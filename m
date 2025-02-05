@@ -1,134 +1,215 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EBE6229B35;
-	Wed,  5 Feb 2025 09:08:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE13522A4E4;
+	Wed,  5 Feb 2025 09:49:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738746493; cv=none; b=ftYxRE1y0dtuQZFjVFYqjCeTqAaVFsduQRKW9RnrbmMsShYKq6ya69lbkC9Us3BsuCVMsgW07VOhKwqe0ksC1VN+VA7yl+QekuS6D8lBgekkgDikpjQVxg1kWbV4oMyA2mVLyrYkPh8s9e5ZCDldXcHJxYWS4tSWsyLapj7q7tI=
+	t=1738748943; cv=none; b=XNCe+74KH4c0d+vDpMS4ygJrOxb5NhQM+xKa8XwvnlbxI+TXPHUVlDudOCfSoDpv2D6WD5oAZ3UH/w6cCvt7MwP/rSPY4MQN3sJP4O3fHis+CBsfs3RhaTo9sEooNfRL/6+vLJBeQyonGIJxfwBeqgb0dcWz7jO8F1CIo73iIN0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738746493; c=relaxed/simple;
-	bh=zK4BcCviFYKOci9GCdxPo1LHA6sklsGtzEQGEFH0p50=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cJj1SpOSrmcJ048ezVvaAuq1f7ZARIoHp/fgsSF0eUJ9sr8r/BPFIcWRc3PC9WrAE+NP0ZQ+IOimDP/3tSrILBdjEAW+MG/sWbznEwIi3bLIGj3hH+42+kB7psxJ63eCZbapwZaV6Ion8OFZvxmh5eiM+XFK7rDiMESqOf5EYgE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=CM3G/q47; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1738748943; c=relaxed/simple;
+	bh=xRu2zg0ybR/jC1c8Z/n8MS6efWbFo0dqhH3MX4A/TJU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=W+7qBjCMoQmW5BtH6b8emIdr8TcT55XWrAyc1/GZBaVxy1EQpXKH3kGigCmcQKsuj3srxu1imkLvXqdckl6yS5pyqvDSVDjcAM3m4xOVH3+85L+5k5NsW0Tqhmhkfz/HlbfO4QK9ehZnHd8Km/JMC2MT9KZwLi/OXWSrV9TM/5A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=WcXcs2CE; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="CM3G/q47"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=qkne+ZvkqwZNIJvySjfCkna8nyuLIRV8ik1o0AG9MyE=; b=CM3G/q47aJbqtCQ0AUoQetpyzV
-	cuJAP/abGed2N9qu1ydLrMdp8uUQzF5Rao21C7odP4h0tpTJBtorMkzXYcxsfQvWchUNAJaRM3uRF
-	wNCEqwJzS7+BCwd2nf3WoCWP+LWuKGLGz7eKIoht32jc4QPPV2TMFtCEkGWJ/zqRzyRJKs96XwGIV
-	mt9JlknaYHh/qdivsptOSn1/DLRHO+HfqYEnFIou5JHVgtf5LSXVN1pScmN1D6Fu4+ab8DjNkZnlz
-	eQsxwNDfFGNwsEA3NUnDNjzT+i+JoDq8mdygVC9dagfg8nViwk9W38tND56xGft3+H4+PQy51otQS
-	GDDnr4uA==;
-Received: from 77-249-17-89.cable.dynamic.v4.ziggo.nl ([77.249.17.89] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1tfbNh-0000000GbAt-28dP;
-	Wed, 05 Feb 2025 09:07:37 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 6C1A93002CE; Wed,  5 Feb 2025 10:07:36 +0100 (CET)
-Date: Wed, 5 Feb 2025 10:07:36 +0100
-From: Peter Zijlstra <peterz@infradead.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ankur Arora <ankur.a.arora@oracle.com>,
-	Linus Torvalds <torvalds@linux-foundation.org>, linux-mm@kvack.org,
-	x86@kernel.org, akpm@linux-foundation.org, luto@kernel.org,
-	bp@alien8.de, dave.hansen@linux.intel.com, hpa@zytor.com,
-	juri.lelli@redhat.com, vincent.guittot@linaro.org,
-	willy@infradead.org, mgorman@suse.de, jon.grimm@amd.com,
-	bharata@amd.com, raghavendra.kt@amd.com, boris.ostrovsky@oracle.com,
-	konrad.wilk@oracle.com, jgross@suse.com, andrew.cooper3@citrix.com,
-	Joel Fernandes <joel@joelfernandes.org>,
-	Vineeth Pillai <vineethrp@google.com>,
-	Suleiman Souhlal <suleiman@google.com>,
-	Ingo Molnar <mingo@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Clark Williams <clark.williams@gmail.com>, bigeasy@linutronix.de,
-	daniel.wagner@suse.com, joseph.salisbury@oracle.com,
-	broonie@gmail.com
-Subject: Re: [RFC][PATCH 1/2] sched: Extended scheduler time slice
-Message-ID: <20250205090736.GY7145@noisy.programming.kicks-ass.net>
-References: <20250201115906.GB8256@noisy.programming.kicks-ass.net>
- <F30E23B6-7452-46F9-BF53-48799AE02F75@goodmis.org>
- <20250201181129.GA34937@noisy.programming.kicks-ass.net>
- <20250201180617.491ce087@batman.local.home>
- <20250203084306.GC505@noisy.programming.kicks-ass.net>
- <20250203114537.6a30c7c0@gandalf.local.home>
- <20250204091613.GQ7145@noisy.programming.kicks-ass.net>
- <20250204075100.3fcbfda8@gandalf.local.home>
- <20250204153053.GX7145@noisy.programming.kicks-ass.net>
- <20250204111119.10ee37c8@gandalf.local.home>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="WcXcs2CE"
+Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51555xZk023240;
+	Wed, 5 Feb 2025 09:48:06 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=KoMTPO
+	fTGUJ3D7aK/EXCHQAUdLgDeta4XBrLWtEwo3E=; b=WcXcs2CEHSIrNoXmduEdut
+	rqzbq1ijTeYZKtQKJbhlYlB+uGOkGAh6Yl0rqwtP5JbHfOlNGVHuWiw8CM8Wzj9R
+	ign2wmmqGaQXuj/hLsqhkmDayGd5zmfRt3MKMF/FkDocehrPrNfkrh/G23VZ0pe1
+	2hYeZd04+hC5f/MIjAQJGEp8xle/4CqFmKLPhiIC4mQX5O+xYU8I0LzEp4A892+a
+	Z4979ZOC3vuXi1KkNcLYOUksX021UYR56GCrGxfARUR+oJo7QrfdE8Zi8MV3Eha4
+	OmHclJL18R3udhdUVh6OtZsUUWaOhC+5mzLM1zOYjXIo9ElOuJVus6MyR9ALcW5g
+	==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44kn62mv8h-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 05 Feb 2025 09:48:06 +0000 (GMT)
+Received: from m0356517.ppops.net (m0356517.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 5159jlkt011948;
+	Wed, 5 Feb 2025 09:48:05 GMT
+Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44kn62mv8b-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 05 Feb 2025 09:48:05 +0000 (GMT)
+Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 5158aLBw024461;
+	Wed, 5 Feb 2025 09:48:04 GMT
+Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
+	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 44hxxn8470-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 05 Feb 2025 09:48:04 +0000
+Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
+	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 5159m0lq45351422
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 5 Feb 2025 09:48:00 GMT
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 1D2F520040;
+	Wed,  5 Feb 2025 09:48:00 +0000 (GMT)
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id EC0F32004F;
+	Wed,  5 Feb 2025 09:47:58 +0000 (GMT)
+Received: from [9.171.163.71] (unknown [9.171.163.71])
+	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Wed,  5 Feb 2025 09:47:58 +0000 (GMT)
+Message-ID: <d2345191-0b73-4860-89be-9a189078d85e@linux.ibm.com>
+Date: Wed, 5 Feb 2025 10:47:58 +0100
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250204111119.10ee37c8@gandalf.local.home>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 19/39] unwind_user/sframe: Add support for reading
+ .sframe contents
+To: Josh Poimboeuf <jpoimboe@kernel.org>
+Cc: x86@kernel.org, Peter Zijlstra <peterz@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>, Ingo Molnar <mingo@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        linux-kernel@vger.kernel.org, Indu Bhagat <indu.bhagat@oracle.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        linux-perf-users@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+        linux-toolchains@vger.kernel.org, Jordan Rome <jordalgo@meta.com>,
+        Sam James <sam@gentoo.org>, linux-trace-kernel@vger.kernel.org,
+        Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Florian Weimer <fweimer@redhat.com>, Andy Lutomirski <luto@kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>, Weinan Liu <wnliu@google.com>,
+        Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>
+References: <cover.1737511963.git.jpoimboe@kernel.org>
+ <77c0d1ec143bf2a53d66c4ecb190e7e0a576fbfd.1737511963.git.jpoimboe@kernel.org>
+ <b35ca3a3-8de5-4d32-8d30-d4e562f6b0de@linux.ibm.com>
+ <20250204185121.jt5ylxsouqi5dyie@jpoimboe>
+From: Jens Remus <jremus@linux.ibm.com>
+Content-Language: en-US
+Organization: IBM Deutschland Research & Development GmbH
+In-Reply-To: <20250204185121.jt5ylxsouqi5dyie@jpoimboe>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: JUYyYdunAg3NquC3r-liJGhpDvkhnBnN
+X-Proofpoint-ORIG-GUID: FHoTaAZdZ0mVaiD_50taZTUqn4mKyl5x
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-05_04,2025-02-05_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 clxscore=1015
+ priorityscore=1501 suspectscore=0 impostorscore=0 bulkscore=0
+ mlxlogscore=999 spamscore=0 lowpriorityscore=0 phishscore=0 mlxscore=0
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2501170000 definitions=main-2502050075
 
-On Tue, Feb 04, 2025 at 11:11:19AM -0500, Steven Rostedt wrote:
-> On Tue, 4 Feb 2025 16:30:53 +0100
-> Peter Zijlstra <peterz@infradead.org> wrote:
+On 04.02.2025 19:51, Josh Poimboeuf wrote:
+> On Thu, Jan 30, 2025 at 04:47:00PM +0100, Jens Remus wrote:
+>> On 22.01.2025 03:31, Josh Poimboeuf wrote:
+
+>>> +#define __UNSAFE_GET_USER_INC(to, from, type, label)			\
+>>> +({									\
+>>> +	type __to;							\
+>>> +	unsafe_get_user(__to, (type __user *)from, label);		\
+>>> +	from += sizeof(__to);						\
+>>> +	to = (typeof(to))__to;							\
+>>> +})
+>>> +
+>>> +#define UNSAFE_GET_USER_INC(to, from, size, label)			\
+>>> +({									\
+>>> +	switch (size) {							\
+>>> +	case 1:								\
+>>> +		__UNSAFE_GET_USER_INC(to, from, u8, label);		\
+>>> +		break;							\
+>>> +	case 2:								\
+>>> +		__UNSAFE_GET_USER_INC(to, from, u16, label);		\
+>>> +		break;							\
+>>> +	case 4:								\
+>>> +		__UNSAFE_GET_USER_INC(to, from, u32, label);		\
+>>> +		break;							\
+>>> +	default:							\
+>>> +		return -EFAULT;						\
+>>> +	}								\
+>>> +})
+>>
+>> This does not work for the signed SFrame fields, such as the FRE CFA,
+>> RA, and FP offsets, as it does not perform the required sign extension.
+>> One option would be to rename to UNSAFE_GET_USER_UNSIGNED_INC() and
+>> re-introduce UNSAFE_GET_USER_SIGNED_INC() using s8, s16, and s32.
 > 
-> > If you go back and reread that initial thread, you'll find the 50us is
-> > below the scheduling latency that random test box already had.
-> > 
-> > I'm sure more modern systems will have a lower number, and slower
-> > systems will have a larger number, but we got to pick a number :/
-> > 
-> > I'm fine with making it 20us. Or whatever. Its just a stupid number.
-> > 
-> > But yes. If we're going to be doing this, there is absolutely no reason
-> > not to allow DEADLINE/FIFO threads the same. Misbehaving FIFO is already
-> > a problem, and we can make DL-CBS enforcement punch through it if we
-> > have to.
-> > 
-> > And less retries on the RSEQ for FIFO can equally improve performance.
-> > 
-> > There is no difference between a 'malicious/broken' userspace consuming
-> > the entire window in userspace (50us, 20us whatever it will be) and
-> > doing a system call which we know will cause similar delays because it
-> > does in-kernel locking.
+> See the following line in __UNSAFE_GET_USER_INC():
 > 
-> This is where we will disagree for the reasons I explained in my second
-> email. This feature affects other tasks. And no, making it 20us doesn't
-> make it better. Because from what I get from you, if we implement this, it
-> will be available for all preemption methods (including PREEMPT_RT), where
-> we do have less than 50us latency, and and even a 20us will break those
-> applications.
+> 	to = (typeof(to))__to;
+> 
+> Does that not do the sign extension?
 
-Then pick another number; RT too has a max scheduling latency number (on
-some random hardware). If you stay below that, all is fine. 
+No. In practice with my proposed changes reverted and the following
+debugging code added:
 
-> This was supposed to be only a hint to the kernel, not a complete feature
+@@ -293,6 +293,10 @@ static __always_inline int __find_fre(struct sframe_section *sec,
+                 return -EINVAL;
+         fre = prev_fre;
 
-That's a contradiction in terms -- even a hint is a feature.
++       dbg_sec_uaccess("fre: ip_off=%u, cfa_off=%d, ra_off=%d, fp_off=%d, use_fp=%s, sp_val_off=%d\n",
++                       fre->ip_off, fre->cfa_off, fre->ra_off, fre->fp_off,
++                       SFRAME_FRE_CFA_BASE_REG_ID(fre->info) == SFRAME_BASE_REG_FP ? "y" : "n",
++                       sframe_sp_val_off());
 
-> that is hard coded and will override how other tasks behave. 
+Excerpt from dmesg:
 
-Everything has some effect. My point is that if you limit this effect to
-be less than what it can already effect, you're not making things worse.
+sframe: /usr/lib/ld64.so.1: fre: ip_off=16, cfa_off=440, ra_off=208, fp_off=184, use_fp=n, sp_val_off=-160
+sframe: /usr/lib/ld64.so.1: fre: ip_off=2600, cfa_off=672, ra_off=208, fp_off=184, use_fp=y, sp_val_off=-160
+sframe: /usr/lib/ld64.so.1: fre: ip_off=10, cfa_off=368, ra_off=0, fp_off=0, use_fp=n, sp_val_off=-160
+sframe: /usr/lib/ld64.so.1: fre: ip_off=722, cfa_off=672, ra_off=208, fp_off=184, use_fp=y, sp_val_off=-160
 
-> As system
-> calls themselves can make how things are scheduled depending on the
-> preemption method,
+On s390 the register save slots have negative offsets from CFA (due to
+the CFA to be defined as SP at call site + 160).  The RA, if saved,
+would be saved at CFA-48 on the stack.  I.e. ra_off=-48 instead of
+ra_off=208 would have been correct.
 
-What?
-
-> I didn't want to add something that will change how
-> things are scheduled that ignores the preemption method that was chosen.
-
-Userspace is totally oblivious to the preemption method chosen, and it
-damn well should be.
+208 = 0xd0 (unsigned) = -48 (signed)
 
 
+Looking at the code:
+
+UNSAFE_GET_USER_INC(ra_off, cur, offset_size, Efault);
+
+With offset_size=1 expands into:
+
+__UNSAFE_GET_USER_INC(/*to=*/ra_off, /*from=*cur, /*type=*/u8, /*label=*/Efault);
+
+Expands into:
+
+{
+	u8 __to;
+	unsafe_get_user(__to, (u8 __user *)cur, Efault);
+	cur += sizeof(__to);
+	ra_off = (typeof(ra_off))__to;
+}
+
+The issue is that on the last line __to is u8 instead of s8 and thus
+u8 gets casted to s32, which is performed without sign extension.  __to
+would need to be s8 or get casted to s8 for sign extension to take
+place.
+
+Regards,
+Jens
+-- 
+Jens Remus
+Linux on Z Development (D3303)
++49-7031-16-1128 Office
+jremus@de.ibm.com
+
+IBM
+
+IBM Deutschland Research & Development GmbH; Vorsitzender des Aufsichtsrats: Wolfgang Wendt; Geschäftsführung: David Faller; Sitz der Gesellschaft: Böblingen; Registergericht: Amtsgericht Stuttgart, HRB 243294
+IBM Data Privacy Statement: https://www.ibm.com/privacy/
 
