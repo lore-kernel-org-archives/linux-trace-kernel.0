@@ -1,46 +1,51 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1948136326;
-	Wed,  5 Feb 2025 13:38:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2698A126C16;
+	Wed,  5 Feb 2025 13:44:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738762702; cv=none; b=AUZBpKo3CnCO2d80EHS0TNwECVyA8VNyGpMhCzf2frw2TlDgN3GIBGcKcCumSa3H6EKFFku6utBvIihaWJkST8+bZqb6O4MZd49gqshtzWPmiFHKrloCgib7OezoWoUOmBCGAMxYVhVVFX5878w71Xn7xl2oC3dBYlfZALKtV3w=
+	t=1738763054; cv=none; b=pHpUReWQOc7acUvoVhpPyoALrfBaUAxH/bgw7Zm+XROE3KqGdfn67lwTAEj7HSF/KiYGZ7nHXkmao8AcWVYkqYz9r1wFEMuq5dzo/9nml660rA22rHnpLYYI7vUCE55GwBxA4eKX11tWM+TobCHGLqGRppWfs4dEYs7bee2Qz3A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738762702; c=relaxed/simple;
-	bh=TvQYTQI2caqCgYr0ko4ZYxI25bCsN32KMP1UcW9wIiw=;
+	s=arc-20240116; t=1738763054; c=relaxed/simple;
+	bh=DyoO0bDkkGwqDojQ2Ceg0QQyvmnaHFwenu6GP62/ut4=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=if/sc/bLx+UDo5r8NNWUV3qLOA3msWzKWLyFkU5Xcu0NvpaWItb2Lsx2unsmzjcX6ktbTvymFo4mLHBkGPRaLxPERz5LS5QuH+9og9pkS1CeloOgzdYk4yIDA5KjmpGcVFXngqSrLdY2+dSQ6zKpdlWS+uoZ7BCslnesqmtzrYk=
+	 MIME-Version:Content-Type; b=oAJ/ZN7TjVMPoAOAkmV8PZwBa8CsjgnAjxcOtKn9++i5xLyYwHlW0bQdBYUXts0t0+R8eU7I4ZR5NlYjaP5YJilBEDGPZIkBFxDv73BLwvm6lim7eQtTxoP3AWTQgOLyejXnPZeOIxHyOL0XKbHh4CKpO8VypZ9tXYZ9mL/9EC0=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AA8D5C4CED1;
-	Wed,  5 Feb 2025 13:38:18 +0000 (UTC)
-Date: Wed, 5 Feb 2025 08:38:57 -0500
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2165AC4CED1;
+	Wed,  5 Feb 2025 13:44:10 +0000 (UTC)
+Date: Wed, 5 Feb 2025 08:44:49 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
-To: Joel Fernandes <joel@joelfernandes.org>
-Cc: Prakash Sangappa <prakash.sangappa@oracle.com>, Peter Zijlstra
- <peterz@infradead.org>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
- Ankur Arora <ankur.a.arora@oracle.com>, Linus Torvalds
- <torvalds@linux-foundation.org>, linux-mm@kvack.org, x86@kernel.org, Andrew
- Morton <akpm@linux-foundation.org>, luto@kernel.org, bp@alien8.de,
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Thomas
+ Gleixner <tglx@linutronix.de>, Ankur Arora <ankur.a.arora@oracle.com>,
+ Linus Torvalds <torvalds@linux-foundation.org>, linux-mm@kvack.org,
+ x86@kernel.org, akpm@linux-foundation.org, luto@kernel.org, bp@alien8.de,
  dave.hansen@linux.intel.com, hpa@zytor.com, juri.lelli@redhat.com,
  vincent.guittot@linaro.org, willy@infradead.org, mgorman@suse.de,
- jon.grimm@amd.com, bharata@amd.com, raghavendra.kt@amd.com, Boris Ostrovsky
- <boris.ostrovsky@oracle.com>, Konrad Wilk <konrad.wilk@oracle.com>,
- jgross@suse.com, Andrew.Cooper3@citrix.com, Vineeth Pillai
- <vineethrp@google.com>, Suleiman Souhlal <suleiman@google.com>, Ingo Molnar
- <mingo@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Clark Williams <clark.williams@gmail.com>, bigeasy@linutronix.de,
- daniel.wagner@suse.com, Joseph Salisbury <joseph.salisbury@oracle.com>,
- broonie@gmail.com
+ jon.grimm@amd.com, bharata@amd.com, raghavendra.kt@amd.com,
+ boris.ostrovsky@oracle.com, konrad.wilk@oracle.com, jgross@suse.com,
+ andrew.cooper3@citrix.com, Joel Fernandes <joel@joelfernandes.org>, Vineeth
+ Pillai <vineethrp@google.com>, Suleiman Souhlal <suleiman@google.com>, Ingo
+ Molnar <mingo@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Clark Williams
+ <clark.williams@gmail.com>, bigeasy@linutronix.de, daniel.wagner@suse.com,
+ joseph.salisbury@oracle.com, broonie@gmail.com
 Subject: Re: [RFC][PATCH 1/2] sched: Extended scheduler time slice
-Message-ID: <20250205083857.3cc06aa7@gandalf.local.home>
-In-Reply-To: <20250205081635.397eacb0@gandalf.local.home>
-References: <EC77D83D-DD17-4CCD-9EF6-C4C39FCE16E7@oracle.com>
-	<9DA1FAE6-A008-4785-BDF9-541457E29807@joelfernandes.org>
-	<20250204220418.35949317@gandalf.local.home>
-	<CAEXW_YQxTi2y_hY_e4AjLSa6RwVVLn3DPj5d4Cfewq0js-0UTA@mail.gmail.com>
-	<20250205081635.397eacb0@gandalf.local.home>
+Message-ID: <20250205084449.1bca619d@gandalf.local.home>
+In-Reply-To: <20250205081019.6f81f05a@gandalf.local.home>
+References: <20250201115906.GB8256@noisy.programming.kicks-ass.net>
+	<F30E23B6-7452-46F9-BF53-48799AE02F75@goodmis.org>
+	<20250201181129.GA34937@noisy.programming.kicks-ass.net>
+	<20250201180617.491ce087@batman.local.home>
+	<20250203084306.GC505@noisy.programming.kicks-ass.net>
+	<20250203114537.6a30c7c0@gandalf.local.home>
+	<20250204091613.GQ7145@noisy.programming.kicks-ass.net>
+	<20250204075100.3fcbfda8@gandalf.local.home>
+	<20250204153053.GX7145@noisy.programming.kicks-ass.net>
+	<20250204111119.10ee37c8@gandalf.local.home>
+	<20250205090736.GY7145@noisy.programming.kicks-ass.net>
+	<20250205081019.6f81f05a@gandalf.local.home>
 X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -51,25 +56,21 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Wed, 5 Feb 2025 08:16:35 -0500
+On Wed, 5 Feb 2025 08:10:19 -0500
 Steven Rostedt <rostedt@goodmis.org> wrote:
 
-> Correct. And why I don't think this should be used for RT. It's SCHED_OTHER
-> that doesn't have any control of the sched tick, where this hint can help.
+> The preemption method will influence that decision, but user space doesn't
+> need to be know.
 
-Honestly, I don't care that much if it is used on all preemption models,
-but I do care if it affects RT tasks. The LAZY flag just happens to let us
-know if the next schedule is mandatory or not. NEED_RESCHED_LAZY means,
-this schedule is not that important, where as the NEED_RESCHED means it is.
+If your issue is that this depends on the preemption method, I have a
+slight change to make it work for all preemption methods. I just replied to
+Joel about this:
 
-That's why I picked that to decide if the task can get extended or not. Has
-nothing to do with the preemption method. The preemption method currently
-sets that flag.
+  https://lore.kernel.org/all/20250205083857.3cc06aa7@gandalf.local.home/
 
-Now we could just change when NEED_RESCHED_LAZY is set and this could work
-with all preemption methods.
+I'll repeat some of it here.
 
-To explain this better. Currently we have:
+Currently we have:
 
 TYPE       |       Sched Tick      |      RT Wakeup       |
 ===========+=======================+======================+
@@ -80,7 +81,9 @@ Voluntary  |    NEED_RESCHED_LAZY  |     NEED_RESCHED     |
 Full       |      NEED_RESCHED     |     NEED_RESCHED     |
 -----------+-----------------------+----------------------+
 
-Perhaps if we do:
+Now, if we set NEED_RESCHED_LAZY in PREEMPT_FULL (and PREEMPT_RT) on a
+scheduler tick if it interrupted user space (not the kernel) then we have
+this:
 
 TYPE       |           Sched Tick              |      RT Wakeup       |
 ===========+===================================+======================+
@@ -91,16 +94,14 @@ Voluntary  |        NEED_RESCHED_LAZY          |    NEED_RESCHED      |
 Full       | NEED_RESCHED or NEED_RESCHED_LAZY |    NEED_RESCHED      |
 -----------+-----------------------------------+----------------------+
 
-Where on the scheduler tick, for PREEMPT_FULL (and even PREEMPT_RT), we set
-NEED_RESCHED if the task is in the kernel and NEED_RESCHED_LAZY if it is in
-user space then this patch will work in all preemption methods. As the LAZY
-bit will decide if the task gets extended or not.
+Then going back to user space from the interrupt, we can use rseq and the
+LAZY bit to know if we should extend the tick or not! Even without rseq,
+this would behave the same as NEED_RESCHED_LAZY will schedule just like
+NEED_RESCHED when going back to user space.
 
-That is, any SCHED_OTHER task that is being preempted due to its scheduler
-tick can be granted 50us more, regardless of the preemption method.
+This will allow this schedule tick extension to work in all the preemption
+methods.
 
-Now on PREEMPT_NONE, it may even get to preempt a RT task a bit more, but
-RT tasks have more to worry about if they are running on a PREEMPT_NONE
-system anyway!
+Would this be something you are more OK with? I can go and test this out.
 
 -- Steve
