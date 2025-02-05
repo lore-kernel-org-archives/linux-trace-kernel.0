@@ -1,43 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E8AC79F5;
-	Wed,  5 Feb 2025 00:35:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DE1C747F;
+	Wed,  5 Feb 2025 00:47:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738715725; cv=none; b=cT4GQE7GRGFCBzd8ukmPCxJNgwf6fHQckFG3BVCWuw1+4TEzRX9l3U+71aw7DtYDsWyGwB7XnSN21NbuiLTJNIGRB1ZNVpUrUL2MZIApKqJbiUpP7ZN7isymLVdINL1z9+vaGeNmlJbj2ZkGdhbu61rAYOZEY9KFMc56UPLAI1g=
+	t=1738716464; cv=none; b=pcSrUIKM+mhQQRvrRVnobzurAxe8Q/4BbZkvg00tOHM6AQgzsGoBIvtxjAzYbJYnzZbHlxUhfBC0LMlF5lh4H2e4BHfU2sLXTqphSyBIxzfV3HrxcAFmL8d0TBUpnN03/SLm/cxKWNAZ5sWzcpiXhsP9WOVpFOzw0rNRVkpQsgM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738715725; c=relaxed/simple;
-	bh=xWE0l1fyQZcerbALehy228Zxj2+0c+MEx/a4oL83YXQ=;
+	s=arc-20240116; t=1738716464; c=relaxed/simple;
+	bh=pA5YSQT+PflJ99T3ntYsCMPYvL6cveLPcdY6XLlaojI=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=R7HGv/6KaEgfQ+fV41X8tpo6hYAz6sfX0oHC79J0kJK3mYtkBK8/4PXQus/cLxkW3zZrkKa8EjGEzi1TdVw8lW5IF9opa6eDiCR/3mz6aQ4iTRcR8m+zcO48xkfRioPRTCM+rClyh/cesWyLQ82AVmmBA/TA+UtFGx8vJnF3PCk=
+	 MIME-Version:Content-Type; b=HOxoqn07GLfWXYbaUxMQemd/OUHJrisqGmNLQbmX2odrkPCamgigSTLOfze1KaRnfFT/o7tFp3APQ/VC7gGAO1kX1C/esXWgLW/uLQARyKpbDEImJnI+a3tSyzYdUbBGCcf4KhjrMBa8M8e1HKdL5xsLLuVAdApZquCkcUm48fU=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7EDE4C4CEDF;
-	Wed,  5 Feb 2025 00:35:22 +0000 (UTC)
-Date: Tue, 4 Feb 2025 19:35:59 -0500
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 31BAAC4CEDF;
+	Wed,  5 Feb 2025 00:47:43 +0000 (UTC)
+Date: Tue, 4 Feb 2025 19:48:20 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
-To: Martin Kelly <martin.kelly@crowdstrike.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "linux-trace-kernel@vger.kernel.org" <linux-trace-kernel@vger.kernel.org>,
- "bpf@vger.kernel.org" <bpf@vger.kernel.org>, "linux-kbuild@vger.kernel.org"
- <linux-kbuild@vger.kernel.org>, "masahiroy@kernel.org"
- <masahiroy@kernel.org>, "akpm@linux-foundation.org"
- <akpm@linux-foundation.org>, "jpoimboe@redhat.com" <jpoimboe@redhat.com>,
- "peterz@infradead.org" <peterz@infradead.org>, "mark.rutland@arm.com"
- <mark.rutland@arm.com>, "mathieu.desnoyers@efficios.com"
- <mathieu.desnoyers@efficios.com>, "mhiramat@kernel.org"
- <mhiramat@kernel.org>, "torvalds@linux-foundation.org"
- <torvalds@linux-foundation.org>, "nicolas@fjasle.eu" <nicolas@fjasle.eu>,
- "nathan@kernel.org" <nathan@kernel.org>, "zhengyejian1@huawei.com"
- <zhengyejian1@huawei.com>, "christophe.leroy@csgroup.eu"
- <christophe.leroy@csgroup.eu>
-Subject: Re: [PATCH v2 16/16] scripts/sorttable: ftrace: Do not add weak
- functions to available_filter_functions
-Message-ID: <20250204193559.1f87b4ea@gandalf.local.home>
-In-Reply-To: <aba52935dc06a1fe69f05309f5d9828a297ad787.camel@crowdstrike.com>
-References: <20250102232609.529842248@goodmis.org>
-	<20250102232651.347490863@goodmis.org>
-	<aba52935dc06a1fe69f05309f5d9828a297ad787.camel@crowdstrike.com>
+To: Nikolay Kuratov <kniv@yandex-team.ru>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Wen
+ Yang <wenyang@linux.alibaba.com>, Mark Rutland <mark.rutland@arm.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Subject: Re: [PATCH] ftrace: Avoid potential division by zero in
+ function_stat_show()
+Message-ID: <20250204194820.7ef50d96@gandalf.local.home>
+In-Reply-To: <20250204172045.3a5d8d01@gandalf.local.home>
+References: <20250203100603.5c00df0f@gandalf.local.home>
+	<20250204074301.1427497-1-kniv@yandex-team.ru>
+	<20250204172045.3a5d8d01@gandalf.local.home>
 X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -48,19 +37,71 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Wed, 5 Feb 2025 00:13:26 +0000
-Martin Kelly <martin.kelly@crowdstrike.com> wrote:
+On Tue, 4 Feb 2025 17:20:45 -0500
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-> I'm not necessarily a qualified reviewer for this patch, but I'm very
-> interested in seeing it or a similar solution get merged, as the impact
-> when it hits is significant (silent failure) and not easy to detect or
-> work around. Is there any obstacle left in getting this one merged
-> other than further reviews?
+> x = rec->counter
+> 
+>   x * (x - 1) * 1000 = (2^32 - 1) // use minus 1 just to be sure
+>   x * (x - 1) = (2^32 - 1) / 1000
+>   x^2 - x = (2^32 - 1) / 1000
+>   x^2 - x - (2^32 - 1) / 1000 = 0
+> 
+>  x = (-b +/- sqrt(b^2 - 4ac)) / 2a
+> 
+>  a = 1
+>  b = -1
+>  c = -(2^32 - 1) / 1000 = -4294967.295
+> 
+>  x = (-1 +/- sqrt((-1)^2 - 4 * -4294967.295)) / 2
 
-A version of the patches 1-14 was merged this merge window, with some
-tweaks. I plan on rebasing patches 15 and 16 on top of that and
-resubmitting. I just have some other things I'm finishing up.
+And I did make a mistake, as b = -1, and the above should start with -(-1)
+or 1 :-p
 
-Thanks,
+> 
+>  x = 2071.930 for 32bit
+
+This should be: 2072.930
+
+> 
+> For 64bit we have
+> 
+>  c = -(2^64 - 1) / 1000 = -18446744073709551.615
+> 
+> That makes
+> 
+>   x = 135818790.812
+
+And this needs to be: 135818791.812
+
+> +/*
+> + * The calculation for stddev will overflow when the counter
+> + * algorithm overflows the long size:
+> + *
+> + * rec->counter * (rec->counter - 1) * 1000 >= 2^BITS_PER_LONG
+> + *
+> + * Using the quadratic equation: x = (-b +/- sqrt(b^2 - 4ac)) / 2a
+> + * we can figure out what the max rec->counter is before it
+> + * overflows.
+> + *
+> + * x = rec->counter
+> + * x * (x - 1) * 1000 = 2^BITS_PER_LONG - 1 // -1 for rounding
+> + * x * (x - 1) = (2^BITS_PER_LONG - 1) / 1000
+> + * x^2 - x = (2^BITS_PER_LONG - 1) / 1000
+> + * x^2 - x - (2^BITS_PER_LONG - 1) / 1000 = 0
+> + *
+> + * a = 1
+> + * b = -1
+> + * c = -(2^BITS_PER_LONG - 1) / 1000
+> + *
+> + * x = (1 +/- sqrt(1 - 4 * -(2^BITS_PER_LONG - 1) / 1000)) / 2
+> + *
+> + * For 32bit that is: x = 2072.930 (or 2072)
+> + * For 64bit that is: x = 135818791.812 (or 135818791)
+> + */
+
+
+But in the patch, I redid the numbers and did not copy from the above, and
+here I did it correctly.
 
 -- Steve
