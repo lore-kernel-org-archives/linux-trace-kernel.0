@@ -1,177 +1,133 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from forwardcorp1b.mail.yandex.net (forwardcorp1b.mail.yandex.net [178.154.239.136])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92BAD22B8D2;
-	Wed,  5 Feb 2025 10:26:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B18022B59A;
+	Wed,  5 Feb 2025 10:42:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.154.239.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738751172; cv=none; b=BPh9iQxlX2Zk7YGQOf+qq8AEQB6N+KR09c9YG+Q/z3j6g3a3k0SciqQ6YTY2mc9RX3+IOzDTcZ8CL4h3FVkMa5dM1Db7VGIrN+WSbjHrwduQN5iNI4SfnDECQrs7ufnP4Qg6sSGXhuPh72P0W4XKF1xj1M8o31z1Iv4zoRfenZA=
+	t=1738752162; cv=none; b=mxNJppqwqMQrsEb5KTJ9iZYxVjQILnTYDCvZLX6pJLwU5ZYjZX2rP58/iB4Z3xsklkCspnrGt4LBBygs5kpp0DDTAeFxw02Je/0G5rlydHas8Fgc3llQYf3PkjV3XMjxkbW750ri9On9By+GMpti8lP6NxZDSCNY9Eh2mnRvNGY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738751172; c=relaxed/simple;
-	bh=kNuY9pTiA71TGN0k1KL8rYBqW4XfeUprFTz9eU0Hp1g=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=KP0kS/EUfbVjc4urHIs5Kkfr0nTY08nEJCBOGEU7ZATI2gf8JG00ngn5PpBS+VyGPG6D+aReHOcYPwncsT/L6YZp1gFEhd7TaPoSowVWssQeX/Ju4Nz0RdlxyfqTK5FRwEQehQHODBKPi9jWPqauGQ3TMkcJwtxFyrOkmgRMrN0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=Dpy0VAf/; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1738752162; c=relaxed/simple;
+	bh=LRquYjF41Qs3ozkMj7DtLWEVyZ1h1D3hkjDaHZat6z8=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=iTBrAmmUv39RqIn0VigqNa4z8nQufo5h7gg5WgSJ96Dc+XzU8/mm8f9PXoqGq6DP4cxKI5Hvag1+KZnrHCYxoDnbBO1SPhFCJaAyjkCwD69SJt1rBrg4NMaTZPK7YCKoKkoKgJO2mInVEXACTK9UNVQ0aqH3WQFJyGVhBVaq68s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex-team.ru; spf=pass smtp.mailfrom=yandex-team.ru; dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b=cnZHsYa/; arc=none smtp.client-ip=178.154.239.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex-team.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yandex-team.ru
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Dpy0VAf/"
-Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51520ium009855;
-	Wed, 5 Feb 2025 10:25:45 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=39GbDh
-	2oCbRcovW+HgpZfevaZM0m5ogCHv73Pk6nFWo=; b=Dpy0VAf/acHdqDOm2ya/z/
-	OnEz7BlsnxBuS8heK24YigyGDQgOJhHCVPNpDnwi086+6aABxsdG4RnNkEJesmjQ
-	08ipiRYunZX0hxlD/WvgVxmzEv+U+j/+aquuWlTuQIK8JcAWhHvwR1rsNyUZaIkj
-	IgOak2GCuyTTz3REWWJSWkotKiu1UPaQo0yQ6J15qLNUdNSmM7q4b+5iOClDNo2e
-	X/pfB6b9kdqcDxgS9F3/gsUXznU4/f0BmK3ypIFVxRpMIU1AH/plE5aR2takMShT
-	4+ONqpPXm8fwN/9XwX3lS42Ge2qDuieb/4m3OCeAJgiXxM90xxGtVSQB70gyn10g
-	==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44kxtyhxge-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 05 Feb 2025 10:25:44 +0000 (GMT)
-Received: from m0353725.ppops.net (m0353725.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 515AMgDe018856;
-	Wed, 5 Feb 2025 10:25:44 GMT
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44kxtyhxga-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 05 Feb 2025 10:25:44 +0000 (GMT)
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 5159GJuu005292;
-	Wed, 5 Feb 2025 10:25:43 GMT
-Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 44j05k01cw-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 05 Feb 2025 10:25:43 +0000
-Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
-	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 515APdev20578672
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 5 Feb 2025 10:25:39 GMT
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 9313720189;
-	Wed,  5 Feb 2025 10:04:56 +0000 (GMT)
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 7D0DE20184;
-	Wed,  5 Feb 2025 10:04:55 +0000 (GMT)
-Received: from [9.171.163.71] (unknown [9.171.163.71])
-	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Wed,  5 Feb 2025 10:04:55 +0000 (GMT)
-Message-ID: <48231957-ef84-4329-9337-411a8fbf5fe6@linux.ibm.com>
-Date: Wed, 5 Feb 2025 11:04:55 +0100
+	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="cnZHsYa/"
+Received: from mail-nwsmtp-smtp-corp-canary-81.sas.yp-c.yandex.net (mail-nwsmtp-smtp-corp-canary-81.sas.yp-c.yandex.net [IPv6:2a02:6b8:c10:4a4:0:640:7b31:0])
+	by forwardcorp1b.mail.yandex.net (Yandex) with ESMTPS id 19A0360B8B;
+	Wed,  5 Feb 2025 13:40:33 +0300 (MSK)
+Received: from kniv-nix.yandex-team.ru (unknown [2a02:6b8:b081:5::1:34])
+	by mail-nwsmtp-smtp-corp-canary-81.sas.yp-c.yandex.net (smtpcorp/Yandex) with ESMTPSA id TdiCnH3Ij4Y0-luTAzeim;
+	Wed, 05 Feb 2025 13:40:32 +0300
+X-Yandex-Fwd: 1
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru;
+	s=default; t=1738752032;
+	bh=Pt9TK34WEMC8Wuyn6NT+uWaQA66Oaj1A7lok/fuTYG8=;
+	h=Message-Id:Date:In-Reply-To:Cc:Subject:References:To:From;
+	b=cnZHsYa/t5/roPh+OSek1SW2AuObAcdSlzeHzwt6tpYnkMSmzfXsCcCbGGWeDmVzd
+	 ttoiFQuvyM/lpN7Pp+Px0/7aqroqQVSvkvgo7Sxon7jUPYsYZ/PNoWwe20BM7mzCq9
+	 D06U+B5CiXzEFXUJ8CQV4KerWlXThoKEJp16oKvc=
+Authentication-Results: mail-nwsmtp-smtp-corp-canary-81.sas.yp-c.yandex.net; dkim=pass header.i=@yandex-team.ru
+From: Nikolay Kuratov <kniv@yandex-team.ru>
+To: linux-kernel@vger.kernel.org
+Cc: linux-trace-kernel@vger.kernel.org,
+	Wen Yang <wenyang@linux.alibaba.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	kniv@yandex-team.ru
+Subject: Re: [PATCH] ftrace: Avoid potential division by zero in function_stat_show()
+Date: Wed,  5 Feb 2025 13:39:29 +0300
+Message-Id: <20250205103929.1538065-1-kniv@yandex-team.ru>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250204194820.7ef50d96@gandalf.local.home>
+References: <20250204194820.7ef50d96@gandalf.local.home>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 25/39] unwind_user/sframe: Show file name in debug
- output
-To: Josh Poimboeuf <jpoimboe@kernel.org>
-Cc: x86@kernel.org, Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>, Ingo Molnar <mingo@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        linux-kernel@vger.kernel.org, Indu Bhagat <indu.bhagat@oracle.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-perf-users@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-        linux-toolchains@vger.kernel.org, Jordan Rome <jordalgo@meta.com>,
-        Sam James <sam@gentoo.org>, linux-trace-kernel@vger.kernel.org,
-        Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Florian Weimer <fweimer@redhat.com>, Andy Lutomirski <luto@kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>, Weinan Liu <wnliu@google.com>,
-        Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>
-References: <cover.1737511963.git.jpoimboe@kernel.org>
- <7bfb7ffad5fe384fe3dbe6c8ca985f35b98b48bb.1737511963.git.jpoimboe@kernel.org>
- <c9ba301e-8451-441d-8212-2913a76ff32d@linux.ibm.com>
- <20250204191017.iqrew5zgxg7eh4s2@jpoimboe>
-From: Jens Remus <jremus@linux.ibm.com>
-Content-Language: en-US
-Organization: IBM Deutschland Research & Development GmbH
-In-Reply-To: <20250204191017.iqrew5zgxg7eh4s2@jpoimboe>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: sjoZ26pCl11vMu4rdX37ChXw6CTlE3_A
-X-Proofpoint-ORIG-GUID: PcHiUz60VwhfqjfkWBzqnNpy4WiNAGpt
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-05_04,2025-02-05_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 mlxscore=0
- priorityscore=1501 lowpriorityscore=0 impostorscore=0 bulkscore=0
- suspectscore=0 mlxlogscore=999 adultscore=0 spamscore=0 phishscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2501170000 definitions=main-2502050080
 
-On 04.02.2025 20:10, Josh Poimboeuf wrote:
-> On Thu, Jan 30, 2025 at 05:17:33PM +0100, Jens Remus wrote:
->> On 22.01.2025 03:31, Josh Poimboeuf wrote:
+Your approach should prevent both zero division and overflow in the
+denominator. We also should consider that the numerator
 
->>> diff --git a/kernel/unwind/sframe_debug.h b/kernel/unwind/sframe_debug.h
->>
->>> +static inline void dbg_init(struct sframe_section *sec)
->>> +{
->>> +	struct mm_struct *mm = current->mm;
->>> +	struct vm_area_struct *vma;
->>> +
->>> +	guard(mmap_read_lock)(mm);
->>> +	vma = vma_lookup(mm, sec->sframe_start);
->>> +	if (!vma)
->>> +		sec->filename = kstrdup("(vma gone???)", GFP_KERNEL);
->>> +	else if (vma->vm_file)
->>> +		sec->filename = kstrdup_quotable_file(vma->vm_file, GFP_KERNEL);
->>> +	else if (!vma->vm_mm)
->>
->> This condition does not appear to work for vdso on s390.
-> 
-> I had a fix for this which somehow got dropped:
-> 
-> diff --git a/kernel/unwind/sframe_debug.h b/kernel/unwind/sframe_debug.h
-> index 3bb3c5574aee..045e9c0b16c9 100644
-> --- a/kernel/unwind/sframe_debug.h
-> +++ b/kernel/unwind/sframe_debug.h
-> @@ -67,6 +67,10 @@ static inline void dbg_init(struct sframe_section *sec)
->   		sec->filename = kstrdup("(vma gone???)", GFP_KERNEL);
->   	else if (vma->vm_file)
->   		sec->filename = kstrdup_quotable_file(vma->vm_file, GFP_KERNEL);
-> +	else if (vma->vm_ops && vma->vm_ops->name)
-> +		sec->filename = kstrdup(vma->vm_ops->name(vma), GFP_KERNEL);
-> +	else if (arch_vma_name(vma))
-> +		sec->filename = kstrdup(arch_vma_name(vma), GFP_KERNEL);
->   	else if (!vma->vm_mm)
->   		sec->filename = kstrdup("(vdso)", GFP_KERNEL);
->   	else
+> stddev = counter * rec->time_squared - rec->stddev_time * rec->stddev_time;
 
-Thanks! Your patch works fine on s390:
+may overflow too. Suppose 1000 ns per call case. On each function execution
+time_squared would get additional 10^6. So for 32-bit and
+MAX_STDDEV_COUNTER = 2072 we would have
+counter * rec->time_squared = 2071 * (2071 * 10^6) = 4289041000000,
+a 42-bit number.
 
-test_vdso    1087   104.721004:      10000 task-clock:ppp:
-              3ffd11f1702 __cvdso_clock_gettime_data.constprop.0+0x52 ([vdso])
-              3ffd11f14c6 __kernel_clock_gettime+0x16 ([vdso])
-              3ff8f6f113e clock_gettime@@GLIBC_2.17+0x1e (/usr/lib64/libc.so.6)
-              3ff8f6e20e8 __gettimeofday+0x38 (/usr/lib64/libc.so.6)
-                  100066e main+0x1e (/root/test/vdso/test_vdso)
-              3ff8f63459c __libc_start_call_main+0x8c (/usr/lib64/libc.so.6)
-              3ff8f63469e __libc_start_main@@GLIBC_2.34+0xae (/usr/lib64/libc.so.6)
-                  100073a _start+0x3a (/root/test/vdso/test_vdso)
+It looks like overflow prevention here is not viable with macro constants,
+since function execution time is dynamic in nature.
 
-Regards,
-Jens
--- 
-Jens Remus
-Linux on Z Development (D3303)
-+49-7031-16-1128 Office
-jremus@de.ibm.com
+My suggestion is to rewrite formula such as we perform division earlier
+and avoid overflow checks as much as possible. Note that doing divisions
+earlier may result in precision loss, but I think that is acceptable since
+rec->time is nanoseconds precision. Also this allows us to not care about
+counter overflow at all, because expression rec->time * rec->time will always
+overflow earlier than both counter and rec->time_square_sum. Renamed
+time_squared into time_square_sum just to clarify.
 
-IBM
-
-IBM Deutschland Research & Development GmbH; Vorsitzender des Aufsichtsrats: Wolfgang Wendt; Geschäftsführung: David Faller; Sitz der Gesellschaft: Böblingen; Registergericht: Amtsgericht Stuttgart, HRB 243294
-IBM Data Privacy Statement: https://www.ibm.com/privacy/
+diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+index 728ecda6e8d4..91e7185dd5de 100644
+--- a/kernel/trace/ftrace.c
++++ b/kernel/trace/ftrace.c
+@@ -419,7 +419,8 @@ struct ftrace_profile {
+ 	unsigned long			counter;
+ #ifdef CONFIG_FUNCTION_GRAPH_TRACER
+ 	unsigned long long		time;
+-	unsigned long long		time_squared;
++	unsigned long long		time_square_sum;
++	unsigned long long		saved_stddev;
+ #endif
+ };
+ 
+@@ -560,22 +561,24 @@ static int function_stat_show(struct seq_file *m, void *v)
+ 	seq_puts(m, "    ");
+ 
+ 	/* Sample standard deviation (s^2) */
+-	if (rec->counter <= 1)
++	if (rec->counter <= 1 || !rec->time)
+ 		stddev = 0;
++	else if (div64_ul(rec->time * rec->time, rec->time) != rec->time)
++		stddev = rec->saved_stddev;
+ 	else {
+ 		/*
+-		 * Apply Welford's method:
+-		 * s^2 = 1 / (n * (n-1)) * (n * \Sum (x_i)^2 - (\Sum x_i)^2)
++		 * A formula for calculating the variance is:
++		 * s^2 = (\Sum (x_i)^2 - (\Sum x_i)^2 / n) / (n - 1)
+ 		 */
+-		stddev = rec->counter * rec->time_squared -
+-			 rec->time * rec->time;
+-
++		stddev = rec->time_square_sum -
++			 div64_ul(rec->time * rec->time, rec->counter);
++		stddev = div64_ul(stddev, rec->counter - 1);
+ 		/*
+ 		 * Divide only 1000 for ns^2 -> us^2 conversion.
+ 		 * trace_print_graph_duration will divide 1000 again.
+ 		 */
+-		stddev = div64_ul(stddev,
+-				  rec->counter * (rec->counter - 1) * 1000);
++		stddev = div64_ul(stddev, 1000);
++		rec->saved_stddev = stddev;
+ 	}
+ 
+ 	trace_seq_init(&s);
+@@ -888,7 +891,7 @@ static void profile_graph_return(struct ftrace_graph_ret *trace,
+ 	rec = ftrace_find_profiled_func(stat, trace->func);
+ 	if (rec) {
+ 		rec->time += calltime;
+-		rec->time_squared += calltime * calltime;
++		rec->time_square_sum += calltime * calltime;
+ 	}
+ }
 
