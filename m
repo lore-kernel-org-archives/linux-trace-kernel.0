@@ -1,119 +1,104 @@
-Received: from mx0b-00206402.pphosted.com (mx0b-00206402.pphosted.com [148.163.152.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B5A31DAC95;
-	Wed,  5 Feb 2025 16:36:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.152.16
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.2])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 853057083A;
+	Wed,  5 Feb 2025 18:02:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.2
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738773388; cv=none; b=Vv9lO7D7hmk+yrk5qnJQnKNH0zwi3ZZSrQqX0Ce8XNagW1Sx9UzWD7stdNQgB4vDrpO/rqOyg4Xv0wDLjzPcY13H+DiVFPhwbknt3NTFdYIWwrXYPNEQmHOdtS+Q7XAJSb6PQ+mXzS2QHP8yl4r//KblKT9yoVW2XFGDRD7tm44=
+	t=1738778575; cv=none; b=BnLaNGK/wplZ+sXs0TkrKaDn+6M7lS3AkYzES/d6iAXXGz916s4s/kT7KznPhEpg5c7cwra2raUGkje005OrGpwdzhG/sbT5GLgi1UE0ilxfusTPrvFRxHddythiO116c/J1w+zN1b16VC116ODr41GZUkSmC0AR4cl4pQWF0fg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738773388; c=relaxed/simple;
-	bh=KQAjdNXPn0DfadHsCm5XjQMXRiXHNgA7KxiZn4px+3o=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=XRN1k6SwbqPu8djkomJyb0EyCRP6d5ISSuhqfMktTtYuxgrUOgUcbiReyXFvhHMY19WiEIyb9dd4UMMEk97If2qQeQa0N8jIZhBkPQR9SGffDwqODFW5E0/kqyQPgYXfT3+arvCVUuehY/t3xPRc/h9zqieLThb3fkB+akjL4tw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=crowdstrike.com; spf=pass smtp.mailfrom=crowdstrike.com; dkim=pass (2048-bit key) header.d=crowdstrike.com header.i=@crowdstrike.com header.b=YHeV919j; arc=none smtp.client-ip=148.163.152.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=crowdstrike.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=crowdstrike.com
+	s=arc-20240116; t=1738778575; c=relaxed/simple;
+	bh=PHU/NfVcsttQ72o5pN+qEZLaYIsGQyu0oU3I4xzGJvA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=IRcu+xGtBykqhWkOXw6DE1tkKs6EmIND98coA1gzM8la+Drw0hVm4dVz8+JRBOAWVMzdwsnqiKQGp9dH7xlUDuW9BIHYzyu2AqdN7sc/sT+DsBACMTDF3VIgGjwNqomLQHmwjseblm7tRQRrkUJ40IazueggY2lu32udA9aeHKI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=hAaEEkGY; arc=none smtp.client-ip=220.197.31.2
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=crowdstrike.com header.i=@crowdstrike.com header.b="YHeV919j"
-Received: from pps.filterd (m0354655.ppops.net [127.0.0.1])
-	by mx0b-00206402.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 515FQCIx024083;
-	Wed, 5 Feb 2025 16:00:04 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crowdstrike.com;
-	 h=cc:content-id:content-transfer-encoding:content-type:date
-	:from:in-reply-to:message-id:mime-version:references:subject:to;
-	 s=default; bh=KQAjdNXPn0DfadHsCm5XjQMXRiXHNgA7KxiZn4px+3o=; b=Y
-	HeV919jwJAKBcZ9DZYoJZ746xXdNm2KJ++Nw6WaGqiiyhKDtNfUghTJeY3x/Qdm1
-	lPWXA1t9+oHuXjf8cHgfQFjGwqxzeOhJpV7fzoOSniIPt31uwiTe9145bBzlynWl
-	B1pDyp8D9OLUl38VgOHHHQ6QiUTE1GZrTm2iPvXQWn2qZgzIj2tDY+wM8LyHho4a
-	R945pTtGxTRlhDd7gTWdJiB7wjhwB1X8KYVltOhU6bPZ38VBLAVH1J2HUE5ZgN2x
-	8zqbBuD1EX58SrGkQJNzczp6kffEQ1lN8YnFH2Yzu5PuqFNAnOAaorTzcWLBaXnE
-	q545s4quSSUrqQNnRl2VA==
-Received: from mail.crowdstrike.com (dragosx.crowdstrike.com [208.42.231.60] (may be forged))
-	by mx0b-00206402.pphosted.com (PPS) with ESMTPS id 44mammg3t0-2
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 05 Feb 2025 16:00:04 +0000 (GMT)
-Received: from 04WPEXCH006.crowdstrike.sys (10.100.11.70) by
- 04WPEXCH005.crowdstrike.sys (10.100.11.69) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Wed, 5 Feb 2025 16:00:00 +0000
-Received: from 04WPEXCH006.crowdstrike.sys ([fe80::a97d:6ad:c239:d138]) by
- 04WPEXCH006.crowdstrike.sys ([fe80::a97d:6ad:c239:d138%11]) with mapi id
- 15.02.1544.009; Wed, 5 Feb 2025 16:00:00 +0000
-From: Martin Kelly <martin.kelly@crowdstrike.com>
-To: "rostedt@goodmis.org" <rostedt@goodmis.org>
-CC: "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
-        "masahiroy@kernel.org"
-	<masahiroy@kernel.org>,
-        "zhengyejian1@huawei.com" <zhengyejian1@huawei.com>,
-        "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>,
-        "mhiramat@kernel.org" <mhiramat@kernel.org>,
-        "mathieu.desnoyers@efficios.com"
-	<mathieu.desnoyers@efficios.com>,
-        "akpm@linux-foundation.org"
-	<akpm@linux-foundation.org>,
-        "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>,
-        "nathan@kernel.org" <nathan@kernel.org>,
-        "nicolas@fjasle.eu" <nicolas@fjasle.eu>,
-        "christophe.leroy@csgroup.eu"
-	<christophe.leroy@csgroup.eu>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "peterz@infradead.org" <peterz@infradead.org>,
-        "linux-trace-kernel@vger.kernel.org" <linux-trace-kernel@vger.kernel.org>,
-        "linux-kbuild@vger.kernel.org" <linux-kbuild@vger.kernel.org>,
-        "jpoimboe@redhat.com" <jpoimboe@redhat.com>
-Subject: Re: Re: [PATCH v2 16/16] scripts/sorttable: ftrace: Do not add weak
- functions to available_filter_functions
-Thread-Topic: Re: [PATCH v2 16/16] scripts/sorttable: ftrace: Do not add weak
- functions to available_filter_functions
-Thread-Index: AQHbd+cCrpRl49KJ0EiNa9urqmBbFA==
-Date: Wed, 5 Feb 2025 16:00:00 +0000
-Message-ID: <c4c7f0931742c8636a82f2ae3b3c492c93266c93.camel@crowdstrike.com>
-References: <20250102232609.529842248@goodmis.org>
-	 <20250102232651.347490863@goodmis.org>
-	 <aba52935dc06a1fe69f05309f5d9828a297ad787.camel@crowdstrike.com>
-	 <20250204193559.1f87b4ea@gandalf.local.home>
-In-Reply-To: <20250204193559.1f87b4ea@gandalf.local.home>
-Accept-Language: en-US, en-GB
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-x-disclaimer: USA
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <E0BB0A2C680BEB4980905CE6486592F2@crowdstrike.sys>
-Content-Transfer-Encoding: base64
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="hAaEEkGY"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:Subject:Date:Message-ID:MIME-Version:
+	Content-Type; bh=Dml9wWDOyFyVC02psZGYm1mepRSxmmbQx2D3qzg//A0=;
+	b=hAaEEkGYIbhafCw4aHZA4Rrw1HRTB4rYUEcMjPRCufvAOHgAgeTFeb3GsyHxvF
+	dQEcM2/wIovt++wKIFwtAmqD/mTs/I0Y7fQjyK610WNXQ1N9pq9TOFkpvr+uLH8k
+	4DFbiBaHsfgtXaeO4PWK6VYpEFIdHipJz6GL+MMCu1K9I=
+Received: from localhost.localdomain (unknown [])
+	by gzga-smtp-mtada-g0-2 (Coremail) with SMTP id _____wB3QQqCp6NniA_EKA--.28624S2;
+	Thu, 06 Feb 2025 02:01:39 +0800 (CST)
+From: Haiyue Wang <haiyuewa@163.com>
+To: x86@kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Cc: samitolvanen@google.com,
+	Haiyue Wang <haiyuewa@163.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	linux-kernel@vger.kernel.org (open list:FUNCTION HOOKS (FTRACE))
+Subject: [PATCH v1] ftrace: Fix compile error when CONFIG_GENDWARFKSYMS is enabled
+Date: Thu,  6 Feb 2025 02:00:42 +0800
+Message-ID: <20250205180116.88644-1-haiyuewa@163.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Proofpoint-ORIG-GUID: 6e_pcGkFVcXTbb8vvYC3lg2INop8zK62
-X-Authority-Analysis: v=2.4 cv=NvQrc9dJ c=1 sm=1 tr=0 ts=67a38b04 cx=c_pps a=1d8vc5iZWYKGYgMGCdbIRA==:117 a=1d8vc5iZWYKGYgMGCdbIRA==:17 a=xqWC_Br6kY4A:10 a=EjBHVkixTFsA:10 a=IkcTkHD0fZMA:10 a=T2h4t0Lz3GQA:10 a=pl6vuDidAAAA:8 a=lqAKrMhzrGgqgS63txUA:9
- a=QEXdDO2ut3YA:10
-X-Proofpoint-GUID: 6e_pcGkFVcXTbb8vvYC3lg2INop8zK62
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-05_06,2025-02-05_03,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 phishscore=0
- bulkscore=0 priorityscore=1501 mlxscore=0 clxscore=1015 impostorscore=0
- malwarescore=0 lowpriorityscore=0 adultscore=0 spamscore=0 mlxlogscore=949
- classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2501170000
- definitions=main-2502050124
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wB3QQqCp6NniA_EKA--.28624S2
+X-Coremail-Antispam: 1Uf129KBjvJXoWxJr18Kry7Cr43GF43Zw1kKrg_yoW8ArWfpF
+	97Cr1kGay5uasrK34Du34Fvw1Uuw4DC34ayry2gr90vF42qFykGrsF9wnrCry7Ja98ta4F
+	gay3uFn8GF1UZw7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0zEEdgJUUUUU=
+X-CM-SenderInfo: 5kdl53xhzdqiywtou0bp/1tbiYBfqa2ejLSUfNwABsT
 
-T24gVHVlLCAyMDI1LTAyLTA0IGF0IDE5OjM1IC0wNTAwLCBTdGV2ZW4gUm9zdGVkdCB3cm90ZToN
-Cj4gT24gV2VkLCA1IEZlYiAyMDI1IDAwOjEzOjI2ICswMDAwDQo+IE1hcnRpbiBLZWxseSA8bWFy
-dGluLmtlbGx5QGNyb3dkc3RyaWtlLmNvbT4gd3JvdGU6DQo+IA0KPiA+IEknbSBub3QgbmVjZXNz
-YXJpbHkgYSBxdWFsaWZpZWQgcmV2aWV3ZXIgZm9yIHRoaXMgcGF0Y2gsIGJ1dCBJJ20NCj4gPiB2
-ZXJ5DQo+ID4gaW50ZXJlc3RlZCBpbiBzZWVpbmcgaXQgb3IgYSBzaW1pbGFyIHNvbHV0aW9uIGdl
-dCBtZXJnZWQsIGFzIHRoZQ0KPiA+IGltcGFjdA0KPiA+IHdoZW4gaXQgaGl0cyBpcyBzaWduaWZp
-Y2FudCAoc2lsZW50IGZhaWx1cmUpIGFuZCBub3QgZWFzeSB0byBkZXRlY3QNCj4gPiBvcg0KPiA+
-IHdvcmsgYXJvdW5kLiBJcyB0aGVyZSBhbnkgb2JzdGFjbGUgbGVmdCBpbiBnZXR0aW5nIHRoaXMg
-b25lIG1lcmdlZA0KPiA+IG90aGVyIHRoYW4gZnVydGhlciByZXZpZXdzPw0KPiANCj4gQSB2ZXJz
-aW9uIG9mIHRoZSBwYXRjaGVzIDEtMTQgd2FzIG1lcmdlZCB0aGlzIG1lcmdlIHdpbmRvdywgd2l0
-aCBzb21lDQo+IHR3ZWFrcy4gSSBwbGFuIG9uIHJlYmFzaW5nIHBhdGNoZXMgMTUgYW5kIDE2IG9u
-IHRvcCBvZiB0aGF0IGFuZA0KPiByZXN1Ym1pdHRpbmcuIEkganVzdCBoYXZlIHNvbWUgb3RoZXIg
-dGhpbmdzIEknbSBmaW5pc2hpbmcgdXAuDQo+IA0KPiBUaGFua3MsDQo+IA0KPiAtLSBTdGV2ZQ0K
-DQpBd2Vzb21lLCB0aGFua3MhDQo=
+When switching from CONFIG_GENKSYMS to CONFIG_GENDWARFKSYMS enabled, the
+build is failed:
+
+  AS      arch/x86/entry/entry.o
+In file included from ./arch/x86/include/asm/asm-prototypes.h:2,
+                 from <stdin>:3:
+./arch/x86/include/asm/ftrace.h: In function ‘arch_ftrace_get_symaddr’:
+./arch/x86/include/asm/ftrace.h:46:21: error: implicit declaration of function ‘get_kernel_nofault’ [-Werror=implicit-function-declaration]
+   46 |                 if (get_kernel_nofault(instr, (u32 *)(fentry_ip - ENDBR_INSN_SIZE)))
+      |                     ^~~~~~~~~~~~~~~~~~
+cc1: some warnings being treated as errors
+
+File "asm-prototypes.h" is added to entry.S by 'scripts/Makefile.build',
+adding the missed declaration header file can also fix the error:
+
+ getasmexports =                                                        \
+    { echo "\#include <linux/kernel.h>" ;                               \
+      echo "\#include <linux/string.h>" ;                               \
++     echo "\#include <linux/uaccess.h>";                               \
+      echo "\#include <asm/asm-prototypes.h>" ;                         \
+      $(call getexportsymbols,EXPORT_SYMBOL(\1);) ; }
+
+Fixes: 2bc56fdae1ba ("ftrace: Add ftrace_get_symaddr to convert fentry_ip to symaddr")
+
+Signed-off-by: Haiyue Wang <haiyuewa@163.com>
+---
+ arch/x86/include/asm/ftrace.h | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/arch/x86/include/asm/ftrace.h b/arch/x86/include/asm/ftrace.h
+index f9cb4d07df58..063ce70837bb 100644
+--- a/arch/x86/include/asm/ftrace.h
++++ b/arch/x86/include/asm/ftrace.h
+@@ -34,6 +34,10 @@ static inline unsigned long ftrace_call_adjust(unsigned long addr)
+ 	return addr;
+ }
+ 
++#ifdef CONFIG_X86_KERNEL_IBT
++#include <linux/uaccess.h>
++#endif
++
+ static inline unsigned long arch_ftrace_get_symaddr(unsigned long fentry_ip)
+ {
+ #ifdef CONFIG_X86_KERNEL_IBT
+-- 
+2.48.1
+
