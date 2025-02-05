@@ -1,133 +1,204 @@
-Received: from forwardcorp1b.mail.yandex.net (forwardcorp1b.mail.yandex.net [178.154.239.136])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B18022B59A;
-	Wed,  5 Feb 2025 10:42:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.154.239.136
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDE0B22A4FC;
+	Wed,  5 Feb 2025 11:02:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738752162; cv=none; b=mxNJppqwqMQrsEb5KTJ9iZYxVjQILnTYDCvZLX6pJLwU5ZYjZX2rP58/iB4Z3xsklkCspnrGt4LBBygs5kpp0DDTAeFxw02Je/0G5rlydHas8Fgc3llQYf3PkjV3XMjxkbW750ri9On9By+GMpti8lP6NxZDSCNY9Eh2mnRvNGY=
+	t=1738753344; cv=none; b=LkknX81Ec+3Y6kizfvaf1LEyM29yIhmwAMtimmomPgqZ3xkg+OGhajdnZ5TEXUOaa5bel4WXHUMtmdSEY5MY68sj9C6dyeQbAhDgeWedGGAGxOUZhTKL/dABwPYCpcXpmP5c+KoxLQmOhkC4tbNK0K54w57CxBwqLOk813021ps=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738752162; c=relaxed/simple;
-	bh=LRquYjF41Qs3ozkMj7DtLWEVyZ1h1D3hkjDaHZat6z8=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=iTBrAmmUv39RqIn0VigqNa4z8nQufo5h7gg5WgSJ96Dc+XzU8/mm8f9PXoqGq6DP4cxKI5Hvag1+KZnrHCYxoDnbBO1SPhFCJaAyjkCwD69SJt1rBrg4NMaTZPK7YCKoKkoKgJO2mInVEXACTK9UNVQ0aqH3WQFJyGVhBVaq68s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex-team.ru; spf=pass smtp.mailfrom=yandex-team.ru; dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b=cnZHsYa/; arc=none smtp.client-ip=178.154.239.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex-team.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yandex-team.ru
+	s=arc-20240116; t=1738753344; c=relaxed/simple;
+	bh=21iZlA3+pBUERxi/Phwgzt2HE4TTIA44xavTnIvfDhg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=dgEcNvunNB4NDrcf+tjuBz6kA0Vq5enMRQUI/Mj7xj/ORlyOKJMJ73DakZlIZyCCOYNJTmAM1aD9Nker+fKsPby/hMrARUnm4Wfqur5UMz9D/y1JiiOs2sNJNw0hgkIDYmEgYQpDT8i1rcfuSYlqT6ZKv41gv8RwpBd7gzc7Tr0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=rFPyKt5N; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="cnZHsYa/"
-Received: from mail-nwsmtp-smtp-corp-canary-81.sas.yp-c.yandex.net (mail-nwsmtp-smtp-corp-canary-81.sas.yp-c.yandex.net [IPv6:2a02:6b8:c10:4a4:0:640:7b31:0])
-	by forwardcorp1b.mail.yandex.net (Yandex) with ESMTPS id 19A0360B8B;
-	Wed,  5 Feb 2025 13:40:33 +0300 (MSK)
-Received: from kniv-nix.yandex-team.ru (unknown [2a02:6b8:b081:5::1:34])
-	by mail-nwsmtp-smtp-corp-canary-81.sas.yp-c.yandex.net (smtpcorp/Yandex) with ESMTPSA id TdiCnH3Ij4Y0-luTAzeim;
-	Wed, 05 Feb 2025 13:40:32 +0300
-X-Yandex-Fwd: 1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru;
-	s=default; t=1738752032;
-	bh=Pt9TK34WEMC8Wuyn6NT+uWaQA66Oaj1A7lok/fuTYG8=;
-	h=Message-Id:Date:In-Reply-To:Cc:Subject:References:To:From;
-	b=cnZHsYa/t5/roPh+OSek1SW2AuObAcdSlzeHzwt6tpYnkMSmzfXsCcCbGGWeDmVzd
-	 ttoiFQuvyM/lpN7Pp+Px0/7aqroqQVSvkvgo7Sxon7jUPYsYZ/PNoWwe20BM7mzCq9
-	 D06U+B5CiXzEFXUJ8CQV4KerWlXThoKEJp16oKvc=
-Authentication-Results: mail-nwsmtp-smtp-corp-canary-81.sas.yp-c.yandex.net; dkim=pass header.i=@yandex-team.ru
-From: Nikolay Kuratov <kniv@yandex-team.ru>
-To: linux-kernel@vger.kernel.org
-Cc: linux-trace-kernel@vger.kernel.org,
-	Wen Yang <wenyang@linux.alibaba.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	kniv@yandex-team.ru
-Subject: Re: [PATCH] ftrace: Avoid potential division by zero in function_stat_show()
-Date: Wed,  5 Feb 2025 13:39:29 +0300
-Message-Id: <20250205103929.1538065-1-kniv@yandex-team.ru>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250204194820.7ef50d96@gandalf.local.home>
-References: <20250204194820.7ef50d96@gandalf.local.home>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="rFPyKt5N"
+Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5153ZgaO028577;
+	Wed, 5 Feb 2025 11:02:01 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=rIsNwe
+	JAGDoYvayRmwL0H3ULsnZKE6A2R6leZJKDpaQ=; b=rFPyKt5NKlIDZPhbtEkiLi
+	99s6/XGfhLSDsCAQksAJhbJSF99E6B/Dv9hgYmUUTrLFeWUkmLl28gNSCZ4pigs8
+	K64bJTiNejHnCUxPHOrJ24hpKdvERkzX+DJ371iX8+pHEQ1WfexlWV2giQqriK8w
+	Hbl0+dDnkeoKFu0m/En5R4ztUNLkx42249TXKCzKh05DxV5Nz6+XDBY8c7PMc4z2
+	WYIGmdOaqRVWwN4etEEwwUpYoI3UBWlPcjkrl+Sge45f3gIWsp3ThxQGp/NMWvFt
+	UnutCCp49/em8xhWyuCvhE/YM17XLMWabdAek9AFOHN1SzbXVTsQj/gtX7J4X5mQ
+	==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44knqtvmv9-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 05 Feb 2025 11:02:01 +0000 (GMT)
+Received: from m0356516.ppops.net (m0356516.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 515AmEmW003041;
+	Wed, 5 Feb 2025 11:02:00 GMT
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44knqtvmv6-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 05 Feb 2025 11:02:00 +0000 (GMT)
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 515947qx006543;
+	Wed, 5 Feb 2025 11:01:59 GMT
+Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 44hyekgad3-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 05 Feb 2025 11:01:59 +0000
+Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
+	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 515B1vq735128056
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 5 Feb 2025 11:01:57 GMT
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 4306B20063;
+	Wed,  5 Feb 2025 11:01:57 +0000 (GMT)
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 551CB20043;
+	Wed,  5 Feb 2025 11:01:56 +0000 (GMT)
+Received: from [9.171.163.71] (unknown [9.171.163.71])
+	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Wed,  5 Feb 2025 11:01:56 +0000 (GMT)
+Message-ID: <0837be81-ec2e-4dac-bc42-91c626c22b9a@linux.ibm.com>
+Date: Wed, 5 Feb 2025 12:01:55 +0100
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 17/39] unwind_user/sframe: Add support for reading
+ .sframe headers
+To: Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+        Indu Bhagat <indu.bhagat@oracle.com>,
+        Josh Poimboeuf <jpoimboe@kernel.org>
+Cc: x86@kernel.org, Peter Zijlstra <peterz@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>, Ingo Molnar <mingo@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        linux-perf-users@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+        linux-toolchains@vger.kernel.org, Jordan Rome <jordalgo@meta.com>,
+        Sam James <sam@gentoo.org>, linux-trace-kernel@vger.kernel.org,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Florian Weimer <fweimer@redhat.com>, Andy Lutomirski <luto@kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>, Weinan Liu <wnliu@google.com>
+References: <cover.1737511963.git.jpoimboe@kernel.org>
+ <f27e8463783febfa0dabb0432a3dd6be8ad98412.1737511963.git.jpoimboe@kernel.org>
+ <CAEf4BzbQGipBq-Ls1=n49nyNoX941Ka13HgXAXLTzGAo9wckAA@mail.gmail.com>
+ <20250124192159.ypvqwoqjvhasamev@jpoimboe>
+ <47f1e244-992f-44fe-a0a5-6c271e9c719e@oracle.com>
+ <CAEf4BzZaWrscT1HrcUJkz45iMMuyCcA6ivfMffeHpxf=LmmXRg@mail.gmail.com>
+From: Jens Remus <jremus@linux.ibm.com>
+Content-Language: en-US
+Organization: IBM Deutschland Research & Development GmbH
+In-Reply-To: <CAEf4BzZaWrscT1HrcUJkz45iMMuyCcA6ivfMffeHpxf=LmmXRg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: TIaRcJkInjtllFxr2tjyWifseTZRUQWg
+X-Proofpoint-ORIG-GUID: n0QAURNQRXXTJmkGluYOqBZgqxUv06jy
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-05_04,2025-02-05_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ adultscore=0 spamscore=0 lowpriorityscore=0 impostorscore=0 suspectscore=0
+ clxscore=1015 mlxlogscore=999 phishscore=0 malwarescore=0 mlxscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2501170000 definitions=main-2502050088
 
-Your approach should prevent both zero division and overflow in the
-denominator. We also should consider that the numerator
+On 28.01.2025 02:10, Andrii Nakryiko wrote:
 
-> stddev = counter * rec->time_squared - rec->stddev_time * rec->stddev_time;
+> So, currently in v2, FREs within FDEs use an array-of-structs layout.
+> If we use preudo-C type definitions, it would be something like this
+> for FDE + its FREs:
+> 
+> struct FDE_and_FREs {
+>      struct sframe_func_desc_entry fde_metadata;
+> 
+>      union FRE {
+>          struct FRE8 {
+>              u8 sfre_start_address;
+>              u8 sfre_info;
+>              u8|u16|u32 offsets[M];
+>          }
+>          struct FRE16 {
+>              u16 sfre_start_address;
+>              u16 sfre_info;
+>              u8|u16|u32 offsets[M];
+>          }
+>          struct FRE32 {
+>              u32 sfre_start_address;
+>              u32 sfre_info;
+>              u8|u16|u32 offsets[M];
+>          }
+>      } fres[N] __packed;
+> };
+> 
+> where all fres[i]s are one of those FRE8/FRE16/FRE32, so start
+> addresses have the same size, but each FRE has potentially different
+> offsets sizing, so there is no common alignment, and so everything has
+> to be packed and unaligned.
 
-may overflow too. Suppose 1000 ns per call case. On each function execution
-time_squared would get additional 10^6. So for 32-bit and
-MAX_STDDEV_COUNTER = 2072 we would have
-counter * rec->time_squared = 2071 * (2071 * 10^6) = 4289041000000,
-a 42-bit number.
+Just for clarification of the SFrame V2 format, as there may be some
+misconception. Using pseudo-C type definition:
 
-It looks like overflow prevention here is not viable with macro constants,
-since function execution time is dynamic in nature.
+struct sframe_fre8 {
+	u8 sfre_start_address;
+	u8 sfre_info;
+	s8|s16|s32 offsets[M];
+};
+struct sframe_fre16 {
+	u16 sfre_start_address;
+	u8 sfre_info;
+	s8|s16|s32 offsets[M];
+};
+struct sframe_fre32 {
+	u32 sfre_start_address;
+	u8 sfre_info;
+	s8|s16|s32 offsets[M];
+};
 
-My suggestion is to rewrite formula such as we perform division earlier
-and avoid overflow checks as much as possible. Note that doing divisions
-earlier may result in precision loss, but I think that is acceptable since
-rec->time is nanoseconds precision. Also this allows us to not care about
-counter overflow at all, because expression rec->time * rec->time will always
-overflow earlier than both counter and rec->time_square_sum. Renamed
-time_squared into time_square_sum just to clarify.
+struct sframe_section {
+	/* Headers. */
+	struct sframe_preamble preamble;
+	struct sframe_header header;
+	struct sframe_auxiliary_header auxhdr;
 
-diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-index 728ecda6e8d4..91e7185dd5de 100644
---- a/kernel/trace/ftrace.c
-+++ b/kernel/trace/ftrace.c
-@@ -419,7 +419,8 @@ struct ftrace_profile {
- 	unsigned long			counter;
- #ifdef CONFIG_FUNCTION_GRAPH_TRACER
- 	unsigned long long		time;
--	unsigned long long		time_squared;
-+	unsigned long long		time_square_sum;
-+	unsigned long long		saved_stddev;
- #endif
- };
- 
-@@ -560,22 +561,24 @@ static int function_stat_show(struct seq_file *m, void *v)
- 	seq_puts(m, "    ");
- 
- 	/* Sample standard deviation (s^2) */
--	if (rec->counter <= 1)
-+	if (rec->counter <= 1 || !rec->time)
- 		stddev = 0;
-+	else if (div64_ul(rec->time * rec->time, rec->time) != rec->time)
-+		stddev = rec->saved_stddev;
- 	else {
- 		/*
--		 * Apply Welford's method:
--		 * s^2 = 1 / (n * (n-1)) * (n * \Sum (x_i)^2 - (\Sum x_i)^2)
-+		 * A formula for calculating the variance is:
-+		 * s^2 = (\Sum (x_i)^2 - (\Sum x_i)^2 / n) / (n - 1)
- 		 */
--		stddev = rec->counter * rec->time_squared -
--			 rec->time * rec->time;
--
-+		stddev = rec->time_square_sum -
-+			 div64_ul(rec->time * rec->time, rec->counter);
-+		stddev = div64_ul(stddev, rec->counter - 1);
- 		/*
- 		 * Divide only 1000 for ns^2 -> us^2 conversion.
- 		 * trace_print_graph_duration will divide 1000 again.
- 		 */
--		stddev = div64_ul(stddev,
--				  rec->counter * (rec->counter - 1) * 1000);
-+		stddev = div64_ul(stddev, 1000);
-+		rec->saved_stddev = stddev;
- 	}
- 
- 	trace_seq_init(&s);
-@@ -888,7 +891,7 @@ static void profile_graph_return(struct ftrace_graph_ret *trace,
- 	rec = ftrace_find_profiled_func(stat, trace->func);
- 	if (rec) {
- 		rec->time += calltime;
--		rec->time_squared += calltime * calltime;
-+		rec->time_square_sum += calltime * calltime;
- 	}
- }
+	/* FDEs. */
+	struct sframe_fde fdes[N_FDE];
+
+	/* FRE8s / FRE16s / FRE32s per FDE. */
+	struct sframe_fre{8|16|32} fres_fde1[N_FRE_FDE1] __packed;
+	...
+	struct sframe_fre{8|16|32} fres_fdeN[N_FRE_FDEN] __packed;
+};
+
+Where:
+- fdes[] can be binary searched: All fdes[i] are of equal size and
+   sorted on start address.
+- Each fdes[i] points at its fres_fdei[].
+- fres_fdei[] cannot be binary searched: For each fdes[i] they are
+   one of those FRE8/FRE16/FRE32, so start addresses have the same
+   size, but each FRE has potentially different offsets sizing, so
+   there is no common alignment, and so everything has to be packed
+   and unaligned.
+
+Regards,
+Jens
+-- 
+Jens Remus
+Linux on Z Development (D3303)
++49-7031-16-1128 Office
+jremus@de.ibm.com
+
+IBM
+
+IBM Deutschland Research & Development GmbH; Vorsitzender des Aufsichtsrats: Wolfgang Wendt; Geschäftsführung: David Faller; Sitz der Gesellschaft: Böblingen; Registergericht: Amtsgericht Stuttgart, HRB 243294
+IBM Data Privacy Statement: https://www.ibm.com/privacy/
 
