@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3F672F43;
-	Wed,  5 Feb 2025 00:57:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64DDD78F4C;
+	Wed,  5 Feb 2025 02:25:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738717033; cv=none; b=KuO6kgVp6DBHKBNRLWic+HroBohz/YvICYa+hb3+KrE9MIMe4qgHxoGqUdPWFvq1zQy0oU1fEAOB8kZvGMH6LwuBch5CI/qHw/Zwo+xSoaBBDHqoZCNr9OF5zFwh+wgzqZXGxtdd6C2K35hddTQfy+ycTJ7kQAOGtp5IdD7OKHM=
+	t=1738722304; cv=none; b=NHgNqLV2qE6fAeFbL2xeoxib5zV9yV2p7kcXMyyx8Ipa8k3oCw4ekKXo+kxSVLUqKVuqm0sBjSONqnUon7KDoYBYpskbsmVgnSHoa2Q8sZC9oS4s+O2wd5g0bgygLhmWgHBbvb//dRXuxX1KdDVOOdQOil0NX+DUB4LeTq65mxQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738717033; c=relaxed/simple;
-	bh=B7z0x5seqAXVffdy9ePk/hSVwqrIAlxLk9eZJItykE8=;
+	s=arc-20240116; t=1738722304; c=relaxed/simple;
+	bh=pufqpysQKd95ciAQ8Ar90FFziPH/uymLmauofbzInFU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=j0x2/z+Uli24GhvdSGtcdMHajAzP8lOfFdCmO+QiAkb47gv6DCr1vO3HL7D2RMXpHnzhWUCJ9kQ9bT6peXIT76/dA6gahPHusFqaFHEh+glaTHVfQ3aqyKoxRLIVLqs2SiBjLPaixtFp71PlOsM01orK6PWlw7Daka/7s56hdrQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Geqpiw4w; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=gAPq/lndGgGk4wAilPgHyrkzKyTyd5wNRuqnQrLbGgupP+YG4vgtRx/biUv6qXkQS5WzyTW8CZU1uSnqR1WKWETthH8kfyHEYUra+Xs8QmaNar9o8I0na+LbmoAXn6A3iTyn+otqoF3KDK3ffOFziZNPpieabDfiZItC0o+hekE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=q4K1CC0D; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Geqpiw4w"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 29454C4CEDF;
-	Wed,  5 Feb 2025 00:57:12 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="q4K1CC0D"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 980CAC4CEDF;
+	Wed,  5 Feb 2025 02:25:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738717033;
-	bh=B7z0x5seqAXVffdy9ePk/hSVwqrIAlxLk9eZJItykE8=;
+	s=k20201202; t=1738722303;
+	bh=pufqpysQKd95ciAQ8Ar90FFziPH/uymLmauofbzInFU=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Geqpiw4wAXIV6oo0v1qkE2bAZOcLFwMrC/iJGe9hClmdvvU95V5xUyaQw/Ns9mKhr
-	 u4RRiVZCYaG4bWC+jZshNVa+pZ/W75/59p7WMnQ35SWP2cc9IfkMrciqO257AeIamb
-	 p6TpyMmRvXlZhIPMIWMT787U/JLpZ293D4DGkyid4ubdPmVi2KDgGp3gLCNcqL+y/x
-	 y9HlNeV5jmLUSJbc6L9jHCDiZhW+qu46KIYJliEYju+AxiR+6tPN4m6xC/280Cxzx6
-	 gEUGNNta0qsDLSr2DLvoJkhX6k2FKNjW93FtLk5PSd8n5wggEVuYCYbCilHe1Q6kyS
-	 Qh4xyyF6lDxrw==
-Date: Tue, 4 Feb 2025 16:57:10 -0800
+	b=q4K1CC0DtiPBGVOrymzduhv0rmPRb0lHU5vZfwsbv/XLxlG+q1KZgGDOTNyzfmtVx
+	 trkPEYMgCwkY+AQHNuMGP0v3Tv2t6EvUW+VDJWhzwQQF3OXeBPaZWsEqF7wZqPbVOg
+	 V5bSH5km3qvNnkylN+D8UDGbovBnTVRFuNkPnkOmuLxMTVYt1m/QsEyQpMIiyys74S
+	 rSuUbpZbKeJHOdko/qXNlowP0ANy/IEHddNCnMKijL1xMTf0eSnHR4NwMP9QeKshwc
+	 tZwiDNafA39SKqlIiHYwwxoDGG1Kz+sZaCMlMom2Pjh1Ni3vueaQxzK0sWyjlR1efe
+	 IVpSae6kOXUow==
+Date: Tue, 4 Feb 2025 18:25:00 -0800
 From: Josh Poimboeuf <jpoimboe@kernel.org>
-To: Indu Bhagat <indu.bhagat@oracle.com>
-Cc: Andrii Nakryiko <andrii.nakryiko@gmail.com>, x86@kernel.org,
-	Peter Zijlstra <peterz@infradead.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Peter Zijlstra <peterz@infradead.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, x86@kernel.org,
 	Ingo Molnar <mingo@kernel.org>,
 	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
+	linux-kernel@vger.kernel.org, Indu Bhagat <indu.bhagat@oracle.com>,
+	Mark Rutland <mark.rutland@arm.com>,
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
 	Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
 	Ian Rogers <irogers@google.com>,
@@ -42,23 +42,25 @@ Cc: Andrii Nakryiko <andrii.nakryiko@gmail.com>, x86@kernel.org,
 	linux-perf-users@vger.kernel.org, Mark Brown <broonie@kernel.org>,
 	linux-toolchains@vger.kernel.org, Jordan Rome <jordalgo@meta.com>,
 	Sam James <sam@gentoo.org>, linux-trace-kernel@vger.kernel.org,
+	Andrii Nakryiko <andrii.nakryiko@gmail.com>,
 	Jens Remus <jremus@linux.ibm.com>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
 	Florian Weimer <fweimer@redhat.com>,
 	Andy Lutomirski <luto@kernel.org>,
 	Masami Hiramatsu <mhiramat@kernel.org>,
 	Weinan Liu <wnliu@google.com>
-Subject: Re: [PATCH v4 17/39] unwind_user/sframe: Add support for reading
- .sframe headers
-Message-ID: <20250205005710.35wdzvobyhm6zyda@jpoimboe>
-References: <cover.1737511963.git.jpoimboe@kernel.org>
- <f27e8463783febfa0dabb0432a3dd6be8ad98412.1737511963.git.jpoimboe@kernel.org>
- <CAEf4BzbQGipBq-Ls1=n49nyNoX941Ka13HgXAXLTzGAo9wckAA@mail.gmail.com>
- <20250124192159.ypvqwoqjvhasamev@jpoimboe>
- <47f1e244-992f-44fe-a0a5-6c271e9c719e@oracle.com>
- <CAEf4BzZaWrscT1HrcUJkz45iMMuyCcA6ivfMffeHpxf=LmmXRg@mail.gmail.com>
- <20250129020249.owmklacvuvss7z7n@jpoimboe>
- <e4a52247-af59-4c0f-9215-00ee83a61339@oracle.com>
+Subject: Re: [PATCH v4 28/39] unwind_user/deferred: Add deferred unwinding
+ interface
+Message-ID: <20250205022500.lnz3jlaetzh6gxds@jpoimboe>
+References: <e92fc832-ef46-4863-9316-24f30d8d82fd@efficios.com>
+ <20250123040533.e7guez5drz7mk6es@jpoimboe>
+ <20250123082534.GD3808@noisy.programming.kicks-ass.net>
+ <20250123184305.rjuxj7hs3ond3e7c@jpoimboe>
+ <20250123221326.GD969@noisy.programming.kicks-ass.net>
+ <20250124165803.565c29ed@gandalf.local.home>
+ <20250124224645.lcovfraeq53gegys@jpoimboe>
+ <20250124225011.aebigdykpmnnthfg@jpoimboe>
+ <20250124185744.69379ba6@gandalf.local.home>
+ <20250130152136.51bee69b@gandalf.local.home>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -67,66 +69,41 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <e4a52247-af59-4c0f-9215-00ee83a61339@oracle.com>
+In-Reply-To: <20250130152136.51bee69b@gandalf.local.home>
 
-On Thu, Jan 30, 2025 at 01:39:52PM -0800, Indu Bhagat wrote:
-> On 1/28/25 6:02 PM, Josh Poimboeuf wrote:
-> > However, if we're going that route, we might want to even consider a
-> > completely revamped data layout.  For example:
-> > 
-> > One insight is that the vast majority of (cfa, fp, ra) tuples aren't
-> > unique.  They could be deduped by storing the unique tuples in a
-> > standalone 'fre_data' array which is referenced by another
-> > address-specific array.
-> > 
-> >    struct fre_data {
-> > 	s8|s16|s32 cfa, fp, ra;
-> > 	u8 info;
-> >    };
-> >    struct fre_data fre_data[num_fre_data];
-> > 
+On Thu, Jan 30, 2025 at 03:21:36PM -0500, Steven Rostedt wrote:
+> Coming back from this. It would be fine if we could do the back trace when
+> we come back from the scheduler, so it should not be an issue if the task
+> even has to schedule again to fault in the sframe information.
+
+So there would be two callback hook points:
+
+  - schedule() after enabling preemption
+
+  - task work
+
+and first one wins?
+
+> I was also wondering if the unwinder doesn't keep track of who requested
+> the back trace, just that someone did. Then it would just take a single
+> flag in the task struct to do the back trace. Return the "cookie" to the
+> tracer that requested the back trace, and when you do the back trace, just
+> call all callbacks with that cookie. Let the tracer decided if it wants to
+> record the back trace or ignore it based on the cookie.
 > 
-> We had the same observation at the time of SFrame V1.  And this method of
-> compaction (deduped tuples) was brain-stormed a bit.  Back then, the costs
-> were thought to be:
->   - more work at build time.
->   - an additional data access once the FRE is found (as there is
-> indirection).
-> 
-> So it was really compaction at the costs above.  We did steer towards
-> simplicity and the SFrame FRE is what it stands today.
-> 
-> The difference in the pros and cons now from then:
->   - pros: helps mitigate unaligned accesses
->   - cons: interferes slightly with the design goal of efficient addition and
-> removal of stack trace information per function for JIT. Think "removal" as
-> the set of actions necessary for addressing fragmentation in SFrame section
-> data in JIT usecase.
+> That is, the tracers would need to keep track of the cookies that it cares
+> about, as if there's other tracers asking for stack traces on tasks that
+> this tracer doesn't care about it needs to handle being called when it
+> doesn't care about the stack trace. That said, if you want to trace all
+> tasks, you can just ignore the cookies and record the traces.
 
-If fre_data[] is allowed to have duplicates then the deduping could be
-optional.
+Easy enough for the unwinder, but IIUC each tracer would have to
+maintain a global list of pending cookies (and corresponding ptrs to
+perf_event, trace_array, etc)?  Would that not create a lot of
+contention?
 
-> > Note FDEs aren't even needed here as the unwinder doesn't need to know
-> > when a function begins/ends.  The only info needed by the unwinder is
-> > just the fre_data struct.  So a simple binary search of fres[] is all
-> > that's really needed.
-> 
-> Splitting out information (start_address) to an FDE (as done in V1/V2) has
-> the benefit that a job like relocating information is proportional to
-> O(NumFunctions).
-> 
-> In the case above, IIUC, where the proposal puts start_address in the FRE,
-> these costs will be (much) higher.
-
-I'm not sure I follow, is this referring to the link-time work of
-sorting things?
-
-> In addition, not being able to identify stack trace information per function
-> will affect the JIT usecase.  We need to able to mark stack trace
-> information stale for functions in JIT environment.
-
-Maybe, though it's hard to really say how any of these changes would
-affect JIT without knowing what those interfaces are going to look like.
+Seems like there really needs to be some kind of per-task or per-request
+state.
 
 -- 
 Josh
