@@ -1,204 +1,120 @@
-Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out162-62-57-64.mail.qq.com (out162-62-57-64.mail.qq.com [162.62.57.64])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B10D19FA8D;
-	Thu,  6 Feb 2025 18:20:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F46E1990C1;
+	Thu,  6 Feb 2025 19:43:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.57.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738866015; cv=none; b=A9olNL2x1/eooj6JV614ifgXVMlSsNhTEEhkVcwCirywpe+BANsQWHge+Wtidcn5zdQch3sUiV864XoHJQfoDrKZtk4xgr6VQ8KRFLU93N/YDK3vIwSMoDyDtVMF50BF+SrlNsOeANvc9YzwA3PRl0iVoQQ6ScjvQdgZEigYaMk=
+	t=1738870992; cv=none; b=P86iicwnkqrtg6BUeZLbr79gQ3tdmWhPEWdMT7/rNLSfMiExRDVdXmcTUffA43FNL3BV67jtonwpbG6gWez7k+rP31DnOdrP3KGAKUvTx/3Tt4/AhYt1NUKdJI3F7Io1UDK1fCPxwAcWtUfMhaPyTPgkx8Mob6XSGWRAljr8mqE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738866015; c=relaxed/simple;
-	bh=7xGc49hCcHJZCMN59E//NooAH7ZW/6S1zhGVCmh/4iA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=RFc5wynA32WaVoJ6aLzrSHG9uunwQTpGR5Nzi3IkOBEvsztc+VDwv+BDpkaxYBqXmWs08Pq5/vDT1FtFJnuTRsydMHJ1Irz3fyuSbsZ3lLIjJG86kOkhnF3U/KZLwmnaByXL97J/VUPWGNWvKG2ZX8XLHlsw2tkoURUaGWk/DaA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YKDHSTS+; arc=none smtp.client-ip=209.85.218.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1738870992; c=relaxed/simple;
+	bh=JVngml0+5obmLEOoHc7/+pi3gcZa6bg05TXxb5hLsag=;
+	h=Message-ID:From:To:Cc:Subject:Date:MIME-Version; b=kNN7YVyNWvagK1FtHy3HHQy2i+o9P3OfV/PCLsYhECgKSbyC+0Q8l8DgcUVaMfXaRn1VnoRveJySar1IgUEdfoVE9DeowmdcsWfU+NsQat9Um6+u1061yatZwzUfXbIC2Suse9/DfKKwkGVyopD1HdzDyNqHQHIBu+bZpcOGJ+4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com; spf=pass smtp.mailfrom=foxmail.com; dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b=MZMrmUBv; arc=none smtp.client-ip=162.62.57.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foxmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YKDHSTS+"
-Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-ab7157cf352so454575766b.0;
-        Thu, 06 Feb 2025 10:20:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738866011; x=1739470811; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=oNEi0kknlIjpUum1uoPVYlcdsr42AMJVcKjCrYsKSL0=;
-        b=YKDHSTS+Tp0Id/BDvaxQiNqc4ar/8NvOPtkHqox+IIkRacmc9uRdgd9fWl76S5w/Vf
-         jCbaLXooR1fXPYwOjGtiRdOx9Ho6vpQFAPN4Tmc3o7CPkoMivh3ddf889ndFED667ajZ
-         1HwSehhWy+yIthwFnTCxzm3cCk+KodCitpqWGwS51O2Oxf2e/2X4z/29eAfPE23pB7Y+
-         GXhGsmUlZ2sZxfgmWhIjG6ffolN15r0z1FCIX2djT52LtzKZBJDUfyyugUuBFowCFUbE
-         D5wuVCw+/EY2lpL6Id3v0O/0XfNSQHB4q0XtQWwMCd6Il9f51CvXAOSoNIpvmymg1zlh
-         sj+w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738866011; x=1739470811;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=oNEi0kknlIjpUum1uoPVYlcdsr42AMJVcKjCrYsKSL0=;
-        b=c8hczAmdiQDm4YhlUj2QrSjx1fb0HTz3W2CK6nPuU7ae2JFvOIksy2ucXyEhh6jGk/
-         F7sA0iruA5GTxDhjo+Mh4hJPzu3cVbJklvzfsrJCSP0qmM12cNsDOwTLpKZde5Cl1tUH
-         OOO3NT10HYif3lYu4GRjX24pDpjp4JyVYKq8+Cx8V/NIpPchpUtd3OoSSGQC4BQfCmjS
-         dz1Lwd6rWpk34PcVtyBpUffMIOeqB69SfXRL2MmwSw3pGhHkXtsYtR3m6miY9tvVghhN
-         /Dr4/hauhVdqV9rdFdxw+36u5fQbxyWZlHfrF9LIt4g0G5ZrTwHxWMrbYt4yiG8dN4Ni
-         kyKg==
-X-Forwarded-Encrypted: i=1; AJvYcCVAJyYaXXDAv3v/jcamDaQ5+w9eOHJJDljtpjcp4vAWTUkijne7/3PH2lAD4Qo4910BuSlHyEKWFlE1rl66iaiJj4hA@vger.kernel.org, AJvYcCXT/eHdH0jXKFWfvZ3grEwDCvUXcKsMsNDrnoHHB1uHi5oI01CdXnk3OYAM9bRRr5ZwNuc801r4hZtkK3Y=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxV8goztwvYptIzTUygq6PYupXSky+o/rauWwibi5nBVho4w8hS
-	xvI10w71CjCY/T84QZ/mXM5DDSTyBjniGsf/eBbt73PznECjKvZ4oKTZ4TQYvoDbzNhPaaVsHyZ
-	hrBjTPj1i5osLghmVw8/x6GY/Cc4=
-X-Gm-Gg: ASbGncuoaBQT/HASaeoI6flaYVsa2vy4RjG9usNkBFqiJlqp6p07R1UmzndqtMWmGjF
-	r7o/7NW0vs6qWeWODKYO+un2gBE4eh33r9OnsS96q+ZwqUhApeGd2lYsWX52h/L2T6tZxP8jBG4
-	nzQFHmaiUHZ6INZiHfuRoPeYquLw8=
-X-Google-Smtp-Source: AGHT+IH0zOqsMJfbAGW7RIBKq/bHcuItMk/Hpd9Z0DEoPzQJLzkikiCPZ9hu9xh24sTJVpiZzgqLDfxTZ2hcolOJz4o=
-X-Received: by 2002:a17:907:3f22:b0:ab7:5983:13b5 with SMTP id
- a640c23a62f3a-ab76e8e9017mr483401566b.20.1738866011273; Thu, 06 Feb 2025
- 10:20:11 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b="MZMrmUBv"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foxmail.com;
+	s=s201512; t=1738870982;
+	bh=hb/VRdBvoOPQUGQgI2/03oKonh4Fn4N6DJ1GnbGVOIA=;
+	h=From:To:Cc:Subject:Date;
+	b=MZMrmUBv9qOoVU8TYOPWUd7asdtLSD0Q2xTGbCOid16IbbOUJ+9CxqOXoGhPBcMZe
+	 0qjYef+t+7pGRnjjxT6f/mQLj0pZp1Qt/KA5nbXuEgvGMs5/uICWk8Elc6hjAO7v/c
+	 gY3gVPbQ+EVf0R/H68Yh1090OzQ8PtU2dcac6c6w=
+Received: from debian.localdomain ([130.126.255.141])
+	by newxmesmtplogicsvrsza36-0.qq.com (NewEsmtp) with SMTP
+	id 76C89252; Fri, 07 Feb 2025 03:29:44 +0800
+X-QQ-mid: xmsmtpt1738870184tmphv9uhz
+Message-ID: <tencent_AE90AA59903A628E87E9F80E563DA5BA5508@qq.com>
+X-QQ-XMAILINFO: ONXjbYTFhCz05A1HOGH3Uq7V0ThlxAWGNw21QxOoVGfe3lNjILDMymu4O3Pxay
+	 GlNyDXNldkP6Vlbtjb5/g1qwOKoikYknDU6Nh3m2gU7k+5sjIDH1axEFip04jmVp2l8ysSPzIqLW
+	 uqPGJqvjK4uCtfOiKDkye5m4cgw3xGUVMbY6LYmuVjYY/lWCULTP0/B9CL6gZXjJV6lCX1EwJdM/
+	 oTc8W7pSONXg/OF9VacGckJoEDGj6Bm0uEMxVSxUewQeUnvwgsV0gTFeUybNXEsteCPeJEp4KjSb
+	 MUzg84lqCPyOSpeH6JKKo8inKo40BKP526GJbzdtg4AyzVqM33U0Rlq8YS1PXraavRDkWQ+m7LZ8
+	 ZGFdO8RuD6DHLDOmOeNzxEQNFwnMePzTtputDcWmH9f6kGWBUwNDOhTcvxENa59xTuIv7fskAwUX
+	 zbBGZFjdFbvLOXBHkXrPIsuqxVD1O0FLFUbSwPjUw9lduEKvtHGJ4g0IVSylKk43o7QbMyrP1VfC
+	 k4aUdBz6iVloQVfkIpihxmSdxFtzFyeRZ1nAsr7nLeYV+hq5IaPqTYtRID5ftk0kpg3g3jQLOyfK
+	 X24g82kvJKMeGY31FKnoFEdyoydj3aoO1c0tiMbQ8MRQPY2a2WfEx9gjeix8stGPyXUW2jYMC4Bk
+	 nqmxP9oJtZBcPFlUwodsT7m2K6quPdRbQyjEADTy9An6+rpN1+4ncpP6+pM3iVcDUmsrvpRouMfZ
+	 VJKkCEdXm0/DCeqHIUS2+EgUPLj+wSeyhjk2IbqXjLLfhmswNiQOdp8LhhV0Q+AWLRuRww/NiN6v
+	 enO2WYUqZSX+Mazr9vz6JBU+e6RWfFt78WY85hlHDEl4D3y558Bs5bvIgRLyH1H0D249HA1vqmJ9
+	 Jg7qAP/oTEmGqpxcqsBnTqvAKhQltKgCv4FS3Orwgls1bfcXs9XnHSOUA35khQVwR6+KtHRQHYLu
+	 StqkHzyhIhyXgc/0K0OHomrC5TBT2/
+X-QQ-XMRINFO: Nq+8W0+stu50PRdwbJxPCL0=
+From: Juhan Jin <juhan.jin@foxmail.com>
+To: guoren@kernel.org,
+	guoren@linux.alibaba.com,
+	rostedt@goodmis.org,
+	mhiramat@kernel.org,
+	mark.rutland@arm.com,
+	paul.walmsley@sifive.com,
+	palmer@dabbelt.com,
+	aou@eecs.berkeley.edu
+Cc: linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-riscv@lists.infradead.org,
+	Juhan Jin <juhan.jin@foxmail.com>
+Subject: [PATCH] riscv: ftrace: Add parentheses in macro definitions of make_call_t0 and make_call_ra
+Date: Thu,  6 Feb 2025 13:28:36 -0600
+X-OQ-MSGID: <20250206192836.208698-1-juhan.jin@foxmail.com>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <173881156244.211648.1242168038709680511.stgit@devnote2>
-In-Reply-To: <173881156244.211648.1242168038709680511.stgit@devnote2>
-From: Gabriel de Perthuis <g2p.code@gmail.com>
-Date: Thu, 6 Feb 2025 19:19:33 +0100
-X-Gm-Features: AWEUYZlWm6WvivHpQ9sKTR6x9MaTGCkLmLGJFxAPYpqPxRCl1X4z3C_99JN6be4
-Message-ID: <CAFEugPfsYVfHroc7W7PHjnRbs+KRj53AaCgeQHZediSoYm6E8g@mail.gmail.com>
-Subject: Re: [PATCH] ftrace: x86: Fix a compile error about get_kernel_nofault()
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Haiyue Wang <haiyuewa@163.com>, 
-	Sami Tolvanen <samitolvanen@google.com>, Mark Rutland <mark.rutland@arm.com>, 
-	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org, 
-	linux-trace-kernel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-Hello,
-I can confirm this solves the build issue alongside gendwarfksyms;
-much appreciated.
+This patch adds parentheses to parameters caller and callee of macros
+make_call_t0 and make_call_ra. Every existing invocation of these two
+macros uses a single variable for each argument, so the absence of the
+parentheses seems okay. However, future invocations might use more
+complex expressions as arguments. For example, a future invocation might
+look like this: make_call_t0(a - b, c, call). Without parentheses in the
+macro definition, the macro invocation expands to:
 
-Le jeu. 6 f=C3=A9vr. 2025 =C3=A0 04:12, Masami Hiramatsu (Google)
-<mhiramat@kernel.org> a =C3=A9crit :
->
-> From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
->
-> Fix a compile error about get_kernel_nofault() which is defined in the
-> linux/uaccess.h. Since asm/ftrace.h is widely used, including
-> linux/uaccess.h in asm/ftrace.h caused another error. Thus this
-> moves arch_ftrace_get_symaddr() into arch/x86/kernel/ftrace.c.
->
-> The original errors look like:
->
-> In file included from ./arch/x86/include/asm/asm-prototypes.h:2,
->                  from <stdin>:3:
-> ./arch/x86/include/asm/ftrace.h: In function 'arch_ftrace_get_symaddr':
-> ./arch/x86/include/asm/ftrace.h:46:21: error: implicit declaration of fun=
-ction 'get_kernel_nofault' [-Werror=3Dimplicit-function-declaration]
->    46 |                 if (get_kernel_nofault(instr, (u32 *)(fentry_ip -=
- ENDBR_INSN_SIZE)))
->       |                     ^~~~~~~~~~~~~~~~~~
->
-> This also makes ftrace_get_symaddr() available only when
-> CONFIG_HAVE_FENTRY=3Dy on x86.
->
-> Reported-by: Gabriel de Perthuis <g2p.code@gmail.com>
-> Closes: https://lore.kernel.org/all/a87f98bf-45b1-4ef5-aa77-02f7e61203f4@=
-gmail.com/
-> Reported-by: Haiyue Wang <haiyuewa@163.com>
-> Closes: https://lore.kernel.org/all/20250205180116.88644-1-haiyuewa@163.c=
-om/
-> Fixes: 2bc56fdae1ba ("ftrace: Add ftrace_get_symaddr to convert fentry_ip=
- to symaddr")
-> Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> ---
->  arch/x86/include/asm/ftrace.h |   23 ++++-------------------
->  arch/x86/kernel/ftrace.c      |   26 +++++++++++++++++++++++++-
->  2 files changed, 29 insertions(+), 20 deletions(-)
->
-> diff --git a/arch/x86/include/asm/ftrace.h b/arch/x86/include/asm/ftrace.=
-h
-> index f9cb4d07df58..1ed08f2de366 100644
-> --- a/arch/x86/include/asm/ftrace.h
-> +++ b/arch/x86/include/asm/ftrace.h
-> @@ -34,26 +34,11 @@ static inline unsigned long ftrace_call_adjust(unsign=
-ed long addr)
->         return addr;
->  }
->
-> -static inline unsigned long arch_ftrace_get_symaddr(unsigned long fentry=
-_ip)
-> -{
-> -#ifdef CONFIG_X86_KERNEL_IBT
-> -       u32 instr;
-> -
-> -       /* We want to be extra safe in case entry ip is on the page edge,
-> -        * but otherwise we need to avoid get_kernel_nofault()'s overhead=
-.
-> -        */
-> -       if ((fentry_ip & ~PAGE_MASK) < ENDBR_INSN_SIZE) {
-> -               if (get_kernel_nofault(instr, (u32 *)(fentry_ip - ENDBR_I=
-NSN_SIZE)))
-> -                       return fentry_ip;
-> -       } else {
-> -               instr =3D *(u32 *)(fentry_ip - ENDBR_INSN_SIZE);
-> -       }
-> -       if (is_endbr(instr))
-> -               fentry_ip -=3D ENDBR_INSN_SIZE;
-> -#endif
-> -       return fentry_ip;
-> -}
-> +/* This does not support mcount. */
-> +#ifdef CONFIG_HAVE_FENTRY
-> +unsigned long arch_ftrace_get_symaddr(unsigned long fentry_ip);
->  #define ftrace_get_symaddr(fentry_ip)  arch_ftrace_get_symaddr(fentry_ip=
-)
-> +#endif
->
->  #ifdef CONFIG_HAVE_DYNAMIC_FTRACE_WITH_ARGS
->
-> diff --git a/arch/x86/kernel/ftrace.c b/arch/x86/kernel/ftrace.c
-> index 166bc0ea3bdf..7250118005fc 100644
-> --- a/arch/x86/kernel/ftrace.c
-> +++ b/arch/x86/kernel/ftrace.c
-> @@ -29,11 +29,35 @@
->
->  #include <trace/syscall.h>
->
-> -#include <asm/kprobes.h>
->  #include <asm/ftrace.h>
-> +#include <asm/ibt.h>
-> +#include <asm/kprobes.h>
->  #include <asm/nops.h>
->  #include <asm/text-patching.h>
->
-> +#ifdef CONFIG_HAVE_FENTRY
-> +/* Convert fentry address to the symbol address. */
-> +unsigned long arch_ftrace_get_symaddr(unsigned long fentry_ip)
-> +{
-> +#ifdef CONFIG_X86_KERNEL_IBT
-> +       u32 instr;
-> +
-> +       /* We want to be extra safe in case entry ip is on the page edge,
-> +        * but otherwise we need to avoid get_kernel_nofault()'s overhead=
-.
-> +        */
-> +       if ((fentry_ip & ~PAGE_MASK) < ENDBR_INSN_SIZE) {
-> +               if (get_kernel_nofault(instr, (u32 *)(fentry_ip - ENDBR_I=
-NSN_SIZE)))
-> +                       return fentry_ip;
-> +       } else {
-> +               instr =3D *(u32 *)(fentry_ip - ENDBR_INSN_SIZE);
-> +       }
-> +       if (is_endbr(instr))
-> +               fentry_ip -=3D ENDBR_INSN_SIZE;
-> +#endif
-> +       return fentry_ip;
-> +}
-> +#endif
-> +
->  #ifdef CONFIG_DYNAMIC_FTRACE
->
->  static int ftrace_poke_late =3D 0;
->
+...
+unsigned int offset = (unsigned long) c - (unsigned long) a - b;
+...
+
+which is clearly wrong.
+
+The use of parentheses ensures arguments are correctly evaluated and
+potentially saves future users of make_call_t0 and make_call_ra debugging
+trouble.
+
+Fixes: 6724a76cff85 ("riscv: ftrace: Reduce the detour code size to half")
+Signed-off-by: Juhan Jin <juhan.jin@foxmail.com>
+---
+ arch/riscv/include/asm/ftrace.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/arch/riscv/include/asm/ftrace.h b/arch/riscv/include/asm/ftrace.h
+index c4721ce44ca4..2636ee00ccf0 100644
+--- a/arch/riscv/include/asm/ftrace.h
++++ b/arch/riscv/include/asm/ftrace.h
+@@ -92,7 +92,7 @@ struct dyn_arch_ftrace {
+ #define make_call_t0(caller, callee, call)				\
+ do {									\
+ 	unsigned int offset =						\
+-		(unsigned long) callee - (unsigned long) caller;	\
++		(unsigned long) (callee) - (unsigned long) (caller);	\
+ 	call[0] = to_auipc_t0(offset);					\
+ 	call[1] = to_jalr_t0(offset);					\
+ } while (0)
+@@ -108,7 +108,7 @@ do {									\
+ #define make_call_ra(caller, callee, call)				\
+ do {									\
+ 	unsigned int offset =						\
+-		(unsigned long) callee - (unsigned long) caller;	\
++		(unsigned long) (callee) - (unsigned long) (caller);	\
+ 	call[0] = to_auipc_ra(offset);					\
+ 	call[1] = to_jalr_ra(offset);					\
+ } while (0)
+
+base-commit: 2014c95afecee3e76ca4a56956a936e23283f05b
+-- 
+2.39.5
+
