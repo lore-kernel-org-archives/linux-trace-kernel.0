@@ -1,344 +1,204 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F145A383A5;
-	Thu,  6 Feb 2025 17:45:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B10D19FA8D;
+	Thu,  6 Feb 2025 18:20:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738863952; cv=none; b=Q8SwZreAGeSKHucmFeAVyTacHBvBqNV6UplxoBItAipfYg31eL54unfwYocJ6L9vB68Rj/4Vtv8jsNB/odJhbzoOQpKfTQCsbt+AeOFPayz94lUD+WEdFCN2kWVjr9ViR5MkNyCEuuJAbaooFwnDKfjYJVlioZVLDmmAYhGmP/8=
+	t=1738866015; cv=none; b=A9olNL2x1/eooj6JV614ifgXVMlSsNhTEEhkVcwCirywpe+BANsQWHge+Wtidcn5zdQch3sUiV864XoHJQfoDrKZtk4xgr6VQ8KRFLU93N/YDK3vIwSMoDyDtVMF50BF+SrlNsOeANvc9YzwA3PRl0iVoQQ6ScjvQdgZEigYaMk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738863952; c=relaxed/simple;
-	bh=pEzGzwcqG4AV3dGawUFOo23/moR+4NIZlqB+xb6WqX8=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=KbwtkjANqI75cYKw85dGk3+wZOylbwM4DVv498LmFgdG4VYl5ZMDi8Nyrgjq8bHoe9A8KPPJfRmSAi7HnpNJLpq91VBRNFdQdDRJnvlohdE7ZaxZTlmrZi2gK6vI5vb1d0O9E1VzJobMx5tYf+iv1tD1KNLNe1lGmWC7ExgN+Y0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C1E3DC4CEDD;
-	Thu,  6 Feb 2025 17:45:49 +0000 (UTC)
-Date: Thu, 6 Feb 2025 12:46:31 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Mark
- Rutland <mark.rutland@arm.com>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH 3/3] tracing: Show last module text symbols in the
- stacktrace
-Message-ID: <20250206124631.7fe2ecfb@gandalf.local.home>
-In-Reply-To: <173886114516.496116.8314066678313037503.stgit@devnote2>
-References: <20250207015330.5c71ad55ed2f516da1410711@kernel.org>
-	<173886114516.496116.8314066678313037503.stgit@devnote2>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1738866015; c=relaxed/simple;
+	bh=7xGc49hCcHJZCMN59E//NooAH7ZW/6S1zhGVCmh/4iA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=RFc5wynA32WaVoJ6aLzrSHG9uunwQTpGR5Nzi3IkOBEvsztc+VDwv+BDpkaxYBqXmWs08Pq5/vDT1FtFJnuTRsydMHJ1Irz3fyuSbsZ3lLIjJG86kOkhnF3U/KZLwmnaByXL97J/VUPWGNWvKG2ZX8XLHlsw2tkoURUaGWk/DaA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YKDHSTS+; arc=none smtp.client-ip=209.85.218.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YKDHSTS+"
+Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-ab7157cf352so454575766b.0;
+        Thu, 06 Feb 2025 10:20:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738866011; x=1739470811; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=oNEi0kknlIjpUum1uoPVYlcdsr42AMJVcKjCrYsKSL0=;
+        b=YKDHSTS+Tp0Id/BDvaxQiNqc4ar/8NvOPtkHqox+IIkRacmc9uRdgd9fWl76S5w/Vf
+         jCbaLXooR1fXPYwOjGtiRdOx9Ho6vpQFAPN4Tmc3o7CPkoMivh3ddf889ndFED667ajZ
+         1HwSehhWy+yIthwFnTCxzm3cCk+KodCitpqWGwS51O2Oxf2e/2X4z/29eAfPE23pB7Y+
+         GXhGsmUlZ2sZxfgmWhIjG6ffolN15r0z1FCIX2djT52LtzKZBJDUfyyugUuBFowCFUbE
+         D5wuVCw+/EY2lpL6Id3v0O/0XfNSQHB4q0XtQWwMCd6Il9f51CvXAOSoNIpvmymg1zlh
+         sj+w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738866011; x=1739470811;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=oNEi0kknlIjpUum1uoPVYlcdsr42AMJVcKjCrYsKSL0=;
+        b=c8hczAmdiQDm4YhlUj2QrSjx1fb0HTz3W2CK6nPuU7ae2JFvOIksy2ucXyEhh6jGk/
+         F7sA0iruA5GTxDhjo+Mh4hJPzu3cVbJklvzfsrJCSP0qmM12cNsDOwTLpKZde5Cl1tUH
+         OOO3NT10HYif3lYu4GRjX24pDpjp4JyVYKq8+Cx8V/NIpPchpUtd3OoSSGQC4BQfCmjS
+         dz1Lwd6rWpk34PcVtyBpUffMIOeqB69SfXRL2MmwSw3pGhHkXtsYtR3m6miY9tvVghhN
+         /Dr4/hauhVdqV9rdFdxw+36u5fQbxyWZlHfrF9LIt4g0G5ZrTwHxWMrbYt4yiG8dN4Ni
+         kyKg==
+X-Forwarded-Encrypted: i=1; AJvYcCVAJyYaXXDAv3v/jcamDaQ5+w9eOHJJDljtpjcp4vAWTUkijne7/3PH2lAD4Qo4910BuSlHyEKWFlE1rl66iaiJj4hA@vger.kernel.org, AJvYcCXT/eHdH0jXKFWfvZ3grEwDCvUXcKsMsNDrnoHHB1uHi5oI01CdXnk3OYAM9bRRr5ZwNuc801r4hZtkK3Y=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxV8goztwvYptIzTUygq6PYupXSky+o/rauWwibi5nBVho4w8hS
+	xvI10w71CjCY/T84QZ/mXM5DDSTyBjniGsf/eBbt73PznECjKvZ4oKTZ4TQYvoDbzNhPaaVsHyZ
+	hrBjTPj1i5osLghmVw8/x6GY/Cc4=
+X-Gm-Gg: ASbGncuoaBQT/HASaeoI6flaYVsa2vy4RjG9usNkBFqiJlqp6p07R1UmzndqtMWmGjF
+	r7o/7NW0vs6qWeWODKYO+un2gBE4eh33r9OnsS96q+ZwqUhApeGd2lYsWX52h/L2T6tZxP8jBG4
+	nzQFHmaiUHZ6INZiHfuRoPeYquLw8=
+X-Google-Smtp-Source: AGHT+IH0zOqsMJfbAGW7RIBKq/bHcuItMk/Hpd9Z0DEoPzQJLzkikiCPZ9hu9xh24sTJVpiZzgqLDfxTZ2hcolOJz4o=
+X-Received: by 2002:a17:907:3f22:b0:ab7:5983:13b5 with SMTP id
+ a640c23a62f3a-ab76e8e9017mr483401566b.20.1738866011273; Thu, 06 Feb 2025
+ 10:20:11 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+References: <173881156244.211648.1242168038709680511.stgit@devnote2>
+In-Reply-To: <173881156244.211648.1242168038709680511.stgit@devnote2>
+From: Gabriel de Perthuis <g2p.code@gmail.com>
+Date: Thu, 6 Feb 2025 19:19:33 +0100
+X-Gm-Features: AWEUYZlWm6WvivHpQ9sKTR6x9MaTGCkLmLGJFxAPYpqPxRCl1X4z3C_99JN6be4
+Message-ID: <CAFEugPfsYVfHroc7W7PHjnRbs+KRj53AaCgeQHZediSoYm6E8g@mail.gmail.com>
+Subject: Re: [PATCH] ftrace: x86: Fix a compile error about get_kernel_nofault()
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>, Haiyue Wang <haiyuewa@163.com>, 
+	Sami Tolvanen <samitolvanen@google.com>, Mark Rutland <mark.rutland@arm.com>, 
+	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org, 
+	linux-trace-kernel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri,  7 Feb 2025 01:59:05 +0900
-"Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
+Hello,
+I can confirm this solves the build issue alongside gendwarfksyms;
+much appreciated.
 
+Le jeu. 6 f=C3=A9vr. 2025 =C3=A0 04:12, Masami Hiramatsu (Google)
+<mhiramat@kernel.org> a =C3=A9crit :
+>
 > From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
->=20
-> Since the previous boot trace buffer can include module text address in
-> the stacktrace. As same as the kernel text address, convert the module
-> text address using the module address information.
-
-Note, this doesn't look like it depends on the first two patches, which I
-don't think we want yet. As that assumes we never disable the buffer once
-we start it, and may start it again. But that's a debate we can have later.
-
->=20
+>
+> Fix a compile error about get_kernel_nofault() which is defined in the
+> linux/uaccess.h. Since asm/ftrace.h is widely used, including
+> linux/uaccess.h in asm/ftrace.h caused another error. Thus this
+> moves arch_ftrace_get_symaddr() into arch/x86/kernel/ftrace.c.
+>
+> The original errors look like:
+>
+> In file included from ./arch/x86/include/asm/asm-prototypes.h:2,
+>                  from <stdin>:3:
+> ./arch/x86/include/asm/ftrace.h: In function 'arch_ftrace_get_symaddr':
+> ./arch/x86/include/asm/ftrace.h:46:21: error: implicit declaration of fun=
+ction 'get_kernel_nofault' [-Werror=3Dimplicit-function-declaration]
+>    46 |                 if (get_kernel_nofault(instr, (u32 *)(fentry_ip -=
+ ENDBR_INSN_SIZE)))
+>       |                     ^~~~~~~~~~~~~~~~~~
+>
+> This also makes ftrace_get_symaddr() available only when
+> CONFIG_HAVE_FENTRY=3Dy on x86.
+>
+> Reported-by: Gabriel de Perthuis <g2p.code@gmail.com>
+> Closes: https://lore.kernel.org/all/a87f98bf-45b1-4ef5-aa77-02f7e61203f4@=
+gmail.com/
+> Reported-by: Haiyue Wang <haiyuewa@163.com>
+> Closes: https://lore.kernel.org/all/20250205180116.88644-1-haiyuewa@163.c=
+om/
+> Fixes: 2bc56fdae1ba ("ftrace: Add ftrace_get_symaddr to convert fentry_ip=
+ to symaddr")
 > Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 > ---
->  kernel/trace/trace.c        |   76 +++++++++++++++++++++++++++++++++++++=
-++++--
->  kernel/trace/trace.h        |    4 ++
->  kernel/trace/trace_output.c |    3 +-
->  3 files changed, 78 insertions(+), 5 deletions(-)
->=20
-> diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-> index 5a064e712fd7..9d942b7c2651 100644
-> --- a/kernel/trace/trace.c
-> +++ b/kernel/trace/trace.c
-> @@ -49,6 +49,7 @@
->  #include <linux/fsnotify.h>
->  #include <linux/irq_work.h>
->  #include <linux/workqueue.h>
-> +#include <linux/sort.h>
-> =20
->  #include <asm/setup.h> /* COMMAND_LINE_SIZE and kaslr_offset() */
-> =20
-> @@ -6007,6 +6008,27 @@ struct trace_scratch {
-> =20
->  static DEFINE_MUTEX(scratch_mutex);
-> =20
-> +unsigned long trace_adjust_address(struct trace_array *tr, unsigned long=
- addr)
+>  arch/x86/include/asm/ftrace.h |   23 ++++-------------------
+>  arch/x86/kernel/ftrace.c      |   26 +++++++++++++++++++++++++-
+>  2 files changed, 29 insertions(+), 20 deletions(-)
+>
+> diff --git a/arch/x86/include/asm/ftrace.h b/arch/x86/include/asm/ftrace.=
+h
+> index f9cb4d07df58..1ed08f2de366 100644
+> --- a/arch/x86/include/asm/ftrace.h
+> +++ b/arch/x86/include/asm/ftrace.h
+> @@ -34,26 +34,11 @@ static inline unsigned long ftrace_call_adjust(unsign=
+ed long addr)
+>         return addr;
+>  }
+>
+> -static inline unsigned long arch_ftrace_get_symaddr(unsigned long fentry=
+_ip)
+> -{
+> -#ifdef CONFIG_X86_KERNEL_IBT
+> -       u32 instr;
+> -
+> -       /* We want to be extra safe in case entry ip is on the page edge,
+> -        * but otherwise we need to avoid get_kernel_nofault()'s overhead=
+.
+> -        */
+> -       if ((fentry_ip & ~PAGE_MASK) < ENDBR_INSN_SIZE) {
+> -               if (get_kernel_nofault(instr, (u32 *)(fentry_ip - ENDBR_I=
+NSN_SIZE)))
+> -                       return fentry_ip;
+> -       } else {
+> -               instr =3D *(u32 *)(fentry_ip - ENDBR_INSN_SIZE);
+> -       }
+> -       if (is_endbr(instr))
+> -               fentry_ip -=3D ENDBR_INSN_SIZE;
+> -#endif
+> -       return fentry_ip;
+> -}
+> +/* This does not support mcount. */
+> +#ifdef CONFIG_HAVE_FENTRY
+> +unsigned long arch_ftrace_get_symaddr(unsigned long fentry_ip);
+>  #define ftrace_get_symaddr(fentry_ip)  arch_ftrace_get_symaddr(fentry_ip=
+)
+> +#endif
+>
+>  #ifdef CONFIG_HAVE_DYNAMIC_FTRACE_WITH_ARGS
+>
+> diff --git a/arch/x86/kernel/ftrace.c b/arch/x86/kernel/ftrace.c
+> index 166bc0ea3bdf..7250118005fc 100644
+> --- a/arch/x86/kernel/ftrace.c
+> +++ b/arch/x86/kernel/ftrace.c
+> @@ -29,11 +29,35 @@
+>
+>  #include <trace/syscall.h>
+>
+> -#include <asm/kprobes.h>
+>  #include <asm/ftrace.h>
+> +#include <asm/ibt.h>
+> +#include <asm/kprobes.h>
+>  #include <asm/nops.h>
+>  #include <asm/text-patching.h>
+>
+> +#ifdef CONFIG_HAVE_FENTRY
+> +/* Convert fentry address to the symbol address. */
+> +unsigned long arch_ftrace_get_symaddr(unsigned long fentry_ip)
 > +{
-> +	struct trace_scratch *tscratch;
-> +	int i;
+> +#ifdef CONFIG_X86_KERNEL_IBT
+> +       u32 instr;
 > +
-> +	/* If we don't have last boot delta, return the address */
-> +	if (!(tr->flags & TRACE_ARRAY_FL_LAST_BOOT))
-> +		return addr;
-> +
-> +	tscratch =3D tr->scratch;
-> +	if (tscratch && tr->module_delta && tscratch->entries[0].mod_addr < add=
-r) {
-> +		/* Note that entries are sorted */
-> +		for (i =3D 0; i < tr->nr_modules; i++)
-> +			if (addr < tscratch->entries[i].mod_addr)
-> +				break;
-> +		return addr + tr->module_delta[i - 1];
-> +	}
-> +
-> +	return addr + tr->text_delta;
+> +       /* We want to be extra safe in case entry ip is on the page edge,
+> +        * but otherwise we need to avoid get_kernel_nofault()'s overhead=
+.
+> +        */
+> +       if ((fentry_ip & ~PAGE_MASK) < ENDBR_INSN_SIZE) {
+> +               if (get_kernel_nofault(instr, (u32 *)(fentry_ip - ENDBR_I=
+NSN_SIZE)))
+> +                       return fentry_ip;
+> +       } else {
+> +               instr =3D *(u32 *)(fentry_ip - ENDBR_INSN_SIZE);
+> +       }
+> +       if (is_endbr(instr))
+> +               fentry_ip -=3D ENDBR_INSN_SIZE;
+> +#endif
+> +       return fentry_ip;
 > +}
+> +#endif
 > +
->  static int save_mod(struct module *mod, void *data)
->  {
->  	struct trace_array *tr =3D data;
-> @@ -6068,6 +6090,9 @@ static void update_last_data(struct trace_array *tr)
-> =20
->  	/* Using current data now */
->  	tr->text_delta =3D 0;
-> +	kfree(tr->module_delta);
-> +	tr->module_delta =3D NULL;
-> +	tr->nr_modules =3D 0;
-> =20
->  	if (!tr->scratch)
->  		return;
-
-The above could probably go after the check for !tr->scratch.
-
-> @@ -9351,10 +9376,37 @@ static struct dentry *trace_instance_dir;
->  static void
->  init_tracer_tracefs(struct trace_array *tr, struct dentry *d_tracer);
-> =20
-> +static int make_mod_delta(struct module *mod, void *data)
-> +{
-> +	struct trace_scratch *tscratch;
-> +	struct trace_mod_entry *entry;
-> +	struct trace_array *tr =3D data;
-> +	int i;
-> +
-> +	tscratch =3D tr->scratch;
-> +	for (i =3D 0; i < tr->nr_modules; i++) {
-> +		entry =3D &tscratch->entries[i];
-> +		if (!strcmp(mod->name, entry->mod_name)) {
-> +			tr->module_delta[i] =3D (unsigned long)mod->mem[MOD_TEXT].base - entr=
-y->mod_addr;
-> +			return 1;
-
-Returning 1 causes the module_loop to stop. That is, this will only process
-the first module it finds and then no more after that.
-
-> +		}
-> +	}
-
-Doesn't this assume that we have the same modules loaded?
-
-Note, I do plan on adding another field in the trace_scratch structure that
-has the uname, then only allow the ascii trace to use the current kallsyms
-if the uname matches.
-
-> +	return 0;
-> +}
-> +
-> +static int mod_addr_comp(const void *a, const void *b, const void *data)
-> +{
-> +	const struct trace_mod_entry *e1 =3D a;
-> +	const struct trace_mod_entry *e2 =3D b;
-> +
-> +	return e1->mod_addr - e2->mod_addr;
-
-Hmm, could this possibly cause an overflow issue? If the two addresses are
-more than 32 bits apart?
-
-> +}
-> +
->  static void setup_trace_scratch(struct trace_array *tr, void *scratch, u=
-nsigned int size)
->  {
->  	struct trace_scratch *tscratch =3D scratch;
->  	struct trace_mod_entry *entry;
-> +	int i, nr_entries;
-> =20
->  	if (!scratch)
->  		return;
-> @@ -9371,7 +9423,7 @@ static void setup_trace_scratch(struct trace_array =
-*tr, void *scratch, unsigned
->  		goto reset;
-> =20
->  	/* Check if each module name is a valid string */
-> -	for (int i =3D 0; i < tscratch->nr_entries; i++) {
-> +	for (i =3D 0; i < tscratch->nr_entries; i++) {
->  		int n;
-> =20
->  		entry =3D &tscratch->entries[i];
-> @@ -9385,6 +9437,20 @@ static void setup_trace_scratch(struct trace_array=
- *tr, void *scratch, unsigned
->  		if (n =3D=3D MODULE_NAME_LEN)
->  			goto reset;
->  	}
-> +	nr_entries =3D i;
-> +	/* Allocate module delta array */
-> +	tr->module_delta =3D kcalloc(nr_entries, sizeof(long), GFP_KERNEL);
-> +	if (!tr->module_delta)
-
-I wonder if this should trigger a WARN_ON()?
-
-> +		goto reset;
-> +	tr->nr_modules =3D nr_entries;
-> +
-> +	/* Sort module table by base address. */
-> +	sort_r(tscratch->entries, nr_entries, sizeof(struct trace_mod_entry),
-> +		mod_addr_comp, NULL, NULL);
-> +
-> +	/* Scan modules */
-> +	module_for_each_mod(make_mod_delta, tr);
-> +
->  	return;
->   reset:
->  	/* Invalid trace modules */
-
-
-BTW, here's my removal patch:
-
--- Steve
-
-
-=46rom 521bc0e5286c93eb4be981d22a6c05043a78b555 Mon Sep 17 00:00:00 2001
-From: Steven Rostedt <rostedt@goodmis.org>
-Date: Wed, 5 Feb 2025 11:55:51 -0500
-Subject: [PATCH] tracing: Update modules to persistent instances when remov=
-ed
-
-When a module is removed, remove it from the list of saved modules in the
-persistent memory to any persistent instance that is currently active.
-
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
- kernel/trace/trace.c | 69 +++++++++++++++++++++++++++++++++++++++++---
- 1 file changed, 65 insertions(+), 4 deletions(-)
-
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index 443f2bc5b856..13eeb8df8b8c 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -6001,6 +6001,7 @@ struct trace_mod_entry {
-=20
- struct trace_scratch {
- 	unsigned long		kaslr_addr;
-+	unsigned long		first_free_slot;
- 	unsigned long		nr_entries;
- 	struct trace_mod_entry	entries[];
- };
-@@ -6012,6 +6013,7 @@ static int save_mod(struct module *mod, void *data)
- 	struct trace_array *tr =3D data;
- 	struct trace_scratch *tscratch;
- 	struct trace_mod_entry *entry;
-+	unsigned int idx;
- 	unsigned int size;
-=20
- 	guard(mutex)(&scratch_mutex);
-@@ -6021,16 +6023,60 @@ static int save_mod(struct module *mod, void *data)
- 		return -1;
- 	size =3D tr->scratch_size;
-=20
--	if (struct_size(tscratch, entries, tscratch->nr_entries + 1) > size)
--		return -1;
-+	idx =3D tscratch->first_free_slot < tscratch->nr_entries ?
-+		tscratch->first_free_slot : tscratch->nr_entries;
-=20
--	entry =3D &tscratch->entries[tscratch->nr_entries];
-+	if (struct_size(tscratch, entries, idx + 1) > size)
-+		return -1;
-=20
--	tscratch->nr_entries++;
-+	entry =3D &tscratch->entries[idx];
-=20
- 	entry->mod_addr =3D (unsigned long)mod->mem[MOD_TEXT].base;
- 	strscpy(entry->mod_name, mod->name);
-=20
-+	if (idx =3D=3D tscratch->nr_entries)
-+		tscratch->nr_entries++;
-+
-+	for (idx++; idx < tscratch->nr_entries; idx++) {
-+		entry =3D &tscratch->entries[idx];
-+		if (!entry->mod_addr)
-+			break;
-+	}
-+
-+	tscratch->first_free_slot =3D idx;
-+
-+	return 0;
-+}
-+
-+static int remove_mod(struct module *mod, void *data)
-+{
-+	struct trace_array *tr =3D data;
-+	struct trace_scratch *tscratch;
-+	struct trace_mod_entry *entry;
-+	unsigned int idx;
-+	unsigned int size;
-+
-+	guard(mutex)(&scratch_mutex);
-+
-+	tscratch =3D tr->scratch;
-+	if (!tscratch)
-+		return -1;
-+	size =3D tr->scratch_size;
-+
-+	for (idx =3D 0; idx < tscratch->nr_entries; idx++) {
-+		entry =3D &tscratch->entries[idx];
-+		if (entry->mod_addr =3D=3D (unsigned long)mod->mem[MOD_TEXT].base)
-+			break;
-+	}
-+	if (idx =3D=3D tscratch->nr_entries)
-+		return -1;
-+
-+	if (idx < tscratch->first_free_slot)
-+		tscratch->first_free_slot =3D idx;
-+
-+	entry->mod_addr =3D 0;
-+	entry->mod_name[0] =3D '\0';
-+
- 	return 0;
- }
-=20
-@@ -10112,6 +10158,20 @@ static void trace_module_record(struct module *mod)
- 	}
- }
-=20
-+static void trace_module_delete(struct module *mod)
-+{
-+	struct trace_array *tr;
-+
-+	list_for_each_entry(tr, &ftrace_trace_arrays, list) {
-+		/* Update any persistent trace array that has already been started */
-+		if ((tr->flags & (TRACE_ARRAY_FL_BOOT | TRACE_ARRAY_FL_LAST_BOOT)) =3D=3D
-+		    TRACE_ARRAY_FL_BOOT) {
-+			if (trace_array_active(tr))
-+				remove_mod(mod, tr);
-+		}
-+	}
-+}
-+
- static int trace_module_notify(struct notifier_block *self,
- 			       unsigned long val, void *data)
- {
-@@ -10124,6 +10184,7 @@ static int trace_module_notify(struct notifier_bloc=
-k *self,
- 		break;
- 	case MODULE_STATE_GOING:
- 		trace_module_remove_evals(mod);
-+		trace_module_delete(mod);
- 		break;
- 	}
-=20
---=20
-2.45.2
-
+>  #ifdef CONFIG_DYNAMIC_FTRACE
+>
+>  static int ftrace_poke_late =3D 0;
+>
