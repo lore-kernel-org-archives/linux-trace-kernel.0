@@ -1,47 +1,47 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4236225764
-	for <linux-trace-kernel@vger.kernel.org>; Thu,  6 Feb 2025 08:10:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B70222576F
+	for <linux-trace-kernel@vger.kernel.org>; Thu,  6 Feb 2025 08:10:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738829430; cv=none; b=bJBG3GzN2CX1JiZON+crBhmU2PIHZfk2NQASVx3KejzOgX1/8wcYJiAVoD5GYXc28oh+MzWRUXleYPcs3wcteIkyBnCAbEkQzlg0QXKIa9TVRTDk3JuTDRTgbk6L/TTo781aBD/T9w1RaYe+981BEZ1hnjNKmOmHYj6XIrJiueg=
+	t=1738829432; cv=none; b=SEIwEuokH0RK/cPrwecstjXsSdgwFFA07RqmBRhF/+VRI4V30AS71xr+pzB0Y7pXOUSBDlqPBylb+AuHPRuG69QU9F8eH2Kbb7H39dPEh8OBr6R4WNno/uORoGudo/2PjmCZrUcY2uXGVqYfE9ohYqrvtxI+TCDzfM9cUjU8c9U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738829430; c=relaxed/simple;
-	bh=drlyJ8V3A9lZ/uzebI8I5kiW9uJk1CUOCMnoLezXLXQ=;
+	s=arc-20240116; t=1738829432; c=relaxed/simple;
+	bh=iImBJ2agGmMeArR0ncM4kOQKnY8qcxHU4nDTvyK/SRc=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=UMnb0pb/O2ILBM5zQ10xeYf9VtybuZMZGYOUZLi2FOEv3jA9BKNfFkHAQiWKZLD49qeD7ISUskHHIhkrPLXcNtoL6lK77EZaDOoHaOD2Sf1Dg7v6A9SVOI2vxMhqATYRXObcHamFnTN7S6iTydlhc1KOcWrkxHzZ0wlCcYUE498=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Hk0gqC2v; arc=none smtp.client-ip=170.10.129.124
+	 MIME-Version; b=YraPuiOrhTgzD7v+tKPNiTXX4EhiB2AVie1yEgSDpbt/tO4Jx2huzGucLLLXpi3cp9xtrAII4C19/TevjIkvdBC7nvVzl100r1iBS7c0PnJ1CfVW6dm/ioYaeJvg8i4pJc4vxU7nMvE83A/9ynahu08RFtee/zyUeNzZEse3/6M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=MCnnCW91; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Hk0gqC2v"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MCnnCW91"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1738829427;
+	s=mimecast20190719; t=1738829430;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=2q1ixL/Y/5336ANzdK2sPqd8brfXEPGOp30ur96CMgA=;
-	b=Hk0gqC2va10EeId2tBlhyKBzXoTgsH+nQvCqBxoyYu7OywfZp96WkptZcT/j8Ne82Rs+Mz
-	gtCwctGFwjP2Vvw0DLoUZnx5+WgJnhbba8BD3sVfdEDH2lyiyIrq1EmjznN3g381uEVSmw
-	7XfKpPdPUK2/a+WuE3wtx73Q8VekuI0=
-Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
+	bh=DkykfxMxi7lIzlRfOqumN+3ptq4UmHs6swUgjKGoWDw=;
+	b=MCnnCW91eWrOyvTxFPkJCjRY619caM2VLJlcHt5MEnug4/t9LDVnGnrNs9+UjU1S1/zlDR
+	GQ/v7Ne11NoeVbAtqUVT8HdcAdgLU1dkYVhUaA1JWmrfwjZqaP64u8IPGt2N16iUXJFweL
+	AjW5r7lBOsvBMU10HDM8088HjBSv/H8=
+Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-685-usNZzehRPMuRAqdsXgjgFA-1; Thu,
- 06 Feb 2025 03:10:21 -0500
-X-MC-Unique: usNZzehRPMuRAqdsXgjgFA-1
-X-Mimecast-MFC-AGG-ID: usNZzehRPMuRAqdsXgjgFA
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-224-YYZro5N0MqS2F4TtYFfvtg-1; Thu,
+ 06 Feb 2025 03:10:26 -0500
+X-MC-Unique: YYZro5N0MqS2F4TtYFfvtg-1
+X-Mimecast-MFC-AGG-ID: YYZro5N0MqS2F4TtYFfvtg
 Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id D78991955D5C;
-	Thu,  6 Feb 2025 08:10:20 +0000 (UTC)
+	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 6793D195608E;
+	Thu,  6 Feb 2025 08:10:25 +0000 (UTC)
 Received: from gmonaco-thinkpadt14gen3.rmtit.com (unknown [10.45.224.82])
-	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 6AB9119560AE;
-	Thu,  6 Feb 2025 08:10:17 +0000 (UTC)
+	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 0213019560AE;
+	Thu,  6 Feb 2025 08:10:21 +0000 (UTC)
 From: Gabriele Monaco <gmonaco@redhat.com>
 To: linux-kernel@vger.kernel.org,
 	Ingo Molnar <mingo@redhat.com>,
@@ -52,9 +52,9 @@ Cc: Gabriele Monaco <gmonaco@redhat.com>,
 	Juri Lelli <juri.lelli@redhat.com>,
 	John Kacur <jkacur@redhat.com>,
 	Clark Williams <williams@redhat.com>
-Subject: [RFC PATCH 05/11] rv: Add sco and tss per-cpu monitors
-Date: Thu,  6 Feb 2025 09:09:41 +0100
-Message-ID: <20250206080952.98478-6-gmonaco@redhat.com>
+Subject: [RFC PATCH 06/11] rv: Add snroc per-task monitor
+Date: Thu,  6 Feb 2025 09:09:42 +0100
+Message-ID: <20250206080952.98478-7-gmonaco@redhat.com>
 In-Reply-To: <20250206080952.98478-1-gmonaco@redhat.com>
 References: <20250206080952.98478-1-gmonaco@redhat.com>
 Precedence: bulk
@@ -66,12 +66,10 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
 
-Add 2 per-cpu monitors as part of the sched model:
+Add a per-task monitor as part of the sched model:
 
-* sco: scheduling context operations
-    Monitor to ensure sched_set_state happens only in thread context
-* tss: task switch while scheduling
-    Monitor to ensure sched_switch happens only in scheduling context
+* snroc: set non runnable on its own context
+    Monitor to ensure set_state happens only in the respective task's context
 
 To: Ingo Molnar <mingo@redhat.com>
 To: Peter Zijlstra <peterz@infradead.org>
@@ -80,96 +78,83 @@ Cc: John Kacur <jkacur@redhat.com>
 Cc: Clark Williams <williams@redhat.com>
 Signed-off-by: Gabriele Monaco <gmonaco@redhat.com>
 ---
- kernel/trace/rv/Kconfig                  |  2 +
- kernel/trace/rv/Makefile                 |  2 +
- kernel/trace/rv/monitors/sched/Kconfig   |  2 +
- kernel/trace/rv/monitors/sco/Kconfig     | 13 ++++
- kernel/trace/rv/monitors/sco/sco.c       | 88 +++++++++++++++++++++++
- kernel/trace/rv/monitors/sco/sco.h       | 47 ++++++++++++
- kernel/trace/rv/monitors/sco/sco_trace.h | 15 ++++
- kernel/trace/rv/monitors/tss/Kconfig     | 13 ++++
- kernel/trace/rv/monitors/tss/tss.c       | 91 ++++++++++++++++++++++++
- kernel/trace/rv/monitors/tss/tss.h       | 47 ++++++++++++
- kernel/trace/rv/monitors/tss/tss_trace.h | 15 ++++
- kernel/trace/rv/rv_trace.h               |  2 +
- tools/verification/models/sched/sco.dot  | 18 +++++
- tools/verification/models/sched/tss.dot  | 18 +++++
- 14 files changed, 373 insertions(+)
- create mode 100644 kernel/trace/rv/monitors/sco/Kconfig
- create mode 100644 kernel/trace/rv/monitors/sco/sco.c
- create mode 100644 kernel/trace/rv/monitors/sco/sco.h
- create mode 100644 kernel/trace/rv/monitors/sco/sco_trace.h
- create mode 100644 kernel/trace/rv/monitors/tss/Kconfig
- create mode 100644 kernel/trace/rv/monitors/tss/tss.c
- create mode 100644 kernel/trace/rv/monitors/tss/tss.h
- create mode 100644 kernel/trace/rv/monitors/tss/tss_trace.h
- create mode 100644 tools/verification/models/sched/sco.dot
- create mode 100644 tools/verification/models/sched/tss.dot
+ kernel/trace/rv/Kconfig                      |  1 +
+ kernel/trace/rv/Makefile                     |  1 +
+ kernel/trace/rv/monitors/sched/Kconfig       |  1 +
+ kernel/trace/rv/monitors/snroc/Kconfig       | 13 +++
+ kernel/trace/rv/monitors/snroc/snroc.c       | 87 ++++++++++++++++++++
+ kernel/trace/rv/monitors/snroc/snroc.h       | 47 +++++++++++
+ kernel/trace/rv/monitors/snroc/snroc_trace.h | 15 ++++
+ kernel/trace/rv/rv_trace.h                   |  1 +
+ tools/verification/models/sched/snroc.dot    | 18 ++++
+ 9 files changed, 184 insertions(+)
+ create mode 100644 kernel/trace/rv/monitors/snroc/Kconfig
+ create mode 100644 kernel/trace/rv/monitors/snroc/snroc.c
+ create mode 100644 kernel/trace/rv/monitors/snroc/snroc.h
+ create mode 100644 kernel/trace/rv/monitors/snroc/snroc_trace.h
+ create mode 100644 tools/verification/models/sched/snroc.dot
 
 diff --git a/kernel/trace/rv/Kconfig b/kernel/trace/rv/Kconfig
-index 84c98a5327f3e..961ac1e487df1 100644
+index 961ac1e487df1..c4f1c0fc3abc6 100644
 --- a/kernel/trace/rv/Kconfig
 +++ b/kernel/trace/rv/Kconfig
-@@ -28,6 +28,8 @@ menuconfig RV
- source "kernel/trace/rv/monitors/wip/Kconfig"
- source "kernel/trace/rv/monitors/wwnr/Kconfig"
+@@ -30,6 +30,7 @@ source "kernel/trace/rv/monitors/wwnr/Kconfig"
  source "kernel/trace/rv/monitors/sched/Kconfig"
-+source "kernel/trace/rv/monitors/tss/Kconfig"
-+source "kernel/trace/rv/monitors/sco/Kconfig"
+ source "kernel/trace/rv/monitors/tss/Kconfig"
+ source "kernel/trace/rv/monitors/sco/Kconfig"
++source "kernel/trace/rv/monitors/snroc/Kconfig"
  # Add new monitors here
  
  config RV_REACTORS
 diff --git a/kernel/trace/rv/Makefile b/kernel/trace/rv/Makefile
-index 1c784df03b9a7..ef2a084ff3102 100644
+index ef2a084ff3102..6d11d6400ddd0 100644
 --- a/kernel/trace/rv/Makefile
 +++ b/kernel/trace/rv/Makefile
-@@ -6,6 +6,8 @@ obj-$(CONFIG_RV) += rv.o
- obj-$(CONFIG_RV_MON_WIP) += monitors/wip/wip.o
- obj-$(CONFIG_RV_MON_WWNR) += monitors/wwnr/wwnr.o
+@@ -8,6 +8,7 @@ obj-$(CONFIG_RV_MON_WWNR) += monitors/wwnr/wwnr.o
  obj-$(CONFIG_RV_MON_SCHED) += monitors/sched/sched.o
-+obj-$(CONFIG_RV_MON_TSS) += monitors/tss/tss.o
-+obj-$(CONFIG_RV_MON_SCO) += monitors/sco/sco.o
+ obj-$(CONFIG_RV_MON_TSS) += monitors/tss/tss.o
+ obj-$(CONFIG_RV_MON_SCO) += monitors/sco/sco.o
++obj-$(CONFIG_RV_MON_SNROC) += monitors/snroc/snroc.o
  # Add new monitors here
  obj-$(CONFIG_RV_REACTORS) += rv_reactors.o
  obj-$(CONFIG_RV_REACT_PRINTK) += reactor_printk.o
 diff --git a/kernel/trace/rv/monitors/sched/Kconfig b/kernel/trace/rv/monitors/sched/Kconfig
-index 36c371af53f6f..1eb368573124c 100644
+index 1eb368573124c..831d9bcbce94a 100644
 --- a/kernel/trace/rv/monitors/sched/Kconfig
 +++ b/kernel/trace/rv/monitors/sched/Kconfig
-@@ -3,6 +3,8 @@
- config RV_MON_SCHED
- 	depends on RV
+@@ -5,6 +5,7 @@ config RV_MON_SCHED
  	select DA_MON_EVENTS_IMPLICIT
-+	select RV_MON_TSS
-+	select RV_MON_SCO
+ 	select RV_MON_TSS
+ 	select RV_MON_SCO
++	select RV_MON_SNROC
  	bool "sched monitor"
  	help
  	  Collection of monitors to check the scheduler behaves according to specifications.
-diff --git a/kernel/trace/rv/monitors/sco/Kconfig b/kernel/trace/rv/monitors/sco/Kconfig
+diff --git a/kernel/trace/rv/monitors/snroc/Kconfig b/kernel/trace/rv/monitors/snroc/Kconfig
 new file mode 100644
-index 0000000000000..275f8b935151f
+index 0000000000000..bb648ed1e39f8
 --- /dev/null
-+++ b/kernel/trace/rv/monitors/sco/Kconfig
++++ b/kernel/trace/rv/monitors/snroc/Kconfig
 @@ -0,0 +1,13 @@
 +# SPDX-License-Identifier: GPL-2.0-only
 +#
-+config RV_MON_SCO
++config RV_MON_SNROC
 +	depends on RV
 +	depends on RV_MON_SCHED
-+	select DA_MON_EVENTS_IMPLICIT
-+	bool "sco monitor"
++	select DA_MON_EVENTS_ID
++	bool "snroc monitor"
 +	help
-+	  Monitor to ensure sched_set_state happens only in thread context.
++	  Monitor to ensure sched_set_state happens only in the respective task's context.
 +	  This monitor is part of the sched monitors collection.
 +
 +	  For further information, see:
 +	    Documentation/trace/rv/monitor_sched.rst
-diff --git a/kernel/trace/rv/monitors/sco/sco.c b/kernel/trace/rv/monitors/sco/sco.c
+diff --git a/kernel/trace/rv/monitors/snroc/snroc.c b/kernel/trace/rv/monitors/snroc/snroc.c
 new file mode 100644
-index 0000000000000..e74476bc2c4ab
+index 0000000000000..14c8eca3d5c8e
 --- /dev/null
-+++ b/kernel/trace/rv/monitors/sco/sco.c
-@@ -0,0 +1,88 @@
++++ b/kernel/trace/rv/monitors/snroc/snroc.c
+@@ -0,0 +1,87 @@
 +// SPDX-License-Identifier: GPL-2.0
 +#include <linux/ftrace.h>
 +#include <linux/tracepoint.h>
@@ -180,332 +165,141 @@ index 0000000000000..e74476bc2c4ab
 +#include <rv/instrumentation.h>
 +#include <rv/da_monitor.h>
 +
-+#define MODULE_NAME "sco"
++#define MODULE_NAME "snroc"
 +
 +#include <trace/events/sched.h>
 +#include <rv_trace.h>
 +#include <monitors/sched/sched.h>
 +
-+#include "sco.h"
++#include "snroc.h"
 +
-+static struct rv_monitor rv_sco;
-+DECLARE_DA_MON_PER_CPU(sco, unsigned char);
++static struct rv_monitor rv_snroc;
++DECLARE_DA_MON_PER_TASK(snroc, unsigned char);
 +
 +static void handle_sched_set_state(void *data, struct task_struct *tsk, int curr_state, int state)
 +{
-+	da_handle_start_event_sco(sched_set_state_sco);
++	struct task_struct *p = tsk;
++
++	da_handle_event_snroc(p, sched_set_state_snroc);
 +}
-+
-+static void handle_schedule_entry(void *data, bool preempt, unsigned long ip)
-+{
-+	da_handle_event_sco(schedule_entry_sco);
-+}
-+
-+static void handle_schedule_exit(void *data, bool is_switch, unsigned long ip)
-+{
-+	da_handle_start_event_sco(schedule_exit_sco);
-+}
-+
-+static int enable_sco(void)
-+{
-+	int retval;
-+
-+	retval = da_monitor_init_sco();
-+	if (retval)
-+		return retval;
-+
-+	rv_attach_trace_probe("sco", sched_set_state_tp, handle_sched_set_state);
-+	rv_attach_trace_probe("sco", sched_entry_tp, handle_schedule_entry);
-+	rv_attach_trace_probe("sco", sched_exit_tp, handle_schedule_exit);
-+
-+	return 0;
-+}
-+
-+static void disable_sco(void)
-+{
-+	rv_sco.enabled = 0;
-+
-+	rv_detach_trace_probe("sco", sched_set_state_tp, handle_sched_set_state);
-+	rv_detach_trace_probe("sco", sched_entry_tp, handle_schedule_entry);
-+	rv_detach_trace_probe("sco", sched_exit_tp, handle_schedule_exit);
-+
-+	da_monitor_destroy_sco();
-+}
-+
-+static struct rv_monitor rv_sco = {
-+	.name = "sco",
-+	.description = "scheduling context operations.",
-+	.enable = enable_sco,
-+	.disable = disable_sco,
-+	.reset = da_monitor_reset_all_sco,
-+	.enabled = 0,
-+};
-+
-+static int __init register_sco(void)
-+{
-+	rv_register_monitor(&rv_sco, &rv_sched);
-+	return 0;
-+}
-+
-+static void __exit unregister_sco(void)
-+{
-+	rv_unregister_monitor(&rv_sco);
-+}
-+
-+module_init(register_sco);
-+module_exit(unregister_sco);
-+
-+MODULE_LICENSE("GPL");
-+MODULE_AUTHOR("Gabriele Monaco <gmonaco@redhat.com>");
-+MODULE_DESCRIPTION("sco: scheduling context operations.");
-diff --git a/kernel/trace/rv/monitors/sco/sco.h b/kernel/trace/rv/monitors/sco/sco.h
-new file mode 100644
-index 0000000000000..7a4c1f2d5ca1c
---- /dev/null
-+++ b/kernel/trace/rv/monitors/sco/sco.h
-@@ -0,0 +1,47 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Automatically generated C representation of sco automaton
-+ * For further information about this format, see kernel documentation:
-+ *   Documentation/trace/rv/deterministic_automata.rst
-+ */
-+
-+enum states_sco {
-+	thread_context_sco = 0,
-+	scheduling_context_sco,
-+	state_max_sco
-+};
-+
-+#define INVALID_STATE state_max_sco
-+
-+enum events_sco {
-+	sched_set_state_sco = 0,
-+	schedule_entry_sco,
-+	schedule_exit_sco,
-+	event_max_sco
-+};
-+
-+struct automaton_sco {
-+	char *state_names[state_max_sco];
-+	char *event_names[event_max_sco];
-+	unsigned char function[state_max_sco][event_max_sco];
-+	unsigned char initial_state;
-+	bool final_states[state_max_sco];
-+};
-+
-+static const struct automaton_sco automaton_sco = {
-+	.state_names = {
-+		"thread_context",
-+		"scheduling_context"
-+	},
-+	.event_names = {
-+		"sched_set_state",
-+		"schedule_entry",
-+		"schedule_exit"
-+	},
-+	.function = {
-+		{     thread_context_sco, scheduling_context_sco,          INVALID_STATE },
-+		{          INVALID_STATE,          INVALID_STATE,     thread_context_sco },
-+	},
-+	.initial_state = thread_context_sco,
-+	.final_states = { 1, 0 },
-+};
-diff --git a/kernel/trace/rv/monitors/sco/sco_trace.h b/kernel/trace/rv/monitors/sco/sco_trace.h
-new file mode 100644
-index 0000000000000..b711cd9024ec4
---- /dev/null
-+++ b/kernel/trace/rv/monitors/sco/sco_trace.h
-@@ -0,0 +1,15 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+
-+/*
-+ * Snippet to be included in rv_trace.h
-+ */
-+
-+#ifdef CONFIG_RV_MON_SCO
-+DEFINE_EVENT(event_da_monitor, event_sco,
-+	     TP_PROTO(char *state, char *event, char *next_state, bool final_state),
-+	     TP_ARGS(state, event, next_state, final_state));
-+
-+DEFINE_EVENT(error_da_monitor, error_sco,
-+	     TP_PROTO(char *state, char *event),
-+	     TP_ARGS(state, event));
-+#endif /* CONFIG_RV_MON_SCO */
-diff --git a/kernel/trace/rv/monitors/tss/Kconfig b/kernel/trace/rv/monitors/tss/Kconfig
-new file mode 100644
-index 0000000000000..5d133a76cb74e
---- /dev/null
-+++ b/kernel/trace/rv/monitors/tss/Kconfig
-@@ -0,0 +1,13 @@
-+# SPDX-License-Identifier: GPL-2.0-only
-+#
-+config RV_MON_TSS
-+	depends on RV
-+	depends on RV_MON_SCHED
-+	select DA_MON_EVENTS_IMPLICIT
-+	bool "tss monitor"
-+	help
-+	  Monitor to ensure sched_switch happens only in scheduling context.
-+	  This monitor is part of the sched monitors collection.
-+
-+	  For further information, see:
-+	    Documentation/trace/rv/monitor_sched.rst
-diff --git a/kernel/trace/rv/monitors/tss/tss.c b/kernel/trace/rv/monitors/tss/tss.c
-new file mode 100644
-index 0000000000000..542787e6524fc
---- /dev/null
-+++ b/kernel/trace/rv/monitors/tss/tss.c
-@@ -0,0 +1,91 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#include <linux/ftrace.h>
-+#include <linux/tracepoint.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/init.h>
-+#include <linux/rv.h>
-+#include <rv/instrumentation.h>
-+#include <rv/da_monitor.h>
-+
-+#define MODULE_NAME "tss"
-+
-+#include <trace/events/sched.h>
-+#include <rv_trace.h>
-+#include <monitors/sched/sched.h>
-+
-+#include "tss.h"
-+
-+static struct rv_monitor rv_tss;
-+DECLARE_DA_MON_PER_CPU(tss, unsigned char);
 +
 +static void handle_sched_switch(void *data, bool preempt,
 +				struct task_struct *prev,
 +				struct task_struct *next,
 +				unsigned int prev_state)
 +{
-+	da_handle_event_tss(sched_switch_tss);
++	da_handle_start_event_snroc(prev, sched_switch_out_snroc);
++	da_handle_event_snroc(next, sched_switch_in_snroc);
 +}
 +
-+static void handle_schedule_entry(void *data, bool preempt, unsigned long ip)
-+{
-+	da_handle_event_tss(schedule_entry_tss);
-+}
-+
-+static void handle_schedule_exit(void *data, bool is_switch, unsigned long ip)
-+{
-+	da_handle_start_event_tss(schedule_exit_tss);
-+}
-+
-+static int enable_tss(void)
++static int enable_snroc(void)
 +{
 +	int retval;
 +
-+	retval = da_monitor_init_tss();
++	retval = da_monitor_init_snroc();
 +	if (retval)
 +		return retval;
 +
-+	rv_attach_trace_probe("tss", sched_switch, handle_sched_switch);
-+	rv_attach_trace_probe("tss", sched_entry_tp, handle_schedule_entry);
-+	rv_attach_trace_probe("tss", sched_exit_tp, handle_schedule_exit);
++	rv_attach_trace_probe("snroc", sched_set_state_tp, handle_sched_set_state);
++	rv_attach_trace_probe("snroc", sched_switch, handle_sched_switch);
 +
 +	return 0;
 +}
 +
-+static void disable_tss(void)
++static void disable_snroc(void)
 +{
-+	rv_tss.enabled = 0;
++	rv_snroc.enabled = 0;
 +
-+	rv_detach_trace_probe("tss", sched_switch, handle_sched_switch);
-+	rv_detach_trace_probe("tss", sched_entry_tp, handle_schedule_entry);
-+	rv_detach_trace_probe("tss", sched_exit_tp, handle_schedule_exit);
++	rv_detach_trace_probe("snroc", sched_set_state_tp, handle_sched_set_state);
++	rv_detach_trace_probe("snroc", sched_switch, handle_sched_switch);
 +
-+	da_monitor_destroy_tss();
++	da_monitor_destroy_snroc();
 +}
 +
-+static struct rv_monitor rv_tss = {
-+	.name = "tss",
-+	.description = "task switch while scheduling.",
-+	.enable = enable_tss,
-+	.disable = disable_tss,
-+	.reset = da_monitor_reset_all_tss,
++static struct rv_monitor rv_snroc = {
++	.name = "snroc",
++	.description = "set non runnable on its own context.",
++	.enable = enable_snroc,
++	.disable = disable_snroc,
++	.reset = da_monitor_reset_all_snroc,
 +	.enabled = 0,
 +};
 +
-+static int __init register_tss(void)
++static int __init register_snroc(void)
 +{
-+	rv_register_monitor(&rv_tss, &rv_sched);
++	rv_register_monitor(&rv_snroc, &rv_sched);
 +	return 0;
 +}
 +
-+static void __exit unregister_tss(void)
++static void __exit unregister_snroc(void)
 +{
-+	rv_unregister_monitor(&rv_tss);
++	rv_unregister_monitor(&rv_snroc);
 +}
 +
-+module_init(register_tss);
-+module_exit(unregister_tss);
++module_init(register_snroc);
++module_exit(unregister_snroc);
 +
 +MODULE_LICENSE("GPL");
 +MODULE_AUTHOR("Gabriele Monaco <gmonaco@redhat.com>");
-+MODULE_DESCRIPTION("tss: task switch while scheduling.");
-diff --git a/kernel/trace/rv/monitors/tss/tss.h b/kernel/trace/rv/monitors/tss/tss.h
++MODULE_DESCRIPTION("snroc: set non runnable on its own context.");
+diff --git a/kernel/trace/rv/monitors/snroc/snroc.h b/kernel/trace/rv/monitors/snroc/snroc.h
 new file mode 100644
-index 0000000000000..f0a36fda1b873
+index 0000000000000..c3650a2b1b107
 --- /dev/null
-+++ b/kernel/trace/rv/monitors/tss/tss.h
++++ b/kernel/trace/rv/monitors/snroc/snroc.h
 @@ -0,0 +1,47 @@
 +/* SPDX-License-Identifier: GPL-2.0 */
 +/*
-+ * Automatically generated C representation of tss automaton
++ * Automatically generated C representation of snroc automaton
 + * For further information about this format, see kernel documentation:
 + *   Documentation/trace/rv/deterministic_automata.rst
 + */
 +
-+enum states_tss {
-+	thread_tss = 0,
-+	sched_tss,
-+	state_max_tss
++enum states_snroc {
++	other_context_snroc = 0,
++	own_context_snroc,
++	state_max_snroc
 +};
 +
-+#define INVALID_STATE state_max_tss
++#define INVALID_STATE state_max_snroc
 +
-+enum events_tss {
-+	sched_switch_tss = 0,
-+	schedule_entry_tss,
-+	schedule_exit_tss,
-+	event_max_tss
++enum events_snroc {
++	sched_set_state_snroc = 0,
++	sched_switch_in_snroc,
++	sched_switch_out_snroc,
++	event_max_snroc
 +};
 +
-+struct automaton_tss {
-+	char *state_names[state_max_tss];
-+	char *event_names[event_max_tss];
-+	unsigned char function[state_max_tss][event_max_tss];
++struct automaton_snroc {
++	char *state_names[state_max_snroc];
++	char *event_names[event_max_snroc];
++	unsigned char function[state_max_snroc][event_max_snroc];
 +	unsigned char initial_state;
-+	bool final_states[state_max_tss];
++	bool final_states[state_max_snroc];
 +};
 +
-+static const struct automaton_tss automaton_tss = {
++static const struct automaton_snroc automaton_snroc = {
 +	.state_names = {
-+		"thread",
-+		"sched"
++		"other_context",
++		"own_context"
 +	},
 +	.event_names = {
-+		"sched_switch",
-+		"schedule_entry",
-+		"schedule_exit"
++		"sched_set_state",
++		"sched_switch_in",
++		"sched_switch_out"
 +	},
 +	.function = {
-+		{     INVALID_STATE,         sched_tss,     INVALID_STATE },
-+		{         sched_tss,     INVALID_STATE,        thread_tss },
++		{      INVALID_STATE,  own_context_snroc,       INVALID_STATE },
++		{  own_context_snroc,      INVALID_STATE, other_context_snroc },
 +	},
-+	.initial_state = thread_tss,
++	.initial_state = other_context_snroc,
 +	.final_states = { 1, 0 },
 +};
-diff --git a/kernel/trace/rv/monitors/tss/tss_trace.h b/kernel/trace/rv/monitors/tss/tss_trace.h
+diff --git a/kernel/trace/rv/monitors/snroc/snroc_trace.h b/kernel/trace/rv/monitors/snroc/snroc_trace.h
 new file mode 100644
-index 0000000000000..4619dbb50cc06
+index 0000000000000..50114cef51229
 --- /dev/null
-+++ b/kernel/trace/rv/monitors/tss/tss_trace.h
++++ b/kernel/trace/rv/monitors/snroc/snroc_trace.h
 @@ -0,0 +1,15 @@
 +/* SPDX-License-Identifier: GPL-2.0 */
 +
@@ -513,74 +307,49 @@ index 0000000000000..4619dbb50cc06
 + * Snippet to be included in rv_trace.h
 + */
 +
-+#ifdef CONFIG_RV_MON_TSS
-+DEFINE_EVENT(event_da_monitor, event_tss,
-+	     TP_PROTO(char *state, char *event, char *next_state, bool final_state),
-+	     TP_ARGS(state, event, next_state, final_state));
++#ifdef CONFIG_RV_MON_SNROC
++DEFINE_EVENT(event_da_monitor_id, event_snroc,
++	     TP_PROTO(int id, char *state, char *event, char *next_state, bool final_state),
++	     TP_ARGS(id, state, event, next_state, final_state));
 +
-+DEFINE_EVENT(error_da_monitor, error_tss,
-+	     TP_PROTO(char *state, char *event),
-+	     TP_ARGS(state, event));
-+#endif /* CONFIG_RV_MON_TSS */
++DEFINE_EVENT(error_da_monitor_id, error_snroc,
++	     TP_PROTO(int id, char *state, char *event),
++	     TP_ARGS(id, state, event));
++#endif /* CONFIG_RV_MON_SNROC */
 diff --git a/kernel/trace/rv/rv_trace.h b/kernel/trace/rv/rv_trace.h
-index 5e65097423ba4..f49e85ca97a1f 100644
+index f49e85ca97a1f..a533bc29cfddf 100644
 --- a/kernel/trace/rv/rv_trace.h
 +++ b/kernel/trace/rv/rv_trace.h
-@@ -58,6 +58,8 @@ DECLARE_EVENT_CLASS(error_da_monitor,
+@@ -120,6 +120,7 @@ DECLARE_EVENT_CLASS(error_da_monitor_id,
  );
  
- #include <monitors/wip/wip_trace.h>
-+#include <monitors/tss/tss_trace.h>
-+#include <monitors/sco/sco_trace.h>
- // Add new monitors based on CONFIG_DA_MON_EVENTS_IMPLICIT here
+ #include <monitors/wwnr/wwnr_trace.h>
++#include <monitors/snroc/snroc_trace.h>
+ // Add new monitors based on CONFIG_DA_MON_EVENTS_ID here
  
- #endif /* CONFIG_DA_MON_EVENTS_IMPLICIT */
-diff --git a/tools/verification/models/sched/sco.dot b/tools/verification/models/sched/sco.dot
+ #endif /* CONFIG_DA_MON_EVENTS_ID */
+diff --git a/tools/verification/models/sched/snroc.dot b/tools/verification/models/sched/snroc.dot
 new file mode 100644
-index 0000000000000..20b0e3b449a6b
+index 0000000000000..8b71c32d4dca4
 --- /dev/null
-+++ b/tools/verification/models/sched/sco.dot
++++ b/tools/verification/models/sched/snroc.dot
 @@ -0,0 +1,18 @@
 +digraph state_automaton {
 +	center = true;
 +	size = "7,11";
-+	{node [shape = plaintext] "scheduling_context"};
-+	{node [shape = plaintext, style=invis, label=""] "__init_thread_context"};
-+	{node [shape = ellipse] "thread_context"};
-+	{node [shape = plaintext] "thread_context"};
-+	"__init_thread_context" -> "thread_context";
-+	"scheduling_context" [label = "scheduling_context"];
-+	"scheduling_context" -> "thread_context" [ label = "schedule_exit" ];
-+	"thread_context" [label = "thread_context", color = green3];
-+	"thread_context" -> "scheduling_context" [ label = "schedule_entry" ];
-+	"thread_context" -> "thread_context" [ label = "sched_set_state" ];
++	{node [shape = plaintext, style=invis, label=""] "__init_other_context"};
++	{node [shape = ellipse] "other_context"};
++	{node [shape = plaintext] "other_context"};
++	{node [shape = plaintext] "own_context"};
++	"__init_other_context" -> "other_context";
++	"other_context" [label = "other_context", color = green3];
++	"other_context" -> "own_context" [ label = "sched_switch_in" ];
++	"own_context" [label = "own_context"];
++	"own_context" -> "other_context" [ label = "sched_switch_out" ];
++	"own_context" -> "own_context" [ label = "sched_set_state" ];
 +	{ rank = min ;
-+		"__init_thread_context";
-+		"thread_context";
-+	}
-+}
-diff --git a/tools/verification/models/sched/tss.dot b/tools/verification/models/sched/tss.dot
-new file mode 100644
-index 0000000000000..7dfa1d9121bbd
---- /dev/null
-+++ b/tools/verification/models/sched/tss.dot
-@@ -0,0 +1,18 @@
-+digraph state_automaton {
-+	center = true;
-+	size = "7,11";
-+	{node [shape = plaintext] "sched"};
-+	{node [shape = plaintext, style=invis, label=""] "__init_thread"};
-+	{node [shape = ellipse] "thread"};
-+	{node [shape = plaintext] "thread"};
-+	"__init_thread" -> "thread";
-+	"sched" [label = "sched"];
-+	"sched" -> "sched" [ label = "sched_switch" ];
-+	"sched" -> "thread" [ label = "schedule_exit" ];
-+	"thread" [label = "thread", color = green3];
-+	"thread" -> "sched" [ label = "schedule_entry" ];
-+	{ rank = min ;
-+		"__init_thread";
-+		"thread";
++		"__init_other_context";
++		"other_context";
 +	}
 +}
 -- 
