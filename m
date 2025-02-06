@@ -1,32 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E26E81EDA12;
-	Thu,  6 Feb 2025 15:23:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74EFD1C700E;
+	Thu,  6 Feb 2025 15:26:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738855424; cv=none; b=trF864BXse8IOGc3iF3co255xaUe6h8cP+PtCFl4h+1dWYGU1Xlf3mN89d2iFoX+42j2eeca4JTmQ8xPycLslQxiM9DzV4j/5+cmnqJAdLWGMlE+KBk25NKN82O5ytm7u3lAYL2CoAGkr3Nedagud90Ln9Jg7TVIlySffBUk0bQ=
+	t=1738855600; cv=none; b=TooX6TyWhC10Jx/KPkDJgGt2Fv50uCSC5zrFGrzfO2NrO3ZdWl51rl5X8Syly81WDnGhsGsLdUZt4W+S2l0Vo9fBXXEK3hKyXV7dcZDyhPUkOtvY0yVw6fOqwwlLHs/VX+XV6VvbTEd2yzeeqQlXJih7dUZCVERqDoIdnCWOFOE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738855424; c=relaxed/simple;
-	bh=nUu17B7s0z1EoNOLJJ+yCLRICxXjZP3DnG1WBW5SukA=;
+	s=arc-20240116; t=1738855600; c=relaxed/simple;
+	bh=F9Rz2Q6E+Wzqfvvh0HW0lgSSQjBGxcjxaNnHLhTnOZ0=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=aTGfCXYUkqj/9OeM/gtnjIewiqCC4rJ/p4tB5EbnR3dYj4m0mVxeNuMKQ2xJQ2zHGHQzfJDbRgD5Y2lrV/lEn7OtzcmiZZwGHiDCe0w11T04OrM1iEablbTFIRgG5hbHIVejrsJayGwNonjXhei2gCgj4r0MUCEdriuYPn84CHM=
+	 MIME-Version:Content-Type; b=XmSb1BG8M1BUvxeG5MuxhW98Fn1v0GSydq2WYb2R1qa7tyuVzmL/8caWcu6I861PLJthA3xQr08lFDVOTtHh2B1zr+EPhMSb8TSHbXHjR2uFQYJlxpJCGEJni8Ef/fBhmOEqmonii0qdlRQId4UHBHHwOqdFqpluf7dPEP49ttI=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A4BEFC4CEDD;
-	Thu,  6 Feb 2025 15:23:43 +0000 (UTC)
-Date: Thu, 6 Feb 2025 10:24:25 -0500
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C0A7AC4CEDD;
+	Thu,  6 Feb 2025 15:26:38 +0000 (UTC)
+Date: Thu, 6 Feb 2025 10:27:20 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
 To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
 Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Mark
  Rutland <mark.rutland@arm.com>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH 4/8] tracing: Have persistent trace instances save KASLR
- offset
-Message-ID: <20250206102425.2d1f71ad@gandalf.local.home>
-In-Reply-To: <20250206142232.5a10545649210f3b3ba172c2@kernel.org>
+ <mathieu.desnoyers@efficios.com>, Andrew Morton
+ <akpm@linux-foundation.org>, Luis Chamberlain <mcgrof@kernel.org>, Petr
+ Pavlu <petr.pavlu@suse.com>, Sami Tolvanen <samitolvanen@google.com>,
+ Daniel Gomez <da.gomez@samsung.com>, linux-modules@vger.kernel.org
+Subject: Re: [PATCH 5/8] module: Add module_for_each_mod() function
+Message-ID: <20250206102720.0fd57129@gandalf.local.home>
+In-Reply-To: <20250206142817.91853f475c681bc2ef7ca962@kernel.org>
 References: <20250205225031.799739376@goodmis.org>
-	<20250205225103.596907199@goodmis.org>
-	<20250206142232.5a10545649210f3b3ba172c2@kernel.org>
+	<20250205225103.760856859@goodmis.org>
+	<20250206142817.91853f475c681bc2ef7ca962@kernel.org>
 X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -37,49 +39,65 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Thu, 6 Feb 2025 14:22:32 +0900
+On Thu, 6 Feb 2025 14:28:17 +0900
 Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
 
-> On Wed, 05 Feb 2025 17:50:35 -0500
-> Steven Rostedt <rostedt@goodmis.org> wrote:
+> > --- a/kernel/module/main.c
+> > +++ b/kernel/module/main.c
+> > @@ -3809,6 +3809,20 @@ bool is_module_text_address(unsigned long addr)
+> >  	return ret;
+> >  }
+> >    
 > 
-> > From: Steven Rostedt <rostedt@goodmis.org>
-> > 
-> > There's no reason to save the KASLR offset for the ring buffer itself.
-> > That is used by the tracer. Now that the tracer has a way to save data in
-> > the persistent memory of the ring buffer, have the tracing infrastructure
-> > take care of the saving of the KASLR offset.
-> >   
+> It is better to add a kerneldoc for this API.
+
+Agreed, but I was planning on this changing. Waiting to hear from the
+module maintainers.
+
 > 
-> Looks good to me. But note that the scratchpad size may not enough for
-> module table later, because 1 module requires at least the name[]
-> (64byte - sizeof(ulong)) and the base address (ulong). This means
-> 1 entry consumes 64byte. Thus there can be only 63 entries + meta
-> data in 4K page. My ubuntu loads 189(!) modules;
+> /** 
+>  * module_for_each_mod() - iterate all modules
+>  * @func: Callback function
+>  * @data: User data
+>  *
+>  * Call the @func with each module in the system. If @func returns !0, this
+>  * stops itrating. Note that @func must not sleep since it is called under
+>  * the preemption disabled.
+>  */
 > 
-> $ lsmod | wc -l
-> 190
-> 
-> so we want 255 entries, which requires 16KB.
+> BTW, do we really need to disable preempt or is it enough to call
+> rcu_read_lock()?
 
-So, I was thinking of modifying the allocation of the persistent ring
-buffer, which currently is
+Bah, as I expected this function to be changed, I didn't spend too much
+time on looking at its implementation. I just cut and pasted how the other
+loops worked. But yes, it should not be disabling preemption. In fact, I
+think the module code itself should not be disabling preemption!
 
-#define ring_buffer_alloc_range(size, flags, order, start, range_size)
+I'll have to go and look into that.
 
-[ it's a macro to add lockdep key information in it ]
-
-But I should change it to include a scratch size, and allow the tracing
-system to define how much of the range it should allocate for scratch.
-
-Then we could do:
-
-		buf->buffer = ring_buffer_alloc_range(size, rb_flags, 0,
-						      tr->range_addr_start,
-						      tr->range_addr_size,
-						      struct_size(tscratch, entries, 128));
-
-Which would make sure that the scratch size contains enough memory to hold
-128 modules.
+Thanks!
 
 -- Steve
+
+
+> 
+> Thank you,
+> 
+> > +void module_for_each_mod(int(*func)(struct module *mod, void *data), void *data)
+> > +{
+> > +	struct module *mod;
+> > +
+> > +	preempt_disable();
+> > +	list_for_each_entry_rcu(mod, &modules, list) {
+> > +		if (mod->state == MODULE_STATE_UNFORMED)
+> > +			continue;
+> > +		if (func(mod, data))
+> > +			break;
+> > +	}
+> > +	preempt_enable();
+> > +}
+> > +
+> >  /**
+> >   * __module_text_address() - get the module whose code contains an address.
+> >   * @addr: the address.
+> > -- 
