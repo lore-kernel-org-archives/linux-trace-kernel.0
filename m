@@ -1,62 +1,55 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7473C225799
-	for <linux-trace-kernel@vger.kernel.org>; Thu,  6 Feb 2025 08:10:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40AD5225A22
+	for <linux-trace-kernel@vger.kernel.org>; Thu,  6 Feb 2025 08:10:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738829447; cv=none; b=iWtEZePdA1rkpw9M5eafXWPR9AUTJpF/7SKQveCjS9KNvd9yPScb/0pCZJVQpfat35xvE64thwya0LSC+Q7mKiuw6DlEtPWdRyY/fwQrKGWti6x3wOQCNxH7e4SCv+Am8JAsCdVCjl2NKh5Wgk8Xn9rmbGiEOgMHTEZgdx5j48I=
+	t=1738829450; cv=none; b=fJ7H/o1mi49WgfGz0/5MrSarW9ZAAqLCoC/v/O39p6IVRBahlThsAvXouusYvV/GRx61IGj7NCixz8Dfnf7G4WhM689sdTNBEXkpWGlMFLuM6L2g50NHYTQ27fPrGw7fMa7ibKN0KW5ahv0UW26AaSHupd6B6yMfrOr5sEd9Arw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738829447; c=relaxed/simple;
-	bh=IY7DU1BhjQRR5Coi7wNZ7++4LSEJz4/d+wLFVatOJNE=;
+	s=arc-20240116; t=1738829450; c=relaxed/simple;
+	bh=MFyJzG3kxv6rgiXk0F67ley3QB9Ga1PK84Oojs3YhRQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=nF+XwOqZTHpxTXg9QyeNmoZSDq3ltehcObGTvn3yi7jiPAvEeRyBMS33RhA5B9xHlF3AOB0nf1Mu7FkggKhtt34zCllLQdJ6Oob7EiOZraNuTn5ARp7xjXM4gmPlz1K/OhGrsfPGnnXLmBsVhe9yfc0eZia5dd6DA7tcZE44Bws=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Pz6V4cRG; arc=none smtp.client-ip=170.10.133.124
+	 MIME-Version; b=CTVVtA16ZnHjBr1vSIHD24gqfs9J4h9bXhpcNlF61ZGvq+2YGcciEdLJ+mvAhifshttNxErllutyAo0BH8le5XO1+6PXOOWA6iLvs2ApuWas43stydLsfBj/oLvBqgKlgWrgjO2mLmqSacqzXeq+AlpZ9myJII8sTESuMwnDjY8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=iOOvDXH9; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Pz6V4cRG"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iOOvDXH9"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1738829444;
+	s=mimecast20190719; t=1738829447;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=rPPwrQnu9UKt/4NbsUXxMh/AuN498RxwAC9aj1izwuk=;
-	b=Pz6V4cRGaCL9qocbY/L7du0sHKeW/Rv1jWEmR2BL24VgaJiwkvH7lASCe31T77/a2WCbf8
-	P0Qqn9GO0Kqjvf6Hh2d43KntzBMfHNEmPyY8LvA/uUSoEAIxjW2/t0pF2YFdRypOicE14c
-	KSMXSFcuZaqbDfogV/UXGeoCYoF7yPw=
+	bh=BnR6oqxI0UEcO9ewCzZls4ELgDlHtvYrPUmSJgsWcEQ=;
+	b=iOOvDXH9qjDnfLX13zfWSCpdAGY0PlqCPtwM/RDOnrEBFNCHusVzn4/2+fzE1qX4lWqWB0
+	Brovi9iTE4fm12ycyen7+SoNjfE/cWTOI7U9ZJSslwNa+9c9JSE2XRQ2vZXst+n3G4mRKh
+	Rj5gtEfmJoZRH/yi2NSmGKbJtvCHnqA=
 Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-608-fiP22780PDCosPesVr3YzA-1; Thu,
- 06 Feb 2025 03:10:41 -0500
-X-MC-Unique: fiP22780PDCosPesVr3YzA-1
-X-Mimecast-MFC-AGG-ID: fiP22780PDCosPesVr3YzA
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-247-4TrA2jcfM2eRXUgIV0Fdzg-1; Thu,
+ 06 Feb 2025 03:10:43 -0500
+X-MC-Unique: 4TrA2jcfM2eRXUgIV0Fdzg-1
+X-Mimecast-MFC-AGG-ID: 4TrA2jcfM2eRXUgIV0Fdzg
 Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 2A17B1956059;
-	Thu,  6 Feb 2025 08:10:40 +0000 (UTC)
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id AE84D1956051;
+	Thu,  6 Feb 2025 08:10:42 +0000 (UTC)
 Received: from gmonaco-thinkpadt14gen3.rmtit.com (unknown [10.45.224.82])
-	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 436AD19560B9;
-	Thu,  6 Feb 2025 08:10:35 +0000 (UTC)
+	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id F067119560B9;
+	Thu,  6 Feb 2025 08:10:40 +0000 (UTC)
 From: Gabriele Monaco <gmonaco@redhat.com>
 To: linux-kernel@vger.kernel.org,
-	Ingo Molnar <mingo@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Jonathan Corbet <corbet@lwn.net>,
 	Steven Rostedt <rostedt@goodmis.org>,
-	linux-doc@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org
-Cc: Gabriele Monaco <gmonaco@redhat.com>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	John Kacur <jkacur@redhat.com>,
-	Clark Williams <williams@redhat.com>
-Subject: [RFC PATCH 10/11] Documentation/rv: Add docs for the sched monitors
-Date: Thu,  6 Feb 2025 09:09:46 +0100
-Message-ID: <20250206080952.98478-11-gmonaco@redhat.com>
+Cc: Gabriele Monaco <gmonaco@redhat.com>
+Subject: [RFC PATCH 11/11] tools/rv: Allow rv list to filter for container
+Date: Thu,  6 Feb 2025 09:09:47 +0100
+Message-ID: <20250206080952.98478-12-gmonaco@redhat.com>
 In-Reply-To: <20250206080952.98478-1-gmonaco@redhat.com>
 References: <20250206080952.98478-1-gmonaco@redhat.com>
 Precedence: bulk
@@ -68,276 +61,178 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
 
-Add man page and kernel documentation for the sched monitors, as sched
-is a container of other monitors, document all in the same page.
-sched is the first nested monitor, also explain what is a nested monitor
-and how enabling containers or children monitors work.
+Add possibility to supply the container name to rv list:
 
-To: Ingo Molnar <mingo@redhat.com>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Juri Lelli <juri.lelli@redhat.com>
-Cc: John Kacur <jkacur@redhat.com>
-Cc: Clark Williams <williams@redhat.com>
+  # rv list sched
+  mon1
+  mon2
+  mon3
+
+This lists only monitors in sched, without indentation.
+Supplying -h, any option (string starting with -) or more than 1
+argument will still print the usage.
+Passing a non-existent container prints nothing and passing no container
+continues to print all monitors, showing indentation for nested
+monitors, reported after their container.
+
 Signed-off-by: Gabriele Monaco <gmonaco@redhat.com>
 ---
- Documentation/tools/rv/rv-mon-sched.rst  |  69 +++++++++
- Documentation/trace/rv/monitor_sched.rst | 171 +++++++++++++++++++++++
- 2 files changed, 240 insertions(+)
- create mode 100644 Documentation/tools/rv/rv-mon-sched.rst
- create mode 100644 Documentation/trace/rv/monitor_sched.rst
+ tools/verification/rv/include/in_kernel.h |  2 +-
+ tools/verification/rv/src/in_kernel.c     | 36 +++++++++++++++------
+ tools/verification/rv/src/rv.c            | 38 +++++++++++++++--------
+ 3 files changed, 53 insertions(+), 23 deletions(-)
 
-diff --git a/Documentation/tools/rv/rv-mon-sched.rst b/Documentation/tools/rv/rv-mon-sched.rst
-new file mode 100644
-index 0000000000000..da0fe4c79ae52
---- /dev/null
-+++ b/Documentation/tools/rv/rv-mon-sched.rst
-@@ -0,0 +1,69 @@
-+.. SPDX-License-Identifier: GPL-2.0
+diff --git a/tools/verification/rv/include/in_kernel.h b/tools/verification/rv/include/in_kernel.h
+index 3090638c8d710..f3bfd3b9895fe 100644
+--- a/tools/verification/rv/include/in_kernel.h
++++ b/tools/verification/rv/include/in_kernel.h
+@@ -1,3 +1,3 @@
+ // SPDX-License-Identifier: GPL-2.0
+-int ikm_list_monitors(void);
++int ikm_list_monitors(char *container);
+ int ikm_run_monitor(char *monitor, int argc, char **argv);
+diff --git a/tools/verification/rv/src/in_kernel.c b/tools/verification/rv/src/in_kernel.c
+index 032b851019290..c0dcee795c0de 100644
+--- a/tools/verification/rv/src/in_kernel.c
++++ b/tools/verification/rv/src/in_kernel.c
+@@ -180,19 +180,25 @@ static char *ikm_read_desc(char *monitor_name)
+ /*
+  * ikm_fill_monitor_definition - fill monitor's definition
+  *
+- * Returns -1 on error, 0 otherwise.
++ * Returns -1 on error, 1 if the monitor does not belong in the container, 0 otherwise.
++ * container can be NULL
+  */
+-static int ikm_fill_monitor_definition(char *name, struct monitor *ikm)
++static int ikm_fill_monitor_definition(char *name, struct monitor *ikm, char *container)
+ {
+ 	int enabled;
+ 	char *desc, *nested_name;
+ 
+ 	nested_name = strstr(name, ":");
+ 	if (nested_name) {
++		/* it belongs in container if it starts with "container:" */
++		if (container && strstr(name, container) != name)
++			return 1;
+ 		*nested_name = '/';
+ 		++nested_name;
+ 		ikm->nested = 1;
+ 	} else {
++		if (container)
++			return 1;
+ 		nested_name = name;
+ 		ikm->nested = 0;
+ 	}
+@@ -328,12 +334,12 @@ static int ikm_has_id(char *monitor_name)
+  *
+  * Returns 0 on success, -1 otherwise.
+  */
+-int ikm_list_monitors(void)
++int ikm_list_monitors(char *container)
+ {
+ 	char *available_monitors;
+ 	struct monitor ikm = {0};
+ 	char *curr, *next;
+-	int retval;
++	int retval, list_monitor = 0;
+ 
+ 	available_monitors = tracefs_instance_file_read(NULL, "rv/available_monitors", NULL);
+ 
+@@ -347,17 +353,29 @@ int ikm_list_monitors(void)
+ 		next = strstr(curr, "\n");
+ 		*next = '\0';
+ 
+-		retval = ikm_fill_monitor_definition(curr, &ikm);
+-		if (retval)
++		retval = ikm_fill_monitor_definition(curr, &ikm, container);
++		if (retval < 0)
+ 			err_msg("ikm: error reading %d in kernel monitor, skipping\n", curr);
+ 
+-		printf("%s%-*s %s %s\n", ikm.nested ? " - " : "",
+-		       ikm.nested ? MAX_DA_NAME_LEN - 3 : MAX_DA_NAME_LEN,
+-		       ikm.name, ikm.desc, ikm.enabled ? "[ON]" : "[OFF]");
++		if (!retval) {
++			int indent = ikm.nested && !container;
 +
-+============
-+rv-mon-sched
-+============
-+-----------------------------
-+Scheduler monitors collection
-+-----------------------------
++			list_monitor = 1;
++			printf("%s%-*s %s %s\n", indent ? " - " : "",
++			       indent ? MAX_DA_NAME_LEN - 3 : MAX_DA_NAME_LEN,
++			       ikm.name, ikm.desc, ikm.enabled ? "[ON]" : "[OFF]");
++		}
+ 		curr = ++next;
+ 
+ 	} while (strlen(curr));
+ 
++	if (!list_monitor) {
++		if (container)
++			printf("-- No monitor found in container %s --\n", container);
++		else
++			printf("-- No monitor found --\n");
++	}
 +
-+:Manual section: 1
+ 	free(available_monitors);
+ 
+ 	return 0;
+diff --git a/tools/verification/rv/src/rv.c b/tools/verification/rv/src/rv.c
+index 1ddb855328165..239de054d1e06 100644
+--- a/tools/verification/rv/src/rv.c
++++ b/tools/verification/rv/src/rv.c
+@@ -41,30 +41,42 @@ static void rv_list(int argc, char **argv)
+ {
+ 	static const char *const usage[] = {
+ 		"",
+-		"  usage: rv list [-h]",
++		"  usage: rv list [-h] [container]",
+ 		"",
+ 		"	list all available monitors",
+ 		"",
+ 		"	-h/--help: print this menu",
++		"",
++		"	[container]: list only monitors in this container",
+ 		NULL,
+ 	};
+-	int i;
+-
+-	if (argc > 1) {
++	int i, print_help = 0, retval = 0;
++	char *container = NULL;
 +
-+SYNOPSIS
-+========
++	if (argc == 2) {
++		if (!strcmp(argv[1], "-h") || !strcmp(argv[1], "--help")) {
++			print_help = 1;
++			retval = 0;
++		} else if (argv[1][0] == '-') {
++			/* assume invalid option */
++			print_help = 1;
++			retval = 1;
++		} else
++			container = argv[1];
++	} else if (argc > 2) {
++		/* more than 2 is always usage */
++		print_help = 1;
++		retval = 1;
++	}
++	if (print_help) {
+ 		fprintf(stderr, "rv version %s\n", VERSION);
+-
+-		/* more than 1 is always usage */
+ 		for (i = 0; usage[i]; i++)
+ 			fprintf(stderr, "%s\n", usage[i]);
+-
+-		/* but only -h is valid */
+-		if (!strcmp(argv[1], "-h") || !strcmp(argv[1], "--help"))
+-			exit(0);
+-		else
+-			exit(1);
++		exit(retval);
+ 	}
+ 
+-	ikm_list_monitors();
++	ikm_list_monitors(container);
 +
-+**rv mon sched** [*OPTIONS*]
-+
-+**rv mon <NESTED_MONITOR>** [*OPTIONS*]
-+
-+**rv mon sched:<NESTED_MONITOR>** [*OPTIONS*]
-+
-+DESCRIPTION
-+===========
-+
-+The scheduler monitor collection is a container for several monitors to model
-+the behaviour of the scheduler. Each monitor describes a specification that
-+the scheduler should follow.
-+
-+As a monitor container, it will enable all nested monitors and set them
-+according to OPTIONS.
-+Nevertheless nested monitors can also be activated independently both by name
-+and by specifying sched: , e.g. to enable only monitor tss you can do any of:
-+
-+    # rv mon sched:tss
-+
-+    # rv mon tss
-+
-+See kernel documentation for further information about this monitor:
-+<https://docs.kernel.org/trace/rv/monitor_sched.html>
-+
-+OPTIONS
-+=======
-+
-+.. include:: common_ikm.rst
-+
-+NESTED MONITOR
-+==============
-+
-+The available nested monitors are:
-+  * scpd: schedule called with preemption disabled
-+  * snep: schedule does not enable preempt
-+  * sncid: schedule not called with interrupt disabled
-+  * snroc: set non runnable on its own context
-+  * sco: scheduling context operations
-+  * tss: task switch while scheduling
-+
-+SEE ALSO
-+========
-+
-+**rv**\(1), **rv-mon**\(1)
-+
-+Linux kernel *RV* documentation:
-+<https://www.kernel.org/doc/html/latest/trace/rv/index.html>
-+
-+AUTHOR
-+======
-+
-+Written by Gabriele Monaco <gmonaco@redhat.com>
-+
-+.. include:: common_appendix.rst
-diff --git a/Documentation/trace/rv/monitor_sched.rst b/Documentation/trace/rv/monitor_sched.rst
-new file mode 100644
-index 0000000000000..24b2c62a3bc26
---- /dev/null
-+++ b/Documentation/trace/rv/monitor_sched.rst
-@@ -0,0 +1,171 @@
-+Scheduler monitors
-+==================
-+
-+- Name: sched
-+- Type: container for multiple monitors
-+- Author: Gabriele Monaco <gmonaco@redhat.com>, Daniel Bristot de Oliveira <bristot@kernel.org>
-+
-+Description
-+-----------
-+
-+Monitors describing complex systems, such as the scheduler, can easily grow to
-+the point where they are just hard to understand because of the many possible
-+state transitions.
-+Often it is possible to break such descriptions into smaller monitors,
-+sharing some or all events. Enabling those smaller monitors concurrently is,
-+in fact, testing the system as if we had one single larger monitor.
-+Splitting models into multiple specification is not only easier to
-+understand, but gives some more clues when we see errors.
-+
-+The sched monitor is a set of specifications to describe the scheduler behaviour.
-+It includes several per-cpu and per-task monitors that work independently to verify
-+different specifications the scheduler should follow.
-+
-+To make this system as straightforward as possible, sched specifications are *nested*
-+monitors, whereas sched itself is a *container*.
-+From the interface perspective, sched includes other monitors as sub-directories,
-+enabling/disabling or setting reactors to sched, propagates the change to all monitors,
-+however single monitors can be used independently as well.
-+
-+It is important that future modules are built after their container (sched, in
-+this case), otherwise the linker would not respect the order and the nesting
-+wouldn't work as expected.
-+To do so, simply add them after sched in the Makefile.
-+
-+Specifications
-+--------------
-+
-+The specifications included in sched are currently a work in progress, adapting the ones
-+defined in by Daniel Bristot in [1].
-+
-+Currently we included the following:
-+
-+Monitor tss
-+~~~~~~~~~~~
-+
-+The task switch while scheduling (tss) monitor ensures a task switch happens
-+only in scheduling context, that is inside a call to `__schedule`::
-+
-+                     |
-+                     |
-+                     v
-+                   +-----------------+
-+                   |     thread      | <+
-+                   +-----------------+  |
-+                     |                  |
-+                     | schedule_entry   | schedule_exit
-+                     v                  |
-+    sched_switch                        |
-+  +---------------                      |
-+  |                       sched         |
-+  +-------------->                     -+
-+
-+Monitor sco
-+~~~~~~~~~~~
-+
-+The scheduling context operations (sco) monitor ensures changes in a task state
-+happen only in thread context::
-+
-+
-+                        |
-+                        |
-+                        v
-+    sched_set_state   +------------------+
-+  +------------------ |                  |
-+  |                   |  thread_context  |
-+  +-----------------> |                  | <+
-+                      +------------------+  |
-+                        |                   |
-+                        | schedule_entry    | schedule_exit
-+                        v                   |
-+                                            |
-+                       scheduling_context  -+
-+
-+Monitor snroc
-+~~~~~~~~~~~~~
-+
-+The set non runnable on its own context (snroc) monitor ensures changes in a
-+task state happens only in the respective task's context. This is a per-task
-+monitor::
-+
-+                        |
-+                        |
-+                        v
-+                      +------------------+
-+                      |  other_context   | <+
-+                      +------------------+  |
-+                        |                   |
-+                        | sched_switch_in   | sched_switch_out
-+                        v                   |
-+    sched_set_state                         |
-+  +------------------                       |
-+  |                       own_context       |
-+  +----------------->                      -+
-+
-+Monitor scpd
-+~~~~~~~~~~~~
-+
-+The schedule called with preemption disabled (scpd) monitor ensures schedule is
-+called with preemption disabled::
-+
-+                       |
-+                       |
-+                       v
-+                     +------------------+
-+                     |    cant_sched    | <+
-+                     +------------------+  |
-+                       |                   |
-+                       | preempt_disable   | preempt_enable
-+                       v                   |
-+    schedule_entry                         |
-+    schedule_exit                          |
-+  +-----------------      can_sched        |
-+  |                                        |
-+  +---------------->                      -+
-+
-+Monitor snep
-+~~~~~~~~~~~~
-+
-+The schedule does not enable preempt (snep) monitor ensures a schedule call
-+does not enable preemption::
-+
-+                        |
-+                        |
-+                        v
-+    preempt_disable   +------------------------+
-+    preempt_enable    |                        |
-+  +------------------ | non_scheduling_context |
-+  |                   |                        |
-+  +-----------------> |                        | <+
-+                      +------------------------+  |
-+                        |                         |
-+                        | schedule_entry          | schedule_exit
-+                        v                         |
-+                                                  |
-+                          scheduling_contex      -+
-+
-+Monitor sncid
-+~~~~~~~~~~~~~
-+
-+The schedule not called with interrupt disabled (sncid) monitor ensures
-+schedule is not called with interrupt disabled::
-+
-+                       |
-+                       |
-+                       v
-+    schedule_entry   +--------------+
-+    schedule_exit    |              |
-+  +----------------- |  can_sched   |
-+  |                  |              |
-+  +----------------> |              | <+
-+                     +--------------+  |
-+                       |               |
-+                       | irq_disable   | irq_enable
-+                       v               |
-+                                       |
-+                        cant_sched    -+
-+
-+References
-+----------
-+
-+[1] - https://bristot.me/linux-task-model
+ 	exit(0);
+ }
+ 
 -- 
 2.48.1
 
