@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C943E1EDA2E;
-	Thu,  6 Feb 2025 15:29:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F11DB1EDA29;
+	Thu,  6 Feb 2025 15:35:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738855748; cv=none; b=YktfqVRHPMPGTOe+n9kMrvagcqijYJC2GQTqYHGfbdKn90Gwtiepw7TDXE81+eSS1ejY3PpewxUCGmPbg3islebri6hrsDAMQs1r6XDbB2Ut/jf7Y3sT/l0yKoOUfrSlmxIznzDHzTjf0mibAP+im1ihdGtjc/pQxTNAB+aYV7E=
+	t=1738856132; cv=none; b=bv/oD5RaKUHLtXbMzy1hFo39X9nwSnfeOmhBznI1GCvgcqyyOiRf7OKS8YqvLW7HOZk6vK0uJ6P3li4C+v/X3JIOS3Wsg63774wcBG6iKkszMkSEm+OT9FiqXbbD+8OnaqljkSCdxN72yEradwP5fwkgpLibnMzTJyK0vjneg/M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738855748; c=relaxed/simple;
-	bh=MrgnQb99g5cs+OzuYe034jD7K+cu1wANHYdTZp1r7nA=;
+	s=arc-20240116; t=1738856132; c=relaxed/simple;
+	bh=gOMHX2Q+w6hLohZgDMrr4HjRsOKoZUv4ynW5WakTNa8=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=bp42Gf7QlX48JeS+sHglx4HhtAQvNchCkE4lKeIyW6/pKBCslNQzSBwNd2jwMJctAFLHCEzhEg4kWQcQ9P8h/IOXF/I9Jn+9QGfPHCR2dkCl3t43AN0OUITYqQKwNbEfJVsUe+LHTT/Ge+LDPj3PmbNQ90kmQAYkL0k2/KFRzfE=
+	 MIME-Version:Content-Type; b=U1iZ8YiPrZnilUfG7TAm3K2rs5Q61C1qi5KuEuhHKeDi/Xlaomil49YQ75VEsgO49xoPMeM0/vgMuOw7Ougkr+jfIRdPN54ERDeGiWLQlsKGQgBQ1ew9H4yEmczB93NF3GRgKUkHSeyAWbzxFM0vhsqIZI6ZGOo0J7hGvyVsBfk=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 003D1C4CEDD;
-	Thu,  6 Feb 2025 15:29:07 +0000 (UTC)
-Date: Thu, 6 Feb 2025 10:29:49 -0500
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AFB99C4CEDF;
+	Thu,  6 Feb 2025 15:35:30 +0000 (UTC)
+Date: Thu, 6 Feb 2025 10:36:12 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
 To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
 Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Mark
  Rutland <mark.rutland@arm.com>, Mathieu Desnoyers
  <mathieu.desnoyers@efficios.com>, Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH 6/8] tracing: Have persistent trace instances save
- module addresses
-Message-ID: <20250206102949.65493416@gandalf.local.home>
-In-Reply-To: <20250206172642.391c16d75dbce00518ef9688@kernel.org>
+Subject: Re: [PATCH 8/8] tracing: Update modules to persistent instances
+ when loaded
+Message-ID: <20250206103612.355a4be9@gandalf.local.home>
+In-Reply-To: <20250206190124.1518c3bf070e862da7993d9e@kernel.org>
 References: <20250205225031.799739376@goodmis.org>
-	<20250205225103.930895467@goodmis.org>
-	<20250206172642.391c16d75dbce00518ef9688@kernel.org>
+	<20250205225104.264333506@goodmis.org>
+	<20250206190124.1518c3bf070e862da7993d9e@kernel.org>
 X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -37,31 +37,59 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Thu, 6 Feb 2025 17:26:42 +0900
+On Thu, 6 Feb 2025 19:01:24 +0900
 Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
 
-> This maybe too frequently scan the module because the update_last_data() is
-> called when;
-> - change tracer (this maybe OK)
-> - update "set_event"
-> - write 1 to "enable" under events
-> - change pid filter
-> - etc.
+> > +static void trace_module_record(struct module *mod)
+> > +{
+> > +	struct trace_array *tr;
+> > +
+> > +	list_for_each_entry(tr, &ftrace_trace_arrays, list) {
+> > +		/* Update any persistent trace array that has already been started */
+> > +		if ((tr->flags & (TRACE_ARRAY_FL_BOOT | TRACE_ARRAY_FL_LAST_BOOT)) ==
+> > +		    TRACE_ARRAY_FL_BOOT) {
+> > +			/* Only update if the trace array is active */
+> > +			if (trace_array_active(tr))  
 > 
-> Once it is scanned, it should not scan again, but update by module
-> callback, because usually events are enabled individually (thus
-> write 1 to "event" can happen multiple time online).
+> Do we really need this check? It seems that we can just save_mod() if the
+> above condition is true.
+
+It gets a little more  complicated if we need to add and remove modules.
+
 > 
-> I think we can move this after TRACE_ARRAY_FL_LAST_BOOT check,
-> if TRACE_ARRAY_FL_LAST_BOOT flag is set, that flag should be cleared
-> with updating the tscratch, and the flag is not set, we can skip updating
-> the scratch.
+> > +				save_mod(mod, tr);
+> > +		}
+> > +	}
+> > +}
+> > +
+> >  static int trace_module_notify(struct notifier_block *self,
+> >  			       unsigned long val, void *data)
+> >  {
+> > @@ -10096,6 +10120,7 @@ static int trace_module_notify(struct notifier_block *self,
+> >  	switch (val) {
+> >  	case MODULE_STATE_COMING:
+> >  		trace_module_add_evals(mod);
+> > +		trace_module_record(mod);
+> >  		break;
+> >  	case MODULE_STATE_GOING:
+> >  		trace_module_remove_evals(mod);  
+> 
+> Don't we need to remove the module entry when a module is removed?
+> (everytime we remove a module, trace data is cleared?)
 
-No, because we could enable it, disable it, and then the user could be
-adding and removing modules all day long, and we only add and do not remove
-(I do have a patch that does remove them).
+I do have a patch that that removes entries, but I decided we don't really
+want to do that.
 
-But we can do the same check as patch 8 does, and only do this if the
-tracer wasn't already active.
+If we want to have events for modules that were removed. Note, the ring
+buffer is cleared if any module event was ever enabled and then the module
+is removed, as how to print it is removed too. But we could disable that
+for the persistent ring buffers as they should not be using the default
+trace event print format anyway.
+
+As for stack traces, we still want the module it was for when the stack
+trace happens. A common bug we see is when a module is removed, it can
+cause other bugs. We want to know about modules that were removed. Keeping
+that information about removed modules will allow us to see what functions
+were called by a stack trace for a module that was removed.
 
 -- Steve
