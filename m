@@ -1,242 +1,260 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E70242AD02;
-	Thu,  6 Feb 2025 01:28:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 550054964E;
+	Thu,  6 Feb 2025 01:59:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738805315; cv=none; b=RxILStN5zBhr08A1OsEi7esIBrRnbAldxzWrPo8u1NwZC/cADJU4KFMY+eRtnBZpT7LIQjn287W+HbGGaNhv6bCs4JH/uUBAtAAaNulqDn38eKgZ8hKppjqwPts33m6rI6P9Z8u7ex30b+ixCtsCPG9afVlxCT/bquuAgCuVeMg=
+	t=1738807159; cv=none; b=EngiXEuoCO791yp71P1XByfEw0REoqZ7wzLKtBL+ar4/kOTbg3KwA9Bt9eu0pAKZdugjyEFJ3yoeXgw5GstM00j3c0hNo3B/v4AadceFIzhrslPto5fRJenhdA010ucaAXom+/weOEK7UANoCWRBD5MNZiT541nIoCOIyDIRpW0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738805315; c=relaxed/simple;
-	bh=clh2tfGXEKkbWkJuVRoDBfayvnFN0owsIXBdxYeNISk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=HhhqsRPD5uMc36bTql7NljO3XaU0clZLqbD8ha7l7Q/Wd3N2luiNzRABzJm13YPnmjpXHNPdnUyoR0czOtxu3PyYFdkzA1F+65op2PwaSg+omQC94Ih9xWiQV1ZDqP5eeEgn6WodTKIE/owzfXdSKajAh6knn92D4J0QSHdWjnQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SQ6pAlI9; arc=none smtp.client-ip=209.85.214.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1738807159; c=relaxed/simple;
+	bh=vBuSbbpEaBblpFthL/DAmTOPtxEdlckQsYIOQlOd1ew=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=mJaACGqHRWDZXSIKJGrkilLa/R/pYAKiQBW2s61Y9y5Jti1oCDWkEOkeXVxV5XX/zd0m1geKb/quSCfvUR4R/uvrThlStKI4Z432HA8/ImdQMNjM841RTy5moVcE3GR5GDadB5B2bQDZ1WWh6SaIjMxgeuixnGFakL3Cv2CDKh0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Emc/IHJV; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SQ6pAlI9"
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-2166f1e589cso9735625ad.3;
-        Wed, 05 Feb 2025 17:28:33 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738805313; x=1739410113; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=eRvjh4lUXS/FqYAnsO+QmQYUHjBjCN0Nceh7ZqfHMtQ=;
-        b=SQ6pAlI9BkVTkqEVD7VhUlnajP1ySgf3sFAGDCm1Qkja/8bLWXKHkzjs1a9LRE5rIG
-         SQeQPR5k7EjWERy+hcJhcs9lJabogecDKUH9+wE+1pOuA0XUKTt+/JaFzQ6qhKRJYMvf
-         WcYYLdh2WwjLxO0SA3/h1JitBCnxtiM0tjbo4r+OxmrUImhiyeGp9YQ5xFKSUn6d1VGR
-         9tksp+B6zvNV9ZHxI1KPrH6sjqjfknxu+4j2G8P6WUQno/gKl/XgxzPdIQy2L1djcn1q
-         HEirOyh1w3V0r+mvmmRas2X8R5DrGV9B4rbIt71dya51+2R9bJ4n9rWW5Vlxai0Mchwq
-         QEWw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738805313; x=1739410113;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=eRvjh4lUXS/FqYAnsO+QmQYUHjBjCN0Nceh7ZqfHMtQ=;
-        b=CBRrfuSpuhQ33ouXabseDNxYGzL8dRhsXrpnHzp1+Xbw2+nn7lbg4FSZ+DXHIPhecX
-         DOTzN7JZywWKws2k9/SMsE3/Tfv084c4YZ6blqoFWdxzPFmyD/nVvf4X02UqzzpYyWHU
-         JDNFMkX8RjANI+Fir7CLf+dMLaycpAtMVJUJxkZtQT0LOcJUw5NyEpzro65Y4FDEzZHQ
-         +lBnGbXCcELB5WuBDRj3LGpLVJP1tN9BJeApdKnTBYNWPlMQcyC9SkMgO0lIsm2bWaSq
-         9N3x+Aa2yr3Cm68cCkmQrUWm5cbPWn4JAtudsa4FTSqXYByncfypV4QIEvQpwfUFXM05
-         6HMg==
-X-Forwarded-Encrypted: i=1; AJvYcCUTxgY6hlNJuwhaRuaNNqmZMLLtTgPE3vtUb57fRtU4TIrvDmUlB8lU4ic5PWHtDsNK0uY=@vger.kernel.org, AJvYcCUsVOGNRNxZPpUKo7xu+TcWxXN+vxmojtI6ajukmiAR9ixp7bx2zcye2/B5LwcmeHBG0DrBVLwiy8bixCr2ZQEZ@vger.kernel.org, AJvYcCWFbB53Zkkwl5xYEWVRgjXn7LLqyNk2MhvQi12tYMhKgTEe7p7nGBA66QLNs6LGKOG+LWhUCly3IOlZRrdT6nBaqA==@vger.kernel.org, AJvYcCWWQR0/RQ2yJe/eyanSdlovSfvNZULBvvGmraT73mnYwWcXnbvEozu+2z+WdGhy8fYKNh2icIGnewtjFkMdsbc7fggT@vger.kernel.org, AJvYcCXCwfA9byXJC2JtL+eNRqDtzdYsLvcOvZqJzyawOhMZ5/V+uxoY3L44mj8iLVwTgSLei0zAeXVRXz14XuU=@vger.kernel.org, AJvYcCXcmMDVmJG6a6q3sf6+9h9mxbN8fnzTaThRyQ+rESAWmguVZSzbS9XTmIG6PXii+fEFVMHGt94j/O7CNiIc@vger.kernel.org, AJvYcCXm4l+FEs5zGxy49SCkD9SYNmn/k21Y3GZiXwJRluz+vbhQVpTKWkc47KbD9pG0R+V+7be0N9liwyE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzXxP8iyNLY/eeUL5tKR9E80pqBh5KjHUm9yIjF9qlym+VPsVxF
-	CaFgIFEkW+bbn+N/xfScAD0XRBE1RipIwXYKp9FDVzK4IzIh3NYXtMMFOJkWhDK6bIfkJBng0Oh
-	WinPlf/lKFPUlpq9t6zIESeo22As=
-X-Gm-Gg: ASbGncttxrELntXGbXo4U4ZGng8uYEIG6+PnmKANHCFubMMFIWxQkCk06ESfx2CJn5i
-	G12rvWcYBP8jeCcj9e+Wda2Esb7kjsvkf1A9IBlO6+2+knKLMUmM8Z98BTnA+pFV266k9o1oa3P
-	k3rVyAvv4ZtziF
-X-Google-Smtp-Source: AGHT+IHbBLU9Yp+KgnLDKo9nDxmvDiMpB2P2eCS3pSqU+ciOVfvltT7NgM9NDohKwcgz1sTHUPwVZ1B1B8ZxWNOrSek=
-X-Received: by 2002:a05:6a20:c78d:b0:1e6:5323:58d1 with SMTP id
- adf61e73a8af0-1ede88aa5dcmr8780768637.26.1738805312996; Wed, 05 Feb 2025
- 17:28:32 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Emc/IHJV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BA170C4CED1;
+	Thu,  6 Feb 2025 01:59:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738807158;
+	bh=vBuSbbpEaBblpFthL/DAmTOPtxEdlckQsYIOQlOd1ew=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=Emc/IHJVJyTZ2raDcGU/OWGq5qQ9CKzXLOCGR3eEtMyWvawfwaH/CgadHnFgh4ZsS
+	 +0YclRuAfeIsc01w8K2s3xRH9QU78E01ZNfm8j/62IYoKNBbZW8KXhz6DWddyb4qVC
+	 ReJnUy4nEkfMkQr7oPHSnHRVRufQCGietnyrTDVXhJ17RZPZ0yrdK6YWpVYmLvRpTW
+	 2H1mp93ds4HUnrsC+tKRoy932bMN3TnUD42zyRJjg+G33jGgK6YMiS9c5nhcUaSl+s
+	 Knl5LN246/hg0DtLHAVzO9edaEyJrh1rfaHLiHpLRZv2txavBPvkHTKgoeIGa6+h0z
+	 Xj/ZME3/o3Xww==
+Date: Thu, 6 Feb 2025 10:59:15 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Gabriel de Perthuis <g2p.code@gmail.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>,
+ linux-trace-kernel@vger.kernel.org, linux-arch@vger.kernel.org
+Subject: Re: [PATCH v22 19/20] ftrace: Add ftrace_get_symaddr to convert
+ fentry_ip to symaddr
+Message-Id: <20250206105915.e2ddadd0c0d2c597bb923495@kernel.org>
+In-Reply-To: <CAFEugPfFykYsHqS-J36CNWDn+d34bSQg-e5hJ=AaJPC8=6Ej-g@mail.gmail.com>
+References: <173518987627.391279.3307342580035322889.stgit@devnote2>
+	<173519011487.391279.5450806886342723151.stgit@devnote2>
+	<a87f98bf-45b1-4ef5-aa77-02f7e61203f4@gmail.com>
+	<20250204181902.dd6e02416ff5eeec3ea47a79@kernel.org>
+	<CAFEugPfFykYsHqS-J36CNWDn+d34bSQg-e5hJ=AaJPC8=6Ej-g@mail.gmail.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20250203-quiet_tools-v1-0-d25c8956e59a@rivosinc.com>
- <CAADnVQKTqRBQBA-yxB9EYPMgayP3rOE4iDhg+QD++2d=jxfY=Q@mail.gmail.com>
- <Z6JdwSsAk1xCiSrn@ghost> <Z6JksXDRh8OSAh-u@google.com> <CAADnVQKmKf6wY3dg+PfAxtrrFWGO7D-m83dEndjWksPfWDt5wQ@mail.gmail.com>
- <Z6Khl1rHIAb7wOXw@ghost>
-In-Reply-To: <Z6Khl1rHIAb7wOXw@ghost>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Wed, 5 Feb 2025 17:28:19 -0800
-X-Gm-Features: AWEUYZlPBcKhnlnzEHzYVL21RVck5Pbw-X3QYTAmjmTe7rjtAGdrSN0T9YRAupA
-Message-ID: <CAEf4Bza5nKk6_fVY2vmJjZgPb40zB+R3REy8==ZLc98eg1iHTA@mail.gmail.com>
-Subject: Re: [PATCH 0/2] tools: Unify top-level quiet infrastructure
-To: Charlie Jenkins <charlie@rivosinc.com>
-Cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>, Namhyung Kim <namhyung@kernel.org>, 
-	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, 
-	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
-	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
-	Jiri Olsa <jolsa@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Ian Rogers <irogers@google.com>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Quentin Monnet <qmo@kernel.org>, 
-	"Rafael J. Wysocki" <rafael@kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, 
-	Zhang Rui <rui.zhang@intel.com>, Lukasz Luba <lukasz.luba@arm.com>, 
-	Josh Poimboeuf <jpoimboe@kernel.org>, Mykola Lysenko <mykolal@fb.com>, Shuah Khan <shuah@kernel.org>, 
-	Jiri Kosina <jikos@kernel.org>, Benjamin Tissoires <bentiss@kernel.org>, 
-	Steven Rostedt <rostedt@goodmis.org>, bpf <bpf@vger.kernel.org>, 
-	LKML <linux-kernel@vger.kernel.org>, 
-	"linux-perf-use." <linux-perf-users@vger.kernel.org>, 
-	Linux Power Management <linux-pm@vger.kernel.org>, 
-	"open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>, 
-	"open list:HID CORE LAYER" <linux-input@vger.kernel.org>, 
-	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Tue, Feb 4, 2025 at 3:24=E2=80=AFPM Charlie Jenkins <charlie@rivosinc.co=
-m> wrote:
->
-> On Tue, Feb 04, 2025 at 11:02:42PM +0000, Alexei Starovoitov wrote:
-> > On Tue, Feb 4, 2025 at 7:04=E2=80=AFPM Namhyung Kim <namhyung@kernel.or=
-g> wrote:
-> > >
+On Tue, 4 Feb 2025 15:19:45 +0100
+Gabriel de Perthuis <g2p.code@gmail.com> wrote:
+
+> Thank you for the prompt response!
+> Sorry, this doesn't build.
+
+Thanks for testing!
+OK, so including linux/uaccess.h in asm/ftrace.h will cause another
+issue. This is a good information!
+I'll move the ftrace_call_adjust() to arch/x86/kernel/ftrace.c then.
+
+Thank you!
+
+> New, different errors:
+> 
+>   AS      arch/x86/kernel/ftrace_64.o
+> In file included from ./include/linux/kcsan-checks.h:13,
+>                  from ./include/linux/instrumented.h:12,
+>                  from ./include/linux/uaccess.h:6,
+>                  from ./arch/x86/include/asm/ftrace.h:20,
+>                  from arch/x86/kernel/ftrace_64.S:11:
+> ./include/linux/compiler_attributes.h:91:20: error: missing binary
+> operator before token "("
+>    91 | #if __has_attribute(__copy__)
+>       |                    ^
+> ./include/linux/compiler_attributes.h:103:20: error: missing binary
+> operator before token "("
+>   103 | #if __has_attribute(__diagnose_as_builtin__)
+>       |                    ^
+> ./include/linux/compiler_attributes.h:126:20: error: missing binary
+> operator before token "("
+>   126 | #if __has_attribute(__designated_init__)
+>       |                    ^
+> ./include/linux/compiler_attributes.h:137:20: error: missing binary
+> operator before token "("
+>   137 | #if __has_attribute(__error__)
+>       |                    ^
+> ./include/linux/compiler_attributes.h:148:20: error: missing binary
+> operator before token "("
+>   148 | #if __has_attribute(__externally_visible__)
+>       |                    ^
+> ./include/linux/compiler_attributes.h:185:20: error: missing binary
+> operator before token "("
+>   185 | #if __has_attribute(__no_caller_saved_registers__)
+>       |                    ^
+> ./include/linux/compiler_attributes.h:196:20: error: missing binary
+> operator before token "("
+>   196 | #if __has_attribute(__noclone__)
+>       |                    ^
+> ./include/linux/compiler_attributes.h:213:20: error: missing binary
+> operator before token "("
+>   213 | #if __has_attribute(__fallthrough__)
+>       |                    ^
+> ./include/linux/compiler_attributes.h:239:20: error: missing binary
+> operator before token "("
+>   239 | #if __has_attribute(__nonstring__)
+>       |                    ^
+> ./include/linux/compiler_attributes.h:251:20: error: missing binary
+> operator before token "("
+>   251 | #if __has_attribute(__no_profile_instrument_function__)
+>       |                    ^
+> ./include/linux/compiler_attributes.h:270:20: error: missing binary
+> operator before token "("
+>   270 | #if __has_attribute(__no_stack_protector__)
+>       |                    ^
+> ./include/linux/compiler_attributes.h:281:20: error: missing binary
+> operator before token "("
+>   281 | #if __has_attribute(__overloadable__)
+>       |                    ^
+> ./include/linux/compiler_attributes.h:300:20: error: missing binary
+> operator before token "("
+>   300 | #if __has_attribute(__pass_dynamic_object_size__)
+>       |                    ^
+> ./include/linux/compiler_attributes.h:305:20: error: missing binary
+> operator before token "("
+>   305 | #if __has_attribute(__pass_object_size__)
+>       |                    ^
+> ./include/linux/compiler_attributes.h:329:20: error: missing binary
+> operator before token "("
+>   329 | #if __has_attribute(__uninitialized__)
+>       |                    ^
+> ./include/linux/compiler_attributes.h:375:20: error: missing binary
+> operator before token "("
+>   375 | #if __has_attribute(__warning__)
+>       |                    ^
+> ./include/linux/compiler_attributes.h:392:20: error: missing binary
+> operator before token "("
+>   392 | #if __has_attribute(disable_sanitizer_instrumentation)
+>       |                    ^
+> In file included from ./include/linux/mm_types_task.h:11,
+>                  from ./include/linux/sched.h:38,
+>                  from ./include/linux/uaccess.h:9:
+> ./include/linux/align.h:8:9: warning: "ALIGN" redefined
+>     8 | #define ALIGN(x, a)             __ALIGN_KERNEL((x), (a))
+>       |         ^~~~~
+> In file included from ./include/linux/export.h:6,
+>                  from arch/x86/kernel/ftrace_64.S:6:
+> ./include/linux/linkage.h:103:9: note: this is the location of the
+> previous definition
+>   103 | #define ALIGN __ALIGN
+>       |         ^~~~~
+> make[7]: *** [scripts/Makefile.build:339: arch/x86/kernel/ftrace_64.o] Error 1
+> 
+> Am attaching the .config so you can reproduce these easily.
+> 
+> Le mar. 4 févr. 2025 à 10:19, Masami Hiramatsu <mhiramat@kernel.org> a écrit :
+> >
+> > On Mon, 3 Feb 2025 22:33:48 +0100
+> > Gabriel de Perthuis <g2p.code@gmail.com> wrote:
+> >
 > > > Hello,
 > > >
-> > > On Tue, Feb 04, 2025 at 10:34:41AM -0800, Charlie Jenkins wrote:
-> > > > On Tue, Feb 04, 2025 at 05:18:42PM +0000, Alexei Starovoitov wrote:
-> > > > > On Tue, Feb 4, 2025 at 12:10=E2=80=AFAM Charlie Jenkins <charlie@=
-rivosinc.com> wrote:
-> > > > > >
-> > > > > > The quiet infrastructure was moved out of Makefile.build to acc=
-omidate
-> > > > > > the new syscall table generation scripts in perf. Syscall table
-> > > > > > generation wanted to also be able to be quiet, so instead of ag=
-ain
-> > > > > > copying the code to set the quiet variables, the code was moved=
- into
-> > > > > > Makefile.perf to be used globally. This was not the right solut=
-ion. It
-> > > > > > should have been moved even further upwards in the call chain.
-> > > > > > Makefile.include is imported in many files so this seems like a=
- proper
-> > > > > > place to put it.
-> > > > > >
-> > > > > > To:
-> > > > > >
-> > > > > > Signed-off-by: Charlie Jenkins <charlie@rivosinc.com>
-> > > > > > ---
-> > > > > > Charlie Jenkins (2):
-> > > > > >       tools: Unify top-level quiet infrastructure
-> > > > > >       tools: Remove redundant quiet setup
-> > > > > >
-> > > > > >  tools/arch/arm64/tools/Makefile           |  6 -----
-> > > > > >  tools/bpf/Makefile                        |  6 -----
-> > > > > >  tools/bpf/bpftool/Documentation/Makefile  |  6 -----
-> > > > > >  tools/bpf/bpftool/Makefile                |  6 -----
-> > > > > >  tools/bpf/resolve_btfids/Makefile         |  2 --
-> > > > > >  tools/bpf/runqslower/Makefile             |  5 +---
-> > > > > >  tools/build/Makefile                      |  8 +-----
-> > > > > >  tools/lib/bpf/Makefile                    | 13 ----------
-> > > > >
-> > > > > Nack.
-> > > > > libbpf and bpftool are synced independently to github
-> > > > > and released from there.
-> > > > > This change breaks it.
+> > > I got errors building Linux 6.14-rc1 that were solved by reverting this
+> > > patch and the one after (19/20 and 20/20).
 > > >
-> > > Sorry, I overlooked this part and merged a change that touched the
-> > > common files into the perf tree.
+> > > Errors look like:
 > > >
-> > > f2868b1a66d4f40f ("perf tools: Expose quiet/verbose variables in Make=
-file.perf")
+> > > In file included from ./arch/x86/include/asm/asm-prototypes.h:2,
+> > >                   from <stdin>:3:
+> > > ./arch/x86/include/asm/ftrace.h: In function 'arch_ftrace_get_symaddr':
+> > > ./arch/x86/include/asm/ftrace.h:46:21: error: implicit declaration of
+> > > function 'get_kernel_nofault' [-Wimplicit-function-declaration]
+> > >     46 |                 if (get_kernel_nofault(instr, (u32 *)(fentry_ip
+> > > - ENDBR_INSN_SIZE)))
+> > >        | ^~~~~~~~~~~~~~~~~~
 > > >
-> > > Unfortunately, it's already in v6.14-rc1.
-> > >
-> > > >
-> > > > Can you explain how it breaks it? Currently bpftool and resolve_btf=
-ids
-> > > > don't build quietly so this was an attempt to fix that.
-> > >
-> > > So I think you will need something like this for v6.14.  Again, sorry
-> > > about the trouble.
+> > > Will send .config on request if needed.
 > >
-> > Just revert f2868b1a66d4f40f that created this mess.
->
-> Why are you opposed to unifying this helpers among the various projects
-> in tools? Can you explain what about this breaks the Github syncing flow
-> and why it cannot be resolved? It doesn't make sense to duplicate "Q=3D"
-> in every Makefile anybody ever wants to add to tools just because bpf
-> syncing isn't robust.
+> >
+> > Thanks for the report!
+> >
+> > -------<arch/x86/include/asm/asm-prototypes.h>
+> > /* SPDX-License-Identifier: GPL-2.0 */
+> > #include <asm/ftrace.h>
+> > #include <linux/uaccess.h>
+> > -----
+> >
+> > Ah, that's why... get_kernel_nofault() is defined in linux/uaccess.h.
+> > I also found that is_endbr() is in asm/ibt.h.
+> >
+> > Can you try this?
+> >
+> > Thank you,
+> >
+> > diff --git a/arch/x86/include/asm/ftrace.h b/arch/x86/include/asm/ftrace.h
+> > index f9cb4d07df58..d24d7c71253f 100644
+> > --- a/arch/x86/include/asm/ftrace.h
+> > +++ b/arch/x86/include/asm/ftrace.h
+> > @@ -16,24 +16,9 @@
+> >  # include <asm/ibt.h>
+> >  /* Add offset for endbr64 if IBT enabled */
+> >  # define FTRACE_MCOUNT_MAX_OFFSET      ENDBR_INSN_SIZE
+> > -#endif
+> > -
+> > -#ifdef CONFIG_DYNAMIC_FTRACE
+> > -#define ARCH_SUPPORTS_FTRACE_OPS 1
+> > -#endif
+> > -
+> > -#ifndef __ASSEMBLY__
+> > -extern void __fentry__(void);
+> > -
+> > -static inline unsigned long ftrace_call_adjust(unsigned long addr)
+> > -{
+> > -       /*
+> > -        * addr is the address of the mcount call instruction.
+> > -        * recordmcount does the necessary offset calculation.
+> > -        */
+> > -       return addr;
+> > -}
+> >
+> > +#include <linux/uaccess.h>
+> > +/* This only supports fentry based ftrace. */
+> >  static inline unsigned long arch_ftrace_get_symaddr(unsigned long fentry_ip)
+> >  {
+> >  #ifdef CONFIG_X86_KERNEL_IBT
+> > @@ -55,6 +40,24 @@ static inline unsigned long arch_ftrace_get_symaddr(unsigned long fentry_ip)
+> >  }
+> >  #define ftrace_get_symaddr(fentry_ip)  arch_ftrace_get_symaddr(fentry_ip)
+> >
+> > +#endif
+> > +
+> > +#ifdef CONFIG_DYNAMIC_FTRACE
+> > +#define ARCH_SUPPORTS_FTRACE_OPS 1
+> > +#endif
+> > +
+> > +#ifndef __ASSEMBLY__
+> > +extern void __fentry__(void);
+> > +
+> > +static inline unsigned long ftrace_call_adjust(unsigned long addr)
+> > +{
+> > +       /*
+> > +        * addr is the address of the mcount call instruction.
+> > +        * recordmcount does the necessary offset calculation.
+> > +        */
+> > +       return addr;
+> > +}
+> > +
+> >  #ifdef CONFIG_HAVE_DYNAMIC_FTRACE_WITH_ARGS
+> >
+> >  #include <linux/ftrace_regs.h>
+> >
+> >
+> > --
+> > Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-Alexei's concern about Github mirrors of bpftool and libbpf isn't
-valid. Github versions of those projects use their own independent
-Makefiles anyways, so your change doesn't break that aspect.
 
-But your change *does* break both libbpf's and bpftool's make output
-*in the kernel repo*. With this patch we basically don't have "quiet"
-mode anymore:
-
-$ git co f2868b1a66d4f40f07e985b0beead606b2753602
-HEAD is now at f2868b1a66d4 perf tools: Expose quiet/verbose variables
-in Makefile.perf
-$ git log --oneline -n1
-f2868b1a66d4 (HEAD) perf tools: Expose quiet/verbose variables in Makefile.=
-perf
-$ pwd
-/home/andriin/linux/tools/lib/bpf
-$ make
-  gcc -Wp,-MD,/data/users/andriin/linux/tools/lib/bpf/staticobjs/.libbpf.o.=
-d
--Wp,-MT,/data/users/andriin/linux/tools/lib/bpf/staticobjs/libbpf.o -g
--O2 -std=3Dgnu89 -Wbad-function-cast -Wdeclaration-after-statement
--Wformat-security -Wformat-y2k -Winit-self -Wmissing-declarations
--Wmissing-prototypes -Wnested-externs -Wno-system-headers
--Wold-style-definition -Wpacked -Wredundant-decls -Wstrict-prototypes
--Wswitch-default -Wswitch-enum -Wundef -Wwrite-strings -Wformat
--Wno-type-limits -Wstrict-aliasing=3D3 -Wshadow -Wno-switch-enum -Werror
--Wall -I/data/users/andriin/linux/tools/lib/bpf/
--I/data/users/andriin/linux/tools/include
--I/data/users/andriin/linux/tools/include/uapi
--I/data/users/andriin/linux/tools/arch/x86/include -fvisibility=3Dhidden
--D_LARGEFILE64_SOURCE -D_FILE_OFFSET_BITS=3D64 -D"BUILD_STR(s)=3D#s" -c -o
-/data/users/andriin/linux/tools/lib/bpf/staticobjs/libbpf.o libbpf.c
-^Cmake[2]: *** [/data/users/andriin/linux/tools/build/Makefile.build:86:
-/data/users/andriin/linux/tools/lib/bpf/staticobjs/libbpf.o] Interrupt
-make[1]: *** [Makefile:165:
-/data/users/andriin/linux/tools/lib/bpf/staticobjs/libbpf-in.o]
-Interrupt
-make: *** [Makefile:143: all] Interrupt
-
-$ git co HEAD~
-Previous HEAD position was f2868b1a66d4 perf tools: Expose
-quiet/verbose variables in Makefile.perf
-HEAD is now at e9cbc854d8b1 perf config: Add a function to set one
-variable in .perfconfig
-$ make
-  CC      /data/users/andriin/linux/tools/lib/bpf/staticobjs/libbpf.o
-^C
-
-So, can you please check and fix?
-
-Also, looking at your patch:
-
-a) you removed the `"$(origin V)", "command line"` check from both
-perf and libbpf, so that's not really an equivalent change/behavior
-now
-
-b) a bit sloppy on assignment:
-
-+ifeq ($(V),1)
-+  quiet =3D
-+  Q =3D
-+else
-+  quiet=3Dquiet_
-+  Q=3D@
-+endif
-
-note the spaces around '=3D', try to keep stuff like this consistent
-(and if this was shell, it would bite you as well)
-
->
-> - Charlie
->
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
