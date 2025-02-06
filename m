@@ -1,146 +1,189 @@
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.3])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F1C521EA7C2;
-	Thu,  6 Feb 2025 13:26:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.3
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 671C7226884;
+	Thu,  6 Feb 2025 13:30:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738848420; cv=none; b=XxJ5S9GpYQUuSlO1ovrPsR+SVLU78Frwqic230B6sxo8j5bBCfcZInYq8mgHKzEDNK7GEdrRtLA0WmFNhCs/ev2CNfiymsQcPw3WwTqLK9YTUMln6AYtjoX2DsMlO8vgZxNbb2EtURi2u5YJ/mMx22Cxkkx+GHl3W5BYjLRyo/I=
+	t=1738848604; cv=none; b=DPecFIFCmEpr2YfkpW+GpHCSEISYRHm2RbI1R/I55F2TMh88SsM2ww3pRbqp0KhQS1EcfSAYyKUGhzqM4iKFwnG4eblw12Q9iDOeVW/i+nXkn0qe6bLtND3kymBy1mHxbTuVl92jZ93Fjuj4/Mw208J7GXqYIfjr7/kJdA/bDpA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738848420; c=relaxed/simple;
-	bh=Xa2e6zZUE5Ypv/4gGdRlghgenoolHBoV4uJXpLNA0Ho=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=g+vkSwPa4JciwKawbT5fTTrw0ecjwOx6x0vv+Ak5TgyP/OG4SUsdSnShs2ysDaJRkeSWFw+PeAk2Qp5254G6c8pGwWtsbnfpuQ3aT4LsB8YkYnMJIuEgVvJWRsebfC2ymKPMNl2gGkFPSNCSXJiz1EDzBl/YgvsYzm4r9QOvWRQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=DHBwf1PV; arc=none smtp.client-ip=220.197.31.3
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="DHBwf1PV"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=Message-ID:Date:MIME-Version:Subject:From:
-	Content-Type; bh=cK6k51s+cBjVEgWYzrHKvOcp/x8Wau2Xj95c58xdXn8=;
-	b=DHBwf1PVLFgOtk7NSpBkgTPdRR9av3iy3CIn6Zj+IHZZ1A7DiWX9CjPUo3w5Lm
-	i+gbJE8DqqvFsEXuByrb/Im+47pp4acYiEfSBSpeNL6hUjatpeP0TVtRB5BsqjLm
-	wZ03TWW9+b4DENRy9fo6LP9F5e2Pnwqjn+JXLhrn1gg08=
-Received: from [192.168.31.211] (unknown [])
-	by gzsmtp4 (Coremail) with SMTP id PygvCgDHDzFSuKRnmF9+Bg--.16667S2;
-	Thu, 06 Feb 2025 21:25:39 +0800 (CST)
-Message-ID: <b4ef10d0-a1eb-4d9c-8ddc-d7815a2bb607@163.com>
-Date: Thu, 6 Feb 2025 21:25:37 +0800
+	s=arc-20240116; t=1738848604; c=relaxed/simple;
+	bh=DYpME27A+ab/pShQvnBeasd17GEf4TEkvqRicVcaXYQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=I0o1ck4ghPsdLrwAvvR0/Ymy5a1QzoEN/E4wamgybXU+LrX1xc1Tn7R0GzF5/EQN6YNvGJt81Xu3Mm5jtflrVn78zoCamuBfbIYN0tgf4B3GDufAKqPrxHACUhffCyNtzZvnLoKRofRb9GhvhTDPTo2jQ7FMmnGj6+bv99S2EaQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 51590C4CEE2;
+	Thu,  6 Feb 2025 13:30:00 +0000 (UTC)
+Date: Thu, 6 Feb 2025 08:30:39 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Joel Fernandes <joel@joelfernandes.org>
+Cc: Prakash Sangappa <prakash.sangappa@oracle.com>, Peter Zijlstra
+ <peterz@infradead.org>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+ Ankur Arora <ankur.a.arora@oracle.com>, Linus Torvalds
+ <torvalds@linux-foundation.org>, linux-mm@kvack.org, x86@kernel.org, Andrew
+ Morton <akpm@linux-foundation.org>, luto@kernel.org, bp@alien8.de,
+ dave.hansen@linux.intel.com, hpa@zytor.com, juri.lelli@redhat.com,
+ vincent.guittot@linaro.org, willy@infradead.org, mgorman@suse.de,
+ jon.grimm@amd.com, bharata@amd.com, raghavendra.kt@amd.com, Boris Ostrovsky
+ <boris.ostrovsky@oracle.com>, Konrad Wilk <konrad.wilk@oracle.com>,
+ jgross@suse.com, Andrew.Cooper3@citrix.com, Vineeth Pillai
+ <vineethrp@google.com>, Suleiman Souhlal <suleiman@google.com>, Ingo Molnar
+ <mingo@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Clark Williams <clark.williams@gmail.com>, bigeasy@linutronix.de,
+ daniel.wagner@suse.com, Joseph Salisbury <joseph.salisbury@oracle.com>,
+ broonie@gmail.com
+Subject: Re: [RFC][PATCH 1/2] sched: Extended scheduler time slice
+Message-ID: <20250206083039.0916ad24@gandalf.local.home>
+In-Reply-To: <CAEXW_YQY2zuU+XZjrYWLS860+PJno0nf9WAe1iPU=EyDkA7H4Q@mail.gmail.com>
+References: <EC77D83D-DD17-4CCD-9EF6-C4C39FCE16E7@oracle.com>
+	<9DA1FAE6-A008-4785-BDF9-541457E29807@joelfernandes.org>
+	<20250204220418.35949317@gandalf.local.home>
+	<CAEXW_YQxTi2y_hY_e4AjLSa6RwVVLn3DPj5d4Cfewq0js-0UTA@mail.gmail.com>
+	<20250205081635.397eacb0@gandalf.local.home>
+	<CAEXW_YQY2zuU+XZjrYWLS860+PJno0nf9WAe1iPU=EyDkA7H4Q@mail.gmail.com>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] ftrace: x86: Fix a compile error about
- get_kernel_nofault()
-To: Peter Zijlstra <peterz@infradead.org>,
- Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>,
- Gabriel de Perthuis <g2p.code@gmail.com>,
- Sami Tolvanen <samitolvanen@google.com>, Mark Rutland
- <mark.rutland@arm.com>, Thomas Gleixner <tglx@linutronix.de>,
- Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
- Dave Hansen <dave.hansen@linux.intel.com>, "H . Peter Anvin"
- <hpa@zytor.com>, x86@kernel.org, linux-trace-kernel@vger.kernel.org,
- LKML <linux-kernel@vger.kernel.org>
-References: <173881156244.211648.1242168038709680511.stgit@devnote2>
- <20250206081225.GI7145@noisy.programming.kicks-ass.net>
- <20250206205449.5f83a585945ae6eb0cc15483@kernel.org>
- <20250206121328.GN7145@noisy.programming.kicks-ass.net>
- <20250206123307.GO7145@noisy.programming.kicks-ass.net>
-From: Haiyue Wang <haiyuewa@163.com>
-In-Reply-To: <20250206123307.GO7145@noisy.programming.kicks-ass.net>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:PygvCgDHDzFSuKRnmF9+Bg--.16667S2
-X-Coremail-Antispam: 1Uf129KBjvJXoWxGry7Xry8GrW8Cr13CrW3KFg_yoW5Wr45pF
-	y3Crn3GFs5XFyYkrZrur109r15Zw1kCr1Sg347Gr95ZF1qvFyUJr1I9w1vyasFvasaga4r
-	tFW7ZFn09w1DZ3JanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07UIZXrUUUUU=
-X-CM-SenderInfo: 5kdl53xhzdqiywtou0bp/1tbiShPra2ekp8XqkgAAsA
+
+On Wed, 5 Feb 2025 22:07:12 -0500
+Joel Fernandes <joel@joelfernandes.org> wrote:
+> >
+> > RT tasks don't have a time slice. They are affected by events. An external
+> > interrupt coming in, or a timer going off that states something is
+> > happening. Perhaps we could use this for SCHED_RR or maybe even
+> > SCHED_DEADLINE, as those do have time slices.
+> >
+> > But if it does get used, it should only be used when the task being
+> > scheduled is the same SCHED_RR priority, or if SCHED_DEADLINE will not fail
+> > its guarantees.
+> >  
+> 
+> Right, it would apply still to RR/DL though...
+
+But it would have to guarantee that the RR it is delaying is of the same
+priority, and that delaying the DL is not going to cause something to miss
+its deadline.
+
+> 
+> > > In any case, if you want this to only work on FAIR tasks and not RT
+> > > tasks, why is that only possible to do with rseq() + LAZY preemption
+> > > and not Prakash's new API + all preemption modes?
+> > >
+> > > Also you can just ignore RT tasks (not that I'm saying that's a good
+> > > idea but..) in taskshrd_delay_resched() in that patch if you ever
+> > > wanted to do that.
+> > >
+> > > I just feel the RT latency thing is a non-issue AFAICS.  
+> >
+> > Have you worked on any RT projects before?  
+> 
+> Heh.. I think maybe you misunderstood my statement, I was mentioning
+> that I felt (similar to Peter I think) that NOT adopting this feature
+> generically for all tasks due to a concern of 50us latency maybe does
+> not make sense since poorly designed app / random hardware already
+> have this issue. I think the main concern discussed in this thread is
+> (and please CMIIW):
+
+We have code that has sub 100us latency and less. If some random user space
+application applies this, adding 50us (or even 20us) will break these. And
+this has nothing to do with poorly designed applications or hardware.
+
+By adding this as a feature that works everywhere, you will break use cases
+that work today.
 
 
+> 1. Locking down this feature to only SCHED_OTHER versus making it
+> generic (maybe sched_ext could also use it?).
 
-On 2025/2/6 20:33, Peter Zijlstra wrote:
-> On Thu, Feb 06, 2025 at 01:13:28PM +0100, Peter Zijlstra wrote:
-> 
->> No, it just cleans up this utter trainwreck. I also noticed this is a
->> second (new) copy of this garbage. Clearly I didn't yell loud enough
->> last time and people didn't think to vomit when doing the copy/paste :/
->>
->> Function will look something like:
->>
->> unsigned long arch_ftrace_get_symaddr(unsigned long fentry_ip)
->> {
->> 	if (is_endbr(fentry_ip - ENDBR_INSN_SIZE))
->> 		fentry_op -= ENDBR_INSN_SIZE;
->> 	return fentry_ip;
->> }
->>
->> Let me finish local build test before I push out.
-> 
-> Bah, still waiting for a LLVM build, but patch should be here:
-> 
-> git://git.kernel.org/pub/scm/linux/kernel/git/peterz/queue.git x86/ibt
-> 
-> I was supposed to merge this last cycle, but then akpm shat all over
-> arch/x86/kernel/alternative.c and we had to clean that up :/
-> 
-> Notably, this patch, not sure it applies out of order.
-> 
-> ---
-> 
-> Subject: x86/ibt: Clean up is_endbr()
-> From: Peter Zijlstra <peterz@infradead.org>
-> Date: Mon Nov 27 09:58:06 CET 2023
-> 
-> Pretty much every caller of is_endbr() actually wants to test something at an
-> address and ends up doing get_kernel_nofault(). Fold the lot into a more
-> convenient helper.
-> 
-> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> Acked-by: Alexei Starovoitov <ast@kernel.org>
-> Acked-by: Andrii Nakryiko <andrii@kernel.org>
-> ---
->   arch/x86/events/core.c         |    2 +-
->   arch/x86/include/asm/ftrace.h  |   17 +++--------------
->   arch/x86/include/asm/ibt.h     |    5 +++--
->   arch/x86/kernel/alternative.c  |   20 ++++++++++++++------
->   arch/x86/kernel/kprobes/core.c |   11 +----------
->   arch/x86/net/bpf_jit_comp.c    |    4 ++--
->   kernel/trace/bpf_trace.c       |   20 +++-----------------
->   7 files changed, 27 insertions(+), 52 deletions(-)
-> 
-> --- a/arch/x86/events/core.c
-> +++ b/arch/x86/events/core.c
-> @@ -2857,7 +2857,7 @@ static bool is_uprobe_at_func_entry(stru
->   		return true;
->   
->   	/* endbr64 (64-bit only) */
-> -	if (user_64bit_mode(regs) && is_endbr(*(u32 *)auprobe->insn))
-> +	if (user_64bit_mode(regs) && is_endbr((u32 *)auprobe->insn))
->   		return true;
->   
->   	return false;
-> --- a/arch/x86/include/asm/ftrace.h
-> +++ b/arch/x86/include/asm/ftrace.h
-> @@ -2,6 +2,7 @@
->   #ifndef _ASM_X86_FTRACE_H
->   #define _ASM_X86_FTRACE_H
->   
-> +#include "asm/ibt.h"
+sched_ext can do whatever it wants ;-)
 
-Then 
-https://git.kernel.org/pub/scm/linux/kernel/git/peterz/queue.git/tree/arch/x86/include/asm/ftrace.h?h=x86/ibt#n17
+But the reason I picked SCHED_OTHER is because that's the only policy that
+has no control of when it gets preempted by lower priority processes.
 
-# include <asm/ibt.h> --> This line can be removed ?
+This isn't about "hey I'm in a critical section can you delay higher
+priority applications with strict deadlines for me?"
 
->   #include <asm/ptrace.h>
->   
->   #ifdef CONFIG_FUNCTION_TRACER
-> @@ -36,21 +37,9 @@ static inline unsigned long ftrace_call_
->   
->   static inline unsigned long arch_ftrace_get_symaddr(unsigned long fentry_ip)
->   {
+The scheduler tick comes at random moments. SCHED_OTHER is more about
+performance and not about latency. Sure, we want better latency when it
+comes to reaction times, but that's usually in the millisec range. Not
+microsecond range. RT and DL tasks do care about microseconds. And every
+microsecond counts. This is why I was fine in limiting this to 50us.
 
+> 2. Tying it to specific preemption methods which may change user mode
+> behavior/expectation (because LAZY is tied to preemption method).
+
+Well, every time a user task calls a system call, it is affected by the
+preemption method. And I also reported how this can work in all preemption
+methods, but only for SCHED_OTHER. It will just take some work on how the
+kernel handles NEED_RESCHED_LAZY. User space will be unaware of any of this.
+
+> 3. Overloading the purpose of LAZY: My understanding is, the purpose
+> of LAZY is to let the scheduler decide if it wants to preempt based on
+> preemption mode. It is not based on any hint, just on the preemption
+> mode. I guess you are overloading LAZY by making LAZY flag also extend
+> userspace timeslice (versus say making the time-slice extension hint
+> its own thing...).
+
+I already replied about that. Note, LAZY was created in PREEMPT_RT for this
+very purpose (but in the kernel), and ported to vanilla for a slightly
+different purpose.
+
+Here's the history:
+
+  PREEMPT_RT would convert spin_locks in the kernel to sleeping mutexes.
+
+  This made RT tasks respond much faster to events.
+
+  But non-RT (SCHED_OTHER) started suffering performance issues.
+
+  When looking at the performance issues, we found that it was due to tasks
+  holding these sleeping spin_locks and being preempted. That is, the
+  preemption of holding spin_locks was causing more contention and slowing
+  things down tremendously.
+
+  To first handle this, adaptive mutexes was introduced. These would spin
+  if the owner of the lock was still running, and would go to sleep if the
+  owner goes to sleep. This helped things quite a bit, but PREEMPT_RT was
+  still suffer a performance deficit compared to non-RT.
+
+  This was because of the timer tick on SCHED_OTHER tasks that could
+  preempt a task holding a spin lock.
+
+  NEED_RESCHED_LAZY was introduced to remedy this. It would be set for
+  SCHED_OTHER tasks and NEED_RESCHED for RT tasks. If the task was holding
+  a sleeping spin lock, the NEED_RESCHED_LAZY would not preempt the running
+  task, but NEED_RESCHED would. If the SCHED_OTHER task was not holding a
+  sleeping spin_lock it would be preempted regardless.
+
+This improved the performance of SCHED_OTHER tasks in PREEMPT_RT to be as
+good as what was in vanilla.
+
+You see, LAZY was *created* for this purpose. Of letting the scheduler know
+that the running task is in a critical section and the timer tick should
+not preempt a SCHED_OTHER task.
+
+I just wanted to extend this to SCHED_OTHER in user space too.
+
+> 
+> Yes, I have worked on RT projects before --  you would know better
+> than anyone. :-D. But admittedly, I haven't got to work much with
+> PREEMPT_RT systems.
+
+Just using RT policy to improve performance is not an RT project. I'm
+talking about projects that if you miss a deadline things crash. Where the
+project works very hard to make sure everything works as intended.
+
+I'm totally against allowing SCHED_OTHER to use any feature that can delay
+an RT/DL task (unless of course it is to help those, like priority inheritance).
+
+There's several RT folks on this thread. I wonder if any of
+them are OK with this?
+
+-- Steve
