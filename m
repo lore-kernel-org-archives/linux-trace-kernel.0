@@ -1,176 +1,83 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4707418A6BA;
-	Wed,  5 Feb 2025 23:50:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 717EE15199C;
+	Thu,  6 Feb 2025 00:28:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738799416; cv=none; b=r3ICUH4i0zJoppdLFtJpxDcZRt8mHPTWa2NEeTIQkVYP4HoVll68t3kcYy1Mv3ta2Ao0az9shMTGEnqNbV0CqcQY7IoO2m+flkiwI3WGJ+2hKkvpX+hC5TiOTWEij8evO6IItQ1cVRJUw7uFuXv53cATQet94SHbuolS1YI90n4=
+	t=1738801740; cv=none; b=UB5MbdFb4k+Mp25nHlv9XYjyIasS+bfnqEtHaUYVvWl6Cj0plhDDRMbS+b96uUmGhtm/bWAdPWBtbmBK3Z3OpiiT8G1uD95LeXejd3IKBzz036LI5cBBp0LM+z8K4VBVXI5pPNjRneyDtL9JGcP4uLe06Lf9zUEI/unzjNrzCgc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738799416; c=relaxed/simple;
-	bh=WWl2S5+EyGyEtfzriFh+vpNpc+S5JQxM9/r6w/9TgLE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=S+VCnLMLKFPdTsTo9VXQRoHJ86OsF983JHkjlqtCghUYry64IFqXq+z/pe39Le6ohWhphzWlsQwKtUrJRW80PZxPsS+3a3c4QibsnDVGPta5scYnOYdBz+SeCbiWtrLM4g3bCjeRXEf1igzB/J+9CsFLBkonQVph+Z/iV7APXA8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cXU4BkCD; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738801740; c=relaxed/simple;
+	bh=LfdU6dfd/o6h8/7t4Zv4PI/+fJg+kTvuw8EKuAIygRE=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=fJC0uM00McXnvqWkgr67v54SZVfME/EWgmznLIt0FaytOTcD5/Cb9h/onM1zBbbQiE7jZxApyLFaOP8LaR/w/g4Yvk7ySA0BVKRylZJDUFfXVTGw6X8gJdE3hi5fX2/HdbI7PPKfDestcY7tYJZIRp6LcsDXeZl70YaQqZy0q1Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ERlLk0L/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cXU4BkCD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8892AC4CED1;
-	Wed,  5 Feb 2025 23:50:14 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ERlLk0L/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C96BEC4CED1;
+	Thu,  6 Feb 2025 00:28:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738799414;
-	bh=WWl2S5+EyGyEtfzriFh+vpNpc+S5JQxM9/r6w/9TgLE=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-	b=cXU4BkCDbcgNWXv+x/lfkaByZWYXA39FkEEQfPHCgbHtHAzmngzxeNsk9x1GyKzxt
-	 fl2aMmIGhfcjcbyY8Iy7iJQ1Y4XMxZuQZYFoxmNWqjLkud2JCfLadwHUECgOkjbW0s
-	 0EPiXwLEIEaxIftxlSptVrXIS+peft0832awGlz3oQtL6KUqp1aV1eEe2i2PsVG25C
-	 ssRLhMOFyRPOP73YTzjqVNJBleBE+sF4DBNrUMdsMUWyfwEw8/1Im/8KGRX729wOK2
-	 dm5ULgdR0Vng2eL+tD0GF63QTkaVYYY9web/ZRbIJHxFuDVY4/1EX/TO56B+a0fQdU
-	 ozzJDIGKD7pbg==
-Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-	id 27852CE071A; Wed,  5 Feb 2025 15:50:14 -0800 (PST)
-Date: Wed, 5 Feb 2025 15:50:14 -0800
-From: "Paul E. McKenney" <paulmck@kernel.org>
-To: John Ogness <john.ogness@linutronix.de>
-Cc: Petr Mladek <pmladek@suse.com>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	rcu@vger.kernel.org, linux-kernel@vger.kernel.org,
-	kernel-team@meta.com, rostedt@goodmis.org,
-	Frederic Weisbecker <frederic@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH rcu v2] 4/5] rcu-tasks: Move RCU Tasks self-tests to
- core_initcall()
-Message-ID: <2a7774e4-a3fc-48d5-97b0-6f74396e7f93@paulmck-laptop>
-Reply-To: paulmck@kernel.org
-References: <20250204163409.ueObHFje@linutronix.de>
- <9ed4e0fd-75c4-400a-9a0b-74c68286bad3@paulmck-laptop>
- <a68e2e94-b4c6-4791-b581-ecbf3fee28e9@paulmck-laptop>
- <84pljwi2w0.fsf@jogness.linutronix.de>
- <3a0ceabe-d5a0-4cb3-8343-ec56bc9bd0fd@paulmck-laptop>
- <af84eb57-2da2-461c-82bb-36312bbb49b0@paulmck-laptop>
- <84ed0c1401.fsf@jogness.linutronix.de>
- <efef835a-d2dd-4f03-bb02-c0cf873433e1@paulmck-laptop>
- <841pwc11ae.fsf@jogness.linutronix.de>
- <84y0ykyqf6.fsf@jogness.linutronix.de>
+	s=k20201202; t=1738801739;
+	bh=LfdU6dfd/o6h8/7t4Zv4PI/+fJg+kTvuw8EKuAIygRE=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=ERlLk0L/uSYb65s3+GEUZUhaKkZHYaSO8HrvH9H1vfYX0um0koUbMGxGgHFVzbfcj
+	 EPi6vNc7/OaUUblveFvh+9CS/ZTKOgbo8/DtlPhJECHkBxFsh4givOb/4mS18sM7dC
+	 RCeidqjwVy2DVzfVJCBGMzVOz1PkE/Oyf/JN9UYrjBCXGFz1uDqLakyGUa5qjVH8La
+	 wG0/A4ZwTn6HhDqNX4BkCT0OJNnGWg0qpzBKLsKmbnrhNfnaEka93+qvEFld9A0Mzo
+	 xKXzbYT6yUIvVvZpMcUzs6x6QnjafQVGmMwKytr45xVIwN5EHF3QN2GOd7/odINSl6
+	 2UBeFiqTe645g==
+Date: Thu, 6 Feb 2025 09:28:55 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Luis Chamberlain
+ <mcgrof@kernel.org>, Petr Pavlu <petr.pavlu@suse.com>, Sami Tolvanen
+ <samitolvanen@google.com>, Daniel Gomez <da.gomez@samsung.com>,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ linux-modules@vger.kernel.org
+Subject: Re: [PATCH v2 0/2] tracing: Introduce relative stacktrace
+Message-Id: <20250206092855.6d313227cf5db2a1a96ac200@kernel.org>
+In-Reply-To: <20250205175234.2c16671a@gandalf.local.home>
+References: <173839458022.2009498.14495253908367838065.stgit@devnote2>
+	<20250203103234.79c4a388@gandalf.local.home>
+	<20250205212543.42bd11a8093a074e9df27670@kernel.org>
+	<20250205095322.308234eb@gandalf.local.home>
+	<20250205175234.2c16671a@gandalf.local.home>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <84y0ykyqf6.fsf@jogness.linutronix.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Wed, Feb 05, 2025 at 11:37:25PM +0106, John Ogness wrote:
-> On 2025-02-05, John Ogness <john.ogness@linutronix.de> wrote:
-> >> OK, so I don't need to add "if (IS_ENABLED(CONFIG_PREEMPT_RT))" to guard
-> >> it, then?
-> >
-> > For !CONFIG_PREEMPT_RT, if there are legacy consoles registered,
-> > pr_flush() will additionally perform a blocking lock on the
-> > console_lock.
+On Wed, 5 Feb 2025 17:52:34 -0500
+Steven Rostedt <rostedt@goodmis.org> wrote:
+
+> On Wed, 5 Feb 2025 09:53:22 -0500
+> Steven Rostedt <rostedt@goodmis.org> wrote:
 > 
-> Sorry, I was just thinking about the flushing component of
-> pr_flush(). Later in the function it takes the console_lock even for
-> CONFIG_PREEMPT_RT. So please do _not_ have a guard.
+> > On Wed, 5 Feb 2025 21:25:43 +0900
+> > Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
+> > 
+> > > Anyway, let me try storing the module table.  
+> > 
+> > I have the module table code almost done. At least the recording of the
+> > modules into persistent memory. Exposing and using it is not started yet. I
+> > can send what I have and you can take it over if you want.
 > 
-> pr_flush() should never hang on the console_lock during shutdown, but if
-> does, that is something that will need to be debugged and fixed.
+> I finished what I was working on. Can you start with that? I can push this
+> up to the ring-buffer/core branch. Although it's not fully tested.
+
+Oops, I also worked on that. Anyway, let me check it.
+
+Thanks!
+
 > 
-> @pmladek: Looking forward to reading your input on this.
+> -- Steve
+> 
 
-Here is an updated commit, hopefully applying your feedback correctly.
 
-							Thanx, Paul
-
-------------------------------------------------------------------------
-
-commit 35679c18b062368855e183ee6712ca5c16145d8c
-Author: Paul E. McKenney <paulmck@kernel.org>
-Date:   Wed Feb 5 12:27:23 2025 -0800
-
-    printk: Flush console log from kernel_power_off()
-    
-    Kernels built with CONFIG_PREEMPT_RT=y can lose significant console output
-    and shutdown time, which hides shutdown-time RCU issues from rcutorture.
-    Therefore, make pr_flush() public and invoke it after then last print
-    in kernel_power_off().
-    
-    [ paulmck: Apply John Ogness feedback. ]
-    
-    Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
-    Cc: Petr Mladek <pmladek@suse.com>
-    Cc: Steven Rostedt <rostedt@goodmis.org>
-    Cc: John Ogness <john.ogness@linutronix.de>
-    Cc: Sergey Senozhatsky <senozhatsky@chromium.org>
-
-diff --git a/include/linux/printk.h b/include/linux/printk.h
-index 4217a9f412b2..d658d7e81bef 100644
---- a/include/linux/printk.h
-+++ b/include/linux/printk.h
-@@ -207,6 +207,7 @@ void printk_legacy_allow_panic_sync(void);
- extern bool nbcon_device_try_acquire(struct console *con);
- extern void nbcon_device_release(struct console *con);
- void nbcon_atomic_flush_unsafe(void);
-+bool pr_flush(int timeout_ms, bool reset_on_progress);
- #else
- static inline __printf(1, 0)
- int vprintk(const char *s, va_list args)
-@@ -315,6 +316,11 @@ static inline void nbcon_atomic_flush_unsafe(void)
- {
- }
- 
-+static bool pr_flush(int timeout_ms, bool reset_on_progress)
-+{
-+	return true;
-+}
-+
- #endif
- 
- bool this_cpu_in_panic(void);
-diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
-index 80910bc3470c..b9699eaacf19 100644
---- a/kernel/printk/printk.c
-+++ b/kernel/printk/printk.c
-@@ -2461,7 +2461,6 @@ asmlinkage __visible int _printk(const char *fmt, ...)
- }
- EXPORT_SYMBOL(_printk);
- 
--static bool pr_flush(int timeout_ms, bool reset_on_progress);
- static bool __pr_flush(struct console *con, int timeout_ms, bool reset_on_progress);
- 
- #else /* CONFIG_PRINTK */
-@@ -2474,7 +2473,6 @@ static bool __pr_flush(struct console *con, int timeout_ms, bool reset_on_progre
- 
- static u64 syslog_seq;
- 
--static bool pr_flush(int timeout_ms, bool reset_on_progress) { return true; }
- static bool __pr_flush(struct console *con, int timeout_ms, bool reset_on_progress) { return true; }
- 
- #endif /* CONFIG_PRINTK */
-@@ -4466,7 +4464,7 @@ static bool __pr_flush(struct console *con, int timeout_ms, bool reset_on_progre
-  * Context: Process context. May sleep while acquiring console lock.
-  * Return: true if all usable printers are caught up.
-  */
--static bool pr_flush(int timeout_ms, bool reset_on_progress)
-+bool pr_flush(int timeout_ms, bool reset_on_progress)
- {
- 	return __pr_flush(NULL, timeout_ms, reset_on_progress);
- }
-diff --git a/kernel/reboot.c b/kernel/reboot.c
-index a701000bab34..a84828d0757b 100644
---- a/kernel/reboot.c
-+++ b/kernel/reboot.c
-@@ -704,6 +704,7 @@ void kernel_power_off(void)
- 	migrate_to_reboot_cpu();
- 	syscore_shutdown();
- 	pr_emerg("Power down\n");
-+	pr_flush(1000, 1);
- 	kmsg_dump(KMSG_DUMP_SHUTDOWN);
- 	machine_power_off();
- }
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
