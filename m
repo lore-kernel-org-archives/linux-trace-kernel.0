@@ -1,187 +1,120 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from bg1.exmail.qq.com (bg1.exmail.qq.com [114.132.65.219])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9546C22617E;
-	Thu,  6 Feb 2025 10:18:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30ABF226553;
+	Thu,  6 Feb 2025 10:27:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.132.65.219
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738837119; cv=none; b=C2tZWAKFgINCy79olsYstDaRnSe/GCGLYgo1lzzn2vd4kKn9NRtB+VbxvW1iey7WpCxbo9aJqbz2sY9wTVW/KUm59pv4NcBjDwA5rPaS4jkFDS+VGSjmsSJ1/4b76Vt2jj8MlaGkrvNTutapoMf9ekH/8W1d0aAEfCENnedf87k=
+	t=1738837645; cv=none; b=Ok3rQiepy+YWPfcxVQCLbxkCk0GUkRfr6ZLmWOIPF6JwoUAThpHTPxdNbMIsOCuE3BVR10KcFgNNEO1XaRskdQhojaA+/ITbWtJ1XO4OEY8GtxNhAspq2c1esFBZDFa5pjLZIS/TPLmYziIrch4+AJx0unlh6Evl2tajS4t07xA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738837119; c=relaxed/simple;
-	bh=sKgK4n742urQz6RPy5PwBIny4WYqbq8rW4TbqRRvwgI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=g8Jj5QNBXNu39rWIFnDd0DJjCZNkREiktQoxXVsR5cftBTMSyr6rY4kFoqeUL7G71B6cGbujQaUoARB9701Hy1OzUCgaksXaYx+dcuc0NwXPdxwderx5Aqm08lNAHfc54e3kSec3RPwD3EgdrFHj8lYAAdTsXzhqf7d3ukQYLas=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W5ukKH/f; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738837645; c=relaxed/simple;
+	bh=ty4Eujbi3JXutVV8JchgtpSnzXyS57fNPP7x8fwv3Cc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Elccwfj5ewuui8SUHiXhvwUYUCJBW5rJ/JWA890MSOvKgC/F3IkLXBV6xEYUogWI7LHbKua2mj6kA+J9rZ2lyuZxZCweFOCPVRKEFfg8J+mFwX7gKWsmjKZS4B9P+mlZpDWxO82YPqUJJETBTuT9o+O8I1TbNKni1ZjA2Hk3seM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=dmumk0CX; arc=none smtp.client-ip=114.132.65.219
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W5ukKH/f"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EC889C4CEDD;
-	Thu,  6 Feb 2025 10:18:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738837119;
-	bh=sKgK4n742urQz6RPy5PwBIny4WYqbq8rW4TbqRRvwgI=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-	b=W5ukKH/fLA3MZYjxg3zXxNOZTIOqAgEN5SF6gxrQOd4I9UvMdS5v7a4wbPSmAervD
-	 55gtaX2IkNdxYrSPa7C0KTUt30oC9V+h8s4tNGRDaHsbofEveCJ9pE8ri4pKYaoeKL
-	 jxZjSkUYGqCn5QtRbNk3ALO9vYP/plk4zvRm+mkodZSuKXdlgfOgoNV+yb+4N7D5Fg
-	 wO6OrNP6rCuCGWFcEUWpLtk2gSr8WkS5TtQYwZFkchGvKMqLTr0M6xgEsa5kjqUhOV
-	 I4AxCB/nXh+cwc8Zf0NMcjdSn7PH0MUvVzRnVcdRnfi8uKBu9yE8EP66ub1CLDx72n
-	 DkRghnzTJt8vg==
-Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-	id 9233ACE0B74; Thu,  6 Feb 2025 02:18:38 -0800 (PST)
-Date: Thu, 6 Feb 2025 02:18:38 -0800
-From: "Paul E. McKenney" <paulmck@kernel.org>
-To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc: John Ogness <john.ogness@linutronix.de>, Petr Mladek <pmladek@suse.com>,
-	rcu@vger.kernel.org, linux-kernel@vger.kernel.org,
-	kernel-team@meta.com, rostedt@goodmis.org,
-	Frederic Weisbecker <frederic@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH rcu v2] 4/5] rcu-tasks: Move RCU Tasks self-tests to
- core_initcall()
-Message-ID: <1c5acc45-24b0-488d-9a93-8d9b187c013c@paulmck-laptop>
-Reply-To: paulmck@kernel.org
-References: <84pljwi2w0.fsf@jogness.linutronix.de>
- <3a0ceabe-d5a0-4cb3-8343-ec56bc9bd0fd@paulmck-laptop>
- <af84eb57-2da2-461c-82bb-36312bbb49b0@paulmck-laptop>
- <84ed0c1401.fsf@jogness.linutronix.de>
- <efef835a-d2dd-4f03-bb02-c0cf873433e1@paulmck-laptop>
- <841pwc11ae.fsf@jogness.linutronix.de>
- <84y0ykyqf6.fsf@jogness.linutronix.de>
- <2a7774e4-a3fc-48d5-97b0-6f74396e7f93@paulmck-laptop>
- <20250206090249.G7TXOt0y@linutronix.de>
- <a6090e06-34af-4b71-a9b5-79d94005dc15@paulmck-laptop>
+	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="dmumk0CX"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
+	s=onoh2408; t=1738837566;
+	bh=flV33qDbCktrhjYaUTG2DPPSAd2dWkCXdepsMeSnBJ8=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version;
+	b=dmumk0CX8WGpa/Z82vdJ4IRu6Bf7eY4i+16r2YCJBPPqdHz1KUOPLZ6THwMWcWKfY
+	 oH34pGfYJAaJNC7xXJXIdhROnHnwvlDTn1iCL3vf+y1Fd3J/ngG/wQX+U918uuD9rO
+	 xuZfXNBYRvnegedfhl08AkhXr86RkexYGqzET4SM=
+X-QQ-mid: bizesmtpip4t1738837559tgprquo
+X-QQ-Originating-IP: YmVy3874EstnoparGauVHa6MhyYnp0d0n3DAgaqWRRQ=
+Received: from localhost.localdomain ( [localhost])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Thu, 06 Feb 2025 18:25:57 +0800 (CST)
+X-QQ-SSF: 0000000000000000000000000000000
+X-QQ-GoodBg: 1
+X-BIZMAIL-ID: 5688250677626398646
+From: WangYuli <wangyuli@uniontech.com>
+To: gregkh@linuxfoundation.org,
+	sashal@kernel.org,
+	stable@vger.kernel.org
+Cc: rostedt@goodmis.org,
+	mhiramat@kernel.org,
+	mark.rutland@arm.com,
+	tsbogend@alpha.franken.de,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-mips@vger.kernel.org,
+	WangYuli <wangyuli@uniontech.com>,
+	=?UTF-8?q?Philippe=20Mathieu-Daud=C3=A9?= <philmd@linaro.org>
+Subject: [PATCH 5.4~6.13] MIPS: ftrace: Declare ftrace_get_parent_ra_addr() as static
+Date: Thu,  6 Feb 2025 18:25:48 +0800
+Message-ID: <6832B20AFE3B7328+20250206102548.95302-1-wangyuli@uniontech.com>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <a6090e06-34af-4b71-a9b5-79d94005dc15@paulmck-laptop>
+X-QQ-SENDSIZE: 520
+Feedback-ID: bizesmtpip:uniontech.com:qybglogicsvrgz:qybglogicsvrgz8a-1
+X-QQ-XMAILINFO: M135ko5REW2alb6372CGYhiZ+aMCzPVWw0sIl38J0eO6ryeBc6Ks962c
+	0j2G+sdqngN6dk/kIK+VYDL0hE737vMoAwUC2TGPKF28HN0ZRzBcfbBeuoIo1vjHJkQVT1h
+	ckRfpkFEV1s/Q7YSJKan95K+MpbjGv14ldicVHVv6kCy+gmqKYBbUeNX/vHL8lge0OQGfL/
+	eeIVG5dXGx8VkKoOTOFbaZvRPvz2g9IGH36jyGwxs6oFDtRKWT91zPVbhom+c1ro4TggioN
+	zzsn6/Hpm1Oc0LTW93MQ4f+iWQaAbagtE4erK1pYClcN99TFZswge9mSTKLYbWlZcHiYIIP
+	Asp0TPl6450JJgK16aFAUdogcrt8Awsq68Tagz/gjQL003dSkfw4qhJv+b9rGtK3MDhtbsc
+	VYuoruhLA7OHRjdVy9mtGEjr2GWGXa9JNsXtYV/bpEE/K/cjA7mWKA4PJAwBy614IzE6mtT
+	RRJE1a22a92e9dChwO+UaXJOTDk214L5BhGPRt9ijlZ6urypd6Aqm3m+9SAL5rTnrIviEP6
+	ejCw5wPE8UoHXOC8bunnN5jN+cUFzCTxQhqMMBvjiv64BEt9DA1uul+1zKz6uGefvmGysFS
+	Yhkexjloyj7OWXIft06NlctVwtVqqg7nkLQk2acpO5Xi0P3Xfc2fukPGJg0AJTrmzPOYSng
+	9Iy5iYQkKPJzUx2+jh0rR3j38Gr+n7Y66F0xxn4838QMk3OOCtKpS+j1IN4ocZx+LOQ6Hmp
+	1F43Iup9vyzeJRYj9vEjCrvH0NaUlB4f2RHKk1S+dOoanKA58GLrIGhBrCqANOi02s2RH/7
+	3Cv1e3MMeq0r/UYPwL07NAa8dC0FJFhk70mLSMFdtegU0Ia493oLHUBFBKIqOjqwEeIRaSV
+	crV5yWGeUEj+LSzgqs6nuE3VM9eHGnyTZmwaCt/sQ1WOrFTvsk3/N+mPom4BmJnXWYQditU
+	Dn2yYcUIMQh3FhwQFc8jQ3ca6w8u1eBhBDZcfbfQrDk4OzA5dV0F1HlPYDdV+3wJvkKspI6
+	z/syDtYQ==
+X-QQ-XMRINFO: M/715EihBoGSf6IYSX1iLFg=
+X-QQ-RECHKSPAM: 0
 
-On Thu, Feb 06, 2025 at 01:59:00AM -0800, Paul E. McKenney wrote:
-> On Thu, Feb 06, 2025 at 10:02:49AM +0100, Sebastian Andrzej Siewior wrote:
-> > On 2025-02-05 15:50:14 [-0800], Paul E. McKenney wrote:
-> > > diff --git a/include/linux/printk.h b/include/linux/printk.h
-> > > index 4217a9f412b2..d658d7e81bef 100644
-> > > --- a/include/linux/printk.h
-> > > +++ b/include/linux/printk.h
-> > > @@ -207,6 +207,7 @@ void printk_legacy_allow_panic_sync(void);
-> > >  extern bool nbcon_device_try_acquire(struct console *con);
-> > >  extern void nbcon_device_release(struct console *con);
-> > >  void nbcon_atomic_flush_unsafe(void);
-> > > +bool pr_flush(int timeout_ms, bool reset_on_progress);
-> > …
-> > > diff --git a/kernel/reboot.c b/kernel/reboot.c
-> > > index a701000bab34..a84828d0757b 100644
-> > > --- a/kernel/reboot.c
-> > > +++ b/kernel/reboot.c
-> > > @@ -704,6 +704,7 @@ void kernel_power_off(void)
-> > >  	migrate_to_reboot_cpu();
-> > >  	syscore_shutdown();
-> > >  	pr_emerg("Power down\n");
-> > > +	pr_flush(1000, 1);
-> > 
-> > this could be true instead 1 given that the type is bool
-> 
-> Good point, and this matches other usage.  Will fix on my next rebase.
+commit ddd068d81445b17ac0bed084dfeb9e58b4df3ddd upstream.
 
-And here is the updated commit.  Thoughts?
+Declare ftrace_get_parent_ra_addr() as static to suppress clang
+compiler warning that 'no previous prototype'. This function is
+not intended to be called from other parts.
 
-							Thanx, Paul
+Fix follow error with clang-19:
 
-------------------------------------------------------------------------
+arch/mips/kernel/ftrace.c:251:15: error: no previous prototype for function 'ftrace_get_parent_ra_addr' [-Werror,-Wmissing-prototypes]
+  251 | unsigned long ftrace_get_parent_ra_addr(unsigned long self_ra, unsigned long
+      |               ^
+arch/mips/kernel/ftrace.c:251:1: note: declare 'static' if the function is not intended to be used outside of this translation unit
+  251 | unsigned long ftrace_get_parent_ra_addr(unsigned long self_ra, unsigned long
+      | ^
+      | static
+1 error generated.
 
-commit 04ccc09a6eb9a50f79c0a0e46fd273b5131b24f1
-Author: Paul E. McKenney <paulmck@kernel.org>
-Date:   Wed Feb 5 12:27:23 2025 -0800
+Signed-off-by: WangYuli <wangyuli@uniontech.com>
+Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Reviewed-by: Philippe Mathieu-Daudé <philmd@linaro.org>
+Signed-off-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Signed-off-by: WangYuli <wangyuli@uniontech.com>
+---
+ arch/mips/kernel/ftrace.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-    printk: Flush console log from kernel_power_off()
-    
-    Kernels built with CONFIG_PREEMPT_RT=y can lose significant console output
-    and shutdown time, which hides shutdown-time RCU issues from rcutorture.
-    Therefore, make pr_flush() public and invoke it after then last print
-    in kernel_power_off().
-    
-    [ paulmck: Apply John Ogness feedback. ]
-    [ paulmck: Appy Sebastian Andrzej Siewior feedback. ]
-    [ paulmck: Apply kernel test robot feedback. ]
-    
-    Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
-    Reviewed-by: John Ogness <john.ogness@linutronix.de>
-    Cc: Petr Mladek <pmladek@suse.com>
-    Cc: Steven Rostedt <rostedt@goodmis.org>
-    Cc: Sergey Senozhatsky <senozhatsky@chromium.org>
-
-diff --git a/include/linux/printk.h b/include/linux/printk.h
-index 4217a9f412b2..5b462029d03c 100644
---- a/include/linux/printk.h
-+++ b/include/linux/printk.h
-@@ -207,6 +207,7 @@ void printk_legacy_allow_panic_sync(void);
- extern bool nbcon_device_try_acquire(struct console *con);
- extern void nbcon_device_release(struct console *con);
- void nbcon_atomic_flush_unsafe(void);
-+bool pr_flush(int timeout_ms, bool reset_on_progress);
- #else
- static inline __printf(1, 0)
- int vprintk(const char *s, va_list args)
-@@ -315,6 +316,11 @@ static inline void nbcon_atomic_flush_unsafe(void)
+diff --git a/arch/mips/kernel/ftrace.c b/arch/mips/kernel/ftrace.c
+index 8c401e42301c..f39e85fd58fa 100644
+--- a/arch/mips/kernel/ftrace.c
++++ b/arch/mips/kernel/ftrace.c
+@@ -248,7 +248,7 @@ int ftrace_disable_ftrace_graph_caller(void)
+ #define S_R_SP	(0xafb0 << 16)	/* s{d,w} R, offset(sp) */
+ #define OFFSET_MASK	0xffff	/* stack offset range: 0 ~ PT_SIZE */
+ 
+-unsigned long ftrace_get_parent_ra_addr(unsigned long self_ra, unsigned long
++static unsigned long ftrace_get_parent_ra_addr(unsigned long self_ra, unsigned long
+ 		old_parent_ra, unsigned long parent_ra_addr, unsigned long fp)
  {
- }
- 
-+static inline bool pr_flush(int timeout_ms, bool reset_on_progress)
-+{
-+	return true;
-+}
-+
- #endif
- 
- bool this_cpu_in_panic(void);
-diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
-index 80910bc3470c..b9699eaacf19 100644
---- a/kernel/printk/printk.c
-+++ b/kernel/printk/printk.c
-@@ -2461,7 +2461,6 @@ asmlinkage __visible int _printk(const char *fmt, ...)
- }
- EXPORT_SYMBOL(_printk);
- 
--static bool pr_flush(int timeout_ms, bool reset_on_progress);
- static bool __pr_flush(struct console *con, int timeout_ms, bool reset_on_progress);
- 
- #else /* CONFIG_PRINTK */
-@@ -2474,7 +2473,6 @@ static bool __pr_flush(struct console *con, int timeout_ms, bool reset_on_progre
- 
- static u64 syslog_seq;
- 
--static bool pr_flush(int timeout_ms, bool reset_on_progress) { return true; }
- static bool __pr_flush(struct console *con, int timeout_ms, bool reset_on_progress) { return true; }
- 
- #endif /* CONFIG_PRINTK */
-@@ -4466,7 +4464,7 @@ static bool __pr_flush(struct console *con, int timeout_ms, bool reset_on_progre
-  * Context: Process context. May sleep while acquiring console lock.
-  * Return: true if all usable printers are caught up.
-  */
--static bool pr_flush(int timeout_ms, bool reset_on_progress)
-+bool pr_flush(int timeout_ms, bool reset_on_progress)
- {
- 	return __pr_flush(NULL, timeout_ms, reset_on_progress);
- }
-diff --git a/kernel/reboot.c b/kernel/reboot.c
-index a701000bab34..3ba15b2c4066 100644
---- a/kernel/reboot.c
-+++ b/kernel/reboot.c
-@@ -704,6 +704,7 @@ void kernel_power_off(void)
- 	migrate_to_reboot_cpu();
- 	syscore_shutdown();
- 	pr_emerg("Power down\n");
-+	pr_flush(1000, true);
- 	kmsg_dump(KMSG_DUMP_SHUTDOWN);
- 	machine_power_off();
- }
+ 	unsigned long sp, ip, tmp;
+-- 
+2.47.2
+
