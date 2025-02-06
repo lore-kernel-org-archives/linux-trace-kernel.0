@@ -1,44 +1,40 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17AC71EA7F6;
-	Thu,  6 Feb 2025 13:53:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B0791EA7C6;
+	Thu,  6 Feb 2025 13:58:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738850038; cv=none; b=o6dfU7E6dG/Ju+S7ifLhpql/aRCHdg8AvhkWduGwvXMz1O7HyQ8QrKeRMfTqgznNB3CjfFo1zNj3KGcP+NbicF9AcQa12UYEbghMgOPi6f0vYPs8mPwXBF5BxF5ZVF1c1tdm0EyLqhO2jRXzd9/ciJRr+Bv6QT0OT0EKDanV5Vc=
+	t=1738850288; cv=none; b=UcrpLtl7ap33Ywe8PFx2rQGvR5JTIsQioXagN5VNRrYFKIjp04eUd0z82Bsq7yM5C/y9hs6pLazBiuUIXUJ16ntUyMo6SjgKe8cAfVQBBvd/UaIEWVEKvQyAEObo6TgqD+1Kc1fxfjzMWSt9BS/fHieZadKaTSL+259KBxdFBMM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738850038; c=relaxed/simple;
-	bh=RIg4iOaqEgFYPkW2inMxoFeA8rI0uIk8n+pQO4qC1J0=;
+	s=arc-20240116; t=1738850288; c=relaxed/simple;
+	bh=cEhkfPaoicf2zxAScAcOmhV+Jht47Dii7DLMmmIYkC4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=al0TJ6dm7064NT/pg3ZYA2GahPm7ae2Qcl9frLV8NNyuBk7pHYUxlmZiVhEXadlcA7hnAEPk2lp9YKKYbw/wLkrMZbu415yUzW/3SLRBPyKprKBXz8f1YrwNTPwbrSI5vA8futDTizF34Eegzbul8eT9bhmC36n8doGL8kNenbo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=pzwTHOiw; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=iTyIeh7N; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	 Content-Type:Content-Disposition:In-Reply-To; b=EvO3bHP7pJqhIqRNPp43ZF94spNQ9zo3PbCBZqVDisE8GdtfBH2p5AQWletB7n9VdG8B5KXN3ivxpKy8/G6tDKE6KXCXSxjlMcoRBk3Uz3CGAsAQlUuCmTuTbX4y7FLfiF9oKPa2zreLlWk27I9ULr4qv9XAFA48tQJiG87EHBA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=qFAwRwU9; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="pzwTHOiw";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="iTyIeh7N"
-Date: Thu, 6 Feb 2025 14:53:53 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1738850035;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=5OhWPAu4aphIzD7xlFqULoTdQ1d9FLpBhL4JzORAtrE=;
-	b=pzwTHOiw0eZL5YDmeqk51vz9SLKgEg85QZWTqMPS1jHY0dwDmSWRFIl4awVJf1+3JTqD1c
-	EGbeNjBzmXsaL/ZBpZkb85ozSbbD0JPbF4NwdRakdpHOeDrP8LImCCi1Uqvieo15WRkXVJ
-	UioM7O2jzD6wS8TQx+k5r4O46ML0VN+lhZZ8lV/Qg84z5w0HE0fSYIVmCHODc9fmmdwRF4
-	cW/8zakoTdOfZTue0x0Paz0+yDG1C/rUfQJkcUR+UXEpuezhP6gyKk0YiotiWEdSdUpJn7
-	9QyXU6SJX7aYAQ8rIuNt0Mf5/s2b4pXAMvUHzxsn2SVw/Q9Ic0QJlCdfgu7CEg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1738850035;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=5OhWPAu4aphIzD7xlFqULoTdQ1d9FLpBhL4JzORAtrE=;
-	b=iTyIeh7Njzn/4TjYMIJNO4dZZ06HQrrqMMFtJMLkWxziMGXg5Pcp1QHiud1ezdWMm5fhIE
-	oUSv4/bv/q0c5iDw==
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To: Peter Zijlstra <peterz@infradead.org>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="qFAwRwU9"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=aS8G2mLVXo/L1oMuqtZDMH9m5wICqaE0EgdSFqltFMQ=; b=qFAwRwU94EzqKbEILUMXjByVGu
+	JJUSIYThEUJtvIxP64w/gKtfzM6b27fey57XMLUMpS/KXaNn0cCKxSiHGGPQzWuNbLAbzhWA+r/Ku
+	MychWV9G2HX0R3YVIouwsRdbEu/CR82pZr5Xd8D5PNzyBJPoabJPnmNyQAZ2c9zw3e6Pn3IMsM7Nq
+	8B7w7WH0BdIVUjvQG89CwZo7NMODIyVO5WSPm7SboBMh5rFiJvdFbsSzbN0iNKnv1NecjbtIIaV7U
+	GtNwR/t/gAZeKGy9ZD97CTVPQ25AGA20AVxOtwZ7YGrRT5+0/8VyPgZjSOrhzbi/j0BKytkEQnH4G
+	LzO0Kbow==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
+	id 1tg2O1-000000065sw-1yNY;
+	Thu, 06 Feb 2025 13:57:45 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 3D9B23003E1; Thu,  6 Feb 2025 14:57:44 +0100 (CET)
+Date: Thu, 6 Feb 2025 14:57:44 +0100
+From: Peter Zijlstra <peterz@infradead.org>
+To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 Cc: Steven Rostedt <rostedt@goodmis.org>,
 	Joel Fernandes <joel@joelfernandes.org>,
 	Prakash Sangappa <prakash.sangappa@oracle.com>,
@@ -60,7 +56,7 @@ Cc: Steven Rostedt <rostedt@goodmis.org>,
 	Clark Williams <clark.williams@gmail.com>, daniel.wagner@suse.com,
 	Joseph Salisbury <joseph.salisbury@oracle.com>, broonie@gmail.com
 Subject: Re: [RFC][PATCH 1/2] sched: Extended scheduler time slice
-Message-ID: <20250206135353.i1tp4vDv@linutronix.de>
+Message-ID: <20250206135744.GQ7145@noisy.programming.kicks-ass.net>
 References: <EC77D83D-DD17-4CCD-9EF6-C4C39FCE16E7@oracle.com>
  <9DA1FAE6-A008-4785-BDF9-541457E29807@joelfernandes.org>
  <20250204220418.35949317@gandalf.local.home>
@@ -70,31 +66,41 @@ References: <EC77D83D-DD17-4CCD-9EF6-C4C39FCE16E7@oracle.com>
  <20250206083039.0916ad24@gandalf.local.home>
  <20250206134408.lD_POjuG@linutronix.de>
  <20250206134859.GP7145@noisy.programming.kicks-ass.net>
+ <20250206135353.i1tp4vDv@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250206134859.GP7145@noisy.programming.kicks-ass.net>
+In-Reply-To: <20250206135353.i1tp4vDv@linutronix.de>
 
-On 2025-02-06 14:48:59 [+0100], Peter Zijlstra wrote:
-> On Thu, Feb 06, 2025 at 02:44:08PM +0100, Sebastian Andrzej Siewior wrote:
-> > SCHED_OTHER vs SCHED_OTHER after all. But please don't delay a wakeup of
-> > SCHED_FIFO/ RR/ DL because of this LAZY hint.
+On Thu, Feb 06, 2025 at 02:53:53PM +0100, Sebastian Andrzej Siewior wrote:
+> On 2025-02-06 14:48:59 [+0100], Peter Zijlstra wrote:
+> > On Thu, Feb 06, 2025 at 02:44:08PM +0100, Sebastian Andrzej Siewior wrote:
+> > > SCHED_OTHER vs SCHED_OTHER after all. But please don't delay a wakeup of
+> > > SCHED_FIFO/ RR/ DL because of this LAZY hint.
+> > 
+> > Thing will get delayed if interrupts are disabled or kernel has
+> > preemption disabled too. So as long as we ensure hint crap is of equal
+> > order, nothing cares if you do.
+> > 
+> > If you can't tell the difference between task does hint crap in
+> > userspace and task is in the middle of syscall, you can't tell the
+> > difference.
 > 
-> Thing will get delayed if interrupts are disabled or kernel has
-> preemption disabled too. So as long as we ensure hint crap is of equal
-> order, nothing cares if you do.
-> 
-> If you can't tell the difference between task does hint crap in
-> userspace and task is in the middle of syscall, you can't tell the
-> difference.
+> I can tell the difference if I see a trace where an interrupt fires,
+> performs a wakeup and the SCHED_OTHER task remains on CPU while the task
+> SCHED_FIFO task sits on the runqueue until a timer fires.
 
-I can tell the difference if I see a trace where an interrupt fires,
-performs a wakeup and the SCHED_OTHER task remains on CPU while the task
-SCHED_FIFO task sits on the runqueue until a timer fires.
+Right, but so what? Same delay will happen if interrupt fires in the
+middle of a preempt_disable() region.
 
-Sebastian
+Or if interrupt gets pending while interrupts are disabled, except your
+trace will not show that.
+
+Your worst case response time isn't affected. That's all that matters.
+
+
