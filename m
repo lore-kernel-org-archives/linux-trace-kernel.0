@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 244481EDA3E;
-	Thu,  6 Feb 2025 16:58:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 404231A3176;
+	Thu,  6 Feb 2025 16:58:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738861131; cv=none; b=hdmFKfLXDfyL1j1fHOFOwFFIW280VOpC9JI117iKUcBGPUtAdZW9CgjrvQ/jGn7paDkrAU7tjU1EHct7SGXkbolYW1l5F/eHydT2wvkw6tKudXBjTKBBESbFcKfqS9139qa0qBxvIQ5J/1a8Ybnc9d3dR64bPnyNf6tlH7yUIJw=
+	t=1738861140; cv=none; b=bCOxfKE+VQlCiZpm9lAOIobdJflLH3EIEe8Fgm8TDlIu/OcbCER8n1Lz0TIAoHWEP9BlMy43GTSnuuO52qMx10Qkn8orQx5Xi31BH11ssG24c8OCJrppoMXCcorzGSr/Cpx0zLVsSddkED/pb/G3N+yyecFpgrs9ULqpExrDDF0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738861131; c=relaxed/simple;
-	bh=suqPh1SD4lnh3t+6pnrqVZkyz5azPVfGSsO+TVw9B7g=;
+	s=arc-20240116; t=1738861140; c=relaxed/simple;
+	bh=oKw1gq3IJXBNZHaLukyfGjM4RYUKQnlHlVj8vrLsr7k=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=H5q+4V19zGo8xt9Axs2bdOhCFXfRc7h6drU5hV6A9GYGc77CWFStJXilNwFk4ojZd9Bk3+3IVHMI0mOibBuwCgajPf8Gmt72iHy4iAv4F3t9zvOh/NObXo+mrYzdJ3Kt2h0mFdVtyUK6+0OB0NinLkIX35U52s12HQjMJqIcHDg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hVOP4iqM; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=lxm+QnHDnQoikC63Ens7HkC0GBTb272SeAyDXnFdk5Ag/CPgpdmeDqDkIOzc3GxygxvniaDo66mdHbpZvWewZaUk2mh6mbuOkp3MAZvbzwZDQzV0D3hTvtmk402KYJfDEkwSB2chBoN8K8s4XsL9gbHLjgHAfGVskLNWTAZvVfo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Zzz7vuaF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hVOP4iqM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 73ECDC4CEDD;
-	Thu,  6 Feb 2025 16:58:49 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Zzz7vuaF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4F630C4CEDD;
+	Thu,  6 Feb 2025 16:58:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738861130;
-	bh=suqPh1SD4lnh3t+6pnrqVZkyz5azPVfGSsO+TVw9B7g=;
+	s=k20201202; t=1738861139;
+	bh=oKw1gq3IJXBNZHaLukyfGjM4RYUKQnlHlVj8vrLsr7k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=hVOP4iqMBnT4X0FcAaEr9ym2OOBcTL8aoSAR7C3xDHfPt31VmmYbOp/I+aubjtx8S
-	 OLSDepFnvfWYOjg7ZmbtfL1iv9a/8mEQ1dP6D49Hs+g1RdpkR55f4PlqxTAZElYZaL
-	 tKh7hEi0GYbwb1zFuohHsVwxn/a+6JPH04dKCCtljYveamAK85LzQ1lW4+Ea9gUlPq
-	 5mZT285aPaTopBpFJEOKNJkOHbiblGctfl6fmw5doiFxwH1BX3F16A719Nh4730lXb
-	 ghdbHq7o1VrXdA61jdDxblmESG7umlihXvDNkCXOpZG8kY64IwJZmFZQ4ilrmAD2hm
-	 xSlIhFGsvgVjg==
+	b=Zzz7vuaF/l+EvyS+Cm7imJ7FSxBtUyKVRFJh0UKgtzVS/GhBV9NskzkztEuoR4q1M
+	 DY3qKTJY80GIVvRWp/bAOLM7fUnTqidWC8z8UXij8gPOgsXKDzpkTiBAnF0T/cxPA6
+	 nLXU3qj+/KbP0rp3iQaCzmOd4RGfpP65XhHhuoGgKyC/T/0R/GJe9VCIgkWSQJYMXv
+	 xgJk3EKhZ8DaZwWny0bgo5ZjGIwsD3iuJt4XJTx4a8nJd6sQLxkIOY3JdTbNZRua8K
+	 UUT6JqPBRJqk9klq7RBE7w/Cw+3TfQysM3iemA6joIefppl/be7DkdCPGIr6Rnud5c
+	 lJ2QQJzlgzfAQ==
 From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
 To: Steven Rostedt <rostedt@goodmis.org>
 Cc: Masami Hiramatsu <mhiramat@kernel.org>,
@@ -34,9 +34,9 @@ Cc: Masami Hiramatsu <mhiramat@kernel.org>,
 	Mark Rutland <mark.rutland@arm.com>,
 	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
 	Andrew Morton <akpm@linux-foundation.org>
-Subject: [PATCH 1/3] tracing: Skip update_last_data() if it is already updated
-Date: Fri,  7 Feb 2025 01:58:46 +0900
-Message-ID: <173886112678.496116.16133647703573943563.stgit@devnote2>
+Subject: [PATCH 2/3] tracing: Remove checking the activity when module map is updating
+Date: Fri,  7 Feb 2025 01:58:56 +0900
+Message-ID: <173886113592.496116.11615563462036645436.stgit@devnote2>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250207015330.5c71ad55ed2f516da1410711@kernel.org>
 References: <20250207015330.5c71ad55ed2f516da1410711@kernel.org>
@@ -52,47 +52,42 @@ Content-Transfer-Encoding: 8bit
 
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-If the last boot data is already cleared, there is no reason to update it
-again. Skip if the TRACE_ARRAY_FL_LAST_BOOT is cleared.
+Remove unnecessary active check because tr->flags already checks it.
 
 Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 ---
- kernel/trace/trace.c |   10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+ kernel/trace/trace.c |   13 +------------
+ 1 file changed, 1 insertion(+), 12 deletions(-)
 
 diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index 443f2bc5b856..0f010a34de84 100644
+index 0f010a34de84..5a064e712fd7 100644
 --- a/kernel/trace/trace.c
 +++ b/kernel/trace/trace.c
-@@ -6041,6 +6041,12 @@ static void update_last_data(struct trace_array *tr)
- 	if (!(tr->flags & TRACE_ARRAY_FL_BOOT))
- 		return;
+@@ -10090,15 +10090,6 @@ static void trace_module_remove_evals(struct module *mod)
+ static inline void trace_module_remove_evals(struct module *mod) { }
+ #endif /* CONFIG_TRACE_EVAL_MAP_FILE */
  
-+	if (!(tr->flags & TRACE_ARRAY_FL_LAST_BOOT))
-+		return;
-+
-+	/* Only if the buffer has previous boot data clear and update it. */
-+	tr->flags &= ~TRACE_ARRAY_FL_LAST_BOOT;
-+
- 	/* Reset the module list and reload them */
- 	if (tr->scratch) {
- 		struct trace_scratch *tscratch = tr->scratch;
-@@ -6052,9 +6058,6 @@ static void update_last_data(struct trace_array *tr)
- 		module_for_each_mod(save_mod, tr);
- 	}
- 
--	if (!(tr->flags & TRACE_ARRAY_FL_LAST_BOOT))
--		return;
+-static bool trace_array_active(struct trace_array *tr)
+-{
+-	if (tr->current_trace != &nop_trace)
+-		return true;
 -
- 	/*
- 	 * Need to clear all CPU buffers as there cannot be events
- 	 * from the previous boot mixed with events with this boot
-@@ -6077,7 +6080,6 @@ static void update_last_data(struct trace_array *tr)
- #else
- 	tscratch->kaslr_addr = 0;
- #endif
--	tr->flags &= ~TRACE_ARRAY_FL_LAST_BOOT;
+-	/* 0 is no events, 1 is all disabled */
+-	return trace_events_enabled(tr, NULL) > 1;
+-}
+-
+ static void trace_module_record(struct module *mod)
+ {
+ 	struct trace_array *tr;
+@@ -10107,9 +10098,7 @@ static void trace_module_record(struct module *mod)
+ 		/* Update any persistent trace array that has already been started */
+ 		if ((tr->flags & (TRACE_ARRAY_FL_BOOT | TRACE_ARRAY_FL_LAST_BOOT)) ==
+ 		    TRACE_ARRAY_FL_BOOT) {
+-			/* Only update if the trace array is active */
+-			if (trace_array_active(tr))
+-				save_mod(mod, tr);
++			save_mod(mod, tr);
+ 		}
+ 	}
  }
- 
- /**
 
