@@ -1,203 +1,97 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDE30235342;
-	Thu,  6 Feb 2025 16:32:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D17E23537F;
+	Thu,  6 Feb 2025 16:53:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738859558; cv=none; b=VOOBfXmDofVSN9M6UbX1uvBJ3MpIgGuC/6FCE09QOPfIm5W2IVhHEDh/DicmWu/QWzXrvwAxQDHFsnJjPv5MIcQJDX5gav2i4gvdFyu54g/EutAzEvRhTPf4hxaUD0g5rFJ1d4B1gQE2sZqyy3B+CHHF6IlECPo90Y2mdBQBpWA=
+	t=1738860791; cv=none; b=PALGFYK/P/8CmMdnvhk70YwUSek9GP108ERXszfwjChPZbEv23E1CgISaImz3sHg0y9mPUN5GQVyMfsnnBNqBL8B3L7UFf8aNq6bFtbp97j637T4fSV0kt3ktn2tH4dL2wFqABTJLutBZfETBqUz6kkx8IYMvROK8tCEsTMlEDE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738859558; c=relaxed/simple;
-	bh=1WPhQojRQB6CLXyDW6586XaRgnWAu9mr00msx/RSff0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bEIOP4Dh9sLzs9CzaIZgrUebN+M+u1sWXss7P+gTqRrXgU5fMhFeeBt9GzC46JyqmVPL8lj3ML4nzTy2QvBOrvidrffM6pcrMPABY5ZY7ca2rmMRUk5WmIGzrR+z2k2kQsw01BftyAuoJIMTu06sA1dL/jY2+VKOEdGgcppZ/R8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B8zzMOwM; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738860791; c=relaxed/simple;
+	bh=sJiJEkNYXh2cchmUanQA7WTNGhbQyJm9RSJEg++jKqk=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=H9SOCedMWflLFvVftUSBXJLwQZmQw7h0j7MW9188j2rpm1JRl0eQ+iol8P2ac0VqjH4pdaH31vglEKk74ISYbsrqCCwtUKyeJw+LlSTzBkW4k1QSJN6k1clMPhOICSMp/6IGJy8DRAZSKik8nprEJfjDZ1l3M+tmPx+YWffAev0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=enUXRhMH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B8zzMOwM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2D299C4CEDD;
-	Thu,  6 Feb 2025 16:32:38 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="enUXRhMH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8F11AC4CEDD;
+	Thu,  6 Feb 2025 16:53:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738859558;
-	bh=1WPhQojRQB6CLXyDW6586XaRgnWAu9mr00msx/RSff0=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-	b=B8zzMOwMR5AjXM+YO6P86j6EWDMZBEEs7Pl0EPJD1m9cYH3xfIsg0Y3nvQKcR1v0S
-	 VgshrfO+CJmfDidqhDxa1JJUEID70mMdiFfaaEOy2+TJWRrodYx9FDM7WeanByBry7
-	 3yMWWN/wv5rOLMsPFc+HMwT8boKTtNTwwNwlT311Javqr/e/Lhk4C+3xj71/EMl7Ao
-	 wJcQdkKBdppuRLvyK/pG6LMH1MM3BMBilUXEnj8GZLwlEbIhSAlt3JJj7yHIilbOk8
-	 XIKAWS8hm/t3hWiDmZUwOpZ7uK8/MfBANJA/70ledrjSaew0FyOLcyBoeHWTZUt5XX
-	 IxbCVkMFrnymQ==
-Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-	id C46B7CE03FB; Thu,  6 Feb 2025 08:32:37 -0800 (PST)
-Date: Thu, 6 Feb 2025 08:32:37 -0800
-From: "Paul E. McKenney" <paulmck@kernel.org>
-To: Petr Mladek <pmladek@suse.com>
-Cc: John Ogness <john.ogness@linutronix.de>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	rcu@vger.kernel.org, linux-kernel@vger.kernel.org,
-	kernel-team@meta.com, rostedt@goodmis.org,
-	Frederic Weisbecker <frederic@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH rcu v2] 4/5] rcu-tasks: Move RCU Tasks self-tests to
- core_initcall()
-Message-ID: <e852c4fc-7446-46d4-882e-aa20bc235c42@paulmck-laptop>
-Reply-To: paulmck@kernel.org
-References: <a68e2e94-b4c6-4791-b581-ecbf3fee28e9@paulmck-laptop>
- <84pljwi2w0.fsf@jogness.linutronix.de>
- <3a0ceabe-d5a0-4cb3-8343-ec56bc9bd0fd@paulmck-laptop>
- <af84eb57-2da2-461c-82bb-36312bbb49b0@paulmck-laptop>
- <84ed0c1401.fsf@jogness.linutronix.de>
- <efef835a-d2dd-4f03-bb02-c0cf873433e1@paulmck-laptop>
- <841pwc11ae.fsf@jogness.linutronix.de>
- <84y0ykyqf6.fsf@jogness.linutronix.de>
- <2a7774e4-a3fc-48d5-97b0-6f74396e7f93@paulmck-laptop>
- <Z6SXoLnUw6D0xEqh@pathway.suse.cz>
+	s=k20201202; t=1738860790;
+	bh=sJiJEkNYXh2cchmUanQA7WTNGhbQyJm9RSJEg++jKqk=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=enUXRhMHDIRaCHdmKUCfCuhJBKDTzQh48rJsiPIUY0o9aoEKprc4G08aAlbsvvPrd
+	 WI2cOqIy1hmoGPbSD8x3d+emtdOPOlMAHAJyUpaaFycy7Ae/o4UIgnQcnMd2cyUVpa
+	 JbtT1/EY/DwewbexGzAGmPmUxbMsm0yXPLZVdgbbhUTsiT6wJnPt/Evq6H8y5H5rNU
+	 jPlL0U/OLAlsBUk5qcC/6pvRt3w729KMb6T+ly+nNCms0TpH0GeJk+L2Py2q+XzCPv
+	 csTNqhNRi0KJ6yoWl0UPwvuvdIjy2aGNUs1yZYUQsFrv3vtrzzq2ipCW0EBhkStN26
+	 rPnF4eBzZZ7qg==
+Date: Fri, 7 Feb 2025 01:53:07 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Mark
+ Rutland <mark.rutland@arm.com>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH 6/8] tracing: Have persistent trace instances save
+ module addresses
+Message-Id: <20250207015307.ce9273f4cd5eee9335c335d3@kernel.org>
+In-Reply-To: <20250206102949.65493416@gandalf.local.home>
+References: <20250205225031.799739376@goodmis.org>
+	<20250205225103.930895467@goodmis.org>
+	<20250206172642.391c16d75dbce00518ef9688@kernel.org>
+	<20250206102949.65493416@gandalf.local.home>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <Z6SXoLnUw6D0xEqh@pathway.suse.cz>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Thu, Feb 06, 2025 at 12:06:08PM +0100, Petr Mladek wrote:
-> On Wed 2025-02-05 15:50:14, Paul E. McKenney wrote:
-> > On Wed, Feb 05, 2025 at 11:37:25PM +0106, John Ogness wrote:
-> > > On 2025-02-05, John Ogness <john.ogness@linutronix.de> wrote:
-> > > >> OK, so I don't need to add "if (IS_ENABLED(CONFIG_PREEMPT_RT))" to guard
-> > > >> it, then?
-> > > >
-> > > > For !CONFIG_PREEMPT_RT, if there are legacy consoles registered,
-> > > > pr_flush() will additionally perform a blocking lock on the
-> > > > console_lock.
-> > > 
-> > > Sorry, I was just thinking about the flushing component of
-> > > pr_flush(). Later in the function it takes the console_lock even for
-> > > CONFIG_PREEMPT_RT. So please do _not_ have a guard.
+On Thu, 6 Feb 2025 10:29:49 -0500
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-Thank you all for looking this over!
-
-> It should be possible to avoid this console_lock() when only NBCON
-> consoles are registered. We take it in pr_flush() for reading con->seq
-> and potential race with register_console(). But it can be handled
-> another way, for example, by restarting the cycle when non-NBCON
-> console suddenly appears.
+> On Thu, 6 Feb 2025 17:26:42 +0900
+> Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
 > 
-> But it might be done later. We do not have NBCON consoles at the
-> moment so the console_lock() is needed anyway.
-
-Fair enough.
-
-> > > pr_flush() should never hang on the console_lock during shutdown, but if
-> > > does, that is something that will need to be debugged and fixed.
-> > > 
-> > > @pmladek: Looking forward to reading your input on this.
-> 
-> My only concern is that kernel_power_off() is called in many
-> code paths so it is not easy to review all scenarios.
-> 
-> But I haven't found any code path where it would be an obvious problem.
-> Especially, it seems that it is _not_ called in panic situations.
-> 
-> Also kernel_power_off() calls syscore_shutdown() which takes
-> syscore_ops_lock mutex. So that is must be called only in
-> a schedulable context even before this patch.
-> 
-> Summary: I do not see any obvious problem in the end.
-> 	 Except, for some small details, see below.
-
-The presence of that syscore_shutdown() call greatly reduced my level
-of anxiety as well.  ;-)
-
-> > Here is an updated commit, hopefully applying your feedback correctly.
+> > This maybe too frequently scan the module because the update_last_data() is
+> > called when;
+> > - change tracer (this maybe OK)
+> > - update "set_event"
+> > - write 1 to "enable" under events
+> > - change pid filter
+> > - etc.
 > > 
-> > 							Thanx, Paul
+> > Once it is scanned, it should not scan again, but update by module
+> > callback, because usually events are enabled individually (thus
+> > write 1 to "event" can happen multiple time online).
 > > 
-> > ------------------------------------------------------------------------
-> > 
-> > commit 35679c18b062368855e183ee6712ca5c16145d8c
-> > Author: Paul E. McKenney <paulmck@kernel.org>
-> > Date:   Wed Feb 5 12:27:23 2025 -0800
-> > 
-> >     printk: Flush console log from kernel_power_off()
-> >     
-> >     Kernels built with CONFIG_PREEMPT_RT=y can lose significant console output
-> >     and shutdown time, which hides shutdown-time RCU issues from rcutorture.
-> >     Therefore, make pr_flush() public and invoke it after then last print
-> >     in kernel_power_off().
-> >     
-> > --- a/include/linux/printk.h
-> > +++ b/include/linux/printk.h
-> > @@ -207,6 +207,7 @@ void printk_legacy_allow_panic_sync(void);
-> >  extern bool nbcon_device_try_acquire(struct console *con);
-> >  extern void nbcon_device_release(struct console *con);
-> >  void nbcon_atomic_flush_unsafe(void);
-> > +bool pr_flush(int timeout_ms, bool reset_on_progress);
-> >  #else
-> >  static inline __printf(1, 0)
-> >  int vprintk(const char *s, va_list args)
-> > @@ -315,6 +316,11 @@ static inline void nbcon_atomic_flush_unsafe(void)
-> >  {
-> >  }
-> >  
-> > +static bool pr_flush(int timeout_ms, bool reset_on_progress)
+> > I think we can move this after TRACE_ARRAY_FL_LAST_BOOT check,
+> > if TRACE_ARRAY_FL_LAST_BOOT flag is set, that flag should be cleared
+> > with updating the tscratch, and the flag is not set, we can skip updating
+> > the scratch.
 > 
-> There is missing "inline":
-> 
-> static inline bool pr_flush(int timeout_ms, bool reset_on_progress)
-> 
-> 
-> Otherwise, I get
-> 
-> In file included from ./include/asm-generic/bug.h:22,
->                  from ./arch/x86/include/asm/bug.h:99,
->                  from ./include/linux/bug.h:5,
->                  from ./include/linux/page-flags.h:10,
->                  from kernel/bounds.c:10:
-> ./include/linux/printk.h:319:13: warning: ‘pr_flush’ defined but not used [-Wunused-function]
+> No, because we could enable it, disable it, and then the user could be
+> adding and removing modules all day long, and we only add and do not remove
+> (I do have a patch that does remove them).
 
-Fixed, thank you both!
+I think TRACE_ARRAY_FL_LAST_BOOT is something like one-way flag, it is set
+if the buffer is persistent, but cleared when it is reused (start writing)
+and never be back. Isn't it?
 
-> > +{
-> > +	return true;
-> > +}
-> > +
-> >  #endif
-> >  
-> >  bool this_cpu_in_panic(void);
-> > --- a/kernel/reboot.c
-> > +++ b/kernel/reboot.c
-> > @@ -704,6 +704,7 @@ void kernel_power_off(void)
-> >  	migrate_to_reboot_cpu();
-> >  	syscore_shutdown();
-> >  	pr_emerg("Power down\n");
-> > +	pr_flush(1000, 1);
 > 
-> This should be pr_flush(1000, true) as suggested by Sebastian.
+> But we can do the same check as patch 8 does, and only do this if the
+> tracer wasn't already active.
 
-Also fixed, also thank you both!
+Yeah, so I think this change needs patch 8 change.
 
-> >  	kmsg_dump(KMSG_DUMP_SHUTDOWN);
-> >  	machine_power_off();
-> >  }
+Thank you,
+
 > 
-> With the two changes:
-> 
-> Reviewed-by: Petr Mladek <pmladek@suse.com>
-> 
-> Paul, I assume that you will pass this via the RCU tree together with
-> the other changes. Or would you prefer to route this particular
-> change via printk tree? Both ways are fine to me.
+> -- Steve
 
-One advantage of carrying it via RCU is that I can arrange things so that
-rcutorture users don't see this problem.  So unless a problem arises,
-thank you, and I do plan to send this up via RCU.
 
-							Thanx, Paul
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
