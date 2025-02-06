@@ -1,216 +1,192 @@
-Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 894D822DF9D
-	for <linux-trace-kernel@vger.kernel.org>; Thu,  6 Feb 2025 11:06:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F74021E0B7
+	for <linux-trace-kernel@vger.kernel.org>; Thu,  6 Feb 2025 11:47:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738839976; cv=none; b=Jcz3tj0HqCiHQCbWAR5T0sSbvPyCfpX4X+jHu+Ch50W4CvxhaX5sljUrTzR6nPXDVtZTZ6yLiqhy7xiClbAV+voqxD1UEBOAWOj4pE5TWasxLs9HXQjU86fvNJnB9q3GNy+ltwWbU2g+SOLwfWC048QL5zCVjU1GQ8FiiA2kc2M=
+	t=1738842446; cv=none; b=JJ96Qc+OYzRYUYI0GEcYc5o28gP/hwoI4TWQa6CwGPEt0bUHhMPLpZiuwxGEXECqQ3HARXx7/XZWKvFy3ocrfsSxV6Cz5obYK3Vw8nipmg80NqOmDfZvLTHlqTr6aGDON4CwMFvSr4Vxbxgzac4GVa8Q7YSHF+TsGIdynrYFuls=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738839976; c=relaxed/simple;
-	bh=uSTA4hN/FvLzpYyGHIJeFJQdyDYFG6AA9fA4OzHjNUY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jR/XQz22f6AxoCX4W3fCXyCD7qkdbtJoSPpFc2P2wr7ZZsYCXDXVKVOFq5QMkMpX9vWBg6eZMsRpcKpVd277pi8ZiFquziJ+Su5klcWuy6LsolBFDKVXeyvztGjJNs9JZOdy2wV6ImNIUPmLsNuEIgifAHz384JPLmBXkwAGUjc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=dDKHOZlW; arc=none smtp.client-ip=209.85.208.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1738842446; c=relaxed/simple;
+	bh=a/Xm8aj2vlhSlJllO3PWBXvZn+46e9ONno+fbb6e1bM=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=cEHySXVZiYG9DMkR3je+F/UHm7VJI25+c+SJ1/rvKmvIH56z8yAgwj85xtQi9EZRJVccLFdxPF6Od5FierfDhuXYMFGzWEGtLgAj7oZZM7q0QMgxZDiSuEvgdT+g2o6ojvFtrAz4+rKIOv7xc+9HvS8QH4jaQC17jIwLKR4nx9Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=aAxrgKvE; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="dDKHOZlW"
-Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-5dca4521b95so1691128a12.0
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 06 Feb 2025 03:06:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1738839971; x=1739444771; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=mXE47cCWyK4lBa3ePxOl4Tt4nUECCOpvFmKs5qWQUGE=;
-        b=dDKHOZlWs0MRD4cnIqPct58ikZBfEQNe/4gqQ8eKQDNd/mnV3aXMDX5UtWzdyH1gmj
-         55h63014ib5rYUNtAEmiY8awhsEQPIazNm1KufZpJmLILV/HYtmBTpnNmxybSjtveAo7
-         IpXBMwIAQKhHD3Wgp/uWVE58/NaaS4FcheTvsaT0IbeeperJDa4DyzM82cevYZoGaudK
-         PXcKgJImpVsMsO9DGREmQ0Srw74TtUbwJaDT57O1ygUaJ1TlZm/q73Ce6XN3z56aX8vk
-         w0UQH51aBDzEi5mj81HabwgCEhEQFfJTKQEUwhUXhpk1wcUiPLnfMtv6m8+7HDAW8hgH
-         8b4A==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aAxrgKvE"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1738842443;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=fSAkfRkQPvRxFNFTaRJCBDO2IC+tb40TSBtMJR0fb5g=;
+	b=aAxrgKvEpDupG4RjLYkDEkunffzx+a0leM3I9ESRLzWSIYhCnqnbEnQ5hbAbtr9+859BWv
+	8EMjQm/L93XDcp8C/bLHJtoYPqBmSF81ltBOMVQq2TmgXhZn43uIU6AquwzUt4Otrw+cOE
+	PXe6Qkf1mKBJcuY4LvV1SyxM91qDOpk=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-659-7pkHl_JYM4CDICz5q6bwvg-1; Thu, 06 Feb 2025 06:47:22 -0500
+X-MC-Unique: 7pkHl_JYM4CDICz5q6bwvg-1
+X-Mimecast-MFC-AGG-ID: 7pkHl_JYM4CDICz5q6bwvg
+Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-4359206e1e4so6602455e9.2
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 06 Feb 2025 03:47:21 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738839971; x=1739444771;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
+        d=1e100.net; s=20230601; t=1738842441; x=1739447241;
+        h=mime-version:user-agent:content-transfer-encoding:autocrypt
+         :references:in-reply-to:date:cc:to:from:subject:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=mXE47cCWyK4lBa3ePxOl4Tt4nUECCOpvFmKs5qWQUGE=;
-        b=RVq1mnpJnrO+GdSikUbgNOjfOLvg3J+83OaD3HKNUB9Bd6QPSNvOcR/p3F0d59DX3Y
-         DMGY5tV9GklBikkhapgMZpFHvZ0XOmnAHMXP7/0agXPhXdzeSEoX5Qqn2Ufz9CR+H2tV
-         JeDn1ozBpjZNTP0ykPe4S/kwllJYDtbFdxB6GGjFGhlroS47BThEi7oNhephVctFKGo7
-         t7xiu/2oTtmWuXTwkXWRfVQsoIv++6MtcgQN0xDtsn3izHrFbuUNK6GVjzA+LWkQmZp5
-         T/ru+lEJa/qEjZZGIolIz+hMM8NVjtM5ENmVc6WZzbLilPifMy99uM5lsI9zMJavdFoV
-         eMlg==
-X-Forwarded-Encrypted: i=1; AJvYcCU/KlUCeZxrRUndZg4s8cPGbHq6ISA3E5I5A6bcxoVFnIDc1Pp+FhryRkm5QnBpSyNwKnNgHv4OxE5snJ3Y0AlqBbk=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx64XK5p+Qt/C+BXBbWg9P1fzbIEGYtp1iMlBMMeghYOTIGauBt
-	haSGyJxq6TEMXntS4QJ/fBzapcLWWSZfDQeHzsEwtPc/eoDue1ahgCOu2ojG/2E=
-X-Gm-Gg: ASbGncumxNwpnUOhAdvM4MTaJw0AVNhI9Wzf4pnWd79fN3TFd4mnsSfP+dTli83mof0
-	0Tg2jEHLtfTs/jKqZ93ZSDQshwXtUBPs92TVWQL+Tow43+hZhNmr4NU8jOLdiPN1AAg0iHgxMR6
-	LPUhF3519+Zt/2S78JHmBTcJ6cfFYo69pECgyNOO9DQ1d1IOTaI4tL+lmAYjmoelvUVnNQuPuIq
-	tLiM+HmvjKuzGkaTVRIVb9JTrMT10zne5g90TaZbnnmG15YVVNDa2Uwc33StyIyxglyu9MBibcd
-	U3HBb0BYrLIzVj+cGQ==
-X-Google-Smtp-Source: AGHT+IHhw5tungS1WCfZTr9LIjTXHvl2yvbkxn0pkpTScc4ZbgAQ2fJW6rcViTk9NZQWzIkYKE9Ysw==
-X-Received: by 2002:a17:907:9728:b0:aa6:7933:8b26 with SMTP id a640c23a62f3a-ab75e213013mr687209966b.9.1738839970699;
-        Thu, 06 Feb 2025 03:06:10 -0800 (PST)
-Received: from pathway.suse.cz ([176.114.240.130])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab7732e7139sm82774866b.102.2025.02.06.03.06.10
+        bh=Dy2FKCeBq1SU957TE4mxB3MK1uzhlMiHCxjSG5afeJI=;
+        b=VbmaKNUDBWW/ABHyTW4IUamHR46EBP1mw99C8MBoSSmr1Zagoh57xVikqcJyEyLVOH
+         7CNky2AI4d8QiRLWxNXHyKd1Sbl9fz4FdoWHSGiK7VGTs3YXRcQsd006KcO1yWpaZrWF
+         /clQ7fXd0tA/pOzvawxFpqhJTBn+PJg33f5bR+9W6O86JU4bXwJ2yopOh0bMBpal+jaY
+         yNIrkeL/uy2qhS82QaeWxXfTiAJ+EZvIUtl3qa5gEYNFyHi0AJ59m5roNtKN4AKoVcfJ
+         U6WMx/s0099KWQ2nsIKXB4lhHRybTKrkH1cDXAc9c3aj69Hf6Z+9Rwjwx583GWIActCq
+         slHQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUP/i2EbXqzmlezW/t4zVZjzVnQbcG1RKMF4Txs1yNKnBcWZip20+uDEG1DUrEtVYXrMg/TJJVDtxsvNbdBLKcC4ak=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwgSd2XeNgokf07ZNCZDr/yJF30VMnbM2D8cD6hsrxbUjKjreAe
+	b4eziHjnTaOcKxPEwuw2qEgUB19BnFpYWcS7wmBMYTFTpJBrt+edKWylR6Kd7Yv/netP3ejbFs7
+	+Idvs5iXu5XLoh35Mb7+pZDK7EI1Rvp1AW6dys+FPCp7xp5BW5xt4cauAuoZ1K9ckLpPtdw==
+X-Gm-Gg: ASbGncscnF5SCsW7qfXQ4pRtmB7tbi4rmNrSUuNchRIE6W6F4SNN5IMXcAtHsszdwe9
+	wHfHSb0KJJBUASouOaiq7O5Y5rn1LaNIMhgDKW08pB76GkhgT4o0QW85yEQ+c/9E60pR/2cWGzz
+	EgUpPSIh3Yp9D+wmhRQP2H1n5o9P6VC2S6XA9/M/jUf5PvGk+Yds08EuEBExDyZibvHs8uDC5zg
+	rKmKfXlcddKARgs4/U29B8cZEZZunQViJSxzIwvXlbwUpNYVDqc3HqZIl5MVkf1Gb4aoOPYjHUB
+	d6Zh87IBCFhtedEpl14ondxFu6b5zD4=
+X-Received: by 2002:a05:600c:4586:b0:434:a734:d279 with SMTP id 5b1f17b1804b1-4390d43e90emr76244595e9.16.1738842440792;
+        Thu, 06 Feb 2025 03:47:20 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IFIZzkUxVZHwTwp/9vlaB//pSPOdWyQfr606Hz2/0/dN8YRTYL7OQ4AmFikgXi+GNq+gARynw==
+X-Received: by 2002:a05:600c:4586:b0:434:a734:d279 with SMTP id 5b1f17b1804b1-4390d43e90emr76244265e9.16.1738842440442;
+        Thu, 06 Feb 2025 03:47:20 -0800 (PST)
+Received: from gmonaco-thinkpadt14gen3.rmtit.csb ([185.107.56.35])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38dbde31e09sm1537030f8f.99.2025.02.06.03.47.19
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Feb 2025 03:06:10 -0800 (PST)
-Date: Thu, 6 Feb 2025 12:06:08 +0100
-From: Petr Mladek <pmladek@suse.com>
-To: "Paul E. McKenney" <paulmck@kernel.org>
-Cc: John Ogness <john.ogness@linutronix.de>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	rcu@vger.kernel.org, linux-kernel@vger.kernel.org,
-	kernel-team@meta.com, rostedt@goodmis.org,
-	Frederic Weisbecker <frederic@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
+        Thu, 06 Feb 2025 03:47:20 -0800 (PST)
+Message-ID: <1818165c4cbaedfb7314f4a200a273454ce49b63.camel@redhat.com>
+Subject: Re: [RFC PATCH 03/11] sched: Add sched tracepoints for RV task model
+From: Gabriele Monaco <gmonaco@redhat.com>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>, Ingo
+ Molnar <mingo@redhat.com>, Masami Hiramatsu <mhiramat@kernel.org>, 
 	linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH rcu v2] 4/5] rcu-tasks: Move RCU Tasks self-tests to
- core_initcall()
-Message-ID: <Z6SXoLnUw6D0xEqh@pathway.suse.cz>
-References: <9ed4e0fd-75c4-400a-9a0b-74c68286bad3@paulmck-laptop>
- <a68e2e94-b4c6-4791-b581-ecbf3fee28e9@paulmck-laptop>
- <84pljwi2w0.fsf@jogness.linutronix.de>
- <3a0ceabe-d5a0-4cb3-8343-ec56bc9bd0fd@paulmck-laptop>
- <af84eb57-2da2-461c-82bb-36312bbb49b0@paulmck-laptop>
- <84ed0c1401.fsf@jogness.linutronix.de>
- <efef835a-d2dd-4f03-bb02-c0cf873433e1@paulmck-laptop>
- <841pwc11ae.fsf@jogness.linutronix.de>
- <84y0ykyqf6.fsf@jogness.linutronix.de>
- <2a7774e4-a3fc-48d5-97b0-6f74396e7f93@paulmck-laptop>
+Date: Thu, 06 Feb 2025 12:47:17 +0100
+In-Reply-To: <20250206085738.GL7145@noisy.programming.kicks-ass.net>
+References: <20250206080952.98478-1-gmonaco@redhat.com>
+	 <20250206080952.98478-4-gmonaco@redhat.com>
+	 <20250206081942.GJ7145@noisy.programming.kicks-ass.net>
+	 <d8187fcd53c62272d7e1a8dad327c4f2a5f07188.camel@redhat.com>
+	 <20250206085738.GL7145@noisy.programming.kicks-ass.net>
+Autocrypt: addr=gmonaco@redhat.com; prefer-encrypt=mutual;
+ keydata=mDMEZuK5YxYJKwYBBAHaRw8BAQdAmJ3dM9Sz6/Hodu33Qrf8QH2bNeNbOikqYtxWFLVm0
+ 1a0JEdhYnJpZWxlIE1vbmFjbyA8Z21vbmFjb0ByZWRoYXQuY29tPoiZBBMWCgBBFiEEysoR+AuB3R
+ Zwp6j270psSVh4TfIFAmbiuWMCGwMFCQWjmoAFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgk
+ Q70psSVh4TfJzZgD/TXjnqCyqaZH/Y2w+YVbvm93WX2eqBqiVZ6VEjTuGNs8A/iPrKbzdWC7AicnK
+ xyhmqeUWOzFx5P43S1E1dhsrLWgP
+User-Agent: Evolution 3.54.3 (3.54.3-1.fc41)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <2a7774e4-a3fc-48d5-97b0-6f74396e7f93@paulmck-laptop>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: 3R0jd8n-_EiwBY6PRqJoc6ESMgR-liRGrfUx7C3m4l8_1738842441
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed 2025-02-05 15:50:14, Paul E. McKenney wrote:
-> On Wed, Feb 05, 2025 at 11:37:25PM +0106, John Ogness wrote:
-> > On 2025-02-05, John Ogness <john.ogness@linutronix.de> wrote:
-> > >> OK, so I don't need to add "if (IS_ENABLED(CONFIG_PREEMPT_RT))" to guard
-> > >> it, then?
-> > >
-> > > For !CONFIG_PREEMPT_RT, if there are legacy consoles registered,
-> > > pr_flush() will additionally perform a blocking lock on the
-> > > console_lock.
-> > 
-> > Sorry, I was just thinking about the flushing component of
-> > pr_flush(). Later in the function it takes the console_lock even for
-> > CONFIG_PREEMPT_RT. So please do _not_ have a guard.
+On Thu, 2025-02-06 at 09:57 +0100, Peter Zijlstra wrote:
+> On Thu, Feb 06, 2025 at 09:36:41AM +0100, Gabriele Monaco wrote:
+>=20
+> > > > diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+> > > > index 165c90ba64ea9..fb5f8aa61ef5d 100644
+> > > > --- a/kernel/sched/core.c
+> > > > +++ b/kernel/sched/core.c
+> > > > @@ -491,6 +491,12 @@ sched_core_dequeue(struct rq *rq, struct
+> > > > task_struct *p, int flags) { }
+> > > > =C2=A0
+> > > > =C2=A0#endif /* CONFIG_SCHED_CORE */
+> > > > =C2=A0
+> > > > +void trace_set_current_state(int state_value)
+> > > > +{
+> > > > +=09trace_sched_set_state_tp(current, current->__state,
+> > > > state_value);
+> > > > +}
+> > > > +EXPORT_SYMBOL(trace_set_current_state);
+> > >=20
+> > > Urgh, why !?!
+> >=20
+> > What do you think would be better?
+>=20
+> So I would think having the tracepoint in-line would be better.
+> Because
+> as is, everything gets to have this pointless CALL to an empty
+> function.
+>=20
+> If this were x86_64 only, I would suggest using static_call(), but
+> barring that, the static_branch() already in the tracepoint is the
+> best
+> we can do.
+>=20
 
-It should be possible to avoid this console_lock() when only NBCON
-consoles are registered. We take it in pr_flush() for reading con->seq
-and potential race with register_console(). But it can be handled
-another way, for example, by restarting the cycle when non-NBCON
-console suddenly appears.
+Ok, I see your point now..
 
-But it might be done later. We do not have NBCON consoles at the
-moment so the console_lock() is needed anyway.
+Adding the trace_ call inline seems far from trivial to me, but we
+could indeed do what's suggested in tracepoint-defs.h and practically
+use a static branch to call this trace_set_current_state, not sure if
+this is already what you were suggesting, though.
 
-> > pr_flush() should never hang on the console_lock during shutdown, but if
-> > does, that is something that will need to be debugged and fixed.
-> > 
-> > @pmladek: Looking forward to reading your input on this.
+Ignore the inconsistent naming, but something like this should work:
 
-My only concern is that kernel_power_off() is called in many
-code paths so it is not easy to review all scenarios.
-
-But I haven't found any code path where it would be an obvious problem.
-Especially, it seems that it is _not_ called in panic situations.
-
-Also kernel_power_off() calls syscore_shutdown() which takes
-syscore_ops_lock mutex. So that is must be called only in
-a schedulable context even before this patch.
-
-Summary: I do not see any obvious problem in the end.
-	 Except, for some small details, see below.
-
-> Here is an updated commit, hopefully applying your feedback correctly.
-> 
-> 							Thanx, Paul
-> 
-> ------------------------------------------------------------------------
-> 
-> commit 35679c18b062368855e183ee6712ca5c16145d8c
-> Author: Paul E. McKenney <paulmck@kernel.org>
-> Date:   Wed Feb 5 12:27:23 2025 -0800
-> 
->     printk: Flush console log from kernel_power_off()
->     
->     Kernels built with CONFIG_PREEMPT_RT=y can lose significant console output
->     and shutdown time, which hides shutdown-time RCU issues from rcutorture.
->     Therefore, make pr_flush() public and invoke it after then last print
->     in kernel_power_off().
->     
-> --- a/include/linux/printk.h
-> +++ b/include/linux/printk.h
-> @@ -207,6 +207,7 @@ void printk_legacy_allow_panic_sync(void);
->  extern bool nbcon_device_try_acquire(struct console *con);
->  extern void nbcon_device_release(struct console *con);
->  void nbcon_atomic_flush_unsafe(void);
-> +bool pr_flush(int timeout_ms, bool reset_on_progress);
->  #else
->  static inline __printf(1, 0)
->  int vprintk(const char *s, va_list args)
-> @@ -315,6 +316,11 @@ static inline void nbcon_atomic_flush_unsafe(void)
->  {
->  }
->  
-> +static bool pr_flush(int timeout_ms, bool reset_on_progress)
-
-There is missing "inline":
-
-static inline bool pr_flush(int timeout_ms, bool reset_on_progress)
+diff --git a/include/linux/sched.h b/include/linux/sched.h
+index af9fa18035c7..7b9d84dbc2f5 100644
+--- a/include/linux/sched.h
++++ b/include/linux/sched.h
+@@ -223,6 +223,12 @@ struct user_event_mm;
+  *
+  * Also see the comments of try_to_wake_up().
+  */
++
++#define trace_set_current_state(state_value) do { \
++=09if (tracepoint_enabled(sched_set_state_tp))   \
++=09=09do_trace_set_current_state(state_value); \
++} while(0)
++
+ #define __set_current_state(state_value)=09=09=09=09\
+ =09do {=09=09=09=09=09=09=09=09\
+ =09=09debug_normal_state_change((state_value));=09=09\
+@@ -332,7 +338,9 @@ extern void io_schedule_finish(int token);
+ extern long io_schedule_timeout(long timeout);
+ extern void io_schedule(void);
+=20
+-extern void trace_set_current_state(int state_value);
++#include <linux/tracepoint-defs.h>
++DECLARE_TRACEPOINT(sched_set_state_tp);
++extern void do_trace_set_current_state(int state_value);
+=20
+ /**
+  * struct prev_cputime - snapshot of system and user cputime
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index 149d55195532..9fc2be079bb5 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -491,11 +491,12 @@ sched_core_dequeue(struct rq *rq, struct task_struct =
+*p, int flags) { }
+=20
+ #endif /* CONFIG_SCHED_CORE */
+=20
+-void trace_set_current_state(int state_value)
++void do_trace_set_current_state(int state_value)
+ {
+ =09trace_sched_set_state_tp(current, current->__state, state_value);
+ }
+-EXPORT_SYMBOL(trace_set_current_state);
++EXPORT_SYMBOL(do_trace_set_current_state);
++EXPORT_TRACEPOINT_SYMBOL(sched_set_state_tp);
+=20
+ /*
+  * Serialization rules:
 
 
-Otherwise, I get
-
-In file included from ./include/asm-generic/bug.h:22,
-                 from ./arch/x86/include/asm/bug.h:99,
-                 from ./include/linux/bug.h:5,
-                 from ./include/linux/page-flags.h:10,
-                 from kernel/bounds.c:10:
-./include/linux/printk.h:319:13: warning: ‘pr_flush’ defined but not used [-Wunused-function]
-
-> +{
-> +	return true;
-> +}
-> +
->  #endif
->  
->  bool this_cpu_in_panic(void);
-> --- a/kernel/reboot.c
-> +++ b/kernel/reboot.c
-> @@ -704,6 +704,7 @@ void kernel_power_off(void)
->  	migrate_to_reboot_cpu();
->  	syscore_shutdown();
->  	pr_emerg("Power down\n");
-> +	pr_flush(1000, 1);
-
-This should be pr_flush(1000, true) as suggested by Sebastian.
-
->  	kmsg_dump(KMSG_DUMP_SHUTDOWN);
->  	machine_power_off();
->  }
-
-With the two changes:
-
-Reviewed-by: Petr Mladek <pmladek@suse.com>
-
-Paul, I assume that you will pass this via the RCU tree together with
-the other changes. Or would you prefer to route this particular
-change via printk tree? Both ways are fine to me.
-
-Best Regards,
-Petr
