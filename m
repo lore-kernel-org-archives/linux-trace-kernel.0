@@ -1,162 +1,120 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52A5114A4F0;
-	Thu,  6 Feb 2025 03:12:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.2])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B630370838;
+	Thu,  6 Feb 2025 03:24:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.2
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738811569; cv=none; b=lDIpGXzta4hByKiQEr92EWnt8/fZCw4JnAGtpkez81pU4XfbzXCJ2+mjo148aRxrGsW2KjPGLOjH6Y90pSgQhX0r9qa/3BXGvZiaasMyQKiB0kFPFdphCsExRF/E+2JrVOHE0UmL94kEXWHoNYVGThZldlyIpLN80ABdMavTx0M=
+	t=1738812244; cv=none; b=jjt+D9aprcaUzzihcKmYeaF4Xd+ELfs7QyDfBHAVxNqbd0J7qg+1c5danRn0wNDrtGRAKxqpfDDMBd//x6TPCszTj5WnsocFJUBmEnmLau/eM00wq19C2rk0mQNMYZQrZu4gtFpRMoLM6OqR+TpLf6Kqt74raK2BzJ9hJJ81TXU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738811569; c=relaxed/simple;
-	bh=Fj+mlnMPpUC5soIHZqTztR74wvvQB9iem7Yha5sC0AI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=ptG6ocoKOmmOog4gj1uZhIxD3GfSRuGtlZz+YcdHCuLrBRLp4W8gMbImJJyY0XlXYpReEekP3TTcCdP8aSutuUHFhsATEY+3qJT9llf6HTUY5oOECTHBWRIqdYnS6qXNbWI6eEmWtBM9NPU62/H1EWJwIOEK2edUPAIwCYghDzA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kEc0NiPw; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738812244; c=relaxed/simple;
+	bh=GN/qgEB3iu+83b4+zqY+4Uy9NmjTGYSRTrcXXIDnSPA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=B+aJTX2Dg/ThPMYjL5CW9ruTxYQ0OS5ver6GZbVbhD9dXCkP4JcAgYhdUVG8qWq0KNAD068eb425cUiurtEc+sRE8+BqhVtc7YuOFE7CCCsrFihudFmYio7n1M5q9zmVMOIqRy3UrCvXVrCevowCZ2Ox02l+jFcKYpvwxV/7qjU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=AUvoh+wY; arc=none smtp.client-ip=220.197.31.2
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kEc0NiPw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 062C3C4CED1;
-	Thu,  6 Feb 2025 03:12:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738811568;
-	bh=Fj+mlnMPpUC5soIHZqTztR74wvvQB9iem7Yha5sC0AI=;
-	h=From:To:Cc:Subject:Date:From;
-	b=kEc0NiPw+CmUv1HcAKgkBUVPlaEWnj16wVGaFoP4/4SDqMkfoVe0lHG0unM+8c2wK
-	 x9wCSKyXNiR0m+WOm5Gt6jOiRMMgiD3ZagLK99TOHvAGvxXh+Lyj+cjVn6iAVMBZwO
-	 xOENSY35XoDa2ImL7CiGO8CH1TZMA1NOtAnwaXsP8/UuUJZ3Ie5ACzutJTmu56WKPw
-	 tl2b+g7U+JrhmR5C5NJ2fOZHqfSnTy7wqvLsSHHZFmZ/WQiF/DxS0B+ha7xGr7OWjJ
-	 dRazmklWsturnsY+vdHxJkUyTJOuOggoleQWGwhxoS1MVSeYz/OmMDTFkT9pDeOcdm
-	 pYU6oj3zllOAA==
-From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Gabriel de Perthuis <g2p.code@gmail.com>,
-	Haiyue Wang <haiyuewa@163.com>,
-	Sami Tolvanen <samitolvanen@google.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H . Peter Anvin" <hpa@zytor.com>,
-	x86@kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	LKML <linux-kernel@vger.kernel.org>
-Subject: [PATCH] ftrace: x86: Fix a compile error about get_kernel_nofault()
-Date: Thu,  6 Feb 2025 12:12:42 +0900
-Message-ID: <173881156244.211648.1242168038709680511.stgit@devnote2>
-X-Mailer: git-send-email 2.43.0
-User-Agent: StGit/0.19
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="AUvoh+wY"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=Message-ID:Date:MIME-Version:Subject:From:
+	Content-Type; bh=0Aqrt6RJByUe1ybDFqadLh4aZHYSY2vHFVbudygDxjA=;
+	b=AUvoh+wYLUes/EROgRCLEaosd+30TIwVYU4rxSYiMPZ1tA+LVm9MDxkHyTGGC/
+	1DFukM8BehqAdxyUJWaoqNLlW6eO2GsUhUxnh0c/JTwRKaIKz/7DygFnxnLH0nsg
+	786bG4DRIjLaWejhbfIWSIY4lDpeiIa/BwEdhBW3OYKXE=
+Received: from [192.168.31.211] (unknown [])
+	by gzga-smtp-mtada-g1-4 (Coremail) with SMTP id _____wC3PlIWK6RnBVGrJw--.7220S2;
+	Thu, 06 Feb 2025 11:23:04 +0800 (CST)
+Message-ID: <767d054d-1d00-40bb-b8c7-0e990b1578b9@163.com>
+Date: Thu, 6 Feb 2025 11:23:02 +0800
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1] ftrace: Fix compile error when CONFIG_GENDWARFKSYMS is
+ enabled
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
+ Steven Rostedt <rostedt@goodmis.org>
+Cc: x86@kernel.org, linux-trace-kernel@vger.kernel.org,
+ samitolvanen@google.com, Mark Rutland <mark.rutland@arm.com>,
+ Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ "H. Peter Anvin" <hpa@zytor.com>,
+ "open list:FUNCTION HOOKS (FTRACE)" <linux-kernel@vger.kernel.org>
+References: <20250205180116.88644-1-haiyuewa@163.com>
+ <20250206093853.4e55405ccfcba7111705f395@kernel.org>
+ <20250205195300.42d3e3b0@gandalf.local.home>
+ <20250206114529.d2483df2c9d09726f1f3a43d@kernel.org>
+From: Haiyue Wang <haiyuewa@163.com>
+In-Reply-To: <20250206114529.d2483df2c9d09726f1f3a43d@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:_____wC3PlIWK6RnBVGrJw--.7220S2
+X-Coremail-Antispam: 1Uf129KBjvJXoW7CryruFW3ur4fXrW7WrykZrb_yoW8AF4DpF
+	WDGrnYga15W397G3yqkw1Iva4jqr98Cr18G34vqryDCF9F93Z7Jws5CrWYvryDAFZrK3WD
+	K34xWa43Wry8XaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07UIZXrUUUUU=
+X-CM-SenderInfo: 5kdl53xhzdqiywtou0bp/1tbiYBHra2ekIiKyHAABsd
 
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-Fix a compile error about get_kernel_nofault() which is defined in the
-linux/uaccess.h. Since asm/ftrace.h is widely used, including
-linux/uaccess.h in asm/ftrace.h caused another error. Thus this
-moves arch_ftrace_get_symaddr() into arch/x86/kernel/ftrace.c.
 
-The original errors look like:
+On 2025/2/6 10:45, Masami Hiramatsu (Google) wrote:
+> On Wed, 5 Feb 2025 19:53:00 -0500
+> Steven Rostedt <rostedt@goodmis.org> wrote:
+> 
+>> On Thu, 6 Feb 2025 09:38:53 +0900
+>> Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
+>>
+>>> Thanks for the fix. And this fixes one of problems.
+>>> Another one is that `is_endbr()` is defined in <asm/ibt.h> but that also depend
+>>> on CONFIG_HAVE_FENTRY.
+>>>
+>>> Let's pick this and fix above issue.
+>>
+>> OK, I'll pull this into my urgent tree and start testing it.
+> 
+> Sorry, Gabriel found another issue.
+> Let me fix this instead of this patch.
+> 
+> https://lore.kernel.org/all/CAFEugPfFykYsHqS-J36CNWDn+d34bSQg-e5hJ=AaJPC8=6Ej-g@mail.gmail.com/
+> 
 
-In file included from ./arch/x86/include/asm/asm-prototypes.h:2,
-                 from <stdin>:3:
-./arch/x86/include/asm/ftrace.h: In function 'arch_ftrace_get_symaddr':
-./arch/x86/include/asm/ftrace.h:46:21: error: implicit declaration of function 'get_kernel_nofault' [-Werror=implicit-function-declaration]
-   46 |                 if (get_kernel_nofault(instr, (u32 *)(fentry_ip - ENDBR_INSN_SIZE)))
-      |                     ^~~~~~~~~~~~~~~~~~
+If I put the fix above '#ifndef __ASSEMBLY__', then I can reproduce 
+Gabriel's founding:
 
-This also makes ftrace_get_symaddr() available only when
-CONFIG_HAVE_FENTRY=y on x86.
-
-Reported-by: Gabriel de Perthuis <g2p.code@gmail.com>
-Closes: https://lore.kernel.org/all/a87f98bf-45b1-4ef5-aa77-02f7e61203f4@gmail.com/
-Reported-by: Haiyue Wang <haiyuewa@163.com>
-Closes: https://lore.kernel.org/all/20250205180116.88644-1-haiyuewa@163.com/
-Fixes: 2bc56fdae1ba ("ftrace: Add ftrace_get_symaddr to convert fentry_ip to symaddr")
-Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
----
- arch/x86/include/asm/ftrace.h |   23 ++++-------------------
- arch/x86/kernel/ftrace.c      |   26 +++++++++++++++++++++++++-
- 2 files changed, 29 insertions(+), 20 deletions(-)
-
-diff --git a/arch/x86/include/asm/ftrace.h b/arch/x86/include/asm/ftrace.h
-index f9cb4d07df58..1ed08f2de366 100644
---- a/arch/x86/include/asm/ftrace.h
-+++ b/arch/x86/include/asm/ftrace.h
-@@ -34,26 +34,11 @@ static inline unsigned long ftrace_call_adjust(unsigned long addr)
- 	return addr;
- }
- 
--static inline unsigned long arch_ftrace_get_symaddr(unsigned long fentry_ip)
--{
--#ifdef CONFIG_X86_KERNEL_IBT
--	u32 instr;
--
--	/* We want to be extra safe in case entry ip is on the page edge,
--	 * but otherwise we need to avoid get_kernel_nofault()'s overhead.
--	 */
--	if ((fentry_ip & ~PAGE_MASK) < ENDBR_INSN_SIZE) {
--		if (get_kernel_nofault(instr, (u32 *)(fentry_ip - ENDBR_INSN_SIZE)))
--			return fentry_ip;
--	} else {
--		instr = *(u32 *)(fentry_ip - ENDBR_INSN_SIZE);
--	}
--	if (is_endbr(instr))
--		fentry_ip -= ENDBR_INSN_SIZE;
--#endif
--	return fentry_ip;
--}
-+/* This does not support mcount. */
-+#ifdef CONFIG_HAVE_FENTRY
-+unsigned long arch_ftrace_get_symaddr(unsigned long fentry_ip);
- #define ftrace_get_symaddr(fentry_ip)	arch_ftrace_get_symaddr(fentry_ip)
-+#endif
- 
- #ifdef CONFIG_HAVE_DYNAMIC_FTRACE_WITH_ARGS
- 
-diff --git a/arch/x86/kernel/ftrace.c b/arch/x86/kernel/ftrace.c
-index 166bc0ea3bdf..7250118005fc 100644
---- a/arch/x86/kernel/ftrace.c
-+++ b/arch/x86/kernel/ftrace.c
-@@ -29,11 +29,35 @@
- 
- #include <trace/syscall.h>
- 
--#include <asm/kprobes.h>
- #include <asm/ftrace.h>
-+#include <asm/ibt.h>
-+#include <asm/kprobes.h>
- #include <asm/nops.h>
- #include <asm/text-patching.h>
- 
-+#ifdef CONFIG_HAVE_FENTRY
-+/* Convert fentry address to the symbol address. */
-+unsigned long arch_ftrace_get_symaddr(unsigned long fentry_ip)
-+{
 +#ifdef CONFIG_X86_KERNEL_IBT
-+	u32 instr;
-+
-+	/* We want to be extra safe in case entry ip is on the page edge,
-+	 * but otherwise we need to avoid get_kernel_nofault()'s overhead.
-+	 */
-+	if ((fentry_ip & ~PAGE_MASK) < ENDBR_INSN_SIZE) {
-+		if (get_kernel_nofault(instr, (u32 *)(fentry_ip - ENDBR_INSN_SIZE)))
-+			return fentry_ip;
-+	} else {
-+		instr = *(u32 *)(fentry_ip - ENDBR_INSN_SIZE);
-+	}
-+	if (is_endbr(instr))
-+		fentry_ip -= ENDBR_INSN_SIZE;
-+#endif
-+	return fentry_ip;
-+}
++#include <linux/uaccess.h>
 +#endif
 +
- #ifdef CONFIG_DYNAMIC_FTRACE
- 
- static int ftrace_poke_late = 0;
+  #ifndef __ASSEMBLY__
+
+
+In file included from ./include/linux/kcsan-checks.h:13,
+                  from ./include/linux/instrumented.h:12,
+                  from ./include/linux/uaccess.h:6,
+                  from ./arch/x86/include/asm/ftrace.h:26,
+                  from arch/x86/kernel/ftrace_64.S:11:
+./include/linux/compiler_attributes.h:91:20: error: missing binary 
+operator before token "("
+    91 | #if __has_attribute(__copy__)
+       |                    ^
+./include/linux/compiler_attributes.h:103:20: error: missing binary 
+operator before token "("
+   103 | #if __has_attribute(__diagnose_as_builtin__)
+       |                    ^
+./include/linux/compiler_attributes.h:126:20: error: missing binary 
+operator before token "("
+   126 | #if __has_attribute(__designated_init__)
+       |                    ^
+./include/linux/compiler_attributes.h:137:20: error: missing binary 
+operator before token "("
+   137 | #if __has_attribute(__error__)
+       |                    ^
+
+
+>>
+>> -- Steve
+> 
+> 
 
