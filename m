@@ -1,50 +1,47 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8785154C05;
-	Fri,  7 Feb 2025 00:00:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BE7317E4;
+	Fri,  7 Feb 2025 00:47:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738886405; cv=none; b=bGlbsdQZYZ/e11GftKH4wO60ZDGaadzapOv1M9siVc7quIZw/kw4wRcLuhKOyop4r4FHv/+B0P3ncFFNqzHUjwLW8hN0Dg8FYgrqfZI8JFynwaKM3S8dJmShNkmPraIIRvrnfdefdOxELh0luBEho6moRRH4eT5yZWzRL2ggrzI=
+	t=1738889273; cv=none; b=stKRIgY03B68BOJfgPk2pM49IzEWEh613VRv/yXGHwqmObuin0qqht4m69gzTI4OO17cNjSwyd7ligYcdhT1xSuS3/1v7j53w92TcC799I1pdaIQv0HtPw5mlMRKvTywNhIop5+aU2hPt3NyyYcJ2eANPtpi8g9sH0n3EIY2g9U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738886405; c=relaxed/simple;
-	bh=vMRk5eYT1y1j5Eoi9kn/BArzU2FKpJtaHLaZmkaLB14=;
+	s=arc-20240116; t=1738889273; c=relaxed/simple;
+	bh=w8UjyACvoFHxPDNReEpOPs72erNDTwxnFeiTpkJNDOM=;
 	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=RjN8D9snV8DlWpRdA6wP8aoWRDs9q43UYQe822LyGF+RY2jlq7BlG2RYfexYVACCkOsoLAGVUeLW7/RZyL+7/EYW2KAUQYfMuCZ/hpJYFJaMQXIqsvgunB8csDMD6hArly0qtHP064lgaEvsowE50HOp0MwXyHlbRtad0lB5kfI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ucLXRBWK; arc=none smtp.client-ip=10.30.226.201
+	 Mime-Version:Content-Type; b=nvAmMY5xL25Wq2ECNGvqDFA04v7xz4FCWFjxBob3iBlUbtN4yY50uMwY+FdcinJjhKYm1I1jCfR2IkcFkqT0e4QvSPClRDcmRdCq7KBFop2u3GKV8WR0pkTKlcsqHhwVrXAKYTCiEL3yAR9b2InLPZZ9BOt6O+AkHleDSYpPbyY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=plFuOlOH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ucLXRBWK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 83A62C4CEDD;
-	Fri,  7 Feb 2025 00:00:01 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="plFuOlOH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 84D10C4CEDD;
+	Fri,  7 Feb 2025 00:47:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738886404;
-	bh=vMRk5eYT1y1j5Eoi9kn/BArzU2FKpJtaHLaZmkaLB14=;
+	s=k20201202; t=1738889272;
+	bh=w8UjyACvoFHxPDNReEpOPs72erNDTwxnFeiTpkJNDOM=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=ucLXRBWK+0oBTvB+oa5GNOdHVgVswHqbAtNJ1nOxVTEwmmglOeBRZ2iH+3KAOI+Ri
-	 q2GYr4YMaMt+lb1zeB06BXIKfLQH2zRtva+Pjf6IlvHZmVQ1iECKt+SpdyqsiA02Nw
-	 o2XprQkTCnkvGxZcnKnLlyjszR0CJpuOqi9TzhAKQJnZ2qx4PHn7ATlPX+CFDJD6hC
-	 OFYuyrt6clfATDRzg/BN1tL0mGmLjR9GHjgzjlBhoZ6wepBD/TXmz5t+imGtMhOFTS
-	 JYkIY3kuZvPVfltt7j5Ywuby6MpxWQvO6tR4nKj1HF1zKYMZmz97qjuoWuN9lvGVCr
-	 HZZVoJZNQo33Q==
-Date: Fri, 7 Feb 2025 08:59:59 +0900
+	b=plFuOlOH+8EsQce3Z5ZSCuhg0flkt9ay4pb6MF0UVOxNPv0+8xhGBk4+sUnCUmo/m
+	 7XBR8tmFCin3YyjY7miPfkLkVTSNmRpeW3U0xy9mMzZBHIOCv1bz5hOr2PKt0jCniD
+	 /8hEM3f0ZtSso8kpya+jb02ZrNEkxp6JkFVq2GbLEuTFQ6N4EOJezvSiO2+GVDxbjY
+	 s4hE3y2YkE3nnNPJOvaBQc536ZOb1rDvpAI1lGt6DL1jfmY25a+HRCJit8RRBwHTTM
+	 hTxdG4vG6mVpZdJUZiCvp3e/VyKWugLrRjEJv6D1pnobT6phSXmENJlJtH8wyJNKlN
+	 IQq4Dy2rx6Rlw==
+Date: Fri, 7 Feb 2025 09:47:49 +0900
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Gabriel de Perthuis
- <g2p.code@gmail.com>, Haiyue Wang <haiyuewa@163.com>, Sami Tolvanen
- <samitolvanen@google.com>, Mark Rutland <mark.rutland@arm.com>, Thomas
- Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav
- Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
- linux-trace-kernel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] ftrace: x86: Fix a compile error about
- get_kernel_nofault()
-Message-Id: <20250207085959.b3e9d922eab33edf885368e3@kernel.org>
-In-Reply-To: <20250206123307.GO7145@noisy.programming.kicks-ass.net>
-References: <173881156244.211648.1242168038709680511.stgit@devnote2>
-	<20250206081225.GI7145@noisy.programming.kicks-ass.net>
-	<20250206205449.5f83a585945ae6eb0cc15483@kernel.org>
-	<20250206121328.GN7145@noisy.programming.kicks-ass.net>
-	<20250206123307.GO7145@noisy.programming.kicks-ass.net>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Mark
+ Rutland <mark.rutland@arm.com>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH 8/8] tracing: Update modules to persistent instances
+ when loaded
+Message-Id: <20250207094749.a325cb0eb15b2431fbb7271a@kernel.org>
+In-Reply-To: <20250206121820.1ebf3c98@gandalf.local.home>
+References: <20250205225031.799739376@goodmis.org>
+	<20250205225104.264333506@goodmis.org>
+	<20250206190124.1518c3bf070e862da7993d9e@kernel.org>
+	<20250206103612.355a4be9@gandalf.local.home>
+	<20250207015330.5c71ad55ed2f516da1410711@kernel.org>
+	<20250206121820.1ebf3c98@gandalf.local.home>
 X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -55,254 +52,81 @@ Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Thu, 6 Feb 2025 13:33:07 +0100
-Peter Zijlstra <peterz@infradead.org> wrote:
+On Thu, 6 Feb 2025 12:18:20 -0500
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-> On Thu, Feb 06, 2025 at 01:13:28PM +0100, Peter Zijlstra wrote:
+> On Fri, 7 Feb 2025 01:53:30 +0900
+> Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
 > 
-> > No, it just cleans up this utter trainwreck. I also noticed this is a
-> > second (new) copy of this garbage. Clearly I didn't yell loud enough
-> > last time and people didn't think to vomit when doing the copy/paste :/
+> > On Thu, 6 Feb 2025 10:36:12 -0500
+> > Steven Rostedt <rostedt@goodmis.org> wrote:
 > > 
-> > Function will look something like:
+> > > On Thu, 6 Feb 2025 19:01:24 +0900
+> > > Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
+> > >   
+> > > > > +static void trace_module_record(struct module *mod)
+> > > > > +{
+> > > > > +	struct trace_array *tr;
+> > > > > +
+> > > > > +	list_for_each_entry(tr, &ftrace_trace_arrays, list) {
+> > > > > +		/* Update any persistent trace array that has already been started */
+> > > > > +		if ((tr->flags & (TRACE_ARRAY_FL_BOOT | TRACE_ARRAY_FL_LAST_BOOT)) ==
+> > > > > +		    TRACE_ARRAY_FL_BOOT) {
+> > > > > +			/* Only update if the trace array is active */
+> > > > > +			if (trace_array_active(tr))    
+> > > > 
+> > > > Do we really need this check? It seems that we can just save_mod() if the
+> > > > above condition is true.  
+> > > 
+> > > It gets a little more  complicated if we need to add and remove modules.  
 > > 
-> > unsigned long arch_ftrace_get_symaddr(unsigned long fentry_ip)
-> > {
-> > 	if (is_endbr(fentry_ip - ENDBR_INSN_SIZE))
-> > 		fentry_op -= ENDBR_INSN_SIZE;
-> > 	return fentry_ip;
-> > }
+> > Yeah, but for converting the module address, we don't want to see other
+> > module information.
+> 
+> But we want to see the module information for modules that were loaded
+> during the trace. If a module is removed and suddenly the system crashed,
+> we just lost that information. Hence why I reset the module information
+> when the tracing starts.
+
+Then, what about removing module info if the address is recycled for
+new module? We can keep it until the same address range is used by other
+module(s).
+
+> 
+> 
+> > > If we want to have events for modules that were removed. Note, the ring
+> > > buffer is cleared if any module event was ever enabled and then the module
+> > > is removed, as how to print it is removed too. But we could disable that
+> > > for the persistent ring buffers as they should not be using the default
+> > > trace event print format anyway.  
 > > 
-> > Let me finish local build test before I push out.
+> > Yeah, if the event is on the module the buffer is cleared.
+> > But the module address can be in the stacktrace. In that case, the event
+> > in the module is not enabled, but other events like sched_switch can
+> > take stacktrace which can include the module address. In that case, the
+> > buffer is also cleared when the module is removed?
 > 
-> Bah, still waiting for a LLVM build, but patch should be here:
+> No. The buffer is only cleared if one of its events were ever enabled. If
+> no event within the module was enabled, then the buffer is not cleared.
 > 
-> git://git.kernel.org/pub/scm/linux/kernel/git/peterz/queue.git x86/ibt
+> > 
+> > > As for stack traces, we still want the module it was for when the stack
+> > > trace happens. A common bug we see is when a module is removed, it can
+> > > cause other bugs. We want to know about modules that were removed. Keeping
+> > > that information about removed modules will allow us to see what functions
+> > > were called by a stack trace for a module that was removed.  
+> > 
+> > Hmm, but that should be covered by module load/unload events?
 > 
-> I was supposed to merge this last cycle, but then akpm shat all over
-> arch/x86/kernel/alternative.c and we had to clean that up :/
-> 
-> Notably, this patch, not sure it applies out of order.
-> 
+> If we have them enabled.
 
-Ah, this looks good to me except for the removing redundant asm/ibt.h
-which Haiyue pointed.
+Yes, and current module load event does not cover the address. I think
+we can add a new event to log it.
 
-Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Thank you,
 
-Thanks,
-
-> ---
 > 
-> Subject: x86/ibt: Clean up is_endbr()
-> From: Peter Zijlstra <peterz@infradead.org>
-> Date: Mon Nov 27 09:58:06 CET 2023
-> 
-> Pretty much every caller of is_endbr() actually wants to test something at an
-> address and ends up doing get_kernel_nofault(). Fold the lot into a more
-> convenient helper.
-> 
-> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> Acked-by: Alexei Starovoitov <ast@kernel.org>
-> Acked-by: Andrii Nakryiko <andrii@kernel.org>
-> ---
->  arch/x86/events/core.c         |    2 +-
->  arch/x86/include/asm/ftrace.h  |   17 +++--------------
->  arch/x86/include/asm/ibt.h     |    5 +++--
->  arch/x86/kernel/alternative.c  |   20 ++++++++++++++------
->  arch/x86/kernel/kprobes/core.c |   11 +----------
->  arch/x86/net/bpf_jit_comp.c    |    4 ++--
->  kernel/trace/bpf_trace.c       |   20 +++-----------------
->  7 files changed, 27 insertions(+), 52 deletions(-)
-> 
-> --- a/arch/x86/events/core.c
-> +++ b/arch/x86/events/core.c
-> @@ -2857,7 +2857,7 @@ static bool is_uprobe_at_func_entry(stru
->  		return true;
->  
->  	/* endbr64 (64-bit only) */
-> -	if (user_64bit_mode(regs) && is_endbr(*(u32 *)auprobe->insn))
-> +	if (user_64bit_mode(regs) && is_endbr((u32 *)auprobe->insn))
->  		return true;
->  
->  	return false;
-> --- a/arch/x86/include/asm/ftrace.h
-> +++ b/arch/x86/include/asm/ftrace.h
-> @@ -2,6 +2,7 @@
->  #ifndef _ASM_X86_FTRACE_H
->  #define _ASM_X86_FTRACE_H
->  
-> +#include "asm/ibt.h"
->  #include <asm/ptrace.h>
->  
->  #ifdef CONFIG_FUNCTION_TRACER
-> @@ -36,21 +37,9 @@ static inline unsigned long ftrace_call_
->  
->  static inline unsigned long arch_ftrace_get_symaddr(unsigned long fentry_ip)
->  {
-> -#ifdef CONFIG_X86_KERNEL_IBT
-> -	u32 instr;
-> +	if (is_endbr((void*)(fentry_ip - ENDBR_INSN_SIZE)))
-> +		fentry_ip -= ENDBENDBR_INSN_SIZE;
->  
-> -	/* We want to be extra safe in case entry ip is on the page edge,
-> -	 * but otherwise we need to avoid get_kernel_nofault()'s overhead.
-> -	 */
-> -	if ((fentry_ip & ~PAGE_MASK) < ENDBR_INSN_SIZE) {
-> -		if (get_kernel_nofault(instr, (u32 *)(fentry_ip - ENDBR_INSN_SIZE)))
-> -			return fentry_ip;
-> -	} else {
-> -		instr = *(u32 *)(fentry_ip - ENDBR_INSN_SIZE);
-> -	}
-> -	if (is_endbr(instr))
-> -		fentry_ip -= ENDBR_INSN_SIZE;
-> -#endif
->  	return fentry_ip;
->  }
->  #define ftrace_get_symaddr(fentry_ip)	arch_ftrace_get_symaddr(fentry_ip)
-> --- a/arch/x86/include/asm/ibt.h
-> +++ b/arch/x86/include/asm/ibt.h
-> @@ -65,7 +65,7 @@ static __always_inline __attribute_const
->  	return 0x001f0f66; /* osp nopl (%rax) */
->  }
->  
-> -static inline bool is_endbr(u32 val)
-> +static inline bool __is_endbr(u32 val)
->  {
->  	if (val == gen_endbr_poison())
->  		return true;
-> @@ -74,6 +74,7 @@ static inline bool is_endbr(u32 val)
->  	return val == gen_endbr();
->  }
->  
-> +extern __noendbr bool is_endbr(u32 *val);
->  extern __noendbr u64 ibt_save(bool disable);
->  extern __noendbr void ibt_restore(u64 save);
->  
-> @@ -98,7 +99,7 @@ extern __noendbr void ibt_restore(u64 sa
->  
->  #define __noendbr
->  
-> -static inline bool is_endbr(u32 val) { return false; }
-> +static inline bool is_endbr(u32 *val) { return false; }
->  
->  static inline u64 ibt_save(bool disable) { return 0; }
->  static inline void ibt_restore(u64 save) { }
-> --- a/arch/x86/kernel/alternative.c
-> +++ b/arch/x86/kernel/alternative.c
-> @@ -852,16 +852,24 @@ void __init_or_module noinline apply_ret
->  
->  #ifdef CONFIG_X86_KERNEL_IBT
->  
-> +__noendbr bool is_endbr(u32 *val)
-> +{
-> +	u32 endbr;
-> +
-> +	__get_kernel_nofault(&endbr, val, u32, Efault);
-> +	return __is_endbr(endbr);
-> +
-> +Efault:
-> +	return false;
-> +}
-> +
->  static void poison_cfi(void *addr);
->  
->  static void __init_or_module poison_endbr(void *addr, bool warn)
->  {
-> -	u32 endbr, poison = gen_endbr_poison();
-> -
-> -	if (WARN_ON_ONCE(get_kernel_nofault(endbr, addr)))
-> -		return;
-> +	u32 poison = gen_endbr_poison();
->  
-> -	if (!is_endbr(endbr)) {
-> +	if (!is_endbr(addr)) {
->  		WARN_ON_ONCE(warn);
->  		return;
->  	}
-> @@ -984,7 +992,7 @@ static u32  cfi_seed __ro_after_init;
->  static u32 cfi_rehash(u32 hash)
->  {
->  	hash ^= cfi_seed;
-> -	while (unlikely(is_endbr(hash) || is_endbr(-hash))) {
-> +	while (unlikely(__is_endbr(hash) || __is_endbr(-hash))) {
->  		bool lsb = hash & 1;
->  		hash >>= 1;
->  		if (lsb)
-> --- a/arch/x86/kernel/kprobes/core.c
-> +++ b/arch/x86/kernel/kprobes/core.c
-> @@ -373,16 +373,7 @@ static bool can_probe(unsigned long padd
->  kprobe_opcode_t *arch_adjust_kprobe_addr(unsigned long addr, unsigned long offset,
->  					 bool *on_func_entry)
->  {
-> -	u32 insn;
-> -
-> -	/*
-> -	 * Since 'addr' is not guaranteed to be safe to access, use
-> -	 * copy_from_kernel_nofault() to read the instruction:
-> -	 */
-> -	if (copy_from_kernel_nofault(&insn, (void *)addr, sizeof(u32)))
-> -		return NULL;
-> -
-> -	if (is_endbr(insn)) {
-> +	if (is_endbr((u32 *)addr)) {
->  		*on_func_entry = !offset || offset == 4;
->  		if (*on_func_entry)
->  			offset = 4;
-> --- a/arch/x86/net/bpf_jit_comp.c
-> +++ b/arch/x86/net/bpf_jit_comp.c
-> @@ -641,7 +641,7 @@ int bpf_arch_text_poke(void *ip, enum bp
->  	 * See emit_prologue(), for IBT builds the trampoline hook is preceded
->  	 * with an ENDBR instruction.
->  	 */
-> -	if (is_endbr(*(u32 *)ip))
-> +	if (is_endbr(ip))
->  		ip += ENDBR_INSN_SIZE;
->  
->  	return __bpf_arch_text_poke(ip, t, old_addr, new_addr);
-> @@ -3036,7 +3036,7 @@ static int __arch_prepare_bpf_trampoline
->  		/* skip patched call instruction and point orig_call to actual
->  		 * body of the kernel function.
->  		 */
-> -		if (is_endbr(*(u32 *)orig_call))
-> +		if (is_endbr(orig_call))
->  			orig_call += ENDBR_INSN_SIZE;
->  		orig_call += X86_PATCH_SIZE;
->  	}
-> --- a/kernel/trace/bpf_trace.c
-> +++ b/kernel/trace/bpf_trace.c
-> @@ -1038,27 +1038,13 @@ static const struct bpf_func_proto bpf_g
->  	.arg1_type	= ARG_PTR_TO_CTX,
->  };
->  
-> -#ifdef CONFIG_X86_KERNEL_IBT
-> -static unsigned long get_entry_ip(unsigned long fentry_ip)
-> +static inline unsigned long get_entry_ip(unsigned long fentry_ip)
->  {
-> -	u32 instr;
-> -
-> -	/* We want to be extra safe in case entry ip is on the page edge,
-> -	 * but otherwise we need to avoid get_kernel_nofault()'s overhead.
-> -	 */
-> -	if ((fentry_ip & ~PAGE_MASK) < ENDBR_INSN_SIZE) {
-> -		if (get_kernel_nofault(instr, (u32 *)(fentry_ip - ENDBR_INSN_SIZE)))
-> -			return fentry_ip;
-> -	} else {
-> -		instr = *(u32 *)(fentry_ip - ENDBR_INSN_SIZE);
-> -	}
-> -	if (is_endbr(instr))
-> +	if (is_endbr((void *)(fentry_ip - ENDBR_INSN_SIZE)))
->  		fentry_ip -= ENDBR_INSN_SIZE;
-> +
->  	return fentry_ip;
->  }
-> -#else
-> -#define get_entry_ip(fentry_ip) fentry_ip
-> -#endif
->  
->  BPF_CALL_1(bpf_get_func_ip_kprobe, struct pt_regs *, regs)
->  {
-> 
+> -- Steve
 
 
 -- 
