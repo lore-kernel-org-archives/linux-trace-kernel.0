@@ -1,197 +1,128 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D31A0238D2E
-	for <linux-trace-kernel@vger.kernel.org>; Fri,  7 Feb 2025 14:57:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2B971DA10C
+	for <linux-trace-kernel@vger.kernel.org>; Fri,  7 Feb 2025 15:27:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738940250; cv=none; b=hjfkkUDObdfJTC72xCAvgu90nj/VQZlWOih1LRVtaC3w79VZf0ACXRrJRG9jEqlbqAT2+mv2LJnsPhyZ0SORCZMJTbdIttAren7szm3Ofj/+UUIm1gltQv76JMUYTjvvpjMgdbNbkP1MXnzNROyFSbpU0pPvTBtgpwSXzYW/I4Y=
+	t=1738942069; cv=none; b=fnOxEcvdxku89Cko1Kam5PP2Lpl+cu00HboNFV2Atkfwt/Jxhb59TxLL3UF4Qb4F9+zsc7m1lnsi6pMGlkzfX1mGe5EHTepnrjpNBjK+Tuc2xV0n103vz+o45ECLGQlMmHgXQX6fe+5xjeflUi7CwCNCm/XkSoP59a5PfQugRfg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738940250; c=relaxed/simple;
-	bh=Zlv8q7TgjhROaMibYT/4drmx95N9OLtbBAMv4y0Ny4Y=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=EonF8tv9sHwzcNZ+t4vlTljW5V7veHy8WHbRIWd8wKuEj49PjgNggwCnJVS8ET+ibBBdLhd8incotfenMYsFNcb8qYZpcgTQ9TV737h1Nq4r5ktpN2jrGqLqNi/m+LCkbrRUmioAcgyHtHU6G4V352w46qVL0AG6NZjU+xW+feI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=GdCNIYlP; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1738942069; c=relaxed/simple;
+	bh=F4j0KkSbpmD5d1hZhFwZpCkYNFkzmXINbPi2uJ87EwA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=AJW2nL6gP8PnDZ1g67And30h298ITbpYGGK7XbqMxJUmXOOgzCaE0ReBfLboLjJ2uruYID+7u9NWH9NanNLxYJvQxz1Bl8HNcl6z81PdLKw/HP5qC7SMqbgYlSKq+lRsCM9Ou4JcMy4TFkNlwLF2of5JLy1qnGo3dhoXzDb1S04=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=K+WEOEPZ; arc=none smtp.client-ip=209.85.208.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GdCNIYlP"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1738940243;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=Zlv8q7TgjhROaMibYT/4drmx95N9OLtbBAMv4y0Ny4Y=;
-	b=GdCNIYlPz+P55dyflATsU94TnLwvvzPRSkr9mXJ3C5o/SwY63LK5zm3nr4nu12pOjhWg8f
-	Yz0d08d9YEOG9+FwlK7/GYW6KAb3mfZyaUVszTNmbPqAl/XS+DlQPxLS/jeGdyDMe6dWFo
-	6BOYJ7N+7n16n9k6XjGBuvjZoDN6uoY=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-54-0Ub4cI41N9G11dGM5BCTMg-1; Fri, 07 Feb 2025 09:57:22 -0500
-X-MC-Unique: 0Ub4cI41N9G11dGM5BCTMg-1
-X-Mimecast-MFC-AGG-ID: 0Ub4cI41N9G11dGM5BCTMg
-Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-38dd0265d97so179682f8f.0
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 07 Feb 2025 06:57:22 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="K+WEOEPZ"
+Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-5dcd33d9d9dso10545a12.0
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 07 Feb 2025 07:27:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1738942066; x=1739546866; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=F4j0KkSbpmD5d1hZhFwZpCkYNFkzmXINbPi2uJ87EwA=;
+        b=K+WEOEPZBusFmWVzafxm9BwPE7etbs6sP+Rs/FzkdIWODkl/x0h+JCpWWm55UWCPWk
+         Fs+7gTcFfMYGWdVras1s5wFKE7tQ9rmiEXrjDRzjLOwQ7NJ9WwLY8SKGTgn3UvfZOT/j
+         b5vIWlMMnmf963hyzk36SgSqBdfQ8mI6eZFJShMIP5l76ApgTOgSUZK2nHs7l8clojb7
+         IbcU9mopg6LrSrfGeNe6fGbTa4+YzE6qj0bQ859e3xbHJt+IuSBkfFxvlOlbYldo8hjS
+         Zj/jSPHfqbOtN0lm2SafdXddR2WBSJAZjEEBK16U/o17Jp6omUomgRBBKK3kko9uzL8b
+         6WVg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738940241; x=1739545041;
-        h=mime-version:user-agent:content-transfer-encoding:autocrypt
-         :references:in-reply-to:date:cc:to:from:subject:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Zlv8q7TgjhROaMibYT/4drmx95N9OLtbBAMv4y0Ny4Y=;
-        b=fNnHatpbUL7N3WjVdGK0o7HF7bSDwSW0zlZ8QKoSItoffLJlXPMDfeaIX5AIp0hb5S
-         yhr3wJuEkk912PEQ9GYpR0M9o6tP+jAJ4859DBIubUfGigPfiusSO/m5NDQVtv4YXBjt
-         Q48uHTRiDnyBsCVHTvlrL/5ZiT+8vMNyrnatuukO3uOPEXl3AHb7C74tPzj9W3S7csH5
-         SajKSgNDWfz4hwH7D33s0diK0+M+exj+Vctu9vYhNnlZvrDY09JYd4DwFu9sIg1NN9xd
-         shsmr5zwb3ncnHzkqGQu3bm/CYg1moOU5d801QSTn433UIA3U/6yx1HICNBT58Pa8Qdz
-         F11A==
-X-Forwarded-Encrypted: i=1; AJvYcCWIwTgXS20LlTzdoxSdO2WqFm3q16KFW00tpmDwZs2AiKqmBcmDA3bxao3QMFscwUdcwZuUYn1QncKg1R28I1rsU/s=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwUYqqYRFmP9Ac94RZezz5n+67/4aeN5Nm8ZwFTVGdwP4eHRYck
-	0a39QLF05p6knuQwXeF9dWc8JbPqP2thrXl1GWJVEbDjOPIknNG+Pjx3i80WnDCJeH3f9bKmaTL
-	mPdmJZbme+9AYqxerlZmiZ1f87WZ/w+Xa3+YAfFqqXALZnf2hlEn176TPFpKOY8USJi8VJw==
-X-Gm-Gg: ASbGncsrGbz31tJdC+sgZo0LrBjFhdeMygpOGUSJnVaRy4QZuBEe0QHjygZMsYcWOpD
-	TrIqR9/xSdUzycfn7PklfYZE3RMOE0vrZHEqYynSymfLTXMneUtliy9xBpy3uaR7f6N3EqKCFG6
-	MSVkxyp982hu5xnWWkkc56QMfZNsVUyFrkeCFVGUiOXib9ziOJgDw/ozmeCA89ATvsFBD2k/rEv
-	lasOa2CXIPqwAmnN2Gf8LhfINLe876EwkQNTJPon4Vi2aKBDZOFtHrp6EuhImG2N1P43WQ3kjSO
-	o940kYLiiednMDjDISYaWnQsqe/uqcw=
-X-Received: by 2002:a05:6000:e8b:b0:38a:8ec6:f46f with SMTP id ffacd0b85a97d-38dc9351400mr2047646f8f.53.1738940241233;
-        Fri, 07 Feb 2025 06:57:21 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IGsxt58t1ggpxOyV8Jw35Ibo+3DCejqzHyg3fxJQZBM9uxGG4KqiZt49GPYbE8JvBAjoXExpA==
-X-Received: by 2002:a05:6000:e8b:b0:38a:8ec6:f46f with SMTP id ffacd0b85a97d-38dc9351400mr2047621f8f.53.1738940240672;
-        Fri, 07 Feb 2025 06:57:20 -0800 (PST)
-Received: from gmonaco-thinkpadt14gen3.rmtit.csb ([185.107.56.42])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38dcc9bd251sm1608877f8f.9.2025.02.07.06.57.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Feb 2025 06:57:20 -0800 (PST)
-Message-ID: <71f969466238803df34d731bf9deafdf5f52c746.camel@redhat.com>
-Subject: Re: [RFC PATCH 00/11] rv: Add scheduler specification monitors
-From: Gabriele Monaco <gmonaco@redhat.com>
-To: Juri Lelli <juri.lelli@redhat.com>
-Cc: linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>, Ingo
- Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>, 
-	linux-trace-kernel@vger.kernel.org, John Kacur <jkacur@redhat.com>, Clark
- Williams <williams@redhat.com>
-Date: Fri, 07 Feb 2025 15:57:18 +0100
-In-Reply-To: <Z6YYPAiM0itlIVAH@jlelli-thinkpadt14gen4.remote.csb>
-References: <20250206080952.98478-1-gmonaco@redhat.com>
-	 <czykavxpz46nwnelml6yorg3tvmyjvczqogeuqzji6qrfd2peu@qxr6wucv6mrj>
-	 <847c962745ef5bce757b9ae257ae279913ac711c.camel@redhat.com>
-	 <Z6YYPAiM0itlIVAH@jlelli-thinkpadt14gen4.remote.csb>
-Autocrypt: addr=gmonaco@redhat.com; prefer-encrypt=mutual;
- keydata=mDMEZuK5YxYJKwYBBAHaRw8BAQdAmJ3dM9Sz6/Hodu33Qrf8QH2bNeNbOikqYtxWFLVm0
- 1a0JEdhYnJpZWxlIE1vbmFjbyA8Z21vbmFjb0ByZWRoYXQuY29tPoiZBBMWCgBBFiEEysoR+AuB3R
- Zwp6j270psSVh4TfIFAmbiuWMCGwMFCQWjmoAFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgk
- Q70psSVh4TfJzZgD/TXjnqCyqaZH/Y2w+YVbvm93WX2eqBqiVZ6VEjTuGNs8A/iPrKbzdWC7AicnK
- xyhmqeUWOzFx5P43S1E1dhsrLWgP
-User-Agent: Evolution 3.54.3 (3.54.3-1.fc41)
+        d=1e100.net; s=20230601; t=1738942066; x=1739546866;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=F4j0KkSbpmD5d1hZhFwZpCkYNFkzmXINbPi2uJ87EwA=;
+        b=kcZzMIja+bGaodaybFk8JC7Kqy/s3USLOA6onL6eTaqTOsS6pu7ttm01iShwp8nLy0
+         RIoTQDH05wgYLM5D3F8to7MYkmYKbu57Uphw26+G1lHlJFI2iQmoMXx9BuE/tdTlBB6k
+         XpfTG3KYHMWff72oKASq4gBwKc3PWW+eVOJEgG1rCBit7+vLYQUSSNHtArA8wkeqws5s
+         iAUogVYLTyqHH+5vg4WdGRtCdkwUckRxWvR29+p/jk0KpURERNXbr7Ybwxsjr01HEDPZ
+         uizRkWUeWPovurRB6MYKLbRpv1CPRRAvK0t7RYXHQoQNhbmLFzkXAjHUYEt6Yst/Hwuc
+         GPOw==
+X-Forwarded-Encrypted: i=1; AJvYcCXbQzlYsicjF1XtAPbbsftSMqbvgcVIxYonbFOs454LgbZkhppzgUHD1r1Oyuqv8kxV35/SNySn69X3YCnN6wA64DY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz+GUD9OscIpUErOHPzpLIWV4VUIk/jKDefO60lcZhyD4iTswUe
+	ZAYMMrUORIcJ0MTzFHJrli5ruG7MoH06CuEZpSZir+LjPTHPI/IExB6BWlJBlqh1NYcs+lXxQNn
+	Qx4zztPmO+9W7ueJ5/S1OAxhJJziwEQRNQmkp
+X-Gm-Gg: ASbGnctJudlNdknwZ9dwmRv+PVFeZFdtftExM0NMqjpTGkF8k7ADmvR7uIcf1hZhsk9
+	4r2zeGp23hjN9OWlDFjJNJzxrNdSHSZn8O+bgvTC8Cq3PJ5wDX1btYgpyHqX4lxwUCe3sLzCrwK
+	C3P4j8fBK78zCS/Im9j5VpVZ4=
+X-Google-Smtp-Source: AGHT+IEABdgK9eHRB4H0WezxqoVghBHcRPYWNAOuQN7T+MNlzRlH684F1NSJpUngreTS9WPWXZN59E97viGK5BDWvz8=
+X-Received: by 2002:a05:6402:517c:b0:5dc:d08e:e128 with SMTP id
+ 4fb4d7f45d1cf-5de47da7d23mr74223a12.5.1738942065552; Fri, 07 Feb 2025
+ 07:27:45 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: 3keOg5tgdWnYUzh57xGKSnx3tuLB9hwGQSev67YdCR8_1738940241
-X-Mimecast-Originator: redhat.com
+References: <20250202162921.335813-1-eyal.birger@gmail.com>
+In-Reply-To: <20250202162921.335813-1-eyal.birger@gmail.com>
+From: Jann Horn <jannh@google.com>
+Date: Fri, 7 Feb 2025 16:27:09 +0100
+X-Gm-Features: AWEUYZnrwNzsLd1SX3TTXp9my4IROz2Zr8KCBuJa7WZQ86FVBE2pL8vu6wsQ824
+Message-ID: <CAG48ez1Pj6MT=RV-sogtNbw7WLLmCrC-3TkNfRjpcCif8iNGkA@mail.gmail.com>
+Subject: Re: [PATCH v3 0/2] seccomp: pass uretprobe system call through seccomp
+To: Eyal Birger <eyal.birger@gmail.com>
+Cc: kees@kernel.org, luto@amacapital.net, wad@chromium.org, oleg@redhat.com, 
+	mhiramat@kernel.org, andrii@kernel.org, jolsa@kernel.org, 
+	alexei.starovoitov@gmail.com, olsajiri@gmail.com, cyphar@cyphar.com, 
+	songliubraving@fb.com, yhs@fb.com, john.fastabend@gmail.com, 
+	peterz@infradead.org, tglx@linutronix.de, bp@alien8.de, daniel@iogearbox.net, 
+	ast@kernel.org, andrii.nakryiko@gmail.com, rostedt@goodmis.org, rafi@rbk.io, 
+	shmulik.ladkani@gmail.com, bpf@vger.kernel.org, linux-api@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, x86@kernel.org, 
+	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, 2025-02-07 at 15:27 +0100, Juri Lelli wrote:
-> On 07/02/25 12:36, Gabriele Monaco wrote:
-> >=20
-> >=20
-> > On Fri, 2025-02-07 at 11:55 +0100, Juri Lelli wrote:
-> > > Hi Gabriele,
-> > >=20
-> > > On 06/02/25 09:09, Gabriele Monaco wrote:
-> > > > This patchset starts including adapted scheduler specifications
-> > > > from
-> > > > Daniel's task model [1].
-> > >=20
-> > > Thanks a lot for working on this. Apart from being cool stuff
-> > > per-se,
-> > > it
-> > > means a lot personally to see Daniel's work continuing to be
-> > > developed.
-> > >=20
-> > > > As the model is fairly complicated, it is split in several
-> > > > generators
-> > > > and specifications. The tool used to create the model can
-> > > > output a
-> > > > unified model, but that would be hardly readable (9k states).
-> > > >=20
-> > > > RV allows monitors to run and react concurrently. Running the
-> > > > cumulative
-> > > > model is equivalent to running single components using the same
-> > > > reactors, with the advantage that it's easier to point out
-> > > > which
-> > > > specification failed in case of error.
-> > > >=20
-> > > > We allow this by introducing nested monitors, in short, the
-> > > > sysfs
-> > > > monitor folder will contain a monitor named sched, which is
-> > > > nothing
-> > > > but
-> > > > an empty container for other monitors. Controlling the sched
-> > > > monitor
-> > > > (enable, disable, set reactors) controls all nested monitors.
-> > > >=20
-> > > > The task model proposed by Daniel includes 12 generators and 33
-> > > > specifications. The generators are good for documentation but
-> > > > are
-> > > > usually implied in some specifications.
-> > > > Not all monitors work out of the box, mainly because of those
-> > > > reasons:
-> > > > * need to distinguish if preempt disable leads to schedule
-> > > > * need to distinguish if irq disable comes from an actual irq
-> > > > * assumptions not always true on SMP
-> > > >=20
-> > > > The original task model was designed for PREEMPT_RT and this
-> > > > patchset is
-> > > > only tested on an upstream kernel with full preemption enabled.
-> > >=20
-> > > I played with your additions a bit and I was able to
-> > > enable/disable
-> > > monitors, switch reactors, etc., w/o noticing any issue.
-> > >=20
-> >=20
-> > Thanks for trying it out!
-> >=20
-> > > I wonder if you also had ways to test that the monitors actually
-> > > react
-> > > properly in case of erroneous conditions (so that we can see a
-> > > reactor
-> > > actually react :).
-> > >=20
-> >=20
-> > Well, in my understanding, reactors should fire if there is a
-> > problem
-> > either in the kernel or in the model logic.
->=20
-> Right. I guess I wonder if we can find a way to inject kernel
-> problems
-> somehow, so that model(s) can be further tested explicitly thus
-> making
-> us confident that they will be able to identify real problems when
-> they
-> occur.
->=20
+On Sun, Feb 2, 2025 at 5:29=E2=80=AFPM Eyal Birger <eyal.birger@gmail.com> =
+wrote:
+> uretprobe(2) is an performance enhancement system call added to improve
+> uretprobes on x86_64.
+>
+> Confinement environments such as Docker are not aware of this new system
+> call and kill confined processes when uretprobes are attached to them.
 
-Just for the sake of testing reactors there is already the wwnr monitor
-which is intentionally broken exactly for that reason, Daniel described
-a bit what scenario can trigger the error (some IRQ, so it may be
-harder to see in a VM).
+FYI, you might have similar issues with Syscall User Dispatch
+(https://docs.kernel.org/admin-guide/syscall-user-dispatch.html) and
+potentially also with ptrace-based sandboxes, depending on what kinda
+processes you inject uprobes into. For Syscall User Dispatch, there is
+already precedent for a bypass based on instruction pointer (see
+syscall_user_dispatch()).
 
-If we want any monitor to react, yeah that could be a bit trickier. We
-could perhaps do something like livepatching/kprobes.
+> Since uretprobe is a "kernel implementation detail" system call which is
+> not used by userspace application code directly, pass this system call
+> through seccomp without forcing existing userspace confinement environmen=
+ts
+> to be changed.
 
-I'd assume we'd need some care though, since some of those monitors are
-pretty basic and making them fail may cause pretty bad errors in the
-kernel.
-Another approach could be to just inject the tracepoint/handler call
-those are all static functions but we may have some luck there and
-wouldn't break the system, just trick the monitor.
+This makes me feel kinda uncomfortable. The purpose of seccomp() is
+that you can create a process that is as locked down as you want; you
+can use it for some light limits on what a process can do (like in
+Docker), or you can use it to make a process that has access to
+essentially nothing except read(), write() and exit_group(). Even
+stuff like restart_syscall() and rt_sigreturn() is not currently
+excepted from that.
 
-But good point, I can have a look.
+I guess your usecase is a little special in that you were already
+calling from userspace into the kernel with SWBP before, which is also
+not subject to seccomp; and the syscall is essentially an
+arch-specific hack to make the SWBP a little faster.
 
+If we do this, we should at least ensure that there is absolutely no
+way for anything to happen in sys_uretprobe when no uretprobes are
+configured for the process - the first check in the syscall
+implementation almost does that, but the implementation could be a bit
+stricter. It checks for "regs->ip !=3D trampoline_check_ip()", but if no
+uprobe region exists for the process, trampoline_check_ip() returns
+`-1 + (uretprobe_syscall_check - uretprobe_trampoline_entry)`. So
+there is a userspace instruction pointer near the bottom of the
+address space that is allowed to call into the syscall if uretprobes
+are not set up. Though the mmap minimum address restrictions will
+typically prevent creating mappings there, and
+uprobe_handle_trampoline() will SIGILL us if we get that far without a
+valid uretprobe.
