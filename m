@@ -1,184 +1,117 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7ABDB2417ED
-	for <linux-trace-kernel@vger.kernel.org>; Fri,  7 Feb 2025 11:36:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95E141448E0;
+	Fri,  7 Feb 2025 13:24:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738928192; cv=none; b=XbNZllPVf3eSERKwfC/XPbD7ltjtHieXMpjx2Adwn6vzKnKG1abFll2Y8ld9gb9lKjG6HQfphc0NrEFfagZqKEOYidSlYwYYj4n80Du2iP+xso9qBDKLVDDuiKtL7b4wpUBVlgHZArzKjDxSrxYv3lM/ISbdP5IOj1nBa8vmR44=
+	t=1738934647; cv=none; b=rduSChKQHH8jDn/AszP6xMxPJA1eCsmo5IIklp8qZ5AAxA200NzMIiFH9IOiA/UIRZvQ1R5JmTXJWrzOaa/4oeD1eyKLBqyY+aBqxKiFnd7a2HepA2CCBeVi7emxbvkBoGo9WhyUUCj/POi7GhH5i6hpozGdzaDl/w1TOBsKuO0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738928192; c=relaxed/simple;
-	bh=S0jXGXJYq667zMKFys7Ylp7YNrGipcdb91sgnACR210=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ONVh4a8lbVMtu0enRlLKGuFz1Ar30HvKFh8fTfvrN3mF0EVLV+9r7AOrBSjzkXTOr5BZpBmxCADHt82ynNSMgkF5I2Ho2HH0lSymhsvSSRYVXEIG5ky4GYFKwqeBMVEBhhA1GxVOkhbIUAND4eSlo6EzXoVTL91Jp85EVgZqUlQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=SEMGHoEh; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1738934647; c=relaxed/simple;
+	bh=AzWxQ2Sg+iUWihcfYL10pylpUN7zV6ouv8rPPjCM7w4=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=vASlLIN/Ap9VXk39zqv9TCELEhn+a3sgYoE23+bkyClvnwr85lQue+xbldf/BSEqCCEhRTA5RzjEFq64A3RWU0M2ZwvRaVawcba1pieakbyedp6DHiSZDfA2o54QdJO6JVG5IMHI1yY5Fa8+rUxZN0HwY6wfMGtN25+b0/ulB3Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Aqqwfjp7; arc=none smtp.client-ip=209.85.128.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SEMGHoEh"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1738928189;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=S0jXGXJYq667zMKFys7Ylp7YNrGipcdb91sgnACR210=;
-	b=SEMGHoEhplx2SOQtVUWM3k54CjzBjDYEjkBKVfBIoQkZR3pFlNKXSoOKF9ueRivOkiodm9
-	oBPwdMu2XUYavhCAzovpwiID64/B1ww9ikBwjqLSrYXH90O9ITDRCMEOwrH4YJqfuJSnPb
-	q+Nu/Ufxp+tkArS85GNnPTdcVMFT2aA=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-492-9W4S5ZWGOlG46qNZroToSQ-1; Fri, 07 Feb 2025 06:36:28 -0500
-X-MC-Unique: 9W4S5ZWGOlG46qNZroToSQ-1
-X-Mimecast-MFC-AGG-ID: 9W4S5ZWGOlG46qNZroToSQ
-Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-38da6aa2363so862583f8f.0
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 07 Feb 2025 03:36:28 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Aqqwfjp7"
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-4362bae4d7dso14115585e9.1;
+        Fri, 07 Feb 2025 05:24:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738934644; x=1739539444; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:date:from:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=+hbCjT6LBaffMENlqpR7e1aJbG1h/qpXNwBhV0ZXuXo=;
+        b=Aqqwfjp7Ljvyy1WdeznO9EoT5fEbvwOiZ0qaVjjmhfKInaAMMg4UAmx4TJYYGG18sP
+         F7BODArGAZwhofoWX9b5K8yG3rnbdWT1L2UOyb6GxhQ6lYey9z1q04HNEm/JdEGULl4I
+         4+oLepMlleY90Dl0GwHdd4rTLL17u9bVGFROj1RbCak5AUIs7AsQARQCmT1PpxoHEOZc
+         cv0t/Jzag6zxVkoq2bWUPE/BepcVxR9QUB+HdT+uYPySgH4zg5CGwv9CaU19euyDX73J
+         HXKSBGtrtAdxPiubU6hFuz32kTw3i021ijZfgmtPaMgaMF90eY9QHjO7K5FPa9jdKXVM
+         XNQg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738928187; x=1739532987;
-        h=mime-version:user-agent:content-transfer-encoding:autocrypt
-         :references:in-reply-to:date:cc:to:from:subject:message-id
+        d=1e100.net; s=20230601; t=1738934644; x=1739539444;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:date:from
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=S0jXGXJYq667zMKFys7Ylp7YNrGipcdb91sgnACR210=;
-        b=N7X+62pg/MyqbsWb2aDDrC2XZNniWvwBLUpmzIjglzYUM4/MzRDYQsEi/6z0yg3x/e
-         XtxLe4OuUJZiaqCxUSezyxhKcZNVZPK77AeII/dGqPtwJWhYxPTV2xSbHIh6PRwXIPBR
-         PW/vuUZqeOgUlF/2QHQSw2rydmPe9iFH50MoyxsjOl5+93D5wfxRTsONN3PQmNlVO44t
-         l0AC/udbNSWAL/6QVgMBW+wTpx6RwxSYV1qfNm+j7CCLiY1eG+doiGBzsIL5mIjhGowp
-         5t4Eln9JsjeygoZmNGdl/LoFsDjdQ0nOPy5mKtkRWm9ekAYzB4+hf10+AkTaMIQD3X8k
-         ssKw==
-X-Forwarded-Encrypted: i=1; AJvYcCXSkWoec1BH60fvgVAx+s27LdJfD6TslJd3PKhnfEQnCXUAYuTHRCHbNV8ZjhS0r+bF2aDAwxf2vBUtrR/NAnOiSI8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YycFExSF2Cxlaqv4LS5ktkwauBSMsoAc+3o4snPSVh/QQ4U4pTo
-	W6hbRMIaHof9zl8a5K53DhSHIsCXPwlTnzx2yNkSUmBwiHP4NyEqPBFsCyLlH62O4DAmPwNSWL0
-	fq3RxKY7ghvpriNjHp10sQzpa2WZFTT63LFZOj+OiPOEDfOnAl5aQ9s2CACrqJmvhbm0JcQ==
-X-Gm-Gg: ASbGncsMrnT99HADh4iGNV+Qt100cfkhbS7NkcKcjYCVqgqRkRGQT3CSEy/t0fGsVAq
-	lKUGiEvDdmD3pJo7rpX4faf2rXb40lexAtHkClAmuEZ/PEXSp2DujHFlggzT8m4GWQoZj5H+dYs
-	53OjhM1qrXOObQM2CXEj4HqG6Y55ChV4mtT3uxIRAeviuLmfqKTBO+s5o+1fOQNizJV6Cvhob8l
-	xjwF+wo9gkaScKhDqC0zs4+2sKoGlx8XM8y8aPNYtf4G/rfFBU0si6yTxvdPnYSY3rCciBqfm5P
-	FGKMxXkfsJrbGUmEaKuIK2PuSHgmlaQ=
-X-Received: by 2002:a5d:6d88:0:b0:38c:1281:260d with SMTP id ffacd0b85a97d-38dc90f0f98mr1895385f8f.31.1738928186960;
-        Fri, 07 Feb 2025 03:36:26 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IF4yT975z2O3wFjbb3NJP9lf8J4Kp/aHd+bgRUK1tWpGp2eSjf2AnV/W9eW0s1bLI33jydtYA==
-X-Received: by 2002:a5d:6d88:0:b0:38c:1281:260d with SMTP id ffacd0b85a97d-38dc90f0f98mr1895365f8f.31.1738928186554;
-        Fri, 07 Feb 2025 03:36:26 -0800 (PST)
-Received: from gmonaco-thinkpadt14gen3.rmtit.csb ([185.107.56.42])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4390d96530fsm85449585e9.19.2025.02.07.03.36.25
+        bh=+hbCjT6LBaffMENlqpR7e1aJbG1h/qpXNwBhV0ZXuXo=;
+        b=UeVo+GlFITvV4f2DPmfy3Vl+C/qt2q7KdihkF9hyqbcOiujPtPErROh67xYT63cL1x
+         od2EglHY7EocmVRmv2JYE1cChsBgSc6MlN5DRdSlMW2jBZHqJ6U/KaYCAe725Kpz0s7i
+         wD7Gf2LIU8s51Lzg6B/DJv9RlgiuBMTo9zvPsFBGMEU9bsVii8Y0ccxsv+ivkUZVULNp
+         CZgHxYIGRMMXAG6t2RsF5aYhQa5BivlUX2I8vXauxEEcTiA0RqQlDzmKhWIC8cmYicIE
+         HSi//i6xYL18IheVOR8NoPJGZ19Qta8pxulHPOgghg1JzG0Ut3zlYFUW+Em+x6LlvEXQ
+         s4Sg==
+X-Forwarded-Encrypted: i=1; AJvYcCV9jxeW35pCQE3FsgSAg6gzY9j8B0BqnZ1S68rD5j7mANHNlP+c41IrpG6mspq4iFgGhCvkwuwcB6NB@vger.kernel.org, AJvYcCWbQo/oakZ1VZt5REZ3PtrZYdogmOdichhUqLmNAmhgBpa2LBCcXuY6UgRaHnYBrEMYsiFTeI4QKzkYIRn/xHRkHS8G@vger.kernel.org, AJvYcCX9IAVfoDHr+zPwsQPNjOoyQXAEnzoJdHEZNq2mCDG83j7xeo0KSyjKtI96I908/Jy0oQA=@vger.kernel.org, AJvYcCXjIUI8zyCV+aoGlDxF0H/9Gru7FEoOUTb2tO6RLqsKHdOW2gNz/+1whP1V3stWnLWrgqMn+wK7J2rfDJvN@vger.kernel.org
+X-Gm-Message-State: AOJu0YzlKhenRQ2kcg0CDM1MYtHwO92RBPbZyZZP3Er4vhjLOqjdAlol
+	5RWUmvrsIK5EnI7vfG61syr587/MegJm9zw30hw3taGGUfeqOQnG
+X-Gm-Gg: ASbGncsF68l2bWUOFT84i7+tM2iRzds/JlMHb1Ug1w6MRx7/mTSlwaNuZ1I8eg/MQee
+	nYm2h137fk0BfT4GNq9zrbfNulz9/3OypfmcX1rgI1oi8TlnGQPZLpmihiAWOBmvQi0VJE8wpQP
+	eDhIx3XFdjE2LLiIKO0xPHXFO9/j/VUi8zGvgKXPV0eOmrPVyGO1qPeYkxt24CrucO5wIoU9lD2
+	ZcNBrxBDiyWaTOGsT/hty+qzyRGKYS7IfbJdKM/9wBNYAbGFxd34P2s5YyoC3bzrhd5/zEqU6rv
+	q1L5hkVYGKzHlnwIQhoTyk3tZCZLV/k=
+X-Google-Smtp-Source: AGHT+IE/dkWaHQatq8qE3MpEXoCi7s+Hw+dw0vHj5fIDgdHGWKUguMXN1STdGWAXkSC2GuA0xGcc+w==
+X-Received: by 2002:a05:600c:1ca5:b0:434:a5bc:70fc with SMTP id 5b1f17b1804b1-43924987b0cmr26104705e9.8.1738934643559;
+        Fri, 07 Feb 2025 05:24:03 -0800 (PST)
+Received: from krava (ip4-95-82-160-96.cust.nbox.cz. [95.82.160.96])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4390daf44f3sm92400715e9.29.2025.02.07.05.24.02
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Feb 2025 03:36:26 -0800 (PST)
-Message-ID: <847c962745ef5bce757b9ae257ae279913ac711c.camel@redhat.com>
-Subject: Re: [RFC PATCH 00/11] rv: Add scheduler specification monitors
-From: Gabriele Monaco <gmonaco@redhat.com>
-To: Juri Lelli <juri.lelli@redhat.com>
-Cc: linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>, Ingo
- Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>, 
-	linux-trace-kernel@vger.kernel.org, John Kacur <jkacur@redhat.com>, Clark
- Williams <williams@redhat.com>
-Date: Fri, 07 Feb 2025 12:36:24 +0100
-In-Reply-To: <czykavxpz46nwnelml6yorg3tvmyjvczqogeuqzji6qrfd2peu@qxr6wucv6mrj>
-References: <20250206080952.98478-1-gmonaco@redhat.com>
-	 <czykavxpz46nwnelml6yorg3tvmyjvczqogeuqzji6qrfd2peu@qxr6wucv6mrj>
-Autocrypt: addr=gmonaco@redhat.com; prefer-encrypt=mutual;
- keydata=mDMEZuK5YxYJKwYBBAHaRw8BAQdAmJ3dM9Sz6/Hodu33Qrf8QH2bNeNbOikqYtxWFLVm0
- 1a0JEdhYnJpZWxlIE1vbmFjbyA8Z21vbmFjb0ByZWRoYXQuY29tPoiZBBMWCgBBFiEEysoR+AuB3R
- Zwp6j270psSVh4TfIFAmbiuWMCGwMFCQWjmoAFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgk
- Q70psSVh4TfJzZgD/TXjnqCyqaZH/Y2w+YVbvm93WX2eqBqiVZ6VEjTuGNs8A/iPrKbzdWC7AicnK
- xyhmqeUWOzFx5P43S1E1dhsrLWgP
-User-Agent: Evolution 3.54.3 (3.54.3-1.fc41)
+        Fri, 07 Feb 2025 05:24:03 -0800 (PST)
+From: Jiri Olsa <olsajiri@gmail.com>
+X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
+Date: Fri, 7 Feb 2025 14:24:00 +0100
+To: Eyal Birger <eyal.birger@gmail.com>
+Cc: Kees Cook <kees@kernel.org>, luto@amacapital.net, wad@chromium.org,
+	oleg@redhat.com, mhiramat@kernel.org, andrii@kernel.org,
+	olsajiri@gmail.com, cyphar@cyphar.com, songliubraving@fb.com,
+	yhs@fb.com, john.fastabend@gmail.com, peterz@infradead.org,
+	tglx@linutronix.de, bp@alien8.de, daniel@iogearbox.net,
+	ast@kernel.org, andrii.nakryiko@gmail.com, rostedt@goodmis.org,
+	rafi@rbk.io, shmulik.ladkani@gmail.com, bpf@vger.kernel.org,
+	linux-api@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	x86@kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 0/2] seccomp: pass uretprobe system call through
+ seccomp
+Message-ID: <Z6YJcPS3ujIx6AJP@krava>
+References: <20250202162921.335813-1-eyal.birger@gmail.com>
+ <173887689139.3506371.3849387827240027734.b4-ty@kernel.org>
+ <CAHsH6Gv7SLuy+v1hRzxH7sk-dVDRKA=iTyeabRBkoFuMGz7_YQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: oUrjECl85nw3uaTsqrHGoVb0yVEPtyQ03XzN1_wHWRY_1738928187
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAHsH6Gv7SLuy+v1hRzxH7sk-dVDRKA=iTyeabRBkoFuMGz7_YQ@mail.gmail.com>
 
+On Thu, Feb 06, 2025 at 05:06:29PM -0800, Eyal Birger wrote:
+> On Thu, Feb 6, 2025 at 1:22 PM Kees Cook <kees@kernel.org> wrote:
+> >
+> > On Sun, 02 Feb 2025 08:29:19 -0800, Eyal Birger wrote:
+> > > uretprobe(2) is an performance enhancement system call added to improve
+> > > uretprobes on x86_64.
+> > >
+> > > Confinement environments such as Docker are not aware of this new system
+> > > call and kill confined processes when uretprobes are attached to them.
+> > >
+> > > Since uretprobe is a "kernel implementation detail" system call which is
+> > > not used by userspace application code directly, pass this system call
+> > > through seccomp without forcing existing userspace confinement environments
+> > > to be changed.
+> > >
+> > > [...]
+> >
+> > With the changes I mentioned in each patch, I've applied this to
+> > for-next/seccomp, with the intention of getting them into v6.14-rc2.
+> >
+> > Thanks!
+> 
+> Thank you very much for your help.
 
+great!
 
-On Fri, 2025-02-07 at 11:55 +0100, Juri Lelli wrote:
-> Hi Gabriele,
->=20
-> On 06/02/25 09:09, Gabriele Monaco wrote:
-> > This patchset starts including adapted scheduler specifications
-> > from
-> > Daniel's task model [1].
->=20
-> Thanks a lot for working on this. Apart from being cool stuff per-se,
-> it
-> means a lot personally to see Daniel's work continuing to be
-> developed.
->=20
-> > As the model is fairly complicated, it is split in several
-> > generators
-> > and specifications. The tool used to create the model can output a
-> > unified model, but that would be hardly readable (9k states).
-> >=20
-> > RV allows monitors to run and react concurrently. Running the
-> > cumulative
-> > model is equivalent to running single components using the same
-> > reactors, with the advantage that it's easier to point out which
-> > specification failed in case of error.
-> >=20
-> > We allow this by introducing nested monitors, in short, the sysfs
-> > monitor folder will contain a monitor named sched, which is nothing
-> > but
-> > an empty container for other monitors. Controlling the sched
-> > monitor
-> > (enable, disable, set reactors) controls all nested monitors.
-> >=20
-> > The task model proposed by Daniel includes 12 generators and 33
-> > specifications. The generators are good for documentation but are
-> > usually implied in some specifications.
-> > Not all monitors work out of the box, mainly because of those
-> > reasons:
-> > * need to distinguish if preempt disable leads to schedule
-> > * need to distinguish if irq disable comes from an actual irq
-> > * assumptions not always true on SMP
-> >=20
-> > The original task model was designed for PREEMPT_RT and this
-> > patchset is
-> > only tested on an upstream kernel with full preemption enabled.
->=20
-> I played with your additions a bit and I was able to enable/disable
-> monitors, switch reactors, etc., w/o noticing any issue.
->=20
-
-Thanks for trying it out!
-
-> I wonder if you also had ways to test that the monitors actually
-> react
-> properly in case of erroneous conditions (so that we can see a
-> reactor
-> actually react :).
->=20
-
-Well, in my understanding, reactors should fire if there is a problem
-either in the kernel or in the model logic.
-While trying things out, I had more than a few models failing and I
-excluded them from this patch because they are not stable.
-
-Ideally you shouldn't be seeing errors using those monitors, unless you
-(un)intentionally break something in the kernel.
-
-That said, the monitor task switch while scheduling (tss) imposes
-context switches whenever we reach the scheduler.
-Daniel modified the sched_switch tracepoint to fire also if prev=3D=3Dnext
-(in fact no switch is happening), I'm assuming the tss specification is
-partly why that was necessary.
-During my tests, I didn't apply that change, yet I've never seen the
-monitor failing.
-
-If you manage to call __schedule while the next picked task is the same
-as the currently running one, you should see an error and a reactor
-firing.
-
-Since I couldn't reproduce the above case, I ignored it for the current
-RFC, however if that's possible in practice, we should perhaps add
-another event describing this fake switch to prevent the monitor from
-failing.
-
-Thanks,
-Gabriele
-
+thanks,
+jirka
