@@ -1,27 +1,26 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0D0914A0B3;
-	Sat,  8 Feb 2025 05:15:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE5F413EFE3;
+	Sat,  8 Feb 2025 15:30:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738991716; cv=none; b=lyOvoi4JSLqumgjUxvnN3+BUDdio8nJLd46PS510eVkFZntHRPv3+gl8s/CzW5PmVo3AdDuSTyFrb2/169Sp2Qw8oLatUuOcbDcrSERSBJcDd1M2bE6XEmiXkyohA7FCXv/bFxLFr8F80kAkvgxH9KVyXGb+/BAR+LGIdRmASQ4=
+	t=1739028620; cv=none; b=NysHEf0AxaUGVr2ClwK5vQc90LarB1/gKxGw0TWjjfMWpmq4aG9LtqMoMFJ0sEPxTMlzRdzDaHbCPQx84cKRVf4a8zM24n7qLQVobN48amtvBa9cX3ftW92QuN+auQ6mxovJEJLw4lRZmfTBu7rcFTuTS5gkRlZtyqQnArubCT4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738991716; c=relaxed/simple;
-	bh=IITLHrpQ9HHWrHK0xM3nrmcduVrguCrrRbBJi2jqYTE=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=cpyUZBzLEgUbunt98NDjK9q7HX83OIqlEkkqByKFZs0k7sn/9ICrKpkclEQQoQwTg22stkT17ZcH6PwmTYfFFN9yPeosbnwkE19ijo/GFYfpM/V8tKYeKGk9Ly4Pvf2v+NP8Km+b4VBljwP9sBsFiYqWjiQYsahT1ohcLz/dOLs=
+	s=arc-20240116; t=1739028620; c=relaxed/simple;
+	bh=8HJ2lM2SOnHYyQoVMiqtqy+Vyu6PArUz60SZ2F8HSXo=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=kPNTOVwQf4L/iWGHivbRgAVmXsFn+8KIRGFOnLF6vvA5eLTmLsSTXh9Gqb9+cQjBIg+rZPhj4UgvNEZLmmIQ0qJA383cg+RCaTw2cGDtposeGKYOQd3bBHQZyJdd9pFeivLhQydpagGPV+lHb9qU2dgnxd+Txi7u5ZQy2skVyUY=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9C99CC4CED6;
-	Sat,  8 Feb 2025 05:15:14 +0000 (UTC)
-Date: Sat, 8 Feb 2025 00:15:11 -0500
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 87EDDC4CED6;
+	Sat,  8 Feb 2025 15:30:18 +0000 (UTC)
+Date: Sat, 8 Feb 2025 10:30:17 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
 To: LKML <linux-kernel@vger.kernel.org>, Linux trace kernel
  <linux-trace-kernel@vger.kernel.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland
- <mark.rutland@arm.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Subject: [PATCH] fgraph: Fix set_graph_notrace with setting
- TRACE_GRAPH_NOTRACE_BIT
-Message-ID: <20250208001511.535be150@batman.local.home>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Borislav Petkov <bp@alien8.de>
+Subject: [PATCH] tracing: Add traceoff_after_boot option
+Message-ID: <20250208103017.48a7ec83@batman.local.home>
 X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -34,66 +33,74 @@ Content-Transfer-Encoding: 7bit
 
 From: Steven Rostedt <rostedt@goodmis.org>
 
-The code was restructured where the function graph notrace code, that
-would not trace a function and all its children is done by setting a
-NOTRACE flag when the function that is not to be traced is hit.
+Sometimes tracing is used to debug issues during the boot process. Since
+the trace buffer has a limited amount of storage, it may be prudent to
+disable tracing after the boot is finished, otherwise the critical
+information may be overwritten.  With this option, the main tracing buffer
+will be turned off at the end of the boot process.
 
-There's a TRACE_GRAPH_NOTRACE_BIT which defines the bit in the flags and a
-TRACE_GRAPH_NOTRACE which is the mask with that bit set. But the
-restructuring used TRACE_GRAPH_NOTRACE_BIT when it should have used
-TRACE_GRAPH_NOTRACE.
-
-For example:
-
- # cd /sys/kernel/tracing
- # echo set_track_prepare stack_trace_save  > set_graph_notrace
- # echo function_graph > current_tracer
- # cat trace
-[..]
- 0)               |                          __slab_free() {
- 0)               |                            free_to_partial_list() {
- 0)               |                                  arch_stack_walk() {
- 0)               |                                    __unwind_start() {
- 0)   0.501 us    |                                      get_stack_info();
-
-Where a non filter trace looks like:
-
- # echo > set_graph_notrace
- # cat trace
- 0)               |                            free_to_partial_list() {
- 0)               |                              set_track_prepare() {
- 0)               |                                stack_trace_save() {
- 0)               |                                  arch_stack_walk() {
- 0)               |                                    __unwind_start() {
-
-Where the filter should look like:
-
- # cat trace
- 0)               |                            free_to_partial_list() {
- 0)               |                              _raw_spin_lock_irqsave() {
- 0)   0.350 us    |                                preempt_count_add();
- 0)   0.351 us    |                                do_raw_spin_lock();
- 0)   2.440 us    |                              }
-
-Fixes: b84214890a9bc ("function_graph: Move graph notrace bit to shadow stack global var")
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- kernel/trace/trace_functions_graph.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ Documentation/admin-guide/kernel-parameters.txt |  9 +++++++++
+ kernel/trace/trace.c                            | 11 +++++++++++
+ 2 files changed, 20 insertions(+)
 
-diff --git a/kernel/trace/trace_functions_graph.c b/kernel/trace/trace_functions_graph.c
-index 54d850997c0a..136c750b0b4d 100644
---- a/kernel/trace/trace_functions_graph.c
-+++ b/kernel/trace/trace_functions_graph.c
-@@ -198,7 +198,7 @@ int trace_graph_entry(struct ftrace_graph_ent *trace,
- 	 * returning from the function.
- 	 */
- 	if (ftrace_graph_notrace_addr(trace->func)) {
--		*task_var |= TRACE_GRAPH_NOTRACE_BIT;
-+		*task_var |= TRACE_GRAPH_NOTRACE;
- 		/*
- 		 * Need to return 1 to have the return called
- 		 * that will clear the NOTRACE bit.
+diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+index fb8752b42ec8..e8ca4eabd152 100644
+--- a/Documentation/admin-guide/kernel-parameters.txt
++++ b/Documentation/admin-guide/kernel-parameters.txt
+@@ -7279,6 +7279,15 @@
+ 			See also "Event triggers" in Documentation/trace/events.rst
+ 
+ 
++	traceoff_after_boot
++			[FTRACE] Sometimes tracing is used to debug issues
++			during the boot process. Since the trace buffer has a
++			limited amount of storage, it may be prudent to
++			disable tracing after the boot is finished, otherwise
++			the critical information may be overwritten.  With this
++			option, the main tracing buffer will be turned off at
++			the end of the boot process.
++
+ 	traceoff_on_warning
+ 			[FTRACE] enable this option to disable tracing when a
+ 			warning is hit. This turns off "tracing_on". Tracing can
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index 1496a5ac33ae..1af18908ac3d 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -87,6 +87,7 @@ void __init disable_tracing_selftest(const char *reason)
+ static struct trace_iterator *tracepoint_print_iter;
+ int tracepoint_printk;
+ static bool tracepoint_printk_stop_on_boot __initdata;
++static bool traceoff_after_boot __initdata;
+ static DEFINE_STATIC_KEY_FALSE(tracepoint_printk_key);
+ 
+ /* For tracers that don't implement custom flags */
+@@ -330,6 +331,13 @@ static int __init set_tracepoint_printk_stop(char *str)
+ }
+ __setup("tp_printk_stop_on_boot", set_tracepoint_printk_stop);
+ 
++static int __init set_traceoff_after_boot(char *str)
++{
++	traceoff_after_boot = true;
++	return 1;
++}
++__setup("traceoff_after_boot", set_traceoff_after_boot);
++
+ unsigned long long ns2usecs(u64 nsec)
+ {
+ 	nsec += 500;
+@@ -10706,6 +10714,9 @@ __init static int late_trace_init(void)
+ 		tracepoint_printk = 0;
+ 	}
+ 
++	if (traceoff_after_boot)
++		tracing_off();
++
+ 	tracing_set_default_clock();
+ 	clear_boot_tracer();
+ 	return 0;
 -- 
 2.45.2
 
