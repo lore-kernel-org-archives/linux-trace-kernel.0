@@ -1,434 +1,399 @@
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50F7825742A
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 10 Feb 2025 18:35:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 637B725E46C;
+	Mon, 10 Feb 2025 19:26:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739212508; cv=none; b=Tp7itc/Vblbrjl8c70ct9glcqS6FGzkx7Ltw3PrNFJfIIydZdv0/DeLpL0pH1qgW1PcyhNYEgqf1htX8itaIPgTQcHoUNZaa6h3wPSQ+EyPll1JT99bNvaQbyAoNL0gMwOODeLTjssy2+755n2ueXeHJk6q3KLdyYdTW1J13bcs=
+	t=1739215606; cv=none; b=oyeLpZB5iaqGy6cLcOQch0Jn239Fh6DjKJHB8yjoLiKHl3W8mmKtr6TdSQx0OS4oLalSlOrV+zCWb7ieKQmfhI8IstH5GXqmFdnaFU4knr3NmY1y5M2EA5m5ETPVl/S0Prkq4qT3OPQhPXzt3ol5NlA2pNDO4smU2F49IsFHsUM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739212508; c=relaxed/simple;
-	bh=afFbwZhPvABw9QtnhyLoeWFZ1DAKvScTsQg8dH8fITI=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=mRbanpgTLH8ahK00+0Rd1R0xzU/rpEDaNzYCWPF6l51HLG7TngYQ39e+nhAW2ckKrE01N86sg/qrDidDaLLUHn9cigGbDlXpk+oN4AK/C/IIxh9GjDfdtOeoAkS9FG8YON7zdhy6zrqKmusCO2+Mm4MXawr0SLtYA2LSVNhJC4M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=wajH00IG; arc=none smtp.client-ip=209.85.214.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="wajH00IG"
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-21f74c4e586so39368905ad.0
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 10 Feb 2025 10:35:06 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1739212505; x=1739817305; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=IZC6hwdmsqFUIUOrfafnyuVDJQQmUYi4erRt9zplJew=;
-        b=wajH00IGPM8LMRdwak4iQ5X/8GVVgAsmyAPewes8oPNsjQM3bjOlOUA9YtHBV1c7U/
-         A67oPMctVoL53ZcoiBDMuELYSzwst2w1W5RU+QFjc7sVOS5Kz/bJxFQ1RbibRH3QruxP
-         tjXL48K9hCUN+r1rVPx15W5KwyXxZlmvkn9s5UYiSfMhULPzlNVTmfKNxECE6fWLhvF7
-         odMY2Mfe9PosoCZ431uGchljvlbZUDD4RLQfCpoMCWJNnjqB5CCn6K2Ge/PKRGq4qwqs
-         7WlAKScmbbPtfJVxv6pCt0Y7k1f9ZfIq/DrH70zuQbwmSSIxVja0irQ4MGEGSVquYXYk
-         krlw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739212505; x=1739817305;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=IZC6hwdmsqFUIUOrfafnyuVDJQQmUYi4erRt9zplJew=;
-        b=s7eQVgU3tx4EdcDdTUQ2Yt6sKF/+lyh5OIN3A+nWtWqN9+5x9Pbxp/7SBhKo7Vq1rU
-         SH9UrgB6GLNdzxLnCnMCath50ZFnmQlqHzb9KyeeShWnl+0Ic1T3/6sfrBLMVmym9u+v
-         qWUT2WkuUU9/4/O1TutNEFJmB+M4oIP+ZFb1//sEqVD6DCFcnvU/Z54pIKuD3gf1I/ae
-         kbzswtExEbK2REdXlK9zlFOgdvjxWT4XnqeQJm0AT3Q8RcexupVeYy8r9luw4RkgJSq1
-         jUldtLlVefJX4uD2Q+xirFKHpe6mB+CnyWxWCYKaDHngmsFN2hVbaxlK8PFuFOP2RhFN
-         5YKg==
-X-Forwarded-Encrypted: i=1; AJvYcCXoOTAqo7U/aewhXRyk0TqdbNiAZSsC1zvyCRPwQl/x5e6aKIBvTpOhZ/lek9nrTQQ5Qe6+p4JeHGHa3kSyqq9e5Hk=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyi7oqTVE6Um6tH8xDuCnrE9YGeUhkHA+b6zfx94YmPFeSWpjxR
-	tgx0lJMXbMKPEC/lRTWv4jHcayOT5lJwYvem1kKFi4SnmClSaHMz+QGl07LMTRA=
-X-Gm-Gg: ASbGncuQPeORV9j+yLC0lrc8bdDScHhrViwnBaFdZoOPLfQiHNr0LTKQcJAAXtuAogS
-	Em8NFRu2ktcclUzkjRC0ldfFKFuddqmG62iV1RAA+245TzuS3eeJ4EF6PU+gMYxxNLeKWu2tBEA
-	eWayYoZsKZpJX2mx2RyCRqipEjWHP3/AJTmEoFXTIT67xex2ION7ncrCZU6jDVDP/sVy4XWFZA3
-	z6DCpNph59B62ZY78NNhxOdlIasKHqnV1f+0elqW4PZb8+4u1+ni8wkTu/WSHXdGyKyStieQtjP
-	WZVkdXIVxD8BDvcILpj7VoqXLC1RShw=
-X-Google-Smtp-Source: AGHT+IHtp08VQuun5C1yu46ll/uFsvIp/+Quz02mNlB+fHEav3tysjyfH3BKOpexgQ5joBYuNTCv8A==
-X-Received: by 2002:a17:903:2f83:b0:215:89a0:416f with SMTP id d9443c01a7336-21fb64460e9mr7223045ad.30.1739212505447;
-        Mon, 10 Feb 2025 10:35:05 -0800 (PST)
-Received: from charlie.ba.rivosinc.com ([64.71.180.162])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21f3650e6b5sm82534815ad.46.2025.02.10.10.35.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Feb 2025 10:35:04 -0800 (PST)
-From: Charlie Jenkins <charlie@rivosinc.com>
-Date: Mon, 10 Feb 2025 10:34:43 -0800
-Subject: [PATCH v2 2/2] tools: Remove redundant quiet setup
+	s=arc-20240116; t=1739215606; c=relaxed/simple;
+	bh=yJL6JAF/Hjh/c9myb5opuCMmiur+tgSE24VYYiPvxaM=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=pZ5UHOvxGATLZNq/9XAJGoNRFgN4iUkhQSzb2lrlcU5682U5Hp+noEk3kD2K4KuCHefsitGooJDxSFy++sPL7IKO4yFMh4K9F+otnMiCscmtLRuNMOtCYJexK47t+Uv0BnaC+2FgN4U1OBu2us58TatStfcv75uUFTq5mK1jqLw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B3E1CC4CEE4;
+	Mon, 10 Feb 2025 19:26:44 +0000 (UTC)
+Date: Mon, 10 Feb 2025 14:26:47 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+ linux-arm-kernel@lists.infradead.org, Mark Rutland <mark.rutland@arm.com>,
+ Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>, Heiko Carstens
+ <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, Alexander Gordeev
+ <agordeev@linux.ibm.com>, linux-s390@vger.kernel.org
+Subject: [PATCH] arm64: scripts/sorttable: Implement sorting mcount_loc at
+ boot for arm64
+Message-ID: <20250210142647.083ff456@gandalf.local.home>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250210-quiet_tools-v2-2-b2f18cbf72af@rivosinc.com>
-References: <20250210-quiet_tools-v2-0-b2f18cbf72af@rivosinc.com>
-In-Reply-To: <20250210-quiet_tools-v2-0-b2f18cbf72af@rivosinc.com>
-To: Alexei Starovoitov <ast@kernel.org>, 
- Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, 
- Martin KaFai Lau <martin.lau@linux.dev>, 
- Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
- Yonghong Song <yonghong.song@linux.dev>, 
- John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>, 
- Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
- Jiri Olsa <jolsa@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
- Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
- Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
- Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
- Quentin Monnet <qmo@kernel.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
- Daniel Lezcano <daniel.lezcano@linaro.org>, Zhang Rui <rui.zhang@intel.com>, 
- Lukasz Luba <lukasz.luba@arm.com>, Josh Poimboeuf <jpoimboe@kernel.org>, 
- Mykola Lysenko <mykolal@fb.com>, Shuah Khan <shuah@kernel.org>, 
- Jiri Kosina <jikos@kernel.org>, Benjamin Tissoires <bentiss@kernel.org>, 
- Steven Rostedt <rostedt@goodmis.org>
-Cc: bpf@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-perf-users@vger.kernel.org, linux-pm@vger.kernel.org, 
- linux-kselftest@vger.kernel.org, linux-input@vger.kernel.org, 
- linux-trace-kernel@vger.kernel.org, Charlie Jenkins <charlie@rivosinc.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=10090; i=charlie@rivosinc.com;
- h=from:subject:message-id; bh=afFbwZhPvABw9QtnhyLoeWFZ1DAKvScTsQg8dH8fITI=;
- b=owGbwMvMwCXWx5hUnlvL8Y3xtFoSQ/oqt0u/FxybH+p4mC9Zx/PRSWbdmew734Zp/dy93/bY9
- p6Fp/eWdpSyMIhxMciKKbLwXGtgbr2jX3ZUtGwCzBxWJpAhDFycAjCRehtGhl1F0efO6NpNY9/B
- rPv9RaPrVk75XSdeKIvcjDnmKnts6gWG/0l3TM5cu5r8r35nrNzheXeO5/UUalspTHr6qfh6fGf
- zbn4A
-X-Developer-Key: i=charlie@rivosinc.com; a=openpgp;
- fpr=7D834FF11B1D8387E61C776FFB10D1F27D6B1354
 
-Q is exported from Makefile.include so it is not necessary to manually
-set it.
+From: Steven Rostedt <rostedt@goodmis.org>
 
-Signed-off-by: Charlie Jenkins <charlie@rivosinc.com>
+The mcount_loc section holds the addresses of the functions that get
+patched by ftrace when enabling function callbacks. It can contain tens of
+thousands of entries. These addresses must be sorted. If they are not
+sorted at compile time, they are sorted at boot. Sorting at boot does take
+some time and does have a small impact on boot performance.
+
+x86 and arm32 have the addresses in the mcount_loc section of the ELF
+file. But for arm64, the section just contains zeros. The .rela.dyn
+Elf_Rela section holds the addresses and they get patched at boot during
+the relocation phase.
+
+In order to sort these addresses, the Elf_Rela needs to be updated instead
+of the location in the binary that holds the mcount_loc section. Have the
+sorttable code, allocate an array to hold the functions, load the
+addresses from the Elf_Rela entries, sort them, then put them back in
+order into the Elf_rela entries so that they will be sorted at boot up
+without having to sort them during boot up.
+
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- tools/arch/arm64/tools/Makefile           |  6 ------
- tools/bpf/Makefile                        |  6 ------
- tools/bpf/bpftool/Documentation/Makefile  |  6 ------
- tools/bpf/bpftool/Makefile                |  6 ------
- tools/bpf/resolve_btfids/Makefile         |  2 --
- tools/bpf/runqslower/Makefile             |  5 +----
- tools/lib/bpf/Makefile                    | 13 -------------
- tools/lib/perf/Makefile                   | 13 -------------
- tools/lib/thermal/Makefile                | 13 -------------
- tools/objtool/Makefile                    |  6 ------
- tools/testing/selftests/bpf/Makefile.docs |  6 ------
- tools/testing/selftests/hid/Makefile      |  2 --
- tools/thermal/lib/Makefile                | 13 -------------
- tools/tracing/latency/Makefile            |  6 ------
- tools/tracing/rtla/Makefile               |  6 ------
- tools/verification/rv/Makefile            |  6 ------
- 16 files changed, 1 insertion(+), 114 deletions(-)
 
-diff --git a/tools/arch/arm64/tools/Makefile b/tools/arch/arm64/tools/Makefile
-index 7b42feedf647190ad498de0937e8fb557e40f39c..de4f1b66ef0148b7bfd0fd16655ad854c7542240 100644
---- a/tools/arch/arm64/tools/Makefile
-+++ b/tools/arch/arm64/tools/Makefile
-@@ -13,12 +13,6 @@ AWK	?= awk
- MKDIR	?= mkdir
- RM	?= rm
- 
--ifeq ($(V),1)
--Q =
--else
--Q = @
--endif
--
- arm64_tools_dir = $(top_srcdir)/arch/arm64/tools
- arm64_sysreg_tbl = $(arm64_tools_dir)/sysreg
- arm64_gen_sysreg = $(arm64_tools_dir)/gen-sysreg.awk
-diff --git a/tools/bpf/Makefile b/tools/bpf/Makefile
-index 243b79f2b451e52ca196f79dc46befd1b3dab458..062bbd6cd048e9e42f9bc8f9972ec96594f3dbd2 100644
---- a/tools/bpf/Makefile
-+++ b/tools/bpf/Makefile
-@@ -27,12 +27,6 @@ srctree := $(patsubst %/,%,$(dir $(CURDIR)))
- srctree := $(patsubst %/,%,$(dir $(srctree)))
- endif
- 
--ifeq ($(V),1)
--  Q =
--else
--  Q = @
--endif
--
- FEATURE_USER = .bpf
- FEATURE_TESTS = libbfd disassembler-four-args disassembler-init-styled
- FEATURE_DISPLAY = libbfd
-diff --git a/tools/bpf/bpftool/Documentation/Makefile b/tools/bpf/bpftool/Documentation/Makefile
-index 4315652678b9f2e27e48b7815f3b9ddc70a57165..bf843f328812e10dd65a73f355f74e6825ad95b9 100644
---- a/tools/bpf/bpftool/Documentation/Makefile
-+++ b/tools/bpf/bpftool/Documentation/Makefile
-@@ -5,12 +5,6 @@ INSTALL ?= install
- RM ?= rm -f
- RMDIR ?= rmdir --ignore-fail-on-non-empty
- 
--ifeq ($(V),1)
--  Q =
--else
--  Q = @
--endif
--
- prefix ?= /usr/local
- mandir ?= $(prefix)/man
- man8dir = $(mandir)/man8
-diff --git a/tools/bpf/bpftool/Makefile b/tools/bpf/bpftool/Makefile
-index dd9f3ec842017f1dd24054bf3a0986d546811dc4..6ea4823b770cbbe7fd9eb7da79956cc1dae1f204 100644
---- a/tools/bpf/bpftool/Makefile
-+++ b/tools/bpf/bpftool/Makefile
-@@ -7,12 +7,6 @@ srctree := $(patsubst %/,%,$(dir $(srctree)))
- srctree := $(patsubst %/,%,$(dir $(srctree)))
- endif
- 
--ifeq ($(V),1)
--  Q =
--else
--  Q = @
--endif
--
- BPF_DIR = $(srctree)/tools/lib/bpf
- 
- ifneq ($(OUTPUT),)
-diff --git a/tools/bpf/resolve_btfids/Makefile b/tools/bpf/resolve_btfids/Makefile
-index 4b8079f294f65b284481e9a2bf6ff52594a4669a..afbddea3a39c64ffb2efc874a3637b6401791c5b 100644
---- a/tools/bpf/resolve_btfids/Makefile
-+++ b/tools/bpf/resolve_btfids/Makefile
-@@ -5,10 +5,8 @@ include ../../scripts/Makefile.arch
- srctree := $(abspath $(CURDIR)/../../../)
- 
- ifeq ($(V),1)
--  Q =
-   msg =
- else
--  Q = @
-   ifeq ($(silent),1)
-     msg =
-   else
-diff --git a/tools/bpf/runqslower/Makefile b/tools/bpf/runqslower/Makefile
-index c4f1f1735af659c2e660a322dbf6912d9a5724bc..e49203ebd48c18607a6136a9e805ccf16ee960d3 100644
---- a/tools/bpf/runqslower/Makefile
-+++ b/tools/bpf/runqslower/Makefile
-@@ -26,10 +26,7 @@ VMLINUX_BTF_PATHS := $(if $(O),$(O)/vmlinux)		\
- VMLINUX_BTF_PATH := $(or $(VMLINUX_BTF),$(firstword			       \
- 					  $(wildcard $(VMLINUX_BTF_PATHS))))
- 
--ifeq ($(V),1)
--Q =
--else
--Q = @
-+ifneq ($(V),1)
- MAKEFLAGS += --no-print-directory
- submake_extras := feature_display=0
- endif
-diff --git a/tools/lib/bpf/Makefile b/tools/lib/bpf/Makefile
-index 857a5f7b413d6dc4cbe7bc4167496674dd08d875..168140f8e6461bd06db40e23d21a3fb8847ccbf4 100644
---- a/tools/lib/bpf/Makefile
-+++ b/tools/lib/bpf/Makefile
-@@ -53,13 +53,6 @@ include $(srctree)/tools/scripts/Makefile.include
- 
- # copy a bit from Linux kbuild
- 
--ifeq ("$(origin V)", "command line")
--  VERBOSE = $(V)
--endif
--ifndef VERBOSE
--  VERBOSE = 0
--endif
--
- INCLUDES = -I$(or $(OUTPUT),.) \
- 	   -I$(srctree)/tools/include -I$(srctree)/tools/include/uapi \
- 	   -I$(srctree)/tools/arch/$(SRCARCH)/include
-@@ -96,12 +89,6 @@ override CFLAGS += $(CLANG_CROSS_FLAGS)
- # flags specific for shared library
- SHLIB_FLAGS := -DSHARED -fPIC
- 
--ifeq ($(VERBOSE),1)
--  Q =
--else
--  Q = @
--endif
--
- # Disable command line variables (CFLAGS) override from top
- # level Makefile (perf), otherwise build Makefile will get
- # the same command line setup.
-diff --git a/tools/lib/perf/Makefile b/tools/lib/perf/Makefile
-index 3a9b2140aa048ea919c69ed2240bf0ea444dbf21..e9a7ac2c062e2b398c2f22af41907b62815ca07e 100644
---- a/tools/lib/perf/Makefile
-+++ b/tools/lib/perf/Makefile
-@@ -39,19 +39,6 @@ libdir = $(prefix)/$(libdir_relative)
- libdir_SQ = $(subst ','\'',$(libdir))
- libdir_relative_SQ = $(subst ','\'',$(libdir_relative))
- 
--ifeq ("$(origin V)", "command line")
--  VERBOSE = $(V)
--endif
--ifndef VERBOSE
--  VERBOSE = 0
--endif
--
--ifeq ($(VERBOSE),1)
--  Q =
--else
--  Q = @
--endif
--
- TEST_ARGS := $(if $(V),-v)
- 
- # Set compile option CFLAGS
-diff --git a/tools/lib/thermal/Makefile b/tools/lib/thermal/Makefile
-index 8890fd57b110ccc1a837d37624a5dead00f18656..a1f5e388644d31d36f973d3ddce48d036ee0a083 100644
---- a/tools/lib/thermal/Makefile
-+++ b/tools/lib/thermal/Makefile
-@@ -39,19 +39,6 @@ libdir = $(prefix)/$(libdir_relative)
- libdir_SQ = $(subst ','\'',$(libdir))
- libdir_relative_SQ = $(subst ','\'',$(libdir_relative))
- 
--ifeq ("$(origin V)", "command line")
--  VERBOSE = $(V)
--endif
--ifndef VERBOSE
--  VERBOSE = 0
--endif
--
--ifeq ($(VERBOSE),1)
--  Q =
--else
--  Q = @
--endif
--
- # Set compile option CFLAGS
- ifdef EXTRA_CFLAGS
-   CFLAGS := $(EXTRA_CFLAGS)
-diff --git a/tools/objtool/Makefile b/tools/objtool/Makefile
-index f56e2772753414ff8d3462bdebbc8e95e7667fcd..7a65948892e569cbe1d6e5a78db68bb35102cd26 100644
---- a/tools/objtool/Makefile
-+++ b/tools/objtool/Makefile
-@@ -46,12 +46,6 @@ HOST_OVERRIDES := CC="$(HOSTCC)" LD="$(HOSTLD)" AR="$(HOSTAR)"
- AWK = awk
- MKDIR = mkdir
- 
--ifeq ($(V),1)
--  Q =
--else
--  Q = @
--endif
--
- BUILD_ORC := n
- 
- ifeq ($(SRCARCH),x86)
-diff --git a/tools/testing/selftests/bpf/Makefile.docs b/tools/testing/selftests/bpf/Makefile.docs
-index eb6a4fea8c794d8354363ac8daa0baac3e3bd060..f7f9e7088bb38c7507282990fb62921ca7a636d2 100644
---- a/tools/testing/selftests/bpf/Makefile.docs
-+++ b/tools/testing/selftests/bpf/Makefile.docs
-@@ -7,12 +7,6 @@ INSTALL ?= install
- RM ?= rm -f
- RMDIR ?= rmdir --ignore-fail-on-non-empty
- 
--ifeq ($(V),1)
--  Q =
--else
--  Q = @
--endif
--
- prefix ?= /usr/local
- mandir ?= $(prefix)/man
- man2dir = $(mandir)/man2
-diff --git a/tools/testing/selftests/hid/Makefile b/tools/testing/selftests/hid/Makefile
-index 0336353bd15f0d56dbed6c8fa02f53c234f949e1..2839d2612ce3a70f4332f8e886586e9cca6f03cb 100644
---- a/tools/testing/selftests/hid/Makefile
-+++ b/tools/testing/selftests/hid/Makefile
-@@ -43,10 +43,8 @@ TEST_GEN_PROGS = hid_bpf hidraw
- # $3 - target (assumed to be file); only file name will be emitted;
- # $4 - optional extra arg, emitted as-is, if provided.
- ifeq ($(V),1)
--Q =
- msg =
- else
--Q = @
- msg = @printf '  %-8s%s %s%s\n' "$(1)" "$(if $(2), [$(2)])" "$(notdir $(3))" "$(if $(4), $(4))";
- MAKEFLAGS += --no-print-directory
- submake_extras := feature_display=0
-diff --git a/tools/thermal/lib/Makefile b/tools/thermal/lib/Makefile
-index f2552f73a64c7eb1be24c27b3a1414617391315b..056d212f25cf51cd8c02260fbe2ef28dda5e4acb 100644
---- a/tools/thermal/lib/Makefile
-+++ b/tools/thermal/lib/Makefile
-@@ -39,19 +39,6 @@ libdir = $(prefix)/$(libdir_relative)
- libdir_SQ = $(subst ','\'',$(libdir))
- libdir_relative_SQ = $(subst ','\'',$(libdir_relative))
- 
--ifeq ("$(origin V)", "command line")
--  VERBOSE = $(V)
--endif
--ifndef VERBOSE
--  VERBOSE = 0
--endif
--
--ifeq ($(VERBOSE),1)
--  Q =
--else
--  Q = @
--endif
--
- # Set compile option CFLAGS
- ifdef EXTRA_CFLAGS
-   CFLAGS := $(EXTRA_CFLAGS)
-diff --git a/tools/tracing/latency/Makefile b/tools/tracing/latency/Makefile
-index 6518b03e05c71b4fa84498f9628adf81a38c9f56..257a56b1899f23837de533353e9c2cebdb6035bd 100644
---- a/tools/tracing/latency/Makefile
-+++ b/tools/tracing/latency/Makefile
-@@ -37,12 +37,6 @@ FEATURE_TESTS	+= libtracefs
- FEATURE_DISPLAY	:= libtraceevent
- FEATURE_DISPLAY	+= libtracefs
- 
--ifeq ($(V),1)
--  Q 		=
--else
--  Q 		= @
--endif
--
- all: $(LATENCY-COLLECTOR)
- 
- include $(srctree)/tools/build/Makefile.include
-diff --git a/tools/tracing/rtla/Makefile b/tools/tracing/rtla/Makefile
-index 8b5101457c70b48e9c720f1ba53293f1307c15a2..0b61208db604ec0754024c3007db6b2fe74a613c 100644
---- a/tools/tracing/rtla/Makefile
-+++ b/tools/tracing/rtla/Makefile
-@@ -37,12 +37,6 @@ FEATURE_DISPLAY	:= libtraceevent
- FEATURE_DISPLAY	+= libtracefs
- FEATURE_DISPLAY	+= libcpupower
- 
--ifeq ($(V),1)
--  Q		=
--else
--  Q		= @
--endif
--
- all: $(RTLA)
- 
- include $(srctree)/tools/build/Makefile.include
-diff --git a/tools/verification/rv/Makefile b/tools/verification/rv/Makefile
-index 411d62b3d8eb93abf85526ad33cafd783df86bc1..5b898360ba4818b12e8a16c27bd88c75d0076fb9 100644
---- a/tools/verification/rv/Makefile
-+++ b/tools/verification/rv/Makefile
-@@ -35,12 +35,6 @@ FEATURE_TESTS	+= libtracefs
- FEATURE_DISPLAY	:= libtraceevent
- FEATURE_DISPLAY	+= libtracefs
- 
--ifeq ($(V),1)
--  Q		=
--else
--  Q		= @
--endif
--
- all: $(RV)
- 
- include $(srctree)/tools/build/Makefile.include
+Can I get a "Tested-by" and a Reviewed-by or Acked-by from one of the ARM64
+maintainers? I have some code that I want to add on top of this that will
+remove the weak functions from the mcount_loc section.
 
+For the s390 folks. I cross compiled a s390 and looked at the mcount_loc
+section, and I have no idea how to implement this for that. I wrote a elf
+parser to dump sections based symbols:
+
+  https://rostedt.org/code/dump_elf_sym.c
+
+And ran it on the s390 vmlinux:
+
+ $ ./dump_elf_sym vmlinux __start_mcount_loc __stop_mcount_loc
+ 1801620: .. .. .. .. .. .. .. ..   00 00 00 00 00 11 70 20  ......... .....p 
+ 1801630: 00 00 00 00 00 11 70 90   00 00 00 00 00 11 70 a0  ......p.. .....p.
+ 1801640: 00 00 00 00 00 11 71 10   00 00 00 00 00 11 71 20  ......q.. .....q 
+ 1801650: 00 00 00 00 00 11 71 90   00 00 00 00 01 7c 70 00  ......q.. ....|p.
+ 1801660: 00 00 00 00 01 7c 70 20   00 00 00 00 01 7c 70 40  .....|p . ....|p@
+ 1801670: 00 00 00 00 01 7c 70 60   00 00 00 00 01 7c 70 70  .....|p`. ....|pp
+ 1801680: 00 00 00 00 01 7c 70 98   00 00 00 00 01 7c 70 c0  .....|p.. ....|p.
+ 1801690: 00 00 00 00 01 7c 70 d0   00 00 00 00 01 7c 71 68  .....|p.. ....|qh
+[..]
+
+It looks like addresses in that section where ARM64 only has zeros. I
+couldn't find a .rel or .rela section either.
+
+I guess there's some other table that these addresses are dependent upon?
+
+
+ arch/arm64/Kconfig  |   1 +
+ scripts/sorttable.c | 181 +++++++++++++++++++++++++++++++++++++++++++-
+ 2 files changed, 179 insertions(+), 3 deletions(-)
+
+diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+index fcdd0ed3eca8..3c6c9dcd96aa 100644
+--- a/arch/arm64/Kconfig
++++ b/arch/arm64/Kconfig
+@@ -217,6 +217,7 @@ config ARM64
+ 		if DYNAMIC_FTRACE_WITH_ARGS
+ 	select HAVE_SAMPLE_FTRACE_DIRECT
+ 	select HAVE_SAMPLE_FTRACE_DIRECT_MULTI
++	select HAVE_BUILDTIME_MCOUNT_SORT
+ 	select HAVE_EFFICIENT_UNALIGNED_ACCESS
+ 	select HAVE_GUP_FAST
+ 	select HAVE_FTRACE_GRAPH_FUNC
+diff --git a/scripts/sorttable.c b/scripts/sorttable.c
+index 9f41575afd7a..f75be83916a8 100644
+--- a/scripts/sorttable.c
++++ b/scripts/sorttable.c
+@@ -28,6 +28,7 @@
+ #include <fcntl.h>
+ #include <stdio.h>
+ #include <stdlib.h>
++#include <stdbool.h>
+ #include <string.h>
+ #include <unistd.h>
+ #include <errno.h>
+@@ -79,10 +80,16 @@ typedef union {
+ 	Elf64_Sym	e64;
+ } Elf_Sym;
+ 
++typedef union {
++	Elf32_Rela	e32;
++	Elf64_Rela	e64;
++} Elf_Rela;
++
+ static uint32_t (*r)(const uint32_t *);
+ static uint16_t (*r2)(const uint16_t *);
+ static uint64_t (*r8)(const uint64_t *);
+ static void (*w)(uint32_t, uint32_t *);
++static void (*w8)(uint64_t, uint64_t *);
+ typedef void (*table_sort_t)(char *, int);
+ 
+ static struct elf_funcs {
+@@ -102,6 +109,10 @@ static struct elf_funcs {
+ 	uint32_t (*sym_name)(Elf_Sym *sym);
+ 	uint64_t (*sym_value)(Elf_Sym *sym);
+ 	uint16_t (*sym_shndx)(Elf_Sym *sym);
++	uint64_t (*rela_offset)(Elf_Rela *rela);
++	uint64_t (*rela_info)(Elf_Rela *rela);
++	uint64_t (*rela_addend)(Elf_Rela *rela);
++	void (*rela_write_addend)(Elf_Rela *rela, uint64_t val);
+ } e;
+ 
+ static uint64_t ehdr64_shoff(Elf_Ehdr *ehdr)
+@@ -262,6 +273,41 @@ SYM_ADDR(value)
+ SYM_WORD(name)
+ SYM_HALF(shndx)
+ 
++#define RELA_ADDR(fn_name)				\
++static uint64_t rela64_##fn_name(Elf_Rela *rela)	\
++{							\
++	return r8((uint64_t *)&rela->e64.r_##fn_name);	\
++}							\
++							\
++static uint64_t rela32_##fn_name(Elf_Rela *rela)	\
++{							\
++	return r((uint32_t *)&rela->e32.r_##fn_name);	\
++}							\
++							\
++static uint64_t rela_##fn_name(Elf_Rela *rela)		\
++{							\
++	return e.rela_##fn_name(rela);			\
++}
++
++RELA_ADDR(offset)
++RELA_ADDR(info)
++RELA_ADDR(addend)
++
++static void rela64_write_addend(Elf_Rela *rela, uint64_t val)
++{
++	w8(val, (uint64_t *)&rela->e64.r_addend);
++}
++
++static void rela32_write_addend(Elf_Rela *rela, uint64_t val)
++{
++	w(val, (uint32_t *)&rela->e32.r_addend);
++}
++
++static void rela_write_addend(Elf_Rela *rela, uint64_t val)
++{
++	e.rela_write_addend(rela, val);
++}
++
+ /*
+  * Get the whole file as a programming convenience in order to avoid
+  * malloc+lseek+read+free of many pieces.  If successful, then mmap
+@@ -341,6 +387,16 @@ static void wle(uint32_t val, uint32_t *x)
+ 	put_unaligned_le32(val, x);
+ }
+ 
++static void w8be(uint64_t val, uint64_t *x)
++{
++	put_unaligned_be64(val, x);
++}
++
++static void w8le(uint64_t val, uint64_t *x)
++{
++	put_unaligned_le64(val, x);
++}
++
+ /*
+  * Move reserved section indices SHN_LORESERVE..SHN_HIRESERVE out of
+  * the way to -256..-1, to avoid conflicting with real section
+@@ -398,13 +454,12 @@ static inline void *get_index(void *start, int entsize, int index)
+ static int extable_ent_size;
+ static int long_size;
+ 
++#define ERRSTR_MAXSZ	256
+ 
+ #ifdef UNWINDER_ORC_ENABLED
+ /* ORC unwinder only support X86_64 */
+ #include <asm/orc_types.h>
+ 
+-#define ERRSTR_MAXSZ	256
+-
+ static char g_err[ERRSTR_MAXSZ];
+ static int *g_orc_ip_table;
+ static struct orc_entry *g_orc_table;
+@@ -500,6 +555,11 @@ static void *sort_orctable(void *arg)
+ 
+ #ifdef MCOUNT_SORT_ENABLED
+ static pthread_t mcount_sort_thread;
++static bool sort_reloc;
++
++static long rela_type;
++
++static char m_err[ERRSTR_MAXSZ];
+ 
+ struct elf_mcount_loc {
+ 	Elf_Ehdr *ehdr;
+@@ -508,6 +568,103 @@ struct elf_mcount_loc {
+ 	uint64_t stop_mcount_loc;
+ };
+ 
++/* Sort the relocations not the address itself */
++static void *sort_relocs(Elf_Ehdr *ehdr, uint64_t start_loc, uint64_t size)
++{
++	Elf_Shdr *shdr_start;
++	Elf_Rela *rel;
++	unsigned int shnum;
++	unsigned int count;
++	int shentsize;
++	void *vals;
++	void *ptr;
++
++	shdr_start = (Elf_Shdr *)((char *)ehdr + ehdr_shoff(ehdr));
++	shentsize = ehdr_shentsize(ehdr);
++
++	vals = malloc(long_size * size);
++	if (!vals) {
++		snprintf(m_err, ERRSTR_MAXSZ, "Failed to allocate sort array");
++		pthread_exit(m_err);
++		return NULL;
++	}
++
++	ptr = vals;
++
++	shnum = ehdr_shnum(ehdr);
++	if (shnum == SHN_UNDEF)
++		shnum = shdr_size(shdr_start);
++
++	for (int i = 0; i < shnum; i++) {
++		Elf_Shdr *shdr = get_index(shdr_start, shentsize, i);
++		void *end;
++
++		if (shdr_type(shdr) != SHT_RELA)
++			continue;
++
++		rel = (void *)ehdr + shdr_offset(shdr);
++		end = (void *)rel + shdr_size(shdr);
++
++		for (; (void *)rel < end; rel = (void *)rel + shdr_entsize(shdr)) {
++			uint64_t offset = rela_offset(rel);
++
++			if (offset >= start_loc && offset < start_loc + size) {
++				if (ptr + long_size > vals + size) {
++					free(vals);
++					snprintf(m_err, ERRSTR_MAXSZ,
++						 "Too many relocations");
++					pthread_exit(m_err);
++					return NULL;
++				}
++
++				/* Make sure this has the correct type */
++				if (rela_info(rel) != rela_type) {
++					free(vals);
++					snprintf(m_err, ERRSTR_MAXSZ,
++						"rela has type %lx but expected %lx\n",
++						(long)rela_info(rel), rela_type);
++					pthread_exit(m_err);
++					return NULL;
++				}
++
++				if (long_size == 4)
++					*(uint32_t *)ptr = rela_addend(rel);
++				else
++					*(uint64_t *)ptr = rela_addend(rel);
++				ptr += long_size;
++			}
++		}
++	}
++	count = ptr - vals;
++	qsort(vals, count / long_size, long_size, compare_extable);
++
++	ptr = vals;
++	for (int i = 0; i < shnum; i++) {
++		Elf_Shdr *shdr = get_index(shdr_start, shentsize, i);
++		void *end;
++
++		if (shdr_type(shdr) != SHT_RELA)
++			continue;
++
++		rel = (void *)ehdr + shdr_offset(shdr);
++		end = (void *)rel + shdr_size(shdr);
++
++		for (; (void *)rel < end; rel = (void *)rel + shdr_entsize(shdr)) {
++			uint64_t offset = rela_offset(rel);
++
++			if (offset >= start_loc && offset < start_loc + size) {
++				if (long_size == 4)
++					rela_write_addend(rel, *(uint32_t *)ptr);
++				else
++					rela_write_addend(rel, *(uint64_t *)ptr);
++				ptr += long_size;
++			}
++		}
++	}
++	free(vals);
++	return NULL;
++}
++
+ /* Sort the addresses stored between __start_mcount_loc to __stop_mcount_loc in vmlinux */
+ static void *sort_mcount_loc(void *arg)
+ {
+@@ -517,6 +674,9 @@ static void *sort_mcount_loc(void *arg)
+ 	uint64_t count = emloc->stop_mcount_loc - emloc->start_mcount_loc;
+ 	unsigned char *start_loc = (void *)emloc->ehdr + offset;
+ 
++	if (sort_reloc)
++		return sort_relocs(emloc->ehdr, emloc->start_mcount_loc, count);
++
+ 	qsort(start_loc, count/long_size, long_size, compare_extable);
+ 	return NULL;
+ }
+@@ -866,12 +1026,14 @@ static int do_file(char const *const fname, void *addr)
+ 		r2	= r2le;
+ 		r8	= r8le;
+ 		w	= wle;
++		w8	= w8le;
+ 		break;
+ 	case ELFDATA2MSB:
+ 		r	= rbe;
+ 		r2	= r2be;
+ 		r8	= r8be;
+ 		w	= wbe;
++		w8	= w8be;
+ 		break;
+ 	default:
+ 		fprintf(stderr, "unrecognized ELF data encoding %d: %s\n",
+@@ -887,8 +1049,13 @@ static int do_file(char const *const fname, void *addr)
+ 	}
+ 
+ 	switch (r2(&ehdr->e32.e_machine)) {
+-	case EM_386:
+ 	case EM_AARCH64:
++#ifdef MCOUNT_SORT_ENABLED
++		sort_reloc = true;
++		rela_type = 0x403;
++#endif
++		/* fallthrough */
++	case EM_386:
+ 	case EM_LOONGARCH:
+ 	case EM_RISCV:
+ 	case EM_S390:
+@@ -932,6 +1099,10 @@ static int do_file(char const *const fname, void *addr)
+ 			.sym_name		= sym32_name,
+ 			.sym_value		= sym32_value,
+ 			.sym_shndx		= sym32_shndx,
++			.rela_offset		= rela32_offset,
++			.rela_info		= rela32_info,
++			.rela_addend		= rela32_addend,
++			.rela_write_addend	= rela32_write_addend,
+ 		};
+ 
+ 		e = efuncs;
+@@ -965,6 +1136,10 @@ static int do_file(char const *const fname, void *addr)
+ 			.sym_name		= sym64_name,
+ 			.sym_value		= sym64_value,
+ 			.sym_shndx		= sym64_shndx,
++			.rela_offset		= rela64_offset,
++			.rela_info		= rela64_info,
++			.rela_addend		= rela64_addend,
++			.rela_write_addend	= rela64_write_addend,
+ 		};
+ 
+ 		e = efuncs;
 -- 
-2.43.0
+2.47.2
 
