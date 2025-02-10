@@ -1,113 +1,174 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C05311DFE29;
-	Sun,  9 Feb 2025 22:05:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1FAF189906
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 10 Feb 2025 05:58:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739138722; cv=none; b=MzHO4GPIK0SsEkAxf/RgeIFtr9SThMEOIovbdDMLsFaDrJLDgmZj4mXrTpn09NVb4yQYLBaECPaUmfS831q1JsrukXY5+xuYFmKSd8vGIZdp7GahZ6AKypqTuAeNG/DdmUW49XA5mwr/OPKI6AdcvS5rBPNUJPe9Hk8U6AuEtgw=
+	t=1739167116; cv=none; b=JTc2poO6LjGF1O7Eaf9b53XaVxgIeSUdnykCf0U+mPYJsarML+ug8CQS1Sk7G5pLlwpZUWxhPbodVkDCCC5sYvWwk1nqhmfR8rAWIZgidi/SmNV4jdn5bLd1fbCz76ifIfSCem1QVhZU2fVmZmUY+FdlSidfsScl7zv3IbGeZZc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739138722; c=relaxed/simple;
-	bh=zbruKfVxkpPFukeUIwoXti6I5aN9agltekSwmA2xsSc=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=e3DhJu5X7geW6kz6bQhJDL7stI8GWvTMsXOMHRsyqSvHjKL7GDhFWU6qk8yigLUfZDRpkUoFC0YKWT+ZfMPhxcXkHhytUW71lC3lHB2RhGy4EVZvVCWuETxiGBa4u2Y5J9T1f2qO9oVLVxPnJZm0gIeIPU0Yh1bBuJC1mC3ErOE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oHK27Lw9; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739167116; c=relaxed/simple;
+	bh=P6ZIjOcrVGSddzFqkeN9Se9GTO1nq5yLuU1kZ4p08iM=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=ni2dMRKsKz2DAaLbKDUNTP9VC0PF1mAXExFBtyRAhqa5EMvOQA8h9jkSiXUtGWpdFuVp+RJyNibRu7omsuvUHZUJjk1NO8N/0uDrUyPhfxMn6hucyJS51wP6CBdLGWYmyqTvbFQ/G/3GxxzqB4TLjrcRhUtgD4S57AmMY+myZjY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--keyz.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=UzqmXGbN; arc=none smtp.client-ip=209.85.214.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--keyz.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oHK27Lw9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C31B5C4CEDD;
-	Sun,  9 Feb 2025 22:05:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739138722;
-	bh=zbruKfVxkpPFukeUIwoXti6I5aN9agltekSwmA2xsSc=;
-	h=From:To:Cc:Subject:Date:From;
-	b=oHK27Lw9zlYvKr1w6qwJGgyLCaQhaU7cckjDRv0sqKfcb1GVT3ZONdV5DIiNr1E0Q
-	 HTBbCbuyh65ISkXNrfIQr+M1iMmFtvNOHTHi3ocuT2p2Ekan8+qYC81MiOB1e1K13+
-	 TY/UdRpHugPfiT2P4KMTBlDZWaQ0hB2IfJRfk2FhQ1IBpArRXBxUpqM/E9cDJutOdR
-	 L6cj5maCuSZcOotv99TQnZUADaoPo+Mi0QKQQtJaX4figKna9vRoctgqI9B4U8yLrs
-	 S19F5jVoA24ROqrntsEWL4hpDczi4AAtErJgRva5jsMwQOtSERFji9MQY9Ngla821A
-	 tM35F+Egkb+4g==
-From: Jiri Olsa <jolsa@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Oleg Nesterov <oleg@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Andrii Nakryiko <andrii@kernel.org>
-Cc: Kees Cook <kees@kernel.org>,
-	Eyal Birger <eyal.birger@gmail.com>,
-	stable@vger.kernel.org,
-	Jann Horn <jannh@google.com>,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	linux-api@vger.kernel.org,
-	x86@kernel.org,
-	bpf@vger.kernel.org,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Andy Lutomirski <luto@kernel.org>,
-	Deepak Gupta <debug@rivosinc.com>,
-	Stephen Rothwell <sfr@canb.auug.org.au>
-Subject: [PATCH bpf-next] uprobes: Harden uretprobe syscall trampoline check
-Date: Sun,  9 Feb 2025 23:05:15 +0100
-Message-ID: <20250209220515.2554058-1-jolsa@kernel.org>
-X-Mailer: git-send-email 2.48.1
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="UzqmXGbN"
+Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-21f37eaef03so66256075ad.0
+        for <linux-trace-kernel@vger.kernel.org>; Sun, 09 Feb 2025 21:58:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1739167114; x=1739771914; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=2Dv5Ac6SPOdtGgS0tmgxnxoVXUMjLjqcjHEmAbg0F2U=;
+        b=UzqmXGbNZ48VqB06pUERCXZro4aYyIa7HUyltaILxa1BzdI1CLpElgllG70XL5RGKW
+         OYY2XflOG1FRjBzoPs36G2N7Mmi7n9Y2vCrwl8qU0dH0apRPnYDvYiv92v6DPJOZJCtn
+         M2mkgkJLVOk72PCSQWcdRJKS3x9+Re6PldzDxeMaZjENOHK/XXG8ldzFW/FxRTkhQnP+
+         coUo6X1w9LJ9UqQAy/7xr2nRuBN/MjQXWTtJRkm2npTGaGzhV1P3ijMjI+maulb+UMBr
+         8QjvpSvNDRF0UTdSBOZMxSlz+cGxeBYoSLu1Vvr0IseouxvIjr/QJX7lySAK3UUSNOjz
+         tEpQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739167114; x=1739771914;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=2Dv5Ac6SPOdtGgS0tmgxnxoVXUMjLjqcjHEmAbg0F2U=;
+        b=Fe3n0yviI63A7Qf1c1+9gcdZNNxflHvqhkXCA9IF1qW48a+vLyvCg9XDpZn297Pk5l
+         rbpc7T5EYuHILfyMSM3rhy4hjtWSxmVrKStdZCW5nL7Ze51DEjCGi7rqKxgpPdKHqsT8
+         qN/hwTOO6+ObX5grxheGXMSUU1MQhQhBm0aoBnVQromlbpI2dcHWHVj+xYG4VxMaOsXK
+         /N0Q+G6MeRv3xK8Hp074FCuRet9/UDThf34+25zJFQB6LrlHbnntMk5S9PKSRooAYzt7
+         bybS0+y/DU44IdphofET0zcgyfBrvD75uZeRpYblFqVza4zZAtM6L8z/huI3Rbok8f8Q
+         MUEA==
+X-Forwarded-Encrypted: i=1; AJvYcCUpnqKnN5ccXcUyGaUCljGfe2pUOg0hF4OYWkoL3jiyPFL26CGSzK3yPGOmMgKtGXVoUiAm3op1HqobgcWXvhnRnCo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyX2D5MjVBJ3B2UvmySC4YwJgZb9ns5whkMczozvrioASrRppTF
+	tVE/QAaDsOTpXsaEosewdHLMuxjdm6dHbXhHV1CWocX1Ee7FBiN+QBaxjZrPqCPGvAcQGw==
+X-Google-Smtp-Source: AGHT+IG9+tJP7rcVhYR2srzYJXFwTOg0EBXRqoEhYIHwOJw5Kqc+b20iAmM0LQw/LoJ0TYVsQm3UCyyp
+X-Received: from plwh12.prod.google.com ([2002:a17:902:f7cc:b0:21f:314b:a317])
+ (user=keyz job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:40d0:b0:216:6769:9ed7
+ with SMTP id d9443c01a7336-21f4e73bca0mr220424795ad.40.1739167114209; Sun, 09
+ Feb 2025 21:58:34 -0800 (PST)
+Date: Mon, 10 Feb 2025 13:58:28 +0800
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.48.1.502.g6dc24dfdaf-goog
+Message-ID: <20250210055828.1875372-1-keyz@google.com>
+Subject: [PATCH v5 RESEND] cpuidle: psci: Add trace for PSCI domain idle
+From: Keita Morisaki <keyz@google.com>
+To: linux-kernel@vger.kernel.org, lpieralisi@kernel.org, sudeep.holla@arm.com, 
+	rafael@kernel.org, daniel.lezcano@linaro.org, linux-pm@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org
+Cc: rostedt@goodmis.org, mhiramat@kernel.org, mathieu.desnoyers@efficios.com, 
+	linux-trace-kernel@vger.kernel.org, aarontian@google.com, 
+	yimingtseng@google.com, Keita Morisaki <keyz@google.com>, Dhruva Gole <d-gole@ti.com>, 
+	Kevin Hilman <khilman@baylibre.com>
+Content-Type: text/plain; charset="UTF-8"
 
-Jann reported [1] possible issue when trampoline_check_ip returns
-address near the bottom of the address space that is allowed to
-call into the syscall if uretprobes are not set up.
+The trace event cpu_idle provides insufficient information for debugging
+PSCI requests due to lacking access to determined PSCI domain idle
+states. The cpu_idle usually only shows -1, 0, or 1 regardless how many
+idle states the power domain has.
 
-Though the mmap minimum address restrictions will typically prevent
-creating mappings there, let's make sure uretprobe syscall checks
-for that.
+Add new trace events namely psci_domain_idle_enter and
+psci_domain_idle_exit to trace enter and exit events with a determined
+idle state.
 
-[1] https://lore.kernel.org/bpf/202502081235.5A6F352985@keescook/T/#m9d416df341b8fbc11737dacbcd29f0054413cbbf
-Cc: Kees Cook <kees@kernel.org>
-Cc: Eyal Birger <eyal.birger@gmail.com>
-Cc: stable@vger.kernel.org
-Reported-by: Jann Horn <jannh@google.com>
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+These new trace events will help developers debug CPUidle issues on ARM
+systems using PSCI by providing more detailed information about the
+requested idle states.
+
+Signed-off-by: Keita Morisaki <keyz@google.com>
+Reviewed-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+Reviewed-by: Dhruva Gole <d-gole@ti.com>
+Tested-by: Kevin Hilman <khilman@baylibre.com>
 ---
- arch/x86/kernel/uprobes.c | 14 +++++++++-----
- 1 file changed, 9 insertions(+), 5 deletions(-)
+v1->v2: Split the ftrace event into two (psci_domain_idle_(enter|exit))
+        and rephrase the commit message accordingly. Rebased onto the latest.
+v2->v3: Add "Reviewed-by: Steven Rostedt"
+v3->v4: Add the Tested-by label
+v4->v5: Add "Reviewed-by: Dhruva Gole"
 
-diff --git a/arch/x86/kernel/uprobes.c b/arch/x86/kernel/uprobes.c
-index 5a952c5ea66b..109d6641a1b3 100644
---- a/arch/x86/kernel/uprobes.c
-+++ b/arch/x86/kernel/uprobes.c
-@@ -357,19 +357,23 @@ void *arch_uprobe_trampoline(unsigned long *psize)
- 	return &insn;
- }
- 
--static unsigned long trampoline_check_ip(void)
-+static unsigned long trampoline_check_ip(unsigned long tramp)
- {
--	unsigned long tramp = uprobe_get_trampoline_vaddr();
--
- 	return tramp + (uretprobe_syscall_check - uretprobe_trampoline_entry);
- }
- 
- SYSCALL_DEFINE0(uretprobe)
- {
- 	struct pt_regs *regs = task_pt_regs(current);
--	unsigned long err, ip, sp, r11_cx_ax[3];
-+	unsigned long err, ip, sp, r11_cx_ax[3], tramp;
+Hopefully this patch gets attention from maintainers of
+drivers/cpuidle/cpuidle-psci.c too.
+
+ drivers/cpuidle/cpuidle-psci.c |  3 +++
+ include/trace/events/power.h   | 37 ++++++++++++++++++++++++++++++++++
+ 2 files changed, 40 insertions(+)
+
+diff --git a/drivers/cpuidle/cpuidle-psci.c b/drivers/cpuidle/cpuidle-psci.c
+index 2562dc001fc1..dd8d776d6e39 100644
+--- a/drivers/cpuidle/cpuidle-psci.c
++++ b/drivers/cpuidle/cpuidle-psci.c
+@@ -25,6 +25,7 @@
+ #include <linux/syscore_ops.h>
+
+ #include <asm/cpuidle.h>
++#include <trace/events/power.h>
+
+ #include "cpuidle-psci.h"
+ #include "dt_idle_states.h"
+@@ -74,7 +75,9 @@ static __cpuidle int __psci_enter_domain_idle_state(struct cpuidle_device *dev,
+ 	if (!state)
+ 		state = states[idx];
+
++	trace_psci_domain_idle_enter(dev->cpu, state, s2idle);
+ 	ret = psci_cpu_suspend_enter(state) ? -1 : idx;
++	trace_psci_domain_idle_exit(dev->cpu, state, s2idle);
+
+ 	if (s2idle)
+ 		dev_pm_genpd_resume(pd_dev);
+diff --git a/include/trace/events/power.h b/include/trace/events/power.h
+index d2349b6b531a..9253e83b9bb4 100644
+--- a/include/trace/events/power.h
++++ b/include/trace/events/power.h
+@@ -62,6 +62,43 @@ TRACE_EVENT(cpu_idle_miss,
+ 		(unsigned long)__entry->state, (__entry->below)?"below":"above")
+ );
+
++DECLARE_EVENT_CLASS(psci_domain_idle,
 +
-+	/* If there's no trampoline, we are called from wrong place. */
-+	tramp = uprobe_get_trampoline_vaddr();
-+	if (tramp == -1)
-+		goto sigill;
- 
--	if (regs->ip != trampoline_check_ip())
-+	/* Make sure the ip matches the only allowed sys_uretprobe caller. */
-+	if (regs->ip != trampoline_check_ip(tramp))
- 		goto sigill;
- 
- 	err = copy_from_user(r11_cx_ax, (void __user *)regs->sp, sizeof(r11_cx_ax));
--- 
-2.48.1
++	TP_PROTO(unsigned int cpu_id, unsigned int state, bool s2idle),
++
++	TP_ARGS(cpu_id, state, s2idle),
++
++	TP_STRUCT__entry(
++		__field(u32,		cpu_id)
++		__field(u32,		state)
++		__field(bool,		s2idle)
++	),
++
++	TP_fast_assign(
++		__entry->cpu_id = cpu_id;
++		__entry->state = state;
++		__entry->s2idle = s2idle;
++	),
++
++	TP_printk("cpu_id=%lu state=0x%lx is_s2idle=%s",
++		  (unsigned long)__entry->cpu_id, (unsigned long)__entry->state,
++		  (__entry->s2idle)?"yes":"no")
++);
++
++DEFINE_EVENT(psci_domain_idle, psci_domain_idle_enter,
++
++	TP_PROTO(unsigned int cpu_id, unsigned int state, bool s2idle),
++
++	TP_ARGS(cpu_id, state, s2idle)
++);
++
++DEFINE_EVENT(psci_domain_idle, psci_domain_idle_exit,
++
++	TP_PROTO(unsigned int cpu_id, unsigned int state, bool s2idle),
++
++	TP_ARGS(cpu_id, state, s2idle)
++);
++
+ TRACE_EVENT(powernv_throttle,
 
+ 	TP_PROTO(int chip_id, const char *reason, int pmax),
+
+base-commit: ffd294d346d185b70e28b1a28abe367bbfe53c04
+--
+2.48.1.362.g079036d154-goog
