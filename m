@@ -1,148 +1,261 @@
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+Received: from mail-yb1-f173.google.com (mail-yb1-f173.google.com [209.85.219.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41A8324BD0C;
-	Mon, 10 Feb 2025 17:27:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 057F41F8BC7
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 10 Feb 2025 18:31:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739208427; cv=none; b=lniYWf4wo4LtLGh3fslPuWTQ3jru8kU0xP22SAhmzEWDIpgIkMhVlAt2fDmnwC1y/rXUov+m9KpVmAtQa8qckBPHWddbdiUoNz8dI0Zr7SnY7xWIVAySCYUdppgsSAmTcozcwgjSd2BP1a7yausqpviAb3viMj1MNNQjIkvVYqc=
+	t=1739212268; cv=none; b=mhhyjGW7RJGBq+mhjAMyz5nSb+pPfX/d/DN4CDhwlqH5UpEMv5MT32Kg9KXL60MsVgNerYD1m9yucvKJLlgx5QaTjLMpG2EzJ/5psFSCMD1Km5xkpFl4MYn08uClSpUJE1c47azLgAp7PASzcL639xFLgaWt4MocA59T8br3ItI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739208427; c=relaxed/simple;
-	bh=1TsLwSNIODCyCtoMMInJN2hxwExvt91BRQh/dFO7ytg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=h8u2JSMyhSQfRFtN4xRDkvHE6PNhZcd0eYqmdnQQLJ5B19jQvG0Gv1H8nz65NKUqv9/Tbm2clCub2F0rc3p0nnPuy0QPAiP+a8gyEO2CSZcU99x351obtXk5CEf4Q9LnWkCve7kttwsyktVZpqc9+r1WvmAKvNMTR1q28zesc0Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XZcPKZD0; arc=none smtp.client-ip=209.85.214.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1739212268; c=relaxed/simple;
+	bh=NGOFeQX/94iKLC7KRyXn9K4Nt0CwgBBrM/PM50W0oY0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tww3hjUdCfOd5Jdxzz65R8X73uBa3lFdOJeUXGN5+3pldjz2Ng8tCnkITNmC76LcosODdznAMm5Hu15SOagmwXkWjo4xKPcDvpC4h+ZiKIOJlzzQ759UzdhueNe/irLMtYMHR/E6rnFAR6BwRmSa7eRxboEUx1xoRoM3z+7F+iI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=uPPNNnS0; arc=none smtp.client-ip=209.85.219.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XZcPKZD0"
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-21f49837d36so51752475ad.3;
-        Mon, 10 Feb 2025 09:27:06 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="uPPNNnS0"
+Received: by mail-yb1-f173.google.com with SMTP id 3f1490d57ef6-e46ebe19489so3476846276.2
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 10 Feb 2025 10:31:05 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739208425; x=1739813225; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=zktfdqzMeMwjC0BeHzef0BqRxxg/u+VUG81lM/bxr8U=;
-        b=XZcPKZD0xHJqex7Oj4wBm2mQ78QTsfHQPGdBgLpcXpMGKYjWvkf9Hq5LL1p3w3PNRQ
-         4b+0MOfUI2I2B1pyc9mMm+HNreSiieTOdsAMOrHUh5b7Yn/RBc6MhAQCT2qe460TX91s
-         Yhn0z44zsg/T6iI18Oh1fH/TxpPUEQfX32rWd45Wol2rbrfQK8awptAd5mJLQdjF826S
-         4J+OoY7Vtug6KUPED7j96OL5Vs1cKtDH9NttPSkho2Rn+tu51wnQMHdXFH8jd3iAZaZW
-         aUGlUSKnk85/fDzq/aKg0/NwcfIpJic0AauB8v74Uj1rzsSPv4tnItC8wDenrwNHjtPq
-         SBmw==
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1739212265; x=1739817065; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=KPwb4aI7pixw1RFAv20MaBbqn02tdpDM4Y6srTWRmRk=;
+        b=uPPNNnS04+JKCnArBtaVzbXinW+Z6sw8obI2LEZkIcEuXfK4sD6xH2vRUV7pbUuNlG
+         Y5k5sN9uXUvWVBhFL0VE3mesvv+WGMgHMAx/FjICw2cpmWW4KQ2u4FKPwG+rQ+lgzK8S
+         ZT6oikXG8OZ+vDptV+whm4dY2IU1UZCXfpKophp8tFe3E6KqtqNDqbgqaAon61IPwLBj
+         zUWF6Wson0GFjgnijp7GdoeTCDRIKDPzQnp3HHq6TZ7aH/iwoP7HjiTVzwBFOoePAPoZ
+         cpH77Motu1kIJmk+GTJZ9yym2DtuNZgfNEnSB8iJ0b1HB/a3C+GT4MAMOUEQKvJosiov
+         7XPQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739208425; x=1739813225;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=zktfdqzMeMwjC0BeHzef0BqRxxg/u+VUG81lM/bxr8U=;
-        b=YrS715QtEGhKfI8h1rjzbsr+DsvFxO6oZ27E8RxskxdPN3wiN5OU+hJWIG/7pNqK1Y
-         htQl0ImxRBLofTi9LvSyoEgTIgs72Ne0qE8Ihzix/4OzMJWHWZjzqSuB+s8vB8oWFOlw
-         9326Ltnq7XTXtMVmRajZOBpwmbeMjE7MsioNthzAIG4tcHC81vlEoEmlpfQyiFAYpqgf
-         Ut3J2u8bOjE0YINIQE7a7pVQ+DlsHf1rBNTg0zkE5AjT6HQ5wpjRVUU6H0hKHLE0vcwZ
-         VGyA4yEcdoij34FmAfln7jiFWAxCCwU0oYF98cn3OyLWEykazXF4CbH/Oj6W8aH4apne
-         XTtA==
-X-Forwarded-Encrypted: i=1; AJvYcCU625Jk9uOTXjRQLV/hO8DAqCD8mY+Asv5wSfg/61vSVHDmkUAxC6p/oikUaSr2E3fLkrCU7Wnn@vger.kernel.org, AJvYcCUYEhC97QrZMCqoX7Kc6IL/51KoxpmGb3FzZUfu3s1rDgnCywf1bKcpS28W7ueSqC1mGGsWvw58gIFXdkxvto5rbRnw@vger.kernel.org, AJvYcCUzW2H+hANtfQkraaR/C6u+Qafx48dv56QggEPDjNtGlIY4QBosrcRMVdEOjgSm28KpnxU=@vger.kernel.org, AJvYcCWgZzhqloGBc5BL1dOPKA/DNdByblgqaBARzr8msLywJhG3HnAM59vEkgQdO4JIAPa6MYCLln/91w5WOuni@vger.kernel.org, AJvYcCXJU2qSmAykfwPiO49L+y6LbRQH368rafsGMYCkmxDpu0p2Kemu893/+cdPDsQxsqql4Y6W1EydrJAb@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx87/COZk9F4Ffq/SkEGr9fbeqJg1WBbNdDvtqkn1AQS0CV+Vcq
-	8smNNzZ/X33KER2D0b6fW0k1+QZ3+bgvJwshWU3WlBPPr2dxotJXdWr1YYjgzUxVrWDh7Dw3L4N
-	Y98wlFmiah81aSwyFMeVA9xUgvMk=
-X-Gm-Gg: ASbGnct6tfW4L6mxvJN9O4InFJh8AE8hIV4LiDTWHCsvatgmiI5FT2sTZm7Yg6pLvR5
-	IDrknMxuVD6g/ORuZCD7PS92RMFi82qWJVjj8eFDQ7Y7HcEuN8Tj/2QZX+zhsC0LITVV/C8hatn
-	qf9PccTdKEe1zf
-X-Google-Smtp-Source: AGHT+IE5zCCUJuchWiR5YczuUu7jAG0iwCKJQMiLLkUQ2Fo/APpTjQalXVSkY230/hIw14r5JrHG9UvVj6k2uAv6tyk=
-X-Received: by 2002:a17:903:3d03:b0:21f:801a:9be1 with SMTP id
- d9443c01a7336-21f801aa620mr119753205ad.33.1739208425589; Mon, 10 Feb 2025
- 09:27:05 -0800 (PST)
+        d=1e100.net; s=20230601; t=1739212265; x=1739817065;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=KPwb4aI7pixw1RFAv20MaBbqn02tdpDM4Y6srTWRmRk=;
+        b=afIg3R/Z6O2TuFaSibQBY5+aQERL+tPcYwSdEbDi0r/31RusGwYTPXhSKFLT1B+O9a
+         AgaNSvIeGJU7iF04q8gXOcEXFN701qVrCSk851MXqM1+EBm/E+BKT288TRJkB5/CY1vp
+         esxYsTqwBvchQ7m3oUiN9vslte0AlCaIpTuNo8ezrbocQIFLdlj4IWyv4YJXsTwSir9N
+         wQSQSZXJnvrZq+R042HVaHqkrHt+JRjSRhNnJYH1VEJtmQ81fFlp7h+7WehZ+cfJchP1
+         bu/K46Gh1Ve7uznBqxMKbSjDo1FVrwqQufoEpFXWCykQItsQLxdtfojfr+y1HiaoKEKo
+         6Img==
+X-Forwarded-Encrypted: i=1; AJvYcCWlzZFdoSy6PXHVtD+ItHztRYza2ElCr7RfpdFo6d6rI9slDZRXGbBG/smN3iFkhFSISEkG6Uo5lO8Qh0ZcgqJwvqo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyCI1myR4NvtMpktll9K8YzIAdFqxS7+lPJzsAvYWqh5c63iQ5N
+	xMltIMtG7C9Dg7dbzdea6QIHFxCcshPm4dGaZ712Vc+uFuhvV4bv5JWlTqazZJE=
+X-Gm-Gg: ASbGnctV0FfzFw36g1PKpf5Pkx8rOnV924z8JP6sOo6sEUW1JCznUY5DEmMwxMSXktz
+	uCm6KBp6MpaZjR686yYF2cK26dztu75RAWFYa5zk2IYR/zf8ZjfzGljFsW/pKJ03QrlQu4BBl8i
+	f9Hu5F+6qqN3IvHRXSWqYPZmSeV+RVtuKaUS8D2JLbBZJqV+t3t0BFSozmiM/xH1qmPk2yeSVeb
+	uN3MlQ+UcjHJUnOih8Wk6+4/6RY7781rn/BOisDCSW/CQQq264h8kN72ZJUJ0uG2rFlcZCw+1jG
+	q2g=
+X-Google-Smtp-Source: AGHT+IHP4/PfYe0pzIQUijWibiRiqcclWIqX6MxksiY/orFAxERUC+/zAt6c1cAXqUao8PQOqCSyhA==
+X-Received: by 2002:a05:6902:1793:b0:e5b:3394:ea0c with SMTP id 3f1490d57ef6-e5b461672f5mr12395154276.10.1739212264835;
+        Mon, 10 Feb 2025 10:31:04 -0800 (PST)
+Received: from ghost ([50.146.0.9])
+        by smtp.gmail.com with ESMTPSA id 3f1490d57ef6-e5b3a45d7f1sm2703301276.40.2025.02.10.10.31.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 10 Feb 2025 10:31:04 -0800 (PST)
+Date: Mon, 10 Feb 2025 10:31:02 -0800
+From: Charlie Jenkins <charlie@rivosinc.com>
+To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	John Fastabend <john.fastabend@gmail.com>,
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>,
+	Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Quentin Monnet <qmo@kernel.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Daniel Lezcano <daniel.lezcano@linaro.org>,
+	Zhang Rui <rui.zhang@intel.com>, Lukasz Luba <lukasz.luba@arm.com>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Mykola Lysenko <mykolal@fb.com>, Shuah Khan <shuah@kernel.org>,
+	Jiri Kosina <jikos@kernel.org>,
+	Benjamin Tissoires <bentiss@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>, bpf <bpf@vger.kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	"linux-perf-use." <linux-perf-users@vger.kernel.org>,
+	Linux Power Management <linux-pm@vger.kernel.org>,
+	"open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>,
+	"open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
+	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>
+Subject: Re: [PATCH 0/2] tools: Unify top-level quiet infrastructure
+Message-ID: <Z6pF5pkH_bqvDwMK@ghost>
+References: <20250203-quiet_tools-v1-0-d25c8956e59a@rivosinc.com>
+ <CAADnVQKTqRBQBA-yxB9EYPMgayP3rOE4iDhg+QD++2d=jxfY=Q@mail.gmail.com>
+ <Z6JdwSsAk1xCiSrn@ghost>
+ <Z6JksXDRh8OSAh-u@google.com>
+ <CAADnVQKmKf6wY3dg+PfAxtrrFWGO7D-m83dEndjWksPfWDt5wQ@mail.gmail.com>
+ <Z6Khl1rHIAb7wOXw@ghost>
+ <CAEf4Bza5nKk6_fVY2vmJjZgPb40zB+R3REy8==ZLc98eg1iHTA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250209220515.2554058-1-jolsa@kernel.org>
-In-Reply-To: <20250209220515.2554058-1-jolsa@kernel.org>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Mon, 10 Feb 2025 09:26:53 -0800
-X-Gm-Features: AWEUYZneXLBiDOJWqgYBMH0F-wezftc0RsqYEeTR83R9d-szAQ4fRffxE8w_gIM
-Message-ID: <CAEf4BzbpKReuNhdH6RnwYOyYxFwgJjjgUB_2xwU=dGkC--K=Kg@mail.gmail.com>
-Subject: Re: [PATCH bpf-next] uprobes: Harden uretprobe syscall trampoline check
-To: Jiri Olsa <jolsa@kernel.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Oleg Nesterov <oleg@redhat.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Andrii Nakryiko <andrii@kernel.org>, Kees Cook <kees@kernel.org>, Eyal Birger <eyal.birger@gmail.com>, 
-	stable@vger.kernel.org, Jann Horn <jannh@google.com>, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, linux-api@vger.kernel.org, x86@kernel.org, 
-	bpf@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
-	Andy Lutomirski <luto@kernel.org>, Deepak Gupta <debug@rivosinc.com>, 
-	Stephen Rothwell <sfr@canb.auug.org.au>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAEf4Bza5nKk6_fVY2vmJjZgPb40zB+R3REy8==ZLc98eg1iHTA@mail.gmail.com>
 
-On Sun, Feb 9, 2025 at 2:05=E2=80=AFPM Jiri Olsa <jolsa@kernel.org> wrote:
->
-> Jann reported [1] possible issue when trampoline_check_ip returns
-> address near the bottom of the address space that is allowed to
-> call into the syscall if uretprobes are not set up.
->
-> Though the mmap minimum address restrictions will typically prevent
-> creating mappings there, let's make sure uretprobe syscall checks
-> for that.
->
-> [1] https://lore.kernel.org/bpf/202502081235.5A6F352985@keescook/T/#m9d41=
-6df341b8fbc11737dacbcd29f0054413cbbf
-> Cc: Kees Cook <kees@kernel.org>
-> Cc: Eyal Birger <eyal.birger@gmail.com>
-> Cc: stable@vger.kernel.org
-> Reported-by: Jann Horn <jannh@google.com>
-> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-> ---
->  arch/x86/kernel/uprobes.c | 14 +++++++++-----
->  1 file changed, 9 insertions(+), 5 deletions(-)
->
-> diff --git a/arch/x86/kernel/uprobes.c b/arch/x86/kernel/uprobes.c
-> index 5a952c5ea66b..109d6641a1b3 100644
-> --- a/arch/x86/kernel/uprobes.c
-> +++ b/arch/x86/kernel/uprobes.c
-> @@ -357,19 +357,23 @@ void *arch_uprobe_trampoline(unsigned long *psize)
->         return &insn;
->  }
->
-> -static unsigned long trampoline_check_ip(void)
-> +static unsigned long trampoline_check_ip(unsigned long tramp)
->  {
-> -       unsigned long tramp =3D uprobe_get_trampoline_vaddr();
-> -
->         return tramp + (uretprobe_syscall_check - uretprobe_trampoline_en=
-try);
->  }
->
->  SYSCALL_DEFINE0(uretprobe)
->  {
->         struct pt_regs *regs =3D task_pt_regs(current);
-> -       unsigned long err, ip, sp, r11_cx_ax[3];
-> +       unsigned long err, ip, sp, r11_cx_ax[3], tramp;
-> +
-> +       /* If there's no trampoline, we are called from wrong place. */
-> +       tramp =3D uprobe_get_trampoline_vaddr();
-> +       if (tramp =3D=3D -1)
+On Wed, Feb 05, 2025 at 05:28:19PM -0800, Andrii Nakryiko wrote:
+> On Tue, Feb 4, 2025 at 3:24 PM Charlie Jenkins <charlie@rivosinc.com> wrote:
+> >
+> > On Tue, Feb 04, 2025 at 11:02:42PM +0000, Alexei Starovoitov wrote:
+> > > On Tue, Feb 4, 2025 at 7:04 PM Namhyung Kim <namhyung@kernel.org> wrote:
+> > > >
+> > > > Hello,
+> > > >
+> > > > On Tue, Feb 04, 2025 at 10:34:41AM -0800, Charlie Jenkins wrote:
+> > > > > On Tue, Feb 04, 2025 at 05:18:42PM +0000, Alexei Starovoitov wrote:
+> > > > > > On Tue, Feb 4, 2025 at 12:10 AM Charlie Jenkins <charlie@rivosinc.com> wrote:
+> > > > > > >
+> > > > > > > The quiet infrastructure was moved out of Makefile.build to accomidate
+> > > > > > > the new syscall table generation scripts in perf. Syscall table
+> > > > > > > generation wanted to also be able to be quiet, so instead of again
+> > > > > > > copying the code to set the quiet variables, the code was moved into
+> > > > > > > Makefile.perf to be used globally. This was not the right solution. It
+> > > > > > > should have been moved even further upwards in the call chain.
+> > > > > > > Makefile.include is imported in many files so this seems like a proper
+> > > > > > > place to put it.
+> > > > > > >
+> > > > > > > To:
+> > > > > > >
+> > > > > > > Signed-off-by: Charlie Jenkins <charlie@rivosinc.com>
+> > > > > > > ---
+> > > > > > > Charlie Jenkins (2):
+> > > > > > >       tools: Unify top-level quiet infrastructure
+> > > > > > >       tools: Remove redundant quiet setup
+> > > > > > >
+> > > > > > >  tools/arch/arm64/tools/Makefile           |  6 -----
+> > > > > > >  tools/bpf/Makefile                        |  6 -----
+> > > > > > >  tools/bpf/bpftool/Documentation/Makefile  |  6 -----
+> > > > > > >  tools/bpf/bpftool/Makefile                |  6 -----
+> > > > > > >  tools/bpf/resolve_btfids/Makefile         |  2 --
+> > > > > > >  tools/bpf/runqslower/Makefile             |  5 +---
+> > > > > > >  tools/build/Makefile                      |  8 +-----
+> > > > > > >  tools/lib/bpf/Makefile                    | 13 ----------
+> > > > > >
+> > > > > > Nack.
+> > > > > > libbpf and bpftool are synced independently to github
+> > > > > > and released from there.
+> > > > > > This change breaks it.
+> > > >
+> > > > Sorry, I overlooked this part and merged a change that touched the
+> > > > common files into the perf tree.
+> > > >
+> > > > f2868b1a66d4f40f ("perf tools: Expose quiet/verbose variables in Makefile.perf")
+> > > >
+> > > > Unfortunately, it's already in v6.14-rc1.
+> > > >
+> > > > >
+> > > > > Can you explain how it breaks it? Currently bpftool and resolve_btfids
+> > > > > don't build quietly so this was an attempt to fix that.
+> > > >
+> > > > So I think you will need something like this for v6.14.  Again, sorry
+> > > > about the trouble.
+> > >
+> > > Just revert f2868b1a66d4f40f that created this mess.
+> >
+> > Why are you opposed to unifying this helpers among the various projects
+> > in tools? Can you explain what about this breaks the Github syncing flow
+> > and why it cannot be resolved? It doesn't make sense to duplicate "Q="
+> > in every Makefile anybody ever wants to add to tools just because bpf
+> > syncing isn't robust.
+> 
+> Alexei's concern about Github mirrors of bpftool and libbpf isn't
+> valid. Github versions of those projects use their own independent
+> Makefiles anyways, so your change doesn't break that aspect.
+> 
+> But your change *does* break both libbpf's and bpftool's make output
+> *in the kernel repo*. With this patch we basically don't have "quiet"
+> mode anymore:
+> 
+> $ git co f2868b1a66d4f40f07e985b0beead606b2753602
+> HEAD is now at f2868b1a66d4 perf tools: Expose quiet/verbose variables
+> in Makefile.perf
+> $ git log --oneline -n1
+> f2868b1a66d4 (HEAD) perf tools: Expose quiet/verbose variables in Makefile.perf
+> $ pwd
+> /home/andriin/linux/tools/lib/bpf
+> $ make
+>   gcc -Wp,-MD,/data/users/andriin/linux/tools/lib/bpf/staticobjs/.libbpf.o.d
+> -Wp,-MT,/data/users/andriin/linux/tools/lib/bpf/staticobjs/libbpf.o -g
+> -O2 -std=gnu89 -Wbad-function-cast -Wdeclaration-after-statement
+> -Wformat-security -Wformat-y2k -Winit-self -Wmissing-declarations
+> -Wmissing-prototypes -Wnested-externs -Wno-system-headers
+> -Wold-style-definition -Wpacked -Wredundant-decls -Wstrict-prototypes
+> -Wswitch-default -Wswitch-enum -Wundef -Wwrite-strings -Wformat
+> -Wno-type-limits -Wstrict-aliasing=3 -Wshadow -Wno-switch-enum -Werror
+> -Wall -I/data/users/andriin/linux/tools/lib/bpf/
+> -I/data/users/andriin/linux/tools/include
+> -I/data/users/andriin/linux/tools/include/uapi
+> -I/data/users/andriin/linux/tools/arch/x86/include -fvisibility=hidden
+> -D_LARGEFILE64_SOURCE -D_FILE_OFFSET_BITS=64 -D"BUILD_STR(s)=#s" -c -o
+> /data/users/andriin/linux/tools/lib/bpf/staticobjs/libbpf.o libbpf.c
+> ^Cmake[2]: *** [/data/users/andriin/linux/tools/build/Makefile.build:86:
+> /data/users/andriin/linux/tools/lib/bpf/staticobjs/libbpf.o] Interrupt
+> make[1]: *** [Makefile:165:
+> /data/users/andriin/linux/tools/lib/bpf/staticobjs/libbpf-in.o]
+> Interrupt
+> make: *** [Makefile:143: all] Interrupt
+> 
+> $ git co HEAD~
+> Previous HEAD position was f2868b1a66d4 perf tools: Expose
+> quiet/verbose variables in Makefile.perf
+> HEAD is now at e9cbc854d8b1 perf config: Add a function to set one
+> variable in .perfconfig
+> $ make
+>   CC      /data/users/andriin/linux/tools/lib/bpf/staticobjs/libbpf.o
+> ^C
+> 
+> So, can you please check and fix?
 
-slight nit: mixing -1 and unsigned long looks sloppy. Maybe let's add
-something like
+I think I am misunderstanding what you are saying. The patch that we are
+discussing on is the patch to fix this? You are showing the output from
+the patch that is being fixed in this series.
 
-#define UPROBE_NO_TRAMPOLINE_VADDR ((unsigned long)-1)
+> 
+> Also, looking at your patch:
+> 
+> a) you removed the `"$(origin V)", "command line"` check from both
+> perf and libbpf, so that's not really an equivalent change/behavior
+> now
 
-and return that from uprobe_get_trampoline_vaddr()?
+I don't believe it is required to keep that check.
 
-> +               goto sigill;
->
-> -       if (regs->ip !=3D trampoline_check_ip())
-> +       /* Make sure the ip matches the only allowed sys_uretprobe caller=
-. */
-> +       if (regs->ip !=3D trampoline_check_ip(tramp))
->                 goto sigill;
->
->         err =3D copy_from_user(r11_cx_ax, (void __user *)regs->sp, sizeof=
-(r11_cx_ax));
-> --
-> 2.48.1
->
+> 
+> b) a bit sloppy on assignment:
+> 
+> +ifeq ($(V),1)
+> +  quiet =
+> +  Q =
+> +else
+> +  quiet=quiet_
+> +  Q=@
+> +endif
+> 
+> note the spaces around '=', try to keep stuff like this consistent
+> (and if this was shell, it would bite you as well)
+
+Yes, I can make that consistent.
+
+> 
+> >
+> > - Charlie
+> >
