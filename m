@@ -1,399 +1,341 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 637B725E46C;
-	Mon, 10 Feb 2025 19:26:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C197720487F
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 10 Feb 2025 19:38:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739215606; cv=none; b=oyeLpZB5iaqGy6cLcOQch0Jn239Fh6DjKJHB8yjoLiKHl3W8mmKtr6TdSQx0OS4oLalSlOrV+zCWb7ieKQmfhI8IstH5GXqmFdnaFU4knr3NmY1y5M2EA5m5ETPVl/S0Prkq4qT3OPQhPXzt3ol5NlA2pNDO4smU2F49IsFHsUM=
+	t=1739216293; cv=none; b=pMFK/Yi/Wywu/+AegwhWwxd1ECor5QzKWz6lH80GlmblUbSbL8/8LJQcymvd8HdISs2rJZ7vOv3RVPSqFkpNrGQDpl4ukcuDZ5OWXhKh3J/7kdgwmenzWsjrchqnliANStnPVCxIGRr+Lm3UZQHzFjrYk1VKbf+b66KZz2y+Lrk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739215606; c=relaxed/simple;
-	bh=yJL6JAF/Hjh/c9myb5opuCMmiur+tgSE24VYYiPvxaM=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=pZ5UHOvxGATLZNq/9XAJGoNRFgN4iUkhQSzb2lrlcU5682U5Hp+noEk3kD2K4KuCHefsitGooJDxSFy++sPL7IKO4yFMh4K9F+otnMiCscmtLRuNMOtCYJexK47t+Uv0BnaC+2FgN4U1OBu2us58TatStfcv75uUFTq5mK1jqLw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B3E1CC4CEE4;
-	Mon, 10 Feb 2025 19:26:44 +0000 (UTC)
-Date: Mon, 10 Feb 2025 14:26:47 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>,
- linux-arm-kernel@lists.infradead.org, Mark Rutland <mark.rutland@arm.com>,
- Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>, Heiko Carstens
- <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, Alexander Gordeev
- <agordeev@linux.ibm.com>, linux-s390@vger.kernel.org
-Subject: [PATCH] arm64: scripts/sorttable: Implement sorting mcount_loc at
- boot for arm64
-Message-ID: <20250210142647.083ff456@gandalf.local.home>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1739216293; c=relaxed/simple;
+	bh=apI3TaNZZL36DYa7Oiv1+x3h78ZZQgNoP4cKlZ77AWk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=TPlnQFLmetzx7FbYgkiLNJ8ocYLYbjU8P2cSgjt53HV3xB7iPoeNCzlPVZAcGAbyaTgK4U9nFJ5uUjGKW0KpdqS4A5am1zcenXXvcb+1RAiLsBC/QCnwy1/u5ccf1NN2o52SDShmDCK2As/5FIiNRTHnbXWwRAEsUAUsNTXMaMU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=e62l2Sde; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="e62l2Sde"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1739216290;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=MCWz0QKB/3zA+wyPgSQYXWNTlsWbH4Vu3NwNK9eMowA=;
+	b=e62l2SdekImESuC0C1oE6D2EQSbVc3Xsvdkb6jZuo7gplL06DW8mMuiemz+CeGS2z8NboJ
+	p0B8SS4JHSYAWvtiD3BMKYQVF/4cMkQWWHbP50VSKHKB56oJlx8mrtrG6YBmQ12xTfbPJH
+	EUiMyB7rVtcIMRBo7g7JlXBQ0uvfzEY=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-665-gjBk-ca8PJ6ynBUtNmgOnw-1; Mon, 10 Feb 2025 14:38:07 -0500
+X-MC-Unique: gjBk-ca8PJ6ynBUtNmgOnw-1
+X-Mimecast-MFC-AGG-ID: gjBk-ca8PJ6ynBUtNmgOnw
+Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-4392fc6bceaso13131765e9.2
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 10 Feb 2025 11:38:07 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739216286; x=1739821086;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=MCWz0QKB/3zA+wyPgSQYXWNTlsWbH4Vu3NwNK9eMowA=;
+        b=WfVd/HEKpYWWznQ9vBRSu2UHAqc2DMsIfN2rCW9/P5M1RM4bT9qZaLtPtBZI5PQDq0
+         IErefAfNEKZQrC6HQuaS+ajZfSVaExXDM68qcPvALuiff7SZSqy638ThcDSRpZ3EPS0Z
+         Pzq/IsCz/RWu30kfXQvpWmF95TIYvksjw7N8TCViJQdXYhq9nau1bDy7VwmgDMogSsjd
+         BkLuBIqVGnpScAB+XLtemuM/IzMqVsEbrEAfKpppHp5DHNb86UfYkeaWh/fY/2uW/flX
+         vqzyIGG4/seKD8hNJOCtTnBgslXd+Vt3B3WlDsoI6jGyVexPx1joyVJIYnNZjOIJuXsB
+         MY8Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUEhaFLNwWu1FFhGm/oU+Fx3Wg52J4x8gpM11lcVLk+lWnzLMYC5iYv9qZ4g9UNKGvc7eRIHXpr84rREHhUFfNsuJE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxsTWM6X/OQj9zzZvIKJkYzQUwnOw0EGkutN9eI8qhyUKn6OaII
+	chwWoo42erSzlmpBz8b1/NAVvtgHQ8c30nIlJJOdD/G5XSkd1dSukGA44ZcXfj/7kn5bBpxDTSZ
+	2Z6QwDhWNj+Ro/e5mtdZ/8QVQ2wVNHl14A5MJnDPk5pg+dUyvTe8rhzUKRuRfv625Mn6BWA==
+X-Gm-Gg: ASbGnculYIhnjgtjE8Nbo+cdzM2iBmxKsF7ilig0rJuaymrHkphVCfqLWSHvNbJc+8c
+	e6mQjGlA2+gEEruX7K1cPSttx9mGopGv3rmQs9EloDhAsne7Yyb/nPHfhQv6/kDmd1PmxHRe6ZG
+	1Rue3fUbzaNZNuPoaepF4k8gCkOvm3ueXID8uXuzYmTX6dRKcHUPPyGMW8FwIeA0ygywpx0ZLXy
+	YSky59vyCjBKeboBy3UJLEfQqUHSDKVp9ZYHbZQEXrMO9jvu0UYYjZnyJzIK++JNzqRlKWu7myC
+	ANZPzkiboI05F/MbM8mu96Zk106lYsp1MVfQ1xZY3T9qYB97oQo2khUzzGH25HO9+Q==
+X-Received: by 2002:a05:600c:1e0e:b0:431:5e3c:2ff0 with SMTP id 5b1f17b1804b1-439249889a8mr117184785e9.8.1739216286105;
+        Mon, 10 Feb 2025 11:38:06 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IEHEaOpDMG7a/03CRbYKSofR+ckzDf4tR3vs9lDmaTs2zKGFHodBnTigVeQlsjTuu7+8Xv9cw==
+X-Received: by 2002:a05:600c:1e0e:b0:431:5e3c:2ff0 with SMTP id 5b1f17b1804b1-439249889a8mr117184625e9.8.1739216285660;
+        Mon, 10 Feb 2025 11:38:05 -0800 (PST)
+Received: from localhost (p200300cbc734b80012c465cd348aaee6.dip0.t-ipconnect.de. [2003:cb:c734:b800:12c4:65cd:348a:aee6])
+        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-4390d94db77sm189019515e9.15.2025.02.10.11.38.02
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 10 Feb 2025 11:38:04 -0800 (PST)
+From: David Hildenbrand <david@redhat.com>
+To: linux-kernel@vger.kernel.org
+Cc: linux-doc@vger.kernel.org,
+	dri-devel@lists.freedesktop.org,
+	linux-mm@kvack.org,
+	nouveau@lists.freedesktop.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	damon@lists.linux.dev,
+	David Hildenbrand <david@redhat.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	=?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Alex Shi <alexs@kernel.org>,
+	Yanteng Si <si.yanteng@linux.dev>,
+	Karol Herbst <kherbst@redhat.com>,
+	Lyude Paul <lyude@redhat.com>,
+	Danilo Krummrich <dakr@kernel.org>,
+	David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Oleg Nesterov <oleg@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	SeongJae Park <sj@kernel.org>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Jann Horn <jannh@google.com>,
+	Pasha Tatashin <pasha.tatashin@soleen.com>,
+	Peter Xu <peterx@redhat.com>,
+	Alistair Popple <apopple@nvidia.com>,
+	Jason Gunthorpe <jgg@nvidia.com>
+Subject: [PATCH v2 00/17] mm: fixes for device-exclusive entries (hmm)
+Date: Mon, 10 Feb 2025 20:37:42 +0100
+Message-ID: <20250210193801.781278-1-david@redhat.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: 9hodbVyU34Egy5nIAMm80smFTQw-LgP8S6kOvf2HOXg_1739216286
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-From: Steven Rostedt <rostedt@goodmis.org>
+Against mm-hotfixes-stable for now.
 
-The mcount_loc section holds the addresses of the functions that get
-patched by ftrace when enabling function callbacks. It can contain tens of
-thousands of entries. These addresses must be sorted. If they are not
-sorted at compile time, they are sorted at boot. Sorting at boot does take
-some time and does have a small impact on boot performance.
+Discussing the PageTail() call in make_device_exclusive_range() with
+Willy, I recently discovered [1] that device-exclusive handling does
+not properly work with THP, making the hmm-tests selftests fail if THPs
+are enabled on the system.
 
-x86 and arm32 have the addresses in the mcount_loc section of the ELF
-file. But for arm64, the section just contains zeros. The .rela.dyn
-Elf_Rela section holds the addresses and they get patched at boot during
-the relocation phase.
+Looking into more details, I found that hugetlb is not properly fenced,
+and I realized that something that was bugging me for longer -- how
+device-exclusive entries interact with mapcounts -- completely breaks
+migration/swapout/split/hwpoison handling of these folios while they have
+device-exclusive PTEs.
 
-In order to sort these addresses, the Elf_Rela needs to be updated instead
-of the location in the binary that holds the mcount_loc section. Have the
-sorttable code, allocate an array to hold the functions, load the
-addresses from the Elf_Rela entries, sort them, then put them back in
-order into the Elf_rela entries so that they will be sorted at boot up
-without having to sort them during boot up.
+The program below can be used to allocate 1 GiB worth of pages and
+making them device-exclusive on a kernel with CONFIG_TEST_HMM.
 
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
+Once they are device-exclusive, these folios cannot get swapped out
+(proc$pid/smaps_rollup will always indicate 1 GiB RSS no matter how
+much one forces memory reclaim), and when having a memory block onlined
+to ZONE_MOVABLE, trying to offline it will loop forever and complain about
+failed migration of a page that should be movable.
 
-Can I get a "Tested-by" and a Reviewed-by or Acked-by from one of the ARM64
-maintainers? I have some code that I want to add on top of this that will
-remove the weak functions from the mcount_loc section.
+# echo offline > /sys/devices/system/memory/memory136/state
+# echo online_movable > /sys/devices/system/memory/memory136/state
+# ./hmm-swap &
+... wait until everything is device-exclusive
+# echo offline > /sys/devices/system/memory/memory136/state
+[  285.193431][T14882] page: refcount:2 mapcount:0 mapping:0000000000000000
+  index:0x7f20671f7 pfn:0x442b6a
+[  285.196618][T14882] memcg:ffff888179298000
+[  285.198085][T14882] anon flags: 0x5fff0000002091c(referenced|uptodate|
+  dirty|active|owner_2|swapbacked|node=1|zone=3|lastcpupid=0x7ff)
+[  285.201734][T14882] raw: ...
+[  285.204464][T14882] raw: ...
+[  285.207196][T14882] page dumped because: migration failure
+[  285.209072][T14882] page_owner tracks the page as allocated
+[  285.210915][T14882] page last allocated via order 0, migratetype
+  Movable, gfp_mask 0x140dca(GFP_HIGHUSER_MOVABLE|__GFP_COMP|__GFP_ZERO),
+  id 14926, tgid 14926 (hmm-swap), ts 254506295376, free_ts 227402023774
+[  285.216765][T14882]  post_alloc_hook+0x197/0x1b0
+[  285.218874][T14882]  get_page_from_freelist+0x76e/0x3280
+[  285.220864][T14882]  __alloc_frozen_pages_noprof+0x38e/0x2740
+[  285.223302][T14882]  alloc_pages_mpol+0x1fc/0x540
+[  285.225130][T14882]  folio_alloc_mpol_noprof+0x36/0x340
+[  285.227222][T14882]  vma_alloc_folio_noprof+0xee/0x1a0
+[  285.229074][T14882]  __handle_mm_fault+0x2b38/0x56a0
+[  285.230822][T14882]  handle_mm_fault+0x368/0x9f0
+...
 
-For the s390 folks. I cross compiled a s390 and looked at the mcount_loc
-section, and I have no idea how to implement this for that. I wrote a elf
-parser to dump sections based symbols:
+This series fixes all issues I found so far. There is no easy way to fix
+without a bigger rework/cleanup. I have a bunch of cleanups on top (some
+previous sent, some the result of the discussion in v1) that I will send
+out separately once this landed and I get to it.
 
-  https://rostedt.org/code/dump_elf_sym.c
+I wish we could just use some special present PROT_NONE PTEs instead of
+these (non-present, non-none) fake-swap entries; but that just results in
+the same problem we keep having (lack of spare PTE bits), and staring at
+other similar fake-swap entries, that ship has sailed.
 
-And ran it on the s390 vmlinux:
+With this series, make_device_exclusive() doesn't actually belong into
+mm/rmap.c anymore, but I'll leave moving that for another day.
 
- $ ./dump_elf_sym vmlinux __start_mcount_loc __stop_mcount_loc
- 1801620: .. .. .. .. .. .. .. ..   00 00 00 00 00 11 70 20  ......... .....p 
- 1801630: 00 00 00 00 00 11 70 90   00 00 00 00 00 11 70 a0  ......p.. .....p.
- 1801640: 00 00 00 00 00 11 71 10   00 00 00 00 00 11 71 20  ......q.. .....q 
- 1801650: 00 00 00 00 00 11 71 90   00 00 00 00 01 7c 70 00  ......q.. ....|p.
- 1801660: 00 00 00 00 01 7c 70 20   00 00 00 00 01 7c 70 40  .....|p . ....|p@
- 1801670: 00 00 00 00 01 7c 70 60   00 00 00 00 01 7c 70 70  .....|p`. ....|pp
- 1801680: 00 00 00 00 01 7c 70 98   00 00 00 00 01 7c 70 c0  .....|p.. ....|p.
- 1801690: 00 00 00 00 01 7c 70 d0   00 00 00 00 01 7c 71 68  .....|p.. ....|qh
-[..]
+I only tested this series with the hmm-tests selftests due to lack of HW,
+so I'd appreciate some testing, especially if the interaction between
+two GPUs wanting a device-exclusive entry works as expected.
 
-It looks like addresses in that section where ARM64 only has zeros. I
-couldn't find a .rel or .rela section either.
+<program>
+#include <stdio.h>
+#include <fcntl.h>
+#include <stdint.h>
+#include <unistd.h>
+#include <stdlib.h>
+#include <string.h>
+#include <sys/mman.h>
+#include <sys/ioctl.h>
+#include <linux/types.h>
+#include <linux/ioctl.h>
 
-I guess there's some other table that these addresses are dependent upon?
+#define HMM_DMIRROR_EXCLUSIVE _IOWR('H', 0x05, struct hmm_dmirror_cmd)
+
+struct hmm_dmirror_cmd {
+	__u64 addr;
+	__u64 ptr;
+	__u64 npages;
+	__u64 cpages;
+	__u64 faults;
+};
+
+const size_t size = 1 * 1024 * 1024 * 1024ul;
+const size_t chunk_size = 2 * 1024 * 1024ul;
+
+int main(void)
+{
+	struct hmm_dmirror_cmd cmd;
+	size_t cur_size;
+	int fd, ret;
+	char *addr, *mirror;
+
+	fd = open("/dev/hmm_dmirror1", O_RDWR, 0);
+	if (fd < 0) {
+		perror("open failed\n");
+		exit(1);
+	}
+
+	addr = mmap(NULL, size, PROT_READ | PROT_WRITE,
+		    MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
+	if (addr == MAP_FAILED) {
+		perror("mmap failed\n");
+		exit(1);
+	}
+	madvise(addr, size, MADV_NOHUGEPAGE);
+	memset(addr, 1, size);
+
+	mirror = malloc(chunk_size);
+
+	for (cur_size = 0; cur_size < size; cur_size += chunk_size) {
+		cmd.addr = (uintptr_t)addr + cur_size;
+		cmd.ptr = (uintptr_t)mirror;
+		cmd.npages = chunk_size / getpagesize();
+		ret = ioctl(fd, HMM_DMIRROR_EXCLUSIVE, &cmd);
+		if (ret) {
+			perror("ioctl failed\n");
+			exit(1);
+		}
+	}
+	pause();
+	return 0;
+}
+</program>
+
+[1] https://lkml.kernel.org/r/25e02685-4f1d-47fa-be5b-01ff85bb0ce2@redhat.com
+
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: "Jérôme Glisse" <jglisse@redhat.com>
+Cc: Jonathan Corbet <corbet@lwn.net>
+Cc: Alex Shi <alexs@kernel.org>
+Cc: Yanteng Si <si.yanteng@linux.dev>
+Cc: Karol Herbst <kherbst@redhat.com>
+Cc: Lyude Paul <lyude@redhat.com>
+Cc: Danilo Krummrich <dakr@kernel.org>
+Cc: David Airlie <airlied@gmail.com>
+Cc: Simona Vetter <simona@ffwll.ch>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Oleg Nesterov <oleg@redhat.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: SeongJae Park <sj@kernel.org>
+Cc: "Liam R. Howlett" <Liam.Howlett@oracle.com>
+Cc: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Cc: Vlastimil Babka <vbabka@suse.cz>
+Cc: Jann Horn <jannh@google.com>
+Cc: Pasha Tatashin <pasha.tatashin@soleen.com>
+Cc: Peter Xu <peterx@redhat.com>
+Cc: Alistair Popple <apopple@nvidia.com>
+Cc: Jason Gunthorpe <jgg@nvidia.com>
+
+v1 -> v2:
+ * "mm/rmap: convert make_device_exclusive_range() to make_device_exclusive()"
+  -> Fix and simplify return value handling when calling dmirror_atomic_map()
+  -> Fix parameter order when calling make_device_exclusive()
+  [both things were fixed by the separate cleanups I previously sent, realized
+   it when re-testing the fixes here only]
+  -> Heavily extend documentation of make_device_exclusive()
+ * "mm/rmap: implement make_device_exclusive() using folio_walk instead of
+    rmap walk"
+  -> Keep MMU_NOTIFY_EXCLUSIVE, and update comments/description
+ * "mm/rmap: handle device-exclusive entries correctly in try_to_migrate_one()"
+  -> Handle PageHWPoison with device-private pages differently
+ * Added a bunch of "handle device-exclusive entries correctly" fixes,
+   now handling all page_vma_mapped_walk() callers correctly
+ * Added "mm/rmap: avoid -EBUSY from make_device_exclusive()" to fix some
+   hmm selftest failures I saw while testing under memory pressure
+ * Plenty of comment/description updates and improvements
+
+David Hildenbrand (17):
+  mm/gup: reject FOLL_SPLIT_PMD with hugetlb VMAs
+  mm/rmap: reject hugetlb folios in folio_make_device_exclusive()
+  mm/rmap: convert make_device_exclusive_range() to
+    make_device_exclusive()
+  mm/rmap: implement make_device_exclusive() using folio_walk instead of
+    rmap walk
+  mm/memory: detect writability in restore_exclusive_pte() through
+    can_change_pte_writable()
+  mm: use single SWP_DEVICE_EXCLUSIVE entry type
+  mm/page_vma_mapped: device-exclusive entries are not migration entries
+  kernel/events/uprobes: handle device-exclusive entries correctly in
+    __replace_page()
+  mm/ksm: handle device-exclusive entries correctly in
+    write_protect_page()
+  mm/rmap: handle device-exclusive entries correctly in
+    try_to_unmap_one()
+  mm/rmap: handle device-exclusive entries correctly in
+    try_to_migrate_one()
+  mm/rmap: handle device-exclusive entries correctly in
+    page_vma_mkclean_one()
+  mm/page_idle: handle device-exclusive entries correctly in
+    page_idle_clear_pte_refs_one()
+  mm/damon: handle device-exclusive entries correctly in
+    damon_folio_young_one()
+  mm/damon: handle device-exclusive entries correctly in
+    damon_folio_mkold_one()
+  mm/rmap: keep mapcount untouched for device-exclusive entries
+  mm/rmap: avoid -EBUSY from make_device_exclusive()
+
+ Documentation/mm/hmm.rst                    |   2 +-
+ Documentation/translations/zh_CN/mm/hmm.rst |   2 +-
+ drivers/gpu/drm/nouveau/nouveau_svm.c       |   5 +-
+ include/linux/mmu_notifier.h                |   2 +-
+ include/linux/rmap.h                        |   5 +-
+ include/linux/swap.h                        |   7 +-
+ include/linux/swapops.h                     |  27 +-
+ kernel/events/uprobes.c                     |  13 +-
+ lib/test_hmm.c                              |  41 +-
+ mm/damon/ops-common.c                       |  23 +-
+ mm/damon/paddr.c                            |  10 +-
+ mm/gup.c                                    |   3 +
+ mm/ksm.c                                    |   9 +-
+ mm/memory.c                                 |  28 +-
+ mm/mprotect.c                               |   8 -
+ mm/page_idle.c                              |   9 +-
+ mm/page_table_check.c                       |   5 +-
+ mm/page_vma_mapped.c                        |   3 +-
+ mm/rmap.c                                   | 469 +++++++++-----------
+ 19 files changed, 315 insertions(+), 356 deletions(-)
 
 
- arch/arm64/Kconfig  |   1 +
- scripts/sorttable.c | 181 +++++++++++++++++++++++++++++++++++++++++++-
- 2 files changed, 179 insertions(+), 3 deletions(-)
-
-diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-index fcdd0ed3eca8..3c6c9dcd96aa 100644
---- a/arch/arm64/Kconfig
-+++ b/arch/arm64/Kconfig
-@@ -217,6 +217,7 @@ config ARM64
- 		if DYNAMIC_FTRACE_WITH_ARGS
- 	select HAVE_SAMPLE_FTRACE_DIRECT
- 	select HAVE_SAMPLE_FTRACE_DIRECT_MULTI
-+	select HAVE_BUILDTIME_MCOUNT_SORT
- 	select HAVE_EFFICIENT_UNALIGNED_ACCESS
- 	select HAVE_GUP_FAST
- 	select HAVE_FTRACE_GRAPH_FUNC
-diff --git a/scripts/sorttable.c b/scripts/sorttable.c
-index 9f41575afd7a..f75be83916a8 100644
---- a/scripts/sorttable.c
-+++ b/scripts/sorttable.c
-@@ -28,6 +28,7 @@
- #include <fcntl.h>
- #include <stdio.h>
- #include <stdlib.h>
-+#include <stdbool.h>
- #include <string.h>
- #include <unistd.h>
- #include <errno.h>
-@@ -79,10 +80,16 @@ typedef union {
- 	Elf64_Sym	e64;
- } Elf_Sym;
- 
-+typedef union {
-+	Elf32_Rela	e32;
-+	Elf64_Rela	e64;
-+} Elf_Rela;
-+
- static uint32_t (*r)(const uint32_t *);
- static uint16_t (*r2)(const uint16_t *);
- static uint64_t (*r8)(const uint64_t *);
- static void (*w)(uint32_t, uint32_t *);
-+static void (*w8)(uint64_t, uint64_t *);
- typedef void (*table_sort_t)(char *, int);
- 
- static struct elf_funcs {
-@@ -102,6 +109,10 @@ static struct elf_funcs {
- 	uint32_t (*sym_name)(Elf_Sym *sym);
- 	uint64_t (*sym_value)(Elf_Sym *sym);
- 	uint16_t (*sym_shndx)(Elf_Sym *sym);
-+	uint64_t (*rela_offset)(Elf_Rela *rela);
-+	uint64_t (*rela_info)(Elf_Rela *rela);
-+	uint64_t (*rela_addend)(Elf_Rela *rela);
-+	void (*rela_write_addend)(Elf_Rela *rela, uint64_t val);
- } e;
- 
- static uint64_t ehdr64_shoff(Elf_Ehdr *ehdr)
-@@ -262,6 +273,41 @@ SYM_ADDR(value)
- SYM_WORD(name)
- SYM_HALF(shndx)
- 
-+#define RELA_ADDR(fn_name)				\
-+static uint64_t rela64_##fn_name(Elf_Rela *rela)	\
-+{							\
-+	return r8((uint64_t *)&rela->e64.r_##fn_name);	\
-+}							\
-+							\
-+static uint64_t rela32_##fn_name(Elf_Rela *rela)	\
-+{							\
-+	return r((uint32_t *)&rela->e32.r_##fn_name);	\
-+}							\
-+							\
-+static uint64_t rela_##fn_name(Elf_Rela *rela)		\
-+{							\
-+	return e.rela_##fn_name(rela);			\
-+}
-+
-+RELA_ADDR(offset)
-+RELA_ADDR(info)
-+RELA_ADDR(addend)
-+
-+static void rela64_write_addend(Elf_Rela *rela, uint64_t val)
-+{
-+	w8(val, (uint64_t *)&rela->e64.r_addend);
-+}
-+
-+static void rela32_write_addend(Elf_Rela *rela, uint64_t val)
-+{
-+	w(val, (uint32_t *)&rela->e32.r_addend);
-+}
-+
-+static void rela_write_addend(Elf_Rela *rela, uint64_t val)
-+{
-+	e.rela_write_addend(rela, val);
-+}
-+
- /*
-  * Get the whole file as a programming convenience in order to avoid
-  * malloc+lseek+read+free of many pieces.  If successful, then mmap
-@@ -341,6 +387,16 @@ static void wle(uint32_t val, uint32_t *x)
- 	put_unaligned_le32(val, x);
- }
- 
-+static void w8be(uint64_t val, uint64_t *x)
-+{
-+	put_unaligned_be64(val, x);
-+}
-+
-+static void w8le(uint64_t val, uint64_t *x)
-+{
-+	put_unaligned_le64(val, x);
-+}
-+
- /*
-  * Move reserved section indices SHN_LORESERVE..SHN_HIRESERVE out of
-  * the way to -256..-1, to avoid conflicting with real section
-@@ -398,13 +454,12 @@ static inline void *get_index(void *start, int entsize, int index)
- static int extable_ent_size;
- static int long_size;
- 
-+#define ERRSTR_MAXSZ	256
- 
- #ifdef UNWINDER_ORC_ENABLED
- /* ORC unwinder only support X86_64 */
- #include <asm/orc_types.h>
- 
--#define ERRSTR_MAXSZ	256
--
- static char g_err[ERRSTR_MAXSZ];
- static int *g_orc_ip_table;
- static struct orc_entry *g_orc_table;
-@@ -500,6 +555,11 @@ static void *sort_orctable(void *arg)
- 
- #ifdef MCOUNT_SORT_ENABLED
- static pthread_t mcount_sort_thread;
-+static bool sort_reloc;
-+
-+static long rela_type;
-+
-+static char m_err[ERRSTR_MAXSZ];
- 
- struct elf_mcount_loc {
- 	Elf_Ehdr *ehdr;
-@@ -508,6 +568,103 @@ struct elf_mcount_loc {
- 	uint64_t stop_mcount_loc;
- };
- 
-+/* Sort the relocations not the address itself */
-+static void *sort_relocs(Elf_Ehdr *ehdr, uint64_t start_loc, uint64_t size)
-+{
-+	Elf_Shdr *shdr_start;
-+	Elf_Rela *rel;
-+	unsigned int shnum;
-+	unsigned int count;
-+	int shentsize;
-+	void *vals;
-+	void *ptr;
-+
-+	shdr_start = (Elf_Shdr *)((char *)ehdr + ehdr_shoff(ehdr));
-+	shentsize = ehdr_shentsize(ehdr);
-+
-+	vals = malloc(long_size * size);
-+	if (!vals) {
-+		snprintf(m_err, ERRSTR_MAXSZ, "Failed to allocate sort array");
-+		pthread_exit(m_err);
-+		return NULL;
-+	}
-+
-+	ptr = vals;
-+
-+	shnum = ehdr_shnum(ehdr);
-+	if (shnum == SHN_UNDEF)
-+		shnum = shdr_size(shdr_start);
-+
-+	for (int i = 0; i < shnum; i++) {
-+		Elf_Shdr *shdr = get_index(shdr_start, shentsize, i);
-+		void *end;
-+
-+		if (shdr_type(shdr) != SHT_RELA)
-+			continue;
-+
-+		rel = (void *)ehdr + shdr_offset(shdr);
-+		end = (void *)rel + shdr_size(shdr);
-+
-+		for (; (void *)rel < end; rel = (void *)rel + shdr_entsize(shdr)) {
-+			uint64_t offset = rela_offset(rel);
-+
-+			if (offset >= start_loc && offset < start_loc + size) {
-+				if (ptr + long_size > vals + size) {
-+					free(vals);
-+					snprintf(m_err, ERRSTR_MAXSZ,
-+						 "Too many relocations");
-+					pthread_exit(m_err);
-+					return NULL;
-+				}
-+
-+				/* Make sure this has the correct type */
-+				if (rela_info(rel) != rela_type) {
-+					free(vals);
-+					snprintf(m_err, ERRSTR_MAXSZ,
-+						"rela has type %lx but expected %lx\n",
-+						(long)rela_info(rel), rela_type);
-+					pthread_exit(m_err);
-+					return NULL;
-+				}
-+
-+				if (long_size == 4)
-+					*(uint32_t *)ptr = rela_addend(rel);
-+				else
-+					*(uint64_t *)ptr = rela_addend(rel);
-+				ptr += long_size;
-+			}
-+		}
-+	}
-+	count = ptr - vals;
-+	qsort(vals, count / long_size, long_size, compare_extable);
-+
-+	ptr = vals;
-+	for (int i = 0; i < shnum; i++) {
-+		Elf_Shdr *shdr = get_index(shdr_start, shentsize, i);
-+		void *end;
-+
-+		if (shdr_type(shdr) != SHT_RELA)
-+			continue;
-+
-+		rel = (void *)ehdr + shdr_offset(shdr);
-+		end = (void *)rel + shdr_size(shdr);
-+
-+		for (; (void *)rel < end; rel = (void *)rel + shdr_entsize(shdr)) {
-+			uint64_t offset = rela_offset(rel);
-+
-+			if (offset >= start_loc && offset < start_loc + size) {
-+				if (long_size == 4)
-+					rela_write_addend(rel, *(uint32_t *)ptr);
-+				else
-+					rela_write_addend(rel, *(uint64_t *)ptr);
-+				ptr += long_size;
-+			}
-+		}
-+	}
-+	free(vals);
-+	return NULL;
-+}
-+
- /* Sort the addresses stored between __start_mcount_loc to __stop_mcount_loc in vmlinux */
- static void *sort_mcount_loc(void *arg)
- {
-@@ -517,6 +674,9 @@ static void *sort_mcount_loc(void *arg)
- 	uint64_t count = emloc->stop_mcount_loc - emloc->start_mcount_loc;
- 	unsigned char *start_loc = (void *)emloc->ehdr + offset;
- 
-+	if (sort_reloc)
-+		return sort_relocs(emloc->ehdr, emloc->start_mcount_loc, count);
-+
- 	qsort(start_loc, count/long_size, long_size, compare_extable);
- 	return NULL;
- }
-@@ -866,12 +1026,14 @@ static int do_file(char const *const fname, void *addr)
- 		r2	= r2le;
- 		r8	= r8le;
- 		w	= wle;
-+		w8	= w8le;
- 		break;
- 	case ELFDATA2MSB:
- 		r	= rbe;
- 		r2	= r2be;
- 		r8	= r8be;
- 		w	= wbe;
-+		w8	= w8be;
- 		break;
- 	default:
- 		fprintf(stderr, "unrecognized ELF data encoding %d: %s\n",
-@@ -887,8 +1049,13 @@ static int do_file(char const *const fname, void *addr)
- 	}
- 
- 	switch (r2(&ehdr->e32.e_machine)) {
--	case EM_386:
- 	case EM_AARCH64:
-+#ifdef MCOUNT_SORT_ENABLED
-+		sort_reloc = true;
-+		rela_type = 0x403;
-+#endif
-+		/* fallthrough */
-+	case EM_386:
- 	case EM_LOONGARCH:
- 	case EM_RISCV:
- 	case EM_S390:
-@@ -932,6 +1099,10 @@ static int do_file(char const *const fname, void *addr)
- 			.sym_name		= sym32_name,
- 			.sym_value		= sym32_value,
- 			.sym_shndx		= sym32_shndx,
-+			.rela_offset		= rela32_offset,
-+			.rela_info		= rela32_info,
-+			.rela_addend		= rela32_addend,
-+			.rela_write_addend	= rela32_write_addend,
- 		};
- 
- 		e = efuncs;
-@@ -965,6 +1136,10 @@ static int do_file(char const *const fname, void *addr)
- 			.sym_name		= sym64_name,
- 			.sym_value		= sym64_value,
- 			.sym_shndx		= sym64_shndx,
-+			.rela_offset		= rela64_offset,
-+			.rela_info		= rela64_info,
-+			.rela_addend		= rela64_addend,
-+			.rela_write_addend	= rela64_write_addend,
- 		};
- 
- 		e = efuncs;
+base-commit: e5b2a356dc8a88708d97bd47cca3b8f7ed7af6cb
 -- 
-2.47.2
+2.48.1
 
