@@ -1,174 +1,173 @@
-Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx3.molgen.mpg.de (mx3.molgen.mpg.de [141.14.17.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1FAF189906
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 10 Feb 2025 05:58:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 665732F2A;
+	Mon, 10 Feb 2025 07:55:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=141.14.17.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739167116; cv=none; b=JTc2poO6LjGF1O7Eaf9b53XaVxgIeSUdnykCf0U+mPYJsarML+ug8CQS1Sk7G5pLlwpZUWxhPbodVkDCCC5sYvWwk1nqhmfR8rAWIZgidi/SmNV4jdn5bLd1fbCz76ifIfSCem1QVhZU2fVmZmUY+FdlSidfsScl7zv3IbGeZZc=
+	t=1739174151; cv=none; b=r/0Up28ejqXqrw9jeHWmazOsh+683Dk2DhCpT+vlggtLidHn962dvRJpqDJ59aM2qGxpwWwYowQEK9vJKIlcqcRuDo4vPA2mEiwUzbyKP/hARV7qzAPij6ZxIhGRSyHvebC6L1I/nwivmRjkgur4s7FZoI8RfF5+n3/oyVL3UwE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739167116; c=relaxed/simple;
-	bh=P6ZIjOcrVGSddzFqkeN9Se9GTO1nq5yLuU1kZ4p08iM=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=ni2dMRKsKz2DAaLbKDUNTP9VC0PF1mAXExFBtyRAhqa5EMvOQA8h9jkSiXUtGWpdFuVp+RJyNibRu7omsuvUHZUJjk1NO8N/0uDrUyPhfxMn6hucyJS51wP6CBdLGWYmyqTvbFQ/G/3GxxzqB4TLjrcRhUtgD4S57AmMY+myZjY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--keyz.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=UzqmXGbN; arc=none smtp.client-ip=209.85.214.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--keyz.bounces.google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="UzqmXGbN"
-Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-21f37eaef03so66256075ad.0
-        for <linux-trace-kernel@vger.kernel.org>; Sun, 09 Feb 2025 21:58:34 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1739167114; x=1739771914; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=2Dv5Ac6SPOdtGgS0tmgxnxoVXUMjLjqcjHEmAbg0F2U=;
-        b=UzqmXGbNZ48VqB06pUERCXZro4aYyIa7HUyltaILxa1BzdI1CLpElgllG70XL5RGKW
-         OYY2XflOG1FRjBzoPs36G2N7Mmi7n9Y2vCrwl8qU0dH0apRPnYDvYiv92v6DPJOZJCtn
-         M2mkgkJLVOk72PCSQWcdRJKS3x9+Re6PldzDxeMaZjENOHK/XXG8ldzFW/FxRTkhQnP+
-         coUo6X1w9LJ9UqQAy/7xr2nRuBN/MjQXWTtJRkm2npTGaGzhV1P3ijMjI+maulb+UMBr
-         8QjvpSvNDRF0UTdSBOZMxSlz+cGxeBYoSLu1Vvr0IseouxvIjr/QJX7lySAK3UUSNOjz
-         tEpQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739167114; x=1739771914;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=2Dv5Ac6SPOdtGgS0tmgxnxoVXUMjLjqcjHEmAbg0F2U=;
-        b=Fe3n0yviI63A7Qf1c1+9gcdZNNxflHvqhkXCA9IF1qW48a+vLyvCg9XDpZn297Pk5l
-         rbpc7T5EYuHILfyMSM3rhy4hjtWSxmVrKStdZCW5nL7Ze51DEjCGi7rqKxgpPdKHqsT8
-         qN/hwTOO6+ObX5grxheGXMSUU1MQhQhBm0aoBnVQromlbpI2dcHWHVj+xYG4VxMaOsXK
-         /N0Q+G6MeRv3xK8Hp074FCuRet9/UDThf34+25zJFQB6LrlHbnntMk5S9PKSRooAYzt7
-         bybS0+y/DU44IdphofET0zcgyfBrvD75uZeRpYblFqVza4zZAtM6L8z/huI3Rbok8f8Q
-         MUEA==
-X-Forwarded-Encrypted: i=1; AJvYcCUpnqKnN5ccXcUyGaUCljGfe2pUOg0hF4OYWkoL3jiyPFL26CGSzK3yPGOmMgKtGXVoUiAm3op1HqobgcWXvhnRnCo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyX2D5MjVBJ3B2UvmySC4YwJgZb9ns5whkMczozvrioASrRppTF
-	tVE/QAaDsOTpXsaEosewdHLMuxjdm6dHbXhHV1CWocX1Ee7FBiN+QBaxjZrPqCPGvAcQGw==
-X-Google-Smtp-Source: AGHT+IG9+tJP7rcVhYR2srzYJXFwTOg0EBXRqoEhYIHwOJw5Kqc+b20iAmM0LQw/LoJ0TYVsQm3UCyyp
-X-Received: from plwh12.prod.google.com ([2002:a17:902:f7cc:b0:21f:314b:a317])
- (user=keyz job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:40d0:b0:216:6769:9ed7
- with SMTP id d9443c01a7336-21f4e73bca0mr220424795ad.40.1739167114209; Sun, 09
- Feb 2025 21:58:34 -0800 (PST)
-Date: Mon, 10 Feb 2025 13:58:28 +0800
+	s=arc-20240116; t=1739174151; c=relaxed/simple;
+	bh=dLifF2bTaaX2VVSLrgjXHMuMu/WbQ5g7c0KnzmB7Zqg=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=geIkr0eid7UknKd4ryNKgbBraGzFaFpdQNzEMYxFbqVZvjebf7l1rfsCYO2xicf99YgI+mT9mlUVBomix9bGYGZZNXVCTa9md4/Yl47aMM3aHTxB3tOFCxLNEKXLgaYE6wXpyY389WJa9ez6a9ksbAFsOHR243YjaGzCuawD8CU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de; spf=pass smtp.mailfrom=molgen.mpg.de; arc=none smtp.client-ip=141.14.17.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=molgen.mpg.de
+Received: from [192.168.0.2] (ip5f5af68c.dynamic.kabel-deutschland.de [95.90.246.140])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: pmenzel)
+	by mx.molgen.mpg.de (Postfix) with ESMTPSA id 931F761E6477D;
+	Mon, 10 Feb 2025 08:55:15 +0100 (CET)
+Message-ID: <9d056e62-4e58-40d5-9401-40d3c20c2389@molgen.mpg.de>
+Date: Mon, 10 Feb 2025 08:55:14 +0100
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.48.1.502.g6dc24dfdaf-goog
-Message-ID: <20250210055828.1875372-1-keyz@google.com>
-Subject: [PATCH v5 RESEND] cpuidle: psci: Add trace for PSCI domain idle
-From: Keita Morisaki <keyz@google.com>
-To: linux-kernel@vger.kernel.org, lpieralisi@kernel.org, sudeep.holla@arm.com, 
-	rafael@kernel.org, daniel.lezcano@linaro.org, linux-pm@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org
-Cc: rostedt@goodmis.org, mhiramat@kernel.org, mathieu.desnoyers@efficios.com, 
-	linux-trace-kernel@vger.kernel.org, aarontian@google.com, 
-	yimingtseng@google.com, Keita Morisaki <keyz@google.com>, Dhruva Gole <d-gole@ti.com>, 
-	Kevin Hilman <khilman@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: NOHZ tick-stop error: local softirq work is pending, handler
+ #08!!! on Dell XPS 13 9360
+From: Paul Menzel <pmenzel@molgen.mpg.de>
+To: Anna-Maria Behnsen <anna-maria@linutronix.de>
+Cc: Frederic Weisbecker <frederic@kernel.org>, Ingo Molnar
+ <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
+ LKML <linux-kernel@vger.kernel.org>, linux-usb@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+References: <354a2690-9bbf-4ccb-8769-fa94707a9340@molgen.mpg.de>
+ <87o7ak411y.fsf@somnus> <256fdb2e-9b83-4837-bd31-0c34e4267c31@molgen.mpg.de>
+ <87sezv7ytw.fsf@somnus> <1cf78f6f-af21-48bc-a9d8-755dd7bf8503@molgen.mpg.de>
+ <9de8ebd1-53fc-48d7-af11-b5c1ed828b3d@molgen.mpg.de>
+ <598d4118-3f63-44dd-b0da-e19efbb73933@molgen.mpg.de>
+Content-Language: en-US
+In-Reply-To: <598d4118-3f63-44dd-b0da-e19efbb73933@molgen.mpg.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-The trace event cpu_idle provides insufficient information for debugging
-PSCI requests due to lacking access to determined PSCI domain idle
-states. The cpu_idle usually only shows -1, 0, or 1 regardless how many
-idle states the power domain has.
+Dear Anna-Maria,
 
-Add new trace events namely psci_domain_idle_enter and
-psci_domain_idle_exit to trace enter and exit events with a determined
-idle state.
 
-These new trace events will help developers debug CPUidle issues on ARM
-systems using PSCI by providing more detailed information about the
-requested idle states.
+Am 24.10.24 um 14:48 schrieb Paul Menzel:
 
-Signed-off-by: Keita Morisaki <keyz@google.com>
-Reviewed-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-Reviewed-by: Dhruva Gole <d-gole@ti.com>
-Tested-by: Kevin Hilman <khilman@baylibre.com>
----
-v1->v2: Split the ftrace event into two (psci_domain_idle_(enter|exit))
-        and rephrase the commit message accordingly. Rebased onto the latest.
-v2->v3: Add "Reviewed-by: Steven Rostedt"
-v3->v4: Add the Tested-by label
-v4->v5: Add "Reviewed-by: Dhruva Gole"
+> Am 21.08.24 um 23:01 schrieb Paul Menzel:
+>> [Added URLs for files.]
+>>
+>> Am 21.08.24 um 10:20 schrieb Paul Menzel:
 
-Hopefully this patch gets attention from maintainers of
-drivers/cpuidle/cpuidle-psci.c too.
+>>> Thank you very much for the support. I was finally able to collect 
+>>> the data you asked for.
+>>>
+>>> Am 09.04.24 um 09:57 schrieb Anna-Maria Behnsen:
+>>>> Paul Menzel writes:
+>>>
+>>> […]
+>>>
+>>>>> Am 08.04.24 um 12:10 schrieb Anna-Maria Behnsen:
+>>>>>
+>>>>>> Paul Menzel writes:
+>>>>>
+>>>>>>> On Dell XPS 13 9360/0596KF, BIOS 2.21.0 06/02/2022, with Linux 6.9- rc2+
+>>>>>>> built from commit b1e6ec0a0fd0 (Merge tag 'docs-6.9-fixes' of
+>>>>>>> git://git.lwn.net/linux) the external USB-C adapter Dell DA300 stopped
+>>>>>>> working (only the Ethernet port was used). Linux logged:
+>>>>>>
+>>>>>> thanks for the report. Can you please provide a trace beside the dmesg
+>>>>>> output? The following trace events should be enabled (via kernel 
+>>>>>> command line):
+>>>>>>
+>>>>>> trace_event=timer:*,timer_migration:*,sched:sched_switch,sched:sched_wakeup,sched:sched_process_hang,irq:softirq_entry,irq:softirq_raise,irq:softirq_exit
+>>>>> Unfortunately I haven’t been able to reproduce it until now. Should it
+>>>>> happen again, I am going to try your suggestion.
+>>>>
+>>>> Thanks for letting me know.
+>>>
+>>> I wanted to configure that in the running system, but wasn’t able to 
+>>> set all of these at once with `set_event`:
+>>>
+>>>      echo 'timer:*,timer_migration:*,sched:sched_switch,sched:sched_wakeup,sched:sched_process_hang,irq:softirq_entry,irq:softirq_raise,irq:softirq_exit' | sudo tee /sys/kernel/tracing/set_event
+>>>
+>>> For some reason setting them individually also did *not* work:
+>>>
+>>>      for e in timer:* timer_migration:* sched:sched_switch sched:sched_wakeup sched:sched_process_hang irq:softirq_entry irq:softirq_raise irq:softirq_exit'; do echo "$e" | sudo tee -a /sys/kernel/tracing/set_event; done
+>>>
+>>> I then used
+>>>
+>>>      echo 1 | sudo tee /sys/kernel/tracing/events/timer/enable
+>>>      echo 1 | sudo tee /sys/kernel/tracing/events/timer_migration/enable
+>>>      echo 1 | sudo tee /sys/kernel/tracing/events/sched/sched_switch/enable
+>>>      echo 1 | sudo tee /sys/kernel/tracing/events/sched/sched_wakeup/enable
+>>>      echo 1 | sudo tee /sys/kernel/tracing/events/sched/sched_process_hang/enable
+>>>      echo 1 | sudo tee /sys/kernel/tracing/events/irq/softirq_entry/enable
+>>>      echo 1 | sudo tee /sys/kernel/tracing/events/irq/softirq_raise/enable
+>>>      echo 1 | sudo tee /sys/kernel/tracing/events/irq/softirq_exit/enable
+>>>
+>>> and also had to increase the buffer to bridge the gap between the 
+>>> event and me noticing it:
+>>>
+>>>      echo 96000 | sudo tee /sys/kernel/tracing/buffer_size_kb
+>>>
+>>> Then, with Linux v6.11-rc4-11-g521b1e7f4cf0b, I was able to get the 
+>>> trace for the event below:
+>>>
+>>>      [ 7542.706299] NOHZ tick-stop error: local softirq work is pending, handler #08!!!
+>>>
+>>> $ sudo cat /sys/kernel/tracing/trace
+>>> […]
+>>>   MediaPD~der #28-14000   [000] d..1.  7542.703768: hrtimer_cancel: hrtimer=000000008d2c9f3f
+>>>   MediaPD~der #28-14000   [000] .....  7542.703810: hrtimer_init: hrtimer=00000000c6f259e7 clockid=CLOCK_MONOTONIC mode=ABS
+>>>   MediaPD~der #28-14000   [000] d..1.  7542.703812: hrtimer_start:hrtimer=00000000c6f259e7 function=hrtimer_wakeup expires=7602581538204 softexpires=7602581488204 mode=ABS
+>>>   MediaPD~der #28-14000   [000] d..2.  7542.703821: sched_switch: prev_comm=MediaPD~der #28 prev_pid=14000 prev_prio=120 prev_state=S ==> next_comm=swapper/0 next_pid=0 next_prio=120
+>>>            <idle>-0       [000] dN.2.  7542.703931: sched_wakeup: comm=ImageBridgeChld pid=6041 prio=120 target_cpu=000
+>>>            <idle>-0       [000] d..2.  7542.703937: sched_switch: prev_comm=swapper/0 prev_pid=0 prev_prio=120 prev_state=R ==> next_comm=ImageBridgeChld next_pid=6041 next_prio=120
+>>>   ImageBridgeChld-6041    [000] d..2.  7542.704041: sched_switch: prev_comm=ImageBridgeChld prev_pid=6041 prev_prio=120 prev_state=S ==> next_comm=swapper/0 next_pid=0 next_prio=120
+>>>            <idle>-0       [000] dN.2.  7542.704174: sched_wakeup: comm=Renderer pid=4113 prio=120 target_cpu=000
+>>>            <idle>-0       [000] d..2.  7542.704179: sched_switch: prev_comm=swapper/0 prev_pid=0 prev_prio=120 prev_state=R ==> next_comm=Renderer next_pid=4113 next_prio=120
+>>>          Renderer-4113    [000] d..2.  7542.704245: sched_switch: prev_comm=Renderer prev_pid=4113 prev_prio=120 prev_state=S ==> next_comm=swapper/0 next_pid=0 next_prio=120
+>>>            <idle>-0       [000] dNh2.  7542.704260: sched_wakeup: comm=IPC I/O Child pid=6029 prio=120 target_cpu=000
+>>>            <idle>-0       [000] d..2.  7542.704267: sched_switch: prev_comm=swapper/0 prev_pid=0 prev_prio=120 prev_state=R ==>  next_comm=IPC I/O Child next_pid=6029 next_prio=120
+>>>     IPC I/O Child-6029    [000] d..2.  7542.704340: sched_switch: prev_comm=IPC I/O Child prev_pid=6029 prev_prio=120 prev_state=S ==> next_comm=swapper/0 next_pid=0 next_prio=120
+>>>            <idle>-0       [000] dN.2.  7542.704786: sched_wakeup: comm=Compositor pid=4123 prio=120 target_cpu=000
+>>>            <idle>-0       [000] d..2.  7542.704791: sched_switch: prev_comm=swapper/0 prev_pid=0 prev_prio=120 prev_state=R ==> next_comm=Compositor next_pid=4123 next_prio=120
+>>>        Compositor-4123    [000] d..2.  7542.704944: sched_switch: prev_comm=Compositor prev_pid=4123 prev_prio=120 prev_state=S ==> next_comm=swapper/0 next_pid=0 next_prio=120
+>>>            <idle>-0       [000] dN.2.  7542.705943: sched_wakeup: comm=Compositor pid=4123 prio=120 target_cpu=000
+>>>            <idle>-0       [000] d..2.  7542.705950: sched_switch: prev_comm=swapper/0 prev_pid=0 prev_prio=120 prev_state=R ==> next_comm=Compositor next_pid=4123 next_prio=120
+>>>        Compositor-4123    [000] d..2.  7542.706105: sched_switch: prev_comm=Compositor prev_pid=4123 prev_prio=120 prev_state=S ==> next_comm=swapper/0 next_pid=0 next_prio=120
+>>>            <idle>-0       [000] d.h2.  7542.706328: hrtimer_cancel: hrtimer=000000009bbda66a
+>>>            <idle>-0       [000] d.h1.  7542.706329: hrtimer_expire_entry: hrtimer=000000009bbda66a 
+>>> function=tick_nohz_handler now=7542584007490
+>>>            <idle>-0       [000] d.h1.  7542.706333: softirq_raise: vec=9 [action=RCU]
+>>>            <idle>-0       [000] d.h1.  7542.706338: softirq_raise: vec=7 [action=SCHED]
+>>>            <idle>-0       [000] d.h1.  7542.706339: hrtimer_expire_exit: hrtimer=000000009bbda66a
+>>>            <idle>-0       [000] d.h2.  7542.706340: hrtimer_start: hrtimer=000000009bbda66a function=tick_nohz_handler expires=7542588000000 softexpires=7542588000000 mode=ABS
+>>>            <idle>-0       [000] ..s1.  7542.706345: softirq_entry: vec=7 [action=SCHED]
+>>>            <idle>-0       [000] ..s1.  7542.706359: softirq_exit: vec=7 [action=SCHED]
+>>>            <idle>-0       [000] ..s1.  7542.706360: softirq_entry: vec=9 [action=RCU]
+>>>            <idle>-0       [000] ..s1.  7542.706362: softirq_exit: vec=9 [action=RCU]
+>>>            <idle>-0       [000] dNh4.  7542.707672: sched_wakeup: comm=irq/51-DLL075B: pid=194 prio=49 target_cpu=000
+>>>            <idle>-0       [000] d..2.  7542.707685: sched_switch: prev_comm=swapper/0 prev_pid=0 prev_prio=120 prev_state=R ==> next_comm=irq/51-DLL075B: next_pid=194 next_prio=49
+>>>   irq/51-DLL075B:-194     [000] .....  7542.707708: timer_init: timer=00000000630ae178
+>>>   irq/51-DLL075B:-194     [000] d..1.  7542.707710: timer_start: timer=00000000630ae178 function=process_timeout expires=4296778179 [timeout=250] bucket_expiry=4296778184 cpu=0 idx=121 flags=
+>>>   irq/51-DLL075B:-194     [000] d..2.  7542.707718: sched_switch: prev_comm=irq/51-DLL075B: prev_pid=194 prev_prio=49 prev_state=D ==> next_comm=swapper/0 next_pid=0 next_prio=120
+>>>            <idle>-0       [000] dN.2.  7542.709072: sched_wakeup: comm=AudioIP~ent RPC pid=6671 prio=120 target_cpu=000
+>>> […]
+>>>
+>>> The trace file is 320 MB big. If you need the full trace and log, 
+>>> please tell me, and I’ll upload it somewhere.
+>>
+>> https://owww.molgen.mpg.de/~pmenzel/20240821--linux-6.10-rc4+.txt
+>> https://owww.molgen.mpg.de/~pmenzel/20240821--soft-irq--trace.7z
+> 
+> Just for the record, I am still seeing this with 6.12.0-rc4-00047- 
+> gc2ee9f594da8 (KVM: selftests: Fix build on on non-x86 architectures).
 
- drivers/cpuidle/cpuidle-psci.c |  3 +++
- include/trace/events/power.h   | 37 ++++++++++++++++++++++++++++++++++
- 2 files changed, 40 insertions(+)
+Just for the record, I am still seeing this with 
+6.14.0-rc1-00187-g8f6629c004b1 (kbuild: Move -Wenum-enum-conversion to W=2).
 
-diff --git a/drivers/cpuidle/cpuidle-psci.c b/drivers/cpuidle/cpuidle-psci.c
-index 2562dc001fc1..dd8d776d6e39 100644
---- a/drivers/cpuidle/cpuidle-psci.c
-+++ b/drivers/cpuidle/cpuidle-psci.c
-@@ -25,6 +25,7 @@
- #include <linux/syscore_ops.h>
 
- #include <asm/cpuidle.h>
-+#include <trace/events/power.h>
+Kind regards,
 
- #include "cpuidle-psci.h"
- #include "dt_idle_states.h"
-@@ -74,7 +75,9 @@ static __cpuidle int __psci_enter_domain_idle_state(struct cpuidle_device *dev,
- 	if (!state)
- 		state = states[idx];
-
-+	trace_psci_domain_idle_enter(dev->cpu, state, s2idle);
- 	ret = psci_cpu_suspend_enter(state) ? -1 : idx;
-+	trace_psci_domain_idle_exit(dev->cpu, state, s2idle);
-
- 	if (s2idle)
- 		dev_pm_genpd_resume(pd_dev);
-diff --git a/include/trace/events/power.h b/include/trace/events/power.h
-index d2349b6b531a..9253e83b9bb4 100644
---- a/include/trace/events/power.h
-+++ b/include/trace/events/power.h
-@@ -62,6 +62,43 @@ TRACE_EVENT(cpu_idle_miss,
- 		(unsigned long)__entry->state, (__entry->below)?"below":"above")
- );
-
-+DECLARE_EVENT_CLASS(psci_domain_idle,
-+
-+	TP_PROTO(unsigned int cpu_id, unsigned int state, bool s2idle),
-+
-+	TP_ARGS(cpu_id, state, s2idle),
-+
-+	TP_STRUCT__entry(
-+		__field(u32,		cpu_id)
-+		__field(u32,		state)
-+		__field(bool,		s2idle)
-+	),
-+
-+	TP_fast_assign(
-+		__entry->cpu_id = cpu_id;
-+		__entry->state = state;
-+		__entry->s2idle = s2idle;
-+	),
-+
-+	TP_printk("cpu_id=%lu state=0x%lx is_s2idle=%s",
-+		  (unsigned long)__entry->cpu_id, (unsigned long)__entry->state,
-+		  (__entry->s2idle)?"yes":"no")
-+);
-+
-+DEFINE_EVENT(psci_domain_idle, psci_domain_idle_enter,
-+
-+	TP_PROTO(unsigned int cpu_id, unsigned int state, bool s2idle),
-+
-+	TP_ARGS(cpu_id, state, s2idle)
-+);
-+
-+DEFINE_EVENT(psci_domain_idle, psci_domain_idle_exit,
-+
-+	TP_PROTO(unsigned int cpu_id, unsigned int state, bool s2idle),
-+
-+	TP_ARGS(cpu_id, state, s2idle)
-+);
-+
- TRACE_EVENT(powernv_throttle,
-
- 	TP_PROTO(int chip_id, const char *reason, int pmax),
-
-base-commit: ffd294d346d185b70e28b1a28abe367bbfe53c04
---
-2.48.1.362.g079036d154-goog
+Paul
