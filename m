@@ -1,51 +1,39 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A198D24E4D0;
-	Mon, 10 Feb 2025 22:15:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29C682512E8;
+	Mon, 10 Feb 2025 22:30:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739225740; cv=none; b=nF2vd9UIGqVFmX9gXpIwmrMJZcRPWz/etNN1Y8mtrjJuNGFRPXPojgfwdgknNjvK5Grj82oe7iZbv2zHZhDqK+71DHHBX8NC0v4TercfbAWsN1T+30Iy3LDsXy9KFKyAfnB3FxA0jIc2P1+QJXxl4MLpmuOksH0Zmw5IDmBugeY=
+	t=1739226615; cv=none; b=PYkxeXRqajFp9UgJSJgGAUhoy8Uy90i6D1nybEo/GBixW9EVGH2qbjY+URCQ75z4stt4RCEQ7Jx1QlpBEHpn61msVLA68p/DxOLW2sVRYzI/TMMUEhPuZo+hWLCimnUubkEIedDAYQx939LiK4BnMwNzh1OT2Mu4kiQLbYWNReg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739225740; c=relaxed/simple;
-	bh=JBugsF4suao+uRLDc+amLaMCUNW+RfTAy/NRSarvDZw=;
+	s=arc-20240116; t=1739226615; c=relaxed/simple;
+	bh=On4u1pJ/lcFgvG7Fm6nIQ+470cFF1Kng8YnIj3HQR8k=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=J5hZRCLrbgt2D41/gN2eSQkfOsUxoRe7pXy0ADpVsxm+HFWZVMu0lhP6Bcf6WU281DcWdu4gVQ08vLpfkMOg0gYc4plrndpL5ixNALHF0DtI9JP07RaL/8Fq0xMQveW2cGETpSXcTQ2bl5qoGNtbdW8FL3WJ7u2e7nVdIlkXMGM=
+	 MIME-Version:Content-Type; b=hZYcjTQVK13eUlsjTci3qbV5eJqC79YyxPWwNDZDzgcGUcQ5G46NjxzntT1FHAaBwixHvxJ/0u9AdHCqoUQYk6lMd9DekIt1FV0Cx8H9U2LeqsdQxW6guV9BIidbj4RlPBY5yEBkDHtY2bBwELZ8hmN+AvajBvkHRq1sf8wOQpg=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 59C9DC4CEE6;
-	Mon, 10 Feb 2025 22:15:36 +0000 (UTC)
-Date: Mon, 10 Feb 2025 17:15:39 -0500
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2EE61C4CED1;
+	Mon, 10 Feb 2025 22:30:13 +0000 (UTC)
+Date: Mon, 10 Feb 2025 17:30:16 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
-To: David Laight <david.laight.linux@gmail.com>
-Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>, Joel Fernandes
- <joel@joelfernandes.org>, Prakash Sangappa <prakash.sangappa@oracle.com>,
- Peter Zijlstra <peterz@infradead.org>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
- Ankur Arora <ankur.a.arora@oracle.com>, Linus Torvalds
- <torvalds@linux-foundation.org>, linux-mm@kvack.org, x86@kernel.org, Andrew
- Morton <akpm@linux-foundation.org>, luto@kernel.org, bp@alien8.de,
- dave.hansen@linux.intel.com, hpa@zytor.com, juri.lelli@redhat.com,
- vincent.guittot@linaro.org, willy@infradead.org, mgorman@suse.de,
- jon.grimm@amd.com, bharata@amd.com, raghavendra.kt@amd.com, Boris Ostrovsky
- <boris.ostrovsky@oracle.com>, Konrad Wilk <konrad.wilk@oracle.com>,
- jgross@suse.com, Andrew.Cooper3@citrix.com, Vineeth Pillai
- <vineethrp@google.com>, Suleiman Souhlal <suleiman@google.com>, Ingo Molnar
- <mingo@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Clark Williams <clark.williams@gmail.com>, daniel.wagner@suse.com, Joseph
- Salisbury <joseph.salisbury@oracle.com>, broonie@gmail.com
-Subject: Re: [RFC][PATCH 1/2] sched: Extended scheduler time slice
-Message-ID: <20250210171539.64268143@gandalf.local.home>
-In-Reply-To: <20250210220433.24f6c6c7@pumpkin>
-References: <EC77D83D-DD17-4CCD-9EF6-C4C39FCE16E7@oracle.com>
-	<9DA1FAE6-A008-4785-BDF9-541457E29807@joelfernandes.org>
-	<20250204220418.35949317@gandalf.local.home>
-	<CAEXW_YQxTi2y_hY_e4AjLSa6RwVVLn3DPj5d4Cfewq0js-0UTA@mail.gmail.com>
-	<20250205081635.397eacb0@gandalf.local.home>
-	<CAEXW_YQY2zuU+XZjrYWLS860+PJno0nf9WAe1iPU=EyDkA7H4Q@mail.gmail.com>
-	<20250206083039.0916ad24@gandalf.local.home>
-	<20250206134408.lD_POjuG@linutronix.de>
-	<20250210144321.1f5974a6@gandalf.local.home>
-	<20250210220433.24f6c6c7@pumpkin>
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Gabriel de Perthuis
+ <g2p.code@gmail.com>, Haiyue Wang <haiyuewa@163.com>, Sami Tolvanen
+ <samitolvanen@google.com>, Mark Rutland <mark.rutland@arm.com>, Thomas
+ Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav
+ Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, "H .
+ Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+ linux-trace-kernel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] ftrace: x86: Fix a compile error about
+ get_kernel_nofault()
+Message-ID: <20250210173016.0ce79bc8@gandalf.local.home>
+In-Reply-To: <20250207085959.b3e9d922eab33edf885368e3@kernel.org>
+References: <173881156244.211648.1242168038709680511.stgit@devnote2>
+	<20250206081225.GI7145@noisy.programming.kicks-ass.net>
+	<20250206205449.5f83a585945ae6eb0cc15483@kernel.org>
+	<20250206121328.GN7145@noisy.programming.kicks-ass.net>
+	<20250206123307.GO7145@noisy.programming.kicks-ass.net>
+	<20250207085959.b3e9d922eab33edf885368e3@kernel.org>
 X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -56,44 +44,15 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Mon, 10 Feb 2025 22:04:33 +0000
-David Laight <david.laight.linux@gmail.com> wrote:
+On Fri, 7 Feb 2025 08:59:59 +0900
+Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
 
-
-> My 'gut feel' is that all the context switches with PREEMPT_RT add a significant
-> overhead.
-
-"gut feel" is normally not something we care about. You can have a gut feel
-to try new code, but it's the benchmarks and measurements that are the only
-input for actual decisions.
-
-> It might not matter if your system is lightly loaded (overspecified),
-> but if you need to run at 95%+ cpu then they will hit you hard.
+> Ah, this looks good to me except for the removing redundant asm/ibt.h
+> which Haiyue pointed.
 > 
-> Maybe you can afford to drop softint and napi code to a high(ish) priority
-> thread, but I'd have thought that most interrupts should stay that way and
-> most spinlocks stay as spinlocks - and probably all disable interrupts!
-> Any interrupts that take 'a long time' or spinlocks that are held for 'a long time'
-> really need changing anyway.
+> Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-There's a lot of users of PREEMPT_RT where things work under load. We've
-been arguing about those things being changed for a long time (over 20
-years), and that hasn't worked out well. The PREEMPT_RT method was used to
-fix that. There's just too many places that grab a spin lock and iterate a
-list that doesn't have a bound size.
-
-> 
-> But there are some really dreadful bits of code in the kernel.
-> One of the Intel ethernet drivers spins for ages whenever the bios is accessing
-> the hardware - you can't run RTP audio tests on that system.
-> 
-> Perhaps interrupt disable and pre-emption times should (optionally) be monitored
-> and a warning output every time they go up significantly.
-> A 'name and shame' policy might improve matters.
-
-We have interrupt and preemption off latency tracers. Note, any
-measurements you add can cause noticeable performance hits. They are small,
-but still noticeable. Which is why I recommend disabling them on any
-production system.
+Cool, so Peter's going to fix this and I can drop the fixes that are in
+patchwork?
 
 -- Steve
