@@ -1,31 +1,29 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 291C81E04BD;
-	Tue, 11 Feb 2025 17:52:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C1F2250C11;
+	Tue, 11 Feb 2025 19:11:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739296327; cv=none; b=id8UV2A2iHjVRAz43qLsjl+vCklukxN4CyqVNNnFfntQTe1Pm978iNaQNAkiuDquNUwlEYKvaA0ypFvz7eR8lsbZ8rzDTHdZMgd+ue+e55EneJUgP0eWVKPO7VxXwLXPNZUgyznyAin3kmD17BuTGhyqp5ctwjTiyQj4vO6BfFs=
+	t=1739301095; cv=none; b=mJTOvoix5peSbdXvEpfy8QyfCh3WIrgns/heVvdgj7jfdB8B3HFb0t7tpmz74/GsmPK+UinBP39gg1FbGgEgIMKBf8F9xk6s1QeT4rVjVWz0A+OCXRDvtLPyzfhlmPqCtePU1ELFJIc815vrKSlN7rDhjD04ZBmwZyqMvJdLakw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739296327; c=relaxed/simple;
-	bh=YTafCKEppYoNXzJ95myX+YS+ooOT1zO9b534PHZVm64=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=eac3whq6rq8kNYnKORyvvUEoSWoWvqsWV242SfeB9ddx5PBQnM6x3O8Q3Rmt4gf+9IOOqIOyld8NrDk9Qks7CuZqt3xNI3E6PBbzYmsd4B1r6y063juQCsBB/Nc98xYSXrbH3QhjnYVbuVbJjM5NOjm35qXzTbj7E+3E4eLTN1Q=
+	s=arc-20240116; t=1739301095; c=relaxed/simple;
+	bh=NT31UZbnR6y05sXiqAM4QtCObLO6ZTFZ4MMMYxKGJ/4=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=THqM2SkdqAIkEDlc4998fY1W9cRoz7/MBSLGeGfcna9gm2g4wrFPrQC+HfWggr5hKCrMJxHQHcDn3ZZE/9VNKY5w98eD5xNvi3bBL19xigRhtSSYbfcIBjv4mxrv8A0scFFhrvCE2WoxVYZMfaH8bWIfuv5WL2/uY+UqT6G8oW8=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 52E29C4CEDD;
-	Tue, 11 Feb 2025 17:52:06 +0000 (UTC)
-Date: Tue, 11 Feb 2025 12:52:11 -0500
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E67D0C4CEDD;
+	Tue, 11 Feb 2025 19:11:33 +0000 (UTC)
+Date: Tue, 11 Feb 2025 14:11:39 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Mark
- Rutland <mark.rutland@arm.com>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH v3 1/2] mm/memblock: Add reserved memory release
- function
-Message-ID: <20250211125211.1ce892a5@gandalf.local.home>
-In-Reply-To: <173928522350.906035.5626965043208329135.stgit@devnote2>
-References: <173928521419.906035.17750338150436695675.stgit@devnote2>
-	<173928522350.906035.5626965043208329135.stgit@devnote2>
+To: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+ linux-arm-kernel@lists.infradead.org, Mark Rutland <mark.rutland@arm.com>,
+ Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>, Heiko Carstens 
+ <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, Alexander Gordeev 
+ <agordeev@linux.ibm.com>, linux-s390@vger.kernel.org
+Subject: [PATCH v2] arm64: scripts/sorttable: Implement sorting mcount_loc
+ at boot for arm64
+Message-ID: <20250211141139.03d2997e@gandalf.local.home>
 X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -36,160 +34,343 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Tue, 11 Feb 2025 23:47:03 +0900
-"Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
+From: Steven Rostedt <rostedt@goodmis.org>
 
-> From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> 
-> Add reserve_mem_release_by_name() to release a reserved memory region
-> with a given name. This allows us to release reserved memory which is
-> defined by kernel cmdline, after boot.
-> 
-> Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Mike Rapoport <rppt@kernel.org>
-> Cc: linux-mm@kvack.org
+The mcount_loc section holds the addresses of the functions that get
+patched by ftrace when enabling function callbacks. It can contain tens of
+thousands of entries. These addresses must be sorted. If they are not
+sorted at compile time, they are sorted at boot. Sorting at boot does take
+some time and does have a small impact on boot performance.
 
-Hi, can we get one of the Memory Management maintainers to ack this patch?
+x86 and arm32 have the addresses in the mcount_loc section of the ELF
+file. But for arm64, the section just contains zeros. The .rela.dyn
+Elf_Rela section holds the addresses and they get patched at boot during
+the relocation phase.
 
-We will be having devices going out with the reserve_mem option to perform
-tracing in the field. But that only happens if the user grants permission
-to do so. But the kernel command line does not change between users that
-granted permission and those that do not. We would like to free up the
-memory for those devices where the users did not grant permission to trace,
-as then the memory is just wasted.
+In order to sort these addresses, the Elf_Rela needs to be updated instead
+of the location in the binary that holds the mcount_loc section. Have the
+sorttable code, allocate an array to hold the functions, load the
+addresses from the Elf_Rela entries, sort them, then put them back in
+order into the Elf_rela entries so that they will be sorted at boot up
+without having to sort them during boot up.
 
-Thanks!
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+Changes since v1: https://lore.kernel.org/all/20250210142647.083ff456@gandalf.local.home/
 
--- Steve
+  - Fixed the unused warnings when MCOUNT_SORT is not enabled
+    (reported by the kernel test robot)
 
+ arch/arm64/Kconfig  |   1 +
+ scripts/sorttable.c | 185 +++++++++++++++++++++++++++++++++++++++++++-
+ 3 files changed, 184 insertions(+), 4 deletions(-)
 
-> ---
->  Changes in v2:
->   - Rename reserved_mem_* to reserve_mem_*.
-> ---
->  include/linux/mm.h |    1 +
->  mm/memblock.c      |   72 +++++++++++++++++++++++++++++++++++++++++++---------
->  2 files changed, 61 insertions(+), 12 deletions(-)
-> 
-> diff --git a/include/linux/mm.h b/include/linux/mm.h
-> index f02925447e59..fe5f7711df04 100644
-> --- a/include/linux/mm.h
-> +++ b/include/linux/mm.h
-> @@ -4197,6 +4197,7 @@ void vma_pgtable_walk_begin(struct vm_area_struct *vma);
->  void vma_pgtable_walk_end(struct vm_area_struct *vma);
->  
->  int reserve_mem_find_by_name(const char *name, phys_addr_t *start, phys_addr_t *size);
-> +int reserve_mem_release_by_name(const char *name);
->  
->  #ifdef CONFIG_64BIT
->  int do_mseal(unsigned long start, size_t len_in, unsigned long flags);
-> diff --git a/mm/memblock.c b/mm/memblock.c
-> index 095c18b5c430..c8d207ebb93c 100644
-> --- a/mm/memblock.c
-> +++ b/mm/memblock.c
-> @@ -16,6 +16,7 @@
->  #include <linux/kmemleak.h>
->  #include <linux/seq_file.h>
->  #include <linux/memblock.h>
-> +#include <linux/mutex.h>
->  
->  #include <asm/sections.h>
->  #include <linux/io.h>
-> @@ -2263,6 +2264,7 @@ struct reserve_mem_table {
->  };
->  static struct reserve_mem_table reserved_mem_table[RESERVE_MEM_MAX_ENTRIES];
->  static int reserved_mem_count;
-> +static DEFINE_MUTEX(reserve_mem_lock);
->  
->  /* Add wildcard region with a lookup name */
->  static void __init reserved_mem_add(phys_addr_t start, phys_addr_t size,
-> @@ -2276,6 +2278,21 @@ static void __init reserved_mem_add(phys_addr_t start, phys_addr_t size,
->  	strscpy(map->name, name);
->  }
->  
-> +static struct reserve_mem_table *reserve_mem_find_by_name_nolock(const char *name)
-> +{
-> +	struct reserve_mem_table *map;
-> +	int i;
-> +
-> +	for (i = 0; i < reserved_mem_count; i++) {
-> +		map = &reserved_mem_table[i];
-> +		if (!map->size)
-> +			continue;
-> +		if (strcmp(name, map->name) == 0)
-> +			return map;
-> +	}
-> +	return NULL;
-> +}
-> +
->  /**
->   * reserve_mem_find_by_name - Find reserved memory region with a given name
->   * @name: The name that is attached to a reserved memory region
-> @@ -2289,22 +2306,53 @@ static void __init reserved_mem_add(phys_addr_t start, phys_addr_t size,
->  int reserve_mem_find_by_name(const char *name, phys_addr_t *start, phys_addr_t *size)
->  {
->  	struct reserve_mem_table *map;
-> -	int i;
->  
-> -	for (i = 0; i < reserved_mem_count; i++) {
-> -		map = &reserved_mem_table[i];
-> -		if (!map->size)
-> -			continue;
-> -		if (strcmp(name, map->name) == 0) {
-> -			*start = map->start;
-> -			*size = map->size;
-> -			return 1;
-> -		}
-> -	}
-> -	return 0;
-> +	guard(mutex)(&reserve_mem_lock);
-> +	map = reserve_mem_find_by_name_nolock(name);
-> +	if (!map)
-> +		return 0;
-> +
-> +	*start = map->start;
-> +	*size = map->size;
-> +	return 1;
->  }
->  EXPORT_SYMBOL_GPL(reserve_mem_find_by_name);
->  
-> +/**
-> + * reserve_mem_release_by_name - Release reserved memory region with a given name
-> + * @name: The name that is attatched to a reserved memory region
-> + *
-> + * Forcibly release the pages in the reserved memory region so that those memory
-> + * can be used as free memory. After released the reserved region size becomes 0.
-> + *
-> + * Returns: 1 if released or 0 if not found.
-> + */
-> +int reserve_mem_release_by_name(const char *name)
-> +{
-> +	struct reserve_mem_table *map;
-> +	unsigned int page_count;
-> +	phys_addr_t start;
-> +
-> +	guard(mutex)(&reserve_mem_lock);
-> +	map = reserve_mem_find_by_name_nolock(name);
-> +	if (!map)
-> +		return 0;
-> +
-> +	start = map->start;
-> +	page_count = DIV_ROUND_UP(map->size, PAGE_SIZE);
-> +
-> +	for (int i = 0; i < page_count; i++) {
-> +		phys_addr_t addr = start + i * PAGE_SIZE;
-> +		struct page *page = pfn_to_page(addr >> PAGE_SHIFT);
-> +
-> +		page->flags &= ~BIT(PG_reserved);
-> +		__free_page(page);
-> +	}
-> +	map->size = 0;
-> +
-> +	return 1;
-> +}
-> +
->  /*
->   * Parse reserve_mem=nn:align:name
->   */
-
+diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+index fcdd0ed3eca8..3c6c9dcd96aa 100644
+--- a/arch/arm64/Kconfig
++++ b/arch/arm64/Kconfig
+@@ -217,6 +217,7 @@ config ARM64
+ 		if DYNAMIC_FTRACE_WITH_ARGS
+ 	select HAVE_SAMPLE_FTRACE_DIRECT
+ 	select HAVE_SAMPLE_FTRACE_DIRECT_MULTI
++	select HAVE_BUILDTIME_MCOUNT_SORT
+ 	select HAVE_EFFICIENT_UNALIGNED_ACCESS
+ 	select HAVE_GUP_FAST
+ 	select HAVE_FTRACE_GRAPH_FUNC
+diff --git a/scripts/sorttable.c b/scripts/sorttable.c
+index 9f41575afd7a..4a34c275123e 100644
+--- a/scripts/sorttable.c
++++ b/scripts/sorttable.c
+@@ -28,6 +28,7 @@
+ #include <fcntl.h>
+ #include <stdio.h>
+ #include <stdlib.h>
++#include <stdbool.h>
+ #include <string.h>
+ #include <unistd.h>
+ #include <errno.h>
+@@ -79,10 +80,16 @@ typedef union {
+ 	Elf64_Sym	e64;
+ } Elf_Sym;
+ 
++typedef union {
++	Elf32_Rela	e32;
++	Elf64_Rela	e64;
++} Elf_Rela;
++
+ static uint32_t (*r)(const uint32_t *);
+ static uint16_t (*r2)(const uint16_t *);
+ static uint64_t (*r8)(const uint64_t *);
+ static void (*w)(uint32_t, uint32_t *);
++static void (*w8)(uint64_t, uint64_t *);
+ typedef void (*table_sort_t)(char *, int);
+ 
+ static struct elf_funcs {
+@@ -102,6 +109,10 @@ static struct elf_funcs {
+ 	uint32_t (*sym_name)(Elf_Sym *sym);
+ 	uint64_t (*sym_value)(Elf_Sym *sym);
+ 	uint16_t (*sym_shndx)(Elf_Sym *sym);
++	uint64_t (*rela_offset)(Elf_Rela *rela);
++	uint64_t (*rela_info)(Elf_Rela *rela);
++	uint64_t (*rela_addend)(Elf_Rela *rela);
++	void (*rela_write_addend)(Elf_Rela *rela, uint64_t val);
+ } e;
+ 
+ static uint64_t ehdr64_shoff(Elf_Ehdr *ehdr)
+@@ -262,6 +273,38 @@ SYM_ADDR(value)
+ SYM_WORD(name)
+ SYM_HALF(shndx)
+ 
++#define __maybe_unused			__attribute__((__unused__))
++
++#define RELA_ADDR(fn_name)					\
++static uint64_t rela64_##fn_name(Elf_Rela *rela)		\
++{								\
++	return r8((uint64_t *)&rela->e64.r_##fn_name);		\
++}								\
++								\
++static uint64_t rela32_##fn_name(Elf_Rela *rela)		\
++{								\
++	return r((uint32_t *)&rela->e32.r_##fn_name);		\
++}								\
++								\
++static uint64_t __maybe_unused rela_##fn_name(Elf_Rela *rela)	\
++{								\
++	return e.rela_##fn_name(rela);				\
++}
++
++RELA_ADDR(offset)
++RELA_ADDR(info)
++RELA_ADDR(addend)
++
++static void rela64_write_addend(Elf_Rela *rela, uint64_t val)
++{
++	w8(val, (uint64_t *)&rela->e64.r_addend);
++}
++
++static void rela32_write_addend(Elf_Rela *rela, uint64_t val)
++{
++	w(val, (uint32_t *)&rela->e32.r_addend);
++}
++
+ /*
+  * Get the whole file as a programming convenience in order to avoid
+  * malloc+lseek+read+free of many pieces.  If successful, then mmap
+@@ -341,6 +384,16 @@ static void wle(uint32_t val, uint32_t *x)
+ 	put_unaligned_le32(val, x);
+ }
+ 
++static void w8be(uint64_t val, uint64_t *x)
++{
++	put_unaligned_be64(val, x);
++}
++
++static void w8le(uint64_t val, uint64_t *x)
++{
++	put_unaligned_le64(val, x);
++}
++
+ /*
+  * Move reserved section indices SHN_LORESERVE..SHN_HIRESERVE out of
+  * the way to -256..-1, to avoid conflicting with real section
+@@ -398,13 +451,12 @@ static inline void *get_index(void *start, int entsize, int index)
+ static int extable_ent_size;
+ static int long_size;
+ 
++#define ERRSTR_MAXSZ	256
+ 
+ #ifdef UNWINDER_ORC_ENABLED
+ /* ORC unwinder only support X86_64 */
+ #include <asm/orc_types.h>
+ 
+-#define ERRSTR_MAXSZ	256
+-
+ static char g_err[ERRSTR_MAXSZ];
+ static int *g_orc_ip_table;
+ static struct orc_entry *g_orc_table;
+@@ -499,7 +551,19 @@ static void *sort_orctable(void *arg)
+ #endif
+ 
+ #ifdef MCOUNT_SORT_ENABLED
++
++/* Only used for sorting mcount table */
++static void rela_write_addend(Elf_Rela *rela, uint64_t val)
++{
++	e.rela_write_addend(rela, val);
++}
++
+ static pthread_t mcount_sort_thread;
++static bool sort_reloc;
++
++static long rela_type;
++
++static char m_err[ERRSTR_MAXSZ];
+ 
+ struct elf_mcount_loc {
+ 	Elf_Ehdr *ehdr;
+@@ -508,6 +572,103 @@ struct elf_mcount_loc {
+ 	uint64_t stop_mcount_loc;
+ };
+ 
++/* Sort the relocations not the address itself */
++static void *sort_relocs(Elf_Ehdr *ehdr, uint64_t start_loc, uint64_t size)
++{
++	Elf_Shdr *shdr_start;
++	Elf_Rela *rel;
++	unsigned int shnum;
++	unsigned int count;
++	int shentsize;
++	void *vals;
++	void *ptr;
++
++	shdr_start = (Elf_Shdr *)((char *)ehdr + ehdr_shoff(ehdr));
++	shentsize = ehdr_shentsize(ehdr);
++
++	vals = malloc(long_size * size);
++	if (!vals) {
++		snprintf(m_err, ERRSTR_MAXSZ, "Failed to allocate sort array");
++		pthread_exit(m_err);
++		return NULL;
++	}
++
++	ptr = vals;
++
++	shnum = ehdr_shnum(ehdr);
++	if (shnum == SHN_UNDEF)
++		shnum = shdr_size(shdr_start);
++
++	for (int i = 0; i < shnum; i++) {
++		Elf_Shdr *shdr = get_index(shdr_start, shentsize, i);
++		void *end;
++
++		if (shdr_type(shdr) != SHT_RELA)
++			continue;
++
++		rel = (void *)ehdr + shdr_offset(shdr);
++		end = (void *)rel + shdr_size(shdr);
++
++		for (; (void *)rel < end; rel = (void *)rel + shdr_entsize(shdr)) {
++			uint64_t offset = rela_offset(rel);
++
++			if (offset >= start_loc && offset < start_loc + size) {
++				if (ptr + long_size > vals + size) {
++					free(vals);
++					snprintf(m_err, ERRSTR_MAXSZ,
++						 "Too many relocations");
++					pthread_exit(m_err);
++					return NULL;
++				}
++
++				/* Make sure this has the correct type */
++				if (rela_info(rel) != rela_type) {
++					free(vals);
++					snprintf(m_err, ERRSTR_MAXSZ,
++						"rela has type %lx but expected %lx\n",
++						(long)rela_info(rel), rela_type);
++					pthread_exit(m_err);
++					return NULL;
++				}
++
++				if (long_size == 4)
++					*(uint32_t *)ptr = rela_addend(rel);
++				else
++					*(uint64_t *)ptr = rela_addend(rel);
++				ptr += long_size;
++			}
++		}
++	}
++	count = ptr - vals;
++	qsort(vals, count / long_size, long_size, compare_extable);
++
++	ptr = vals;
++	for (int i = 0; i < shnum; i++) {
++		Elf_Shdr *shdr = get_index(shdr_start, shentsize, i);
++		void *end;
++
++		if (shdr_type(shdr) != SHT_RELA)
++			continue;
++
++		rel = (void *)ehdr + shdr_offset(shdr);
++		end = (void *)rel + shdr_size(shdr);
++
++		for (; (void *)rel < end; rel = (void *)rel + shdr_entsize(shdr)) {
++			uint64_t offset = rela_offset(rel);
++
++			if (offset >= start_loc && offset < start_loc + size) {
++				if (long_size == 4)
++					rela_write_addend(rel, *(uint32_t *)ptr);
++				else
++					rela_write_addend(rel, *(uint64_t *)ptr);
++				ptr += long_size;
++			}
++		}
++	}
++	free(vals);
++	return NULL;
++}
++
+ /* Sort the addresses stored between __start_mcount_loc to __stop_mcount_loc in vmlinux */
+ static void *sort_mcount_loc(void *arg)
+ {
+@@ -517,6 +678,9 @@ static void *sort_mcount_loc(void *arg)
+ 	uint64_t count = emloc->stop_mcount_loc - emloc->start_mcount_loc;
+ 	unsigned char *start_loc = (void *)emloc->ehdr + offset;
+ 
++	if (sort_reloc)
++		return sort_relocs(emloc->ehdr, emloc->start_mcount_loc, count);
++
+ 	qsort(start_loc, count/long_size, long_size, compare_extable);
+ 	return NULL;
+ }
+@@ -866,12 +1030,14 @@ static int do_file(char const *const fname, void *addr)
+ 		r2	= r2le;
+ 		r8	= r8le;
+ 		w	= wle;
++		w8	= w8le;
+ 		break;
+ 	case ELFDATA2MSB:
+ 		r	= rbe;
+ 		r2	= r2be;
+ 		r8	= r8be;
+ 		w	= wbe;
++		w8	= w8be;
+ 		break;
+ 	default:
+ 		fprintf(stderr, "unrecognized ELF data encoding %d: %s\n",
+@@ -887,8 +1053,13 @@ static int do_file(char const *const fname, void *addr)
+ 	}
+ 
+ 	switch (r2(&ehdr->e32.e_machine)) {
+-	case EM_386:
+ 	case EM_AARCH64:
++#ifdef MCOUNT_SORT_ENABLED
++		sort_reloc = true;
++		rela_type = 0x403;
++#endif
++		/* fallthrough */
++	case EM_386:
+ 	case EM_LOONGARCH:
+ 	case EM_RISCV:
+ 	case EM_S390:
+@@ -932,6 +1103,10 @@ static int do_file(char const *const fname, void *addr)
+ 			.sym_name		= sym32_name,
+ 			.sym_value		= sym32_value,
+ 			.sym_shndx		= sym32_shndx,
++			.rela_offset		= rela32_offset,
++			.rela_info		= rela32_info,
++			.rela_addend		= rela32_addend,
++			.rela_write_addend	= rela32_write_addend,
+ 		};
+ 
+ 		e = efuncs;
+@@ -965,6 +1140,10 @@ static int do_file(char const *const fname, void *addr)
+ 			.sym_name		= sym64_name,
+ 			.sym_value		= sym64_value,
+ 			.sym_shndx		= sym64_shndx,
++			.rela_offset		= rela64_offset,
++			.rela_info		= rela64_info,
++			.rela_addend		= rela64_addend,
++			.rela_write_addend	= rela64_write_addend,
+ 		};
+ 
+ 		e = efuncs;
