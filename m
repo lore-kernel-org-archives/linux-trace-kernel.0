@@ -1,158 +1,140 @@
-Received: from mail-ua1-f46.google.com (mail-ua1-f46.google.com [209.85.222.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69A5A261375;
-	Mon, 10 Feb 2025 23:39:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71A7D380;
+	Tue, 11 Feb 2025 00:01:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739230761; cv=none; b=rZ8Ei8rBzl1YfOSYiWaMj+W2w+cL/rDSiB6JHwNcSi1qxtHlu5AzwQF8B84pG/c+aP/dAWWGjXXgZ8ccg/DgljEuu/wugme8SdDQgKp3TTxQ6rLHhRiIFt1VSEONet7P+sd2lZoqMrT7355eUeWcfgYtnKLSbeHDQ6cYr3Z9B3s=
+	t=1739232064; cv=none; b=ia2sn+vLnJ1BGnIbMKPUkyz9SogH+1WNXwF0rCLt3FHk+Qn/oQCQ0KKxwaVAyAYvLtenOrcGxP7GIkWlchgA0f+9uzTLc2IzrUQinDXw5PS4O5OJKdpXSrU/FUhVror136OgMq52jnbnBe3s0mx3EDaYwBFfXWeLXRr8wAIXyYo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739230761; c=relaxed/simple;
-	bh=XtC1lnaFlsxPJJUHriOWePwP8yBTmLkmhQe6ny+9TZw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=enyxpP0ePtn43VNmurpnbv3QRJrTbIlcaAF9tNxR0hNz8wBfR4Oml8YfH1AOEo+c1oh4G4QTPWaieOcwBjpkLFT8RPA5cMJbf01MpAQcFzfUwS7oo2lhripwhPNXKp4af1uL+GcEYrLedl/NY06/N+BIRYjtcsyna8M4j6iOzs8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PvCsv4p/; arc=none smtp.client-ip=209.85.222.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1739232064; c=relaxed/simple;
+	bh=KJAXYKFfcDTkKPOe7RLg/h85JfAGZ7OLrRd3HvGoHPo=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=rVp6f8oNEkdAOKEuOK/QYyVuSl2PWPl2Wq0jDzbAQojPiMmCxVGOUbKnmYrCpx8MMn1xMfjtWrYzlM3oM42IA1f1DV/lS12+GJ4p75d5shUW9wceqxJQth64dpTNGtxY4x4BcpMNQxhwiHWBILcFL/CgPTXvXPK2sFAbNvezRfQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Bo6HhKy4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PvCsv4p/"
-Received: by mail-ua1-f46.google.com with SMTP id a1e0cc1a2514c-86703c58149so1230238241.0;
-        Mon, 10 Feb 2025 15:39:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739230758; x=1739835558; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=r4J5WV+6IR7+S2waApgF1qBwpbiN//GCbixakjmicks=;
-        b=PvCsv4p/sEKjoFjFtVnpdanLWNPVWH5TQE4Bh0rNoohnh2nWO5PabqYBxnAu8S3+ik
-         Mrmgt0OSLz5KlhUYDkE2UYYqtz0dyvV6f6cLCkXL/Dmtd72+fkxnfJfqp/PHbUrQ72V/
-         1iO8Y/5Wq/E3vhT87QgBUrHUqh5iQHux4pt1SwP1ICt5kbJtr5szjkrL7wxGeN9zCd2t
-         CvBoeUrIBuyeJUT/pyklgAsVA5LAoeYaQiV+t6XKBrdiwBLts7oA814JU3ifGYkEvwIj
-         227H85kfKRR7bTI46CMcWRUA0ce0TTN0WA6t94QToL+SdtPo5azlgqunYArWBeAeV2Ht
-         eHDw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739230758; x=1739835558;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=r4J5WV+6IR7+S2waApgF1qBwpbiN//GCbixakjmicks=;
-        b=YFPTmTE+faKyd5PeDli4wq3PZLmXnbYarapMkSS8IconQGbE+FbvZz6ZaCerUP2sIC
-         ADNVeCzYPgWlfV2mvG+SUDfo+WTQHW1IQCRlpFR2d3ViIZlyvPrDA6hEmeUJqmAqxNuo
-         fYNgSRp2R+5Ce/ydJaV+hce4sKlHGQqY6YlN5OcyYi5G/IgLemDbpREZPiTGPuLLc31m
-         9teJnQf/nYOHZwtkEZZH3UZ5IjBhYRVsPac5GwyHDHYrLMfaL5FZizPrzu66coEob9DY
-         WFLWtZp7TLOS7dSvr7hKep0t0md5vj6JtrcZXy33IcExvxLitB1fpD8yBW4VX5dbxEbJ
-         ZyuA==
-X-Forwarded-Encrypted: i=1; AJvYcCUMwXGRBWzaxykwHPx6EpFnz4h6TJAx8vEZIBo4PAmsEyITHqJXv6siANG15/+PF+KRcAzUI0d415JjByehmgdI3A==@vger.kernel.org, AJvYcCUfGoinyiubk9ar27zndQxCrlsIwpfHGi+eeuy4+OxFBp4QwZDk0HPVgFAHACoUt7IX2cHejxQGUVnXNm0nEwc/E0ZU@vger.kernel.org, AJvYcCUxdzmZ8UQbEcLCDldnQf/IvVAoV28h34raWWIf/6hQ0vlJtlob30AYYZ3OaBkCECixCTlxz2GKuGw6qP6D@vger.kernel.org, AJvYcCW76MZGXav1J96O8mHJpBz0Pc0Wq0xIdoYwj/2AedrtT1Q0VWa7nS/H+Ln5YarJ16+Ud1ut9Gld8Fc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwGm2TqEfGEtvmrVgQiyD1+ZI2ZuWs+QmPFKwTeTxgjLgo4qrOa
-	MSNP4w8RYDYNcV+GvzL6XMXJRAqhDpMwwhX5undWBEyDoh7NvwbVYI32HkBN+USzeQHBLwQzYSo
-	XWwUbxZSfzosXWbmNY71hCXwP5nY=
-X-Gm-Gg: ASbGncukU/5Rg7r7139f0qjOiOweN8iyZuTkLvLpr9qr9KNyq59bc+6prnBFeZ3toJu
-	YuKeU8HF7iKTp8/F2Ombl4ULBKn4a5m+l/onDOnoqnw5iRLHSGTG6tI9SzB0MuTpXI6LIK6y2pf
-	Gp8J7Jl6s4bOfaBpHaZialLZcbK8pOEyU=
-X-Google-Smtp-Source: AGHT+IEzfy3CbplemS9WcnlHDD6MpmxCskJpVqC7I5+Y9/ioGIApBpWu1Deqy+MADOJ9mj0OMU6KQgcPeg0LuaokY6w=
-X-Received: by 2002:a05:6102:2b88:b0:4bb:ba51:7d48 with SMTP id
- ada2fe7eead31-4bbba51806cmr4870296137.5.1739230758203; Mon, 10 Feb 2025
- 15:39:18 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Bo6HhKy4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EACA0C4CED1;
+	Tue, 11 Feb 2025 00:00:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739232063;
+	bh=KJAXYKFfcDTkKPOe7RLg/h85JfAGZ7OLrRd3HvGoHPo=;
+	h=Date:From:Subject:To:Cc:References:In-Reply-To:From;
+	b=Bo6HhKy4FsJamOKzCtjqK8uo3ZdPNN7akmZSAOEg1QBxFGF+Ia49S7UgP5MLfHEw6
+	 VV13dCI0D8/e+E3yeKI7FJknC423IhA3c+FCZMiuXff703v5eLHiF+vI+WrSf6uV/Z
+	 E4GRMlzSd17XEfk39LXUf8ByV/zJydc+A7dQkD9nFG1g0yTm47zdcqcPbN+1LxXaAD
+	 xLEbWuk6mUpoG0mikMzcpi58EbTNuqx5ozW/aIUDnR2AL86oA4ZOx9MYiUj1S7PpHM
+	 Ywl98ZAAtikOMJ1qz9yTuXtvfoM0Vg+UhFXqGMJpzuAsVLPrKkAyYr8jYReK+/cMjD
+	 kT8e776dGaSjA==
+Message-ID: <21f98687-f715-449c-86f0-c095ea499450@kernel.org>
+Date: Tue, 11 Feb 2025 00:00:49 +0000
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250210193801.781278-1-david@redhat.com> <20250210150515.c71078f212ff4661eafc15bf@linux-foundation.org>
-In-Reply-To: <20250210150515.c71078f212ff4661eafc15bf@linux-foundation.org>
-From: Barry Song <21cnbao@gmail.com>
-Date: Tue, 11 Feb 2025 12:39:07 +1300
-X-Gm-Features: AWEUYZmxTQri2-Cf24uNq3e2oUES2a1ywMTPcjyR3D9qOdCEqwTj81M6L3Eziec
-Message-ID: <CAGsJ_4yVkJdKejof1CxJY1hkUSsQ-ziRzCTp9CBXdBJ-4d1HHw@mail.gmail.com>
-Subject: Re: [PATCH v2 00/17] mm: fixes for device-exclusive entries (hmm)
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: David Hildenbrand <david@redhat.com>, linux-kernel@vger.kernel.org, 
-	linux-doc@vger.kernel.org, dri-devel@lists.freedesktop.org, 
-	linux-mm@kvack.org, nouveau@lists.freedesktop.org, 
-	linux-trace-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	damon@lists.linux.dev, =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>, 
-	Jonathan Corbet <corbet@lwn.net>, Alex Shi <alexs@kernel.org>, Yanteng Si <si.yanteng@linux.dev>, 
-	Karol Herbst <kherbst@redhat.com>, Lyude Paul <lyude@redhat.com>, 
-	Danilo Krummrich <dakr@kernel.org>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Oleg Nesterov <oleg@redhat.com>, 
-	Peter Zijlstra <peterz@infradead.org>, SeongJae Park <sj@kernel.org>, 
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, 
-	Vlastimil Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>, 
-	Pasha Tatashin <pasha.tatashin@soleen.com>, Peter Xu <peterx@redhat.com>, 
-	Alistair Popple <apopple@nvidia.com>, Jason Gunthorpe <jgg@nvidia.com>, Barry Song <v-songbaohua@oppo.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+From: Quentin Monnet <qmo@kernel.org>
+Subject: Re: [PATCH v2 2/2] tools: Remove redundant quiet setup
+To: Charlie Jenkins <charlie@rivosinc.com>,
+ Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
+ Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau
+ <martin.lau@linux.dev>, Eduard Zingerman <eddyz87@gmail.com>,
+ Song Liu <song@kernel.org>, Yonghong Song <yonghong.song@linux.dev>,
+ John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>,
+ Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>,
+ Jiri Olsa <jolsa@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
+ Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>,
+ "Rafael J. Wysocki" <rafael@kernel.org>,
+ Daniel Lezcano <daniel.lezcano@linaro.org>, Zhang Rui <rui.zhang@intel.com>,
+ Lukasz Luba <lukasz.luba@arm.com>, Josh Poimboeuf <jpoimboe@kernel.org>,
+ Mykola Lysenko <mykolal@fb.com>, Shuah Khan <shuah@kernel.org>,
+ Jiri Kosina <jikos@kernel.org>, Benjamin Tissoires <bentiss@kernel.org>,
+ Steven Rostedt <rostedt@goodmis.org>
+Cc: bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, linux-pm@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, linux-input@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+References: <20250210-quiet_tools-v2-0-b2f18cbf72af@rivosinc.com>
+ <20250210-quiet_tools-v2-2-b2f18cbf72af@rivosinc.com>
+Content-Language: en-GB
+In-Reply-To: <20250210-quiet_tools-v2-2-b2f18cbf72af@rivosinc.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, Feb 11, 2025 at 12:05=E2=80=AFPM Andrew Morton
-<akpm@linux-foundation.org> wrote:
->
-> On Mon, 10 Feb 2025 20:37:42 +0100 David Hildenbrand <david@redhat.com> w=
-rote:
->
-> > Against mm-hotfixes-stable for now.
-> >
-> > Discussing the PageTail() call in make_device_exclusive_range() with
-> > Willy, I recently discovered [1] that device-exclusive handling does
-> > not properly work with THP, making the hmm-tests selftests fail if THPs
-> > are enabled on the system.
-> >
-> > Looking into more details, I found that hugetlb is not properly fenced,
-> > and I realized that something that was bugging me for longer -- how
-> > device-exclusive entries interact with mapcounts -- completely breaks
-> > migration/swapout/split/hwpoison handling of these folios while they ha=
-ve
-> > device-exclusive PTEs.
-> >
-> > The program below can be used to allocate 1 GiB worth of pages and
-> > making them device-exclusive on a kernel with CONFIG_TEST_HMM.
-> >
-> > Once they are device-exclusive, these folios cannot get swapped out
-> > (proc$pid/smaps_rollup will always indicate 1 GiB RSS no matter how
-> > much one forces memory reclaim), and when having a memory block onlined
-> > to ZONE_MOVABLE, trying to offline it will loop forever and complain ab=
-out
-> > failed migration of a page that should be movable.
-> >
-> > # echo offline > /sys/devices/system/memory/memory136/state
-> > # echo online_movable > /sys/devices/system/memory/memory136/state
-> > # ./hmm-swap &
-> > ... wait until everything is device-exclusive
-> > # echo offline > /sys/devices/system/memory/memory136/state
-> > [  285.193431][T14882] page: refcount:2 mapcount:0 mapping:000000000000=
-0000
-> >   index:0x7f20671f7 pfn:0x442b6a
-> > [  285.196618][T14882] memcg:ffff888179298000
-> > [  285.198085][T14882] anon flags: 0x5fff0000002091c(referenced|uptodat=
-e|
-> >   dirty|active|owner_2|swapbacked|node=3D1|zone=3D3|lastcpupid=3D0x7ff)
-> > [  285.201734][T14882] raw: ...
-> > [  285.204464][T14882] raw: ...
-> > [  285.207196][T14882] page dumped because: migration failure
-> > [  285.209072][T14882] page_owner tracks the page as allocated
-> > [  285.210915][T14882] page last allocated via order 0, migratetype
-> >   Movable, gfp_mask 0x140dca(GFP_HIGHUSER_MOVABLE|__GFP_COMP|__GFP_ZERO=
-),
-> >   id 14926, tgid 14926 (hmm-swap), ts 254506295376, free_ts 22740202377=
-4
-> > [  285.216765][T14882]  post_alloc_hook+0x197/0x1b0
-> > [  285.218874][T14882]  get_page_from_freelist+0x76e/0x3280
-> > [  285.220864][T14882]  __alloc_frozen_pages_noprof+0x38e/0x2740
-> > [  285.223302][T14882]  alloc_pages_mpol+0x1fc/0x540
-> > [  285.225130][T14882]  folio_alloc_mpol_noprof+0x36/0x340
-> > [  285.227222][T14882]  vma_alloc_folio_noprof+0xee/0x1a0
-> > [  285.229074][T14882]  __handle_mm_fault+0x2b38/0x56a0
-> > [  285.230822][T14882]  handle_mm_fault+0x368/0x9f0
-> > ...
-> >
-> > This series fixes all issues I found so far.
->
-> Cool.
->
-> Barry, could you please redo your series "mm: batched unmap lazyfree
-> large folios during reclamation" on top of this (on top of mm-unstable,
-> ideally).
+2025-02-10 10:34 UTC-0800 ~ Charlie Jenkins <charlie@rivosinc.com>
+> Q is exported from Makefile.include so it is not necessary to manually
+> set it.
+> 
+> Signed-off-by: Charlie Jenkins <charlie@rivosinc.com>
+> ---
+>  tools/arch/arm64/tools/Makefile           |  6 ------
+>  tools/bpf/Makefile                        |  6 ------
+>  tools/bpf/bpftool/Documentation/Makefile  |  6 ------
+>  tools/bpf/bpftool/Makefile                |  6 ------
+>  tools/bpf/resolve_btfids/Makefile         |  2 --
+>  tools/bpf/runqslower/Makefile             |  5 +----
+>  tools/lib/bpf/Makefile                    | 13 -------------
+>  tools/lib/perf/Makefile                   | 13 -------------
+>  tools/lib/thermal/Makefile                | 13 -------------
+>  tools/objtool/Makefile                    |  6 ------
+>  tools/testing/selftests/bpf/Makefile.docs |  6 ------
+>  tools/testing/selftests/hid/Makefile      |  2 --
+>  tools/thermal/lib/Makefile                | 13 -------------
+>  tools/tracing/latency/Makefile            |  6 ------
+>  tools/tracing/rtla/Makefile               |  6 ------
+>  tools/verification/rv/Makefile            |  6 ------
+>  16 files changed, 1 insertion(+), 114 deletions(-)
+> 
 
-Sure. Thanks for letting me know.
 
->
+[...]
+
+
+> diff --git a/tools/bpf/bpftool/Documentation/Makefile b/tools/bpf/bpftool/Documentation/Makefile
+> index 4315652678b9f2e27e48b7815f3b9ddc70a57165..bf843f328812e10dd65a73f355f74e6825ad95b9 100644
+> --- a/tools/bpf/bpftool/Documentation/Makefile
+> +++ b/tools/bpf/bpftool/Documentation/Makefile
+> @@ -5,12 +5,6 @@ INSTALL ?= install
+>  RM ?= rm -f
+>  RMDIR ?= rmdir --ignore-fail-on-non-empty
+>  
+> -ifeq ($(V),1)
+> -  Q =
+> -else
+> -  Q = @
+> -endif
+> -
+>  prefix ?= /usr/local
+>  mandir ?= $(prefix)/man
+>  man8dir = $(mandir)/man8
+> diff --git a/tools/bpf/bpftool/Makefile b/tools/bpf/bpftool/Makefile
+> index dd9f3ec842017f1dd24054bf3a0986d546811dc4..6ea4823b770cbbe7fd9eb7da79956cc1dae1f204 100644
+> --- a/tools/bpf/bpftool/Makefile
+> +++ b/tools/bpf/bpftool/Makefile
+> @@ -7,12 +7,6 @@ srctree := $(patsubst %/,%,$(dir $(srctree)))
+>  srctree := $(patsubst %/,%,$(dir $(srctree)))
+>  endif
+>  
+> -ifeq ($(V),1)
+> -  Q =
+> -else
+> -  Q = @
+> -endif
+> -
+>  BPF_DIR = $(srctree)/tools/lib/bpf
+>  
+>  ifneq ($(OUTPUT),)
+
+
+This is OK from bpftool's side, the GitHub mirror has a Makefile.include
+included from both main and doc Makefiles, and where I can move this
+definition.
+
+Acked-by: Quentin Monnet <qmo@kernel.org>
+
+Thanks
