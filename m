@@ -1,41 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 273C5253B78;
-	Tue, 11 Feb 2025 15:49:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D49826BDAB;
+	Tue, 11 Feb 2025 16:24:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739288999; cv=none; b=fB54Igb9HqYsRvk4GXwqQiabaqbBzKgrE1TNtFFmRlH4xg4M2fw4+ENLxCJtC+y3Rd2rbxbb1aSmP6fTCvZf0MTWHGDLQs6p6ktu2uDu/YJ+R40mXQV8f+UUbcg8pwwlbiTDqnPAlBvUrbMySGZcSfb7nrFFbiHfVpA576d92EI=
+	t=1739291050; cv=none; b=W6s0M1MAUx8fTe8XS7CWdn4fyks/eSwxWwkePmVwcA8NxMhwPPRehiQ/Q61HViEZAu8brf+LQW1Q+otwsy6ohCmaGPTbzinqGrBz0kshqo/2ViGxsqytNq1MK3QZP7ykWxzq5ffGxtwIHBTrz7oxSNabn2UxMvt/FrS6BiGo+oI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739288999; c=relaxed/simple;
-	bh=WH6M6M02Yrw5Vf7oinZl3vqvT5eLFg3LKVqdyJx/LQg=;
+	s=arc-20240116; t=1739291050; c=relaxed/simple;
+	bh=fOJNLFXheFs3t97+oDIWKPx50/a6xFugJurvSYY4P0U=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=D9QW7IFPFP/XthfBCOTxwVqtsUxCDGuTSUD2MEoDdYS4KS7Wm2FJYKrUsipaLZb6Cnw3+U9wpyymqcwJIkFbuP9TRpbkYReOqRHJPELrLIpl7jbUjJF/3RHx9IqFcANERaf+swCwF6Ra9zzCH5BokLj8QpfZ0JCBh0R8FVcy7KY=
+	 MIME-Version:Content-Type; b=nbk3zBE/z4wDcQW+I4Bt5zv4GCSkWMKVDR0nMy89yrqVTWZGtC60ZwoyHplZw6W/rcyGkGQgXeqFBpL6P/sK5Utvx2G5rst6yJWemGmUVduQ3IZBDrGt0diDvkZm7Wkff5KhzzRmTQso4jgx1DIf/CXWuYQxCU11/qj4bRlPP4o=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 25DABC4CEE6;
-	Tue, 11 Feb 2025 15:49:57 +0000 (UTC)
-Date: Tue, 11 Feb 2025 10:50:02 -0500
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6FD20C4CEDD;
+	Tue, 11 Feb 2025 16:24:08 +0000 (UTC)
+Date: Tue, 11 Feb 2025 11:24:13 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>, Gabriel de Perthuis
- <g2p.code@gmail.com>, Haiyue Wang <haiyuewa@163.com>, Sami Tolvanen
- <samitolvanen@google.com>, Mark Rutland <mark.rutland@arm.com>, Thomas
- Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav
- Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, "H .
- Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
- linux-trace-kernel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] ftrace: x86: Fix a compile error about
- get_kernel_nofault()
-Message-ID: <20250211105002.31b5a517@gandalf.local.home>
-In-Reply-To: <20250211100914.GA29593@noisy.programming.kicks-ass.net>
-References: <173881156244.211648.1242168038709680511.stgit@devnote2>
-	<20250206081225.GI7145@noisy.programming.kicks-ass.net>
-	<20250206205449.5f83a585945ae6eb0cc15483@kernel.org>
-	<20250206121328.GN7145@noisy.programming.kicks-ass.net>
-	<20250206123307.GO7145@noisy.programming.kicks-ass.net>
-	<20250207085959.b3e9d922eab33edf885368e3@kernel.org>
-	<20250210173016.0ce79bc8@gandalf.local.home>
-	<20250211100914.GA29593@noisy.programming.kicks-ass.net>
+To: Menglong Dong <menglong8.dong@gmail.com>
+Cc: alexei.starovoitov@gmail.com, x86@kernel.org, tglx@linutronix.de,
+ mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, hpa@zytor.com,
+ mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
+ dongml2@chinatelecom.cn, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org
+Subject: Re: [RFC PATCH] x86: add function metadata support
+Message-ID: <20250211112413.4c43a9ca@gandalf.local.home>
+In-Reply-To: <CADxym3YzTc8wyAndNP4OpK8JSLWkpCAMgJox49ioUBXrov1h=w@mail.gmail.com>
+References: <20250210104034.146273-1-dongml2@chinatelecom.cn>
+	<20250210180528.01118537@gandalf.local.home>
+	<CADxym3YzTc8wyAndNP4OpK8JSLWkpCAMgJox49ioUBXrov1h=w@mail.gmail.com>
 X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -46,20 +38,37 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Tue, 11 Feb 2025 11:09:14 +0100
-Peter Zijlstra <peterz@infradead.org> wrote:
+On Tue, 11 Feb 2025 20:03:38 +0800
+Menglong Dong <menglong8.dong@gmail.com> wrote:
 
-> I was aiming my patch for x86/core, but if there's a reason to expedite
-> them, I can stick it in x86/urgent I suppose.
+
 > 
-> Just need a reason -- what's this compile error nonsense about, my
-> kernels build just fine?
+> Another beneficiary can be ftrace. For now, all the kernel functions that
+> are enabled by dynamic ftrace will be added to a filter hash. And hash
+> lookup will happen when then traced functions are called, which has an
+> impact on the performance, see
+> __ftrace_ops_list_func() -> ftrace_ops_test(). With the per-function metadata
+> support, we can store the information that if the ftrace ops is enabled on the
+> kernel function to the metadata.
 
-Masami,
+Note, ftrace only uses ftrace_ops_list if there's more than one callback
+attached to the same function. Otherwise it calls directly to a single
+trampoline, and is rather efficient. No meta data needed.
 
-Do you have a config that fails to build without this fix? If so, can you
-please reply with it, and then this can go in as a quick fix.
+> > Arm64 and other archs add meta data before the functions too. Can we have
+> > an effort to perhaps share these methods?  
+> 
+> I have not done research on arm64 yet. AFAIK, arm64 insn is 16-bytes aligned,
+> so the way we process can be a little different here, as making kernel function
+> non 16-bytes aligned can have a huge influence.
 
-Thanks,
+Arm64 already uses the meta data before every function. That's where it
+stores a pointer to the ftrace_ops. So in ftrace, when there's a single
+callback attached to a function in arm64, it jumps to a ftrace trampoline,
+that will reference the function's meta data to find the ftrace_ops to use
+for that callback.
+
+If more than one callback is attached to the same function, then it acts
+just like x86 and does the loop.
 
 -- Steve
