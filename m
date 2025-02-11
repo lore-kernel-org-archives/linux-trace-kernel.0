@@ -1,47 +1,47 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E1221DFDAB
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 11 Feb 2025 00:31:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25B951805E
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 11 Feb 2025 00:31:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739233906; cv=none; b=pPEonWg2+KZ+XwrsP91IoAQYoQgHxKfgW31ntjPp1Wl/fUkGQcFzD7sYkgH4QV4YpBOHGGAkxLwqJsZF0CBbFoNRvu9fTjvBEsNNNK7dpF4w/hTIqSCAPKAem58OX4gb8ilO8YzYd+M1R5TNx+2L27s37jqjlc6MBDACM3iYF9A=
+	t=1739233914; cv=none; b=jGm/E6awTvTuzEbcJmJX56iOlxoAFvp7fZi6ggCsCMK1+mZv6wErGLawsr615g6uTXu0zypaSJM+/Wggi/rxqADX2V4cbW4Bk9fRuWPE5oTHOdRtLUlWMHkFZYaVBAUbudBfnjHT+h0jtB/AlgKw14CD0Z0F5dSQjpefyqGvh00=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739233906; c=relaxed/simple;
-	bh=zsg7Lb4sKnYhVww/v9vwP2UhGN1gjZUs4C+UjH1ebK0=;
+	s=arc-20240116; t=1739233914; c=relaxed/simple;
+	bh=exluz/RAmIVPLGFMkT8KUSBrUpp5/n1b2knsIKpRLuQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=TcRo+IVzauYDCDcphMK/qEBelGGwOEqPxm8TeDBh+auv6/SYqvos/8TpJxt8/LbSH49GeyQ7NKUa47oFQwFZWDYCuj0z93eLedpSOjvxmMLTrREbALDDWXsG7NzcVDLfYJQpyYthdEeE5s2hjXQvpx1FtiCbHiQ3zA4cdH7I9U0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=MtN31F8j; arc=none smtp.client-ip=170.10.133.124
+	 MIME-Version; b=pl48BScCV+iQIIN1AOEddwPaPrbpSJlEtQs/A6IQcF7MZC3jxNB82hCOSwjUR9+2NBVo4p9O7JQk0Yt8OaVsBzfl2osKA8jspk9VshB1uURqC1FQi2kbkeYkxRWtFp6b6TwU3Hcgh9isu3KxkBZqFrfEKxnhg4eNcZmnuMNvkZk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=bszaF5oh; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MtN31F8j"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bszaF5oh"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1739233903;
+	s=mimecast20190719; t=1739233912;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=rzjDVzZllkv1t501JGBPBZlzucpspDJXSDj68ZE8hcQ=;
-	b=MtN31F8jjsyg24xrARU2X4F8PJqsX2QDTwt5BWLzK8ZyvLjvi5HDc7b2FNulI+u0cGGXBA
-	yRudhV63/S2lby/8urxMLTNIisCqQPbYTEACdLTIQIq7CrKQNg/l+Vb8npTRF9G8v9XjRM
-	83X1qFeazAT7SiWY7wSZwgK8FbzT+zQ=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+	bh=h0sopSeKMteOebrJDoWD56LIp+P2qMN45Do9CiZPN14=;
+	b=bszaF5ohyyE88Dkld4htpnePyqWDU6oPketEnXt0GXMNIG6hjavc6CB4fAdALoXeps0OrP
+	MNaLpawC3LyIqUw3Y+YU443eTKHdltovdCQ0m0xqz1dQQ4ziyypMT5DAzv6UTYXdSDrwge
+	vl0MdaB3zQxJ9FhS/ncOzuf3ck+pbIs=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-488-OM9rMKLZPIuLmOGLavR4PQ-1; Mon,
- 10 Feb 2025 19:31:40 -0500
-X-MC-Unique: OM9rMKLZPIuLmOGLavR4PQ-1
-X-Mimecast-MFC-AGG-ID: OM9rMKLZPIuLmOGLavR4PQ
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-480--IkTyaSUNSaX2JxRcwKqPA-1; Mon,
+ 10 Feb 2025 19:31:50 -0500
+X-MC-Unique: -IkTyaSUNSaX2JxRcwKqPA-1
+X-Mimecast-MFC-AGG-ID: -IkTyaSUNSaX2JxRcwKqPA
 Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 735BC1800873;
-	Tue, 11 Feb 2025 00:31:35 +0000 (UTC)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 236541800373;
+	Tue, 11 Feb 2025 00:31:46 +0000 (UTC)
 Received: from h1.redhat.com (unknown [10.22.88.129])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 4FABA180035E;
-	Tue, 11 Feb 2025 00:31:25 +0000 (UTC)
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id C2B4718004A7;
+	Tue, 11 Feb 2025 00:31:35 +0000 (UTC)
 From: Nico Pache <npache@redhat.com>
 To: linux-kernel@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org,
@@ -86,9 +86,9 @@ Cc: ryan.roberts@arm.com,
 	rostedt@goodmis.org,
 	mathieu.desnoyers@efficios.com,
 	tiwai@suse.de
-Subject: [RFC v2 3/9] khugepaged: generalize hugepage_vma_revalidate for mTHP support
-Date: Mon, 10 Feb 2025 17:30:22 -0700
-Message-ID: <20250211003028.213461-4-npache@redhat.com>
+Subject: [RFC v2 4/9] khugepaged: generalize alloc_charge_folio for mTHP support
+Date: Mon, 10 Feb 2025 17:30:23 -0700
+Message-ID: <20250211003028.213461-5-npache@redhat.com>
 In-Reply-To: <20250211003028.213461-1-npache@redhat.com>
 References: <20250211003028.213461-1-npache@redhat.com>
 Precedence: bulk
@@ -100,68 +100,56 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
 
-For khugepaged to support different mTHP orders, we must generalize this
-function for arbitrary orders.
+alloc_charge_folio allocates the new folio for the khugepaged collapse.
+Generalize the order of the folio allocations to support future mTHP
+collapsing.
 
-No functional change in this patch.
+No functional changes in this patch.
 
 Signed-off-by: Nico Pache <npache@redhat.com>
 ---
- mm/khugepaged.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ mm/khugepaged.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
 diff --git a/mm/khugepaged.c b/mm/khugepaged.c
-index 4c88d17250f4..c834ea842847 100644
+index c834ea842847..0cfcdc11cabd 100644
 --- a/mm/khugepaged.c
 +++ b/mm/khugepaged.c
-@@ -920,7 +920,7 @@ static int khugepaged_find_target_node(struct collapse_control *cc)
- static int hugepage_vma_revalidate(struct mm_struct *mm, unsigned long address,
- 				   bool expect_anon,
- 				   struct vm_area_struct **vmap,
--				   struct collapse_control *cc)
-+				   struct collapse_control *cc, int order)
+@@ -1074,14 +1074,14 @@ static int __collapse_huge_page_swapin(struct mm_struct *mm,
+ }
+ 
+ static int alloc_charge_folio(struct folio **foliop, struct mm_struct *mm,
+-			      struct collapse_control *cc)
++			      struct collapse_control *cc, int order)
  {
- 	struct vm_area_struct *vma;
- 	unsigned long tva_flags = cc->is_khugepaged ? TVA_ENFORCE_SYSFS : 0;
-@@ -932,9 +932,9 @@ static int hugepage_vma_revalidate(struct mm_struct *mm, unsigned long address,
- 	if (!vma)
- 		return SCAN_VMA_NULL;
+ 	gfp_t gfp = (cc->is_khugepaged ? alloc_hugepage_khugepaged_gfpmask() :
+ 		     GFP_TRANSHUGE);
+ 	int node = khugepaged_find_target_node(cc);
+ 	struct folio *folio;
  
--	if (!thp_vma_suitable_order(vma, address, PMD_ORDER))
-+	if (!thp_vma_suitable_order(vma, address, order))
- 		return SCAN_ADDRESS_RANGE;
--	if (!thp_vma_allowable_order(vma, vma->vm_flags, tva_flags, PMD_ORDER))
-+	if (!thp_vma_allowable_order(vma, vma->vm_flags, tva_flags, order))
- 		return SCAN_VMA_CHECK;
- 	/*
- 	 * Anon VMA expected, the address may be unmapped then
-@@ -1130,7 +1130,7 @@ static int collapse_huge_page(struct mm_struct *mm, unsigned long address,
- 		goto out_nolock;
- 
- 	mmap_read_lock(mm);
--	result = hugepage_vma_revalidate(mm, address, true, &vma, cc);
-+	result = hugepage_vma_revalidate(mm, address, true, &vma, cc, HPAGE_PMD_ORDER);
- 	if (result != SCAN_SUCCEED) {
- 		mmap_read_unlock(mm);
- 		goto out_nolock;
-@@ -1164,7 +1164,7 @@ static int collapse_huge_page(struct mm_struct *mm, unsigned long address,
- 	 * mmap_lock.
+-	folio = __folio_alloc(gfp, HPAGE_PMD_ORDER, node, &cc->alloc_nmask);
++	folio = __folio_alloc(gfp, order, node, &cc->alloc_nmask);
+ 	if (!folio) {
+ 		*foliop = NULL;
+ 		count_vm_event(THP_COLLAPSE_ALLOC_FAILED);
+@@ -1125,7 +1125,7 @@ static int collapse_huge_page(struct mm_struct *mm, unsigned long address,
  	 */
- 	mmap_write_lock(mm);
--	result = hugepage_vma_revalidate(mm, address, true, &vma, cc);
-+	result = hugepage_vma_revalidate(mm, address, true, &vma, cc, HPAGE_PMD_ORDER);
+ 	mmap_read_unlock(mm);
+ 
+-	result = alloc_charge_folio(&folio, mm, cc);
++	result = alloc_charge_folio(&folio, mm, cc, HPAGE_PMD_ORDER);
  	if (result != SCAN_SUCCEED)
- 		goto out_up_write;
- 	/* check if the pmd is still valid */
-@@ -2796,7 +2796,7 @@ int madvise_collapse(struct vm_area_struct *vma, struct vm_area_struct **prev,
- 			mmap_read_lock(mm);
- 			mmap_locked = true;
- 			result = hugepage_vma_revalidate(mm, addr, false, &vma,
--							 cc);
-+							 cc, HPAGE_PMD_ORDER);
- 			if (result  != SCAN_SUCCEED) {
- 				last_fail = result;
- 				goto out_nolock;
+ 		goto out_nolock;
+ 
+@@ -1851,7 +1851,7 @@ static int collapse_file(struct mm_struct *mm, unsigned long addr,
+ 	VM_BUG_ON(!IS_ENABLED(CONFIG_READ_ONLY_THP_FOR_FS) && !is_shmem);
+ 	VM_BUG_ON(start & (HPAGE_PMD_NR - 1));
+ 
+-	result = alloc_charge_folio(&new_folio, mm, cc);
++	result = alloc_charge_folio(&new_folio, mm, cc, HPAGE_PMD_ORDER);
+ 	if (result != SCAN_SUCCEED)
+ 		goto out;
+ 
 -- 
 2.48.1
 
