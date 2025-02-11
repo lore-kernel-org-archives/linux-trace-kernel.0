@@ -1,184 +1,117 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEBDF1F03D2;
-	Tue, 11 Feb 2025 09:07:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 569F91EE010
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 11 Feb 2025 09:38:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739264867; cv=none; b=VwCcxqVOR5+zfaGB4Hsb18GPOYuYe4f+MxjPQHgo2XLUcDA2Wz+Kf/6kB7xGn3v8fp426g9ln6qoGHF7GvpgfULaCm09EOK2+acBbcBTNQLdB86uyk/cqnRGPouC5/I2Zdi20q+PFVA3askvBchf+/zj7stMSgUvFc/jsyrQC2A=
+	t=1739266701; cv=none; b=kGc9/UA3y4yXl2hVp9UrE1UywE2JluUGwSFxxEUqNNq9mOkYmgbNYZYpTm7QnS8NpqQY8DKJiwQGQNnLdYDfWihS1ATSDk27k8df/UiQHeJb5TZf08exqupnt+44ekFpwFBuioASZAvRxJgDSj1x6d5CJW9XubRT2u0r4nVLO28=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739264867; c=relaxed/simple;
-	bh=hFx79QumT2efvDIu9SQG+KhJyUcuw+IZ0OY2d/uT+og=;
+	s=arc-20240116; t=1739266701; c=relaxed/simple;
+	bh=UMEmLFxSzGCX0x4TAPfHL2GDmSKTHafVFyL78eN5EOQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=K8KLf8G0DcSbkJ8kxhlabyRaRpX/43uIvTlnybzTN7xJeeC4dDRYdbZLRHjoVEeIyipdtoiz217oS1MomEcl11l1UKJum5XktG1SEOxuFXUVt9ycltXIzhjz6z49vtkJDDyt1HuaPHTzpi+LHolrh+MIQrR2MriWBqVoVeF2x3s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=X5xgcR2j; arc=none smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 In-Reply-To:Content-Type:Content-Disposition; b=mUiGEli1RegT7sBNWBXinchdu5XtcelirKld37FHNv8CYLmWhPrHP/hI8yElv3ZrbDs6Y0uqlKVK585PU3+SXOmajQp/nu4KqtuIb8BTx4OsoLLXi+bLHL6H8sttPiub7iJ0kUSrqhjrn6smpWk170aoRjLi64EjDQCrDM+bfqo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ZaGP4up+; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="X5xgcR2j"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739264866; x=1770800866;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=hFx79QumT2efvDIu9SQG+KhJyUcuw+IZ0OY2d/uT+og=;
-  b=X5xgcR2jSLNt89s/67ieR8yzJN1T+7/bPWJsXx7aT4thNw9Fkgs2nVaI
-   f0hdP9qApM+UReHx07eahi+LNSLiBLG9h65aZyBciNU4I8McMXhTbZ1jC
-   cSkq479Gp4tE+GDcnnI/qEgT5tQUZUCt1/9GVkE7nK0BIJzespdvRTcPq
-   nmkoSv7glLVxBOz4dFhwCnblxXstMYSXdY+MF52dE69sueEVyF2N7J+ms
-   IRooQLEpjnXK01Q9u5YXSEOU00vL41invI6ZNRUDgaSYPCMmBcArowMUg
-   DVVq4MAcRikY+VTimfbaNUBjydXBTDujjobn/fQi3hnEKnahqEoEZeKBF
-   g==;
-X-CSE-ConnectionGUID: KQQKYG4EThSTzOgzXc34gg==
-X-CSE-MsgGUID: 8qxQp64eReOzFlXWRcAkug==
-X-IronPort-AV: E=McAfee;i="6700,10204,11341"; a="39758893"
-X-IronPort-AV: E=Sophos;i="6.13,277,1732608000"; 
-   d="scan'208";a="39758893"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Feb 2025 01:07:45 -0800
-X-CSE-ConnectionGUID: Wlse3+4DSkGTXxDkvf01tQ==
-X-CSE-MsgGUID: nbHe+6jIRwa8BdCdBKGWcg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="135702696"
-Received: from lkp-server01.sh.intel.com (HELO d63d4d77d921) ([10.239.97.150])
-  by fmviesa002.fm.intel.com with ESMTP; 11 Feb 2025 01:07:42 -0800
-Received: from kbuild by d63d4d77d921 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1thmF2-0013wj-0a;
-	Tue, 11 Feb 2025 09:07:40 +0000
-Date: Tue, 11 Feb 2025 17:07:13 +0800
-From: kernel test robot <lkp@intel.com>
-To: Steven Rostedt <rostedt@goodmis.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>
-Cc: oe-kbuild-all@lists.linux.dev, LKML <linux-kernel@vger.kernel.org>,
-	linux-arm-kernel@lists.infradead.org,
-	Mark Rutland <mark.rutland@arm.com>,
-	Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	linux-s390@vger.kernel.org
-Subject: Re: [PATCH] arm64: scripts/sorttable: Implement sorting mcount_loc
- at boot for arm64
-Message-ID: <202502111626.K7CTghCR-lkp@intel.com>
-References: <20250210142647.083ff456@gandalf.local.home>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZaGP4up+"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1739266698;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=JEBn5BDD0bivGeX0sWRFJtyk8zRNMnBY8R9geVV2WJw=;
+	b=ZaGP4up+qJ1LMK3LDCKJhLvYrhnq4r4TAP3SeRLBAm7XyaooLKOAUXIeWa5GIP2ITFLLcI
+	n6UTNA7OxLK0+gX2rK1Iz4/W6Q+F+avwbC7ozlLfBtz2Ku/e8U0Lpd7D8QsYMXLveD9ksm
+	gKPje7i/FwligONLtPtf35dyLgDxvkg=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-626-9xAFp1IzO1KH8hrdUSY_5g-1; Tue, 11 Feb 2025 04:38:17 -0500
+X-MC-Unique: 9xAFp1IzO1KH8hrdUSY_5g-1
+X-Mimecast-MFC-AGG-ID: 9xAFp1IzO1KH8hrdUSY_5g
+Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-38dc88ed9c0so1547999f8f.1
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 11 Feb 2025 01:38:17 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739266695; x=1739871495;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=JEBn5BDD0bivGeX0sWRFJtyk8zRNMnBY8R9geVV2WJw=;
+        b=tluONs/Q18elqXcexRFtL6U8P8lr0XGdhc6C6bh5YUOtlmCFHatlilfPyekDXRpKeO
+         7zwuX8fGt0rAxXxLYMEhWq4jd7LT5ZRWrgLQ6qbtdP0b18woSRN23mjPogzQUB3k8FbD
+         pIRitrRqP2tNfqGUs6v5cCC22TMIUW9JxjtBOGZta13U2jrl3+8NP/we2A76hvGsfQ1J
+         1QefBiLX8jpsaToKmqMbzla+lj6TixmYAmTn70ubambJC1/pIj3hY8df0950GxYteMa+
+         stvACcDVOkwmthwc6oKqnNYwvytIrzT6MbyYYVeeEhTlAnnJuH3nwaXBakevH5K5u+yJ
+         TDdQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW7Th4DscOn7aebpw8uld7WD+wI6KntPXeYK1vZEwCtGZcoWT93h/qG2MArGiO43D+bpw45B5pyCHdF59TQuz+VAHs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxeoJHkYLtYIde+QhTnFEE4lhnCRsHbJQy3WQtSjIJer33rLk9d
+	iegpnOPVUDk9bie1lrF2M+DqP0OWq/JeeuTQaYSTKqx474ALzXDBIwwMBykG8HmQARtUHc5hwh3
+	GwBRCJWJRJ76wSiwXH+eWjeSGoLKucmrGcOJ/jxzmpe8LHZqGthMj10LLqQKg6L/O2TqcVUt87l
+	B4nhpL
+X-Gm-Gg: ASbGncuHxqmJVmuWtuGi/JfokAJ95PDXEyxszMjW84HY6+z4HWFGZGyV/j1SGzh5n6j
+	d5YxlKmgq17AXsTO143nk6T4qwuxX9akJTAQe5JYyhBBndnFk86ltkY2rlI5LuIzOXYvAT68gfO
+	TY9EQVQk1gK1G+bAOI/ZCVpJGh3o8oElfrRx5scAshc6oZ0oVOzyGXWOYsLFK0pYQtrFyE+5U5l
+	vOmyOhsuUyBsQiPwUjXNDL0BXDDMgc1U6geW+TNOQRUQlbnEk/yYfNfsy39S2cOMlK3iFtRlOuH
+	Kg8br9h++yjZigjxWaN3EGEiwAAwjNHoQg==
+X-Received: by 2002:a5d:648c:0:b0:38d:d221:701d with SMTP id ffacd0b85a97d-38de41be949mr2385523f8f.42.1739266695212;
+        Tue, 11 Feb 2025 01:38:15 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IEi1zF8zGCXf3u5BZowhS/tIHfp/myPqRuYfehgLlAWbaD5VlSQIEDbgi0akDT9Mtd2ryGMOQ==
+X-Received: by 2002:a5d:648c:0:b0:38d:d221:701d with SMTP id ffacd0b85a97d-38de41be949mr2385504f8f.42.1739266694894;
+        Tue, 11 Feb 2025 01:38:14 -0800 (PST)
+Received: from jlelli-thinkpadt14gen4.remote.csb ([151.29.34.42])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38dc53ae9c0sm12923656f8f.101.2025.02.11.01.38.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 11 Feb 2025 01:38:14 -0800 (PST)
+Date: Tue, 11 Feb 2025 10:38:12 +0100
+From: Juri Lelli <juri.lelli@redhat.com>
+To: Gabriele Monaco <gmonaco@redhat.com>
+Cc: linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	linux-trace-kernel@vger.kernel.org, John Kacur <jkacur@redhat.com>,
+	Clark Williams <williams@redhat.com>
+Subject: Re: [RFC PATCH 00/11] rv: Add scheduler specification monitors
+Message-ID: <Z6sahFdh9uVhrRhA@jlelli-thinkpadt14gen4.remote.csb>
+References: <20250206080952.98478-1-gmonaco@redhat.com>
+ <czykavxpz46nwnelml6yorg3tvmyjvczqogeuqzji6qrfd2peu@qxr6wucv6mrj>
+ <847c962745ef5bce757b9ae257ae279913ac711c.camel@redhat.com>
+ <Z6YYPAiM0itlIVAH@jlelli-thinkpadt14gen4.remote.csb>
+ <59ad26ac442aef340f819ed080684d72b50e1c57.camel@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+In-Reply-To: <59ad26ac442aef340f819ed080684d72b50e1c57.camel@redhat.com>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: 4iIS1BsWfHYiNg9ak_iOrkgWQZPAGsZcs75V8qxZLck_1739266696
+X-Mimecast-Originator: redhat.com
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250210142647.083ff456@gandalf.local.home>
 
-Hi Steven,
+On 10/02/25 13:56, Gabriele Monaco wrote:
+> On Fri, 2025-02-07 at 15:27 +0100, Juri Lelli wrote:
+> > 
+> > Right. I guess I wonder if we can find a way to inject kernel
+> > problems
+> > somehow, so that model(s) can be further tested explicitly thus
+> > making
+> > us confident that they will be able to identify real problems when
+> > they
+> > occur.
+> > 
+> 
+> I sketched it quickly and I wouldn't include it in this series not to
+> make it heavier, but if you want to play with it I wrote a patch
+> exporting a function to inject events and building a kernel module
+> calling the function periodically.
 
-kernel test robot noticed the following build warnings:
+Ah, this is cool. Thanks for working on it!
 
-[auto build test WARNING on linus/master]
-[also build test WARNING on v6.14-rc2 next-20250210]
-[cannot apply to arm64/for-next/core arm-perf/for-next/perf kvmarm/next soc/for-next arm/for-next arm/fixes]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+Yeah, agree, we can leave it for later.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Steven-Rostedt/arm64-scripts-sorttable-Implement-sorting-mcount_loc-at-boot-for-arm64/20250211-032956
-base:   linus/master
-patch link:    https://lore.kernel.org/r/20250210142647.083ff456%40gandalf.local.home
-patch subject: [PATCH] arm64: scripts/sorttable: Implement sorting mcount_loc at boot for arm64
-config: riscv-randconfig-001-20250211 (https://download.01.org/0day-ci/archive/20250211/202502111626.K7CTghCR-lkp@intel.com/config)
-compiler: riscv64-linux-gcc (GCC) 14.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250211/202502111626.K7CTghCR-lkp@intel.com/reproduce)
+Thanks!
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202502111626.K7CTghCR-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
->> scripts/sorttable.c:306:13: warning: 'rela_write_addend' defined but not used [-Wunused-function]
-     306 | static void rela_write_addend(Elf_Rela *rela, uint64_t val)
-         |             ^~~~~~~~~~~~~~~~~
->> scripts/sorttable.c:287:17: warning: 'rela_addend' defined but not used [-Wunused-function]
-     287 | static uint64_t rela_##fn_name(Elf_Rela *rela)          \
-         |                 ^~~~~
-   scripts/sorttable.c:294:1: note: in expansion of macro 'RELA_ADDR'
-     294 | RELA_ADDR(addend)
-         | ^~~~~~~~~
->> scripts/sorttable.c:287:17: warning: 'rela_info' defined but not used [-Wunused-function]
-     287 | static uint64_t rela_##fn_name(Elf_Rela *rela)          \
-         |                 ^~~~~
-   scripts/sorttable.c:293:1: note: in expansion of macro 'RELA_ADDR'
-     293 | RELA_ADDR(info)
-         | ^~~~~~~~~
->> scripts/sorttable.c:287:17: warning: 'rela_offset' defined but not used [-Wunused-function]
-     287 | static uint64_t rela_##fn_name(Elf_Rela *rela)          \
-         |                 ^~~~~
-   scripts/sorttable.c:292:1: note: in expansion of macro 'RELA_ADDR'
-     292 | RELA_ADDR(offset)
-         | ^~~~~~~~~
-   In file included from arch/riscv/kernel/asm-offsets.c:10:
-   include/linux/ftrace.h: In function 'ftrace_get_regs':
-   include/linux/ftrace.h:190:16: error: implicit declaration of function 'arch_ftrace_get_regs'; did you mean 'arch_ftrace_regs'? [-Wimplicit-function-declaration]
-     190 |         return arch_ftrace_get_regs(fregs);
-         |                ^~~~~~~~~~~~~~~~~~~~
-         |                arch_ftrace_regs
-   include/linux/ftrace.h:190:16: error: returning 'int' from a function with return type 'struct pt_regs *' makes pointer from integer without a cast [-Wint-conversion]
-     190 |         return arch_ftrace_get_regs(fregs);
-         |                ^~~~~~~~~~~~~~~~~~~~~~~~~~~
-   make[3]: *** [scripts/Makefile.build:102: arch/riscv/kernel/asm-offsets.s] Error 1 shuffle=1925395641
-   make[3]: Target 'prepare' not remade because of errors.
-   make[2]: *** [Makefile:1264: prepare0] Error 2 shuffle=1925395641
-   make[2]: Target 'prepare' not remade because of errors.
-   make[1]: *** [Makefile:251: __sub-make] Error 2 shuffle=1925395641
-   make[1]: Target 'prepare' not remade because of errors.
-   make: *** [Makefile:251: __sub-make] Error 2 shuffle=1925395641
-   make: Target 'prepare' not remade because of errors.
-
-
-vim +/rela_write_addend +306 scripts/sorttable.c
-
-   275	
-   276	#define RELA_ADDR(fn_name)				\
-   277	static uint64_t rela64_##fn_name(Elf_Rela *rela)	\
-   278	{							\
-   279		return r8((uint64_t *)&rela->e64.r_##fn_name);	\
-   280	}							\
-   281								\
-   282	static uint64_t rela32_##fn_name(Elf_Rela *rela)	\
-   283	{							\
-   284		return r((uint32_t *)&rela->e32.r_##fn_name);	\
-   285	}							\
-   286								\
- > 287	static uint64_t rela_##fn_name(Elf_Rela *rela)		\
-   288	{							\
-   289		return e.rela_##fn_name(rela);			\
-   290	}
-   291	
-   292	RELA_ADDR(offset)
-   293	RELA_ADDR(info)
-   294	RELA_ADDR(addend)
-   295	
-   296	static void rela64_write_addend(Elf_Rela *rela, uint64_t val)
-   297	{
-   298		w8(val, (uint64_t *)&rela->e64.r_addend);
-   299	}
-   300	
-   301	static void rela32_write_addend(Elf_Rela *rela, uint64_t val)
-   302	{
-   303		w(val, (uint32_t *)&rela->e32.r_addend);
-   304	}
-   305	
- > 306	static void rela_write_addend(Elf_Rela *rela, uint64_t val)
-   307	{
-   308		e.rela_write_addend(rela, val);
-   309	}
-   310	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
