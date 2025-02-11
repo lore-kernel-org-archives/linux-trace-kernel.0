@@ -1,51 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 794761F0E4E;
-	Tue, 11 Feb 2025 15:28:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 229282505C8;
+	Tue, 11 Feb 2025 15:46:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739287680; cv=none; b=G4/ChQyQoxYri+uG43ta2tYeT47f73ltFK1I20Rr6ZDZ32Rkch74B0cm59Rhf7/j0XrRu35eOIodUW7tskBITKAFBbBtqNNSyoYDzfQiI6bgobhZtrn/J+4v1l5+8NeiOkVNO7oZt7xiPyZovG0bsQ6Xg+EDLXivBT9A7JAgESc=
+	t=1739288796; cv=none; b=EuCG1o3l3xoc5cPp25NR9q/gTUCidBYHXjRXgfr0uTv0i2Ot3oH6IFWmgk25R8TcF8dAHaxyygUb0vTdfAZOdSh/+4HNRdwtIa59emkCqOL76K1qXKYqIWPbb6q3rP/AQsT0mX1lK/ahhBICKO3mBFMXDcqEVTytbtSLWs59VGQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739287680; c=relaxed/simple;
-	bh=ZOFCgQqHmE5mPF2tRhaxFQ1i76aEb/IlE1b/4Rfz6EI=;
+	s=arc-20240116; t=1739288796; c=relaxed/simple;
+	bh=6fu3wYfrbxpX9ThH36XIH7LpZ6BrCQc/5hqS5lNA56E=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=AXanHUXNnU3TVDqhHHOtgmScs9C2bHfywozN/nZ3NLB+fsEcnbfpUrH0/cvcSL2zaofH8SPw/l8dQ+VV03gEKSIcyrWi+F0LbGXDZ4hqcaLQIsEX5jKwyKPMH33JofcKKm6ETceBGmSB0P9ZuIFK3TtT7UP7dbpqbeZHVXdHukQ=
+	 MIME-Version:Content-Type; b=lHUP7eGvtHb0ztFMf8gPx8usCCvA422yftBmCKxGHjFcwMAlVTP2tncMELNNpA4w5julLYswTo3/EkhPODRGFKplqao0Dp0wQwy7CT9eBg480039XXibmqeB8uUw3jAidRag2fYbDeXaiWblXO1Sdu55CMzrOntmDkBjYHLiXIE=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 650FAC4CEDD;
-	Tue, 11 Feb 2025 15:27:56 +0000 (UTC)
-Date: Tue, 11 Feb 2025 10:28:01 -0500
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 40B98C4CEDD;
+	Tue, 11 Feb 2025 15:46:34 +0000 (UTC)
+Date: Tue, 11 Feb 2025 10:46:38 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
-To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc: Joel Fernandes <joel@joelfernandes.org>, Prakash Sangappa
- <prakash.sangappa@oracle.com>, Peter Zijlstra <peterz@infradead.org>,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Thomas
- Gleixner <tglx@linutronix.de>, Ankur Arora <ankur.a.arora@oracle.com>,
- Linus Torvalds <torvalds@linux-foundation.org>, linux-mm@kvack.org,
- x86@kernel.org, Andrew Morton <akpm@linux-foundation.org>, luto@kernel.org,
- bp@alien8.de, dave.hansen@linux.intel.com, hpa@zytor.com,
- juri.lelli@redhat.com, vincent.guittot@linaro.org, willy@infradead.org,
- mgorman@suse.de, jon.grimm@amd.com, bharata@amd.com,
- raghavendra.kt@amd.com, Boris Ostrovsky <boris.ostrovsky@oracle.com>,
- Konrad Wilk <konrad.wilk@oracle.com>, jgross@suse.com,
- Andrew.Cooper3@citrix.com, Vineeth Pillai <vineethrp@google.com>, Suleiman
- Souhlal <suleiman@google.com>, Ingo Molnar <mingo@kernel.org>, Mathieu
- Desnoyers <mathieu.desnoyers@efficios.com>, Clark Williams
- <clark.williams@gmail.com>, daniel.wagner@suse.com, Joseph Salisbury
- <joseph.salisbury@oracle.com>, broonie@gmail.com
-Subject: Re: [RFC][PATCH 1/2] sched: Extended scheduler time slice
-Message-ID: <20250211102801.5b32d610@gandalf.local.home>
-In-Reply-To: <20250211082138.iqvedSfG@linutronix.de>
-References: <EC77D83D-DD17-4CCD-9EF6-C4C39FCE16E7@oracle.com>
-	<9DA1FAE6-A008-4785-BDF9-541457E29807@joelfernandes.org>
-	<20250204220418.35949317@gandalf.local.home>
-	<CAEXW_YQxTi2y_hY_e4AjLSa6RwVVLn3DPj5d4Cfewq0js-0UTA@mail.gmail.com>
-	<20250205081635.397eacb0@gandalf.local.home>
-	<CAEXW_YQY2zuU+XZjrYWLS860+PJno0nf9WAe1iPU=EyDkA7H4Q@mail.gmail.com>
-	<20250206083039.0916ad24@gandalf.local.home>
-	<20250206134408.lD_POjuG@linutronix.de>
-	<20250210144321.1f5974a6@gandalf.local.home>
-	<20250211082138.iqvedSfG@linutronix.de>
+To: kernel test robot <lkp@intel.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon
+ <will@kernel.org>, oe-kbuild-all@lists.linux.dev, LKML
+ <linux-kernel@vger.kernel.org>, linux-arm-kernel@lists.infradead.org, Mark
+ Rutland <mark.rutland@arm.com>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>, Heiko Carstens <hca@linux.ibm.com>,
+ Vasily Gorbik <gor@linux.ibm.com>, Alexander Gordeev
+ <agordeev@linux.ibm.com>, linux-s390@vger.kernel.org
+Subject: Re: [PATCH] arm64: scripts/sorttable: Implement sorting mcount_loc
+ at boot for arm64
+Message-ID: <20250211104638.0cdc51e1@gandalf.local.home>
+In-Reply-To: <202502111626.K7CTghCR-lkp@intel.com>
+References: <20250210142647.083ff456@gandalf.local.home>
+	<202502111626.K7CTghCR-lkp@intel.com>
 X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -56,41 +40,23 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Tue, 11 Feb 2025 09:21:38 +0100
-Sebastian Andrzej Siewior <bigeasy@linutronix.de> wrote:
+On Tue, 11 Feb 2025 17:07:13 +0800
+kernel test robot <lkp@intel.com> wrote:
 
-> We don't follow this behaviour exactly today.
+> All warnings (new ones prefixed by >>):
 > 
-> Adding this behaviour back vs the behaviour we have now, doesn't seem to
-> improve anything at visible levels. We don't have a counter but we can
-> look at the RCU nesting counter which should be zero once locks have
-> been dropped. So this can be used for testing.
-> 
-> But as I said: using "run to completion" and preempt on the return
-> userland rather than once the lazy flag is seen and all locks have been
-> released appears to be better.
-> 
-> It is (now) possible that you run for a long time and get preempted
-> while holding a spinlock_t. It is however more likely that you release
-> all locks and get preempted while returning to userland.
+> >> scripts/sorttable.c:306:13: warning: 'rela_write_addend' defined but not used [-Wunused-function]  
+>      306 | static void rela_write_addend(Elf_Rela *rela, uint64_t val)
+>          |             ^~~~~~~~~~~~~~~~~
+> >> scripts/sorttable.c:287:17: warning: 'rela_addend' defined but not used [-Wunused-function]  
+>      287 | static uint64_t rela_##fn_name(Elf_Rela *rela)          \
+>          |                 ^~~~~
+>    scripts/sorttable.c:294:1: note: in expansion of macro 'RELA_ADDR'
+>      294 | RELA_ADDR(addend)
+>          | ^~~~~~~~~
 
-IIUC, today, LAZY causes all SCHED_OTHER tasks to act more like
-PREEMPT_NONE. Is that correct?
+The above isn't used if sorting isn't enabled.
 
-Now that the PREEMPT_RT is not one of the preemption selections, when you
-select PREEMPT_RT, you can pick between CONFIG_PREEMPT and
-CONFIG_PREEMPT_LAZY. Where CONFIG_PREEMPT will preempt the kernel at the
-scheduler tick if preemption is enabled and CONFIG_PREEMPT_LAZY will
-not preempt the kernel on a scheduler tick and wait for exit to user space.
-
-Sebastian,
-
-It appears you only tested the CONFIG_PREEMPT_LAZY selection. Have you
-tested the difference of how CONFIG_PREEMPT behaves between PREEMPT_RT and
-no PREEMPT_RT? I think that will show a difference like we had in the past.
-
-I can see people picking both PREEMPT_RT and CONFIG_PREEMPT (Full), but
-then wondering why their non RT tasks are suffering from a performance
-penalty from that.
+Looks like I'll have to add some "__maybe_unused" attributes.
 
 -- Steve
