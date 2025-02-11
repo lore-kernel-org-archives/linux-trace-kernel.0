@@ -1,140 +1,191 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71A7D380;
-	Tue, 11 Feb 2025 00:01:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5803520ED;
+	Tue, 11 Feb 2025 00:03:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739232064; cv=none; b=ia2sn+vLnJ1BGnIbMKPUkyz9SogH+1WNXwF0rCLt3FHk+Qn/oQCQ0KKxwaVAyAYvLtenOrcGxP7GIkWlchgA0f+9uzTLc2IzrUQinDXw5PS4O5OJKdpXSrU/FUhVror136OgMq52jnbnBe3s0mx3EDaYwBFfXWeLXRr8wAIXyYo=
+	t=1739232184; cv=none; b=rnEHHq2KVIqET+wHZPJAZ2xLHiGN9/CGH4bfzICgt4c/9WKEC3s3CWA8w3ewClSVBxgV5+Q804KWWMi8lZHkljsx+EcjviAPIygYr87BuynzYHiPf5iWscqSFL7r5YG893LhDOoUZ1teCztiNexGNa2HweMHDRj3X1u+4ySez2I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739232064; c=relaxed/simple;
-	bh=KJAXYKFfcDTkKPOe7RLg/h85JfAGZ7OLrRd3HvGoHPo=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=rVp6f8oNEkdAOKEuOK/QYyVuSl2PWPl2Wq0jDzbAQojPiMmCxVGOUbKnmYrCpx8MMn1xMfjtWrYzlM3oM42IA1f1DV/lS12+GJ4p75d5shUW9wceqxJQth64dpTNGtxY4x4BcpMNQxhwiHWBILcFL/CgPTXvXPK2sFAbNvezRfQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Bo6HhKy4; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Bo6HhKy4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EACA0C4CED1;
-	Tue, 11 Feb 2025 00:00:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739232063;
-	bh=KJAXYKFfcDTkKPOe7RLg/h85JfAGZ7OLrRd3HvGoHPo=;
-	h=Date:From:Subject:To:Cc:References:In-Reply-To:From;
-	b=Bo6HhKy4FsJamOKzCtjqK8uo3ZdPNN7akmZSAOEg1QBxFGF+Ia49S7UgP5MLfHEw6
-	 VV13dCI0D8/e+E3yeKI7FJknC423IhA3c+FCZMiuXff703v5eLHiF+vI+WrSf6uV/Z
-	 E4GRMlzSd17XEfk39LXUf8ByV/zJydc+A7dQkD9nFG1g0yTm47zdcqcPbN+1LxXaAD
-	 xLEbWuk6mUpoG0mikMzcpi58EbTNuqx5ozW/aIUDnR2AL86oA4ZOx9MYiUj1S7PpHM
-	 Ywl98ZAAtikOMJ1qz9yTuXtvfoM0Vg+UhFXqGMJpzuAsVLPrKkAyYr8jYReK+/cMjD
-	 kT8e776dGaSjA==
-Message-ID: <21f98687-f715-449c-86f0-c095ea499450@kernel.org>
-Date: Tue, 11 Feb 2025 00:00:49 +0000
+	s=arc-20240116; t=1739232184; c=relaxed/simple;
+	bh=C2PkNuwJRg2pu3jrlhfoM3kK7xXOFeIRAETD3oKXU1o=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=HZRDZmKZYUVbn4ncvqVoHOpvfpFrBtkgGMxJA6Y/F6JeRbvDEf5fvFWWKMjz27fKUAnWtqphM22uto8U5lm+2maHJJtEXOmLOXCww6j/F1IAHZ4+DJNFMONgk8x9m9QQlI90JFC8m3MmqJWuCT30/scYXE0TJvFh+7sIbBH4PvI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 065C5C4CED1;
+	Tue, 11 Feb 2025 00:03:02 +0000 (UTC)
+Date: Mon, 10 Feb 2025 19:03:06 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Mark
+ Rutland <mark.rutland@arm.com>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Andrew Morton
+ <akpm@linux-foundation.org>, Mike Rapoport <rppt@kernel.org>
+Subject: Re: [RFC PATCH v2 2/3] mm/memblock: Add reserved memory release
+ function
+Message-ID: <20250210190306.6ffda2c7@gandalf.local.home>
+In-Reply-To: <173920224789.826592.13627374781649157364.stgit@devnote2>
+References: <173920222697.826592.3726270716809214055.stgit@devnote2>
+	<173920224789.826592.13627374781649157364.stgit@devnote2>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Quentin Monnet <qmo@kernel.org>
-Subject: Re: [PATCH v2 2/2] tools: Remove redundant quiet setup
-To: Charlie Jenkins <charlie@rivosinc.com>,
- Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
- Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau
- <martin.lau@linux.dev>, Eduard Zingerman <eddyz87@gmail.com>,
- Song Liu <song@kernel.org>, Yonghong Song <yonghong.song@linux.dev>,
- John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>,
- Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>,
- Jiri Olsa <jolsa@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
- Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>,
- "Rafael J. Wysocki" <rafael@kernel.org>,
- Daniel Lezcano <daniel.lezcano@linaro.org>, Zhang Rui <rui.zhang@intel.com>,
- Lukasz Luba <lukasz.luba@arm.com>, Josh Poimboeuf <jpoimboe@kernel.org>,
- Mykola Lysenko <mykolal@fb.com>, Shuah Khan <shuah@kernel.org>,
- Jiri Kosina <jikos@kernel.org>, Benjamin Tissoires <bentiss@kernel.org>,
- Steven Rostedt <rostedt@goodmis.org>
-Cc: bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-perf-users@vger.kernel.org, linux-pm@vger.kernel.org,
- linux-kselftest@vger.kernel.org, linux-input@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
-References: <20250210-quiet_tools-v2-0-b2f18cbf72af@rivosinc.com>
- <20250210-quiet_tools-v2-2-b2f18cbf72af@rivosinc.com>
-Content-Language: en-GB
-In-Reply-To: <20250210-quiet_tools-v2-2-b2f18cbf72af@rivosinc.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-2025-02-10 10:34 UTC-0800 ~ Charlie Jenkins <charlie@rivosinc.com>
-> Q is exported from Makefile.include so it is not necessary to manually
-> set it.
+On Tue, 11 Feb 2025 00:44:08 +0900
+"Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
+
+> From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 > 
-> Signed-off-by: Charlie Jenkins <charlie@rivosinc.com>
+> Add reserved_mem_release_by_name() to release a reserved memory region
+> with a given name. This allows us to release reserved memory which is
+> defined by kernel cmdline, after boot.
+
+Since Mike wrote the reserve_mem code, we should Cc him on changes.
+
+Also, I would make patches 2 and 3 a separate patchset, as it is unrelated
+to the other code.
+
+> 
+> Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 > ---
->  tools/arch/arm64/tools/Makefile           |  6 ------
->  tools/bpf/Makefile                        |  6 ------
->  tools/bpf/bpftool/Documentation/Makefile  |  6 ------
->  tools/bpf/bpftool/Makefile                |  6 ------
->  tools/bpf/resolve_btfids/Makefile         |  2 --
->  tools/bpf/runqslower/Makefile             |  5 +----
->  tools/lib/bpf/Makefile                    | 13 -------------
->  tools/lib/perf/Makefile                   | 13 -------------
->  tools/lib/thermal/Makefile                | 13 -------------
->  tools/objtool/Makefile                    |  6 ------
->  tools/testing/selftests/bpf/Makefile.docs |  6 ------
->  tools/testing/selftests/hid/Makefile      |  2 --
->  tools/thermal/lib/Makefile                | 13 -------------
->  tools/tracing/latency/Makefile            |  6 ------
->  tools/tracing/rtla/Makefile               |  6 ------
->  tools/verification/rv/Makefile            |  6 ------
->  16 files changed, 1 insertion(+), 114 deletions(-)
+>  include/linux/mm.h |    1 +
+>  mm/memblock.c      |   72 +++++++++++++++++++++++++++++++++++++++++++---------
+>  2 files changed, 61 insertions(+), 12 deletions(-)
 > 
-
-
-[...]
-
-
-> diff --git a/tools/bpf/bpftool/Documentation/Makefile b/tools/bpf/bpftool/Documentation/Makefile
-> index 4315652678b9f2e27e48b7815f3b9ddc70a57165..bf843f328812e10dd65a73f355f74e6825ad95b9 100644
-> --- a/tools/bpf/bpftool/Documentation/Makefile
-> +++ b/tools/bpf/bpftool/Documentation/Makefile
-> @@ -5,12 +5,6 @@ INSTALL ?= install
->  RM ?= rm -f
->  RMDIR ?= rmdir --ignore-fail-on-non-empty
+> diff --git a/include/linux/mm.h b/include/linux/mm.h
+> index f02925447e59..a7201824c1fc 100644
+> --- a/include/linux/mm.h
+> +++ b/include/linux/mm.h
+> @@ -4197,6 +4197,7 @@ void vma_pgtable_walk_begin(struct vm_area_struct *vma);
+>  void vma_pgtable_walk_end(struct vm_area_struct *vma);
 >  
-> -ifeq ($(V),1)
-> -  Q =
-> -else
-> -  Q = @
-> -endif
-> -
->  prefix ?= /usr/local
->  mandir ?= $(prefix)/man
->  man8dir = $(mandir)/man8
-> diff --git a/tools/bpf/bpftool/Makefile b/tools/bpf/bpftool/Makefile
-> index dd9f3ec842017f1dd24054bf3a0986d546811dc4..6ea4823b770cbbe7fd9eb7da79956cc1dae1f204 100644
-> --- a/tools/bpf/bpftool/Makefile
-> +++ b/tools/bpf/bpftool/Makefile
-> @@ -7,12 +7,6 @@ srctree := $(patsubst %/,%,$(dir $(srctree)))
->  srctree := $(patsubst %/,%,$(dir $(srctree)))
->  endif
+>  int reserve_mem_find_by_name(const char *name, phys_addr_t *start, phys_addr_t *size);
+> +int reserved_mem_release_by_name(const char *name);
+
+Should be "reserve_mem_release_by_name()" and not "reserved_mem" to stay consistent.
+
 >  
-> -ifeq ($(V),1)
-> -  Q =
-> -else
-> -  Q = @
-> -endif
-> -
->  BPF_DIR = $(srctree)/tools/lib/bpf
+>  #ifdef CONFIG_64BIT
+>  int do_mseal(unsigned long start, size_t len_in, unsigned long flags);
+> diff --git a/mm/memblock.c b/mm/memblock.c
+> index 095c18b5c430..9962fbb90597 100644
+> --- a/mm/memblock.c
+> +++ b/mm/memblock.c
+> @@ -16,6 +16,7 @@
+>  #include <linux/kmemleak.h>
+>  #include <linux/seq_file.h>
+>  #include <linux/memblock.h>
+> +#include <linux/mutex.h>
 >  
->  ifneq ($(OUTPUT),)
+>  #include <asm/sections.h>
+>  #include <linux/io.h>
+> @@ -2263,6 +2264,7 @@ struct reserve_mem_table {
+>  };
+>  static struct reserve_mem_table reserved_mem_table[RESERVE_MEM_MAX_ENTRIES];
+>  static int reserved_mem_count;
+> +static DEFINE_MUTEX(reserved_mem_lock);
+
+"reserve_mem_lock".
+
+>  
+>  /* Add wildcard region with a lookup name */
+>  static void __init reserved_mem_add(phys_addr_t start, phys_addr_t size,
+> @@ -2276,6 +2278,21 @@ static void __init reserved_mem_add(phys_addr_t start, phys_addr_t size,
+>  	strscpy(map->name, name);
+>  }
+>  
+> +static struct reserve_mem_table *reserve_mem_find_by_name_nolock(const char *name)
+> +{
+> +	struct reserve_mem_table *map;
+> +	int i;
+> +
+> +	for (i = 0; i < reserved_mem_count; i++) {
+> +		map = &reserved_mem_table[i];
+> +		if (!map->size)
+> +			continue;
+> +		if (strcmp(name, map->name) == 0)
+> +			return map;
+> +	}
+> +	return NULL;
+> +}
+> +
+>  /**
+>   * reserve_mem_find_by_name - Find reserved memory region with a given name
+>   * @name: The name that is attached to a reserved memory region
+> @@ -2289,22 +2306,53 @@ static void __init reserved_mem_add(phys_addr_t start, phys_addr_t size,
+>  int reserve_mem_find_by_name(const char *name, phys_addr_t *start, phys_addr_t *size)
+>  {
+>  	struct reserve_mem_table *map;
+> -	int i;
+>  
+> -	for (i = 0; i < reserved_mem_count; i++) {
+> -		map = &reserved_mem_table[i];
+> -		if (!map->size)
+> -			continue;
+> -		if (strcmp(name, map->name) == 0) {
+> -			*start = map->start;
+> -			*size = map->size;
+> -			return 1;
+> -		}
+> -	}
+> -	return 0;
+> +	guard(mutex)(&reserved_mem_lock);
+> +	map = reserve_mem_find_by_name_nolock(name);
+> +	if (!map)
+> +		return 0;
+> +
+> +	*start = map->start;
+> +	*size = map->size;
+> +	return 1;
+>  }
+>  EXPORT_SYMBOL_GPL(reserve_mem_find_by_name);
+>  
+> +/**
+> + * reserved_mem_release_by_name - Release reserved memory region with a given name
+> + * @name: The name that is attatched to a reserved memory region
+> + *
+> + * Forcibly release the pages in the reserved memory region so that those memory
+> + * can be used as free memory. After released the reserved region size becomes 0.
+> + *
+> + * Returns: 1 if released or 0 if not found.
+> + */
+> +int reserved_mem_release_by_name(const char *name)
+> +{
+> +	struct reserve_mem_table *map;
+> +	unsigned int page_count;
+> +	phys_addr_t start;
+> +
+> +	guard(mutex)(&reserved_mem_lock);
+> +	map = reserve_mem_find_by_name_nolock(name);
+> +	if (!map)
+> +		return 0;
+> +
+> +	start = map->start;
+> +	page_count = DIV_ROUND_UP(map->size, PAGE_SIZE);
+> +
+> +	for (int i = 0; i < page_count; i++) {
+> +		phys_addr_t addr = start + i * PAGE_SIZE;
+> +		struct page *page = pfn_to_page(addr >> PAGE_SHIFT);
+> +
+> +		page->flags &= ~BIT(PG_reserved);
+> +		__free_page(page);
+> +	}
+> +	map->size = 0;
+> +
+> +	return 1;
+> +}
+> +
+>  /*
+>   * Parse reserve_mem=nn:align:name
+>   */
 
 
-This is OK from bpftool's side, the GitHub mirror has a Makefile.include
-included from both main and doc Makefiles, and where I can move this
-definition.
+Thanks,
 
-Acked-by: Quentin Monnet <qmo@kernel.org>
-
-Thanks
+-- Steve
