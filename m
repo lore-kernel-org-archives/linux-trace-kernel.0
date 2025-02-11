@@ -1,47 +1,47 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B52151D7E57
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 11 Feb 2025 07:47:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B88431F03CA
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 11 Feb 2025 07:47:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739260025; cv=none; b=lmphLxwOh/WGEPih+cJN6PYOjwpTdnDVDx/VttEoMe+NJ3OcpozzuiaLPtK9V4LEY/DdV1WR9jxOOXmnnhVqN/ZL3omcka7EzaPUpNbnG2ZPHVr1mpkXKyyrQsMmYu7Sdyymc+LvgoUXLQoM/5j3FBuHJqKtI29El6m6tjzuB7I=
+	t=1739260034; cv=none; b=NUfU2NXmBQJA9750mo1Bw5QwU0ctbYtxSKhtd033sCRk3xytxUZQOxcQe7jPnNJ96vVv2vSYz8PFSREOFWhgjuXbdIi8+HFzSVR19Z9j0ZZFU42CB2I/eNwaN/GrjaRiQY4hlK0HhpCnkoWf0WYW6ehTuqjM2NVzQXz2A7zcU4A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739260025; c=relaxed/simple;
-	bh=j2DIEPJn234b25zWy2ollwEvyS7l9DLI9kE9Xxv/KPE=;
+	s=arc-20240116; t=1739260034; c=relaxed/simple;
+	bh=yovrjLO5C2lI2eSzru+1Mb9+OYScywOuVc/sKVRRLEI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ihx+fDUJQib2Fmil3+YrKUjJXEK6ryPd4G/pTHMCiAHaFMAK5NAGBgr4Z9FQbnJEqR2u0PDermV9cZZ5obL/HheYXkiS7F9xVSpuhooCIDTh5tedQbLaL5LNQieoS/Hx+/X0KZMUdzzZNujidAWpUGRuY+lq/XHi2y1LZKisURk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=UTmJEjkN; arc=none smtp.client-ip=170.10.133.124
+	 MIME-Version; b=sFYcNWSJAHgYfVORF0Re0tJiItl4ZfVzpXWRin6SdO4s17FBp04TcIz3dV10TwVkRiowTjfngorvU3npF0hGH2/yxEiwrZHgyhA6tc61yejgbXZEfWjbQnTBEyGYmCs1rjCbHExAMiFzSu4iuRrlc9dCcwN8wu5btqOt3qj+cvQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=cTd89Wa9; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UTmJEjkN"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cTd89Wa9"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1739260022;
+	s=mimecast20190719; t=1739260029;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=ncfRznIDJ0C7V6n5PD+CDnDY5iuvbJ9L9cieyHdRpfI=;
-	b=UTmJEjkNinHx5uQyFJ5TR7/+yu5y4LIZnunLtpyKOfQDKhawAYkyMk0+oEYMpi4B8gUnue
-	Mg4LwsGyVEg4Lx4hSoI5QjZvG6bHl9dtcPbiDV/cSYfhPdt+RRtVVEFutvEr4IN6jrrVrK
-	DCd1/8nbYqUQtKbwWUqy/CdeON7s8qk=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+	bh=lkVEMAD1KIHnt/RQNLq8JVn6UMoPGr35EGnArS1ZYxI=;
+	b=cTd89Wa9dSfaUzZLO9wsicirjRIjFNn7R96/kdZry1/LJzzOwbEOp5ZrsjN4xKmWXDRv8i
+	G7wWRvsjqmzfYq5+FzrYgTWlAdzj6ccX+v7BoaepeZ8jTL7kEEgAPR35ZdkYwFIMj8QlD3
+	aKsW9dThp1avIZSB0jvHpmOsa3HRvOU=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-550-jT8ErFm8OAOOKCPxUSW27Q-1; Tue,
- 11 Feb 2025 02:47:00 -0500
-X-MC-Unique: jT8ErFm8OAOOKCPxUSW27Q-1
-X-Mimecast-MFC-AGG-ID: jT8ErFm8OAOOKCPxUSW27Q
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-516-uM0Az5LgMbikcrxB_m0kGw-1; Tue,
+ 11 Feb 2025 02:47:05 -0500
+X-MC-Unique: uM0Az5LgMbikcrxB_m0kGw-1
+X-Mimecast-MFC-AGG-ID: uM0Az5LgMbikcrxB_m0kGw
 Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id C43831800872;
-	Tue, 11 Feb 2025 07:46:58 +0000 (UTC)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 1E5361800875;
+	Tue, 11 Feb 2025 07:47:04 +0000 (UTC)
 Received: from gmonaco-thinkpadt14gen3.rmtit.com (unknown [10.45.224.45])
-	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 48F7E195608D;
-	Tue, 11 Feb 2025 07:46:55 +0000 (UTC)
+	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 47E9C1956048;
+	Tue, 11 Feb 2025 07:46:59 +0000 (UTC)
 From: Gabriele Monaco <gmonaco@redhat.com>
 To: linux-kernel@vger.kernel.org,
 	Ingo Molnar <mingo@redhat.com>,
@@ -52,9 +52,9 @@ Cc: Gabriele Monaco <gmonaco@redhat.com>,
 	Juri Lelli <juri.lelli@redhat.com>,
 	John Kacur <jkacur@redhat.com>,
 	Clark Williams <williams@redhat.com>
-Subject: [PATCH v1 06/11] rv: Add snroc per-task monitor
-Date: Tue, 11 Feb 2025 08:46:13 +0100
-Message-ID: <20250211074622.58590-7-gmonaco@redhat.com>
+Subject: [PATCH v1 07/11] rv: Add scpd, snep and sncid per-cpu monitors
+Date: Tue, 11 Feb 2025 08:46:14 +0100
+Message-ID: <20250211074622.58590-8-gmonaco@redhat.com>
 In-Reply-To: <20250211074622.58590-1-gmonaco@redhat.com>
 References: <20250211074622.58590-1-gmonaco@redhat.com>
 Precedence: bulk
@@ -66,10 +66,14 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
 
-Add a per-task monitor as part of the sched model:
+Add 3 per-cpu monitors as part of the sched model:
 
-* snroc: set non runnable on its own context
-    Monitor to ensure set_state happens only in the respective task's context
+* scpd: schedule called with preemption disabled
+    Monitor to ensure schedule is called with preemption disabled
+* snep: schedule does not enable preempt
+    Monitor to ensure schedule does not enable preempt
+* sncid: schedule not called with interrupt disabled
+    Monitor to ensure schedule is not called with interrupt disabled
 
 To: Ingo Molnar <mingo@redhat.com>
 To: Peter Zijlstra <peterz@infradead.org>
@@ -78,71 +82,96 @@ Cc: John Kacur <jkacur@redhat.com>
 Cc: Clark Williams <williams@redhat.com>
 Signed-off-by: Gabriele Monaco <gmonaco@redhat.com>
 ---
- kernel/trace/rv/Kconfig                      |  1 +
- kernel/trace/rv/Makefile                     |  1 +
- kernel/trace/rv/monitors/snroc/Kconfig       | 14 ++++
- kernel/trace/rv/monitors/snroc/snroc.c       | 87 ++++++++++++++++++++
- kernel/trace/rv/monitors/snroc/snroc.h       | 47 +++++++++++
- kernel/trace/rv/monitors/snroc/snroc_trace.h | 15 ++++
- kernel/trace/rv/rv_trace.h                   |  1 +
- tools/verification/models/sched/snroc.dot    | 18 ++++
- 8 files changed, 184 insertions(+)
- create mode 100644 kernel/trace/rv/monitors/snroc/Kconfig
- create mode 100644 kernel/trace/rv/monitors/snroc/snroc.c
- create mode 100644 kernel/trace/rv/monitors/snroc/snroc.h
- create mode 100644 kernel/trace/rv/monitors/snroc/snroc_trace.h
- create mode 100644 tools/verification/models/sched/snroc.dot
+ kernel/trace/rv/Kconfig                      |  3 +
+ kernel/trace/rv/Makefile                     |  3 +
+ kernel/trace/rv/monitors/scpd/Kconfig        | 15 +++
+ kernel/trace/rv/monitors/scpd/scpd.c         | 96 ++++++++++++++++++++
+ kernel/trace/rv/monitors/scpd/scpd.h         | 49 ++++++++++
+ kernel/trace/rv/monitors/scpd/scpd_trace.h   | 15 +++
+ kernel/trace/rv/monitors/sncid/Kconfig       | 15 +++
+ kernel/trace/rv/monitors/sncid/sncid.c       | 96 ++++++++++++++++++++
+ kernel/trace/rv/monitors/sncid/sncid.h       | 49 ++++++++++
+ kernel/trace/rv/monitors/sncid/sncid_trace.h | 15 +++
+ kernel/trace/rv/monitors/snep/Kconfig        | 15 +++
+ kernel/trace/rv/monitors/snep/snep.c         | 96 ++++++++++++++++++++
+ kernel/trace/rv/monitors/snep/snep.h         | 49 ++++++++++
+ kernel/trace/rv/monitors/snep/snep_trace.h   | 15 +++
+ kernel/trace/rv/rv_trace.h                   |  3 +
+ tools/verification/models/sched/scpd.dot     | 18 ++++
+ tools/verification/models/sched/sncid.dot    | 18 ++++
+ tools/verification/models/sched/snep.dot     | 18 ++++
+ 18 files changed, 588 insertions(+)
+ create mode 100644 kernel/trace/rv/monitors/scpd/Kconfig
+ create mode 100644 kernel/trace/rv/monitors/scpd/scpd.c
+ create mode 100644 kernel/trace/rv/monitors/scpd/scpd.h
+ create mode 100644 kernel/trace/rv/monitors/scpd/scpd_trace.h
+ create mode 100644 kernel/trace/rv/monitors/sncid/Kconfig
+ create mode 100644 kernel/trace/rv/monitors/sncid/sncid.c
+ create mode 100644 kernel/trace/rv/monitors/sncid/sncid.h
+ create mode 100644 kernel/trace/rv/monitors/sncid/sncid_trace.h
+ create mode 100644 kernel/trace/rv/monitors/snep/Kconfig
+ create mode 100644 kernel/trace/rv/monitors/snep/snep.c
+ create mode 100644 kernel/trace/rv/monitors/snep/snep.h
+ create mode 100644 kernel/trace/rv/monitors/snep/snep_trace.h
+ create mode 100644 tools/verification/models/sched/scpd.dot
+ create mode 100644 tools/verification/models/sched/sncid.dot
+ create mode 100644 tools/verification/models/sched/snep.dot
 
 diff --git a/kernel/trace/rv/Kconfig b/kernel/trace/rv/Kconfig
-index 961ac1e487df1..c4f1c0fc3abc6 100644
+index c4f1c0fc3abc6..b39f36013ef23 100644
 --- a/kernel/trace/rv/Kconfig
 +++ b/kernel/trace/rv/Kconfig
-@@ -30,6 +30,7 @@ source "kernel/trace/rv/monitors/wwnr/Kconfig"
- source "kernel/trace/rv/monitors/sched/Kconfig"
+@@ -31,6 +31,9 @@ source "kernel/trace/rv/monitors/sched/Kconfig"
  source "kernel/trace/rv/monitors/tss/Kconfig"
  source "kernel/trace/rv/monitors/sco/Kconfig"
-+source "kernel/trace/rv/monitors/snroc/Kconfig"
+ source "kernel/trace/rv/monitors/snroc/Kconfig"
++source "kernel/trace/rv/monitors/scpd/Kconfig"
++source "kernel/trace/rv/monitors/snep/Kconfig"
++source "kernel/trace/rv/monitors/sncid/Kconfig"
  # Add new monitors here
  
  config RV_REACTORS
 diff --git a/kernel/trace/rv/Makefile b/kernel/trace/rv/Makefile
-index ef2a084ff3102..6d11d6400ddd0 100644
+index 6d11d6400ddd0..f9b2cd0483c3c 100644
 --- a/kernel/trace/rv/Makefile
 +++ b/kernel/trace/rv/Makefile
-@@ -8,6 +8,7 @@ obj-$(CONFIG_RV_MON_WWNR) += monitors/wwnr/wwnr.o
- obj-$(CONFIG_RV_MON_SCHED) += monitors/sched/sched.o
+@@ -9,6 +9,9 @@ obj-$(CONFIG_RV_MON_SCHED) += monitors/sched/sched.o
  obj-$(CONFIG_RV_MON_TSS) += monitors/tss/tss.o
  obj-$(CONFIG_RV_MON_SCO) += monitors/sco/sco.o
-+obj-$(CONFIG_RV_MON_SNROC) += monitors/snroc/snroc.o
+ obj-$(CONFIG_RV_MON_SNROC) += monitors/snroc/snroc.o
++obj-$(CONFIG_RV_MON_SCPD) += monitors/scpd/scpd.o
++obj-$(CONFIG_RV_MON_SNEP) += monitors/snep/snep.o
++obj-$(CONFIG_RV_MON_SNCID) += monitors/sncid/sncid.o
  # Add new monitors here
  obj-$(CONFIG_RV_REACTORS) += rv_reactors.o
  obj-$(CONFIG_RV_REACT_PRINTK) += reactor_printk.o
-diff --git a/kernel/trace/rv/monitors/snroc/Kconfig b/kernel/trace/rv/monitors/snroc/Kconfig
+diff --git a/kernel/trace/rv/monitors/scpd/Kconfig b/kernel/trace/rv/monitors/scpd/Kconfig
 new file mode 100644
-index 0000000000000..6e4365a2fea3b
+index 0000000000000..b9114fbf680f9
 --- /dev/null
-+++ b/kernel/trace/rv/monitors/snroc/Kconfig
-@@ -0,0 +1,14 @@
++++ b/kernel/trace/rv/monitors/scpd/Kconfig
+@@ -0,0 +1,15 @@
 +# SPDX-License-Identifier: GPL-2.0-only
 +#
-+config RV_MON_SNROC
++config RV_MON_SCPD
 +	depends on RV
++	depends on PREEMPT_TRACER
 +	depends on RV_MON_SCHED
 +	default y
-+	select DA_MON_EVENTS_ID
-+	bool "snroc monitor"
++	select DA_MON_EVENTS_IMPLICIT
++	bool "scpd monitor"
 +	help
-+	  Monitor to ensure sched_set_state happens only in the respective task's context.
++	  Monitor to ensure schedule is called with preemption disabled.
 +	  This monitor is part of the sched monitors collection.
 +
 +	  For further information, see:
 +	    Documentation/trace/rv/monitor_sched.rst
-diff --git a/kernel/trace/rv/monitors/snroc/snroc.c b/kernel/trace/rv/monitors/snroc/snroc.c
+diff --git a/kernel/trace/rv/monitors/scpd/scpd.c b/kernel/trace/rv/monitors/scpd/scpd.c
 new file mode 100644
-index 0000000000000..14c8eca3d5c8e
+index 0000000000000..cbdd6a5f8d7fd
 --- /dev/null
-+++ b/kernel/trace/rv/monitors/snroc/snroc.c
-@@ -0,0 +1,87 @@
++++ b/kernel/trace/rv/monitors/scpd/scpd.c
+@@ -0,0 +1,96 @@
 +// SPDX-License-Identifier: GPL-2.0
 +#include <linux/ftrace.h>
 +#include <linux/tracepoint.h>
@@ -153,141 +182,152 @@ index 0000000000000..14c8eca3d5c8e
 +#include <rv/instrumentation.h>
 +#include <rv/da_monitor.h>
 +
-+#define MODULE_NAME "snroc"
++#define MODULE_NAME "scpd"
 +
 +#include <trace/events/sched.h>
++#include <trace/events/preemptirq.h>
 +#include <rv_trace.h>
 +#include <monitors/sched/sched.h>
 +
-+#include "snroc.h"
++#include "scpd.h"
 +
-+static struct rv_monitor rv_snroc;
-+DECLARE_DA_MON_PER_TASK(snroc, unsigned char);
++static struct rv_monitor rv_scpd;
++DECLARE_DA_MON_PER_CPU(scpd, unsigned char);
 +
-+static void handle_sched_set_state(void *data, struct task_struct *tsk, int curr_state, int state)
++static void handle_preempt_disable(void *data, unsigned long ip, unsigned long parent_ip)
 +{
-+	struct task_struct *p = tsk;
-+
-+	da_handle_event_snroc(p, sched_set_state_snroc);
++	da_handle_event_scpd(preempt_disable_scpd);
 +}
 +
-+static void handle_sched_switch(void *data, bool preempt,
-+				struct task_struct *prev,
-+				struct task_struct *next,
-+				unsigned int prev_state)
++static void handle_preempt_enable(void *data, unsigned long ip, unsigned long parent_ip)
 +{
-+	da_handle_start_event_snroc(prev, sched_switch_out_snroc);
-+	da_handle_event_snroc(next, sched_switch_in_snroc);
++	da_handle_start_event_scpd(preempt_enable_scpd);
 +}
 +
-+static int enable_snroc(void)
++static void handle_schedule_entry(void *data, bool preempt, unsigned long ip)
++{
++	da_handle_event_scpd(schedule_entry_scpd);
++}
++
++static void handle_schedule_exit(void *data, bool is_switch, unsigned long ip)
++{
++	da_handle_event_scpd(schedule_exit_scpd);
++}
++
++static int enable_scpd(void)
 +{
 +	int retval;
 +
-+	retval = da_monitor_init_snroc();
++	retval = da_monitor_init_scpd();
 +	if (retval)
 +		return retval;
 +
-+	rv_attach_trace_probe("snroc", sched_set_state_tp, handle_sched_set_state);
-+	rv_attach_trace_probe("snroc", sched_switch, handle_sched_switch);
++	rv_attach_trace_probe("scpd", preempt_disable, handle_preempt_disable);
++	rv_attach_trace_probe("scpd", preempt_enable, handle_preempt_enable);
++	rv_attach_trace_probe("scpd", sched_entry_tp, handle_schedule_entry);
++	rv_attach_trace_probe("scpd", sched_exit_tp, handle_schedule_exit);
 +
 +	return 0;
 +}
 +
-+static void disable_snroc(void)
++static void disable_scpd(void)
 +{
-+	rv_snroc.enabled = 0;
++	rv_scpd.enabled = 0;
 +
-+	rv_detach_trace_probe("snroc", sched_set_state_tp, handle_sched_set_state);
-+	rv_detach_trace_probe("snroc", sched_switch, handle_sched_switch);
++	rv_detach_trace_probe("scpd", preempt_disable, handle_preempt_disable);
++	rv_detach_trace_probe("scpd", preempt_enable, handle_preempt_enable);
++	rv_detach_trace_probe("scpd", sched_entry_tp, handle_schedule_entry);
++	rv_detach_trace_probe("scpd", sched_exit_tp, handle_schedule_exit);
 +
-+	da_monitor_destroy_snroc();
++	da_monitor_destroy_scpd();
 +}
 +
-+static struct rv_monitor rv_snroc = {
-+	.name = "snroc",
-+	.description = "set non runnable on its own context.",
-+	.enable = enable_snroc,
-+	.disable = disable_snroc,
-+	.reset = da_monitor_reset_all_snroc,
++static struct rv_monitor rv_scpd = {
++	.name = "scpd",
++	.description = "schedule called with preemption disabled.",
++	.enable = enable_scpd,
++	.disable = disable_scpd,
++	.reset = da_monitor_reset_all_scpd,
 +	.enabled = 0,
 +};
 +
-+static int __init register_snroc(void)
++static int __init register_scpd(void)
 +{
-+	rv_register_monitor(&rv_snroc, &rv_sched);
++	rv_register_monitor(&rv_scpd, &rv_sched);
 +	return 0;
 +}
 +
-+static void __exit unregister_snroc(void)
++static void __exit unregister_scpd(void)
 +{
-+	rv_unregister_monitor(&rv_snroc);
++	rv_unregister_monitor(&rv_scpd);
 +}
 +
-+module_init(register_snroc);
-+module_exit(unregister_snroc);
++module_init(register_scpd);
++module_exit(unregister_scpd);
 +
 +MODULE_LICENSE("GPL");
 +MODULE_AUTHOR("Gabriele Monaco <gmonaco@redhat.com>");
-+MODULE_DESCRIPTION("snroc: set non runnable on its own context.");
-diff --git a/kernel/trace/rv/monitors/snroc/snroc.h b/kernel/trace/rv/monitors/snroc/snroc.h
++MODULE_DESCRIPTION("scpd: schedule called with preemption disabled.");
+diff --git a/kernel/trace/rv/monitors/scpd/scpd.h b/kernel/trace/rv/monitors/scpd/scpd.h
 new file mode 100644
-index 0000000000000..c3650a2b1b107
+index 0000000000000..295f735a58110
 --- /dev/null
-+++ b/kernel/trace/rv/monitors/snroc/snroc.h
-@@ -0,0 +1,47 @@
++++ b/kernel/trace/rv/monitors/scpd/scpd.h
+@@ -0,0 +1,49 @@
 +/* SPDX-License-Identifier: GPL-2.0 */
 +/*
-+ * Automatically generated C representation of snroc automaton
++ * Automatically generated C representation of scpd automaton
 + * For further information about this format, see kernel documentation:
 + *   Documentation/trace/rv/deterministic_automata.rst
 + */
 +
-+enum states_snroc {
-+	other_context_snroc = 0,
-+	own_context_snroc,
-+	state_max_snroc
++enum states_scpd {
++	cant_sched_scpd = 0,
++	can_sched_scpd,
++	state_max_scpd
 +};
 +
-+#define INVALID_STATE state_max_snroc
++#define INVALID_STATE state_max_scpd
 +
-+enum events_snroc {
-+	sched_set_state_snroc = 0,
-+	sched_switch_in_snroc,
-+	sched_switch_out_snroc,
-+	event_max_snroc
++enum events_scpd {
++	preempt_disable_scpd = 0,
++	preempt_enable_scpd,
++	schedule_entry_scpd,
++	schedule_exit_scpd,
++	event_max_scpd
 +};
 +
-+struct automaton_snroc {
-+	char *state_names[state_max_snroc];
-+	char *event_names[event_max_snroc];
-+	unsigned char function[state_max_snroc][event_max_snroc];
++struct automaton_scpd {
++	char *state_names[state_max_scpd];
++	char *event_names[event_max_scpd];
++	unsigned char function[state_max_scpd][event_max_scpd];
 +	unsigned char initial_state;
-+	bool final_states[state_max_snroc];
++	bool final_states[state_max_scpd];
 +};
 +
-+static const struct automaton_snroc automaton_snroc = {
++static const struct automaton_scpd automaton_scpd = {
 +	.state_names = {
-+		"other_context",
-+		"own_context"
++		"cant_sched",
++		"can_sched"
 +	},
 +	.event_names = {
-+		"sched_set_state",
-+		"sched_switch_in",
-+		"sched_switch_out"
++		"preempt_disable",
++		"preempt_enable",
++		"schedule_entry",
++		"schedule_exit"
 +	},
 +	.function = {
-+		{      INVALID_STATE,  own_context_snroc,       INVALID_STATE },
-+		{  own_context_snroc,      INVALID_STATE, other_context_snroc },
++		{     can_sched_scpd,     INVALID_STATE,     INVALID_STATE,     INVALID_STATE },
++		{     INVALID_STATE,    cant_sched_scpd,     can_sched_scpd,     can_sched_scpd },
 +	},
-+	.initial_state = other_context_snroc,
++	.initial_state = cant_sched_scpd,
 +	.final_states = { 1, 0 },
 +};
-diff --git a/kernel/trace/rv/monitors/snroc/snroc_trace.h b/kernel/trace/rv/monitors/snroc/snroc_trace.h
+diff --git a/kernel/trace/rv/monitors/scpd/scpd_trace.h b/kernel/trace/rv/monitors/scpd/scpd_trace.h
 new file mode 100644
-index 0000000000000..50114cef51229
+index 0000000000000..6b0f4aa4732e8
 --- /dev/null
-+++ b/kernel/trace/rv/monitors/snroc/snroc_trace.h
++++ b/kernel/trace/rv/monitors/scpd/scpd_trace.h
 @@ -0,0 +1,15 @@
 +/* SPDX-License-Identifier: GPL-2.0 */
 +
@@ -295,49 +335,497 @@ index 0000000000000..50114cef51229
 + * Snippet to be included in rv_trace.h
 + */
 +
-+#ifdef CONFIG_RV_MON_SNROC
-+DEFINE_EVENT(event_da_monitor_id, event_snroc,
-+	     TP_PROTO(int id, char *state, char *event, char *next_state, bool final_state),
-+	     TP_ARGS(id, state, event, next_state, final_state));
++#ifdef CONFIG_RV_MON_SCPD
++DEFINE_EVENT(event_da_monitor, event_scpd,
++	     TP_PROTO(char *state, char *event, char *next_state, bool final_state),
++	     TP_ARGS(state, event, next_state, final_state));
 +
-+DEFINE_EVENT(error_da_monitor_id, error_snroc,
-+	     TP_PROTO(int id, char *state, char *event),
-+	     TP_ARGS(id, state, event));
-+#endif /* CONFIG_RV_MON_SNROC */
++DEFINE_EVENT(error_da_monitor, error_scpd,
++	     TP_PROTO(char *state, char *event),
++	     TP_ARGS(state, event));
++#endif /* CONFIG_RV_MON_SCPD */
+diff --git a/kernel/trace/rv/monitors/sncid/Kconfig b/kernel/trace/rv/monitors/sncid/Kconfig
+new file mode 100644
+index 0000000000000..76bcfef4fd103
+--- /dev/null
++++ b/kernel/trace/rv/monitors/sncid/Kconfig
+@@ -0,0 +1,15 @@
++# SPDX-License-Identifier: GPL-2.0-only
++#
++config RV_MON_SNCID
++	depends on RV
++	depends on IRQSOFF_TRACER
++	depends on RV_MON_SCHED
++	default y
++	select DA_MON_EVENTS_IMPLICIT
++	bool "sncid monitor"
++	help
++	  Monitor to ensure schedule is not called with interrupt disabled.
++	  This monitor is part of the sched monitors collection.
++
++	  For further information, see:
++	    Documentation/trace/rv/monitor_sched.rst
+diff --git a/kernel/trace/rv/monitors/sncid/sncid.c b/kernel/trace/rv/monitors/sncid/sncid.c
+new file mode 100644
+index 0000000000000..f5037cd6214c2
+--- /dev/null
++++ b/kernel/trace/rv/monitors/sncid/sncid.c
+@@ -0,0 +1,96 @@
++// SPDX-License-Identifier: GPL-2.0
++#include <linux/ftrace.h>
++#include <linux/tracepoint.h>
++#include <linux/kernel.h>
++#include <linux/module.h>
++#include <linux/init.h>
++#include <linux/rv.h>
++#include <rv/instrumentation.h>
++#include <rv/da_monitor.h>
++
++#define MODULE_NAME "sncid"
++
++#include <trace/events/sched.h>
++#include <trace/events/preemptirq.h>
++#include <rv_trace.h>
++#include <monitors/sched/sched.h>
++
++#include "sncid.h"
++
++static struct rv_monitor rv_sncid;
++DECLARE_DA_MON_PER_CPU(sncid, unsigned char);
++
++static void handle_irq_disable(void *data, unsigned long ip, unsigned long parent_ip)
++{
++	da_handle_event_sncid(irq_disable_sncid);
++}
++
++static void handle_irq_enable(void *data, unsigned long ip, unsigned long parent_ip)
++{
++	da_handle_start_event_sncid(irq_enable_sncid);
++}
++
++static void handle_schedule_entry(void *data, bool preempt, unsigned long ip)
++{
++	da_handle_start_event_sncid(schedule_entry_sncid);
++}
++
++static void handle_schedule_exit(void *data, bool is_switch, unsigned long ip)
++{
++	da_handle_start_event_sncid(schedule_exit_sncid);
++}
++
++static int enable_sncid(void)
++{
++	int retval;
++
++	retval = da_monitor_init_sncid();
++	if (retval)
++		return retval;
++
++	rv_attach_trace_probe("sncid", irq_disable, handle_irq_disable);
++	rv_attach_trace_probe("sncid", irq_enable, handle_irq_enable);
++	rv_attach_trace_probe("sncid", sched_entry_tp, handle_schedule_entry);
++	rv_attach_trace_probe("sncid", sched_exit_tp, handle_schedule_exit);
++
++	return 0;
++}
++
++static void disable_sncid(void)
++{
++	rv_sncid.enabled = 0;
++
++	rv_detach_trace_probe("sncid", irq_disable, handle_irq_disable);
++	rv_detach_trace_probe("sncid", irq_enable, handle_irq_enable);
++	rv_detach_trace_probe("sncid", sched_entry_tp, handle_schedule_entry);
++	rv_detach_trace_probe("sncid", sched_exit_tp, handle_schedule_exit);
++
++	da_monitor_destroy_sncid();
++}
++
++static struct rv_monitor rv_sncid = {
++	.name = "sncid",
++	.description = "schedule not called with interrupt disabled.",
++	.enable = enable_sncid,
++	.disable = disable_sncid,
++	.reset = da_monitor_reset_all_sncid,
++	.enabled = 0,
++};
++
++static int __init register_sncid(void)
++{
++	rv_register_monitor(&rv_sncid, &rv_sched);
++	return 0;
++}
++
++static void __exit unregister_sncid(void)
++{
++	rv_unregister_monitor(&rv_sncid);
++}
++
++module_init(register_sncid);
++module_exit(unregister_sncid);
++
++MODULE_LICENSE("GPL");
++MODULE_AUTHOR("Gabriele Monaco <gmonaco@redhat.com>");
++MODULE_DESCRIPTION("sncid: schedule not called with interrupt disabled.");
+diff --git a/kernel/trace/rv/monitors/sncid/sncid.h b/kernel/trace/rv/monitors/sncid/sncid.h
+new file mode 100644
+index 0000000000000..21304725142bc
+--- /dev/null
++++ b/kernel/trace/rv/monitors/sncid/sncid.h
+@@ -0,0 +1,49 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * Automatically generated C representation of sncid automaton
++ * For further information about this format, see kernel documentation:
++ *   Documentation/trace/rv/deterministic_automata.rst
++ */
++
++enum states_sncid {
++	can_sched_sncid = 0,
++	cant_sched_sncid,
++	state_max_sncid
++};
++
++#define INVALID_STATE state_max_sncid
++
++enum events_sncid {
++	irq_disable_sncid = 0,
++	irq_enable_sncid,
++	schedule_entry_sncid,
++	schedule_exit_sncid,
++	event_max_sncid
++};
++
++struct automaton_sncid {
++	char *state_names[state_max_sncid];
++	char *event_names[event_max_sncid];
++	unsigned char function[state_max_sncid][event_max_sncid];
++	unsigned char initial_state;
++	bool final_states[state_max_sncid];
++};
++
++static const struct automaton_sncid automaton_sncid = {
++	.state_names = {
++		"can_sched",
++		"cant_sched"
++	},
++	.event_names = {
++		"irq_disable",
++		"irq_enable",
++		"schedule_entry",
++		"schedule_exit"
++	},
++	.function = {
++		{ cant_sched_sncid,   INVALID_STATE, can_sched_sncid, can_sched_sncid },
++		{    INVALID_STATE, can_sched_sncid,   INVALID_STATE,   INVALID_STATE },
++	},
++	.initial_state = can_sched_sncid,
++	.final_states = { 1, 0 },
++};
+diff --git a/kernel/trace/rv/monitors/sncid/sncid_trace.h b/kernel/trace/rv/monitors/sncid/sncid_trace.h
+new file mode 100644
+index 0000000000000..3ce42a57671d4
+--- /dev/null
++++ b/kernel/trace/rv/monitors/sncid/sncid_trace.h
+@@ -0,0 +1,15 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++
++/*
++ * Snippet to be included in rv_trace.h
++ */
++
++#ifdef CONFIG_RV_MON_SNCID
++DEFINE_EVENT(event_da_monitor, event_sncid,
++	     TP_PROTO(char *state, char *event, char *next_state, bool final_state),
++	     TP_ARGS(state, event, next_state, final_state));
++
++DEFINE_EVENT(error_da_monitor, error_sncid,
++	     TP_PROTO(char *state, char *event),
++	     TP_ARGS(state, event));
++#endif /* CONFIG_RV_MON_SNCID */
+diff --git a/kernel/trace/rv/monitors/snep/Kconfig b/kernel/trace/rv/monitors/snep/Kconfig
+new file mode 100644
+index 0000000000000..77527f9712325
+--- /dev/null
++++ b/kernel/trace/rv/monitors/snep/Kconfig
+@@ -0,0 +1,15 @@
++# SPDX-License-Identifier: GPL-2.0-only
++#
++config RV_MON_SNEP
++	depends on RV
++	depends on PREEMPT_TRACER
++	depends on RV_MON_SCHED
++	default y
++	select DA_MON_EVENTS_IMPLICIT
++	bool "snep monitor"
++	help
++	  Monitor to ensure schedule does not enable preempt.
++	  This monitor is part of the sched monitors collection.
++
++	  For further information, see:
++	    Documentation/trace/rv/monitor_sched.rst
+diff --git a/kernel/trace/rv/monitors/snep/snep.c b/kernel/trace/rv/monitors/snep/snep.c
+new file mode 100644
+index 0000000000000..0076ba6d7ea44
+--- /dev/null
++++ b/kernel/trace/rv/monitors/snep/snep.c
+@@ -0,0 +1,96 @@
++// SPDX-License-Identifier: GPL-2.0
++#include <linux/ftrace.h>
++#include <linux/tracepoint.h>
++#include <linux/kernel.h>
++#include <linux/module.h>
++#include <linux/init.h>
++#include <linux/rv.h>
++#include <rv/instrumentation.h>
++#include <rv/da_monitor.h>
++
++#define MODULE_NAME "snep"
++
++#include <trace/events/sched.h>
++#include <trace/events/preemptirq.h>
++#include <rv_trace.h>
++#include <monitors/sched/sched.h>
++
++#include "snep.h"
++
++static struct rv_monitor rv_snep;
++DECLARE_DA_MON_PER_CPU(snep, unsigned char);
++
++static void handle_preempt_disable(void *data, unsigned long ip, unsigned long parent_ip)
++{
++	da_handle_start_event_snep(preempt_disable_snep);
++}
++
++static void handle_preempt_enable(void *data, unsigned long ip, unsigned long parent_ip)
++{
++	da_handle_start_event_snep(preempt_enable_snep);
++}
++
++static void handle_schedule_entry(void *data, bool preempt, unsigned long ip)
++{
++	da_handle_event_snep(schedule_entry_snep);
++}
++
++static void handle_schedule_exit(void *data, bool is_switch, unsigned long ip)
++{
++	da_handle_start_event_snep(schedule_exit_snep);
++}
++
++static int enable_snep(void)
++{
++	int retval;
++
++	retval = da_monitor_init_snep();
++	if (retval)
++		return retval;
++
++	rv_attach_trace_probe("snep", preempt_disable, handle_preempt_disable);
++	rv_attach_trace_probe("snep", preempt_enable, handle_preempt_enable);
++	rv_attach_trace_probe("snep", sched_entry_tp, handle_schedule_entry);
++	rv_attach_trace_probe("snep", sched_exit_tp, handle_schedule_exit);
++
++	return 0;
++}
++
++static void disable_snep(void)
++{
++	rv_snep.enabled = 0;
++
++	rv_detach_trace_probe("snep", preempt_disable, handle_preempt_disable);
++	rv_detach_trace_probe("snep", preempt_enable, handle_preempt_enable);
++	rv_detach_trace_probe("snep", sched_entry_tp, handle_schedule_entry);
++	rv_detach_trace_probe("snep", sched_exit_tp, handle_schedule_exit);
++
++	da_monitor_destroy_snep();
++}
++
++static struct rv_monitor rv_snep = {
++	.name = "snep",
++	.description = "schedule does not enable preempt.",
++	.enable = enable_snep,
++	.disable = disable_snep,
++	.reset = da_monitor_reset_all_snep,
++	.enabled = 0,
++};
++
++static int __init register_snep(void)
++{
++	rv_register_monitor(&rv_snep, &rv_sched);
++	return 0;
++}
++
++static void __exit unregister_snep(void)
++{
++	rv_unregister_monitor(&rv_snep);
++}
++
++module_init(register_snep);
++module_exit(unregister_snep);
++
++MODULE_LICENSE("GPL");
++MODULE_AUTHOR("Gabriele Monaco <gmonaco@redhat.com>");
++MODULE_DESCRIPTION("snep: schedule does not enable preempt.");
+diff --git a/kernel/trace/rv/monitors/snep/snep.h b/kernel/trace/rv/monitors/snep/snep.h
+new file mode 100644
+index 0000000000000..6d16b9ad931e1
+--- /dev/null
++++ b/kernel/trace/rv/monitors/snep/snep.h
+@@ -0,0 +1,49 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * Automatically generated C representation of snep automaton
++ * For further information about this format, see kernel documentation:
++ *   Documentation/trace/rv/deterministic_automata.rst
++ */
++
++enum states_snep {
++	non_scheduling_context_snep = 0,
++	scheduling_contex_snep,
++	state_max_snep
++};
++
++#define INVALID_STATE state_max_snep
++
++enum events_snep {
++	preempt_disable_snep = 0,
++	preempt_enable_snep,
++	schedule_entry_snep,
++	schedule_exit_snep,
++	event_max_snep
++};
++
++struct automaton_snep {
++	char *state_names[state_max_snep];
++	char *event_names[event_max_snep];
++	unsigned char function[state_max_snep][event_max_snep];
++	unsigned char initial_state;
++	bool final_states[state_max_snep];
++};
++
++static const struct automaton_snep automaton_snep = {
++	.state_names = {
++		"non_scheduling_context",
++		"scheduling_contex"
++	},
++	.event_names = {
++		"preempt_disable",
++		"preempt_enable",
++		"schedule_entry",
++		"schedule_exit"
++	},
++	.function = {
++		{ non_scheduling_context_snep, non_scheduling_context_snep, scheduling_contex_snep,               INVALID_STATE },
++		{               INVALID_STATE,               INVALID_STATE,          INVALID_STATE, non_scheduling_context_snep },
++	},
++	.initial_state = non_scheduling_context_snep,
++	.final_states = { 1, 0 },
++};
+diff --git a/kernel/trace/rv/monitors/snep/snep_trace.h b/kernel/trace/rv/monitors/snep/snep_trace.h
+new file mode 100644
+index 0000000000000..01aad49a949a8
+--- /dev/null
++++ b/kernel/trace/rv/monitors/snep/snep_trace.h
+@@ -0,0 +1,15 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++
++/*
++ * Snippet to be included in rv_trace.h
++ */
++
++#ifdef CONFIG_RV_MON_SNEP
++DEFINE_EVENT(event_da_monitor, event_snep,
++	     TP_PROTO(char *state, char *event, char *next_state, bool final_state),
++	     TP_ARGS(state, event, next_state, final_state));
++
++DEFINE_EVENT(error_da_monitor, error_snep,
++	     TP_PROTO(char *state, char *event),
++	     TP_ARGS(state, event));
++#endif /* CONFIG_RV_MON_SNEP */
 diff --git a/kernel/trace/rv/rv_trace.h b/kernel/trace/rv/rv_trace.h
-index f49e85ca97a1f..a533bc29cfddf 100644
+index a533bc29cfddf..422b75f58891e 100644
 --- a/kernel/trace/rv/rv_trace.h
 +++ b/kernel/trace/rv/rv_trace.h
-@@ -120,6 +120,7 @@ DECLARE_EVENT_CLASS(error_da_monitor_id,
- );
+@@ -60,6 +60,9 @@ DECLARE_EVENT_CLASS(error_da_monitor,
+ #include <monitors/wip/wip_trace.h>
+ #include <monitors/tss/tss_trace.h>
+ #include <monitors/sco/sco_trace.h>
++#include <monitors/scpd/scpd_trace.h>
++#include <monitors/snep/snep_trace.h>
++#include <monitors/sncid/sncid_trace.h>
+ // Add new monitors based on CONFIG_DA_MON_EVENTS_IMPLICIT here
  
- #include <monitors/wwnr/wwnr_trace.h>
-+#include <monitors/snroc/snroc_trace.h>
- // Add new monitors based on CONFIG_DA_MON_EVENTS_ID here
- 
- #endif /* CONFIG_DA_MON_EVENTS_ID */
-diff --git a/tools/verification/models/sched/snroc.dot b/tools/verification/models/sched/snroc.dot
+ #endif /* CONFIG_DA_MON_EVENTS_IMPLICIT */
+diff --git a/tools/verification/models/sched/scpd.dot b/tools/verification/models/sched/scpd.dot
 new file mode 100644
-index 0000000000000..8b71c32d4dca4
+index 0000000000000..340413896765c
 --- /dev/null
-+++ b/tools/verification/models/sched/snroc.dot
++++ b/tools/verification/models/sched/scpd.dot
 @@ -0,0 +1,18 @@
 +digraph state_automaton {
 +	center = true;
 +	size = "7,11";
-+	{node [shape = plaintext, style=invis, label=""] "__init_other_context"};
-+	{node [shape = ellipse] "other_context"};
-+	{node [shape = plaintext] "other_context"};
-+	{node [shape = plaintext] "own_context"};
-+	"__init_other_context" -> "other_context";
-+	"other_context" [label = "other_context", color = green3];
-+	"other_context" -> "own_context" [ label = "sched_switch_in" ];
-+	"own_context" [label = "own_context"];
-+	"own_context" -> "other_context" [ label = "sched_switch_out" ];
-+	"own_context" -> "own_context" [ label = "sched_set_state" ];
++	{node [shape = plaintext] "can_sched"};
++	{node [shape = plaintext, style=invis, label=""] "__init_cant_sched"};
++	{node [shape = ellipse] "cant_sched"};
++	{node [shape = plaintext] "cant_sched"};
++	"__init_cant_sched" -> "cant_sched";
++	"can_sched" [label = "can_sched"];
++	"can_sched" -> "can_sched" [ label = "schedule_entry\nschedule_exit" ];
++	"can_sched" -> "cant_sched" [ label = "preempt_enable" ];
++	"cant_sched" [label = "cant_sched", color = green3];
++	"cant_sched" -> "can_sched" [ label = "preempt_disable" ];
 +	{ rank = min ;
-+		"__init_other_context";
-+		"other_context";
++		"__init_cant_sched";
++		"cant_sched";
++	}
++}
+diff --git a/tools/verification/models/sched/sncid.dot b/tools/verification/models/sched/sncid.dot
+new file mode 100644
+index 0000000000000..072851721b50a
+--- /dev/null
++++ b/tools/verification/models/sched/sncid.dot
+@@ -0,0 +1,18 @@
++digraph state_automaton {
++	center = true;
++	size = "7,11";
++	{node [shape = plaintext, style=invis, label=""] "__init_can_sched"};
++	{node [shape = ellipse] "can_sched"};
++	{node [shape = plaintext] "can_sched"};
++	{node [shape = plaintext] "cant_sched"};
++	"__init_can_sched" -> "can_sched";
++	"can_sched" [label = "can_sched", color = green3];
++	"can_sched" -> "can_sched" [ label = "schedule_entry\nschedule_exit" ];
++	"can_sched" -> "cant_sched" [ label = "irq_disable" ];
++	"cant_sched" [label = "cant_sched"];
++	"cant_sched" -> "can_sched" [ label = "irq_enable" ];
++	{ rank = min ;
++		"__init_can_sched";
++		"can_sched";
++	}
++}
+diff --git a/tools/verification/models/sched/snep.dot b/tools/verification/models/sched/snep.dot
+new file mode 100644
+index 0000000000000..fe1300e93f211
+--- /dev/null
++++ b/tools/verification/models/sched/snep.dot
+@@ -0,0 +1,18 @@
++digraph state_automaton {
++	center = true;
++	size = "7,11";
++	{node [shape = plaintext, style=invis, label=""] "__init_non_scheduling_context"};
++	{node [shape = ellipse] "non_scheduling_context"};
++	{node [shape = plaintext] "non_scheduling_context"};
++	{node [shape = plaintext] "scheduling_contex"};
++	"__init_non_scheduling_context" -> "non_scheduling_context";
++	"non_scheduling_context" [label = "non_scheduling_context", color = green3];
++	"non_scheduling_context" -> "non_scheduling_context" [ label = "preempt_disable\npreempt_enable" ];
++	"non_scheduling_context" -> "scheduling_contex" [ label = "schedule_entry" ];
++	"scheduling_contex" [label = "scheduling_contex"];
++	"scheduling_contex" -> "non_scheduling_context" [ label = "schedule_exit" ];
++	{ rank = min ;
++		"__init_non_scheduling_context";
++		"non_scheduling_context";
 +	}
 +}
 -- 
