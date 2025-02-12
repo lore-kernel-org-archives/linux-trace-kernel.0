@@ -1,138 +1,126 @@
-Received: from mail-yb1-f194.google.com (mail-yb1-f194.google.com [209.85.219.194])
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99172146A68;
-	Wed, 12 Feb 2025 06:50:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78DFD2AF19;
+	Wed, 12 Feb 2025 11:10:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739343048; cv=none; b=GPyzPLNsIJ3qVTRWmfj4ji2QWry2XrIHfRgDyUdIwLXSYWbiySjRCm2mh2lfVOlKc5Ujb25mqvAvLQOiA8h1+JATwVjDWGrIbFupzXTxDi64F3mBk68S1p38FWYnnwtGtizAoXwlFh0OGw5+ehuFRMOd9D6s96bsBuwo7qtsz6s=
+	t=1739358650; cv=none; b=N7h8YDhEGw265tEBmJ6H9Od0wYWOSODdwr1+4csOW7FlzG96vpYRepSddZhBX62IZ8ShsaAP47JBu3+ZfAW6XNITvUQw/qahs4hi19CeVeiX5/9i4QVpFOl8P2HrZA7B3x3eqQPDGBB6XYLEYaUCTRFsFDNjPI0wjsLsuhl+oJE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739343048; c=relaxed/simple;
-	bh=R8pIttXenMn7iTlampJ6LXPNSmuNn071Fr3gaT1wJW0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=H19Drkrg8IUuYu652/aThLxjYWBVMDIkIkzW6z7en72bbgHTOHOEvYkym0EjMUjHEwVbB5YmbS0NjsDHA2Dd5xRrFzVYe2PNufFSVlygeADmNy9vNpF8msRBraGU++SqfmMazqer/qspFRrS5Wc0/JwE5LH9oLRoRu0l0JveELc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RwKEJbz1; arc=none smtp.client-ip=209.85.219.194
+	s=arc-20240116; t=1739358650; c=relaxed/simple;
+	bh=r79VELnViF7+zIzfkgy+4Z0CPtTiHpjajGKPiHY0sQI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kOqzY2ICWJToFPUztUAPnk7tT8Nkz0C6b6Gw05gkie5oLS0UiPhcZyeaXI7adRwl80ZoJonFUWiyiTteFs7VSsv+0SbV6VizK+paZ6EAS5b5nxjjJZVwyWHSOcWaR0U+pJiBNRR8DdxV1GGKv7un5VxXoRH15xzkncebQSzKrIw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=neO4g9XF; arc=none smtp.client-ip=209.85.214.180
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RwKEJbz1"
-Received: by mail-yb1-f194.google.com with SMTP id 3f1490d57ef6-e589c258663so6899264276.1;
-        Tue, 11 Feb 2025 22:50:46 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="neO4g9XF"
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-21f40deb941so144886845ad.2;
+        Wed, 12 Feb 2025 03:10:49 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739343045; x=1739947845; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=R8pIttXenMn7iTlampJ6LXPNSmuNn071Fr3gaT1wJW0=;
-        b=RwKEJbz1O2Ipxn6xvMM7mtI3/+UV48Eh0vhvnYfgQ3+i/OWtWrdyVAcYjSBBovrDY2
-         aUV5B7K69X1wMWIAWcdhblvLJ7mp34ZrdLOJXlfsn+q3qD+xfSLaErTIetjW/zRN4ZaZ
-         kaWJ1dCQXsTFgbj/LHaKl3M2FHFlgBoG3roHhrK1+KkGGgZsl9Vek/Gae3bTvzMDdH0d
-         Qo+93qHm513Wqdog3iRKF59CjxJ08APZt1JgcDQIepEN9PhZkuwdjeBWU4V9zCbhe4d/
-         1NPrHTupYMO2BR+SCzNKafXt5a4eUUFkdLj12IRmz5qxABfvdSG0TuxFuHVI/Mzll+OV
-         YBLg==
+        d=gmail.com; s=20230601; t=1739358649; x=1739963449; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=a7fijWHvwPLZETcSwOhX6AJpI56/uusqCA2JoLk/IPY=;
+        b=neO4g9XFVWb1XbZZIkfGaRNkJYnwRx94ikmveCBAw1WNVW2UiqYjebpXhwPn5AyTG1
+         vBhgvYWLlidkeQqf82+YtOgK0754W/qEQFHR14TZa5sgNzpBv55whiM0dKEiFdHNfOh8
+         Yv470DjerqAXWeMGwZepx7kIwrGn49+LCOKjmcT2Ui7s/nPjd+QldWbd01g80wZWb/+w
+         e0PQdnfE5PdK7LYm4je9SvDxo3zM9IJ3yApkm9vqPIcOnD9VAoA2Y+5QfWB/mjf9Fwxp
+         AAqysxVn8bIfNSvk6ipVW25U6RfCRCtccSbkX8TR9HXHKC3aQlJ2Nx21dgIbbfQhV+PU
+         ESHA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739343045; x=1739947845;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=R8pIttXenMn7iTlampJ6LXPNSmuNn071Fr3gaT1wJW0=;
-        b=SfSn2/1VLrk04uIDv++MoCuiyLEmiDD+G1CYMBnB6hzE0JM4Yt6Mmz5BCF3FNm8k9o
-         JRLWtgpAsXuWCOdxxbd1Has9FAfUBx5Zzhzf2s/THOVl/C8eGkP2HKhCHm39m86UjblT
-         ssP642OOySmBaGx+2q7XCxnrX1ugUgMMWcb4IFYkX9Vq0F5EBMyfk+o1y09HTaKQjCpd
-         7G1IC/4sOcH1WEUxe+zm9c/lHYv17inoWvbyPSLiHKm+o8bwxhaJCNqYZETI2BPYjorl
-         5lSCmQufNXNZO5AcxNVEfORuJBxjYoMC5KmVCkJxFXcsbyXRDAUvxSbOXNr834AF7ynr
-         5mkQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU5WtI0Vkp8QkkZZjXo3sg1mSp6XMxXPu0Rul/4gepmzWiCgX9Ua0vTQPrD5KWmUDS+pyoh5BlFo+xXCncb/dOQKh4x@vger.kernel.org, AJvYcCUMZPkwV1woUq3I5pE8ruSJCQTcmCGat9M9owIGsC4kAHgQTY7FTV0whRFDNaXQN5Kmabg=@vger.kernel.org, AJvYcCXJn9meZS4LAqywlXePznz7ZAFz4RKgGtCIu7Mtq5eia6uRNkhYPGo0SrVeuPygeEvt2fUyRTViLDMAuex1@vger.kernel.org
-X-Gm-Message-State: AOJu0YxauAhSbDNYN3OgLkBDslbStdOvqlZxxRDUnkRTBXrgraC8Eyb6
-	aQSyJ1k7q+YIhAOgH9tlLC9IN6IdM5jUORk+82T1o8j1cbmt2El7rKxEhOYiOlLRqkyy7dbd+ml
-	i0ofrFc+EnRfWryabqOrTQ2hSQo0=
-X-Gm-Gg: ASbGnct8vvXKUHfskAZXKt6V9wR0EffP0ZBi1E77Hj5MevwUGgVsYbIrmG4zJWcoJ+w
-	7hOzmSfn0u9kV84HaXYezTaEyn9mzhTFDuQW0JPQxJ9KT48B8FVEGascKX33vLoAC5VjpTkRH
-X-Google-Smtp-Source: AGHT+IHqv5DsEiQvLDynsgRjnDoQlnnEq9Aa+3yv9dup4mcV6bVTxrkdRR/kv757DtYZ2qjPy587yVhC9Ido1MMNUn8=
-X-Received: by 2002:a05:6902:1618:b0:e5b:3de2:cead with SMTP id
- 3f1490d57ef6-e5d9f179f21mr2209894276.34.1739343045146; Tue, 11 Feb 2025
- 22:50:45 -0800 (PST)
+        d=1e100.net; s=20230601; t=1739358649; x=1739963449;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=a7fijWHvwPLZETcSwOhX6AJpI56/uusqCA2JoLk/IPY=;
+        b=QCU6YpRF52gcyed2ig+5r37C7E4V7xQrSuINjiPH0R0FoDYrdAMMiKuVPzLvitbj5j
+         iZpzGc0ofODwwSe4WGsZ1d9EGRFz3u3YSZ8CxOOSzUE1thMgAXIlLwwkzGv7VSpMn2Hp
+         6VfvHBhFnPViaZ0PW6whKpbcD8egDfwez87U+NAZp1qke22efrNT/qJ/L7H0oQQ3w2BA
+         vdersyCeE/k85NMF8dO8TXW77LSpwL5EvxiCRPyqr6bQCHZFG/Y7q9gu7SWMz7t82ptl
+         wjuwubS3zdg0o2X7vKviTF+L7fpc2lNGCetIZu0uPt3SiriEKRUxiUqesI+Or85y1pJ7
+         XT1w==
+X-Forwarded-Encrypted: i=1; AJvYcCVuG8oH2CCJJFVFUL/RQoz3pQrhkrVQ92nZcMUukGH9FfZcxJ/NsH2HZeVgLjdrL3bd//VEIMJbfPzCay5k@vger.kernel.org, AJvYcCWlD9M7eGnuA/ZXBOabUdz1+4bpnrmu38NwYaIP93e+BR/TYZVKHa+uLohMLtKxAiTo8NYOu0lgOnc=@vger.kernel.org, AJvYcCXhvXN3hoYN8mEcuevsXQts2EAo/+38GK3W2opX4Jy43Uw1uU3/NpybREAwmhg8vCnZvViMKmJtHjxcMpmdXT+2qXcJ@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx3yYvh7kwJt/mh1TkdQkAcHQLmmDRN6+qgeUBXwvl4BrCfWcx7
+	bgG5v1+lYdRv8N/0dx55I7Obszx2dvQ9punOE38mcsKeXwZ/LvbY
+X-Gm-Gg: ASbGnctuhoI1/mxPu+zDOcQXb7GWS4qjCmekBvnksYTORd8zS5Rl+2+YvztQ3NvvmOL
+	qUoKXHXEoPFAWpb4QhN8hQbSWjlmg2SdEEzMIyQqzhLEIDhJeQhKnyYe6cOh2kn56bEvnsiICbw
+	vELnV7t2XkgmFXhE3SeHwVOsdAdNrFzerj3UnG6TqmU7adqkATE8Q7S47LAKPyt27ckQDnFcj3v
+	EQAajAETsVBUYuSp6RuS8rwMC1wPSpYvj4sRj9xB8z/l/yseoMyOkY/FHFoUHDJdd7ZpifZdvwy
+	BlJSXOcLZxqgSPs=
+X-Google-Smtp-Source: AGHT+IGp2GrkTxnkrKocmv5gmhrc7t4bOc4wq/AeiNfsAXB6wLiZu11bnsEFtrqJaXyjiakK2bDQ0A==
+X-Received: by 2002:a05:6a00:2e28:b0:730:8526:5db0 with SMTP id d2e1a72fcca58-7322c3fe428mr4533067b3a.22.1739358648568;
+        Wed, 12 Feb 2025 03:10:48 -0800 (PST)
+Received: from archie.me ([103.124.138.155])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7322d4c2fb2sm1071798b3a.166.2025.02.12.03.10.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 12 Feb 2025 03:10:47 -0800 (PST)
+Received: by archie.me (Postfix, from userid 1000)
+	id A937F41F5559; Wed, 12 Feb 2025 18:10:44 +0700 (WIB)
+Date: Wed, 12 Feb 2025 18:10:44 +0700
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+To: Steven Rostedt <rostedt@goodmis.org>,
+	Purva Yeshi <purvayeshi550@gmail.com>
+Cc: mhiramat@kernel.org, corbet@lwn.net, skhan@linuxfoundation.org,
+	mathieu.desnoyers@efficios.com, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org
+Subject: Re: [PATCH v2] docs: trace: Refactor index documentation
+Message-ID: <Z6yBtB7mjoiquKRj@archie.me>
+References: <20250206141453.139613-1-purvayeshi550@gmail.com>
+ <20250210174556.70fc53b7@gandalf.local.home>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250210104034.146273-1-dongml2@chinatelecom.cn>
- <20250210180528.01118537@gandalf.local.home> <CADxym3YzTc8wyAndNP4OpK8JSLWkpCAMgJox49ioUBXrov1h=w@mail.gmail.com>
- <20250211112413.4c43a9ca@gandalf.local.home>
-In-Reply-To: <20250211112413.4c43a9ca@gandalf.local.home>
-From: Menglong Dong <menglong8.dong@gmail.com>
-Date: Wed, 12 Feb 2025 14:49:33 +0800
-X-Gm-Features: AWEUYZluqXA7qte-RxqrP7PeGuBefghFWc2vtTzom1EOtmrmBcyDAGU25hHmgDA
-Message-ID: <CADxym3a2QcujvvmVgWv9OvJXn=SGVeFN2zSPEQAmFkk2SH2iNA@mail.gmail.com>
-Subject: Re: [RFC PATCH] x86: add function metadata support
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: alexei.starovoitov@gmail.com, x86@kernel.org, tglx@linutronix.de, 
-	mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, hpa@zytor.com, 
-	mhiramat@kernel.org, mathieu.desnoyers@efficios.com, dongml2@chinatelecom.cn, 
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	bpf@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="G4fEeRqeY7bfT9kX"
+Content-Disposition: inline
+In-Reply-To: <20250210174556.70fc53b7@gandalf.local.home>
+
+
+--G4fEeRqeY7bfT9kX
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Feb 12, 2025 at 12:24=E2=80=AFAM Steven Rostedt <rostedt@goodmis.or=
-g> wrote:
->
-> On Tue, 11 Feb 2025 20:03:38 +0800
-> Menglong Dong <menglong8.dong@gmail.com> wrote:
->
->
-> >
-> > Another beneficiary can be ftrace. For now, all the kernel functions th=
-at
-> > are enabled by dynamic ftrace will be added to a filter hash. And hash
-> > lookup will happen when then traced functions are called, which has an
-> > impact on the performance, see
-> > __ftrace_ops_list_func() -> ftrace_ops_test(). With the per-function me=
-tadata
-> > support, we can store the information that if the ftrace ops is enabled=
- on the
-> > kernel function to the metadata.
->
-> Note, ftrace only uses ftrace_ops_list if there's more than one callback
-> attached to the same function. Otherwise it calls directly to a single
-> trampoline, and is rather efficient. No meta data needed.
+On Mon, Feb 10, 2025 at 05:45:56PM -0500, Steven Rostedt wrote:
+> On Thu,  6 Feb 2025 19:44:53 +0530
+> Purva Yeshi <purvayeshi550@gmail.com> wrote:
+>=20
+> > +Introduction to Tracing
+> > +-----------------------
+> > +
+> > +This section provides an overview of Linux tracing mechanisms
+> > +and debugging approaches.
+> > =20
+> >  .. toctree::
+> > -   :maxdepth: 2
+> > +   :maxdepth: 1
+>=20
+> I don't really know what the maxdepth gives here, but there was no mention
+> in the change log why it had to be converted from 2 to 1.
 
-Sorry that the log didn't describe it accurately, the multi callback
-case is just what I meant. I'm not sure if it is suitable for such a
-case, so let me just remove this part from the commit log, and
-let's see it later :/
+:maxdepth: specifies heading levels depth of the toctree. In this case,
+the author wants only doc titles (hence 1), whereas 2 also includes
+second-level (section) headings.
 
->
-> > > Arm64 and other archs add meta data before the functions too. Can we =
-have
-> > > an effort to perhaps share these methods?
-> >
-> > I have not done research on arm64 yet. AFAIK, arm64 insn is 16-bytes al=
-igned,
-> > so the way we process can be a little different here, as making kernel =
-function
-> > non 16-bytes aligned can have a huge influence.
->
-> Arm64 already uses the meta data before every function. That's where it
-> stores a pointer to the ftrace_ops. So in ftrace, when there's a single
-> callback attached to a function in arm64, it jumps to a ftrace trampoline=
-,
-> that will reference the function's meta data to find the ftrace_ops to us=
-e
-> for that callback.
->
-> If more than one callback is attached to the same function, then it acts
-> just like x86 and does the loop.
+Thanks.
 
-Thank you for your explanation. It seems that it is quite
-simple to implement the function meta data in arm64. Let
-me dig it deeper on arm64, and I'll implement it together
-with x86 in the next version if it is possible.
+--=20
+An old man doll... just what I always wanted! - Clara
 
-Thanks!
-Menglong Dong
+--G4fEeRqeY7bfT9kX
+Content-Type: application/pgp-signature; name="signature.asc"
 
->
-> -- Steve
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZ6yBtAAKCRD2uYlJVVFO
+o7o7AP9ZDuLNx/pS+dVzBbJANlqkQ6/aBRBsp18uCVK/VSXP0QD/erPFR5e1iGi1
+Y96FwEN5+wlxAfr87V4jb7YnOpTMmww=
+=pH/s
+-----END PGP SIGNATURE-----
+
+--G4fEeRqeY7bfT9kX--
