@@ -1,44 +1,54 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F7F127291F;
-	Tue, 11 Feb 2025 23:39:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB8E3271835;
+	Wed, 12 Feb 2025 04:05:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739317184; cv=none; b=nIACAXEAMG4tKLEDdc+Lo4KdDNxgKUP73i+PjET/PGXfO4gQMZXLkOyCefvYWMtl3j6IdHjFlfu0OxlTL5Bx90EgZC3hiLGEVus/nl6N0RaDzR4V0CXBbnmxQ15w736mMdIe3fH6OzspXSXJh8D7bmUwUa9qh6oLA6yfPs39Shk=
+	t=1739333114; cv=none; b=MXVpASojqTRrP6WcSvSOW2NKpz4MVd+Ut6TS1kNko4hxEVg4H2ItT67o63wqpfpwiV0Xj/jlNrrv5+JAMNWXrKftja6RUVMVYNEtiPL1f1AJehZNGsjccwcEZuqam85TbX7MD0L7unyg6Mkbxifn4Pjwjt6zUseeIz9fCnhAK9U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739317184; c=relaxed/simple;
-	bh=KmZZdjl6ZufzH7ljJKE+F1Ax+O9hFfz9th1qlIB6io0=;
+	s=arc-20240116; t=1739333114; c=relaxed/simple;
+	bh=ybIygu13oOH3MI8QbIfsK7m4pRQxcHlQE2MUTFs9fjQ=;
 	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=K+Byi9cEOdL1b2RtMQTIjXXQa5i3ElCsokAkWICaklPU/pLkSP1zjD91dDHqYSiNurPHdFrsLs1KqwrKCp+WQnPchvcajh+3CSRFEMJ2kZsserv6r34tVcXo3JOXQt0yVl2Ltll2E8BgztCOmc0A2otIqGOJ9XmnAMHNFmLXa+4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MqZw8H+Y; arc=none smtp.client-ip=10.30.226.201
+	 Mime-Version:Content-Type; b=m4ekgV5a1wuf7R7sz3Ssy50LIvyx2/gWOxwyEAAEuqInziP3zN2rkr76+4yFH4KmKnYiq5oTVC3NQYNFD1ZajckTWuABJrBX466SGnfZsrskMtHvVhVtOUUDZeS9dOglhnHX6MNdNSXCepiocDG8j/qy3KZH191Fxi9w8WaZMPA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EPIDA6ro; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MqZw8H+Y"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 734CEC4CEDD;
-	Tue, 11 Feb 2025 23:39:42 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EPIDA6ro"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E3850C4CEDF;
+	Wed, 12 Feb 2025 04:05:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739317183;
-	bh=KmZZdjl6ZufzH7ljJKE+F1Ax+O9hFfz9th1qlIB6io0=;
+	s=k20201202; t=1739333113;
+	bh=ybIygu13oOH3MI8QbIfsK7m4pRQxcHlQE2MUTFs9fjQ=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=MqZw8H+YK+HmXZ8Q98zirAJfh43qwJBjqC4G10PCMijbs7MHLqHyy8ij2y9JrFp4Y
-	 PCHqizlhN6EpikrsQQe5FdsUTHhsOTGGW834POt56J95wj2IetWFq/La6qE5s7qIWD
-	 lFtPuvJXA/j/mOsGzP0dkecwjTfjg+XXZoj2ZEHjV83V1j8ROlQO7rRak/uiOvJA7+
-	 GC46whdgpIU6Xvnq5Jmy7ioG0f1iei8TH/XPQR2gdUyKJoF+trlW/z4vs9bTYwZCWE
-	 T73a/s3i3elPvGLGZuYHDZfYAQU6mW966xT7NDg9TdS7wXkHBwEM2UGTspNCS6kcLL
-	 pMQbYYW9qSPGg==
-Date: Wed, 12 Feb 2025 08:39:40 +0900
+	b=EPIDA6roMboDSVK9Hu+DMva2D4DI1vs1cARp6GDK4B2UlsWiJOvf6Cmrd/HY1pxcM
+	 XChqNqjTc1JLVAsyOyv6wrJja4l6ggvaFtGZxp900mpKsLQJBGMvH10kSEf8TMYzUI
+	 b7Hqhamm9WhTNgyMFNff6AflhioI1v3WAj0L0cGKrb/Qqn/29w0t+2u8gKv68lVdhv
+	 90ST5Aoxlkp8Y1K1aDxeiI0xd8WkpgB0qVrg48B13y3qVRUY3ExcYPVBJU9waGugCy
+	 LaiXh9hSos/9iZlc8XxztDvszX94Nc/lcPZQ6Oei/ql1wGUjIgYh36Dukq8nbv7kSM
+	 mwc4KLZHdWDCQ==
+Date: Wed, 12 Feb 2025 13:05:09 +0900
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Mark
- Rutland <mark.rutland@arm.com>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH v3 1/2] mm/memblock: Add reserved memory release
- function
-Message-Id: <20250212083940.8a88be7b1f9cf68a2cb8465b@kernel.org>
-In-Reply-To: <20250211125211.1ce892a5@gandalf.local.home>
-References: <173928521419.906035.17750338150436695675.stgit@devnote2>
-	<173928522350.906035.5626965043208329135.stgit@devnote2>
-	<20250211125211.1ce892a5@gandalf.local.home>
+To: Oleg Nesterov <oleg@redhat.com>
+Cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>, Andrii Nakryiko
+ <andrii.nakryiko@gmail.com>, Jiri Olsa <jolsa@kernel.org>, Steven Rostedt
+ <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, Peter
+ Zijlstra <peterz@infradead.org>, Andrii Nakryiko <andrii@kernel.org>, Kees
+ Cook <kees@kernel.org>, Eyal Birger <eyal.birger@gmail.com>, stable
+ <stable@vger.kernel.org>, Jann Horn <jannh@google.com>, LKML
+ <linux-kernel@vger.kernel.org>, linux-trace-kernel
+ <linux-trace-kernel@vger.kernel.org>, Linux API
+ <linux-api@vger.kernel.org>, X86 ML <x86@kernel.org>, bpf
+ <bpf@vger.kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar
+ <mingo@redhat.com>, Andy Lutomirski <luto@kernel.org>, Deepak Gupta
+ <debug@rivosinc.com>, Stephen Rothwell <sfr@canb.auug.org.au>
+Subject: Re: [PATCHv2 perf/core] uprobes: Harden uretprobe syscall
+ trampoline check
+Message-Id: <20250212130509.ce1987095c6b17b26d3ee40a@kernel.org>
+In-Reply-To: <20250211165940.GB9174@redhat.com>
+References: <20250211111559.2984778-1-jolsa@kernel.org>
+	<CAEf4BzYPmtUirnO3Bp+3F3d4++4ttL_MZAG+yGcTTKTRK2X2vw@mail.gmail.com>
+	<CAADnVQJ05xkXw+c_T1qB+ECUqO5sJxDVJ3bypjS3KSQCTJb-1g@mail.gmail.com>
+	<20250211165940.GB9174@redhat.com>
 X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -49,173 +59,41 @@ Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Tue, 11 Feb 2025 12:52:11 -0500
-Steven Rostedt <rostedt@goodmis.org> wrote:
+On Tue, 11 Feb 2025 17:59:41 +0100
+Oleg Nesterov <oleg@redhat.com> wrote:
 
-> On Tue, 11 Feb 2025 23:47:03 +0900
-> "Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
+> On 02/11, Alexei Starovoitov wrote:
+> >
+> > > > +#define UPROBE_NO_TRAMPOLINE_VADDR ((unsigned long)-1)
+> >
+> > If you respin anyway maybe use ~0UL instead?
+> > In the above and in
+> > uprobe_get_trampoline_vaddr(),
+> > since
+> >
+> > unsigned long trampoline_vaddr = -1;
 > 
-> > From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> > 
-> > Add reserve_mem_release_by_name() to release a reserved memory region
-> > with a given name. This allows us to release reserved memory which is
-> > defined by kernel cmdline, after boot.
-> > 
-> > Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> > Cc: Andrew Morton <akpm@linux-foundation.org>
-> > Cc: Mike Rapoport <rppt@kernel.org>
-> > Cc: linux-mm@kvack.org
+> ... or -1ul in both cases.
 > 
-> Hi, can we get one of the Memory Management maintainers to ack this patch?
-> 
-> We will be having devices going out with the reserve_mem option to perform
-> tracing in the field. But that only happens if the user grants permission
-> to do so. But the kernel command line does not change between users that
-> granted permission and those that do not. We would like to free up the
-> memory for those devices where the users did not grant permission to trace,
-> as then the memory is just wasted.
+> I agree, UPROBE_NO_TRAMPOLINE_VADDR has a single user, looks
+> a bit strange...
 
-Thanks Steve for explaining, I missed Ccing the background information.
-Here is the covermail of this series.
+I think both this function and uprobe_get_trampoline_vaddr()
+should use the same macro as a token.
+(and ~0UL is a bit more comfortable for me too :) )
 
-https://lore.kernel.org/all/173928521419.906035.17750338150436695675.stgit@devnote2/
+----
+unsigned long uprobe_get_trampoline_vaddr(void)
+{
+	struct xol_area *area;
+	unsigned long trampoline_vaddr = -1;
+----
 
 Thank you,
 
 > 
-> Thanks!
+> Oleg.
 > 
-> -- Steve
-> 
-> 
-> > ---
-> >  Changes in v2:
-> >   - Rename reserved_mem_* to reserve_mem_*.
-> > ---
-> >  include/linux/mm.h |    1 +
-> >  mm/memblock.c      |   72 +++++++++++++++++++++++++++++++++++++++++++---------
-> >  2 files changed, 61 insertions(+), 12 deletions(-)
-> > 
-> > diff --git a/include/linux/mm.h b/include/linux/mm.h
-> > index f02925447e59..fe5f7711df04 100644
-> > --- a/include/linux/mm.h
-> > +++ b/include/linux/mm.h
-> > @@ -4197,6 +4197,7 @@ void vma_pgtable_walk_begin(struct vm_area_struct *vma);
-> >  void vma_pgtable_walk_end(struct vm_area_struct *vma);
-> >  
-> >  int reserve_mem_find_by_name(const char *name, phys_addr_t *start, phys_addr_t *size);
-> > +int reserve_mem_release_by_name(const char *name);
-> >  
-> >  #ifdef CONFIG_64BIT
-> >  int do_mseal(unsigned long start, size_t len_in, unsigned long flags);
-> > diff --git a/mm/memblock.c b/mm/memblock.c
-> > index 095c18b5c430..c8d207ebb93c 100644
-> > --- a/mm/memblock.c
-> > +++ b/mm/memblock.c
-> > @@ -16,6 +16,7 @@
-> >  #include <linux/kmemleak.h>
-> >  #include <linux/seq_file.h>
-> >  #include <linux/memblock.h>
-> > +#include <linux/mutex.h>
-> >  
-> >  #include <asm/sections.h>
-> >  #include <linux/io.h>
-> > @@ -2263,6 +2264,7 @@ struct reserve_mem_table {
-> >  };
-> >  static struct reserve_mem_table reserved_mem_table[RESERVE_MEM_MAX_ENTRIES];
-> >  static int reserved_mem_count;
-> > +static DEFINE_MUTEX(reserve_mem_lock);
-> >  
-> >  /* Add wildcard region with a lookup name */
-> >  static void __init reserved_mem_add(phys_addr_t start, phys_addr_t size,
-> > @@ -2276,6 +2278,21 @@ static void __init reserved_mem_add(phys_addr_t start, phys_addr_t size,
-> >  	strscpy(map->name, name);
-> >  }
-> >  
-> > +static struct reserve_mem_table *reserve_mem_find_by_name_nolock(const char *name)
-> > +{
-> > +	struct reserve_mem_table *map;
-> > +	int i;
-> > +
-> > +	for (i = 0; i < reserved_mem_count; i++) {
-> > +		map = &reserved_mem_table[i];
-> > +		if (!map->size)
-> > +			continue;
-> > +		if (strcmp(name, map->name) == 0)
-> > +			return map;
-> > +	}
-> > +	return NULL;
-> > +}
-> > +
-> >  /**
-> >   * reserve_mem_find_by_name - Find reserved memory region with a given name
-> >   * @name: The name that is attached to a reserved memory region
-> > @@ -2289,22 +2306,53 @@ static void __init reserved_mem_add(phys_addr_t start, phys_addr_t size,
-> >  int reserve_mem_find_by_name(const char *name, phys_addr_t *start, phys_addr_t *size)
-> >  {
-> >  	struct reserve_mem_table *map;
-> > -	int i;
-> >  
-> > -	for (i = 0; i < reserved_mem_count; i++) {
-> > -		map = &reserved_mem_table[i];
-> > -		if (!map->size)
-> > -			continue;
-> > -		if (strcmp(name, map->name) == 0) {
-> > -			*start = map->start;
-> > -			*size = map->size;
-> > -			return 1;
-> > -		}
-> > -	}
-> > -	return 0;
-> > +	guard(mutex)(&reserve_mem_lock);
-> > +	map = reserve_mem_find_by_name_nolock(name);
-> > +	if (!map)
-> > +		return 0;
-> > +
-> > +	*start = map->start;
-> > +	*size = map->size;
-> > +	return 1;
-> >  }
-> >  EXPORT_SYMBOL_GPL(reserve_mem_find_by_name);
-> >  
-> > +/**
-> > + * reserve_mem_release_by_name - Release reserved memory region with a given name
-> > + * @name: The name that is attatched to a reserved memory region
-> > + *
-> > + * Forcibly release the pages in the reserved memory region so that those memory
-> > + * can be used as free memory. After released the reserved region size becomes 0.
-> > + *
-> > + * Returns: 1 if released or 0 if not found.
-> > + */
-> > +int reserve_mem_release_by_name(const char *name)
-> > +{
-> > +	struct reserve_mem_table *map;
-> > +	unsigned int page_count;
-> > +	phys_addr_t start;
-> > +
-> > +	guard(mutex)(&reserve_mem_lock);
-> > +	map = reserve_mem_find_by_name_nolock(name);
-> > +	if (!map)
-> > +		return 0;
-> > +
-> > +	start = map->start;
-> > +	page_count = DIV_ROUND_UP(map->size, PAGE_SIZE);
-> > +
-> > +	for (int i = 0; i < page_count; i++) {
-> > +		phys_addr_t addr = start + i * PAGE_SIZE;
-> > +		struct page *page = pfn_to_page(addr >> PAGE_SHIFT);
-> > +
-> > +		page->flags &= ~BIT(PG_reserved);
-> > +		__free_page(page);
-> > +	}
-> > +	map->size = 0;
-> > +
-> > +	return 1;
-> > +}
-> > +
-> >  /*
-> >   * Parse reserve_mem=nn:align:name
-> >   */
 > 
 
 
