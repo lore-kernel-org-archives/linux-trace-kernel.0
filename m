@@ -1,126 +1,152 @@
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78DFD2AF19;
-	Wed, 12 Feb 2025 11:10:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85BC4205AAF;
+	Wed, 12 Feb 2025 12:11:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739358650; cv=none; b=N7h8YDhEGw265tEBmJ6H9Od0wYWOSODdwr1+4csOW7FlzG96vpYRepSddZhBX62IZ8ShsaAP47JBu3+ZfAW6XNITvUQw/qahs4hi19CeVeiX5/9i4QVpFOl8P2HrZA7B3x3eqQPDGBB6XYLEYaUCTRFsFDNjPI0wjsLsuhl+oJE=
+	t=1739362283; cv=none; b=NCJvq+00y24ttUastksLh/TCmCEyRWKoS9djNlb3+wQwZSOu4AdTV2OXaQ2jKkMl+ms0qqIx6Q+s05EVToDTCezeqSiwrg2ySzUHDGWbQYdNBTVh3odq4onhx7UOYhKw65+2pMERmoxhMvDBI3QiRrnChqouxYQ+5s2ytUSMdRw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739358650; c=relaxed/simple;
-	bh=r79VELnViF7+zIzfkgy+4Z0CPtTiHpjajGKPiHY0sQI=;
+	s=arc-20240116; t=1739362283; c=relaxed/simple;
+	bh=hfRnQRhXFDPkdEJgmQjQac1uhk3WIaBMF/BbN2Omgr4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kOqzY2ICWJToFPUztUAPnk7tT8Nkz0C6b6Gw05gkie5oLS0UiPhcZyeaXI7adRwl80ZoJonFUWiyiTteFs7VSsv+0SbV6VizK+paZ6EAS5b5nxjjJZVwyWHSOcWaR0U+pJiBNRR8DdxV1GGKv7un5VxXoRH15xzkncebQSzKrIw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=neO4g9XF; arc=none smtp.client-ip=209.85.214.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=boM0tGAbmWEhb4v541R3PWL/YocOerff4R4ezMRQaRFMHXlS8zc+jetOI6YmjgKiCLn5pIh/8yllRoYqn8YyGSMwhUeE3iFp30/7OSMs98e74RK/ydJ2kLK9m0JdwMVA8YkqSrOdRwrF0bnVCwaw0oT6kvskQC9JJ+xKwAhcxr0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=uT5v+mE7; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=HM5DkrZ9; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="neO4g9XF"
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-21f40deb941so144886845ad.2;
-        Wed, 12 Feb 2025 03:10:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739358649; x=1739963449; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=a7fijWHvwPLZETcSwOhX6AJpI56/uusqCA2JoLk/IPY=;
-        b=neO4g9XFVWb1XbZZIkfGaRNkJYnwRx94ikmveCBAw1WNVW2UiqYjebpXhwPn5AyTG1
-         vBhgvYWLlidkeQqf82+YtOgK0754W/qEQFHR14TZa5sgNzpBv55whiM0dKEiFdHNfOh8
-         Yv470DjerqAXWeMGwZepx7kIwrGn49+LCOKjmcT2Ui7s/nPjd+QldWbd01g80wZWb/+w
-         e0PQdnfE5PdK7LYm4je9SvDxo3zM9IJ3yApkm9vqPIcOnD9VAoA2Y+5QfWB/mjf9Fwxp
-         AAqysxVn8bIfNSvk6ipVW25U6RfCRCtccSbkX8TR9HXHKC3aQlJ2Nx21dgIbbfQhV+PU
-         ESHA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739358649; x=1739963449;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=a7fijWHvwPLZETcSwOhX6AJpI56/uusqCA2JoLk/IPY=;
-        b=QCU6YpRF52gcyed2ig+5r37C7E4V7xQrSuINjiPH0R0FoDYrdAMMiKuVPzLvitbj5j
-         iZpzGc0ofODwwSe4WGsZ1d9EGRFz3u3YSZ8CxOOSzUE1thMgAXIlLwwkzGv7VSpMn2Hp
-         6VfvHBhFnPViaZ0PW6whKpbcD8egDfwez87U+NAZp1qke22efrNT/qJ/L7H0oQQ3w2BA
-         vdersyCeE/k85NMF8dO8TXW77LSpwL5EvxiCRPyqr6bQCHZFG/Y7q9gu7SWMz7t82ptl
-         wjuwubS3zdg0o2X7vKviTF+L7fpc2lNGCetIZu0uPt3SiriEKRUxiUqesI+Or85y1pJ7
-         XT1w==
-X-Forwarded-Encrypted: i=1; AJvYcCVuG8oH2CCJJFVFUL/RQoz3pQrhkrVQ92nZcMUukGH9FfZcxJ/NsH2HZeVgLjdrL3bd//VEIMJbfPzCay5k@vger.kernel.org, AJvYcCWlD9M7eGnuA/ZXBOabUdz1+4bpnrmu38NwYaIP93e+BR/TYZVKHa+uLohMLtKxAiTo8NYOu0lgOnc=@vger.kernel.org, AJvYcCXhvXN3hoYN8mEcuevsXQts2EAo/+38GK3W2opX4Jy43Uw1uU3/NpybREAwmhg8vCnZvViMKmJtHjxcMpmdXT+2qXcJ@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx3yYvh7kwJt/mh1TkdQkAcHQLmmDRN6+qgeUBXwvl4BrCfWcx7
-	bgG5v1+lYdRv8N/0dx55I7Obszx2dvQ9punOE38mcsKeXwZ/LvbY
-X-Gm-Gg: ASbGnctuhoI1/mxPu+zDOcQXb7GWS4qjCmekBvnksYTORd8zS5Rl+2+YvztQ3NvvmOL
-	qUoKXHXEoPFAWpb4QhN8hQbSWjlmg2SdEEzMIyQqzhLEIDhJeQhKnyYe6cOh2kn56bEvnsiICbw
-	vELnV7t2XkgmFXhE3SeHwVOsdAdNrFzerj3UnG6TqmU7adqkATE8Q7S47LAKPyt27ckQDnFcj3v
-	EQAajAETsVBUYuSp6RuS8rwMC1wPSpYvj4sRj9xB8z/l/yseoMyOkY/FHFoUHDJdd7ZpifZdvwy
-	BlJSXOcLZxqgSPs=
-X-Google-Smtp-Source: AGHT+IGp2GrkTxnkrKocmv5gmhrc7t4bOc4wq/AeiNfsAXB6wLiZu11bnsEFtrqJaXyjiakK2bDQ0A==
-X-Received: by 2002:a05:6a00:2e28:b0:730:8526:5db0 with SMTP id d2e1a72fcca58-7322c3fe428mr4533067b3a.22.1739358648568;
-        Wed, 12 Feb 2025 03:10:48 -0800 (PST)
-Received: from archie.me ([103.124.138.155])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7322d4c2fb2sm1071798b3a.166.2025.02.12.03.10.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Feb 2025 03:10:47 -0800 (PST)
-Received: by archie.me (Postfix, from userid 1000)
-	id A937F41F5559; Wed, 12 Feb 2025 18:10:44 +0700 (WIB)
-Date: Wed, 12 Feb 2025 18:10:44 +0700
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-To: Steven Rostedt <rostedt@goodmis.org>,
-	Purva Yeshi <purvayeshi550@gmail.com>
-Cc: mhiramat@kernel.org, corbet@lwn.net, skhan@linuxfoundation.org,
-	mathieu.desnoyers@efficios.com, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org
-Subject: Re: [PATCH v2] docs: trace: Refactor index documentation
-Message-ID: <Z6yBtB7mjoiquKRj@archie.me>
-References: <20250206141453.139613-1-purvayeshi550@gmail.com>
- <20250210174556.70fc53b7@gandalf.local.home>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="uT5v+mE7";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="HM5DkrZ9"
+Date: Wed, 12 Feb 2025 13:11:13 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1739362278;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=7TNBT0J/OEy8YxJkvBLL8wlR8TSxY9KLsjAwzg3RD5Y=;
+	b=uT5v+mE7N7yeiBRcXKtyRYO25ZC9j8Al4cOBRuno5OOctcw+aDUpqUPq92BdBifezgbN4F
+	9u+a5LXCadMGf6UplzQwmBaCwNvZ5Z2wdP5hJCIkSFhkv0JGifwTvkclQTGEn72aqmgOPP
+	GysGRoHIRsVAufNid/6utAkCZPUlQcsr1BljCaF65CDGDOhTIW0i1iKUw6n2mJ9lVBw61J
+	DOnEtcQmoUCJd1TfszpTIgI/Re+kop87GPKG+ky1DKH14ZPhTwceihO1vQfpZa8pwxb+kV
+	q/CWy/BLAU5VYT9/uUUfIrB/vSHzRklLEfvz0dUbuGM4vK2Cotxm256RPucmNA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1739362278;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=7TNBT0J/OEy8YxJkvBLL8wlR8TSxY9KLsjAwzg3RD5Y=;
+	b=HM5DkrZ9tyvbTSgICy7zFN4UfAQH4az1YxHKFMneOnIGHrh2cP4SqEkoDBPucxmk1g+KTF
+	o8BHvK+H7Orm/QAg==
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Joel Fernandes <joel@joelfernandes.org>,
+	Prakash Sangappa <prakash.sangappa@oracle.com>,
+	Peter Zijlstra <peterz@infradead.org>, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ankur Arora <ankur.a.arora@oracle.com>,
+	Linus Torvalds <torvalds@linux-foundation.org>, linux-mm@kvack.org,
+	x86@kernel.org, Andrew Morton <akpm@linux-foundation.org>,
+	luto@kernel.org, bp@alien8.de, dave.hansen@linux.intel.com,
+	hpa@zytor.com, juri.lelli@redhat.com, vincent.guittot@linaro.org,
+	willy@infradead.org, mgorman@suse.de, jon.grimm@amd.com,
+	bharata@amd.com, raghavendra.kt@amd.com,
+	Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+	Konrad Wilk <konrad.wilk@oracle.com>, jgross@suse.com,
+	Andrew.Cooper3@citrix.com, Vineeth Pillai <vineethrp@google.com>,
+	Suleiman Souhlal <suleiman@google.com>,
+	Ingo Molnar <mingo@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Clark Williams <clark.williams@gmail.com>, daniel.wagner@suse.com,
+	Joseph Salisbury <joseph.salisbury@oracle.com>, broonie@gmail.com
+Subject: Re: [RFC][PATCH 1/2] sched: Extended scheduler time slice
+Message-ID: <20250212121113.3nJ-kf-6@linutronix.de>
+References: <9DA1FAE6-A008-4785-BDF9-541457E29807@joelfernandes.org>
+ <20250204220418.35949317@gandalf.local.home>
+ <CAEXW_YQxTi2y_hY_e4AjLSa6RwVVLn3DPj5d4Cfewq0js-0UTA@mail.gmail.com>
+ <20250205081635.397eacb0@gandalf.local.home>
+ <CAEXW_YQY2zuU+XZjrYWLS860+PJno0nf9WAe1iPU=EyDkA7H4Q@mail.gmail.com>
+ <20250206083039.0916ad24@gandalf.local.home>
+ <20250206134408.lD_POjuG@linutronix.de>
+ <20250210144321.1f5974a6@gandalf.local.home>
+ <20250211082138.iqvedSfG@linutronix.de>
+ <20250211102801.5b32d610@gandalf.local.home>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="G4fEeRqeY7bfT9kX"
-Content-Disposition: inline
-In-Reply-To: <20250210174556.70fc53b7@gandalf.local.home>
-
-
---G4fEeRqeY7bfT9kX
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20250211102801.5b32d610@gandalf.local.home>
 
-On Mon, Feb 10, 2025 at 05:45:56PM -0500, Steven Rostedt wrote:
-> On Thu,  6 Feb 2025 19:44:53 +0530
-> Purva Yeshi <purvayeshi550@gmail.com> wrote:
->=20
-> > +Introduction to Tracing
-> > +-----------------------
-> > +
-> > +This section provides an overview of Linux tracing mechanisms
-> > +and debugging approaches.
-> > =20
-> >  .. toctree::
-> > -   :maxdepth: 2
-> > +   :maxdepth: 1
->=20
-> I don't really know what the maxdepth gives here, but there was no mention
-> in the change log why it had to be converted from 2 to 1.
+On 2025-02-11 10:28:01 [-0500], Steven Rostedt wrote:
+> On Tue, 11 Feb 2025 09:21:38 +0100
+> Sebastian Andrzej Siewior <bigeasy@linutronix.de> wrote:
+> 
+> > We don't follow this behaviour exactly today.
+> > 
+> > Adding this behaviour back vs the behaviour we have now, doesn't seem to
+> > improve anything at visible levels. We don't have a counter but we can
+> > look at the RCU nesting counter which should be zero once locks have
+> > been dropped. So this can be used for testing.
+> > 
+> > But as I said: using "run to completion" and preempt on the return
+> > userland rather than once the lazy flag is seen and all locks have been
+> > released appears to be better.
+> > 
+> > It is (now) possible that you run for a long time and get preempted
+> > while holding a spinlock_t. It is however more likely that you release
+> > all locks and get preempted while returning to userland.
+> 
+> IIUC, today, LAZY causes all SCHED_OTHER tasks to act more like
+> PREEMPT_NONE. Is that correct?
 
-:maxdepth: specifies heading levels depth of the toctree. In this case,
-the author wants only doc titles (hence 1), whereas 2 also includes
-second-level (section) headings.
+Well. First sched-tick will set the LAZY bit, the second sched-tick
+forces a resched.
+On PREEMPT_NONE the sched-tick would be set NEED_RESCHED while nothing
+will force a resched until the task decides to do schedule() on its own.
+So it is slightly different for kernel threads.
 
-Thanks.
+Unless we talk about userland, here we would have a resched on the
+return to userland after the sched-tick LAZY or NONE does not matter.
 
---=20
-An old man doll... just what I always wanted! - Clara
+> Now that the PREEMPT_RT is not one of the preemption selections, when you
+> select PREEMPT_RT, you can pick between CONFIG_PREEMPT and
+> CONFIG_PREEMPT_LAZY. Where CONFIG_PREEMPT will preempt the kernel at the
+> scheduler tick if preemption is enabled and CONFIG_PREEMPT_LAZY will
+> not preempt the kernel on a scheduler tick and wait for exit to user space.
 
---G4fEeRqeY7bfT9kX
-Content-Type: application/pgp-signature; name="signature.asc"
+This is not specific to RT but FULL vs LAZY. But yes. However the second
+sched-tick will force preemption point even without the
+exit-to-userland.
 
------BEGIN PGP SIGNATURE-----
+> Sebastian,
+> 
+> It appears you only tested the CONFIG_PREEMPT_LAZY selection. Have you
+> tested the difference of how CONFIG_PREEMPT behaves between PREEMPT_RT and
+> no PREEMPT_RT? I think that will show a difference like we had in the past.
 
-iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZ6yBtAAKCRD2uYlJVVFO
-o7o7AP9ZDuLNx/pS+dVzBbJANlqkQ6/aBRBsp18uCVK/VSXP0QD/erPFR5e1iGi1
-Y96FwEN5+wlxAfr87V4jb7YnOpTMmww=
-=pH/s
------END PGP SIGNATURE-----
+Not that I remember testing PREEMPT vs PREEMPT_RT. I remember people
+complained about high networking load on RT which become visible due to
+threaded interrupts (as in top) while for non-RT it was more or less
+hidden and not clearly visible due to selected accounting. The network
+performance was mostly the same as far as I remember (that is gbit).
 
---G4fEeRqeY7bfT9kX--
+> I can see people picking both PREEMPT_RT and CONFIG_PREEMPT (Full), but
+> then wondering why their non RT tasks are suffering from a performance
+> penalty from that.
+
+We might want to opt in for lazy by default on RT. That was the case in
+the RT queue until it was replaced with PREEMPT_AUTO.
+But then why not use LAZY in favour of PREEMPT. Mike had numbers
+   https://lore.kernel.org/all/9df22ebbc2e6d426099bf380477a0ed885068896.camel@gmx.de/
+
+where LAZY had mostly the voluntary performance with less context
+switches than preempt. Which means also without the need for
+cond_resched() and friends.
+
+> -- Steve
+
+Sebastian
