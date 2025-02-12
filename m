@@ -1,101 +1,138 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f194.google.com (mail-yb1-f194.google.com [209.85.219.194])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB8E3271835;
-	Wed, 12 Feb 2025 04:05:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99172146A68;
+	Wed, 12 Feb 2025 06:50:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739333114; cv=none; b=MXVpASojqTRrP6WcSvSOW2NKpz4MVd+Ut6TS1kNko4hxEVg4H2ItT67o63wqpfpwiV0Xj/jlNrrv5+JAMNWXrKftja6RUVMVYNEtiPL1f1AJehZNGsjccwcEZuqam85TbX7MD0L7unyg6Mkbxifn4Pjwjt6zUseeIz9fCnhAK9U=
+	t=1739343048; cv=none; b=GPyzPLNsIJ3qVTRWmfj4ji2QWry2XrIHfRgDyUdIwLXSYWbiySjRCm2mh2lfVOlKc5Ujb25mqvAvLQOiA8h1+JATwVjDWGrIbFupzXTxDi64F3mBk68S1p38FWYnnwtGtizAoXwlFh0OGw5+ehuFRMOd9D6s96bsBuwo7qtsz6s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739333114; c=relaxed/simple;
-	bh=ybIygu13oOH3MI8QbIfsK7m4pRQxcHlQE2MUTFs9fjQ=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=m4ekgV5a1wuf7R7sz3Ssy50LIvyx2/gWOxwyEAAEuqInziP3zN2rkr76+4yFH4KmKnYiq5oTVC3NQYNFD1ZajckTWuABJrBX466SGnfZsrskMtHvVhVtOUUDZeS9dOglhnHX6MNdNSXCepiocDG8j/qy3KZH191Fxi9w8WaZMPA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EPIDA6ro; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739343048; c=relaxed/simple;
+	bh=R8pIttXenMn7iTlampJ6LXPNSmuNn071Fr3gaT1wJW0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=H19Drkrg8IUuYu652/aThLxjYWBVMDIkIkzW6z7en72bbgHTOHOEvYkym0EjMUjHEwVbB5YmbS0NjsDHA2Dd5xRrFzVYe2PNufFSVlygeADmNy9vNpF8msRBraGU++SqfmMazqer/qspFRrS5Wc0/JwE5LH9oLRoRu0l0JveELc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RwKEJbz1; arc=none smtp.client-ip=209.85.219.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EPIDA6ro"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E3850C4CEDF;
-	Wed, 12 Feb 2025 04:05:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739333113;
-	bh=ybIygu13oOH3MI8QbIfsK7m4pRQxcHlQE2MUTFs9fjQ=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=EPIDA6roMboDSVK9Hu+DMva2D4DI1vs1cARp6GDK4B2UlsWiJOvf6Cmrd/HY1pxcM
-	 XChqNqjTc1JLVAsyOyv6wrJja4l6ggvaFtGZxp900mpKsLQJBGMvH10kSEf8TMYzUI
-	 b7Hqhamm9WhTNgyMFNff6AflhioI1v3WAj0L0cGKrb/Qqn/29w0t+2u8gKv68lVdhv
-	 90ST5Aoxlkp8Y1K1aDxeiI0xd8WkpgB0qVrg48B13y3qVRUY3ExcYPVBJU9waGugCy
-	 LaiXh9hSos/9iZlc8XxztDvszX94Nc/lcPZQ6Oei/ql1wGUjIgYh36Dukq8nbv7kSM
-	 mwc4KLZHdWDCQ==
-Date: Wed, 12 Feb 2025 13:05:09 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Oleg Nesterov <oleg@redhat.com>
-Cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>, Andrii Nakryiko
- <andrii.nakryiko@gmail.com>, Jiri Olsa <jolsa@kernel.org>, Steven Rostedt
- <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, Peter
- Zijlstra <peterz@infradead.org>, Andrii Nakryiko <andrii@kernel.org>, Kees
- Cook <kees@kernel.org>, Eyal Birger <eyal.birger@gmail.com>, stable
- <stable@vger.kernel.org>, Jann Horn <jannh@google.com>, LKML
- <linux-kernel@vger.kernel.org>, linux-trace-kernel
- <linux-trace-kernel@vger.kernel.org>, Linux API
- <linux-api@vger.kernel.org>, X86 ML <x86@kernel.org>, bpf
- <bpf@vger.kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar
- <mingo@redhat.com>, Andy Lutomirski <luto@kernel.org>, Deepak Gupta
- <debug@rivosinc.com>, Stephen Rothwell <sfr@canb.auug.org.au>
-Subject: Re: [PATCHv2 perf/core] uprobes: Harden uretprobe syscall
- trampoline check
-Message-Id: <20250212130509.ce1987095c6b17b26d3ee40a@kernel.org>
-In-Reply-To: <20250211165940.GB9174@redhat.com>
-References: <20250211111559.2984778-1-jolsa@kernel.org>
-	<CAEf4BzYPmtUirnO3Bp+3F3d4++4ttL_MZAG+yGcTTKTRK2X2vw@mail.gmail.com>
-	<CAADnVQJ05xkXw+c_T1qB+ECUqO5sJxDVJ3bypjS3KSQCTJb-1g@mail.gmail.com>
-	<20250211165940.GB9174@redhat.com>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RwKEJbz1"
+Received: by mail-yb1-f194.google.com with SMTP id 3f1490d57ef6-e589c258663so6899264276.1;
+        Tue, 11 Feb 2025 22:50:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1739343045; x=1739947845; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=R8pIttXenMn7iTlampJ6LXPNSmuNn071Fr3gaT1wJW0=;
+        b=RwKEJbz1O2Ipxn6xvMM7mtI3/+UV48Eh0vhvnYfgQ3+i/OWtWrdyVAcYjSBBovrDY2
+         aUV5B7K69X1wMWIAWcdhblvLJ7mp34ZrdLOJXlfsn+q3qD+xfSLaErTIetjW/zRN4ZaZ
+         kaWJ1dCQXsTFgbj/LHaKl3M2FHFlgBoG3roHhrK1+KkGGgZsl9Vek/Gae3bTvzMDdH0d
+         Qo+93qHm513Wqdog3iRKF59CjxJ08APZt1JgcDQIepEN9PhZkuwdjeBWU4V9zCbhe4d/
+         1NPrHTupYMO2BR+SCzNKafXt5a4eUUFkdLj12IRmz5qxABfvdSG0TuxFuHVI/Mzll+OV
+         YBLg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739343045; x=1739947845;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=R8pIttXenMn7iTlampJ6LXPNSmuNn071Fr3gaT1wJW0=;
+        b=SfSn2/1VLrk04uIDv++MoCuiyLEmiDD+G1CYMBnB6hzE0JM4Yt6Mmz5BCF3FNm8k9o
+         JRLWtgpAsXuWCOdxxbd1Has9FAfUBx5Zzhzf2s/THOVl/C8eGkP2HKhCHm39m86UjblT
+         ssP642OOySmBaGx+2q7XCxnrX1ugUgMMWcb4IFYkX9Vq0F5EBMyfk+o1y09HTaKQjCpd
+         7G1IC/4sOcH1WEUxe+zm9c/lHYv17inoWvbyPSLiHKm+o8bwxhaJCNqYZETI2BPYjorl
+         5lSCmQufNXNZO5AcxNVEfORuJBxjYoMC5KmVCkJxFXcsbyXRDAUvxSbOXNr834AF7ynr
+         5mkQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU5WtI0Vkp8QkkZZjXo3sg1mSp6XMxXPu0Rul/4gepmzWiCgX9Ua0vTQPrD5KWmUDS+pyoh5BlFo+xXCncb/dOQKh4x@vger.kernel.org, AJvYcCUMZPkwV1woUq3I5pE8ruSJCQTcmCGat9M9owIGsC4kAHgQTY7FTV0whRFDNaXQN5Kmabg=@vger.kernel.org, AJvYcCXJn9meZS4LAqywlXePznz7ZAFz4RKgGtCIu7Mtq5eia6uRNkhYPGo0SrVeuPygeEvt2fUyRTViLDMAuex1@vger.kernel.org
+X-Gm-Message-State: AOJu0YxauAhSbDNYN3OgLkBDslbStdOvqlZxxRDUnkRTBXrgraC8Eyb6
+	aQSyJ1k7q+YIhAOgH9tlLC9IN6IdM5jUORk+82T1o8j1cbmt2El7rKxEhOYiOlLRqkyy7dbd+ml
+	i0ofrFc+EnRfWryabqOrTQ2hSQo0=
+X-Gm-Gg: ASbGnct8vvXKUHfskAZXKt6V9wR0EffP0ZBi1E77Hj5MevwUGgVsYbIrmG4zJWcoJ+w
+	7hOzmSfn0u9kV84HaXYezTaEyn9mzhTFDuQW0JPQxJ9KT48B8FVEGascKX33vLoAC5VjpTkRH
+X-Google-Smtp-Source: AGHT+IHqv5DsEiQvLDynsgRjnDoQlnnEq9Aa+3yv9dup4mcV6bVTxrkdRR/kv757DtYZ2qjPy587yVhC9Ido1MMNUn8=
+X-Received: by 2002:a05:6902:1618:b0:e5b:3de2:cead with SMTP id
+ 3f1490d57ef6-e5d9f179f21mr2209894276.34.1739343045146; Tue, 11 Feb 2025
+ 22:50:45 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+References: <20250210104034.146273-1-dongml2@chinatelecom.cn>
+ <20250210180528.01118537@gandalf.local.home> <CADxym3YzTc8wyAndNP4OpK8JSLWkpCAMgJox49ioUBXrov1h=w@mail.gmail.com>
+ <20250211112413.4c43a9ca@gandalf.local.home>
+In-Reply-To: <20250211112413.4c43a9ca@gandalf.local.home>
+From: Menglong Dong <menglong8.dong@gmail.com>
+Date: Wed, 12 Feb 2025 14:49:33 +0800
+X-Gm-Features: AWEUYZluqXA7qte-RxqrP7PeGuBefghFWc2vtTzom1EOtmrmBcyDAGU25hHmgDA
+Message-ID: <CADxym3a2QcujvvmVgWv9OvJXn=SGVeFN2zSPEQAmFkk2SH2iNA@mail.gmail.com>
+Subject: Re: [RFC PATCH] x86: add function metadata support
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: alexei.starovoitov@gmail.com, x86@kernel.org, tglx@linutronix.de, 
+	mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, hpa@zytor.com, 
+	mhiramat@kernel.org, mathieu.desnoyers@efficios.com, dongml2@chinatelecom.cn, 
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	bpf@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, 11 Feb 2025 17:59:41 +0100
-Oleg Nesterov <oleg@redhat.com> wrote:
-
-> On 02/11, Alexei Starovoitov wrote:
+On Wed, Feb 12, 2025 at 12:24=E2=80=AFAM Steven Rostedt <rostedt@goodmis.or=
+g> wrote:
+>
+> On Tue, 11 Feb 2025 20:03:38 +0800
+> Menglong Dong <menglong8.dong@gmail.com> wrote:
+>
+>
 > >
-> > > > +#define UPROBE_NO_TRAMPOLINE_VADDR ((unsigned long)-1)
+> > Another beneficiary can be ftrace. For now, all the kernel functions th=
+at
+> > are enabled by dynamic ftrace will be added to a filter hash. And hash
+> > lookup will happen when then traced functions are called, which has an
+> > impact on the performance, see
+> > __ftrace_ops_list_func() -> ftrace_ops_test(). With the per-function me=
+tadata
+> > support, we can store the information that if the ftrace ops is enabled=
+ on the
+> > kernel function to the metadata.
+>
+> Note, ftrace only uses ftrace_ops_list if there's more than one callback
+> attached to the same function. Otherwise it calls directly to a single
+> trampoline, and is rather efficient. No meta data needed.
+
+Sorry that the log didn't describe it accurately, the multi callback
+case is just what I meant. I'm not sure if it is suitable for such a
+case, so let me just remove this part from the commit log, and
+let's see it later :/
+
+>
+> > > Arm64 and other archs add meta data before the functions too. Can we =
+have
+> > > an effort to perhaps share these methods?
 > >
-> > If you respin anyway maybe use ~0UL instead?
-> > In the above and in
-> > uprobe_get_trampoline_vaddr(),
-> > since
-> >
-> > unsigned long trampoline_vaddr = -1;
-> 
-> ... or -1ul in both cases.
-> 
-> I agree, UPROBE_NO_TRAMPOLINE_VADDR has a single user, looks
-> a bit strange...
+> > I have not done research on arm64 yet. AFAIK, arm64 insn is 16-bytes al=
+igned,
+> > so the way we process can be a little different here, as making kernel =
+function
+> > non 16-bytes aligned can have a huge influence.
+>
+> Arm64 already uses the meta data before every function. That's where it
+> stores a pointer to the ftrace_ops. So in ftrace, when there's a single
+> callback attached to a function in arm64, it jumps to a ftrace trampoline=
+,
+> that will reference the function's meta data to find the ftrace_ops to us=
+e
+> for that callback.
+>
+> If more than one callback is attached to the same function, then it acts
+> just like x86 and does the loop.
 
-I think both this function and uprobe_get_trampoline_vaddr()
-should use the same macro as a token.
-(and ~0UL is a bit more comfortable for me too :) )
+Thank you for your explanation. It seems that it is quite
+simple to implement the function meta data in arm64. Let
+me dig it deeper on arm64, and I'll implement it together
+with x86 in the next version if it is possible.
 
-----
-unsigned long uprobe_get_trampoline_vaddr(void)
-{
-	struct xol_area *area;
-	unsigned long trampoline_vaddr = -1;
-----
+Thanks!
+Menglong Dong
 
-Thank you,
-
-> 
-> Oleg.
-> 
-> 
-
-
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+>
+> -- Steve
