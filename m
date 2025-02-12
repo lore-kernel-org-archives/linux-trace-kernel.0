@@ -1,64 +1,49 @@
-Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp-fw-80009.amazon.com (smtp-fw-80009.amazon.com [99.78.197.220])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E58D2586F3;
-	Wed, 12 Feb 2025 17:04:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52F4A25C709;
+	Wed, 12 Feb 2025 18:14:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=99.78.197.220
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739379889; cv=none; b=d5m4SndL5UvnxvPey4j0pwgshy0pLtYsEvTOe5ph7VGBng1ovlLTnHz16xpJfS2asACnRGZhHEhXS8HuYIabhSO0O2/ai1DknELJAQEKz4S7DyyvBotMuYivZJbNxEH00/llVg5BmEd1tI7lqwg9hProHww49EUAPgzT0jcfIcc=
+	t=1739384066; cv=none; b=exjfnftmg8CFpK3n6z6NiC2Qfqc65XgmV2XXmz7qeAhbuJ2GCAxKTjfDa64xZY7nid1aqC9v1t010UsWvquPuSW4MJI7853Avjk8y1pQsOPwz2ACj3QcKHHSD2zIny8XAuWH8Hoi26SAW782nYMwsd3IR4GIMqrCR19SS46FWt8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739379889; c=relaxed/simple;
-	bh=jMfdTRsZdI5eWoj3aWSlH0xyFaWuq8yWsFhqFzD+kCc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=jsKxjLsJ8r83jErh9ONJKloXu0V4tJANT5cr3ZKC5XhsiPsIN3PGQ7IcTdiihz6R9DXWe5KnmeARK4ynBMwiCY1RGhuisRRUZ1sOPqtKci/k/qdu1JdJMMVJBfsLYEjR/hFdbXW12FaOlodf47TFmi/38lOBIrBX6iMHOttOctc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IPELDo8X; arc=none smtp.client-ip=209.85.218.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1739384066; c=relaxed/simple;
+	bh=Vm/vy95eI1ezE1PcaSjVCSTl+B1DwmM79oWZaxTkKyE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=HZcVeiTeVOg2p/gizBwqMIEuwmK5OEXtk2EZF3h0lYn1T4G4IzwX3I/sx8fWkfLuF/oXYDurV/795eAYOtivq2vFwArsz/GA5ulBkZD+RWJVh2WNoBJjTRFLia/j1AZHcuPyrzwae/w3/fVhDu1xlFpbNyJpqFCXgKoYcqOUcWo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.co.uk; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=qm0sMRbZ; arc=none smtp.client-ip=99.78.197.220
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IPELDo8X"
-Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-ab7430e27b2so1342379066b.3;
-        Wed, 12 Feb 2025 09:04:46 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="qm0sMRbZ"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739379885; x=1739984685; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Fvzxk7wvgu91bGu3wJDWmHVE0pCbZmsOLUpuRRBS1Oo=;
-        b=IPELDo8XCybDA94V3dqMxxlUG5PogtTcAxE5A23UUKckRH51ZAerPO7T2L7GDb/hBk
-         V7RNyAcgC/FU8STPfPOTieyDEsuja9yQH/Ds23dO9YbcaSDyhAd8sVoXz/0hxSkymwkq
-         RUKEzOHexDUqiLye4f1J0utFHAfpD5rt0eXKlUTCBLfefBhyxL25IArE+QUBfx/jZOAQ
-         Cytu+yku9rkS3os25seC78MjTRlYJRbFNMxtE4r+q4QbDGXGENOcU2oy8UKh/t/mDchj
-         C4zB3j0qii8q/ApruEXptJHKSceVZY1z4z1nJoC9LZeUiALE3WBAF3fbH4M0NMVdYOJO
-         eYwg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739379885; x=1739984685;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Fvzxk7wvgu91bGu3wJDWmHVE0pCbZmsOLUpuRRBS1Oo=;
-        b=bHPHd1OHwCguyTmjIigYhDt3r94l7nqUlRDWWLHNrPHz96RwirG8PdXL/Fw1H+JtW1
-         Wj6KP7BdiL5K7/+KHPtqAypVuHql96fX0siHla5PttKeBmZqWNJZu/hH68il6HE7tqen
-         4ELwwmv6gPJwcRAH3Yvmtti7tIaBypmLsg1b3O5s7BTXw2/fP9gpM0FpjOY9iHo5/HJ6
-         mMjWIkjLTMNPHJz8t6+1NIuNB45c5SPiHHIO7eyf5B5VKRDBVML98wgvaeS+CTB8fmzd
-         6q39dZDYqMWQjXO/FRF0j0/lUCqULP++5QQs/4kv0CHTardTezE/waDtkN8hwNX+JeXv
-         WO4A==
-X-Forwarded-Encrypted: i=1; AJvYcCWsAmbEId9UKqByC+SnAHHZ/Tcy8YYONyieoTy/c2Xyeyk0BASSpc7lhA1u3kPUW4IzcLPOwJZ7JapzQiM=@vger.kernel.org, AJvYcCXcsMrciMfzKEAe/2cpa6NntZLEuEzaBv7etVqYHB6OErhA0BI/3Y8FXXG5LNECTlZAnECkO4/mZ1511KLK1+mtsWWo@vger.kernel.org
-X-Gm-Message-State: AOJu0YxmbPv4jJYlKZXh/JFcBct9yLX41THjXW1cuJPFdq9D30dTaMlC
-	Fjl8jxW+8hL1uc1wLDNwPf4+8FmH22CnOrhZaYos2WqstDlvCWlx
-X-Gm-Gg: ASbGncu/+TP0F7TW+l7OvCmLll6XDWWngXPIAOtPeE+FOX+7A6P1+bTAt9dnm4J1EKo
-	3HZo9k9Bp7FL5Jflv9+jiSL1dmcgP/7IfD7HbgmeqkMQBf6pCMV8SXuWYce6RFGMVTAuWEPnvu8
-	yxkMGRnIhaOO8RPrlCmPISHDEt27zwuZLsreXOmIa0VVf+KexCbb78u3aT18mkFhRBqSa9X0UQJ
-	vqiS1rsm0alRAlUo55GvmbMhMJm2h6Tq+J7QyrMU69lgdi9J3j6ANYsLVTLkM0yBk6atBVQq3zC
-	8oORm9QL/Ll5MvQc8geXpaBctVpVIbFno16sSb3mN4kiGDxPSePHMKRrZr2fHQ==
-X-Google-Smtp-Source: AGHT+IG7q/wYJM73PiW8r3OsiQSf89b8XBujhBqSp6Ld1tSLhvrTp1ylssyeX8E7sgzOgoQUiPkV8Q==
-X-Received: by 2002:a17:907:d17:b0:ab7:9df1:e562 with SMTP id a640c23a62f3a-ab7f34d3323mr317980366b.48.1739379884809;
-        Wed, 12 Feb 2025 09:04:44 -0800 (PST)
-Received: from ?IPV6:2a03:83e0:1126:4:fb:39c9:9a24:d181? ([2620:10d:c092:500::6:8e63])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ab78e3e212dsm1136599566b.147.2025.02.12.09.04.43
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 12 Feb 2025 09:04:44 -0800 (PST)
-Message-ID: <9ade1f26-1642-48b3-b7e4-ba571892c7d6@gmail.com>
-Date: Wed, 12 Feb 2025 17:04:43 +0000
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1739384063; x=1770920063;
+  h=message-id:date:mime-version:reply-to:subject:to:cc:
+   references:from:in-reply-to:content-transfer-encoding;
+  bh=tLQ7EYLSV5p6U68SgS/kba4CtD/Xo5+7Mfv8EG+fVPo=;
+  b=qm0sMRbZvEwXaQ6YMG/aNu1yH00ZLgZZ/LPlcv1PTAVfe4tmtc2CwjxC
+   XpHgus/LmrWzJou09u+Y9K/hDi9ixrKWmh1X4xrVoAq/XcFmUqQMy+hP7
+   7GLxSmZZ16N+Fu1wihbCjRUlTeQ8OZldNxoAYK0XVwCbug11eaNgAIcWV
+   s=;
+X-IronPort-AV: E=Sophos;i="6.13,280,1732579200"; 
+   d="scan'208";a="171921279"
+Received: from pdx4-co-svc-p1-lb2-vlan2.amazon.com (HELO smtpout.prod.us-east-1.prod.farcaster.email.amazon.dev) ([10.25.36.210])
+  by smtp-border-fw-80009.pdx80.corp.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Feb 2025 18:14:17 +0000
+Received: from EX19MTAEUC001.ant.amazon.com [10.0.10.100:55874]
+ by smtpin.naws.eu-west-1.prod.farcaster.email.amazon.dev [10.0.13.140:2525] with esmtp (Farcaster)
+ id 904e299c-b667-4a04-9212-5c8f5c103a88; Wed, 12 Feb 2025 18:14:16 +0000 (UTC)
+X-Farcaster-Flow-ID: 904e299c-b667-4a04-9212-5c8f5c103a88
+Received: from EX19D022EUC002.ant.amazon.com (10.252.51.137) by
+ EX19MTAEUC001.ant.amazon.com (10.252.51.193) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1258.39;
+ Wed, 12 Feb 2025 18:14:16 +0000
+Received: from [192.168.16.81] (10.106.82.23) by EX19D022EUC002.ant.amazon.com
+ (10.252.51.137) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14; Wed, 12 Feb 2025
+ 18:14:14 +0000
+Message-ID: <a7080c07-0fc5-45ce-92f7-5f432a67bc63@amazon.com>
+Date: Wed, 12 Feb 2025 18:14:09 +0000
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -66,207 +51,194 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC v2 7/9] khugepaged: add mTHP support
-To: Nico Pache <npache@redhat.com>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, linux-mm@kvack.org
-Cc: ryan.roberts@arm.com, anshuman.khandual@arm.com, catalin.marinas@arm.com,
- cl@gentwo.org, vbabka@suse.cz, mhocko@suse.com, apopple@nvidia.com,
- dave.hansen@linux.intel.com, will@kernel.org, baohua@kernel.org,
- jack@suse.cz, srivatsa@csail.mit.edu, haowenchao22@gmail.com,
- hughd@google.com, aneesh.kumar@kernel.org, yang@os.amperecomputing.com,
- peterx@redhat.com, ioworker0@gmail.com, wangkefeng.wang@huawei.com,
- ziy@nvidia.com, jglisse@google.com, surenb@google.com,
- vishal.moola@gmail.com, zokeefe@google.com, zhengqi.arch@bytedance.com,
- jhubbard@nvidia.com, 21cnbao@gmail.com, willy@infradead.org,
- kirill.shutemov@linux.intel.com, david@redhat.com, aarcange@redhat.com,
- raquini@redhat.com, dev.jain@arm.com, sunnanyong@huawei.com,
- audra@redhat.com, akpm@linux-foundation.org, rostedt@goodmis.org,
- mathieu.desnoyers@efficios.com, tiwai@suse.de,
- Johannes Weiner <hannes@cmpxchg.org>
-References: <20250211003028.213461-1-npache@redhat.com>
- <20250211003028.213461-8-npache@redhat.com>
+Reply-To: <kalyazin@amazon.com>
+Subject: Re: [RFC PATCH 0/6] KVM: x86: async PF user
+To: Sean Christopherson <seanjc@google.com>
+CC: <pbonzini@redhat.com>, <corbet@lwn.net>, <tglx@linutronix.de>,
+	<mingo@redhat.com>, <bp@alien8.de>, <dave.hansen@linux.intel.com>,
+	<hpa@zytor.com>, <rostedt@goodmis.org>, <mhiramat@kernel.org>,
+	<mathieu.desnoyers@efficios.com>, <kvm@vger.kernel.org>,
+	<linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-trace-kernel@vger.kernel.org>, <jthoughton@google.com>,
+	<david@redhat.com>, <peterx@redhat.com>, <oleg@redhat.com>,
+	<vkuznets@redhat.com>, <gshan@redhat.com>, <graf@amazon.de>,
+	<jgowans@amazon.com>, <roypat@amazon.co.uk>, <derekmn@amazon.com>,
+	<nsaenz@amazon.es>, <xmarcalx@amazon.com>
+References: <20241118123948.4796-1-kalyazin@amazon.com>
+ <Z6u-WdbiW3n7iTjp@google.com>
 Content-Language: en-US
-From: Usama Arif <usamaarif642@gmail.com>
-In-Reply-To: <20250211003028.213461-8-npache@redhat.com>
-Content-Type: text/plain; charset=UTF-8
+From: Nikita Kalyazin <kalyazin@amazon.com>
+Autocrypt: addr=kalyazin@amazon.com; keydata=
+ xjMEY+ZIvRYJKwYBBAHaRw8BAQdA9FwYskD/5BFmiiTgktstviS9svHeszG2JfIkUqjxf+/N
+ JU5pa2l0YSBLYWx5YXppbiA8a2FseWF6aW5AYW1hem9uLmNvbT7CjwQTFggANxYhBGhhGDEy
+ BjLQwD9FsK+SyiCpmmTzBQJnrNfABQkFps9DAhsDBAsJCAcFFQgJCgsFFgIDAQAACgkQr5LK
+ IKmaZPOpfgD/exazh4C2Z8fNEz54YLJ6tuFEgQrVQPX6nQ/PfQi2+dwBAMGTpZcj9Z9NvSe1
+ CmmKYnYjhzGxzjBs8itSUvWIcMsFzjgEY+ZIvRIKKwYBBAGXVQEFAQEHQCqd7/nb2tb36vZt
+ ubg1iBLCSDctMlKHsQTp7wCnEc4RAwEIB8J+BBgWCAAmFiEEaGEYMTIGMtDAP0Wwr5LKIKma
+ ZPMFAmes18AFCQWmz0MCGwwACgkQr5LKIKmaZPNTlQEA+q+rGFn7273rOAg+rxPty0M8lJbT
+ i2kGo8RmPPLu650A/1kWgz1AnenQUYzTAFnZrKSsXAw5WoHaDLBz9kiO5pAK
+In-Reply-To: <Z6u-WdbiW3n7iTjp@google.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: EX19D007EUA002.ant.amazon.com (10.252.50.68) To
+ EX19D022EUC002.ant.amazon.com (10.252.51.137)
+
+On 11/02/2025 21:17, Sean Christopherson wrote:
+> On Mon, Nov 18, 2024, Nikita Kalyazin wrote:
+>> Async PF [1] allows to run other processes on a vCPU while the host
+>> handles a stage-2 fault caused by a process on that vCPU. When using
+>> VM-exit-based stage-2 fault handling [2], async PF functionality is lost
+>> because KVM does not run the vCPU while a fault is being handled so no
+>> other process can execute on the vCPU. This patch series extends
+>> VM-exit-based stage-2 fault handling with async PF support by letting
+>> userspace handle faults instead of the kernel, hence the "async PF user"
+>> name.
+>>
+>> I circulated the idea with Paolo, Sean, David H, and James H at the LPC,
+>> and the only concern I heard was about injecting the "page not present"
+>> event via #PF exception in the CoCo case, where it may not work. In my
+>> implementation, I reused the existing code for doing that, so the async
+>> PF user implementation is on par with the present async PF
+>> implementation in this regard, and support for the CoCo case can be
+>> added separately.
+>>
+>> Please note that this series is applied on top of the VM-exit-based
+>> stage-2 fault handling RFC [2].
+> 
+> ...
+> 
+>> Nikita Kalyazin (6):
+>>    Documentation: KVM: add userfault KVM exit flag
+>>    Documentation: KVM: add async pf user doc
+>>    KVM: x86: add async ioctl support
+>>    KVM: trace events: add type argument to async pf
+>>    KVM: x86: async_pf_user: add infrastructure
+>>    KVM: x86: async_pf_user: hook to fault handling and add ioctl
+>>
+>>   Documentation/virt/kvm/api.rst  |  35 ++++++
+>>   arch/x86/include/asm/kvm_host.h |  12 +-
+>>   arch/x86/kvm/Kconfig            |   7 ++
+>>   arch/x86/kvm/lapic.c            |   2 +
+>>   arch/x86/kvm/mmu/mmu.c          |  68 ++++++++++-
+>>   arch/x86/kvm/x86.c              | 101 +++++++++++++++-
+>>   arch/x86/kvm/x86.h              |   2 +
+>>   include/linux/kvm_host.h        |  30 +++++
+>>   include/linux/kvm_types.h       |   1 +
+>>   include/trace/events/kvm.h      |  50 +++++---
+>>   include/uapi/linux/kvm.h        |  12 +-
+>>   virt/kvm/Kconfig                |   3 +
+>>   virt/kvm/Makefile.kvm           |   1 +
+>>   virt/kvm/async_pf.c             |   2 +-
+>>   virt/kvm/async_pf_user.c        | 197 ++++++++++++++++++++++++++++++++
+>>   virt/kvm/async_pf_user.h        |  24 ++++
+>>   virt/kvm/kvm_main.c             |  14 +++
+>>   17 files changed, 535 insertions(+), 26 deletions(-)
+> 
+> I am supportive of the idea, but there is way too much copy+paste in this series.
+Hi Sean,
+
+Yes, like I mentioned in the cover letter, I left the new implementation 
+isolated on purpose to make the scope of the change clear.  There is 
+certainly lots of duplication that should be removed later on.
+
+> And it's not just the code itself, it's all the structures and concepts.  Off the
+> top of my head, I can't think of any reason there needs to be a separate queue,
+> separate lock(s), etc.  The only difference between kernel APF and user APF is
+> what chunk of code is responsible for faulting in the page.
+
+There are two queues involved:
+  - "queue": stores in-flight faults. APF-kernel uses it to cancel all 
+works if needed.  APF-user does not have a way to "cancel" userspace 
+works, but it uses the queue to look up the struct by the token when 
+userspace reports a completion.
+  - "ready": stores completed faults until KVM finds a chance to tell 
+guest about them.
+
+I agree that the "ready" queue can be shared between APF-kernel and 
+-user as it's used in the same way.  As for the "queue" queue, do you 
+think it's ok to process its elements differently based on the "type" of 
+them in a single loop [1] instead of having two separate queues?
+
+[1] https://elixir.bootlin.com/linux/v6.13.2/source/virt/kvm/async_pf.c#L120
+
+> I suspect a good place to start would be something along the lines of the below
+> diff, and go from there.  Given that KVM already needs to special case the fake
+> "wake all" items, I'm guessing it won't be terribly difficult to teach the core
+> flows about userspace async #PF.
+
+That sounds sensible.  I can certainly approach it in a "bottom up" way 
+by sparingly adding handling where it's different in APF-user rather 
+than adding it side by side and trying to merge common parts.
+
+> I'm also not sure that injecting async #PF for all userfaults is desirable.  For
+> in-kernel async #PF, KVM knows that faulting in the memory would sleep.  For
+> userfaults, KVM has no way of knowing if the userfault will sleep, i.e. should
+> be handled via async #PF.  The obvious answer is to have userspace only enable
+> userspace async #PF when it's useful, but "an all or nothing" approach isn't
+> great uAPI.  On the flip side, adding uAPI for a use case that doesn't exist
+> doesn't make sense either :-/
+
+I wasn't able to locate the code that would check whether faulting would 
+sleep in APF-kernel.  KVM spins APF-kernel whenever it can ([2]). 
+Please let me know if I'm missing something here.
+
+[2] 
+https://elixir.bootlin.com/linux/v6.13.2/source/arch/x86/kvm/mmu/mmu.c#L4360
+
+> Exiting to userspace in vCPU context is also kludgy.  It makes sense for base
+> userfault, because the vCPU can't make forward progress until the fault is
+> resolved.  Actually, I'm not even sure it makes sense there.  I'll follow-up in
+
+Even though we exit to userspace, in case of APF-user, userspace is 
+supposed to VM enter straight after scheduling the async job, which is 
+then executed concurrently with the vCPU.
+
+> James' series.  Anyways, it definitely doesn't make sense for async #PF, because
+> the whole point is to let the vCPU run.  Signalling userspace would definitely
+> add complexity, but only because of the need to communicate the token and wait
+> for userspace to consume said token.  I'll think more on that.
+
+By signalling userspace you mean a new non-exit-to-userspace mechanism 
+similar to UFFD?  What advantage can you see in it over exiting to 
+userspace (which already exists in James's series)?
 
 
+Thanks,
+Nikita
 
-On 11/02/2025 00:30, Nico Pache wrote:
-> Introduce the ability for khugepaged to collapse to different mTHP sizes.
-> While scanning a PMD range for potential collapse candidates, keep track
-> of pages in MIN_MTHP_ORDER chunks via a bitmap. Each bit represents a
-> utilized region of order MIN_MTHP_ORDER ptes. We remove the restriction
-> of max_ptes_none during the scan phase so we dont bailout early and miss
-> potential mTHP candidates.
 > 
-> After the scan is complete we will perform binary recursion on the
-> bitmap to determine which mTHP size would be most efficient to collapse
-> to. max_ptes_none will be scaled by the attempted collapse order to
-> determine how full a THP must be to be eligible.
+> diff --git a/virt/kvm/async_pf.c b/virt/kvm/async_pf.c
+> index 0ee4816b079a..fc31b47cf9c5 100644
+> --- a/virt/kvm/async_pf.c
+> +++ b/virt/kvm/async_pf.c
+> @@ -177,7 +177,8 @@ void kvm_check_async_pf_completion(struct kvm_vcpu *vcpu)
+>    * success, 'false' on failure (page fault has to be handled synchronously).
+>    */
+>   bool kvm_setup_async_pf(struct kvm_vcpu *vcpu, gpa_t cr2_or_gpa,
+> -                       unsigned long hva, struct kvm_arch_async_pf *arch)
+> +                       unsigned long hva, struct kvm_arch_async_pf *arch,
+> +                       bool userfault)
+>   {
+>          struct kvm_async_pf *work;
 > 
-> If a mTHP collapse is attempted, but contains swapped out, or shared
-> pages, we dont perform the collapse.
+> @@ -202,13 +203,16 @@ bool kvm_setup_async_pf(struct kvm_vcpu *vcpu, gpa_t cr2_or_gpa,
+>          work->addr = hva;
+>          work->arch = *arch;
 > 
-> Signed-off-by: Nico Pache <npache@redhat.com>
-> ---
->  mm/khugepaged.c | 122 ++++++++++++++++++++++++++++++++----------------
->  1 file changed, 83 insertions(+), 39 deletions(-)
-> 
-> diff --git a/mm/khugepaged.c b/mm/khugepaged.c
-> index c8048d9ec7fb..cd310989725b 100644
-> --- a/mm/khugepaged.c
-> +++ b/mm/khugepaged.c
-> @@ -1127,13 +1127,14 @@ static int collapse_huge_page(struct mm_struct *mm, unsigned long address,
->  {
->  	LIST_HEAD(compound_pagelist);
->  	pmd_t *pmd, _pmd;
-> -	pte_t *pte;
-> +	pte_t *pte, mthp_pte;
->  	pgtable_t pgtable;
->  	struct folio *folio;
->  	spinlock_t *pmd_ptl, *pte_ptl;
->  	int result = SCAN_FAIL;
->  	struct vm_area_struct *vma;
->  	struct mmu_notifier_range range;
-> +	unsigned long _address = address + offset * PAGE_SIZE;
->  	VM_BUG_ON(address & ~HPAGE_PMD_MASK);
->  
->  	/*
-> @@ -1148,12 +1149,13 @@ static int collapse_huge_page(struct mm_struct *mm, unsigned long address,
->  		*mmap_locked = false;
->  	}
->  
-> -	result = alloc_charge_folio(&folio, mm, cc, HPAGE_PMD_ORDER);
-> +	result = alloc_charge_folio(&folio, mm, cc, order);
->  	if (result != SCAN_SUCCEED)
->  		goto out_nolock;
->  
->  	mmap_read_lock(mm);
-> -	result = hugepage_vma_revalidate(mm, address, true, &vma, cc, HPAGE_PMD_ORDER);
-> +	*mmap_locked = true;
-> +	result = hugepage_vma_revalidate(mm, address, true, &vma, cc, order);
->  	if (result != SCAN_SUCCEED) {
->  		mmap_read_unlock(mm);
->  		goto out_nolock;
-> @@ -1171,13 +1173,14 @@ static int collapse_huge_page(struct mm_struct *mm, unsigned long address,
->  		 * released when it fails. So we jump out_nolock directly in
->  		 * that case.  Continuing to collapse causes inconsistency.
->  		 */
-> -		result = __collapse_huge_page_swapin(mm, vma, address, pmd,
-> -				referenced, HPAGE_PMD_ORDER);
-> +		result = __collapse_huge_page_swapin(mm, vma, _address, pmd,
-> +				referenced, order);
->  		if (result != SCAN_SUCCEED)
->  			goto out_nolock;
->  	}
->  
->  	mmap_read_unlock(mm);
-> +	*mmap_locked = false;
->  	/*
->  	 * Prevent all access to pagetables with the exception of
->  	 * gup_fast later handled by the ptep_clear_flush and the VM
-> @@ -1187,7 +1190,7 @@ static int collapse_huge_page(struct mm_struct *mm, unsigned long address,
->  	 * mmap_lock.
->  	 */
->  	mmap_write_lock(mm);
-> -	result = hugepage_vma_revalidate(mm, address, true, &vma, cc, HPAGE_PMD_ORDER);
-> +	result = hugepage_vma_revalidate(mm, address, true, &vma, cc, order);
->  	if (result != SCAN_SUCCEED)
->  		goto out_up_write;
->  	/* check if the pmd is still valid */
-> @@ -1198,11 +1201,12 @@ static int collapse_huge_page(struct mm_struct *mm, unsigned long address,
->  	vma_start_write(vma);
->  	anon_vma_lock_write(vma->anon_vma);
->  
-> -	mmu_notifier_range_init(&range, MMU_NOTIFY_CLEAR, 0, mm, address,
-> -				address + HPAGE_PMD_SIZE);
-> +	mmu_notifier_range_init(&range, MMU_NOTIFY_CLEAR, 0, mm, _address,
-> +				_address + (PAGE_SIZE << order));
->  	mmu_notifier_invalidate_range_start(&range);
->  
->  	pmd_ptl = pmd_lock(mm, pmd); /* probably unnecessary */
-> +
->  	/*
->  	 * This removes any huge TLB entry from the CPU so we won't allow
->  	 * huge and small TLB entries for the same virtual address to
-> @@ -1216,10 +1220,10 @@ static int collapse_huge_page(struct mm_struct *mm, unsigned long address,
->  	mmu_notifier_invalidate_range_end(&range);
->  	tlb_remove_table_sync_one();
->  
-> -	pte = pte_offset_map_lock(mm, &_pmd, address, &pte_ptl);
-> +	pte = pte_offset_map_lock(mm, &_pmd, _address, &pte_ptl);
->  	if (pte) {
-> -		result = __collapse_huge_page_isolate(vma, address, pte, cc,
-> -					&compound_pagelist, HPAGE_PMD_ORDER);
-> +		result = __collapse_huge_page_isolate(vma, _address, pte, cc,
-> +					&compound_pagelist, order);
->  		spin_unlock(pte_ptl);
->  	} else {
->  		result = SCAN_PMD_NULL;
-> @@ -1248,8 +1252,8 @@ static int collapse_huge_page(struct mm_struct *mm, unsigned long address,
->  	anon_vma_unlock_write(vma->anon_vma);
->  
->  	result = __collapse_huge_page_copy(pte, folio, pmd, _pmd,
-> -					   vma, address, pte_ptl,
-> -					   &compound_pagelist, HPAGE_PMD_ORDER);
-> +					   vma, _address, pte_ptl,
-> +					   &compound_pagelist, order);
->  	pte_unmap(pte);
->  	if (unlikely(result != SCAN_SUCCEED))
->  		goto out_up_write;
-> @@ -1260,20 +1264,37 @@ static int collapse_huge_page(struct mm_struct *mm, unsigned long address,
->  	 * write.
->  	 */
->  	__folio_mark_uptodate(folio);
-> -	pgtable = pmd_pgtable(_pmd);
+> -       INIT_WORK(&work->work, async_pf_execute);
 > -
-> -	_pmd = mk_huge_pmd(&folio->page, vma->vm_page_prot);
-> -	_pmd = maybe_pmd_mkwrite(pmd_mkdirty(_pmd), vma);
-> -
-> -	spin_lock(pmd_ptl);
-> -	BUG_ON(!pmd_none(*pmd));
-> -	folio_add_new_anon_rmap(folio, vma, address, RMAP_EXCLUSIVE);
-> -	folio_add_lru_vma(folio, vma);
-> -	pgtable_trans_huge_deposit(mm, pmd, pgtable);
-> -	set_pmd_at(mm, address, pmd, _pmd);
-> -	update_mmu_cache_pmd(vma, address, pmd);
-> -	deferred_split_folio(folio, false);
-> -	spin_unlock(pmd_ptl);
-> +	if (order == HPAGE_PMD_ORDER) {
-> +		pgtable = pmd_pgtable(_pmd);
-> +		_pmd = mk_huge_pmd(&folio->page, vma->vm_page_prot);
-> +		_pmd = maybe_pmd_mkwrite(pmd_mkdirty(_pmd), vma);
-> +
-> +		spin_lock(pmd_ptl);
-> +		BUG_ON(!pmd_none(*pmd));
-> +		folio_add_new_anon_rmap(folio, vma, _address, RMAP_EXCLUSIVE);
-> +		folio_add_lru_vma(folio, vma);
-> +		pgtable_trans_huge_deposit(mm, pmd, pgtable);
-> +		set_pmd_at(mm, address, pmd, _pmd);
-> +		update_mmu_cache_pmd(vma, address, pmd);
-> +		deferred_split_folio(folio, false);
-> +		spin_unlock(pmd_ptl);
-> +	} else { //mTHP
-> +		mthp_pte = mk_pte(&folio->page, vma->vm_page_prot);
-> +		mthp_pte = maybe_mkwrite(pte_mkdirty(mthp_pte), vma);
-> +
-> +		spin_lock(pmd_ptl);
-> +		folio_ref_add(folio, (1 << order) - 1);
-> +		folio_add_new_anon_rmap(folio, vma, _address, RMAP_EXCLUSIVE);
-> +		folio_add_lru_vma(folio, vma);
-> +		spin_lock(pte_ptl);
-> +		set_ptes(vma->vm_mm, _address, pte, mthp_pte, (1 << order));
-> +		update_mmu_cache_range(NULL, vma, _address, pte, (1 << order));
-> +		spin_unlock(pte_ptl);
-> +		smp_wmb(); /* make pte visible before pmd */
-> +		pmd_populate(mm, pmd, pmd_pgtable(_pmd));
-> +		deferred_split_folio(folio, false);
-
-
-Hi Nico,
-
-This patch will have the same issue as the one I pointed out in
-https://lore.kernel.org/all/82b9efd1-f2a6-4452-b2ea-6c163e17cdf7@gmail.com/ ?
+>          list_add_tail(&work->queue, &vcpu->async_pf.queue);
+>          vcpu->async_pf.queued++;
+>          work->notpresent_injected = kvm_arch_async_page_not_present(vcpu, work);
+> 
+> -       schedule_work(&work->work);
+> +       if (userfault) {
+> +               work->userfault = true;
+> +       } else {
+> +               INIT_WORK(&work->work, async_pf_execute);
+> +               schedule_work(&work->work);
+> +       }
+> 
+>          return true;
+>   }
 
