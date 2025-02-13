@@ -1,132 +1,214 @@
-Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 066C99476;
-	Thu, 13 Feb 2025 03:31:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.43
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D1887250EC;
+	Thu, 13 Feb 2025 08:26:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739417496; cv=none; b=bzOUI5sK0t2UYY14aBvvsoFFRoJ8zy77lxJrTsLHeoZ070+VLTG8ZWfiHDVCHLV9kQqpUYmYGFFH36rSIGTarlSZMhKjH9yMmbpjIzR/pGBQaZfEiic4kS3gcd9a0xsnayR3M8MqbGgeCkeh7hbz4GRaWm23KvNl0f6iCr+LMRU=
+	t=1739435191; cv=none; b=HGVOFFiV2LJJBp7UJ6f2W81AQIUGjfRuvJxhw+Ug9erC75RGmq8TRci7aawK5XJG3W/JqrEAaahUedUmKp/PuYXtqa9sW9zud/dCXRENplven59pt7u+RhWR7rqO/+rxxAjFvOeAkA/PpQQ1IE+G30NEHAZn8iRgltqVSZ9VXkg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739417496; c=relaxed/simple;
-	bh=Q8EwH0ENUprCzIBAekBdCxAsKlSG8kdvqUySrD13GpA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=f6Kys7RTjJdXAwaO4/sZioLWg3o95QEZdRWwmnOK9G5suJPSmFGQXcI/N0QPADqnlD8xaL8twp2HzlCei0zGdx9HGV0/JcBHZ6Op3pB+RKKmRN8p/kDBePzNddmb9V1TxhvkV+HF+pKz3a+w/UvKHCUGXQAajU4hbsamlAaZumw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NEbkf8BX; arc=none smtp.client-ip=209.85.216.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NEbkf8BX"
-Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-2fc1843495eso101127a91.1;
-        Wed, 12 Feb 2025 19:31:34 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739417494; x=1740022294; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=75irhUr4NJWrSjQg3lqVY6NYuQhtQPvJ4JEknJJLBuM=;
-        b=NEbkf8BXLQ8NrE8Dx5C9GMGjJ4Yx3w668QK48R4clrTLHGV6R1bVD8C1cUY1mTxLn4
-         XPRg81P5splozw1XkkrNN8LgdPmuiSdYwyD/U/Ml06rop+ZTILoxW3Rg41vLHPFG7AM7
-         93UNoYuX/MCh5osfKKhfTshZBeEioUW2fHsKgBxHztX2vF/AZ2c4iNrI7ANiTvW7LLpG
-         21gw37NifiQ5VAekJm10SfzEM3fn9+7qw6inh7F9Uabo7bKOGPPP3Z03wpCXOkMVxjxG
-         7QvLoB+AXwyrkSguKtsuMU5VU74bRP9FgeXr9Or3gX836Yhl2t3D9upkkLn5t3gaXV9q
-         QUjA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739417494; x=1740022294;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=75irhUr4NJWrSjQg3lqVY6NYuQhtQPvJ4JEknJJLBuM=;
-        b=Vaj/0gk6CNTcxdXpe+nnWQFNCpKMFlw6oM4RzfOTAX4AOirthdXyonx1dfig/OE4bn
-         moh6maANDFQY/QUs2aIYxK8diyDIPBYHkiAVPPvpbj/jSpv4yjT43EgHYWOG+8LqJp3v
-         jRgByhZClQOHJZ2416a71HMx00JNa8EjUwbCs5fanSyGrSBa9N5QB/5Scp/P7v3ujPQ/
-         o0S8ySi8ffZr19UeLtz2wQPKbraK6VR8osUTILvrRMySwr9wFn472IQBJ91ouymSKN+P
-         MYFBWnEYOcIYuAeIVssEBgG7Eq4IGqOLeGXJTs0QyiU8xU26j5DeyaJeHRRDoYAafAgc
-         MH1w==
-X-Forwarded-Encrypted: i=1; AJvYcCVCUzZ3nUjiJVZ52U9Is1y7plNNnw4G1FWJGxA21+ZXYCMLa/FdeIlJmlgpOpBAESeyALdYDgGzKzk=@vger.kernel.org, AJvYcCVRgWQkU8kQ6U38micMKxK00PJvmm9deEV1Tgyh2HIfPOh3CtMMU+gWjHR5w1V8GX3WGAEKHCgccssX/hC7@vger.kernel.org, AJvYcCWSM3g34vFO3AocSB9EmpCxNKALA7Bs9OhmmVMO7ljrgip4d1ZMs9SHdLKQ+JmXo8oqnqleaggIQTqjNOhbyPrPVmV/@vger.kernel.org
-X-Gm-Message-State: AOJu0YzwHQY0fUJwANJJ8iwTLB/SI52P52Z/KJ5ZHLrbZnrs01rTRQs9
-	cJ+0DnG2P/bqGdigeh0pAtAmOpXUmvybe2FzEmMggngBhdzpQryW
-X-Gm-Gg: ASbGncsb4qxPrCsHMoL1T0vQbF5vM+SaWfQa7ZfRZ0oum3q7uYR51RPOgxN7rf8/Bbj
-	jr1CZHxgp10Vh0sq4ueaHQGzS5okDFjDaF4M6v7L8Hn+hQoWL/7ZcT76yRzUzIYlayFsmRV7Y5b
-	X8Kyp6PztXXamyShxcYDsHZQtD90V7PqmEhfdECe43j3R7rnKwYVJPuRfUBkU1N2S16rQ/1JTZr
-	QYkEY8kH21XGzyu6usYvo42uQC4hPqUtC51IhWqGHl5z5hCNjRtG2Tk0KnZ+LV5S2HaJ1KV+G7E
-	OfjNZFNXqIjUQhE=
-X-Google-Smtp-Source: AGHT+IFSe8dlFKi5twoIhx4rWsHQnu8HvDw55CQSxaFV/pYXI3d9NEwKZfEDzy+KIvYPgQTIbXIcTQ==
-X-Received: by 2002:a05:6a00:3989:b0:729:a31:892d with SMTP id d2e1a72fcca58-7322c591baemr10797114b3a.8.1739417493949;
-        Wed, 12 Feb 2025 19:31:33 -0800 (PST)
-Received: from archie.me ([103.124.138.155])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73242761619sm215859b3a.141.2025.02.12.19.31.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Feb 2025 19:31:32 -0800 (PST)
-Received: by archie.me (Postfix, from userid 1000)
-	id E42274208FB6; Thu, 13 Feb 2025 10:31:30 +0700 (WIB)
-Date: Thu, 13 Feb 2025 10:31:30 +0700
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Purva Yeshi <purvayeshi550@gmail.com>, mhiramat@kernel.org,
-	corbet@lwn.net, skhan@linuxfoundation.org,
-	mathieu.desnoyers@efficios.com, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org
-Subject: Re: [PATCH v2] docs: trace: Refactor index documentation
-Message-ID: <Z61nkk7X3jQJyzYX@archie.me>
-References: <20250206141453.139613-1-purvayeshi550@gmail.com>
- <20250210174556.70fc53b7@gandalf.local.home>
- <Z6yBtB7mjoiquKRj@archie.me>
- <20250212095111.7e07b92e@gandalf.local.home>
+	s=arc-20240116; t=1739435191; c=relaxed/simple;
+	bh=4UAJuCrKAipdKEWUfbN0EZQOAe8EIxsR4FOvN+39LcI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=WHGoIyFC1nW3yfLEc5ITkagujzVQTrpOE/DfdCCrBeyB9n0tE4lKhSFvuWFpKqZaIdAYjYLekzox+gNjWvt98wZoRGJHP3xVc7YR2KgrdWu7gMD0ZuHdEY1VsfpVEvm1v/TGFmjXtGaJd7s77iXMSgfMEJ9XaWFCFhNfVs91VhY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7EF8116F3;
+	Thu, 13 Feb 2025 00:26:48 -0800 (PST)
+Received: from [10.163.91.196] (unknown [10.163.91.196])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8A4C83F58B;
+	Thu, 13 Feb 2025 00:26:14 -0800 (PST)
+Message-ID: <4ba52062-1bd3-4d53-aa28-fcbbd4913801@arm.com>
+Date: Thu, 13 Feb 2025 13:56:11 +0530
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="G1xUjSJSMfJSdqY9"
-Content-Disposition: inline
-In-Reply-To: <20250212095111.7e07b92e@gandalf.local.home>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC v2 0/9] khugepaged: mTHP support
+To: Nico Pache <npache@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ linux-mm@kvack.org, ryan.roberts@arm.com, anshuman.khandual@arm.com,
+ catalin.marinas@arm.com, cl@gentwo.org, vbabka@suse.cz, mhocko@suse.com,
+ apopple@nvidia.com, dave.hansen@linux.intel.com, will@kernel.org,
+ baohua@kernel.org, jack@suse.cz, srivatsa@csail.mit.edu,
+ haowenchao22@gmail.com, hughd@google.com, aneesh.kumar@kernel.org,
+ yang@os.amperecomputing.com, peterx@redhat.com, ioworker0@gmail.com,
+ wangkefeng.wang@huawei.com, ziy@nvidia.com, jglisse@google.com,
+ surenb@google.com, vishal.moola@gmail.com, zokeefe@google.com,
+ zhengqi.arch@bytedance.com, jhubbard@nvidia.com, 21cnbao@gmail.com,
+ willy@infradead.org, kirill.shutemov@linux.intel.com, david@redhat.com,
+ aarcange@redhat.com, raquini@redhat.com, sunnanyong@huawei.com,
+ usamaarif642@gmail.com, audra@redhat.com, akpm@linux-foundation.org,
+ rostedt@goodmis.org, mathieu.desnoyers@efficios.com, tiwai@suse.de
+References: <20250211003028.213461-1-npache@redhat.com>
+ <5a995dc9-fee7-442f-b439-c484d9de1750@arm.com>
+ <CAA1CXcCo3eCH-5axnw3WUqPfL-EPCbLVFo_AFYXkbnExfX=KLQ@mail.gmail.com>
+Content-Language: en-US
+From: Dev Jain <dev.jain@arm.com>
+In-Reply-To: <CAA1CXcCo3eCH-5axnw3WUqPfL-EPCbLVFo_AFYXkbnExfX=KLQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
 
---G1xUjSJSMfJSdqY9
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Wed, Feb 12, 2025 at 09:51:11AM -0500, Steven Rostedt wrote:
-> On Wed, 12 Feb 2025 18:10:44 +0700
-> Bagas Sanjaya <bagasdotme@gmail.com> wrote:
->=20
-> > > > +Introduction to Tracing
-> > > > +-----------------------
-> > > > +
-> > > > +This section provides an overview of Linux tracing mechanisms
-> > > > +and debugging approaches.
-> > > > =20
-> > > >  .. toctree::
-> > > > -   :maxdepth: 2
-> > > > +   :maxdepth: 1 =20
-> > >=20
-> > > I don't really know what the maxdepth gives here, but there was no me=
-ntion
-> > > in the change log why it had to be converted from 2 to 1. =20
-> >=20
-> > :maxdepth: specifies heading levels depth of the toctree. In this case,
-> > the author wants only doc titles (hence 1), whereas 2 also includes
-> > second-level (section) headings.
->=20
-> As I'm the original author, I would like to know why there was a change.
->=20
+On 12/02/25 10:19 pm, Nico Pache wrote:
+> On Tue, Feb 11, 2025 at 5:50 AM Dev Jain <dev.jain@arm.com> wrote:
+>>
+>>
+>>
+>> On 11/02/25 6:00 am, Nico Pache wrote:
+>>> The following series provides khugepaged and madvise collapse with the
+>>> capability to collapse regions to mTHPs.
+>>>
+>>> To achieve this we generalize the khugepaged functions to no longer depend
+>>> on PMD_ORDER. Then during the PMD scan, we keep track of chunks of pages
+>>> (defined by MTHP_MIN_ORDER) that are utilized. This info is tracked
+>>> using a bitmap. After the PMD scan is done, we do binary recursion on the
+>>> bitmap to find the optimal mTHP sizes for the PMD range. The restriction
+>>> on max_ptes_none is removed during the scan, to make sure we account for
+>>> the whole PMD range. max_ptes_none will be scaled by the attempted collapse
+>>> order to determine how full a THP must be to be eligible. If a mTHP collapse
+>>> is attempted, but contains swapped out, or shared pages, we dont perform the
+>>> collapse.
+>>>
+>>> With the default max_ptes_none=511, the code should keep its most of its
+>>> original behavior. To exercise mTHP collapse we need to set max_ptes_none<=255.
+>>> With max_ptes_none > HPAGE_PMD_NR/2 you will experience collapse "creep" and
+>>> constantly promote mTHPs to the next available size.
+>>>
+>>> Patch 1:     Some refactoring to combine madvise_collapse and khugepaged
+>>> Patch 2:     Refactor/rename hpage_collapse
+>>> Patch 3-5:   Generalize khugepaged functions for arbitrary orders
+>>> Patch 6-9:   The mTHP patches
+>>>
+>>> ---------
+>>>    Testing
+>>> ---------
+>>> - Built for x86_64, aarch64, ppc64le, and s390x
+>>> - selftests mm
+>>> - I created a test script that I used to push khugepaged to its limits while
+>>>      monitoring a number of stats and tracepoints. The code is available
+>>>      here[1] (Run in legacy mode for these changes and set mthp sizes to inherit)
+>>>      The summary from my testings was that there was no significant regression
+>>>      noticed through this test. In some cases my changes had better collapse
+>>>      latencies, and was able to scan more pages in the same amount of time/work,
+>>>      but for the most part the results were consistant.
+>>> - redis testing. I tested these changes along with my defer changes
+>>>     (see followup post for more details).
+>>> - some basic testing on 64k page size.
+>>> - lots of general use. These changes have been running in my VM for some time.
+>>>
+>>> Changes since V1 [2]:
+>>> - Minor bug fixes discovered during review and testing
+>>> - removed dynamic allocations for bitmaps, and made them stack based
+>>> - Adjusted bitmap offset from u8 to u16 to support 64k pagesize.
+>>> - Updated trace events to include collapsing order info.
+>>> - Scaled max_ptes_none by order rather than scaling to a 0-100 scale.
+>>> - No longer require a chunk to be fully utilized before setting the bit. Use
+>>>      the same max_ptes_none scaling principle to achieve this.
+>>> - Skip mTHP collapse that requires swapin or shared handling. This helps prevent
+>>>      some of the "creep" that was discovered in v1.
+>>>
+>>> [1] - https://gitlab.com/npache/khugepaged_mthp_test
+>>> [2] - https://lore.kernel.org/lkml/20250108233128.14484-1-npache@redhat.com/
+>>>
+>>> Nico Pache (9):
+>>>     introduce khugepaged_collapse_single_pmd to unify khugepaged and
+>>>       madvise_collapse
+>>>     khugepaged: rename hpage_collapse_* to khugepaged_*
+>>>     khugepaged: generalize hugepage_vma_revalidate for mTHP support
+>>>     khugepaged: generalize alloc_charge_folio for mTHP support
+>>>     khugepaged: generalize __collapse_huge_page_* for mTHP support
+>>>     khugepaged: introduce khugepaged_scan_bitmap for mTHP support
+>>>     khugepaged: add mTHP support
+>>>     khugepaged: improve tracepoints for mTHP orders
+>>>     khugepaged: skip collapsing mTHP to smaller orders
+>>>
+>>>    include/linux/khugepaged.h         |   4 +
+>>>    include/trace/events/huge_memory.h |  34 ++-
+>>>    mm/khugepaged.c                    | 422 +++++++++++++++++++----------
+>>>    3 files changed, 306 insertions(+), 154 deletions(-)
+>>>
+>>
+>> Does this patchset suffer from the problem described here:
+>> https://lore.kernel.org/all/8abd99d5-329f-4f8d-8680-c2d48d4963b6@arm.com/
+> Hi Dev,
+> 
+> Sorry I meant to get back to you about that.
+> 
+> I understand your concern, but like I've mentioned before, the scan
+> with the read lock was done so we dont have to do the more expensive
+> locking, and could still gain insight into the state. You are right
+> that this info could become stale if the state changes dramatically,
+> but the collapse_isolate function will verify it and not collapse.
 
-Oops, I mean I'm referring to the patch author (Purva Yeshi).
+If the state changes dramatically, the _isolate function will verify it, 
+and fallback. And this fallback happens after following this costly 
+path: retrieve a large folio from the buddy allocator -> swapin pages 
+from the disk -> mmap_write_lock() -> anon_vma_lock_write() -> TLB flush 
+on all CPUs -> fallback in _isolate().
+If you do fail in _isolate(), doesn't it make sense to get the updated 
+state for the next fallback order immediately, because we have prior 
+information that we failed because of PTE state? What your algorithm 
+will do is *still* follow the costly path described above, and again 
+fail in _isolate(), instead of failing in hpage_collapse_scan_pmd() like 
+mine would.
 
---=20
-An old man doll... just what I always wanted! - Clara
+The verification of the PTE state by the _isolate() function is the "no 
+turning back" point of the algorithm. The verification by 
+hpage_collapse_scan_pmd() is the "let us see if proceeding is even worth 
+it, before we do costly operations" point of the algorithm.
 
---G1xUjSJSMfJSdqY9
-Content-Type: application/pgp-signature; name="signature.asc"
+>  From my testing I found this to rarely happen.
 
------BEGIN PGP SIGNATURE-----
+Unfortunately, I am not very familiar with performance testing/load 
+testing, I am fairly new to kernel programming, so I am getting there. 
+But it really depends on the type of test you are running, what actually 
+runs on memory-intensive systems, etc etc. In fact, on loaded systems I 
+would expect the PTE state to dramatically change. But still, no opinion 
+here.
 
-iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZ61njAAKCRD2uYlJVVFO
-o1RTAP0R+L/WHOcFYnFYSyJUoEvegF44yZcBOi74NnUA5cbqGAD/aFv94vJEm1Uv
-fVr4b6gsHMzKFD95XwkISpY0U1rpEgQ=
-=8Que
------END PGP SIGNATURE-----
+> 
+> Also, khugepaged, my changes, and your changes are all a victim of
+> this. Once we drop the read lock (to either allocate the folio, or
+> right before acquiring the write_lock), the state can change. In your
+> case, yes, you are gathering more up to date information, but is it
+> really that important/worth it to retake locks and rescan for each
+> instance if we are about to reverify with the write lock taken?
 
---G1xUjSJSMfJSdqY9--
+You said "reverify": You are removing the verification, so this step 
+won't be reverification, it will be verification. We do not want to 
+verify *after* we have already done 95% of latency-heavy stuff, only to 
+know that we are going to fail.
+
+Algorithms in the kernel, in general, are of the following form: 1) 
+Verify if a condition is true, resulting in taking a control path -> 2) 
+do a lot of stuff -> "no turning back" step, wherein before committing 
+(by taking locks, say), reverify if this is the control path we should 
+be in. You are eliminating step 1).
+
+Therefore, I will have to say that I disagree with your approach.
+
+On top of this, in the subjective analysis in [1], point number 7 (along 
+with point number 1) remains. And, point number 4 remains.
+
+[1] 
+https://lore.kernel.org/all/23023f48-95c6-4a24-ac8b-aba4b1a441b4@arm.com/
+
+> 
+> So in my eyes, this is not a "problem"
+
+Looks like the kernel scheduled us for a high-priority debate, I hope 
+there's no deadlock :)
+
+> 
+> Cheers,
+> -- Nico
+> 
+> 
+>>
+> 
+
