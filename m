@@ -1,83 +1,63 @@
-Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DD6020C49E;
-	Thu, 13 Feb 2025 09:12:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2080B211474;
+	Thu, 13 Feb 2025 10:08:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739437932; cv=none; b=LjmQas9DBguPANXmIZkgXNRmLtc+2X9YAib4/2D9Y/v6OfZztUOMNWFMamzZcBn6Mx0yM3ADYVX6ppG2AjHT0Hf3lNZ8iOY1UUkRPCQbkHmjDVsw4ODX4UIRD7ro6gxYn1Q0MksbHcIOgjxmvtKPcC8KJ8EZy68HMBNa7iC6468=
+	t=1739441332; cv=none; b=fyWWZ6nf9Lm6pCXqmzmdbm97ZRBSuwA2x2Tj+g3vksjF5DFwMItTzy5vT5PNk64V2QJTiUTZ4pRnsmFerj64ZxIuogTd+vzIYN9ej0nHSQ9vP3Gys8iXAV/fUFmEsnUzNsR4kK4/QKFjSUGsUVDTaFXeN1SHWQl/W7Ai1ZE7kaE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739437932; c=relaxed/simple;
-	bh=JPlerEw+HpIcTQO1AoV9HkgsXrH9Q7r63PdqOw1EkME=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DK/7TEsbwc/HrOyZAmUcqD5ypBYRIlOKuMoVGo7XBQWkMUKBE/qGhuUqkuMnuNiBZ+vfVjaUGE+nxnOm8xRTSs1YTirkXtFokY1DkQ3PFMww1UXsg9U/JdSm8qg04ifkddV2wj5p9bpypI//TwBZ7f+07cjeRSKeVG8/8HeBImI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VkB5uNRJ; arc=none smtp.client-ip=209.85.218.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1739441332; c=relaxed/simple;
+	bh=gFpRK/JkdgX13UygTMKOHD6tsNu85A/NEUS8hn+Wmow=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BJcdUrh49Stw0bJIX5kZuPPuIp/lnaZXDvhLPOEVlD9C73sqvFh9Cf8bmENM7Q4d2Wk6HdQvTNuit5PfXEpOVYHizz8WuZ7Izd3JBwS9QSqZN3Eb2rKxbEbR2DmcWr0jXlMA3AFQwHq1CHimJYYvYrhyZvKHFYZKK9LbLsgxslc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=BhWsbXVR; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VkB5uNRJ"
-Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-ab7f2b3d563so130248766b.1;
-        Thu, 13 Feb 2025 01:12:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739437929; x=1740042729; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:date:from:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=kk8GoiJCBLwy0VGMO3TU9B+awh6BEc3xAZZDrhJYR4Q=;
-        b=VkB5uNRJjqUC7rzjY+U4v+ylv5ha2vjEWxjL3XO6KbOiw2VU7P2YulK19n6BrMfPVh
-         Oh0WqiIwTNhVFQC2+UjhYPgSzALE6yQ2abcFkhXBz35POFjlICnQdgrygGiTL8fh+Asd
-         j5VoqctOzf76hMehq0C7ODcsFX1BlRQp3fivn6+72x54XSu4KxvPHUJPdFu3/K9QFVFj
-         HrzvtKb+axeuTObPUzgnsEGTtl2cgE6eaHiej8n0dYo67vP30Kz4XKIyf9xdICJ2DRbj
-         dsaLCqXZqlqj1z3skdOD0QkPxz/1++cSiVjSoqlTcqrsTS1EVItwFGiG4fABKeI3S59c
-         cy1g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739437929; x=1740042729;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:date:from
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=kk8GoiJCBLwy0VGMO3TU9B+awh6BEc3xAZZDrhJYR4Q=;
-        b=uO1vUv0WmYS4D71MqyvpsANk4+jQKUbyEIU863RLQyV8wzW0yWOcmK9DSt3SVeDufo
-         C0psicrrhECyV4D+mmEQ5K6h8sLcH+5iE4IoN3xn0fIHEVXkzz71ybYy+JwR3EXkgz4+
-         yPK/7B4VZ6Sqr5yfbr6PGCFpIIzuYZfgmCdAc68s9Q0b0o+Lh+i8gAxZ5Msav9kfQx5k
-         DYYgJM6Sjcc7jB6m5XXwdS3JJw3HzfF1zuvc5mwuhi9/KAXljv/sbYXaMv3uifJevKQi
-         hMX+/X2jW4s0VzHeqxqOtttxoXkmOpMZrn+dVYHxru/65OdeZQOzABfa9oye9rsMzvjl
-         6Tvw==
-X-Forwarded-Encrypted: i=1; AJvYcCUMV5ncOl6vHXUH9nmUQzxDNGAzKiOZE/taVptbAQBEO4NcUNW7qxFmaj7tPqFStq5Jg0aSvry5BX9W4SkZ@vger.kernel.org, AJvYcCUmM8Ubyx0qWwZK/3eUVMeqrKynVW3ELFGMP40jKvOSpwoE3e21fyN9oekzeA7Qvg/+NGM=@vger.kernel.org, AJvYcCVhWHHRugOZY9cbIIuwRb+R1RwZLHqzBz2AYXLwf5NGcqSUymfx3QGHM6JcsawY2JlROPf+caxq@vger.kernel.org, AJvYcCWHvRWEB5v8NhGw9DZcWtMopzdsXCh8xiTD3gwVcGcZTdw0TX4232L/MfJLcPJq5ShAMIHuRSoV5Dm0LEl6ksP2/PbU@vger.kernel.org, AJvYcCXWbDy4bg796h9DEIsD5HdaYApq+3oaLARU10LGKOL8gUQFD7rlV8IO17C8n7JEY9TBL3h/GmAlU4tg@vger.kernel.org
-X-Gm-Message-State: AOJu0YznvV8fO79wQoYLOzOUGjiBzVQATUTkpN+pu7a1caq9//paI/Yd
-	1+zbfyVVBUJdzSuyyGeCKJ+ggfFyA1s4ysJ4C/g1qprViax12M6G
-X-Gm-Gg: ASbGnctCxqSsloMuiPw/5skEJ51WYAiqq/a5Q5TZVRr2rz+3y9UUlB6MMZDkpmIT2AR
-	zlDbpnSBTcmHWkju7VVAxIMDcW3ODWZrsDrhMJyqO2CBHfjMcrm1qN23mx89TUcIEowyjhQBMto
-	OWm8BWPTR98QRNNP6SpCyjeDrMHSiFMd31KObaBkfrUDS1ZQYs0bnFGVL7RKNJTgig7NA3OkHRm
-	EA/9DZklJ7oUcMC+zDf7NnIHcdv7i1nlf8RvYjisjv0+P/SranZnqlKuu3ed8jfbj8dwnHWwEWZ
-	zw==
-X-Google-Smtp-Source: AGHT+IGs3oJZf7x6yD/Cx3fNNknBE6YPrj9ItenyEdO+HvKskjnm0uGLWq5sjCosjH1kmhwkZqU1rQ==
-X-Received: by 2002:a17:907:6d24:b0:ab7:be81:8940 with SMTP id a640c23a62f3a-aba4eb9b519mr235654066b.10.1739437928410;
-        Thu, 13 Feb 2025 01:12:08 -0800 (PST)
-Received: from krava ([173.38.220.37])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-aba5337698asm88429866b.120.2025.02.13.01.12.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Feb 2025 01:12:07 -0800 (PST)
-From: Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date: Thu, 13 Feb 2025 10:12:05 +0100
-To: Andy Lutomirski <luto@kernel.org>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="BhWsbXVR"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Transfer-Encoding:
+	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+	Sender:Reply-To:Content-ID:Content-Description;
+	bh=lkR5HccpBuZLkizNzU99y3bBaTyy+HSQ8rJU1fNxcTU=; b=BhWsbXVRFgyMTetQDG8EwW6EN/
+	NVwzdLblMFdudFFCF8L95wG55iZWI5gDUI7pJsXiZP1fVJTRudSfzel1yVH48lzQAEcvVwZ+9QWgO
+	QXhnJYFhWLNSc7JSnf6A1LBGkMmnj9+u8NP/I0bKx1R72s/3OGNDLct5tlV2Hu9RylYs6hybDSY/Z
+	DMjDXJLDnkGapDMMD0cvgMm6ayah2V0REsepDWT9/OzDkEkS3irK8IIRxeQ5VR0VZgwim4lb4KqhZ
+	Ox9063pwKwgt/3oCcZJCzr147MR8SrgCfEHaXUT9EHqxbEm29hNaNseaCDgfw5OE1NQtZGkMN8Yn+
+	pt1HL9IQ==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
+	id 1tiW97-00000000xLl-1nvj;
+	Thu, 13 Feb 2025 10:08:37 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 9DF49300155; Thu, 13 Feb 2025 11:08:36 +0100 (CET)
+Date: Thu, 13 Feb 2025 11:08:36 +0100
+From: Peter Zijlstra <peterz@infradead.org>
+To: Sami Tolvanen <samitolvanen@google.com>
 Cc: Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Oleg Nesterov <oleg@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Andrii Nakryiko <andrii@kernel.org>, Kees Cook <kees@kernel.org>,
-	Eyal Birger <eyal.birger@gmail.com>, stable@vger.kernel.org,
-	Jann Horn <jannh@google.com>, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, linux-api@vger.kernel.org,
-	x86@kernel.org, bpf@vger.kernel.org,
+	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
+	Gabriel de Perthuis <g2p.code@gmail.com>,
+	Haiyue Wang <haiyuewa@163.com>, Mark Rutland <mark.rutland@arm.com>,
 	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Deepak Gupta <debug@rivosinc.com>,
-	Stephen Rothwell <sfr@canb.auug.org.au>
-Subject: Re: [PATCHv3 perf/core] uprobes: Harden uretprobe syscall trampoline
- check
-Message-ID: <Z623ZcZj6Wsbnrhs@krava>
-References: <20250212220433.3624297-1-jolsa@kernel.org>
- <CALCETrVFdAFVinbpPK+q7pSQHo3=JgGxZSPZVz-y7oaG=xP3fA@mail.gmail.com>
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] ftrace: x86: Fix a compile error about
+ get_kernel_nofault()
+Message-ID: <20250213100836.GC28068@noisy.programming.kicks-ass.net>
+References: <173881156244.211648.1242168038709680511.stgit@devnote2>
+ <20250206081225.GI7145@noisy.programming.kicks-ass.net>
+ <20250206205449.5f83a585945ae6eb0cc15483@kernel.org>
+ <20250206121328.GN7145@noisy.programming.kicks-ass.net>
+ <20250206123307.GO7145@noisy.programming.kicks-ass.net>
+ <20250207085959.b3e9d922eab33edf885368e3@kernel.org>
+ <20250210173016.0ce79bc8@gandalf.local.home>
+ <20250211100914.GA29593@noisy.programming.kicks-ass.net>
+ <20250211105002.31b5a517@gandalf.local.home>
+ <CABCJKudwf11wAbv9NdKh_FN-Z+pLaupMHJxNGtRKK1-1D94hCQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -87,39 +67,43 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CALCETrVFdAFVinbpPK+q7pSQHo3=JgGxZSPZVz-y7oaG=xP3fA@mail.gmail.com>
+In-Reply-To: <CABCJKudwf11wAbv9NdKh_FN-Z+pLaupMHJxNGtRKK1-1D94hCQ@mail.gmail.com>
 
-On Wed, Feb 12, 2025 at 05:37:11PM -0800, Andy Lutomirski wrote:
-> On Wed, Feb 12, 2025 at 2:04 PM Jiri Olsa <jolsa@kernel.org> wrote:
+On Wed, Feb 12, 2025 at 08:52:27AM -0800, Sami Tolvanen wrote:
+> On Tue, Feb 11, 2025 at 7:49 AM Steven Rostedt <rostedt@goodmis.org> wrote:
 > >
-> > Jann reported [1] possible issue when trampoline_check_ip returns
-> > address near the bottom of the address space that is allowed to
-> > call into the syscall if uretprobes are not set up.
+> > On Tue, 11 Feb 2025 11:09:14 +0100
+> > Peter Zijlstra <peterz@infradead.org> wrote:
 > >
-> > Though the mmap minimum address restrictions will typically prevent
-> > creating mappings there, let's make sure uretprobe syscall checks
-> > for that.
+> > > I was aiming my patch for x86/core, but if there's a reason to expedite
+> > > them, I can stick it in x86/urgent I suppose.
+> > >
+> > > Just need a reason -- what's this compile error nonsense about, my
+> > > kernels build just fine?
+> >
+> > Masami,
+> >
+> > Do you have a config that fails to build without this fix? If so, can you
+> > please reply with it, and then this can go in as a quick fix.
 > 
-> It would be a layering violation, but we could perhaps do better here:
+> x86 builds with both CONFIG_GENDWARFKSYMS and CONFIG_FUNCTION_TRACER
+> are broken without this fix. Here's how to reproduce:
 > 
-> > -       if (regs->ip != trampoline_check_ip())
-> > +       /* Make sure the ip matches the only allowed sys_uretprobe caller. */
-> > +       if (unlikely(regs->ip != trampoline_check_ip(tramp)))
-> >                 goto sigill;
-> 
-> Instead of SIGILL, perhaps this should do the seccomp action?  So the
-> logic in seccomp would be (sketchily, with some real mode1 mess):
-> 
-> if (is_a_real_uretprobe())
->     skip seccomp;
+> $ make defconfig
+> $ ./scripts/config -e DEBUG_INFO -e DEBUG_INFO_DWARF5 -e MODVERSIONS
+> -e GENDWARFKSYMS -e FUNCTION_TRACER
+> $ make olddefconfig && make -j
+> ...
+> In file included from ./arch/x86/include/asm/asm-prototypes.h:2,
+>                  from <stdin>:3:
+> ./arch/x86/include/asm/ftrace.h: In function ‘arch_ftrace_get_symaddr’:
+> ./arch/x86/include/asm/ftrace.h:46:21: error: implicit declaration of
+> function ‘get_kernel_nofault’ [-Wimplicit-function-declaration]
+>    46 |                 if (get_kernel_nofault(instr, (u32
+> *)(fentry_ip - ENDBR_INSN_SIZE)))
+> ...
 
-IIUC you want to move the address check earlier to the seccomp path..
-with the benefit that we would kill not allowed caller sooner?
+It breaks much sooner, complaining about not having dwarf.h.. let me go
+figure out what package provides that :/
 
-jirka
-
-> 
-> where is_a_real_uretprobe() is only true if the nr and arch match
-> uretprobe *and* the address is right.
-> 
-> --Andy
+Anyway, thanks, I'll go see if my patch helps here.
