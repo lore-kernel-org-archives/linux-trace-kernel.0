@@ -1,214 +1,265 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D1887250EC;
-	Thu, 13 Feb 2025 08:26:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 729A320DD64
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 13 Feb 2025 09:08:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739435191; cv=none; b=HGVOFFiV2LJJBp7UJ6f2W81AQIUGjfRuvJxhw+Ug9erC75RGmq8TRci7aawK5XJG3W/JqrEAaahUedUmKp/PuYXtqa9sW9zud/dCXRENplven59pt7u+RhWR7rqO/+rxxAjFvOeAkA/PpQQ1IE+G30NEHAZn8iRgltqVSZ9VXkg=
+	t=1739437723; cv=none; b=nW54s124HZg1PNQe1VfwiMKvcjBPts8zO5BgM2AuVxSsJ/fUO6Cv11+CqaB7owfr1KFU1RiLKc1O5x/e69cq+2dUUJxL4V2hL22awVM7CZGVCG8Q40ypC66froaQbzGVp+GCkHYAfxp4kWMPhwyq9gqOTfLrQK9DT2ZJuAPp6cw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739435191; c=relaxed/simple;
-	bh=4UAJuCrKAipdKEWUfbN0EZQOAe8EIxsR4FOvN+39LcI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=WHGoIyFC1nW3yfLEc5ITkagujzVQTrpOE/DfdCCrBeyB9n0tE4lKhSFvuWFpKqZaIdAYjYLekzox+gNjWvt98wZoRGJHP3xVc7YR2KgrdWu7gMD0ZuHdEY1VsfpVEvm1v/TGFmjXtGaJd7s77iXMSgfMEJ9XaWFCFhNfVs91VhY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7EF8116F3;
-	Thu, 13 Feb 2025 00:26:48 -0800 (PST)
-Received: from [10.163.91.196] (unknown [10.163.91.196])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8A4C83F58B;
-	Thu, 13 Feb 2025 00:26:14 -0800 (PST)
-Message-ID: <4ba52062-1bd3-4d53-aa28-fcbbd4913801@arm.com>
-Date: Thu, 13 Feb 2025 13:56:11 +0530
+	s=arc-20240116; t=1739437723; c=relaxed/simple;
+	bh=+21jG0SoLqjF4O0Q3XEjlGr23v4342skTokARZ9UmqE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Eu/C8GMpq+hSI3Fs+tWJzewbQ1QbZ8WnbsUy/Yt5tA1lUHq32Ys25L6XY4/m6j1aZa3byQygbDwb9jD/8Fsku4bbXaExEbKtS7dy/zB/HnpDw8cR7OXZ2wHwT3VdWryKIRAI0f8CHxCuLBgioS2GK5R4MK2rf/RmWNjYmr2mrp8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=BMCBbqLw; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BMCBbqLw"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1739437719;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=RnG+dU3FuNR3QQKixT0ph3PVUAxRSx13aFnhkjUdmrA=;
+	b=BMCBbqLwZ8VG/+uI7G39sVivInQCQfJHbwSBR7FMqgamDHimmxjjzbD1qMwshsH1SU/r5K
+	kD8dfpdXdwPHxYeVIkIC/qt+3s+iHfU8eS15ZiW1fGjTFBp+sXtk9e/JUtjozofVlklAf6
+	et+AQrRZSl7unmqtefPkwx6f4LaF4fY=
+Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-541-uIFROcN4MF2dVU2wE2pM2g-1; Thu,
+ 13 Feb 2025 04:08:36 -0500
+X-MC-Unique: uIFROcN4MF2dVU2wE2pM2g-1
+X-Mimecast-MFC-AGG-ID: uIFROcN4MF2dVU2wE2pM2g
+Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 3815D196E078;
+	Thu, 13 Feb 2025 09:08:35 +0000 (UTC)
+Received: from gmonaco-thinkpadt14gen3.rmtit.com (unknown [10.45.224.81])
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 066821800365;
+	Thu, 13 Feb 2025 09:08:29 +0000 (UTC)
+From: Gabriele Monaco <gmonaco@redhat.com>
+To: linux-kernel@vger.kernel.org,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Juri Lelli <juri.lelli@redhat.com>
+Cc: Gabriele Monaco <gmonaco@redhat.com>,
+	John Kacur <jkacur@redhat.com>,
+	Clark Williams <williams@redhat.com>,
+	Tomas Glozar <tglozar@redhat.com>,
+	linux-trace-kernel@vger.kernel.org
+Subject: [PATCH v2 00/11] rv: Add scheduler specification monitors
+Date: Thu, 13 Feb 2025 10:07:58 +0100
+Message-ID: <20250213090819.419470-1-gmonaco@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC v2 0/9] khugepaged: mTHP support
-To: Nico Pache <npache@redhat.com>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- linux-mm@kvack.org, ryan.roberts@arm.com, anshuman.khandual@arm.com,
- catalin.marinas@arm.com, cl@gentwo.org, vbabka@suse.cz, mhocko@suse.com,
- apopple@nvidia.com, dave.hansen@linux.intel.com, will@kernel.org,
- baohua@kernel.org, jack@suse.cz, srivatsa@csail.mit.edu,
- haowenchao22@gmail.com, hughd@google.com, aneesh.kumar@kernel.org,
- yang@os.amperecomputing.com, peterx@redhat.com, ioworker0@gmail.com,
- wangkefeng.wang@huawei.com, ziy@nvidia.com, jglisse@google.com,
- surenb@google.com, vishal.moola@gmail.com, zokeefe@google.com,
- zhengqi.arch@bytedance.com, jhubbard@nvidia.com, 21cnbao@gmail.com,
- willy@infradead.org, kirill.shutemov@linux.intel.com, david@redhat.com,
- aarcange@redhat.com, raquini@redhat.com, sunnanyong@huawei.com,
- usamaarif642@gmail.com, audra@redhat.com, akpm@linux-foundation.org,
- rostedt@goodmis.org, mathieu.desnoyers@efficios.com, tiwai@suse.de
-References: <20250211003028.213461-1-npache@redhat.com>
- <5a995dc9-fee7-442f-b439-c484d9de1750@arm.com>
- <CAA1CXcCo3eCH-5axnw3WUqPfL-EPCbLVFo_AFYXkbnExfX=KLQ@mail.gmail.com>
-Content-Language: en-US
-From: Dev Jain <dev.jain@arm.com>
-In-Reply-To: <CAA1CXcCo3eCH-5axnw3WUqPfL-EPCbLVFo_AFYXkbnExfX=KLQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
+
+This patchset starts including adapted scheduler specifications from
+Daniel's task model [1].
+As the model is fairly complicated, it is split in several generators
+and specifications. The tool used to create the model can output a
+unified model, but that would be hardly readable (9k states).
+
+RV allows monitors to run and react concurrently. Running the cumulative
+model is equivalent to running single components using the same
+reactors, with the advantage that it's easier to point out which
+specification failed in case of error.
+
+We allow this by introducing nested monitors, in short, the sysfs
+monitor folder will contain a monitor named sched, which is nothing but
+an empty container for other monitors. Controlling the sched monitor
+(enable, disable, set reactors) controls all nested monitors.
+
+The task model proposed by Daniel includes 12 generators and 33
+specifications. The generators are good for documentation but are
+usually implied in some specifications.
+Not all monitors work out of the box, mainly because of those reasons:
+* need to distinguish if preempt disable leads to schedule
+* need to distinguish if irq disable comes from an actual irq
+* assumptions not always true on SMP
+
+The original task model was designed for PREEMPT_RT and this patchset is
+only tested on an upstream kernel with full preemption enabled.
+
+In patch 4-6 are included only some specifications that work without
+further modifications. Ideally, we would adapt all specifications and
+add them gradually to the sched monitor.
+
+Patch 1 fixes a macro required for some tracepoints
+This patch was already sent and reviewed in [2]
+
+Patch 2 adds some additional tracepoints in the scheduler's code to
+complete the model, the tracepoints were already defined in Daniel's
+patches but, as far as I understand, were never submitted
+
+Patch 3 adds the empty sched monitor container and the infrastructure
+for nested monitors
+
+Patch 4 adds 2 per-cpu monitors using the tracepoints defined in 2
+
+Patch 5 adds a per-task monitor using the tracepoints defined in 2
+
+Patch 6 adds 3 more per-cpu monitors using the tracepoints defined in 2
+and preemptirq tracepoints
+
+Patch 7 adjusts the rv tool to support nested monitors
+
+Patch 8 adjusts the dot2k tool to support nested monitors
+
+Patch 9 adds some documentation for the sched monitors, including
+a description of the included specifications
+
+Patch 10 adapts the rv tool to list also filtering by container
+
+Changes since V1:
+* skip static_branch_unlikely in function exporting the tracepoint
+* rename function and make clear it should not be called directly
+* add missing parameter documentation in rv_register_monitor
+
+Changes since RFC:
+* use static_branch_unlikely to trace set_state via external function
+* allow nested monitors to be disabled via Kconfig
+    - they are enabled by default if the container is enabled
+* remove need_resched tracepoint as it needs a bit more work
+    - will come in a following patch together with a monitor using it
+
+[1] - https://bristot.me/linux-task-model
+[2] - https://lore.kernel.org/linux-trace-kernel/20250128111926.303093-1-gmonaco@redhat.com
+
+To: Steven Rostedt <rostedt@goodmis.org>
+To: Ingo Molnar <mingo@redhat.com>
+To: Peter Zijlstra <peterz@infradead.org>
+To: Juri Lelli <juri.lelli@redhat.com>
+Cc: John Kacur <jkacur@redhat.com>
+Cc: Clark Williams <williams@redhat.com>
+Cc: Tomas Glozar <tglozar@redhat.com>
+Cc: linux-trace-kernel@vger.kernel.org
+
+Gabriele Monaco (11):
+  tracing: Fix DECLARE_TRACE_CONDITION
+  rv: Add license identifiers to monitor files
+  sched: Add sched tracepoints for RV task model
+  rv: Add option for nested monitors and include sched
+  rv: Add sco and tss per-cpu monitors
+  rv: Add snroc per-task monitor
+  rv: Add scpd, snep and sncid per-cpu monitors
+  tools/rv: Add support for nested monitors
+  verification/dot2k: Add support for nested monitors
+  Documentation/rv: Add docs for the sched monitors
+  tools/rv: Allow rv list to filter for container
+
+ Documentation/tools/rv/rv-mon-sched.rst       |  69 +++++
+ Documentation/trace/rv/monitor_sched.rst      | 171 ++++++++++++
+ include/linux/rv.h                            |   4 +-
+ include/linux/sched.h                         |  16 ++
+ include/trace/define_trace.h                  |   7 +
+ include/trace/events/sched.h                  |  13 +
+ kernel/sched/core.c                           |  26 +-
+ kernel/trace/rv/Kconfig                       |   7 +
+ kernel/trace/rv/Makefile                      |   7 +
+ kernel/trace/rv/monitors/sched/Kconfig        |  12 +
+ kernel/trace/rv/monitors/sched/sched.c        |  38 +++
+ kernel/trace/rv/monitors/sched/sched.h        |   3 +
+ kernel/trace/rv/monitors/sco/Kconfig          |  14 +
+ kernel/trace/rv/monitors/sco/sco.c            |  88 ++++++
+ kernel/trace/rv/monitors/sco/sco.h            |  47 ++++
+ kernel/trace/rv/monitors/sco/sco_trace.h      |  15 +
+ kernel/trace/rv/monitors/scpd/Kconfig         |  15 +
+ kernel/trace/rv/monitors/scpd/scpd.c          |  96 +++++++
+ kernel/trace/rv/monitors/scpd/scpd.h          |  49 ++++
+ kernel/trace/rv/monitors/scpd/scpd_trace.h    |  15 +
+ kernel/trace/rv/monitors/sncid/Kconfig        |  15 +
+ kernel/trace/rv/monitors/sncid/sncid.c        |  96 +++++++
+ kernel/trace/rv/monitors/sncid/sncid.h        |  49 ++++
+ kernel/trace/rv/monitors/sncid/sncid_trace.h  |  15 +
+ kernel/trace/rv/monitors/snep/Kconfig         |  15 +
+ kernel/trace/rv/monitors/snep/snep.c          |  96 +++++++
+ kernel/trace/rv/monitors/snep/snep.h          |  49 ++++
+ kernel/trace/rv/monitors/snep/snep_trace.h    |  15 +
+ kernel/trace/rv/monitors/snroc/Kconfig        |  14 +
+ kernel/trace/rv/monitors/snroc/snroc.c        |  87 ++++++
+ kernel/trace/rv/monitors/snroc/snroc.h        |  47 ++++
+ kernel/trace/rv/monitors/snroc/snroc_trace.h  |  15 +
+ kernel/trace/rv/monitors/tss/Kconfig          |  14 +
+ kernel/trace/rv/monitors/tss/tss.c            |  91 +++++++
+ kernel/trace/rv/monitors/tss/tss.h            |  47 ++++
+ kernel/trace/rv/monitors/tss/tss_trace.h      |  15 +
+ kernel/trace/rv/monitors/wip/Kconfig          |   2 +
+ kernel/trace/rv/monitors/wip/wip.c            |   2 +-
+ kernel/trace/rv/monitors/wip/wip.h            |   1 +
+ kernel/trace/rv/monitors/wwnr/Kconfig         |   2 +
+ kernel/trace/rv/monitors/wwnr/wwnr.c          |   2 +-
+ kernel/trace/rv/monitors/wwnr/wwnr.h          |   1 +
+ kernel/trace/rv/rv.c                          | 152 +++++++++--
+ kernel/trace/rv/rv.h                          |   4 +
+ kernel/trace/rv/rv_reactors.c                 |  28 +-
+ kernel/trace/rv/rv_trace.h                    |   6 +
+ tools/verification/dot2/dot2k                 |  27 +-
+ tools/verification/dot2/dot2k.py              |  80 ++++--
+ .../verification/dot2/dot2k_templates/Kconfig |   3 +
+ .../verification/dot2/dot2k_templates/main.c  |   4 +-
+ .../dot2/dot2k_templates/main_container.c     |  38 +++
+ .../dot2/dot2k_templates/main_container.h     |   3 +
+ tools/verification/models/sched/sco.dot       |  18 ++
+ tools/verification/models/sched/scpd.dot      |  18 ++
+ tools/verification/models/sched/sncid.dot     |  18 ++
+ tools/verification/models/sched/snep.dot      |  18 ++
+ tools/verification/models/sched/snroc.dot     |  18 ++
+ tools/verification/models/sched/tss.dot       |  18 ++
+ tools/verification/rv/include/in_kernel.h     |   2 +-
+ tools/verification/rv/include/rv.h            |   3 +-
+ tools/verification/rv/src/in_kernel.c         | 256 ++++++++++++++----
+ tools/verification/rv/src/rv.c                |  38 ++-
+ 62 files changed, 2027 insertions(+), 127 deletions(-)
+ create mode 100644 Documentation/tools/rv/rv-mon-sched.rst
+ create mode 100644 Documentation/trace/rv/monitor_sched.rst
+ create mode 100644 kernel/trace/rv/monitors/sched/Kconfig
+ create mode 100644 kernel/trace/rv/monitors/sched/sched.c
+ create mode 100644 kernel/trace/rv/monitors/sched/sched.h
+ create mode 100644 kernel/trace/rv/monitors/sco/Kconfig
+ create mode 100644 kernel/trace/rv/monitors/sco/sco.c
+ create mode 100644 kernel/trace/rv/monitors/sco/sco.h
+ create mode 100644 kernel/trace/rv/monitors/sco/sco_trace.h
+ create mode 100644 kernel/trace/rv/monitors/scpd/Kconfig
+ create mode 100644 kernel/trace/rv/monitors/scpd/scpd.c
+ create mode 100644 kernel/trace/rv/monitors/scpd/scpd.h
+ create mode 100644 kernel/trace/rv/monitors/scpd/scpd_trace.h
+ create mode 100644 kernel/trace/rv/monitors/sncid/Kconfig
+ create mode 100644 kernel/trace/rv/monitors/sncid/sncid.c
+ create mode 100644 kernel/trace/rv/monitors/sncid/sncid.h
+ create mode 100644 kernel/trace/rv/monitors/sncid/sncid_trace.h
+ create mode 100644 kernel/trace/rv/monitors/snep/Kconfig
+ create mode 100644 kernel/trace/rv/monitors/snep/snep.c
+ create mode 100644 kernel/trace/rv/monitors/snep/snep.h
+ create mode 100644 kernel/trace/rv/monitors/snep/snep_trace.h
+ create mode 100644 kernel/trace/rv/monitors/snroc/Kconfig
+ create mode 100644 kernel/trace/rv/monitors/snroc/snroc.c
+ create mode 100644 kernel/trace/rv/monitors/snroc/snroc.h
+ create mode 100644 kernel/trace/rv/monitors/snroc/snroc_trace.h
+ create mode 100644 kernel/trace/rv/monitors/tss/Kconfig
+ create mode 100644 kernel/trace/rv/monitors/tss/tss.c
+ create mode 100644 kernel/trace/rv/monitors/tss/tss.h
+ create mode 100644 kernel/trace/rv/monitors/tss/tss_trace.h
+ create mode 100644 tools/verification/dot2/dot2k_templates/main_container.c
+ create mode 100644 tools/verification/dot2/dot2k_templates/main_container.h
+ create mode 100644 tools/verification/models/sched/sco.dot
+ create mode 100644 tools/verification/models/sched/scpd.dot
+ create mode 100644 tools/verification/models/sched/sncid.dot
+ create mode 100644 tools/verification/models/sched/snep.dot
+ create mode 100644 tools/verification/models/sched/snroc.dot
+ create mode 100644 tools/verification/models/sched/tss.dot
 
 
-
-On 12/02/25 10:19 pm, Nico Pache wrote:
-> On Tue, Feb 11, 2025 at 5:50 AM Dev Jain <dev.jain@arm.com> wrote:
->>
->>
->>
->> On 11/02/25 6:00 am, Nico Pache wrote:
->>> The following series provides khugepaged and madvise collapse with the
->>> capability to collapse regions to mTHPs.
->>>
->>> To achieve this we generalize the khugepaged functions to no longer depend
->>> on PMD_ORDER. Then during the PMD scan, we keep track of chunks of pages
->>> (defined by MTHP_MIN_ORDER) that are utilized. This info is tracked
->>> using a bitmap. After the PMD scan is done, we do binary recursion on the
->>> bitmap to find the optimal mTHP sizes for the PMD range. The restriction
->>> on max_ptes_none is removed during the scan, to make sure we account for
->>> the whole PMD range. max_ptes_none will be scaled by the attempted collapse
->>> order to determine how full a THP must be to be eligible. If a mTHP collapse
->>> is attempted, but contains swapped out, or shared pages, we dont perform the
->>> collapse.
->>>
->>> With the default max_ptes_none=511, the code should keep its most of its
->>> original behavior. To exercise mTHP collapse we need to set max_ptes_none<=255.
->>> With max_ptes_none > HPAGE_PMD_NR/2 you will experience collapse "creep" and
->>> constantly promote mTHPs to the next available size.
->>>
->>> Patch 1:     Some refactoring to combine madvise_collapse and khugepaged
->>> Patch 2:     Refactor/rename hpage_collapse
->>> Patch 3-5:   Generalize khugepaged functions for arbitrary orders
->>> Patch 6-9:   The mTHP patches
->>>
->>> ---------
->>>    Testing
->>> ---------
->>> - Built for x86_64, aarch64, ppc64le, and s390x
->>> - selftests mm
->>> - I created a test script that I used to push khugepaged to its limits while
->>>      monitoring a number of stats and tracepoints. The code is available
->>>      here[1] (Run in legacy mode for these changes and set mthp sizes to inherit)
->>>      The summary from my testings was that there was no significant regression
->>>      noticed through this test. In some cases my changes had better collapse
->>>      latencies, and was able to scan more pages in the same amount of time/work,
->>>      but for the most part the results were consistant.
->>> - redis testing. I tested these changes along with my defer changes
->>>     (see followup post for more details).
->>> - some basic testing on 64k page size.
->>> - lots of general use. These changes have been running in my VM for some time.
->>>
->>> Changes since V1 [2]:
->>> - Minor bug fixes discovered during review and testing
->>> - removed dynamic allocations for bitmaps, and made them stack based
->>> - Adjusted bitmap offset from u8 to u16 to support 64k pagesize.
->>> - Updated trace events to include collapsing order info.
->>> - Scaled max_ptes_none by order rather than scaling to a 0-100 scale.
->>> - No longer require a chunk to be fully utilized before setting the bit. Use
->>>      the same max_ptes_none scaling principle to achieve this.
->>> - Skip mTHP collapse that requires swapin or shared handling. This helps prevent
->>>      some of the "creep" that was discovered in v1.
->>>
->>> [1] - https://gitlab.com/npache/khugepaged_mthp_test
->>> [2] - https://lore.kernel.org/lkml/20250108233128.14484-1-npache@redhat.com/
->>>
->>> Nico Pache (9):
->>>     introduce khugepaged_collapse_single_pmd to unify khugepaged and
->>>       madvise_collapse
->>>     khugepaged: rename hpage_collapse_* to khugepaged_*
->>>     khugepaged: generalize hugepage_vma_revalidate for mTHP support
->>>     khugepaged: generalize alloc_charge_folio for mTHP support
->>>     khugepaged: generalize __collapse_huge_page_* for mTHP support
->>>     khugepaged: introduce khugepaged_scan_bitmap for mTHP support
->>>     khugepaged: add mTHP support
->>>     khugepaged: improve tracepoints for mTHP orders
->>>     khugepaged: skip collapsing mTHP to smaller orders
->>>
->>>    include/linux/khugepaged.h         |   4 +
->>>    include/trace/events/huge_memory.h |  34 ++-
->>>    mm/khugepaged.c                    | 422 +++++++++++++++++++----------
->>>    3 files changed, 306 insertions(+), 154 deletions(-)
->>>
->>
->> Does this patchset suffer from the problem described here:
->> https://lore.kernel.org/all/8abd99d5-329f-4f8d-8680-c2d48d4963b6@arm.com/
-> Hi Dev,
-> 
-> Sorry I meant to get back to you about that.
-> 
-> I understand your concern, but like I've mentioned before, the scan
-> with the read lock was done so we dont have to do the more expensive
-> locking, and could still gain insight into the state. You are right
-> that this info could become stale if the state changes dramatically,
-> but the collapse_isolate function will verify it and not collapse.
-
-If the state changes dramatically, the _isolate function will verify it, 
-and fallback. And this fallback happens after following this costly 
-path: retrieve a large folio from the buddy allocator -> swapin pages 
-from the disk -> mmap_write_lock() -> anon_vma_lock_write() -> TLB flush 
-on all CPUs -> fallback in _isolate().
-If you do fail in _isolate(), doesn't it make sense to get the updated 
-state for the next fallback order immediately, because we have prior 
-information that we failed because of PTE state? What your algorithm 
-will do is *still* follow the costly path described above, and again 
-fail in _isolate(), instead of failing in hpage_collapse_scan_pmd() like 
-mine would.
-
-The verification of the PTE state by the _isolate() function is the "no 
-turning back" point of the algorithm. The verification by 
-hpage_collapse_scan_pmd() is the "let us see if proceeding is even worth 
-it, before we do costly operations" point of the algorithm.
-
->  From my testing I found this to rarely happen.
-
-Unfortunately, I am not very familiar with performance testing/load 
-testing, I am fairly new to kernel programming, so I am getting there. 
-But it really depends on the type of test you are running, what actually 
-runs on memory-intensive systems, etc etc. In fact, on loaded systems I 
-would expect the PTE state to dramatically change. But still, no opinion 
-here.
-
-> 
-> Also, khugepaged, my changes, and your changes are all a victim of
-> this. Once we drop the read lock (to either allocate the folio, or
-> right before acquiring the write_lock), the state can change. In your
-> case, yes, you are gathering more up to date information, but is it
-> really that important/worth it to retake locks and rescan for each
-> instance if we are about to reverify with the write lock taken?
-
-You said "reverify": You are removing the verification, so this step 
-won't be reverification, it will be verification. We do not want to 
-verify *after* we have already done 95% of latency-heavy stuff, only to 
-know that we are going to fail.
-
-Algorithms in the kernel, in general, are of the following form: 1) 
-Verify if a condition is true, resulting in taking a control path -> 2) 
-do a lot of stuff -> "no turning back" step, wherein before committing 
-(by taking locks, say), reverify if this is the control path we should 
-be in. You are eliminating step 1).
-
-Therefore, I will have to say that I disagree with your approach.
-
-On top of this, in the subjective analysis in [1], point number 7 (along 
-with point number 1) remains. And, point number 4 remains.
-
-[1] 
-https://lore.kernel.org/all/23023f48-95c6-4a24-ac8b-aba4b1a441b4@arm.com/
-
-> 
-> So in my eyes, this is not a "problem"
-
-Looks like the kernel scheduled us for a high-priority debate, I hope 
-there's no deadlock :)
-
-> 
-> Cheers,
-> -- Nico
-> 
-> 
->>
-> 
+base-commit: 4dc1d1bec89864d8076e5ab314f86f46442bfb02
+-- 
+2.48.1
 
