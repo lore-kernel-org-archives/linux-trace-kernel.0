@@ -1,144 +1,118 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 835CB280A26;
-	Thu, 13 Feb 2025 16:21:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1690828A2AA;
+	Thu, 13 Feb 2025 16:47:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739463696; cv=none; b=SIXaHKd0b9FfxE3/l0a1TeecwEUfFxrcmHHYidy5veZi7yjstb2J9Csr+jfDacA8AAYXCosgFIqzAe8csl/nEeR1WD6plP85gJkCBrwYd5WghWAeEgviKR1+PS8ZY3IyXuE4h7INDxetKhv1Go+vqL0l4B+XEpWfMgh2ZUUxjeU=
+	t=1739465233; cv=none; b=b5R1u1oIuSN3zVdYeqjcUNlwOXJjRb3i0OwInCv6puxMhZ/x7I31lmCYZKpIx8eONDRNAvk4on4GS++Kx7FkrYmMutg7+Mcgv0NyttymSdGziiDO5BR2j9vg0udIx+rjLbz5a9uRAfuBhhu86zKftZXYLWLyTJ2SkvzXIalHdeQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739463696; c=relaxed/simple;
-	bh=h5HZDvjlSble8n9tutmQYNXJ8OyrHiQ1Z2innQWa9XE=;
-	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=ErB+bdoobo5sTU46GX4z3JdThx62/WS5rf9uawDJKrHu4AnxCbH+MLLfflZEylvnVIrNxGkyh/fpiYoY6iMDpI1AD9EhwJeryoQUW1QZrVwLfc4UwxWkDC5pVIVHVFnjRQNk8paY/TEv4OA+7Mc/tRaqW9Zkd4BrP6D8Wxtx7gE=
+	s=arc-20240116; t=1739465233; c=relaxed/simple;
+	bh=Q+7RTh/pTrWkDGeB5wUpAsRMuOZ7iBoJrIrT5Q6Tqpw=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=hVQV0mBUXrt/cecamvVre44vzAWTkCOZCOjdhcR4dngFx6wmm+Ku0b++zIAqaExMbNG3jC5Jp5tH2OpQRiuJF3j7x2HXtTIPpyDophgHmlPx3pCCBpxFixEUik2K7oTqSERCYLaY6ZbxKsSMsC/wG0WiidleOGCxCZ4pqsbGEws=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 006D4C4CEE7;
-	Thu, 13 Feb 2025 16:21:36 +0000 (UTC)
-Received: from rostedt by gandalf with local (Exim 4.98)
-	(envelope-from <rostedt@goodmis.org>)
-	id 1tibyE-00000001qcx-21Ty;
-	Thu, 13 Feb 2025 11:21:46 -0500
-Message-ID: <20250213162146.332262157@goodmis.org>
-User-Agent: quilt/0.68
-Date: Thu, 13 Feb 2025 11:20:53 -0500
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8ABDBC4CED1;
+	Thu, 13 Feb 2025 16:47:11 +0000 (UTC)
+Date: Thu, 13 Feb 2025 11:47:21 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
-To: linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org,
- linux-kbuild@vger.kernel.org,
- bpf <bpf@vger.kernel.org>,
- linux-arm-kernel@lists.infradead.org,
- linux-s390@vger.kernel.org
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- Peter Zijlstra <peterz@infradead.org>,
- Linus Torvalds <torvalds@linux-foundation.org>,
- Masahiro Yamada <masahiroy@kernel.org>,
- Nathan Chancellor <nathan@kernel.org>,
- Nicolas Schier <nicolas@fjasle.eu>,
- Zheng Yejian <zhengyejian1@huawei.com>,
- Martin  Kelly <martin.kelly@crowdstrike.com>,
- Christophe Leroy <christophe.leroy@csgroup.eu>,
- Josh Poimboeuf <jpoimboe@redhat.com>,
- Heiko Carstens <hca@linux.ibm.com>,
- Catalin Marinas <catalin.marinas@arm.com>,
- Will Deacon <will@kernel.org>,
- Vasily Gorbik <gor@linux.ibm.com>,
- Alexander Gordeev <agordeev@linux.ibm.com>
-Subject: [PATCH v3 6/6] ftrace: Have ftrace pages output reflect freed pages
-References: <20250213162047.306074881@goodmis.org>
+To: Purva Yeshi <purvayeshi550@gmail.com>
+Cc: mhiramat@kernel.org, corbet@lwn.net, skhan@linuxfoundation.org,
+ mathieu.desnoyers@efficios.com, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org
+Subject: Re: [PATCH v2] docs: trace: Refactor index documentation
+Message-ID: <20250213114721.23d07909@gandalf.local.home>
+In-Reply-To: <1906f93a-dc32-4dbe-9b11-eabd4aad196e@gmail.com>
+References: <20250206141453.139613-1-purvayeshi550@gmail.com>
+	<20250210174556.70fc53b7@gandalf.local.home>
+	<1906f93a-dc32-4dbe-9b11-eabd4aad196e@gmail.com>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-From: Steven Rostedt <rostedt@goodmis.org>
+On Thu, 13 Feb 2025 17:26:21 +0530
+Purva Yeshi <purvayeshi550@gmail.com> wrote:
 
-The amount of memory that ftrace uses to save the descriptors to manage
-the functions it can trace is shown at output. But if there are a lot of
-functions that are skipped because they were weak or the architecture
-added holes into the tables, then the extra pages that were allocated are
-freed. But these freed pages are not reflected in the numbers shown, and
-they can even be inconsistent with what is reported:
+> >> +Tracing in the Linux kernel is a powerful mechanism that allows
+> >> +developers and system administrators to analyze and debug system
+> >> +behavior. This guide provides documentation on various tracing
+> >> +frameworks and tools available in the Linux kernel.
+> >> +
+> >> +Introduction to Tracing
+> >> +-----------------------
+> >> +
+> >> +This section provides an overview of Linux tracing mechanisms
+> >> +and debugging approaches.
+> >>   
+> >>   .. toctree::
+> >> -   :maxdepth: 2
+> >> +   :maxdepth: 1  
+> > 
+> > I don't really know what the maxdepth gives here, but there was no mention
+> > in the change log why it had to be converted from 2 to 1.
+> >   
+> 
+> I changed :maxdepth: from 2 to 1 to simplify the table of contents, 
+> keeping only document titles instead of also including second-level 
+> section headings. The intent was to improve readability and navigation.
+> 
+> Additionally, I referred to commit '270beb5b2aae', as suggested by 
+> Jonathan Corbet in the v1 patch, to align the documentation structure 
+> accordingly.
+> 
+> I'll update the commit message in the next revision to explicitly 
+> mention this change.
+> 
 
- ftrace: allocating 57482 entries in 225 pages
- ftrace: allocated 224 pages with 3 groups
+Can you make that a separate patch. A commit should do only one thing and
+that change isn't necessary to be part of the rest of the changes.
 
-The above shows the number of original entries that are in the mcount_loc
-section and the pages needed to save them (225), but the second output
-reflects the number of pages that were actually used. The two should be
-consistent as:
+> >>   
+> >> -   ftrace-design
+> >> +   debugging
+> >> +   tracepoints
+> >>      tracepoint-analysis
+> >> +
 
- ftrace: allocating 56739 entries in 224 pages
- ftrace: allocated 224 pages with 3 groups
-
-The above also shows the accurate number of entires that were actually
-stored and does not include the entries that were removed.
-
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
- kernel/trace/ftrace.c | 15 ++++++++++++---
- 1 file changed, 12 insertions(+), 3 deletions(-)
-
-diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-index 55d28c060784..fa7c3417d995 100644
---- a/kernel/trace/ftrace.c
-+++ b/kernel/trace/ftrace.c
-@@ -7006,6 +7006,7 @@ static int ftrace_process_locs(struct module *mod,
- 	unsigned long addr;
- 	unsigned long kaslr;
- 	unsigned long flags = 0; /* Shut up gcc */
-+	unsigned long pages;
- 	int ret = -ENOMEM;
- 
- 	count = end - start;
-@@ -7013,6 +7014,8 @@ static int ftrace_process_locs(struct module *mod,
- 	if (!count)
- 		return 0;
- 
-+	pages = DIV_ROUND_UP(count, ENTRIES_PER_PAGE);
-+
- 	/*
- 	 * Sorting mcount in vmlinux at build time depend on
- 	 * CONFIG_BUILDTIME_MCOUNT_SORT, while mcount loc in
-@@ -7125,6 +7128,8 @@ static int ftrace_process_locs(struct module *mod,
- 				remaining += 1 << pg->order;
- 			}
- 
-+			pages -= remaining;
-+
- 			skip = DIV_ROUND_UP(skip, ENTRIES_PER_PAGE);
- 
- 			/*
-@@ -7138,6 +7143,13 @@ static int ftrace_process_locs(struct module *mod,
- 		synchronize_rcu();
- 		ftrace_free_pages(pg_unuse);
- 	}
-+
-+	if (!mod) {
-+		count -= skipped;
-+		pr_info("ftrace: allocating %ld entries in %ld pages\n",
-+			count, pages);
-+	}
-+
- 	return ret;
- }
- 
-@@ -7783,9 +7795,6 @@ void __init ftrace_init(void)
- 		goto failed;
- 	}
- 
--	pr_info("ftrace: allocating %ld entries in %ld pages\n",
--		count, DIV_ROUND_UP(count, ENTRIES_PER_PAGE));
--
- 	ret = ftrace_process_locs(NULL,
- 				  __start_mcount_loc,
- 				  __stop_mcount_loc);
--- 
-2.47.2
+> >> +
+> >> +Hardware and Performance Tracing
+> >> +--------------------------------
+> >> +
+> >> +This section covers tracing features that monitor hardware
+> >> +interactions and system performance.
+> >> +
+> >> +.. toctree::
+> >> +   :maxdepth: 1
+> >> +
+> >>      intel_th  
+> >   
+> >>      ring-buffer-design  
+> > 
+> > The ring-buffer-design should be in "Core Tracing Frameworks".
+> >   
+> 
+> I'll move 'ring-buffer-design' to the Core Tracing Frameworks section.
+> 
+> >>      ring-buffer-map  
+> > 
+> > This describes how to map the ring buffer in user space. Maybe it should go
+> > at the "Introduction" section?
+> > 
+> >   
+> 
+> For ring-buffer-map, placing it in the Introduction section could 
+> provide early context, but since it is more implementation-specific, it 
+> might fit better under Core Tracing Frameworks alongside 
+> ring-buffer-design. Would that placement works?
 
 
+But it's not kernel implementation. It describes how to use it in user
+space. That is, it's not part of the tracing framework.
+
+-- Steve
