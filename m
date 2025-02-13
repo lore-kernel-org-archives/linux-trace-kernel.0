@@ -1,435 +1,123 @@
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EB1C26981F
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 13 Feb 2025 21:12:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F31422753F3;
+	Thu, 13 Feb 2025 23:07:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739481157; cv=none; b=sI5XXEWCrEpWeR1EfbYwSn7TCQD2CYGf+/2t6Mq+5SfBs/gqRqwRMilKvG0+D1BUSQwzLPrEcnysCG+ZuzlCYus/+wrMXpkOQ85FcB2FehcBnwqHVyEhLNTssYSVMgx4paWQRwJ2jMNj8crEu2v2kqg1xSWmPIeqc5amtsvRR18=
+	t=1739488049; cv=none; b=tfDWmTvPq8AOVwoYDFkl3gMy2SiG8/QZb6GUeWlRQeJKqg8uT2pTG2B+3yqpNBpTAmi2qdx7upymbTcRWkOhOM761MVU/Ia0OcqKZWgeNAhFpKW6vvbaQIm1b4PhGu23JWRqKF+/yiJrBEXATUlSZyyXhgrQwKzuoLp8AuW5V50=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739481157; c=relaxed/simple;
-	bh=LaWY661hGGOsz8ab9A8tX3O52beRD/JORrirTIwPdYI=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=gqVzb09T3ARmxR2jHoe1Eet/TsTex7WeW72yGaxEQkiyLF5QO+RpilEUhH5QMaMeG26UyHfGT8ssch8/uSJYlckp3A2ic0dDBN7uv7TgdozozArFblwae344utW/iTIVcAnFGmWfz+M0qZZKea/P5YyCn4JIqOx0+cc5uh6TYOU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=PQgOjTPS; arc=none smtp.client-ip=209.85.214.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="PQgOjTPS"
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-21f49bd087cso20664785ad.0
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 13 Feb 2025 13:12:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1739481155; x=1740085955; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=7dCT5jcbY95du2Tjjq6rItJv9SEP2f87N9w5dx/eCvk=;
-        b=PQgOjTPSZ018B7gXHtYTZ5cRL50oqDk9VjHlUmAM1ERVJShkmoz/p6hKEKzwtRjDNY
-         po6iTqmYTlvXp98UsSVtAkMNSQ/MBAAbYVQycjTeVLKTtnVOtrT5IwJx0pp7bJW8yzRM
-         zycNB69qQDWQLooo6hDzJfOC6QSax+5hV8oD04YhjuRF4dmcKVwW1ZnooFrXvHyLOnEJ
-         TFypj/qjuk49tse64lXBXoEyp5453DjrsmfnDxc6Tij4a0XpLwBOS7iCIdQlF5ru8Ock
-         Ueav0D4Msz4raWAfzewlOF1AGnZL0oQPiS4Es067DrW12AIveFAApfkEPV6L7S5W+Mwa
-         tbcQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739481155; x=1740085955;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=7dCT5jcbY95du2Tjjq6rItJv9SEP2f87N9w5dx/eCvk=;
-        b=fUXd5peVynNuPhlQeb5j2/4HhoYasnE0uhM4U9iIzKMEpswkEp1qCgm8ZY/vberW9g
-         DLMaA7j+kMmt/OZ9rB3AfEX9XeL+pzbPvIE3QMi54dds0zyDjrbEUEvnO2n3mMnFnzl8
-         BGdFJkyR+ZW8LjBQ8xzuKv1EaXzdK8KGFTKbHmbSG5vU68barnLCGmWcWMtKr2Y9bQqr
-         QXvSzsZ7PcCoDcfcKsXkONo3BSEi8UA/2O+wdq+Z2Z9XzW/JDbm68hCJNGGC86DlDSrI
-         AMyRUlUHH3cpQ7Pu5m7glPvw+JGDAP/+WGMRi2BZ0S1NyStrIU3WFmZPYkeltPguQmDM
-         DY5w==
-X-Forwarded-Encrypted: i=1; AJvYcCU1W6cbmoIr05GS6nYN6bm92PiyG9j+8HiYjbfGmVgkTvp2O35IecQQ6y8IZ6jROlLBN+/FuYU4n/dqDApZ1CkBRH8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxIMKg1Ix4uK8ORf8kq36edUfg6QysAsVB6eARy7pIPuizQANh4
-	OTqOTyzPsocrwvOtAPPxFA/Z4GujTCIaSDh3N7YtLOGtjoOGYFfTML0o+Nc9bnM=
-X-Gm-Gg: ASbGncsQH3gFr/jPYgWbgFbErz5obMag4/gQmv3GJHQLnRWH7x/R9lqIBvFUt/+dAUZ
-	CSgM+nM3aIpP0fwThKZdRDZyiQ2m8VVW5I/XaK434zQs7wtqpM1IC8Mibrj3rTcCAxFabmOYVR7
-	r0yUgjh8sHVaa/dbDJoh3MdA0m6wCctYm7b2etjHGSlu0YhtMlNBxIPL0E1df5XqrcAwMrQ3Ckj
-	21l/2pPzBk9XkRvqc3DyOdf9KgnG5pGyT/lD7oKBT2PVubdc6FZ/iu5OJ1kUcd9xDeqkyFM/izQ
-	vj9sLX8w4XB2HqAGEV4/NCGJK98ysPI=
-X-Google-Smtp-Source: AGHT+IHWMlGwUiWdsiNRbvm7dD8sEMzLzmRqwl/PU5Ys8fbVS90IAlTNhDD0UoMI3fOVabW+kAQ4WQ==
-X-Received: by 2002:a05:6a00:3e04:b0:730:9334:18f3 with SMTP id d2e1a72fcca58-7323c1bcde7mr7654326b3a.19.1739481154657;
-        Thu, 13 Feb 2025 13:12:34 -0800 (PST)
-Received: from charlie.ba.rivosinc.com ([64.71.180.162])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7324257fdd6sm1758072b3a.76.2025.02.13.13.12.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Feb 2025 13:12:34 -0800 (PST)
-From: Charlie Jenkins <charlie@rivosinc.com>
-Date: Thu, 13 Feb 2025 13:06:22 -0800
-Subject: [PATCH v3 2/2] tools: Remove redundant quiet setup
+	s=arc-20240116; t=1739488049; c=relaxed/simple;
+	bh=be3SOUzafT7cX8O08b1XLjoHzql+2mi7/3YYCGxNmZs=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=H7SGXBizDv6N9ArDWI0OSRBLwmxkgr52N4+tCVHZGMZNC/Lxf+X9g8KiZ6qjFqXd5Z5Iid28eaMs88fLtWLJF0POwkbkqDyB2OcrsWhI13dZafyHnmhp544BU9/xiWEIPyjEH4jEsqRfLddRcS+B31I+e13xExn0pvFzc00kbi8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 28BB5C4CED1;
+	Thu, 13 Feb 2025 23:07:28 +0000 (UTC)
+Date: Thu, 13 Feb 2025 18:07:37 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Vincent Donnefort <vdonnefort@google.com>
+Subject: [PATCH] tracing: Do not allow mmap() of persistent ring buffer
+Message-ID: <20250213180737.061871ae@gandalf.local.home>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250213-quiet_tools-v3-2-07de4482a581@rivosinc.com>
-References: <20250213-quiet_tools-v3-0-07de4482a581@rivosinc.com>
-In-Reply-To: <20250213-quiet_tools-v3-0-07de4482a581@rivosinc.com>
-To: Alexei Starovoitov <ast@kernel.org>, 
- Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, 
- Martin KaFai Lau <martin.lau@linux.dev>, 
- Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
- Yonghong Song <yonghong.song@linux.dev>, 
- John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>, 
- Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
- Jiri Olsa <jolsa@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
- Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
- Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
- Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
- Quentin Monnet <qmo@kernel.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
- Daniel Lezcano <daniel.lezcano@linaro.org>, Zhang Rui <rui.zhang@intel.com>, 
- Lukasz Luba <lukasz.luba@arm.com>, Josh Poimboeuf <jpoimboe@kernel.org>, 
- Mykola Lysenko <mykolal@fb.com>, Shuah Khan <shuah@kernel.org>, 
- Jiri Kosina <jikos@kernel.org>, Benjamin Tissoires <bentiss@kernel.org>, 
- Steven Rostedt <rostedt@goodmis.org>
-Cc: bpf@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-perf-users@vger.kernel.org, linux-pm@vger.kernel.org, 
- linux-kselftest@vger.kernel.org, linux-input@vger.kernel.org, 
- linux-trace-kernel@vger.kernel.org, Charlie Jenkins <charlie@rivosinc.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=10133; i=charlie@rivosinc.com;
- h=from:subject:message-id; bh=LaWY661hGGOsz8ab9A8tX3O52beRD/JORrirTIwPdYI=;
- b=owGbwMvMwCXWx5hUnlvL8Y3xtFoSQ/q6BGu5TUfqNyQ4drwoiJ+XWX7zwBmVfSudWRT0mS+9f
- 6jGzv6oo5SFQYyLQVZMkYXnWgNz6x39sqOiZRNg5rAygQxh4OIUgImsvszwz7bS6cPv4DW/n82q
- c1vDlz51t8ZH3vIlkd7+d8qjXp67tpThf3xtgqCr1zKtYgkrh/mW1rFZmbr1cr4pv1r89977OvU
- rMwA=
-X-Developer-Key: i=charlie@rivosinc.com; a=openpgp;
- fpr=7D834FF11B1D8387E61C776FFB10D1F27D6B1354
 
-Q is exported from Makefile.include so it is not necessary to manually
-set it.
+From: Steven Rostedt <rostedt@goodmis.org>
 
-Signed-off-by: Charlie Jenkins <charlie@rivosinc.com>
-Acked-by: Quentin Monnet <qmo@kernel.org>
+When trying to mmap a trace instance buffer that is attached to
+reserve_mem, it would crash:
+
+ BUG: unable to handle page fault for address: ffffe97bd00025c8
+ #PF: supervisor read access in kernel mode
+ #PF: error_code(0x0000) - not-present page
+ PGD 2862f3067 P4D 2862f3067 PUD 0
+ Oops: Oops: 0000 [#1] PREEMPT_RT SMP PTI
+ CPU: 4 UID: 0 PID: 981 Comm: mmap-rb Not tainted 6.14.0-rc2-test-00003-g7f1a5e3fbf9e-dirty #233
+ Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+ RIP: 0010:validate_page_before_insert+0x5/0xb0
+ Code: e2 01 89 d0 c3 cc cc cc cc 66 66 2e 0f 1f 84 00 00 00 00 00 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 0f 1f 44 00 00 <48> 8b 46 08 a8 01 75 67 66 90 48 89 f0 8b 50 34 85 d2 74 76 48 89
+ RSP: 0018:ffffb148c2f3f968 EFLAGS: 00010246
+ RAX: ffff9fa5d3322000 RBX: ffff9fa5ccff9c08 RCX: 00000000b879ed29
+ RDX: ffffe97bd00025c0 RSI: ffffe97bd00025c0 RDI: ffff9fa5ccff9c08
+ RBP: ffffb148c2f3f9f0 R08: 0000000000000004 R09: 0000000000000004
+ R10: 0000000000000000 R11: 0000000000000200 R12: 0000000000000000
+ R13: 00007f16a18d5000 R14: ffff9fa5c48db6a8 R15: 0000000000000000
+ FS:  00007f16a1b54740(0000) GS:ffff9fa73df00000(0000) knlGS:0000000000000000
+ CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+ CR2: ffffe97bd00025c8 CR3: 00000001048c6006 CR4: 0000000000172ef0
+ Call Trace:
+  <TASK>
+  ? __die_body.cold+0x19/0x1f
+  ? __die+0x2e/0x40
+  ? page_fault_oops+0x157/0x2b0
+  ? search_module_extables+0x53/0x80
+  ? validate_page_before_insert+0x5/0xb0
+  ? kernelmode_fixup_or_oops.isra.0+0x5f/0x70
+  ? __bad_area_nosemaphore+0x16e/0x1b0
+  ? bad_area_nosemaphore+0x16/0x20
+  ? do_kern_addr_fault+0x77/0x90
+  ? exc_page_fault+0x22b/0x230
+  ? asm_exc_page_fault+0x2b/0x30
+  ? validate_page_before_insert+0x5/0xb0
+  ? vm_insert_pages+0x151/0x400
+  __rb_map_vma+0x21f/0x3f0
+  ring_buffer_map+0x21b/0x2f0
+  tracing_buffers_mmap+0x70/0xd0
+  __mmap_region+0x6f0/0xbd0
+  mmap_region+0x7f/0x130
+  do_mmap+0x475/0x610
+  vm_mmap_pgoff+0xf2/0x1d0
+  ksys_mmap_pgoff+0x166/0x200
+  __x64_sys_mmap+0x37/0x50
+  x64_sys_call+0x1670/0x1d70
+  do_syscall_64+0xbb/0x1d0
+  entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+The reason was that the code that maps the ring buffer pages to user space
+has:
+
+	page = virt_to_page((void *)cpu_buffer->subbuf_ids[s]);
+
+And uses that in:
+
+	vm_insert_pages(vma, vma->vm_start, pages, &nr_pages);
+
+But virt_to_page() does not work with vmap()'d memory which is what the
+persistent ring buffer has. It is rather trivial to allow this, but for
+now just disable mmap() of instances that have their ring buffer from the
+reserve_mem option.
+
+Cc: stable@vger.kernel.org
+Fixes: e645535a954ad ("tracing: Add option to use memmapped memory for trace boot instance")
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- tools/arch/arm64/tools/Makefile           |  6 ------
- tools/bpf/Makefile                        |  6 ------
- tools/bpf/bpftool/Documentation/Makefile  |  6 ------
- tools/bpf/bpftool/Makefile                |  6 ------
- tools/bpf/resolve_btfids/Makefile         |  2 --
- tools/bpf/runqslower/Makefile             |  5 +----
- tools/lib/bpf/Makefile                    | 13 -------------
- tools/lib/perf/Makefile                   | 13 -------------
- tools/lib/thermal/Makefile                | 13 -------------
- tools/objtool/Makefile                    |  6 ------
- tools/testing/selftests/bpf/Makefile.docs |  6 ------
- tools/testing/selftests/hid/Makefile      |  2 --
- tools/thermal/lib/Makefile                | 13 -------------
- tools/tracing/latency/Makefile            |  6 ------
- tools/tracing/rtla/Makefile               |  6 ------
- tools/verification/rv/Makefile            |  6 ------
- 16 files changed, 1 insertion(+), 114 deletions(-)
+ kernel/trace/trace.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/tools/arch/arm64/tools/Makefile b/tools/arch/arm64/tools/Makefile
-index 7b42feedf647190ad498de0937e8fb557e40f39c..de4f1b66ef0148b7bfd0fd16655ad854c7542240 100644
---- a/tools/arch/arm64/tools/Makefile
-+++ b/tools/arch/arm64/tools/Makefile
-@@ -13,12 +13,6 @@ AWK	?= awk
- MKDIR	?= mkdir
- RM	?= rm
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index 25ff37aab00f..72895500155d 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -8279,6 +8279,10 @@ static int tracing_buffers_mmap(struct file *filp, struct vm_area_struct *vma)
+ 	struct trace_iterator *iter = &info->iter;
+ 	int ret = 0;
  
--ifeq ($(V),1)
--Q =
--else
--Q = @
--endif
--
- arm64_tools_dir = $(top_srcdir)/arch/arm64/tools
- arm64_sysreg_tbl = $(arm64_tools_dir)/sysreg
- arm64_gen_sysreg = $(arm64_tools_dir)/gen-sysreg.awk
-diff --git a/tools/bpf/Makefile b/tools/bpf/Makefile
-index 243b79f2b451e52ca196f79dc46befd1b3dab458..062bbd6cd048e9e42f9bc8f9972ec96594f3dbd2 100644
---- a/tools/bpf/Makefile
-+++ b/tools/bpf/Makefile
-@@ -27,12 +27,6 @@ srctree := $(patsubst %/,%,$(dir $(CURDIR)))
- srctree := $(patsubst %/,%,$(dir $(srctree)))
- endif
- 
--ifeq ($(V),1)
--  Q =
--else
--  Q = @
--endif
--
- FEATURE_USER = .bpf
- FEATURE_TESTS = libbfd disassembler-four-args disassembler-init-styled
- FEATURE_DISPLAY = libbfd
-diff --git a/tools/bpf/bpftool/Documentation/Makefile b/tools/bpf/bpftool/Documentation/Makefile
-index 4315652678b9f2e27e48b7815f3b9ddc70a57165..bf843f328812e10dd65a73f355f74e6825ad95b9 100644
---- a/tools/bpf/bpftool/Documentation/Makefile
-+++ b/tools/bpf/bpftool/Documentation/Makefile
-@@ -5,12 +5,6 @@ INSTALL ?= install
- RM ?= rm -f
- RMDIR ?= rmdir --ignore-fail-on-non-empty
- 
--ifeq ($(V),1)
--  Q =
--else
--  Q = @
--endif
--
- prefix ?= /usr/local
- mandir ?= $(prefix)/man
- man8dir = $(mandir)/man8
-diff --git a/tools/bpf/bpftool/Makefile b/tools/bpf/bpftool/Makefile
-index dd9f3ec842017f1dd24054bf3a0986d546811dc4..6ea4823b770cbbe7fd9eb7da79956cc1dae1f204 100644
---- a/tools/bpf/bpftool/Makefile
-+++ b/tools/bpf/bpftool/Makefile
-@@ -7,12 +7,6 @@ srctree := $(patsubst %/,%,$(dir $(srctree)))
- srctree := $(patsubst %/,%,$(dir $(srctree)))
- endif
- 
--ifeq ($(V),1)
--  Q =
--else
--  Q = @
--endif
--
- BPF_DIR = $(srctree)/tools/lib/bpf
- 
- ifneq ($(OUTPUT),)
-diff --git a/tools/bpf/resolve_btfids/Makefile b/tools/bpf/resolve_btfids/Makefile
-index 4b8079f294f65b284481e9a2bf6ff52594a4669a..afbddea3a39c64ffb2efc874a3637b6401791c5b 100644
---- a/tools/bpf/resolve_btfids/Makefile
-+++ b/tools/bpf/resolve_btfids/Makefile
-@@ -5,10 +5,8 @@ include ../../scripts/Makefile.arch
- srctree := $(abspath $(CURDIR)/../../../)
- 
- ifeq ($(V),1)
--  Q =
-   msg =
- else
--  Q = @
-   ifeq ($(silent),1)
-     msg =
-   else
-diff --git a/tools/bpf/runqslower/Makefile b/tools/bpf/runqslower/Makefile
-index c4f1f1735af659c2e660a322dbf6912d9a5724bc..e49203ebd48c18607a6136a9e805ccf16ee960d3 100644
---- a/tools/bpf/runqslower/Makefile
-+++ b/tools/bpf/runqslower/Makefile
-@@ -26,10 +26,7 @@ VMLINUX_BTF_PATHS := $(if $(O),$(O)/vmlinux)		\
- VMLINUX_BTF_PATH := $(or $(VMLINUX_BTF),$(firstword			       \
- 					  $(wildcard $(VMLINUX_BTF_PATHS))))
- 
--ifeq ($(V),1)
--Q =
--else
--Q = @
-+ifneq ($(V),1)
- MAKEFLAGS += --no-print-directory
- submake_extras := feature_display=0
- endif
-diff --git a/tools/lib/bpf/Makefile b/tools/lib/bpf/Makefile
-index 857a5f7b413d6dc4cbe7bc4167496674dd08d875..168140f8e6461bd06db40e23d21a3fb8847ccbf4 100644
---- a/tools/lib/bpf/Makefile
-+++ b/tools/lib/bpf/Makefile
-@@ -53,13 +53,6 @@ include $(srctree)/tools/scripts/Makefile.include
- 
- # copy a bit from Linux kbuild
- 
--ifeq ("$(origin V)", "command line")
--  VERBOSE = $(V)
--endif
--ifndef VERBOSE
--  VERBOSE = 0
--endif
--
- INCLUDES = -I$(or $(OUTPUT),.) \
- 	   -I$(srctree)/tools/include -I$(srctree)/tools/include/uapi \
- 	   -I$(srctree)/tools/arch/$(SRCARCH)/include
-@@ -96,12 +89,6 @@ override CFLAGS += $(CLANG_CROSS_FLAGS)
- # flags specific for shared library
- SHLIB_FLAGS := -DSHARED -fPIC
- 
--ifeq ($(VERBOSE),1)
--  Q =
--else
--  Q = @
--endif
--
- # Disable command line variables (CFLAGS) override from top
- # level Makefile (perf), otherwise build Makefile will get
- # the same command line setup.
-diff --git a/tools/lib/perf/Makefile b/tools/lib/perf/Makefile
-index 3a9b2140aa048ea919c69ed2240bf0ea444dbf21..e9a7ac2c062e2b398c2f22af41907b62815ca07e 100644
---- a/tools/lib/perf/Makefile
-+++ b/tools/lib/perf/Makefile
-@@ -39,19 +39,6 @@ libdir = $(prefix)/$(libdir_relative)
- libdir_SQ = $(subst ','\'',$(libdir))
- libdir_relative_SQ = $(subst ','\'',$(libdir_relative))
- 
--ifeq ("$(origin V)", "command line")
--  VERBOSE = $(V)
--endif
--ifndef VERBOSE
--  VERBOSE = 0
--endif
--
--ifeq ($(VERBOSE),1)
--  Q =
--else
--  Q = @
--endif
--
- TEST_ARGS := $(if $(V),-v)
- 
- # Set compile option CFLAGS
-diff --git a/tools/lib/thermal/Makefile b/tools/lib/thermal/Makefile
-index 8890fd57b110ccc1a837d37624a5dead00f18656..a1f5e388644d31d36f973d3ddce48d036ee0a083 100644
---- a/tools/lib/thermal/Makefile
-+++ b/tools/lib/thermal/Makefile
-@@ -39,19 +39,6 @@ libdir = $(prefix)/$(libdir_relative)
- libdir_SQ = $(subst ','\'',$(libdir))
- libdir_relative_SQ = $(subst ','\'',$(libdir_relative))
- 
--ifeq ("$(origin V)", "command line")
--  VERBOSE = $(V)
--endif
--ifndef VERBOSE
--  VERBOSE = 0
--endif
--
--ifeq ($(VERBOSE),1)
--  Q =
--else
--  Q = @
--endif
--
- # Set compile option CFLAGS
- ifdef EXTRA_CFLAGS
-   CFLAGS := $(EXTRA_CFLAGS)
-diff --git a/tools/objtool/Makefile b/tools/objtool/Makefile
-index f56e2772753414ff8d3462bdebbc8e95e7667fcd..7a65948892e569cbe1d6e5a78db68bb35102cd26 100644
---- a/tools/objtool/Makefile
-+++ b/tools/objtool/Makefile
-@@ -46,12 +46,6 @@ HOST_OVERRIDES := CC="$(HOSTCC)" LD="$(HOSTLD)" AR="$(HOSTAR)"
- AWK = awk
- MKDIR = mkdir
- 
--ifeq ($(V),1)
--  Q =
--else
--  Q = @
--endif
--
- BUILD_ORC := n
- 
- ifeq ($(SRCARCH),x86)
-diff --git a/tools/testing/selftests/bpf/Makefile.docs b/tools/testing/selftests/bpf/Makefile.docs
-index eb6a4fea8c794d8354363ac8daa0baac3e3bd060..f7f9e7088bb38c7507282990fb62921ca7a636d2 100644
---- a/tools/testing/selftests/bpf/Makefile.docs
-+++ b/tools/testing/selftests/bpf/Makefile.docs
-@@ -7,12 +7,6 @@ INSTALL ?= install
- RM ?= rm -f
- RMDIR ?= rmdir --ignore-fail-on-non-empty
- 
--ifeq ($(V),1)
--  Q =
--else
--  Q = @
--endif
--
- prefix ?= /usr/local
- mandir ?= $(prefix)/man
- man2dir = $(mandir)/man2
-diff --git a/tools/testing/selftests/hid/Makefile b/tools/testing/selftests/hid/Makefile
-index 0336353bd15f0d56dbed6c8fa02f53c234f949e1..2839d2612ce3a70f4332f8e886586e9cca6f03cb 100644
---- a/tools/testing/selftests/hid/Makefile
-+++ b/tools/testing/selftests/hid/Makefile
-@@ -43,10 +43,8 @@ TEST_GEN_PROGS = hid_bpf hidraw
- # $3 - target (assumed to be file); only file name will be emitted;
- # $4 - optional extra arg, emitted as-is, if provided.
- ifeq ($(V),1)
--Q =
- msg =
- else
--Q = @
- msg = @printf '  %-8s%s %s%s\n' "$(1)" "$(if $(2), [$(2)])" "$(notdir $(3))" "$(if $(4), $(4))";
- MAKEFLAGS += --no-print-directory
- submake_extras := feature_display=0
-diff --git a/tools/thermal/lib/Makefile b/tools/thermal/lib/Makefile
-index f2552f73a64c7eb1be24c27b3a1414617391315b..056d212f25cf51cd8c02260fbe2ef28dda5e4acb 100644
---- a/tools/thermal/lib/Makefile
-+++ b/tools/thermal/lib/Makefile
-@@ -39,19 +39,6 @@ libdir = $(prefix)/$(libdir_relative)
- libdir_SQ = $(subst ','\'',$(libdir))
- libdir_relative_SQ = $(subst ','\'',$(libdir_relative))
- 
--ifeq ("$(origin V)", "command line")
--  VERBOSE = $(V)
--endif
--ifndef VERBOSE
--  VERBOSE = 0
--endif
--
--ifeq ($(VERBOSE),1)
--  Q =
--else
--  Q = @
--endif
--
- # Set compile option CFLAGS
- ifdef EXTRA_CFLAGS
-   CFLAGS := $(EXTRA_CFLAGS)
-diff --git a/tools/tracing/latency/Makefile b/tools/tracing/latency/Makefile
-index 6518b03e05c71b4fa84498f9628adf81a38c9f56..257a56b1899f23837de533353e9c2cebdb6035bd 100644
---- a/tools/tracing/latency/Makefile
-+++ b/tools/tracing/latency/Makefile
-@@ -37,12 +37,6 @@ FEATURE_TESTS	+= libtracefs
- FEATURE_DISPLAY	:= libtraceevent
- FEATURE_DISPLAY	+= libtracefs
- 
--ifeq ($(V),1)
--  Q 		=
--else
--  Q 		= @
--endif
--
- all: $(LATENCY-COLLECTOR)
- 
- include $(srctree)/tools/build/Makefile.include
-diff --git a/tools/tracing/rtla/Makefile b/tools/tracing/rtla/Makefile
-index 8b5101457c70b48e9c720f1ba53293f1307c15a2..0b61208db604ec0754024c3007db6b2fe74a613c 100644
---- a/tools/tracing/rtla/Makefile
-+++ b/tools/tracing/rtla/Makefile
-@@ -37,12 +37,6 @@ FEATURE_DISPLAY	:= libtraceevent
- FEATURE_DISPLAY	+= libtracefs
- FEATURE_DISPLAY	+= libcpupower
- 
--ifeq ($(V),1)
--  Q		=
--else
--  Q		= @
--endif
--
- all: $(RTLA)
- 
- include $(srctree)/tools/build/Makefile.include
-diff --git a/tools/verification/rv/Makefile b/tools/verification/rv/Makefile
-index 411d62b3d8eb93abf85526ad33cafd783df86bc1..5b898360ba4818b12e8a16c27bd88c75d0076fb9 100644
---- a/tools/verification/rv/Makefile
-+++ b/tools/verification/rv/Makefile
-@@ -35,12 +35,6 @@ FEATURE_TESTS	+= libtracefs
- FEATURE_DISPLAY	:= libtraceevent
- FEATURE_DISPLAY	+= libtracefs
- 
--ifeq ($(V),1)
--  Q		=
--else
--  Q		= @
--endif
--
- all: $(RV)
- 
- include $(srctree)/tools/build/Makefile.include
-
++	/* Currently the boot mapped buffer is not supported for mmap */
++	if (iter->tr->flags & TRACE_ARRAY_FL_BOOT)
++		return -EINVAL;
++
+ 	ret = get_snapshot_map(iter->tr);
+ 	if (ret)
+ 		return ret;
 -- 
-2.43.0
+2.47.2
 
