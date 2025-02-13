@@ -1,59 +1,158 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC8D8335BA;
-	Thu, 13 Feb 2025 15:14:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A77B81FFC7A;
+	Thu, 13 Feb 2025 16:21:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739459668; cv=none; b=NjCixn99yxILVzc4JnGADZznubs2St2TQ77A1MDQfWry+mIqoMvBEkj2jHjkhCq7IHt+jB+jEvYlTmthe2KHX3SLPS6UbSG+1FYuxtrWO23G6LYXpRXG0HNylGCPZrbysTLb5TbO70uNlFL+7vD1ydJiQYdpMjHDEx2JuY1OGDU=
+	t=1739463695; cv=none; b=l3TYhY4rtcDrh8U2jPv5jClaDX+EpvKU7EGcp0YRR7yu8eeTuwrn9L6z6r6jcNv9Dx8Qj+AjLdyJ3Qrm8WpF6zsHwy3xZwTXH1M0bPMC3hynusWhNNx3uRHTZYwkvUM7Rq5kKl/ZBlmeAfiCIhEmgD/4UYgDCPZGj8W6yXXM39g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739459668; c=relaxed/simple;
-	bh=2/Su0nNJOTZ5Ivfe1qEfm4b8ERGy6jToxRGt6ddEdPY=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=OJKltyg/MnIGEuBKUUa+nEIn/MOz44ncf2yIKYP6JLLklKL69nDYjNMb2B58CffmZHVHKkRnjBgHgiCv0pqwssELORLXJ8Fiyf1hvYJYxtUmHz6tQDzvLbLV+Y+tg67OcafsSyeXpZul7mvwekJhcqd20fHeS2GwuCO3dqyCRMo=
+	s=arc-20240116; t=1739463695; c=relaxed/simple;
+	bh=ki5i2OB8DqrRr53FCV5uiJSHnPSRTR4IrOB5Ict3+xQ=;
+	h=Message-ID:Date:From:To:Cc:Subject; b=UyBQz7z3CzXFALiPfegdLpc6+1AiTxoFJ9FGfic7z6Od4PQwDsRvO1iw3C6NeKUki+zN1Yn5okBxU2VgwGgRC2ZjiWR7bf7jyyK4DFV8pgbWmCKclIwTchgXgUmtvn4pY2D9rPvRSuxz5itewJiQJ5FRiLAwCJme744lvsA9a70=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2CE95C4CED1;
-	Thu, 13 Feb 2025 15:14:27 +0000 (UTC)
-Date: Thu, 13 Feb 2025 10:14:36 -0500
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 21D7EC4CED1;
+	Thu, 13 Feb 2025 16:21:35 +0000 (UTC)
+Received: from rostedt by gandalf with local (Exim 4.98)
+	(envelope-from <rostedt@goodmis.org>)
+	id 1tibyD-00000001qZz-1tpJ;
+	Thu, 13 Feb 2025 11:21:45 -0500
+Message-ID: <20250213162047.306074881@goodmis.org>
+User-Agent: quilt/0.68
+Date: Thu, 13 Feb 2025 11:20:47 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
-To: Heiko Carstens <hca@linux.ibm.com>
-Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon
- <will@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
- linux-arm-kernel@lists.infradead.org, Mark Rutland <mark.rutland@arm.com>,
- Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>, Vasily Gorbik
- <gor@linux.ibm.com>, Alexander Gordeev <agordeev@linux.ibm.com>,
+To: linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org,
+ linux-kbuild@vger.kernel.org,
+ bpf <bpf@vger.kernel.org>,
+ linux-arm-kernel@lists.infradead.org,
  linux-s390@vger.kernel.org
-Subject: Re: [PATCH] arm64: scripts/sorttable: Implement sorting mcount_loc
- at boot for arm64
-Message-ID: <20250213101436.39981514@gandalf.local.home>
-In-Reply-To: <20250213150934.12012-C-hca@linux.ibm.com>
-References: <20250210142647.083ff456@gandalf.local.home>
-	<20250213125302.12012-A-hca@linux.ibm.com>
-	<20250213150934.12012-C-hca@linux.ibm.com>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Peter Zijlstra <peterz@infradead.org>,
+ Linus Torvalds <torvalds@linux-foundation.org>,
+ Masahiro Yamada <masahiroy@kernel.org>,
+ Nathan Chancellor <nathan@kernel.org>,
+ Nicolas Schier <nicolas@fjasle.eu>,
+ Zheng Yejian <zhengyejian1@huawei.com>,
+ Martin  Kelly <martin.kelly@crowdstrike.com>,
+ Christophe Leroy <christophe.leroy@csgroup.eu>,
+ Josh Poimboeuf <jpoimboe@redhat.com>,
+ Heiko Carstens <hca@linux.ibm.com>,
+ Catalin Marinas <catalin.marinas@arm.com>,
+ Will Deacon <will@kernel.org>,
+ Vasily Gorbik <gor@linux.ibm.com>,
+ Alexander Gordeev <agordeev@linux.ibm.com>
+Subject: [PATCH v3 0/6] scripts/sorttable: ftrace: Remove place holders for weak functions in available_filter_functions
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
 
-On Thu, 13 Feb 2025 16:09:34 +0100
-Heiko Carstens <hca@linux.ibm.com> wrote:
+This series removes the place holder __ftrace_invalid_address___ from
+the available_filter_functions file.
 
-> Something like this:
+The rewriting of the sorttable.c code to make it more manageable
+has already been merged:
 
-Thanks,
+  https://git.kernel.org/torvalds/c/c0e75905caf368e19aab585d20151500e750de89
 
-I'm about to send a bunch of patches to this code that removes weak
-functions. Since s390 is big-endian, it would be good for you to test them
-too. I'll Cc you on them. I think I handled the endianess correctly.
-Although I found a bug where if you compile le arm64 on s390 it will break
-because it assumed that the endianess of the build machine was the same as
-the target.
+Now this is only for getting rid of the ftrace invalid function place holders.
 
-I'll be sending them shortly. Just doing some more smoke tests.
+The first patch adds arm64 sorting, which requires copying the Elf_Rela into
+a separate array and sorting that.
 
--- Steve
+There's a slight fix patch that adds using a compare function that checks the
+direct values without swapping bytes as the current method will swap bytes,
+but the copying into the array already did the necessary swapping.
+
+The third patch makes it always copy the section into an array, sort that,
+then copy it back. This allows updates to the values in one place.
+
+The forth patch adds the option "-s <file>" to sorttable.c. Now this code
+is called by:
+
+  ${NM} -S vmlinux > .tmp_vmlinux.nm-sort
+  ${objtree}/scripts/sorttable -s .tmp_vmlinux.nm-sort ${1}
+
+Where the file created by "nm -S" is read, recording the address and the
+associated sizes of each function. It then is sorted, and before sorting the
+mcount_loc table, it is scanned to make sure all symbols in the mcount_loc are
+within the boundaries of the functions defined by nm. If they are not, they
+are zeroed out, as they are most likely weak functions (I don't know what else
+they would be).
+
+Since the KASLR address can be added to the values in this section, when the
+section is read to populate the ftrace records, if the value is zero or equal
+to kaslr_offset() it is skipped and not added.
+
+Before:
+    
+ ~# grep __ftrace_invalid_address___ /sys/kernel/tracing/available_filter_functions | wc -l
+ 551
+
+After:
+
+ ~# grep __ftrace_invalid_address___ /sys/kernel/tracing/available_filter_functions | wc -l
+ 0
+
+The last patches are fixes to ftrace accounting to handle the fact that it
+will likely always have skipped values (at least for x86), and to modify the
+code to verify that the amount of skipped and saved records do match the
+calculated allocations necessary.
+
+And finally, to change the reporting of how much was allocated to reflect the
+freed pages that were allocated but not used due to the skipped entries.
+
+Changes since v2: https://lore.kernel.org/linux-trace-kernel/20250102232609.529842248@goodmis.org/
+
+- Rebased on mainline that has the rewriting of sorttable.c
+
+- Added the code to handle the sections being stored in Elf_Rela sections as
+  arm64 uses.
+
+- No longer use the "ftrace_skip_sym" variable to skip over the zeroed out
+  functions and instead just compare with kalsr_offset.
+
+- Sort via an array and not directly in the file's section.
+
+- Update the verification code to make sure the skipped value is correct.
+
+- Update the output to correctly reflect what was allocated.
+
+
+Changes since v1: https://lore.kernel.org/all/20250102185845.928488650@goodmis.org/
+
+- Replaced the last patch with 3 patches.
+
+  The first of the 3 patches removed the hack of reading System.map
+  with properly reading the Elf symbol table to find start_mcount_loc
+  and stop_mcount_loc.
+
+  The second patch adds the call to "nm -S vmlinux" to get the sizes
+  of each function.
+
+  The previous last patch would just check the zeroed out values and compare
+  them to kaslr_offset(). Instead, this time, the last patch adds a new
+  ftrace_mcount_skip that is used to simply skip over the first entries
+  that the sorttable.c moved to the beginning, as they were the weak functions
+  that were found.
+
+
+Steven Rostedt (6):
+      arm64: scripts/sorttable: Implement sorting mcount_loc at boot for arm64
+      scripts/sorttable: Have mcount rela sort use direct values
+      scripts/sorttable: Always use an array for the mcount_loc sorting
+      scripts/sorttable: Zero out weak functions in mcount_loc table
+      ftrace: Update the mcount_loc check of skipped entries
+      ftrace: Have ftrace pages output reflect freed pages
+
+----
+ arch/arm64/Kconfig      |   1 +
+ kernel/trace/ftrace.c   |  45 +++++-
+ scripts/link-vmlinux.sh |   4 +-
+ scripts/sorttable.c     | 401 +++++++++++++++++++++++++++++++++++++++++++++++-
+ 4 files changed, 437 insertions(+), 14 deletions(-)
