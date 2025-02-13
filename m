@@ -1,226 +1,114 @@
-Received: from mx3.molgen.mpg.de (mx3.molgen.mpg.de [141.14.17.11])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA4DD15689A;
-	Thu, 13 Feb 2025 17:15:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=141.14.17.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6BE523F400
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 13 Feb 2025 17:58:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739466937; cv=none; b=hNxmDAUhvM4SaE592sO2OuOvSCnLfFn9YtWHtvi9F1Z36rFcIuIrdw4NmWxxDEJLLGz2VNbsbNrOZ2hjy6BeMVN2jE0M2vTNjc0g9i8q5tsyussTgW/BpwfudDHiSrdPuHRckOkgO832FgTNhjlk5SLzIffOMWbmdP1Hm8Au9Ic=
+	t=1739469522; cv=none; b=e66N8HJEpfpfwndy0AniycDV+Go+yIyvaaGh6Be1UkgUIRzIL7fe6FrX5bdNbtrQKzAfVSCT/K0+CQutihfJGwXMzP4ZUb5S99zlN/TRy4W03GijDG44sauLyFPzf21kLMg+OQcLpGfUKu5sCzRZ7rn7r3niaZg/Ze0Qt4oGaqw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739466937; c=relaxed/simple;
-	bh=sKAH8pxmoLFHVCRS/HFwKo3JD4z1kJnrcgM44SAA0J8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=uSuggjntZQcUbPRq5ca+1lrtIUnWPZfWr+Y8zb1NFKM6EXCT2aVws1QxuYnEDCMzIS4WB1ifVV3+KcFMIbDGsnBhtVEH0anOTuXP7wq6MygXS5xm7I/6AcsEY8J6jsI7RE7QS2jMv7zbyCkN/7lDu0adLivuynsfMdff+2KwjRg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de; spf=pass smtp.mailfrom=molgen.mpg.de; arc=none smtp.client-ip=141.14.17.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=molgen.mpg.de
-Received: from [192.168.0.2] (ip5f5af065.dynamic.kabel-deutschland.de [95.90.240.101])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: pmenzel)
-	by mx.molgen.mpg.de (Postfix) with ESMTPSA id D3C0261CCD7D2;
-	Thu, 13 Feb 2025 18:07:34 +0100 (CET)
-Message-ID: <1430649f-75e2-4edd-afee-87bf4ac7a961@molgen.mpg.de>
-Date: Thu, 13 Feb 2025 18:07:33 +0100
+	s=arc-20240116; t=1739469522; c=relaxed/simple;
+	bh=iCD1EJbH1lIRLMhar/vubBdCo81+Zp/krmtY+yjRst0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=m7mWDeuZidY2XcKMC1lgQZKn++RBKYaUNz35oR94SRbXt5/A1gatVCCNEOQCGg3bWDZdq7ha6X3hu1pK3XaYhJ2m1JlaVyi22SMCUcI1E19EYpLIx96lheay3gOKUkboyr80AXUu+wZcysy4UpZSdEEyKKfy1XP6lFKK0fxWU/o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PKqet2+z; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PKqet2+z"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7D67EC4CEF0
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 13 Feb 2025 17:58:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739469522;
+	bh=iCD1EJbH1lIRLMhar/vubBdCo81+Zp/krmtY+yjRst0=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=PKqet2+zH1t97Tb9PYh+csE5Hdb00pQkostRd2H2ctUmml1g8pGaPSCFUWnd+A+O0
+	 bOMyt4JNMnU96lRXLcWJRor87iyLPNItlWNX/iX3dZG/1Uiu89IzQ4X1LtvLTcY/2O
+	 7WicsQQbKQWDPk3XgXrgyZQz+ak29vrd2BaMECULVVsLSjv6pwN53nd3BBp1r2DRDD
+	 pIZ75RwafjHlIFQ0r/x5yRo8Lo9WUvLtkAcvnfH1UGQHS0RIb9w282c8FYrQtCWJzD
+	 mHbM4bZhXbdkWtKXrrOa0kyfEtO0tPU8X02toteJqeRdwmKZL4nLi3fjSdEH7rvIaQ
+	 lI+jDpT9mbxmQ==
+Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-ab7e1286126so216715566b.0
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 13 Feb 2025 09:58:42 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCW0eBdVuecPI7CQeUs++fPYMKoJL23PanqT8EgUOsLJO1v5RM20lvP+wv7wcuMHJHGBhmm9Jp6rfoiAeFyCPGpD44Q=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxYA+DDZvaGk+c2dWcuwf0pLMt5E8sB/eU32nyn5rRHTX3EhgX8
+	UqeelQPVGaz3hnBZR9cItwFRwTP/T9qI27sYrUbNkplC/zDcernhj+u5rF11ekwrzFZyrLW64GZ
+	hF3yr3k0yR8cip7EocbiB5vwjaAc22p0Os/fo
+X-Google-Smtp-Source: AGHT+IFHopkCd1IJRkVGtcRhcYRjj+s4dlwwFJCs/2tuVCIcDrZdxsclaMkaSiHDnOZupJK47TfVKKdiSuDfdpu5g6U=
+X-Received: by 2002:a17:907:3ea2:b0:ab7:c43f:8382 with SMTP id
+ a640c23a62f3a-ab7f33cab3bmr916405866b.31.1739469520915; Thu, 13 Feb 2025
+ 09:58:40 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: NOHZ tick-stop error: local softirq work is pending, handler
- #08!!! on Dell XPS 13 9360
-To: Frederic Weisbecker <frederic@kernel.org>
-Cc: =?UTF-8?Q?Micha=C5=82_Pecio?= <michal.pecio@gmail.com>,
- anna-maria@linutronix.de, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
- mingo@kernel.org, tglx@linutronix.de, Andrew Lunn <andrew+netdev@lunn.ch>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Hayes Wang <hayeswang@realtek.com>, Simon Horman <horms@kernel.org>,
- netdev@vger.kernel.org
-References: <20250210124551.3687ae51@foxbook>
- <b0d55f4c-a078-42a0-a0fe-5823700f2837@molgen.mpg.de>
- <Z6n-dWDSxNCjROYV@localhost.localdomain>
- <10de7289-653f-43b1-ad46-2e8a0cd42724@molgen.mpg.de>
- <Z6tmbdl646D_UjrY@localhost.localdomain>
-Content-Language: en-US
-From: Paul Menzel <pmenzel@molgen.mpg.de>
-In-Reply-To: <Z6tmbdl646D_UjrY@localhost.localdomain>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+References: <20250212220433.3624297-1-jolsa@kernel.org> <CALCETrVFdAFVinbpPK+q7pSQHo3=JgGxZSPZVz-y7oaG=xP3fA@mail.gmail.com>
+ <Z623ZcZj6Wsbnrhs@krava>
+In-Reply-To: <Z623ZcZj6Wsbnrhs@krava>
+From: Andy Lutomirski <luto@kernel.org>
+Date: Thu, 13 Feb 2025 09:58:29 -0800
+X-Gmail-Original-Message-ID: <CALCETrVt=N-QG3zGyPspNCF=8tA4icC75RVVe70-DvJfsh7Sww@mail.gmail.com>
+X-Gm-Features: AWEUYZkKsWtgJBXXFU3xbPGAlALgrkQUHGzWNL5HcC7wERAjq_EEPmO7fwgtv2M
+Message-ID: <CALCETrVt=N-QG3zGyPspNCF=8tA4icC75RVVe70-DvJfsh7Sww@mail.gmail.com>
+Subject: Re: [PATCHv3 perf/core] uprobes: Harden uretprobe syscall trampoline check
+To: Jiri Olsa <olsajiri@gmail.com>
+Cc: Andy Lutomirski <luto@kernel.org>, Steven Rostedt <rostedt@goodmis.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Oleg Nesterov <oleg@redhat.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Andrii Nakryiko <andrii@kernel.org>, Kees Cook <kees@kernel.org>, 
+	Eyal Birger <eyal.birger@gmail.com>, stable@vger.kernel.org, 
+	Jann Horn <jannh@google.com>, linux-kernel@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, linux-api@vger.kernel.org, x86@kernel.org, 
+	bpf@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
+	Deepak Gupta <debug@rivosinc.com>, Stephen Rothwell <sfr@canb.auug.org.au>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Dear Frederic,
+On Thu, Feb 13, 2025 at 1:16=E2=80=AFAM Jiri Olsa <olsajiri@gmail.com> wrot=
+e:
+>
+> On Wed, Feb 12, 2025 at 05:37:11PM -0800, Andy Lutomirski wrote:
+> > On Wed, Feb 12, 2025 at 2:04=E2=80=AFPM Jiri Olsa <jolsa@kernel.org> wr=
+ote:
+> > >
+> > > Jann reported [1] possible issue when trampoline_check_ip returns
+> > > address near the bottom of the address space that is allowed to
+> > > call into the syscall if uretprobes are not set up.
+> > >
+> > > Though the mmap minimum address restrictions will typically prevent
+> > > creating mappings there, let's make sure uretprobe syscall checks
+> > > for that.
+> >
+> > It would be a layering violation, but we could perhaps do better here:
+> >
+> > > -       if (regs->ip !=3D trampoline_check_ip())
+> > > +       /* Make sure the ip matches the only allowed sys_uretprobe ca=
+ller. */
+> > > +       if (unlikely(regs->ip !=3D trampoline_check_ip(tramp)))
+> > >                 goto sigill;
+> >
+> > Instead of SIGILL, perhaps this should do the seccomp action?  So the
+> > logic in seccomp would be (sketchily, with some real mode1 mess):
+> >
+> > if (is_a_real_uretprobe())
+> >     skip seccomp;
+>
+> IIUC you want to move the address check earlier to the seccomp path..
+> with the benefit that we would kill not allowed caller sooner?
 
+The benefit would be that seccomp users that want to do something
+other than killing a process (returning an error code, getting
+notified, etc) could retain that functionality without the new
+automatic hole being poked for uretprobe() in cases where uprobes
+aren't in use or where the calling address doesn't match the uprobe
+trampoline.  IOW it would reduce the scope to which we're making
+seccomp behave unexpectedly.
 
-Thank you very much for your help.
-
-Am 11.02.25 um 16:02 schrieb Frederic Weisbecker:
-> Le Tue, Feb 11, 2025 at 12:57:33PM +0100, Paul Menzel a écrit :
-
->> Am 10.02.25 um 14:26 schrieb Frederic Weisbecker:
->>> Le Mon, Feb 10, 2025 at 12:59:42PM +0100, Paul Menzel a écrit :
->>
->>>> Am 10.02.25 um 12:45 schrieb Michał Pecio:
->>>>
->>>>>>>>>>>> On Dell XPS 13 9360/0596KF, BIOS 2.21.0 06/02/2022, with Linux 6.9-rc2+
->>>>>
->>>>>> Just for the record, I am still seeing this with 6.14.0-rc1
->>>>>
->>>>> Is this a regression? If so, which versions were not affected?
->>>>
->>>> Unfortunately, I do not know. Right now, my logs go back until September
->>>> 2024.
->>>>
->>>>       Sep 22 13:08:04 abreu kernel: Linux version 6.11.0-07273-g1e7530883cd2 (build@bohemianrhapsody.molgen.mpg.de) (gcc (Debian 14.2.0-5) 14.2.0, GNU ld (GNU Binutils for Debian) 2.43.1) #12 SMP PREEMPT_DYNAMIC Sun Sep 22 09:57:36 CEST 2024
->>>>
->>>>> How hard to reproduce? Wasn't it during resume from hibernation?
->>>>
->>>> It’s not easy to reproduce, and I believe it’s not related with resuming
->>>> from hibernation (which I do not use) or ACPI S3 suspend. I think, I can
->>>> force it more, when having the USB-C adapter with only the network cable
->>>> plugged into it, and then running `sudo powertop --auto-tune`. But sometimes
->>>> it seems unrelated.
->>>>
->>>>> IRQ isuses may be a red herring, this code here is a busy wait under
->>>>> spinlock. There are a few of those, they cause various problems.
->>>>>
->>>>>                   if (xhci_handshake(&xhci->op_regs->status,
->>>>>                                  STS_RESTORE, 0, 100 * 1000)) {
->>>>>                            xhci_warn(xhci, "WARN: xHC restore state timeout\n");
->>>>> 			spin_unlock_irq(&xhci->lock);
->>>>>                            return -ETIMEDOUT;
->>>>>                   }
->>>>>
->>>>> This thing timing out may be close to the root cause of everything.
->>>>
->>>> Interesting. Hopefully the USB folks have an idea.
->>>
->>> Handler #08 is NET_RX. So something raised the NET_RX on some non-appropriate
->>> place, perhaps...
->>>
->>> Can I ask you one more trace dump?
->>>
->>> I need:
->>>
->>> echo 1 > /sys/kernel/tracing/events/irq/softirq_raise/enable
->>> echo 1 > /sys/kernel/tracing/options/stacktrace
->>>
->>> Unfortunately this will also involve a small patch:
->>>
->>> diff --git a/kernel/time/tick-sched.c b/kernel/time/tick-sched.c
->>> index fa058510af9c..accd2eb8c927 100644
->>> --- a/kernel/time/tick-sched.c
->>> +++ b/kernel/time/tick-sched.c
->>> @@ -1159,6 +1159,9 @@ static bool report_idle_softirq(void)
->>>    	if (local_bh_blocked())
->>>    		return false;
->>> +	trace_printk("STOP\n");
->>> +	trace_dump_stack(0);
->>> +	tracing_off();
->>>    	pr_warn("NOHZ tick-stop error: local softirq work is pending, handler #%02x!!!\n",
->>>    		pending);
->>>    	ratelimit++;
->>
->> Thank you for your help. I applied the patch on top of 6.14-rc2, and was
->> able to reproduce the issue. Please find the Linux messages attached, and
->> the trace can be downloaded [1].
-> 
-> So here is the offender:
-> 
->   => __raise_softirq_irqoff
->   => __napi_schedule
->   => rtl8152_runtime_resume.isra.0
->   => rtl8152_resume
->   => usb_resume_interface.isra.0
->   => usb_resume_both
->   => __rpm_callback
->   => rpm_callback
->   => rpm_resume
->   => __pm_runtime_resume
->   => usb_autoresume_device
->   => usb_remote_wakeup
->   => hub_event
->   => process_one_work
->   => worker_thread
->   => kthread
->   => ret_from_fork
->   => ret_from_fork_asm
-> 
-> It is calling napi_schedule() from a non-interrupt. And since
-> ____napi_schedule() assumes to be called from an interrupt, it
-> raises the softirq accordingly without waking up ksoftirqd.
-> 
-> Can you try the following fix (untested, sorry...) ?
-> 
-> diff --git a/drivers/net/usb/r8152.c b/drivers/net/usb/r8152.c
-> index 468c73974046..8f6ea4e7685c 100644
-> --- a/drivers/net/usb/r8152.c
-> +++ b/drivers/net/usb/r8152.c
-> @@ -8537,8 +8537,11 @@ static int rtl8152_runtime_resume(struct r8152 *tp)
->   		clear_bit(SELECTIVE_SUSPEND, &tp->flags);
->   		smp_mb__after_atomic();
->   
-> -		if (!list_empty(&tp->rx_done))
-> +		if (!list_empty(&tp->rx_done)) {
-> +			local_bh_disable();
->   			napi_schedule(&tp->napi);
-> +			local_bh_enable();
-> +		}
->   
->   		usb_submit_urb(tp->intr_urb, GFP_NOIO);
->   	} else {
-> diff --git a/include/linux/lockdep.h b/include/linux/lockdep.h
-> index 67964dc4db95..1bd730b881f0 100644
-> --- a/include/linux/lockdep.h
-> +++ b/include/linux/lockdep.h
-> @@ -619,6 +619,17 @@ do {									\
->   		     (!in_softirq() || in_irq() || in_nmi()));		\
->   } while (0)
->   
-> +/*
-> + * Assert to be either in hardirq or in serving softirq or with
-> + * softirqs disabled. Verifies a safe context to queue a softirq
-> + * with __raise_softirq_irqoff().
-> + */
-> +#define lockdep_assert_in_interrupt()				\
-> +do {								\
-> +	WARN_ON_ONCE(__lockdep_enabled && !in_interrupt());	\
-> +} while (0)
-> +
-> +
->   extern void lockdep_assert_in_softirq_func(void);
->   
->   #else
-> @@ -634,6 +645,7 @@ extern void lockdep_assert_in_softirq_func(void);
->   # define lockdep_assert_preemption_enabled() do { } while (0)
->   # define lockdep_assert_preemption_disabled() do { } while (0)
->   # define lockdep_assert_in_softirq() do { } while (0)
-> +# define lockdep_assert_in_interrupt() do { } while (0)
->   # define lockdep_assert_in_softirq_func() do { } while (0)
->   #endif
->   
-> diff --git a/net/core/dev.c b/net/core/dev.c
-> index c0021cbd28fc..80e415ccf2c8 100644
-> --- a/net/core/dev.c
-> +++ b/net/core/dev.c
-> @@ -4666,6 +4666,7 @@ static inline void ____napi_schedule(struct softnet_data *sd,
->   	struct task_struct *thread;
->   
->   	lockdep_assert_irqs_disabled();
-> +	lockdep_assert_in_interrupt();
->   
->   	if (test_bit(NAPI_STATE_THREADED, &napi->state)) {
->   		/* Paired with smp_mb__before_atomic() in
-
-With this diff applied, I wasn’t able to reproduce the issue. Looks 
-promising. Thank you very much.
-
-Tested-by: Paul Menzel <pmenzel@molgen.mpg.de>
-
-
-Kind regards,
-
-Paul
+>
+> jirka
+>
+> >
+> > where is_a_real_uretprobe() is only true if the nr and arch match
+> > uretprobe *and* the address is right.
+> >
+> > --Andy
+>
