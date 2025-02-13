@@ -1,123 +1,132 @@
-Received: from mail-oa1-f46.google.com (mail-oa1-f46.google.com [209.85.160.46])
+Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 934781FECB4;
-	Thu, 13 Feb 2025 02:59:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 066C99476;
+	Thu, 13 Feb 2025 03:31:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739415546; cv=none; b=Cq+XDJbKxQLHldGHzaEhfbc6bTUBtVeqXUOpWlJnQv0HITQ6hbCOZDXGLHi5eqroOF2qkBXpIB08UdyKFObyVI8Z4/OgGK2N7IungSBt4efA8XkFyQOwr3e24FHo2UbFA3ImVbB7tBbd9KErWYTR9TFYsXlaPtL/WZ6bCe/JyYA=
+	t=1739417496; cv=none; b=bzOUI5sK0t2UYY14aBvvsoFFRoJ8zy77lxJrTsLHeoZ070+VLTG8ZWfiHDVCHLV9kQqpUYmYGFFH36rSIGTarlSZMhKjH9yMmbpjIzR/pGBQaZfEiic4kS3gcd9a0xsnayR3M8MqbGgeCkeh7hbz4GRaWm23KvNl0f6iCr+LMRU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739415546; c=relaxed/simple;
-	bh=sm/A5DDYfWFWU/VotvaDeerUCy+HMeubsXLRAwDtoso=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=fm9q6F0nOTMOhuhaCSKOktwHJVBh4kR14sILxq0uTQ8qGTokIcwr82iTLZ3wCx2uN89rr+zV23G+UmSi5RoHzWVJMvKXWhY93L18KTMBIP09RtqnCFsyxddxn55aiptGUEL28iQmWBt1yTI4foGAcAwHhZZlxe6Rd4QQus71LH4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ay+0USiZ; arc=none smtp.client-ip=209.85.160.46
+	s=arc-20240116; t=1739417496; c=relaxed/simple;
+	bh=Q8EwH0ENUprCzIBAekBdCxAsKlSG8kdvqUySrD13GpA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=f6Kys7RTjJdXAwaO4/sZioLWg3o95QEZdRWwmnOK9G5suJPSmFGQXcI/N0QPADqnlD8xaL8twp2HzlCei0zGdx9HGV0/JcBHZ6Op3pB+RKKmRN8p/kDBePzNddmb9V1TxhvkV+HF+pKz3a+w/UvKHCUGXQAajU4hbsamlAaZumw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NEbkf8BX; arc=none smtp.client-ip=209.85.216.43
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ay+0USiZ"
-Received: by mail-oa1-f46.google.com with SMTP id 586e51a60fabf-2b1a9cbfc8dso154912fac.2;
-        Wed, 12 Feb 2025 18:59:04 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NEbkf8BX"
+Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-2fc1843495eso101127a91.1;
+        Wed, 12 Feb 2025 19:31:34 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739415544; x=1740020344; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=v4ZQSX+iTddF0FgfN0z+bWuH3PadR/0Ql3Bz3nbWzqU=;
-        b=Ay+0USiZYpA/DBrmxiINHo1fbxc1NUC7Q2sieYelefXtbKBo2SoX/oAVYkh6BS7BF9
-         coVznKfKEeBFFE2QDj+8lTC8UE7iNNx95TpJ+WsBLcOZNXpOJ+1zN/2QRu+lA+fi6w5f
-         cu3C0X1rM/XtvMHdGDDt25n4joRbeQ68CZTJ2QvPuPOLnGsmafecwI39BLkBdYaSMR8R
-         JGK9UD1sbD4XOz0N558ul4z+wtueYGy0GSsaZz43o/0ilRw1zZ33Y/BYA9Q3CT+DoXZQ
-         q741ZCwI8suUs7vefJCYP92BlId/KY2a/JPsb2k0ihh9uqLAJSLbAo1fibfS7M2nB7WZ
-         FJqQ==
+        d=gmail.com; s=20230601; t=1739417494; x=1740022294; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=75irhUr4NJWrSjQg3lqVY6NYuQhtQPvJ4JEknJJLBuM=;
+        b=NEbkf8BXLQ8NrE8Dx5C9GMGjJ4Yx3w668QK48R4clrTLHGV6R1bVD8C1cUY1mTxLn4
+         XPRg81P5splozw1XkkrNN8LgdPmuiSdYwyD/U/Ml06rop+ZTILoxW3Rg41vLHPFG7AM7
+         93UNoYuX/MCh5osfKKhfTshZBeEioUW2fHsKgBxHztX2vF/AZ2c4iNrI7ANiTvW7LLpG
+         21gw37NifiQ5VAekJm10SfzEM3fn9+7qw6inh7F9Uabo7bKOGPPP3Z03wpCXOkMVxjxG
+         7QvLoB+AXwyrkSguKtsuMU5VU74bRP9FgeXr9Or3gX836Yhl2t3D9upkkLn5t3gaXV9q
+         QUjA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739415544; x=1740020344;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=v4ZQSX+iTddF0FgfN0z+bWuH3PadR/0Ql3Bz3nbWzqU=;
-        b=DsLWVfQtQ5rBLU/owdJqCJda6q8ZbwX31nGwawmSujUbb0YBqmCWh5sxBujk90XBoc
-         rBlnPpKLyWdnsq7wEeURgA9UfGP2WQW/FTBUP3KyzjMqzyEnnPivNnV/EBiyPJcZTdDE
-         3YOcsDbIbHsDLVY3slnr2Jlyx5BBegfxBCDUktwh6RJte1BWf3CVJ33SZR4LlcaakBlk
-         /U/YrK0fjLQC8ZoPJvJf/DbIIydems4po0QnwaPw9nSY3P9G3WQIJX9vHzWLtsAd/yDK
-         Lkt31pzWAzFlPGLa+XaDwQ+zkNFWZlzxf7sVWKWUef4lNQPNfOrFr28SG4rP4EIXFU5Q
-         knxA==
-X-Forwarded-Encrypted: i=1; AJvYcCU5U5Mi34o4/PRVw8ZxOUjuQjt0ttjaadYGEe0KKz79OG3sKYegidbu0dAajRCxe5ZN05E=@vger.kernel.org, AJvYcCUqyRVJjnTWYdV4jhFsxKgRV1FIza1p9liU5hFTudNlYBpxUKYASLBBKLxeHBVS6YKu35e3s3s+jnqRV//rlAmHqplS@vger.kernel.org, AJvYcCWGInCIwF1AQmHOgX0VMmwUImltoVBhix0Ee4yAPdaz34yPDna8l8J+6YHtuLE+LBZn3z5JcqzeydU7CFwe@vger.kernel.org, AJvYcCX5vzqYtT3UCloNkpQgRRkiPsmbPxkZvSoNhXknpY//eoFzx+0ogP67Xs67uSyYFXpXLf6WhHxKPT3O@vger.kernel.org, AJvYcCXOk4r1TDkVpdmKxSJPAiFK4gtoapC1yeqDB/LT9o3cn0ygjiVZowR04VdO4wkKgLnGU9d6vg9H@vger.kernel.org
-X-Gm-Message-State: AOJu0YwqOofyjkX/Bu2ORkY0+vfL5i9XEefB3euDeTumEVlM7at1Odlf
-	tP0+xpQJWEqU6zG/OW9/royTBiQn3b6H4D2z17b77h25oLCxjufFx2BBAHFJA4WOTf1DM2wZmHS
-	MOxSAAX2q5y66WRdpckFgNKGIYHw=
-X-Gm-Gg: ASbGncseUdqhvE+silbszctwWCp0OOL5SBv1LbL/Xk4TCKwZvka4pk4lwbYa/ZPmmDT
-	s2fKhG7vD661dhW2EN3tyC/uVF5lNVzKsuYsAXAA7Ja65R9uHn7KBjBk52svziF2IU/4t3CIY
-X-Google-Smtp-Source: AGHT+IFGA+xw9PUj3EPyBJDEfnct8a80eDqwi4eIT1nLpiELpYVP3ZL5tJreXFrsqRlNLfGgFswLTHKffTwAIuAe19c=
-X-Received: by 2002:a05:6871:10b:b0:29e:2422:49f9 with SMTP id
- 586e51a60fabf-2b8d684addamr3452293fac.25.1739415543729; Wed, 12 Feb 2025
- 18:59:03 -0800 (PST)
+        d=1e100.net; s=20230601; t=1739417494; x=1740022294;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=75irhUr4NJWrSjQg3lqVY6NYuQhtQPvJ4JEknJJLBuM=;
+        b=Vaj/0gk6CNTcxdXpe+nnWQFNCpKMFlw6oM4RzfOTAX4AOirthdXyonx1dfig/OE4bn
+         moh6maANDFQY/QUs2aIYxK8diyDIPBYHkiAVPPvpbj/jSpv4yjT43EgHYWOG+8LqJp3v
+         jRgByhZClQOHJZ2416a71HMx00JNa8EjUwbCs5fanSyGrSBa9N5QB/5Scp/P7v3ujPQ/
+         o0S8ySi8ffZr19UeLtz2wQPKbraK6VR8osUTILvrRMySwr9wFn472IQBJ91ouymSKN+P
+         MYFBWnEYOcIYuAeIVssEBgG7Eq4IGqOLeGXJTs0QyiU8xU26j5DeyaJeHRRDoYAafAgc
+         MH1w==
+X-Forwarded-Encrypted: i=1; AJvYcCVCUzZ3nUjiJVZ52U9Is1y7plNNnw4G1FWJGxA21+ZXYCMLa/FdeIlJmlgpOpBAESeyALdYDgGzKzk=@vger.kernel.org, AJvYcCVRgWQkU8kQ6U38micMKxK00PJvmm9deEV1Tgyh2HIfPOh3CtMMU+gWjHR5w1V8GX3WGAEKHCgccssX/hC7@vger.kernel.org, AJvYcCWSM3g34vFO3AocSB9EmpCxNKALA7Bs9OhmmVMO7ljrgip4d1ZMs9SHdLKQ+JmXo8oqnqleaggIQTqjNOhbyPrPVmV/@vger.kernel.org
+X-Gm-Message-State: AOJu0YzwHQY0fUJwANJJ8iwTLB/SI52P52Z/KJ5ZHLrbZnrs01rTRQs9
+	cJ+0DnG2P/bqGdigeh0pAtAmOpXUmvybe2FzEmMggngBhdzpQryW
+X-Gm-Gg: ASbGncsb4qxPrCsHMoL1T0vQbF5vM+SaWfQa7ZfRZ0oum3q7uYR51RPOgxN7rf8/Bbj
+	jr1CZHxgp10Vh0sq4ueaHQGzS5okDFjDaF4M6v7L8Hn+hQoWL/7ZcT76yRzUzIYlayFsmRV7Y5b
+	X8Kyp6PztXXamyShxcYDsHZQtD90V7PqmEhfdECe43j3R7rnKwYVJPuRfUBkU1N2S16rQ/1JTZr
+	QYkEY8kH21XGzyu6usYvo42uQC4hPqUtC51IhWqGHl5z5hCNjRtG2Tk0KnZ+LV5S2HaJ1KV+G7E
+	OfjNZFNXqIjUQhE=
+X-Google-Smtp-Source: AGHT+IFSe8dlFKi5twoIhx4rWsHQnu8HvDw55CQSxaFV/pYXI3d9NEwKZfEDzy+KIvYPgQTIbXIcTQ==
+X-Received: by 2002:a05:6a00:3989:b0:729:a31:892d with SMTP id d2e1a72fcca58-7322c591baemr10797114b3a.8.1739417493949;
+        Wed, 12 Feb 2025 19:31:33 -0800 (PST)
+Received: from archie.me ([103.124.138.155])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73242761619sm215859b3a.141.2025.02.12.19.31.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 12 Feb 2025 19:31:32 -0800 (PST)
+Received: by archie.me (Postfix, from userid 1000)
+	id E42274208FB6; Thu, 13 Feb 2025 10:31:30 +0700 (WIB)
+Date: Thu, 13 Feb 2025 10:31:30 +0700
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Purva Yeshi <purvayeshi550@gmail.com>, mhiramat@kernel.org,
+	corbet@lwn.net, skhan@linuxfoundation.org,
+	mathieu.desnoyers@efficios.com, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org
+Subject: Re: [PATCH v2] docs: trace: Refactor index documentation
+Message-ID: <Z61nkk7X3jQJyzYX@archie.me>
+References: <20250206141453.139613-1-purvayeshi550@gmail.com>
+ <20250210174556.70fc53b7@gandalf.local.home>
+ <Z6yBtB7mjoiquKRj@archie.me>
+ <20250212095111.7e07b92e@gandalf.local.home>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250212220433.3624297-1-jolsa@kernel.org> <CALCETrVFdAFVinbpPK+q7pSQHo3=JgGxZSPZVz-y7oaG=xP3fA@mail.gmail.com>
-In-Reply-To: <CALCETrVFdAFVinbpPK+q7pSQHo3=JgGxZSPZVz-y7oaG=xP3fA@mail.gmail.com>
-From: Eyal Birger <eyal.birger@gmail.com>
-Date: Wed, 12 Feb 2025 18:58:52 -0800
-X-Gm-Features: AWEUYZnrOGezMYWshN0W51Wq8NuAF6Ki9dZJOYg4qrtbtnzm3Yom2efk1PBRoAQ
-Message-ID: <CAHsH6GtYpH++etxpa4YDkW5PQTLRA5QiZ8fqBViwZV4+yXG5+A@mail.gmail.com>
-Subject: Re: [PATCHv3 perf/core] uprobes: Harden uretprobe syscall trampoline check
-To: Andy Lutomirski <luto@kernel.org>
-Cc: Jiri Olsa <jolsa@kernel.org>, Steven Rostedt <rostedt@goodmis.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Oleg Nesterov <oleg@redhat.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Andrii Nakryiko <andrii@kernel.org>, Kees Cook <kees@kernel.org>, 
-	stable@vger.kernel.org, Jann Horn <jannh@google.com>, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, linux-api@vger.kernel.org, x86@kernel.org, 
-	bpf@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
-	Deepak Gupta <debug@rivosinc.com>, Stephen Rothwell <sfr@canb.auug.org.au>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="G1xUjSJSMfJSdqY9"
+Content-Disposition: inline
+In-Reply-To: <20250212095111.7e07b92e@gandalf.local.home>
+
+
+--G1xUjSJSMfJSdqY9
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-(sorry for the HTML spam)
+On Wed, Feb 12, 2025 at 09:51:11AM -0500, Steven Rostedt wrote:
+> On Wed, 12 Feb 2025 18:10:44 +0700
+> Bagas Sanjaya <bagasdotme@gmail.com> wrote:
+>=20
+> > > > +Introduction to Tracing
+> > > > +-----------------------
+> > > > +
+> > > > +This section provides an overview of Linux tracing mechanisms
+> > > > +and debugging approaches.
+> > > > =20
+> > > >  .. toctree::
+> > > > -   :maxdepth: 2
+> > > > +   :maxdepth: 1 =20
+> > >=20
+> > > I don't really know what the maxdepth gives here, but there was no me=
+ntion
+> > > in the change log why it had to be converted from 2 to 1. =20
+> >=20
+> > :maxdepth: specifies heading levels depth of the toctree. In this case,
+> > the author wants only doc titles (hence 1), whereas 2 also includes
+> > second-level (section) headings.
+>=20
+> As I'm the original author, I would like to know why there was a change.
+>=20
 
-On Wed, Feb 12, 2025 at 5:37=E2=80=AFPM Andy Lutomirski <luto@kernel.org> w=
-rote:
->
-> On Wed, Feb 12, 2025 at 2:04=E2=80=AFPM Jiri Olsa <jolsa@kernel.org> wrot=
-e:
-> >
-> > Jann reported [1] possible issue when trampoline_check_ip returns
-> > address near the bottom of the address space that is allowed to
-> > call into the syscall if uretprobes are not set up.
-> >
-> > Though the mmap minimum address restrictions will typically prevent
-> > creating mappings there, let's make sure uretprobe syscall checks
-> > for that.
->
-> It would be a layering violation, but we could perhaps do better here:
->
-> > -       if (regs->ip !=3D trampoline_check_ip())
-> > +       /* Make sure the ip matches the only allowed sys_uretprobe call=
-er. */
-> > +       if (unlikely(regs->ip !=3D trampoline_check_ip(tramp)))
-> >                 goto sigill;
->
-> Instead of SIGILL, perhaps this should do the seccomp action?  So the
-> logic in seccomp would be (sketchily, with some real mode1 mess):
->
-> if (is_a_real_uretprobe())
->     skip seccomp;
->
-> where is_a_real_uretprobe() is only true if the nr and arch match
-> uretprobe *and* the address is right.
+Oops, I mean I'm referring to the patch author (Purva Yeshi).
 
+--=20
+An old man doll... just what I always wanted! - Clara
 
+--G1xUjSJSMfJSdqY9
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Why would it make sense to rely on CONFIG_SECCOMP for this check? seems
-this check should be done regardless of seccomp.
+-----BEGIN PGP SIGNATURE-----
 
-Or maybe I missed something in the suggestion.
+iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZ61njAAKCRD2uYlJVVFO
+o1RTAP0R+L/WHOcFYnFYSyJUoEvegF44yZcBOi74NnUA5cbqGAD/aFv94vJEm1Uv
+fVr4b6gsHMzKFD95XwkISpY0U1rpEgQ=
+=8Que
+-----END PGP SIGNATURE-----
 
-Eyal.
-
->
->
-> --Andy
+--G1xUjSJSMfJSdqY9--
