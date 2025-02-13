@@ -1,114 +1,62 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6BE523F400
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 13 Feb 2025 17:58:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD753245008;
+	Thu, 13 Feb 2025 18:19:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739469522; cv=none; b=e66N8HJEpfpfwndy0AniycDV+Go+yIyvaaGh6Be1UkgUIRzIL7fe6FrX5bdNbtrQKzAfVSCT/K0+CQutihfJGwXMzP4ZUb5S99zlN/TRy4W03GijDG44sauLyFPzf21kLMg+OQcLpGfUKu5sCzRZ7rn7r3niaZg/Ze0Qt4oGaqw=
+	t=1739470788; cv=none; b=MS2b18FBER3PFB7JRyucubxeWO9Urk8yEGJHxGeIHEY5B4aX77VhyiPiDAUESLdvCwrp84+pr9WGalhOEkYJAECW9nfTnr78LVAOjH8d3OkmHNFQr40ovkWrDHu9WoyUbOhgKph7/nr9xitmPVEu3jwudzspLA3ikxDr4yrHwTQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739469522; c=relaxed/simple;
-	bh=iCD1EJbH1lIRLMhar/vubBdCo81+Zp/krmtY+yjRst0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=m7mWDeuZidY2XcKMC1lgQZKn++RBKYaUNz35oR94SRbXt5/A1gatVCCNEOQCGg3bWDZdq7ha6X3hu1pK3XaYhJ2m1JlaVyi22SMCUcI1E19EYpLIx96lheay3gOKUkboyr80AXUu+wZcysy4UpZSdEEyKKfy1XP6lFKK0fxWU/o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PKqet2+z; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PKqet2+z"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7D67EC4CEF0
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 13 Feb 2025 17:58:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739469522;
-	bh=iCD1EJbH1lIRLMhar/vubBdCo81+Zp/krmtY+yjRst0=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=PKqet2+zH1t97Tb9PYh+csE5Hdb00pQkostRd2H2ctUmml1g8pGaPSCFUWnd+A+O0
-	 bOMyt4JNMnU96lRXLcWJRor87iyLPNItlWNX/iX3dZG/1Uiu89IzQ4X1LtvLTcY/2O
-	 7WicsQQbKQWDPk3XgXrgyZQz+ak29vrd2BaMECULVVsLSjv6pwN53nd3BBp1r2DRDD
-	 pIZ75RwafjHlIFQ0r/x5yRo8Lo9WUvLtkAcvnfH1UGQHS0RIb9w282c8FYrQtCWJzD
-	 mHbM4bZhXbdkWtKXrrOa0kyfEtO0tPU8X02toteJqeRdwmKZL4nLi3fjSdEH7rvIaQ
-	 lI+jDpT9mbxmQ==
-Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-ab7e1286126so216715566b.0
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 13 Feb 2025 09:58:42 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCW0eBdVuecPI7CQeUs++fPYMKoJL23PanqT8EgUOsLJO1v5RM20lvP+wv7wcuMHJHGBhmm9Jp6rfoiAeFyCPGpD44Q=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxYA+DDZvaGk+c2dWcuwf0pLMt5E8sB/eU32nyn5rRHTX3EhgX8
-	UqeelQPVGaz3hnBZR9cItwFRwTP/T9qI27sYrUbNkplC/zDcernhj+u5rF11ekwrzFZyrLW64GZ
-	hF3yr3k0yR8cip7EocbiB5vwjaAc22p0Os/fo
-X-Google-Smtp-Source: AGHT+IFHopkCd1IJRkVGtcRhcYRjj+s4dlwwFJCs/2tuVCIcDrZdxsclaMkaSiHDnOZupJK47TfVKKdiSuDfdpu5g6U=
-X-Received: by 2002:a17:907:3ea2:b0:ab7:c43f:8382 with SMTP id
- a640c23a62f3a-ab7f33cab3bmr916405866b.31.1739469520915; Thu, 13 Feb 2025
- 09:58:40 -0800 (PST)
+	s=arc-20240116; t=1739470788; c=relaxed/simple;
+	bh=VuurLnqN+FB3hPgjykP4dy2hW3XD6JxMvkT5P4qSHG8=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=kCWzONJCmArLszKnQRM6SooytrYd1O6+ZKBH0sL2YjNZALypG6TbbdiUJiMwPVoOWxH8N77+zFQZPX+nOCREdjbrv47/sVSNABlDWFR+k1TNy8XxiJ99oAIf8oyNONqCLnqKRPNxDXEWfqXjgTDJkFri6QzXnYXKYw3xtGhs9bo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0B8DAC4CED1;
+	Thu, 13 Feb 2025 18:19:47 +0000 (UTC)
+Date: Thu, 13 Feb 2025 13:19:57 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Vincent Donnefort <vdonnefort@google.com>
+Subject: [PATCH] ring-buffer: Unlock resize on mmap error
+Message-ID: <20250213131957.530ec3c5@gandalf.local.home>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250212220433.3624297-1-jolsa@kernel.org> <CALCETrVFdAFVinbpPK+q7pSQHo3=JgGxZSPZVz-y7oaG=xP3fA@mail.gmail.com>
- <Z623ZcZj6Wsbnrhs@krava>
-In-Reply-To: <Z623ZcZj6Wsbnrhs@krava>
-From: Andy Lutomirski <luto@kernel.org>
-Date: Thu, 13 Feb 2025 09:58:29 -0800
-X-Gmail-Original-Message-ID: <CALCETrVt=N-QG3zGyPspNCF=8tA4icC75RVVe70-DvJfsh7Sww@mail.gmail.com>
-X-Gm-Features: AWEUYZkKsWtgJBXXFU3xbPGAlALgrkQUHGzWNL5HcC7wERAjq_EEPmO7fwgtv2M
-Message-ID: <CALCETrVt=N-QG3zGyPspNCF=8tA4icC75RVVe70-DvJfsh7Sww@mail.gmail.com>
-Subject: Re: [PATCHv3 perf/core] uprobes: Harden uretprobe syscall trampoline check
-To: Jiri Olsa <olsajiri@gmail.com>
-Cc: Andy Lutomirski <luto@kernel.org>, Steven Rostedt <rostedt@goodmis.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Oleg Nesterov <oleg@redhat.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Andrii Nakryiko <andrii@kernel.org>, Kees Cook <kees@kernel.org>, 
-	Eyal Birger <eyal.birger@gmail.com>, stable@vger.kernel.org, 
-	Jann Horn <jannh@google.com>, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, linux-api@vger.kernel.org, x86@kernel.org, 
-	bpf@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
-	Deepak Gupta <debug@rivosinc.com>, Stephen Rothwell <sfr@canb.auug.org.au>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Thu, Feb 13, 2025 at 1:16=E2=80=AFAM Jiri Olsa <olsajiri@gmail.com> wrot=
-e:
->
-> On Wed, Feb 12, 2025 at 05:37:11PM -0800, Andy Lutomirski wrote:
-> > On Wed, Feb 12, 2025 at 2:04=E2=80=AFPM Jiri Olsa <jolsa@kernel.org> wr=
-ote:
-> > >
-> > > Jann reported [1] possible issue when trampoline_check_ip returns
-> > > address near the bottom of the address space that is allowed to
-> > > call into the syscall if uretprobes are not set up.
-> > >
-> > > Though the mmap minimum address restrictions will typically prevent
-> > > creating mappings there, let's make sure uretprobe syscall checks
-> > > for that.
-> >
-> > It would be a layering violation, but we could perhaps do better here:
-> >
-> > > -       if (regs->ip !=3D trampoline_check_ip())
-> > > +       /* Make sure the ip matches the only allowed sys_uretprobe ca=
-ller. */
-> > > +       if (unlikely(regs->ip !=3D trampoline_check_ip(tramp)))
-> > >                 goto sigill;
-> >
-> > Instead of SIGILL, perhaps this should do the seccomp action?  So the
-> > logic in seccomp would be (sketchily, with some real mode1 mess):
-> >
-> > if (is_a_real_uretprobe())
-> >     skip seccomp;
->
-> IIUC you want to move the address check earlier to the seccomp path..
-> with the benefit that we would kill not allowed caller sooner?
+From: Steven Rostedt <rostedt@goodmis.org>
 
-The benefit would be that seccomp users that want to do something
-other than killing a process (returning an error code, getting
-notified, etc) could retain that functionality without the new
-automatic hole being poked for uretprobe() in cases where uprobes
-aren't in use or where the calling address doesn't match the uprobe
-trampoline.  IOW it would reduce the scope to which we're making
-seccomp behave unexpectedly.
+Memory mapping the tracing ring buffer will disable resizing the buffer.
+But if there's an error in the memory mapping like an invalid parameter,
+the function exits out without re-enabling the resizing of the ring
+buffer, preventing the ring buffer from being resized after that.
 
->
-> jirka
->
-> >
-> > where is_a_real_uretprobe() is only true if the nr and arch match
-> > uretprobe *and* the address is right.
-> >
-> > --Andy
->
+Cc: stable@vger.kernel.org
+Fixes: 117c39200d9d7 ("ring-buffer: Introducing ring-buffer mapping functions")
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+ kernel/trace/ring_buffer.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+index b8e0ae15ca5b..07b421115692 100644
+--- a/kernel/trace/ring_buffer.c
++++ b/kernel/trace/ring_buffer.c
+@@ -7126,6 +7126,7 @@ int ring_buffer_map(struct trace_buffer *buffer, int cpu,
+ 		kfree(cpu_buffer->subbuf_ids);
+ 		cpu_buffer->subbuf_ids = NULL;
+ 		rb_free_meta_page(cpu_buffer);
++		atomic_dec(&cpu_buffer->resize_disabled);
+ 	}
+ 
+ unlock:
+-- 
+2.47.2
+
