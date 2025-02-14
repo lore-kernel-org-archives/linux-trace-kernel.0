@@ -1,53 +1,53 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D1F321CC4D;
-	Fri, 14 Feb 2025 08:00:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCF85245AFE;
+	Fri, 14 Feb 2025 09:52:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739520041; cv=none; b=qViv8cbbaCRlQi5ZDlIdmmnmlP4vip1VmzHmVYjZtCwcY+hr66mJCaXO0rjMuof5ELglONN7zVf6qEQMQS48/QatZVE8YmEU/TjSIUa+oYqOKHyjSs/PY9M73q/ixMLLvXzLoB4DW0gbDfFIbha+ZpGQtmxJrIJjr9aYo03lSOc=
+	t=1739526775; cv=none; b=JzO3z33fVUGiZjhjBXShIygp2/n8n2KUqstKsY8M1iPqhqpec7bFQZ68m5IuV3Ypjc0Lq+My5WijUrV18RxyHIYiQMMNpGDhIG80BZDo4pxMf55xy14bAHKrY6PLuvLJ82s1cqnOBsmcbSTYnz4UCFEaAQabXky9WCmF9N1Ia90=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739520041; c=relaxed/simple;
-	bh=v8hYqpTwAwdY3wJCEKVEjENut2Exj9ilsZyzIlA7VIc=;
+	s=arc-20240116; t=1739526775; c=relaxed/simple;
+	bh=Q2GLg2Ix3oJH2aSftQVDhySr55iaLzQztNTe7NKGzs0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WL9nKPzWtmFxvAT0WlVUvYDyaDkpOmvO90mHHiG/SNCnsJdnQtq4HGze4Zc/ScFRUCOjCep1L4AUNypHGAtoVcuUigjmT9thSribrCmv1JI1rrjBRoRYtvm39c0nmg2z+0x2F00ULmeJF9F+PslApfMjq6KHR7m/lQc47fQMZdQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Ss3JsjB+; arc=none smtp.client-ip=198.175.65.10
+	 Content-Type:Content-Disposition:In-Reply-To; b=I9lexi8CasI+KUEgmMq93G/FndXx6pdstTeKRxYVBnl5zVDOKyB/oyeqtmcZDXMZd5iFhE12G5IUkv4yTag6xvaGvmbUQ0gBcq0aj1eV+6AcHLB6Y1SCiit5sLnEUwPOiTWrbW5KU+speA4HlAYhrtz60N4mvCG1VMZreVe1t4U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=G9SPymFp; arc=none smtp.client-ip=198.175.65.11
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ss3JsjB+"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="G9SPymFp"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739520040; x=1771056040;
+  t=1739526773; x=1771062773;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=v8hYqpTwAwdY3wJCEKVEjENut2Exj9ilsZyzIlA7VIc=;
-  b=Ss3JsjB++WvgReWc86xLGCUYXAmFR4ipiALbjNq57hdlck9iqsU2/Xzs
-   kDDjB3TVZgOCzj1wGf/xuMsslseMAl8FVP3tNbzSgAx7rGy8t5SGIPNWq
-   Rql87wLDOfYcNdkNSN3eSHAkAyh6ClHyAprxJgohYc0je+gdj8/FTS8vk
-   Atev5Qio96me2JhA9CQ6sVlCkDVwFfXZgsn+gyCe7jf8wKfxSrtZNyegZ
-   Q1LUrQIa7zPlVgKWfW6dHQI/z9km8JZOk+gFyvoCwhrCoxtiqTXtzmdD2
-   IqZwT65u9z2y5/2XNMLDk4VdS17JY9TzFX0xnQ10+Q/FaRigtDW+rmyPi
-   A==;
-X-CSE-ConnectionGUID: D0gXEUzoQBusCVa9FPh2ug==
-X-CSE-MsgGUID: bVlkWACYSWy75zlhyB+/dg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11344"; a="57666760"
+  bh=Q2GLg2Ix3oJH2aSftQVDhySr55iaLzQztNTe7NKGzs0=;
+  b=G9SPymFp8ZeTxhIveT5/1n6qSCUeX3bgaTe017QCRB2bS/JkfvIMTcux
+   pkkMAWmF2VP6woUvvPUolojv3tUL2TpKFYvFcippYgn06Z+EweYF2W+8O
+   qc091pQMDClTEIe5Xxj/8h6w7FGVY/XyAviXQr6x8LfyKAD33f3hTEXsA
+   g2PBEzhtV6hC4UV6UPIHM5D1SJD1R/3KAoMNV61hGYxlK6UMsgZqk/fLc
+   WDStaIMY/lpHidh3/K/Utgg6JjXjg9RdoDOmurKRP3fj2wzfNlUKFHm5C
+   EopEhQwus5KCCkulRZM2RQRvoqyLtLM02lzY2tBtob0GD3MpD/HfVwuWI
+   w==;
+X-CSE-ConnectionGUID: bix9pkX3QdWNH63Cx3nWeg==
+X-CSE-MsgGUID: LUg3jvVRRNuBvF8hLxG5MQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11344"; a="50484978"
 X-IronPort-AV: E=Sophos;i="6.13,285,1732608000"; 
-   d="scan'208";a="57666760"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Feb 2025 00:00:40 -0800
-X-CSE-ConnectionGUID: sFldRYM+S2WPmtEdqfEVvQ==
-X-CSE-MsgGUID: Eh1FUK/UQRW996/whU3rZg==
+   d="scan'208";a="50484978"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Feb 2025 01:52:53 -0800
+X-CSE-ConnectionGUID: 0Vjz3su7Tf6WLgy7UW1g6A==
+X-CSE-MsgGUID: fb6+pPMbSDS6uIG0KS32Hw==
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="113253143"
+X-IronPort-AV: E=Sophos;i="6.13,285,1732608000"; 
+   d="scan'208";a="113605790"
 Received: from lkp-server01.sh.intel.com (HELO d63d4d77d921) ([10.239.97.150])
-  by orviesa010.jf.intel.com with ESMTP; 14 Feb 2025 00:00:37 -0800
+  by fmviesa008.fm.intel.com with ESMTP; 14 Feb 2025 01:52:50 -0800
 Received: from kbuild by d63d4d77d921 with local (Exim 4.96)
 	(envelope-from <lkp@intel.com>)
-	id 1tiqck-0019FP-2J;
-	Fri, 14 Feb 2025 08:00:34 +0000
-Date: Fri, 14 Feb 2025 16:00:19 +0800
+	id 1tisNL-0019LX-1U;
+	Fri, 14 Feb 2025 09:52:47 +0000
+Date: Fri, 14 Feb 2025 17:52:17 +0800
 From: kernel test robot <lkp@intel.com>
 To: Gabriele Monaco <gmonaco@redhat.com>, linux-kernel@vger.kernel.org,
 	Steven Rostedt <rostedt@goodmis.org>,
@@ -55,10 +55,11 @@ To: Gabriele Monaco <gmonaco@redhat.com>, linux-kernel@vger.kernel.org,
 	Peter Zijlstra <peterz@infradead.org>,
 	Masami Hiramatsu <mhiramat@kernel.org>,
 	linux-trace-kernel@vger.kernel.org
-Cc: oe-kbuild-all@lists.linux.dev, Gabriele Monaco <gmonaco@redhat.com>,
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	Gabriele Monaco <gmonaco@redhat.com>,
 	Juri Lelli <juri.lelli@redhat.com>
 Subject: Re: [PATCH v2 03/11] sched: Add sched tracepoints for RV task model
-Message-ID: <202502141516.OkUInaxw-lkp@intel.com>
+Message-ID: <202502141719.Jdm44al4-lkp@intel.com>
 References: <20250213090819.419470-4-gmonaco@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -80,26 +81,40 @@ url:    https://github.com/intel-lab-lkp/linux/commits/Gabriele-Monaco/tracing-F
 base:   4dc1d1bec89864d8076e5ab314f86f46442bfb02
 patch link:    https://lore.kernel.org/r/20250213090819.419470-4-gmonaco%40redhat.com
 patch subject: [PATCH v2 03/11] sched: Add sched tracepoints for RV task model
-config: i386-buildonly-randconfig-001-20250214 (https://download.01.org/0day-ci/archive/20250214/202502141516.OkUInaxw-lkp@intel.com/config)
-compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250214/202502141516.OkUInaxw-lkp@intel.com/reproduce)
+config: arm-randconfig-001-20250214 (https://download.01.org/0day-ci/archive/20250214/202502141719.Jdm44al4-lkp@intel.com/config)
+compiler: clang version 16.0.6 (https://github.com/llvm/llvm-project 7cbf1a2591520c2491aa35339f227775f4d3adf6)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250214/202502141719.Jdm44al4-lkp@intel.com/reproduce)
 
 If you fix the issue in a separate patch/commit (i.e. not just a new version of
 the same patch/commit), kindly add following tags
 | Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202502141516.OkUInaxw-lkp@intel.com/
+| Closes: https://lore.kernel.org/oe-kbuild-all/202502141719.Jdm44al4-lkp@intel.com/
 
 All errors (new ones prefixed by >>):
 
-   kernel/sched/core.c: In function '__do_trace_set_current_state':
->> kernel/sched/core.c:503:9: error: implicit declaration of function '__do_trace_sched_set_state_tp'; did you mean 'trace_sched_set_state_tp'? [-Werror=implicit-function-declaration]
-     503 |         __do_trace_sched_set_state_tp(current, current->__state, state_value);
-         |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-         |         trace_sched_set_state_tp
-   cc1: some warnings being treated as errors
+>> kernel/sched/core.c:503:2: error: call to undeclared function '__do_trace_sched_set_state_tp'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
+           __do_trace_sched_set_state_tp(current, current->__state, state_value);
+           ^
+   kernel/sched/core.c:503:2: note: did you mean 'trace_sched_set_state_tp'?
+   include/trace/events/sched.h:835:1: note: 'trace_sched_set_state_tp' declared here
+   DECLARE_TRACE_CONDITION(sched_set_state_tp,
+   ^
+   include/linux/tracepoint.h:472:2: note: expanded from macro 'DECLARE_TRACE_CONDITION'
+           __DECLARE_TRACE(name, PARAMS(proto), PARAMS(args),              \
+           ^
+   include/linux/tracepoint.h:409:2: note: expanded from macro '__DECLARE_TRACE'
+           __DECLARE_TRACE_COMMON(name, PARAMS(proto), PARAMS(args), PARAMS(data_proto))
+           ^
+   include/linux/tracepoint.h:385:21: note: expanded from macro '__DECLARE_TRACE_COMMON'
+           static inline void trace_##name(proto)                          \
+                              ^
+   <scratch space>:84:1: note: expanded from here
+   trace_sched_set_state_tp
+   ^
+   1 error generated.
 
 
-vim +503 kernel/sched/core.c
+vim +/__do_trace_sched_set_state_tp +503 kernel/sched/core.c
 
    496	
    497	/*
