@@ -1,169 +1,111 @@
-Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94006267706;
-	Fri, 14 Feb 2025 17:07:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3984189F56;
+	Fri, 14 Feb 2025 17:18:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739552850; cv=none; b=N9yZam+DfXUM2IgXFcQ1kdnFno72kwbK+Yi1T208WuFiF0iC6yV5sKHrbppeT2/39m5j9LgmmEEsolTcZGYQTbDQ0k5tShpSY3CDPezlfuO0tWFE+RTHdn6gBLAI6HFKjYpUBHCqEh7yap+Ure3hle4c+jUpQocBtLXBtBZKunY=
+	t=1739553539; cv=none; b=sgUBXmDjIFBHtXoHTYy/VMPNQR8JENYqzyLQZX2rwcQhvy6SO+xRAw11ZqaAIPD2ylahUakGt3HZEFdHOKaKhEHzKDHLkF1voErGOKnMoeES1DfQ3OjgEKRR0R8nP7/eqeQMwXMDcegwNTuV9/HoYmT59Xdc6oUyAyBRViz1Fy0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739552850; c=relaxed/simple;
-	bh=4lxofitPsYrHNm7bi3LfUMF9ZD1wJq6AEPk0sbeQ7X4=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=kur+5DEtF9KisLTfdtjkalsAi6v9Ks/Fz5Tkr6huueT61s2/QXJ6Uln5ZWRKHl9++yeHlCNZJ5k9d+5E/o8L0MeI+af/VTDq5yxNSGc0B5d/7b053kDnxoGRBq5A/J6mgG4X4ZCGdyWgHZRJJNCi0kduDOnASflBzzmV/nL1M4U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.218.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+	s=arc-20240116; t=1739553539; c=relaxed/simple;
+	bh=5w9szdovW8cw1e9MFI/dUwdT88FpwDXhmAb9Exjhm/o=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=FgtRUp+rkVjbusUP38j/b6yAzSQYYhXjkBxBRezUQ9+KjeZIDjjRN38zzuZa0pQLMw2GTBb89qJS87EcVLjrGGXYirj2WUyOWo9PBO9GiWFNoUZqjqawcr1YGNrqee/leNuLKuQidqZHQnmJj/ltdJ0jqWd2XY4ADgPoZo6i8qc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ekw46s9r; arc=none smtp.client-ip=209.85.128.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-ab7c501bbecso341665966b.2;
-        Fri, 14 Feb 2025 09:07:28 -0800 (PST)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ekw46s9r"
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-4394829ef0fso21551675e9.0;
+        Fri, 14 Feb 2025 09:18:57 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1739553536; x=1740158336; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=qftA7qwwF/BZn/LdSqftv264JIM5F1LnaZcnD09P8xM=;
+        b=ekw46s9r5dTgrhbYP/E231Z3Yu3J3U6lqNhYH0cy3RyuQge1ByPPn5VtqARezvGDMz
+         +O2KPQ8b3ENcxUx8Gnd2U3w2Ccxwslv4f4PlrnYeYxVTOH/+BqtKkOv8OtC5hVEyzlAs
+         V+OvYqTV2H8GoOgM7qiik7mAB+ga6e8F2flDz3szV/qtVahU0wIAB8JbhMP/LPzRI2bl
+         0R9JU2tgwSk68CWN6oVuK3rPbREwk4RaAJoQV4WPbNkrUO/CiBVDnc4RQK/C/v9w31F+
+         pICdMhQwjIrnnkIW4h1UTnyOgjfbpeLAQLDFVeKvr0AwSLVxeiwGMzIUqc47/blKT/sk
+         vC2Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739552847; x=1740157647;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=BIrO4AUyyPAuiO56g6/OhKbTYoxtm/sXhUq9qEndj9g=;
-        b=s2ivOP/SfA9XBnP/VYe7uSO+lY7EK0fh1TLPeKU70ltE8ecWOTqcAjLBO8pExoUjXn
-         /vRnYH47Ttyv+Fs098CzYj4rDbHfnMJj25Qb8kK9DV975xRGxubtA5+kdBG8K9AjAnSq
-         hH2QpZla/iPB0MZDyd4BG0neWc6wtun6uGTqqfv3owZ0zVsEgoueacxqcuwHKB47Fkkj
-         Zk99bLSeHJbQ22L0h7wGOtEeoAT7gab4uptwqL+ImmTvCCZTaPsBZ9yhhsz1R24YlYVu
-         4V2HkmTSxcZw68t0eSHoaBNUoNcoboyjuFvOPTfa/ifqwNIgI6wXYx+1gbLlDnT799rq
-         xXfw==
-X-Forwarded-Encrypted: i=1; AJvYcCUpV8mkIsSZ/2TEwx38vJdZNwCiIYTCw4FlPGG+dQF4L+oZTXTsGmqq3zvJTyucP9zYtz6yftdVEVtAN8U=@vger.kernel.org, AJvYcCWmVN6C6d3tQiUvC48TunXhWGOS9ZVPP+VhS3ONoK84k00bnY5FK+rfZ/SUtF4GFt9Nm9ssOgTw7n0gh6nRN/Dw4qsp@vger.kernel.org
-X-Gm-Message-State: AOJu0YxM0eWGrzc9zB27XU1Yl7tGKn9f8EDcsjvEDaPEO1YvpXHFhSNg
-	0SKj2rLpNmheWyJ81BlJsfu8yoLJQxVI/iP3Z3a4Jp0XagigFFxd
-X-Gm-Gg: ASbGncv6hJlMnEZ0eEDz02f6KWL1xfKC45ibeARiY1X78tIvcvuzLB7Kb3eUNFUwj8V
-	T2gfO58zF1ecKZT0ezXy14uoM5Xb+ZvCc7ir7qpCoUZTC3h6S5dtPgFUNKDEYmqflBc3CmBOaSp
-	jJXH6NJofe6KyEIcdf1uuj1XclRH81NS8cA12npYBrO3gTykE6/nJwjcpAQLfVdM2ectwRiP7mH
-	tCZAMElKvJ1Grg7FOR1i8L8Bvh9KoNUjkOdV8q7ACczZ6mDCytRAHRajYaDJ36XhKmAQV1xZ6dM
-	EETvuA==
-X-Google-Smtp-Source: AGHT+IGcx6b4t8RM4Fx7WnQoAc1OzmsxgOSJ23g5olNhu1HxNmi6drUByzGPykqu5+gR/vAUTGrLyg==
-X-Received: by 2002:a17:907:608e:b0:ab7:e8d6:3b12 with SMTP id a640c23a62f3a-ab7f334500dmr1277008866b.1.1739552846600;
-        Fri, 14 Feb 2025 09:07:26 -0800 (PST)
-Received: from localhost ([2a03:2880:30ff:6::])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-aba53231f36sm373755266b.33.2025.02.14.09.07.25
+        d=1e100.net; s=20230601; t=1739553536; x=1740158336;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=qftA7qwwF/BZn/LdSqftv264JIM5F1LnaZcnD09P8xM=;
+        b=exmim29tb7Ccwp5NArMjEAH7z2M/f4UmJg6lIXYKVEeM9nqN7cjFnDQ9B1GCAF+T3U
+         jXgXVLVfQPK5eBQkvvK4Msum6tSjVsHhTWx5cwEez5npC9FDRZV6OCye5iEj/otY6uFD
+         g36PGxrVQ7FKTbvKYdJ81o3PrISSf/az7/MndkqAips/yEAGjh+vuPDj0hRFkcfoxwy5
+         gBWyIUwA0llht9AnMFX5squD/Kj2g9Ut8Qa73pdreWizgq+z8ALG/BL/ACKlhaoAl961
+         lrAK6X1xsgKI0ZXerewFYAwikzk85l8BOmU8dF+ki0qRG3t227IL8znWvOM4IYHPukgn
+         d3qg==
+X-Forwarded-Encrypted: i=1; AJvYcCUcCjbttc/MT861fNfjaopJ0VPf4W00VZkIrtJixPhELPKEhVXTXH6MIZ7SAVXYqPgjug4xPj1Ea/ieG/MZIXsXQQA=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxin9DRYTYFl8SjkcwSE7NKFdbzm3VT1lcq3YBgXAUINmruxdYE
+	08E8vRXVAxoeYPDThlZTTv8pp0FwgPhenCXT7+OBvEUFvsr4QVpuHkoBbQ==
+X-Gm-Gg: ASbGncuE8g782uCGTOPYcXUmLYTzvJftxuutAejUigBOFS0oS1daSrLjH5uUb/ti/qT
+	ZEPWXvll0ZSKufkgqXccQg6MlsIudbOa6TJy1MhLRuXmgaklJMTNbjN+CMFAvqCRZ7aVXJ/6ZN1
+	LSkDwhH7M7fl9B330VKeJKPZ48VJoyhv+dxP16TqygTxg50TgsVe2QTS16gw7Iy0yrx9qYE5/2d
+	Q8QOROtVst6vnjuVbEz+4HF4uSYBkZWK/3/bF2HBvLpq2fLY1ONAyw/CXAPkAsezMpHBN/ly5o3
+	WBYLvdnqIBq5s/iVSHtq6iFVTPBCcaSImVn7XQlfBwjUZe0pIzDqlw==
+X-Google-Smtp-Source: AGHT+IEp/tZRt2esZ1kk2Dq8pQD5WsnQsKzzbXY2N+EmI+m6c/RyUNFNBV5zCEQOY16uueZq3sg5Bw==
+X-Received: by 2002:a5d:5889:0:b0:385:faf5:ebb8 with SMTP id ffacd0b85a97d-38f24f2ba56mr9980582f8f.7.1739553535998;
+        Fri, 14 Feb 2025 09:18:55 -0800 (PST)
+Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38f258ccd2csm5263225f8f.30.2025.02.14.09.18.55
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Feb 2025 09:07:25 -0800 (PST)
-From: Breno Leitao <leitao@debian.org>
-Date: Fri, 14 Feb 2025 09:07:11 -0800
-Subject: [PATCH net-next v2] trace: tcp: Add tracepoint for
- tcp_cwnd_reduction()
+        Fri, 14 Feb 2025 09:18:55 -0800 (PST)
+Date: Fri, 14 Feb 2025 17:18:54 +0000
+From: David Laight <david.laight.linux@gmail.com>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Vincent Donnefort <vdonnefort@google.com>
+Subject: Re: [PATCH v2] tracing: Do not allow mmap() of persistent ring
+ buffer
+Message-ID: <20250214171854.50adf509@pumpkin>
+In-Reply-To: <20250214115547.0d7287d3@gandalf.local.home>
+References: <20250214115547.0d7287d3@gandalf.local.home>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250214-cwnd_tracepoint-v2-1-ef8d15162d95@debian.org>
-X-B4-Tracking: v=1; b=H4sIAD94r2cC/3WNSw7CIBQAr0Leuhg+FkNX3sM0hsJr+zbUAKk1T
- e9uZOVC15OZ2SFjIszQsR0SrpRpidAx1TDws4sTcgrQMVBCtUIqwf0zhntJzuNjoVi4Qim9tcZ
- ZP0DD4JFwpK0WbxCx8Ihbgb5hMFMuS3rV1Sor/1tdJZdcm0GgCOasR3cNOJCLpyVNn0sVlbj8F
- qU2rRi1d9aEb7E/juMNAtsfbPIAAAA=
-X-Change-ID: 20250120-cwnd_tracepoint-2e11c996a9cb
-To: Eric Dumazet <edumazet@google.com>, 
- Steven Rostedt <rostedt@goodmis.org>, 
- Masami Hiramatsu <mhiramat@kernel.org>, 
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
- "David S. Miller" <davem@davemloft.net>, David Ahern <dsahern@kernel.org>, 
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
- Simon Horman <horms@kernel.org>, Neal Cardwell <ncardwell@google.com>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-trace-kernel@vger.kernel.org, kernel-team@meta.com, 
- Breno Leitao <leitao@debian.org>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2815; i=leitao@debian.org;
- h=from:subject:message-id; bh=4lxofitPsYrHNm7bi3LfUMF9ZD1wJq6AEPk0sbeQ7X4=;
- b=owEBbQKS/ZANAwAIATWjk5/8eHdtAcsmYgBnr3hMt7hBwgflH6VNNshkd/HsByY3dQgcaq6W8
- Ybx3tzUfLyJAjMEAAEIAB0WIQSshTmm6PRnAspKQ5s1o5Of/Hh3bQUCZ694TAAKCRA1o5Of/Hh3
- bVtXD/914iEFx6I/drSRqpQtHjhCkmfeynnlbBsXv0iOya/zzKL1lr9y7KSzQkuNaWmyhI1WfhC
- jfSCTXqAetgIcg3C3iBcN9jfyXleABjsQ0czTkd85Ab6JtPTyGFdP2dT5+t6E24hHVxA2Y2CAIc
- GqxXCxiqKEOeLlIOHuvaNNo3HhnZ6gwwwBFGFZhEBS6UF1xWslIDzEmWbmcvqiPTeksmP23MZbr
- 6FFrFjcalHRDqoyhghjJnRC2Wcy3ToI8xX3YIMCni3gTCQprkeqc6a6VCGoK8Zz5wsz3+oW8idn
- hd64jNIfHvDQpU3eRQ19DW/w7hWS9dO03l393PvJHWwDH8MJk6ETRRB+dc9FhAgifXKvriVrsxq
- +7mHkiyxzoExm8riELtd3EyTrFBlJwCOE2uGXD/h7svW2Fj/a1/uxt90FHyf8rMsDoxrdkP16gc
- 139je7c3YgM0hi2nt/Cizx0G7JOQjFVbGJ2CyvN0bYtANLv5cGHeNhuN3TT+/M90lD2/q4Kq34M
- 2wBuMxzxPaxm6BNBc1Gz3GLumF0bQRWeB37thxPkDoMEB3OJGOUOpBI/quWc5YazP7/cnTFC+Es
- N7Mrkhc3CXJKHOArGHGm460fbOEj8lxvyBDLszx9YP8vbLDQAC0fp5nGxYkn8aZf+G0VLKmBiLg
- AOzz1t1iax5X1kQ==
-X-Developer-Key: i=leitao@debian.org; a=openpgp;
- fpr=AC8539A6E8F46702CA4A439B35A3939FFC78776D
 
-Add a lightweight tracepoint to monitor TCP congestion window
-adjustments via tcp_cwnd_reduction(). This tracepoint enables tracking
-of:
-- TCP window size fluctuations
-- Active socket behavior
-- Congestion window reduction events
+On Fri, 14 Feb 2025 11:55:47 -0500
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-Meta has been using BPF programs to monitor this function for years.
-Adding a proper tracepoint provides a stable API for all users who need
-to monitor TCP congestion window behavior.
+> From: Steven Rostedt <rostedt@goodmis.org>
+....
+> The reason was that the code that maps the ring buffer pages to user space
+> has:
+> 
+> 	page = virt_to_page((void *)cpu_buffer->subbuf_ids[s]);
+...
+> But virt_to_page() does not work with vmap()'d memory which is what the
+> persistent ring buffer has. It is rather trivial to allow this, but for
+> now just disable mmap() of instances that have their ring buffer from the
+> reserve_mem option.
 
-Use DECLARE_TRACE instead of TRACE_EVENT to avoid creating trace event
-infrastructure and exporting to tracefs, keeping the implementation
-minimal. (Thanks Steven Rostedt)
+I've recently fallen foul of the same issue elsewhere [1].
+Perhaps there ought to be a variant of virt_to_page() that returns an
+error for addresses outside the kernel map.
+Or even a fast version that doesn't check for places where the cost
+of the additional conditional would matter.
 
-Given that this patch creates a rawtracepoint, you could hook into it
-using regular tooling, like bpftrace, using regular rawtracepoint
-infrastructure, such as:
+Even a kernel panic for an unchecked NULL pointer would be easier
+to diagnose than the current situation.
 
-	rawtracepoint:tcp_cwnd_reduction_tp {
-		....
-	}
+[1] In my case it was dma_alloc_coherent() using vmalloc() when an iommu
+is enabled and then the wrong things happening when I try to mmap()
+the buffer into userspace (offset in both the dma buffer and the user file).
+I do need to check that the iommu is honouring the buffer alignment.
 
-Signed-off-by: Breno Leitao <leitao@debian.org>
----
----
-Changes in v2:
-- Close the parenthesis in a new line to honor the tcp.h format (Jakub).
-- Add the bpftrace example in the commit message (Jakub)
-- Link to v1: https://lore.kernel.org/r/20250207-cwnd_tracepoint-v1-1-13650f3ca96d@debian.org
-
-Changes since RFC:
-- Change from a full tracepoint to DECLARE_TRACE() as suggested by
-  Steven
-- Link to RFC: https://lore.kernel.org/r/20250120-cwnd_tracepoint-v1-1-36b0e0d643fa@debian.org
----
- include/trace/events/tcp.h | 6 ++++++
- net/ipv4/tcp_input.c       | 2 ++
- 2 files changed, 8 insertions(+)
-
-diff --git a/include/trace/events/tcp.h b/include/trace/events/tcp.h
-index a27c4b619dffd7dcc72fffa71bf0fd5e34fe6681..1a40c41ff8c30a31b5c7002a4109de1cd8ef389e 100644
---- a/include/trace/events/tcp.h
-+++ b/include/trace/events/tcp.h
-@@ -259,6 +259,12 @@ TRACE_EVENT(tcp_retransmit_synack,
- 		  __entry->saddr_v6, __entry->daddr_v6)
- );
- 
-+DECLARE_TRACE(tcp_cwnd_reduction_tp,
-+	TP_PROTO(const struct sock *sk, int newly_acked_sacked,
-+		 int newly_lost, int flag),
-+	TP_ARGS(sk, newly_acked_sacked, newly_lost, flag)
-+);
-+
- #include <trace/events/net_probe_common.h>
- 
- TRACE_EVENT(tcp_probe,
-diff --git a/net/ipv4/tcp_input.c b/net/ipv4/tcp_input.c
-index 4686783b70defe0457571efd72d41ac88c528f7b..3f79718fdb1ec7a4352dc691147da527448c1f46 100644
---- a/net/ipv4/tcp_input.c
-+++ b/net/ipv4/tcp_input.c
-@@ -2709,6 +2709,8 @@ void tcp_cwnd_reduction(struct sock *sk, int newly_acked_sacked, int newly_lost,
- 	if (newly_acked_sacked <= 0 || WARN_ON_ONCE(!tp->prior_cwnd))
- 		return;
- 
-+	trace_tcp_cwnd_reduction_tp(sk, newly_acked_sacked, newly_lost, flag);
-+
- 	tp->prr_delivered += newly_acked_sacked;
- 	if (delta < 0) {
- 		u64 dividend = (u64)tp->snd_ssthresh * tp->prr_delivered +
-
----
-base-commit: 7a7e0197133d18cfd9931e7d3a842d0f5730223f
-change-id: 20250120-cwnd_tracepoint-2e11c996a9cb
-
-Best regards,
--- 
-Breno Leitao <leitao@debian.org>
-
+	David
