@@ -1,199 +1,139 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECBD118A95E;
-	Fri, 14 Feb 2025 18:04:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 347741DDA18;
+	Fri, 14 Feb 2025 22:14:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739556272; cv=none; b=fHkt4WPGza7fTvP2qtiX6Zq8NyFtkatwYswIPXhZU2ePKiYUNP9CsVhVdqXGgBxYOTHW8pRL8BicJUOZOdD+9RPkNEaVcaZsiV8jj3890OsKiZi76vovWZIs81qUosCb1C0Nqwr3sGvbtqyNJH7ZgWO9LVMnwjxrV7Ny7Xtz/bs=
+	t=1739571272; cv=none; b=Qb7ujbdRLk63GM4nAEtHpb36Nzvot3P5ChpIpkFNVX+sQuSVLTI2XC6fTogR3x331Q14d6T0bfebML12UZ/sYbe5pCqQU08dug4TQtIn2fzsWqWXCiy/uTAhWQnIDRIdCeAnq/0jDSZDj0l3KuG18Jd6grVCW1UN4S3Bks2t0X0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739556272; c=relaxed/simple;
-	bh=i8eBRsGFqX7u/OaXDisHtA5IiCuO9McveZ0pd21c1r4=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=FXu7MpDIV5eNp8+1NPU9FzoybLm/qtPAbsDDilzWhpttFFOS8LgoLTuAdRPWeaRsuO+Zcg1xWlybhIGKfvyHj2CtyT8OQQXb/ZrdtwzH9Ln4yrYrMpX0G65AeVGEp7F/Mca4wVKM81HxFxDvhm9rKv13hAwyckR2S+HCd7UB/Ss=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B081DC4CED1;
-	Fri, 14 Feb 2025 18:04:30 +0000 (UTC)
-Date: Fri, 14 Feb 2025 13:04:42 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Vincent Donnefort <vdonnefort@google.com>
-Subject: [PATCH] ring-buffer: Allow persistent ring buffers to be mmapped
-Message-ID: <20250214130442.3f4fee5d@gandalf.local.home>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1739571272; c=relaxed/simple;
+	bh=HIsehv+iWAWVMHHYckz3gqMXnT7YI+cVRjsvqR6vsrQ=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lRpCo9FjoVST6lBK6YWsF8YkGWDIEQWp9xsq6W9QjJ5JFkw62iV195bdi7LxjY6mskY9uEq/Fh5vVGP0WuSI0Qt7xKrpF9Oa638m/Ex96bUkr1q+ZpDOeDi1KYAciVnH2MFO1/FPqUezjxIPgplfox19NhGl7jYVrGUY/B2cFiU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EYKGEZP9; arc=none smtp.client-ip=209.85.208.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EYKGEZP9"
+Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-5de4d3bbc76so4090234a12.3;
+        Fri, 14 Feb 2025 14:14:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1739571269; x=1740176069; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=bEB+wipqpxDExoX7XkJyi7zxDfuglvJ+HC5Ljm+PuFY=;
+        b=EYKGEZP95Mh5IUFfOEHxXs2I9qpTnoCE2q/sbx98ayfP2Kb92NBL7w9N2Q3Y1nisDR
+         ulFPQcJA2mNxp/BiFLODSGtO1X5YZt/6C9nRtYmkKfYuRhp19ab0HR4r2rYhznHq1byD
+         xrXUXr31gPU1MpT4dmPlchcoeLI/EJbxjX8f0bGlDTHORPF1S0Du9GabCvbX+4ohEaRM
+         E954HyhnQnpxWdZsoqyUlO5G9fLJKvyNFngqiIwwVTts2iYavQJAMU177YlYvQCsH8cQ
+         RiR+6W7gfVPKLVk3nL20RxgW9FaEqwt2LUCPjbChbAFNBygt3kTgZ9827DPmlKXklbOg
+         qXhQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739571269; x=1740176069;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=bEB+wipqpxDExoX7XkJyi7zxDfuglvJ+HC5Ljm+PuFY=;
+        b=B/mXjqKwD7TzZE6AUZXztYny1vlYpi9Yrj8JPC4DhNmJizJMlS+/Qfqz9nQwzaHYgQ
+         oAF2WnRpCdnr6KZP/8EJYdcYFFQnwJJ0T6o9SurcNQNPBA5INphKZZ2C2dtjirFcC/9C
+         QYQXW8JxyQF4+++tnYIoltFcDlEguC6t1o4yo1y/AYLuk50Iiwn+YU4/kjFnU+pkBqEN
+         S+UDs9UcsWV3F+2gHw47iDjxBeZlkH6fLoe3MT+XZPXmnsq2zDJULa1niKuHT1CUSeVj
+         GNqhrcvQ1yow6ena8TxqbPldZG1XodgrUqRyqMie/JpHeK3r0l4ghzqUa5G9dSGQ2QzD
+         MIOQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUBNVGf7FF6B6I0k4Rr5WWRtuk+xq3++ip9uZS7K5Wr4ZbRgOJ72WPY8UFIrvKWUK6thhmr+lVrj85eWg==@vger.kernel.org, AJvYcCUBtk0+AVl/cF/Qbul9soD61IUE6n29xpTAQIoKkMccBgbVVqVopaDgdiC1igNrZM/dvGI=@vger.kernel.org, AJvYcCVZq7ROyxVQ7xL1NaOry5yXMnmuMyi9TsUM5GPDDA4nweSSIwAu8dz9DBd0CSzol/gKhLP/hCaLoGBBZZcG@vger.kernel.org, AJvYcCW78kdoJUbcS8Ci6PKzpGQPGj2K1sYN09N93CfyCIDPsIFW8zibRlsCocBlczC2r3E5m76+sx9kpPUIoYk6Rk9gMTIC@vger.kernel.org
+X-Gm-Message-State: AOJu0YwGsfeTYTwNLFispEsCCZDhEZnrNEah6/HwYlXIUXxm4UUvm+4g
+	pdYh/EFMuTSm3xX9lKPHYCoW+KSnuRShtalrdY4Pm7duNp305I1x
+X-Gm-Gg: ASbGncu26dkFW4irT/qU9laTdGnVt+5Jwaiq2AFdjjE8qcYp+NT2Yq2sQ68tPCDw8Br
+	SRSQMebSMuk0+YEA9o28s1wCwDEvAVOkaAwSPUz4fn7EH4hA+mziSkYk5Ho1AFf9q8tIJnKRS1m
+	HuJCQtjh2g8GYF+rpwcuyiqmdVcuNaWjbiJG343huimvzS/nJpdSsy6rDk3X9iSLKnaK/FlLW3I
+	xwAYgp+7RvQP8UH/T5hcFlqk1yOSANRMFEuECEIHDFpOhc7VdWpg/+RnQZ62zM0JAdb8ka3P/0e
+	8DR0+9x6BbYFNBpS9s96FZxPROiXWZymowmN
+X-Google-Smtp-Source: AGHT+IGhKMUt6pQQ2eEdpEq9Kp47Mlkh7KYX18Dx2znHH1AwQvYGHh0IRemg9M7NamftnrBLcT9VIw==
+X-Received: by 2002:a05:6402:5210:b0:5de:dc08:9cc5 with SMTP id 4fb4d7f45d1cf-5e0360a1fb6mr766609a12.7.1739571269178;
+        Fri, 14 Feb 2025 14:14:29 -0800 (PST)
+Received: from krava (ip-94-113-247-30.net.vodafone.cz. [94.113.247.30])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5dece1c46b3sm3547034a12.21.2025.02.14.14.14.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 14 Feb 2025 14:14:28 -0800 (PST)
+From: Jiri Olsa <olsajiri@gmail.com>
+X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
+Date: Fri, 14 Feb 2025 23:14:26 +0100
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	linux-kbuild@vger.kernel.org, bpf <bpf@vger.kernel.org>,
+	linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nicolas Schier <nicolas@fjasle.eu>,
+	Zheng Yejian <zhengyejian1@huawei.com>,
+	Martin Kelly <martin.kelly@crowdstrike.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Josh Poimboeuf <jpoimboe@redhat.com>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Vasily Gorbik <gor@linux.ibm.com>,
+	Alexander Gordeev <agordeev@linux.ibm.com>
+Subject: Re: [PATCH v3 4/6] scripts/sorttable: Zero out weak functions in
+ mcount_loc table
+Message-ID: <Z6_AQmaUWAekeB5B@krava>
+References: <20250213162047.306074881@goodmis.org>
+ <20250213162145.986887092@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250213162145.986887092@goodmis.org>
 
-From: Steven Rostedt <rostedt@goodmis.org>
+On Thu, Feb 13, 2025 at 11:20:51AM -0500, Steven Rostedt wrote:
 
-The persistent ring buffer uses vmap()'d memory to map the reserved memory
-from boot. But the user space mmap() to the ring buffer requires
-virt_to_page() to return a valid page. But that only works for core kernel
-addresses and not for vmap() addresses.
+SNIP
 
-If virt_addr_valid() fails on the page to be mapped, use vmalloc_to_page()
-instead.
+> +static int cmp_funcs(const void *A, const void *B)
+> +{
+> +	const struct func_info *a = A;
+> +	const struct func_info *b = B;
+> +
+> +	if (a->addr < b->addr)
+> +		return -1;
+> +	return a->addr > b->addr;
+> +}
+> +
+> +static int parse_symbols(const char *fname)
+> +{
+> +	FILE *fp;
+> +	char addr_str[20]; /* Only need 17, but round up to next int size */
+> +	char size_str[20];
+> +	char type;
+> +
+> +	fp = fopen(fname, "r");
+> +	if (!fp) {
+> +		perror(fname);
+> +		return -1;
+> +	}
+> +
+> +	while (fscanf(fp, "%16s %16s %c %*s\n", addr_str, size_str, &type) == 3) {
+> +		uint64_t addr;
+> +		uint64_t size;
+> +
+> +		/* Only care about functions */
+> +		if (type != 't' && type != 'T')
+> +			continue;
 
-Also, the persistent memory uses the page->id for its own purpose where as
-the user mmap buffer currently uses that for the subbuf array mapped to
-user space. If the buffer is a persistent buffer, use the page index into
-that buffer as the identifier instead of the page->id.
+hi,
+I think we need the 'W' check in here [1]
 
-That is, the page->id for a persistent buffer, represents the order of the
-buffer is in the link list. ->id == 0 means it is the reader page.
-When a reader page is swapped, the new reader page's ->id gets zero, and
-the old reader page gets the ->id of the page that it swapped with.
+jirka
 
-The user space mapping has the ->id is the index of where it was mapped in
-user space and does not change while it is mapped.
 
-Since the persistent buffer is fixed in its location, the index of where
-a page is in the memory range can be used as the "id" to put in the meta
-page array, and it can be mapped in the same order to user space as it is
-in the persistent memory.
-
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
- kernel/trace/ring_buffer.c | 49 ++++++++++++++++++++++++++++++++------
- kernel/trace/trace.c       |  4 ----
- 2 files changed, 42 insertions(+), 11 deletions(-)
-
-diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-index bb6089c2951e..87caf9d48edb 100644
---- a/kernel/trace/ring_buffer.c
-+++ b/kernel/trace/ring_buffer.c
-@@ -5950,12 +5950,18 @@ static void rb_clear_buffer_page(struct buffer_page *page)
- static void rb_update_meta_page(struct ring_buffer_per_cpu *cpu_buffer)
- {
- 	struct trace_buffer_meta *meta = cpu_buffer->meta_page;
-+	struct page *page;
- 
- 	if (!meta)
- 		return;
- 
- 	meta->reader.read = cpu_buffer->reader_page->read;
--	meta->reader.id = cpu_buffer->reader_page->id;
-+	/* For boot buffers, the id is the index */
-+	if (cpu_buffer->ring_meta)
-+		meta->reader.id = rb_meta_subbuf_idx(cpu_buffer->ring_meta,
-+						     cpu_buffer->reader_page->page);
-+	else
-+		meta->reader.id = cpu_buffer->reader_page->id;
- 	meta->reader.lost_events = cpu_buffer->lost_events;
- 
- 	meta->entries = local_read(&cpu_buffer->entries);
-@@ -5963,7 +5969,12 @@ static void rb_update_meta_page(struct ring_buffer_per_cpu *cpu_buffer)
- 	meta->read = cpu_buffer->read;
- 
- 	/* Some archs do not have data cache coherency between kernel and user-space */
--	flush_dcache_folio(virt_to_folio(cpu_buffer->meta_page));
-+	if (virt_addr_valid(cpu_buffer->meta_page))
-+		page = virt_to_page(cpu_buffer->meta_page);
-+	else
-+		page = vmalloc_to_page(cpu_buffer->meta_page);
-+
-+	flush_dcache_folio(page_folio(page));
- }
- 
- static void
-@@ -6883,23 +6894,38 @@ static void rb_setup_ids_meta_page(struct ring_buffer_per_cpu *cpu_buffer,
- 	struct trace_buffer_meta *meta = cpu_buffer->meta_page;
- 	unsigned int nr_subbufs = cpu_buffer->nr_pages + 1;
- 	struct buffer_page *first_subbuf, *subbuf;
-+	int cnt = 0;
- 	int id = 0;
- 
--	subbuf_ids[id] = (unsigned long)cpu_buffer->reader_page->page;
--	cpu_buffer->reader_page->id = id++;
-+	if (cpu_buffer->ring_meta)
-+		id = rb_meta_subbuf_idx(cpu_buffer->ring_meta,
-+					cpu_buffer->reader_page->page);
-+	else
-+		cpu_buffer->reader_page->id = id;
-+
-+	subbuf_ids[id++] = (unsigned long)cpu_buffer->reader_page->page;
-+	cnt++;
- 
- 	first_subbuf = subbuf = rb_set_head_page(cpu_buffer);
- 	do {
-+		if (cpu_buffer->ring_meta)
-+			id = rb_meta_subbuf_idx(cpu_buffer->ring_meta,
-+						subbuf->page);
-+		else
-+			subbuf->id = id;
-+
- 		if (WARN_ON(id >= nr_subbufs))
- 			break;
- 
- 		subbuf_ids[id] = (unsigned long)subbuf->page;
--		subbuf->id = id;
- 
- 		rb_inc_page(&subbuf);
- 		id++;
-+		cnt++;
- 	} while (subbuf != first_subbuf);
- 
-+	WARN_ON(cnt != nr_subbufs);
-+
- 	/* install subbuf ID to kern VA translation */
- 	cpu_buffer->subbuf_ids = subbuf_ids;
- 
-@@ -7064,7 +7090,10 @@ static int __rb_map_vma(struct ring_buffer_per_cpu *cpu_buffer,
- 			goto out;
- 		}
- 
--		page = virt_to_page((void *)cpu_buffer->subbuf_ids[s]);
-+		if (virt_addr_valid(cpu_buffer->subbuf_ids[s]))
-+			page = virt_to_page((void *)cpu_buffer->subbuf_ids[s]);
-+		else
-+			page = vmalloc_to_page((void *)cpu_buffer->subbuf_ids[s]);
- 
- 		for (; off < (1 << (subbuf_order)); off++, page++) {
- 			if (p >= nr_pages)
-@@ -7210,6 +7239,7 @@ int ring_buffer_map_get_reader(struct trace_buffer *buffer, int cpu)
- 	unsigned long missed_events;
- 	unsigned long reader_size;
- 	unsigned long flags;
-+	struct page *page;
- 
- 	cpu_buffer = rb_get_mapped_buffer(buffer, cpu);
- 	if (IS_ERR(cpu_buffer))
-@@ -7278,7 +7308,12 @@ int ring_buffer_map_get_reader(struct trace_buffer *buffer, int cpu)
- 
- out:
- 	/* Some archs do not have data cache coherency between kernel and user-space */
--	flush_dcache_folio(virt_to_folio(cpu_buffer->reader_page->page));
-+	if (virt_addr_valid(cpu_buffer->meta_page))
-+		page = virt_to_page(cpu_buffer->meta_page);
-+	else
-+		page = vmalloc_to_page(cpu_buffer->meta_page);
-+
-+	flush_dcache_folio(page_folio(page));
- 
- 	rb_update_meta_page(cpu_buffer);
- 
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index 0e6d517e74e0..25ff37aab00f 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -8279,10 +8279,6 @@ static int tracing_buffers_mmap(struct file *filp, struct vm_area_struct *vma)
- 	struct trace_iterator *iter = &info->iter;
- 	int ret = 0;
- 
--	/* Currently the boot mapped buffer is not supported for mmap */
--	if (iter->tr->flags & TRACE_ARRAY_FL_BOOT)
--		return -ENODEV;
--
- 	ret = get_snapshot_map(iter->tr);
- 	if (ret)
- 		return ret;
--- 
-2.47.2
-
+[1] https://lore.kernel.org/bpf/20250103071409.47db1479@batman.local.home/
