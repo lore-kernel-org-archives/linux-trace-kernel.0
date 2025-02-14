@@ -1,66 +1,96 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCF85245AFE;
-	Fri, 14 Feb 2025 09:52:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE9BE2505C2;
+	Fri, 14 Feb 2025 10:08:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739526775; cv=none; b=JzO3z33fVUGiZjhjBXShIygp2/n8n2KUqstKsY8M1iPqhqpec7bFQZ68m5IuV3Ypjc0Lq+My5WijUrV18RxyHIYiQMMNpGDhIG80BZDo4pxMf55xy14bAHKrY6PLuvLJ82s1cqnOBsmcbSTYnz4UCFEaAQabXky9WCmF9N1Ia90=
+	t=1739527699; cv=none; b=AMTbZtyi7XCN1iRvFvJzxSOPGdphwKYfzFh8SVHyiimNadfuHl2ffqA1eIgQaGCm5CqRBW8VrX5QIl4g9fA+FTNvxE+aAFEH4Yy8oEmzeP+B6lUFAONI/HYvsPnCRx2QLY7yRGn1iF4lbNvgQLNA8FW8ITfeazMBa/j6zLZAZNM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739526775; c=relaxed/simple;
-	bh=Q2GLg2Ix3oJH2aSftQVDhySr55iaLzQztNTe7NKGzs0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=I9lexi8CasI+KUEgmMq93G/FndXx6pdstTeKRxYVBnl5zVDOKyB/oyeqtmcZDXMZd5iFhE12G5IUkv4yTag6xvaGvmbUQ0gBcq0aj1eV+6AcHLB6Y1SCiit5sLnEUwPOiTWrbW5KU+speA4HlAYhrtz60N4mvCG1VMZreVe1t4U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=G9SPymFp; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1739527699; c=relaxed/simple;
+	bh=Jogrd7O7L0fZyAc7FlJcz8HqG9ZjCfH+uLAxpQ2sT9U=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=aObDIdq7kCVzPQtbNhDiuDMEa38Eqw8HPTgMJH3fAOCrguk3V1cZj0ZsdnzmCx47Uontp0OYzkubEiJMe0nrNOKCP0zu8fyN8p1iYG4LDtQnlhnUwbBN1onedZNTjOkvgURYlFZACmEwQbCN341yLgX4wED+JbPbNVuKOjdgGAU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JwS8nXJA; arc=none smtp.client-ip=209.85.208.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="G9SPymFp"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739526773; x=1771062773;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=Q2GLg2Ix3oJH2aSftQVDhySr55iaLzQztNTe7NKGzs0=;
-  b=G9SPymFp8ZeTxhIveT5/1n6qSCUeX3bgaTe017QCRB2bS/JkfvIMTcux
-   pkkMAWmF2VP6woUvvPUolojv3tUL2TpKFYvFcippYgn06Z+EweYF2W+8O
-   qc091pQMDClTEIe5Xxj/8h6w7FGVY/XyAviXQr6x8LfyKAD33f3hTEXsA
-   g2PBEzhtV6hC4UV6UPIHM5D1SJD1R/3KAoMNV61hGYxlK6UMsgZqk/fLc
-   WDStaIMY/lpHidh3/K/Utgg6JjXjg9RdoDOmurKRP3fj2wzfNlUKFHm5C
-   EopEhQwus5KCCkulRZM2RQRvoqyLtLM02lzY2tBtob0GD3MpD/HfVwuWI
-   w==;
-X-CSE-ConnectionGUID: bix9pkX3QdWNH63Cx3nWeg==
-X-CSE-MsgGUID: LUg3jvVRRNuBvF8hLxG5MQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11344"; a="50484978"
-X-IronPort-AV: E=Sophos;i="6.13,285,1732608000"; 
-   d="scan'208";a="50484978"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Feb 2025 01:52:53 -0800
-X-CSE-ConnectionGUID: 0Vjz3su7Tf6WLgy7UW1g6A==
-X-CSE-MsgGUID: fb6+pPMbSDS6uIG0KS32Hw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,285,1732608000"; 
-   d="scan'208";a="113605790"
-Received: from lkp-server01.sh.intel.com (HELO d63d4d77d921) ([10.239.97.150])
-  by fmviesa008.fm.intel.com with ESMTP; 14 Feb 2025 01:52:50 -0800
-Received: from kbuild by d63d4d77d921 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1tisNL-0019LX-1U;
-	Fri, 14 Feb 2025 09:52:47 +0000
-Date: Fri, 14 Feb 2025 17:52:17 +0800
-From: kernel test robot <lkp@intel.com>
-To: Gabriele Monaco <gmonaco@redhat.com>, linux-kernel@vger.kernel.org,
-	Steven Rostedt <rostedt@goodmis.org>,
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JwS8nXJA"
+Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-5df07041c24so525530a12.0;
+        Fri, 14 Feb 2025 02:08:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1739527696; x=1740132496; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=PK881UT06YXsyKuTqU0MnqGvntUnhpOAf0QXivCUVQA=;
+        b=JwS8nXJAylYFB6CYGdNrk9l+KL+k6jl1LvFb3DGhHNjlnrp1ZjkRrPpkYHooeGkk6H
+         veYqjYAurbg2SNw9Cyj8u1lnZUNQ1h5Qor4H6z0sQ2raclA3D/hvba4X1Nn2lp/Q5LlK
+         EjXHSQVBAnbymOpTAqyDTlnxIBQCAA6NVOUweCjtCeS3mOkf+Mod7YVr+c53Ka1EVfpj
+         BgvK64a2rLTj2naopA/xokgvilna+xIXWrDBk6PJYNSP7n4r2zlYNWr5q8wQDcoavRWQ
+         mlbeMSeFtUTxT/epP52thKvgGVNehOp/2mkX/kpKhZRLhTgSvqxVzk65ectNJ4IQYxVs
+         lPLA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739527696; x=1740132496;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=PK881UT06YXsyKuTqU0MnqGvntUnhpOAf0QXivCUVQA=;
+        b=k6qO9ovJYrPnTePzF5uqtsisvIBjBSj+uFOMzjeXpxhHoT7MDBxh5/OWa/kDKqV/h5
+         4yuRACqt0wrpWjWbJFKlYWslaMjx3rZbY42y6I9Wk+D+DSVmRxOr9IxcwpVMMy59TV9j
+         hpvaoh2OaLM+pDAuaUSgD3dJTQICVsG7XMHxNuJlyOUBEvCuJ5RB8tUoQ8rVmUIo4OPz
+         c6s9QTl+xPAgip/JoMSTzy0iRsX0Q/V0yqX1hfnKobWWb9Fyeio38oIvBkP+bHNMvK3K
+         8P2kjT7bPwhuNDeDc6jFhmfHCuXxUnRRCGGQxN9zXV/WvUX6vBtyT2ZrDct0zOU+XL1Y
+         hmRQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW5ObGWxTq3O6Q+hqlQ/KmUbFa6eyJFzLnvsrNnGyA9+m1lxznePc6sbObmaMlZ1RTDSXKUgodqkzBjxThMK+tm9jh7@vger.kernel.org, AJvYcCWVmG/Eqz+0KyEgCqH0PnCi+uHmg+MXFN5tRByZqVjgfImYEgFxGWnkvlCINfzA6FlZL3k5XhDL1wcFdgs=@vger.kernel.org, AJvYcCWnSSnUNbJj4rzrunOzy28ptVtQdy6o1Wjb0ufCaW0NfBbNYBJX2Sz5w2pdXAhGxNqhBK66VET6hgnN6+MesQ46@vger.kernel.org, AJvYcCWvPkUvlh+9k6IDMXoI2jUMKF5RjVlJCWvKwM9nyg33oI2iY13CLgMwukv5XsF484W2XZk=@vger.kernel.org, AJvYcCX4Rs9h/tj+nxYAhRliR8YQLSBN4zjFAG/9VRyxSOcry5PhDKcku5fo9wGmGFTlQsA62tDduUB6NzE8nw5QwuEY3A==@vger.kernel.org, AJvYcCXH1aMSiGO0gzSKKpFqx5hy571KmA7mvHpK9Zo3/HMI5vJR+SCuzy6zQy5pnS5dpvr96Vo7n/KBL4I=@vger.kernel.org, AJvYcCXyREquk7YhI8rtD5ORCdlOYd0P/YHmVfEbpqKbkVuBQHJGlcIfz28IADOE1/Kb2Ksb2t77FUCAjex1HIvu@vger.kernel.org
+X-Gm-Message-State: AOJu0YwKn/DWsz9nGJ49EMr4qjGzAvusowzPO9Wo3LxG7JucMndGg/kW
+	Cr+69FXxSdoZzNbVrv8S2PBGntSIaigPqedwtMh37c3BSpX2InbQ
+X-Gm-Gg: ASbGnctjLX8oQ9BRgk+soUDkzQula6M/uGbOmsAZZFj9OWVmFoR8IPKk18/nL0VOFBs
+	W0tb8nufufyOADI8s2b6dmTuIEFuhIvrRbkBqn1kppmYxoz/ommmYaIrnZnR/mjtIVP/Uv/Ia52
+	w4qrtGyM1yjKbJQTy5HX965e+3IehI8DELwsX2FVL98JD/Hwj3yurO6ufScoub9j/SkKaCbMXKL
+	Vp7Lo+SjNWfNc2pgKmBwZvPCKjU9ynBFShNC1SWjySl6311FPHjO6Df5Qn/RJrQ+JGyGaEdKmdh
+	ZA==
+X-Google-Smtp-Source: AGHT+IHfUA9MbFKK0cGZxcq1fnHrJJMJoWr8y/oBmtSB3GGdubTXz3Fdqd2b5Ipl+F4XZpRsok2xqA==
+X-Received: by 2002:a05:6402:4616:b0:5dc:d8e6:62a7 with SMTP id 4fb4d7f45d1cf-5deadd84b7bmr9556320a12.14.1739527695955;
+        Fri, 14 Feb 2025 02:08:15 -0800 (PST)
+Received: from krava ([173.38.220.59])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5dece1c43a0sm2672253a12.28.2025.02.14.02.08.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 14 Feb 2025 02:08:14 -0800 (PST)
+From: Jiri Olsa <olsajiri@gmail.com>
+X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
+Date: Fri, 14 Feb 2025 11:08:10 +0100
+To: Charlie Jenkins <charlie@rivosinc.com>
+Cc: Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	John Fastabend <john.fastabend@gmail.com>,
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>,
+	Hao Luo <haoluo@google.com>, Peter Zijlstra <peterz@infradead.org>,
 	Ingo Molnar <mingo@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	linux-trace-kernel@vger.kernel.org
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	Gabriele Monaco <gmonaco@redhat.com>,
-	Juri Lelli <juri.lelli@redhat.com>
-Subject: Re: [PATCH v2 03/11] sched: Add sched tracepoints for RV task model
-Message-ID: <202502141719.Jdm44al4-lkp@intel.com>
-References: <20250213090819.419470-4-gmonaco@redhat.com>
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Quentin Monnet <qmo@kernel.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Daniel Lezcano <daniel.lezcano@linaro.org>,
+	Zhang Rui <rui.zhang@intel.com>, Lukasz Luba <lukasz.luba@arm.com>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Mykola Lysenko <mykolal@fb.com>, Shuah Khan <shuah@kernel.org>,
+	Jiri Kosina <jikos@kernel.org>,
+	Benjamin Tissoires <bentiss@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>, bpf@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+	linux-pm@vger.kernel.org, linux-kselftest@vger.kernel.org,
+	linux-input@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 0/2] tools: Unify top-level quiet infrastructure
+Message-ID: <Z68WCtRqdrgqC5iN@krava>
+References: <20250213-quiet_tools-v3-0-07de4482a581@rivosinc.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -69,65 +99,64 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250213090819.419470-4-gmonaco@redhat.com>
+In-Reply-To: <20250213-quiet_tools-v3-0-07de4482a581@rivosinc.com>
 
-Hi Gabriele,
+On Thu, Feb 13, 2025 at 01:06:20PM -0800, Charlie Jenkins wrote:
+> The quiet infrastructure was moved out of Makefile.build to accomidate
+> the new syscall table generation scripts in perf. Syscall table
+> generation wanted to also be able to be quiet, so instead of again
+> copying the code to set the quiet variables, the code was moved into
+> Makefile.perf to be used globally. This was not the right solution. It
+> should have been moved even further upwards in the call chain.
+> Makefile.include is imported in many files so this seems like a proper
+> place to put it.
+> 
+> To: 
+> 
+> Signed-off-by: Charlie Jenkins <charlie@rivosinc.com>
+> ---
+> Changes in v3:
+> - Add back erroneously removed "silent=1" (Jiri)
+> - Link to v2: https://lore.kernel.org/r/20250210-quiet_tools-v2-0-b2f18cbf72af@rivosinc.com
 
-kernel test robot noticed the following build errors:
+Reviewed-by: Jiri Olsa <jolsa@kernel.org>
 
-[auto build test ERROR on 4dc1d1bec89864d8076e5ab314f86f46442bfb02]
+thanks,
+jirka
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Gabriele-Monaco/tracing-Fix-DECLARE_TRACE_CONDITION/20250213-171642
-base:   4dc1d1bec89864d8076e5ab314f86f46442bfb02
-patch link:    https://lore.kernel.org/r/20250213090819.419470-4-gmonaco%40redhat.com
-patch subject: [PATCH v2 03/11] sched: Add sched tracepoints for RV task model
-config: arm-randconfig-001-20250214 (https://download.01.org/0day-ci/archive/20250214/202502141719.Jdm44al4-lkp@intel.com/config)
-compiler: clang version 16.0.6 (https://github.com/llvm/llvm-project 7cbf1a2591520c2491aa35339f227775f4d3adf6)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250214/202502141719.Jdm44al4-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202502141719.Jdm44al4-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
->> kernel/sched/core.c:503:2: error: call to undeclared function '__do_trace_sched_set_state_tp'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
-           __do_trace_sched_set_state_tp(current, current->__state, state_value);
-           ^
-   kernel/sched/core.c:503:2: note: did you mean 'trace_sched_set_state_tp'?
-   include/trace/events/sched.h:835:1: note: 'trace_sched_set_state_tp' declared here
-   DECLARE_TRACE_CONDITION(sched_set_state_tp,
-   ^
-   include/linux/tracepoint.h:472:2: note: expanded from macro 'DECLARE_TRACE_CONDITION'
-           __DECLARE_TRACE(name, PARAMS(proto), PARAMS(args),              \
-           ^
-   include/linux/tracepoint.h:409:2: note: expanded from macro '__DECLARE_TRACE'
-           __DECLARE_TRACE_COMMON(name, PARAMS(proto), PARAMS(args), PARAMS(data_proto))
-           ^
-   include/linux/tracepoint.h:385:21: note: expanded from macro '__DECLARE_TRACE_COMMON'
-           static inline void trace_##name(proto)                          \
-                              ^
-   <scratch space>:84:1: note: expanded from here
-   trace_sched_set_state_tp
-   ^
-   1 error generated.
-
-
-vim +/__do_trace_sched_set_state_tp +503 kernel/sched/core.c
-
-   496	
-   497	/*
-   498	 * Do not call this function directly since it won't check if the tp is enabled.
-   499	 * Call the helper macro trace_set_current_state instead.
-   500	 */
-   501	void __do_trace_set_current_state(int state_value)
-   502	{
- > 503		__do_trace_sched_set_state_tp(current, current->__state, state_value);
-   504	}
-   505	EXPORT_SYMBOL(__do_trace_set_current_state);
-   506	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+> 
+> Changes in v2:
+> - Fix spacing around Q= (Andrii)
+> - Link to v1: https://lore.kernel.org/r/20250203-quiet_tools-v1-0-d25c8956e59a@rivosinc.com
+> 
+> ---
+> Charlie Jenkins (2):
+>       tools: Unify top-level quiet infrastructure
+>       tools: Remove redundant quiet setup
+> 
+>  tools/arch/arm64/tools/Makefile           |  6 -----
+>  tools/bpf/Makefile                        |  6 -----
+>  tools/bpf/bpftool/Documentation/Makefile  |  6 -----
+>  tools/bpf/bpftool/Makefile                |  6 -----
+>  tools/bpf/resolve_btfids/Makefile         |  2 --
+>  tools/bpf/runqslower/Makefile             |  5 +---
+>  tools/build/Makefile                      |  8 +-----
+>  tools/lib/bpf/Makefile                    | 13 ----------
+>  tools/lib/perf/Makefile                   | 13 ----------
+>  tools/lib/thermal/Makefile                | 13 ----------
+>  tools/objtool/Makefile                    |  6 -----
+>  tools/perf/Makefile.perf                  | 41 -------------------------------
+>  tools/scripts/Makefile.include            | 30 ++++++++++++++++++++++
+>  tools/testing/selftests/bpf/Makefile.docs |  6 -----
+>  tools/testing/selftests/hid/Makefile      |  2 --
+>  tools/thermal/lib/Makefile                | 13 ----------
+>  tools/tracing/latency/Makefile            |  6 -----
+>  tools/tracing/rtla/Makefile               |  6 -----
+>  tools/verification/rv/Makefile            |  6 -----
+>  19 files changed, 32 insertions(+), 162 deletions(-)
+> ---
+> base-commit: 2014c95afecee3e76ca4a56956a936e23283f05b
+> change-id: 20250203-quiet_tools-9a6ea9d65a19
+> -- 
+> - Charlie
+> 
