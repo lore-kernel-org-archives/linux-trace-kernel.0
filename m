@@ -1,157 +1,151 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A194B23A9AC
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 14 Feb 2025 11:15:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A6CB221541;
+	Fri, 14 Feb 2025 12:07:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739531741; cv=none; b=CsgKY5x+VAIskgosSOdJY6MHs+qhC4fVrGk5HXJg2QAXSUlDVtWqW9AjYhVAUeRRFw7yV5XUx7Ur7llj49/BNsW/GBtLJy5cN468PM727yEnfF0TT5GEaaXjZjdNMfiOm/15grdQ2cfinYOvDS+PnI6FDo1RxJGgOHDQMJwRU/Q=
+	t=1739534823; cv=none; b=FHxMxpIV7zRqRzDmKdVAKzooNSN1pcKx5VAPYsFfwGTVFXCEXL01QE4S7ZFTALgMlnDomm25+4DMawQtNqd+z58LRW8+rbPCM2ySUPF/p+anXVHKWDZ4BHGWgYOy2mx+73y8pLLPkTGGDi+oW+zlZVX8B1xAigHAeNmqnF0niP0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739531741; c=relaxed/simple;
-	bh=PUc3QdosbHPXkAkyz/Yvw31TFP4gs9runVGAjzZ7t80=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=kto+sgp9ouVdsGdtVWQWMEMfI3YzO3tpiqLLu9X5o9IBBCOq5KxvTJciuQxOUEe5eRrJ3h2dxs2XOd2nv4Xp13ahUiq5Ecg5dGmQLgMD04w5OhFHqFkafJGfwf2GMO63NHgUSohHrL//mtIQ2UHTOMjHxxA82cPda05BF/Th08Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=FYR2ZwGs; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FYR2ZwGs"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1739531738;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=PUc3QdosbHPXkAkyz/Yvw31TFP4gs9runVGAjzZ7t80=;
-	b=FYR2ZwGsIHJ1nHyCdhKHNmpY7FVR6cHV5kjR+lgv++eQbX+yUf87W3TH4KqVRe7+NKTnH4
-	G4DcCTJ1OWo02BtKc5be5X9l+rlw2DeiFb5jy3lebVXiKBrfHhYW6AXHWLgNfp06AD10Er
-	ewm4V8UCEOhd934kA2iDme7MiyM8wVE=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-27-z9puO_l8N12hx3WwXxw62Q-1; Fri, 14 Feb 2025 06:15:37 -0500
-X-MC-Unique: z9puO_l8N12hx3WwXxw62Q-1
-X-Mimecast-MFC-AGG-ID: z9puO_l8N12hx3WwXxw62Q_1739531736
-Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-4394c0a58e7so14549315e9.0
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 14 Feb 2025 03:15:37 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739531736; x=1740136536;
-        h=mime-version:user-agent:content-transfer-encoding:autocrypt
-         :references:in-reply-to:date:cc:to:from:subject:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Q1iQIbvDhgSHZ4WT/gbEt1daMYEMQVwHES/A7FJ/qNY=;
-        b=XxUFNj2Xq/qKkYAWoCY1Vfrr1xM4wVybZjb98rmmOZvB3OWmho+biS+wBn/omtz/3d
-         O8TEYVz8vDDq4r2S4CeK1WQK5/WamgM6vrx2kOEtOlILMz4aN+YjLkCrAQwFByyUqHoB
-         oRgXSEdGe5ZztfBpNQfDxbKOdATsB+W4TT7/9Qne/Fc4rhQkm/EUeb966d20PMuaxxo9
-         lC9l/kok0ymAaWiBZySegD+tGXFAHPFgmX3HUC9Un4ZmvnW6ey+tw7OYWCIAzpMaCYJQ
-         fSTOFT0hB32GwpPoiw0GjrPuF5F0FQR9s5krGXQ08f7Mk1eQAyolZVPpUS14vfIB3slw
-         JiSw==
-X-Forwarded-Encrypted: i=1; AJvYcCVK20j2OxdoFCXHau4Z/uuO3AAbVlDo+5urszxr2oZQLQ3JAA2rGfMCqJwLdb8Sc+s/p/SloTpuRiK0FjyZvoRThb4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwN5Mot7JXBAQP4Q/877hj+tRONpUaLmnQftSEtTGBG672Pe0yM
-	DJl14nQfvs1+aI0cHAeoW6LnIyverXV7pfW3TUrhknajC76cUrSsu9iT8VnnRd4IuNesMyc26hT
-	HSLm+029VbzwbhiG3QYnmq+mkqtamiQrQqamLT5eHIVrTYxySIeLhaakiDztxCzLq2Z65Gw==
-X-Gm-Gg: ASbGncvpBxe0oiFKeOLFqHLP76sFd12gcciN9n5UFV2IxS9RAs+6slNdpDW56mgNWiK
-	34UExg0CWkZyIcvBUpHL3NIdoFx9N/jIY+9Da3qJinq7XppWE71mCbj/S+3zrTU+Wk30ie/OCKI
-	kowBvwN9z0ufNSPDe6XVxljwSGUuyJZw3Qa5CfcEkvLWF3IJ0kVrbGvAaQty9yJ0n31yh3xJyNN
-	+94M85D0MFJVYRRrtaJoBhiOT6Hnk/YXxtInV2WAUgexwydQvMw+d2Fq7GTCFQKqE+7OyuhogV1
-	GPhyvQ6k/eUPYoNJ4/7wkPMK52omZSXbrQ==
-X-Received: by 2002:a05:600c:19cf:b0:439:5573:9348 with SMTP id 5b1f17b1804b1-439581b88ccmr119294185e9.22.1739531736303;
-        Fri, 14 Feb 2025 03:15:36 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IGkfOw2bzXtZt2kXV8bZhrLtsOBgcZjNkpTqtdBEsmjzhSmT9IDyjozv2rFlJKM3Au+7OdF3w==
-X-Received: by 2002:a05:600c:19cf:b0:439:5573:9348 with SMTP id 5b1f17b1804b1-439581b88ccmr119293675e9.22.1739531735938;
-        Fri, 14 Feb 2025 03:15:35 -0800 (PST)
-Received: from gmonaco-thinkpadt14gen3.rmtit.csb ([195.174.133.197])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43961645422sm27024865e9.2.2025.02.14.03.15.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Feb 2025 03:15:35 -0800 (PST)
-Message-ID: <789b56973c0e6419a6a44210a18d1b31d0daf8e6.camel@redhat.com>
-Subject: Re: [PATCH v2 03/11] sched: Add sched tracepoints for RV task model
-From: Gabriele Monaco <gmonaco@redhat.com>
-To: kernel test robot <lkp@intel.com>, linux-kernel@vger.kernel.org, Steven
- Rostedt <rostedt@goodmis.org>, Ingo Molnar <mingo@redhat.com>, Peter
- Zijlstra <peterz@infradead.org>,  Masami Hiramatsu <mhiramat@kernel.org>,
- linux-trace-kernel@vger.kernel.org
-Cc: oe-kbuild-all@lists.linux.dev, Juri Lelli <juri.lelli@redhat.com>
-Date: Fri, 14 Feb 2025 12:15:31 +0100
-In-Reply-To: <202502141516.OkUInaxw-lkp@intel.com>
-References: <20250213090819.419470-4-gmonaco@redhat.com>
-	 <202502141516.OkUInaxw-lkp@intel.com>
-Autocrypt: addr=gmonaco@redhat.com; prefer-encrypt=mutual;
- keydata=mDMEZuK5YxYJKwYBBAHaRw8BAQdAmJ3dM9Sz6/Hodu33Qrf8QH2bNeNbOikqYtxWFLVm0
- 1a0JEdhYnJpZWxlIE1vbmFjbyA8Z21vbmFjb0ByZWRoYXQuY29tPoiZBBMWCgBBFiEEysoR+AuB3R
- Zwp6j270psSVh4TfIFAmbiuWMCGwMFCQWjmoAFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgk
- Q70psSVh4TfJzZgD/TXjnqCyqaZH/Y2w+YVbvm93WX2eqBqiVZ6VEjTuGNs8A/iPrKbzdWC7AicnK
- xyhmqeUWOzFx5P43S1E1dhsrLWgP
-User-Agent: Evolution 3.54.3 (3.54.3-1.fc41)
+	s=arc-20240116; t=1739534823; c=relaxed/simple;
+	bh=uBUJSEL5HuOe9zrSMv4zj/jgUFFhuIj6M7Q1fYfmraM=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=cdYKNMRIJ7rKe8pbow3NgT6gBDQbfC525oJon5gAxxazPuA3LKN8SkSdb22ykDdoDVv8LUt5WnVkzVhvXWu7FSmkj26405R+HMDykGLuINZcRo7SsLmOOrb8J4E8GCTWPFDMXT33AUCqxiQV3cMka1DSOK4GVwooRREqqJ3Ufto=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E7B9DC4CED1;
+	Fri, 14 Feb 2025 12:07:01 +0000 (UTC)
+Date: Fri, 14 Feb 2025 07:07:12 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Vincent Donnefort <vdonnefort@google.com>
+Subject: Re: [PATCH] tracing: Do not allow mmap() of persistent ring buffer
+Message-ID: <20250214070712.01997ea1@gandalf.local.home>
+In-Reply-To: <20250214161332.8797b20f09e068c33f872698@kernel.org>
+References: <20250213180737.061871ae@gandalf.local.home>
+	<20250214110722.7eaf35b42c4858e6b74500f7@kernel.org>
+	<20250213212147.6511b235@gandalf.local.home>
+	<20250214161332.8797b20f09e068c33f872698@kernel.org>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: yDC6AmS7pOciEGD3kovejZh4_TQ41QcpEqYZGvfPIo0_1739531736
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-=20
-On Fri, 2025-02-14 at 16:00 +0800, kernel test robot wrote:=20
-=20
-> =C2=A0> =C2=A0=C2=A0 kernel/sched/core.c: In function
-> '__do_trace_set_current_state':=20
-> =C2=A0
-=20
-> =C2=A0
-> > =C2=A0
-> > > =C2=A0> > > kernel/sched/core.c:503:9: error: implicit declaration of=
-=20
-> > > > > > function '__do_trace_sched_set_state_tp'; did you mean=20
-> > > > > > 'trace_sched_set_state_tp'?=20
-> > > > > > [-Werror=3Dimplicit-function-declaration]=20
-> > > =C2=A0
-> > =C2=A0
-> =C2=A0
-=20
-> =C2=A0> =C2=A0=C2=A0=C2=A0=C2=A0 503 |=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0 __do_trace_sched_set_state_tp(current,=20
-> > current->__state, state_value);=20
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~=20
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0 trace_sched_set_state_tp=20
-> > =C2=A0=C2=A0 cc1: some warnings being treated as errors=20
-> >=20
-> >=20
-> > vim +503 kernel/sched/core.c=20
-> >=20
-> > =C2=A0=C2=A0 496=20
-> > =C2=A0=C2=A0 497 /*=20
-> > =C2=A0=C2=A0 498 * Do not call this function directly since it won't ch=
-eck if
-> > the tp is enabled.=20
-> > =C2=A0=C2=A0 499 * Call the helper macro trace_set_current_state instea=
-d.=20
-> > =C2=A0=C2=A0 500 */=20
-> > =C2=A0=C2=A0 501 void __do_trace_set_current_state(int state_value)=20
-> > =C2=A0=C2=A0 502 {=20
-> > =C2=A0> 503 __do_trace_sched_set_state_tp(current, current->__state,=20
-> > state_value);=20
-> > =C2=A0=C2=A0 504 }=20
-> > =C2=A0=C2=A0 505 EXPORT_SYMBOL(__do_trace_set_current_state);=20
-> > =C2=A0=C2=A0 506=20
-> =C2=A0
-=20
-I honestly don't get why this build failed. The function __do_trace_
-exists since cff6d93eab00ba ("tracepoint: Reduce duplication of
-__DO_TRACE_CALL"), a while before that it was just a macro and not an
-inline function, reason why no one so far used it directly.
+On Fri, 14 Feb 2025 16:13:32 +0900
+Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
 
-Both failed builds are based on 4dc1d1bec898 (where my patchset is
-based) and there __do_trace_ does exist.
+> On Thu, 13 Feb 2025 21:21:47 -0500
+> Steven Rostedt <rostedt@goodmis.org> wrote:
+> 
+> > On Fri, 14 Feb 2025 11:07:22 +0900
+> > Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
+> >   
+> > > This may be good for fixing crash short term but may not allow us to read the
+> > > subbufs which is read right before crash. Can we also add an option to reset
+> > > the read pointer in the previous boot for the persistent ring buffer?  
+> > 
+> > I'm not sure what you mean here.
+> > 
+> > Note, this is just for mmapping the buffers. Currently we never tried it as
+> > if we did, it would have crashed. But this does not affect normal reads.  
+> 
+> But reading buffer via mmap() is already supported. Can we read all pages,
+> which had been read by trace_pipe_raw in previous boot, again on this boot?
 
-Unless there's a strong opinion not to use it although the compiler
-allows it, I'd consider the two kernel robot results false negatives.
+It's not supported. If you try it, it will crash. This prevents reading via
+mmap() on a boot buffer. I don't know what you are asking. Once this patch
+is applied, mmap() will always fail on the boot buffer before or after you
+start it.
 
-Or am I missing something?
+> 
+> Anyway, I made another patch to fix it to allow mmap() on persistent ring
+> buffer here. I thought I can get the phys_addr from struct vm_area, but
+> it could not for vmap()'d area. So this stores the phys_addr in trace_buffer.
 
+Which is way too complex and intrusive. If you want to allow mapping, all
+it needs is this:
+
+diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+index 07b421115692..9339adc88ad5 100644
+--- a/kernel/trace/ring_buffer.c
++++ b/kernel/trace/ring_buffer.c
+@@ -5927,12 +5941,18 @@ static void rb_clear_buffer_page(struct buffer_page *page)
+ static void rb_update_meta_page(struct ring_buffer_per_cpu *cpu_buffer)
+ {
+ 	struct trace_buffer_meta *meta = cpu_buffer->meta_page;
++	struct page *page;
+ 
+ 	if (!meta)
+ 		return;
+ 
+ 	meta->reader.read = cpu_buffer->reader_page->read;
+-	meta->reader.id = cpu_buffer->reader_page->id;
++	/* For boot buffers, the id is the index */
++	if (cpu_buffer->ring_meta)
++		meta->reader.id = rb_meta_subbuf_idx(cpu_buffer->ring_meta,
++						     cpu_buffer->reader_page->page);
++	else
++		meta->reader.id = cpu_buffer->reader_page->id;
+ 	meta->reader.lost_events = cpu_buffer->lost_events;
+ 
+ 	meta->entries = local_read(&cpu_buffer->entries);
+@@ -5940,7 +5960,12 @@ static void rb_update_meta_page(struct ring_buffer_per_cpu *cpu_buffer)
+ 	meta->read = cpu_buffer->read;
+ 
+ 	/* Some archs do not have data cache coherency between kernel and user-space */
+-	flush_dcache_folio(virt_to_folio(cpu_buffer->meta_page));
++	if (virt_addr_valid(cpu_buffer->meta_page))
++		page = virt_to_page(cpu_buffer->meta_page);
++	else
++		page = vmalloc_to_page(cpu_buffer->meta_page);
++
++	flush_dcache_folio(page_folio(page));
+ }
+ 
+ static void
+@@ -7041,7 +7066,10 @@ static int __rb_map_vma(struct ring_buffer_per_cpu *cpu_buffer,
+ 			goto out;
+ 		}
+ 
+-		page = virt_to_page((void *)cpu_buffer->subbuf_ids[s]);
++		if (virt_addr_valid(cpu_buffer->subbuf_ids[s]))
++			page = virt_to_page((void *)cpu_buffer->subbuf_ids[s]);
++		else
++			page = vmalloc_to_page((void *)cpu_buffer->subbuf_ids[s]);
+ 
+ 		for (; off < (1 << (subbuf_order)); off++, page++) {
+ 			if (p >= nr_pages)
+@@ -7187,6 +7215,7 @@ int ring_buffer_map_get_reader(struct trace_buffer *buffer, int cpu)
+ 	unsigned long missed_events;
+ 	unsigned long reader_size;
+ 	unsigned long flags;
++	struct page *page;
+ 
+ 	cpu_buffer = rb_get_mapped_buffer(buffer, cpu);
+ 	if (IS_ERR(cpu_buffer))
+@@ -7255,7 +7291,12 @@ int ring_buffer_map_get_reader(struct trace_buffer *buffer, int cpu)
+ 
+ out:
+ 	/* Some archs do not have data cache coherency between kernel and user-space */
+-	flush_dcache_folio(virt_to_folio(cpu_buffer->reader_page->page));
++	if (virt_addr_valid(cpu_buffer->meta_page))
++		page = virt_to_page(cpu_buffer->meta_page);
++	else
++		page = vmalloc_to_page(cpu_buffer->meta_page);
++
++	flush_dcache_folio(page_folio(page));
+ 
+ 	rb_update_meta_page(cpu_buffer);
+ 
+But this still doesn't work, as the index is still off (I'm still fixing it).
+
+The persistent ring buffer uses the page->id for one thing but the user
+space mmap() uses it for something else.
+
+-- Steve
