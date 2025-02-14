@@ -1,162 +1,289 @@
-Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE9BE2505C2;
-	Fri, 14 Feb 2025 10:08:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68BFE212D67
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 14 Feb 2025 10:37:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739527699; cv=none; b=AMTbZtyi7XCN1iRvFvJzxSOPGdphwKYfzFh8SVHyiimNadfuHl2ffqA1eIgQaGCm5CqRBW8VrX5QIl4g9fA+FTNvxE+aAFEH4Yy8oEmzeP+B6lUFAONI/HYvsPnCRx2QLY7yRGn1iF4lbNvgQLNA8FW8ITfeazMBa/j6zLZAZNM=
+	t=1739529474; cv=none; b=jzfo5tANDtCnnSOjqeYZ4JnOp3/4s1hRQ3gj45AqW6HcrgGeV759p3DFP8+AMPsGi3bIeNHJECgiTET67pqPZvYH3MQRojpO3tNoYsMUfT8cqNG0KeESr4Kjrstr/U2tcly3ZdlBvlxtbkyHlhQbn0TWr8fbrodBvdfUidpA2Cc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739527699; c=relaxed/simple;
-	bh=Jogrd7O7L0fZyAc7FlJcz8HqG9ZjCfH+uLAxpQ2sT9U=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aObDIdq7kCVzPQtbNhDiuDMEa38Eqw8HPTgMJH3fAOCrguk3V1cZj0ZsdnzmCx47Uontp0OYzkubEiJMe0nrNOKCP0zu8fyN8p1iYG4LDtQnlhnUwbBN1onedZNTjOkvgURYlFZACmEwQbCN341yLgX4wED+JbPbNVuKOjdgGAU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JwS8nXJA; arc=none smtp.client-ip=209.85.208.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1739529474; c=relaxed/simple;
+	bh=ZsyjMzGdyJqkrDeCLAABwQTLH7CfEZ7/s8ypCPoBKuA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=IkoWSCrFlyYBi0HbndmrvTmovlV+Na7X8aBPN2sA7GVzS2VW8CW/xfn7WXxwUH/DSVyUyxpBW2bD/bz2+mBVFusrUVYbq3/uL9h4hNzh7m2VXJPtKMEaT+EUPd51zwfT43ko3qtF/VKcyQIcimMiB+QbJyeqhBp+TRpk+bJCZgk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=eykAJ98o; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JwS8nXJA"
-Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-5df07041c24so525530a12.0;
-        Fri, 14 Feb 2025 02:08:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739527696; x=1740132496; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=PK881UT06YXsyKuTqU0MnqGvntUnhpOAf0QXivCUVQA=;
-        b=JwS8nXJAylYFB6CYGdNrk9l+KL+k6jl1LvFb3DGhHNjlnrp1ZjkRrPpkYHooeGkk6H
-         veYqjYAurbg2SNw9Cyj8u1lnZUNQ1h5Qor4H6z0sQ2raclA3D/hvba4X1Nn2lp/Q5LlK
-         EjXHSQVBAnbymOpTAqyDTlnxIBQCAA6NVOUweCjtCeS3mOkf+Mod7YVr+c53Ka1EVfpj
-         BgvK64a2rLTj2naopA/xokgvilna+xIXWrDBk6PJYNSP7n4r2zlYNWr5q8wQDcoavRWQ
-         mlbeMSeFtUTxT/epP52thKvgGVNehOp/2mkX/kpKhZRLhTgSvqxVzk65ectNJ4IQYxVs
-         lPLA==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eykAJ98o"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1739529471;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=v1ELqJmSBEXwSdcynoIWjIw5bhWZWQeX4Q07dCSIZyk=;
+	b=eykAJ98oF3Vxl2aXTAb55Zn8yPpPK4W0YOee/UuXo4qkb/tiIA82DvKSNkxBap37heW5HQ
+	qehXDEdX/2LPu/rOp9UkCRcroEe5RB5D7uW7XGhsLurLKIWlK2VI6VZLlfYSj30dxGMM/9
+	vUsE3CjqbrkW/l/PDyexcOiAPdGilws=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-294-pEVyxVdzOpmt_BXdaORPwg-1; Fri, 14 Feb 2025 05:37:48 -0500
+X-MC-Unique: pEVyxVdzOpmt_BXdaORPwg-1
+X-Mimecast-MFC-AGG-ID: pEVyxVdzOpmt_BXdaORPwg_1739529467
+Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-38f31e96292so19268f8f.3
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 14 Feb 2025 02:37:48 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739527696; x=1740132496;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=PK881UT06YXsyKuTqU0MnqGvntUnhpOAf0QXivCUVQA=;
-        b=k6qO9ovJYrPnTePzF5uqtsisvIBjBSj+uFOMzjeXpxhHoT7MDBxh5/OWa/kDKqV/h5
-         4yuRACqt0wrpWjWbJFKlYWslaMjx3rZbY42y6I9Wk+D+DSVmRxOr9IxcwpVMMy59TV9j
-         hpvaoh2OaLM+pDAuaUSgD3dJTQICVsG7XMHxNuJlyOUBEvCuJ5RB8tUoQ8rVmUIo4OPz
-         c6s9QTl+xPAgip/JoMSTzy0iRsX0Q/V0yqX1hfnKobWWb9Fyeio38oIvBkP+bHNMvK3K
-         8P2kjT7bPwhuNDeDc6jFhmfHCuXxUnRRCGGQxN9zXV/WvUX6vBtyT2ZrDct0zOU+XL1Y
-         hmRQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW5ObGWxTq3O6Q+hqlQ/KmUbFa6eyJFzLnvsrNnGyA9+m1lxznePc6sbObmaMlZ1RTDSXKUgodqkzBjxThMK+tm9jh7@vger.kernel.org, AJvYcCWVmG/Eqz+0KyEgCqH0PnCi+uHmg+MXFN5tRByZqVjgfImYEgFxGWnkvlCINfzA6FlZL3k5XhDL1wcFdgs=@vger.kernel.org, AJvYcCWnSSnUNbJj4rzrunOzy28ptVtQdy6o1Wjb0ufCaW0NfBbNYBJX2Sz5w2pdXAhGxNqhBK66VET6hgnN6+MesQ46@vger.kernel.org, AJvYcCWvPkUvlh+9k6IDMXoI2jUMKF5RjVlJCWvKwM9nyg33oI2iY13CLgMwukv5XsF484W2XZk=@vger.kernel.org, AJvYcCX4Rs9h/tj+nxYAhRliR8YQLSBN4zjFAG/9VRyxSOcry5PhDKcku5fo9wGmGFTlQsA62tDduUB6NzE8nw5QwuEY3A==@vger.kernel.org, AJvYcCXH1aMSiGO0gzSKKpFqx5hy571KmA7mvHpK9Zo3/HMI5vJR+SCuzy6zQy5pnS5dpvr96Vo7n/KBL4I=@vger.kernel.org, AJvYcCXyREquk7YhI8rtD5ORCdlOYd0P/YHmVfEbpqKbkVuBQHJGlcIfz28IADOE1/Kb2Ksb2t77FUCAjex1HIvu@vger.kernel.org
-X-Gm-Message-State: AOJu0YwKn/DWsz9nGJ49EMr4qjGzAvusowzPO9Wo3LxG7JucMndGg/kW
-	Cr+69FXxSdoZzNbVrv8S2PBGntSIaigPqedwtMh37c3BSpX2InbQ
-X-Gm-Gg: ASbGnctjLX8oQ9BRgk+soUDkzQula6M/uGbOmsAZZFj9OWVmFoR8IPKk18/nL0VOFBs
-	W0tb8nufufyOADI8s2b6dmTuIEFuhIvrRbkBqn1kppmYxoz/ommmYaIrnZnR/mjtIVP/Uv/Ia52
-	w4qrtGyM1yjKbJQTy5HX965e+3IehI8DELwsX2FVL98JD/Hwj3yurO6ufScoub9j/SkKaCbMXKL
-	Vp7Lo+SjNWfNc2pgKmBwZvPCKjU9ynBFShNC1SWjySl6311FPHjO6Df5Qn/RJrQ+JGyGaEdKmdh
-	ZA==
-X-Google-Smtp-Source: AGHT+IHfUA9MbFKK0cGZxcq1fnHrJJMJoWr8y/oBmtSB3GGdubTXz3Fdqd2b5Ipl+F4XZpRsok2xqA==
-X-Received: by 2002:a05:6402:4616:b0:5dc:d8e6:62a7 with SMTP id 4fb4d7f45d1cf-5deadd84b7bmr9556320a12.14.1739527695955;
-        Fri, 14 Feb 2025 02:08:15 -0800 (PST)
-Received: from krava ([173.38.220.59])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5dece1c43a0sm2672253a12.28.2025.02.14.02.08.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Feb 2025 02:08:14 -0800 (PST)
-From: Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date: Fri, 14 Feb 2025 11:08:10 +0100
-To: Charlie Jenkins <charlie@rivosinc.com>
-Cc: Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Martin KaFai Lau <martin.lau@linux.dev>,
-	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
-	Yonghong Song <yonghong.song@linux.dev>,
-	John Fastabend <john.fastabend@gmail.com>,
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>,
-	Hao Luo <haoluo@google.com>, Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Quentin Monnet <qmo@kernel.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Daniel Lezcano <daniel.lezcano@linaro.org>,
-	Zhang Rui <rui.zhang@intel.com>, Lukasz Luba <lukasz.luba@arm.com>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Mykola Lysenko <mykolal@fb.com>, Shuah Khan <shuah@kernel.org>,
-	Jiri Kosina <jikos@kernel.org>,
-	Benjamin Tissoires <bentiss@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>, bpf@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-	linux-pm@vger.kernel.org, linux-kselftest@vger.kernel.org,
-	linux-input@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 0/2] tools: Unify top-level quiet infrastructure
-Message-ID: <Z68WCtRqdrgqC5iN@krava>
-References: <20250213-quiet_tools-v3-0-07de4482a581@rivosinc.com>
+        d=1e100.net; s=20230601; t=1739529467; x=1740134267;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=v1ELqJmSBEXwSdcynoIWjIw5bhWZWQeX4Q07dCSIZyk=;
+        b=di7Sz53e1Y/RbjA2eFZLfpLiXS/B2kQqfyEvySWfuF0kMU7lX8mrb1XKq5feS1zokZ
+         65JGYWonix4Qwe+6YzIMOCBw41kK5CXdXikJ34Zf43SquEcmG3p3bymTj+YfaejvljPs
+         GvkWavImPZMae5AX2iF+VMk+Zop2/FASdxGEPgzlFoeHcSwdKjLsXXK1Rj9klHNLlBKd
+         i27hzd0D50/Gy19ig9LFanXYXTXjzE2h95FQnDB0WozHuJ3pfZY1xXd3Qr3Dt9MNQKSM
+         +TTvu5PBl2RghCwvbUv0NZcMDH+puPCFlUmECbhMZpmZKhU67PEhfXk7bF5AqhPzx9Ld
+         bx9A==
+X-Forwarded-Encrypted: i=1; AJvYcCUrHZn4tfpgu/YmEP0XGh3j7AvB4SMYLZjnUwmCmteG17XzUCpaVO+lUwYCL6iZePJ/tmT6ijPgG8va6uovEb2Lorg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyP6aFkq0C2vTbfjwwScOx9mvPfUUg8JeyZKx0WAgKWXvfIJD8P
+	34Q2/BdsOWu73fl0Fp8HIBZfw29jnyB6LvQh8y7KFF3e0o+T5VF9XuXlwJT58NYpabqDT2lOzYd
+	Pyvp8XxdSbsOfURKnKUOCL4LkEtYTOTPUtCZPq6w2b+3XsAfgVBBqa/atvHRkdddStf5wWg==
+X-Gm-Gg: ASbGncsSU1jHIAy/y+afK3In4g6xnFMC0AsRAoeNJEuPLs4V5EdY8fmy5HYLlgxH6dS
+	KAkN6zSLUSY9Z6VShlJT++EL4aCdJzywEkGtReMln2WwboGXt2kZJ4Z4Tdzv/KDytEWYH3Jgzrl
+	x5mEdId6Qf+9qttVBrpAUn08VM2ysp2DkY4KS+dOIXxo3FWfv9cuSbDXmpheaPQKx5ohA1i3agv
+	OchAE6NDiod/4+phAhbJGioLNHnUZgaHjQAmzid3xLfXWGsZIT2fs0GGQF06Vly/m6aZvaWkjM7
+	XcBdlBB0hmjtguPCGdA2k97hoP2p4inVsM+BjCE7YaRaj2gDPe7zMlDnawy/DTZY+wweU5PPavF
+	yC5pztnFclDrI62cGJhRTSyQiBq2uZA==
+X-Received: by 2002:a05:6000:18a8:b0:38f:2413:2622 with SMTP id ffacd0b85a97d-38f24132bb7mr9218055f8f.47.1739529466905;
+        Fri, 14 Feb 2025 02:37:46 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IH4ObsXSu+uaHBcCGCpcGtfSdrcoS3HhFa3rCOolNFcAYKhUug8deHKDOqr2tqK+ZhCEHYNXw==
+X-Received: by 2002:a05:6000:18a8:b0:38f:2413:2622 with SMTP id ffacd0b85a97d-38f24132bb7mr9218011f8f.47.1739529466461;
+        Fri, 14 Feb 2025 02:37:46 -0800 (PST)
+Received: from ?IPV6:2003:cb:c709:a00:7d7d:3665:5fe4:7127? (p200300cbc7090a007d7d36655fe47127.dip0.t-ipconnect.de. [2003:cb:c709:a00:7d7d:3665:5fe4:7127])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43961e07252sm39337615e9.14.2025.02.14.02.37.43
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 14 Feb 2025 02:37:45 -0800 (PST)
+Message-ID: <1404d6a3-c27d-4d51-8e3a-e10dc040dc6e@redhat.com>
+Date: Fri, 14 Feb 2025 11:37:42 +0100
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250213-quiet_tools-v3-0-07de4482a581@rivosinc.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 00/17] mm: fixes for device-exclusive entries (hmm)
+To: Alistair Popple <apopple@nvidia.com>
+Cc: linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+ dri-devel@lists.freedesktop.org, linux-mm@kvack.org,
+ nouveau@lists.freedesktop.org, linux-trace-kernel@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, damon@lists.linux.dev,
+ Andrew Morton <akpm@linux-foundation.org>, =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?=
+ <jglisse@redhat.com>, Jonathan Corbet <corbet@lwn.net>,
+ Alex Shi <alexs@kernel.org>, Yanteng Si <si.yanteng@linux.dev>,
+ Karol Herbst <kherbst@redhat.com>, Lyude Paul <lyude@redhat.com>,
+ Danilo Krummrich <dakr@kernel.org>, David Airlie <airlied@gmail.com>,
+ Simona Vetter <simona@ffwll.ch>, Masami Hiramatsu <mhiramat@kernel.org>,
+ Oleg Nesterov <oleg@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
+ SeongJae Park <sj@kernel.org>, "Liam R. Howlett" <Liam.Howlett@oracle.com>,
+ Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+ Vlastimil Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>,
+ Pasha Tatashin <pasha.tatashin@soleen.com>, Peter Xu <peterx@redhat.com>,
+ Jason Gunthorpe <jgg@nvidia.com>
+References: <20250210193801.781278-1-david@redhat.com>
+ <6sejv2hauce3il5lq6sw53xmjjjglxkhz5copm62oryga6jioi@u66wl2nc3hoy>
+ <039b2e48-1d7c-48dc-b832-24db12af216a@redhat.com>
+ <pqxzfmb2ydjgplkiswb5oxtbvpxyzmfroh2fbeqeuywklmrw6i@jbj73xssektr>
+From: David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <pqxzfmb2ydjgplkiswb5oxtbvpxyzmfroh2fbeqeuywklmrw6i@jbj73xssektr>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: xa_m57yuwL1IGPF_y-0IVBBpmEPsMUBowIy1qNMS3M4_1739529467
+X-Mimecast-Originator: redhat.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Thu, Feb 13, 2025 at 01:06:20PM -0800, Charlie Jenkins wrote:
-> The quiet infrastructure was moved out of Makefile.build to accomidate
-> the new syscall table generation scripts in perf. Syscall table
-> generation wanted to also be able to be quiet, so instead of again
-> copying the code to set the quiet variables, the code was moved into
-> Makefile.perf to be used globally. This was not the right solution. It
-> should have been moved even further upwards in the call chain.
-> Makefile.include is imported in many files so this seems like a proper
-> place to put it.
+On 14.02.25 02:25, Alistair Popple wrote:
+> On Thu, Feb 13, 2025 at 12:15:58PM +0100, David Hildenbrand wrote:
+>> On 13.02.25 12:03, Alistair Popple wrote:
+>>> On Mon, Feb 10, 2025 at 08:37:42PM +0100, David Hildenbrand wrote:
+>>>> Against mm-hotfixes-stable for now.
+>>>>
+>>>> Discussing the PageTail() call in make_device_exclusive_range() with
+>>>> Willy, I recently discovered [1] that device-exclusive handling does
+>>>> not properly work with THP, making the hmm-tests selftests fail if THPs
+>>>> are enabled on the system.
+>>>>
+>>>> Looking into more details, I found that hugetlb is not properly fenced,
+>>>> and I realized that something that was bugging me for longer -- how
+>>>> device-exclusive entries interact with mapcounts -- completely breaks
+>>>> migration/swapout/split/hwpoison handling of these folios while they have
+>>>> device-exclusive PTEs.
+>>>>
+>>>> The program below can be used to allocate 1 GiB worth of pages and
+>>>> making them device-exclusive on a kernel with CONFIG_TEST_HMM.
+>>>>
+>>>> Once they are device-exclusive, these folios cannot get swapped out
+>>>> (proc$pid/smaps_rollup will always indicate 1 GiB RSS no matter how
+>>>> much one forces memory reclaim), and when having a memory block onlined
+>>>> to ZONE_MOVABLE, trying to offline it will loop forever and complain about
+>>>> failed migration of a page that should be movable.
+>>>>
+>>>> # echo offline > /sys/devices/system/memory/memory136/state
+>>>> # echo online_movable > /sys/devices/system/memory/memory136/state
+>>>> # ./hmm-swap &
+>>>> ... wait until everything is device-exclusive
+>>>> # echo offline > /sys/devices/system/memory/memory136/state
+>>>> [  285.193431][T14882] page: refcount:2 mapcount:0 mapping:0000000000000000
+>>>>     index:0x7f20671f7 pfn:0x442b6a
+>>>> [  285.196618][T14882] memcg:ffff888179298000
+>>>> [  285.198085][T14882] anon flags: 0x5fff0000002091c(referenced|uptodate|
+>>>>     dirty|active|owner_2|swapbacked|node=1|zone=3|lastcpupid=0x7ff)
+>>>> [  285.201734][T14882] raw: ...
+>>>> [  285.204464][T14882] raw: ...
+>>>> [  285.207196][T14882] page dumped because: migration failure
+>>>> [  285.209072][T14882] page_owner tracks the page as allocated
+>>>> [  285.210915][T14882] page last allocated via order 0, migratetype
+>>>>     Movable, gfp_mask 0x140dca(GFP_HIGHUSER_MOVABLE|__GFP_COMP|__GFP_ZERO),
+>>>>     id 14926, tgid 14926 (hmm-swap), ts 254506295376, free_ts 227402023774
+>>>> [  285.216765][T14882]  post_alloc_hook+0x197/0x1b0
+>>>> [  285.218874][T14882]  get_page_from_freelist+0x76e/0x3280
+>>>> [  285.220864][T14882]  __alloc_frozen_pages_noprof+0x38e/0x2740
+>>>> [  285.223302][T14882]  alloc_pages_mpol+0x1fc/0x540
+>>>> [  285.225130][T14882]  folio_alloc_mpol_noprof+0x36/0x340
+>>>> [  285.227222][T14882]  vma_alloc_folio_noprof+0xee/0x1a0
+>>>> [  285.229074][T14882]  __handle_mm_fault+0x2b38/0x56a0
+>>>> [  285.230822][T14882]  handle_mm_fault+0x368/0x9f0
+>>>> ...
+>>>>
+>>>> This series fixes all issues I found so far. There is no easy way to fix
+>>>> without a bigger rework/cleanup. I have a bunch of cleanups on top (some
+>>>> previous sent, some the result of the discussion in v1) that I will send
+>>>> out separately once this landed and I get to it.
+>>>> I wish we could just use some special present PROT_NONE PTEs instead of
 > 
-> To: 
-> 
-> Signed-off-by: Charlie Jenkins <charlie@rivosinc.com>
-> ---
-> Changes in v3:
-> - Add back erroneously removed "silent=1" (Jiri)
-> - Link to v2: https://lore.kernel.org/r/20250210-quiet_tools-v2-0-b2f18cbf72af@rivosinc.com
+> Yeah, that was my initial instinct when I first investigated this. As you point
+> out a lack of spare PTE bits made it hard/impossible. Of course I'm about to
+> give you all one back, maybe I should keep it :) I'm only kidding though - I'm
+> sure there's more interesting things to spend it on.
 
-Reviewed-by: Jiri Olsa <jolsa@kernel.org>
+Yes. And I think it could actually be valuable to have the option for 
+more fake-prot-none things.
 
-thanks,
-jirka
+For example, right now we cannot really distinguish NUMA-hinting 
+prot-none from ordinary prot-none without guessing based on some VMA flags.
+
+One could implement NUMA-hinting using a PFN swap entry in an 
+arch-independent way I guess.
+
+So there are pros and cons to it. The biggest con is, that while RMAP 
+can now handle it, other page table walkers mostly skip these entries.
 
 > 
-> Changes in v2:
-> - Fix spacing around Q= (Andrii)
-> - Link to v1: https://lore.kernel.org/r/20250203-quiet_tools-v1-0-d25c8956e59a@rivosinc.com
+>>>
+>>> First off David thanks for finding and fixing these issues. If you have further
+>>> clean-ups in mind that you need help with please let me know as I'd be happy
+>>> to help.
+>>
+>> Sure! I have some cleanups TBD as result of the previous discussion, but
+>> nothing bigger so far.
+>>
+>> (removing the folio lock could be considered bigger, if we want to go down
+>> that path)
+>>
+>>>
+>>>> these (non-present, non-none) fake-swap entries; but that just results in
+>>>> the same problem we keep having (lack of spare PTE bits), and staring at
+>>>> other similar fake-swap entries, that ship has sailed.
+>>>>
+>>>> With this series, make_device_exclusive() doesn't actually belong into
+>>>> mm/rmap.c anymore, but I'll leave moving that for another day.
+>>>>
+>>>> I only tested this series with the hmm-tests selftests due to lack of HW,
+>>>> so I'd appreciate some testing, especially if the interaction between
+>>>> two GPUs wanting a device-exclusive entry works as expected.
+>>>
+>>> I'm still reviewing the series but so far testing on my single GPU system
+>>> appears to be working as expected. I will try and fire up a dual GPU system
+>>> tomorrow and test it there as well.
+>>
+>> Great, thanks a bunch for testing!
+>>
+>> Out of interest: does the nvidia driver make use of this interface as well,
+>> and are you testing with that or with the nouveau driver? I saw some reports
+>> that nvidia at least checks for it [1] when building the module:
 > 
-> ---
-> Charlie Jenkins (2):
->       tools: Unify top-level quiet infrastructure
->       tools: Remove redundant quiet setup
+> Both. I have tested Nouveau with the Mesa OpenCL stack and a simple stress test
+> that just thrashes atomic accesses between CPU and GPU and a similar test for
+> the nvidia driver.
 > 
->  tools/arch/arm64/tools/Makefile           |  6 -----
->  tools/bpf/Makefile                        |  6 -----
->  tools/bpf/bpftool/Documentation/Makefile  |  6 -----
->  tools/bpf/bpftool/Makefile                |  6 -----
->  tools/bpf/resolve_btfids/Makefile         |  2 --
->  tools/bpf/runqslower/Makefile             |  5 +---
->  tools/build/Makefile                      |  8 +-----
->  tools/lib/bpf/Makefile                    | 13 ----------
->  tools/lib/perf/Makefile                   | 13 ----------
->  tools/lib/thermal/Makefile                | 13 ----------
->  tools/objtool/Makefile                    |  6 -----
->  tools/perf/Makefile.perf                  | 41 -------------------------------
->  tools/scripts/Makefile.include            | 30 ++++++++++++++++++++++
->  tools/testing/selftests/bpf/Makefile.docs |  6 -----
->  tools/testing/selftests/hid/Makefile      |  2 --
->  tools/thermal/lib/Makefile                | 13 ----------
->  tools/tracing/latency/Makefile            |  6 -----
->  tools/tracing/rtla/Makefile               |  6 -----
->  tools/verification/rv/Makefile            |  6 -----
->  19 files changed, 32 insertions(+), 162 deletions(-)
-> ---
-> base-commit: 2014c95afecee3e76ca4a56956a936e23283f05b
-> change-id: 20250203-quiet_tools-9a6ea9d65a19
-> -- 
-> - Charlie
+> In practice the nvidia driver probably doesn't use this that often as it
+> more aggressively migrates data but it does use this as a fallback. Also it's
+> possible for users to force residency on the CPU in which case this is used,
+> which is what the test does.
+
+Cool, thanks! (so even though nouveau is not enabled in RHEL, we'd 
+effectively be using that functionality in RHEL kernels using the nvidia 
+driver)
+
 > 
+> Anyway I have just finished testing on a multi-GPU setup so please feel free to
+> add for the series:
+> 
+> Tested-by: Alistair Popple <apopple@nvidia.com>
+
+Thanks a bunch!
+
+-- 
+Cheers,
+
+David / dhildenb
+
