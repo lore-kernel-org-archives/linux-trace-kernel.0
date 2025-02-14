@@ -1,42 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC96180B;
-	Fri, 14 Feb 2025 00:10:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC5D315D1;
+	Fri, 14 Feb 2025 00:27:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739491835; cv=none; b=hT+12uoH1OoJG3LzjLNCB8Wpf6VgcdedPq0wlf+Ddt6ZzfZiCfx6Pd2/GqrUUqXeK9SQxNoRUXp1YQfzy0i/zflXKMZbiHkqSYmDf7HNYkKe8kZ6rI59K+rux4JsdP7G710B0vnnp1N01pJiXMwNkx/8xbKjqSaZz6MugMsjFlA=
+	t=1739492856; cv=none; b=FZm5PDBE/GWgkX/7JhwdIOfmU0pbV5pXnhnp/j2LjjVJFE9p46QKRqnveLEQulh6KituZbhJEs9/MQ2wUzg93Ra5Z39s7w3zPxuQypI+akwkM+17r8CVOkdNAL8LC0o6/yeHPTOQmhN3540WOoa3Rkd/nzocTT+9ItmMbaafmT4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739491835; c=relaxed/simple;
-	bh=3xrjQC4vivjWCLqH94r/JVqPR6YJTXdfJtrCe9XTMKc=;
+	s=arc-20240116; t=1739492856; c=relaxed/simple;
+	bh=lzasSBqCZsMzMvKJCwaSsF4RMTN7fMcWPM3EndeXCHQ=;
 	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=Pp4oVBzxocushWYQYQKmR8b/e3gmXP3X36NI6sYX1mSNWdN4QJwlHl/RItovtdac6tN4tyJBg7XW4+chzRwN18FzPJtDDKg9+IhKzgr1IwDKqnN+g6j/dglrVS/bv+rQIVy14eXZi6bR9ZCXHTNDjio+H76MDHlrKiRtboVssHw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MHmIX2ub; arc=none smtp.client-ip=10.30.226.201
+	 Mime-Version:Content-Type; b=l5LBOIBFcLDJ/cueXjluBxJzgi1Y/OR9dnkoxkbD2s7iO82zY+0zsmH2VjxOV1nMQRw/tBByofgQ+PE8Cpsa09IwB4jiIOOkS/DZ+cZxSEqy/D80EHPUVvs//e+JRhqDRmRjM/Gv7um8Jlwjj40ZgEQk5DukyPHtbxNW+NMgLOE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qH1XZ621; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MHmIX2ub"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 29614C4CED1;
-	Fri, 14 Feb 2025 00:10:34 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qH1XZ621"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A7D8AC4CED1;
+	Fri, 14 Feb 2025 00:27:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739491835;
-	bh=3xrjQC4vivjWCLqH94r/JVqPR6YJTXdfJtrCe9XTMKc=;
+	s=k20201202; t=1739492856;
+	bh=lzasSBqCZsMzMvKJCwaSsF4RMTN7fMcWPM3EndeXCHQ=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=MHmIX2ubYN87rsggIK/s1pbWVFEFf8quxjxjOKNvTaPI5kbf3vJa7fxkaKHRu6hKD
-	 I8GFGiUfCHyZYRQFcZZnmEiLrqJYVULAMhKtdA6zomIN2slXWb7Ry9aTnL5y9Ero91
-	 GM2uKmTu4+5HizDjFbHSym9iWfSNoNbJCcySGOG2UbJkxiP0nZtUSpgj+DuWxEex8o
-	 Mgf1tKr380BNF/zGaWw2A8CKQ1rEW9Y17aAkzeyNqND1Afu/vYE++vfUg+YVgtzm+o
-	 bGJZJxX/I3uy/BOzyg5oXN/0w+ItMp90MxSjFBmoMvDYj7XYJ31WGuT7cwra94wnZQ
-	 c99tAXQrrnWSw==
-Date: Fri, 14 Feb 2025 09:10:31 +0900
+	b=qH1XZ621nEUET6F0YY9IRFEI3iH78nnMtXZQUpQCGsVkIsc/O6Q1FTIhOnSL3PkGK
+	 Zqi/DWQamtRrio1rqxOmOkXsj3hldbZHHq7ZIukZRuxBErqp3Ffii9bSsBZ84uZwh2
+	 YJT/LLeDvDLH5aK3zsDWAf5ferPja3MY52/hyS2e5K7g/QeQU+FZCQHDly2mJ8XIff
+	 fUUfaCuPsVel45udJ0l0yC8Jfl1jNg652tBhTXNGBPdbQ7R2OKJ4Tae8q2jhkI8Oco
+	 wFdPmtTtivZ1UymPFgC/i4K1Ft/jRZO2XFSB4yrMu/DtN8D5XAgNmDEOWFXSxHOnla
+	 XNDih8tUaYMSQ==
+Date: Fri, 14 Feb 2025 09:27:32 +0900
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 To: Steven Rostedt <rostedt@goodmis.org>
 Cc: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
  <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu
  <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
  Vincent Donnefort <vdonnefort@google.com>
-Subject: Re: [PATCH] ring-buffer: Unlock resize on mmap error
-Message-Id: <20250214091031.fc31a81a5e86148655998e4a@kernel.org>
-In-Reply-To: <20250213131957.530ec3c5@gandalf.local.home>
-References: <20250213131957.530ec3c5@gandalf.local.home>
+Subject: Re: [PATCH] tracing: Have the error of
+ __tracing_resize_ring_buffer() passed to user
+Message-Id: <20250214092732.32e4a05358f2e9a96fecf5d7@kernel.org>
+In-Reply-To: <20250213134132.7e4505d7@gandalf.local.home>
+References: <20250213134132.7e4505d7@gandalf.local.home>
 X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -47,42 +48,59 @@ Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Thu, 13 Feb 2025 13:19:57 -0500
+On Thu, 13 Feb 2025 13:41:32 -0500
 Steven Rostedt <rostedt@goodmis.org> wrote:
 
 > From: Steven Rostedt <rostedt@goodmis.org>
 > 
-> Memory mapping the tracing ring buffer will disable resizing the buffer.
-> But if there's an error in the memory mapping like an invalid parameter,
-> the function exits out without re-enabling the resizing of the ring
-> buffer, preventing the ring buffer from being resized after that.
+> Currently if __tracing_resize_ring_buffer() returns an error, the
+> tracing_resize_ringbuffer() returns -ENOMEM. But it may not be a memory
+> issue that caused the function to fail. If the ring buffer is memory
+> mapped, then the resizing of the ring buffer will be disabled. But if the
+> user tries to resize the buffer, it will get an -ENOMEM returned, which is
+> confusing because there is plenty of memory. The actual error returned was
+> -EBUSY, which would make much more sense to the user.
 > 
 
 Looks good to me.
 
-Reveiewed-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Reviewed-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-Thank you,
+Thanks,
 
 > Cc: stable@vger.kernel.org
 > Fixes: 117c39200d9d7 ("ring-buffer: Introducing ring-buffer mapping functions")
 > Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 > ---
->  kernel/trace/ring_buffer.c | 1 +
->  1 file changed, 1 insertion(+)
+>  kernel/trace/trace.c | 8 +-------
+>  1 file changed, 1 insertion(+), 7 deletions(-)
 > 
-> diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-> index b8e0ae15ca5b..07b421115692 100644
-> --- a/kernel/trace/ring_buffer.c
-> +++ b/kernel/trace/ring_buffer.c
-> @@ -7126,6 +7126,7 @@ int ring_buffer_map(struct trace_buffer *buffer, int cpu,
->  		kfree(cpu_buffer->subbuf_ids);
->  		cpu_buffer->subbuf_ids = NULL;
->  		rb_free_meta_page(cpu_buffer);
-> +		atomic_dec(&cpu_buffer->resize_disabled);
+> diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+> index 1496a5ac33ae..25ff37aab00f 100644
+> --- a/kernel/trace/trace.c
+> +++ b/kernel/trace/trace.c
+> @@ -5977,8 +5977,6 @@ static int __tracing_resize_ring_buffer(struct trace_array *tr,
+>  ssize_t tracing_resize_ring_buffer(struct trace_array *tr,
+>  				  unsigned long size, int cpu_id)
+>  {
+> -	int ret;
+> -
+>  	guard(mutex)(&trace_types_lock);
+>  
+>  	if (cpu_id != RING_BUFFER_ALL_CPUS) {
+> @@ -5987,11 +5985,7 @@ ssize_t tracing_resize_ring_buffer(struct trace_array *tr,
+>  			return -EINVAL;
 >  	}
 >  
->  unlock:
+> -	ret = __tracing_resize_ring_buffer(tr, size, cpu_id);
+> -	if (ret < 0)
+> -		ret = -ENOMEM;
+> -
+> -	return ret;
+> +	return __tracing_resize_ring_buffer(tr, size, cpu_id);
+>  }
+>  
+>  static void update_last_data(struct trace_array *tr)
 > -- 
 > 2.47.2
 > 
