@@ -1,34 +1,39 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 882D51624FB;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 846831624F5;
 	Sat, 15 Feb 2025 03:43:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739591031; cv=none; b=FWWVsJ1PwIVup3xa4Wjl7QvDtfiwHYU+9sj0RljtmjTU+REwLGROVzihujRW3Ql+RP8Sry+3hP+Qr1VnoROXK4aQMXYYBtEsAFFTeYBeAGcy/2FcoMa59AOkjYzTUioOdsYR0hY8ZT81G0mxFTwj90ahOQxWZhQ7XD/2JpE3BPM=
+	t=1739591031; cv=none; b=ngyG8kH0F1UFVdtruqKmcw5RQejnIGOpKGvURvUh2UvAywXVpwOo6QOSnQeJsvwxVCXqxQmzdCF++j20p3YMLfhyyRv9ELfUrOoMngvnS5Y2lyDVmZcCiSp7/H6s3onjJuPhQTxlB6LBv0ifabZi5BuOnYJwsfd13x0ETmgqaTw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1739591031; c=relaxed/simple;
-	bh=7w5oaea+L+7n9clu6OmpQtZSCfDQNtPY3onQai/m8Ho=;
+	bh=uJnQyG8i5lyHH/RkjjPSKWtqaqlnhy1DWyeFiqlXDKo=;
 	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=mGEuLvy9DmcVvknUSGRWrajL5LH7LAGTRmtzjhfRbiFkOKSx7dTH7Tuu4bmRAm9HzMJcKUxGmiWuPh2HqLpBq0uAU0AmsunCKWXruZTlF4IcOyUjJj052UtUrJ+JeTcc/CFAycFejWMkQcBEoLV0dGqU2MyXWmi2fRfLIo1z4nk=
+	 Content-Type; b=CS2yzl78yybG55E51o9x3SQ0QJrJkRM+oR2MOf593BSGiebiBGxmmGDCD6YIrstNKGc692B39Nv0Sn3pmmkCmHDDEXvHgNXOcz5sw6sKsf1BQp9dbDGWOHXzA3O3sjrqm6pNPo24NdUDc+Jk8g8s8QK5XKlvYaIdP6tmqHlYC0o=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 66B0DC4CEE7;
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0E72AC4CEE6;
 	Sat, 15 Feb 2025 03:43:51 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.98)
 	(envelope-from <rostedt@goodmis.org>)
-	id 1tj965-00000002gxH-1e3B;
+	id 1tj965-00000002gwJ-0Dzx;
 	Fri, 14 Feb 2025 22:44:05 -0500
-Message-ID: <20250215034405.244453188@goodmis.org>
+Message-ID: <20250215034404.902259250@goodmis.org>
 User-Agent: quilt/0.68
-Date: Fri, 14 Feb 2025 22:43:08 -0500
+Date: Fri, 14 Feb 2025 22:43:06 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org,
  linux-trace-kernel@vger.kernel.org
 Cc: Masami Hiramatsu <mhiramat@kernel.org>,
  Mark Rutland <mark.rutland@arm.com>,
  Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Andrew Morton <akpm@linux-foundation.org>
-Subject: [PATCH v2 7/8] tracing: Show module names and addresses of last boot
+ Andrew Morton <akpm@linux-foundation.org>,
+ Luis Chamberlain <mcgrof@kernel.org>,
+ Petr Pavlu <petr.pavlu@suse.com>,
+ Sami Tolvanen <samitolvanen@google.com>,
+ Daniel Gomez <da.gomez@samsung.com>,
+ linux-modules@vger.kernel.org
+Subject: [PATCH v2 5/8] module: Add module_for_each_mod() function
 References: <20250215034301.624019422@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -40,173 +45,76 @@ Content-Type: text/plain; charset=UTF-8
 
 From: Steven Rostedt <rostedt@goodmis.org>
 
-Add the last boot module's names and addresses to the last_boot_info file.
-This only shows the module information from a previous boot. If the buffer
-is started and is recording the current boot, this file still will only
-show "current".
+The tracing system needs a way to save all the currently loaded modules
+and their addresses into persistent memory so that it can evaluate the
+addresses on a reboot from a crash. When the persistent memory trace
+starts, it will load the module addresses and names into the persistent
+memory. To do so, it will call the module_for_each_mod() function and pass
+it a function and data structure to get called on each loaded module. Then
+it can record the memory.
 
-  ~# cat instances/boot_mapped/last_boot_info
-  10c00000		[kernel]
-  ffffffffc00ca000	usb_serial_simple
-  ffffffffc00ae000	usbserial
-  ffffffffc008b000	bfq
+This only implements that function.
 
-  ~# echo function > instances/boot_mapped/current_tracer
-  ~# cat instances/boot_mapped/last_boot_info
-  # Current
-
+Cc: Luis Chamberlain <mcgrof@kernel.org>
+Cc: Petr Pavlu <petr.pavlu@suse.com>
+Cc: Sami Tolvanen <samitolvanen@google.com>
+Cc: Daniel Gomez <da.gomez@samsung.com>
+Cc: linux-modules@vger.kernel.org
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- kernel/trace/trace.c | 103 +++++++++++++++++++++++++++++++++++++------
- 1 file changed, 90 insertions(+), 13 deletions(-)
+ include/linux/module.h |  6 ++++++
+ kernel/module/main.c   | 14 ++++++++++++++
+ 2 files changed, 20 insertions(+)
 
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index 6674dc985e52..fe65a256c193 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -5999,6 +5999,8 @@ struct trace_scratch {
- 	struct trace_mod_entry	entries[];
- };
- 
-+static DEFINE_MUTEX(scratch_mutex);
-+
- static int save_mod(struct module *mod, void *data)
- {
- 	struct trace_array *tr = data;
-@@ -6006,6 +6008,8 @@ static int save_mod(struct module *mod, void *data)
- 	struct trace_mod_entry *entry;
- 	unsigned int size;
- 
-+	guard(mutex)(&scratch_mutex);
-+
- 	tscratch = tr->scratch;
- 	if (!tscratch)
- 		return -1;
-@@ -6876,15 +6880,47 @@ tracing_total_entries_read(struct file *filp, char __user *ubuf,
- 	return simple_read_from_buffer(ubuf, cnt, ppos, buf, r);
+diff --git a/include/linux/module.h b/include/linux/module.h
+index 30e5b19bafa9..9a71dd2cb11f 100644
+--- a/include/linux/module.h
++++ b/include/linux/module.h
+@@ -782,6 +782,8 @@ static inline void *module_writable_address(struct module *mod, void *loc)
+ 	return __module_writable_address(mod, loc);
  }
  
--static ssize_t
--tracing_last_boot_read(struct file *filp, char __user *ubuf, size_t cnt, loff_t *ppos)
-+#define LAST_BOOT_HEADER ((void *)1)
++void module_for_each_mod(int(*func)(struct module *mod, void *data), void *data);
 +
-+static void *l_next(struct seq_file *m, void *v, loff_t *pos)
+ #else /* !CONFIG_MODULES... */
+ 
+ static inline struct module *__module_address(unsigned long addr)
+@@ -894,6 +896,10 @@ static inline void *module_writable_address(struct module *mod, void *loc)
  {
--	struct trace_array *tr = filp->private_data;
-+	struct trace_array *tr = m->private;
- 	struct trace_scratch *tscratch = tr->scratch;
--	struct seq_buf seq;
--	char buf[64];
-+	unsigned int index = *pos;
+ 	return loc;
+ }
 +
-+	(*pos)++;
-+
-+	if (*pos == 1)
-+		return LAST_BOOT_HEADER;
-+
-+	/* Only show offsets of the last boot data */
-+	if (!tscratch || !(tr->flags & TRACE_ARRAY_FL_LAST_BOOT))
-+		return NULL;
++static inline void module_for_each_mod(int(*func)(struct module *mod, void *data), void *data)
++{
++}
+ #endif /* CONFIG_MODULES */
  
--	seq_buf_init(&seq, buf, 64);
-+	/* *pos 0 is for the header, 1 is for the first module */
-+	index--;
-+
-+	if (index >= tscratch->nr_entries)
-+		return NULL;
-+
-+	return &tscratch->entries[index];
-+}
-+
-+static void *l_start(struct seq_file *m, loff_t *pos)
-+{
-+	mutex_lock(&scratch_mutex);
-+
-+	return l_next(m, NULL, pos);
-+}
-+
-+static void l_stop(struct seq_file *m, void *p)
-+{
-+	mutex_unlock(&scratch_mutex);
-+}
-+
-+static void show_last_boot_header(struct seq_file *m, struct trace_array *tr)
-+{
-+	struct trace_scratch *tscratch = tr->scratch;
- 
- 	/*
- 	 * Do not leak KASLR address. This only shows the KASLR address of
-@@ -6894,11 +6930,52 @@ tracing_last_boot_read(struct file *filp, char __user *ubuf, size_t cnt, loff_t
- 	 * should not be the same as the current boot.
- 	 */
- 	if (tscratch && (tr->flags & TRACE_ARRAY_FL_LAST_BOOT))
--		seq_buf_printf(&seq, "%lx\t[kernel]\n", tscratch->kaslr_addr);
-+		seq_printf(m, "%lx\t[kernel]\n", tscratch->kaslr_addr);
- 	else
--		seq_buf_puts(&seq, "# Current\n");
-+		seq_puts(m, "# Current\n");
-+}
-+
-+static int l_show(struct seq_file *m, void *v)
-+{
-+	struct trace_array *tr = m->private;
-+	struct trace_mod_entry *entry = v;
-+
-+	if (v == LAST_BOOT_HEADER) {
-+		show_last_boot_header(m, tr);
-+		return 0;
-+	}
- 
--	return simple_read_from_buffer(ubuf, cnt, ppos, buf, seq_buf_used(&seq));
-+	seq_printf(m, "%lx\t%s\n", entry->mod_addr, entry->mod_name);
-+	return 0;
-+}
-+
-+static const struct seq_operations last_boot_seq_ops = {
-+	.start		= l_start,
-+	.next		= l_next,
-+	.stop		= l_stop,
-+	.show		= l_show,
-+};
-+
-+static int tracing_last_boot_open(struct inode *inode, struct file *file)
-+{
-+	struct trace_array *tr = inode->i_private;
-+	struct seq_file *m;
-+	int ret;
-+
-+	ret = tracing_check_open_get_tr(tr);
-+	if (ret)
-+		return ret;
-+
-+	ret = seq_open(file, &last_boot_seq_ops);
-+	if (ret) {
-+		trace_array_put(tr);
-+		return ret;
-+	}
-+
-+	m = file->private_data;
-+	m->private = tr;
-+
-+	return 0;
+ #ifdef CONFIG_SYSFS
+diff --git a/kernel/module/main.c b/kernel/module/main.c
+index 1fb9ad289a6f..ea1fe313fb89 100644
+--- a/kernel/module/main.c
++++ b/kernel/module/main.c
+@@ -3809,6 +3809,20 @@ bool is_module_text_address(unsigned long addr)
+ 	return ret;
  }
  
- static int tracing_buffer_meta_open(struct inode *inode, struct file *filp)
-@@ -7527,10 +7604,10 @@ static const struct file_operations trace_time_stamp_mode_fops = {
- };
- 
- static const struct file_operations last_boot_fops = {
--	.open		= tracing_open_generic_tr,
--	.read		= tracing_last_boot_read,
--	.llseek		= generic_file_llseek,
--	.release	= tracing_release_generic_tr,
-+	.open		= tracing_last_boot_open,
-+	.read		= seq_read,
-+	.llseek		= seq_lseek,
-+	.release	= tracing_seq_release,
- };
- 
- #ifdef CONFIG_TRACER_SNAPSHOT
++void module_for_each_mod(int(*func)(struct module *mod, void *data), void *data)
++{
++	struct module *mod;
++
++	preempt_disable();
++	list_for_each_entry_rcu(mod, &modules, list) {
++		if (mod->state == MODULE_STATE_UNFORMED)
++			continue;
++		if (func(mod, data))
++			break;
++	}
++	preempt_enable();
++}
++
+ /**
+  * __module_text_address() - get the module whose code contains an address.
+  * @addr: the address.
 -- 
 2.47.2
 
