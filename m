@@ -1,181 +1,314 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B792217B50B;
-	Sat, 15 Feb 2025 03:43:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 462BFC2ED;
+	Sat, 15 Feb 2025 06:38:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739591031; cv=none; b=BZyEjUi2ibLIhjruQ3iLnQzrtM+biyUSCoC4vQoAsJfvl+tYT/NKNfSTRE3w9Brp2o4LcwaZ1tVWVZ/V6DVuBrs+dlOA1dqH/BkDWYdD7kRCTkCk6xzST21yYC1XEbzDC5RPHKHnZNBXpMtsjKlcyNmLQno13T4XN3LIFOWsKN8=
+	t=1739601541; cv=none; b=A3c7B1J5n91Qwgfs0w8yo+R5KAWErH6hfgYRtKsOblkH79V6Qpy9zwUjQVTt1U9bp56SIywJxMdFC03bcwhcdQ7karY6KJANFM6CaiaMijGPShRWcXIBx0vld4fu57zWfoooaMy9bi//y2n+fHxczPiB4saH6rl52iZkzX7zjjU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739591031; c=relaxed/simple;
-	bh=7hwoSzxe5VpOXzoRHtdURWklqJCT/Gf+Eu14WGwmWbY=;
-	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=aBO9BjGFP+j4CVvyTL1TI78RrPkGl4Itgd7m4kYlxQ0lHJCkp1QArenRVxRh/BdmmnNxrdF0KdppGdGc0ig9Ta0jg2RQTFiuBwaarYVsBO1olz2fgx6AE+aJFfCt1vhBO64ZP0zJ0RDq9iHLiJjsBByPIq9/rr9hwPpQUQWr1w0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9DB4DC4CEE5;
-	Sat, 15 Feb 2025 03:43:51 +0000 (UTC)
-Received: from rostedt by gandalf with local (Exim 4.98)
-	(envelope-from <rostedt@goodmis.org>)
-	id 1tj965-00000002gxm-2NFq;
-	Fri, 14 Feb 2025 22:44:05 -0500
-Message-ID: <20250215034405.414999988@goodmis.org>
-User-Agent: quilt/0.68
-Date: Fri, 14 Feb 2025 22:43:09 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Andrew Morton <akpm@linux-foundation.org>
-Subject: [PATCH v2 8/8] tracing: Update modules to persistent instances when loaded
-References: <20250215034301.624019422@goodmis.org>
+	s=arc-20240116; t=1739601541; c=relaxed/simple;
+	bh=SQOrMWFD7Sxr/kmAX6d8BqquVqYa6iPTomkH62ORN2c=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=EV1Llt/YhqAhsnGf3eUEfKLiGUNndOhX/K3O+mG09axYqs8BlPagbhjBGgyT0wJPCte+cu0Vw6xsnbiIG6l7u8Rg/BmDmp1pXv0qSrQ+/72ZRMeFNdMkitai3+fLmfmlV3T7yI1FbjGKeWg/k3u9ft+aOeshDuNTCq18nXEnMlo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1FC671063;
+	Fri, 14 Feb 2025 22:39:16 -0800 (PST)
+Received: from [10.163.93.19] (unknown [10.163.93.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CA40B3F58B;
+	Fri, 14 Feb 2025 22:38:43 -0800 (PST)
+Message-ID: <5445bc55-6bd2-46fd-8107-99eb31aee172@arm.com>
+Date: Sat, 15 Feb 2025 12:08:40 +0530
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC v2 0/9] khugepaged: mTHP support
+To: Nico Pache <npache@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ linux-mm@kvack.org, ryan.roberts@arm.com, anshuman.khandual@arm.com,
+ catalin.marinas@arm.com, cl@gentwo.org, vbabka@suse.cz, mhocko@suse.com,
+ apopple@nvidia.com, dave.hansen@linux.intel.com, will@kernel.org,
+ baohua@kernel.org, jack@suse.cz, srivatsa@csail.mit.edu,
+ haowenchao22@gmail.com, hughd@google.com, aneesh.kumar@kernel.org,
+ yang@os.amperecomputing.com, peterx@redhat.com, ioworker0@gmail.com,
+ wangkefeng.wang@huawei.com, ziy@nvidia.com, jglisse@google.com,
+ surenb@google.com, vishal.moola@gmail.com, zokeefe@google.com,
+ zhengqi.arch@bytedance.com, jhubbard@nvidia.com, 21cnbao@gmail.com,
+ willy@infradead.org, kirill.shutemov@linux.intel.com, david@redhat.com,
+ aarcange@redhat.com, raquini@redhat.com, sunnanyong@huawei.com,
+ usamaarif642@gmail.com, audra@redhat.com, akpm@linux-foundation.org,
+ rostedt@goodmis.org, mathieu.desnoyers@efficios.com, tiwai@suse.de
+References: <20250211003028.213461-1-npache@redhat.com>
+ <5a995dc9-fee7-442f-b439-c484d9de1750@arm.com>
+ <CAA1CXcCo3eCH-5axnw3WUqPfL-EPCbLVFo_AFYXkbnExfX=KLQ@mail.gmail.com>
+ <4ba52062-1bd3-4d53-aa28-fcbbd4913801@arm.com>
+ <CAA1CXcCeFjCx-6VDCjOUUniLHXMUYpjesOhcHQapMS5i7=RR4A@mail.gmail.com>
+ <71490f8c-f234-4032-bc2a-f6cffa491fcb@arm.com>
+ <CAA1CXcCkbxe_D4cSroBTu3E4dn6SaaDDk6xo9y4O9cWW-9Rc9Q@mail.gmail.com>
+Content-Language: en-US
+From: Dev Jain <dev.jain@arm.com>
+In-Reply-To: <CAA1CXcCkbxe_D4cSroBTu3E4dn6SaaDDk6xo9y4O9cWW-9Rc9Q@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-From: Steven Rostedt <rostedt@goodmis.org>
 
-When a module is loaded and a persistent buffer is actively tracing, add
-it to the list of modules in the persistent memory.
 
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
- kernel/trace/trace.c        | 25 +++++++++++++++++++++++
- kernel/trace/trace.h        |  2 ++
- kernel/trace/trace_events.c | 40 ++++++++++++++++++++++++++-----------
- 3 files changed, 55 insertions(+), 12 deletions(-)
+On 15/02/25 6:22 am, Nico Pache wrote:
+> On Thu, Feb 13, 2025 at 7:02 PM Dev Jain <dev.jain@arm.com> wrote:
+>>
+>>
+>>
+>> On 14/02/25 1:09 am, Nico Pache wrote:
+>>> On Thu, Feb 13, 2025 at 1:26 AM Dev Jain <dev.jain@arm.com> wrote:
+>>>>
+>>>>
+>>>>
+>>>> On 12/02/25 10:19 pm, Nico Pache wrote:
+>>>>> On Tue, Feb 11, 2025 at 5:50 AM Dev Jain <dev.jain@arm.com> wrote:
+>>>>>>
+>>>>>>
+>>>>>>
+>>>>>> On 11/02/25 6:00 am, Nico Pache wrote:
+>>>>>>> The following series provides khugepaged and madvise collapse with the
+>>>>>>> capability to collapse regions to mTHPs.
+>>>>>>>
+>>>>>>> To achieve this we generalize the khugepaged functions to no longer depend
+>>>>>>> on PMD_ORDER. Then during the PMD scan, we keep track of chunks of pages
+>>>>>>> (defined by MTHP_MIN_ORDER) that are utilized. This info is tracked
+>>>>>>> using a bitmap. After the PMD scan is done, we do binary recursion on the
+>>>>>>> bitmap to find the optimal mTHP sizes for the PMD range. The restriction
+>>>>>>> on max_ptes_none is removed during the scan, to make sure we account for
+>>>>>>> the whole PMD range. max_ptes_none will be scaled by the attempted collapse
+>>>>>>> order to determine how full a THP must be to be eligible. If a mTHP collapse
+>>>>>>> is attempted, but contains swapped out, or shared pages, we dont perform the
+>>>>>>> collapse.
+>>>>>>>
+>>>>>>> With the default max_ptes_none=511, the code should keep its most of its
+>>>>>>> original behavior. To exercise mTHP collapse we need to set max_ptes_none<=255.
+>>>>>>> With max_ptes_none > HPAGE_PMD_NR/2 you will experience collapse "creep" and
+>>>>>>> constantly promote mTHPs to the next available size.
+>>>>>>>
+>>>>>>> Patch 1:     Some refactoring to combine madvise_collapse and khugepaged
+>>>>>>> Patch 2:     Refactor/rename hpage_collapse
+>>>>>>> Patch 3-5:   Generalize khugepaged functions for arbitrary orders
+>>>>>>> Patch 6-9:   The mTHP patches
+>>>>>>>
+>>>>>>> ---------
+>>>>>>>      Testing
+>>>>>>> ---------
+>>>>>>> - Built for x86_64, aarch64, ppc64le, and s390x
+>>>>>>> - selftests mm
+>>>>>>> - I created a test script that I used to push khugepaged to its limits while
+>>>>>>>        monitoring a number of stats and tracepoints. The code is available
+>>>>>>>        here[1] (Run in legacy mode for these changes and set mthp sizes to inherit)
+>>>>>>>        The summary from my testings was that there was no significant regression
+>>>>>>>        noticed through this test. In some cases my changes had better collapse
+>>>>>>>        latencies, and was able to scan more pages in the same amount of time/work,
+>>>>>>>        but for the most part the results were consistant.
+>>>>>>> - redis testing. I tested these changes along with my defer changes
+>>>>>>>       (see followup post for more details).
+>>>>>>> - some basic testing on 64k page size.
+>>>>>>> - lots of general use. These changes have been running in my VM for some time.
+>>>>>>>
+>>>>>>> Changes since V1 [2]:
+>>>>>>> - Minor bug fixes discovered during review and testing
+>>>>>>> - removed dynamic allocations for bitmaps, and made them stack based
+>>>>>>> - Adjusted bitmap offset from u8 to u16 to support 64k pagesize.
+>>>>>>> - Updated trace events to include collapsing order info.
+>>>>>>> - Scaled max_ptes_none by order rather than scaling to a 0-100 scale.
+>>>>>>> - No longer require a chunk to be fully utilized before setting the bit. Use
+>>>>>>>        the same max_ptes_none scaling principle to achieve this.
+>>>>>>> - Skip mTHP collapse that requires swapin or shared handling. This helps prevent
+>>>>>>>        some of the "creep" that was discovered in v1.
+>>>>>>>
+>>>>>>> [1] - https://gitlab.com/npache/khugepaged_mthp_test
+>>>>>>> [2] - https://lore.kernel.org/lkml/20250108233128.14484-1-npache@redhat.com/
+>>>>>>>
+>>>>>>> Nico Pache (9):
+>>>>>>>       introduce khugepaged_collapse_single_pmd to unify khugepaged and
+>>>>>>>         madvise_collapse
+>>>>>>>       khugepaged: rename hpage_collapse_* to khugepaged_*
+>>>>>>>       khugepaged: generalize hugepage_vma_revalidate for mTHP support
+>>>>>>>       khugepaged: generalize alloc_charge_folio for mTHP support
+>>>>>>>       khugepaged: generalize __collapse_huge_page_* for mTHP support
+>>>>>>>       khugepaged: introduce khugepaged_scan_bitmap for mTHP support
+>>>>>>>       khugepaged: add mTHP support
+>>>>>>>       khugepaged: improve tracepoints for mTHP orders
+>>>>>>>       khugepaged: skip collapsing mTHP to smaller orders
+>>>>>>>
+>>>>>>>      include/linux/khugepaged.h         |   4 +
+>>>>>>>      include/trace/events/huge_memory.h |  34 ++-
+>>>>>>>      mm/khugepaged.c                    | 422 +++++++++++++++++++----------
+>>>>>>>      3 files changed, 306 insertions(+), 154 deletions(-)
+>>>>>>>
+>>>>>>
+>>>>>> Does this patchset suffer from the problem described here:
+>>>>>> https://lore.kernel.org/all/8abd99d5-329f-4f8d-8680-c2d48d4963b6@arm.com/
+>>>>> Hi Dev,
+>>>>>
+>>>>> Sorry I meant to get back to you about that.
+>>>>>
+>>>>> I understand your concern, but like I've mentioned before, the scan
+>>>>> with the read lock was done so we dont have to do the more expensive
+>>>>> locking, and could still gain insight into the state. You are right
+>>>>> that this info could become stale if the state changes dramatically,
+>>>>> but the collapse_isolate function will verify it and not collapse.
+>>>>
+>>>> If the state changes dramatically, the _isolate function will verify it,
+>>>> and fallback. And this fallback happens after following this costly
+>>>> path: retrieve a large folio from the buddy allocator -> swapin pages
+>>>> from the disk -> mmap_write_lock() -> anon_vma_lock_write() -> TLB flush
+>>>> on all CPUs -> fallback in _isolate().
+>>>> If you do fail in _isolate(), doesn't it make sense to get the updated
+>>>> state for the next fallback order immediately, because we have prior
+>>>> information that we failed because of PTE state? What your algorithm
+>>>> will do is *still* follow the costly path described above, and again
+>>>> fail in _isolate(), instead of failing in hpage_collapse_scan_pmd() like
+>>>> mine would.
+>>>
+>>> You do raise a valid point here, I can optimize my solution by
+>>> detecting certain collapse failure types and jump to the next scan.
+>>> I'll add that to my solution, thanks!
+>>>
+>>> As for the disagreement around the bitmap, we'll leave that up to the
+>>> community to decide since we have differing opinions/solutions.
+>>>
+>>>>
+>>>> The verification of the PTE state by the _isolate() function is the "no
+>>>> turning back" point of the algorithm. The verification by
+>>>> hpage_collapse_scan_pmd() is the "let us see if proceeding is even worth
+>>>> it, before we do costly operations" point of the algorithm.
+>>>>
+>>>>>    From my testing I found this to rarely happen.
+>>>>
+>>>> Unfortunately, I am not very familiar with performance testing/load
+>>>> testing, I am fairly new to kernel programming, so I am getting there.
+>>>> But it really depends on the type of test you are running, what actually
+>>>> runs on memory-intensive systems, etc etc. In fact, on loaded systems I
+>>>> would expect the PTE state to dramatically change. But still, no opinion
+>>>> here.
+>>>
+>>> Yeah there are probably some cases where it happens more often.
+>>> Probably in cases of short lived allocations, but khugepaged doesn't
+>>> run that frequently so those won't be that big of an issue.
+>>>
+>>> Our performance team is currently testing my implementation so I
+>>> should have more real workload test results soon. The redis testing
+>>> had some gains and didn't show any signs of obvious regressions.
+>>>
+>>> As for the testing, check out
+>>> https://gitlab.com/npache/khugepaged_mthp_test/-/blob/master/record-khuge-performance.sh?ref_type=heads
+>>> this does the tracing for my testing script. It can help you get
+>>> started. There are 3 different traces being applied there: the
+>>> bpftrace for collapse latencies, the perf record for the flamegraph
+>>> (not actually that useful, but may be useful to visualize any
+>>> weird/long paths that you may not have noticed), and the trace-cmd
+>>> which records the tracepoint of the scan and the collapse functions
+>>> then processes the data using the awk script-- the output being the
+>>> scan rate, the pages collapsed, and their result status (grouped by
+>>> order).
+>>>
+>>> You can also look into https://github.com/gormanm/mmtests for
+>>> testing/comparing kernels. I was running the
+>>> config-memdb-redis-benchmark-medium workload.
+>>
+>> Thanks. I'll take a look.
+>>
+>>>
+>>>>
+>>>>>
+>>>>> Also, khugepaged, my changes, and your changes are all a victim of
+>>>>> this. Once we drop the read lock (to either allocate the folio, or
+>>>>> right before acquiring the write_lock), the state can change. In your
+>>>>> case, yes, you are gathering more up to date information, but is it
+>>>>> really that important/worth it to retake locks and rescan for each
+>>>>> instance if we are about to reverify with the write lock taken?
+>>>>
+>>>> You said "reverify": You are removing the verification, so this step
+>>>> won't be reverification, it will be verification. We do not want to
+>>>> verify *after* we have already done 95% of latency-heavy stuff, only to
+>>>> know that we are going to fail.
+>>>>
+>>>> Algorithms in the kernel, in general, are of the following form: 1)
+>>>> Verify if a condition is true, resulting in taking a control path -> 2)
+>>>> do a lot of stuff -> "no turning back" step, wherein before committing
+>>>> (by taking locks, say), reverify if this is the control path we should
+>>>> be in. You are eliminating step 1).
+>>>>
+>>>> Therefore, I will have to say that I disagree with your approach.
+>>>>
+>>>> On top of this, in the subjective analysis in [1], point number 7 (along
+>>>> with point number 1) remains. And, point number 4 remains.
+>>>
+>>> for 1) your worst case of 1024 is not the worst case. There are 8
+>>> possible orders in your implementation, if all are enabled, that is
+>>> 4096 iterations in the worst case.
+>>
+>> Yes, that is exactly what I wrote in 1). I am still not convinced that
+>> the overhead you produce + 512 iterations is going to beat 4096
+>> iterations. Anyways, that is hand-waving and we should test this.
+>>
+>>> This becomes WAY worse on 64k page size, ~45,000 iterations vs 4096 in my case.
+>>
+>> Sorry, I am missing something here; how does the number of iterations
+>> change with page size? Am I not scanning the PTE table, which is
+>> invariant to the page size?
+> 
+> I got the calculation wrong the first time and it's actually worst.
+> Lets hope I got this right this time
+> on ARM64 64k kernel:
+> PMD size = 512M
+> PTE= 64k
+> PTEs per PMD = 8192
 
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index fe65a256c193..4d4ac9de14a8 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -10084,6 +10084,30 @@ static void trace_module_remove_evals(struct module *mod)
- static inline void trace_module_remove_evals(struct module *mod) { }
- #endif /* CONFIG_TRACE_EVAL_MAP_FILE */
- 
-+static bool trace_array_active(struct trace_array *tr)
-+{
-+	if (tr->current_trace != &nop_trace)
-+		return true;
-+
-+	/* 0 is no events, 1 is all disabled */
-+	return trace_events_enabled(tr, NULL) > 1;
-+}
-+
-+static void trace_module_record(struct module *mod)
-+{
-+	struct trace_array *tr;
-+
-+	list_for_each_entry(tr, &ftrace_trace_arrays, list) {
-+		/* Update any persistent trace array that has already been started */
-+		if ((tr->flags & (TRACE_ARRAY_FL_BOOT | TRACE_ARRAY_FL_LAST_BOOT)) ==
-+		    TRACE_ARRAY_FL_BOOT) {
-+			/* Only update if the trace array is active */
-+			if (trace_array_active(tr))
-+				save_mod(mod, tr);
-+		}
-+	}
-+}
-+
- static int trace_module_notify(struct notifier_block *self,
- 			       unsigned long val, void *data)
- {
-@@ -10092,6 +10116,7 @@ static int trace_module_notify(struct notifier_block *self,
- 	switch (val) {
- 	case MODULE_STATE_COMING:
- 		trace_module_add_evals(mod);
-+		trace_module_record(mod);
- 		break;
- 	case MODULE_STATE_GOING:
- 		trace_module_remove_evals(mod);
-diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
-index 3a020fb82a34..90493220c362 100644
---- a/kernel/trace/trace.h
-+++ b/kernel/trace/trace.h
-@@ -786,6 +786,8 @@ extern void trace_find_cmdline(int pid, char comm[]);
- extern int trace_find_tgid(int pid);
- extern void trace_event_follow_fork(struct trace_array *tr, bool enable);
- 
-+extern int trace_events_enabled(struct trace_array *tr, const char *system);
-+
- #ifdef CONFIG_DYNAMIC_FTRACE
- extern unsigned long ftrace_update_tot_cnt;
- extern unsigned long ftrace_number_of_pages;
-diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
-index 4cb275316e51..107767afe0ab 100644
---- a/kernel/trace/trace_events.c
-+++ b/kernel/trace/trace_events.c
-@@ -1811,28 +1811,28 @@ event_enable_write(struct file *filp, const char __user *ubuf, size_t cnt,
- 	return cnt;
- }
- 
--static ssize_t
--system_enable_read(struct file *filp, char __user *ubuf, size_t cnt,
--		   loff_t *ppos)
-+/*
-+ * Returns:
-+ *   0 : no events exist?
-+ *   1 : all events are disabled
-+ *   2 : all events are enabled
-+ *   3 : some events are enabled and some are enabled
-+ */
-+int trace_events_enabled(struct trace_array *tr, const char *system)
- {
--	const char set_to_char[4] = { '?', '0', '1', 'X' };
--	struct trace_subsystem_dir *dir = filp->private_data;
--	struct event_subsystem *system = dir->subsystem;
- 	struct trace_event_call *call;
- 	struct trace_event_file *file;
--	struct trace_array *tr = dir->tr;
--	char buf[2];
- 	int set = 0;
--	int ret;
- 
--	mutex_lock(&event_mutex);
-+	guard(mutex)(&event_mutex);
-+
- 	list_for_each_entry(file, &tr->events, list) {
- 		call = file->event_call;
- 		if ((call->flags & TRACE_EVENT_FL_IGNORE_ENABLE) ||
- 		    !trace_event_name(call) || !call->class || !call->class->reg)
- 			continue;
- 
--		if (system && strcmp(call->class->system, system->name) != 0)
-+		if (system && strcmp(call->class->system, system) != 0)
- 			continue;
- 
- 		/*
-@@ -1848,7 +1848,23 @@ system_enable_read(struct file *filp, char __user *ubuf, size_t cnt,
- 		if (set == 3)
- 			break;
- 	}
--	mutex_unlock(&event_mutex);
-+
-+	return set;
-+}
-+
-+static ssize_t
-+system_enable_read(struct file *filp, char __user *ubuf, size_t cnt,
-+		   loff_t *ppos)
-+{
-+	const char set_to_char[4] = { '?', '0', '1', 'X' };
-+	struct trace_subsystem_dir *dir = filp->private_data;
-+	struct event_subsystem *system = dir->subsystem;
-+	struct trace_array *tr = dir->tr;
-+	char buf[2];
-+	int set;
-+	int ret;
-+
-+	set = trace_events_enabled(tr, system ? system->name : NULL);
- 
- 	buf[0] = set_to_char[set];
- 	buf[1] = '\n';
--- 
-2.47.2
+*facepalm* my bad, thanks. I got thrown off thinking HPAGE_PMD_NR won't 
+depend on page size, but #pte entries = PAGE_SIZE / sizeof(pte) = 
+PAGE_SIZE / 8. So it does depend. You are correct, the PTEs per PMD is 1 
+<< 13.
 
+> log2(8192) = 13 - 2 = 11 number of (m)THP sizes including PMD (the
+> first and second order are skipped)
+> 
+> Assuming I understand your algorithm correctly, in the worst case you
+> are scanning the whole PMD for each order.
+> 
+> So you scan 8192 PTEs 11 times. 8192 * 11 = 90112.
+
+Yup. Now it seems that the bitmap overhead may just be worth it; for the 
+worst case the bitmap will give us an 11x saving...for the average case, 
+it will give us 2x, but still, 8192 is a large number. I'll think of 
+ways to test this out.
+
+Btw, I was made aware that an LWN article just got posted on our work!
+https://lwn.net/Articles/1009039/
+
+> 
+> Please let me know if I'm missing something here.
+>>
+>>>>
+>>>> [1]
+>>>> https://lore.kernel.org/all/23023f48-95c6-4a24-ac8b-aba4b1a441b4@arm.com/
+>>>>
+>>>>>
+>>>>> So in my eyes, this is not a "problem"
+>>>>
+>>>> Looks like the kernel scheduled us for a high-priority debate, I hope
+>>>> there's no deadlock :)
+>>>>
+>>>>>
+>>>>> Cheers,
+>>>>> -- Nico
+>>>>>
+>>>>>
+>>>>>>
+>>>>>
+>>>>
+>>>
+>>
+> 
 
