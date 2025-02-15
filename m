@@ -1,26 +1,26 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3E8617799F;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B792217B50B;
 	Sat, 15 Feb 2025 03:43:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739591031; cv=none; b=JdoKstQQpdKwJwdntCnouyNVIacIyD1Zx0ck4FfbPNYI3sBXSXKc9sj5K2xEL8zjeYbV2a9lCoHwqoJRuhP8PfF34u7jEoPXE0N7kZrh9AaOndu2ugBhvXzcEkcbGP07R+DcASznRj0RSA/gutxa2zoKuZvFkwu8VAoSMmOH5To=
+	t=1739591031; cv=none; b=BZyEjUi2ibLIhjruQ3iLnQzrtM+biyUSCoC4vQoAsJfvl+tYT/NKNfSTRE3w9Brp2o4LcwaZ1tVWVZ/V6DVuBrs+dlOA1dqH/BkDWYdD7kRCTkCk6xzST21yYC1XEbzDC5RPHKHnZNBXpMtsjKlcyNmLQno13T4XN3LIFOWsKN8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1739591031; c=relaxed/simple;
-	bh=dXr+X5dJgcrNCEwc2EpFMguMKGBFbGy9DrYu4JVp6HA=;
+	bh=7hwoSzxe5VpOXzoRHtdURWklqJCT/Gf+Eu14WGwmWbY=;
 	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=cJ5ktQn4IuXanifwt20yZ4KgU8IynUzap0566sDVbhDjB7b70Ji07SoxPT7NBd0zaV/Whh/1OmiCeBjUlx02tkESP/AAeUE+qDMKMSKUjtcXTet9BpYna70YHUPzjqssdBpjy3hZ6L1MmGN1uTF53xyVsfSSqEeER8VSEBoDyks=
+	 Content-Type; b=aBO9BjGFP+j4CVvyTL1TI78RrPkGl4Itgd7m4kYlxQ0lHJCkp1QArenRVxRh/BdmmnNxrdF0KdppGdGc0ig9Ta0jg2RQTFiuBwaarYVsBO1olz2fgx6AE+aJFfCt1vhBO64ZP0zJ0RDq9iHLiJjsBByPIq9/rr9hwPpQUQWr1w0=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5AE56C4CEE4;
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9DB4DC4CEE5;
 	Sat, 15 Feb 2025 03:43:51 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.98)
 	(envelope-from <rostedt@goodmis.org>)
-	id 1tj965-00000002gwn-0wNh;
+	id 1tj965-00000002gxm-2NFq;
 	Fri, 14 Feb 2025 22:44:05 -0500
-Message-ID: <20250215034405.074476251@goodmis.org>
+Message-ID: <20250215034405.414999988@goodmis.org>
 User-Agent: quilt/0.68
-Date: Fri, 14 Feb 2025 22:43:07 -0500
+Date: Fri, 14 Feb 2025 22:43:09 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org,
  linux-trace-kernel@vger.kernel.org
@@ -28,7 +28,7 @@ Cc: Masami Hiramatsu <mhiramat@kernel.org>,
  Mark Rutland <mark.rutland@arm.com>,
  Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
  Andrew Morton <akpm@linux-foundation.org>
-Subject: [PATCH v2 6/8] tracing: Have persistent trace instances save module addresses
+Subject: [PATCH v2 8/8] tracing: Update modules to persistent instances when loaded
 References: <20250215034301.624019422@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -40,153 +40,141 @@ Content-Type: text/plain; charset=UTF-8
 
 From: Steven Rostedt <rostedt@goodmis.org>
 
-For trace instances that are mapped to persistent memory, have them use
-the scratch area to save the currently loaded modules. This will allow
-where the modules have been loaded on the next boot so that their
-addresses can be deciphered by using where they were loaded previously.
+When a module is loaded and a persistent buffer is actively tracing, add
+it to the list of modules in the persistent memory.
 
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- kernel/trace/trace.c | 98 ++++++++++++++++++++++++++++++++++++++++----
- 1 file changed, 89 insertions(+), 9 deletions(-)
+ kernel/trace/trace.c        | 25 +++++++++++++++++++++++
+ kernel/trace/trace.h        |  2 ++
+ kernel/trace/trace_events.c | 40 ++++++++++++++++++++++++++-----------
+ 3 files changed, 55 insertions(+), 12 deletions(-)
 
 diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index 12a359c293c6..6674dc985e52 100644
+index fe65a256c193..4d4ac9de14a8 100644
 --- a/kernel/trace/trace.c
 +++ b/kernel/trace/trace.c
-@@ -5988,14 +5988,60 @@ ssize_t tracing_resize_ring_buffer(struct trace_array *tr,
- 	return __tracing_resize_ring_buffer(tr, size, cpu_id);
+@@ -10084,6 +10084,30 @@ static void trace_module_remove_evals(struct module *mod)
+ static inline void trace_module_remove_evals(struct module *mod) { }
+ #endif /* CONFIG_TRACE_EVAL_MAP_FILE */
+ 
++static bool trace_array_active(struct trace_array *tr)
++{
++	if (tr->current_trace != &nop_trace)
++		return true;
++
++	/* 0 is no events, 1 is all disabled */
++	return trace_events_enabled(tr, NULL) > 1;
++}
++
++static void trace_module_record(struct module *mod)
++{
++	struct trace_array *tr;
++
++	list_for_each_entry(tr, &ftrace_trace_arrays, list) {
++		/* Update any persistent trace array that has already been started */
++		if ((tr->flags & (TRACE_ARRAY_FL_BOOT | TRACE_ARRAY_FL_LAST_BOOT)) ==
++		    TRACE_ARRAY_FL_BOOT) {
++			/* Only update if the trace array is active */
++			if (trace_array_active(tr))
++				save_mod(mod, tr);
++		}
++	}
++}
++
+ static int trace_module_notify(struct notifier_block *self,
+ 			       unsigned long val, void *data)
+ {
+@@ -10092,6 +10116,7 @@ static int trace_module_notify(struct notifier_block *self,
+ 	switch (val) {
+ 	case MODULE_STATE_COMING:
+ 		trace_module_add_evals(mod);
++		trace_module_record(mod);
+ 		break;
+ 	case MODULE_STATE_GOING:
+ 		trace_module_remove_evals(mod);
+diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
+index 3a020fb82a34..90493220c362 100644
+--- a/kernel/trace/trace.h
++++ b/kernel/trace/trace.h
+@@ -786,6 +786,8 @@ extern void trace_find_cmdline(int pid, char comm[]);
+ extern int trace_find_tgid(int pid);
+ extern void trace_event_follow_fork(struct trace_array *tr, bool enable);
+ 
++extern int trace_events_enabled(struct trace_array *tr, const char *system);
++
+ #ifdef CONFIG_DYNAMIC_FTRACE
+ extern unsigned long ftrace_update_tot_cnt;
+ extern unsigned long ftrace_number_of_pages;
+diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
+index 4cb275316e51..107767afe0ab 100644
+--- a/kernel/trace/trace_events.c
++++ b/kernel/trace/trace_events.c
+@@ -1811,28 +1811,28 @@ event_enable_write(struct file *filp, const char __user *ubuf, size_t cnt,
+ 	return cnt;
  }
  
-+struct trace_mod_entry {
-+	unsigned long	mod_addr;
-+	char		mod_name[MODULE_NAME_LEN];
-+};
-+
- struct trace_scratch {
- 	unsigned long		kaslr_addr;
-+	unsigned long		nr_entries;
-+	struct trace_mod_entry	entries[];
- };
- 
-+static int save_mod(struct module *mod, void *data)
-+{
-+	struct trace_array *tr = data;
-+	struct trace_scratch *tscratch;
-+	struct trace_mod_entry *entry;
-+	unsigned int size;
-+
-+	tscratch = tr->scratch;
-+	if (!tscratch)
-+		return -1;
-+	size = tr->scratch_size;
-+
-+	if (struct_size(tscratch, entries, tscratch->nr_entries + 1) > size)
-+		return -1;
-+
-+	entry = &tscratch->entries[tscratch->nr_entries];
-+
-+	tscratch->nr_entries++;
-+
-+	entry->mod_addr = (unsigned long)mod->mem[MOD_TEXT].base;
-+	strscpy(entry->mod_name, mod->name);
-+
-+	return 0;
-+}
-+
- static void update_last_data(struct trace_array *tr)
+-static ssize_t
+-system_enable_read(struct file *filp, char __user *ubuf, size_t cnt,
+-		   loff_t *ppos)
++/*
++ * Returns:
++ *   0 : no events exist?
++ *   1 : all events are disabled
++ *   2 : all events are enabled
++ *   3 : some events are enabled and some are enabled
++ */
++int trace_events_enabled(struct trace_array *tr, const char *system)
  {
- 	struct trace_scratch *tscratch;
+-	const char set_to_char[4] = { '?', '0', '1', 'X' };
+-	struct trace_subsystem_dir *dir = filp->private_data;
+-	struct event_subsystem *system = dir->subsystem;
+ 	struct trace_event_call *call;
+ 	struct trace_event_file *file;
+-	struct trace_array *tr = dir->tr;
+-	char buf[2];
+ 	int set = 0;
+-	int ret;
  
-+	if (!(tr->flags & TRACE_ARRAY_FL_BOOT))
-+		return;
+-	mutex_lock(&event_mutex);
++	guard(mutex)(&event_mutex);
 +
-+	/* Reset the module list and reload them */
-+	if (tr->scratch) {
-+		struct trace_scratch *tscratch = tr->scratch;
-+
-+		memset(tscratch->entries, 0,
-+		       flex_array_size(tscratch, entries, tscratch->nr_entries));
-+		tscratch->nr_entries = 0;
-+
-+		module_for_each_mod(save_mod, tr);
-+	}
-+
- 	if (!(tr->flags & TRACE_ARRAY_FL_LAST_BOOT))
- 		return;
+ 	list_for_each_entry(file, &tr->events, list) {
+ 		call = file->event_call;
+ 		if ((call->flags & TRACE_EVENT_FL_IGNORE_ENABLE) ||
+ 		    !trace_event_name(call) || !call->class || !call->class->reg)
+ 			continue;
  
-@@ -9220,6 +9266,46 @@ static struct dentry *trace_instance_dir;
- static void
- init_tracer_tracefs(struct trace_array *tr, struct dentry *d_tracer);
+-		if (system && strcmp(call->class->system, system->name) != 0)
++		if (system && strcmp(call->class->system, system) != 0)
+ 			continue;
  
-+static void setup_trace_scratch(struct trace_array *tr,
-+				struct trace_scratch *tscratch, unsigned int size)
-+{
-+	struct trace_mod_entry *entry;
-+
-+	if (!tscratch)
-+		return;
-+
-+	tr->scratch = tscratch;
-+	tr->scratch_size = size;
-+
-+#ifdef CONFIG_RANDOMIZE_BASE
-+	if (tscratch->kaslr_addr)
-+		tr->text_delta = kaslr_offset() - tscratch->kaslr_addr;
-+#endif
-+
-+	if (struct_size(tscratch, entries, tscratch->nr_entries) > size)
-+		goto reset;
-+
-+	/* Check if each module name is a valid string */
-+	for (int i = 0; i < tscratch->nr_entries; i++) {
-+		int n;
-+
-+		entry = &tscratch->entries[i];
-+
-+		for (n = 0; n < MODULE_NAME_LEN; n++) {
-+			if (entry->mod_name[n] == '\0')
-+				break;
-+			if (!isprint(entry->mod_name[n]))
-+				goto reset;
-+		}
-+		if (n == MODULE_NAME_LEN)
-+			goto reset;
-+	}
-+	return;
-+ reset:
-+	/* Invalid trace modules */
-+	memset(tscratch, 0, size);
-+}
-+
- static int
- allocate_trace_buffer(struct trace_array *tr, struct array_buffer *buf, int size)
- {
-@@ -9232,21 +9318,15 @@ allocate_trace_buffer(struct trace_array *tr, struct array_buffer *buf, int size
- 	buf->tr = tr;
- 
- 	if (tr->range_addr_start && tr->range_addr_size) {
-+		/* Add scratch buffer to handle 128 modules */
- 		buf->buffer = ring_buffer_alloc_range(size, rb_flags, 0,
- 						      tr->range_addr_start,
- 						      tr->range_addr_size,
--						      sizeof(*tscratch));
-+						      struct_size(tscratch, entries, 128));
- 
- 		tscratch = ring_buffer_meta_scratch(buf->buffer, &scratch_size);
--		if (tscratch) {
--			tr->scratch = tscratch;
--			tr->scratch_size = scratch_size;
-+		setup_trace_scratch(tr, tscratch, scratch_size);
- 
--#ifdef CONFIG_RANDOMIZE_BASE
--			if (tscratch->kaslr_addr)
--				tr->text_delta = kaslr_offset() - tscratch->kaslr_addr;
--#endif
--		}
  		/*
- 		 * This is basically the same as a mapped buffer,
- 		 * with the same restrictions.
+@@ -1848,7 +1848,23 @@ system_enable_read(struct file *filp, char __user *ubuf, size_t cnt,
+ 		if (set == 3)
+ 			break;
+ 	}
+-	mutex_unlock(&event_mutex);
++
++	return set;
++}
++
++static ssize_t
++system_enable_read(struct file *filp, char __user *ubuf, size_t cnt,
++		   loff_t *ppos)
++{
++	const char set_to_char[4] = { '?', '0', '1', 'X' };
++	struct trace_subsystem_dir *dir = filp->private_data;
++	struct event_subsystem *system = dir->subsystem;
++	struct trace_array *tr = dir->tr;
++	char buf[2];
++	int set;
++	int ret;
++
++	set = trace_events_enabled(tr, system ? system->name : NULL);
+ 
+ 	buf[0] = set_to_char[set];
+ 	buf[1] = '\n';
 -- 
 2.47.2
 
