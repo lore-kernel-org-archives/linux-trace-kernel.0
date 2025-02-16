@@ -1,129 +1,141 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3893D367;
-	Sun, 16 Feb 2025 02:35:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1641517B421;
+	Sun, 16 Feb 2025 22:40:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739673348; cv=none; b=YFCoOSbm1QjuT3egZ6lAee/zmJ8lv6035Lo5HEpRcSDi6HJuc+PArwNfAObHHPDW2h0dMsg9/JwpTyWeKiBTKyHeO+Fkb6SOpQ9wfuPKc5LPQP4BbMDz2Y5UZLm2mCxCTd0E7ngHDjuhEaOezxuE+awGrzt1UcdywAiF7NZhXVk=
+	t=1739745604; cv=none; b=ASfX65j9ApOKVazJsuWhYBA+jbKhszND4ofmrdo0ZulTa3fmokPIy0RIaFmFBeCtX2FDp9c/dP8IhZVOg36U3fs6u0zTChguvwiBOVcJkuVOczVcOGIDD1Ta7fdgaAPpy9fh+S316jcY8yC71uEt7472P3lnt9Cb4PF0hwb7ATI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739673348; c=relaxed/simple;
-	bh=og7vRdotEbl970Mxh3tCgnLXuP+7n1w8WQ3zdtO/IFk=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=uDhVB6RkOe5f6X//+ZjQhSycssgFNrM2+YhqvKnF8gdgQVWfLlZ4jZiX4JENmaQJN+4ASoRymIuIk+O2g6oWEAjuQZZhMKjX3Z9MDM/eLXYoHRIPSK0fwwzxbc3zHXwVJDkmoTsJ+5SZHoioffBY9Cz8qcFAYhI6LhHx9dcwbTg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=STY1/6DV; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739745604; c=relaxed/simple;
+	bh=XDkFH1CKivV42f88DbYlsdJizxC8wr6s3JGgLIo07Dc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=K6vmhQy4jKK2Q0b40CoFAOdVT65ULzBFTtyxXsgHCtRyzaKAi0ArqKqa8gamAGtD7HoSrBsRNJfL3bRuuvijUspO7Oghgxcs5uQ6JYvknaJH4JAE3UW44Zm3KqMwQBHjqtdIFjdO1E5lR8yrz/OFRO3KrjZ8yb8sEcRLbsMQiu8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XiMe4ITI; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="STY1/6DV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3BA32C4CEDF;
-	Sun, 16 Feb 2025 02:35:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739673347;
-	bh=og7vRdotEbl970Mxh3tCgnLXuP+7n1w8WQ3zdtO/IFk=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=STY1/6DVx2ue+1I8wj8+diIba67bpb0LgomeJUcOPpN09fa/wxx/UNjL0c86cuFi5
-	 xBYAnMqN6vcQ8aWpDULOnXALhhzzgid3RCPL/ouSZOgimew576pUwfpXrArMXsC37a
-	 veJqHFOrQ0m1IwMa/OpDOMAChHQrXRlPeWGkQZZq27GKoQEHwEsY8utxIgC1dExoKz
-	 tHj+4DhkQy+WyKPGOySRDYIiK0cCoC9Y/485oc4ILaQR/7/h1P7x9y/RkXiLr90xnP
-	 OGPitbwK+frCwUAdEtZr49FeHjEUl1HnMUvUOAqLFdhdeL8mf4dxbYXG4gTY5fCmI0
-	 XXqgK/JIuDfdw==
-Date: Sun, 16 Feb 2025 11:35:44 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Masami
- Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Andrew Morton
- <akpm@linux-foundation.org>
-Subject: Re: [PATCH v2 0/8] ring-buffer/tracing: Save module information in
- persistent memory
-Message-Id: <20250216113544.5abf06ed25203539a8c7d16c@kernel.org>
-In-Reply-To: <20250215034301.624019422@goodmis.org>
-References: <20250215034301.624019422@goodmis.org>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XiMe4ITI"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1739745602; x=1771281602;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=XDkFH1CKivV42f88DbYlsdJizxC8wr6s3JGgLIo07Dc=;
+  b=XiMe4ITIvO3nMU7VZEXMgpfPNMFfXAlywfiCarry/d4v4ff0lSrKDNB0
+   viEul9t1Gu2uKJXDSAdn7Oz7cqdq0p+AAyr1NC45OFsi2Cba3HiyWPJdw
+   YP8Zo4WXv0XR82emw0c+LRHusogl+yKD+tzYKUtpgnjfYet1tELvj7MEC
+   vqSEEB2wLohurYijNdnOiqhbcIuGKhOojcLkByaMa+esLrvpe8r8r2+ic
+   VfcilvHSpJSzL+uBaqEiDu1ICKcCEfMxeJdMv1mddmdLtWsz+1zbKMjiS
+   QpTQxmm4mIwcDpJystfNhpFKtrBWP/oGYcMqL8W4SsoKO3VHghxYXi8QZ
+   A==;
+X-CSE-ConnectionGUID: xa+6kdWiQ/6o9LY2m0u5eQ==
+X-CSE-MsgGUID: dW508GixT7WSt+EJasopvg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11347"; a="44078086"
+X-IronPort-AV: E=Sophos;i="6.13,291,1732608000"; 
+   d="scan'208";a="44078086"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Feb 2025 14:40:02 -0800
+X-CSE-ConnectionGUID: dP14IB77TLO3/MsDIhTVbQ==
+X-CSE-MsgGUID: tgF2EO7kStSS4QJY5R8v7A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,291,1732608000"; 
+   d="scan'208";a="118972905"
+Received: from lkp-server01.sh.intel.com (HELO d63d4d77d921) ([10.239.97.150])
+  by orviesa004.jf.intel.com with ESMTP; 16 Feb 2025 14:39:59 -0800
+Received: from kbuild by d63d4d77d921 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1tjnIr-001CHP-0w;
+	Sun, 16 Feb 2025 22:39:57 +0000
+Date: Mon, 17 Feb 2025 06:39:41 +0800
+From: kernel test robot <lkp@intel.com>
+To: Gabriele Monaco <gmonaco@redhat.com>, linux-kernel@vger.kernel.org,
+	Steven Rostedt <rostedt@goodmis.org>,
+	linux-trace-kernel@vger.kernel.org
+Cc: oe-kbuild-all@lists.linux.dev, Gabriele Monaco <gmonaco@redhat.com>,
+	Ingo Molnar <mingo@redhat.com>, Juri Lelli <juri.lelli@redhat.com>
+Subject: Re: [PATCH v2 04/11] rv: Add option for nested monitors and include
+ sched
+Message-ID: <202502170630.xSYE4cUk-lkp@intel.com>
+References: <20250213090819.419470-5-gmonaco@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250213090819.419470-5-gmonaco@redhat.com>
 
-On Fri, 14 Feb 2025 22:43:01 -0500
-Steven Rostedt <rostedt@goodmis.org> wrote:
+Hi Gabriele,
 
-> 
-> This updates the persistent instance to record what modules were
-> loaded and what addresses they were loaded at.
-> 
-> First the KASLR offset is recorded in the persistent ring buffer instead of
-> a text address. This can be used to calculated the address offset.
-> 
-> Next the persistent memory is divided up differently so that there's
-> a single global meta data for the entire buffer that can hold the
-> global data, and each per CPU meta data can just hold what it needs.
-> 
-> A scratch area can be created by the caller, in this case the tracing
-> system, to store data in the persistent memory area.
-> 
-> As the KASLR offset is only needed by the tracer, that data is moved
-> from the ring buffer meta data into this new storage.
-> 
-> Next the modules that are loaded and where they are loaded is stored in this
-> new persistent storage.
-> 
-> The module list along with the KASLR offset is now exposed in the
-> last_boot_info if the buffer is from a previous boot. If it is from the
-> current boot, the file will only contain:
-> 
->    # Current
-> 
-> in order to not leak the KASLR offset.
-> 
-> Finally, when new modules are loaded while the trace is active, they too
-> will be added to this persistent memory. Note, if tracing is stopped, and
-> then restarted, it clears the module list and will reload all the modules
-> again so that it doesn't need to keep track of what is loaded or unloaded
-> while no tracing is going on.
+kernel test robot noticed the following build warnings:
 
-The series looks good to me.
+[auto build test WARNING on 4dc1d1bec89864d8076e5ab314f86f46442bfb02]
 
-Reviewed-by: Masami Hiramatsu (Google) <mhiramat@kernel.org> for this series.
+url:    https://github.com/intel-lab-lkp/linux/commits/Gabriele-Monaco/tracing-Fix-DECLARE_TRACE_CONDITION/20250213-171642
+base:   4dc1d1bec89864d8076e5ab314f86f46442bfb02
+patch link:    https://lore.kernel.org/r/20250213090819.419470-5-gmonaco%40redhat.com
+patch subject: [PATCH v2 04/11] rv: Add option for nested monitors and include sched
+config: parisc-randconfig-r112-20250217 (https://download.01.org/0day-ci/archive/20250217/202502170630.xSYE4cUk-lkp@intel.com/config)
+compiler: hppa-linux-gcc (GCC) 14.2.0
+reproduce: (https://download.01.org/0day-ci/archive/20250217/202502170630.xSYE4cUk-lkp@intel.com/reproduce)
 
-Thanks,
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202502170630.xSYE4cUk-lkp@intel.com/
 
-> 
-> Changes since v1: https://lore.kernel.org/all/20250205225031.799739376@goodmis.org/
-> 
-> - Rebased on top of the urgent branch
-> 
-> - Allow the size of the scratch area in the persistent ring buffer to be
->   defined by the caller.
-> 
-> - Change the output of the last_boot_info to show the kaslr instead of:
->   "Offset: <offset>" to "<offset>\t[kernel]" to make it consistent with
->   the module output.
-> 
-> 
-> Steven Rostedt (8):
->       ring-buffer: Use kaslr address instead of text delta
->       ring-buffer: Add buffer meta data for persistent ring buffer
->       ring-buffer: Add ring_buffer_meta_scratch()
->       tracing: Have persistent trace instances save KASLR offset
->       module: Add module_for_each_mod() function
->       tracing: Have persistent trace instances save module addresses
->       tracing: Show module names and addresses of last boot
->       tracing: Update modules to persistent instances when loaded
-> 
-> ----
->  include/linux/module.h      |   6 +
->  include/linux/ring_buffer.h |   8 +-
->  kernel/module/main.c        |  14 +++
->  kernel/trace/ring_buffer.c  | 245 ++++++++++++++++++++++++-----------------
->  kernel/trace/trace.c        | 263 ++++++++++++++++++++++++++++++++++++++++----
->  kernel/trace/trace.h        |  15 ++-
->  kernel/trace/trace_events.c |  40 +++++--
->  7 files changed, 448 insertions(+), 143 deletions(-)
+All warnings (new ones prefixed by >>):
 
+   In file included from include/trace/define_trace.h:119,
+                    from kernel/trace/rv/rv_trace.h:130,
+                    from kernel/trace/rv/rv.c:148:
+>> include/trace/trace_events.h:477:13: warning: 'print_fmt_error_da_monitor' defined but not used [-Wunused-variable]
+     477 | static char print_fmt_##call[] = print;                                 \
+         |             ^~~~~~~~~~
+   kernel/trace/rv/./rv_trace.h:39:1: note: in expansion of macro 'DECLARE_EVENT_CLASS'
+      39 | DECLARE_EVENT_CLASS(error_da_monitor,
+         | ^~~~~~~~~~~~~~~~~~~
+>> include/trace/trace_events.h:477:13: warning: 'print_fmt_event_da_monitor' defined but not used [-Wunused-variable]
+     477 | static char print_fmt_##call[] = print;                                 \
+         |             ^~~~~~~~~~
+   kernel/trace/rv/./rv_trace.h:12:1: note: in expansion of macro 'DECLARE_EVENT_CLASS'
+      12 | DECLARE_EVENT_CLASS(event_da_monitor,
+         | ^~~~~~~~~~~~~~~~~~~
+>> include/trace/trace_events.h:223:37: warning: 'trace_event_type_funcs_error_da_monitor' defined but not used [-Wunused-variable]
+     223 | static struct trace_event_functions trace_event_type_funcs_##call = {   \
+         |                                     ^~~~~~~~~~~~~~~~~~~~~~~
+   kernel/trace/rv/./rv_trace.h:39:1: note: in expansion of macro 'DECLARE_EVENT_CLASS'
+      39 | DECLARE_EVENT_CLASS(error_da_monitor,
+         | ^~~~~~~~~~~~~~~~~~~
+>> include/trace/trace_events.h:223:37: warning: 'trace_event_type_funcs_event_da_monitor' defined but not used [-Wunused-variable]
+     223 | static struct trace_event_functions trace_event_type_funcs_##call = {   \
+         |                                     ^~~~~~~~~~~~~~~~~~~~~~~
+   kernel/trace/rv/./rv_trace.h:12:1: note: in expansion of macro 'DECLARE_EVENT_CLASS'
+      12 | DECLARE_EVENT_CLASS(event_da_monitor,
+         | ^~~~~~~~~~~~~~~~~~~
+
+
+vim +/print_fmt_error_da_monitor +477 include/trace/trace_events.h
+
+46ac51822a6a0b Steven Rostedt (Red Hat  2015-09-23  473) 
+46ac51822a6a0b Steven Rostedt (Red Hat  2015-09-23  474) #undef DECLARE_EVENT_CLASS
+46ac51822a6a0b Steven Rostedt (Red Hat  2015-09-23  475) #define DECLARE_EVENT_CLASS(call, proto, args, tstruct, assign, print)	\
+46ac51822a6a0b Steven Rostedt (Red Hat  2015-09-23  476) _TRACE_PERF_PROTO(call, PARAMS(proto));					\
+46ac51822a6a0b Steven Rostedt (Red Hat  2015-09-23 @477) static char print_fmt_##call[] = print;					\
+46ac51822a6a0b Steven Rostedt (Red Hat  2015-09-23  478) static struct trace_event_class __used __refdata event_class_##call = { \
+46ac51822a6a0b Steven Rostedt (Red Hat  2015-09-23  479) 	.system			= TRACE_SYSTEM_STRING,			\
+04ae87a52074e2 Peter Zijlstra           2019-10-24  480  	.fields_array		= trace_event_fields_##call,		\
+46ac51822a6a0b Steven Rostedt (Red Hat  2015-09-23  481) 	.fields			= LIST_HEAD_INIT(event_class_##call.fields),\
+46ac51822a6a0b Steven Rostedt (Red Hat  2015-09-23  482) 	.raw_init		= trace_event_raw_init,			\
+46ac51822a6a0b Steven Rostedt (Red Hat  2015-09-23  483) 	.probe			= trace_event_raw_event_##call,		\
+46ac51822a6a0b Steven Rostedt (Red Hat  2015-09-23  484) 	.reg			= trace_event_reg,			\
+46ac51822a6a0b Steven Rostedt (Red Hat  2015-09-23  485) 	_TRACE_PERF_INIT(call)						\
+46ac51822a6a0b Steven Rostedt (Red Hat  2015-09-23  486) };
+46ac51822a6a0b Steven Rostedt (Red Hat  2015-09-23  487) 
 
 -- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
