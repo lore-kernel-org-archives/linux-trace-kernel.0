@@ -1,99 +1,131 @@
-Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C21A8C8FE;
-	Mon, 17 Feb 2025 02:36:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 569D318DB3A;
+	Mon, 17 Feb 2025 06:39:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739759810; cv=none; b=Uavq7GXdbj0SmXNFDSM2F3M/VKjZxQGFYmgZur8nvHCrJ1ziSSeCd+JUbA9kq8mrMGmkWUCsH58XnqlXWUqpVfFWzSW+qs1a9GgR29Ky1jvrZdi0QL0yefASNMN20DqcFtT8N+A7JO0cw7G+na5V4BBKxy1Ib91kbYfYEjATh4Q=
+	t=1739774366; cv=none; b=MvhFv4cOXTE13nwLGSWf0CxJ+EpTSjIMhavYMLthdxXAzFS2poH7JiANY/MjLn4gj/HjGF9ojWc42BtwMlKsD2IcQcpR9XITSIODKAUFPNblbOt8pDUPVFVbF1Vw0+kwpkUjNUwh+rEX9CbqiwCenPhuWRgw3Fn3LoQHA2MHae0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739759810; c=relaxed/simple;
-	bh=I2rRDOaKvJmH/fo4VfvrvXCEyC3FkbqRpsXWolij3SY=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=oIl8YPzUnCQDDu8RnkkukhBGZ1OIMa208KLc8wF89kw6ep0UNZXNH/m8+FkbbrRRseMuznms11BmTXBbFEujZ2F3F3GK7vgsrYpci0CNkyZ88ylXgU4tGEf3j/limeBdwK97+bt0jge7n/1Xun+YB1F52pcysPXGCuGPgJFq8HA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.191
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.162.112])
-	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4Yx6Bp68Lbz1ltbV;
-	Mon, 17 Feb 2025 10:32:50 +0800 (CST)
-Received: from kwepemf100008.china.huawei.com (unknown [7.202.181.222])
-	by mail.maildlp.com (Postfix) with ESMTPS id 776E71402C7;
-	Mon, 17 Feb 2025 10:36:42 +0800 (CST)
-Received: from huawei.com (10.175.103.91) by kwepemf100008.china.huawei.com
- (7.202.181.222) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Mon, 17 Feb
- 2025 10:36:40 +0800
-From: Zeng Heng <zengheng4@huawei.com>
-To: <peterz@infradead.org>, <masahiroy@kernel.org>, <mgorman@suse.de>,
-	<guoweikang.kernel@gmail.com>, <mingo@redhat.com>,
-	<vincent.guittot@linaro.org>, <hpa@zytor.com>, <agordeev@linux.ibm.com>,
-	<vschneid@redhat.com>, <tzimmermann@suse.de>, <dave.hansen@linux.intel.com>,
-	<ardb@kernel.org>, <mhiramat@kernel.org>, <juri.lelli@redhat.com>,
-	<geert@linux-m68k.org>, <bp@alien8.de>, <pavel@ucw.cz>,
-	<simona.vetter@ffwll.ch>, <bp@suse.de>, <rostedt@goodmis.org>,
-	<bsegall@google.com>, <nicolas@fjasle.eu>, <sebastian.reichel@collabora.com>,
-	<tglx@linutronix.de>, <akpm@linux-foundation.org>,
-	<mathieu.desnoyers@efficios.com>, <dietmar.eggemann@arm.com>,
-	<lkundrak@v3.sk>, <changhuaixin@linux.alibaba.com>, <nathan@kernel.org>,
-	<javierm@redhat.com>
-CC: <linux-trace-kernel@vger.kernel.org>, <linux-efi@vger.kernel.org>,
-	<bobo.shaobowang@huawei.com>, <linux-kbuild@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <x86@kernel.org>
-Subject: [PATCH 1/5] ring-buffer: Update pages_touched to reflect persistent buffer content
-Date: Mon, 17 Feb 2025 10:46:35 +0800
-Message-ID: <20250217024639.1980139-1-zengheng4@huawei.com>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1739774366; c=relaxed/simple;
+	bh=1ygNsLOXbxIHY3FpCR4Lwf8Cf9fnupC7i0/rcObujDg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=eH9eorwlrdPy7GWCm9YozohrgGs65WXu9uSkwbognmwLhVcB4suPgwZPnB35yzDppfG4jQYkw8JuRG1whd1mJw0ivLtQGwMBdFxm/xs4PBh/AeMMjUE9R/RyYWkmDZT7oBlo/+TQpN0m4pXpbCNW59/udQusPR4rHIAq1oUUpg0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BC90C1063;
+	Sun, 16 Feb 2025 22:39:41 -0800 (PST)
+Received: from [10.162.41.27] (K4MQJ0H1H2.blr.arm.com [10.162.41.27])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 73A0A3F59E;
+	Sun, 16 Feb 2025 22:39:09 -0800 (PST)
+Message-ID: <fae7019f-517f-4ad2-a5c2-2e839e5087ce@arm.com>
+Date: Mon, 17 Feb 2025 12:09:06 +0530
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
- kwepemf100008.china.huawei.com (7.202.181.222)
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC v2 0/9] khugepaged: mTHP support
+To: Nico Pache <npache@redhat.com>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, linux-mm@kvack.org
+Cc: ryan.roberts@arm.com, anshuman.khandual@arm.com, catalin.marinas@arm.com,
+ cl@gentwo.org, vbabka@suse.cz, mhocko@suse.com, apopple@nvidia.com,
+ dave.hansen@linux.intel.com, will@kernel.org, baohua@kernel.org,
+ jack@suse.cz, srivatsa@csail.mit.edu, haowenchao22@gmail.com,
+ hughd@google.com, aneesh.kumar@kernel.org, yang@os.amperecomputing.com,
+ peterx@redhat.com, ioworker0@gmail.com, wangkefeng.wang@huawei.com,
+ ziy@nvidia.com, jglisse@google.com, surenb@google.com,
+ vishal.moola@gmail.com, zokeefe@google.com, zhengqi.arch@bytedance.com,
+ jhubbard@nvidia.com, 21cnbao@gmail.com, willy@infradead.org,
+ kirill.shutemov@linux.intel.com, david@redhat.com, aarcange@redhat.com,
+ raquini@redhat.com, sunnanyong@huawei.com, usamaarif642@gmail.com,
+ audra@redhat.com, akpm@linux-foundation.org, rostedt@goodmis.org,
+ mathieu.desnoyers@efficios.com, tiwai@suse.de
+References: <20250211003028.213461-1-npache@redhat.com>
+Content-Language: en-US
+From: Dev Jain <dev.jain@arm.com>
+In-Reply-To: <20250211003028.213461-1-npache@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-From: Steven Rostedt <rostedt@goodmis.org>
 
-The pages_touched field represents the number of subbuffers in the ring
-buffer that have content that can be read. This is used in accounting of
-"dirty_pages" and "buffer_percent" to allow the user to wait for the
-buffer to be filled to a certain amount before it reads the buffer in
-blocking mode.
 
-The persistent buffer never updated this value so it was set to zero, and
-this accounting would take it as it had no content. This would cause user
-space to wait for content even though there's enough content in the ring
-buffer that satisfies the buffer_percent.
+On 11/02/25 6:00 am, Nico Pache wrote:
+> The following series provides khugepaged and madvise collapse with the
+> capability to collapse regions to mTHPs.
+> 
+> To achieve this we generalize the khugepaged functions to no longer depend
+> on PMD_ORDER. Then during the PMD scan, we keep track of chunks of pages
+> (defined by MTHP_MIN_ORDER) that are utilized. This info is tracked
+> using a bitmap. After the PMD scan is done, we do binary recursion on the
+> bitmap to find the optimal mTHP sizes for the PMD range. The restriction
+> on max_ptes_none is removed during the scan, to make sure we account for
+> the whole PMD range. max_ptes_none will be scaled by the attempted collapse
+> order to determine how full a THP must be to be eligible. If a mTHP collapse
+> is attempted, but contains swapped out, or shared pages, we dont perform the
+> collapse.
+> 
+> With the default max_ptes_none=511, the code should keep its most of its
+> original behavior. To exercise mTHP collapse we need to set max_ptes_none<=255.
+> With max_ptes_none > HPAGE_PMD_NR/2 you will experience collapse "creep" and
+> constantly promote mTHPs to the next available size.
 
-Cc: stable@vger.kernel.org
-Cc: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: Vincent Donnefort <vdonnefort@google.com>
-Link: https://lore.kernel.org/20250214123512.0631436e@gandalf.local.home
-Fixes: 5f3b6e839f3ce ("ring-buffer: Validate boot range memory events")
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
- kernel/trace/ring_buffer.c | 5 +++++
- 1 file changed, 5 insertions(+)
+How does creep stop when max_ptes_none <= 255?
 
-diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-index 0419d41a2060..bb6089c2951e 100644
---- a/kernel/trace/ring_buffer.c
-+++ b/kernel/trace/ring_buffer.c
-@@ -1850,6 +1850,11 @@ static void rb_meta_validate_events(struct ring_buffer_per_cpu *cpu_buffer)
- 				cpu_buffer->cpu);
- 			goto invalid;
- 		}
-+
-+		/* If the buffer has content, update pages_touched */
-+		if (ret)
-+			local_inc(&cpu_buffer->pages_touched);
-+
- 		entries += ret;
- 		entry_bytes += local_read(&head_page->page->commit);
- 		local_set(&cpu_buffer->head_page->entries, ret);
--- 
-2.25.1
+> 
+> Patch 1:     Some refactoring to combine madvise_collapse and khugepaged
+> Patch 2:     Refactor/rename hpage_collapse
+> Patch 3-5:   Generalize khugepaged functions for arbitrary orders
+> Patch 6-9:   The mTHP patches
+> 
+> ---------
+>   Testing
+> ---------
+> - Built for x86_64, aarch64, ppc64le, and s390x
+> - selftests mm
+> - I created a test script that I used to push khugepaged to its limits while
+>     monitoring a number of stats and tracepoints. The code is available
+>     here[1] (Run in legacy mode for these changes and set mthp sizes to inherit)
+>     The summary from my testings was that there was no significant regression
+>     noticed through this test. In some cases my changes had better collapse
+>     latencies, and was able to scan more pages in the same amount of time/work,
+>     but for the most part the results were consistant.
+> - redis testing. I tested these changes along with my defer changes
+>    (see followup post for more details).
+> - some basic testing on 64k page size.
+> - lots of general use. These changes have been running in my VM for some time.
+> 
+> Changes since V1 [2]:
+> - Minor bug fixes discovered during review and testing
+> - removed dynamic allocations for bitmaps, and made them stack based
+> - Adjusted bitmap offset from u8 to u16 to support 64k pagesize.
+> - Updated trace events to include collapsing order info.
+> - Scaled max_ptes_none by order rather than scaling to a 0-100 scale.
+> - No longer require a chunk to be fully utilized before setting the bit. Use
+>     the same max_ptes_none scaling principle to achieve this.
+> - Skip mTHP collapse that requires swapin or shared handling. This helps prevent
+>     some of the "creep" that was discovered in v1.
+> 
+> [1] - https://gitlab.com/npache/khugepaged_mthp_test
+> [2] - https://lore.kernel.org/lkml/20250108233128.14484-1-npache@redhat.com/
+> 
+> Nico Pache (9):
+>    introduce khugepaged_collapse_single_pmd to unify khugepaged and
+>      madvise_collapse
+>    khugepaged: rename hpage_collapse_* to khugepaged_*
+>    khugepaged: generalize hugepage_vma_revalidate for mTHP support
+>    khugepaged: generalize alloc_charge_folio for mTHP support
+>    khugepaged: generalize __collapse_huge_page_* for mTHP support
+>    khugepaged: introduce khugepaged_scan_bitmap for mTHP support
+>    khugepaged: add mTHP support
+>    khugepaged: improve tracepoints for mTHP orders
+>    khugepaged: skip collapsing mTHP to smaller orders
+> 
+>   include/linux/khugepaged.h         |   4 +
+>   include/trace/events/huge_memory.h |  34 ++-
+>   mm/khugepaged.c                    | 422 +++++++++++++++++++----------
+>   3 files changed, 306 insertions(+), 154 deletions(-)
+> 
 
