@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EB49155C83;
-	Mon, 17 Feb 2025 17:16:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BDDB22AE7A;
+	Mon, 17 Feb 2025 17:59:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739812589; cv=none; b=ulm91gpmfUnr0jSjFSdDDXnYGLcv4E6zpiDDUJ9z1mTzRpI0sHV4zRqlAxYb9OL3J9XouXk012Tb+8TKELmq9KF8CvgCJgffjKaAn7gdRRFNsn0enYKoV6ppBQaeYOghfHQDbt/6Yep9CnEBUaNBRqx6PhPHi4RqMeyJnPyWxPk=
+	t=1739815171; cv=none; b=gLU4WgpHfqqJzPltV6M6MVj9iUaohNC3Ze55JK1ABFVDIVkOLMjiUM0+921TqXE8oKsXmkYntBrTfYH4QwDXDet/b2X2vDOq84Kqj1RGUmRbwMw5aa6eW3XKuM9HG4WznzwlokXeusChR+f8LHD8/2aTkNSggqNiDt80G7ndtiM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739812589; c=relaxed/simple;
-	bh=vU8tIRAuuXZCU920XSuNW0iGdqX5Q9N94wDalhr2TRk=;
+	s=arc-20240116; t=1739815171; c=relaxed/simple;
+	bh=HBTFlEtW/5/Q3d/t2LVuQARVEufkfmUFRGuesCgbf6g=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=qh5PnFEzYH2vS/Q+gelvUpHTQ54VQ2OQ6R/ngWUrDQM0S9kqoA+T4PeX90tAZha5hs7GRWaEYyfSixZuYmkR8OIFF6L6NCbn1S8bW2UnIy34r9dn1QYqXJvQ/yXYVFgcVUQZjheP4eOPfd/05TK/2ppfwuGEGm/FUV+E9p66zoE=
+	 MIME-Version:Content-Type; b=VtAnvhOvl/g99H7TBOreCYsN84tZJ9WI9vZAosp+02FQ3c/kS51gdxyNK2BXeyr87YNG3INGh2+0I7Xcjk4Hun6GpdG/j7/OtLRQtDwMkEeWmPtm85LKxK6gyXW5MF9g+uyqoGCzH4Zaf+52+sP77+v4MkvCDkwVaL/XNFq+2f4=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4ABBCC4CED1;
-	Mon, 17 Feb 2025 17:16:28 +0000 (UTC)
-Date: Mon, 17 Feb 2025 12:16:47 -0500
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D28ECC4CED1;
+	Mon, 17 Feb 2025 17:59:29 +0000 (UTC)
+Date: Mon, 17 Feb 2025 12:59:49 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Gabriele Monaco <gmonaco@redhat.com>, linux-kernel@vger.kernel.org, Ingo
- Molnar <mingo@redhat.com>, Masami Hiramatsu <mhiramat@kernel.org>,
- linux-trace-kernel@vger.kernel.org, Juri Lelli <juri.lelli@redhat.com>
-Subject: Re: [PATCH v2 03/11] sched: Add sched tracepoints for RV task model
-Message-ID: <20250217121647.0b9ead66@gandalf.local.home>
-In-Reply-To: <20250217164917.GB40464@noisy.programming.kicks-ass.net>
-References: <20250213090819.419470-1-gmonaco@redhat.com>
-	<20250213090819.419470-4-gmonaco@redhat.com>
-	<20250217113844.5ad7893c@gandalf.local.home>
-	<20250217164917.GB40464@noisy.programming.kicks-ass.net>
+To: Heiko Carstens <hca@linux.ibm.com>
+Cc: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>, Shuah Khan
+ <shuah@kernel.org>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH 2/2] selftests/ftrace: Make uprobe test more robust
+ against binary name
+Message-ID: <20250217125949.24d52997@gandalf.local.home>
+In-Reply-To: <20250217134244.21424A57-hca@linux.ibm.com>
+References: <173625185823.1383744.4020760882101555349.stgit@devnote2>
+	<173625187633.1383744.2840679071525852811.stgit@devnote2>
+	<20250217134244.21424A57-hca@linux.ibm.com>
 X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -37,34 +37,34 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Mon, 17 Feb 2025 17:49:17 +0100
-Peter Zijlstra <peterz@infradead.org> wrote:
+On Mon, 17 Feb 2025 14:42:44 +0100
+Heiko Carstens <hca@linux.ibm.com> wrote:
 
-> On Mon, Feb 17, 2025 at 11:38:44AM -0500, Steven Rostedt wrote:
+> > +REALBIN=`readlink -f /bin/sh`
+> > +
+> >  echo 'cat /proc/$$/maps' | /bin/sh | \
+> > -	grep "r-xp .*/bin/.*sh$" | \
+> > +	grep "r-xp .*${REALBIN}$" | \
+> >  	awk '{printf "p:myevent %s:0x%s\n", $6,$3 }' >> uprobe_events  
 > 
-> > > +void __do_trace_set_current_state(int state_value)
-> > > +{
-> > > +	__do_trace_sched_set_state_tp(current, current->__state, state_value);  
-> > 
-> > And this should not be using the internal macros of a trace point. It should be:
-> > 
-> > 	trace_sched_set_state_tp(current, state_value);
-> > 
-> > (I removed the current->__state as mentioned above).  
+> This test fails on s390, not because of this change, but since the
+> test seems to assume that the entry point of /bin/sh is at offset 0;
+> or at least there is some code that is executed at least once at
+> offset 0; but that is not the case (at least) for s390.
 > 
-> But the static branch is already in the caller, no point duplicating
-> that.
+> Not sure how this can be addressed. Using "readelf -f" to get the
+> entry point address of the executable and use that for the uprobe
+> would work, but it would also add a dependency to binutils for the
+> ftrace selftests, which doesn't exist yet, as far as I can tell.
+> 
+> Would it maybe an option for architectures to opt-in to use readelf
+> and skip the test (exit_unsupported) if readelf is not available?
 
-Regardless, you should not be using internals of the tracepoints. That can
-change at any time and is not reliable (as the kernel test robot pointed out).
+I'm OK for adding a dependency on readelf existing on the test system, as
+it is part of binutils.
 
-It's a static branch, who cares if it's added twice? One is used to jump to
-the function, the other is for the tracepoint logic itself.
+Masami and Shuah,
 
-There's several places that do this.
-
-Perhaps, in the future we could create a normal API that will always call
-the tracepoint, but until then, let's not use code that wasn't meant for
-that purpose.
+Are you OK with that?
 
 -- Steve
