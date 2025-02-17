@@ -1,139 +1,179 @@
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD820217670;
-	Mon, 17 Feb 2025 11:21:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E95721A421;
+	Mon, 17 Feb 2025 11:57:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739791287; cv=none; b=kpGmiaFCk1XvBAl3lC7FSPsWHSqjId48+UKraBQsAEMST1H86Pt1Sd9OpoBsV+jXaiacl2RiUr2eWKnadS5g7xxuA37SNf9h/7J9qhfyuNSfl7UWFAWZWNIjweA9VxsEkFf+LIIp2vw2Gs74X/Ivy/ad8TPzvSmesE7i+V5NXh0=
+	t=1739793440; cv=none; b=QKOd2/1ZQfKD4WFEcIgBMrYhvDzQCJzi8Gh7jdbmZPgfZ39Qk7ckZVO26ylfuqR+arrFOxj/DbgndQnacBfTSMiWFtMbi9fIb3n8YGtgSrI10T0LHBvIiiCt5Xh+MxMwZZaDedlFKscS0Xs7p1YSFzi9oXmlx2biT1aPqK6Sbg4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739791287; c=relaxed/simple;
-	bh=yr2NeM5xZd+21Kz+8dbrA+63YokkKPeruGiWILIFWq0=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=k6AJQ7Vk6I/RIAVNZz86FoOOc1Oxn1Ng4wa2CUOGaluZ/eHoqT5pwP4fsp4VXvIpMozKKNWF7iSm5c88iItWbLNgwokUwMlKfwUd7QiQYpW+IiKBYgWMm1M8pJ8kvlFyIVsLB7StinvmYN4YUq+7bvdOY3py78m7o7OzKu8Xats=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=P+pVS7yh; arc=none smtp.client-ip=209.85.214.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1739793440; c=relaxed/simple;
+	bh=Y/TN2bh9LSXg3FW05NB+yXIAvd1FTqOs+ZHW/w1bA90=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ldE920u7rUvtBn74wARon0x7osZdJW8ypqENRvJz9n8rJIbzQuBcLZQZiU32bcSOMXJWo5zA9w7HvuH69H4f3ck7NHrkFqYYtwmVT/cLZOU2uZr4psI101hG5lqNN0Pk5ip6j0RWTqsxAgFbUiSZrNasftkh/981yGItzSrHUkA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cfv+iQDr; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P+pVS7yh"
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-220ec47991aso39053095ad.1;
-        Mon, 17 Feb 2025 03:21:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739791285; x=1740396085; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=4M/3rcO0sPMe5Iql+QqO4QeWNUxz9DotePxQss5GMBg=;
-        b=P+pVS7yhSBFvnOdUrCY/VK/bK8jcWogO3EKgnvRouaq7tG8eM1uKYZfLX8iseiF8E3
-         G1NIedXG+PkgNtuxwxcuFKRGiqQUlyOtgYuIpgqnn6Zb27raRC1YYBQn9bZ7t1vOUn/k
-         IScBAiylishlfD5e08VbIOo/CMY0P+VCIZBDfUfX1CsaUefwCvEO9eJgrUMviLWUh4qI
-         ZvKHMZnd46phf5VPfTV4GRXWryWqXI/1PK08xYNBEGEKnM1xrzm8ygYcW//mu2JJEIDP
-         xuxpm8vMR/j3OgGn3adwb0vunneR/fsKnoSVTnWbjJMVC4uqYW18auuYh/96nyS1aQ+D
-         sEGg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739791285; x=1740396085;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=4M/3rcO0sPMe5Iql+QqO4QeWNUxz9DotePxQss5GMBg=;
-        b=KV1uJHVRmivuo8szCR6dfAkvvkwopKsstaOWMMBDFufwp/hs4B4m12MZsCNU2PHwEQ
-         9JN3thW4idPQ6dRl3jwYV/EPHbyWucnqQCW29YQsG2XIAUayZODFbjAZrMa3uzQ0URFM
-         NvGVips38cqUyDz7HXMbG/KtsB/M5hAFPqWwCyMnAhAnLQrZAiJfn+5GiEpNpmwK/GIG
-         3bne5nV8/X2spaMxI6Sbea/q0o6Wj7u0T2wEddV3CgTVpAgNfYEtxICBXM7k8Wv9a4Cl
-         01w5JMgvvgFqzg8KeJwKrkJVzUsP/Vr9gCGTQ9klkfMrH8USkUPk9VOgeHeodxqVsoN2
-         Ha5Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUCwfF9Ag7/16RKfjejGLQgLAZnEAF0DLr17nUi6QCXZZBFp0uogd/IoUKQuhQjxkGwJOYBbIgVmDY=@vger.kernel.org, AJvYcCVtzhwXXSnKhTOKwly6B/B8+j7fW9K3dRglf5YrhO1LD/cEoH1kzjEn1TrYgzCZr7StRZ2GPqPdH9svU0cT@vger.kernel.org, AJvYcCVziIk+0mzIyQRKVj+t0gzgyFPutiZwD0r58u6wAL8Gj4Rac39D6rhaHo7drM89Eb+xMsPod3G8IfW2Rhz9MvKAtyDC@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyj5GyC6Y1DQS2uMzodenY8cncaRQ1+F97Z6LNMBm4LIPVR1UFz
-	JcScGHy0hyEw5cEwpw5Xt5MG9Jsh5620dy7FT0yrJtb1y8P+Bv8gkWhMDg==
-X-Gm-Gg: ASbGncsAY1d3egd5Uz1RA7YfbOcTVwtAVvbx+Mcp5R+7ES/0EYkYBxH94BEPxPKgfPZ
-	8aSp258om6ODcvHfRONOpMyBONy4QwDon0ZyzA+wUci3iIGPr2xpvfvcjoQ31dMEw9ZlOOvYSsn
-	XF2ob53XV/NegPZDhGVu4IZxyIc+6Hq4hghxXGARBfE0Y2W75hMgIHDRw7xDuIsG0P7O10TEWLe
-	B119cEG+fw/NF6jccJ+pHfcjdc6r76uJsf8D+as2wyWvYGvJ2AkF/2ZiXtajdpVglpi3JSKbWm1
-	ppOnRZKyYvrfjVcg7EL0HMaTdcTjc8VyieOy5bLgJMW/9kur
-X-Google-Smtp-Source: AGHT+IG2wp6SxvUYLH3QY8NUObd+LCQ2SCD1wbP8i0JO2n92euCaJ/7zCXgTIegWz9F/1IB6d+NQ+w==
-X-Received: by 2002:a05:6a00:1a8f:b0:730:76a1:3935 with SMTP id d2e1a72fcca58-732617999f1mr14087951b3a.6.1739791284967;
-        Mon, 17 Feb 2025 03:21:24 -0800 (PST)
-Received: from purva-IdeaPad-Gaming-3-15IHU6.. ([2409:40c0:1035:b6f:a7b9:b8b1:950d:8c7b])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73270de9b7asm3109685b3a.90.2025.02.17.03.21.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Feb 2025 03:21:24 -0800 (PST)
-From: Purva Yeshi <purvayeshi550@gmail.com>
-To: rostedt@goodmis.org,
-	mhiramat@kernel.org,
-	mathieu.desnoyers@efficios.com,
-	corbet@lwn.net
-Cc: skhan@linuxfoundation.org,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	Purva Yeshi <purvayeshi550@gmail.com>
-Subject: [PATCH] docs: tracing: Reduce maxdepth in index documentation
-Date: Mon, 17 Feb 2025 16:51:09 +0530
-Message-Id: <20250217112109.7734-1-purvayeshi550@gmail.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cfv+iQDr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9842FC4CEEE;
+	Mon, 17 Feb 2025 11:57:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739793439;
+	bh=Y/TN2bh9LSXg3FW05NB+yXIAvd1FTqOs+ZHW/w1bA90=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=cfv+iQDrdlvQhTaqmTSjjFAW0FI5sUTOl67HXFXxgts+jSAGVIuTfp5jpzwcsBtZ6
+	 GJuA92555UBfHT+pKctv0gc9wkFh4gzmvZfuOkS5fwDHJDqeEcKzVUliWqFC6WW6m+
+	 00aKxI2H65TKhey8O+fp0FK4qH7FvSOD5Am80Wh6yg81CPerUtNIRwpa6foYMyh3Ff
+	 v7EkH2Xx91D0lrJ9i6ZIXFH/gS9tPGpr7Itq9FPswe8EL4262ExHLItgWYKDwfaUQQ
+	 t40pWxGJcGDIgJIEbPIBfyj06/E8Jw/MHG9KLdxFrSe7dLaMJeQBz+Qfv19nbNKJtL
+	 /eKinNhoEyzdw==
+Received: by mail-oi1-f170.google.com with SMTP id 5614622812f47-3f3deb037cfso1750335b6e.3;
+        Mon, 17 Feb 2025 03:57:19 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCVgmMmH2jLLpI2ELQ5HJfsTV2OYXw99c/SlPOULVuntUA8ixEbO59OaMFMgGgPwVTGbrUQ3A3LyMo6cHkeQo5wYPcV5@vger.kernel.org, AJvYcCWgYbIFZN0YBOLY3k9tNsFIqG+k7H1R/0CySa3iLw2rCrPim0MFzaD90hzJv4QDaUl+L1qoOY+hmw==@vger.kernel.org
+X-Gm-Message-State: AOJu0YzjxOUn/UAvFkKu955hHWfA/HeEiBLtBQh8NLe4yBy4WotO6sPP
+	rXwVHv3K6EwkaAmnznsdeiD8hJLywSMKDnB4HR/xi+uk0K0XhRfYgOGyo1A7GqCcRXPfQGmPqY7
+	2IEBSZdXkefF4Jy0NwxVg2j39ayY=
+X-Google-Smtp-Source: AGHT+IGgk9wjF7NwnX8et0jzER6LayQU2MY0yj2pfOSKSlhSiBlMxG4HuFD/YSGpYLbiMFfjiKIXrDujz+RjTFY3bqo=
+X-Received: by 2002:a05:6808:13c2:b0:3f3:e1c3:39d8 with SMTP id
+ 5614622812f47-3f3eb088af9mr6680370b6e.7.1739793438923; Mon, 17 Feb 2025
+ 03:57:18 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250210055828.1875372-1-keyz@google.com>
+In-Reply-To: <20250210055828.1875372-1-keyz@google.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Mon, 17 Feb 2025 12:57:07 +0100
+X-Gmail-Original-Message-ID: <CAJZ5v0hWNYB69ydM4--GNtLBgG3WS4MT+S10w46883kHnFMMEQ@mail.gmail.com>
+X-Gm-Features: AWEUYZlerGW8CaScCPlNU0kV18tmC8lLU10SucLC1QEGtyvEZia5QSOw4UT49-U
+Message-ID: <CAJZ5v0hWNYB69ydM4--GNtLBgG3WS4MT+S10w46883kHnFMMEQ@mail.gmail.com>
+Subject: Re: [PATCH v5 RESEND] cpuidle: psci: Add trace for PSCI domain idle
+To: Keita Morisaki <keyz@google.com>, Ulf Hansson <ulf.hansson@linaro.org>, lpieralisi@kernel.org, 
+	sudeep.holla@arm.com
+Cc: linux-kernel@vger.kernel.org, rafael@kernel.org, daniel.lezcano@linaro.org, 
+	linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	rostedt@goodmis.org, mhiramat@kernel.org, mathieu.desnoyers@efficios.com, 
+	linux-trace-kernel@vger.kernel.org, aarontian@google.com, 
+	yimingtseng@google.com, Dhruva Gole <d-gole@ti.com>, Kevin Hilman <khilman@baylibre.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Reduce :maxdepth: from 2 to 1 in index.rst to simplify the table of
-contents, showing only top-level document titles for better readability.
++Ulf
 
-Signed-off-by: Purva Yeshi <purvayeshi550@gmail.com>
----
- Documentation/trace/index.rst | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+On Mon, Feb 10, 2025 at 6:58=E2=80=AFAM Keita Morisaki <keyz@google.com> wr=
+ote:
+>
+> The trace event cpu_idle provides insufficient information for debugging
+> PSCI requests due to lacking access to determined PSCI domain idle
+> states. The cpu_idle usually only shows -1, 0, or 1 regardless how many
+> idle states the power domain has.
+>
+> Add new trace events namely psci_domain_idle_enter and
+> psci_domain_idle_exit to trace enter and exit events with a determined
+> idle state.
+>
+> These new trace events will help developers debug CPUidle issues on ARM
+> systems using PSCI by providing more detailed information about the
+> requested idle states.
+>
+> Signed-off-by: Keita Morisaki <keyz@google.com>
+> Reviewed-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+> Reviewed-by: Dhruva Gole <d-gole@ti.com>
+> Tested-by: Kevin Hilman <khilman@baylibre.com>
+> ---
+> v1->v2: Split the ftrace event into two (psci_domain_idle_(enter|exit))
+>         and rephrase the commit message accordingly. Rebased onto the lat=
+est.
+> v2->v3: Add "Reviewed-by: Steven Rostedt"
+> v3->v4: Add the Tested-by label
+> v4->v5: Add "Reviewed-by: Dhruva Gole"
+>
+> Hopefully this patch gets attention from maintainers of
+> drivers/cpuidle/cpuidle-psci.c too.
 
-diff --git a/Documentation/trace/index.rst b/Documentation/trace/index.rst
-index 6b268194f..5ddd47ee7 100644
---- a/Documentation/trace/index.rst
-+++ b/Documentation/trace/index.rst
-@@ -14,7 +14,7 @@ This section provides an overview of Linux tracing mechanisms
- and debugging approaches.
- 
- .. toctree::
--   :maxdepth: 2
-+   :maxdepth: 1
- 
-    debugging
-    tracepoints
-@@ -28,7 +28,7 @@ The following are the primary tracing frameworks integrated into
- the Linux kernel.
- 
- .. toctree::
--   :maxdepth: 2
-+   :maxdepth: 1
- 
-    ftrace
-    ftrace-design
-@@ -47,7 +47,7 @@ A detailed explanation of event tracing mechanisms and their
- applications.
- 
- .. toctree::
--   :maxdepth: 2
-+   :maxdepth: 1
- 
-    events
-    events-kmem
-@@ -65,7 +65,7 @@ This section covers tracing features that monitor hardware
- interactions and system performance.
- 
- .. toctree::
--   :maxdepth: 2
-+   :maxdepth: 1
- 
-    intel_th
-    stm
-@@ -85,7 +85,7 @@ These tools allow tracing user-space applications and
- interactions.
- 
- .. toctree::
--   :maxdepth: 2
-+   :maxdepth: 1
- 
-    user_events
- 
--- 
-2.34.1
+Lorenzo, Sudeep, Ulf, any comments?
 
+>  drivers/cpuidle/cpuidle-psci.c |  3 +++
+>  include/trace/events/power.h   | 37 ++++++++++++++++++++++++++++++++++
+>  2 files changed, 40 insertions(+)
+>
+> diff --git a/drivers/cpuidle/cpuidle-psci.c b/drivers/cpuidle/cpuidle-psc=
+i.c
+> index 2562dc001fc1..dd8d776d6e39 100644
+> --- a/drivers/cpuidle/cpuidle-psci.c
+> +++ b/drivers/cpuidle/cpuidle-psci.c
+> @@ -25,6 +25,7 @@
+>  #include <linux/syscore_ops.h>
+>
+>  #include <asm/cpuidle.h>
+> +#include <trace/events/power.h>
+>
+>  #include "cpuidle-psci.h"
+>  #include "dt_idle_states.h"
+> @@ -74,7 +75,9 @@ static __cpuidle int __psci_enter_domain_idle_state(str=
+uct cpuidle_device *dev,
+>         if (!state)
+>                 state =3D states[idx];
+>
+> +       trace_psci_domain_idle_enter(dev->cpu, state, s2idle);
+>         ret =3D psci_cpu_suspend_enter(state) ? -1 : idx;
+> +       trace_psci_domain_idle_exit(dev->cpu, state, s2idle);
+>
+>         if (s2idle)
+>                 dev_pm_genpd_resume(pd_dev);
+> diff --git a/include/trace/events/power.h b/include/trace/events/power.h
+> index d2349b6b531a..9253e83b9bb4 100644
+> --- a/include/trace/events/power.h
+> +++ b/include/trace/events/power.h
+> @@ -62,6 +62,43 @@ TRACE_EVENT(cpu_idle_miss,
+>                 (unsigned long)__entry->state, (__entry->below)?"below":"=
+above")
+>  );
+>
+> +DECLARE_EVENT_CLASS(psci_domain_idle,
+> +
+> +       TP_PROTO(unsigned int cpu_id, unsigned int state, bool s2idle),
+> +
+> +       TP_ARGS(cpu_id, state, s2idle),
+> +
+> +       TP_STRUCT__entry(
+> +               __field(u32,            cpu_id)
+> +               __field(u32,            state)
+> +               __field(bool,           s2idle)
+> +       ),
+> +
+> +       TP_fast_assign(
+> +               __entry->cpu_id =3D cpu_id;
+> +               __entry->state =3D state;
+> +               __entry->s2idle =3D s2idle;
+> +       ),
+> +
+> +       TP_printk("cpu_id=3D%lu state=3D0x%lx is_s2idle=3D%s",
+> +                 (unsigned long)__entry->cpu_id, (unsigned long)__entry-=
+>state,
+> +                 (__entry->s2idle)?"yes":"no")
+> +);
+> +
+> +DEFINE_EVENT(psci_domain_idle, psci_domain_idle_enter,
+> +
+> +       TP_PROTO(unsigned int cpu_id, unsigned int state, bool s2idle),
+> +
+> +       TP_ARGS(cpu_id, state, s2idle)
+> +);
+> +
+> +DEFINE_EVENT(psci_domain_idle, psci_domain_idle_exit,
+> +
+> +       TP_PROTO(unsigned int cpu_id, unsigned int state, bool s2idle),
+> +
+> +       TP_ARGS(cpu_id, state, s2idle)
+> +);
+> +
+>  TRACE_EVENT(powernv_throttle,
+>
+>         TP_PROTO(int chip_id, const char *reason, int pmax),
+>
+> base-commit: ffd294d346d185b70e28b1a28abe367bbfe53c04
+> --
+> 2.48.1.362.g079036d154-goog
