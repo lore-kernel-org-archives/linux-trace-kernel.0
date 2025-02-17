@@ -1,198 +1,221 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f45.google.com (mail-pj1-f45.google.com [209.85.216.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC40C215F5F
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 17 Feb 2025 09:32:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A7E88BE8;
+	Mon, 17 Feb 2025 11:07:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739784770; cv=none; b=QSMO6VvnMsh3eO5MlqZffp1Jwnwdr5TtBLAdTLkI92Apgbs/91g2cDlR6dNm6juy/Xnq/bPtzxsmu33puXjoS3HC7Jf01Hdd1PNm+DOz7bme0Y3gDX2NtwcXED85dmix/HjVQYqu5+6I3rW/G4YdUmAKTazvRrBaKxCbTEjzdq4=
+	t=1739790427; cv=none; b=Fp0NPpXbt0blhAXO/5y/BVdwEDtCVFmTY/0/r+78IKbZs3Qva1dWdZffyk58JXfUhfsHjNsL9jYacU9HeRcebfASBleratbnWConoITywQP9tLeRBZIHetKIw6p+8PwDmSEzgcNG3CouxYUqpLUWk7uVO6FXKMo3fiopVOMrHpE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739784770; c=relaxed/simple;
-	bh=C18oNuSiRM+TIpqOyHblP4q4/wiZKl1/Sm7Ge/iJ9oU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=B4n8Q3fR6vt6oKdfHUsmMic9MEVqsvjkh12Y9cgW8p7oebxlPSI0ny1HONbPEs/Ovf7C6BST8mdgdftUJtCPUmAETad8pulRJikt1FtjXnfRJaS+evLJJhsQ9CzDD6gzhduoaTsCnKkQ6A/5juZU6Xxn1SKP5l3VrDBOEMrQSGI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=TiRRxlR/; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1739790427; c=relaxed/simple;
+	bh=isFALg6CXqDl8cu7cPP7y6ryoQs71iJg27uKq5QT0gM=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=hzF1liwLLfowb1h463+DYc8uoVgBQmH4sV5dmkzgI1fUevqTjahlU02DQh4jV8eBdjr/H34qeXBtypIBZ+Wgfan39Eo0QECrKAPcXLXKOR7CoSmWXDiaaAka+THXu2NChmePhJdskJe0AdSLWr4q2iSR3IBlFC7eW14F7haPuy0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hAZdrRvs; arc=none smtp.client-ip=209.85.216.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TiRRxlR/"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1739784767;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=Eeb7nv1cNhGbfxr+l0PpfHS4x7aSgl8Mgbc1lpE/bK0=;
-	b=TiRRxlR/6a/m9YJepzkTVOSgQ0gjqB3NkDKx+nKAnyGlubIM8RCBSNc8uMJC0TgoM+Bgjz
-	gPe8mBNhLX50JhHA2mq8ClIlIXV8jhzhlu4LrU0IBsyg1fePkCDw1cjfcvR6pKS3HDFCgz
-	/Ey8UB7oIQS7gI09r74LXGVm3niTzrw=
-Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
- [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-47-ebyJtyQQPM22dCefrhgM-w-1; Mon, 17 Feb 2025 04:32:46 -0500
-X-MC-Unique: ebyJtyQQPM22dCefrhgM-w-1
-X-Mimecast-MFC-AGG-ID: ebyJtyQQPM22dCefrhgM-w_1739784765
-Received: by mail-ej1-f71.google.com with SMTP id a640c23a62f3a-ab7d2d60e88so412224166b.1
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 17 Feb 2025 01:32:46 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hAZdrRvs"
+Received: by mail-pj1-f45.google.com with SMTP id 98e67ed59e1d1-2fbffe0254fso7855374a91.3;
+        Mon, 17 Feb 2025 03:07:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1739790425; x=1740395225; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=WKfNUEOjLl/LJnQn1CB92jCGeCH7231aksnRXVNSbLI=;
+        b=hAZdrRvsI9ZGckTj2v6B/y7q8yIQ+9rj7aorYQDpB+702JAMl2ceDej/E45gJVwB6D
+         ktkf7m9T8BQQYY+DGyOSWBkCrugg3gaZeOmUgi2PgXvwxrN/+Ko9yWIrWohNSfs8iA5j
+         B5sHxL1SXAINPJLj1Pua+EkqsC3mRAFK3YHf9UZrIzOV/PgNaeEyR5McWY/SGNdso9hl
+         T4GXKSLeyj1FUoW8xRB17nvvrmnhZ9Vyul7KKTCvkgCWx1daMUdCITXgGoUbvyRFal14
+         K0JldIu5M4lC+V635HCUT20Lgz+D5V/4tWYybHalmeoPzIJy2wgrsx+Ap5r0sxA9SfDz
+         E0+w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739784765; x=1740389565;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=Eeb7nv1cNhGbfxr+l0PpfHS4x7aSgl8Mgbc1lpE/bK0=;
-        b=wrRft9aEzhIJy5feZ12zC+jisGPsq7e2XefndyE/soIarPam1TY+wXMX8SoJX4/Pgg
-         /HPYWgGSIeS0+7EO3PoGoHO9Xdkty9pjJvf5Efm9p7kYRDxyjEiM/tsUtA7nueGAuH+Y
-         d0FQSU/jG4FgtxzMLiVugxUirLsl6oHYniLtBtbBOnh6yF8uW6HUHzQ1RNV/LkXxdKW9
-         Tu64pRhbphyFsWj2Ke5SHuJM7aeH4EA5X7r+i2DKPm0GYmuEorQJNU82RNmfpw/TMxa2
-         EcZv878rzQ2u5iJoHyJ2VoUj8qKQeBLtG0X1G6n+E/CDZu1vXc0wm5NpTd1ATbp1FYeU
-         tJ6g==
-X-Forwarded-Encrypted: i=1; AJvYcCWfrtUyFkzV3MgaCbrGQi3VOtnEKp9BE5Ef9XOyadep9m/V3KKMP3lxw/sdBB4wot4vER0rlCaN3+/FH9oUORMplrA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YziV9dzA9qAlFCAxyCjRytw39XYfoWjZbmIHfrKQDR+/1MAf1sx
-	gw7PdixXOcxDNPHiCJYrZwfBjgbLWWNPf7CiubeHYZPAQ15LxV4Pb3mj0SpGZe8kIvRkmewBASO
-	zUPJEd4NPSr2nR92UVFrthnbi7sYYHkE9ecuH2Q3p5Ctwg3QPk8xo7U3nQwXu70eJ3rZQGQ==
-X-Gm-Gg: ASbGncsTjLVoL3fylXpeA7g/8bqBvoN4noiI/q128DNOghCywGfu8J8SeEivd2eO7SW
-	ztgyBrrpARHQNyQwABgnwO6VuVRSbzUGe4LwGo8KrcDr4LXnuEjCvoDYiZ+4CR7JfPRTk33T4yj
-	QwsldgRSbnzVSNrqTnDjnF45D7RNykv/JGd9IeLASL0ooPg+tFy3q8TeGOEvTQX7QHaPMx/J8Xr
-	MkjNvM43PLdzUJeoOBcw4OBQVsauHsGtTJILbFU3pJcrsUwC6xdohj8xcNdZd8VCxrTIDxjMxuZ
-	dWI48HFf98A9N1H15ZK1VMNfCO7GwiCv/qX6i8Lq/ju9oL6+T8Gzqi5iXI4N+efuo9mesrvK6ER
-	nmjEN7ijlGjSKs5dXx03rnKf4H/mJjg==
-X-Received: by 2002:a17:906:31d6:b0:ab7:e943:4c1 with SMTP id a640c23a62f3a-abb7091ab36mr780763066b.11.1739784763483;
-        Mon, 17 Feb 2025 01:32:43 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IH3Wgg/IfmYVp/LsQNMw7j+PPvq4aGzaMQEi/BT3iuWyQBhHI1flKgzEnpyKaqJ/zoXhyrMhQ==
-X-Received: by 2002:a17:906:31d6:b0:ab7:e943:4c1 with SMTP id a640c23a62f3a-abb7091ab36mr780753066b.11.1739784761522;
-        Mon, 17 Feb 2025 01:32:41 -0800 (PST)
-Received: from ?IPV6:2003:cb:c739:900:900f:3c9e:2f7b:5d0a? (p200300cbc7390900900f3c9e2f7b5d0a.dip0.t-ipconnect.de. [2003:cb:c739:900:900f:3c9e:2f7b:5d0a])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-aba53376bb3sm864425066b.109.2025.02.17.01.32.39
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 17 Feb 2025 01:32:40 -0800 (PST)
-Message-ID: <76a9a0dc-4d2f-430c-a2be-a2371f3108d7@redhat.com>
-Date: Mon, 17 Feb 2025 10:32:38 +0100
+        d=1e100.net; s=20230601; t=1739790425; x=1740395225;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=WKfNUEOjLl/LJnQn1CB92jCGeCH7231aksnRXVNSbLI=;
+        b=EMBS3w7A+HKbX/1qYZMEtP4/AZaLwzyXYduS6Upp2CzpCJAcqmzh4Uacrcs3EXjHFI
+         yDg4PJvGs/zHsgH64CLZfbtM3PoNIz3ADSdrP4g1qzsaEJ7L1YaXJJ6hG+Xu78YCoEge
+         rbBB69eiWXYphtXBH88i1mdBXsq6olKJGHUNIRslGNbkK8s7hDeRJnUC8Pw2qLVePtw5
+         JYhVG0buytEmtAdJKPO6OShN/U57uwByA2hZ+6KlW4X8eLqYCMgMS2/3b9IyMBQi4WYR
+         Ft1eoM4pKFJX7hZeNfaL50Ui9rgnr3PU+fSUYOxhnEDlkXmWuTf3dQKJ/K71843xXADu
+         dCiA==
+X-Forwarded-Encrypted: i=1; AJvYcCVXyxDRIhEFDY4nTX+g4uCRB61OIzPTfD/yNWMybT6x/VxRSKSQuA+f1uDg3NIKnxHA1m4HxioBC88=@vger.kernel.org, AJvYcCVanH0vFySyBU6Y39zuJTHQfziHPtwSY482EVudWz2ofV7SGIsK1xVVB3/vZPwk3jkwJOaL8Zu+u3Qmu8NfhohhOedU@vger.kernel.org, AJvYcCWl7xp1q6NTeHRI7vyiZWoyLMtxCfa4hcruYHLxzPucjPSZ54dhcki4WXkrpxyumHjTc97yn23dXdvpSOVD@vger.kernel.org
+X-Gm-Message-State: AOJu0YwDl2YuvZ/1VZOaF93dbyjO1f8XXDN4RUGITXX07aIGmxT+WgxK
+	W9V8yORamX3n3Dyw2jUdsVhSjF+ByAz+rC6VS6R0iau+PrGeE3Oh
+X-Gm-Gg: ASbGncsHpJVXXqtzNxZ2fm0f3MG3uKhDtLkrb/Jr0ahkOfDJL79jnOhyybTZIAIt0jT
+	kDVZu8S9vMkSTe4Um9o2bUFhaTvsYE3SkgQAiBQGUQZ3bRiZNkZPwWTA6bgoBya2kPVvXmoOemM
+	2ps2wDWshNLGKJ49CDPRGzJnEPJBmJxrphkmKbSkmwqLC9DUz0e0ez4Ak3cdKXRR2dzVahAPZ1n
+	MF94KtVSRaoK7069awSZ7bfLxnLikeTf/o+OZlSQFIXYBA+803worF39nz9EiAXSBTBkNbYdznC
+	tfqGkdFTzQmVqZG/1dRZ8DT/sJS9ksHVuqvIalMuXzaP2QJ5
+X-Google-Smtp-Source: AGHT+IG7B4sPeRxfvU839YopNnkapoIY0Cc35bbDmNDyP3vYMcMAmVTKblMiHxI+hpJeWLYL+RCgRw==
+X-Received: by 2002:a17:90b:510c:b0:2ee:53b3:3f1c with SMTP id 98e67ed59e1d1-2fc40d14c1emr14088366a91.5.1739790425312;
+        Mon, 17 Feb 2025 03:07:05 -0800 (PST)
+Received: from purva-IdeaPad-Gaming-3-15IHU6.. ([2409:40c0:1035:b6f:a7b9:b8b1:950d:8c7b])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2fc13ab1ff2sm7840844a91.8.2025.02.17.03.07.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 17 Feb 2025 03:07:04 -0800 (PST)
+From: Purva Yeshi <purvayeshi550@gmail.com>
+To: rostedt@goodmis.org,
+	mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com,
+	corbet@lwn.net
+Cc: skhan@linuxfoundation.org,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	Purva Yeshi <purvayeshi550@gmail.com>
+Subject: [PATCH v3] docs: tracing: Refactor index.rst documentation
+Date: Mon, 17 Feb 2025 16:36:37 +0530
+Message-Id: <20250217110637.6640-1-purvayeshi550@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 03/17] mm/rmap: convert make_device_exclusive_range()
- to make_device_exclusive()
-To: Alistair Popple <apopple@nvidia.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org,
- linux-doc@vger.kernel.org, dri-devel@lists.freedesktop.org,
- linux-mm@kvack.org, nouveau@lists.freedesktop.org,
- linux-trace-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
- damon@lists.linux.dev, =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?=
- <jglisse@redhat.com>, Jonathan Corbet <corbet@lwn.net>,
- Alex Shi <alexs@kernel.org>, Yanteng Si <si.yanteng@linux.dev>,
- Karol Herbst <kherbst@redhat.com>, Lyude Paul <lyude@redhat.com>,
- Danilo Krummrich <dakr@kernel.org>, David Airlie <airlied@gmail.com>,
- Simona Vetter <simona@ffwll.ch>, Masami Hiramatsu <mhiramat@kernel.org>,
- Oleg Nesterov <oleg@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
- SeongJae Park <sj@kernel.org>, "Liam R. Howlett" <Liam.Howlett@oracle.com>,
- Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
- Vlastimil Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>,
- Pasha Tatashin <pasha.tatashin@soleen.com>, Peter Xu <peterx@redhat.com>,
- Jason Gunthorpe <jgg@nvidia.com>, Simona Vetter <simona.vetter@ffwll.ch>
-References: <20250210193801.781278-1-david@redhat.com>
- <20250210193801.781278-4-david@redhat.com>
- <20250210210001.5dc68b38eb1bfa44d0fd78f6@linux-foundation.org>
- <48fd75b9-696e-402c-95bd-55f2f0e24dfc@redhat.com>
- <vclmxoorivzhamd4smaaeyamdeangj3aqlbl27muzxuljasdrg@t4jj77rmiozu>
-From: David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <vclmxoorivzhamd4smaaeyamdeangj3aqlbl27muzxuljasdrg@t4jj77rmiozu>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: vkCTGdH6L39x8Seyz47iah8s-kUPmC0lDCPIPVZfpmc_1739784765
-X-Mimecast-Originator: redhat.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 17.02.25 01:01, Alistair Popple wrote:
-> On Tue, Feb 11, 2025 at 09:33:54AM +0100, David Hildenbrand wrote:
->> On 11.02.25 06:00, Andrew Morton wrote:
->>> On Mon, 10 Feb 2025 20:37:45 +0100 David Hildenbrand <david@redhat.com> wrote:
->>>
->>>> The single "real" user in the tree of make_device_exclusive_range() always
->>>> requests making only a single address exclusive. The current implementation
->>>> is hard to fix for properly supporting anonymous THP / large folios and
->>>> for avoiding messing with rmap walks in weird ways.
->>>>
->>>> So let's always process a single address/page and return folio + page to
->>>> minimize page -> folio lookups. This is a preparation for further
->>>> changes.
->>>>
->>>> Reject any non-anonymous or hugetlb folios early, directly after GUP.
->>>>
->>>> While at it, extend the documentation of make_device_exclusive() to
->>>> clarify some things.
->>>
->>> x86_64 allmodconfig:
->>>
->>> drivers/gpu/drm/nouveau/nouveau_svm.c: In function 'nouveau_atomic_range_fault':
->>> drivers/gpu/drm/nouveau/nouveau_svm.c:612:68: error: 'folio' undeclared (first use in this function)
->>>     612 |                 page = make_device_exclusive(mm, start, drm->dev, &folio);
->>>         |                                                                    ^~~~~
->>> drivers/gpu/drm/nouveau/nouveau_svm.c:612:68: note: each undeclared identifier is reported only once for each function it appears in
->>
->> Ah! Because I was carrying on the same branch SVM fixes [1] that are
->> getting surprisingly little attention so far.
-> 
-> I believe this has been picked up in drm-misc-fixes now:
-> 
-> https://lore.kernel.org/dri-devel/Z69eloo_7LM6NneO@cassiopeiae/
+Refactor Documentation/trace/index.rst to improve clarity, structure,
+and organization. Reformat sections and add appropriate headings for
+better readability.
 
-Yes. Both trees should merge without conflicts. However, we can later 
-get rid of the now-superfluous page_folio() that was required in the drm 
-fix.
+Improve section grouping and refine descriptions for better usability.
 
+Signed-off-by: Purva Yeshi <purvayeshi550@gmail.com>
+---
+V1 - https://lore.kernel.org/all/20250204133616.27694-1-purvayeshi550@gmail.com/
+V2 - https://lore.kernel.org/lkml/20250206141453.139613-1-purvayeshi550@gmail.com/
+V3 - Improve section grouping and refine descriptions.
+
+ Documentation/trace/index.rst | 94 +++++++++++++++++++++++++++++------
+ 1 file changed, 79 insertions(+), 15 deletions(-)
+
+diff --git a/Documentation/trace/index.rst b/Documentation/trace/index.rst
+index 2c991dc96..6b268194f 100644
+--- a/Documentation/trace/index.rst
++++ b/Documentation/trace/index.rst
+@@ -1,39 +1,103 @@
+-==========================
+-Linux Tracing Technologies
+-==========================
++================================
++Linux Tracing Technologies Guide
++================================
++
++Tracing in the Linux kernel is a powerful mechanism that allows
++developers and system administrators to analyze and debug system
++behavior. This guide provides documentation on various tracing
++frameworks and tools available in the Linux kernel.
++
++Introduction to Tracing
++-----------------------
++
++This section provides an overview of Linux tracing mechanisms
++and debugging approaches.
+ 
+ .. toctree::
+    :maxdepth: 2
+ 
+-   ftrace-design
++   debugging
++   tracepoints
+    tracepoint-analysis
++   ring-buffer-map
++
++Core Tracing Frameworks
++-----------------------
++
++The following are the primary tracing frameworks integrated into
++the Linux kernel.
++
++.. toctree::
++   :maxdepth: 2
++
+    ftrace
++   ftrace-design
+    ftrace-uses
+-   fprobe
+    kprobes
+    kprobetrace
+    uprobetracer
+    fprobetrace
+-   tracepoints
++   fprobe
++   ring-buffer-design
++
++Event Tracing and Analysis
++--------------------------
++
++A detailed explanation of event tracing mechanisms and their
++applications.
++
++.. toctree::
++   :maxdepth: 2
++
+    events
+    events-kmem
+    events-power
+    events-nmi
+    events-msr
+-   mmiotrace
++   boottime-trace
+    histogram
+    histogram-design
+-   boottime-trace
+-   debugging
+-   hwlat_detector
+-   osnoise-tracer
+-   timerlat-tracer
++
++Hardware and Performance Tracing
++--------------------------------
++
++This section covers tracing features that monitor hardware
++interactions and system performance.
++
++.. toctree::
++   :maxdepth: 2
++
+    intel_th
+-   ring-buffer-design
+-   ring-buffer-map
+    stm
+    sys-t
+    coresight/index
+-   user_events
+    rv/index
+    hisi-ptt
++   mmiotrace
++   hwlat_detector
++   osnoise-tracer
++   timerlat-tracer
++
++User-Space Tracing
++------------------
++
++These tools allow tracing user-space applications and
++interactions.
++
++.. toctree::
++   :maxdepth: 2
++
++   user_events
++
++Additional Resources
++--------------------
++
++For more details, refer to the respective documentation of each
++tracing tool and framework.
++
++.. only:: subproject and html
++
++   Indices
++   =======
++
++   * :ref:`genindex`
+\ No newline at end of file
 -- 
-Cheers,
-
-David / dhildenb
+2.34.1
 
