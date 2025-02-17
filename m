@@ -1,123 +1,101 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A769721B199
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 17 Feb 2025 16:13:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F18C21D59D;
+	Mon, 17 Feb 2025 16:38:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739808784; cv=none; b=XutmH4+avoulyh4lY0DIgjyWfrYT6FjeM9tqRUujLP7jha07yeskVxEN0wV7QHknAIdAYUquMDYW7IsD8/VJn+01I2D+KfhEsfWCrmZ023vIvhB3/O69yoSvhJIDtcB3iG81ab7oHD/egHUkwjWZpbZWb0ql06i9QhNDHDC7xeY=
+	t=1739810306; cv=none; b=S+gA2AsxButU31PPDm8yfi1vMG6CdRdbROqQhVCv3wWko0d4Etmu+RbKCmd/GpgywuXXGQ00oWet6qybCXLmLBuYoqttU0NX2S0cIYUd3bsI9lxbaUG1SMAbsO7crE9Uy6MUerkBfA/d8DXmzbbeUJMO5bFhfs1c2NIxDjHmyyo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739808784; c=relaxed/simple;
-	bh=TyFc+m+o5Ip61yVd3LutnSKqRmbGsdZH3zjUdTzZjJw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=B/px2r+DmxSJ4BX3xjoS/15FzOoWNJwpHE3hk8+MyQUT/3Zh2ZswJAdUakKMtz3MDYILapjQwwYGu3cgrKvWQBvv/uBQ4CcsAxkjxQ6GCXcWzZOjXyn1a7shXHov0BiZdo1TrAV2fa/EhMzOgP709SPQmokn7/2D4whcbdcRSTA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=A8wwnJh2; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="A8wwnJh2"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1739808781;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=WWhOzTyt32fDH0giRXlm9T2UpJRlwSqApuOdt4srbxg=;
-	b=A8wwnJh2rv4ujalIqZa0/LGS/HssgrxzeyaxdzHaPGq+SmWw7GAbrAv2hTm8xv88Jt1a6J
-	dSxdB+g1O6EZDnKcIZ2aV+ojVnt7inzXVGDF1kmnwFEJEGdlEzscr8jLzjbgOHCPbEO677
-	BJU/SAQgoceTOOzooLaEC+NKJ0AcLgk=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-221-ydGPgqKWO5W8I6WzF8btgw-1; Mon,
- 17 Feb 2025 11:12:58 -0500
-X-MC-Unique: ydGPgqKWO5W8I6WzF8btgw-1
-X-Mimecast-MFC-AGG-ID: ydGPgqKWO5W8I6WzF8btgw_1739808776
-Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id B368B180087C;
-	Mon, 17 Feb 2025 16:12:55 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.226.150])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 4DD241955BCB;
-	Mon, 17 Feb 2025 16:12:48 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Mon, 17 Feb 2025 17:12:26 +0100 (CET)
-Date: Mon, 17 Feb 2025 17:12:19 +0100
-From: Oleg Nesterov <oleg@redhat.com>
-To: Tong Tiangen <tongtiangen@huawei.com>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	"Liang, Kan" <kan.liang@linux.intel.com>,
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, bpf@vger.kernel.org,
-	wangkefeng.wang@huawei.com
-Subject: Re: [PATCH -next] uprobes: fix two zero old_folio bugs in
- __replace_page()
-Message-ID: <20250217161218.GD8082@redhat.com>
-References: <20250217123826.88503-1-tongtiangen@huawei.com>
+	s=arc-20240116; t=1739810306; c=relaxed/simple;
+	bh=gJssyFMbKSFlkJOhj2UTG0SBRegf3zS5G+kMehMWhxk=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=tM5JhYXM1gk39mLdzk+a/65LIQv6jRZc/sZjGYq6sbX7gr/r+4v4KCrWUMA6tnQWcNcu99k8FS4h/1uEpMCXIjXmho1+TjoyFNgLMwRdj/BY+V9RmCnQTcpICNVcGeKT3iNywYpQs/ODtbWaIu9YPDGoaeWPIgrDMuV81jy71no=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 45FD1C4CED1;
+	Mon, 17 Feb 2025 16:38:25 +0000 (UTC)
+Date: Mon, 17 Feb 2025 11:38:44 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Gabriele Monaco <gmonaco@redhat.com>
+Cc: linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>, Peter
+ Zijlstra <peterz@infradead.org>, Masami Hiramatsu <mhiramat@kernel.org>,
+ linux-trace-kernel@vger.kernel.org, Juri Lelli <juri.lelli@redhat.com>
+Subject: Re: [PATCH v2 03/11] sched: Add sched tracepoints for RV task model
+Message-ID: <20250217113844.5ad7893c@gandalf.local.home>
+In-Reply-To: <20250213090819.419470-4-gmonaco@redhat.com>
+References: <20250213090819.419470-1-gmonaco@redhat.com>
+	<20250213090819.419470-4-gmonaco@redhat.com>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250217123826.88503-1-tongtiangen@huawei.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Can't comment, my understanding of mm/ is not enough these days.
+On Thu, 13 Feb 2025 10:08:01 +0100
+Gabriele Monaco <gmonaco@redhat.com> wrote:
 
-Just one question...
-
-On 02/17, Tong Tiangen wrote:
->
-> Fixes: 7396fa818d62 ("uprobes/core: Make background page replacement logic account for rss_stat counters")
-> Fixes: 2b1444983508 ("uprobes, mm, x86: Add the ability to install and remove uprobes breakpoints")
-
-Are you sure this logic was wrong from the very beginning? Just curious.
-
-Oleg.
-
-> Signed-off-by: Tong Tiangen <tongtiangen@huawei.com>
-> ---
->  kernel/events/uprobes.c | 6 ++++--
->  1 file changed, 4 insertions(+), 2 deletions(-)
-> 
-> diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
-> index 46ddf3a2334d..ff5694acfa68 100644
-> --- a/kernel/events/uprobes.c
-> +++ b/kernel/events/uprobes.c
-> @@ -213,7 +213,8 @@ static int __replace_page(struct vm_area_struct *vma, unsigned long addr,
->  		dec_mm_counter(mm, MM_ANONPAGES);
+> diff --git a/include/trace/events/sched.h b/include/trace/events/sched.h
+> index 9ea4c404bd4ef..cc3be04fe9986 100644
+> --- a/include/trace/events/sched.h
+> +++ b/include/trace/events/sched.h
+> @@ -824,6 +824,19 @@ DECLARE_TRACE(sched_compute_energy_tp,
+>  		 unsigned long max_util, unsigned long busy_time),
+>  	TP_ARGS(p, dst_cpu, energy, max_util, busy_time));
 >  
->  	if (!folio_test_anon(old_folio)) {
-> -		dec_mm_counter(mm, mm_counter_file(old_folio));
-> +		if (!is_zero_folio(old_folio))
-> +			dec_mm_counter(mm, mm_counter_file(old_folio));
->  		inc_mm_counter(mm, MM_ANONPAGES);
->  	}
->  
-> @@ -227,7 +228,8 @@ static int __replace_page(struct vm_area_struct *vma, unsigned long addr,
->  	if (!folio_mapped(old_folio))
->  		folio_free_swap(old_folio);
->  	page_vma_mapped_walk_done(&pvmw);
-> -	folio_put(old_folio);
-> +	if (!is_zero_folio(old_folio))
-> +		folio_put(old_folio);
->  
->  	err = 0;
->   unlock:
-> -- 
-> 2.25.1
-> 
+> +DECLARE_TRACE(sched_entry_tp,
+> +	TP_PROTO(bool preempt, unsigned long ip),
+> +	TP_ARGS(preempt, ip));
+> +
+> +DECLARE_TRACE(sched_exit_tp,
+> +	TP_PROTO(bool is_switch, unsigned long ip),
+> +	TP_ARGS(is_switch, ip));
+> +
+> +DECLARE_TRACE_CONDITION(sched_set_state_tp,
+> +	TP_PROTO(struct task_struct *tsk, int curr_state, int state),
+> +	TP_ARGS(tsk, curr_state, state),
+> +	TP_CONDITION(!!curr_state != !!state));
 
+I don't think you need to pass in state. Just have it be:
+
+	TP_CONDITION(!!(tsk->__state) != !!state));
+
+
+> +
+>  #endif /* _TRACE_SCHED_H */
+>  
+>  /* This part must be outside protection */
+> diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+> index 165c90ba64ea9..4aa6af026e05c 100644
+> --- a/kernel/sched/core.c
+> +++ b/kernel/sched/core.c
+> @@ -491,6 +491,19 @@ sched_core_dequeue(struct rq *rq, struct task_struct *p, int flags) { }
+>  
+>  #endif /* CONFIG_SCHED_CORE */
+>  
+> +/* need a wrapper since we may need to trace from modules */
+> +EXPORT_TRACEPOINT_SYMBOL(sched_set_state_tp);
+> +
+> +/*
+> + * Do not call this function directly since it won't check if the tp is enabled.
+> + * Call the helper macro trace_set_current_state instead.
+> + */
+> +void __do_trace_set_current_state(int state_value)
+> +{
+> +	__do_trace_sched_set_state_tp(current, current->__state, state_value);
+
+And this should not be using the internal macros of a trace point. It should be:
+
+	trace_sched_set_state_tp(current, state_value);
+
+(I removed the current->__state as mentioned above).
+
+
+> +}
+> +EXPORT_SYMBOL(__do_trace_set_current_state);
+> +
+
+-- Steve
