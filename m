@@ -1,241 +1,99 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FB092206A0
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 17 Feb 2025 13:13:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 254FB21C188;
+	Mon, 17 Feb 2025 13:16:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739797998; cv=none; b=a3QrZs/AEvpYQBGcOM9Trn9PmvVhsVnJVWRqRIHV2bMLkCroSo1CC72c/HN2QZaRl6+29AqwuGZwW6f0CcFiO5hHTlJm+Gwli2Bmy642pSwq6h01ojnrFO4xaEbF9GxA+m/pSTcb/R72phISkUifbChTn7oZgZqaP2itlJSFQds=
+	t=1739798195; cv=none; b=oajJYQZQom1AesrPGnFTTghQOC3KWScjxz+dbhW1nL6u3WiMhShGA4BaKPf6XSfCf6p6YZLuGyksX5BXjVHykVaP5td+thDkvxPgB+wMqYp6tUNPHBGXP/SJcaUskzYui0XbmU+zOGq/ufxWWPRlN6G5sNnCfrLvpTA7O+ZR6Ls=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739797998; c=relaxed/simple;
-	bh=MFyJzG3kxv6rgiXk0F67ley3QB9Ga1PK84Oojs3YhRQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=mWiL/bPc5A/HeYcWk/COImTZhh6i4wTLQotRVj8k/GQ+af9WXaYkGLTtVL9NhHci7sDCySS2MadhGB9Rpw4XqOveXp6W7IRRyp891Ej7dMTLG6dowluS1o926ilzZYKVVYc0GmOh6tklFW1Ri07QG0CKA/MlOnaWCCCsWueXr9w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=WXSxppMK; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1739798195; c=relaxed/simple;
+	bh=wyxvqAZpVxqQZ+urKOWQ+0EqdnJ4IB5u0lshrjFkqAw=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=QLzMqAgkKdG1VCySr4WAY4HbUllTdEUhEX4KVnd7ZrGzu3XJ9NnLxGF3sy9TylYMP1OBNQy1zDBVN9NSpumRzvaSnxmnCAVQW7QbWZ5jGq+a5bkwiqOijKq8k9HZ7+IlnGVsy49Ls3clHYPnQ0BnltezoWNU0sP3XLRPr6SuOA8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=MYTv89Ja; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=nhnlbg3r; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WXSxppMK"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1739797995;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="MYTv89Ja";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="nhnlbg3r"
+From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1739798191;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=BnR6oqxI0UEcO9ewCzZls4ELgDlHtvYrPUmSJgsWcEQ=;
-	b=WXSxppMKMyAVCGogenUPnmmhnfYqFVXOjzBVRvKRRrF5c3YOpHNeGbT55jT/dZ99toU/Ie
-	IbL/sV8mbIi3SkDKSDZr2wQ5Fyuod0osXbxPrB/1p2VK83jXV5glRHZLw24a0j1b55blMI
-	YQRDr+OuM96fXt1rDOThLagWbCKU9eM=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-53-GKB3N3pYOjSaiNrql5xdJQ-1; Mon,
- 17 Feb 2025 08:13:12 -0500
-X-MC-Unique: GKB3N3pYOjSaiNrql5xdJQ-1
-X-Mimecast-MFC-AGG-ID: GKB3N3pYOjSaiNrql5xdJQ_1739797991
-Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 47B89180087F;
-	Mon, 17 Feb 2025 13:13:11 +0000 (UTC)
-Received: from gmonaco-thinkpadt14gen3.rmtit.com (unknown [10.44.32.190])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id B1C3B180035E;
-	Mon, 17 Feb 2025 13:13:08 +0000 (UTC)
-From: Gabriele Monaco <gmonaco@redhat.com>
-To: linux-kernel@vger.kernel.org,
-	Steven Rostedt <rostedt@goodmis.org>,
-	linux-trace-kernel@vger.kernel.org
-Cc: Gabriele Monaco <gmonaco@redhat.com>,
-	Ingo Molnar <mingo@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Juri Lelli <juri.lelli@redhat.com>
-Subject: [PATCH v2 11/11] tools/rv: Allow rv list to filter for container
-Date: Mon, 17 Feb 2025 14:12:02 +0100
-Message-ID: <20250217131206.388485-12-gmonaco@redhat.com>
-In-Reply-To: <20250217131206.388485-1-gmonaco@redhat.com>
-References: <20250217131206.388485-1-gmonaco@redhat.com>
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=hbzeR8+Y7kYNnpEhwXuG2o0ayidVAVXDLH2xJ++sFq0=;
+	b=MYTv89JaLWwTZ4hqEsQ65a3p8WL38z2EgzHOFTBQUgpGy0HrA6Vs1LwodIHPhkXDF7NUhc
+	V8DGXyvNtuQmAPfEeCiooWf2I4QNw/r0Tkue4XoFcc4ffVzddVf87c+Lxa7Ev/YtIQffy2
+	TP+WBevURyfeW6nUqxjk1G6kYcohn7BfIxZNNw0nSkugf0hFkbleDLFvRMi5BPCHwZMy+y
+	FQJ6zd4wMmlmsfTW1e8RYt1ShyB8QHN+ohqsvu7zoJbe4wLyyoDyfWb8jh0QrwpXFvTuE9
+	t0LPvm4mMSSO7Yugr2TXaxoYb+ehMquBD4gzOM1o5jniTWCFJQCxijqXZI4CQw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1739798191;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=hbzeR8+Y7kYNnpEhwXuG2o0ayidVAVXDLH2xJ++sFq0=;
+	b=nhnlbg3rrME/McneTBlNPVXjK2e2zMfvWMeY7kjBlShSXXD2ZqTobgx0Aml1TDArIvvxmu
+	MDWkImDjbtw80lAA==
+Date: Mon, 17 Feb 2025 14:16:12 +0100
+Subject: [PATCH] tracing/user_events: Don't use %pK through printk
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
+Message-Id: <20250217-restricted-pointers-trace-v1-1-bbe9ea279848@linutronix.de>
+X-B4-Tracking: v=1; b=H4sIAJs2s2cC/x3MQQrDIBBG4auEWXdAhUbIVUoXVv8kszFhRkpBc
+ vdIl9/ivU4GFRgtUyfFV0yOOuAfE+U91Q0sZZiCC08XfGSFNZXcUPg8pDaocdOUwcmtHx+iiyn
+ PNPpTscrv/369r+sGfoClOWsAAAA=
+X-Change-ID: 20250217-restricted-pointers-trace-a0fb12707ac6
+To: Steven Rostedt <rostedt@goodmis.org>, 
+ Masami Hiramatsu <mhiramat@kernel.org>, 
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+ =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1739798191; l=1287;
+ i=thomas.weissschuh@linutronix.de; s=20240209; h=from:subject:message-id;
+ bh=wyxvqAZpVxqQZ+urKOWQ+0EqdnJ4IB5u0lshrjFkqAw=;
+ b=r/RcJt5aXygEOq0CjtIFIXiehHHKoVjtu7JXI7aBsbaIYYQRlJKgkBeAfl3dKOEiuEUXKwjlW
+ apHuprJr5oQALJnPJYhMHz2Do8HvvdaBADzKQSr/efP+GBMNB92Z+jw
+X-Developer-Key: i=thomas.weissschuh@linutronix.de; a=ed25519;
+ pk=pfvxvpFUDJV2h2nY0FidLUml22uGLSjByFbM6aqQQws=
 
-Add possibility to supply the container name to rv list:
+Restricted pointers ("%pK") are not meant to be used through printk().
+It can unintentionally expose security sensitive, raw pointer values.
 
-  # rv list sched
-  mon1
-  mon2
-  mon3
+Use regular pointer formatting instead.
 
-This lists only monitors in sched, without indentation.
-Supplying -h, any option (string starting with -) or more than 1
-argument will still print the usage.
-Passing a non-existent container prints nothing and passing no container
-continues to print all monitors, showing indentation for nested
-monitors, reported after their container.
-
-Signed-off-by: Gabriele Monaco <gmonaco@redhat.com>
+Link: https://lore.kernel.org/lkml/20250113171731-dc10e3c1-da64-4af0-b767-7c7070468023@linutronix.de/
+Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
 ---
- tools/verification/rv/include/in_kernel.h |  2 +-
- tools/verification/rv/src/in_kernel.c     | 36 +++++++++++++++------
- tools/verification/rv/src/rv.c            | 38 +++++++++++++++--------
- 3 files changed, 53 insertions(+), 23 deletions(-)
+ kernel/trace/trace_events_user.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/verification/rv/include/in_kernel.h b/tools/verification/rv/include/in_kernel.h
-index 3090638c8d710..f3bfd3b9895fe 100644
---- a/tools/verification/rv/include/in_kernel.h
-+++ b/tools/verification/rv/include/in_kernel.h
-@@ -1,3 +1,3 @@
- // SPDX-License-Identifier: GPL-2.0
--int ikm_list_monitors(void);
-+int ikm_list_monitors(char *container);
- int ikm_run_monitor(char *monitor, int argc, char **argv);
-diff --git a/tools/verification/rv/src/in_kernel.c b/tools/verification/rv/src/in_kernel.c
-index 032b851019290..c0dcee795c0de 100644
---- a/tools/verification/rv/src/in_kernel.c
-+++ b/tools/verification/rv/src/in_kernel.c
-@@ -180,19 +180,25 @@ static char *ikm_read_desc(char *monitor_name)
- /*
-  * ikm_fill_monitor_definition - fill monitor's definition
-  *
-- * Returns -1 on error, 0 otherwise.
-+ * Returns -1 on error, 1 if the monitor does not belong in the container, 0 otherwise.
-+ * container can be NULL
-  */
--static int ikm_fill_monitor_definition(char *name, struct monitor *ikm)
-+static int ikm_fill_monitor_definition(char *name, struct monitor *ikm, char *container)
- {
- 	int enabled;
- 	char *desc, *nested_name;
+diff --git a/kernel/trace/trace_events_user.c b/kernel/trace/trace_events_user.c
+index 97325fbd62836f4fb477c4a2b2936eff544291ec..3effc6fce20e65a8077de5221eb69db04fb1a775 100644
+--- a/kernel/trace/trace_events_user.c
++++ b/kernel/trace/trace_events_user.c
+@@ -455,7 +455,7 @@ static void user_event_enabler_fault_fixup(struct work_struct *work)
+ 	if (ret && ret != -ENOENT) {
+ 		struct user_event *user = enabler->event;
  
- 	nested_name = strstr(name, ":");
- 	if (nested_name) {
-+		/* it belongs in container if it starts with "container:" */
-+		if (container && strstr(name, container) != name)
-+			return 1;
- 		*nested_name = '/';
- 		++nested_name;
- 		ikm->nested = 1;
- 	} else {
-+		if (container)
-+			return 1;
- 		nested_name = name;
- 		ikm->nested = 0;
- 	}
-@@ -328,12 +334,12 @@ static int ikm_has_id(char *monitor_name)
-  *
-  * Returns 0 on success, -1 otherwise.
-  */
--int ikm_list_monitors(void)
-+int ikm_list_monitors(char *container)
- {
- 	char *available_monitors;
- 	struct monitor ikm = {0};
- 	char *curr, *next;
--	int retval;
-+	int retval, list_monitor = 0;
- 
- 	available_monitors = tracefs_instance_file_read(NULL, "rv/available_monitors", NULL);
- 
-@@ -347,17 +353,29 @@ int ikm_list_monitors(void)
- 		next = strstr(curr, "\n");
- 		*next = '\0';
- 
--		retval = ikm_fill_monitor_definition(curr, &ikm);
--		if (retval)
-+		retval = ikm_fill_monitor_definition(curr, &ikm, container);
-+		if (retval < 0)
- 			err_msg("ikm: error reading %d in kernel monitor, skipping\n", curr);
- 
--		printf("%s%-*s %s %s\n", ikm.nested ? " - " : "",
--		       ikm.nested ? MAX_DA_NAME_LEN - 3 : MAX_DA_NAME_LEN,
--		       ikm.name, ikm.desc, ikm.enabled ? "[ON]" : "[OFF]");
-+		if (!retval) {
-+			int indent = ikm.nested && !container;
-+
-+			list_monitor = 1;
-+			printf("%s%-*s %s %s\n", indent ? " - " : "",
-+			       indent ? MAX_DA_NAME_LEN - 3 : MAX_DA_NAME_LEN,
-+			       ikm.name, ikm.desc, ikm.enabled ? "[ON]" : "[OFF]");
-+		}
- 		curr = ++next;
- 
- 	} while (strlen(curr));
- 
-+	if (!list_monitor) {
-+		if (container)
-+			printf("-- No monitor found in container %s --\n", container);
-+		else
-+			printf("-- No monitor found --\n");
-+	}
-+
- 	free(available_monitors);
- 
- 	return 0;
-diff --git a/tools/verification/rv/src/rv.c b/tools/verification/rv/src/rv.c
-index 1ddb855328165..239de054d1e06 100644
---- a/tools/verification/rv/src/rv.c
-+++ b/tools/verification/rv/src/rv.c
-@@ -41,30 +41,42 @@ static void rv_list(int argc, char **argv)
- {
- 	static const char *const usage[] = {
- 		"",
--		"  usage: rv list [-h]",
-+		"  usage: rv list [-h] [container]",
- 		"",
- 		"	list all available monitors",
- 		"",
- 		"	-h/--help: print this menu",
-+		"",
-+		"	[container]: list only monitors in this container",
- 		NULL,
- 	};
--	int i;
--
--	if (argc > 1) {
-+	int i, print_help = 0, retval = 0;
-+	char *container = NULL;
-+
-+	if (argc == 2) {
-+		if (!strcmp(argv[1], "-h") || !strcmp(argv[1], "--help")) {
-+			print_help = 1;
-+			retval = 0;
-+		} else if (argv[1][0] == '-') {
-+			/* assume invalid option */
-+			print_help = 1;
-+			retval = 1;
-+		} else
-+			container = argv[1];
-+	} else if (argc > 2) {
-+		/* more than 2 is always usage */
-+		print_help = 1;
-+		retval = 1;
-+	}
-+	if (print_help) {
- 		fprintf(stderr, "rv version %s\n", VERSION);
--
--		/* more than 1 is always usage */
- 		for (i = 0; usage[i]; i++)
- 			fprintf(stderr, "%s\n", usage[i]);
--
--		/* but only -h is valid */
--		if (!strcmp(argv[1], "-h") || !strcmp(argv[1], "--help"))
--			exit(0);
--		else
--			exit(1);
-+		exit(retval);
+-		pr_warn("user_events: Fault for mm: 0x%pK @ 0x%llx event: %s\n",
++		pr_warn("user_events: Fault for mm: 0x%p @ 0x%llx event: %s\n",
+ 			mm->mm, (unsigned long long)uaddr, EVENT_NAME(user));
  	}
  
--	ikm_list_monitors();
-+	ikm_list_monitors(container);
-+
- 	exit(0);
- }
- 
+
+---
+base-commit: 0ad2507d5d93f39619fc42372c347d6006b64319
+change-id: 20250217-restricted-pointers-trace-a0fb12707ac6
+
+Best regards,
 -- 
-2.48.1
+Thomas Weißschuh <thomas.weissschuh@linutronix.de>
 
