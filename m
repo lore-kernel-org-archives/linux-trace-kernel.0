@@ -1,131 +1,205 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 569D318DB3A;
-	Mon, 17 Feb 2025 06:39:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E973D18A95A
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 17 Feb 2025 06:56:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739774366; cv=none; b=MvhFv4cOXTE13nwLGSWf0CxJ+EpTSjIMhavYMLthdxXAzFS2poH7JiANY/MjLn4gj/HjGF9ojWc42BtwMlKsD2IcQcpR9XITSIODKAUFPNblbOt8pDUPVFVbF1Vw0+kwpkUjNUwh+rEX9CbqiwCenPhuWRgw3Fn3LoQHA2MHae0=
+	t=1739775394; cv=none; b=tvjCASNgFFTwA+e0Lz5TVU6+b6s3mKAc6QKQyyyqXSK0HFPJtnCOSCjzJvUpLApeMrBQ4SbcQbjmhDSOGvH6dnrYcg1BsuDtg0E48YUWgP7qtjA+6JFTLoGuOrwHXF2c6TPuMvhMAF26ge4JwCneKKed56OOxH2OLKaJx1o2r0E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739774366; c=relaxed/simple;
-	bh=1ygNsLOXbxIHY3FpCR4Lwf8Cf9fnupC7i0/rcObujDg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=eH9eorwlrdPy7GWCm9YozohrgGs65WXu9uSkwbognmwLhVcB4suPgwZPnB35yzDppfG4jQYkw8JuRG1whd1mJw0ivLtQGwMBdFxm/xs4PBh/AeMMjUE9R/RyYWkmDZT7oBlo/+TQpN0m4pXpbCNW59/udQusPR4rHIAq1oUUpg0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BC90C1063;
-	Sun, 16 Feb 2025 22:39:41 -0800 (PST)
-Received: from [10.162.41.27] (K4MQJ0H1H2.blr.arm.com [10.162.41.27])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 73A0A3F59E;
-	Sun, 16 Feb 2025 22:39:09 -0800 (PST)
-Message-ID: <fae7019f-517f-4ad2-a5c2-2e839e5087ce@arm.com>
-Date: Mon, 17 Feb 2025 12:09:06 +0530
+	s=arc-20240116; t=1739775394; c=relaxed/simple;
+	bh=UAjwm8ZUmY9NHxBX1wqkn0W4bWD5dQPw7sKcOk9oW2U=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=BZtmTnTUFc4PPsdLd42kz7uEgLJOFgv6jwxFcx8QoyAh6tjTjotqrVtzLhI2ywVFUm5JkJtwUiEq3YeRnzVr3rxKy4TUOcWbD2ESO9c3Ydc8BQjNYpfzqZMZtMWlj3yWLMCcXmV7zhlWaMJNTSaNBKDk9Q6FFA3WqyuaeOgm5ns=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=EoqEiHM/; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EoqEiHM/"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1739775390;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=UAjwm8ZUmY9NHxBX1wqkn0W4bWD5dQPw7sKcOk9oW2U=;
+	b=EoqEiHM//hFJzYoAQge/c2LNG6TJSrUQP6uh3iprWccRGkWmE4rxJlxFNgjlq4VKvbSyEQ
+	vFLKTsAqXGtZCNvslm2VXGAvyOa7QuML8nJluYzThc7AmbOHaUlqb8TDrcJoyKQZAgF1zJ
+	mjN2nRHRx0rMKPToncIhz53k1id+NPA=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-9-4RBQo7g1N7SN6b6dOjKQWA-1; Mon, 17 Feb 2025 01:56:28 -0500
+X-MC-Unique: 4RBQo7g1N7SN6b6dOjKQWA-1
+X-Mimecast-MFC-AGG-ID: 4RBQo7g1N7SN6b6dOjKQWA_1739775387
+Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-439385b08d1so33446505e9.1
+        for <linux-trace-kernel@vger.kernel.org>; Sun, 16 Feb 2025 22:56:27 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739775387; x=1740380187;
+        h=mime-version:user-agent:content-transfer-encoding:autocrypt
+         :references:in-reply-to:date:cc:to:from:subject:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=UAjwm8ZUmY9NHxBX1wqkn0W4bWD5dQPw7sKcOk9oW2U=;
+        b=KW9lOzln5bVkC7W0wIvpfGLcwqeSv7ULcpq24CbponYLzHQscWYxnX8SsDDXVPeOJj
+         5JN/XYV8kygsowC87zvKntXfK0XU9sWOAYnj1coHRTRu1AWPT9vocW8jaZHPmf6qo5/h
+         Gwq9zmczErvQ+OQaFGTIxLB+3xT5OouRyScli2x116yVGBBsZkan9+TM96ikjSvd2Kf/
+         DX4apbyHnUt8gwfIJKQkJy9HXDJ65/EJi5TdrRBM+29uEncnkovvKOEm8Hq8rU2XQz48
+         0IWUZYw5Za4w0lNu49lVDIOovt5253ft41MHzEM0PV7ju4vb6HF69AJiQUgP66PH1GmU
+         5ofg==
+X-Forwarded-Encrypted: i=1; AJvYcCVNKoU4eq0fvtN6p0PqrYHTeEG7+7yCmMEPAWGKgZ9MxsI49HX88vCDiRIar1BSMhuPKTkomRrkWDgZBK1oV9OswQU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxcRWAU4oCJWMdDXQyr5Cxo1zbiyIniv+2CkgRFYMMj/vBPA0ys
+	HiNsa5lGoIR3xtQx1R+OQqdoFkar//xRbO1mOCuWGO+yfIw4R4sFN18IL3Imc56xJGOu4W7cSMK
+	jQbdzmnAP070vzcpGK83rXxe7/HVGe6tHedsXMjRJ+4iqCpEEkuVr6+fRNGn/XyhtX2WmVQ==
+X-Gm-Gg: ASbGncvIsRpArbaV4wOGnksxH8YvNCjRSl/dqRY2J6e2Z7V8rhmCFCiagxMMN6M195O
+	RoafgEy1fofbkrWZIcFDqc2s/y7+jgq/3ANOrFqKknxjlRQkSqkni8DV5Q4CX7oq1b+NvqvAawv
+	BFMq/Lz1I9D5y0pKuKR0RsSMa19ZMne9ZVANNMdhrVD6nmQ1DSrZPzNdUjutNcYQZr8Ovw3bmBI
+	ja8EOAjFHDQDPQ0z21ag7jv+bu8WIDyCndNqhRyx9dTCCSaBvwTC2fwtKdyVgDI9K2DDzNR0eKx
+	fNWyHuou5NkZ7KPRiISfRsm2vbuCRDQ=
+X-Received: by 2002:a05:600c:4ec9:b0:439:5506:7183 with SMTP id 5b1f17b1804b1-4396e6a6e31mr75901435e9.7.1739775386962;
+        Sun, 16 Feb 2025 22:56:26 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IFk3NBZALdJoBEHy/OW1hnkv7UynhyXmZFDFCyRcaZfKjwzBNYuS2O/oEr1D7pZAVFTavR1tg==
+X-Received: by 2002:a05:600c:4ec9:b0:439:5506:7183 with SMTP id 5b1f17b1804b1-4396e6a6e31mr75901285e9.7.1739775386528;
+        Sun, 16 Feb 2025 22:56:26 -0800 (PST)
+Received: from gmonaco-thinkpadt14gen3.rmtit.csb ([185.107.56.40])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4395cf084d5sm98968555e9.1.2025.02.16.22.56.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 16 Feb 2025 22:56:26 -0800 (PST)
+Message-ID: <c5fe1f637a84087afb94ed3f9255810ef3975724.camel@redhat.com>
+Subject: Re: [PATCH v2 04/11] rv: Add option for nested monitors and include
+ sched
+From: Gabriele Monaco <gmonaco@redhat.com>
+To: kernel test robot <lkp@intel.com>, linux-kernel@vger.kernel.org, Steven
+ Rostedt <rostedt@goodmis.org>, linux-trace-kernel@vger.kernel.org
+Cc: oe-kbuild-all@lists.linux.dev, Ingo Molnar <mingo@redhat.com>, Juri
+ Lelli	 <juri.lelli@redhat.com>
+Date: Mon, 17 Feb 2025 07:56:23 +0100
+In-Reply-To: <202502170630.xSYE4cUk-lkp@intel.com>
+References: <20250213090819.419470-5-gmonaco@redhat.com>
+	 <202502170630.xSYE4cUk-lkp@intel.com>
+Autocrypt: addr=gmonaco@redhat.com; prefer-encrypt=mutual;
+ keydata=mDMEZuK5YxYJKwYBBAHaRw8BAQdAmJ3dM9Sz6/Hodu33Qrf8QH2bNeNbOikqYtxWFLVm0
+ 1a0JEdhYnJpZWxlIE1vbmFjbyA8Z21vbmFjb0ByZWRoYXQuY29tPoiZBBMWCgBBFiEEysoR+AuB3R
+ Zwp6j270psSVh4TfIFAmbiuWMCGwMFCQWjmoAFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgk
+ Q70psSVh4TfJzZgD/TXjnqCyqaZH/Y2w+YVbvm93WX2eqBqiVZ6VEjTuGNs8A/iPrKbzdWC7AicnK
+ xyhmqeUWOzFx5P43S1E1dhsrLWgP
+User-Agent: Evolution 3.54.3 (3.54.3-1.fc41)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC v2 0/9] khugepaged: mTHP support
-To: Nico Pache <npache@redhat.com>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, linux-mm@kvack.org
-Cc: ryan.roberts@arm.com, anshuman.khandual@arm.com, catalin.marinas@arm.com,
- cl@gentwo.org, vbabka@suse.cz, mhocko@suse.com, apopple@nvidia.com,
- dave.hansen@linux.intel.com, will@kernel.org, baohua@kernel.org,
- jack@suse.cz, srivatsa@csail.mit.edu, haowenchao22@gmail.com,
- hughd@google.com, aneesh.kumar@kernel.org, yang@os.amperecomputing.com,
- peterx@redhat.com, ioworker0@gmail.com, wangkefeng.wang@huawei.com,
- ziy@nvidia.com, jglisse@google.com, surenb@google.com,
- vishal.moola@gmail.com, zokeefe@google.com, zhengqi.arch@bytedance.com,
- jhubbard@nvidia.com, 21cnbao@gmail.com, willy@infradead.org,
- kirill.shutemov@linux.intel.com, david@redhat.com, aarcange@redhat.com,
- raquini@redhat.com, sunnanyong@huawei.com, usamaarif642@gmail.com,
- audra@redhat.com, akpm@linux-foundation.org, rostedt@goodmis.org,
- mathieu.desnoyers@efficios.com, tiwai@suse.de
-References: <20250211003028.213461-1-npache@redhat.com>
-Content-Language: en-US
-From: Dev Jain <dev.jain@arm.com>
-In-Reply-To: <20250211003028.213461-1-npache@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: mA1FIpR1KSw9pL1BuIhlyNrPi8hyhMfPKB3nFX0GCxA_1739775387
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Mon, 2025-02-17 at 06:39 +0800, kernel test robot wrote:
+> Hi Gabriele,
+>=20
+> kernel test robot noticed the following build warnings:
+>=20
+> [auto build test WARNING on 4dc1d1bec89864d8076e5ab314f86f46442bfb02]
+>=20
+> url:=C2=A0=C2=A0=C2=A0
+> https://github.com/intel-lab-lkp/linux/commits/Gabriele-Monaco/tracing-Fi=
+x-DECLARE_TRACE_CONDITION/20250213-171642
+> base:=C2=A0=C2=A0 4dc1d1bec89864d8076e5ab314f86f46442bfb02
+> patch link:=C2=A0=C2=A0=C2=A0
+> https://lore.kernel.org/r/20250213090819.419470-5-gmonaco%40redhat.com
+> patch subject: [PATCH v2 04/11] rv: Add option for nested monitors
+> and include sched
+> config: parisc-randconfig-r112-20250217
+> (https://download.01.org/0day-ci/archive/20250217/202502170630.xSYE4c
+> Uk-lkp@intel.com/config)
+> compiler: hppa-linux-gcc (GCC) 14.2.0
+> reproduce:
+> (https://download.01.org/0day-ci/archive/20250217/202502170630.xSYE4c
+> Uk-lkp@intel.com/reproduce)
+>=20
+> If you fix the issue in a separate patch/commit (i.e. not just a new
+> version of
+> the same patch/commit), kindly add following tags
+> > Reported-by: kernel test robot <lkp@intel.com>
+> > Closes:
+> > https://lore.kernel.org/oe-kbuild-all/202502170630.xSYE4cUk-lkp@intel.c=
+om/
+>=20
+> All warnings (new ones prefixed by >>):
+>=20
+> =C2=A0=C2=A0 In file included from include/trace/define_trace.h:119,
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 from kernel/trace/rv/rv_trace.h:=
+130,
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 from kernel/trace/rv/rv.c:148:
+> > > include/trace/trace_events.h:477:13: warning:
+> > > 'print_fmt_error_da_monitor' defined but not used [-Wunused-
+> > > variable]
+> =C2=A0=C2=A0=C2=A0=C2=A0 477 | static char print_fmt_##call[] =3D
+> print;=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 \
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ^~~~~~~~~~
+> =C2=A0=C2=A0 kernel/trace/rv/./rv_trace.h:39:1: note: in expansion of mac=
+ro
+> 'DECLARE_EVENT_CLASS'
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 39 | DECLARE_EVENT_CLASS(error_da_monitor,
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | ^~~~~~~~~~~~~~~~~~~
+> > > include/trace/trace_events.h:477:13: warning:
+> > > 'print_fmt_event_da_monitor' defined but not used [-Wunused-
+> > > variable]
+> =C2=A0=C2=A0=C2=A0=C2=A0 477 | static char print_fmt_##call[] =3D
+> print;=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 \
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ^~~~~~~~~~
+> =C2=A0=C2=A0 kernel/trace/rv/./rv_trace.h:12:1: note: in expansion of mac=
+ro
+> 'DECLARE_EVENT_CLASS'
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 12 | DECLARE_EVENT_CLASS(event_da_monitor,
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | ^~~~~~~~~~~~~~~~~~~
+> > > include/trace/trace_events.h:223:37: warning:
+> > > 'trace_event_type_funcs_error_da_monitor' defined but not used [-
+> > > Wunused-variable]
+> =C2=A0=C2=A0=C2=A0=C2=A0 223 | static struct trace_event_functions
+> trace_event_type_funcs_##call =3D {=C2=A0=C2=A0 \
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0
+> ^~~~~~~~~~~~~~~~~~~~~~~
+> =C2=A0=C2=A0 kernel/trace/rv/./rv_trace.h:39:1: note: in expansion of mac=
+ro
+> 'DECLARE_EVENT_CLASS'
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 39 | DECLARE_EVENT_CLASS(error_da_monitor,
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | ^~~~~~~~~~~~~~~~~~~
+> > > include/trace/trace_events.h:223:37: warning:
+> > > 'trace_event_type_funcs_event_da_monitor' defined but not used [-
+> > > Wunused-variable]
+> =C2=A0=C2=A0=C2=A0=C2=A0 223 | static struct trace_event_functions
+> trace_event_type_funcs_##call =3D {=C2=A0=C2=A0 \
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0
+> ^~~~~~~~~~~~~~~~~~~~~~~
+> =C2=A0=C2=A0 kernel/trace/rv/./rv_trace.h:12:1: note: in expansion of mac=
+ro
+> 'DECLARE_EVENT_CLASS'
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 12 | DECLARE_EVENT_CLASS(event_da_monitor,
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | ^~~~~~~~~~~~~~~~~~~
+>=20
 
+This is something hard to trigger, but I didn't remove the select
+DA_MON_EVENTS_IMPLICIT in RV_MON_SCHED . As a result if the user
+enables the sched monitor without any nested monitor (which is already
+a broken configuration but happens if you apply this commit without the
+following ones) trace event classes would be created with no event
+using them.
 
-On 11/02/25 6:00 am, Nico Pache wrote:
-> The following series provides khugepaged and madvise collapse with the
-> capability to collapse regions to mTHPs.
-> 
-> To achieve this we generalize the khugepaged functions to no longer depend
-> on PMD_ORDER. Then during the PMD scan, we keep track of chunks of pages
-> (defined by MTHP_MIN_ORDER) that are utilized. This info is tracked
-> using a bitmap. After the PMD scan is done, we do binary recursion on the
-> bitmap to find the optimal mTHP sizes for the PMD range. The restriction
-> on max_ptes_none is removed during the scan, to make sure we account for
-> the whole PMD range. max_ptes_none will be scaled by the attempted collapse
-> order to determine how full a THP must be to be eligible. If a mTHP collapse
-> is attempted, but contains swapped out, or shared pages, we dont perform the
-> collapse.
-> 
-> With the default max_ptes_none=511, the code should keep its most of its
-> original behavior. To exercise mTHP collapse we need to set max_ptes_none<=255.
-> With max_ptes_none > HPAGE_PMD_NR/2 you will experience collapse "creep" and
-> constantly promote mTHPs to the next available size.
-
-How does creep stop when max_ptes_none <= 255?
-
-> 
-> Patch 1:     Some refactoring to combine madvise_collapse and khugepaged
-> Patch 2:     Refactor/rename hpage_collapse
-> Patch 3-5:   Generalize khugepaged functions for arbitrary orders
-> Patch 6-9:   The mTHP patches
-> 
-> ---------
->   Testing
-> ---------
-> - Built for x86_64, aarch64, ppc64le, and s390x
-> - selftests mm
-> - I created a test script that I used to push khugepaged to its limits while
->     monitoring a number of stats and tracepoints. The code is available
->     here[1] (Run in legacy mode for these changes and set mthp sizes to inherit)
->     The summary from my testings was that there was no significant regression
->     noticed through this test. In some cases my changes had better collapse
->     latencies, and was able to scan more pages in the same amount of time/work,
->     but for the most part the results were consistant.
-> - redis testing. I tested these changes along with my defer changes
->    (see followup post for more details).
-> - some basic testing on 64k page size.
-> - lots of general use. These changes have been running in my VM for some time.
-> 
-> Changes since V1 [2]:
-> - Minor bug fixes discovered during review and testing
-> - removed dynamic allocations for bitmaps, and made them stack based
-> - Adjusted bitmap offset from u8 to u16 to support 64k pagesize.
-> - Updated trace events to include collapsing order info.
-> - Scaled max_ptes_none by order rather than scaling to a 0-100 scale.
-> - No longer require a chunk to be fully utilized before setting the bit. Use
->     the same max_ptes_none scaling principle to achieve this.
-> - Skip mTHP collapse that requires swapin or shared handling. This helps prevent
->     some of the "creep" that was discovered in v1.
-> 
-> [1] - https://gitlab.com/npache/khugepaged_mthp_test
-> [2] - https://lore.kernel.org/lkml/20250108233128.14484-1-npache@redhat.com/
-> 
-> Nico Pache (9):
->    introduce khugepaged_collapse_single_pmd to unify khugepaged and
->      madvise_collapse
->    khugepaged: rename hpage_collapse_* to khugepaged_*
->    khugepaged: generalize hugepage_vma_revalidate for mTHP support
->    khugepaged: generalize alloc_charge_folio for mTHP support
->    khugepaged: generalize __collapse_huge_page_* for mTHP support
->    khugepaged: introduce khugepaged_scan_bitmap for mTHP support
->    khugepaged: add mTHP support
->    khugepaged: improve tracepoints for mTHP orders
->    khugepaged: skip collapsing mTHP to smaller orders
-> 
->   include/linux/khugepaged.h         |   4 +
->   include/trace/events/huge_memory.h |  34 ++-
->   mm/khugepaged.c                    | 422 +++++++++++++++++++----------
->   3 files changed, 306 insertions(+), 154 deletions(-)
-> 
+I will send a V2 with the fix.
 
