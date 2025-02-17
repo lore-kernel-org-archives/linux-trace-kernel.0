@@ -1,205 +1,260 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E973D18A95A
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 17 Feb 2025 06:56:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4FDD219D8A0;
+	Mon, 17 Feb 2025 07:27:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739775394; cv=none; b=tvjCASNgFFTwA+e0Lz5TVU6+b6s3mKAc6QKQyyyqXSK0HFPJtnCOSCjzJvUpLApeMrBQ4SbcQbjmhDSOGvH6dnrYcg1BsuDtg0E48YUWgP7qtjA+6JFTLoGuOrwHXF2c6TPuMvhMAF26ge4JwCneKKed56OOxH2OLKaJx1o2r0E=
+	t=1739777259; cv=none; b=WwUWjrMuc1EC/TAaYkojscIAiertN7UfzF0xij5lZP5kxNmbiyV7/DhuU6QYO3sBRrxIFs2PkhY0kdApF2JalllkgBILQh7YRH1knv3ii4OziCy7fpiDTw09rMfXZ626HODfWzm9ai6jvS/QxeQdDh7aOhC8SeV6JxtdUOx3zsQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739775394; c=relaxed/simple;
-	bh=UAjwm8ZUmY9NHxBX1wqkn0W4bWD5dQPw7sKcOk9oW2U=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=BZtmTnTUFc4PPsdLd42kz7uEgLJOFgv6jwxFcx8QoyAh6tjTjotqrVtzLhI2ywVFUm5JkJtwUiEq3YeRnzVr3rxKy4TUOcWbD2ESO9c3Ydc8BQjNYpfzqZMZtMWlj3yWLMCcXmV7zhlWaMJNTSaNBKDk9Q6FFA3WqyuaeOgm5ns=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=EoqEiHM/; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EoqEiHM/"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1739775390;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=UAjwm8ZUmY9NHxBX1wqkn0W4bWD5dQPw7sKcOk9oW2U=;
-	b=EoqEiHM//hFJzYoAQge/c2LNG6TJSrUQP6uh3iprWccRGkWmE4rxJlxFNgjlq4VKvbSyEQ
-	vFLKTsAqXGtZCNvslm2VXGAvyOa7QuML8nJluYzThc7AmbOHaUlqb8TDrcJoyKQZAgF1zJ
-	mjN2nRHRx0rMKPToncIhz53k1id+NPA=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-9-4RBQo7g1N7SN6b6dOjKQWA-1; Mon, 17 Feb 2025 01:56:28 -0500
-X-MC-Unique: 4RBQo7g1N7SN6b6dOjKQWA-1
-X-Mimecast-MFC-AGG-ID: 4RBQo7g1N7SN6b6dOjKQWA_1739775387
-Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-439385b08d1so33446505e9.1
-        for <linux-trace-kernel@vger.kernel.org>; Sun, 16 Feb 2025 22:56:27 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739775387; x=1740380187;
-        h=mime-version:user-agent:content-transfer-encoding:autocrypt
-         :references:in-reply-to:date:cc:to:from:subject:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=UAjwm8ZUmY9NHxBX1wqkn0W4bWD5dQPw7sKcOk9oW2U=;
-        b=KW9lOzln5bVkC7W0wIvpfGLcwqeSv7ULcpq24CbponYLzHQscWYxnX8SsDDXVPeOJj
-         5JN/XYV8kygsowC87zvKntXfK0XU9sWOAYnj1coHRTRu1AWPT9vocW8jaZHPmf6qo5/h
-         Gwq9zmczErvQ+OQaFGTIxLB+3xT5OouRyScli2x116yVGBBsZkan9+TM96ikjSvd2Kf/
-         DX4apbyHnUt8gwfIJKQkJy9HXDJ65/EJi5TdrRBM+29uEncnkovvKOEm8Hq8rU2XQz48
-         0IWUZYw5Za4w0lNu49lVDIOovt5253ft41MHzEM0PV7ju4vb6HF69AJiQUgP66PH1GmU
-         5ofg==
-X-Forwarded-Encrypted: i=1; AJvYcCVNKoU4eq0fvtN6p0PqrYHTeEG7+7yCmMEPAWGKgZ9MxsI49HX88vCDiRIar1BSMhuPKTkomRrkWDgZBK1oV9OswQU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxcRWAU4oCJWMdDXQyr5Cxo1zbiyIniv+2CkgRFYMMj/vBPA0ys
-	HiNsa5lGoIR3xtQx1R+OQqdoFkar//xRbO1mOCuWGO+yfIw4R4sFN18IL3Imc56xJGOu4W7cSMK
-	jQbdzmnAP070vzcpGK83rXxe7/HVGe6tHedsXMjRJ+4iqCpEEkuVr6+fRNGn/XyhtX2WmVQ==
-X-Gm-Gg: ASbGncvIsRpArbaV4wOGnksxH8YvNCjRSl/dqRY2J6e2Z7V8rhmCFCiagxMMN6M195O
-	RoafgEy1fofbkrWZIcFDqc2s/y7+jgq/3ANOrFqKknxjlRQkSqkni8DV5Q4CX7oq1b+NvqvAawv
-	BFMq/Lz1I9D5y0pKuKR0RsSMa19ZMne9ZVANNMdhrVD6nmQ1DSrZPzNdUjutNcYQZr8Ovw3bmBI
-	ja8EOAjFHDQDPQ0z21ag7jv+bu8WIDyCndNqhRyx9dTCCSaBvwTC2fwtKdyVgDI9K2DDzNR0eKx
-	fNWyHuou5NkZ7KPRiISfRsm2vbuCRDQ=
-X-Received: by 2002:a05:600c:4ec9:b0:439:5506:7183 with SMTP id 5b1f17b1804b1-4396e6a6e31mr75901435e9.7.1739775386962;
-        Sun, 16 Feb 2025 22:56:26 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IFk3NBZALdJoBEHy/OW1hnkv7UynhyXmZFDFCyRcaZfKjwzBNYuS2O/oEr1D7pZAVFTavR1tg==
-X-Received: by 2002:a05:600c:4ec9:b0:439:5506:7183 with SMTP id 5b1f17b1804b1-4396e6a6e31mr75901285e9.7.1739775386528;
-        Sun, 16 Feb 2025 22:56:26 -0800 (PST)
-Received: from gmonaco-thinkpadt14gen3.rmtit.csb ([185.107.56.40])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4395cf084d5sm98968555e9.1.2025.02.16.22.56.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 16 Feb 2025 22:56:26 -0800 (PST)
-Message-ID: <c5fe1f637a84087afb94ed3f9255810ef3975724.camel@redhat.com>
-Subject: Re: [PATCH v2 04/11] rv: Add option for nested monitors and include
- sched
-From: Gabriele Monaco <gmonaco@redhat.com>
-To: kernel test robot <lkp@intel.com>, linux-kernel@vger.kernel.org, Steven
- Rostedt <rostedt@goodmis.org>, linux-trace-kernel@vger.kernel.org
-Cc: oe-kbuild-all@lists.linux.dev, Ingo Molnar <mingo@redhat.com>, Juri
- Lelli	 <juri.lelli@redhat.com>
-Date: Mon, 17 Feb 2025 07:56:23 +0100
-In-Reply-To: <202502170630.xSYE4cUk-lkp@intel.com>
-References: <20250213090819.419470-5-gmonaco@redhat.com>
-	 <202502170630.xSYE4cUk-lkp@intel.com>
-Autocrypt: addr=gmonaco@redhat.com; prefer-encrypt=mutual;
- keydata=mDMEZuK5YxYJKwYBBAHaRw8BAQdAmJ3dM9Sz6/Hodu33Qrf8QH2bNeNbOikqYtxWFLVm0
- 1a0JEdhYnJpZWxlIE1vbmFjbyA8Z21vbmFjb0ByZWRoYXQuY29tPoiZBBMWCgBBFiEEysoR+AuB3R
- Zwp6j270psSVh4TfIFAmbiuWMCGwMFCQWjmoAFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgk
- Q70psSVh4TfJzZgD/TXjnqCyqaZH/Y2w+YVbvm93WX2eqBqiVZ6VEjTuGNs8A/iPrKbzdWC7AicnK
- xyhmqeUWOzFx5P43S1E1dhsrLWgP
-User-Agent: Evolution 3.54.3 (3.54.3-1.fc41)
+	s=arc-20240116; t=1739777259; c=relaxed/simple;
+	bh=UeWwVPWbzIIAgtLdrtpQdDnl7IKv66IredifQ9C1934=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=fw65lCVq56SOQFBNSEjKWltpz8qG45BYepzFiLSk4UboINYamDnkGuUjopvZ/IVnAgEuDqNF2KRuK8plPk02G/OKQE1beyvCtghPUnhjDn42UuYc6uXT8G8V8PLRUAEuh3R1+DqLvEPMFCtlrZ+S3TrdsY2gRZM/Ko7DRCLshuU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DD608FEC;
+	Sun, 16 Feb 2025 23:27:55 -0800 (PST)
+Received: from [10.162.41.27] (K4MQJ0H1H2.blr.arm.com [10.162.41.27])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A61563F6A8;
+	Sun, 16 Feb 2025 23:27:23 -0800 (PST)
+Message-ID: <021f76c6-f9d5-4685-814f-4d6c573b22e6@arm.com>
+Date: Mon, 17 Feb 2025 12:57:20 +0530
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: mA1FIpR1KSw9pL1BuIhlyNrPi8hyhMfPKB3nFX0GCxA_1739775387
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC v2 6/9] khugepaged: introduce khugepaged_scan_bitmap for
+ mTHP support
+To: Nico Pache <npache@redhat.com>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, linux-mm@kvack.org
+Cc: ryan.roberts@arm.com, anshuman.khandual@arm.com, catalin.marinas@arm.com,
+ cl@gentwo.org, vbabka@suse.cz, mhocko@suse.com, apopple@nvidia.com,
+ dave.hansen@linux.intel.com, will@kernel.org, baohua@kernel.org,
+ jack@suse.cz, srivatsa@csail.mit.edu, haowenchao22@gmail.com,
+ hughd@google.com, aneesh.kumar@kernel.org, yang@os.amperecomputing.com,
+ peterx@redhat.com, ioworker0@gmail.com, wangkefeng.wang@huawei.com,
+ ziy@nvidia.com, jglisse@google.com, surenb@google.com,
+ vishal.moola@gmail.com, zokeefe@google.com, zhengqi.arch@bytedance.com,
+ jhubbard@nvidia.com, 21cnbao@gmail.com, willy@infradead.org,
+ kirill.shutemov@linux.intel.com, david@redhat.com, aarcange@redhat.com,
+ raquini@redhat.com, sunnanyong@huawei.com, usamaarif642@gmail.com,
+ audra@redhat.com, akpm@linux-foundation.org, rostedt@goodmis.org,
+ mathieu.desnoyers@efficios.com, tiwai@suse.de
+References: <20250211003028.213461-1-npache@redhat.com>
+ <20250211003028.213461-7-npache@redhat.com>
+Content-Language: en-US
+From: Dev Jain <dev.jain@arm.com>
+In-Reply-To: <20250211003028.213461-7-npache@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Mon, 2025-02-17 at 06:39 +0800, kernel test robot wrote:
-> Hi Gabriele,
->=20
-> kernel test robot noticed the following build warnings:
->=20
-> [auto build test WARNING on 4dc1d1bec89864d8076e5ab314f86f46442bfb02]
->=20
-> url:=C2=A0=C2=A0=C2=A0
-> https://github.com/intel-lab-lkp/linux/commits/Gabriele-Monaco/tracing-Fi=
-x-DECLARE_TRACE_CONDITION/20250213-171642
-> base:=C2=A0=C2=A0 4dc1d1bec89864d8076e5ab314f86f46442bfb02
-> patch link:=C2=A0=C2=A0=C2=A0
-> https://lore.kernel.org/r/20250213090819.419470-5-gmonaco%40redhat.com
-> patch subject: [PATCH v2 04/11] rv: Add option for nested monitors
-> and include sched
-> config: parisc-randconfig-r112-20250217
-> (https://download.01.org/0day-ci/archive/20250217/202502170630.xSYE4c
-> Uk-lkp@intel.com/config)
-> compiler: hppa-linux-gcc (GCC) 14.2.0
-> reproduce:
-> (https://download.01.org/0day-ci/archive/20250217/202502170630.xSYE4c
-> Uk-lkp@intel.com/reproduce)
->=20
-> If you fix the issue in a separate patch/commit (i.e. not just a new
-> version of
-> the same patch/commit), kindly add following tags
-> > Reported-by: kernel test robot <lkp@intel.com>
-> > Closes:
-> > https://lore.kernel.org/oe-kbuild-all/202502170630.xSYE4cUk-lkp@intel.c=
-om/
->=20
-> All warnings (new ones prefixed by >>):
->=20
-> =C2=A0=C2=A0 In file included from include/trace/define_trace.h:119,
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 from kernel/trace/rv/rv_trace.h:=
-130,
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 from kernel/trace/rv/rv.c:148:
-> > > include/trace/trace_events.h:477:13: warning:
-> > > 'print_fmt_error_da_monitor' defined but not used [-Wunused-
-> > > variable]
-> =C2=A0=C2=A0=C2=A0=C2=A0 477 | static char print_fmt_##call[] =3D
-> print;=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 \
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ^~~~~~~~~~
-> =C2=A0=C2=A0 kernel/trace/rv/./rv_trace.h:39:1: note: in expansion of mac=
-ro
-> 'DECLARE_EVENT_CLASS'
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 39 | DECLARE_EVENT_CLASS(error_da_monitor,
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | ^~~~~~~~~~~~~~~~~~~
-> > > include/trace/trace_events.h:477:13: warning:
-> > > 'print_fmt_event_da_monitor' defined but not used [-Wunused-
-> > > variable]
-> =C2=A0=C2=A0=C2=A0=C2=A0 477 | static char print_fmt_##call[] =3D
-> print;=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 \
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ^~~~~~~~~~
-> =C2=A0=C2=A0 kernel/trace/rv/./rv_trace.h:12:1: note: in expansion of mac=
-ro
-> 'DECLARE_EVENT_CLASS'
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 12 | DECLARE_EVENT_CLASS(event_da_monitor,
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | ^~~~~~~~~~~~~~~~~~~
-> > > include/trace/trace_events.h:223:37: warning:
-> > > 'trace_event_type_funcs_error_da_monitor' defined but not used [-
-> > > Wunused-variable]
-> =C2=A0=C2=A0=C2=A0=C2=A0 223 | static struct trace_event_functions
-> trace_event_type_funcs_##call =3D {=C2=A0=C2=A0 \
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0
-> ^~~~~~~~~~~~~~~~~~~~~~~
-> =C2=A0=C2=A0 kernel/trace/rv/./rv_trace.h:39:1: note: in expansion of mac=
-ro
-> 'DECLARE_EVENT_CLASS'
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 39 | DECLARE_EVENT_CLASS(error_da_monitor,
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | ^~~~~~~~~~~~~~~~~~~
-> > > include/trace/trace_events.h:223:37: warning:
-> > > 'trace_event_type_funcs_event_da_monitor' defined but not used [-
-> > > Wunused-variable]
-> =C2=A0=C2=A0=C2=A0=C2=A0 223 | static struct trace_event_functions
-> trace_event_type_funcs_##call =3D {=C2=A0=C2=A0 \
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0
-> ^~~~~~~~~~~~~~~~~~~~~~~
-> =C2=A0=C2=A0 kernel/trace/rv/./rv_trace.h:12:1: note: in expansion of mac=
-ro
-> 'DECLARE_EVENT_CLASS'
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 12 | DECLARE_EVENT_CLASS(event_da_monitor,
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | ^~~~~~~~~~~~~~~~~~~
->=20
 
-This is something hard to trigger, but I didn't remove the select
-DA_MON_EVENTS_IMPLICIT in RV_MON_SCHED . As a result if the user
-enables the sched monitor without any nested monitor (which is already
-a broken configuration but happens if you apply this commit without the
-following ones) trace event classes would be created with no event
-using them.
 
-I will send a V2 with the fix.
+On 11/02/25 6:00 am, Nico Pache wrote:
+> khugepaged scans PMD ranges for potential collapse to a hugepage. To add
+> mTHP support we use this scan to instead record chunks of fully utilized
+> sections of the PMD.
+> 
+> create a bitmap to represent a PMD in order MTHP_MIN_ORDER chunks.
+> by default we will set this to order 3. The reasoning is that for 4K 512
+> PMD size this results in a 64 bit bitmap which has some optimizations.
+> For other arches like ARM64 64K, we can set a larger order if needed.
+> 
+> khugepaged_scan_bitmap uses a stack struct to recursively scan a bitmap
+> that represents chunks of utilized regions. We can then determine what
+> mTHP size fits best and in the following patch, we set this bitmap while
+> scanning the PMD.
+> 
+> max_ptes_none is used as a scale to determine how "full" an order must
+> be before being considered for collapse.
+> 
+> If a order is set to "always" lets always collapse to that order in a
+> greedy manner.
+> 
+> Signed-off-by: Nico Pache <npache@redhat.com>
+> ---
+>   include/linux/khugepaged.h |  4 ++
+>   mm/khugepaged.c            | 89 +++++++++++++++++++++++++++++++++++---
+>   2 files changed, 86 insertions(+), 7 deletions(-)
+> 
+> diff --git a/include/linux/khugepaged.h b/include/linux/khugepaged.h
+> index 1f46046080f5..1fe0c4fc9d37 100644
+> --- a/include/linux/khugepaged.h
+> +++ b/include/linux/khugepaged.h
+> @@ -1,6 +1,10 @@
+>   /* SPDX-License-Identifier: GPL-2.0 */
+>   #ifndef _LINUX_KHUGEPAGED_H
+>   #define _LINUX_KHUGEPAGED_H
+> +#define MIN_MTHP_ORDER	3
+> +#define MIN_MTHP_NR	(1<<MIN_MTHP_ORDER)
+> +#define MAX_MTHP_BITMAP_SIZE  (1 << (ilog2(MAX_PTRS_PER_PTE * PAGE_SIZE) - MIN_MTHP_ORDER))
+> +#define MTHP_BITMAP_SIZE  (1 << (HPAGE_PMD_ORDER - MIN_MTHP_ORDER))
+>   
+>   extern unsigned int khugepaged_max_ptes_none __read_mostly;
+>   #ifdef CONFIG_TRANSPARENT_HUGEPAGE
+> diff --git a/mm/khugepaged.c b/mm/khugepaged.c
+> index 3776055bd477..c8048d9ec7fb 100644
+> --- a/mm/khugepaged.c
+> +++ b/mm/khugepaged.c
+> @@ -94,6 +94,11 @@ static DEFINE_READ_MOSTLY_HASHTABLE(mm_slots_hash, MM_SLOTS_HASH_BITS);
+>   
+>   static struct kmem_cache *mm_slot_cache __ro_after_init;
+>   
+> +struct scan_bit_state {
+> +	u8 order;
+> +	u16 offset;
+> +};
+> +
+>   struct collapse_control {
+>   	bool is_khugepaged;
+>   
+> @@ -102,6 +107,15 @@ struct collapse_control {
+>   
+>   	/* nodemask for allocation fallback */
+>   	nodemask_t alloc_nmask;
+> +
+> +	/* bitmap used to collapse mTHP sizes. 1bit = order MIN_MTHP_ORDER mTHP */
+> +	DECLARE_BITMAP(mthp_bitmap, MAX_MTHP_BITMAP_SIZE);
+> +	DECLARE_BITMAP(mthp_bitmap_temp, MAX_MTHP_BITMAP_SIZE);
+> +	struct scan_bit_state mthp_bitmap_stack[MAX_MTHP_BITMAP_SIZE];
+> +};
+> +
+> +struct collapse_control khugepaged_collapse_control = {
+> +	.is_khugepaged = true,
+>   };
+>   
+>   /**
+> @@ -851,10 +865,6 @@ static void khugepaged_alloc_sleep(void)
+>   	remove_wait_queue(&khugepaged_wait, &wait);
+>   }
+>   
+> -struct collapse_control khugepaged_collapse_control = {
+> -	.is_khugepaged = true,
+> -};
+> -
+>   static bool khugepaged_scan_abort(int nid, struct collapse_control *cc)
+>   {
+>   	int i;
+> @@ -1112,7 +1122,8 @@ static int alloc_charge_folio(struct folio **foliop, struct mm_struct *mm,
+>   
+>   static int collapse_huge_page(struct mm_struct *mm, unsigned long address,
+>   			      int referenced, int unmapped,
+> -			      struct collapse_control *cc)
+> +			      struct collapse_control *cc, bool *mmap_locked,
+> +				  u8 order, u16 offset)
+>   {
+>   	LIST_HEAD(compound_pagelist);
+>   	pmd_t *pmd, _pmd;
+> @@ -1130,8 +1141,12 @@ static int collapse_huge_page(struct mm_struct *mm, unsigned long address,
+>   	 * The allocation can take potentially a long time if it involves
+>   	 * sync compaction, and we do not need to hold the mmap_lock during
+>   	 * that. We will recheck the vma after taking it again in write mode.
+> +	 * If collapsing mTHPs we may have already released the read_lock.
+>   	 */
+> -	mmap_read_unlock(mm);
+> +	if (*mmap_locked) {
+> +		mmap_read_unlock(mm);
+> +		*mmap_locked = false;
+> +	}
+>   
+>   	result = alloc_charge_folio(&folio, mm, cc, HPAGE_PMD_ORDER);
+>   	if (result != SCAN_SUCCEED)
+> @@ -1266,12 +1281,71 @@ static int collapse_huge_page(struct mm_struct *mm, unsigned long address,
+>   out_up_write:
+>   	mmap_write_unlock(mm);
+>   out_nolock:
+> +	*mmap_locked = false;
+>   	if (folio)
+>   		folio_put(folio);
+>   	trace_mm_collapse_huge_page(mm, result == SCAN_SUCCEED, result);
+>   	return result;
+>   }
+>   
+> +// Recursive function to consume the bitmap
+> +static int khugepaged_scan_bitmap(struct mm_struct *mm, unsigned long address,
+> +			int referenced, int unmapped, struct collapse_control *cc,
+> +			bool *mmap_locked, unsigned long enabled_orders)
+> +{
+> +	u8 order, next_order;
+> +	u16 offset, mid_offset;
+> +	int num_chunks;
+> +	int bits_set, threshold_bits;
+> +	int top = -1;
+> +	int collapsed = 0;
+> +	int ret;
+> +	struct scan_bit_state state;
+> +
+> +	cc->mthp_bitmap_stack[++top] = (struct scan_bit_state)
+> +		{ HPAGE_PMD_ORDER - MIN_MTHP_ORDER, 0 };
+> +
+> +	while (top >= 0) {
+> +		state = cc->mthp_bitmap_stack[top--];
+> +		order = state.order + MIN_MTHP_ORDER;
+> +		offset = state.offset;
+> +		num_chunks = 1 << (state.order);
+> +		// Skip mTHP orders that are not enabled
+> +		if (!test_bit(order, &enabled_orders))
+> +			goto next;
+> +
+> +		// copy the relavant section to a new bitmap
+> +		bitmap_shift_right(cc->mthp_bitmap_temp, cc->mthp_bitmap, offset,
+> +				  MTHP_BITMAP_SIZE);
+> +
+> +		bits_set = bitmap_weight(cc->mthp_bitmap_temp, num_chunks);
+> +		threshold_bits = (HPAGE_PMD_NR - khugepaged_max_ptes_none - 1)
+> +				>> (HPAGE_PMD_ORDER - state.order);
+> +
+> +		//Check if the region is "almost full" based on the threshold
+> +		if (bits_set > threshold_bits
+> +			|| test_bit(order, &huge_anon_orders_always)) {
+> +			ret = collapse_huge_page(mm, address, referenced, unmapped, cc,
+> +					mmap_locked, order, offset * MIN_MTHP_NR);
+> +			if (ret == SCAN_SUCCEED) {
+> +				collapsed += (1 << order);
+> +				continue;
+> +			}
+
+If collapse_huge_page() fails due to hugepage_vma_revalidate() or 
+find_pmd_or_thp_or_none(), you should exit.
+
+
+> +		}
+> +
+> +next:
+> +		if (state.order > 0) {
+> +			next_order = state.order - 1;
+> +			mid_offset = offset + (num_chunks / 2);
+> +			cc->mthp_bitmap_stack[++top] = (struct scan_bit_state)
+> +				{ next_order, mid_offset };
+> +			cc->mthp_bitmap_stack[++top] = (struct scan_bit_state)
+> +				{ next_order, offset };
+> +			}
+> +	}
+> +	return collapsed;
+> +}
+> +
+>   static int khugepaged_scan_pmd(struct mm_struct *mm,
+>   				   struct vm_area_struct *vma,
+>   				   unsigned long address, bool *mmap_locked,
+> @@ -1440,7 +1514,7 @@ static int khugepaged_scan_pmd(struct mm_struct *mm,
+>   	pte_unmap_unlock(pte, ptl);
+>   	if (result == SCAN_SUCCEED) {
+>   		result = collapse_huge_page(mm, address, referenced,
+> -					    unmapped, cc);
+> +					    unmapped, cc, mmap_locked, HPAGE_PMD_ORDER, 0);
+>   		/* collapse_huge_page will return with the mmap_lock released */
+>   		*mmap_locked = false;
+>   	}
+> @@ -2856,6 +2930,7 @@ int madvise_collapse(struct vm_area_struct *vma, struct vm_area_struct **prev,
+>   	mmdrop(mm);
+>   	kfree(cc);
+>   
+> +
+>   	return thps == ((hend - hstart) >> HPAGE_PMD_SHIFT) ? 0
+>   			: madvise_collapse_errno(last_fail);
+>   }
 
