@@ -1,69 +1,71 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6448D21D59D;
-	Mon, 17 Feb 2025 16:39:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 780D82248B2;
+	Mon, 17 Feb 2025 16:49:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739810351; cv=none; b=m7bWqRo+QLp3YXtLBmK3EOA+JzE2NWAkI36d8p74W61UL/3q1Def7xXTu6ZB8ig35zFuvJ+rMmkuL36+4xc0GUB9XYzs8JT2BJAk5yMGJeHiR+vDEG4lJDBm6bEZgv4MJOseL8SoALAz8XO2veNfHwq92QprnoCeBUwIr58dgmA=
+	t=1739810964; cv=none; b=AgjIJSG8hDG72T8ygUeqNaxG3KHq9uTg6sU/E1LncGbXAkm508OzwKqgksESX+TwlGMeILvbUe07OoqSPlRLwEUP54xRLvfrhWP8gt+QaVHZvUix/KmyXyXi+wkXQ6GCJjt5jnOzVgQfEpyPw18NYNJ0Aq8KSuSEUpl26vpokDs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739810351; c=relaxed/simple;
-	bh=NWvuDyabTJWpoyeI+onyTDh+4s6cY1tIzANVKIrYKMU=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=AzODmCT7C8esYwjPKy8TTjKqEEblB1BvaFzXPvttoNBTFZcolRtry/cQu43Fu+Bfk5diYcrJDaSDfaJnYgPO9pYS42Qc648F+eidxKBw5qYYGpKECH/Z7nuAG9ZRH9cFbh4RlCBaGtFwqsDxHcrUscNrrs7ThMrurZk0lXPsMlk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D2836C4CED1;
-	Mon, 17 Feb 2025 16:39:09 +0000 (UTC)
-Date: Mon, 17 Feb 2025 11:39:29 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Gabriele Monaco <gmonaco@redhat.com>
-Cc: kernel test robot <lkp@intel.com>, linux-kernel@vger.kernel.org, Ingo
- Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>, Masami
- Hiramatsu <mhiramat@kernel.org>, linux-trace-kernel@vger.kernel.org,
- oe-kbuild-all@lists.linux.dev, Juri Lelli <juri.lelli@redhat.com>
+	s=arc-20240116; t=1739810964; c=relaxed/simple;
+	bh=JboDu0TQIuen63q5qPzsV/LcUn/RP7ekbSiDOWPJ8Uw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OwhzcaUuB6JcxST1zlq/TMeW08dphc99TT0Wq6oy/yUmT/Gbe/QLYudjbXla5LzDx+0sP8u+6jGWIUHB+VFUFz2JcqOMEeQ/r768FScWx8DPzyIN7ke35fJiHMQz1XvFr9OcUpFidO5lnFc1tEv3RaKTnwwTOMLI1KhKDmbo0CU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=W51vjcvD; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="W51vjcvD"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=p4cOO+qlUr7HNQs1Rexuf+LmTFJw1DE5zTywYs4+BVw=; b=W51vjcvDQvJvOrztgtfKX9klA4
+	P9B2xvEsMiiiMUn+I54I9jXpLqvl0HKr2elnlbpwXkyrqwEcPm0h/Lisd2VTf/gIsXjFFkA9qixV3
+	bJ7EnkShApdn7dU/QFrc4ruC7lsZJlEoWnXqck2ZmJJ5x2T8EjsoW3kD1BSxdiUKK4rWqRXBqwb0/
+	3gzd1ZFhdLCHtZzqcEpJ5t+CiiJrKPDLCVnZR4TtN1+Bwhj70gV911vmz/9VnE6Wnw+ltHRD434I0
+	C9EiMWKchD7rlHU89gh/DkYUeJOlgctM8X1/RlM8e2ayue9oGGo1DekUSDgQQ0OoIUa3bpLWSBvHg
+	+T3THfoA==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
+	id 1tk4J4-00000001rCW-4A0V;
+	Mon, 17 Feb 2025 16:49:19 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id A9E03300783; Mon, 17 Feb 2025 17:49:17 +0100 (CET)
+Date: Mon, 17 Feb 2025 17:49:17 +0100
+From: Peter Zijlstra <peterz@infradead.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Gabriele Monaco <gmonaco@redhat.com>, linux-kernel@vger.kernel.org,
+	Ingo Molnar <mingo@redhat.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	linux-trace-kernel@vger.kernel.org,
+	Juri Lelli <juri.lelli@redhat.com>
 Subject: Re: [PATCH v2 03/11] sched: Add sched tracepoints for RV task model
-Message-ID: <20250217113929.5c205c53@gandalf.local.home>
-In-Reply-To: <789b56973c0e6419a6a44210a18d1b31d0daf8e6.camel@redhat.com>
-References: <20250213090819.419470-4-gmonaco@redhat.com>
-	<202502141516.OkUInaxw-lkp@intel.com>
-	<789b56973c0e6419a6a44210a18d1b31d0daf8e6.camel@redhat.com>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+Message-ID: <20250217164917.GB40464@noisy.programming.kicks-ass.net>
+References: <20250213090819.419470-1-gmonaco@redhat.com>
+ <20250213090819.419470-4-gmonaco@redhat.com>
+ <20250217113844.5ad7893c@gandalf.local.home>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250217113844.5ad7893c@gandalf.local.home>
 
-On Fri, 14 Feb 2025 12:15:31 +0100
-Gabriele Monaco <gmonaco@redhat.com> wrote:
+On Mon, Feb 17, 2025 at 11:38:44AM -0500, Steven Rostedt wrote:
 
-> > > =C2=A0> 503 __do_trace_sched_set_state_tp(current, current->__state, =
- =20
-> > > state_value);=20
-> > > =C2=A0=C2=A0 504 }=20
-> > > =C2=A0=C2=A0 505 EXPORT_SYMBOL(__do_trace_set_current_state);=20
-> > > =C2=A0=C2=A0 506  =20
-> > =C2=A0 =20
-> =20
-> I honestly don't get why this build failed. The function __do_trace_
-> exists since cff6d93eab00ba ("tracepoint: Reduce duplication of
-> __DO_TRACE_CALL"), a while before that it was just a macro and not an
-> inline function, reason why no one so far used it directly.
->=20
-> Both failed builds are based on 4dc1d1bec898 (where my patchset is
-> based) and there __do_trace_ does exist.
->=20
-> Unless there's a strong opinion not to use it although the compiler
-> allows it, I'd consider the two kernel robot results false negatives.
->=20
-> Or am I missing something?
+> > +void __do_trace_set_current_state(int state_value)
+> > +{
+> > +	__do_trace_sched_set_state_tp(current, current->__state, state_value);
+> 
+> And this should not be using the internal macros of a trace point. It should be:
+> 
+> 	trace_sched_set_state_tp(current, state_value);
+> 
+> (I removed the current->__state as mentioned above).
 
-It's because you should not be using the internal macros of a tracepoint.
-Just use the tracepoint itself.
-
-I replied to the patch.
-
--- Steve
+But the static branch is already in the caller, no point duplicating
+that.
