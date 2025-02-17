@@ -1,128 +1,190 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f176.google.com (mail-yb1-f176.google.com [209.85.219.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BAE613AA5D;
-	Mon, 17 Feb 2025 13:42:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF86651C5A
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 17 Feb 2025 13:45:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739799775; cv=none; b=hIDcBuU/E5Ne6ijlsg8WjRnVs5IGXtrsZJJpvzLVS0rEJXIDn1ysyhWCt7rhw+U/MlETz8FIEW0SiEkJwKKIUVKQ6PmFSQNrDgr5+9xz48dkRwJusqFaqyg7wAh/tJXDtR8wj1wpnABZYlEcKwL+fnKclPQba9jiyzBM72T+I0s=
+	t=1739799907; cv=none; b=ttzVKyPxM/h64O2MLAHy7sxAbReG/9WikUadOdF0dFeQDEWjH7QwFgL3T4n2/qYeLShm8OjEG4XxugrbdGco+h7xiOY3FYiqkRuCSuwU7vOyaJytf3G9VSDCAz0r6n5KttyLms7bCEv2ot7e1oE701JciimWthOHyqU0wyfmQ5s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739799775; c=relaxed/simple;
-	bh=PJJl56wGhGbOSi7fd/XKLyf03o1+wNsu5UVIOH9q0YA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IwMlHoQ3R/nLVzVKmKyipUTuQp2PGNt6v73EOKA0yReCZ6JlQ+OTTYSg+AluKzOBkCebmL0yfQsuaKMdQKeCpb45dPbWx9J+6kSErF10yPvpiZdZocJx/YCv+sV5VoGD1Hy4ADMa4+DwmOeFiZnnuVL3o5iNR6fa/YyXJh5PsDE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=N47CXBfN; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1739799907; c=relaxed/simple;
+	bh=mz8Ai43z2T4C3EljPqnyEAPpcR/9p6r3VDn8veM6B78=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=bB3d0d88Mg/1vwghy2cHO0N5baE+EdWWYPF6KTyFKkAafko5Pg8+CdyhLdBC+pvRDVvO8YukzXn0SHYLg7Z+cyjzoKK3k4qzKNf9CFhbQqCxFJbzkit7Vp+rCrzR1guEfdYBOeyf7uIvCrZ3lYOD3wLJ8HdkW4wWlI21LTQO7vc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=N2qgLDaz; arc=none smtp.client-ip=209.85.219.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="N47CXBfN"
-Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51HA8YHI008970;
-	Mon, 17 Feb 2025 13:42:49 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=pp1; bh=wUe4fKrx5o4/Zt5xfEBsdlqjck4Hlq
-	HFST87BHRi/q8=; b=N47CXBfN4+2yzZ4J8YTD04o0EeMWbLKhXJ6RFbLJgEvDvW
-	RqKbiwAcuUN0p6YVqTKUeJlRiHa+pvuKaPqC+UnArV6cuzAo6JY30xwc6JRtsA75
-	YSHiCv0l38yFPHgelwyqUTIhAKcs4EpHGKY61DraX9ADM5+5VgnK9PRDnLr2J6hG
-	puAij6E19Q7lqHyXUBaHRTf5DCKXikZKbdrzYx6+Y7Ce/3L7P7WgDV+/ZUCKMIUp
-	26MxLm0+qqXLDP+g4T1hQk9RuqW81ohqDVi7AhIkBCbrGDft+ZDGvDvxcbf+pINs
-	QQqpnAgUqYthQOFhE5ocOCwf4Y+eWELGVhiptWHg==
-Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44ujutmfk0-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 17 Feb 2025 13:42:49 +0000 (GMT)
-Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 51HCleAg004038;
-	Mon, 17 Feb 2025 13:42:48 GMT
-Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
-	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 44u68np9uv-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 17 Feb 2025 13:42:48 +0000
-Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
-	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 51HDgkGD43909604
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 17 Feb 2025 13:42:46 GMT
-Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 4339320043;
-	Mon, 17 Feb 2025 13:42:46 +0000 (GMT)
-Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id CF3FF20040;
-	Mon, 17 Feb 2025 13:42:45 +0000 (GMT)
-Received: from osiris (unknown [9.171.53.224])
-	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Mon, 17 Feb 2025 13:42:45 +0000 (GMT)
-Date: Mon, 17 Feb 2025 14:42:44 +0100
-From: Heiko Carstens <hca@linux.ibm.com>
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Shuah Khan <shuah@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH 2/2] selftests/ftrace: Make uprobe test more robust
- against binary name
-Message-ID: <20250217134244.21424A57-hca@linux.ibm.com>
-References: <173625185823.1383744.4020760882101555349.stgit@devnote2>
- <173625187633.1383744.2840679071525852811.stgit@devnote2>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="N2qgLDaz"
+Received: by mail-yb1-f176.google.com with SMTP id 3f1490d57ef6-e5dd164ee34so1401487276.2
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 17 Feb 2025 05:45:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1739799904; x=1740404704; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=p+UsSXYo2ga0Tyi4tOLZzBPl69neKftwGKEChrHrVkU=;
+        b=N2qgLDazdpBf5eLpgVGll9FejGrVxcRGfVnDDgGUQ0g+rDwDRQRHb0MdW48/z3Y/Hw
+         QjVbWb5qJ+15yJHcwChM/dDT9rfFbXTuFiXACB4nK05sUWICJG42C42UWxUxWGfTmFsQ
+         Jkbc/+1v02ifHypaBBP3qsQJAn9c95Td4uhs1Hd1pKnQOksfm2GFUPie7CLQXO7fF612
+         tcEJFJWQ9vZYySr5kaqQqv8KeG5de+6W1v0jor0h69MSvOBkbVDX62SZOghpqXOsAIeE
+         Mykmg4iwf8dlmux21IeHEegDm164fD2DqrGmeL74ySrTRohkzpg81mczgklZpWBxuPj2
+         V3Xw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739799904; x=1740404704;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=p+UsSXYo2ga0Tyi4tOLZzBPl69neKftwGKEChrHrVkU=;
+        b=v7zNCZ6Y//RrKGwE3wRLqbRivx10EOf9dhh5xgJ9KOPo83zTQgSCsiYMFMl6kZGwza
+         ZxQXqpN3/8fB8WpHfn6zEb5w5HSzJECIj63+86eY0PpW5HhM+hAoYY+0V6dqrVAJ/iuN
+         H3gGEW/J+/cw4BdG4JHJIZIt56n8sqL5wtfyzBoyQxQuoEaFA3XZ6r9EGGYYLRTuwe/b
+         2SUEFJwoFeweE8KuYj0mvGU2ryd6NST5F7D4ANIzhV4Vr/+C8kc11SW493JayBQafGIP
+         siIfH7VksnjB63IaxPneDyLTgCJJR5Wf/xUw2fyoMF2xEmPvOK+6mCo95mI0zsS7SclZ
+         2hgQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUzqShaVuWp3TJ9a3OMOS3brbn89Tr17ZsmoWUyu1xmP0W5ZrH3MW4W4fCg1vd0wPGe0j0gaB3F8pWWAQ50nZFwb9M=@vger.kernel.org
+X-Gm-Message-State: AOJu0YybbrXyQu9PnOH/hqBX9P8UMc4h0T1wCU8PUbWqOU0+xmqt67Ur
+	T/C2kil1Q8AR3KqgnRsSMwMy71z/dTgaNvc3OUccAsXufaiHlmHsG8EoLhIpLRqcXQkeL3tIf8S
+	rmWwYQiHEWugRkMo9L5EWNn7ZS6MRjoeazWjdig==
+X-Gm-Gg: ASbGnctSKWZ6/CJpjQzDsgfVM3EvshC9NtwDjyrPW854Il947SFbqNlRMojNjUUNa4Y
+	JJc3XYwzEEhl4jWeEvyoRLeyQ8XUxDxWxgi+94JRaNocg8tyThazlS5mUVM8pssfyrqmA2jhBEA
+	==
+X-Google-Smtp-Source: AGHT+IFwm/mDqHth8/B/J2U9h8dFtorqOZBoT4t+LjnjdnozWXFMI7irJv+LBN7mF0tOQfF16XjitkQjg935Mk3+pG4=
+X-Received: by 2002:a05:6902:27c4:b0:e5d:ce4f:66ba with SMTP id
+ 3f1490d57ef6-e5dce4f6a09mr4587750276.46.1739799903844; Mon, 17 Feb 2025
+ 05:45:03 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <173625187633.1383744.2840679071525852811.stgit@devnote2>
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: nr19yrfXbNrp8eyhPihgTjLj0320_c_Q
-X-Proofpoint-GUID: nr19yrfXbNrp8eyhPihgTjLj0320_c_Q
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-17_05,2025-02-13_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 spamscore=0
- suspectscore=0 phishscore=0 lowpriorityscore=0 impostorscore=0
- adultscore=0 priorityscore=1501 clxscore=1011 mlxlogscore=789
- malwarescore=0 mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2501170000 definitions=main-2502170117
+References: <20250210055828.1875372-1-keyz@google.com>
+In-Reply-To: <20250210055828.1875372-1-keyz@google.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Date: Mon, 17 Feb 2025 14:44:28 +0100
+X-Gm-Features: AWEUYZkhcOiOPHPRB32A0szYwISzmq1cUWV_OtOCbi8uCd62e9ysZ4rFpLd2LWo
+Message-ID: <CAPDyKFor_kP1hcNC1YwLBjH=eaLG9qSyvOYvj+FQrNu8Piu2Dg@mail.gmail.com>
+Subject: Re: [PATCH v5 RESEND] cpuidle: psci: Add trace for PSCI domain idle
+To: Keita Morisaki <keyz@google.com>
+Cc: linux-kernel@vger.kernel.org, lpieralisi@kernel.org, sudeep.holla@arm.com, 
+	rafael@kernel.org, daniel.lezcano@linaro.org, linux-pm@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, rostedt@goodmis.org, 
+	mhiramat@kernel.org, mathieu.desnoyers@efficios.com, 
+	linux-trace-kernel@vger.kernel.org, aarontian@google.com, 
+	yimingtseng@google.com, Dhruva Gole <d-gole@ti.com>, Kevin Hilman <khilman@baylibre.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On Tue, Jan 07, 2025 at 09:11:16PM +0900, Masami Hiramatsu (Google) wrote:
-> From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> 
-> Make add_remove_uprobe test case more robust against various real
-> binary name.
-> Current add_remove_uprobe.tc test expects the real binary of /bin/sh
-> is '*/bin/*sh', but it does not work on busybox environment.
-> Instead of using fixed pattern, use readlink to identify real binary
-> name.
-> 
-> Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+On Mon, 10 Feb 2025 at 06:58, Keita Morisaki <keyz@google.com> wrote:
+>
+> The trace event cpu_idle provides insufficient information for debugging
+> PSCI requests due to lacking access to determined PSCI domain idle
+> states. The cpu_idle usually only shows -1, 0, or 1 regardless how many
+> idle states the power domain has.
+>
+> Add new trace events namely psci_domain_idle_enter and
+> psci_domain_idle_exit to trace enter and exit events with a determined
+> idle state.
+>
+> These new trace events will help developers debug CPUidle issues on ARM
+> systems using PSCI by providing more detailed information about the
+> requested idle states.
+>
+> Signed-off-by: Keita Morisaki <keyz@google.com>
+> Reviewed-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+> Reviewed-by: Dhruva Gole <d-gole@ti.com>
+> Tested-by: Kevin Hilman <khilman@baylibre.com>
+
+Applied for next, thanks!
+
+Kind regards
+Uffe
+
 > ---
->  .../ftrace/test.d/dynevent/add_remove_uprobe.tc    |    4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
-> 
-> diff --git a/tools/testing/selftests/ftrace/test.d/dynevent/add_remove_uprobe.tc b/tools/testing/selftests/ftrace/test.d/dynevent/add_remove_uprobe.tc
-> index a275decdc880..86c76679c56e 100644
-> --- a/tools/testing/selftests/ftrace/test.d/dynevent/add_remove_uprobe.tc
-> +++ b/tools/testing/selftests/ftrace/test.d/dynevent/add_remove_uprobe.tc
-> @@ -6,8 +6,10 @@
->  echo 0 > events/enable
->  echo > dynamic_events
->  
-> +REALBIN=`readlink -f /bin/sh`
+> v1->v2: Split the ftrace event into two (psci_domain_idle_(enter|exit))
+>         and rephrase the commit message accordingly. Rebased onto the latest.
+> v2->v3: Add "Reviewed-by: Steven Rostedt"
+> v3->v4: Add the Tested-by label
+> v4->v5: Add "Reviewed-by: Dhruva Gole"
+>
+> Hopefully this patch gets attention from maintainers of
+> drivers/cpuidle/cpuidle-psci.c too.
+>
+>  drivers/cpuidle/cpuidle-psci.c |  3 +++
+>  include/trace/events/power.h   | 37 ++++++++++++++++++++++++++++++++++
+>  2 files changed, 40 insertions(+)
+>
+> diff --git a/drivers/cpuidle/cpuidle-psci.c b/drivers/cpuidle/cpuidle-psci.c
+> index 2562dc001fc1..dd8d776d6e39 100644
+> --- a/drivers/cpuidle/cpuidle-psci.c
+> +++ b/drivers/cpuidle/cpuidle-psci.c
+> @@ -25,6 +25,7 @@
+>  #include <linux/syscore_ops.h>
+>
+>  #include <asm/cpuidle.h>
+> +#include <trace/events/power.h>
+>
+>  #include "cpuidle-psci.h"
+>  #include "dt_idle_states.h"
+> @@ -74,7 +75,9 @@ static __cpuidle int __psci_enter_domain_idle_state(struct cpuidle_device *dev,
+>         if (!state)
+>                 state = states[idx];
+>
+> +       trace_psci_domain_idle_enter(dev->cpu, state, s2idle);
+>         ret = psci_cpu_suspend_enter(state) ? -1 : idx;
+> +       trace_psci_domain_idle_exit(dev->cpu, state, s2idle);
+>
+>         if (s2idle)
+>                 dev_pm_genpd_resume(pd_dev);
+> diff --git a/include/trace/events/power.h b/include/trace/events/power.h
+> index d2349b6b531a..9253e83b9bb4 100644
+> --- a/include/trace/events/power.h
+> +++ b/include/trace/events/power.h
+> @@ -62,6 +62,43 @@ TRACE_EVENT(cpu_idle_miss,
+>                 (unsigned long)__entry->state, (__entry->below)?"below":"above")
+>  );
+>
+> +DECLARE_EVENT_CLASS(psci_domain_idle,
 > +
->  echo 'cat /proc/$$/maps' | /bin/sh | \
-> -	grep "r-xp .*/bin/.*sh$" | \
-> +	grep "r-xp .*${REALBIN}$" | \
->  	awk '{printf "p:myevent %s:0x%s\n", $6,$3 }' >> uprobe_events
-
-This test fails on s390, not because of this change, but since the
-test seems to assume that the entry point of /bin/sh is at offset 0;
-or at least there is some code that is executed at least once at
-offset 0; but that is not the case (at least) for s390.
-
-Not sure how this can be addressed. Using "readelf -f" to get the
-entry point address of the executable and use that for the uprobe
-would work, but it would also add a dependency to binutils for the
-ftrace selftests, which doesn't exist yet, as far as I can tell.
-
-Would it maybe an option for architectures to opt-in to use readelf
-and skip the test (exit_unsupported) if readelf is not available?
+> +       TP_PROTO(unsigned int cpu_id, unsigned int state, bool s2idle),
+> +
+> +       TP_ARGS(cpu_id, state, s2idle),
+> +
+> +       TP_STRUCT__entry(
+> +               __field(u32,            cpu_id)
+> +               __field(u32,            state)
+> +               __field(bool,           s2idle)
+> +       ),
+> +
+> +       TP_fast_assign(
+> +               __entry->cpu_id = cpu_id;
+> +               __entry->state = state;
+> +               __entry->s2idle = s2idle;
+> +       ),
+> +
+> +       TP_printk("cpu_id=%lu state=0x%lx is_s2idle=%s",
+> +                 (unsigned long)__entry->cpu_id, (unsigned long)__entry->state,
+> +                 (__entry->s2idle)?"yes":"no")
+> +);
+> +
+> +DEFINE_EVENT(psci_domain_idle, psci_domain_idle_enter,
+> +
+> +       TP_PROTO(unsigned int cpu_id, unsigned int state, bool s2idle),
+> +
+> +       TP_ARGS(cpu_id, state, s2idle)
+> +);
+> +
+> +DEFINE_EVENT(psci_domain_idle, psci_domain_idle_exit,
+> +
+> +       TP_PROTO(unsigned int cpu_id, unsigned int state, bool s2idle),
+> +
+> +       TP_ARGS(cpu_id, state, s2idle)
+> +);
+> +
+>  TRACE_EVENT(powernv_throttle,
+>
+>         TP_PROTO(int chip_id, const char *reason, int pmax),
+>
+> base-commit: ffd294d346d185b70e28b1a28abe367bbfe53c04
+> --
+> 2.48.1.362.g079036d154-goog
+>
