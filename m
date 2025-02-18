@@ -1,47 +1,47 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 103D12500C4
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 18 Feb 2025 12:32:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01F8D2451D4
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 18 Feb 2025 12:32:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739881932; cv=none; b=MqbJRv5cZrVsItwngAA0d444dDAzESDTIuzu/KHmNoUac0D52f899aTfFF1z0+dlqvfKh9dN/dHnwhGA+sWaK9RqjwrSKvX1Q32DNmlqpPuZKFDM/B3jajICSJ0bd5pNhr7lHDccribOLm9e1o7EbSsE5YqfXuKrSFMq+A2Bpns=
+	t=1739881937; cv=none; b=BRpnE/Pgkuoa09c8FrQY8S52sZmXyu3G02EZGh8l/l1I+oMbJ8EfO+bzTCUAxqIwIDICoO1xA2vLAhiFOXU0rF9GssEHzQW6RSBnFcoGwW1pUJtcV4/gWnkTug+jW+8wi6XHn2A10kmUuvvaHNFI469Lu3MFANlfcSB29c49oyw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739881932; c=relaxed/simple;
-	bh=lVyN68PAuVuaUbw2Fw2Mxp6XLn4ydjdYyX28OEJOV4Y=;
+	s=arc-20240116; t=1739881937; c=relaxed/simple;
+	bh=+L/G9ZYml07rE7xcoMc1XI178hR7JR3O+4eZS6nC3hs=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ksv3F0brUA67Jbqufm1zigRYmL+I0AYzN8uclBBxJStEfq1w2x5KfFMSlFeGQWazaMdq879lIIYJM0NI5oORKJJ/Vqv5t1pdrj+zc2QweF8rk/gg4XtxCi5jXQrDn34wEou0leqzi5spNB55eSPX6RskxGYTNxudvlCVgK0ETIA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=PRvbJ316; arc=none smtp.client-ip=170.10.133.124
+	 MIME-Version; b=Ojl3DWH1pEXn3N/0tOZEOTaHesD5E0gZ5MzyYS5o7BsdDRXYDEgPCq8ho/Ryax8HClmDhL4IRqE551tedb2hnkMc3JU+Y9vy/JAqVD51g7txVXYcDtFW591Uir9GvotuVFzYeSqKs5lSoHaj+D8X4XmgXKILL+OCudYfdvjtF3A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=SprGrrAR; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PRvbJ316"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SprGrrAR"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1739881929;
+	s=mimecast20190719; t=1739881935;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=hGYuQzr8+Oo+ccnLjzv3DqBm1OL5JlztXtFW9bZR+YM=;
-	b=PRvbJ316c2AyvkJn91Y6IInZXP1MaOIHjSC9Re1Vt4rB9SOQIqK8/8PZ5U2lnv9eWKN/81
-	eEXQ6B82uGOxyyAyDmad0fig87kA7Me80+EBSPg/qLxYXdyTXbDZ56qs9Ms1en+Hc0NenB
-	E1RupxFt2+ZWOnFWbCbj5zfEYmxksl4=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+	bh=veJYqIZhZwJMarbagx/aKK/mQbHDV25wxXH1xL62AG8=;
+	b=SprGrrAR7DlD0ik2dEhzQFNeZYHLzw7zDfcJtJke6PNzRlhx17IJPL3GT3wCVabeB4MVwm
+	D43sgP9GYtraKf94yNZZ9Rv30cYa5GvCgryu5Ed7VYkaBbynsAq5IfwyzlUogqnmaMXRN1
+	wWAQgi+emap/fCbuTTfJshirEpr53rU=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-250-bHJKG4gaPnyxUxFVOQ7xPA-1; Tue,
- 18 Feb 2025 07:32:07 -0500
-X-MC-Unique: bHJKG4gaPnyxUxFVOQ7xPA-1
-X-Mimecast-MFC-AGG-ID: bHJKG4gaPnyxUxFVOQ7xPA_1739881926
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-434-6UkHocdNOeCFMJ33RKjEJQ-1; Tue,
+ 18 Feb 2025 07:32:11 -0500
+X-MC-Unique: 6UkHocdNOeCFMJ33RKjEJQ-1
+X-Mimecast-MFC-AGG-ID: 6UkHocdNOeCFMJ33RKjEJQ_1739881930
 Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id C37031800982;
-	Tue, 18 Feb 2025 12:32:06 +0000 (UTC)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 7E7431975AFC;
+	Tue, 18 Feb 2025 12:32:10 +0000 (UTC)
 Received: from gmonaco-thinkpadt14gen3.rmtit.com (unknown [10.44.33.84])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id DF3551800352;
-	Tue, 18 Feb 2025 12:32:03 +0000 (UTC)
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id BF8391800352;
+	Tue, 18 Feb 2025 12:32:07 +0000 (UTC)
 From: Gabriele Monaco <gmonaco@redhat.com>
 To: linux-kernel@vger.kernel.org,
 	Steven Rostedt <rostedt@goodmis.org>,
@@ -50,9 +50,9 @@ Cc: Gabriele Monaco <gmonaco@redhat.com>,
 	Ingo Molnar <mingo@redhat.com>,
 	Peter Zijlstra <peterz@infradead.org>,
 	Juri Lelli <juri.lelli@redhat.com>
-Subject: [PATCH v4 08/11] tools/rv: Add support for nested monitors
-Date: Tue, 18 Feb 2025 13:31:13 +0100
-Message-ID: <20250218123121.253551-9-gmonaco@redhat.com>
+Subject: [PATCH v4 09/11] verification/dot2k: Add support for nested monitors
+Date: Tue, 18 Feb 2025 13:31:14 +0100
+Message-ID: <20250218123121.253551-10-gmonaco@redhat.com>
 In-Reply-To: <20250218123121.253551-1-gmonaco@redhat.com>
 References: <20250218123121.253551-1-gmonaco@redhat.com>
 Precedence: bulk
@@ -68,447 +68,312 @@ RV now supports nested monitors, this functionality requires a container
 monitor, which has virtually no functionality besides holding other
 monitors, and nested monitors, that have a container as parent.
 
-Nested monitors' sysfs folders are physically nested in the container's
-folder, and they are listed in the available_monitors file with the
-notation container:monitor.
-These changes go against the assumption that each line in the
-available_monitors file correspond to a folder in the rv directory,
-breaking the functionality of the rv tool.
-
-Add support for nested containers in the rv userspace tool, indenting
-nested monitors while listed and allowing both the notation with and
-without container name, which are equivalent:
-
-  # rv list
-  mon1
-  mon2
-  container:
-   - nested1
-   - nested2
-
-  ## notation with container name
-  # rv mon container:nested1
-
-  ## notation without container name
-  # rv mon nested1
-
-Either way, enabling a nested monitor is the same as enabling any other
-non-nested monitor.
-Selecting the container with rv mon enables all the nested monitors, if
--t is passed, the trace also includes the monitor name next to the
-event:
-
-  # rv mon nested1 -t
-  <idle>-0        [004] event   state1 x event    -> state2
-  <idle>-0        [004] error   event not expected in state2
-
-  # rv mon sched -t
-  <idle>-0        [004] event_nested1   state1 x event    -> state2
-  <idle>-0        [004] error_nested1   event not expected in state2
+Add the -p flag to pass a parent to a monitor, this sets it up while
+registering the monitor and adds necessary includes and configurations.
+Add the -c flag to create a container, since containers are empty, we
+don't allow supplying a dot model or a monitor type, the template is
+also different since functions to enable and disable the monitor are not
+defined, nor any tracepoint. The generated header file only allows to
+include the rv_monitor structure in children monitors.
 
 Signed-off-by: Gabriele Monaco <gmonaco@redhat.com>
 ---
- tools/verification/rv/include/rv.h    |   1 +
- tools/verification/rv/src/in_kernel.c | 226 ++++++++++++++++++++------
- 2 files changed, 179 insertions(+), 48 deletions(-)
+ tools/verification/dot2/dot2k                 | 27 ++++---
+ tools/verification/dot2/dot2k.py              | 79 +++++++++++++++----
+ .../verification/dot2/dot2k_templates/Kconfig |  1 +
+ .../verification/dot2/dot2k_templates/main.c  |  4 +-
+ .../dot2/dot2k_templates/main_container.c     | 38 +++++++++
+ .../dot2/dot2k_templates/main_container.h     |  3 +
+ 6 files changed, 125 insertions(+), 27 deletions(-)
+ create mode 100644 tools/verification/dot2/dot2k_templates/main_container.c
+ create mode 100644 tools/verification/dot2/dot2k_templates/main_container.h
 
-diff --git a/tools/verification/rv/include/rv.h b/tools/verification/rv/include/rv.h
-index 0cab1037a98f7..6f668eb266cbb 100644
---- a/tools/verification/rv/include/rv.h
-+++ b/tools/verification/rv/include/rv.h
-@@ -7,6 +7,7 @@ struct monitor {
- 	char name[MAX_DA_NAME_LEN];
- 	char desc[MAX_DESCRIPTION];
- 	int enabled;
-+	int nested;
- };
+diff --git a/tools/verification/dot2/dot2k b/tools/verification/dot2/dot2k
+index 559ba191a1f6d..767064f415e76 100644
+--- a/tools/verification/dot2/dot2k
++++ b/tools/verification/dot2/dot2k
+@@ -11,22 +11,30 @@
+ if __name__ == '__main__':
+     from dot2.dot2k import dot2k
+     import argparse
+-    import ntpath
+-    import os
+-    import platform
+     import sys
  
- int should_stop(void);
-diff --git a/tools/verification/rv/src/in_kernel.c b/tools/verification/rv/src/in_kernel.c
-index f2bbc75a76f4d..032b851019290 100644
---- a/tools/verification/rv/src/in_kernel.c
-+++ b/tools/verification/rv/src/in_kernel.c
-@@ -6,15 +6,18 @@
++    def is_container():
++        """Should work even before parsing the arguments"""
++        return "-c" in sys.argv or "--container" in sys.argv
++
+     parser = argparse.ArgumentParser(description='transform .dot file into kernel rv monitor')
+-    parser.add_argument('-d', "--dot", dest="dot_file", required=True)
+-    parser.add_argument('-t', "--monitor_type", dest="monitor_type", required=True)
+-    parser.add_argument('-n', "--model_name", dest="model_name", required=False)
++    parser.add_argument('-d', "--dot", dest="dot_file", required=not is_container())
++    parser.add_argument('-t', "--monitor_type", dest="monitor_type", required=not is_container(),
++                        help=f"Available options: {', '.join(dot2k.monitor_types.keys())}")
++    parser.add_argument('-n', "--model_name", dest="model_name", required=is_container())
+     parser.add_argument("-D", "--description", dest="description", required=False)
+     parser.add_argument("-a", "--auto_patch", dest="auto_patch",
+                         action="store_true", required=False,
+                         help="Patch the kernel in place")
++    parser.add_argument("-p", "--parent", dest="parent",
++                        required=False, help="Create a monitor nested to parent")
++    parser.add_argument("-c", "--container", dest="container",
++                        action="store_true", required=False,
++                        help="Create an empty monitor to be used as a container")
+     params = parser.parse_args()
+ 
+-    print("Opening and parsing the dot file %s" % params.dot_file)
++    if not is_container():
++        print("Opening and parsing the dot file %s" % params.dot_file)
+     try:
+         monitor=dot2k(params.dot_file, params.monitor_type, vars(params))
+     except Exception as e:
+@@ -37,8 +45,9 @@ if __name__ == '__main__':
+     print("Writing the monitor into the directory %s" % monitor.name)
+     monitor.print_files()
+     print("Almost done, checklist")
+-    print("  - Edit the %s/%s.c to add the instrumentation" % (monitor.name, monitor.name))
+-    print(monitor.fill_tracepoint_tooltip())
++    if not is_container():
++        print("  - Edit the %s/%s.c to add the instrumentation" % (monitor.name, monitor.name))
++        print(monitor.fill_tracepoint_tooltip())
+     print(monitor.fill_makefile_tooltip())
+     print(monitor.fill_kconfig_tooltip())
+     print(monitor.fill_monitor_tooltip())
+diff --git a/tools/verification/dot2/dot2k.py b/tools/verification/dot2/dot2k.py
+index 153cc14bcca45..745d35a4a3791 100644
+--- a/tools/verification/dot2/dot2k.py
++++ b/tools/verification/dot2/dot2k.py
+@@ -19,16 +19,31 @@ class dot2k(Dot2c):
+     monitor_type = "per_cpu"
+ 
+     def __init__(self, file_path, MonitorType, extra_params={}):
+-        super().__init__(file_path, extra_params.get("model_name"))
+-
+-        self.monitor_type = self.monitor_types.get(MonitorType)
+-        if self.monitor_type is None:
+-            raise ValueError("Unknown monitor type: %s" % MonitorType)
+-
+-        self.monitor_type = MonitorType
++        self.container = extra_params.get("container")
++        self.parent = extra_params.get("parent")
+         self.__fill_rv_templates_dir()
+-        self.main_c = self.__read_file(self.monitor_templates_dir + "main.c")
+-        self.trace_h = self.__read_file(self.monitor_templates_dir + "trace.h")
++
++        if self.container:
++            if file_path:
++                raise ValueError("A container does not require a dot file")
++            if MonitorType:
++                raise ValueError("A container does not require a monitor type")
++            if self.parent:
++                raise ValueError("A container cannot have a parent")
++            self.name = extra_params.get("model_name")
++            self.events = []
++            self.states = []
++            self.main_c = self.__read_file(self.monitor_templates_dir + "main_container.c")
++            self.main_h = self.__read_file(self.monitor_templates_dir + "main_container.h")
++        else:
++            super().__init__(file_path, extra_params.get("model_name"))
++
++            self.monitor_type = self.monitor_types.get(MonitorType)
++            if self.monitor_type is None:
++                raise ValueError("Unknown monitor type: %s" % MonitorType)
++            self.monitor_type = MonitorType
++            self.main_c = self.__read_file(self.monitor_templates_dir + "main.c")
++            self.trace_h = self.__read_file(self.monitor_templates_dir + "trace.h")
+         self.kconfig = self.__read_file(self.monitor_templates_dir + "Kconfig")
+         self.enum_suffix = "_%s" % self.name
+         self.description = extra_params.get("description", self.name) or "auto-generated"
+@@ -105,6 +120,14 @@ class dot2k(Dot2c):
+     def fill_monitor_type(self):
+         return self.monitor_type.upper()
+ 
++    def fill_parent(self):
++        return "&rv_%s" % self.parent if self.parent else "NULL"
++
++    def fill_include_parent(self):
++        if self.parent:
++            return "#include <monitors/%s/%s.h>\n" % (self.parent, self.parent)
++        return ""
++
+     def fill_tracepoint_handlers_skel(self):
+         buff = []
+         for event in self.events:
+@@ -146,6 +169,8 @@ class dot2k(Dot2c):
+         tracepoint_handlers = self.fill_tracepoint_handlers_skel()
+         tracepoint_attach = self.fill_tracepoint_attach_probe()
+         tracepoint_detach = self.fill_tracepoint_detach_helper()
++        parent = self.fill_parent()
++        parent_include = self.fill_include_parent()
+ 
+         main_c = main_c.replace("%%MONITOR_TYPE%%", monitor_type)
+         main_c = main_c.replace("%%MIN_TYPE%%", min_type)
+@@ -155,6 +180,8 @@ class dot2k(Dot2c):
+         main_c = main_c.replace("%%TRACEPOINT_ATTACH%%", tracepoint_attach)
+         main_c = main_c.replace("%%TRACEPOINT_DETACH%%", tracepoint_detach)
+         main_c = main_c.replace("%%DESCRIPTION%%", self.description)
++        main_c = main_c.replace("%%PARENT%%", parent)
++        main_c = main_c.replace("%%INCLUDE_PARENT%%", parent_include)
+ 
+         return main_c
+ 
+@@ -216,6 +243,14 @@ class dot2k(Dot2c):
+         buff.append("	     TP_ARGS(%s)" % tp_args_c)
+         return self.__buff_to_string(buff)
+ 
++    def fill_monitor_deps(self):
++        buff = []
++        buff.append("	# XXX: add dependencies if there")
++        if self.parent:
++            buff.append("	depends on RV_MON_%s" % self.parent.upper())
++            buff.append("	default y")
++        return self.__buff_to_string(buff)
++
+     def fill_trace_h(self):
+         trace_h = self.trace_h
+         monitor_class = self.fill_monitor_class()
+@@ -233,12 +268,19 @@ class dot2k(Dot2c):
+     def fill_kconfig(self):
+         kconfig = self.kconfig
+         monitor_class_type = self.fill_monitor_class_type()
++        monitor_deps = self.fill_monitor_deps()
+         kconfig = kconfig.replace("%%MODEL_NAME%%", self.name)
+         kconfig = kconfig.replace("%%MODEL_NAME_UP%%", self.name.upper())
+         kconfig = kconfig.replace("%%MONITOR_CLASS_TYPE%%", monitor_class_type)
+         kconfig = kconfig.replace("%%DESCRIPTION%%", self.description)
++        kconfig = kconfig.replace("%%MONITOR_DEPS%%", monitor_deps)
+         return kconfig
+ 
++    def fill_main_container_h(self):
++        main_h = self.main_h
++        main_h = main_h.replace("%%MODEL_NAME%%", self.name)
++        return main_h
++
+     def __patch_file(self, file, marker, line):
+         file_to_patch = os.path.join(self.rv_dir, file)
+         content = self.__read_file(file_to_patch)
+@@ -324,19 +366,24 @@ obj-$(CONFIG_RV_MON_%s) += monitors/%s/%s.o
+ 
+     def print_files(self):
+         main_c = self.fill_main_c()
+-        model_h = self.fill_model_h()
+ 
+         self.__create_directory()
+ 
+         path = "%s.c" % self.name
+         self.__create_file(path, main_c)
+ 
+-        path = "%s.h" % self.name
+-        self.__create_file(path, model_h)
+-
+-        trace_h = self.fill_trace_h()
+-        path = "%s_trace.h" % self.name
+-        self.__create_file(path, trace_h)
++        if self.container:
++            main_h = self.fill_main_container_h()
++            path = "%s.h" % self.name
++            self.__create_file(path, main_h)
++        else:
++            model_h = self.fill_model_h()
++            path = "%s.h" % self.name
++            self.__create_file(path, model_h)
++
++            trace_h = self.fill_trace_h()
++            path = "%s_trace.h" % self.name
++            self.__create_file(path, trace_h)
+ 
+         kconfig = self.fill_kconfig()
+         self.__create_file("Kconfig", kconfig)
+diff --git a/tools/verification/dot2/dot2k_templates/Kconfig b/tools/verification/dot2/dot2k_templates/Kconfig
+index 03100eda17075..291b29ea28db3 100644
+--- a/tools/verification/dot2/dot2k_templates/Kconfig
++++ b/tools/verification/dot2/dot2k_templates/Kconfig
+@@ -2,6 +2,7 @@
+ #
+ config RV_MON_%%MODEL_NAME_UP%%
+ 	depends on RV
++%%MONITOR_DEPS%%
+ 	select %%MONITOR_CLASS_TYPE%%
+ 	bool "%%MODEL_NAME%% monitor"
+ 	help
+diff --git a/tools/verification/dot2/dot2k_templates/main.c b/tools/verification/dot2/dot2k_templates/main.c
+index 9605ca994416b..83044a20c89aa 100644
+--- a/tools/verification/dot2/dot2k_templates/main.c
++++ b/tools/verification/dot2/dot2k_templates/main.c
+@@ -15,7 +15,7 @@
+  * #include <trace/events/sched.h>
   */
- #include <getopt.h>
- #include <stdlib.h>
-+#include <stdio.h>
- #include <string.h>
- #include <errno.h>
- #include <unistd.h>
-+#include <dirent.h>
- 
- #include <trace.h>
- #include <utils.h>
- #include <rv.h>
- 
- static int config_has_id;
-+static int config_is_container;
- static int config_my_pid;
- static int config_trace;
- 
-@@ -44,6 +47,51 @@ static int __ikm_read_enable(char *monitor_name)
- 	return enabled;
- }
- 
-+/*
-+ * __ikm_find_monitor - find the full name of a possibly nested module
-+ *
-+ * __does not log errors.
-+ *
-+ * Returns 1 if we found the monitor, -1 on error and 0 if it does not exist.
-+ * The string out_name is populated with the full name, which can be
-+ * equal to monitor_name or container/monitor_name if nested
-+ */
-+static int __ikm_find_monitor_name(char *monitor_name, char *out_name)
-+{
-+	char *available_monitors, container[MAX_DA_NAME_LEN+1], *cursor, *end;
-+	int retval = 1;
-+
-+	available_monitors = tracefs_instance_file_read(NULL, "rv/available_monitors", NULL);
-+	if (!available_monitors)
-+		return -1;
-+
-+	cursor = strstr(available_monitors, monitor_name);
-+	if (!cursor) {
-+		retval = 0;
-+		goto out_free;
-+	}
-+
-+	for (; cursor > available_monitors; cursor--)
-+		if (*(cursor-1) == '\n')
-+			break;
-+	end = strstr(cursor, "\n");
-+	memcpy(out_name, cursor, end-cursor);
-+	out_name[end-cursor] = '\0';
-+
-+	cursor = strstr(out_name, ":");
-+	if (cursor)
-+		*cursor = '/';
-+	else {
-+		sprintf(container, "%s:", monitor_name);
-+		if (strstr(available_monitors, container))
-+			config_is_container = 1;
-+	}
-+
-+out_free:
-+	free(available_monitors);
-+	return retval;
-+}
-+
+ #include <rv_trace.h>
+-
++%%INCLUDE_PARENT%%
  /*
-  * ikm_read_enable - reads monitor's enable status
-  *
-@@ -137,7 +185,17 @@ static char *ikm_read_desc(char *monitor_name)
- static int ikm_fill_monitor_definition(char *name, struct monitor *ikm)
+  * This is the self-generated part of the monitor. Generally, there is no need
+  * to touch this section.
+@@ -74,7 +74,7 @@ static struct rv_monitor rv_%%MODEL_NAME%% = {
+ 
+ static int __init register_%%MODEL_NAME%%(void)
  {
- 	int enabled;
--	char *desc;
-+	char *desc, *nested_name;
-+
-+	nested_name = strstr(name, ":");
-+	if (nested_name) {
-+		*nested_name = '/';
-+		++nested_name;
-+		ikm->nested = 1;
-+	} else {
-+		nested_name = name;
-+		ikm->nested = 0;
-+	}
- 
- 	enabled = ikm_read_enable(name);
- 	if (enabled < 0) {
-@@ -151,7 +209,7 @@ static int ikm_fill_monitor_definition(char *name, struct monitor *ikm)
- 		return -1;
- 	}
- 
--	strncpy(ikm->name, name, MAX_DA_NAME_LEN);
-+	strncpy(ikm->name, nested_name, MAX_DA_NAME_LEN);
- 	ikm->enabled = enabled;
- 	strncpy(ikm->desc, desc, MAX_DESCRIPTION);
- 
-@@ -273,7 +331,7 @@ static int ikm_has_id(char *monitor_name)
- int ikm_list_monitors(void)
- {
- 	char *available_monitors;
--	struct monitor ikm;
-+	struct monitor ikm = {0};
- 	char *curr, *next;
- 	int retval;
- 
-@@ -293,7 +351,9 @@ int ikm_list_monitors(void)
- 		if (retval)
- 			err_msg("ikm: error reading %d in kernel monitor, skipping\n", curr);
- 
--		printf("%-24s %s %s\n", ikm.name, ikm.desc, ikm.enabled ? "[ON]" : "[OFF]");
-+		printf("%s%-*s %s %s\n", ikm.nested ? " - " : "",
-+		       ikm.nested ? MAX_DA_NAME_LEN - 3 : MAX_DA_NAME_LEN,
-+		       ikm.name, ikm.desc, ikm.enabled ? "[ON]" : "[OFF]");
- 		curr = ++next;
- 
- 	} while (strlen(curr));
-@@ -343,11 +403,11 @@ ikm_event_handler(struct trace_seq *s, struct tep_record *record,
- 	unsigned long long final_state;
- 	unsigned long long pid;
- 	unsigned long long id;
--	int cpu = record->cpu;
- 	int val;
-+	bool missing_id;
- 
- 	if (config_has_id)
--		tep_get_field_val(s, trace_event, "id", record, &id, 1);
-+		missing_id = tep_get_field_val(s, trace_event, "id", record, &id, 1);
- 
- 	tep_get_common_field_val(s, trace_event, "common_pid", record, &pid, 1);
- 
-@@ -356,12 +416,21 @@ ikm_event_handler(struct trace_seq *s, struct tep_record *record,
- 	else if (config_my_pid && (config_my_pid == pid))
- 		return 0;
- 
--	tep_print_event(trace_event->tep, s, record, "%16s-%-8d ", TEP_PRINT_COMM, TEP_PRINT_PID);
-+	tep_print_event(trace_event->tep, s, record, "%16s-%-8d [%.3d] ",
-+			TEP_PRINT_COMM, TEP_PRINT_PID, TEP_PRINT_CPU);
- 
--	trace_seq_printf(s, "[%.3d] event ", cpu);
-+	if (config_is_container)
-+		tep_print_event(trace_event->tep, s, record, "%s ", TEP_PRINT_NAME);
-+	else
-+		trace_seq_printf(s, "event ");
- 
--	if (config_has_id)
--		trace_seq_printf(s, "%8llu ", id);
-+	if (config_has_id) {
-+		if (missing_id)
-+			/* placeholder if we are dealing with a mixed-type container*/
-+			trace_seq_printf(s, "        ");
-+		else
-+			trace_seq_printf(s, "%8llu ", id);
-+	}
- 
- 	state = tep_get_field_raw(s, trace_event, "state", record, &val, 0);
- 	event = tep_get_field_raw(s, trace_event, "event", record, &val, 0);
-@@ -394,9 +463,10 @@ ikm_error_handler(struct trace_seq *s, struct tep_record *record,
- 	int cpu = record->cpu;
- 	char *state, *event;
- 	int val;
-+	bool missing_id;
- 
- 	if (config_has_id)
--		tep_get_field_val(s, trace_event, "id", record, &id, 1);
-+		missing_id = tep_get_field_val(s, trace_event, "id", record, &id, 1);
- 
- 	tep_get_common_field_val(s, trace_event, "common_pid", record, &pid, 1);
- 
-@@ -405,10 +475,20 @@ ikm_error_handler(struct trace_seq *s, struct tep_record *record,
- 	else if (config_my_pid == pid)
- 		return 0;
- 
--	trace_seq_printf(s, "%8lld [%03d] error ", pid, cpu);
-+	trace_seq_printf(s, "%8lld [%03d] ", pid, cpu);
- 
--	if (config_has_id)
--		trace_seq_printf(s, "%8llu ", id);
-+	if (config_is_container)
-+		tep_print_event(trace_event->tep, s, record, "%s ", TEP_PRINT_NAME);
-+	else
-+		trace_seq_printf(s, "error ");
-+
-+	if (config_has_id) {
-+		if (missing_id)
-+			/* placeholder if we are dealing with a mixed-type container*/
-+			trace_seq_printf(s, "        ");
-+		else
-+			trace_seq_printf(s, "%8llu ", id);
-+	}
- 
- 	state = tep_get_field_raw(s, trace_event, "state", record, &val, 0);
- 	event = tep_get_field_raw(s, trace_event, "event", record, &val, 0);
-@@ -421,6 +501,64 @@ ikm_error_handler(struct trace_seq *s, struct tep_record *record,
+-	rv_register_monitor(&rv_%%MODEL_NAME%%);
++	rv_register_monitor(&rv_%%MODEL_NAME%%, %%PARENT%%);
  	return 0;
  }
  
-+static int ikm_enable_trace_events(char *monitor_name, struct trace_instance *inst)
+diff --git a/tools/verification/dot2/dot2k_templates/main_container.c b/tools/verification/dot2/dot2k_templates/main_container.c
+new file mode 100644
+index 0000000000000..89fc17cf8958e
+--- /dev/null
++++ b/tools/verification/dot2/dot2k_templates/main_container.c
+@@ -0,0 +1,38 @@
++// SPDX-License-Identifier: GPL-2.0
++#include <linux/kernel.h>
++#include <linux/module.h>
++#include <linux/init.h>
++#include <linux/rv.h>
++
++#define MODULE_NAME "%%MODEL_NAME%%"
++
++#include "%%MODEL_NAME%%.h"
++
++struct rv_monitor rv_%%MODEL_NAME%%;
++
++struct rv_monitor rv_%%MODEL_NAME%% = {
++	.name = "%%MODEL_NAME%%",
++	.description = "%%DESCRIPTION%%",
++	.enable = NULL,
++	.disable = NULL,
++	.reset = NULL,
++	.enabled = 0,
++};
++
++static int __init register_%%MODEL_NAME%%(void)
 +{
-+	char event[MAX_DA_NAME_LEN + 7]; /* max(error_,event_) + '0' = 7 */
-+	int retval;
-+
-+	snprintf(event, sizeof(event), "event_%s", monitor_name);
-+	retval = tracefs_event_enable(inst->inst, "rv",  event);
-+	if (retval)
-+		return -1;
-+
-+	tep_register_event_handler(inst->tep, -1, "rv", event,
-+				   ikm_event_handler, NULL);
-+
-+	snprintf(event, sizeof(event), "error_%s", monitor_name);
-+	retval = tracefs_event_enable(inst->inst, "rv", event);
-+	if (retval)
-+		return -1;
-+
-+	tep_register_event_handler(inst->tep, -1, "rv", event,
-+				   ikm_error_handler, NULL);
-+
-+	/* set if at least 1 monitor has id in case of a container */
-+	config_has_id = ikm_has_id(monitor_name);
-+	if (config_has_id < 0)
-+		return -1;
-+
-+
++	rv_register_monitor(&rv_%%MODEL_NAME%%, NULL);
 +	return 0;
 +}
 +
-+static int ikm_enable_trace_container(char *monitor_name,
-+				      struct trace_instance *inst)
++static void __exit unregister_%%MODEL_NAME%%(void)
 +{
-+	DIR *dp;
-+	char *abs_path, rv_path[MAX_PATH];
-+	struct dirent *ep;
-+	int retval = 0;
-+
-+	snprintf(rv_path, MAX_PATH, "rv/monitors/%s", monitor_name);
-+	abs_path = tracefs_instance_get_file(NULL, rv_path);
-+	if (!abs_path)
-+		return -1;
-+	dp = opendir(abs_path);
-+	if (!dp)
-+		goto out_free;
-+
-+	while (!retval && (ep = readdir(dp))) {
-+		if (ep->d_type != DT_DIR || ep->d_name[0] == '.')
-+			continue;
-+		retval = ikm_enable_trace_events(ep->d_name, inst);
-+	}
-+
-+	closedir(dp);
-+out_free:
-+	free(abs_path);
-+	return retval;
++	rv_unregister_monitor(&rv_%%MODEL_NAME%%);
 +}
 +
- /*
-  * ikm_setup_trace_instance - set up a tracing instance to collect data
-  *
-@@ -430,19 +568,12 @@ ikm_error_handler(struct trace_seq *s, struct tep_record *record,
-  */
- static struct trace_instance *ikm_setup_trace_instance(char *monitor_name)
- {
--	char event[MAX_DA_NAME_LEN + 7]; /* max(error_,event_) + '0' = 7 */
- 	struct trace_instance *inst;
- 	int retval;
- 
- 	if (!config_trace)
- 		return NULL;
- 
--	config_has_id = ikm_has_id(monitor_name);
--	if (config_has_id < 0) {
--		err_msg("ikm: failed to read monitor %s event format\n", monitor_name);
--		goto out_err;
--	}
--
- 	/* alloc data */
- 	inst = calloc(1, sizeof(*inst));
- 	if (!inst) {
-@@ -454,23 +585,13 @@ static struct trace_instance *ikm_setup_trace_instance(char *monitor_name)
- 	if (retval)
- 		goto out_free;
- 
--	/* enable events */
--	snprintf(event, sizeof(event), "event_%s", monitor_name);
--	retval = tracefs_event_enable(inst->inst, "rv",  event);
--	if (retval)
--		goto out_inst;
--
--	tep_register_event_handler(inst->tep, -1, "rv", event,
--				   ikm_event_handler, NULL);
--
--	snprintf(event, sizeof(event), "error_%s", monitor_name);
--	retval = tracefs_event_enable(inst->inst, "rv", event);
-+	if (config_is_container)
-+		retval = ikm_enable_trace_container(monitor_name, inst);
-+	else
-+		retval = ikm_enable_trace_events(monitor_name, inst);
- 	if (retval)
- 		goto out_inst;
- 
--	tep_register_event_handler(inst->tep, -1, "rv", event,
--				   ikm_error_handler, NULL);
--
- 	/* ready to enable */
- 	tracefs_trace_on(inst->inst);
- 
-@@ -633,32 +754,41 @@ static int parse_arguments(char *monitor_name, int argc, char **argv)
- int ikm_run_monitor(char *monitor_name, int argc, char **argv)
- {
- 	struct trace_instance *inst = NULL;
-+	char *nested_name, full_name[2*MAX_DA_NAME_LEN];
- 	int retval;
- 
--	/*
--	 * Check if monitor exists by seeing it is enabled.
--	 */
--	retval = __ikm_read_enable(monitor_name);
--	if (retval < 0)
-+	nested_name = strstr(monitor_name, ":");
-+	if (nested_name)
-+		++nested_name;
-+	else
-+		nested_name = monitor_name;
++module_init(register_%%MODEL_NAME%%);
++module_exit(unregister_%%MODEL_NAME%%);
 +
-+	retval = __ikm_find_monitor_name(monitor_name, full_name);
-+	if (!retval)
- 		return 0;
-+	if (retval < 0) {
-+		err_msg("ikm: error finding monitor %s\n", nested_name);
-+		return -1;
-+	}
- 
-+	retval = __ikm_read_enable(full_name);
- 	if (retval) {
--		err_msg("ikm: monitor %s (in-kernel) is already enabled\n", monitor_name);
-+		err_msg("ikm: monitor %s (in-kernel) is already enabled\n", nested_name);
- 		return -1;
- 	}
- 
- 	/* we should be good to go */
--	retval = parse_arguments(monitor_name, argc, argv);
-+	retval = parse_arguments(full_name, argc, argv);
- 	if (retval)
--		ikm_usage(1, monitor_name, "ikm: failed parsing arguments");
-+		ikm_usage(1, nested_name, "ikm: failed parsing arguments");
- 
- 	if (config_trace) {
--		inst = ikm_setup_trace_instance(monitor_name);
-+		inst = ikm_setup_trace_instance(nested_name);
- 		if (!inst)
- 			return -1;
- 	}
- 
--	retval = ikm_enable(monitor_name);
-+	retval = ikm_enable(full_name);
- 	if (retval < 0)
- 		goto out_free_instance;
- 
-@@ -682,17 +812,17 @@ int ikm_run_monitor(char *monitor_name, int argc, char **argv)
- 		sleep(1);
- 	}
- 
--	ikm_disable(monitor_name);
-+	ikm_disable(full_name);
- 	ikm_destroy_trace_instance(inst);
- 
- 	if (config_reactor && config_initial_reactor)
--		ikm_write_reactor(monitor_name, config_initial_reactor);
-+		ikm_write_reactor(full_name, config_initial_reactor);
- 
- 	return 1;
- 
- out_free_instance:
- 	ikm_destroy_trace_instance(inst);
- 	if (config_reactor && config_initial_reactor)
--		ikm_write_reactor(monitor_name, config_initial_reactor);
-+		ikm_write_reactor(full_name, config_initial_reactor);
- 	return -1;
- }
++MODULE_LICENSE("GPL");
++MODULE_AUTHOR("dot2k: auto-generated");
++MODULE_DESCRIPTION("%%MODEL_NAME%%: %%DESCRIPTION%%");
+diff --git a/tools/verification/dot2/dot2k_templates/main_container.h b/tools/verification/dot2/dot2k_templates/main_container.h
+new file mode 100644
+index 0000000000000..0f6883ab4bcc7
+--- /dev/null
++++ b/tools/verification/dot2/dot2k_templates/main_container.h
+@@ -0,0 +1,3 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++
++extern struct rv_monitor rv_%%MODEL_NAME%%;
 -- 
 2.48.1
 
