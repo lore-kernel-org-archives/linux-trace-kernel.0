@@ -1,85 +1,106 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1F622690FE;
-	Tue, 18 Feb 2025 13:06:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 364F8267B6C
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 18 Feb 2025 13:21:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739883993; cv=none; b=XNhAa0lvJ4lw32+YdJHowib88iapPt740FhfaP+ykWTAT+nzIyPbiX/WJ+43xYzLCJZY57WToYr0oqbwRKMMCNp0w87VvCV5bRQucZh0Lk2VWsapyUDvkIObkqciCxJ0W9dOP0hj6HQfDX/uohqcjN6Bht9TxJ8D8azza/WCrSc=
+	t=1739884896; cv=none; b=NRX6xlnktmcI+bNnle1DflKCNskmWc1O98TXQJu7UzVFYt8kTB7I+59V8TySOiFPRm5LG0Vsull671Ugt70eMsoad+zz28+taLuIgbAMsOIqrFE9cve646vHqbEm8flej1Dr4NVp65kt2Cf5bHvFPj19hlnsdYrjW4xX9vZH9G0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739883993; c=relaxed/simple;
-	bh=YodAmXd4oybScYWK8pNDUTkadK7M3omvdyYffhVFwN8=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=hGBt5onBTOyorI74VUuzH11Ocs+mm3lSIY03PRkQ77xI7sZCEbNmWWtxZGOQXqwbMYFzcLYCHLWeef3YEgbcooYgZjlFvSlwTFcuSx16M3w9PJeUwmYpiihzwU+PZpkf2/Mt52gmsag63Ngpop0D8bKCh+myrZ3SQ4s8SDGX+wQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RwJX5dZK; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739884896; c=relaxed/simple;
+	bh=vNJSYCuYen7yBiUlt8/F/NhDj/0DDvBzBZsO/cYBZN0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=udtCicX4wUkNlwik9VYIQNfIejmrJPYFz2xr+87coepmutZhjTsC3W6KHR1ANRsZKlu2YTwWy//1ldG1EM4sFRBCVV0ovf3f9zBvUWwCn/4pdfQJISMIO1MHtcGG4fg/HP+8pUqjoqoNWnu53ivExKtQlScRupgwckCz4Uo6Nps=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=nPbVYq27; arc=none smtp.client-ip=209.85.218.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RwJX5dZK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5259EC4CEE2;
-	Tue, 18 Feb 2025 13:06:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739883993;
-	bh=YodAmXd4oybScYWK8pNDUTkadK7M3omvdyYffhVFwN8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=RwJX5dZKGEAx2BCwkf+b+WqYyNQVu6NPYzFcunnG51iBEOEidGQjcnq1W+7r0bCQ7
-	 cCqNfV44z5Q0V1ixU4WZmL92185hc0KGmZl2uAqdCSOhVxPnEwtqEqAcQUkE9k4ZxV
-	 3oh6pYDgmYG4c5c9PL0V37a5xODUkx0f9gUnL6oP0hy6pW6ioV8G5oWnlyS9/Z/QFY
-	 jBnfXtRk0U08P+MKGd0lfafF8q9mcWxu2FlW8o+kbO3OLxJrbJJlNFj/ZE/j4pL71G
-	 PCHfiTNB1vPrb/fveOAplSQY4cqLER7QwqG5MXoxgOg257pO+xc4bYhScncbEVoRDa
-	 nmRBLsx1gZ0nw==
-Date: Tue, 18 Feb 2025 22:06:29 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Mike Rapoport <rppt@kernel.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Andrew Morton
- <akpm@linux-foundation.org>
-Subject: Re: [PATCH v3 1/2] mm/memblock: Add reserved memory release
- function
-Message-Id: <20250218220629.6a352d70e0350b01e662d782@kernel.org>
-In-Reply-To: <Z7RwWyD67BxWPnK8@kernel.org>
-References: <173928521419.906035.17750338150436695675.stgit@devnote2>
-	<173928522350.906035.5626965043208329135.stgit@devnote2>
-	<Z7Q1xY3jhWjaSdeh@kernel.org>
-	<20250218174257.61018735a30268b5e21e50e3@kernel.org>
-	<Z7RXGX/TyAvETRgc@kernel.org>
-	<Z7RwWyD67BxWPnK8@kernel.org>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="nPbVYq27"
+Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-ab771575040so1260266366b.1
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 18 Feb 2025 05:21:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1739884891; x=1740489691; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=+VRsn+AEynXrzDApi3GOCSB7kda1CeXhMpv+TvTGpE8=;
+        b=nPbVYq27ZawqQJs54gG+N7vhAULaE74Dqem+QI0sRYaGaOIjWBLt2QoG5tcUwc3LMp
+         djms69G1IJbBIk1ct6zk7pVYqfjOSgeYAf1iWCENh67LoeMVSEmtydzKgGJj8Tc9l76C
+         WuuqeQDDCyIOEkOllnD6jyoXevFsQcasuZukogKipx1PWdsMNubuA/XAumbQ6PQB0tCr
+         LDq4O7XA4VwzBc0u7AbTzZgXWfg3RuYBBH7nZtFulbaQoQ33NLbqRW0+sYsNyXBfmtlh
+         B7bTNzWWkIdw/MSwZRTtOdCcvSY0gklRCtR63UEM1Bl4QUWvq/a9E0hNY2sAlnXk0UBj
+         MlSA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739884891; x=1740489691;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=+VRsn+AEynXrzDApi3GOCSB7kda1CeXhMpv+TvTGpE8=;
+        b=lEuKqKpVq6U+F+DzMutKoDomJbOw0jUtfiWqkDL5YNzlN/1ORv8jMOSUVMsofPxh8j
+         L8dlPEr2NIqvWSd3yWsSqCvgMVOJuYukhbrHtQ6dzrW/heBA9/Z9jElkaFmgUJOtyuFN
+         21/O9+/8RbDCW1ckSZROjNMoOnVHZ1Y+HsuH8ieYKiTI6hWEv+zqUT4kPmbz9EZicpZB
+         5fu6DrFlvQ2OzQpdFcgnAKKOR4OfV+OXilOacxfG1EG6oeARPIOG55tLBWhAhPahz8IV
+         2cRVfhyF9+tAhaqipimDf/BcOgQnC45hW53Em4DfCyDzDQJ7zKMpxe2wFBo+gbPbv7yP
+         wtJA==
+X-Forwarded-Encrypted: i=1; AJvYcCXw9SKesMJO3LAU2/+fGXg/13bw4Fl/S65awJXNQfvuyUN+AZu/0ZRcBC0Wtdk6ynlFTlX/sPiiGrfSOAthzSfPN+c=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxClY888oT+CRp5L6eg/JkM161NW1m7aX06z5jtgOzLarPEaXzr
+	600OdcTWOoNRKDjNrxfkAH7IX68dBslbC+uyOq6dUDTFWSap7KwG48T0Y66b925P7rzdXiIKhqJ
+	AJhb7GiAjPdRpHVJ5w10sTvRELb9k/RODVeDe
+X-Gm-Gg: ASbGncsKv+mkx2MAb8xjfiMCkv9U9CrQADLUw12CmT+Lj9WJeK33sIlZTlFBLNPe/sS
+	sTGC6QfU/9NDWslsWH1Gg1kYuo5yNWdqU22GDHFP54UHoiOAVwVnb2LwLkOFQtS60kFSoFJ0D
+X-Google-Smtp-Source: AGHT+IHENWMLQyMCFNyQoxq+tfzbXqrmhbnicTEoipxWjXHMkPQJj0dvAxcA8gbOg9IcuPizgSbv9RYX5Ub2iiHYQEw=
+X-Received: by 2002:a17:907:1903:b0:abb:c457:af69 with SMTP id
+ a640c23a62f3a-abbc457b75emr101178366b.0.1739884891353; Tue, 18 Feb 2025
+ 05:21:31 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+References: <20250214-cwnd_tracepoint-v2-1-ef8d15162d95@debian.org>
+In-Reply-To: <20250214-cwnd_tracepoint-v2-1-ef8d15162d95@debian.org>
+From: Eric Dumazet <edumazet@google.com>
+Date: Tue, 18 Feb 2025 14:21:19 +0100
+X-Gm-Features: AWEUYZn0nWNA0Mz8GXU5V1iIM17iCX9C2BuP0-zp0BUC-CYDsMjMQia2EAIfB_0
+Message-ID: <CANn89iKyKTD+vQwG-h=oczX=tfBJeY9SVmXFX4a7yMXJCvuJ7w@mail.gmail.com>
+Subject: Re: [PATCH net-next v2] trace: tcp: Add tracepoint for tcp_cwnd_reduction()
+To: Breno Leitao <leitao@debian.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, "David S. Miller" <davem@davemloft.net>, 
+	David Ahern <dsahern@kernel.org>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	Simon Horman <horms@kernel.org>, Neal Cardwell <ncardwell@google.com>, netdev@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	kernel-team@meta.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, 18 Feb 2025 13:34:51 +0200
-Mike Rapoport <rppt@kernel.org> wrote:
+On Fri, Feb 14, 2025 at 6:07=E2=80=AFPM Breno Leitao <leitao@debian.org> wr=
+ote:
+>
+> Add a lightweight tracepoint to monitor TCP congestion window
+> adjustments via tcp_cwnd_reduction(). This tracepoint enables tracking
+> of:
+> - TCP window size fluctuations
+> - Active socket behavior
+> - Congestion window reduction events
+>
+> Meta has been using BPF programs to monitor this function for years.
+> Adding a proper tracepoint provides a stable API for all users who need
+> to monitor TCP congestion window behavior.
+>
+> Use DECLARE_TRACE instead of TRACE_EVENT to avoid creating trace event
+> infrastructure and exporting to tracefs, keeping the implementation
+> minimal. (Thanks Steven Rostedt)
+>
+> Given that this patch creates a rawtracepoint, you could hook into it
+> using regular tooling, like bpftrace, using regular rawtracepoint
+> infrastructure, such as:
+>
+>         rawtracepoint:tcp_cwnd_reduction_tp {
+>                 ....
+>         }
+>
+> Signed-off-by: Breno Leitao <leitao@debian.org>
 
-> On Tue, Feb 18, 2025 at 11:47:11AM +0200, Mike Rapoport wrote:
-> > On Tue, Feb 18, 2025 at 05:42:57PM +0900, Masami Hiramatsu wrote:
-> > > Hi Mike,
-> > > 
-> > > 
-> > > Thanks! but I can not use free_reserved_area() here because it uses
-> > > virt_to_page(). Here we only know the physical address in the map.
-> > > I think we can use free_reserved_page() instead. Is that OK?
-> > 
-> > For reserve_mem ranges virt_to_phys() will work, they are allocated from the
-> 
-> I meant phys_to_virt() of course :)
-
-Ah, I got it :). Let me update it.
-
-Thanks!
-
-> 
-> > memory that is covered by the direct map.
-> 
-> -- 
-> Sincerely yours,
-> Mike.
-
-
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Reviewed-by: Eric Dumazet <edumazet@google.com>
