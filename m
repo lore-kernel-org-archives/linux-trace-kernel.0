@@ -1,186 +1,125 @@
-Received: from mail-io1-f78.google.com (mail-io1-f78.google.com [209.85.166.78])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16A9022FADE
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 18 Feb 2025 09:37:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.78
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FB3022CBD0;
+	Tue, 18 Feb 2025 09:47:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739871446; cv=none; b=dWyah6+X91CJMNXE2xdNS97XW+y3R/dfTU8GBG1gB5etPCzNxnpVHaP6Z4LBB4d/T/EBq0xL7bqxc5+u+3ICVhCZPFnsa8KhCRY7a8hc/WKcvzGG9DFXLE5JpfXfegkBH5ZKQQa4ruuL+IUbL0garf8+/ln6wg2cPSUcgaWyiVM=
+	t=1739872032; cv=none; b=e2Mb7L/QmEcKkmmeo/7BPg27rNje2nC51l9KAXW0DKhr2WdTPhHVBWALxxJ2nx/wd6LSIbUUmldj2ydVRaQCKq69v0otRNomhX/9Oe2RPAFTMBoyjoxd0sLA/kMkNPpaZMerABnmpqX1FqhcBDEyIBbkdxVb/7aH0NwggZ0SGNA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739871446; c=relaxed/simple;
-	bh=1vzXxAhEudrAhyb1CsSMVfihnBRlSdyHD0J4se+ZkKs=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=GNz8VAfksU8ksuPrZ0wR+qtkJ9yyUg2q/a6yrXIsLJp1xNBilQnCC6mkurzXusx6QRZqwnyloFUup3fwV/FJ+MMBwdlf13Npw+/SbF7r1s+lCJaAR0rlI8tcno35iC2UCeVOP6dvmgM2r7eFgz/4Cy9LclN8oTCRGCuP7jsKphY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f78.google.com with SMTP id ca18e2360f4ac-8558f28e005so305774539f.1
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 18 Feb 2025 01:37:24 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739871444; x=1740476244;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=FLZ4fY1/NxqwbUdjoAoI1yEPFjdoeZ2kiHEcyPZJC1Y=;
-        b=qlQsaftYJYLU4xvwFcyKkiYWaMp/DP9cPqvDT3dTRR2e/qLb8hqNGVibhhmHOlzZhc
-         uyw+ojKzfD3l1hGceoLszveUTefPXDq1X/DD2Wh0nn+mrF4Sw6GChKEprge7NiLekKXz
-         3q5UWOIiAuWysO4Yy8yI6WeYxIQlnohvjoXJPq3XyloW5Hu6MV1548S/0THEj7lvUYne
-         uhJV4GnPn2JosZpCE1N7ztGz7XQ7N0UReEqb1qMQjo7A4A2+yQ6UmsAPem+jcrKi091i
-         E82FVe4OW9CnBG8v/z4AqtVZSaR4327xj0X+ZhQsTrY2yaW0Epby5vOw9Ulv+lLffHpt
-         E+WA==
-X-Forwarded-Encrypted: i=1; AJvYcCVccIo0rpUfvtf8Uw2oHpzdGszp3akgmjAd+9rtFdAEL2UMUfOSj2qboKlCijj8cBgsLgRtuKOHg1Is5iXkdcnXBZw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YztIWBTfFXZ72REM3e470wCyubnLHpcd8lVvLYgVCaFwIv1iq6m
-	ySf0q9ZMOfW0D/1QihSxuzr81TStyIyCRddVwtoNG6pjPy4plDvkKNvBkAmjFFH5CuZ2Azuw1ij
-	PYTjHFruGRCqVlX+0DpjZPK3PtkDhT5VuoIOMHE9+SleuWy33OvVCMXw=
-X-Google-Smtp-Source: AGHT+IEm82RK3nnYqiu/mYzAVrx+dILIstbP39Ck3XYMaxYLNL9eyMHJ8hlfxzpUGC53uwrwTtS1l7Y1imi/shDsJlP6RzNpi6m1
+	s=arc-20240116; t=1739872032; c=relaxed/simple;
+	bh=RewN5nlvJM/iiydEKFf80mM01NzWJ5mNu9D7+12YtFY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MkyUF6HnIOpBNYrYl8p4tabTZwjTfF9B9b6fvO2Fd46vHkGmJIs4qPeyfLWM5AjHTUOqIOpf5i1BbfaP0DW2oq81Uedq5iag20NfBnxSg403odC1Tq67fwlsV+r0N6UxlE9lQe/IbdJd6Y1XIfIYtqssALDeVZw/y6GlkhsNhG8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WxYr3p8+; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WxYr3p8+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 09C41C4CEE2;
+	Tue, 18 Feb 2025 09:47:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739872031;
+	bh=RewN5nlvJM/iiydEKFf80mM01NzWJ5mNu9D7+12YtFY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=WxYr3p8+ONFGwBoe1iFxQlwIolL1Cznbq8f6dhKX94nIMMeQSNMLuJ4TNF4oqUsDg
+	 di2QHX3OtREUPToYGwHEvIPPF/psJiHmlT3rKLI0NHX1ZUmJ6m2tbyN1bWv2rIrxcf
+	 7mFDdcFWUQaCtf6tLCHuPWdpg+2TzUz0U8s9BGZ0FtLtb73kSwApNfMoN2r3wifvzC
+	 KM3iXPsoh/LeRxt7ksvSTpiWTdyoPtWr1IFjeLhin+RLl9zT3etYaoijloF4PJhaQJ
+	 5lGSC9GRKfalcPp7pRzRF9BzF0IZ5meUM6mrcKz68sY7tOQ42muFf1IBeKDS2QmDTN
+	 ZeDmaT0MZD6KQ==
+Date: Tue, 18 Feb 2025 11:47:05 +0200
+From: Mike Rapoport <rppt@kernel.org>
+To: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	Mark Rutland <mark.rutland@arm.com>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH v3 1/2] mm/memblock: Add reserved memory release function
+Message-ID: <Z7RXGX/TyAvETRgc@kernel.org>
+References: <173928521419.906035.17750338150436695675.stgit@devnote2>
+ <173928522350.906035.5626965043208329135.stgit@devnote2>
+ <Z7Q1xY3jhWjaSdeh@kernel.org>
+ <20250218174257.61018735a30268b5e21e50e3@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1c8c:b0:3d0:21aa:a756 with SMTP id
- e9e14a558f8ab-3d2807aba07mr117250795ab.5.1739871444163; Tue, 18 Feb 2025
- 01:37:24 -0800 (PST)
-Date: Tue, 18 Feb 2025 01:37:24 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67b454d4.050a0220.173698.0051.GAE@google.com>
-Subject: [syzbot] [netfs?] INFO: task hung in pipe_write (6)
-From: syzbot <syzbot+5984e31a805252b3b40a@syzkaller.appspotmail.com>
-To: brauner@kernel.org, ceph-devel@vger.kernel.org, dhowells@redhat.com, 
-	idryomov@gmail.com, jack@suse.cz, jlayton@kernel.org, 
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, mathieu.desnoyers@efficios.com, 
-	mhiramat@kernel.org, netfs@lists.linux.dev, rostedt@goodmis.org, 
-	syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk, xiubli@redhat.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250218174257.61018735a30268b5e21e50e3@kernel.org>
 
-Hello,
+On Tue, Feb 18, 2025 at 05:42:57PM +0900, Masami Hiramatsu wrote:
+> Hi Mike,
+> 
+> On Tue, 18 Feb 2025 09:24:53 +0200
+> Mike Rapoport <rppt@kernel.org> wrote:
+> 
+> > Hi Masami,
+> > 
+> > On Tue, Feb 11, 2025 at 11:47:03PM +0900, Masami Hiramatsu (Google) wrote:
+> > > From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> > > 
+> > > Add reserve_mem_release_by_name() to release a reserved memory region
+> > > with a given name. This allows us to release reserved memory which is
+> > > defined by kernel cmdline, after boot.
+> > > 
+> > > Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> > > Cc: Andrew Morton <akpm@linux-foundation.org>
+> > > Cc: Mike Rapoport <rppt@kernel.org>
+> > > Cc: linux-mm@kvack.org
+> > 
+> > ...
+> > 
+> > > +/**
+> > > + * reserve_mem_release_by_name - Release reserved memory region with a given name
+> > > + * @name: The name that is attatched to a reserved memory region
+> > > + *
+> > > + * Forcibly release the pages in the reserved memory region so that those memory
+> > > + * can be used as free memory. After released the reserved region size becomes 0.
+> > > + *
+> > > + * Returns: 1 if released or 0 if not found.
+> > > + */
+> > > +int reserve_mem_release_by_name(const char *name)
+> > > +{
+> > > +	struct reserve_mem_table *map;
+> > > +	unsigned int page_count;
+> > > +	phys_addr_t start;
+> > > +
+> > > +	guard(mutex)(&reserve_mem_lock);
+> > > +	map = reserve_mem_find_by_name_nolock(name);
+> > > +	if (!map)
+> > > +		return 0;
+> > > +
+> > > +	start = map->start;
+> > > +	page_count = DIV_ROUND_UP(map->size, PAGE_SIZE);
+> > > +
+> > > +	for (int i = 0; i < page_count; i++) {
+> > > +		phys_addr_t addr = start + i * PAGE_SIZE;
+> > > +		struct page *page = pfn_to_page(addr >> PAGE_SHIFT);
+> > > +
+> > > +		page->flags &= ~BIT(PG_reserved);
+> > > +		__free_page(page);
+> > > +	}
+> > 
+> > We have free_reserved_area(), please use it here.
+> > Otherwise
+> > 
+> > Acked-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+> 
+> Thanks! but I can not use free_reserved_area() here because it uses
+> virt_to_page(). Here we only know the physical address in the map.
+> I think we can use free_reserved_page() instead. Is that OK?
 
-syzbot found the following issue on:
+For reserve_mem ranges virt_to_phys() will work, they are allocated from the
+memory that is covered by the direct map.
+ 
+> Thank you,
+> 
+> -- 
+> Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-HEAD commit:    ad1b832bf1cf Merge tag 'devicetree-fixes-for-6.14-1' of gi..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=1251a898580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=e55cabe422b4fcaf
-dashboard link: https://syzkaller.appspot.com/bug?extid=5984e31a805252b3b40a
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=170d57df980000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=12df35a4580000
-
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/9de6d97a8d34/disk-ad1b832b.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/258463d6a9b5/vmlinux-ad1b832b.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/f0449b94f00a/bzImage-ad1b832b.xz
-
-The issue was bisected to:
-
-commit 7ba167c4c73ed96eb002c98a9d7d49317dfb0191
-Author: David Howells <dhowells@redhat.com>
-Date:   Mon Mar 18 16:57:31 2024 +0000
-
-    netfs: Switch to using unsigned long long rather than loff_t
-
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=166625b0580000
-final oops:     https://syzkaller.appspot.com/x/report.txt?x=156625b0580000
-console output: https://syzkaller.appspot.com/x/log.txt?x=116625b0580000
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+5984e31a805252b3b40a@syzkaller.appspotmail.com
-Fixes: 7ba167c4c73e ("netfs: Switch to using unsigned long long rather than loff_t")
-
-INFO: task kworker/1:2:837 blocked for more than 143 seconds.
-      Not tainted 6.14.0-rc2-syzkaller-00303-gad1b832bf1cf #0
-"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-task:kworker/1:2     state:D stack:25360 pid:837   tgid:837   ppid:2      task_flags:0x4208060 flags:0x00004000
-Workqueue: events p9_write_work
-Call Trace:
- <TASK>
- context_switch kernel/sched/core.c:5377 [inline]
- __schedule+0x18bc/0x4c40 kernel/sched/core.c:6764
- __schedule_loop kernel/sched/core.c:6841 [inline]
- schedule+0x14b/0x320 kernel/sched/core.c:6856
- schedule_preempt_disabled+0x13/0x30 kernel/sched/core.c:6913
- __mutex_lock_common kernel/locking/mutex.c:662 [inline]
- __mutex_lock+0x817/0x1010 kernel/locking/mutex.c:730
- pipe_write+0x1c6/0x1a30 fs/pipe.c:456
- __kernel_write_iter+0x433/0x950 fs/read_write.c:612
- __kernel_write fs/read_write.c:632 [inline]
- kernel_write+0x214/0x330 fs/read_write.c:653
- p9_fd_write net/9p/trans_fd.c:432 [inline]
- p9_write_work+0x57d/0xd70 net/9p/trans_fd.c:483
- process_one_work kernel/workqueue.c:3236 [inline]
- process_scheduled_works+0xabe/0x18e0 kernel/workqueue.c:3317
- worker_thread+0x870/0xd30 kernel/workqueue.c:3398
- kthread+0x7a9/0x920 kernel/kthread.c:464
- ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:148
- ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
- </TASK>
-
-Showing all locks held in the system:
-1 lock held by khungtaskd/30:
- #0: ffffffff8eb38f60 (rcu_read_lock){....}-{1:3}, at: rcu_lock_acquire include/linux/rcupdate.h:337 [inline]
- #0: ffffffff8eb38f60 (rcu_read_lock){....}-{1:3}, at: rcu_read_lock include/linux/rcupdate.h:849 [inline]
- #0: ffffffff8eb38f60 (rcu_read_lock){....}-{1:3}, at: debug_show_all_locks+0x55/0x2a0 kernel/locking/lockdep.c:6746
-3 locks held by kworker/1:2/837:
- #0: ffff88801b080d48 ((wq_completion)events){+.+.}-{0:0}, at: process_one_work kernel/workqueue.c:3211 [inline]
- #0: ffff88801b080d48 ((wq_completion)events){+.+.}-{0:0}, at: process_scheduled_works+0x98b/0x18e0 kernel/workqueue.c:3317
- #1: ffffc90003547c60 ((work_completion)(&m->wq)){+.+.}-{0:0}, at: process_one_work kernel/workqueue.c:3212 [inline]
- #1: ffffc90003547c60 ((work_completion)(&m->wq)){+.+.}-{0:0}, at: process_scheduled_works+0x9c6/0x18e0 kernel/workqueue.c:3317
- #2: ffff8880233c5468 (&pipe->mutex){+.+.}-{4:4}, at: pipe_write+0x1c6/0x1a30 fs/pipe.c:456
-2 locks held by getty/5577:
- #0: ffff8880354a20a0 (&tty->ldisc_sem){++++}-{0:0}, at: tty_ldisc_ref_wait+0x25/0x70 drivers/tty/tty_ldisc.c:243
- #1: ffffc9000332b2f0 (&ldata->atomic_read_lock){+.+.}-{4:4}, at: n_tty_read+0x616/0x1770 drivers/tty/n_tty.c:2211
-2 locks held by syz-executor138/5815:
- #0: ffff8880233c5468 (&pipe->mutex){+.+.}-{4:4}, at: pipe_write+0x1c6/0x1a30 fs/pipe.c:456
- #1: ffff888077e802e8 (mapping.invalidate_lock#3){.+.+}-{4:4}, at: filemap_invalidate_lock_shared include/linux/fs.h:932 [inline]
- #1: ffff888077e802e8 (mapping.invalidate_lock#3){.+.+}-{4:4}, at: page_cache_ra_unbounded+0x156/0x820 mm/readahead.c:229
-
-=============================================
-
-NMI backtrace for cpu 1
-CPU: 1 UID: 0 PID: 30 Comm: khungtaskd Not tainted 6.14.0-rc2-syzkaller-00303-gad1b832bf1cf #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 12/27/2024
-Call Trace:
- <TASK>
- __dump_stack lib/dump_stack.c:94 [inline]
- dump_stack_lvl+0x241/0x360 lib/dump_stack.c:120
- nmi_cpu_backtrace+0x49c/0x4d0 lib/nmi_backtrace.c:113
- nmi_trigger_cpumask_backtrace+0x198/0x320 lib/nmi_backtrace.c:62
- trigger_all_cpu_backtrace include/linux/nmi.h:162 [inline]
- check_hung_uninterruptible_tasks kernel/hung_task.c:236 [inline]
- watchdog+0x1058/0x10a0 kernel/hung_task.c:399
- kthread+0x7a9/0x920 kernel/kthread.c:464
- ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:148
- ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
- </TASK>
-Sending NMI from CPU 1 to CPUs 0:
-NMI backtrace for cpu 0 skipped: idling at native_safe_halt arch/x86/include/asm/irqflags.h:48 [inline]
-NMI backtrace for cpu 0 skipped: idling at arch_safe_halt arch/x86/include/asm/irqflags.h:106 [inline]
-NMI backtrace for cpu 0 skipped: idling at acpi_safe_halt+0x21/0x30 drivers/acpi/processor_idle.c:111
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
+-- 
+Sincerely yours,
+Mike.
