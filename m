@@ -1,134 +1,85 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A74FD232373;
-	Tue, 18 Feb 2025 08:43:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D09C322AE7F
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 18 Feb 2025 09:17:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739868180; cv=none; b=uDoFzFTb6bzntzDcnAf2UUWOtAO1rYb1WLdOode2c7o38kkzDdSzIL55nUJTahnk+zbN9PWkTDDdM7dtDn/Oj2ckqdybfitmxdZuu+ct7Kk+EETyIXar6CDGX75lWd518ddXfmtOLV7oPl3yQnmRL/7atW2Wqi4T8vGzvA1xnq8=
+	t=1739870243; cv=none; b=exC5zHeUTvpa4cpp7t+YauPzPvTcoI4UVlNIdUBKCOass8EdbAfY2sGEmh6Lwr9DhpOh7ewWwTeVVAVQZB/YEyoL2TTRQa9ci5DnpqgDOYsa8qvjfDAsDQ9ysjqv+/KTyM8WZyF8uUPb+SpZhC2qRKm7XGkVcB0ituPjIf5Y4Co=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739868180; c=relaxed/simple;
-	bh=dZj4WZKT+DPeEny8O4y/kHznbdhmpc4YiiO8vAgv9xQ=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=DYD5+J4ZYyTt1QBvYQI6gDJEdrz/3jytQFoklYLvT1JcVgeGHrqdOBoGQBVsj7DS7ojGqlEKZlyQv6jIJjEbITUfKpgfgJUMHkMQb8Mi6Jefq2sRxetd/iMOItSoT2UO5rtn+n7pymAqmXXZmv1ySqYUxxf7R3tEnsTQV7eclYI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lSY8zTlL; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739870243; c=relaxed/simple;
+	bh=e9eawh0CQTC6B4XkVXKnBZTw+De/FpP0oA2+UhyUCeA=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=UphX+jg6bS5zApIFeL4+WcoB5oy29C1m0GsVfmAc3OKzS9M1dofbgiXIl1aC/Y/jZ0TJXoDqciJ+WB76EsyJa/ua+7QRdqd06gG99QGzoZhHBDG2FiWa8HxLillCetQH3UIny4+Y0L+sj0W23/Kd7+lF1tkFIRX6U767l8J3bpI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--keyz.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=kkPj8ud3; arc=none smtp.client-ip=209.85.214.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--keyz.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lSY8zTlL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 18E96C4CEE2;
-	Tue, 18 Feb 2025 08:42:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739868180;
-	bh=dZj4WZKT+DPeEny8O4y/kHznbdhmpc4YiiO8vAgv9xQ=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=lSY8zTlLGGME3fNBQLvfB4Hhhq/C9RBpdnk1C4vnK1mlkKk8JSg9qbE4kbKAqAPIw
-	 c3IBQnAhRK+wDwwbMyYBUjrsqWIWIShBYj0bonDHAY3W3u5gFHHA/x2gHgXj/IprXA
-	 XZMtNsNjLO4wyrw8vEWagbn6XqLJYJcm28A3u8wl5eLPx7BqpxRxLlWsAiIOEuq5FC
-	 UfsBH9IN6dpb/OeEs5QlrHD/GzRMR4ze1ecuX/xwQxr5aDWKOHkOXYLDpwmi+T6tz0
-	 9idnNcB69/mYFp8LoR6dmRVsGYs261+RP5J4+sUncMtkqF1bZokm/y7q8SBmDPq9nH
-	 Xj2BzxsQbFHPA==
-Date: Tue, 18 Feb 2025 17:42:57 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Mike Rapoport <rppt@kernel.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Andrew Morton
- <akpm@linux-foundation.org>
-Subject: Re: [PATCH v3 1/2] mm/memblock: Add reserved memory release
- function
-Message-Id: <20250218174257.61018735a30268b5e21e50e3@kernel.org>
-In-Reply-To: <Z7Q1xY3jhWjaSdeh@kernel.org>
-References: <173928521419.906035.17750338150436695675.stgit@devnote2>
-	<173928522350.906035.5626965043208329135.stgit@devnote2>
-	<Z7Q1xY3jhWjaSdeh@kernel.org>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kkPj8ud3"
+Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-220ec5c16e9so83903525ad.1
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 18 Feb 2025 01:17:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1739870240; x=1740475040; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=e9eawh0CQTC6B4XkVXKnBZTw+De/FpP0oA2+UhyUCeA=;
+        b=kkPj8ud3WPOPuoa0aG9XMxegP/Uq+j0KH96YL0HqV29MJuctdCHRzz/bveDcYoCg0V
+         ej2vzyGqUpLHMrlTblU6jzAY7CCBO18QKE4bujyzOEvMKVVHOoViJ9SZE0b/6dzfgyAm
+         Fuvb400lk8JQSqPhzP7b+yiiVkLghzLZ5GqjsekFQ+zF8OaAX2NQ5C6ct0TN7nqiDSsi
+         yyTtM5PRPHySogNoVqsAvTJGuri7vRTWI3ZqHhcME+6pcBBa0Uy3VK1PHRAUP/D5HrSd
+         iNKui2VODNumGEgLaQyCD0ZKEXN6EydrMNhW47w7k5TYKA0uWzoSw43SZCjyFqKvDF1c
+         3wdw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739870240; x=1740475040;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=e9eawh0CQTC6B4XkVXKnBZTw+De/FpP0oA2+UhyUCeA=;
+        b=OWVx6IUBF6Fl/6bpJJv3rs2fI6iSak2Fdh2Mjdax+IYTZTj99uXI8tSpdmazIYwXdt
+         HCvNJcx1ysSJCObpvw43TkNOIj2OPbYX+0Crm0wlh6j6OwvToMRGfaAJG2hLNNakJ2qZ
+         PCv4GpPtbA/ncA8ZwxjII4pVLctJBmX76bxU3ypTiCUlR4sfYcmMsQvQYvXQiBzqx7hc
+         G95cJpMlzKs7OdfvMVIjLtMgj2Vw/AIrh5ogqXtldfsMCo27EDaBHw+O2y5UG3IwduAH
+         TGBRO/mnjQ0C5DhoCVgqfCt/bsbYCZ+nkLQfMT6sU1Bo23HJU6bj6zhO0I5FdxVTNQKw
+         8zPw==
+X-Forwarded-Encrypted: i=1; AJvYcCWlsPw7GzSz1Oc1ac8bWpTdlgUuoFN634FgPDAgSPbMVZwKunKI+DljdgoZyodSym5xBBnh6S6nBlwzh29YQtAQjD4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywg4cPcHbAygU6HXUVj09B367nV05SVucnx5QUeEycw7gcW1HTN
+	J5nBQib9NVBdNi48dRg5TVsx9Hr7/66E0akmnZ1NyI8xvExMdJH5oabzySL45PXF36Vsmg==
+X-Google-Smtp-Source: AGHT+IGEUf1IAWU1YfH4BCxWMw3DbzclxHXWfJ0bKoh4oebNPcKR4H3sJDIdZaS1HGUEr9wC1aKrwoRL
+X-Received: from pfbdn12.prod.google.com ([2002:a05:6a00:498c:b0:730:92d9:52e3])
+ (user=keyz job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:124e:b0:732:23ed:9470
+ with SMTP id d2e1a72fcca58-73261901144mr18452340b3a.23.1739870240161; Tue, 18
+ Feb 2025 01:17:20 -0800 (PST)
+Date: Tue, 18 Feb 2025 17:17:16 +0800
+In-Reply-To: <CAPDyKFor_kP1hcNC1YwLBjH=eaLG9qSyvOYvj+FQrNu8Piu2Dg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <CAPDyKFor_kP1hcNC1YwLBjH=eaLG9qSyvOYvj+FQrNu8Piu2Dg@mail.gmail.com>
+X-Mailer: git-send-email 2.48.1.601.g30ceb7b040-goog
+Message-ID: <20250218091716.1450623-1-keyz@google.com>
+Subject: Re: [PATCH v5 RESEND] cpuidle: psci: Add trace for PSCI domain idle
+From: Keita Morisaki <keyz@google.com>
+To: ulf.hansson@linaro.org
+Cc: aarontian@google.com, d-gole@ti.com, daniel.lezcano@linaro.org, 
+	keyz@google.com, khilman@baylibre.com, linux-arm-kernel@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, lpieralisi@kernel.org, 
+	mathieu.desnoyers@efficios.com, mhiramat@kernel.org, rafael@kernel.org, 
+	rostedt@goodmis.org, sudeep.holla@arm.com, yimingtseng@google.com
+Content-Type: text/plain; charset="UTF-8"
 
-Hi Mike,
+> Looks good to me. I left it to Ulf, FWIW:
+>
+> Acked-by: Sudeep Holla <sudeep.holla@arm.com>
 
-On Tue, 18 Feb 2025 09:24:53 +0200
-Mike Rapoport <rppt@kernel.org> wrote:
+> Applied for next, thanks!
+>
+> Kind regards
+> Uffe
 
-> Hi Masami,
-> 
-> On Tue, Feb 11, 2025 at 11:47:03PM +0900, Masami Hiramatsu (Google) wrote:
-> > From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> > 
-> > Add reserve_mem_release_by_name() to release a reserved memory region
-> > with a given name. This allows us to release reserved memory which is
-> > defined by kernel cmdline, after boot.
-> > 
-> > Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> > Cc: Andrew Morton <akpm@linux-foundation.org>
-> > Cc: Mike Rapoport <rppt@kernel.org>
-> > Cc: linux-mm@kvack.org
-> 
-> ...
-> 
-> > +/**
-> > + * reserve_mem_release_by_name - Release reserved memory region with a given name
-> > + * @name: The name that is attatched to a reserved memory region
-> > + *
-> > + * Forcibly release the pages in the reserved memory region so that those memory
-> > + * can be used as free memory. After released the reserved region size becomes 0.
-> > + *
-> > + * Returns: 1 if released or 0 if not found.
-> > + */
-> > +int reserve_mem_release_by_name(const char *name)
-> > +{
-> > +	struct reserve_mem_table *map;
-> > +	unsigned int page_count;
-> > +	phys_addr_t start;
-> > +
-> > +	guard(mutex)(&reserve_mem_lock);
-> > +	map = reserve_mem_find_by_name_nolock(name);
-> > +	if (!map)
-> > +		return 0;
-> > +
-> > +	start = map->start;
-> > +	page_count = DIV_ROUND_UP(map->size, PAGE_SIZE);
-> > +
-> > +	for (int i = 0; i < page_count; i++) {
-> > +		phys_addr_t addr = start + i * PAGE_SIZE;
-> > +		struct page *page = pfn_to_page(addr >> PAGE_SHIFT);
-> > +
-> > +		page->flags &= ~BIT(PG_reserved);
-> > +		__free_page(page);
-> > +	}
-> 
-> We have free_reserved_area(), please use it here.
-> Otherwise
-> 
-> Acked-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+Thank you for all the review! Excited to see it in the next.
 
-Thanks! but I can not use free_reserved_area() here because it uses
-virt_to_page(). Here we only know the physical address in the map.
-I think we can use free_reserved_page() instead. Is that OK?
-
-Thank you,
-
-
-> 
-> > +	map->size = 0;
-> > +
-> > +	return 1;
-> > +}
-> > +
-> >  /*
-> >   * Parse reserve_mem=nn:align:name
-> >   */
-> > 
-> 
-> -- 
-> Sincerely yours,
-> Mike.
-
-
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Best regards,
+Keita
