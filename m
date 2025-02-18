@@ -1,67 +1,98 @@
-Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B060623BF9A;
-	Tue, 18 Feb 2025 13:33:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18F77243361;
+	Tue, 18 Feb 2025 14:09:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739885593; cv=none; b=lO42VZCBjSgNmrPGOCk+OhuVfx23vXppJiYFB0G8spXRv9mdjoTEq6JoQRHfCoqITXAd78HabHl1RQz4KMn3NVQywKIpWcu+3FSkaehoHMb5AL81Rix6c7UFDG48TELz9haE3lipctBOFbO4caMR4LNVc9CStJxH9AWBit4sVw4=
+	t=1739887767; cv=none; b=N9PhUqFWlHLSHhN3lXiRWvLs/CSB01jMLCuqaCoS3X4qivcb0J+9G+nBeVOTtMXUUwZSs808WN0x+L5IwXojCZMlAh51lhdQbB+A2SjHw2fENuY3s3kqBE6h/XdxE2wzXi9teIUKaceYcUMMTCo2uTAtEFqkhIe1bO9fvVjoUOM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739885593; c=relaxed/simple;
-	bh=zw9wPD0cZ2Lg1Lu+CaJQbG9ZVlJ4oAHyJaPkVTDGwck=;
+	s=arc-20240116; t=1739887767; c=relaxed/simple;
+	bh=I/RdCQPPn1wHaFmlp+tuRpK9XsLvtlVCcv5TFMGTqPg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gP6p8moEBvOuc0ijC0w/jSsRq78mx/t8CG9QjgMrssxEwcUDjumwHbBTrLf8xMU5ggWulb9+4uLAP9rIoLgUBu6xygGKRj8ZFAH6hoSz9LGwI8JDRrWwKKAjlAmFO6Z3va9ekwAW/pKLGpt+DIvvLY7lwA4BBTwjdqveLh6+bt4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.218.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-abb90f68f8cso448455166b.3;
-        Tue, 18 Feb 2025 05:33:11 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739885590; x=1740490390;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=fWiUlVTiHOeTkc4pIfg7w83qDgdyows487uF1rjzqiU=;
-        b=qM5/T9GE6GodZ21wedeB25hK6aP/rIXEUhXYYDgXNc31CfhtgPGyO9+3lTPW0RSDhz
-         CjEsOuINR9xv2jY9OySISRHtcJ9cBXJK3fiduKtJkusC/tcLIQY/RJYKEi4pu6Pqev1D
-         +TDFlwZzpCJe8Ip+knnPKOm6ux9NShK9fE8GeeONUcTd6FBo28lFpwBfP+/OixcZZfLk
-         Spcz1N1Ep0Wv1pnNyMfa5jjCC6KyYhhdq4vqzwkNDVIs6cHOGhezYUkaqVB2DlE9Ussr
-         2XH+fHaGL8doGlkhu8UPknoNj5VEGYx+2rmlnKuMPbTYftjWJhcLkOUm2XPcOXjO4guV
-         MY6Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVZFAXYQEIu6h1s5gINrT/JT0+0Kxey0w1lojDmY779gTZHsx1L5ufA7QSoRn0/9B5wMlaF+FtQrZTCL9I=@vger.kernel.org, AJvYcCWfymFj6Bc3ojHYWoJxcl7ICvC5kas6ORxSSydJFBvBg4ySlQ/QMov571GdIAPXiwspQozCG7KdECvkLFssJ/7i4kp+@vger.kernel.org
-X-Gm-Message-State: AOJu0YxGmgwrNHCf9pcsnToL0DqpGJ4GwjPYknfL9z45dWRVMNb3wob2
-	kABz5aV0ZlKXppyr3G4VoWn9igdkgJB9RVqzEoAcs+CASiIz4lq2
-X-Gm-Gg: ASbGncvAfywzWzFOHH4cEMkkipyUkPwYHgXh/7IUmdAOkA+m4eAJEsbmGcxOG+OTkb8
-	uPcTssa8m8Jh20Z2I31INa7+EZsgUj81XyFG3TDio2S9WT60j/ETrx40ymk5d2pst1QVBddamUV
-	veW7DV7PplEZwr0jtCVWbsRfPfUU3BACt/dIXeikkn4rWRXnZhGkZm5242vz6u/k21PylEOtNpw
-	vv7FbZdd2iIITejBXifvDvfE2SxDMP6p5KIeOz/RvOGDG/upff+bJJRZ+BrB5l96n01eZ85QdpJ
-	XB2N4Q==
-X-Google-Smtp-Source: AGHT+IFda2Nj++VmsOMVFkxsPwtVMktXaY7BoajbEeCSOP7w+ytjkjbjYtnmMKjhRF5VvfmGgiymLQ==
-X-Received: by 2002:a17:906:6a03:b0:ab7:4632:e3df with SMTP id a640c23a62f3a-abb70c266e1mr1481278566b.31.1739885589578;
-        Tue, 18 Feb 2025 05:33:09 -0800 (PST)
-Received: from gmail.com ([2a03:2880:30ff:7::])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-abbaa99f283sm254406166b.32.2025.02.18.05.33.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Feb 2025 05:33:09 -0800 (PST)
-Date: Tue, 18 Feb 2025 05:33:06 -0800
-From: Breno Leitao <leitao@debian.org>
-To: Paolo Abeni <pabeni@redhat.com>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	linux-trace-kernel@vger.kernel.org, kernel-team@meta.com,
-	Jakub Kicinski <kuba@kernel.org>,
-	Eric Dumazet <edumazet@google.com>,
-	David Ahern <dsahern@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	Simon Horman <horms@kernel.org>,
-	Neal Cardwell <ncardwell@google.com>
-Subject: Re: [PATCH net-next v2] trace: tcp: Add tracepoint for
- tcp_cwnd_reduction()
-Message-ID: <20250218-honored-pronghorn-of-focus-ffabb2@leitao>
-References: <20250214-cwnd_tracepoint-v2-1-ef8d15162d95@debian.org>
- <cc84f98f-d3d6-499e-9d2f-47eaeb56aad3@redhat.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=pkDgHp/UYeGz4Ia1oAtvIswY4OqAgB3kfJaChDrYcL6rN6NIF2WnvsbXoSJp9vbNhPBrcIgH+tZx67uMvP9Duny4bH4Z4AflQhsbk9BY1aVyJj+bXzzVE8mOWRj4m3qzsRZX8oXqa50IUp3l6F6bO4sHKB2GPO0r5qXvodmCu1E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=CV+RovXp; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="CV+RovXp"
+Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51IBML7J020389;
+	Tue, 18 Feb 2025 14:08:29 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=pp1; bh=9AF1om8Lrm/xLDRHOLxFEifeKpnaLe
+	RhNPZT9gDLIQ0=; b=CV+RovXpmtr1HdW8oXhrmXR+yctXcF/BZ/igc+sObd4LmN
+	Q+YeZ1Zlb43eyfvWfHnVonpvcozFlMyS7RwWrXmeeapi/bJc0Xqnd/qGeGwkkqYx
+	zL1E7BNIE+kIXvk8qpAT60eq6qShVzwSUL2vNi2m4D6+XHL77xqXT+KRDpqxKNEw
+	VFv8m1cHcw3z3cUALoCO9xSlCFCDjwS7GjlwK3XN5pEwSMMC+4YXKqAp4mzE8/XH
+	/9saCZ8rgKGhg0d+fjm594PCQaoMsYHZqawndMZp+Wt2fIn9VzEBYa6q9a5OfePO
+	UhtAvSK5l82To9C9ygf3TkZ3thakqLmrVwcHailg==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44vg99u7j6-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 18 Feb 2025 14:08:28 +0000 (GMT)
+Received: from m0360083.ppops.net (m0360083.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 51IE7Lf0016617;
+	Tue, 18 Feb 2025 14:08:28 GMT
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44vg99u7j0-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 18 Feb 2025 14:08:27 +0000 (GMT)
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 51IBaUc3013259;
+	Tue, 18 Feb 2025 14:08:26 GMT
+Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 44u7fkk9wb-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 18 Feb 2025 14:08:26 +0000
+Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
+	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 51IE8NZ59306562
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 18 Feb 2025 14:08:23 GMT
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 430722004E;
+	Tue, 18 Feb 2025 14:08:23 +0000 (GMT)
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id AAD4620043;
+	Tue, 18 Feb 2025 14:08:22 +0000 (GMT)
+Received: from osiris (unknown [9.152.212.60])
+	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Tue, 18 Feb 2025 14:08:22 +0000 (GMT)
+Date: Tue, 18 Feb 2025 15:08:21 +0100
+From: Heiko Carstens <hca@linux.ibm.com>
+To: joel granados <joel.granados@kernel.org>
+Cc: Kees Cook <kees@kernel.org>, Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        "Liang, Kan" <kan.liang@linux.intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Andreas Larsson <andreas@gaisler.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Sven Schnelle <svens@linux.ibm.com>,
+        Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
+        Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-trace-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        sparclinux@vger.kernel.org, linux-s390@vger.kernel.org,
+        linux-acpi@vger.kernel.org
+Subject: Re: [PATCH 7/8] s390: mv s390 sysctls into their own file under
+ arch/s390 dir
+Message-ID: <20250218140821.7740Ab5-hca@linux.ibm.com>
+References: <20250218-jag-mv_ctltables-v1-0-cd3698ab8d29@kernel.org>
+ <20250218-jag-mv_ctltables-v1-7-cd3698ab8d29@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -70,46 +101,65 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <cc84f98f-d3d6-499e-9d2f-47eaeb56aad3@redhat.com>
+In-Reply-To: <20250218-jag-mv_ctltables-v1-7-cd3698ab8d29@kernel.org>
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: C1vwg1h0Wd1-AF41KNeLrehTep7PLEGd
+X-Proofpoint-ORIG-GUID: 6Qf1aZgnvDRrtDnExFplYp_kZP8KujkA
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-18_06,2025-02-18_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ adultscore=0 mlxscore=0 suspectscore=0 clxscore=1011 mlxlogscore=780
+ priorityscore=1501 bulkscore=0 malwarescore=0 phishscore=0 spamscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2501170000 definitions=main-2502180106
 
-Hello Paolo,
-
-On Tue, Feb 18, 2025 at 01:53:15PM +0100, Paolo Abeni wrote:
-> On 2/14/25 6:07 PM, Breno Leitao wrote:
-> > Add a lightweight tracepoint to monitor TCP congestion window
-> > adjustments via tcp_cwnd_reduction(). This tracepoint enables tracking
-> > of:
-> > - TCP window size fluctuations
-> > - Active socket behavior
-> > - Congestion window reduction events
-> > 
-> > Meta has been using BPF programs to monitor this function for years.
-> > Adding a proper tracepoint provides a stable API for all users who need
-> > to monitor TCP congestion window behavior.
-> > 
-> > Use DECLARE_TRACE instead of TRACE_EVENT to avoid creating trace event
-> > infrastructure and exporting to tracefs, keeping the implementation
-> > minimal. (Thanks Steven Rostedt)
-> > 
-> > Given that this patch creates a rawtracepoint, you could hook into it
-> > using regular tooling, like bpftrace, using regular rawtracepoint
-> > infrastructure, such as:
-> > 
-> > 	rawtracepoint:tcp_cwnd_reduction_tp {
-> > 		....
-> > 	}
-> > 
-> > Signed-off-by: Breno Leitao <leitao@debian.org>
-> > ---
-> > ---
-> > Changes in v2:
-> > - Close the parenthesis in a new line to honor the tcp.h format (Jakub).
-> > - Add the bpftrace example in the commit message (Jakub)
-> > - Link to v1: https://lore.kernel.org/r/20250207-cwnd_tracepoint-v1-1-13650f3ca96d@debian.org
+On Tue, Feb 18, 2025 at 10:56:23AM +0100, joel granados wrote:
+> Move s390 sysctls (spin_retry and userprocess_debug) into their own
+> files under arch/s390. We create two new sysctl tables
+> (2390_{fault,spin}_sysctl_table) which will be initialized with
+> arch_initcall placing them after their original place in proc_root_init.
 > 
-> For future similar situations, note that it's expected to carry-on the
-> tag already collected in the previous versions, since the delta is only
-> cosmetic.
+> This is part of a greater effort to move ctl tables into their
+> respective subsystems which will reduce the merge conflicts in
+> kerenel/sysctl.c.
+  ^^^^^^^
+typo
 
-That is fair. I simply forgot about it. Sorry about it.
+> diff --git a/arch/s390/lib/spinlock.c b/arch/s390/lib/spinlock.c
+> index a81a01c44927..4483fdc9d472 100644
+> --- a/arch/s390/lib/spinlock.c
+> +++ b/arch/s390/lib/spinlock.c
+> @@ -17,6 +17,10 @@
+>  #include <asm/alternative.h>
+>  #include <asm/asm.h>
+>  
+> +#if defined(CONFIG_SMP)
+> +#include <linux/sysctl.h>
+> +#endif
+> +
+...
+> +#if defined(CONFIG_SMP)
+> +static const struct ctl_table s390_spin_sysctl_table[] = {
+> +	{
+> +		.procname	= "spin_retry",
+> +		.data		= &spin_retry,
+> +		.maxlen		= sizeof(int),
+> +		.mode		= 0644,
+> +		.proc_handler	= proc_dointvec,
+> +	},
+> +};
+> +
+> +static int __init init_s390_spin_sysctls(void)
+> +{
+> +	register_sysctl_init("kernel", s390_spin_sysctl_table);
+> +	return 0;
+> +}
+> +arch_initcall(init_s390_spin_sysctls);
+> +#endif
 
+I see that you want to keep the existing CONFIG_SMP behaviour, but since a
+long time s390 enforces CONFIG_SMP=y (this was obviously never reflected in
+kernel/sysctl.c).
+Therefore the above ifdefs should be removed, and in addition the include
+statement should be added to the other linux includes at the top of the file.
