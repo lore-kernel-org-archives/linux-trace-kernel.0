@@ -1,106 +1,115 @@
-Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
+Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 364F8267B6C
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 18 Feb 2025 13:21:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B060623BF9A;
+	Tue, 18 Feb 2025 13:33:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739884896; cv=none; b=NRX6xlnktmcI+bNnle1DflKCNskmWc1O98TXQJu7UzVFYt8kTB7I+59V8TySOiFPRm5LG0Vsull671Ugt70eMsoad+zz28+taLuIgbAMsOIqrFE9cve646vHqbEm8flej1Dr4NVp65kt2Cf5bHvFPj19hlnsdYrjW4xX9vZH9G0=
+	t=1739885593; cv=none; b=lO42VZCBjSgNmrPGOCk+OhuVfx23vXppJiYFB0G8spXRv9mdjoTEq6JoQRHfCoqITXAd78HabHl1RQz4KMn3NVQywKIpWcu+3FSkaehoHMb5AL81Rix6c7UFDG48TELz9haE3lipctBOFbO4caMR4LNVc9CStJxH9AWBit4sVw4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739884896; c=relaxed/simple;
-	bh=vNJSYCuYen7yBiUlt8/F/NhDj/0DDvBzBZsO/cYBZN0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=udtCicX4wUkNlwik9VYIQNfIejmrJPYFz2xr+87coepmutZhjTsC3W6KHR1ANRsZKlu2YTwWy//1ldG1EM4sFRBCVV0ovf3f9zBvUWwCn/4pdfQJISMIO1MHtcGG4fg/HP+8pUqjoqoNWnu53ivExKtQlScRupgwckCz4Uo6Nps=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=nPbVYq27; arc=none smtp.client-ip=209.85.218.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="nPbVYq27"
-Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-ab771575040so1260266366b.1
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 18 Feb 2025 05:21:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1739884891; x=1740489691; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=+VRsn+AEynXrzDApi3GOCSB7kda1CeXhMpv+TvTGpE8=;
-        b=nPbVYq27ZawqQJs54gG+N7vhAULaE74Dqem+QI0sRYaGaOIjWBLt2QoG5tcUwc3LMp
-         djms69G1IJbBIk1ct6zk7pVYqfjOSgeYAf1iWCENh67LoeMVSEmtydzKgGJj8Tc9l76C
-         WuuqeQDDCyIOEkOllnD6jyoXevFsQcasuZukogKipx1PWdsMNubuA/XAumbQ6PQB0tCr
-         LDq4O7XA4VwzBc0u7AbTzZgXWfg3RuYBBH7nZtFulbaQoQ33NLbqRW0+sYsNyXBfmtlh
-         B7bTNzWWkIdw/MSwZRTtOdCcvSY0gklRCtR63UEM1Bl4QUWvq/a9E0hNY2sAlnXk0UBj
-         MlSA==
+	s=arc-20240116; t=1739885593; c=relaxed/simple;
+	bh=zw9wPD0cZ2Lg1Lu+CaJQbG9ZVlJ4oAHyJaPkVTDGwck=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gP6p8moEBvOuc0ijC0w/jSsRq78mx/t8CG9QjgMrssxEwcUDjumwHbBTrLf8xMU5ggWulb9+4uLAP9rIoLgUBu6xygGKRj8ZFAH6hoSz9LGwI8JDRrWwKKAjlAmFO6Z3va9ekwAW/pKLGpt+DIvvLY7lwA4BBTwjdqveLh6+bt4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.218.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-abb90f68f8cso448455166b.3;
+        Tue, 18 Feb 2025 05:33:11 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739884891; x=1740489691;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=+VRsn+AEynXrzDApi3GOCSB7kda1CeXhMpv+TvTGpE8=;
-        b=lEuKqKpVq6U+F+DzMutKoDomJbOw0jUtfiWqkDL5YNzlN/1ORv8jMOSUVMsofPxh8j
-         L8dlPEr2NIqvWSd3yWsSqCvgMVOJuYukhbrHtQ6dzrW/heBA9/Z9jElkaFmgUJOtyuFN
-         21/O9+/8RbDCW1ckSZROjNMoOnVHZ1Y+HsuH8ieYKiTI6hWEv+zqUT4kPmbz9EZicpZB
-         5fu6DrFlvQ2OzQpdFcgnAKKOR4OfV+OXilOacxfG1EG6oeARPIOG55tLBWhAhPahz8IV
-         2cRVfhyF9+tAhaqipimDf/BcOgQnC45hW53Em4DfCyDzDQJ7zKMpxe2wFBo+gbPbv7yP
-         wtJA==
-X-Forwarded-Encrypted: i=1; AJvYcCXw9SKesMJO3LAU2/+fGXg/13bw4Fl/S65awJXNQfvuyUN+AZu/0ZRcBC0Wtdk6ynlFTlX/sPiiGrfSOAthzSfPN+c=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxClY888oT+CRp5L6eg/JkM161NW1m7aX06z5jtgOzLarPEaXzr
-	600OdcTWOoNRKDjNrxfkAH7IX68dBslbC+uyOq6dUDTFWSap7KwG48T0Y66b925P7rzdXiIKhqJ
-	AJhb7GiAjPdRpHVJ5w10sTvRELb9k/RODVeDe
-X-Gm-Gg: ASbGncsKv+mkx2MAb8xjfiMCkv9U9CrQADLUw12CmT+Lj9WJeK33sIlZTlFBLNPe/sS
-	sTGC6QfU/9NDWslsWH1Gg1kYuo5yNWdqU22GDHFP54UHoiOAVwVnb2LwLkOFQtS60kFSoFJ0D
-X-Google-Smtp-Source: AGHT+IHENWMLQyMCFNyQoxq+tfzbXqrmhbnicTEoipxWjXHMkPQJj0dvAxcA8gbOg9IcuPizgSbv9RYX5Ub2iiHYQEw=
-X-Received: by 2002:a17:907:1903:b0:abb:c457:af69 with SMTP id
- a640c23a62f3a-abbc457b75emr101178366b.0.1739884891353; Tue, 18 Feb 2025
- 05:21:31 -0800 (PST)
+        d=1e100.net; s=20230601; t=1739885590; x=1740490390;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=fWiUlVTiHOeTkc4pIfg7w83qDgdyows487uF1rjzqiU=;
+        b=qM5/T9GE6GodZ21wedeB25hK6aP/rIXEUhXYYDgXNc31CfhtgPGyO9+3lTPW0RSDhz
+         CjEsOuINR9xv2jY9OySISRHtcJ9cBXJK3fiduKtJkusC/tcLIQY/RJYKEi4pu6Pqev1D
+         +TDFlwZzpCJe8Ip+knnPKOm6ux9NShK9fE8GeeONUcTd6FBo28lFpwBfP+/OixcZZfLk
+         Spcz1N1Ep0Wv1pnNyMfa5jjCC6KyYhhdq4vqzwkNDVIs6cHOGhezYUkaqVB2DlE9Ussr
+         2XH+fHaGL8doGlkhu8UPknoNj5VEGYx+2rmlnKuMPbTYftjWJhcLkOUm2XPcOXjO4guV
+         MY6Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVZFAXYQEIu6h1s5gINrT/JT0+0Kxey0w1lojDmY779gTZHsx1L5ufA7QSoRn0/9B5wMlaF+FtQrZTCL9I=@vger.kernel.org, AJvYcCWfymFj6Bc3ojHYWoJxcl7ICvC5kas6ORxSSydJFBvBg4ySlQ/QMov571GdIAPXiwspQozCG7KdECvkLFssJ/7i4kp+@vger.kernel.org
+X-Gm-Message-State: AOJu0YxGmgwrNHCf9pcsnToL0DqpGJ4GwjPYknfL9z45dWRVMNb3wob2
+	kABz5aV0ZlKXppyr3G4VoWn9igdkgJB9RVqzEoAcs+CASiIz4lq2
+X-Gm-Gg: ASbGncvAfywzWzFOHH4cEMkkipyUkPwYHgXh/7IUmdAOkA+m4eAJEsbmGcxOG+OTkb8
+	uPcTssa8m8Jh20Z2I31INa7+EZsgUj81XyFG3TDio2S9WT60j/ETrx40ymk5d2pst1QVBddamUV
+	veW7DV7PplEZwr0jtCVWbsRfPfUU3BACt/dIXeikkn4rWRXnZhGkZm5242vz6u/k21PylEOtNpw
+	vv7FbZdd2iIITejBXifvDvfE2SxDMP6p5KIeOz/RvOGDG/upff+bJJRZ+BrB5l96n01eZ85QdpJ
+	XB2N4Q==
+X-Google-Smtp-Source: AGHT+IFda2Nj++VmsOMVFkxsPwtVMktXaY7BoajbEeCSOP7w+ytjkjbjYtnmMKjhRF5VvfmGgiymLQ==
+X-Received: by 2002:a17:906:6a03:b0:ab7:4632:e3df with SMTP id a640c23a62f3a-abb70c266e1mr1481278566b.31.1739885589578;
+        Tue, 18 Feb 2025 05:33:09 -0800 (PST)
+Received: from gmail.com ([2a03:2880:30ff:7::])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-abbaa99f283sm254406166b.32.2025.02.18.05.33.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Feb 2025 05:33:09 -0800 (PST)
+Date: Tue, 18 Feb 2025 05:33:06 -0800
+From: Breno Leitao <leitao@debian.org>
+To: Paolo Abeni <pabeni@redhat.com>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	linux-trace-kernel@vger.kernel.org, kernel-team@meta.com,
+	Jakub Kicinski <kuba@kernel.org>,
+	Eric Dumazet <edumazet@google.com>,
+	David Ahern <dsahern@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	"David S. Miller" <davem@davemloft.net>,
+	Simon Horman <horms@kernel.org>,
+	Neal Cardwell <ncardwell@google.com>
+Subject: Re: [PATCH net-next v2] trace: tcp: Add tracepoint for
+ tcp_cwnd_reduction()
+Message-ID: <20250218-honored-pronghorn-of-focus-ffabb2@leitao>
+References: <20250214-cwnd_tracepoint-v2-1-ef8d15162d95@debian.org>
+ <cc84f98f-d3d6-499e-9d2f-47eaeb56aad3@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250214-cwnd_tracepoint-v2-1-ef8d15162d95@debian.org>
-In-Reply-To: <20250214-cwnd_tracepoint-v2-1-ef8d15162d95@debian.org>
-From: Eric Dumazet <edumazet@google.com>
-Date: Tue, 18 Feb 2025 14:21:19 +0100
-X-Gm-Features: AWEUYZn0nWNA0Mz8GXU5V1iIM17iCX9C2BuP0-zp0BUC-CYDsMjMQia2EAIfB_0
-Message-ID: <CANn89iKyKTD+vQwG-h=oczX=tfBJeY9SVmXFX4a7yMXJCvuJ7w@mail.gmail.com>
-Subject: Re: [PATCH net-next v2] trace: tcp: Add tracepoint for tcp_cwnd_reduction()
-To: Breno Leitao <leitao@debian.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, "David S. Miller" <davem@davemloft.net>, 
-	David Ahern <dsahern@kernel.org>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	Simon Horman <horms@kernel.org>, Neal Cardwell <ncardwell@google.com>, netdev@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	kernel-team@meta.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cc84f98f-d3d6-499e-9d2f-47eaeb56aad3@redhat.com>
 
-On Fri, Feb 14, 2025 at 6:07=E2=80=AFPM Breno Leitao <leitao@debian.org> wr=
-ote:
->
-> Add a lightweight tracepoint to monitor TCP congestion window
-> adjustments via tcp_cwnd_reduction(). This tracepoint enables tracking
-> of:
-> - TCP window size fluctuations
-> - Active socket behavior
-> - Congestion window reduction events
->
-> Meta has been using BPF programs to monitor this function for years.
-> Adding a proper tracepoint provides a stable API for all users who need
-> to monitor TCP congestion window behavior.
->
-> Use DECLARE_TRACE instead of TRACE_EVENT to avoid creating trace event
-> infrastructure and exporting to tracefs, keeping the implementation
-> minimal. (Thanks Steven Rostedt)
->
-> Given that this patch creates a rawtracepoint, you could hook into it
-> using regular tooling, like bpftrace, using regular rawtracepoint
-> infrastructure, such as:
->
->         rawtracepoint:tcp_cwnd_reduction_tp {
->                 ....
->         }
->
-> Signed-off-by: Breno Leitao <leitao@debian.org>
+Hello Paolo,
 
-Reviewed-by: Eric Dumazet <edumazet@google.com>
+On Tue, Feb 18, 2025 at 01:53:15PM +0100, Paolo Abeni wrote:
+> On 2/14/25 6:07 PM, Breno Leitao wrote:
+> > Add a lightweight tracepoint to monitor TCP congestion window
+> > adjustments via tcp_cwnd_reduction(). This tracepoint enables tracking
+> > of:
+> > - TCP window size fluctuations
+> > - Active socket behavior
+> > - Congestion window reduction events
+> > 
+> > Meta has been using BPF programs to monitor this function for years.
+> > Adding a proper tracepoint provides a stable API for all users who need
+> > to monitor TCP congestion window behavior.
+> > 
+> > Use DECLARE_TRACE instead of TRACE_EVENT to avoid creating trace event
+> > infrastructure and exporting to tracefs, keeping the implementation
+> > minimal. (Thanks Steven Rostedt)
+> > 
+> > Given that this patch creates a rawtracepoint, you could hook into it
+> > using regular tooling, like bpftrace, using regular rawtracepoint
+> > infrastructure, such as:
+> > 
+> > 	rawtracepoint:tcp_cwnd_reduction_tp {
+> > 		....
+> > 	}
+> > 
+> > Signed-off-by: Breno Leitao <leitao@debian.org>
+> > ---
+> > ---
+> > Changes in v2:
+> > - Close the parenthesis in a new line to honor the tcp.h format (Jakub).
+> > - Add the bpftrace example in the commit message (Jakub)
+> > - Link to v1: https://lore.kernel.org/r/20250207-cwnd_tracepoint-v1-1-13650f3ca96d@debian.org
+> 
+> For future similar situations, note that it's expected to carry-on the
+> tag already collected in the previous versions, since the delta is only
+> cosmetic.
+
+That is fair. I simply forgot about it. Sorry about it.
+
