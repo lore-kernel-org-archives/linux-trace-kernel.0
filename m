@@ -1,71 +1,71 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7413E1AED5C;
-	Tue, 18 Feb 2025 11:34:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.3])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EC73E22FF40;
+	Tue, 18 Feb 2025 12:21:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.3
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739878497; cv=none; b=E+9nsG+NHoOHCz/HV2J+M6Hg3zdJJ226CbVEmXL9V3L+TnAYBwk8lJgzfNAtntWxZucVHy00I6tJnvFwIWUpnqj44QLQ2Ds6/jGd+BxFK1HzhH57STh8mx8HTzF8D7NwbrqsgmCfEN3xOW6CQXYqFSTM2Fy8/VmjFP7lJE2JKGM=
+	t=1739881315; cv=none; b=gXH1Oz81Jp5lNrtD/GB/tvwdjYV/ogU3FAowYOWayC2Ahf15uRRCgFKCCOQylTG1dMnKNpY6rtIJVCqtEiSGzdYhgxxpILfpAszwMMKCkDRX8LrYHo+H5wSaUeA7QeaiyvTqk5YaJIp8Fnk+y+qMljcPCrpNu+e0St4sl6LgBMc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739878497; c=relaxed/simple;
-	bh=qy+ADcRDpL7IcB8ffbDmM4cQ3ihRFC1+NBOrsZ+ZJ44=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DUuV7/6oCgHJz4YoHO9wBROJ5+90Z4KV3vQHdX+IGXYz/NPgk84LYczMsDR2FhxXiYaOJSWdMuUSRye1UP4XpiwDybcxvz9FLgMYEW9cQH641g9zepcCW6JI7l0yOgiQ/ELA1iKnbtG1UVN1r+CDM6Q4cD3Q18hGj0vpoEABPMQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DI1KhgME; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739881315; c=relaxed/simple;
+	bh=ptCScSd+4h1BoYlk7WM359v+rG83VRckDRqhzGXIR6I=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=CbUq3t5XPN5MYHjxOV43ocSuZjCdbfG7iOC1Jf3nAjdVPoGYrFGcMPFeDrT1Xp90OLUdCsDAv71uNL/m/e7cUE6tv6UawybGSFFdGT6AymUxLLq+G1IzZmD9uXqcnBL098UcBlI0vPNgRYZm/ELVhXFwuW1hooOPoY9rmYpnt7Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=gSieVkef; arc=none smtp.client-ip=117.135.210.3
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DI1KhgME"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8D933C4CEE2;
-	Tue, 18 Feb 2025 11:34:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739878497;
-	bh=qy+ADcRDpL7IcB8ffbDmM4cQ3ihRFC1+NBOrsZ+ZJ44=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=DI1KhgME/ddB6KlXcskIiRYbGU1w4l6iNpN8f1ZQ2Aam1GA/Cv3Sd1BttW2yt3Cb/
-	 qZrGBncfQ1smTx0kuyfi0m73PoYaqQzwfxtyRx8Tzg37EpdCUHgD20E++R0w6E95Oi
-	 gFcikLuOBnYTMTKSwzLJE71FVoOkRmchRLr/NzyZzeEXPBSBuMe2Lve5ZGX5JVb2vp
-	 dXRfYlBkhIeuwby7Tj4YxEHhypwt8uYd+ej2DRtbzTxRjyNQnv0m221wC9uDyFAPIq
-	 HkUr8Xn5bqXJI6YuUdCzcSa8JvTwvYkl7TDnZ+FlFiUMmBn2cN6/HRzMB4NEib2cPO
-	 6DVBgAFVfq4Bw==
-Date: Tue, 18 Feb 2025 13:34:51 +0200
-From: Mike Rapoport <rppt@kernel.org>
-To: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="gSieVkef"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:Subject:Date:Message-ID:MIME-Version; bh=Caj+i
+	S4MCMJNnw0cvQpDvzauLB52HqMQBpoATbVMicA=; b=gSieVkefNMIzjP+/ukSin
+	MyvhXXwrtxwlJGrO2CEVDRV9DFTQcbKdeoz+eQHS/3NQ/a0gtqMOoJkVmwk11R0E
+	ys9y3qVGfuYRUS6caxgWoXBthMOQP39Q/BMWecSLwdQK/l3v3Fnt0tuZt80+Jd/P
+	JVpcijI5xzwU4Wd5LZPGHg=
+Received: from localhost.localdomain (unknown [])
+	by gzga-smtp-mtada-g1-4 (Coremail) with SMTP id _____wD3b1JAe7Rn+27cMQ--.47696S2;
+	Tue, 18 Feb 2025 20:21:21 +0800 (CST)
+From: Haiyue Wang <haiyuewa@163.com>
+To: linux-trace-kernel@vger.kernel.org
+Cc: Haiyue Wang <haiyuewa@163.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
 	Mark Rutland <mark.rutland@arm.com>,
 	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH v3 1/2] mm/memblock: Add reserved memory release function
-Message-ID: <Z7RwWyD67BxWPnK8@kernel.org>
-References: <173928521419.906035.17750338150436695675.stgit@devnote2>
- <173928522350.906035.5626965043208329135.stgit@devnote2>
- <Z7Q1xY3jhWjaSdeh@kernel.org>
- <20250218174257.61018735a30268b5e21e50e3@kernel.org>
- <Z7RXGX/TyAvETRgc@kernel.org>
+	linux-kernel@vger.kernel.org (open list:FUNCTION HOOKS (FTRACE))
+Subject: [PATCH v1] fgraph: Correct typo in ftrace_return_to_handler comment
+Date: Tue, 18 Feb 2025 20:20:34 +0800
+Message-ID: <20250218122052.58348-1-haiyuewa@163.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z7RXGX/TyAvETRgc@kernel.org>
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wD3b1JAe7Rn+27cMQ--.47696S2
+X-Coremail-Antispam: 1Uf129KBjvdXoW7Gr4DGr4UXr4xXF47Gr1rJFb_yoWxZwb_Xr
+	ZFyF18ua48CFn2vF1fAFZ7ZFyxtr1FgFW8uw47tFZxC3WUKF43J3Z8X3ZIqFWDZrs2grsa
+	9r15Wr1UGw13tjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUvcSsGvfC2KfnxnUUI43ZEXa7xRtSdgJUUUUU==
+X-CM-SenderInfo: 5kdl53xhzdqiywtou0bp/1tbiYBj3a2e0BFtIBAABsl
 
-On Tue, Feb 18, 2025 at 11:47:11AM +0200, Mike Rapoport wrote:
-> On Tue, Feb 18, 2025 at 05:42:57PM +0900, Masami Hiramatsu wrote:
-> > Hi Mike,
-> > 
-> > 
-> > Thanks! but I can not use free_reserved_area() here because it uses
-> > virt_to_page(). Here we only know the physical address in the map.
-> > I think we can use free_reserved_page() instead. Is that OK?
-> 
-> For reserve_mem ranges virt_to_phys() will work, they are allocated from the
+Signed-off-by: Haiyue Wang <haiyuewa@163.com>
+---
+ kernel/trace/fgraph.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-I meant phys_to_virt() of course :)
-
-> memory that is covered by the direct map.
-
+diff --git a/kernel/trace/fgraph.c b/kernel/trace/fgraph.c
+index 5dddfc2149f6..8d925cbdce3a 100644
+--- a/kernel/trace/fgraph.c
++++ b/kernel/trace/fgraph.c
+@@ -865,7 +865,7 @@ __ftrace_return_to_handler(struct ftrace_regs *fregs, unsigned long frame_pointe
+ }
+ 
+ /*
+- * After all architecures have selected HAVE_FUNCTION_GRAPH_FREGS, we can
++ * After all architectures have selected HAVE_FUNCTION_GRAPH_FREGS, we can
+  * leave only ftrace_return_to_handler(fregs).
+  */
+ #ifdef CONFIG_HAVE_FUNCTION_GRAPH_FREGS
 -- 
-Sincerely yours,
-Mike.
+2.48.1
+
