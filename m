@@ -1,26 +1,26 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61EBD270EB1;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76FEF270ECE;
 	Tue, 18 Feb 2025 19:31:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739907064; cv=none; b=bvHMRf0XRZi2oO+qI7mN5mRAiQ7W4LeDakEpFLiqWOWwJVZD9hXw4qhqo5HKtBvt9bs3+28EJdPf9gf8S/l3rwMZVuYMdSCC7Kuk53v2YVUKSay2rQ+FEWDzGroMguvSSxtvDrbnCfZcmbFI4zmjn8Gl2WzJqNgZMwkYtVyqgUQ=
+	t=1739907064; cv=none; b=EYp0aJf69g5kUcPRY8MjC3416AoMLOf7mRJp/x7YuN78nbK9h9/1wtrRBwdGMD5MUzLPk5BD7hXUbLG66kRepicRpkZ6+37sf0qZ9V8tyVc+ivRXuUBreweryado6IVAW12MBUhmjIUc9c76WW13D35C06/2hP63/mtqALCFhjw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1739907064; c=relaxed/simple;
-	bh=Nc5G7cjo5t0C+ylkq05UMrUoS1JfeZk/+PH8rHYPIp0=;
+	bh=IczSO0h8tCSdWpAMkGFhoB9zUssOEz97ahdprfA2go8=;
 	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=VcFtRt8Sj155ouxP5Gaogh0s1SOMKBDW1ugipPrhBvN0QByWzHUOrtkm2sr9JIr2qaDA9no/Pfye6e0i1pK0SGa69JY/xm3TIxhj4alvp/mfi7cA9LzBTlMKzcYX0xChuMVdosMmIjhgjcUHoAmv0Lunse/YUT9KlY9yXA2yL54=
+	 Content-Type; b=Ao5HUM1c8Ak/Elk8lcEFyQNttqsM6CVwQhxol+ZZ1yvHgn1M6TB3HQl8LfVxFfdg4aqSc7LB7LSPwAbfmyh/YmwGYEkrmbYcqrT8H1JNSA74Z/2JsFoXtErEwkEFjQ1ZmpooiEHeK6+XvE0uwqKNYGlOejcrLfytYkUJ4s9+emw=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 10474C4CEE8;
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5EB39C4CEE2;
 	Tue, 18 Feb 2025 19:31:04 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.98)
 	(envelope-from <rostedt@goodmis.org>)
-	id 1tkTJW-000000049zt-2W98;
+	id 1tkTJW-00000004A0w-3vZO;
 	Tue, 18 Feb 2025 14:31:26 -0500
-Message-ID: <20250218193126.451591597@goodmis.org>
+Message-ID: <20250218193126.785837383@goodmis.org>
 User-Agent: quilt/0.68
-Date: Tue, 18 Feb 2025 14:30:35 -0500
+Date: Tue, 18 Feb 2025 14:30:37 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org,
  linux-trace-kernel@vger.kernel.org
@@ -33,7 +33,7 @@ Cc: Masami Hiramatsu <mhiramat@kernel.org>,
  Vasily Gorbik <gor@linux.ibm.com>,
  Alexander Gordeev <agordeev@linux.ibm.com>,
  stable@vger.kernel.org
-Subject: [PATCH 2/5] ftrace: Do not add duplicate entries in subops manager ops
+Subject: [PATCH 4/5] fprobe: Always unregister fgraph function from ops
 References: <20250218193033.338823920@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -45,31 +45,65 @@ Content-Type: text/plain; charset=UTF-8
 
 From: Steven Rostedt <rostedt@goodmis.org>
 
-Check if a function is already in the manager ops of a subops. A manager
-ops contains multiple subops, and if two or more subops are tracing the
-same function, the manager ops only needs a single entry in its hash.
+When the last fprobe is removed, it calls unregister_ftrace_graph() to
+remove the graph_ops from function graph. The issue is when it does so, it
+calls return before removing the function from its graph ops via
+ftrace_set_filter_ips(). This leaves the last function lingering in the
+fprobe's fgraph ops and if a probe is added it also enables that last
+function (even though the callback will just drop it, it does add unneeded
+overhead to make that call).
+
+  # echo "f:myevent1 kernel_clone" >> /sys/kernel/tracing/dynamic_events
+  # cat /sys/kernel/tracing/enabled_functions
+kernel_clone (1)           	tramp: 0xffffffffc02f3000 (ftrace_graph_func+0x0/0x60) ->ftrace_graph_func+0x0/0x60
+
+  # echo "f:myevent2 schedule_timeout" >> /sys/kernel/tracing/dynamic_events
+  # cat /sys/kernel/tracing/enabled_functions
+kernel_clone (1)           	tramp: 0xffffffffc02f3000 (ftrace_graph_func+0x0/0x60) ->ftrace_graph_func+0x0/0x60
+schedule_timeout (1)           	tramp: 0xffffffffc02f3000 (ftrace_graph_func+0x0/0x60) ->ftrace_graph_func+0x0/0x60
+
+  # > /sys/kernel/tracing/dynamic_events
+  # cat /sys/kernel/tracing/enabled_functions
+
+  # echo "f:myevent3 kmem_cache_free" >> /sys/kernel/tracing/dynamic_events
+  # cat /sys/kernel/tracing/enabled_functions
+kmem_cache_free (1)           	tramp: 0xffffffffc0219000 (ftrace_graph_func+0x0/0x60) ->ftrace_graph_func+0x0/0x60
+schedule_timeout (1)           	tramp: 0xffffffffc0219000 (ftrace_graph_func+0x0/0x60) ->ftrace_graph_func+0x0/0x60
+
+The above enabled a fprobe on kernel_clone, and then on schedule_timeout.
+The content of the enabled_functions shows the functions that have a
+callback attached to them. The fprobe attached to those functions
+properly. Then the fprobes were cleared, and enabled_functions was empty
+after that. But after adding a fprobe on kmem_cache_free, the
+enabled_functions shows that the schedule_timeout was attached again. This
+is because it was still left in the fprobe ops that is used to tell
+function graph what functions it wants callbacks from.
 
 Cc: stable@vger.kernel.org
-Fixes: 4f554e955614f ("ftrace: Add ftrace_set_filter_ips function")
+Fixes: 4346ba1604093 ("fprobe: Rewrite fprobe on function-graph tracer")
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- kernel/trace/ftrace.c | 3 +++
- 1 file changed, 3 insertions(+)
+ kernel/trace/fprobe.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-index 03b35a05808c..189eb0a12f4b 100644
---- a/kernel/trace/ftrace.c
-+++ b/kernel/trace/ftrace.c
-@@ -5717,6 +5717,9 @@ __ftrace_match_addr(struct ftrace_hash *hash, unsigned long ip, int remove)
- 			return -ENOENT;
- 		free_hash_entry(hash, entry);
- 		return 0;
-+	} else if (__ftrace_lookup_ip(hash, ip) != NULL) {
-+		/* Already exists */
-+		return 0;
- 	}
+diff --git a/kernel/trace/fprobe.c b/kernel/trace/fprobe.c
+index 90241091ca61..886090845b1a 100644
+--- a/kernel/trace/fprobe.c
++++ b/kernel/trace/fprobe.c
+@@ -403,11 +403,9 @@ static void fprobe_graph_remove_ips(unsigned long *addrs, int num)
+ 	lockdep_assert_held(&fprobe_mutex);
  
- 	entry = add_hash_entry(hash, ip);
+ 	fprobe_graph_active--;
+-	if (!fprobe_graph_active) {
+-		/* Q: should we unregister it ? */
++	/* Q: should we unregister it ? */
++	if (!fprobe_graph_active)
+ 		unregister_ftrace_graph(&fprobe_graph_ops);
+-		return;
+-	}
+ 
+ 	ftrace_set_filter_ips(&fprobe_graph_ops.ops, addrs, num, 1, 0);
+ }
 -- 
 2.47.2
 
