@@ -1,241 +1,140 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8E5D262D30
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 18 Feb 2025 12:32:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDAF51ABEA5
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 18 Feb 2025 12:53:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739881946; cv=none; b=jFzQfoLIvyjyPmB3nL5vnCkTdJn9FFP4IfO35d2pxTbreNTjlJjeIJ+QohhIpiPtql1JNq6BfRW5oARx+Nj3h+YV3JxMSKDVPS562Xz7mwRrkv4THW/SsQPrcgYyBEgvu+Aag9rvDTQaiwpYDTL275wPVMelJrutV4kJR1eSshA=
+	t=1739883202; cv=none; b=VETLenpEZ8/Kz/PDaQBx4OJxRYe+E9KcdVROTeH2HGm2iZOihQoZBY/cLyAmVLnofqDEeheNe7ikdwu0QHUrJrMGZHJ/UdNUtYlkJflNMErKKpT65Ia2LdDvAe1xk2vbe2R5WX2hSPkJeaPa2yEThlWuCAuMvBsW2X3UUkjQ4r4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739881946; c=relaxed/simple;
-	bh=MFyJzG3kxv6rgiXk0F67ley3QB9Ga1PK84Oojs3YhRQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=kh6eQCUZkONWkkwwrLJtT8hGlCmguwe/4Cd1mD5V0b1NA0Iu2ni2KQwN86bzEL/nulYt5HlQPl7sBoa9XBf4u1Ope/z/mwsmS8Jxqo67ENMjMEJ2RYzSurbYSG5183IrVLTKkQvsWa/jWswLUZXY1qigP4rl5BJAhFMobUjz7/c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=EXOITl5B; arc=none smtp.client-ip=170.10.129.124
+	s=arc-20240116; t=1739883202; c=relaxed/simple;
+	bh=B6rcI33jR0AkhpRZXIBj9cKrGXC+Z78I+ZFwTdFFfe0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=snOeQTU1epxlqeuOUUcJ33VytD7SiqPp4kH31jbfzuSHboWi1uTBifBeg6f4GMxz6pCZa5wqwKi9hYA35zlpmlWRnvDnIwh5mquuvODTkd6kUV36HUPDKMpq7CoPFObzgEhifYZU1txrDNeA59bK+VCUYXYnd9cvzBZbNPKmX1s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=UvFKvQ4L; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EXOITl5B"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UvFKvQ4L"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1739881944;
+	s=mimecast20190719; t=1739883199;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=BnR6oqxI0UEcO9ewCzZls4ELgDlHtvYrPUmSJgsWcEQ=;
-	b=EXOITl5BQG/NSfL3iW/B22LCBvK5WCMT4qAS0ZlyeLiUgy70U44aH/EF1QVxzE//LzS613
-	TkYZ/Gfgrf32KYSh5yPxiHZDykHTJahz1sniBJ4pAwFMhklDIE1KWhm4r/ozVh+7EVUx1Q
-	4UMfE1J9CubLykRVmgdoWNMX61t+v24=
-Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-161-3KxYUmAKP4Wt6Anbn0cLaA-1; Tue,
- 18 Feb 2025 07:32:20 -0500
-X-MC-Unique: 3KxYUmAKP4Wt6Anbn0cLaA-1
-X-Mimecast-MFC-AGG-ID: 3KxYUmAKP4Wt6Anbn0cLaA_1739881939
-Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 5FDAA1903085;
-	Tue, 18 Feb 2025 12:32:19 +0000 (UTC)
-Received: from gmonaco-thinkpadt14gen3.rmtit.com (unknown [10.44.33.84])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 96EF81800352;
-	Tue, 18 Feb 2025 12:32:16 +0000 (UTC)
-From: Gabriele Monaco <gmonaco@redhat.com>
-To: linux-kernel@vger.kernel.org,
-	Steven Rostedt <rostedt@goodmis.org>,
-	linux-trace-kernel@vger.kernel.org
-Cc: Gabriele Monaco <gmonaco@redhat.com>,
-	Ingo Molnar <mingo@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Juri Lelli <juri.lelli@redhat.com>
-Subject: [PATCH v4 11/11] tools/rv: Allow rv list to filter for container
-Date: Tue, 18 Feb 2025 13:31:16 +0100
-Message-ID: <20250218123121.253551-12-gmonaco@redhat.com>
-In-Reply-To: <20250218123121.253551-1-gmonaco@redhat.com>
-References: <20250218123121.253551-1-gmonaco@redhat.com>
+	bh=WsfKFHU32JDYtPZqdtJcI1xvfyN6A84vuhKqOKdqLYQ=;
+	b=UvFKvQ4LHLLCElHoKdLgdpOssQb7hXS4FJvDe3yHwqNEuNk3HVgiLBzy6mPvHJokqL6F+n
+	P42GARssA158FexocYWqgD5G3V+luNf7sPBXxc+YagRccECdjvcpYsYvN6Z28ViIIa7q9L
+	IkqRM9pIBh22WAJZ8WUbm0rFqYklrnU=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-168-kE8HMHFBOOWdgiFYDrs6ow-1; Tue, 18 Feb 2025 07:53:18 -0500
+X-MC-Unique: kE8HMHFBOOWdgiFYDrs6ow-1
+X-Mimecast-MFC-AGG-ID: kE8HMHFBOOWdgiFYDrs6ow_1739883197
+Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-38f32ac838cso2739463f8f.2
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 18 Feb 2025 04:53:18 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739883197; x=1740487997;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=WsfKFHU32JDYtPZqdtJcI1xvfyN6A84vuhKqOKdqLYQ=;
+        b=xUPU1b3rtcR9oxph+LWFK/GE9iZ29kI+vbtyMsFPZAJU8M5fz+f+E6hwBkuqmY7TNF
+         YNZ9Yp3aarXQUZML8HozjPKG3Y7wk9AwYYCrnfbKruqdnrkcbw/gs+EB6CYMglY2i/Ij
+         9ibaQCLBGVp7Of9S5YjL8q2ri6hI2Ay3gZeXZtCE8rjLo1FcleeQYxjk9tcHO4gONQeS
+         l3ym/qvdp+Dk+h3M/QEDd61MIl833QgndasgDkf9RAFh+LXV/ni2wg6ZUp28T/ZDkk2n
+         nkt504Bx926GwF0lkBEdb5jSdlISALcGpt7rlAAO13svFWXZTcJU1iLJV6+MZ2raxjRS
+         0gNQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXd8YWkucQ4UcIXnOi6NGJgm6za0hxhNdDYX9zMvQjVd0HzCpYOdV7pSig1342v1DT5li8uaLzRKQeeyuHYKM/fjjQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzUe4IpnfSoi3cH3WXu9D2IRWV4IJI9sESXd60EzytHQijKXuRy
+	sfANzA7a6xy9bC0ClNpCqQT4M0vQRZS52E9Tnji3pc0Z1mMplHU7l810LSK9d2CdAvMtva4jtsm
+	mCSKXHqEV+FvzUQg1TqAVP7510cZTnQxiJunxGyouppF3CX37nOgO29Fz5Z+IeM7cl6ehig==
+X-Gm-Gg: ASbGncubEA2oS4tHHYJ+Du8clHvNLtX8529cwysZWUX4nlODZ4LGMMb/y+rrMxsHDrP
+	1KT/13fCEd7b2oR6zIVamFB2ha8Ryq5vHtbixH+9CpL4Uy/HlkSrT/G8YQ8JCbqzTAodAOegI2f
+	TAOzDW7Oe9ZSuS1NW71xevREkJ6ixEKJ8/LwrVB+G5GuViFxtZm1rmvfg3c2lXVCGiUPi+1mnvZ
+	FbkBSL7WGZV7rWQi8DHkPq/3AitUez7WnvLRX4odt7JYT4jlmkC2ZN/4Qini1fkmF/KMUqUL1ZP
+	uRc1p/wkzS8YDDZeNXeCRlL8pHBH14lhV6s=
+X-Received: by 2002:a5d:564d:0:b0:38f:2173:b7b7 with SMTP id ffacd0b85a97d-38f33f28c73mr9321381f8f.18.1739883197496;
+        Tue, 18 Feb 2025 04:53:17 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IGmuOBQoBPGkm0apcXujpsKNRJknLqhiWdlArj2xmAH10Rv73rZHl5OqE/4YMT5tnZCWC0Bzw==
+X-Received: by 2002:a5d:564d:0:b0:38f:2173:b7b7 with SMTP id ffacd0b85a97d-38f33f28c73mr9321354f8f.18.1739883197088;
+        Tue, 18 Feb 2025 04:53:17 -0800 (PST)
+Received: from [192.168.88.253] (146-241-89-107.dyn.eolo.it. [146.241.89.107])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38f258dab74sm15132973f8f.32.2025.02.18.04.53.15
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 18 Feb 2025 04:53:16 -0800 (PST)
+Message-ID: <cc84f98f-d3d6-499e-9d2f-47eaeb56aad3@redhat.com>
+Date: Tue, 18 Feb 2025 13:53:15 +0100
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next v2] trace: tcp: Add tracepoint for
+ tcp_cwnd_reduction()
+To: Breno Leitao <leitao@debian.org>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ linux-trace-kernel@vger.kernel.org, kernel-team@meta.com,
+ Jakub Kicinski <kuba@kernel.org>, Eric Dumazet <edumazet@google.com>,
+ David Ahern <dsahern@kernel.org>, Steven Rostedt <rostedt@goodmis.org>,
+ Masami Hiramatsu <mhiramat@kernel.org>, "David S. Miller"
+ <davem@davemloft.net>, Simon Horman <horms@kernel.org>,
+ Neal Cardwell <ncardwell@google.com>
+References: <20250214-cwnd_tracepoint-v2-1-ef8d15162d95@debian.org>
+From: Paolo Abeni <pabeni@redhat.com>
+In-Reply-To: <20250214-cwnd_tracepoint-v2-1-ef8d15162d95@debian.org>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: ndEsuOO9nA2EBuzReEipUXIxbsEyqfajkr28l5H5K7w_1739883197
+X-Mimecast-Originator: redhat.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Add possibility to supply the container name to rv list:
+Hi,
 
-  # rv list sched
-  mon1
-  mon2
-  mon3
+On 2/14/25 6:07 PM, Breno Leitao wrote:
+> Add a lightweight tracepoint to monitor TCP congestion window
+> adjustments via tcp_cwnd_reduction(). This tracepoint enables tracking
+> of:
+> - TCP window size fluctuations
+> - Active socket behavior
+> - Congestion window reduction events
+> 
+> Meta has been using BPF programs to monitor this function for years.
+> Adding a proper tracepoint provides a stable API for all users who need
+> to monitor TCP congestion window behavior.
+> 
+> Use DECLARE_TRACE instead of TRACE_EVENT to avoid creating trace event
+> infrastructure and exporting to tracefs, keeping the implementation
+> minimal. (Thanks Steven Rostedt)
+> 
+> Given that this patch creates a rawtracepoint, you could hook into it
+> using regular tooling, like bpftrace, using regular rawtracepoint
+> infrastructure, such as:
+> 
+> 	rawtracepoint:tcp_cwnd_reduction_tp {
+> 		....
+> 	}
+> 
+> Signed-off-by: Breno Leitao <leitao@debian.org>
+> ---
+> ---
+> Changes in v2:
+> - Close the parenthesis in a new line to honor the tcp.h format (Jakub).
+> - Add the bpftrace example in the commit message (Jakub)
+> - Link to v1: https://lore.kernel.org/r/20250207-cwnd_tracepoint-v1-1-13650f3ca96d@debian.org
 
-This lists only monitors in sched, without indentation.
-Supplying -h, any option (string starting with -) or more than 1
-argument will still print the usage.
-Passing a non-existent container prints nothing and passing no container
-continues to print all monitors, showing indentation for nested
-monitors, reported after their container.
+For future similar situations, note that it's expected to carry-on the
+tag already collected in the previous versions, since the delta is only
+cosmetic.
 
-Signed-off-by: Gabriele Monaco <gmonaco@redhat.com>
----
- tools/verification/rv/include/in_kernel.h |  2 +-
- tools/verification/rv/src/in_kernel.c     | 36 +++++++++++++++------
- tools/verification/rv/src/rv.c            | 38 +++++++++++++++--------
- 3 files changed, 53 insertions(+), 23 deletions(-)
+No further actions required on your side.
 
-diff --git a/tools/verification/rv/include/in_kernel.h b/tools/verification/rv/include/in_kernel.h
-index 3090638c8d710..f3bfd3b9895fe 100644
---- a/tools/verification/rv/include/in_kernel.h
-+++ b/tools/verification/rv/include/in_kernel.h
-@@ -1,3 +1,3 @@
- // SPDX-License-Identifier: GPL-2.0
--int ikm_list_monitors(void);
-+int ikm_list_monitors(char *container);
- int ikm_run_monitor(char *monitor, int argc, char **argv);
-diff --git a/tools/verification/rv/src/in_kernel.c b/tools/verification/rv/src/in_kernel.c
-index 032b851019290..c0dcee795c0de 100644
---- a/tools/verification/rv/src/in_kernel.c
-+++ b/tools/verification/rv/src/in_kernel.c
-@@ -180,19 +180,25 @@ static char *ikm_read_desc(char *monitor_name)
- /*
-  * ikm_fill_monitor_definition - fill monitor's definition
-  *
-- * Returns -1 on error, 0 otherwise.
-+ * Returns -1 on error, 1 if the monitor does not belong in the container, 0 otherwise.
-+ * container can be NULL
-  */
--static int ikm_fill_monitor_definition(char *name, struct monitor *ikm)
-+static int ikm_fill_monitor_definition(char *name, struct monitor *ikm, char *container)
- {
- 	int enabled;
- 	char *desc, *nested_name;
- 
- 	nested_name = strstr(name, ":");
- 	if (nested_name) {
-+		/* it belongs in container if it starts with "container:" */
-+		if (container && strstr(name, container) != name)
-+			return 1;
- 		*nested_name = '/';
- 		++nested_name;
- 		ikm->nested = 1;
- 	} else {
-+		if (container)
-+			return 1;
- 		nested_name = name;
- 		ikm->nested = 0;
- 	}
-@@ -328,12 +334,12 @@ static int ikm_has_id(char *monitor_name)
-  *
-  * Returns 0 on success, -1 otherwise.
-  */
--int ikm_list_monitors(void)
-+int ikm_list_monitors(char *container)
- {
- 	char *available_monitors;
- 	struct monitor ikm = {0};
- 	char *curr, *next;
--	int retval;
-+	int retval, list_monitor = 0;
- 
- 	available_monitors = tracefs_instance_file_read(NULL, "rv/available_monitors", NULL);
- 
-@@ -347,17 +353,29 @@ int ikm_list_monitors(void)
- 		next = strstr(curr, "\n");
- 		*next = '\0';
- 
--		retval = ikm_fill_monitor_definition(curr, &ikm);
--		if (retval)
-+		retval = ikm_fill_monitor_definition(curr, &ikm, container);
-+		if (retval < 0)
- 			err_msg("ikm: error reading %d in kernel monitor, skipping\n", curr);
- 
--		printf("%s%-*s %s %s\n", ikm.nested ? " - " : "",
--		       ikm.nested ? MAX_DA_NAME_LEN - 3 : MAX_DA_NAME_LEN,
--		       ikm.name, ikm.desc, ikm.enabled ? "[ON]" : "[OFF]");
-+		if (!retval) {
-+			int indent = ikm.nested && !container;
-+
-+			list_monitor = 1;
-+			printf("%s%-*s %s %s\n", indent ? " - " : "",
-+			       indent ? MAX_DA_NAME_LEN - 3 : MAX_DA_NAME_LEN,
-+			       ikm.name, ikm.desc, ikm.enabled ? "[ON]" : "[OFF]");
-+		}
- 		curr = ++next;
- 
- 	} while (strlen(curr));
- 
-+	if (!list_monitor) {
-+		if (container)
-+			printf("-- No monitor found in container %s --\n", container);
-+		else
-+			printf("-- No monitor found --\n");
-+	}
-+
- 	free(available_monitors);
- 
- 	return 0;
-diff --git a/tools/verification/rv/src/rv.c b/tools/verification/rv/src/rv.c
-index 1ddb855328165..239de054d1e06 100644
---- a/tools/verification/rv/src/rv.c
-+++ b/tools/verification/rv/src/rv.c
-@@ -41,30 +41,42 @@ static void rv_list(int argc, char **argv)
- {
- 	static const char *const usage[] = {
- 		"",
--		"  usage: rv list [-h]",
-+		"  usage: rv list [-h] [container]",
- 		"",
- 		"	list all available monitors",
- 		"",
- 		"	-h/--help: print this menu",
-+		"",
-+		"	[container]: list only monitors in this container",
- 		NULL,
- 	};
--	int i;
--
--	if (argc > 1) {
-+	int i, print_help = 0, retval = 0;
-+	char *container = NULL;
-+
-+	if (argc == 2) {
-+		if (!strcmp(argv[1], "-h") || !strcmp(argv[1], "--help")) {
-+			print_help = 1;
-+			retval = 0;
-+		} else if (argv[1][0] == '-') {
-+			/* assume invalid option */
-+			print_help = 1;
-+			retval = 1;
-+		} else
-+			container = argv[1];
-+	} else if (argc > 2) {
-+		/* more than 2 is always usage */
-+		print_help = 1;
-+		retval = 1;
-+	}
-+	if (print_help) {
- 		fprintf(stderr, "rv version %s\n", VERSION);
--
--		/* more than 1 is always usage */
- 		for (i = 0; usage[i]; i++)
- 			fprintf(stderr, "%s\n", usage[i]);
--
--		/* but only -h is valid */
--		if (!strcmp(argv[1], "-h") || !strcmp(argv[1], "--help"))
--			exit(0);
--		else
--			exit(1);
-+		exit(retval);
- 	}
- 
--	ikm_list_monitors();
-+	ikm_list_monitors(container);
-+
- 	exit(0);
- }
- 
--- 
-2.48.1
+Cheers,
+
+Paolo
 
