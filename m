@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 464B0269AF4;
-	Tue, 18 Feb 2025 15:09:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DD61269AF4;
+	Tue, 18 Feb 2025 15:09:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739891343; cv=none; b=sBkORgSwAkhCIjSU+1JtYVN0807Mwki+88ktE3p2mTFe6SXgQo6ka+XYWJesYAsHkbt98ve7Fk2Q+DwBMtZlLqame2LU12AjFKC5KfAZOv8dggzqajznfQSQjA0mjXm8bYqzVLg29IwMh6h1e6ABauTIaHivGdWMQgHdMS2nF9c=
+	t=1739891352; cv=none; b=G8/6V+Ok9749Zi+3AWuq37WUkWM0Xex0Ybu9eFYtaICWRj6Jc8H3TbvaUaK2WnyXba+0fIDv9dItbTyANiuW3YP5SL4CC3sF5U7VzT0HHxu97afGTWzIfxhEngVt/AZi0XmMCNHXmCF9EFnSq8PooHjp/Ba/jynnuMW+Jpk9yNQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739891343; c=relaxed/simple;
-	bh=8v4zZwccKy+E3kLDMp/TBNu5P5+5ygdWnFUDTOV6vhs=;
+	s=arc-20240116; t=1739891352; c=relaxed/simple;
+	bh=+d+1VZIgN3LNMc7YVtQVmKawA11NnKwFm+u6wA92Fcc=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=sqM9m3MU0tBkKEMNGEdRbwUgLcbDoysN5y0yaI0ihX4j7TTFhe5wplrbjc8PkWuhnnXUpsbhK0RxaeFG5KHgO40+ocL91qjV9Ztj6tBbtieJjJ7I3Wl5uYOh4ucE0+3fODi9VCIhfyURYEjGbe7BNiSOrLB5XNI9BBZw9W4tYHg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=e6dVhIcO; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=krYQfI3RxywLpkTOckdRPxZAnGGn3+lHY1HO1AQ/Tj4tB+K5/BVVWw/FYQDdk7LlZsJiwnP1SZpme9DOjl5jhsmCFUWmjDHtRkWOxbcuXg9IiklwvcJl27DTnzBinYVLwqhbfwlHYfTBXynHsoK0kA87jnmv+RommVQbgNb5wm4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=C1fkO0T9; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="e6dVhIcO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D5ADCC4CEE7;
-	Tue, 18 Feb 2025 15:09:00 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="C1fkO0T9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AC4C2C4CEE2;
+	Tue, 18 Feb 2025 15:09:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739891342;
-	bh=8v4zZwccKy+E3kLDMp/TBNu5P5+5ygdWnFUDTOV6vhs=;
+	s=k20201202; t=1739891352;
+	bh=+d+1VZIgN3LNMc7YVtQVmKawA11NnKwFm+u6wA92Fcc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=e6dVhIcOxjQStAmdg1frwiYYMzwqNWrkW5KnknEwHxn6tpy53X+QuZUBlpcLgZCf1
-	 CKEhu0DH9fC/Je+UIYpHOPzeiwPitaHanVUV2TRGiHdKr/MFRFPslLVWDEouuekeZX
-	 1PRKaxuasqXI3LWVdzF6hhzr8gJH93z6XH3BwEZEB0FX+PMovWkseGWpUlgTsaX1ZQ
-	 ce/usigvzflPg5s2CUSHiT/il3eC3bi6Xw3PXcd+ok8GBdoAez7t5tu9UCAdiAEX43
-	 b1t6ue9XccNUA4FWE4IVLXzP5PnCWTOlfmlahs6HObelUFY4EQCD5F8DYhatYhD2Yu
-	 YOO2wMctHY73g==
+	b=C1fkO0T9sHWR/MXhOO4ABi24T1h8CKC/FU+oygEimshbWqP6c5f0Hx1DjsV817Ib3
+	 JCIsIsVKaqVANO7Cn1YcwebdbheZTOnwnc6O+cksvDiIDNYCexR08eiU5+xfDcCu+R
+	 eT+AesrWA8SvbkPEdS6jlvQ9PiHCBjy4+B4HsoZH3fUo+Zru4uxz6gO982wRu1ke6i
+	 djAv8prKsnouKLIZm8YmJvIgq1rrL5JWfJ07ryo48I6IZMbNJzvlQeR9NxGEkQTayh
+	 cVtQfT9PRJuYN4Eg1zZUOhJhjzVtXx+gei1kdpRUBz315UnOxVj+ta/IROKZMtXWqP
+	 m4M49YhyS0+TA==
 From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
 To: Steven Rostedt <rostedt@goodmis.org>
 Cc: Masami Hiramatsu <mhiramat@kernel.org>,
@@ -36,9 +36,9 @@ Cc: Masami Hiramatsu <mhiramat@kernel.org>,
 	Andrew Morton <akpm@linux-foundation.org>,
 	Mike Rapoport <rppt@kernel.org>,
 	linux-mm@kvack.org
-Subject: [PATCH v4 1/2] mm/memblock: Add reserved memory release function
-Date: Wed, 19 Feb 2025 00:08:58 +0900
-Message-ID: <173989133862.230693.14094993331347437600.stgit@devnote2>
+Subject: [PATCH v4 2/2] tracing: Freeable reserved ring buffer
+Date: Wed, 19 Feb 2025 00:09:08 +0900
+Message-ID: <173989134814.230693.18199312930337815629.stgit@devnote2>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <173989132750.230693.15749600013776132201.stgit@devnote2>
 References: <173989132750.230693.15749600013776132201.stgit@devnote2>
@@ -54,136 +54,106 @@ Content-Transfer-Encoding: 8bit
 
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-Add reserve_mem_release_by_name() to release a reserved memory region
-with a given name. This allows us to release reserved memory which is
-defined by kernel cmdline, after boot.
+Make the ring buffer on reserved memory to be freeable. This allows us
+to free the trace instance on the reserved memory without changing
+cmdline and rebooting. Even if we can not change the kernel cmdline
+for security reason, we can release the reserved memory for the ring
+buffer as free (available) memory.
+
+For example, boot kernel with reserved memory;
+"reserve_mem=20M:2M:trace trace_instance=boot_mapped^traceoff@trace"
+
+~ # free
+              total        used        free      shared  buff/cache   available
+Mem:        1995548       50544     1927568       14964       17436     1911480
+Swap:             0           0           0
+~ # rmdir /sys/kernel/tracing/instances/boot_mapped/
+[   23.704023] Freeing reserve_mem:trace memory: 20476K
+~ # free
+              total        used        free      shared  buff/cache   available
+Mem:        2016024       41844     1956740       14968       17440     1940572
+Swap:             0           0           0
 
 Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-Acked-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: linux-mm@kvack.org
 ---
  Changes in v4:
-  - Use free_reserved_area() according to Mike's comment.
- Changes in v2:
-  - Rename reserved_mem_* to reserve_mem_*.
+  - Update the result example in the description.
+ Changes in v3:
+  - Remove debug printk.
 ---
- include/linux/mm.h |    1 +
- mm/memblock.c      |   66 +++++++++++++++++++++++++++++++++++++++++++---------
- 2 files changed, 55 insertions(+), 12 deletions(-)
+ kernel/trace/trace.c |   13 ++++++++++++-
+ kernel/trace/trace.h |    1 +
+ 2 files changed, 13 insertions(+), 1 deletion(-)
 
-diff --git a/include/linux/mm.h b/include/linux/mm.h
-index 7b1068ddcbb7..1ee9e7447485 100644
---- a/include/linux/mm.h
-+++ b/include/linux/mm.h
-@@ -4123,6 +4123,7 @@ void vma_pgtable_walk_begin(struct vm_area_struct *vma);
- void vma_pgtable_walk_end(struct vm_area_struct *vma);
- 
- int reserve_mem_find_by_name(const char *name, phys_addr_t *start, phys_addr_t *size);
-+int reserve_mem_release_by_name(const char *name);
- 
- #ifdef CONFIG_64BIT
- int do_mseal(unsigned long start, size_t len_in, unsigned long flags);
-diff --git a/mm/memblock.c b/mm/memblock.c
-index 95af35fd1389..8cd95f60015d 100644
---- a/mm/memblock.c
-+++ b/mm/memblock.c
-@@ -16,6 +16,7 @@
- #include <linux/kmemleak.h>
- #include <linux/seq_file.h>
- #include <linux/memblock.h>
-+#include <linux/mutex.h>
- 
- #include <asm/sections.h>
- #include <linux/io.h>
-@@ -2283,6 +2284,7 @@ struct reserve_mem_table {
- };
- static struct reserve_mem_table reserved_mem_table[RESERVE_MEM_MAX_ENTRIES];
- static int reserved_mem_count;
-+static DEFINE_MUTEX(reserve_mem_lock);
- 
- /* Add wildcard region with a lookup name */
- static void __init reserved_mem_add(phys_addr_t start, phys_addr_t size,
-@@ -2296,6 +2298,21 @@ static void __init reserved_mem_add(phys_addr_t start, phys_addr_t size,
- 	strscpy(map->name, name);
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index 0e6d517e74e0..cf57c7ac2c55 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -9284,6 +9284,9 @@ static void free_trace_buffers(struct trace_array *tr)
+ #ifdef CONFIG_TRACER_MAX_TRACE
+ 	free_trace_buffer(&tr->max_buffer);
+ #endif
++
++	if (tr->range_addr_start)
++		vunmap((void *)tr->range_addr_start);
  }
  
-+static struct reserve_mem_table *reserve_mem_find_by_name_nolock(const char *name)
-+{
-+	struct reserve_mem_table *map;
-+	int i;
-+
-+	for (i = 0; i < reserved_mem_count; i++) {
-+		map = &reserved_mem_table[i];
-+		if (!map->size)
-+			continue;
-+		if (strcmp(name, map->name) == 0)
-+			return map;
+ static void init_trace_flags_index(struct trace_array *tr)
+@@ -9445,6 +9448,7 @@ trace_array_create_systems(const char *name, const char *systems,
+ 	free_cpumask_var(tr->pipe_cpumask);
+ 	free_cpumask_var(tr->tracing_cpumask);
+ 	kfree_const(tr->system_names);
++	kfree(tr->range_name);
+ 	kfree(tr->name);
+ 	kfree(tr);
+ 
+@@ -9571,6 +9575,11 @@ static int __remove_instance(struct trace_array *tr)
+ 	free_trace_buffers(tr);
+ 	clear_tracing_err_log(tr);
+ 
++	if (tr->range_name) {
++		reserve_mem_release_by_name(tr->range_name);
++		kfree(tr->range_name);
 +	}
-+	return NULL;
-+}
 +
- /**
-  * reserve_mem_find_by_name - Find reserved memory region with a given name
-  * @name: The name that is attached to a reserved memory region
-@@ -2309,22 +2326,47 @@ static void __init reserved_mem_add(phys_addr_t start, phys_addr_t size,
- int reserve_mem_find_by_name(const char *name, phys_addr_t *start, phys_addr_t *size)
- {
- 	struct reserve_mem_table *map;
--	int i;
+ 	for (i = 0; i < tr->nr_topts; i++) {
+ 		kfree(tr->topts[i].topts);
+ 	}
+@@ -10368,6 +10377,7 @@ __init static void enable_instances(void)
+ 		bool traceoff = false;
+ 		char *flag_delim;
+ 		char *addr_delim;
++		char *rname __free(kfree) = NULL;
  
--	for (i = 0; i < reserved_mem_count; i++) {
--		map = &reserved_mem_table[i];
--		if (!map->size)
--			continue;
--		if (strcmp(name, map->name) == 0) {
--			*start = map->start;
--			*size = map->size;
--			return 1;
--		}
--	}
--	return 0;
-+	guard(mutex)(&reserve_mem_lock);
-+	map = reserve_mem_find_by_name_nolock(name);
-+	if (!map)
-+		return 0;
-+
-+	*start = map->start;
-+	*size = map->size;
-+	return 1;
- }
- EXPORT_SYMBOL_GPL(reserve_mem_find_by_name);
+ 		tok = strsep(&curr_str, ",");
  
-+/**
-+ * reserve_mem_release_by_name - Release reserved memory region with a given name
-+ * @name: The name that is attatched to a reserved memory region
-+ *
-+ * Forcibly release the pages in the reserved memory region so that those memory
-+ * can be used as free memory. After released the reserved region size becomes 0.
-+ *
-+ * Returns: 1 if released or 0 if not found.
-+ */
-+int reserve_mem_release_by_name(const char *name)
-+{
-+	char buf[RESERVE_MEM_NAME_SIZE + 12];
-+	struct reserve_mem_table *map;
-+	void *start, *end;
-+
-+	guard(mutex)(&reserve_mem_lock);
-+	map = reserve_mem_find_by_name_nolock(name);
-+	if (!map)
-+		return 0;
-+
-+	start = phys_to_virt(map->start);
-+	end = start + map->size - 1;
-+	snprintf(buf, sizeof(buf), "reserve_mem:%s", name);
-+	free_reserved_area(start, end, 0, buf);
-+	map->size = 0;
-+
-+	return 1;
-+}
-+
- /*
-  * Parse reserve_mem=nn:align:name
-  */
+@@ -10424,6 +10434,7 @@ __init static void enable_instances(void)
+ 				pr_warn("Failed to map boot instance %s to %s\n", name, tok);
+ 				continue;
+ 			}
++			rname = kstrdup(tok, GFP_KERNEL);
+ 		}
+ 
+ 		if (start) {
+@@ -10460,7 +10471,7 @@ __init static void enable_instances(void)
+ 		 */
+ 		if (start) {
+ 			tr->flags |= TRACE_ARRAY_FL_BOOT;
+-			tr->ref++;
++			tr->range_name = no_free_ptr(rname);
+ 		}
+ 
+ 		while ((tok = strsep(&curr_str, ","))) {
+diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
+index 9c21ba45b7af..93b6279d3da4 100644
+--- a/kernel/trace/trace.h
++++ b/kernel/trace/trace.h
+@@ -348,6 +348,7 @@ struct trace_array {
+ 	unsigned int		mapped;
+ 	unsigned long		range_addr_start;
+ 	unsigned long		range_addr_size;
++	char			*range_name;
+ 	long			text_delta;
+ 	long			data_delta;
+ 
 
