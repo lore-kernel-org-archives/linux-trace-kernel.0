@@ -1,85 +1,186 @@
-Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
+Received: from mail-io1-f78.google.com (mail-io1-f78.google.com [209.85.166.78])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D09C322AE7F
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 18 Feb 2025 09:17:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16A9022FADE
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 18 Feb 2025 09:37:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.78
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739870243; cv=none; b=exC5zHeUTvpa4cpp7t+YauPzPvTcoI4UVlNIdUBKCOass8EdbAfY2sGEmh6Lwr9DhpOh7ewWwTeVVAVQZB/YEyoL2TTRQa9ci5DnpqgDOYsa8qvjfDAsDQ9ysjqv+/KTyM8WZyF8uUPb+SpZhC2qRKm7XGkVcB0ituPjIf5Y4Co=
+	t=1739871446; cv=none; b=dWyah6+X91CJMNXE2xdNS97XW+y3R/dfTU8GBG1gB5etPCzNxnpVHaP6Z4LBB4d/T/EBq0xL7bqxc5+u+3ICVhCZPFnsa8KhCRY7a8hc/WKcvzGG9DFXLE5JpfXfegkBH5ZKQQa4ruuL+IUbL0garf8+/ln6wg2cPSUcgaWyiVM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739870243; c=relaxed/simple;
-	bh=e9eawh0CQTC6B4XkVXKnBZTw+De/FpP0oA2+UhyUCeA=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=UphX+jg6bS5zApIFeL4+WcoB5oy29C1m0GsVfmAc3OKzS9M1dofbgiXIl1aC/Y/jZ0TJXoDqciJ+WB76EsyJa/ua+7QRdqd06gG99QGzoZhHBDG2FiWa8HxLillCetQH3UIny4+Y0L+sj0W23/Kd7+lF1tkFIRX6U767l8J3bpI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--keyz.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=kkPj8ud3; arc=none smtp.client-ip=209.85.214.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--keyz.bounces.google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kkPj8ud3"
-Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-220ec5c16e9so83903525ad.1
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 18 Feb 2025 01:17:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1739870240; x=1740475040; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=e9eawh0CQTC6B4XkVXKnBZTw+De/FpP0oA2+UhyUCeA=;
-        b=kkPj8ud3WPOPuoa0aG9XMxegP/Uq+j0KH96YL0HqV29MJuctdCHRzz/bveDcYoCg0V
-         ej2vzyGqUpLHMrlTblU6jzAY7CCBO18QKE4bujyzOEvMKVVHOoViJ9SZE0b/6dzfgyAm
-         Fuvb400lk8JQSqPhzP7b+yiiVkLghzLZ5GqjsekFQ+zF8OaAX2NQ5C6ct0TN7nqiDSsi
-         yyTtM5PRPHySogNoVqsAvTJGuri7vRTWI3ZqHhcME+6pcBBa0Uy3VK1PHRAUP/D5HrSd
-         iNKui2VODNumGEgLaQyCD0ZKEXN6EydrMNhW47w7k5TYKA0uWzoSw43SZCjyFqKvDF1c
-         3wdw==
+	s=arc-20240116; t=1739871446; c=relaxed/simple;
+	bh=1vzXxAhEudrAhyb1CsSMVfihnBRlSdyHD0J4se+ZkKs=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=GNz8VAfksU8ksuPrZ0wR+qtkJ9yyUg2q/a6yrXIsLJp1xNBilQnCC6mkurzXusx6QRZqwnyloFUup3fwV/FJ+MMBwdlf13Npw+/SbF7r1s+lCJaAR0rlI8tcno35iC2UCeVOP6dvmgM2r7eFgz/4Cy9LclN8oTCRGCuP7jsKphY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.78
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f78.google.com with SMTP id ca18e2360f4ac-8558f28e005so305774539f.1
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 18 Feb 2025 01:37:24 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739870240; x=1740475040;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=e9eawh0CQTC6B4XkVXKnBZTw+De/FpP0oA2+UhyUCeA=;
-        b=OWVx6IUBF6Fl/6bpJJv3rs2fI6iSak2Fdh2Mjdax+IYTZTj99uXI8tSpdmazIYwXdt
-         HCvNJcx1ysSJCObpvw43TkNOIj2OPbYX+0Crm0wlh6j6OwvToMRGfaAJG2hLNNakJ2qZ
-         PCv4GpPtbA/ncA8ZwxjII4pVLctJBmX76bxU3ypTiCUlR4sfYcmMsQvQYvXQiBzqx7hc
-         G95cJpMlzKs7OdfvMVIjLtMgj2Vw/AIrh5ogqXtldfsMCo27EDaBHw+O2y5UG3IwduAH
-         TGBRO/mnjQ0C5DhoCVgqfCt/bsbYCZ+nkLQfMT6sU1Bo23HJU6bj6zhO0I5FdxVTNQKw
-         8zPw==
-X-Forwarded-Encrypted: i=1; AJvYcCWlsPw7GzSz1Oc1ac8bWpTdlgUuoFN634FgPDAgSPbMVZwKunKI+DljdgoZyodSym5xBBnh6S6nBlwzh29YQtAQjD4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywg4cPcHbAygU6HXUVj09B367nV05SVucnx5QUeEycw7gcW1HTN
-	J5nBQib9NVBdNi48dRg5TVsx9Hr7/66E0akmnZ1NyI8xvExMdJH5oabzySL45PXF36Vsmg==
-X-Google-Smtp-Source: AGHT+IGEUf1IAWU1YfH4BCxWMw3DbzclxHXWfJ0bKoh4oebNPcKR4H3sJDIdZaS1HGUEr9wC1aKrwoRL
-X-Received: from pfbdn12.prod.google.com ([2002:a05:6a00:498c:b0:730:92d9:52e3])
- (user=keyz job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:124e:b0:732:23ed:9470
- with SMTP id d2e1a72fcca58-73261901144mr18452340b3a.23.1739870240161; Tue, 18
- Feb 2025 01:17:20 -0800 (PST)
-Date: Tue, 18 Feb 2025 17:17:16 +0800
-In-Reply-To: <CAPDyKFor_kP1hcNC1YwLBjH=eaLG9qSyvOYvj+FQrNu8Piu2Dg@mail.gmail.com>
+        d=1e100.net; s=20230601; t=1739871444; x=1740476244;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=FLZ4fY1/NxqwbUdjoAoI1yEPFjdoeZ2kiHEcyPZJC1Y=;
+        b=qlQsaftYJYLU4xvwFcyKkiYWaMp/DP9cPqvDT3dTRR2e/qLb8hqNGVibhhmHOlzZhc
+         uyw+ojKzfD3l1hGceoLszveUTefPXDq1X/DD2Wh0nn+mrF4Sw6GChKEprge7NiLekKXz
+         3q5UWOIiAuWysO4Yy8yI6WeYxIQlnohvjoXJPq3XyloW5Hu6MV1548S/0THEj7lvUYne
+         uhJV4GnPn2JosZpCE1N7ztGz7XQ7N0UReEqb1qMQjo7A4A2+yQ6UmsAPem+jcrKi091i
+         E82FVe4OW9CnBG8v/z4AqtVZSaR4327xj0X+ZhQsTrY2yaW0Epby5vOw9Ulv+lLffHpt
+         E+WA==
+X-Forwarded-Encrypted: i=1; AJvYcCVccIo0rpUfvtf8Uw2oHpzdGszp3akgmjAd+9rtFdAEL2UMUfOSj2qboKlCijj8cBgsLgRtuKOHg1Is5iXkdcnXBZw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YztIWBTfFXZ72REM3e470wCyubnLHpcd8lVvLYgVCaFwIv1iq6m
+	ySf0q9ZMOfW0D/1QihSxuzr81TStyIyCRddVwtoNG6pjPy4plDvkKNvBkAmjFFH5CuZ2Azuw1ij
+	PYTjHFruGRCqVlX+0DpjZPK3PtkDhT5VuoIOMHE9+SleuWy33OvVCMXw=
+X-Google-Smtp-Source: AGHT+IEm82RK3nnYqiu/mYzAVrx+dILIstbP39Ck3XYMaxYLNL9eyMHJ8hlfxzpUGC53uwrwTtS1l7Y1imi/shDsJlP6RzNpi6m1
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <CAPDyKFor_kP1hcNC1YwLBjH=eaLG9qSyvOYvj+FQrNu8Piu2Dg@mail.gmail.com>
-X-Mailer: git-send-email 2.48.1.601.g30ceb7b040-goog
-Message-ID: <20250218091716.1450623-1-keyz@google.com>
-Subject: Re: [PATCH v5 RESEND] cpuidle: psci: Add trace for PSCI domain idle
-From: Keita Morisaki <keyz@google.com>
-To: ulf.hansson@linaro.org
-Cc: aarontian@google.com, d-gole@ti.com, daniel.lezcano@linaro.org, 
-	keyz@google.com, khilman@baylibre.com, linux-arm-kernel@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, lpieralisi@kernel.org, 
-	mathieu.desnoyers@efficios.com, mhiramat@kernel.org, rafael@kernel.org, 
-	rostedt@goodmis.org, sudeep.holla@arm.com, yimingtseng@google.com
+MIME-Version: 1.0
+X-Received: by 2002:a05:6e02:1c8c:b0:3d0:21aa:a756 with SMTP id
+ e9e14a558f8ab-3d2807aba07mr117250795ab.5.1739871444163; Tue, 18 Feb 2025
+ 01:37:24 -0800 (PST)
+Date: Tue, 18 Feb 2025 01:37:24 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67b454d4.050a0220.173698.0051.GAE@google.com>
+Subject: [syzbot] [netfs?] INFO: task hung in pipe_write (6)
+From: syzbot <syzbot+5984e31a805252b3b40a@syzkaller.appspotmail.com>
+To: brauner@kernel.org, ceph-devel@vger.kernel.org, dhowells@redhat.com, 
+	idryomov@gmail.com, jack@suse.cz, jlayton@kernel.org, 
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, mathieu.desnoyers@efficios.com, 
+	mhiramat@kernel.org, netfs@lists.linux.dev, rostedt@goodmis.org, 
+	syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk, xiubli@redhat.com
 Content-Type: text/plain; charset="UTF-8"
 
-> Looks good to me. I left it to Ulf, FWIW:
->
-> Acked-by: Sudeep Holla <sudeep.holla@arm.com>
+Hello,
 
-> Applied for next, thanks!
->
-> Kind regards
-> Uffe
+syzbot found the following issue on:
 
-Thank you for all the review! Excited to see it in the next.
+HEAD commit:    ad1b832bf1cf Merge tag 'devicetree-fixes-for-6.14-1' of gi..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=1251a898580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=e55cabe422b4fcaf
+dashboard link: https://syzkaller.appspot.com/bug?extid=5984e31a805252b3b40a
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=170d57df980000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=12df35a4580000
 
-Best regards,
-Keita
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/9de6d97a8d34/disk-ad1b832b.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/258463d6a9b5/vmlinux-ad1b832b.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/f0449b94f00a/bzImage-ad1b832b.xz
+
+The issue was bisected to:
+
+commit 7ba167c4c73ed96eb002c98a9d7d49317dfb0191
+Author: David Howells <dhowells@redhat.com>
+Date:   Mon Mar 18 16:57:31 2024 +0000
+
+    netfs: Switch to using unsigned long long rather than loff_t
+
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=166625b0580000
+final oops:     https://syzkaller.appspot.com/x/report.txt?x=156625b0580000
+console output: https://syzkaller.appspot.com/x/log.txt?x=116625b0580000
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+5984e31a805252b3b40a@syzkaller.appspotmail.com
+Fixes: 7ba167c4c73e ("netfs: Switch to using unsigned long long rather than loff_t")
+
+INFO: task kworker/1:2:837 blocked for more than 143 seconds.
+      Not tainted 6.14.0-rc2-syzkaller-00303-gad1b832bf1cf #0
+"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+task:kworker/1:2     state:D stack:25360 pid:837   tgid:837   ppid:2      task_flags:0x4208060 flags:0x00004000
+Workqueue: events p9_write_work
+Call Trace:
+ <TASK>
+ context_switch kernel/sched/core.c:5377 [inline]
+ __schedule+0x18bc/0x4c40 kernel/sched/core.c:6764
+ __schedule_loop kernel/sched/core.c:6841 [inline]
+ schedule+0x14b/0x320 kernel/sched/core.c:6856
+ schedule_preempt_disabled+0x13/0x30 kernel/sched/core.c:6913
+ __mutex_lock_common kernel/locking/mutex.c:662 [inline]
+ __mutex_lock+0x817/0x1010 kernel/locking/mutex.c:730
+ pipe_write+0x1c6/0x1a30 fs/pipe.c:456
+ __kernel_write_iter+0x433/0x950 fs/read_write.c:612
+ __kernel_write fs/read_write.c:632 [inline]
+ kernel_write+0x214/0x330 fs/read_write.c:653
+ p9_fd_write net/9p/trans_fd.c:432 [inline]
+ p9_write_work+0x57d/0xd70 net/9p/trans_fd.c:483
+ process_one_work kernel/workqueue.c:3236 [inline]
+ process_scheduled_works+0xabe/0x18e0 kernel/workqueue.c:3317
+ worker_thread+0x870/0xd30 kernel/workqueue.c:3398
+ kthread+0x7a9/0x920 kernel/kthread.c:464
+ ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:148
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
+ </TASK>
+
+Showing all locks held in the system:
+1 lock held by khungtaskd/30:
+ #0: ffffffff8eb38f60 (rcu_read_lock){....}-{1:3}, at: rcu_lock_acquire include/linux/rcupdate.h:337 [inline]
+ #0: ffffffff8eb38f60 (rcu_read_lock){....}-{1:3}, at: rcu_read_lock include/linux/rcupdate.h:849 [inline]
+ #0: ffffffff8eb38f60 (rcu_read_lock){....}-{1:3}, at: debug_show_all_locks+0x55/0x2a0 kernel/locking/lockdep.c:6746
+3 locks held by kworker/1:2/837:
+ #0: ffff88801b080d48 ((wq_completion)events){+.+.}-{0:0}, at: process_one_work kernel/workqueue.c:3211 [inline]
+ #0: ffff88801b080d48 ((wq_completion)events){+.+.}-{0:0}, at: process_scheduled_works+0x98b/0x18e0 kernel/workqueue.c:3317
+ #1: ffffc90003547c60 ((work_completion)(&m->wq)){+.+.}-{0:0}, at: process_one_work kernel/workqueue.c:3212 [inline]
+ #1: ffffc90003547c60 ((work_completion)(&m->wq)){+.+.}-{0:0}, at: process_scheduled_works+0x9c6/0x18e0 kernel/workqueue.c:3317
+ #2: ffff8880233c5468 (&pipe->mutex){+.+.}-{4:4}, at: pipe_write+0x1c6/0x1a30 fs/pipe.c:456
+2 locks held by getty/5577:
+ #0: ffff8880354a20a0 (&tty->ldisc_sem){++++}-{0:0}, at: tty_ldisc_ref_wait+0x25/0x70 drivers/tty/tty_ldisc.c:243
+ #1: ffffc9000332b2f0 (&ldata->atomic_read_lock){+.+.}-{4:4}, at: n_tty_read+0x616/0x1770 drivers/tty/n_tty.c:2211
+2 locks held by syz-executor138/5815:
+ #0: ffff8880233c5468 (&pipe->mutex){+.+.}-{4:4}, at: pipe_write+0x1c6/0x1a30 fs/pipe.c:456
+ #1: ffff888077e802e8 (mapping.invalidate_lock#3){.+.+}-{4:4}, at: filemap_invalidate_lock_shared include/linux/fs.h:932 [inline]
+ #1: ffff888077e802e8 (mapping.invalidate_lock#3){.+.+}-{4:4}, at: page_cache_ra_unbounded+0x156/0x820 mm/readahead.c:229
+
+=============================================
+
+NMI backtrace for cpu 1
+CPU: 1 UID: 0 PID: 30 Comm: khungtaskd Not tainted 6.14.0-rc2-syzkaller-00303-gad1b832bf1cf #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 12/27/2024
+Call Trace:
+ <TASK>
+ __dump_stack lib/dump_stack.c:94 [inline]
+ dump_stack_lvl+0x241/0x360 lib/dump_stack.c:120
+ nmi_cpu_backtrace+0x49c/0x4d0 lib/nmi_backtrace.c:113
+ nmi_trigger_cpumask_backtrace+0x198/0x320 lib/nmi_backtrace.c:62
+ trigger_all_cpu_backtrace include/linux/nmi.h:162 [inline]
+ check_hung_uninterruptible_tasks kernel/hung_task.c:236 [inline]
+ watchdog+0x1058/0x10a0 kernel/hung_task.c:399
+ kthread+0x7a9/0x920 kernel/kthread.c:464
+ ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:148
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
+ </TASK>
+Sending NMI from CPU 1 to CPUs 0:
+NMI backtrace for cpu 0 skipped: idling at native_safe_halt arch/x86/include/asm/irqflags.h:48 [inline]
+NMI backtrace for cpu 0 skipped: idling at arch_safe_halt arch/x86/include/asm/irqflags.h:106 [inline]
+NMI backtrace for cpu 0 skipped: idling at acpi_safe_halt+0x21/0x30 drivers/acpi/processor_idle.c:111
+
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
