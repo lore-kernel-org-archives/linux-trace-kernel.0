@@ -1,268 +1,134 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B5FD22CBE9
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 18 Feb 2025 08:23:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A74FD232373;
+	Tue, 18 Feb 2025 08:43:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739867028; cv=none; b=HYRGqKCHDv/+8TZc4o/1j5TBN2iI40njmim6TiXku45+nuwJuwyQUgdjoz588vV36yeuD9oC7PfAkCxioq+YrN34PH7u+AsSQ0thCrdzoQYzH2LQ4uO/5Je+VmbzLthL6rkAAUh6LmHHi4IFlG5ObiytMAhWynl3E4XdEwDaa7E=
+	t=1739868180; cv=none; b=uDoFzFTb6bzntzDcnAf2UUWOtAO1rYb1WLdOode2c7o38kkzDdSzIL55nUJTahnk+zbN9PWkTDDdM7dtDn/Oj2ckqdybfitmxdZuu+ct7Kk+EETyIXar6CDGX75lWd518ddXfmtOLV7oPl3yQnmRL/7atW2Wqi4T8vGzvA1xnq8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739867028; c=relaxed/simple;
-	bh=gWd6drMmeihrMWJ8/TtKCyEBVI8vLXPoVdRTCAifHog=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=nWZbRRlaLAP2eO4GsPdq+MHECqnkkrensbGQGXlknd4jTegHQGDohP5oLAM9Dm0KrSksP3SGyiBPN11wDAiXn1DoseX61B7hHBIYpveB9Q4kvizsAq1eGvbCEJMRxSFfYlRuAH95De+rApsk/BQgdLqC6Ix9JaBYXE2JWSgGf98=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=MIeTFt6D; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1739868180; c=relaxed/simple;
+	bh=dZj4WZKT+DPeEny8O4y/kHznbdhmpc4YiiO8vAgv9xQ=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=DYD5+J4ZYyTt1QBvYQI6gDJEdrz/3jytQFoklYLvT1JcVgeGHrqdOBoGQBVsj7DS7ojGqlEKZlyQv6jIJjEbITUfKpgfgJUMHkMQb8Mi6Jefq2sRxetd/iMOItSoT2UO5rtn+n7pymAqmXXZmv1ySqYUxxf7R3tEnsTQV7eclYI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lSY8zTlL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MIeTFt6D"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1739867026;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=qBvHlvfhr6BmJazXy9Q+HDDUtHYXQv5MYZOFyogRBUc=;
-	b=MIeTFt6DjMaKJ8PEsGWbUgfnywGZyBRknnAICkn+hvPgcJUIXomr9TcVzAt2qO92PuhtnB
-	h2X6UfRzuaqtcy1FWYX69l0K8c80Vtt12Yef0tiwDRDRo9hr+x8zS/5QAl93+2ON5wf5pC
-	Y+vzqZjUdd8jTP5A5AexYuG5VP3aOng=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-527-GgoSnKXxPgqy8tPaJO8POA-1; Tue, 18 Feb 2025 03:23:44 -0500
-X-MC-Unique: GgoSnKXxPgqy8tPaJO8POA-1
-X-Mimecast-MFC-AGG-ID: GgoSnKXxPgqy8tPaJO8POA_1739867023
-Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-43941ad86d4so30971095e9.2
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 18 Feb 2025 00:23:44 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739867023; x=1740471823;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=qBvHlvfhr6BmJazXy9Q+HDDUtHYXQv5MYZOFyogRBUc=;
-        b=c8aMSRAs3uvFM6wc/LaEojMld661na5vzoDJamE/kTQdNqnMUcmVgicAZWAfyDBCmN
-         deNOvoD6HG/4UUCwUxvISy1ptSMZ1yx8ZoFKkGlhODNvdS1BuqKQj/xM3EVib1ydCnx0
-         Y5SH8jV853Hcfel9mNNR5GdqKXO9r2gbQ/96rlHdetoItC9hageubwcKR2oodfPYWV7K
-         YOy61+mtdncbZD8nDTZhHIC7kb4u++XvGyrXblqMKW7ZLcytXiVL5StXmNo/ZJgQJMfM
-         yzc22E9ox3OybiRVePlZpMN7+FlnCTYwD+SogCtv8p06rAjDLX3NG+aVulEUJfk/b1TZ
-         5Z7w==
-X-Forwarded-Encrypted: i=1; AJvYcCXUSimTn63lIjWZspNe5ZtRNNKeyuJTIelDqGegGJoztE2n6XoLoRY2/+aN4Q3ojoieAVO+qQTB1ZqOsIiCJK1Inr4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YySQtg122tZ0N5GWoU1ftqtEAuG5UPGSFMAEfLPz2paiRgOpesb
-	lmEpvhxjESamHV/9NA8aHhJc/wlGG7RGjXJFHZpmewf+c8taPBDYxXbTLouxw82CBfwAxrfjiu5
-	4q1KqPYIcbIeC20Sd28EefmzzEf7aLPEwKSvDh7mm83jKt7y4EEQXw+tvZtKyxkGWRVb5Rw==
-X-Gm-Gg: ASbGncvy3bDkFkW8bqaUfqOfz3dAnLkUhik5TsZQEKYTujIiBrULjJOm2efp4klk0LF
-	h5TCA0UyENYWx4TtR828L89q3EtX5cmMmXszV01BcADIHL3sNjj48Ay56bhNy4bOIRrSlqdDZ1p
-	vpsWDmm8E8zkFrUknEWo9rHVUP0RmlOIxZHgcUXMMTCbDhBwI41H8CkCdG4vEsZNFOpVbh3OdLT
-	BKF9+6XMaxxT1/17C1R0fx6DWQuuGBmoHnCZdzy7dwsl8byeL3idohRkxHltsG47C6eq+m2YVKs
-	Po1KFMBr5IQjarGLn9FTUHIcMN+iMc7ncg==
-X-Received: by 2002:a05:600c:4f0b:b0:439:8e3e:b0d6 with SMTP id 5b1f17b1804b1-4398e3eb2efmr32505895e9.13.1739867023325;
-        Tue, 18 Feb 2025 00:23:43 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IF1tH9YBQtD4GkUVh4n7y0i9ZJ1I2JKGhUsOrKgQV1OtugdjJp59dqV+zBOCHkFIW2CoWU6WQ==
-X-Received: by 2002:a05:600c:4f0b:b0:439:8e3e:b0d6 with SMTP id 5b1f17b1804b1-4398e3eb2efmr32505555e9.13.1739867022833;
-        Tue, 18 Feb 2025 00:23:42 -0800 (PST)
-Received: from [192.168.3.141] (p5b0c61a2.dip0.t-ipconnect.de. [91.12.97.162])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4398a64febasm36172685e9.1.2025.02.18.00.23.39
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 18 Feb 2025 00:23:41 -0800 (PST)
-Message-ID: <3b893634-5453-42d0-b8dc-e9d07988e9e9@redhat.com>
-Date: Tue, 18 Feb 2025 09:23:39 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lSY8zTlL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 18E96C4CEE2;
+	Tue, 18 Feb 2025 08:42:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739868180;
+	bh=dZj4WZKT+DPeEny8O4y/kHznbdhmpc4YiiO8vAgv9xQ=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=lSY8zTlLGGME3fNBQLvfB4Hhhq/C9RBpdnk1C4vnK1mlkKk8JSg9qbE4kbKAqAPIw
+	 c3IBQnAhRK+wDwwbMyYBUjrsqWIWIShBYj0bonDHAY3W3u5gFHHA/x2gHgXj/IprXA
+	 XZMtNsNjLO4wyrw8vEWagbn6XqLJYJcm28A3u8wl5eLPx7BqpxRxLlWsAiIOEuq5FC
+	 UfsBH9IN6dpb/OeEs5QlrHD/GzRMR4ze1ecuX/xwQxr5aDWKOHkOXYLDpwmi+T6tz0
+	 9idnNcB69/mYFp8LoR6dmRVsGYs261+RP5J4+sUncMtkqF1bZokm/y7q8SBmDPq9nH
+	 Xj2BzxsQbFHPA==
+Date: Tue, 18 Feb 2025 17:42:57 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Mike Rapoport <rppt@kernel.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Andrew Morton
+ <akpm@linux-foundation.org>
+Subject: Re: [PATCH v3 1/2] mm/memblock: Add reserved memory release
+ function
+Message-Id: <20250218174257.61018735a30268b5e21e50e3@kernel.org>
+In-Reply-To: <Z7Q1xY3jhWjaSdeh@kernel.org>
+References: <173928521419.906035.17750338150436695675.stgit@devnote2>
+	<173928522350.906035.5626965043208329135.stgit@devnote2>
+	<Z7Q1xY3jhWjaSdeh@kernel.org>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Add Morton,Peter and David for discussion//Re: [PATCH -next]
- uprobes: fix two zero old_folio bugs in __replace_page()
-To: Tong Tiangen <tongtiangen@huawei.com>,
- Masami Hiramatsu <mhiramat@kernel.org>, Oleg Nesterov <oleg@redhat.com>,
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>,
- "Liang, Kan" <kan.liang@linux.intel.com>,
- Andrew Morton <akpm@linux-foundation.org>, Peter Xu <peterx@redhat.com>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- linux-perf-users@vger.kernel.org, bpf@vger.kernel.org,
- wangkefeng.wang@huawei.com, linux-mm <linux-mm@kvack.org>
-References: <20250217123826.88503-1-tongtiangen@huawei.com>
- <c2924e9e-1a42-a4f6-5066-ea2e15477c11@huawei.com>
-From: David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <c2924e9e-1a42-a4f6-5066-ea2e15477c11@huawei.com>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: 3Cr-9mexCDrQ7raSPpC8h-UXvYLQbuKbo2n7EjCP0JY_1739867023
-X-Mimecast-Originator: redhat.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On 18.02.25 03:47, Tong Tiangen wrote:
+Hi Mike,
+
+On Tue, 18 Feb 2025 09:24:53 +0200
+Mike Rapoport <rppt@kernel.org> wrote:
+
+> Hi Masami,
 > 
+> On Tue, Feb 11, 2025 at 11:47:03PM +0900, Masami Hiramatsu (Google) wrote:
+> > From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> > 
+> > Add reserve_mem_release_by_name() to release a reserved memory region
+> > with a given name. This allows us to release reserved memory which is
+> > defined by kernel cmdline, after boot.
+> > 
+> > Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> > Cc: Andrew Morton <akpm@linux-foundation.org>
+> > Cc: Mike Rapoport <rppt@kernel.org>
+> > Cc: linux-mm@kvack.org
 > 
-> 在 2025/2/17 20:38, Tong Tiangen 写道:
->> We triggered the following error logs in syzkaller test:
->>
->>     BUG: Bad page state in process syz.7.38  pfn:1eff3
->>     page: refcount:0 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x1eff3
->>     flags: 0x3fffff00004004(referenced|reserved|node=0|zone=1|lastcpupid=0x1fffff)
->>     raw: 003fffff00004004 ffffe6c6c07bfcc8 ffffe6c6c07bfcc8 0000000000000000
->>     raw: 0000000000000000 0000000000000000 00000000fffffffe 0000000000000000
->>     page dumped because: PAGE_FLAGS_CHECK_AT_FREE flag(s) set
->>     Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.13.0-1ubuntu1.1 04/01/2014
->>     Call Trace:
->>      <TASK>
->>      dump_stack_lvl+0x32/0x50
->>      bad_page+0x69/0xf0
->>      free_unref_page_prepare+0x401/0x500
->>      free_unref_page+0x6d/0x1b0
->>      uprobe_write_opcode+0x460/0x8e0
->>      install_breakpoint.part.0+0x51/0x80
->>      register_for_each_vma+0x1d9/0x2b0
->>      __uprobe_register+0x245/0x300
->>      bpf_uprobe_multi_link_attach+0x29b/0x4f0
->>      link_create+0x1e2/0x280
->>      __sys_bpf+0x75f/0xac0
->>      __x64_sys_bpf+0x1a/0x30
->>      do_syscall_64+0x56/0x100
->>      entry_SYSCALL_64_after_hwframe+0x78/0xe2
->>
->>      BUG: Bad rss-counter state mm:00000000452453e0 type:MM_FILEPAGES val:-1
->>
->> The following syzkaller test case can be used to reproduce:
->>
->>     r2 = creat(&(0x7f0000000000)='./file0\x00', 0x8)
->>     write$nbd(r2, &(0x7f0000000580)=ANY=[], 0x10)
->>     r4 = openat(0xffffffffffffff9c, &(0x7f0000000040)='./file0\x00', 0x42, 0x0)
->>     mmap$IORING_OFF_SQ_RING(&(0x7f0000ffd000/0x3000)=nil, 0x3000, 0x0, 0x12, r4, 0x0)
->>     r5 = userfaultfd(0x80801)
->>     ioctl$UFFDIO_API(r5, 0xc018aa3f, &(0x7f0000000040)={0xaa, 0x20})
->>     r6 = userfaultfd(0x80801)
->>     ioctl$UFFDIO_API(r6, 0xc018aa3f, &(0x7f0000000140))
->>     ioctl$UFFDIO_REGISTER(r6, 0xc020aa00, &(0x7f0000000100)={{&(0x7f0000ffc000/0x4000)=nil, 0x4000}, 0x2})
->>     ioctl$UFFDIO_ZEROPAGE(r5, 0xc020aa04, &(0x7f0000000000)={{&(0x7f0000ffd000/0x1000)=nil, 0x1000}})
->>     r7 = bpf$PROG_LOAD(0x5, &(0x7f0000000140)={0x2, 0x3, &(0x7f0000000200)=ANY=[@ANYBLOB="1800000000120000000000000000000095"], &(0x7f0000000000)='GPL\x00', 0x7, 0x0, 0x0, 0x0, 0x0, '\x00', 0x0, @fallback=0x30, 0xffffffffffffffff, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x10, 0x0, @void, @value}, 0x94)
->>     bpf$BPF_LINK_CREATE_XDP(0x1c, &(0x7f0000000040)={r7, 0x0, 0x30, 0x1e, @val=@uprobe_multi={&(0x7f0000000080)='./file0\x00', &(0x7f0000000100)=[0x2], 0x0, 0x0, 0x1}}, 0x40)
->>
->> The cause is that zero pfn is set to the pte without increasing the rss
->> count in mfill_atomic_pte_zeropage() and the refcount of zero folio does
->> not increase accordingly. Then, the operation on the same pfn is performed
->> in uprobe_write_opcode()->__replace_page() to unconditional decrease the
->> rss count and old_folio's refcount.
->>
->> Therefore, two bugs are introduced:
->> 1. The rss count is incorrect, when process exit, the check_mm() report
->>      error "Bad rss-count".
->> 2. The reserved folio (zero folio) is freed when folio->refcount is zero,
->>      then free_pages_prepare->free_page_is_bad() report error "Bad page state".
->>
->> To fix it, add zero folio check before rss counter and refcount decrease.
->>
->> Fixes: 7396fa818d62 ("uprobes/core: Make background page replacement logic account for rss_stat counters")
->> Fixes: 2b1444983508 ("uprobes, mm, x86: Add the ability to install and remove uprobes breakpoints")
->> Signed-off-by: Tong Tiangen <tongtiangen@huawei.com>
->> ---
->>    kernel/events/uprobes.c | 6 ++++--
->>    1 file changed, 4 insertions(+), 2 deletions(-)
->>
->> diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
->> index 46ddf3a2334d..ff5694acfa68 100644
->> --- a/kernel/events/uprobes.c
->> +++ b/kernel/events/uprobes.c
->> @@ -213,7 +213,8 @@ static int __replace_page(struct vm_area_struct *vma, unsigned long addr,
->>    		dec_mm_counter(mm, MM_ANONPAGES);
->>    
->>    	if (!folio_test_anon(old_folio)) {
->> -		dec_mm_counter(mm, mm_counter_file(old_folio));
->> +		if (!is_zero_folio(old_folio))
->> +			dec_mm_counter(mm, mm_counter_file(old_folio));
->>    		inc_mm_counter(mm, MM_ANONPAGES);
->>    	}
->>    
->> @@ -227,7 +228,8 @@ static int __replace_page(struct vm_area_struct *vma, unsigned long addr,
->>    	if (!folio_mapped(old_folio))
->>    		folio_free_swap(old_folio);
->>    	page_vma_mapped_walk_done(&pvmw);
->> -	folio_put(old_folio);
->> +	if (!is_zero_folio(old_folio))
->> +		folio_put(old_folio);
- >>    >>    	err = 0;
->>     unlock:
+> ...
 > 
+> > +/**
+> > + * reserve_mem_release_by_name - Release reserved memory region with a given name
+> > + * @name: The name that is attatched to a reserved memory region
+> > + *
+> > + * Forcibly release the pages in the reserved memory region so that those memory
+> > + * can be used as free memory. After released the reserved region size becomes 0.
+> > + *
+> > + * Returns: 1 if released or 0 if not found.
+> > + */
+> > +int reserve_mem_release_by_name(const char *name)
+> > +{
+> > +	struct reserve_mem_table *map;
+> > +	unsigned int page_count;
+> > +	phys_addr_t start;
+> > +
+> > +	guard(mutex)(&reserve_mem_lock);
+> > +	map = reserve_mem_find_by_name_nolock(name);
+> > +	if (!map)
+> > +		return 0;
+> > +
+> > +	start = map->start;
+> > +	page_count = DIV_ROUND_UP(map->size, PAGE_SIZE);
+> > +
+> > +	for (int i = 0; i < page_count; i++) {
+> > +		phys_addr_t addr = start + i * PAGE_SIZE;
+> > +		struct page *page = pfn_to_page(addr >> PAGE_SHIFT);
+> > +
+> > +		page->flags &= ~BIT(PG_reserved);
+> > +		__free_page(page);
+> > +	}
+> 
+> We have free_reserved_area(), please use it here.
+> Otherwise
+> 
+> Acked-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
 
-The whole "manually replace pages" logic is fragile. I tried to rewrite 
-it a while back:
+Thanks! but I can not use free_reserved_area() here because it uses
+virt_to_page(). Here we only know the physical address in the map.
+I think we can use free_reserved_page() instead. Is that OK?
 
-https://lkml.kernel.org/r/20240604122548.359952-1-david@redhat.com
-
-But didn't get to follow-up yet.
-
-I'm not sure if the page_vma_mapped_walk() really does what we would 
-expect here.
-
-The folio_remove_rmap_pte(old_folio, old_page, vma); is certainly wrong 
-as well for ero folios.
+Thank you,
 
 
-I don't think there is a sane use case right now where we would hit the 
-shared zeropage.
+> 
+> > +	map->size = 0;
+> > +
+> > +	return 1;
+> > +}
+> > +
+> >  /*
+> >   * Parse reserve_mem=nn:align:name
+> >   */
+> > 
+> 
+> -- 
+> Sincerely yours,
+> Mike.
 
-So for the time being, I think we should just reject them immediately 
-after get_user_page_vma_remote().
-
-At some point I'll follow up with my rewrite that will clean this 
-nastiness here up a bit.
 
 -- 
-Cheers,
-
-David / dhildenb
-
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
