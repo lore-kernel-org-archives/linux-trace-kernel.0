@@ -1,144 +1,101 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0D3A2586EC;
-	Wed, 19 Feb 2025 22:04:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92A31235341;
+	Wed, 19 Feb 2025 22:24:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740002686; cv=none; b=QDPbXU+4GHYlGsQUgSx2whlNPZGPtGCWEBdebLEQ0sTxz6ccpTI+GVCtlP+uuZJhe8unXoFv70O8TD+6tPyjt2J+guvByVWF+o+CxDdpK0Osae1CrgTs59aznPVCkfe52Aa3mY1YW6bKcyuZv8DfBVRoXhEuaa0+O6tsvzRQuK8=
+	t=1740003861; cv=none; b=W9hwMqKePgw7rb28719KHehb3XnJuCSMIDRv7j/+eo+e7/Dez81r7EK9/wMb0IouacAj6UbaMw/F/P4mT8CAQMAB7/K0LRoxnD9/OFyvF/KFF+fxIt+lwZ3h81zTsfSbNHEZxD5QnSaWlmzuHRx/v6XrEjwbhOenQvCj/z7o4EE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740002686; c=relaxed/simple;
-	bh=ed4oJT8Vvl3M2/8n3hRn6wKpF9ddoi3DZ6J87+Kpego=;
-	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=C4y21ndlKBD0JgaQOrzUwlbKjDERHIkcUApPhhffDQg13Zv6sgUGPXM7ODUQY8YDT54pxTJ0mkIE0l8SRc1aGoisp7qaFGINRAaWruJAJufpKUr3owqeGtoZYExlYEPtfUd+x0bI3ZYgK9h578m25rMXw6+B7yn9W89PA5chU1E=
+	s=arc-20240116; t=1740003861; c=relaxed/simple;
+	bh=F7cQj/S2Jx2LKjsunoVGqTWLq7Q+BonMp+jOTEJgYM8=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=fKV+qiRHVTZ9jjQVmncCxb/L6oYm1/PvRHTAIY3cCiv2KNpRExIqkIsK/aiiodap2KImii8Yg3lBz5VtW3vjG2Lb/nhmT5enJ1h6+KXyM7LWwRG7z2aXrCMbbvPTuuuXVPym9IJex+FrAb0A2LoM6JxWn3erlDN9CQpxKV7gIFs=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7BE6CC4CED1;
-	Wed, 19 Feb 2025 22:04:46 +0000 (UTC)
-Received: from rostedt by gandalf with local (Exim 4.98)
-	(envelope-from <rostedt@goodmis.org>)
-	id 1tksBr-00000004qe7-2yMH;
-	Wed, 19 Feb 2025 17:05:11 -0500
-Message-ID: <20250219220511.557045614@goodmis.org>
-User-Agent: quilt/0.68
-Date: Wed, 19 Feb 2025 17:04:41 -0500
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B0919C4CED1;
+	Wed, 19 Feb 2025 22:24:19 +0000 (UTC)
+Date: Wed, 19 Feb 2025 17:24:43 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
-To: linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- Heiko Carstens <hca@linux.ibm.com>,
- Sven Schnelle <svens@linux.ibm.com>,
- Vasily Gorbik <gor@linux.ibm.com>,
- Alexander Gordeev <agordeev@linux.ibm.com>
-Subject: [PATCH v2 5/5] selftests/ftrace: Update fprobe test to check enabled_functions file
-References: <20250219220436.498041541@goodmis.org>
+To: Jemmy Wong <jemmywong512@gmail.com>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Mark Rutland <mark.rutland@arm.com>,
+ Jonathan Corbet <corbet@lwn.net>, Ingo Molnar <mingo@redhat.com>, Peter
+ Zijlstra <peterz@infradead.org>, Juri Lelli <juri.lelli@redhat.com>,
+ Vincent Guittot <vincent.guittot@linaro.org>, Dietmar Eggemann
+ <dietmar.eggemann@arm.com>, Ben Segall <bsegall@google.com>, Mel Gorman
+ <mgorman@suse.de>, Valentin Schneider <vschneid@redhat.com>,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ linux-doc@vger.kernel.org
+Subject: Re: [PATCH 0/2] sched: Refine scheduler naming for clarity and
+ specificity
+Message-ID: <20250219172443.5a78401d@gandalf.local.home>
+In-Reply-To: <20250219182020.393006-1-jemmywong512@gmail.com>
+References: <20250219182020.393006-1-jemmywong512@gmail.com>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-From: Steven Rostedt <rostedt@goodmis.org>
+On Thu, 20 Feb 2025 02:20:18 +0800
+Jemmy Wong <jemmywong512@gmail.com> wrote:
 
-A few bugs were found in the fprobe accounting logic along with it using
-the function graph infrastructure. Update the fprobe selftest to catch
-those bugs in case they or something similar shows up in the future.
+> Hi, I'm relatively new to Linux and eager to contribute to the community
+> with some foundational work.
 
-The test now checks the enabled_functions file which shows all the
-functions attached to ftrace or fgraph. When enabling a fprobe, make sure
-that its corresponding function is also added to that file. Also add two
-more fprobes to enable to make sure that the fprobe logic works properly
-with multiple probes.
+Welcome to the community.
 
-Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
- .../test.d/dynevent/add_remove_fprobe.tc      | 54 +++++++++++++++++++
- 1 file changed, 54 insertions(+)
+> 
+> I aim to help improve code readability and maintainability.
+> While reading the scheduler code, I found some naming inconsistencies
+> that made understanding the code more difficult.
 
-diff --git a/tools/testing/selftests/ftrace/test.d/dynevent/add_remove_fprobe.tc b/tools/testing/selftests/ftrace/test.d/dynevent/add_remove_fprobe.tc
-index dc25bcf4f9e2..449f9d8be746 100644
---- a/tools/testing/selftests/ftrace/test.d/dynevent/add_remove_fprobe.tc
-+++ b/tools/testing/selftests/ftrace/test.d/dynevent/add_remove_fprobe.tc
-@@ -7,12 +7,38 @@ echo 0 > events/enable
- echo > dynamic_events
- 
- PLACE=$FUNCTION_FORK
-+PLACE2="kmem_cache_free"
-+PLACE3="schedule_timeout"
- 
- echo "f:myevent1 $PLACE" >> dynamic_events
-+
-+# Make sure the event is attached and is the only one
-+grep -q $PLACE enabled_functions
-+cnt=`cat enabled_functions | wc -l`
-+if [ $cnt -ne 1 ]; then
-+	exit_fail
-+fi
-+
- echo "f:myevent2 $PLACE%return" >> dynamic_events
- 
-+# It should till be the only attached function
-+cnt=`cat enabled_functions | wc -l`
-+if [ $cnt -ne 1 ]; then
-+	exit_fail
-+fi
-+
-+# add another event
-+echo "f:myevent3 $PLACE2" >> dynamic_events
-+
-+grep -q $PLACE2 enabled_functions
-+cnt=`cat enabled_functions | wc -l`
-+if [ $cnt -ne 2 ]; then
-+	exit_fail
-+fi
-+
- grep -q myevent1 dynamic_events
- grep -q myevent2 dynamic_events
-+grep -q myevent3 dynamic_events
- test -d events/fprobes/myevent1
- test -d events/fprobes/myevent2
- 
-@@ -21,6 +47,34 @@ echo "-:myevent2" >> dynamic_events
- grep -q myevent1 dynamic_events
- ! grep -q myevent2 dynamic_events
- 
-+# should still have 2 left
-+cnt=`cat enabled_functions | wc -l`
-+if [ $cnt -ne 2 ]; then
-+	exit_fail
-+fi
-+
- echo > dynamic_events
- 
-+# Should have none left
-+cnt=`cat enabled_functions | wc -l`
-+if [ $cnt -ne 0 ]; then
-+	exit_fail
-+fi
-+
-+echo "f:myevent4 $PLACE" >> dynamic_events
-+
-+# Should only have one enabled
-+cnt=`cat enabled_functions | wc -l`
-+if [ $cnt -ne 1 ]; then
-+	exit_fail
-+fi
-+
-+echo > dynamic_events
-+
-+# Should have none left
-+cnt=`cat enabled_functions | wc -l`
-+if [ $cnt -ne 0 ]; then
-+	exit_fail
-+fi
-+
- clear_trace
--- 
-2.47.2
+I do plan on updating the scheduler comments soon, so that every function
+has a purpose. But there's a lot of history to the scheduler code that you
+really can't just go and rename items. It causes a lot of churn which also
+causes noise in the git history, where git blame is used a lot to find why
+things were done. Adding renames causes one more level of indirection that
+makes it harder on the maintainers to do git forensics.
 
+> 
+> Specifically:
+> 1. Some function names do not accurately reflect their purpose.
+> 2. Certain names are too general, making it unclear what they represent.
+> 3. Some concepts are ambiguous, leading to potential confusion.
+> 
+> - Rename ttwu_do_wakeup to ttwu_set_running:
+>     - This function only sets task state to TASK_RUNNING,
+>         not performing the actual wakeup.
+> 
+> - Rename update_cfs_group to update_cfs_group_shares:
+>     - The name was too generic; specifying "shares" clarifies its purpose.
+> 
+> - Rename place_entity to update_entity_sched:
+>     - The function does not handle entity placement but updates
+>         sched info: vruntime, slice, and deadline.
+> 
+> - Rename update_load_<set, add, sub> to load_weight_<set, add, sub>:
+>     - "load" can refer to either PELT load or load weight, causing ambiguity;
+>         "load_weight" specifies it's dealing with weight.
+> 
+> - Rename struct sched_avg to struct sched_pelt:
+>     - This structure includes not just average statistics
+>         but also sums like <load, runnable, util>_sum, last_updae_time,
+>         all of which are PELT (Per-Entity Load Tracking) metrics.
+> 
+> - Rename init_entity_runnable_average to init_entity_pelt
+> 
+> This patch aims to improve code readability and reduce confusion by
+> ensuring names are more descriptive of their actual functionality or purpose.
 
+I personally am not against these updates. But as I mentioned, there's a
+lot of history here and it's really Peter Zijlstra's call (and he's been
+against changes like this in the past).
+
+So please do not be discourage if this doesn't get much traction.
+
+-- Steve
