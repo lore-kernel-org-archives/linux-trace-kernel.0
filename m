@@ -1,26 +1,26 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1A062586E5;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0D3A2586EC;
 	Wed, 19 Feb 2025 22:04:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740002686; cv=none; b=ohKkoSKrf66a5+lonHlj1hIXcpSNZLLmLlIBB0J64a3jOZi0TtHX1yc7WLUcCoKF0yNqsKC7XC7Djy2eM2v5UfsgzW1VgMFhJO5zxsfhqR42Y1ZoUd84Y1u40LxmUW0Hs4KM8ysrFrDyqViHdhxZqM+Nwp7KtxQ/uT2IFVSbH4w=
+	t=1740002686; cv=none; b=QDPbXU+4GHYlGsQUgSx2whlNPZGPtGCWEBdebLEQ0sTxz6ccpTI+GVCtlP+uuZJhe8unXoFv70O8TD+6tPyjt2J+guvByVWF+o+CxDdpK0Osae1CrgTs59aznPVCkfe52Aa3mY1YW6bKcyuZv8DfBVRoXhEuaa0+O6tsvzRQuK8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1740002686; c=relaxed/simple;
-	bh=zh4VdXnVHXZjp312HoO8Zj9ZqIman7zjchqknOA/CvY=;
+	bh=ed4oJT8Vvl3M2/8n3hRn6wKpF9ddoi3DZ6J87+Kpego=;
 	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=IPv412GmNI25iDV18vDW9N93owIzQ3HrUWEpxn/xWBR2HIn846XEEPW0jxNMFCNyrfiIMyMUxEW0vNJqblVqSsoNq2kFT1t9/Z8muvp0d65ONSTKtvn0jHppdWUb+zBR26g3ZFW1ejcGirwiQSl1yQ7IkL9SzH0aiQ1CVtOk3Jk=
+	 Content-Type; b=C4y21ndlKBD0JgaQOrzUwlbKjDERHIkcUApPhhffDQg13Zv6sgUGPXM7ODUQY8YDT54pxTJ0mkIE0l8SRc1aGoisp7qaFGINRAaWruJAJufpKUr3owqeGtoZYExlYEPtfUd+x0bI3ZYgK9h578m25rMXw6+B7yn9W89PA5chU1E=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5B068C4CEDD;
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7BE6CC4CED1;
 	Wed, 19 Feb 2025 22:04:46 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.98)
 	(envelope-from <rostedt@goodmis.org>)
-	id 1tksBr-00000004qdd-2FYZ;
+	id 1tksBr-00000004qe7-2yMH;
 	Wed, 19 Feb 2025 17:05:11 -0500
-Message-ID: <20250219220511.392563510@goodmis.org>
+Message-ID: <20250219220511.557045614@goodmis.org>
 User-Agent: quilt/0.68
-Date: Wed, 19 Feb 2025 17:04:40 -0500
+Date: Wed, 19 Feb 2025 17:04:41 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org,
  linux-trace-kernel@vger.kernel.org
@@ -31,9 +31,8 @@ Cc: Masami Hiramatsu <mhiramat@kernel.org>,
  Heiko Carstens <hca@linux.ibm.com>,
  Sven Schnelle <svens@linux.ibm.com>,
  Vasily Gorbik <gor@linux.ibm.com>,
- Alexander Gordeev <agordeev@linux.ibm.com>,
- stable@vger.kernel.org
-Subject: [PATCH v2 4/5] fprobe: Fix accounting of when to unregister from function graph
+ Alexander Gordeev <agordeev@linux.ibm.com>
+Subject: [PATCH v2 5/5] selftests/ftrace: Update fprobe test to check enabled_functions file
 References: <20250219220436.498041541@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -45,87 +44,100 @@ Content-Type: text/plain; charset=UTF-8
 
 From: Steven Rostedt <rostedt@goodmis.org>
 
-When adding a new fprobe, it will update the function hash to the
-functions the fprobe is attached to and register with function graph to
-have it call the registered functions. The fprobe_graph_active variable
-keeps track of the number of fprobes that are using function graph.
+A few bugs were found in the fprobe accounting logic along with it using
+the function graph infrastructure. Update the fprobe selftest to catch
+those bugs in case they or something similar shows up in the future.
 
-If two fprobes attach to the same function, it increments the
-fprobe_graph_active for each of them. But when they are removed, the first
-fprobe to be removed will see that the function it is attached to is also
-used by another fprobe and it will not remove that function from
-function_graph. The logic will skip decrementing the fprobe_graph_active
-variable.
+The test now checks the enabled_functions file which shows all the
+functions attached to ftrace or fgraph. When enabling a fprobe, make sure
+that its corresponding function is also added to that file. Also add two
+more fprobes to enable to make sure that the fprobe logic works properly
+with multiple probes.
 
-This causes the fprobe_graph_active variable to not go to zero when all
-fprobes are removed, and in doing so it does not unregister from
-function graph. As the fgraph ops hash will now be empty, and an empty
-filter hash means all functions are enabled, this triggers function graph
-to add a callback to the fprobe infrastructure for every function!
-
- # echo "f:myevent1 kernel_clone" >> /sys/kernel/tracing/dynamic_events
- # echo "f:myevent2 kernel_clone%return" >> /sys/kernel/tracing/dynamic_events
- # cat /sys/kernel/tracing/enabled_functions
-kernel_clone (1)           	tramp: 0xffffffffc0024000 (ftrace_graph_func+0x0/0x60) ->ftrace_graph_func+0x0/0x60
-
- # > /sys/kernel/tracing/dynamic_events
- # cat /sys/kernel/tracing/enabled_functions
-trace_initcall_start_cb (1)             tramp: 0xffffffffc0026000 (function_trace_call+0x0/0x170) ->function_trace_call+0x0/0x170
-run_init_process (1)            tramp: 0xffffffffc0026000 (function_trace_call+0x0/0x170) ->function_trace_call+0x0/0x170
-try_to_run_init_process (1)             tramp: 0xffffffffc0026000 (function_trace_call+0x0/0x170) ->function_trace_call+0x0/0x170
-x86_pmu_show_pmu_cap (1)                tramp: 0xffffffffc0026000 (function_trace_call+0x0/0x170) ->function_trace_call+0x0/0x170
-cleanup_rapl_pmus (1)                   tramp: 0xffffffffc0026000 (function_trace_call+0x0/0x170) ->function_trace_call+0x0/0x170
-uncore_free_pcibus_map (1)              tramp: 0xffffffffc0026000 (function_trace_call+0x0/0x170) ->function_trace_call+0x0/0x170
-uncore_types_exit (1)                   tramp: 0xffffffffc0026000 (function_trace_call+0x0/0x170) ->function_trace_call+0x0/0x170
-uncore_pci_exit.part.0 (1)              tramp: 0xffffffffc0026000 (function_trace_call+0x0/0x170) ->function_trace_call+0x0/0x170
-kvm_shutdown (1)                tramp: 0xffffffffc0026000 (function_trace_call+0x0/0x170) ->function_trace_call+0x0/0x170
-vmx_dump_msrs (1)               tramp: 0xffffffffc0026000 (function_trace_call+0x0/0x170) ->function_trace_call+0x0/0x170
-[..]
-
- # cat /sys/kernel/tracing/enabled_functions | wc -l
-54702
-
-If a fprobe is being removed and all its functions are also traced by
-other fprobes, still decrement the fprobe_graph_active counter.
-
-Cc: stable@vger.kernel.org
-Fixes: 4346ba1604093 ("fprobe: Rewrite fprobe on function-graph tracer")
-Closes: https://lore.kernel.org/all/20250217114918.10397-A-hca@linux.ibm.com/
-Reported-by: Heiko Carstens <hca@linux.ibm.com>
+Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
-Changes since v1: https://lore.kernel.org/20250218193126.619197190@goodmis.org
+ .../test.d/dynevent/add_remove_fprobe.tc      | 54 +++++++++++++++++++
+ 1 file changed, 54 insertions(+)
 
-- Move the check into fprobe_graph_remove_ips() to keep it matching
-  with fprobe_graph_add_ips() (Masami Hiramatsu)
-
- kernel/trace/fprobe.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/kernel/trace/fprobe.c b/kernel/trace/fprobe.c
-index 62e8f7d56602..33082c4e8154 100644
---- a/kernel/trace/fprobe.c
-+++ b/kernel/trace/fprobe.c
-@@ -407,7 +407,8 @@ static void fprobe_graph_remove_ips(unsigned long *addrs, int num)
- 	if (!fprobe_graph_active)
- 		unregister_ftrace_graph(&fprobe_graph_ops);
+diff --git a/tools/testing/selftests/ftrace/test.d/dynevent/add_remove_fprobe.tc b/tools/testing/selftests/ftrace/test.d/dynevent/add_remove_fprobe.tc
+index dc25bcf4f9e2..449f9d8be746 100644
+--- a/tools/testing/selftests/ftrace/test.d/dynevent/add_remove_fprobe.tc
++++ b/tools/testing/selftests/ftrace/test.d/dynevent/add_remove_fprobe.tc
+@@ -7,12 +7,38 @@ echo 0 > events/enable
+ echo > dynamic_events
  
--	ftrace_set_filter_ips(&fprobe_graph_ops.ops, addrs, num, 1, 0);
-+	if (num)
-+		ftrace_set_filter_ips(&fprobe_graph_ops.ops, addrs, num, 1, 0);
- }
+ PLACE=$FUNCTION_FORK
++PLACE2="kmem_cache_free"
++PLACE3="schedule_timeout"
  
- static int symbols_cmp(const void *a, const void *b)
-@@ -677,8 +678,7 @@ int unregister_fprobe(struct fprobe *fp)
- 	}
- 	del_fprobe_hash(fp);
+ echo "f:myevent1 $PLACE" >> dynamic_events
++
++# Make sure the event is attached and is the only one
++grep -q $PLACE enabled_functions
++cnt=`cat enabled_functions | wc -l`
++if [ $cnt -ne 1 ]; then
++	exit_fail
++fi
++
+ echo "f:myevent2 $PLACE%return" >> dynamic_events
  
--	if (count)
--		fprobe_graph_remove_ips(addrs, count);
-+	fprobe_graph_remove_ips(addrs, count);
++# It should till be the only attached function
++cnt=`cat enabled_functions | wc -l`
++if [ $cnt -ne 1 ]; then
++	exit_fail
++fi
++
++# add another event
++echo "f:myevent3 $PLACE2" >> dynamic_events
++
++grep -q $PLACE2 enabled_functions
++cnt=`cat enabled_functions | wc -l`
++if [ $cnt -ne 2 ]; then
++	exit_fail
++fi
++
+ grep -q myevent1 dynamic_events
+ grep -q myevent2 dynamic_events
++grep -q myevent3 dynamic_events
+ test -d events/fprobes/myevent1
+ test -d events/fprobes/myevent2
  
- 	kfree_rcu(hlist_array, rcu);
- 	fp->hlist_array = NULL;
+@@ -21,6 +47,34 @@ echo "-:myevent2" >> dynamic_events
+ grep -q myevent1 dynamic_events
+ ! grep -q myevent2 dynamic_events
+ 
++# should still have 2 left
++cnt=`cat enabled_functions | wc -l`
++if [ $cnt -ne 2 ]; then
++	exit_fail
++fi
++
+ echo > dynamic_events
+ 
++# Should have none left
++cnt=`cat enabled_functions | wc -l`
++if [ $cnt -ne 0 ]; then
++	exit_fail
++fi
++
++echo "f:myevent4 $PLACE" >> dynamic_events
++
++# Should only have one enabled
++cnt=`cat enabled_functions | wc -l`
++if [ $cnt -ne 1 ]; then
++	exit_fail
++fi
++
++echo > dynamic_events
++
++# Should have none left
++cnt=`cat enabled_functions | wc -l`
++if [ $cnt -ne 0 ]; then
++	exit_fail
++fi
++
+ clear_trace
 -- 
 2.47.2
 
