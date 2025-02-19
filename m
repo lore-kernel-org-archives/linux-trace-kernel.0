@@ -1,110 +1,165 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 706E3BA45;
-	Wed, 19 Feb 2025 00:24:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE42F19D8A7;
+	Wed, 19 Feb 2025 00:53:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739924666; cv=none; b=dtybvVTZL52BsCVaYfN2g5KYXZDr331FTw6Drz5UFkA6/qNDqy+KNTwPHMqxtu+YQPcGgongS7mVehVlvqhBvXcdvptrIQE08wl4L1bVhFDRXQPdDR2oKadetjeFUoZM4rcCC/giM2Vpib9ugHNsumtzP9CzEwq+hNGMnZO4AY8=
+	t=1739926416; cv=none; b=NNFIqFHzLHVr0Wv92MsofwwBQntn+Q2LhbPyqNYLxKjda4QRnNJAtCyuUARDlmBm+53Q/fvCAmZcAZ4ky2hDzBr98wfCCUIJzHxf93YBGGTkIFuSS2m2MW7vxjHHkm2l5nlHep9TyDznJsOIxSJDUlqCggVrG/7ll0uprHvAcio=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739924666; c=relaxed/simple;
-	bh=v+G6XQjKH8mwQQ9LTsWzSc9ufj1uf31ots88a2yaIdU=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=RngZzjcAH0Kre/oWyFqAyjPvCTBrFOpqDJxN4rIPAmoVuu7rsMrCo4lLj8Es2pHb6Elb1tmy0ULsQQqwQ4ienvpjjPwNUOENpXpaXRPx8OhssQRSAkkS7jI8I9HFxSYnL9pk3p73lP80yKuraXE4Paed6zGET2s/U/EVCm420gI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4D314C4CEE2;
-	Wed, 19 Feb 2025 00:24:24 +0000 (UTC)
-Date: Tue, 18 Feb 2025 19:24:46 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Luis Chamberlain <mcgrof@kernel.org>
-Cc: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Mark
- Rutland <mark.rutland@arm.com>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Andrew Morton
- <akpm@linux-foundation.org>, Petr Pavlu <petr.pavlu@suse.com>, Sami
- Tolvanen <samitolvanen@google.com>, Daniel Gomez <da.gomez@samsung.com>,
- linux-modules@vger.kernel.org, Sebastian Andrzej Siewior
- <bigeasy@linutronix.de>
-Subject: Re: [PATCH 5/8] module: Add module_for_each_mod() function
-Message-ID: <20250218192446.1269e461@gandalf.local.home>
-In-Reply-To: <Z7T50DxEL7NYkr8H@bombadil.infradead.org>
-References: <20250205225031.799739376@goodmis.org>
-	<20250205225103.760856859@goodmis.org>
-	<20250206142817.91853f475c681bc2ef7ca962@kernel.org>
-	<20250206102720.0fd57129@gandalf.local.home>
-	<20250214173017.07b0b250@gandalf.local.home>
-	<Z7T50DxEL7NYkr8H@bombadil.infradead.org>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1739926416; c=relaxed/simple;
+	bh=l8wDuRqJ/CejzfL8HrHYbXhxxF4iBq5obOtIyGJ7yDI=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=pMHlOfj46TWpgeMm5BCbwdx9SF0dtHLf/NpWfymx1mt74TSnNesfAlpBkoeabPyLfoR7jOWIg5zQq/KImbOuWWRzugZWmEfdW/hlqBzWYAqe4xa86hNDxylaCCsiisUWNdKVv3x694Q94xSgOa5lkXcwIZqCT3UDAKe/AsQS5VQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FKsPac5q; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FKsPac5q"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3A4FCC4CEE2;
+	Wed, 19 Feb 2025 00:53:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739926416;
+	bh=l8wDuRqJ/CejzfL8HrHYbXhxxF4iBq5obOtIyGJ7yDI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=FKsPac5qFYVOu/eypD1DMagX/ta6fHybw+efTDnTqM1WWXUsZwRzuN4RNTI3H9I+O
+	 zagN4+q654nuN65pE0Uvwiek1r9Z2vXIkMT8Cf4w1i/3cu2VpfUL/toI7RcgFhb05T
+	 +p7z0TwTDAsls14C15wJ2lxLQS4gxHEGqkUQxTIF49FQc4jCwPU1MXpRe2wX0vmDqb
+	 4THOOVs0gUSFc5p6HrwBmjMOkbShm1C2gxop6nMieL8cFY6nN+bBDVVkmSGnS8deJR
+	 1A9D3P4yAMUPCnfT6T5KVH03v+hzR0GueaPIvlkCmfOrs3vwDbkauF0OSDoN1B0aft
+	 Jd41HG7LyQ5dw==
+Date: Wed, 19 Feb 2025 09:53:32 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Masami
+ Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Andrew Morton
+ <akpm@linux-foundation.org>, Heiko Carstens <hca@linux.ibm.com>, Sven
+ Schnelle <svens@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
+ Alexander Gordeev <agordeev@linux.ibm.com>, stable@vger.kernel.org
+Subject: Re: [PATCH 3/5] fprobe: Fix accounting of when to unregister from
+ function graph
+Message-Id: <20250219095332.f9667fe4f414ec9945093b73@kernel.org>
+In-Reply-To: <20250218193126.619197190@goodmis.org>
+References: <20250218193033.338823920@goodmis.org>
+	<20250218193126.619197190@goodmis.org>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
+Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Tue, 18 Feb 2025 13:21:20 -0800
-Luis Chamberlain <mcgrof@kernel.org> wrote:
+On Tue, 18 Feb 2025 14:30:36 -0500
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-> The patch is not OK, you're looking at old code, look at
-> modules-next and as Petr suggested look at Sebastian's recently
-> merged work.
+> From: Steven Rostedt <rostedt@goodmis.org>
 > 
-> git remote add korg-modules git://git.kernel.org/pub/scm/linux/kernel/git/modules/linux.git
+> When adding a new fprobe, it will update the function hash to the
+> functions the fprobe is attached to and register with function graph to
+> have it call the registered functions. The fprobe_graph_active variable
+> keeps track of the number of fprobes that are using function graph.
+> 
+> If two fprobes attach to the same function, it increments the
+> fprobe_graph_active for each of them. But when they are removed, the first
+> fprobe to be removed will see that the function it is attached to is also
+> used by another fprobe and it will not remove that function from
+> function_graph. The logic will skip decrementing the fprobe_graph_active
+> variable.
+> 
+> This causes the fprobe_graph_active variable to not go to zero when all
+> fprobes are removed, and in doing so it does not unregister from
+> function graph. As the fgraph ops hash will now be empty, and an empty
+> filter hash means all functions are enabled, this triggers function graph
+> to add a callback to the fprobe infrastructure for every function!
+> 
+>  # echo "f:myevent1 kernel_clone" >> /sys/kernel/tracing/dynamic_events
+>  # echo "f:myevent2 kernel_clone%return" >> /sys/kernel/tracing/dynamic_events
+>  # cat /sys/kernel/tracing/enabled_functions
+> kernel_clone (1)           	tramp: 0xffffffffc0024000 (ftrace_graph_func+0x0/0x60) ->ftrace_graph_func+0x0/0x60
+> 
+>  # > /sys/kernel/tracing/dynamic_events
+>  # cat /sys/kernel/tracing/enabled_functions
+> trace_initcall_start_cb (1)             tramp: 0xffffffffc0026000 (function_trace_call+0x0/0x170) ->function_trace_call+0x0/0x170
+> run_init_process (1)            tramp: 0xffffffffc0026000 (function_trace_call+0x0/0x170) ->function_trace_call+0x0/0x170
+> try_to_run_init_process (1)             tramp: 0xffffffffc0026000 (function_trace_call+0x0/0x170) ->function_trace_call+0x0/0x170
+> x86_pmu_show_pmu_cap (1)                tramp: 0xffffffffc0026000 (function_trace_call+0x0/0x170) ->function_trace_call+0x0/0x170
+> cleanup_rapl_pmus (1)                   tramp: 0xffffffffc0026000 (function_trace_call+0x0/0x170) ->function_trace_call+0x0/0x170
+> uncore_free_pcibus_map (1)              tramp: 0xffffffffc0026000 (function_trace_call+0x0/0x170) ->function_trace_call+0x0/0x170
+> uncore_types_exit (1)                   tramp: 0xffffffffc0026000 (function_trace_call+0x0/0x170) ->function_trace_call+0x0/0x170
+> uncore_pci_exit.part.0 (1)              tramp: 0xffffffffc0026000 (function_trace_call+0x0/0x170) ->function_trace_call+0x0/0x170
+> kvm_shutdown (1)                tramp: 0xffffffffc0026000 (function_trace_call+0x0/0x170) ->function_trace_call+0x0/0x170
+> vmx_dump_msrs (1)               tramp: 0xffffffffc0026000 (function_trace_call+0x0/0x170) ->function_trace_call+0x0/0x170
+> [..]
+> 
+>  # cat /sys/kernel/tracing/enabled_functions | wc -l
+> 54702
+> 
+> If a fprobe is being removed and all its functions are also traced by
+> other fprobes, still decrement the fprobe_graph_active counter.
+> 
 
-Would this be OK?
 
-I have this on v6.14-rc3, and it doesn't cause any conflicts when I merge
-it with modules-next, and it builds fine.
+Ah, thanks! But I would like to change the fix a bit since
+fprobe_graph_remove_ips() must be paired with fprobe_graph_add_ips()
+to hide fprobe_graph_active counting.
 
--- Steve
+Can you use this version?
 
-diff --git a/include/linux/module.h b/include/linux/module.h
-index 30e5b19bafa9..9a71dd2cb11f 100644
---- a/include/linux/module.h
-+++ b/include/linux/module.h
-@@ -782,6 +782,8 @@ static inline void *module_writable_address(struct module *mod, void *loc)
- 	return __module_writable_address(mod, loc);
+diff --git a/kernel/trace/fprobe.c b/kernel/trace/fprobe.c
+index 2560b312ad57..7d282c08549e 100644
+--- a/kernel/trace/fprobe.c
++++ b/kernel/trace/fprobe.c
+@@ -409,7 +409,8 @@ static void fprobe_graph_remove_ips(unsigned long *addrs, int num)
+ 		return;
+ 	}
+ 
+-	ftrace_set_filter_ips(&fprobe_graph_ops.ops, addrs, num, 1, 0);
++	if (num)
++		ftrace_set_filter_ips(&fprobe_graph_ops.ops, addrs, num, 1, 0);
  }
  
-+void module_for_each_mod(int(*func)(struct module *mod, void *data), void *data);
-+
- #else /* !CONFIG_MODULES... */
+ static int symbols_cmp(const void *a, const void *b)
+@@ -679,8 +680,7 @@ int unregister_fprobe(struct fprobe *fp)
+ 	}
+ 	del_fprobe_hash(fp);
  
- static inline struct module *__module_address(unsigned long addr)
-@@ -894,6 +896,10 @@ static inline void *module_writable_address(struct module *mod, void *loc)
- {
- 	return loc;
- }
-+
-+static inline void module_for_each_mod(int(*func)(struct module *mod, void *data), void *data)
-+{
-+}
- #endif /* CONFIG_MODULES */
+-	if (count)
+-		fprobe_graph_remove_ips(addrs, count);
++	fprobe_graph_remove_ips(addrs, count);
  
- #ifdef CONFIG_SYSFS
-diff --git a/kernel/module/main.c b/kernel/module/main.c
-index 1fb9ad289a6f..1bd4e3b7098a 100644
---- a/kernel/module/main.c
-+++ b/kernel/module/main.c
-@@ -3809,6 +3809,19 @@ bool is_module_text_address(unsigned long addr)
- 	return ret;
- }
- 
-+void module_for_each_mod(int(*func)(struct module *mod, void *data), void *data)
-+{
-+	struct module *mod;
-+
-+	guard(rcu)();
-+	list_for_each_entry_rcu(mod, &modules, list) {
-+		if (mod->state == MODULE_STATE_UNFORMED)
-+			continue;
-+		if (func(mod, data))
-+			break;
-+	}
-+}
-+
- /**
-  * __module_text_address() - get the module whose code contains an address.
-  * @addr: the address.
+ 	kfree_rcu(hlist_array, rcu);
+ 	fp->hlist_array = NULL;
+
+
+> Cc: stable@vger.kernel.org
+> Fixes: 4346ba1604093 ("fprobe: Rewrite fprobe on function-graph tracer")
+> Closes: https://lore.kernel.org/all/20250217114918.10397-A-hca@linux.ibm.com/
+> Reported-by: Heiko Carstens <hca@linux.ibm.com>
+> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+> ---
+>  kernel/trace/fprobe.c | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/kernel/trace/fprobe.c b/kernel/trace/fprobe.c
+> index 2560b312ad57..90241091ca61 100644
+> --- a/kernel/trace/fprobe.c
+> +++ b/kernel/trace/fprobe.c
+> @@ -681,6 +681,8 @@ int unregister_fprobe(struct fprobe *fp)
+>  
+>  	if (count)
+>  		fprobe_graph_remove_ips(addrs, count);
+> +	else
+> +		fprobe_graph_active--;
+>  
+>  	kfree_rcu(hlist_array, rcu);
+>  	fp->hlist_array = NULL;
+> -- 
+> 2.47.2
+> 
+> 
+
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
