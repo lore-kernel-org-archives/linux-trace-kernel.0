@@ -1,94 +1,119 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 456481E5B90
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 19 Feb 2025 15:23:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8192F199237;
+	Wed, 19 Feb 2025 15:29:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739978612; cv=none; b=RLdOAwniH+YyaLvg7ORgK/By1xHnIvc1MsocZwdAc/Xlxry8w8+vQ3Vyu5TOaZtRtORJNj1h1sEbphwwcaJ3wmOjrqkYopgL4su9cuJCZpvAjmzwNVx10Oi7io99e5tyNNBoOPTCcN88FP3Z+qmYCmqtEP3X1BNSXu9qxyaWHJs=
+	t=1739978996; cv=none; b=S1338PcEQZjuQw4ppyEoiYCGPgfJ/T3sxnRzk07n0+6LUtZnMUT3+YK2XrZ2DUu2jP84DFhwVldJhFSDa6QNb4R613S3l+Nu88DhfeQ/NiHWOQQtUrJJ8JjnS48bxupyKtvur9emKWd5c95atdDc8UJZkgKsKFVnKV5M/h0plm8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739978612; c=relaxed/simple;
-	bh=/0kmnhcuXSDK/VJa/ZW0gcKx1grCl+oTBF/dgOBkbx8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JpEMmdhhXPNJH2EayTl77hfBYlCKiNSEH8u43o9oW9FikYkNbS+3/GwPfAjLTeAH1NipAqTRfTei5A11VJ5Pt9KSmE8ij0Zhr+5RTdGCszkENsvMSOzlXxDOOZDJuni82PzhnmntWznSurKobTryw81b3efYi0rHNtjbOOqhrJs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Cd9Mm5MZ; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Cd9Mm5MZ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1739978610;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=/0kmnhcuXSDK/VJa/ZW0gcKx1grCl+oTBF/dgOBkbx8=;
-	b=Cd9Mm5MZNS3z07sHkLsx3dBldfuR5guE8U2UZk3F+BziKCZ0vWFaIi/8Egd0bUc/sNsTMf
-	4KskhN8ezNOUGM2v/tDEtWzpEmRAnJWHOduLsW9l8SpxbU3BvT3jyIzKZJ+5GbR0B1E2SN
-	9gBmGjCiPxGgu8+3egpvIGnrX4XRX3k=
-Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-629-wy_-NrPsPJOUKZFcVv0X_g-1; Wed,
- 19 Feb 2025 10:23:27 -0500
-X-MC-Unique: wy_-NrPsPJOUKZFcVv0X_g-1
-X-Mimecast-MFC-AGG-ID: wy_-NrPsPJOUKZFcVv0X_g_1739978604
-Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 8F12119783BC;
-	Wed, 19 Feb 2025 15:23:23 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.44.33.102])
-	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 910421956094;
-	Wed, 19 Feb 2025 15:23:08 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Wed, 19 Feb 2025 16:22:53 +0100 (CET)
-Date: Wed, 19 Feb 2025 16:22:38 +0100
-From: Oleg Nesterov <oleg@redhat.com>
-To: Tong Tiangen <tongtiangen@huawei.com>
-Cc: David Hildenbrand <david@redhat.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	"Liang, Kan" <kan.liang@linux.intel.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Peter Xu <peterx@redhat.com>, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, bpf@vger.kernel.org,
-	wangkefeng.wang@huawei.com, linux-mm <linux-mm@kvack.org>
-Subject: Re: Add Morton,Peter and David for discussion//Re: [PATCH -next]
- uprobes: fix two zero old_folio bugs in __replace_page()
-Message-ID: <20250219152237.GB5948@redhat.com>
-References: <20250217123826.88503-1-tongtiangen@huawei.com>
- <c2924e9e-1a42-a4f6-5066-ea2e15477c11@huawei.com>
- <3b893634-5453-42d0-b8dc-e9d07988e9e9@redhat.com>
- <24a61833-f389-b074-0d9c-d5ad9efc2046@huawei.com>
+	s=arc-20240116; t=1739978996; c=relaxed/simple;
+	bh=8BSiMyKZOdyFw/92729oiwxfXkyUH7puwGPtfJpZwT8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=EHOrTe10XdvtULyEVmRd8RfIsD/Q2j1hRE655H8OmkVfYSTkFC2WXnJjMtjhTAEv1wsm0J5e5HCodabXv9Msc84rixF/zMgdAzqBg0LSHGzMPKdYTsuuMqxOiQQokoNEunQ0iEpAIbOX59G4ASzOrC1RqBvymFYfP324aaEf9jM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 149B8152B;
+	Wed, 19 Feb 2025 07:30:12 -0800 (PST)
+Received: from [10.57.84.233] (unknown [10.57.84.233])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B000F3F59E;
+	Wed, 19 Feb 2025 07:29:45 -0800 (PST)
+Message-ID: <6cdc1de1-f760-4084-8eae-102ca16fee20@arm.com>
+Date: Wed, 19 Feb 2025 15:29:44 +0000
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <24a61833-f389-b074-0d9c-d5ad9efc2046@huawei.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC v2 4/9] khugepaged: generalize alloc_charge_folio for mTHP
+ support
+Content-Language: en-GB
+To: Nico Pache <npache@redhat.com>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, linux-mm@kvack.org
+Cc: anshuman.khandual@arm.com, catalin.marinas@arm.com, cl@gentwo.org,
+ vbabka@suse.cz, mhocko@suse.com, apopple@nvidia.com,
+ dave.hansen@linux.intel.com, will@kernel.org, baohua@kernel.org,
+ jack@suse.cz, srivatsa@csail.mit.edu, haowenchao22@gmail.com,
+ hughd@google.com, aneesh.kumar@kernel.org, yang@os.amperecomputing.com,
+ peterx@redhat.com, ioworker0@gmail.com, wangkefeng.wang@huawei.com,
+ ziy@nvidia.com, jglisse@google.com, surenb@google.com,
+ vishal.moola@gmail.com, zokeefe@google.com, zhengqi.arch@bytedance.com,
+ jhubbard@nvidia.com, 21cnbao@gmail.com, willy@infradead.org,
+ kirill.shutemov@linux.intel.com, david@redhat.com, aarcange@redhat.com,
+ raquini@redhat.com, dev.jain@arm.com, sunnanyong@huawei.com,
+ usamaarif642@gmail.com, audra@redhat.com, akpm@linux-foundation.org,
+ rostedt@goodmis.org, mathieu.desnoyers@efficios.com, tiwai@suse.de
+References: <20250211003028.213461-1-npache@redhat.com>
+ <20250211003028.213461-5-npache@redhat.com>
+From: Ryan Roberts <ryan.roberts@arm.com>
+In-Reply-To: <20250211003028.213461-5-npache@redhat.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On 02/18, Tong Tiangen wrote:
->
-> OK, Before your rewrite last merged, How about i change the solution to
-> just reject them immediately after get_user_page_vma_remote()？
+On 11/02/2025 00:30, Nico Pache wrote:
+> alloc_charge_folio allocates the new folio for the khugepaged collapse.
+> Generalize the order of the folio allocations to support future mTHP
+> collapsing.
+> 
+> No functional changes in this patch.
+> 
+> Signed-off-by: Nico Pache <npache@redhat.com>
+> ---
+>  mm/khugepaged.c | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
+> 
+> diff --git a/mm/khugepaged.c b/mm/khugepaged.c
+> index c834ea842847..0cfcdc11cabd 100644
+> --- a/mm/khugepaged.c
+> +++ b/mm/khugepaged.c
+> @@ -1074,14 +1074,14 @@ static int __collapse_huge_page_swapin(struct mm_struct *mm,
+>  }
+>  
+>  static int alloc_charge_folio(struct folio **foliop, struct mm_struct *mm,
+> -			      struct collapse_control *cc)
+> +			      struct collapse_control *cc, int order)
+>  {
+>  	gfp_t gfp = (cc->is_khugepaged ? alloc_hugepage_khugepaged_gfpmask() :
+>  		     GFP_TRANSHUGE);
+>  	int node = khugepaged_find_target_node(cc);
+>  	struct folio *folio;
+>  
+> -	folio = __folio_alloc(gfp, HPAGE_PMD_ORDER, node, &cc->alloc_nmask);
+> +	folio = __folio_alloc(gfp, order, node, &cc->alloc_nmask);
+>  	if (!folio) {
+>  		*foliop = NULL;
+>  		count_vm_event(THP_COLLAPSE_ALLOC_FAILED);
 
-I agree, uprobe_write_opcode() should simply fail if is_zero_page(old_page).
+Stats management is different for PMD-sized THP vs mTHP. All the PMD-sized THP
+stats continue to be accumulated in /proc/meminfo (or whatever its called).
+Other THP sizes are not accounted here. All mTHP sizes (*including* PMD-sized)
+should accounted in
+/sys/kernel/mm/transparent_hugepage/hugepages-<size>kB/stats/*. There is a file
+for each stat.
 
-Oleg.
+We decided to do it this way for fear of breaking unenlightened user space that
+only understands PMD-sized THP.
+
+You can find the mTHP stats machinery at count_mthp_stat().
+
+> @@ -1125,7 +1125,7 @@ static int collapse_huge_page(struct mm_struct *mm, unsigned long address,
+>  	 */
+>  	mmap_read_unlock(mm);
+>  
+> -	result = alloc_charge_folio(&folio, mm, cc);
+> +	result = alloc_charge_folio(&folio, mm, cc, HPAGE_PMD_ORDER);
+>  	if (result != SCAN_SUCCEED)
+>  		goto out_nolock;
+>  
+> @@ -1851,7 +1851,7 @@ static int collapse_file(struct mm_struct *mm, unsigned long addr,
+>  	VM_BUG_ON(!IS_ENABLED(CONFIG_READ_ONLY_THP_FOR_FS) && !is_shmem);
+>  	VM_BUG_ON(start & (HPAGE_PMD_NR - 1));
+>  
+> -	result = alloc_charge_folio(&new_folio, mm, cc);
+> +	result = alloc_charge_folio(&new_folio, mm, cc, HPAGE_PMD_ORDER);
+>  	if (result != SCAN_SUCCEED)
+>  		goto out;
+>  
 
