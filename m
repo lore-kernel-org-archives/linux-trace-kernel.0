@@ -1,262 +1,168 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 298091E885;
-	Wed, 19 Feb 2025 15:39:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-qk1-f182.google.com (mail-qk1-f182.google.com [209.85.222.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 134FB198E81;
+	Wed, 19 Feb 2025 15:39:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739979573; cv=none; b=LLZyi7chULaD+MoG3V9cFA8uQ7eR8ZApg4HjItv12fUPvgzVT7WW3dlNC9QKkRCxThOD3TGkotW7IY277O9P009Cnj90ztB7beGlPpk9d7xustVnpCUg9dK6idXvBzkU7ZdslhbCofPWZwQpTOXnlcElQ6SAU8A1YM9+l9PyXT4=
+	t=1739979585; cv=none; b=RaoXrvGo8hq23G9pmfOCCRx+12bSOnS+NauV6JtWXhgj7hW0g6ATFGx8mqazAJx57GEd3Z4dTMn3heLPxjNrLZky0nXYsarPXF+jJSfiTWJqQY9v6MZqXBXZAcOfJ2qMWjQde4pY+Y9O+rz3pCaHfGpNq2xuUz8CKc1Yl05b2C0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739979573; c=relaxed/simple;
-	bh=wjWDMZyRre3+QgzoR8Wj1C29FffW/HN/oi/Y+0p9bU4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=aw4/WP3mbqMsvW+6Hctf+FMISpHKDhpJV3BHE3HL/Sxvn+DKpB+asNbjb8mBCBEiWNfJt1NUnBXVucOip2j3fwxYwMev5TjnOSfXk5LMUQG3Zg4xExbdIl/94y3W27GFhsMCg7Y5zsNx9nm/Vb8DK0LdJ5EBLtMmH+4s6xghFnY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 98D761682;
-	Wed, 19 Feb 2025 07:39:48 -0800 (PST)
-Received: from [10.57.84.233] (unknown [10.57.84.233])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5747A3F59E;
-	Wed, 19 Feb 2025 07:39:18 -0800 (PST)
-Message-ID: <8524c7c7-024f-4f17-9b89-ef9aedfca672@arm.com>
-Date: Wed, 19 Feb 2025 15:39:15 +0000
+	s=arc-20240116; t=1739979585; c=relaxed/simple;
+	bh=gOBJQr57HVai1YFd7Xm+S8zGKknWTzs5SQGe41z1lOY=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=VqfIpUMXa4+QIq7MEvKOo7DR9miJP1vQRiEN6zL4VttT8yIXxMxUpRijkryU6uf7zVRCKBu5bzvwXMI+2Gc4RfVqoANNcS7PIQdQXQCfG2pWgcJhWle+ivTk0JBr+2U1t6xKzFIhS8E/A7A/xjSThZJUl/NCV/Ydvl4aASNS8pA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NFBW21lC; arc=none smtp.client-ip=209.85.222.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NFBW21lC"
+Received: by mail-qk1-f182.google.com with SMTP id af79cd13be357-7c0a1677aebso278760885a.0;
+        Wed, 19 Feb 2025 07:39:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1739979583; x=1740584383; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:feedback-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=QOPQIn1fX7GxNW/Oq7e50z1baZmFRs2en+1MYVm0Jko=;
+        b=NFBW21lCXm9CbR81Gum2qoGNYd+hry0EojUdsQC84hMSbg3aqFocCRMFmXMVMvojjf
+         CIqzpm10T9o5l5JmlZ1pTwrLu4PLZ9Tr99jYDaYZ72mcxnG6ZIAWqKgzeirB65cuc6Qn
+         K8stk3ES9XZpQLcjpaMDfNPPjobYOCqeO90CJg6/hRmKQ3JZI2vDe1qElNJUYlxyuQNx
+         ZbW2OS6+WdCtAfWwdh34Kt35ktI3NX9GcbNccAXkcGlm35Z95O4nvzox4mFC2p39VcYP
+         B6MoVmjVLyRdTUXQko642USlixBFiDlh5SHVF7ISMHpeqXH4tPNW4g1mjSompz2wtydy
+         vt/Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739979583; x=1740584383;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:feedback-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=QOPQIn1fX7GxNW/Oq7e50z1baZmFRs2en+1MYVm0Jko=;
+        b=anczp1E7AsvlKm6q89V3Ae1i+t5bbZFF3q9Gbb4kmhYn79SQsR8Obf7s1OXj4KnPOt
+         xfEdIh0vn5bquOikzmF/a+A2k4CYZVkzmwo6YQ8QxVm3VeJcWiUhBRUNAHvctiqsCOpA
+         7crRX1onDMBfEAn6lLaG+lcCRq7uNWk1uH2sIDzHZyAyppsV9NRq3O6/PBkTADfuqArb
+         ja4aMlCvR9MncoFME96HVr1H+11fWYshfTMO4+MuLbFJFSo/R2WEPya+L56wjieDp8Hg
+         ofQdIbtWxlFU0q1X/wHfGanSsGpjOh+nhG7nDW3drx1M4hllzkyHAiuTJVjYbHR+GskO
+         o+HQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU7+ttoQK/z/cMODARS5rp2eQQj2tWemrxkb5DeDn6zgEj2drwkwkC1Kt0diUbc1VAZXmRhpy2e/9AHA+vjp4ywKRFW@vger.kernel.org, AJvYcCUe1GF1r8+g8H9GBctpycToFM8c2Asj4VMTfccPZxM6R1Qzu2yPZGTYBABmEkYvQoD5vgARdBNN/sQ=@vger.kernel.org, AJvYcCXGekreKnEgwPLPQSlNvv1sSYOjEkxNp9jW4hI94Ee8Osbh8ZfasEnbHomNRdO6Me9QFb39oHXvPvIuVe14xmub@vger.kernel.org, AJvYcCXo5+4x3Ln/T2ufPUxxH4OGNVfFtimKGNYzlHEN9BnbJAJrDQ/WnY4J5ykF8A5N+a7hZEPpB1qyr9poyRde@vger.kernel.org
+X-Gm-Message-State: AOJu0YyVXBD8pjYrMxRCbuKlrDudewy368WRpVy9cxQLKuRtavwXX8a/
+	I8CXwEfLTD/lExlXHBikSvHRJP9n7Vu8YH6Q9hsfk+k8B/uofA0g
+X-Gm-Gg: ASbGncuForHTIK7Qb6H6NrJ3wx2MA39lBd+cLJIu49IHjYBOrtryjZZDkF0wdMlp54d
+	tH8OXRFl8uE3XeQNgplhbcssoxsL6lo2Ml6MBkSo6KemXP1O4J4k/7WLEUJEWYeyjHTnnrkoYqx
+	xN5GGtlC9DmXoiKw3C/habEnjY+wko0/U3IvlVhXe74+nq+HD+/y+jqS/YEISAfUWBj2m1VJGFB
+	dad1ZI9piruWoOKTqAczTdh+eAzvxTh0iq7pfIW+2WN1ENN0fdNJ+b9cv5/mc/bQ7iycJ34bF8u
+	DzP8IhNT1fmvihq/zyaM/W2kx9lfqMPyO3h09FPyRbmo4VuNVWMGrup19t0mFMJY7VuZLPEPoFa
+	qPEOCFg==
+X-Google-Smtp-Source: AGHT+IFzvAL5bAZmO7McixMnJtBdygccmJwnnXWUeAxB4tYPWT6bakDwtgNas5txE5kws5pwrRm0PA==
+X-Received: by 2002:a05:620a:6007:b0:7c0:ba6b:b6d2 with SMTP id af79cd13be357-7c0ba6bba2bmr259913385a.38.1739979582828;
+        Wed, 19 Feb 2025 07:39:42 -0800 (PST)
+Received: from fauth-a2-smtp.messagingengine.com (fauth-a2-smtp.messagingengine.com. [103.168.172.201])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c0abde9fa0sm233481185a.105.2025.02.19.07.39.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 19 Feb 2025 07:39:42 -0800 (PST)
+Received: from phl-compute-09.internal (phl-compute-09.phl.internal [10.202.2.49])
+	by mailfauth.phl.internal (Postfix) with ESMTP id 8EBEE1200043;
+	Wed, 19 Feb 2025 10:39:41 -0500 (EST)
+Received: from phl-mailfrontend-02 ([10.202.2.163])
+  by phl-compute-09.internal (MEProxy); Wed, 19 Feb 2025 10:39:41 -0500
+X-ME-Sender: <xms:Pfu1Z_9mOZVtSQlDGI4OZflKd6QOxIceB0nV4d3dPgJC1rRDWcntHA>
+    <xme:Pfu1Z7sQBHkepvrr9SmSFjU-d7AT21r2etUgfqWGZriP5Ny5vY5Y9HpfeMqTahVLg
+    g8d-x6z7KTYddspng>
+X-ME-Received: <xmr:Pfu1Z9B5h7vUujka9GGhE8Bf3WhGUVXJHeSmDGfHYCX9kIfllo-G8Lz-NA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdeigeeigecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
+    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
+    hnthhsucdlqddutddtmdenucfjughrpefhvfevufffkffoggfgsedtkeertdertddtnecu
+    hfhrohhmpeeuohhquhhnucfhvghnghcuoegsohhquhhnrdhfvghnghesghhmrghilhdrtg
+    homheqnecuggftrfgrthhtvghrnhepgeegueekgefhvedukedtveejhefhkeffveeufedu
+    iedvleetledtkeehjefgieevnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucevlh
+    hushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegsohhquhhnodhm
+    vghsmhhtphgruhhthhhpvghrshhonhgrlhhithihqdeiledvgeehtdeigedqudejjeekhe
+    ehhedvqdgsohhquhhnrdhfvghngheppehgmhgrihhlrdgtohhmsehfihigmhgvrdhnrghm
+    vgdpnhgspghrtghpthhtohepvdekpdhmohguvgepshhmthhpohhuthdprhgtphhtthhope
+    hrtghusehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheptghorhgsvghtsehl
+    fihnrdhnvghtpdhrtghpthhtoheprhhoshhtvgguthesghhoohgumhhishdrohhrghdprh
+    gtphhtthhopehmhhhirhgrmhgrtheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepmhgr
+    thhhihgvuhdruggvshhnohihvghrshesvghffhhitghiohhsrdgtohhmpdhrtghpthhtoh
+    epphgruhhlmhgtkheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepfhhrvgguvghrihgt
+    sehkvghrnhgvlhdrohhrghdprhgtphhtthhopehnvggvrhgrjhdruhhprgguhhihrgihse
+    hkvghrnhgvlhdrohhrghdprhgtphhtthhopehjohgvlhesjhhovghlfhgvrhhnrghnuggv
+    shdrohhrgh
+X-ME-Proxy: <xmx:Pfu1Z7cpw4Bu6SWvRSIB59oWNQCspdHG_i7TfaqabHWq4vhlHNiCFw>
+    <xmx:Pfu1Z0Pxio3WCXYf3Sx3PV2KmeQ62kelDYSrFEf-aJ-Oky1Iw3LJgA>
+    <xmx:Pfu1Z9mHlR3mAQmc8Qt6Ec9foVre3KXoKz2PNpHUNqJgjHVbWLPGrw>
+    <xmx:Pfu1Z-teYc2WLpoA8InXfuhgV3ST4LZv-sgibucN97rb1-0gZOev2w>
+    <xmx:Pfu1Z-tYEUEP1VinV0deYw632B4GKoB0EmNNXPDTxMk1Cnru0V03hWcL>
+Feedback-ID: iad51458e:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
+ 19 Feb 2025 10:39:40 -0500 (EST)
+From: Boqun Feng <boqun.feng@gmail.com>
+To: rcu@vger.kernel.org
+Cc: Jonathan Corbet <corbet@lwn.net>,	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	Frederic Weisbecker <frederic@kernel.org>,
+	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
+	Joel Fernandes <joel@joelfernandes.org>,
+	Josh Triplett <josh@joshtriplett.org>,	Boqun Feng <boqun.feng@gmail.com>,
+	Uladzislau Rezki <urezki@gmail.com>,
+	Lai Jiangshan <jiangshanlai@gmail.com>,
+	Zqiang <qiang.zhang1211@gmail.com>,	Davidlohr Bueso <dave@stgolabs.net>,
+	Shuah Khan <shuah@kernel.org>,	Andrew Morton <akpm@linux-foundation.org>,
+	Thomas Huth <thuth@redhat.com>,	"Borislav Petkov (AMD)" <bp@alien8.de>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,	Yury Norov <yury.norov@gmail.com>,
+	Valentin Schneider <vschneid@redhat.com>,	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,	linux-trace-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org
+Subject: [PATCH rcu 00/11] RCU torture changes for v6.15
+Date: Wed, 19 Feb 2025 07:39:27 -0800
+Message-Id: <20250219153938.24966-1-boqun.feng@gmail.com>
+X-Mailer: git-send-email 2.39.5 (Apple Git-154)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC v2 5/9] khugepaged: generalize __collapse_huge_page_* for
- mTHP support
-Content-Language: en-GB
-To: Nico Pache <npache@redhat.com>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, linux-mm@kvack.org
-Cc: anshuman.khandual@arm.com, catalin.marinas@arm.com, cl@gentwo.org,
- vbabka@suse.cz, mhocko@suse.com, apopple@nvidia.com,
- dave.hansen@linux.intel.com, will@kernel.org, baohua@kernel.org,
- jack@suse.cz, srivatsa@csail.mit.edu, haowenchao22@gmail.com,
- hughd@google.com, aneesh.kumar@kernel.org, yang@os.amperecomputing.com,
- peterx@redhat.com, ioworker0@gmail.com, wangkefeng.wang@huawei.com,
- ziy@nvidia.com, jglisse@google.com, surenb@google.com,
- vishal.moola@gmail.com, zokeefe@google.com, zhengqi.arch@bytedance.com,
- jhubbard@nvidia.com, 21cnbao@gmail.com, willy@infradead.org,
- kirill.shutemov@linux.intel.com, david@redhat.com, aarcange@redhat.com,
- raquini@redhat.com, dev.jain@arm.com, sunnanyong@huawei.com,
- usamaarif642@gmail.com, audra@redhat.com, akpm@linux-foundation.org,
- rostedt@goodmis.org, mathieu.desnoyers@efficios.com, tiwai@suse.de
-References: <20250211003028.213461-1-npache@redhat.com>
- <20250211003028.213461-6-npache@redhat.com>
-From: Ryan Roberts <ryan.roberts@arm.com>
-In-Reply-To: <20250211003028.213461-6-npache@redhat.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 11/02/2025 00:30, Nico Pache wrote:
-> generalize the order of the __collapse_huge_page_* functions
-> to support future mTHP collapse.
-> 
-> mTHP collapse can suffer from incosistant behavior, and memory waste
-> "creep". disable swapin and shared support for mTHP collapse.
-> 
-> No functional changes in this patch.
-> 
-> Signed-off-by: Nico Pache <npache@redhat.com>
-> ---
->  mm/khugepaged.c | 48 ++++++++++++++++++++++++++++--------------------
->  1 file changed, 28 insertions(+), 20 deletions(-)
-> 
-> diff --git a/mm/khugepaged.c b/mm/khugepaged.c
-> index 0cfcdc11cabd..3776055bd477 100644
-> --- a/mm/khugepaged.c
-> +++ b/mm/khugepaged.c
-> @@ -565,15 +565,17 @@ static int __collapse_huge_page_isolate(struct vm_area_struct *vma,
->  					unsigned long address,
->  					pte_t *pte,
->  					struct collapse_control *cc,
-> -					struct list_head *compound_pagelist)
-> +					struct list_head *compound_pagelist,
-> +					u8 order)
+Hi,
 
-nit: I think we are mostly standardised on order being int. Is there any reason
-to make it u8 here?
+Please find the upcoming changes in rcutorture for v6.15. The
+changes can also be found at:
 
->  {
->  	struct page *page = NULL;
->  	struct folio *folio = NULL;
->  	pte_t *_pte;
->  	int none_or_zero = 0, shared = 0, result = SCAN_FAIL, referenced = 0;
->  	bool writable = false;
-> +	int scaled_none = khugepaged_max_ptes_none >> (HPAGE_PMD_ORDER - order);
->  
-> -	for (_pte = pte; _pte < pte + HPAGE_PMD_NR;
-> +	for (_pte = pte; _pte < pte + (1 << order);
->  	     _pte++, address += PAGE_SIZE) {
->  		pte_t pteval = ptep_get(_pte);
->  		if (pte_none(pteval) || (pte_present(pteval) &&
-> @@ -581,7 +583,7 @@ static int __collapse_huge_page_isolate(struct vm_area_struct *vma,
->  			++none_or_zero;
->  			if (!userfaultfd_armed(vma) &&
->  			    (!cc->is_khugepaged ||
-> -			     none_or_zero <= khugepaged_max_ptes_none)) {
-> +			     none_or_zero <= scaled_none)) {
->  				continue;
->  			} else {
->  				result = SCAN_EXCEED_NONE_PTE;
-> @@ -609,8 +611,8 @@ static int __collapse_huge_page_isolate(struct vm_area_struct *vma,
->  		/* See khugepaged_scan_pmd(). */
->  		if (folio_likely_mapped_shared(folio)) {
->  			++shared;
-> -			if (cc->is_khugepaged &&
-> -			    shared > khugepaged_max_ptes_shared) {
-> +			if (order != HPAGE_PMD_ORDER || (cc->is_khugepaged &&
-> +			    shared > khugepaged_max_ptes_shared)) {
->  				result = SCAN_EXCEED_SHARED_PTE;
->  				count_vm_event(THP_SCAN_EXCEED_SHARED_PTE);
+	git://git.kernel.org/pub/scm/linux/kernel/git/rcu/linux.git torture.2025.02.05a
 
-Same comment about events; I think you will want to be careful to only count
-events for PMD-sized THP using count_vm_event() and introduce equivalent MTHP
-events to cover all sizes.
+Regards,
+Boqun
 
->  				goto out;
-> @@ -711,14 +713,15 @@ static void __collapse_huge_page_copy_succeeded(pte_t *pte,
->  						struct vm_area_struct *vma,
->  						unsigned long address,
->  						spinlock_t *ptl,
-> -						struct list_head *compound_pagelist)
-> +						struct list_head *compound_pagelist,
-> +						u8 order)
->  {
->  	struct folio *src, *tmp;
->  	pte_t *_pte;
->  	pte_t pteval;
->  
-> -	for (_pte = pte; _pte < pte + HPAGE_PMD_NR;
-> -	     _pte++, address += PAGE_SIZE) {
-> +	for (_pte = pte; _pte < pte + (1 << order);
-> +		_pte++, address += PAGE_SIZE) {
+Paul E. McKenney (11):
+  torture: Add get_torture_init_jiffies() for test-start time
+  rcutorture: Add a test_boost_holdoff module parameter
+  rcutorture: Include grace-period sequence numbers in
+    failure/close-call
+  rcutorture: Expand failure/close-call grace-period output
+  rcu: Trace expedited grace-period numbers in hexadecimal
+  rcutorture: Add ftrace-compatible timestamp to GP# failure/close-call
+    output
+  rcutorture: Make cur_ops->format_gp_seqs take buffer length
+  rcutorture: Move RCU_TORTURE_TEST_{CHK_RDR_STATE,LOG_CPU} to bool
+  rcutorture: Complain when invalid SRCU reader_flavor is specified
+  srcu: Add FORCE_NEED_SRCU_NMI_SAFE Kconfig for testing
+  torture: Make SRCU lockdep testing use srcu_read_lock_nmisafe()
 
-nit: you changed the indentation here.
+ .../admin-guide/kernel-parameters.txt         |  5 ++
+ include/linux/torture.h                       |  1 +
+ include/trace/events/rcu.h                    |  2 +-
+ kernel/rcu/Kconfig                            | 11 ++++
+ kernel/rcu/Kconfig.debug                      | 18 ++++-
+ kernel/rcu/rcu.h                              |  2 +
+ kernel/rcu/rcutorture.c                       | 65 +++++++++++++++++--
+ kernel/rcu/tiny.c                             | 14 ++++
+ kernel/rcu/tree.c                             | 20 ++++++
+ kernel/torture.c                              | 12 ++++
+ .../selftests/rcutorture/bin/srcu_lockdep.sh  |  2 +-
+ 11 files changed, 144 insertions(+), 8 deletions(-)
 
->  		pteval = ptep_get(_pte);
->  		if (pte_none(pteval) || is_zero_pfn(pte_pfn(pteval))) {
->  			add_mm_counter(vma->vm_mm, MM_ANONPAGES, 1);
-> @@ -764,7 +767,8 @@ static void __collapse_huge_page_copy_failed(pte_t *pte,
->  					     pmd_t *pmd,
->  					     pmd_t orig_pmd,
->  					     struct vm_area_struct *vma,
-> -					     struct list_head *compound_pagelist)
-> +					     struct list_head *compound_pagelist,
-> +					     u8 order)
->  {
->  	spinlock_t *pmd_ptl;
->  
-> @@ -781,7 +785,7 @@ static void __collapse_huge_page_copy_failed(pte_t *pte,
->  	 * Release both raw and compound pages isolated
->  	 * in __collapse_huge_page_isolate.
->  	 */
-> -	release_pte_pages(pte, pte + HPAGE_PMD_NR, compound_pagelist);
-> +	release_pte_pages(pte, pte + (1 << order), compound_pagelist);
->  }
->  
->  /*
-> @@ -802,7 +806,7 @@ static void __collapse_huge_page_copy_failed(pte_t *pte,
->  static int __collapse_huge_page_copy(pte_t *pte, struct folio *folio,
->  		pmd_t *pmd, pmd_t orig_pmd, struct vm_area_struct *vma,
->  		unsigned long address, spinlock_t *ptl,
-> -		struct list_head *compound_pagelist)
-> +		struct list_head *compound_pagelist, u8 order)
->  {
->  	unsigned int i;
->  	int result = SCAN_SUCCEED;
-> @@ -810,7 +814,7 @@ static int __collapse_huge_page_copy(pte_t *pte, struct folio *folio,
->  	/*
->  	 * Copying pages' contents is subject to memory poison at any iteration.
->  	 */
-> -	for (i = 0; i < HPAGE_PMD_NR; i++) {
-> +	for (i = 0; i < (1 << order); i++) {
->  		pte_t pteval = ptep_get(pte + i);
->  		struct page *page = folio_page(folio, i);
->  		unsigned long src_addr = address + i * PAGE_SIZE;
-> @@ -829,10 +833,10 @@ static int __collapse_huge_page_copy(pte_t *pte, struct folio *folio,
->  
->  	if (likely(result == SCAN_SUCCEED))
->  		__collapse_huge_page_copy_succeeded(pte, vma, address, ptl,
-> -						    compound_pagelist);
-> +						    compound_pagelist, order);
->  	else
->  		__collapse_huge_page_copy_failed(pte, pmd, orig_pmd, vma,
-> -						 compound_pagelist);
-> +						 compound_pagelist, order);
->  
->  	return result;
->  }
-> @@ -1000,11 +1004,11 @@ static int check_pmd_still_valid(struct mm_struct *mm,
->  static int __collapse_huge_page_swapin(struct mm_struct *mm,
->  				       struct vm_area_struct *vma,
->  				       unsigned long haddr, pmd_t *pmd,
-> -				       int referenced)
-> +				       int referenced, u8 order)
->  {
->  	int swapped_in = 0;
->  	vm_fault_t ret = 0;
-> -	unsigned long address, end = haddr + (HPAGE_PMD_NR * PAGE_SIZE);
-> +	unsigned long address, end = haddr + (PAGE_SIZE << order);
->  	int result;
->  	pte_t *pte = NULL;
->  	spinlock_t *ptl;
-> @@ -1035,6 +1039,11 @@ static int __collapse_huge_page_swapin(struct mm_struct *mm,
->  		if (!is_swap_pte(vmf.orig_pte))
->  			continue;
->  
-> +		if (order != HPAGE_PMD_ORDER) {
-> +			result = SCAN_EXCEED_SWAP_PTE;
-> +			goto out;
-> +		}
-
-A comment to explain the rationale for this divergent behaviour based on order
-would be helpful.
-
-> +
->  		vmf.pte = pte;
->  		vmf.ptl = ptl;
->  		ret = do_swap_page(&vmf);
-> @@ -1114,7 +1123,6 @@ static int collapse_huge_page(struct mm_struct *mm, unsigned long address,
->  	int result = SCAN_FAIL;
->  	struct vm_area_struct *vma;
->  	struct mmu_notifier_range range;
-> -
-
-nit: no need for this whitespace change?
-
->  	VM_BUG_ON(address & ~HPAGE_PMD_MASK);
->  
->  	/*
-> @@ -1149,7 +1157,7 @@ static int collapse_huge_page(struct mm_struct *mm, unsigned long address,
->  		 * that case.  Continuing to collapse causes inconsistency.
->  		 */
->  		result = __collapse_huge_page_swapin(mm, vma, address, pmd,
-> -						     referenced);
-> +				referenced, HPAGE_PMD_ORDER);
->  		if (result != SCAN_SUCCEED)
->  			goto out_nolock;
->  	}
-> @@ -1196,7 +1204,7 @@ static int collapse_huge_page(struct mm_struct *mm, unsigned long address,
->  	pte = pte_offset_map_lock(mm, &_pmd, address, &pte_ptl);
->  	if (pte) {
->  		result = __collapse_huge_page_isolate(vma, address, pte, cc,
-> -						      &compound_pagelist);
-> +					&compound_pagelist, HPAGE_PMD_ORDER);
->  		spin_unlock(pte_ptl);
->  	} else {
->  		result = SCAN_PMD_NULL;
-> @@ -1226,7 +1234,7 @@ static int collapse_huge_page(struct mm_struct *mm, unsigned long address,
->  
->  	result = __collapse_huge_page_copy(pte, folio, pmd, _pmd,
->  					   vma, address, pte_ptl,
-> -					   &compound_pagelist);
-> +					   &compound_pagelist, HPAGE_PMD_ORDER);
->  	pte_unmap(pte);
->  	if (unlikely(result != SCAN_SUCCEED))
->  		goto out_up_write;
+-- 
+2.39.5 (Apple Git-154)
 
