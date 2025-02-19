@@ -1,135 +1,143 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A4A201DA3D;
-	Wed, 19 Feb 2025 17:00:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A52511FCFD2;
+	Wed, 19 Feb 2025 18:20:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739984447; cv=none; b=Li/mO4DlcU+w/FF9OKjEYIA4c680P3XftFs0oRiQrVEuzzdvK8O9zXzvmB9PY2SpQqU2TiRYy0SIwYPVdgJnXVoa82MuK85tx1C2+6+7024bTY1rMEi5u9BmAotU1QrkEtCmIpX3M4FYixlhFmDZo22Eqc+5czOfChGCETPOqfk=
+	t=1739989249; cv=none; b=J2VN0DS1azLgWiFPtmynl28WzkO3r9lWbKk9pPEp/dOfWu9QmBuagEtI9lKVomCs5xk5EODc0x3HuGCxvhB3y+Vb0tvRJ9+5a923Ahur6/eHSimqzbtKqyD1T+D0g6smxZHmOvb6CIZYhJZuCK8DEjq37givfuIiYnVjAsbPEys=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739984447; c=relaxed/simple;
-	bh=KeY/IdHVerYHMi6qZxcsbEwdvnN7AqlhqJqH+tT1Ia4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=YLxmR2Fj0EY0jCQGinYPbXTYkaF2e6Mj+Idi4jeRjfF7J7apUOOyHhlqJZBsJAEVpxA+qrduKBg6M8DGjXKuigZwKa5wQx783YKZ1/l4CMK2BCNt2tlKfYAliKKaxv+Bv0HX93s2qEbJC0rFAJs5yCOTJasnYzLuUMPLiKPGykc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 550A31688;
-	Wed, 19 Feb 2025 09:01:03 -0800 (PST)
-Received: from [10.57.84.233] (unknown [10.57.84.233])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 86CCD3F6A8;
-	Wed, 19 Feb 2025 09:00:38 -0800 (PST)
-Message-ID: <252058fd-c087-4340-b505-a12aa45562f8@arm.com>
-Date: Wed, 19 Feb 2025 17:00:37 +0000
+	s=arc-20240116; t=1739989249; c=relaxed/simple;
+	bh=X14I7mbTIu2+tFsLjHVL5fSZz+NqDimLUr7e8CxbkJQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=cRtElYX9UbrDp49aALNwyppUHK3KLlFsf4a4KWDTtMPw4YUzGpArEDaAORA2disPVA3nHW+KgMWHWSAObiACJhpHCKRWEDtgC4BPa5JYoqYMK0Gk3rcNy1z/roBQek6tE7TOZBvh6Cq+7sOWNLKlTeu5+9VY1k0eT+JCyYMf6cc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Oej0EZNh; arc=none smtp.client-ip=209.85.214.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Oej0EZNh"
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-220c2a87378so372225ad.1;
+        Wed, 19 Feb 2025 10:20:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1739989247; x=1740594047; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=76EGObTpdOqVLxr8ga99oMSHZxAdsSys7BY3UEvgdGo=;
+        b=Oej0EZNhjzgZcZ80QOQXMavocEt9OUDwGXOWcfj4ihnRPbvq9fkgzSgwE1SKpeFc7N
+         Cz9sc8W4WQMJFe534jm/DvG/yGm2ld0Vars48i3H8N8XJtMVYaqnb9GhRNjnrRe9p8qx
+         sT+j3cx36mXWNMwN93dHXCT0Hm89aoBKhEl3fjw5cYoW1bGTa9R4AVhMwC+2eYggdicT
+         VBlFHalHtLbIBdejW9K8PMshaaUT36AB8dHgEg8JPTvs7kvMCljTtAVAXUO8gwAEiYu+
+         0uI1O5YaoOxgY1BlkrJyuzqbyB4wjhbTrQRHJA38eH1VZaTxODIDXfkT/LAtCcwye/iD
+         pBZw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1739989247; x=1740594047;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=76EGObTpdOqVLxr8ga99oMSHZxAdsSys7BY3UEvgdGo=;
+        b=n22XBJivSu4RyDFx4XSiEUNDmXfY2dh8q6F/maFFiNT6C2QPbWuxBOy5zgA65M4xvH
+         mWdKCQWtHT+YddABeubbjGUwmUcywDFZb0YE1PHcWHdS3hhwZAQYPoFUMrf64S6RIYyB
+         XyR/i963nk8zv+/6DaYK+Ho9UzJ0bqRoaIZOirZwWrQ43NDG5Srbefc7mSnvlULdekhi
+         yFZs3+Hd5Tp/lntD6MsJBmzq6RE0h6ug11JrMZiT49ft7lcpBCtlPWvQIhRTK62e6EMg
+         +WDyfvhd3IRQTIrf/ygZEbBlWrStfYT2YxH3bpVago6/R+7+O8krr1RSozfkXzYjwtOr
+         RKDg==
+X-Forwarded-Encrypted: i=1; AJvYcCUlwzNSjD5R/5VOaI8Uv5FevfJfVJqFwsu3/x4rnacEyQxLJmp/woOD+JiSGZlPQvSwJmHKGO+mYLB1iHE8gCaM2zDN@vger.kernel.org, AJvYcCWWD+kXo0pjRos1+jm8TLArOLcmvKXlw1k1O9icJkSrd4mpTf2yaBBokoL0w03xgVd6z3SXkFL9AvE=@vger.kernel.org, AJvYcCXB2B9hkBoGLY48AjW0ZDhrKMiRwP70wTikKw0hYJM1FzDW2R5BHw9Lg+1HggZxDDCx9o6fF0GRJ7+EoamS@vger.kernel.org
+X-Gm-Message-State: AOJu0YxqKkPYTS457dF91I1bhCAsYkxpZIeQmU/DJWJkAmn6GLKPq9/Z
+	wC6jXKzk0KuTWfnvM5Xs2DHsj8Phu0Sr314jcsqZwc+AXREIGihA
+X-Gm-Gg: ASbGncthr8k01c6MsNzkxnmlRk33PwTiv72ifF4Y/6QZYY9pSHuKWDVrD1100J6OqM2
+	ZQG+2/2bwXQIbIkz4RC1yvzjc2V4ydAW/rWZHQGVsq9X8fPpdiqwraal3/X6aSwAS8AjlLykmJL
+	t6a342zUz6APJVY9yxs5cm8/anbz2tHHFVpm9floDTQmLKDaCsxITD4zSvJq4xvTOE/olPdO6XA
+	boEaudvvNeaJFV2fvz8iNeOvB0T3E/h69MkuWjCd97+Qz5Dv0TtZo7kvPX9gdO4q5VmqCbCieYq
+	+EtBscJN9p5Oqw==
+X-Google-Smtp-Source: AGHT+IE9woL3cS8LSc84OwEKFZItt18q3T4hIJa4P0EOZXN+eQBRjN/5am8F7oQZrvigsd9J1eVjrg==
+X-Received: by 2002:a05:6a20:3d84:b0:1ee:8922:563 with SMTP id adf61e73a8af0-1ee8cb08f4amr29813280637.16.1739989246845;
+        Wed, 19 Feb 2025 10:20:46 -0800 (PST)
+Received: from jemmy.. ([47.116.124.190])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-ade083277b3sm7753218a12.27.2025.02.19.10.20.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 19 Feb 2025 10:20:46 -0800 (PST)
+From: Jemmy Wong <jemmywong512@gmail.com>
+To: Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Ingo Molnar <mingo@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Ben Segall <bsegall@google.com>,
+	Mel Gorman <mgorman@suse.de>,
+	Valentin Schneider <vschneid@redhat.com>,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org
+Cc: Jemmy Wong <Jemmywong512@gmail.com>
+Subject: [PATCH 0/2] sched: Refine scheduler naming for clarity and specificity
+Date: Thu, 20 Feb 2025 02:20:18 +0800
+Message-ID: <20250219182020.393006-1-jemmywong512@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC v2 0/9] khugepaged: mTHP support
-Content-Language: en-GB
-To: Nico Pache <npache@redhat.com>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, linux-mm@kvack.org
-Cc: anshuman.khandual@arm.com, catalin.marinas@arm.com, cl@gentwo.org,
- vbabka@suse.cz, mhocko@suse.com, apopple@nvidia.com,
- dave.hansen@linux.intel.com, will@kernel.org, baohua@kernel.org,
- jack@suse.cz, srivatsa@csail.mit.edu, haowenchao22@gmail.com,
- hughd@google.com, aneesh.kumar@kernel.org, yang@os.amperecomputing.com,
- peterx@redhat.com, ioworker0@gmail.com, wangkefeng.wang@huawei.com,
- ziy@nvidia.com, jglisse@google.com, surenb@google.com,
- vishal.moola@gmail.com, zokeefe@google.com, zhengqi.arch@bytedance.com,
- jhubbard@nvidia.com, 21cnbao@gmail.com, willy@infradead.org,
- kirill.shutemov@linux.intel.com, david@redhat.com, aarcange@redhat.com,
- raquini@redhat.com, dev.jain@arm.com, sunnanyong@huawei.com,
- usamaarif642@gmail.com, audra@redhat.com, akpm@linux-foundation.org,
- rostedt@goodmis.org, mathieu.desnoyers@efficios.com, tiwai@suse.de
-References: <20250211003028.213461-1-npache@redhat.com>
-From: Ryan Roberts <ryan.roberts@arm.com>
-In-Reply-To: <20250211003028.213461-1-npache@redhat.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 11/02/2025 00:30, Nico Pache wrote:
-> The following series provides khugepaged and madvise collapse with the
-> capability to collapse regions to mTHPs.
-> 
-> To achieve this we generalize the khugepaged functions to no longer depend
-> on PMD_ORDER. Then during the PMD scan, we keep track of chunks of pages
-> (defined by MTHP_MIN_ORDER) that are utilized. 
+Hi, I'm relatively new to Linux and eager to contribute to the community
+with some foundational work.
 
-Having been through the code I don't think you can handle the case of a
-partially covered PMD? That was never important before because by definition we
-only cared about PMD-sized chunks, but it would be good to be able to collapse
-to appropriately sized mTHP, memory within a VMA that doesn't cover an entire
-PMD. Do you have plans to add that? Is the approach you've taken amenable to
-extension in this way?
+I aim to help improve code readability and maintainability.
+While reading the scheduler code, I found some naming inconsistencies
+that made understanding the code more difficult.
 
-> This info is tracked
-> using a bitmap. After the PMD scan is done, we do binary recursion on the
-> bitmap to find the optimal mTHP sizes for the PMD range. The restriction
-> on max_ptes_none is removed during the scan, to make sure we account for
-> the whole PMD range. max_ptes_none will be scaled by the attempted collapse
-> order to determine how full a THP must be to be eligible. If a mTHP collapse
-> is attempted, but contains swapped out, or shared pages, we dont perform the
-> collapse.
-> 
-> With the default max_ptes_none=511, the code should keep its most of its 
-> original behavior. To exercise mTHP collapse we need to set max_ptes_none<=255.
-> With max_ptes_none > HPAGE_PMD_NR/2 you will experience collapse "creep" and 
-> constantly promote mTHPs to the next available size.
-> 
-> Patch 1:     Some refactoring to combine madvise_collapse and khugepaged
-> Patch 2:     Refactor/rename hpage_collapse
-> Patch 3-5:   Generalize khugepaged functions for arbitrary orders
-> Patch 6-9:   The mTHP patches
-> 
-> ---------
->  Testing
-> ---------
-> - Built for x86_64, aarch64, ppc64le, and s390x
-> - selftests mm
-> - I created a test script that I used to push khugepaged to its limits while
->    monitoring a number of stats and tracepoints. The code is available 
->    here[1] (Run in legacy mode for these changes and set mthp sizes to inherit)
->    The summary from my testings was that there was no significant regression
->    noticed through this test. In some cases my changes had better collapse
->    latencies, and was able to scan more pages in the same amount of time/work,
->    but for the most part the results were consistant.
-> - redis testing. I tested these changes along with my defer changes
->   (see followup post for more details).
-> - some basic testing on 64k page size.
-> - lots of general use. These changes have been running in my VM for some time.
-> 
-> Changes since V1 [2]:
-> - Minor bug fixes discovered during review and testing
-> - removed dynamic allocations for bitmaps, and made them stack based
-> - Adjusted bitmap offset from u8 to u16 to support 64k pagesize.
-> - Updated trace events to include collapsing order info.
-> - Scaled max_ptes_none by order rather than scaling to a 0-100 scale.
-> - No longer require a chunk to be fully utilized before setting the bit. Use
->    the same max_ptes_none scaling principle to achieve this.
-> - Skip mTHP collapse that requires swapin or shared handling. This helps prevent
->    some of the "creep" that was discovered in v1.
-> 
-> [1] - https://gitlab.com/npache/khugepaged_mthp_test
-> [2] - https://lore.kernel.org/lkml/20250108233128.14484-1-npache@redhat.com/
-> 
-> Nico Pache (9):
->   introduce khugepaged_collapse_single_pmd to unify khugepaged and
->     madvise_collapse
->   khugepaged: rename hpage_collapse_* to khugepaged_*
->   khugepaged: generalize hugepage_vma_revalidate for mTHP support
->   khugepaged: generalize alloc_charge_folio for mTHP support
->   khugepaged: generalize __collapse_huge_page_* for mTHP support
->   khugepaged: introduce khugepaged_scan_bitmap for mTHP support
->   khugepaged: add mTHP support
->   khugepaged: improve tracepoints for mTHP orders
->   khugepaged: skip collapsing mTHP to smaller orders
-> 
->  include/linux/khugepaged.h         |   4 +
->  include/trace/events/huge_memory.h |  34 ++-
->  mm/khugepaged.c                    | 422 +++++++++++++++++++----------
->  3 files changed, 306 insertions(+), 154 deletions(-)
-> 
+Specifically:
+1. Some function names do not accurately reflect their purpose.
+2. Certain names are too general, making it unclear what they represent.
+3. Some concepts are ambiguous, leading to potential confusion.
 
+- Rename ttwu_do_wakeup to ttwu_set_running:
+    - This function only sets task state to TASK_RUNNING,
+        not performing the actual wakeup.
+
+- Rename update_cfs_group to update_cfs_group_shares:
+    - The name was too generic; specifying "shares" clarifies its purpose.
+
+- Rename place_entity to update_entity_sched:
+    - The function does not handle entity placement but updates
+        sched info: vruntime, slice, and deadline.
+
+- Rename update_load_<set, add, sub> to load_weight_<set, add, sub>:
+    - "load" can refer to either PELT load or load weight, causing ambiguity;
+        "load_weight" specifies it's dealing with weight.
+
+- Rename struct sched_avg to struct sched_pelt:
+    - This structure includes not just average statistics
+        but also sums like <load, runnable, util>_sum, last_updae_time,
+        all of which are PELT (Per-Entity Load Tracking) metrics.
+
+- Rename init_entity_runnable_average to init_entity_pelt
+
+This patch aims to improve code readability and reduce confusion by
+ensuring names are more descriptive of their actual functionality or purpose.
+
+Signed-off-by: Jemmy Wong <Jemmywong512@gmail.com>
+---
+Jemmy Wong (2):
+  sched: Refine scheduler naming for clarity and specificity
+  sched: Refine sched_avg naming for clarity and specificity
+
+ Documentation/trace/ftrace.rst | 190 ++++++-------
+ include/linux/sched.h          |   6 +-
+ kernel/sched/core.c            |  18 +-
+ kernel/sched/debug.c           |  36 +--
+ kernel/sched/fair.c            | 478 ++++++++++++++++-----------------
+ kernel/sched/pelt.c            | 100 +++----
+ kernel/sched/pelt.h            |  16 +-
+ kernel/sched/rt.c              |   2 +-
+ kernel/sched/sched.h           |  22 +-
+ 9 files changed, 433 insertions(+), 435 deletions(-)
+
+--
+2.43.0
