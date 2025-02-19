@@ -1,230 +1,314 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1DA51EA7E4
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 19 Feb 2025 12:49:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 688691F426F
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 19 Feb 2025 13:53:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739969374; cv=none; b=MkXpY4LXlYCQYscLHayUGPYRS2ioDVI7m3MUbMuWt8MeIQTPDKa3VVjlQip8jaEEZIwqSD57rA5lTUeWsFae75DVnmhXgD65aB/Th1CfCvOR3HfXDh8v+7svbK9hjc18JVIW7NjATU8lqv7bFukBSY8umEgHQvsaxS3mGCOkX8U=
+	t=1739973200; cv=none; b=smHKOLYTEa3V/Yy90Pl9tmeD3kDlb54CEn6KcbFilTXvcBme3mXTxa7utJHn06CGzohNoI73dzQEwfXzMyGY/14S2VYrHItVZ4ZB4sbcMq+x5Yb6CC05gLHO5OyGuaQRQRlEwtcS5Q/pYAxq5Q7oYcBf6zqibCgpk88hUYcOKm4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739969374; c=relaxed/simple;
-	bh=EDsmNvJG6i+8D4LW00y//lAFbtwrmRk1VHBMZ8wJodo=;
+	s=arc-20240116; t=1739973200; c=relaxed/simple;
+	bh=+yGgqqM6m67SHcWQ5C/LyqeoOn2NxRwpbuq8bb0rr8I=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Cb+AkQ6VEZR2LasZOjrRlL8LvD2eWVUev5Q30O0ELk3wJxNM9zg2bS0gxGyRI8Ops2vsSfOunGMJW0NbBur2P1wfxYlIlyzQW3TDu1CiVE65tiqSKOqhEN+em9RSxVOyHLExZAeGAGoATAKmQldrlFx4d3snd4r6jgbuvMGAog8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=CiB/OEFk; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 To:Cc:Content-Type; b=LcY9TJL2k/IFn0VXPoCQYT81ERF+BUUXNfD9B+PN1aNtKANVn+MgpW/v9UXdXLOjn/IeGNwfd5hPj3aVFE3+nKuMDavVU3E666I5b45bG5MXdJKEJDEDV8CVU0TLNe23g73GNrtVbMRcGG9sDlYsr7lkdJ4GE+wTpzIENu2/UsU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=lSy1zEcG; arc=none smtp.client-ip=209.85.160.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CiB/OEFk"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1739969371;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=rreqea7gob/60z8pNTfWbKUJ2v9iqUromgRXlIzbXP4=;
-	b=CiB/OEFkxk2tb6hs/ZnQO1aua9YctlNMaSDbk804ENTaR0tUHEKfPhbGF2cpIxJrJJtjMe
-	V6Sz6teooo+b1AHGp+QkPihkQjFejCC+JU0hkV/+nJ/8mFfVAiMEuqga6bwqVHCMe481jU
-	aaup/XymcX4f2BR+zZ+rA3ykOMsoAak=
-Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
- [209.85.208.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-7-DvzvhZ_LMwy35REepPgH_g-1; Wed, 19 Feb 2025 07:49:30 -0500
-X-MC-Unique: DvzvhZ_LMwy35REepPgH_g-1
-X-Mimecast-MFC-AGG-ID: DvzvhZ_LMwy35REepPgH_g_1739969369
-Received: by mail-ed1-f69.google.com with SMTP id 4fb4d7f45d1cf-5d9fcb4a122so6947953a12.0
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 19 Feb 2025 04:49:30 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lSy1zEcG"
+Received: by mail-qt1-f170.google.com with SMTP id d75a77b69052e-472098e6e75so311161cf.1
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 19 Feb 2025 05:53:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1739973195; x=1740577995; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=UdmAiMEeKrPEDg3p+jo+2xFKJGKxXYyTYb14zoBH7Bo=;
+        b=lSy1zEcGSTYGQw70X6tKAtWz/LXQxnAQVGCidhqUixZKNP4DnMDx3a/y6EVbyQhfUT
+         SBrZBOQaeFbQS8UyRxmavFpsGEZm6oNFcgkvJpDIOsH+0bw3JcpN6sUFfh3t5Qz3tsA9
+         62w6GpRcgcttSb4UcPefwaGJjhbBj5imkqEJTCvqt1KcYA1NdbYmN3ZmMzihkeFytWkv
+         DnSAC+JzANuLJZFt7KOrNCvZuXGWEl+LvlemmMkt7+FZ0BoIdcO6oPw9C18iez86S0ry
+         ENmUkJp03cZgfJvA4Ep5aEi6ZicaQIC2Spu0AkiTwL2Jv/CyKQthblEd51YI+fJ1tAgH
+         yl+Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739969369; x=1740574169;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=rreqea7gob/60z8pNTfWbKUJ2v9iqUromgRXlIzbXP4=;
-        b=pPO5dsXWPDjM3D7ZAnnGxSM1f7DiXC12S6mhywcshrcYMyB/Jeay2Q4mA08Wh17dRG
-         1UUHbDHVgqE77VAAAGk/k7B7xDuRQMwiLpqacFczp6mzIVVcMqUiwAG28phfXQRKGa82
-         467Rd5UyuHmVeYFvBO3K0mBHHAYHnygXZhBHTZLdzNHUOeZDZBor+1dWigwLzf2ndl1P
-         ex0N6FzqlqbwwEAC2a32ASZdUZBClY7O9+sER0vO3OAaGP48qjYavzuI0onL7ddZ5LFU
-         9N3sDiGPPq7otUeHSHS+Kn4+Sb4y6NdkSxZbHnk/OJIwtDBEdBucYIL7AqEU9+qWETwl
-         bStw==
-X-Forwarded-Encrypted: i=1; AJvYcCWrRk8wslhOjnvO5ViOGww3RuOYE/RG0jV6lNS7BeIcQgazX6psJ3VoEMNxZ6OI3y0sW0KNBtkapryYTk3Cqy1FMj4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw3jcW4rgxsJrI1h7eW27W46yYuqx5TXpoWcR6Joi4FdZe2PU2+
-	CAFsPjTp4OqVfWVj3Be+YZi6iAfzRfOI9wh8W+ZS9jtsayKk3pHYD6EzA/c4PlUZ3VoksRZPPSL
-	vB/zkv1v6wUmYPlmKcDUyQntbcJwxWDG55RTeNBjyvy1OAk05JYyvUVBbhM5B9Z/e8RdP4L4/Wf
-	/46+X523uMZkZ0RJXgD1fCdZOJYXQvCISwWkDXPl7CdJeh
-X-Gm-Gg: ASbGnctIDSibQHPt/njNPOzK7Vf8Q/iHFUeEKSf35ASG0mDBoSupEfufkq6475VO6m3
-	zYLYD0qt36Ii3LENJc1oSb8w79Wr4jw0KoLJSeGE/CcKcmc+L+H58GTwfwDuQTnFPqvBK6N0JBM
-	tBptItmWIx4DGaiRjD
-X-Received: by 2002:a17:907:6ea7:b0:abb:ca31:8877 with SMTP id a640c23a62f3a-abbca318c12mr501705566b.0.1739969369085;
-        Wed, 19 Feb 2025 04:49:29 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IHrJ+KooYm5EcqJPGxQt1LpLB0CkdlVYG1NrpzXOwYPi/3fnsFqEB+yJ0oIwBQsTdFJa5qKOomUHiL7yERHl2g=
-X-Received: by 2002:a17:907:6ea7:b0:abb:ca31:8877 with SMTP id
- a640c23a62f3a-abbca318c12mr501702766b.0.1739969368673; Wed, 19 Feb 2025
- 04:49:28 -0800 (PST)
+        d=1e100.net; s=20230601; t=1739973195; x=1740577995;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=UdmAiMEeKrPEDg3p+jo+2xFKJGKxXYyTYb14zoBH7Bo=;
+        b=BbEozG8IYCqgUVngT64X+t0BOz0kKMOPzgLFAwJ3wRGf1jkDVEap6omRyUSsRqpq7h
+         4vDZxvZaDvDQzsCTt5V19eRq5IusbKWlIDHGlOGDtXS2CFyYiYBddhSGXUHngvSd/k2x
+         olfy5iQdjSt5DSNA6r1nWjZ4BBFtJQWeYm7MkncRx6YhpQrboUGSpmaOZX8uwGgSU6+w
+         UWyQGOTCBweIxbx3C7iIiT0kwJwSwVS+hSvE7soJITibetm23JhI+j6B5szcP3wYGpBS
+         tCnkGwY3a0dJJjBCmImsiF2IdQBeGBnVpC0aHmHa44ESJkAJWXb8kRAEKlRN0kFpvnrA
+         jm4g==
+X-Forwarded-Encrypted: i=1; AJvYcCWPshgLrFYOMZWQ24u/hIrO4iLfXyQvBeElRg7TwsdS9j4L/RUT9zPDrpqxg5Hl9esxKPk+iMxoZ43GkHRFjygkJBU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwRx9/bbWHGLNkYouj97q2ABQvcnMrUpXS6m9MYLzObHL0gGBXo
+	1UioC2kJCdUUmG1rnr8AAif4aZBQlu4MGGd95wTHqp6wF/b5Ba6BnrnJhxxl4ohen55nG9SSlUg
+	mpKsvNADEarGSmR8vR+uPmDQ86Ku9LE7l8GAq
+X-Gm-Gg: ASbGncuu5zg72+uzTP98mPE11JJheqOveCeF/r4g/k8MarifF9LUbVfIGWijwLsFFdK
+	PKQLMPDB9XAKOGHSbMByMFFo2F+oK0XsRs1li0HaCaBkHx5jhkRBkDYZ5Nm7McauX2yxbqgW6G6
+	6RXCJZgaL7sy1voI9AEWqzRJr9CT8=
+X-Google-Smtp-Source: AGHT+IENNUmIuZuxSQylUApjIg4cKkgEiog4c3mRT0+zySA3cwktAnc8eGuiyh3/xKClKXO5dwBsFhWfn2uiV/6urfI=
+X-Received: by 2002:a05:622a:85:b0:471:b772:c717 with SMTP id
+ d75a77b69052e-472097c2b32mr3540781cf.26.1739973194577; Wed, 19 Feb 2025
+ 05:53:14 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250219115138.406075-1-costa.shul@redhat.com>
-In-Reply-To: <20250219115138.406075-1-costa.shul@redhat.com>
-From: Tomas Glozar <tglozar@redhat.com>
-Date: Wed, 19 Feb 2025 13:49:17 +0100
-X-Gm-Features: AWEUYZkYvfK5JpbvU46W1SFw9D0VGBjvXAvqoPqgQy1IV8AabKtxO-Spu2r3qzQ
-Message-ID: <CAP4=nvQ=qj6STkXH=iDvpcesgj-0aBXPhHhXc5POyjWuwuzWYg@mail.gmail.com>
-Subject: Re: [PATCH v1] rtla: Refactor save_trace_to_file
-To: Costa Shulyupin <costa.shul@redhat.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Daniel Bristot de Oliveira <bristot@kernel.org>, 
-	John Kacur <jkacur@redhat.com>, "Luis Claudio R. Goncalves" <lgoncalv@redhat.com>, 
-	Eder Zulian <ezulian@redhat.com>, Dan Carpenter <dan.carpenter@linaro.org>, 
-	Gabriele Monaco <gmonaco@redhat.com>, linux-trace-kernel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: nTqlIt89NWZ_2e1waHSWQN6jBpgNWptWhhwsSPkRx-o_1739969369
-X-Mimecast-Originator: redhat.com
+References: <20250110-asi-rfc-v2-v2-0-8419288bc805@google.com>
+ <20250110-asi-rfc-v2-v2-3-8419288bc805@google.com> <20250219105503.GKZ7W4h6QW1CNj48U9@fat_crate.local>
+In-Reply-To: <20250219105503.GKZ7W4h6QW1CNj48U9@fat_crate.local>
+From: Brendan Jackman <jackmanb@google.com>
+Date: Wed, 19 Feb 2025 14:53:03 +0100
+X-Gm-Features: AWEUYZnAiIsbh62TRn4xLoxaltzDiT1dCIBY-Pnf2HWy-DCtrTT9-DxdH-ccpBo
+Message-ID: <CA+i-1C2xK8hzMQ8Y-=-7iYy+27nnouQZu1NdWG0qa35t+OQLqw@mail.gmail.com>
+Subject: Re: [PATCH RFC v2 03/29] mm: asi: Introduce ASI core API
+To: Borislav Petkov <bp@alien8.de>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>, 
+	Andy Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
+	Richard Henderson <richard.henderson@linaro.org>, Matt Turner <mattst88@gmail.com>, 
+	Vineet Gupta <vgupta@kernel.org>, Russell King <linux@armlinux.org.uk>, 
+	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Guo Ren <guoren@kernel.org>, 
+	Brian Cain <bcain@quicinc.com>, Huacai Chen <chenhuacai@kernel.org>, 
+	WANG Xuerui <kernel@xen0n.name>, Geert Uytterhoeven <geert@linux-m68k.org>, 
+	Michal Simek <monstr@monstr.eu>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
+	Dinh Nguyen <dinguyen@kernel.org>, Jonas Bonn <jonas@southpole.se>, 
+	Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>, Stafford Horne <shorne@gmail.com>, 
+	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>, Helge Deller <deller@gmx.de>, 
+	Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>, 
+	Christophe Leroy <christophe.leroy@csgroup.eu>, Naveen N Rao <naveen@kernel.org>, 
+	Madhavan Srinivasan <maddy@linux.ibm.com>, Paul Walmsley <paul.walmsley@sifive.com>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
+	Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, 
+	Alexander Gordeev <agordeev@linux.ibm.com>, Christian Borntraeger <borntraeger@linux.ibm.com>, 
+	Sven Schnelle <svens@linux.ibm.com>, Yoshinori Sato <ysato@users.sourceforge.jp>, 
+	Rich Felker <dalias@libc.org>, John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, 
+	"David S. Miller" <davem@davemloft.net>, Andreas Larsson <andreas@gaisler.com>, 
+	Richard Weinberger <richard@nod.at>, Anton Ivanov <anton.ivanov@cambridgegreys.com>, 
+	Johannes Berg <johannes@sipsolutions.net>, Chris Zankel <chris@zankel.net>, 
+	Max Filippov <jcmvbkbc@gmail.com>, Arnd Bergmann <arnd@arndb.de>, 
+	Andrew Morton <akpm@linux-foundation.org>, Juri Lelli <juri.lelli@redhat.com>, 
+	Vincent Guittot <vincent.guittot@linaro.org>, Dietmar Eggemann <dietmar.eggemann@arm.com>, 
+	Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>, 
+	Valentin Schneider <vschneid@redhat.com>, Uladzislau Rezki <urezki@gmail.com>, 
+	Christoph Hellwig <hch@infradead.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Mike Rapoport <rppt@kernel.org>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Dennis Zhou <dennis@kernel.org>, Tejun Heo <tj@kernel.org>, Christoph Lameter <cl@linux.com>, 
+	Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>, 
+	Ard Biesheuvel <ardb@kernel.org>, Josh Poimboeuf <jpoimboe@kernel.org>, 
+	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>, x86@kernel.org, 
+	linux-kernel@vger.kernel.org, linux-alpha@vger.kernel.org, 
+	linux-snps-arc@lists.infradead.org, linux-arm-kernel@lists.infradead.org, 
+	linux-csky@vger.kernel.org, linux-hexagon@vger.kernel.org, 
+	loongarch@lists.linux.dev, linux-m68k@lists.linux-m68k.org, 
+	linux-mips@vger.kernel.org, linux-openrisc@vger.kernel.org, 
+	linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, 
+	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org, 
+	linux-sh@vger.kernel.org, sparclinux@vger.kernel.org, 
+	linux-um@lists.infradead.org, linux-arch@vger.kernel.org, linux-mm@kvack.org, 
+	linux-trace-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	kvm@vger.kernel.org, linux-efi@vger.kernel.org, 
+	Ofir Weisse <oweisse@google.com>, Junaid Shahid <junaids@google.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-st 19. 2. 2025 v 12:52 odes=C3=ADlatel Costa Shulyupin
-<costa.shul@redhat.com> napsal:
->
-> The functions osnoise_hist_main(), osnoise_top_main(),
-> timerlat_hist_main(), and timerlat_top_main() are lengthy and contain
-> duplicated code.
->
+Argh, sorry, GMail switched back to HTML mode somehow. Maybe I have to
+get a proper mail client after all.
 
-There is definitely a bunch of code that needs to be unified in rtla.
-My idea is to eventually merge top and hist, see my note to the cover
-letter to the BPF patchset [1].
+Here's the clean version.
 
-[1] https://lore.kernel.org/linux-trace-kernel/20250218145859.27762-1-tgloz=
-ar@redhat.com/
+On Wed, 19 Feb 2025 at 11:57, Borislav Petkov <bp@alien8.de> wrote:
+>
+> > + * Runtime usage:
+> > + *
+> > + * 1. Call asi_enter() to switch to the restricted address space. This can't be
+> > + *    from an interrupt or exception handler and preemption must be disabled.
+> > + *
+> > + * 2. Execute untrusted code.
+> > + *
+> > + * 3. Call asi_relax() to inform the ASI subsystem that untrusted code execution
+> > + *    is finished. This doesn't cause any address space change. This can't be
+> > + *    from an interrupt or exception handler and preemption must be disabled.
+> > + *
+> > + * 4. Either:
+> > + *
+> > + *    a. Go back to 1.
+> > + *
+> > + *    b. Call asi_exit() before returning to userspace. This immediately
+> > + *       switches to the unrestricted address space.
+>
+> So only from reading this, it does sound weird. Maybe the code does it
+> differently - I'll see soon - but this basically says:
+>
+> I asi_enter(), do something, asi_relax() and then I decide to do something
+> more and to asi_enter() again!? And then I can end it all with a *single*
+> asi_exit() call?
+>
+> Hm, definitely weird API. Why?
 
-> Refactor by consolidating the duplicate lines into the
-> save_trace_to_file() function.
->
-> Signed-off-by: Costa Shulyupin <costa.shul@redhat.com>
 
-Thank you for the cleanup patch.
+OK, sounds like I need to rewrite this explanation! It's only been
+read before by people who already knew how this thing worked so this
+might take a few attempts to make it clear.
 
-Reviewed-by: Tomas Glozar <tglozar@redhat.com>
-Tested-by: Tomas Glozar <tglozar@redhat.com>
+Maybe the best way to make it clear is to explain this with reference
+to KVM. At a super high level, That looks like:
 
-> ---
->  tools/tracing/rtla/src/osnoise_hist.c  | 5 +----
->  tools/tracing/rtla/src/osnoise_top.c   | 5 +----
->  tools/tracing/rtla/src/timerlat_hist.c | 5 +----
->  tools/tracing/rtla/src/timerlat_top.c  | 5 +----
->  tools/tracing/rtla/src/trace.c         | 4 ++++
->  5 files changed, 8 insertions(+), 16 deletions(-)
->
-> diff --git a/tools/tracing/rtla/src/osnoise_hist.c b/tools/tracing/rtla/s=
-rc/osnoise_hist.c
-> index b4930b835b0a1..7c6ef67ef3e6c 100644
-> --- a/tools/tracing/rtla/src/osnoise_hist.c
-> +++ b/tools/tracing/rtla/src/osnoise_hist.c
-> @@ -983,10 +983,7 @@ int osnoise_hist_main(int argc, char *argv[])
->
->         if (osnoise_trace_is_off(tool, record)) {
->                 printf("rtla osnoise hit stop tracing\n");
-> -               if (params->trace_output) {
-> -                       printf("  Saving trace to %s\n", params->trace_ou=
-tput);
-> -                       save_trace_to_file(record->trace.inst, params->tr=
-ace_output);
-> -               }
-> +               save_trace_to_file(record->trace.inst, params->trace_outp=
-ut);
->         }
->
->  out_hist:
-> diff --git a/tools/tracing/rtla/src/osnoise_top.c b/tools/tracing/rtla/sr=
-c/osnoise_top.c
-> index 4772677ac762c..0eeefbbbf3173 100644
-> --- a/tools/tracing/rtla/src/osnoise_top.c
-> +++ b/tools/tracing/rtla/src/osnoise_top.c
-> @@ -813,10 +813,7 @@ int osnoise_top_main(int argc, char **argv)
->
->         if (osnoise_trace_is_off(tool, record)) {
->                 printf("osnoise hit stop tracing\n");
-> -               if (params->trace_output) {
-> -                       printf("  Saving trace to %s\n", params->trace_ou=
-tput);
-> -                       save_trace_to_file(record->trace.inst, params->tr=
-ace_output);
-> -               }
-> +               save_trace_to_file(record->trace.inst, params->trace_outp=
-ut);
->         }
->
->  out_top:
-> diff --git a/tools/tracing/rtla/src/timerlat_hist.c b/tools/tracing/rtla/=
-src/timerlat_hist.c
-> index 6d7d0a2d45b47..5f54b268a1033 100644
-> --- a/tools/tracing/rtla/src/timerlat_hist.c
-> +++ b/tools/tracing/rtla/src/timerlat_hist.c
-> @@ -1390,10 +1390,7 @@ int timerlat_hist_main(int argc, char *argv[])
->                 if (!params->no_aa)
->                         timerlat_auto_analysis(params->stop_us, params->s=
-top_total_us);
->
-> -               if (params->trace_output) {
-> -                       printf("  Saving trace to %s\n", params->trace_ou=
-tput);
-> -                       save_trace_to_file(record->trace.inst, params->tr=
-ace_output);
-> -               }
-> +               save_trace_to_file(record->trace.inst, params->trace_outp=
-ut);
->         }
->
->  out_hist:
-> diff --git a/tools/tracing/rtla/src/timerlat_top.c b/tools/tracing/rtla/s=
-rc/timerlat_top.c
-> index 05a9403b01d26..1e64e6216bc2e 100644
-> --- a/tools/tracing/rtla/src/timerlat_top.c
-> +++ b/tools/tracing/rtla/src/timerlat_top.c
-> @@ -1159,10 +1159,7 @@ int timerlat_top_main(int argc, char *argv[])
->                 if (!params->no_aa)
->                         timerlat_auto_analysis(params->stop_us, params->s=
-top_total_us);
->
-> -               if (params->trace_output) {
-> -                       printf("  Saving trace to %s\n", params->trace_ou=
-tput);
-> -                       save_trace_to_file(record->trace.inst, params->tr=
-ace_output);
-> -               }
-> +               save_trace_to_file(record->trace.inst, params->trace_outp=
-ut);
->         } else if (params->aa_only) {
->                 /*
->                  * If the trace did not stop with --aa-only, at least pri=
-nt the
-> diff --git a/tools/tracing/rtla/src/trace.c b/tools/tracing/rtla/src/trac=
-e.c
-> index 728f5029d5335..74ed2f6208baa 100644
-> --- a/tools/tracing/rtla/src/trace.c
-> +++ b/tools/tracing/rtla/src/trace.c
-> @@ -75,12 +75,16 @@ int save_trace_to_file(struct tracefs_instance *inst,=
- const char *filename)
->         int out_fd, in_fd;
->         int retval =3D -1;
->
-> +       if (!filename)
-> +               return 0;
-> +
->         in_fd =3D tracefs_instance_file_open(inst, file, O_RDONLY);
->         if (in_fd < 0) {
->                 err_msg("Failed to open trace file\n");
->                 return -1;
->         }
->
-> +       printf("  Saving trace to %s\n", filename);
->         out_fd =3D creat(filename, mode);
->         if (out_fd < 0) {
->                 err_msg("Failed to create output file %s\n", filename);
-> --
-> 2.48.1
->
+ioctl(KVM_RUN) {
+    enter_from_user_mode()
+    while !need_userspace_handling() {
+        asi_enter();  // part 1
+        vmenter();  // part 2
+        asi_relax(); // part 3
+    }
+    asi _exit(); // part 4b
+    exit_to_user_mode()
+}
 
+So part 4a is just referring to continuation of the loop.
+
+This explanation was written when that was the only user of this API
+so it was probably clearer, now we have userspace it seems a bit odd.
+
+With my pseudocode above, does it make more sense? If so I'll try to
+think of a better way to explain it.
+
+> /*
+>  * Leave the "tense" state if we are in it, i.e. end the critical section. We
+>  * will stay relaxed until the next asi_enter.
+>  */
+> void asi_relax(void);
+>
+> Yeah, so there's no API functions balance between enter() and relax()...
+
+
+asi_enter() is actually balanced with asi_relax(). The comment says
+"if we are in it" because technically if you call this asi_relax()
+outside of the critical section, it's a nop. But, there's no reason to
+do that, so we could definitely change the comment and WARN if that
+happens.
+
+>
+> > +#define ASI_TAINT_OTHER_MM_CONTROL   ((asi_taints_t)BIT(6))
+> > +#define ASI_NUM_TAINTS                       6
+> > +static_assert(BITS_PER_BYTE * sizeof(asi_taints_t) >= ASI_NUM_TAINTS);
+>
+> Why is this a typedef at all to make the code more unreadable than it needs to
+> be? Why not a simple unsigned int or char or whatever you need?
+
+
+My thinking was just that it's nicer to see asi_taints_t and know that
+it means "it holds taint flags and it's big enough" instead of having
+to remember the space needed for these flags. But yeah I'm fine with
+making it a raw integer type.
+
+> > +#define ASI_TAINTS_CONTROL_MASK \
+> > +     (ASI_TAINT_USER_CONTROL | ASI_TAINT_GUEST_CONTROL | ASI_TAINT_OTHER_MM_CONTROL)
+> > +
+> > +#define ASI_TAINTS_DATA_MASK \
+> > +     (ASI_TAINT_KERNEL_DATA | ASI_TAINT_USER_DATA | ASI_TAINT_OTHER_MM_DATA)
+> > +
+> > +#define ASI_TAINTS_GUEST_MASK (ASI_TAINT_GUEST_DATA | ASI_TAINT_GUEST_CONTROL)
+> > +#define ASI_TAINTS_USER_MASK (ASI_TAINT_USER_DATA | ASI_TAINT_USER_CONTROL)
+> > +
+> > +/* The taint policy tells ASI how a class interacts with the CPU taints */
+> > +struct asi_taint_policy {
+> > +     /*
+> > +      * What taints would necessitate a flush when entering the domain, to
+> > +      * protect it from attack by prior domains?
+> > +      */
+> > +     asi_taints_t prevent_control;
+>
+> So if those necessitate a flush, why isn't this var called "taints_to_flush"
+> or whatever which exactly explains what it is?
+
+
+Well it needs to be disambiguated from the field below (currently
+protect_data) but it could be control_to_flush (and data_to_flush).
+
+The downside of that is that having one say "prevent" and one say
+"protect" is quite meaningful. prevent_control is describing things we
+need to do to protect the system from this domain, protect_data is
+about protecting the domain from the system. However, while that
+difference is meaningful it might not actually be helpful for the
+reader of the code so I'm not wed to it.
+
+Also worth noting that we could just combine these fields. At present
+they should have disjoint bits set. But, they're used in separate
+contexts and have separate (although conceptually very similar)
+meanings, so I think that would reduce clarity.
+
+>
+> Spellchecker please. Go over your whole set.
+
+
+Ack, I've set up a local thingy to spellcheck all my commits so
+hopefully you should encounter less of that noise in future.
+
+For the pronouns stuff I will do my best but you might still spot
+violations in older text, sorry about that.
+
+> > +     /* What taints should be set when entering the domain? */
+> > +     asi_taints_t set;
+>
+>
+> So "required_taints" or so... hm?
+
+
+What this field is describing is: when we run the untrusted code, what
+happens? I don't mean "what does the kernel do" but what physically
+happens on the CPU from an exploit point of view.
+
+For example setting ASI_TAINT_USER_DATA in this field means "when we
+run the untrusted code (i.e. userspace), userspace data gets left
+behind in sidechannels".
+
+"Should be set" in the comment means "this field should be set to
+record that a thing has happened" not "this field being set is a
+requirement for some API" or something. So I don't think "required" is
+right but this is hard to name.
+
+That commentary should also be expanded I think, since "should be set"
+is pretty ambiguous. And maybe if we called it "to_set" it would be
+more obvious that "set" is a verb? I'm very open to suggestions.
+
+>
+> > +
+> > +void asi_init_mm_state(struct mm_struct *mm);
+> > +
+> > +int asi_init_class(enum asi_class_id class_id, struct asi_taint_policy *taint_policy);
+> > +void asi_uninit_class(enum asi_class_id class_id);
+>
+> "uninit", meh. "exit" perhaps? or "destroy"
+
+
+>
+> And you have "asi_destroy" already so I guess you can do:
+>
+> asi_class_init()
+> asi_class_destroy()
+>
+> to have the namespace correct.
+
+
+Yeah, not sure what I was thinking here!
+
+>
+> > +static __always_inline bool asi_is_tense(void)
+> > +{
+> > +     return !asi_is_relaxed();
+> > +}
+>
+> So can we tone down the silly helpers above? You don't really need
+> asi_is_tense() for example. It is still very intuitive if I read
+>
+>         if (!asi_is_relaxed())
+>
+Yep that sounds good.
