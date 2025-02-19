@@ -1,94 +1,110 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 719233FC2;
-	Wed, 19 Feb 2025 00:10:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 706E3BA45;
+	Wed, 19 Feb 2025 00:24:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739923828; cv=none; b=LOcSsc2JDaDhGT3y/IUwCCbjLYCL8apDv1jDQfcjZVazjmfltGrjpBL7yPxW2+KTSLjrJvoPCzTlHeTHrKZ4HGM/oqlxHuYLmGzWxhml92/Zkh1BeJzLtR9IHCsV8vtMk0/5hlSP+3SEMaeEV8d8UzrquxMow5O+A0f1HbRQPAE=
+	t=1739924666; cv=none; b=dtybvVTZL52BsCVaYfN2g5KYXZDr331FTw6Drz5UFkA6/qNDqy+KNTwPHMqxtu+YQPcGgongS7mVehVlvqhBvXcdvptrIQE08wl4L1bVhFDRXQPdDR2oKadetjeFUoZM4rcCC/giM2Vpib9ugHNsumtzP9CzEwq+hNGMnZO4AY8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739923828; c=relaxed/simple;
-	bh=9Vw4L/7bu0F9hyQfG+u+P+URLIF4Z1kuQHWvCRHBaWw=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=dO45d3S4DvrRVk+ja8dTn+gDtKFOG6B2gkqeKlz7QvjvrAfG+BQ+KN+cJ/ru7FHlO5GMZu4x/k+ZmO2WZlh7LINxO4wvtzOfDqtIsRCsHlz8tEBZXwVMI5lbcwVBwIHKlGAPSNOwxT9C5BtztUSmCp0jjwb/dMJkMSbsWe/ea5s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cGnuTuoU; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cGnuTuoU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5100BC4CEE2;
-	Wed, 19 Feb 2025 00:10:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739923827;
-	bh=9Vw4L/7bu0F9hyQfG+u+P+URLIF4Z1kuQHWvCRHBaWw=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=cGnuTuoUcJcQ0hACXnT6oJePo3mAJfaDHmusTo/Z1YLcJRcVB1164Y18S7KBH0un4
-	 a6qkC1zLra8fMBCvTclwukHf7SGpPv0DscD943iLriHcHDaWZi9YZAbkMQlorSoTyR
-	 urS8iRXUxdF/UQ82p63ypN51SkKG/sk5PTAz+W+BPWURd0kJFwgGTcFVMZowlGy8Ho
-	 5oKEH2XQGkS6bKHLk0Zq0egcogpJbzSGhE6/U5oPAJGs0hTwDd+hV2nk4renE+Aum7
-	 WAtIG2rQi1VkGRRg+JkHO83ZaKIh0ykF09jC2ZLLHtYCpRWad95N4PlrVeCCq1fRS2
-	 2/uT3axVAh8Lg==
-Date: Wed, 19 Feb 2025 09:10:23 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Thomas =?UTF-8?B?V2Vpw59zY2h1aA==?= <thomas.weissschuh@linutronix.de>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH] tracing/user_events: Don't use %pK through printk
-Message-Id: <20250219091023.f17833aea92a3d90e1bbc7da@kernel.org>
-In-Reply-To: <20250217-restricted-pointers-trace-v1-1-bbe9ea279848@linutronix.de>
-References: <20250217-restricted-pointers-trace-v1-1-bbe9ea279848@linutronix.de>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1739924666; c=relaxed/simple;
+	bh=v+G6XQjKH8mwQQ9LTsWzSc9ufj1uf31ots88a2yaIdU=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=RngZzjcAH0Kre/oWyFqAyjPvCTBrFOpqDJxN4rIPAmoVuu7rsMrCo4lLj8Es2pHb6Elb1tmy0ULsQQqwQ4ienvpjjPwNUOENpXpaXRPx8OhssQRSAkkS7jI8I9HFxSYnL9pk3p73lP80yKuraXE4Paed6zGET2s/U/EVCm420gI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4D314C4CEE2;
+	Wed, 19 Feb 2025 00:24:24 +0000 (UTC)
+Date: Tue, 18 Feb 2025 19:24:46 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Luis Chamberlain <mcgrof@kernel.org>
+Cc: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Mark
+ Rutland <mark.rutland@arm.com>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Andrew Morton
+ <akpm@linux-foundation.org>, Petr Pavlu <petr.pavlu@suse.com>, Sami
+ Tolvanen <samitolvanen@google.com>, Daniel Gomez <da.gomez@samsung.com>,
+ linux-modules@vger.kernel.org, Sebastian Andrzej Siewior
+ <bigeasy@linutronix.de>
+Subject: Re: [PATCH 5/8] module: Add module_for_each_mod() function
+Message-ID: <20250218192446.1269e461@gandalf.local.home>
+In-Reply-To: <Z7T50DxEL7NYkr8H@bombadil.infradead.org>
+References: <20250205225031.799739376@goodmis.org>
+	<20250205225103.760856859@goodmis.org>
+	<20250206142817.91853f475c681bc2ef7ca962@kernel.org>
+	<20250206102720.0fd57129@gandalf.local.home>
+	<20250214173017.07b0b250@gandalf.local.home>
+	<Z7T50DxEL7NYkr8H@bombadil.infradead.org>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Mon, 17 Feb 2025 14:16:12 +0100
-Thomas Weißschuh <thomas.weissschuh@linutronix.de> wrote:
+On Tue, 18 Feb 2025 13:21:20 -0800
+Luis Chamberlain <mcgrof@kernel.org> wrote:
 
-> Restricted pointers ("%pK") are not meant to be used through printk().
-> It can unintentionally expose security sensitive, raw pointer values.
+> The patch is not OK, you're looking at old code, look at
+> modules-next and as Petr suggested look at Sebastian's recently
+> merged work.
 > 
-> Use regular pointer formatting instead.
-> 
-> Link: https://lore.kernel.org/lkml/20250113171731-dc10e3c1-da64-4af0-b767-7c7070468023@linutronix.de/
+> git remote add korg-modules git://git.kernel.org/pub/scm/linux/kernel/git/modules/linux.git
 
-This is only for the kernel pointer, but the "uaddr" below means it
-has a user space address. So I think this does not need to be applied.
+Would this be OK?
 
-Thank you,
+I have this on v6.14-rc3, and it doesn't cause any conflicts when I merge
+it with modules-next, and it builds fine.
 
-> Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
-> ---
->  kernel/trace/trace_events_user.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/kernel/trace/trace_events_user.c b/kernel/trace/trace_events_user.c
-> index 97325fbd62836f4fb477c4a2b2936eff544291ec..3effc6fce20e65a8077de5221eb69db04fb1a775 100644
-> --- a/kernel/trace/trace_events_user.c
-> +++ b/kernel/trace/trace_events_user.c
-> @@ -455,7 +455,7 @@ static void user_event_enabler_fault_fixup(struct work_struct *work)
->  	if (ret && ret != -ENOENT) {
->  		struct user_event *user = enabler->event;
->  
-> -		pr_warn("user_events: Fault for mm: 0x%pK @ 0x%llx event: %s\n",
-> +		pr_warn("user_events: Fault for mm: 0x%p @ 0x%llx event: %s\n",
->  			mm->mm, (unsigned long long)uaddr, EVENT_NAME(user));
->  	}
->  
-> 
-> ---
-> base-commit: 0ad2507d5d93f39619fc42372c347d6006b64319
-> change-id: 20250217-restricted-pointers-trace-a0fb12707ac6
-> 
-> Best regards,
-> -- 
-> Thomas Weißschuh <thomas.weissschuh@linutronix.de>
-> 
+-- Steve
 
-
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+diff --git a/include/linux/module.h b/include/linux/module.h
+index 30e5b19bafa9..9a71dd2cb11f 100644
+--- a/include/linux/module.h
++++ b/include/linux/module.h
+@@ -782,6 +782,8 @@ static inline void *module_writable_address(struct module *mod, void *loc)
+ 	return __module_writable_address(mod, loc);
+ }
+ 
++void module_for_each_mod(int(*func)(struct module *mod, void *data), void *data);
++
+ #else /* !CONFIG_MODULES... */
+ 
+ static inline struct module *__module_address(unsigned long addr)
+@@ -894,6 +896,10 @@ static inline void *module_writable_address(struct module *mod, void *loc)
+ {
+ 	return loc;
+ }
++
++static inline void module_for_each_mod(int(*func)(struct module *mod, void *data), void *data)
++{
++}
+ #endif /* CONFIG_MODULES */
+ 
+ #ifdef CONFIG_SYSFS
+diff --git a/kernel/module/main.c b/kernel/module/main.c
+index 1fb9ad289a6f..1bd4e3b7098a 100644
+--- a/kernel/module/main.c
++++ b/kernel/module/main.c
+@@ -3809,6 +3809,19 @@ bool is_module_text_address(unsigned long addr)
+ 	return ret;
+ }
+ 
++void module_for_each_mod(int(*func)(struct module *mod, void *data), void *data)
++{
++	struct module *mod;
++
++	guard(rcu)();
++	list_for_each_entry_rcu(mod, &modules, list) {
++		if (mod->state == MODULE_STATE_UNFORMED)
++			continue;
++		if (func(mod, data))
++			break;
++	}
++}
++
+ /**
+  * __module_text_address() - get the module whose code contains an address.
+  * @addr: the address.
