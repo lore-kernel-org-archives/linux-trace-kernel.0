@@ -1,116 +1,106 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B824C1DDC3A;
-	Thu, 20 Feb 2025 11:53:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDC411F150B;
+	Thu, 20 Feb 2025 12:01:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740052394; cv=none; b=DHyz5yfxXWRY5FDphI4IgZmhmJ+zDjRhURjj/sa4KMf3idQqL+yFNWA858+UXqIQ9Dhoe17005fPBfHoLGE52HSBaYXTjMbhmETWXGQChr7yxog8bj4hNqtVZ6JrhsWlj6wNS8xqjmgCORXzlYsn6dcoETMgXsLZdcgoisR45z0=
+	t=1740052919; cv=none; b=TE+R2XyazMT+T+oYfCnJWhkhifiY3Km4vQIz99XZkIsU8BsowH+Omxj/t0eezKAEbVeohpCL/FhamJ6BqQ404rNbzEj5RM/95cHaxgM7666dkg0MZyAi0zWiv2ChP/ZNDxT76S2Bo95ZxoXamWPtJlfuX3BlSEdkRb13No4/NtM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740052394; c=relaxed/simple;
-	bh=tpyBoxI5qMXzINsVgoVISpA2J5RByzXnSUPMqHuNecU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GkA/1ao9aeuQfZtgaT2tt9sPxVlHytwplVyx7Q8BGxXXHmm/WyYNls4hBj1rF/lDo/BRUwPU8QpR3oiOwG4BFbA8Vf7LNMFpeu4D7tZ2a79qkJjeLbeqcMT2GXdjLPA0a5m1vFYR2gMT7byTqT3JnrEjpbKB8efi5T4yOvkyiL4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=SKorP5qD; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="SKorP5qD"
-Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51K9P5R7007707;
-	Thu, 20 Feb 2025 11:53:05 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=pp1; bh=qOTIXEgZBdBPbP5wfG94fNSYaqQcZk
-	oqvNhtqiQLdwo=; b=SKorP5qDur+VyH4yz+WCL5dWRAb+oHbOz2my0W0fXs7BTh
-	f+/JJhJJbB2/Fkj7y76VKRENKdc6B8tZpzRvK2Usl7lIl8qvXfNSLclYorP0Uh4H
-	Xjgwx1dzIcSYvKFoAyo02H50DB1AozzB5vhUpSIz7blg+1DCuan/RWRS4owHtdrs
-	q0zNZB8Mi6218PBcyv8SpnHByxFG4NlGi/odrEtHqA6HsdzWek4ZBc3iu2Vw0p2g
-	FCPA/TRY/nctoXGuyW58VA3brA/klgEyqZhHdAOFkefW3eJWM59mbaIICD7twGqo
-	xYuibX5C4ZDPHIBxCjGi5z/bdjbxT9qSX/IKt7KQ==
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44x1qy8nrg-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 20 Feb 2025 11:53:04 +0000 (GMT)
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 51KBPV2q030147;
-	Thu, 20 Feb 2025 11:53:04 GMT
-Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 44w01x9u0u-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 20 Feb 2025 11:53:04 +0000
-Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
-	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 51KBr0GL31260980
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 20 Feb 2025 11:53:00 GMT
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 8CA2E20043;
-	Thu, 20 Feb 2025 11:53:00 +0000 (GMT)
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 58AD420040;
-	Thu, 20 Feb 2025 11:53:00 +0000 (GMT)
-Received: from osiris (unknown [9.152.212.60])
-	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Thu, 20 Feb 2025 11:53:00 +0000 (GMT)
-Date: Thu, 20 Feb 2025 12:52:58 +0100
-From: Heiko Carstens <hca@linux.ibm.com>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Sven Schnelle <svens@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>
-Subject: Re: [PATCH v2 0/5] ftrace: Fix fprobe with function graph accounting
-Message-ID: <20250220115258.7558Aa9-hca@linux.ibm.com>
-References: <20250219220436.498041541@goodmis.org>
+	s=arc-20240116; t=1740052919; c=relaxed/simple;
+	bh=xC4t5PNFRGnqdbnDdkkrRiU383ecZkkQlQNaoeaxAAo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=jNqj5JFPaPuuhVa6zTwqI3GwldQn5d5vdKHd9E4sI7PmeuWBwL7aDWNnFd6WFT5/vo9oa3Nf6hMtqRBGwZg0J+bSaBY/R/q4znjuC9ivfECyNc1Ph1ZBUQkB6CU/bL5J9u+Xcy7rs6GJUSFRTE0wvScmsuHg8GbQg3Emmz/hE/g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.44])
+	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4YzBcW1pQBz21mxG;
+	Thu, 20 Feb 2025 19:58:51 +0800 (CST)
+Received: from kwepemk500005.china.huawei.com (unknown [7.202.194.90])
+	by mail.maildlp.com (Postfix) with ESMTPS id BA519140360;
+	Thu, 20 Feb 2025 20:01:52 +0800 (CST)
+Received: from [10.174.179.234] (10.174.179.234) by
+ kwepemk500005.china.huawei.com (7.202.194.90) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Thu, 20 Feb 2025 20:01:51 +0800
+Message-ID: <85725388-180b-267c-e121-3af1f1b75f94@huawei.com>
+Date: Thu, 20 Feb 2025 20:01:50 +0800
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250219220436.498041541@goodmis.org>
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: PnCLRCC862pKH9cvgqtn4oeWul4Fd7J2
-X-Proofpoint-ORIG-GUID: PnCLRCC862pKH9cvgqtn4oeWul4Fd7J2
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-20_04,2025-02-20_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 clxscore=1015
- phishscore=0 impostorscore=0 bulkscore=0 mlxlogscore=436 adultscore=0
- suspectscore=0 lowpriorityscore=0 priorityscore=1501 malwarescore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2502100000 definitions=main-2502200086
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.8.0
+Subject: Re: Add Morton,Peter and David for discussion//Re: [PATCH -next]
+ uprobes: fix two zero old_folio bugs in __replace_page()
+To: David Hildenbrand <david@redhat.com>, Oleg Nesterov <oleg@redhat.com>
+CC: Masami Hiramatsu <mhiramat@kernel.org>, Peter Zijlstra
+	<peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de
+ Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Mark Rutland
+	<mark.rutland@arm.com>, Alexander Shishkin
+	<alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, Ian
+ Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, "Liang,
+ Kan" <kan.liang@linux.intel.com>, Andrew Morton <akpm@linux-foundation.org>,
+	Peter Xu <peterx@redhat.com>, <linux-kernel@vger.kernel.org>,
+	<linux-trace-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>,
+	<bpf@vger.kernel.org>, <wangkefeng.wang@huawei.com>, linux-mm
+	<linux-mm@kvack.org>
+References: <20250217123826.88503-1-tongtiangen@huawei.com>
+ <c2924e9e-1a42-a4f6-5066-ea2e15477c11@huawei.com>
+ <3b893634-5453-42d0-b8dc-e9d07988e9e9@redhat.com>
+ <24a61833-f389-b074-0d9c-d5ad9efc2046@huawei.com>
+ <20250219152237.GB5948@redhat.com>
+ <34e18c47-e536-48e4-80ca-7c7bbc75ecce@redhat.com>
+ <2fe4c4d1-c480-c250-1ba2-1a82caf5d7fa@huawei.com>
+ <196fc7d8-30a8-439a-89bd-57353fd98df8@redhat.com>
+From: Tong Tiangen <tongtiangen@huawei.com>
+In-Reply-To: <196fc7d8-30a8-439a-89bd-57353fd98df8@redhat.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
+ kwepemk500005.china.huawei.com (7.202.194.90)
 
-On Wed, Feb 19, 2025 at 05:04:36PM -0500, Steven Rostedt wrote:
-> Heiko Carstens reported[1] a bug when running the ftrace selftests.
-> After running them, he noticed that the enabled_functions file had
-> all functions enabled in it. That means something was registered to
-> ftrace that shouldn't be.
+
+
+在 2025/2/20 16:38, David Hildenbrand 写道:
+> On 20.02.25 03:31, Tong Tiangen wrote:
+>>
+>>
+>> 在 2025/2/20 0:12, David Hildenbrand 写道:
+>>> On 19.02.25 16:22, Oleg Nesterov wrote:
+>>>> On 02/18, Tong Tiangen wrote:
+>>>>>
+>>>>> OK, Before your rewrite last merged, How about i change the 
+>>>>> solution to
+>>>>> just reject them immediately after get_user_page_vma_remote()？
+>>>>
+>>>> I agree, uprobe_write_opcode() should simply fail if
+>>>> is_zero_page(old_page).
+>>>
+>>> Yes. That's currently only syzkaller that triggers it, not some sane use
+>>> case.
+>>
+>> OK, change as follows:
+>>
+>> --- a/kernel/events/uprobes.c
+>> +++ b/kernel/events/uprobes.c
+>> @@ -506,6 +506,12 @@ int uprobe_write_opcode(struct arch_uprobe
+>> *auprobe, struct mm_struct *mm,
+>>           if (ret <= 0)
+>>                   goto put_old;
+>>
+>> +       if (WARN(is_zero_page(old_page),
 > 
-> The issue was with the accounting of the new fprobe logic which was
-> built on top of the function graph infrastructure. Patch 3 of this
-> series is the fix for that bug, but while debugging that, 3 other
-> accounting bugs were discovered.
-...
-> Steven Rostedt (5):
->       ftrace: Fix accounting of adding subops to a manager ops
->       ftrace: Do not add duplicate entries in subops manager ops
->       fprobe: Always unregister fgraph function from ops
->       fprobe: Fix accounting of when to unregister from function graph
->       selftests/ftrace: Update fprobe test to check enabled_functions file
+> This can likely be triggered by user space, so do not use WARN.
+
+OK,thanks.
+
+Hi Oleg, is that all right?
+
+Thanks,
+Tong.
+
 > 
-> ----
->  kernel/trace/fprobe.c                              | 12 ++---
->  kernel/trace/ftrace.c                              | 33 +++++++++----
->  .../ftrace/test.d/dynevent/add_remove_fprobe.tc    | 54 ++++++++++++++++++++++
->  3 files changed, 82 insertions(+), 17 deletions(-)
-
-FWIW, I can confirm that this fixes the bug I reported.
-Feel free to add
-
-Tested-by: Heiko Carstens <hca@linux.ibm.com>
