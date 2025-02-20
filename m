@@ -1,25 +1,26 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78D5F26388C;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B1312641C2;
 	Thu, 20 Feb 2025 18:58:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740077899; cv=none; b=liQgh2h5Xf3BgX8uKI8kw//+jg0LKCUdkE1/0KkmfNjSzG4tQM2Z3M4Nji7gTF8+WfUJ+NLC90bna3c7x+tpeTXidHm5C8XKZ8ILSnGACUWArYILo4X1k2UFgWkystGW7LhMywdf2oYexb4MjBH97RKlXrWx9mPNuaEDw1nLBi8=
+	t=1740077899; cv=none; b=eY8xpdNhv8T7N52O6xLf+TsQl3hic6vhwiTRJQOjhA5iGsmYHcejml0eSwaKkv6q16IHjJrlhEYrvGQ4osikWUkNyP7ZOTylSEdUn4hCNB6JBmk5P3NgFaW1Zm0zWrQdLWB07ghV8wvROyKcSxKzAZWdq0agjDkP69mzhKCnFks=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1740077899; c=relaxed/simple;
-	bh=Efnf9gDllCLF+wDUfnuFW17d2G76IKsnJdN3dFQHTzA=;
-	h=Message-ID:Date:From:To:Cc:Subject; b=OHt56QhGA8ilq1VOtNwQKDGg9hub4a84d31wQZbovVHgS6hlTDCCMDrP1bynpSfEzgR4esZAtHFjdvyvi/Y4Z+JX1jODOTcMLX6RPZJKVH20i7RHpPEgbv8XcmGQB5rCC+iQNFjjSlHTM2zkS+6aRDf7tAfWYatfqnpQl4mPaFc=
+	bh=JIeJKv1D9tRmGCPxA3yF5nAK/eVKLIsMo8diAYkiolc=;
+	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
+	 Content-Type; b=I3/D44eRBzUlZZhZes4j6KuWreYTrVfiwx1vj3gbcQzNX1gQzo6dtt/CmlJ5PjfPCgvp9AtB+1KDMu0eXSOR49y6h1oMYVvTDHOmmf0NIjXm1lhkey/blN5tN1mfTFrS+jE7eE+Ia9zLPM/o2N3Z0c3/2OxO2wtLPtin3FLrluc=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E5E82C4CED1;
-	Thu, 20 Feb 2025 18:58:18 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2AA2CC4CEE9;
+	Thu, 20 Feb 2025 18:58:19 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.98)
 	(envelope-from <rostedt@goodmis.org>)
-	id 1tlBl0-00000005cQr-0Q6w;
+	id 1tlBl0-00000005cRt-1o54;
 	Thu, 20 Feb 2025 13:58:46 -0500
-Message-ID: <20250220185759.811830333@goodmis.org>
+Message-ID: <20250220185846.291817731@goodmis.org>
 User-Agent: quilt/0.68
-Date: Thu, 20 Feb 2025 13:57:59 -0500
+Date: Thu, 20 Feb 2025 13:58:01 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org,
  linux-trace-kernel@vger.kernel.org,
@@ -29,31 +30,52 @@ Cc: Masami Hiramatsu <mhiramat@kernel.org>,
  Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
  Andrew Morton <akpm@linux-foundation.org>,
  Shuah Khan <shuah@kernel.org>
-Subject: [RESEND][PATCH 0/3] selftests/tracing: Test only toplevel README file not the instances
+Subject: [RESEND][PATCH 2/3] selftests/ftrace: Clean up triggers after setting them
+References: <20250220185759.811830333@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 
-Allow some more tests to run in instances. There's a few tests that
-require something in README to be present to run. But currently README
-can't be used for instance tests. Fix that and then allow 4 more tests
-to run in instances.
+From: Steven Rostedt <rostedt@goodmis.org>
 
-[ RESEND to include selftest maintainers and lists:
-  original: https://lore.kernel.org/linux-trace-kernel/20250116012009.840870709@goodmis.org/ ]
+The triggers set in trigger-onchange-action-hist.tc and
+trigger-snapshot-action-hist.tc are not cleaned up at the end. These tests
+can also be done in instances and without cleaning up the triggers, the
+instances can not be removed as they are still "busy".
+
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+ .../test.d/trigger/inter-event/trigger-onchange-action-hist.tc  | 2 ++
+ .../test.d/trigger/inter-event/trigger-snapshot-action-hist.tc  | 2 ++
+ 2 files changed, 4 insertions(+)
+
+diff --git a/tools/testing/selftests/ftrace/test.d/trigger/inter-event/trigger-onchange-action-hist.tc b/tools/testing/selftests/ftrace/test.d/trigger/inter-event/trigger-onchange-action-hist.tc
+index 91339c130832..2430f541cd5d 100644
+--- a/tools/testing/selftests/ftrace/test.d/trigger/inter-event/trigger-onchange-action-hist.tc
++++ b/tools/testing/selftests/ftrace/test.d/trigger/inter-event/trigger-onchange-action-hist.tc
+@@ -19,4 +19,6 @@ if ! grep -q "changed:" events/sched/sched_waking/hist; then
+     fail "Failed to create onchange action inter-event histogram"
+ fi
+ 
++echo '!hist:keys=comm:newprio=prio:onchange($newprio).save(comm,prio) if comm=="ping"' >> events/sched/sched_waking/trigger
++
+ exit 0
+diff --git a/tools/testing/selftests/ftrace/test.d/trigger/inter-event/trigger-snapshot-action-hist.tc b/tools/testing/selftests/ftrace/test.d/trigger/inter-event/trigger-snapshot-action-hist.tc
+index 147967e86584..334595daa9f4 100644
+--- a/tools/testing/selftests/ftrace/test.d/trigger/inter-event/trigger-snapshot-action-hist.tc
++++ b/tools/testing/selftests/ftrace/test.d/trigger/inter-event/trigger-snapshot-action-hist.tc
+@@ -27,4 +27,6 @@ if ! grep -q "comm=ping" snapshot; then
+     fail "Failed to create snapshot action inter-event histogram"
+ fi
+ 
++echo '!hist:keys=comm:newprio=prio:onchange($newprio).save(comm,prio):onchange($newprio).snapshot() if comm=="ping"' >> events/sched/sched_waking/trigger
++
+ exit 0
+-- 
+2.47.2
 
 
-Steven Rostedt (3):
-      selftests/tracing: Test only toplevel README file not the instances
-      selftests/ftrace: Clean up triggers after setting them
-      selftests/tracing: Allow some more tests to run in instances
-
-----
- tools/testing/selftests/ftrace/test.d/functions                   | 8 +++++++-
- .../test.d/trigger/inter-event/trigger-action-hist-xfail.tc       | 1 +
- .../test.d/trigger/inter-event/trigger-onchange-action-hist.tc    | 3 +++
- .../test.d/trigger/inter-event/trigger-snapshot-action-hist.tc    | 3 +++
- .../selftests/ftrace/test.d/trigger/trigger-hist-expressions.tc   | 1 +
- 5 files changed, 15 insertions(+), 1 deletion(-)
