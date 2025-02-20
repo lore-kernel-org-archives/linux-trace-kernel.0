@@ -1,114 +1,159 @@
-Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DEAC1DEFF7;
-	Thu, 20 Feb 2025 03:09:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80C3410FD;
+	Thu, 20 Feb 2025 03:17:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740020949; cv=none; b=Oapt4NoYNnot4V4jJOu9UKWnhIgnf9qMBTaefIyZsf6UzjzfxfZ8xMcKaQTaM9qlF0w+6PI+f/A06lRgea05QJdeQIj0SXS+HMVgiqAT73fMDJn+7oYIfvG/v5H4Ug+KKtjcKMvZI3pbjFATYRhUKRlf/9RViT3wLLn+1x+rsgk=
+	t=1740021426; cv=none; b=uhPt5v6Zml4gq3t6WuTuy0HDuenTQgl1YFbjSQq+RjRIWLa51U2uHAd+byc6G73ZefYHOW/dR60dWvVPZA7i5f1gT8EiMKEwGLeFy+zDpUXCgAVuqdxMDN6AlPmUNhutTv9DLa5TLzg6ka83dUSV79xXiyECSCq0wCoGwxwMzV8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740020949; c=relaxed/simple;
-	bh=SIIxMmbbjCnZ1H7d5BftVx4BljoiEjzP6fU+7MNNPY8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cTc3rori+49sKhia8dMEWyZ2IeEc08gE15e69XalYTgrTMJ3pTR/rJ6sSNNBhs0RzxdIWsibxAnP1hQAN6O0FsEECEq1eXthOZvp58YikEJ+m+SOQDToi0CLNtpKtOkmSbr7s7XhPjd7dSi4vkLymr6FVftFCIYiPTOTqDNO4wU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=g7cTiT7j; arc=none smtp.client-ip=209.85.216.43
+	s=arc-20240116; t=1740021426; c=relaxed/simple;
+	bh=9NI2gIBXNK0s7n/ljiTbibviNS/2GH4hHP3zf9R4Wo0=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=BbWGOR7Yg0Yn/MwMPnQPptB3cIKpJzCZvsWxnAUtEifwfVgCuntrK1YSLKlID7jOr++I8D4wky73IZ/gjlEp40Shd51cSu4WYiXB3XFmkVYpMXJGiK7/4zFWkjz/gvHfITE5L3rsjTCJNr2pubFmkQddMCJ54NEduNv6l2p2qcI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BjTWTymR; arc=none smtp.client-ip=209.85.214.178
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g7cTiT7j"
-Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-2fa8ac56891so709604a91.2;
-        Wed, 19 Feb 2025 19:09:07 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BjTWTymR"
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-22113560c57so7765675ad.2;
+        Wed, 19 Feb 2025 19:17:05 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740020947; x=1740625747; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=SIIxMmbbjCnZ1H7d5BftVx4BljoiEjzP6fU+7MNNPY8=;
-        b=g7cTiT7jTLJsqEbH7gc9kSwgk9WKI0QAfOCY5JklBGRuj3GbrtOGeYDhn+uSfJBAWe
-         AbcdhlyK78+eB/j/YWxY97fbkr10g+UaIBunJCJN2ZocuuIGFV9NVjcVV3gGsdP6qARA
-         1wPWzS4Eh6QQU+5adYrf0R/NP5+Kmhm4Wjp9sh7ha89TCpVHUu20LhPLQZL4/0qINzdC
-         ApaYcNND2uXV28ViahzCe6CQ3Ry425T1orqmqj7v92lXl2vIDS3ZA2kYjbTOj5gZFVFI
-         tPazfjpO11L1/1hfyMRcYhgscjkbeWn5AK1hQdKxj36fiJbXwki1LlW6Muf8ey+8hMgB
-         Lylw==
+        d=gmail.com; s=20230601; t=1740021425; x=1740626225; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=RlnHXFPBKqev4q+6awl68HvHcTKpxS2Uwsz5JCoSit8=;
+        b=BjTWTymRb1GDE2W+NuR4aGJval67ro+xppvB2VddeWEvytsUWybzId4xkHaOwWoMFe
+         bhWxw5elCiA/Z2Dr1eMvJIzXLgmEZd9FygTML1Y61QWcliWb2/EJXNZULX/kKcMbK4v6
+         Oj/G2JMf2Op1GJmpY9jMFrKasGV/V1P/+sf5ROwqRvTkou9ult+0D7I4mWSZG3Fq3lL/
+         p85b5yY2oc/rU2XoKxv1F6YWK6lptSP8Ah0N7ltijEp7JtYo8eR3RBEMdQbWtW2G53ep
+         DW3I53bszs+Faz2KZtbMcrW4nHS5YyUJNHvyfDVD4fR9o+BymG81FiCwiA6nq9t/bCus
+         KV9Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740020947; x=1740625747;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=SIIxMmbbjCnZ1H7d5BftVx4BljoiEjzP6fU+7MNNPY8=;
-        b=bcSwDKHlkBVDdGTahynw7We9Zio/LYkVBmiZOh0S8O3KFpOsSOOusb9WXYEl6yAx/h
-         qfpSOT12WeZz41vgKpfhBWffAGAb60X4bVns4dbF3HqbKSsGFbecOB1V5UNC1YJjcwAL
-         i+HmhCJlhUBDpHeATZgwNJCAjUoXGfKUO1Qiw+8NlRwF9nOU7PXW++t3L7erO2CLDF9z
-         U7yFAeqOyY7okbOro/zn1KQXVHHZRKXNqCdKUreAxjqpti6UvTRbSmpQKaPHEUrxqaJk
-         Of9OQEd9iL+Y7aQiXF9SYzq+pXBqc6VOookRuxchDwiUWWhVFIRCuCl6rYyAGi3rpzvp
-         4TJA==
-X-Forwarded-Encrypted: i=1; AJvYcCWpVRpZVbN5ZDMJTGpvlM1xUSPOnW6U5GBvvQks1eif0gsu/QJr1eXWVC958vNbr3rKavQo841OeXODl/d8jCkCe0i3@vger.kernel.org, AJvYcCXSzK+XR9ckP0Uo8v/+Qfi1fhvVyTblzxO3GGevYE975qxY6h8+rrErYzzmCBfgvEThrZnyJXFpXKBQ8hsh@vger.kernel.org, AJvYcCXuIvMNz2Ty570XKeGEFhGknyrg7QFA0VgbqJPQvxUYFALVP8o/IUIVxqHHM1gLk2sduW0ORxYiBRI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzUnmtAM6BaWL8qZPoJH/YUM7AY77VaThwOTzyms4eVg3+wynR8
-	pxakBeQKD1jege0CUPDhXJQoLJZB7FLE7OZqIXbVe7VbiLItAKKf
-X-Gm-Gg: ASbGncssfNPXT6RkUFe+35ghv8ei0OqwIq8Au5V0hfHsqlhIbyTwcN0nNKWpAk8/J+g
-	lUBeVgTci/XwO8c4xO8mbx22Wo+gqDt5j9Ig5HpcKAK97lVOG3SJjSHQIZ35xWlhb7DTz+Jo1kU
-	oszi4N3aDoXOLUZwm7oC9UW3xMLrmuAV0Ma74eIBic4Bdxi/dmcM6GCUibZJMkjvGXGxFLxql+q
-	m6DZ3qA6i/NSDqyATuX7X55n5u+biBudDAcu6rzUZ80XImclTxDNdzIO3Sc9zXR8dozc58nEVVs
-	3VgqnxeC2e659P4=
-X-Google-Smtp-Source: AGHT+IHY+jkVOxxqyb7oeuPNdMxN/x/S20vcx2nSe/tuB0SSxqUCO1KkygpT8VsNxFzmTEcR5XhbIg==
-X-Received: by 2002:a17:90b:4a49:b0:2ea:aa56:499 with SMTP id 98e67ed59e1d1-2fc40d13e61mr31473657a91.1.1740020947025;
-        Wed, 19 Feb 2025 19:09:07 -0800 (PST)
-Received: from archie.me ([103.124.138.155])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2fbf98b3255sm14701558a91.8.2025.02.19.19.09.05
+        d=1e100.net; s=20230601; t=1740021425; x=1740626225;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=RlnHXFPBKqev4q+6awl68HvHcTKpxS2Uwsz5JCoSit8=;
+        b=oZISiPJpSPLrMIxhIfhB+Boz6HGwQaYb88VM7K01V9H2Q+orAaSXuCaPcl958X/XSl
+         sVhM/z9wPZ/7x26/4BbIQGOnL25Gq9HcKppcVv1T7cwjN6E8T1/Il66EwpvmrfDXdTXx
+         1dZpsxlcfZAJDBVdpUhtd8SgwAtWDYzXo16VFb5FuzN81uI7ahlXN8TI2OBGrnZ6DyaQ
+         3u29HEBdUclAwn1HMvrFqUl1JxH/jQHf60/VLsDpYLpVWYDlT1ww2KZQ1jKLTQ1QjjNX
+         lOopMMOT1AFpXu8jV/UMzHTUe2ZlIZeEHlKTEur+RzSFDkoro9Yg31qTFG/k5FR/4JZr
+         bmJQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW6ewMxgyHXG8jvcLVFIjurzdtbgR2TNEI3UwK9w405cUzQsIz7/+fH2gRFbADnpAQKFt1jxMNePt7ihPc=@vger.kernel.org, AJvYcCWvfzdIxW7+J91DJ2qCwMpiJU4HyDd3VkROPCaANV/3x0LRO6ZOt4ST5vU1/0JuEFSPak1Uj27NGF/gHthPwf0DGgNt@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzt0l9OPkc8f0pMINo/cdcybneqeqJoptX2++11dsdF+JcHm+HT
+	1muWEDA02hSixwHFLf/NFopkgIaYYJxvclK08+P9qyimwZCSVrdhLE/IeqjF
+X-Gm-Gg: ASbGncshxDZC0iJMm2YL2QXNPBSWknanfbzho8HqG3obzobY4PeeLb74p6ikgFe7psu
+	C1rN9Ptd9/8IBKD2QsbXz3rAUJV2XAsZvQxpGaJuwIYwaSwXm+h+owP851jDl9wCm8DDWTOQqMu
+	FT+EV+n3/wt70EupXClw82VEZTTBO0p1XnM35PSkvnAz+tD+j5aBpqYTBU7ruWchPaSP5Jr8cZP
+	g7wTAkTFRZ55d7vQzMavKJ8sQEKldoYtifEROmsp/ob93H7nJhqLGsthG6j7by3IvZPFXPmoS45
+	Zm1zrIO6YnZAuTQL+qfz0h5X3g5Lgh9+jBx+FQ3YO6Im4h+rVEPAL/5lmC5+BP31E3N/Xu4=
+X-Google-Smtp-Source: AGHT+IF8YyAOUY9WFATxdYRRmi23UUSUFNHSvUKci7PiPXmGIYN05r2gp0Sz65gUYsf6PONsVp4r4g==
+X-Received: by 2002:a17:902:ce0d:b0:215:a179:14ca with SMTP id d9443c01a7336-22103ef5861mr318261255ad.2.1740021424652;
+        Wed, 19 Feb 2025 19:17:04 -0800 (PST)
+Received: from AHUANG12-3ZHH9X.lenovo.com (1-175-143-196.dynamic-ip.hinet.net. [1.175.143.196])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22105174c73sm79936015ad.216.2025.02.19.19.17.02
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Feb 2025 19:09:06 -0800 (PST)
-Received: by archie.me (Postfix, from userid 1000)
-	id 1F4794208FB6; Thu, 20 Feb 2025 10:09:02 +0700 (WIB)
-Date: Thu, 20 Feb 2025 10:09:02 +0700
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-To: Purva Yeshi <purvayeshi550@gmail.com>, rostedt@goodmis.org,
-	mhiramat@kernel.org, mathieu.desnoyers@efficios.com, corbet@lwn.net
-Cc: skhan@linuxfoundation.org, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org
-Subject: Re: [PATCH] docs: tracing: Reduce maxdepth in index documentation
-Message-ID: <Z7aczkdNVgLy1NeP@archie.me>
-References: <20250217112109.7734-1-purvayeshi550@gmail.com>
+        Wed, 19 Feb 2025 19:17:04 -0800 (PST)
+From: Adrian Huang <adrianhuang0701@gmail.com>
+X-Google-Original-From: Adrian Huang <ahuang12@lenovo.com>
+To: Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	Adrian Huang <ahuang12@lenovo.com>
+Subject: [PATCH v2 1/1] tracing: Fix memory leak when reading set_event file
+Date: Thu, 20 Feb 2025 11:15:28 +0800
+Message-Id: <20250220031528.7373-1-ahuang12@lenovo.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="zfvOq29s0SxCOtX0"
-Content-Disposition: inline
-In-Reply-To: <20250217112109.7734-1-purvayeshi550@gmail.com>
+Content-Transfer-Encoding: 8bit
 
+From: Adrian Huang <ahuang12@lenovo.com>
 
---zfvOq29s0SxCOtX0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+kmemleak reports the following memory leak after reading set_event file:
 
-On Mon, Feb 17, 2025 at 04:51:09PM +0530, Purva Yeshi wrote:
-> Reduce :maxdepth: from 2 to 1 in index.rst to simplify the table of
-> contents, showing only top-level document titles for better readability.
->=20
+  # cat /sys/kernel/tracing/set_event
 
-Is this patch mean to be applied on top of/squashed into your toctree
-refactoring ([1])?
+  # cat /sys/kernel/debug/kmemleak
+  unreferenced object 0xff110001234449e0 (size 16):
+  comm "cat", pid 13645, jiffies 4294981880
+  hex dump (first 16 bytes):
+    01 00 00 00 00 00 00 00 a8 71 e7 84 ff ff ff ff  .........q......
+  backtrace (crc c43abbc):
+    __kmalloc_cache_noprof+0x3ca/0x4b0
+    s_start+0x72/0x2d0
+    seq_read_iter+0x265/0x1080
+    seq_read+0x2c9/0x420
+    vfs_read+0x166/0xc30
+    ksys_read+0xf4/0x1d0
+    do_syscall_64+0x79/0x150
+    entry_SYSCALL_64_after_hwframe+0x76/0x7e
 
-Confused...
+The issue can be reproduced regardless of whether set_event is empty or
+not. Here is an example about the valid content of set_event.
 
-[1]: https://lore.kernel.org/linux-doc/20250217110637.6640-1-purvayeshi550@=
-gmail.com/
+  # cat /sys/kernel/tracing/set_event
+  sched:sched_process_fork
+  sched:sched_switch
+  sched:sched_wakeup
+  *:*:mod:trace_events_sample
 
---=20
-An old man doll... just what I always wanted! - Clara
+The root cause is that s_next() returns NULL when nothing is found.
+This results in s_stop() attempting to free a NULL pointer because its
+parameter is NULL.
 
---zfvOq29s0SxCOtX0
-Content-Type: application/pgp-signature; name="signature.asc"
+Fix the issue by freeing the memory appropriately when s_next() fails
+to find anything.
 
------BEGIN PGP SIGNATURE-----
+Fixes: b355247df104 ("tracing: Cache ":mod:" events for modules not loaded yet")
+Signed-off-by: Adrian Huang <ahuang12@lenovo.com>
+---
+Changelog v2:
+ - Per Steven's suggestion: Add a comment to describe why to free memory
+   in s_next().
+ - Per Steven's suggestion: Change the variable 'p' to 'v' in s_stop()
 
-iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZ7acxgAKCRD2uYlJVVFO
-ozBWAQDOLzWpuGIWnJnyZ4TZ4GfFwpnG/SQ4r4S4B3NYiBRs/AEA48g0UAiGeSgh
-WGK0r3sF6uZ84Ahm7ecC/1WwaCUxGAw=
-=IEAJ
------END PGP SIGNATURE-----
+---
+ kernel/trace/trace_events.c | 11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
 
---zfvOq29s0SxCOtX0--
+diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
+index 4cb275316e51..513de9ceb80e 100644
+--- a/kernel/trace/trace_events.c
++++ b/kernel/trace/trace_events.c
+@@ -1591,6 +1591,13 @@ s_next(struct seq_file *m, void *v, loff_t *pos)
+ 		return iter;
+ #endif
+ 
++	/*
++	 * The iter is allocated in s_start() and passed via the 'v'
++	 * parameter. To stop the iterator, NULL must be returned. But
++	 * the return value is what the 'v' parameter in s_stop() receives
++	 * and frees. Free iter here as it will no longer be used.
++	 */
++	kfree(iter);
+ 	return NULL;
+ }
+ 
+@@ -1667,9 +1674,9 @@ static int s_show(struct seq_file *m, void *v)
+ }
+ #endif
+ 
+-static void s_stop(struct seq_file *m, void *p)
++static void s_stop(struct seq_file *m, void *v)
+ {
+-	kfree(p);
++	kfree(v);
+ 	t_stop(m, NULL);
+ }
+ 
+-- 
+2.34.1
+
