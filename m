@@ -1,107 +1,108 @@
-Received: from mail-io1-f52.google.com (mail-io1-f52.google.com [209.85.166.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 793F41E2845
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 20 Feb 2025 20:19:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 352622641C3;
+	Thu, 20 Feb 2025 20:20:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740082743; cv=none; b=kOuF2Y7Ty0eOrWo/+uj/zUIV+cgbj0aDwTC3N8k1m0qyagwo5O8zO2tisOUhejckGY39zqoSLmH6uwNodMjOk6zHkibYUrWbukeNk17x+rtPtVizky8w/zHgX5UiBlB4HBnOKLlHX1gV6af1OCoeMtDf63mbAYoMKro5VAqSw3U=
+	t=1740082828; cv=none; b=UWuKO5AhHWHi109LARYg9IYBCilpSI1unZbI+hRgIa0qMhtEUYQFTeXlHjnDXRq8JLkXgoqepdk48UVJcP/gPLnu1//jCXPPOtcX4ovoawcFNAXAFjwnIMiY1MPZekuRJbn/Y4CqdWnmBPwEhhfPk/37SDfxa9SjlYl4OMnSOhM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740082743; c=relaxed/simple;
-	bh=ufNNg2rNOkDICBHFg0h+S6poNghZSgivhHBZkJrRIyE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=BXqBRsge3IR7TFAjq+1q8ZJmq6sU3/ncfEPnnhalTL5SPRP7nUEaDCKMrIGr7sIgJ+dI0kdXBJGG1VQFlfnexVQl0aFIk9xw/Z5SAdNEZM2Rto0Vvvu7wCI2/YrrE0Tq/mOBkQolW2ipM0RyN7P+6mhMr7pPwJhJe8fClaWdetU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=HsJ392q/; arc=none smtp.client-ip=209.85.166.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="HsJ392q/"
-Received: by mail-io1-f52.google.com with SMTP id ca18e2360f4ac-854a68f5afcso36099939f.0
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 20 Feb 2025 12:19:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1740082740; x=1740687540; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=g/Ezzc0bR8B+p/byl9E3hgmtjeFWLzb0FMiOjqIXu3M=;
-        b=HsJ392q/wkvDvLQmauQAj8II+0R2/QAaYU27Crjm/FAnRmhN1cW1bI+7iMGZOgSnJz
-         HDH2HupVeUndve4vs45NEbAOrLG2iRQEnYWZPwdCUWtvTaeLpZPBW8efug5CFFh29/2s
-         J9mOMu2vKMts9wrnk8t1TwTk2YBAWAM7Nij9g=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740082740; x=1740687540;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=g/Ezzc0bR8B+p/byl9E3hgmtjeFWLzb0FMiOjqIXu3M=;
-        b=Hx29ecc3o1dVNYDtkf3bImYjko4fg38EDjiVOJ05I3SDeo8/9nWg3WyEOz88LNDK9W
-         F7DoUEXCWwdAOODt0hJV4G9feBhSTJLYF1hcTH02BF4EiCP/PObzYr/ecKgB2wi1Ibja
-         3K3Lyy14ph/UlYXZ6KdkPFxA5YVfgGR+Qzx0TAj4y9SOblK4kiccuZapflVym1ZCK6dP
-         wm8B7OtasBCnH3VzWbATpmZumKquygS0EpqhisnmmJmj4/3/fqB+ugQRvKz/+mrW/RWY
-         n8NLERGJ9t8yGIedq4tCEqbGs4XA0rufXTH4K/LJaMmyJOFcGfmoYWSTsrR2tA3HONVU
-         NmeA==
-X-Forwarded-Encrypted: i=1; AJvYcCWTaUBc42ZtE0P5JXzteopHmofT6v+j7Dqp/5Q88EBXVVBDkADd9vcZmgJ3jHPX8dIVivOH8ibBhhyXq/BtyA/A/AI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxYMmkeRxJt56hdPeWm7pGtWf+/OSZNr//tQ4YYwsG0fj7BvdiH
-	kwLhPGZ4j1LbJfBFLjTXC9a9EVNZQeCKu/MOHvNRI6a2DrijwWmwxks2Ynsob7k=
-X-Gm-Gg: ASbGncva79szxd+15pZeK9aYYnnGvATisbhw7Iseh5zHYPZftl91R0Oj8TtMvLrLggt
-	7vSLXcMjbf4E/YxjUnYcs1EC3wzfQCOJQ1zVhhwDMspINmd4lopdvHlCXlaU/KzZ2c/U3BfP85M
-	Z41aNmXudpkivcLHXGeHx8gzzhCgAlbKIsERrHDYf5bOR8cBHsJfguMHiIP1Ih9n8szqVPuxWCI
-	sbwHtffhnpogsExKinClP1ANv6sLjYY0g60jqSx28ojfivdnCgnvszoD/UhBUH/I+ctg6a09pMc
-	/woQK4sWCpux6XrOv+XtizgVaQ==
-X-Google-Smtp-Source: AGHT+IF79ckeVt665lYdXJU7VJLqlE8Q15fFZXr1QkP6ouOQoPFieWVNlE/ofs7NRQPHbTbqq2wz5Q==
-X-Received: by 2002:a05:6e02:378c:b0:3d0:d0d:db8e with SMTP id e9e14a558f8ab-3d2cae49deemr4900315ab.1.1740082740482;
-        Thu, 20 Feb 2025 12:19:00 -0800 (PST)
-Received: from [192.168.1.14] ([38.175.170.29])
-        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4eea680c803sm1719151173.14.2025.02.20.12.18.59
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 20 Feb 2025 12:18:59 -0800 (PST)
-Message-ID: <16def228-662d-4db5-bb1f-7d79c4ed3ae6@linuxfoundation.org>
-Date: Thu, 20 Feb 2025 13:18:59 -0700
+	s=arc-20240116; t=1740082828; c=relaxed/simple;
+	bh=vsLgiLMWDg2JG9MMUpEvXVPsNEGJdkE/7EGROK1ECyc=;
+	h=Message-ID:Date:From:To:Cc:Subject; b=AtQgabvYPoavZP9uo46Q4iP0G3hMBbvyxAt0cWXCEPkF/8sAM60TNrExx0vlC6EfSxnmjKfrY0fizbjpX/gWlYxKDp3EC5kzvOwZ6vDezovt9H99jYbcaczRMb/LPuVh5zE0cdb3nfKBupBWr4pHWKtDsBDmGB8VbWFuIZszKI8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AA09BC4CED1;
+	Thu, 20 Feb 2025 20:20:27 +0000 (UTC)
+Received: from rostedt by gandalf with local (Exim 4.98)
+	(envelope-from <rostedt@goodmis.org>)
+	id 1tlD2V-00000005fWI-08Cx;
+	Thu, 20 Feb 2025 15:20:55 -0500
+Message-ID: <20250220202009.689253424@goodmis.org>
+User-Agent: quilt/0.68
+Date: Thu, 20 Feb 2025 15:20:09 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Heiko Carstens <hca@linux.ibm.com>,
+ Sven Schnelle <svens@linux.ibm.com>,
+ Vasily Gorbik <gor@linux.ibm.com>,
+ Alexander Gordeev <agordeev@linux.ibm.com>
+Subject: [PATCH v3 0/5] ftrace: Fix fprobe with function graph accounting
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RESEND][PATCH 0/3] selftests/tracing: Test only toplevel README
- file not the instances
-To: Steven Rostedt <rostedt@goodmis.org>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Andrew Morton <akpm@linux-foundation.org>, Shuah Khan <shuah@kernel.org>
-References: <20250220185759.811830333@goodmis.org>
-Content-Language: en-US
-From: Shuah Khan <skhan@linuxfoundation.org>
-In-Reply-To: <20250220185759.811830333@goodmis.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
 
-On 2/20/25 11:57, Steven Rostedt wrote:
-> Allow some more tests to run in instances. There's a few tests that
-> require something in README to be present to run. But currently README
-> can't be used for instance tests. Fix that and then allow 4 more tests
-> to run in instances.
-> 
-> [ RESEND to include selftest maintainers and lists:
->    original: https://lore.kernel.org/linux-trace-kernel/20250116012009.840870709@goodmis.org/ ]
-> 
-> 
-> Steven Rostedt (3):
->        selftests/tracing: Test only toplevel README file not the instances
->        selftests/ftrace: Clean up triggers after setting them
->        selftests/tracing: Allow some more tests to run in instances
-> 
-> ----
->   tools/testing/selftests/ftrace/test.d/functions                   | 8 +++++++-
->   .../test.d/trigger/inter-event/trigger-action-hist-xfail.tc       | 1 +
->   .../test.d/trigger/inter-event/trigger-onchange-action-hist.tc    | 3 +++
->   .../test.d/trigger/inter-event/trigger-snapshot-action-hist.tc    | 3 +++
->   .../selftests/ftrace/test.d/trigger/trigger-hist-expressions.tc   | 1 +
->   5 files changed, 15 insertions(+), 1 deletion(-)
 
-Thanks - applied for Linux 6.15-rc1
+Heiko Carstens reported[1] a bug when running the ftrace selftests.
+After running them, he noticed that the enabled_functions file had
+all functions enabled in it. That means something was registered to
+ftrace that shouldn't be.
 
-thanks,
--- Shuah
+The issue was with the accounting of the new fprobe logic which was
+built on top of the function graph infrastructure. Patch 3 of this
+series is the fix for that bug, but while debugging that, 3 other
+accounting bugs were discovered.
+
+The bug fix for the reported bug was that fprobes would update its counter
+every time a new fprobe was added, even if a new fprobe was attached to a
+function that was already attached to another fprobe. But when removing the
+fprobe, it would not decrement the counter of an fprobe with a duplicate.
+This left the fprobe ops attached to function graph and when it removed the
+last probe from the hash, it would create an empty filter hash which would
+tell function graph that it wanted to trace all functions. The solution was
+to always decrement the counter when a fprobe was removed.
+
+The first of the other bugs was that when enabling a second subops to the
+function graph infrastructure, it would add all functions to be called back
+and not just the functions for the two subops for tracing. This was due to
+the creation of the filter hash for the manager ops that controls the
+subops. The first iteration where the manage ops hash was NULL was mistaken
+as an "empty hash" which means to trace all functions.
+
+The second bug was when adding a function to the hash where the hash already
+had that function, it would allocate and create a new entry for it.  This
+leaves duplicates and causes unnecessary overhead and memory wastage.
+
+The third bug was when the last fprobe was removed, it would just unregister
+from function graph but it did not remove the function from its own ops
+hash. When adding a new fprobe, it would not only enable the function for
+that new fprobe, but it would also enable the function of the last fprobe
+that was removed.
+
+Finally, a test was added to check and fail if any of the bugs were
+introduced, with the exception of the duplicate hash entries, as that
+was more of a memory waste and not something visible by user space.
+
+[1] https://lore.kernel.org/all/20250217114918.10397-A-hca@linux.ibm.com/
+
+Changes since v2: https://lore.kernel.org/linux-trace-kernel/20250219220436.498041541@goodmis.org/
+
+- Have append_hashes() return EMPTY_HASH instead of NULL when the resulting
+  hash is empty.
+
+Changes since v1: https://lore.kernel.org/all/20250218193033.338823920@goodmis.org/
+
+- Moved the "Always unregister fgraph function from ops" to patch 3
+
+- Change the "Fix accounting" patch to do the update in
+  fprobe_graph_remove_ips() to make it match fprobe_graph_add_ips().
+
+
+Steven Rostedt (5):
+      ftrace: Fix accounting of adding subops to a manager ops
+      ftrace: Do not add duplicate entries in subops manager ops
+      fprobe: Always unregister fgraph function from ops
+      fprobe: Fix accounting of when to unregister from function graph
+      selftests/ftrace: Update fprobe test to check enabled_functions file
+
+----
+ kernel/trace/fprobe.c                              | 12 ++---
+ kernel/trace/ftrace.c                              | 36 ++++++++++-----
+ .../ftrace/test.d/dynevent/add_remove_fprobe.tc    | 54 ++++++++++++++++++++++
+ 3 files changed, 84 insertions(+), 18 deletions(-)
