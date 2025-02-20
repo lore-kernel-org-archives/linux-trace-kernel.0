@@ -1,112 +1,127 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 213301F5833
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 20 Feb 2025 12:26:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A33CB79C8;
+	Thu, 20 Feb 2025 13:01:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740054374; cv=none; b=c5W5lGltnFYz+3XzzTRuuZoc3UtpzvLC1LdS0YYSqerBMYxaaXCW6HFUN8M3eO+zQ9wp8pE1vRPeaEaM6eaLa/AATZcBoxfHR5zlOnq1bwk8hGifZZJifUQztXHRjIEauk8dtFnftNotvE41IhlZhWmNrZj/HD6ExFgqvLngQ4c=
+	t=1740056471; cv=none; b=ZOxieHCnPgtR4NZWr+v9tAHF3SPi0AWK1YdCMHzbUjb6KcTaY8FX3ZGmy/M9fQQLs/Plje4RRioTExbyCk7FcG1w93MoJuT8WmVJ3sMdpoAsVTz8vNQQVOZ1QZw5bAoi6lx6CYyVNawQpi08+Odl7iM0F02kapFPDxf+XFecwO4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740054374; c=relaxed/simple;
-	bh=YvVj3Y+E/X9aMBDeF+0zodv5Y6r1iWhyl676Hl/yr5o=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=teuvG/AsNCPlLur6K6chN0ExihH4G45KghyUos2iCaYmrSPre5TkP1pkkv7BqPXOpHSL4NvEI6qSe6eLKZC+WQiUQx2OdlqnDm5wpGMcDppfgs0BUgLukWMxC6ptTkRJoqr09ShhtmDcKv+dpBLZ0zcTUiYDHT9xadZKFQuUOeg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=HgZ+kY9L; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1740056471; c=relaxed/simple;
+	bh=l1w0+lyiZ65S3cAJQpzDmBFyQVQl7D7mEE+bo97iMPc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=YoRKxLR+TvIU7Bn1ZaLyGMoVRDnIfSeuG9Z01TWHVNp1s4HPYYuu4nGnr0wdJrmfWbsiRKs2Nk/fOuOYlQiV7G1x2ZGYVDS+zjdtPOoGGPKq+6gLBtH9xgLClHNIz0SBy198hEC/eGeegIerYULme4LZ2Qm6V+TYOl9Vge75FBQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=OWzlsZx2; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HgZ+kY9L"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1740054372;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=YvVj3Y+E/X9aMBDeF+0zodv5Y6r1iWhyl676Hl/yr5o=;
-	b=HgZ+kY9LVHzVBXRjeLbCdP+z+IotU+rjRa7YG/qA9G4upP9h6cFdlYDY/lxuP6T5SBfJlV
-	pFmkPnNe/MAY/wQ3jWiyNushwY3ot65fvM12N2zLLsXa8dvtu20gzFV4LAqg3CTTmQyya2
-	0KMIaArNSLFfpbQlXchY9IWDPQyr0es=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-427-Lpk1sia7P76NWT0yuqVEtQ-1; Thu,
- 20 Feb 2025 07:26:09 -0500
-X-MC-Unique: Lpk1sia7P76NWT0yuqVEtQ-1
-X-Mimecast-MFC-AGG-ID: Lpk1sia7P76NWT0yuqVEtQ_1740054366
-Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 78AE419373C4;
-	Thu, 20 Feb 2025 12:26:05 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.225.147])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 9AE43180035F;
-	Thu, 20 Feb 2025 12:25:56 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Thu, 20 Feb 2025 13:25:36 +0100 (CET)
-Date: Thu, 20 Feb 2025 13:25:26 +0100
-From: Oleg Nesterov <oleg@redhat.com>
-To: Tong Tiangen <tongtiangen@huawei.com>
-Cc: David Hildenbrand <david@redhat.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	"Liang, Kan" <kan.liang@linux.intel.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Peter Xu <peterx@redhat.com>, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, bpf@vger.kernel.org,
-	wangkefeng.wang@huawei.com, linux-mm <linux-mm@kvack.org>
-Subject: Re: Add Morton,Peter and David for discussion//Re: [PATCH -next]
- uprobes: fix two zero old_folio bugs in __replace_page()
-Message-ID: <20250220122525.GA30669@redhat.com>
-References: <20250217123826.88503-1-tongtiangen@huawei.com>
- <c2924e9e-1a42-a4f6-5066-ea2e15477c11@huawei.com>
- <3b893634-5453-42d0-b8dc-e9d07988e9e9@redhat.com>
- <24a61833-f389-b074-0d9c-d5ad9efc2046@huawei.com>
- <20250219152237.GB5948@redhat.com>
- <34e18c47-e536-48e4-80ca-7c7bbc75ecce@redhat.com>
- <2fe4c4d1-c480-c250-1ba2-1a82caf5d7fa@huawei.com>
- <196fc7d8-30a8-439a-89bd-57353fd98df8@redhat.com>
- <85725388-180b-267c-e121-3af1f1b75f94@huawei.com>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="OWzlsZx2"
+Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51KAKXbC012889;
+	Thu, 20 Feb 2025 13:01:06 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=pp1; bh=uxa5PCd5TtVPSlEW7mce6b3lLsV62hgbts+mgfZ3s
+	TY=; b=OWzlsZx2b1s9mX72yy3/O0FYnqM/oxZfHkWPzt6t0iL9zJq7TmWww2euw
+	iaJdm/rsv/0uHNPLpVFhr9PkRGMoYjB5bVXLdm47pB/vMp1jKEqVEwktikSHZeiz
+	vAqM4liEs4k8wqezWTm8c4udW1HfLESUx0DjJJB4+s/rQ47ijUpPgyJ0vC2bk0dd
+	4qsJlptZDsOanGCK1RUQqUx0EWjv5WCZx7EOMhuUrQm3shlq+duA4SIFmwx6vec4
+	CgxtrBP09VivpgaWY3bbSCoXR4ozzad4UNA0OaMbSTG5Soj+oHWbiPrcLv4/Pz+/
+	6+n7lgXYqIDWF08kiK23CZtZrmrxA==
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44wreabdr9-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 20 Feb 2025 13:01:05 +0000 (GMT)
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 51KBQS2K027098;
+	Thu, 20 Feb 2025 13:01:05 GMT
+Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 44w025a1y9-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 20 Feb 2025 13:01:04 +0000
+Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
+	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 51KD13Vn30867968
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 20 Feb 2025 13:01:03 GMT
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 3A5702004B;
+	Thu, 20 Feb 2025 13:01:03 +0000 (GMT)
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 173B120043;
+	Thu, 20 Feb 2025 13:01:03 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Thu, 20 Feb 2025 13:01:03 +0000 (GMT)
+From: Heiko Carstens <hca@linux.ibm.com>
+To: Masami Hiramatsu <mhiramat@kernel.org>, Shuah Khan <shuah@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        linux-kselftest@vger.kernel.org
+Subject: [PATCH] selftests/ftrace: Use readelf to find entry point in uprobe test
+Date: Thu, 20 Feb 2025 14:01:02 +0100
+Message-ID: <20250220130102.2079179-1-hca@linux.ibm.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <85725388-180b-267c-e121-3af1f1b75f94@huawei.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: S7TRqR8J_A56GPHqP5O-6KoE4Jq5iXs_
+X-Proofpoint-GUID: S7TRqR8J_A56GPHqP5O-6KoE4Jq5iXs_
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-20_05,2025-02-20_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
+ priorityscore=1501 suspectscore=0 bulkscore=0 mlxscore=0 adultscore=0
+ spamscore=0 impostorscore=0 phishscore=0 clxscore=1015 lowpriorityscore=0
+ mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2502100000 definitions=main-2502200094
 
-On 02/20, Tong Tiangen wrote:
->
-> 在 2025/2/20 16:38, David Hildenbrand 写道:
-> >On 20.02.25 03:31, Tong Tiangen wrote:
-> >>
-> >>@@ -506,6 +506,12 @@ int uprobe_write_opcode(struct arch_uprobe
-> >>*auprobe, struct mm_struct *mm,
-> >>          if (ret <= 0)
-> >>                  goto put_old;
-> >>
-> >>+       if (WARN(is_zero_page(old_page),
-> >
-> >This can likely be triggered by user space, so do not use WARN.
->
-> OK,thanks.
->
-> Hi Oleg, is that all right?
+The uprobe events test fails on s390, but also on x86 (Fedora 41). The
+problem appears to be that there is an assumption that adding a uprobe to
+the beginning of the executable mapping of /bin/sh is sufficient to trigger
+a uprobe event when /bin/sh is executed.
 
-Thanks, LGTM.
+This assumption is not necessarily true. Therefore use "readelf -h" to find
+the entry point address of /bin/sh and use this address when adding the
+uprobe event.
 
-Oleg.
+This adds a dependency to readelf which is not always installed. Therefore
+add a check and exit with exit_unresolved if it is not installed.
+
+Signed-off-by: Heiko Carstens <hca@linux.ibm.com>
+---
+ .../ftrace/test.d/dynevent/add_remove_uprobe.tc        | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
+
+diff --git a/tools/testing/selftests/ftrace/test.d/dynevent/add_remove_uprobe.tc b/tools/testing/selftests/ftrace/test.d/dynevent/add_remove_uprobe.tc
+index 86c76679c56e..f2048c244526 100644
+--- a/tools/testing/selftests/ftrace/test.d/dynevent/add_remove_uprobe.tc
++++ b/tools/testing/selftests/ftrace/test.d/dynevent/add_remove_uprobe.tc
+@@ -3,14 +3,18 @@
+ # description: Generic dynamic event - add/remove/test uprobe events
+ # requires: uprobe_events
+ 
++if ! which readelf > /dev/null 2>&1 ; then
++  echo "No readelf found. skipped."
++  exit_unresolved
++fi
++
+ echo 0 > events/enable
+ echo > dynamic_events
+ 
+ REALBIN=`readlink -f /bin/sh`
++ENTRYPOINT=`readelf -h ${REALBIN} | grep Entry | sed -e 's/[^0]*//'`
+ 
+-echo 'cat /proc/$$/maps' | /bin/sh | \
+-	grep "r-xp .*${REALBIN}$" | \
+-	awk '{printf "p:myevent %s:0x%s\n", $6,$3 }' >> uprobe_events
++echo "p:myevent ${REALBIN}:${ENTRYPOINT}" >> uprobe_events
+ 
+ grep -q myevent uprobe_events
+ test -d events/uprobes/myevent
+-- 
+2.45.2
 
