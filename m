@@ -1,42 +1,46 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB07F286291;
-	Thu, 20 Feb 2025 04:28:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EB043FD1;
+	Thu, 20 Feb 2025 04:41:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740025731; cv=none; b=ErO0kAbNBrzN/0LS43jFZeMnVoJ7e19WQw3llt7iiwONKqxEv2ci7PMlJeAn168BV41m7IIwwQsUsi+BzFOPnkj/1CnbN6/9sdWLnKkgyBQkwHWj++gOiIqOA+K/3laG/NDoFymjFCqO498UUKYvrUVoivw9PTEx/M5b+8TPrZ8=
+	t=1740026493; cv=none; b=NmDX83yrPTfPIFLZmuzaK4dM77xIv7HUV6PRRLGhcKEAyG3JvBbs8ScMxPxuXnV7goRmmwDw+/JMAOqJf9YqYCUFAYQaQl/mZBkONR4aKsYyvDUVYjpqXAFxrrjs2ZnIJGUovLfu6+J2TjL1JDRv5inqvJ9rUmJPznbl4DJ9U7Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740025731; c=relaxed/simple;
-	bh=E72o+rqqTE8JfgJn/D0x7UAbb00J5LZDy4139aZCk9g=;
+	s=arc-20240116; t=1740026493; c=relaxed/simple;
+	bh=U//WCjz/OhSm6S+aKb2vckRzIxF+ipPyMBGHe+o6hVE=;
 	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=X05EJe5VWwCp3dP2+SO204FemViyNn9boCxU3WFqQD6Zapn3opYtIXVlevYZ0UkN7PlPR1sYjxHXdD+wlXUDZ9haCgErZL59SpJ1bfOl2vJe2yqg2Waxbms9Wv8eOaBeiZvv1yEbtjw+5DIS9h2RBEo8D0PajsADiMyO/lcjSNo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uR5/eQTh; arc=none smtp.client-ip=10.30.226.201
+	 Mime-Version:Content-Type; b=SVTt3hFFhI5oaEe9zUUIdKTToGqiC1ZYShBsMwN7t0EchTt32QNbNx27Buj8UNVLYFbt9PYMk5iwpqmX+P1EIPlYdiftNahL2iYOO0YxT7Jozy9uB1Ziuwms3ro7HOo30TdjZPkwgd54s/5tSEeq1mCF47FtD9QN/G8Vc6kmPmY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HkeJK9BJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uR5/eQTh"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 34135C4CED1;
-	Thu, 20 Feb 2025 04:28:50 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HkeJK9BJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E5A17C4CED1;
+	Thu, 20 Feb 2025 04:41:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740025731;
-	bh=E72o+rqqTE8JfgJn/D0x7UAbb00J5LZDy4139aZCk9g=;
+	s=k20201202; t=1740026492;
+	bh=U//WCjz/OhSm6S+aKb2vckRzIxF+ipPyMBGHe+o6hVE=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=uR5/eQThy9LLj50nIGethKOOBFCvC4sO0nImncmiEJuTkbW0boby6Jt3P8pFRC8Wi
-	 bpAVBG0rpzc7LM/4ZPN6eT2xsN9lE5SEzlBiwc7svty7TxTQgjmaNAc3fKYwuxs87A
-	 rt7h5SjvHwe2TYGGpKy1TJB2tqvCPwUXK+/+zYSsYyyilKak0V/4aMbjSyJdwIsgxg
-	 wVUCY/5KoTytTrjS8YiV+NOvJiB0fu89fGUOyZHkzhLFQ+YHZvb/Tm0gpY4+WLNcBH
-	 ufROED8Q5+gZK0WyBHFfifyj1TBD8C9radsWW9daPcTPVRpXAPkryRpe6QfZuIZOph
-	 DOL8zebGkVssA==
-Date: Thu, 20 Feb 2025 13:28:48 +0900
+	b=HkeJK9BJsX/SCnE2GQ1B40tC9noS025JefFPIt4mkqs1xFVbK0ihnDftRXqC9XEiM
+	 wzncXHuO+BKbqMjmAW79vzP1EwZmzTUikp/nBiik/0NYg2MeqNUntValx0O9bFpkz5
+	 2B1KLv1aW2m3PjMJG/aXosD0MwMLSuXiP6UJDJbSw9zsTZHuhGDvcjHtZtq21hJXom
+	 oHSnBJZsfdxyvuEMLKY5CKN3UZunu8de4xD0vJVJgnz89nkpYRsiaKEaA67xq3p9uU
+	 3cvQjhc1AdKx5R4OU+uOF5U8FwKLhRMnxEBh7B5GBNk72yvktnVRCdQ75YmfyrLmo9
+	 EfbXISW+qHxBA==
+Date: Thu, 20 Feb 2025 13:41:29 +0900
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Adrian Huang <adrianhuang0701@gmail.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, Adrian Huang <ahuang12@lenovo.com>
-Subject: Re: [PATCH v2 1/1] tracing: Fix memory leak when reading set_event
- file
-Message-Id: <20250220132848.eafa42f94b25c6431d43a292@kernel.org>
-In-Reply-To: <20250220031528.7373-1-ahuang12@lenovo.com>
-References: <20250220031528.7373-1-ahuang12@lenovo.com>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Masami
+ Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Andrew Morton
+ <akpm@linux-foundation.org>, Heiko Carstens <hca@linux.ibm.com>, Sven
+ Schnelle <svens@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
+ Alexander Gordeev <agordeev@linux.ibm.com>, stable@vger.kernel.org
+Subject: Re: [PATCH v2 3/5] fprobe: Always unregister fgraph function from
+ ops
+Message-Id: <20250220134129.e0e1520b6b99499047b9120b@kernel.org>
+In-Reply-To: <20250219220511.227410168@goodmis.org>
+References: <20250219220436.498041541@goodmis.org>
+	<20250219220511.227410168@goodmis.org>
 X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -47,97 +51,81 @@ Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Thu, 20 Feb 2025 11:15:28 +0800
-Adrian Huang <adrianhuang0701@gmail.com> wrote:
+On Wed, 19 Feb 2025 17:04:39 -0500
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-> From: Adrian Huang <ahuang12@lenovo.com>
+> From: Steven Rostedt <rostedt@goodmis.org>
 > 
-> kmemleak reports the following memory leak after reading set_event file:
+> When the last fprobe is removed, it calls unregister_ftrace_graph() to
+> remove the graph_ops from function graph. The issue is when it does so, it
+> calls return before removing the function from its graph ops via
+> ftrace_set_filter_ips(). This leaves the last function lingering in the
+> fprobe's fgraph ops and if a probe is added it also enables that last
+> function (even though the callback will just drop it, it does add unneeded
+> overhead to make that call).
 > 
->   # cat /sys/kernel/tracing/set_event
+>   # echo "f:myevent1 kernel_clone" >> /sys/kernel/tracing/dynamic_events
+>   # cat /sys/kernel/tracing/enabled_functions
+> kernel_clone (1)           	tramp: 0xffffffffc02f3000 (ftrace_graph_func+0x0/0x60) ->ftrace_graph_func+0x0/0x60
 > 
->   # cat /sys/kernel/debug/kmemleak
->   unreferenced object 0xff110001234449e0 (size 16):
->   comm "cat", pid 13645, jiffies 4294981880
->   hex dump (first 16 bytes):
->     01 00 00 00 00 00 00 00 a8 71 e7 84 ff ff ff ff  .........q......
->   backtrace (crc c43abbc):
->     __kmalloc_cache_noprof+0x3ca/0x4b0
->     s_start+0x72/0x2d0
->     seq_read_iter+0x265/0x1080
->     seq_read+0x2c9/0x420
->     vfs_read+0x166/0xc30
->     ksys_read+0xf4/0x1d0
->     do_syscall_64+0x79/0x150
->     entry_SYSCALL_64_after_hwframe+0x76/0x7e
+>   # echo "f:myevent2 schedule_timeout" >> /sys/kernel/tracing/dynamic_events
+>   # cat /sys/kernel/tracing/enabled_functions
+> kernel_clone (1)           	tramp: 0xffffffffc02f3000 (ftrace_graph_func+0x0/0x60) ->ftrace_graph_func+0x0/0x60
+> schedule_timeout (1)           	tramp: 0xffffffffc02f3000 (ftrace_graph_func+0x0/0x60) ->ftrace_graph_func+0x0/0x60
 > 
-> The issue can be reproduced regardless of whether set_event is empty or
-> not. Here is an example about the valid content of set_event.
+>   # > /sys/kernel/tracing/dynamic_events
+>   # cat /sys/kernel/tracing/enabled_functions
 > 
->   # cat /sys/kernel/tracing/set_event
->   sched:sched_process_fork
->   sched:sched_switch
->   sched:sched_wakeup
->   *:*:mod:trace_events_sample
+>   # echo "f:myevent3 kmem_cache_free" >> /sys/kernel/tracing/dynamic_events
+>   # cat /sys/kernel/tracing/enabled_functions
+> kmem_cache_free (1)           	tramp: 0xffffffffc0219000 (ftrace_graph_func+0x0/0x60) ->ftrace_graph_func+0x0/0x60
+> schedule_timeout (1)           	tramp: 0xffffffffc0219000 (ftrace_graph_func+0x0/0x60) ->ftrace_graph_func+0x0/0x60
 > 
-> The root cause is that s_next() returns NULL when nothing is found.
-> This results in s_stop() attempting to free a NULL pointer because its
-> parameter is NULL.
+> The above enabled a fprobe on kernel_clone, and then on schedule_timeout.
+> The content of the enabled_functions shows the functions that have a
+> callback attached to them. The fprobe attached to those functions
+> properly. Then the fprobes were cleared, and enabled_functions was empty
+> after that. But after adding a fprobe on kmem_cache_free, the
+> enabled_functions shows that the schedule_timeout was attached again. This
+> is because it was still left in the fprobe ops that is used to tell
+> function graph what functions it wants callbacks from.
 > 
-> Fix the issue by freeing the memory appropriately when s_next() fails
-> to find anything.
-> 
-> Fixes: b355247df104 ("tracing: Cache ":mod:" events for modules not loaded yet")
-> Signed-off-by: Adrian Huang <ahuang12@lenovo.com>
 
-Looks good to me.
+This looks good to me.
 
 Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-Thank you,
+Thanks!
 
+
+> Cc: stable@vger.kernel.org
+> Fixes: 4346ba1604093 ("fprobe: Rewrite fprobe on function-graph tracer")
+> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 > ---
-> Changelog v2:
->  - Per Steven's suggestion: Add a comment to describe why to free memory
->    in s_next().
->  - Per Steven's suggestion: Change the variable 'p' to 'v' in s_stop()
+>  kernel/trace/fprobe.c | 6 ++----
+>  1 file changed, 2 insertions(+), 4 deletions(-)
 > 
-> ---
->  kernel/trace/trace_events.c | 11 +++++++++--
->  1 file changed, 9 insertions(+), 2 deletions(-)
-> 
-> diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
-> index 4cb275316e51..513de9ceb80e 100644
-> --- a/kernel/trace/trace_events.c
-> +++ b/kernel/trace/trace_events.c
-> @@ -1591,6 +1591,13 @@ s_next(struct seq_file *m, void *v, loff_t *pos)
->  		return iter;
->  #endif
+> diff --git a/kernel/trace/fprobe.c b/kernel/trace/fprobe.c
+> index 2560b312ad57..62e8f7d56602 100644
+> --- a/kernel/trace/fprobe.c
+> +++ b/kernel/trace/fprobe.c
+> @@ -403,11 +403,9 @@ static void fprobe_graph_remove_ips(unsigned long *addrs, int num)
+>  	lockdep_assert_held(&fprobe_mutex);
 >  
-> +	/*
-> +	 * The iter is allocated in s_start() and passed via the 'v'
-> +	 * parameter. To stop the iterator, NULL must be returned. But
-> +	 * the return value is what the 'v' parameter in s_stop() receives
-> +	 * and frees. Free iter here as it will no longer be used.
-> +	 */
-> +	kfree(iter);
->  	return NULL;
+>  	fprobe_graph_active--;
+> -	if (!fprobe_graph_active) {
+> -		/* Q: should we unregister it ? */
+> +	/* Q: should we unregister it ? */
+> +	if (!fprobe_graph_active)
+>  		unregister_ftrace_graph(&fprobe_graph_ops);
+> -		return;
+> -	}
+>  
+>  	ftrace_set_filter_ips(&fprobe_graph_ops.ops, addrs, num, 1, 0);
 >  }
->  
-> @@ -1667,9 +1674,9 @@ static int s_show(struct seq_file *m, void *v)
->  }
->  #endif
->  
-> -static void s_stop(struct seq_file *m, void *p)
-> +static void s_stop(struct seq_file *m, void *v)
->  {
-> -	kfree(p);
-> +	kfree(v);
->  	t_stop(m, NULL);
->  }
->  
 > -- 
-> 2.34.1
+> 2.47.2
+> 
 > 
 
 
