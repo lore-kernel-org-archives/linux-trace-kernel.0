@@ -1,127 +1,107 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A33CB79C8;
-	Thu, 20 Feb 2025 13:01:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71CB21A8F94
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 20 Feb 2025 14:07:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740056471; cv=none; b=ZOxieHCnPgtR4NZWr+v9tAHF3SPi0AWK1YdCMHzbUjb6KcTaY8FX3ZGmy/M9fQQLs/Plje4RRioTExbyCk7FcG1w93MoJuT8WmVJ3sMdpoAsVTz8vNQQVOZ1QZw5bAoi6lx6CYyVNawQpi08+Odl7iM0F02kapFPDxf+XFecwO4=
+	t=1740060474; cv=none; b=ADIp8AzCgIFd9BfImatKNoH5EDCCc5KN+IuH43FgffaKH7WJtX+g5dXT8kITrSRzqUAioPPzFLnbLWhwqZJP8lEu8QNsDOLb3DpoOkn2RRMQ8Q1zKHK8Sa/YutK6Ox7yvHz9GIBmxutgfJX8SWhCPKLDf8JbZdl3v0dCbtfCH8Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740056471; c=relaxed/simple;
-	bh=l1w0+lyiZ65S3cAJQpzDmBFyQVQl7D7mEE+bo97iMPc=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=YoRKxLR+TvIU7Bn1ZaLyGMoVRDnIfSeuG9Z01TWHVNp1s4HPYYuu4nGnr0wdJrmfWbsiRKs2Nk/fOuOYlQiV7G1x2ZGYVDS+zjdtPOoGGPKq+6gLBtH9xgLClHNIz0SBy198hEC/eGeegIerYULme4LZ2Qm6V+TYOl9Vge75FBQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=OWzlsZx2; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1740060474; c=relaxed/simple;
+	bh=I+MBhbWOY8fw/wnlSvNDYQihrRnx4esg5ubU+djXAHI=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=kmJjbRPjzzJPcPO9iREcLU7yN9jdfjOX7asW0x5vXDmPO6ClQFr+o2jiwFJF5+yIyMPlE0QCEB3MNF8AlmYfPnpdWhFqE2nzFrdeO68lEpH1M+l1g6PH59TjL0wgNX4YAnRXyiOPa8K8XzQ5NsZSd0UQtUC22X8wA+Bk4AWyatw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=vjP4obKV; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=KCxe42Bi; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="OWzlsZx2"
-Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51KAKXbC012889;
-	Thu, 20 Feb 2025 13:01:06 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:date:from:message-id:mime-version
-	:subject:to; s=pp1; bh=uxa5PCd5TtVPSlEW7mce6b3lLsV62hgbts+mgfZ3s
-	TY=; b=OWzlsZx2b1s9mX72yy3/O0FYnqM/oxZfHkWPzt6t0iL9zJq7TmWww2euw
-	iaJdm/rsv/0uHNPLpVFhr9PkRGMoYjB5bVXLdm47pB/vMp1jKEqVEwktikSHZeiz
-	vAqM4liEs4k8wqezWTm8c4udW1HfLESUx0DjJJB4+s/rQ47ijUpPgyJ0vC2bk0dd
-	4qsJlptZDsOanGCK1RUQqUx0EWjv5WCZx7EOMhuUrQm3shlq+duA4SIFmwx6vec4
-	CgxtrBP09VivpgaWY3bbSCoXR4ozzad4UNA0OaMbSTG5Soj+oHWbiPrcLv4/Pz+/
-	6+n7lgXYqIDWF08kiK23CZtZrmrxA==
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44wreabdr9-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 20 Feb 2025 13:01:05 +0000 (GMT)
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 51KBQS2K027098;
-	Thu, 20 Feb 2025 13:01:05 GMT
-Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 44w025a1y9-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 20 Feb 2025 13:01:04 +0000
-Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
-	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 51KD13Vn30867968
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 20 Feb 2025 13:01:03 GMT
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 3A5702004B;
-	Thu, 20 Feb 2025 13:01:03 +0000 (GMT)
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 173B120043;
-	Thu, 20 Feb 2025 13:01:03 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Thu, 20 Feb 2025 13:01:03 +0000 (GMT)
-From: Heiko Carstens <hca@linux.ibm.com>
-To: Masami Hiramatsu <mhiramat@kernel.org>, Shuah Khan <shuah@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        linux-kselftest@vger.kernel.org
-Subject: [PATCH] selftests/ftrace: Use readelf to find entry point in uprobe test
-Date: Thu, 20 Feb 2025 14:01:02 +0100
-Message-ID: <20250220130102.2079179-1-hca@linux.ibm.com>
-X-Mailer: git-send-email 2.45.2
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="vjP4obKV";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="KCxe42Bi"
+Date: Thu, 20 Feb 2025 15:07:49 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1740060470;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type;
+	bh=MH0oFd2HSVxFdutwygEWJbmJNkelnLGC7oXToNWbw8A=;
+	b=vjP4obKVTnRmqRx8WPor31wltayn0RFYFxO6SFlvR7zSqx9+Q//tFQuJQLCwODeZKFWsLD
+	zHIMLiklUKGkjUxM2gFw2vtlIJaXyVNHTHoYU+swWdz4xwNWTxTrs3TH+2EPxi6C+a/4J8
+	c9kgLi/s/T9zpmIQV7Bn3Fi3qVvsckWFPvPL28Je/O3Hl0hEis3wDvf1I+obLmHrZuQ/3v
+	AHplRqWLOAHI37KL3ItT3c/Pi1svYZytEijONny/4DGsDRdjeDUsg1B50aXOqm9GbCSp49
+	rL3FRFC4sOvqZH7HUz+cHgQHgMlKTgXAUHmc8kMPo9IxBN6mzkpMWupkXlgnYw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1740060470;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type;
+	bh=MH0oFd2HSVxFdutwygEWJbmJNkelnLGC7oXToNWbw8A=;
+	b=KCxe42Bi11ERzq5sXGdh6a38LR+175Iy/BiGfgYylZ+zqbx6nNPQDFfWrC9Mz+ogF/hb7Z
+	jadLCFywYKVsRyDw==
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To: linux-trace-kernel@vger.kernel.org
+Cc: Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Wander Lairson Costa <wander@redhat.com>,
+	Thomas Gleixner <tglx@linutronix.de>
+Subject: [PATCH] ftrace: Correct preemption accounting for function tracing.
+Message-ID: <20250220140749.pfw8qoNZ@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: S7TRqR8J_A56GPHqP5O-6KoE4Jq5iXs_
-X-Proofpoint-GUID: S7TRqR8J_A56GPHqP5O-6KoE4Jq5iXs_
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-20_05,2025-02-20_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
- priorityscore=1501 suspectscore=0 bulkscore=0 mlxscore=0 adultscore=0
- spamscore=0 impostorscore=0 phishscore=0 clxscore=1015 lowpriorityscore=0
- mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2502100000 definitions=main-2502200094
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 
-The uprobe events test fails on s390, but also on x86 (Fedora 41). The
-problem appears to be that there is an assumption that adding a uprobe to
-the beginning of the executable mapping of /bin/sh is sufficient to trigger
-a uprobe event when /bin/sh is executed.
+The function tracer should record the preemption level at the point when
+the function is invoked. If the tracing subsystem decrement the
+preemption counter it needs to correct this before feeding the data into
+the trace buffer. This was broken in the commit cited below while
+shifting the preempt-disabled section.
 
-This assumption is not necessarily true. Therefore use "readelf -h" to find
-the entry point address of /bin/sh and use this address when adding the
-uprobe event.
+Use tracing_gen_ctx_dec() which properly subtracts one from the
+preemption counter on a preemptible kernel.
 
-This adds a dependency to readelf which is not always installed. Therefore
-add a check and exit with exit_unresolved if it is not installed.
-
-Signed-off-by: Heiko Carstens <hca@linux.ibm.com>
+Cc: Wander Lairson Costa <wander@redhat.com>
+Fixes: ce5e48036c9e7 ("ftrace: disable preemption when recursion locked")
+Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 ---
- .../ftrace/test.d/dynevent/add_remove_uprobe.tc        | 10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
+I haven't been ftrace for quite some time if I got the fixes tag right.
 
-diff --git a/tools/testing/selftests/ftrace/test.d/dynevent/add_remove_uprobe.tc b/tools/testing/selftests/ftrace/test.d/dynevent/add_remove_uprobe.tc
-index 86c76679c56e..f2048c244526 100644
---- a/tools/testing/selftests/ftrace/test.d/dynevent/add_remove_uprobe.tc
-+++ b/tools/testing/selftests/ftrace/test.d/dynevent/add_remove_uprobe.tc
-@@ -3,14 +3,18 @@
- # description: Generic dynamic event - add/remove/test uprobe events
- # requires: uprobe_events
+ kernel/trace/trace_functions.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
+
+diff --git a/kernel/trace/trace_functions.c b/kernel/trace/trace_functions.c
+index d358c9935164d..df56f9b760109 100644
+--- a/kernel/trace/trace_functions.c
++++ b/kernel/trace/trace_functions.c
+@@ -216,7 +216,7 @@ function_trace_call(unsigned long ip, unsigned long parent_ip,
  
-+if ! which readelf > /dev/null 2>&1 ; then
-+  echo "No readelf found. skipped."
-+  exit_unresolved
-+fi
-+
- echo 0 > events/enable
- echo > dynamic_events
+ 	parent_ip = function_get_true_parent_ip(parent_ip, fregs);
  
- REALBIN=`readlink -f /bin/sh`
-+ENTRYPOINT=`readelf -h ${REALBIN} | grep Entry | sed -e 's/[^0]*//'`
+-	trace_ctx = tracing_gen_ctx();
++	trace_ctx = tracing_gen_ctx_dec();
  
--echo 'cat /proc/$$/maps' | /bin/sh | \
--	grep "r-xp .*${REALBIN}$" | \
--	awk '{printf "p:myevent %s:0x%s\n", $6,$3 }' >> uprobe_events
-+echo "p:myevent ${REALBIN}:${ENTRYPOINT}" >> uprobe_events
+ 	data = this_cpu_ptr(tr->array_buffer.data);
+ 	if (!atomic_read(&data->disabled))
+@@ -321,7 +321,6 @@ function_no_repeats_trace_call(unsigned long ip, unsigned long parent_ip,
+ 	struct trace_array *tr = op->private;
+ 	struct trace_array_cpu *data;
+ 	unsigned int trace_ctx;
+-	unsigned long flags;
+ 	int bit;
  
- grep -q myevent uprobe_events
- test -d events/uprobes/myevent
+ 	if (unlikely(!tr->function_enabled))
+@@ -347,8 +346,7 @@ function_no_repeats_trace_call(unsigned long ip, unsigned long parent_ip,
+ 	if (is_repeat_check(tr, last_info, ip, parent_ip))
+ 		goto out;
+ 
+-	local_save_flags(flags);
+-	trace_ctx = tracing_gen_ctx_flags(flags);
++	trace_ctx = tracing_gen_ctx_dec();
+ 	process_repeats(tr, ip, parent_ip, last_info, trace_ctx);
+ 
+ 	trace_function(tr, ip, parent_ip, trace_ctx);
 -- 
-2.45.2
+2.47.2
 
