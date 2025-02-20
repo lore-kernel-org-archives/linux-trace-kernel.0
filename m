@@ -1,53 +1,71 @@
-Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDC411F150B;
-	Thu, 20 Feb 2025 12:01:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 213301F5833
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 20 Feb 2025 12:26:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740052919; cv=none; b=TE+R2XyazMT+T+oYfCnJWhkhifiY3Km4vQIz99XZkIsU8BsowH+Omxj/t0eezKAEbVeohpCL/FhamJ6BqQ404rNbzEj5RM/95cHaxgM7666dkg0MZyAi0zWiv2ChP/ZNDxT76S2Bo95ZxoXamWPtJlfuX3BlSEdkRb13No4/NtM=
+	t=1740054374; cv=none; b=c5W5lGltnFYz+3XzzTRuuZoc3UtpzvLC1LdS0YYSqerBMYxaaXCW6HFUN8M3eO+zQ9wp8pE1vRPeaEaM6eaLa/AATZcBoxfHR5zlOnq1bwk8hGifZZJifUQztXHRjIEauk8dtFnftNotvE41IhlZhWmNrZj/HD6ExFgqvLngQ4c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740052919; c=relaxed/simple;
-	bh=xC4t5PNFRGnqdbnDdkkrRiU383ecZkkQlQNaoeaxAAo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=jNqj5JFPaPuuhVa6zTwqI3GwldQn5d5vdKHd9E4sI7PmeuWBwL7aDWNnFd6WFT5/vo9oa3Nf6hMtqRBGwZg0J+bSaBY/R/q4znjuC9ivfECyNc1Ph1ZBUQkB6CU/bL5J9u+Xcy7rs6GJUSFRTE0wvScmsuHg8GbQg3Emmz/hE/g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.44])
-	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4YzBcW1pQBz21mxG;
-	Thu, 20 Feb 2025 19:58:51 +0800 (CST)
-Received: from kwepemk500005.china.huawei.com (unknown [7.202.194.90])
-	by mail.maildlp.com (Postfix) with ESMTPS id BA519140360;
-	Thu, 20 Feb 2025 20:01:52 +0800 (CST)
-Received: from [10.174.179.234] (10.174.179.234) by
- kwepemk500005.china.huawei.com (7.202.194.90) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Thu, 20 Feb 2025 20:01:51 +0800
-Message-ID: <85725388-180b-267c-e121-3af1f1b75f94@huawei.com>
-Date: Thu, 20 Feb 2025 20:01:50 +0800
-Precedence: bulk
-X-Mailing-List: linux-trace-kernel@vger.kernel.org
-List-Id: <linux-trace-kernel.vger.kernel.org>
-List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
-List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.8.0
+	s=arc-20240116; t=1740054374; c=relaxed/simple;
+	bh=YvVj3Y+E/X9aMBDeF+0zodv5Y6r1iWhyl676Hl/yr5o=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=teuvG/AsNCPlLur6K6chN0ExihH4G45KghyUos2iCaYmrSPre5TkP1pkkv7BqPXOpHSL4NvEI6qSe6eLKZC+WQiUQx2OdlqnDm5wpGMcDppfgs0BUgLukWMxC6ptTkRJoqr09ShhtmDcKv+dpBLZ0zcTUiYDHT9xadZKFQuUOeg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=HgZ+kY9L; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HgZ+kY9L"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1740054372;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=YvVj3Y+E/X9aMBDeF+0zodv5Y6r1iWhyl676Hl/yr5o=;
+	b=HgZ+kY9LVHzVBXRjeLbCdP+z+IotU+rjRa7YG/qA9G4upP9h6cFdlYDY/lxuP6T5SBfJlV
+	pFmkPnNe/MAY/wQ3jWiyNushwY3ot65fvM12N2zLLsXa8dvtu20gzFV4LAqg3CTTmQyya2
+	0KMIaArNSLFfpbQlXchY9IWDPQyr0es=
+Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-427-Lpk1sia7P76NWT0yuqVEtQ-1; Thu,
+ 20 Feb 2025 07:26:09 -0500
+X-MC-Unique: Lpk1sia7P76NWT0yuqVEtQ-1
+X-Mimecast-MFC-AGG-ID: Lpk1sia7P76NWT0yuqVEtQ_1740054366
+Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 78AE419373C4;
+	Thu, 20 Feb 2025 12:26:05 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.225.147])
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 9AE43180035F;
+	Thu, 20 Feb 2025 12:25:56 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Thu, 20 Feb 2025 13:25:36 +0100 (CET)
+Date: Thu, 20 Feb 2025 13:25:26 +0100
+From: Oleg Nesterov <oleg@redhat.com>
+To: Tong Tiangen <tongtiangen@huawei.com>
+Cc: David Hildenbrand <david@redhat.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Peter Xu <peterx@redhat.com>, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org, bpf@vger.kernel.org,
+	wangkefeng.wang@huawei.com, linux-mm <linux-mm@kvack.org>
 Subject: Re: Add Morton,Peter and David for discussion//Re: [PATCH -next]
  uprobes: fix two zero old_folio bugs in __replace_page()
-To: David Hildenbrand <david@redhat.com>, Oleg Nesterov <oleg@redhat.com>
-CC: Masami Hiramatsu <mhiramat@kernel.org>, Peter Zijlstra
-	<peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de
- Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Mark Rutland
-	<mark.rutland@arm.com>, Alexander Shishkin
-	<alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, Ian
- Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, "Liang,
- Kan" <kan.liang@linux.intel.com>, Andrew Morton <akpm@linux-foundation.org>,
-	Peter Xu <peterx@redhat.com>, <linux-kernel@vger.kernel.org>,
-	<linux-trace-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>,
-	<bpf@vger.kernel.org>, <wangkefeng.wang@huawei.com>, linux-mm
-	<linux-mm@kvack.org>
+Message-ID: <20250220122525.GA30669@redhat.com>
 References: <20250217123826.88503-1-tongtiangen@huawei.com>
  <c2924e9e-1a42-a4f6-5066-ea2e15477c11@huawei.com>
  <3b893634-5453-42d0-b8dc-e9d07988e9e9@redhat.com>
@@ -56,51 +74,39 @@ References: <20250217123826.88503-1-tongtiangen@huawei.com>
  <34e18c47-e536-48e4-80ca-7c7bbc75ecce@redhat.com>
  <2fe4c4d1-c480-c250-1ba2-1a82caf5d7fa@huawei.com>
  <196fc7d8-30a8-439a-89bd-57353fd98df8@redhat.com>
-From: Tong Tiangen <tongtiangen@huawei.com>
-In-Reply-To: <196fc7d8-30a8-439a-89bd-57353fd98df8@redhat.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+ <85725388-180b-267c-e121-3af1f1b75f94@huawei.com>
+Precedence: bulk
+X-Mailing-List: linux-trace-kernel@vger.kernel.org
+List-Id: <linux-trace-kernel.vger.kernel.org>
+List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
+List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
- kwepemk500005.china.huawei.com (7.202.194.90)
+In-Reply-To: <85725388-180b-267c-e121-3af1f1b75f94@huawei.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
 
+On 02/20, Tong Tiangen wrote:
+>
+> 在 2025/2/20 16:38, David Hildenbrand 写道:
+> >On 20.02.25 03:31, Tong Tiangen wrote:
+> >>
+> >>@@ -506,6 +506,12 @@ int uprobe_write_opcode(struct arch_uprobe
+> >>*auprobe, struct mm_struct *mm,
+> >>          if (ret <= 0)
+> >>                  goto put_old;
+> >>
+> >>+       if (WARN(is_zero_page(old_page),
+> >
+> >This can likely be triggered by user space, so do not use WARN.
+>
+> OK,thanks.
+>
+> Hi Oleg, is that all right?
 
+Thanks, LGTM.
 
-在 2025/2/20 16:38, David Hildenbrand 写道:
-> On 20.02.25 03:31, Tong Tiangen wrote:
->>
->>
->> 在 2025/2/20 0:12, David Hildenbrand 写道:
->>> On 19.02.25 16:22, Oleg Nesterov wrote:
->>>> On 02/18, Tong Tiangen wrote:
->>>>>
->>>>> OK, Before your rewrite last merged, How about i change the 
->>>>> solution to
->>>>> just reject them immediately after get_user_page_vma_remote()？
->>>>
->>>> I agree, uprobe_write_opcode() should simply fail if
->>>> is_zero_page(old_page).
->>>
->>> Yes. That's currently only syzkaller that triggers it, not some sane use
->>> case.
->>
->> OK, change as follows:
->>
->> --- a/kernel/events/uprobes.c
->> +++ b/kernel/events/uprobes.c
->> @@ -506,6 +506,12 @@ int uprobe_write_opcode(struct arch_uprobe
->> *auprobe, struct mm_struct *mm,
->>           if (ret <= 0)
->>                   goto put_old;
->>
->> +       if (WARN(is_zero_page(old_page),
-> 
-> This can likely be triggered by user space, so do not use WARN.
+Oleg.
 
-OK,thanks.
-
-Hi Oleg, is that all right?
-
-Thanks,
-Tong.
-
-> 
