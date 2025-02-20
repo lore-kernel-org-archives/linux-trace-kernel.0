@@ -1,104 +1,114 @@
-Received: from szxga06-in.huawei.com (szxga06-in.huawei.com [45.249.212.32])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59F942F5E;
-	Thu, 20 Feb 2025 02:31:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.32
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DEAC1DEFF7;
+	Thu, 20 Feb 2025 03:09:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740018699; cv=none; b=qAzZPwnQAikWc8f8cExFc7Y2Ia/+evt/nz+zerBO3NYUi0hnF7h+35vpBfOVO6X6mJRMwugob7Z6UkMKvuY6euXe1gstguZ57z27c5eEgSxIcMEZmTPh3YwvKGUd9ufoAU+XPHc1tdzuQtLrI6LSLAg1fyVG3YrwC/CTyd24PDc=
+	t=1740020949; cv=none; b=Oapt4NoYNnot4V4jJOu9UKWnhIgnf9qMBTaefIyZsf6UzjzfxfZ8xMcKaQTaM9qlF0w+6PI+f/A06lRgea05QJdeQIj0SXS+HMVgiqAT73fMDJn+7oYIfvG/v5H4Ug+KKtjcKMvZI3pbjFATYRhUKRlf/9RViT3wLLn+1x+rsgk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740018699; c=relaxed/simple;
-	bh=hTsNSbikiqFbBAoA46AmZ15cdx/rCAA4hup/c0bL4XU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=ISAiu5ECp0YDQfOm0evy7niaxCqXPubC/I01ruVwDGwqmQ4X1lM7rA0ueCy0p1zX6WIKzrDyXVSYPbgOgdU1sI7xApA/r/2eMl1FA0xGyQy6l+j3FN4ffyI5x9YocnVOuj2R9kVYw0T/sIu4UczlF8Ti//m3iIRTd6ReS6ZmEEQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.214])
-	by szxga06-in.huawei.com (SkyGuard) with ESMTP id 4Yyy2X1Gc4zpk6Z;
-	Thu, 20 Feb 2025 10:32:04 +0800 (CST)
-Received: from kwepemk500005.china.huawei.com (unknown [7.202.194.90])
-	by mail.maildlp.com (Postfix) with ESMTPS id 32F151A016C;
-	Thu, 20 Feb 2025 10:31:33 +0800 (CST)
-Received: from [10.174.179.234] (10.174.179.234) by
- kwepemk500005.china.huawei.com (7.202.194.90) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Thu, 20 Feb 2025 10:31:31 +0800
-Message-ID: <2fe4c4d1-c480-c250-1ba2-1a82caf5d7fa@huawei.com>
-Date: Thu, 20 Feb 2025 10:31:30 +0800
+	s=arc-20240116; t=1740020949; c=relaxed/simple;
+	bh=SIIxMmbbjCnZ1H7d5BftVx4BljoiEjzP6fU+7MNNPY8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cTc3rori+49sKhia8dMEWyZ2IeEc08gE15e69XalYTgrTMJ3pTR/rJ6sSNNBhs0RzxdIWsibxAnP1hQAN6O0FsEECEq1eXthOZvp58YikEJ+m+SOQDToi0CLNtpKtOkmSbr7s7XhPjd7dSi4vkLymr6FVftFCIYiPTOTqDNO4wU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=g7cTiT7j; arc=none smtp.client-ip=209.85.216.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g7cTiT7j"
+Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-2fa8ac56891so709604a91.2;
+        Wed, 19 Feb 2025 19:09:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1740020947; x=1740625747; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=SIIxMmbbjCnZ1H7d5BftVx4BljoiEjzP6fU+7MNNPY8=;
+        b=g7cTiT7jTLJsqEbH7gc9kSwgk9WKI0QAfOCY5JklBGRuj3GbrtOGeYDhn+uSfJBAWe
+         AbcdhlyK78+eB/j/YWxY97fbkr10g+UaIBunJCJN2ZocuuIGFV9NVjcVV3gGsdP6qARA
+         1wPWzS4Eh6QQU+5adYrf0R/NP5+Kmhm4Wjp9sh7ha89TCpVHUu20LhPLQZL4/0qINzdC
+         ApaYcNND2uXV28ViahzCe6CQ3Ry425T1orqmqj7v92lXl2vIDS3ZA2kYjbTOj5gZFVFI
+         tPazfjpO11L1/1hfyMRcYhgscjkbeWn5AK1hQdKxj36fiJbXwki1LlW6Muf8ey+8hMgB
+         Lylw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740020947; x=1740625747;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=SIIxMmbbjCnZ1H7d5BftVx4BljoiEjzP6fU+7MNNPY8=;
+        b=bcSwDKHlkBVDdGTahynw7We9Zio/LYkVBmiZOh0S8O3KFpOsSOOusb9WXYEl6yAx/h
+         qfpSOT12WeZz41vgKpfhBWffAGAb60X4bVns4dbF3HqbKSsGFbecOB1V5UNC1YJjcwAL
+         i+HmhCJlhUBDpHeATZgwNJCAjUoXGfKUO1Qiw+8NlRwF9nOU7PXW++t3L7erO2CLDF9z
+         U7yFAeqOyY7okbOro/zn1KQXVHHZRKXNqCdKUreAxjqpti6UvTRbSmpQKaPHEUrxqaJk
+         Of9OQEd9iL+Y7aQiXF9SYzq+pXBqc6VOookRuxchDwiUWWhVFIRCuCl6rYyAGi3rpzvp
+         4TJA==
+X-Forwarded-Encrypted: i=1; AJvYcCWpVRpZVbN5ZDMJTGpvlM1xUSPOnW6U5GBvvQks1eif0gsu/QJr1eXWVC958vNbr3rKavQo841OeXODl/d8jCkCe0i3@vger.kernel.org, AJvYcCXSzK+XR9ckP0Uo8v/+Qfi1fhvVyTblzxO3GGevYE975qxY6h8+rrErYzzmCBfgvEThrZnyJXFpXKBQ8hsh@vger.kernel.org, AJvYcCXuIvMNz2Ty570XKeGEFhGknyrg7QFA0VgbqJPQvxUYFALVP8o/IUIVxqHHM1gLk2sduW0ORxYiBRI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzUnmtAM6BaWL8qZPoJH/YUM7AY77VaThwOTzyms4eVg3+wynR8
+	pxakBeQKD1jege0CUPDhXJQoLJZB7FLE7OZqIXbVe7VbiLItAKKf
+X-Gm-Gg: ASbGncssfNPXT6RkUFe+35ghv8ei0OqwIq8Au5V0hfHsqlhIbyTwcN0nNKWpAk8/J+g
+	lUBeVgTci/XwO8c4xO8mbx22Wo+gqDt5j9Ig5HpcKAK97lVOG3SJjSHQIZ35xWlhb7DTz+Jo1kU
+	oszi4N3aDoXOLUZwm7oC9UW3xMLrmuAV0Ma74eIBic4Bdxi/dmcM6GCUibZJMkjvGXGxFLxql+q
+	m6DZ3qA6i/NSDqyATuX7X55n5u+biBudDAcu6rzUZ80XImclTxDNdzIO3Sc9zXR8dozc58nEVVs
+	3VgqnxeC2e659P4=
+X-Google-Smtp-Source: AGHT+IHY+jkVOxxqyb7oeuPNdMxN/x/S20vcx2nSe/tuB0SSxqUCO1KkygpT8VsNxFzmTEcR5XhbIg==
+X-Received: by 2002:a17:90b:4a49:b0:2ea:aa56:499 with SMTP id 98e67ed59e1d1-2fc40d13e61mr31473657a91.1.1740020947025;
+        Wed, 19 Feb 2025 19:09:07 -0800 (PST)
+Received: from archie.me ([103.124.138.155])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2fbf98b3255sm14701558a91.8.2025.02.19.19.09.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 19 Feb 2025 19:09:06 -0800 (PST)
+Received: by archie.me (Postfix, from userid 1000)
+	id 1F4794208FB6; Thu, 20 Feb 2025 10:09:02 +0700 (WIB)
+Date: Thu, 20 Feb 2025 10:09:02 +0700
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+To: Purva Yeshi <purvayeshi550@gmail.com>, rostedt@goodmis.org,
+	mhiramat@kernel.org, mathieu.desnoyers@efficios.com, corbet@lwn.net
+Cc: skhan@linuxfoundation.org, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org
+Subject: Re: [PATCH] docs: tracing: Reduce maxdepth in index documentation
+Message-ID: <Z7aczkdNVgLy1NeP@archie.me>
+References: <20250217112109.7734-1-purvayeshi550@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.8.0
-Subject: Re: Add Morton,Peter and David for discussion//Re: [PATCH -next]
- uprobes: fix two zero old_folio bugs in __replace_page()
-To: David Hildenbrand <david@redhat.com>, Oleg Nesterov <oleg@redhat.com>
-CC: Masami Hiramatsu <mhiramat@kernel.org>, Peter Zijlstra
-	<peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de
- Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Mark Rutland
-	<mark.rutland@arm.com>, Alexander Shishkin
-	<alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, Ian
- Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, "Liang,
- Kan" <kan.liang@linux.intel.com>, Andrew Morton <akpm@linux-foundation.org>,
-	Peter Xu <peterx@redhat.com>, <linux-kernel@vger.kernel.org>,
-	<linux-trace-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>,
-	<bpf@vger.kernel.org>, <wangkefeng.wang@huawei.com>, linux-mm
-	<linux-mm@kvack.org>
-References: <20250217123826.88503-1-tongtiangen@huawei.com>
- <c2924e9e-1a42-a4f6-5066-ea2e15477c11@huawei.com>
- <3b893634-5453-42d0-b8dc-e9d07988e9e9@redhat.com>
- <24a61833-f389-b074-0d9c-d5ad9efc2046@huawei.com>
- <20250219152237.GB5948@redhat.com>
- <34e18c47-e536-48e4-80ca-7c7bbc75ecce@redhat.com>
-From: Tong Tiangen <tongtiangen@huawei.com>
-In-Reply-To: <34e18c47-e536-48e4-80ca-7c7bbc75ecce@redhat.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
- kwepemk500005.china.huawei.com (7.202.194.90)
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="zfvOq29s0SxCOtX0"
+Content-Disposition: inline
+In-Reply-To: <20250217112109.7734-1-purvayeshi550@gmail.com>
 
 
+--zfvOq29s0SxCOtX0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-在 2025/2/20 0:12, David Hildenbrand 写道:
-> On 19.02.25 16:22, Oleg Nesterov wrote:
->> On 02/18, Tong Tiangen wrote:
->>>
->>> OK, Before your rewrite last merged, How about i change the solution to
->>> just reject them immediately after get_user_page_vma_remote()？
->>
->> I agree, uprobe_write_opcode() should simply fail if 
->> is_zero_page(old_page).
-> 
-> Yes. That's currently only syzkaller that triggers it, not some sane use 
-> case.
+On Mon, Feb 17, 2025 at 04:51:09PM +0530, Purva Yeshi wrote:
+> Reduce :maxdepth: from 2 to 1 in index.rst to simplify the table of
+> contents, showing only top-level document titles for better readability.
+>=20
 
-OK, change as follows:
+Is this patch mean to be applied on top of/squashed into your toctree
+refactoring ([1])?
 
---- a/kernel/events/uprobes.c
-+++ b/kernel/events/uprobes.c
-@@ -506,6 +506,12 @@ int uprobe_write_opcode(struct arch_uprobe 
-*auprobe, struct mm_struct *mm,
-         if (ret <= 0)
-                 goto put_old;
+Confused...
 
-+       if (WARN(is_zero_page(old_page),
-+                "uprobe should never work on zero page\n")) {
-+               ret = -EINVAL;
-+               goto put_old;
-+       }
-+
-         if (WARN(!is_register && PageCompound(old_page),
-                  "uprobe unregister should never work on compound 
-page\n")) {
-                 ret = -EINVAL;
+[1]: https://lore.kernel.org/linux-doc/20250217110637.6640-1-purvayeshi550@=
+gmail.com/
 
-If ok, i will send v2 soon.
+--=20
+An old man doll... just what I always wanted! - Clara
 
-Thanks,
-Tong.
+--zfvOq29s0SxCOtX0
+Content-Type: application/pgp-signature; name="signature.asc"
 
-> 
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZ7acxgAKCRD2uYlJVVFO
+ozBWAQDOLzWpuGIWnJnyZ4TZ4GfFwpnG/SQ4r4S4B3NYiBRs/AEA48g0UAiGeSgh
+WGK0r3sF6uZ84Ahm7ecC/1WwaCUxGAw=
+=IEAJ
+-----END PGP SIGNATURE-----
+
+--zfvOq29s0SxCOtX0--
