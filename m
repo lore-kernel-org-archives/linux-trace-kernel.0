@@ -1,101 +1,104 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from szxga06-in.huawei.com (szxga06-in.huawei.com [45.249.212.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92A31235341;
-	Wed, 19 Feb 2025 22:24:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59F942F5E;
+	Thu, 20 Feb 2025 02:31:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.32
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740003861; cv=none; b=W9hwMqKePgw7rb28719KHehb3XnJuCSMIDRv7j/+eo+e7/Dez81r7EK9/wMb0IouacAj6UbaMw/F/P4mT8CAQMAB7/K0LRoxnD9/OFyvF/KFF+fxIt+lwZ3h81zTsfSbNHEZxD5QnSaWlmzuHRx/v6XrEjwbhOenQvCj/z7o4EE=
+	t=1740018699; cv=none; b=qAzZPwnQAikWc8f8cExFc7Y2Ia/+evt/nz+zerBO3NYUi0hnF7h+35vpBfOVO6X6mJRMwugob7Z6UkMKvuY6euXe1gstguZ57z27c5eEgSxIcMEZmTPh3YwvKGUd9ufoAU+XPHc1tdzuQtLrI6LSLAg1fyVG3YrwC/CTyd24PDc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740003861; c=relaxed/simple;
-	bh=F7cQj/S2Jx2LKjsunoVGqTWLq7Q+BonMp+jOTEJgYM8=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=fKV+qiRHVTZ9jjQVmncCxb/L6oYm1/PvRHTAIY3cCiv2KNpRExIqkIsK/aiiodap2KImii8Yg3lBz5VtW3vjG2Lb/nhmT5enJ1h6+KXyM7LWwRG7z2aXrCMbbvPTuuuXVPym9IJex+FrAb0A2LoM6JxWn3erlDN9CQpxKV7gIFs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B0919C4CED1;
-	Wed, 19 Feb 2025 22:24:19 +0000 (UTC)
-Date: Wed, 19 Feb 2025 17:24:43 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Jemmy Wong <jemmywong512@gmail.com>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Mark Rutland <mark.rutland@arm.com>,
- Jonathan Corbet <corbet@lwn.net>, Ingo Molnar <mingo@redhat.com>, Peter
- Zijlstra <peterz@infradead.org>, Juri Lelli <juri.lelli@redhat.com>,
- Vincent Guittot <vincent.guittot@linaro.org>, Dietmar Eggemann
- <dietmar.eggemann@arm.com>, Ben Segall <bsegall@google.com>, Mel Gorman
- <mgorman@suse.de>, Valentin Schneider <vschneid@redhat.com>,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- linux-doc@vger.kernel.org
-Subject: Re: [PATCH 0/2] sched: Refine scheduler naming for clarity and
- specificity
-Message-ID: <20250219172443.5a78401d@gandalf.local.home>
-In-Reply-To: <20250219182020.393006-1-jemmywong512@gmail.com>
-References: <20250219182020.393006-1-jemmywong512@gmail.com>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1740018699; c=relaxed/simple;
+	bh=hTsNSbikiqFbBAoA46AmZ15cdx/rCAA4hup/c0bL4XU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=ISAiu5ECp0YDQfOm0evy7niaxCqXPubC/I01ruVwDGwqmQ4X1lM7rA0ueCy0p1zX6WIKzrDyXVSYPbgOgdU1sI7xApA/r/2eMl1FA0xGyQy6l+j3FN4ffyI5x9YocnVOuj2R9kVYw0T/sIu4UczlF8Ti//m3iIRTd6ReS6ZmEEQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.214])
+	by szxga06-in.huawei.com (SkyGuard) with ESMTP id 4Yyy2X1Gc4zpk6Z;
+	Thu, 20 Feb 2025 10:32:04 +0800 (CST)
+Received: from kwepemk500005.china.huawei.com (unknown [7.202.194.90])
+	by mail.maildlp.com (Postfix) with ESMTPS id 32F151A016C;
+	Thu, 20 Feb 2025 10:31:33 +0800 (CST)
+Received: from [10.174.179.234] (10.174.179.234) by
+ kwepemk500005.china.huawei.com (7.202.194.90) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Thu, 20 Feb 2025 10:31:31 +0800
+Message-ID: <2fe4c4d1-c480-c250-1ba2-1a82caf5d7fa@huawei.com>
+Date: Thu, 20 Feb 2025 10:31:30 +0800
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.8.0
+Subject: Re: Add Morton,Peter and David for discussion//Re: [PATCH -next]
+ uprobes: fix two zero old_folio bugs in __replace_page()
+To: David Hildenbrand <david@redhat.com>, Oleg Nesterov <oleg@redhat.com>
+CC: Masami Hiramatsu <mhiramat@kernel.org>, Peter Zijlstra
+	<peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de
+ Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Mark Rutland
+	<mark.rutland@arm.com>, Alexander Shishkin
+	<alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, Ian
+ Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, "Liang,
+ Kan" <kan.liang@linux.intel.com>, Andrew Morton <akpm@linux-foundation.org>,
+	Peter Xu <peterx@redhat.com>, <linux-kernel@vger.kernel.org>,
+	<linux-trace-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>,
+	<bpf@vger.kernel.org>, <wangkefeng.wang@huawei.com>, linux-mm
+	<linux-mm@kvack.org>
+References: <20250217123826.88503-1-tongtiangen@huawei.com>
+ <c2924e9e-1a42-a4f6-5066-ea2e15477c11@huawei.com>
+ <3b893634-5453-42d0-b8dc-e9d07988e9e9@redhat.com>
+ <24a61833-f389-b074-0d9c-d5ad9efc2046@huawei.com>
+ <20250219152237.GB5948@redhat.com>
+ <34e18c47-e536-48e4-80ca-7c7bbc75ecce@redhat.com>
+From: Tong Tiangen <tongtiangen@huawei.com>
+In-Reply-To: <34e18c47-e536-48e4-80ca-7c7bbc75ecce@redhat.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
+ kwepemk500005.china.huawei.com (7.202.194.90)
 
-On Thu, 20 Feb 2025 02:20:18 +0800
-Jemmy Wong <jemmywong512@gmail.com> wrote:
 
-> Hi, I'm relatively new to Linux and eager to contribute to the community
-> with some foundational work.
 
-Welcome to the community.
+在 2025/2/20 0:12, David Hildenbrand 写道:
+> On 19.02.25 16:22, Oleg Nesterov wrote:
+>> On 02/18, Tong Tiangen wrote:
+>>>
+>>> OK, Before your rewrite last merged, How about i change the solution to
+>>> just reject them immediately after get_user_page_vma_remote()？
+>>
+>> I agree, uprobe_write_opcode() should simply fail if 
+>> is_zero_page(old_page).
+> 
+> Yes. That's currently only syzkaller that triggers it, not some sane use 
+> case.
+
+OK, change as follows:
+
+--- a/kernel/events/uprobes.c
++++ b/kernel/events/uprobes.c
+@@ -506,6 +506,12 @@ int uprobe_write_opcode(struct arch_uprobe 
+*auprobe, struct mm_struct *mm,
+         if (ret <= 0)
+                 goto put_old;
+
++       if (WARN(is_zero_page(old_page),
++                "uprobe should never work on zero page\n")) {
++               ret = -EINVAL;
++               goto put_old;
++       }
++
+         if (WARN(!is_register && PageCompound(old_page),
+                  "uprobe unregister should never work on compound 
+page\n")) {
+                 ret = -EINVAL;
+
+If ok, i will send v2 soon.
+
+Thanks,
+Tong.
 
 > 
-> I aim to help improve code readability and maintainability.
-> While reading the scheduler code, I found some naming inconsistencies
-> that made understanding the code more difficult.
-
-I do plan on updating the scheduler comments soon, so that every function
-has a purpose. But there's a lot of history to the scheduler code that you
-really can't just go and rename items. It causes a lot of churn which also
-causes noise in the git history, where git blame is used a lot to find why
-things were done. Adding renames causes one more level of indirection that
-makes it harder on the maintainers to do git forensics.
-
-> 
-> Specifically:
-> 1. Some function names do not accurately reflect their purpose.
-> 2. Certain names are too general, making it unclear what they represent.
-> 3. Some concepts are ambiguous, leading to potential confusion.
-> 
-> - Rename ttwu_do_wakeup to ttwu_set_running:
->     - This function only sets task state to TASK_RUNNING,
->         not performing the actual wakeup.
-> 
-> - Rename update_cfs_group to update_cfs_group_shares:
->     - The name was too generic; specifying "shares" clarifies its purpose.
-> 
-> - Rename place_entity to update_entity_sched:
->     - The function does not handle entity placement but updates
->         sched info: vruntime, slice, and deadline.
-> 
-> - Rename update_load_<set, add, sub> to load_weight_<set, add, sub>:
->     - "load" can refer to either PELT load or load weight, causing ambiguity;
->         "load_weight" specifies it's dealing with weight.
-> 
-> - Rename struct sched_avg to struct sched_pelt:
->     - This structure includes not just average statistics
->         but also sums like <load, runnable, util>_sum, last_updae_time,
->         all of which are PELT (Per-Entity Load Tracking) metrics.
-> 
-> - Rename init_entity_runnable_average to init_entity_pelt
-> 
-> This patch aims to improve code readability and reduce confusion by
-> ensuring names are more descriptive of their actual functionality or purpose.
-
-I personally am not against these updates. But as I mentioned, there's a
-lot of history here and it's really Peter Zijlstra's call (and he's been
-against changes like this in the past).
-
-So please do not be discourage if this doesn't get much traction.
-
--- Steve
