@@ -1,143 +1,237 @@
-Received: from szxga07-in.huawei.com (szxga07-in.huawei.com [45.249.212.35])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9057D70807;
-	Fri, 21 Feb 2025 01:51:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.35
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CD84EF9D9;
+	Fri, 21 Feb 2025 04:57:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740102683; cv=none; b=u7nv40hOrijAn6ka8Dp0BT3aaG9LJVGoHaXcgsNUy+9F3DWIpZpUnAB2cfUxHNdlPPmRb9H5dveoQUnUkGoQ/lxVbYloeyNzNYKyVaDi05ZeT4ea1tcEEoxGgAiRm5hgYPYWoFl0K7t8hFBHlTvwiyvas4Puqg+4pnazyNXjCCw=
+	t=1740113852; cv=none; b=HZeoiN9JZH2+ATPRiFW7jwiWCpDrb0gUpDTPTwKHySV08om//+PNBdVxNhWFCZD6Kxk0no4ojThAur05FVjr4Roz4zK//Rb8ChbBy8iH5g/+LjPIKm0NQyrnzflsjFi1r2O7W8KZmP7/ok9A+2kjkQ2lJLspTPOAlVSrA6zHgWM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740102683; c=relaxed/simple;
-	bh=pofo1p1sPAJ5BwZKidB+v48Bp+eCZ+Zmh0S5C0spgVY=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=fzxRtjhpYauJazi5NAWglM6fO0lMZNQMesdCh3Va2p7FvHH+Vkk12NfzKa7uMTbgkn/U8KA244TQdI4S2PUsowGuGOWRDYseuWtPdqkX8nNfaMQyDmPP8jNmwDi5HShNdXbzbO2rIkIsygkmQvtbJBU+4Y5qlXwmAorsl/+WCjQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.35
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.163])
-	by szxga07-in.huawei.com (SkyGuard) with ESMTP id 4YzY0R1gvXz1wn7R;
-	Fri, 21 Feb 2025 09:47:19 +0800 (CST)
-Received: from kwepemk500005.china.huawei.com (unknown [7.202.194.90])
-	by mail.maildlp.com (Postfix) with ESMTPS id A8D8B18001B;
-	Fri, 21 Feb 2025 09:51:16 +0800 (CST)
-Received: from localhost.localdomain (10.175.112.125) by
- kwepemk500005.china.huawei.com (7.202.194.90) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Fri, 21 Feb 2025 09:51:15 +0800
-From: Tong Tiangen <tongtiangen@huawei.com>
-To: David Hildenbrand <david@redhat.com>, Oleg Nesterov <oleg@redhat.com>,
-	Andrew Morton <akpm@linux-foundation.org>, Peter Zijlstra
-	<peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de
- Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Mark Rutland
-	<mark.rutland@arm.com>, Alexander Shishkin
-	<alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, Peter Xu
-	<peterx@redhat.com>, Ian Rogers <irogers@google.com>, Adrian Hunter
-	<adrian.hunter@intel.com>, "Liang, Kan" <kan.liang@linux.intel.com>, Masami
- Hiramatsu <mhiramat@kernel.org>
-CC: <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-mm@kvack.org>, <linux-trace-kernel@vger.kernel.org>,
-	<bpf@vger.kernel.org>, Tong Tiangen <tongtiangen@huawei.com>,
-	<wangkefeng.wang@huawei.com>, Guohanjun <guohanjun@huawei.com>
-Subject: [PATCH -next v2] uprobes: fix two zero old_folio bugs in __replace_page()
-Date: Fri, 21 Feb 2025 09:50:56 +0800
-Message-ID: <20250221015056.1269344-1-tongtiangen@huawei.com>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1740113852; c=relaxed/simple;
+	bh=6aI+GHr2BBwATOUxRUp9CTA9xgtY8w2tQT/HqCn+JY8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=QcxNT/GIIb0ttsvtqrOy8GZajYsIvBCU5K4LcEDGPqDz9mxaxbO3W7xZ9yEUhanGyWIXBvXX83gpk6vAaTrad9jU5jElE67bF6i0xJSbHE3Q4LrKXMN0lp/KoJ7MTc7sE9wcX4R+fFBKiC98YBQSCg5/hS8K8pMIfjyb8AeB5Eg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E037916A3;
+	Thu, 20 Feb 2025 20:57:47 -0800 (PST)
+Received: from [10.162.41.20] (K4MQJ0H1H2.blr.arm.com [10.162.41.20])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 695743F59E;
+	Thu, 20 Feb 2025 20:57:17 -0800 (PST)
+Message-ID: <db344bf6-a064-4646-9edb-828f3d20d200@arm.com>
+Date: Fri, 21 Feb 2025 10:27:14 +0530
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC v2 0/9] khugepaged: mTHP support
+To: Nico Pache <npache@redhat.com>
+Cc: Ryan Roberts <ryan.roberts@arm.com>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, linux-mm@kvack.org,
+ anshuman.khandual@arm.com, catalin.marinas@arm.com, cl@gentwo.org,
+ vbabka@suse.cz, mhocko@suse.com, apopple@nvidia.com,
+ dave.hansen@linux.intel.com, will@kernel.org, baohua@kernel.org,
+ jack@suse.cz, srivatsa@csail.mit.edu, haowenchao22@gmail.com,
+ hughd@google.com, aneesh.kumar@kernel.org, yang@os.amperecomputing.com,
+ peterx@redhat.com, ioworker0@gmail.com, wangkefeng.wang@huawei.com,
+ ziy@nvidia.com, jglisse@google.com, surenb@google.com,
+ vishal.moola@gmail.com, zokeefe@google.com, zhengqi.arch@bytedance.com,
+ jhubbard@nvidia.com, 21cnbao@gmail.com, willy@infradead.org,
+ kirill.shutemov@linux.intel.com, david@redhat.com, aarcange@redhat.com,
+ raquini@redhat.com, sunnanyong@huawei.com, usamaarif642@gmail.com,
+ audra@redhat.com, akpm@linux-foundation.org, rostedt@goodmis.org,
+ mathieu.desnoyers@efficios.com, tiwai@suse.de
+References: <20250211003028.213461-1-npache@redhat.com>
+ <8a37f99b-f207-4688-bc90-7f8e6900e29d@arm.com>
+ <CAA1CXcDHCesahmZs21rVP=xai9C=-TpK_7=_8DMqxGJRJzyKSA@mail.gmail.com>
+ <867280bf-2ba1-4e83-8e16-9d93e1c41e08@arm.com>
+ <CAA1CXcDLU-ZQJiF2pXH_=EtqXcqaZKLS+gJ7SGtTq7+2HA47QA@mail.gmail.com>
+Content-Language: en-US
+From: Dev Jain <dev.jain@arm.com>
+In-Reply-To: <CAA1CXcDLU-ZQJiF2pXH_=EtqXcqaZKLS+gJ7SGtTq7+2HA47QA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
- kwepemk500005.china.huawei.com (7.202.194.90)
 
-We triggered the following error logs in syzkaller test:
 
-  BUG: Bad page state in process syz.7.38  pfn:1eff3
-  page: refcount:0 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x1eff3
-  flags: 0x3fffff00004004(referenced|reserved|node=0|zone=1|lastcpupid=0x1fffff)
-  raw: 003fffff00004004 ffffe6c6c07bfcc8 ffffe6c6c07bfcc8 0000000000000000
-  raw: 0000000000000000 0000000000000000 00000000fffffffe 0000000000000000
-  page dumped because: PAGE_FLAGS_CHECK_AT_FREE flag(s) set
-  Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.13.0-1ubuntu1.1 04/01/2014
-  Call Trace:
-   <TASK>
-   dump_stack_lvl+0x32/0x50
-   bad_page+0x69/0xf0
-   free_unref_page_prepare+0x401/0x500
-   free_unref_page+0x6d/0x1b0
-   uprobe_write_opcode+0x460/0x8e0
-   install_breakpoint.part.0+0x51/0x80
-   register_for_each_vma+0x1d9/0x2b0
-   __uprobe_register+0x245/0x300
-   bpf_uprobe_multi_link_attach+0x29b/0x4f0
-   link_create+0x1e2/0x280
-   __sys_bpf+0x75f/0xac0
-   __x64_sys_bpf+0x1a/0x30
-   do_syscall_64+0x56/0x100
-   entry_SYSCALL_64_after_hwframe+0x78/0xe2
 
-   BUG: Bad rss-counter state mm:00000000452453e0 type:MM_FILEPAGES val:-1
+On 21/02/25 12:42 am, Nico Pache wrote:
+> On Wed, Feb 19, 2025 at 2:01 AM Dev Jain <dev.jain@arm.com> wrote:
+>>
+>>
+>>
+>> On 19/02/25 4:00 am, Nico Pache wrote:
+>>> On Tue, Feb 18, 2025 at 9:07 AM Ryan Roberts <ryan.roberts@arm.com> wrote:
+>>>>
+>>>> On 11/02/2025 00:30, Nico Pache wrote:
+>>>>> The following series provides khugepaged and madvise collapse with the
+>>>>> capability to collapse regions to mTHPs.
+>>>>>
+>>>>> To achieve this we generalize the khugepaged functions to no longer depend
+>>>>> on PMD_ORDER. Then during the PMD scan, we keep track of chunks of pages
+>>>>> (defined by MTHP_MIN_ORDER) that are utilized. This info is tracked
+>>>>> using a bitmap. After the PMD scan is done, we do binary recursion on the
+>>>>> bitmap to find the optimal mTHP sizes for the PMD range. The restriction
+>>>>> on max_ptes_none is removed during the scan, to make sure we account for
+>>>>> the whole PMD range. max_ptes_none will be scaled by the attempted collapse
+>>>>> order to determine how full a THP must be to be eligible. If a mTHP collapse
+>>>>> is attempted, but contains swapped out, or shared pages, we dont perform the
+>>>>> collapse.
+>>>>>
+>>>>> With the default max_ptes_none=511, the code should keep its most of its
+>>>>> original behavior. To exercise mTHP collapse we need to set max_ptes_none<=255.
+>>>>> With max_ptes_none > HPAGE_PMD_NR/2 you will experience collapse "creep" and
+>>>>
+>>>> nit: I think you mean "max_ptes_none >= HPAGE_PMD_NR/2" (greater or *equal*)?
+>>>> This is making my head hurt, but I *think* I agree with you that if
+>>>> max_ptes_none is less than half of the number of ptes in a pmd, then creep
+>>>> doesn't happen.
+>>> Haha yea the compressed bitmap does not make the math super easy to
+>>> follow, but i'm glad we arrived at the same conclusion :)
+>>>>
+>>>> To make sure I've understood;
+>>>>
+>>>>    - to collapse to 16K, you would need >=3 out of 4 PTEs to be present
+>>>>    - to collapse to 32K, you would need >=5 out of 8 PTEs to be present
+>>>>    - to collapse to 64K, you would need >=9 out of 16 PTEs to be present
+>>>>    - ...
+>>>>
+>>>> So if we start with 3 present PTEs in a 16K area, we collapse to 16K and now
+>>>> have 4 PTEs in a 32K area which is insufficient to collapse to 32K.
+>>>>
+>>>> Sounds good to me!
+>>> Great! Another easy way to think about it is, with max_ptes_none =
+>>> HPAGE_PMD_NR/2, a collapse will double the size, and we only need half
+>>> for it to collapse again. Each size is 2x the last, so if we hit one
+>>> collapse, it will be eligible again next round.
+>>
+>> Please someone correct me if I am wrong.
+>>
+> 
+> max_ptes_none = 204
+> scaled_none = (204 >> 9 - 3) = ~3.1
+> so 4 pages need to be available in each chunk for the bit to be set, not 5.
+> 
+> at 204 the bitmap check is
+> 512 - 1 - 204 = 307
+> (PMD) 307 >> 3 = 38
+> (1024k) 307 >> 4 = 19
+> (512k) 307 >> 5 = 9
+> (256k) 307 >> 6 = 4
+> 
+>> Consider this; you are collapsing a 256K folio. => #PTEs = 256K/4K = 64
+>> => #chunks = 64 / 8 = 8.
+>>
+>> Let the PTE state within the chunks be as follows:
+>>
+>> Chunk 0: < 5 filled   Chunk 1: 5 filled   Chunk 2: 5 filled   Chunk 3: 5
+>> filled
+>>
+>> Chunk 4: 5 filled   Chunk 5: < 5 filled   Chunk 6: < 5 filled   Chunk 7:
+>> < 5 filled
+>>
+>> Consider max_ptes_none = 40% (512 * 40 / 100 = 204.8 (round down) = 204
+>> < HPAGE_PMD_NR/2).
+>> => To collapse we need at least 60% of the PTEs filled.
+>>
+>> Your algorithm marks chunks in the bitmap if 60% of the chunk is filled.
+>> Then, if the number of chunks set is greater than 60%, then we will
+>> collapse.
+>>
+>> Chunk 0 will be marked zero because less than 5 PTEs are filled =>
+>> percentage filled <= 50%
+>>
+>> Right now the state is
+>> 0111 1000
+>> where the indices are the chunk numbers.
+>> Since #1s = 4 => percent filled = 4/8 * 100 = 50%, 256K folio collapse
+>> won't happen.
+>>
+>> For the first 4 chunks, the percent filled is 75%.  So the state becomes
+>> 1111 1000
+>> after 128K collapse, and now 256K collapse will happen.
+>>
+>> Either I got this correct, or I do not understand the utility of
+>> maintaining chunks :) What you are doing is what I am doing except that
+>> my chunk size = 1.
+> 
+> Ignoring all the math, and just going off the 0111 1000
+> We do "creep", but its not the same type of "creep" we've been
+> describing. The collapse in the first half will allow the collapse in
+> order++ to collapse but it stops there and doesnt keep getting
+> promoted to a PMD size. That is unless the adjacent 256k also has some
+> bits set, then it can collapse to 512k. So I guess we still can creep,
+> but its way less aggressive and only when there is actual memory being
+> utilized in the adjacent chunk, so it's not like we are creating a
+> huge waste.
 
-The following syzkaller test case can be used to reproduce:
+I get you. You will creep when the adjacent chunk has at least 1 bit 
+set. I don't really have a strong opinion on this one.
 
-  r2 = creat(&(0x7f0000000000)='./file0\x00', 0x8)
-  write$nbd(r2, &(0x7f0000000580)=ANY=[], 0x10)
-  r4 = openat(0xffffffffffffff9c, &(0x7f0000000040)='./file0\x00', 0x42, 0x0)
-  mmap$IORING_OFF_SQ_RING(&(0x7f0000ffd000/0x3000)=nil, 0x3000, 0x0, 0x12, r4, 0x0)
-  r5 = userfaultfd(0x80801)
-  ioctl$UFFDIO_API(r5, 0xc018aa3f, &(0x7f0000000040)={0xaa, 0x20})
-  r6 = userfaultfd(0x80801)
-  ioctl$UFFDIO_API(r6, 0xc018aa3f, &(0x7f0000000140))
-  ioctl$UFFDIO_REGISTER(r6, 0xc020aa00, &(0x7f0000000100)={{&(0x7f0000ffc000/0x4000)=nil, 0x4000}, 0x2})
-  ioctl$UFFDIO_ZEROPAGE(r5, 0xc020aa04, &(0x7f0000000000)={{&(0x7f0000ffd000/0x1000)=nil, 0x1000}})
-  r7 = bpf$PROG_LOAD(0x5, &(0x7f0000000140)={0x2, 0x3, &(0x7f0000000200)=ANY=[@ANYBLOB="1800000000120000000000000000000095"], &(0x7f0000000000)='GPL\x00', 0x7, 0x0, 0x0, 0x0, 0x0, '\x00', 0x0, @fallback=0x30, 0xffffffffffffffff, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x10, 0x0, @void, @value}, 0x94)
-  bpf$BPF_LINK_CREATE_XDP(0x1c, &(0x7f0000000040)={r7, 0x0, 0x30, 0x1e, @val=@uprobe_multi={&(0x7f0000000080)='./file0\x00', &(0x7f0000000100)=[0x2], 0x0, 0x0, 0x1}}, 0x40)
-
-The cause is that zero pfn is set to the pte without increasing the rss
-count in mfill_atomic_pte_zeropage() and the refcount of zero folio does
-not increase accordingly. Then, the operation on the same pfn is performed
-in uprobe_write_opcode()->__replace_page() to unconditional decrease the
-rss count and old_folio's refcount.
-
-Therefore, two bugs are introduced:
-1. The rss count is incorrect, when process exit, the check_mm() report
-   error "Bad rss-count".
-2. The reserved folio (zero folio) is freed when folio->refcount is zero,
-   then free_pages_prepare->free_page_is_bad() report error
-   "Bad page state".
-
-Considering that uprobe hit the zero folio is a very rare scene, just
-reject zero old folio immediately after get_user_page_vma_remote().
-
-Fixes: 7396fa818d62 ("uprobes/core: Make background page replacement logic account for rss_stat counters")
-Fixes: 2b1444983508 ("uprobes, mm, x86: Add the ability to install and remove uprobes breakpoints")
-Signed-off-by: Tong Tiangen <tongtiangen@huawei.com>
-Reviewed-by: David Hildenbrand <david@redhat.com>
-Reviewed-by: Oleg Nesterov <oleg@redhat.com>
----
-v2: Modified according to the comments of David and Oleg. 
----
- kernel/events/uprobes.c | 5 +++++
- 1 file changed, 5 insertions(+)
-
-diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
-index 46ddf3a2334d..daa46868faf3 100644
---- a/kernel/events/uprobes.c
-+++ b/kernel/events/uprobes.c
-@@ -506,6 +506,11 @@ int uprobe_write_opcode(struct arch_uprobe *auprobe, struct mm_struct *mm,
- 	if (ret <= 0)
- 		goto put_old;
- 
-+	if (is_zero_page(old_page)) {
-+		ret = -EINVAL;
-+		goto put_old;
-+	}
-+
- 	if (WARN(!is_register && PageCompound(old_page),
- 		 "uprobe unregister should never work on compound page\n")) {
- 		ret = -EINVAL;
--- 
-2.25.1
+> 
+> 
+>>
+>>>>
+>>>>> constantly promote mTHPs to the next available size.
+>>>>>
+>>>>> Patch 1:     Some refactoring to combine madvise_collapse and khugepaged
+>>>>> Patch 2:     Refactor/rename hpage_collapse
+>>>>> Patch 3-5:   Generalize khugepaged functions for arbitrary orders
+>>>>> Patch 6-9:   The mTHP patches
+>>>>>
+>>>>> ---------
+>>>>>    Testing
+>>>>> ---------
+>>>>> - Built for x86_64, aarch64, ppc64le, and s390x
+>>>>> - selftests mm
+>>>>> - I created a test script that I used to push khugepaged to its limits while
+>>>>>      monitoring a number of stats and tracepoints. The code is available
+>>>>>      here[1] (Run in legacy mode for these changes and set mthp sizes to inherit)
+>>>>>      The summary from my testings was that there was no significant regression
+>>>>>      noticed through this test. In some cases my changes had better collapse
+>>>>>      latencies, and was able to scan more pages in the same amount of time/work,
+>>>>>      but for the most part the results were consistant.
+>>>>> - redis testing. I tested these changes along with my defer changes
+>>>>>     (see followup post for more details).
+>>>>> - some basic testing on 64k page size.
+>>>>> - lots of general use. These changes have been running in my VM for some time.
+>>>>>
+>>>>> Changes since V1 [2]:
+>>>>> - Minor bug fixes discovered during review and testing
+>>>>> - removed dynamic allocations for bitmaps, and made them stack based
+>>>>> - Adjusted bitmap offset from u8 to u16 to support 64k pagesize.
+>>>>> - Updated trace events to include collapsing order info.
+>>>>> - Scaled max_ptes_none by order rather than scaling to a 0-100 scale.
+>>>>> - No longer require a chunk to be fully utilized before setting the bit. Use
+>>>>>      the same max_ptes_none scaling principle to achieve this.
+>>>>> - Skip mTHP collapse that requires swapin or shared handling. This helps prevent
+>>>>>      some of the "creep" that was discovered in v1.
+>>>>>
+>>>>> [1] - https://gitlab.com/npache/khugepaged_mthp_test
+>>>>> [2] - https://lore.kernel.org/lkml/20250108233128.14484-1-npache@redhat.com/
+>>>>>
+>>>>> Nico Pache (9):
+>>>>>     introduce khugepaged_collapse_single_pmd to unify khugepaged and
+>>>>>       madvise_collapse
+>>>>>     khugepaged: rename hpage_collapse_* to khugepaged_*
+>>>>>     khugepaged: generalize hugepage_vma_revalidate for mTHP support
+>>>>>     khugepaged: generalize alloc_charge_folio for mTHP support
+>>>>>     khugepaged: generalize __collapse_huge_page_* for mTHP support
+>>>>>     khugepaged: introduce khugepaged_scan_bitmap for mTHP support
+>>>>>     khugepaged: add mTHP support
+>>>>>     khugepaged: improve tracepoints for mTHP orders
+>>>>>     khugepaged: skip collapsing mTHP to smaller orders
+>>>>>
+>>>>>    include/linux/khugepaged.h         |   4 +
+>>>>>    include/trace/events/huge_memory.h |  34 ++-
+>>>>>    mm/khugepaged.c                    | 422 +++++++++++++++++++----------
+>>>>>    3 files changed, 306 insertions(+), 154 deletions(-)
+>>>>>
+>>>>
+>>>
+>>>
+>>
+> 
 
