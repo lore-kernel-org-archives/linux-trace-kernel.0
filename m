@@ -1,35 +1,77 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f66.google.com (mail-ed1-f66.google.com [209.85.208.66])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 019881FFC73
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 21 Feb 2025 16:47:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45250244EAB
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 21 Feb 2025 17:02:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.66
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740156465; cv=none; b=ohlVDved9dcjyhXNSECc4u4ufEs2Ym9+2too44twIQtAPYvY73/6tX6bZW3sKdFfwEbPrqDl4b49dkT9+VQ39/WYkVatW+P+s7CA8dK42DM6RKzVAfPP4smcdC0m12z+sSYnaNwIBFUz+ZKAeqAqBqqg0zKGICgxPDyIz9wNzkY=
+	t=1740157377; cv=none; b=NitbXNwafu4DGKattmrJsirDNEltjWjdGSOUGG+0g37LnUWHgfj39EsW1HOwWy1glZ2TfUvtsumUfNc/M6Wh/3RrayqUW9adpI38fLaKiTpjmsrR9mwjJf+snUBuO/Lmg5NKrNLdZn+TPzNpeH7Q6+lhcP29WeMxkrTpG0cGAzQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740156465; c=relaxed/simple;
-	bh=QGsnl3UDxL6o+Zb5sIuMg4mK/ph+5EQXHCi9skL7zbg=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=l4g9ly1KzOfnJ/GX68+FoWJydA3meuvCmIPy9N6C9WNyl4r5PPTNLTzwVtNi4x8JvpSmSu+oegHKXPsrFLA0BdLY9orjh8tUCHyReI6oddsw/qMWmISsteEDpR8NjpqpFkfuttxs523t7pNRqfeUALLJSfLkgtfwl9pUNeIELks=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C9253C4CEE2;
-	Fri, 21 Feb 2025 16:47:43 +0000 (UTC)
-Date: Fri, 21 Feb 2025 11:48:12 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc: Wander Lairson Costa <wander@redhat.com>,
- linux-trace-kernel@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Thomas Gleixner
- <tglx@linutronix.de>
-Subject: Re: [PATCH] ftrace: Correct preemption accounting for function
- tracing.
-Message-ID: <20250221114812.6030671d@gandalf.local.home>
-In-Reply-To: <20250221162146.9KWeIdA0@linutronix.de>
-References: <20250220140749.pfw8qoNZ@linutronix.de>
-	<44ymxgot422oetab62w55rth5tqrzseyhwirxg2ho7vzvvkaud@qiada52ckt25>
-	<20250220115400.4d75d881@gandalf.local.home>
-	<20250221162146.9KWeIdA0@linutronix.de>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1740157377; c=relaxed/simple;
+	bh=CSW10IqiNdAkspr2IgyTQkreJmoj1lkd5Vs5Tjhn4Lk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=qB3ItwK1Mz8XuZAHmwFzsfUrpXDB5hFa4SA91LeoYtK7F231H+kO0pQ8wo7L1d0aFlXE+Jd+fFayt5m1k1Bp1HsqdFGC8KhcbSlHxdqucUrYcLHtP7QLK2yhRO7QKDyLUDvLaZoXLk28aalEVCddVCKjxJQCjI9MADFdQj3j3AE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=QwFh39Je; arc=none smtp.client-ip=209.85.208.66
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="QwFh39Je"
+Received: by mail-ed1-f66.google.com with SMTP id 4fb4d7f45d1cf-5e08064b4ddso3295010a12.1
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 21 Feb 2025 09:02:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1740157373; x=1740762173; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=wDByaDv2MeIoDkWDRCtDD68r/JuubevBl9+EY++FX5Y=;
+        b=QwFh39JeqOC/L5XL2f66VTxmJj5cJEme7AAXfK7OIAhcQzpFmYaqe3QFX4KX9mGDFh
+         qbNHWeHSYk6JhstjFSsNC7K6aM04+ogSFIoYYv2WfyvLDN3R0y7RKg46xtpVKtFm3Xue
+         YhexQFdNPaYEasZdUdakA6iFKkyIbOPLzG0JY/pZnB2aD+buf4yRG0IidRVF42tm24Dw
+         TUtZe0CkwRjyZnMzSgxJy2EBRcxkF+V9W/cZoYDVJGAytYxVEMG9s74v/+mUwPc2dXKg
+         TIXRy3MEu+voy5q4afxEUFUvSf8dtozHP/qkecmN7AQigSGElxDfXk444p+C5Dn8zw7O
+         iFGA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740157373; x=1740762173;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=wDByaDv2MeIoDkWDRCtDD68r/JuubevBl9+EY++FX5Y=;
+        b=jVFUysg4FNjHCYu4XCwxS/tNKWkWrBD2lwfguxNK5B8vQVspeCBeYdtB63UjTd1kw/
+         xZ7cL+VrP0sohDBfwG/cdZ+xDrRQ/IsP/k3RfsazlArfD7Id6Wbk9n0TxVdLKaG7eRvY
+         ry3CxsUqtrSga/9HmzJ67Ju7dpWjInoTP6zX/7belCzjvoq/B75ByMWohxHPH+A1JIKx
+         2qIXyvCByQEFGvClBV2Xbs8q6WYdmNWHpywICEVRP568rIyYweniqF3pL+JAEkEzteU3
+         Y1ineQNhYVfki4UeRK1ChQ1iy4BpEEPBqcMnnqGtJm5dJSs52i80nC4oXWx2hHwfVJV7
+         XM6g==
+X-Forwarded-Encrypted: i=1; AJvYcCWv7rYhzG55A7kzFbPWnOKMDk+1TQSM8UCdmC0wxS5exu9gVF5oWIjSmSosynW9bvafy4vxVXBJ/lB4Wj7INE1pfSM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwjkY2KYpUBN7ui38INcqIPl/rwe2k8/Nz0R4+CPuHcukG/bztr
+	yA0EPRotW5/0cUd65U663JH0iD9bwA59oAJmgqX8+KkgLYBl3CF1w5K2T+Ai3Vk=
+X-Gm-Gg: ASbGncualwlb5N3WE4j2NnnhxQoYuEDg09rBH41s7i3Q9IoISfpOfj1bqe22TZ05Bxn
+	z4f8uZz3AQ+Qu+hUMwan/m0rQGP77qnHXp6FE1F12PBOLKFUyaFDfE6d7E5WAU+jAUBMDAFVtUi
+	ILkEnjW1zbfWrHaFdCmK9k/IwpdH8dscWlPIZEkQZe8W89vKHcj+3KPedDzP58bggwfzNwqQHIj
+	XRw3KBvZEQmWBO/nWFI7kbB+lpcmAYAWMGXRIyV66vjle4GHc1bw9obgpeIgpIcmcH2qmlDIQ/e
+	F96ZQ1ZrOeZGbsdUsUipj+tSD2i7
+X-Google-Smtp-Source: AGHT+IGfcJwK8DsLRDynNMYZTxbIxb0l+jqrdkXEpzFnvtKSRwocRJ46u22XwIA9pSi82Z9VX3nCQA==
+X-Received: by 2002:a17:907:7855:b0:abb:b092:dade with SMTP id a640c23a62f3a-abc0de0de6dmr329918266b.38.1740157373377;
+        Fri, 21 Feb 2025 09:02:53 -0800 (PST)
+Received: from blackdock.suse.cz ([193.86.92.181])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-abb8eea4d65sm1105668766b.161.2025.02.21.09.02.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 21 Feb 2025 09:02:52 -0800 (PST)
+From: =?UTF-8?q?Michal=20Koutn=C3=BD?= <mkoutny@suse.com>
+To: Christian Brauner <brauner@kernel.org>,
+	Alexander Mikhalitsyn <alexander@mihalicyn.com>,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Cc: Jonathan Corbet <corbet@lwn.net>,
+	Kees Cook <kees@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	"Eric W . Biederman" <ebiederm@xmission.com>,
+	=?UTF-8?q?Michal=20Koutn=C3=BD?= <mkoutny@suse.com>,
+	Oleg Nesterov <oleg@redhat.com>
+Subject: [PATCH 0/2] Alternative "pid_max" for 32-bit userspace
+Date: Fri, 21 Feb 2025 18:02:47 +0100
+Message-ID: <20250221170249.890014-1-mkoutny@suse.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -37,35 +79,52 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Fri, 21 Feb 2025 17:21:46 +0100
-Sebastian Andrzej Siewior <bigeasy@linutronix.de> wrote:
+pid_max is sort of a legacy limit (its value and partially the concept
+too, given the existence of pids cgroup controller).
+It is tempting to make the pid_max value part of a pid namespace to
+provide compat environment for 32-bit applications [1].  On the other
+hand, it provides yet another mechanism for limitation of task count.
+Even without namespacing of pid_max value, the configuration of
+conscious limit is confusing for users [2].
 
-> On 2025-02-20 11:54:00 [-0500], Steven Rostedt wrote:
-> > >      kworker/0:5-88      [000] D.Zf2   211.983391: igbvf_reset_L14: (=
-igbvf_reset+0x62/0x120 [igbvf])
-> > >      kworker/0:5-88      [000] .N...   211.983396: igbvf_reset_L16: (=
-igbvf_reset+0x7b/0x120 [igbvf]) =20
-> =E2=80=A6
-> > > (Except in line 6 where it show 'f', which seems to be an unrelated i=
-ssue) =20
-> >=20
-> > But it appears to be consistent.
-> >=20
-> > Let me go and add some probes and see what they show. The output you ga=
-ve
-> > me that I requested didn't show anything unusual. =20
->=20
-> Since I just noticed that you posted the patches, did you find anything?
-> From looking at it, if we preemption at 0, migrate disable at 3 then a
-> substraction of one would underflow the preemption counter to f and
-> migrate disable to 2. But based on code inspection mg should be at 1.
-> And this does not explain where D & Z is coming from.
+This series builds upon the idea of restricting the number (amount) of
+tasks by pids controller and ensuring that number (pid) never exceeds
+the amount of tasks. This would not currently work out of the box
+because next-fit pid allocation would continue to assign numbers (pids)
+higher than the actual amount (there would be gaps in the lower range of
+the interval). The patch 2/2 implements this idea by extending semantics
+of ns_last_pid knob to allow first-fit numbering. (The implementation
+has clumsy ifdefery, which can might be dropped since it's too
+x86-centric.)
 
-I haven't found the bug for this yet, but I need to send out other fixes.
-The preempt count issue you posted is agnostic to this issue, so I just
-took it and added it to my current queue for this rc release.
+The patch 1/2 is a mere revert to simplify pid_max to one global limit
+only.
 
--- Steve
+(I pruned Cc: list from scripts/get_maintainer.pl for better focus, feel
+free to bounce as necessary.)
+
+[1] https://lore.kernel.org/r/20241122132459.135120-1-aleksandr.mikhalitsyn@canonical.com/
+[2] https://lore.kernel.org/r/bnxhqrq7tip6jl2hu6jsvxxogdfii7ugmafbhgsogovrchxfyp@kagotkztqurt/
+
+Michal Koutný (2):
+  Revert "pid: allow pid_max to be set per pid namespace"
+  pid: Optional first-fit pid allocation
+
+ Documentation/admin-guide/sysctl/kernel.rst |   2 +
+ include/linux/pid.h                         |   3 +
+ include/linux/pid_namespace.h               |  11 +-
+ kernel/pid.c                                | 137 +++-----------------
+ kernel/pid_namespace.c                      |  71 +++++-----
+ kernel/sysctl.c                             |   9 ++
+ kernel/trace/pid_list.c                     |   2 +-
+ kernel/trace/trace.h                        |   2 +
+ kernel/trace/trace_sched_switch.c           |   2 +-
+ 9 files changed, 70 insertions(+), 169 deletions(-)
+
+
+base-commit: 334426094588f8179fe175a09ecc887ff0c75758
+-- 
+2.48.1
 
