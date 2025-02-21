@@ -1,85 +1,102 @@
-Received: from mail-il1-f200.google.com (mail-il1-f200.google.com [209.85.166.200])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4402120D4E4
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 21 Feb 2025 13:20:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB7AA215F42
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 21 Feb 2025 15:29:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740144005; cv=none; b=hTxi8ejhERZPRHpkTem5qt1ipdRmP2ynT9lu/tM5iHMTjIGpCIZacS9yrGTBTypDPs8wvEWhtodw07cBWIxDv8h9PswHticTRI6zYZxEmjeoz3tpGRa6Ez8cKR034BqYpZsOe3DnpYLZZBioHbEk/EFOlCKxvFomFfV/xWwzNDw=
+	t=1740151771; cv=none; b=pkBFbcN1jMhAQ4RohYLEPlGIf0XmXeVpm4A32vSWUDLvEQc36bzdM6BWI2FGFwzoleQYUSDqDyXo3Xw0rhRfysay+HZ3RyKWmV1XfrAB7DZ/a04OX3uBaN92tPJ6NENolk662Ok76uxQj0vh1hAw3wZf+r7qzTyiYvbI4YEyAno=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740144005; c=relaxed/simple;
-	bh=4vCKVNEsEgWIs64ubjYODu9ezwCabVqJz8/9mUMtinc=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=O6vYExR6uNmOmq40fsPM5QD02kbukanmLFAAWoN7OyXzllYiSeWq2RkNJYmPA+GBibp9gCXywckvTWJV2nEP+B9USkSA41AXQvjKyi49f62qMbaeQPcXddPExM4Pz+Hh8gw6sVq1E9zyWnbPUoAtj/gfTVXOKi0XYmYJZoDQoZk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.200
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f200.google.com with SMTP id e9e14a558f8ab-3d2b6d933acso16249685ab.3
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 21 Feb 2025 05:20:02 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740144002; x=1740748802;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=TKOeUNmgFq9mGFTlFKpVDLkAHhwJwc1BYdbAZYlmsac=;
-        b=M2MdhEuYaovqVm9ZhRk5i4thweCcm1qfuNGrRh9aIekISikyVnIS/zeHyvWsFb926/
-         CmTuZsgHvuq7kg4sHVr8eYIw1dOB1+pFM3QDw6E/m3269b0Ok0s3xHRrevgmE1C3BCLX
-         Q5Arp6DFzhCsTJHxxEFniwq95l5K/gT8m1QKS6YYoB4ecXMTkBZXL7BiKzXDZ3kWsdWT
-         9ItdCw7PamOUqM3yEJ347AYeuPpfxZpe0ptathduaMuqCZ7UKscjBJKPGOMFloR8ZIRh
-         NhQlgtXcAN42+wkBJRh7uS/326VMvrfWrhOrcibpks49xEBaZg75XUC9YhF/PFHFg32Y
-         Aw5A==
-X-Forwarded-Encrypted: i=1; AJvYcCX8i79yzrGvmDcFxC9j65MiEh3v2yS1SdJRHcFB+eT+1ITUeD3oWOy+UDsYtvGSax1QisRaLWYDsoDZVmm4NmwClps=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyoBvw6AeN2Bd7u19krVn0l6HYoOLPrUDt29Q00Xed2Mqs2ScQf
-	rNuSH1sPl54fCufVtnZpc8KNDEZZwh42QYd8yJMA9XnVE6ulVsCY8GnN2UgRMRL/RhffxVZQ4gb
-	+XVc3ebNBolcWIXdU6sKyw3Av8kW9riVCWkjPb5PEUvnlSDyM0Z1eEcY=
-X-Google-Smtp-Source: AGHT+IFk7iXIGjPM3Cd4yMSgfW4vr1fE96DRJ9EACQSHU1A21Wn9X6x85b6VG+vkzitZxJM+02ayoLSehtNh39Na0i/XwqFmq+M9
+	s=arc-20240116; t=1740151771; c=relaxed/simple;
+	bh=RPWq7Di80wCaezBdT5MKfthytldTTyeI8zqYu5ssG9A=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fhjKwTtEDtVhB6CybQR9EwPNFYbIZZDgIGe9JcSxJYqSEPtssbihWcvHoBsrEI0qCmYMRKeHKZQL0a8jZ5kEADY8Ctf6qzR8xzh/5JFE0BqbgKdNkXA1ilv9g5u42RSfCB387M/Kw3Thk+yCw6CO5fpReIiYz96GeIglib4vprY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=h+qejeEB; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="h+qejeEB"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1740151768;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Ic1/uViOEImLUfOGxnGRSWveOc6wET399Ae2ZdSNHEc=;
+	b=h+qejeEBMi7n15RS4Ng0N3d2Rp74Lwg1RSMFqXHHwEJ7dsK+LscZ+xg0JQSxtdvxLSnINp
+	ClIbUDND+AHuH2oy1swcI2OKRkiTxGuLs0Ruoyrmc222yF0JQIwyqiD/cWpuigUN45aIvB
+	6Dj737DB5RHWeXAQxD6rJyk83w2gwVI=
+Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-30-W3hhLAD0P8O_s-BkpsjBfQ-1; Fri,
+ 21 Feb 2025 10:29:25 -0500
+X-MC-Unique: W3hhLAD0P8O_s-BkpsjBfQ-1
+X-Mimecast-MFC-AGG-ID: W3hhLAD0P8O_s-BkpsjBfQ_1740151763
+Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id E2F6619373D8;
+	Fri, 21 Feb 2025 15:29:20 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.44.32.97])
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 3BE231800943;
+	Fri, 21 Feb 2025 15:29:11 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Fri, 21 Feb 2025 16:28:51 +0100 (CET)
+Date: Fri, 21 Feb 2025 16:28:41 +0100
+From: Oleg Nesterov <oleg@redhat.com>
+To: Tong Tiangen <tongtiangen@huawei.com>
+Cc: David Hildenbrand <david@redhat.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Peter Xu <peterx@redhat.com>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org,
+	bpf@vger.kernel.org, wangkefeng.wang@huawei.com,
+	Guohanjun <guohanjun@huawei.com>
+Subject: Re: [PATCH -next v2] uprobes: fix two zero old_folio bugs in
+ __replace_page()
+Message-ID: <20250221152841.GA24705@redhat.com>
+References: <20250221015056.1269344-1-tongtiangen@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:12c5:b0:3d2:5a0a:7227 with SMTP id
- e9e14a558f8ab-3d2cb48229dmr21416275ab.13.1740144002400; Fri, 21 Feb 2025
- 05:20:02 -0800 (PST)
-Date: Fri, 21 Feb 2025 05:20:02 -0800
-In-Reply-To: <6792ffb7.050a0220.3ab881.0005.GAE@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67b87d82.050a0220.14d86d.04d4.GAE@google.com>
-Subject: Re: [syzbot] [mm?] [v9fs?] BUG: stack guard page was hit in sys_openat
-From: syzbot <syzbot+1f18c9b1bb51239d82f2@syzkaller.appspotmail.com>
-To: akpm@linux-foundation.org, asmadeus@codewreck.org, bharathsm@microsoft.com, 
-	brauner@kernel.org, ceph-devel@vger.kernel.org, dhowells@redhat.com, 
-	ericvh@kernel.org, idryomov@gmail.com, jlayton@kernel.org, 
-	linux-afs@lists.infradead.org, linux-cifs@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org, 
-	linux_oss@crudebyte.com, lucho@ionkov.net, marc.dionne@auristor.com, 
-	mathieu.desnoyers@efficios.com, mhiramat@kernel.org, netfs@lists.linux.dev, 
-	pc@manguebit.com, ronniesahlberg@gmail.com, rostedt@goodmis.org, 
-	samba-technical@lists.samba.org, sfrench@samba.org, sprasad@microsoft.com, 
-	syzkaller-bugs@googlegroups.com, tom@talpey.com, v9fs@lists.linux.dev, 
-	xiubli@redhat.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250221015056.1269344-1-tongtiangen@huawei.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
 
-syzbot suspects this issue was fixed by commit:
+On 02/21, Tong Tiangen wrote:
+>
+> --- a/kernel/events/uprobes.c
+> +++ b/kernel/events/uprobes.c
+> @@ -506,6 +506,11 @@ int uprobe_write_opcode(struct arch_uprobe *auprobe, struct mm_struct *mm,
+>  	if (ret <= 0)
+>  		goto put_old;
+>
+> +	if (is_zero_page(old_page)) {
+> +		ret = -EINVAL;
+> +		goto put_old;
+> +	}
 
-commit e2d46f2ec332533816417b60933954173f602121
-Author: David Howells <dhowells@redhat.com>
-Date:   Mon Dec 16 20:41:17 2024 +0000
+I agree with David, the subject looks a bit misleading.
 
-    netfs: Change the read result collector to only use one work item
+And. I won't insist, this is cosmetic, but if you send V2 please consider
+moving the "verify_opcode()" check down, after the is_zero_page/PageCompound
+checks.
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=15cb3ae4580000
-start commit:   9528d418de4d Merge tag 'x86_urgent_for_v6.13' of git://git..
-git tree:       upstream
-kernel config:  https://syzkaller.appspot.com/x/.config?x=d7f05e16f48c5834
-dashboard link: https://syzkaller.appspot.com/bug?extid=1f18c9b1bb51239d82f2
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=17808824580000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=129252b0580000
+Oleg.
 
-If the result looks correct, please mark the issue as fixed by replying with:
-
-#syz fix: netfs: Change the read result collector to only use one work item
-
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
