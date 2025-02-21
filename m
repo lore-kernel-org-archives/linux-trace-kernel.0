@@ -1,25 +1,72 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CD84EF9D9;
-	Fri, 21 Feb 2025 04:57:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A25BA20010A
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 21 Feb 2025 08:12:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740113852; cv=none; b=HZeoiN9JZH2+ATPRiFW7jwiWCpDrb0gUpDTPTwKHySV08om//+PNBdVxNhWFCZD6Kxk0no4ojThAur05FVjr4Roz4zK//Rb8ChbBy8iH5g/+LjPIKm0NQyrnzflsjFi1r2O7W8KZmP7/ok9A+2kjkQ2lJLspTPOAlVSrA6zHgWM=
+	t=1740125536; cv=none; b=koXPrTsv5CVfFnN14/WiJmFe1w1wIn3PP/D7Ss+qorNHs2vuVpZCqk/ixRJYEFpsvu5I9Gf5M4zMK7tuc1YKPqEaVymLhCKoUrRXaxhtBp46/xmfqcB1VbJREM6BYxnSIzDVzbx/pwRyjnh5kBDQLsZz/Sic6Q3TXcJ+jzjoP3s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740113852; c=relaxed/simple;
-	bh=6aI+GHr2BBwATOUxRUp9CTA9xgtY8w2tQT/HqCn+JY8=;
+	s=arc-20240116; t=1740125536; c=relaxed/simple;
+	bh=lzWxN1S1fKFRnF86+Gs+pAO61S9OlEWIgKWpyTFIpqY=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=QcxNT/GIIb0ttsvtqrOy8GZajYsIvBCU5K4LcEDGPqDz9mxaxbO3W7xZ9yEUhanGyWIXBvXX83gpk6vAaTrad9jU5jElE67bF6i0xJSbHE3Q4LrKXMN0lp/KoJ7MTc7sE9wcX4R+fFBKiC98YBQSCg5/hS8K8pMIfjyb8AeB5Eg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E037916A3;
-	Thu, 20 Feb 2025 20:57:47 -0800 (PST)
-Received: from [10.162.41.20] (K4MQJ0H1H2.blr.arm.com [10.162.41.20])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 695743F59E;
-	Thu, 20 Feb 2025 20:57:17 -0800 (PST)
-Message-ID: <db344bf6-a064-4646-9edb-828f3d20d200@arm.com>
-Date: Fri, 21 Feb 2025 10:27:14 +0530
+	 In-Reply-To:Content-Type; b=VkcfvPQaq3RyIHDfwHJv34vE3Jbuex6aeyocKJV7GJJ1Ue6NUb3xCMV/9WzPeTF7d4MEuGQDbTmnfDBPVGjDN4rQ5cOKT8pMik5maxPC+phyBAiSVnIvcfASbt1/WWWAllYbZ8Whk/7Z5+CebTxLaxMRBpmhDsc5TCVFMF7wPPQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=QLsoHMLn; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QLsoHMLn"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1740125533;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=snZPDRQfF3nkbAItK54JkAF0l4vF4hDbSlVfQh+HZLY=;
+	b=QLsoHMLn4CfDDFIt4VDXIU5oF9R3j4oolvtwb43b9v8GHbVNpzVnNffhvwLDjuHCpXB/wF
+	7pz8Kir2C70MOEY4pR96tGF/3et9HZ6T4o76SDt7J/g5BKjmt8nG36wsU3cfClOQEH+P7l
+	mfS2b4eGDkRGi+A61QUhvzPrQqxdBoI=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-300-8mJvgNmAOL66Cayb4A6GUw-1; Fri, 21 Feb 2025 03:12:12 -0500
+X-MC-Unique: 8mJvgNmAOL66Cayb4A6GUw-1
+X-Mimecast-MFC-AGG-ID: 8mJvgNmAOL66Cayb4A6GUw_1740125531
+Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-43947a0919aso16948545e9.0
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 21 Feb 2025 00:12:12 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740125531; x=1740730331;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=snZPDRQfF3nkbAItK54JkAF0l4vF4hDbSlVfQh+HZLY=;
+        b=W9K2Wn5Z9Xe7cQzjVZiaCglUfTGltBw+rgScnSBBtm7QsmdsTYPdfD5RfQkMNuQQb4
+         J6W5bEGpEIf/miaJyrBQyOwPYGiaH8Jafj5eEcbXOw46Bv2HFoHNxoI+WKYFlQYrC9FG
+         sl3mmkP6JxGZzBbwVZDsfL/IaHYWpRuEifyAl6FLwQAim/2nhNLec763Si5C07s7LNX4
+         2IiGzFO4FoMQv8E4JlZIoqVVJ33zG5hIYtsmgKP2AQ7Wglf8mZXSbKx2hxLhiPDEKLFF
+         aCcVenCDHiid7JEQH+AjV66ooAhuTRudhS4iTmtr4ZNIyMcN7LxPpEInBeTG16iGbPR/
+         oGtw==
+X-Forwarded-Encrypted: i=1; AJvYcCWq4caq9XFDisD++s/BzMhXzdAkE2YKR+/z/U9W4ngA/UuPr+PLzdtud04eEkTaKB7CEToj53wKr2geiekadwR23Go=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxZP7cf1wzvc6t/miHzNbDSnwPQqCdZGF/7fk4IhaSYDUNX2sDf
+	bj9AQcDU1imLR56RtCfBTpDfXP/gHv1P61e2ooX8mdkmBRV2jTWCQ3Jp+OkzGNiGb6TOUyV+nXZ
+	6MgVFaLX1caWhXp5dUR6eVhjxVodjbQ6OpivXtF26Uc8KiLlqwRlsxUrvHkEvgxFdfkxN/g==
+X-Gm-Gg: ASbGncs+hPdTqVFr+XEAgOONE3i1kEx1h/0g7A6oXta8E6e68/oFqiylrgNWcOJhvpo
+	XC7il04CVMqWPIOi7Rk53EwqcKLY/gD/SeLnDq635/5D8cTeO1D6o5i5gWa+m3HOIv3OXV2PmVF
+	Pi4L+WYJLcOlZR71rCSocRqLKlqLs5aqSRIL+HOAwj1lY4loJnMyGstOI71OFuJ8OKY5CDmSRrJ
+	n+Glso9vohI6OL4WH//bZqOav9AH6ruRo70aG1PHvYkq0u9N6kkxkkyBQjRCtdbOI1E3bH0F1x1
+	9D+OeREEIn1puOP9mAZxEAsXv3AEo5LN/Nu27rzVY8mu/w==
+X-Received: by 2002:a05:600c:45ca:b0:439:9a40:aa0b with SMTP id 5b1f17b1804b1-439ae21e36emr15274115e9.25.1740125531069;
+        Fri, 21 Feb 2025 00:12:11 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IEG0dkekhehCKl02eUDjNK4+y+UHQN/7nOWkErBj+FTNK2mzW3HjK76Y3BDYHomyV9SXb1sTw==
+X-Received: by 2002:a05:600c:45ca:b0:439:9a40:aa0b with SMTP id 5b1f17b1804b1-439ae21e36emr15273695e9.25.1740125530691;
+        Fri, 21 Feb 2025 00:12:10 -0800 (PST)
+Received: from [192.168.3.141] (p4ff23890.dip0.t-ipconnect.de. [79.242.56.144])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-439b02ce404sm9811415e9.7.2025.02.21.00.12.07
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 21 Feb 2025 00:12:09 -0800 (PST)
+Message-ID: <bdc01d66-01a7-43f6-954f-12a274e294d4@redhat.com>
+Date: Fri, 21 Feb 2025 09:12:07 +0100
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -27,211 +74,147 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC v2 0/9] khugepaged: mTHP support
-To: Nico Pache <npache@redhat.com>
-Cc: Ryan Roberts <ryan.roberts@arm.com>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, linux-mm@kvack.org,
- anshuman.khandual@arm.com, catalin.marinas@arm.com, cl@gentwo.org,
- vbabka@suse.cz, mhocko@suse.com, apopple@nvidia.com,
- dave.hansen@linux.intel.com, will@kernel.org, baohua@kernel.org,
- jack@suse.cz, srivatsa@csail.mit.edu, haowenchao22@gmail.com,
- hughd@google.com, aneesh.kumar@kernel.org, yang@os.amperecomputing.com,
- peterx@redhat.com, ioworker0@gmail.com, wangkefeng.wang@huawei.com,
- ziy@nvidia.com, jglisse@google.com, surenb@google.com,
- vishal.moola@gmail.com, zokeefe@google.com, zhengqi.arch@bytedance.com,
- jhubbard@nvidia.com, 21cnbao@gmail.com, willy@infradead.org,
- kirill.shutemov@linux.intel.com, david@redhat.com, aarcange@redhat.com,
- raquini@redhat.com, sunnanyong@huawei.com, usamaarif642@gmail.com,
- audra@redhat.com, akpm@linux-foundation.org, rostedt@goodmis.org,
- mathieu.desnoyers@efficios.com, tiwai@suse.de
-References: <20250211003028.213461-1-npache@redhat.com>
- <8a37f99b-f207-4688-bc90-7f8e6900e29d@arm.com>
- <CAA1CXcDHCesahmZs21rVP=xai9C=-TpK_7=_8DMqxGJRJzyKSA@mail.gmail.com>
- <867280bf-2ba1-4e83-8e16-9d93e1c41e08@arm.com>
- <CAA1CXcDLU-ZQJiF2pXH_=EtqXcqaZKLS+gJ7SGtTq7+2HA47QA@mail.gmail.com>
+Subject: Re: [PATCH -next v2] uprobes: fix two zero old_folio bugs in
+ __replace_page()
+To: Tong Tiangen <tongtiangen@huawei.com>, Oleg Nesterov <oleg@redhat.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Peter Xu <peterx@redhat.com>,
+ Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>,
+ "Liang, Kan" <kan.liang@linux.intel.com>,
+ Masami Hiramatsu <mhiramat@kernel.org>
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org,
+ wangkefeng.wang@huawei.com, Guohanjun <guohanjun@huawei.com>
+References: <20250221015056.1269344-1-tongtiangen@huawei.com>
+From: David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <20250221015056.1269344-1-tongtiangen@huawei.com>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: xsGnUfAN0VRSMbnlYQ7dQbNEdRVa7PYZEdDVr2c3Ot8_1740125531
+X-Mimecast-Originator: redhat.com
 Content-Language: en-US
-From: Dev Jain <dev.jain@arm.com>
-In-Reply-To: <CAA1CXcDLU-ZQJiF2pXH_=EtqXcqaZKLS+gJ7SGtTq7+2HA47QA@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
+On 21.02.25 02:50, Tong Tiangen wrote:
+> We triggered the following error logs in syzkaller test:
+> 
+>    BUG: Bad page state in process syz.7.38  pfn:1eff3
+>    page: refcount:0 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x1eff3
+>    flags: 0x3fffff00004004(referenced|reserved|node=0|zone=1|lastcpupid=0x1fffff)
+>    raw: 003fffff00004004 ffffe6c6c07bfcc8 ffffe6c6c07bfcc8 0000000000000000
+>    raw: 0000000000000000 0000000000000000 00000000fffffffe 0000000000000000
+>    page dumped because: PAGE_FLAGS_CHECK_AT_FREE flag(s) set
+>    Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.13.0-1ubuntu1.1 04/01/2014
+>    Call Trace:
+>     <TASK>
+>     dump_stack_lvl+0x32/0x50
+>     bad_page+0x69/0xf0
+>     free_unref_page_prepare+0x401/0x500
+>     free_unref_page+0x6d/0x1b0
+>     uprobe_write_opcode+0x460/0x8e0
+>     install_breakpoint.part.0+0x51/0x80
+>     register_for_each_vma+0x1d9/0x2b0
+>     __uprobe_register+0x245/0x300
+>     bpf_uprobe_multi_link_attach+0x29b/0x4f0
+>     link_create+0x1e2/0x280
+>     __sys_bpf+0x75f/0xac0
+>     __x64_sys_bpf+0x1a/0x30
+>     do_syscall_64+0x56/0x100
+>     entry_SYSCALL_64_after_hwframe+0x78/0xe2
+> 
+>     BUG: Bad rss-counter state mm:00000000452453e0 type:MM_FILEPAGES val:-1
+> 
+> The following syzkaller test case can be used to reproduce:
+> 
+>    r2 = creat(&(0x7f0000000000)='./file0\x00', 0x8)
+>    write$nbd(r2, &(0x7f0000000580)=ANY=[], 0x10)
+>    r4 = openat(0xffffffffffffff9c, &(0x7f0000000040)='./file0\x00', 0x42, 0x0)
+>    mmap$IORING_OFF_SQ_RING(&(0x7f0000ffd000/0x3000)=nil, 0x3000, 0x0, 0x12, r4, 0x0)
+>    r5 = userfaultfd(0x80801)
+>    ioctl$UFFDIO_API(r5, 0xc018aa3f, &(0x7f0000000040)={0xaa, 0x20})
+>    r6 = userfaultfd(0x80801)
+>    ioctl$UFFDIO_API(r6, 0xc018aa3f, &(0x7f0000000140))
+>    ioctl$UFFDIO_REGISTER(r6, 0xc020aa00, &(0x7f0000000100)={{&(0x7f0000ffc000/0x4000)=nil, 0x4000}, 0x2})
+>    ioctl$UFFDIO_ZEROPAGE(r5, 0xc020aa04, &(0x7f0000000000)={{&(0x7f0000ffd000/0x1000)=nil, 0x1000}})
+>    r7 = bpf$PROG_LOAD(0x5, &(0x7f0000000140)={0x2, 0x3, &(0x7f0000000200)=ANY=[@ANYBLOB="1800000000120000000000000000000095"], &(0x7f0000000000)='GPL\x00', 0x7, 0x0, 0x0, 0x0, 0x0, '\x00', 0x0, @fallback=0x30, 0xffffffffffffffff, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x10, 0x0, @void, @value}, 0x94)
+>    bpf$BPF_LINK_CREATE_XDP(0x1c, &(0x7f0000000040)={r7, 0x0, 0x30, 0x1e, @val=@uprobe_multi={&(0x7f0000000080)='./file0\x00', &(0x7f0000000100)=[0x2], 0x0, 0x0, 0x1}}, 0x40)
+> 
+> The cause is that zero pfn is set to the pte without increasing the rss
+> count in mfill_atomic_pte_zeropage() and the refcount of zero folio does
+> not increase accordingly. Then, the operation on the same pfn is performed
+> in uprobe_write_opcode()->__replace_page() to unconditional decrease the
+> rss count and old_folio's refcount.
+> 
+> Therefore, two bugs are introduced:
+> 1. The rss count is incorrect, when process exit, the check_mm() report
+>     error "Bad rss-count".
+> 2. The reserved folio (zero folio) is freed when folio->refcount is zero,
+>     then free_pages_prepare->free_page_is_bad() report error
+>     "Bad page state".
 
+Well, there is more, like triggering the
 
-On 21/02/25 12:42 am, Nico Pache wrote:
-> On Wed, Feb 19, 2025 at 2:01 AM Dev Jain <dev.jain@arm.com> wrote:
->>
->>
->>
->> On 19/02/25 4:00 am, Nico Pache wrote:
->>> On Tue, Feb 18, 2025 at 9:07 AM Ryan Roberts <ryan.roberts@arm.com> wrote:
->>>>
->>>> On 11/02/2025 00:30, Nico Pache wrote:
->>>>> The following series provides khugepaged and madvise collapse with the
->>>>> capability to collapse regions to mTHPs.
->>>>>
->>>>> To achieve this we generalize the khugepaged functions to no longer depend
->>>>> on PMD_ORDER. Then during the PMD scan, we keep track of chunks of pages
->>>>> (defined by MTHP_MIN_ORDER) that are utilized. This info is tracked
->>>>> using a bitmap. After the PMD scan is done, we do binary recursion on the
->>>>> bitmap to find the optimal mTHP sizes for the PMD range. The restriction
->>>>> on max_ptes_none is removed during the scan, to make sure we account for
->>>>> the whole PMD range. max_ptes_none will be scaled by the attempted collapse
->>>>> order to determine how full a THP must be to be eligible. If a mTHP collapse
->>>>> is attempted, but contains swapped out, or shared pages, we dont perform the
->>>>> collapse.
->>>>>
->>>>> With the default max_ptes_none=511, the code should keep its most of its
->>>>> original behavior. To exercise mTHP collapse we need to set max_ptes_none<=255.
->>>>> With max_ptes_none > HPAGE_PMD_NR/2 you will experience collapse "creep" and
->>>>
->>>> nit: I think you mean "max_ptes_none >= HPAGE_PMD_NR/2" (greater or *equal*)?
->>>> This is making my head hurt, but I *think* I agree with you that if
->>>> max_ptes_none is less than half of the number of ptes in a pmd, then creep
->>>> doesn't happen.
->>> Haha yea the compressed bitmap does not make the math super easy to
->>> follow, but i'm glad we arrived at the same conclusion :)
->>>>
->>>> To make sure I've understood;
->>>>
->>>>    - to collapse to 16K, you would need >=3 out of 4 PTEs to be present
->>>>    - to collapse to 32K, you would need >=5 out of 8 PTEs to be present
->>>>    - to collapse to 64K, you would need >=9 out of 16 PTEs to be present
->>>>    - ...
->>>>
->>>> So if we start with 3 present PTEs in a 16K area, we collapse to 16K and now
->>>> have 4 PTEs in a 32K area which is insufficient to collapse to 32K.
->>>>
->>>> Sounds good to me!
->>> Great! Another easy way to think about it is, with max_ptes_none =
->>> HPAGE_PMD_NR/2, a collapse will double the size, and we only need half
->>> for it to collapse again. Each size is 2x the last, so if we hit one
->>> collapse, it will be eligible again next round.
->>
->> Please someone correct me if I am wrong.
->>
-> 
-> max_ptes_none = 204
-> scaled_none = (204 >> 9 - 3) = ~3.1
-> so 4 pages need to be available in each chunk for the bit to be set, not 5.
-> 
-> at 204 the bitmap check is
-> 512 - 1 - 204 = 307
-> (PMD) 307 >> 3 = 38
-> (1024k) 307 >> 4 = 19
-> (512k) 307 >> 5 = 9
-> (256k) 307 >> 6 = 4
-> 
->> Consider this; you are collapsing a 256K folio. => #PTEs = 256K/4K = 64
->> => #chunks = 64 / 8 = 8.
->>
->> Let the PTE state within the chunks be as follows:
->>
->> Chunk 0: < 5 filled   Chunk 1: 5 filled   Chunk 2: 5 filled   Chunk 3: 5
->> filled
->>
->> Chunk 4: 5 filled   Chunk 5: < 5 filled   Chunk 6: < 5 filled   Chunk 7:
->> < 5 filled
->>
->> Consider max_ptes_none = 40% (512 * 40 / 100 = 204.8 (round down) = 204
->> < HPAGE_PMD_NR/2).
->> => To collapse we need at least 60% of the PTEs filled.
->>
->> Your algorithm marks chunks in the bitmap if 60% of the chunk is filled.
->> Then, if the number of chunks set is greater than 60%, then we will
->> collapse.
->>
->> Chunk 0 will be marked zero because less than 5 PTEs are filled =>
->> percentage filled <= 50%
->>
->> Right now the state is
->> 0111 1000
->> where the indices are the chunk numbers.
->> Since #1s = 4 => percent filled = 4/8 * 100 = 50%, 256K folio collapse
->> won't happen.
->>
->> For the first 4 chunks, the percent filled is 75%.  So the state becomes
->> 1111 1000
->> after 128K collapse, and now 256K collapse will happen.
->>
->> Either I got this correct, or I do not understand the utility of
->> maintaining chunks :) What you are doing is what I am doing except that
->> my chunk size = 1.
-> 
-> Ignoring all the math, and just going off the 0111 1000
-> We do "creep", but its not the same type of "creep" we've been
-> describing. The collapse in the first half will allow the collapse in
-> order++ to collapse but it stops there and doesnt keep getting
-> promoted to a PMD size. That is unless the adjacent 256k also has some
-> bits set, then it can collapse to 512k. So I guess we still can creep,
-> but its way less aggressive and only when there is actual memory being
-> utilized in the adjacent chunk, so it's not like we are creating a
-> huge waste.
+	VM_WARN_ON_FOLIO(is_zero_folio(folio), folio);
 
-I get you. You will creep when the adjacent chunk has at least 1 bit 
-set. I don't really have a strong opinion on this one.
+in __folio_rmap_sanity_checks() I assume.
 
-> 
-> 
->>
->>>>
->>>>> constantly promote mTHPs to the next available size.
->>>>>
->>>>> Patch 1:     Some refactoring to combine madvise_collapse and khugepaged
->>>>> Patch 2:     Refactor/rename hpage_collapse
->>>>> Patch 3-5:   Generalize khugepaged functions for arbitrary orders
->>>>> Patch 6-9:   The mTHP patches
->>>>>
->>>>> ---------
->>>>>    Testing
->>>>> ---------
->>>>> - Built for x86_64, aarch64, ppc64le, and s390x
->>>>> - selftests mm
->>>>> - I created a test script that I used to push khugepaged to its limits while
->>>>>      monitoring a number of stats and tracepoints. The code is available
->>>>>      here[1] (Run in legacy mode for these changes and set mthp sizes to inherit)
->>>>>      The summary from my testings was that there was no significant regression
->>>>>      noticed through this test. In some cases my changes had better collapse
->>>>>      latencies, and was able to scan more pages in the same amount of time/work,
->>>>>      but for the most part the results were consistant.
->>>>> - redis testing. I tested these changes along with my defer changes
->>>>>     (see followup post for more details).
->>>>> - some basic testing on 64k page size.
->>>>> - lots of general use. These changes have been running in my VM for some time.
->>>>>
->>>>> Changes since V1 [2]:
->>>>> - Minor bug fixes discovered during review and testing
->>>>> - removed dynamic allocations for bitmaps, and made them stack based
->>>>> - Adjusted bitmap offset from u8 to u16 to support 64k pagesize.
->>>>> - Updated trace events to include collapsing order info.
->>>>> - Scaled max_ptes_none by order rather than scaling to a 0-100 scale.
->>>>> - No longer require a chunk to be fully utilized before setting the bit. Use
->>>>>      the same max_ptes_none scaling principle to achieve this.
->>>>> - Skip mTHP collapse that requires swapin or shared handling. This helps prevent
->>>>>      some of the "creep" that was discovered in v1.
->>>>>
->>>>> [1] - https://gitlab.com/npache/khugepaged_mthp_test
->>>>> [2] - https://lore.kernel.org/lkml/20250108233128.14484-1-npache@redhat.com/
->>>>>
->>>>> Nico Pache (9):
->>>>>     introduce khugepaged_collapse_single_pmd to unify khugepaged and
->>>>>       madvise_collapse
->>>>>     khugepaged: rename hpage_collapse_* to khugepaged_*
->>>>>     khugepaged: generalize hugepage_vma_revalidate for mTHP support
->>>>>     khugepaged: generalize alloc_charge_folio for mTHP support
->>>>>     khugepaged: generalize __collapse_huge_page_* for mTHP support
->>>>>     khugepaged: introduce khugepaged_scan_bitmap for mTHP support
->>>>>     khugepaged: add mTHP support
->>>>>     khugepaged: improve tracepoints for mTHP orders
->>>>>     khugepaged: skip collapsing mTHP to smaller orders
->>>>>
->>>>>    include/linux/khugepaged.h         |   4 +
->>>>>    include/trace/events/huge_memory.h |  34 ++-
->>>>>    mm/khugepaged.c                    | 422 +++++++++++++++++++----------
->>>>>    3 files changed, 306 insertions(+), 154 deletions(-)
->>>>>
->>>>
->>>
->>>
->>
-> 
+So maybe just call the patch
+
+	"uprobes: reject the share zeropage in uprobe_write_opcode)()"
+
+Thanks!
+
+-- 
+Cheers,
+
+David / dhildenb
 
