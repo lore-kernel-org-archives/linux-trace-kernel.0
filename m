@@ -1,147 +1,120 @@
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0A6F7494;
-	Sat, 22 Feb 2025 07:19:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A00441FF7BE;
+	Sat, 22 Feb 2025 09:02:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740208774; cv=none; b=PPjmr5SfCOdQB/hd+pnikGrIxQ3Kd4FINq28Nw8VoJb9lpir1KekZrPoerRn5mwz7VPtN4ALvFY3v5SO0pf8GhJVWeoOUj2SRYMtAHlJyxQs19AWx74WnoDKkncnCH1FSw8eAELeq1V8qRFfxL6h/8bEPCRXdg7VPSpzXNwlFvQ=
+	t=1740214934; cv=none; b=JOdek9+ihbcdiRozghY0KLSg8dbmmBu/D4V1ZxJzz9yOng1ehP2qBZde+hiVVT/umMLGUMTn10Yw7cpzRooDKOYMl4KXDx83Z+sr6EZcetbcieA/tGW3iEFEKa4+zbtLCcpCdmlW+u4fOCpKj6W5kp2kHz7VmUT4asfcRE0d2Uw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740208774; c=relaxed/simple;
-	bh=R5+4K/Nzsi5fbnQc0W9jCxIEubmmJjFdB88aAxqxfu4=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:CC:References:
-	 In-Reply-To:Content-Type; b=bBGUPKogrHrAOHemJpl+KK7xRxKV33rElJ6ts6dqHaiHBHyOFsuJXwzK3COkMJvnAFVGT64wu01bxzN3uVlpp8d4HnqMQj7k/UuIYnj9mq0uPXbX0b/zDSS+hhI5PngDrF5n1ME1qH9SHwIK95y5mAl4bX10NfGq/VQ57JJigvQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.174])
-	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4Z0JDw3nVGzvWpS;
-	Sat, 22 Feb 2025 15:15:44 +0800 (CST)
-Received: from kwepemk500005.china.huawei.com (unknown [7.202.194.90])
-	by mail.maildlp.com (Postfix) with ESMTPS id 20EC4140154;
-	Sat, 22 Feb 2025 15:19:27 +0800 (CST)
-Received: from [10.174.179.234] (10.174.179.234) by
- kwepemk500005.china.huawei.com (7.202.194.90) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Sat, 22 Feb 2025 15:19:25 +0800
-Message-ID: <ef999493-cac0-68bb-2684-97da0fb8b583@huawei.com>
-Date: Sat, 22 Feb 2025 15:19:24 +0800
+	s=arc-20240116; t=1740214934; c=relaxed/simple;
+	bh=U1Y3QCiccIy2Bc3YWo1Ckf9aCUTnMXxllH24aDN4AeI=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=SZaIlbiENF4pduC2QMaYLlpX5soNZqAicmhw4TlXCYnduu+kKr5ljhX9I3ee8UQmuYVBaryVIn/OVofNKtcdEVTmxLS9g/Tcqi2uQ+2/eTaN3cj+KQcicRwWqoboI9kp4zEAClCSVOtKO9tLV+Ra1MgTemmSu0bo56XcKOSrW5M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=h9y8gvgU; arc=none smtp.client-ip=209.85.128.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h9y8gvgU"
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-43989226283so19596695e9.1;
+        Sat, 22 Feb 2025 01:02:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1740214931; x=1740819731; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=cc4Exa6FAddDAbtlvd2fqBlbQffGYT9nB3xGilwSryg=;
+        b=h9y8gvgUf9rCExtFzbsT4oCOQzLS11DhZRC5NjgFaaj/pkdGgBBPpLnvAJhBqE0hyF
+         aCJTtq1fqfTLsFhL/tCN3I/+tTHkwdMCLj8FngqWsZihka8xkn+9fxxQgasydMLPA8Za
+         1HsDwuUTQ397twuBN0iv9M6UOrGatUMVKAXYqJNn0EE3zYxpdXAaXlNiSMBjUhwU8U2h
+         p3/ZlCvxPKpdCK/iTpHC6ihAu9XhRVjxYjf4c3+3JJkalpnn7iaE8T8K/SSAf6RH6v1U
+         OuN+HRhnsU65mZRLF9+4E4vC5Wg0rrF3Ae9seXvDcr6QB63wnDWt7ntCnNHSUTU4178D
+         XWYQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740214931; x=1740819731;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=cc4Exa6FAddDAbtlvd2fqBlbQffGYT9nB3xGilwSryg=;
+        b=aJn/UacoeKU4q/knOeKaybU4dkC/GUDfDgo1ZQcFNqKda4Yyz/y4OHmi+g91JVSGLp
+         PVoOyBaqez2GCv8OzfDolLHcUSMuqKufkWHOdcT2yl47SNQr29Wp8JRrJBTkRMtSE8mS
+         wCzxuM/pP+T+aNfMpK7nLvFKArr5jWLBjWm4frpeXje2egHU4e+LxS9qlX4J0Lo+ActU
+         1SETn+Et+MKDh6XUJariyrElT4s+9pI6Zjh6/JTmLA131MSB1qjrqrWfjWlufrMXffIo
+         gcZwfc8HjoSAFQuvH66TmuVdPOxzTH/rFxhiBUyzLNDD053z8CpgR/z3YmW56HhQG56k
+         /Y7A==
+X-Forwarded-Encrypted: i=1; AJvYcCV7DhCtYi2Z+yejK/ZXRZsBvbwaObCpYxs9Of1mLwm3noDP53Ag0Vec67P8NA/Bs/kVmtQu4DzohRnrF9+zOJccf8PB@vger.kernel.org, AJvYcCVYGer2JM2iREc8ZOHKWbU8bxiQlX+QVZTVbKAAh/NVbIwRcpK2WWl01fOD+iEY1eBBFn6SRBu2e5tg6X/V@vger.kernel.org, AJvYcCWm1qRl+8DXhbDGkOGfb6WG/IlrIXDXgbpModUFOnV2nRUaU7ikSQp+BimwL3MhrMW4oVRXf8Y3NtXj6ugsvw==@vger.kernel.org, AJvYcCXDkCBK2EqTF3vCWyEHDKSVCNOJ294RxUGQuh8LpQktc/qWQPkLD8eAPRyQu5ZRUoW4UmV/0O8+wac=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwrczsJFnXZNQEsXhS5zo+AN8ZwmRIHJRahaR6QCnAxiHwr3U8e
+	/+PfEU1Xgch88KrGVwME+/95g8099fq24uY9NU2fwvReVWCa3MZA
+X-Gm-Gg: ASbGnctw4jPd5iSkHx//pbeSOtw5iO0T80+A2uOQz7tCFCMNWmci8CJV49GcMN0l9FN
+	Yrs7GxI/kBngyfsSo43YZZ/2K8AcRxDngkH0i/vLWJBJe7iDqtD75Tyq658AFGhn9re8mH0bBld
+	jGDy+nl8gt5nbgz+HaRhWhN/CNJu5eEohtNFNVBCbI/4wf19Kdz5dC9vb3CaTAtbqT5v3/HxpVb
+	IMwYALrZAiypXSS+m1Y8zmQr2q+BSmEPVdTHrpX9bRsZSq75apHXiI0KqPX0bBrCGsxMPkVZGF4
+	azC2YtJ6sMOhAHIldPNCALAv1yLBW6BDiBQxzInFc90c+O7208cXxPzs00EmVQFB
+X-Google-Smtp-Source: AGHT+IGgwQsHaCz1wE9iK2C5QOgZJkgw5pU/qb/Udfdou4Zdzj7nBzMomCJ1PT4g6dRXg8sa3K1YLg==
+X-Received: by 2002:a05:600c:4fd3:b0:439:8c80:6af4 with SMTP id 5b1f17b1804b1-439ae21cdfcmr52749815e9.19.1740214930566;
+        Sat, 22 Feb 2025 01:02:10 -0800 (PST)
+Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-439b02d6837sm40159295e9.13.2025.02.22.01.02.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 22 Feb 2025 01:02:09 -0800 (PST)
+Date: Sat, 22 Feb 2025 09:02:08 +0000
+From: David Laight <david.laight.linux@gmail.com>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Michal =?UTF-8?B?S291dG7DvQ==?= <mkoutny@suse.com>, Christian Brauner
+ <brauner@kernel.org>, Alexander Mikhalitsyn <alexander@mihalicyn.com>,
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-fsdevel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Jonathan
+ Corbet <corbet@lwn.net>, Kees Cook <kees@kernel.org>, "Eric W . Biederman"
+ <ebiederm@xmission.com>, Oleg Nesterov <oleg@redhat.com>
+Subject: Re: [PATCH 2/2] pid: Optional first-fit pid allocation
+Message-ID: <20250222090208.2b7aa864@pumpkin>
+In-Reply-To: <20250221161854.8ea0dd0b2da05d38574cefc4@linux-foundation.org>
+References: <20250221170249.890014-1-mkoutny@suse.com>
+	<20250221170249.890014-3-mkoutny@suse.com>
+	<20250221161854.8ea0dd0b2da05d38574cefc4@linux-foundation.org>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.8.0
-Subject: Re: [PATCH -next v2] uprobes: fix two zero old_folio bugs in
- __replace_page()
-From: Tong Tiangen <tongtiangen@huawei.com>
-To: Oleg Nesterov <oleg@redhat.com>
-CC: David Hildenbrand <david@redhat.com>, Andrew Morton
-	<akpm@linux-foundation.org>, Peter Zijlstra <peterz@infradead.org>, Ingo
- Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa
-	<jolsa@kernel.org>, Peter Xu <peterx@redhat.com>, Ian Rogers
-	<irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, "Liang, Kan"
-	<kan.liang@linux.intel.com>, Masami Hiramatsu <mhiramat@kernel.org>,
-	<linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-mm@kvack.org>, <linux-trace-kernel@vger.kernel.org>,
-	<bpf@vger.kernel.org>, <wangkefeng.wang@huawei.com>, Guohanjun
-	<guohanjun@huawei.com>
-References: <20250221015056.1269344-1-tongtiangen@huawei.com>
- <20250221152841.GA24705@redhat.com>
- <46a48eb4-5245-81ba-9779-ace8f162c31b@huawei.com>
-In-Reply-To: <46a48eb4-5245-81ba-9779-ace8f162c31b@huawei.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
- kwepemk500005.china.huawei.com (7.202.194.90)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
+On Fri, 21 Feb 2025 16:18:54 -0800
+Andrew Morton <akpm@linux-foundation.org> wrote:
 
+> On Fri, 21 Feb 2025 18:02:49 +0100 Michal Koutn=C3=BD <mkoutny@suse.com> =
+wrote:
+>=20
+> > --- a/Documentation/admin-guide/sysctl/kernel.rst
+> > +++ b/Documentation/admin-guide/sysctl/kernel.rst
+> > @@ -1043,6 +1043,8 @@ The last pid allocated in the current (the one ta=
+sk using this sysctl
+> >  lives in) pid namespace. When selecting a pid for a next task on fork
+> >  kernel tries to allocate a number starting from this one.
+> > =20
+> > +When set to -1, first-fit pid numbering is used instead of the next-fi=
+t.
+> > + =20
+>=20
+> This seems thin.  Is there more we can tell our users?  What are the
+> visible effects of this?  What are the benefits?  Why would they want
+> to turn it on?
+>=20
+> I mean, there are veritable paragraphs in the changelogs, but just a
+> single line in the user-facing docs.  Seems there could be more...
 
-在 2025/2/22 10:37, Tong Tiangen 写道:
-> 
-> 
-> 在 2025/2/21 23:28, Oleg Nesterov 写道:
->> On 02/21, Tong Tiangen wrote:
->>>
->>> --- a/kernel/events/uprobes.c
->>> +++ b/kernel/events/uprobes.c
->>> @@ -506,6 +506,11 @@ int uprobe_write_opcode(struct arch_uprobe 
->>> *auprobe, struct mm_struct *mm,
->>>       if (ret <= 0)
->>>           goto put_old;
->>>
->>> +    if (is_zero_page(old_page)) {
->>> +        ret = -EINVAL;
->>> +        goto put_old;
->>> +    }
->>
->> I agree with David, the subject looks a bit misleading.
->>
->> And. I won't insist, this is cosmetic, but if you send V2 please consider
->> moving the "verify_opcode()" check down, after the 
->> is_zero_page/PageCompound
->> checks.
->>
->> Oleg.
-> 
-> OK, check the validity of the old page first and modify the subject in
-> v3 .
-> 
-> Thanks.
+It also seems a good way of being able to predict the next pid and
+doing all the 'nasty' things that allows because there is no guard
+time on pid reuse.
 
-I'm going to add a new patch to moving the "verify_opcode()" check down
-, IIUC that "!PageAnon(old_page)" below also needs to be moved together,
-and as David said this can be triggered by user space, so delete the use
-  of "WARN", as follows:
+Both first-fit and next-fit have the same issue.
+Picking a random pid is better.
 
+Or pick the pid after finding an empty slot in the 'hash' table.
+Then you guarantee O(1) lookup and can easily stop pids being reused
+quickly.
 
-@@ -502,20 +502,16 @@ int uprobe_write_opcode(struct arch_uprobe 
-*auprobe, struct mm_struct *mm,
-         if (IS_ERR(old_page))
-                 return PTR_ERR(old_page);
-
--       ret = verify_opcode(old_page, vaddr, &opcode);
--       if (ret <= 0)
-+       ret = -EINVAL;
-+       if (is_zero_page(old_page))
-                 goto put_old;
-
--       if (is_zero_page(old_page)) {
--               ret = -EINVAL;
-+       if (!is_register && (PageCompound(old_page) || !PageAnon(old_page)))
-                 goto put_old;
--       }
-
--       if (WARN(!is_register && PageCompound(old_page),
--                "uprobe unregister should never work on compound 
-page\n")) {
--               ret = -EINVAL;
-+       ret = verify_opcode(old_page, vaddr, &opcode);
-+       if (ret <= 0)
-                 goto put_old;
--       }
-
-         /* We are going to replace instruction, update ref_ctr. */
-         if (!ref_ctr_updated && uprobe->ref_ctr_offset) {
-@@ -526,10 +522,6 @@ int uprobe_write_opcode(struct arch_uprobe 
-*auprobe, struct mm_struct *mm,
-                 ref_ctr_updated = 1;
-         }
-
--       ret = 0;
--       if (!is_register && !PageAnon(old_page))
--               goto put_old;
--
-         ret = anon_vma_prepare(vma);
-
-Thanks.
-> 
->>
->>
->> .
-> 
-> .
+	David
