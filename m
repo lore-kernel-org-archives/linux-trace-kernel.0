@@ -1,167 +1,77 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B850D20AF9A
-	for <linux-trace-kernel@vger.kernel.org>; Sat, 22 Feb 2025 12:40:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.4])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1B0B73FB3B;
+	Sun, 23 Feb 2025 07:01:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.4
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740228043; cv=none; b=fMSdlVQa1IU0AVROw+3uxAiqRxykCk68T3fEySI9Rmg9Q0Oqj765VEmbvc7jnmxmR3c0m2s6QFp4ml7UXzhHW/0eFkyHJGtmp/EIQ30rgov3aVK+RUXnRf6anIkndPBXVYbrn4etYSZK0d0gBhG7UCKPiErE/qonkvNeGA4WNrw=
+	t=1740294096; cv=none; b=Ro0IZwnz58NXmUwSdJFih0Z5sXZ5Qsjsf7pSezCQa80k01PozS+Ve+n5MXQ55ml2yrBS/b/30Kj47OTIuS9gMg58r/zUnXByCuPe+3U122GtTfrFNNLshR82bw1/Gk05aigtmwDOjxMLb5i9I4nKhgqjr1F1LX4f3aCEphZljVY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740228043; c=relaxed/simple;
-	bh=44WiBU3e87uUbt5Joj83rDplJVriJ4yNvs0txze1vTY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rpjC+Wn9f9pkImd5z5ByC/gbDEoEDZtwT0/sLL6353hjEZU/6UMdEmjP7aOp52ickYxJmqr1R3kjXp4XEui/uZUhDTYn8ZH+O7IIGB6EMEzjiMOm57rkcw/lo8QLcP4QdaGneIom5XWy1/XjXpQ2iIqMNu6Tb+fOv0NPn715tI4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=QhiNuhQf; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1740294096; c=relaxed/simple;
+	bh=iHcM+418cwGbIFvJAKJ3q5m+qdZ1GMm7O/kw8C9W984=;
+	h=From:To:Cc:Subject:Date:Message-Id; b=rUI7fK6wD2vwVLZzfXpw5kSoEy27j7YBM6b0aokm1sxmKqS/m/0nOwuIn8jjQRAEJkQqhtW9Huk1NLCvyUfSQcBARWlgtBmurVe6p7yq1zX0o2yT18kpeGOCgVligVtHkHcs5oa8g74n7SzECj/Arx0heLHEVJEUdEI7Al1twao=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=d8JGqOXV; arc=none smtp.client-ip=117.135.210.4
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QhiNuhQf"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1740228040;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=qAd8SANoOauq5uEymG+29fWeYf7y+gGWAJmdDdaiSKs=;
-	b=QhiNuhQfO8pL4JNOd1uGHVyp7OW9Zpe6Fc0oVZ+LhpUZs7Gem9C/G8rgmN11lAsv/SOnkl
-	foTKnmmeMSq2HPz7DpK7c+m4yshLQl9Xq5Lz785Wj+B0nuolaVLa3iiPkkNwrEnFjE2biD
-	yIqbdQuQJkxx4L5kXlvsi2VS5+uKKfE=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-122-u0F871nGP4-7jWvcSvDHtQ-1; Sat,
- 22 Feb 2025 07:40:35 -0500
-X-MC-Unique: u0F871nGP4-7jWvcSvDHtQ-1
-X-Mimecast-MFC-AGG-ID: u0F871nGP4-7jWvcSvDHtQ_1740228033
-Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 6224619560B9;
-	Sat, 22 Feb 2025 12:40:32 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.2])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 8A6E8180094A;
-	Sat, 22 Feb 2025 12:40:23 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Sat, 22 Feb 2025 13:40:03 +0100 (CET)
-Date: Sat, 22 Feb 2025 13:39:53 +0100
-From: Oleg Nesterov <oleg@redhat.com>
-To: Tong Tiangen <tongtiangen@huawei.com>
-Cc: David Hildenbrand <david@redhat.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Peter Xu <peterx@redhat.com>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	"Liang, Kan" <kan.liang@linux.intel.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org,
-	bpf@vger.kernel.org, wangkefeng.wang@huawei.com,
-	Guohanjun <guohanjun@huawei.com>
-Subject: Re: [PATCH -next v2] uprobes: fix two zero old_folio bugs in
- __replace_page()
-Message-ID: <20250222123952.GA17836@redhat.com>
-References: <20250221015056.1269344-1-tongtiangen@huawei.com>
- <20250221152841.GA24705@redhat.com>
- <46a48eb4-5245-81ba-9779-ace8f162c31b@huawei.com>
- <ef999493-cac0-68bb-2684-97da0fb8b583@huawei.com>
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="d8JGqOXV"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:Subject:Date:Message-Id; bh=xnxr8ajCrGei2+iYa1
+	7nwH0TcnlFuD6GY0BMpH5KR8k=; b=d8JGqOXVwB0k4Pba4rmLnvNpLuUUhd+fEQ
+	mrlf9vpxzz+ZUkBBz1OBirwF2t4xtRYwoi73LO2O57wgx8X1WkCSxvVxFoEc4FlG
+	SjqW4NnnfgRGegvIgzC9q4js1so+MOz/bwzzgz18hfMmNKLKBV0vV2SW5x5/m+R3
+	uXupU4FM8=
+Received: from yang-Virtual-Machine.mshome.net (unknown [])
+	by gzga-smtp-mtada-g1-1 (Coremail) with SMTP id _____wD3H0G0x7pn3PW6OA--.65050S2;
+	Sun, 23 Feb 2025 15:01:08 +0800 (CST)
+From: Feng Yang <yangfeng59949@163.com>
+To: linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Cc: mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com,
+	Feng Yang <yangfeng@kylinos.cn>
+Subject: [PATCH] ring-buffer: Fix bytes_dropped calculation issue
+Date: Sun, 23 Feb 2025 15:01:06 +0800
+Message-Id: <20250223070106.6781-1-yangfeng59949@163.com>
+X-Mailer: git-send-email 2.17.1
+X-CM-TRANSID:_____wD3H0G0x7pn3PW6OA--.65050S2
+X-Coremail-Antispam: 1Uf129KBjvdXoW7GF4UAr13Zr1xKF1xWr4xtFb_yoWfKFX_ur
+	95Wa4kKFyUCF1DWr4xAFWavFs0k3yIqa48u3W7tFWUJ34Yvr15tr4kAFn3KFWDWFZYgr4a
+	qr45Wr97KF13KjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUvcSsGvfC2KfnxnUUI43ZEXa7IUbvtCDUUUUU==
+X-CM-SenderInfo: p1dqww5hqjkmqzuzqiywtou0bp/1tbiTRz8eGe6wyZBMQAAsd
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ef999493-cac0-68bb-2684-97da0fb8b583@huawei.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
 
-On 02/22, Tong Tiangen wrote:
->
->
-> I'm going to add a new patch to moving the "verify_opcode()" check down
-> , IIUC that "!PageAnon(old_page)" below also needs to be moved together,
+From: Feng Yang <yangfeng@kylinos.cn>
 
-No, no.
+The calculation of bytes-dropped and bytes_dropped_nested is reversed.
+Although it does not affect the final calculation of total_dropped,
+it should still be modified.
 
-I forgot everything, but please don't do this. IIUC This is optimization
-for the case when the probed file has int3 at this offset. We should not
-skip update_ref_ctr() in this case, just we can avoid __replace_page().
+Fixes: 6c43e554a2a5 ("ring-buffer: Add ring buffer startup selftest")
+Signed-off-by: Feng Yang <yangfeng@kylinos.cn>
+---
+ kernel/trace/ring_buffer.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-> and as David said this can be triggered by user space, so delete the use
->  of "WARN", as follows:
-
-Hmm... I think that David meant the new WARN_ON() added by you in V1?
-
-Please don't remove the old WARN(PageCompound(old_page) check. If userspace
-can trigger this warning we need to to fix this code and add FOLL_SPLIT_PMD
-unconditionally (and likely do something else).
-
-I take my words back ;) Don't do the additional cleanups, just add the
-is_zero_page(old_page) check right after get_user_page_vma_remote() and
-update the subject/changelog as David suggests.
-
-This function needs more cleanups anyway. Say, the usage of orig_page_huge
-_looks_ obviously wrong even if (afaics) nothing bad can happen. It should
-be reinitialized after "goto retry" or it should be checked before the
-"orig_page = find_get_page()" code. The usage of gup_flags looks confusing
-too. Lets do this later.
-
-Oleg.
-
->
->
-> @@ -502,20 +502,16 @@ int uprobe_write_opcode(struct arch_uprobe *auprobe,
-> struct mm_struct *mm,
->         if (IS_ERR(old_page))
->                 return PTR_ERR(old_page);
->
-> -       ret = verify_opcode(old_page, vaddr, &opcode);
-> -       if (ret <= 0)
-> +       ret = -EINVAL;
-> +       if (is_zero_page(old_page))
->                 goto put_old;
->
-> -       if (is_zero_page(old_page)) {
-> -               ret = -EINVAL;
-> +       if (!is_register && (PageCompound(old_page) || !PageAnon(old_page)))
->                 goto put_old;
-> -       }
->
-> -       if (WARN(!is_register && PageCompound(old_page),
-> -                "uprobe unregister should never work on compound page\n"))
-> {
-> -               ret = -EINVAL;
-> +       ret = verify_opcode(old_page, vaddr, &opcode);
-> +       if (ret <= 0)
->                 goto put_old;
-> -       }
->
->         /* We are going to replace instruction, update ref_ctr. */
->         if (!ref_ctr_updated && uprobe->ref_ctr_offset) {
-> @@ -526,10 +522,6 @@ int uprobe_write_opcode(struct arch_uprobe *auprobe,
-> struct mm_struct *mm,
->                 ref_ctr_updated = 1;
->         }
->
-> -       ret = 0;
-> -       if (!is_register && !PageAnon(old_page))
-> -               goto put_old;
-> -
->         ret = anon_vma_prepare(vma);
->
-> Thanks.
-> >
-> >>
-> >>
-> >>.
-> >
-> >.
->
+diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+index bb6089c2951e..510409f97992 100644
+--- a/kernel/trace/ring_buffer.c
++++ b/kernel/trace/ring_buffer.c
+@@ -7411,9 +7411,9 @@ static __init int rb_write_something(struct rb_test_data *data, bool nested)
+ 		/* Ignore dropped events before test starts. */
+ 		if (started) {
+ 			if (nested)
+-				data->bytes_dropped += len;
+-			else
+ 				data->bytes_dropped_nested += len;
++			else
++				data->bytes_dropped += len;
+ 		}
+ 		return len;
+ 	}
+-- 
+2.39.0.windows.2
 
