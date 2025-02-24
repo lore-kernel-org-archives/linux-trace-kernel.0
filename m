@@ -1,179 +1,150 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A4491519B3;
-	Mon, 24 Feb 2025 14:05:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B7DF18B484
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 24 Feb 2025 15:22:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740405917; cv=none; b=d+h7L3Pyrye2cjTWYhLcQdv78ow2bAiKEpesACtt5EuyqA7rJ63MAQGDvShDGxCc8nIdBp6B88CWtXIzPpxB51Yy0mGitS0nQfDnuk/B1Juy6v4L5DFyoXKpQFVZ4IcO4tU7MpO3PyF7dCuT74v8+v+kWvKBVwWAA3eQcR9pc9A=
+	t=1740410576; cv=none; b=NOW56ZcdpjOsG2ZU8/YsI+MXAgJoEdeBC2EKf1rpKVGD7quJzlUdfvkq1ckVktnYVHHxWJHZ5GwwawrUsGUeiJmSGO1ubqR8i/6DCYWM6dAfEmbtzkEPTIPnVvdDyIGw8gyD56hJQGcab+EiqPri8yRFD/iXSMLKM7y82qGLKYg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740405917; c=relaxed/simple;
-	bh=lZgiGKXEGLcef9zLrQpZ2xY+YKcgOU+iUFykkPKDbMg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ZkTLYuECA8O4/Y/tgCWTwU995kutqtczv8Ybc41Xd1Fl+wsaaQmO2qFS6n3iCVy2ETSIzXoW5FrudGeGhQmbHu4HRF0OlmtsWH1S5huZs4P2DRTlHLb2VWf4orvTG89zeks3sFmUUcRpXVRmqknNEvfJ4qLElTjrhzwRq8chOgQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jAMJP0sE; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740410576; c=relaxed/simple;
+	bh=KA03db2Q7Bmc8LTEwFfTxiDDccSBkDh4Mxm0Z7Yphys=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=aGVTBPCGNmE/jhRtZzrAOYEDXhr4gt0Hll7iN3msh7nJXJqaeHh3sYi46gqWKYvVy4/uzamkiLLFEZbIq+op68E2gb5dgp1+iNpPmZC0KR8nvcGqW/DQ1IN6bONWh6g0070or0otLQ97vrA2Uxm47pcsl46bhzd0V9ZBRuMdAuM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ZLf+sTN8; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jAMJP0sE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 86344C4CEE6;
-	Mon, 24 Feb 2025 14:05:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740405917;
-	bh=lZgiGKXEGLcef9zLrQpZ2xY+YKcgOU+iUFykkPKDbMg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=jAMJP0sEQQHafoIhJZ0lVVtSyIxcb1Md2DD67capMUULEzGF5HCmBJAv2raeqCv4Q
-	 hT8GoLB81yy2tX135O/ixcnQzy/RN6jSIwj7F5qnWOFxy1OHusz7L8KeRhjkZKBfFh
-	 wMHCjcyUVTmg+7f3Yla8EubIYU6VKIDyCQjGjGr5PWL+S9hFyB6n10inxN1AnQtg0q
-	 zDHdNbGG95BbcOTKmgUznJ4OOQZSWi7uEj12ktVsX3d7EIzUb4qwByPGqSsDtKBl0e
-	 V8o2dyWje8txdQiU3uo1pZnXQl/jHUrty80CV9qfaiRgUs/vog0wlF0TleVD3s4bAC
-	 4gRHvr+lybmlA==
-From: Jiri Olsa <jolsa@kernel.org>
-To: Oleg Nesterov <oleg@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Andrii Nakryiko <andrii@kernel.org>
-Cc: bpf@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	x86@kernel.org,
-	Song Liu <songliubraving@fb.com>,
-	Yonghong Song <yhs@fb.com>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Hao Luo <haoluo@google.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Alan Maguire <alan.maguire@oracle.com>,
-	David Laight <David.Laight@ACULAB.COM>,
-	=?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <thomas@t-8ch.de>
-Subject: [PATCH RFCv2 18/18] selftests/bpf: Add 5-byte nop uprobe trigger bench
-Date: Mon, 24 Feb 2025 15:01:50 +0100
-Message-ID: <20250224140151.667679-19-jolsa@kernel.org>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250224140151.667679-1-jolsa@kernel.org>
-References: <20250224140151.667679-1-jolsa@kernel.org>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZLf+sTN8"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1740410573;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type;
+	bh=KA03db2Q7Bmc8LTEwFfTxiDDccSBkDh4Mxm0Z7Yphys=;
+	b=ZLf+sTN8+ZXgD06/uZa1eOWawp/QlknqFljnfXOJSoYB1+ioYhB+f8M1zpgpZ/I7PlvRwx
+	GaobxMNl1Bg292xogGmXviWDp7NQJ80gBJwC3oNUk2lH0wG/Xldugi6nQpmK/sKw1WODpZ
+	cxOJ+Md9n9OCiAmNZhNIldjtGEekemA=
+Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
+ [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-320-vJUJqGgwMJi4euzWOhMlzw-1; Mon, 24 Feb 2025 10:22:52 -0500
+X-MC-Unique: vJUJqGgwMJi4euzWOhMlzw-1
+X-Mimecast-MFC-AGG-ID: vJUJqGgwMJi4euzWOhMlzw_1740410571
+Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-abb4d3ef1a7so386203566b.3
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 24 Feb 2025 07:22:52 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740410571; x=1741015371;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=KA03db2Q7Bmc8LTEwFfTxiDDccSBkDh4Mxm0Z7Yphys=;
+        b=OchLK26zEzexl62cnqk7TH4OtxnTuyNZ7mYkAxrzoVeQtbLaiLvK9s7EodOR1Umi92
+         nkM6/ng33aHYKp5id1vDhg+Egm1sTDScGxhcY+LT4wZBVxlRMGtAlBmbuNiVLhifg6AZ
+         j2/WoLjH0G13V9JXqgCUq9foSApxME5gQ1H2CRqDOX+Zch+GquAb/HJ9HKVjmeM2r9ZV
+         fDLM9kh+/kAEmxje2BrZ38nnDqZUy//hVfjQTEcINMKDtD9t5g/ZZD8ZGUqRWHZy4FtH
+         AQHDs1EV2HaHTTR1EB0nW6kO62vYz3PjInrQ39siCpvblNGUoIVlGVvKgWRNenF368ST
+         gM+g==
+X-Gm-Message-State: AOJu0Yw3GMngGkpVoj7PyOOLXWJqYAZ2RcnEcf4n9V/qapNW2RaYZr0L
+	3+qj07Q36TxGGl+Zl+aWAcTXYjtSZNv2uFOs1k8/pyhrA96wQEoUic64HaGlH7gmeeQqLxuNejH
+	jqp5HyAR2ajhaE+AcOlE9j0UCQxKq8nHUFO2I+zBx+BUkco6K36fX/0MtS4XlCAObuhqb4OlbGj
+	zA2KI/43EeWDlnLX48YakBtRCa2rIbaT1sVO7p9e/PTVHuG1C/E/BNOQs=
+X-Gm-Gg: ASbGncvoa10SRq3QKTV7RERUEfWDdj94433insywOWiBZP4gy7h+7e1PZWBwS/8CEMI
+	e9CSXR51QXHztFOkZbQWijxHK9t/ykkJozDW6GKHyHHqTg2qjzljXMCpzFkF+iKEeTWkaH+0q4u
+	3Eo33VIgl8hsfbJUQLUthrxxzFhaw=
+X-Received: by 2002:a17:907:6ea2:b0:abb:bcef:837c with SMTP id a640c23a62f3a-abc09e47232mr1275776766b.56.1740410570890;
+        Mon, 24 Feb 2025 07:22:50 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IHBo6s8cUiAqNVZm4nJopUm/elE2Aq6N61eGyZLrPKP2pVrQSWw1dK8qw/4PCpKABglA5S89W6ODLXX+NDpmlQ=
+X-Received: by 2002:a17:907:6ea2:b0:abb:bcef:837c with SMTP id
+ a640c23a62f3a-abc09e47232mr1275773466b.56.1740410570450; Mon, 24 Feb 2025
+ 07:22:50 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+From: Tomas Glozar <tglozar@redhat.com>
+Date: Mon, 24 Feb 2025 16:22:39 +0100
+X-Gm-Features: AWEUYZlP3Wh5a4SlvjJ5cLB44e_lexr3gB5QopvTOz-dW8HAy8T83mH9jizYL8A
+Message-ID: <CAP4=nvTsxjckSBTz=Oe_UYh8keD9_sZC4i++4h72mJLic4_W4A@mail.gmail.com>
+Subject: [BUG] Crash on named histogram trigger with invalid onmax variable
+To: Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>
+Cc: linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: oRM8Enz4evMXb6VrNjWiWK2quTvYZv-a2QNt4MFOzhI_1740410571
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
 
-Add 5-byte nop uprobe trigger bench (x86_64 specific) to measure
-uprobes/uretprobes on top of nop5 instruction.
+Dear maintainers and linux-trace-kernel,
 
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
----
- tools/testing/selftests/bpf/bench.c           | 12 ++++++
- .../selftests/bpf/benchs/bench_trigger.c      | 42 +++++++++++++++++++
- .../selftests/bpf/benchs/run_bench_uprobes.sh |  2 +-
- 3 files changed, 55 insertions(+), 1 deletion(-)
+I stumbled upon a bug in the histogram trigger implementation, where a
+named histogram trigger with invalid onmax variable does not get
+unregistered properly in the error path, and a subsequent access to
+the same trigger file leads to kernel panic.
 
-diff --git a/tools/testing/selftests/bpf/bench.c b/tools/testing/selftests/bpf/bench.c
-index 1bd403a5ef7b..0fd8c9b0d38f 100644
---- a/tools/testing/selftests/bpf/bench.c
-+++ b/tools/testing/selftests/bpf/bench.c
-@@ -526,6 +526,12 @@ extern const struct bench bench_trig_uprobe_multi_push;
- extern const struct bench bench_trig_uretprobe_multi_push;
- extern const struct bench bench_trig_uprobe_multi_ret;
- extern const struct bench bench_trig_uretprobe_multi_ret;
-+#ifdef __x86_64__
-+extern const struct bench bench_trig_uprobe_nop5;
-+extern const struct bench bench_trig_uretprobe_nop5;
-+extern const struct bench bench_trig_uprobe_multi_nop5;
-+extern const struct bench bench_trig_uretprobe_multi_nop5;
-+#endif
- 
- extern const struct bench bench_rb_libbpf;
- extern const struct bench bench_rb_custom;
-@@ -586,6 +592,12 @@ static const struct bench *benchs[] = {
- 	&bench_trig_uretprobe_multi_push,
- 	&bench_trig_uprobe_multi_ret,
- 	&bench_trig_uretprobe_multi_ret,
-+#ifdef __x86_64__
-+	&bench_trig_uprobe_nop5,
-+	&bench_trig_uretprobe_nop5,
-+	&bench_trig_uprobe_multi_nop5,
-+	&bench_trig_uretprobe_multi_nop5,
-+#endif
- 	/* ringbuf/perfbuf benchmarks */
- 	&bench_rb_libbpf,
- 	&bench_rb_custom,
-diff --git a/tools/testing/selftests/bpf/benchs/bench_trigger.c b/tools/testing/selftests/bpf/benchs/bench_trigger.c
-index 32e9f194d449..82327657846e 100644
---- a/tools/testing/selftests/bpf/benchs/bench_trigger.c
-+++ b/tools/testing/selftests/bpf/benchs/bench_trigger.c
-@@ -333,6 +333,20 @@ static void *uprobe_producer_ret(void *input)
- 	return NULL;
- }
- 
-+#ifdef __x86_64__
-+__nocf_check __weak void uprobe_target_nop5(void)
-+{
-+	asm volatile (".byte 0x0f, 0x1f, 0x44, 0x00, 0x00");
-+}
-+
-+static void *uprobe_producer_nop5(void *input)
-+{
-+	while (true)
-+		uprobe_target_nop5();
-+	return NULL;
-+}
-+#endif
-+
- static void usetup(bool use_retprobe, bool use_multi, void *target_addr)
- {
- 	size_t uprobe_offset;
-@@ -448,6 +462,28 @@ static void uretprobe_multi_ret_setup(void)
- 	usetup(true, true /* use_multi */, &uprobe_target_ret);
- }
- 
-+#ifdef __x86_64__
-+static void uprobe_nop5_setup(void)
-+{
-+	usetup(false, false /* !use_multi */, &uprobe_target_nop5);
-+}
-+
-+static void uretprobe_nop5_setup(void)
-+{
-+	usetup(true, false /* !use_multi */, &uprobe_target_nop5);
-+}
-+
-+static void uprobe_multi_nop5_setup(void)
-+{
-+	usetup(false, true /* use_multi */, &uprobe_target_nop5);
-+}
-+
-+static void uretprobe_multi_nop5_setup(void)
-+{
-+	usetup(true, true /* use_multi */, &uprobe_target_nop5);
-+}
-+#endif
-+
- const struct bench bench_trig_syscall_count = {
- 	.name = "trig-syscall-count",
- 	.validate = trigger_validate,
-@@ -506,3 +542,9 @@ BENCH_TRIG_USERMODE(uprobe_multi_ret, ret, "uprobe-multi-ret");
- BENCH_TRIG_USERMODE(uretprobe_multi_nop, nop, "uretprobe-multi-nop");
- BENCH_TRIG_USERMODE(uretprobe_multi_push, push, "uretprobe-multi-push");
- BENCH_TRIG_USERMODE(uretprobe_multi_ret, ret, "uretprobe-multi-ret");
-+#ifdef __x86_64__
-+BENCH_TRIG_USERMODE(uprobe_nop5, nop5, "uprobe-nop5");
-+BENCH_TRIG_USERMODE(uretprobe_nop5, nop5, "uretprobe-nop5");
-+BENCH_TRIG_USERMODE(uprobe_multi_nop5, nop5, "uprobe-multi-nop5");
-+BENCH_TRIG_USERMODE(uretprobe_multi_nop5, nop5, "uretprobe-multi-nop5");
-+#endif
-diff --git a/tools/testing/selftests/bpf/benchs/run_bench_uprobes.sh b/tools/testing/selftests/bpf/benchs/run_bench_uprobes.sh
-index af169f831f2f..03f55405484b 100755
---- a/tools/testing/selftests/bpf/benchs/run_bench_uprobes.sh
-+++ b/tools/testing/selftests/bpf/benchs/run_bench_uprobes.sh
-@@ -2,7 +2,7 @@
- 
- set -eufo pipefail
- 
--for i in usermode-count syscall-count {uprobe,uretprobe}-{nop,push,ret}
-+for i in usermode-count syscall-count {uprobe,uretprobe}-{nop,push,ret,nop5}
- do
- 	summary=$(sudo ./bench -w2 -d5 -a trig-$i | tail -n1 | cut -d'(' -f1 | cut -d' ' -f3-)
- 	printf "%-15s: %s\n" $i "$summary"
--- 
-2.48.1
+The issue reproduces on 6.14.0-rc4 with these commands (works with any
+trace event):
+
+$ cd /sys/kernel/tracing/events/rcu/rcu_callback
+$ echo 'hist:name=bad:keys=common_pid:onmax(bogus).save(common_pid)' > trigger
+bash: echo: write error: Invalid argument
+$ echo 'hist:name=bad:keys=common_pid' > trigger
+
+which leads to the panic:
+
+BUG: kernel NULL pointer dereference, address: 0000000000000000
+#PF: supervisor read access in kernel mode
+#PF: error_code(0x0000) - not-present page
+PGD 0 P4D 0
+Oops: Oops: 0000 [#1] PREEMPT SMP NOPTI
+CPU: 3 UID: 0 PID: 2187 Comm: hist_panic_repr Kdump: loaded Not
+tainted 6.14.0-rc4 #10
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-3.fc41
+04/01/2014
+RIP: 0010:strcmp+0x10/0x30
+...
+Call Trace:
+ <TASK>
+ ? __die+0x24/0x70
+ ? page_fault_oops+0x75/0x170
+ ? exc_page_fault+0x70/0x160
+ ? asm_exc_page_fault+0x26/0x30
+ ? strcmp+0x10/0x30
+ find_named_trigger+0x4a/0x70
+ hist_register_trigger+0x3e/0x320
+ event_hist_trigger_parse+0x520/0xa80
+ trigger_process_regex+0xbc/0x110
+ event_trigger_write+0x79/0xe0
+ vfs_write+0xf7/0x420
+ ? do_syscall_64+0x89/0x160
+ ? syscall_exit_to_user_mode_prepare+0x154/0x190
+ ksys_write+0x66/0xe0
+ do_syscall_64+0x7d/0x160
+ ? syscall_exit_to_user_mode_prepare+0x154/0x190
+ ? syscall_exit_to_user_mode+0x32/0x1b0
+ ? filp_flush+0x72/0x80
+ ? filp_close+0x1f/0x30
+ ? do_dup2+0xae/0x150
+ ? ksys_dup3+0x65/0xf0
+ ? syscall_exit_to_user_mode_prepare+0x154/0x190
+ ? syscall_exit_to_user_mode+0x32/0x1b0
+ ? clear_bhb_loop+0x25/0x80
+ ? clear_bhb_loop+0x25/0x80
+ ? clear_bhb_loop+0x25/0x80
+ entry_SYSCALL_64_after_hwframe+0x76/0x7e
+
+Further investigation revealed that hist_unregister_trigger called in
+the out_unreg path in event_hist_trigger_parse (which, by the way,
+accidentally passes glob+1 instead of glob; it doesn't matter only
+because it is unused) does not find the trigger, and, thus, does not
+free it and remove it from the named_triggers list.
+
+Subsequent calls to find_named_trigger then finds the freed
+hist_trigger_data, tries to compare against it for name and crashes
+the kernel.
+
+I'm not familiar with the trigger implementation. Do you have any
+ideas on why the hist_unregister_trigger fails and/or a fix?
+
+Thank you.
+
+Tomas
 
