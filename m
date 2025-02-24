@@ -1,77 +1,150 @@
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.4])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1B0B73FB3B;
-	Sun, 23 Feb 2025 07:01:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.4
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5B09F4E2;
+	Mon, 24 Feb 2025 03:12:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740294096; cv=none; b=Ro0IZwnz58NXmUwSdJFih0Z5sXZ5Qsjsf7pSezCQa80k01PozS+Ve+n5MXQ55ml2yrBS/b/30Kj47OTIuS9gMg58r/zUnXByCuPe+3U122GtTfrFNNLshR82bw1/Gk05aigtmwDOjxMLb5i9I4nKhgqjr1F1LX4f3aCEphZljVY=
+	t=1740366732; cv=none; b=JBq/EyQuXLSmkxKU1TNP4i8sT1dg79LV9vPSfC7gDD+P7O23eiUNQGRnqtSbwhP+17ivpQ7iWLnJ0/uS/j4KNvQ23GFGQiMrUxbb23UWQwaMBqXsc6ZTTcCtaOhzH3EKHND2vXNXoATXY/n205GM96+J0dniZFZqh8qNnfs4X84=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740294096; c=relaxed/simple;
-	bh=iHcM+418cwGbIFvJAKJ3q5m+qdZ1GMm7O/kw8C9W984=;
-	h=From:To:Cc:Subject:Date:Message-Id; b=rUI7fK6wD2vwVLZzfXpw5kSoEy27j7YBM6b0aokm1sxmKqS/m/0nOwuIn8jjQRAEJkQqhtW9Huk1NLCvyUfSQcBARWlgtBmurVe6p7yq1zX0o2yT18kpeGOCgVligVtHkHcs5oa8g74n7SzECj/Arx0heLHEVJEUdEI7Al1twao=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=d8JGqOXV; arc=none smtp.client-ip=117.135.210.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="d8JGqOXV"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:Subject:Date:Message-Id; bh=xnxr8ajCrGei2+iYa1
-	7nwH0TcnlFuD6GY0BMpH5KR8k=; b=d8JGqOXVwB0k4Pba4rmLnvNpLuUUhd+fEQ
-	mrlf9vpxzz+ZUkBBz1OBirwF2t4xtRYwoi73LO2O57wgx8X1WkCSxvVxFoEc4FlG
-	SjqW4NnnfgRGegvIgzC9q4js1so+MOz/bwzzgz18hfMmNKLKBV0vV2SW5x5/m+R3
-	uXupU4FM8=
-Received: from yang-Virtual-Machine.mshome.net (unknown [])
-	by gzga-smtp-mtada-g1-1 (Coremail) with SMTP id _____wD3H0G0x7pn3PW6OA--.65050S2;
-	Sun, 23 Feb 2025 15:01:08 +0800 (CST)
-From: Feng Yang <yangfeng59949@163.com>
-To: linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Cc: mhiramat@kernel.org,
-	mathieu.desnoyers@efficios.com,
-	Feng Yang <yangfeng@kylinos.cn>
-Subject: [PATCH] ring-buffer: Fix bytes_dropped calculation issue
-Date: Sun, 23 Feb 2025 15:01:06 +0800
-Message-Id: <20250223070106.6781-1-yangfeng59949@163.com>
-X-Mailer: git-send-email 2.17.1
-X-CM-TRANSID:_____wD3H0G0x7pn3PW6OA--.65050S2
-X-Coremail-Antispam: 1Uf129KBjvdXoW7GF4UAr13Zr1xKF1xWr4xtFb_yoWfKFX_ur
-	95Wa4kKFyUCF1DWr4xAFWavFs0k3yIqa48u3W7tFWUJ34Yvr15tr4kAFn3KFWDWFZYgr4a
-	qr45Wr97KF13KjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUvcSsGvfC2KfnxnUUI43ZEXa7IUbvtCDUUUUU==
-X-CM-SenderInfo: p1dqww5hqjkmqzuzqiywtou0bp/1tbiTRz8eGe6wyZBMQAAsd
+	s=arc-20240116; t=1740366732; c=relaxed/simple;
+	bh=XWJMx12NbsBM+EgAyV5Uqf9FJjuPIfxva8iem+oY5tQ=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=iQlEKt2PAlOoRdu+FD5vPwIgGd0hqO/uqD6iNz/Cp67F7kXxBmzCwrtuXB1H14TAItAAMQEvikJGNPrz5MRVJFnngONj360uTZLLMhIJr/ewD+iyyNQIwzj224NEddB+Y9T2Gs+zCNeziTdg9bs5Siy2+vslsMxuo/v4eleCoNM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.105])
+	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4Z1Qfn4TKxzCs7B;
+	Mon, 24 Feb 2025 11:08:33 +0800 (CST)
+Received: from kwepemk500005.china.huawei.com (unknown [7.202.194.90])
+	by mail.maildlp.com (Postfix) with ESMTPS id 426EE1402E2;
+	Mon, 24 Feb 2025 11:11:59 +0800 (CST)
+Received: from localhost.localdomain (10.175.112.125) by
+ kwepemk500005.china.huawei.com (7.202.194.90) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Mon, 24 Feb 2025 11:11:57 +0800
+From: Tong Tiangen <tongtiangen@huawei.com>
+To: David Hildenbrand <david@redhat.com>, Oleg Nesterov <oleg@redhat.com>,
+	Andrew Morton <akpm@linux-foundation.org>, Peter Zijlstra
+	<peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de
+ Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Mark Rutland
+	<mark.rutland@arm.com>, Alexander Shishkin
+	<alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, Peter Xu
+	<peterx@redhat.com>, Ian Rogers <irogers@google.com>, Adrian Hunter
+	<adrian.hunter@intel.com>, "Liang, Kan" <kan.liang@linux.intel.com>, Masami
+ Hiramatsu <mhiramat@kernel.org>
+CC: <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-mm@kvack.org>, <linux-trace-kernel@vger.kernel.org>,
+	<bpf@vger.kernel.org>, Tong Tiangen <tongtiangen@huawei.com>,
+	<wangkefeng.wang@huawei.com>, Guohanjun <guohanjun@huawei.com>
+Subject: [PATCH -next v3] uprobes: reject the share zeropage in uprobe_write_opcode()
+Date: Mon, 24 Feb 2025 11:11:49 +0800
+Message-ID: <20250224031149.1598949-1-tongtiangen@huawei.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
+ kwepemk500005.china.huawei.com (7.202.194.90)
 
-From: Feng Yang <yangfeng@kylinos.cn>
+We triggered the following error logs in syzkaller test:
 
-The calculation of bytes-dropped and bytes_dropped_nested is reversed.
-Although it does not affect the final calculation of total_dropped,
-it should still be modified.
+  BUG: Bad page state in process syz.7.38  pfn:1eff3
+  page: refcount:0 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x1eff3
+  flags: 0x3fffff00004004(referenced|reserved|node=0|zone=1|lastcpupid=0x1fffff)
+  raw: 003fffff00004004 ffffe6c6c07bfcc8 ffffe6c6c07bfcc8 0000000000000000
+  raw: 0000000000000000 0000000000000000 00000000fffffffe 0000000000000000
+  page dumped because: PAGE_FLAGS_CHECK_AT_FREE flag(s) set
+  Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.13.0-1ubuntu1.1 04/01/2014
+  Call Trace:
+   <TASK>
+   dump_stack_lvl+0x32/0x50
+   bad_page+0x69/0xf0
+   free_unref_page_prepare+0x401/0x500
+   free_unref_page+0x6d/0x1b0
+   uprobe_write_opcode+0x460/0x8e0
+   install_breakpoint.part.0+0x51/0x80
+   register_for_each_vma+0x1d9/0x2b0
+   __uprobe_register+0x245/0x300
+   bpf_uprobe_multi_link_attach+0x29b/0x4f0
+   link_create+0x1e2/0x280
+   __sys_bpf+0x75f/0xac0
+   __x64_sys_bpf+0x1a/0x30
+   do_syscall_64+0x56/0x100
+   entry_SYSCALL_64_after_hwframe+0x78/0xe2
 
-Fixes: 6c43e554a2a5 ("ring-buffer: Add ring buffer startup selftest")
-Signed-off-by: Feng Yang <yangfeng@kylinos.cn>
+   BUG: Bad rss-counter state mm:00000000452453e0 type:MM_FILEPAGES val:-1
+
+The following syzkaller test case can be used to reproduce:
+
+  r2 = creat(&(0x7f0000000000)='./file0\x00', 0x8)
+  write$nbd(r2, &(0x7f0000000580)=ANY=[], 0x10)
+  r4 = openat(0xffffffffffffff9c, &(0x7f0000000040)='./file0\x00', 0x42, 0x0)
+  mmap$IORING_OFF_SQ_RING(&(0x7f0000ffd000/0x3000)=nil, 0x3000, 0x0, 0x12, r4, 0x0)
+  r5 = userfaultfd(0x80801)
+  ioctl$UFFDIO_API(r5, 0xc018aa3f, &(0x7f0000000040)={0xaa, 0x20})
+  r6 = userfaultfd(0x80801)
+  ioctl$UFFDIO_API(r6, 0xc018aa3f, &(0x7f0000000140))
+  ioctl$UFFDIO_REGISTER(r6, 0xc020aa00, &(0x7f0000000100)={{&(0x7f0000ffc000/0x4000)=nil, 0x4000}, 0x2})
+  ioctl$UFFDIO_ZEROPAGE(r5, 0xc020aa04, &(0x7f0000000000)={{&(0x7f0000ffd000/0x1000)=nil, 0x1000}})
+  r7 = bpf$PROG_LOAD(0x5, &(0x7f0000000140)={0x2, 0x3, &(0x7f0000000200)=ANY=[@ANYBLOB="1800000000120000000000000000000095"], &(0x7f0000000000)='GPL\x00', 0x7, 0x0, 0x0, 0x0, 0x0, '\x00', 0x0, @fallback=0x30, 0xffffffffffffffff, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x10, 0x0, @void, @value}, 0x94)
+  bpf$BPF_LINK_CREATE_XDP(0x1c, &(0x7f0000000040)={r7, 0x0, 0x30, 0x1e, @val=@uprobe_multi={&(0x7f0000000080)='./file0\x00', &(0x7f0000000100)=[0x2], 0x0, 0x0, 0x1}}, 0x40)
+
+The cause is that zero pfn is set to the pte without increasing the rss
+count in mfill_atomic_pte_zeropage() and the refcount of zero folio does
+not increase accordingly. Then, the operation on the same pfn is performed
+in uprobe_write_opcode()->__replace_page() to unconditional decrease the
+rss count and old_folio's refcount.
+
+Therefore, two bugs are introduced:
+1. The rss count is incorrect, when process exit, the check_mm() report
+   error "Bad rss-count".
+2. The reserved folio (zero folio) is freed when folio->refcount is zero,
+   then free_pages_prepare->free_page_is_bad() report error
+   "Bad page state".
+
+There is more, the following warn could also theoretically be triggered:
+  __replace_page()
+    -> ...
+      -> folio_remove_rmap_pte()
+        -> VM_WARN_ON_FOLIO(is_zero_folio(folio), folio)
+
+Considering that uprobe hit the zero folio is a very rare scene, just
+reject zero old folio immediately after get_user_page_vma_remote().
+
+Fixes: 7396fa818d62 ("uprobes/core: Make background page replacement logic account for rss_stat counters")
+Fixes: 2b1444983508 ("uprobes, mm, x86: Add the ability to install and remove uprobes breakpoints")
+Signed-off-by: Tong Tiangen <tongtiangen@huawei.com>
+Reviewed-by: David Hildenbrand <david@redhat.com>
+Reviewed-by: Oleg Nesterov <oleg@redhat.com>
 ---
- kernel/trace/ring_buffer.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+v3: update the subject/changelog as David suggests.
+v2: Modified according to the comments of David and Oleg.
+---
+ kernel/events/uprobes.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-index bb6089c2951e..510409f97992 100644
---- a/kernel/trace/ring_buffer.c
-+++ b/kernel/trace/ring_buffer.c
-@@ -7411,9 +7411,9 @@ static __init int rb_write_something(struct rb_test_data *data, bool nested)
- 		/* Ignore dropped events before test starts. */
- 		if (started) {
- 			if (nested)
--				data->bytes_dropped += len;
--			else
- 				data->bytes_dropped_nested += len;
-+			else
-+				data->bytes_dropped += len;
- 		}
- 		return len;
- 	}
+diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
+index 9372bfd0e8fc..ca1879c74158 100644
+--- a/kernel/events/uprobes.c
++++ b/kernel/events/uprobes.c
+@@ -506,6 +506,11 @@ int uprobe_write_opcode(struct arch_uprobe *auprobe, struct mm_struct *mm,
+ 	if (ret <= 0)
+ 		goto put_old;
+ 
++	if (is_zero_page(old_page)) {
++		ret = -EINVAL;
++		goto put_old;
++	}
++
+ 	if (WARN(!is_register && PageCompound(old_page),
+ 		 "uprobe unregister should never work on compound page\n")) {
+ 		ret = -EINVAL;
 -- 
-2.39.0.windows.2
+2.25.1
 
