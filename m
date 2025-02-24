@@ -1,139 +1,136 @@
-Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
+Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E84A1FC7D0;
-	Mon, 24 Feb 2025 19:22:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92DB31FCFE2
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 24 Feb 2025 19:23:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740424978; cv=none; b=Do+PW5peN7xQGULyGpEF7Khgu83lWtOz/vE+p2HwVxZVd6a+ZYi+0t81VVVH2TEvwbqUgsf8JOXQqNdMSiNH5YJDvoR7x2p60QGIcIP3ploOQ+GZi51miQXxaXjgI9A4ajrGtEvVawd0UU/s/BhD7CpkvekzjLBKwtfmj7SB7E0=
+	t=1740424997; cv=none; b=QUzxeia992z5igunwmYlO6jvESFImrlBpEVv+y7HlcR4AdK9SluaAFnV/w9g68pZA+c2wPmMx8rOUk3sR+gzN1BvX2QbvdfpJ7SSMyon1espUbHUoAxekuYZ1mqSfLGVJ9D4cyDRmxiWhsK9+qNSgrvPv2tJdrOVs7klNlopMA0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740424978; c=relaxed/simple;
-	bh=vGr191suNHJMobX/xH0d0V4FfC46fopUgaS64eWuGio=;
+	s=arc-20240116; t=1740424997; c=relaxed/simple;
+	bh=MuxBrNIX06+MBlaJPoUCPaS8vE9mO1mdJznRkFGE6ag=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=iHTgOsE+1kpeWJw340dPAsULG26GTAVXwlPlRF/SFvW06EkuhlBqti/tWuYQvR+yk8fx5amvd4SgwvXJzvmK3zUH0MQat6q8lYZkDwWxfdkf6eqZDX1XwMfdRuNj69LNR4tLFsporrOBin5mxhJNq8cOmHFECvqxzin0LHvbp/k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mZPnwA0H; arc=none smtp.client-ip=209.85.221.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 To:Cc:Content-Type; b=j4uMwsVdaTX9JdAWcGoacBrY8dVYnv8jTtMKTOlkL+zHoGPpIhFT2E9fqtoZFB9CL4bXQGpEoizKXUo4Ikj9TQgg/tIW218/d15QQ8XLd9Pxzb/+70a+IQJ1sUNTpBhJsbEJNalhqKBfmofAr0qJaTTNweD/qqoKb0WkqZu0gLE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=tHgcLj00; arc=none smtp.client-ip=209.85.208.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mZPnwA0H"
-Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-38f24fc466aso3634355f8f.2;
-        Mon, 24 Feb 2025 11:22:55 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="tHgcLj00"
+Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-5ded368fcd9so6823530a12.1
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 24 Feb 2025 11:23:14 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740424974; x=1741029774; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1740424993; x=1741029793; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=N2gwHImuzq/bOyTYKm1I6At6U11HqW5s/2Yyuz2olGE=;
-        b=mZPnwA0HMjvjhilt4+ocKGmRDQ6YKTYRu4w+6i5xKEwM1fJHlD88s1X5alNTDqadwd
-         kXV6yidiBIZ8GrU04UgZp3XqG4nEhWuXkALGb6RQ1HcqSipjgrtnnsAXhpMfuj33isIA
-         VdmQhTsd8UkxTgmuveEHIGF9J7yXY2bkHnWHxqzS/8UWUcqwmWwGZFoX2YyZxfgtFu2D
-         PW+tYNhhhlmtIIRnapPgLGIyq5Z9Butk2B4iKs5Q/5N/yjcGAoxwsDDLIOi8paFOgxSd
-         PcX0aCXh4Bw5vilBoBZIl39GGOk8E2yCkg5SYR0rdP4ramEoa4e0GdNeWrgvUU4gAvGF
-         Latg==
+        bh=4G9JOwMMqctfXuBGODgzmfMVslmCh5Emd9i+EC8Wh/o=;
+        b=tHgcLj00AAnkKI8aQt7gSbFjqqkq0FGg7X/srfkxhdwKmExjXzgED7als5mQMK6irq
+         W0RCnO0SBUxfdvsUac1heVRRDwYxKYGsVpkgNFjJm2gJAk4j0JtMQnm8hV8nykP2TPJJ
+         +mPCkbU+1rWl74XxVSH2JVuqjDE9XRuRpwzayRRn5lCH6sIFgrrYLbrunru4qAHumRbK
+         8y2UF10CGMThGr8jOZEY1RIN2OSxTBKiXs6lLG/l1XujrekTrJ7El8D8cnHKGhYA4vfP
+         dPDNFH6Tib3yLXQdsymufPstsZN4t9kd3zufgz8SgKtDeoBwz/xEjaGuxk7k0jcdYg6w
+         /WsQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740424974; x=1741029774;
+        d=1e100.net; s=20230601; t=1740424993; x=1741029793;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=N2gwHImuzq/bOyTYKm1I6At6U11HqW5s/2Yyuz2olGE=;
-        b=orFfubV6sOKCN3nUVl6tpFtmhfEwqNdTgLp8Ow+dK1bWNtrXRfFG0U0Zvn0DMjk3kw
-         WogB6jeoQrknnnmkOkptyT78ejVVeWx6PcEZbDkU3QTdz3eAJxjJjQeehpsnLvSFX0Or
-         RNUkPBKpKk9044c+jbgr4CbgT0j4xu7wl5fC8pcogY7kyshCJHGFb0fKQ2zsHV0PSdq1
-         MMEJthPspdOxj+y+O9cr4gNjt7e9GYMppTXihuu/p595gxmy1AgzzfyRR3VLDmNc4ixR
-         csNZcEsy8EJDxAsfPyyM+/fhUKK+2SHQ2fxsbN+45MsbonfUSfXmqJb7kDPifSD4fxah
-         te1w==
-X-Forwarded-Encrypted: i=1; AJvYcCUHvVfJKIpEDDcCZDeYmnjRXzDoKs/2nLarmvUiGMDpEnz/2upllowLBFLp9jqn1MsTzSBRd+EJae+LZbY5yLGu33Ae@vger.kernel.org, AJvYcCVDI5s/r6zzP6Za8cubcdRgxA3opbMNqyBSBVdgIU2vxpd9yeRcQYJK2vlSBVMK2q3Q1wE=@vger.kernel.org, AJvYcCVSC8zHA1QlT8oFdnmX6hJPYaCGq4G648Q5SBpVcBDA1BlYO8ikABfOKKSsrZ6h/J7727iDWk7waniqUTjx@vger.kernel.org
-X-Gm-Message-State: AOJu0YykaIuX1gmtMMpXTWlIVcXZV3vUZ9js8Lje8OkSQ4aoV2pGpur+
-	zanTqTUoYm8UzRTGcElofXh4EQTVKDE3t85STatik5JzaqL1iKOogsCxiEYdILHGw9AbjmNHk3w
-	E5yeK0XHZb57Q0YlFtDD1X/gAxVw=
-X-Gm-Gg: ASbGncu/GeZuegaEdLCTRadcpKpideyrwE9KWZXgK++8vT2Ezlab+9TFAhskE12KgOk
-	pzimWn5TX74f/6MsJgTOAUDo2WooR66Zm7CrMBXgGQ0xffiEhxEM2yNWqewvIhgTrJH4aZWVxQu
-	QWgdDZGxaImD6pkFUaQHtqktQ=
-X-Google-Smtp-Source: AGHT+IHB+AWBWMWujb3mhlPpZTweDQu7gM85nkpA1ASHouT/Lu7csEogxRIcljQtw93JGoGEX+oW7MjtuiuWGRqB2ak=
-X-Received: by 2002:a05:6000:2ae:b0:38d:e304:7470 with SMTP id
- ffacd0b85a97d-38f707b0798mr11924539f8f.25.1740424973425; Mon, 24 Feb 2025
- 11:22:53 -0800 (PST)
+        bh=4G9JOwMMqctfXuBGODgzmfMVslmCh5Emd9i+EC8Wh/o=;
+        b=PbSoMEJZkHujOLyqQ/o2oBRxoOWmMdJlgpQTX+TY2xrZ1d2tCYfO/8sWtHFs0KyUPx
+         IeYsctaQ8P5xC4jZ3Yqobzp1p2iCqpmaFC94/R4WbXWL3o5dYHcfG1WPTW2J6kux4fgk
+         hXhjPwmIEaS3rM/ODQx3NTf+xwOMzUl7ETl0j7ViztC30CPi1qHMLk7P6jUonv3sRIbE
+         JaOvMc8etbwvv+TLlUAYgaDauTMyWByK7xOTIe5RZpwCELxJ1TvfFmUH4mjrvLBGVJST
+         csY4yBwdZgKmepgKCXHzd85AsSpCeuYRHQJg4PHcSG1hQWzh+Db271FeL1IDqYp0b2wz
+         GrYQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVd2MjOoQBT/owGxEKBYNFFO134QwS//+Hb0GSOrGNWvfY8F64OO0zHiXKTQtYn43C/S0+tx9kzfacfwr9hhnqRgQo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzaV4Hk0L4aFjQkz9LG+C5JnNS+KPkoCkOoLTkCRBSor0YBPGxh
+	yKOieNabX5N1TndiOxU99mtSVuE0oIkXZC1LvFtauET6xuLj0sCevo+887DIIozzlZ/KGciPaRb
+	IL8l78uXo02ChYvU6r8tscFc9t1gWuDf/6ETl
+X-Gm-Gg: ASbGncsEWF3pAeGM27LDD0mWddbswnTNFvM1Fzj9Lprab7D6+buWO1UAj7DTCFsJLjN
+	YYDi0zwobvVP3Gw/3xYYJsQlnwe06HYBEPAxL/GznlGkfMH6ETxGYdpdYEWJG74wXl2PhVHBpkl
+	9Hyd59Gg==
+X-Google-Smtp-Source: AGHT+IGfiIchpM9eOMnXtJ/WcKCVUkgDFUa2p/xrMF61h/aNYjj6Fhs5Fbn5eztpvP2RHcdoRWctJt81jVevyjeHkjo=
+X-Received: by 2002:a05:6402:238f:b0:5e0:348a:e33c with SMTP id
+ 4fb4d7f45d1cf-5e0b70d674amr10053613a12.10.1740424992694; Mon, 24 Feb 2025
+ 11:23:12 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250224140151.667679-1-jolsa@kernel.org> <20250224140151.667679-9-jolsa@kernel.org>
-In-Reply-To: <20250224140151.667679-9-jolsa@kernel.org>
-From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date: Mon, 24 Feb 2025 11:22:42 -0800
-X-Gm-Features: AWEUYZkGP788jzMs5wQ5_d8-32CVaAvKvg6jzwRmafgcfsVy_Y3Y5MT5uxFOAJo
-Message-ID: <CAADnVQJ_-7cB3OaeFWaupcq0fRPh3uP62HBGxq0QbyZsx3aHqA@mail.gmail.com>
-Subject: Re: [PATCH RFCv2 08/18] uprobes/x86: Add uprobe syscall to speed up uprobe
-To: Jiri Olsa <jolsa@kernel.org>
-Cc: Oleg Nesterov <oleg@redhat.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Andrii Nakryiko <andrii@kernel.org>, bpf <bpf@vger.kernel.org>, 
-	LKML <linux-kernel@vger.kernel.org>, 
-	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>, 
-	Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>, 
-	John Fastabend <john.fastabend@gmail.com>, Hao Luo <haoluo@google.com>, 
-	Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Alan Maguire <alan.maguire@oracle.com>, David Laight <David.Laight@aculab.com>, 
-	=?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas@t-8ch.de>
+References: <20250224-tcpsendmsg-v1-1-bac043c59cc8@debian.org>
+ <CANn89iLybqJ22LVy00KUOVscRr8GQ88AcJ3Oy9MjBUgN=or0jA@mail.gmail.com> <SA3PR15MB5630CFBB36C212008DA8ACC7CAC02@SA3PR15MB5630.namprd15.prod.outlook.com>
+In-Reply-To: <SA3PR15MB5630CFBB36C212008DA8ACC7CAC02@SA3PR15MB5630.namprd15.prod.outlook.com>
+From: Eric Dumazet <edumazet@google.com>
+Date: Mon, 24 Feb 2025 20:23:00 +0100
+X-Gm-Features: AWEUYZnUmpoUUWnKefqPzOGV3a3YKaKSZHqzoRXrvSuNNgfx9ij51R1mq4ffPRc
+Message-ID: <CANn89i+zxMje+wbQzLKbSq_WKYnwGdMyAdStMm4GqkdJCvWPOg@mail.gmail.com>
+Subject: Re: [PATCH net-next] trace: tcp: Add tracepoint for tcp_sendmsg()
+To: Yonghong Song <yhs@meta.com>
+Cc: Breno Leitao <leitao@debian.org>, Neal Cardwell <ncardwell@google.com>, 
+	Kuniyuki Iwashima <kuniyu@amazon.com>, Steven Rostedt <rostedt@goodmis.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	"David S. Miller" <davem@davemloft.net>, David Ahern <dsahern@kernel.org>, 
+	"kuba@kernel.org" <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
+	"netdev@vger.kernel.org" <netdev@vger.kernel.org>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
+	"linux-trace-kernel@vger.kernel.org" <linux-trace-kernel@vger.kernel.org>, Kernel Team <kernel-team@meta.com>, 
+	"yonghong.song@linux.dev" <yonghong.song@linux.dev>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Feb 24, 2025 at 6:08=E2=80=AFAM Jiri Olsa <jolsa@kernel.org> wrote:
+On Mon, Feb 24, 2025 at 8:13=E2=80=AFPM Yonghong Song <yhs@meta.com> wrote:
 >
-> +SYSCALL_DEFINE0(uprobe)
-> +{
-> +       struct pt_regs *regs =3D task_pt_regs(current);
-> +       unsigned long bp_vaddr;
-> +       int err;
-> +
-> +       err =3D copy_from_user(&bp_vaddr, (void __user *)regs->sp + 3*8, =
-sizeof(bp_vaddr));
-> +       if (err) {
-> +               force_sig(SIGILL);
-> +               return -1;
-> +       }
-> +
-> +       /* Allow execution only from uprobe trampolines. */
-> +       if (!in_uprobe_trampoline(regs->ip)) {
-> +               force_sig(SIGILL);
-> +               return -1;
-> +       }
-> +
-> +       handle_syscall_uprobe(regs, bp_vaddr - 5);
-> +       return 0;
-> +}
-> +
-> +asm (
-> +       ".pushsection .rodata\n"
-> +       ".balign " __stringify(PAGE_SIZE) "\n"
-> +       "uprobe_trampoline_entry:\n"
-> +       "endbr64\n"
+> > ________________________________________
+> >
+> > On Mon, Feb 24, 2025 at 7:24=E2=80=AFPM Breno Leitao <leitao@debian.org=
+> wrote:
+> >>
+> >> Add a lightweight tracepoint to monitor TCP sendmsg operations, enabli=
+ng
+> >> the tracing of TCP messages being sent.
+> >>
+> >> Meta has been using BPF programs to monitor this function for years,
+> >> indicating significant interest in observing this important
+> >> functionality. Adding a proper tracepoint provides a stable API for al=
+l
+> >> users who need visibility into TCP message transmission.
+> >>
+> >> The implementation uses DECLARE_TRACE instead of TRACE_EVENT to avoid
+> >> creating unnecessary trace event infrastructure and tracefs exports,
+> >> keeping the implementation minimal while stabilizing the API.
+> >>
+> >> Given that this patch creates a rawtracepoint, you could hook into it
+> >> using regular tooling, like bpftrace, using regular rawtracepoint
+> >> infrastructure, such as:
+> >>
+> >>         rawtracepoint:tcp_sendmsg_tp {
+> >>                 ....
+> >>         }
+> >
+> > I would expect tcp_sendmsg() being stable enough ?
+> >
+> > kprobe:tcp_sendmsg {
+> > }
+>
+> In LTO mode, tcp_sendmsg could be inlined cross files. For example,
+>
+>   net/ipv4/tcp.c:
+>        int tcp_sendmsg(struct sock *sk, struct msghdr *msg, size_t size)
+>   net/ipv4/tcp_bpf.c:
+>        ...
+>       return tcp_sendmsg(sk, msg, size);
+>   net/ipv6/af_inet6.c:
+>        ...
+>        return INDIRECT_CALL_2(prot->sendmsg, tcp_sendmsg, udpv6_sendmsg, =
+...)
+>
+> And this does happen in our production environment.
 
-why endbr is there?
-The trampoline is called with a direct call.
+And we do not have a way to make the kprobe work even if LTO decided
+to inline a function ?
 
-> +       "push %rcx\n"
-> +       "push %r11\n"
-> +       "push %rax\n"
-> +       "movq $" __stringify(__NR_uprobe) ", %rax\n"
-
-To avoid introducing a new syscall for a very similar operation
-can we disambiguate uprobe vs uretprobe via %rdi or
-some other way?
-imo not too late to change uretprobe api.
-Maybe it was discussed already.
-
-> +       "syscall\n"
-> +       "pop %rax\n"
-> +       "pop %r11\n"
-> +       "pop %rcx\n"
-> +       "ret\n"
-
-In later patches I see nop5 is replaced with a call to
-uprobe_trampoline_entry, but which part saves
-rdi and other regs?
-Compiler doesn't automatically spill/fill around USDT's nop/nop5.
-Selftest is doing:
-+__naked noinline void uprobe_test(void)
-so just lucky ?
+This seems like a tracing or LTO issue, this could be addressed there
+in a generic way
+and avoid many other patches to work around this.
