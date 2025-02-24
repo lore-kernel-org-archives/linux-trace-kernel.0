@@ -1,118 +1,154 @@
-Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF3762571AD;
-	Mon, 24 Feb 2025 12:23:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 211021A29A;
+	Mon, 24 Feb 2025 14:01:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740399792; cv=none; b=MuF9Kqua7O8YPKWV7GJEzB7rAXeCN6AIWoVSs2qPIxbtdXVNTQAXH1dxrqL5epseKBbrL8Nm7HbsgTHayQ4J8QsesWpn7aC5Z1KO5E++572UNDCi0FguqHpu9CHQFWUWPxZWf8wg6j0UW079BmP2TZJr53h3O5l75q4+mlyjnGk=
+	t=1740405718; cv=none; b=h4bXzDiavAS03kykrCU4WxxBKprOwen3lDqHneQPRanNCq/Qby6Fw2aqN5+/A8vgCbPEi9TY8RuLpGfMKD9lhjJD8fBzQENSBlIeSrq3N6ven9ORu4r+bZuUFaiq6z5JiXZ99qr8NCV4xNgAvI8c3HZFN9qZc00r7i2HglpfqF0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740399792; c=relaxed/simple;
-	bh=CmbC/F96+RPZ1IRVYGWb9VjmvwRIpPJc828eSkvb5ig=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cD+BE7G7GHzyb72m+KcbxJ11WCdbfB/GzZKRbJaIrhxdEm3ZQOvIDP95kyLPExIPxWLGaHQma3CbFhZYM1AR1QBOIGFwcnn3DzAIs+clqFTutbulkOPKdCXJaogQH5dam3eJJWYVFua0Wh4LDgdA32FF6k3906HxSIKOg3rBaQU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.218.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-abb86beea8cso777484766b.1;
-        Mon, 24 Feb 2025 04:23:09 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740399788; x=1741004588;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=IkcVWWowe/XlwLesIA74T7Kc+wW9oSTR0kY7TLZNlyE=;
-        b=dBAFaKCz65qtlLj4tsnlg2+94L3RorfWJ98AVikFIpzzLLUZ8x9wGZ33tyM/7Yr1c1
-         KmQl5KFrKu0UE9pwJPid4YreUlK1M9HpMWaznN/IFLZRNjxydB7x84dZ9V0QHeL9yH/Q
-         f1FCaoKGsPe/gdnlf/fjO64MLXFVpII4b6eq2pOOUwleWvV1TIhNO2PNYLAKB0LykzS4
-         OGJf2vNKlLqodyO+NKBqna434rf2HJGIGSJHOm4e+DsImyqkgIpn5R6u12fp9NjSlBkS
-         WvbOKto/U7uzlUyeus851XOaG2+/JeT9XKSYTOVpZ5wT5Sxw032JXrDJqyvgq7RE2Hgo
-         +3Ug==
-X-Forwarded-Encrypted: i=1; AJvYcCW2pwvhCBpFyROHSTQIuf/D91TQOtAAcaZKYcEEfnIndvEkjyC4QJ2XuVX64NG6Cty7lP9ajQRdwmfUBgr5@vger.kernel.org, AJvYcCWhr9j7AmL4vXvo1SIqf8tKS0Xxp9ZOI9zcyBgR8pgATye4lxkVhHa73084H0jUgxeZK0Y=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxIi/gE2ueSgmjOaJOXOdXYZgUuKy3fEmSYSFKetVrf6xQeQj6N
-	uJN0I+Yyi15n3nyCFJNebmpWUvgTZZAiQ2d1+UX7475lPhxLAApClK7fNg==
-X-Gm-Gg: ASbGncsJpsW02ooCFua1xenJSVvNxoMF7QgdkutGd/fCoqNBFp9bNvYpKVyovD61q0F
-	+GwKfQlYJfaAL+FqZpCV6wdG+ECTBmr1xfxZcfXITOPl4pOZxVgfV2wsbu+T+Uc/vMWEaqXCgrR
-	Bjd9sI5Kns9d0kTt0HFlw8LcoopEHr82eVEQruhwneB1e4GhV5m2TwlukIrPtJzyPrES3aIxO8a
-	s/SYYxsLmwW0kvn9deu7T3iczbYop19SSBBC3pCDJ8TCsb0ZvBuUWu7vcUXR4XgPuiIbNRbXmkR
-	8q7FoZoepHlXl/fUnA==
-X-Google-Smtp-Source: AGHT+IFjZjKDjN5EXWE+BnTyShdH8rCGFExD7eS7HA3oT4lwQ7KO2yLywocY7OLik5IKwG1XKLh3Ig==
-X-Received: by 2002:a17:907:3f19:b0:ab7:ea47:dee1 with SMTP id a640c23a62f3a-abc09e56c7emr1080435166b.48.1740399787765;
-        Mon, 24 Feb 2025 04:23:07 -0800 (PST)
-Received: from gmail.com ([2a03:2880:30ff:73::])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-abbab9e9863sm1436329266b.64.2025.02.24.04.23.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Feb 2025 04:23:07 -0800 (PST)
-Date: Mon, 24 Feb 2025 04:22:23 -0800
-From: Breno Leitao <leitao@debian.org>
-To: Andrii Nakryiko <andrii@kernel.org>
-Cc: linux-trace-kernel@vger.kernel.org, peterz@infradead.org,
-	oleg@redhat.com, rostedt@goodmis.org, mhiramat@kernel.org,
-	mingo@kernel.org, bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
-	jolsa@kernel.org, paulmck@kernel.org
-Subject: Re: [PATCH v3 tip/perf/core 2/2] uprobes: SRCU-protect uretprobe
- lifetime (with timeout)
-Message-ID: <20250224-impressive-onyx-boa-36e85d@leitao>
-References: <20241024044159.3156646-1-andrii@kernel.org>
- <20241024044159.3156646-3-andrii@kernel.org>
+	s=arc-20240116; t=1740405718; c=relaxed/simple;
+	bh=XpLkgpXiELKYDF5SxtkwlqDt74f1mFK/7OQcFGFEGXU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=GYd5G/lS8ajonA7wBKBsobDresUhujBHyqw1UfPO6iLF9Lk0Qxnft5vREwKgHuRTPwaK6IMNqQknMGghVTwhmPejTAdalzeudOkbKYRgEiIu7fj+rH/qQZ9YIo0wQcZh0Oj5REumF0rXsc+TUAk9NYkOQ08zDwdnd3PJQxkHugc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lYXkNJbp; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lYXkNJbp"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A66E9C4CED6;
+	Mon, 24 Feb 2025 14:01:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740405717;
+	bh=XpLkgpXiELKYDF5SxtkwlqDt74f1mFK/7OQcFGFEGXU=;
+	h=From:To:Cc:Subject:Date:From;
+	b=lYXkNJbpmdYak0n71ruHvVVAKdFDI8TB2d6m+zAiq8acBEoZCzJIyImTOCSy37sfU
+	 zYpSf1sRVyqABIszvEbLpniyKTIZo0rE8cbdcK+gYauaInF9Q5WrXb53B5sC5r1tWs
+	 sokznkCri8ApSZJooF9DMteKFPRue4GwGdTMh16u4NFJDqjrIOO65SgzrkU3k4ZTP5
+	 4qWIqcXKkky40Fb4kXenN5P2SLXxqkhzBNaVsxYTSmCHR/bmupreugggO3JbhjH2Ul
+	 vfF+JhGMNIhlnmesKtIZXXVVa8bhoiOEW0B7bENGFK6tKIn3grwWyjHEzc/ab12jm9
+	 7KMYR0v1KM5Kg==
+From: Jiri Olsa <jolsa@kernel.org>
+To: Oleg Nesterov <oleg@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Andrii Nakryiko <andrii@kernel.org>
+Cc: bpf@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	x86@kernel.org,
+	Song Liu <songliubraving@fb.com>,
+	Yonghong Song <yhs@fb.com>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Hao Luo <haoluo@google.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Alan Maguire <alan.maguire@oracle.com>,
+	David Laight <David.Laight@ACULAB.COM>,
+	=?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <thomas@t-8ch.de>
+Subject: [PATCH RFCv2 00/18] uprobes: Add support to optimize usdt probes on x86_64
+Date: Mon, 24 Feb 2025 15:01:32 +0100
+Message-ID: <20250224140151.667679-1-jolsa@kernel.org>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20241024044159.3156646-3-andrii@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Hello Andrii,
+hi,
+this patchset adds support to optimize usdt probes on top of 5-byte
+nop instruction.
 
-On Wed, Oct 23, 2024 at 09:41:59PM -0700, Andrii Nakryiko wrote:
->
-> +static struct uprobe* hprobe_expire(struct hprobe *hprobe, bool get)
-> +{
-> +	enum hprobe_state hstate;
-> +
-> +	/*
-> +	 * return_instance's hprobe is protected by RCU.
-> +	 * Underlying uprobe is itself protected from reuse by SRCU.
-> +	 */
-> +	lockdep_assert(rcu_read_lock_held() && srcu_read_lock_held(&uretprobes_srcu));
+The generic approach (optimize all uprobes) is hard due to emulating
+possible multiple original instructions and its related issues. The
+usdt case, which stores 5-byte nop seems much easier, so starting
+with that.
 
-I am hitting this warning in d082ecbc71e9e ("Linux 6.14-rc4") on
-aarch64. I suppose this might happen on x86 as well, but I haven't
-tested.
+The basic idea is to replace breakpoint exception with syscall which
+is faster on x86_64. For more details please see changelog of patch 8.
 
-	WARNING: CPU: 28 PID: 158906 at kernel/events/uprobes.c:768 hprobe_expire (kernel/events/uprobes.c:825)
+The run_bench_uprobes.sh benchmark triggers uprobe (on top of different
+original instructions) in a loop and counts how many of those happened
+per second (the unit below is million loops).
 
-	Call trace:
-	hprobe_expire (kernel/events/uprobes.c:825) (P)
-	uprobe_copy_process (kernel/events/uprobes.c:691 kernel/events/uprobes.c:2103 kernel/events/uprobes.c:2142)
-	copy_process (kernel/fork.c:2636)
-	kernel_clone (kernel/fork.c:2815)
-	__arm64_sys_clone (kernel/fork.c:? kernel/fork.c:2926 kernel/fork.c:2926)
-	invoke_syscall (arch/arm64/kernel/syscall.c:35 arch/arm64/kernel/syscall.c:49)
-	do_el0_svc (arch/arm64/kernel/syscall.c:139 arch/arm64/kernel/syscall.c:151)
-	el0_svc (arch/arm64/kernel/entry-common.c:165 arch/arm64/kernel/entry-common.c:178 arch/arm64/kernel/entry-common.c:745)
-	el0t_64_sync_handler (arch/arm64/kernel/entry-common.c:797)
-	el0t_64_sync (arch/arm64/kernel/entry.S:600)
+There's big speed up if you consider current usdt implementation
+(uprobe-nop) compared to proposed usdt (uprobe-nop5):
 
-I broke down that warning, and the problem is on related to
-rcu_read_lock_held(), since RCU read lock does not seem to be held in
-this path.
+  # ./benchs/run_bench_uprobes.sh 
 
-Reading this code, RCU read lock seems to protect old hprobe, which
-doesn't seem so.
+          usermode-count :  818.386 ± 1.886M/s
+          syscall-count  :    8.923 ± 0.003M/s
+  -->     uprobe-nop     :    3.086 ± 0.005M/s
+          uprobe-push    :    2.751 ± 0.001M/s
+          uprobe-ret     :    1.481 ± 0.000M/s
+  -->     uprobe-nop5    :    4.016 ± 0.002M/s
+          uretprobe-nop  :    1.712 ± 0.008M/s
+          uretprobe-push :    1.616 ± 0.001M/s
+          uretprobe-ret  :    1.052 ± 0.000M/s
+          uretprobe-nop5 :    2.015 ± 0.000M/s
 
-I am wondering if we need to protect it properly, something as:
 
-	@@ -2089,7 +2092,9 @@ static int dup_utask(struct task_struct *t, struct uprobe_task *o_utask)
-				return -ENOMEM;
+rfc v2 changes:
+- make uretprobe work properly with optimized uprobe
+- make the uprobe optimized code x86_64 specific [Peter]
+- rework the verify function logic, using it now as callback
+- fix find_nearest_page to include [PAGE_SIZE, ... ] area [Andrii]
+- try lockless vma lookup in in_uprobe_trampoline [Peter]
+- do per partes instructions update using int3 like in text_poke_bp_batch [David]
+- map uprobe trampoline via single global page [Thomas]
+- keep track of uprobes per mm_struct
 
-			/* if uprobe is non-NULL, we'll have an extra refcount for uprobe */
-	+               rcu_read_lock();
-			uprobe = hprobe_expire(&o->hprobe, true);
-	+               rcu_write_lock();
+pending todo (follow ups):
+- use PROCMAP_QUERY in tests
+- alloc 'struct uprobes_state' for mm_struct only when needed [Andrii]
+- seccomp change for new uprobe syscall (same as for uretprobe)
 
-			/*
-			* New utask will have stable properly refcounted uprobe or
+thanks,
+jirka
+
+
+---
+Jiri Olsa (18):
+      uprobes: Rename arch_uretprobe_trampoline function
+      uprobes: Make copy_from_page global
+      uprobes: Move ref_ctr_offset update out of uprobe_write_opcode
+      uprobes: Add uprobe_write function
+      uprobes: Add nbytes argument to uprobe_write_opcode
+      uprobes: Add orig argument to uprobe_write and uprobe_write_opcode
+      uprobes: Add swbp argument to arch_uretprobe_hijack_return_addr
+      uprobes/x86: Add uprobe syscall to speed up uprobe
+      uprobes/x86: Add mapping for optimized uprobe trampolines
+      uprobes/x86: Add mm_uprobe objects to track uprobes within mm
+      uprobes/x86: Add support to emulate nop5 instruction
+      uprobes/x86: Add support to optimize uprobes
+      selftests/bpf: Reorg the uprobe_syscall test function
+      selftests/bpf: Use 5-byte nop for x86 usdt probes
+      selftests/bpf: Add uprobe/usdt syscall tests
+      selftests/bpf: Add hit/attach/detach race optimized uprobe test
+      selftests/bpf: Add uprobe syscall sigill signal test
+      selftests/bpf: Add 5-byte nop uprobe trigger bench
+
+ arch/arm/probes/uprobes/core.c                              |   4 +-
+ arch/arm64/kernel/probes/uprobes.c                          |   2 +-
+ arch/csky/kernel/probes/uprobes.c                           |   2 +-
+ arch/loongarch/kernel/uprobes.c                             |   2 +-
+ arch/mips/kernel/uprobes.c                                  |   2 +-
+ arch/powerpc/kernel/uprobes.c                               |   2 +-
+ arch/riscv/kernel/probes/uprobes.c                          |   2 +-
+ arch/s390/kernel/uprobes.c                                  |   2 +-
+ arch/sparc/kernel/uprobes.c                                 |   2 +-
+ arch/x86/entry/syscalls/syscall_64.tbl                      |   1 +
+ arch/x86/include/asm/uprobes.h                              |   6 ++
+ arch/x86/kernel/uprobes.c                                   | 530 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-
+ include/linux/syscalls.h                                    |   2 +
+ include/linux/uprobes.h                                     |  23 +++-
+ kernel/events/uprobes.c                                     | 147 +++++++++++++++++--------
+ kernel/fork.c                                               |   1 +
+ kernel/sys_ni.c                                             |   1 +
+ tools/testing/selftests/bpf/bench.c                         |  12 +++
+ tools/testing/selftests/bpf/benchs/bench_trigger.c          |  42 ++++++++
+ tools/testing/selftests/bpf/benchs/run_bench_uprobes.sh     |   2 +-
+ tools/testing/selftests/bpf/prog_tests/uprobe_syscall.c     | 342 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++---
+ tools/testing/selftests/bpf/progs/uprobe_syscall_executed.c |  34 +++++-
+ tools/testing/selftests/bpf/sdt.h                           |   9 +-
+ 23 files changed, 1093 insertions(+), 79 deletions(-)
