@@ -1,124 +1,106 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCCE711185;
-	Mon, 24 Feb 2025 18:46:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8E421A83E7
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 24 Feb 2025 19:04:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740422815; cv=none; b=a5ldrw44t0aTBfTzJBDP8o+wnMmdzltFnT2yYppe64fYSi5dOugWfl7bGCp6KEBhfbtkLup4igCYAhsoYBJ6E1LjBc39dsVci+Vt8LLcNdgiISXaRh6BEQYZTpJ+Vcr07L8gIeWqpdQxEaHmnJTrjhloKSBVGwFsH6IsQ+hisHs=
+	t=1740423853; cv=none; b=kXkc9EfPrNITN4I383yfnZ5oeLfV0ToFecUl6uP7TfisU/KGIPge0Zw7F9L8ljI39KuhTLXd4AjFSQUVZuSvPDieD0tEZ6RJEvEFNqHho0/xtz1LUT/SIb/rqdyerK1feWGnGj2GKUgQn85SqxKizPjqB1BlafwCObtEwJmrYiE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740422815; c=relaxed/simple;
-	bh=/9XEwpYnicVuWAD8/l1pDfwiKoB8ajZoewUaq9rOkwk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=deQAgR7QBe/Ps4RtXvCqp4gqwhRfwCWnyVSf+aPFcs8P8F/j/nmYUXNZeEuCUoODS68ssaPRlWvqglOVW7lEnGYBqzWSlJWKao4sHqn/iE121KaaQiC8OZdt8pTUp61E5zoMBHW1P7RRtc9Z6wvAKI5GOJrCln7f1AaS2pQLUl0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=joQbmD8D; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740423853; c=relaxed/simple;
+	bh=a7KIxKD7aoeoZOqCkxW8MiXflXZAnlr6LQmmaXMfXYE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=R2ve4s79VehvS004frG5KnkHshje5Z2zRRyPZyY4BrN3hYJchlzZjkooKREALUZkzY/vtmzgCxagqjNiyPVrkqp/aujKhWp7a5XHpe1w/S9I33AKwq2BzX72oc04KoAUb1UALitdxioxXtH51LQJGHeXjqRjt5Xfk570PLqGKVE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=1yyjpECE; arc=none smtp.client-ip=209.85.208.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="joQbmD8D"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 82BEEC4CEDD;
-	Mon, 24 Feb 2025 18:46:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740422815;
-	bh=/9XEwpYnicVuWAD8/l1pDfwiKoB8ajZoewUaq9rOkwk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=joQbmD8Dlm/rcU8cHKF28oFBH+pplRZ7yq8Yk9ZphffAC71lrqqxFB+eN5TuIdLai
-	 +BVlmZQgJHYOT1knIYJPgSqxOyJtcxgahK/sf8kx75xsKq3jr6PXMl10xtxcm4z2KR
-	 8RIARDh/LN43obOLl3q27+nPYOqG7i0neP8qmZCBUNG+E1oY/DKoEpyIO/IssA5ZGC
-	 psnaVDQp7K5HW6cxTk/VDLS1QcD8/tMqrksuuIaU4KONXMrVQXJ6Li6XIgJi5DE84o
-	 /p8TsZZn697oYw4lBQhPoNnNMfmyxkXEnxS/e4fOBTsWLIU34LMCrZ2dudnvEKnHeO
-	 QzZYI/O52QU8A==
-Date: Mon, 24 Feb 2025 19:46:43 +0100
-From: Ingo Molnar <mingo@kernel.org>
-To: Jiri Olsa <jolsa@kernel.org>
-Cc: Oleg Nesterov <oleg@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
-	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	x86@kernel.org, Song Liu <songliubraving@fb.com>,
-	Yonghong Song <yhs@fb.com>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Hao Luo <haoluo@google.com>, Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Alan Maguire <alan.maguire@oracle.com>,
-	David Laight <David.Laight@aculab.com>,
-	Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas@t-8ch.de>
-Subject: Re: [PATCH RFCv2 00/18] uprobes: Add support to optimize usdt probes
- on x86_64
-Message-ID: <Z7y-kwkXZzbv-CQs@gmail.com>
-References: <20250224140151.667679-1-jolsa@kernel.org>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="1yyjpECE"
+Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-5debbced002so8677462a12.1
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 24 Feb 2025 11:04:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1740423849; x=1741028649; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=4nSSnIUgykCsOJjoRoPgBIV/Do11WjZXMG8oFwcXmD8=;
+        b=1yyjpECEC4FwpamKSMT98G/jqqz0XOq+OwoJdHIsFjHqkj4Lo+y22qQdFqgBX+0T46
+         CUL89o4mvo8J28S+iULL5fNo8DgpecmGspw7puUVQ4Z5rmtzZk4rtuQ9F4rCxqZyscTc
+         jgSg2n8WzivwS/HTvHS9bdhpW0WU7oZzlLMEU8+qWsPM3OHGMcct6Yk1japA5v3cT5Wx
+         s70mLRm047ZAW2urgoRQ/XZJVw0y9LeBSvmz2J5P3DQDMOh71LFMwI+NvPrxzGFWvhye
+         GsL4eX6LSTe+vfXwtMaJXXiRLYFPDtw8qnFxpD10o2e7qP6y75BCflNhfSzYLJroZdfS
+         T+lw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740423849; x=1741028649;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=4nSSnIUgykCsOJjoRoPgBIV/Do11WjZXMG8oFwcXmD8=;
+        b=AxANFMSL8vBeIjBpAbiJ73wdvOahQHv1RrM2hrLfvMPuJul/il3d7Nd4jSVL5U9AOZ
+         hi+FJn3lINX4r6gQD9Z726IA9+tlD8noZRhN58nRdL7fLBepIEF9qTpxey4ekRAEV8Lr
+         wQlYant7BEubIxupoy9w/QhxkpER+x8ail8rtr1mcHBpJXrluS+eVN/bV8rOX0ysjtvp
+         iSPXyOgZeIXqGA3GlfQTL7yhlRkOFnz6YqqBs7a0WWwQuoOYB7cLvrCvu8LrOxldTU7t
+         piicvKgS28V7k58l0txxss58OCAfX/ghEzSSb4BxIP/Vpvrs+JoqctU0c6RAhsIIL2M4
+         NCVw==
+X-Forwarded-Encrypted: i=1; AJvYcCVaPGUi80UFbLv447Wu6CMbwHO7stTr5QSGkk5UQSyz33OGROWB98GdCdmghJ0CSI+6ETSCLECYz9xzfDl5gPrIzT4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxjO1RBTdRgM0wCFNT//z1y4dT7pzG4viXFeSAoXHIWbxS0OrnD
+	YldToulpYxfO/PTDDfmgGc/xcv+KXFbkFT1sz+vbr4oxpBQQSblOr2r3hUjUxYDZZ1OxdMd7Hr5
+	iNa77Wk0D0zZFWZsXsarsV+5G43rF4JEKvMzb
+X-Gm-Gg: ASbGncuT3nWeug5G8mPs2ITiW6Rw2jqqYQBSchTbfTM2QPJGw0t8WWaVY5Um9Ye+zsn
+	/BdD2WBnMfXPimax6aDSf4Mw0xlVGjfU2ryA8rk+8G8FzttTSTHFYbkm8XG5ymhcZkXfD7QDVhu
+	1bY4eodQ==
+X-Google-Smtp-Source: AGHT+IGgQflHbqJ4UhoDf/fk2E5dvSe6cFNlfrPYK7uSbM45dr7J0xkIHLkRgPNbQ8e5rSTMONtTWGu2Ja+QKsZlfN8=
+X-Received: by 2002:a05:6402:26d1:b0:5de:572c:72cf with SMTP id
+ 4fb4d7f45d1cf-5e0a12b7c27mr19854821a12.10.1740423848811; Mon, 24 Feb 2025
+ 11:04:08 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250224140151.667679-1-jolsa@kernel.org>
+References: <20250224-tcpsendmsg-v1-1-bac043c59cc8@debian.org>
+In-Reply-To: <20250224-tcpsendmsg-v1-1-bac043c59cc8@debian.org>
+From: Eric Dumazet <edumazet@google.com>
+Date: Mon, 24 Feb 2025 20:03:57 +0100
+X-Gm-Features: AWEUYZnNdis7E0SVF0S-h6-AU7K1RTAWbc2V10Km6GwZSmwi5zbMocT2Sf-WWMY
+Message-ID: <CANn89iLybqJ22LVy00KUOVscRr8GQ88AcJ3Oy9MjBUgN=or0jA@mail.gmail.com>
+Subject: Re: [PATCH net-next] trace: tcp: Add tracepoint for tcp_sendmsg()
+To: Breno Leitao <leitao@debian.org>
+Cc: Neal Cardwell <ncardwell@google.com>, Kuniyuki Iwashima <kuniyu@amazon.com>, 
+	Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, "David S. Miller" <davem@davemloft.net>, 
+	David Ahern <dsahern@kernel.org>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	Simon Horman <horms@kernel.org>, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, kernel-team@meta.com, 
+	yonghong.song@linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Mon, Feb 24, 2025 at 7:24=E2=80=AFPM Breno Leitao <leitao@debian.org> wr=
+ote:
+>
+> Add a lightweight tracepoint to monitor TCP sendmsg operations, enabling
+> the tracing of TCP messages being sent.
+>
+> Meta has been using BPF programs to monitor this function for years,
+> indicating significant interest in observing this important
+> functionality. Adding a proper tracepoint provides a stable API for all
+> users who need visibility into TCP message transmission.
+>
+> The implementation uses DECLARE_TRACE instead of TRACE_EVENT to avoid
+> creating unnecessary trace event infrastructure and tracefs exports,
+> keeping the implementation minimal while stabilizing the API.
+>
+> Given that this patch creates a rawtracepoint, you could hook into it
+> using regular tooling, like bpftrace, using regular rawtracepoint
+> infrastructure, such as:
+>
+>         rawtracepoint:tcp_sendmsg_tp {
+>                 ....
+>         }
 
-* Jiri Olsa <jolsa@kernel.org> wrote:
+I would expect tcp_sendmsg() being stable enough ?
 
-> hi,
-> this patchset adds support to optimize usdt probes on top of 5-byte
-> nop instruction.
-> 
-> The generic approach (optimize all uprobes) is hard due to emulating
-> possible multiple original instructions and its related issues. The
-> usdt case, which stores 5-byte nop seems much easier, so starting
-> with that.
-> 
-> The basic idea is to replace breakpoint exception with syscall which
-> is faster on x86_64. For more details please see changelog of patch 8.
-> 
-> The run_bench_uprobes.sh benchmark triggers uprobe (on top of different
-> original instructions) in a loop and counts how many of those happened
-> per second (the unit below is million loops).
-> 
-> There's big speed up if you consider current usdt implementation
-> (uprobe-nop) compared to proposed usdt (uprobe-nop5):
-> 
->   # ./benchs/run_bench_uprobes.sh 
-> 
->           usermode-count :  818.386 ± 1.886M/s
->           syscall-count  :    8.923 ± 0.003M/s
->   -->     uprobe-nop     :    3.086 ± 0.005M/s
->           uprobe-push    :    2.751 ± 0.001M/s
->           uprobe-ret     :    1.481 ± 0.000M/s
->   -->     uprobe-nop5    :    4.016 ± 0.002M/s
->           uretprobe-nop  :    1.712 ± 0.008M/s
->           uretprobe-push :    1.616 ± 0.001M/s
->           uretprobe-ret  :    1.052 ± 0.000M/s
->           uretprobe-nop5 :    2.015 ± 0.000M/s
-
-So I had to dig into patch #12 to see the magnitude of the speedup:
-
-# current:
-#         usermode-count :  818.836 ± 2.842M/s
-#         syscall-count  :    8.917 ± 0.003M/s
-#         uprobe-nop     :    3.056 ± 0.013M/s
-#         uprobe-push    :    2.903 ± 0.002M/s
-#         uprobe-ret     :    1.533 ± 0.001M/s
-# -->     uprobe-nop5    :    1.492 ± 0.000M/s
-#         uretprobe-nop  :    1.783 ± 0.000M/s
-#         uretprobe-push :    1.672 ± 0.001M/s
-#         uretprobe-ret  :    1.067 ± 0.002M/s
-# -->     uretprobe-nop5 :    1.052 ± 0.000M/s
-# 
-# after the change:
-# 
-#         usermode-count :  818.386 ± 1.886M/s
-#         syscall-count  :    8.923 ± 0.003M/s
-#         uprobe-nop     :    3.086 ± 0.005M/s
-#         uprobe-push    :    2.751 ± 0.001M/s
-#         uprobe-ret     :    1.481 ± 0.000M/s
-# -->     uprobe-nop5    :    4.016 ± 0.002M/s
-#         uretprobe-nop  :    1.712 ± 0.008M/s
-#         uretprobe-push :    1.616 ± 0.001M/s
-#         uretprobe-ret  :    1.052 ± 0.000M/s
-# -->     uretprobe-nop5 :    2.015 ± 0.000M/s
-
-That's a +169% and a +91% speedup - pretty darn impressive!
-
-Thanks,
-
-	Ingo
+kprobe:tcp_sendmsg {
+}
