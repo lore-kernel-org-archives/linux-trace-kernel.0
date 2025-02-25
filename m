@@ -1,26 +1,26 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F7B51A4E98;
-	Tue, 25 Feb 2025 18:20:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A8C01A9B46;
+	Tue, 25 Feb 2025 18:20:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740507616; cv=none; b=jvg2XT6KG+2PuysBmH8uCoSISJR1tjwZPiCXHcu5LhhP2TXEXFJ674chEiUccCVaZJFuzQR815BrP6ww9jWDoLYJ0u3JnpWpCJL+J1stWz/1tmeJQIurvoEWyFksuAZcz7zp0iYGL8k3hd1isZ0TBbq0dXg3SRXPx1WbSim4ETs=
+	t=1740507616; cv=none; b=DuqDnd3ycbN9lrhsrpXDw548Xnj/U3Ua0XgoZVBmsKfGjdF48xAadGIz2Tirt0mBzs/9NWQESXBsjd7Te6GaRPcoNan6ZMlT0+TNwVTkDUK+nxdE4kRAw1sk2Fqplo02KYaG97QeqOdGUuSnxS12Cc6uLsqa6UPgohWxVh5ZzN0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1740507616; c=relaxed/simple;
-	bh=YdLBlvD7KuxzSEIk+RyaPCgrtz0J+VoLSvcf9Vme8s8=;
+	bh=K/F1CY7g3Rg1wpx3W23+5xHOx/IOS3QKZnW8nZXMLXE=;
 	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=aTCzGPdvIEiaZERP+jETJE3twA+oizEhBWsO/Z0DztPLJ4VX3lytTUn9N+Nt2zYJkszzNgvldI1Bf6aZQkgnwrbQGTYsIVVLFrpeLBUUD8lh5lnZAW0DMGODw4jdFyNGIPge6LnrWzoci4wT6cdcm0uj5jKZ+8TapaNm+6+Vc+s=
+	 Content-Type; b=pRAItC2amRNkhM5OpEk+8QQwoYWRaN5yjL4Mq0DHgaJTwT/voWH+mzm5tDwNVdNlGV1L1+qRG2KUOqSBV2Ncys6f8Jja4nGz1ieXzddWLdEamQchbDdAOdYLj9c2AQjKUgwcvdlrn4iodBZYFqUKQzU97+ULkPtGGPPk+wLR9Go=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E8A1EC4CEF2;
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CFFD2C4CEF1;
 	Tue, 25 Feb 2025 18:20:15 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.98)
 	(envelope-from <rostedt@goodmis.org>)
-	id 1tmzY6-000000095ZO-41vx;
+	id 1tmzY6-000000095Yu-3KXv;
 	Tue, 25 Feb 2025 13:20:54 -0500
-Message-ID: <20250225182054.815536219@goodmis.org>
+Message-ID: <20250225182054.648398403@goodmis.org>
 User-Agent: quilt/0.68
-Date: Tue, 25 Feb 2025 13:20:08 -0500
+Date: Tue, 25 Feb 2025 13:20:07 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org,
  linux-trace-kernel@vger.kernel.org,
@@ -35,7 +35,8 @@ Cc: Masami Hiramatsu <mhiramat@kernel.org>,
  Nathan Chancellor <nathan@kernel.org>,
  "Arnd Bergmann" <arnd@arndb.de>,
  Mark Brown <broonie@kernel.org>
-Subject: [PATCH 4/4] scripts/sorttable: Allow matches to functions before function entry
+Subject: [PATCH 3/4] scripts/sorttable: Use normal sort if theres no relocs in the mcount
+ section
 References: <20250225182004.473875894@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -47,53 +48,48 @@ Content-Type: text/plain; charset=UTF-8
 
 From: Steven Rostedt <rostedt@goodmis.org>
 
-ARM 64 uses -fpatchable-function-entry=4,2 which adds padding before the
-function and the addresses in the mcount_loc point there instead of the
-function entry that is returned by nm. In order to find a function from nm
-to make sure it's not an unused weak function, the entries in the
-mcount_loc section needs to match the entries from nm. Since it can be an
-instruction before the entry, add a before_func variable that ARM 64 can
-set to 8, and if the mcount_loc entry is within 8 bytes of the nm function
-entry, then it will be considered a match.
+When ARM 64 is compiled with gcc, the mcount_loc section will be filled
+with zeros and the addresses will be located in the Elf_Rela sections. To
+sort the mcount_loc section, the addresses from the Elf_Rela need to be
+placed into an array and that is sorted.
 
-Fixes: ef378c3b82338 ("scripts/sorttable: Zero out weak functions in mcount_loc table")
+But when ARM 64 is compiled with clang, it does it the same way as other
+architectures and leaves the addresses as is in the mcount_loc section.
+
+To handle both cases, ARM 64 will first try to sort the Elf_Rela section,
+and if it doesn't find any functions, it will then fall back to the
+sorting of the addresses in the mcount_loc section itself.
+
+Fixes: b3d09d06e052 ("arm64: scripts/sorttable: Implement sorting mcount_loc at boot for arm64")
+Reported-by: "Arnd Bergmann" <arnd@arndb.de>
 Tested-by: Nathan Chancellor <nathan@kernel.org>
+Closes: https://lore.kernel.org/all/893cd8f1-8585-4d25-bf0f-4197bf872465@app.fastmail.com/
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- scripts/sorttable.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ scripts/sorttable.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
 diff --git a/scripts/sorttable.c b/scripts/sorttable.c
-index 07ad8116bc8d..7b4b3714b1af 100644
+index 23c7e0e6c024..07ad8116bc8d 100644
 --- a/scripts/sorttable.c
 +++ b/scripts/sorttable.c
-@@ -611,13 +611,16 @@ static int add_field(uint64_t addr, uint64_t size)
- 	return 0;
- }
+@@ -827,9 +827,14 @@ static void *sort_mcount_loc(void *arg)
+ 		pthread_exit(m_err);
+ 	}
  
-+/* Used for when mcount/fentry is before the function entry */
-+static int before_func;
-+
- /* Only return match if the address lies inside the function size */
- static int cmp_func_addr(const void *K, const void *A)
- {
- 	uint64_t key = *(const uint64_t *)K;
- 	const struct func_info *a = A;
+-	if (sort_reloc)
++	if (sort_reloc) {
+ 		count = fill_relocs(vals, size, ehdr, emloc->start_mcount_loc);
+-	else
++		/* gcc may use relocs to save the addresses, but clang does not. */
++		if (!count) {
++			count = fill_addrs(vals, size, start_loc);
++			sort_reloc = 0;
++		}
++	} else
+ 		count = fill_addrs(vals, size, start_loc);
  
--	if (key < a->addr)
-+	if (key + before_func < a->addr)
- 		return -1;
- 	return key >= a->addr + a->size;
- }
-@@ -1253,6 +1256,8 @@ static int do_file(char const *const fname, void *addr)
- #ifdef MCOUNT_SORT_ENABLED
- 		sort_reloc = true;
- 		rela_type = 0x403;
-+		/* arm64 uses patchable function entry placing before function */
-+		before_func = 8;
- #endif
- 		/* fallthrough */
- 	case EM_386:
+ 	if (count < 0) {
 -- 
 2.47.2
 
