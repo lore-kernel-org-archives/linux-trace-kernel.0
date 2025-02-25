@@ -1,184 +1,245 @@
-Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com [209.85.216.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB7B215198B;
-	Tue, 25 Feb 2025 22:11:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81C982135AC;
+	Tue, 25 Feb 2025 22:26:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740521474; cv=none; b=Pa7ybx82r05CYpbYaiSpV4QL/p0X63mYICrSy9Tv6fkSSIFdaAWU0DdsALi8IpJ7vQwNd0TlLTjlWoO2F7/+qpSKW7EuhE8cIRg6WLsi2dfnpy3j2P0D3lmuRtE553HFUVJAi1woXQzQ6WZ0XueLSlgXgyrXHC3PZrCO+1CysCk=
+	t=1740522374; cv=none; b=FTqaO5LLcKW6kYfEOSSI2To1UgvKKqdKQQqHpaMb5QiIXtnV4+Xuk83qDZYTyldQ2gQQ8LHuGoINx+xNraav7ODPjq0+taixfRGMNPPabNjL2XQoF1x5/Jb5D0HFQEmZqqjMByVsvMsFVfrBD0ntcncFxR/0avLENKEYs2uKigQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740521474; c=relaxed/simple;
-	bh=37Ko1SNCa7V3a4wD3ug9FmTKdFC7UMkAsjvXmxDkgqg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ttc0yECXcn1+7wCgHYLaI/bDn7J2lTf8Lkbflu1S/VzXnkvIcD5Arx2M8tgZtXX23Jkpv25RPb7giJPfl+c2lawRCJ/CynnvH2OXiAuSYIqrdTp381I7Vnj5kcOf+Evn4dBQHFcJI57Tsi7IA9OyF9odReOCqESM5JUKV4ToIyE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eqMWQqOs; arc=none smtp.client-ip=209.85.216.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eqMWQqOs"
-Received: by mail-pj1-f41.google.com with SMTP id 98e67ed59e1d1-2fbffe0254fso12324264a91.3;
-        Tue, 25 Feb 2025 14:11:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740521472; x=1741126272; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=KAI/91W4mgIneZXqGJLoDY9N+72avalSOaf3OdNXKIw=;
-        b=eqMWQqOsPJzTfdTzVVc4TjkevCH9uUF85G69AsFkRAsdg2XLET7TcMMNsQa5a5b7C3
-         qZRoIzQvNWh7S7PyTkkQhBa6yPPtP+ozepT9uVAhSus5WhTKUCbeIkHm6ChkvwJNrMKk
-         xJM/wu0bWBZM5vCAZp4l097oy9GiW6pjuFDyC8SI7usJkkBPU6EUD2LgatpRHh3K/Cuv
-         rJDAjACKAtw0B80gGb8FMrS7kYZ6QBGmZSkbrUqw3BJhx0G785BzbF3dOznDuXQqksaC
-         5guCrr2P4McAzsshzTBPXoK/+q2QdCrvP4wowGQwvfiy/qKGot8k/nmx3rEHzzCWRBkY
-         y9zw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740521472; x=1741126272;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=KAI/91W4mgIneZXqGJLoDY9N+72avalSOaf3OdNXKIw=;
-        b=r+BdDGeVIJFlxrH0txy5u3Eg5MqyRg7aO+XS4UlhW5cu9dWZMwuGJYDNa+rP9DkLmd
-         vvqCAy+gUq1aKcseRVJRN50XSmAW+gS1S85RDhndBIcJw8zDH3WUiqCTT3GY+QFCv8Dp
-         GCSJhOBrxgVqGGeoYl2xQ3Ox9PBepf6vCsxZvZNrIynSzj0NNGmMftoKLfqZMSymWd6t
-         erIFSAWlSWbyY9pFENmXXaOgaCICdyP86blJpcfX0k9pzEK8n0BFY2Zf5dWMr8Wg1sPn
-         GCLpIWZS3I9VOycjq2MHalm6MOMxdckypl5EPWQMDRHW27l6acIc2AeuxYfmZWsB6iYL
-         RpKA==
-X-Forwarded-Encrypted: i=1; AJvYcCVXWCf1qm3JzS57ZSb/ky8xJT9R1bmWNbblfAuiLE+kteQDgY4oJLwIdZjdStMlRdIoTMRPjR6yJbl4kqeY/riWiOsj@vger.kernel.org, AJvYcCX0EpqYwQyYETrDveWxZkom74p6alInCqA/lIx+wFsQIbKZ7JoryftJuDBBZ130Z79kMi0=@vger.kernel.org, AJvYcCXV/XxMuh+zwHCrVtGkcTYjuW5AlNYGhLpE4wDbzn3K+/npvjQj0oDZvPtm80HlIetEk3OclIb0jcmorNvn@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzk9qso7xOTQdVvDAW4epthUU8ZHxoH5F80uxamZCnly5N48omq
-	mm/0JJC+eHeVpuBmCJjIwPJ1VIzEO3i4aWiEAu2b+Llc3fN6CZ+oPW5WiLEJ2bey++jxcz9LmI+
-	0BhRUoA7zpzoQs2lsr8sL7teHj4Gc199V
-X-Gm-Gg: ASbGncvvBpoHavkH8D458qlrrytURe7wIgyWTYCaiDpRnwWuQDUuPpP3SgqlfdCepQH
-	zqgFAkRDGig0SCMHuVp0umZTNR4aGIBn547ai49v/L2NLZPTxA/xbjTLsxUOctioN3qASsKtsW4
-	ZNfLHUd3Qese8SwBgNdnXTXnE=
-X-Google-Smtp-Source: AGHT+IHQ2K37qTX1fEZF7ko7UiCt4pMglg8mPgIXzfrl9jd5UAh59OuT84s2Q4gOj2QoGC++CbghiX5E3jCLwNHXK24=
-X-Received: by 2002:a17:90b:5686:b0:2ee:aed6:9ec2 with SMTP id
- 98e67ed59e1d1-2fe7e30045emr1918582a91.14.1740521472147; Tue, 25 Feb 2025
- 14:11:12 -0800 (PST)
+	s=arc-20240116; t=1740522374; c=relaxed/simple;
+	bh=tRHI8ZJVVN9HtU7W0TRJCGhhu1PZfM94l3gZgy+tV9E=;
+	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
+	 Content-Type; b=gBeTjsOLjwqu/5yY7DP+NqPINxsZ0B8zpAx8iSTG32B4m1WBVrz/d7Jb0saL3ymViQrqrL8UBm0wF0gX/ETypMsx3QKIx8DA72zmA13fmzDGGslSe1PTMpSP/iZv8VtI228Iizjl/9vuuaYxhbWDlRhN8X/uJ2q526Oxi+jSf9E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4C252C4CEE2;
+	Tue, 25 Feb 2025 22:26:14 +0000 (UTC)
+Received: from rostedt by gandalf with local (Exim 4.98)
+	(envelope-from <rostedt@goodmis.org>)
+	id 1tn3O9-00000009CIh-2wUA;
+	Tue, 25 Feb 2025 17:26:53 -0500
+Message-ID: <20250225222653.550619678@goodmis.org>
+User-Agent: quilt/0.68
+Date: Tue, 25 Feb 2025 17:26:02 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Sven Schnelle <svens@linux.ibm.com>,
+ Paul Walmsley <paul.walmsley@sifive.com>,
+ Palmer Dabbelt <palmer@dabbelt.com>,
+ Albert Ou <aou@eecs.berkeley.edu>,
+ Guo Ren <guoren@kernel.org>,
+ Donglin Peng <dolinux.peng@gmail.com>,
+ Zheng Yejian <zhengyejian@huaweicloud.com>,
+ bpf@vger.kernel.org
+Subject: [PATCH v3 1/4] ftrace: Add print_function_args()
+References: <20250225222601.423129938@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241024044159.3156646-1-andrii@kernel.org> <20241024044159.3156646-3-andrii@kernel.org>
- <20250224-impressive-onyx-boa-36e85d@leitao> <CAEf4BzbupJe10k0MROG5iZq6cYu6PRoN3sHhNK=L7eDLOULvNQ@mail.gmail.com>
- <20250225-transparent-bronze-cobra-bafff4@leitao>
-In-Reply-To: <20250225-transparent-bronze-cobra-bafff4@leitao>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Tue, 25 Feb 2025 14:10:59 -0800
-X-Gm-Features: AWEUYZniwBXSm-CS6dZMKJf5vIXpusGil3DJP8z2uRSMzGzi_NI3zZnx4fLHvtE
-Message-ID: <CAEf4Bzae9ngTyKjt1O2PO6Udk7cC5M9VGLrvjCyTv2fbRRFy_Q@mail.gmail.com>
-Subject: Re: [PATCH v3 tip/perf/core 2/2] uprobes: SRCU-protect uretprobe
- lifetime (with timeout)
-To: Breno Leitao <leitao@debian.org>
-Cc: Andrii Nakryiko <andrii@kernel.org>, linux-trace-kernel@vger.kernel.org, 
-	peterz@infradead.org, oleg@redhat.com, rostedt@goodmis.org, 
-	mhiramat@kernel.org, mingo@kernel.org, bpf@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, jolsa@kernel.org, paulmck@kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
 
-On Tue, Feb 25, 2025 at 3:46=E2=80=AFAM Breno Leitao <leitao@debian.org> wr=
-ote:
->
-> Hello Andrii,
->
-> On Mon, Feb 24, 2025 at 02:23:51PM -0800, Andrii Nakryiko wrote:
-> > On Mon, Feb 24, 2025 at 4:23=E2=80=AFAM Breno Leitao <leitao@debian.org=
-> wrote:
-> > >
-> > > Hello Andrii,
-> > >
-> > > On Wed, Oct 23, 2024 at 09:41:59PM -0700, Andrii Nakryiko wrote:
-> > > >
-> > > > +static struct uprobe* hprobe_expire(struct hprobe *hprobe, bool ge=
-t)
-> > > > +{
-> > > > +     enum hprobe_state hstate;
-> > > > +
-> > > > +     /*
-> > > > +      * return_instance's hprobe is protected by RCU.
-> > > > +      * Underlying uprobe is itself protected from reuse by SRCU.
-> > > > +      */
-> > > > +     lockdep_assert(rcu_read_lock_held() && srcu_read_lock_held(&u=
-retprobes_srcu));
-> > >
-> > > I am hitting this warning in d082ecbc71e9e ("Linux 6.14-rc4") on
-> > > aarch64. I suppose this might happen on x86 as well, but I haven't
-> > > tested.
-> > >
-> > >         WARNING: CPU: 28 PID: 158906 at kernel/events/uprobes.c:768 h=
-probe_expire (kernel/events/uprobes.c:825)
-> > >
-> > >         Call trace:
-> > >         hprobe_expire (kernel/events/uprobes.c:825) (P)
-> > >         uprobe_copy_process (kernel/events/uprobes.c:691 kernel/event=
-s/uprobes.c:2103 kernel/events/uprobes.c:2142)
-> > >         copy_process (kernel/fork.c:2636)
-> > >         kernel_clone (kernel/fork.c:2815)
-> > >         __arm64_sys_clone (kernel/fork.c:? kernel/fork.c:2926 kernel/=
-fork.c:2926)
-> > >         invoke_syscall (arch/arm64/kernel/syscall.c:35 arch/arm64/ker=
-nel/syscall.c:49)
-> > >         do_el0_svc (arch/arm64/kernel/syscall.c:139 arch/arm64/kernel=
-/syscall.c:151)
-> > >         el0_svc (arch/arm64/kernel/entry-common.c:165 arch/arm64/kern=
-el/entry-common.c:178 arch/arm64/kernel/entry-common.c:745)
-> > >         el0t_64_sync_handler (arch/arm64/kernel/entry-common.c:797)
-> > >         el0t_64_sync (arch/arm64/kernel/entry.S:600)
-> > >
-> > > I broke down that warning, and the problem is on related to
-> > > rcu_read_lock_held(), since RCU read lock does not seem to be held in
-> > > this path.
-> > >
-> > > Reading this code, RCU read lock seems to protect old hprobe, which
-> > > doesn't seem so.
-> > >
-> > > I am wondering if we need to protect it properly, something as:
-> > >
-> > >         @@ -2089,7 +2092,9 @@ static int dup_utask(struct task_struct=
- *t, struct uprobe_task *o_utask)
-> > >                                 return -ENOMEM;
-> > >
-> > >                         /* if uprobe is non-NULL, we'll have an extra=
- refcount for uprobe */
-> > >         +               rcu_read_lock();
-> > >                         uprobe =3D hprobe_expire(&o->hprobe, true);
-> > >         +               rcu_write_lock();
-> > >
-> >
-> > I think this is not good enough. rcu_read_lock/unlock should be around
-> > the entire for loop, because, technically, that return_instance can be
-> > freed before we even get to hprobe_expire.
->
-> re you suggesting that we should use an RCU read lock to protect the
-> "traversal" of return_instances? In other words, is it currently being
-> traversed unsafely, given that return_instance can be freed at any time?
+From: Sven Schnelle <svens@linux.ibm.com>
 
-Yes, that's what I was suggesting initially.
+Add a function to decode argument types with the help of BTF. Will
+be used to display arguments in the function and function graph
+tracer.
 
-But reading through all this again and paging in all the context I had
-when I was implementing this, I think this
-lockdep_assert(rcu_read_lock_held()) is a false positive.
+It can only handle simply arguments and up to FTRACE_REGS_MAX_ARGS number
+of arguments. When it hits a max, it will print ", ...":
 
-For timer thread, yes, we need to keep rcu_read_lock(), because timer
-thread doesn't own return_instance, so it has to guarantee that memory
-won't go away.
+   page_to_skb(vi=0xffff8d53842dc980, rq=0xffff8d53843a0800, page=0xfffffc2e04337c00, offset=6160, len=64, truesize=1536, ...)
 
-But dup_utask() is called for current thread's return_instances, so
-they can't go anywhere and RCU read lock is not necessary here.
+And if it hits an argument that is not recognized, it will print the raw
+value and the type of argument it is:
 
-So I'm going to send a patch removing part of this lockdep_assert()
-and will expand the comment with the actual lifetime rules.
+   make_vfsuid(idmap=0xffffffff87f99db8, fs_userns=0xffffffff87e543c0, kuid=0x0 (STRUCT))
+   __pti_set_user_pgtbl(pgdp=0xffff8d5384ab47f8, pgd=0x110e74067 (STRUCT))
 
->
-> > So, just like we have guard(srcu)(&uretprobes_srcu); we should have
-> > guard(rcu)();
-> >
-> > Except, there is that kmemdup() hidden inside dup_return_instance(),
-> > so we can't really do that.
->
-> Right. kmemdup() is using GFP_KERNEL, which might sleep, so, it cannot
-> be called using rcu read lock.
->
-> Thanks
-> --breno
+Cc: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Paul Walmsley <paul.walmsley@sifive.com>
+Cc: Palmer Dabbelt <palmer@dabbelt.com>
+Cc: Albert Ou <aou@eecs.berkeley.edu>
+Cc: Guo Ren <guoren@kernel.org>
+Cc: Donglin Peng <dolinux.peng@gmail.com>
+Cc: Zheng Yejian <zhengyejian@huaweicloud.com>
+Link: https://lore.kernel.org/20241223201541.898496620@goodmis.org
+Co-developed-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+Signed-off-by: Sven Schnelle <svens@linux.ibm.com>
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+ include/linux/ftrace_regs.h |  5 +++
+ kernel/trace/Kconfig        |  6 +++
+ kernel/trace/trace_output.c | 85 +++++++++++++++++++++++++++++++++++++
+ kernel/trace/trace_output.h |  9 ++++
+ 4 files changed, 105 insertions(+)
+
+diff --git a/include/linux/ftrace_regs.h b/include/linux/ftrace_regs.h
+index bbc1873ca6b8..15627ceea9bc 100644
+--- a/include/linux/ftrace_regs.h
++++ b/include/linux/ftrace_regs.h
+@@ -35,4 +35,9 @@ struct ftrace_regs;
+ 
+ #endif /* HAVE_ARCH_FTRACE_REGS */
+ 
++/* This can be overridden by the architectures */
++#ifndef FTRACE_REGS_MAX_ARGS
++# define FTRACE_REGS_MAX_ARGS	6
++#endif
++
+ #endif /* _LINUX_FTRACE_REGS_H */
+diff --git a/kernel/trace/Kconfig b/kernel/trace/Kconfig
+index d570b8b9c0a9..60412c1012ef 100644
+--- a/kernel/trace/Kconfig
++++ b/kernel/trace/Kconfig
+@@ -263,6 +263,12 @@ config FUNCTION_GRAPH_RETADDR
+ 	  the function is called. This feature is off by default, and you can
+ 	  enable it via the trace option funcgraph-retaddr.
+ 
++config FUNCTION_TRACE_ARGS
++       bool
++	depends on HAVE_FUNCTION_ARG_ACCESS_API
++	depends on DEBUG_INFO_BTF
++	default y
++
+ config DYNAMIC_FTRACE
+ 	bool "enable/disable function tracing dynamically"
+ 	depends on FUNCTION_TRACER
+diff --git a/kernel/trace/trace_output.c b/kernel/trace/trace_output.c
+index 03d56f711ad1..4b721cd4f21d 100644
+--- a/kernel/trace/trace_output.c
++++ b/kernel/trace/trace_output.c
+@@ -12,8 +12,11 @@
+ #include <linux/sched/clock.h>
+ #include <linux/sched/mm.h>
+ #include <linux/idr.h>
++#include <linux/btf.h>
++#include <linux/bpf.h>
+ 
+ #include "trace_output.h"
++#include "trace_btf.h"
+ 
+ /* must be a power of 2 */
+ #define EVENT_HASHSIZE	128
+@@ -684,6 +687,88 @@ int trace_print_lat_context(struct trace_iterator *iter)
+ 	return !trace_seq_has_overflowed(s);
+ }
+ 
++#ifdef CONFIG_FUNCTION_TRACE_ARGS
++void print_function_args(struct trace_seq *s, unsigned long *args,
++			 unsigned long func)
++{
++	const struct btf_param *param;
++	const struct btf_type *t;
++	const char *param_name;
++	char name[KSYM_NAME_LEN];
++	unsigned long arg;
++	struct btf *btf;
++	s32 tid, nr = 0;
++	int a, p, x;
++
++	trace_seq_printf(s, "(");
++
++	if (!args)
++		goto out;
++	if (lookup_symbol_name(func, name))
++		goto out;
++
++	/* TODO: Pass module name here too */
++	t = btf_find_func_proto(name, &btf);
++	if (IS_ERR_OR_NULL(t))
++		goto out;
++
++	param = btf_get_func_param(t, &nr);
++	if (!param)
++		goto out_put;
++
++	for (a = 0, p = 0; p < nr; a++, p++) {
++		if (p)
++			trace_seq_puts(s, ", ");
++
++		/* This only prints what the arch allows (6 args by default) */
++		if (a == FTRACE_REGS_MAX_ARGS) {
++			trace_seq_puts(s, "...");
++			break;
++		}
++
++		arg = args[a];
++
++		param_name = btf_name_by_offset(btf, param[p].name_off);
++		if (param_name)
++			trace_seq_printf(s, "%s=", param_name);
++		t = btf_type_skip_modifiers(btf, param[p].type, &tid);
++
++		switch (t ? BTF_INFO_KIND(t->info) : BTF_KIND_UNKN) {
++		case BTF_KIND_UNKN:
++			trace_seq_putc(s, '?');
++			/* Still print unknown type values */
++			fallthrough;
++		case BTF_KIND_PTR:
++			trace_seq_printf(s, "0x%lx", arg);
++			break;
++		case BTF_KIND_INT:
++			trace_seq_printf(s, "%ld", arg);
++			break;
++		case BTF_KIND_ENUM:
++			trace_seq_printf(s, "%ld", arg);
++			break;
++		default:
++			/* This does not handle complex arguments */
++			trace_seq_printf(s, "(%s)[0x%lx", btf_type_str(t), arg);
++			for (x = sizeof(long); x < t->size; x += sizeof(long)) {
++				trace_seq_putc(s, ':');
++				if (++a == FTRACE_REGS_MAX_ARGS) {
++					trace_seq_puts(s, "...]");
++					goto out_put;
++				}
++				trace_seq_printf(s, "0x%lx", args[a]);
++			}
++			trace_seq_putc(s, ']');
++			break;
++		}
++	}
++out_put:
++	btf_put(btf);
++out:
++	trace_seq_printf(s, ")");
++}
++#endif
++
+ /**
+  * ftrace_find_event - find a registered event
+  * @type: the type of event to look for
+diff --git a/kernel/trace/trace_output.h b/kernel/trace/trace_output.h
+index dca40f1f1da4..2e305364f2a9 100644
+--- a/kernel/trace/trace_output.h
++++ b/kernel/trace/trace_output.h
+@@ -41,5 +41,14 @@ extern struct rw_semaphore trace_event_sem;
+ #define SEQ_PUT_HEX_FIELD(s, x)				\
+ 	trace_seq_putmem_hex(s, &(x), sizeof(x))
+ 
++#ifdef CONFIG_FUNCTION_TRACE_ARGS
++void print_function_args(struct trace_seq *s, unsigned long *args,
++			 unsigned long func);
++#else
++static inline void print_function_args(struct trace_seq *s, unsigned long *args,
++				       unsigned long func) {
++	trace_seq_puts(s, "()");
++}
++#endif
+ #endif
+ 
+-- 
+2.47.2
+
+
