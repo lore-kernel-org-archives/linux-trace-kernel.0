@@ -1,175 +1,101 @@
-Received: from mail-pj1-f45.google.com (mail-pj1-f45.google.com [209.85.216.45])
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4264B19B3CB
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 25 Feb 2025 17:53:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66D8B156F3A;
+	Tue, 25 Feb 2025 18:06:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740506015; cv=none; b=LECxCVRyBjQOWI87susegiqQ2dGFRUqQL7iPKfSX9d3TmNl92b3aTVQw7mwZ0mliCGXAMliKUx2s7Tp6HVKoc3PBpj4w+raiFZi3pofx5EIinFKwTCC+rhBC+QU9FQfdG1fCtcan51YthM2Saqx4aU7Li5y2CwdeBoxhtp2HQw0=
+	t=1740506797; cv=none; b=YDfASeEtKn/8SCRcpNTtmr8MPdKgU21cNMcF/+Tn2PgA+L/PUTEZitlayVIznqZ/RpD5DAYZGJqmeeNyBhRio1m9XG957mzr2heW2Px0QJ6+vz2PNEl1fwvhwHbJTRPzScWKGX6ily+7EzmZk0oLZyOa+i94rp4bQFe2osdwoM8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740506015; c=relaxed/simple;
-	bh=MH07qjLZ92AfV112Knvo2zI/QK4I2MXbywwIDal1d54=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iFQJSrPK5A4v3wyykll7QHHoXIOxnk6fk8lzgxlvAB+6AmP2i3+TXSHwsLDRuP1JzYjPW2auk/kPTl+g6hCtncpkjBODhSk2r3GAjbSgS+SDTBe78FUgjHd85FxqhBuo3vnJfRIoMsUKJu0oyCTtlDffHBwLby74Kn5L2IuUq9I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=Q7YzJwdx; arc=none smtp.client-ip=209.85.216.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	s=arc-20240116; t=1740506797; c=relaxed/simple;
+	bh=zchtCEfEGcKd3MAmswqArfI+K6HNuL7Cz7XDtG3NbNA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=omw6/bzf5Pe6xaULbxanKbDmdZ3z+FCMz5POjx50taJ6op7mYhFE8BllNZf5S7P/VQd5xeGvfSWHC4nA4VR2JEHGZY7XixRyswRp83RJJY+c3+VKB67pmT1Y1eypFxGS5z7xWhUEdvJ2wWHNsLkHx/zgJH5HvXDbiXTHJUJ2T/o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Y4oifWZd; arc=none smtp.client-ip=209.85.128.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="Q7YzJwdx"
-Received: by mail-pj1-f45.google.com with SMTP id 98e67ed59e1d1-2fc0bd358ccso11772699a91.2
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 25 Feb 2025 09:53:31 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y4oifWZd"
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-43aac0390e8so15406255e9.2;
+        Tue, 25 Feb 2025 10:06:35 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1740506011; x=1741110811; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=M8ytOcimcOajPMmPbmHJ20XRT2ET7W0PdZC0CAWsNrs=;
-        b=Q7YzJwdxpNNGG7rEOi38zlyjQJp7g2wUDGdhHQweNiu8FbOyuXI4yqmlQOyIJDzp9l
-         26b4of9HRlLUkYF0tIY6BwM6rVOMjL0bYakUDSmsic5xKO4aZn75GbB8nqJv46FCFkJv
-         O7YgbRdYXfqd8JnHi9WhFfaNaXZ05Jm/Xi6H9ZAWMfpSbe5oeX43p+FDwHVqrZfLBvk1
-         Q0/fuN7MKXEcAo2Y16bEE3aVKAnNNxuomOLXyzz1Y2ifcdqkgO+5W49AZ61CSp98US4U
-         3FyGxgA0s5eIz4/EaYGFYJwpIUGC3BTNTQ3nMTP6kwmrxHSxnRrCy9Bdp5XnpyrcDDqk
-         wDBw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740506011; x=1741110811;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1740506793; x=1741111593; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=M8ytOcimcOajPMmPbmHJ20XRT2ET7W0PdZC0CAWsNrs=;
-        b=YOdSQlsl0TWgNentYygr5eP/AZBSCMgOVUlx9qmMT6qbRNhwDsWmKd0lR04FngkMGX
-         5Y/6BaMsAoVEK1ZoQaN8dUv9Bw8hfqO87tHyLe+TpKnvoDcIbqc7NfPaNu0ZTaieP49w
-         +5oByc0W8UxNsts5M8x3m/qkrfsLtNiaa2LEWAWlbD1eiVnmMnM+lnrZo4btQRvcwUBe
-         SKpSVIvqUyqcODnlopZUEzQ4o8F9s56Gv4nH82r2BZPT0OAMJxBG3A1U1Btbs/mfB0OA
-         eavfCwEij9HhP1jS8HSxlA3kM6cLK6B/ctbPHdtwRODkNeZBTLsUnoTSWLVKuZTke/3+
-         w6dA==
-X-Forwarded-Encrypted: i=1; AJvYcCUkhDY020SGbT1QEpbR4U5goEGlzNDS8YTLer2jfEEbw/2KUMq7ZGz/H3xErFCn+RZUuw+Y1VRPlowUOn39NbP+KkA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxnNlwcnYYkflPo42s72d+nbaqI2T1CpZZnyn8I6ST/2PEAjrO5
-	7W3AWDm5eZwI/IaB5vaJFYcRh6lAeBwxnv2MEDxX3sr/UdTQRzvGebJ7p5efREI=
-X-Gm-Gg: ASbGncurkyINJHOv35CYB6ZkaTUxivqJdVoiILwNQziSG8K5ziG0yX+TasqjMcYdxcp
-	+MXsWzF63XKmJKXZ+IezgqU62z/xAd8QoluYxevnxavXfWJ3iJuUfHG6715AmFsmekobh31Vsxu
-	VIpkzWCPn72l8RJpCN8ykQ4iZ+DebodCYUu4JMOx9v87dFwhxy4Xu5CAZiDyrk8KBjefKJPEIeJ
-	9KC7T42PdYJZoaRiucnITYsPTFKOoWxmlGD9oTO04ULjthwpUoXyx8Epqsxy22FWsyZ3TWAT6gP
-	p1SAXoOVV2huHZ9I
-X-Google-Smtp-Source: AGHT+IGE1vlRW/ZqwQ5Dzm1smcnQLurLLpTK4sP2+b5ghrhOvAR+GUgf0qQALw30DxM3WGJrzHgVQQ==
-X-Received: by 2002:a17:90b:54c7:b0:2f5:63a:44f9 with SMTP id 98e67ed59e1d1-2fe68d065e9mr5651684a91.23.1740506011483;
-        Tue, 25 Feb 2025 09:53:31 -0800 (PST)
-Received: from ghost ([50.145.13.30])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2fceb10fb43sm8709371a91.35.2025.02.25.09.53.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Feb 2025 09:53:30 -0800 (PST)
-Date: Tue, 25 Feb 2025 09:53:27 -0800
-From: Charlie Jenkins <charlie@rivosinc.com>
-To: Alexandre Ghiti <alex@ghiti.fr>
-Cc: Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>, Oleg Nesterov <oleg@redhat.com>,
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	linux-riscv@lists.infradead.org
-Subject: Re: [PATCH] riscv: tracing: Fix __write_overflow_field in
- ftrace_partial_regs()
-Message-ID: <Z74DlyiSS75MrkqS@ghost>
-References: <20250224-fix_ftrace_partial_regs-v1-1-54b906417e86@rivosinc.com>
- <b449aacb-f981-4907-af37-1ca5aea83bb4@ghiti.fr>
+        bh=zchtCEfEGcKd3MAmswqArfI+K6HNuL7Cz7XDtG3NbNA=;
+        b=Y4oifWZdg4UIF2bN0BfWa9urTM3jRZzoW1QN6DcLlXirvkiAKj6aDDGEBMjrfKlL+t
+         xy+Lz7k6BMECbFed8A9wnsL1S4Oge1kJMqY9YTUET1/NUEiGbl0jAP86uCdoZ8UeUMEg
+         HAm2NrCOaPHlheOnwOM9dAw0k7ZW//nadzEYUyUXfzygwjuqi4nlUt4YC4Zz67C4vw2f
+         UJq6GrmNEkfmo5SZk5vRuOk5nwdPEEGi/rjNHs4pcJbSgqg5uAXokHPWlCxBrWmJBQBi
+         9aLvPPaKm3bNZ7BZTHvzMKFO5MauM8hzUS8+j9BKcwnAiQIDfzbwjTjmghel+fL1t12V
+         LuMg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740506793; x=1741111593;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=zchtCEfEGcKd3MAmswqArfI+K6HNuL7Cz7XDtG3NbNA=;
+        b=HP68725Feem9g5QDjwLjxfpAPzaRagT8+URSKDSvV+3axFBae72g8nabqztGn/+Og8
+         B4/UDbEEBqOO6SOB/di66VqvgYTJNRc3I/uCVuL6Xse+rVy7Ta57i4Rwh36fnIbXmpSq
+         4YXYhZD15pa+8up3ZqbxuBjwwt4bOAdOchrYd9S9OvNlK4VCFkXzuiIB1zQPCTYVdTyY
+         oqoq4x4a3rRdLEmC/uBcrJWGGR1ONxHiL4aNkI/IAuP6fL3yAtEBuI45/NNcKGNYv+Qc
+         AXT2x1+he3pc5iZIyngfRYOuEeV/K6eYRLg7fxqvuc32f2Eov5sFDALtCo2RBQevo4ah
+         hxew==
+X-Forwarded-Encrypted: i=1; AJvYcCW4t5davvoATg/D+1oVAeqj/VUP7dnwfXP8f+0AKzxlsmSVeoD80FnfbzBO8GcR7Q7FNis=@vger.kernel.org, AJvYcCWl6QkI3dmc/XohEhTW5Y5IaLdwpSnX1LjQ7cEJY45szxpSMCA25gEqWT2lVCe4er8odv/ya4QdcjbQEbrk@vger.kernel.org, AJvYcCX7PjBgC546bUBAbYlyL7YYWEer8bvrCz4zaSUBaRUqKb7gxkGvA5ZWW991LSBTniRTFi3YrwkLq3TQtZjB3H4rN+Jg@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyi7KIyi6TnoVNDeu48TmByxQzP/FKAX0Tm1LEuPyYYU5xQiff6
+	2HUK5ZhDC0EonB2HQNDHSjnDF4jzhPUi3fhm8AnvBQOM5hyeEFR3jzSdZvOCwTxoEa4PW1YyvD+
+	l3NXlYwk/LzCSLIGJpq+j/OS85L+WxMUB
+X-Gm-Gg: ASbGncuNiOaYT9OkRy/Bhrv490UDKGvP8MiamexKrP6162v+2xROlF2tJsP4Bi57vb8
+	VEcT/QIs9U3hY2xZ6lRwYTbeI5oG8FOEEY30HhJxAiObYKsnauIoqLXyIfvvsQooVTqvgDtU+lP
+	jefdjSLAksVdarprttrpV+sXs=
+X-Google-Smtp-Source: AGHT+IGlwkwtt8yLazHetKUrxIo1z6pDXtJnI2CGJXL07EgtfUktZVrpKCWsb3EHD1nsxtvSR1Y7t73KP/dUgPFF8CA=
+X-Received: by 2002:a05:6000:1fae:b0:38d:cbc2:29f6 with SMTP id
+ ffacd0b85a97d-38f6e947434mr14144173f8f.17.1740506793340; Tue, 25 Feb 2025
+ 10:06:33 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b449aacb-f981-4907-af37-1ca5aea83bb4@ghiti.fr>
+References: <20250224140151.667679-1-jolsa@kernel.org> <20250224140151.667679-9-jolsa@kernel.org>
+ <CAADnVQJ_-7cB3OaeFWaupcq0fRPh3uP62HBGxq0QbyZsx3aHqA@mail.gmail.com> <Z73HDU5IZ5NV3BtM@krava>
+In-Reply-To: <Z73HDU5IZ5NV3BtM@krava>
+From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date: Tue, 25 Feb 2025 10:06:19 -0800
+X-Gm-Features: AQ5f1JonQ3bzFeYH2MPwYc-bN0juQN4SqNxsA6Q12e74EuGvHeE7xiA9aTlZ6Xg
+Message-ID: <CAADnVQKNeWKFkZxb_-Fuenvmfy47-t6Z7KLY_j3UUOrj5pFP-g@mail.gmail.com>
+Subject: Re: [PATCH RFCv2 08/18] uprobes/x86: Add uprobe syscall to speed up uprobe
+To: Jiri Olsa <olsajiri@gmail.com>
+Cc: Oleg Nesterov <oleg@redhat.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Andrii Nakryiko <andrii@kernel.org>, bpf <bpf@vger.kernel.org>, 
+	LKML <linux-kernel@vger.kernel.org>, 
+	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>, 
+	Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>, 
+	John Fastabend <john.fastabend@gmail.com>, Hao Luo <haoluo@google.com>, 
+	Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Alan Maguire <alan.maguire@oracle.com>, David Laight <David.Laight@aculab.com>, 
+	=?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas@t-8ch.de>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Feb 25, 2025 at 09:36:04AM +0100, Alexandre Ghiti wrote:
-> Hi Charlie,
-> 
-> On 25/02/2025 03:42, Charlie Jenkins wrote:
-> > The size of &regs->a0 is unknown, causing the error:
-> > 
-> > ../include/linux/fortify-string.h:571:25: warning: call to
-> > '__write_overflow_field' declared with attribute warning: detected write
-> > beyond size of field (1st parameter); maybe use struct_group()?
-> > [-Wattribute-warning]
-> 
-> 
-> I can't reproduce this warning with gcc and llvm, even when setting by hand
-> -Wattribute-warning when compiling bpf_trace.c (which is the user of
-> ftrace_partial_regs()).
-> 
-> Which toolchain did you use?
+On Tue, Feb 25, 2025 at 5:35=E2=80=AFAM Jiri Olsa <olsajiri@gmail.com> wrot=
+e:
+>
+> > In later patches I see nop5 is replaced with a call to
+> > uprobe_trampoline_entry, but which part saves
+> > rdi and other regs?
+> > Compiler doesn't automatically spill/fill around USDT's nop/nop5.
+> > Selftest is doing:
+> > +__naked noinline void uprobe_test(void)
+> > so just lucky ?
+>
+> if you mean registers that would carry usdt arguments, ebpf programs
+> access those based on assembler operand string stored in usdt record:
 
-You need to have the configs:
-CONFIG_BPF_SYSCALL=y
-CONFIG_FORTIFY_SOURCE=y
-CONFIG_FUNCTION_TRACER=y
-CONFIG_FPROBE=y
-CONFIG_DYNAMIC_FTRACE=y
-
-I used gcc 14.2.0
-
-- Charlie
-
-> 
-> Thanks,
-> 
-> Alex
-> 
-> 
-> > 
-> > Fix this by wrapping the required registers in pt_regs with
-> > struct_group() and reference the group when doing the offending
-> > memcpy().
-> > 
-> > Signed-off-by: Charlie Jenkins <charlie@rivosinc.com>
-> > ---
-> >   arch/riscv/include/asm/ftrace.h |  2 +-
-> >   arch/riscv/include/asm/ptrace.h | 18 ++++++++++--------
-> >   2 files changed, 11 insertions(+), 9 deletions(-)
-> > 
-> > diff --git a/arch/riscv/include/asm/ftrace.h b/arch/riscv/include/asm/ftrace.h
-> > index c4721ce44ca474654b37b3d51bc0a63d46bc1eff..ec6db1162021fbf4fa48fc87e7984266040aa7d9 100644
-> > --- a/arch/riscv/include/asm/ftrace.h
-> > +++ b/arch/riscv/include/asm/ftrace.h
-> > @@ -207,7 +207,7 @@ ftrace_partial_regs(const struct ftrace_regs *fregs, struct pt_regs *regs)
-> >   {
-> >   	struct __arch_ftrace_regs *afregs = arch_ftrace_regs(fregs);
-> > -	memcpy(&regs->a0, afregs->args, sizeof(afregs->args));
-> > +	memcpy(&regs->a_regs, afregs->args, sizeof(afregs->args));
-> >   	regs->epc = afregs->epc;
-> >   	regs->ra = afregs->ra;
-> >   	regs->sp = afregs->sp;
-> > diff --git a/arch/riscv/include/asm/ptrace.h b/arch/riscv/include/asm/ptrace.h
-> > index b5b0adcc85c18e15c156de11172a5d7f03ada037..2910231977cb71dac3cc42f2dc32590284204057 100644
-> > --- a/arch/riscv/include/asm/ptrace.h
-> > +++ b/arch/riscv/include/asm/ptrace.h
-> > @@ -23,14 +23,16 @@ struct pt_regs {
-> >   	unsigned long t2;
-> >   	unsigned long s0;
-> >   	unsigned long s1;
-> > -	unsigned long a0;
-> > -	unsigned long a1;
-> > -	unsigned long a2;
-> > -	unsigned long a3;
-> > -	unsigned long a4;
-> > -	unsigned long a5;
-> > -	unsigned long a6;
-> > -	unsigned long a7;
-> > +	struct_group(a_regs,
-> > +		unsigned long a0;
-> > +		unsigned long a1;
-> > +		unsigned long a2;
-> > +		unsigned long a3;
-> > +		unsigned long a4;
-> > +		unsigned long a5;
-> > +		unsigned long a6;
-> > +		unsigned long a7;
-> > +	);
-> >   	unsigned long s2;
-> >   	unsigned long s3;
-> >   	unsigned long s4;
-> > 
-> > ---
-> > base-commit: d082ecbc71e9e0bf49883ee4afd435a77a5101b6
-> > change-id: 20250224-fix_ftrace_partial_regs-eddaf4a7e5ed
+No. I'm talking about all normal registers that trap-style uprobe
+preserves, but this nop5->call will scratch.
+Instead of void uprobe_test(void)
+add some arguments to it, and read them before and after nop5 uprobe.
+They must remain the same.
