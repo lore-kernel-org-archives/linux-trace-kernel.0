@@ -1,164 +1,175 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f45.google.com (mail-pj1-f45.google.com [209.85.216.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F08B14F9C4;
-	Tue, 25 Feb 2025 17:53:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4264B19B3CB
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 25 Feb 2025 17:53:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740505999; cv=none; b=iMLI+xY/QvVTUhT/kJtgsr3soBAhhrRl+Xf+uIuXttuTZYMyogBwrWNFhG2XqCyZxvbbQznFvif2G+qlpustb53YZbZsAHXOTpbFmcuoF86OOnve4pneWoTH8TbWpBx5RwQzy/CRqifI4aw9w5NxQ9Zb7f1CWHg1I9hM96lFpvQ=
+	t=1740506015; cv=none; b=LECxCVRyBjQOWI87susegiqQ2dGFRUqQL7iPKfSX9d3TmNl92b3aTVQw7mwZ0mliCGXAMliKUx2s7Tp6HVKoc3PBpj4w+raiFZi3pofx5EIinFKwTCC+rhBC+QU9FQfdG1fCtcan51YthM2Saqx4aU7Li5y2CwdeBoxhtp2HQw0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740505999; c=relaxed/simple;
-	bh=PFetlwZIjtDHSeCjjYgYXTvGCoSFeYK5lIXFMoq1cNc=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=u+RssE96UOUOcf8RnbmlSl9TyamVG/ycOA3+jFQdgVX3uQDFeX67VnoE3v+VrzAruS1P2gusGCW9cBOEE5eVkx8YXMHd1YJCQC7mpu+E6WQoy9m8LQAKSPt+7O2UhrKxj+XgODzTNBj9tYZ0YJQZgZrr3SEsbIBrpsLy+kjFeJE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0C338C4CEDD;
-	Tue, 25 Feb 2025 17:53:17 +0000 (UTC)
-Date: Tue, 25 Feb 2025 12:53:56 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Tomas Glozar <tglozar@redhat.com>, Tom
- Zanussi <zanussi@kernel.org>
-Subject: [PATCH] tracing: Fix bad hist from corrupting named_triggers list
-Message-ID: <20250225125356.29236cd1@gandalf.local.home>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1740506015; c=relaxed/simple;
+	bh=MH07qjLZ92AfV112Knvo2zI/QK4I2MXbywwIDal1d54=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=iFQJSrPK5A4v3wyykll7QHHoXIOxnk6fk8lzgxlvAB+6AmP2i3+TXSHwsLDRuP1JzYjPW2auk/kPTl+g6hCtncpkjBODhSk2r3GAjbSgS+SDTBe78FUgjHd85FxqhBuo3vnJfRIoMsUKJu0oyCTtlDffHBwLby74Kn5L2IuUq9I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=Q7YzJwdx; arc=none smtp.client-ip=209.85.216.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="Q7YzJwdx"
+Received: by mail-pj1-f45.google.com with SMTP id 98e67ed59e1d1-2fc0bd358ccso11772699a91.2
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 25 Feb 2025 09:53:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1740506011; x=1741110811; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=M8ytOcimcOajPMmPbmHJ20XRT2ET7W0PdZC0CAWsNrs=;
+        b=Q7YzJwdxpNNGG7rEOi38zlyjQJp7g2wUDGdhHQweNiu8FbOyuXI4yqmlQOyIJDzp9l
+         26b4of9HRlLUkYF0tIY6BwM6rVOMjL0bYakUDSmsic5xKO4aZn75GbB8nqJv46FCFkJv
+         O7YgbRdYXfqd8JnHi9WhFfaNaXZ05Jm/Xi6H9ZAWMfpSbe5oeX43p+FDwHVqrZfLBvk1
+         Q0/fuN7MKXEcAo2Y16bEE3aVKAnNNxuomOLXyzz1Y2ifcdqkgO+5W49AZ61CSp98US4U
+         3FyGxgA0s5eIz4/EaYGFYJwpIUGC3BTNTQ3nMTP6kwmrxHSxnRrCy9Bdp5XnpyrcDDqk
+         wDBw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740506011; x=1741110811;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=M8ytOcimcOajPMmPbmHJ20XRT2ET7W0PdZC0CAWsNrs=;
+        b=YOdSQlsl0TWgNentYygr5eP/AZBSCMgOVUlx9qmMT6qbRNhwDsWmKd0lR04FngkMGX
+         5Y/6BaMsAoVEK1ZoQaN8dUv9Bw8hfqO87tHyLe+TpKnvoDcIbqc7NfPaNu0ZTaieP49w
+         +5oByc0W8UxNsts5M8x3m/qkrfsLtNiaa2LEWAWlbD1eiVnmMnM+lnrZo4btQRvcwUBe
+         SKpSVIvqUyqcODnlopZUEzQ4o8F9s56Gv4nH82r2BZPT0OAMJxBG3A1U1Btbs/mfB0OA
+         eavfCwEij9HhP1jS8HSxlA3kM6cLK6B/ctbPHdtwRODkNeZBTLsUnoTSWLVKuZTke/3+
+         w6dA==
+X-Forwarded-Encrypted: i=1; AJvYcCUkhDY020SGbT1QEpbR4U5goEGlzNDS8YTLer2jfEEbw/2KUMq7ZGz/H3xErFCn+RZUuw+Y1VRPlowUOn39NbP+KkA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxnNlwcnYYkflPo42s72d+nbaqI2T1CpZZnyn8I6ST/2PEAjrO5
+	7W3AWDm5eZwI/IaB5vaJFYcRh6lAeBwxnv2MEDxX3sr/UdTQRzvGebJ7p5efREI=
+X-Gm-Gg: ASbGncurkyINJHOv35CYB6ZkaTUxivqJdVoiILwNQziSG8K5ziG0yX+TasqjMcYdxcp
+	+MXsWzF63XKmJKXZ+IezgqU62z/xAd8QoluYxevnxavXfWJ3iJuUfHG6715AmFsmekobh31Vsxu
+	VIpkzWCPn72l8RJpCN8ykQ4iZ+DebodCYUu4JMOx9v87dFwhxy4Xu5CAZiDyrk8KBjefKJPEIeJ
+	9KC7T42PdYJZoaRiucnITYsPTFKOoWxmlGD9oTO04ULjthwpUoXyx8Epqsxy22FWsyZ3TWAT6gP
+	p1SAXoOVV2huHZ9I
+X-Google-Smtp-Source: AGHT+IGE1vlRW/ZqwQ5Dzm1smcnQLurLLpTK4sP2+b5ghrhOvAR+GUgf0qQALw30DxM3WGJrzHgVQQ==
+X-Received: by 2002:a17:90b:54c7:b0:2f5:63a:44f9 with SMTP id 98e67ed59e1d1-2fe68d065e9mr5651684a91.23.1740506011483;
+        Tue, 25 Feb 2025 09:53:31 -0800 (PST)
+Received: from ghost ([50.145.13.30])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2fceb10fb43sm8709371a91.35.2025.02.25.09.53.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 25 Feb 2025 09:53:30 -0800 (PST)
+Date: Tue, 25 Feb 2025 09:53:27 -0800
+From: Charlie Jenkins <charlie@rivosinc.com>
+To: Alexandre Ghiti <alex@ghiti.fr>
+Cc: Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, Oleg Nesterov <oleg@redhat.com>,
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	linux-riscv@lists.infradead.org
+Subject: Re: [PATCH] riscv: tracing: Fix __write_overflow_field in
+ ftrace_partial_regs()
+Message-ID: <Z74DlyiSS75MrkqS@ghost>
+References: <20250224-fix_ftrace_partial_regs-v1-1-54b906417e86@rivosinc.com>
+ <b449aacb-f981-4907-af37-1ca5aea83bb4@ghiti.fr>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b449aacb-f981-4907-af37-1ca5aea83bb4@ghiti.fr>
 
-From: Steven Rostedt <rostedt@goodmis.org>
+On Tue, Feb 25, 2025 at 09:36:04AM +0100, Alexandre Ghiti wrote:
+> Hi Charlie,
+> 
+> On 25/02/2025 03:42, Charlie Jenkins wrote:
+> > The size of &regs->a0 is unknown, causing the error:
+> > 
+> > ../include/linux/fortify-string.h:571:25: warning: call to
+> > '__write_overflow_field' declared with attribute warning: detected write
+> > beyond size of field (1st parameter); maybe use struct_group()?
+> > [-Wattribute-warning]
+> 
+> 
+> I can't reproduce this warning with gcc and llvm, even when setting by hand
+> -Wattribute-warning when compiling bpf_trace.c (which is the user of
+> ftrace_partial_regs()).
+> 
+> Which toolchain did you use?
 
-The following commands causes a crash:
+You need to have the configs:
+CONFIG_BPF_SYSCALL=y
+CONFIG_FORTIFY_SOURCE=y
+CONFIG_FUNCTION_TRACER=y
+CONFIG_FPROBE=y
+CONFIG_DYNAMIC_FTRACE=y
 
- ~# cd /sys/kernel/tracing/events/rcu/rcu_callback
- ~# echo 'hist:name=bad:keys=common_pid:onmax(bogus).save(common_pid)' > trigger
- bash: echo: write error: Invalid argument
- ~# echo 'hist:name=bad:keys=common_pid' > trigger
+I used gcc 14.2.0
 
-Because the following occurs:
+- Charlie
 
-event_trigger_write() {
-  trigger_process_regex() {
-    event_hist_trigger_parse() {
-
-      data = event_trigger_alloc(..);
-
-      event_trigger_register(.., data) {
-        cmd_ops->reg(.., data, ..) [hist_register_trigger()] {
-          data->ops->init() [event_hist_trigger_init()] {
-            save_named_trigger(name, data) {
-              list_add(&data->named_list, &named_triggers);
-            }
-          }
-        }
-      }
-
-      ret = create_actions(); (return -EINVAL)
-      if (ret)
-        goto out_unreg;
-[..]
-      ret = hist_trigger_enable(data, ...) {
-        list_add_tail_rcu(&data->list, &file->triggers); <<<---- SKIPPED!!! (this is important!)
-[..]
- out_unreg:
-      event_hist_unregister(.., data) {
-        cmd_ops->unreg(.., data, ..) [hist_unregister_trigger()] {
-          list_for_each_entry(iter, &file->triggers, list) {
-            if (!hist_trigger_match(data, iter, named_data, false))   <- never matches
-                continue;
-            [..]
-            test = iter;
-          }
-          if (test && test->ops->free) <<<-- test is NULL
-
-            test->ops->free(test) [event_hist_trigger_free()] {
-              [..]
-              if (data->name)
-                del_named_trigger(data) {
-                  list_del(&data->named_list);  <<<<-- NEVER gets removed!
-                }
-              }
-           }
-         }
-
-         [..]
-         kfree(data); <<<-- frees item but it is still on list
-
-The next time a hist with name is registered, it causes an u-a-f bug and
-the kernel can crash.
-
-Move the code around such that if event_trigger_register() succeeds, the
-next thing called is hist_trigger_enable() which adds it to the list.
-
-A bunch of actions is called if get_named_trigger_data() returns false.
-But that doesn't need to be called after event_trigger_register(), so it
-can be moved up, allowing event_trigger_register() to be called just
-before hist_trigger_enable() keeping them together and allowing the
-file->triggers to be properly populated.
-
-Cc: stable@vger.kernel.org
-Fixes: 067fe038e70f6 ("tracing: Add variable reference handling to hist triggers")
-Reported-by: Tomas Glozar <tglozar@redhat.com>
-Closes: https://lore.kernel.org/all/CAP4=nvTsxjckSBTz=Oe_UYh8keD9_sZC4i++4h72mJLic4_W4A@mail.gmail.com/
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
- kernel/trace/trace_events_hist.c | 31 ++++++++++++++++---------------
- 1 file changed, 16 insertions(+), 15 deletions(-)
-
-diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events_hist.c
-index 261163b00137..c32adc372808 100644
---- a/kernel/trace/trace_events_hist.c
-+++ b/kernel/trace/trace_events_hist.c
-@@ -6724,27 +6724,28 @@ static int event_hist_trigger_parse(struct event_command *cmd_ops,
- 	if (existing_hist_update_only(glob, trigger_data, file))
- 		goto out_free;
- 
--	ret = event_trigger_register(cmd_ops, file, glob, trigger_data);
--	if (ret < 0)
--		goto out_free;
-+	if (!get_named_trigger_data(trigger_data)) {
- 
--	if (get_named_trigger_data(trigger_data))
--		goto enable;
-+		ret = create_actions(hist_data);
-+		if (ret)
-+			goto out_free;
- 
--	ret = create_actions(hist_data);
--	if (ret)
--		goto out_unreg;
-+		if (has_hist_vars(hist_data) || hist_data->n_var_refs) {
-+			ret = save_hist_vars(hist_data);
-+			if (ret)
-+				goto out_free;
-+		}
- 
--	if (has_hist_vars(hist_data) || hist_data->n_var_refs) {
--		ret = save_hist_vars(hist_data);
-+		ret = tracing_map_init(hist_data->map);
- 		if (ret)
--			goto out_unreg;
-+			goto out_free;
- 	}
- 
--	ret = tracing_map_init(hist_data->map);
--	if (ret)
--		goto out_unreg;
--enable:
-+	ret = event_trigger_register(cmd_ops, file, glob, trigger_data);
-+	if (ret < 0)
-+		goto out_free;
-+
-+
- 	ret = hist_trigger_enable(trigger_data, file);
- 	if (ret)
- 		goto out_unreg;
--- 
-2.47.2
-
+> 
+> Thanks,
+> 
+> Alex
+> 
+> 
+> > 
+> > Fix this by wrapping the required registers in pt_regs with
+> > struct_group() and reference the group when doing the offending
+> > memcpy().
+> > 
+> > Signed-off-by: Charlie Jenkins <charlie@rivosinc.com>
+> > ---
+> >   arch/riscv/include/asm/ftrace.h |  2 +-
+> >   arch/riscv/include/asm/ptrace.h | 18 ++++++++++--------
+> >   2 files changed, 11 insertions(+), 9 deletions(-)
+> > 
+> > diff --git a/arch/riscv/include/asm/ftrace.h b/arch/riscv/include/asm/ftrace.h
+> > index c4721ce44ca474654b37b3d51bc0a63d46bc1eff..ec6db1162021fbf4fa48fc87e7984266040aa7d9 100644
+> > --- a/arch/riscv/include/asm/ftrace.h
+> > +++ b/arch/riscv/include/asm/ftrace.h
+> > @@ -207,7 +207,7 @@ ftrace_partial_regs(const struct ftrace_regs *fregs, struct pt_regs *regs)
+> >   {
+> >   	struct __arch_ftrace_regs *afregs = arch_ftrace_regs(fregs);
+> > -	memcpy(&regs->a0, afregs->args, sizeof(afregs->args));
+> > +	memcpy(&regs->a_regs, afregs->args, sizeof(afregs->args));
+> >   	regs->epc = afregs->epc;
+> >   	regs->ra = afregs->ra;
+> >   	regs->sp = afregs->sp;
+> > diff --git a/arch/riscv/include/asm/ptrace.h b/arch/riscv/include/asm/ptrace.h
+> > index b5b0adcc85c18e15c156de11172a5d7f03ada037..2910231977cb71dac3cc42f2dc32590284204057 100644
+> > --- a/arch/riscv/include/asm/ptrace.h
+> > +++ b/arch/riscv/include/asm/ptrace.h
+> > @@ -23,14 +23,16 @@ struct pt_regs {
+> >   	unsigned long t2;
+> >   	unsigned long s0;
+> >   	unsigned long s1;
+> > -	unsigned long a0;
+> > -	unsigned long a1;
+> > -	unsigned long a2;
+> > -	unsigned long a3;
+> > -	unsigned long a4;
+> > -	unsigned long a5;
+> > -	unsigned long a6;
+> > -	unsigned long a7;
+> > +	struct_group(a_regs,
+> > +		unsigned long a0;
+> > +		unsigned long a1;
+> > +		unsigned long a2;
+> > +		unsigned long a3;
+> > +		unsigned long a4;
+> > +		unsigned long a5;
+> > +		unsigned long a6;
+> > +		unsigned long a7;
+> > +	);
+> >   	unsigned long s2;
+> >   	unsigned long s3;
+> >   	unsigned long s4;
+> > 
+> > ---
+> > base-commit: d082ecbc71e9e0bf49883ee4afd435a77a5101b6
+> > change-id: 20250224-fix_ftrace_partial_regs-eddaf4a7e5ed
