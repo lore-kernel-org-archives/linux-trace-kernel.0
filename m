@@ -1,46 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3221627701;
-	Tue, 25 Feb 2025 15:45:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63A6F18FC83;
+	Tue, 25 Feb 2025 16:29:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740498319; cv=none; b=BpFxwbypgL4dDeLpd56fzAA3f1jl0465fUnmR9hA1V4zIK0f1qJ/HHKh2F03Gp74FZsOG2ftJ6oIEecId+WfhRnTW48hXYxcPkmI5EIfFT/WlnszHg1XOj2B5H6K+7WNhQj26HKCol+zh1K4abHJ057NL4lb0nBpXwHAgAIe8g0=
+	t=1740500995; cv=none; b=Iw1dBuGcmNbnzL35qEwcwiZsZTo5mgeRndMswer3Up1oBUMq8sVwUa1OO/31NIAAuhXytQoUNgebM5oDNvbdWGapM+pzjNTULI2QV3qYj16QdobM/fVY5JGL4WUIiXco0SjnH5KvU/yBHS72b4J1DbuA/VlSiQmARpwdQM3bn3U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740498319; c=relaxed/simple;
-	bh=J5MY8MNJZjjXvPf3aaubOgBeUIi+hFPi+Z9UdY1nir8=;
+	s=arc-20240116; t=1740500995; c=relaxed/simple;
+	bh=M6eCWP5N7NLqafofIMj1/gwTZwbYOxkJr165KE/TatM=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=nK9pU3kwkxs2liFoJgNs7SIU6m6mRJfMALg4oAbNUr+fB5plefHRRmSimoh0bJIMhZOEfMTUN/0WA3H/9KLDXn/DlonfBo+u8FiIot/ivRjV2XVjCS9OCBkOEL96ubnihLgyVeaSriJmFTNynj9MgLe4APwpAPKxYBxk/3LwEbc=
+	 MIME-Version:Content-Type; b=mEbnA4arFsOnH1c6WGKD1fEZyzDNntvDRKPmtXfAtra2HcIUDXxubT25PF/xwfXGlf9WgyNZsd2RTPwdf5jZ4AnsZTGXxQDo1oWhj/fJ9iRajE8n1jaHZewlT0fZSOZtBGPDMNgqVZDqBzoywk1GQ79f6Lm9Jbbgrc7TAsdNW4c=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B16DDC4CEDD;
-	Tue, 25 Feb 2025 15:45:14 +0000 (UTC)
-Date: Tue, 25 Feb 2025 10:45:52 -0500
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 41B62C4CEDD;
+	Tue, 25 Feb 2025 16:29:54 +0000 (UTC)
+Date: Tue, 25 Feb 2025 11:30:32 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
-To: "Arnd Bergmann" <arnd@arndb.de>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- linux-kbuild@vger.kernel.org, bpf <bpf@vger.kernel.org>,
- linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org, "Masami
- Hiramatsu" <mhiramat@kernel.org>, "Mark Rutland" <mark.rutland@arm.com>,
- "Mathieu Desnoyers" <mathieu.desnoyers@efficios.com>, "Andrew Morton"
- <akpm@linux-foundation.org>, "Peter Zijlstra" <peterz@infradead.org>,
- "Linus Torvalds" <torvalds@linux-foundation.org>, "Masahiro Yamada"
- <masahiroy@kernel.org>, "Nathan Chancellor" <nathan@kernel.org>, "Nicolas
- Schier" <nicolas@fjasle.eu>, "Zheng Yejian" <zhengyejian1@huawei.com>,
- "Martin Kelly" <martin.kelly@crowdstrike.com>, "Christophe Leroy"
- <christophe.leroy@csgroup.eu>, "Josh Poimboeuf" <jpoimboe@redhat.com>,
- "Heiko Carstens" <hca@linux.ibm.com>, "Catalin Marinas"
- <catalin.marinas@arm.com>, "Will Deacon" <will@kernel.org>, "Vasily Gorbik"
- <gor@linux.ibm.com>, "Alexander Gordeev" <agordeev@linux.ibm.com>
-Subject: Re: [PATCH v5 2/6] scripts/sorttable: Have mcount rela sort use
- direct values
-Message-ID: <20250225104552.2acc5909@gandalf.local.home>
-In-Reply-To: <91523154-072b-437b-bbdc-0b70e9783fd0@app.fastmail.com>
-References: <20250218195918.255228630@goodmis.org>
-	<20250218200022.538888594@goodmis.org>
-	<893cd8f1-8585-4d25-bf0f-4197bf872465@app.fastmail.com>
-	<20250224172147.1de3fda5@gandalf.local.home>
-	<20250224211102.33e264fc@gandalf.local.home>
-	<91523154-072b-437b-bbdc-0b70e9783fd0@app.fastmail.com>
+To: Ran Xiaokai <ranxiaokai627@163.com>
+Cc: mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ ran.xiaokai@zte.com.cn, yang.guang5@zte.com.cn, Wang Yong
+ <wang.yong12@zte.com.cn>
+Subject: Re: [PATCH] tracing/osnoise: Fix possible recursive locking for
+ cpus_read_lock()
+Message-ID: <20250225113032.5e01922d@gandalf.local.home>
+In-Reply-To: <20250225123132.2583820-1-ranxiaokai627@163.com>
+References: <20250225123132.2583820-1-ranxiaokai627@163.com>
 X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -51,120 +36,52 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Tue, 25 Feb 2025 09:45:52 +0100
-"Arnd Bergmann" <arnd@arndb.de> wrote:
+On Tue, 25 Feb 2025 12:31:32 +0000
+Ran Xiaokai <ranxiaokai627@163.com> wrote:
 
-> It fixes the build issue for me. I tried booting as well, but ran
-> into a BUG() when I enable ftrace. I assume this is an unrelated
-> issue, but you can find the output for reference in case this is
-> relevant.
+> @@ -2097,7 +2096,7 @@ static void osnoise_hotplug_workfn(struct
+> work_struct *dummy)
+>  		return;
+>  
+>  	guard(mutex)(&interface_lock);
+> -	guard(cpus_read_lock)();
+> +	cpus_read_lock();
+>  
+>  	if (!cpu_online(cpu))
+>  		return;
 
-Thanks, can you try this patch instead? I'll be breaking it up if this works.
+This is buggy. You removed the guard, and right below we have an error exit
+that will leave this function without unlocking the cpus_read_lock().
 
-This also removes the kaslr_offset() code.
+> @@ -2105,7 +2104,12 @@ static void osnoise_hotplug_workfn(struct
+> work_struct *dummy)
+>  	if (!cpumask_test_cpu(cpu, &osnoise_cpumask))
+>  		return;
+>  
+> -	start_kthread(cpu);
+> +	if (start_kthread(cpu)) {
+> +		cpus_read_unlock();
+> +		stop_per_cpu_kthreads();
+> +		return;
+
+If all you want to do is to unlock before calling stop_per_cpu_kthreads(),
+then this should simply be:
+
+	if (start_kthread(cpu)) {
+		cpus_read_unlock();
+		stop_per_cpu_kthreads();
+		cpus_read_lock(); // The guard() above will unlock this
+		return;
+	}
+
+
+But I still have to verify that this is indeed the issue here.
 
 -- Steve
 
-diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-index 27c8def2139d..fdd5ffe268de 100644
---- a/kernel/trace/ftrace.c
-+++ b/kernel/trace/ftrace.c
-@@ -7004,7 +7004,6 @@ static int ftrace_process_locs(struct module *mod,
- 	unsigned long count;
- 	unsigned long *p;
- 	unsigned long addr;
--	unsigned long kaslr;
- 	unsigned long flags = 0; /* Shut up gcc */
- 	unsigned long pages;
- 	int ret = -ENOMEM;
-@@ -7056,25 +7055,37 @@ static int ftrace_process_locs(struct module *mod,
- 		ftrace_pages->next = start_pg;
- 	}
- 
--	/* For zeroed locations that were shifted for core kernel */
--	kaslr = !mod ? kaslr_offset() : 0;
--
- 	p = start;
- 	pg = start_pg;
- 	while (p < end) {
- 		unsigned long end_offset;
--		addr = ftrace_call_adjust(*p++);
-+
-+		addr = *p++;
-+
- 		/*
- 		 * Some architecture linkers will pad between
- 		 * the different mcount_loc sections of different
- 		 * object files to satisfy alignments.
- 		 * Skip any NULL pointers.
- 		 */
--		if (!addr || addr == kaslr) {
-+		if (!addr) {
-+			skipped++;
-+			continue;
-+		}
-+
-+		/*
-+		 * If this is core kernel, make sure the address is in core
-+		 * or inittext, as weak functions get zeroed and KASLR can
-+		 * move them to something other than zero. It just will not
-+		 * move it to an area where kernel text is.
-+		 */
-+		if (!mod && !(is_kernel_text(addr) || is_kernel_inittext(addr))) {
- 			skipped++;
- 			continue;
- 		}
- 
-+		addr = ftrace_call_adjust(addr);
-+
- 		end_offset = (pg->index+1) * sizeof(pg->records[0]);
- 		if (end_offset > PAGE_SIZE << pg->order) {
- 			/* We should have allocated enough */
-diff --git a/scripts/sorttable.c b/scripts/sorttable.c
-index 23c7e0e6c024..10aff2aeb868 100644
---- a/scripts/sorttable.c
-+++ b/scripts/sorttable.c
-@@ -611,13 +611,16 @@ static int add_field(uint64_t addr, uint64_t size)
- 	return 0;
- }
- 
-+/* Used for when mcount/fentry is before the function entry */
-+static int before_func;
-+
- /* Only return match if the address lies inside the function size */
- static int cmp_func_addr(const void *K, const void *A)
- {
- 	uint64_t key = *(const uint64_t *)K;
- 	const struct func_info *a = A;
- 
--	if (key < a->addr)
-+	if (key + before_func < a->addr)
- 		return -1;
- 	return key >= a->addr + a->size;
- }
-@@ -827,9 +830,14 @@ static void *sort_mcount_loc(void *arg)
- 		pthread_exit(m_err);
- 	}
- 
--	if (sort_reloc)
-+	if (sort_reloc) {
- 		count = fill_relocs(vals, size, ehdr, emloc->start_mcount_loc);
--	else
-+		/* gcc may use relocs to save the addresses, but clang does not. */
-+		if (!count) {
-+			count = fill_addrs(vals, size, start_loc);
-+			sort_reloc = 0;
-+		}
-+	} else
- 		count = fill_addrs(vals, size, start_loc);
- 
- 	if (count < 0) {
-@@ -1248,6 +1256,8 @@ static int do_file(char const *const fname, void *addr)
- #ifdef MCOUNT_SORT_ENABLED
- 		sort_reloc = true;
- 		rela_type = 0x403;
-+		/* arm64 uses patchable function entry placing before function */
-+		before_func = 8;
- #endif
- 		/* fallthrough */
- 	case EM_386:
+
+> +	}
+> +	cpus_read_unlock();
+>  }
+>  
+>  static DECLARE_WORK(osnoise_hotplug_work, osnoise_hotplug_workfn);
