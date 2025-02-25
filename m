@@ -1,537 +1,164 @@
-Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 624341A01CC
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 25 Feb 2025 17:36:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F08B14F9C4;
+	Tue, 25 Feb 2025 17:53:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740505017; cv=none; b=AZgIoMIFC3AlRzcDoJ1nKupT+h4NjLtawPYVNWLs8wdy/QMErjqtRR9NXmhakAeX67VgahR2qD8FYOM1pLt2rcBG8CAWr9lLD/0fDm1mGz+6xaRgmZ+Vfre11RZ16LcOBEv2k4/JCDCxP/e7pBG800ScKlZLI8imQcRkK3wdXFA=
+	t=1740505999; cv=none; b=iMLI+xY/QvVTUhT/kJtgsr3soBAhhrRl+Xf+uIuXttuTZYMyogBwrWNFhG2XqCyZxvbbQznFvif2G+qlpustb53YZbZsAHXOTpbFmcuoF86OOnve4pneWoTH8TbWpBx5RwQzy/CRqifI4aw9w5NxQ9Zb7f1CWHg1I9hM96lFpvQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740505017; c=relaxed/simple;
-	bh=D77701LRLaOOKnyAHEl7TtKq/YsD0uP2H8B6chFtW3k=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=o1L8mF0ak1bzAhVN/QBCUQq2Fy0ueyJXY66XbySj4wdV8SNwtV1SbbJlZfLMb7rQ4h5BSDqbPvN72KN0ElUWr4Cf9zsoV5FqcNs3VDnwbDpP3v6ZOmllJejkcJ2sRh5G4L2ebhwntdi9gEe8lRUemX9zBI0/idZ2V3NHQcwVSbo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mihalicyn.com; spf=pass smtp.mailfrom=mihalicyn.com; dkim=pass (1024-bit key) header.d=mihalicyn.com header.i=@mihalicyn.com header.b=VuSovidw; arc=none smtp.client-ip=209.85.167.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mihalicyn.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mihalicyn.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mihalicyn.com header.i=@mihalicyn.com header.b="VuSovidw"
-Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-545284eac3bso5722455e87.0
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 25 Feb 2025 09:36:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=mihalicyn.com; s=mihalicyn; t=1740505011; x=1741109811; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Msex6yCsWlgaVfBs19G7jgsagoME7+ZXdQHDX2hOeFM=;
-        b=VuSovidwGQBn8Hh0EX1ljUBkObN1w4PdOXfGcseglmSFsHGK+41i+u5Ffv2NLM0a2c
-         4TCsJpkwQZ/9+l1ef1QkneI6OnROg6ThXb395nOdMbC0kyvlG4as54GkJFW8BEqm3Sto
-         RfP7SfjDe/jzWCiQMtMZOYSnRaX12HslVoTq0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740505011; x=1741109811;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Msex6yCsWlgaVfBs19G7jgsagoME7+ZXdQHDX2hOeFM=;
-        b=KNFHWz2bSQjlct6wFZetDdnURpnWjFAouyUCAtoL4xWWxxqMxA2MuTji736wYHuLxc
-         cgGkFbczzduwjn4pqFt0qwidyesl7mFXMz7dCARbNTAjc3jCdHH3jC2eE1xrFv5QNzR/
-         G2ym6mP+yP1eSEZFeiP5Yzf0t+KXzdxIkkTJZxmco/VwRnXyFzixkgg0iao7TxmXhY4w
-         rESvTFq7hjg0d+czEDJXMZKPdnTK6BGKihuz4IAeJ46uBiXEDgaD7jWNGRlmIU9/r9pP
-         LQUNJLTYfedg85DYioKM7MB/iuURNl6QmGoboMoOIS4j5KoDYbvNGBK7iJ/+KghTlbal
-         hAkw==
-X-Forwarded-Encrypted: i=1; AJvYcCVP5knynjksqB57ogQxokUz4JkNOoCBO125bFqCiBav/4TNdnDCfvkK5VzWhxqEQbYEpfLdR1PGTIurv56rcM/018o=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwSbW/0MdXJnYZO6qVU7ZN3OprF6BhQhRnMZsvDc5N/lP2NY8e2
-	5UrBtcrnjzzx4WFNfdM448U9ohvUwf8eScTweQ5MdCrRUJAmDsxYUlD2T5DrePmDJ4A38LmjHqd
-	AorwDKojxcopwyRamx4s0BLjsjoUU9O/pGC3/XpWa6MT84Y5snh4Nrg==
-X-Gm-Gg: ASbGncsBxAt+/LRv/6Ef9PXJCMxJqpDr/jxwphX3s0gaG71TtvCazSzWfm1jltLwBR5
-	C2dWx6GGNxZXNIFXiNl7xYA+HxEfkcLvQLikacpOP82bfzGx8QvUpfzENniprVUtLC6L14RIUNU
-	aYFz9BOUo/
-X-Google-Smtp-Source: AGHT+IEIT7QJ3ck7w7rERWt6WrEciKE9hk04HlX37PjngzwmwdHve4peqnsrJx+9xAXaYXn7MPTLGeipdO4WecKw2o4=
-X-Received: by 2002:a05:6512:3984:b0:545:2efc:745d with SMTP id
- 2adb3069b0e04-5493c5b6683mr145249e87.46.1740505011137; Tue, 25 Feb 2025
- 09:36:51 -0800 (PST)
+	s=arc-20240116; t=1740505999; c=relaxed/simple;
+	bh=PFetlwZIjtDHSeCjjYgYXTvGCoSFeYK5lIXFMoq1cNc=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=u+RssE96UOUOcf8RnbmlSl9TyamVG/ycOA3+jFQdgVX3uQDFeX67VnoE3v+VrzAruS1P2gusGCW9cBOEE5eVkx8YXMHd1YJCQC7mpu+E6WQoy9m8LQAKSPt+7O2UhrKxj+XgODzTNBj9tYZ0YJQZgZrr3SEsbIBrpsLy+kjFeJE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0C338C4CEDD;
+	Tue, 25 Feb 2025 17:53:17 +0000 (UTC)
+Date: Tue, 25 Feb 2025 12:53:56 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Tomas Glozar <tglozar@redhat.com>, Tom
+ Zanussi <zanussi@kernel.org>
+Subject: [PATCH] tracing: Fix bad hist from corrupting named_triggers list
+Message-ID: <20250225125356.29236cd1@gandalf.local.home>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250221170249.890014-1-mkoutny@suse.com> <20250221170249.890014-2-mkoutny@suse.com>
-In-Reply-To: <20250221170249.890014-2-mkoutny@suse.com>
-From: Alexander Mikhalitsyn <alexander@mihalicyn.com>
-Date: Tue, 25 Feb 2025 18:36:37 +0100
-X-Gm-Features: AQ5f1JrN8pkHqnXfS84QMJIHeoOE-NkguSHJdWcXncitet9kEMSWYpxUBbAy90Q
-Message-ID: <CAJqdLrry4HaHpsWGH_YUUr_mWetCCogOxnw1SMRW-XcWE_FXcg@mail.gmail.com>
-Subject: Re: [PATCH 1/2] Revert "pid: allow pid_max to be set per pid namespace"
-To: =?UTF-8?Q?Michal_Koutn=C3=BD?= <mkoutny@suse.com>
-Cc: Christian Brauner <brauner@kernel.org>, linux-doc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, 
-	Kees Cook <kees@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, 
-	"Eric W . Biederman" <ebiederm@xmission.com>, Oleg Nesterov <oleg@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Am Fr., 21. Feb. 2025 um 18:02 Uhr schrieb Michal Koutn=C3=BD <mkoutny@suse=
-.com>:
->
-> This reverts commit 7863dcc72d0f4b13a641065670426435448b3d80.
+From: Steven Rostedt <rostedt@goodmis.org>
 
-If we revert this one, then we should also revert a corresponding kselftest=
-:
-https://github.com/torvalds/linux/commit/615ab43b838bb982dc234feff75ee9ad35=
-447c5d
+The following commands causes a crash:
 
->
-> It is already difficult for users to troubleshoot which of multiple pid
-> limits restricts their workload. I'm afraid making pid_max
-> per-(hierarchical-)NS will contribute to confusion.
-> Also, the implementation copies the limit upon creation from
-> parent, this pattern showed cumbersome with some attributes in legacy
-> cgroup controllers -- it's subject to race condition between parent's
-> limit modification and children creation and once copied it must be
-> changed in the descendant.
->
-> This is very similar to what pids.max of a cgroup (already) does that
-> can be used as an alternative.
->
-> Link: https://lore.kernel.org/r/bnxhqrq7tip6jl2hu6jsvxxogdfii7ugmafbhgsog=
-ovrchxfyp@kagotkztqurt/
-> Signed-off-by: Michal Koutn=C3=BD <mkoutny@suse.com>
-> ---
->  include/linux/pid.h               |   3 +
->  include/linux/pid_namespace.h     |  10 +--
->  kernel/pid.c                      | 125 ++----------------------------
->  kernel/pid_namespace.c            |  43 +++-------
->  kernel/sysctl.c                   |   9 +++
->  kernel/trace/pid_list.c           |   2 +-
->  kernel/trace/trace.h              |   2 +
->  kernel/trace/trace_sched_switch.c |   2 +-
->  8 files changed, 35 insertions(+), 161 deletions(-)
->
-> diff --git a/include/linux/pid.h b/include/linux/pid.h
-> index 98837a1ff0f33..fe575fcdb4afa 100644
-> --- a/include/linux/pid.h
-> +++ b/include/linux/pid.h
-> @@ -108,6 +108,9 @@ extern void exchange_tids(struct task_struct *task, s=
-truct task_struct *old);
->  extern void transfer_pid(struct task_struct *old, struct task_struct *ne=
-w,
->                          enum pid_type);
->
-> +extern int pid_max;
-> +extern int pid_max_min, pid_max_max;
-> +
->  /*
->   * look up a PID in the hash table. Must be called with the tasklist_loc=
-k
->   * or rcu_read_lock() held.
-> diff --git a/include/linux/pid_namespace.h b/include/linux/pid_namespace.=
-h
-> index 7c67a58111998..f9f9931e02d6a 100644
-> --- a/include/linux/pid_namespace.h
-> +++ b/include/linux/pid_namespace.h
-> @@ -30,7 +30,6 @@ struct pid_namespace {
->         struct task_struct *child_reaper;
->         struct kmem_cache *pid_cachep;
->         unsigned int level;
-> -       int pid_max;
->         struct pid_namespace *parent;
->  #ifdef CONFIG_BSD_PROCESS_ACCT
->         struct fs_pin *bacct;
-> @@ -39,14 +38,9 @@ struct pid_namespace {
->         struct ucounts *ucounts;
->         int reboot;     /* group exit code if this pidns was rebooted */
->         struct ns_common ns;
-> -       struct work_struct      work;
-> -#ifdef CONFIG_SYSCTL
-> -       struct ctl_table_set    set;
-> -       struct ctl_table_header *sysctls;
-> -#if defined(CONFIG_MEMFD_CREATE)
-> +#if defined(CONFIG_SYSCTL) && defined(CONFIG_MEMFD_CREATE)
->         int memfd_noexec_scope;
->  #endif
-> -#endif
->  } __randomize_layout;
->
->  extern struct pid_namespace init_pid_ns;
-> @@ -123,8 +117,6 @@ static inline int reboot_pid_ns(struct pid_namespace =
-*pid_ns, int cmd)
->  extern struct pid_namespace *task_active_pid_ns(struct task_struct *tsk)=
-;
->  void pidhash_init(void);
->  void pid_idr_init(void);
-> -int register_pidns_sysctls(struct pid_namespace *pidns);
-> -void unregister_pidns_sysctls(struct pid_namespace *pidns);
->
->  static inline bool task_is_in_init_pid_ns(struct task_struct *tsk)
->  {
-> diff --git a/kernel/pid.c b/kernel/pid.c
-> index 924084713be8b..aa2a7d4da4555 100644
-> --- a/kernel/pid.c
-> +++ b/kernel/pid.c
-> @@ -61,8 +61,10 @@ struct pid init_struct_pid =3D {
->         }, }
->  };
->
-> -static int pid_max_min =3D RESERVED_PIDS + 1;
-> -static int pid_max_max =3D PID_MAX_LIMIT;
-> +int pid_max =3D PID_MAX_DEFAULT;
-> +
-> +int pid_max_min =3D RESERVED_PIDS + 1;
-> +int pid_max_max =3D PID_MAX_LIMIT;
->
->  /*
->   * PID-map pages start out as NULL, they get allocated upon
-> @@ -81,7 +83,6 @@ struct pid_namespace init_pid_ns =3D {
->  #ifdef CONFIG_PID_NS
->         .ns.ops =3D &pidns_operations,
->  #endif
-> -       .pid_max =3D PID_MAX_DEFAULT,
->  #if defined(CONFIG_SYSCTL) && defined(CONFIG_MEMFD_CREATE)
->         .memfd_noexec_scope =3D MEMFD_NOEXEC_SCOPE_EXEC,
->  #endif
-> @@ -190,7 +191,6 @@ struct pid *alloc_pid(struct pid_namespace *ns, pid_t=
- *set_tid,
->
->         for (i =3D ns->level; i >=3D 0; i--) {
->                 int tid =3D 0;
-> -               int pid_max =3D READ_ONCE(tmp->pid_max);
->
->                 if (set_tid_size) {
->                         tid =3D set_tid[ns->level - i];
-> @@ -644,118 +644,17 @@ SYSCALL_DEFINE2(pidfd_open, pid_t, pid, unsigned i=
-nt, flags)
->         return fd;
->  }
->
-> -#ifdef CONFIG_SYSCTL
-> -static struct ctl_table_set *pid_table_root_lookup(struct ctl_table_root=
- *root)
-> -{
-> -       return &task_active_pid_ns(current)->set;
-> -}
-> -
-> -static int set_is_seen(struct ctl_table_set *set)
-> -{
-> -       return &task_active_pid_ns(current)->set =3D=3D set;
-> -}
-> -
-> -static int pid_table_root_permissions(struct ctl_table_header *head,
-> -                                     const struct ctl_table *table)
-> -{
-> -       struct pid_namespace *pidns =3D
-> -               container_of(head->set, struct pid_namespace, set);
-> -       int mode =3D table->mode;
-> -
-> -       if (ns_capable(pidns->user_ns, CAP_SYS_ADMIN) ||
-> -           uid_eq(current_euid(), make_kuid(pidns->user_ns, 0)))
-> -               mode =3D (mode & S_IRWXU) >> 6;
-> -       else if (in_egroup_p(make_kgid(pidns->user_ns, 0)))
-> -               mode =3D (mode & S_IRWXG) >> 3;
-> -       else
-> -               mode =3D mode & S_IROTH;
-> -       return (mode << 6) | (mode << 3) | mode;
-> -}
-> -
-> -static void pid_table_root_set_ownership(struct ctl_table_header *head,
-> -                                        kuid_t *uid, kgid_t *gid)
-> -{
-> -       struct pid_namespace *pidns =3D
-> -               container_of(head->set, struct pid_namespace, set);
-> -       kuid_t ns_root_uid;
-> -       kgid_t ns_root_gid;
-> -
-> -       ns_root_uid =3D make_kuid(pidns->user_ns, 0);
-> -       if (uid_valid(ns_root_uid))
-> -               *uid =3D ns_root_uid;
-> -
-> -       ns_root_gid =3D make_kgid(pidns->user_ns, 0);
-> -       if (gid_valid(ns_root_gid))
-> -               *gid =3D ns_root_gid;
-> -}
-> -
-> -static struct ctl_table_root pid_table_root =3D {
-> -       .lookup         =3D pid_table_root_lookup,
-> -       .permissions    =3D pid_table_root_permissions,
-> -       .set_ownership  =3D pid_table_root_set_ownership,
-> -};
-> -
-> -static const struct ctl_table pid_table[] =3D {
-> -       {
-> -               .procname       =3D "pid_max",
-> -               .data           =3D &init_pid_ns.pid_max,
-> -               .maxlen         =3D sizeof(int),
-> -               .mode           =3D 0644,
-> -               .proc_handler   =3D proc_dointvec_minmax,
-> -               .extra1         =3D &pid_max_min,
-> -               .extra2         =3D &pid_max_max,
-> -       },
-> -};
-> -#endif
-> -
-> -int register_pidns_sysctls(struct pid_namespace *pidns)
-> -{
-> -#ifdef CONFIG_SYSCTL
-> -       struct ctl_table *tbl;
-> -
-> -       setup_sysctl_set(&pidns->set, &pid_table_root, set_is_seen);
-> -
-> -       tbl =3D kmemdup(pid_table, sizeof(pid_table), GFP_KERNEL);
-> -       if (!tbl)
-> -               return -ENOMEM;
-> -       tbl->data =3D &pidns->pid_max;
-> -       pidns->pid_max =3D min(pid_max_max, max_t(int, pidns->pid_max,
-> -                            PIDS_PER_CPU_DEFAULT * num_possible_cpus()))=
-;
-> -
-> -       pidns->sysctls =3D __register_sysctl_table(&pidns->set, "kernel",=
- tbl,
-> -                                                ARRAY_SIZE(pid_table));
-> -       if (!pidns->sysctls) {
-> -               kfree(tbl);
-> -               retire_sysctl_set(&pidns->set);
-> -               return -ENOMEM;
-> -       }
-> -#endif
-> -       return 0;
-> -}
-> -
-> -void unregister_pidns_sysctls(struct pid_namespace *pidns)
-> -{
-> -#ifdef CONFIG_SYSCTL
-> -       const struct ctl_table *tbl;
-> -
-> -       tbl =3D pidns->sysctls->ctl_table_arg;
-> -       unregister_sysctl_table(pidns->sysctls);
-> -       retire_sysctl_set(&pidns->set);
-> -       kfree(tbl);
-> -#endif
-> -}
-> -
->  void __init pid_idr_init(void)
->  {
->         /* Verify no one has done anything silly: */
->         BUILD_BUG_ON(PID_MAX_LIMIT >=3D PIDNS_ADDING);
->
->         /* bump default and minimum pid_max based on number of cpus */
-> -       init_pid_ns.pid_max =3D min(pid_max_max, max_t(int, init_pid_ns.p=
-id_max,
-> -                                 PIDS_PER_CPU_DEFAULT * num_possible_cpu=
-s()));
-> +       pid_max =3D min(pid_max_max, max_t(int, pid_max,
-> +                               PIDS_PER_CPU_DEFAULT * num_possible_cpus(=
-)));
->         pid_max_min =3D max_t(int, pid_max_min,
->                                 PIDS_PER_CPU_MIN * num_possible_cpus());
-> -       pr_info("pid_max: default: %u minimum: %u\n", init_pid_ns.pid_max=
-, pid_max_min);
-> +       pr_info("pid_max: default: %u minimum: %u\n", pid_max, pid_max_mi=
-n);
->
->         idr_init(&init_pid_ns.idr);
->
-> @@ -766,16 +665,6 @@ void __init pid_idr_init(void)
->                         NULL);
->  }
->
-> -static __init int pid_namespace_sysctl_init(void)
-> -{
-> -#ifdef CONFIG_SYSCTL
-> -       /* "kernel" directory will have already been initialized. */
-> -       BUG_ON(register_pidns_sysctls(&init_pid_ns));
-> -#endif
-> -       return 0;
-> -}
-> -subsys_initcall(pid_namespace_sysctl_init);
-> -
->  static struct file *__pidfd_fget(struct task_struct *task, int fd)
->  {
->         struct file *file;
-> diff --git a/kernel/pid_namespace.c b/kernel/pid_namespace.c
-> index 8f6cfec87555a..0f23285be4f92 100644
-> --- a/kernel/pid_namespace.c
-> +++ b/kernel/pid_namespace.c
-> @@ -70,8 +70,6 @@ static void dec_pid_namespaces(struct ucounts *ucounts)
->         dec_ucount(ucounts, UCOUNT_PID_NAMESPACES);
->  }
->
-> -static void destroy_pid_namespace_work(struct work_struct *work);
-> -
->  static struct pid_namespace *create_pid_namespace(struct user_namespace =
-*user_ns,
->         struct pid_namespace *parent_pid_ns)
->  {
-> @@ -107,27 +105,17 @@ static struct pid_namespace *create_pid_namespace(s=
-truct user_namespace *user_ns
->                 goto out_free_idr;
->         ns->ns.ops =3D &pidns_operations;
->
-> -       ns->pid_max =3D parent_pid_ns->pid_max;
-> -       err =3D register_pidns_sysctls(ns);
-> -       if (err)
-> -               goto out_free_inum;
-> -
->         refcount_set(&ns->ns.count, 1);
->         ns->level =3D level;
->         ns->parent =3D get_pid_ns(parent_pid_ns);
->         ns->user_ns =3D get_user_ns(user_ns);
->         ns->ucounts =3D ucounts;
->         ns->pid_allocated =3D PIDNS_ADDING;
-> -       INIT_WORK(&ns->work, destroy_pid_namespace_work);
-> -
->  #if defined(CONFIG_SYSCTL) && defined(CONFIG_MEMFD_CREATE)
->         ns->memfd_noexec_scope =3D pidns_memfd_noexec_scope(parent_pid_ns=
-);
->  #endif
-> -
->         return ns;
->
-> -out_free_inum:
-> -       ns_free_inum(&ns->ns);
->  out_free_idr:
->         idr_destroy(&ns->idr);
->         kmem_cache_free(pid_ns_cachep, ns);
-> @@ -149,28 +137,12 @@ static void delayed_free_pidns(struct rcu_head *p)
->
->  static void destroy_pid_namespace(struct pid_namespace *ns)
->  {
-> -       unregister_pidns_sysctls(ns);
-> -
->         ns_free_inum(&ns->ns);
->
->         idr_destroy(&ns->idr);
->         call_rcu(&ns->rcu, delayed_free_pidns);
->  }
->
-> -static void destroy_pid_namespace_work(struct work_struct *work)
-> -{
-> -       struct pid_namespace *ns =3D
-> -               container_of(work, struct pid_namespace, work);
-> -
-> -       do {
-> -               struct pid_namespace *parent;
-> -
-> -               parent =3D ns->parent;
-> -               destroy_pid_namespace(ns);
-> -               ns =3D parent;
-> -       } while (ns !=3D &init_pid_ns && refcount_dec_and_test(&ns->ns.co=
-unt));
-> -}
-> -
->  struct pid_namespace *copy_pid_ns(unsigned long flags,
->         struct user_namespace *user_ns, struct pid_namespace *old_ns)
->  {
-> @@ -183,8 +155,15 @@ struct pid_namespace *copy_pid_ns(unsigned long flag=
-s,
->
->  void put_pid_ns(struct pid_namespace *ns)
->  {
-> -       if (ns && ns !=3D &init_pid_ns && refcount_dec_and_test(&ns->ns.c=
-ount))
-> -               schedule_work(&ns->work);
-> +       struct pid_namespace *parent;
-> +
-> +       while (ns !=3D &init_pid_ns) {
-> +               parent =3D ns->parent;
-> +               if (!refcount_dec_and_test(&ns->ns.count))
-> +                       break;
-> +               destroy_pid_namespace(ns);
-> +               ns =3D parent;
-> +       }
->  }
->  EXPORT_SYMBOL_GPL(put_pid_ns);
->
-> @@ -295,7 +274,6 @@ static int pid_ns_ctl_handler(const struct ctl_table =
-*table, int write,
->         next =3D idr_get_cursor(&pid_ns->idr) - 1;
->
->         tmp.data =3D &next;
-> -       tmp.extra2 =3D &pid_ns->pid_max;
->         ret =3D proc_dointvec_minmax(&tmp, write, buffer, lenp, ppos);
->         if (!ret && write)
->                 idr_set_cursor(&pid_ns->idr, next + 1);
-> @@ -303,6 +281,7 @@ static int pid_ns_ctl_handler(const struct ctl_table =
-*table, int write,
->         return ret;
->  }
->
-> +extern int pid_max;
->  static const struct ctl_table pid_ns_ctl_table[] =3D {
->         {
->                 .procname =3D "ns_last_pid",
-> @@ -310,7 +289,7 @@ static const struct ctl_table pid_ns_ctl_table[] =3D =
-{
->                 .mode =3D 0666, /* permissions are checked in the handler=
- */
->                 .proc_handler =3D pid_ns_ctl_handler,
->                 .extra1 =3D SYSCTL_ZERO,
-> -               .extra2 =3D &init_pid_ns.pid_max,
-> +               .extra2 =3D &pid_max,
->         },
->  };
->  #endif /* CONFIG_CHECKPOINT_RESTORE */
-> diff --git a/kernel/sysctl.c b/kernel/sysctl.c
-> index cb57da499ebb1..bb739608680f2 100644
-> --- a/kernel/sysctl.c
-> +++ b/kernel/sysctl.c
-> @@ -1803,6 +1803,15 @@ static const struct ctl_table kern_table[] =3D {
->                 .proc_handler   =3D proc_dointvec,
->         },
->  #endif
-> +       {
-> +               .procname       =3D "pid_max",
-> +               .data           =3D &pid_max,
-> +               .maxlen         =3D sizeof(int),
-> +               .mode           =3D 0644,
-> +               .proc_handler   =3D proc_dointvec_minmax,
-> +               .extra1         =3D &pid_max_min,
-> +               .extra2         =3D &pid_max_max,
-> +       },
->         {
->                 .procname       =3D "panic_on_oops",
->                 .data           =3D &panic_on_oops,
-> diff --git a/kernel/trace/pid_list.c b/kernel/trace/pid_list.c
-> index c62b9b3cfb3d8..4966e6bbdf6f3 100644
-> --- a/kernel/trace/pid_list.c
-> +++ b/kernel/trace/pid_list.c
-> @@ -414,7 +414,7 @@ struct trace_pid_list *trace_pid_list_alloc(void)
->         int i;
->
->         /* According to linux/thread.h, pids can be no bigger that 30 bit=
-s */
-> -       WARN_ON_ONCE(init_pid_ns.pid_max > (1 << 30));
-> +       WARN_ON_ONCE(pid_max > (1 << 30));
->
->         pid_list =3D kzalloc(sizeof(*pid_list), GFP_KERNEL);
->         if (!pid_list)
-> diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
-> index 9c21ba45b7af6..46c65402ad7e5 100644
-> --- a/kernel/trace/trace.h
-> +++ b/kernel/trace/trace.h
-> @@ -732,6 +732,8 @@ extern unsigned long tracing_thresh;
->
->  /* PID filtering */
->
-> +extern int pid_max;
-> +
->  bool trace_find_filtered_pid(struct trace_pid_list *filtered_pids,
->                              pid_t search_pid);
->  bool trace_ignore_this_task(struct trace_pid_list *filtered_pids,
-> diff --git a/kernel/trace/trace_sched_switch.c b/kernel/trace/trace_sched=
-_switch.c
-> index cb49f7279dc80..573b5d8e8a28e 100644
-> --- a/kernel/trace/trace_sched_switch.c
-> +++ b/kernel/trace/trace_sched_switch.c
-> @@ -442,7 +442,7 @@ int trace_alloc_tgid_map(void)
->         if (tgid_map)
->                 return 0;
->
-> -       tgid_map_max =3D init_pid_ns.pid_max;
-> +       tgid_map_max =3D pid_max;
->         map =3D kvcalloc(tgid_map_max + 1, sizeof(*tgid_map),
->                        GFP_KERNEL);
->         if (!map)
-> --
-> 2.48.1
->
+ ~# cd /sys/kernel/tracing/events/rcu/rcu_callback
+ ~# echo 'hist:name=bad:keys=common_pid:onmax(bogus).save(common_pid)' > trigger
+ bash: echo: write error: Invalid argument
+ ~# echo 'hist:name=bad:keys=common_pid' > trigger
+
+Because the following occurs:
+
+event_trigger_write() {
+  trigger_process_regex() {
+    event_hist_trigger_parse() {
+
+      data = event_trigger_alloc(..);
+
+      event_trigger_register(.., data) {
+        cmd_ops->reg(.., data, ..) [hist_register_trigger()] {
+          data->ops->init() [event_hist_trigger_init()] {
+            save_named_trigger(name, data) {
+              list_add(&data->named_list, &named_triggers);
+            }
+          }
+        }
+      }
+
+      ret = create_actions(); (return -EINVAL)
+      if (ret)
+        goto out_unreg;
+[..]
+      ret = hist_trigger_enable(data, ...) {
+        list_add_tail_rcu(&data->list, &file->triggers); <<<---- SKIPPED!!! (this is important!)
+[..]
+ out_unreg:
+      event_hist_unregister(.., data) {
+        cmd_ops->unreg(.., data, ..) [hist_unregister_trigger()] {
+          list_for_each_entry(iter, &file->triggers, list) {
+            if (!hist_trigger_match(data, iter, named_data, false))   <- never matches
+                continue;
+            [..]
+            test = iter;
+          }
+          if (test && test->ops->free) <<<-- test is NULL
+
+            test->ops->free(test) [event_hist_trigger_free()] {
+              [..]
+              if (data->name)
+                del_named_trigger(data) {
+                  list_del(&data->named_list);  <<<<-- NEVER gets removed!
+                }
+              }
+           }
+         }
+
+         [..]
+         kfree(data); <<<-- frees item but it is still on list
+
+The next time a hist with name is registered, it causes an u-a-f bug and
+the kernel can crash.
+
+Move the code around such that if event_trigger_register() succeeds, the
+next thing called is hist_trigger_enable() which adds it to the list.
+
+A bunch of actions is called if get_named_trigger_data() returns false.
+But that doesn't need to be called after event_trigger_register(), so it
+can be moved up, allowing event_trigger_register() to be called just
+before hist_trigger_enable() keeping them together and allowing the
+file->triggers to be properly populated.
+
+Cc: stable@vger.kernel.org
+Fixes: 067fe038e70f6 ("tracing: Add variable reference handling to hist triggers")
+Reported-by: Tomas Glozar <tglozar@redhat.com>
+Closes: https://lore.kernel.org/all/CAP4=nvTsxjckSBTz=Oe_UYh8keD9_sZC4i++4h72mJLic4_W4A@mail.gmail.com/
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+ kernel/trace/trace_events_hist.c | 31 ++++++++++++++++---------------
+ 1 file changed, 16 insertions(+), 15 deletions(-)
+
+diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events_hist.c
+index 261163b00137..c32adc372808 100644
+--- a/kernel/trace/trace_events_hist.c
++++ b/kernel/trace/trace_events_hist.c
+@@ -6724,27 +6724,28 @@ static int event_hist_trigger_parse(struct event_command *cmd_ops,
+ 	if (existing_hist_update_only(glob, trigger_data, file))
+ 		goto out_free;
+ 
+-	ret = event_trigger_register(cmd_ops, file, glob, trigger_data);
+-	if (ret < 0)
+-		goto out_free;
++	if (!get_named_trigger_data(trigger_data)) {
+ 
+-	if (get_named_trigger_data(trigger_data))
+-		goto enable;
++		ret = create_actions(hist_data);
++		if (ret)
++			goto out_free;
+ 
+-	ret = create_actions(hist_data);
+-	if (ret)
+-		goto out_unreg;
++		if (has_hist_vars(hist_data) || hist_data->n_var_refs) {
++			ret = save_hist_vars(hist_data);
++			if (ret)
++				goto out_free;
++		}
+ 
+-	if (has_hist_vars(hist_data) || hist_data->n_var_refs) {
+-		ret = save_hist_vars(hist_data);
++		ret = tracing_map_init(hist_data->map);
+ 		if (ret)
+-			goto out_unreg;
++			goto out_free;
+ 	}
+ 
+-	ret = tracing_map_init(hist_data->map);
+-	if (ret)
+-		goto out_unreg;
+-enable:
++	ret = event_trigger_register(cmd_ops, file, glob, trigger_data);
++	if (ret < 0)
++		goto out_free;
++
++
+ 	ret = hist_trigger_enable(trigger_data, file);
+ 	if (ret)
+ 		goto out_unreg;
+-- 
+2.47.2
+
