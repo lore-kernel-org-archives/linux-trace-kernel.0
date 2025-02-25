@@ -1,26 +1,26 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A69C1A38F9;
-	Tue, 25 Feb 2025 18:20:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F7B51A4E98;
+	Tue, 25 Feb 2025 18:20:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740507616; cv=none; b=IHNGjTME8iIrts62oYLlctkDFI3TATZ8mteO6n/Egwql5bPLTanQ6ZzucV4AaIEQoZ1W4zQ0uVXs72ETpnZIPWUEqzar3Ag3Daz10RDgcImhfZGjYiOp7e6tqAy+gjKC3gvQTAhQO4/QPMArysB6qmXQVt42vV0GSZLKu7HzNuc=
+	t=1740507616; cv=none; b=jvg2XT6KG+2PuysBmH8uCoSISJR1tjwZPiCXHcu5LhhP2TXEXFJ674chEiUccCVaZJFuzQR815BrP6ww9jWDoLYJ0u3JnpWpCJL+J1stWz/1tmeJQIurvoEWyFksuAZcz7zp0iYGL8k3hd1isZ0TBbq0dXg3SRXPx1WbSim4ETs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1740507616; c=relaxed/simple;
-	bh=bjXwCEFL3RTxjvXbt/lE5V7lqwwfrOXJ5cW/b9UMM8E=;
+	bh=YdLBlvD7KuxzSEIk+RyaPCgrtz0J+VoLSvcf9Vme8s8=;
 	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=Wv+SD+LCVKPwpZvl5mPWpEhqKwdvEpOfNt3vrHWE2TuRbgKxmYqPEv/PNFgMyau9jLdRvSujcUjBzbGHHFv7Y/WEBysLUBALMhr6EV6aC8cWKzzENqYgu1kUn8Kg8lj6yPBQwffNTliuO56uSOQdrfbr6t5mMgsgYevQOVbGs2E=
+	 Content-Type; b=aTCzGPdvIEiaZERP+jETJE3twA+oizEhBWsO/Z0DztPLJ4VX3lytTUn9N+Nt2zYJkszzNgvldI1Bf6aZQkgnwrbQGTYsIVVLFrpeLBUUD8lh5lnZAW0DMGODw4jdFyNGIPge6LnrWzoci4wT6cdcm0uj5jKZ+8TapaNm+6+Vc+s=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9EE33C4CEEE;
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E8A1EC4CEF2;
 	Tue, 25 Feb 2025 18:20:15 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.98)
 	(envelope-from <rostedt@goodmis.org>)
-	id 1tmzY6-000000095YQ-2bvl;
+	id 1tmzY6-000000095ZO-41vx;
 	Tue, 25 Feb 2025 13:20:54 -0500
-Message-ID: <20250225182054.471759017@goodmis.org>
+Message-ID: <20250225182054.815536219@goodmis.org>
 User-Agent: quilt/0.68
-Date: Tue, 25 Feb 2025 13:20:06 -0500
+Date: Tue, 25 Feb 2025 13:20:08 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org,
  linux-trace-kernel@vger.kernel.org,
@@ -35,7 +35,7 @@ Cc: Masami Hiramatsu <mhiramat@kernel.org>,
  Nathan Chancellor <nathan@kernel.org>,
  "Arnd Bergmann" <arnd@arndb.de>,
  Mark Brown <broonie@kernel.org>
-Subject: [PATCH 2/4] ftrace: Check against is_kernel_text() instead of kaslr_offset()
+Subject: [PATCH 4/4] scripts/sorttable: Allow matches to functions before function entry
 References: <20250225182004.473875894@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -47,66 +47,53 @@ Content-Type: text/plain; charset=UTF-8
 
 From: Steven Rostedt <rostedt@goodmis.org>
 
-As kaslr_offset() is architecture dependent and also may not be defined by
-all architectures, when zeroing out unused weak functions, do not check
-against kaslr_offset(), but instead check if the address is within the
-kernel text sections. If KASLR added a shift to the zeroed out function,
-it would still not be located in the kernel text. This is a more robust
-way to test if the text is valid or not.
+ARM 64 uses -fpatchable-function-entry=4,2 which adds padding before the
+function and the addresses in the mcount_loc point there instead of the
+function entry that is returned by nm. In order to find a function from nm
+to make sure it's not an unused weak function, the entries in the
+mcount_loc section needs to match the entries from nm. Since it can be an
+instruction before the entry, add a before_func variable that ARM 64 can
+set to 8, and if the mcount_loc entry is within 8 bytes of the nm function
+entry, then it will be considered a match.
 
-Fixes: ef378c3b8233 ("scripts/sorttable: Zero out weak functions in mcount_loc table")
-Reported-by: Nathan Chancellor <nathan@kernel.org>
-Reported-by: Mark Brown <broonie@kernel.org>
+Fixes: ef378c3b82338 ("scripts/sorttable: Zero out weak functions in mcount_loc table")
 Tested-by: Nathan Chancellor <nathan@kernel.org>
-Closes: https://lore.kernel.org/all/20250224180805.GA1536711@ax162/
-Closes: https://lore.kernel.org/all/5225b07b-a9b2-4558-9d5f-aa60b19f6317@sirena.org.uk/
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- kernel/trace/ftrace.c | 17 ++++++++++++-----
- 1 file changed, 12 insertions(+), 5 deletions(-)
+ scripts/sorttable.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-index 183f72cf15ed..bec7b5dbdb3b 100644
---- a/kernel/trace/ftrace.c
-+++ b/kernel/trace/ftrace.c
-@@ -7004,7 +7004,6 @@ static int ftrace_process_locs(struct module *mod,
- 	unsigned long count;
- 	unsigned long *p;
- 	unsigned long addr;
--	unsigned long kaslr;
- 	unsigned long flags = 0; /* Shut up gcc */
- 	unsigned long pages;
- 	int ret = -ENOMEM;
-@@ -7056,9 +7055,6 @@ static int ftrace_process_locs(struct module *mod,
- 		ftrace_pages->next = start_pg;
- 	}
+diff --git a/scripts/sorttable.c b/scripts/sorttable.c
+index 07ad8116bc8d..7b4b3714b1af 100644
+--- a/scripts/sorttable.c
++++ b/scripts/sorttable.c
+@@ -611,13 +611,16 @@ static int add_field(uint64_t addr, uint64_t size)
+ 	return 0;
+ }
  
--	/* For zeroed locations that were shifted for core kernel */
--	kaslr = !mod ? kaslr_offset() : 0;
--
- 	p = start;
- 	pg = start_pg;
- 	while (p < end) {
-@@ -7072,7 +7068,18 @@ static int ftrace_process_locs(struct module *mod,
- 		 * object files to satisfy alignments.
- 		 * Skip any NULL pointers.
- 		 */
--		if (!addr || addr == kaslr) {
-+		if (!addr) {
-+			skipped++;
-+			continue;
-+		}
++/* Used for when mcount/fentry is before the function entry */
++static int before_func;
 +
-+		/*
-+		 * If this is core kernel, make sure the address is in core
-+		 * or inittext, as weak functions get zeroed and KASLR can
-+		 * move them to something other than zero. It just will not
-+		 * move it to an area where kernel text is.
-+		 */
-+		if (!mod && !(is_kernel_text(addr) || is_kernel_inittext(addr))) {
- 			skipped++;
- 			continue;
- 		}
+ /* Only return match if the address lies inside the function size */
+ static int cmp_func_addr(const void *K, const void *A)
+ {
+ 	uint64_t key = *(const uint64_t *)K;
+ 	const struct func_info *a = A;
+ 
+-	if (key < a->addr)
++	if (key + before_func < a->addr)
+ 		return -1;
+ 	return key >= a->addr + a->size;
+ }
+@@ -1253,6 +1256,8 @@ static int do_file(char const *const fname, void *addr)
+ #ifdef MCOUNT_SORT_ENABLED
+ 		sort_reloc = true;
+ 		rela_type = 0x403;
++		/* arm64 uses patchable function entry placing before function */
++		before_func = 8;
+ #endif
+ 		/* fallthrough */
+ 	case EM_386:
 -- 
 2.47.2
 
