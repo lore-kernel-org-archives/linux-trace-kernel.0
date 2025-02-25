@@ -1,135 +1,170 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 231A921ABDD;
-	Tue, 25 Feb 2025 15:13:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3221627701;
+	Tue, 25 Feb 2025 15:45:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740496437; cv=none; b=A6hz0/LOCHWEqnTh0OZVrXNSgA0y1QwKBN/Y5QpWKe1n4pFS+Ig2BgA+lvi97QImXzi83rXU71PWflIx0zQHBbaqFcQ9PXqIlYBUEQbl128LDJSZIRFkZDKh+KJTxpwOQcG+dAExg4uNCTTtJWFYjqBi+ue6zEM+h+Jy6JAmeSk=
+	t=1740498319; cv=none; b=BpFxwbypgL4dDeLpd56fzAA3f1jl0465fUnmR9hA1V4zIK0f1qJ/HHKh2F03Gp74FZsOG2ftJ6oIEecId+WfhRnTW48hXYxcPkmI5EIfFT/WlnszHg1XOj2B5H6K+7WNhQj26HKCol+zh1K4abHJ057NL4lb0nBpXwHAgAIe8g0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740496437; c=relaxed/simple;
-	bh=a2YZv/1QZDn3VN6AQmlt6Nog70dPk30yV5obHPkUik8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=c3K6rRWCDUk/GuwcHfatQ7t1a1r9VBKSgF0cMW0ZFW8El2ZyzcEFweKL2hswyMt+lcaD7g+OJ3jOHZvQeMyWVYqiez/+lKb38ttTWILfY0Qa/ztrFYvgYKjISPyBwlHiOxbq/99CUluiUtH8L9Errp0/azVkyTs1BWwMR23m434=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JwIcd9sh; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JwIcd9sh"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 91295C4CEDD;
-	Tue, 25 Feb 2025 15:13:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740496435;
-	bh=a2YZv/1QZDn3VN6AQmlt6Nog70dPk30yV5obHPkUik8=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-	b=JwIcd9shT229Zf7eHqLfNmMHL93VVQ49C4O2/2FIi3+Mc2/YffA30OMpjpDJLBwTY
-	 qQWIsxaRPwJdEQR2zAwmci8W/KWGXInSc/R+5pfH42u9gp5o33THLjG8NNna8a39Y2
-	 cvztAGYJJpGRtU6+P4w3EqVR8T25BQwcNJosZJvmQ73v998XHMkIiTWUo7Y0GdFxRY
-	 yHruwZorfELM2lQX2ipRQGCilnjzF5M/6Je5F+Sqi7JBoIZJgFldQTWvYBESzbZ6rs
-	 255tD60EwQ6dgEqMmdD/SzNs5W+n+pCBW5FcgsU/5tl3p2vs2KAzF9Il+cB2LV/Bvs
-	 Py+XHS9W37xyQ==
-Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-	id 2B455CE045A; Tue, 25 Feb 2025 07:13:55 -0800 (PST)
-Date: Tue, 25 Feb 2025 07:13:55 -0800
-From: "Paul E. McKenney" <paulmck@kernel.org>
-To: Breno Leitao <leitao@debian.org>
-Cc: Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	linux-trace-kernel@vger.kernel.org, peterz@infradead.org,
-	oleg@redhat.com, rostedt@goodmis.org, mhiramat@kernel.org,
-	mingo@kernel.org, bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
-	jolsa@kernel.org
-Subject: Re: [PATCH v3 tip/perf/core 2/2] uprobes: SRCU-protect uretprobe
- lifetime (with timeout)
-Message-ID: <04598803-a22b-4663-b79a-4c79de480838@paulmck-laptop>
-Reply-To: paulmck@kernel.org
-References: <20241024044159.3156646-1-andrii@kernel.org>
- <20241024044159.3156646-3-andrii@kernel.org>
- <20250224-impressive-onyx-boa-36e85d@leitao>
- <CAEf4BzbupJe10k0MROG5iZq6cYu6PRoN3sHhNK=L7eDLOULvNQ@mail.gmail.com>
- <20250225-transparent-bronze-cobra-bafff4@leitao>
+	s=arc-20240116; t=1740498319; c=relaxed/simple;
+	bh=J5MY8MNJZjjXvPf3aaubOgBeUIi+hFPi+Z9UdY1nir8=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=nK9pU3kwkxs2liFoJgNs7SIU6m6mRJfMALg4oAbNUr+fB5plefHRRmSimoh0bJIMhZOEfMTUN/0WA3H/9KLDXn/DlonfBo+u8FiIot/ivRjV2XVjCS9OCBkOEL96ubnihLgyVeaSriJmFTNynj9MgLe4APwpAPKxYBxk/3LwEbc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B16DDC4CEDD;
+	Tue, 25 Feb 2025 15:45:14 +0000 (UTC)
+Date: Tue, 25 Feb 2025 10:45:52 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: "Arnd Bergmann" <arnd@arndb.de>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ linux-kbuild@vger.kernel.org, bpf <bpf@vger.kernel.org>,
+ linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org, "Masami
+ Hiramatsu" <mhiramat@kernel.org>, "Mark Rutland" <mark.rutland@arm.com>,
+ "Mathieu Desnoyers" <mathieu.desnoyers@efficios.com>, "Andrew Morton"
+ <akpm@linux-foundation.org>, "Peter Zijlstra" <peterz@infradead.org>,
+ "Linus Torvalds" <torvalds@linux-foundation.org>, "Masahiro Yamada"
+ <masahiroy@kernel.org>, "Nathan Chancellor" <nathan@kernel.org>, "Nicolas
+ Schier" <nicolas@fjasle.eu>, "Zheng Yejian" <zhengyejian1@huawei.com>,
+ "Martin Kelly" <martin.kelly@crowdstrike.com>, "Christophe Leroy"
+ <christophe.leroy@csgroup.eu>, "Josh Poimboeuf" <jpoimboe@redhat.com>,
+ "Heiko Carstens" <hca@linux.ibm.com>, "Catalin Marinas"
+ <catalin.marinas@arm.com>, "Will Deacon" <will@kernel.org>, "Vasily Gorbik"
+ <gor@linux.ibm.com>, "Alexander Gordeev" <agordeev@linux.ibm.com>
+Subject: Re: [PATCH v5 2/6] scripts/sorttable: Have mcount rela sort use
+ direct values
+Message-ID: <20250225104552.2acc5909@gandalf.local.home>
+In-Reply-To: <91523154-072b-437b-bbdc-0b70e9783fd0@app.fastmail.com>
+References: <20250218195918.255228630@goodmis.org>
+	<20250218200022.538888594@goodmis.org>
+	<893cd8f1-8585-4d25-bf0f-4197bf872465@app.fastmail.com>
+	<20250224172147.1de3fda5@gandalf.local.home>
+	<20250224211102.33e264fc@gandalf.local.home>
+	<91523154-072b-437b-bbdc-0b70e9783fd0@app.fastmail.com>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250225-transparent-bronze-cobra-bafff4@leitao>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Tue, Feb 25, 2025 at 03:46:53AM -0800, Breno Leitao wrote:
-> Hello Andrii,
-> 
-> On Mon, Feb 24, 2025 at 02:23:51PM -0800, Andrii Nakryiko wrote:
-> > On Mon, Feb 24, 2025 at 4:23 AM Breno Leitao <leitao@debian.org> wrote:
-> > >
-> > > Hello Andrii,
-> > >
-> > > On Wed, Oct 23, 2024 at 09:41:59PM -0700, Andrii Nakryiko wrote:
-> > > >
-> > > > +static struct uprobe* hprobe_expire(struct hprobe *hprobe, bool get)
-> > > > +{
-> > > > +     enum hprobe_state hstate;
-> > > > +
-> > > > +     /*
-> > > > +      * return_instance's hprobe is protected by RCU.
-> > > > +      * Underlying uprobe is itself protected from reuse by SRCU.
-> > > > +      */
-> > > > +     lockdep_assert(rcu_read_lock_held() && srcu_read_lock_held(&uretprobes_srcu));
-> > >
-> > > I am hitting this warning in d082ecbc71e9e ("Linux 6.14-rc4") on
-> > > aarch64. I suppose this might happen on x86 as well, but I haven't
-> > > tested.
-> > >
-> > >         WARNING: CPU: 28 PID: 158906 at kernel/events/uprobes.c:768 hprobe_expire (kernel/events/uprobes.c:825)
-> > >
-> > >         Call trace:
-> > >         hprobe_expire (kernel/events/uprobes.c:825) (P)
-> > >         uprobe_copy_process (kernel/events/uprobes.c:691 kernel/events/uprobes.c:2103 kernel/events/uprobes.c:2142)
-> > >         copy_process (kernel/fork.c:2636)
-> > >         kernel_clone (kernel/fork.c:2815)
-> > >         __arm64_sys_clone (kernel/fork.c:? kernel/fork.c:2926 kernel/fork.c:2926)
-> > >         invoke_syscall (arch/arm64/kernel/syscall.c:35 arch/arm64/kernel/syscall.c:49)
-> > >         do_el0_svc (arch/arm64/kernel/syscall.c:139 arch/arm64/kernel/syscall.c:151)
-> > >         el0_svc (arch/arm64/kernel/entry-common.c:165 arch/arm64/kernel/entry-common.c:178 arch/arm64/kernel/entry-common.c:745)
-> > >         el0t_64_sync_handler (arch/arm64/kernel/entry-common.c:797)
-> > >         el0t_64_sync (arch/arm64/kernel/entry.S:600)
-> > >
-> > > I broke down that warning, and the problem is on related to
-> > > rcu_read_lock_held(), since RCU read lock does not seem to be held in
-> > > this path.
-> > >
-> > > Reading this code, RCU read lock seems to protect old hprobe, which
-> > > doesn't seem so.
-> > >
-> > > I am wondering if we need to protect it properly, something as:
-> > >
-> > >         @@ -2089,7 +2092,9 @@ static int dup_utask(struct task_struct *t, struct uprobe_task *o_utask)
-> > >                                 return -ENOMEM;
-> > >
-> > >                         /* if uprobe is non-NULL, we'll have an extra refcount for uprobe */
-> > >         +               rcu_read_lock();
-> > >                         uprobe = hprobe_expire(&o->hprobe, true);
-> > >         +               rcu_write_lock();
-> > >
-> > 
-> > I think this is not good enough. rcu_read_lock/unlock should be around
-> > the entire for loop, because, technically, that return_instance can be
-> > freed before we even get to hprobe_expire.
-> 
-> re you suggesting that we should use an RCU read lock to protect the
-> "traversal" of return_instances? In other words, is it currently being
-> traversed unsafely, given that return_instance can be freed at any time?
-> 
-> > So, just like we have guard(srcu)(&uretprobes_srcu); we should have
-> > guard(rcu)();
-> > 
-> > Except, there is that kmemdup() hidden inside dup_return_instance(),
-> > so we can't really do that.
-> 
-> Right. kmemdup() is using GFP_KERNEL, which might sleep, so, it cannot
-> be called using rcu read lock.
+On Tue, 25 Feb 2025 09:45:52 +0100
+"Arnd Bergmann" <arnd@arndb.de> wrote:
 
-There is always SRCU?
+> It fixes the build issue for me. I tried booting as well, but ran
+> into a BUG() when I enable ftrace. I assume this is an unrelated
+> issue, but you can find the output for reference in case this is
+> relevant.
 
-							Thanx, Paul
+Thanks, can you try this patch instead? I'll be breaking it up if this works.
+
+This also removes the kaslr_offset() code.
+
+-- Steve
+
+diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+index 27c8def2139d..fdd5ffe268de 100644
+--- a/kernel/trace/ftrace.c
++++ b/kernel/trace/ftrace.c
+@@ -7004,7 +7004,6 @@ static int ftrace_process_locs(struct module *mod,
+ 	unsigned long count;
+ 	unsigned long *p;
+ 	unsigned long addr;
+-	unsigned long kaslr;
+ 	unsigned long flags = 0; /* Shut up gcc */
+ 	unsigned long pages;
+ 	int ret = -ENOMEM;
+@@ -7056,25 +7055,37 @@ static int ftrace_process_locs(struct module *mod,
+ 		ftrace_pages->next = start_pg;
+ 	}
+ 
+-	/* For zeroed locations that were shifted for core kernel */
+-	kaslr = !mod ? kaslr_offset() : 0;
+-
+ 	p = start;
+ 	pg = start_pg;
+ 	while (p < end) {
+ 		unsigned long end_offset;
+-		addr = ftrace_call_adjust(*p++);
++
++		addr = *p++;
++
+ 		/*
+ 		 * Some architecture linkers will pad between
+ 		 * the different mcount_loc sections of different
+ 		 * object files to satisfy alignments.
+ 		 * Skip any NULL pointers.
+ 		 */
+-		if (!addr || addr == kaslr) {
++		if (!addr) {
++			skipped++;
++			continue;
++		}
++
++		/*
++		 * If this is core kernel, make sure the address is in core
++		 * or inittext, as weak functions get zeroed and KASLR can
++		 * move them to something other than zero. It just will not
++		 * move it to an area where kernel text is.
++		 */
++		if (!mod && !(is_kernel_text(addr) || is_kernel_inittext(addr))) {
+ 			skipped++;
+ 			continue;
+ 		}
+ 
++		addr = ftrace_call_adjust(addr);
++
+ 		end_offset = (pg->index+1) * sizeof(pg->records[0]);
+ 		if (end_offset > PAGE_SIZE << pg->order) {
+ 			/* We should have allocated enough */
+diff --git a/scripts/sorttable.c b/scripts/sorttable.c
+index 23c7e0e6c024..10aff2aeb868 100644
+--- a/scripts/sorttable.c
++++ b/scripts/sorttable.c
+@@ -611,13 +611,16 @@ static int add_field(uint64_t addr, uint64_t size)
+ 	return 0;
+ }
+ 
++/* Used for when mcount/fentry is before the function entry */
++static int before_func;
++
+ /* Only return match if the address lies inside the function size */
+ static int cmp_func_addr(const void *K, const void *A)
+ {
+ 	uint64_t key = *(const uint64_t *)K;
+ 	const struct func_info *a = A;
+ 
+-	if (key < a->addr)
++	if (key + before_func < a->addr)
+ 		return -1;
+ 	return key >= a->addr + a->size;
+ }
+@@ -827,9 +830,14 @@ static void *sort_mcount_loc(void *arg)
+ 		pthread_exit(m_err);
+ 	}
+ 
+-	if (sort_reloc)
++	if (sort_reloc) {
+ 		count = fill_relocs(vals, size, ehdr, emloc->start_mcount_loc);
+-	else
++		/* gcc may use relocs to save the addresses, but clang does not. */
++		if (!count) {
++			count = fill_addrs(vals, size, start_loc);
++			sort_reloc = 0;
++		}
++	} else
+ 		count = fill_addrs(vals, size, start_loc);
+ 
+ 	if (count < 0) {
+@@ -1248,6 +1256,8 @@ static int do_file(char const *const fname, void *addr)
+ #ifdef MCOUNT_SORT_ENABLED
+ 		sort_reloc = true;
+ 		rela_type = 0x403;
++		/* arm64 uses patchable function entry placing before function */
++		before_func = 8;
+ #endif
+ 		/* fallthrough */
+ 	case EM_386:
