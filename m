@@ -1,37 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F22121CFF4;
-	Wed, 26 Feb 2025 16:11:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59CA421CA00;
+	Wed, 26 Feb 2025 16:12:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740586278; cv=none; b=ajW0F5q6At6ON3axbPTretv4CXqCPlAhkbcgn1ELu+IttIbIIn0IkZMefJGSpxPanMGKNrWOq/bY+MX9YIHqozf1JwdMJB10WLvCWszU8neWYgzMCVaPvA7QBhQ3zCRv8ibWWyrh3dLNR1GZnTP8jMoeo7Ws8POoa3U7qI+wAXo=
+	t=1740586341; cv=none; b=bghO+2pZqb27R2jSud1qVNic/2IDhxAEwvxJbGlc4/m8EZaM4+ZPHVRuVLWkFOsNt2T/J4plriCfL34Y9+3XDRA16hHLehCpoE6GApIK5MKL+skhdRdrn1IPdWhx94HizXZ64P9kD1mZfxjFgL5p71q6Iyfnw/7ODuUrkhm6iuU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740586278; c=relaxed/simple;
-	bh=ROz9XuGNvnoBJA3+2RuGgf4Sy1IM+BhZiK6em0GKSIw=;
+	s=arc-20240116; t=1740586341; c=relaxed/simple;
+	bh=ezZVDVPoqD1CODDNsl3QxjZWV9xXC08SKtHunsM9KEo=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=lZQUV06MeagB1QUVlhig3E3VnnCH5v1s8gg08/tFzCR2gEa1xL2GE2aWoTX8k+Ki4LEtCFujGsxPkLBGJtNwBHIgVb2mruuQFmbjTNafJoxhaUyleQuABMbzKh0c4uief0jZymGnVkkNLutvybYiDQ558WwrnKP1I5nayXT/+e8=
+	 MIME-Version:Content-Type; b=VtpOd0siA3Cg8eBIx5ve3yrZ6MRB5xsaWT4DHFvhmu4LM6QAMdFP6Xl5ASnI0pgNfApsB/uLPXHg0Pr+3BIIkxXPOkg+7cqkziw9Hdn5gdZgfy0m5mJUjQvdaU+DOUC550d6t5NrwlPastH5L0v10v91d005u8h1+N8n5yb/yD0=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 40363C4CED6;
-	Wed, 26 Feb 2025 16:11:16 +0000 (UTC)
-Date: Wed, 26 Feb 2025 11:11:56 -0500
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 12B57C4CED6;
+	Wed, 26 Feb 2025 16:12:19 +0000 (UTC)
+Date: Wed, 26 Feb 2025 11:13:00 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
 To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Mark
- Rutland <mark.rutland@arm.com>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Andrew Morton
- <akpm@linux-foundation.org>, Sven Schnelle <svens@linux.ibm.com>, Paul
- Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>,
- Albert Ou <aou@eecs.berkeley.edu>, Guo Ren <guoren@kernel.org>, Donglin
- Peng <dolinux.peng@gmail.com>, Zheng Yejian <zhengyejian@huaweicloud.com>,
- bpf@vger.kernel.org
-Subject: Re: [PATCH v3 2/4] ftrace: Add support for function argument to
- graph tracer
-Message-ID: <20250226111156.3e9bb653@gandalf.local.home>
-In-Reply-To: <20250226234852.5b6d2c34ef02d3e9a4b80d4e@kernel.org>
-References: <20250225222601.423129938@goodmis.org>
-	<20250225222653.724198940@goodmis.org>
-	<20250226234852.5b6d2c34ef02d3e9a4b80d4e@kernel.org>
+Cc: Heiko Carstens <hca@linux.ibm.com>, Mark Rutland <mark.rutland@arm.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Andrew Morton
+ <akpm@linux-foundation.org>, Sven Schnelle <svens@linux.ibm.com>, Vasily
+ Gorbik <gor@linux.ibm.com>, Alexander Gordeev <agordeev@linux.ibm.com>,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH] selftests/ftrace: Let fprobe test consider already
+ enabled functions
+Message-ID: <20250226111300.5140fa9e@gandalf.local.home>
+In-Reply-To: <20250226235447.7fab8051b2968277ce6920db@kernel.org>
+References: <20250226142703.910860-1-hca@linux.ibm.com>
+	<20250226235447.7fab8051b2968277ce6920db@kernel.org>
 X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -42,26 +38,14 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Wed, 26 Feb 2025 23:48:52 +0900
+On Wed, 26 Feb 2025 23:54:47 +0900
 Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
 
-> > -	event = trace_buffer_lock_reserve(buffer, TRACE_GRAPH_ENT,
-> > -					  sizeof(*entry), trace_ctx);
-> > +	/* If fregs is defined, add FTRACE_REGS_MAX_ARGS long size words */
-> > +	size = sizeof(*entry) + (FTRACE_REGS_MAX_ARGS * !!fregs * sizeof(long));  
-> 
-> Is `!!fregs` always 1 if fregs != NULL? (seems to depend on compiler)
+> Hmm, this ftrace selftests has been expected to be run without 
+> any BPF programs... Is there any other issue on other test cases?
 
-Yes, C guarantees that ! is either 1 or zero. If you want to convert
-something from non zero to 1, the C convention is "!!".
+Unfortunately, systemd is starting to add BPF programs :-p
 
-> 
-> Others looks good to me.
-> 
-> Reviewed-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-
-
-Thanks!
+I noticed that my laptop has users.
 
 -- Steve
-
