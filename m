@@ -1,73 +1,72 @@
-Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2631D42A9D;
-	Wed, 26 Feb 2025 10:41:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA8791E1E06;
+	Wed, 26 Feb 2025 10:50:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740566489; cv=none; b=E4onEfnujZZczEYZm/Rqzz8+HuwUYP2GSmxJPylHCWxZmlIEhgd1ZcHwq6T7zyg/oxajxyqL4bDU/zDeR9c1bQYA/XloUVJNNVhrkY1I7oNgMa1rZlt/0xZfZnrlDC1dUKsYGbRhm2nVvD8LYdAlpsZyc8UxbMZZcZ4YuwsE9Tc=
+	t=1740567050; cv=none; b=nSDL0kuITkdHbsi3rAIsLPczEt9kTfrWWI5rg9Dvu160de9OFfBQYEvMy8XeA8jXODhTzWHIw8qA9XSTnlzBPBYN/WBo9TO0J8uTjpy8YES8xvKLoB7U6P5uXHKAIWVtcRnio2MvSFkfZMQw39u5zhD1SQWdvRojCor9CDArvQs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740566489; c=relaxed/simple;
-	bh=BSMw+04gEqWq3Msk3LXpsoriHTDgOv1NVpgVH9B4mzU=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RWgz+VE67CgWWIuAQY9QzG8QU9FHQlMQQpPCX6GDDRQoTqRlfdqV6l4gPnROFpyYNICdRDBThk7aGt2EmUAXOd51kahXTGNxhx5rW6MfdTO5ytkiTTLDWgGPEeE3XfkQDxcfmZb1fAC8vMy2RA5pjeT+UcQe566L7ktIQa2elWA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gOIOEQIp; arc=none smtp.client-ip=209.85.208.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1740567050; c=relaxed/simple;
+	bh=j/lsfMgdXj4U0FmD8DOv1nxwAJF5yp/+dzneb1YLgsk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=h558v/o/GMwe2pQjH0WHqNoXqDURaG3C/OqSC8H1giZ8JDXf43e0eBcKDsd97pN9ySl8eKW9+Bal4WgX7yGCp+JeJRuRXP3tR4n+g/6HcoDRlribVpEW5/py2ViMlp0G/C752MIVAlJguT8yhvNvQGitAw7zAkNF04rGcyOdifU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=T7/X7BoS; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gOIOEQIp"
-Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-5e04861e7a6so12360999a12.1;
-        Wed, 26 Feb 2025 02:41:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740566476; x=1741171276; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=Szrg7Q5tkv9AIWm3qQj3ZI+4jNVtlGstTxdi9rRe2us=;
-        b=gOIOEQIpS3B/Gq5rqyz+Y4oS7g2+Mk9NQW16U5L6kddGQs/lcnOptmTnWVAeLVzYbr
-         0cCDXn/MeJfiKkV9hRvc5fIfGsrb4NO+Ab8TfVGIDp4cfsNl4EDXL6bcidcQ4IQixiQR
-         YU3TLu9eWBXwnYjtdrd8i2NUGmCAiClKqmRutKt5R01CbS1X22fxy4n/tC/KqILsyRWV
-         tLh0NwT7B9MCTk7gEgibuD8PMclGfGem0adexsV3dO7REQCTLSDvLK2W10QcMkyealqU
-         zJDlZO+bp2HL64BmE7dZvfNiFOYsbKwrm7GRBpniv5FQJHDF29vARXdiPI7ehGfLAkKC
-         XwJQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740566476; x=1741171276;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Szrg7Q5tkv9AIWm3qQj3ZI+4jNVtlGstTxdi9rRe2us=;
-        b=aoSlW+LIPDg0isZOpX9iwgp43VQw0c2Fg6wq3GCNQJYJ6SNmUmQduhiaUArCAYUvV6
-         FFmR++et6mNjYRBk5qZYS6GdKaKlGT2Fy7ADlV3OzB4iqtTwCn4U0m7ZzfuEe9bn2cvD
-         IJ/DTpa0zCBEYtC3QuCsD/VTNve52yDlg1fR6RssFl4qyi7T/1AwCqMQ8xnaEX7nhnkL
-         grMFpmHDW6kMVqdP9jaR4QDo2Jdnt1/s+/M7m2ZEhRUTiV9nyONHerwPaVuyObYLh7Du
-         oP5RPUtnBJ64SXplNDxdqDrQNcrGdok/EAIuqyzsep430XBYa9oLfYb+2Szd8b1xKg+9
-         dhZg==
-X-Forwarded-Encrypted: i=1; AJvYcCV0qCk7DAok8NTbXwoC1fTTsl+gxEaszYcxcNwzXOzMFMw2Le2EuXsEQhL4UrxdZiRtSZXP/x/gMSs2HXRI@vger.kernel.org, AJvYcCX7MXpJSLSp/9c8kQWQ3HHowyslFXQ5hfhBg9LURtb0JlUILUiatC4fi5ILV4KXAqLsJLc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxKbkEe9Qrvq1/y7lMfmg6xdC+Qg/gM8EJg+trUSV7KqkMegqGt
-	v3FzqSH0o4htX6BrqWrcm3c95FDhZCqkhXK4WSUulbVbOq6wI0v2
-X-Gm-Gg: ASbGncuDczZRZoWajQdeBT7eArkX/ezSk05Iie2hLG0O3ddWz5LjvvOPuHjwVonSaed
-	DNyS96niThmm8v4jz7VJOTm/FNy4dk8O/mGNzBK5GEo1/QNC70473wjZuReioqaEsXN1a+0QX+5
-	TUjnEQzMYcc2s7lp9ZtQ+xqvVaINRV3o+EsSQAgYWbY21G6Axuy7gVex89ciXDJL9LMM88RfjjQ
-	rx2KfuzWBjURwHko+PJCOPqRXZ3jEUXlBf0F/wB6QkvokjyeqpKbQBWAXddxV5ja570rpMURaoe
-	+dS5uaOLqql1
-X-Google-Smtp-Source: AGHT+IHH9F1IYBz1le8xW/KqZ54BHrkJ9A72amTbhME1pL0CzrJPPjM7s4jtPYMcv2g8PbVdUFENAA==
-X-Received: by 2002:a05:6402:5518:b0:5e0:8c35:a137 with SMTP id 4fb4d7f45d1cf-5e44a2545d8mr6074759a12.23.1740566475856;
-        Wed, 26 Feb 2025 02:41:15 -0800 (PST)
-Received: from krava ([173.38.220.53])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5e492120418sm2189620a12.14.2025.02.26.02.41.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Feb 2025 02:41:15 -0800 (PST)
-From: Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date: Wed, 26 Feb 2025 11:41:12 +0100
-To: Andrii Nakryiko <andrii@kernel.org>
-Cc: linux-trace-kernel@vger.kernel.org, peterz@infradead.org,
-	mingo@kernel.org, oleg@redhat.com, bpf@vger.kernel.org,
-	linux-kernel@vger.kernel.org, kernel-team@meta.com,
-	Breno Leitao <leitao@debian.org>
-Subject: Re: [PATCH perf/core] uprobes: remove too strict lockdep_assert()
- condition in hprobe_expire()
-Message-ID: <Z77vyIKkLyliF0zz@krava>
-References: <20250225223214.2970740-1-andrii@kernel.org>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="T7/X7BoS"
+Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51Q6PdQl028521;
+	Wed, 26 Feb 2025 10:50:34 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=pp1; bh=Sj6FPmDqgizR1Z+bfnuKYQu5oydtXc
+	ls/cnkUdKywcs=; b=T7/X7BoSvV9QfTgWLe61QOrc8uRWYIRlu49CmSi36cQWnU
+	9TD2r5sudIdeQpu1alswcvPWgc84XWac6kIZ0V/NoRbI+tHDaKmnKw/0spkv5qz6
+	aWRi2Gt9jzkWYh5Nq3rXn+B7uq50B5n9zuSX54SI0R3SFYXBVKzv9HQ72i+OESHq
+	oiLiYY1quXrIOvBNb1fPIA1v96gjQbkwYoVMOnAhZOWy22yjAuHxvN4rkPSfJOnm
+	HnSNMUNEMITBnZKQ0L0ipcfasqCYUU5GPXOcZ28kRBA7WbJ8cR8TfCmi6cRLLDmk
+	LxwXNBXq8ndC2yYYmFfXQNImEQji8bSg3EVlJjhw==
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 451wp693tp-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 26 Feb 2025 10:50:34 +0000 (GMT)
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 51QAPcWe027372;
+	Wed, 26 Feb 2025 10:50:33 GMT
+Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
+	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 44yum21rxk-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 26 Feb 2025 10:50:33 +0000
+Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
+	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 51QAoUZv58523966
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 26 Feb 2025 10:50:30 GMT
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 3D0582004B;
+	Wed, 26 Feb 2025 10:50:30 +0000 (GMT)
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 10DD220043;
+	Wed, 26 Feb 2025 10:50:30 +0000 (GMT)
+Received: from osiris (unknown [9.152.212.60])
+	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Wed, 26 Feb 2025 10:50:30 +0000 (GMT)
+Date: Wed, 26 Feb 2025 11:50:28 +0100
+From: Heiko Carstens <hca@linux.ibm.com>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Sven Schnelle <svens@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>
+Subject: Re: [PATCH v3 5/5] selftests/ftrace: Update fprobe test to check
+ enabled_functions file
+Message-ID: <20250226105028.16208A53-hca@linux.ibm.com>
+References: <20250220202009.689253424@goodmis.org>
+ <20250220202055.733001756@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -76,65 +75,150 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250225223214.2970740-1-andrii@kernel.org>
+In-Reply-To: <20250220202055.733001756@goodmis.org>
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: VtondUeQLGDImSrNCPR2GLUOf1uEtfom
+X-Proofpoint-ORIG-GUID: VtondUeQLGDImSrNCPR2GLUOf1uEtfom
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-26_02,2025-02-26_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
+ lowpriorityscore=0 impostorscore=0 mlxlogscore=999 clxscore=1015
+ adultscore=0 spamscore=0 bulkscore=0 priorityscore=1501 phishscore=0
+ suspectscore=0 mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2502100000 definitions=main-2502260084
 
-On Tue, Feb 25, 2025 at 02:32:14PM -0800, Andrii Nakryiko wrote:
-> hprobe_expire() is used to atomically switch pending uretprobe instance
-> (struct return_instance) from being SRCU protected to be refcounted.
-> This can be done from background timer thread, or synchronously within
-> current thread when task is forked.
+On Thu, Feb 20, 2025 at 03:20:14PM -0500, Steven Rostedt wrote:
+> From: Steven Rostedt <rostedt@goodmis.org>
 > 
-> In the former case, return_instance has to be protected through RCU read
-> lock, and that's what hprobe_expire() used to check with
-> lockdep_assert(rcu_read_lock_held()).
+> A few bugs were found in the fprobe accounting logic along with it using
+> the function graph infrastructure. Update the fprobe selftest to catch
+> those bugs in case they or something similar shows up in the future.
 > 
-> But in the latter case (hprobe_expire() called from dup_utask()) there
-> is no RCU lock being held, and it's both unnecessary and incovenient.
-> Inconvenient due to the intervening memory allocations inside
-> dup_return_instance()'s loop. Unnecessary because dup_utask() is called
-> synchronously in current thread, and no uretprobe can run at that point,
-> so return_instance can't be freed either.
+> The test now checks the enabled_functions file which shows all the
+> functions attached to ftrace or fgraph. When enabling a fprobe, make sure
+> that its corresponding function is also added to that file. Also add two
+> more fprobes to enable to make sure that the fprobe logic works properly
+> with multiple probes.
 > 
-> So drop rcu_read_lock_held() condition, and expand corresponding comment
-> to explain necessary lifetime guarantees. lockdep_assert()-detected
-> issue is a false positive.
-> 
-> Fixes: dd1a7567784e ("uprobes: SRCU-protect uretprobe lifetime (with timeout)")
-> Reported-by: Breno Leitao <leitao@debian.org>
-> Signed-off-by: Andrii Nakryiko <andrii@kernel.org>
-
-lgtm
-
-Reviewed-by: Jiri Olsa <jolsa@kernel.org>
-
-jirka
-
+> Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> Tested-by: Heiko Carstens <hca@linux.ibm.com>
+> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 > ---
->  kernel/events/uprobes.c | 10 +++++++---
->  1 file changed, 7 insertions(+), 3 deletions(-)
+>  .../test.d/dynevent/add_remove_fprobe.tc      | 54 +++++++++++++++++++
+>  1 file changed, 54 insertions(+)
 > 
-> diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
-> index e783da1d1762..4d2140cab7ec 100644
-> --- a/kernel/events/uprobes.c
-> +++ b/kernel/events/uprobes.c
-> @@ -762,10 +762,14 @@ static struct uprobe *hprobe_expire(struct hprobe *hprobe, bool get)
->  	enum hprobe_state hstate;
+> diff --git a/tools/testing/selftests/ftrace/test.d/dynevent/add_remove_fprobe.tc b/tools/testing/selftests/ftrace/test.d/dynevent/add_remove_fprobe.tc
+> index dc25bcf4f9e2..449f9d8be746 100644
+> --- a/tools/testing/selftests/ftrace/test.d/dynevent/add_remove_fprobe.tc
+> +++ b/tools/testing/selftests/ftrace/test.d/dynevent/add_remove_fprobe.tc
+> @@ -7,12 +7,38 @@ echo 0 > events/enable
+>  echo > dynamic_events
 >  
->  	/*
-> -	 * return_instance's hprobe is protected by RCU.
-> -	 * Underlying uprobe is itself protected from reuse by SRCU.
-> +	 * Caller should guarantee that return_instance is not going to be
-> +	 * freed from under us. This can be achieved either through holding
-> +	 * rcu_read_lock() or by owning return_instance in the first place.
-> +	 *
-> +	 * Underlying uprobe is itself protected from reuse by SRCU, so ensure
-> +	 * SRCU lock is held properly.
->  	 */
-> -	lockdep_assert(rcu_read_lock_held() && srcu_read_lock_held(&uretprobes_srcu));
-> +	lockdep_assert(srcu_read_lock_held(&uretprobes_srcu));
+>  PLACE=$FUNCTION_FORK
+> +PLACE2="kmem_cache_free"
+> +PLACE3="schedule_timeout"
 >  
->  	hstate = READ_ONCE(hprobe->state);
->  	switch (hstate) {
-> -- 
-> 2.43.5
-> 
+>  echo "f:myevent1 $PLACE" >> dynamic_events
+> +
+> +# Make sure the event is attached and is the only one
+> +grep -q $PLACE enabled_functions
+> +cnt=`cat enabled_functions | wc -l`
+> +if [ $cnt -ne 1 ]; then
+> +	exit_fail
+> +fi
+
+Bah.. :) this doesn't work always, since at least with Fedora 41 the
+assumption that there are zero enabled functions before this test is
+executed is not necessarily true:
+
+# cat tracing/enabled_functions 
+free_user_ns (1) R         
+bpf_lsm_path_mkdir (1) R   D   M        tramp: ftrace_regs_caller+0x0/0x68 (call_direct_funcs+0x0/0x20)
+        direct-->bpf_trampoline_6442505669+0x0/0x148
+bpf_lsm_path_mknod (1) R   D   M        tramp: ftrace_regs_caller+0x0/0x68 (call_direct_funcs+0x0/0x20)
+        direct-->bpf_trampoline_6442505671+0x0/0x14e
+...
+
+I didn't stumble across this before, since I tried a monolithic kernel
+without modules when verifying your series; and then there aren't any
+enabled functions. But with modules there are.
+
+This could be worked around for example with something like the patch
+below (against linux-next). But no idea what your preferred way to
+handle this would be.
+
+diff --git a/tools/testing/selftests/ftrace/test.d/dynevent/add_remove_fprobe.tc b/tools/testing/selftests/ftrace/test.d/dynevent/add_remove_fprobe.tc
+index 449f9d8be746..b0f24c57b8e1 100644
+--- a/tools/testing/selftests/ftrace/test.d/dynevent/add_remove_fprobe.tc
++++ b/tools/testing/selftests/ftrace/test.d/dynevent/add_remove_fprobe.tc
+@@ -10,12 +10,14 @@ PLACE=$FUNCTION_FORK
+ PLACE2="kmem_cache_free"
+ PLACE3="schedule_timeout"
+ 
++ocnt=`cat enabled_functions | wc -l`
++
+ echo "f:myevent1 $PLACE" >> dynamic_events
+ 
+ # Make sure the event is attached and is the only one
+ grep -q $PLACE enabled_functions
+ cnt=`cat enabled_functions | wc -l`
+-if [ $cnt -ne 1 ]; then
++if [ $cnt -ne $((ocnt + 1)) ]; then
+ 	exit_fail
+ fi
+ 
+@@ -23,7 +25,7 @@ echo "f:myevent2 $PLACE%return" >> dynamic_events
+ 
+ # It should till be the only attached function
+ cnt=`cat enabled_functions | wc -l`
+-if [ $cnt -ne 1 ]; then
++if [ $cnt -ne $((ocnt + 1)) ]; then
+ 	exit_fail
+ fi
+ 
+@@ -32,7 +34,7 @@ echo "f:myevent3 $PLACE2" >> dynamic_events
+ 
+ grep -q $PLACE2 enabled_functions
+ cnt=`cat enabled_functions | wc -l`
+-if [ $cnt -ne 2 ]; then
++if [ $cnt -ne $((ocnt + 2)) ]; then
+ 	exit_fail
+ fi
+ 
+@@ -49,7 +51,7 @@ grep -q myevent1 dynamic_events
+ 
+ # should still have 2 left
+ cnt=`cat enabled_functions | wc -l`
+-if [ $cnt -ne 2 ]; then
++if [ $cnt -ne $((ocnt + 2)) ]; then
+ 	exit_fail
+ fi
+ 
+@@ -57,7 +59,7 @@ echo > dynamic_events
+ 
+ # Should have none left
+ cnt=`cat enabled_functions | wc -l`
+-if [ $cnt -ne 0 ]; then
++if [ $cnt -ne $ocnt ]; then
+ 	exit_fail
+ fi
+ 
+@@ -65,7 +67,7 @@ echo "f:myevent4 $PLACE" >> dynamic_events
+ 
+ # Should only have one enabled
+ cnt=`cat enabled_functions | wc -l`
+-if [ $cnt -ne 1 ]; then
++if [ $cnt -ne $((ocnt + 1)) ]; then
+ 	exit_fail
+ fi
+ 
+@@ -73,7 +75,7 @@ echo > dynamic_events
+ 
+ # Should have none left
+ cnt=`cat enabled_functions | wc -l`
+-if [ $cnt -ne 0 ]; then
++if [ $cnt -ne $ocnt ]; then
+ 	exit_fail
+ fi
+ 
