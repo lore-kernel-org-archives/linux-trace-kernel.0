@@ -1,183 +1,171 @@
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2450232786
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 25 Feb 2025 22:55:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B02261494C9
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 26 Feb 2025 00:59:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740524103; cv=none; b=lbw69EEDLw+DXjEkyCIf915gBJiiO+NF6DvTnONAg1W1lXgwvJP9z2vRvU8ZrpF5osIGV2AjrLyG/il1zXNI2SsZT/BdrsUWfHiBdzoYFkii3GbQU8XeVysImnwzKnfr3chf8cSpcCTZUyl7PdIyFEbXjGjkuW3TWGGVCBk2Ego=
+	t=1740531543; cv=none; b=OspS5rvqMkR5wjXc5rWYHxUZPCFhiWQeCLifmDHMRh1adEZ215sQlOu5r/fimsOOmvEqX4mfmR8TTUwY5s2Kq2BuTcunHr04WdeDxoRKeOKHZlmkkW+YMORuMr3xpQ3ydj6Gz3zyjnrcVOWGcq5cnw5JIin7Vfym7uZlIEbqYY8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740524103; c=relaxed/simple;
-	bh=b7GE2WDSJ8erb2DRmKw664l9pESoplGUaVO7FPP4lP8=;
-	h=Date:Subject:In-Reply-To:CC:From:To:Message-ID:Mime-Version:
-	 Content-Type; b=NlJuPP7SOqH0vHj7WkAqyTgm5bfMU83aUKUC6C4SpjHq/ypc8//pghGP9QrP31+cWPE1qP62hU1DkcibtX821rUe5/S66L7qWRWbrXomz2DXSxpxKdlxWRdeWKXJA3IfqdP0TeIBLkqjhQPzQS3OkYDto9LzGcrv0eSKTtYpuss=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dabbelt.com; spf=pass smtp.mailfrom=dabbelt.com; dkim=pass (2048-bit key) header.d=dabbelt-com.20230601.gappssmtp.com header.i=@dabbelt-com.20230601.gappssmtp.com header.b=Z09qg6/M; arc=none smtp.client-ip=209.85.214.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dabbelt.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dabbelt.com
+	s=arc-20240116; t=1740531543; c=relaxed/simple;
+	bh=pEtfZVCVm3/XOugzU8Ltx4f7z/cLwxmkARQ2R+6a/Qc=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=JhtvNTM0o5mk4rWaqedhT76R5HLmfLQdbOkuU0Vhe8dOzWoP5g9IfpBzsIgrvISuPTANZtxjhEAYkOTO/dTtC6UzlMuhYkSpdQ5mQnJC+7eG6kID2X6ixdeE8tvbXjpUgBTMGvJm7Imo0EOa5CrhnoBcWhICvMekJ+8ou8BpDwc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=kvMIoC7o; arc=none smtp.client-ip=209.85.216.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=dabbelt-com.20230601.gappssmtp.com header.i=@dabbelt-com.20230601.gappssmtp.com header.b="Z09qg6/M"
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-220c8f38febso130057455ad.2
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 25 Feb 2025 14:55:01 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kvMIoC7o"
+Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-2fe86c01f4aso63914a91.2
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 25 Feb 2025 16:59:01 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=dabbelt-com.20230601.gappssmtp.com; s=20230601; t=1740524101; x=1741128901; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:to:from:cc
-         :in-reply-to:subject:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=eoxgd0LXqhYyoIs1TcxAsnvLmRYvl51fOK6HZwrhImc=;
-        b=Z09qg6/MfsbPoF1aSZoQlg2H7xUhPjefiDOQjO8gpa2Lqh5KndyaQ9FoA5gTzFKk1d
-         +7j8aL3Iwcrwyzlcx3Dgu1LzjUu57gVNIwCi0gfX8zli8bv1kMXJWde7/cECc/G7UspX
-         nL9/o+8IiYEsVIohGvH76EaAvL/IbHTTGrCIo7wS8tfS+TriUJi2orYFDWZgYtiJnpQV
-         rcq05FGC6yUzHYCYqu4l6MGU65qCqC1h7P2Elqu0f/0aYAZHPiW31+V7HqhyfidI+fbl
-         ARGjydJdtIPrJA1yRi+Oia3CIzLqGfCVUmG+xDXNVcpHHwJBUlcpRaMGCSC/y8Z8E3wD
-         OnEw==
+        d=google.com; s=20230601; t=1740531541; x=1741136341; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=BfE+FYiAOd9DAOybGgX5laywdzU/CIqHsXJrp0PBGSY=;
+        b=kvMIoC7onJ9el6359P2kksBcw1fUyvFQ5BG00eaS6r6g7Lk+2z3Iq1cKWUEIegi8G3
+         FNgUCWwkwwLUasxSDULJOataRitRltGWLhdiEw9uGw5eNLMcnLv/16ekUoZJN80HORm9
+         skeNhoAkG2HWFo6Zq39yfiw2VmdSGzhnbbc8gFZjVa3iu49iiZg6hpNcjkG9qw/yyTDO
+         9IvwBR/wVDP6ybkDGJDaEJKM7JEDJS3KGkOOsbNq/cXaXX0BCoAnMbA+WPAJDHfP5EwA
+         6hQ5TreFgBS6aWqyegaV+NZ70Ir2udjvuBb1eUyIt7Yqo1ocyGXOWOMdO+tAWHhQpzes
+         2E9Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740524101; x=1741128901;
-        h=content-transfer-encoding:mime-version:message-id:to:from:cc
-         :in-reply-to:subject:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=eoxgd0LXqhYyoIs1TcxAsnvLmRYvl51fOK6HZwrhImc=;
-        b=WkBz3M2NEYDZ4VziobpoWqptmrLznpFnIyMAO780eIC8h8FZl2ci9zUTDtH4a+fyPU
-         WV3mjNvU6oCSDUHTaFCMvK6q7NZ2b/XWfTdEZY1nUxk32iQDPiu9d7J7n6Kl17/ibxeJ
-         FI1E8Gpj3UdIcCgSKH4Og0bvkGW2NvnRllYaum5QDW6TLo5NBeGEK6xEleQ6ZZB7aYRd
-         iLDn9otuUQS3ZGCfm9/vLoZut+Pdi2RNH34SGH4JQEAihONL6wmV9akPX+GuPONzMMQR
-         X26avzKhkjLCNRR2b+pnKdRsdW1rPByx2pVIQEGs7h+x7VTP2aejLa12tuHrBJcMcYC6
-         0eyQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUGlT/5yZ27w9pKMuh96DDk8RX2n78RpeZHkJJ60c+ikDyDHPM9e/nJY1MAm0cC8+GJ6i8enZx8pKRZpRA6JfuPkCk=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy1sS/GxIIz5U9Kq/PrxLiIxqKsbWvE490Jqz0d5gJcQifrhW3P
-	lwupE/iFp1moe0S5l4F5D610a78i+NyHM0Bjpp9OnPuRKUUGRR35nGyivhTRRTA=
-X-Gm-Gg: ASbGncsSXZInR8oRQZgBZp/qqChQFwvE3Mg9CMb2q0SJ2o93J6o/6MWgGQZvIqEeu2z
-	XigffDQW/8vm5Hn+kNhMl6rfhJVWWh49MOsWo/rU3kkIimrVw1FFCTTXHQpoxnpeJCkhODiRIXV
-	jVVMyDOxHvvjw7ygelp4m5QuWj7Rj8blCi17Iu8Tfj55RGGV1R6BS4wX9rjfoCzy6rnnWnkHwc+
-	aCuO7o/s8boWeqEw/Y1Of0G6qiEXoF9UAWy+WlObDmSlUrY3TCdczKbMa+gO00kPkKl5yyehtEh
-	4UYJf3E9XgzlN55tcbg=
-X-Google-Smtp-Source: AGHT+IHDF0cWJ/SEBMVNAJOxihTtvNcg7f922v9D9w95rEqvhz8RZQiYleayAK1FRV0WuHL7CfLLPw==
-X-Received: by 2002:a17:903:986:b0:221:80f8:99cd with SMTP id d9443c01a7336-2219ffb3badmr294881865ad.21.1740524101121;
-        Tue, 25 Feb 2025 14:55:01 -0800 (PST)
-Received: from localhost ([50.145.13.30])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2230a092fc9sm19662355ad.126.2025.02.25.14.55.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Feb 2025 14:55:00 -0800 (PST)
-Date: Tue, 25 Feb 2025 14:55:00 -0800 (PST)
-X-Google-Original-Date: Tue, 25 Feb 2025 14:54:59 PST (-0800)
-Subject:     Re: [PATCH] riscv: tracing: Fix __write_overflow_field in ftrace_partial_regs()
-In-Reply-To: <Z74DlyiSS75MrkqS@ghost>
-CC: alex@ghiti.fr, rostedt@goodmis.org, mhiramat@kernel.org,
-  Mark Rutland <mark.rutland@arm.com>, Paul Walmsley <paul.walmsley@sifive.com>, aou@eecs.berkeley.edu,
-  oleg@redhat.com, linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-  linux-riscv@lists.infradead.org
-From: Palmer Dabbelt <palmer@dabbelt.com>
-To: Charlie Jenkins <charlie@rivosinc.com>
-Message-ID: <mhng-2350fde8-5ca3-4770-94d0-26582bdfc0dd@palmer-ri-x1c9a>
+        d=1e100.net; s=20230601; t=1740531541; x=1741136341;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=BfE+FYiAOd9DAOybGgX5laywdzU/CIqHsXJrp0PBGSY=;
+        b=JsMUnFxUGX3U5vLg96fMla2gIJS3GMCJ/ddlzq/a09hViEEZQdT2vmU1WfOpl8y8DV
+         Ubbop02xT+7gHctvI77nUyGEcKfhxsWXgt1AAYFvb4vC80M4VyysJ0UFxcnmH+f1kN4p
+         u3VB/Oj5vKh3xF3W2CgtP7pLp0ux6o6Pu9VQsA+R2ClEYJiabEwezyRuYd0OBcj40FFs
+         9o8aQU3C/0sUh1PF5zABU7XfGQ/MPZNHehfNW6qnoIsu+/tiFIB0N05sKRrLnVlfVkDn
+         yFwD5rLZcy0gd4He7bk76gqdYpN129J30UzCSIJciWq9QwPv1CZ+HrM05IRqZTR5FqZs
+         x6dQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVtOzq8suGAwRoVEmHsh9BM26OGBpXiTB4GHjXxZWIauGqZXbPj+KQRBip2ozBDQV4OQ0wXQ/WGzzjjp/58DHOktD4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YytrXa7Dbq+0/Mxc+/SbrghLAxeeIdaSOpoDZFwKztU0KxYfYyX
+	NLp5PtDhBDU/7N1evgTP0H71z4zrIMC6Q3YZuqmIPlON9TL3vG0LQXg/2llwC/lBTqM/apWmmsY
+	4Pg==
+X-Google-Smtp-Source: AGHT+IFyXk03Mdjf7OBLIfTSLB6+EQPz/jBslrwK2d8KkEi7ba7NS0D3gxx1v5rFfPJNkg1JKx26oqdIPiY=
+X-Received: from pjbqb10.prod.google.com ([2002:a17:90b:280a:b0:2e0:915d:d594])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:2708:b0:2f2:3efd:96da
+ with SMTP id 98e67ed59e1d1-2fe7e39f297mr2345354a91.24.1740531541052; Tue, 25
+ Feb 2025 16:59:01 -0800 (PST)
+Date: Tue, 25 Feb 2025 16:58:47 -0800
+In-Reply-To: <f820b630-13c1-4164-baa8-f5e8231612d1@amazon.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (MHng)
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+References: <20241118123948.4796-1-kalyazin@amazon.com> <Z6u-WdbiW3n7iTjp@google.com>
+ <a7080c07-0fc5-45ce-92f7-5f432a67bc63@amazon.com> <Z7X2EKzgp_iN190P@google.com>
+ <6eddd049-7c7a-406d-b763-78fa1e7d921b@amazon.com> <Z7d5HT7FpE-ZsHQ9@google.com>
+ <f820b630-13c1-4164-baa8-f5e8231612d1@amazon.com>
+Message-ID: <Z75nRwSBxpeMwbsR@google.com>
+Subject: Re: [RFC PATCH 0/6] KVM: x86: async PF user
+From: Sean Christopherson <seanjc@google.com>
+To: Nikita Kalyazin <kalyazin@amazon.com>
+Cc: pbonzini@redhat.com, corbet@lwn.net, tglx@linutronix.de, mingo@redhat.com, 
+	bp@alien8.de, dave.hansen@linux.intel.com, hpa@zytor.com, rostedt@goodmis.org, 
+	mhiramat@kernel.org, mathieu.desnoyers@efficios.com, kvm@vger.kernel.org, 
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, jthoughton@google.com, david@redhat.com, 
+	peterx@redhat.com, oleg@redhat.com, vkuznets@redhat.com, gshan@redhat.com, 
+	graf@amazon.de, jgowans@amazon.com, roypat@amazon.co.uk, derekmn@amazon.com, 
+	nsaenz@amazon.es, xmarcalx@amazon.com
+Content-Type: text/plain; charset="us-ascii"
 
-On Tue, 25 Feb 2025 09:53:27 PST (-0800), Charlie Jenkins wrote:
-> On Tue, Feb 25, 2025 at 09:36:04AM +0100, Alexandre Ghiti wrote:
->> Hi Charlie,
->>
->> On 25/02/2025 03:42, Charlie Jenkins wrote:
->> > The size of &regs->a0 is unknown, causing the error:
->> >
->> > ../include/linux/fortify-string.h:571:25: warning: call to
->> > '__write_overflow_field' declared with attribute warning: detected write
->> > beyond size of field (1st parameter); maybe use struct_group()?
->> > [-Wattribute-warning]
->>
->>
->> I can't reproduce this warning with gcc and llvm, even when setting by hand
->> -Wattribute-warning when compiling bpf_trace.c (which is the user of
->> ftrace_partial_regs()).
->>
->> Which toolchain did you use?
->
-> You need to have the configs:
-> CONFIG_BPF_SYSCALL=y
-> CONFIG_FORTIFY_SOURCE=y
+On Fri, Feb 21, 2025, Nikita Kalyazin wrote:
+> On 20/02/2025 18:49, Sean Christopherson wrote:
+> > On Thu, Feb 20, 2025, Nikita Kalyazin wrote:
+> > > On 19/02/2025 15:17, Sean Christopherson wrote:
+> > > > On Wed, Feb 12, 2025, Nikita Kalyazin wrote:
+> > > > The conundrum with userspace async #PF is that if userspace is given only a single
+> > > > bit per gfn to force an exit, then KVM won't be able to differentiate between
+> > > > "faults" that will be handled synchronously by the vCPU task, and faults that
+> > > > usersepace will hand off to an I/O task.  If the fault is handled synchronously,
+> > > > KVM will needlessly inject a not-present #PF and a present IRQ.
+> > > 
+> > > Right, but from the guest's point of view, async PF means "it will probably
+> > > take a while for the host to get the page, so I may consider doing something
+> > > else in the meantime (ie schedule another process if available)".
+> > 
+> > Except in this case, the guest never gets a chance to run, i.e. it can't do
+> > something else.  From the guest point of view, if KVM doesn't inject what is
+> > effectively a spurious async #PF, the VM-Exiting instruction simply took a (really)
+> > long time to execute.
+> 
+> Sorry, I didn't get that.  If userspace learns from the
+> kvm_run::memory_fault::flags that the exit is due to an async PF, it should
+> call kvm run immediately, inject the not-present PF and allow the guest to
+> reschedule.  What do you mean by "the guest never gets a chance to run"?
 
-I don't think I have any FORTIFY_SOURCE runs, unless they're on by 
-default behind some other argument.  I'm kind of surprised this is the 
-only bug we have, that usually trips up all sorts of stuff.
+What I'm saying is that, as proposed, the API doesn't precisely tell userspace
+an exit happened due to an "async #PF".  KVM has absolutely zero clue as to
+whether or not userspace is going to do an async #PF, or if userspace wants to
+intercept the fault for some entirely different purpose.
 
-I'll go add some runs and see...
+> > > If we are exiting to userspace, it isn't going to be quick anyway, so we can
+> > > consider all such faults "long" and warranting the execution of the async PF
+> > > protocol.  So always injecting a not-present #PF and page ready IRQ doesn't
+> > > look too wrong in that case.
+> > 
+> > There is no "wrong", it's simply wasteful.  The fact that the userspace exit is
+> > "long" is completely irrelevant.  Decompressing zswap is also slow, but it is
+> > done on the current CPU, i.e. is not background I/O, and so doesn't trigger async
+> > #PFs.
+> > 
+> > In the guest, if host userspace resolves the fault before redoing KVM_RUN, the
+> > vCPU will get two events back-to-back: an async #PF, and an IRQ signalling completion
+> > of that #PF.
+> 
+> Is this practically likely?
 
-(I'm also going to just go pick this up, might take a little bit to show 
-up.)
+Yes, I think's it's quite possible.
 
-Thanks!
+> At least in our scenario (Firecracker snapshot restore) and probably in live
+> migration postcopy, if a vCPU hits a fault, it's probably because the content
+> of the page is somewhere remote (eg on the source machine or wherever the
+> snapshot data is stored) and isn't going to be available quickly.
 
-> CONFIG_FUNCTION_TRACER=y
-> CONFIG_FPROBE=y
-> CONFIG_DYNAMIC_FTRACE=y
->
-> I used gcc 14.2.0
->
-> - Charlie
->
->>
->> Thanks,
->>
->> Alex
->>
->>
->> >
->> > Fix this by wrapping the required registers in pt_regs with
->> > struct_group() and reference the group when doing the offending
->> > memcpy().
->> >
->> > Signed-off-by: Charlie Jenkins <charlie@rivosinc.com>
->> > ---
->> >   arch/riscv/include/asm/ftrace.h |  2 +-
->> >   arch/riscv/include/asm/ptrace.h | 18 ++++++++++--------
->> >   2 files changed, 11 insertions(+), 9 deletions(-)
->> >
->> > diff --git a/arch/riscv/include/asm/ftrace.h b/arch/riscv/include/asm/ftrace.h
->> > index c4721ce44ca474654b37b3d51bc0a63d46bc1eff..ec6db1162021fbf4fa48fc87e7984266040aa7d9 100644
->> > --- a/arch/riscv/include/asm/ftrace.h
->> > +++ b/arch/riscv/include/asm/ftrace.h
->> > @@ -207,7 +207,7 @@ ftrace_partial_regs(const struct ftrace_regs *fregs, struct pt_regs *regs)
->> >   {
->> >   	struct __arch_ftrace_regs *afregs = arch_ftrace_regs(fregs);
->> > -	memcpy(&regs->a0, afregs->args, sizeof(afregs->args));
->> > +	memcpy(&regs->a_regs, afregs->args, sizeof(afregs->args));
->> >   	regs->epc = afregs->epc;
->> >   	regs->ra = afregs->ra;
->> >   	regs->sp = afregs->sp;
->> > diff --git a/arch/riscv/include/asm/ptrace.h b/arch/riscv/include/asm/ptrace.h
->> > index b5b0adcc85c18e15c156de11172a5d7f03ada037..2910231977cb71dac3cc42f2dc32590284204057 100644
->> > --- a/arch/riscv/include/asm/ptrace.h
->> > +++ b/arch/riscv/include/asm/ptrace.h
->> > @@ -23,14 +23,16 @@ struct pt_regs {
->> >   	unsigned long t2;
->> >   	unsigned long s0;
->> >   	unsigned long s1;
->> > -	unsigned long a0;
->> > -	unsigned long a1;
->> > -	unsigned long a2;
->> > -	unsigned long a3;
->> > -	unsigned long a4;
->> > -	unsigned long a5;
->> > -	unsigned long a6;
->> > -	unsigned long a7;
->> > +	struct_group(a_regs,
->> > +		unsigned long a0;
->> > +		unsigned long a1;
->> > +		unsigned long a2;
->> > +		unsigned long a3;
->> > +		unsigned long a4;
->> > +		unsigned long a5;
->> > +		unsigned long a6;
->> > +		unsigned long a7;
->> > +	);
->> >   	unsigned long s2;
->> >   	unsigned long s3;
->> >   	unsigned long s4;
->> >
->> > ---
->> > base-commit: d082ecbc71e9e0bf49883ee4afd435a77a5101b6
->> > change-id: 20250224-fix_ftrace_partial_regs-eddaf4a7e5ed
+Unless the remote page was already requested, e.g. by a different vCPU, or by a
+prefetching algorithim.
+
+> Conversely, if the page content is available, it must have already been
+> prepopulated into guest memory pagecache, the bit in the bitmap is cleared
+> and no exit to userspace occurs.
+
+But that doesn't happen instantaneously.  Even if the VMM somehow atomically
+receives the page and marks it present, it's still possible for marking the page
+present to race with KVM checking the bitmap.
+
+> > > > > What advantage can you see in it over exiting to userspace (which already exists
+> > > > > in James's series)?
+> > > > 
+> > > > It doesn't exit to userspace :-)
+> > > > 
+> > > > If userspace simply wakes a different task in response to the exit, then KVM
+> > > > should be able to wake said task, e.g. by signalling an eventfd, and resume the
+> > > > guest much faster than if the vCPU task needs to roundtrip to userspace.  Whether
+> > > > or not such an optimization is worth the complexity is an entirely different
+> > > > question though.
+> > > 
+> > > This reminds me of the discussion about VMA-less UFFD that was coming up
+> > > several times, such as [1], but AFAIK hasn't materialised into something
+> > > actionable.  I may be wrong, but James was looking into that and couldn't
+> > > figure out a way to scale it sufficiently for his use case and had to stick
+> > > with the VM-exit-based approach.  Can you see a world where VM-exit
+> > > userfaults coexist with no-VM-exit way of handling async PFs?
+> > 
+> > The issue with UFFD is that it's difficult to provide a generic "point of contact",
+> > whereas with KVM userfault, signalling can be tied to the vCPU, and KVM can provide
+> > per-vCPU buffers/structures to aid communication.
+> > 
+> > That said, supporting "exitless" KVM userfault would most definitely be premature
+> > optimization without strong evidence it would benefit a real world use case.
+> 
+> Does that mean that the "exitless" solution for async PF is a long-term one
+> (if required), while the short-term would still be "exitful" (if we find a
+> way to do it sensibly)?
+
+My question on exitless support was purely exploratory, just ignore it for now.
