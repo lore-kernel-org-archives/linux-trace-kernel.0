@@ -1,151 +1,67 @@
-Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0760721CFEA;
-	Wed, 26 Feb 2025 16:10:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F22121CFF4;
+	Wed, 26 Feb 2025 16:11:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740586256; cv=none; b=b/xdPSy6zlKFls0Ef6k5wNLkad7KSi1uHxmywtOhpUO5VDBqYNpi0/pOSLDHMDwTTPyqMYVDadSTIAq+XI+hueRIU4b6C8NnKDl+jrPChIQSXudh9GE3ZGQLMJ/CM3HrI4iBu22fzVH1akMC8W7yhbxwJ62PvaGwMVwi+l8muVE=
+	t=1740586278; cv=none; b=ajW0F5q6At6ON3axbPTretv4CXqCPlAhkbcgn1ELu+IttIbIIn0IkZMefJGSpxPanMGKNrWOq/bY+MX9YIHqozf1JwdMJB10WLvCWszU8neWYgzMCVaPvA7QBhQ3zCRv8ibWWyrh3dLNR1GZnTP8jMoeo7Ws8POoa3U7qI+wAXo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740586256; c=relaxed/simple;
-	bh=NiH8SRXw2DXbtCKmXtL7dumfhM6oSyvlJXoK8NUJwS4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NF58IoizKlN/kIiGhLqD+UXEOEHQeckIWlaVSQ04aB+mY8RT6nhVaE7gKyLu3g9Z0v11YqoVqYqgDC2XpdY7owE8KlhDFS3WC9EAXG6fOUWT06KLlJEpvFsb6Djc+iT7IK8i79rdxy2W8YvScOPUwe3W45uvjXotxhaYsMGlD4E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.208.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-5e0505275b7so11196301a12.3;
-        Wed, 26 Feb 2025 08:10:54 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740586253; x=1741191053;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=hdFq/RSQGllNMaaMkzzrwTZL0ht5WX0qvlwijavAzn4=;
-        b=qclbH2EuBUYx8LYlp/Z9ZNEq3RnnGNkkYw1HrE2GNta0jjZv5QGWwhPW6TnXB3jAUB
-         zfJRqqnJ2M9lS1wB/PP4YXxEUgc/asLeECiWd1yVgHHEzTRgxpoT2LKTY1LL/j1W0pgS
-         ZfFniFZ0qWxRvitQyJ6ohohnd3dN8soaFot7r+sQT+/8QB/qRrpwGEPmtz1G95J1tLpF
-         7tOXz2uKQcLEfP2GPodOR0DoEAaEj2to1vlSxbAF+67IKITPBSOK16oTeRiow9/IaWXh
-         C432ckyqC+jKg0gvIWIylebX9u2gid/bJnwgzZ3nL8JbiHg/UvAhGK5+Oa+LC45BJ6G7
-         ARNQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUal/bnPxI+PGa4QfDRjLSourwJUANdmTQn0Llnfv1WFPHUoL6qFnKdrbj6bAzfe0wfEKzf9E07@vger.kernel.org, AJvYcCVv2X2iltq2d1tgjD2hIiCnS7al8h8sRbMM2sMqnC2fcp1zEeJIz2IwuO6EsDTCnfoaBjC9FaXKo24Jnrt4O0LnxNCx@vger.kernel.org, AJvYcCW25vYtNQ4IVVcA+4bwwkd4vlmgNyqVVhocvJsQqR5ybl0o6deEhZmqahyRgVpvUTsKS2b5Knaagm+qnOA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyWCa66pf5z0Rg0dvVK6GDjGE6zuevt8tytrDuqlQi2c2YfbADY
-	IzoVaceF/be4LX37vLIKk0rP0ALP9nFmSVQvhBSZP12Z956i6S9cQmmuzg==
-X-Gm-Gg: ASbGncvBDbstiszZX7oJGZLW9bmjwrTsVexyCmDKlT1Oqebqoko0u2poDfMQtawxWrv
-	7CYr7dmP87V9Kr0htsZi+mIF6dM0rt5xP4Fc3atxjOGZtDQlGG7zHwvmYPURjdQI3OokWbeR595
-	E1aR/c7ysIpyXZcn/NSSlLOSjyrz+ncrX45Nx6hL8UMlwT1Pss5I36WQp19j8j/i7ty3VlrIwkz
-	dGlX6yiB8EhWKkWtufzXIGQ8sYJsIpg0ZcLY4B6C7Q+DDe3LHcYlRkK+nsn8yHp8bgKCbou2x5b
-	X9dx00ySDC8AQzMs
-X-Google-Smtp-Source: AGHT+IHkM42/HOpoB5e04qARcXv0azFNm3lcPy13WbWpWbJWwaQKpfFqbOJx/CyYcNMJ21Tke9hjgQ==
-X-Received: by 2002:a05:6402:4305:b0:5d4:1ac2:277f with SMTP id 4fb4d7f45d1cf-5e4a0d71fb1mr5146443a12.9.1740586253056;
-        Wed, 26 Feb 2025 08:10:53 -0800 (PST)
-Received: from gmail.com ([2a03:2880:30ff:4::])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5e460ff8aa2sm2954375a12.56.2025.02.26.08.10.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Feb 2025 08:10:52 -0800 (PST)
-Date: Wed, 26 Feb 2025 08:10:50 -0800
-From: Breno Leitao <leitao@debian.org>
-To: David Ahern <dsahern@kernel.org>
-Cc: Eric Dumazet <edumazet@google.com>,
-	Neal Cardwell <ncardwell@google.com>,
-	Kuniyuki Iwashima <kuniyu@amazon.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	kernel-team@meta.com, yonghong.song@linux.dev
-Subject: Re: [PATCH net-next] trace: tcp: Add tracepoint for tcp_sendmsg()
-Message-ID: <20250226-cunning-innocent-degu-d6c2fe@leitao>
-References: <20250224-tcpsendmsg-v1-1-bac043c59cc8@debian.org>
- <CANn89iLybqJ22LVy00KUOVscRr8GQ88AcJ3Oy9MjBUgN=or0jA@mail.gmail.com>
- <559f3da9-4b3d-41c2-bf44-18329f76e937@kernel.org>
+	s=arc-20240116; t=1740586278; c=relaxed/simple;
+	bh=ROz9XuGNvnoBJA3+2RuGgf4Sy1IM+BhZiK6em0GKSIw=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=lZQUV06MeagB1QUVlhig3E3VnnCH5v1s8gg08/tFzCR2gEa1xL2GE2aWoTX8k+Ki4LEtCFujGsxPkLBGJtNwBHIgVb2mruuQFmbjTNafJoxhaUyleQuABMbzKh0c4uief0jZymGnVkkNLutvybYiDQ558WwrnKP1I5nayXT/+e8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 40363C4CED6;
+	Wed, 26 Feb 2025 16:11:16 +0000 (UTC)
+Date: Wed, 26 Feb 2025 11:11:56 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Mark
+ Rutland <mark.rutland@arm.com>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Andrew Morton
+ <akpm@linux-foundation.org>, Sven Schnelle <svens@linux.ibm.com>, Paul
+ Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>,
+ Albert Ou <aou@eecs.berkeley.edu>, Guo Ren <guoren@kernel.org>, Donglin
+ Peng <dolinux.peng@gmail.com>, Zheng Yejian <zhengyejian@huaweicloud.com>,
+ bpf@vger.kernel.org
+Subject: Re: [PATCH v3 2/4] ftrace: Add support for function argument to
+ graph tracer
+Message-ID: <20250226111156.3e9bb653@gandalf.local.home>
+In-Reply-To: <20250226234852.5b6d2c34ef02d3e9a4b80d4e@kernel.org>
+References: <20250225222601.423129938@goodmis.org>
+	<20250225222653.724198940@goodmis.org>
+	<20250226234852.5b6d2c34ef02d3e9a4b80d4e@kernel.org>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <559f3da9-4b3d-41c2-bf44-18329f76e937@kernel.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Hello David,
+On Wed, 26 Feb 2025 23:48:52 +0900
+Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
 
-On Mon, Feb 24, 2025 at 12:16:04PM -0700, David Ahern wrote:
-> On 2/24/25 12:03 PM, Eric Dumazet wrote:
-> > On Mon, Feb 24, 2025 at 7:24 PM Breno Leitao <leitao@debian.org> wrote:
-> >>
-> >> Add a lightweight tracepoint to monitor TCP sendmsg operations, enabling
-> >> the tracing of TCP messages being sent.
-> >>
-> >> Meta has been using BPF programs to monitor this function for years,
-> >> indicating significant interest in observing this important
-> >> functionality. Adding a proper tracepoint provides a stable API for all
-> >> users who need visibility into TCP message transmission.
-> >>
-> >> The implementation uses DECLARE_TRACE instead of TRACE_EVENT to avoid
-> >> creating unnecessary trace event infrastructure and tracefs exports,
-> >> keeping the implementation minimal while stabilizing the API.
-> >>
-> >> Given that this patch creates a rawtracepoint, you could hook into it
-> >> using regular tooling, like bpftrace, using regular rawtracepoint
-> >> infrastructure, such as:
-> >>
-> >>         rawtracepoint:tcp_sendmsg_tp {
-> >>                 ....
-> >>         }
-> > 
-> > I would expect tcp_sendmsg() being stable enough ?
-> > 
-> > kprobe:tcp_sendmsg {
-> > }
+> > -	event = trace_buffer_lock_reserve(buffer, TRACE_GRAPH_ENT,
+> > -					  sizeof(*entry), trace_ctx);
+> > +	/* If fregs is defined, add FTRACE_REGS_MAX_ARGS long size words */
+> > +	size = sizeof(*entry) + (FTRACE_REGS_MAX_ARGS * !!fregs * sizeof(long));  
 > 
-> Also, if a tracepoint is added, inside of tcp_sendmsg_locked would cover
-> more use cases (see kernel references to it).
+> Is `!!fregs` always 1 if fregs != NULL? (seems to depend on compiler)
 
-Agree, this seems to provide more useful information
+Yes, C guarantees that ! is either 1 or zero. If you want to convert
+something from non zero to 1, the C convention is "!!".
 
-> We have a patch for a couple years now with a tracepoint inside the
-
-Sorry, where do you have this patch? is it downstream?
-
-> while (msg_data_left(msg)) {
-> }
 > 
-> loop which is more useful than just entry to sendmsg.
+> Others looks good to me.
+> 
+> Reviewed-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-Do you mean something like the following?
 
-diff --git a/include/trace/events/tcp.h b/include/trace/events/tcp.h
-index 1a40c41ff8c30..23318e252d6b9 100644
---- a/include/trace/events/tcp.h
-+++ b/include/trace/events/tcp.h
-@@ -259,6 +259,11 @@ TRACE_EVENT(tcp_retransmit_synack,
- 		  __entry->saddr_v6, __entry->daddr_v6)
- );
- 
-+DECLARE_TRACE(tcp_sendmsg_tp,
-+	TP_PROTO(const struct sock *sk, const struct msghdr *msg, size_t size, ssize_t copied),
-+	TP_ARGS(sk, msg, size, copied)
-+);
-+
- DECLARE_TRACE(tcp_cwnd_reduction_tp,
- 	TP_PROTO(const struct sock *sk, int newly_acked_sacked,
- 		 int newly_lost, int flag),
-diff --git a/net/ipv4/tcp.c b/net/ipv4/tcp.c
-index 08d73f17e8162..5fcef82275d4a 100644
---- a/net/ipv4/tcp.c
-+++ b/net/ipv4/tcp.c
-@@ -1290,6 +1290,8 @@ int tcp_sendmsg_locked(struct sock *sk, struct msghdr *msg, size_t size)
- 			sk_mem_charge(sk, copy);
- 		}
- 
-+		trace_tcp_sendmsg_tp(sk, msg, size, copy);
-+
- 		if (!copied)
- 			TCP_SKB_CB(skb)->tcp_flags &= ~TCPHDR_PSH;
- 
+Thanks!
+
+-- Steve
+
