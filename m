@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71F5822A1ED;
-	Wed, 26 Feb 2025 15:29:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CFF4225A4F;
+	Wed, 26 Feb 2025 15:32:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740583744; cv=none; b=bEdch+9N5ufTb1CraGzW5TrClDXJClLtlLwksuboPvEqhVaAAgykBzwDQnlaTGzJiClcfvA1J5io/Re0mo9ZsMCUKHIHPO/zyiHFowb3udW7eKcyIyJ1HwiLHjqAGBkUZIqol/BhZuBxZdNtafMB8BsbGkHKc+B8sqY6BbiPA50=
+	t=1740583928; cv=none; b=PHpy0jZfTAegSjt6X16zTmbZ2nrYdz8DEvbLJ9T41VsXrjjLg9QnBdio5GUdpnFjCgHLzBaX7PAEg50hZ8OfVwfUmsKbRIRH5aK01jW1awOrkIU1BJCBfpMwCB7PMZMMCUEas2sf0fuEU4UEYAbPYnVLPCM4VSPBMVtlCltSMKc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740583744; c=relaxed/simple;
-	bh=OnHmEnWPvS83Da/aYoWNysSG745r2ceFyNCAqo8yztU=;
+	s=arc-20240116; t=1740583928; c=relaxed/simple;
+	bh=heENjJMwh84tX4G13BOeVR205PPQbLUC4CONA1SFEPw=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=IsnTIgOY0mqYz9zayoXYcOFPTVWwqd84Dtn/77VLM8FgGnW3qO+3W2rrxbJc7z73XqIFLgVprlsSJPSSIpgqawbS2X2CUmToas5BaDYsjbvxu4gB7nO7m8mFEe7TDTwH7W1O7n/rPIzUvVHd9JqF7kP90Ipk0VmGYss5jYc+fhA=
+	 MIME-Version:Content-Type; b=fgdLrbIqpiFNsXCjcsnW2PHsEzIJGVAtcRBnMVoz9OhrJfZFO9AGWcc/UyP/5SmssS5057X3haSvmy9qTTi+xEwHrihCbGvSYUibBf5agvvRZAj/7OaJCTTc59W6qgIi0OwDKqo5u2EZv+0YcNERywFUOSlNv3lE7a6CYJYSaB4=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 23D1CC4CEE4;
-	Wed, 26 Feb 2025 15:29:03 +0000 (UTC)
-Date: Wed, 26 Feb 2025 10:29:43 -0500
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B7FB9C4CEEA;
+	Wed, 26 Feb 2025 15:32:06 +0000 (UTC)
+Date: Wed, 26 Feb 2025 10:32:47 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
 To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
 Cc: Shuah Khan <shuah@kernel.org>, Mathieu Desnoyers
  <mathieu.desnoyers@efficios.com>, Hari Bathini <hbathini@linux.ibm.com>,
  linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
  linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH 4/8] tracing: probe-events: Log errro for exceeding the
- number of arguments
-Message-ID: <20250226102943.5d20a6f7@gandalf.local.home>
-In-Reply-To: <174055075075.4079315.10916648136898316476.stgit@mhiramat.tok.corp.google.com>
+Subject: Re: [PATCH 5/8] tracing: probe-events: Remove unused
+ MAX_ARG_BUF_LEN macro
+Message-ID: <20250226103247.23abdd62@gandalf.local.home>
+In-Reply-To: <174055075876.4079315.8805416872155957588.stgit@mhiramat.tok.corp.google.com>
 References: <174055071644.4079315.12468865615828925878.stgit@mhiramat.tok.corp.google.com>
-	<174055075075.4079315.10916648136898316476.stgit@mhiramat.tok.corp.google.com>
+	<174055075876.4079315.8805416872155957588.stgit@mhiramat.tok.corp.google.com>
 X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -37,24 +37,37 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Wed, 26 Feb 2025 15:19:10 +0900
+On Wed, 26 Feb 2025 15:19:18 +0900
 "Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
 
 > From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 > 
-> Add error message when the number of arguments exceeeds the limitation.
+> Commit 18b1e870a496 ("tracing/probes: Add $arg* meta argument for all
+> function args") introduced MAX_ARG_BUF_LEN but it is not used.
+> Remove it.
 > 
+> Fixes: 18b1e870a496 ("tracing/probes: Add $arg* meta argument for all function args")
 > Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> ---
 
 Reviewed-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 
 -- Steve
 
-> ---
->  kernel/trace/trace_eprobe.c |    2 ++
->  kernel/trace/trace_fprobe.c |    5 ++++-
->  kernel/trace/trace_kprobe.c |    5 ++++-
->  kernel/trace/trace_probe.h  |    1 +
->  kernel/trace/trace_uprobe.c |    9 +++++++--
->  5 files changed, 18 insertions(+), 4 deletions(-)
+
+>  kernel/trace/trace_probe.h |    1 -
+>  1 file changed, 1 deletion(-)
+> 
+> diff --git a/kernel/trace/trace_probe.h b/kernel/trace/trace_probe.h
+> index 6075afc8ea67..854e5668f5ee 100644
+> --- a/kernel/trace/trace_probe.h
+> +++ b/kernel/trace/trace_probe.h
+> @@ -36,7 +36,6 @@
+>  #define MAX_BTF_ARGS_LEN	128
+>  #define MAX_DENTRY_ARGS_LEN	256
+>  #define MAX_STRING_SIZE		PATH_MAX
+> -#define MAX_ARG_BUF_LEN		(MAX_TRACE_ARGS * MAX_ARG_NAME_LEN)
+>  
+>  /* Reserved field names */
+>  #define FIELD_STRING_IP		"__probe_ip"
 
