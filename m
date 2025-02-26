@@ -1,147 +1,82 @@
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.5])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9113924EF86;
-	Wed, 26 Feb 2025 03:43:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.5
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B371D16DEB1;
+	Wed, 26 Feb 2025 06:18:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740541396; cv=none; b=pUkLKaxbgUwlxMamm6lsyA2P+Z/jAHsv1cGWWpM98r2fZhRFVA3mXlKW2VBpxTSjxKFQUFR1xN+xJrq3NDhW9RoMhYQrQK/JdhnOUtRI0365mz8Yd6qlzroUXCCYSat1lzzPxxoEJo5Y30qdIHBNwem0G7KGRsroYLJq3hUZOZE=
+	t=1740550721; cv=none; b=SPWb+7Q/2MQP8I6kM9ciqbC81l2X0qRYfxB0E1nfV0B+gueqvZom6iwo13LIPXR6CknVKryqLSWpACRhIEZWvS/NnUaCVsDdlvEynpKCyAm7VNt7AYzcgNH1x926MAI/Rq+RorvXtB1FhLRoqF2/3/53TLfUJy0EVc0hm6djiIY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740541396; c=relaxed/simple;
-	bh=CK3z3Dkb7MP4cqTYmLODrtTGMImGRsCJkDk0a6x8xsM=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Lm64C7Sv6Wn3KK/M1dhG/38p19E1lVHB4vTuiTMesQevxIA8cPgNTokuahwBDV8CJVDu1WSa5qWrbs12Ebqn4WxQi7INwyMR4i3g3bO3Rh/IlDvxHxH+yqqAY+AO0dRNTKRyERpyEZ32ZM07lSwOmp+yrnRopjziWijwEsMB2Z8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=XzW6o9vd; arc=none smtp.client-ip=220.197.31.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1740550721; c=relaxed/simple;
+	bh=ih0Il9VNpXYbKf9bvdfY0gWj93ycLMrwGzMmW0dJ+fY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=OsyAyeH7VEpxud0Ba3sLEAEwAQ7LoSeVXIM6pz0Jnxv+JlbWZQ5v0HoheeLWVoPCs06Q8LNskBbo+RSCZ2DLXrSgKS6C2e0igdgo8VPSA9g81/n0Gi3ybNoHuF7Haac5IaWpGiyw+rXQsTGJjtVE+nH9A/sjZ+sZKGmA6KFTN9I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AbzL73He; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="XzW6o9vd"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=djarr
-	SxnaQbMICwbJJIshb9xwjnsUGfAjAjHmHySZvo=; b=XzW6o9vdIxE6AG3r98V+W
-	dZdjorF1Ls6zp4Yor52Ktw+ppcMooz7upfgW5SfdpwhIjpY4oNoQ7FaroGmhkgKh
-	NRO+9xS10Og/Rzd1McIfFX5bVtQvx+DEoVLtFssSPHKpG78pJfCKGVyD3Fnc5IPn
-	9DLyhKB+DK9ilMM1haxrdM=
-Received: from localhost.localdomain (unknown [])
-	by gzga-smtp-mtada-g0-0 (Coremail) with SMTP id _____wDnj8y+jb5nNn+pOw--.51281S4;
-	Wed, 26 Feb 2025 11:42:55 +0800 (CST)
-From: Ran Xiaokai <ranxiaokai627@163.com>
-To: rostedt@goodmis.org
-Cc: linux-kernel@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AbzL73He"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2AE67C4CED6;
+	Wed, 26 Feb 2025 06:18:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740550721;
+	bh=ih0Il9VNpXYbKf9bvdfY0gWj93ycLMrwGzMmW0dJ+fY=;
+	h=From:To:Cc:Subject:Date:From;
+	b=AbzL73HehKGV2Yfi4pr6Iw/PzCjphe0OupUVlfAS4QQ/cPn9isb2Ug2ROIbI2vOvh
+	 SUX3bF4ZVNpa+G4XA/qe4Xc08Z4kSIduDftSW/UYkMX6cmedEgxGOWi2AzdXVnCQim
+	 4BN0kxFn1unZ4bOIK9jPLAcDXdQiWZIRYhgVLfojcFpXfHM9yswHhmO7wZKoGjP7DJ
+	 u1BIgWDELd6srw2SxcbWaBuPbd+BbV34vVMj2p5BCozjnnOlP0g61QMo3Ar03QmYsX
+	 whYENUeUe//eqRafVWKsHD4YT4ltzUk28isLlgdJEUdCd4pfO0o+eOuj8viJWS9api
+	 gK9difvOiXatw==
+From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>,
+	Shuah Khan <shuah@kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Hari Bathini <hbathini@linux.ibm.com>,
+	linux-kernel@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org,
-	mathieu.desnoyers@efficios.com,
-	mhiramat@kernel.org,
-	ran.xiaokai@zte.com.cn,
-	ranxiaokai627@163.com,
-	wang.yong12@zte.com.cn,
-	yang.guang5@zte.com.cn
-Subject: Re: [PATCH] tracing/osnoise: Fix possible recursive locking for cpus_read_lock()
-Date: Wed, 26 Feb 2025 03:42:53 +0000
-Message-Id: <20250226034253.2587709-1-ranxiaokai627@163.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20250225113032.5e01922d@gandalf.local.home>
-References: <20250225113032.5e01922d@gandalf.local.home>
+	linux-kselftest@vger.kernel.org
+Subject: [PATCH 0/8] tracing: probes: Fixes and enhancing error logs
+Date: Wed, 26 Feb 2025 15:18:37 +0900
+Message-ID:  <174055071644.4079315.12468865615828925878.stgit@mhiramat.tok.corp.google.com>
+X-Mailer: git-send-email 2.48.1.658.g4767266eb4-goog
+User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wDnj8y+jb5nNn+pOw--.51281S4
-X-Coremail-Antispam: 1Uf129KBjvJXoW7Kr4DGr4ktr18GFW5Xr13Jwb_yoW8Kr4Up3
-	95tF9rGr45A34vv345Z3WrJw18tw4jgF4vkrykt3WrA3Z8Z3y3WFy5Kas8Xw15uw1xWFWj
-	v3yDJFZxuw4DX3DanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0JUIXHiUUUUU=
-X-CM-SenderInfo: xudq5x5drntxqwsxqiywtou0bp/xtbB0hMATGe+it9Y8QAAso
 
->On Tue, 25 Feb 2025 12:31:32 +0000
->Ran Xiaokai <ranxiaokai627@163.com> wrote:
->
->> @@ -2097,7 +2096,7 @@ static void osnoise_hotplug_workfn(struct
->> work_struct *dummy)
->>          return;
->>  
->>      guard(mutex)(&interface_lock);
->> -    guard(cpus_read_lock)();
->> +    cpus_read_lock();
->>  
->>      if (!cpu_online(cpu))
->>          return;
->
->This is buggy. You removed the guard, and right below we have an error exit
->that will leave this function without unlocking the cpus_read_lock().
+The following series fixes some bugs and adding some error messages
+which are not handled.
+This also add some selftests which tests the new error messages.
 
-Indeed.
-I will run the LTP cpu-hotplug testcases before the next verion.
+Thank you,
 
->> @@ -2105,7 +2104,12 @@ static void osnoise_hotplug_workfn(struct
->> work_struct *dummy)
->>      if (!cpumask_test_cpu(cpu, &osnoise_cpumask))
->>          return;
->>  
->> -    start_kthread(cpu);
->> +    if (start_kthread(cpu)) {
->> +        cpus_read_unlock();
->> +        stop_per_cpu_kthreads();
->> +        return;
->
->If all you want to do is to unlock before calling stop_per_cpu_kthreads(),
->then this should simply be:
->
->   if (start_kthread(cpu)) {
->       cpus_read_unlock();
->       stop_per_cpu_kthreads();
->       cpus_read_lock(); // The guard() above will unlock this
->       return;
->   }
+---
 
-This is the deadlock senario:
-start_per_cpu_kthreads()
-  cpus_read_lock();                  // first lock call
-  start_kthread(cpu)
-    ... kthread_run_on_cpu() fails:
-    if (IS_ERR(kthread)) {
-      stop_per_cpu_kthreads(); {
-        cpus_read_lock();      // second lock call. Cause the AA deadlock senario
-      }
-    }
-  stop_per_cpu_kthreads();
+Masami Hiramatsu (Google) (8):
+      tracing: tprobe-events: Fix a memory leak when tprobe with $retval
+      tracing: tprobe-events: Reject invalid tracepoint name
+      tracing: fprobe-events: Log error for exceeding the number of entry args
+      tracing: probe-events: Log errro for exceeding the number of arguments
+      tracing: probe-events: Remove unused MAX_ARG_BUF_LEN macro
+      selftests/ftrace: Expand the tprobe event test to check wrong format
+      selftests/ftrace: Add new syntax error test
+      selftests/ftrace: Add dynamic events argument limitation test case
 
-Besides, stop_per_cpu_kthreads() is called both in start_per_cpu_kthreads() and
-start_kthread() which is unnecessary.
 
-So the fix should be inside start_kthread()?
-How about this ?
+ kernel/trace/trace_eprobe.c                        |    2 +
+ kernel/trace/trace_fprobe.c                        |   25 +++++++++++-
+ kernel/trace/trace_kprobe.c                        |    5 ++
+ kernel/trace/trace_probe.h                         |    6 ++-
+ kernel/trace/trace_uprobe.c                        |    9 +++-
+ .../ftrace/test.d/dynevent/add_remove_tprobe.tc    |   14 +++++++
+ .../ftrace/test.d/dynevent/dynevent_limitations.tc |   42 ++++++++++++++++++++
+ .../ftrace/test.d/dynevent/fprobe_syntax_errors.tc |    1 
+ 8 files changed, 98 insertions(+), 6 deletions(-)
+ create mode 100644 tools/testing/selftests/ftrace/test.d/dynevent/dynevent_limitations.tc
 
---- a/kernel/trace/trace_osnoise.c
-+++ b/kernel/trace/trace_osnoise.c
-@@ -2029,7 +2029,9 @@ static int start_kthread(unsigned int cpu)
-
-        if (IS_ERR(kthread)) {
-                pr_err(BANNER "could not start sampling thread\n");
-+               cpus_read_unlock();
-                stop_per_cpu_kthreads();
-+               cpus_read_lock();
-                return -ENOMEM;
-        }
-
-@@ -2076,7 +2078,6 @@ static int start_per_cpu_kthreads(void)
-                retval = start_kthread(cpu);
-                if (retval) {
-                        cpus_read_unlock();
--                       stop_per_cpu_kthreads();
-                        return retval;
-                }
-        }
-
->
->But I still have to verify that this is indeed the issue here.
->
->-- Steve
->
->
->> +    }
->> +    cpus_read_unlock();
->>  }
->>  
->>  static DECLARE_WORK(osnoise_hotplug_work, osnoise_hotplug_workfn);
-
+--
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
