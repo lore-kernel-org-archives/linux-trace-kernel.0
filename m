@@ -1,52 +1,46 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7AA2270028;
-	Wed, 26 Feb 2025 23:46:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2E0A27004B;
+	Wed, 26 Feb 2025 23:51:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740613598; cv=none; b=iY3WpxeP6YgGvS7XP0+szk1eye7Inz4qeFzn2BsAJKqO/YOJ1+RIu1HO3Aw5GZXBLlidqoHwJw5wUJK4GW+0fjlMatT7bux8Yzj35KQM6COXQzpBkQquZE5Z1d2uxOSvwiU9HArr0peYeEoW/Zzmz863otNXO6gP6KLHpJxmr2U=
+	t=1740613901; cv=none; b=ORs5oRMEzvirkiwfxgtpRdoX2eziDn9IWQCjtC/Onrsj1ejqA5ivoToNbAxkEJNkSzPGnaPoZKVAXAQ1pDQHiWNy7u150uBM+cMaoLFJjq7g4DMD2kVbspZ8mC8Bk8zO/61yfgMwPe8wPs5Y97Wksjb5JduedQsdU82++Ui6lt0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740613598; c=relaxed/simple;
-	bh=6ftfCkEYFUthTag7/WYnVErlCC9sJd5WAdqss6rh2RM=;
+	s=arc-20240116; t=1740613901; c=relaxed/simple;
+	bh=6EbVlzjJrV2ElwmZxu2gWiXV7FHg40FqwN7t5C4bvEg=;
 	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=Gy7knkF8vdNZ2niEZMvjcoWGNUTCy50FEquUCTrJ45UBkeuTmev/+5swC3Ee8/quSsMeBLbhALYSDbJ1YK6tZH0fofRDwup9EJCaVi0x6gLrp+WrEmma0igj3Yk5sgMWlhhOEN+9RP084zgdOE22D9TM1leJrU1aH8OjR5o2yxw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Kaz3srJy; arc=none smtp.client-ip=10.30.226.201
+	 Mime-Version:Content-Type; b=X5EXeXRvIcQX9jfX4wEcV4r9jPMsuCD24vwE5jd6SNUe0C0yuzAdEACwcS7KGYEddyJK/ITa/5UmEr7Fl0NjygI8YwaeUxsZJCyGpiX2U78PRmHhJ9zrx6v1wxPNwd5UH92ukoWuCVVp4Dpb2A8dZZdiGN0F5vozv20bFoPTszA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KFJyRvE2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Kaz3srJy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BAC13C4CEE8;
-	Wed, 26 Feb 2025 23:46:34 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KFJyRvE2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C515DC4CED6;
+	Wed, 26 Feb 2025 23:51:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740613598;
-	bh=6ftfCkEYFUthTag7/WYnVErlCC9sJd5WAdqss6rh2RM=;
+	s=k20201202; t=1740613901;
+	bh=6EbVlzjJrV2ElwmZxu2gWiXV7FHg40FqwN7t5C4bvEg=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=Kaz3srJylFaYL/nS4MWe15aZ/hJlqNZJt9Tr1AVBW3HIFKSgn2vXCsrv6yyPr9wcU
-	 uTtk7ujLLszX/EITv9PsHUFY9tlEBW58SF1LxnteqZ1+HBPU73jYT16Tl30QzIpN3r
-	 diAQ5N49wtB5OVFlcEc8BRRRuazNP4ZNoV1vrxdNII8cukaI9ognOG/bji3PINP1Ip
-	 GMZ4DnFQnvD8ufDxk50u6n7bKEcWz6VYsq9f/9YH4N6wC3TLMq0aAKdtVcd4OgqZFZ
-	 yXv/Vo8b+rwDneQ5AY5ShUQB7/xaa5FAwqZkQYTbM6gd6pJNdmpnnmThlTOZV5mNPG
-	 tKoarA7aM1n4w==
-Date: Thu, 27 Feb 2025 08:46:31 +0900
+	b=KFJyRvE2pX8fYVlh19qwqvU2lMd+tF8yVlrSF8Loo3ndDYgUeptke/zL7HThG1o3X
+	 QBgyBwgX+29nhTztQxSTi7NGBT6FklT0jIRYh2CLrBZej40AVW5idPQAxfij/QxzPg
+	 Kj5MIJ6BoG57nY3/AovMl92lJFMvDkDTNe+NIGR010cRd2o+G7sCbob5nfk0MFZQuC
+	 VqrkSUZcjzJpI4y8ShmIuVwTPRoRnftzvILDBH35r5JdggmTzyRJy0rjap8c+hfaaz
+	 GbzDIuIRK9OF6ii/mSg9J52dccfPGdzf3gqQw2DZZq0h7HhJVsR7yNEBg2ctJ7xMDZ
+	 ir0ENPyxdMMSg==
+Date: Thu, 27 Feb 2025 08:51:36 +0900
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Eric Dumazet <edumazet@google.com>
-Cc: Yonghong Song <yhs@meta.com>, Breno Leitao <leitao@debian.org>, Neal
- Cardwell <ncardwell@google.com>, Kuniyuki Iwashima <kuniyu@amazon.com>,
- Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- "David S. Miller" <davem@davemloft.net>, David Ahern <dsahern@kernel.org>,
- "kuba@kernel.org" <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Simon
- Horman <horms@kernel.org>, "netdev@vger.kernel.org"
- <netdev@vger.kernel.org>, "linux-kernel@vger.kernel.org"
- <linux-kernel@vger.kernel.org>, "linux-trace-kernel@vger.kernel.org"
- <linux-trace-kernel@vger.kernel.org>, Kernel Team <kernel-team@meta.com>,
- "yonghong.song@linux.dev" <yonghong.song@linux.dev>
-Subject: Re: [PATCH net-next] trace: tcp: Add tracepoint for tcp_sendmsg()
-Message-Id: <20250227084631.025e02eee682c42f296fe570@kernel.org>
-In-Reply-To: <CANn89i+zxMje+wbQzLKbSq_WKYnwGdMyAdStMm4GqkdJCvWPOg@mail.gmail.com>
-References: <20250224-tcpsendmsg-v1-1-bac043c59cc8@debian.org>
-	<CANn89iLybqJ22LVy00KUOVscRr8GQ88AcJ3Oy9MjBUgN=or0jA@mail.gmail.com>
-	<SA3PR15MB5630CFBB36C212008DA8ACC7CAC02@SA3PR15MB5630.namprd15.prod.outlook.com>
-	<CANn89i+zxMje+wbQzLKbSq_WKYnwGdMyAdStMm4GqkdJCvWPOg@mail.gmail.com>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Heiko Carstens <hca@linux.ibm.com>, Mark Rutland <mark.rutland@arm.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Andrew Morton
+ <akpm@linux-foundation.org>, Sven Schnelle <svens@linux.ibm.com>, Vasily
+ Gorbik <gor@linux.ibm.com>, Alexander Gordeev <agordeev@linux.ibm.com>,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH] selftests/ftrace: Let fprobe test consider already
+ enabled functions
+Message-Id: <20250227085136.741479a6719e53b50a0cc489@kernel.org>
+In-Reply-To: <20250226111300.5140fa9e@gandalf.local.home>
+References: <20250226142703.910860-1-hca@linux.ibm.com>
+	<20250226235447.7fab8051b2968277ce6920db@kernel.org>
+	<20250226111300.5140fa9e@gandalf.local.home>
 X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -54,72 +48,28 @@ List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Mon, 24 Feb 2025 20:23:00 +0100
-Eric Dumazet <edumazet@google.com> wrote:
+On Wed, 26 Feb 2025 11:13:00 -0500
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-> On Mon, Feb 24, 2025 at 8:13 PM Yonghong Song <yhs@meta.com> wrote:
-> >
-> > > ________________________________________
-> > >
-> > > On Mon, Feb 24, 2025 at 7:24 PM Breno Leitao <leitao@debian.org> wrote:
-> > >>
-> > >> Add a lightweight tracepoint to monitor TCP sendmsg operations, enabling
-> > >> the tracing of TCP messages being sent.
-> > >>
-> > >> Meta has been using BPF programs to monitor this function for years,
-> > >> indicating significant interest in observing this important
-> > >> functionality. Adding a proper tracepoint provides a stable API for all
-> > >> users who need visibility into TCP message transmission.
-> > >>
-> > >> The implementation uses DECLARE_TRACE instead of TRACE_EVENT to avoid
-> > >> creating unnecessary trace event infrastructure and tracefs exports,
-> > >> keeping the implementation minimal while stabilizing the API.
-> > >>
-> > >> Given that this patch creates a rawtracepoint, you could hook into it
-> > >> using regular tooling, like bpftrace, using regular rawtracepoint
-> > >> infrastructure, such as:
-> > >>
-> > >>         rawtracepoint:tcp_sendmsg_tp {
-> > >>                 ....
-> > >>         }
-> > >
-> > > I would expect tcp_sendmsg() being stable enough ?
-> > >
-> > > kprobe:tcp_sendmsg {
-> > > }
-> >
-> > In LTO mode, tcp_sendmsg could be inlined cross files. For example,
-> >
-> >   net/ipv4/tcp.c:
-> >        int tcp_sendmsg(struct sock *sk, struct msghdr *msg, size_t size)
-> >   net/ipv4/tcp_bpf.c:
-> >        ...
-> >       return tcp_sendmsg(sk, msg, size);
-> >   net/ipv6/af_inet6.c:
-> >        ...
-> >        return INDIRECT_CALL_2(prot->sendmsg, tcp_sendmsg, udpv6_sendmsg, ...)
-> >
-> > And this does happen in our production environment.
+> On Wed, 26 Feb 2025 23:54:47 +0900
+> Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
 > 
-> And we do not have a way to make the kprobe work even if LTO decided
-> to inline a function ?
+> > Hmm, this ftrace selftests has been expected to be run without 
+> > any BPF programs... Is there any other issue on other test cases?
+> 
+> Unfortunately, systemd is starting to add BPF programs :-p
+> 
+> I noticed that my laptop has users.
 
-There is `perf probe` command to set it up based on the debuginfo. But
-the function parameters sometimes optimized out and no more accessible.
-(You can try.)
+Ah, I might need systemd-busybox to build minimum test environment :-(
 
-Thus if you needs this tracepoint not temporarily nor debugging,
-I would recommend to use tracepoint (or trace event).
-
-Thank you,
+Thanks,
 
 > 
-> This seems like a tracing or LTO issue, this could be addressed there
-> in a generic way
-> and avoid many other patches to work around this.
+> -- Steve
 
 
 -- 
