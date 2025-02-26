@@ -1,235 +1,151 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3EE521C9EE
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 26 Feb 2025 15:58:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0760721CFEA;
+	Wed, 26 Feb 2025 16:10:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740585533; cv=none; b=OQNWus9AJghFvIIk0I6KFVc/8VcnlT+FA0BhN3kZgApBJScxkChub04xIcwzTylZOg4p7YX2f1sX+VpP/Cof2LFeWY1TORIaQ+Ca1wSDaFiKeUe0ljPtqsxUBW4Sh/Pu5aI9WmyUCqq7W2UjMAFY1IMM06lcOXKY6uj9HOQhiQQ=
+	t=1740586256; cv=none; b=b/xdPSy6zlKFls0Ef6k5wNLkad7KSi1uHxmywtOhpUO5VDBqYNpi0/pOSLDHMDwTTPyqMYVDadSTIAq+XI+hueRIU4b6C8NnKDl+jrPChIQSXudh9GE3ZGQLMJ/CM3HrI4iBu22fzVH1akMC8W7yhbxwJ62PvaGwMVwi+l8muVE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740585533; c=relaxed/simple;
-	bh=mM3hDiHpBSmKILPkBX6OHeUMagubawojwUE8PdvBAAQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=JZ9J/3puKAQO//etzI52joR2/com9PFkuGlVTLbG5iRR/BH+4fsXL5xZOFbrEoV1MdLt2FPjnWQoohxSrTOScmmqro4jAdTsbph7jygOMe6LWAh+l26VQjcZz03ApwtkFU5BdQMIRZBzPfPc3MC1XGXR9MZZOcB8oVP9Ij29nnA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=eGTefUsB; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eGTefUsB"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1740585530;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=S7sz7icioz09gsYo4+0sb7OK453jEJXRkoeOgkSSMe8=;
-	b=eGTefUsB99Sfmi2QWUADEATyJptSR6b3JI+ZUBeusJ//jw5lEmGVBO43KNpwzFwsRz67Jg
-	0W3+kdNpuHWFm/YjzCBuBw5x5WDSfxwBpMvIRkCdu1g5UgPIyR5XHSypPGJSj6BwyvA8fd
-	2lLsqZ6VfUgu3L8YqaejuK3Gac8WeyI=
-Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
- [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-125-yuNvTlUxP9SNCcPeTDCMNw-1; Wed, 26 Feb 2025 10:58:49 -0500
-X-MC-Unique: yuNvTlUxP9SNCcPeTDCMNw-1
-X-Mimecast-MFC-AGG-ID: yuNvTlUxP9SNCcPeTDCMNw_1740585528
-Received: by mail-ej1-f72.google.com with SMTP id a640c23a62f3a-ab68fbe53a4so769136566b.2
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 26 Feb 2025 07:58:49 -0800 (PST)
+	s=arc-20240116; t=1740586256; c=relaxed/simple;
+	bh=NiH8SRXw2DXbtCKmXtL7dumfhM6oSyvlJXoK8NUJwS4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NF58IoizKlN/kIiGhLqD+UXEOEHQeckIWlaVSQ04aB+mY8RT6nhVaE7gKyLu3g9Z0v11YqoVqYqgDC2XpdY7owE8KlhDFS3WC9EAXG6fOUWT06KLlJEpvFsb6Djc+iT7IK8i79rdxy2W8YvScOPUwe3W45uvjXotxhaYsMGlD4E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.208.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-5e0505275b7so11196301a12.3;
+        Wed, 26 Feb 2025 08:10:54 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740585528; x=1741190328;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=S7sz7icioz09gsYo4+0sb7OK453jEJXRkoeOgkSSMe8=;
-        b=Sk3g16fCiaKiUI6WYyEwg3FEKpd365Z6KTy9zoqY5MlhNFI3eritRZdHlzrhH6OHch
-         4LjSIv+lainb4gUNAbvxQqLUhzFUE+Uxmd15l2X4vSZXREWkO5N1Sz0CwVplpDfxNPx+
-         OI5dW814hiTbmyXOnOq3rNJwsfdNbdyhNNt0JJOMsWW6GyeGEQNL3/AXhtF9Vy/tRXm1
-         PFDZJd35Gf+CP5HdOuwCpAbe17A7pCQ8qzC7lAhOtk8pGUHz1Lb0ttfvofGlRIhcnYXl
-         HX+hkXyXtziCqnVymgekzTynzS7rgEZB7rkphXIZKsZWWFi1LXY2VS3q7oAJG4aPk3tw
-         BelQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWCM0QsVYsSx5/agoHYWjSR8zdm20acaz6jYO9ljx8TNqznTX7qDVaBjK6UvjCOLCB2ohpq89LFfXgaJFw8mPtN2qk=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyjn/2/eckM19fnfCvTzWhsIB6vuXo7JSka7/KIbwv0qxEDGqSm
-	tjQlYRZnT+qB+ohEfumCRLfN7UOfxz6Z/UXxYgn9kYepF3DiiTIYAvxoRnH4rufGcGX1SH/bZ3T
-	95sfOI3DiRNB3GMUUGoWkEJAd5ivcO6x9Hpb6fBnB38kk+rWadSRim+uAzvH4W62+vPfLf/TqPQ
-	SCKjWVnfcU/VryyuI0IMdWZIIgcAVH1wm+RTcfX7/EJL7I
-X-Gm-Gg: ASbGnct5OPt/e9ZSCPFCs5VVAs5jfkNFwGO6DL0tH1be2IrmaGbkyxQ+7fpUcgtON7e
-	Fttrid3bS0qdFlHgBB+MJZYM8Pcy1pcoyIjGlehWfLoYdm/2LaGGryVcO2kj8vFl4hU7rs6/eIm
-	rfsfoYyMLAJU+go+AMLYLyp+V5oIk=
-X-Received: by 2002:a17:907:3e8f:b0:ab6:c4e0:2d18 with SMTP id a640c23a62f3a-abed0ce6817mr811336266b.16.1740585528092;
-        Wed, 26 Feb 2025 07:58:48 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IHgpx9WBd221DBgH7nEbyacMDn9H3O6xcej+Kyl1SltNnmGjCAnJR60vZ99bsRgpI2Tcbke/4nEm3ytgoPIHT0=
-X-Received: by 2002:a17:907:3e8f:b0:ab6:c4e0:2d18 with SMTP id
- a640c23a62f3a-abed0ce6817mr811333866b.16.1740585527757; Wed, 26 Feb 2025
- 07:58:47 -0800 (PST)
+        d=1e100.net; s=20230601; t=1740586253; x=1741191053;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=hdFq/RSQGllNMaaMkzzrwTZL0ht5WX0qvlwijavAzn4=;
+        b=qclbH2EuBUYx8LYlp/Z9ZNEq3RnnGNkkYw1HrE2GNta0jjZv5QGWwhPW6TnXB3jAUB
+         zfJRqqnJ2M9lS1wB/PP4YXxEUgc/asLeECiWd1yVgHHEzTRgxpoT2LKTY1LL/j1W0pgS
+         ZfFniFZ0qWxRvitQyJ6ohohnd3dN8soaFot7r+sQT+/8QB/qRrpwGEPmtz1G95J1tLpF
+         7tOXz2uKQcLEfP2GPodOR0DoEAaEj2to1vlSxbAF+67IKITPBSOK16oTeRiow9/IaWXh
+         C432ckyqC+jKg0gvIWIylebX9u2gid/bJnwgzZ3nL8JbiHg/UvAhGK5+Oa+LC45BJ6G7
+         ARNQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUal/bnPxI+PGa4QfDRjLSourwJUANdmTQn0Llnfv1WFPHUoL6qFnKdrbj6bAzfe0wfEKzf9E07@vger.kernel.org, AJvYcCVv2X2iltq2d1tgjD2hIiCnS7al8h8sRbMM2sMqnC2fcp1zEeJIz2IwuO6EsDTCnfoaBjC9FaXKo24Jnrt4O0LnxNCx@vger.kernel.org, AJvYcCW25vYtNQ4IVVcA+4bwwkd4vlmgNyqVVhocvJsQqR5ybl0o6deEhZmqahyRgVpvUTsKS2b5Knaagm+qnOA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyWCa66pf5z0Rg0dvVK6GDjGE6zuevt8tytrDuqlQi2c2YfbADY
+	IzoVaceF/be4LX37vLIKk0rP0ALP9nFmSVQvhBSZP12Z956i6S9cQmmuzg==
+X-Gm-Gg: ASbGncvBDbstiszZX7oJGZLW9bmjwrTsVexyCmDKlT1Oqebqoko0u2poDfMQtawxWrv
+	7CYr7dmP87V9Kr0htsZi+mIF6dM0rt5xP4Fc3atxjOGZtDQlGG7zHwvmYPURjdQI3OokWbeR595
+	E1aR/c7ysIpyXZcn/NSSlLOSjyrz+ncrX45Nx6hL8UMlwT1Pss5I36WQp19j8j/i7ty3VlrIwkz
+	dGlX6yiB8EhWKkWtufzXIGQ8sYJsIpg0ZcLY4B6C7Q+DDe3LHcYlRkK+nsn8yHp8bgKCbou2x5b
+	X9dx00ySDC8AQzMs
+X-Google-Smtp-Source: AGHT+IHkM42/HOpoB5e04qARcXv0azFNm3lcPy13WbWpWbJWwaQKpfFqbOJx/CyYcNMJ21Tke9hjgQ==
+X-Received: by 2002:a05:6402:4305:b0:5d4:1ac2:277f with SMTP id 4fb4d7f45d1cf-5e4a0d71fb1mr5146443a12.9.1740586253056;
+        Wed, 26 Feb 2025 08:10:53 -0800 (PST)
+Received: from gmail.com ([2a03:2880:30ff:4::])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5e460ff8aa2sm2954375a12.56.2025.02.26.08.10.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Feb 2025 08:10:52 -0800 (PST)
+Date: Wed, 26 Feb 2025 08:10:50 -0800
+From: Breno Leitao <leitao@debian.org>
+To: David Ahern <dsahern@kernel.org>
+Cc: Eric Dumazet <edumazet@google.com>,
+	Neal Cardwell <ncardwell@google.com>,
+	Kuniyuki Iwashima <kuniyu@amazon.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	kernel-team@meta.com, yonghong.song@linux.dev
+Subject: Re: [PATCH net-next] trace: tcp: Add tracepoint for tcp_sendmsg()
+Message-ID: <20250226-cunning-innocent-degu-d6c2fe@leitao>
+References: <20250224-tcpsendmsg-v1-1-bac043c59cc8@debian.org>
+ <CANn89iLybqJ22LVy00KUOVscRr8GQ88AcJ3Oy9MjBUgN=or0jA@mail.gmail.com>
+ <559f3da9-4b3d-41c2-bf44-18329f76e937@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250225125356.29236cd1@gandalf.local.home>
-In-Reply-To: <20250225125356.29236cd1@gandalf.local.home>
-From: Tomas Glozar <tglozar@redhat.com>
-Date: Wed, 26 Feb 2025 16:58:36 +0100
-X-Gm-Features: AQ5f1Jpmgw8B10fvjfktihKyrmOlGZbLgMwGhf7mNM06WMENA8EDPL_1OpW-4QA
-Message-ID: <CAP4=nvQdq4CQT9Y1ri8FfPE_rbw0T+-ggeHbKgmasmCD9OYB=A@mail.gmail.com>
-Subject: Re: [PATCH] tracing: Fix bad hist from corrupting named_triggers list
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, 
-	Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Tom Zanussi <zanussi@kernel.org>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: CU7-sLerLrTpK8Kv_cz-pKXD_f7DQtWMbNY7VWgkhSU_1740585528
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <559f3da9-4b3d-41c2-bf44-18329f76e937@kernel.org>
 
-=C3=BAt 25. 2. 2025 v 18:53 odes=C3=ADlatel Steven Rostedt <rostedt@goodmis=
-.org> napsal:
->
-> From: Steven Rostedt <rostedt@goodmis.org>
->
-> The following commands causes a crash:
->
->  ~# cd /sys/kernel/tracing/events/rcu/rcu_callback
->  ~# echo 'hist:name=3Dbad:keys=3Dcommon_pid:onmax(bogus).save(common_pid)=
-' > trigger
->  bash: echo: write error: Invalid argument
->  ~# echo 'hist:name=3Dbad:keys=3Dcommon_pid' > trigger
->
-> Because the following occurs:
->
-> event_trigger_write() {
->   trigger_process_regex() {
->     event_hist_trigger_parse() {
->
->       data =3D event_trigger_alloc(..);
->
->       event_trigger_register(.., data) {
->         cmd_ops->reg(.., data, ..) [hist_register_trigger()] {
->           data->ops->init() [event_hist_trigger_init()] {
->             save_named_trigger(name, data) {
->               list_add(&data->named_list, &named_triggers);
->             }
->           }
->         }
->       }
->
->       ret =3D create_actions(); (return -EINVAL)
->       if (ret)
->         goto out_unreg;
-> [..]
->       ret =3D hist_trigger_enable(data, ...) {
->         list_add_tail_rcu(&data->list, &file->triggers); <<<---- SKIPPED!=
-!! (this is important!)
-> [..]
->  out_unreg:
->       event_hist_unregister(.., data) {
->         cmd_ops->unreg(.., data, ..) [hist_unregister_trigger()] {
->           list_for_each_entry(iter, &file->triggers, list) {
->             if (!hist_trigger_match(data, iter, named_data, false))   <- =
-never matches
->                 continue;
->             [..]
->             test =3D iter;
->           }
->           if (test && test->ops->free) <<<-- test is NULL
->
->             test->ops->free(test) [event_hist_trigger_free()] {
->               [..]
->               if (data->name)
->                 del_named_trigger(data) {
->                   list_del(&data->named_list);  <<<<-- NEVER gets removed=
-!
->                 }
->               }
->            }
->          }
->
->          [..]
->          kfree(data); <<<-- frees item but it is still on list
->
-> The next time a hist with name is registered, it causes an u-a-f bug and
-> the kernel can crash.
->
-> Move the code around such that if event_trigger_register() succeeds, the
-> next thing called is hist_trigger_enable() which adds it to the list.
->
-> A bunch of actions is called if get_named_trigger_data() returns false.
-> But that doesn't need to be called after event_trigger_register(), so it
-> can be moved up, allowing event_trigger_register() to be called just
-> before hist_trigger_enable() keeping them together and allowing the
-> file->triggers to be properly populated.
->
-> Cc: stable@vger.kernel.org
-> Fixes: 067fe038e70f6 ("tracing: Add variable reference handling to hist t=
-riggers")
-> Reported-by: Tomas Glozar <tglozar@redhat.com>
-> Closes: https://lore.kernel.org/all/CAP4=3DnvTsxjckSBTz=3DOe_UYh8keD9_sZC=
-4i++4h72mJLic4_W4A@mail.gmail.com/
-> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-> ---
->  kernel/trace/trace_events_hist.c | 31 ++++++++++++++++---------------
->  1 file changed, 16 insertions(+), 15 deletions(-)
->
-> diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events=
-_hist.c
-> index 261163b00137..c32adc372808 100644
-> --- a/kernel/trace/trace_events_hist.c
-> +++ b/kernel/trace/trace_events_hist.c
-> @@ -6724,27 +6724,28 @@ static int event_hist_trigger_parse(struct event_=
-command *cmd_ops,
->         if (existing_hist_update_only(glob, trigger_data, file))
->                 goto out_free;
->
-> -       ret =3D event_trigger_register(cmd_ops, file, glob, trigger_data)=
-;
-> -       if (ret < 0)
-> -               goto out_free;
-> +       if (!get_named_trigger_data(trigger_data)) {
->
-> -       if (get_named_trigger_data(trigger_data))
-> -               goto enable;
-> +               ret =3D create_actions(hist_data);
-> +               if (ret)
-> +                       goto out_free;
->
-> -       ret =3D create_actions(hist_data);
-> -       if (ret)
-> -               goto out_unreg;
-> +               if (has_hist_vars(hist_data) || hist_data->n_var_refs) {
-> +                       ret =3D save_hist_vars(hist_data);
-> +                       if (ret)
-> +                               goto out_free;
-> +               }
->
-> -       if (has_hist_vars(hist_data) || hist_data->n_var_refs) {
-> -               ret =3D save_hist_vars(hist_data);
-> +               ret =3D tracing_map_init(hist_data->map);
->                 if (ret)
-> -                       goto out_unreg;
-> +                       goto out_free;
->         }
->
-> -       ret =3D tracing_map_init(hist_data->map);
-> -       if (ret)
-> -               goto out_unreg;
-> -enable:
-> +       ret =3D event_trigger_register(cmd_ops, file, glob, trigger_data)=
-;
-> +       if (ret < 0)
-> +               goto out_free;
-> +
-> +
->         ret =3D hist_trigger_enable(trigger_data, file);
->         if (ret)
->                 goto out_unreg;
-> --
-> 2.47.2
->
+Hello David,
 
-Applied this on 6.14.0-rc4 and the problem is gone.
+On Mon, Feb 24, 2025 at 12:16:04PM -0700, David Ahern wrote:
+> On 2/24/25 12:03 PM, Eric Dumazet wrote:
+> > On Mon, Feb 24, 2025 at 7:24 PM Breno Leitao <leitao@debian.org> wrote:
+> >>
+> >> Add a lightweight tracepoint to monitor TCP sendmsg operations, enabling
+> >> the tracing of TCP messages being sent.
+> >>
+> >> Meta has been using BPF programs to monitor this function for years,
+> >> indicating significant interest in observing this important
+> >> functionality. Adding a proper tracepoint provides a stable API for all
+> >> users who need visibility into TCP message transmission.
+> >>
+> >> The implementation uses DECLARE_TRACE instead of TRACE_EVENT to avoid
+> >> creating unnecessary trace event infrastructure and tracefs exports,
+> >> keeping the implementation minimal while stabilizing the API.
+> >>
+> >> Given that this patch creates a rawtracepoint, you could hook into it
+> >> using regular tooling, like bpftrace, using regular rawtracepoint
+> >> infrastructure, such as:
+> >>
+> >>         rawtracepoint:tcp_sendmsg_tp {
+> >>                 ....
+> >>         }
+> > 
+> > I would expect tcp_sendmsg() being stable enough ?
+> > 
+> > kprobe:tcp_sendmsg {
+> > }
+> 
+> Also, if a tracepoint is added, inside of tcp_sendmsg_locked would cover
+> more use cases (see kernel references to it).
 
-Tested-by: Tomas Glozar <tglozar@redhat.com>
+Agree, this seems to provide more useful information
 
-Tomas
+> We have a patch for a couple years now with a tracepoint inside the
 
+Sorry, where do you have this patch? is it downstream?
+
+> while (msg_data_left(msg)) {
+> }
+> 
+> loop which is more useful than just entry to sendmsg.
+
+Do you mean something like the following?
+
+diff --git a/include/trace/events/tcp.h b/include/trace/events/tcp.h
+index 1a40c41ff8c30..23318e252d6b9 100644
+--- a/include/trace/events/tcp.h
++++ b/include/trace/events/tcp.h
+@@ -259,6 +259,11 @@ TRACE_EVENT(tcp_retransmit_synack,
+ 		  __entry->saddr_v6, __entry->daddr_v6)
+ );
+ 
++DECLARE_TRACE(tcp_sendmsg_tp,
++	TP_PROTO(const struct sock *sk, const struct msghdr *msg, size_t size, ssize_t copied),
++	TP_ARGS(sk, msg, size, copied)
++);
++
+ DECLARE_TRACE(tcp_cwnd_reduction_tp,
+ 	TP_PROTO(const struct sock *sk, int newly_acked_sacked,
+ 		 int newly_lost, int flag),
+diff --git a/net/ipv4/tcp.c b/net/ipv4/tcp.c
+index 08d73f17e8162..5fcef82275d4a 100644
+--- a/net/ipv4/tcp.c
++++ b/net/ipv4/tcp.c
+@@ -1290,6 +1290,8 @@ int tcp_sendmsg_locked(struct sock *sk, struct msghdr *msg, size_t size)
+ 			sk_mem_charge(sk, copy);
+ 		}
+ 
++		trace_tcp_sendmsg_tp(sk, msg, size, copy);
++
+ 		if (!copied)
+ 			TCP_SKB_CB(skb)->tcp_flags &= ~TCPHDR_PSH;
+ 
