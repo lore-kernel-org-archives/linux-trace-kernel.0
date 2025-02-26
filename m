@@ -1,110 +1,265 @@
-Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 122E12222C0;
-	Wed, 26 Feb 2025 14:27:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.196
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3431D212FB4;
+	Wed, 26 Feb 2025 14:48:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740580045; cv=none; b=h4Se4kTxV5+43fCyfElhzS4i9ksccIKSmlAh6wuPoqsaf2FPdTc3LWFlSgmPRIvXlnYr9z9+bumCGo3OKL50XmMF1uFKvXgFa5dZ+MdXLqEQ4ZqRgVt4EVXwt2nO4p8WGlEK7zfPT5udO7fSVub5/nkfdupkneQ5t/iTqWKj890=
+	t=1740581330; cv=none; b=Roovr+qFccLfMF4boe72DLoIPAWaa+QMnfHbUTdQHhBi/05LauIPwWc8vLpXmDwJx/GnTMDhXcbedJc4xCEHbS5ZS3zmTR72Z0L3MZAdWd6al7jOI6z2Lgysf8X0GwlXtVVVmGMEQ3GYs8NaGimTftMwevFWUmGsMtkwF4ujRzs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740580045; c=relaxed/simple;
-	bh=E20gb9sD+thFGdT/sXff/794s9zpyHXdhBKGllLOaCM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=YnwFuDHoOyNTYsycv0+UOftTZtn7mv3NnymYc/4SF6B2bxsH2Vjp682gT0zlkZcXSTEMhpjjc9jjyWs7J/eXAs5OsRRKEdsdDDdfRQtcbLaB5FoFPyAohKm1NzQHMJkVwEtstm6qZtKAN4CUsrzauLvC3a+r4U+X76HaHYDMT5A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr; spf=pass smtp.mailfrom=ghiti.fr; arc=none smtp.client-ip=217.70.183.196
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ghiti.fr
-Received: by mail.gandi.net (Postfix) with ESMTPSA id DCA8A433C9;
-	Wed, 26 Feb 2025 14:27:17 +0000 (UTC)
-Message-ID: <83830ab7-e15c-476f-b583-0df8d614f7cf@ghiti.fr>
-Date: Wed, 26 Feb 2025 15:27:17 +0100
+	s=arc-20240116; t=1740581330; c=relaxed/simple;
+	bh=gLpXpt/oNQG+cEDy1hm4zqtSmcdqyW5EeSzyAxZ0V9o=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=KMl9nAZ9pKnfuZbDad888/4FVqgckJbnIPHTsSU/wDs4rB2VGBdurTptopsXfFmYZQ/TpuD0NjWDOdHpF7oRA+8Hj8Fxl/Xjr95QsaXU09UHYX1wQ67B2o4e6yNfZYYGKSKJAJ0mSDjuCkORTJ2SNYMybO9ayWTsg4sNZKWfNd4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gJ7B01W+; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gJ7B01W+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DA497C4CED6;
+	Wed, 26 Feb 2025 14:48:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740581329;
+	bh=gLpXpt/oNQG+cEDy1hm4zqtSmcdqyW5EeSzyAxZ0V9o=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=gJ7B01W+mbrEcbxVnT29sGrNuF70RyfeH5tA9BH9uG4p4L4pvobeAtOVeOYYxOGbL
+	 QaHIvLgwp2XQyL4AcVkPAq2GwMs0kZYUHdnzNq6FMKcgkAvhxXYG8OIprZtFzh+8Ra
+	 HbNd48dvOtfMNqJCyeCRON0ePQe2R5WnjlbGvlLMJg+W13UsAcOrpPEikHOUp3Kc03
+	 s39xRJQ4G7wCURYmuluIMiQu3IiP326gpaijSLJMF5YbYD37ISfNqvahT9V2Iyxap0
+	 czvH/JqVsIMzLaNA5lZMq3nNFCndr0ccxpTIf0Cri6N/l1qmU4stYRnaBTtrJsYPlv
+	 MersOB2KFfqzQ==
+Date: Wed, 26 Feb 2025 23:48:46 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Masami
+ Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Andrew Morton
+ <akpm@linux-foundation.org>, Sven Schnelle <svens@linux.ibm.com>, Paul
+ Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>,
+ Albert Ou <aou@eecs.berkeley.edu>, Guo Ren <guoren@kernel.org>, Donglin
+ Peng <dolinux.peng@gmail.com>, Zheng Yejian <zhengyejian@huaweicloud.com>,
+ bpf@vger.kernel.org
+Subject: Re: [PATCH v3 1/4] ftrace: Add print_function_args()
+Message-Id: <20250226234846.2525cef803717aa5acfb8f36@kernel.org>
+In-Reply-To: <20250225222653.550619678@goodmis.org>
+References: <20250225222601.423129938@goodmis.org>
+	<20250225222653.550619678@goodmis.org>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] riscv: ftrace: Add parentheses in macro definitions of
- make_call_t0 and make_call_ra
-Content-Language: en-US
-To: Juhan Jin <juhan.jin@foxmail.com>, guoren@kernel.org,
- guoren@linux.alibaba.com, rostedt@goodmis.org, mhiramat@kernel.org,
- mark.rutland@arm.com, paul.walmsley@sifive.com, palmer@dabbelt.com,
- aou@eecs.berkeley.edu
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- linux-riscv@lists.infradead.org
-References: <tencent_AE90AA59903A628E87E9F80E563DA5BA5508@qq.com>
-From: Alexandre Ghiti <alex@ghiti.fr>
-In-Reply-To: <tencent_AE90AA59903A628E87E9F80E563DA5BA5508@qq.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdekgeekvdcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepkfffgggfuffvvehfhfgjtgfgsehtjeertddtvdejnecuhfhrohhmpeetlhgvgigrnhgurhgvucfihhhithhiuceorghlvgigsehghhhithhirdhfrheqnecuggftrfgrthhtvghrnheptdfhleefjeegheevgeeljeellefgvefhkeeiffekueejteefvdevhfelvdeggeeinecukfhppedvtddtudemkeeiudemfeefkedvmegvfheltdemrgektddumeegfhegfeemgeekudeimeeisggtfhenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvtddtudemkeeiudemfeefkedvmegvfheltdemrgektddumeegfhegfeemgeekudeimeeisggtfhdphhgvlhhopeglkffrggeimedvtddtudemkeeiudemfeefkedvmegvfheltdemrgektddumeegfhegfeemgeekudeimeeisggtfhgnpdhmrghilhhfrhhomheprghlvgigsehghhhithhirdhfrhdpnhgspghrtghpthhtohepuddvpdhrtghpthhtohepjhhuhhgrnhdrjhhinhesfhhogihmrghilhdrtghomhdprhgtphhtthhopehguhhorhgvnheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepghhuohhrvghnsehlihhnuhigrdgrlhhisggrsggrrdgtohhmp
- dhrtghpthhtoheprhhoshhtvgguthesghhoohgumhhishdrohhrghdprhgtphhtthhopehmhhhirhgrmhgrtheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepmhgrrhhkrdhruhhtlhgrnhgusegrrhhmrdgtohhmpdhrtghpthhtohepphgruhhlrdifrghlmhhslhgvhiesshhifhhivhgvrdgtohhmpdhrtghpthhtohepphgrlhhmvghrsegurggssggvlhhtrdgtohhm
-X-GND-Sasl: alex@ghiti.fr
 
-Hi Juhan,
+On Tue, 25 Feb 2025 17:26:02 -0500
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-On 06/02/2025 20:28, Juhan Jin wrote:
-> This patch adds parentheses to parameters caller and callee of macros
-> make_call_t0 and make_call_ra. Every existing invocation of these two
-> macros uses a single variable for each argument, so the absence of the
-> parentheses seems okay. However, future invocations might use more
-> complex expressions as arguments. For example, a future invocation might
-> look like this: make_call_t0(a - b, c, call). Without parentheses in the
-> macro definition, the macro invocation expands to:
->
-> ...
-> unsigned int offset = (unsigned long) c - (unsigned long) a - b;
-> ...
->
-> which is clearly wrong.
->
-> The use of parentheses ensures arguments are correctly evaluated and
-> potentially saves future users of make_call_t0 and make_call_ra debugging
-> trouble.
->
-> Fixes: 6724a76cff85 ("riscv: ftrace: Reduce the detour code size to half")
-> Signed-off-by: Juhan Jin <juhan.jin@foxmail.com>
+> From: Sven Schnelle <svens@linux.ibm.com>
+> 
+> Add a function to decode argument types with the help of BTF. Will
+> be used to display arguments in the function and function graph
+> tracer.
+> 
+> It can only handle simply arguments and up to FTRACE_REGS_MAX_ARGS number
+> of arguments. When it hits a max, it will print ", ...":
+> 
+>    page_to_skb(vi=0xffff8d53842dc980, rq=0xffff8d53843a0800, page=0xfffffc2e04337c00, offset=6160, len=64, truesize=1536, ...)
+> 
+> And if it hits an argument that is not recognized, it will print the raw
+> value and the type of argument it is:
+> 
+>    make_vfsuid(idmap=0xffffffff87f99db8, fs_userns=0xffffffff87e543c0, kuid=0x0 (STRUCT))
+>    __pti_set_user_pgtbl(pgdp=0xffff8d5384ab47f8, pgd=0x110e74067 (STRUCT))
+> 
+
+This looks good to me.
+
+Reviewed-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+
+Thank you,
+
+> Cc: Masami Hiramatsu <mhiramat@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Paul Walmsley <paul.walmsley@sifive.com>
+> Cc: Palmer Dabbelt <palmer@dabbelt.com>
+> Cc: Albert Ou <aou@eecs.berkeley.edu>
+> Cc: Guo Ren <guoren@kernel.org>
+> Cc: Donglin Peng <dolinux.peng@gmail.com>
+> Cc: Zheng Yejian <zhengyejian@huaweicloud.com>
+> Link: https://lore.kernel.org/20241223201541.898496620@goodmis.org
+> Co-developed-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+> Signed-off-by: Sven Schnelle <svens@linux.ibm.com>
+> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 > ---
->   arch/riscv/include/asm/ftrace.h | 4 ++--
->   1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/arch/riscv/include/asm/ftrace.h b/arch/riscv/include/asm/ftrace.h
-> index c4721ce44ca4..2636ee00ccf0 100644
-> --- a/arch/riscv/include/asm/ftrace.h
-> +++ b/arch/riscv/include/asm/ftrace.h
-> @@ -92,7 +92,7 @@ struct dyn_arch_ftrace {
->   #define make_call_t0(caller, callee, call)				\
->   do {									\
->   	unsigned int offset =						\
-> -		(unsigned long) callee - (unsigned long) caller;	\
-> +		(unsigned long) (callee) - (unsigned long) (caller);	\
->   	call[0] = to_auipc_t0(offset);					\
->   	call[1] = to_jalr_t0(offset);					\
->   } while (0)
-> @@ -108,7 +108,7 @@ do {									\
->   #define make_call_ra(caller, callee, call)				\
->   do {									\
->   	unsigned int offset =						\
-> -		(unsigned long) callee - (unsigned long) caller;	\
-> +		(unsigned long) (callee) - (unsigned long) (caller);	\
->   	call[0] = to_auipc_ra(offset);					\
->   	call[1] = to_jalr_ra(offset);					\
->   } while (0)
->
-> base-commit: 2014c95afecee3e76ca4a56956a936e23283f05b
+>  include/linux/ftrace_regs.h |  5 +++
+>  kernel/trace/Kconfig        |  6 +++
+>  kernel/trace/trace_output.c | 85 +++++++++++++++++++++++++++++++++++++
+>  kernel/trace/trace_output.h |  9 ++++
+>  4 files changed, 105 insertions(+)
+> 
+> diff --git a/include/linux/ftrace_regs.h b/include/linux/ftrace_regs.h
+> index bbc1873ca6b8..15627ceea9bc 100644
+> --- a/include/linux/ftrace_regs.h
+> +++ b/include/linux/ftrace_regs.h
+> @@ -35,4 +35,9 @@ struct ftrace_regs;
+>  
+>  #endif /* HAVE_ARCH_FTRACE_REGS */
+>  
+> +/* This can be overridden by the architectures */
+> +#ifndef FTRACE_REGS_MAX_ARGS
+> +# define FTRACE_REGS_MAX_ARGS	6
+> +#endif
+> +
+>  #endif /* _LINUX_FTRACE_REGS_H */
+> diff --git a/kernel/trace/Kconfig b/kernel/trace/Kconfig
+> index d570b8b9c0a9..60412c1012ef 100644
+> --- a/kernel/trace/Kconfig
+> +++ b/kernel/trace/Kconfig
+> @@ -263,6 +263,12 @@ config FUNCTION_GRAPH_RETADDR
+>  	  the function is called. This feature is off by default, and you can
+>  	  enable it via the trace option funcgraph-retaddr.
+>  
+> +config FUNCTION_TRACE_ARGS
+> +       bool
+> +	depends on HAVE_FUNCTION_ARG_ACCESS_API
+> +	depends on DEBUG_INFO_BTF
+> +	default y
+> +
+>  config DYNAMIC_FTRACE
+>  	bool "enable/disable function tracing dynamically"
+>  	depends on FUNCTION_TRACER
+> diff --git a/kernel/trace/trace_output.c b/kernel/trace/trace_output.c
+> index 03d56f711ad1..4b721cd4f21d 100644
+> --- a/kernel/trace/trace_output.c
+> +++ b/kernel/trace/trace_output.c
+> @@ -12,8 +12,11 @@
+>  #include <linux/sched/clock.h>
+>  #include <linux/sched/mm.h>
+>  #include <linux/idr.h>
+> +#include <linux/btf.h>
+> +#include <linux/bpf.h>
+>  
+>  #include "trace_output.h"
+> +#include "trace_btf.h"
+>  
+>  /* must be a power of 2 */
+>  #define EVENT_HASHSIZE	128
+> @@ -684,6 +687,88 @@ int trace_print_lat_context(struct trace_iterator *iter)
+>  	return !trace_seq_has_overflowed(s);
+>  }
+>  
+> +#ifdef CONFIG_FUNCTION_TRACE_ARGS
+> +void print_function_args(struct trace_seq *s, unsigned long *args,
+> +			 unsigned long func)
+> +{
+> +	const struct btf_param *param;
+> +	const struct btf_type *t;
+> +	const char *param_name;
+> +	char name[KSYM_NAME_LEN];
+> +	unsigned long arg;
+> +	struct btf *btf;
+> +	s32 tid, nr = 0;
+> +	int a, p, x;
+> +
+> +	trace_seq_printf(s, "(");
+> +
+> +	if (!args)
+> +		goto out;
+> +	if (lookup_symbol_name(func, name))
+> +		goto out;
+> +
+> +	/* TODO: Pass module name here too */
+> +	t = btf_find_func_proto(name, &btf);
+> +	if (IS_ERR_OR_NULL(t))
+> +		goto out;
+> +
+> +	param = btf_get_func_param(t, &nr);
+> +	if (!param)
+> +		goto out_put;
+> +
+> +	for (a = 0, p = 0; p < nr; a++, p++) {
+> +		if (p)
+> +			trace_seq_puts(s, ", ");
+> +
+> +		/* This only prints what the arch allows (6 args by default) */
+> +		if (a == FTRACE_REGS_MAX_ARGS) {
+> +			trace_seq_puts(s, "...");
+> +			break;
+> +		}
+> +
+> +		arg = args[a];
+> +
+> +		param_name = btf_name_by_offset(btf, param[p].name_off);
+> +		if (param_name)
+> +			trace_seq_printf(s, "%s=", param_name);
+> +		t = btf_type_skip_modifiers(btf, param[p].type, &tid);
+> +
+> +		switch (t ? BTF_INFO_KIND(t->info) : BTF_KIND_UNKN) {
+> +		case BTF_KIND_UNKN:
+> +			trace_seq_putc(s, '?');
+> +			/* Still print unknown type values */
+> +			fallthrough;
+> +		case BTF_KIND_PTR:
+> +			trace_seq_printf(s, "0x%lx", arg);
+> +			break;
+> +		case BTF_KIND_INT:
+> +			trace_seq_printf(s, "%ld", arg);
+> +			break;
+> +		case BTF_KIND_ENUM:
+> +			trace_seq_printf(s, "%ld", arg);
+> +			break;
+> +		default:
+> +			/* This does not handle complex arguments */
+> +			trace_seq_printf(s, "(%s)[0x%lx", btf_type_str(t), arg);
+> +			for (x = sizeof(long); x < t->size; x += sizeof(long)) {
+> +				trace_seq_putc(s, ':');
+> +				if (++a == FTRACE_REGS_MAX_ARGS) {
+> +					trace_seq_puts(s, "...]");
+> +					goto out_put;
+> +				}
+> +				trace_seq_printf(s, "0x%lx", args[a]);
+> +			}
+> +			trace_seq_putc(s, ']');
+> +			break;
+> +		}
+> +	}
+> +out_put:
+> +	btf_put(btf);
+> +out:
+> +	trace_seq_printf(s, ")");
+> +}
+> +#endif
+> +
+>  /**
+>   * ftrace_find_event - find a registered event
+>   * @type: the type of event to look for
+> diff --git a/kernel/trace/trace_output.h b/kernel/trace/trace_output.h
+> index dca40f1f1da4..2e305364f2a9 100644
+> --- a/kernel/trace/trace_output.h
+> +++ b/kernel/trace/trace_output.h
+> @@ -41,5 +41,14 @@ extern struct rw_semaphore trace_event_sem;
+>  #define SEQ_PUT_HEX_FIELD(s, x)				\
+>  	trace_seq_putmem_hex(s, &(x), sizeof(x))
+>  
+> +#ifdef CONFIG_FUNCTION_TRACE_ARGS
+> +void print_function_args(struct trace_seq *s, unsigned long *args,
+> +			 unsigned long func);
+> +#else
+> +static inline void print_function_args(struct trace_seq *s, unsigned long *args,
+> +				       unsigned long func) {
+> +	trace_seq_puts(s, "()");
+> +}
+> +#endif
+>  #endif
+>  
+> -- 
+> 2.47.2
+> 
+> 
 
 
-Probably not worth going into fixes since the problem is not around for 
-now, but that's still a good catch:
-
-Reviewed-by: Alexandre Ghiti <alexghiti@rivosinc.com>
-
-Thanks,
-
-Alex
-
-
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
