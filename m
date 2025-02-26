@@ -1,93 +1,111 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFDE32248AC;
-	Wed, 26 Feb 2025 17:12:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC5B322540A;
+	Wed, 26 Feb 2025 18:18:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740589956; cv=none; b=udPAJC7SGYT3+/hgXFRREutn/w10mqfRQiP3w6hJiAshfIlBr6kUL6liY3sqiQvLs8GiZTpzxUbZU82qQV8PdTPZE1Tynq20fnZrCzWhiHRrxMU4+pMrP27j2GBRKiIuIH5pOq0/qXsbGr/LLMTLdoN66x69cpb4GzrbyltMhR8=
+	t=1740593916; cv=none; b=rHaXla36FlL5UAsPeRX7WivORFglP/k01fJZtkDnE1tIYx77kiqoJpaoVCltqZ6PtjvOgfPMrkO3odtOqLNG5K3/pjZOV7gScf6asY0ayVoSzVosK52pqAP9PyEfw8OOT6MvK2eb6KN3WiQgaNawdgBIZSOMzJGdmQjlYZ5CizI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740589956; c=relaxed/simple;
-	bh=g9PtS94SimNpV+zQLwIgKPUHzoPC2EfDWNlYHcTqODk=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=KIr4+c14FHKKvLvAw7ZZnVnG1ECV4ZYqtCOjIv7SUOjijYcMrWkJI7B2jupt+rpywIBbpprAJ0nnpNi4qYf8cj8FRCardQOlhW/ENjSfcUJr1h9Dvtttux0kM49SR+GsjSZ60h1xOvXSe3vuN4csjyboiT06a3SYs9WRos+4PHY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EC03EC4CED6;
-	Wed, 26 Feb 2025 17:12:35 +0000 (UTC)
-Date: Wed, 26 Feb 2025 12:13:16 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Heiko Carstens <hca@linux.ibm.com>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Shuah Khan <shuah@kernel.org>,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- linux-kselftest@vger.kernel.org, Shuah Khan <skhan@linuxfoundation.org>
-Subject: Re: [PATCH] selftests/ftrace: Use readelf to find entry point in
- uprobe test
-Message-ID: <20250226121316.7653ae38@gandalf.local.home>
-In-Reply-To: <20250220130102.2079179-1-hca@linux.ibm.com>
-References: <20250220130102.2079179-1-hca@linux.ibm.com>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1740593916; c=relaxed/simple;
+	bh=VIygefJsmrqlayJetk/TuRE//08XHGhMXg4SxJl1N7g=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=p/SwXZC95Ks6qXrjJSbevxbt2WfuaIkrKaWa5hjWrFnY/n+dIDkQB7C/u3WaM9yYckl1TEzIm5cAP7n/QjsoMAkytamZ+AQtpoei2YT3T4oESCrPLOm+WHBMMT6JkkMqSjssJ1XnnVZ6OUKczFmQprNq/mKAd2N1C08EKOKx49M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.218.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-abb86beea8cso8867166b.1;
+        Wed, 26 Feb 2025 10:18:34 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740593913; x=1741198713;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ANOUXq6Q4nNmGnkwfSvFwfZWJzxkc6uaWJAjlNi6mrw=;
+        b=FfuFw6x4R1MjPcJV5iQBUDYP19L4w0UxZPtGELt60sGFAC2JgcSD3NSeLb4gETakMz
+         nJADBYI1nLzRIkm+asNkvHM9Hb9vcSTDx9T9sROfDJgZREywwtqaYLHnL9Qj9eErpDwt
+         OOs1i/Em4cd4BXXLndxBgx00YeeC8bzIGPdz+Cq1yjsJJmdl5KkLbtez4U2ViHkJLoYU
+         DXmExVsbtbmsW6FngHvPUV0Ex6FAL/6EUH/A5b+nNh8KKBKiFCwJszxtuBcuQJKttFRd
+         mMz8bOU18j9552NA7BFhKalfN7w0uQZ4va+AyniAlnxjGLXx6oJGt7/h6R7ceGN0NL69
+         VMSg==
+X-Forwarded-Encrypted: i=1; AJvYcCUzbFs+kAczICxZsGKmxIKpI097aF08XxrXFwfG1oDAiMk4tLL0ZWHOMQ83DoCltLorqBZG4qbOXIz9NT0=@vger.kernel.org, AJvYcCXQMCkFipIYBiqdUv3bII3vAwrnwtNumPnQ3acyK1gLu3+0z2BnxnP7yF/eq3yF4ODROInr5HmRgVI/+rRge4Fvt8pw@vger.kernel.org, AJvYcCXiVKkZmjhuoNCFeom82oAlUfKbu+wd5hGMjVvrVUJXjf7CMPygcPffIBt5tFvoAfsjNLPocWPW@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywbq+I8I9JA9oCGSS5v38UZ0z+5tQAXZ/I5+Y+lzqVSqBdhOUzC
+	4ObwPOPAtTIwGTeTxEwqhEqxgdNUwH9ktybH1X3D6+rEFd2x+0u4
+X-Gm-Gg: ASbGncttpHYl46vLQB5T8v0cvvNmHQTLwwkkHM37m8O+z/Zo2x+g3rnpO7TQYkUWCsP
+	hZ6m+dT86vsYQ0hcBWwthyhoO/MiZ2zIYV8pvSbUwZX3O0P1z09eR/u5v+goBkDNSV5CTy9AgW2
+	cZ3tRIFk+bXzZ2LKkRBPX+ZPESrRmA4+1OZiYTOaIozb5+q5RuP+zBJXNhJlixo33paH216rkRB
+	ZmuhLCRZ70BUYAU2vUlnNoPkQMVDQTC3mVl3xh+kB3SfxZkjlCi/RgwHmO/bCZUOnhLm0Rf4XSV
+	NPAcd0KrsqxajaBH
+X-Google-Smtp-Source: AGHT+IGHOxW1BBkFTturFyL0nAQ4vwJGMPYFC9ml9D+kyEb7X/IH12HFXFvHGQMhPjAVMLuRzx9bPg==
+X-Received: by 2002:a17:907:2cc2:b0:abc:cbf:ff1f with SMTP id a640c23a62f3a-abeeef42910mr615585566b.40.1740593912702;
+        Wed, 26 Feb 2025 10:18:32 -0800 (PST)
+Received: from gmail.com ([2a03:2880:30ff:5::])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-abed1d55b90sm373260066b.54.2025.02.26.10.18.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Feb 2025 10:18:32 -0800 (PST)
+Date: Wed, 26 Feb 2025 10:18:29 -0800
+From: Breno Leitao <leitao@debian.org>
+To: David Ahern <dsahern@kernel.org>
+Cc: Eric Dumazet <edumazet@google.com>,
+	Neal Cardwell <ncardwell@google.com>,
+	Kuniyuki Iwashima <kuniyu@amazon.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	kernel-team@meta.com, yonghong.song@linux.dev
+Subject: Re: [PATCH net-next] trace: tcp: Add tracepoint for tcp_sendmsg()
+Message-ID: <20250226-daft-inchworm-of-love-3a98c2@leitao>
+References: <20250224-tcpsendmsg-v1-1-bac043c59cc8@debian.org>
+ <CANn89iLybqJ22LVy00KUOVscRr8GQ88AcJ3Oy9MjBUgN=or0jA@mail.gmail.com>
+ <559f3da9-4b3d-41c2-bf44-18329f76e937@kernel.org>
+ <20250226-cunning-innocent-degu-d6c2fe@leitao>
+ <7e148fd2-b4b7-49a1-958f-4b0838571245@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <7e148fd2-b4b7-49a1-958f-4b0838571245@kernel.org>
 
-On Thu, 20 Feb 2025 14:01:02 +0100
-Heiko Carstens <hca@linux.ibm.com> wrote:
+Hello David,
 
-> The uprobe events test fails on s390, but also on x86 (Fedora 41). The
-> problem appears to be that there is an assumption that adding a uprobe to
-> the beginning of the executable mapping of /bin/sh is sufficient to trigger
-> a uprobe event when /bin/sh is executed.
+On Wed, Feb 26, 2025 at 10:12:08AM -0700, David Ahern wrote:
+> On 2/26/25 9:10 AM, Breno Leitao wrote:
+> >> Also, if a tracepoint is added, inside of tcp_sendmsg_locked would cover
+> >> more use cases (see kernel references to it).
+> > 
+> > Agree, this seems to provide more useful information
+> > 
+> >> We have a patch for a couple years now with a tracepoint inside the
+> > 
+> > Sorry, where do you have this patch? is it downstream?
 > 
-> This assumption is not necessarily true. Therefore use "readelf -h" to find
-> the entry point address of /bin/sh and use this address when adding the
-> uprobe event.
-> 
-> This adds a dependency to readelf which is not always installed. Therefore
-> add a check and exit with exit_unresolved if it is not installed.
-> 
-> Signed-off-by: Heiko Carstens <hca@linux.ibm.com>
+> company tree. Attached. Where to put tracepoints and what arguments to
+> supply so that it is beneficial to multiple users is always a touchy
+> subject :-)
 
-Acked-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+Thanks. I would like to state that this would be useful for Meta as
+well.
 
-Shuah,
+Right now, we (Meta) are using nasty `noinline` attribute in
+tcp_sendmsg() in order to make the API stable, and this tracepoint would
+solve this problem avoiding the `noinline` hack. So, at least two type
+of users would benefit from it.
 
-Can you take this in your tree?
+> so I have not tried to push the patch out. sock arg should
+> be added to it for example.
 
--- Steve
+True, if it becomes a tracepoint instead of a rawtracepoint, the sock
+arg might be useful.
 
-> ---
->  .../ftrace/test.d/dynevent/add_remove_uprobe.tc        | 10 +++++++---
->  1 file changed, 7 insertions(+), 3 deletions(-)
-> 
-> diff --git a/tools/testing/selftests/ftrace/test.d/dynevent/add_remove_uprobe.tc b/tools/testing/selftests/ftrace/test.d/dynevent/add_remove_uprobe.tc
-> index 86c76679c56e..f2048c244526 100644
-> --- a/tools/testing/selftests/ftrace/test.d/dynevent/add_remove_uprobe.tc
-> +++ b/tools/testing/selftests/ftrace/test.d/dynevent/add_remove_uprobe.tc
-> @@ -3,14 +3,18 @@
->  # description: Generic dynamic event - add/remove/test uprobe events
->  # requires: uprobe_events
->  
-> +if ! which readelf > /dev/null 2>&1 ; then
-> +  echo "No readelf found. skipped."
-> +  exit_unresolved
-> +fi
-> +
->  echo 0 > events/enable
->  echo > dynamic_events
->  
->  REALBIN=`readlink -f /bin/sh`
-> +ENTRYPOINT=`readelf -h ${REALBIN} | grep Entry | sed -e 's/[^0]*//'`
->  
-> -echo 'cat /proc/$$/maps' | /bin/sh | \
-> -	grep "r-xp .*${REALBIN}$" | \
-> -	awk '{printf "p:myevent %s:0x%s\n", $6,$3 }' >> uprobe_events
-> +echo "p:myevent ${REALBIN}:${ENTRYPOINT}" >> uprobe_events
->  
->  grep -q myevent uprobe_events
->  test -d events/uprobes/myevent
+How would you recommend me proceeding in this case?
 
+Thanks
+--breno
