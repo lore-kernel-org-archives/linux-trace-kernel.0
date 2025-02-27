@@ -1,41 +1,25 @@
-Received: from mout.web.de (mout.web.de [212.227.17.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 553A021B9EE;
-	Thu, 27 Feb 2025 10:13:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.12
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1A10A225761;
+	Thu, 27 Feb 2025 11:13:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740651233; cv=none; b=uCYA/Alvkzp0/vQORtBJ09xdHH7qgEOEoq+7iRsUAdtLra8oUjAMt3xXhY3oN+nCI1UBG4SpWzQOt/u9deK9SGvT/QvgG9pEzswN1pY6d+IqXIVIVI+0CQG4PL0rX+ly8yNAm9MmX5gH/C2wH0VJwZyrq2cV6B6CNHFauNmsKbo=
+	t=1740654823; cv=none; b=AnDijjdMNsGDHSBR7eaegBrfJDLgQLmZ4yqFke+JgfMubzW1UYXGLf2tKUMnE2P63dPIvKw9Ze0NW2hnuIdV2gwh+QP07K5Jj8rZEtiR+VzdpFNuc3IE386qpTgvC5NxsvDBEuRKxRJcGAG9DqYlKzdsfeoYt6FtBH4LeFwZJdo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740651233; c=relaxed/simple;
-	bh=ZYrecEk+Tp1l07obRlnqI5FqzHeKhzKzCSwOWo+CHy8=;
+	s=arc-20240116; t=1740654823; c=relaxed/simple;
+	bh=SAqzx+hkCBMFjSaW75HdRmriaQmgXA3UpjpZK1/xZLI=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=thACHSz/YKdjeLhtkr1lLSeRKAvPKqfGf842CaGjnLSvks4rtu5DXLPvQ4a7qkmYaioeVbaN/TyilOrFNb97vZ4Y/PqpqQKZ0O6f8rmdC2muydBhF6R+59EYIg8c+GNzzUgyh+VXxaZIaQMlKCfV4v6u7xCxXqXr44N2OElEzrY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=Lw8hEZER; arc=none smtp.client-ip=212.227.17.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="Lw8hEZER"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1740651216; x=1741256016; i=markus.elfring@web.de;
-	bh=ZYrecEk+Tp1l07obRlnqI5FqzHeKhzKzCSwOWo+CHy8=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=Lw8hEZERotn4tzrn0kcTaofnQX5bKVIGjdumqQyO/0yRjTQhY4uRjcB6K4hOWnJW
-	 IvsRWR2Fh/HyCzIox/Z2LagvRw7ZgKjhEhMXwCkQ6z9hZITVSLQKQuvZSOQHbqL3R
-	 lYx0I+vcjlmkJ1YsanH4J9jMKXY4mI7jFjXj4TumMXsajDvG0ft79gUAJuZy9D0UH
-	 r70tbenRYg7TR7xKX38qFcrosqZQs4ULiY3Nj1g592R2WCSLufJF6TbmcG82HtmNR
-	 C38u3zrITX3+YZ78I8J6KVrBfAsqTYeD0Q3upjLvrtmf0ZGoPh4z0icVfd7sR4UZP
-	 yNxDUHwvOm4+K0NbCw==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.29] ([94.31.70.82]) by smtp.web.de (mrweb106
- [213.165.67.124]) with ESMTPSA (Nemesis) id 1M8Bw1-1tsngp2m9r-00GHAT; Thu, 27
- Feb 2025 11:13:36 +0100
-Message-ID: <bc03e16b-3c6c-4379-8af0-28cd8e269508@web.de>
-Date: Thu, 27 Feb 2025 11:13:28 +0100
+	 In-Reply-To:Content-Type; b=SeHQ5FVkyKlUEOoG0+OgI2s6aF1YsAAza166Wjfgo3SVWD4hH+WT0gpYgV86UORlwiUJPZ3eB369gWCX7qjZEF5gfzoS9K+NPYuLcurXf3CbO9tC0ye5E+0UkIU4IFc8jLPu8jd7DOhnP6EneZIjRPz+yD5DR4oct2TRYAjVzgY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B40CD2C23;
+	Thu, 27 Feb 2025 03:13:56 -0800 (PST)
+Received: from [10.57.85.134] (unknown [10.57.85.134])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6FF103F6A8;
+	Thu, 27 Feb 2025 03:13:31 -0800 (PST)
+Message-ID: <16863478-2195-435e-a899-559df097bc59@arm.com>
+Date: Thu, 27 Feb 2025 11:13:29 +0000
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -43,58 +27,150 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [4/8] tracing: probe-events: Log errro for exceeding the number
- of arguments
-To: Masami Hiramatsu <mhiramat@kernel.org>,
- linux-trace-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
-Cc: LKML <linux-kernel@vger.kernel.org>, Hari Bathini
- <hbathini@linux.ibm.com>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Shuah Khan <shuah@kernel.org>,
- Steven Rostedt <rostedt@goodmis.org>
-References: <174055075075.4079315.10916648136898316476.stgit@mhiramat.tok.corp.google.com>
- <516ea911-acc6-47c2-87d5-2df0a18468de@web.de>
- <20250227091904.a072168412d6d94efc5b0852@kernel.org>
+Subject: Re: [PATCH v7 7/8] execmem: add support for cache of large ROX pages
 Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <20250227091904.a072168412d6d94efc5b0852@kernel.org>
+To: Mike Rapoport <rppt@kernel.org>, Andrew Morton
+ <akpm@linux-foundation.org>, Luis Chamberlain <mcgrof@kernel.org>,
+ Dev Jain <dev.jain@arm.com>
+Cc: Andreas Larsson <andreas@gaisler.com>, Andy Lutomirski <luto@kernel.org>,
+ Ard Biesheuvel <ardb@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+ Borislav Petkov <bp@alien8.de>, Brian Cain <bcain@quicinc.com>,
+ Catalin Marinas <catalin.marinas@arm.com>,
+ Christoph Hellwig <hch@infradead.org>,
+ Christophe Leroy <christophe.leroy@csgroup.eu>,
+ Dave Hansen <dave.hansen@linux.intel.com>, Dinh Nguyen
+ <dinguyen@kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>,
+ Guo Ren <guoren@kernel.org>, Helge Deller <deller@gmx.de>,
+ Huacai Chen <chenhuacai@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+ Johannes Berg <johannes@sipsolutions.net>,
+ John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+ Kent Overstreet <kent.overstreet@linux.dev>,
+ "Liam R. Howlett" <Liam.Howlett@oracle.com>,
+ Mark Rutland <mark.rutland@arm.com>, Masami Hiramatsu <mhiramat@kernel.org>,
+ Matt Turner <mattst88@gmail.com>, Max Filippov <jcmvbkbc@gmail.com>,
+ Michael Ellerman <mpe@ellerman.id.au>, Michal Simek <monstr@monstr.eu>,
+ Oleg Nesterov <oleg@redhat.com>, Palmer Dabbelt <palmer@dabbelt.com>,
+ Peter Zijlstra <peterz@infradead.org>, Richard Weinberger <richard@nod.at>,
+ Russell King <linux@armlinux.org.uk>, Song Liu <song@kernel.org>,
+ Stafford Horne <shorne@gmail.com>, Steven Rostedt <rostedt@goodmis.org>,
+ Suren Baghdasaryan <surenb@google.com>,
+ Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+ Thomas Gleixner <tglx@linutronix.de>, Uladzislau Rezki <urezki@gmail.com>,
+ Vineet Gupta <vgupta@kernel.org>, Will Deacon <will@kernel.org>,
+ bpf@vger.kernel.org, linux-alpha@vger.kernel.org,
+ linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-csky@vger.kernel.org, linux-hexagon@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
+ linux-mips@vger.kernel.org, linux-mm@kvack.org,
+ linux-modules@vger.kernel.org, linux-openrisc@vger.kernel.org,
+ linux-parisc@vger.kernel.org, linux-riscv@lists.infradead.org,
+ linux-sh@vger.kernel.org, linux-snps-arc@lists.infradead.org,
+ linux-trace-kernel@vger.kernel.org, linux-um@lists.infradead.org,
+ linuxppc-dev@lists.ozlabs.org, loongarch@lists.linux.dev,
+ sparclinux@vger.kernel.org, x86@kernel.org
+References: <20241023162711.2579610-1-rppt@kernel.org>
+ <20241023162711.2579610-8-rppt@kernel.org>
+From: Ryan Roberts <ryan.roberts@arm.com>
+In-Reply-To: <20241023162711.2579610-8-rppt@kernel.org>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:0fSE91QN7qSi8m6wzasRk1biQMjb4gyGsoug1Ocka6uVqFfSM/p
- x3dHlbI95miCm1GQ8FiyRYb05vUKcIsn1b/7GNe/srj8AVFHS+l8q+9iIaVIX+LpNiiy+A/
- aIrnCzszXDCMtvDnXvvFMKk/UQGcFsC7xkegVSrOkXYhIff+Bol260W+b6dVhxsitW0qiOi
- 5mcHqcg2N5lFlybq00U3Q==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:M95len23fBc=;3d80qJ+HAoyGgWtQxWzatIZPw3h
- q2eClVviWuc7Fr15Sa4EM5Pitm2zMp54CeCiYEL0WQ5lstvkRqA6NSkzejzJBFjh0EbFptGQO
- P1VNNvv45HNzKxxBJYxNFVwVvt19WNkpsnCcUYW0ZAi7vwEju2T8TlA6OoPiUxoNmZHm/5Ush
- OKn8SHG8ry9mlWw90rBx32T1kicfRhdWehuqGXUlCi1an3rsi4rdPXaXBw6+QHVPnvJ4VIu4m
- pZs8Y+kvVkmZh3pP/Dt6qUsqEeeVhsnjlZJmCUArNare8TAkUbl76UHnAs29Q/ZJ53no6kaZE
- kOYn64iFTUSFY3vMp0nuu4bfN8/YTWi2e3YJV8nfld6kk+epvk+G+q5TnKE/Ao1bye3vW4qWl
- E0hJZiWeqqRDKaetfaot85wPDo/rfI7Aalzr7p7PTPila35g104hTt1P4WGdKUgG2w4RoKA7U
- SIrDzbXf8sWqTvGIqU/V5JzJUVBbxrbKPRE/g6WRutvv29POvISd6L8BpK8QNaxa0cn52I771
- ObNwW5SM5O/Jb4Rjh+fBXWRRqBemosHy/SwD/tDlNA31lnLu6MrJVQrXuPc+7fRQCvoXKefSh
- MjJ/XGHk6VZLVuAGBb/ktCP4NfhN+2U9OKSitHN7ZlkdogIk9sS+Pn1sIaKpzJdySWvLMwWy7
- /0l3EpYLDCqctDcMWmI/6qlUuvBOlsVLWJtwY0tA76DNalc/RHIbuarrgpDB08/7CoiarIXLF
- zMKnf8VIJ74TqmqE3un7mK/P09VmdOMSabFPZewLQ9sGgQk8xQiF7wPQVYBqKCKYmeH7akoBK
- VuK1r8ukeo9bAqMNve0jdSFdZdyWtoaG8R2k9dcxZAr2L7vJ7F+Y2CpzgkE123JNP5Utfg5qa
- tYRI2hrJR99CgjbTGOyIQ2p+cZN97r+pMa3lRi5wEudqswCcXdVHZgL6CP6Uyiw1MdQqhpigN
- NDbqsyakQRPXXWmbHUEDd3ulWP/ZRaeIsTPGraEezrK9sO9Oyi9uKnva8koONNCrKH+iTYQQl
- AxE5W2dQMBPM7Su5Z4IDpEBsXEPTX3Vp/t4mABJo4G8C6dc/HHC5sC3kcj2aZXePaj4WVDm+p
- tsGHHCsmpnlKT/xaske3yZLs9tvmIKezr2unNUJLM2oPyr8kXYNn//yHS3K1rYEM4QSqR5NlP
- 2KD4cXCwikyzKjt2ygR8dMrY12Djx/PYp/k7aYIoryIkYfUx31YgRT0PEuyKxPew++Or4fndV
- iGC6rMmy4jmYiyEnFtw3ia3hRhvDc7xtfj5EcBgaRwXN1j1AKxsMGcS0WHXDFeIIEro2loGAw
- hmr3FU5JSHxz48FiJ3Gvw1a1VdsvVeR3TJwDjvkf9bDM0JalDj8vPTy+hev4B5uXVN+bP/gE5
- zGtbwZwU6S3JXIvs+lce54oUlj/oB93NZHV45epz0NebjBBxL3PXDbv9MkeuDXitTvwZTHcIg
- M5xeFsNNPnClKq0yVKrRiXF07O1g=
+Content-Transfer-Encoding: 7bit
 
->> May a bit of exception handling code be shared by an additional jump ta=
-rget?
->> Will another goto chain become helpful here?
->
-> Honestly, I don't want to introduce jump any more.
+Hi Mike,
 
-Would you like to avoid any duplicate source code (including error handlin=
-g)?
+Drive by review comments below...
 
-Regards,
-Markus
+
+On 23/10/2024 17:27, Mike Rapoport wrote:
+> From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
+> 
+> Using large pages to map text areas reduces iTLB pressure and improves
+> performance.
+> 
+> Extend execmem_alloc() with an ability to use huge pages with ROX
+> permissions as a cache for smaller allocations.
+> 
+> To populate the cache, a writable large page is allocated from vmalloc with
+> VM_ALLOW_HUGE_VMAP, filled with invalid instructions and then remapped as
+> ROX.
+> 
+> The direct map alias of that large page is exculded from the direct map.
+> 
+> Portions of that large page are handed out to execmem_alloc() callers
+> without any changes to the permissions.
+> 
+> When the memory is freed with execmem_free() it is invalidated again so
+> that it won't contain stale instructions.
+> 
+> An architecture has to implement execmem_fill_trapping_insns() callback
+> and select ARCH_HAS_EXECMEM_ROX configuration option to be able to use
+> the ROX cache.
+> 
+> The cache is enabled on per-range basis when an architecture sets
+> EXECMEM_ROX_CACHE flag in definition of an execmem_range.
+> 
+> Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+> Reviewed-by: Luis Chamberlain <mcgrof@kernel.org>
+> Tested-by: kdevops <kdevops@lists.linux.dev>
+> ---
+
+[...]
+
+> +
+> +static int execmem_cache_populate(struct execmem_range *range, size_t size)
+> +{
+> +	unsigned long vm_flags = VM_ALLOW_HUGE_VMAP;
+> +	unsigned long start, end;
+> +	struct vm_struct *vm;
+> +	size_t alloc_size;
+> +	int err = -ENOMEM;
+> +	void *p;
+> +
+> +	alloc_size = round_up(size, PMD_SIZE);
+> +	p = execmem_vmalloc(range, alloc_size, PAGE_KERNEL, vm_flags);
+
+Shouldn't this be passing PAGE_KERNEL_ROX? Otherwise I don't see how the
+allocated memory is ROX? I don't see any call below where you change the permission.
+
+Given the range has the pgprot in it, you could just drop passing the pgprot
+explicitly here and have execmem_vmalloc() use range->pgprot directly?
+
+Thanks,
+Ryan
+
+> +	if (!p)
+> +		return err;
+> +
+> +	vm = find_vm_area(p);
+> +	if (!vm)
+> +		goto err_free_mem;
+> +
+> +	/* fill memory with instructions that will trap */
+> +	execmem_fill_trapping_insns(p, alloc_size, /* writable = */ true);
+> +
+> +	start = (unsigned long)p;
+> +	end = start + alloc_size;
+> +
+> +	vunmap_range(start, end);
+> +
+> +	err = execmem_set_direct_map_valid(vm, false);
+> +	if (err)
+> +		goto err_free_mem;
+> +
+> +	err = vmap_pages_range_noflush(start, end, range->pgprot, vm->pages,
+> +				       PMD_SHIFT);
+> +	if (err)
+> +		goto err_free_mem;
+> +
+> +	err = execmem_cache_add(p, alloc_size);
+> +	if (err)
+> +		goto err_free_mem;
+> +
+> +	return 0;
+> +
+> +err_free_mem:
+> +	vfree(p);
+> +	return err;
+> +}
+
+[...]
+
