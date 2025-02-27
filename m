@@ -1,186 +1,243 @@
-Received: from smtp-fw-52003.amazon.com (smtp-fw-52003.amazon.com [52.119.213.152])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E98831B424D;
-	Thu, 27 Feb 2025 18:24:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.119.213.152
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 776D91D4335;
+	Thu, 27 Feb 2025 18:57:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740680655; cv=none; b=IAQzqka42/KsxeK8w11pbhtw1AAzWqHwSFYxP4VpEAsjwc/KbUxVCpeJebWfhXu3akz8h4RWJkftNFN0h+kK/8FFlh/HbHCHEPAvbN7A7pTmxY7tnycFFczsE//9FMTO83y9ZXfWx/4QxDbBXkA8B/gGmb1ahUIJj6d4LxyiMIQ=
+	t=1740682659; cv=none; b=T1T3LOvp/qCM6bVRG9DuxJwwucosp0Vw4rxx2NecUdsJwUxlh18NE6/hb9bZ7Wkl5dJvoI1XJz7PCnPXMGOVJJ+GjgjVu4KAhge9vRrRcJkYI4na2KfbUo0yr3/XidTHoFA2d1OF3W99HzHhfCk0xnRHG/X0LO1kbzNItriVWlQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740680655; c=relaxed/simple;
-	bh=I1CbooREzLYn9AAlLO5H4sUKHJxW7EPg7nEEHpyFmNQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=FFWuTyj8wYmrxXFj150GVeZijiDkf2/ls5hy3WKQPM1CYAZAQDivcgg0BiJGNSCm6FujP44nrXNASqqaqd//MVmGnH7OWWGKGJnxADAz4td94Zw6B1ADugjappO5nuTQXu2YzDqPx81cKIQwmCVeIimaXVT6GB9IUZ6I82VD3yE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.co.uk; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=G3/XvC/X; arc=none smtp.client-ip=52.119.213.152
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.uk
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="G3/XvC/X"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1740680653; x=1772216653;
-  h=message-id:date:mime-version:reply-to:subject:to:cc:
-   references:from:in-reply-to:content-transfer-encoding;
-  bh=j3OPBGuyioaxsCKCSnyqb+F4cY9H+pA8vNbT+Ls4f/A=;
-  b=G3/XvC/X20YPL2O+wFXBQjsinccl8Xrr8olD/DNvb4u9vyeruoSySQ6O
-   j2XE1DuRKasNrTmRWGl4HI4hV/kULyXW60nyLoBj62xFDeO1k0AhNIZal
-   Q2Bk5rO+fxMlNcLuG1XSiVin7/Ci8M97xlPAKA9SzeoIkc+659CB2Jrff
-   g=;
-X-IronPort-AV: E=Sophos;i="6.13,320,1732579200"; 
-   d="scan'208";a="69833984"
-Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO smtpout.prod.us-east-1.prod.farcaster.email.amazon.dev) ([10.43.8.6])
-  by smtp-border-fw-52003.iad7.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2025 18:24:10 +0000
-Received: from EX19MTAEUC002.ant.amazon.com [10.0.43.254:43332]
- by smtpin.naws.eu-west-1.prod.farcaster.email.amazon.dev [10.0.1.85:2525] with esmtp (Farcaster)
- id a2951172-87b8-49fe-bd0f-813ab7bbf005; Thu, 27 Feb 2025 18:24:08 +0000 (UTC)
-X-Farcaster-Flow-ID: a2951172-87b8-49fe-bd0f-813ab7bbf005
-Received: from EX19D022EUC002.ant.amazon.com (10.252.51.137) by
- EX19MTAEUC002.ant.amazon.com (10.252.51.245) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
- Thu, 27 Feb 2025 18:24:08 +0000
-Received: from [192.168.19.93] (10.106.83.21) by EX19D022EUC002.ant.amazon.com
- (10.252.51.137) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14; Thu, 27 Feb 2025
- 18:24:07 +0000
-Message-ID: <7f2b25c9-c92b-4b0a-bfd9-dda8b0b7a244@amazon.com>
-Date: Thu, 27 Feb 2025 18:24:05 +0000
+	s=arc-20240116; t=1740682659; c=relaxed/simple;
+	bh=m+2s+O4tHRelC89taiEqdahnzEKvH/ygc+ZUyR8XqpI=;
+	h=Message-ID:Date:From:To:Cc:Subject; b=PWrqG5B7LqmJpnlIv31uKzi1MNLJwLYLXXFT8pajYZVZGUEbMgGr6npiyzE2Nv2VnbVl1NocrhtLCOKB17j/MW1S9f0AfwId8yuxHiDNx9VEGo1jaQbBo2DzocatkWizE5tQVTZwj51eCmu9YxmAn1JHSmD+buOudxYCMQihBO0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F3597C4CEDD;
+	Thu, 27 Feb 2025 18:57:38 +0000 (UTC)
+Received: from rostedt by gandalf with local (Exim 4.98)
+	(envelope-from <rostedt@goodmis.org>)
+	id 1tnj5S-00000009nQY-2Z1Q;
+	Thu, 27 Feb 2025 13:58:22 -0500
+Message-ID: <20250227185804.639525399@goodmis.org>
+User-Agent: quilt/0.68
+Date: Thu, 27 Feb 2025 13:58:04 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org,
+ bpf@vger.kernel.org
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Sven Schnelle <svens@linux.ibm.com>,
+ Paul Walmsley <paul.walmsley@sifive.com>,
+ Palmer Dabbelt <palmer@dabbelt.com>,
+ Albert Ou <aou@eecs.berkeley.edu>,
+ Guo Ren <guoren@kernel.org>,
+ Donglin Peng <dolinux.peng@gmail.com>,
+ Zheng Yejian <zhengyejian@huaweicloud.com>
+Subject: [PATCH v4 0/4] ftrace: Add function arguments to function tracers
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Reply-To: <kalyazin@amazon.com>
-Subject: Re: [RFC PATCH 0/6] KVM: x86: async PF user
-To: Sean Christopherson <seanjc@google.com>
-CC: <pbonzini@redhat.com>, <corbet@lwn.net>, <tglx@linutronix.de>,
-	<mingo@redhat.com>, <bp@alien8.de>, <dave.hansen@linux.intel.com>,
-	<hpa@zytor.com>, <rostedt@goodmis.org>, <mhiramat@kernel.org>,
-	<mathieu.desnoyers@efficios.com>, <kvm@vger.kernel.org>,
-	<linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-trace-kernel@vger.kernel.org>, <jthoughton@google.com>,
-	<david@redhat.com>, <peterx@redhat.com>, <oleg@redhat.com>,
-	<vkuznets@redhat.com>, <gshan@redhat.com>, <graf@amazon.de>,
-	<jgowans@amazon.com>, <roypat@amazon.co.uk>, <derekmn@amazon.com>,
-	<nsaenz@amazon.es>, <xmarcalx@amazon.com>
-References: <20241118123948.4796-1-kalyazin@amazon.com>
- <Z6u-WdbiW3n7iTjp@google.com>
- <a7080c07-0fc5-45ce-92f7-5f432a67bc63@amazon.com>
- <Z7X2EKzgp_iN190P@google.com>
- <6eddd049-7c7a-406d-b763-78fa1e7d921b@amazon.com>
- <Z7d5HT7FpE-ZsHQ9@google.com>
- <f820b630-13c1-4164-baa8-f5e8231612d1@amazon.com>
- <Z75nRwSBxpeMwbsR@google.com>
- <946fc0f5-4306-4aa9-9b63-f7ccbaff8003@amazon.com>
- <Z8CWUiAYVvNKqzfK@google.com>
-Content-Language: en-US
-From: Nikita Kalyazin <kalyazin@amazon.com>
-Autocrypt: addr=kalyazin@amazon.com; keydata=
- xjMEY+ZIvRYJKwYBBAHaRw8BAQdA9FwYskD/5BFmiiTgktstviS9svHeszG2JfIkUqjxf+/N
- JU5pa2l0YSBLYWx5YXppbiA8a2FseWF6aW5AYW1hem9uLmNvbT7CjwQTFggANxYhBGhhGDEy
- BjLQwD9FsK+SyiCpmmTzBQJnrNfABQkFps9DAhsDBAsJCAcFFQgJCgsFFgIDAQAACgkQr5LK
- IKmaZPOpfgD/exazh4C2Z8fNEz54YLJ6tuFEgQrVQPX6nQ/PfQi2+dwBAMGTpZcj9Z9NvSe1
- CmmKYnYjhzGxzjBs8itSUvWIcMsFzjgEY+ZIvRIKKwYBBAGXVQEFAQEHQCqd7/nb2tb36vZt
- ubg1iBLCSDctMlKHsQTp7wCnEc4RAwEIB8J+BBgWCAAmFiEEaGEYMTIGMtDAP0Wwr5LKIKma
- ZPMFAmes18AFCQWmz0MCGwwACgkQr5LKIKmaZPNTlQEA+q+rGFn7273rOAg+rxPty0M8lJbT
- i2kGo8RmPPLu650A/1kWgz1AnenQUYzTAFnZrKSsXAw5WoHaDLBz9kiO5pAK
-In-Reply-To: <Z8CWUiAYVvNKqzfK@google.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: EX19D006EUA002.ant.amazon.com (10.252.50.65) To
- EX19D022EUC002.ant.amazon.com (10.252.51.137)
 
-On 27/02/2025 16:44, Sean Christopherson wrote:
-> On Wed, Feb 26, 2025, Nikita Kalyazin wrote:
->> On 26/02/2025 00:58, Sean Christopherson wrote:
->>> On Fri, Feb 21, 2025, Nikita Kalyazin wrote:
->>>> On 20/02/2025 18:49, Sean Christopherson wrote:
->>>>> On Thu, Feb 20, 2025, Nikita Kalyazin wrote:
->>>>>> On 19/02/2025 15:17, Sean Christopherson wrote:
->>>>>>> On Wed, Feb 12, 2025, Nikita Kalyazin wrote:
->>>>>>> The conundrum with userspace async #PF is that if userspace is given only a single
->>>>>>> bit per gfn to force an exit, then KVM won't be able to differentiate between
->>>>>>> "faults" that will be handled synchronously by the vCPU task, and faults that
->>>>>>> usersepace will hand off to an I/O task.  If the fault is handled synchronously,
->>>>>>> KVM will needlessly inject a not-present #PF and a present IRQ.
->>>>>>
->>>>>> Right, but from the guest's point of view, async PF means "it will probably
->>>>>> take a while for the host to get the page, so I may consider doing something
->>>>>> else in the meantime (ie schedule another process if available)".
->>>>>
->>>>> Except in this case, the guest never gets a chance to run, i.e. it can't do
->>>>> something else.  From the guest point of view, if KVM doesn't inject what is
->>>>> effectively a spurious async #PF, the VM-Exiting instruction simply took a (really)
->>>>> long time to execute.
->>>>
->>>> Sorry, I didn't get that.  If userspace learns from the
->>>> kvm_run::memory_fault::flags that the exit is due to an async PF, it should
->>>> call kvm run immediately, inject the not-present PF and allow the guest to
->>>> reschedule.  What do you mean by "the guest never gets a chance to run"?
->>>
->>> What I'm saying is that, as proposed, the API doesn't precisely tell userspace
->                                                                           ^^^^^^^^^
->                                                                           KVM
->>> an exit happened due to an "async #PF".  KVM has absolutely zero clue as to
->>> whether or not userspace is going to do an async #PF, or if userspace wants to
->>> intercept the fault for some entirely different purpose.
->>
->> Userspace is supposed to know whether the PF is async from the dedicated
->> flag added in the memory_fault structure:
->> KVM_MEMORY_EXIT_FLAG_ASYNC_PF_USER.  It will be set when KVM managed to
->> inject page-not-present.  Are you saying it isn't sufficient?
-> 
-> Gah, sorry, typo.  The API doesn't tell *KVM* that userfault exit is due to an
-> async #PF.
-> 
->>> Unless the remote page was already requested, e.g. by a different vCPU, or by a
->>> prefetching algorithim.
->>>
->>>> Conversely, if the page content is available, it must have already been
->>>> prepopulated into guest memory pagecache, the bit in the bitmap is cleared
->>>> and no exit to userspace occurs.
->>>
->>> But that doesn't happen instantaneously.  Even if the VMM somehow atomically
->>> receives the page and marks it present, it's still possible for marking the page
->>> present to race with KVM checking the bitmap.
->>
->> That looks like a generic problem of the VM-exit fault handling.  Eg when
-> 
-> Heh, it's a generic "problem" for faults in general.  E.g. modern x86 CPUs will
-> take "spurious" page faults on write accesses if a PTE is writable in memory but
-> the CPU has a read-only mapping cached in its TLB.
-> 
-> It's all a matter of cost.  E.g. pre-Nehalem Intel CPUs didn't take such spurious
-> read-only faults as they would re-walk the in-memory page tables, but that ended
-> up being a net negative because the cost of re-walking for all read-only faults
-> outweighed the benefits of avoiding spurious faults in the unlikely scenario the
-> fault had already been fixed.
-> 
-> For a spurious async #PF + IRQ, the cost could be signficant, e.g. due to causing
-> unwanted context switches in the guest, in addition to the raw overhead of the
-> faults, interrupts, and exits.
-> 
->> one vCPU exits, userspace handles the fault and races setting the bitmap
->> with another vCPU that is about to fault the same page, which may cause a
->> spurious exit.
->>
->> On the other hand, is it malignant?  The only downside is additional
->> overhead of the async PF protocol, but if the race occurs infrequently, it
->> shouldn't be a problem.
-> 
-> When it comes to uAPI, I want to try and avoid statements along the lines of
-> "IF 'x' holds true, then 'y' SHOULDN'T be a problem".  If this didn't impact uAPI,
-> I wouldn't care as much, i.e. I'd be much more willing iterate as needed.
-> 
-> I'm not saying we should go straight for a complex implementation.  Quite the
-> opposite.  But I do want us to consider the possible ramifications of using a
-> single bit for all userfaults, so that we can at least try to design something
-> that is extensible and won't be a pain to maintain.
 
-So you would've liked more the "two-bit per gfn" approach as in: provide 
-2 interception points, for sync and async exits, with the former chosen 
-by userspace when it "knows" that the content is already in memory? 
-What makes it a conundrum then?  It looks like an incremental change to 
-what has already been proposed.  There is a complication that 2-bit 
-operations aren't atomic, but even 1 bit is racy between KVM and userspace.
+These patches add support for printing function arguments in ftrace.
+
+Example usage:
+
+function tracer:
+
+ ~# cd /sys/kernel/tracing/
+ ~# echo icmp_rcv >set_ftrace_filter
+ ~# echo function >current_tracer
+ ~# echo 1 >options/func-args
+ ~# ping -c 10 127.0.0.1
+[..]
+ ~# cat trace
+[..]
+            ping-1277    [030] ..s1.    39.120939: icmp_rcv(skb=0xa0ecab00) <-ip_protocol_deliver_rcu
+            ping-1277    [030] ..s1.    39.120946: icmp_rcv(skb=0xa0ecac00) <-ip_protocol_deliver_rcu
+            ping-1277    [030] ..s1.    40.179724: icmp_rcv(skb=0xa0ecab00) <-ip_protocol_deliver_rcu
+            ping-1277    [030] ..s1.    40.179730: icmp_rcv(skb=0xa0ecac00) <-ip_protocol_deliver_rcu
+            ping-1277    [030] ..s1.    41.219700: icmp_rcv(skb=0xa0ecab00) <-ip_protocol_deliver_rcu
+            ping-1277    [030] ..s1.    41.219706: icmp_rcv(skb=0xa0ecac00) <-ip_protocol_deliver_rcu
+            ping-1277    [030] ..s1.    42.259717: icmp_rcv(skb=0xa0ecab00) <-ip_protocol_deliver_rcu
+            ping-1277    [030] ..s1.    42.259725: icmp_rcv(skb=0xa0ecac00) <-ip_protocol_deliver_rcu
+            ping-1277    [030] ..s1.    43.299735: icmp_rcv(skb=0xa0ecab00) <-ip_protocol_deliver_rcu
+            ping-1277    [030] ..s1.    43.299742: icmp_rcv(skb=0xa0ecac00) <-ip_protocol_deliver_rcu
+
+function graph:
+
+ ~# cd /sys/kernel/tracing
+ ~# echo icmp_rcv >set_graph_function
+ ~# echo function_graph >current_tracer
+ ~# echo 1 >options/funcgraph-args
+
+ ~# ping -c 1 127.0.0.1
+
+ ~# cat trace
+
+ 30)               |  icmp_rcv(skb=0xa0ecab00) {
+ 30)               |    __skb_checksum_complete(skb=0xa0ecab00) {
+ 30)               |      skb_checksum(skb=0xa0ecab00, offset=0, len=64, csum=0) {
+ 30)               |        __skb_checksum(skb=0xa0ecab00, offset=0, len=64, csum=0, ops=0x232e0327a88) {
+ 30)   0.418 us    |          csum_partial(buff=0xa0d20924, len=64, sum=0)
+ 30)   0.985 us    |        }
+ 30)   1.463 us    |      }
+ 30)   2.039 us    |    }
+[..]
+
+This was last posted by Sven Schnelle here:
+
+  https://lore.kernel.org/all/20240904065908.1009086-1-svens@linux.ibm.com/
+
+As Sven hasn't worked on it since, I decided to continue to push it
+through. I'm keeping Sven as original author and added myself as
+"Co-developed-by".
+
+Changes since v3: https://lore.kernel.org/linux-trace-kernel/20250225222601.423129938@goodmis.org/
+
+- kernel test robot flagged that this broke builds of archictecuters
+  that do not support function args access.
+  This was due to missing #ifdefs around calls of functions those archs
+  do not implement.
+
+- For archs that do not support function graph tracer, the irqsoff trace
+  uses trace_function, but that now has a new parameter.
+
+- Here's the diff between v3 and this series:
+
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index 86d828b9dc7c..cb13c88abfd6 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -2895,10 +2895,12 @@ trace_function(struct trace_array *tr, unsigned long ip, unsigned long
+ 	entry->ip			= ip;
+ 	entry->parent_ip		= parent_ip;
+ 
++#ifdef CONFIG_HAVE_FUNCTION_ARG_ACCESS_API
+ 	if (fregs) {
+ 		for (int i = 0; i < FTRACE_REGS_MAX_ARGS; i++)
+ 			entry->args[i] = ftrace_regs_get_argument(fregs, i);
+ 	}
++#endif
+ 
+ 	if (static_branch_unlikely(&trace_function_exports_enabled))
+ 		ftrace_exports(event, TRACE_EXPORT_FUNCTION);
+diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
+index 472ec5d623db..32da87f45010 100644
+--- a/kernel/trace/trace.h
++++ b/kernel/trace/trace.h
+@@ -21,6 +21,7 @@
+ #include <linux/workqueue.h>
+ #include <linux/ctype.h>
+ #include <linux/once_lite.h>
++#include <linux/ftrace_regs.h>
+ 
+ #include "pid_list.h"
+ 
+diff --git a/kernel/trace/trace_functions_graph.c b/kernel/trace/trace_functions_graph.c
+index 49fcf665cb58..71b2fb068b6b 100644
+--- a/kernel/trace/trace_functions_graph.c
++++ b/kernel/trace/trace_functions_graph.c
+@@ -132,10 +132,12 @@ static int __graph_entry(struct trace_array *tr, struct ftrace_graph_ent *trace,
+ 	entry = ring_buffer_event_data(event);
+ 	entry->graph_ent = *trace;
+ 
++#ifdef CONFIG_HAVE_FUNCTION_ARG_ACCESS_API
+ 	if (fregs) {
+ 		for (int i = 0; i < FTRACE_REGS_MAX_ARGS; i++)
+ 			entry->args[i] = ftrace_regs_get_argument(fregs, i);
+ 	}
++#endif
+ 
+ 	trace_buffer_unlock_commit_nostack(buffer, event);
+ 
+diff --git a/kernel/trace/trace_irqsoff.c b/kernel/trace/trace_irqsoff.c
+index 0ce00fe66d0c..c8bfa7310a91 100644
+--- a/kernel/trace/trace_irqsoff.c
++++ b/kernel/trace/trace_irqsoff.c
+@@ -299,7 +299,13 @@ __trace_function(struct trace_array *tr,
+ }
+ 
+ #else
+-#define __trace_function trace_function
++static inline void
++__trace_function(struct trace_array *tr,
++		 unsigned long ip, unsigned long parent_ip,
++		 unsigned int trace_ctx)
++{
++	return trace_function(tr, ip, parent_ip, trace_ctx, NULL);
++}
+ 
+ static enum print_line_t irqsoff_print_line(struct trace_iterator *iter)
+ {
+
+Changes since v2: https://lore.kernel.org/linux-trace-kernel/20241223201347.609298489@goodmis.org/
+
+- Removed unneeded headers
+
+- Put back removed '\n' that was accidentally erased.
+
+- Do not use bpf_get_btf_vmlinux() to get btf element as
+  btf_find_func_proto() will handle that.
+
+- Fixed how structures are printed
+
+Changes since Sven's work:
+
+- Made the kconfig option unconditional if all the dependencies are set.
+
+- Not save ftrace_regs in the ring buffer, as that is an abstract
+  descriptor defined by the architectures and should remain opaque from
+  generic code. Instead, the args are read at the time they are recorded
+  (with the ftrace_regs passed to the callback function), and saved into
+  the ring buffer. Then the print function only takes an array of elements.
+
+  This could allow archs to retrieve arguments that are on the stack where
+  as, post processing ftrace_regs could cause undesirable results.
+
+- Made the function and function graph entry events dynamically sized
+  to allow the arguments to be appended to the event in the ring buffer.
+  The print function only looks to see if the event saved in the ring
+  buffer is big enough to hold all the arguments defined by the new
+  FTRACE_REGS_MAX_ARGS macro and if so, it will assume there are arguments
+  there and print them. This also means user space will not break on
+  reading these events as arguments will simply be ignored.
+
+- The printing of the arguments has some more data when things are not
+  processed by BPF. Any unsupported argument will have the type printed
+  out in the ring buffer. 
+
+- Also removed the spaces around the '=' as that's more in line to how
+  trace events show their fields.
+
+- One new patch I added to convert function graph tracing over to using
+  args as soon as the user sets the option even if function graph tracing
+  is enabled. Function tracer did this already by default.
+
+
+
+Steven Rostedt (1):
+      ftrace: Have funcgraph-args take affect during tracing
+
+Sven Schnelle (3):
+      ftrace: Add print_function_args()
+      ftrace: Add support for function argument to graph tracer
+      ftrace: Add arguments to function tracer
+
+----
+ include/linux/ftrace_regs.h          |   5 +
+ kernel/trace/Kconfig                 |  12 +++
+ kernel/trace/trace.c                 |  14 ++-
+ kernel/trace/trace.h                 |   5 +-
+ kernel/trace/trace_entries.h         |  12 ++-
+ kernel/trace/trace_functions.c       |  46 +++++++++-
+ kernel/trace/trace_functions_graph.c | 172 ++++++++++++++++++++++++++++-------
+ kernel/trace/trace_irqsoff.c         |  12 ++-
+ kernel/trace/trace_output.c          | 103 ++++++++++++++++++++-
+ kernel/trace/trace_output.h          |   9 ++
+ kernel/trace/trace_sched_wakeup.c    |   4 +-
+ 11 files changed, 340 insertions(+), 54 deletions(-)
