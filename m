@@ -1,71 +1,72 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17AB724E004;
-	Thu, 27 Feb 2025 15:20:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D3771ADFE4;
+	Thu, 27 Feb 2025 16:26:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740669633; cv=none; b=jb8Oxn53nDYaejo7hrnKJVBW5ClqmtjUEm+ztHVxz8VprJQ6Njt1v7b7a5tdC80h8REsZjMppGZb9X7tx70upt/Hqr+Jh9sUhXW3ww4YVwNtNryF6tf9zpC73q/xKsWBm0iNp+Pa8gS9ESEQeKFWSaa6n8e1AR1wgs9MMfzprZk=
+	t=1740673575; cv=none; b=ZHCMtmBjvLWDxd5ZgLXTa1lbF/pwHsrEWjANBQ+gbsARUvO8eW+y81tTLQglZZTd2uUsVqxziGwz7RGd6vhPCVZdE9RYPIIgHsqg/P0XIgqyrfNI8LAyqj4POHgB9/sGlFwlHwGkXw+1QYHpbzpjlL9uXlNhhAYCz3AMx6LbAD4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740669633; c=relaxed/simple;
-	bh=O2RSGihEUeZucdzzlTWlLZ5f5Ojwj25KIj+Cw9BroWs=;
+	s=arc-20240116; t=1740673575; c=relaxed/simple;
+	bh=9pV0PaNRiWoRB5N+sSMXlSy3Ekhc7h6RUle+VERQ06Q=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=o4MucIfRhXq1Owm3jBW0t8CBIXM/zbTpRf57TuT4EOOYYsUieEYskb+FPLnMGfZYxXFTJ8l4sts0/hlHn4nOThWXysHDH4HuXaKpIk4o/m5N2iFxYuqDUJA2QH6RKs2XoUdgpCxKQ9BJwS0R2tf99ibwKLIQu+dkVVuFbxSfPZk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FKLV04MR; arc=none smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FKLV04MR"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1740669632; x=1772205632;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=O2RSGihEUeZucdzzlTWlLZ5f5Ojwj25KIj+Cw9BroWs=;
-  b=FKLV04MRYYb7b6aXwpHrfElsZjmra+KifLCD9npobdPcD6XJ+PTnz8f8
-   BRO0ec2GprKE4W+RlWeca1D1GXHrG+Mb1pwyqk8LQr694wRmx+VPzISLD
-   A/CHUEwzfLQWIx7jZH59NOq3+pEME+lINtvK9p6WV3mvkSaFDt2UedETM
-   iNL9zLs3oJ8AO2e4NHxSuAnozxtNelGgeqATD9UOcg87aqtrTGZWOui+0
-   t1C1+zxPB2j5gqAEnywl962TNVD+upBjEuAr3d2KAoDiMcIfc7j63A9zw
-   HGYQxK3OQ5gr2IG5noLmRg9N61wc4V9WrBfeUvzRGocDyx6ZWz+mpNW+9
-   g==;
-X-CSE-ConnectionGUID: moKvmkB4RRKSyEy+frWgGA==
-X-CSE-MsgGUID: VcAKaJoeRYqyEZSB5xZIqg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11358"; a="59100823"
-X-IronPort-AV: E=Sophos;i="6.13,320,1732608000"; 
-   d="scan'208";a="59100823"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2025 07:20:31 -0800
-X-CSE-ConnectionGUID: tghChrLAT3uZcFB1OG6MDw==
-X-CSE-MsgGUID: fJ23NbXIRqK8v79NrO9hEw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="121177193"
-Received: from lkp-server02.sh.intel.com (HELO 76cde6cc1f07) ([10.239.97.151])
-  by fmviesa003.fm.intel.com with ESMTP; 27 Feb 2025 07:20:25 -0800
-Received: from kbuild by 76cde6cc1f07 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1tnfgR-000DYs-2D;
-	Thu, 27 Feb 2025 15:20:23 +0000
-Date: Thu, 27 Feb 2025 23:18:40 +0800
-From: kernel test robot <lkp@intel.com>
-To: Menglong Dong <menglong8.dong@gmail.com>, rostedt@goodmis.org,
-	mark.rutland@arm.com, alexei.starovoitov@gmail.com
-Cc: Paul Gazzillo <paul@pgazz.com>,
-	Necip Fazil Yildiran <fazilyildiran@gmail.com>,
-	oe-kbuild-all@lists.linux.dev, catalin.marinas@arm.com,
-	will@kernel.org, mhiramat@kernel.org, tglx@linutronix.de,
-	mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
-	x86@kernel.org, hpa@zytor.com, mathieu.desnoyers@efficios.com,
-	nathan@kernel.org, ndesaulniers@google.com, morbo@google.com,
-	justinstitt@google.com, dongml2@chinatelecom.cn,
-	akpm@linux-foundation.org, rppt@kernel.org, graf@amazon.com,
-	dan.j.williams@intel.com, linux-arm-kernel@lists.infradead.org,
+	 Content-Type:Content-Disposition:In-Reply-To; b=YSLBoHBbAILSiM/eAbYUFHdaonr6inVWZqeDkuFmMledo3hpR29hMVywOPmzHfofFMLaBtrgMiNObZUIdWfrdIQow9+RJygoI0qqAESUgwvjwRGXxs2Pj5DdMeYc4XJvNGTuJmbzPnVx8SZuolkOLdIHRImLA1+uVCC0MlJfa7Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.208.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-5dec817f453so1596584a12.2;
+        Thu, 27 Feb 2025 08:26:13 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740673572; x=1741278372;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=9SiNTLmXpB44ayGIMhxkuJJ/NuIXuy/J+wOgM1W1l6Q=;
+        b=hkkRbu/mKDIv/reoQWGu1A765zT8jZ6R/5OVCJ6MIAIQcAIWUf1Ld/jYHp6u2GKgCC
+         +XyjIaNU4lTbjcNtXaqgOSKeLp8woz5nh7pj/1LxIRHXcWoeipi2flBlG3MSdW10WoaD
+         Z3EKe0e3cXkMpt2u06+4FhYN6pC+2DELp/LordaRrRx3pJeFW9MJ8vpmKt78bZAKfX/+
+         4HQ5Z4Thmzfqk5qUNUFnc+xzlx21P483ONnvAZsKCHgpIrCR2vkFztvQqB7/HftHdfOv
+         wz0f8bYRofq7NBqR+0AsbPeHNR7weDdBPx0P5dv5T8nMMVvkgaxs7oC2tmWJQgmhBvlx
+         zjlg==
+X-Forwarded-Encrypted: i=1; AJvYcCUlyzkFFbwJ1L8cJgqMsjgyRi2RzRkclsOxZuYXc5HjP1XBV/isnmr3Ad25Pop4Oq52TTh/1us7@vger.kernel.org, AJvYcCWBwM56Q70eRg0qYh174TPs9BG3AbPkaf6h7pJhRfEE9ZJ1OfGZDgg0MzhhOdOFHHZkaOx4nrG265VaqvqAsqkB4FF9@vger.kernel.org, AJvYcCXC9ly9hZem7cHPyJA+cimeis8iMYZZOGp6Yh2hQfL8oKykVUiPnho8vgH++KDPA6TGFx0VMahuE9OF0NM=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx8MEdrDyF6fVAUoZZft9OXwnnQq3KdxtURuNGZhBLalEVHsoQk
+	4LU8LUfQ6pRh0/D9VXfPT0G7T4ZCB1Gw/6H1kJgKZTn28xnXUr4Y
+X-Gm-Gg: ASbGncuCGx2UdJT4r+F9rWYOGPIc15739Q01V1qCY2WgW14MbPMm0WQtFNfdDrYrMYE
+	i1c5V5d0k5eqz3rNNc4HvOpnhj96tG8QUQKgys405lk8ELGe44YluTvSZEqk55VlfJyqw6GTndv
+	/8iq6keN5vBIkxgXU+rFEr9gj+RFJZFcrCli+J94uh2MtkVAwpc0budzgQyEXJBFkMHS/P+DiWf
+	Q409y6TrU+nky8rKLsoZzV1y8p9KjfxmZiFWNbmDwKv+tTviZuBgbDsON4We4X78K5HJT1kUF/6
+	xZEpe3vw/CoLTw5lKw==
+X-Google-Smtp-Source: AGHT+IFl++/yOYa9Rn+HrahvjmAv7sDLMp+8sFdPJunRtah/54z93OmcU7nX22QHGuCBIFZWglvWyw==
+X-Received: by 2002:a05:6402:2813:b0:5e4:ce6e:3885 with SMTP id 4fb4d7f45d1cf-5e4ce6e3c13mr1888970a12.2.1740673570860;
+        Thu, 27 Feb 2025 08:26:10 -0800 (PST)
+Received: from gmail.com ([2a03:2880:30ff:70::])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5e4c3b6d279sm1333711a12.23.2025.02.27.08.26.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 27 Feb 2025 08:26:10 -0800 (PST)
+Date: Thu, 27 Feb 2025 08:26:07 -0800
+From: Breno Leitao <leitao@debian.org>
+To: David Ahern <dsahern@kernel.org>
+Cc: Eric Dumazet <edumazet@google.com>,
+	Neal Cardwell <ncardwell@google.com>,
+	Kuniyuki Iwashima <kuniyu@amazon.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>, netdev@vger.kernel.org,
 	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	bpf@vger.kernel.org, llvm@lists.linux.dev
-Subject: Re: [PATCH bpf-next v2] add function metadata support
-Message-ID: <202502272339.DtueAali-lkp@intel.com>
-References: <20250226121537.752241-1-dongml2@chinatelecom.cn>
+	kernel-team@meta.com, yonghong.song@linux.dev
+Subject: Re: [PATCH net-next] trace: tcp: Add tracepoint for tcp_sendmsg()
+Message-ID: <20250227-ingenious-therapeutic-dingo-e786cc@leitao>
+References: <20250224-tcpsendmsg-v1-1-bac043c59cc8@debian.org>
+ <CANn89iLybqJ22LVy00KUOVscRr8GQ88AcJ3Oy9MjBUgN=or0jA@mail.gmail.com>
+ <559f3da9-4b3d-41c2-bf44-18329f76e937@kernel.org>
+ <20250226-cunning-innocent-degu-d6c2fe@leitao>
+ <7e148fd2-b4b7-49a1-958f-4b0838571245@kernel.org>
+ <20250226-daft-inchworm-of-love-3a98c2@leitao>
+ <CANn89iKwO6yiBS_AtcR-ymBaA83uLh8sCh6znWE__+a-tC=qhQ@mail.gmail.com>
+ <70168c8f-bf52-4279-b4c4-be64527aa1ac@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -74,33 +75,21 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250226121537.752241-1-dongml2@chinatelecom.cn>
+In-Reply-To: <70168c8f-bf52-4279-b4c4-be64527aa1ac@kernel.org>
 
-Hi Menglong,
+On Wed, Feb 26, 2025 at 11:31:49AM -0700, David Ahern wrote:
+> On 2/26/25 11:27 AM, Eric Dumazet wrote:
+> > In 2022, Menglong Dong added __fix_address
+> > 
+> > Then later , Yafang Shao  added noinline_for_tracing .
+> > 
+> > Would one of them be sufficient ?
+> 
+> tcp_sendmsg_locked should not be getting inlined; it is the
+> sendmsg_locked handler and directly called by several subsystems.
+> 
+> ie., moving the tracepoint to tcp_sendmsg_locked should solve the inline
+> problem. From there, the question is inside the loop or at entry to the
+> function. Inside the loop has been very helpful for me.
 
-kernel test robot noticed the following build warnings:
-
-[auto build test WARNING on bpf-next/master]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Menglong-Dong/add-function-metadata-support/20250226-202312
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/bpf/bpf-next.git master
-patch link:    https://lore.kernel.org/r/20250226121537.752241-1-dongml2%40chinatelecom.cn
-patch subject: [PATCH bpf-next v2] add function metadata support
-config: i386-kismet-CONFIG_CALL_PADDING-CONFIG_FUNCTION_METADATA-0-0 (https://download.01.org/0day-ci/archive/20250227/202502272339.DtueAali-lkp@intel.com/config)
-reproduce: (https://download.01.org/0day-ci/archive/20250227/202502272339.DtueAali-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202502272339.DtueAali-lkp@intel.com/
-
-kismet warnings: (new ones prefixed by >>)
->> kismet: WARNING: unmet direct dependencies detected for CALL_PADDING when selected by FUNCTION_METADATA
-   WARNING: unmet direct dependencies detected for CALL_PADDING
-     Depends on [n]: CC_HAS_ENTRY_PADDING [=y] && OBJTOOL [=n]
-     Selected by [y]:
-     - FUNCTION_METADATA [=y]
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Inside the loop would work for me as well.
