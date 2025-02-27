@@ -1,211 +1,186 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+Received: from smtp-fw-52003.amazon.com (smtp-fw-52003.amazon.com [52.119.213.152])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 172341E51E7;
-	Thu, 27 Feb 2025 17:49:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E98831B424D;
+	Thu, 27 Feb 2025 18:24:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.119.213.152
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740678558; cv=none; b=QGaj5ucAGRtch3CA68hs/y+yhA6mqCxv4uxtaWn9ZpQUZJtiy+Kfh9w9/x2+tPp808McHzVN6pv93d1IA9g3XZACkGHTUWsbTadUjYQzQ+Y+KviyVYeykdieIq7fA0Q5v2R5C6F7XU+ywyeV2lp24O+S2LHBexTfe8qcf5BWlfk=
+	t=1740680655; cv=none; b=IAQzqka42/KsxeK8w11pbhtw1AAzWqHwSFYxP4VpEAsjwc/KbUxVCpeJebWfhXu3akz8h4RWJkftNFN0h+kK/8FFlh/HbHCHEPAvbN7A7pTmxY7tnycFFczsE//9FMTO83y9ZXfWx/4QxDbBXkA8B/gGmb1ahUIJj6d4LxyiMIQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740678558; c=relaxed/simple;
-	bh=hbOcWRR965qL+r3t+KOoQIZ6pqo51J3oCtyYdu/MbP8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Fm/S2S+gpk9FDG8Q/qvhmLc6wRELUjZQNT6uySP69qUtLClVVEDwbkiAO1rKzBnxw2rP+4xT2UJiTozszqFlRdciM+UqQfrxYM1pDHXlbo/tVBC8ZPaLWP47lOBshktWrt9io//cu+Gb7PQn/ov+6k67Hy8NLVffS5ATDnc018U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eRC9CMEb; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1740680655; c=relaxed/simple;
+	bh=I1CbooREzLYn9AAlLO5H4sUKHJxW7EPg7nEEHpyFmNQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=FFWuTyj8wYmrxXFj150GVeZijiDkf2/ls5hy3WKQPM1CYAZAQDivcgg0BiJGNSCm6FujP44nrXNASqqaqd//MVmGnH7OWWGKGJnxADAz4td94Zw6B1ADugjappO5nuTQXu2YzDqPx81cKIQwmCVeIimaXVT6GB9IUZ6I82VD3yE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.co.uk; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=G3/XvC/X; arc=none smtp.client-ip=52.119.213.152
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eRC9CMEb"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1740678556; x=1772214556;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=hbOcWRR965qL+r3t+KOoQIZ6pqo51J3oCtyYdu/MbP8=;
-  b=eRC9CMEbSw91m9MKdtFIALTXHdePzXEhMRanjuPXzLktTxSKsx0FQ/IG
-   0it4Neh5y9184DEnohQxRgyMOgrlM0pQVIQ2zXoFlv4CddpjaI7d592Qs
-   nAEiDKfu7yUWRHS9Xbw5pd5eYq2sCX5RDLn835kJYy7i0SnQDzefRbt4h
-   c3eyZdDACbMftHZKBFfGyYJkD3Gbdz96aH6OjUdOYSNH+QcNe5XWYqoiC
-   W4Exqf9xCbygpsY3PzpDCpNxsQjK5EVtX4ep3ZXrWMx3VSPMdyGJtDPa8
-   g7dzEit1XaGm3REFAc5jUhTTrEBvyHL5vqzlWIP6n+mwyhi5PBp9d/7k+
-   g==;
-X-CSE-ConnectionGUID: XLGVswL3Rfa16ts4q2dg7g==
-X-CSE-MsgGUID: ahRYtFKqR0qSZtSFKP117g==
-X-IronPort-AV: E=McAfee;i="6700,10204,11358"; a="41503217"
-X-IronPort-AV: E=Sophos;i="6.13,320,1732608000"; 
-   d="scan'208";a="41503217"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2025 09:49:16 -0800
-X-CSE-ConnectionGUID: od8b3YkhQHOqc5lLH407AA==
-X-CSE-MsgGUID: qM2gFwLiQoGeQ9Pbh3oF7w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,320,1732608000"; 
-   d="scan'208";a="117753696"
-Received: from lkp-server02.sh.intel.com (HELO 76cde6cc1f07) ([10.239.97.151])
-  by fmviesa009.fm.intel.com with ESMTP; 27 Feb 2025 09:49:09 -0800
-Received: from kbuild by 76cde6cc1f07 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1tni0R-000DnH-0q;
-	Thu, 27 Feb 2025 17:49:07 +0000
-Date: Fri, 28 Feb 2025 01:48:52 +0800
-From: kernel test robot <lkp@intel.com>
-To: Menglong Dong <menglong8.dong@gmail.com>, rostedt@goodmis.org,
-	mark.rutland@arm.com, alexei.starovoitov@gmail.com
-Cc: oe-kbuild-all@lists.linux.dev, catalin.marinas@arm.com, will@kernel.org,
-	mhiramat@kernel.org, tglx@linutronix.de, mingo@redhat.com,
-	bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org,
-	hpa@zytor.com, mathieu.desnoyers@efficios.com, nathan@kernel.org,
-	ndesaulniers@google.com, morbo@google.com, justinstitt@google.com,
-	dongml2@chinatelecom.cn, akpm@linux-foundation.org, rppt@kernel.org,
-	graf@amazon.com, dan.j.williams@intel.com,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org,
-	llvm@lists.linux.dev
-Subject: Re: [PATCH bpf-next v2] add function metadata support
-Message-ID: <202502280123.BNaCYT2A-lkp@intel.com>
-References: <20250226121537.752241-1-dongml2@chinatelecom.cn>
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="G3/XvC/X"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1740680653; x=1772216653;
+  h=message-id:date:mime-version:reply-to:subject:to:cc:
+   references:from:in-reply-to:content-transfer-encoding;
+  bh=j3OPBGuyioaxsCKCSnyqb+F4cY9H+pA8vNbT+Ls4f/A=;
+  b=G3/XvC/X20YPL2O+wFXBQjsinccl8Xrr8olD/DNvb4u9vyeruoSySQ6O
+   j2XE1DuRKasNrTmRWGl4HI4hV/kULyXW60nyLoBj62xFDeO1k0AhNIZal
+   Q2Bk5rO+fxMlNcLuG1XSiVin7/Ci8M97xlPAKA9SzeoIkc+659CB2Jrff
+   g=;
+X-IronPort-AV: E=Sophos;i="6.13,320,1732579200"; 
+   d="scan'208";a="69833984"
+Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO smtpout.prod.us-east-1.prod.farcaster.email.amazon.dev) ([10.43.8.6])
+  by smtp-border-fw-52003.iad7.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2025 18:24:10 +0000
+Received: from EX19MTAEUC002.ant.amazon.com [10.0.43.254:43332]
+ by smtpin.naws.eu-west-1.prod.farcaster.email.amazon.dev [10.0.1.85:2525] with esmtp (Farcaster)
+ id a2951172-87b8-49fe-bd0f-813ab7bbf005; Thu, 27 Feb 2025 18:24:08 +0000 (UTC)
+X-Farcaster-Flow-ID: a2951172-87b8-49fe-bd0f-813ab7bbf005
+Received: from EX19D022EUC002.ant.amazon.com (10.252.51.137) by
+ EX19MTAEUC002.ant.amazon.com (10.252.51.245) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
+ Thu, 27 Feb 2025 18:24:08 +0000
+Received: from [192.168.19.93] (10.106.83.21) by EX19D022EUC002.ant.amazon.com
+ (10.252.51.137) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14; Thu, 27 Feb 2025
+ 18:24:07 +0000
+Message-ID: <7f2b25c9-c92b-4b0a-bfd9-dda8b0b7a244@amazon.com>
+Date: Thu, 27 Feb 2025 18:24:05 +0000
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250226121537.752241-1-dongml2@chinatelecom.cn>
+User-Agent: Mozilla Thunderbird
+Reply-To: <kalyazin@amazon.com>
+Subject: Re: [RFC PATCH 0/6] KVM: x86: async PF user
+To: Sean Christopherson <seanjc@google.com>
+CC: <pbonzini@redhat.com>, <corbet@lwn.net>, <tglx@linutronix.de>,
+	<mingo@redhat.com>, <bp@alien8.de>, <dave.hansen@linux.intel.com>,
+	<hpa@zytor.com>, <rostedt@goodmis.org>, <mhiramat@kernel.org>,
+	<mathieu.desnoyers@efficios.com>, <kvm@vger.kernel.org>,
+	<linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-trace-kernel@vger.kernel.org>, <jthoughton@google.com>,
+	<david@redhat.com>, <peterx@redhat.com>, <oleg@redhat.com>,
+	<vkuznets@redhat.com>, <gshan@redhat.com>, <graf@amazon.de>,
+	<jgowans@amazon.com>, <roypat@amazon.co.uk>, <derekmn@amazon.com>,
+	<nsaenz@amazon.es>, <xmarcalx@amazon.com>
+References: <20241118123948.4796-1-kalyazin@amazon.com>
+ <Z6u-WdbiW3n7iTjp@google.com>
+ <a7080c07-0fc5-45ce-92f7-5f432a67bc63@amazon.com>
+ <Z7X2EKzgp_iN190P@google.com>
+ <6eddd049-7c7a-406d-b763-78fa1e7d921b@amazon.com>
+ <Z7d5HT7FpE-ZsHQ9@google.com>
+ <f820b630-13c1-4164-baa8-f5e8231612d1@amazon.com>
+ <Z75nRwSBxpeMwbsR@google.com>
+ <946fc0f5-4306-4aa9-9b63-f7ccbaff8003@amazon.com>
+ <Z8CWUiAYVvNKqzfK@google.com>
+Content-Language: en-US
+From: Nikita Kalyazin <kalyazin@amazon.com>
+Autocrypt: addr=kalyazin@amazon.com; keydata=
+ xjMEY+ZIvRYJKwYBBAHaRw8BAQdA9FwYskD/5BFmiiTgktstviS9svHeszG2JfIkUqjxf+/N
+ JU5pa2l0YSBLYWx5YXppbiA8a2FseWF6aW5AYW1hem9uLmNvbT7CjwQTFggANxYhBGhhGDEy
+ BjLQwD9FsK+SyiCpmmTzBQJnrNfABQkFps9DAhsDBAsJCAcFFQgJCgsFFgIDAQAACgkQr5LK
+ IKmaZPOpfgD/exazh4C2Z8fNEz54YLJ6tuFEgQrVQPX6nQ/PfQi2+dwBAMGTpZcj9Z9NvSe1
+ CmmKYnYjhzGxzjBs8itSUvWIcMsFzjgEY+ZIvRIKKwYBBAGXVQEFAQEHQCqd7/nb2tb36vZt
+ ubg1iBLCSDctMlKHsQTp7wCnEc4RAwEIB8J+BBgWCAAmFiEEaGEYMTIGMtDAP0Wwr5LKIKma
+ ZPMFAmes18AFCQWmz0MCGwwACgkQr5LKIKmaZPNTlQEA+q+rGFn7273rOAg+rxPty0M8lJbT
+ i2kGo8RmPPLu650A/1kWgz1AnenQUYzTAFnZrKSsXAw5WoHaDLBz9kiO5pAK
+In-Reply-To: <Z8CWUiAYVvNKqzfK@google.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: EX19D006EUA002.ant.amazon.com (10.252.50.65) To
+ EX19D022EUC002.ant.amazon.com (10.252.51.137)
 
-Hi Menglong,
+On 27/02/2025 16:44, Sean Christopherson wrote:
+> On Wed, Feb 26, 2025, Nikita Kalyazin wrote:
+>> On 26/02/2025 00:58, Sean Christopherson wrote:
+>>> On Fri, Feb 21, 2025, Nikita Kalyazin wrote:
+>>>> On 20/02/2025 18:49, Sean Christopherson wrote:
+>>>>> On Thu, Feb 20, 2025, Nikita Kalyazin wrote:
+>>>>>> On 19/02/2025 15:17, Sean Christopherson wrote:
+>>>>>>> On Wed, Feb 12, 2025, Nikita Kalyazin wrote:
+>>>>>>> The conundrum with userspace async #PF is that if userspace is given only a single
+>>>>>>> bit per gfn to force an exit, then KVM won't be able to differentiate between
+>>>>>>> "faults" that will be handled synchronously by the vCPU task, and faults that
+>>>>>>> usersepace will hand off to an I/O task.  If the fault is handled synchronously,
+>>>>>>> KVM will needlessly inject a not-present #PF and a present IRQ.
+>>>>>>
+>>>>>> Right, but from the guest's point of view, async PF means "it will probably
+>>>>>> take a while for the host to get the page, so I may consider doing something
+>>>>>> else in the meantime (ie schedule another process if available)".
+>>>>>
+>>>>> Except in this case, the guest never gets a chance to run, i.e. it can't do
+>>>>> something else.  From the guest point of view, if KVM doesn't inject what is
+>>>>> effectively a spurious async #PF, the VM-Exiting instruction simply took a (really)
+>>>>> long time to execute.
+>>>>
+>>>> Sorry, I didn't get that.  If userspace learns from the
+>>>> kvm_run::memory_fault::flags that the exit is due to an async PF, it should
+>>>> call kvm run immediately, inject the not-present PF and allow the guest to
+>>>> reschedule.  What do you mean by "the guest never gets a chance to run"?
+>>>
+>>> What I'm saying is that, as proposed, the API doesn't precisely tell userspace
+>                                                                           ^^^^^^^^^
+>                                                                           KVM
+>>> an exit happened due to an "async #PF".  KVM has absolutely zero clue as to
+>>> whether or not userspace is going to do an async #PF, or if userspace wants to
+>>> intercept the fault for some entirely different purpose.
+>>
+>> Userspace is supposed to know whether the PF is async from the dedicated
+>> flag added in the memory_fault structure:
+>> KVM_MEMORY_EXIT_FLAG_ASYNC_PF_USER.  It will be set when KVM managed to
+>> inject page-not-present.  Are you saying it isn't sufficient?
+> 
+> Gah, sorry, typo.  The API doesn't tell *KVM* that userfault exit is due to an
+> async #PF.
+> 
+>>> Unless the remote page was already requested, e.g. by a different vCPU, or by a
+>>> prefetching algorithim.
+>>>
+>>>> Conversely, if the page content is available, it must have already been
+>>>> prepopulated into guest memory pagecache, the bit in the bitmap is cleared
+>>>> and no exit to userspace occurs.
+>>>
+>>> But that doesn't happen instantaneously.  Even if the VMM somehow atomically
+>>> receives the page and marks it present, it's still possible for marking the page
+>>> present to race with KVM checking the bitmap.
+>>
+>> That looks like a generic problem of the VM-exit fault handling.  Eg when
+> 
+> Heh, it's a generic "problem" for faults in general.  E.g. modern x86 CPUs will
+> take "spurious" page faults on write accesses if a PTE is writable in memory but
+> the CPU has a read-only mapping cached in its TLB.
+> 
+> It's all a matter of cost.  E.g. pre-Nehalem Intel CPUs didn't take such spurious
+> read-only faults as they would re-walk the in-memory page tables, but that ended
+> up being a net negative because the cost of re-walking for all read-only faults
+> outweighed the benefits of avoiding spurious faults in the unlikely scenario the
+> fault had already been fixed.
+> 
+> For a spurious async #PF + IRQ, the cost could be signficant, e.g. due to causing
+> unwanted context switches in the guest, in addition to the raw overhead of the
+> faults, interrupts, and exits.
+> 
+>> one vCPU exits, userspace handles the fault and races setting the bitmap
+>> with another vCPU that is about to fault the same page, which may cause a
+>> spurious exit.
+>>
+>> On the other hand, is it malignant?  The only downside is additional
+>> overhead of the async PF protocol, but if the race occurs infrequently, it
+>> shouldn't be a problem.
+> 
+> When it comes to uAPI, I want to try and avoid statements along the lines of
+> "IF 'x' holds true, then 'y' SHOULDN'T be a problem".  If this didn't impact uAPI,
+> I wouldn't care as much, i.e. I'd be much more willing iterate as needed.
+> 
+> I'm not saying we should go straight for a complex implementation.  Quite the
+> opposite.  But I do want us to consider the possible ramifications of using a
+> single bit for all userfaults, so that we can at least try to design something
+> that is extensible and won't be a pain to maintain.
 
-kernel test robot noticed the following build warnings:
-
-[auto build test WARNING on bpf-next/master]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Menglong-Dong/add-function-metadata-support/20250226-202312
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/bpf/bpf-next.git master
-patch link:    https://lore.kernel.org/r/20250226121537.752241-1-dongml2%40chinatelecom.cn
-patch subject: [PATCH bpf-next v2] add function metadata support
-config: i386-randconfig-062-20250227 (https://download.01.org/0day-ci/archive/20250228/202502280123.BNaCYT2A-lkp@intel.com/config)
-compiler: clang version 19.1.7 (https://github.com/llvm/llvm-project cd708029e0b2869e80abe31ddb175f7c35361f90)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250228/202502280123.BNaCYT2A-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202502280123.BNaCYT2A-lkp@intel.com/
-
-sparse warnings: (new ones prefixed by >>)
-   kernel/trace/kfunc_md.c:12:23: sparse: sparse: symbol 'kfunc_mds' redeclared with different type (different address spaces):
-   kernel/trace/kfunc_md.c:12:23: sparse:    struct kfunc_md [noderef] __rcu *[addressable] [toplevel] kfunc_mds
-   kernel/trace/kfunc_md.c: note: in included file:
-   include/linux/kfunc_md.h:16:24: sparse: note: previously declared as:
-   include/linux/kfunc_md.h:16:24: sparse:    struct kfunc_md *extern [addressable] [toplevel] kfunc_mds
-   kernel/trace/kfunc_md.c:186:20: sparse: sparse: incorrect type in assignment (different address spaces) @@     expected struct kfunc_md *md @@     got struct kfunc_md [noderef] __rcu * @@
-   kernel/trace/kfunc_md.c:186:20: sparse:     expected struct kfunc_md *md
-   kernel/trace/kfunc_md.c:186:20: sparse:     got struct kfunc_md [noderef] __rcu *
->> kernel/trace/kfunc_md.c:98:25: sparse: sparse: non size-preserving pointer to integer cast
-
-vim +98 kernel/trace/kfunc_md.c
-
-    10	
-    11	static u32 kfunc_md_count = ENTRIES_PER_PAGE, kfunc_md_used;
-  > 12	struct kfunc_md __rcu *kfunc_mds;
-    13	EXPORT_SYMBOL_GPL(kfunc_mds);
-    14	
-    15	static DEFINE_MUTEX(kfunc_md_mutex);
-    16	
-    17	
-    18	void kfunc_md_unlock(void)
-    19	{
-    20		mutex_unlock(&kfunc_md_mutex);
-    21	}
-    22	EXPORT_SYMBOL_GPL(kfunc_md_unlock);
-    23	
-    24	void kfunc_md_lock(void)
-    25	{
-    26		mutex_lock(&kfunc_md_mutex);
-    27	}
-    28	EXPORT_SYMBOL_GPL(kfunc_md_lock);
-    29	
-    30	static u32 kfunc_md_get_index(void *ip)
-    31	{
-    32		return *(u32 *)(ip - KFUNC_MD_DATA_OFFSET);
-    33	}
-    34	
-    35	static void kfunc_md_init(struct kfunc_md *mds, u32 start, u32 end)
-    36	{
-    37		u32 i;
-    38	
-    39		for (i = start; i < end; i++)
-    40			mds[i].users = 0;
-    41	}
-    42	
-    43	static int kfunc_md_page_order(void)
-    44	{
-    45		return fls(DIV_ROUND_UP(kfunc_md_count, ENTRIES_PER_PAGE)) - 1;
-    46	}
-    47	
-    48	/* Get next usable function metadata. On success, return the usable
-    49	 * kfunc_md and store the index of it to *index. If no usable kfunc_md is
-    50	 * found in kfunc_mds, a larger array will be allocated.
-    51	 */
-    52	static struct kfunc_md *kfunc_md_get_next(u32 *index)
-    53	{
-    54		struct kfunc_md *new_mds, *mds;
-    55		u32 i, order;
-    56	
-    57		mds = rcu_dereference(kfunc_mds);
-    58		if (mds == NULL) {
-    59			order = kfunc_md_page_order();
-    60			new_mds = (void *)__get_free_pages(GFP_KERNEL, order);
-    61			if (!new_mds)
-    62				return NULL;
-    63			kfunc_md_init(new_mds, 0, kfunc_md_count);
-    64			/* The first time to initialize kfunc_mds, so it is not
-    65			 * used anywhere yet, and we can update it directly.
-    66			 */
-    67			rcu_assign_pointer(kfunc_mds, new_mds);
-    68			mds = new_mds;
-    69		}
-    70	
-    71		if (likely(kfunc_md_used < kfunc_md_count)) {
-    72			/* maybe we can manage the used function metadata entry
-    73			 * with a bit map ?
-    74			 */
-    75			for (i = 0; i < kfunc_md_count; i++) {
-    76				if (!mds[i].users) {
-    77					kfunc_md_used++;
-    78					*index = i;
-    79					mds[i].users++;
-    80					return mds + i;
-    81				}
-    82			}
-    83		}
-    84	
-    85		order = kfunc_md_page_order();
-    86		/* no available function metadata, so allocate a bigger function
-    87		 * metadata array.
-    88		 */
-    89		new_mds = (void *)__get_free_pages(GFP_KERNEL, order + 1);
-    90		if (!new_mds)
-    91			return NULL;
-    92	
-    93		memcpy(new_mds, mds, kfunc_md_count * sizeof(*new_mds));
-    94		kfunc_md_init(new_mds, kfunc_md_count, kfunc_md_count * 2);
-    95	
-    96		rcu_assign_pointer(kfunc_mds, new_mds);
-    97		synchronize_rcu();
-  > 98		free_pages((u64)mds, order);
-    99	
-   100		mds = new_mds + kfunc_md_count;
-   101		*index = kfunc_md_count;
-   102		kfunc_md_count <<= 1;
-   103		kfunc_md_used++;
-   104		mds->users++;
-   105	
-   106		return mds;
-   107	}
-   108	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+So you would've liked more the "two-bit per gfn" approach as in: provide 
+2 interception points, for sync and async exits, with the former chosen 
+by userspace when it "knows" that the content is already in memory? 
+What makes it a conundrum then?  It looks like an incremental change to 
+what has already been proposed.  There is a complication that 2-bit 
+operations aren't atomic, but even 1 bit is racy between KVM and userspace.
