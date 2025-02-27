@@ -1,363 +1,221 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0920215769;
-	Thu, 27 Feb 2025 18:57:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 776EA1E832D;
+	Thu, 27 Feb 2025 19:53:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740682659; cv=none; b=ZyTsvGAKv4VxSf1LF65JQexLNanbdbvoUGfgMjbRzvDNsjFXki0QL+fftO/yPLHddxUiLvjPvTyz4EJY+9YECcGTEIE0UC2b7vtxAgAmYHqTW9dDg+axU0yRwEzI7sXgi2/p61FL6OZ9CSzlywwFnsNROAPdZX0ChfLAsjHoqbE=
+	t=1740686009; cv=none; b=bN31Dn94+wwDoQE+X/K9pGnEfd5EN6L9afnLUfDn1Hphff2KYj4RuN4q/ImXxCHzKCTSGvJxVYvxGS7V3O2/cDxuqhLr9AX+xgOKaLChYEni17EG++hk8foPcFlmoRyxN1exsuLVliISD04O9WzRUTHfB1jkwuriNMk3QWyEWpU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740682659; c=relaxed/simple;
-	bh=75NhAFRF+JLlYAINhq+WwIi22Lhv7jwxXtxpD0YdsMY=;
-	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=rZ5nwDUGRkK0g2bCO9PXiluNYa4H7jlm6froCp5Qz9FhyVA3hR4gCQk0r8lO5PmlvCktYbk4KT5dwUM1ZQKZigHeHuw1WGw/GXta5jXN+09Lpw4F8u4nJdd/uhnPsvVPt3JbdmQWQmeOM1pMCn9PY9PCbmzav9I/X2UwN2GGNi8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6EF77C4CEE4;
-	Thu, 27 Feb 2025 18:57:39 +0000 (UTC)
-Received: from rostedt by gandalf with local (Exim 4.98)
-	(envelope-from <rostedt@goodmis.org>)
-	id 1tnj5T-00000009nSX-1GYc;
-	Thu, 27 Feb 2025 13:58:23 -0500
-Message-ID: <20250227185823.154996172@goodmis.org>
-User-Agent: quilt/0.68
-Date: Thu, 27 Feb 2025 13:58:08 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org,
- bpf@vger.kernel.org
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- Sven Schnelle <svens@linux.ibm.com>,
- Paul Walmsley <paul.walmsley@sifive.com>,
- Palmer Dabbelt <palmer@dabbelt.com>,
- Albert Ou <aou@eecs.berkeley.edu>,
- Guo Ren <guoren@kernel.org>,
- Donglin Peng <dolinux.peng@gmail.com>,
- Zheng Yejian <zhengyejian@huaweicloud.com>
-Subject: [PATCH v4 4/4] ftrace: Add arguments to function tracer
-References: <20250227185804.639525399@goodmis.org>
+	s=arc-20240116; t=1740686009; c=relaxed/simple;
+	bh=Pybs4UBoKUiyRMTbYO8kBDo7Uwc8g6SoPNrJghcwkX0=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=jkBOh26B7tt1/6ydo30r6tG+Ro94nS5RZg82Z0dl2J+PXOCB2FzCaebSyVfM7a4ORthqkLZgMsj5lPfc1nREPJ+50PwqSQN6XUp5QHIGd4WIuxAN/qEGUJiUGKmTLb0aTeIeTDG1zbLQvKUF7INWJRMws8PBNLw94+LiwOmAivY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=h1FheZU2; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h1FheZU2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 641F1C4CEDD;
+	Thu, 27 Feb 2025 19:53:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740686008;
+	bh=Pybs4UBoKUiyRMTbYO8kBDo7Uwc8g6SoPNrJghcwkX0=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=h1FheZU2m9MmaMkRZYDWhM1KYHFXHc1TpEzMtsbhQVH7Iq0KnCAfl6l+bswhgX6RY
+	 aLUwWkO38/dkK2WFixD/fZMeeUBmm5ZTYAUV6Yb+0JXc3/EBrZs5VHO7SAVgomJq0P
+	 SFhCRh5GzzqNfWK/vAYSke/KwJ1715AkdWxAe0sB8QQbLYMsxOWNUXmpGfNYs8458T
+	 iYh8ZhXsBSNPCJTzNYWpGtqdieBSjWUoG5IGs/6xArhap7CCu/6Cxqv66OHxEvRDSS
+	 4WkGehXi1ixjFi1o87ZhvTEFHG6uG5wJ3Nq6Knsu2M77rNKKm4/yDQlfASjueYTiCd
+	 Ipq9yj3Kd4O9Q==
+Message-ID: <0af3b796add9016c6e34b0b9b3eca673aaaa3a7d.camel@kernel.org>
+Subject: Re: [PATCH] tracing: Fix bad hist from corrupting named_triggers
+ list
+From: Tom Zanussi <zanussi@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>, LKML
+ <linux-kernel@vger.kernel.org>,  Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+	 <mathieu.desnoyers@efficios.com>, Tomas Glozar <tglozar@redhat.com>
+Date: Thu, 27 Feb 2025 13:53:27 -0600
+In-Reply-To: <20250225125356.29236cd1@gandalf.local.home>
+References: <20250225125356.29236cd1@gandalf.local.home>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.3-0ubuntu1 
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 
-From: Sven Schnelle <svens@linux.ibm.com>
+Hi Steve,
 
-Wire up the code to print function arguments in the function tracer.
-This functionality can be enabled/disabled during runtime with
-options/func-args.
+On Tue, 2025-02-25 at 12:53 -0500, Steven Rostedt wrote:
+> From: Steven Rostedt <rostedt@goodmis.org>
+>=20
+> The following commands causes a crash:
+>=20
+> =C2=A0~# cd /sys/kernel/tracing/events/rcu/rcu_callback
+> =C2=A0~# echo 'hist:name=3Dbad:keys=3Dcommon_pid:onmax(bogus).save(common=
+_pid)' > trigger
+> =C2=A0bash: echo: write error: Invalid argument
+> =C2=A0~# echo 'hist:name=3Dbad:keys=3Dcommon_pid' > trigger
+>=20
+> Because the following occurs:
+>=20
+> event_trigger_write() {
+> =C2=A0 trigger_process_regex() {
+> =C2=A0=C2=A0=C2=A0 event_hist_trigger_parse() {
+>=20
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 data =3D event_trigger_alloc(..);
+>=20
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 event_trigger_register(.., data) {
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 cmd_ops->reg(.., data, ..) [hi=
+st_register_trigger()] {
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 data->ops->init() =
+[event_hist_trigger_init()] {
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 save_n=
+amed_trigger(name, data) {
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0 list_add(&data->named_list, &named_triggers);
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
+>=20
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ret =3D create_actions(); (return -EINVAL)
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (ret)
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 goto out_unreg;
+> [..]
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ret =3D hist_trigger_enable(data, ...) {
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 list_add_tail_rcu(&data->list,=
+ &file->triggers); <<<---- SKIPPED!!! (this is important!)
+> [..]
+> =C2=A0out_unreg:
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 event_hist_unregister(.., data) {
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 cmd_ops->unreg(.., data, ..) [=
+hist_unregister_trigger()] {
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 list_for_each_entr=
+y(iter, &file->triggers, list) {
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (!h=
+ist_trigger_match(data, iter, named_data, false))=C2=A0=C2=A0 <- never matc=
+hes
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0 continue;
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 [..]
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 test =
+=3D iter;
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (test && test->=
+ops->free) <<<-- test is NULL
+>=20
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 test->=
+ops->free(test) [event_hist_trigger_free()] {
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0 [..]
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0 if (data->name)
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0 del_named_trigger(data) {
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 list_del(&data->named_list);=C2=A0 <<<<-- NE=
+VER gets removed!
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0 }
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0 }
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
+>=20
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 [..]
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 kfree(data); <<<-- frees=
+ item but it is still on list
+>=20
+> The next time a hist with name is registered, it causes an u-a-f bug and
+> the kernel can crash.
+>=20
+> Move the code around such that if event_trigger_register() succeeds, the
+> next thing called is hist_trigger_enable() which adds it to the list.
+>=20
+> A bunch of actions is called if get_named_trigger_data() returns false.
+> But that doesn't need to be called after event_trigger_register(), so it
+> can be moved up, allowing event_trigger_register() to be called just
+> before hist_trigger_enable() keeping them together and allowing the
+> file->triggers to be properly populated.
+>=20
+> Cc: stable@vger.kernel.org
+> Fixes: 067fe038e70f6 ("tracing: Add variable reference handling to hist t=
+riggers")
+> Reported-by: Tomas Glozar <tglozar@redhat.com>
+> Closes: https://lore.kernel.org/all/CAP4=3DnvTsxjckSBTz=3DOe_UYh8keD9_sZC=
+4i++4h72mJLic4_W4A@mail.gmail.com/
+> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 
-        ping-689     [004] b....    77.170220: dummy_xmit(skb = 0x82904800, dev = 0x882d0000) <-dev_hard_start_xmit
+Looks like a good fix, and is cleaner without the goto as well. Small typo =
+below...
 
-Reviewed-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-Co-developed-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-Signed-off-by: Sven Schnelle <svens@linux.ibm.com>
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
- kernel/trace/trace.c              | 14 ++++++++--
- kernel/trace/trace.h              |  4 ++-
- kernel/trace/trace_entries.h      |  5 ++--
- kernel/trace/trace_functions.c    | 46 +++++++++++++++++++++++++++----
- kernel/trace/trace_irqsoff.c      | 12 ++++++--
- kernel/trace/trace_output.c       | 18 ++++++++++--
- kernel/trace/trace_sched_wakeup.c |  4 +--
- 7 files changed, 85 insertions(+), 18 deletions(-)
-
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index 0e6d517e74e0..cb13c88abfd6 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -2878,13 +2878,16 @@ trace_buffer_unlock_commit_nostack(struct trace_buffer *buffer,
- 
- void
- trace_function(struct trace_array *tr, unsigned long ip, unsigned long
--	       parent_ip, unsigned int trace_ctx)
-+	       parent_ip, unsigned int trace_ctx, struct ftrace_regs *fregs)
- {
- 	struct trace_buffer *buffer = tr->array_buffer.buffer;
- 	struct ring_buffer_event *event;
- 	struct ftrace_entry *entry;
-+	int size = sizeof(*entry);
- 
--	event = __trace_buffer_lock_reserve(buffer, TRACE_FN, sizeof(*entry),
-+	size += FTRACE_REGS_MAX_ARGS * !!fregs * sizeof(long);
-+
-+	event = __trace_buffer_lock_reserve(buffer, TRACE_FN, size,
- 					    trace_ctx);
- 	if (!event)
- 		return;
-@@ -2892,6 +2895,13 @@ trace_function(struct trace_array *tr, unsigned long ip, unsigned long
- 	entry->ip			= ip;
- 	entry->parent_ip		= parent_ip;
- 
-+#ifdef CONFIG_HAVE_FUNCTION_ARG_ACCESS_API
-+	if (fregs) {
-+		for (int i = 0; i < FTRACE_REGS_MAX_ARGS; i++)
-+			entry->args[i] = ftrace_regs_get_argument(fregs, i);
-+	}
-+#endif
-+
- 	if (static_branch_unlikely(&trace_function_exports_enabled))
- 		ftrace_exports(event, TRACE_EXPORT_FUNCTION);
- 	__buffer_unlock_commit(buffer, event);
-diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
-index 6963cd83b6da..32da87f45010 100644
---- a/kernel/trace/trace.h
-+++ b/kernel/trace/trace.h
-@@ -21,6 +21,7 @@
- #include <linux/workqueue.h>
- #include <linux/ctype.h>
- #include <linux/once_lite.h>
-+#include <linux/ftrace_regs.h>
- 
- #include "pid_list.h"
- 
-@@ -697,7 +698,8 @@ unsigned long trace_total_entries(struct trace_array *tr);
- void trace_function(struct trace_array *tr,
- 		    unsigned long ip,
- 		    unsigned long parent_ip,
--		    unsigned int trace_ctx);
-+		    unsigned int trace_ctx,
-+		    struct ftrace_regs *regs);
- void trace_graph_function(struct trace_array *tr,
- 		    unsigned long ip,
- 		    unsigned long parent_ip,
-diff --git a/kernel/trace/trace_entries.h b/kernel/trace/trace_entries.h
-index 77a8ba3bc1e3..ee40d4e6ad1c 100644
---- a/kernel/trace/trace_entries.h
-+++ b/kernel/trace/trace_entries.h
-@@ -61,8 +61,9 @@ FTRACE_ENTRY_REG(function, ftrace_entry,
- 	TRACE_FN,
- 
- 	F_STRUCT(
--		__field_fn(	unsigned long,	ip		)
--		__field_fn(	unsigned long,	parent_ip	)
-+		__field_fn(	unsigned long,		ip		)
-+		__field_fn(	unsigned long,		parent_ip	)
-+		__dynamic_array( unsigned long,		args		)
- 	),
- 
- 	F_printk(" %ps <-- %ps",
-diff --git a/kernel/trace/trace_functions.c b/kernel/trace/trace_functions.c
-index df56f9b76010..98ccf3f00c51 100644
---- a/kernel/trace/trace_functions.c
-+++ b/kernel/trace/trace_functions.c
-@@ -25,6 +25,9 @@ static void
- function_trace_call(unsigned long ip, unsigned long parent_ip,
- 		    struct ftrace_ops *op, struct ftrace_regs *fregs);
- static void
-+function_args_trace_call(unsigned long ip, unsigned long parent_ip,
-+			 struct ftrace_ops *op, struct ftrace_regs *fregs);
-+static void
- function_stack_trace_call(unsigned long ip, unsigned long parent_ip,
- 			  struct ftrace_ops *op, struct ftrace_regs *fregs);
- static void
-@@ -42,9 +45,10 @@ enum {
- 	TRACE_FUNC_NO_OPTS		= 0x0, /* No flags set. */
- 	TRACE_FUNC_OPT_STACK		= 0x1,
- 	TRACE_FUNC_OPT_NO_REPEATS	= 0x2,
-+	TRACE_FUNC_OPT_ARGS		= 0x4,
- 
- 	/* Update this to next highest bit. */
--	TRACE_FUNC_OPT_HIGHEST_BIT	= 0x4
-+	TRACE_FUNC_OPT_HIGHEST_BIT	= 0x8
- };
- 
- #define TRACE_FUNC_OPT_MASK	(TRACE_FUNC_OPT_HIGHEST_BIT - 1)
-@@ -114,6 +118,8 @@ static ftrace_func_t select_trace_function(u32 flags_val)
- 	switch (flags_val & TRACE_FUNC_OPT_MASK) {
- 	case TRACE_FUNC_NO_OPTS:
- 		return function_trace_call;
-+	case TRACE_FUNC_OPT_ARGS:
-+		return function_args_trace_call;
- 	case TRACE_FUNC_OPT_STACK:
- 		return function_stack_trace_call;
- 	case TRACE_FUNC_OPT_NO_REPEATS:
-@@ -220,7 +226,34 @@ function_trace_call(unsigned long ip, unsigned long parent_ip,
- 
- 	data = this_cpu_ptr(tr->array_buffer.data);
- 	if (!atomic_read(&data->disabled))
--		trace_function(tr, ip, parent_ip, trace_ctx);
-+		trace_function(tr, ip, parent_ip, trace_ctx, NULL);
-+
-+	ftrace_test_recursion_unlock(bit);
-+}
-+
-+static void
-+function_args_trace_call(unsigned long ip, unsigned long parent_ip,
-+			 struct ftrace_ops *op, struct ftrace_regs *fregs)
-+{
-+	struct trace_array *tr = op->private;
-+	struct trace_array_cpu *data;
-+	unsigned int trace_ctx;
-+	int bit;
-+	int cpu;
-+
-+	if (unlikely(!tr->function_enabled))
-+		return;
-+
-+	bit = ftrace_test_recursion_trylock(ip, parent_ip);
-+	if (bit < 0)
-+		return;
-+
-+	trace_ctx = tracing_gen_ctx();
-+
-+	cpu = smp_processor_id();
-+	data = per_cpu_ptr(tr->array_buffer.data, cpu);
-+	if (!atomic_read(&data->disabled))
-+		trace_function(tr, ip, parent_ip, trace_ctx, fregs);
- 
- 	ftrace_test_recursion_unlock(bit);
- }
-@@ -270,7 +303,7 @@ function_stack_trace_call(unsigned long ip, unsigned long parent_ip,
- 
- 	if (likely(disabled == 1)) {
- 		trace_ctx = tracing_gen_ctx_flags(flags);
--		trace_function(tr, ip, parent_ip, trace_ctx);
-+		trace_function(tr, ip, parent_ip, trace_ctx, NULL);
- #ifdef CONFIG_UNWINDER_FRAME_POINTER
- 		if (ftrace_pids_enabled(op))
- 			skip++;
-@@ -349,7 +382,7 @@ function_no_repeats_trace_call(unsigned long ip, unsigned long parent_ip,
- 	trace_ctx = tracing_gen_ctx_dec();
- 	process_repeats(tr, ip, parent_ip, last_info, trace_ctx);
- 
--	trace_function(tr, ip, parent_ip, trace_ctx);
-+	trace_function(tr, ip, parent_ip, trace_ctx, NULL);
- 
- out:
- 	ftrace_test_recursion_unlock(bit);
-@@ -389,7 +422,7 @@ function_stack_no_repeats_trace_call(unsigned long ip, unsigned long parent_ip,
- 		trace_ctx = tracing_gen_ctx_flags(flags);
- 		process_repeats(tr, ip, parent_ip, last_info, trace_ctx);
- 
--		trace_function(tr, ip, parent_ip, trace_ctx);
-+		trace_function(tr, ip, parent_ip, trace_ctx, NULL);
- 		__trace_stack(tr, trace_ctx, STACK_SKIP);
- 	}
- 
-@@ -403,6 +436,9 @@ static struct tracer_opt func_opts[] = {
- 	{ TRACER_OPT(func_stack_trace, TRACE_FUNC_OPT_STACK) },
- #endif
- 	{ TRACER_OPT(func-no-repeats, TRACE_FUNC_OPT_NO_REPEATS) },
-+#ifdef CONFIG_FUNCTION_TRACE_ARGS
-+	{ TRACER_OPT(func-args, TRACE_FUNC_OPT_ARGS) },
-+#endif
- 	{ } /* Always set a last empty entry */
- };
- 
-diff --git a/kernel/trace/trace_irqsoff.c b/kernel/trace/trace_irqsoff.c
-index 7294ad676379..c8bfa7310a91 100644
---- a/kernel/trace/trace_irqsoff.c
-+++ b/kernel/trace/trace_irqsoff.c
-@@ -150,7 +150,7 @@ irqsoff_tracer_call(unsigned long ip, unsigned long parent_ip,
- 
- 	trace_ctx = tracing_gen_ctx_flags(flags);
- 
--	trace_function(tr, ip, parent_ip, trace_ctx);
-+	trace_function(tr, ip, parent_ip, trace_ctx, fregs);
- 
- 	atomic_dec(&data->disabled);
- }
-@@ -295,11 +295,17 @@ __trace_function(struct trace_array *tr,
- 	if (is_graph(tr))
- 		trace_graph_function(tr, ip, parent_ip, trace_ctx);
- 	else
--		trace_function(tr, ip, parent_ip, trace_ctx);
-+		trace_function(tr, ip, parent_ip, trace_ctx, NULL);
- }
- 
- #else
--#define __trace_function trace_function
-+static inline void
-+__trace_function(struct trace_array *tr,
-+		 unsigned long ip, unsigned long parent_ip,
-+		 unsigned int trace_ctx)
-+{
-+	return trace_function(tr, ip, parent_ip, trace_ctx, NULL);
-+}
- 
- static enum print_line_t irqsoff_print_line(struct trace_iterator *iter)
- {
-diff --git a/kernel/trace/trace_output.c b/kernel/trace/trace_output.c
-index 4b721cd4f21d..b51ee9373773 100644
---- a/kernel/trace/trace_output.c
-+++ b/kernel/trace/trace_output.c
-@@ -1090,12 +1090,15 @@ enum print_line_t trace_nop_print(struct trace_iterator *iter, int flags,
- }
- 
- static void print_fn_trace(struct trace_seq *s, unsigned long ip,
--			   unsigned long parent_ip, long delta, int flags)
-+			   unsigned long parent_ip, long delta,
-+			   unsigned long *args, int flags)
- {
- 	ip += delta;
- 	parent_ip += delta;
- 
- 	seq_print_ip_sym(s, ip, flags);
-+	if (args)
-+		print_function_args(s, args, ip);
- 
- 	if ((flags & TRACE_ITER_PRINT_PARENT) && parent_ip) {
- 		trace_seq_puts(s, " <-");
-@@ -1109,10 +1112,19 @@ static enum print_line_t trace_fn_trace(struct trace_iterator *iter, int flags,
- {
- 	struct ftrace_entry *field;
- 	struct trace_seq *s = &iter->seq;
-+	unsigned long *args;
-+	int args_size;
- 
- 	trace_assign_type(field, iter->ent);
- 
--	print_fn_trace(s, field->ip, field->parent_ip, iter->tr->text_delta, flags);
-+	args_size = iter->ent_size - offsetof(struct ftrace_entry, args);
-+	if (args_size >= FTRACE_REGS_MAX_ARGS * sizeof(long))
-+		args = field->args;
-+	else
-+		args = NULL;
-+
-+	print_fn_trace(s, field->ip, field->parent_ip, iter->tr->text_delta,
-+		       args, flags);
- 	trace_seq_putc(s, '\n');
- 
- 	return trace_handle_return(s);
-@@ -1785,7 +1797,7 @@ trace_func_repeats_print(struct trace_iterator *iter, int flags,
- 
- 	trace_assign_type(field, iter->ent);
- 
--	print_fn_trace(s, field->ip, field->parent_ip, iter->tr->text_delta, flags);
-+	print_fn_trace(s, field->ip, field->parent_ip, iter->tr->text_delta, NULL, flags);
- 	trace_seq_printf(s, " (repeats: %u, last_ts:", field->count);
- 	trace_print_time(s, iter,
- 			 iter->ts - FUNC_REPEATS_GET_DELTA_TS(field));
-diff --git a/kernel/trace/trace_sched_wakeup.c b/kernel/trace/trace_sched_wakeup.c
-index af30586f1aea..c9ba4259e03e 100644
---- a/kernel/trace/trace_sched_wakeup.c
-+++ b/kernel/trace/trace_sched_wakeup.c
-@@ -242,7 +242,7 @@ wakeup_tracer_call(unsigned long ip, unsigned long parent_ip,
- 		return;
- 
- 	local_irq_save(flags);
--	trace_function(tr, ip, parent_ip, trace_ctx);
-+	trace_function(tr, ip, parent_ip, trace_ctx, fregs);
- 	local_irq_restore(flags);
- 
- 	atomic_dec(&data->disabled);
-@@ -327,7 +327,7 @@ __trace_function(struct trace_array *tr,
- 	if (is_graph(tr))
- 		trace_graph_function(tr, ip, parent_ip, trace_ctx);
- 	else
--		trace_function(tr, ip, parent_ip, trace_ctx);
-+		trace_function(tr, ip, parent_ip, trace_ctx, NULL);
- }
- 
- static int wakeup_flag_changed(struct trace_array *tr, u32 mask, int set)
--- 
-2.47.2
+Reviewed-by: Tom Zanussi <zanussi@kernel.org>
 
 
+> ---
+> =C2=A0kernel/trace/trace_events_hist.c | 31 ++++++++++++++++-------------=
+--
+> =C2=A01 file changed, 16 insertions(+), 15 deletions(-)
+>=20
+> diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events=
+_hist.c
+> index 261163b00137..c32adc372808 100644
+> --- a/kernel/trace/trace_events_hist.c
+> +++ b/kernel/trace/trace_events_hist.c
+> @@ -6724,27 +6724,28 @@ static int event_hist_trigger_parse(struct event_=
+command *cmd_ops,
+> =C2=A0	if (existing_hist_update_only(glob, trigger_data, file))
+> =C2=A0		goto out_free;
+> =C2=A0
+> -	ret =3D event_trigger_register(cmd_ops, file, glob, trigger_data);
+> -	if (ret < 0)
+> -		goto out_free;
+> +	if (!get_named_trigger_data(trigger_data)) {
+> =C2=A0
+> -	if (get_named_trigger_data(trigger_data))
+> -		goto enable;
+> +		ret =3D create_actions(hist_data);
+> +		if (ret)
+> +			goto out_free;
+> =C2=A0
+> -	ret =3D create_actions(hist_data);
+> -	if (ret)
+> -		goto out_unreg;
+> +		if (has_hist_vars(hist_data) || hist_data->n_var_refs) {
+> +			ret =3D save_hist_vars(hist_data);
+> +			if (ret)
+> +				goto out_free;
+> +		}
+> =C2=A0
+> -	if (has_hist_vars(hist_data) || hist_data->n_var_refs) {
+> -		ret =3D save_hist_vars(hist_data);
+> +		ret =3D tracing_map_init(hist_data->map);
+> =C2=A0		if (ret)
+> -			goto out_unreg;
+> +			goto out_free;
+> =C2=A0	}
+> =C2=A0
+> -	ret =3D tracing_map_init(hist_data->map);
+> -	if (ret)
+> -		goto out_unreg;
+> -enable:
+> +	ret =3D event_trigger_register(cmd_ops, file, glob, trigger_data);
+> +	if (ret < 0)
+> +		goto out_free;
+> +
+> +
+
+Extra space added here.
+
+> =C2=A0	ret =3D hist_trigger_enable(trigger_data, file);
+> =C2=A0	if (ret)
+> =C2=A0		goto out_unreg;
+
+Thanks,
+
+Tom
