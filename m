@@ -1,64 +1,69 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2C68276D13;
-	Thu, 27 Feb 2025 23:47:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02FBC211C;
+	Fri, 28 Feb 2025 00:44:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740700058; cv=none; b=EqSWhDla0b30x2fBsQJQvlLCtjJ2qyhgE5f91r54M1q179HPKeD8IuPkFJadaNy4UPMgbD5lYPRMpkbIvce6ZGHhlyBw4M9PvaDMpchB5DE7/NVakn3G9ebUzKqP760Ol6Bpi2wvg9Op//FGIqfpBnfCfW8dU1Dz0OGeM6OwUms=
+	t=1740703446; cv=none; b=r4ceSurpjahqJBaHirVwzKG1V3jHu0g5XK+2sZUxUekKLA2JvonB1KJ+5Yw3V4HArwdP6+ju8GHM2nFlYMhRGSn6PAUPE+mkEnVtWvVDUfGz2tVb+pjISlIZU6fe0CFdOvnBPZKdnhw/XNzOaKIb3apInQFVVNxzSKAaT8C0dOM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740700058; c=relaxed/simple;
-	bh=c0oYsmyu//bfUW48faBRQo8ItRj/gBwXXjbw7H7EfQE=;
+	s=arc-20240116; t=1740703446; c=relaxed/simple;
+	bh=eLeJvveqOt8R8zNm/BD89sPpR/xN6v9RWVXKbMNVdSw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jew09JcQsO+0V+LLjMCGbM1yX0aU60gQUFB9ciARidG43R9GaTJGfnWr0N+nkv5bLahM00WNTEcP0T0WV963V9tWwaQj0jHGVqX/d9cUre4DqqZS5j22O4xz++R5cTmZuJ5JZreGt0hvtc/ILirZgpPwKNlJAZpu3xWzA+zsis0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RgKWI+Gs; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=keopDDFIMxI/0coiB1LxP4d17nUfc3uu23rdCCQUQRj5/y/ujOgD8lf6OIQSrscCZAIOni1T05HRVexK0lteNwNTGdy741hcEVgdPeozR2iPo6hk82y7A+lRAA1isBxKsjAkwCVSEMu40nmRIrh21IOeaqe16EtB8v2pfzLFfCg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Q1aXp4Su; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RgKWI+Gs"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 57319C4CEDD;
-	Thu, 27 Feb 2025 23:47:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740700057;
-	bh=c0oYsmyu//bfUW48faBRQo8ItRj/gBwXXjbw7H7EfQE=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-	b=RgKWI+GspJn7hE7J9mcDJJ2vqB3NUtVCZFG4YE3vLwMRajxDv/fyEoclXVe+u/WAN
-	 jaQAFcaaqpw6/B3uIMG427FUVOVWVOjF5DPHhaBmg7GdF2gjYmRvOMzHMIa2w9PYE3
-	 nLvq8CAram0W7yR+6F9p8wT1rZ1x+ypelEc+iDD2JEdfelcUZWwOr91va0431r6Ny9
-	 b8x7N43CGE4DWZa0Qx/Fkj02WvppLE2Y6JQLNdj8CaqS3gqZ52ZkrehMjle4RTcbjt
-	 GkY6P9G3giZSYPyDdK8r0X/MqNVZva684PqoYv8UbEf7482/zYfiMaiY0AX9nlq1ke
-	 01QijDOrvvDsw==
-Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-	id F22ECCE04CA; Thu, 27 Feb 2025 15:47:36 -0800 (PST)
-Date: Thu, 27 Feb 2025 15:47:36 -0800
-From: "Paul E. McKenney" <paulmck@kernel.org>
-To: Ankur Arora <ankur.a.arora@oracle.com>
-Cc: Boqun Feng <boqun.feng@gmail.com>, rcu@vger.kernel.org,
-	Frederic Weisbecker <frederic@kernel.org>,
-	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
-	Joel Fernandes <joel@joelfernandes.org>,
-	Josh Triplett <josh@joshtriplett.org>,
-	Uladzislau Rezki <urezki@gmail.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Lai Jiangshan <jiangshanlai@gmail.com>,
-	Zqiang <qiang.zhang1211@gmail.com>,
-	Davidlohr Bueso <dave@stgolabs.net>, Ingo Molnar <mingo@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-	Valentin Schneider <vschneid@redhat.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Shuah Khan <shuah@kernel.org>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	Clark Williams <clrkwllms@kernel.org>, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-	linux-rt-devel@lists.linux.dev
-Subject: Re: [PATCH rcu 00/11] Lazy Preempt changes for v6.15
-Message-ID: <a43b531a-241e-4a0a-b373-5a111b519d0f@paulmck-laptop>
-Reply-To: paulmck@kernel.org
-References: <20250225035516.26443-1-boqun.feng@gmail.com>
- <87mse70xqn.fsf@oracle.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Q1aXp4Su"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1740703445; x=1772239445;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=eLeJvveqOt8R8zNm/BD89sPpR/xN6v9RWVXKbMNVdSw=;
+  b=Q1aXp4SuVPVe+2lljuaQMTlRP5jBe67Qj9Q2ASbTlUR2xkW7nLpuVDCE
+   FGyEw20bS95LRtJYFa6sozVPNFE9ZxcuPuZg5QDTJbRgDDVHSTtqJ2A25
+   B95HCQioBlADJH1IAlB3F9EnUYAX91SIomdHGvDjkoCuAfjSvQpbx24i0
+   GZh/3iM7SWE/xvDgfJBOYIHRq9gtBldNV36fxGC4bwtx6neqWd6If2OxS
+   oFrOZl/jsYzrnDevo9ydlz2M/PxKSsvW4oq9nTnTMtDi8SW6ymTDQotGL
+   50jvt51t4zmdxsdD9g6RlGysAEC0kbBdH8JgGEFgvGuGYyGTR1sRKVGPy
+   Q==;
+X-CSE-ConnectionGUID: VmBGSBWsQra8S3aRo5OvbA==
+X-CSE-MsgGUID: zElCPIsDROmKpmX9mD99kA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11358"; a="45402598"
+X-IronPort-AV: E=Sophos;i="6.13,320,1732608000"; 
+   d="scan'208";a="45402598"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2025 16:43:52 -0800
+X-CSE-ConnectionGUID: byxxMEs1TTiX2LpHkc1grg==
+X-CSE-MsgGUID: jshEyU3CSAGftBCl95s7dA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,320,1732608000"; 
+   d="scan'208";a="122313669"
+Received: from lkp-server02.sh.intel.com (HELO 76cde6cc1f07) ([10.239.97.151])
+  by fmviesa004.fm.intel.com with ESMTP; 27 Feb 2025 16:43:45 -0800
+Received: from kbuild by 76cde6cc1f07 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1tnoTe-000EFG-2u;
+	Fri, 28 Feb 2025 00:43:42 +0000
+Date: Fri, 28 Feb 2025 08:43:12 +0800
+From: kernel test robot <lkp@intel.com>
+To: Menglong Dong <menglong8.dong@gmail.com>, rostedt@goodmis.org,
+	mark.rutland@arm.com, alexei.starovoitov@gmail.com
+Cc: oe-kbuild-all@lists.linux.dev, catalin.marinas@arm.com, will@kernel.org,
+	mhiramat@kernel.org, tglx@linutronix.de, mingo@redhat.com,
+	bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org,
+	hpa@zytor.com, mathieu.desnoyers@efficios.com, nathan@kernel.org,
+	ndesaulniers@google.com, morbo@google.com, justinstitt@google.com,
+	dongml2@chinatelecom.cn, akpm@linux-foundation.org, rppt@kernel.org,
+	graf@amazon.com, dan.j.williams@intel.com,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org,
+	llvm@lists.linux.dev
+Subject: Re: [PATCH bpf-next v2] add function metadata support
+Message-ID: <202502280842.nI3PwNwz-lkp@intel.com>
+References: <20250226121537.752241-1-dongml2@chinatelecom.cn>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -67,26 +72,106 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <87mse70xqn.fsf@oracle.com>
+In-Reply-To: <20250226121537.752241-1-dongml2@chinatelecom.cn>
 
-On Thu, Feb 27, 2025 at 03:33:04PM -0800, Ankur Arora wrote:
-> 
-> Boqun Feng <boqun.feng@gmail.com> writes:
-> 
-> > Hi,
-> >
-> > Please find the upcoming changes for CONFIG_PREEMPT_LAZY in RCU. The
-> > changes can also be found at:
-> >
-> > 	git://git.kernel.org/pub/scm/linux/kernel/git/rcu/linux.git lazypreempt.2025.02.24a
-> >
-> > Paul & Ankur, I put patch #7 and #8 (bug fixes in rcutorture) before
-> > patch #9 (which is the one that enables non-preemptible RCU in
-> > preemptible kernel), because I want to avoid introduce a bug in-between
-> > a series, appreciate it if you can double check on this. Thanks!
-> 
-> Makes sense to me.
+Hi Menglong,
 
-Looks good to me as well, and thank you for spotting this!
+kernel test robot noticed the following build warnings:
 
-							Thanx, Paul
+[auto build test WARNING on bpf-next/master]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Menglong-Dong/add-function-metadata-support/20250226-202312
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/bpf/bpf-next.git master
+patch link:    https://lore.kernel.org/r/20250226121537.752241-1-dongml2%40chinatelecom.cn
+patch subject: [PATCH bpf-next v2] add function metadata support
+config: i386-buildonly-randconfig-002-20250227 (https://download.01.org/0day-ci/archive/20250228/202502280842.nI3PwNwz-lkp@intel.com/config)
+compiler: gcc-11 (Debian 11.3.0-12) 11.3.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250228/202502280842.nI3PwNwz-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202502280842.nI3PwNwz-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+   kernel/trace/kfunc_md.c: In function 'kfunc_md_get_next':
+>> kernel/trace/kfunc_md.c:98:20: warning: cast from pointer to integer of different size [-Wpointer-to-int-cast]
+      98 |         free_pages((u64)mds, order);
+         |                    ^
+
+Kconfig warnings: (for reference only)
+   WARNING: unmet direct dependencies detected for CALL_PADDING
+   Depends on [n]: CC_HAS_ENTRY_PADDING [=y] && OBJTOOL [=n]
+   Selected by [y]:
+   - FUNCTION_METADATA [=y]
+
+
+vim +98 kernel/trace/kfunc_md.c
+
+    47	
+    48	/* Get next usable function metadata. On success, return the usable
+    49	 * kfunc_md and store the index of it to *index. If no usable kfunc_md is
+    50	 * found in kfunc_mds, a larger array will be allocated.
+    51	 */
+    52	static struct kfunc_md *kfunc_md_get_next(u32 *index)
+    53	{
+    54		struct kfunc_md *new_mds, *mds;
+    55		u32 i, order;
+    56	
+    57		mds = rcu_dereference(kfunc_mds);
+    58		if (mds == NULL) {
+    59			order = kfunc_md_page_order();
+    60			new_mds = (void *)__get_free_pages(GFP_KERNEL, order);
+    61			if (!new_mds)
+    62				return NULL;
+    63			kfunc_md_init(new_mds, 0, kfunc_md_count);
+    64			/* The first time to initialize kfunc_mds, so it is not
+    65			 * used anywhere yet, and we can update it directly.
+    66			 */
+    67			rcu_assign_pointer(kfunc_mds, new_mds);
+    68			mds = new_mds;
+    69		}
+    70	
+    71		if (likely(kfunc_md_used < kfunc_md_count)) {
+    72			/* maybe we can manage the used function metadata entry
+    73			 * with a bit map ?
+    74			 */
+    75			for (i = 0; i < kfunc_md_count; i++) {
+    76				if (!mds[i].users) {
+    77					kfunc_md_used++;
+    78					*index = i;
+    79					mds[i].users++;
+    80					return mds + i;
+    81				}
+    82			}
+    83		}
+    84	
+    85		order = kfunc_md_page_order();
+    86		/* no available function metadata, so allocate a bigger function
+    87		 * metadata array.
+    88		 */
+    89		new_mds = (void *)__get_free_pages(GFP_KERNEL, order + 1);
+    90		if (!new_mds)
+    91			return NULL;
+    92	
+    93		memcpy(new_mds, mds, kfunc_md_count * sizeof(*new_mds));
+    94		kfunc_md_init(new_mds, kfunc_md_count, kfunc_md_count * 2);
+    95	
+    96		rcu_assign_pointer(kfunc_mds, new_mds);
+    97		synchronize_rcu();
+  > 98		free_pages((u64)mds, order);
+    99	
+   100		mds = new_mds + kfunc_md_count;
+   101		*index = kfunc_md_count;
+   102		kfunc_md_count <<= 1;
+   103		kfunc_md_used++;
+   104		mds->users++;
+   105	
+   106		return mds;
+   107	}
+   108	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
