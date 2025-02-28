@@ -1,30 +1,30 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38F0138B;
-	Fri, 28 Feb 2025 01:05:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4261AC2F2;
+	Fri, 28 Feb 2025 01:45:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740704749; cv=none; b=ZVCF8bMGtZai26aPXnhm8C1kDC9WL6NGWmO8wlKIw3ZUeLDnTk56X7TWb5MBZiJMC/d4qH9J123EoYp+tVFJtz9B0Fd0xCfoMbBZX9Xwl0W6n3xUY/MIuH2yOhUzNCXzVqrg06da2kiXAkTxt2ULTPuzEClDPgrNczxejmk7rAA=
+	t=1740707141; cv=none; b=O5XGeYe5twoBKUwnT6gktlZosih0r7gF9y/V/7CfZD8PxiODxdKzStKtQaErL/Lt1E1uM53PE4jp7eW0+kyaO1lUypO/Ukhs2ozNBM4syGsWAW6SUOYGFJTM7/VrPHbt9VSLq6rZJd3tZXDiKjVtW7cdqkeK7KH6UtF1YEm2mbI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740704749; c=relaxed/simple;
-	bh=polPD8VaEKf+veiscNjndlyOpxGIQ7eRxcTUeyf9umU=;
+	s=arc-20240116; t=1740707141; c=relaxed/simple;
+	bh=FdM+SWazuMviL3adW6k2iGTQW1/8u96S5utnExJhd0A=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=LlxcR7rsnzs6lXCk3O9OATH5zN0/40fp/+pMoR74x1jexavfkoUA9W64gcq8Vsbz16mn9WQA/T293pfXRZzcsTxvS/KFt0HmD/3zoDxeEOorjrHFLId5+d7YBa4x/181Pv0+JCd99HSjgSFS7baaFHbd+uGneZGgI7qtV+dJe+s=
+	 MIME-Version:Content-Type; b=OjKwpJr9+TQj2z7lYzw7jkPA7s4PzsRs+GjdziU9iZV9oydHpzPuM8zBsLQwoZWT4YiJx2PEBKD9Lj/z2TtFqpDKmWqq29PxPqu/A7P2tcDBK49oO6n6G2soSLKt80h4GB1Onj5LnEAtgFvRk33zt6rhTVb9gf/v1/Lpd3kvxBc=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C815DC4CEDD;
-	Fri, 28 Feb 2025 01:05:47 +0000 (UTC)
-Date: Thu, 27 Feb 2025 20:06:31 -0500
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E4683C4CEDD;
+	Fri, 28 Feb 2025 01:45:39 +0000 (UTC)
+Date: Thu, 27 Feb 2025 20:46:23 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
-To: Costa Shulyupin <costa.shul@redhat.com>
-Cc: John Kacur <jkacur@redhat.com>, Tomas Glozar <tglozar@redhat.com>, "Luis
- Claudio R. Goncalves" <lgoncalv@redhat.com>, Eder Zulian
- <ezulian@redhat.com>, Dan Carpenter <dan.carpenter@linaro.org>,
- linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1] rtla: Save trace when option `--trace` is specified
-Message-ID: <20250227200623.60f20571@gandalf.local.home>
-In-Reply-To: <20250127170251.744751-1-costa.shul@redhat.com>
-References: <20250127170251.744751-1-costa.shul@redhat.com>
+To: Gabriele Monaco <gmonaco@redhat.com>
+Cc: linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>, Peter
+ Zijlstra <peterz@infradead.org>, Masami Hiramatsu <mhiramat@kernel.org>,
+ linux-trace-kernel@vger.kernel.org, Juri Lelli <juri.lelli@redhat.com>
+Subject: Re: [PATCH v4 03/11] sched: Add sched tracepoints for RV task model
+Message-ID: <20250227204623.5e29e101@gandalf.local.home>
+In-Reply-To: <20250218123121.253551-4-gmonaco@redhat.com>
+References: <20250218123121.253551-1-gmonaco@redhat.com>
+	<20250218123121.253551-4-gmonaco@redhat.com>
 X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -35,30 +35,23 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Mon, 27 Jan 2025 19:02:40 +0200
-Costa Shulyupin <costa.shul@redhat.com> wrote:
+On Tue, 18 Feb 2025 13:31:08 +0100
+Gabriele Monaco <gmonaco@redhat.com> wrote:
 
-> +++ b/tools/tracing/rtla/src/osnoise_hist.c
-> @@ -981,12 +981,11 @@ int osnoise_hist_main(int argc, char *argv[])
->  
->  	return_value = 0;
->  
-> -	if (osnoise_trace_is_off(tool, record)) {
-> +	if (osnoise_trace_is_off(tool, record))
->  		printf("rtla osnoise hit stop tracing\n");
-> -		if (params->trace_output) {
-> -			printf("  Saving trace to %s\n", params->trace_output);
-> -			save_trace_to_file(record->trace.inst, params->trace_output);
-> -		}
-> +	if (params->trace_output) {
-> +		printf("  Saving trace to %s\n", params->trace_output);
-> +		save_trace_to_file(record->trace.inst, params->trace_output);
->  	}
+> Add the following tracepoints:
+> * sched_entry(bool preempt, ip)
+>     Called while entering __schedule
+> * sched_exit(bool is_switch, ip)
+>     Called while exiting __schedule
+> * sched_set_state(task, curr_state, state)
+>     Called when a task changes its state (to and from running)
+> 
+> These tracepoints are useful to describe the Linux task model and are
+> adapted from the patches by Daniel Bristot de Oliveira
+> (https://bristot.me/linux-task-model/).
+> 
+> Signed-off-by: Gabriele Monaco <gmonaco@redhat.com>
 
-Without tracing being off, this can run forever if the events come in
-faster than it can be recorded. And save trace uses the "trace" file, which
-is slow to read.
-
-Are you sure you want that?
+I'll need an Ack from the scheduler maintainer to take this series.
 
 -- Steve
