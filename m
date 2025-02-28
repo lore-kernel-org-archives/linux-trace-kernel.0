@@ -1,145 +1,118 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FB6E1C1F20;
-	Fri, 28 Feb 2025 19:07:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E15423F372;
+	Fri, 28 Feb 2025 22:46:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740769674; cv=none; b=Ze6wqG9JywZ0wk4/NcffvbH8lb+JaEgPbk352m29fY3axTBG7KwTJ1hTTfWXQDii22E0YRV2o2tuUpIEt5uP7sR7PtpcCSRj7qnNh8THbQLsQ2MWaIH/dl7n6Woc+EGln62Q5Yf3IuEcdtTfwiJsYLo0YVJkJ47rk2AP8DeOiBY=
+	t=1740782788; cv=none; b=KZEyZSuc3e9KLSb+ZmRaGLHQni/+/u2jDr4T68/NJ+FYjpeV0PyxnkLFmLjfTEy3r9IhEIOYvBZaRFCDBmXOqEuUu67Ug0sRS8NDAabzqAjVGIVfeG5ldj/wHLq5lKPnvzHTok0MtFcgnXs5jzkk8d0xuGDf7jd1RQfjdFN0+rE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740769674; c=relaxed/simple;
-	bh=9lW/L2uwTClYpBDI96k2oS/2hJMHgNf7Jcxjr8JJPjk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=o7Yaf6n2GiTNVW+QZQuq49xsnjE2KqvfgXe7DA4j5lyz4vj4GNT4ZXr1JYJFQzpVNjjOiGe0006FOvG0l6LHYC+vyghtuwdQ0RU3kLbGTgfuGH8Cl5A9K1d0tko+Dy+yCxrSoYF9OB2fx0bkXh1J8ZTythyKtGsB44P2xIatUAU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lpju1Avn; arc=none smtp.client-ip=209.85.214.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lpju1Avn"
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-22104c4de96so43664235ad.3;
-        Fri, 28 Feb 2025 11:07:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740769672; x=1741374472; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=gX8RKp2k+j3T5ymvVtbsGkD0SHBdaBI/tBq0Hc7RKcs=;
-        b=lpju1Avn+f+hGwCa9+QkPM8DDuTeRaYnnCiU1/XvPWbOtaf6dpH4uLOygYUJxbRQGC
-         vy1o2FiK8H3jPFROtEtleAMrCH5KezZ9qNIQIjeqg+VKyZsSkbkNnJ75eagzR/qnuere
-         Eebi3kKnHmMZ8QFZShr97KLdnAsj6/+AM7II8BkgNatkh+o2LP5WzjLOK/nAxsYvMUGo
-         mB+lOTJkt9+hvoPm3tLG9Z4IzyFGpzgU+e+O3zacOFjNsvFC56XlgprSUVIcYQL2gWyK
-         bBJyky8fMCP8nUN2Bzs6qyzg7QEHoTMvXccWXc6wIY14gU+UF4QR0nvWgoBfFqoHMW/k
-         g+Pw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740769672; x=1741374472;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=gX8RKp2k+j3T5ymvVtbsGkD0SHBdaBI/tBq0Hc7RKcs=;
-        b=xTbEOwP1AM/sLHnPM9jz0O0gCcA1JTd66+Ery0VbguxZ/Hzzy+cFlkWlEWM1RpQWnN
-         zg8HWMUuIsaQB8nwxNo5ChgutteoM8Y3lU/fH+W1R6N6TI7P5aUNI6YENDCtZURbVdwe
-         RXR8ma/6Sb2kd1RLeMVAvPzr4SCE2F+Nj+/Ane/AD3YBpAIJwJTaK5+YE/h3vXnkX4JT
-         fiy2GL6kj6Y4dlcIU5p9FDkWBoC2YfWi4jHQ+HypWaqAPCeJPAqPgQ/hAgZXDi97Z/7q
-         xVSGqJ/xMU497UCvMv/ljTzow9PtHjWHI3y1VJ9xPskqBduDqyD6Sc6LdD/4sthVPWPA
-         JxRw==
-X-Forwarded-Encrypted: i=1; AJvYcCUSCikAZCCa+aCdCE3Tuwq5o3MfMBQ+/hSFpyuwHmrJIt8PFW3kZ7tx1KhGGaSsSG6zGs4=@vger.kernel.org, AJvYcCVnXr9FxhT3xQ1AkR9IM3w74bhs37yQIbgAjRBEdIltHInRDenSS9/c5mvk0OS5xF2Or4/0fA0xc5uwut1FwN06x9R5@vger.kernel.org, AJvYcCXk8Z8UHKHOvoX2nVGjE8MUNLtb2j0avLWmD6ejHsIvGLZlk+yhCW0MJuaIznJadJfhkonWjB3GQRw4L3MI@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxgn6Pq2lHIqTOjf7L0+xOkum2gIHYYcIJGLrP3QNXZ61ybI7mx
-	z1GEG5l9EZBxsfggPylQVHXDNWSl3Wt/NA4/G5MKITxPMI+vZ/oI1sjPyg54uJidneop+fycF6i
-	ZAM1AHTrX+4DYd6uMDKfrQI02x0U=
-X-Gm-Gg: ASbGncv8wZpURAH91nNPFH2KKxkh8fod0pz8IhhHLVETClcWQpe62Kat3C+NS4kw0C+
-	eemBp9vMRexQPnRc53JXi+VguPkVSu1B1Bl120/lpD3pkCqod0aIUY536y20EK81qmnhyzKXI6S
-	KU4GYg2Lg70CPxs47V6FsrbRA=
-X-Google-Smtp-Source: AGHT+IGuy2F+O6xkEm0RmJ8Snn2z3mEZjrIDO8zblSIcPmYR7MSfS4388EyBUboSCR7xy0fLHrjLlj+vvBMqgk78I50=
-X-Received: by 2002:a17:903:fa5:b0:216:6283:5a8c with SMTP id
- d9443c01a7336-2236924f8fcmr59479745ad.39.1740769671787; Fri, 28 Feb 2025
- 11:07:51 -0800 (PST)
+	s=arc-20240116; t=1740782788; c=relaxed/simple;
+	bh=nf6nYmm4zc+i2pBm9AUoXsjNIM7O0LuYmHZq/Hapx4w=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=gMVz54+HRmVbx2SXx3CV6CbE7F9eJdO20EH7VPTAm8F9oGSuMvl79rn0eu2sceAlYylWi0bVeeHEcFCxadFV8uKOKvjWA5yV1ZqesJVvX9+j2As8sG3DyVcte/Q1OSx1AmSyB0VfioYR38zY11xteN+4Wq91vItKze3gwzcIJvU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E59AAC4CED6;
+	Fri, 28 Feb 2025 22:46:26 +0000 (UTC)
+Date: Fri, 28 Feb 2025 17:47:12 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH] tracing: probe-events: Add comments about entry data
+ storing code
+Message-ID: <20250228174712.44e03694@gandalf.local.home>
+In-Reply-To: <174061715004.501424.333819546601401102.stgit@devnote2>
+References: <174061715004.501424.333819546601401102.stgit@devnote2>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250224140151.667679-1-jolsa@kernel.org> <20250224140151.667679-7-jolsa@kernel.org>
-In-Reply-To: <20250224140151.667679-7-jolsa@kernel.org>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Fri, 28 Feb 2025 11:07:38 -0800
-X-Gm-Features: AQ5f1Jr7R7T1i4YVMLyvGi1eA_0AUq6Fm08N4xTtjpgH-0hiHSCKFQiDSZ5y_cA
-Message-ID: <CAEf4BzZ=TOGXMwYDz1=bdw4DVVgkXJkMKKv=O1HnWddS-i6Kww@mail.gmail.com>
-Subject: Re: [PATCH RFCv2 06/18] uprobes: Add orig argument to uprobe_write
- and uprobe_write_opcode
-To: Jiri Olsa <jolsa@kernel.org>
-Cc: Oleg Nesterov <oleg@redhat.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, x86@kernel.org, 
-	Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>, 
-	John Fastabend <john.fastabend@gmail.com>, Hao Luo <haoluo@google.com>, 
-	Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Alan Maguire <alan.maguire@oracle.com>, David Laight <David.Laight@aculab.com>, 
-	=?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas@t-8ch.de>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Mon, Feb 24, 2025 at 6:03=E2=80=AFAM Jiri Olsa <jolsa@kernel.org> wrote:
->
-> The uprobe_write has special path to restore the original page when
-> we write original instruction back.
->
-> This happens when uprobe_write detects that we want to write anything
-> else but breakpoint instruction.
->
-> In following changes we want to use uprobe_write function for multiple
-> updates, so adding new function argument to denote that this is the
-> original instruction update. This way uprobe_write can make appropriate
-> checks and restore the original page when possible.
->
-> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+On Thu, 27 Feb 2025 09:45:50 +0900
+"Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
+
+> From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> 
+> Add comments about entry data storing code to __store_entry_arg() and
+> traceprobe_get_entry_data_size(). These are a bit complicated because of
+> building the entry data storing code and scanning it.
+> 
+> This just add comments, no behavior change.
+> 
+> Reported-by: Steven Rostedt <rostedt@goodmis.org>
+> Closes: https://lore.kernel.org/all/20250226102223.586d7119@gandalf.local.home/
+> Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 > ---
->  arch/arm/probes/uprobes/core.c |  2 +-
->  include/linux/uprobes.h        |  5 +++--
->  kernel/events/uprobes.c        | 22 ++++++++++------------
->  3 files changed, 14 insertions(+), 15 deletions(-)
->
-
-[...]
-
-> diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
-> index ad5879fc2d26..2b542043089e 100644
-> --- a/kernel/events/uprobes.c
-> +++ b/kernel/events/uprobes.c
-> @@ -471,25 +471,23 @@ static int update_ref_ctr(struct uprobe *uprobe, st=
-ruct mm_struct *mm,
->   * Return 0 (success) or a negative errno.
->   */
->  int uprobe_write_opcode(struct arch_uprobe *auprobe, struct mm_struct *m=
-m,
-> -                       unsigned long vaddr, uprobe_opcode_t opcode)
-> +                       unsigned long vaddr, uprobe_opcode_t opcode, bool=
- orig)
+>  kernel/trace/trace_probe.c |   28 ++++++++++++++++++++++++++++
+>  1 file changed, 28 insertions(+)
+> 
+> diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
+> index 8f58ee1e8858..2eeecb6c95ee 100644
+> --- a/kernel/trace/trace_probe.c
+> +++ b/kernel/trace/trace_probe.c
+> @@ -770,6 +770,10 @@ static int check_prepare_btf_string_fetch(char *typename,
+>  
+>  #ifdef CONFIG_HAVE_FUNCTION_ARG_ACCESS_API
+>  
+> +/*
+> + * Add the entry code to store the 'argnum'th parameter and return the offset
+> + * in the entry data buffer where the data will be stored.
+> + */
+>  static int __store_entry_arg(struct trace_probe *tp, int argnum)
 >  {
-> -       return uprobe_write(auprobe, mm, vaddr, &opcode, UPROBE_SWBP_INSN=
-_SIZE, verify_opcode);
-> +       return uprobe_write(auprobe, mm, vaddr, &opcode, UPROBE_SWBP_INSN=
-_SIZE, verify_opcode, orig);
->  }
->
->  int uprobe_write(struct arch_uprobe *auprobe, struct mm_struct *mm,
->                  unsigned long vaddr, uprobe_opcode_t *insn,
-> -                int nbytes, uprobe_write_verify_t verify)
-> +                int nbytes, uprobe_write_verify_t verify, bool orig)
+>  	struct probe_entry_arg *earg = tp->entry_arg;
+> @@ -793,6 +797,20 @@ static int __store_entry_arg(struct trace_probe *tp, int argnum)
+>  		tp->entry_arg = earg;
+>  	}
+>  
+> +	/*
+> +	 * The entry code array is repeating the pair of
+> +	 * [FETCH_OP_ARG(argnum)][FETCH_OP_ST_EDATA(offset of entry data buffer)]
+> +	 * and the rest of entries are filled with [FETCH_OP_END].
+> +	 *
+> +	 * To reduce the redundant function parameter fetching, we scan the entry
+> +	 * code array to find the FETCH_OP_ARG which already fetches the 'argnum'
+> +	 * parameter. If it doesn't match, update 'offset' to find the last
+> +	 * offset.
+> +	 * If we find the FETCH_OP_END without matching FETCH_OP_ARG entry, we
+> +	 * will save the entry with FETCH_OP_ARG and FETCH_OP_ST_EDATA, and
+> +	 * return data offset so that caller can find the data offset in the entry
+> +	 * data buffer.
+> +	 */
 
-why not call orig -> is_register and avoid a bunch of code churn?...
-(and while "is_register" is not awesome name, still a bit more clear
-compared to "orig", IMO)
+So I'm still not 100% sure what is happening here, but at least these
+comments can help me figure it out if I spend some time gawking at the code
+a bit more ;-)
 
->  {
->         struct page *old_page, *new_page;
->         struct vm_area_struct *vma;
-> -       int ret, is_register;
-> +       int ret;
->         bool orig_page_huge =3D false;
->         unsigned int gup_flags =3D FOLL_FORCE;
->
-> -       is_register =3D is_swbp_insn(insn);
-> -
+Reviewed-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 
-[...]
+-- Steve
+
+
+>  	offset = 0;
+>  	for (i = 0; i < earg->size - 1; i++) {
+>  		switch (earg->code[i].op) {
+> @@ -826,6 +844,16 @@ int traceprobe_get_entry_data_size(struct trace_probe *tp)
+>  	if (!earg)
+>  		return 0;
+>  
+> +	/*
+> +	 * earg->code[] array has an operation sequence which is run in
+> +	 * the entry handler.
+> +	 * The sequence stopped by FETCH_OP_END and each data stored in
+> +	 * the entry data buffer by FETCH_OP_ST_EDATA. The FETCH_OP_ST_EDATA
+> +	 * stores the data at the data buffer + its offset, and all data are
+> +	 * "unsigned long" size. The offset must be increased when a data is
+> +	 * stored. Thus we need to find the last FETCH_OP_ST_EDATA in the
+> +	 * code array.
+> +	 */
+>  	for (i = 0; i < earg->size; i++) {
+>  		switch (earg->code[i].op) {
+>  		case FETCH_OP_END:
+
