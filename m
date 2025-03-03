@@ -1,102 +1,120 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00271214A93;
-	Mon,  3 Mar 2025 20:03:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D712D230277
+	for <linux-trace-kernel@vger.kernel.org>; Mon,  3 Mar 2025 21:40:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741032181; cv=none; b=TlalvWoeC0H1h0xLrt7tZwtyak7SVP9YwihN2O5n7KYTwFgn2/ZxQ17SU4VzHlfoo9rS146MSVdFy7mJZX79nHCsfHMaoVQ6ETJ7sgRXBy5GV12wp+WbUCiylbMQ4nmcbqhtrV8EsTsxHd9gxsExoy8LfcakLO13zs/YqUOI/GM=
+	t=1741038056; cv=none; b=EqvFxc8Fl+PYDl5FOpThD0QE5hqrOOYKNnmwLHY5unGwEID4Foujam8Qh/AYL6dSnqmxRC+uG71YfoxhjxO8DeI9oGkPY8bUvkDjkz5Wt+M5kZYBKUaalmG0/k3IjpsIik/ovOin4hgMOi0xE9FmeQwmxzWIEHaivgqQWT2J2dU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741032181; c=relaxed/simple;
-	bh=73I1h4N8ONqM7LkCsAn6MUNbeUrw1eXTjVsd6IxZo0A=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=VpMcP4OA2iGkRxG6zml20fLZorWeK+LUAM2lMeZgy/0EWOfMdDvJdB8cHhJLTKiLesTlq8oV8PV+14xPGaryybElWDR0PF/T1rhutmlb64cQ1EpnGiYvaW6WMegvP+24NhrFEbB8ex5ip4a9SaPhv7UssJfO9OmxZqaKTB4SlNg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 81E85C4CEE5;
-	Mon,  3 Mar 2025 20:02:59 +0000 (UTC)
-Date: Mon, 3 Mar 2025 15:03:51 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Tomas Glozar <tglozar@redhat.com>
-Cc: Costa Shulyupin <costa.shul@redhat.com>, John Kacur <jkacur@redhat.com>,
- "Luis Claudio R. Goncalves" <lgoncalv@redhat.com>, Eder Zulian
- <ezulian@redhat.com>, Dan Carpenter <dan.carpenter@linaro.org>,
- linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1] rtla: Save trace when option `--trace` is specified
-Message-ID: <20250303150351.28007ad1@gandalf.local.home>
-In-Reply-To: <CAP4=nvQXaFmemBeW8U3U9zTMK0gVYvp23gfq_6ALsBJPTXt9Uw@mail.gmail.com>
-References: <20250127170251.744751-1-costa.shul@redhat.com>
-	<20250227200623.60f20571@gandalf.local.home>
-	<CAP4=nvQXaFmemBeW8U3U9zTMK0gVYvp23gfq_6ALsBJPTXt9Uw@mail.gmail.com>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1741038056; c=relaxed/simple;
+	bh=t48prv4ltqZBgmpiT8R/ZTVb9z8qZJulguu49one7U4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=IE4NgKq36k9wfG2UUuLjMPev7mEFwxsT+Prfqs1hbD51p25K1/yUiSt2UJb0hbejrIpPZBXssLsmBvjdYWB8l/4NHJmVY1OCTR87EH+8Vj+DlJO3awrz3cLf+NNEVQM7e06thL8/TOi31Ov8q5XHKmsgvpYmTQjXp5NMnHqheG8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=NjTUyC4t; arc=none smtp.client-ip=209.85.214.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="NjTUyC4t"
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-2237a32c03aso15765ad.1
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 03 Mar 2025 13:40:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1741038054; x=1741642854; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=//CA4dP1gRO/1RNRixCqJrbqKaw0YXw5wU7J/MVaxKg=;
+        b=NjTUyC4tnMMbS2ZkzEQu+tumClDu5ho6F4m5Q+WN1K2Va0/uPSgzO5AEhDDBekPa6L
+         Dah8MBZnU/1mxnVqV0WmA7JTbWKPXkxxuMDFW7tVBm/Rv+0nTucILMzPqN4JE2iRI66r
+         +QfJWlBg/iWxfeOt9MT/kyRgayw+yR3ksBXyZ42ySyZmAx9NbTgZpxiDDqpcDfJrJBVU
+         wRyC6H1r76w+vpTCeIcOHPjg23ND8SxN8dqGGN/A4YGaHlmdZmPvi/BRk5Xk+u3sklBz
+         efiGFYH6bQMtDebloPlYoTJbhviL+fdn5Uoet5qVvEjdHuvAGQGiU4Bv74Py3P9tdmK8
+         XUmA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741038054; x=1741642854;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=//CA4dP1gRO/1RNRixCqJrbqKaw0YXw5wU7J/MVaxKg=;
+        b=B9bEemdMLIGtUaTjO9U7uABTaOlv2KiZ/ExFL3XNLeZFHKobecDENavvDZuY1uUpzu
+         0vUSSdv/5rGEU34/BjGcaI41DJ9T2SfED0yU64YjsEIp5+8MwXCe+yUXHUkBYWjS7guy
+         Tq4MlWgeL706BsXUQEEJZSIstws6NK7rEhqWt06mkfNOt7A054/IFI6GSwxU3k3li0h8
+         taqu0kGGbL1l/0S9gn6BoV8dnQqEILdVA8+QCMcPq+PR+8tGLWDsvlTVxhtV4sTtgpvE
+         jCRp1ke8aObOom55Bsx/LzXre/6xU1iCHi3U74C+xUUL1435eAXQK7nHld+GREvjIJwu
+         1xaA==
+X-Forwarded-Encrypted: i=1; AJvYcCXx5Wws1+Rb9YCj56QyoJvLEn5fmKT2+95EPdvQCDQPrDBTgZnGL5gNWLCtPMa8io9H2bgU5y36tzVSVkjFxfB2H9c=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyCuIfZiYYfIyxdQN5WwidVTM/rU93RuBLCiFdXqHvsfbLWGJP9
+	Wg+imZVV3tSGitPx1TX3Kq5g3ga2DCKKszkgLEr0osgHQeHu18XLPzkIhZ8ADw==
+X-Gm-Gg: ASbGncvDfLPniwLpVSMj7d4xk7dDGiYQB7T2miPsESK4l5al7KGnN85HR8Yd0IcDxIF
+	iA8nseO5wCErgaaGkFGUQsG5sg9eIz+tm0rMYA5wvdpje9XJdZTe1Mdml43oP7DS1uI2EOs5Ye1
+	pbhX8Nak5rtls4vYUS3K1prJO2lecBI+lngh9truN6f6MVM5CtVGmNeBI5WAAOaR/+xCYtUTTEo
+	wBR12kyDS4FYwf6HHjOJPsR08uzpiHaAuKg9SLXPROXZjVzE+nG92nC0r3x7pqFqVAGLgXt/gDt
+	cQyG/LQMjXs17lG+DAJFTe1x8sO8QI3xuYpq66Q+9upsy8lMymt7YHpM5jSg8kH+Bh004STFU8w
+	otgW62uwKeStqTaI=
+X-Google-Smtp-Source: AGHT+IEwj6zn3l1n1mEvrRIOd0S1KGWs/bgL/3cFaL+tQsr/6cABYrLinWLfgT7M2GWCtuDNAUdgLA==
+X-Received: by 2002:a17:903:2592:b0:223:2630:6b86 with SMTP id d9443c01a7336-223db3fdecdmr77895ad.7.1741038053846;
+        Mon, 03 Mar 2025 13:40:53 -0800 (PST)
+Received: from google.com (227.180.227.35.bc.googleusercontent.com. [35.227.180.227])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7349fe514besm9424721b3a.71.2025.03.03.13.40.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Mar 2025 13:40:53 -0800 (PST)
+Date: Mon, 3 Mar 2025 21:40:48 +0000
+From: Sami Tolvanen <samitolvanen@google.com>
+To: Menglong Dong <menglong8.dong@gmail.com>
+Cc: peterz@infradead.org, rostedt@goodmis.org, mark.rutland@arm.com,
+	alexei.starovoitov@gmail.com, catalin.marinas@arm.com,
+	will@kernel.org, mhiramat@kernel.org, tglx@linutronix.de,
+	mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
+	x86@kernel.org, hpa@zytor.com, ast@kernel.org, daniel@iogearbox.net,
+	andrii@kernel.org, martin.lau@linux.dev, eddyz87@gmail.com,
+	yonghong.song@linux.dev, john.fastabend@gmail.com,
+	kpsingh@kernel.org, sdf@fomichev.me, jolsa@kernel.org,
+	davem@davemloft.net, dsahern@kernel.org,
+	mathieu.desnoyers@efficios.com, nathan@kernel.org,
+	nick.desaulniers+lkml@gmail.com, morbo@google.com, kees@kernel.org,
+	dongml2@chinatelecom.cn, akpm@linux-foundation.org,
+	riel@surriel.com, rppt@kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org,
+	netdev@vger.kernel.org, llvm@lists.linux.dev
+Subject: Re: [PATCH v4 4/4] arm64: implement per-function metadata storage
+ for arm64
+Message-ID: <20250303214048.GA570570@google.com>
+References: <20250303132837.498938-1-dongml2@chinatelecom.cn>
+ <20250303132837.498938-5-dongml2@chinatelecom.cn>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250303132837.498938-5-dongml2@chinatelecom.cn>
 
-On Mon, 3 Mar 2025 16:34:21 +0100
-Tomas Glozar <tglozar@redhat.com> wrote:
+On Mon, Mar 03, 2025 at 09:28:37PM +0800, Menglong Dong wrote:
+> The per-function metadata storage is already used by ftrace if
+> CONFIG_DYNAMIC_FTRACE_WITH_CALL_OPS is enabled, and it store the pointer
+> of the callback directly to the function padding, which consume 8-bytes,
+> in the commit
+> baaf553d3bc3 ("arm64: Implement HAVE_DYNAMIC_FTRACE_WITH_CALL_OPS").
+> So we can directly store the index to the function padding too, without
+> a prepending. With CONFIG_DYNAMIC_FTRACE_WITH_CALL_OPS enabled, the
+> function is 8-bytes aligned, and we will compile the kernel with extra
+> 8-bytes (2 NOPS) padding space. Otherwise, the function is 4-bytes
+> aligned, and only extra 4-bytes (1 NOPS) is needed.
+> 
+> However, we have the same problem with Mark in the commit above: we can't
+> use the function padding together with CFI_CLANG, which can make the clang
+> compiles a wrong offset to the pre-function type hash. He said that he was
+> working with others on this problem 2 years ago. Hi Mark, is there any
+> progress on this problem?
 
-> p=C3=A1 28. 2. 2025 v 2:05 odes=C3=ADlatel Steven Rostedt <rostedt@goodmi=
-s.org> napsal:
-> >
-> > Without tracing being off, this can run forever if the events come in
-> > faster than it can be recorded. And save trace uses the "trace" file, w=
-hich
-> > is slow to read.
-> >
-> > Are you sure you want that?
-> > =20
->=20
-> Isn't that a different problem though? As far as I'm aware, it
-> shouldn't matter at all whether tracing is stopped on the main
-> instance for collecting the trace from the record instance.
->=20
-> If the record instance generates a lot of samples, this can already
-> run forever, regardless of whether tracing is stopped on the main
-> instance or not. This should be a separate fix.
+I don't think there's been much progress since the previous
+discussion a couple of years ago. The conclusion seemed to be
+that adding a section parameter to -fpatchable-function-entry
+would allow us to identify notrace functions while keeping a
+consistent layout for functions:
 
-Not sure what you mean by "main instance"?
+https://lore.kernel.org/lkml/Y1QEzk%2FA41PKLEPe@hirez.programming.kicks-ass.net/
 
-The code being changed is:
-
--	if (osnoise_trace_is_off(tool, record)) {
-+	if (osnoise_trace_is_off(tool, record))
- 		printf("rtla osnoise hit stop tracing\n");
--		if (params->trace_output) {
--			printf("  Saving trace to %s\n", params->trace_output);
--			save_trace_to_file(record->trace.inst, params->trace_output);
--		}
-+	if (params->trace_output) {
-+		printf("  Saving trace to %s\n", params->trace_output);
-+		save_trace_to_file(record->trace.inst, params->trace_output);
- 	}
-
-Where osnoise_trace_is_off() is:
-
-bool osnoise_trace_is_off(struct osnoise_tool *tool, struct osnoise_tool *r=
-ecord)
-{
-        /*
-         * The tool instance is always present, it is the one used to colle=
-ct
-         * data.
-         */
-        if (!tracefs_trace_is_on(tool->trace.inst))
-                return true;
-
-        /*
-         * The trace record instance is only enabled when -t is set. IOW, w=
-hen the system
-         * is tracing.
-         */
-        return record && !tracefs_trace_is_on(record->trace.inst);
-}
-
-
-Which returns true if the tool->trace.inst is on and false otherwise.
-
--- Steve
+Sami
