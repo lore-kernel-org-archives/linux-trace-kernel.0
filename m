@@ -1,33 +1,30 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F72A1DDA3C;
-	Mon,  3 Mar 2025 22:23:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A43D023BFA6;
+	Mon,  3 Mar 2025 23:35:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741040616; cv=none; b=d6ansjeH2ieXCVXA4VimonDSRu20I2+VoIyG8qo/Dy7DoRrBp67Trzd93kDPIh/78SgKKeXeq4nMt0vs23h9rsOHU/FSZWemsFLK0LSCrHlz9GZpkTbIwGDXFsRuAk6xCosRHQg3xz458xB9fVad4hZBuVLd+y2PBA3YZaeCB9g=
+	t=1741044934; cv=none; b=BzLlnPV4Vn8sCJnAaPQ5eqKy/Hse0OjiwrMZGhlkvuL9rKBawSSVAC1x+utnZbJ1fhF7iPvRXo4b5CQYXBVkjlsY8DSrKfU1UwntA9SlsIzg3MZvyY4iFKcvfyuaJBROJqj1lK9nO9GKFwON3cqGVe2ruvzxSAqyok3r32bFW1k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741040616; c=relaxed/simple;
-	bh=uHU0msuo6LE/sTtKRcI7R/wNd3MTe9c6mL/acWjYvOI=;
+	s=arc-20240116; t=1741044934; c=relaxed/simple;
+	bh=GR6hpDShTHYuM5MN65bxH92P4OE/9lJl7f2NLjNYShg=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=jjzGJITASt/efj1peXJIcGTG4p3znCpdL6OOy94mAJW5vIoIOxuBKtaxQ074OY+Dfq7rmFt9FtPx7a++X4P8kePjt6qty/BA/H9DIwk8d+WvK9Swbo4+iXnt8FJ46WwE67yYCyGjO8MflY+LMqz5IgvmgMKbJqQZhoiQSsni6wE=
+	 MIME-Version:Content-Type; b=MD7Y4rIovdyx3CEIVlhK5+45jVTp5Bv8lSlnXOBnmexvrW19HJYRtPh8VIG05P/uEyPkvRNu9rrCRafKLAXuOWA9KLu2vjZXlopRqSNNOVQ7QNDVmB6apNd6sTSj5yflveMRZpvo8QlGU02z3OsLuI0sjxCppqWg+DA/HgrEsqI=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7F5DFC4CED6;
-	Mon,  3 Mar 2025 22:23:34 +0000 (UTC)
-Date: Mon, 3 Mar 2025 17:24:27 -0500
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0EDC0C4CEEA;
+	Mon,  3 Mar 2025 23:35:32 +0000 (UTC)
+Date: Mon, 3 Mar 2025 18:36:25 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
-To: Mike Rapoport <rppt@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>, Borislav Petkov
- <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, Ingo Molnar
- <mingo@redhat.com>, Masami Hiramatsu <mhiramat@kernel.org>, Thomas Gleixner
- <tglx@linutronix.de>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, x86@kernel.org
-Subject: Re: [PATCH] x86/ftrace: fix boot time slowdown
-Message-ID: <20250303172427.1ae6c924@gandalf.local.home>
-In-Reply-To: <20241210230056.185826cd@batman.local.home>
-References: <20241124140705.2883-1-rppt@kernel.org>
-	<Z07KnNk5AK_Jq6CU@kernel.org>
-	<20241210230056.185826cd@batman.local.home>
+To: Bharadwaj Raju <bharadwaj.raju777@gmail.com>
+Cc: mhiramat@kernel.org, mathieu.desnoyers@efficios.com, shuah@kernel.org,
+ skhan@linuxfoundation.org, linux-trace-kernel@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-kernel-mentees@lists.linux.dev
+Subject: Re: [PATCH] selftests/ftrace: add 'poll' binary to gitignore
+Message-ID: <20250303183625.5acc59ec@gandalf.local.home>
+In-Reply-To: <20250210160138.4745-1-bharadwaj.raju777@gmail.com>
+References: <20250210160138.4745-1-bharadwaj.raju777@gmail.com>
 X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -38,16 +35,40 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Tue, 10 Dec 2024 23:00:56 -0500
-Steven Rostedt <rostedt@goodmis.org> wrote:
+On Mon, 10 Feb 2025 21:31:34 +0530
+Bharadwaj Raju <bharadwaj.raju777@gmail.com> wrote:
 
-> On Tue, 3 Dec 2024 11:08:44 +0200
-> Mike Rapoport <rppt@kernel.org> wrote:
+> When building this test, a binary file 'poll' is
+> generated and should be gitignore'd.
 > 
-> > Gentle ping  
-> 
-> I'll take this if nobody else will.
+> Signed-off-by: Bharadwaj Raju <bharadwaj.raju777@gmail.com>
 
-I guess I'll take this for the next merge window.
+Acked-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+
+Shuah,
+
+Can you take this for your tree?
+
+Possibly with:
+
+Fixes: 80c3e28528ff9 ("selftests/tracing: Add hist poll() support test")
+
+So it should go into this rc release.
+
+Thanks,
 
 -- Steve
+
+> ---
+>  tools/testing/selftests/ftrace/.gitignore | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/tools/testing/selftests/ftrace/.gitignore b/tools/testing/selftests/ftrace/.gitignore
+> index 2659417cb2c7..4d7fcb828850 100644
+> --- a/tools/testing/selftests/ftrace/.gitignore
+> +++ b/tools/testing/selftests/ftrace/.gitignore
+> @@ -1,2 +1,3 @@
+>  # SPDX-License-Identifier: GPL-2.0-only
+>  logs
+> +poll
+
