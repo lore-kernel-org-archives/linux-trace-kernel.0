@@ -1,26 +1,26 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC9C81F8697;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCA201FAC4C;
 	Tue,  4 Mar 2025 23:15:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741130122; cv=none; b=ngciAZlNCn6BtCwxon1pY5aMDUxFVmVUUkgindJIttfbUAVlMjC3GzMcW+h/3NhD9AZkn5WiW/rUS+c+lgaAEK9z2qVgC0Kb8opOJBHMzk+QOtbZeCTu5QZmZxGb9nQ73dUMSK27dO6pvodRTmFVbAOsxOmvne0sTN/chVg14iI=
+	t=1741130122; cv=none; b=U8ShUg608MvZuT9+8AzXq/CMS3e2sG8BBfXkW1LrEYmuWRRk1dF0AVSFO4xo9ql5ZmTrAlCJFnVW1pZHnDnzzyKK5o2epo9262OKrYKS/4/J3uqgt8djMxZ6xK7ZlaWGWQNHTChEoMT9Ta6JL7f08dR9p8CskKh6DVlsnfp+xkU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1741130122; c=relaxed/simple;
-	bh=wC/IeTaVY4YGXDLvAUqyWXaYfQfr59gdDdHoBxGilKY=;
+	bh=Sc+tHgnrwcvbiAJXC4eaEryDgMZlPRgI9XOGIB2esok=;
 	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=XYuBQaXuc/tVOwRRYomfU2Q+vN8tyNDEMX8I3MfQdbkxIoojuzBo2HkXeBu1rpAIGMWKXKNgEbPagfPvx0bal+c064UFrSo8pYyWSOkWVpiuIKKH2ygcm3DT9G0hSM9g8dsRz+L7iBm5u/rIwnfU5iC07gGl6kT0cxcagKCGEb8=
+	 Content-Type; b=sc7o5eh/054ot9MGWQu2vs52WhoM/JyAHWBXKG73YP9Tkl8CK5tUblejI59blbPjDuAzLni+mEs9lkJ9HIYc2KJM0KmQMEtnbNb6H4LRigTUHNgH/a25qz4De3qSmTtvK4oVLQYMuDLN1tW+htT/oLOXADwo7t18xEX81BTltm8=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7D1AEC4CEEC;
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4EE26C4CEE5;
 	Tue,  4 Mar 2025 23:15:22 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.98)
 	(envelope-from <rostedt@goodmis.org>)
-	id 1tpbUo-0000000CSaQ-2R1E;
+	id 1tpbUo-0000000CSZP-12u6;
 	Tue, 04 Mar 2025 18:16:18 -0500
-Message-ID: <20250304231618.438023367@goodmis.org>
+Message-ID: <20250304231618.104482909@goodmis.org>
 User-Agent: quilt/0.68
-Date: Tue, 04 Mar 2025 18:15:48 -0500
+Date: Tue, 04 Mar 2025 18:15:46 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org,
  linux-trace-kernel@vger.kernel.org
@@ -28,8 +28,7 @@ Cc: Masami Hiramatsu <mhiramat@kernel.org>,
  Mark Rutland <mark.rutland@arm.com>,
  Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
  Andrew Morton <akpm@linux-foundation.org>
-Subject: [PATCH 3/4] tracing: Only return an adjusted address if it matches the kernel
- address
+Subject: [PATCH 1/4] tracing: Update function trace addresses with module addresses
 References: <20250304231545.708806702@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -41,44 +40,65 @@ Content-Type: text/plain; charset=UTF-8
 
 From: Steven Rostedt <rostedt@goodmis.org>
 
-The trace_adjust_address() will take a given address and examine the
-persistent ring buffer to see if the address matches a module that is
-listed there. If it does not, it will just adjust the value to the core
-kernel delta. But if the address was for something that was not part of
-the core kernel text or data it should not be adjusted.
+Now that module addresses are saved in the persistent ring buffer, their
+addresses can be used to adjust the address in the persistent ring buffer
+to the address of the module that is currently loaded.
 
-Check the result of the adjustment and only return the adjustment if it
-lands in the current kernel text or data. If not, return the original
-address.
+Instead of blindly using the text_delta that only works for core kernel
+code, call the trace_adjust_address() that will see if the address matches
+an address saved in the persistent ring buffer, and then uses that against
+the matching module if it is loaded.
 
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- kernel/trace/trace.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ kernel/trace/trace_output.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index c37dd3b6acb3..2ad2686f39f3 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -6005,6 +6005,7 @@ static DEFINE_MUTEX(scratch_mutex);
- unsigned long trace_adjust_address(struct trace_array *tr, unsigned long addr)
- {
- 	struct trace_scratch *tscratch;
-+	unsigned long raddr;
- 	int i;
- 
- 	/* If we don't have last boot delta, return the address */
-@@ -6020,7 +6021,9 @@ unsigned long trace_adjust_address(struct trace_array *tr, unsigned long addr)
- 		return addr + tr->module_delta[i - 1];
- 	}
- 
--	return addr + tr->text_delta;
-+	raddr = addr + tr->text_delta;
-+	return is_kernel_core_data(raddr) || is_kernel_rodata(raddr) ||
-+		__is_kernel(raddr) ? raddr : addr;
+diff --git a/kernel/trace/trace_output.c b/kernel/trace/trace_output.c
+index a5336c4ece8e..5f3b698afc07 100644
+--- a/kernel/trace/trace_output.c
++++ b/kernel/trace/trace_output.c
+@@ -1005,10 +1005,10 @@ enum print_line_t trace_nop_print(struct trace_iterator *iter, int flags,
  }
  
- static int save_mod(struct module *mod, void *data)
+ static void print_fn_trace(struct trace_seq *s, unsigned long ip,
+-			   unsigned long parent_ip, long delta, int flags)
++			   unsigned long parent_ip, struct trace_array *tr, int flags)
+ {
+-	ip += delta;
+-	parent_ip += delta;
++	ip = trace_adjust_address(tr, ip);
++	parent_ip = trace_adjust_address(tr, parent_ip);
+ 
+ 	seq_print_ip_sym(s, ip, flags);
+ 
+@@ -1027,7 +1027,7 @@ static enum print_line_t trace_fn_trace(struct trace_iterator *iter, int flags,
+ 
+ 	trace_assign_type(field, iter->ent);
+ 
+-	print_fn_trace(s, field->ip, field->parent_ip, iter->tr->text_delta, flags);
++	print_fn_trace(s, field->ip, field->parent_ip, iter->tr, flags);
+ 	trace_seq_putc(s, '\n');
+ 
+ 	return trace_handle_return(s);
+@@ -1613,7 +1613,7 @@ static enum print_line_t trace_print_print(struct trace_iterator *iter,
+ 
+ 	trace_assign_type(field, iter->ent);
+ 
+-	ip = field->ip + iter->tr->text_delta;
++	ip = trace_adjust_address(iter->tr, field->ip);
+ 
+ 	seq_print_ip_sym(s, ip, flags);
+ 	trace_seq_printf(s, ": %s", field->buf);
+@@ -1699,7 +1699,7 @@ trace_func_repeats_print(struct trace_iterator *iter, int flags,
+ 
+ 	trace_assign_type(field, iter->ent);
+ 
+-	print_fn_trace(s, field->ip, field->parent_ip, iter->tr->text_delta, flags);
++	print_fn_trace(s, field->ip, field->parent_ip, iter->tr, flags);
+ 	trace_seq_printf(s, " (repeats: %u, last_ts:", field->count);
+ 	trace_print_time(s, iter,
+ 			 iter->ts - FUNC_REPEATS_GET_DELTA_TS(field));
 -- 
 2.47.2
 
