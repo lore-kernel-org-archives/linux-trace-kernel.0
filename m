@@ -1,130 +1,224 @@
-Received: from mail-yw1-f193.google.com (mail-yw1-f193.google.com [209.85.128.193])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38C14524B0;
-	Tue,  4 Mar 2025 01:22:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.193
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 932EF273FD;
+	Tue,  4 Mar 2025 01:24:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741051374; cv=none; b=CZ41YDSCeN1v2cZ2WXrsHHST2dEQ5boY/BJzZb67uvs6PveIrzCclkJhrLFw9Y/Wxwd+av9XsG/Gsqes4rRKbo5KwfqQWbrUP7nudbgjVmr6lUQP3RjiARtUsaSYbWQ6QUtUNiqGME5K8kEKcDGTu2g/lC3alVjSKBLNwFN1QpY=
+	t=1741051494; cv=none; b=Bx+CZ8Fkb9PVhz/ytxbe6/PRn9L1aDlRA6u6VM+3A2hOwQq5WR7IRfTJRQ6o8pmCHtuuirNTb0sUtmJZ/pDi8l3LdFGYin0VkSJ3VpCQulsOk2gPzuxkLgmT2sebllxouO9XXFy4RoDiw5FjdSPhDqFGwcuZACyqsiByizHASWM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741051374; c=relaxed/simple;
-	bh=sj01G89WSKsFpjf/wy7aY/kOlbTksiMMzEm1e033JpE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=P87NHfm2nSTb6lX11lpVl5pbrUdVRUBM6zb1zRfiVhjwJ2XwXIUWu9yE90ksnIxjo7Mru4aBFbfwg9rN1snM9+OIIGqB8TCJhpcFhLiFWc5ic4XcB+C2fGERTC83sYpVxDD/gdTpv2gnyyDDwuRtROALe9m1T54egTi1XygfNx4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WBl1S94a; arc=none smtp.client-ip=209.85.128.193
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WBl1S94a"
-Received: by mail-yw1-f193.google.com with SMTP id 00721157ae682-6fd6f7f8df9so16510637b3.1;
-        Mon, 03 Mar 2025 17:22:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741051372; x=1741656172; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=sj01G89WSKsFpjf/wy7aY/kOlbTksiMMzEm1e033JpE=;
-        b=WBl1S94aUZlMnMpmbZBTghTGHozbnyoDSpF7Y+dt/Urh+TbZ8cV3Sjjs/mZCEMUSHQ
-         F2LFEpMsF87oLgzo7IK6tPES4whx+7alaHiFAhnd8HkuYkCKryQvHUOMa+cvnKSRb/uy
-         TF7iOlcJYScFMGGbLHz4Nu0IVKz4wtBgIP9etF4Cq3foNY5RP1Bd+Id88Kh3gDx4aHmT
-         5UNx9k1CsEwXMHDq8oEOy6tUwflZjUx4chHnukS8xVRPNIGe/TOJG67tyhTaK5V4n+1c
-         VXKoGlGtIEmgzhLM20cRQjughXORQelxmAC6Ex8f7MWP0XGNiviSo2+3x226Bnp+09fW
-         RQIw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741051372; x=1741656172;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=sj01G89WSKsFpjf/wy7aY/kOlbTksiMMzEm1e033JpE=;
-        b=Td9h7J/a9yJMoJEzhwXOUq0pJtohenP+Aqy68ApufDGFNQIMZ8ZDoP9wHpmQ3k2tex
-         ctmc0o9UUi8fOOP49wswunCrG3xtG0aBlAyS+Lbf1FAjmkQMURwrKagKs8TgQeB4DzO3
-         xHUrZ82MumAJdhI8b/9J0Md4ViRKkBzwd7aUDUouqfh0bg0bb3DOyH28shp888NvmeKP
-         H9dHvWS5OJGiX2J//30pNL7rDVhfgXMIHZNHu9gy4hkiVw3OEgM6XPLqLE8y9Mlf+oIj
-         KqzWehrt4EUGKrcOOXzqLhq3e0yowFjtu/u5MoPw38WCrUKoW21JbbY/njeNyKptA3Fz
-         /bCQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUxH/lkEGc28u7PIGZqbOsmox4Pq9kMzrGM45qduQ7/cgQTv9Mjlm6/m5uAb0yLuhGJ+VSvj2pE@vger.kernel.org, AJvYcCVoq8CLEP8ZoZcPj17zBxRKqQkC8KcvEXnAI2BBNdqaclgy/S7zWWF6TR4p+D+ukq3G7MEPKsXE/1fgcCkt@vger.kernel.org, AJvYcCWg4xQZb2ApGwLU8oMM+pTM7bsmcfKzetmRULOXObt29h66j1Edwgqs7eaOJ2UKBIq7SV6b/r2LxA4nrHwkJnx4Itg7@vger.kernel.org, AJvYcCXmQyzP5sPIroQanLn79JNfbVQiRUs7ZDTlRUUENf+Jgjgr2AynuBgplHRoRrudIY6GpBs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyTtWWBNL7tffOdTtUAtYNGt00TB08QQn6NEvbs/h7EB7bYsbzU
-	/hrXy3O0KzktQGK1TeDU6Qy0q6u2ReGZP0fFiv0paf+q4DhOIn7vV6hNNzkpu+T4ZZvYG7LkNIY
-	yWhWDnf+0//Waci1ReHByXgBAA9Y=
-X-Gm-Gg: ASbGnctpm2m+AZ8NNotPO2hzLUy8PX0Gks/l9ivGBHAeqSyVHto5MEJTCJi6TOyZfAt
-	LsvIQMcsZC6qmiUVXt91SJRMhq6x2pbiBKl90MGqg6Ndfnpzn3qCUPzgcZUDdZDYzaXUkApW6qn
-	On2pozPgQzBvTRR7mee9QvQrKV8A==
-X-Google-Smtp-Source: AGHT+IElMAk21PoBw46zmvLTxOIKzrTm436wI79ItKGnS7B37hL1mh91tHN7JBEL3hC27FIUVigt3qCLJ8UVxsKzHIY=
-X-Received: by 2002:a05:690c:802:b0:6f9:5552:6b20 with SMTP id
- 00721157ae682-6fd93fe85c0mr16592127b3.0.1741051372144; Mon, 03 Mar 2025
- 17:22:52 -0800 (PST)
+	s=arc-20240116; t=1741051494; c=relaxed/simple;
+	bh=3+LfRhStgRkOnlP0mwLCHwGugqSl/C9uw5T6xGyyMhc=;
+	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
+	 Content-Type; b=mshuUlu565XEV72UISPYzOIs966Vtb6mRYsE/Jv4ojspo5diaDYuHBlTDNVok0mnFVlC10HcksQn+7KSH0mgJgT4vRqJh+MdaROrFhcq2dsfIInlE3IzMrzyyYo1tqjZejWwHZzPIK3V5LHZf9dVlxxRNpmldeH8Q+pcmRRucR4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6D52EC4CEEC;
+	Tue,  4 Mar 2025 01:24:54 +0000 (UTC)
+Received: from rostedt by gandalf with local (Exim 4.98)
+	(envelope-from <rostedt@goodmis.org>)
+	id 1tpH2a-0000000CC5h-12qN;
+	Mon, 03 Mar 2025 20:25:48 -0500
+Message-ID: <20250304012548.100322331@goodmis.org>
+User-Agent: quilt/0.68
+Date: Mon, 03 Mar 2025 20:25:19 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Andrew Morton <akpm@linux-foundation.org>
+Subject: [PATCH v3 3/8] ring-buffer: Add ring_buffer_meta_scratch()
+References: <20250304012516.282694507@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250303132837.498938-1-dongml2@chinatelecom.cn>
- <20250303132837.498938-5-dongml2@chinatelecom.cn> <20250303214048.GA570570@google.com>
-In-Reply-To: <20250303214048.GA570570@google.com>
-From: Menglong Dong <menglong8.dong@gmail.com>
-Date: Tue, 4 Mar 2025 09:21:15 +0800
-X-Gm-Features: AQ5f1JpZvyop7dLuEaHSyJ9xfDPdFhBsxp1mwPgCCs2RQqwOnwzgm0G2X_76n64
-Message-ID: <CADxym3Z76bm9wXPjX=9c95eZtWjODwz70xN1KUR92NuC6vzrwg@mail.gmail.com>
-Subject: Re: [PATCH v4 4/4] arm64: implement per-function metadata storage for arm64
-To: Sami Tolvanen <samitolvanen@google.com>
-Cc: peterz@infradead.org, rostedt@goodmis.org, mark.rutland@arm.com, 
-	alexei.starovoitov@gmail.com, catalin.marinas@arm.com, will@kernel.org, 
-	mhiramat@kernel.org, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, 
-	dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com, ast@kernel.org, 
-	daniel@iogearbox.net, andrii@kernel.org, martin.lau@linux.dev, 
-	eddyz87@gmail.com, yonghong.song@linux.dev, john.fastabend@gmail.com, 
-	kpsingh@kernel.org, sdf@fomichev.me, jolsa@kernel.org, davem@davemloft.net, 
-	dsahern@kernel.org, mathieu.desnoyers@efficios.com, nathan@kernel.org, 
-	nick.desaulniers+lkml@gmail.com, morbo@google.com, kees@kernel.org, 
-	dongml2@chinatelecom.cn, akpm@linux-foundation.org, riel@surriel.com, 
-	rppt@kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	bpf@vger.kernel.org, netdev@vger.kernel.org, llvm@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
 
-On Tue, Mar 4, 2025 at 5:40=E2=80=AFAM Sami Tolvanen <samitolvanen@google.c=
-om> wrote:
->
-> On Mon, Mar 03, 2025 at 09:28:37PM +0800, Menglong Dong wrote:
-> > The per-function metadata storage is already used by ftrace if
-> > CONFIG_DYNAMIC_FTRACE_WITH_CALL_OPS is enabled, and it store the pointe=
-r
-> > of the callback directly to the function padding, which consume 8-bytes=
-,
-> > in the commit
-> > baaf553d3bc3 ("arm64: Implement HAVE_DYNAMIC_FTRACE_WITH_CALL_OPS").
-> > So we can directly store the index to the function padding too, without
-> > a prepending. With CONFIG_DYNAMIC_FTRACE_WITH_CALL_OPS enabled, the
-> > function is 8-bytes aligned, and we will compile the kernel with extra
-> > 8-bytes (2 NOPS) padding space. Otherwise, the function is 4-bytes
-> > aligned, and only extra 4-bytes (1 NOPS) is needed.
-> >
-> > However, we have the same problem with Mark in the commit above: we can=
-'t
-> > use the function padding together with CFI_CLANG, which can make the cl=
-ang
-> > compiles a wrong offset to the pre-function type hash. He said that he =
-was
-> > working with others on this problem 2 years ago. Hi Mark, is there any
-> > progress on this problem?
->
-> I don't think there's been much progress since the previous
-> discussion a couple of years ago. The conclusion seemed to be
-> that adding a section parameter to -fpatchable-function-entry
-> would allow us to identify notrace functions while keeping a
-> consistent layout for functions:
->
-> https://lore.kernel.org/lkml/Y1QEzk%2FA41PKLEPe@hirez.programming.kicks-a=
-ss.net/
+From: Steven Rostedt <rostedt@goodmis.org>
 
-Thank you for your information, which helps me a lot.
-I'll dig deeper to find a way to keep CFI working together
-with this function.
+Now that there's one meta data at the start of the persistent memory used by
+the ring buffer, allow the caller to request some memory right after that
+data that it can use as its own persistent memory.
 
-Thanks!
-Menglong Dong
+Also fix some white space issues with ring_buffer_alloc().
 
->
-> Sami
+Reviewed-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+ include/linux/ring_buffer.h |  6 ++++--
+ kernel/trace/ring_buffer.c  | 34 ++++++++++++++++++++++++++++------
+ kernel/trace/trace.c        |  2 +-
+ 3 files changed, 33 insertions(+), 9 deletions(-)
+
+diff --git a/include/linux/ring_buffer.h b/include/linux/ring_buffer.h
+index 8de035f4f0d9..019b59a0bbc9 100644
+--- a/include/linux/ring_buffer.h
++++ b/include/linux/ring_buffer.h
+@@ -92,9 +92,11 @@ __ring_buffer_alloc(unsigned long size, unsigned flags, struct lock_class_key *k
+ struct trace_buffer *__ring_buffer_alloc_range(unsigned long size, unsigned flags,
+ 					       int order, unsigned long start,
+ 					       unsigned long range_size,
++					       unsigned long scratch_size,
+ 					       struct lock_class_key *key);
+ 
+ bool ring_buffer_last_boot_delta(struct trace_buffer *buffer, unsigned long *kaslr_addr);
++void *ring_buffer_meta_scratch(struct trace_buffer *buffer, unsigned int *size);
+ 
+ /*
+  * Because the ring buffer is generic, if other users of the ring buffer get
+@@ -112,11 +114,11 @@ bool ring_buffer_last_boot_delta(struct trace_buffer *buffer, unsigned long *kas
+  * traced by ftrace, it can produce lockdep warnings. We need to keep each
+  * ring buffer's lock class separate.
+  */
+-#define ring_buffer_alloc_range(size, flags, order, start, range_size)	\
++#define ring_buffer_alloc_range(size, flags, order, start, range_size, s_size)	\
+ ({									\
+ 	static struct lock_class_key __key;				\
+ 	__ring_buffer_alloc_range((size), (flags), (order), (start),	\
+-				  (range_size), &__key);		\
++				  (range_size), (s_size), &__key);	\
+ })
+ 
+ typedef bool (*ring_buffer_cond_fn)(void *data);
+diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+index bd37e14990a3..2df74f3f0086 100644
+--- a/kernel/trace/ring_buffer.c
++++ b/kernel/trace/ring_buffer.c
+@@ -1678,7 +1678,7 @@ static void *rb_range_buffer(struct ring_buffer_per_cpu *cpu_buffer, int idx)
+  * See if the existing memory contains a valid meta section.
+  * if so, use that, otherwise initialize it.
+  */
+-static bool rb_meta_init(struct trace_buffer *buffer)
++static bool rb_meta_init(struct trace_buffer *buffer, int scratch_size)
+ {
+ 	unsigned long ptr = buffer->range_addr_start;
+ 	struct ring_buffer_meta *bmeta;
+@@ -1696,6 +1696,7 @@ static bool rb_meta_init(struct trace_buffer *buffer)
+ 	/* The first buffer will start word size after the meta page */
+ 	ptr += sizeof(*bmeta);
+ 	ptr = ALIGN(ptr, sizeof(long));
++	ptr += scratch_size;
+ 
+ 	if (bmeta->magic != RING_BUFFER_META_MAGIC) {
+ 		pr_info("Ring buffer boot meta mismatch of magic\n");
+@@ -1730,6 +1731,9 @@ static bool rb_meta_init(struct trace_buffer *buffer)
+ 	bmeta->total_size = total_size;
+ 	bmeta->buffers_offset = (void *)ptr - (void *)bmeta;
+ 
++	/* Zero out the scatch pad */
++	memset((void *)bmeta + sizeof(*bmeta), 0, bmeta->buffers_offset - sizeof(*bmeta));
++
+ 	return false;
+ }
+ 
+@@ -1954,7 +1958,7 @@ static void rb_meta_init_text_addr(struct ring_buffer_cpu_meta *meta)
+ #endif
+ }
+ 
+-static void rb_range_meta_init(struct trace_buffer *buffer, int nr_pages)
++static void rb_range_meta_init(struct trace_buffer *buffer, int nr_pages, int scratch_size)
+ {
+ 	struct ring_buffer_cpu_meta *meta;
+ 	struct ring_buffer_meta *bmeta;
+@@ -1969,7 +1973,7 @@ static void rb_range_meta_init(struct trace_buffer *buffer, int nr_pages)
+ 	subbuf_mask = bitmap_alloc(nr_pages + 1, GFP_KERNEL);
+ 	/* If subbuf_mask fails to allocate, then rb_meta_valid() will return false */
+ 
+-	if (rb_meta_init(buffer))
++	if (rb_meta_init(buffer, scratch_size))
+ 		valid = true;
+ 
+ 	bmeta = buffer->meta;
+@@ -2367,6 +2371,7 @@ static void rb_free_cpu_buffer(struct ring_buffer_per_cpu *cpu_buffer)
+ static struct trace_buffer *alloc_buffer(unsigned long size, unsigned flags,
+ 					 int order, unsigned long start,
+ 					 unsigned long end,
++					 unsigned long scratch_size,
+ 					 struct lock_class_key *key)
+ {
+ 	struct trace_buffer *buffer;
+@@ -2416,10 +2421,15 @@ static struct trace_buffer *alloc_buffer(unsigned long size, unsigned flags,
+ 		/* Make sure that start is word aligned */
+ 		start = ALIGN(start, sizeof(long));
+ 
++		/* scratch_size needs to be aligned too */
++		scratch_size = ALIGN(scratch_size, sizeof(long));
++
+ 		/* Subtract the buffer meta data and word aligned */
+ 		buffers_start = start + sizeof(struct ring_buffer_cpu_meta);
+ 		buffers_start = ALIGN(buffers_start, sizeof(long));
++		buffers_start += scratch_size;
+ 
++		/* Calculate the size for the per CPU data */
+ 		size = end - buffers_start;
+ 		size = size / nr_cpu_ids;
+ 
+@@ -2456,7 +2466,7 @@ static struct trace_buffer *alloc_buffer(unsigned long size, unsigned flags,
+ 		buffer->range_addr_start = start;
+ 		buffer->range_addr_end = end;
+ 
+-		rb_range_meta_init(buffer, nr_pages);
++		rb_range_meta_init(buffer, nr_pages, scratch_size);
+ 	} else {
+ 
+ 		/* need at least two pages */
+@@ -2509,7 +2519,7 @@ struct trace_buffer *__ring_buffer_alloc(unsigned long size, unsigned flags,
+ 					struct lock_class_key *key)
+ {
+ 	/* Default buffer page size - one system page */
+-	return alloc_buffer(size, flags, 0, 0, 0,key);
++	return alloc_buffer(size, flags, 0, 0, 0, 0, key);
+ 
+ }
+ EXPORT_SYMBOL_GPL(__ring_buffer_alloc);
+@@ -2531,9 +2541,11 @@ EXPORT_SYMBOL_GPL(__ring_buffer_alloc);
+ struct trace_buffer *__ring_buffer_alloc_range(unsigned long size, unsigned flags,
+ 					       int order, unsigned long start,
+ 					       unsigned long range_size,
++					       unsigned long scratch_size,
+ 					       struct lock_class_key *key)
+ {
+-	return alloc_buffer(size, flags, order, start, start + range_size, key);
++	return alloc_buffer(size, flags, order, start, start + range_size,
++			    scratch_size, key);
+ }
+ 
+ /**
+@@ -2557,6 +2569,16 @@ bool ring_buffer_last_boot_delta(struct trace_buffer *buffer, unsigned long *kas
+ 	return true;
+ }
+ 
++void *ring_buffer_meta_scratch(struct trace_buffer *buffer, unsigned int *size)
++{
++	if (!buffer || !buffer->meta)
++		return NULL;
++
++	*size = PAGE_SIZE - sizeof(*buffer->meta);
++
++	return (void *)buffer->meta + sizeof(*buffer->meta);
++}
++
+ /**
+  * ring_buffer_free - free a ring buffer.
+  * @buffer: the buffer to free.
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index 41d463e5327c..69dcd7edaf26 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -9214,7 +9214,7 @@ allocate_trace_buffer(struct trace_array *tr, struct array_buffer *buf, int size
+ 	if (tr->range_addr_start && tr->range_addr_size) {
+ 		buf->buffer = ring_buffer_alloc_range(size, rb_flags, 0,
+ 						      tr->range_addr_start,
+-						      tr->range_addr_size);
++						      tr->range_addr_size, 0);
+ 
+ #ifdef CONFIG_RANDOMIZE_BASE
+ 		if (ring_buffer_last_boot_delta(buf->buffer, &tr->kaslr_addr))
+-- 
+2.47.2
+
+
