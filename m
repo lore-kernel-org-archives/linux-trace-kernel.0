@@ -1,74 +1,98 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A9551FF7AE;
-	Tue,  4 Mar 2025 13:06:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D644D2063D4
+	for <linux-trace-kernel@vger.kernel.org>; Tue,  4 Mar 2025 14:23:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741093614; cv=none; b=MInBxJhnQgNG22VewRqt2WXbWST+Ux4ibPOwzgQLD/h+2lYPeCMZiYke+2ULDBsLdARN8wWt3urAGW9e+7AODpgQExIMU8z5U9IjtWX7wPzJYZANSYqjto7WUvpSDTeBBM5EVANEISOlNwy+Hg0TeMZ8VWJs7YpWsJ2H7nMZdTQ=
+	t=1741098204; cv=none; b=JNv+2TAbqUiXBOgA8xi7fJ9TtGkKAjc0YxKs8/9KP+Dfq35hqx8IocRZMJtcK5zC0snHuRbm3CMbUc+Cg48m3WunZeM827vWH1yXGTk0FzfGA9FRF0gjnphqEROcvjq7jFIB2wk1ZzXoyAzBSqWFnAl9p7obtdQx3YXD6n9G+Ts=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741093614; c=relaxed/simple;
-	bh=pHSz09iNcjxLjQhcs9B/mcpQH839SIy3BkVhtEt1c1k=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oM3SYOnBglFmeOdp+1ury6HUFW+yd2fimxP9khQYMZdNkfAEIo1Pa6vhkxKWbe/LjaxdwZZwK9rfjngqUu6sGxlwNstIIiNM7ciDHH6vO4doH+UkLQoMt8NM+Y3kq518+mA2nF9o4loIa3ATHwIzOpMw3H/xPUZbe/C8yvoRyZc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U3Cj0Iu5; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741098204; c=relaxed/simple;
+	bh=o0nIP+iK6OAB30vRcT8cW4nyCWpwPA0CBIu37QSA3C8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Zi+txf0W5fNaB3I6TFueYE15q25eQYt1s4DHLAXpAvxeRMYPdrjdXuD7MNaOl3L1CkcGChLJXPrpZI8wY4wLL3X84kiFHyARp6Z3XOxHePERahYv0aXA3CecdWTDIZ7c7JbdJxX2GsAerBJbhlFjU7C6HFOl0wvKgKVHfToEYOQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=LTOMaFnZ; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U3Cj0Iu5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 46BA0C4CEE5;
-	Tue,  4 Mar 2025 13:06:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741093613;
-	bh=pHSz09iNcjxLjQhcs9B/mcpQH839SIy3BkVhtEt1c1k=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=U3Cj0Iu5ONRQ7mlexTrvEG19NljSPjUlaLx3SNbwyl+sZG4c56xKD3wv8ArXLssmT
-	 HwUna2K6QIFAc2Azw69M32cZpXIBxUxTrszVC/6hhT6iGs1bs1CVD/4OOknteMzpHO
-	 C3pujDMaNRrGgzxlOzpiOmcoxQzTmnJKbJPN0nkv+UfHVHeclTP0qEetf4nsjhk8HR
-	 olAA2uOuQ2TLW70QuE6fn6Pb67FtqnOCJL2ixJXFzq8VzCM/U2SfacBNFInlw9DHKL
-	 wHs3v4zbBFu3O3I4prsob3cEtxOwscNQXROV/I1JaLY2WGQD2OZgKHhzap5cgwZrxU
-	 v+xHr1lOUvj+Q==
-Date: Tue, 4 Mar 2025 14:06:48 +0100
-From: Nathan Chancellor <nathan@kernel.org>
-To: Uday Shankar <ushankar@purestorage.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	Nicolas Schier <nicolas@fjasle.eu>,
-	linux-trace-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org
-Subject: Re: [PATCH 0/2] kbuild: rpm-pkg: improve debuggability
-Message-ID: <20250304130648.GA3922496@ax162>
-References: <20250210-debuginfo-v1-0-368feb58292a@purestorage.com>
- <Z7Pv+hD3AOS/ymFI@dev-ushankar.dev.purestorage.com>
- <Z7zJ5EjIFLbz9C3I@dev-ushankar.dev.purestorage.com>
- <Z8Zu0p2vCAfwXa/L@dev-ushankar.dev.purestorage.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LTOMaFnZ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1741098201;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=o8Y3blARs8HOt3v7nbGnlDEcPvZYsitdJvmKLOEigGQ=;
+	b=LTOMaFnZXUn391/drAglt6O2daG8u7LFWgOZfh2/gsVqAcTydb4aL6LNGKoq0EoFVyySeV
+	95Ux2QCsmDFuSeB/X/YsY368pRE5ISyBiiSrNSV0KYA+SDVcncVSCztiTauRTKr/UqW3UI
+	oawN2qsL/DeFU51ZNrJJCWnYMczDdzw=
+Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-685-DZRwrSqoNNSecsA6bCpr9Q-1; Tue,
+ 04 Mar 2025 09:23:17 -0500
+X-MC-Unique: DZRwrSqoNNSecsA6bCpr9Q-1
+X-Mimecast-MFC-AGG-ID: DZRwrSqoNNSecsA6bCpr9Q_1741098196
+Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 8DC21190ECE0;
+	Tue,  4 Mar 2025 14:23:16 +0000 (UTC)
+Received: from fedora.brq.redhat.com (unknown [10.43.17.52])
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 7953C180087B;
+	Tue,  4 Mar 2025 14:23:14 +0000 (UTC)
+From: Tomas Glozar <tglozar@redhat.com>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: linux-trace-kernel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	John Kacur <jkacur@redhat.com>,
+	Luis Goncalves <lgoncalv@redhat.com>,
+	Gabriele Monaco <gmonaco@redhat.com>,
+	Tomas Glozar <tglozar@redhat.com>
+Subject: [PATCH] tools/rv: Keep user LDFLAGS in build
+Date: Tue,  4 Mar 2025 15:22:28 +0100
+Message-ID: <20250304142228.767658-1-tglozar@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z8Zu0p2vCAfwXa/L@dev-ushankar.dev.purestorage.com>
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
 
-Hi Uday,
+rv, unlike rtla and perf, drops LDFLAGS supplied by the user and honors
+only EXTRA_LDFLAGS. This is inconsistent with both perf and rtla and
+can lead to all kinds of unexpected behavior.
 
-On Mon, Mar 03, 2025 at 08:09:06PM -0700, Uday Shankar wrote:
-> On Mon, Feb 24, 2025 at 12:35:00PM -0700, Uday Shankar wrote:
-> > On Mon, Feb 17, 2025 at 07:27:06PM -0700, Uday Shankar wrote:
-> > > ping
-> > 
-> > ping again
-> 
-> ping again again. Can someone please take a look at this and/or let me
-> know if I'm missing any recipients or if I'm expecting feedback too
-> soon?
+For example, on Fedora and RHEL, it causes rv to be build without
+PIE, unlike the aforementioned perf and rtla:
 
-Your recipients list looks correct to me but I am not super
-knowledgeable about the RPM format so I am not sure I can give this a
-proper review but I will try to take a look at it when I can find some
-time to do some research. Masahiro will be the one to pick this up but
-some maintainers are busier than others.
+$ file /usr/bin/{rv,rtla,perf}
+/usr/bin/rv:   ELF 64-bit LSB executable, ...
+/usr/bin/rtla: ELF 64-bit LSB pie executable, ...
+/usr/bin/perf: ELF 64-bit LSB pie executable, ...
 
-Cheers,
-Nathan
+Keep both LDFLAGS and EXTRA_LDFLAGS for the build.
+
+Fixes: 012e4e77df73 ("tools/verification: Use tools/build makefiles on rv")
+Signed-off-by: Tomas Glozar <tglozar@redhat.com>
+---
+ tools/verification/rv/Makefile.rv | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/tools/verification/rv/Makefile.rv b/tools/verification/rv/Makefile.rv
+index 161baa29eb86..2497fb96c83d 100644
+--- a/tools/verification/rv/Makefile.rv
++++ b/tools/verification/rv/Makefile.rv
+@@ -27,7 +27,7 @@ endif
+ 
+ INCLUDE		:= -Iinclude/
+ CFLAGS		:= -g -DVERSION=\"$(VERSION)\" $(FOPTS) $(WOPTS) $(EXTRA_CFLAGS) $(INCLUDE)
+-LDFLAGS		:= -ggdb $(EXTRA_LDFLAGS)
++LDFLAGS		:= -ggdb $(LDFLAGS) $(EXTRA_LDFLAGS)
+ 
+ INSTALL		:= install
+ MKDIR		:= mkdir
+-- 
+2.48.1
+
