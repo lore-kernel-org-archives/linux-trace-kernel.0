@@ -1,58 +1,58 @@
-Received: from mail-yw1-f193.google.com (mail-yw1-f193.google.com [209.85.128.193])
+Received: from mail-yw1-f195.google.com (mail-yw1-f195.google.com [209.85.128.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1766333D8;
-	Tue,  4 Mar 2025 02:08:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.193
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C17F013792B;
+	Tue,  4 Mar 2025 03:08:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741054141; cv=none; b=VHtEgo2E55Lr6OJCZgifmaviWWeq/plb9lyli2uXofNMb5WZZfX5vdP3DhAC9LCwb9Y2mh+on09tP9hpA5x2NoX2n1yDQbwCz/G+FmHMXe8rr8fJaiDn+1pI5TI5D7eDSFPSL+AaVexnwnrBxO/0tcWzaE+mwjnmGtekuzhIBwA=
+	t=1741057714; cv=none; b=B+g72xpk2g3E76XBxI/gUuIZ0KTWW0RMVEtvuGNzBKUHkYyACmQApgwcP9OnPDRJl2NtDyoccZ2semlBZpxc1Hr5rLFg2YKuRrsLakW1/NlLS57Kmq9DVuMjFX7hepizKYfVhqr6wenHIc9AVXFxsY5kTuERR+JxQjkAzfPD6U4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741054141; c=relaxed/simple;
-	bh=CMTlN2042F1cPygssJ1pVpNt6nZSTMZWYy14BylY0bg=;
+	s=arc-20240116; t=1741057714; c=relaxed/simple;
+	bh=zd2kXp2LW9rFB0BwWOdHQwKVUln9e8unlctAyne2dUE=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=SqjnS2VxhdgMdPiYLCRlgHYKgyI+QYWkXoy57NtCAgkRLqPh48vU8xnA7ZXfmK8WXWCboZgZvE9i+0fRduyQi3B/ID4mGvW+mDuIRtF1GUQgoSCi1dgUikTV3/7578w6Eunb2/VA8g64Ppwk4AQi3islRzHidd/IXSgMzrSazvM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=coBIWmTA; arc=none smtp.client-ip=209.85.128.193
+	 To:Cc:Content-Type; b=jGuR6jm3ocsXTyJi58xxSVkDKB1Ld2Y5glZDdhgGv4u3oK3SSF7QYSBa9qjrO//9NvzrdJXX1fPwr2R0XSoFHMUw3p37v6BEFgdD+tl7p6e0WwAsJJ/sjuhdvrI6F8X+9Szh7UtNF6L3T03bWRfbeSdsJGG3x1wJE5NhHNSrf2g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=N8d4hQDi; arc=none smtp.client-ip=209.85.128.195
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="coBIWmTA"
-Received: by mail-yw1-f193.google.com with SMTP id 00721157ae682-6fd719f9e0dso15598267b3.1;
-        Mon, 03 Mar 2025 18:08:59 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N8d4hQDi"
+Received: by mail-yw1-f195.google.com with SMTP id 00721157ae682-6fd2587d059so31426207b3.3;
+        Mon, 03 Mar 2025 19:08:32 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741054139; x=1741658939; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1741057711; x=1741662511; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Uprm3w7QSLW+3a1cofYW+cceQk8H3e14YKGxf9c5SEc=;
-        b=coBIWmTA++2Am+Yb5/Wxl4cm/Jmd8m4m6FMZ3EU37r7vDTJAvpm7ziCv3+rmw9K3gw
-         OdEhi3sg/4S3L/iu1+lLP6LSALH0vndwY7h3EFlCwlTf9RyImP3w1IfyyqXiCqOD0KLJ
-         3VKyQ3iraRg3hRdFjG5r49RCHg6rzaBN/x1TC8/sxpHuPwq/lZ558R6BkGNXrHBMJKOb
-         VgQAgSaDRs4+5Zr8APidXL7xOPl50Falf5WzkhJyq1zhoPcMk1V0iKt7IB5HNfTYuNF0
-         y441qjbaUiLUjxMj0AwLIinLWJytg9eEmkD2Y959ymiuBmMx9dI5DtgdQC/z0iygVdeW
-         7mnA==
+        bh=iJdTuc12hE8xNboldJDtY0tNQVyNe2iG7pRWAnla1E8=;
+        b=N8d4hQDi5m5CspWv5kmBWUdEx5Ys0U1utbMH6QixtMF91nRIxLqIuoYfnBgPUe8uqI
+         7kJ6+XVVCd7Zm1l/Bcx8vfgRVZ4XzPragdTP4sqMff2h56DfUrhj34pvLfYtQxdrfwyR
+         gNOBu26FcL6rbrZc099Onkrzz7lO+ASm31U+VTEttLcF+lxoxmdJlKx3oS4snth89naO
+         wbaEmjA89QffnoIzwg9eQDh6Di2+bjAZh6B9giilt5sJpH9FODFNi+xJCQ//oQJ5vCu4
+         2Sbeyh4RBlyK/AglK4vFv+3EfMFs7hcvBzWeGCCaRTRU3D/2CWEdWh57cxYzXWTct892
+         9AYQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741054139; x=1741658939;
+        d=1e100.net; s=20230601; t=1741057711; x=1741662511;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Uprm3w7QSLW+3a1cofYW+cceQk8H3e14YKGxf9c5SEc=;
-        b=H4jeAMbLpXjGJ9Py9jceEIPbwhvkqX8k0QC1akzVr5lXRpgO86WFOmLynK5J0tJEjB
-         sDT1P3M7Ur6LjFwor3E/OcWzoFGPqEshcvRQVFNVN8biuPLEudHQ7xdCGoighd/AQyrn
-         c1J0o7uysMorADPRDTdzwzmWQdRgW+lJABkmFTKom+jqGwddl+QbIgz6VCIvj4OhLiNl
-         KQ4imv1xExhm9OB8dpntzzJCH2eoiFBIcsmnJ0DsD2Ryc1WAVdhKwu1STxbIrAShyPRb
-         pnjs5MHXEZwA7Yo2V9ku3SlnqQ7yuJnQ0urBCwqY8NdxZ0ydOaQH/4btUZe0VHvdruOJ
-         3qTQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUry5J3y7bRbaYJgjqK42QOYX38gj1GeuNKTGPd6NLwILxk2CrMwq9lQZplz4nOWHpI6oE=@vger.kernel.org, AJvYcCVYx1fj34nogjAVt/HHdvy0+XDE7BARJrFnQ6qIXqpIboU5P6Atvuz+XHCRephGl8e4sxYJf1XBp1Tk89yk@vger.kernel.org, AJvYcCVur22qSBFFnkFaffuTJP/jc583ny2BNarDOP8muztHvMY+ZGbJYyzKc00a6EADxfz+R/WhHbHx@vger.kernel.org, AJvYcCWbb0Amakf9gd9rseVdy9scwyRRqsHV3AUfEP/5zV3osIeJnDvhRFEbPRmURTdqJ1lIjBNrSpE9uvxHWjuKWj2YNSuL@vger.kernel.org
-X-Gm-Message-State: AOJu0YxRdQmUmgePLcIXqiT23pghEYv2HAN1dw7RvUSGR2RXS3lLnHa7
-	zlepg2sWDbiFeaIq2gFD1WuJLWWYVr1ISiCHamQFVqjKkSmiyJ0HfeaRxn59hS9oCkRtGJe02aY
-	VyffLLseZaKzNhuAf6yXRCxokpYI=
-X-Gm-Gg: ASbGncuOxRlUvluJsHHSBAjLiwKdzIFr+j+3tfuIa3B5pYY7kEW4IRMzWnH+Xiyu2yw
-	9EokWH2gbspCe+zWTmWG5SeaEwZEMn+mKaqc8V0IFQQ+MHRzkpdOqmXGQ0HP6vfxLdJ4euTTmZ+
-	is1c9Shphhgxn/E+si5SQPQY3peg==
-X-Google-Smtp-Source: AGHT+IGNh2K54VaqDxAbwZPq6ghZwf/0d9iTd28qnutLtwuc/n0G9myX7k8yUwefwHhFhOUKlgvRS6Iy3hX/wt2iX1c=
-X-Received: by 2002:a05:690c:3506:b0:6ef:6fef:4cb6 with SMTP id
- 00721157ae682-6fd49ea038fmr219227267b3.0.1741054138974; Mon, 03 Mar 2025
- 18:08:58 -0800 (PST)
+        bh=iJdTuc12hE8xNboldJDtY0tNQVyNe2iG7pRWAnla1E8=;
+        b=af7lo7If/DiFrz59f6SuHbzAoD2KAKfo92E8HC54Gw/BvhKxZMUKVjkqxQ4gm8zLCf
+         zGdxvVCNTWpytpUxEM9vWcZxdUMpIhRJ76RzsbAQAzeCIRYpyESdebo9WCQ7SF2VvJfK
+         QW1AHsmPeFeRdt8RbhlK7HWT6ztPVm+9ptXfJQNPpTLnWqZQUjW81XEKBJXRj8mgybW/
+         h7KGU1J02yMGJiabLDEx0p/YE8dcAiSe2EfQQlJAlON0bTPXN3+33/v8bA7pzVNHDnnH
+         uHz1BsbJLLoVBf09gbJ10G0QjaN4jg46N3TPwKkY/7irgwn+Ms91LUuMJeicCpJ4O8vH
+         L+PQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVpi+Fp8/vSw2K3af+qWf+td42aZux6h4PnNXXPPJV3RsnGL+VjXO993RC/xsG5F/Y3+YRu5LEygUYsc+fa@vger.kernel.org, AJvYcCWaIwWzC30o3byCbLOzALLQuH+9HlrfeMfMT69ZjPELTA+/dnOyqVocIjTWzyqC/FUghw+eBP51@vger.kernel.org, AJvYcCX1gfFzUvvc9RM5ScMv21VjJ9TRMlZF0QiVWckbxbcQVo9zRd1PEHCeSAspoNM8ZB6To1s=@vger.kernel.org, AJvYcCXNA/UEstwg7qRetXLK9dl4zbomJjC610e3zdIMCsssjj3m6eUksjYtPj2/T1WUHiphq3EvdeDf9hmp22n0gPeCkWiK@vger.kernel.org
+X-Gm-Message-State: AOJu0YxOjw00bNAii2sd1ThLraJOg81y7QfWmEJwO4OaK2/VuE22svmY
+	GzKLKux6VWuEXLQrd9GOlEVK1ikkOopUbR9GJHmrxcPo9YRfa4kkBQyueALNeMNoSvOwjYt2+oC
+	0GtYw+7qA39eTp5JX5LDyjQQDkB0=
+X-Gm-Gg: ASbGncsAReIxP2ZaWslADapeEpdHls8AhY/LD0IWmpMxXPs+bD6pqf83vz2zSY9k7mA
+	J36w7ZbIeXwoY7Rjt8cHDJsHPbaWJG0WZG8zuk46WCvLywCBuyKrPOprSwqTfuTPSTlULE0Ag3r
+	nnvsAhUaUOlskoz64EtJz0h2lFDQ==
+X-Google-Smtp-Source: AGHT+IGjpE37/D8VFUXwtx1+vTlIBKGMhPsHyscBlEpff0BYVERCrQfJXRrs4afpX4s/+1NgBA8mJU+Be8nzIuYC69Q=
+X-Received: by 2002:a05:690c:3708:b0:6f9:447d:d1a2 with SMTP id
+ 00721157ae682-6fd4a1b56d0mr207861007b3.29.1741057711592; Mon, 03 Mar 2025
+ 19:08:31 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -61,11 +61,12 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 References: <20250303065345.229298-1-dongml2@chinatelecom.cn>
  <20250303065345.229298-4-dongml2@chinatelecom.cn> <20250303110559.5a584602@gandalf.local.home>
-In-Reply-To: <20250303110559.5a584602@gandalf.local.home>
+ <CADxym3ZJf3TEMwCy4JVT1gs9GP=U1n1qss3ycnuMZVyp9TfDdw@mail.gmail.com>
+In-Reply-To: <CADxym3ZJf3TEMwCy4JVT1gs9GP=U1n1qss3ycnuMZVyp9TfDdw@mail.gmail.com>
 From: Menglong Dong <menglong8.dong@gmail.com>
-Date: Tue, 4 Mar 2025 10:07:22 +0800
-X-Gm-Features: AQ5f1JqbmerWbAPhQH3CompG0G6GUmmcqJsAR9G321CVuef2yZdxRX3kR81QiyY
-Message-ID: <CADxym3ZJf3TEMwCy4JVT1gs9GP=U1n1qss3ycnuMZVyp9TfDdw@mail.gmail.com>
+Date: Tue, 4 Mar 2025 11:06:55 +0800
+X-Gm-Features: AQ5f1JrQ2Vfag3gyvkNKHuCTcxmUnHFiO3c2filqEDv803CK-Q1LsulYa_DCrkw
+Message-ID: <CADxym3bNxGb-FPtkbjiLfEXBRnVT7HBM8nbQBWvcHoLhYrKKgw@mail.gmail.com>
 Subject: Re: [PATCH bpf-next v3 3/4] x86: implement per-function metadata
  storage for x86
 To: Steven Rostedt <rostedt@goodmis.org>
@@ -85,43 +86,67 @@ Cc: peterz@infradead.org, mark.rutland@arm.com, alexei.starovoitov@gmail.com,
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Mar 4, 2025 at 12:05=E2=80=AFAM Steven Rostedt <rostedt@goodmis.org=
-> wrote:
+On Tue, Mar 4, 2025 at 10:07=E2=80=AFAM Menglong Dong <menglong8.dong@gmail=
+.com> wrote:
 >
-> On Mon,  3 Mar 2025 14:53:44 +0800
-> Menglong Dong <menglong8.dong@gmail.com> wrote:
+> On Tue, Mar 4, 2025 at 12:05=E2=80=AFAM Steven Rostedt <rostedt@goodmis.o=
+rg> wrote:
+> >
+> > On Mon,  3 Mar 2025 14:53:44 +0800
+> > Menglong Dong <menglong8.dong@gmail.com> wrote:
+> >
+> > > In the third case, we make the kernel function 32 bytes aligned, and =
+there
+> > > will be 32 bytes padding before the functions. According to my testin=
+g,
+> > > the text size didn't increase on this case, which is weird.
+> > >
+> > > With 16-bytes padding:
+> > >
+> > > -rwxr-xr-x 1 401190688  x86-dev/vmlinux*
+> > > -rw-r--r-- 1    251068  x86-dev/vmlinux.a
+> > > -rw-r--r-- 1 851892992  x86-dev/vmlinux.o
+> > > -rw-r--r-- 1  12395008  x86-dev/arch/x86/boot/bzImage
+> > >
+> > > With 32-bytes padding:
+> > >
+> > > -rwxr-xr-x 1 401318128 x86-dev/vmlinux*
+> > > -rw-r--r-- 1    251154 x86-dev/vmlinux.a
+> > > -rw-r--r-- 1 853636704 x86-dev/vmlinux.o
+> > > -rw-r--r-- 1  12509696 x86-dev/arch/x86/boot/bzImage
+> >
+> > Use the "size" command to see the differences in sizes and not the file=
+ size.
+> >
+> > $ size vmlinux
+> >    text    data     bss     dec     hex filename
+> > 36892658        9798658 16982016        63673332        3cb93f4 vmlinux
 >
-> > In the third case, we make the kernel function 32 bytes aligned, and th=
-ere
-> > will be 32 bytes padding before the functions. According to my testing,
-> > the text size didn't increase on this case, which is weird.
-> >
-> > With 16-bytes padding:
-> >
-> > -rwxr-xr-x 1 401190688  x86-dev/vmlinux*
-> > -rw-r--r-- 1    251068  x86-dev/vmlinux.a
-> > -rw-r--r-- 1 851892992  x86-dev/vmlinux.o
-> > -rw-r--r-- 1  12395008  x86-dev/arch/x86/boot/bzImage
-> >
-> > With 32-bytes padding:
-> >
-> > -rwxr-xr-x 1 401318128 x86-dev/vmlinux*
-> > -rw-r--r-- 1    251154 x86-dev/vmlinux.a
-> > -rw-r--r-- 1 853636704 x86-dev/vmlinux.o
-> > -rw-r--r-- 1  12509696 x86-dev/arch/x86/boot/bzImage
->
-> Use the "size" command to see the differences in sizes and not the file s=
-ize.
->
-> $ size vmlinux
->    text    data     bss     dec     hex filename
-> 36892658        9798658 16982016        63673332        3cb93f4 vmlinux
+> Great! It seems that the way I tested has something wrong. I'll
+> compare the text size with "size" command later.
 
-Great! It seems that the way I tested has something wrong. I'll
-compare the text size with "size" command later.
+With the size command, the text size with 32-bytes padding is:
+
+  text    data     bss     dec     hex filename
+48299471        14776173        18345936        81421580
+4da650c x86-dev/vmlinux
+
+And with 16-bytes padding is:
+
+  text    data     bss     dec     hex filename
+46620640        14772017        18458396        79851053
+4c26e2d x86-dev/vmlinux
+
+It increases about 3%, which I think is acceptable in this case.
+
+I'll post the message in the commit log of the next version.
 
 Thanks!
 Menglong Dong
 
 >
-> -- Steve
+> Thanks!
+> Menglong Dong
+>
+> >
+> > -- Steve
