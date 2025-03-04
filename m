@@ -1,152 +1,98 @@
-Received: from mail-yw1-f195.google.com (mail-yw1-f195.google.com [209.85.128.195])
+Received: from mail-lf1-f99.google.com (mail-lf1-f99.google.com [209.85.167.99])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C17F013792B;
-	Tue,  4 Mar 2025 03:08:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 617121DED79
+	for <linux-trace-kernel@vger.kernel.org>; Tue,  4 Mar 2025 03:09:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.99
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741057714; cv=none; b=B+g72xpk2g3E76XBxI/gUuIZ0KTWW0RMVEtvuGNzBKUHkYyACmQApgwcP9OnPDRJl2NtDyoccZ2semlBZpxc1Hr5rLFg2YKuRrsLakW1/NlLS57Kmq9DVuMjFX7hepizKYfVhqr6wenHIc9AVXFxsY5kTuERR+JxQjkAzfPD6U4=
+	t=1741057752; cv=none; b=I9w9C2XPMEjXSS6YKh6W0O3mI7SERzRx5IcUytB3UasPaNaM44yvqci6aK7GNdLvDbHqx6+hsCaciAlBQA6/yMdUcSpsRwbj0paUGfRVrxcxLlOTHADFMYYYWryNPFiucRXN7tHK/G93tkHMG+OcSFB/RKt/Pr+G4tVwcv44/p8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741057714; c=relaxed/simple;
-	bh=zd2kXp2LW9rFB0BwWOdHQwKVUln9e8unlctAyne2dUE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=jGuR6jm3ocsXTyJi58xxSVkDKB1Ld2Y5glZDdhgGv4u3oK3SSF7QYSBa9qjrO//9NvzrdJXX1fPwr2R0XSoFHMUw3p37v6BEFgdD+tl7p6e0WwAsJJ/sjuhdvrI6F8X+9Szh7UtNF6L3T03bWRfbeSdsJGG3x1wJE5NhHNSrf2g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=N8d4hQDi; arc=none smtp.client-ip=209.85.128.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1741057752; c=relaxed/simple;
+	bh=XAX5kNvACP91UXNcdnDTgumV4d/6JMem6vwatakdEKo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JvlwNa1Ygm/8E3nIYN1NKAHIWIWBSMFbuZNOvXoZeR1Oi2oo/K6OF+StCP8n3s9ODT3leHZYPCziT7z/WBM2OemjMvLpLacDi/Q3E6/fCYfAbbgyq095UeaRtAxg2h4eu/0IF5l9WrwXyDsS5O3Lx+5OoAIQcVju5zJ6KOaUr8g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=Pk7gBwhc; arc=none smtp.client-ip=209.85.167.99
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=purestorage.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N8d4hQDi"
-Received: by mail-yw1-f195.google.com with SMTP id 00721157ae682-6fd2587d059so31426207b3.3;
-        Mon, 03 Mar 2025 19:08:32 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="Pk7gBwhc"
+Received: by mail-lf1-f99.google.com with SMTP id 2adb3069b0e04-548409cd2a8so5357023e87.3
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 03 Mar 2025 19:09:10 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741057711; x=1741662511; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=iJdTuc12hE8xNboldJDtY0tNQVyNe2iG7pRWAnla1E8=;
-        b=N8d4hQDi5m5CspWv5kmBWUdEx5Ys0U1utbMH6QixtMF91nRIxLqIuoYfnBgPUe8uqI
-         7kJ6+XVVCd7Zm1l/Bcx8vfgRVZ4XzPragdTP4sqMff2h56DfUrhj34pvLfYtQxdrfwyR
-         gNOBu26FcL6rbrZc099Onkrzz7lO+ASm31U+VTEttLcF+lxoxmdJlKx3oS4snth89naO
-         wbaEmjA89QffnoIzwg9eQDh6Di2+bjAZh6B9giilt5sJpH9FODFNi+xJCQ//oQJ5vCu4
-         2Sbeyh4RBlyK/AglK4vFv+3EfMFs7hcvBzWeGCCaRTRU3D/2CWEdWh57cxYzXWTct892
-         9AYQ==
+        d=purestorage.com; s=google2022; t=1741057748; x=1741662548; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=/HaTgp9n3x/1hhkTDyIg3nxbnnDs0fCQyAsV1iOMog4=;
+        b=Pk7gBwhcPx3mgF5r4tZAFVYbQvYWoMdodmlCjF3o//59/x92f9uKUsXyVfF4AKi29n
+         +Ml5a5uqdoJZos8oi2aJy/JrqNzl/K/7sH/1G6XU7cwlm9yvzcIvsE68jyQVVuMv0JBp
+         lgVC8yPXTwEW276ZLZlXyulNRiWZcRSo4jq94OkClhV29LcbbHhQw7vaoHhbSWRGy0A+
+         mcTc+ViLQ0IUtHYc3atWkjn4R7sPb3wYHgJnKYRNgarakjX6ZHzh2d97THf9GGA/9J8y
+         z/+cXRnbzDwfte0aKGs7EdK8hliNDNPpQhFfLggBkenjP+Z1PD4zH9ieznhye7Z4wW7g
+         CKsw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741057711; x=1741662511;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=iJdTuc12hE8xNboldJDtY0tNQVyNe2iG7pRWAnla1E8=;
-        b=af7lo7If/DiFrz59f6SuHbzAoD2KAKfo92E8HC54Gw/BvhKxZMUKVjkqxQ4gm8zLCf
-         zGdxvVCNTWpytpUxEM9vWcZxdUMpIhRJ76RzsbAQAzeCIRYpyESdebo9WCQ7SF2VvJfK
-         QW1AHsmPeFeRdt8RbhlK7HWT6ztPVm+9ptXfJQNPpTLnWqZQUjW81XEKBJXRj8mgybW/
-         h7KGU1J02yMGJiabLDEx0p/YE8dcAiSe2EfQQlJAlON0bTPXN3+33/v8bA7pzVNHDnnH
-         uHz1BsbJLLoVBf09gbJ10G0QjaN4jg46N3TPwKkY/7irgwn+Ms91LUuMJeicCpJ4O8vH
-         L+PQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVpi+Fp8/vSw2K3af+qWf+td42aZux6h4PnNXXPPJV3RsnGL+VjXO993RC/xsG5F/Y3+YRu5LEygUYsc+fa@vger.kernel.org, AJvYcCWaIwWzC30o3byCbLOzALLQuH+9HlrfeMfMT69ZjPELTA+/dnOyqVocIjTWzyqC/FUghw+eBP51@vger.kernel.org, AJvYcCX1gfFzUvvc9RM5ScMv21VjJ9TRMlZF0QiVWckbxbcQVo9zRd1PEHCeSAspoNM8ZB6To1s=@vger.kernel.org, AJvYcCXNA/UEstwg7qRetXLK9dl4zbomJjC610e3zdIMCsssjj3m6eUksjYtPj2/T1WUHiphq3EvdeDf9hmp22n0gPeCkWiK@vger.kernel.org
-X-Gm-Message-State: AOJu0YxOjw00bNAii2sd1ThLraJOg81y7QfWmEJwO4OaK2/VuE22svmY
-	GzKLKux6VWuEXLQrd9GOlEVK1ikkOopUbR9GJHmrxcPo9YRfa4kkBQyueALNeMNoSvOwjYt2+oC
-	0GtYw+7qA39eTp5JX5LDyjQQDkB0=
-X-Gm-Gg: ASbGncsAReIxP2ZaWslADapeEpdHls8AhY/LD0IWmpMxXPs+bD6pqf83vz2zSY9k7mA
-	J36w7ZbIeXwoY7Rjt8cHDJsHPbaWJG0WZG8zuk46WCvLywCBuyKrPOprSwqTfuTPSTlULE0Ag3r
-	nnvsAhUaUOlskoz64EtJz0h2lFDQ==
-X-Google-Smtp-Source: AGHT+IGjpE37/D8VFUXwtx1+vTlIBKGMhPsHyscBlEpff0BYVERCrQfJXRrs4afpX4s/+1NgBA8mJU+Be8nzIuYC69Q=
-X-Received: by 2002:a05:690c:3708:b0:6f9:447d:d1a2 with SMTP id
- 00721157ae682-6fd4a1b56d0mr207861007b3.29.1741057711592; Mon, 03 Mar 2025
- 19:08:31 -0800 (PST)
+        d=1e100.net; s=20230601; t=1741057748; x=1741662548;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=/HaTgp9n3x/1hhkTDyIg3nxbnnDs0fCQyAsV1iOMog4=;
+        b=BqaHBkZsNEKcMZU+6HkHFcz3fkaKgTBV9VNzbpt1GkBOVe2vvr1+OelbwjBCb845eB
+         Re9OdAXjKwuQJv5eiKd/jtmAyro9oV/iKMLpXeFbGuMqeiG3WmS4BLK6eap5JQFWAlRy
+         Yy9QLAwXDU7pXybyCNanTAwPsg3Hx1CXmfnOfrRYDro+vrh8slBMLH3EhRhemwcSDuXR
+         D0ovd35NVKEEk6VGdHR8pR8ErX8Ys75FpPa7PQngOR/qx626BhYBOusGpnAG+BSzIurc
+         EsTLty0qmTg7NAw628EXheis9FfageRtGrR0TJi04wJLE9dv1ou27YqBaHL++OlQoHB1
+         6nJg==
+X-Gm-Message-State: AOJu0YzelsDTU9gI+ncXRFdhLCihjtwrEnG6++fWn5vgOs2DGAN/O35R
+	PswQKzQ3/heAyHcewpy3Mo7vKUxjMqUBa6zSNI9r6A88uUM98rnJxh9gMNuSuU5414Dp6vQlFLb
+	Bif5VNB5BYwtkkZcj0w6usxy06xVU0/XP
+X-Gm-Gg: ASbGnctPRB8cZcYYqCr5qTspzxsgTqIQ8tXLNIuWg1h3rpdVPlfnlYH/rnixdIMb6P2
+	wstNSj1lZledgfaZDRjrTtMfVbC4KwJjbC3aLQZj0zbX2RaHzVhzD12gKWPQmul0ru1FyNZAPdD
+	J8pw8JD0EZtaqNZwZlKerIEdcDMnuMJ5VD4VBcWF5x2M12VGfLWnBRejVPpA5lS2ANzVHUFuuIh
+	Cln6SPLeeGbC3ptSPB5h3YOgufgIxDCtPht1K0T8VPNTDARwaj+PoQ2UKYTLj9XOAQfNbQrqE/M
+	pEW0FrknCy4l1YJiq9FaoSi4MLTimH29GZTkBAjsWcoV6vHTrQ==
+X-Google-Smtp-Source: AGHT+IGf/IY6HezRQ43QtfLfekiv+xOizzvReIxLMI0ZMJ368PWxhP18LT82B+4hWSuhlPa4SQcohHFLjjGg
+X-Received: by 2002:a05:6512:318e:b0:549:38d5:8858 with SMTP id 2adb3069b0e04-5494c124ab1mr5388036e87.20.1741057748190;
+        Mon, 03 Mar 2025 19:09:08 -0800 (PST)
+Received: from c7-smtp-2023.dev.purestorage.com ([208.88.159.129])
+        by smtp-relay.gmail.com with ESMTPS id 2adb3069b0e04-5496a687c55sm132162e87.122.2025.03.03.19.09.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Mar 2025 19:09:08 -0800 (PST)
+X-Relaying-Domain: purestorage.com
+Received: from dev-ushankar.dev.purestorage.com (dev-ushankar.dev.purestorage.com [IPv6:2620:125:9007:640:7:70:36:0])
+	by c7-smtp-2023.dev.purestorage.com (Postfix) with ESMTP id 3020A3400C1;
+	Mon,  3 Mar 2025 20:09:06 -0700 (MST)
+Received: by dev-ushankar.dev.purestorage.com (Postfix, from userid 1557716368)
+	id 45E45E435AF; Mon,  3 Mar 2025 20:09:06 -0700 (MST)
+Date: Mon, 3 Mar 2025 20:09:06 -0700
+From: Uday Shankar <ushankar@purestorage.com>
+To: Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nicolas Schier <nicolas@fjasle.eu>
+Cc: linux-trace-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org
+Subject: Re: [PATCH 0/2] kbuild: rpm-pkg: improve debuggability
+Message-ID: <Z8Zu0p2vCAfwXa/L@dev-ushankar.dev.purestorage.com>
+References: <20250210-debuginfo-v1-0-368feb58292a@purestorage.com>
+ <Z7Pv+hD3AOS/ymFI@dev-ushankar.dev.purestorage.com>
+ <Z7zJ5EjIFLbz9C3I@dev-ushankar.dev.purestorage.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250303065345.229298-1-dongml2@chinatelecom.cn>
- <20250303065345.229298-4-dongml2@chinatelecom.cn> <20250303110559.5a584602@gandalf.local.home>
- <CADxym3ZJf3TEMwCy4JVT1gs9GP=U1n1qss3ycnuMZVyp9TfDdw@mail.gmail.com>
-In-Reply-To: <CADxym3ZJf3TEMwCy4JVT1gs9GP=U1n1qss3ycnuMZVyp9TfDdw@mail.gmail.com>
-From: Menglong Dong <menglong8.dong@gmail.com>
-Date: Tue, 4 Mar 2025 11:06:55 +0800
-X-Gm-Features: AQ5f1JrQ2Vfag3gyvkNKHuCTcxmUnHFiO3c2filqEDv803CK-Q1LsulYa_DCrkw
-Message-ID: <CADxym3bNxGb-FPtkbjiLfEXBRnVT7HBM8nbQBWvcHoLhYrKKgw@mail.gmail.com>
-Subject: Re: [PATCH bpf-next v3 3/4] x86: implement per-function metadata
- storage for x86
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: peterz@infradead.org, mark.rutland@arm.com, alexei.starovoitov@gmail.com, 
-	catalin.marinas@arm.com, will@kernel.org, mhiramat@kernel.org, 
-	tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, 
-	dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com, ast@kernel.org, 
-	daniel@iogearbox.net, andrii@kernel.org, martin.lau@linux.dev, 
-	eddyz87@gmail.com, yonghong.song@linux.dev, john.fastabend@gmail.com, 
-	kpsingh@kernel.org, sdf@fomichev.me, jolsa@kernel.org, davem@davemloft.net, 
-	dsahern@kernel.org, mathieu.desnoyers@efficios.com, nathan@kernel.org, 
-	nick.desaulniers+lkml@gmail.com, morbo@google.com, samitolvanen@google.com, 
-	kees@kernel.org, dongml2@chinatelecom.cn, akpm@linux-foundation.org, 
-	riel@surriel.com, rppt@kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	bpf@vger.kernel.org, netdev@vger.kernel.org, llvm@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z7zJ5EjIFLbz9C3I@dev-ushankar.dev.purestorage.com>
 
-On Tue, Mar 4, 2025 at 10:07=E2=80=AFAM Menglong Dong <menglong8.dong@gmail=
-.com> wrote:
->
-> On Tue, Mar 4, 2025 at 12:05=E2=80=AFAM Steven Rostedt <rostedt@goodmis.o=
-rg> wrote:
-> >
-> > On Mon,  3 Mar 2025 14:53:44 +0800
-> > Menglong Dong <menglong8.dong@gmail.com> wrote:
-> >
-> > > In the third case, we make the kernel function 32 bytes aligned, and =
-there
-> > > will be 32 bytes padding before the functions. According to my testin=
-g,
-> > > the text size didn't increase on this case, which is weird.
-> > >
-> > > With 16-bytes padding:
-> > >
-> > > -rwxr-xr-x 1 401190688  x86-dev/vmlinux*
-> > > -rw-r--r-- 1    251068  x86-dev/vmlinux.a
-> > > -rw-r--r-- 1 851892992  x86-dev/vmlinux.o
-> > > -rw-r--r-- 1  12395008  x86-dev/arch/x86/boot/bzImage
-> > >
-> > > With 32-bytes padding:
-> > >
-> > > -rwxr-xr-x 1 401318128 x86-dev/vmlinux*
-> > > -rw-r--r-- 1    251154 x86-dev/vmlinux.a
-> > > -rw-r--r-- 1 853636704 x86-dev/vmlinux.o
-> > > -rw-r--r-- 1  12509696 x86-dev/arch/x86/boot/bzImage
-> >
-> > Use the "size" command to see the differences in sizes and not the file=
- size.
-> >
-> > $ size vmlinux
-> >    text    data     bss     dec     hex filename
-> > 36892658        9798658 16982016        63673332        3cb93f4 vmlinux
->
-> Great! It seems that the way I tested has something wrong. I'll
-> compare the text size with "size" command later.
+On Mon, Feb 24, 2025 at 12:35:00PM -0700, Uday Shankar wrote:
+> On Mon, Feb 17, 2025 at 07:27:06PM -0700, Uday Shankar wrote:
+> > ping
+> 
+> ping again
 
-With the size command, the text size with 32-bytes padding is:
+ping again again. Can someone please take a look at this and/or let me
+know if I'm missing any recipients or if I'm expecting feedback too
+soon?
 
-  text    data     bss     dec     hex filename
-48299471        14776173        18345936        81421580
-4da650c x86-dev/vmlinux
-
-And with 16-bytes padding is:
-
-  text    data     bss     dec     hex filename
-46620640        14772017        18458396        79851053
-4c26e2d x86-dev/vmlinux
-
-It increases about 3%, which I think is acceptable in this case.
-
-I'll post the message in the commit log of the next version.
-
-Thanks!
-Menglong Dong
-
->
-> Thanks!
-> Menglong Dong
->
-> >
-> > -- Steve
