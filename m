@@ -1,35 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FFB725F996;
-	Tue,  4 Mar 2025 17:10:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 866AD2980A7;
+	Tue,  4 Mar 2025 17:14:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741108200; cv=none; b=MQk/ijIzG69py4rNe4NsMgmK/GgwiVQNn3IlSJKgjozy6QJYeQRFu9WutzXUrIdgCt3SUKvd3b8OUAnNVr9CGDlo3kC6aGHo4SZdhACNqFQvPUiLZSpXhKyfuHw3OZSillAJxbSdVGwcAPuwYH0au7zUr6b4pLJlg+9LfGDf5TM=
+	t=1741108497; cv=none; b=rxOg0MdFGNQpo8AWDSgXt0d3+xzwedgVjIUoVhlzkf2swFviy9MDeYfH/R1pObJ6M3dS6SPJNmvDgATSyqwMu0YSijqTcuCgLQ2AuNVm5AFWtAYkVyJ9R/U3UcdFSVLicFuhrrNW3oZZpjFigjNMqJ2EUFOfwMEnHv3J7la9fgw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741108200; c=relaxed/simple;
-	bh=Vy6aO++eSUX6F1uUf/GKjf51P70zh6k7VBsjfxHU6SU=;
+	s=arc-20240116; t=1741108497; c=relaxed/simple;
+	bh=RMqjiifsdaNCSsKNNjk7Yod7Whvmu0ULCvKNeUA77+w=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=OS1SPN1cuAkjSW4X2FagdrXFkEm8mUz1wAYVttCGbKlmTRdcbXDAW8MSVviA3wJOV7giQNpz9pmWgnVsRPS5gSwywqyl5YuuzWGQPpgtLvn1YRUJCuMeGX/RwTRil2lPXCaRQKhYDRvHb1pipTYPwp1UU1fgP0ir07snCnkyOTE=
+	 MIME-Version:Content-Type; b=L2kmdhkw2K3j69KQ6XhI8wdXYTpClZ8cjlli1Gq9Ptuz+WJhI1lBFKYWjrr9byKNcJlYKjUIcr7RVfji/d5Q+mN2ijLSUzeXJvpMLWddgrZuOyZK1jSlU4A4LWo7XXkw0/TohvlaC5qFYpGkCD8bu7JcQ/KFiiEP5xlEyIBC+1o=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3020CC4CEE5;
-	Tue,  4 Mar 2025 17:09:59 +0000 (UTC)
-Date: Tue, 4 Mar 2025 12:10:53 -0500
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3AF68C4CEE5;
+	Tue,  4 Mar 2025 17:14:56 +0000 (UTC)
+Date: Tue, 4 Mar 2025 12:15:50 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
-To: Tomas Glozar <tglozar@redhat.com>
-Cc: Costa Shulyupin <costa.shul@redhat.com>, John Kacur <jkacur@redhat.com>,
- "Luis Claudio R. Goncalves" <lgoncalv@redhat.com>, Eder Zulian
- <ezulian@redhat.com>, Dan Carpenter <dan.carpenter@linaro.org>,
- linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1] rtla: Save trace when option `--trace` is specified
-Message-ID: <20250304121053.06b84874@gandalf.local.home>
-In-Reply-To: <CAP4=nvTCVLa5MzBbJVz=S_ZiDoJ2hY-8fM+uRnGgumi0sFivWA@mail.gmail.com>
-References: <20250127170251.744751-1-costa.shul@redhat.com>
-	<20250227200623.60f20571@gandalf.local.home>
-	<CAP4=nvQXaFmemBeW8U3U9zTMK0gVYvp23gfq_6ALsBJPTXt9Uw@mail.gmail.com>
-	<20250303150351.28007ad1@gandalf.local.home>
-	<CAP4=nvQ9pXYtihL7HTTRK=EzUEubtWbxDr78JswksSo-wa7zYw@mail.gmail.com>
-	<CAP4=nvTCVLa5MzBbJVz=S_ZiDoJ2hY-8fM+uRnGgumi0sFivWA@mail.gmail.com>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Gabriele Monaco <gmonaco@redhat.com>, linux-kernel@vger.kernel.org, Ingo
+ Molnar <mingo@redhat.com>, Masami Hiramatsu <mhiramat@kernel.org>,
+ linux-trace-kernel@vger.kernel.org, Juri Lelli <juri.lelli@redhat.com>
+Subject: Re: [PATCH v4 03/11] sched: Add sched tracepoints for RV task model
+Message-ID: <20250304121550.097bffe2@gandalf.local.home>
+In-Reply-To: <20250227204623.5e29e101@gandalf.local.home>
+References: <20250218123121.253551-1-gmonaco@redhat.com>
+	<20250218123121.253551-4-gmonaco@redhat.com>
+	<20250227204623.5e29e101@gandalf.local.home>
 X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -37,42 +33,39 @@ List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Tue, 4 Mar 2025 09:16:11 +0100
-Tomas Glozar <tglozar@redhat.com> wrote:
 
-> =C3=BAt 4. 3. 2025 v 9:00 odes=C3=ADlatel Tomas Glozar <tglozar@redhat.co=
-m> napsal:
-> >
-> > So we need to stop tracing here, before we save the trace, if we want
-> > to do that. Perhaps combining this with the cleanup patch [1] and
-> > doing the stopping in save_trace_to_file would make sense?
-> > =20
->=20
-> Also, the patch will also save the trace if running with -a and the
-> threshold was not violated, which is not what one usually wants, e.g.:
->=20
-> $ rtla osnoise top -c 0 -q -a 10000000 -d 5s
->                                          Operating System Noise
->=20
-> duration:   0 00:00:05 | time is in us
-> CPU Period       Runtime        Noise  % CPU Aval   Max Noise   Max
-> Single          HW          NMI          IRQ      Softirq       Threa
-> d
->  0 #4           4000000        37712    99.05720       10998
-> 555        7624            0         4011           34           2
-> 4
->  Saving trace to osnoise_trace.txt
->=20
-> I believe it would be better to add a new option, something like
-> --force-trace, that would be used to save the trace even if there is
-> no threshold violation. -t/--trace and -a could then be used with the
-> same semantics as before.
+Peter,
 
-As long is this is what you expect to happen. I just wanted to point out
-that recording the trace while it is active means it may never stop
-recording. If that is OK, then I'm fine with the change.
+Are you OK with adding these tracepoints? They are not trace events
+(doesn't show up in tracefs) but are required for the runtime verifier.
 
 -- Steve
+
+
+On Thu, 27 Feb 2025 20:46:23 -0500
+Steven Rostedt <rostedt@goodmis.org> wrote:
+
+> On Tue, 18 Feb 2025 13:31:08 +0100
+> Gabriele Monaco <gmonaco@redhat.com> wrote:
+> 
+> > Add the following tracepoints:
+> > * sched_entry(bool preempt, ip)
+> >     Called while entering __schedule
+> > * sched_exit(bool is_switch, ip)
+> >     Called while exiting __schedule
+> > * sched_set_state(task, curr_state, state)
+> >     Called when a task changes its state (to and from running)
+> > 
+> > These tracepoints are useful to describe the Linux task model and are
+> > adapted from the patches by Daniel Bristot de Oliveira
+> > (https://bristot.me/linux-task-model/).
+> > 
+> > Signed-off-by: Gabriele Monaco <gmonaco@redhat.com>  
+> 
+> I'll need an Ack from the scheduler maintainer to take this series.
+> 
+> -- Steve
+
