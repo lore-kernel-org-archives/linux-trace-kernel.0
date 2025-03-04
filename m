@@ -1,87 +1,133 @@
-Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8174720DD4C;
-	Tue,  4 Mar 2025 14:55:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F680205E0D;
+	Tue,  4 Mar 2025 14:56:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741100106; cv=none; b=A7YpTux/m9z2ePfWVY14hGIVKMHir1zKw8WrFZge+ZfAYVz8atXP6lfbvBnoQbuq7sptSN/EdypSUK1L6IFTMplWaDqErbqC5OCxPUginW1uE/yPDauNqBFtW+a54BvMw/TDxgrdTQczJ76zMBbTRrB2oq3GDnj8zH7b1glZvlc=
+	t=1741100182; cv=none; b=C72sywMTkszysXtWG6wmv1bY6xdALuzGrL6eyvpMxGTpCetEWWamqr/Z8p5cqcxt1BImvs3NPjPsBT+LeWkzuQ74q6dn5lr+OArjaZqLhFNDxbPK6h9QyRVRVtNcKUDPhv+/iMVK0aSWromotXiHQO7i6hmXa84JR5VIn2iSMak=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741100106; c=relaxed/simple;
-	bh=6sXLqOGwJPjjQ1mrwjcKafFgt74IfGmcKaUYu1Vea1Y=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=KpuRLzJFAPlZRIH3Nx2wc+6QXQPteO3vUu6lM7GqxkdQiItrqakn0C90Zca2p0nLTC6F6xiVuVpyfEzLig4XaN5jjwlk1UAML97D9zptJ74INCTQDYVPO0dRlntNYfuduEGCxmoSLvsUOvxekfhApOzzLW+e06afy7uXANb38X4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=HsBac2XW; arc=none smtp.client-ip=198.137.202.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="HsBac2XW"
-Received: from [127.0.0.1] ([76.133.66.138])
-	(authenticated bits=0)
-	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 524Eqsmu2303478
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-	Tue, 4 Mar 2025 06:52:55 -0800
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 524Eqsmu2303478
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2025021701; t=1741099977;
-	bh=6sXLqOGwJPjjQ1mrwjcKafFgt74IfGmcKaUYu1Vea1Y=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
-	b=HsBac2XWWG8JTb5veE6LuaAtOLLvQu+vBFWgoKJItDg2FR2nOr9Ue8lryfQJFNb5X
-	 ojvI2P5MCIyrjDnZDpX41nGdlho2yRe4glo+hru+12GUQ7NBtdvcBedZZUsuJAWMmd
-	 N1yfFPWJ9WTY4SudzJVAuXk+ooFW+J2KOOkX3rNtdkndtmyJKXCfOOPoNoEFrEvYyS
-	 l+SyUMQ+mbWmrFpz4qKD1NBiUxnxzQF3eOYkhvJKEwllwoiSYqGIWHFHl+eS6oQqxV
-	 mHa7p//gFjY/UXuPZ99CFf8KpquSyK6rWISD0Qpt03vNg4h+TUDKnvTetXzksGMPfD
-	 /cUCOphcQnqWw==
-Date: Tue, 04 Mar 2025 06:52:53 -0800
-From: "H. Peter Anvin" <hpa@zytor.com>
-To: Peter Zijlstra <peterz@infradead.org>,
-        Menglong Dong <menglong8.dong@gmail.com>
-CC: rostedt@goodmis.org, mark.rutland@arm.com, alexei.starovoitov@gmail.com,
-        catalin.marinas@arm.com, will@kernel.org, mhiramat@kernel.org,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-        dave.hansen@linux.intel.com, x86@kernel.org, ast@kernel.org,
-        daniel@iogearbox.net, andrii@kernel.org, martin.lau@linux.dev,
-        eddyz87@gmail.com, yonghong.song@linux.dev, john.fastabend@gmail.com,
-        kpsingh@kernel.org, sdf@fomichev.me, jolsa@kernel.org,
-        davem@davemloft.net, dsahern@kernel.org,
-        mathieu.desnoyers@efficios.com, nathan@kernel.org,
-        nick.desaulniers+lkml@gmail.com, morbo@google.com,
-        samitolvanen@google.com, kees@kernel.org, dongml2@chinatelecom.cn,
-        akpm@linux-foundation.org, riel@surriel.com, rppt@kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org,
-        netdev@vger.kernel.org, llvm@lists.linux.dev
-Subject: Re: [PATCH v4 1/4] x86/ibt: factor out cfi and fineibt offset
-User-Agent: K-9 Mail for Android
-In-Reply-To: <20250304094220.GC11590@noisy.programming.kicks-ass.net>
-References: <20250303132837.498938-1-dongml2@chinatelecom.cn> <20250303132837.498938-2-dongml2@chinatelecom.cn> <20250303165454.GB11590@noisy.programming.kicks-ass.net> <CADxym3aVtKx_mh7aZyZfk27gEiA_TX6VSAvtK+YDNBtuk_HigA@mail.gmail.com> <20250304053853.GA7099@noisy.programming.kicks-ass.net> <20250304061635.GA29480@noisy.programming.kicks-ass.net> <CADxym3bS_6jpGC3vLAAyD20GsR+QZofQw0_GgKT8nN3c-HqG-g@mail.gmail.com> <20250304094220.GC11590@noisy.programming.kicks-ass.net>
-Message-ID: <6F9EF5C3-4CAE-4C5E-B70E-F73462AC7CA0@zytor.com>
+	s=arc-20240116; t=1741100182; c=relaxed/simple;
+	bh=WkcT4BROTdtshKrn7PVipZZH5jr5YuyR+1h0Ukj8X/c=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=jAUrOLnru5HoQx9Ljvc8Nd90ys9OaTw7EXq+DY0c90BPJ7EXcK1ROoxN/UpzvRZwv6UMK0sozrfpi7A20uNEt2Jh9pFXNARfNRXLIMAc/x2elTqgq5dWBzCQ4O44k7UZL8sI6OsK+ySy5baXKTy4wB4+Grr+s1ZChr6XN9mJJEA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 781FFC4CEE5;
+	Tue,  4 Mar 2025 14:56:20 +0000 (UTC)
+Date: Tue, 4 Mar 2025 09:57:14 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Luis Chamberlain <mcgrof@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Masami
+ Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Andrew Morton
+ <akpm@linux-foundation.org>, Petr Pavlu <petr.pavlu@suse.com>, Sami
+ Tolvanen <samitolvanen@google.com>, Daniel Gomez <da.gomez@samsung.com>,
+ linux-modules@vger.kernel.org
+Subject: Re: [PATCH v3 5/8] module: Add module_for_each_mod() function
+Message-ID: <20250304095714.47a171fa@gandalf.local.home>
+In-Reply-To: <20250304012548.433669427@goodmis.org>
+References: <20250304012516.282694507@goodmis.org>
+	<20250304012548.433669427@goodmis.org>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On March 4, 2025 1:42:20 AM PST, Peter Zijlstra <peterz@infradead=2Eorg> wr=
-ote:
->On Tue, Mar 04, 2025 at 03:47:45PM +0800, Menglong Dong wrote:
->> We don't have to select FUNCTION_ALIGNMENT_32B, so the
->> worst case is to increase ~2=2E2%=2E
->>=20
->> What do you think?
->
->Well, since I don't understand what you need this for at all, I'm firmly
->on the side of not doing this=2E
->
->What actual problem is being solved with this meta data nonsense? Why is
->it worth blowing up our I$ footprint over=2E
->
->Also note, that if you're going to be explaining this, start from
->scratch, as I have absolutely 0 clues about BPF and such=2E
 
-I would appreciate such information as well=2E The idea seems dubious on t=
-he surface=2E
+Luis,
+
+Can I get an Acked-by from you?
+
+This follows the changes you have in linux-next.
+
+Thanks,
+
+-- Steve
+
+
+
+
+On Mon, 03 Mar 2025 20:25:21 -0500
+Steven Rostedt <rostedt@goodmis.org> wrote:
+
+> From: Steven Rostedt <rostedt@goodmis.org>
+> 
+> The tracing system needs a way to save all the currently loaded modules
+> and their addresses into persistent memory so that it can evaluate the
+> addresses on a reboot from a crash. When the persistent memory trace
+> starts, it will load the module addresses and names into the persistent
+> memory. To do so, it will call the module_for_each_mod() function and pass
+> it a function and data structure to get called on each loaded module. Then
+> it can record the memory.
+> 
+> This only implements that function.
+> 
+> Cc: Luis Chamberlain <mcgrof@kernel.org>
+> Cc: Petr Pavlu <petr.pavlu@suse.com>
+> Cc: Sami Tolvanen <samitolvanen@google.com>
+> Cc: Daniel Gomez <da.gomez@samsung.com>
+> Cc: linux-modules@vger.kernel.org
+> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+> ---
+> Changes since v2: https://lore.kernel.org/20250215034404.902259250@goodmis.org
+> 
+> - Use RCU guard instead of disabling preemption
+> 
+>  include/linux/module.h |  6 ++++++
+>  kernel/module/main.c   | 13 +++++++++++++
+>  2 files changed, 19 insertions(+)
+> 
+> diff --git a/include/linux/module.h b/include/linux/module.h
+> index 30e5b19bafa9..9a71dd2cb11f 100644
+> --- a/include/linux/module.h
+> +++ b/include/linux/module.h
+> @@ -782,6 +782,8 @@ static inline void *module_writable_address(struct module *mod, void *loc)
+>  	return __module_writable_address(mod, loc);
+>  }
+>  
+> +void module_for_each_mod(int(*func)(struct module *mod, void *data), void *data);
+> +
+>  #else /* !CONFIG_MODULES... */
+>  
+>  static inline struct module *__module_address(unsigned long addr)
+> @@ -894,6 +896,10 @@ static inline void *module_writable_address(struct module *mod, void *loc)
+>  {
+>  	return loc;
+>  }
+> +
+> +static inline void module_for_each_mod(int(*func)(struct module *mod, void *data), void *data)
+> +{
+> +}
+>  #endif /* CONFIG_MODULES */
+>  
+>  #ifdef CONFIG_SYSFS
+> diff --git a/kernel/module/main.c b/kernel/module/main.c
+> index 1fb9ad289a6f..927a2e0ffd5f 100644
+> --- a/kernel/module/main.c
+> +++ b/kernel/module/main.c
+> @@ -3809,6 +3809,19 @@ bool is_module_text_address(unsigned long addr)
+>  	return ret;
+>  }
+>  
+> +void module_for_each_mod(int(*func)(struct module *mod, void *data), void *data)
+> +{
+> +	struct module *mod;
+> +
+> +	guard(rcu)();
+> +	list_for_each_entry_rcu(mod, &modules, list) {
+> +		if (mod->state == MODULE_STATE_UNFORMED)
+> +			continue;
+> +		if (func(mod, data))
+> +			break;
+> +	}
+> +}
+> +
+>  /**
+>   * __module_text_address() - get the module whose code contains an address.
+>   * @addr: the address.
+
