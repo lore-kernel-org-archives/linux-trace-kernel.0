@@ -1,31 +1,30 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 866AD2980A7;
-	Tue,  4 Mar 2025 17:14:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85C2F29DB7F;
+	Tue,  4 Mar 2025 17:17:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741108497; cv=none; b=rxOg0MdFGNQpo8AWDSgXt0d3+xzwedgVjIUoVhlzkf2swFviy9MDeYfH/R1pObJ6M3dS6SPJNmvDgATSyqwMu0YSijqTcuCgLQ2AuNVm5AFWtAYkVyJ9R/U3UcdFSVLicFuhrrNW3oZZpjFigjNMqJ2EUFOfwMEnHv3J7la9fgw=
+	t=1741108654; cv=none; b=OQyYn6DhqxXtJebPSl+zYDZN9gCV/kqjX58y52wmTEtEppeP71ofE/8Llo7IY5IjHSuwaG3nv+ACbIAvF6J6gGj+tYlD42YfuXpMUcrP3KrU+ShM1f8JejvgCwvlh09JLaFDXhr0qarpuYkS5Ki1eRg4Yaq7IYMvCxAiAeNgVFQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741108497; c=relaxed/simple;
-	bh=RMqjiifsdaNCSsKNNjk7Yod7Whvmu0ULCvKNeUA77+w=;
+	s=arc-20240116; t=1741108654; c=relaxed/simple;
+	bh=Cub2U67ysXpV9EHO8NacvujSGVQMPjHHYnRs/d2RJ2s=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=L2kmdhkw2K3j69KQ6XhI8wdXYTpClZ8cjlli1Gq9Ptuz+WJhI1lBFKYWjrr9byKNcJlYKjUIcr7RVfji/d5Q+mN2ijLSUzeXJvpMLWddgrZuOyZK1jSlU4A4LWo7XXkw0/TohvlaC5qFYpGkCD8bu7JcQ/KFiiEP5xlEyIBC+1o=
+	 MIME-Version:Content-Type; b=BdlDejynDT+/kIvHbhGfXYY7QZnx+DwnEObWEfdnd9VEygcm2UWd2vkPYkSD/6r9o5fSU6uBr9gqEMeWjRsmIIVDt+pLJpF7zA8OtyphIhWKvH5C4tG+GlETNtzhpkqmO+lcozlmFXhrL3fb8Pqt1OYw4XLQS39IPjmMDQeWbJw=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3AF68C4CEE5;
-	Tue,  4 Mar 2025 17:14:56 +0000 (UTC)
-Date: Tue, 4 Mar 2025 12:15:50 -0500
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 92327C4CEED;
+	Tue,  4 Mar 2025 17:17:33 +0000 (UTC)
+Date: Tue, 4 Mar 2025 12:18:28 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Gabriele Monaco <gmonaco@redhat.com>, linux-kernel@vger.kernel.org, Ingo
- Molnar <mingo@redhat.com>, Masami Hiramatsu <mhiramat@kernel.org>,
- linux-trace-kernel@vger.kernel.org, Juri Lelli <juri.lelli@redhat.com>
-Subject: Re: [PATCH v4 03/11] sched: Add sched tracepoints for RV task model
-Message-ID: <20250304121550.097bffe2@gandalf.local.home>
-In-Reply-To: <20250227204623.5e29e101@gandalf.local.home>
+To: Gabriele Monaco <gmonaco@redhat.com>
+Cc: linux-kernel@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
+ linux-trace-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>, Peter
+ Zijlstra <peterz@infradead.org>, Juri Lelli <juri.lelli@redhat.com>
+Subject: Re: [PATCH v4 02/11] rv: Add license identifiers to monitor files
+Message-ID: <20250304121828.34006e00@gandalf.local.home>
+In-Reply-To: <20250218123121.253551-3-gmonaco@redhat.com>
 References: <20250218123121.253551-1-gmonaco@redhat.com>
-	<20250218123121.253551-4-gmonaco@redhat.com>
-	<20250227204623.5e29e101@gandalf.local.home>
+	<20250218123121.253551-3-gmonaco@redhat.com>
 X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -36,36 +35,27 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
+On Tue, 18 Feb 2025 13:31:07 +0100
+Gabriele Monaco <gmonaco@redhat.com> wrote:
 
-Peter,
+> Some monitor files like the main header and the Kconfig are missing the
+> license identifier.
+> 
+> Add it to those and make sure the automatic generation script includes
+> the line in newly created monitors.
+> 
+> Signed-off-by: Gabriele Monaco <gmonaco@redhat.com>
+> ---
+>  kernel/trace/rv/monitors/wip/Kconfig            | 2 ++
+>  kernel/trace/rv/monitors/wip/wip.h              | 1 +
+>  kernel/trace/rv/monitors/wwnr/Kconfig           | 2 ++
+>  kernel/trace/rv/monitors/wwnr/wwnr.h            | 1 +
+>  tools/verification/dot2/dot2k.py                | 1 +
+>  tools/verification/dot2/dot2k_templates/Kconfig | 2 ++
+>  6 files changed, 9 insertions(+)
 
-Are you OK with adding these tracepoints? They are not trace events
-(doesn't show up in tracefs) but are required for the runtime verifier.
+While I'm waiting for Peter's answer on the scheduler tracepoints, I'll
+take these first two patches now, as they are agnostic to the rest of the
+changes.
 
 -- Steve
-
-
-On Thu, 27 Feb 2025 20:46:23 -0500
-Steven Rostedt <rostedt@goodmis.org> wrote:
-
-> On Tue, 18 Feb 2025 13:31:08 +0100
-> Gabriele Monaco <gmonaco@redhat.com> wrote:
-> 
-> > Add the following tracepoints:
-> > * sched_entry(bool preempt, ip)
-> >     Called while entering __schedule
-> > * sched_exit(bool is_switch, ip)
-> >     Called while exiting __schedule
-> > * sched_set_state(task, curr_state, state)
-> >     Called when a task changes its state (to and from running)
-> > 
-> > These tracepoints are useful to describe the Linux task model and are
-> > adapted from the patches by Daniel Bristot de Oliveira
-> > (https://bristot.me/linux-task-model/).
-> > 
-> > Signed-off-by: Gabriele Monaco <gmonaco@redhat.com>  
-> 
-> I'll need an Ack from the scheduler maintainer to take this series.
-> 
-> -- Steve
-
