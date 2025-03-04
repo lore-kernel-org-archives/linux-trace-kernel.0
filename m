@@ -1,47 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7381D29DB83;
-	Tue,  4 Mar 2025 16:11:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FFB725F996;
+	Tue,  4 Mar 2025 17:10:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741104671; cv=none; b=GdqCnIHwF+tGKdtpHZOLLc7VmQEsDYd7UkHcA19CoXmvrcdzAJyq0NQYcgmeWY6zXb+7EmWC9fk4c2Y8H6cuVpFXKorMja5ZqHCfPGRopDOaasY1v6o1p1i3v/7bVunHT6a0l9FxkavGxZP+JAml7b7wi4j5BgNayK7aQnGtHcI=
+	t=1741108200; cv=none; b=MQk/ijIzG69py4rNe4NsMgmK/GgwiVQNn3IlSJKgjozy6QJYeQRFu9WutzXUrIdgCt3SUKvd3b8OUAnNVr9CGDlo3kC6aGHo4SZdhACNqFQvPUiLZSpXhKyfuHw3OZSillAJxbSdVGwcAPuwYH0au7zUr6b4pLJlg+9LfGDf5TM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741104671; c=relaxed/simple;
-	bh=Q5OfRyL0oHBW1Tz9ez/ZaLR+7hn1+yu8saErb1C2CCw=;
+	s=arc-20240116; t=1741108200; c=relaxed/simple;
+	bh=Vy6aO++eSUX6F1uUf/GKjf51P70zh6k7VBsjfxHU6SU=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ucC1SXYzZtf6XG58ox1tajIPtt3u/SWB6vNDA2JNo8BFQQk92VKhdkz7TDixd54xAMLVkcvMSLMlZsQYJuUx4lxNN0dOgmW7K4MgqWYsKy6I1hzj54r0tEUCuYuGzVi0JlpVEBGDacTWV7PQmLyLRqUxlEDmGQ5dsIGmCq+cF50=
+	 MIME-Version:Content-Type; b=OS1SPN1cuAkjSW4X2FagdrXFkEm8mUz1wAYVttCGbKlmTRdcbXDAW8MSVviA3wJOV7giQNpz9pmWgnVsRPS5gSwywqyl5YuuzWGQPpgtLvn1YRUJCuMeGX/RwTRil2lPXCaRQKhYDRvHb1pipTYPwp1UU1fgP0ir07snCnkyOTE=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 157ECC4CEE5;
-	Tue,  4 Mar 2025 16:11:06 +0000 (UTC)
-Date: Tue, 4 Mar 2025 11:12:01 -0500
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3020CC4CEE5;
+	Tue,  4 Mar 2025 17:09:59 +0000 (UTC)
+Date: Tue, 4 Mar 2025 12:10:53 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
-To: Charlie Jenkins <charlie@rivosinc.com>
-Cc: Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann
- <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, Martin KaFai
- Lau <martin.lau@linux.dev>, Eduard Zingerman <eddyz87@gmail.com>, Song Liu
- <song@kernel.org>, Yonghong Song <yonghong.song@linux.dev>, John Fastabend
- <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>, Stanislav
- Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, Jiri Olsa
- <jolsa@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar
- <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung
- Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexander
- Shishkin <alexander.shishkin@linux.intel.com>, Ian Rogers
- <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, Quentin
- Monnet <qmo@kernel.org>, "Rafael J. Wysocki" <rafael@kernel.org>, Daniel
- Lezcano <daniel.lezcano@linaro.org>, Zhang Rui <rui.zhang@intel.com>,
- Lukasz Luba <lukasz.luba@arm.com>, Josh Poimboeuf <jpoimboe@kernel.org>,
- Mykola Lysenko <mykolal@fb.com>, Shuah Khan <shuah@kernel.org>, Jiri Kosina
- <jikos@kernel.org>, Benjamin Tissoires <bentiss@kernel.org>,
- bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-perf-users@vger.kernel.org, linux-pm@vger.kernel.org,
- linux-kselftest@vger.kernel.org, linux-input@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 2/2] tools: Remove redundant quiet setup
-Message-ID: <20250304111201.59ed8cc3@gandalf.local.home>
-In-Reply-To: <20250213-quiet_tools-v3-2-07de4482a581@rivosinc.com>
-References: <20250213-quiet_tools-v3-0-07de4482a581@rivosinc.com>
-	<20250213-quiet_tools-v3-2-07de4482a581@rivosinc.com>
+To: Tomas Glozar <tglozar@redhat.com>
+Cc: Costa Shulyupin <costa.shul@redhat.com>, John Kacur <jkacur@redhat.com>,
+ "Luis Claudio R. Goncalves" <lgoncalv@redhat.com>, Eder Zulian
+ <ezulian@redhat.com>, Dan Carpenter <dan.carpenter@linaro.org>,
+ linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1] rtla: Save trace when option `--trace` is specified
+Message-ID: <20250304121053.06b84874@gandalf.local.home>
+In-Reply-To: <CAP4=nvTCVLa5MzBbJVz=S_ZiDoJ2hY-8fM+uRnGgumi0sFivWA@mail.gmail.com>
+References: <20250127170251.744751-1-costa.shul@redhat.com>
+	<20250227200623.60f20571@gandalf.local.home>
+	<CAP4=nvQXaFmemBeW8U3U9zTMK0gVYvp23gfq_6ALsBJPTXt9Uw@mail.gmail.com>
+	<20250303150351.28007ad1@gandalf.local.home>
+	<CAP4=nvQ9pXYtihL7HTTRK=EzUEubtWbxDr78JswksSo-wa7zYw@mail.gmail.com>
+	<CAP4=nvTCVLa5MzBbJVz=S_ZiDoJ2hY-8fM+uRnGgumi0sFivWA@mail.gmail.com>
 X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -49,65 +37,42 @@ List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, 13 Feb 2025 13:06:22 -0800
-Charlie Jenkins <charlie@rivosinc.com> wrote:
+On Tue, 4 Mar 2025 09:16:11 +0100
+Tomas Glozar <tglozar@redhat.com> wrote:
 
-> diff --git a/tools/tracing/latency/Makefile b/tools/tracing/latency/Makefile
-> index 6518b03e05c71b4fa84498f9628adf81a38c9f56..257a56b1899f23837de533353e9c2cebdb6035bd 100644
-> --- a/tools/tracing/latency/Makefile
-> +++ b/tools/tracing/latency/Makefile
-> @@ -37,12 +37,6 @@ FEATURE_TESTS	+= libtracefs
->  FEATURE_DISPLAY	:= libtraceevent
->  FEATURE_DISPLAY	+= libtracefs
->  
-> -ifeq ($(V),1)
-> -  Q 		=
-> -else
-> -  Q 		= @
-> -endif
-> -
->  all: $(LATENCY-COLLECTOR)
->  
->  include $(srctree)/tools/build/Makefile.include
-> diff --git a/tools/tracing/rtla/Makefile b/tools/tracing/rtla/Makefile
-> index 8b5101457c70b48e9c720f1ba53293f1307c15a2..0b61208db604ec0754024c3007db6b2fe74a613c 100644
-> --- a/tools/tracing/rtla/Makefile
-> +++ b/tools/tracing/rtla/Makefile
-> @@ -37,12 +37,6 @@ FEATURE_DISPLAY	:= libtraceevent
->  FEATURE_DISPLAY	+= libtracefs
->  FEATURE_DISPLAY	+= libcpupower
->  
-> -ifeq ($(V),1)
-> -  Q		=
-> -else
-> -  Q		= @
-> -endif
-> -
->  all: $(RTLA)
->  
->  include $(srctree)/tools/build/Makefile.include
-> diff --git a/tools/verification/rv/Makefile b/tools/verification/rv/Makefile
-> index 411d62b3d8eb93abf85526ad33cafd783df86bc1..5b898360ba4818b12e8a16c27bd88c75d0076fb9 100644
-> --- a/tools/verification/rv/Makefile
-> +++ b/tools/verification/rv/Makefile
-> @@ -35,12 +35,6 @@ FEATURE_TESTS	+= libtracefs
->  FEATURE_DISPLAY	:= libtraceevent
->  FEATURE_DISPLAY	+= libtracefs
->  
-> -ifeq ($(V),1)
-> -  Q		=
-> -else
-> -  Q		= @
-> -endif
-> -
->  all: $(RV)
->  
->  include $(srctree)/tools/build/Makefile.include
-> 
+> =C3=BAt 4. 3. 2025 v 9:00 odes=C3=ADlatel Tomas Glozar <tglozar@redhat.co=
+m> napsal:
+> >
+> > So we need to stop tracing here, before we save the trace, if we want
+> > to do that. Perhaps combining this with the cleanup patch [1] and
+> > doing the stopping in save_trace_to_file would make sense?
+> > =20
+>=20
+> Also, the patch will also save the trace if running with -a and the
+> threshold was not violated, which is not what one usually wants, e.g.:
+>=20
+> $ rtla osnoise top -c 0 -q -a 10000000 -d 5s
+>                                          Operating System Noise
+>=20
+> duration:   0 00:00:05 | time is in us
+> CPU Period       Runtime        Noise  % CPU Aval   Max Noise   Max
+> Single          HW          NMI          IRQ      Softirq       Threa
+> d
+>  0 #4           4000000        37712    99.05720       10998
+> 555        7624            0         4011           34           2
+> 4
+>  Saving trace to osnoise_trace.txt
+>=20
+> I believe it would be better to add a new option, something like
+> --force-trace, that would be used to save the trace even if there is
+> no threshold violation. -t/--trace and -a could then be used with the
+> same semantics as before.
 
-Acked-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+As long is this is what you expect to happen. I just wanted to point out
+that recording the trace while it is active means it may never stop
+recording. If that is OK, then I'm fine with the change.
 
 -- Steve
