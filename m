@@ -1,71 +1,70 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DF8A29DB7D
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 598C629DB7E
 	for <linux-trace-kernel@vger.kernel.org>; Tue,  4 Mar 2025 15:49:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741103346; cv=none; b=kQxgcfYLyY0rAUwid+VugHARYCoDZxzDWKj0jVS4HANXelb/qcuLvXmd+FATfgvWmlOKtpZTPtStP0HwA4SM0yGJoC/mhbUKnGOPMHg6OYjvyPrMtg9RzaI89XwH7jGc/49rrUTZjMWNJRBQ9OPRwKpoueFtaLryaW1JyIftkTk=
+	t=1741103347; cv=none; b=YAa93S/fxSUXxTekZ2N4ycVD8JUR1yQFjSXODOk2o40OgL1I+U9jL7EErSZAZR9vgqKg3a51kY9laOQfginOwAykL9H8jJKvD8wNVFZSNdI8IkNFUelYZh6LOlcyZDcD5MGlykgFJryci480j5Kr0mSTm9Ii6jManhBQkeVjhrE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741103346; c=relaxed/simple;
-	bh=uyHJhziojFGk/tam8soDl9qH4ruNaNMd8RrIguscx8M=;
+	s=arc-20240116; t=1741103347; c=relaxed/simple;
+	bh=nsp+uT9TiQsWVra7pS0tTd3IXrvabNIr1AHBlduKTTU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:content-type; b=fPwI9gX4+VFqyLI8l0gy5bGSWX8UMT3Fy6HTmI1NZeyZmkrPy+YmI6F18CgC5UPJ9BFCeHczUIykindhUDw9vxlL2DDSLAD4ZPZmngDqo2Xc/lSH9LrzA72gsCXXalbnsHKB17mSKXuZU1Sn+MRo75wSrwN4hmSQfn1JrrR4ZGE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=NoKYOUHY; arc=none smtp.client-ip=170.10.133.124
+	 MIME-Version:content-type; b=YOuQ3EBpNQQH09y/C6hXbKAxBRPi0rZcrpijtAZqghsdlB3JNInrHsmxV2sClxbhASY6Z2pX+FNN2ftWi/QmsNR+7lMJ9jReJqmODrQ99v40kfk7zeRrKiyOk62k5hcmmQb3QFvcGx+WepP1ABDjqmo1i2NtbuSaCM0Taraik8E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Ssc/05lk; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NoKYOUHY"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Ssc/05lk"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1741103342;
+	s=mimecast20190719; t=1741103344;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=2RHlzy1ROEWhQbxxG4Yv+rRoMty5ce9tc18f8MaHZsU=;
-	b=NoKYOUHYLvFcLni16hzXllPXEEC4M9cpWMoE3Kc5vZ3ky8z9Q4C84VBTeEu2Tko3d4Y0Mz
-	vIxXpS3wsO4eSL2SsUn34Xx63r788uP9cKFvwOVPjqHquPQgn767qj+3dozh8bbVWWuE+v
-	GCKU4MHtZPaUxNc2P2/0eN+7AD/jFUY=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=wgfV1BFqVf16XcSyPrOW+mvJosHJK6PFcKJVrOW03zU=;
+	b=Ssc/05lkHs4qEKGoHHDU97vasbKHtIMWt4+cyNJjerpgNcxelXpwAND4YnQEupa1c0d/Rn
+	zMyzy1hJaXMjqz3aqmvjdKp3UOtK2jDgDFQth3zeZK8QjANvWOCXkx2njqSLZL2inXpbU+
+	EK0ESXHhgnz487OkKxAoajxmuyB4vpg=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-158-CWxLlz1HNYKp8aAIE_Es9Q-1; Tue, 04 Mar 2025 10:48:53 -0500
-X-MC-Unique: CWxLlz1HNYKp8aAIE_Es9Q-1
-X-Mimecast-MFC-AGG-ID: CWxLlz1HNYKp8aAIE_Es9Q_1741103331
-Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-43941ad86d4so26883605e9.2
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 04 Mar 2025 07:48:53 -0800 (PST)
+ us-mta-336-90qweoeaO0iyvXRI6ge9pg-1; Tue, 04 Mar 2025 10:48:57 -0500
+X-MC-Unique: 90qweoeaO0iyvXRI6ge9pg-1
+X-Mimecast-MFC-AGG-ID: 90qweoeaO0iyvXRI6ge9pg_1741103336
+Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-391079c9798so1161546f8f.3
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 04 Mar 2025 07:48:57 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741103331; x=1741708131;
+        d=1e100.net; s=20230601; t=1741103335; x=1741708135;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=2RHlzy1ROEWhQbxxG4Yv+rRoMty5ce9tc18f8MaHZsU=;
-        b=PWL9IGo1MmnpYjkmMnu1AsdyeI7sJUq8mdr96V8R/QJesMQC+qS+B2FIyCDmXJyhu/
-         js+x+m+NE95cfOCSoLNdi1889w70ER3mDLT6dG1bZmn3R+S1F3K28cxWumQUyWGEykjK
-         xFzVnIgG4We3lmNBmi/2rEaQ1RKACN4nTYuaH183kjcKtAM1N/3lxMiBeowdNvklfTA6
-         9eqkBpn5oyq+go6kUjCxnT4dtqgY5f9CyAr3XigVJoA+1BUqupVPajZ9ultcH3bZNR0J
-         kLfUncon2IXTLNNFa3An9rygqU456HWAoab0ZMmB/N4xfZthoGbG5UwgJUFm5LkzpyN2
-         0pqg==
-X-Forwarded-Encrypted: i=1; AJvYcCXc1LmOtD51oIcLCoTlY5UwrSmn99VR1YzB98X7/qtoM1q2H8lyPR90ZO0MFWd2FaS86t8I04GmT/IwRYSWJPBkb7M=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzxF5y952G7IlgAFq92z9ysjpSua3c1MYZXrF0CzCuomianko2M
-	ZggX1GuKV4M08CeACbV1jrWliAfEtdb02BmTP4rlh+akHbRNJIi+Fwp2jPUXk5E08WTj+OTMhf5
-	INR3Gta/mfdOSTzWCfPyqfUCo6nSJrOJ53P+bbyVaT98MDJp9LXS/ClisE0ERfqT66GxAuqkqf6
-	/hA+xu
-X-Gm-Gg: ASbGnctapGnY8uV67hUJf8AtbcTfHLdn/BZCYKY4C3JNEbz5wxVavozTsoQ+VABHO0Z
-	ocuw5cqFIIuObaCtqkDQGggD/lH4TjF6xGYaI/AU459s+dMgu9rvQyCVNvhxWoeK5H+/+tqPKOi
-	6/d5tB7ZFpFxaK56KsQSNmT+7BnNGqMC7WS+DDlHLFxHXTvu4xz3aNbhz8S6u6krymxRnBGVBhy
-	wGgdFp5wfhTsd/trdyUegrx7lCQbHbtTpSak5TYhBpwgsq49e3xAkaBKHH7gBpjVgcU0pZMGA6N
-	cATUJvPh8oOeoFwVsVzRMC9hnUp5gvuzrDwm3aiNa5hOS9KY4Q8xHYFdZGHCs2Q9QaMI1vD1Vh/
-	Q
-X-Received: by 2002:a5d:5847:0:b0:390:e94c:453e with SMTP id ffacd0b85a97d-390eca070b2mr17839153f8f.39.1741103331033;
-        Tue, 04 Mar 2025 07:48:51 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IFS2yQ2nIm92Fqm8oP87QtIsIbeZe5pQ0O0ho/Z0iCYCjljpWAZZP5v8ry/LGiAu8oiIQK1RQ==
-X-Received: by 2002:a5d:5847:0:b0:390:e94c:453e with SMTP id ffacd0b85a97d-390eca070b2mr17839137f8f.39.1741103330643;
-        Tue, 04 Mar 2025 07:48:50 -0800 (PST)
+        bh=wgfV1BFqVf16XcSyPrOW+mvJosHJK6PFcKJVrOW03zU=;
+        b=phjMLjbx2TisMdOzabnAvcgx/gz8KVDwtF8LrtW/lkMxP08N1FEs2uhXmKlbEZAme2
+         Y40pOTk5j39lO6OKIIcSF4TqstxAGmiUjvxlqDfjrkyZZHRrVdiKta+j/DGNN116STGV
+         NlDunnkpCR5m/Co6b+xfJ4qPwi1h/IS8QgQKehPYkLEmUKKloMWx9McCHySNU0gOjzZm
+         OfFb0w09tds7ua16/ZV2LQ0pctyWX9Dj2axgnCcy+ao3+f4iv2P6wefPNosGjAX+t1YH
+         b1tBI4TtHhGLG94NoIEqDmUTCws1AH7DCqQVdXJuji0s+UBlxDcNwU22SHaFa8uoLa/k
+         z4EA==
+X-Forwarded-Encrypted: i=1; AJvYcCXcsxKi5SeBmvTIJ8L8yc5Rgk/8xvgpecZAn68oJc5z7UWn7IPUNLy5QOz8oHaSflSjjV2HgfaWoBhgDi3xs13e0H0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwupifiQr5+sskUJVDp29HLegjpdeJR/Kvbr6c83y9fz7Cwe9qr
+	rJeOiBMLJ3n8XAEjzDgGZx0rnGQUbPAFh8etV91Y5HycJ6+t97qkYdbm89ANBIjlk4KMb9KY0W0
+	GmAThNeRcVbJj9I61wBlauxfZnXwaaKvKG2PIe1vdH/IBM00F6HaADqFnI9N3FpBYo5EgZQ==
+X-Gm-Gg: ASbGncvwl/PGq7YvWQagI+CXeqFtfRQh9EeQG5+Otif+u4fG+bcp81/fkTRBwsJwL5B
+	2GjFwsMlA3LfrAhdW6UeJaxETSKJDib8XECXw20AFF9V4gRGqY81TTNraCDWi3GN9VH2injP+y/
+	nXaygWaxQHsi+2UkOEO1pGImyyn/xRYQ1S1T0ZAaz2xio9GTlDdQTRZsRkLF+UC3mJ4rfUsBHtk
+	D1rOo+JSJjhnpwwucc2AEsrI9KmT2d+A/bwOs+bu7ehkq3tUxbRylETqG91+79ntiB0MqG31tFn
+	K+Eg8QC192mf8mmbwZEQ0boa5raCxWHZkaZ2G6ITXO0XZnP4IG0h/zFdsY0oz7q203FuEmjhrz7
+	E
+X-Received: by 2002:a05:6000:188c:b0:38f:3224:65ff with SMTP id ffacd0b85a97d-390ec7c6a8emr13964810f8f.5.1741103335428;
+        Tue, 04 Mar 2025 07:48:55 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IEpnVEdNPdrzCOWtxMEX5R8OAMo0fpxMs1MbCedgfb3wOXycePEGo2BYRlgc01bVfM8qeQFCg==
+X-Received: by 2002:a05:6000:188c:b0:38f:3224:65ff with SMTP id ffacd0b85a97d-390ec7c6a8emr13964780f8f.5.1741103334841;
+        Tue, 04 Mar 2025 07:48:54 -0800 (PST)
 Received: from localhost (p200300cbc73610009e302a8acd3d419c.dip0.t-ipconnect.de. [2003:cb:c736:1000:9e30:2a8a:cd3d:419c])
-        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-390e485d906sm18206420f8f.90.2025.03.04.07.48.49
+        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-390e47a66adsm17850100f8f.25.2025.03.04.07.48.53
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 04 Mar 2025 07:48:50 -0800 (PST)
+        Tue, 04 Mar 2025 07:48:54 -0800 (PST)
 From: David Hildenbrand <david@redhat.com>
 To: linux-kernel@vger.kernel.org
 Cc: linux-mm@kvack.org,
@@ -89,9 +88,9 @@ Cc: linux-mm@kvack.org,
 	Adrian Hunter <adrian.hunter@intel.com>,
 	"Liang, Kan" <kan.liang@linux.intel.com>,
 	Tong Tiangen <tongtiangen@huawei.com>
-Subject: [PATCH -next v1 1/3] kernel/events/uprobes: pass VMA instead of MM to remove_breakpoint()
-Date: Tue,  4 Mar 2025 16:48:44 +0100
-Message-ID: <20250304154846.1937958-2-david@redhat.com>
+Subject: [PATCH -next v1 3/3] kernel/events/uprobes: uprobe_write_opcode() rewrite
+Date: Tue,  4 Mar 2025 16:48:46 +0100
+Message-ID: <20250304154846.1937958-4-david@redhat.com>
 X-Mailer: git-send-email 2.48.1
 In-Reply-To: <20250304154846.1937958-1-david@redhat.com>
 References: <20250304154846.1937958-1-david@redhat.com>
@@ -102,82 +101,430 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: DwaxY3QuBUWMr76Fx2vrg54pO7ZaxAjvojDMfkmPcoc_1741103331
+X-Mimecast-MFC-PROC-ID: yj6QULgxKIvONKxRw_5DrC2PDGL6tDdS9AQH99gkViI_1741103336
 X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
 content-type: text/plain; charset="US-ASCII"; x-default=true
 
-... and remove the "MM" argument from install_breakpoint(), because it
-can easily be derived from the VMA.
+uprobe_write_opcode() does some pretty low-level things that really, it
+shouldn't be doing: for example, manually breaking COW by allocating
+anonymous folios and replacing mapped pages.
+
+Further, it does seem to do some shaky things: for example, writing to
+possible COW-shared anonymous pages or zapping anonymous pages that might
+be pinned. We're also not taking care of uffd, uffd-wp, softdirty ...
+although rather corner cases here. Let's just get it right like ordinary
+ptrace writes would.
+
+Let's rewrite the code, leaving COW-breaking to core-MM, triggered by
+FOLL_FORCE|FOLL_WRITE (note that the code was already using FOLL_FORCE).
+
+We'll use GUP to lookup/faultin the page and break COW if required. Then,
+we'll walk the page tables using a folio_walk to perform our page
+modification atomically by temporarily unmap the PTE + flushing the TLB.
+
+Likely, we could avoid the temporary unmap in case we can just
+atomically write the instruction, but that will be a separate project.
+
+Unfortunately, we still have to implement the zapping logic manually,
+because we only want to zap in specific circumstances (e.g., page
+content identical).
+
+Note that we can now handle large folios (compound pages) and the shared
+zeropage just fine, so drop these checks.
 
 Signed-off-by: David Hildenbrand <david@redhat.com>
 ---
- kernel/events/uprobes.c | 20 +++++++++++---------
- 1 file changed, 11 insertions(+), 9 deletions(-)
+ kernel/events/uprobes.c | 316 ++++++++++++++++++++--------------------
+ 1 file changed, 160 insertions(+), 156 deletions(-)
 
 diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
-index 8fc53813779a4..991aacc80d0e0 100644
+index 0276defd6fbfa..4e39280f8f424 100644
 --- a/kernel/events/uprobes.c
 +++ b/kernel/events/uprobes.c
-@@ -1134,10 +1134,10 @@ static bool filter_chain(struct uprobe *uprobe, struct mm_struct *mm)
+@@ -29,6 +29,7 @@
+ #include <linux/workqueue.h>
+ #include <linux/srcu.h>
+ #include <linux/oom.h>          /* check_stable_address_space */
++#include <linux/pagewalk.h>
+ 
+ #include <linux/uprobes.h>
+ 
+@@ -151,91 +152,6 @@ static loff_t vaddr_to_offset(struct vm_area_struct *vma, unsigned long vaddr)
+ 	return ((loff_t)vma->vm_pgoff << PAGE_SHIFT) + (vaddr - vma->vm_start);
+ }
+ 
+-/**
+- * __replace_page - replace page in vma by new page.
+- * based on replace_page in mm/ksm.c
+- *
+- * @vma:      vma that holds the pte pointing to page
+- * @addr:     address the old @page is mapped at
+- * @old_page: the page we are replacing by new_page
+- * @new_page: the modified page we replace page by
+- *
+- * If @new_page is NULL, only unmap @old_page.
+- *
+- * Returns 0 on success, negative error code otherwise.
+- */
+-static int __replace_page(struct vm_area_struct *vma, unsigned long addr,
+-				struct page *old_page, struct page *new_page)
+-{
+-	struct folio *old_folio = page_folio(old_page);
+-	struct folio *new_folio;
+-	struct mm_struct *mm = vma->vm_mm;
+-	DEFINE_FOLIO_VMA_WALK(pvmw, old_folio, vma, addr, 0);
+-	int err;
+-	struct mmu_notifier_range range;
+-	pte_t pte;
+-
+-	mmu_notifier_range_init(&range, MMU_NOTIFY_CLEAR, 0, mm, addr,
+-				addr + PAGE_SIZE);
+-
+-	if (new_page) {
+-		new_folio = page_folio(new_page);
+-		err = mem_cgroup_charge(new_folio, vma->vm_mm, GFP_KERNEL);
+-		if (err)
+-			return err;
+-	}
+-
+-	/* For folio_free_swap() below */
+-	folio_lock(old_folio);
+-
+-	mmu_notifier_invalidate_range_start(&range);
+-	err = -EAGAIN;
+-	if (!page_vma_mapped_walk(&pvmw))
+-		goto unlock;
+-	VM_BUG_ON_PAGE(addr != pvmw.address, old_page);
+-	pte = ptep_get(pvmw.pte);
+-
+-	/*
+-	 * Handle PFN swap PTES, such as device-exclusive ones, that actually
+-	 * map pages: simply trigger GUP again to fix it up.
+-	 */
+-	if (unlikely(!pte_present(pte))) {
+-		page_vma_mapped_walk_done(&pvmw);
+-		goto unlock;
+-	}
+-
+-	if (new_page) {
+-		folio_get(new_folio);
+-		folio_add_new_anon_rmap(new_folio, vma, addr, RMAP_EXCLUSIVE);
+-		folio_add_lru_vma(new_folio, vma);
+-	} else
+-		/* no new page, just dec_mm_counter for old_page */
+-		dec_mm_counter(mm, MM_ANONPAGES);
+-
+-	if (!folio_test_anon(old_folio)) {
+-		dec_mm_counter(mm, mm_counter_file(old_folio));
+-		inc_mm_counter(mm, MM_ANONPAGES);
+-	}
+-
+-	flush_cache_page(vma, addr, pte_pfn(pte));
+-	ptep_clear_flush(vma, addr, pvmw.pte);
+-	if (new_page)
+-		set_pte_at(mm, addr, pvmw.pte,
+-			   mk_pte(new_page, vma->vm_page_prot));
+-
+-	folio_remove_rmap_pte(old_folio, old_page, vma);
+-	if (!folio_mapped(old_folio))
+-		folio_free_swap(old_folio);
+-	page_vma_mapped_walk_done(&pvmw);
+-	folio_put(old_folio);
+-
+-	err = 0;
+- unlock:
+-	mmu_notifier_invalidate_range_end(&range);
+-	folio_unlock(old_folio);
+-	return err;
+-}
+-
+ /**
+  * is_swbp_insn - check if instruction is breakpoint instruction.
+  * @insn: instruction to be checked.
+@@ -463,6 +379,105 @@ static int update_ref_ctr(struct uprobe *uprobe, struct mm_struct *mm,
  	return ret;
  }
  
--static int
--install_breakpoint(struct uprobe *uprobe, struct mm_struct *mm,
--			struct vm_area_struct *vma, unsigned long vaddr)
-+static int install_breakpoint(struct uprobe *uprobe, struct vm_area_struct *vma,
-+		unsigned long vaddr)
- {
-+	struct mm_struct *mm = vma->vm_mm;
- 	bool first_uprobe;
- 	int ret;
- 
-@@ -1162,9 +1162,11 @@ install_breakpoint(struct uprobe *uprobe, struct mm_struct *mm,
- 	return ret;
- }
- 
--static int
--remove_breakpoint(struct uprobe *uprobe, struct mm_struct *mm, unsigned long vaddr)
-+static int remove_breakpoint(struct uprobe *uprobe, struct vm_area_struct *vma,
-+		unsigned long vaddr)
- {
-+	struct mm_struct *mm = vma->vm_mm;
++static bool orig_page_is_identical(struct vm_area_struct *vma,
++		unsigned long vaddr, struct page *page, bool *pmd_mappable)
++{
++	const pgoff_t index = vaddr_to_offset(vma, vaddr) >> PAGE_SHIFT;
++	struct page *orig_page = find_get_page(vma->vm_file->f_inode->i_mapping,
++					       index);
++	struct folio *orig_folio;
++	bool identical;
 +
- 	set_bit(MMF_RECALC_UPROBES, &mm->flags);
- 	return set_orig_insn(&uprobe->arch, mm, vaddr);
++	if (!orig_page)
++		return false;
++	orig_folio = page_folio(orig_page);
++
++	*pmd_mappable = folio_test_pmd_mappable(orig_folio);
++	identical = folio_test_uptodate(orig_folio) &&
++		    pages_identical(page, orig_page);
++	folio_put(orig_folio);
++	return identical;
++}
++
++static int __uprobe_write_opcode(struct vm_area_struct *vma,
++		struct folio_walk *fw, struct folio *folio,
++		unsigned long opcode_vaddr, uprobe_opcode_t opcode)
++{
++	const unsigned long vaddr = opcode_vaddr & PAGE_MASK;
++	const bool is_register = !!is_swbp_insn(&opcode);
++	bool pmd_mappable;
++
++	/* We're done if we don't find an anonymous folio when unregistering. */
++	if (!folio_test_anon(folio))
++		return is_register ? -EFAULT : 0;
++
++	/* For now, we'll only handle PTE-mapped folios. */
++	if (fw->level != FW_LEVEL_PTE)
++		return -EFAULT;
++
++	/*
++	 * See can_follow_write_pte(): we'd actually prefer a writable PTE here,
++	 * but the VMA might not be writable.
++	 */
++	if (!pte_write(fw->pte)) {
++		if (!PageAnonExclusive(fw->page))
++			return -EFAULT;
++		if (unlikely(userfaultfd_pte_wp(vma, fw->pte)))
++			return -EFAULT;
++		/* SOFTDIRTY is handled via pte_mkdirty() below. */
++	}
++
++	/*
++	 * We'll temporarily unmap the page and flush the TLB, such that we can
++	 * modify the page atomically.
++	 */
++	flush_cache_page(vma, vaddr, pte_pfn(fw->pte));
++	fw->pte = ptep_clear_flush(vma, vaddr, fw->ptep);
++
++	/* Verify that the page content is still as expected. */
++	if (verify_opcode(fw->page, opcode_vaddr, &opcode) <= 0) {
++		set_pte_at(vma->vm_mm, vaddr, fw->ptep, fw->pte);
++		return -EAGAIN;
++	}
++	copy_to_page(fw->page, opcode_vaddr, &opcode, UPROBE_SWBP_INSN_SIZE);
++
++	/*
++	 * When unregistering, we may only zap a PTE if uffd is disabled and
++	 * there are no unexpected folio references ...
++	 */
++	if (is_register || userfaultfd_missing(vma) ||
++	    (folio_ref_count(folio) != folio_mapcount(folio) +
++	     folio_test_swapcache(folio) * folio_nr_pages(folio)))
++		goto remap;
++
++	/*
++	 * ... and the mapped page is identical to the original page that
++	 * would get faulted in on next access.
++	 */
++	if (!orig_page_is_identical(vma, vaddr, fw->page, &pmd_mappable))
++		goto remap;
++
++	dec_mm_counter(vma->vm_mm, MM_ANONPAGES);
++	folio_remove_rmap_pte(folio, fw->page, vma);
++	if (!folio_mapped(folio) && folio_test_swapcache(folio) &&
++	     folio_trylock(folio)) {
++		folio_free_swap(folio);
++		folio_unlock(folio);
++	}
++	folio_put(folio);
++
++	return pmd_mappable;
++remap:
++	/*
++	 * Make sure that our copy_to_page() changes become visible before the
++	 * set_pte_at() write.
++	 */
++	smp_wmb();
++	/* We modified the page. Make sure to mark the PTE dirty. */
++	set_pte_at(vma->vm_mm, vaddr, fw->ptep, pte_mkdirty(fw->pte));
++	return 0;
++}
++
+ /*
+  * NOTE:
+  * Expect the breakpoint instruction to be the smallest size instruction for
+@@ -475,116 +490,105 @@ static int update_ref_ctr(struct uprobe *uprobe, struct mm_struct *mm,
+  * uprobe_write_opcode - write the opcode at a given virtual address.
+  * @auprobe: arch specific probepoint information.
+  * @vma: the probed virtual memory area.
+- * @vaddr: the virtual address to store the opcode.
+- * @opcode: opcode to be written at @vaddr.
++ * @opcode_vaddr: the virtual address to store the opcode.
++ * @opcode: opcode to be written at @opcode_vaddr.
+  *
+  * Called with mm->mmap_lock held for read or write.
+  * Return 0 (success) or a negative errno.
+  */
+ int uprobe_write_opcode(struct arch_uprobe *auprobe, struct vm_area_struct *vma,
+-		unsigned long vaddr, uprobe_opcode_t opcode)
++		const unsigned long opcode_vaddr, uprobe_opcode_t opcode)
+ {
++	const unsigned long vaddr = opcode_vaddr & PAGE_MASK;
+ 	struct mm_struct *mm = vma->vm_mm;
+ 	struct uprobe *uprobe;
+-	struct page *old_page, *new_page;
+ 	int ret, is_register, ref_ctr_updated = 0;
+-	bool orig_page_huge = false;
+ 	unsigned int gup_flags = FOLL_FORCE;
++	struct mmu_notifier_range range;
++	struct folio_walk fw;
++	struct folio *folio;
++	struct page *page;
+ 
+ 	is_register = is_swbp_insn(&opcode);
+ 	uprobe = container_of(auprobe, struct uprobe, arch);
+ 
+-retry:
++	if (WARN_ON_ONCE(!is_cow_mapping(vma->vm_flags)))
++		return -EINVAL;
++
++	/*
++	 * When registering, we have to break COW to get an exclusive anonymous
++	 * page that we can safely modify. Use FOLL_WRITE to trigger a write
++	 * fault if required. When unregistering, we might be lucky and the
++	 * anon page is already gone. So defer write faults until really
++	 * required. Use FOLL_SPLIT_PMD, because __uprobe_write_opcode()
++	 * cannot deal with PMDs yet.
++	 */
+ 	if (is_register)
+-		gup_flags |= FOLL_SPLIT_PMD;
+-	/* Read the page with vaddr into memory */
+-	ret = get_user_pages_remote(mm, vaddr, 1, gup_flags, &old_page, NULL);
++		gup_flags |= FOLL_WRITE | FOLL_SPLIT_PMD;
++
++retry:
++	ret = get_user_pages_remote(mm, vaddr, 1, gup_flags, &page, NULL);
+ 	if (ret != 1)
+-		return ret;
++		goto out;
+ 
+-	ret = verify_opcode(old_page, vaddr, &opcode);
++	ret = verify_opcode(page, opcode_vaddr, &opcode);
++	put_page(page);
+ 	if (ret <= 0)
+-		goto put_old;
+-
+-	if (is_zero_page(old_page)) {
+-		ret = -EINVAL;
+-		goto put_old;
+-	}
+-
+-	if (WARN(!is_register && PageCompound(old_page),
+-		 "uprobe unregister should never work on compound page\n")) {
+-		ret = -EINVAL;
+-		goto put_old;
+-	}
++		goto out;
+ 
+ 	/* We are going to replace instruction, update ref_ctr. */
+ 	if (!ref_ctr_updated && uprobe->ref_ctr_offset) {
+ 		ret = update_ref_ctr(uprobe, mm, is_register ? 1 : -1);
+ 		if (ret)
+-			goto put_old;
++			goto out;
+ 
+ 		ref_ctr_updated = 1;
+ 	}
+ 
+-	ret = 0;
+-	if (!is_register && !PageAnon(old_page))
+-		goto put_old;
+-
+-	ret = anon_vma_prepare(vma);
+-	if (ret)
+-		goto put_old;
+-
+-	ret = -ENOMEM;
+-	new_page = alloc_page_vma(GFP_HIGHUSER_MOVABLE, vma, vaddr);
+-	if (!new_page)
+-		goto put_old;
+-
+-	__SetPageUptodate(new_page);
+-	copy_highpage(new_page, old_page);
+-	copy_to_page(new_page, vaddr, &opcode, UPROBE_SWBP_INSN_SIZE);
+-
+ 	if (!is_register) {
+-		struct page *orig_page;
+-		pgoff_t index;
+-
+-		VM_BUG_ON_PAGE(!PageAnon(old_page), old_page);
+-
+-		index = vaddr_to_offset(vma, vaddr & PAGE_MASK) >> PAGE_SHIFT;
+-		orig_page = find_get_page(vma->vm_file->f_inode->i_mapping,
+-					  index);
+-
+-		if (orig_page) {
+-			if (PageUptodate(orig_page) &&
+-			    pages_identical(new_page, orig_page)) {
+-				/* let go new_page */
+-				put_page(new_page);
+-				new_page = NULL;
+-
+-				if (PageCompound(orig_page))
+-					orig_page_huge = true;
+-			}
+-			put_page(orig_page);
+-		}
++		/*
++		 * In the common case, we'll be able to zap the page when
++		 * unregistering. So trigger MMU notifiers now, as we won't
++		 * be able to do it under PTL.
++		 */
++		mmu_notifier_range_init(&range, MMU_NOTIFY_CLEAR, 0, mm,
++					vaddr, vaddr + PAGE_SIZE);
++		mmu_notifier_invalidate_range_start(&range);
++	}
++
++	/* Walk the page tables again, to perform the actual update. */
++	folio = folio_walk_start(&fw, vma, vaddr, 0);
++	if (folio) {
++		ret = __uprobe_write_opcode(vma, &fw, folio, opcode_vaddr,
++					    opcode);
++		folio_walk_end(&fw, vma);
++	} else {
++		ret = -EAGAIN;
+ 	}
+ 
+-	ret = __replace_page(vma, vaddr & PAGE_MASK, old_page, new_page);
+-	if (new_page)
+-		put_page(new_page);
+-put_old:
+-	put_page(old_page);
++	if (!is_register)
++		mmu_notifier_invalidate_range_end(&range);
+ 
+-	if (unlikely(ret == -EAGAIN))
++	switch (ret) {
++	case -EFAULT:
++		gup_flags |= FOLL_WRITE | FOLL_SPLIT_PMD;
++		fallthrough;
++	case -EAGAIN:
+ 		goto retry;
++	default:
++		break;
++	}
+ 
++out:
+ 	/* Revert back reference counter if instruction update failed. */
+-	if (ret && is_register && ref_ctr_updated)
++	if (ret < 0 && is_register && ref_ctr_updated)
+ 		update_ref_ctr(uprobe, mm, -1);
+ 
+ 	/* try collapse pmd for compound page */
+-	if (!ret && orig_page_huge)
++	if (ret > 0)
+ 		collapse_pte_mapped_thp(mm, vaddr, false);
+ 
+-	return ret;
++	return ret < 0 ? ret : 0;
  }
-@@ -1296,10 +1298,10 @@ register_for_each_vma(struct uprobe *uprobe, struct uprobe_consumer *new)
- 		if (is_register) {
- 			/* consult only the "caller", new consumer. */
- 			if (consumer_filter(new, mm))
--				err = install_breakpoint(uprobe, mm, vma, info->vaddr);
-+				err = install_breakpoint(uprobe, vma, info->vaddr);
- 		} else if (test_bit(MMF_HAS_UPROBES, &mm->flags)) {
- 			if (!filter_chain(uprobe, mm))
--				err |= remove_breakpoint(uprobe, mm, info->vaddr);
-+				err |= remove_breakpoint(uprobe, vma, info->vaddr);
- 		}
  
-  unlock:
-@@ -1472,7 +1474,7 @@ static int unapply_uprobe(struct uprobe *uprobe, struct mm_struct *mm)
- 			continue;
- 
- 		vaddr = offset_to_vaddr(vma, uprobe->offset);
--		err |= remove_breakpoint(uprobe, mm, vaddr);
-+		err |= remove_breakpoint(uprobe, vma, vaddr);
- 	}
- 	mmap_read_unlock(mm);
- 
-@@ -1610,7 +1612,7 @@ int uprobe_mmap(struct vm_area_struct *vma)
- 		if (!fatal_signal_pending(current) &&
- 		    filter_chain(uprobe, vma->vm_mm)) {
- 			unsigned long vaddr = offset_to_vaddr(vma, uprobe->offset);
--			install_breakpoint(uprobe, vma->vm_mm, vma, vaddr);
-+			install_breakpoint(uprobe, vma, vaddr);
- 		}
- 		put_uprobe(uprobe);
- 	}
+ /**
 -- 
 2.48.1
 
