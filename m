@@ -1,60 +1,58 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9834624A06B
-	for <linux-trace-kernel@vger.kernel.org>; Wed,  5 Mar 2025 14:05:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EFA324A07A
+	for <linux-trace-kernel@vger.kernel.org>; Wed,  5 Mar 2025 14:05:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741183510; cv=none; b=TsOZYLrWRX+ceQMEljGKBNQFhIgUNUE9cEznpowJhbVVVbSLtWaEnBMPHNN9Xv6p51JPlTlGCupyj/gbtfRxuk6R04VJH0v9PiLsv3JphCqelkWzO27GKVP80vvxDj8UPbi4aFDtsOsLx+9mWkxKpB522J02lbSatSDVeubYEvs=
+	t=1741183513; cv=none; b=iLJFKqWiELKphfFeN3ddtNee32gBz7K6CaLrXJoQdIWu90ygWeKUT9QW8YxR9xQKAckTTp68rBZE2XlClkOBdWfkDPdcEFpvRJSCWy6iqARNoMNgS2q9Rptu5qKlbFwc7osD81QeVvdF2paQL6ePBbCVvkEfMkWs03JxHHHzVeI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741183510; c=relaxed/simple;
-	bh=McRmkmGm6cD6JCHYN4pPdOZN12a3kg0Y763muA7NluQ=;
+	s=arc-20240116; t=1741183513; c=relaxed/simple;
+	bh=lVyN68PAuVuaUbw2Fw2Mxp6XLn4ydjdYyX28OEJOV4Y=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=K//DWLOXabUco+Yp6wI7BDOOap/J3sKVm8gxyUKsj+CHIPuoxUrM8wSr+cj5jNueOA6M094W207NTRRHquOCk/p1F55ZchcAAEABVoJThfRUDXkxxs10wHxdRj9rEjgZsnzTAEGfi1l4h4ogjjwfXCMX+Yfoc6u4AUL98YUbLRI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=aXfxRo1I; arc=none smtp.client-ip=170.10.129.124
+	 MIME-Version; b=dknNf1XLYFB903Z4F0kob5fpb35pZcfQ1hM6a1yyH+AnIvWq4e3iQwMqTlUgBnuEirg01Q3hd2zRfVpU3zZLqClUdshXo21kzs69B3t7LXb6cIKhgCs7mdflHuekTIA+CGXCdakio3UmPFlOtyIlFUS2S4XvlJhHEO4XbihilXw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=cyt9hiRQ; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aXfxRo1I"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cyt9hiRQ"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1741183504;
+	s=mimecast20190719; t=1741183510;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=j20ppbwt90uUaVApMTTUXgz6HU6dL8Ocq1Gxp+pU3mA=;
-	b=aXfxRo1I0lILUVTRuMET3b509rRYTsd9OMbvti29Sf/bBeYO0gF3O5R0/FLJSp9B8kb2+d
-	tIhLA/HclpeBDVOyzaY6toEFt7G4d65TIozp07DCxqroJcsOEvVGbeYxbcQC0vLWGTquVD
-	LxrzXntzNOkGZR9OUy7LZHzufxEdg2I=
+	bh=hGYuQzr8+Oo+ccnLjzv3DqBm1OL5JlztXtFW9bZR+YM=;
+	b=cyt9hiRQh8xtUf33a6Q13Quf6eaT284f4BUDAyNqLBMVXiE3KsArnYWfnn9c5YrONxObXu
+	qdGh4LVAL3AZAZQBESGgvY6DredxNjrSB1vC2zfht/82mLPapCYMeDNqAb8z4HcWusXkvf
+	9mFOc/eNN7T2YcQ/FtXZvz6lq5eNj9A=
 Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-49-QPGzHI-QNjmCQao3q_f43g-1; Wed,
- 05 Mar 2025 09:04:59 -0500
-X-MC-Unique: QPGzHI-QNjmCQao3q_f43g-1
-X-Mimecast-MFC-AGG-ID: QPGzHI-QNjmCQao3q_f43g_1741183497
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-403-WMlopTBtM3ywJ7x0Vmus0Q-1; Wed,
+ 05 Mar 2025 09:05:07 -0500
+X-MC-Unique: WMlopTBtM3ywJ7x0Vmus0Q-1
+X-Mimecast-MFC-AGG-ID: WMlopTBtM3ywJ7x0Vmus0Q_1741183506
 Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 308301954B1D;
-	Wed,  5 Mar 2025 14:04:57 +0000 (UTC)
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 3A89C1954B20;
+	Wed,  5 Mar 2025 14:05:06 +0000 (UTC)
 Received: from gmonaco-thinkpadt14gen3.rmtit.com (unknown [10.45.226.192])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 394E43000708;
-	Wed,  5 Mar 2025 14:04:52 +0000 (UTC)
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 5F3ED3000708;
+	Wed,  5 Mar 2025 14:05:03 +0000 (UTC)
 From: Gabriele Monaco <gmonaco@redhat.com>
 To: linux-kernel@vger.kernel.org,
-	Ingo Molnar <mingo@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
 	Steven Rostedt <rostedt@goodmis.org>,
 	linux-trace-kernel@vger.kernel.org
 Cc: Gabriele Monaco <gmonaco@redhat.com>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	John Kacur <jkacur@redhat.com>,
-	Clark Williams <williams@redhat.com>
-Subject: [PATCH v5 4/9] rv: Add snroc per-task monitor
-Date: Wed,  5 Mar 2025 15:03:57 +0100
-Message-ID: <20250305140406.350227-5-gmonaco@redhat.com>
+	Ingo Molnar <mingo@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Juri Lelli <juri.lelli@redhat.com>
+Subject: [PATCH v5 6/9] tools/rv: Add support for nested monitors
+Date: Wed,  5 Mar 2025 15:03:59 +0100
+Message-ID: <20250305140406.350227-7-gmonaco@redhat.com>
 In-Reply-To: <20250305140406.350227-1-gmonaco@redhat.com>
 References: <20250305140406.350227-1-gmonaco@redhat.com>
 Precedence: bulk
@@ -66,278 +64,451 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
 
-Add a per-task monitor as part of the sched model:
+RV now supports nested monitors, this functionality requires a container
+monitor, which has virtually no functionality besides holding other
+monitors, and nested monitors, that have a container as parent.
 
-* snroc: set non runnable on its own context
-    Monitor to ensure set_state happens only in the respective task's context
+Nested monitors' sysfs folders are physically nested in the container's
+folder, and they are listed in the available_monitors file with the
+notation container:monitor.
+These changes go against the assumption that each line in the
+available_monitors file correspond to a folder in the rv directory,
+breaking the functionality of the rv tool.
 
-To: Ingo Molnar <mingo@redhat.com>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Juri Lelli <juri.lelli@redhat.com>
-Cc: John Kacur <jkacur@redhat.com>
-Cc: Clark Williams <williams@redhat.com>
+Add support for nested containers in the rv userspace tool, indenting
+nested monitors while listed and allowing both the notation with and
+without container name, which are equivalent:
+
+  # rv list
+  mon1
+  mon2
+  container:
+   - nested1
+   - nested2
+
+  ## notation with container name
+  # rv mon container:nested1
+
+  ## notation without container name
+  # rv mon nested1
+
+Either way, enabling a nested monitor is the same as enabling any other
+non-nested monitor.
+Selecting the container with rv mon enables all the nested monitors, if
+-t is passed, the trace also includes the monitor name next to the
+event:
+
+  # rv mon nested1 -t
+  <idle>-0        [004] event   state1 x event    -> state2
+  <idle>-0        [004] error   event not expected in state2
+
+  # rv mon sched -t
+  <idle>-0        [004] event_nested1   state1 x event    -> state2
+  <idle>-0        [004] error_nested1   event not expected in state2
+
 Signed-off-by: Gabriele Monaco <gmonaco@redhat.com>
 ---
- kernel/trace/rv/Kconfig                      |  1 +
- kernel/trace/rv/Makefile                     |  1 +
- kernel/trace/rv/monitors/snroc/Kconfig       | 14 ++++
- kernel/trace/rv/monitors/snroc/snroc.c       | 85 ++++++++++++++++++++
- kernel/trace/rv/monitors/snroc/snroc.h       | 47 +++++++++++
- kernel/trace/rv/monitors/snroc/snroc_trace.h | 15 ++++
- kernel/trace/rv/rv_trace.h                   |  1 +
- tools/verification/models/sched/snroc.dot    | 18 +++++
- 8 files changed, 182 insertions(+)
- create mode 100644 kernel/trace/rv/monitors/snroc/Kconfig
- create mode 100644 kernel/trace/rv/monitors/snroc/snroc.c
- create mode 100644 kernel/trace/rv/monitors/snroc/snroc.h
- create mode 100644 kernel/trace/rv/monitors/snroc/snroc_trace.h
- create mode 100644 tools/verification/models/sched/snroc.dot
+ tools/verification/rv/include/rv.h    |   1 +
+ tools/verification/rv/src/in_kernel.c | 226 ++++++++++++++++++++------
+ 2 files changed, 179 insertions(+), 48 deletions(-)
 
-diff --git a/kernel/trace/rv/Kconfig b/kernel/trace/rv/Kconfig
-index 961ac1e487df1..c4f1c0fc3abc6 100644
---- a/kernel/trace/rv/Kconfig
-+++ b/kernel/trace/rv/Kconfig
-@@ -30,6 +30,7 @@ source "kernel/trace/rv/monitors/wwnr/Kconfig"
- source "kernel/trace/rv/monitors/sched/Kconfig"
- source "kernel/trace/rv/monitors/tss/Kconfig"
- source "kernel/trace/rv/monitors/sco/Kconfig"
-+source "kernel/trace/rv/monitors/snroc/Kconfig"
- # Add new monitors here
+diff --git a/tools/verification/rv/include/rv.h b/tools/verification/rv/include/rv.h
+index 0cab1037a98f7..6f668eb266cbb 100644
+--- a/tools/verification/rv/include/rv.h
++++ b/tools/verification/rv/include/rv.h
+@@ -7,6 +7,7 @@ struct monitor {
+ 	char name[MAX_DA_NAME_LEN];
+ 	char desc[MAX_DESCRIPTION];
+ 	int enabled;
++	int nested;
+ };
  
- config RV_REACTORS
-diff --git a/kernel/trace/rv/Makefile b/kernel/trace/rv/Makefile
-index ef2a084ff3102..6d11d6400ddd0 100644
---- a/kernel/trace/rv/Makefile
-+++ b/kernel/trace/rv/Makefile
-@@ -8,6 +8,7 @@ obj-$(CONFIG_RV_MON_WWNR) += monitors/wwnr/wwnr.o
- obj-$(CONFIG_RV_MON_SCHED) += monitors/sched/sched.o
- obj-$(CONFIG_RV_MON_TSS) += monitors/tss/tss.o
- obj-$(CONFIG_RV_MON_SCO) += monitors/sco/sco.o
-+obj-$(CONFIG_RV_MON_SNROC) += monitors/snroc/snroc.o
- # Add new monitors here
- obj-$(CONFIG_RV_REACTORS) += rv_reactors.o
- obj-$(CONFIG_RV_REACT_PRINTK) += reactor_printk.o
-diff --git a/kernel/trace/rv/monitors/snroc/Kconfig b/kernel/trace/rv/monitors/snroc/Kconfig
-new file mode 100644
-index 0000000000000..6e4365a2fea3b
---- /dev/null
-+++ b/kernel/trace/rv/monitors/snroc/Kconfig
-@@ -0,0 +1,14 @@
-+# SPDX-License-Identifier: GPL-2.0-only
-+#
-+config RV_MON_SNROC
-+	depends on RV
-+	depends on RV_MON_SCHED
-+	default y
-+	select DA_MON_EVENTS_ID
-+	bool "snroc monitor"
-+	help
-+	  Monitor to ensure sched_set_state happens only in the respective task's context.
-+	  This monitor is part of the sched monitors collection.
-+
-+	  For further information, see:
-+	    Documentation/trace/rv/monitor_sched.rst
-diff --git a/kernel/trace/rv/monitors/snroc/snroc.c b/kernel/trace/rv/monitors/snroc/snroc.c
-new file mode 100644
-index 0000000000000..bb1f60d552960
---- /dev/null
-+++ b/kernel/trace/rv/monitors/snroc/snroc.c
-@@ -0,0 +1,85 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#include <linux/ftrace.h>
-+#include <linux/tracepoint.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/init.h>
-+#include <linux/rv.h>
-+#include <rv/instrumentation.h>
-+#include <rv/da_monitor.h>
-+
-+#define MODULE_NAME "snroc"
-+
-+#include <trace/events/sched.h>
-+#include <rv_trace.h>
-+#include <monitors/sched/sched.h>
-+
-+#include "snroc.h"
-+
-+static struct rv_monitor rv_snroc;
-+DECLARE_DA_MON_PER_TASK(snroc, unsigned char);
-+
-+static void handle_sched_set_state(void *data, struct task_struct *tsk, int state)
+ int should_stop(void);
+diff --git a/tools/verification/rv/src/in_kernel.c b/tools/verification/rv/src/in_kernel.c
+index f2bbc75a76f4d..032b851019290 100644
+--- a/tools/verification/rv/src/in_kernel.c
++++ b/tools/verification/rv/src/in_kernel.c
+@@ -6,15 +6,18 @@
+  */
+ #include <getopt.h>
+ #include <stdlib.h>
++#include <stdio.h>
+ #include <string.h>
+ #include <errno.h>
+ #include <unistd.h>
++#include <dirent.h>
+ 
+ #include <trace.h>
+ #include <utils.h>
+ #include <rv.h>
+ 
+ static int config_has_id;
++static int config_is_container;
+ static int config_my_pid;
+ static int config_trace;
+ 
+@@ -44,6 +47,51 @@ static int __ikm_read_enable(char *monitor_name)
+ 	return enabled;
+ }
+ 
++/*
++ * __ikm_find_monitor - find the full name of a possibly nested module
++ *
++ * __does not log errors.
++ *
++ * Returns 1 if we found the monitor, -1 on error and 0 if it does not exist.
++ * The string out_name is populated with the full name, which can be
++ * equal to monitor_name or container/monitor_name if nested
++ */
++static int __ikm_find_monitor_name(char *monitor_name, char *out_name)
 +{
-+	da_handle_event_snroc(tsk, sched_set_state_snroc);
++	char *available_monitors, container[MAX_DA_NAME_LEN+1], *cursor, *end;
++	int retval = 1;
++
++	available_monitors = tracefs_instance_file_read(NULL, "rv/available_monitors", NULL);
++	if (!available_monitors)
++		return -1;
++
++	cursor = strstr(available_monitors, monitor_name);
++	if (!cursor) {
++		retval = 0;
++		goto out_free;
++	}
++
++	for (; cursor > available_monitors; cursor--)
++		if (*(cursor-1) == '\n')
++			break;
++	end = strstr(cursor, "\n");
++	memcpy(out_name, cursor, end-cursor);
++	out_name[end-cursor] = '\0';
++
++	cursor = strstr(out_name, ":");
++	if (cursor)
++		*cursor = '/';
++	else {
++		sprintf(container, "%s:", monitor_name);
++		if (strstr(available_monitors, container))
++			config_is_container = 1;
++	}
++
++out_free:
++	free(available_monitors);
++	return retval;
 +}
 +
-+static void handle_sched_switch(void *data, bool preempt,
-+				struct task_struct *prev,
-+				struct task_struct *next,
-+				unsigned int prev_state)
-+{
-+	da_handle_start_event_snroc(prev, sched_switch_out_snroc);
-+	da_handle_event_snroc(next, sched_switch_in_snroc);
-+}
+ /*
+  * ikm_read_enable - reads monitor's enable status
+  *
+@@ -137,7 +185,17 @@ static char *ikm_read_desc(char *monitor_name)
+ static int ikm_fill_monitor_definition(char *name, struct monitor *ikm)
+ {
+ 	int enabled;
+-	char *desc;
++	char *desc, *nested_name;
 +
-+static int enable_snroc(void)
++	nested_name = strstr(name, ":");
++	if (nested_name) {
++		*nested_name = '/';
++		++nested_name;
++		ikm->nested = 1;
++	} else {
++		nested_name = name;
++		ikm->nested = 0;
++	}
+ 
+ 	enabled = ikm_read_enable(name);
+ 	if (enabled < 0) {
+@@ -151,7 +209,7 @@ static int ikm_fill_monitor_definition(char *name, struct monitor *ikm)
+ 		return -1;
+ 	}
+ 
+-	strncpy(ikm->name, name, MAX_DA_NAME_LEN);
++	strncpy(ikm->name, nested_name, MAX_DA_NAME_LEN);
+ 	ikm->enabled = enabled;
+ 	strncpy(ikm->desc, desc, MAX_DESCRIPTION);
+ 
+@@ -273,7 +331,7 @@ static int ikm_has_id(char *monitor_name)
+ int ikm_list_monitors(void)
+ {
+ 	char *available_monitors;
+-	struct monitor ikm;
++	struct monitor ikm = {0};
+ 	char *curr, *next;
+ 	int retval;
+ 
+@@ -293,7 +351,9 @@ int ikm_list_monitors(void)
+ 		if (retval)
+ 			err_msg("ikm: error reading %d in kernel monitor, skipping\n", curr);
+ 
+-		printf("%-24s %s %s\n", ikm.name, ikm.desc, ikm.enabled ? "[ON]" : "[OFF]");
++		printf("%s%-*s %s %s\n", ikm.nested ? " - " : "",
++		       ikm.nested ? MAX_DA_NAME_LEN - 3 : MAX_DA_NAME_LEN,
++		       ikm.name, ikm.desc, ikm.enabled ? "[ON]" : "[OFF]");
+ 		curr = ++next;
+ 
+ 	} while (strlen(curr));
+@@ -343,11 +403,11 @@ ikm_event_handler(struct trace_seq *s, struct tep_record *record,
+ 	unsigned long long final_state;
+ 	unsigned long long pid;
+ 	unsigned long long id;
+-	int cpu = record->cpu;
+ 	int val;
++	bool missing_id;
+ 
+ 	if (config_has_id)
+-		tep_get_field_val(s, trace_event, "id", record, &id, 1);
++		missing_id = tep_get_field_val(s, trace_event, "id", record, &id, 1);
+ 
+ 	tep_get_common_field_val(s, trace_event, "common_pid", record, &pid, 1);
+ 
+@@ -356,12 +416,21 @@ ikm_event_handler(struct trace_seq *s, struct tep_record *record,
+ 	else if (config_my_pid && (config_my_pid == pid))
+ 		return 0;
+ 
+-	tep_print_event(trace_event->tep, s, record, "%16s-%-8d ", TEP_PRINT_COMM, TEP_PRINT_PID);
++	tep_print_event(trace_event->tep, s, record, "%16s-%-8d [%.3d] ",
++			TEP_PRINT_COMM, TEP_PRINT_PID, TEP_PRINT_CPU);
+ 
+-	trace_seq_printf(s, "[%.3d] event ", cpu);
++	if (config_is_container)
++		tep_print_event(trace_event->tep, s, record, "%s ", TEP_PRINT_NAME);
++	else
++		trace_seq_printf(s, "event ");
+ 
+-	if (config_has_id)
+-		trace_seq_printf(s, "%8llu ", id);
++	if (config_has_id) {
++		if (missing_id)
++			/* placeholder if we are dealing with a mixed-type container*/
++			trace_seq_printf(s, "        ");
++		else
++			trace_seq_printf(s, "%8llu ", id);
++	}
+ 
+ 	state = tep_get_field_raw(s, trace_event, "state", record, &val, 0);
+ 	event = tep_get_field_raw(s, trace_event, "event", record, &val, 0);
+@@ -394,9 +463,10 @@ ikm_error_handler(struct trace_seq *s, struct tep_record *record,
+ 	int cpu = record->cpu;
+ 	char *state, *event;
+ 	int val;
++	bool missing_id;
+ 
+ 	if (config_has_id)
+-		tep_get_field_val(s, trace_event, "id", record, &id, 1);
++		missing_id = tep_get_field_val(s, trace_event, "id", record, &id, 1);
+ 
+ 	tep_get_common_field_val(s, trace_event, "common_pid", record, &pid, 1);
+ 
+@@ -405,10 +475,20 @@ ikm_error_handler(struct trace_seq *s, struct tep_record *record,
+ 	else if (config_my_pid == pid)
+ 		return 0;
+ 
+-	trace_seq_printf(s, "%8lld [%03d] error ", pid, cpu);
++	trace_seq_printf(s, "%8lld [%03d] ", pid, cpu);
+ 
+-	if (config_has_id)
+-		trace_seq_printf(s, "%8llu ", id);
++	if (config_is_container)
++		tep_print_event(trace_event->tep, s, record, "%s ", TEP_PRINT_NAME);
++	else
++		trace_seq_printf(s, "error ");
++
++	if (config_has_id) {
++		if (missing_id)
++			/* placeholder if we are dealing with a mixed-type container*/
++			trace_seq_printf(s, "        ");
++		else
++			trace_seq_printf(s, "%8llu ", id);
++	}
+ 
+ 	state = tep_get_field_raw(s, trace_event, "state", record, &val, 0);
+ 	event = tep_get_field_raw(s, trace_event, "event", record, &val, 0);
+@@ -421,6 +501,64 @@ ikm_error_handler(struct trace_seq *s, struct tep_record *record,
+ 	return 0;
+ }
+ 
++static int ikm_enable_trace_events(char *monitor_name, struct trace_instance *inst)
 +{
++	char event[MAX_DA_NAME_LEN + 7]; /* max(error_,event_) + '0' = 7 */
 +	int retval;
 +
-+	retval = da_monitor_init_snroc();
++	snprintf(event, sizeof(event), "event_%s", monitor_name);
++	retval = tracefs_event_enable(inst->inst, "rv",  event);
 +	if (retval)
-+		return retval;
++		return -1;
 +
-+	rv_attach_trace_probe("snroc", sched_set_state_tp, handle_sched_set_state);
-+	rv_attach_trace_probe("snroc", sched_switch, handle_sched_switch);
++	tep_register_event_handler(inst->tep, -1, "rv", event,
++				   ikm_event_handler, NULL);
++
++	snprintf(event, sizeof(event), "error_%s", monitor_name);
++	retval = tracefs_event_enable(inst->inst, "rv", event);
++	if (retval)
++		return -1;
++
++	tep_register_event_handler(inst->tep, -1, "rv", event,
++				   ikm_error_handler, NULL);
++
++	/* set if at least 1 monitor has id in case of a container */
++	config_has_id = ikm_has_id(monitor_name);
++	if (config_has_id < 0)
++		return -1;
++
 +
 +	return 0;
 +}
 +
-+static void disable_snroc(void)
++static int ikm_enable_trace_container(char *monitor_name,
++				      struct trace_instance *inst)
 +{
-+	rv_snroc.enabled = 0;
++	DIR *dp;
++	char *abs_path, rv_path[MAX_PATH];
++	struct dirent *ep;
++	int retval = 0;
 +
-+	rv_detach_trace_probe("snroc", sched_set_state_tp, handle_sched_set_state);
-+	rv_detach_trace_probe("snroc", sched_switch, handle_sched_switch);
++	snprintf(rv_path, MAX_PATH, "rv/monitors/%s", monitor_name);
++	abs_path = tracefs_instance_get_file(NULL, rv_path);
++	if (!abs_path)
++		return -1;
++	dp = opendir(abs_path);
++	if (!dp)
++		goto out_free;
 +
-+	da_monitor_destroy_snroc();
-+}
-+
-+static struct rv_monitor rv_snroc = {
-+	.name = "snroc",
-+	.description = "set non runnable on its own context.",
-+	.enable = enable_snroc,
-+	.disable = disable_snroc,
-+	.reset = da_monitor_reset_all_snroc,
-+	.enabled = 0,
-+};
-+
-+static int __init register_snroc(void)
-+{
-+	rv_register_monitor(&rv_snroc, &rv_sched);
-+	return 0;
-+}
-+
-+static void __exit unregister_snroc(void)
-+{
-+	rv_unregister_monitor(&rv_snroc);
-+}
-+
-+module_init(register_snroc);
-+module_exit(unregister_snroc);
-+
-+MODULE_LICENSE("GPL");
-+MODULE_AUTHOR("Gabriele Monaco <gmonaco@redhat.com>");
-+MODULE_DESCRIPTION("snroc: set non runnable on its own context.");
-diff --git a/kernel/trace/rv/monitors/snroc/snroc.h b/kernel/trace/rv/monitors/snroc/snroc.h
-new file mode 100644
-index 0000000000000..c3650a2b1b107
---- /dev/null
-+++ b/kernel/trace/rv/monitors/snroc/snroc.h
-@@ -0,0 +1,47 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Automatically generated C representation of snroc automaton
-+ * For further information about this format, see kernel documentation:
-+ *   Documentation/trace/rv/deterministic_automata.rst
-+ */
-+
-+enum states_snroc {
-+	other_context_snroc = 0,
-+	own_context_snroc,
-+	state_max_snroc
-+};
-+
-+#define INVALID_STATE state_max_snroc
-+
-+enum events_snroc {
-+	sched_set_state_snroc = 0,
-+	sched_switch_in_snroc,
-+	sched_switch_out_snroc,
-+	event_max_snroc
-+};
-+
-+struct automaton_snroc {
-+	char *state_names[state_max_snroc];
-+	char *event_names[event_max_snroc];
-+	unsigned char function[state_max_snroc][event_max_snroc];
-+	unsigned char initial_state;
-+	bool final_states[state_max_snroc];
-+};
-+
-+static const struct automaton_snroc automaton_snroc = {
-+	.state_names = {
-+		"other_context",
-+		"own_context"
-+	},
-+	.event_names = {
-+		"sched_set_state",
-+		"sched_switch_in",
-+		"sched_switch_out"
-+	},
-+	.function = {
-+		{      INVALID_STATE,  own_context_snroc,       INVALID_STATE },
-+		{  own_context_snroc,      INVALID_STATE, other_context_snroc },
-+	},
-+	.initial_state = other_context_snroc,
-+	.final_states = { 1, 0 },
-+};
-diff --git a/kernel/trace/rv/monitors/snroc/snroc_trace.h b/kernel/trace/rv/monitors/snroc/snroc_trace.h
-new file mode 100644
-index 0000000000000..50114cef51229
---- /dev/null
-+++ b/kernel/trace/rv/monitors/snroc/snroc_trace.h
-@@ -0,0 +1,15 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+
-+/*
-+ * Snippet to be included in rv_trace.h
-+ */
-+
-+#ifdef CONFIG_RV_MON_SNROC
-+DEFINE_EVENT(event_da_monitor_id, event_snroc,
-+	     TP_PROTO(int id, char *state, char *event, char *next_state, bool final_state),
-+	     TP_ARGS(id, state, event, next_state, final_state));
-+
-+DEFINE_EVENT(error_da_monitor_id, error_snroc,
-+	     TP_PROTO(int id, char *state, char *event),
-+	     TP_ARGS(id, state, event));
-+#endif /* CONFIG_RV_MON_SNROC */
-diff --git a/kernel/trace/rv/rv_trace.h b/kernel/trace/rv/rv_trace.h
-index f49e85ca97a1f..a533bc29cfddf 100644
---- a/kernel/trace/rv/rv_trace.h
-+++ b/kernel/trace/rv/rv_trace.h
-@@ -120,6 +120,7 @@ DECLARE_EVENT_CLASS(error_da_monitor_id,
- );
- 
- #include <monitors/wwnr/wwnr_trace.h>
-+#include <monitors/snroc/snroc_trace.h>
- // Add new monitors based on CONFIG_DA_MON_EVENTS_ID here
- 
- #endif /* CONFIG_DA_MON_EVENTS_ID */
-diff --git a/tools/verification/models/sched/snroc.dot b/tools/verification/models/sched/snroc.dot
-new file mode 100644
-index 0000000000000..8b71c32d4dca4
---- /dev/null
-+++ b/tools/verification/models/sched/snroc.dot
-@@ -0,0 +1,18 @@
-+digraph state_automaton {
-+	center = true;
-+	size = "7,11";
-+	{node [shape = plaintext, style=invis, label=""] "__init_other_context"};
-+	{node [shape = ellipse] "other_context"};
-+	{node [shape = plaintext] "other_context"};
-+	{node [shape = plaintext] "own_context"};
-+	"__init_other_context" -> "other_context";
-+	"other_context" [label = "other_context", color = green3];
-+	"other_context" -> "own_context" [ label = "sched_switch_in" ];
-+	"own_context" [label = "own_context"];
-+	"own_context" -> "other_context" [ label = "sched_switch_out" ];
-+	"own_context" -> "own_context" [ label = "sched_set_state" ];
-+	{ rank = min ;
-+		"__init_other_context";
-+		"other_context";
++	while (!retval && (ep = readdir(dp))) {
++		if (ep->d_type != DT_DIR || ep->d_name[0] == '.')
++			continue;
++		retval = ikm_enable_trace_events(ep->d_name, inst);
 +	}
++
++	closedir(dp);
++out_free:
++	free(abs_path);
++	return retval;
 +}
++
+ /*
+  * ikm_setup_trace_instance - set up a tracing instance to collect data
+  *
+@@ -430,19 +568,12 @@ ikm_error_handler(struct trace_seq *s, struct tep_record *record,
+  */
+ static struct trace_instance *ikm_setup_trace_instance(char *monitor_name)
+ {
+-	char event[MAX_DA_NAME_LEN + 7]; /* max(error_,event_) + '0' = 7 */
+ 	struct trace_instance *inst;
+ 	int retval;
+ 
+ 	if (!config_trace)
+ 		return NULL;
+ 
+-	config_has_id = ikm_has_id(monitor_name);
+-	if (config_has_id < 0) {
+-		err_msg("ikm: failed to read monitor %s event format\n", monitor_name);
+-		goto out_err;
+-	}
+-
+ 	/* alloc data */
+ 	inst = calloc(1, sizeof(*inst));
+ 	if (!inst) {
+@@ -454,23 +585,13 @@ static struct trace_instance *ikm_setup_trace_instance(char *monitor_name)
+ 	if (retval)
+ 		goto out_free;
+ 
+-	/* enable events */
+-	snprintf(event, sizeof(event), "event_%s", monitor_name);
+-	retval = tracefs_event_enable(inst->inst, "rv",  event);
+-	if (retval)
+-		goto out_inst;
+-
+-	tep_register_event_handler(inst->tep, -1, "rv", event,
+-				   ikm_event_handler, NULL);
+-
+-	snprintf(event, sizeof(event), "error_%s", monitor_name);
+-	retval = tracefs_event_enable(inst->inst, "rv", event);
++	if (config_is_container)
++		retval = ikm_enable_trace_container(monitor_name, inst);
++	else
++		retval = ikm_enable_trace_events(monitor_name, inst);
+ 	if (retval)
+ 		goto out_inst;
+ 
+-	tep_register_event_handler(inst->tep, -1, "rv", event,
+-				   ikm_error_handler, NULL);
+-
+ 	/* ready to enable */
+ 	tracefs_trace_on(inst->inst);
+ 
+@@ -633,32 +754,41 @@ static int parse_arguments(char *monitor_name, int argc, char **argv)
+ int ikm_run_monitor(char *monitor_name, int argc, char **argv)
+ {
+ 	struct trace_instance *inst = NULL;
++	char *nested_name, full_name[2*MAX_DA_NAME_LEN];
+ 	int retval;
+ 
+-	/*
+-	 * Check if monitor exists by seeing it is enabled.
+-	 */
+-	retval = __ikm_read_enable(monitor_name);
+-	if (retval < 0)
++	nested_name = strstr(monitor_name, ":");
++	if (nested_name)
++		++nested_name;
++	else
++		nested_name = monitor_name;
++
++	retval = __ikm_find_monitor_name(monitor_name, full_name);
++	if (!retval)
+ 		return 0;
++	if (retval < 0) {
++		err_msg("ikm: error finding monitor %s\n", nested_name);
++		return -1;
++	}
+ 
++	retval = __ikm_read_enable(full_name);
+ 	if (retval) {
+-		err_msg("ikm: monitor %s (in-kernel) is already enabled\n", monitor_name);
++		err_msg("ikm: monitor %s (in-kernel) is already enabled\n", nested_name);
+ 		return -1;
+ 	}
+ 
+ 	/* we should be good to go */
+-	retval = parse_arguments(monitor_name, argc, argv);
++	retval = parse_arguments(full_name, argc, argv);
+ 	if (retval)
+-		ikm_usage(1, monitor_name, "ikm: failed parsing arguments");
++		ikm_usage(1, nested_name, "ikm: failed parsing arguments");
+ 
+ 	if (config_trace) {
+-		inst = ikm_setup_trace_instance(monitor_name);
++		inst = ikm_setup_trace_instance(nested_name);
+ 		if (!inst)
+ 			return -1;
+ 	}
+ 
+-	retval = ikm_enable(monitor_name);
++	retval = ikm_enable(full_name);
+ 	if (retval < 0)
+ 		goto out_free_instance;
+ 
+@@ -682,17 +812,17 @@ int ikm_run_monitor(char *monitor_name, int argc, char **argv)
+ 		sleep(1);
+ 	}
+ 
+-	ikm_disable(monitor_name);
++	ikm_disable(full_name);
+ 	ikm_destroy_trace_instance(inst);
+ 
+ 	if (config_reactor && config_initial_reactor)
+-		ikm_write_reactor(monitor_name, config_initial_reactor);
++		ikm_write_reactor(full_name, config_initial_reactor);
+ 
+ 	return 1;
+ 
+ out_free_instance:
+ 	ikm_destroy_trace_instance(inst);
+ 	if (config_reactor && config_initial_reactor)
+-		ikm_write_reactor(monitor_name, config_initial_reactor);
++		ikm_write_reactor(full_name, config_initial_reactor);
+ 	return -1;
+ }
 -- 
 2.48.1
 
