@@ -1,195 +1,174 @@
-Received: from mail-yw1-f194.google.com (mail-yw1-f194.google.com [209.85.128.194])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM02-DM3-obe.outbound.protection.outlook.com (mail-dm3nam02on2118.outbound.protection.outlook.com [40.107.95.118])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0CC613D8B2;
-	Wed,  5 Mar 2025 01:20:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.194
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741137650; cv=none; b=ThnHym03FQx4Ej82dnjiM/zeXU5ko0b6PYAb4bVxpbdu8zswuWUA4g9R1QGA70eEYXlWrMAQYhHQP1JmvipDJrXLszEo+YoW2HgNuuRgRJW4XlWFqxculYXiVLmt1Vq9iSvNtouUTuRH3DM6a6OZLB7X5NrrBQeiV24KQEr9ZE4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741137650; c=relaxed/simple;
-	bh=xqfh+/z+RQyzw3ZjPbcTSHPRwuHVteqzMjyMDRsSiD8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=NYMOxTpLIB/WfEeNCMCKaF7AuBoUrpgfm1U02Gph19JzzTWDw9UCyrLzrfJeQcEXJBTCL1PM7uMNSmvoFPgGfxT7hivchh2jM1ne1egCXEQ92Droxct5T/4rk9MVj0YuzesOWSbNGshYjD0BlT5Yj2DOGi34yWZvwVtmNxGLE4Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dhq0i/xL; arc=none smtp.client-ip=209.85.128.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 888F8146A6F;
+	Wed,  5 Mar 2025 01:56:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.95.118
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741139768; cv=fail; b=a/xA9dj+/7jfK7/ZSUuggHyzQLSWMOE6cnNwAAfhJWDpSDyh/faYvJInIQCJQcUzWsp8O4Q/17NSSpd/gqG1b8wxSapc5dfbgrF5FSEzORaGNQyrXcJ9mWVBJj2+m7wCkr6i8RxlV+CrUX+b/+Gc1c5eGWta6f4IA2Xkex276nI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741139768; c=relaxed/simple;
+	bh=CvgprK6Azr97e+/ug+CS97a1FuTe/kwYwSfFn8/kqbI=;
+	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=LTL6au4FHeLxsaIgZuuSghtuUDxWZr3oyMbRDoisbXpGUGAgq2O1yP88LoNBGCBKHKiB1Hxhk2m9lLSaqsGsW/WaHIHSiouUH9WAsDqcbti78MHlMHsfx8JBBcoqy097D0eoo3NthCnf1M0aglzvbWaO4WGDPz2JHaATBYmsukI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=os.amperecomputing.com; spf=pass smtp.mailfrom=os.amperecomputing.com; dkim=pass (1024-bit key) header.d=os.amperecomputing.com header.i=@os.amperecomputing.com header.b=dulM4BfM; arc=fail smtp.client-ip=40.107.95.118
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=os.amperecomputing.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=os.amperecomputing.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dhq0i/xL"
-Received: by mail-yw1-f194.google.com with SMTP id 00721157ae682-6ef7c9e9592so48173097b3.1;
-        Tue, 04 Mar 2025 17:20:48 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=os.amperecomputing.com header.i=@os.amperecomputing.com header.b="dulM4BfM"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=K2PRtAbwzGCtnBBnG7VwtcE9+S2UOMZ1o1B8WBhz2I5Kuq7ONhJwQWJBk9+WO3RMW4+QdBXij4LlSbX8LVwIoKni3ywkui3mUX3DBTDpGtGbfjxMAUWW30LXECdGOi5p4ssr7FblmqnuMxUBh8QrqV0Q4QZ+ZguVtDVj4Rc0SUaX2GI/rJdyQVsSanvRdZHP1Bo6ND+p1YXgFoh8zFcsWHdSaNuTe+bchykkuEDHixqBIEAJX2eZC/cae286as9M9yHfRec9W8m5V40xpSVo+15j/1WUQFZ0MTMMaGT7BDDn+SJgVDBS7wiWacwBLZM0nqHg6bd0sg+0Fb69FRFwHQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=yCeFzyriY26j96qACozwoZVBtZVGdvcE2m48fXxpZME=;
+ b=i4Yu1iOvVN4bWxWdbp8ac1XiOQNoHNC8S9CiO93bjzP6MKhM94JahpPDUKbc92XXiM6UMTGSunkeV8Bq/bSJ6RAeyZcY4GKjA9QL1hWQ5bNCLHLI//hlPLvMNC4EKpaQxTr7EBdBB+yYmOBuAJbdgcMrJx7vvqTsxI4Xcfoez8LHsbSVLTpCWbEherRhsQVU8HBYdiRpClyJw/XmUD+b80XGBnYRFo+1cLa5N349K0TyZLccbvHsedUsO32j8hJj2JkDmlzmiH/hUJzlf2cw/02J4Z8UCKrco3ndjPAmVIOHK+7EvNjfEQ5ZP0y7ovvDmLvxGX9qPCG4qAHOUedkWg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=os.amperecomputing.com; dmarc=pass action=none
+ header.from=os.amperecomputing.com; dkim=pass
+ header.d=os.amperecomputing.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741137647; x=1741742447; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=OHYZyJk9t+dccX+FpypbsuXH5wnniLUKk++ZCb3Oz18=;
-        b=dhq0i/xLN+xPsYhZcVVd3qpliCAqRJiMobRUSMtjahZN6dPIg7EN4NRPTlOOMN7HSe
-         1tOqPNvpx1zuWQaF8Oua03XQ/v916NlzhPiQtfRyOtXoUEeI4EVTzt9xe567QoMlNY+6
-         PrwOH9fuA30/eS35dY9BEIn+UrN1N1ialPRN69oa/OCBX7X4WoL8joS0bSXnNM3G4Ifv
-         Gnhiw4Vs+mAYaOye6op90SqzGMHA6S1HkOJl0i/AhvGHazSH84iwOt50yRPDexGu6pAA
-         4+7aOHgQZ626Lnp4/s198CooS/gMsr7N3nv+doVo8MeupupFw8OQbkYjGrUrB70ecPZd
-         5BKw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741137647; x=1741742447;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=OHYZyJk9t+dccX+FpypbsuXH5wnniLUKk++ZCb3Oz18=;
-        b=dGha9FJzQhAyVTCmUuIcw5dNdmYzH1cbfBpQ+HxLqze++yPMaybHcF0OqNvbNIr3uk
-         9sPHJueUyWK/0ySn2T9klXFacIzLKFhaL5XTtNRYuBEZAgv0mumz7OOSGqcoh3a9vPvV
-         M/DH0WxWkjPpTiZxK8rB68KVqt4ANtmt6w6C/kFsNhscTUu15bnBc//85P62fuo7NS9N
-         sPcDotLOZ5xA/3PsqykEjGjXL0vEsIBz6c+mtk0ZeL0tS9ysQQHy6Tj8XhwUB571D7ro
-         NUcPJ47M8AUqKbj/Uy9A7cFKmDs7s+TP1vu2OoaUScf1R8K4POJDjE4fDvsVdajDkOzD
-         Nqlg==
-X-Forwarded-Encrypted: i=1; AJvYcCUxt1jnbJ/z3l51hYcoCjFcP3IrQDXHAUFBwzrRiu+1PWvtpha4YkIJ1s67asP6WbY6vKlSYyskInZLSceRArY51JAC@vger.kernel.org, AJvYcCV3eaYKI2RRbELMbRqR57l3yKuDrZKYuiTOiAXSCdsUtN68kr9qB9NBi9wfdXFlRJ8fqMOLOwLE@vger.kernel.org, AJvYcCVJe4coz8a/kwiyCstaIvutZgg6iKedzV7hETjD5xsIG9fhEJ9JrVp1P7GCvXUSRjKQYHcOmmxDa2J5K1Xh@vger.kernel.org, AJvYcCXHziYkDdC27rheADELsYR8PKsq5kz1m5nkX4yaFALCWUJBcfh/eYQeDeLKw/ZosyTniqo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyB+KIdiQzMbWgOHr5Y6DeGTZxomMRjW32sQkGg14g66RXJIA5y
-	RTMX+w68JayjX+IXqPrmCNEUp28expJ7qU1WcdtymXHmO9gfx/DOJfQHvM5lx/wMuECQSREs1Sj
-	AmKZEp1U/qRxzLqun6iAyzEw9FOE=
-X-Gm-Gg: ASbGncuwbqhZnNl2Fx/rymm2xASjcIYqjdXBxD4f1T5zmY0XB9u5p+FfTJBFzVog/rN
-	u0NPLp8KhIQX/dwpPu/xxKs+nlhtc3PYPXci6ZTPN/vmrzbFS6jkAvg3+9QnffIIJAC1oINCGND
-	HT1iPK/hGYSQBlwlymQNx0HmNPcA==
-X-Google-Smtp-Source: AGHT+IEUFgZnl6Hm/lrUNqrNCPW/Rgad0I4A7NRpQso6+OmPGRY6t9+y0nrp+PzU9oYzztzRMxurMDXN8Jy0BacmWdM=
-X-Received: by 2002:a05:690c:3690:b0:6fb:a376:3848 with SMTP id
- 00721157ae682-6fda315fdfbmr21998337b3.34.1741137647462; Tue, 04 Mar 2025
- 17:20:47 -0800 (PST)
+ d=os.amperecomputing.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=yCeFzyriY26j96qACozwoZVBtZVGdvcE2m48fXxpZME=;
+ b=dulM4BfMkgSEUEORqvhABRF2wk5CVQKoBZHZhfWrJp0grCXdPiDsGovWGRVYUtCd5T5QlzAq6Z9jr0waWPUJ34zm80gB1kzXenvvqXt6OZghneWdutbt9U4fQclJtulbvT668J9LUgyjg2u+1p57mtpdcaIVFMzOuODVGbSsj68=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=os.amperecomputing.com;
+Received: from SN7PR01MB7969.prod.exchangelabs.com (2603:10b6:806:34a::19) by
+ DS1PR01MB8717.prod.exchangelabs.com (2603:10b6:8:214::12) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8511.16; Wed, 5 Mar 2025 01:56:00 +0000
+Received: from SN7PR01MB7969.prod.exchangelabs.com
+ ([fe80::5ca3:a44a:c242:d9eb]) by SN7PR01MB7969.prod.exchangelabs.com
+ ([fe80::5ca3:a44a:c242:d9eb%3]) with mapi id 15.20.8489.025; Wed, 5 Mar 2025
+ 01:56:00 +0000
+From: Huang Shijie <shijie@os.amperecomputing.com>
+To: rostedt@goodmis.org
+Cc: patches@amperecomputing.com,
+	cl@linux.com,
+	yang@os.amperecomputing.com,
+	mathieu.desnoyers@efficios.com,
+	peterz@infradead.org,
+	jpoimboe@kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	Huang Shijie <shijie@os.amperecomputing.com>
+Subject: [PATCH resend ] tracepoint: Print the function symbol when tracepoint_debug is set
+Date: Wed,  5 Mar 2025 09:55:05 +0800
+Message-Id: <20250305015505.14493-1-shijie@os.amperecomputing.com>
+X-Mailer: git-send-email 2.40.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SG2PR04CA0168.apcprd04.prod.outlook.com (2603:1096:4::30)
+ To SN7PR01MB7969.prod.exchangelabs.com (2603:10b6:806:34a::19)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250303132837.498938-1-dongml2@chinatelecom.cn>
- <20250303132837.498938-2-dongml2@chinatelecom.cn> <20250303165454.GB11590@noisy.programming.kicks-ass.net>
- <CADxym3aVtKx_mh7aZyZfk27gEiA_TX6VSAvtK+YDNBtuk_HigA@mail.gmail.com>
- <20250304053853.GA7099@noisy.programming.kicks-ass.net> <20250304061635.GA29480@noisy.programming.kicks-ass.net>
- <CADxym3bS_6jpGC3vLAAyD20GsR+QZofQw0_GgKT8nN3c-HqG-g@mail.gmail.com>
- <20250304094220.GC11590@noisy.programming.kicks-ass.net> <6F9EF5C3-4CAE-4C5E-B70E-F73462AC7CA0@zytor.com>
-In-Reply-To: <6F9EF5C3-4CAE-4C5E-B70E-F73462AC7CA0@zytor.com>
-From: Menglong Dong <menglong8.dong@gmail.com>
-Date: Wed, 5 Mar 2025 09:19:09 +0800
-X-Gm-Features: AQ5f1JovIrYFizMaqP4MsodnwT5N7qb6QoTLb6VyR_6OCJq8SQkboYm5nSKxxpw
-Message-ID: <CADxym3busXZKtX=+FY_xnYw7e1CKp5AiHSasZGjVJTdeCZao-g@mail.gmail.com>
-Subject: Re: [PATCH v4 1/4] x86/ibt: factor out cfi and fineibt offset
-To: "H. Peter Anvin" <hpa@zytor.com>, Peter Zijlstra <peterz@infradead.org>
-Cc: rostedt@goodmis.org, mark.rutland@arm.com, alexei.starovoitov@gmail.com, 
-	catalin.marinas@arm.com, will@kernel.org, mhiramat@kernel.org, 
-	tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, 
-	dave.hansen@linux.intel.com, x86@kernel.org, ast@kernel.org, 
-	daniel@iogearbox.net, andrii@kernel.org, martin.lau@linux.dev, 
-	eddyz87@gmail.com, yonghong.song@linux.dev, john.fastabend@gmail.com, 
-	kpsingh@kernel.org, sdf@fomichev.me, jolsa@kernel.org, davem@davemloft.net, 
-	dsahern@kernel.org, mathieu.desnoyers@efficios.com, nathan@kernel.org, 
-	nick.desaulniers+lkml@gmail.com, morbo@google.com, samitolvanen@google.com, 
-	kees@kernel.org, dongml2@chinatelecom.cn, akpm@linux-foundation.org, 
-	riel@surriel.com, rppt@kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	bpf@vger.kernel.org, netdev@vger.kernel.org, llvm@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SN7PR01MB7969:EE_|DS1PR01MB8717:EE_
+X-MS-Office365-Filtering-Correlation-Id: 9937dd4a-413a-4fb2-8f7f-08dd5b88e085
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|366016|1800799024|52116014|376014|38350700014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?z0h5Skksy2UGh3fllDUafkJ5RvHDQVVA3gYkh3g3JLpEfNlAiYO6TzNXBiOP?=
+ =?us-ascii?Q?DFrluucq8/R3f1ZOg/zdMTPoHlC9Ht9lmUMF1hk4itY9kvYkmADqOsiNWQuw?=
+ =?us-ascii?Q?J/eNodlgl5QUXv7pDDDEggGz8jfuUe9zPMsRsNPI1SNiV2+dCeOaHDWN+Z+J?=
+ =?us-ascii?Q?kbw9bmVD4aISRE7SYq4ETgvXuzUkOGM7Bs8wHtWvqTSohoyfV7vCTsuXUxFA?=
+ =?us-ascii?Q?H8JwQvw6GIsjIZWFcBtAz0itRWp+O8PjWKun1hx0rilOFt1pLMf6xq2+KjQr?=
+ =?us-ascii?Q?QaU2q4Bjeeay7gGiLVuhkSiHUobpHCRFUmmODqzpVxtHV8Q6uNoAQiF0KL6Q?=
+ =?us-ascii?Q?RMuNFXX7s9tSLCuDpB6h4G+ojYT0D4AyZovu1jtUf85NYkvA1r8JJH4UFdro?=
+ =?us-ascii?Q?C1BEFUPSij9MM07f1VRScJUHGs9LHTZP2NDyc1yw8FHfMkgkQi1A0szhtRHN?=
+ =?us-ascii?Q?8gcAkhZ1/ueh3+MLzH6qYg/FLIHFGdtPVQKMUoA+ooXWxVmRVCMbY/vG1qsc?=
+ =?us-ascii?Q?zs5fkUFO8V5v5y5gxlriaAyRqD0NAWY9b0t6verDCSceSylhE6sDey8qdbOw?=
+ =?us-ascii?Q?DgDBEDnhfI1KCpjqKS64a9f1i6CRc3XuoL6mX4m1Pu4nnCdIzDel82Nelpw5?=
+ =?us-ascii?Q?y8zvHlkBGzdR5I6uuT1VBygp8L+Lp1Tvx4vxa7GatqtLv8Y1QuyT/LWcRmFP?=
+ =?us-ascii?Q?VNdlBM9Kuy4TbKFomUrtmNHR7HrK0oFH/VkyWxad27S2hkdjVtL8/wM8W5JO?=
+ =?us-ascii?Q?TLTsX5iltlICJgT4pRBcKr7Dq72CTEhcyk8qoH7n3AsHZwC5xBnUJPPMqfzU?=
+ =?us-ascii?Q?ygBS89QeEr+nnkU8wbZEFw8rctk5bGO9BCzSq4fT2GOD71tyUSS1/utK4Moh?=
+ =?us-ascii?Q?AfMnM+WdlmdsSnQYwC0r6Nu2Vf6283I+rCfgF0ogidxW+b6W7qwDdCUh++kp?=
+ =?us-ascii?Q?PsjZV+PgcLZTbLAvVw5MwawzAUZuIIWnFR3kxalu0ZV8ORs5CD8BoMDjYIFc?=
+ =?us-ascii?Q?xX/AHshiG7I/WlESQTzdO8PLePmaqqrdn92raCWatmgls1BJwMy08Xe2AhNx?=
+ =?us-ascii?Q?NvuXMnHfXoN0JVeEU9BZPMQwX/wt2Er8atSEcCALDqKCXv9vThl/LabkEp87?=
+ =?us-ascii?Q?KzmAtO9njzYDfgqzq0wGb4rO9XNkojET/eeVWmGEXwWo+VkycA5ilQAZpuSa?=
+ =?us-ascii?Q?bBDdSMsyoZ2Jb05ph7EAiIeWhQ22vDFl5G6IwX4yZwM/MaDkMi5NX8F1hCG+?=
+ =?us-ascii?Q?M8WYzb3pHgbL1mMdLApX5HW547xxT5TjaQr2S3sEN/XJnaGsMsyE4TQUmzTE?=
+ =?us-ascii?Q?Q+ZSjihNKG8jPAqglUUO/b4krYLOmVyGlsb0SMKuAYmb70LEgGDgdFnNNpuy?=
+ =?us-ascii?Q?ruetYtrIOEduVKiPaaa4CMSY3rlb/h9y6yfFsjKGJeSlbg2Yq8UjuODew9pW?=
+ =?us-ascii?Q?59zyNblLi9BFmiLNf8ldHPRVMFI3X6EZ?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN7PR01MB7969.prod.exchangelabs.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(52116014)(376014)(38350700014);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?4AxXkz/EvisC1sLhA66/cdQok3zsYMIfxKaaE3j0yoMypg3nBZCkr2fV6UD7?=
+ =?us-ascii?Q?iBFojvLJsvDeBYDm5/vgREzShAA2+x8ZCx2jvZQrDRwVz6leZ/fkS05j10Bm?=
+ =?us-ascii?Q?9PgM3SGs5nWylJ0BhuTQl3VjppwyFhDS6msosL3P+eD4X/99JTRfgF2ScDNj?=
+ =?us-ascii?Q?c5F1XB3zF1IxHHCLNSP+f9HIf1+pX63cBXM7REiiQ0yM8Gv9+LgHaZsnht6q?=
+ =?us-ascii?Q?SqCFntqhUHI1UyTkfX3Dg/fmKn5JIQYaGtOOX9DExY4/2JqfbLEF+sEY4CIp?=
+ =?us-ascii?Q?2a/1PQtnDYpcjhI7uTgfceleCjahC9oaPoCbRqSdCbZ7JX+EkoBET6Ny+swx?=
+ =?us-ascii?Q?RWs+LS1zU+5riqvDJjzjr3r5wt6aracchLHGiYkXfVfNIpLVsjiM/ua7J8S5?=
+ =?us-ascii?Q?ZwqECCxPUcdsrKRr0P+6sP85lkf/ViTRlvPVgt3MZLV5w3+gPz4Y5YCAfyMY?=
+ =?us-ascii?Q?KwRtiyNFTmuDp44dB4SbXTMroQOjpLTS4LGhZ/iWDJ7S8yIn544b9TUTShfa?=
+ =?us-ascii?Q?XjxkopyWUb5CAJSu3EOjZv9sQP9KAdYGU8qSRoHELdr3kUE3n494xadv0uwE?=
+ =?us-ascii?Q?j8dF+RuD7dQKaFGRTv9fHs1lI8ur5KSUn8eYuRE4AWbTtPQZrf/9nVEySMgm?=
+ =?us-ascii?Q?IXan6NwCOHpsIdoW0nG3X1+FQVfzge7Ec/TxEs4dj1uYe9Y85zN/d6EfBRXH?=
+ =?us-ascii?Q?SPSXv4a19sycFiG2EsVE7QSTHgmnnPNXGSMlNbCgizQpe5BrYRk7EcGyJk5Y?=
+ =?us-ascii?Q?70KUQk83vnARMkPpn540WTGzdspRN9n0n+/8IF01ThYX22zURX7TuYqQL0aN?=
+ =?us-ascii?Q?TP44YPOuvlcTwYMEP63TPZW8OrD1h/Pb2uxiNyjrlBUI5Vqw/jURRfDkU1mN?=
+ =?us-ascii?Q?/Owzb3BnO8KofRiVBgsfwYgVX/k3eaJ5kdohVfnubCN4jsIW4JnvI+h8Yakb?=
+ =?us-ascii?Q?7uLQiryJXxep0C0rwN+GxUYJqUTD/NqEsCkPp33itTz3MAOhHjKTUo2Yvilw?=
+ =?us-ascii?Q?f3jTbMeW69Sq35gWeV54hUsOnhhC9lCIcOdH9aWIxmpa5mGCvfre+nbvR6X6?=
+ =?us-ascii?Q?umEtGvSygkTtyEDprBUNBk4Ix2lFto5r/qxdmGAD8jkWDGMtp8m2b78vlcbg?=
+ =?us-ascii?Q?1HiHZ5g87jvp8ZC+iE9p7+/vuF+mxW7GePnSdEHjZdmh5XM2Q1N1sboBqKRw?=
+ =?us-ascii?Q?7triAGo5hm+tOam42zTCUQ2D1x9kpji5IFAN2SOw9N66jMThyPrnqkmCLIzS?=
+ =?us-ascii?Q?7HzGmMhtmBXLZ+1cpR3uKMvE7FOyLJiAaaEkKAqHJHhIK1+jAG9/HffvuYI1?=
+ =?us-ascii?Q?Xw9HtxG50Uz580o+SfzAavOPOEPW8q8r43HuE0bLN/YICD3RwuWmo7xndJzZ?=
+ =?us-ascii?Q?tQYtxsQ4Xmh8VBO3561kswRKsjMDNBN089GQav8MJcT0vc8l0SL/DVQhzXZE?=
+ =?us-ascii?Q?S5k8G4WYGqJM3oYhvC/Q1Ilw5t+JIE/5XHbmeZgNbgJ49ONUx/lNi3mE85aY?=
+ =?us-ascii?Q?ddWlTGHbCMTBq3VkelLvA7Bob4xQsvhkknASM3OP6cmFyz29KsyRTd+95ki2?=
+ =?us-ascii?Q?V99X2OfH/JHXo9wsKpL+CaMSe8AoWLyAPsLUo6+M/xjGDccubw3NmrHvrQcm?=
+ =?us-ascii?Q?L1Rv3Emnr9m99fNFHFhCZ5Q=3D?=
+X-OriginatorOrg: os.amperecomputing.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9937dd4a-413a-4fb2-8f7f-08dd5b88e085
+X-MS-Exchange-CrossTenant-AuthSource: SN7PR01MB7969.prod.exchangelabs.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Mar 2025 01:56:00.2970
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3bc2b170-fd94-476d-b0ce-4229bdc904a7
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 5hrw9cZn3sk4RlVUCyqDGRIwjKeDajqrhHemQZoVXGn2cQhXFM180RdfHLnoekU+9OJklWf+RkyQxgUjBl2SK0R/TuvT6LcXi17Q3S2px3z/CAcN5fMx43w6dfsrwJ56
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS1PR01MB8717
 
-On Tue, Mar 4, 2025 at 10:53=E2=80=AFPM H. Peter Anvin <hpa@zytor.com> wrot=
-e:
->
-> On March 4, 2025 1:42:20 AM PST, Peter Zijlstra <peterz@infradead.org> wr=
-ote:
-> >On Tue, Mar 04, 2025 at 03:47:45PM +0800, Menglong Dong wrote:
-> >> We don't have to select FUNCTION_ALIGNMENT_32B, so the
-> >> worst case is to increase ~2.2%.
-> >>
-> >> What do you think?
-> >
-> >Well, since I don't understand what you need this for at all, I'm firmly
-> >on the side of not doing this.
-> >
-> >What actual problem is being solved with this meta data nonsense? Why is
-> >it worth blowing up our I$ footprint over.
-> >
-> >Also note, that if you're going to be explaining this, start from
-> >scratch, as I have absolutely 0 clues about BPF and such.
->
-> I would appreciate such information as well. The idea seems dubious on th=
-e surface.
+When tracepoint_debug is set, we may get the output in kernel log:
+     [  380.013843] Probe 0 : 00000000f0d68cda
 
-Ok, let me explain it from the beginning. (My English is not good,
-but I'll try to describe it as clear as possible :/)
+It is not readable, so change to print the function symbol.
+After this patch, the output may becomes:
+     [   54.930567] Probe 0 : perf_trace_sched_wakeup_template
 
-Many BPF program types need to depend on the BPF trampoline,
-such as BPF_PROG_TYPE_TRACING, BPF_PROG_TYPE_EXT,
-BPF_PROG_TYPE_LSM, etc. BPF trampoline is a bridge between
-the kernel (or bpf) function and BPF program, and it acts just like the
-trampoline that ftrace uses.
+Reviewed-by: Christoph Lameter <cl@linux.com>
+Signed-off-by: Huang Shijie <shijie@os.amperecomputing.com>
+---
+ kernel/tracepoint.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Generally speaking, it is used to hook a function, just like what ftrace
-do:
+diff --git a/kernel/tracepoint.c b/kernel/tracepoint.c
+index 1848ce7e2976..82bef4b9400a 100644
+--- a/kernel/tracepoint.c
++++ b/kernel/tracepoint.c
+@@ -127,7 +127,7 @@ static void debug_print_probes(struct tracepoint_func *funcs)
+ 		return;
+ 
+ 	for (i = 0; funcs[i].func; i++)
+-		printk(KERN_DEBUG "Probe %d : %p\n", i, funcs[i].func);
++		printk(KERN_DEBUG "Probe %d : %ps\n", i, funcs[i].func);
+ }
+ 
+ static struct tracepoint_func *
+-- 
+2.40.1
 
-foo:
-    endbr
-    nop5  -->  call trampoline_foo
-    xxxx
-
-In short, the trampoline_foo can be this:
-
-trampoline_foo:
-    prepare a array and store the args of foo to the array
-    call fentry_bpf1
-    call fentry_bpf2
-    ......
-    call foo+4 (origin call)
-    save the return value of foo
-    call fexit_bpf1 (this bpf can get the return value of foo)
-    call fexit_bpf2
-    .......
-    return to the caller of foo
-
-We can see that the trampoline_foo can be only used for
-the function foo, as different kernel function can be attached
-different BPF programs, and have different argument count,
-etc. Therefore, we have to create 1000 BPF trampolines if
-we want to attach a BPF program to 1000 kernel functions.
-
-The creation of the BPF trampoline is expensive. According to
-my testing, It will spend more than 1 second to create 100 bpf
-trampoline. What's more, it consumes more memory.
-
-If we have the per-function metadata supporting, then we can
-create a global BPF trampoline, like this:
-
-trampoline_global:
-    prepare a array and store the args of foo to the array
-    get the metadata by the ip
-    call metadata.fentry_bpf1
-    call metadata.fentry_bpf2
-    ....
-    call foo+4 (origin call)
-    save the return value of foo
-    call metadata.fexit_bpf1 (this bpf can get the return value of foo)
-    call metadata.fexit_bpf2
-    .......
-    return to the caller of foo
-
-(The metadata holds more information for the global trampoline than
-I described.)
-
-Then, we don't need to create a trampoline for every kernel function
-anymore.
-
-Another beneficiary can be ftrace. For now, all the kernel functions that
-are enabled by dynamic ftrace will be added to a filter hash if there are
-more than one callbacks. And hash lookup will happen when the traced
-functions are called, which has an impact on the performance, see
-__ftrace_ops_list_func() -> ftrace_ops_test(). With the per-function
-metadata supporting, we can store the information that if the callback is
-enabled on the kernel function to the metadata, which can make the performa=
-nce
-much better.
-
-The per-function metadata storage is a basic function, and I think there
-may be other functions that can use it for better performance in the featur=
-e
-too.
-
-(Hope that I'm describing it clearly :/)
-
-Thanks!
-Menglong Dong
