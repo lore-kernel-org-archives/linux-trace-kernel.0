@@ -1,131 +1,195 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f194.google.com (mail-yw1-f194.google.com [209.85.128.194])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6269927933B;
-	Tue,  4 Mar 2025 23:15:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0CC613D8B2;
+	Wed,  5 Mar 2025 01:20:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741130123; cv=none; b=UTLuG4cYowytoR/lFBHFDU/RJoLE4r/ZzGuk75r5DrjbAXlZUHGLw/gGvW28uMp30oo9eoUKfIrVIJKNYBpbluLSxmKBucpCFdoOS4FLejHrqTqfZyQLIQTHYOcCVCBJmYHso11DGSVWK2tpnf7fyTSSUL5VKKi79BzoEpXYi9s=
+	t=1741137650; cv=none; b=ThnHym03FQx4Ej82dnjiM/zeXU5ko0b6PYAb4bVxpbdu8zswuWUA4g9R1QGA70eEYXlWrMAQYhHQP1JmvipDJrXLszEo+YoW2HgNuuRgRJW4XlWFqxculYXiVLmt1Vq9iSvNtouUTuRH3DM6a6OZLB7X5NrrBQeiV24KQEr9ZE4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741130123; c=relaxed/simple;
-	bh=+QANBucFIezUoXX7P8kYb2sbC27r0CAnf9rNssJhRm8=;
-	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=glULuwBFJfNPGixmY2d6hRY0Uv49nMVJY0Z05Pk4x44/QrI5Y9frbAtURH362JCoW+vSHErgPONV/DbPDL+zLD8F8QlZpvvXi9RIYvJR6pHQufOliHAp7qxmSikE8eg9b2eYu/0BsNl1IVhOr0MFay9DyzytPkDDZuozkLTNAFc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D5F07C4CEE8;
-	Tue,  4 Mar 2025 23:15:22 +0000 (UTC)
-Received: from rostedt by gandalf with local (Exim 4.98)
-	(envelope-from <rostedt@goodmis.org>)
-	id 1tpbUo-0000000CSau-39dy;
-	Tue, 04 Mar 2025 18:16:18 -0500
-Message-ID: <20250304231618.602571527@goodmis.org>
-User-Agent: quilt/0.68
-Date: Tue, 04 Mar 2025 18:15:49 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Andrew Morton <akpm@linux-foundation.org>
-Subject: [PATCH 4/4] tracing: Adjust addresses for printing out fields
-References: <20250304231545.708806702@goodmis.org>
+	s=arc-20240116; t=1741137650; c=relaxed/simple;
+	bh=xqfh+/z+RQyzw3ZjPbcTSHPRwuHVteqzMjyMDRsSiD8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=NYMOxTpLIB/WfEeNCMCKaF7AuBoUrpgfm1U02Gph19JzzTWDw9UCyrLzrfJeQcEXJBTCL1PM7uMNSmvoFPgGfxT7hivchh2jM1ne1egCXEQ92Droxct5T/4rk9MVj0YuzesOWSbNGshYjD0BlT5Yj2DOGi34yWZvwVtmNxGLE4Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dhq0i/xL; arc=none smtp.client-ip=209.85.128.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dhq0i/xL"
+Received: by mail-yw1-f194.google.com with SMTP id 00721157ae682-6ef7c9e9592so48173097b3.1;
+        Tue, 04 Mar 2025 17:20:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1741137647; x=1741742447; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=OHYZyJk9t+dccX+FpypbsuXH5wnniLUKk++ZCb3Oz18=;
+        b=dhq0i/xLN+xPsYhZcVVd3qpliCAqRJiMobRUSMtjahZN6dPIg7EN4NRPTlOOMN7HSe
+         1tOqPNvpx1zuWQaF8Oua03XQ/v916NlzhPiQtfRyOtXoUEeI4EVTzt9xe567QoMlNY+6
+         PrwOH9fuA30/eS35dY9BEIn+UrN1N1ialPRN69oa/OCBX7X4WoL8joS0bSXnNM3G4Ifv
+         Gnhiw4Vs+mAYaOye6op90SqzGMHA6S1HkOJl0i/AhvGHazSH84iwOt50yRPDexGu6pAA
+         4+7aOHgQZ626Lnp4/s198CooS/gMsr7N3nv+doVo8MeupupFw8OQbkYjGrUrB70ecPZd
+         5BKw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741137647; x=1741742447;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=OHYZyJk9t+dccX+FpypbsuXH5wnniLUKk++ZCb3Oz18=;
+        b=dGha9FJzQhAyVTCmUuIcw5dNdmYzH1cbfBpQ+HxLqze++yPMaybHcF0OqNvbNIr3uk
+         9sPHJueUyWK/0ySn2T9klXFacIzLKFhaL5XTtNRYuBEZAgv0mumz7OOSGqcoh3a9vPvV
+         M/DH0WxWkjPpTiZxK8rB68KVqt4ANtmt6w6C/kFsNhscTUu15bnBc//85P62fuo7NS9N
+         sPcDotLOZ5xA/3PsqykEjGjXL0vEsIBz6c+mtk0ZeL0tS9ysQQHy6Tj8XhwUB571D7ro
+         NUcPJ47M8AUqKbj/Uy9A7cFKmDs7s+TP1vu2OoaUScf1R8K4POJDjE4fDvsVdajDkOzD
+         Nqlg==
+X-Forwarded-Encrypted: i=1; AJvYcCUxt1jnbJ/z3l51hYcoCjFcP3IrQDXHAUFBwzrRiu+1PWvtpha4YkIJ1s67asP6WbY6vKlSYyskInZLSceRArY51JAC@vger.kernel.org, AJvYcCV3eaYKI2RRbELMbRqR57l3yKuDrZKYuiTOiAXSCdsUtN68kr9qB9NBi9wfdXFlRJ8fqMOLOwLE@vger.kernel.org, AJvYcCVJe4coz8a/kwiyCstaIvutZgg6iKedzV7hETjD5xsIG9fhEJ9JrVp1P7GCvXUSRjKQYHcOmmxDa2J5K1Xh@vger.kernel.org, AJvYcCXHziYkDdC27rheADELsYR8PKsq5kz1m5nkX4yaFALCWUJBcfh/eYQeDeLKw/ZosyTniqo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyB+KIdiQzMbWgOHr5Y6DeGTZxomMRjW32sQkGg14g66RXJIA5y
+	RTMX+w68JayjX+IXqPrmCNEUp28expJ7qU1WcdtymXHmO9gfx/DOJfQHvM5lx/wMuECQSREs1Sj
+	AmKZEp1U/qRxzLqun6iAyzEw9FOE=
+X-Gm-Gg: ASbGncuwbqhZnNl2Fx/rymm2xASjcIYqjdXBxD4f1T5zmY0XB9u5p+FfTJBFzVog/rN
+	u0NPLp8KhIQX/dwpPu/xxKs+nlhtc3PYPXci6ZTPN/vmrzbFS6jkAvg3+9QnffIIJAC1oINCGND
+	HT1iPK/hGYSQBlwlymQNx0HmNPcA==
+X-Google-Smtp-Source: AGHT+IEUFgZnl6Hm/lrUNqrNCPW/Rgad0I4A7NRpQso6+OmPGRY6t9+y0nrp+PzU9oYzztzRMxurMDXN8Jy0BacmWdM=
+X-Received: by 2002:a05:690c:3690:b0:6fb:a376:3848 with SMTP id
+ 00721157ae682-6fda315fdfbmr21998337b3.34.1741137647462; Tue, 04 Mar 2025
+ 17:20:47 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+References: <20250303132837.498938-1-dongml2@chinatelecom.cn>
+ <20250303132837.498938-2-dongml2@chinatelecom.cn> <20250303165454.GB11590@noisy.programming.kicks-ass.net>
+ <CADxym3aVtKx_mh7aZyZfk27gEiA_TX6VSAvtK+YDNBtuk_HigA@mail.gmail.com>
+ <20250304053853.GA7099@noisy.programming.kicks-ass.net> <20250304061635.GA29480@noisy.programming.kicks-ass.net>
+ <CADxym3bS_6jpGC3vLAAyD20GsR+QZofQw0_GgKT8nN3c-HqG-g@mail.gmail.com>
+ <20250304094220.GC11590@noisy.programming.kicks-ass.net> <6F9EF5C3-4CAE-4C5E-B70E-F73462AC7CA0@zytor.com>
+In-Reply-To: <6F9EF5C3-4CAE-4C5E-B70E-F73462AC7CA0@zytor.com>
+From: Menglong Dong <menglong8.dong@gmail.com>
+Date: Wed, 5 Mar 2025 09:19:09 +0800
+X-Gm-Features: AQ5f1JovIrYFizMaqP4MsodnwT5N7qb6QoTLb6VyR_6OCJq8SQkboYm5nSKxxpw
+Message-ID: <CADxym3busXZKtX=+FY_xnYw7e1CKp5AiHSasZGjVJTdeCZao-g@mail.gmail.com>
+Subject: Re: [PATCH v4 1/4] x86/ibt: factor out cfi and fineibt offset
+To: "H. Peter Anvin" <hpa@zytor.com>, Peter Zijlstra <peterz@infradead.org>
+Cc: rostedt@goodmis.org, mark.rutland@arm.com, alexei.starovoitov@gmail.com, 
+	catalin.marinas@arm.com, will@kernel.org, mhiramat@kernel.org, 
+	tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, 
+	dave.hansen@linux.intel.com, x86@kernel.org, ast@kernel.org, 
+	daniel@iogearbox.net, andrii@kernel.org, martin.lau@linux.dev, 
+	eddyz87@gmail.com, yonghong.song@linux.dev, john.fastabend@gmail.com, 
+	kpsingh@kernel.org, sdf@fomichev.me, jolsa@kernel.org, davem@davemloft.net, 
+	dsahern@kernel.org, mathieu.desnoyers@efficios.com, nathan@kernel.org, 
+	nick.desaulniers+lkml@gmail.com, morbo@google.com, samitolvanen@google.com, 
+	kees@kernel.org, dongml2@chinatelecom.cn, akpm@linux-foundation.org, 
+	riel@surriel.com, rppt@kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	bpf@vger.kernel.org, netdev@vger.kernel.org, llvm@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Steven Rostedt <rostedt@goodmis.org>
+On Tue, Mar 4, 2025 at 10:53=E2=80=AFPM H. Peter Anvin <hpa@zytor.com> wrot=
+e:
+>
+> On March 4, 2025 1:42:20 AM PST, Peter Zijlstra <peterz@infradead.org> wr=
+ote:
+> >On Tue, Mar 04, 2025 at 03:47:45PM +0800, Menglong Dong wrote:
+> >> We don't have to select FUNCTION_ALIGNMENT_32B, so the
+> >> worst case is to increase ~2.2%.
+> >>
+> >> What do you think?
+> >
+> >Well, since I don't understand what you need this for at all, I'm firmly
+> >on the side of not doing this.
+> >
+> >What actual problem is being solved with this meta data nonsense? Why is
+> >it worth blowing up our I$ footprint over.
+> >
+> >Also note, that if you're going to be explaining this, start from
+> >scratch, as I have absolutely 0 clues about BPF and such.
+>
+> I would appreciate such information as well. The idea seems dubious on th=
+e surface.
 
-Add adjustments to the values of the "fields" output if the buffer is a
-persistent ring buffer to adjust the addresses to both the kernel core and
-kernel modules if they match a module in the persistent memory and that
-module is also loaded.
+Ok, let me explain it from the beginning. (My English is not good,
+but I'll try to describe it as clear as possible :/)
 
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
- kernel/trace/trace_output.c | 38 ++++++++++++++++++++-----------------
- 1 file changed, 21 insertions(+), 17 deletions(-)
+Many BPF program types need to depend on the BPF trampoline,
+such as BPF_PROG_TYPE_TRACING, BPF_PROG_TYPE_EXT,
+BPF_PROG_TYPE_LSM, etc. BPF trampoline is a bridge between
+the kernel (or bpf) function and BPF program, and it acts just like the
+trampoline that ftrace uses.
 
-diff --git a/kernel/trace/trace_output.c b/kernel/trace/trace_output.c
-index 3a43128e604a..aa716cf69caa 100644
---- a/kernel/trace/trace_output.c
-+++ b/kernel/trace/trace_output.c
-@@ -857,6 +857,9 @@ static void print_fields(struct trace_iterator *iter, struct trace_event_call *c
- 			 struct list_head *head)
- {
- 	struct ftrace_event_field *field;
-+	struct trace_array *tr = iter->tr;
-+	unsigned long long laddr;
-+	unsigned long addr;
- 	int offset;
- 	int len;
- 	int ret;
-@@ -893,8 +896,8 @@ static void print_fields(struct trace_iterator *iter, struct trace_event_call *c
- 		case FILTER_PTR_STRING:
- 			if (!iter->fmt_size)
- 				trace_iter_expand_format(iter);
--			pos = *(void **)pos;
--			ret = strncpy_from_kernel_nofault(iter->fmt, pos,
-+			addr = trace_adjust_address(tr, *(unsigned long *)pos);
-+			ret = strncpy_from_kernel_nofault(iter->fmt, (void *)addr,
- 							  iter->fmt_size);
- 			if (ret < 0)
- 				trace_seq_printf(&iter->seq, "(0x%px)", pos);
-@@ -903,8 +906,8 @@ static void print_fields(struct trace_iterator *iter, struct trace_event_call *c
- 						 pos, iter->fmt);
- 			break;
- 		case FILTER_TRACE_FN:
--			pos = *(void **)pos;
--			trace_seq_printf(&iter->seq, "%pS", pos);
-+			addr = trace_adjust_address(tr, *(unsigned long *)pos);
-+			trace_seq_printf(&iter->seq, "%pS", (void *)addr);
- 			break;
- 		case FILTER_CPU:
- 		case FILTER_OTHER:
-@@ -934,24 +937,25 @@ static void print_fields(struct trace_iterator *iter, struct trace_event_call *c
- 					break;
- 				}
- 
--				if (sizeof(long) == 4)
-+				addr = *(unsigned int *)pos;
-+				if (sizeof(long) == 4) {
-+					addr = trace_adjust_address(tr, addr);
- 					trace_seq_printf(&iter->seq, "%pS (%d)",
--							 *(void **)pos,
--							 *(unsigned int *)pos);
--				else
-+							 (void *)addr, (int)addr);
-+				} else {
- 					trace_seq_printf(&iter->seq, "0x%x (%d)",
--							 *(unsigned int *)pos,
--							 *(unsigned int *)pos);
-+							 (unsigned int)addr, (int)addr);
-+				}
- 				break;
- 			case 8:
--				if (sizeof(long) == 8)
-+				laddr = *(unsigned long long *)pos;
-+				if (sizeof(long) == 8) {
-+					laddr = trace_adjust_address(tr, (unsigned long)laddr);
- 					trace_seq_printf(&iter->seq, "%pS (%d)",
--							 *(void **)pos,
--							 *(unsigned long long *)pos);
--				else
--					trace_seq_printf(&iter->seq, "0x%llx (%lld)",
--							 *(unsigned long long *)pos,
--							 *(unsigned long long *)pos);
-+							 (void *)laddr, laddr);
-+				} else {
-+					trace_seq_printf(&iter->seq, "0x%llx (%lld)", laddr, laddr);
-+				}
- 				break;
- 			default:
- 				trace_seq_puts(&iter->seq, "<INVALID-SIZE>");
--- 
-2.47.2
+Generally speaking, it is used to hook a function, just like what ftrace
+do:
 
+foo:
+    endbr
+    nop5  -->  call trampoline_foo
+    xxxx
 
+In short, the trampoline_foo can be this:
+
+trampoline_foo:
+    prepare a array and store the args of foo to the array
+    call fentry_bpf1
+    call fentry_bpf2
+    ......
+    call foo+4 (origin call)
+    save the return value of foo
+    call fexit_bpf1 (this bpf can get the return value of foo)
+    call fexit_bpf2
+    .......
+    return to the caller of foo
+
+We can see that the trampoline_foo can be only used for
+the function foo, as different kernel function can be attached
+different BPF programs, and have different argument count,
+etc. Therefore, we have to create 1000 BPF trampolines if
+we want to attach a BPF program to 1000 kernel functions.
+
+The creation of the BPF trampoline is expensive. According to
+my testing, It will spend more than 1 second to create 100 bpf
+trampoline. What's more, it consumes more memory.
+
+If we have the per-function metadata supporting, then we can
+create a global BPF trampoline, like this:
+
+trampoline_global:
+    prepare a array and store the args of foo to the array
+    get the metadata by the ip
+    call metadata.fentry_bpf1
+    call metadata.fentry_bpf2
+    ....
+    call foo+4 (origin call)
+    save the return value of foo
+    call metadata.fexit_bpf1 (this bpf can get the return value of foo)
+    call metadata.fexit_bpf2
+    .......
+    return to the caller of foo
+
+(The metadata holds more information for the global trampoline than
+I described.)
+
+Then, we don't need to create a trampoline for every kernel function
+anymore.
+
+Another beneficiary can be ftrace. For now, all the kernel functions that
+are enabled by dynamic ftrace will be added to a filter hash if there are
+more than one callbacks. And hash lookup will happen when the traced
+functions are called, which has an impact on the performance, see
+__ftrace_ops_list_func() -> ftrace_ops_test(). With the per-function
+metadata supporting, we can store the information that if the callback is
+enabled on the kernel function to the metadata, which can make the performa=
+nce
+much better.
+
+The per-function metadata storage is a basic function, and I think there
+may be other functions that can use it for better performance in the featur=
+e
+too.
+
+(Hope that I'm describing it clearly :/)
+
+Thanks!
+Menglong Dong
