@@ -1,177 +1,118 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C523D24C68D;
-	Wed,  5 Mar 2025 15:02:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2531D24EF86
+	for <linux-trace-kernel@vger.kernel.org>; Wed,  5 Mar 2025 15:04:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741186937; cv=none; b=k2axe5WcxUFpBtJE3EQhSF6En6hpELACud+TGAbJ2UBcsANYLsOZz2x6bu0UWHjWc2ltj6jGD5n9ZDC1vvBvNYaMvKmIxmuV30bgmxMZodEqUlgGJ9ZuoEsqJ5EAu+EpEzf9kwVuoO1FzVkDF7l4yz4U69baD/NUSCS5OP8nXck=
+	t=1741187055; cv=none; b=cSks6fQXdHOv/2PjO557LS464MMK2Y4xcMcQQnf5hqTz0O2jsYYh5fdA0iL7aF0/RLuSDML25gzMZuzwxJDgH5Zpk7IivmqygrGW6RVIU2t9z+uhRwkyHJ4x4Tdiam5JXCpGG3AzEfqiXxk5rFoRc2jlzvp/VAFwJljB1BLo2mM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741186937; c=relaxed/simple;
-	bh=NssrDju0ex2mZCCZUgAf8PQB3BikrUlFJe7buTpCxxs=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=XU8K0jqsN8Ow1O5R7Ae+uXvHr4i7FWU4OOs9e+BZx+Z666K9KnjqHLSBmFxPCs+ISqnRT381TRhBOJ/8qoZLxhwA29mm+/QaZy9qQ7Y6haAjYa7tJsl56amMx9g+jsldGqPD+2kHK7XxI1ARLbcbmkvuPd5aLa5lLkxYx9YuAVQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 08294C4CED1;
-	Wed,  5 Mar 2025 15:02:11 +0000 (UTC)
-Date: Wed, 5 Mar 2025 10:03:06 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Menglong Dong <menglong8.dong@gmail.com>
-Cc: "H. Peter Anvin" <hpa@zytor.com>, Peter Zijlstra <peterz@infradead.org>,
- mark.rutland@arm.com, alexei.starovoitov@gmail.com,
- catalin.marinas@arm.com, will@kernel.org, mhiramat@kernel.org,
- tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
- dave.hansen@linux.intel.com, x86@kernel.org, ast@kernel.org,
- daniel@iogearbox.net, andrii@kernel.org, martin.lau@linux.dev,
- eddyz87@gmail.com, yonghong.song@linux.dev, john.fastabend@gmail.com,
- kpsingh@kernel.org, sdf@fomichev.me, jolsa@kernel.org, davem@davemloft.net,
- dsahern@kernel.org, mathieu.desnoyers@efficios.com, nathan@kernel.org,
- nick.desaulniers+lkml@gmail.com, morbo@google.com, samitolvanen@google.com,
- kees@kernel.org, dongml2@chinatelecom.cn, akpm@linux-foundation.org,
- riel@surriel.com, rppt@kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- bpf@vger.kernel.org, netdev@vger.kernel.org, llvm@lists.linux.dev
-Subject: Re: [PATCH v4 1/4] x86/ibt: factor out cfi and fineibt offset
-Message-ID: <20250305100306.4685333a@gandalf.local.home>
-In-Reply-To: <CADxym3busXZKtX=+FY_xnYw7e1CKp5AiHSasZGjVJTdeCZao-g@mail.gmail.com>
-References: <20250303132837.498938-1-dongml2@chinatelecom.cn>
-	<20250303132837.498938-2-dongml2@chinatelecom.cn>
-	<20250303165454.GB11590@noisy.programming.kicks-ass.net>
-	<CADxym3aVtKx_mh7aZyZfk27gEiA_TX6VSAvtK+YDNBtuk_HigA@mail.gmail.com>
-	<20250304053853.GA7099@noisy.programming.kicks-ass.net>
-	<20250304061635.GA29480@noisy.programming.kicks-ass.net>
-	<CADxym3bS_6jpGC3vLAAyD20GsR+QZofQw0_GgKT8nN3c-HqG-g@mail.gmail.com>
-	<20250304094220.GC11590@noisy.programming.kicks-ass.net>
-	<6F9EF5C3-4CAE-4C5E-B70E-F73462AC7CA0@zytor.com>
-	<CADxym3busXZKtX=+FY_xnYw7e1CKp5AiHSasZGjVJTdeCZao-g@mail.gmail.com>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1741187055; c=relaxed/simple;
+	bh=t5eNaNrX2l+tZef9ZgJzRD8AjzR4E3n2CK9UhuofW3g=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=n1SsSE8s96M7DYCKAG0aKoOMnyyp1e8zfaEcnqInrrnubhGe3hbXdgY3jGrMaIsqo/3dMnKzSRf3Ym94VacM5FIoFeWaSbOEQwMKDHCNZ3xpgDktgQtywHdiDXCxzgkuWNgKr/lLUc/I+5qf4p0l3dm423rIEWR+3cAqhDdK3Qw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=E0fyhTpI; arc=none smtp.client-ip=209.85.221.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="E0fyhTpI"
+Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-38f406e9f80so5291356f8f.2
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 05 Mar 2025 07:04:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1741187051; x=1741791851; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=NLmgp+4BNcFGyEe+zA1DNg0CWSPx2N1T/nc5ywlKYT8=;
+        b=E0fyhTpId/xgNl4mabkCJHJlzGzPtK4E5BvoAhvo19Y0up2Rdhafm/wcZoHuPEKFQx
+         thcCC4Mief+uWfCxeVps+muFMU2CrE+XNW7ZbIQOJEjt0eWJxROgfS1uL/CeDzKK+4Op
+         0aSHbmv2iKKppZ60uvwgMNpbi8NEn21B2+VKGKWGFOdKqDEnt5eBlRNrD7Sxn/uwuKWL
+         a+oX1rIJw4Gz7ur+HjoVXgdkHz2P58fagKBc3B4Wq1vgaBclSwWjSJCugyhFCTLUP3lW
+         T8agu8SD68LHPYdh6kXkb4EI0waExr0BWcscMWRCgRNbzbqMHrIU9OyfMSEPNPZ6wtiz
+         i1Pw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741187051; x=1741791851;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=NLmgp+4BNcFGyEe+zA1DNg0CWSPx2N1T/nc5ywlKYT8=;
+        b=c/YfRIteM2wf4+hyyfM00VhVt0D/I6deD6wYV8FRPhJIRFqHCpllPps0MVxix1y7Xh
+         AXHi5Z/0J1R7x5G5vh8mlXBVK892bCv4/ob1UDCSUioyqJ+UXclJSlq87DlIrAZr9uxg
+         CQE7TbbAXbBO752VnWSTmZJMn/93ij5nVBTwmc0jf3I9uaqHBSpWTad562sG3LfqG9D3
+         i+qO+XUuJASZJucR6v3c07JQQ3ndowkv0gyq5yfSlcfL/9lg/gTy/8rRFqax6HUArdg3
+         KcMATcy/bK0U26UMy7559ksdK6OM1sURsU3OXcM299c7ZauvugogQJSSTvx9Mf482Sqs
+         A8zw==
+X-Forwarded-Encrypted: i=1; AJvYcCXotPev6PyJqgqXQLcJqm5uBfxjstz9m7R5gBzkjyeCtB/xS/O9/24AyJiHcaFhFU/Nhjf3m7ax+FkA69Z9vwTZz8E=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxSBoVOiRZSboUEMUAUaR7uNMMHv9rID03c6kBbNsrfLYprBfOQ
+	MuvULjshgk/P7+e1Gr2FugBBZp221VYhZtWnRVhteAskLlUMjSTDgCabYkLzyhA=
+X-Gm-Gg: ASbGnctKS6B3cOJVxBgljbWSvK/QM052Uycm5mTVaBe2c0gFDTMHIOBrk6B+Nc6kUNg
+	CTwF3ORr1n5QxUL6G26WeNpUYh0lLo0ET/k+DDOpLHgJvte1r3fOaCqZ+8hxQYqsNpxpBECwJxJ
+	oKONUzSblglAp3ZMwA0BNQHyrTma2TVE3LsrtwszHbvYz0FY5JcOAAmTzvgo+nvWz+hs56ovCMT
+	R5IQrhcPTgZDGCZwzm4qJzyn+Fc/xE+vmuouC0i9HL6KCGLn1fnKUP7rjaYDIXYATLhem6T+9KA
+	N0zcaNu4iTk7edrWdwjCVQvrl9twP7tKIInUCiT48ayApcs=
+X-Google-Smtp-Source: AGHT+IGlWpXBw5ri3FaDBssVibQSzlL8JZY/24FSPaE5MWfcweC0DmUsA0HmZ1zjcuQDZS2k9Zzqjw==
+X-Received: by 2002:a5d:59a5:0:b0:390:f1c1:d399 with SMTP id ffacd0b85a97d-3911f7bb9b8mr2998938f8f.41.1741187051174;
+        Wed, 05 Mar 2025 07:04:11 -0800 (PST)
+Received: from blackdock.suse.cz ([193.86.92.181])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-390e485d8e4sm20907920f8f.85.2025.03.05.07.04.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 05 Mar 2025 07:04:10 -0800 (PST)
+Date: Wed, 5 Mar 2025 16:04:08 +0100
+From: Michal =?utf-8?Q?Koutn=C3=BD?= <mkoutny@suse.com>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Christian Brauner <brauner@kernel.org>, 
+	Alexander Mikhalitsyn <alexander@mihalicyn.com>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-fsdevel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	Jonathan Corbet <corbet@lwn.net>, Kees Cook <kees@kernel.org>, 
+	"Eric W . Biederman" <ebiederm@xmission.com>, Oleg Nesterov <oleg@redhat.com>
+Subject: Re: [PATCH 2/2] pid: Optional first-fit pid allocation
+Message-ID: <glmbovmv7ahln6omzoas5lrktaafbmxdkbs4mfoummhrlayl7u@s2nv66r7yx43>
+References: <20250221170249.890014-1-mkoutny@suse.com>
+ <20250221170249.890014-3-mkoutny@suse.com>
+ <20250221161854.8ea0dd0b2da05d38574cefc4@linux-foundation.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-
-On Wed, 5 Mar 2025 09:19:09 +0800
-Menglong Dong <menglong8.dong@gmail.com> wrote:
-
-> Ok, let me explain it from the beginning. (My English is not good,
-> but I'll try to describe it as clear as possible :/)
-
-I always appreciate those who struggle with English having these
-conversations. Thank you for that, as I know I am horrible in speaking any
-other language. (I can get by in German, but even Germans tell me to switch
-back to English ;-)
-
-> 
-> Many BPF program types need to depend on the BPF trampoline,
-> such as BPF_PROG_TYPE_TRACING, BPF_PROG_TYPE_EXT,
-> BPF_PROG_TYPE_LSM, etc. BPF trampoline is a bridge between
-> the kernel (or bpf) function and BPF program, and it acts just like the
-> trampoline that ftrace uses.
-> 
-> Generally speaking, it is used to hook a function, just like what ftrace
-> do:
-> 
-> foo:
->     endbr
->     nop5  -->  call trampoline_foo
->     xxxx
-> 
-> In short, the trampoline_foo can be this:
-> 
-> trampoline_foo:
->     prepare a array and store the args of foo to the array
->     call fentry_bpf1
->     call fentry_bpf2
->     ......
->     call foo+4 (origin call)
-
-Note, I brought up this issue when I first heard about how BPF does this.
-The calling of the original function from the trampoline. I said this will
-cause issues, and is only good for a few functions. Once you start doing
-this for 1000s of functions, it's going to be a nightmare.
-
-Looks like you are now in the nightmare phase.
-
-My argument was once you have this case, you need to switch over to the
-kretprobe / function graph way of doing things, which is to have a shadow
-stack and hijack the return address. Yes, that has slightly more overhead,
-but it's better than having to add all theses hacks.
-
-And function graph has been updated so that it can do this for other users.
-fprobes uses it now, and bpf can too.
-
->     save the return value of foo
->     call fexit_bpf1 (this bpf can get the return value of foo)
->     call fexit_bpf2
->     .......
->     return to the caller of foo
-> 
-> We can see that the trampoline_foo can be only used for
-> the function foo, as different kernel function can be attached
-> different BPF programs, and have different argument count,
-> etc. Therefore, we have to create 1000 BPF trampolines if
-> we want to attach a BPF program to 1000 kernel functions.
-> 
-> The creation of the BPF trampoline is expensive. According to
-> my testing, It will spend more than 1 second to create 100 bpf
-> trampoline. What's more, it consumes more memory.
-> 
-> If we have the per-function metadata supporting, then we can
-> create a global BPF trampoline, like this:
-> 
-> trampoline_global:
->     prepare a array and store the args of foo to the array
->     get the metadata by the ip
->     call metadata.fentry_bpf1
->     call metadata.fentry_bpf2
->     ....
->     call foo+4 (origin call)
-
-So if this is a global trampoline, wouldn't this "call foo" need to be an
-indirect call? It can't be a direct call, otherwise you need a separate
-trampoline for that.
-
-This means you need to mitigate for spectre here, and you just lost the
-performance gain from not using function graph.
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="yphetxzk2ql5urd5"
+Content-Disposition: inline
+In-Reply-To: <20250221161854.8ea0dd0b2da05d38574cefc4@linux-foundation.org>
 
 
->     save the return value of foo
->     call metadata.fexit_bpf1 (this bpf can get the return value of foo)
->     call metadata.fexit_bpf2
->     .......
->     return to the caller of foo
-> 
-> (The metadata holds more information for the global trampoline than
-> I described.)
-> 
-> Then, we don't need to create a trampoline for every kernel function
-> anymore.
-> 
-> Another beneficiary can be ftrace. For now, all the kernel functions that
-> are enabled by dynamic ftrace will be added to a filter hash if there are
-> more than one callbacks. And hash lookup will happen when the traced
-> functions are called, which has an impact on the performance, see
-> __ftrace_ops_list_func() -> ftrace_ops_test(). With the per-function
-> metadata supporting, we can store the information that if the callback is
-> enabled on the kernel function to the metadata, which can make the performance
-> much better.
+--yphetxzk2ql5urd5
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Subject: Re: [PATCH 2/2] pid: Optional first-fit pid allocation
+MIME-Version: 1.0
 
-Let me say now that ftrace will not use this. Looks like too much work for
-little gain. The only time this impacts ftrace is when there's two
-different callbacks tracing the same function, and it only impacts that
-function. All other functions being traced still call the appropriate
-trampoline for the callback.
+Hi.
 
--- Steve
+On Fri, Feb 21, 2025 at 04:18:54PM -0800, Andrew Morton <akpm@linux-foundation.org> wrote:
+> This seems thin.  Is there more we can tell our users?  What are the
+> visible effects of this?  What are the benefits?  Why would they want
+> to turn it on?
 
-> 
-> The per-function metadata storage is a basic function, and I think there
-> may be other functions that can use it for better performance in the feature
-> too.
-> 
-> (Hope that I'm describing it clearly :/)
+Thanks for review and comments (also Alexander).
 
+> I mean, there are veritable paragraphs in the changelogs, but just a
+> single line in the user-facing docs.  Seems there could be more...
+
+I decided not to fiddle with allocation strategies and disable pid_max
+in namespaces by default.
+
+Michal
+
+--yphetxzk2ql5urd5
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQTd6mfF2PbEZnpdoAkt3Wney77BSQUCZ8hn5QAKCRAt3Wney77B
+SeH/AQCl7M3g6jWcHR92iwej1BFLEym+t1kmSZ8IyoLg8iToxwEAolDqAbNbU2Vi
+T/noTfl//D4KGYDllskbpZOuGNvu2gQ=
+=t4Hk
+-----END PGP SIGNATURE-----
+
+--yphetxzk2ql5urd5--
