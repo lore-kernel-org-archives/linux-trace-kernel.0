@@ -1,198 +1,208 @@
-Received: from mail-qt1-f178.google.com (mail-qt1-f178.google.com [209.85.160.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from YT6PR01CU002.outbound.protection.outlook.com (mail-canadacentralazon11022074.outbound.protection.outlook.com [40.107.193.74])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F094E24BC04
-	for <linux-trace-kernel@vger.kernel.org>; Wed,  5 Mar 2025 13:12:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.178
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741180361; cv=none; b=db2zNvBArTjwGuJccx2Wc8sqTHR/VrIiXFg7hO977xNuN8DDPN/uM6dxZdD1Ssp9WrcFGhehhQUGjQLk10Ei8+T2rivB1qaBsQO95CmW16EAUvfTHiI2FHeAM6MeoFn+YtIxfcaiCyeZGacLG3sjAf/dWyMZiU2jEtwQO72VEec=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741180361; c=relaxed/simple;
-	bh=niOkZ3yknjy6O15SgZEu1bTRkBCDN86QkzY45J5nUU4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=LPY9N4XtNzh7UgsHN/NLgFG0EVRX8ZG6KaSUCdpkLLL8D/eiGUmvFm5gl6jUblTuEyxOxGqqPA+TgvyndugQRX9e6/PV1FboC4O8gBYeoAwwizyZ4Tw+6+xzC5WHwXeu6Rm9p3tLmUXnTyaQDNi+aXO8XhPdLDCGgAj80nfXrvA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=bQnGzWp1; arc=none smtp.client-ip=209.85.160.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EF421D540;
+	Wed,  5 Mar 2025 13:53:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.193.74
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741182830; cv=fail; b=u+b4SB17I2xtApjBTD7QB9i/5sadRdGE5XfZ2e3g7MDyg32W84Hl2SIMo0pIR2F2NW9hBTrHbicMR9YJYwU6QWYcqkfmcj1JPeqqqxSmdNkPG3HBdIvflnWaITI8TdvMC4f0TT1ZEo+kA/hDg95xc9mCPcXzsuf2LWaFDQ9fq9Q=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741182830; c=relaxed/simple;
+	bh=051Zg5V42k9BnQbyUBLr0xzCIjVgytZstjAOVJNolfM=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=NBd8riAeaW3KDohzpsU8Xe+u4wGl1GWnSBm0wJDTKsaZyW4kakBijwdsHbEqYTpIYGa9pUTvL83fnQvn5Y8jr33HuawdQANBDSh4e9OhbXBJ2uWEWewy8Griaw7kRtz2TV9700Na77qXxMZYeKsaFFc1lhbKZGP3r5iyMkd8aiY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com; spf=pass smtp.mailfrom=efficios.com; dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b=oMOrPIfO; arc=fail smtp.client-ip=40.107.193.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=efficios.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bQnGzWp1"
-Received: by mail-qt1-f178.google.com with SMTP id d75a77b69052e-474e1b8c935so265411cf.0
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 05 Mar 2025 05:12:38 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1741180358; x=1741785158; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=iOdrgfnKDo0adnIeWCzGbGdt+czcdG3OGWY151PLQj4=;
-        b=bQnGzWp1S5Lnz9b7S+X9iWyT1enphmYxyeyJwj5VVMYJnObuLGzhvMkG9uBL3XQ78b
-         Zo3JrmBI4ko2x+OO+iOQpQBqfBgjcS472wlJfVY900sBa3almRwnfbIdcWBcdXKwsieo
-         7k0oWhWF732whbIyH4GNsIMNo9o7b80aqltg+jU0O65LkiOSm3+oSVpH3YoRptaQnRij
-         NWBaZfEqos2npnT6v52bnbTpKCy19r6KPYKzleLdok7ZrEkR9SnnqDT5T6ABVfKQ+2Iz
-         NKN7Fajx9PPEYnKJdu5XQV9dDUNkJGUpIwD5ACAowRHjrTqUH64V59DpzL+Y1S7JzlY8
-         4rYw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741180358; x=1741785158;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=iOdrgfnKDo0adnIeWCzGbGdt+czcdG3OGWY151PLQj4=;
-        b=Fjl6L9eXuf95OnPMZIDY5e3BrfPmmYXMUE9Tph01G1QIb33hlGaW5fLww0ksuILKxH
-         EK8U5Gb1Y5XNB3OnN8Lw1V0Seade4lsoWMJJX2lruQlol0dTH+fTGOmn5OC/2P23/Ox8
-         AH8yGW3Ksvmb1p+pD/TTSF+y2RBtn0BflOcKG03wST7vRvFvVPYC++PMa9gEixBaIfhX
-         uiWS7bxEmiKWrF3Cx3q+faxaPa/tg/bLYfbZMssDt1v0xm1bjxy2TRY6lccOg2KQKSgo
-         P48QVrDy73F4dZG6HC39Q9Kz3P1eKzpPlmZLUMxLpKYSsDSvKAChX2NIbfPqN/9xf9rb
-         cPWA==
-X-Forwarded-Encrypted: i=1; AJvYcCWKDDlN1np5J94zE8F0PfViCxv3qMz6SFRK0sikvodp6DcU1dWgJRuPbTy7ZmzBQIvXbUmhH7YQCuVf/BFVC/n4Ff0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyrD6oyHrgu7zgDx3PBo7UaAPu948gna0JWegtKHjLpOmIguNkD
-	MoP9gb7kVQ+eihU+nLz12SqT5AROHLkQG/3hE1RauF9hUyB+ZeDpxjBtoxPBkjqANgamh+pYK+W
-	MOu2WGSv00jqIGL4C5GBadwXE2kZMP3kx4A+I
-X-Gm-Gg: ASbGncuYGOr23iITNFONJaWZB0xy8lZ82jHR34yOtGu/kEhgqgZCTOTxBNaJPY8udJF
-	idjcqqdmWrI9cNx3icNdl+vpGcuH9ZefSKY0U+wSqIcFG8oJ4rLOT6ei4i8ZehWt4gLARq/HzCC
-	4eUc1xQPuCvQ9kMM8vD+tZxwjKqFwKikpn+0lGCygmfk1HP6Q878cpg2wp
-X-Google-Smtp-Source: AGHT+IFIn6b7M1PNu9NZZ9KBzOuRO4deZPOixhL9M73rMvQkDHUtfUtYPha+8DdwHlmaLHcT+urAybKKpNAnQK1YFdU=
-X-Received: by 2002:a05:622a:110b:b0:471:f560:27dc with SMTP id
- d75a77b69052e-4750cae2127mr2406081cf.27.1741180357471; Wed, 05 Mar 2025
- 05:12:37 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="oMOrPIfO"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=ttCwhd+VlxAGKWZb9tI2MIB4+oFkZgz04V244CnFEv/3Tjn/lJk4cDcQJlef4J1Fdp0RpcPVXZF2PpWGIBVqmeTx0BQwzvv+2K1mPaRR+mwVv6kiZcFsKijBm63K1EHLZ2ZDWxB//cMz/i+ZBOB78kjd+juQfDH2dYyDk5uhGbLI58+uctKaBDvJF1c9fY7BpEUSo1R/GHQlFyJumZvJH5NQsGSABSzb3X/YO33St26jsy5ZI9xfAhNjkjtOT59DAwjbiVRZtsjDS9fCVux5oElFfgHN2lOoLhymAjVZ++2KvYapEZvvgokJ7tLltuE+bcj3YPXsM/3tXd4lBI0Rsg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=b/z0+1IfXnynVqVwG1CV3JKDAInxdefvIFzfMJClyk4=;
+ b=qQznRU9/yH87X9x5rmuyxu+3dm3b8n0DpH+5O56J9+QIDv5BtiO82zJAb1jxxSl3k1ppOrkMBglBZXTylfp7dPzxAgk4ivX4erQ/kG0pZwKiFRk+pcKLub0VAjjURQbUbHdhRJj2LDr1f7JGJaF1DNGyNzJ9KUSdU9c+THJY5pOBzz1x6RpcsT1yGu51wiOZd5gVye8Ta7hn1Nef4fQfaWWoTeAtl6SDP3J9tJ29vpMqeAGiv8Zgu6lYPMZ0xMGPHC57sgBb1xtFU4RpzcKbyCvpzrSnTVNC5k6bOSdV9f/MY2CUvSrmc2OuoTE50/YeeSZPoA/ANTYiJZqsoxMTXw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=efficios.com; dmarc=pass action=none header.from=efficios.com;
+ dkim=pass header.d=efficios.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=b/z0+1IfXnynVqVwG1CV3JKDAInxdefvIFzfMJClyk4=;
+ b=oMOrPIfOMIS8Z3MiK+ZNoSKUQVgeFZ1/5PHa4eyYVexAkVcymC4BvEGkEzPWjQGM/RtH59fo13ZoMD+nf4LOVSSo+V5UDgyu4fQWxWbE5j+C48gH1wvYoJqVBm4nchuTVRE9Zo4rk1VCJn8kiWNFfzlO+3NDo/Lujg/Jp+gbi7K985dQ6hdyFkgEmUuhvlj1jlo2h+jm1HxPbDhy0xblYqRFVcZZSakqvRcanLo+j56xK5yNuA0Rm/kDZPzpxrDHEOZ2VexQmufFNmyTB1sqb9lo9V9FWH/RVEkcMBYfaGy50xwAwxIjXh/g3G6AXzm8dAu3vcClyG2VW/yvhIqUpw==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=efficios.com;
+Received: from YT2PR01MB9175.CANPRD01.PROD.OUTLOOK.COM (2603:10b6:b01:be::5)
+ by YT2PR01MB8821.CANPRD01.PROD.OUTLOOK.COM (2603:10b6:b01:b8::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8511.18; Wed, 5 Mar
+ 2025 13:53:44 +0000
+Received: from YT2PR01MB9175.CANPRD01.PROD.OUTLOOK.COM
+ ([fe80::50f1:2e3f:a5dd:5b4]) by YT2PR01MB9175.CANPRD01.PROD.OUTLOOK.COM
+ ([fe80::50f1:2e3f:a5dd:5b4%4]) with mapi id 15.20.8511.017; Wed, 5 Mar 2025
+ 13:53:44 +0000
+Message-ID: <f600edd0-8855-46af-98ec-1181db1f5dd4@efficios.com>
+Date: Wed, 5 Mar 2025 08:53:43 -0500
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH resend ] tracepoint: Print the function symbol when
+ tracepoint_debug is set
+To: Huang Shijie <shijie@os.amperecomputing.com>, rostedt@goodmis.org
+Cc: patches@amperecomputing.com, cl@linux.com, yang@os.amperecomputing.com,
+ peterz@infradead.org, jpoimboe@kernel.org, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+References: <20250305015505.14493-1-shijie@os.amperecomputing.com>
+From: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Content-Language: en-US
+In-Reply-To: <20250305015505.14493-1-shijie@os.amperecomputing.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: YQZPR01CA0027.CANPRD01.PROD.OUTLOOK.COM
+ (2603:10b6:c01:86::8) To YT2PR01MB9175.CANPRD01.PROD.OUTLOOK.COM
+ (2603:10b6:b01:be::5)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250110-asi-rfc-v2-v2-0-8419288bc805@google.com>
- <20250110-asi-rfc-v2-v2-2-8419288bc805@google.com> <Z8K2B3WJoICVbDj3@kernel.org>
-In-Reply-To: <Z8K2B3WJoICVbDj3@kernel.org>
-From: Brendan Jackman <jackmanb@google.com>
-Date: Wed, 5 Mar 2025 14:12:25 +0100
-X-Gm-Features: AQ5f1JrEWoe__i5J-gwzMxiuWZ9pJYk4XLPMWAQuPYUSu5vOhjZQNejm22RSyYE
-Message-ID: <CA+i-1C06Sunj0BmFON=MbWBK6ZDt_=K4P3BHChRBYyxXqEkQ2g@mail.gmail.com>
-Subject: Re: [PATCH RFC v2 02/29] x86: Create CONFIG_MITIGATION_ADDRESS_SPACE_ISOLATION
-To: Mike Rapoport <rppt@kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>, 
-	Andy Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
-	Richard Henderson <richard.henderson@linaro.org>, Matt Turner <mattst88@gmail.com>, 
-	Vineet Gupta <vgupta@kernel.org>, Russell King <linux@armlinux.org.uk>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Guo Ren <guoren@kernel.org>, 
-	Brian Cain <bcain@quicinc.com>, Huacai Chen <chenhuacai@kernel.org>, 
-	WANG Xuerui <kernel@xen0n.name>, Geert Uytterhoeven <geert@linux-m68k.org>, 
-	Michal Simek <monstr@monstr.eu>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
-	Dinh Nguyen <dinguyen@kernel.org>, Jonas Bonn <jonas@southpole.se>, 
-	Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>, Stafford Horne <shorne@gmail.com>, 
-	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>, Helge Deller <deller@gmx.de>, 
-	Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>, 
-	Christophe Leroy <christophe.leroy@csgroup.eu>, Naveen N Rao <naveen@kernel.org>, 
-	Madhavan Srinivasan <maddy@linux.ibm.com>, Paul Walmsley <paul.walmsley@sifive.com>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
-	Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, 
-	Alexander Gordeev <agordeev@linux.ibm.com>, Christian Borntraeger <borntraeger@linux.ibm.com>, 
-	Sven Schnelle <svens@linux.ibm.com>, Yoshinori Sato <ysato@users.sourceforge.jp>, 
-	Rich Felker <dalias@libc.org>, John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, 
-	"David S. Miller" <davem@davemloft.net>, Andreas Larsson <andreas@gaisler.com>, 
-	Richard Weinberger <richard@nod.at>, Anton Ivanov <anton.ivanov@cambridgegreys.com>, 
-	Johannes Berg <johannes@sipsolutions.net>, Chris Zankel <chris@zankel.net>, 
-	Max Filippov <jcmvbkbc@gmail.com>, Arnd Bergmann <arnd@arndb.de>, 
-	Andrew Morton <akpm@linux-foundation.org>, Juri Lelli <juri.lelli@redhat.com>, 
-	Vincent Guittot <vincent.guittot@linaro.org>, Dietmar Eggemann <dietmar.eggemann@arm.com>, 
-	Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>, 
-	Valentin Schneider <vschneid@redhat.com>, Uladzislau Rezki <urezki@gmail.com>, 
-	Christoph Hellwig <hch@infradead.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
-	Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Dennis Zhou <dennis@kernel.org>, Tejun Heo <tj@kernel.org>, Christoph Lameter <cl@linux.com>, 
-	Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>, 
-	Ard Biesheuvel <ardb@kernel.org>, Josh Poimboeuf <jpoimboe@kernel.org>, 
-	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>, x86@kernel.org, 
-	linux-kernel@vger.kernel.org, linux-alpha@vger.kernel.org, 
-	linux-snps-arc@lists.infradead.org, linux-arm-kernel@lists.infradead.org, 
-	linux-csky@vger.kernel.org, linux-hexagon@vger.kernel.org, 
-	loongarch@lists.linux.dev, linux-m68k@lists.linux-m68k.org, 
-	linux-mips@vger.kernel.org, linux-openrisc@vger.kernel.org, 
-	linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, 
-	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org, 
-	linux-sh@vger.kernel.org, sparclinux@vger.kernel.org, 
-	linux-um@lists.infradead.org, linux-arch@vger.kernel.org, linux-mm@kvack.org, 
-	linux-trace-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	kvm@vger.kernel.org, linux-efi@vger.kernel.org, 
-	Junaid Shahid <junaids@google.com>
-Content-Type: text/plain; charset="UTF-8"
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: YT2PR01MB9175:EE_|YT2PR01MB8821:EE_
+X-MS-Office365-Filtering-Correlation-Id: 8110f224-45fa-4387-a8f5-08dd5bed2537
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|366016|1800799024|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?VXJZQWxNNUp3TEtOZW1uQXhJZWNCVnB0YlNxTkVJdnlYVnl0Ni8zTGFGYjRD?=
+ =?utf-8?B?Nk9TbXdyU0MzTlNqenN2RjNYRHlzclowTEp6aXpOeGFKeDdoWXk2cHhaWFNH?=
+ =?utf-8?B?UzNuNWtLQlFXd21hV3MwcTdpRmpQcHlrUVJQWVUvUStFdlhXYWV1LzFmRUV1?=
+ =?utf-8?B?OGpNY3M4UEFhYlRqMUxSZlNXRFI2bm1xREQ4VExvNUZYRW8xYjBNakh6UkpY?=
+ =?utf-8?B?MFN4NzhlcmtqQ3lGaUd4MDBRZTJCN3B0RXJWbFF1MGZuTzJ3Unh4blhCTDRM?=
+ =?utf-8?B?aFk4YTZ5S0JLWUh1ZkVaaEpmVGJPL0xhTy9Oa3BDUjVRYWJ4cllsc1hHRFl1?=
+ =?utf-8?B?TXlCU08xaERoQmRWZ1BpbmVydTEyTGczb3gwS25XeEJVUHdya3QrVnNQbktD?=
+ =?utf-8?B?b3BwVUZDaVFzclgxNHhkdHg2UW03UnhiRU02REJ4UlVyOVNEaEsxQWVHUng5?=
+ =?utf-8?B?RG4xTGp2dlFHaXJxOE1pdDFTM25FMjNiYnlOcDQ4c3VrSzAxaHZuZGs2V2FX?=
+ =?utf-8?B?ZmpUNEk1Sy9FdHdCcTlHVUhGQ05mamJBdmN6WHJEdGZtaDdzYjJ0cE5IbERa?=
+ =?utf-8?B?WVM1Tk9USWRZeG80WEdPak53Y3JOL1MvWWRPbVl0bWZTVEFTM3U0cjR6MVh6?=
+ =?utf-8?B?L1lPZjZiTE9HRHpYckZwZkpTWnlJSEE2Ui91ZlhQTnNmSWhzQUVhUVhoWDBQ?=
+ =?utf-8?B?VGJnV0hvb2k1em53alROcEI3TFJsTWlIcFpidGMwS2pKRGV1L09zSExlc095?=
+ =?utf-8?B?cXhwbGdoR3hCV3JjRklJR09XYlQyZExKcjNkUHlKWmhnRGNJdVFQNGJLRkln?=
+ =?utf-8?B?MnQ5RlhRdzVraXFtMTdvdWhNSWtJRnhqcVl6SmhzWFVWWkFPbEU3aWoxaWIy?=
+ =?utf-8?B?TXh2ZElSbXo2ZDhXVCtGZXR5TldDcTU4TVJ2L1hEbEpncWFvWkdkSWNkMEpo?=
+ =?utf-8?B?aHgyaEdYVzNCb0YzMFN4U3k4cHMvR0hNbVZ5S0wvS2Zva2pCdS9leGI5dGFl?=
+ =?utf-8?B?Wkl4VDhCSXh4bDFnaTZ6VUo5WHVzZGdWdVpJaFRUNDd5TTUxVVJQTitLQ1hl?=
+ =?utf-8?B?RzRsWFpudFpWTXJiMURyK2dZbUlSME02RE1haFVwRHMvYkF1MzcxUGp5VndO?=
+ =?utf-8?B?YzFuaDdUZVJKaFVRY1MvdHZZS0JlVGJ6OW1WQURQK1FWMDNydVlnbzNPcWRn?=
+ =?utf-8?B?NThURnFEeWh4ZWJQdDI0ZUZKdlJsT2tGSUFZcUkzN0lCSnhtSm51Z3pMb3NV?=
+ =?utf-8?B?cXZkV1Jnd2podTZQUm9JZkZubnMyM05oNFgwNCtCK0xZaW5Ea0x3S1FoWXda?=
+ =?utf-8?B?TXR5RFFsY0tVd3AybWdmVWVJeVVEci9CRE5CR3ZyajJ6K3EzdlRXbUUzem5X?=
+ =?utf-8?B?V2NQNHNmYjdtZXY3MHR2Zm1DZG1HVFhBeVZqY09mUVRoNWZvRUJFdEQyTWpT?=
+ =?utf-8?B?TEZXOS91YnRhdUV3cnpjZTZsVlNMbFBSVXlNR1pUOU9SR2UraVdtYTlna0NG?=
+ =?utf-8?B?WHdsMktiejFYakVSVnJCdWpkZlpGUHo5VGNNS1gyVGZ5N1lKWTFrQ0VGSDlU?=
+ =?utf-8?B?V1RNVHNyb0JIR3lUdFV1OVg4bksvZXgyeVJXaUE2MHVidERRQm1uNTRDTVlz?=
+ =?utf-8?B?aEZXcTd3ck41eHpha3pnMEJ4Y24yRVhUbThCb0t1Um1kei9Fc0IvSWhRQUhG?=
+ =?utf-8?B?bityYjh6TVBJM0xaRnl5dkFwRm4zWDVNOWduOEtqa2s4K0VNUmZmSzdKODlT?=
+ =?utf-8?Q?Wj1TXt07zbO2u7/kG0Ek84eVfEsCwbf+zy+qsnQ?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:YT2PR01MB9175.CANPRD01.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024)(7053199007);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?UWdZK1J6MGNoL05Ba1BlaUJ1WmZvbndURVFHRzd6bUxGRmZDclhYTEJaWFdJ?=
+ =?utf-8?B?ZjRScFdLeUhZWEZ1YmdZVW9VN0tGbXV0eUZuVUZEc1YwZHN4N0U4NEkzblhM?=
+ =?utf-8?B?TThwaXZSa1ExM0JpN2hSK3FHdWEvZ0FQcmp3QTNDR1JKTjNsUkNwenlkZkN3?=
+ =?utf-8?B?UXZ6T25iVytIQ1gvbkxOTUx0dUpKYnZEZE1pWEM3azJiSE4wSml0SUVmUjNI?=
+ =?utf-8?B?OFFlT1hYMTdrcVNJYlpyVlBJWGxRNzdhY1FxZW51Tm53Q01ZTWF6N0RRRlRP?=
+ =?utf-8?B?dlN2UmMwakMvL21XWGx3UU9FMzc4K1NpWlIzR1d0UFJZMUNaT1FNRkVLcmoz?=
+ =?utf-8?B?MWN1dG1aYk1jMW5TNHZUQ0g4S2s0N0lURzJFRUhkZnk0THhLZitENTdkMkd3?=
+ =?utf-8?B?eVFrNzFYMmpDc2dIcVlaMXY2SDljZ2VUZ0xMcUdYbktvWk9WMVUrYUxYaXBi?=
+ =?utf-8?B?SmZRTWQvSUJLQ3F1TWVCY3JjM2IvNzYvdkcwMlI4WDJRVDM1NHM4NmlremxW?=
+ =?utf-8?B?SXI2TUNNclo2ZjVGVWhzZ1llSXM2bWx0ZlBid2p6SGZNVnNuZzQ5YVRzcmh0?=
+ =?utf-8?B?NHRoOHdxUC8xVGNtSHprUnRBdlY0d0J4RElwUUxUdm9wSmNRczNGTXVoZ2NP?=
+ =?utf-8?B?ZTArSGlLdmF1N2svcTBpMmc3MUc4a0hGM21UUm1Wb1A4NlJqdXZRRFNDOUJY?=
+ =?utf-8?B?MkNQamNEVmdrUll0RU5EZEIxYUM4ZlFyVTE4SU5uUnRzWUNWbFhzR0JsbVIx?=
+ =?utf-8?B?Qlpic1RVTmhJZ0lRMWR2NVBUd04wV3ZML1hiSEVvWlR2dTdFQ1h5SS80N3JF?=
+ =?utf-8?B?NUhDVG0vQ3p3QmhMWjI3emMyMDVtVkhGT1ZHSTFFTkJud0JNbXlJeHRhS3ZG?=
+ =?utf-8?B?S3BHSjhXVU80S29oTDF2b2QxRmRqaHovZ1ZMN2Q0S0lYc2VHcEY4eHlSVmZC?=
+ =?utf-8?B?QkhsUHd3SDNoYnd4RVdaSE5VVzc5VWlJUkdQcTJnT2lQZ2JhV2lwZVZrQzdq?=
+ =?utf-8?B?a1FqMnZkNXp6WDNnNk42T1RXeE9KOGVTUXNBbHZKNk9vREtIcjJubHhWZXFz?=
+ =?utf-8?B?cU1PSGs4RXRkamZWbU5mRWN6ZHZEZVNyME5WNlZWbEpaN0pHQTBaQ0NOQXh5?=
+ =?utf-8?B?RjU5WmlsMVdHQmc4Q3hSWktEVzFjbk5XdHlyMjNQR2RMMGlFa1FQTjdrMysz?=
+ =?utf-8?B?b0xaclNsUzk2cFVxUmpydFU3R0RyLzNkc0Rxb1JDTzVydVhEMU1CNVRwRk15?=
+ =?utf-8?B?UVllWExaZjBiZDdYVTBDYUYwUkdjcElHUC9vTUhkWHJKc3NFTmhQK3VMam9Z?=
+ =?utf-8?B?SHYrdHdVYW5nZ0RDTWFyS3FPOU9jUytaNmRNWVhESG5WS2syNzhhUm1DY1lV?=
+ =?utf-8?B?VC9HemhMb1JWNldyL1U0aWdtWFRpUjVqSHlWOHZlM3Zkc1h0L1dTOGFyTzBF?=
+ =?utf-8?B?eWltcFlMUHY2Zmh3d2VQYVJuQktkT29hZEFQUzVzK3JQRGVUVldmNktrVUtx?=
+ =?utf-8?B?OFNIbEgxa2ppdmthQ1JUU2dpSkRZMVBTT1dYbXdpR3ZON3Q0NzllVnNkNDlB?=
+ =?utf-8?B?emZqTnpYOVFYQ1FCMmJzUkdBamZvRGZxUmp3R1E1THJJZEJCVXJJcStSdzdJ?=
+ =?utf-8?B?RFJYOSswYnFXa3F4RTFmTWVUWi9iYnJUbVJIS09XWVZ5R1p1cFhkK2pyeG1y?=
+ =?utf-8?B?c3lYNXhlY0VScTJSVmdML1M1a0VNbzlCVFBmcGlscW5YbDd4RVduQVdScmFD?=
+ =?utf-8?B?UkVzUDZOL3ZjYVJpUjZoSjlvL2U5ZHMvZ1dZdjdPTHArcEFBNUtyb3VuUEli?=
+ =?utf-8?B?ek1yZXBlbVFWUW81QVlteWtHZnNzejVUdTNIYW5LeVZ0VVFnNXArblBXTW5m?=
+ =?utf-8?B?SC9XQWNzRVJkd0hHbkZ2M2d5cFk0dE5tTmtMRDBTVythZFBVT3lCVWpuMklU?=
+ =?utf-8?B?WSt2YzVwMTZmZTlLaktOKzdQS0RDSGd1YS9EeXdSWFRMUzJXOVY0Y2wreG4v?=
+ =?utf-8?B?L0RodkQramFyR3VYWjRxNHFjVkNXM3pPdWlNd2R6MGM5Z29hRmxXZnlKV0hC?=
+ =?utf-8?B?QkttM2VmK2F3OHZDOEtsYjBnUmRZc3BlRC91anI2Ukx1R3dmczFuQzNvK0pv?=
+ =?utf-8?B?M2lQZVB5aTlaTVM1OGRWemtZNUdpTnZUYzlNb0QrQUlBbFlnVnc1TVJKVXNB?=
+ =?utf-8?Q?wSHs//s+c3pyDzK7sVl1QPg=3D?=
+X-OriginatorOrg: efficios.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8110f224-45fa-4387-a8f5-08dd5bed2537
+X-MS-Exchange-CrossTenant-AuthSource: YT2PR01MB9175.CANPRD01.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Mar 2025 13:53:44.7539
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4f278736-4ab6-415c-957e-1f55336bd31e
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: RsVNvPLYaCd/OYk3WvGYiQtf2+EmNBMpdiJWbd6avXc67ylMPEJ3ofN4KNUW5Rx31bX3uMNEedy1Ix2Kr5dpj3ZyoTSOoS72uQEhCE4NXK0=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: YT2PR01MB8821
 
-On Sat, Mar 01, 2025 at 09:23:51AM +0200, Mike Rapoport wrote:
-> Hi Brendan,
->
-> On Fri, Jan 10, 2025 at 06:40:28PM +0000, Brendan Jackman wrote:
-> > Currently a nop config. Keeping as a separate commit for easy review of
-> > the boring bits. Later commits will use and enable this new config.
-> >
-> > This config is only added for non-UML x86_64 as other architectures do
-> > not yet have pending implementations. It also has somewhat artificial
-> > dependencies on !PARAVIRT and !KASAN which are explained in the Kconfig
-> > file.
-> >
-> > Co-developed-by: Junaid Shahid <junaids@google.com>
-> > Signed-off-by: Junaid Shahid <junaids@google.com>
-> > Signed-off-by: Brendan Jackman <jackmanb@google.com>
-> > ---
-> >  arch/alpha/include/asm/Kbuild      |  1 +
-> >  arch/arc/include/asm/Kbuild        |  1 +
-> >  arch/arm/include/asm/Kbuild        |  1 +
-> >  arch/arm64/include/asm/Kbuild      |  1 +
-> >  arch/csky/include/asm/Kbuild       |  1 +
-> >  arch/hexagon/include/asm/Kbuild    |  1 +
-> >  arch/loongarch/include/asm/Kbuild  |  3 +++
-> >  arch/m68k/include/asm/Kbuild       |  1 +
-> >  arch/microblaze/include/asm/Kbuild |  1 +
-> >  arch/mips/include/asm/Kbuild       |  1 +
-> >  arch/nios2/include/asm/Kbuild      |  1 +
-> >  arch/openrisc/include/asm/Kbuild   |  1 +
-> >  arch/parisc/include/asm/Kbuild     |  1 +
-> >  arch/powerpc/include/asm/Kbuild    |  1 +
-> >  arch/riscv/include/asm/Kbuild      |  1 +
-> >  arch/s390/include/asm/Kbuild       |  1 +
-> >  arch/sh/include/asm/Kbuild         |  1 +
-> >  arch/sparc/include/asm/Kbuild      |  1 +
-> >  arch/um/include/asm/Kbuild         |  2 +-
-> >  arch/x86/Kconfig                   | 14 ++++++++++++++
-> >  arch/xtensa/include/asm/Kbuild     |  1 +
-> >  include/asm-generic/asi.h          |  5 +++++
-> >  22 files changed, 41 insertions(+), 1 deletion(-)
->
-> I don't think this all is needed. You can put asi.h with stubs used outside
-> of arch/x86 in include/linux and save you the hassle of updating every
-> architecture.
+On 2025-03-04 20:55, Huang Shijie wrote:
+> When tracepoint_debug is set, we may get the output in kernel log:
+>       [  380.013843] Probe 0 : 00000000f0d68cda
+> 
+> It is not readable, so change to print the function symbol.
+> After this patch, the output may becomes:
+>       [   54.930567] Probe 0 : perf_trace_sched_wakeup_template
 
-...
+What would it print if the address is corrupted ?
 
-> If you expect other architectures might implement ASI the config would better
-> fit into init/Kconfig or mm/Kconfig and in arch/x86/Kconfig will define
-> ARCH_HAS_MITIGATION_ADDRESS_SPACE_ISOLATION.
+Perhaps we could do like the backtrace code and print e.g.
 
-...
+[<00000000f0d68cda>] perf_trace_sched_wakeup_template+0xNN/0xMM
 
-> > +++ b/include/asm-generic/asi.h
-> > @@ -0,0 +1,5 @@
-> > +/* SPDX-License-Identifier: GPL-2.0 */
-> > +#ifndef __ASM_GENERIC_ASI_H
-> > +#define __ASM_GENERIC_ASI_H
-> > +
-> > +#endif
->
-> IMHO it should be include/linux/asi.h, with something like
->
-> #infdef __LINUX_ASI_H
-> #define __LINUX_ASI_H
->
-> #ifdef CONFIG_MITIGATION_ADDRESS_SPACE_ISOLATION
->
-> #include <asm/asi.h>
->
-> #else /* CONFIG_MITIGATION_ADDRESS_SPACE_ISOLATION */
->
-> /* stubs for functions used outside arch/ */
->
-> #endif /* CONFIG_MITIGATION_ADDRESS_SPACE_ISOLATION */
->
-> #endif /* __LINUX_ASI_H */
+?
 
-Thanks Mike! That does indeed look way tidier. I'll try to adopt it.
+I don't care about the actual layout, but removing the address
+from the formatted output appears to be removing useful data
+in debug situations.
+
+Thanks,
+
+Mathieu
+
+> 
+> Reviewed-by: Christoph Lameter <cl@linux.com>
+> Signed-off-by: Huang Shijie <shijie@os.amperecomputing.com>
+> ---
+>   kernel/tracepoint.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/kernel/tracepoint.c b/kernel/tracepoint.c
+> index 1848ce7e2976..82bef4b9400a 100644
+> --- a/kernel/tracepoint.c
+> +++ b/kernel/tracepoint.c
+> @@ -127,7 +127,7 @@ static void debug_print_probes(struct tracepoint_func *funcs)
+>   		return;
+>   
+>   	for (i = 0; funcs[i].func; i++)
+> -		printk(KERN_DEBUG "Probe %d : %p\n", i, funcs[i].func);
+> +		printk(KERN_DEBUG "Probe %d : %ps\n", i, funcs[i].func);
+>   }
+>   
+>   static struct tracepoint_func *
+
+
+-- 
+Mathieu Desnoyers
+EfficiOS Inc.
+https://www.efficios.com
