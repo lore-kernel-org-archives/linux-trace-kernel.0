@@ -1,60 +1,58 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EF7524A075
-	for <linux-trace-kernel@vger.kernel.org>; Wed,  5 Mar 2025 14:05:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC85324BBF5
+	for <linux-trace-kernel@vger.kernel.org>; Wed,  5 Mar 2025 14:06:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741183560; cv=none; b=o445W3TfWJl1G5VyZJuHeBr/5hxkNgqIChWa0peOqweBG1y2Ah8M7word8eJ+VxoM8FBxxKXoVCaPdGUmAMyEmMJRxWZ7kaBX5ms6kOQjOx7A4B5Zs69EbAHB7ZbvM0yPtz6SGsJsQ9r4B0RfxD1Luut2z2iFKwObjs1RoamaLY=
+	t=1741183564; cv=none; b=fhPi3Mg9Gs3Y9S06ssdJqlOfrUTgNRjaEQkQ4UQmOn8lShjJiMzsXaVezeKdR5bKNKJGdk+X6JD282MxGHWYQTBeVXXj31Zd109KEVA2FTuHPGQF7hNPsKCekRsDUbmf7CpMEvn9MD2L7B31WwSGquVA7kOLJCDL1g5DHqqHLkY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741183560; c=relaxed/simple;
-	bh=yovrjLO5C2lI2eSzru+1Mb9+OYScywOuVc/sKVRRLEI=;
+	s=arc-20240116; t=1741183564; c=relaxed/simple;
+	bh=+L/G9ZYml07rE7xcoMc1XI178hR7JR3O+4eZS6nC3hs=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=TVioonK4TmeEN+WMpgM7Qp9JCmQ1ayxdLeK5IfNVig7Q/fcIKGCBHzuIS1oqMFeu+6gdRRA1RUzKnIVKywGMr36O8HTEfg3tBDyWKI4sVAClTHVOQd8+AqIohVuGFYuVEtRDvJFOeziic2XSx3tACJGYPNCz47FfKeuTfaXi/zU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ex81lPl5; arc=none smtp.client-ip=170.10.129.124
+	 MIME-Version; b=qZEbn46f1kXsPNN5Ys+05JCozK7oPFKYSe3BMHhV+zcUiJr+sca3I9ZEYCJZ6PorO7vU7UQ1YbSUW3m6oPFDvIAw/53lQsn+Q0qI5+by/5ZmW/C0dVoOW2Egn/aTFNTZsgFgaejSi5LVna5nriBm8zyp6LgEhJT/tiSDdjX5GBA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=elRnZgNX; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ex81lPl5"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="elRnZgNX"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1741183557;
+	s=mimecast20190719; t=1741183560;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=lkVEMAD1KIHnt/RQNLq8JVn6UMoPGr35EGnArS1ZYxI=;
-	b=ex81lPl5Phk+NevI5qlDxTL0R7RO/cwSwLUMAxkulw+GqoASm5tWiVAOOrCvF/AvwPOOt6
-	/2f0iiN1DOfEEeIH5ZeFO7bWY1Qutg7Qh0hWu2H4QqaI1GM+Cyv93wjaqki7XXcloRrrXS
-	wdof+P6jaUVzdkfRmF6Syh5BcLQzHH8=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+	bh=veJYqIZhZwJMarbagx/aKK/mQbHDV25wxXH1xL62AG8=;
+	b=elRnZgNXIHL9PjTicvpH218om3pB/D/X/DVzFsd8rvAJYZUdi14V7kH4dCHcb4KTxhbFjX
+	YyETBJeW33pj260GaP7k56RwCV7TwR5un1Dgu8WnHBLj+WfJPbKLO/PTQvvMcooGsPEbcN
+	JS3BTxCkigQVOJELwTiEYwBrvaqtcsk=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-101-qUsGXocVNx2kThBaCafGkA-1; Wed,
- 05 Mar 2025 09:05:55 -0500
-X-MC-Unique: qUsGXocVNx2kThBaCafGkA-1
-X-Mimecast-MFC-AGG-ID: qUsGXocVNx2kThBaCafGkA_1741183553
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-54-LgViCI6fM5C_cm0npJmdlA-1; Wed,
+ 05 Mar 2025 09:05:57 -0500
+X-MC-Unique: LgViCI6fM5C_cm0npJmdlA-1
+X-Mimecast-MFC-AGG-ID: LgViCI6fM5C_cm0npJmdlA_1741183556
 Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 8CC0518CB6AE;
-	Wed,  5 Mar 2025 14:05:02 +0000 (UTC)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 074BD1809CA5;
+	Wed,  5 Mar 2025 14:05:11 +0000 (UTC)
 Received: from gmonaco-thinkpadt14gen3.rmtit.com (unknown [10.45.226.192])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id AB0F93000708;
-	Wed,  5 Mar 2025 14:04:58 +0000 (UTC)
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 3E90E3000708;
+	Wed,  5 Mar 2025 14:05:06 +0000 (UTC)
 From: Gabriele Monaco <gmonaco@redhat.com>
 To: linux-kernel@vger.kernel.org,
-	Ingo Molnar <mingo@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
 	Steven Rostedt <rostedt@goodmis.org>,
 	linux-trace-kernel@vger.kernel.org
 Cc: Gabriele Monaco <gmonaco@redhat.com>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	John Kacur <jkacur@redhat.com>,
-	Clark Williams <williams@redhat.com>
-Subject: [PATCH v5 5/9] rv: Add scpd, snep and sncid per-cpu monitors
-Date: Wed,  5 Mar 2025 15:03:58 +0100
-Message-ID: <20250305140406.350227-6-gmonaco@redhat.com>
+	Ingo Molnar <mingo@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Juri Lelli <juri.lelli@redhat.com>
+Subject: [PATCH v5 7/9] verification/dot2k: Add support for nested monitors
+Date: Wed,  5 Mar 2025 15:04:00 +0100
+Message-ID: <20250305140406.350227-8-gmonaco@redhat.com>
 In-Reply-To: <20250305140406.350227-1-gmonaco@redhat.com>
 References: <20250305140406.350227-1-gmonaco@redhat.com>
 Precedence: bulk
@@ -66,768 +64,316 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
 
-Add 3 per-cpu monitors as part of the sched model:
+RV now supports nested monitors, this functionality requires a container
+monitor, which has virtually no functionality besides holding other
+monitors, and nested monitors, that have a container as parent.
 
-* scpd: schedule called with preemption disabled
-    Monitor to ensure schedule is called with preemption disabled
-* snep: schedule does not enable preempt
-    Monitor to ensure schedule does not enable preempt
-* sncid: schedule not called with interrupt disabled
-    Monitor to ensure schedule is not called with interrupt disabled
+Add the -p flag to pass a parent to a monitor, this sets it up while
+registering the monitor and adds necessary includes and configurations.
+Add the -c flag to create a container, since containers are empty, we
+don't allow supplying a dot model or a monitor type, the template is
+also different since functions to enable and disable the monitor are not
+defined, nor any tracepoint. The generated header file only allows to
+include the rv_monitor structure in children monitors.
 
-To: Ingo Molnar <mingo@redhat.com>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Juri Lelli <juri.lelli@redhat.com>
-Cc: John Kacur <jkacur@redhat.com>
-Cc: Clark Williams <williams@redhat.com>
 Signed-off-by: Gabriele Monaco <gmonaco@redhat.com>
 ---
- kernel/trace/rv/Kconfig                      |  3 +
- kernel/trace/rv/Makefile                     |  3 +
- kernel/trace/rv/monitors/scpd/Kconfig        | 15 +++
- kernel/trace/rv/monitors/scpd/scpd.c         | 96 ++++++++++++++++++++
- kernel/trace/rv/monitors/scpd/scpd.h         | 49 ++++++++++
- kernel/trace/rv/monitors/scpd/scpd_trace.h   | 15 +++
- kernel/trace/rv/monitors/sncid/Kconfig       | 15 +++
- kernel/trace/rv/monitors/sncid/sncid.c       | 96 ++++++++++++++++++++
- kernel/trace/rv/monitors/sncid/sncid.h       | 49 ++++++++++
- kernel/trace/rv/monitors/sncid/sncid_trace.h | 15 +++
- kernel/trace/rv/monitors/snep/Kconfig        | 15 +++
- kernel/trace/rv/monitors/snep/snep.c         | 96 ++++++++++++++++++++
- kernel/trace/rv/monitors/snep/snep.h         | 49 ++++++++++
- kernel/trace/rv/monitors/snep/snep_trace.h   | 15 +++
- kernel/trace/rv/rv_trace.h                   |  3 +
- tools/verification/models/sched/scpd.dot     | 18 ++++
- tools/verification/models/sched/sncid.dot    | 18 ++++
- tools/verification/models/sched/snep.dot     | 18 ++++
- 18 files changed, 588 insertions(+)
- create mode 100644 kernel/trace/rv/monitors/scpd/Kconfig
- create mode 100644 kernel/trace/rv/monitors/scpd/scpd.c
- create mode 100644 kernel/trace/rv/monitors/scpd/scpd.h
- create mode 100644 kernel/trace/rv/monitors/scpd/scpd_trace.h
- create mode 100644 kernel/trace/rv/monitors/sncid/Kconfig
- create mode 100644 kernel/trace/rv/monitors/sncid/sncid.c
- create mode 100644 kernel/trace/rv/monitors/sncid/sncid.h
- create mode 100644 kernel/trace/rv/monitors/sncid/sncid_trace.h
- create mode 100644 kernel/trace/rv/monitors/snep/Kconfig
- create mode 100644 kernel/trace/rv/monitors/snep/snep.c
- create mode 100644 kernel/trace/rv/monitors/snep/snep.h
- create mode 100644 kernel/trace/rv/monitors/snep/snep_trace.h
- create mode 100644 tools/verification/models/sched/scpd.dot
- create mode 100644 tools/verification/models/sched/sncid.dot
- create mode 100644 tools/verification/models/sched/snep.dot
+ tools/verification/dot2/dot2k                 | 27 ++++---
+ tools/verification/dot2/dot2k.py              | 79 +++++++++++++++----
+ .../verification/dot2/dot2k_templates/Kconfig |  1 +
+ .../verification/dot2/dot2k_templates/main.c  |  4 +-
+ .../dot2/dot2k_templates/main_container.c     | 38 +++++++++
+ .../dot2/dot2k_templates/main_container.h     |  3 +
+ 6 files changed, 125 insertions(+), 27 deletions(-)
+ create mode 100644 tools/verification/dot2/dot2k_templates/main_container.c
+ create mode 100644 tools/verification/dot2/dot2k_templates/main_container.h
 
-diff --git a/kernel/trace/rv/Kconfig b/kernel/trace/rv/Kconfig
-index c4f1c0fc3abc6..b39f36013ef23 100644
---- a/kernel/trace/rv/Kconfig
-+++ b/kernel/trace/rv/Kconfig
-@@ -31,6 +31,9 @@ source "kernel/trace/rv/monitors/sched/Kconfig"
- source "kernel/trace/rv/monitors/tss/Kconfig"
- source "kernel/trace/rv/monitors/sco/Kconfig"
- source "kernel/trace/rv/monitors/snroc/Kconfig"
-+source "kernel/trace/rv/monitors/scpd/Kconfig"
-+source "kernel/trace/rv/monitors/snep/Kconfig"
-+source "kernel/trace/rv/monitors/sncid/Kconfig"
- # Add new monitors here
+diff --git a/tools/verification/dot2/dot2k b/tools/verification/dot2/dot2k
+index 559ba191a1f6d..767064f415e76 100644
+--- a/tools/verification/dot2/dot2k
++++ b/tools/verification/dot2/dot2k
+@@ -11,22 +11,30 @@
+ if __name__ == '__main__':
+     from dot2.dot2k import dot2k
+     import argparse
+-    import ntpath
+-    import os
+-    import platform
+     import sys
  
- config RV_REACTORS
-diff --git a/kernel/trace/rv/Makefile b/kernel/trace/rv/Makefile
-index 6d11d6400ddd0..f9b2cd0483c3c 100644
---- a/kernel/trace/rv/Makefile
-+++ b/kernel/trace/rv/Makefile
-@@ -9,6 +9,9 @@ obj-$(CONFIG_RV_MON_SCHED) += monitors/sched/sched.o
- obj-$(CONFIG_RV_MON_TSS) += monitors/tss/tss.o
- obj-$(CONFIG_RV_MON_SCO) += monitors/sco/sco.o
- obj-$(CONFIG_RV_MON_SNROC) += monitors/snroc/snroc.o
-+obj-$(CONFIG_RV_MON_SCPD) += monitors/scpd/scpd.o
-+obj-$(CONFIG_RV_MON_SNEP) += monitors/snep/snep.o
-+obj-$(CONFIG_RV_MON_SNCID) += monitors/sncid/sncid.o
- # Add new monitors here
- obj-$(CONFIG_RV_REACTORS) += rv_reactors.o
- obj-$(CONFIG_RV_REACT_PRINTK) += reactor_printk.o
-diff --git a/kernel/trace/rv/monitors/scpd/Kconfig b/kernel/trace/rv/monitors/scpd/Kconfig
-new file mode 100644
-index 0000000000000..b9114fbf680f9
---- /dev/null
-+++ b/kernel/trace/rv/monitors/scpd/Kconfig
-@@ -0,0 +1,15 @@
-+# SPDX-License-Identifier: GPL-2.0-only
-+#
-+config RV_MON_SCPD
-+	depends on RV
-+	depends on PREEMPT_TRACER
-+	depends on RV_MON_SCHED
-+	default y
-+	select DA_MON_EVENTS_IMPLICIT
-+	bool "scpd monitor"
-+	help
-+	  Monitor to ensure schedule is called with preemption disabled.
-+	  This monitor is part of the sched monitors collection.
-+
-+	  For further information, see:
-+	    Documentation/trace/rv/monitor_sched.rst
-diff --git a/kernel/trace/rv/monitors/scpd/scpd.c b/kernel/trace/rv/monitors/scpd/scpd.c
-new file mode 100644
-index 0000000000000..cbdd6a5f8d7fd
---- /dev/null
-+++ b/kernel/trace/rv/monitors/scpd/scpd.c
-@@ -0,0 +1,96 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#include <linux/ftrace.h>
-+#include <linux/tracepoint.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/init.h>
-+#include <linux/rv.h>
-+#include <rv/instrumentation.h>
-+#include <rv/da_monitor.h>
-+
-+#define MODULE_NAME "scpd"
-+
-+#include <trace/events/sched.h>
-+#include <trace/events/preemptirq.h>
-+#include <rv_trace.h>
-+#include <monitors/sched/sched.h>
-+
-+#include "scpd.h"
-+
-+static struct rv_monitor rv_scpd;
-+DECLARE_DA_MON_PER_CPU(scpd, unsigned char);
-+
-+static void handle_preempt_disable(void *data, unsigned long ip, unsigned long parent_ip)
-+{
-+	da_handle_event_scpd(preempt_disable_scpd);
-+}
-+
-+static void handle_preempt_enable(void *data, unsigned long ip, unsigned long parent_ip)
-+{
-+	da_handle_start_event_scpd(preempt_enable_scpd);
-+}
-+
-+static void handle_schedule_entry(void *data, bool preempt, unsigned long ip)
-+{
-+	da_handle_event_scpd(schedule_entry_scpd);
-+}
-+
-+static void handle_schedule_exit(void *data, bool is_switch, unsigned long ip)
-+{
-+	da_handle_event_scpd(schedule_exit_scpd);
-+}
-+
-+static int enable_scpd(void)
-+{
-+	int retval;
-+
-+	retval = da_monitor_init_scpd();
-+	if (retval)
-+		return retval;
-+
-+	rv_attach_trace_probe("scpd", preempt_disable, handle_preempt_disable);
-+	rv_attach_trace_probe("scpd", preempt_enable, handle_preempt_enable);
-+	rv_attach_trace_probe("scpd", sched_entry_tp, handle_schedule_entry);
-+	rv_attach_trace_probe("scpd", sched_exit_tp, handle_schedule_exit);
-+
-+	return 0;
-+}
-+
-+static void disable_scpd(void)
-+{
-+	rv_scpd.enabled = 0;
-+
-+	rv_detach_trace_probe("scpd", preempt_disable, handle_preempt_disable);
-+	rv_detach_trace_probe("scpd", preempt_enable, handle_preempt_enable);
-+	rv_detach_trace_probe("scpd", sched_entry_tp, handle_schedule_entry);
-+	rv_detach_trace_probe("scpd", sched_exit_tp, handle_schedule_exit);
-+
-+	da_monitor_destroy_scpd();
-+}
-+
-+static struct rv_monitor rv_scpd = {
-+	.name = "scpd",
-+	.description = "schedule called with preemption disabled.",
-+	.enable = enable_scpd,
-+	.disable = disable_scpd,
-+	.reset = da_monitor_reset_all_scpd,
-+	.enabled = 0,
-+};
-+
-+static int __init register_scpd(void)
-+{
-+	rv_register_monitor(&rv_scpd, &rv_sched);
-+	return 0;
-+}
-+
-+static void __exit unregister_scpd(void)
-+{
-+	rv_unregister_monitor(&rv_scpd);
-+}
-+
-+module_init(register_scpd);
-+module_exit(unregister_scpd);
-+
-+MODULE_LICENSE("GPL");
-+MODULE_AUTHOR("Gabriele Monaco <gmonaco@redhat.com>");
-+MODULE_DESCRIPTION("scpd: schedule called with preemption disabled.");
-diff --git a/kernel/trace/rv/monitors/scpd/scpd.h b/kernel/trace/rv/monitors/scpd/scpd.h
-new file mode 100644
-index 0000000000000..295f735a58110
---- /dev/null
-+++ b/kernel/trace/rv/monitors/scpd/scpd.h
-@@ -0,0 +1,49 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Automatically generated C representation of scpd automaton
-+ * For further information about this format, see kernel documentation:
-+ *   Documentation/trace/rv/deterministic_automata.rst
-+ */
-+
-+enum states_scpd {
-+	cant_sched_scpd = 0,
-+	can_sched_scpd,
-+	state_max_scpd
-+};
-+
-+#define INVALID_STATE state_max_scpd
-+
-+enum events_scpd {
-+	preempt_disable_scpd = 0,
-+	preempt_enable_scpd,
-+	schedule_entry_scpd,
-+	schedule_exit_scpd,
-+	event_max_scpd
-+};
-+
-+struct automaton_scpd {
-+	char *state_names[state_max_scpd];
-+	char *event_names[event_max_scpd];
-+	unsigned char function[state_max_scpd][event_max_scpd];
-+	unsigned char initial_state;
-+	bool final_states[state_max_scpd];
-+};
-+
-+static const struct automaton_scpd automaton_scpd = {
-+	.state_names = {
-+		"cant_sched",
-+		"can_sched"
-+	},
-+	.event_names = {
-+		"preempt_disable",
-+		"preempt_enable",
-+		"schedule_entry",
-+		"schedule_exit"
-+	},
-+	.function = {
-+		{     can_sched_scpd,     INVALID_STATE,     INVALID_STATE,     INVALID_STATE },
-+		{     INVALID_STATE,    cant_sched_scpd,     can_sched_scpd,     can_sched_scpd },
-+	},
-+	.initial_state = cant_sched_scpd,
-+	.final_states = { 1, 0 },
-+};
-diff --git a/kernel/trace/rv/monitors/scpd/scpd_trace.h b/kernel/trace/rv/monitors/scpd/scpd_trace.h
-new file mode 100644
-index 0000000000000..6b0f4aa4732e8
---- /dev/null
-+++ b/kernel/trace/rv/monitors/scpd/scpd_trace.h
-@@ -0,0 +1,15 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+
-+/*
-+ * Snippet to be included in rv_trace.h
-+ */
-+
-+#ifdef CONFIG_RV_MON_SCPD
-+DEFINE_EVENT(event_da_monitor, event_scpd,
-+	     TP_PROTO(char *state, char *event, char *next_state, bool final_state),
-+	     TP_ARGS(state, event, next_state, final_state));
-+
-+DEFINE_EVENT(error_da_monitor, error_scpd,
-+	     TP_PROTO(char *state, char *event),
-+	     TP_ARGS(state, event));
-+#endif /* CONFIG_RV_MON_SCPD */
-diff --git a/kernel/trace/rv/monitors/sncid/Kconfig b/kernel/trace/rv/monitors/sncid/Kconfig
-new file mode 100644
-index 0000000000000..76bcfef4fd103
---- /dev/null
-+++ b/kernel/trace/rv/monitors/sncid/Kconfig
-@@ -0,0 +1,15 @@
-+# SPDX-License-Identifier: GPL-2.0-only
-+#
-+config RV_MON_SNCID
-+	depends on RV
-+	depends on IRQSOFF_TRACER
-+	depends on RV_MON_SCHED
-+	default y
-+	select DA_MON_EVENTS_IMPLICIT
-+	bool "sncid monitor"
-+	help
-+	  Monitor to ensure schedule is not called with interrupt disabled.
-+	  This monitor is part of the sched monitors collection.
-+
-+	  For further information, see:
-+	    Documentation/trace/rv/monitor_sched.rst
-diff --git a/kernel/trace/rv/monitors/sncid/sncid.c b/kernel/trace/rv/monitors/sncid/sncid.c
-new file mode 100644
-index 0000000000000..f5037cd6214c2
---- /dev/null
-+++ b/kernel/trace/rv/monitors/sncid/sncid.c
-@@ -0,0 +1,96 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#include <linux/ftrace.h>
-+#include <linux/tracepoint.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/init.h>
-+#include <linux/rv.h>
-+#include <rv/instrumentation.h>
-+#include <rv/da_monitor.h>
-+
-+#define MODULE_NAME "sncid"
-+
-+#include <trace/events/sched.h>
-+#include <trace/events/preemptirq.h>
-+#include <rv_trace.h>
-+#include <monitors/sched/sched.h>
-+
-+#include "sncid.h"
-+
-+static struct rv_monitor rv_sncid;
-+DECLARE_DA_MON_PER_CPU(sncid, unsigned char);
-+
-+static void handle_irq_disable(void *data, unsigned long ip, unsigned long parent_ip)
-+{
-+	da_handle_event_sncid(irq_disable_sncid);
-+}
-+
-+static void handle_irq_enable(void *data, unsigned long ip, unsigned long parent_ip)
-+{
-+	da_handle_start_event_sncid(irq_enable_sncid);
-+}
-+
-+static void handle_schedule_entry(void *data, bool preempt, unsigned long ip)
-+{
-+	da_handle_start_event_sncid(schedule_entry_sncid);
-+}
-+
-+static void handle_schedule_exit(void *data, bool is_switch, unsigned long ip)
-+{
-+	da_handle_start_event_sncid(schedule_exit_sncid);
-+}
-+
-+static int enable_sncid(void)
-+{
-+	int retval;
-+
-+	retval = da_monitor_init_sncid();
-+	if (retval)
-+		return retval;
-+
-+	rv_attach_trace_probe("sncid", irq_disable, handle_irq_disable);
-+	rv_attach_trace_probe("sncid", irq_enable, handle_irq_enable);
-+	rv_attach_trace_probe("sncid", sched_entry_tp, handle_schedule_entry);
-+	rv_attach_trace_probe("sncid", sched_exit_tp, handle_schedule_exit);
-+
-+	return 0;
-+}
-+
-+static void disable_sncid(void)
-+{
-+	rv_sncid.enabled = 0;
-+
-+	rv_detach_trace_probe("sncid", irq_disable, handle_irq_disable);
-+	rv_detach_trace_probe("sncid", irq_enable, handle_irq_enable);
-+	rv_detach_trace_probe("sncid", sched_entry_tp, handle_schedule_entry);
-+	rv_detach_trace_probe("sncid", sched_exit_tp, handle_schedule_exit);
-+
-+	da_monitor_destroy_sncid();
-+}
-+
-+static struct rv_monitor rv_sncid = {
-+	.name = "sncid",
-+	.description = "schedule not called with interrupt disabled.",
-+	.enable = enable_sncid,
-+	.disable = disable_sncid,
-+	.reset = da_monitor_reset_all_sncid,
-+	.enabled = 0,
-+};
-+
-+static int __init register_sncid(void)
-+{
-+	rv_register_monitor(&rv_sncid, &rv_sched);
-+	return 0;
-+}
-+
-+static void __exit unregister_sncid(void)
-+{
-+	rv_unregister_monitor(&rv_sncid);
-+}
-+
-+module_init(register_sncid);
-+module_exit(unregister_sncid);
-+
-+MODULE_LICENSE("GPL");
-+MODULE_AUTHOR("Gabriele Monaco <gmonaco@redhat.com>");
-+MODULE_DESCRIPTION("sncid: schedule not called with interrupt disabled.");
-diff --git a/kernel/trace/rv/monitors/sncid/sncid.h b/kernel/trace/rv/monitors/sncid/sncid.h
-new file mode 100644
-index 0000000000000..21304725142bc
---- /dev/null
-+++ b/kernel/trace/rv/monitors/sncid/sncid.h
-@@ -0,0 +1,49 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Automatically generated C representation of sncid automaton
-+ * For further information about this format, see kernel documentation:
-+ *   Documentation/trace/rv/deterministic_automata.rst
-+ */
-+
-+enum states_sncid {
-+	can_sched_sncid = 0,
-+	cant_sched_sncid,
-+	state_max_sncid
-+};
-+
-+#define INVALID_STATE state_max_sncid
-+
-+enum events_sncid {
-+	irq_disable_sncid = 0,
-+	irq_enable_sncid,
-+	schedule_entry_sncid,
-+	schedule_exit_sncid,
-+	event_max_sncid
-+};
-+
-+struct automaton_sncid {
-+	char *state_names[state_max_sncid];
-+	char *event_names[event_max_sncid];
-+	unsigned char function[state_max_sncid][event_max_sncid];
-+	unsigned char initial_state;
-+	bool final_states[state_max_sncid];
-+};
-+
-+static const struct automaton_sncid automaton_sncid = {
-+	.state_names = {
-+		"can_sched",
-+		"cant_sched"
-+	},
-+	.event_names = {
-+		"irq_disable",
-+		"irq_enable",
-+		"schedule_entry",
-+		"schedule_exit"
-+	},
-+	.function = {
-+		{ cant_sched_sncid,   INVALID_STATE, can_sched_sncid, can_sched_sncid },
-+		{    INVALID_STATE, can_sched_sncid,   INVALID_STATE,   INVALID_STATE },
-+	},
-+	.initial_state = can_sched_sncid,
-+	.final_states = { 1, 0 },
-+};
-diff --git a/kernel/trace/rv/monitors/sncid/sncid_trace.h b/kernel/trace/rv/monitors/sncid/sncid_trace.h
-new file mode 100644
-index 0000000000000..3ce42a57671d4
---- /dev/null
-+++ b/kernel/trace/rv/monitors/sncid/sncid_trace.h
-@@ -0,0 +1,15 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+
-+/*
-+ * Snippet to be included in rv_trace.h
-+ */
-+
-+#ifdef CONFIG_RV_MON_SNCID
-+DEFINE_EVENT(event_da_monitor, event_sncid,
-+	     TP_PROTO(char *state, char *event, char *next_state, bool final_state),
-+	     TP_ARGS(state, event, next_state, final_state));
-+
-+DEFINE_EVENT(error_da_monitor, error_sncid,
-+	     TP_PROTO(char *state, char *event),
-+	     TP_ARGS(state, event));
-+#endif /* CONFIG_RV_MON_SNCID */
-diff --git a/kernel/trace/rv/monitors/snep/Kconfig b/kernel/trace/rv/monitors/snep/Kconfig
-new file mode 100644
-index 0000000000000..77527f9712325
---- /dev/null
-+++ b/kernel/trace/rv/monitors/snep/Kconfig
-@@ -0,0 +1,15 @@
-+# SPDX-License-Identifier: GPL-2.0-only
-+#
-+config RV_MON_SNEP
-+	depends on RV
-+	depends on PREEMPT_TRACER
-+	depends on RV_MON_SCHED
-+	default y
-+	select DA_MON_EVENTS_IMPLICIT
-+	bool "snep monitor"
-+	help
-+	  Monitor to ensure schedule does not enable preempt.
-+	  This monitor is part of the sched monitors collection.
-+
-+	  For further information, see:
-+	    Documentation/trace/rv/monitor_sched.rst
-diff --git a/kernel/trace/rv/monitors/snep/snep.c b/kernel/trace/rv/monitors/snep/snep.c
-new file mode 100644
-index 0000000000000..0076ba6d7ea44
---- /dev/null
-+++ b/kernel/trace/rv/monitors/snep/snep.c
-@@ -0,0 +1,96 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#include <linux/ftrace.h>
-+#include <linux/tracepoint.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/init.h>
-+#include <linux/rv.h>
-+#include <rv/instrumentation.h>
-+#include <rv/da_monitor.h>
-+
-+#define MODULE_NAME "snep"
-+
-+#include <trace/events/sched.h>
-+#include <trace/events/preemptirq.h>
-+#include <rv_trace.h>
-+#include <monitors/sched/sched.h>
-+
-+#include "snep.h"
-+
-+static struct rv_monitor rv_snep;
-+DECLARE_DA_MON_PER_CPU(snep, unsigned char);
-+
-+static void handle_preempt_disable(void *data, unsigned long ip, unsigned long parent_ip)
-+{
-+	da_handle_start_event_snep(preempt_disable_snep);
-+}
-+
-+static void handle_preempt_enable(void *data, unsigned long ip, unsigned long parent_ip)
-+{
-+	da_handle_start_event_snep(preempt_enable_snep);
-+}
-+
-+static void handle_schedule_entry(void *data, bool preempt, unsigned long ip)
-+{
-+	da_handle_event_snep(schedule_entry_snep);
-+}
-+
-+static void handle_schedule_exit(void *data, bool is_switch, unsigned long ip)
-+{
-+	da_handle_start_event_snep(schedule_exit_snep);
-+}
-+
-+static int enable_snep(void)
-+{
-+	int retval;
-+
-+	retval = da_monitor_init_snep();
-+	if (retval)
-+		return retval;
-+
-+	rv_attach_trace_probe("snep", preempt_disable, handle_preempt_disable);
-+	rv_attach_trace_probe("snep", preempt_enable, handle_preempt_enable);
-+	rv_attach_trace_probe("snep", sched_entry_tp, handle_schedule_entry);
-+	rv_attach_trace_probe("snep", sched_exit_tp, handle_schedule_exit);
-+
-+	return 0;
-+}
-+
-+static void disable_snep(void)
-+{
-+	rv_snep.enabled = 0;
-+
-+	rv_detach_trace_probe("snep", preempt_disable, handle_preempt_disable);
-+	rv_detach_trace_probe("snep", preempt_enable, handle_preempt_enable);
-+	rv_detach_trace_probe("snep", sched_entry_tp, handle_schedule_entry);
-+	rv_detach_trace_probe("snep", sched_exit_tp, handle_schedule_exit);
-+
-+	da_monitor_destroy_snep();
-+}
-+
-+static struct rv_monitor rv_snep = {
-+	.name = "snep",
-+	.description = "schedule does not enable preempt.",
-+	.enable = enable_snep,
-+	.disable = disable_snep,
-+	.reset = da_monitor_reset_all_snep,
-+	.enabled = 0,
-+};
-+
-+static int __init register_snep(void)
-+{
-+	rv_register_monitor(&rv_snep, &rv_sched);
-+	return 0;
-+}
-+
-+static void __exit unregister_snep(void)
-+{
-+	rv_unregister_monitor(&rv_snep);
-+}
-+
-+module_init(register_snep);
-+module_exit(unregister_snep);
-+
-+MODULE_LICENSE("GPL");
-+MODULE_AUTHOR("Gabriele Monaco <gmonaco@redhat.com>");
-+MODULE_DESCRIPTION("snep: schedule does not enable preempt.");
-diff --git a/kernel/trace/rv/monitors/snep/snep.h b/kernel/trace/rv/monitors/snep/snep.h
-new file mode 100644
-index 0000000000000..6d16b9ad931e1
---- /dev/null
-+++ b/kernel/trace/rv/monitors/snep/snep.h
-@@ -0,0 +1,49 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Automatically generated C representation of snep automaton
-+ * For further information about this format, see kernel documentation:
-+ *   Documentation/trace/rv/deterministic_automata.rst
-+ */
-+
-+enum states_snep {
-+	non_scheduling_context_snep = 0,
-+	scheduling_contex_snep,
-+	state_max_snep
-+};
-+
-+#define INVALID_STATE state_max_snep
-+
-+enum events_snep {
-+	preempt_disable_snep = 0,
-+	preempt_enable_snep,
-+	schedule_entry_snep,
-+	schedule_exit_snep,
-+	event_max_snep
-+};
-+
-+struct automaton_snep {
-+	char *state_names[state_max_snep];
-+	char *event_names[event_max_snep];
-+	unsigned char function[state_max_snep][event_max_snep];
-+	unsigned char initial_state;
-+	bool final_states[state_max_snep];
-+};
-+
-+static const struct automaton_snep automaton_snep = {
-+	.state_names = {
-+		"non_scheduling_context",
-+		"scheduling_contex"
-+	},
-+	.event_names = {
-+		"preempt_disable",
-+		"preempt_enable",
-+		"schedule_entry",
-+		"schedule_exit"
-+	},
-+	.function = {
-+		{ non_scheduling_context_snep, non_scheduling_context_snep, scheduling_contex_snep,               INVALID_STATE },
-+		{               INVALID_STATE,               INVALID_STATE,          INVALID_STATE, non_scheduling_context_snep },
-+	},
-+	.initial_state = non_scheduling_context_snep,
-+	.final_states = { 1, 0 },
-+};
-diff --git a/kernel/trace/rv/monitors/snep/snep_trace.h b/kernel/trace/rv/monitors/snep/snep_trace.h
-new file mode 100644
-index 0000000000000..01aad49a949a8
---- /dev/null
-+++ b/kernel/trace/rv/monitors/snep/snep_trace.h
-@@ -0,0 +1,15 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+
-+/*
-+ * Snippet to be included in rv_trace.h
-+ */
-+
-+#ifdef CONFIG_RV_MON_SNEP
-+DEFINE_EVENT(event_da_monitor, event_snep,
-+	     TP_PROTO(char *state, char *event, char *next_state, bool final_state),
-+	     TP_ARGS(state, event, next_state, final_state));
-+
-+DEFINE_EVENT(error_da_monitor, error_snep,
-+	     TP_PROTO(char *state, char *event),
-+	     TP_ARGS(state, event));
-+#endif /* CONFIG_RV_MON_SNEP */
-diff --git a/kernel/trace/rv/rv_trace.h b/kernel/trace/rv/rv_trace.h
-index a533bc29cfddf..422b75f58891e 100644
---- a/kernel/trace/rv/rv_trace.h
-+++ b/kernel/trace/rv/rv_trace.h
-@@ -60,6 +60,9 @@ DECLARE_EVENT_CLASS(error_da_monitor,
- #include <monitors/wip/wip_trace.h>
- #include <monitors/tss/tss_trace.h>
- #include <monitors/sco/sco_trace.h>
-+#include <monitors/scpd/scpd_trace.h>
-+#include <monitors/snep/snep_trace.h>
-+#include <monitors/sncid/sncid_trace.h>
- // Add new monitors based on CONFIG_DA_MON_EVENTS_IMPLICIT here
++    def is_container():
++        """Should work even before parsing the arguments"""
++        return "-c" in sys.argv or "--container" in sys.argv
++
+     parser = argparse.ArgumentParser(description='transform .dot file into kernel rv monitor')
+-    parser.add_argument('-d', "--dot", dest="dot_file", required=True)
+-    parser.add_argument('-t', "--monitor_type", dest="monitor_type", required=True)
+-    parser.add_argument('-n', "--model_name", dest="model_name", required=False)
++    parser.add_argument('-d', "--dot", dest="dot_file", required=not is_container())
++    parser.add_argument('-t', "--monitor_type", dest="monitor_type", required=not is_container(),
++                        help=f"Available options: {', '.join(dot2k.monitor_types.keys())}")
++    parser.add_argument('-n', "--model_name", dest="model_name", required=is_container())
+     parser.add_argument("-D", "--description", dest="description", required=False)
+     parser.add_argument("-a", "--auto_patch", dest="auto_patch",
+                         action="store_true", required=False,
+                         help="Patch the kernel in place")
++    parser.add_argument("-p", "--parent", dest="parent",
++                        required=False, help="Create a monitor nested to parent")
++    parser.add_argument("-c", "--container", dest="container",
++                        action="store_true", required=False,
++                        help="Create an empty monitor to be used as a container")
+     params = parser.parse_args()
  
- #endif /* CONFIG_DA_MON_EVENTS_IMPLICIT */
-diff --git a/tools/verification/models/sched/scpd.dot b/tools/verification/models/sched/scpd.dot
+-    print("Opening and parsing the dot file %s" % params.dot_file)
++    if not is_container():
++        print("Opening and parsing the dot file %s" % params.dot_file)
+     try:
+         monitor=dot2k(params.dot_file, params.monitor_type, vars(params))
+     except Exception as e:
+@@ -37,8 +45,9 @@ if __name__ == '__main__':
+     print("Writing the monitor into the directory %s" % monitor.name)
+     monitor.print_files()
+     print("Almost done, checklist")
+-    print("  - Edit the %s/%s.c to add the instrumentation" % (monitor.name, monitor.name))
+-    print(monitor.fill_tracepoint_tooltip())
++    if not is_container():
++        print("  - Edit the %s/%s.c to add the instrumentation" % (monitor.name, monitor.name))
++        print(monitor.fill_tracepoint_tooltip())
+     print(monitor.fill_makefile_tooltip())
+     print(monitor.fill_kconfig_tooltip())
+     print(monitor.fill_monitor_tooltip())
+diff --git a/tools/verification/dot2/dot2k.py b/tools/verification/dot2/dot2k.py
+index 153cc14bcca45..745d35a4a3791 100644
+--- a/tools/verification/dot2/dot2k.py
++++ b/tools/verification/dot2/dot2k.py
+@@ -19,16 +19,31 @@ class dot2k(Dot2c):
+     monitor_type = "per_cpu"
+ 
+     def __init__(self, file_path, MonitorType, extra_params={}):
+-        super().__init__(file_path, extra_params.get("model_name"))
+-
+-        self.monitor_type = self.monitor_types.get(MonitorType)
+-        if self.monitor_type is None:
+-            raise ValueError("Unknown monitor type: %s" % MonitorType)
+-
+-        self.monitor_type = MonitorType
++        self.container = extra_params.get("container")
++        self.parent = extra_params.get("parent")
+         self.__fill_rv_templates_dir()
+-        self.main_c = self.__read_file(self.monitor_templates_dir + "main.c")
+-        self.trace_h = self.__read_file(self.monitor_templates_dir + "trace.h")
++
++        if self.container:
++            if file_path:
++                raise ValueError("A container does not require a dot file")
++            if MonitorType:
++                raise ValueError("A container does not require a monitor type")
++            if self.parent:
++                raise ValueError("A container cannot have a parent")
++            self.name = extra_params.get("model_name")
++            self.events = []
++            self.states = []
++            self.main_c = self.__read_file(self.monitor_templates_dir + "main_container.c")
++            self.main_h = self.__read_file(self.monitor_templates_dir + "main_container.h")
++        else:
++            super().__init__(file_path, extra_params.get("model_name"))
++
++            self.monitor_type = self.monitor_types.get(MonitorType)
++            if self.monitor_type is None:
++                raise ValueError("Unknown monitor type: %s" % MonitorType)
++            self.monitor_type = MonitorType
++            self.main_c = self.__read_file(self.monitor_templates_dir + "main.c")
++            self.trace_h = self.__read_file(self.monitor_templates_dir + "trace.h")
+         self.kconfig = self.__read_file(self.monitor_templates_dir + "Kconfig")
+         self.enum_suffix = "_%s" % self.name
+         self.description = extra_params.get("description", self.name) or "auto-generated"
+@@ -105,6 +120,14 @@ class dot2k(Dot2c):
+     def fill_monitor_type(self):
+         return self.monitor_type.upper()
+ 
++    def fill_parent(self):
++        return "&rv_%s" % self.parent if self.parent else "NULL"
++
++    def fill_include_parent(self):
++        if self.parent:
++            return "#include <monitors/%s/%s.h>\n" % (self.parent, self.parent)
++        return ""
++
+     def fill_tracepoint_handlers_skel(self):
+         buff = []
+         for event in self.events:
+@@ -146,6 +169,8 @@ class dot2k(Dot2c):
+         tracepoint_handlers = self.fill_tracepoint_handlers_skel()
+         tracepoint_attach = self.fill_tracepoint_attach_probe()
+         tracepoint_detach = self.fill_tracepoint_detach_helper()
++        parent = self.fill_parent()
++        parent_include = self.fill_include_parent()
+ 
+         main_c = main_c.replace("%%MONITOR_TYPE%%", monitor_type)
+         main_c = main_c.replace("%%MIN_TYPE%%", min_type)
+@@ -155,6 +180,8 @@ class dot2k(Dot2c):
+         main_c = main_c.replace("%%TRACEPOINT_ATTACH%%", tracepoint_attach)
+         main_c = main_c.replace("%%TRACEPOINT_DETACH%%", tracepoint_detach)
+         main_c = main_c.replace("%%DESCRIPTION%%", self.description)
++        main_c = main_c.replace("%%PARENT%%", parent)
++        main_c = main_c.replace("%%INCLUDE_PARENT%%", parent_include)
+ 
+         return main_c
+ 
+@@ -216,6 +243,14 @@ class dot2k(Dot2c):
+         buff.append("	     TP_ARGS(%s)" % tp_args_c)
+         return self.__buff_to_string(buff)
+ 
++    def fill_monitor_deps(self):
++        buff = []
++        buff.append("	# XXX: add dependencies if there")
++        if self.parent:
++            buff.append("	depends on RV_MON_%s" % self.parent.upper())
++            buff.append("	default y")
++        return self.__buff_to_string(buff)
++
+     def fill_trace_h(self):
+         trace_h = self.trace_h
+         monitor_class = self.fill_monitor_class()
+@@ -233,12 +268,19 @@ class dot2k(Dot2c):
+     def fill_kconfig(self):
+         kconfig = self.kconfig
+         monitor_class_type = self.fill_monitor_class_type()
++        monitor_deps = self.fill_monitor_deps()
+         kconfig = kconfig.replace("%%MODEL_NAME%%", self.name)
+         kconfig = kconfig.replace("%%MODEL_NAME_UP%%", self.name.upper())
+         kconfig = kconfig.replace("%%MONITOR_CLASS_TYPE%%", monitor_class_type)
+         kconfig = kconfig.replace("%%DESCRIPTION%%", self.description)
++        kconfig = kconfig.replace("%%MONITOR_DEPS%%", monitor_deps)
+         return kconfig
+ 
++    def fill_main_container_h(self):
++        main_h = self.main_h
++        main_h = main_h.replace("%%MODEL_NAME%%", self.name)
++        return main_h
++
+     def __patch_file(self, file, marker, line):
+         file_to_patch = os.path.join(self.rv_dir, file)
+         content = self.__read_file(file_to_patch)
+@@ -324,19 +366,24 @@ obj-$(CONFIG_RV_MON_%s) += monitors/%s/%s.o
+ 
+     def print_files(self):
+         main_c = self.fill_main_c()
+-        model_h = self.fill_model_h()
+ 
+         self.__create_directory()
+ 
+         path = "%s.c" % self.name
+         self.__create_file(path, main_c)
+ 
+-        path = "%s.h" % self.name
+-        self.__create_file(path, model_h)
+-
+-        trace_h = self.fill_trace_h()
+-        path = "%s_trace.h" % self.name
+-        self.__create_file(path, trace_h)
++        if self.container:
++            main_h = self.fill_main_container_h()
++            path = "%s.h" % self.name
++            self.__create_file(path, main_h)
++        else:
++            model_h = self.fill_model_h()
++            path = "%s.h" % self.name
++            self.__create_file(path, model_h)
++
++            trace_h = self.fill_trace_h()
++            path = "%s_trace.h" % self.name
++            self.__create_file(path, trace_h)
+ 
+         kconfig = self.fill_kconfig()
+         self.__create_file("Kconfig", kconfig)
+diff --git a/tools/verification/dot2/dot2k_templates/Kconfig b/tools/verification/dot2/dot2k_templates/Kconfig
+index 03100eda17075..291b29ea28db3 100644
+--- a/tools/verification/dot2/dot2k_templates/Kconfig
++++ b/tools/verification/dot2/dot2k_templates/Kconfig
+@@ -2,6 +2,7 @@
+ #
+ config RV_MON_%%MODEL_NAME_UP%%
+ 	depends on RV
++%%MONITOR_DEPS%%
+ 	select %%MONITOR_CLASS_TYPE%%
+ 	bool "%%MODEL_NAME%% monitor"
+ 	help
+diff --git a/tools/verification/dot2/dot2k_templates/main.c b/tools/verification/dot2/dot2k_templates/main.c
+index 9605ca994416b..83044a20c89aa 100644
+--- a/tools/verification/dot2/dot2k_templates/main.c
++++ b/tools/verification/dot2/dot2k_templates/main.c
+@@ -15,7 +15,7 @@
+  * #include <trace/events/sched.h>
+  */
+ #include <rv_trace.h>
+-
++%%INCLUDE_PARENT%%
+ /*
+  * This is the self-generated part of the monitor. Generally, there is no need
+  * to touch this section.
+@@ -74,7 +74,7 @@ static struct rv_monitor rv_%%MODEL_NAME%% = {
+ 
+ static int __init register_%%MODEL_NAME%%(void)
+ {
+-	rv_register_monitor(&rv_%%MODEL_NAME%%);
++	rv_register_monitor(&rv_%%MODEL_NAME%%, %%PARENT%%);
+ 	return 0;
+ }
+ 
+diff --git a/tools/verification/dot2/dot2k_templates/main_container.c b/tools/verification/dot2/dot2k_templates/main_container.c
 new file mode 100644
-index 0000000000000..340413896765c
+index 0000000000000..89fc17cf8958e
 --- /dev/null
-+++ b/tools/verification/models/sched/scpd.dot
-@@ -0,0 +1,18 @@
-+digraph state_automaton {
-+	center = true;
-+	size = "7,11";
-+	{node [shape = plaintext] "can_sched"};
-+	{node [shape = plaintext, style=invis, label=""] "__init_cant_sched"};
-+	{node [shape = ellipse] "cant_sched"};
-+	{node [shape = plaintext] "cant_sched"};
-+	"__init_cant_sched" -> "cant_sched";
-+	"can_sched" [label = "can_sched"];
-+	"can_sched" -> "can_sched" [ label = "schedule_entry\nschedule_exit" ];
-+	"can_sched" -> "cant_sched" [ label = "preempt_enable" ];
-+	"cant_sched" [label = "cant_sched", color = green3];
-+	"cant_sched" -> "can_sched" [ label = "preempt_disable" ];
-+	{ rank = min ;
-+		"__init_cant_sched";
-+		"cant_sched";
-+	}
++++ b/tools/verification/dot2/dot2k_templates/main_container.c
+@@ -0,0 +1,38 @@
++// SPDX-License-Identifier: GPL-2.0
++#include <linux/kernel.h>
++#include <linux/module.h>
++#include <linux/init.h>
++#include <linux/rv.h>
++
++#define MODULE_NAME "%%MODEL_NAME%%"
++
++#include "%%MODEL_NAME%%.h"
++
++struct rv_monitor rv_%%MODEL_NAME%%;
++
++struct rv_monitor rv_%%MODEL_NAME%% = {
++	.name = "%%MODEL_NAME%%",
++	.description = "%%DESCRIPTION%%",
++	.enable = NULL,
++	.disable = NULL,
++	.reset = NULL,
++	.enabled = 0,
++};
++
++static int __init register_%%MODEL_NAME%%(void)
++{
++	rv_register_monitor(&rv_%%MODEL_NAME%%, NULL);
++	return 0;
 +}
-diff --git a/tools/verification/models/sched/sncid.dot b/tools/verification/models/sched/sncid.dot
++
++static void __exit unregister_%%MODEL_NAME%%(void)
++{
++	rv_unregister_monitor(&rv_%%MODEL_NAME%%);
++}
++
++module_init(register_%%MODEL_NAME%%);
++module_exit(unregister_%%MODEL_NAME%%);
++
++MODULE_LICENSE("GPL");
++MODULE_AUTHOR("dot2k: auto-generated");
++MODULE_DESCRIPTION("%%MODEL_NAME%%: %%DESCRIPTION%%");
+diff --git a/tools/verification/dot2/dot2k_templates/main_container.h b/tools/verification/dot2/dot2k_templates/main_container.h
 new file mode 100644
-index 0000000000000..072851721b50a
+index 0000000000000..0f6883ab4bcc7
 --- /dev/null
-+++ b/tools/verification/models/sched/sncid.dot
-@@ -0,0 +1,18 @@
-+digraph state_automaton {
-+	center = true;
-+	size = "7,11";
-+	{node [shape = plaintext, style=invis, label=""] "__init_can_sched"};
-+	{node [shape = ellipse] "can_sched"};
-+	{node [shape = plaintext] "can_sched"};
-+	{node [shape = plaintext] "cant_sched"};
-+	"__init_can_sched" -> "can_sched";
-+	"can_sched" [label = "can_sched", color = green3];
-+	"can_sched" -> "can_sched" [ label = "schedule_entry\nschedule_exit" ];
-+	"can_sched" -> "cant_sched" [ label = "irq_disable" ];
-+	"cant_sched" [label = "cant_sched"];
-+	"cant_sched" -> "can_sched" [ label = "irq_enable" ];
-+	{ rank = min ;
-+		"__init_can_sched";
-+		"can_sched";
-+	}
-+}
-diff --git a/tools/verification/models/sched/snep.dot b/tools/verification/models/sched/snep.dot
-new file mode 100644
-index 0000000000000..fe1300e93f211
---- /dev/null
-+++ b/tools/verification/models/sched/snep.dot
-@@ -0,0 +1,18 @@
-+digraph state_automaton {
-+	center = true;
-+	size = "7,11";
-+	{node [shape = plaintext, style=invis, label=""] "__init_non_scheduling_context"};
-+	{node [shape = ellipse] "non_scheduling_context"};
-+	{node [shape = plaintext] "non_scheduling_context"};
-+	{node [shape = plaintext] "scheduling_contex"};
-+	"__init_non_scheduling_context" -> "non_scheduling_context";
-+	"non_scheduling_context" [label = "non_scheduling_context", color = green3];
-+	"non_scheduling_context" -> "non_scheduling_context" [ label = "preempt_disable\npreempt_enable" ];
-+	"non_scheduling_context" -> "scheduling_contex" [ label = "schedule_entry" ];
-+	"scheduling_contex" [label = "scheduling_contex"];
-+	"scheduling_contex" -> "non_scheduling_context" [ label = "schedule_exit" ];
-+	{ rank = min ;
-+		"__init_non_scheduling_context";
-+		"non_scheduling_context";
-+	}
-+}
++++ b/tools/verification/dot2/dot2k_templates/main_container.h
+@@ -0,0 +1,3 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++
++extern struct rv_monitor rv_%%MODEL_NAME%%;
 -- 
 2.48.1
 
