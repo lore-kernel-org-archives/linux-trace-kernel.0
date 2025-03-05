@@ -1,216 +1,371 @@
-Received: from mail-yw1-f194.google.com (mail-yw1-f194.google.com [209.85.128.194])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E4BE155342;
-	Wed,  5 Mar 2025 08:51:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.194
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8B59B201270;
+	Wed,  5 Mar 2025 09:08:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741164687; cv=none; b=uroCXQ6ZcB30dZRbsWdNSgE7GihFroHlOpE6RTxideOlyV5lSduBnmKZ350Q1e7kCnVs4o1To3SRWDOyLwjreumjB3l27oo/J0UDPgHETK0KxYDZ27kh7X4WpDuPYEpovDb8wg4O/ooqPc8NnZ6t8h05XSDRcGvvfkMEdeXBxnE=
+	t=1741165697; cv=none; b=An0FQ7nQng8SDR7CWWhHCzCYDH8wDCst1S+3wZ6UIZ9jZDLTiEOCeRcLPwU+7Qwlx595056o7NGZlgnBini7abv1E/EILmOf7hCyGwCEAYiwd9jJXHeSH2PCuDtxsJMJaN8pnbY8aVRZqWqx5tMzIXwZNgE0+gFECG0/A5nAcwo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741164687; c=relaxed/simple;
-	bh=Cn0cFNTAZkpwSEDVzdYgVrdTOxR6wqjxB47H6BWXgbg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=SbuS4mFdL/semVLlTWGtQfDeOnbYHsTTjd/3TLAEeqDPLpSMgdtidUIztxsxKgy/IZ7CsxIx0gXmjQvVZsWn6ylcXPE6tzkUjfbHnMAM7F/QwWPBmlPFc7r634V2/lAs/iy47rUmOCQ22DW/ApPhq1Eg1id55fNoVJTJHLCPNzI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PTht5iVc; arc=none smtp.client-ip=209.85.128.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PTht5iVc"
-Received: by mail-yw1-f194.google.com with SMTP id 00721157ae682-6fd47dfe76cso49120807b3.3;
-        Wed, 05 Mar 2025 00:51:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741164685; x=1741769485; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=DQXKjZHa5r4213wcOvfbsp5orLWVfyC4Oxpcslkw+cY=;
-        b=PTht5iVcGGIxtI0Pl8tUHXs2adhL7j2hIOkWxghVyzJAMQdkdtPISeUWOeRa5N0bH+
-         iTfBTDFLv80f/v71g+9gLFErLPSrdOhrF1bIxjRhJ45G1ZabL0pr7i3nFPOkveWukILv
-         4lDIyuzSPHjiYSKb2vcaU7LWXUl2i6mcHQIVC0W6rOEpu0OYOm8yBKpkGYaKaNCTYk6f
-         KW7UHjNiNStP4iUMNm+RngvEYkdBPl+YhulY3PYWyGZpnwYErt4IbTjO3MRqh8wmPovj
-         cgp9UnfgyqpcjdICbZAomHztLpjVPZyooQ29UdYRTAGaROexxoapNsB0f84oAPXtHwrT
-         q0MQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741164685; x=1741769485;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=DQXKjZHa5r4213wcOvfbsp5orLWVfyC4Oxpcslkw+cY=;
-        b=GUlUtmyWHgGMYPxkHHM2s545tyxO6pjlJ6lF9L/vD9cEgyyqd47EFDllpBHSygrlIP
-         aamgyUldXhfpw9PFXIPDyvV1zTl/oAKiq41uTHh243YiSn7DVWWNJxoTd7B8b8QYFKZm
-         bC5ujS6Ljj/Z0hJDKut+7IOkMz3tuIoXKJNMiU4g4yqcYx3RwIuZ3BT+TZ88H/HtC68N
-         8MSqrpRy9oso/DfZnO5WleIS7uMBlJATcEaJh2TsEi6v4jNahMhkfygf49pdZmAobRxW
-         Z1VxFvWGk1OlxqPpEdrCy5YYSHUdTgJPSdszpYngeHDHx6IMjSBE7xmD9oZ86riOw++J
-         Kf7w==
-X-Forwarded-Encrypted: i=1; AJvYcCUZsDx5YNTarkSNfm4SDNv3dvxSP4J61Kfz+ULpRonTw7mPw4GTK9+Gq/g77PEn4e3BihIvqSfYobhDq8YoZftXL36G@vger.kernel.org, AJvYcCWEv26YWeFImkuF6MjeFZVHtRebJoobstcpTXnrjogf9qtGS2cy8cmw3i23VD4PMupbegCyJy4ierfPgCtv@vger.kernel.org, AJvYcCWi2Z1dzwAsfK+kxn5iUvtvfRhPzHr7SS82J/KoNKUPWLkL37nnNViRUX+6TIJRIim5+OQ=@vger.kernel.org, AJvYcCXyJtqrg83P2nGyX2Oo/fWPP5dmOAAqF8THZAGhgOrVjOwdGSrHrJgPTWImG0m56aQ3QreWwZwS@vger.kernel.org
-X-Gm-Message-State: AOJu0YyesAm3ZJIdFgOcOMMSsU+OW+1tNLHxeY0BEsf5gQ5S9n1idOE2
-	MFw8Qz1nu6BVC2C/IDJj+BmidV/iN2GcHvRhlQ4OKxN+BFYKuXGLzpnU7cIiguM8Ic8jfC25FyJ
-	NEwXYRVudY0q67KBCKRCuGbgVVqA=
-X-Gm-Gg: ASbGncsKwPmZrHiOrlz5uqmu3bMapUEJ1rrUyjuftydXHgQobnhKP/EW7BpmEN7+ccs
-	eBOD/OXqcYG4DWcExzP52BVSPTGIXs3hgJNtf6lFURoJ0gJbNSsiodpBr8buBCCHyCTLBxU0hl/
-	YmYwAokO2bmII/N9/oVkR+Wg+6ag==
-X-Google-Smtp-Source: AGHT+IHJHBBsGtFfE4z2mPAk21mETs2dOEwyYu6mGke3XwoXSNX7h5iKIMLg2OfM/L0feLDcyFXEy1rx6kLoqIY81uk=
-X-Received: by 2002:a05:690c:6c82:b0:6ea:5da9:34cc with SMTP id
- 00721157ae682-6fda2f6ae73mr31701457b3.7.1741164685004; Wed, 05 Mar 2025
- 00:51:25 -0800 (PST)
+	s=arc-20240116; t=1741165697; c=relaxed/simple;
+	bh=g7nZ2uqeH8LwJ98yMTZXa6Mh806OPQyUp5YRPfaTrPk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=QcXLcS4EkUYte5sfaxbif76Uozwx5T/cjO6hddrmao1TvTaJCr0HqQPBHMaBArnyyfmimD/LqmGrpJKwxFJaEGgFSRB3Bk/ZEkhQiiqqRda8vHnhk5/QQXiYF5LSV4GCKzGnHfnXDie3Z5HS9YLZbMPC0GMglgXNJmZBZJYKGyk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 035C5FEC;
+	Wed,  5 Mar 2025 01:08:28 -0800 (PST)
+Received: from [10.162.42.28] (K4MQJ0H1H2.blr.arm.com [10.162.42.28])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id F32E03F66E;
+	Wed,  5 Mar 2025 01:08:00 -0800 (PST)
+Message-ID: <d6d8cc12-6c08-42b1-9baa-d4981299bf28@arm.com>
+Date: Wed, 5 Mar 2025 14:37:57 +0530
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250303132837.498938-1-dongml2@chinatelecom.cn>
- <20250303132837.498938-2-dongml2@chinatelecom.cn> <20250303165454.GB11590@noisy.programming.kicks-ass.net>
- <CADxym3aVtKx_mh7aZyZfk27gEiA_TX6VSAvtK+YDNBtuk_HigA@mail.gmail.com>
- <20250304053853.GA7099@noisy.programming.kicks-ass.net> <20250304061635.GA29480@noisy.programming.kicks-ass.net>
- <CADxym3bS_6jpGC3vLAAyD20GsR+QZofQw0_GgKT8nN3c-HqG-g@mail.gmail.com>
- <20250304094220.GC11590@noisy.programming.kicks-ass.net> <6F9EF5C3-4CAE-4C5E-B70E-F73462AC7CA0@zytor.com>
- <CADxym3busXZKtX=+FY_xnYw7e1CKp5AiHSasZGjVJTdeCZao-g@mail.gmail.com> <694E52E0-C9E5-49D2-A677-09A5EE442590@zytor.com>
-In-Reply-To: <694E52E0-C9E5-49D2-A677-09A5EE442590@zytor.com>
-From: Menglong Dong <menglong8.dong@gmail.com>
-Date: Wed, 5 Mar 2025 16:49:47 +0800
-X-Gm-Features: AQ5f1JpDhhwKYSzWqZc9I3K1CFCu-n4ujPK1HFEHMI_ufAKecdbRxf_kS4Jud7Q
-Message-ID: <CADxym3Zu1u1xF0k+N4gZ50jHtZ9iRRQ0ZTtt_koG8Ta+B0DPJg@mail.gmail.com>
-Subject: Re: [PATCH v4 1/4] x86/ibt: factor out cfi and fineibt offset
-To: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, rostedt@goodmis.org, mark.rutland@arm.com, 
-	alexei.starovoitov@gmail.com, catalin.marinas@arm.com, will@kernel.org, 
-	mhiramat@kernel.org, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, 
-	dave.hansen@linux.intel.com, x86@kernel.org, ast@kernel.org, 
-	daniel@iogearbox.net, andrii@kernel.org, martin.lau@linux.dev, 
-	eddyz87@gmail.com, yonghong.song@linux.dev, john.fastabend@gmail.com, 
-	kpsingh@kernel.org, sdf@fomichev.me, jolsa@kernel.org, davem@davemloft.net, 
-	dsahern@kernel.org, mathieu.desnoyers@efficios.com, nathan@kernel.org, 
-	nick.desaulniers+lkml@gmail.com, morbo@google.com, samitolvanen@google.com, 
-	kees@kernel.org, dongml2@chinatelecom.cn, akpm@linux-foundation.org, 
-	riel@surriel.com, rppt@kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	bpf@vger.kernel.org, netdev@vger.kernel.org, llvm@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC v2 7/9] khugepaged: add mTHP support
+To: Ryan Roberts <ryan.roberts@arm.com>, Nico Pache <npache@redhat.com>,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ linux-mm@kvack.org
+Cc: anshuman.khandual@arm.com, catalin.marinas@arm.com, cl@gentwo.org,
+ vbabka@suse.cz, mhocko@suse.com, apopple@nvidia.com,
+ dave.hansen@linux.intel.com, will@kernel.org, baohua@kernel.org,
+ jack@suse.cz, srivatsa@csail.mit.edu, haowenchao22@gmail.com,
+ hughd@google.com, aneesh.kumar@kernel.org, yang@os.amperecomputing.com,
+ peterx@redhat.com, ioworker0@gmail.com, wangkefeng.wang@huawei.com,
+ ziy@nvidia.com, jglisse@google.com, surenb@google.com,
+ vishal.moola@gmail.com, zokeefe@google.com, zhengqi.arch@bytedance.com,
+ jhubbard@nvidia.com, 21cnbao@gmail.com, willy@infradead.org,
+ kirill.shutemov@linux.intel.com, david@redhat.com, aarcange@redhat.com,
+ raquini@redhat.com, sunnanyong@huawei.com, usamaarif642@gmail.com,
+ audra@redhat.com, akpm@linux-foundation.org, rostedt@goodmis.org,
+ mathieu.desnoyers@efficios.com, tiwai@suse.de
+References: <20250211003028.213461-1-npache@redhat.com>
+ <20250211003028.213461-8-npache@redhat.com>
+ <0319c841-cde9-42f6-a230-39b050659f1a@arm.com>
+Content-Language: en-US
+From: Dev Jain <dev.jain@arm.com>
+In-Reply-To: <0319c841-cde9-42f6-a230-39b050659f1a@arm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Wed, Mar 5, 2025 at 4:30=E2=80=AFPM H. Peter Anvin <hpa@zytor.com> wrote=
-:
->
-> On March 4, 2025 5:19:09 PM PST, Menglong Dong <menglong8.dong@gmail.com>=
- wrote:
-> >On Tue, Mar 4, 2025 at 10:53=E2=80=AFPM H. Peter Anvin <hpa@zytor.com> w=
-rote:
-> >>
-> >> On March 4, 2025 1:42:20 AM PST, Peter Zijlstra <peterz@infradead.org>=
- wrote:
-> >> >On Tue, Mar 04, 2025 at 03:47:45PM +0800, Menglong Dong wrote:
-> >> >> We don't have to select FUNCTION_ALIGNMENT_32B, so the
-> >> >> worst case is to increase ~2.2%.
-> >> >>
-> >> >> What do you think?
-> >> >
-> >> >Well, since I don't understand what you need this for at all, I'm fir=
-mly
-> >> >on the side of not doing this.
-> >> >
-> >> >What actual problem is being solved with this meta data nonsense? Why=
- is
-> >> >it worth blowing up our I$ footprint over.
-> >> >
-> >> >Also note, that if you're going to be explaining this, start from
-> >> >scratch, as I have absolutely 0 clues about BPF and such.
-> >>
-> >> I would appreciate such information as well. The idea seems dubious on=
- the surface.
-> >
-> >Ok, let me explain it from the beginning. (My English is not good,
-> >but I'll try to describe it as clear as possible :/)
-> >
-> >Many BPF program types need to depend on the BPF trampoline,
-> >such as BPF_PROG_TYPE_TRACING, BPF_PROG_TYPE_EXT,
-> >BPF_PROG_TYPE_LSM, etc. BPF trampoline is a bridge between
-> >the kernel (or bpf) function and BPF program, and it acts just like the
-> >trampoline that ftrace uses.
-> >
-> >Generally speaking, it is used to hook a function, just like what ftrace
-> >do:
-> >
-> >foo:
-> >    endbr
-> >    nop5  -->  call trampoline_foo
-> >    xxxx
-> >
-> >In short, the trampoline_foo can be this:
-> >
-> >trampoline_foo:
-> >    prepare a array and store the args of foo to the array
-> >    call fentry_bpf1
-> >    call fentry_bpf2
-> >    ......
-> >    call foo+4 (origin call)
-> >    save the return value of foo
-> >    call fexit_bpf1 (this bpf can get the return value of foo)
-> >    call fexit_bpf2
-> >    .......
-> >    return to the caller of foo
-> >
-> >We can see that the trampoline_foo can be only used for
-> >the function foo, as different kernel function can be attached
-> >different BPF programs, and have different argument count,
-> >etc. Therefore, we have to create 1000 BPF trampolines if
-> >we want to attach a BPF program to 1000 kernel functions.
-> >
-> >The creation of the BPF trampoline is expensive. According to
-> >my testing, It will spend more than 1 second to create 100 bpf
-> >trampoline. What's more, it consumes more memory.
-> >
-> >If we have the per-function metadata supporting, then we can
-> >create a global BPF trampoline, like this:
-> >
-> >trampoline_global:
-> >    prepare a array and store the args of foo to the array
-> >    get the metadata by the ip
-> >    call metadata.fentry_bpf1
-> >    call metadata.fentry_bpf2
-> >    ....
-> >    call foo+4 (origin call)
-> >    save the return value of foo
-> >    call metadata.fexit_bpf1 (this bpf can get the return value of foo)
-> >    call metadata.fexit_bpf2
-> >    .......
-> >    return to the caller of foo
-> >
-> >(The metadata holds more information for the global trampoline than
-> >I described.)
-> >
-> >Then, we don't need to create a trampoline for every kernel function
-> >anymore.
-> >
-> >Another beneficiary can be ftrace. For now, all the kernel functions tha=
-t
-> >are enabled by dynamic ftrace will be added to a filter hash if there ar=
-e
-> >more than one callbacks. And hash lookup will happen when the traced
-> >functions are called, which has an impact on the performance, see
-> >__ftrace_ops_list_func() -> ftrace_ops_test(). With the per-function
-> >metadata supporting, we can store the information that if the callback i=
-s
-> >enabled on the kernel function to the metadata, which can make the perfo=
-rmance
-> >much better.
-> >
-> >The per-function metadata storage is a basic function, and I think there
-> >may be other functions that can use it for better performance in the fea=
-ture
-> >too.
-> >
-> >(Hope that I'm describing it clearly :/)
-> >
-> >Thanks!
-> >Menglong Dong
-> >
->
-> This is way too cursory. For one thing, you need to start by explaining w=
-hy you are asking to put this *inline* with the code, which is something th=
-at normally would be avoided at all cost.
 
-Hi,
 
-Sorry that I don't understand the *inline* here, do you mean
-why puting the metadata in the function padding?
+On 19/02/25 10:22 pm, Ryan Roberts wrote:
+> On 11/02/2025 00:30, Nico Pache wrote:
+>> Introduce the ability for khugepaged to collapse to different mTHP sizes.
+>> While scanning a PMD range for potential collapse candidates, keep track
+>> of pages in MIN_MTHP_ORDER chunks via a bitmap. Each bit represents a
+>> utilized region of order MIN_MTHP_ORDER ptes. We remove the restriction
+>> of max_ptes_none during the scan phase so we dont bailout early and miss
+>> potential mTHP candidates.
+>>
+>> After the scan is complete we will perform binary recursion on the
+>> bitmap to determine which mTHP size would be most efficient to collapse
+>> to. max_ptes_none will be scaled by the attempted collapse order to
+>> determine how full a THP must be to be eligible.
+>>
+>> If a mTHP collapse is attempted, but contains swapped out, or shared
+>> pages, we dont perform the collapse.
+>>
+>> Signed-off-by: Nico Pache <npache@redhat.com>
+>> ---
+>>   mm/khugepaged.c | 122 ++++++++++++++++++++++++++++++++----------------
+>>   1 file changed, 83 insertions(+), 39 deletions(-)
+>>
+>> diff --git a/mm/khugepaged.c b/mm/khugepaged.c
+>> index c8048d9ec7fb..cd310989725b 100644
+>> --- a/mm/khugepaged.c
+>> +++ b/mm/khugepaged.c
+>> @@ -1127,13 +1127,14 @@ static int collapse_huge_page(struct mm_struct *mm, unsigned long address,
+>>   {
+>>   	LIST_HEAD(compound_pagelist);
+>>   	pmd_t *pmd, _pmd;
+>> -	pte_t *pte;
+>> +	pte_t *pte, mthp_pte;
+>>   	pgtable_t pgtable;
+>>   	struct folio *folio;
+>>   	spinlock_t *pmd_ptl, *pte_ptl;
+>>   	int result = SCAN_FAIL;
+>>   	struct vm_area_struct *vma;
+>>   	struct mmu_notifier_range range;
+>> +	unsigned long _address = address + offset * PAGE_SIZE;
+>>   	VM_BUG_ON(address & ~HPAGE_PMD_MASK);
+>>   
+>>   	/*
+>> @@ -1148,12 +1149,13 @@ static int collapse_huge_page(struct mm_struct *mm, unsigned long address,
+>>   		*mmap_locked = false;
+>>   	}
+>>   
+>> -	result = alloc_charge_folio(&folio, mm, cc, HPAGE_PMD_ORDER);
+>> +	result = alloc_charge_folio(&folio, mm, cc, order);
+>>   	if (result != SCAN_SUCCEED)
+>>   		goto out_nolock;
+>>   
+>>   	mmap_read_lock(mm);
+>> -	result = hugepage_vma_revalidate(mm, address, true, &vma, cc, HPAGE_PMD_ORDER);
+>> +	*mmap_locked = true;
+>> +	result = hugepage_vma_revalidate(mm, address, true, &vma, cc, order);
+>>   	if (result != SCAN_SUCCEED) {
+>>   		mmap_read_unlock(mm);
+>>   		goto out_nolock;
+>> @@ -1171,13 +1173,14 @@ static int collapse_huge_page(struct mm_struct *mm, unsigned long address,
+>>   		 * released when it fails. So we jump out_nolock directly in
+>>   		 * that case.  Continuing to collapse causes inconsistency.
+>>   		 */
+>> -		result = __collapse_huge_page_swapin(mm, vma, address, pmd,
+>> -				referenced, HPAGE_PMD_ORDER);
+>> +		result = __collapse_huge_page_swapin(mm, vma, _address, pmd,
+>> +				referenced, order);
+>>   		if (result != SCAN_SUCCEED)
+>>   			goto out_nolock;
+>>   	}
+>>   
+>>   	mmap_read_unlock(mm);
+>> +	*mmap_locked = false;
+>>   	/*
+>>   	 * Prevent all access to pagetables with the exception of
+>>   	 * gup_fast later handled by the ptep_clear_flush and the VM
+>> @@ -1187,7 +1190,7 @@ static int collapse_huge_page(struct mm_struct *mm, unsigned long address,
+>>   	 * mmap_lock.
+>>   	 */
+>>   	mmap_write_lock(mm);
+>> -	result = hugepage_vma_revalidate(mm, address, true, &vma, cc, HPAGE_PMD_ORDER);
+>> +	result = hugepage_vma_revalidate(mm, address, true, &vma, cc, order);
+>>   	if (result != SCAN_SUCCEED)
+>>   		goto out_up_write;
+>>   	/* check if the pmd is still valid */
+>> @@ -1198,11 +1201,12 @@ static int collapse_huge_page(struct mm_struct *mm, unsigned long address,
+>>   	vma_start_write(vma);
+>>   	anon_vma_lock_write(vma->anon_vma);
+>>   
+>> -	mmu_notifier_range_init(&range, MMU_NOTIFY_CLEAR, 0, mm, address,
+>> -				address + HPAGE_PMD_SIZE);
+>> +	mmu_notifier_range_init(&range, MMU_NOTIFY_CLEAR, 0, mm, _address,
+>> +				_address + (PAGE_SIZE << order));
+>>   	mmu_notifier_invalidate_range_start(&range);
+>>   
+>>   	pmd_ptl = pmd_lock(mm, pmd); /* probably unnecessary */
+>> +
+>>   	/*
+>>   	 * This removes any huge TLB entry from the CPU so we won't allow
+>>   	 * huge and small TLB entries for the same virtual address to
+>> @@ -1216,10 +1220,10 @@ static int collapse_huge_page(struct mm_struct *mm, unsigned long address,
+>>   	mmu_notifier_invalidate_range_end(&range);
+>>   	tlb_remove_table_sync_one();
+>>   
+>> -	pte = pte_offset_map_lock(mm, &_pmd, address, &pte_ptl);
+>> +	pte = pte_offset_map_lock(mm, &_pmd, _address, &pte_ptl);
+>>   	if (pte) {
+>> -		result = __collapse_huge_page_isolate(vma, address, pte, cc,
+>> -					&compound_pagelist, HPAGE_PMD_ORDER);
+>> +		result = __collapse_huge_page_isolate(vma, _address, pte, cc,
+>> +					&compound_pagelist, order);
+>>   		spin_unlock(pte_ptl);
+>>   	} else {
+>>   		result = SCAN_PMD_NULL;
+>> @@ -1248,8 +1252,8 @@ static int collapse_huge_page(struct mm_struct *mm, unsigned long address,
+>>   	anon_vma_unlock_write(vma->anon_vma);
+>>   
+>>   	result = __collapse_huge_page_copy(pte, folio, pmd, _pmd,
+>> -					   vma, address, pte_ptl,
+>> -					   &compound_pagelist, HPAGE_PMD_ORDER);
+>> +					   vma, _address, pte_ptl,
+>> +					   &compound_pagelist, order);
+>>   	pte_unmap(pte);
+>>   	if (unlikely(result != SCAN_SUCCEED))
+>>   		goto out_up_write;
+>> @@ -1260,20 +1264,37 @@ static int collapse_huge_page(struct mm_struct *mm, unsigned long address,
+>>   	 * write.
+>>   	 */
+>>   	__folio_mark_uptodate(folio);
+>> -	pgtable = pmd_pgtable(_pmd);
+>> -
+>> -	_pmd = mk_huge_pmd(&folio->page, vma->vm_page_prot);
+>> -	_pmd = maybe_pmd_mkwrite(pmd_mkdirty(_pmd), vma);
+>> -
+>> -	spin_lock(pmd_ptl);
+>> -	BUG_ON(!pmd_none(*pmd));
+>> -	folio_add_new_anon_rmap(folio, vma, address, RMAP_EXCLUSIVE);
+>> -	folio_add_lru_vma(folio, vma);
+>> -	pgtable_trans_huge_deposit(mm, pmd, pgtable);
+>> -	set_pmd_at(mm, address, pmd, _pmd);
+>> -	update_mmu_cache_pmd(vma, address, pmd);
+>> -	deferred_split_folio(folio, false);
+>> -	spin_unlock(pmd_ptl);
+>> +	if (order == HPAGE_PMD_ORDER) {
+>> +		pgtable = pmd_pgtable(_pmd);
+>> +		_pmd = mk_huge_pmd(&folio->page, vma->vm_page_prot);
+>> +		_pmd = maybe_pmd_mkwrite(pmd_mkdirty(_pmd), vma);
+>> +
+>> +		spin_lock(pmd_ptl);
+>> +		BUG_ON(!pmd_none(*pmd));
+>> +		folio_add_new_anon_rmap(folio, vma, _address, RMAP_EXCLUSIVE);
+>> +		folio_add_lru_vma(folio, vma);
+>> +		pgtable_trans_huge_deposit(mm, pmd, pgtable);
+>> +		set_pmd_at(mm, address, pmd, _pmd);
+>> +		update_mmu_cache_pmd(vma, address, pmd);
+>> +		deferred_split_folio(folio, false);
+>> +		spin_unlock(pmd_ptl);
+>> +	} else { //mTHP
+>> +		mthp_pte = mk_pte(&folio->page, vma->vm_page_prot);
+>> +		mthp_pte = maybe_mkwrite(pte_mkdirty(mthp_pte), vma);
+>> +
+>> +		spin_lock(pmd_ptl);
+>> +		folio_ref_add(folio, (1 << order) - 1);
+>> +		folio_add_new_anon_rmap(folio, vma, _address, RMAP_EXCLUSIVE);
+>> +		folio_add_lru_vma(folio, vma);
+>> +		spin_lock(pte_ptl);
+>> +		set_ptes(vma->vm_mm, _address, pte, mthp_pte, (1 << order));
+>> +		update_mmu_cache_range(NULL, vma, _address, pte, (1 << order));
+>> +		spin_unlock(pte_ptl);
+>> +		smp_wmb(); /* make pte visible before pmd */
+>> +		pmd_populate(mm, pmd, pmd_pgtable(_pmd));
+>> +		deferred_split_folio(folio, false);
+>> +		spin_unlock(pmd_ptl);
+> 
+> I've only stared at this briefly, but it feels like there might be some bugs:
+> 
+>   - Why are you taking the pmd ptl? and calling pmd_populate? Surely the pte
+> table already exists and is attached to the pmd? So we are only need to update
+> the pte entries here? Or perhaps the whole pmd was previously isolated?
+> 
+>   - I think some arches use a single PTL for all levels of the pgtable? So in
+> this case it's probably not a good idea to nest the pmd and pte spin lock?
+> 
+>   - Given the pte PTL is dropped then reacquired, is there any way that the ptes
+> could have changed under us? Is any revalidation required? Perhaps not if pte
+> table was removed from the PMD.
+> 
+>   - I would have guessed the memory ordering you want from smp_wmb() would
+> already be handled by the spin_unlock()?
+
+Not sure if I understand this; in pmd_install(), we take the PMD lock 
+and before dropping the lock, do smp_wmb(), how is this case different?
+
+> 
+> 
+>> +	}
+>>   
+>>   	folio = NULL;
+>>   
+>> @@ -1353,21 +1374,27 @@ static int khugepaged_scan_pmd(struct mm_struct *mm,
+>>   {
+>>   	pmd_t *pmd;
+>>   	pte_t *pte, *_pte;
+>> +	int i;
+>>   	int result = SCAN_FAIL, referenced = 0;
+>>   	int none_or_zero = 0, shared = 0;
+>>   	struct page *page = NULL;
+>>   	struct folio *folio = NULL;
+>>   	unsigned long _address;
+>> +	unsigned long enabled_orders;
+>>   	spinlock_t *ptl;
+>>   	int node = NUMA_NO_NODE, unmapped = 0;
+>>   	bool writable = false;
+>> -
+>> +	int chunk_none_count = 0;
+>> +	int scaled_none = khugepaged_max_ptes_none >> (HPAGE_PMD_ORDER - MIN_MTHP_ORDER);
+>> +	unsigned long tva_flags = cc->is_khugepaged ? TVA_ENFORCE_SYSFS : 0;
+>>   	VM_BUG_ON(address & ~HPAGE_PMD_MASK);
+>>   
+>>   	result = find_pmd_or_thp_or_none(mm, address, &pmd);
+>>   	if (result != SCAN_SUCCEED)
+>>   		goto out;
+>>   
+>> +	bitmap_zero(cc->mthp_bitmap, MAX_MTHP_BITMAP_SIZE);
+>> +	bitmap_zero(cc->mthp_bitmap_temp, MAX_MTHP_BITMAP_SIZE);
+>>   	memset(cc->node_load, 0, sizeof(cc->node_load));
+>>   	nodes_clear(cc->alloc_nmask);
+>>   	pte = pte_offset_map_lock(mm, pmd, address, &ptl);
+>> @@ -1376,8 +1403,12 @@ static int khugepaged_scan_pmd(struct mm_struct *mm,
+>>   		goto out;
+>>   	}
+>>   
+>> -	for (_address = address, _pte = pte; _pte < pte + HPAGE_PMD_NR;
+>> -	     _pte++, _address += PAGE_SIZE) {
+>> +	for (i = 0; i < HPAGE_PMD_NR; i++) {
+>> +		if (i % MIN_MTHP_NR == 0)
+>> +			chunk_none_count = 0;
+>> +
+>> +		_pte = pte + i;
+>> +		_address = address + i * PAGE_SIZE;
+>>   		pte_t pteval = ptep_get(_pte);
+>>   		if (is_swap_pte(pteval)) {
+>>   			++unmapped;
+>> @@ -1400,16 +1431,14 @@ static int khugepaged_scan_pmd(struct mm_struct *mm,
+>>   			}
+>>   		}
+>>   		if (pte_none(pteval) || is_zero_pfn(pte_pfn(pteval))) {
+>> +			++chunk_none_count;
+>>   			++none_or_zero;
+>> -			if (!userfaultfd_armed(vma) &&
+>> -			    (!cc->is_khugepaged ||
+>> -			     none_or_zero <= khugepaged_max_ptes_none)) {
+>> -				continue;
+>> -			} else {
+>> +			if (userfaultfd_armed(vma)) {
+>>   				result = SCAN_EXCEED_NONE_PTE;
+>>   				count_vm_event(THP_SCAN_EXCEED_NONE_PTE);
+>>   				goto out_unmap;
+>>   			}
+>> +			continue;
+>>   		}
+>>   		if (pte_uffd_wp(pteval)) {
+>>   			/*
+>> @@ -1500,7 +1529,16 @@ static int khugepaged_scan_pmd(struct mm_struct *mm,
+>>   		     folio_test_referenced(folio) || mmu_notifier_test_young(vma->vm_mm,
+>>   								     address)))
+>>   			referenced++;
+>> +
+>> +		/*
+>> +		 * we are reading in MIN_MTHP_NR page chunks. if there are no empty
+>> +		 * pages keep track of it in the bitmap for mTHP collapsing.
+>> +		 */
+>> +		if (chunk_none_count < scaled_none &&
+>> +			(i + 1) % MIN_MTHP_NR == 0)
+>> +			bitmap_set(cc->mthp_bitmap, i / MIN_MTHP_NR, 1);
+>>   	}
+>> +
+>>   	if (!writable) {
+>>   		result = SCAN_PAGE_RO;
+>>   	} else if (cc->is_khugepaged &&
+>> @@ -1513,10 +1551,14 @@ static int khugepaged_scan_pmd(struct mm_struct *mm,
+>>   out_unmap:
+>>   	pte_unmap_unlock(pte, ptl);
+>>   	if (result == SCAN_SUCCEED) {
+>> -		result = collapse_huge_page(mm, address, referenced,
+>> -					    unmapped, cc, mmap_locked, HPAGE_PMD_ORDER, 0);
+>> -		/* collapse_huge_page will return with the mmap_lock released */
+>> -		*mmap_locked = false;
+>> +		enabled_orders = thp_vma_allowable_orders(vma, vma->vm_flags,
+>> +			tva_flags, THP_ORDERS_ALL_ANON);
+>> +		result = khugepaged_scan_bitmap(mm, address, referenced, unmapped, cc,
+>> +			       mmap_locked, enabled_orders);
+>> +		if (result > 0)
+>> +			result = SCAN_SUCCEED;
+>> +		else
+>> +			result = SCAN_FAIL;
+>>   	}
+>>   out:
+>>   	trace_mm_khugepaged_scan_pmd(mm, &folio->page, writable, referenced,
+>> @@ -2476,11 +2518,13 @@ static int khugepaged_collapse_single_pmd(unsigned long addr, struct mm_struct *
+>>   			fput(file);
+>>   			if (result == SCAN_PTE_MAPPED_HUGEPAGE) {
+>>   				mmap_read_lock(mm);
+>> +				*mmap_locked = true;
+>>   				if (khugepaged_test_exit_or_disable(mm))
+>>   					goto end;
+>>   				result = collapse_pte_mapped_thp(mm, addr,
+>>   								 !cc->is_khugepaged);
+>>   				mmap_read_unlock(mm);
+>> +				*mmap_locked = false;
+>>   			}
+>>   		} else {
+>>   			result = khugepaged_scan_pmd(mm, vma, addr,
+> 
+
