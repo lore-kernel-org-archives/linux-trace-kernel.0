@@ -1,47 +1,47 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EFA324A07A
-	for <linux-trace-kernel@vger.kernel.org>; Wed,  5 Mar 2025 14:05:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DEC024A05D
+	for <linux-trace-kernel@vger.kernel.org>; Wed,  5 Mar 2025 14:05:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741183513; cv=none; b=iLJFKqWiELKphfFeN3ddtNee32gBz7K6CaLrXJoQdIWu90ygWeKUT9QW8YxR9xQKAckTTp68rBZE2XlClkOBdWfkDPdcEFpvRJSCWy6iqARNoMNgS2q9Rptu5qKlbFwc7osD81QeVvdF2paQL6ePBbCVvkEfMkWs03JxHHHzVeI=
+	t=1741183526; cv=none; b=aaefRVmpClcpKXEQ5czqfLEbqKpybxJYXMd6sKa2LVnHI+kgFOlLM/p3OlmTK68ut3xZupyWi0MtsnKPErUks4G5BV3LEiOlitpLXHjY4O8GLADPcB2kKUJZbF1iXGlOyRGkl61s6ct1SqGO3FBPM7ZHIgk/dCvmVHiMpWhxC+E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741183513; c=relaxed/simple;
-	bh=lVyN68PAuVuaUbw2Fw2Mxp6XLn4ydjdYyX28OEJOV4Y=;
+	s=arc-20240116; t=1741183526; c=relaxed/simple;
+	bh=MFyJzG3kxv6rgiXk0F67ley3QB9Ga1PK84Oojs3YhRQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=dknNf1XLYFB903Z4F0kob5fpb35pZcfQ1hM6a1yyH+AnIvWq4e3iQwMqTlUgBnuEirg01Q3hd2zRfVpU3zZLqClUdshXo21kzs69B3t7LXb6cIKhgCs7mdflHuekTIA+CGXCdakio3UmPFlOtyIlFUS2S4XvlJhHEO4XbihilXw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=cyt9hiRQ; arc=none smtp.client-ip=170.10.129.124
+	 MIME-Version; b=go08GkpNH8B+ONoR6etgvbosrvHmURvpwouBkDd2cxSlb2g0qcsuXt/rJ3JNda+9/uVhUuv1uHanfcLpEWkS7MNmhE+1Gi2gVbKamZDexQYBh72ql1zRfB3jLZBTJmEBx2Tx3MkzFmFpZ60vhQvibGuJ+A213L3sx/2p4WBNcsU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=DTwuTzpg; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cyt9hiRQ"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DTwuTzpg"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1741183510;
+	s=mimecast20190719; t=1741183524;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=hGYuQzr8+Oo+ccnLjzv3DqBm1OL5JlztXtFW9bZR+YM=;
-	b=cyt9hiRQh8xtUf33a6Q13Quf6eaT284f4BUDAyNqLBMVXiE3KsArnYWfnn9c5YrONxObXu
-	qdGh4LVAL3AZAZQBESGgvY6DredxNjrSB1vC2zfht/82mLPapCYMeDNqAb8z4HcWusXkvf
-	9mFOc/eNN7T2YcQ/FtXZvz6lq5eNj9A=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+	bh=BnR6oqxI0UEcO9ewCzZls4ELgDlHtvYrPUmSJgsWcEQ=;
+	b=DTwuTzpgp8bxGxvRjHfbLbIwVT3Gr3+Tvu4XaiH9vh2W5gMeGspIZSgfoy6dzvpbOXu8OB
+	g4Rk813m31KFAe6UFWmJFyxzf6YbgQ6FNfXFrm7aVAy3B5IPp4hGbaalX49fGqOVxvNMo0
+	/P/Pzi9OpCyIxHUtFUvZPiB560p3xxE=
+Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-403-WMlopTBtM3ywJ7x0Vmus0Q-1; Wed,
- 05 Mar 2025 09:05:07 -0500
-X-MC-Unique: WMlopTBtM3ywJ7x0Vmus0Q-1
-X-Mimecast-MFC-AGG-ID: WMlopTBtM3ywJ7x0Vmus0Q_1741183506
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-314-_hBvETbaMWeDYKRSjKorAQ-1; Wed,
+ 05 Mar 2025 09:05:21 -0500
+X-MC-Unique: _hBvETbaMWeDYKRSjKorAQ-1
+X-Mimecast-MFC-AGG-ID: _hBvETbaMWeDYKRSjKorAQ_1741183520
 Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 3A89C1954B20;
-	Wed,  5 Mar 2025 14:05:06 +0000 (UTC)
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 0D1561954126;
+	Wed,  5 Mar 2025 14:05:20 +0000 (UTC)
 Received: from gmonaco-thinkpadt14gen3.rmtit.com (unknown [10.45.226.192])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 5F3ED3000708;
-	Wed,  5 Mar 2025 14:05:03 +0000 (UTC)
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 35B663000708;
+	Wed,  5 Mar 2025 14:05:16 +0000 (UTC)
 From: Gabriele Monaco <gmonaco@redhat.com>
 To: linux-kernel@vger.kernel.org,
 	Steven Rostedt <rostedt@goodmis.org>,
@@ -50,9 +50,9 @@ Cc: Gabriele Monaco <gmonaco@redhat.com>,
 	Ingo Molnar <mingo@redhat.com>,
 	Peter Zijlstra <peterz@infradead.org>,
 	Juri Lelli <juri.lelli@redhat.com>
-Subject: [PATCH v5 6/9] tools/rv: Add support for nested monitors
-Date: Wed,  5 Mar 2025 15:03:59 +0100
-Message-ID: <20250305140406.350227-7-gmonaco@redhat.com>
+Subject: [PATCH v5 9/9] tools/rv: Allow rv list to filter for container
+Date: Wed,  5 Mar 2025 15:04:02 +0100
+Message-ID: <20250305140406.350227-10-gmonaco@redhat.com>
 In-Reply-To: <20250305140406.350227-1-gmonaco@redhat.com>
 References: <20250305140406.350227-1-gmonaco@redhat.com>
 Precedence: bulk
@@ -64,451 +64,178 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
 
-RV now supports nested monitors, this functionality requires a container
-monitor, which has virtually no functionality besides holding other
-monitors, and nested monitors, that have a container as parent.
+Add possibility to supply the container name to rv list:
 
-Nested monitors' sysfs folders are physically nested in the container's
-folder, and they are listed in the available_monitors file with the
-notation container:monitor.
-These changes go against the assumption that each line in the
-available_monitors file correspond to a folder in the rv directory,
-breaking the functionality of the rv tool.
-
-Add support for nested containers in the rv userspace tool, indenting
-nested monitors while listed and allowing both the notation with and
-without container name, which are equivalent:
-
-  # rv list
+  # rv list sched
   mon1
   mon2
-  container:
-   - nested1
-   - nested2
+  mon3
 
-  ## notation with container name
-  # rv mon container:nested1
-
-  ## notation without container name
-  # rv mon nested1
-
-Either way, enabling a nested monitor is the same as enabling any other
-non-nested monitor.
-Selecting the container with rv mon enables all the nested monitors, if
--t is passed, the trace also includes the monitor name next to the
-event:
-
-  # rv mon nested1 -t
-  <idle>-0        [004] event   state1 x event    -> state2
-  <idle>-0        [004] error   event not expected in state2
-
-  # rv mon sched -t
-  <idle>-0        [004] event_nested1   state1 x event    -> state2
-  <idle>-0        [004] error_nested1   event not expected in state2
+This lists only monitors in sched, without indentation.
+Supplying -h, any option (string starting with -) or more than 1
+argument will still print the usage.
+Passing a non-existent container prints nothing and passing no container
+continues to print all monitors, showing indentation for nested
+monitors, reported after their container.
 
 Signed-off-by: Gabriele Monaco <gmonaco@redhat.com>
 ---
- tools/verification/rv/include/rv.h    |   1 +
- tools/verification/rv/src/in_kernel.c | 226 ++++++++++++++++++++------
- 2 files changed, 179 insertions(+), 48 deletions(-)
+ tools/verification/rv/include/in_kernel.h |  2 +-
+ tools/verification/rv/src/in_kernel.c     | 36 +++++++++++++++------
+ tools/verification/rv/src/rv.c            | 38 +++++++++++++++--------
+ 3 files changed, 53 insertions(+), 23 deletions(-)
 
-diff --git a/tools/verification/rv/include/rv.h b/tools/verification/rv/include/rv.h
-index 0cab1037a98f7..6f668eb266cbb 100644
---- a/tools/verification/rv/include/rv.h
-+++ b/tools/verification/rv/include/rv.h
-@@ -7,6 +7,7 @@ struct monitor {
- 	char name[MAX_DA_NAME_LEN];
- 	char desc[MAX_DESCRIPTION];
- 	int enabled;
-+	int nested;
- };
- 
- int should_stop(void);
+diff --git a/tools/verification/rv/include/in_kernel.h b/tools/verification/rv/include/in_kernel.h
+index 3090638c8d710..f3bfd3b9895fe 100644
+--- a/tools/verification/rv/include/in_kernel.h
++++ b/tools/verification/rv/include/in_kernel.h
+@@ -1,3 +1,3 @@
+ // SPDX-License-Identifier: GPL-2.0
+-int ikm_list_monitors(void);
++int ikm_list_monitors(char *container);
+ int ikm_run_monitor(char *monitor, int argc, char **argv);
 diff --git a/tools/verification/rv/src/in_kernel.c b/tools/verification/rv/src/in_kernel.c
-index f2bbc75a76f4d..032b851019290 100644
+index 032b851019290..c0dcee795c0de 100644
 --- a/tools/verification/rv/src/in_kernel.c
 +++ b/tools/verification/rv/src/in_kernel.c
-@@ -6,15 +6,18 @@
-  */
- #include <getopt.h>
- #include <stdlib.h>
-+#include <stdio.h>
- #include <string.h>
- #include <errno.h>
- #include <unistd.h>
-+#include <dirent.h>
- 
- #include <trace.h>
- #include <utils.h>
- #include <rv.h>
- 
- static int config_has_id;
-+static int config_is_container;
- static int config_my_pid;
- static int config_trace;
- 
-@@ -44,6 +47,51 @@ static int __ikm_read_enable(char *monitor_name)
- 	return enabled;
- }
- 
-+/*
-+ * __ikm_find_monitor - find the full name of a possibly nested module
-+ *
-+ * __does not log errors.
-+ *
-+ * Returns 1 if we found the monitor, -1 on error and 0 if it does not exist.
-+ * The string out_name is populated with the full name, which can be
-+ * equal to monitor_name or container/monitor_name if nested
-+ */
-+static int __ikm_find_monitor_name(char *monitor_name, char *out_name)
-+{
-+	char *available_monitors, container[MAX_DA_NAME_LEN+1], *cursor, *end;
-+	int retval = 1;
-+
-+	available_monitors = tracefs_instance_file_read(NULL, "rv/available_monitors", NULL);
-+	if (!available_monitors)
-+		return -1;
-+
-+	cursor = strstr(available_monitors, monitor_name);
-+	if (!cursor) {
-+		retval = 0;
-+		goto out_free;
-+	}
-+
-+	for (; cursor > available_monitors; cursor--)
-+		if (*(cursor-1) == '\n')
-+			break;
-+	end = strstr(cursor, "\n");
-+	memcpy(out_name, cursor, end-cursor);
-+	out_name[end-cursor] = '\0';
-+
-+	cursor = strstr(out_name, ":");
-+	if (cursor)
-+		*cursor = '/';
-+	else {
-+		sprintf(container, "%s:", monitor_name);
-+		if (strstr(available_monitors, container))
-+			config_is_container = 1;
-+	}
-+
-+out_free:
-+	free(available_monitors);
-+	return retval;
-+}
-+
+@@ -180,19 +180,25 @@ static char *ikm_read_desc(char *monitor_name)
  /*
-  * ikm_read_enable - reads monitor's enable status
+  * ikm_fill_monitor_definition - fill monitor's definition
   *
-@@ -137,7 +185,17 @@ static char *ikm_read_desc(char *monitor_name)
- static int ikm_fill_monitor_definition(char *name, struct monitor *ikm)
+- * Returns -1 on error, 0 otherwise.
++ * Returns -1 on error, 1 if the monitor does not belong in the container, 0 otherwise.
++ * container can be NULL
+  */
+-static int ikm_fill_monitor_definition(char *name, struct monitor *ikm)
++static int ikm_fill_monitor_definition(char *name, struct monitor *ikm, char *container)
  {
  	int enabled;
--	char *desc;
-+	char *desc, *nested_name;
-+
-+	nested_name = strstr(name, ":");
-+	if (nested_name) {
-+		*nested_name = '/';
-+		++nested_name;
-+		ikm->nested = 1;
-+	} else {
-+		nested_name = name;
-+		ikm->nested = 0;
-+	}
+ 	char *desc, *nested_name;
  
- 	enabled = ikm_read_enable(name);
- 	if (enabled < 0) {
-@@ -151,7 +209,7 @@ static int ikm_fill_monitor_definition(char *name, struct monitor *ikm)
- 		return -1;
+ 	nested_name = strstr(name, ":");
+ 	if (nested_name) {
++		/* it belongs in container if it starts with "container:" */
++		if (container && strstr(name, container) != name)
++			return 1;
+ 		*nested_name = '/';
+ 		++nested_name;
+ 		ikm->nested = 1;
+ 	} else {
++		if (container)
++			return 1;
+ 		nested_name = name;
+ 		ikm->nested = 0;
  	}
- 
--	strncpy(ikm->name, name, MAX_DA_NAME_LEN);
-+	strncpy(ikm->name, nested_name, MAX_DA_NAME_LEN);
- 	ikm->enabled = enabled;
- 	strncpy(ikm->desc, desc, MAX_DESCRIPTION);
- 
-@@ -273,7 +331,7 @@ static int ikm_has_id(char *monitor_name)
- int ikm_list_monitors(void)
+@@ -328,12 +334,12 @@ static int ikm_has_id(char *monitor_name)
+  *
+  * Returns 0 on success, -1 otherwise.
+  */
+-int ikm_list_monitors(void)
++int ikm_list_monitors(char *container)
  {
  	char *available_monitors;
--	struct monitor ikm;
-+	struct monitor ikm = {0};
+ 	struct monitor ikm = {0};
  	char *curr, *next;
- 	int retval;
+-	int retval;
++	int retval, list_monitor = 0;
  
-@@ -293,7 +351,9 @@ int ikm_list_monitors(void)
- 		if (retval)
+ 	available_monitors = tracefs_instance_file_read(NULL, "rv/available_monitors", NULL);
+ 
+@@ -347,17 +353,29 @@ int ikm_list_monitors(void)
+ 		next = strstr(curr, "\n");
+ 		*next = '\0';
+ 
+-		retval = ikm_fill_monitor_definition(curr, &ikm);
+-		if (retval)
++		retval = ikm_fill_monitor_definition(curr, &ikm, container);
++		if (retval < 0)
  			err_msg("ikm: error reading %d in kernel monitor, skipping\n", curr);
  
--		printf("%-24s %s %s\n", ikm.name, ikm.desc, ikm.enabled ? "[ON]" : "[OFF]");
-+		printf("%s%-*s %s %s\n", ikm.nested ? " - " : "",
-+		       ikm.nested ? MAX_DA_NAME_LEN - 3 : MAX_DA_NAME_LEN,
-+		       ikm.name, ikm.desc, ikm.enabled ? "[ON]" : "[OFF]");
+-		printf("%s%-*s %s %s\n", ikm.nested ? " - " : "",
+-		       ikm.nested ? MAX_DA_NAME_LEN - 3 : MAX_DA_NAME_LEN,
+-		       ikm.name, ikm.desc, ikm.enabled ? "[ON]" : "[OFF]");
++		if (!retval) {
++			int indent = ikm.nested && !container;
++
++			list_monitor = 1;
++			printf("%s%-*s %s %s\n", indent ? " - " : "",
++			       indent ? MAX_DA_NAME_LEN - 3 : MAX_DA_NAME_LEN,
++			       ikm.name, ikm.desc, ikm.enabled ? "[ON]" : "[OFF]");
++		}
  		curr = ++next;
  
  	} while (strlen(curr));
-@@ -343,11 +403,11 @@ ikm_event_handler(struct trace_seq *s, struct tep_record *record,
- 	unsigned long long final_state;
- 	unsigned long long pid;
- 	unsigned long long id;
--	int cpu = record->cpu;
- 	int val;
-+	bool missing_id;
  
- 	if (config_has_id)
--		tep_get_field_val(s, trace_event, "id", record, &id, 1);
-+		missing_id = tep_get_field_val(s, trace_event, "id", record, &id, 1);
- 
- 	tep_get_common_field_val(s, trace_event, "common_pid", record, &pid, 1);
- 
-@@ -356,12 +416,21 @@ ikm_event_handler(struct trace_seq *s, struct tep_record *record,
- 	else if (config_my_pid && (config_my_pid == pid))
- 		return 0;
- 
--	tep_print_event(trace_event->tep, s, record, "%16s-%-8d ", TEP_PRINT_COMM, TEP_PRINT_PID);
-+	tep_print_event(trace_event->tep, s, record, "%16s-%-8d [%.3d] ",
-+			TEP_PRINT_COMM, TEP_PRINT_PID, TEP_PRINT_CPU);
- 
--	trace_seq_printf(s, "[%.3d] event ", cpu);
-+	if (config_is_container)
-+		tep_print_event(trace_event->tep, s, record, "%s ", TEP_PRINT_NAME);
-+	else
-+		trace_seq_printf(s, "event ");
- 
--	if (config_has_id)
--		trace_seq_printf(s, "%8llu ", id);
-+	if (config_has_id) {
-+		if (missing_id)
-+			/* placeholder if we are dealing with a mixed-type container*/
-+			trace_seq_printf(s, "        ");
++	if (!list_monitor) {
++		if (container)
++			printf("-- No monitor found in container %s --\n", container);
 +		else
-+			trace_seq_printf(s, "%8llu ", id);
++			printf("-- No monitor found --\n");
 +	}
- 
- 	state = tep_get_field_raw(s, trace_event, "state", record, &val, 0);
- 	event = tep_get_field_raw(s, trace_event, "event", record, &val, 0);
-@@ -394,9 +463,10 @@ ikm_error_handler(struct trace_seq *s, struct tep_record *record,
- 	int cpu = record->cpu;
- 	char *state, *event;
- 	int val;
-+	bool missing_id;
- 
- 	if (config_has_id)
--		tep_get_field_val(s, trace_event, "id", record, &id, 1);
-+		missing_id = tep_get_field_val(s, trace_event, "id", record, &id, 1);
- 
- 	tep_get_common_field_val(s, trace_event, "common_pid", record, &pid, 1);
- 
-@@ -405,10 +475,20 @@ ikm_error_handler(struct trace_seq *s, struct tep_record *record,
- 	else if (config_my_pid == pid)
- 		return 0;
- 
--	trace_seq_printf(s, "%8lld [%03d] error ", pid, cpu);
-+	trace_seq_printf(s, "%8lld [%03d] ", pid, cpu);
- 
--	if (config_has_id)
--		trace_seq_printf(s, "%8llu ", id);
-+	if (config_is_container)
-+		tep_print_event(trace_event->tep, s, record, "%s ", TEP_PRINT_NAME);
-+	else
-+		trace_seq_printf(s, "error ");
 +
-+	if (config_has_id) {
-+		if (missing_id)
-+			/* placeholder if we are dealing with a mixed-type container*/
-+			trace_seq_printf(s, "        ");
-+		else
-+			trace_seq_printf(s, "%8llu ", id);
-+	}
+ 	free(available_monitors);
  
- 	state = tep_get_field_raw(s, trace_event, "state", record, &val, 0);
- 	event = tep_get_field_raw(s, trace_event, "event", record, &val, 0);
-@@ -421,6 +501,64 @@ ikm_error_handler(struct trace_seq *s, struct tep_record *record,
  	return 0;
+diff --git a/tools/verification/rv/src/rv.c b/tools/verification/rv/src/rv.c
+index 1ddb855328165..239de054d1e06 100644
+--- a/tools/verification/rv/src/rv.c
++++ b/tools/verification/rv/src/rv.c
+@@ -41,30 +41,42 @@ static void rv_list(int argc, char **argv)
+ {
+ 	static const char *const usage[] = {
+ 		"",
+-		"  usage: rv list [-h]",
++		"  usage: rv list [-h] [container]",
+ 		"",
+ 		"	list all available monitors",
+ 		"",
+ 		"	-h/--help: print this menu",
++		"",
++		"	[container]: list only monitors in this container",
+ 		NULL,
+ 	};
+-	int i;
+-
+-	if (argc > 1) {
++	int i, print_help = 0, retval = 0;
++	char *container = NULL;
++
++	if (argc == 2) {
++		if (!strcmp(argv[1], "-h") || !strcmp(argv[1], "--help")) {
++			print_help = 1;
++			retval = 0;
++		} else if (argv[1][0] == '-') {
++			/* assume invalid option */
++			print_help = 1;
++			retval = 1;
++		} else
++			container = argv[1];
++	} else if (argc > 2) {
++		/* more than 2 is always usage */
++		print_help = 1;
++		retval = 1;
++	}
++	if (print_help) {
+ 		fprintf(stderr, "rv version %s\n", VERSION);
+-
+-		/* more than 1 is always usage */
+ 		for (i = 0; usage[i]; i++)
+ 			fprintf(stderr, "%s\n", usage[i]);
+-
+-		/* but only -h is valid */
+-		if (!strcmp(argv[1], "-h") || !strcmp(argv[1], "--help"))
+-			exit(0);
+-		else
+-			exit(1);
++		exit(retval);
+ 	}
+ 
+-	ikm_list_monitors();
++	ikm_list_monitors(container);
++
+ 	exit(0);
  }
  
-+static int ikm_enable_trace_events(char *monitor_name, struct trace_instance *inst)
-+{
-+	char event[MAX_DA_NAME_LEN + 7]; /* max(error_,event_) + '0' = 7 */
-+	int retval;
-+
-+	snprintf(event, sizeof(event), "event_%s", monitor_name);
-+	retval = tracefs_event_enable(inst->inst, "rv",  event);
-+	if (retval)
-+		return -1;
-+
-+	tep_register_event_handler(inst->tep, -1, "rv", event,
-+				   ikm_event_handler, NULL);
-+
-+	snprintf(event, sizeof(event), "error_%s", monitor_name);
-+	retval = tracefs_event_enable(inst->inst, "rv", event);
-+	if (retval)
-+		return -1;
-+
-+	tep_register_event_handler(inst->tep, -1, "rv", event,
-+				   ikm_error_handler, NULL);
-+
-+	/* set if at least 1 monitor has id in case of a container */
-+	config_has_id = ikm_has_id(monitor_name);
-+	if (config_has_id < 0)
-+		return -1;
-+
-+
-+	return 0;
-+}
-+
-+static int ikm_enable_trace_container(char *monitor_name,
-+				      struct trace_instance *inst)
-+{
-+	DIR *dp;
-+	char *abs_path, rv_path[MAX_PATH];
-+	struct dirent *ep;
-+	int retval = 0;
-+
-+	snprintf(rv_path, MAX_PATH, "rv/monitors/%s", monitor_name);
-+	abs_path = tracefs_instance_get_file(NULL, rv_path);
-+	if (!abs_path)
-+		return -1;
-+	dp = opendir(abs_path);
-+	if (!dp)
-+		goto out_free;
-+
-+	while (!retval && (ep = readdir(dp))) {
-+		if (ep->d_type != DT_DIR || ep->d_name[0] == '.')
-+			continue;
-+		retval = ikm_enable_trace_events(ep->d_name, inst);
-+	}
-+
-+	closedir(dp);
-+out_free:
-+	free(abs_path);
-+	return retval;
-+}
-+
- /*
-  * ikm_setup_trace_instance - set up a tracing instance to collect data
-  *
-@@ -430,19 +568,12 @@ ikm_error_handler(struct trace_seq *s, struct tep_record *record,
-  */
- static struct trace_instance *ikm_setup_trace_instance(char *monitor_name)
- {
--	char event[MAX_DA_NAME_LEN + 7]; /* max(error_,event_) + '0' = 7 */
- 	struct trace_instance *inst;
- 	int retval;
- 
- 	if (!config_trace)
- 		return NULL;
- 
--	config_has_id = ikm_has_id(monitor_name);
--	if (config_has_id < 0) {
--		err_msg("ikm: failed to read monitor %s event format\n", monitor_name);
--		goto out_err;
--	}
--
- 	/* alloc data */
- 	inst = calloc(1, sizeof(*inst));
- 	if (!inst) {
-@@ -454,23 +585,13 @@ static struct trace_instance *ikm_setup_trace_instance(char *monitor_name)
- 	if (retval)
- 		goto out_free;
- 
--	/* enable events */
--	snprintf(event, sizeof(event), "event_%s", monitor_name);
--	retval = tracefs_event_enable(inst->inst, "rv",  event);
--	if (retval)
--		goto out_inst;
--
--	tep_register_event_handler(inst->tep, -1, "rv", event,
--				   ikm_event_handler, NULL);
--
--	snprintf(event, sizeof(event), "error_%s", monitor_name);
--	retval = tracefs_event_enable(inst->inst, "rv", event);
-+	if (config_is_container)
-+		retval = ikm_enable_trace_container(monitor_name, inst);
-+	else
-+		retval = ikm_enable_trace_events(monitor_name, inst);
- 	if (retval)
- 		goto out_inst;
- 
--	tep_register_event_handler(inst->tep, -1, "rv", event,
--				   ikm_error_handler, NULL);
--
- 	/* ready to enable */
- 	tracefs_trace_on(inst->inst);
- 
-@@ -633,32 +754,41 @@ static int parse_arguments(char *monitor_name, int argc, char **argv)
- int ikm_run_monitor(char *monitor_name, int argc, char **argv)
- {
- 	struct trace_instance *inst = NULL;
-+	char *nested_name, full_name[2*MAX_DA_NAME_LEN];
- 	int retval;
- 
--	/*
--	 * Check if monitor exists by seeing it is enabled.
--	 */
--	retval = __ikm_read_enable(monitor_name);
--	if (retval < 0)
-+	nested_name = strstr(monitor_name, ":");
-+	if (nested_name)
-+		++nested_name;
-+	else
-+		nested_name = monitor_name;
-+
-+	retval = __ikm_find_monitor_name(monitor_name, full_name);
-+	if (!retval)
- 		return 0;
-+	if (retval < 0) {
-+		err_msg("ikm: error finding monitor %s\n", nested_name);
-+		return -1;
-+	}
- 
-+	retval = __ikm_read_enable(full_name);
- 	if (retval) {
--		err_msg("ikm: monitor %s (in-kernel) is already enabled\n", monitor_name);
-+		err_msg("ikm: monitor %s (in-kernel) is already enabled\n", nested_name);
- 		return -1;
- 	}
- 
- 	/* we should be good to go */
--	retval = parse_arguments(monitor_name, argc, argv);
-+	retval = parse_arguments(full_name, argc, argv);
- 	if (retval)
--		ikm_usage(1, monitor_name, "ikm: failed parsing arguments");
-+		ikm_usage(1, nested_name, "ikm: failed parsing arguments");
- 
- 	if (config_trace) {
--		inst = ikm_setup_trace_instance(monitor_name);
-+		inst = ikm_setup_trace_instance(nested_name);
- 		if (!inst)
- 			return -1;
- 	}
- 
--	retval = ikm_enable(monitor_name);
-+	retval = ikm_enable(full_name);
- 	if (retval < 0)
- 		goto out_free_instance;
- 
-@@ -682,17 +812,17 @@ int ikm_run_monitor(char *monitor_name, int argc, char **argv)
- 		sleep(1);
- 	}
- 
--	ikm_disable(monitor_name);
-+	ikm_disable(full_name);
- 	ikm_destroy_trace_instance(inst);
- 
- 	if (config_reactor && config_initial_reactor)
--		ikm_write_reactor(monitor_name, config_initial_reactor);
-+		ikm_write_reactor(full_name, config_initial_reactor);
- 
- 	return 1;
- 
- out_free_instance:
- 	ikm_destroy_trace_instance(inst);
- 	if (config_reactor && config_initial_reactor)
--		ikm_write_reactor(monitor_name, config_initial_reactor);
-+		ikm_write_reactor(full_name, config_initial_reactor);
- 	return -1;
- }
 -- 
 2.48.1
 
