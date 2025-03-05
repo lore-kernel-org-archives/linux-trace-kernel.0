@@ -1,69 +1,111 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3312E24503E;
-	Wed,  5 Mar 2025 15:47:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 866211A3172;
+	Wed,  5 Mar 2025 16:46:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741189673; cv=none; b=bLzJP/2DStn8i4c4ycuW0C3ycOdK7x8H0PEJC78YQibKDDzI2W2Aluvlh9sNJfcD3kOzu7/BXGuXzYhIFJ2ODa4uo0zbyeSgQyP8PibzsFB0DdRVKGFTho+ScXswz0vXI1Q5+CUbQmzyI0sMwDgPRum7opDWRvLjdC7Yz5xj/5A=
+	t=1741193169; cv=none; b=TjMNZaXcwZ8gJAG9HUJk1V4MhPevHSv6B+deRceqBLvHuyZvlxJ+QRpZ2+o3mlo3E/vKfw2ZTeHnpZRs3j7Jyf5okf8VgtR8m4I98qNoPzwvut6wP2TWySIppLLc+980Q7Msy1qACTts3GNAQZc/AzXiOEIEVyCcmCFYNvnhVWI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741189673; c=relaxed/simple;
-	bh=f5OV5c6HM0JnrDQ9qS5sHeItWaSeUzifZtx8IrBFMDQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=PDEQDYuW/lBOcg1la1Q++DFfNrAexr/1n8qwy7mq2lmJIoDQa8XhU5q8RXqyDpP58Kayj40qBXkdAAZOziTw/moPfnvSAon6id00U2REZvRV3WTqmNhR+AvBX+rsbnazY9earPcgYJLHNKXYJuEBx6AqZqnnqST8FeCsgzJwm1E=
+	s=arc-20240116; t=1741193169; c=relaxed/simple;
+	bh=7SB+xD3fwwgE5z6/xkgEiXKOXWhLQXIYjVX8jl7BSj8=;
+	h=Message-ID:Date:From:To:Cc:Subject; b=c2VJnrs/lozMudv6pmpEP7OsStQktt4LG3zbFPYbZAJtLooWe4E7hQNoY+UbmeF8X1j9ACa5UO/2BAv5L1AIvO4M6bOEzwtnimjDnVCs6Gu5q9PZHt+BSyOS6tzjcfBYa5hK7zfDMPFevxZgKLForlDzcU3Rp4vNADIEK/kEtGo=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 93BD5C4CED1;
-	Wed,  5 Mar 2025 15:47:51 +0000 (UTC)
-Date: Wed, 5 Mar 2025 10:47:49 -0500
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0FEAAC4CED1;
+	Wed,  5 Mar 2025 16:46:09 +0000 (UTC)
+Received: from rostedt by gandalf with local (Exim 4.98)
+	(envelope-from <rostedt@goodmis.org>)
+	id 1tprsm-0000000D0uT-10Rm;
+	Wed, 05 Mar 2025 11:46:08 -0500
+Message-ID: <20250305164539.379008535@goodmis.org>
+User-Agent: quilt/0.68
+Date: Wed, 05 Mar 2025 11:45:39 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
-To: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: Huang Shijie <shijie@os.amperecomputing.com>,
- patches@amperecomputing.com, cl@linux.com, yang@os.amperecomputing.com,
- peterz@infradead.org, jpoimboe@kernel.org, linux-kernel@vger.kernel.org,
+To: linux-kernel@vger.kernel.org,
  linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH resend ] tracepoint: Print the function symbol when
- tracepoint_debug is set
-Message-ID: <20250305104749.15e57b19@gandalf.local.home>
-In-Reply-To: <f600edd0-8855-46af-98ec-1181db1f5dd4@efficios.com>
-References: <20250305015505.14493-1-shijie@os.amperecomputing.com>
-	<f600edd0-8855-46af-98ec-1181db1f5dd4@efficios.com>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Andrew Morton <akpm@linux-foundation.org>
+Subject: [PATCH v4 0/8] ring-buffer/tracing: Save module information in persistent memory
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
 
-On Wed, 5 Mar 2025 08:53:43 -0500
-Mathieu Desnoyers <mathieu.desnoyers@efficios.com> wrote:
 
-> On 2025-03-04 20:55, Huang Shijie wrote:
-> > When tracepoint_debug is set, we may get the output in kernel log:
-> >       [  380.013843] Probe 0 : 00000000f0d68cda
-> > 
-> > It is not readable, so change to print the function symbol.
-> > After this patch, the output may becomes:
-> >       [   54.930567] Probe 0 : perf_trace_sched_wakeup_template  
-> 
-> What would it print if the address is corrupted ?
-> 
-> Perhaps we could do like the backtrace code and print e.g.
-> 
-> [<00000000f0d68cda>] perf_trace_sched_wakeup_template+0xNN/0xMM
-> 
-> ?
-> 
-> I don't care about the actual layout, but removing the address
-> from the formatted output appears to be removing useful data
-> in debug situations.
-> 
+This updates the persistent instance to record what modules were
+loaded and what addresses they were loaded at.
 
-Perhaps this can use "%pS" which shows both the function entry and the
-offset. If no function is found, it ends up being the same as "%p".
-Also, it's likely that the "%p" is hashed here and one couldn't use it to
-debug either.
+First the KASLR offset is recorded in the persistent ring buffer instead of
+a text address. This can be used to calculated the address offset.
 
--- Steve
+Next the persistent memory is divided up differently so that there's
+a single global meta data for the entire buffer that can hold the
+global data, and each per CPU meta data can just hold what it needs.
+
+A scratch area can be created by the caller, in this case the tracing
+system, to store data in the persistent memory area.
+
+As the KASLR offset is only needed by the tracer, that data is moved
+from the ring buffer meta data into this new storage.
+
+Next the modules that are loaded and where they are loaded is stored in this
+new persistent storage.
+
+The module list along with the KASLR offset is now exposed in the
+last_boot_info if the buffer is from a previous boot. If it is from the
+current boot, the file will only contain:
+
+   # Current
+
+in order to not leak the KASLR offset.
+
+Finally, when new modules are loaded while the trace is active, they too
+will be added to this persistent memory. Note, if tracing is stopped, and
+then restarted, it clears the module list and will reload all the modules
+again so that it doesn't need to keep track of what is loaded or unloaded
+while no tracing is going on.
+
+Changse since v3: https://lore.kernel.org/linux-trace-kernel/20250304012516.282694507@goodmis.org/
+
+- Added kerneldoc for scratch_size parameter for __ring_buffer_alloc_range()
+
+Changes since v2: https://lore.kernel.org/linux-trace-kernel/20250215034301.624019422@goodmis.org/
+
+- Have the module loop be protected by RCU and not preemption disabling
+
+- Take the scratch_mutex outside of save_mod() to prevent deadlocks
+
+Changes since v1: https://lore.kernel.org/all/20250205225031.799739376@goodmis.org/
+
+- Rebased on top of the urgent branch
+
+- Allow the size of the scratch area in the persistent ring buffer to be
+  defined by the caller.
+
+- Change the output of the last_boot_info to show the kaslr instead of:
+  "Offset: <offset>" to "<offset>\t[kernel]" to make it consistent with
+  the module output.
+
+
+Steven Rostedt (8):
+      ring-buffer: Use kaslr address instead of text delta
+      ring-buffer: Add buffer meta data for persistent ring buffer
+      ring-buffer: Add ring_buffer_meta_scratch()
+      tracing: Have persistent trace instances save KASLR offset
+      module: Add module_for_each_mod() function
+      tracing: Have persistent trace instances save module addresses
+      tracing: Show module names and addresses of last boot
+      tracing: Update modules to persistent instances when loaded
+
+----
+ include/linux/module.h      |   6 +
+ include/linux/ring_buffer.h |   8 +-
+ kernel/module/main.c        |  13 +++
+ kernel/trace/ring_buffer.c  | 246 ++++++++++++++++++++++++-----------------
+ kernel/trace/trace.c        | 264 ++++++++++++++++++++++++++++++++++++++++----
+ kernel/trace/trace.h        |  15 ++-
+ kernel/trace/trace_events.c |  40 +++++--
+ 7 files changed, 449 insertions(+), 143 deletions(-)
