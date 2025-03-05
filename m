@@ -1,190 +1,216 @@
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
+Received: from mail-yw1-f194.google.com (mail-yw1-f194.google.com [209.85.128.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16CB82E337C
-	for <linux-trace-kernel@vger.kernel.org>; Wed,  5 Mar 2025 08:47:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E4BE155342;
+	Wed,  5 Mar 2025 08:51:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741164475; cv=none; b=HFH/rWgTL7ueQpQW/oKWy6MXOPiHX20G4Am6nUt4EINpiVN71DTtAnTZSBWLWj9qlKDAiGbH/o6DNauV6KVsFklSGVEhElOdH4kPDnIUbnfEwSDj6zWMAoEv0QN0HTq/skA6BB5MV6qqJBaFpSmOB1mYsQdtYiEH76/ZcfjQEF4=
+	t=1741164687; cv=none; b=uroCXQ6ZcB30dZRbsWdNSgE7GihFroHlOpE6RTxideOlyV5lSduBnmKZ350Q1e7kCnVs4o1To3SRWDOyLwjreumjB3l27oo/J0UDPgHETK0KxYDZ27kh7X4WpDuPYEpovDb8wg4O/ooqPc8NnZ6t8h05XSDRcGvvfkMEdeXBxnE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741164475; c=relaxed/simple;
-	bh=JKybJjCoE0B/n2lncmdSGTssjYFaX+FTdZIDp/sCbx4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=CgfQqRv/hJ8SyP8JCpn8u5+cQHr2IAIOZtPaPqwMyAjmm0lLulRlwmK32UbrkEpzcxIPCTxNMRp4G2cv8pcuAUMMxl414t0fuhd2Yt9HoA//y9iWFOFMwN87ZBanNiHMAadjWFvN0Wal2Ul5q408cvFXTwfKDYSnaACzHEIOI5M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=gXCWjgNS; arc=none smtp.client-ip=209.85.221.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1741164687; c=relaxed/simple;
+	bh=Cn0cFNTAZkpwSEDVzdYgVrdTOxR6wqjxB47H6BWXgbg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=SbuS4mFdL/semVLlTWGtQfDeOnbYHsTTjd/3TLAEeqDPLpSMgdtidUIztxsxKgy/IZ7CsxIx0gXmjQvVZsWn6ylcXPE6tzkUjfbHnMAM7F/QwWPBmlPFc7r634V2/lAs/iy47rUmOCQ22DW/ApPhq1Eg1id55fNoVJTJHLCPNzI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PTht5iVc; arc=none smtp.client-ip=209.85.128.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="gXCWjgNS"
-Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-39104c1cbbdso1617876f8f.3
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 05 Mar 2025 00:47:52 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PTht5iVc"
+Received: by mail-yw1-f194.google.com with SMTP id 00721157ae682-6fd47dfe76cso49120807b3.3;
+        Wed, 05 Mar 2025 00:51:25 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1741164471; x=1741769271; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=zvpBTp2BY7pS5ECRfbZtHxBeNysVHVR+CVs88T54ai8=;
-        b=gXCWjgNSk6nkFKhEXYKdcHk39drO7yuz13WakTs4xv6ae1wGXdHuRHfCzdEb2uN1yv
-         5erIEhN+KLRbfJHlwe9neNjBuTnacbRNOf4eBmL9HGDiracE4fsfbyzRB7C0TPLlpyrE
-         f75wd0aoHcJ5Sx0MUyGyuA7E4T4c2ajX42pGpLXbEnMFreTTLJXqcLPXjDTdu1i4V5qA
-         OnxD+Ug1fRXcc8TGi1QpzffbUcj07vXtc7qiKO18UdZKAlF9zBcZfyM+q3/aHFWMGaxV
-         drYHo59+7hhV96wnqwD4AQSm6KZI/33M+IS0xbHBUmUiBqepOu4qH+J3bfotGXHUFVsT
-         rtog==
+        d=gmail.com; s=20230601; t=1741164685; x=1741769485; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=DQXKjZHa5r4213wcOvfbsp5orLWVfyC4Oxpcslkw+cY=;
+        b=PTht5iVcGGIxtI0Pl8tUHXs2adhL7j2hIOkWxghVyzJAMQdkdtPISeUWOeRa5N0bH+
+         iTfBTDFLv80f/v71g+9gLFErLPSrdOhrF1bIxjRhJ45G1ZabL0pr7i3nFPOkveWukILv
+         4lDIyuzSPHjiYSKb2vcaU7LWXUl2i6mcHQIVC0W6rOEpu0OYOm8yBKpkGYaKaNCTYk6f
+         KW7UHjNiNStP4iUMNm+RngvEYkdBPl+YhulY3PYWyGZpnwYErt4IbTjO3MRqh8wmPovj
+         cgp9UnfgyqpcjdICbZAomHztLpjVPZyooQ29UdYRTAGaROexxoapNsB0f84oAPXtHwrT
+         q0MQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741164471; x=1741769271;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=zvpBTp2BY7pS5ECRfbZtHxBeNysVHVR+CVs88T54ai8=;
-        b=NWptkmNj1ZIxBgfbLVU2GrfmXGh6eVCh0eemiBlwfr2Lp5rx+2VLBnThDtEyGSMj4X
-         d8nVzXjFM78b1aTM9SvfBxOxqWl1Mj/rM0ejqcZ5H8fUFxGTRy+fkNJs+YCmL3HU0gLa
-         ibanABJ630GvoKoWZtvL3p+yT9b8XJqeziniQ9kKMT5exEE0fu/M339akufymrs1JKp+
-         2srpFH8gt9lMzBIL1VUr7R4nirX5knw0m9sp0rp343PxK6poW74X2PjwMKSq4dkZF4SM
-         stHgbi/LHpRCmLuXsf4osAAu6nXkKmGGkw6KwTyUiktAJOAa6ggaqxL5LcsVpJFjOhow
-         0mUw==
-X-Forwarded-Encrypted: i=1; AJvYcCUTicdKiBFvNsLcOQwzC6bS64rFzUZ/A7mo03qq1HgpV+CM4wywxNKmwF716Z5mPsu2KVQK3GUfvXw5Hx9AOBk3YAw=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywd8Us/18EjoE++ytkWyeWcz5dIxMlRMtPqbXG+bffq/KzviWR2
-	coyWQpfvyjIHmbFxsoDH6LXMfhNpY9ldrL5kWotLYdLTi/vRI7DHf2uBK8lGO2o=
-X-Gm-Gg: ASbGnctRispe6w6bwT/HzZ5ZtG1b9X5vbP8QbSOy8O3hiKKqy0DB0/B+Joi+Rzt8sGP
-	d2BMW4k/LJgw3XWonK1NEdluMbs52LxznvCdXZPI5msxCX+t3x0XmaKksV2xpq7JKiZIiyGfo88
-	iqdTm5EfgUXkrARjTWaHFr5akPPGLi81ga002hmmqz6VcjznlCFJdFDwqFy6Pz7woQ5+dKx+GAG
-	q6tlgR9nssZyjGRTWOcH92a/mNzRQyng/7x8me+H4iyvhRJlAMZ7EdLJ4RANDMLWEBAFISWM/nI
-	mlGpH1Q8df1axHQRF0ZmOakUx00JP8pN9DPpWZcR2rHFwo/B
-X-Google-Smtp-Source: AGHT+IFqiG5KUBY477piOlIYHBpXnTArndch8RArWHQORojdj7IkUy39eZX+lXOVE16msF37clFMxQ==
-X-Received: by 2002:a05:6000:1a88:b0:390:fe05:da8e with SMTP id ffacd0b85a97d-3911f75796emr1473006f8f.28.1741164471313;
-        Wed, 05 Mar 2025 00:47:51 -0800 (PST)
-Received: from [10.100.51.161] ([193.86.92.181])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43bd430c2e9sm10640655e9.33.2025.03.05.00.47.50
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 05 Mar 2025 00:47:50 -0800 (PST)
-Message-ID: <17c0cce7-03c7-488a-b61a-6c41d5bacfa1@suse.com>
-Date: Wed, 5 Mar 2025 09:47:49 +0100
+        d=1e100.net; s=20230601; t=1741164685; x=1741769485;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=DQXKjZHa5r4213wcOvfbsp5orLWVfyC4Oxpcslkw+cY=;
+        b=GUlUtmyWHgGMYPxkHHM2s545tyxO6pjlJ6lF9L/vD9cEgyyqd47EFDllpBHSygrlIP
+         aamgyUldXhfpw9PFXIPDyvV1zTl/oAKiq41uTHh243YiSn7DVWWNJxoTd7B8b8QYFKZm
+         bC5ujS6Ljj/Z0hJDKut+7IOkMz3tuIoXKJNMiU4g4yqcYx3RwIuZ3BT+TZ88H/HtC68N
+         8MSqrpRy9oso/DfZnO5WleIS7uMBlJATcEaJh2TsEi6v4jNahMhkfygf49pdZmAobRxW
+         Z1VxFvWGk1OlxqPpEdrCy5YYSHUdTgJPSdszpYngeHDHx6IMjSBE7xmD9oZ86riOw++J
+         Kf7w==
+X-Forwarded-Encrypted: i=1; AJvYcCUZsDx5YNTarkSNfm4SDNv3dvxSP4J61Kfz+ULpRonTw7mPw4GTK9+Gq/g77PEn4e3BihIvqSfYobhDq8YoZftXL36G@vger.kernel.org, AJvYcCWEv26YWeFImkuF6MjeFZVHtRebJoobstcpTXnrjogf9qtGS2cy8cmw3i23VD4PMupbegCyJy4ierfPgCtv@vger.kernel.org, AJvYcCWi2Z1dzwAsfK+kxn5iUvtvfRhPzHr7SS82J/KoNKUPWLkL37nnNViRUX+6TIJRIim5+OQ=@vger.kernel.org, AJvYcCXyJtqrg83P2nGyX2Oo/fWPP5dmOAAqF8THZAGhgOrVjOwdGSrHrJgPTWImG0m56aQ3QreWwZwS@vger.kernel.org
+X-Gm-Message-State: AOJu0YyesAm3ZJIdFgOcOMMSsU+OW+1tNLHxeY0BEsf5gQ5S9n1idOE2
+	MFw8Qz1nu6BVC2C/IDJj+BmidV/iN2GcHvRhlQ4OKxN+BFYKuXGLzpnU7cIiguM8Ic8jfC25FyJ
+	NEwXYRVudY0q67KBCKRCuGbgVVqA=
+X-Gm-Gg: ASbGncsKwPmZrHiOrlz5uqmu3bMapUEJ1rrUyjuftydXHgQobnhKP/EW7BpmEN7+ccs
+	eBOD/OXqcYG4DWcExzP52BVSPTGIXs3hgJNtf6lFURoJ0gJbNSsiodpBr8buBCCHyCTLBxU0hl/
+	YmYwAokO2bmII/N9/oVkR+Wg+6ag==
+X-Google-Smtp-Source: AGHT+IHJHBBsGtFfE4z2mPAk21mETs2dOEwyYu6mGke3XwoXSNX7h5iKIMLg2OfM/L0feLDcyFXEy1rx6kLoqIY81uk=
+X-Received: by 2002:a05:690c:6c82:b0:6ea:5da9:34cc with SMTP id
+ 00721157ae682-6fda2f6ae73mr31701457b3.7.1741164685004; Wed, 05 Mar 2025
+ 00:51:25 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 5/8] module: Add module_for_each_mod() function
-To: Steven Rostedt <rostedt@goodmis.org>, Luis Chamberlain <mcgrof@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- Sami Tolvanen <samitolvanen@google.com>, Daniel Gomez
- <da.gomez@samsung.com>, linux-modules@vger.kernel.org
-References: <20250304012516.282694507@goodmis.org>
- <20250304012548.433669427@goodmis.org>
- <20250304095714.47a171fa@gandalf.local.home>
-Content-Language: en-US
-From: Petr Pavlu <petr.pavlu@suse.com>
-In-Reply-To: <20250304095714.47a171fa@gandalf.local.home>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20250303132837.498938-1-dongml2@chinatelecom.cn>
+ <20250303132837.498938-2-dongml2@chinatelecom.cn> <20250303165454.GB11590@noisy.programming.kicks-ass.net>
+ <CADxym3aVtKx_mh7aZyZfk27gEiA_TX6VSAvtK+YDNBtuk_HigA@mail.gmail.com>
+ <20250304053853.GA7099@noisy.programming.kicks-ass.net> <20250304061635.GA29480@noisy.programming.kicks-ass.net>
+ <CADxym3bS_6jpGC3vLAAyD20GsR+QZofQw0_GgKT8nN3c-HqG-g@mail.gmail.com>
+ <20250304094220.GC11590@noisy.programming.kicks-ass.net> <6F9EF5C3-4CAE-4C5E-B70E-F73462AC7CA0@zytor.com>
+ <CADxym3busXZKtX=+FY_xnYw7e1CKp5AiHSasZGjVJTdeCZao-g@mail.gmail.com> <694E52E0-C9E5-49D2-A677-09A5EE442590@zytor.com>
+In-Reply-To: <694E52E0-C9E5-49D2-A677-09A5EE442590@zytor.com>
+From: Menglong Dong <menglong8.dong@gmail.com>
+Date: Wed, 5 Mar 2025 16:49:47 +0800
+X-Gm-Features: AQ5f1JpDhhwKYSzWqZc9I3K1CFCu-n4ujPK1HFEHMI_ufAKecdbRxf_kS4Jud7Q
+Message-ID: <CADxym3Zu1u1xF0k+N4gZ50jHtZ9iRRQ0ZTtt_koG8Ta+B0DPJg@mail.gmail.com>
+Subject: Re: [PATCH v4 1/4] x86/ibt: factor out cfi and fineibt offset
+To: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, rostedt@goodmis.org, mark.rutland@arm.com, 
+	alexei.starovoitov@gmail.com, catalin.marinas@arm.com, will@kernel.org, 
+	mhiramat@kernel.org, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, 
+	dave.hansen@linux.intel.com, x86@kernel.org, ast@kernel.org, 
+	daniel@iogearbox.net, andrii@kernel.org, martin.lau@linux.dev, 
+	eddyz87@gmail.com, yonghong.song@linux.dev, john.fastabend@gmail.com, 
+	kpsingh@kernel.org, sdf@fomichev.me, jolsa@kernel.org, davem@davemloft.net, 
+	dsahern@kernel.org, mathieu.desnoyers@efficios.com, nathan@kernel.org, 
+	nick.desaulniers+lkml@gmail.com, morbo@google.com, samitolvanen@google.com, 
+	kees@kernel.org, dongml2@chinatelecom.cn, akpm@linux-foundation.org, 
+	riel@surriel.com, rppt@kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	bpf@vger.kernel.org, netdev@vger.kernel.org, llvm@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 3/4/25 15:57, Steven Rostedt wrote:
-> 
-> Luis,
-> 
-> Can I get an Acked-by from you?
-> 
-> This follows the changes you have in linux-next.
+On Wed, Mar 5, 2025 at 4:30=E2=80=AFPM H. Peter Anvin <hpa@zytor.com> wrote=
+:
+>
+> On March 4, 2025 5:19:09 PM PST, Menglong Dong <menglong8.dong@gmail.com>=
+ wrote:
+> >On Tue, Mar 4, 2025 at 10:53=E2=80=AFPM H. Peter Anvin <hpa@zytor.com> w=
+rote:
+> >>
+> >> On March 4, 2025 1:42:20 AM PST, Peter Zijlstra <peterz@infradead.org>=
+ wrote:
+> >> >On Tue, Mar 04, 2025 at 03:47:45PM +0800, Menglong Dong wrote:
+> >> >> We don't have to select FUNCTION_ALIGNMENT_32B, so the
+> >> >> worst case is to increase ~2.2%.
+> >> >>
+> >> >> What do you think?
+> >> >
+> >> >Well, since I don't understand what you need this for at all, I'm fir=
+mly
+> >> >on the side of not doing this.
+> >> >
+> >> >What actual problem is being solved with this meta data nonsense? Why=
+ is
+> >> >it worth blowing up our I$ footprint over.
+> >> >
+> >> >Also note, that if you're going to be explaining this, start from
+> >> >scratch, as I have absolutely 0 clues about BPF and such.
+> >>
+> >> I would appreciate such information as well. The idea seems dubious on=
+ the surface.
+> >
+> >Ok, let me explain it from the beginning. (My English is not good,
+> >but I'll try to describe it as clear as possible :/)
+> >
+> >Many BPF program types need to depend on the BPF trampoline,
+> >such as BPF_PROG_TYPE_TRACING, BPF_PROG_TYPE_EXT,
+> >BPF_PROG_TYPE_LSM, etc. BPF trampoline is a bridge between
+> >the kernel (or bpf) function and BPF program, and it acts just like the
+> >trampoline that ftrace uses.
+> >
+> >Generally speaking, it is used to hook a function, just like what ftrace
+> >do:
+> >
+> >foo:
+> >    endbr
+> >    nop5  -->  call trampoline_foo
+> >    xxxx
+> >
+> >In short, the trampoline_foo can be this:
+> >
+> >trampoline_foo:
+> >    prepare a array and store the args of foo to the array
+> >    call fentry_bpf1
+> >    call fentry_bpf2
+> >    ......
+> >    call foo+4 (origin call)
+> >    save the return value of foo
+> >    call fexit_bpf1 (this bpf can get the return value of foo)
+> >    call fexit_bpf2
+> >    .......
+> >    return to the caller of foo
+> >
+> >We can see that the trampoline_foo can be only used for
+> >the function foo, as different kernel function can be attached
+> >different BPF programs, and have different argument count,
+> >etc. Therefore, we have to create 1000 BPF trampolines if
+> >we want to attach a BPF program to 1000 kernel functions.
+> >
+> >The creation of the BPF trampoline is expensive. According to
+> >my testing, It will spend more than 1 second to create 100 bpf
+> >trampoline. What's more, it consumes more memory.
+> >
+> >If we have the per-function metadata supporting, then we can
+> >create a global BPF trampoline, like this:
+> >
+> >trampoline_global:
+> >    prepare a array and store the args of foo to the array
+> >    get the metadata by the ip
+> >    call metadata.fentry_bpf1
+> >    call metadata.fentry_bpf2
+> >    ....
+> >    call foo+4 (origin call)
+> >    save the return value of foo
+> >    call metadata.fexit_bpf1 (this bpf can get the return value of foo)
+> >    call metadata.fexit_bpf2
+> >    .......
+> >    return to the caller of foo
+> >
+> >(The metadata holds more information for the global trampoline than
+> >I described.)
+> >
+> >Then, we don't need to create a trampoline for every kernel function
+> >anymore.
+> >
+> >Another beneficiary can be ftrace. For now, all the kernel functions tha=
+t
+> >are enabled by dynamic ftrace will be added to a filter hash if there ar=
+e
+> >more than one callbacks. And hash lookup will happen when the traced
+> >functions are called, which has an impact on the performance, see
+> >__ftrace_ops_list_func() -> ftrace_ops_test(). With the per-function
+> >metadata supporting, we can store the information that if the callback i=
+s
+> >enabled on the kernel function to the metadata, which can make the perfo=
+rmance
+> >much better.
+> >
+> >The per-function metadata storage is a basic function, and I think there
+> >may be other functions that can use it for better performance in the fea=
+ture
+> >too.
+> >
+> >(Hope that I'm describing it clearly :/)
+> >
+> >Thanks!
+> >Menglong Dong
+> >
+>
+> This is way too cursory. For one thing, you need to start by explaining w=
+hy you are asking to put this *inline* with the code, which is something th=
+at normally would be avoided at all cost.
 
-Hi Steven,
+Hi,
 
-I'm not Luis, but we started rotating the modules maintenance every six
-months and I'm currently looking after the modules tree. I see Luis
-seemed ok with the change in the previous discussion and the patch looks
-reasonable to me.
-
-Acked-by: Petr Pavlu <petr.pavlu@suse.com>
-
--- 
-Thanks,
-Petr
-
-> 
-> 
-> 
-> 
-> On Mon, 03 Mar 2025 20:25:21 -0500
-> Steven Rostedt <rostedt@goodmis.org> wrote:
-> 
->> From: Steven Rostedt <rostedt@goodmis.org>
->>
->> The tracing system needs a way to save all the currently loaded modules
->> and their addresses into persistent memory so that it can evaluate the
->> addresses on a reboot from a crash. When the persistent memory trace
->> starts, it will load the module addresses and names into the persistent
->> memory. To do so, it will call the module_for_each_mod() function and pass
->> it a function and data structure to get called on each loaded module. Then
->> it can record the memory.
->>
->> This only implements that function.
->>
->> Cc: Luis Chamberlain <mcgrof@kernel.org>
->> Cc: Petr Pavlu <petr.pavlu@suse.com>
->> Cc: Sami Tolvanen <samitolvanen@google.com>
->> Cc: Daniel Gomez <da.gomez@samsung.com>
->> Cc: linux-modules@vger.kernel.org
->> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
->> ---
->> Changes since v2: https://lore.kernel.org/20250215034404.902259250@goodmis.org
->>
->> - Use RCU guard instead of disabling preemption
->>
->>  include/linux/module.h |  6 ++++++
->>  kernel/module/main.c   | 13 +++++++++++++
->>  2 files changed, 19 insertions(+)
->>
->> diff --git a/include/linux/module.h b/include/linux/module.h
->> index 30e5b19bafa9..9a71dd2cb11f 100644
->> --- a/include/linux/module.h
->> +++ b/include/linux/module.h
->> @@ -782,6 +782,8 @@ static inline void *module_writable_address(struct module *mod, void *loc)
->>  	return __module_writable_address(mod, loc);
->>  }
->>  
->> +void module_for_each_mod(int(*func)(struct module *mod, void *data), void *data);
->> +
->>  #else /* !CONFIG_MODULES... */
->>  
->>  static inline struct module *__module_address(unsigned long addr)
->> @@ -894,6 +896,10 @@ static inline void *module_writable_address(struct module *mod, void *loc)
->>  {
->>  	return loc;
->>  }
->> +
->> +static inline void module_for_each_mod(int(*func)(struct module *mod, void *data), void *data)
->> +{
->> +}
->>  #endif /* CONFIG_MODULES */
->>  
->>  #ifdef CONFIG_SYSFS
->> diff --git a/kernel/module/main.c b/kernel/module/main.c
->> index 1fb9ad289a6f..927a2e0ffd5f 100644
->> --- a/kernel/module/main.c
->> +++ b/kernel/module/main.c
->> @@ -3809,6 +3809,19 @@ bool is_module_text_address(unsigned long addr)
->>  	return ret;
->>  }
->>  
->> +void module_for_each_mod(int(*func)(struct module *mod, void *data), void *data)
->> +{
->> +	struct module *mod;
->> +
->> +	guard(rcu)();
->> +	list_for_each_entry_rcu(mod, &modules, list) {
->> +		if (mod->state == MODULE_STATE_UNFORMED)
->> +			continue;
->> +		if (func(mod, data))
->> +			break;
->> +	}
->> +}
->> +
->>  /**
->>   * __module_text_address() - get the module whose code contains an address.
->>   * @addr: the address.
-> 
-
+Sorry that I don't understand the *inline* here, do you mean
+why puting the metadata in the function padding?
