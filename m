@@ -1,200 +1,264 @@
-Received: from CY3PR05CU001.outbound.protection.outlook.com (mail-westcentralusazon11023101.outbound.protection.outlook.com [40.93.201.101])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f196.google.com (mail-yw1-f196.google.com [209.85.128.196])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96CC92907;
-	Thu,  6 Mar 2025 02:26:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.201.101
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741228010; cv=fail; b=d53mwX8FD6i6XS/boJ0bijlTit6GmbH4Sw7qj0tTZ1w4aSS94mAcgI5MhqzE7aBWciyg1iyhaGXOT6ooiyjU36wePG02D27tngCo6g29LhPs4GmvO2H0ibrdoCjXa5Fx9FUCZ2vv7XPRII2hqeFYR2Fj/N0P8Z1FH4qzzojvLi4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741228010; c=relaxed/simple;
-	bh=YW1XlnQtYcwX5df09SujO2pwintMgidbMmztTvm2KLA=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=ciiw3WoOyF0In9LTg+z+v4fXhLcVE2P0WAr5hg57i06U86XFCf1HbspOr7Nk3D/jDPDyUfM2ee9ELAg147dR36d/jDSzXzg7ZX3wCTRQJBmoNH1kaZBj+SagiXBEn1IjCpO9BvVaPDCnLWiPe5jBdd0ZYBlyw0/y1gT6m2QugNw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=amperemail.onmicrosoft.com; spf=pass smtp.mailfrom=os.amperecomputing.com; dkim=fail (0-bit key) header.d=amperemail.onmicrosoft.com header.i=@amperemail.onmicrosoft.com header.b=HS4EFEYE reason="key not found in DNS"; arc=fail smtp.client-ip=40.93.201.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=amperemail.onmicrosoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=os.amperecomputing.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 825F6192B8F;
+	Thu,  6 Mar 2025 02:59:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.196
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741230001; cv=none; b=uMrqGpiCOXRxTN4+D9ejxCsdILj23jW+glPTUs//ZkXTHNe0waKUBMuPDEHABPqENDf4Vg1eQ/HF6xR8kVYGJ+DFnhCjde69r1N8cNCOIyzDFLUhoUIPhkzS+9ATN3lY6PjKFXp4EZF31RUVumXtDRnasYbj37CmeW7jjfLjpaI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741230001; c=relaxed/simple;
+	bh=61tMRzNOM/5QWusjnzUN8wPxi9LPAafyPlmyDrpfEP4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=EI/9v1x3SE2EiN1w7Ui/Qj9KcTOoSxi3qK1JIQuDZJYpj2OiIuh/MFosxV7CAT7k6VOnV9zMy6Gzqqj2ZsDKiWwp5m3vn0lBKLQnPYFoKVTmJm1Grqz5xFm0YG9/dvnoSiaPqwJdre7hhHZPyetgnype/jGMKyoMzhGcEvGVARU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Qr4+n0iP; arc=none smtp.client-ip=209.85.128.196
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=amperemail.onmicrosoft.com header.i=@amperemail.onmicrosoft.com header.b="HS4EFEYE"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=ZXX7rd3K5jSGvV/mx17IvEgvyfkz9IYYnyYJdUTCyVXlGC5tRoheav+NX3Aa+bF8WEoSnu5NwapmuvOoZCQ7DfSSdMRtVcToWJzb/dX0KkSWavjZSmHlNxjawmOyAePZEJ5tvC9+B9njjtVsWPH2MEMZzq2/wQ7VTn5k/UMvheD63UGZDiZynHrFjoQK5F0pieKXsznX1ZvUiVFAlfOBbFO5De/bzDSZyf+AvSe8QvdAFCuCqH0paHT+0buZVluNKegRVBmXGyZTjnQwlMxY3lTWdoax5ibF+94yeUD+x8LnP0vb89BDhf/GZHM//UXrBvgzTeKybtxXL3tFdVHJCw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=1MLOluBTLYaIVJ/llQgfWcSxeZKvp0FyinmiyCVKoDI=;
- b=oM+fW1LelsLvYCqFNzhC2XEV+sSLadRy/RMLuo+rShw/sXLCZk5bLrZppxOcr5z2b6naxnJa3EaXJmpmZWBjLbBHw9zXbsmFyAcq21NYrhU8PpoBZVe/rF/pfLIjZuEPEt5gBtchXmB2p8wy+4O3FBIlWure8ceaEV6XB7uWC4fGVx2v3XGmW9Jao2pfun1md8Lz6FN9sBoJd0Kymg5GOsv9hqsjSgjHOIYtGjx/uPVeXxpb1dK7U1xJ1bBZxuDC8GroJdpYKR8W1Var021yZtPOVkajF2DJp4/lwh/jgi2Oe9/sgtGuTtZufPXq6U9A2vNgn2G7Um4fehBLFRlOTw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=os.amperecomputing.com; dmarc=pass action=none
- header.from=amperemail.onmicrosoft.com; dkim=pass
- header.d=amperemail.onmicrosoft.com; arc=none
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Qr4+n0iP"
+Received: by mail-yw1-f196.google.com with SMTP id 00721157ae682-6f679788fd1so1438407b3.2;
+        Wed, 05 Mar 2025 18:59:59 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amperemail.onmicrosoft.com; s=selector1-amperemail-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=1MLOluBTLYaIVJ/llQgfWcSxeZKvp0FyinmiyCVKoDI=;
- b=HS4EFEYE4ZcYVLeWJWZ0ESN96li2zlD/ebaNjN3sC9jhM8jI4AkrdzPdBQKO4gV0sY6NoypC9RQK+YAa79CWDGJTTCOO2vKe47Gj3Rcla27TSLiOz1/o1qe+QwEljLTupL09F+EL5cXCAraTvD7W2sXWnBuEZl2gg1P17xjd2YE=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amperemail.onmicrosoft.com;
-Received: from PH0PR01MB7975.prod.exchangelabs.com (2603:10b6:510:26d::15) by
- MW4PR01MB6500.prod.exchangelabs.com (2603:10b6:303:72::20) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8511.19; Thu, 6 Mar 2025 02:26:44 +0000
-Received: from PH0PR01MB7975.prod.exchangelabs.com
- ([fe80::6926:a627:118e:8050]) by PH0PR01MB7975.prod.exchangelabs.com
- ([fe80::6926:a627:118e:8050%4]) with mapi id 15.20.8511.017; Thu, 6 Mar 2025
- 02:26:43 +0000
-Message-ID: <070e4579-bbe3-48ef-9e60-1daf51df4b78@amperemail.onmicrosoft.com>
-Date: Thu, 6 Mar 2025 10:26:35 +0800
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH resend ] tracepoint: Print the function symbol when
- tracepoint_debug is set
-To: Steven Rostedt <rostedt@goodmis.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: Huang Shijie <shijie@os.amperecomputing.com>,
- patches@amperecomputing.com, cl@linux.com, yang@os.amperecomputing.com,
- peterz@infradead.org, jpoimboe@kernel.org, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
-References: <20250305015505.14493-1-shijie@os.amperecomputing.com>
- <f600edd0-8855-46af-98ec-1181db1f5dd4@efficios.com>
- <20250305104749.15e57b19@gandalf.local.home>
-Content-Language: en-GB
-From: Shijie Huang <shijie@amperemail.onmicrosoft.com>
-In-Reply-To: <20250305104749.15e57b19@gandalf.local.home>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: SI1PR02CA0045.apcprd02.prod.outlook.com
- (2603:1096:4:1f6::16) To PH0PR01MB7975.prod.exchangelabs.com
- (2603:10b6:510:26d::15)
+        d=gmail.com; s=20230601; t=1741229998; x=1741834798; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=4Jsf4FJkD/oQcph6Un/Rvp8XZNnCIvEKvX+i6GNumRQ=;
+        b=Qr4+n0iPgWdR1cXqJ9eWI4FM9271xlh9iV7xZ/zIKX3v/OVucwnZAkq5y7y/KuGKdA
+         3/FuFZD6BzbacsAXsQwOgUXGUJZtmxHK8ObippSiy4dMw81oiCDsqdgQ/32oZKYfK6Yk
+         0Msr11zx/OSChlCorbQlnfShfvnJAVbQQ4QBewNDUrS6svY0aaP4XXda7Y1uPT4cRzBc
+         0l/2MDynHa8+CUWPKpwGDrGxNBXN4mDoiF0JNUZOpWIy+qZpLefevMBlI1S4Eeg0sDnd
+         qU8s+e4bIhvtnmdzEDOZce3fjPI/WyUSrOEAXHkyBL7H7iIXVpyPlODig524uBD71ElN
+         Lp8g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741229998; x=1741834798;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=4Jsf4FJkD/oQcph6Un/Rvp8XZNnCIvEKvX+i6GNumRQ=;
+        b=BRvS6MfyrZ4Fz2dWODUz8SP4lu55kgF8oizY645eg/aVCzFbse/xY0ebFpYVA2hWRn
+         DuKnX+DzlP3kvr2uH2MzuH/OH2LTS/y0Nh5Ix+i7rz0njhO0fvQ+ncJw47rI7CcWcL7x
+         dlN/n1XrwA2B4M1I/qUq3OkfyA0ohIPF5PX3WMueCg8uB3kxkYofRLzyzDzyg+BiXyij
+         vHczzACDa6KOeXqrVM4ULYXfSFgHVKZdclf4zJ5zO++URb5JgFw40Olt7jpffKO1NXrk
+         +OxjbxyJwTPnvk1l69ulKPxOOSxx+5eoWiMXptjpo/ZlAr3on6qcPq1HWf1xCG0OkNmV
+         YgMA==
+X-Forwarded-Encrypted: i=1; AJvYcCU/jAU/Mf+zwyL7O0/aYe2PZmuOr5lHecs1zPuqx77CrCaPF0P1TUKeb8faptTrERYfIi8=@vger.kernel.org, AJvYcCWLbAWw9WsTx6RCSAguXgkB93Cb70MjFOrr3bgPHAZdLmXCcMJJYOHG2CtWLVtPuIzei0EmDOPH@vger.kernel.org, AJvYcCWue2EBo974zXxRN4oYMPUiq6eDQTijIkp/zElbg5c+LP9Jn/N774g46IGNQr3LQlIihevKzZ8DUqFWdC5HiyJiOXrt@vger.kernel.org, AJvYcCXWfqmVm5+mZ6ZNYjZs78XtK6V9hlVb9nNuChyRa+SBSYaZdbUUlElTGRHCZmaBaAnIV7sBVbjyCjm8tHYb@vger.kernel.org
+X-Gm-Message-State: AOJu0YzAR0Ny3nL6uZtngW42NGf0d8/fujMfv5AesKO4ZfBWzuLQrweX
+	2lAhaDsHwu6llzqHlwcyOrIaBGqW0EuQHZj3CkBxkX1Y6qhn/V69+7JKB4nK7uL5iL9DUMuORPO
+	/Vqma25G4WIKTxUqUbhiNrcGXkIE=
+X-Gm-Gg: ASbGncsbA09TZx8JGtW5BoHzFpTQrCY4by0xBLyvuVUR6aZhn+DbgeQOI0XSzZY8pDB
+	sNwBhsMJqFs6kskpSVw/btVfcjwayOjVL47qLSzadp0L8Vzf/eNz411zc7EkgPPp3/68ML12Ap0
+	h1x3o0tq3KvzqwwyrnPzRZ0l1GBA==
+X-Google-Smtp-Source: AGHT+IFeoYjcATqNsYPiuA+luhOQkjmbzDn/LQX+nvbyZv2699UHF1GDqeNPtOjeUYjHowLaxUhtHEMTkQhU0GT/F40=
+X-Received: by 2002:a05:690c:680f:b0:6fb:1e5a:fcd8 with SMTP id
+ 00721157ae682-6fda31222edmr79126807b3.28.1741229998289; Wed, 05 Mar 2025
+ 18:59:58 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH0PR01MB7975:EE_|MW4PR01MB6500:EE_
-X-MS-Office365-Filtering-Correlation-Id: 55b0349e-b22e-4038-457b-08dd5c5655b0
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?ZG9mVkJYanA0eHB5Z3BqWk1ZUGNPQzczc0dzWmdOZ3JQV2VOVSs1L2JVMUFi?=
- =?utf-8?B?Z3c5WlIvN2Q4N2pra3F4d0pxYTI5VTBtU0JZdmRYUFkyZnZGQ2crUWw5T3dJ?=
- =?utf-8?B?M0t0SzdqeDBtRVlSTFVOQWlwQUZsRldzQmNaTkZyWkNyN0dXOXZ0WmxUYndL?=
- =?utf-8?B?UjNNOGNja0tmWU90MHlGWTJLbHphaWhmNmxVQVJwRjNDQWRXcGtCY1ljZW1F?=
- =?utf-8?B?WWJkOVJKMmFMdURlZ2lZd2h5NjVUQWFDN0FVRmNXRXZQT3Q3SndTQ3YwZlhm?=
- =?utf-8?B?aVBRS1dDTUg2bjhCT0FOR0l4K29DTEcxRXlVU3JEQWpDUWRIZEJzS0F1dlQz?=
- =?utf-8?B?SUNJUVoxM00yZmNEY0R0S3AyTVdlc0F1Ym5MRzJiekU5UzFjbTFjN2xFQ2FP?=
- =?utf-8?B?eEltNmUrNTE5RjF1a205K0ErVHBVQmRNTERERXJLckpaK2NsRDFlSTBXU3dD?=
- =?utf-8?B?N0NjRnNJazNBUEhDcUNsckM5Wm8wc0pnbWRtcHJyc1F3NjBvZWl5WkhuSlZD?=
- =?utf-8?B?NGROTnRsQkY4OXhBa0hoOTI3Z2xjR29EZHBjaHJTeTlvUzBwcEQvbW0vWnlY?=
- =?utf-8?B?OUJrRGIzeUIxSXd1dnVYSDBCT3g0YTB5bW5RclRGeUZuSk4zb3hieFp3aDVr?=
- =?utf-8?B?VXNxNERDajVFWnFOZHFndWVGcnFlMmZVaGd6RE5aaWs5bU1mY0syei9HeWph?=
- =?utf-8?B?MjY4RVgrUDFReHdOMDlhTVdUaGtuT08yNG0vZlJXdUZjRmRxVVpQYjFMM1Zo?=
- =?utf-8?B?djJuT2NwWnB1M2hTRU9MSWZWWTgyblZaNmZueHZlcmRZeitsMWpNTGhyT3hB?=
- =?utf-8?B?Ri9CYk96SkZSbkRCVW9QK1BjYmZ0VEs4a01mM01FZEVIQmNkWHhOZDBTOG5M?=
- =?utf-8?B?ZDJCbUpmMGxYL3pnQVBBUis3eHpLMFpwY1lqVjlQd2FsOER2b1VOOVJiWmxX?=
- =?utf-8?B?cTkyZVhNeVAvOS9KR0xzQkxjb3gveitpK1puNWs1VVJQSVNiZFhyVEhjZi9n?=
- =?utf-8?B?RTZtbHRhNkN6Y2pIMlRVd3BNK2VUMUl1dHhVRis1UmVVS09yTTh5cUsrK2ds?=
- =?utf-8?B?RFhWVjFUZzlnNWpza3lMbzdqYWc4SGRid2tGTlVpczRNcGRRaVJNZWdTcVhK?=
- =?utf-8?B?TERqYnBJcmNrdkhldFZrWVhqSEU4bHlNZGpmVG5tamYrS0lpalBDNXZteWJv?=
- =?utf-8?B?KzhZRG1tODNCYllJQ00wUVlzaHZ5QW9ZN0txOHR4dGY5MU5kMTQwTjZJTTBk?=
- =?utf-8?B?dTZMbVplRldaUTR6NURkWmZkUyswck5ZaVhLMCsrbEh6MWEra3NJSEdtK2p3?=
- =?utf-8?B?bVl3Q055dGRhZllReDhCditoNmtxV1FFa2MrdjlDYlYwVWkvUWxsbElnSWlj?=
- =?utf-8?B?UUYxckVBVDZDM3EzS2lOamhPazVTc0lEUlc4MEEwTHFiVmdkc2dlSDBvMkRE?=
- =?utf-8?B?REw0b1orSXpkam1CUkliLzl3TnVVM1QxV2hjcy96aVZuRnBxbWVIajBiSm1U?=
- =?utf-8?B?eVFlM0xYNDFNNVBOMUFnbHhNWWxiZEJOMFRSYVpEL25uY0F4OVFHZkZVOVk4?=
- =?utf-8?B?UWtJcXQ4bEpia0dDcFpaUmZSVVlheTVydnhxNUZtY2JNVklQQnd3Sys2Rmpu?=
- =?utf-8?B?NkxRbGRWRWpvM1BTVUZnTEpMcmlzVVZ5UUlRT0t6WlBKay81anRZZDZaSUFt?=
- =?utf-8?B?c1ZPbzNGbDNwcjVoSC85U0tyWlo5OGpMUmFpcDRLQmdjTTlwKzJkRVNIQkhO?=
- =?utf-8?B?RDBicktGa1A4WFF3U20rbzRKdlpkZnRkVTlVU0xvSGg0L1dCem8rK3AvYUMv?=
- =?utf-8?B?YnJKUVlLU1IyRHRvTUs5eEJxeTVBR2IrM3U4UUpWSi9pS0dFYjlML2hsZDdV?=
- =?utf-8?Q?wH290FrD6zkw0?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH0PR01MB7975.prod.exchangelabs.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?MUtxbGlkdDBvZjdubXNEZ2JRWXUyYzRLVmJ0RTNhd2Y4UDhyZVlIdUZRVVps?=
- =?utf-8?B?b0J5N1RSdk9Ma1d2L1UxbUl2dkt0aWNkZ1BKaWNTb2VQdGFsUGpUcWVjd1V1?=
- =?utf-8?B?eW4yTFAybGkycWE0YkszWVdodEFSYVBYbUdyOS9mbEZId1lkQUozeHBKSlFp?=
- =?utf-8?B?RHVhMkNVYlZjTXRMSVBELy9BU25BRnY5NitzM2ZqTEN0TG8zSDJxMXI4VlBL?=
- =?utf-8?B?KzFLQ0QycDFIbHR2NDRpQ3ZEVHFFRWdOY3loVHZ6cUlGRnNkb3MyclgrSlE3?=
- =?utf-8?B?K3NMTkN6eFArQWRGWTgyUzg3MzN6ZGRYYnJaY29lak5kZW5tZ3VCRCtYNTVU?=
- =?utf-8?B?TjRoN0JCN2IyRVVjNU9xYWM2OG90Y29veWdwSHE1UUZFMzU3cEpxMVdsQXA1?=
- =?utf-8?B?MkNJZ1R0UzJSRlZwREF2TnB5eWhyeEF3S1l4R0xtcG5zZ0NUSmswN1dBNXlC?=
- =?utf-8?B?QVQ2bGRUcXQ0ZGU0SGRGQVVVbkhIZmJFVkNQUVlJNy9QdDhxeHVZay9RN3FL?=
- =?utf-8?B?ZHpSZUxGOUEwOEpiY2Q0ZEhxVDVIN2VQaXhDYnBiVElIRkpsaE9VaThLbXo3?=
- =?utf-8?B?U2pIQWdjWStjQjVCYktjNWtsR1owVS9MRVMwSkZmMENYb2ZYamk2YzNMVEtI?=
- =?utf-8?B?QlU0d3ZlNFdmWjdLR2c0YVBuaFlyQmwreWN2MEhTYUYvUlhQamkwamNiaEtp?=
- =?utf-8?B?SjhaZnRSZ05xUVZqU01QR3hWaS9mR3RGT2JZaVpydG1OenRJQ0o1dkFVckhV?=
- =?utf-8?B?dXhEaG5mZE54b081NXRDVkUveGtZR21Uc2pnQ2svWnhhWDhod2ZIUENaMzNa?=
- =?utf-8?B?T1ZyckNXSTJrNURCUitwVUxFRTBXTFJvQkxqdUM3c2RXNXM4ZHFTcmhmNWg2?=
- =?utf-8?B?MmVId1VJa3U4TmMyQ0xDQml1cGRjN0hGMmNNcmNNbkt5ZVZiSTNoc1l5L2RZ?=
- =?utf-8?B?M3Zmd0dFakhMbnkzSWQ0dnE0dGd6TE1pZzZuME91blFXVFpCakloV2ZSU0d5?=
- =?utf-8?B?VUlKN3JRWmYxRU5yVlVOdTMwcUM4bEJCMUUxaExLaEdkODkyVVZ4WWJOWm5j?=
- =?utf-8?B?YjBrbG9oQ0RLVVVTWHZrUG1jZVRNaTVMVndMM0piY3M4L0J1VG5VWFRKWjFR?=
- =?utf-8?B?Z2wzeEdieTJpaEFtdFlIYXZhRlE4dUJld2NsWXJvdjFsc2VRc0xMSkM3MEhs?=
- =?utf-8?B?VkFQSHRpQmNOUGQvNTcvM2VmaW1wOXBtTElCc1ZlVEwzM2RsL1B4WUlqaGFO?=
- =?utf-8?B?b0M0RFRvMTcyUDRmYjM2U2w4WlBhU3VOVXBJSklzMVBZeGdzaWxGdnF1a1ZG?=
- =?utf-8?B?Kzc4dzZnK1NCckE0SVViVno2dXBpUklsdWR0Vmx0cG1VUG9HNlVsVVo5UFJM?=
- =?utf-8?B?c0plZndMSlQyd055QWJpMU5weXNwUGJ0Qlh2MGY0RVBDaExDeGovK0xpNGsw?=
- =?utf-8?B?QXcxY1dMZG1mVmszeUt2NllnRlgwdnFuTGtKVDlIV0tnV0JvcTI5V1JxSmwx?=
- =?utf-8?B?Ukc4VHU3NWxRZ3Y1QXoxd01TazdzUWd4aUlnRlNQYzhTZmozcXpSMFA3cHZ5?=
- =?utf-8?B?ZGJ1amlGbGZVOUtKYW0zcDRGL2FSVGVBS01QVVVtaUx2dUVRYVNXYXJrT0ow?=
- =?utf-8?B?TjExelBwYy9hdDMwQXplYnVLTjZjQkhoajEyb3dzSlhqcGw5MlowNkZDWDNR?=
- =?utf-8?B?d0w3ZERBQWdwQXlVUVhuS0RjUE1WcDdsdW00SFV5SDlKL25YdXJTWjhHamJO?=
- =?utf-8?B?YWg1NjlWaW5YeGhnSnRsc0NIcDAxaElhS3NGWW5ieGMwdFZoU3Mya3ppQmVy?=
- =?utf-8?B?THFLVUVzMkZ1ZXhSMGlaeWIzaUVMSTdtWGZ0K3ZlSWZBWGhlbEIwdlhDV1JO?=
- =?utf-8?B?cVBPV3p2RmFoWWRKRUFocTE4TmJTcEhmOGFxb1haSWFmTDZXTlJiUjdvZ3gw?=
- =?utf-8?B?V2dpVE44M0dNaVptWDE3UXJmbERDWU9UbnBiYkdGM1JDUjNBTnFWbzFIUmFV?=
- =?utf-8?B?bUdlVEhCZ2xFRFBGc2VhWGk2c2NUU3FRbTlzdW5iS2lJZ2hlRkU2WEpQRGxv?=
- =?utf-8?B?SUxPOGppOGxnZVRPNGtWN01RdURkSjVNalZEYVNsV1F2cjE4eGtjSmRyRUZG?=
- =?utf-8?B?dThmNmN4dlhVZ3phSUhoSzJ1c0ZSYU9zeFlOL1F2UVpNQjRyalBiaWUwc204?=
- =?utf-8?Q?UjgY2hp8kKT//43nTyUuP4M=3D?=
-X-OriginatorOrg: amperemail.onmicrosoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 55b0349e-b22e-4038-457b-08dd5c5655b0
-X-MS-Exchange-CrossTenant-AuthSource: PH0PR01MB7975.prod.exchangelabs.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Mar 2025 02:26:43.5539
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3bc2b170-fd94-476d-b0ce-4229bdc904a7
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: TR3kzcqZ9a/nL/cND6V0KzjtIeFsdbSf6NVNXXY7rp/9uruk6GXpSTvtANJ/8X4bsc9h96FulBn5asQ22+azQ1hLhWosDTfr/kr+aL7XOKiBckmR+Deknp3QJpEDIOGy
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR01MB6500
+References: <20250303132837.498938-1-dongml2@chinatelecom.cn>
+ <20250303132837.498938-2-dongml2@chinatelecom.cn> <20250303165454.GB11590@noisy.programming.kicks-ass.net>
+ <CADxym3aVtKx_mh7aZyZfk27gEiA_TX6VSAvtK+YDNBtuk_HigA@mail.gmail.com>
+ <20250304053853.GA7099@noisy.programming.kicks-ass.net> <20250304061635.GA29480@noisy.programming.kicks-ass.net>
+ <CADxym3bS_6jpGC3vLAAyD20GsR+QZofQw0_GgKT8nN3c-HqG-g@mail.gmail.com>
+ <20250304094220.GC11590@noisy.programming.kicks-ass.net> <6F9EF5C3-4CAE-4C5E-B70E-F73462AC7CA0@zytor.com>
+ <CADxym3busXZKtX=+FY_xnYw7e1CKp5AiHSasZGjVJTdeCZao-g@mail.gmail.com> <20250305100306.4685333a@gandalf.local.home>
+In-Reply-To: <20250305100306.4685333a@gandalf.local.home>
+From: Menglong Dong <menglong8.dong@gmail.com>
+Date: Thu, 6 Mar 2025 10:58:18 +0800
+X-Gm-Features: AQ5f1Jq_Oa1dQKvMfe98EdRc4mzdybzOfF6-Dlq5oONytu-pPWGY-R6eybChn8I
+Message-ID: <CADxym3ZB_eQny=-aO4AwrHiwT264NXitdKwjRUYrnGJ2tH=Qwg@mail.gmail.com>
+Subject: Re: [PATCH v4 1/4] x86/ibt: factor out cfi and fineibt offset
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: "H. Peter Anvin" <hpa@zytor.com>, Peter Zijlstra <peterz@infradead.org>, mark.rutland@arm.com, 
+	alexei.starovoitov@gmail.com, catalin.marinas@arm.com, will@kernel.org, 
+	mhiramat@kernel.org, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, 
+	dave.hansen@linux.intel.com, x86@kernel.org, ast@kernel.org, 
+	daniel@iogearbox.net, andrii@kernel.org, martin.lau@linux.dev, 
+	eddyz87@gmail.com, yonghong.song@linux.dev, john.fastabend@gmail.com, 
+	kpsingh@kernel.org, sdf@fomichev.me, jolsa@kernel.org, davem@davemloft.net, 
+	dsahern@kernel.org, mathieu.desnoyers@efficios.com, nathan@kernel.org, 
+	nick.desaulniers+lkml@gmail.com, morbo@google.com, samitolvanen@google.com, 
+	kees@kernel.org, dongml2@chinatelecom.cn, akpm@linux-foundation.org, 
+	riel@surriel.com, rppt@kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	bpf@vger.kernel.org, netdev@vger.kernel.org, llvm@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-
-On 2025/3/5 23:47, Steven Rostedt wrote:
-> On Wed, 5 Mar 2025 08:53:43 -0500
-> Mathieu Desnoyers <mathieu.desnoyers@efficios.com> wrote:
+On Wed, Mar 5, 2025 at 11:02=E2=80=AFPM Steven Rostedt <rostedt@goodmis.org=
+> wrote:
 >
->> On 2025-03-04 20:55, Huang Shijie wrote:
->>> When tracepoint_debug is set, we may get the output in kernel log:
->>>        [  380.013843] Probe 0 : 00000000f0d68cda
->>>
->>> It is not readable, so change to print the function symbol.
->>> After this patch, the output may becomes:
->>>        [   54.930567] Probe 0 : perf_trace_sched_wakeup_template
->> What would it print if the address is corrupted ?
->>
->> Perhaps we could do like the backtrace code and print e.g.
->>
->> [<00000000f0d68cda>] perf_trace_sched_wakeup_template+0xNN/0xMM
->>
->> ?
->>
->> I don't care about the actual layout, but removing the address
->> from the formatted output appears to be removing useful data
->> in debug situations.
->>
-> Perhaps this can use "%pS" which shows both the function entry and the
+> On Wed, 5 Mar 2025 09:19:09 +0800
+> Menglong Dong <menglong8.dong@gmail.com> wrote:
+>
+> > Ok, let me explain it from the beginning. (My English is not good,
+> > but I'll try to describe it as clear as possible :/)
+>
+> I always appreciate those who struggle with English having these
+> conversations. Thank you for that, as I know I am horrible in speaking an=
+y
+> other language. (I can get by in German, but even Germans tell me to swit=
+ch
+> back to English ;-)
+>
+> >
+> > Many BPF program types need to depend on the BPF trampoline,
+> > such as BPF_PROG_TYPE_TRACING, BPF_PROG_TYPE_EXT,
+> > BPF_PROG_TYPE_LSM, etc. BPF trampoline is a bridge between
+> > the kernel (or bpf) function and BPF program, and it acts just like the
+> > trampoline that ftrace uses.
+> >
+> > Generally speaking, it is used to hook a function, just like what ftrac=
+e
+> > do:
+> >
+> > foo:
+> >     endbr
+> >     nop5  -->  call trampoline_foo
+> >     xxxx
+> >
+> > In short, the trampoline_foo can be this:
+> >
+> > trampoline_foo:
+> >     prepare a array and store the args of foo to the array
+> >     call fentry_bpf1
+> >     call fentry_bpf2
+> >     ......
+> >     call foo+4 (origin call)
+>
+> Note, I brought up this issue when I first heard about how BPF does this.
+> The calling of the original function from the trampoline. I said this wil=
+l
+> cause issues, and is only good for a few functions. Once you start doing
+> this for 1000s of functions, it's going to be a nightmare.
+>
+> Looks like you are now in the nightmare phase.
+>
+> My argument was once you have this case, you need to switch over to the
+> kretprobe / function graph way of doing things, which is to have a shadow
+> stack and hijack the return address. Yes, that has slightly more overhead=
+,
+> but it's better than having to add all theses hacks.
+>
+> And function graph has been updated so that it can do this for other user=
+s.
+> fprobes uses it now, and bpf can too.
 
-okay, I can change it to use "%pS" in next version if we think it is 
-good enough:
+Yeah, I heard that the kretprobe is able to get the function
+arguments too, which benefits from the function graph.
 
-      [   55.225555] Probe 0 : perf_trace_sched_wakeup_template+0x0/0x20
+Besides the overhead, another problem is that we can't do
+direct memory access if we use the BPF based on kretprobe.
 
+>
+> >     save the return value of foo
+> >     call fexit_bpf1 (this bpf can get the return value of foo)
+> >     call fexit_bpf2
+> >     .......
+> >     return to the caller of foo
+> >
+> > We can see that the trampoline_foo can be only used for
+> > the function foo, as different kernel function can be attached
+> > different BPF programs, and have different argument count,
+> > etc. Therefore, we have to create 1000 BPF trampolines if
+> > we want to attach a BPF program to 1000 kernel functions.
+> >
+> > The creation of the BPF trampoline is expensive. According to
+> > my testing, It will spend more than 1 second to create 100 bpf
+> > trampoline. What's more, it consumes more memory.
+> >
+> > If we have the per-function metadata supporting, then we can
+> > create a global BPF trampoline, like this:
+> >
+> > trampoline_global:
+> >     prepare a array and store the args of foo to the array
+> >     get the metadata by the ip
+> >     call metadata.fentry_bpf1
+> >     call metadata.fentry_bpf2
+> >     ....
+> >     call foo+4 (origin call)
+>
+> So if this is a global trampoline, wouldn't this "call foo" need to be an
+> indirect call? It can't be a direct call, otherwise you need a separate
+> trampoline for that.
+>
+> This means you need to mitigate for spectre here, and you just lost the
+> performance gain from not using function graph.
 
-Thanks
+Yeah, you are right, this is an indirect call here. I haven't done
+any research on mitigating for spectre yet, and maybe we can
+convert it into a direct call somehow? Such as, we maintain a
+trampoline_table:
+    some preparation
+    jmp +%eax (eax is the index of the target function)
+    call foo1 + 4
+    return
+    call foo2 + 4
+    return
+    call foo3 + 4
+    return
 
-Huang Shijie
+(Hmm......Is the jmp above also an indirect call?)
 
+And in the trampoline_global, we can call it like this:
+
+    mov metadata.index %eax
+    call trampoline_table
+
+I'm not sure if it works. However, indirect call is also used
+in function graph, so we still have better performance. Isn't it?
+
+Let me have a look at the code of the function graph first :/
+
+Thanks!
+Menglong Dong
+
+>
+>
+> >     save the return value of foo
+> >     call metadata.fexit_bpf1 (this bpf can get the return value of foo)
+> >     call metadata.fexit_bpf2
+> >     .......
+> >     return to the caller of foo
+> >
+> > (The metadata holds more information for the global trampoline than
+> > I described.)
+> >
+> > Then, we don't need to create a trampoline for every kernel function
+> > anymore.
+> >
+> > Another beneficiary can be ftrace. For now, all the kernel functions th=
+at
+> > are enabled by dynamic ftrace will be added to a filter hash if there a=
+re
+> > more than one callbacks. And hash lookup will happen when the traced
+> > functions are called, which has an impact on the performance, see
+> > __ftrace_ops_list_func() -> ftrace_ops_test(). With the per-function
+> > metadata supporting, we can store the information that if the callback =
+is
+> > enabled on the kernel function to the metadata, which can make the perf=
+ormance
+> > much better.
+>
+> Let me say now that ftrace will not use this. Looks like too much work fo=
+r
+> little gain. The only time this impacts ftrace is when there's two
+> different callbacks tracing the same function, and it only impacts that
+> function. All other functions being traced still call the appropriate
+> trampoline for the callback.
+>
+> -- Steve
+>
+> >
+> > The per-function metadata storage is a basic function, and I think ther=
+e
+> > may be other functions that can use it for better performance in the fe=
+ature
+> > too.
+> >
+> > (Hope that I'm describing it clearly :/)
+>
