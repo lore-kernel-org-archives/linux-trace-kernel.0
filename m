@@ -1,33 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C87AC2114;
-	Thu,  6 Mar 2025 15:13:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFAB720E71F;
+	Thu,  6 Mar 2025 15:31:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741273996; cv=none; b=FQhsk9q7Y/IUEPTVLKIr4X4HonJicPvk/YlNJciNV3pX9eqNTFQlhjcAb8SUZKaGxbBDhYK7Ahf2pvikEVMW8O9LEMU+1k11ziTwlshD5OznF7VDQVPD3AVOn7pJzRoU/6Ic955JV44ji90LfbEXz3w5NOqcn+RndbypPdIHorw=
+	t=1741275100; cv=none; b=IbFj/h3e+h0Wi0L1yxqLCdloQy7xPfg0zR20Xc5iE4WLsIXDkV0xFiKauVjt3y2psHtP9SZh4gt2exvBpxq73PWFvyN1zi65ItZEP/rnI2RHqIUk8RljB1IbW/Z9kd9Isen7XFYd1I3ZQsUk9aerw0mfvQvr5tOZlZA/uFSd4rg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741273996; c=relaxed/simple;
-	bh=pap1xK5SnNKiiMrorspnPCO3wV1Ru3Gs/zhidkela08=;
+	s=arc-20240116; t=1741275100; c=relaxed/simple;
+	bh=SQ4miVnhmPAoOA/6WTcJSGaPc/CNU83guyGxo0OGbvY=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=mEpodJD4LXu9R1A/URdcpLjFswudF+KbBFaGnCx1r3ucMHz99tdRuT3JGAUFUd00T6zEU6DaWC+t15PeqiP6O+kzw4vMYzEwpNlm8kGa3ULw3GAhCeODpxuY5h9YNJ9x3ynoqdjBLEGaspAE1EOV7a+Jrcoa394iOPPKNlztyIY=
+	 MIME-Version:Content-Type; b=UwuhCBDV47wPMx4E5OlxGd9tBSzWPoNQ+wN4SCzkkdF/Z+cSNkQgOy33popx0pJmciuFW6yR9x/V45aMGDET1gESRnCixJhnFo6/7rfUBnxZd1OfcEwRH4KSBOiOVanAqw/uggeteDuD26h+6AOln3nPaJYR0CjVVEyQ7oKRb6Q=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 311CFC4CEE0;
-	Thu,  6 Mar 2025 15:13:15 +0000 (UTC)
-Date: Thu, 6 Mar 2025 10:13:15 -0500
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 52A15C4CEE4;
+	Thu,  6 Mar 2025 15:31:38 +0000 (UTC)
+Date: Thu, 6 Mar 2025 10:31:38 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
-To: Shijie Huang <shijie@amperemail.onmicrosoft.com>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Huang Shijie
- <shijie@os.amperecomputing.com>, patches@amperecomputing.com, cl@linux.com,
- yang@os.amperecomputing.com, peterz@infradead.org, jpoimboe@kernel.org,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH resend ] tracepoint: Print the function symbol when
- tracepoint_debug is set
-Message-ID: <20250306101315.5a5f1d7f@gandalf.local.home>
-In-Reply-To: <b098cbdf-394b-4f20-9dcd-393ad1b734b7@amperemail.onmicrosoft.com>
-References: <20250305015505.14493-1-shijie@os.amperecomputing.com>
-	<f600edd0-8855-46af-98ec-1181db1f5dd4@efficios.com>
-	<b098cbdf-394b-4f20-9dcd-393ad1b734b7@amperemail.onmicrosoft.com>
+To: Joel Granados <joel.granados@kernel.org>
+Cc: Kees Cook <kees@kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, "David S. Miller" <davem@davemloft.net>,
+ Andreas Larsson <andreas@gaisler.com>, Heiko Carstens <hca@linux.ibm.com>,
+ Vasily Gorbik <gor@linux.ibm.com>, Alexander Gordeev
+ <agordeev@linux.ibm.com>, Christian Borntraeger
+ <borntraeger@linux.ibm.com>, Sven Schnelle <svens@linux.ibm.com>, Gerald
+ Schaefer <gerald.schaefer@linux.ibm.com>, linux-kernel@vger.kernel.org,
+ linux-fsdevel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ sparclinux@vger.kernel.org, linux-s390@vger.kernel.org
+Subject: Re: [PATCH v2 4/6] stack_tracer: move sysctl registration to
+ kernel/trace/trace_stack.c
+Message-ID: <20250306103138.3cfc2955@gandalf.local.home>
+In-Reply-To: <20250306-jag-mv_ctltables-v2-4-71b243c8d3f8@kernel.org>
+References: <20250306-jag-mv_ctltables-v2-0-71b243c8d3f8@kernel.org>
+	<20250306-jag-mv_ctltables-v2-4-71b243c8d3f8@kernel.org>
 X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -35,46 +40,82 @@ List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Thu, 6 Mar 2025 11:37:38 +0800
-Shijie Huang <shijie@amperemail.onmicrosoft.com> wrote:
+On Thu, 06 Mar 2025 12:29:44 +0100
+Joel Granados <joel.granados@kernel.org> wrote:
 
-> diff --git a/kernel/tracepoint.c b/kernel/tracepoint.c
-> index abfd0ac1177f..5a5041f32cc8 100644
-> --- a/kernel/tracepoint.c
-> +++ b/kernel/tracepoint.c
-> @@ -127,7 +127,8 @@ static void debug_print_probes(struct=20
-> tracepoint_func *funcs)
->  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 return;
->=20
->  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 for (i =3D 0; funcs[i].func; =
-i++)
-> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0 printk(KERN_DEBUG "Probe %d : %p\n", i, funcs[i].func);
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0 printk(KERN_DEBUG "Probe %d : [ %p ] %pS\n",
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 i, funcs[i].func, funcs[i].func);
->  =C2=A0}
->=20
->=20
-> The output will look like:
->=20
-> [=C2=A0=C2=A0 63.818829] Probe 0 : [ 0000000032848d41 ]=20
-> perf_trace_sched_wakeup_template+0x0/0x20
-> [=C2=A0=C2=A0 63.819287] Probe 0 : [ 00000000fe8cca4d ]=20
-> perf_trace_sched_switch+0x0/0x20
-> [=C2=A0=C2=A0 65.325638] Probe 0 : [ 0000000032848d41 ]=20
-> perf_trace_sched_wakeup_template+0x0/0x20
-> [=C2=A0=C2=A0 65.695631] Probe 0 : [ 00000000fe8cca4d ]=20
-> perf_trace_sched_switch+0x0/0x20
+> Move stack_tracer_enabled into trace_stack_sysctl_table. This is part of
+> a greater effort to move ctl tables into their respective subsystems
+> which will reduce the merge conflicts in kerenel/sysctl.c.
+> 
+> Signed-off-by: Joel Granados <joel.granados@kernel.org>
+> ---
+>  kernel/sysctl.c            | 10 ----------
+>  kernel/trace/trace_stack.c | 20 ++++++++++++++++++++
+>  2 files changed, 20 insertions(+), 10 deletions(-)
+> 
+> diff --git a/kernel/sysctl.c b/kernel/sysctl.c
+> index baa250e223a26bafc39cb7a7d7635b4f7f5dcf56..dc3747cc72d470662879e4f2b7f2651505b7ca90 100644
+> --- a/kernel/sysctl.c
+> +++ b/kernel/sysctl.c
+> @@ -68,7 +68,6 @@
+>  
+>  #ifdef CONFIG_X86
+>  #include <asm/nmi.h>
+> -#include <asm/stacktrace.h>
+>  #include <asm/io.h>
+>  #endif
+>  #ifdef CONFIG_SPARC
+> @@ -1674,15 +1673,6 @@ static const struct ctl_table kern_table[] = {
+>  		.proc_handler	= proc_dointvec,
+>  	},
+>  #endif
+> -#ifdef CONFIG_STACK_TRACER
+> -	{
+> -		.procname	= "stack_tracer_enabled",
+> -		.data		= &stack_tracer_enabled,
+> -		.maxlen		= sizeof(int),
+> -		.mode		= 0644,
+> -		.proc_handler	= stack_trace_sysctl,
+> -	},
+> -#endif
+>  #ifdef CONFIG_MODULES
+>  	{
+>  		.procname	= "modprobe",
+> diff --git a/kernel/trace/trace_stack.c b/kernel/trace/trace_stack.c
+> index 14c6f272c4d8a382070d45e1cf0ee97db38831c9..b7ffbc1da8357f9c252cb8936c8f789daa97eb9a 100644
+> --- a/kernel/trace/trace_stack.c
+> +++ b/kernel/trace/trace_stack.c
+> @@ -578,3 +578,23 @@ static __init int stack_trace_init(void)
+>  }
+>  
+>  device_initcall(stack_trace_init);
+> +
+> +
+> +static const struct ctl_table trace_stack_sysctl_table[] = {
+> +	{
+> +		.procname	= "stack_tracer_enabled",
+> +		.data		= &stack_tracer_enabled,
+> +		.maxlen		= sizeof(int),
+> +		.mode		= 0644,
+> +		.proc_handler	= stack_trace_sysctl,
+> +	},
+> +};
+> +
+> +static int __init init_trace_stack_sysctls(void)
+> +{
+> +	register_sysctl_init("kernel", trace_stack_sysctl_table);
+> +	return 0;
+> +}
+> +subsys_initcall(init_trace_stack_sysctls);
+> +
+> +
+> 
 
-I'm fine either way. Mathieu, what's your preference?
-
-Although the above shows a hashed %p. Is that even useful?
+This should also make the variable "stack_tracer_enabled" static and
+removed from the ftrace.h header.
 
 -- Steve
+
