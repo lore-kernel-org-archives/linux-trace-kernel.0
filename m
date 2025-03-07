@@ -1,118 +1,186 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0027621A92F;
-	Fri,  7 Mar 2025 15:27:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 070EA2E822;
+	Fri,  7 Mar 2025 15:39:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741361230; cv=none; b=sbM0NvBuKRNAWuV5yTTq595tIKQc9BAdD33pzSn5WrdWdPtsSlTDfqh3954wSVcxVmlqbfhbG/05k2o4V5lPS5xmpAt+w4D12ys4i1UA0l52nCjyHyEYFtecbpQEB018hb90atYVC/QMS1oN8wWttXQpNKUpF9vTkcd+si5DuS4=
+	t=1741361983; cv=none; b=q+uw04nUn8isn5bTRR4zkxhQhtUcSC7F4uPBHBIJJAZd4PyE/UkY2DBTFeKbw+Xzvic6MJ24/a4fgiqvVkJ+2zBlaewXQ7uF1weOk0B2T89xRG5Ld2nzkVU8hrzaEw28/Bm2zTgLBxA40LqPUiSmvgkjyCfrkjx8R7f3m2ecpm4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741361230; c=relaxed/simple;
-	bh=d14TcBCq8tNskRbNOhfQ4KQb7u5Ht3zbufS2FqRKCYs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uQ25Gd76JxzPHxTvCrC/C4xfCkVttIQjwEkFoRhaZWD4w8SvG7HpIyqn18K6PHdL4ZulJPT2GvWJwXm3pMQUl4T/+zIJeux6WAA5vU+Hm/LouVkIDxlOYNAh47duIEwbRvjt1cwcQhTZqMWwuqGlhLRV5NNVaPPxDeWcNwMwMnw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=B7XQCfn1; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="B7XQCfn1"
-Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5279O6GO011752;
-	Fri, 7 Mar 2025 15:26:27 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=pp1; bh=6l1/6flwEbafhd438qBLncqgyqXINz
-	D2I0nhn9LVcRs=; b=B7XQCfn1B56XyQ7LV9aQk7AlSHBaQAX26Kkef0jwV3Io3+
-	7O4BCwGbLOBTk7fQ6QoXGOGxXFsnkLPB3N1LXRN+aXkP6maBrzZ6GxhxWnedQ9Oo
-	wb0a4iZTQ2g7ATo8dtTXYc2r2sOjUd9pskzU9gbVuaHEd4nF/xFp800+JEVOPWhQ
-	GKjt5kJ1JPDJ72EXv4zqi6PNOFl4dq8BSV4HYb7v8OudjPsxC1x2JjAMpqgWN+io
-	pnF/i80BgO5P9FHPQ1ngXhQbOKSmoenJmyqPMQPM3TSekIiVgy4mvsEnTJrpTgLX
-	UdnMP6AKZL+jh07ZxCrl8/tTF/vT/81mfmT/7h7w==
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 457k45cm2c-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 07 Mar 2025 15:26:27 +0000 (GMT)
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 527E0kgY020873;
-	Fri, 7 Mar 2025 15:26:26 GMT
-Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 454eskf5yk-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 07 Mar 2025 15:26:26 +0000
-Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
-	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 527FQNxn56426840
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 7 Mar 2025 15:26:23 GMT
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id EA59820043;
-	Fri,  7 Mar 2025 15:26:22 +0000 (GMT)
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 0EBFE20040;
-	Fri,  7 Mar 2025 15:26:22 +0000 (GMT)
-Received: from osiris (unknown [9.171.2.237])
-	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Fri,  7 Mar 2025 15:26:21 +0000 (GMT)
-Date: Fri, 7 Mar 2025 16:26:20 +0100
-From: Heiko Carstens <hca@linux.ibm.com>
-To: joel granados <joel.granados@kernel.org>
-Cc: Kees Cook <kees@kernel.org>, Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Andreas Larsson <andreas@gaisler.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Sven Schnelle <svens@linux.ibm.com>,
-        Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-trace-kernel@vger.kernel.org, sparclinux@vger.kernel.org,
-        linux-s390@vger.kernel.org
-Subject: Re: [PATCH v2 6/6] s390: mv s390 sysctls into their own file under
- arch/s390 dir
-Message-ID: <20250307152620.9880F75-hca@linux.ibm.com>
-References: <20250306-jag-mv_ctltables-v2-0-71b243c8d3f8@kernel.org>
- <20250306-jag-mv_ctltables-v2-6-71b243c8d3f8@kernel.org>
+	s=arc-20240116; t=1741361983; c=relaxed/simple;
+	bh=8RcfGscKVHD+0qW2v6R4G9+bU4Ps2LgpB1Gbudf2mnU=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=Mx3Zgz18wBhXb4Q33agetih0lCHP42OIqk4CIyAzY3RTlYeFhBobjth0SRg0uDTQ/RE5RMjX+kMDMIY+PB0Sn6HrQwkI/j6hc33Zhhdp6GqTKVL5usxV+9m2c+qYaQc2qGmJYmZ3K5snWW7FH86lnxG1Zs9HFT7noW9kleuJL3I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9E53EC4CED1;
+	Fri,  7 Mar 2025 15:39:41 +0000 (UTC)
+Date: Fri, 7 Mar 2025 10:39:41 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland
+ <mark.rutland@arm.com>, Frederic Weisbecker <fweisbec@gmail.com>, Mathieu
+ Desnoyers <mathieu.desnoyers@efficios.com>, Uday Shankar
+ <ushankar@purestorage.com>, Masahiro Yamada <masahiroy@kernel.org>
+Subject: [PATCH] scripts/tracing: Remove scripts/tracing/draw_functrace.py
+Message-ID: <20250307103941.070654e7@gandalf.local.home>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250306-jag-mv_ctltables-v2-6-71b243c8d3f8@kernel.org>
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: CHnHREwPD5LzuGyc-xIZcJW8tFFRpzdB
-X-Proofpoint-GUID: CHnHREwPD5LzuGyc-xIZcJW8tFFRpzdB
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-07_06,2025-03-06_04,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 malwarescore=0
- mlxlogscore=686 mlxscore=0 adultscore=0 clxscore=1015 impostorscore=0
- priorityscore=1501 suspectscore=0 bulkscore=0 lowpriorityscore=0
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2502100000 definitions=main-2503070111
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Thu, Mar 06, 2025 at 12:29:46PM +0100, joel granados wrote:
-> Move s390 sysctls (spin_retry and userprocess_debug) into their own
-> files under arch/s390. We create two new sysctl tables
-> (2390_{fault,spin}_sysctl_table) which will be initialized with
-> arch_initcall placing them after their original place in proc_root_init.
-> 
-> This is part of a greater effort to move ctl tables into their
-> respective subsystems which will reduce the merge conflicts in
-> kernel/sysctl.c.
-> 
-> Signed-off-by: joel granados <joel.granados@kernel.org>
-> ---
->  arch/s390/lib/spinlock.c | 18 ++++++++++++++++++
->  arch/s390/mm/fault.c     | 17 +++++++++++++++++
->  kernel/sysctl.c          | 18 ------------------
->  3 files changed, 35 insertions(+), 18 deletions(-)
+From: Steven Rostedt <rostedt@goodmis.org>
 
-Acked-by: Heiko Carstens <hca@linux.ibm.com>
+The draw_functrace.py hasn't worked in years. There's better ways to
+accomplish the same thing (via libtracefs). Remove it.
 
-How should this go upstream? Will you take care of this, or should
-this go via the s390 tree?
+Link: https://lore.kernel.org/linux-trace-kernel/20250210-debuginfo-v1-1-368feb58292a@purestorage.com/
+
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+ scripts/tracing/draw_functrace.py | 129 ------------------------------
+ 1 file changed, 129 deletions(-)
+ delete mode 100755 scripts/tracing/draw_functrace.py
+
+diff --git a/scripts/tracing/draw_functrace.py b/scripts/tracing/draw_functrace.py
+deleted file mode 100755
+index 42fa87300941..000000000000
+--- a/scripts/tracing/draw_functrace.py
++++ /dev/null
+@@ -1,129 +0,0 @@
+-#!/usr/bin/env python
+-# SPDX-License-Identifier: GPL-2.0-only
+-
+-"""
+-Copyright 2008 (c) Frederic Weisbecker <fweisbec@gmail.com>
+-
+-This script parses a trace provided by the function tracer in
+-kernel/trace/trace_functions.c
+-The resulted trace is processed into a tree to produce a more human
+-view of the call stack by drawing textual but hierarchical tree of
+-calls. Only the functions's names and the call time are provided.
+-
+-Usage:
+-	Be sure that you have CONFIG_FUNCTION_TRACER
+-	# mount -t tracefs nodev /sys/kernel/tracing
+-	# echo function > /sys/kernel/tracing/current_tracer
+-	$ cat /sys/kernel/tracing/trace_pipe > ~/raw_trace_func
+-	Wait some times but not too much, the script is a bit slow.
+-	Break the pipe (Ctrl + Z)
+-	$ scripts/tracing/draw_functrace.py < ~/raw_trace_func > draw_functrace
+-	Then you have your drawn trace in draw_functrace
+-"""
+-
+-
+-import sys, re
+-
+-class CallTree:
+-	""" This class provides a tree representation of the functions
+-		call stack. If a function has no parent in the kernel (interrupt,
+-		syscall, kernel thread...) then it is attached to a virtual parent
+-		called ROOT.
+-	"""
+-	ROOT = None
+-
+-	def __init__(self, func, time = None, parent = None):
+-		self._func = func
+-		self._time = time
+-		if parent is None:
+-			self._parent = CallTree.ROOT
+-		else:
+-			self._parent = parent
+-		self._children = []
+-
+-	def calls(self, func, calltime):
+-		""" If a function calls another one, call this method to insert it
+-			into the tree at the appropriate place.
+-			@return: A reference to the newly created child node.
+-		"""
+-		child = CallTree(func, calltime, self)
+-		self._children.append(child)
+-		return child
+-
+-	def getParent(self, func):
+-		""" Retrieve the last parent of the current node that
+-			has the name given by func. If this function is not
+-			on a parent, then create it as new child of root
+-			@return: A reference to the parent.
+-		"""
+-		tree = self
+-		while tree != CallTree.ROOT and tree._func != func:
+-			tree = tree._parent
+-		if tree == CallTree.ROOT:
+-			child = CallTree.ROOT.calls(func, None)
+-			return child
+-		return tree
+-
+-	def __repr__(self):
+-		return self.__toString("", True)
+-
+-	def __toString(self, branch, lastChild):
+-		if self._time is not None:
+-			s = "%s----%s (%s)\n" % (branch, self._func, self._time)
+-		else:
+-			s = "%s----%s\n" % (branch, self._func)
+-
+-		i = 0
+-		if lastChild:
+-			branch = branch[:-1] + " "
+-		while i < len(self._children):
+-			if i != len(self._children) - 1:
+-				s += "%s" % self._children[i].__toString(branch +\
+-								"    |", False)
+-			else:
+-				s += "%s" % self._children[i].__toString(branch +\
+-								"    |", True)
+-			i += 1
+-		return s
+-
+-class BrokenLineException(Exception):
+-	"""If the last line is not complete because of the pipe breakage,
+-	   we want to stop the processing and ignore this line.
+-	"""
+-	pass
+-
+-class CommentLineException(Exception):
+-	""" If the line is a comment (as in the beginning of the trace file),
+-	    just ignore it.
+-	"""
+-	pass
+-
+-
+-def parseLine(line):
+-	line = line.strip()
+-	if line.startswith("#"):
+-		raise CommentLineException
+-	m = re.match("[^]]+?\\] +([a-z.]+) +([0-9.]+): (\\w+) <-(\\w+)", line)
+-	if m is None:
+-		raise BrokenLineException
+-	return (m.group(2), m.group(3), m.group(4))
+-
+-
+-def main():
+-	CallTree.ROOT = CallTree("Root (Nowhere)", None, None)
+-	tree = CallTree.ROOT
+-
+-	for line in sys.stdin:
+-		try:
+-			calltime, callee, caller = parseLine(line)
+-		except BrokenLineException:
+-			break
+-		except CommentLineException:
+-			continue
+-		tree = tree.getParent(caller)
+-		tree = tree.calls(callee, calltime)
+-
+-	print(CallTree.ROOT)
+-
+-if __name__ == "__main__":
+-	main()
+-- 
+2.47.2
+
