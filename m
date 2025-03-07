@@ -1,29 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C48918A92D;
-	Fri,  7 Mar 2025 17:20:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7FE22405F1;
+	Fri,  7 Mar 2025 17:38:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741368001; cv=none; b=Qr9h/Mc6WXA3oxKRLSbpLCXAyB8eFtwazibV40RXYUD9H0Gd3XDhn9qOX3C9zKy1QHt+SIEh3VO9lZepb2oOIj9QmKyRSTcFfC0M7QYjBteOPA7ZG0L9cL1x4wTQ3YB2ktj/YuIrWeLFJ0XvcniGsDHsBSnNvmsawVemds6mAGY=
+	t=1741369131; cv=none; b=Fkd+xVmtg+ThaJOQX3pNd+RCwN3PFwB/u9HT/YSQ/15uj7ZDU/sgiC35CzMaCRxl1xO4UFAf8wEYpcT768QAiv8YQHVnzyljVcIGXGXxywSq5rWw4/Q7D8sJSaYGyniYRdxtRESsjYKXAp0kOTSIKL0GZp3f2uywPSyfkgMRnJM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741368001; c=relaxed/simple;
-	bh=0ZS30dU8Lsr3gOB4WsKPSYjdXzRXfPzKxW8yxSCorF0=;
+	s=arc-20240116; t=1741369131; c=relaxed/simple;
+	bh=UvSuY+oJiEoNCXacPwNFVz3Vsrlgzufg1q0UiNL1lsY=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Gu79Bfg1TQyMtzGcDIjB/sXtXX1GzGNQYFSxLYZPyYVHJEcPu9xFGx0xNqrUYUyuape1ZDXFgta6oMWY5kdRfiEAiEm4tUkaX6hj+IUOvk/9/ExGmVzACxwxB21rd0tO4DjN2VI6YeGdHO/deLJ+ZUfBQpUeY8O7HqtkUhjvuls=
+	 MIME-Version:Content-Type; b=GK4H4RXIDa8APoB7BekSfpTzzS7fnTvMPH07MdGmltdhlZRn90KVzgEUM7Omb2hsS844AJMQ6qy6mlprAAaAVYLoC2INYReY7oJKUsVyK9fkI1etk1Drb1L+/ob76dcpayP5LF9YH9aNPFYXfsPcX/K+xJZ+kNPnNijw3xpkozk=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 52C17C4CEE7;
-	Fri,  7 Mar 2025 17:20:00 +0000 (UTC)
-Date: Fri, 7 Mar 2025 12:20:00 -0500
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 735F4C4CED1;
+	Fri,  7 Mar 2025 17:38:49 +0000 (UTC)
+Date: Fri, 7 Mar 2025 12:38:49 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH] tracing: tprobe-events: Fix to clean up tprobe
- correctly when module unload
-Message-ID: <20250307122000.3087782f@gandalf.local.home>
-In-Reply-To: <174124210422.3014222.12363751066695445786.stgit@mhiramat.tok.corp.google.com>
-References: <174124210422.3014222.12363751066695445786.stgit@mhiramat.tok.corp.google.com>
+To: Gabriele Monaco <gmonaco@redhat.com>
+Cc: linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>, Peter
+ Zijlstra <peterz@infradead.org>, Masami Hiramatsu <mhiramat@kernel.org>,
+ linux-trace-kernel@vger.kernel.org, Juri Lelli <juri.lelli@redhat.com>,
+ Vincent Guittot <vincent.guittot@linaro.org>
+Subject: Re: [PATCH v5 1/9] sched: Add sched tracepoints for RV task model
+Message-ID: <20250307123849.1e5d7543@gandalf.local.home>
+In-Reply-To: <20250305140406.350227-2-gmonaco@redhat.com>
+References: <20250305140406.350227-1-gmonaco@redhat.com>
+	<20250305140406.350227-2-gmonaco@redhat.com>
 X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -34,122 +36,227 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Thu,  6 Mar 2025 15:21:44 +0900
-"Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
 
-> When unloading module, the tprobe events are not correctly cleaned
-> up. Thus it becomes `fprobe-event` and never be enabled again even
-> if loading the same module again.
-> 
-> For example;
-> 
->  # cd /sys/kernel/tracing
->  # modprobe trace_events_sample
->  # echo 't:my_tprobe foo_bar' >> dynamic_events
->  # cat dynamic_events
-> t:tracepoints/my_tprobe foo_bar
->  # rmmod trace_events_sample
->  # cat dynamic_events
-> f:tracepoints/my_tprobe foo_bar
-> 
-> As you can see, the second time my_tprobe starts with 'f' instead
-> of 't'.
-> 
-> This cleans up (unregister) the tprobe events when module is
-> unloaded.
-
-After applying this, I tried it out:
-
- # cd /sys/kernel/tracing
- # modprobe trace_events_sample
- # echo 't:my_tprobe foo_bar a=$arg1' > dynamic_events
- # echo 1 > events/tracepoints/enable
-[wait]
- # echo 0 > events/tracepoints/enable
- # cat trace
-# tracer: nop
-#
-# entries-in-buffer/entries-written: 13/13   #P:8
-#
-#                                _-----=> irqs-off/BH-disabled
-#                               / _----=> need-resched
-#                              | / _---=> hardirq/softirq
-#                              || / _--=> preempt-depth
-#                              ||| / _-=> migrate-disable
-#                              |||| /     delay
-#           TASK-PID     CPU#  |||||  TIMESTAMP  FUNCTION
-#              | |         |   |||||     |         |
-    event-sample-1041    [005] ...1.  1957.632897: my_tprobe: (__probestub_foo_bar+0x4/0x20 [trace_events_sample]) a=0xffffffffc006c186
-    event-sample-1041    [005] ...1.  1958.656935: my_tprobe: (__probestub_foo_bar+0x4/0x20 [trace_events_sample]) a=0xffffffffc006c186
-    event-sample-1041    [005] ...1.  1959.680883: my_tprobe: (__probestub_foo_bar+0x4/0x20 [trace_events_sample]) a=0xffffffffc006c186
-    event-sample-1041    [005] ...1.  1960.704855: my_tprobe: (__probestub_foo_bar+0x4/0x20 [trace_events_sample]) a=0xffffffffc006c186
-    event-sample-1041    [005] ...1.  1961.728977: my_tprobe: (__probestub_foo_bar+0x4/0x20 [trace_events_sample]) a=0xffffffffc006c186
-    event-sample-1041    [005] ...1.  1962.751822: my_tprobe: (__probestub_foo_bar+0x4/0x20 [trace_events_sample]) a=0xffffffffc006c186
-    event-sample-1041    [005] ...1.  1963.776834: my_tprobe: (__probestub_foo_bar+0x4/0x20 [trace_events_sample]) a=0xffffffffc006c186
-    event-sample-1041    [005] ...1.  1964.800748: my_tprobe: (__probestub_foo_bar+0x4/0x20 [trace_events_sample]) a=0xffffffffc006c186
-    event-sample-1041    [005] ...1.  1965.824788: my_tprobe: (__probestub_foo_bar+0x4/0x20 [trace_events_sample]) a=0xffffffffc006c186
-    event-sample-1041    [005] ...1.  1966.848789: my_tprobe: (__probestub_foo_bar+0x4/0x20 [trace_events_sample]) a=0xffffffffc006c186
-    event-sample-1041    [005] ...1.  1967.872902: my_tprobe: (__probestub_foo_bar+0x4/0x20 [trace_events_sample]) a=0xffffffffc006c186
-    event-sample-1041    [005] ...1.  1968.896754: my_tprobe: (__probestub_foo_bar+0x4/0x20 [trace_events_sample]) a=0xffffffffc006c186
-    event-sample-1041    [005] ...1.  1969.920737: my_tprobe: (__probestub_foo_bar+0x4/0x20 [trace_events_sample]) a=0xffffffffc006c186
- # rmmod trace_events_sample
- # cat trace
-# tracer: nop
-#
-# entries-in-buffer/entries-written: 13/13   #P:8
-#
-#                                _-----=> irqs-off/BH-disabled
-#                               / _----=> need-resched
-#                              | / _---=> hardirq/softirq
-#                              || / _--=> preempt-depth
-#                              ||| / _-=> migrate-disable
-#                              |||| /     delay
-#           TASK-PID     CPU#  |||||  TIMESTAMP  FUNCTION
-#              | |         |   |||||     |         |
-    event-sample-1041    [005] ...1.  1957.632897: my_tprobe: (0xffffffffc00620b4) a=0xffffffffc006c186
-    event-sample-1041    [005] ...1.  1958.656935: my_tprobe: (0xffffffffc00620b4) a=0xffffffffc006c186
-    event-sample-1041    [005] ...1.  1959.680883: my_tprobe: (0xffffffffc00620b4) a=0xffffffffc006c186
-    event-sample-1041    [005] ...1.  1960.704855: my_tprobe: (0xffffffffc00620b4) a=0xffffffffc006c186
-    event-sample-1041    [005] ...1.  1961.728977: my_tprobe: (0xffffffffc00620b4) a=0xffffffffc006c186
-    event-sample-1041    [005] ...1.  1962.751822: my_tprobe: (0xffffffffc00620b4) a=0xffffffffc006c186
-    event-sample-1041    [005] ...1.  1963.776834: my_tprobe: (0xffffffffc00620b4) a=0xffffffffc006c186
-    event-sample-1041    [005] ...1.  1964.800748: my_tprobe: (0xffffffffc00620b4) a=0xffffffffc006c186
-    event-sample-1041    [005] ...1.  1965.824788: my_tprobe: (0xffffffffc00620b4) a=0xffffffffc006c186
-    event-sample-1041    [005] ...1.  1966.848789: my_tprobe: (0xffffffffc00620b4) a=0xffffffffc006c186
-    event-sample-1041    [005] ...1.  1967.872902: my_tprobe: (0xffffffffc00620b4) a=0xffffffffc006c186
-    event-sample-1041    [005] ...1.  1968.896754: my_tprobe: (0xffffffffc00620b4) a=0xffffffffc006c186
-    event-sample-1041    [005] ...1.  1969.920737: my_tprobe: (0xffffffffc00620b4) a=0xffffffffc006c186
-
- # modprobe trace_events_sample
- # echo 1 > events/tracepoints/enable
- # cat trace
-# tracer: nop
-#
-# entries-in-buffer/entries-written: 13/13   #P:8
-#
-#                                _-----=> irqs-off/BH-disabled
-#                               / _----=> need-resched
-#                              | / _---=> hardirq/softirq
-#                              || / _--=> preempt-depth
-#                              ||| / _-=> migrate-disable
-#                              |||| /     delay
-#           TASK-PID     CPU#  |||||  TIMESTAMP  FUNCTION
-#              | |         |   |||||     |         |
-    event-sample-1041    [005] ...1.  1957.632897: my_tprobe: (0xffffffffc00620b4) a=0xffffffffc006c186
-    event-sample-1041    [005] ...1.  1958.656935: my_tprobe: (0xffffffffc00620b4) a=0xffffffffc006c186
-    event-sample-1041    [005] ...1.  1959.680883: my_tprobe: (0xffffffffc00620b4) a=0xffffffffc006c186
-    event-sample-1041    [005] ...1.  1960.704855: my_tprobe: (0xffffffffc00620b4) a=0xffffffffc006c186
-    event-sample-1041    [005] ...1.  1961.728977: my_tprobe: (0xffffffffc00620b4) a=0xffffffffc006c186
-    event-sample-1041    [005] ...1.  1962.751822: my_tprobe: (0xffffffffc00620b4) a=0xffffffffc006c186
-    event-sample-1041    [005] ...1.  1963.776834: my_tprobe: (0xffffffffc00620b4) a=0xffffffffc006c186
-    event-sample-1041    [005] ...1.  1964.800748: my_tprobe: (0xffffffffc00620b4) a=0xffffffffc006c186
-    event-sample-1041    [005] ...1.  1965.824788: my_tprobe: (0xffffffffc00620b4) a=0xffffffffc006c186
-    event-sample-1041    [005] ...1.  1966.848789: my_tprobe: (0xffffffffc00620b4) a=0xffffffffc006c186
-    event-sample-1041    [005] ...1.  1967.872902: my_tprobe: (0xffffffffc00620b4) a=0xffffffffc006c186
-    event-sample-1041    [005] ...1.  1968.896754: my_tprobe: (0xffffffffc00620b4) a=0xffffffffc006c186
-    event-sample-1041    [005] ...1.  1969.920737: my_tprobe: (0xffffffffc00620b4) a=0xffffffffc006c186
-
-Tracing doesn't restart.
+Can I get an Acked-by from one of the scheduler maintainers?
 
 -- Steve
+
+
+On Wed,  5 Mar 2025 15:03:54 +0100
+Gabriele Monaco <gmonaco@redhat.com> wrote:
+
+> Add the following tracepoints:
+> * sched_entry(bool preempt, ip)
+>     Called while entering __schedule
+> * sched_exit(bool is_switch, ip)
+>     Called while exiting __schedule
+> * sched_set_state(task, curr_state, state)
+>     Called when a task changes its state (to and from running)
+> 
+> These tracepoints are useful to describe the Linux task model and are
+> adapted from the patches by Daniel Bristot de Oliveira
+> (https://bristot.me/linux-task-model/).
+> 
+> Signed-off-by: Gabriele Monaco <gmonaco@redhat.com>
+> ---
+>  include/linux/rv.h                 |  2 +-
+>  include/linux/sched.h              | 16 ++++++++++++++++
+>  include/trace/events/sched.h       | 13 +++++++++++++
+>  kernel/sched/core.c                | 23 ++++++++++++++++++++++-
+>  tools/verification/rv/include/rv.h |  2 +-
+>  5 files changed, 53 insertions(+), 3 deletions(-)
+> 
+> diff --git a/include/linux/rv.h b/include/linux/rv.h
+> index 8883b41d88ec4..55d458be53a4c 100644
+> --- a/include/linux/rv.h
+> +++ b/include/linux/rv.h
+> @@ -7,7 +7,7 @@
+>  #ifndef _LINUX_RV_H
+>  #define _LINUX_RV_H
+>  
+> -#define MAX_DA_NAME_LEN	24
+> +#define MAX_DA_NAME_LEN	32
+>  
+>  #ifdef CONFIG_RV
+>  /*
+> diff --git a/include/linux/sched.h b/include/linux/sched.h
+> index 9632e3318e0d6..45a61a0b97903 100644
+> --- a/include/linux/sched.h
+> +++ b/include/linux/sched.h
+> @@ -46,6 +46,7 @@
+>  #include <linux/rv.h>
+>  #include <linux/livepatch_sched.h>
+>  #include <linux/uidgid_types.h>
+> +#include <linux/tracepoint-defs.h>
+>  #include <asm/kmap_size.h>
+>  
+>  /* task_struct member predeclarations (sorted alphabetically): */
+> @@ -186,6 +187,12 @@ struct user_event_mm;
+>  # define debug_rtlock_wait_restore_state()	do { } while (0)
+>  #endif
+>  
+> +#define trace_set_current_state(state_value)                     \
+> +	do {                                                     \
+> +		if (tracepoint_enabled(sched_set_state_tp))      \
+> +			__trace_set_current_state(state_value); \
+> +	} while (0)
+> +
+>  /*
+>   * set_current_state() includes a barrier so that the write of current->__state
+>   * is correctly serialised wrt the caller's subsequent test of whether to
+> @@ -226,12 +233,14 @@ struct user_event_mm;
+>  #define __set_current_state(state_value)				\
+>  	do {								\
+>  		debug_normal_state_change((state_value));		\
+> +		trace_set_current_state(state_value);			\
+>  		WRITE_ONCE(current->__state, (state_value));		\
+>  	} while (0)
+>  
+>  #define set_current_state(state_value)					\
+>  	do {								\
+>  		debug_normal_state_change((state_value));		\
+> +		trace_set_current_state(state_value);			\
+>  		smp_store_mb(current->__state, (state_value));		\
+>  	} while (0)
+>  
+> @@ -247,6 +256,7 @@ struct user_event_mm;
+>  									\
+>  		raw_spin_lock_irqsave(&current->pi_lock, flags);	\
+>  		debug_special_state_change((state_value));		\
+> +		trace_set_current_state(state_value);			\
+>  		WRITE_ONCE(current->__state, (state_value));		\
+>  		raw_spin_unlock_irqrestore(&current->pi_lock, flags);	\
+>  	} while (0)
+> @@ -282,6 +292,7 @@ struct user_event_mm;
+>  		raw_spin_lock(&current->pi_lock);			\
+>  		current->saved_state = current->__state;		\
+>  		debug_rtlock_wait_set_state();				\
+> +		trace_set_current_state(TASK_RTLOCK_WAIT);		\
+>  		WRITE_ONCE(current->__state, TASK_RTLOCK_WAIT);		\
+>  		raw_spin_unlock(&current->pi_lock);			\
+>  	} while (0);
+> @@ -291,6 +302,7 @@ struct user_event_mm;
+>  		lockdep_assert_irqs_disabled();				\
+>  		raw_spin_lock(&current->pi_lock);			\
+>  		debug_rtlock_wait_restore_state();			\
+> +		trace_set_current_state(current->saved_state);		\
+>  		WRITE_ONCE(current->__state, current->saved_state);	\
+>  		current->saved_state = TASK_RUNNING;			\
+>  		raw_spin_unlock(&current->pi_lock);			\
+> @@ -327,6 +339,10 @@ extern void io_schedule_finish(int token);
+>  extern long io_schedule_timeout(long timeout);
+>  extern void io_schedule(void);
+>  
+> +/* wrapper function to trace from this header file */
+> +DECLARE_TRACEPOINT(sched_set_state_tp);
+> +extern void __trace_set_current_state(int state_value);
+> +
+>  /**
+>   * struct prev_cputime - snapshot of system and user cputime
+>   * @utime: time spent in user mode
+> diff --git a/include/trace/events/sched.h b/include/trace/events/sched.h
+> index 9ea4c404bd4ef..90545125c9031 100644
+> --- a/include/trace/events/sched.h
+> +++ b/include/trace/events/sched.h
+> @@ -824,6 +824,19 @@ DECLARE_TRACE(sched_compute_energy_tp,
+>  		 unsigned long max_util, unsigned long busy_time),
+>  	TP_ARGS(p, dst_cpu, energy, max_util, busy_time));
+>  
+> +DECLARE_TRACE(sched_entry_tp,
+> +	TP_PROTO(bool preempt, unsigned long ip),
+> +	TP_ARGS(preempt, ip));
+> +
+> +DECLARE_TRACE(sched_exit_tp,
+> +	TP_PROTO(bool is_switch, unsigned long ip),
+> +	TP_ARGS(is_switch, ip));
+> +
+> +DECLARE_TRACE_CONDITION(sched_set_state_tp,
+> +	TP_PROTO(struct task_struct *tsk, int state),
+> +	TP_ARGS(tsk, state),
+> +	TP_CONDITION(!!(tsk->__state) != !!state));
+> +
+>  #endif /* _TRACE_SCHED_H */
+>  
+>  /* This part must be outside protection */
+> diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+> index 67189907214d3..5d36ccf565e94 100644
+> --- a/kernel/sched/core.c
+> +++ b/kernel/sched/core.c
+> @@ -491,6 +491,16 @@ sched_core_dequeue(struct rq *rq, struct task_struct *p, int flags) { }
+>  
+>  #endif /* CONFIG_SCHED_CORE */
+>  
+> +/* need a wrapper since we may need to trace from modules */
+> +EXPORT_TRACEPOINT_SYMBOL(sched_set_state_tp);
+> +
+> +/* Call via the helper macro trace_set_current_state. */
+> +void __trace_set_current_state(int state_value)
+> +{
+> +	trace_sched_set_state_tp(current, state_value);
+> +}
+> +EXPORT_SYMBOL(__trace_set_current_state);
+> +
+>  /*
+>   * Serialization rules:
+>   *
+> @@ -5307,6 +5317,12 @@ asmlinkage __visible void schedule_tail(struct task_struct *prev)
+>  	 */
+>  
+>  	finish_task_switch(prev);
+> +	/*
+> +	 * This is a special case: the newly created task has just
+> +	 * switched the context for the first time. It is returning from
+> +	 * schedule for the first time in this path.
+> +	 */
+> +	trace_sched_exit_tp(true, CALLER_ADDR0);
+>  	preempt_enable();
+>  
+>  	if (current->set_child_tid)
+> @@ -6650,12 +6666,15 @@ static void __sched notrace __schedule(int sched_mode)
+>  	 * as a preemption by schedule_debug() and RCU.
+>  	 */
+>  	bool preempt = sched_mode > SM_NONE;
+> +	bool is_switch = false;
+>  	unsigned long *switch_count;
+>  	unsigned long prev_state;
+>  	struct rq_flags rf;
+>  	struct rq *rq;
+>  	int cpu;
+>  
+> +	trace_sched_entry_tp(preempt, CALLER_ADDR0);
+> +
+>  	cpu = smp_processor_id();
+>  	rq = cpu_rq(cpu);
+>  	prev = rq->curr;
+> @@ -6723,7 +6742,8 @@ static void __sched notrace __schedule(int sched_mode)
+>  	rq->last_seen_need_resched_ns = 0;
+>  #endif
+>  
+> -	if (likely(prev != next)) {
+> +	is_switch = prev != next;
+> +	if (likely(is_switch)) {
+>  		rq->nr_switches++;
+>  		/*
+>  		 * RCU users of rcu_dereference(rq->curr) may not see
+> @@ -6768,6 +6788,7 @@ static void __sched notrace __schedule(int sched_mode)
+>  		__balance_callbacks(rq);
+>  		raw_spin_rq_unlock_irq(rq);
+>  	}
+> +	trace_sched_exit_tp(is_switch, CALLER_ADDR0);
+>  }
+>  
+>  void __noreturn do_task_dead(void)
+> diff --git a/tools/verification/rv/include/rv.h b/tools/verification/rv/include/rv.h
+> index 770fd6da36107..0cab1037a98f7 100644
+> --- a/tools/verification/rv/include/rv.h
+> +++ b/tools/verification/rv/include/rv.h
+> @@ -1,7 +1,7 @@
+>  // SPDX-License-Identifier: GPL-2.0
+>  
+>  #define MAX_DESCRIPTION 1024
+> -#define MAX_DA_NAME_LEN	24
+> +#define MAX_DA_NAME_LEN	32
+>  
+>  struct monitor {
+>  	char name[MAX_DA_NAME_LEN];
 
