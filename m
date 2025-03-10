@@ -1,151 +1,81 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from out-172.mta1.migadu.com (out-172.mta1.migadu.com [95.215.58.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AB9922D786
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 10 Mar 2025 17:04:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 927041CAA6E
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 10 Mar 2025 20:04:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741626253; cv=none; b=bZpm/LOLPZYKAfsSH3zbGv485jnmjgGh+eF/QHIzR9aP3lIgQ2VzEIBnQlMD0v95CmUmfw3nfC2ZtELdKzdOJyxVXZ/4KSMRA96JWnre5HZURSi5G63ftB3fMuHSvx7LcpwDnMFRwYSgVqtNb3JXppnyjduka1kcvlOJMEu4FxU=
+	t=1741637068; cv=none; b=jXyhYY3lho0d5n3wClCTg23Q0q6SkBN9uttIwtVPzbgsPKwYskgfJxHWrooM3F1Y3e3CEo9irrV16kNZEUbZfasvH7orQ9r6qioOiaK24l73kk+9wVnRpWay1J83EnvFcuwf0cTOd3NWmMcfls6V2zletSd0Z7KySWJjXwxdsyc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741626253; c=relaxed/simple;
-	bh=2iHTQcPXH1FLrxQMiNT55fa/PnOIlAodbQMDjn30aQc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rL1Rg/HaZH+vh08YSOnOyG5OiB1IYD/dK79rM0+PyE97DOabJJ6me2ciHxDmvsqdJdtfeT0Zo3wQEA/0zsKUwg5H2clPtWguNdDDwA4P7sH1Q+AL295AIkAH4EKF6OaMJyls5zQ2pMdmIBZI5klWhhFPnVzFP7of9NB5xwV0eRA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=UI0l+O5e; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1741637068; c=relaxed/simple;
+	bh=0I46IlE0eevSTbe6HgNGjPfeIS7xnB2S0NKk5f7/Yc4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=k5Cc1nVHmDo8/AYep4WVlIyvAw4M0KkV/wmMqkW3O88MVLCZf2wz8lkKf8V3k8KOX+bbZdzNKiHEUl8pMlE+7v4aEtOkdvelXLkGL3FdlWQMFc1qmfIWaWpN4fT4/396KCseoxo8sbVsdUXGrEzuNi/33heGelF3GmsHGP1xnx0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=GtXG+r1W; arc=none smtp.client-ip=95.215.58.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UI0l+O5e"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1741626251;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="GtXG+r1W"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1741637063;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=d7S8yd6R0h6QkbjSSTjEPq0BtEAD/xvKVvoWKNDxzjI=;
-	b=UI0l+O5ehc38NNBR0puKp4TKnmZ2om4xOQML+H3FVI7EzZBYLEjoZ+thsTynl3BVP7y+91
-	yaKy4KG1zNNWBrG/tGRntFncsYXLz/3PePkPbc/RYvSz73MQrDBYJgzy33gvEsW5a/9Ki/
-	qaLwTRKz3LF9issEZKhTsA5nOYhxSt0=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-550-qcA6nO9WNJ6cidPgFWXLFQ-1; Mon,
- 10 Mar 2025 13:04:08 -0400
-X-MC-Unique: qcA6nO9WNJ6cidPgFWXLFQ-1
-X-Mimecast-MFC-AGG-ID: qcA6nO9WNJ6cidPgFWXLFQ_1741626245
-Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 3444E1800349;
-	Mon, 10 Mar 2025 17:04:03 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.34])
-	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 310AD1956094;
-	Mon, 10 Mar 2025 17:03:53 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Mon, 10 Mar 2025 18:03:32 +0100 (CET)
-Date: Mon, 10 Mar 2025 18:03:21 +0100
-From: Oleg Nesterov <oleg@redhat.com>
-To: David Hildenbrand <david@redhat.com>
-Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-trace-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Matthew Wilcox <willy@infradead.org>,
-	Russell King <linux@armlinux.org.uk>,
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=QKEtd75rPVsd5FrismUxBPw8k8s1SS03XckANZg+1No=;
+	b=GtXG+r1WybhFG2HKhJ7aHeW77ftOlVxjTPYaAYsDDuUGptrFh/SC3CD9t/w0lkzmykHP7g
+	GW8lywhzdbjgt9w/9LtF4Ra2PFBu/zLqGgB/1TJn0ihD9qx4vze2d43ncGATfiOrVHA+UZ
+	jFeCO4MV7fzxxoCxl5vHqjC0chqYdVU=
+From: Thorsten Blum <thorsten.blum@linux.dev>
+To: Steven Rostedt <rostedt@goodmis.org>,
 	Masami Hiramatsu <mhiramat@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	"Liang, Kan" <kan.liang@linux.intel.com>,
-	Tong Tiangen <tongtiangen@huawei.com>
-Subject: Re: [PATCH -next v1 3/3] kernel/events/uprobes:
- uprobe_write_opcode() rewrite
-Message-ID: <20250310170320.GC26382@redhat.com>
-References: <20250304154846.1937958-1-david@redhat.com>
- <20250304154846.1937958-4-david@redhat.com>
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: Thorsten Blum <thorsten.blum@linux.dev>,
+	linux-hardening@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Subject: [PATCH] tracing/synthetic: Replace deprecated strncpy() with strscpy()
+Date: Mon, 10 Mar 2025 21:03:58 +0100
+Message-ID: <20250310200359.450172-1-thorsten.blum@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250304154846.1937958-4-david@redhat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On 03/04, David Hildenbrand wrote:
->
-> uprobe_write_opcode() does some pretty low-level things that really, it
-> shouldn't be doing:
+strncpy() is deprecated for NUL-terminated destination buffers; use
+strscpy() instead and remove the manual NUL-termination.
 
-Agreed. Thanks again for doing this.
+The destination buffer 'buf' is used only with kstrtouint() and must be
+NUL-terminated, but not NUL-padded. The source string 'start' is also
+guaranteed to be NUL-terminated and meets the __must_be_cstr()
+requirement of strscpy().
 
-David, as I said, I can't review. I don't understand this mm/folio magic
-with or without your changes.
+No functional changes intended.
 
-However. With your changes the code looks "better" and more understandable
-to me. So I'd vote for your patches even if I can't ack them.
+Link: https://github.com/KSPP/linux/issues/90
+Cc: linux-hardening@vger.kernel.org
+Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
+---
+ kernel/trace/trace_events_synth.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-But I'd like to ask some stupid (no, really) questions.
-__uprobe_write_opcode() does:
-
-	/* We're done if we don't find an anonymous folio when unregistering. */
-	if (!folio_test_anon(folio))
-		return is_register ? -EFAULT : 0;
-
-Yes, but we do not expect !folio_test_anon() if register == true, right?
-See also below.
-
-	/* Verify that the page content is still as expected. */
-	if (verify_opcode(fw->page, opcode_vaddr, &opcode) <= 0) {
-		set_pte_at(vma->vm_mm, vaddr, fw->ptep, fw->pte);
-		return -EAGAIN;
-	}
-
-The caller, uprobe_write_opcode(), has already called verify_opcode(),
-why do we need to re-check?
-
-But whatever reason we have. Can we change uprobe_write_opcode() to
-"delay" put_page() and instead of
-
-	/* Walk the page tables again, to perform the actual update. */
-	folio = folio_walk_start(&fw, vma, vaddr, 0);
-	if (folio) {
-		ret = __uprobe_write_opcode(vma, &fw, folio, opcode_vaddr,
-					    opcode);
-		folio_walk_end(&fw, vma);
-	} else {
-		ret = -EAGAIN;
-	}
-
-do something like
-
-	/* Walk the page tables again, to perform the actual update. */
-	ret = -EAGAIN;
-	folio = folio_walk_start(&fw, vma, vaddr, 0);
-	if (folio) {
-		if (fw.page == page) {
-			WARN_ON(is_register && !folio_test_anon(folio));
-			ret = __uprobe_write_opcode(vma, &fw, folio, opcode_vaddr,
-					            opcode);
-		}
-		folio_walk_end(&fw, vma);
-	}
-
-?
-
-Once again, I am not trying to review. I am trying to understand the
-basics of your code.
-
-Thanks,
-
-Oleg.
+diff --git a/kernel/trace/trace_events_synth.c b/kernel/trace/trace_events_synth.c
+index e3f7d09e5512..4b51f74897b4 100644
+--- a/kernel/trace/trace_events_synth.c
++++ b/kernel/trace/trace_events_synth.c
+@@ -207,8 +207,7 @@ static int synth_field_string_size(char *type)
+ 	if (len == 0)
+ 		return 0; /* variable-length string */
+ 
+-	strncpy(buf, start, len);
+-	buf[len] = '\0';
++	strscpy(buf, start, len + 1);
+ 
+ 	err = kstrtouint(buf, 0, &size);
+ 	if (err)
+-- 
+2.48.1
 
