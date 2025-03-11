@@ -1,102 +1,286 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E3F81C1F07
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 11 Mar 2025 13:20:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81BE31C07D9;
+	Tue, 11 Mar 2025 14:08:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741699230; cv=none; b=kSO7vxvLmoeHAlPyQkY1TsfstlPkaBHy+DWB2VE3Pfhn3I9dqxrdkZgYkSFoovZSE7qnq/vWwDfeHBbttdGMQiudFvULIVLC0boY2zjH7DpYaHLi5+J9dEdKM5qYsI+2UuKwwisiP7WhPUCio50JyckFX2J7xzcfV+oIfGtQigQ=
+	t=1741702120; cv=none; b=k7MdShw1k8QDLXx+CXbrbAvS5tslCCUOX88Hp13/aHU/8EK2q2kKhKSChHYhk2ZRuE7qI5J7By5MAwuAiPQaiFcqVTw2ekblw3jo9ZtcthNh0UOCkFmWqCjXO6E/o+LtWCvBfOvUmCwT2F92vh9/hcRACZ7bI4fLwKp1iZv2MaQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741699230; c=relaxed/simple;
-	bh=CT15IIAP1j3z5KXNjog/OnWaC0n2EV8wBw6ODsx5KwI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=q23eUQ3yrsPu/8VdisZZJd5R+pyBgJxQB93kPDDPWsKqPYq6DAb1H0dMUq0/eiyVynSr6d5vjnxpO6zQ1lcXQCIlsYXTTpSsMbWsxkSYYKhNgfLCgK8M8heiFAAl9cjfKMgz4glYk/JYKEYm0Z2+R3HDW45R+C1uE00bBWfLTjU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=SZW1xyzL; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SZW1xyzL"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1741699227;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=CT15IIAP1j3z5KXNjog/OnWaC0n2EV8wBw6ODsx5KwI=;
-	b=SZW1xyzLE/24CnVwndDmIDNNcUpevMf+SMFFd+oka8bHHMBZ+UHQxk2MOtzCzG2wuW8vTu
-	haKtXBOZB2BuqWzHmTPhsoP1p79ACDF+pSjmEc2k1Z50oYvWqLodiOHxWThXRwnq1wvm8k
-	npcGCXCFzDwzBZUIZZcyIX+/k5QmZZo=
-Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
- [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-284-JZGks-IlOde5us4OewBAqA-1; Tue, 11 Mar 2025 09:20:25 -0400
-X-MC-Unique: JZGks-IlOde5us4OewBAqA-1
-X-Mimecast-MFC-AGG-ID: JZGks-IlOde5us4OewBAqA_1741699225
-Received: by mail-ej1-f72.google.com with SMTP id a640c23a62f3a-abf597afe1fso542162966b.1
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 11 Mar 2025 06:20:25 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741699224; x=1742304024;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=CT15IIAP1j3z5KXNjog/OnWaC0n2EV8wBw6ODsx5KwI=;
-        b=qIT2qWYbAN+WmFhCGUFFttPsORAO4H8tn59arT1CVZLulSOknaPItD9181PPEB1RIZ
-         Ra9xCjk8+673X4BieRCxORuOft3psXqMhLEb1RErGjUQN4zty+SSp0r9+nU4uhWMebk+
-         o4IHo+89WPz8SdE0/bbYczj7NYlIxsBsPcowJoi8+g4IFZojq6xLNPLTy4HUMro+K5qY
-         jdQM49AzqOZoSf8srAkyi47GFUTyq6kc8S9kJQIJh2oXOxGv1G8tYVSD7O2gCBGUVcqn
-         QDLljlFr5KTutTka1m3ozOT+JZ7Hwj/tYBd0nSiZv87nbbsXZfAMdmE9YWNCIBj/12gS
-         ycsw==
-X-Forwarded-Encrypted: i=1; AJvYcCXyNC4rM6CbXVFwLZMTLQHKWHqj0BpTf5mL4nztRb7YPvbh3JgYWAvxuCQNJbNmFeejaZ+XJ1ZbGvroZny9nWxLrh0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxy73bEx6A/z2wSkrLZeNNQZzwqmcn9t0p4aciufxNck/CzdtIh
-	jRL70oSAke+vMEz5M+uvGutZW8XD8BrhqX7brljrygdSQRm7lcshTT7deLMAZBZ0MaYOBM+S5pT
-	WshF5KDSPeIzfZopgL2m4FUOtVQcn5l3EWNoUSD3HWdcYFJYrm+1QS9ryO/OJ2dpNHAZnvzYGiB
-	WA4of9zZXcTn6YBKj6L2/oRAmuqsjJo2xtVNBEz+KGygNb
-X-Gm-Gg: ASbGnctPG/KlDfmKklvg3ZYr4+DQWfK0sq1G2Q9mDqOV2XTA+ee4YTVwb9PBeKke04z
-	HjdU4mqY8GefRzdMBRh/6Ri1c29buM1lttfR6f4sL4YMjDRnCWbUTvx2FT1JbSoDM5tvyIhEZ
-X-Received: by 2002:a17:906:dc8e:b0:abf:67de:2f1f with SMTP id a640c23a62f3a-ac252ba467fmr2029920266b.44.1741699224640;
-        Tue, 11 Mar 2025 06:20:24 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEKYnj8F9Jf4SwA5xwmTqfm/NOh+ZyOvFJjWLkViuxqCpeNhUyvZDmEsh7nVvGxJdktqfaid7A4f0abzVZFRF0=
-X-Received: by 2002:a17:906:dc8e:b0:abf:67de:2f1f with SMTP id
- a640c23a62f3a-ac252ba467fmr2029916166b.44.1741699224220; Tue, 11 Mar 2025
- 06:20:24 -0700 (PDT)
+	s=arc-20240116; t=1741702120; c=relaxed/simple;
+	bh=/0aJfE3w+ZRG+dTjYxqTqSTxFVwN+j1mMW6vC7nALZU=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=l3z3/tQqyqP+FMQgUjGuRufIIbtjOp0ifm9oAHNpQ66BNZDOYG8R9bwvNgyeZ+iI5QHXb8j2ln6Vds4DOACMD6NKPINqW51PGylonjm3fuZJnZ2K0HZK8yv18cbodWHA504LjE455oZBQINwVkFhVM0eDXpGyRsN1iNdPs/hMGg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B8C7DC4CEE9;
+	Tue, 11 Mar 2025 14:08:38 +0000 (UTC)
+Date: Tue, 11 Mar 2025 10:08:32 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Mark
+ Rutland <mark.rutland@arm.com>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>
+Subject: Re: [PATCH v3] tracing: Show last module text symbols in the
+ stacktrace
+Message-ID: <20250311100832.747b3b83@batman.local.home>
+In-Reply-To: <174161444691.1063601.16690699136628689205.stgit@devnote2>
+References: <174161444691.1063601.16690699136628689205.stgit@devnote2>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250311114936.148012-1-tglozar@redhat.com> <20250311114936.148012-5-tglozar@redhat.com>
- <Z9A1oN_XdMguNgHy@uudg.org>
-In-Reply-To: <Z9A1oN_XdMguNgHy@uudg.org>
-From: Tomas Glozar <tglozar@redhat.com>
-Date: Tue, 11 Mar 2025 14:20:13 +0100
-X-Gm-Features: AQ5f1JreteHiyUMcyR3gnnzJJK9jqv2cIeQ3zXcakcHBGBF6xFg1-fV0um1ZFkQ
-Message-ID: <CAP4=nvRCtRwXReMt8+vxjLVqtL_pR9OyKo0HS417+93QR84mUA@mail.gmail.com>
-Subject: Re: [PATCH 4/4] Documentation/rtla: Include BPF sample collection
-To: "Luis Claudio R. Goncalves" <lgoncalv@redhat.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Jonathan Corbet <corbet@lwn.net>, 
-	linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, John Kacur <jkacur@redhat.com>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: l2JwhFihtkaatwpxBqFAciD2cNJRF-wlNuAyb5HpDFs_1741699225
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-=C3=BAt 11. 3. 2025 v 14:07 odes=C3=ADlatel Luis Claudio R. Goncalves
-<lgoncalv@redhat.com> napsal:
+On Mon, 10 Mar 2025 22:47:27 +0900
+"Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
+
+> From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> 
+> Since the previous boot trace buffer can include module text address in
+> the stacktrace. As same as the kernel text address, convert the module
+> text address using the module address information.
+> 
+> Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> ---
+>  Changes in v3:
+>   - Move module_delta to trace_scratch data structure.
+>   - Remove LRU based removed module information.
+> ---
+>  kernel/trace/trace.c        |   99 +++++++++++++++++++++++++++++++++++++++++--
+>  kernel/trace/trace.h        |    2 +
+>  kernel/trace/trace_output.c |    4 +-
+>  3 files changed, 98 insertions(+), 7 deletions(-)
+> 
+> diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+> index c3c79908766e..0c1aa1750077 100644
+> --- a/kernel/trace/trace.c
+> +++ b/kernel/trace/trace.c
+> @@ -49,6 +49,7 @@
+>  #include <linux/fsnotify.h>
+>  #include <linux/irq_work.h>
+>  #include <linux/workqueue.h>
+> +#include <linux/sort.h>
+>  
+>  #include <asm/setup.h> /* COMMAND_LINE_SIZE and kaslr_offset() */
+>  
+> @@ -5996,11 +5997,41 @@ struct trace_mod_entry {
+>  struct trace_scratch {
+>  	unsigned long		kaslr_addr;
+>  	unsigned long		nr_entries;
+> +	long			*module_delta;
+
+Why are we adding this pointer into the persistent memory when it is
+useless after a crash?
+
+>  	struct trace_mod_entry	entries[];
+>  };
+>  
+>  static DEFINE_MUTEX(scratch_mutex);
+>  
+> +/**
+> + * trace_adjust_address() - Adjust prev boot address to current address.
+> + * @tr: Persistent ring buffer's trace_array.
+> + * @addr: Address in @tr which is adjusted.
+> + */
+> +unsigned long trace_adjust_address(struct trace_array *tr, unsigned long addr)
+> +{
+> +	struct trace_scratch *tscratch;
+> +	long *module_delta;
+> +	int i;
+> +
+> +	/* If we don't have last boot delta, return the address */
+> +	if (!(tr->flags & TRACE_ARRAY_FL_LAST_BOOT))
+> +		return addr;
+> +
+> +	tscratch = tr->scratch;
+> +	module_delta = READ_ONCE(tscratch->module_delta);
+> +	if (!tscratch || !tscratch->nr_entries || !module_delta ||
+
+You shouldn't have a !tscratch test just after dereferencing it:
+
+		tscratch->module_delta
+
+Perhaps have it be:
+
+	module_delta = tscratch ? READ_ONCE(tscratch->module_delta) : 0;
+	if (!module_delta || !tscratch->nr_entries || tscratch->entries[0].mod_addr > addr)
+
+
+> +	    tscratch->entries[0].mod_addr > addr)
+> +		return addr + tr->text_delta;
+> +
+> +	/* Note that entries must be sorted. */
+> +	for (i = 0; i < tscratch->nr_entries; i++)
+> +		if (addr < tscratch->entries[i].mod_addr)
+> +			break;
+
+If we are bother sorting it, why not do a binary search here?
+
+> +
+> +	return addr + module_delta[i - 1];
+> +}
+> +
+>  static int save_mod(struct module *mod, void *data)
+>  {
+>  	struct trace_array *tr = data;
+> @@ -6029,6 +6060,7 @@ static int save_mod(struct module *mod, void *data)
+>  static void update_last_data(struct trace_array *tr)
+>  {
+>  	struct trace_scratch *tscratch;
+> +	long *module_delta;
+>  
+>  	if (!(tr->flags & TRACE_ARRAY_FL_BOOT))
+>  		return;
+> @@ -6063,6 +6095,8 @@ static void update_last_data(struct trace_array *tr)
+>  		return;
+>  
+>  	tscratch = tr->scratch;
+> +	module_delta = READ_ONCE(tscratch->module_delta);
+> +	WRITE_ONCE(tscratch->module_delta, NULL);
+>  
+>  	/* Set the persistent ring buffer meta data to this address */
+>  #ifdef CONFIG_RANDOMIZE_BASE
+> @@ -6071,6 +6105,8 @@ static void update_last_data(struct trace_array *tr)
+>  	tscratch->kaslr_addr = 0;
+>  #endif
+>  	tr->flags &= ~TRACE_ARRAY_FL_LAST_BOOT;
+> +
+> +	kfree(module_delta);
+>  }
+>  
+>  /**
+> @@ -9342,10 +9378,43 @@ static struct dentry *trace_instance_dir;
+>  static void
+>  init_tracer_tracefs(struct trace_array *tr, struct dentry *d_tracer);
+>  
+> +static int make_mod_delta(struct module *mod, void *data)
+> +{
+> +	struct trace_scratch *tscratch;
+> +	struct trace_mod_entry *entry;
+> +	struct trace_array *tr = data;
+> +	long *module_delta;
+> +	int i;
+> +
+> +	tscratch = tr->scratch;
+> +	module_delta = READ_ONCE(tscratch->module_delta);
+> +	for (i = 0; i < tscratch->nr_entries; i++) {
+> +		entry = &tscratch->entries[i];
+> +		if (!strcmp(mod->name, entry->mod_name)) {
+> +			if (mod->state == MODULE_STATE_GOING)
+> +				module_delta[i] = 0;
+> +			else
+> +				module_delta[i] = (unsigned long)mod->mem[MOD_TEXT].base
+> +						 - entry->mod_addr;
+> +			break;
+> +		}
+> +	}
+> +	return 0;
+> +}
+> +
+> +static int mod_addr_comp(const void *a, const void *b, const void *data)
+> +{
+> +	const struct trace_mod_entry *e1 = a;
+> +	const struct trace_mod_entry *e2 = b;
+> +
+> +	return e1->mod_addr > e2->mod_addr ? 1 : -1;
+> +}
+> +
+>  static void setup_trace_scratch(struct trace_array *tr,
+>  				struct trace_scratch *tscratch, unsigned int size)
+>  {
+>  	struct trace_mod_entry *entry;
+> +	int i, nr_entries;
+>  
+>  	if (!tscratch)
+>  		return;
+> @@ -9362,7 +9431,7 @@ static void setup_trace_scratch(struct trace_array *tr,
+>  		goto reset;
+>  
+>  	/* Check if each module name is a valid string */
+> -	for (int i = 0; i < tscratch->nr_entries; i++) {
+> +	for (i = 0; i < tscratch->nr_entries; i++) {
+>  		int n;
+>  
+>  		entry = &tscratch->entries[i];
+> @@ -9376,6 +9445,21 @@ static void setup_trace_scratch(struct trace_array *tr,
+>  		if (n == MODULE_NAME_LEN)
+>  			goto reset;
+>  	}
+> +
+> +	nr_entries = i;
+> +	tscratch->module_delta = kcalloc(nr_entries, sizeof(long), GFP_KERNEL);
+> +	if (!tscratch->module_delta) {
+> +		pr_info("module_delta allocation failed. Not able to decode module address.");
+> +		goto reset;
+> +	}
+> +
+> +	/* Sort the entries so that we can find appropriate module from address. */
+> +	sort_r(tscratch->entries, nr_entries, sizeof(struct trace_mod_entry),
+> +	       mod_addr_comp, NULL, NULL);
+> +
+> +	/* Scan modules to make text delta for modules. */
+> +	module_for_each_mod(make_mod_delta, tr);
+> +
+>  	return;
+>   reset:
+>  	/* Invalid trace modules */
+> @@ -10101,19 +10185,23 @@ static bool trace_array_active(struct trace_array *tr)
+>  	return trace_events_enabled(tr, NULL) > 1;
+>  }
+>  
+> -static void trace_module_record(struct module *mod)
+> +static void trace_module_record(struct module *mod, bool remove)
+>  {
+>  	struct trace_array *tr;
+> +	unsigned long flags;
+>  
+>  	list_for_each_entry(tr, &ftrace_trace_arrays, list) {
+> +		flags = tr->flags & (TRACE_ARRAY_FL_BOOT | TRACE_ARRAY_FL_LAST_BOOT);
+>  		/* Update any persistent trace array that has already been started */
+> -		if ((tr->flags & (TRACE_ARRAY_FL_BOOT | TRACE_ARRAY_FL_LAST_BOOT)) ==
+> -		    TRACE_ARRAY_FL_BOOT) {
+> +		if (flags == TRACE_ARRAY_FL_BOOT && !remove) {
+
+Can you rename the parameter from "remove" to "add" so we don't have a
+double negative.
+
+		if (flags == TRACE_ARRAY_FL_BOOT && add) {
+
+
+>  			/* Only update if the trace array is active */
+>  			if (trace_array_active(tr)) {
+>  				guard(mutex)(&scratch_mutex);
+>  				save_mod(mod, tr);
+>  			}
+> +		} else if (flags & TRACE_ARRAY_FL_LAST_BOOT) {
+> +			/* Update delta if the module loaded in previous boot */
+> +			make_mod_delta(mod, tr);
+>  		}
+>  	}
+>  }
+> @@ -10126,10 +10214,11 @@ static int trace_module_notify(struct notifier_block *self,
+>  	switch (val) {
+>  	case MODULE_STATE_COMING:
+>  		trace_module_add_evals(mod);
+> -		trace_module_record(mod);
+> +		trace_module_record(mod, false);
+
+		trace_module_record(mod, true);
+
+>  		break;
+>  	case MODULE_STATE_GOING:
+>  		trace_module_remove_evals(mod);
+> +		trace_module_record(mod, true);
+
+		trace_module_record(mod, false);
+
+>  		break;
+>  	}
+>  
 >
-> In the last phrase, s/is/are/. So that "If either... or... are unavailabl=
-e".
->
-> Luis
->
 
-All references I found on this topic say the verb should be singular
-(since both "BPF" and "the osnoise:timerlat_sample tracepoint" are
-singular). Search for "either or subject verb agreement", e.g. [1].
-
-[1] https://www.englishgrammar.org/subjectverb-agreement-2/
-
-Tomas
-
+-- Steve
