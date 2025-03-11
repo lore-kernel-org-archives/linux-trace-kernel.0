@@ -1,221 +1,118 @@
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C23A1DE894;
-	Tue, 11 Mar 2025 12:42:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0F2F3597F
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 11 Mar 2025 13:07:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741696936; cv=none; b=M/zUgSDatFjrmXHGBGRvkcEtP7ieaqM7FSzchDT/QQeoWi5Ni9Pz5mKxVbj6VE8K3Ikr5tU5yqmnXBLjkAqPNlGX2VDEjzc0HaikFVH8vODYbX03qYneiM2bYDHB+mCmXYLH49eFA6g2vYgvcexcYOukYjNX9ixbPxUX1Efrfwk=
+	t=1741698475; cv=none; b=AQeiUAygmIBI9jF39mYTwi8KcqfL3eliZV3bQ8aIns3ouhlh+3zVcg1Qy3CDkuUE1etVL8VhapscfNdqQmGIbNNwOLD0Hc4ew0nMGrS5qNsvjtedDqiazBs5KUZPEIKwKJIr2Uaf/liNVJPG6Y9/m72NMogbfTWxHbmpgt2B4Ss=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741696936; c=relaxed/simple;
-	bh=isFALg6CXqDl8cu7cPP7y6ryoQs71iJg27uKq5QT0gM=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=WqLMKrabscomzZuJDIN4ZXK8vokLEPR6bDf3byj8ECS54xLEmh/yEyJyhaIM1rzCZrHrAqpAca0ZAJ2L8MjEE6DWVsDVdYxDVHF36zs9wA9DAKYU2d59/vh2Yo3UixVtz/WbmtI1NGyRzy5PxTuJZI4FAJh05D7p17GObgugag0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EFXar4u7; arc=none smtp.client-ip=209.85.214.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1741698475; c=relaxed/simple;
+	bh=Y5DI7+SRpVq21SnJ5XCa+73thQkmx5Q3vChAwkd+ejw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=U45S3texRFzbIfuBr7VfZNm2kP3toFHZcB6s1kee742KkEtU1QioT2DF8LOpdLEeQVsRN1LzvoEhPswUrAqfqKqsHxYWkcLsXZwDRM9KtLo7IjasCeF2USHQQVvXXLr8A286ou0jPPzTkOK8+abuHmP7ap23s9w323ZCre/4dYk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=iN8Kxykf; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EFXar4u7"
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-223959039f4so106755945ad.3;
-        Tue, 11 Mar 2025 05:42:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741696934; x=1742301734; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=WKfNUEOjLl/LJnQn1CB92jCGeCH7231aksnRXVNSbLI=;
-        b=EFXar4u7FqepL/TdIjlR7Rr1E6ZejB+I+ZMvh0GB6oaJttbRWOO2ZAthqs4W9y2IFR
-         VhE4Aj9SLEa5duK1Tp7aZcKNgap7oW53vTiXFPCe6svkgqJqQ4//nDplOk2u8cofBDm0
-         7AQiGiRiaFwgS/McIAaeWZJAs6CKQJ0nHyeMeU1wing9FXyC4Ouijw4Kiv61c9By5AGK
-         qmoRI5AgRtWCZLPJbImh+4aeOVZcXO89+C62PMc0aKtLhNqV/WBx3tPzb+II9PhIyzg1
-         0Zb4jaxGILbf/X5OpaTvNqh4i7igUCnUkAzUuY0YeAQTxCgP4LtBt4HuQW21vSrLRX28
-         D1lA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741696934; x=1742301734;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=WKfNUEOjLl/LJnQn1CB92jCGeCH7231aksnRXVNSbLI=;
-        b=mF+VsxL3NSVht9/P0MKFmQKc5mrOHMqnIAh5dLsxIJZ2IKbWlYYkz8zAsuONLBipug
-         S3gFPrDfkDQAGxlO56P3lBTCFq3B+0Bu9xjCjzRCb99qBuRvcuG3kLZb+owUX7I48yBo
-         Jy6Pb1ocWt42vP8Z+6zCdnm2WsSIu++pTMIDTfcgGS780/eTqKWrBIZCdWtDQL84YlRF
-         H2tBs1NZJZb7DbOlR1dXWWzqkHip+zzy+epu+9A+NeuMVv0InGVZSB1NX+l6zWkJx+fI
-         J+rpO/+2HdxW6coVV/FCTkSERs2ChFWJ4nvfPPb8/sGBCOnmOcunORf69uVLZN3oN+rJ
-         6/eA==
-X-Forwarded-Encrypted: i=1; AJvYcCU9M6uV/SPUbjcglWNCQIQE9rw0I01QCfgQ+stEbk7DMP45cU+zQ+bNHe1B6IDT1KRfq/p6Cr3XHYu1ZTCP@vger.kernel.org, AJvYcCUfYL9EdaHIxHuTTStgkw1k/5kEhP4ePMF8H3vqhoiQGMgFprMwrAjuYWWGyW79Fa+rvMymQsYM0vswpRFFoKxkh8hO@vger.kernel.org, AJvYcCVLQWDzB7Gl++zKzoaXMMHZqlmvBBAA2OUu2OGJ/ReQQ9DBSP4oqpNfEpGlZC0tpoZ/aUiiplB8x2U=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzKA9+vDCsvXYwIaM0k0Y+ufzxduNawd5j7OiUlUGQVRhqULBX0
-	vYcnQiMXnFKID2XiFMw+5PWu1ev6cXQeGjrPUP0L2Zvjd2fQ5Kwg+x1HByffzKQ=
-X-Gm-Gg: ASbGncvIst72bqKVEglk7EMXMJQQqY6Pcl+CiAvjYrBSgyoQyCwW+jDQu81CIueaN8v
-	nqL3IBfAahT+dbHi6yRKJD6UV2QLuBmqVBZ0nlaMXRXKN2GqZrvRE/7uCn6ugllm0oIGWcpYhiO
-	uZzuboSC0ZmW/69GmV2NSWsgbikKGbN6KHVHRoFnzmkFEVPnbfKizaqbpT8S8a8pbnrM9Qs2Xsj
-	11GSYiWO2C6sA3p1CAEGt72hyDORpzZYnvy6+3TJJSewwV8IycwK68Mv5uHiHY1/dK7e1X8IGvD
-	uBqCJnrcCO65pXz5Q02c0xAI0dWOE2Dg/1TuBvSoSP8CFBqHMxOqVX9cImAp+DANRp/AHRghDO0
-	o2OFtmSME4g==
-X-Google-Smtp-Source: AGHT+IFksfkPNQwMHiJKY4c3iD+j5d/ZmUsPno28U2muS68dudrD9hC8Ud5qfSRkEDv+fENeBL7Z/w==
-X-Received: by 2002:a17:902:d488:b0:215:b9a6:5cb9 with SMTP id d9443c01a7336-2242887eb5cmr282396875ad.5.1741696934361;
-        Tue, 11 Mar 2025 05:42:14 -0700 (PDT)
-Received: from purva-IdeaPad-Gaming-3-15IHU6.. ([14.139.108.62])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22410aa4a15sm96360125ad.215.2025.03.11.05.42.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Mar 2025 05:42:13 -0700 (PDT)
-From: Purva Yeshi <purvayeshi550@gmail.com>
-To: rostedt@goodmis.org,
-	mhiramat@kernel.org,
-	corbet@lwn.net
-Cc: mathieu.desnoyers@efficios.com,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	Purva Yeshi <purvayeshi550@gmail.com>
-Subject: [PATCH 0/3] docs: tracing: Refactor index.rst documentation
-Date: Tue, 11 Mar 2025 18:11:58 +0530
-Message-Id: <20250311124158.22950-1-purvayeshi550@gmail.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iN8Kxykf"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1741698471;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=GdzATd1PXx/GmdafuFTK4X7kP47DhqkVfSwlwyUvZU8=;
+	b=iN8Kxykf66i9L95salTdElOIcG+quBjea5MH2YQNbIZ02IZnDAqgHsmfkPfMeHu74IykH7
+	qKtYCqlxRdVeltI1G3CwrO1c5d2dEaHVDZuZLfUQN8LwFbKIJIBLvn3k4VU8bptUxpRh8u
+	xb7vslmBQ8qlpFhfIP6jCfY/Fgz2YF0=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-650-Dq2imMx-O7qH0IQZFDw64A-1; Tue,
+ 11 Mar 2025 09:07:48 -0400
+X-MC-Unique: Dq2imMx-O7qH0IQZFDw64A-1
+X-Mimecast-MFC-AGG-ID: Dq2imMx-O7qH0IQZFDw64A_1741698467
+Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id F19E0180025B;
+	Tue, 11 Mar 2025 13:07:46 +0000 (UTC)
+Received: from localhost (unknown [10.22.81.23])
+	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 2CD7919560AB;
+	Tue, 11 Mar 2025 13:07:45 +0000 (UTC)
+Date: Tue, 11 Mar 2025 10:07:44 -0300
+From: "Luis Claudio R. Goncalves" <lgoncalv@redhat.com>
+To: Tomas Glozar <tglozar@redhat.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>, Jonathan Corbet <corbet@lwn.net>,
+	linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org, John Kacur <jkacur@redhat.com>
+Subject: Re: [PATCH 4/4] Documentation/rtla: Include BPF sample collection
+Message-ID: <Z9A1oN_XdMguNgHy@uudg.org>
+References: <20250311114936.148012-1-tglozar@redhat.com>
+ <20250311114936.148012-5-tglozar@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250311114936.148012-5-tglozar@redhat.com>
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
 
-Refactor Documentation/trace/index.rst to improve clarity, structure,
-and organization. Reformat sections and add appropriate headings for
-better readability.
+On Tue, Mar 11, 2025 at 12:49:36PM +0100, Tomas Glozar wrote:
+> Add dependencies needed to build rtla with BPF sample collection support
+> to README, and document both ways of sample collection in the manpages.
+> 
+> Signed-off-by: Tomas Glozar <tglozar@redhat.com>
+> ---
+>  Documentation/tools/rtla/common_timerlat_description.rst | 8 ++++++++
+>  tools/tracing/rtla/README.txt                            | 7 +++++++
+>  2 files changed, 15 insertions(+)
+> 
+> diff --git a/Documentation/tools/rtla/common_timerlat_description.rst b/Documentation/tools/rtla/common_timerlat_description.rst
+> index 8cd3e717baa8..49fcae3ffdec 100644
+> --- a/Documentation/tools/rtla/common_timerlat_description.rst
+> +++ b/Documentation/tools/rtla/common_timerlat_description.rst
+> @@ -8,3 +8,11 @@ The *timerlat* tracer outputs information in two ways. It periodically
+>  prints the timer latency at the timer *IRQ* handler and the *Thread*
+>  handler. It also enables the trace of the most relevant information via
+>  **osnoise:** tracepoints.
+> +
+> +The **rtla timerlat** tool sets the options of the *timerlat* tracer
+> +and collects and displays a summary of the results. By default,
+> +the collection is done synchronously in kernel space using a dedicated
+> +BPF program attached to the *timerlat* tracer. If either BPF or
+> +the **osnoise:timerlat_sample** tracepoint it attaches to is
 
-Improve section grouping and refine descriptions for better usability.
+In the last phrase, s/is/are/. So that "If either... or... are unavailable".
 
-Signed-off-by: Purva Yeshi <purvayeshi550@gmail.com>
----
-V1 - https://lore.kernel.org/all/20250204133616.27694-1-purvayeshi550@gmail.com/
-V2 - https://lore.kernel.org/lkml/20250206141453.139613-1-purvayeshi550@gmail.com/
-V3 - Improve section grouping and refine descriptions.
+Luis
 
- Documentation/trace/index.rst | 94 +++++++++++++++++++++++++++++------
- 1 file changed, 79 insertions(+), 15 deletions(-)
-
-diff --git a/Documentation/trace/index.rst b/Documentation/trace/index.rst
-index 2c991dc96..6b268194f 100644
---- a/Documentation/trace/index.rst
-+++ b/Documentation/trace/index.rst
-@@ -1,39 +1,103 @@
--==========================
--Linux Tracing Technologies
--==========================
-+================================
-+Linux Tracing Technologies Guide
-+================================
-+
-+Tracing in the Linux kernel is a powerful mechanism that allows
-+developers and system administrators to analyze and debug system
-+behavior. This guide provides documentation on various tracing
-+frameworks and tools available in the Linux kernel.
-+
-+Introduction to Tracing
-+-----------------------
-+
-+This section provides an overview of Linux tracing mechanisms
-+and debugging approaches.
- 
- .. toctree::
-    :maxdepth: 2
- 
--   ftrace-design
-+   debugging
-+   tracepoints
-    tracepoint-analysis
-+   ring-buffer-map
-+
-+Core Tracing Frameworks
-+-----------------------
-+
-+The following are the primary tracing frameworks integrated into
-+the Linux kernel.
-+
-+.. toctree::
-+   :maxdepth: 2
-+
-    ftrace
-+   ftrace-design
-    ftrace-uses
--   fprobe
-    kprobes
-    kprobetrace
-    uprobetracer
-    fprobetrace
--   tracepoints
-+   fprobe
-+   ring-buffer-design
-+
-+Event Tracing and Analysis
-+--------------------------
-+
-+A detailed explanation of event tracing mechanisms and their
-+applications.
-+
-+.. toctree::
-+   :maxdepth: 2
-+
-    events
-    events-kmem
-    events-power
-    events-nmi
-    events-msr
--   mmiotrace
-+   boottime-trace
-    histogram
-    histogram-design
--   boottime-trace
--   debugging
--   hwlat_detector
--   osnoise-tracer
--   timerlat-tracer
-+
-+Hardware and Performance Tracing
-+--------------------------------
-+
-+This section covers tracing features that monitor hardware
-+interactions and system performance.
-+
-+.. toctree::
-+   :maxdepth: 2
-+
-    intel_th
--   ring-buffer-design
--   ring-buffer-map
-    stm
-    sys-t
-    coresight/index
--   user_events
-    rv/index
-    hisi-ptt
-+   mmiotrace
-+   hwlat_detector
-+   osnoise-tracer
-+   timerlat-tracer
-+
-+User-Space Tracing
-+------------------
-+
-+These tools allow tracing user-space applications and
-+interactions.
-+
-+.. toctree::
-+   :maxdepth: 2
-+
-+   user_events
-+
-+Additional Resources
-+--------------------
-+
-+For more details, refer to the respective documentation of each
-+tracing tool and framework.
-+
-+.. only:: subproject and html
-+
-+   Indices
-+   =======
-+
-+   * :ref:`genindex`
-\ No newline at end of file
--- 
-2.34.1
+> +unavailable, the **rtla timerlat** tool falls back to using tracefs to
+> +process the data asynchronously in user space.
+> diff --git a/tools/tracing/rtla/README.txt b/tools/tracing/rtla/README.txt
+> index dd5621038c55..43e98311d10f 100644
+> --- a/tools/tracing/rtla/README.txt
+> +++ b/tools/tracing/rtla/README.txt
+> @@ -13,6 +13,13 @@ RTLA depends on the following libraries and tools:
+>   - libtraceevent
+>   - libcpupower (optional, for --deepest-idle-state)
+>  
+> +For BPF sample collection support, the following extra dependencies are
+> +required:
+> +
+> + - libbpf 1.0.0 or later
+> + - bpftool with skeleton support
+> + - clang with BPF CO-RE support
+> +
+>  It also depends on python3-docutils to compile man pages.
+>  
+>  For development, we suggest the following steps for compiling rtla:
+> -- 
+> 2.48.1
+> 
+---end quoted text---
 
