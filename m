@@ -1,44 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70E346088F;
-	Tue, 11 Mar 2025 00:40:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83ACA360;
+	Tue, 11 Mar 2025 01:29:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741653618; cv=none; b=Pcg6aIu9J7bh0/9UkQPjxwe1d2gEl9V72O63dAuJFhe+1uB2g6afMstkMu0ZSKZprdFod+WQJyZkFJqojvloQBPSG4+kyFeqfhKtN6ox0Bg6B3aix+v3jdVekmx48z3txzZLSsR3jbR3Y6je9cgdUrNBnxYnEEpodUI1UeprVHU=
+	t=1741656572; cv=none; b=UoM1xTx9coD5wrtU6peraMb4YNqgDXRywWmONsSTA1A/dfa2FiOkPFOloCyXzRtJbgB5EKLagRCa89+p0k56LFZaeRtlDKdeX+rCRw0NYsBJqYAORPfthifNiFkqtzi66N7peiyFYkMpcq2wMrFGRI2iy9a9e/dTWnTX6mGmBs4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741653618; c=relaxed/simple;
-	bh=dwNVoDSO9LuhxUhoL9pz/AvCnYig/Hu3oCVWghUy+fo=;
+	s=arc-20240116; t=1741656572; c=relaxed/simple;
+	bh=TS2WD0LGdmJ3Bg5okMf22/qVCeyY/UfSxXD8aVLF15g=;
 	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=hORGVnfqLxh763o9LhwFYKSFxIoWu1nlXGxrKpFod9yjsLVtjR58Lcss7DgsvdZEbfoKmn/xHHDdckYhzcJEaqs3Sl2WySLHnJ4WWKSSxOurFds7rJC70pqjieNGqWOs7LFm1AU+AI+2WzW0TQeXx5tzx+SdFBb4fay4e67MduY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iiD+OIiE; arc=none smtp.client-ip=10.30.226.201
+	 Mime-Version:Content-Type; b=uOdTyI1ofdl3k9A3rAMmJfyh0MNiWmJpmkQHmx3a6VdDJUrqukuZXpzb6aW9+7pmNUILHOrOp4WSiHAkldXkWMw0Y8IDV7jBM2i9eXhnYxZzfjM909rj4FcIGIxNk2XrXt/s83HKfNeT8mo77GaFLSE0xcmrJ9FGvnQjM7MRAAQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Cg+bgZee; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iiD+OIiE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 93C9EC4CEE5;
-	Tue, 11 Mar 2025 00:40:16 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Cg+bgZee"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 99764C4CEE5;
+	Tue, 11 Mar 2025 01:29:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741653617;
-	bh=dwNVoDSO9LuhxUhoL9pz/AvCnYig/Hu3oCVWghUy+fo=;
+	s=k20201202; t=1741656572;
+	bh=TS2WD0LGdmJ3Bg5okMf22/qVCeyY/UfSxXD8aVLF15g=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=iiD+OIiETMOaeju9Asvfi74ipxsWTNoyekRFPJTwTazZAwlFfX7y9ioBrXRJDnSq3
-	 lO7a5Eu51cAGJsfrtKYqhCqJSVf3dwKCISceLmuaM6YJetVqBjhBpeK3kZV7oFa9t0
-	 o4ep9mIF0u4l87onP1mgfxWGHtW+Ft6nSUo0FIZMqTFxTJTpv5nkNA8ScfENIHdMxC
-	 +WuxJWDXhzZZrTmClfie0zWvKczW3uogIG4B3k9XQVvscaavWefc2OP6BnJSgcnqFA
-	 Lw2M+3CNx2fSq2U26vHjGss3ErYKEF2JMOMBKAdLpUTt1mBggjgscUBcgrLFAGB9ci
-	 FTflX7XGhMyvQ==
-Date: Tue, 11 Mar 2025 09:40:14 +0900
+	b=Cg+bgZeeMUhgypkVyufXcErFqv+HHMEjTCAeFYdEWluBGCAoIceH+iC0y1gOFFIsI
+	 SjR8CDAItsGlgIHEg9P89wZDHF4qJzzrBp3z3YjOlrfLc+8g6ffkExyQ6JVHslsh1o
+	 xGiQSA0CRdYRCEQMTTTLQoyRLogDkfhy+SULTnE5ydqjr2YroNYsM39PVkjQ33U2tM
+	 M/8t6kgMlvLAVxj+vZzgaKZxLx83o78e+S/IuFgyf/EFtGxZQH8+Qum0GklCvNLIwi
+	 pXnqRe3oZd1yNf797NhWGrt7iCdL0RdghTWtMY1e5GuuW0pNDomKaPOyLr7HZcvv4k
+	 pWIX3knQA0mMQ==
+Date: Tue, 11 Mar 2025 10:29:28 +0900
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 To: Steven Rostedt <rostedt@goodmis.org>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Mark
- Rutland <mark.rutland@arm.com>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH 2/3] tracing: Remove checking the activity when module
- map is updating
-Message-Id: <20250311094014.0cd4f495b31f25405f3c380e@kernel.org>
-In-Reply-To: <20250307102137.2b3dde8f@gandalf.local.home>
-References: <20250207015330.5c71ad55ed2f516da1410711@kernel.org>
-	<173886113592.496116.11615563462036645436.stgit@devnote2>
-	<20250307102137.2b3dde8f@gandalf.local.home>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH] tracing: probe-events: Cleanup entry-arg storing code
+Message-Id: <20250311102928.ae96ceb8870e73e30f6f1279@kernel.org>
+In-Reply-To: <20250306191404.69b0877e@gandalf.local.home>
+References: <174099254917.619976.17555764627143910556.stgit@devnote2>
+	<20250306191404.69b0877e@gandalf.local.home>
 X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -49,31 +46,65 @@ Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Fri, 7 Mar 2025 10:21:37 -0500
+On Thu, 6 Mar 2025 19:14:04 -0500
 Steven Rostedt <rostedt@goodmis.org> wrote:
 
-> On Fri,  7 Feb 2025 01:58:56 +0900
+> On Mon,  3 Mar 2025 18:02:29 +0900
 > "Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
 > 
-> > From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> > 
-> > Remove unnecessary active check because tr->flags already checks it.
+> > +	/* Search the offset for the sprcified argnum. */
+> > +	for (i = 0; i < earg->size - 1 && earg->code[i].op != FETCH_OP_END; i++) {
+> > +		if (earg->code[i].op != FETCH_OP_ARG || earg->code[i].param != argnum)
+> > +			continue;
 > 
-> I've thought this over, and sure, if we start tracing on a persistent ring
-> buffer, then it can add all modules loaded from then on even if it it's not
-> tracing.
+> I wonder if you can save a loop by changing this to:
 > 
-> Can you merge patches 1 and 2, rebase it on ring-buffer/for-next and
-> resubmit this as one patch?
-
-Oops, I've missed this message. OK, let me rebase it.
-
-Thanks,
-
+> 		if (earg->code[i].op != FETCH_OP_ARG) {
+> 			last_offset = earg->code[i].offset;
+> 			continue;
+> 		}
 > 
-> Thanks,
+> 		if (earg->code[i].param != argnum)
+> 			continue;
+> 
+> 
+> > +
+> > +		if (WARN_ON_ONCE(earg->code[i + 1].op != FETCH_OP_ST_EDATA))
+> > +			continue;
+> > +
+> > +		return earg->code[i + 1].offset;
+> >  	}
+> > -	return -ENOSPC;
+> > +	if (i >= earg->size - 1)
+> > +		return -ENOSPC;
+> > +
+> > +	/* Not found, append new entry if possible. */
+> > +	offset = get_entry_arg_max_offset(earg) + sizeof(unsigned long);
+> 
+> Then here you could use last_offset instead of running the loop again?
+
+Yeah, but I would like it easier to read and safer (adding WARN_ON)
+especially, 
+
+> 		if (earg->code[i].op != FETCH_OP_ARG) {
+> 			last_offset = earg->code[i].offset;
+> 			continue;
+> 		}
+
+this is a bit unsafe if we introduce another operation except for
+the FETCH_OP_ARG and FETCH_OP_ST_EDATA. (and it is expecting the
+offset is always increased.)
+
+Thank you,
+
 > 
 > -- Steve
+> 
+> 
+> > +	store_entry_arg_at(&earg->code[i], argnum, offset);
+> > +	return offset;
+> >  }
+> >  
 
 
 -- 
