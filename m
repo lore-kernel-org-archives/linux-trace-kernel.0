@@ -1,90 +1,90 @@
-Received: from out30-101.freemail.mail.aliyun.com (out30-101.freemail.mail.aliyun.com [115.124.30.101])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78D323FD1;
-	Tue, 11 Mar 2025 02:07:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7E09222572;
+	Tue, 11 Mar 2025 09:17:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741658826; cv=none; b=QpamHjAlJBEWxCUvi6tFWLOmIux8yoOxdNQ72/HT9bfsKyF6zqysudnB7H258CvX4ATTgF/Ykf6WczRIeQlZD+dFEXIxW/dcW3OaLcmGmOAD9fBLKXitPC4hz1LKjZ7DNz+GiaTCgkFhEpXWoMQOl2PW0BMIVLjHOHNHPMM+S8c=
+	t=1741684668; cv=none; b=efNAm0asgg4gzXhfANFNWblEBoyTwe/KMBs1reR44P0zzenSuLbObmtqfxO5vKU9P2cCVoJIqhD0nV90+qrRkX3ikK/Fj762oK8KNGUHfVQ4L8cD6jvsN0cFD1St2YRaLnS4F+fjC4vZs45l+XNPEKyYhrrOjzA63vgWVcU5IZA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741658826; c=relaxed/simple;
-	bh=z6jVo03j7ZbrcOq9bBY8qnIpoBkz5o6+15aKdHE31EI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=SghBUYtJZEjE9w3T0LVupL0S1ALgolZAGvRu7c1petUwEvIQ8TXiy31RMvQCRjNAovTCxI3cSqEhJ7A6YviiBlDGkcBWsA9pttpUZH+suX3QKNXgya7kw3kxRrgtOhbaCGbA1jxd5jEiWRHyYqKYUZXPxaIKzQtr0DP2jpKKBl8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=Zhc8taC7; arc=none smtp.client-ip=115.124.30.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1741684668; c=relaxed/simple;
+	bh=I3wvXEq4ikbk6K4qeOqy4pOSFqJ/9hXqSnnILl+b6SQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=dkhivHFtmvUqNfwLeNPAJgne63HKpQdDrQIaJTVrPJFNiaHeNQBeAlWd/tJtBBG+nzOQM31pDIwxMtnn0xOsaEh3Cz1xIBT3AG0CDu4R42cB7Mr/kOF6DEDDpi4AAm+3ZevnRiqK25cCpqhLIhHdRsdMYP83BcwgEqDNgwOdScs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EJGWK4O0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="Zhc8taC7"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1741658819; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=BzglBtV+XA2a3PeBuIhCqkESUNYrOmlDABzPylPcK5w=;
-	b=Zhc8taC7P9/Vc4IPGJCdNWp7AvNo3j5UUAusoCH7u5pFUXHvrYF2uZNVIjtbBa+R8JYeGHT4dUVRi110e7pZ4j8iydYjHt0GrsoZLht4UgWBNsnN/ZxC/qS0Kr/Vn6o1eo8EjNXgv9obFmQxMfT7C/GC3+sjqBGlytYh4azfxLs=
-Received: from 30.221.130.118(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0WR7LvPK_1741658816 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Tue, 11 Mar 2025 10:06:57 +0800
-Message-ID: <47785d3f-3560-4832-b88a-031a80d1fd28@linux.alibaba.com>
-Date: Tue, 11 Mar 2025 10:06:56 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EJGWK4O0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5FBA5C4CEF1;
+	Tue, 11 Mar 2025 09:17:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741684667;
+	bh=I3wvXEq4ikbk6K4qeOqy4pOSFqJ/9hXqSnnILl+b6SQ=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=EJGWK4O0JvO72MUNTL9fyv6dFbUqrS+QlTHt9NSqPcSEJqsR93Ay3OI6sDys1v5Ps
+	 ZOHEtYwl5HwMHmmalXc8osqgNPVM3DiAsgCavmEAhm8yAj55EqduZIi1MfudAjORht
+	 x37BrIwjmNIZJpJgmBH+B0DoV3sLvdPKMFyBBJuA3HGrvdxypU2BcR9xDf/I172/2v
+	 pa/oAPUJK9OsxoBcXkOwyI4vygXhqaUItZU9VQ4jApa63Z4eAJH4d+dp1mEKFMCbY1
+	 TeeGKPxmFmsmdqmVkPXTMYPA221sp62O4MfsEFVGviIIvn8wPBA8WgsScwPnQpxUHk
+	 3SGIedLzIEaWg==
+Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-5498d2a8b89so5252886e87.1;
+        Tue, 11 Mar 2025 02:17:47 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUkWPk2zSJCTIsUlplIUkICws3HUUaVfSp695Ql3LHi9OwnU/35vAN6RMJD/wv9ZrEJwVknEGnxI7RCLfg=@vger.kernel.org, AJvYcCX66lzLtANeNyf0yCtFKOAsNvagxEwm3hMYrF7KOYSXuEhwNuu7ZMDpzONg367twf3iGIRWPApZg+BJfFUmtQTmTNP4@vger.kernel.org, AJvYcCXTmO/CTv0V30IJl5HGwuZyOmRDU3TELwKme2tIyPEk47zYVgUwwYZxj5vhKin8hQQrUO6ZVcVMCc7C2DgZ9g==@vger.kernel.org
+X-Gm-Message-State: AOJu0YyrE2q0ZX8OtEfa1qpe/qhDy7iohb00MlMDFAw9j/r9sHXAiHbs
+	zWpB0SAewFjiale5qZxDiR11uCwgpeuIY6ROm03IrclXRqF6Lgew4K0peyO+UFsBm9ZJEL3GCAg
+	DeYcQsQNqRF2J4gmHNBCJLxJSWWg=
+X-Google-Smtp-Source: AGHT+IFNr/MqTS76yOqZHInZldYwY6xgGLGctV3Upe1fjkqrKfD1g+oL+NuiwvAIf/RdlzvPulALp+YL5nPG4/u5HHs=
+X-Received: by 2002:ac2:44c6:0:b0:549:91d3:8e66 with SMTP id
+ 2adb3069b0e04-54991d38f57mr3671557e87.8.1741684665913; Tue, 11 Mar 2025
+ 02:17:45 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5] PCI: hotplug: Add a generic RAS tracepoint for hotplug
- event
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: lukas@wunner.de, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-edac@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- helgaas@kernel.org, bhelgaas@google.com, tony.luck@intel.com, bp@alien8.de,
- mhiramat@kernel.org, mathieu.desnoyers@efficios.com, oleg@redhat.com,
- naveen@kernel.org, davem@davemloft.net, anil.s.keshavamurthy@intel.com,
- mark.rutland@arm.com, peterz@infradead.org, tianruidong@linux.alibaba.com
-References: <20250109025543.56830-1-xueshuai@linux.alibaba.com>
- <20250113155503.71467082@gandalf.local.home>
- <deb6f0c4-77b8-431e-9b81-555a8344c750@linux.alibaba.com>
- <20250310105044.129dc354@gandalf.local.home>
-From: Shuai Xue <xueshuai@linux.alibaba.com>
-In-Reply-To: <20250310105044.129dc354@gandalf.local.home>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+References: <20250305192808.2826336-1-kris.van.hees@oracle.com>
+In-Reply-To: <20250305192808.2826336-1-kris.van.hees@oracle.com>
+From: Masahiro Yamada <masahiroy@kernel.org>
+Date: Tue, 11 Mar 2025 18:17:08 +0900
+X-Gmail-Original-Message-ID: <CAK7LNASvQJT5rCGGQT+L+JtRX32_amZz05QCn9cvT4W4+uVJuA@mail.gmail.com>
+X-Gm-Features: AQ5f1JrfovPclrUeoRyJ5wu2zI2p6MJIrGdvqeXCG7Sskxj7mqOIUIcKMP8Uwhs
+Message-ID: <CAK7LNASvQJT5rCGGQT+L+JtRX32_amZz05QCn9cvT4W4+uVJuA@mail.gmail.com>
+Subject: Re: [PATCH] kbuild: exclude .rodata.(cst|str)* when building ranges
+To: Kris Van Hees <kris.van.hees@oracle.com>
+Cc: linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org, 
+	linux-modules@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	Nick Alcock <nick.alcock@oracle.com>, Alan Maguire <alan.maguire@oracle.com>, 
+	Steven Rostedt <rostedt@goodmis.org>, Sam James <sam@gentoo.org>, 
+	Luis Chamberlain <mcgrof@kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Nick Desaulniers <ndesaulniers@google.com>, Jiri Olsa <olsajiri@gmail.com>, 
+	Elena Zannoni <elena.zannoni@oracle.com>, Daniel Gomez <da.gomez@samsung.com>, 
+	Jack Vogel <jack.vogel@oracle.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Thu, Mar 6, 2025 at 4:28=E2=80=AFAM Kris Van Hees <kris.van.hees@oracle.=
+com> wrote:
+>
+> The .rodata.(cst|str)* sections are often resized during the final
+> linking and since these sections do not cover actual symbols there is
+> no need to include them in the modules.builtin.ranges data.
+>
+> When these sections were included in processing and resizing occurred,
+> modules were reported with ranges that extended beyond their true end,
+> causing subsequent symbols (in address order) to be associated with
+> the wrong module.
+>
+> Signed-off-by: Kris Van Hees <kris.van.hees@oracle.com>
+> Reviewed-by: Jack Vogel <jack.vogel@oracle.com>
+> ---
 
+Applied with the following tag:
 
-在 2025/3/10 22:50, Steven Rostedt 写道:
-> On Mon, 10 Mar 2025 11:59:55 +0800
-> Shuai Xue <xueshuai@linux.alibaba.com> wrote:
-> 
->> Hi, Steve,
->>
->> If I move PCI_HOTPLUG_EVENT into one place, `include/upai/linux/pci.h`,
->> I need to include:
->>
->>       #include <linux/tracepoint.h>
->>
->> Then, kernel build fails with CONFIG_UAPI_HEADER_TEST=y:
-> 
-> Just move the enum definitions, not the entire event file.
-> 
-> That is, have one place has the PCI_HOTPLUG_EVENT macro, and have both the
-> uapi header as well as the tracepoint header include that header.
-> 
-> I guess I need to see the entire change.
-> 
+Fixes: 5f5e7344322f ("kbuild: generate offset range data for builtin module=
+s")
 
-Hi, Steven,
+Please let me know if this is wrong.
 
-IMHO, the problem is that the PCI_HOTPLUG_EVENT macro needs to include
-"linux/tracepoint.h" but it is not allowed in userspace.
-
-The entire change in v6 build fails with CONFIG_UAPI_HEADER_TEST=y:
-
-   https://lore.kernel.org/lkml/202501190108.tRReJA1Z-lkp@intel.com/T/#mae507b91b8b80c386dfa9e63fbbdd45826c2e003
-
-(sorry, I did not see the problem because my local .config do not set
-CONFIG_UAPI_HEADER_TEST)
-
-Thanks
-Shuai
+--=20
+Best Regards
+Masahiro Yamada
