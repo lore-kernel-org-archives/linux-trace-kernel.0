@@ -1,243 +1,133 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1653822B8D9
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 11 Mar 2025 09:54:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E65F12505AC;
+	Tue, 11 Mar 2025 11:03:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741686887; cv=none; b=cmzcuJaPJjBtzFpMu8nCgWW4eeXRcKtkUAZdS3uGW9q/NMcuuB28CHH2bPbA05XitTBrmGIJwhlVaFdQk/qjxpfNdq+j4qPKbJGrIPjwkDGhTbzav8gBYTfpu7tsriX8oP3Jcqve6fueOQz1r79CF5+IRXAR2jGfnX5rSn07hTk=
+	t=1741690992; cv=none; b=XPRnXFGoNpYFnW5+tx9/ZBVSek/HAdBO3sYdRP5+UhY7FJTeFmKRC3eIC7J3zOqjX3SfxtziqB/ZMv1Ayz3fkWBNV21wVBNidXfNStUzXaMkAnHxyr7oqkAAorxYfibhu6xUH1o5HrHWskW5gU8WeIQj/oiTYTx2onxMxcpYOdM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741686887; c=relaxed/simple;
-	bh=YJ8aN/wvJALxLucsLU6pRlaFqpDABklnil0F7VecPHA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=tuw4aAxMFFD7K2nMafbrby9PwddEQS9lBJ/kiiJdGn8emrrhj+Lc61mXsGP4VBRSeuGIKdBUdnQ3Eg5RJxNenLjjLW22u8yKW1xxP51DyBMstt+pVnmG7Bs44jbsXJWWzJpR5098eEAv5fFlLY4aEiUMkvpDpqT5lMXTJZ0/VPY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=L6/RIuih; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1741690992; c=relaxed/simple;
+	bh=qAoAEAm5amauGeRnu7bSr3vPpdizHeYfV+q57O0m6pI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nwYL/8R7q+7/LmKzu/R+KVxFDH/k9BuX8EPSOz9zngw4H+DPSI9QisLbyD/voKIvzvKdugX/AXpS4QBpdHLDzZfEq7+8cszjgppcc10eU2xDqq5CP5LXMDVeI/ED6JhSZnbbPxKnbLEmuhlMXwJwLkIOAIaOfVCJa3tNnbT5BoM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=Ct8X7uw8; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="L6/RIuih"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1741686884;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=bn7ocXts0Kxe+IQiLbHVIiui5+EmHdYjljF85vWvYgI=;
-	b=L6/RIuih4wt/9+f2k5BSGQwoSDlk/W5g3ddNmyIw6JtjOULxcNzYVxahKiIexq5Gvz6K1v
-	cjxfz71q1Rdk4A6EHi6eX5iavAq7dvj2vyHRHhgBIUiRJbdNGqfaUBgRwnbCVTDscm9tiM
-	l92bRTdNKw8RSWxRakIuckKfxCBGunQ=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-533-MpIcvZ8AOri_xVF6JdgHKw-1; Tue, 11 Mar 2025 05:54:43 -0400
-X-MC-Unique: MpIcvZ8AOri_xVF6JdgHKw-1
-X-Mimecast-MFC-AGG-ID: MpIcvZ8AOri_xVF6JdgHKw_1741686882
-Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-3912b54611dso3210953f8f.1
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 11 Mar 2025 02:54:43 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741686882; x=1742291682;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=bn7ocXts0Kxe+IQiLbHVIiui5+EmHdYjljF85vWvYgI=;
-        b=NZgw+kcC822BiHQ6ChgyDgzmHF8CRC00d4QDrFRMw1hYrFLlvZfddQvl+Vvc2sYDAx
-         omEyYRVi037SRRyv7597uRM61S0hcIg19sA/NpeJSmGjgNZGxjLBpE0q8KxBb2NThdUi
-         Pv0zsgANJQexSvInNIR0u2HYsY6ClSF3UgGWV5uD2ZnmQeAooC7i1J0SYu7DPcAOz+Go
-         P/8/5xH9e4e0solxU48ah/AJ/sO/h1Joa3apUC9heAZAzHxQ+vqaJXAs/YbEh6guJ2Cf
-         12e3vgilB7yxjoGai2wbN5GK6NQ6GcBdPgH4PC46pbLhFySbPxJ6iZRwP915cCm89ING
-         D1qg==
-X-Forwarded-Encrypted: i=1; AJvYcCU1tzKQtfYCbywhMD/NwDZ0lqXiUUDCRNOeWIZgZxlnbHtuMKrMlYonKFkC/ooj6Fe2fSlhQxwjAEHTT9UrCdI0IKQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YziNiufXsVvqgM/Z0s2B6Ipmoqheu3uGRYRt94mOAGJtKxYG88Y
-	sR4Wv1ajS169uhaxbhs5Ue9v8yrlflU/IslOVUQIhXWMaAwZwqKEqlPbSt0zI/bKFIZ+sLSuCnb
-	SVoRe11EFuunF14AB6NSgJC7qJKLUmJ70CIzWrc+6cJXtVWgNh1Nt6cVP1t+Udtom0qW2kg==
-X-Gm-Gg: ASbGnctbdH6eaVmUbIkOQuZbwfZF4BKxBiHLUErpABKQpRRZjPGx/EJVT+LQynQnBRv
-	MYOpT3JWsWnlm6CrSdRG5J/6RVnCqb+WOnRTheSEMVOnjy6g11K5+b9YMkBAX27WAHE/kpRhl0X
-	3pJAcBOnMBoqDitaPlMz20uTcKIkWJBKKFXJY6hFce5VsnyMoV4t2X4KsCpyJRiIxIZ8S2ryMzH
-	Kl3fEm5LghO0eQNzUjgOs7O/nf/S4hJARpzPJXBKW2uYiDwcjLi3f4IzxHOIkNaHNTLeYpQkxBn
-	f2+HNDly1hYFzN6Prj2Xf6J5sX/rDGAKtTavarcVBi11sNM+eqIkwymL8aAhCyCa/KmH7exfhXW
-	eMFLzlWwwUi8yxHSYnSW0tA25gE0zORXdF582exQXPf4=
-X-Received: by 2002:a5d:6482:0:b0:385:fc70:7f6 with SMTP id ffacd0b85a97d-39132d2affemr11212122f8f.7.1741686882506;
-        Tue, 11 Mar 2025 02:54:42 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEZsoCOeCpGWewJyrTb/pLcsLHd5HyuNZ3aD7JZcjRg8ADFwmVZNT4u9IuiZpVVAYSVvnmFrA==
-X-Received: by 2002:a5d:6482:0:b0:385:fc70:7f6 with SMTP id ffacd0b85a97d-39132d2affemr11212099f8f.7.1741686882020;
-        Tue, 11 Mar 2025 02:54:42 -0700 (PDT)
-Received: from ?IPV6:2003:cb:c720:ed00:a9b3:5954:823e:3427? (p200300cbc720ed00a9b35954823e3427.dip0.t-ipconnect.de. [2003:cb:c720:ed00:a9b3:5954:823e:3427])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3912c0e4065sm17854719f8f.62.2025.03.11.02.54.40
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 11 Mar 2025 02:54:41 -0700 (PDT)
-Message-ID: <79ec5aa9-1937-436e-8cf4-436746142f7b@redhat.com>
-Date: Tue, 11 Mar 2025 10:54:40 +0100
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Ct8X7uw8"
+Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52B93ZVX004497;
+	Tue, 11 Mar 2025 11:02:54 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=pp1; bh=xIPaMqGrsjATDI3COz82wtEWPVXld8
+	ipZrTVOIdtc+s=; b=Ct8X7uw8PWloUFD0MWoLtbch0x8v7ZBHf4sghnsOPUgWIL
+	4laCm8tkNral1P/z9pa2nZgA47oQRfKv0WakeNyyB8R9+Vh6Guw5jpCe+lYkjc9E
+	bj1tlXHKycXEbwA92MaXqkgcxxxOUUrD+0SLU9/Js2h7D+seIhAt3DVxnnK2+m+M
+	SnyXc8vAJyFHNNDHeTCQD7oaSV4hC/oLJUqp7OlFlDHv5ZRbtLJD4z9Jc5AwgRoc
+	/tM4WLkcBDQSA5Xdjf0/2qKWFBR96zHjriFf3YMAmrtmTXRoQMHGolmkB2ovcko5
+	8nhdu6grKgQd2Owr1x8xMpERkdmzu36UAYVwDP6Q==
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45a78qudaa-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 11 Mar 2025 11:02:54 +0000 (GMT)
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 52B9qE2P027631;
+	Tue, 11 Mar 2025 11:02:53 GMT
+Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4591qkkqct-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 11 Mar 2025 11:02:53 +0000
+Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
+	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 52BB2nWY50266594
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 11 Mar 2025 11:02:49 GMT
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id CABD520040;
+	Tue, 11 Mar 2025 11:02:49 +0000 (GMT)
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id B658C20043;
+	Tue, 11 Mar 2025 11:02:48 +0000 (GMT)
+Received: from localhost (unknown [9.171.9.82])
+	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Tue, 11 Mar 2025 11:02:48 +0000 (GMT)
+Date: Tue, 11 Mar 2025 12:02:47 +0100
+From: Vasily Gorbik <gor@linux.ibm.com>
+To: Joel Granados <joel.granados@kernel.org>
+Cc: Heiko Carstens <hca@linux.ibm.com>, Kees Cook <kees@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Andreas Larsson <andreas@gaisler.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Sven Schnelle <svens@linux.ibm.com>,
+        Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-trace-kernel@vger.kernel.org, sparclinux@vger.kernel.org,
+        linux-s390@vger.kernel.org
+Subject: Re: [PATCH v2 6/6] s390: mv s390 sysctls into their own file under
+ arch/s390 dir
+Message-ID: <your-ad-here.call-01741690967-ext-1293@work.hours>
+References: <20250306-jag-mv_ctltables-v2-0-71b243c8d3f8@kernel.org>
+ <20250306-jag-mv_ctltables-v2-6-71b243c8d3f8@kernel.org>
+ <20250307152620.9880F75-hca@linux.ibm.com>
+ <r73ph4ht5ejeeuj65nxocmqp7pury2mekz2lz3r6fs264s24c4@ransymcrzk2h>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH -next v1 3/3] kernel/events/uprobes: uprobe_write_opcode()
- rewrite
-To: Oleg Nesterov <oleg@redhat.com>
-Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
- linux-arm-kernel@lists.infradead.org, linux-trace-kernel@vger.kernel.org,
- linux-perf-users@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>,
- Matthew Wilcox <willy@infradead.org>, Russell King <linux@armlinux.org.uk>,
- Masami Hiramatsu <mhiramat@kernel.org>, Peter Zijlstra
- <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>,
- "Liang, Kan" <kan.liang@linux.intel.com>,
- Tong Tiangen <tongtiangen@huawei.com>
-References: <20250304154846.1937958-1-david@redhat.com>
- <20250304154846.1937958-4-david@redhat.com>
- <20250310170320.GC26382@redhat.com>
-From: David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <20250310170320.GC26382@redhat.com>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: osWr0Gk0hY2Z2o5Tgu9oBailPlmIcIckCDSH3MPah4o_1741686882
-X-Mimecast-Originator: redhat.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <r73ph4ht5ejeeuj65nxocmqp7pury2mekz2lz3r6fs264s24c4@ransymcrzk2h>
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: h9Mg2owPiLRPVj7MJrH8lEXpq9BsvLC-
+X-Proofpoint-ORIG-GUID: h9Mg2owPiLRPVj7MJrH8lEXpq9BsvLC-
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-03-11_01,2025-03-11_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1011 impostorscore=0
+ spamscore=0 adultscore=0 mlxlogscore=856 phishscore=0 priorityscore=1501
+ lowpriorityscore=0 malwarescore=0 bulkscore=0 suspectscore=0 mlxscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2502100000
+ definitions=main-2503110072
 
-On 10.03.25 18:03, Oleg Nesterov wrote:
-> On 03/04, David Hildenbrand wrote:
->>
->> uprobe_write_opcode() does some pretty low-level things that really, it
->> shouldn't be doing:
+On Mon, Mar 10, 2025 at 02:41:59PM +0100, Joel Granados wrote:
+> On Fri, Mar 07, 2025 at 04:26:20PM +0100, Heiko Carstens wrote:
+> > On Thu, Mar 06, 2025 at 12:29:46PM +0100, joel granados wrote:
+> > > Move s390 sysctls (spin_retry and userprocess_debug) into their own
+> > > files under arch/s390. We create two new sysctl tables
+> > > (2390_{fault,spin}_sysctl_table) which will be initialized with
+> > > arch_initcall placing them after their original place in proc_root_init.
+> > > 
+> > > This is part of a greater effort to move ctl tables into their
+> > > respective subsystems which will reduce the merge conflicts in
+> > > kernel/sysctl.c.
+> > > 
+> > > Signed-off-by: joel granados <joel.granados@kernel.org>
+> > > ---
+> > >  arch/s390/lib/spinlock.c | 18 ++++++++++++++++++
+> > >  arch/s390/mm/fault.c     | 17 +++++++++++++++++
+> > >  kernel/sysctl.c          | 18 ------------------
+> > >  3 files changed, 35 insertions(+), 18 deletions(-)
+> > 
+> > Acked-by: Heiko Carstens <hca@linux.ibm.com>
+> > 
+> > How should this go upstream? Will you take care of this, or should
+> > this go via the s390 tree?
 > 
-> Agreed. Thanks again for doing this.
+> thx for the review
 > 
-> David, as I said, I can't review. I don't understand this mm/folio magic
-> with or without your changes.
-> 
+> It would be great if you can push it through the s390 tree. However, if
+> it is not possible to do so, please let me know and I'll add it to the
+> sysctl-next changes.
 
-No worries! Thanks for taking a look!
+I've slightly changed the commit message
+s390: Move s390 sysctls into their own file under arch/s390
 
-> However. With your changes the code looks "better" and more understandable
-> to me. So I'd vote for your patches even if I can't ack them.
-> 
-> But I'd like to ask some stupid (no, really) questions.
-> __uprobe_write_opcode() does:
-> 
-> 	/* We're done if we don't find an anonymous folio when unregistering. */
-> 	if (!folio_test_anon(folio))
-> 		return is_register ? -EFAULT : 0;
-> 
-> Yes, but we do not expect !folio_test_anon() if register == true, right?
- > See also below.>
-> 	/* Verify that the page content is still as expected. */
-> 	if (verify_opcode(fw->page, opcode_vaddr, &opcode) <= 0) {
-> 		set_pte_at(vma->vm_mm, vaddr, fw->ptep, fw->pte);
-> 		return -EAGAIN;
-> 	}
-> 
-> The caller, uprobe_write_opcode(), has already called verify_opcode(),
-> why do we need to re-check?
-
-Regarding both questions, the code is fairly racy. Nothing would stop 
-user space from (a) modifying that memory (b) zapping the anon page 
-using MADV_DONTNEED (if we don't hold the mmap lock in write mode).
-
-Regarding the latter, uprobe_write_opcode() is documented to: "Called 
-with mm->mmap_lock held for read or write.".
-
-Note that both checks are fairly cheap.
-
-> 
-> But whatever reason we have. Can we change uprobe_write_opcode() to
-> "delay" put_page() and instead of
-
-I was debating with myself whether we should do that and went back and 
-forth a couple of times.
-
-> 
-> 	/* Walk the page tables again, to perform the actual update. */
-> 	folio = folio_walk_start(&fw, vma, vaddr, 0);
-> 	if (folio) {
-> 		ret = __uprobe_write_opcode(vma, &fw, folio, opcode_vaddr,
-> 					    opcode);
-> 		folio_walk_end(&fw, vma);
-> 	} else {
-> 		ret = -EAGAIN;
-> 	}
-> 
-> do something like
-> 
-> 	/* Walk the page tables again, to perform the actual update. */
-> 	ret = -EAGAIN;
-> 	folio = folio_walk_start(&fw, vma, vaddr, 0);
-> 	if (folio) {
-> 		if (fw.page == page) {
-> 			WARN_ON(is_register && !folio_test_anon(folio));
-
-Yes, that would work (we could leave the WARN_ON in 
-__uprobe_write_opcode), but I am not sure if the end result is better 
-better. No strong opinion on the details though.
-
-> 			ret = __uprobe_write_opcode(vma, &fw, folio, opcode_vaddr,
-> 					            opcode);
-> 		}
-> 		folio_walk_end(&fw, vma);
-> 	}
-> 
-> ?
-> 
-> Once again, I am not trying to review. I am trying to understand the
-> basics of your code.
-
-Any feedback is welcome, thanks!
-
--- 
-Cheers,
-
-David / dhildenb
-
+And applied, thank you!
