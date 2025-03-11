@@ -1,130 +1,90 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out30-101.freemail.mail.aliyun.com (out30-101.freemail.mail.aliyun.com [115.124.30.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54E0817AE11;
-	Tue, 11 Mar 2025 01:30:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78D323FD1;
+	Tue, 11 Mar 2025 02:07:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741656608; cv=none; b=iz7qYa2zCawVQTZdEP76dO+4EvCZUpYOlAzqHSg6k33K7wCgZtvnCoUjvLNUHW0QC46szog/O0jlkL0GNJw51V2UuUR/vvTfpdLfskhhK+9U5PZVoLlZq3FZjaVLo5gFvpvxnps/N+jRY84YPi0kGn0SMDFCUEFBUaZUKJM9rSM=
+	t=1741658826; cv=none; b=QpamHjAlJBEWxCUvi6tFWLOmIux8yoOxdNQ72/HT9bfsKyF6zqysudnB7H258CvX4ATTgF/Ykf6WczRIeQlZD+dFEXIxW/dcW3OaLcmGmOAD9fBLKXitPC4hz1LKjZ7DNz+GiaTCgkFhEpXWoMQOl2PW0BMIVLjHOHNHPMM+S8c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741656608; c=relaxed/simple;
-	bh=w9HyIeLsxGet48XT7rsx5+4DYHO4MrVOy19e355cau0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=P0hcy7RXfX3+N91HzbhEyTl9Y3VKt1NMtk2uCOmJoyIHLmqHYfEi1PI4Dg5aZCxjs6GEBiqzrBcXQiESvYnuLLwlyy4ThiDS5BsdJ8Ox84rt7kfBOBh/EU9vVCJyuONDutAnlrkK9uAQcKDY4K8AvOstPAZU2hgIRNBakfg/jHs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k7zoyQNd; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741658826; c=relaxed/simple;
+	bh=z6jVo03j7ZbrcOq9bBY8qnIpoBkz5o6+15aKdHE31EI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=SghBUYtJZEjE9w3T0LVupL0S1ALgolZAGvRu7c1petUwEvIQ8TXiy31RMvQCRjNAovTCxI3cSqEhJ7A6YviiBlDGkcBWsA9pttpUZH+suX3QKNXgya7kw3kxRrgtOhbaCGbA1jxd5jEiWRHyYqKYUZXPxaIKzQtr0DP2jpKKBl8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=Zhc8taC7; arc=none smtp.client-ip=115.124.30.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k7zoyQNd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2835BC4CEE5;
-	Tue, 11 Mar 2025 01:30:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741656607;
-	bh=w9HyIeLsxGet48XT7rsx5+4DYHO4MrVOy19e355cau0=;
-	h=From:To:Cc:Subject:Date:From;
-	b=k7zoyQNdUBbSuIq4RIvsTyMxonGniWRIP9P9sXkN7svWNyu1oXRnuQqwZ5k8txSlc
-	 fJf2hJnCCUm6G+UuCIHW/UxM2wNgPDN3qGyDrFTvCqvvQmcKsdkFRVrjXp2hXqcJig
-	 W4xH4yB4fCx6KbiKB59nTDql+fqbeNpigvtnmo5O2/JhkJKAXBYS2WMX8NAJyCkyMD
-	 HrqoyyAqfzCyQGGdVUSDXdXOSOYAqLNe4UL1jc1JzaCQxj3RnfTyj5NbvYsQ9+BlPA
-	 gIljIUhs4k7W/2/nxVasYtlw7iyqjK5h3cN9P2gDO1gXP22Y+firfhesm+I8cxAstW
-	 Gs34zbJGslNJg==
-From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	Mark Rutland <mark.rutland@arm.com>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Subject: [PATCH v2] tracing: Skip update_last_data() if cleared and remove active check for save_mod()
-Date: Tue, 11 Mar 2025 10:30:03 +0900
-Message-ID: <174165660328.1173316.15529357882704817499.stgit@devnote2>
-X-Mailer: git-send-email 2.43.0
-User-Agent: StGit/0.19
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="Zhc8taC7"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1741658819; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=BzglBtV+XA2a3PeBuIhCqkESUNYrOmlDABzPylPcK5w=;
+	b=Zhc8taC7P9/Vc4IPGJCdNWp7AvNo3j5UUAusoCH7u5pFUXHvrYF2uZNVIjtbBa+R8JYeGHT4dUVRi110e7pZ4j8iydYjHt0GrsoZLht4UgWBNsnN/ZxC/qS0Kr/Vn6o1eo8EjNXgv9obFmQxMfT7C/GC3+sjqBGlytYh4azfxLs=
+Received: from 30.221.130.118(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0WR7LvPK_1741658816 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Tue, 11 Mar 2025 10:06:57 +0800
+Message-ID: <47785d3f-3560-4832-b88a-031a80d1fd28@linux.alibaba.com>
+Date: Tue, 11 Mar 2025 10:06:56 +0800
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5] PCI: hotplug: Add a generic RAS tracepoint for hotplug
+ event
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: lukas@wunner.de, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-edac@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ helgaas@kernel.org, bhelgaas@google.com, tony.luck@intel.com, bp@alien8.de,
+ mhiramat@kernel.org, mathieu.desnoyers@efficios.com, oleg@redhat.com,
+ naveen@kernel.org, davem@davemloft.net, anil.s.keshavamurthy@intel.com,
+ mark.rutland@arm.com, peterz@infradead.org, tianruidong@linux.alibaba.com
+References: <20250109025543.56830-1-xueshuai@linux.alibaba.com>
+ <20250113155503.71467082@gandalf.local.home>
+ <deb6f0c4-77b8-431e-9b81-555a8344c750@linux.alibaba.com>
+ <20250310105044.129dc354@gandalf.local.home>
+From: Shuai Xue <xueshuai@linux.alibaba.com>
+In-Reply-To: <20250310105044.129dc354@gandalf.local.home>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-If the last boot data is already cleared, there is no reason to update it
-again. Skip if the TRACE_ARRAY_FL_LAST_BOOT is cleared.
-Also, for calling save_mod() when module loading, we don't need to check
-the trace is active or not because any module address can be on the
-stacktrace.
 
-Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
----
- Changes in v2:
-  - merge [1/3] and [2/3] in the previous series.
----
- kernel/trace/trace.c |   26 ++++++++------------------
- 1 file changed, 8 insertions(+), 18 deletions(-)
+在 2025/3/10 22:50, Steven Rostedt 写道:
+> On Mon, 10 Mar 2025 11:59:55 +0800
+> Shuai Xue <xueshuai@linux.alibaba.com> wrote:
+> 
+>> Hi, Steve,
+>>
+>> If I move PCI_HOTPLUG_EVENT into one place, `include/upai/linux/pci.h`,
+>> I need to include:
+>>
+>>       #include <linux/tracepoint.h>
+>>
+>> Then, kernel build fails with CONFIG_UAPI_HEADER_TEST=y:
+> 
+> Just move the enum definitions, not the entire event file.
+> 
+> That is, have one place has the PCI_HOTPLUG_EVENT macro, and have both the
+> uapi header as well as the tracepoint header include that header.
+> 
+> I guess I need to see the entire change.
+> 
 
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index c3c79908766e..d17278a72e72 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -6033,6 +6033,12 @@ static void update_last_data(struct trace_array *tr)
- 	if (!(tr->flags & TRACE_ARRAY_FL_BOOT))
- 		return;
- 
-+	if (!(tr->flags & TRACE_ARRAY_FL_LAST_BOOT))
-+		return;
-+
-+	/* Only if the buffer has previous boot data clear and update it. */
-+	tr->flags &= ~TRACE_ARRAY_FL_LAST_BOOT;
-+
- 	/* Reset the module list and reload them */
- 	if (tr->scratch) {
- 		struct trace_scratch *tscratch = tr->scratch;
-@@ -6045,9 +6051,6 @@ static void update_last_data(struct trace_array *tr)
- 		module_for_each_mod(save_mod, tr);
- 	}
- 
--	if (!(tr->flags & TRACE_ARRAY_FL_LAST_BOOT))
--		return;
--
- 	/*
- 	 * Need to clear all CPU buffers as there cannot be events
- 	 * from the previous boot mixed with events with this boot
-@@ -6070,7 +6073,6 @@ static void update_last_data(struct trace_array *tr)
- #else
- 	tscratch->kaslr_addr = 0;
- #endif
--	tr->flags &= ~TRACE_ARRAY_FL_LAST_BOOT;
- }
- 
- /**
-@@ -10092,15 +10094,6 @@ static void trace_module_remove_evals(struct module *mod)
- static inline void trace_module_remove_evals(struct module *mod) { }
- #endif /* CONFIG_TRACE_EVAL_MAP_FILE */
- 
--static bool trace_array_active(struct trace_array *tr)
--{
--	if (tr->current_trace != &nop_trace)
--		return true;
--
--	/* 0 is no events, 1 is all disabled */
--	return trace_events_enabled(tr, NULL) > 1;
--}
--
- static void trace_module_record(struct module *mod)
- {
- 	struct trace_array *tr;
-@@ -10109,11 +10102,8 @@ static void trace_module_record(struct module *mod)
- 		/* Update any persistent trace array that has already been started */
- 		if ((tr->flags & (TRACE_ARRAY_FL_BOOT | TRACE_ARRAY_FL_LAST_BOOT)) ==
- 		    TRACE_ARRAY_FL_BOOT) {
--			/* Only update if the trace array is active */
--			if (trace_array_active(tr)) {
--				guard(mutex)(&scratch_mutex);
--				save_mod(mod, tr);
--			}
-+			guard(mutex)(&scratch_mutex);
-+			save_mod(mod, tr);
- 		}
- 	}
- }
+Hi, Steven,
 
+IMHO, the problem is that the PCI_HOTPLUG_EVENT macro needs to include
+"linux/tracepoint.h" but it is not allowed in userspace.
+
+The entire change in v6 build fails with CONFIG_UAPI_HEADER_TEST=y:
+
+   https://lore.kernel.org/lkml/202501190108.tRReJA1Z-lkp@intel.com/T/#mae507b91b8b80c386dfa9e63fbbdd45826c2e003
+
+(sorry, I did not see the problem because my local .config do not set
+CONFIG_UAPI_HEADER_TEST)
+
+Thanks
+Shuai
