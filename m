@@ -1,333 +1,266 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ot1-f46.google.com (mail-ot1-f46.google.com [209.85.210.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A11E125B9;
-	Tue, 11 Mar 2025 23:12:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AA561EC016
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 12 Mar 2025 00:00:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741734725; cv=none; b=fpEG429Bqjsh33JQFOQg6sIYI6f9zOFNmmhpEYRKo+Roav9zwwONeZIo5FlgFS9Vu1J/4vB68PQYLDg7y/kHQeb3jZ/R++jLLrBeyFiajXFvbZ2sjGGdQbpvsquarZBJCgjF1dit/wbtfI8wv14nGQlGSeOcoB5aM8NuEXKAJBQ=
+	t=1741737621; cv=none; b=RJ+hrupzhRPVGCufsaZDKk6sPLlrqXnrti+Dl9h0W4QEpiIoXnxXJiahmULDTgL3pwRJi5VaGOwEpvOep8/7dhmKGfX0xhgAdf2QR3IQRVJc+lPHx9m1SpxcXfin277hKlMgF6MJVawoJldW3j8DQgmygqZVyJJcXWjqvXDwLe8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741734725; c=relaxed/simple;
-	bh=zmaYhJEQcjjBcEbf6TP9whTyAAbWc6fLVTTbJKKfgIQ=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=i0+5WmyJ6ReJlKPhcCnKnaJCAr5F5YlwbGsOCntn7KbFRy5O/z6UFHC2N7FiVScpkT8dNk/AuMF61uLZXcS8kEzgIXtgEYR4cEDd1FZkRgJ7LdCWOjSq5L07e4KaaIrXboNGQSpAkWx0wd/OzLaoHVmEYeOeB/oDb9Ri1nnckWk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Dua6S1/n; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741737621; c=relaxed/simple;
+	bh=LzSGWoUrmA9F7GdxXElYNI9zttTk0B3+Dt7+nD6DobY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=mYcw5o7iKTt9qX5D+pDbKr0OHdwm74Bxtm9LvhcPK7IbYJszoEAoqlz6iBfmDm4BNuNl38lO/gfBGibTMQ0d490hsanRzWCRUFhxfC7xGXT+Bf3WlIUGKHoLeCKQPWuwpTPYF4wIBhCIYVwFlo+YQovA8PIdb6krLASB1PKW9/o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=YJxpfA6O; arc=none smtp.client-ip=209.85.210.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Dua6S1/n"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 53D80C4CEE9;
-	Tue, 11 Mar 2025 23:12:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741734724;
-	bh=zmaYhJEQcjjBcEbf6TP9whTyAAbWc6fLVTTbJKKfgIQ=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=Dua6S1/nMvw8rWu1hLBJuh3YdLl51n4FGRWY2ZK8to7TNoxrOwzZ7pD57I0r3sr6K
-	 /q1ior/taZBNUF0DZoscHX2PU3BFDvzh6L5O8pnV6/2tO5fhKh2M6ZECzi/7Ktg4GV
-	 uMHZWzyyfRxg4DczxyfAloLfc/J/Smp6zKzdCy3UkwDHwnne+fv9HRZYnN1A5Vay1W
-	 Dw0HoS9ZnRkILskr8NTtlzaNH5mw8m94pmtLfiljfMwMe7yD8HYUf+j3XsgTd+x5Yy
-	 CUpGmPA1iGU0gH7eGTlLiJX0ui58EF/VWGzR6ucgVpn+XLinpDM1eB7CK9iqvPAYH7
-	 98RCMp3AY7P8g==
-Date: Wed, 12 Mar 2025 08:12:00 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Mark
- Rutland <mark.rutland@arm.com>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>
-Subject: Re: [PATCH v3] tracing: Show last module text symbols in the
- stacktrace
-Message-Id: <20250312081200.a2e61b2548f0efe9b475969e@kernel.org>
-In-Reply-To: <20250311100832.747b3b83@batman.local.home>
-References: <174161444691.1063601.16690699136628689205.stgit@devnote2>
-	<20250311100832.747b3b83@batman.local.home>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="YJxpfA6O"
+Received: by mail-ot1-f46.google.com with SMTP id 46e09a7af769-72a1a9dd1b0so636913a34.1
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 11 Mar 2025 17:00:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google; t=1741737618; x=1742342418; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=7L/tvJCTiuEQ7q495gZao+1PMe6JjH/RxapbsOLxMlM=;
+        b=YJxpfA6ODb0fE537yi1evrBnocaLJlIu5MQgCy/eT4fltwPQu9CgcA1lIUtOF3CmVR
+         dgdFP1hv+JrVogAk8XZGhhsXyNtOM2NgPxBaPq0+7QRrBhHCiKiuSCWQBv5bCiFDIBrl
+         AVgEX5C3F1x4fAK1M+o+EOVfJ3fsjF764t8W8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741737618; x=1742342418;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=7L/tvJCTiuEQ7q495gZao+1PMe6JjH/RxapbsOLxMlM=;
+        b=t3E1k9K+qJzl52gwiJBrFU3ShzC4J9C+EexpYUIQjMd55UqVEYbETklNMjOOySCXkD
+         QunoABuXX7KoRvkdiwQlbq/DhHn5Ec1mMPGINW+wivVo7mD/5qkJUhxLbep6FxotCcyy
+         SYAR0Tit4fLgsax9VWah1qGDDgWitHT96U1nLKCM3VYC4fk3/sTBy3hgbW7FrQdBNJyq
+         zurQSaToic32to76lulh6pSk88c6TzsdUMZ7KXXOMQlFhAQp2zNuHWdj0SiJex6X9Y1/
+         wHWAJ32cVZ9PF7WLBpNIUJDMyL/vB6uI1rabiH+KaAxSv60cMEk0zKyk0zRHZdSYjiQy
+         L6WA==
+X-Forwarded-Encrypted: i=1; AJvYcCVr75MBGhaaC1SmNSFF3bG95NI+EjZEO2d7LKtFwvB23gjONbLI0czKyPuGVvjWTSjf0tawtGzcO+S0dLPEKEpttnA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwZpg7jtrFFGWGpbUFmrUd2NiOL+9U4FLjljkpH3I1CfWPnLpwc
+	0h6H8nJgw0rTch/O/t1XRFTenuWCmhEDAQd/RECasAk8grwDO8nRtcI0WrzM4Q==
+X-Gm-Gg: ASbGnctbCUdyt6uIEGUPkTjx3yAaF3MYfyPdCBkVpO/LK9fVQIlvJ63rvCPU1FWxdso
+	5Vz2SPRV8Ckb4ngD6RoDXq8+wd0HJAzhzdItmX9QX8unq97eF6aPNAhjc3oO4TMYuyCzFe3s23+
+	t65l6L9cKsXFJxis0AimCpPlxT5fNYYczbCNx78GQpJKZgH+/39RPrKqRhnHoor/xR2eKphR/Uo
+	TG4IZTvFEFybsa01bV+6ILZ/cP/DBks6fPI3Yecj0oa5bEG0Fq2wsQtGlavSrHr8PqZNEz9IDAx
+	RmOGgMX7QWdZFCDUcxnismboNkh58Q8EDaBZH03TDSzSoknVdRnFk4ZVYlrxzH2Gem9jASSQsWG
+	kQGwMYlo5RsXTYQ==
+X-Google-Smtp-Source: AGHT+IH8+DQmUpgMOetDvZc19e+qs53cnjmVRH4SEyeU5jv8b9vCklQxjRT6Gf6qE603U+ZssGc7/A==
+X-Received: by 2002:a05:6830:3693:b0:72b:938e:31cb with SMTP id 46e09a7af769-72b9b4a42f6mr3225979a34.7.1741737618123;
+        Tue, 11 Mar 2025 17:00:18 -0700 (PDT)
+Received: from [10.69.79.211] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id 46e09a7af769-72b7c8e98dasm1543776a34.56.2025.03.11.17.00.16
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 11 Mar 2025 17:00:17 -0700 (PDT)
+Message-ID: <cf6a5ec7-b7cf-4ac6-91ed-5543477d4e30@broadcom.com>
+Date: Tue, 11 Mar 2025 17:00:15 -0700
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-
-On Tue, 11 Mar 2025 10:08:32 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
-
-> On Mon, 10 Mar 2025 22:47:27 +0900
-> "Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
-> 
-> > From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> > 
-> > Since the previous boot trace buffer can include module text address in
-> > the stacktrace. As same as the kernel text address, convert the module
-> > text address using the module address information.
-> > 
-> > Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> > ---
-> >  Changes in v3:
-> >   - Move module_delta to trace_scratch data structure.
-> >   - Remove LRU based removed module information.
-> > ---
-> >  kernel/trace/trace.c        |   99 +++++++++++++++++++++++++++++++++++++++++--
-> >  kernel/trace/trace.h        |    2 +
-> >  kernel/trace/trace_output.c |    4 +-
-> >  3 files changed, 98 insertions(+), 7 deletions(-)
-> > 
-> > diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-> > index c3c79908766e..0c1aa1750077 100644
-> > --- a/kernel/trace/trace.c
-> > +++ b/kernel/trace/trace.c
-> > @@ -49,6 +49,7 @@
-> >  #include <linux/fsnotify.h>
-> >  #include <linux/irq_work.h>
-> >  #include <linux/workqueue.h>
-> > +#include <linux/sort.h>
-> >  
-> >  #include <asm/setup.h> /* COMMAND_LINE_SIZE and kaslr_offset() */
-> >  
-> > @@ -5996,11 +5997,41 @@ struct trace_mod_entry {
-> >  struct trace_scratch {
-> >  	unsigned long		kaslr_addr;
-> >  	unsigned long		nr_entries;
-> > +	long			*module_delta;
-> 
-> Why are we adding this pointer into the persistent memory when it is
-> useless after a crash?
-
-This pointer is only usable after reboot. Hmm, but yeah, it should be
-moved to trace_array again. I confused to copy the nr_entries in here
-and trace_array, there seems 2 same value saved in both side. I think
-we should use tscratch->nr_entries to tr->module_delta too.
-
-> 
-> >  	struct trace_mod_entry	entries[];
-> >  };
-> >  
-> >  static DEFINE_MUTEX(scratch_mutex);
-> >  
-> > +/**
-> > + * trace_adjust_address() - Adjust prev boot address to current address.
-> > + * @tr: Persistent ring buffer's trace_array.
-> > + * @addr: Address in @tr which is adjusted.
-> > + */
-> > +unsigned long trace_adjust_address(struct trace_array *tr, unsigned long addr)
-> > +{
-> > +	struct trace_scratch *tscratch;
-> > +	long *module_delta;
-> > +	int i;
-> > +
-> > +	/* If we don't have last boot delta, return the address */
-> > +	if (!(tr->flags & TRACE_ARRAY_FL_LAST_BOOT))
-> > +		return addr;
-> > +
-> > +	tscratch = tr->scratch;
-> > +	module_delta = READ_ONCE(tscratch->module_delta);
-> > +	if (!tscratch || !tscratch->nr_entries || !module_delta ||
-> 
-> You shouldn't have a !tscratch test just after dereferencing it:
-> 
-> 		tscratch->module_delta
-> 
-> Perhaps have it be:
-> 
-> 	module_delta = tscratch ? READ_ONCE(tscratch->module_delta) : 0;
-> 	if (!module_delta || !tscratch->nr_entries || tscratch->entries[0].mod_addr > addr)
-
-Good catch!
-
-> 
-> 
-> > +	    tscratch->entries[0].mod_addr > addr)
-> > +		return addr + tr->text_delta;
-> > +
-> > +	/* Note that entries must be sorted. */
-> > +	for (i = 0; i < tscratch->nr_entries; i++)
-> > +		if (addr < tscratch->entries[i].mod_addr)
-> > +			break;
-> 
-> If we are bother sorting it, why not do a binary search here?
-
-OK.
-
-BTW, currently it does not care whether there are different modules
-are loaded on the same address (e.g. remove module and load another
-module), so it could find another module. Anyway, we don't know
-when the stacktrace is traced, so there is no way to find correct
-module if any module is unloaded.
-
-I'll add this note somewhere.
-
-> 
-> > +
-> > +	return addr + module_delta[i - 1];
-> > +}
-> > +
-> >  static int save_mod(struct module *mod, void *data)
-> >  {
-> >  	struct trace_array *tr = data;
-> > @@ -6029,6 +6060,7 @@ static int save_mod(struct module *mod, void *data)
-> >  static void update_last_data(struct trace_array *tr)
-> >  {
-> >  	struct trace_scratch *tscratch;
-> > +	long *module_delta;
-> >  
-> >  	if (!(tr->flags & TRACE_ARRAY_FL_BOOT))
-> >  		return;
-> > @@ -6063,6 +6095,8 @@ static void update_last_data(struct trace_array *tr)
-> >  		return;
-> >  
-> >  	tscratch = tr->scratch;
-> > +	module_delta = READ_ONCE(tscratch->module_delta);
-> > +	WRITE_ONCE(tscratch->module_delta, NULL);
-> >  
-> >  	/* Set the persistent ring buffer meta data to this address */
-> >  #ifdef CONFIG_RANDOMIZE_BASE
-> > @@ -6071,6 +6105,8 @@ static void update_last_data(struct trace_array *tr)
-> >  	tscratch->kaslr_addr = 0;
-> >  #endif
-> >  	tr->flags &= ~TRACE_ARRAY_FL_LAST_BOOT;
-> > +
-> > +	kfree(module_delta);
-> >  }
-> >  
-> >  /**
-> > @@ -9342,10 +9378,43 @@ static struct dentry *trace_instance_dir;
-> >  static void
-> >  init_tracer_tracefs(struct trace_array *tr, struct dentry *d_tracer);
-> >  
-> > +static int make_mod_delta(struct module *mod, void *data)
-> > +{
-> > +	struct trace_scratch *tscratch;
-> > +	struct trace_mod_entry *entry;
-> > +	struct trace_array *tr = data;
-> > +	long *module_delta;
-> > +	int i;
-> > +
-> > +	tscratch = tr->scratch;
-> > +	module_delta = READ_ONCE(tscratch->module_delta);
-> > +	for (i = 0; i < tscratch->nr_entries; i++) {
-> > +		entry = &tscratch->entries[i];
-> > +		if (!strcmp(mod->name, entry->mod_name)) {
-> > +			if (mod->state == MODULE_STATE_GOING)
-> > +				module_delta[i] = 0;
-> > +			else
-> > +				module_delta[i] = (unsigned long)mod->mem[MOD_TEXT].base
-> > +						 - entry->mod_addr;
-> > +			break;
-> > +		}
-> > +	}
-> > +	return 0;
-> > +}
-> > +
-> > +static int mod_addr_comp(const void *a, const void *b, const void *data)
-> > +{
-> > +	const struct trace_mod_entry *e1 = a;
-> > +	const struct trace_mod_entry *e2 = b;
-> > +
-> > +	return e1->mod_addr > e2->mod_addr ? 1 : -1;
-> > +}
-> > +
-> >  static void setup_trace_scratch(struct trace_array *tr,
-> >  				struct trace_scratch *tscratch, unsigned int size)
-> >  {
-> >  	struct trace_mod_entry *entry;
-> > +	int i, nr_entries;
-> >  
-> >  	if (!tscratch)
-> >  		return;
-> > @@ -9362,7 +9431,7 @@ static void setup_trace_scratch(struct trace_array *tr,
-> >  		goto reset;
-> >  
-> >  	/* Check if each module name is a valid string */
-> > -	for (int i = 0; i < tscratch->nr_entries; i++) {
-> > +	for (i = 0; i < tscratch->nr_entries; i++) {
-> >  		int n;
-> >  
-> >  		entry = &tscratch->entries[i];
-> > @@ -9376,6 +9445,21 @@ static void setup_trace_scratch(struct trace_array *tr,
-> >  		if (n == MODULE_NAME_LEN)
-> >  			goto reset;
-> >  	}
-> > +
-> > +	nr_entries = i;
-> > +	tscratch->module_delta = kcalloc(nr_entries, sizeof(long), GFP_KERNEL);
-> > +	if (!tscratch->module_delta) {
-> > +		pr_info("module_delta allocation failed. Not able to decode module address.");
-> > +		goto reset;
-> > +	}
-> > +
-> > +	/* Sort the entries so that we can find appropriate module from address. */
-> > +	sort_r(tscratch->entries, nr_entries, sizeof(struct trace_mod_entry),
-> > +	       mod_addr_comp, NULL, NULL);
-> > +
-> > +	/* Scan modules to make text delta for modules. */
-> > +	module_for_each_mod(make_mod_delta, tr);
-> > +
-> >  	return;
-> >   reset:
-> >  	/* Invalid trace modules */
-> > @@ -10101,19 +10185,23 @@ static bool trace_array_active(struct trace_array *tr)
-> >  	return trace_events_enabled(tr, NULL) > 1;
-> >  }
-> >  
-> > -static void trace_module_record(struct module *mod)
-> > +static void trace_module_record(struct module *mod, bool remove)
-> >  {
-> >  	struct trace_array *tr;
-> > +	unsigned long flags;
-> >  
-> >  	list_for_each_entry(tr, &ftrace_trace_arrays, list) {
-> > +		flags = tr->flags & (TRACE_ARRAY_FL_BOOT | TRACE_ARRAY_FL_LAST_BOOT);
-> >  		/* Update any persistent trace array that has already been started */
-> > -		if ((tr->flags & (TRACE_ARRAY_FL_BOOT | TRACE_ARRAY_FL_LAST_BOOT)) ==
-> > -		    TRACE_ARRAY_FL_BOOT) {
-> > +		if (flags == TRACE_ARRAY_FL_BOOT && !remove) {
-> 
-> Can you rename the parameter from "remove" to "add" so we don't have a
-> double negative.
-> 
-> 		if (flags == TRACE_ARRAY_FL_BOOT && add) {
-
-Ah, OK.
-
-> 
-> 
-> >  			/* Only update if the trace array is active */
-> >  			if (trace_array_active(tr)) {
-> >  				guard(mutex)(&scratch_mutex);
-> >  				save_mod(mod, tr);
-> >  			}
-> > +		} else if (flags & TRACE_ARRAY_FL_LAST_BOOT) {
-> > +			/* Update delta if the module loaded in previous boot */
-> > +			make_mod_delta(mod, tr);
-> >  		}
-> >  	}
-> >  }
-> > @@ -10126,10 +10214,11 @@ static int trace_module_notify(struct notifier_block *self,
-> >  	switch (val) {
-> >  	case MODULE_STATE_COMING:
-> >  		trace_module_add_evals(mod);
-> > -		trace_module_record(mod);
-> > +		trace_module_record(mod, false);
-> 
-> 		trace_module_record(mod, true);
-> 
-> >  		break;
-> >  	case MODULE_STATE_GOING:
-> >  		trace_module_remove_evals(mod);
-> > +		trace_module_record(mod, true);
-> 
-> 		trace_module_record(mod, false);
-
-OK.
-
-> 
-> >  		break;
-> >  	}
-> >  
-> >
-> 
-> -- Steve
-> 
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] swiotlb: Introduce DMA_ATTR_SKIP_DEVICE_SYNC
+To: Florian Fainelli <florian.fainelli@broadcom.com>,
+ Robin Murphy <robin.murphy@arm.com>, linux-kernel@vger.kernel.org
+Cc: bcm-kernel-feedback-list@broadcom.com, Jonathan Corbet <corbet@lwn.net>,
+ Christoph Hellwig <hch@lst.de>, Marek Szyprowski <m.szyprowski@samsung.com>,
+ Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Petr Tesarik <petr@tesarici.cz>, Michael Kelley <mhklinux@outlook.com>,
+ Lukas Bulwahn <lukas.bulwahn@redhat.com>,
+ Bagas Sanjaya <bagasdotme@gmail.com>, Eder Zulian <ezulian@redhat.com>,
+ Sean Anderson <sean.anderson@linux.dev>,
+ "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+ "open list:DMA MAPPING HELPERS" <iommu@lists.linux.dev>,
+ "open list:TRACING" <linux-trace-kernel@vger.kernel.org>
+References: <20250115194659.618438-1-florian.fainelli@broadcom.com>
+ <9582878b-1ce7-4fc4-9b45-b72bba722f49@arm.com>
+ <ecf3d8db-8533-4b0d-ab49-3543a766fd99@broadcom.com>
+Content-Language: en-US
+From: Justin Chen <justin.chen@broadcom.com>
+In-Reply-To: <ecf3d8db-8533-4b0d-ab49-3543a766fd99@broadcom.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
 
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+
+On 1/15/25 2:16 PM, Florian Fainelli wrote:
+> On 1/15/25 12:12, Robin Murphy wrote:
+>> On 2025-01-15 7:46 pm, Florian Fainelli wrote:
+>>> From: Justin Chen <justin.chen@broadcom.com>
+>>>
+>>> Network device driver's receive path typically do the following:
+>>>
+>>> - dma_map_single(.., DMA_FROM_DEVICE)
+>>> - dma_sync_single_for_cpu() to allow the CPU to inspect packet
+>>>    descriptors
+>>> - dma_unmap_single(.., DMA_FROM_DEVICE) when releasing the buffer
+>>>
+>>> Each of those operations incurs a copy from the original buffer to the
+>>> TLB buffer, even if the device is known to be writing full buffers.
+>>>
+>>> Add a DMA_ATTR_SKIP_DEVICE_SYNC flag which can be set by device drivers
+>>> to skip the copy at dma_map_single() to speed up the RX path when the
+>>> device is known to be doing full buffer writes.
+>>>
+>>> This has been seen to provide a 20% speedup for Wi-Fi RX throughput
+>>> testing.
+>>>
+>>> Signed-off-by: Justin Chen <justin.chen@broadcom.com>
+>>> [florian: commit message, add DMA-API attribute flag]
+>>> Signed-off-by: Florian Fainelli <florian.fainelli@broadcom.com>
+>>> ---
+>>>   Documentation/core-api/dma-attributes.rst | 9 +++++++++
+>>>   Documentation/core-api/swiotlb.rst        | 4 +++-
+>>>   include/linux/dma-mapping.h               | 6 ++++++
+>>>   include/trace/events/dma.h                | 3 ++-
+>>>   kernel/dma/swiotlb.c                      | 8 ++++++++
+>>>   5 files changed, 28 insertions(+), 2 deletions(-)
+>>>
+>>> diff --git a/Documentation/core-api/dma-attributes.rst b/ 
+>>> Documentation/core-api/dma-attributes.rst
+>>> index 1887d92e8e92..ccd9c1891200 100644
+>>> --- a/Documentation/core-api/dma-attributes.rst
+>>> +++ b/Documentation/core-api/dma-attributes.rst
+>>> @@ -130,3 +130,12 @@ accesses to DMA buffers in both privileged 
+>>> "supervisor" and unprivileged
+>>>   subsystem that the buffer is fully accessible at the elevated 
+>>> privilege
+>>>   level (and ideally inaccessible or at least read-only at the
+>>>   lesser-privileged levels).
+>>> +
+>>> +DMA_ATTR_SKIP_DEVICE_SYNC
+>>> +-------------------------
+>>> +
+>>> +Device drivers can set DMA_ATTR_SKIP_DEVICE_SYNC in order to avoid 
+>>> doing a copy
+>>> +from the original buffer to the TLB buffer for dma_map_single() with a
+>>> +DMA_FROM_DEVICE direction. This can be used to save an extra copy in 
+>>> a device
+>>> +driver's data path when using swiotlb bounce buffering.
+>>> +
+>>> diff --git a/Documentation/core-api/swiotlb.rst b/Documentation/core- 
+>>> api/swiotlb.rst
+>>> index 9e0fe027dd3b..3bc1f9ba67b2 100644
+>>> --- a/Documentation/core-api/swiotlb.rst
+>>> +++ b/Documentation/core-api/swiotlb.rst
+>>> @@ -67,7 +67,9 @@ to the driver for programming into the device. If a 
+>>> DMA operation specifies
+>>>   multiple memory buffer segments, a separate bounce buffer must be 
+>>> allocated for
+>>>   each segment. swiotlb_tbl_map_single() always does a "sync" 
+>>> operation (i.e., a
+>>>   CPU copy) to initialize the bounce buffer to match the contents of 
+>>> the original
+>>> -buffer.
+>>> +buffer, except if DMA_ATTR_SKIP_DEVICE_SYNC is specified and the 
+>>> direction is
+>>> +DMA_FROM_DEVICE. This is a performance optimization that may not be 
+>>> suitable for
+>>> +all platforms.
+>>>   swiotlb_tbl_unmap_single() does the reverse. If the DMA operation 
+>>> might have
+>>>   updated the bounce buffer memory and DMA_ATTR_SKIP_CPU_SYNC is not 
+>>> set, the
+>>> diff --git a/include/linux/dma-mapping.h b/include/linux/dma-mapping.h
+>>> index b79925b1c433..bfdaa65f8e9d 100644
+>>> --- a/include/linux/dma-mapping.h
+>>> +++ b/include/linux/dma-mapping.h
+>>> @@ -58,6 +58,12 @@
+>>>    */
+>>>   #define DMA_ATTR_PRIVILEGED        (1UL << 9)
+>>> +/*
+>>> + * DMA_ATTR_SKIP_DEVICE_SYNC: used to indicate that the buffer does 
+>>> not need to
+>>> + * be synchronized to the device.
+>>> + */
+>>> +#define DMA_ATTR_SKIP_DEVICE_SYNC    (1UL << 10)
+>>> +
+>>>   /*
+>>>    * A dma_addr_t can hold any valid DMA or bus address for the 
+>>> platform.  It can
+>>>    * be given to a device to use as a DMA source or target.  It is 
+>>> specific to a
+>>> diff --git a/include/trace/events/dma.h b/include/trace/events/dma.h
+>>> index d8ddc27b6a7c..6eb8fd7e3515 100644
+>>> --- a/include/trace/events/dma.h
+>>> +++ b/include/trace/events/dma.h
+>>> @@ -31,7 +31,8 @@ TRACE_DEFINE_ENUM(DMA_NONE);
+>>>           { DMA_ATTR_FORCE_CONTIGUOUS, "FORCE_CONTIGUOUS" }, \
+>>>           { DMA_ATTR_ALLOC_SINGLE_PAGES, "ALLOC_SINGLE_PAGES" }, \
+>>>           { DMA_ATTR_NO_WARN, "NO_WARN" }, \
+>>> -        { DMA_ATTR_PRIVILEGED, "PRIVILEGED" })
+>>> +        { DMA_ATTR_PRIVILEGED, "PRIVILEGED" }, \
+>>> +        { DMA_ATTR_SKIP_DEVICE_SYNC, "SKIP_DEVICE_SYNC" })
+>>>   DECLARE_EVENT_CLASS(dma_map,
+>>>       TP_PROTO(struct device *dev, phys_addr_t phys_addr, dma_addr_t 
+>>> dma_addr,
+>>> diff --git a/kernel/dma/swiotlb.c b/kernel/dma/swiotlb.c
+>>> index abcf3fa63a56..8dab89bf5e33 100644
+>>> --- a/kernel/dma/swiotlb.c
+>>> +++ b/kernel/dma/swiotlb.c
+>>> @@ -1435,8 +1435,16 @@ phys_addr_t swiotlb_tbl_map_single(struct 
+>>> device *dev, phys_addr_t orig_addr,
+>>>        * the original data, even if it's garbage, is necessary to match
+>>>        * hardware behavior.  Use of swiotlb is supposed to be 
+>>> transparent,
+>>>        * i.e. swiotlb must not corrupt memory by clobbering unwritten 
+>>> bytes.
+>>> +     *
+>>> +     * Setting DMA_ATTR_SKIP_DEVICE_SYNC will negate the behavior 
+>>> described
+>>> +     * before and avoid the copy from the original buffer to the TLB
+>>> +     * buffer.
+>>>        */
+>>> +    if (dir == DMA_FROM_DEVICE && (attrs & DMA_ATTR_SKIP_DEVICE_SYNC))
+>>> +        goto out;
+>>
+>> Nope, we still need to initialise the SWIOTLB slot with *something*, 
+>> or we're just reintroducing the same data leakage issue again. The 
+>> whole deal with that was that the caller *did* expect the entire 
+>> buffer to be written, but the device had an error, and thus the 
+>> subsequent unmap bounced out whatever data was in SWIOTLB before.
+> 
+> Do you know how common that assumption is within drivers? Could that 
+> behavior been hidden behind a flag, sort of like what is being done here?
+> 
+>>
+>> A memset is hopefully at least a bit faster than a copy, so maybe 
+>> there is still some life in this idea, but the semantic is not "skip 
+>> sync", it's "I'm OK with this entire buffer getting scribbled even my 
+>> device ends up never touching it".
+> 
+> Sure, let me test with a memset(), any suggestion on a name that carries 
+> better semantics, I do agree that "skip sync" is not quite descriptive 
+> enough.
+
+I ran some more test and see minimal improvement from memset. I ran an 
+isolated test of using one 4k page buffer.
+
+Average time per RX packet:
+NO SWIOTLB: 2.111 us
+SWIOTLB without bounce: 4.937 us
+SWIOTLB with bounce: 6.631 us
+SWIOTLB with memset: 6.506 us
+
+I understand this introduces potential data leakage, but the 25% 
+improvement is quite significant. The percentage will increase with 
+bigger buffers. Is there anyway we can find a compromise here? What if 
+we hid this behind the swiotlb flag?
+
+@@ -176,8 +176,9 @@ setup_io_tlb_npages(char *str)
+                 swiotlb_force_bounce = true;
+         else if (!strcmp(str, "noforce"))
+                 swiotlb_force_disable = true;
++       else if (!strcmp(str, "leakDMAbuffer"))
++               swiotlb_leak_dma_buffer = true;
+
+Thanks,
+Justin
+
+
