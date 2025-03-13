@@ -1,88 +1,166 @@
-Received: from outpost1.zedat.fu-berlin.de (outpost1.zedat.fu-berlin.de [130.133.4.66])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F8802E3371;
-	Thu, 13 Mar 2025 16:34:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=130.133.4.66
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A4B52E3390;
+	Thu, 13 Mar 2025 16:53:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741883691; cv=none; b=oT3cEZHWIM60V5bWB3vcPi4555N3wtAaFukQMk2ijuJZjtI6lwnHfjMsTFMM0b7aiZ9RngPeRihmgWUxRVHqK8HWeN3RpWBN8Ymfhd53+vB7THi7asiCywZQAoKkeg9iLRVhvDDushHPYhZ9lQSGNks/ztbJQIA3iJk4sJa1syw=
+	t=1741884801; cv=none; b=mN9095mdC2W8aqNPmF0rh0sTsT4Gp2cNVK0umgVeidWYrJuFg/w9uGz0mV6HHqmPdPzJyZOEQe6WAnFPU5StUVPzCjEOmBFgGBBuuCvkVXa/D5ECUkogBKdowgjMC+uSCfB1VIKVNlJ5h856LLPzpmQ2SmpKxs0tHnchf8cNyM0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741883691; c=relaxed/simple;
-	bh=5OKmSnvCdr1VFgeIsGzSe7XOU1tHtPNOb533sHEAdEA=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=X/VjJ0dcbj4crhs4imRDKGVo5fGDgrnuJUGxmzYtq6d87dbZPsI1YXQNQ4yXF8OdMPoFhkSxgjJai027+I4D6l9cz2A36eJuVpg9za6k/b+6HaEBNoSCh6cKs/x4TcijyeB3BVC+Ydm2gjZsO3WCOjzM6Qb/rvgCz6Zvcd5/O24=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=physik.fu-berlin.de; spf=pass smtp.mailfrom=zedat.fu-berlin.de; dkim=pass (2048-bit key) header.d=fu-berlin.de header.i=@fu-berlin.de header.b=INiw/BY3; arc=none smtp.client-ip=130.133.4.66
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=physik.fu-berlin.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zedat.fu-berlin.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fu-berlin.de header.i=@fu-berlin.de header.b="INiw/BY3"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=fu-berlin.de; s=fub01; h=MIME-Version:Content-Transfer-Encoding:
-	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=t3tspSjPWzUbZJ39HBMWBiuBDmQruoqd/+DIkFO7DU8=; t=1741883687; x=1742488487; 
-	b=INiw/BY3EmpQ+tFbto5KJqYzmXRysM5GThjAhYsbCynEznpLPDo4LhdzdFBTwL58+EdxgvBmbuM
-	028eFSc0XRN70eRuGNl4Y2n3tb+aKMPUE9fasaiQklBDFXoTAtx9Ivce3cjB6GFD/97A0/6jwFUIi
-	l/pIQXAyGtXecH7fIk5k5+/QcTrpW78si4zwBrnWAlfyF8cJnxUqCdv8G+iOc7XeQTpPIgZ93+y4N
-	2rkc9UKNnWUtUhihlBpWpcMvsN88bgThoKynEPt7g26UsXqe7K/GSSTglFEG0jRiH4HrvS+7n/L11
-	isBuLiQ0KzfVqfA2EKk4XM26Qk5t+Dar76Dw==;
-Received: from inpost2.zedat.fu-berlin.de ([130.133.4.69])
-          by outpost.zedat.fu-berlin.de (Exim 4.98)
-          with esmtps (TLS1.3)
-          tls TLS_AES_256_GCM_SHA384
-          (envelope-from <glaubitz@zedat.fu-berlin.de>)
-          id 1tslW3-00000002dFt-2bY1; Thu, 13 Mar 2025 17:34:39 +0100
-Received: from dynamic-078-054-179-053.78.54.pool.telefonica.de ([78.54.179.53] helo=[192.168.178.50])
-          by inpost2.zedat.fu-berlin.de (Exim 4.98)
-          with esmtpsa (TLS1.3)
-          tls TLS_AES_256_GCM_SHA384
-          (envelope-from <glaubitz@physik.fu-berlin.de>)
-          id 1tslW3-00000000cJH-1fzt; Thu, 13 Mar 2025 17:34:39 +0100
-Message-ID: <a25daa5d094cf613e2f52fe716a17edf9fb26448.camel@physik.fu-berlin.de>
-Subject: Re: [PATCH v3 3/5] tracing: Move trace sysctls into trace.c
-From: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
-To: Joel Granados <joel.granados@kernel.org>, Kees Cook <kees@kernel.org>, 
- Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>,  Mathieu
- Desnoyers <mathieu.desnoyers@efficios.com>, "David S. Miller"
- <davem@davemloft.net>, Andreas Larsson	 <andreas@gaisler.com>
-Cc: linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, sparclinux@vger.kernel.org
-Date: Thu, 13 Mar 2025 17:34:38 +0100
-In-Reply-To: <20250313-jag-mv_ctltables-v3-3-91f3bb434d27@kernel.org>
-References: <20250313-jag-mv_ctltables-v3-0-91f3bb434d27@kernel.org>
-	 <20250313-jag-mv_ctltables-v3-3-91f3bb434d27@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.54.3 
+	s=arc-20240116; t=1741884801; c=relaxed/simple;
+	bh=bZu+cNOOnGA6AZDPhiyFBGA4fxgl6uShkg70d/HmjjI=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=m6l0+VoKkzss/uyb3iAnAFAr7OOaUjU50+NA6YZIDn0YfXXxwz8kOILnuF9+dCeaU8PrvuP9K2eZpXqkbN+H5sGggwVMdW+qlxJl0spnsa+MF7ZZRn1GJ/GfUuCLaMgabO+7i30jrpbA6qzBDOShbVD+729oVDlmtN3VhJsoCS0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B5988C4CEDD;
+	Thu, 13 Mar 2025 16:53:16 +0000 (UTC)
+Date: Thu, 13 Mar 2025 12:53:13 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Petr Mladek <pmladek@suse.com>
+Cc: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>, linux-mm@kvack.org, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Andrew Morton <akpm@linux-foundation.org>, Michael Petlan
+ <mpetlan@redhat.com>, Veronika Molnarova <vmolnaro@redhat.com>, Suren
+ Baghdasaryan <surenb@google.com>, Rasmus Villemoes
+ <linux@rasmusvillemoes.dk>, Andy Shevchenko
+ <andriy.shevchenko@linux.intel.com>, Tamir Duberstein <tamird@gmail.com>,
+ Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [RESEND][PATCH] tracing: gfp: Remove duplication of recording
+ GFP flags
+Message-ID: <20250313125313.4f3d98f4@batman.local.home>
+In-Reply-To: <Z9L5HsVzQ0bVZtjp@pathway.suse.cz>
+References: <20250225135611.1942b65c@gandalf.local.home>
+	<Z9L5HsVzQ0bVZtjp@pathway.suse.cz>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Original-Sender: glaubitz@physik.fu-berlin.de
-X-ZEDAT-Hint: PO
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Hi Joel,
+On Thu, 13 Mar 2025 16:26:22 +0100
+Petr Mladek <pmladek@suse.com> wrote:
 
-On Thu, 2025-03-13 at 17:22 +0100, Joel Granados wrote:
-> Move trace ctl tables into their own const array in
-> kernel/trace/trace.c. The sysctl table register is called with
-> subsys_initcall placing if after its original place in proc_root_init.
-> This is part of a greater effort to move ctl tables into their
-> respective subsystems which will reduce the merge conflicts in
-> kerenel/sysctl.c.
-  ^^^^^^^
+> This causes regression in the printf selftest:
+> 
+> # modprobe test_printf
+> modprobe: ERROR: could not insert 'test_printf': Invalid argument
+> 
+> # dmesg | tail 
+> [   46.206779] test_printf: vsnprintf(buf, 256, "%pGg", ...) returned 15, expected 10
+> [   46.208192] test_printf: vsnprintf(buf, 3, "%pGg", ...) returned 15, expected 10
+> [   46.208196] test_printf: vsnprintf(buf, 0, "%pGg", ...) returned 15, expected 10
+> [   46.208199] test_printf: kvasprintf(..., "%pGg", ...) returned 'none|0xfc000000', expected '0xfc000000'
+> [   46.208202] test_printf: vsnprintf(buf, 256, "%pGg", ...) returned 26, expected 21
+> [   46.208204] test_printf: vsnprintf(buf, 17, "%pGg", ...) returned 26, expected 21
+> [   46.208206] test_printf: vsnprintf(buf, 0, "%pGg", ...) returned 26, expected 21
+> [   46.208209] test_printf: kvasprintf(..., "%pGg", ...) returned '__GFP_HIGH|none|0xfc000000', expected '__GFP_HIGH|0xfc000000'
+> [   46.208865] test_printf: failed 8 out of 448 tests
+> 
+>     => vprintf() started printing the "none|" string.  
+> 
+> It seems to me that "{ 0, "none" }" was added as an "innocent" entry
+> to avoid the trailing "," generated by TRACE_GFP_FLAGS. So, it is
+> not really needed.
+> 
+> In fact, I think that it probably causes similar regression in the
+> trace output because the logic in trace_print_flags_seq()
+> seems to be the same as in format_flags() in lib/vsprintf.c.
+> 
+> The following worked for me:
+> 
+> diff --git a/include/trace/events/mmflags.h b/include/trace/events/mmflags.h
+> index 82371177ef79..15aae955a10b 100644
+> --- a/include/trace/events/mmflags.h
+> +++ b/include/trace/events/mmflags.h
+> @@ -101,7 +101,7 @@ TRACE_DEFINE_ENUM(___GFP_LAST_BIT);
+>  	gfpflag_string(GFP_DMA32),		\
+>  	gfpflag_string(__GFP_RECLAIM),		\
+>  	TRACE_GFP_FLAGS				\
+> -	{ 0, "none" }
+> +	{ 0, NULL }
+>  
+>  #define show_gfp_flags(flags)						\
+>  	(flags) ? __print_flags(flags, "|", __def_gfpflag_names		\
+> 
+> It seems to be safe because the callers end up the cycle when .name == NULL.
+> 
+> I think that it actually allows to remove similar trailing {} but I am not sure
+> if we want it.
 
-Typo, exists in patches 4 and 5 of this series.
+Hmm, I could get rid of that last one with this patch. What do you think?
 
-Adrian
+diff --git a/include/trace/events/mmflags.h b/include/trace/events/mmflags.h
+index 82371177ef79..74af49c33d14 100644
+--- a/include/trace/events/mmflags.h
++++ b/include/trace/events/mmflags.h
+@@ -37,26 +37,26 @@
+ 	TRACE_GFP_EM(HARDWALL)			\
+ 	TRACE_GFP_EM(THISNODE)			\
+ 	TRACE_GFP_EM(ACCOUNT)			\
+-	TRACE_GFP_EM(ZEROTAGS)
++	TRACE_GFP_EME(ZEROTAGS)
+ 
+ #ifdef CONFIG_KASAN_HW_TAGS
+ # define TRACE_GFP_FLAGS_KASAN			\
+-	TRACE_GFP_EM(SKIP_ZERO)			\
+-	TRACE_GFP_EM(SKIP_KASAN)
++	TRACE_COMMA TRACE_GFP_EM(SKIP_ZERO)	\
++	TRACE_GFP_EME(SKIP_KASAN)
+ #else
+ # define TRACE_GFP_FLAGS_KASAN
+ #endif
+ 
+ #ifdef CONFIG_LOCKDEP
+ # define TRACE_GFP_FLAGS_LOCKDEP		\
+-	TRACE_GFP_EM(NOLOCKDEP)
++	TRACE_COMMA TRACE_GFP_EME(NOLOCKDEP)
+ #else
+ # define TRACE_GFP_FLAGS_LOCKDEP
+ #endif
+ 
+ #ifdef CONFIG_SLAB_OBJ_EXT
+ # define TRACE_GFP_FLAGS_SLAB			\
+-	TRACE_GFP_EM(NO_OBJ_EXT)
++	TRACE_COMMA TRACE_GFP_EME(NO_OBJ_EXT)
+ #else
+ # define TRACE_GFP_FLAGS_SLAB
+ #endif
+@@ -69,6 +69,10 @@
+ 
+ #undef TRACE_GFP_EM
+ #define TRACE_GFP_EM(a) TRACE_DEFINE_ENUM(___GFP_##a##_BIT);
++#undef TRACE_GFP_EME
++#define TRACE_GFP_EME(a) TRACE_DEFINE_ENUM(___GFP_##a##_BIT);
++#undef TRACE_COMMA
++#define TRACE_COMMA
+ 
+ TRACE_GFP_FLAGS
+ 
+@@ -84,6 +88,10 @@ TRACE_DEFINE_ENUM(___GFP_LAST_BIT);
+  */
+ #undef TRACE_GFP_EM
+ #define TRACE_GFP_EM(a) gfpflag_string(__GFP_##a),
++#undef TRACE_GFP_EME
++#define TRACE_GFP_EME(a) gfpflag_string(__GFP_##a)
++#undef TRACE_COMMA
++#define TRACE_COMMA ,
+ 
+ #define __def_gfpflag_names			\
+ 	gfpflag_string(GFP_TRANSHUGE),		\
+@@ -100,8 +108,7 @@ TRACE_DEFINE_ENUM(___GFP_LAST_BIT);
+ 	gfpflag_string(GFP_DMA),		\
+ 	gfpflag_string(GFP_DMA32),		\
+ 	gfpflag_string(__GFP_RECLAIM),		\
+-	TRACE_GFP_FLAGS				\
+-	{ 0, "none" }
++	TRACE_GFP_FLAGS
+ 
+ #define show_gfp_flags(flags)						\
+ 	(flags) ? __print_flags(flags, "|", __def_gfpflag_names		\
 
---=20
- .''`.  John Paul Adrian Glaubitz
-: :' :  Debian Developer
-`. `'   Physicist
-  `-    GPG: 62FF 8A75 84E0 2956 9546  0006 7426 3B37 F5B5 F913
+-- Steve
