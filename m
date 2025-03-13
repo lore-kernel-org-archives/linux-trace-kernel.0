@@ -1,120 +1,147 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D804134AC;
-	Thu, 13 Mar 2025 01:00:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0988A2E3390;
+	Thu, 13 Mar 2025 03:02:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741827616; cv=none; b=HgGQ27CQO3V5CE9Nvp2KOdQMVxaGNcXlxFa/lZTMa+R+NsZlOTXxlfGUSFxbUByDJlMViZJp4/O+Ws9joZwqWSTwedxsv5LS+IgTU6nmYb8V4LZ0a3nWqHzW6rB0+aS+6KjOmgO+A+nhHPG91AvFqvUi1NbwRs2CI/zEQFJw/KY=
+	t=1741834928; cv=none; b=EgQj1QIrzoTzCmzZpbX/gEs2RmDW0nJLi5sDthytWNtM6NlnurqSZ+v1VWCFmni3Q6sAkqB5ZUkqLsq0RKgfG+3jEW6IZ+C6xqTRUzAltTJqruCC+Agpvn05fCCnwxyxQtJHrMk5e6+z04UcseQwW6BXp5hqwk37iJHhhAf8Uic=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741827616; c=relaxed/simple;
-	bh=7xUY1S6zXxsXXT8asLU92YS/TfvLV/gFRXP7obNkQWM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=GGBpprCBQd6asSN7dnTgPcw/blf3GoQ2Efq+XM1gguVYBcgRZzu/HRMoU7tg5fNmqkazyFiUmThG9iHhDdoW1gw/5LGSdl3iN5V1aDDuuui7z8J0pEtapJXL4lyuzjlkkjD1hVu7L8/7xgT66qRjyWCJVCfRTpDIziNt3dhMLpw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sZE6MNvX; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741834928; c=relaxed/simple;
+	bh=r+eB6iiNmZOofV/kH/cgty+BGAXEJuG9/FlGa6p1IpI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DXZfOLMODUsbPdFx0Rrb+HC/Ft9lMEUviGhtVsEnNZZH1DRZOfCzZ0Ps8BwPntfTJ3lfUZQK5G2LAddceN78+bhfesQXUNaj5XBrfYYeFINFCvPJnB62ehYr8SO3fFEATpGSq7K2y6rhDHHXuLsVRKkqJ1+CK2bqM2IAcQ6t4wY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OeFCFcGw; arc=none smtp.client-ip=209.85.214.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sZE6MNvX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5F1C0C4CEDD;
-	Thu, 13 Mar 2025 01:00:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741827614;
-	bh=7xUY1S6zXxsXXT8asLU92YS/TfvLV/gFRXP7obNkQWM=;
-	h=From:To:Cc:Subject:Date:From;
-	b=sZE6MNvXD8vRI3+AKi4f6VMLXNyuG4M2XRMz93jmTIlfeI2FzUhnDXdLZGmGjJte+
-	 ysFbVDq08W4vEoEF9OZfNvxkin/VWmmhP5FpqdhSLDsXbIDWpGJ68EcAK0OMZdNDcX
-	 DiBX3vUH+jZRUbgMGNtzDW3qK4UpzEfBdELtUmRJ8yH707evO5ozPWcnGgWtbGIIJ9
-	 aTAaVmCnv/iIF6AyMFOELVJRoQbva4rlNpDBWcgY65apXhJ2KfON/ULC14zD2vRb4b
-	 JYNnR3bvkKoAPPYRzQi2/Id8IS4h8kn6TRPpkio3knxzrPyDRJWuLVTo7ZtRZkd9C0
-	 9CAMmxG33aSLg==
-From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OeFCFcGw"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-2232aead377so10144425ad.0;
+        Wed, 12 Mar 2025 20:02:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1741834926; x=1742439726; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=4Y4uZs9IeC823zF1KJoif+3fgDliA6beKiISozxsExc=;
+        b=OeFCFcGwn6XTZ/FfCpmtBa+t6p2PbKkI0IgchmU28Eucl3DBD2l55kSwGSCS4BLHYB
+         n99RgyEoqosK6P1J1rIHB4538QIAqUy4eTfJ9yDVpnXt5acU2v9yO3wU55ciOJcfMgc3
+         +aEVKWqWNAQcN6JW4nnFeX8C3pv3XC7wL3ZdlC+wveW/VhOsqJCHx6k2ZIC4ImAqO/74
+         9vTafDVxw0AKPQJSYO1I4BaVwTCND3mPROT3ko+/+t67BToYYM+oGqL+AAMds1vNhKVK
+         RHqsL5DtkEZZcdiPji8TdYwlw1BR/I63yAJ80JZPF4ORoYDQkLyVgMxd8mz1dYlqujuH
+         P6hA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741834926; x=1742439726;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=4Y4uZs9IeC823zF1KJoif+3fgDliA6beKiISozxsExc=;
+        b=TvtA23TQQZ+u2FBv38IZ/SdHAC0TihBiAuaIUIOjWaRiwhQxZ1UuT81whpjwTW+Nlo
+         qZaCHEGYOBFlBEdFbdiDfeLaGOsjqW9Lwbgs1jACPVqy7y976C3nL/YVtk3bYs5fHykS
+         5kGzPI4lTANffP9UhihCBrXQbChZZPmqPUWLgmV5kGjUMLIqNc0NV1seYG8FxtVupxgK
+         4CbSTdRYZ7wDKwq+/22xAphA2mVe2i5IuHOVvLJkaXcHhDfOFgzOESqr5AVneP2+unb0
+         Uagmyzwg8Z7PxY7kR7rNVJ4KQAVUJ5LQVcc2v2B0msxRGNMX7n32fGFN6ZMI/y6jSsAo
+         MiIg==
+X-Forwarded-Encrypted: i=1; AJvYcCVzoX/wVubLHv1AI7veKNYRpap/yBz6vmCxC8+oCpoV3z2oxti3SMg75hbKFXGfUtnFXUNqy5i1hsERgsqylSlmqV9q@vger.kernel.org, AJvYcCW7PVAEeR86i5MJ2uKxgk6FoThPRvh2F8blaI9RXICUQfpdVl2FAiw5U+tOjHa+dlHdlsZ1fwEW01BxBuY6@vger.kernel.org, AJvYcCWieDfK81x3l8Grjeb+GqSVgYNBDEC5cBdQVMSGEbxjXG3cBQVe4lBBINCWXJ8OeKLx9MWkj+QYlDw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzvlXM2kqW5YYPWY9y2BoSPoj49eEia0WrlD2aNjvrbUxdsxnRG
+	ERmF91pLPHhPUP3tsDAQfwvpz3A9UE9c7LAye60ZesEqFVxCikt0zI9/jg==
+X-Gm-Gg: ASbGncuS+6yDHeCiA8i2Rbm9kiGP1UunQv692knS9oRL3xqCrPP0jnIC4jvDBMxTQba
+	JtGCIryzDV5mDZhHbkEVaaWjE1hZN+JZRxukVbBc2Wqip0hBXVZSkBOfidChCjuQv1g0B4veU3m
+	x+9KsthSmKoTzqdpe+mnQ5vskZmBobiTeVzJ9GHNiz4N6kfPvQ0iYZcEJ33c5zrx0XB40V4nbCx
+	6R29g8SPExsHF9LkHm6Ag1plTqbHx9E9YOe73A4+PvYLXzMD30j0kghmNUJmooY3omETvsARUIl
+	9xtdF1bCqikro9Zy9TLVEwIay/EZ9STw7qoE8Vqekbh6
+X-Google-Smtp-Source: AGHT+IE5WEfPIfF4QrUqCJHEwJWNexMfzYu+4pAeyH5oaXl/EiijH+acC2vEQ0UuApgKnnVlp9lrJg==
+X-Received: by 2002:a05:6a00:10d2:b0:736:ff65:3fd0 with SMTP id d2e1a72fcca58-736ff654674mr6089565b3a.16.1741834925985;
+        Wed, 12 Mar 2025 20:02:05 -0700 (PDT)
+Received: from archie.me ([103.124.138.155])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-737116944easm263593b3a.134.2025.03.12.20.02.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 12 Mar 2025 20:02:04 -0700 (PDT)
+Received: by archie.me (Postfix, from userid 1000)
+	id AE6DE46D5683; Thu, 13 Mar 2025 10:02:01 +0700 (WIB)
+Date: Thu, 13 Mar 2025 10:02:01 +0700
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+To: Steven Rostedt <rostedt@goodmis.org>,
+	Purva Yeshi <purvayeshi550@gmail.com>
 Cc: Masami Hiramatsu <mhiramat@kernel.org>,
 	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH] tracing: tprobe-events: Fix leakage of module refcount
-Date: Thu, 13 Mar 2025 10:00:10 +0900
-Message-ID: <174182761071.83274.18334217580449925882.stgit@devnote2>
-X-Mailer: git-send-email 2.43.0
-User-Agent: StGit/0.19
+	Jonathan Corbet <corbet@lwn.net>, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org
+Subject: Re: [PATCH v3 2/2] docs: tracing: Reduce maxdepth in index
+ documentation
+Message-ID: <Z9JKqVvG1iw0bFXR@archie.me>
+References: <20250312124717.7208-1-purvayeshi550@gmail.com>
+ <20250312134907.06d27d78@batman.local.home>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="OR65uIcLb+LKpD3Q"
+Content-Disposition: inline
+In-Reply-To: <20250312134907.06d27d78@batman.local.home>
 
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-When enabling the tracepoint at loading module, the target module
-refcount is incremented by find_tracepoint_in_module(). But it is
-unnecessary because the module is not unloaded while processing
-module loading callbacks.
-Moreover, the refcount is not decremented in that function.
-To be clear the module refcount handling, move the try_module_get()
-callsite to trace_fprobe_create_internal(), where it is actually
-required.
+--OR65uIcLb+LKpD3Q
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Fixes: 57a7e6de9e30 ("tracing/fprobe: Support raw tracepoints on future loaded modules")
-Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-Cc: stable@vger.kernel.org
----
- kernel/trace/trace_fprobe.c |   21 ++++++++-------------
- 1 file changed, 8 insertions(+), 13 deletions(-)
+On Wed, Mar 12, 2025 at 01:49:07PM -0400, Steven Rostedt wrote:
+> On Wed, 12 Mar 2025 18:17:17 +0530
+> Purva Yeshi <purvayeshi550@gmail.com> wrote:
+>=20
+> > Reduce :maxdepth: from 2 to 1 in index.rst to simplify the table of
+> > contents, showing only top-level document titles for better readability.
+> >=20
+> > Signed-off-by: Purva Yeshi <purvayeshi550@gmail.com>
+> > ---
+> >  Documentation/trace/index.rst | 10 +++++-----
+> >  1 file changed, 5 insertions(+), 5 deletions(-)
+> >=20
+> > diff --git a/Documentation/trace/index.rst b/Documentation/trace/index.=
+rst
+> > index 6b268194f..5ddd47ee7 100644
+> > --- a/Documentation/trace/index.rst
+> > +++ b/Documentation/trace/index.rst
+> > @@ -14,7 +14,7 @@ This section provides an overview of Linux tracing me=
+chanisms
+> >  and debugging approaches.
+> > =20
+> >  .. toctree::
+> > -   :maxdepth: 2
+> > +   :maxdepth: 1
+>=20
+> If you made this the first patch, you would only need to modify one place.
+>=20
+> This is a patch series. If the end result is going to be maxdepth 1,
+> you shouldn't add a bunch of maxdepth 2 and then in the next patch make
+> them all maxdepth 1 as the only change.
 
-diff --git a/kernel/trace/trace_fprobe.c b/kernel/trace/trace_fprobe.c
-index 88a80953ae5e..985ff98272da 100644
---- a/kernel/trace/trace_fprobe.c
-+++ b/kernel/trace/trace_fprobe.c
-@@ -920,13 +920,8 @@ static void __find_tracepoint_module_cb(struct tracepoint *tp, struct module *mo
- 
- 	if (!data->tpoint && !strcmp(data->tp_name, tp->name)) {
- 		data->tpoint = tp;
--		if (!data->mod) {
-+		if (!data->mod)
- 			data->mod = mod;
--			if (!try_module_get(data->mod)) {
--				data->tpoint = NULL;
--				data->mod = NULL;
--			}
--		}
- 	}
- }
- 
-@@ -938,13 +933,7 @@ static void __find_tracepoint_cb(struct tracepoint *tp, void *priv)
- 		data->tpoint = tp;
- }
- 
--/*
-- * Find a tracepoint from kernel and module. If the tracepoint is in a module,
-- * this increments the module refcount to prevent unloading until the
-- * trace_fprobe is registered to the list. After registering the trace_fprobe
-- * on the trace_fprobe list, the module refcount is decremented because
-- * tracepoint_probe_module_cb will handle it.
-- */
-+/* Find a tracepoint from kernel and module. */
- static struct tracepoint *find_tracepoint(const char *tp_name,
- 					  struct module **tp_mod)
- {
-@@ -973,6 +962,7 @@ static void reenable_trace_fprobe(struct trace_fprobe *tf)
- 	}
- }
- 
-+/* Find a tracepoint from specified module. */
- static struct tracepoint *find_tracepoint_in_module(struct module *mod,
- 						    const char *tp_name)
- {
-@@ -1179,6 +1169,11 @@ static int trace_fprobe_create_internal(int argc, const char *argv[],
- 	if (is_tracepoint) {
- 		ctx->flags |= TPARG_FL_TPOINT;
- 		tpoint = find_tracepoint(symbol, &tp_mod);
-+		/* lock module until register this tprobe. */
-+		if (tp_mod && !try_module_get(tp_mod)) {
-+			tpoint = NULL;
-+			tp_mod = NULL;
-+		}
- 		if (tpoint) {
- 			ctx->funcname = kallsyms_lookup(
- 				(unsigned long)tpoint->probestub,
+If you'd like to generate a patch series, you can refer to thoughtbot
+blogpost at [1].
 
+And you can also add cover letter by passing --cover-letter to
+git-format-patch(1).
+
+Thanks.
+
+[1]: https://thoughtbot.com/blog/send-a-patch-to-someone-using-git-format-p=
+atch
+
+--=20
+An old man doll... just what I always wanted! - Clara
+
+--OR65uIcLb+LKpD3Q
+Content-Type: application/pgp-signature; name=signature.asc
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZ9JKogAKCRD2uYlJVVFO
+o5CjAQCaV/dydXz3zK+4Z4t2QUeb1aEHk8WuYeajHfMSa1ZW7AD+IJLtw//3U6ew
+YxBuPzBVu0EQlugaFb1r38CpHWVx8gA=
+=pIVS
+-----END PGP SIGNATURE-----
+
+--OR65uIcLb+LKpD3Q--
