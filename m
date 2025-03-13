@@ -1,50 +1,63 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE8C226980A;
-	Thu, 13 Mar 2025 16:02:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED9162690F6;
+	Thu, 13 Mar 2025 16:08:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741881737; cv=none; b=ar3bOgBYovCAC+kyoGsvbizhbIpSt/SIkgjxvFylqfFvukir8N8r6sEZXnP2nE3AP9/uSpW/tWljBerO8NSJM5NKOV0ynnNzCE9Q/FStTCzcRycXKS6gqCPKDZbxfCh6YRTlADue5V2VYy6ZqTxQm0P8ng29P4MaUS2YlMzjm+0=
+	t=1741882087; cv=none; b=NjYPLUZYUsV/b3HWiUFCuKBXcQYhPw/vas+ObAIXk89+iP6RdGXVCs/nvdl4fjtVsJFjnGVWPjmX9FHTUkoZSWEv+C8vP3uUbaq1cYIrDQufVwVV7X0ABjEmPqgt5SNLAbzwcvE/vf3lvRank9OWrknTkke+jTx8zaFyDpsGTtI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741881737; c=relaxed/simple;
-	bh=SIwoOnJbCCZD6NLPzZTs8MK5F2JNGdpdSvWQ8Oqdt7k=;
+	s=arc-20240116; t=1741882087; c=relaxed/simple;
+	bh=uiO8My9dexLqKjb5e3gJbZmS4+WUeImqOrR3ZNC2bhg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=euEWiLsjkNedMAshNKM5/B7obtDwnOaBDIUo7+fzF6qrhseVA3dl1K4CjPpF2iPs67W12hkaXwPt1HzS8AvUYmruyEnGufIohjWBerXx22gclLpd31Ipt4j1/Lqt9yNRrv6sewR1U+Zg3sNFRF5G0wlUag1TDVaZ8nMwkSnhS0A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FnuYAtXc; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=SvpwEpD+fgopuc/CwDzqbuQSLclFP3t+xQel5imPvZtVvVI4VLA+1wMvWVr841to3ifnprnH/D7v3KSQqbbvochT6qxnroMuqr2hcWeX/LX8oMAj+Q9i3+EdVBwFEkwd5Sk9oiQAfTrghrupjpDzMCNnp9ojgO2eMewRzYaiCAk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=fail smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KYQSjbi8; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FnuYAtXc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EF852C4CEDD;
-	Thu, 13 Mar 2025 16:02:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741881737;
-	bh=SIwoOnJbCCZD6NLPzZTs8MK5F2JNGdpdSvWQ8Oqdt7k=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=FnuYAtXcv4mrX7gH+rVqZueFOZwmu7zNbeuLL+rzBt0Ym3wTPGutW76g/dTeEgnts
-	 fl/Qx3h2ds9r996R1cLAefj3GAlxTP8ObHpJxxmL2YeBqSXmwSozI+/9S0svALjbrN
-	 YoE+G3mnMJu5tQJYyGSBKyudVzTovgoTyJrtCeJNAvj4cxPZNpd4MZMECI00n8ByBA
-	 my7S6e5iM+Q51hFo1k7l3+tYy7WOAjlIS9eJE0jvqUeq5UDbprCuVrKkE6MPR1QoOU
-	 R+YEeQUj3rfxGdu+xvmdmhGJGW2TBh4PqhzMOc6GAxkY7QOnEfWryU4lDuI54OtsGQ
-	 FAPHAi2E4wa9A==
-Date: Thu, 13 Mar 2025 17:02:12 +0100
-From: Joel Granados <joel.granados@kernel.org>
-To: Vasily Gorbik <gor@linux.ibm.com>
-Cc: Heiko Carstens <hca@linux.ibm.com>, Kees Cook <kees@kernel.org>, 
-	Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	"David S. Miller" <davem@davemloft.net>, Andreas Larsson <andreas@gaisler.com>, 
-	Alexander Gordeev <agordeev@linux.ibm.com>, Christian Borntraeger <borntraeger@linux.ibm.com>, 
-	Sven Schnelle <svens@linux.ibm.com>, Gerald Schaefer <gerald.schaefer@linux.ibm.com>, 
-	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, sparclinux@vger.kernel.org, linux-s390@vger.kernel.org
-Subject: Re: [PATCH v2 6/6] s390: mv s390 sysctls into their own file under
- arch/s390 dir
-Message-ID: <t3q6lsy4tjlp5ngapyguwdzu5arorznl3bgjr3iki3rudetuw5@waddjgfn7vvu>
-References: <20250306-jag-mv_ctltables-v2-0-71b243c8d3f8@kernel.org>
- <20250306-jag-mv_ctltables-v2-6-71b243c8d3f8@kernel.org>
- <20250307152620.9880F75-hca@linux.ibm.com>
- <r73ph4ht5ejeeuj65nxocmqp7pury2mekz2lz3r6fs264s24c4@ransymcrzk2h>
- <your-ad-here.call-01741690967-ext-1293@work.hours>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KYQSjbi8"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1741882086; x=1773418086;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=uiO8My9dexLqKjb5e3gJbZmS4+WUeImqOrR3ZNC2bhg=;
+  b=KYQSjbi8mwLs3nWVL1turjT879E7aeIhOUiSsdeLzU0R6JUs5nF1Tkon
+   2iDWbwprDvWGTIU+TafzgWeZik0vLgSWjp4CrfctxOkBCQVHwm0+TPloV
+   c7K5xzzMgzLpCz+0012pESPFd7t6mxxzHN0hdLSZPpqaYjkgfR5Ej7BAu
+   5+gNbhrpwy8ishmVhiWqCMbDymkwuSDHd2YgYLFvJh1iu7C/leS6sUIna
+   71vQfOGH2ifNrkboLir+jzF38hZg/DZwAkBygI1culiSnYFwCMilrFhCu
+   08nQOAfMKROIwgYXjkR9f5h1M0WvOh4fi9N2L6FGp+hqTASFUZ1e7FHMS
+   Q==;
+X-CSE-ConnectionGUID: XHJz9mtKTUaagkhvg/qCkA==
+X-CSE-MsgGUID: wMjsN0mESxmFmzfFeXfOMg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11372"; a="42919149"
+X-IronPort-AV: E=Sophos;i="6.14,245,1736841600"; 
+   d="scan'208";a="42919149"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Mar 2025 09:08:05 -0700
+X-CSE-ConnectionGUID: 9OOSRdT4QFGZfrX2e2lbSA==
+X-CSE-MsgGUID: arr/YG9GTjSRDu2Gp79T8A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,245,1736841600"; 
+   d="scan'208";a="121211093"
+Received: from lkp-server02.sh.intel.com (HELO a4747d147074) ([10.239.97.151])
+  by fmviesa008.fm.intel.com with ESMTP; 13 Mar 2025 09:08:03 -0700
+Received: from kbuild by a4747d147074 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1tsl6G-0009dC-2b;
+	Thu, 13 Mar 2025 16:08:00 +0000
+Date: Fri, 14 Mar 2025 00:07:57 +0800
+From: kernel test robot <lkp@intel.com>
+To: Nam Cao <namcao@linutronix.de>, Steven Rostedt <rostedt@goodmis.org>,
+	Gabriele Monaco <gmonaco@redhat.com>, john.ogness@linutronix.de,
+	linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	Nam Cao <namcao@linutronix.de>, Petr Mladek <pmladek@suse.com>,
+	Sergey Senozhatsky <senozhatsky@chromium.org>
+Subject: Re: [PATCH 02/10] rv: Let the reactors take care of buffers
+Message-ID: <202503132350.aM5NZ6Vh-lkp@intel.com>
+References: <90868f1dd49680ec63c961ec8c72ceb64f1af091.1741708239.git.namcao@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -53,46 +66,53 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <your-ad-here.call-01741690967-ext-1293@work.hours>
+In-Reply-To: <90868f1dd49680ec63c961ec8c72ceb64f1af091.1741708239.git.namcao@linutronix.de>
 
-On Tue, Mar 11, 2025 at 12:02:47PM +0100, Vasily Gorbik wrote:
-> On Mon, Mar 10, 2025 at 02:41:59PM +0100, Joel Granados wrote:
-> > On Fri, Mar 07, 2025 at 04:26:20PM +0100, Heiko Carstens wrote:
-> > > On Thu, Mar 06, 2025 at 12:29:46PM +0100, joel granados wrote:
-> > > > Move s390 sysctls (spin_retry and userprocess_debug) into their own
-> > > > files under arch/s390. We create two new sysctl tables
-> > > > (2390_{fault,spin}_sysctl_table) which will be initialized with
-> > > > arch_initcall placing them after their original place in proc_root_init.
-> > > > 
-> > > > This is part of a greater effort to move ctl tables into their
-> > > > respective subsystems which will reduce the merge conflicts in
-> > > > kernel/sysctl.c.
-> > > > 
-> > > > Signed-off-by: joel granados <joel.granados@kernel.org>
-> > > > ---
-> > > >  arch/s390/lib/spinlock.c | 18 ++++++++++++++++++
-> > > >  arch/s390/mm/fault.c     | 17 +++++++++++++++++
-> > > >  kernel/sysctl.c          | 18 ------------------
-> > > >  3 files changed, 35 insertions(+), 18 deletions(-)
-> > > 
-> > > Acked-by: Heiko Carstens <hca@linux.ibm.com>
-> > > 
-> > > How should this go upstream? Will you take care of this, or should
-> > > this go via the s390 tree?
-> > 
-> > thx for the review
-> > 
-> > It would be great if you can push it through the s390 tree. However, if
-> > it is not possible to do so, please let me know and I'll add it to the
-> > sysctl-next changes.
-> 
-> I've slightly changed the commit message
-> s390: Move s390 sysctls into their own file under arch/s390
-> 
-> And applied, thank you!
-ok. I'll remove it from my future versions.
-Thx
+Hi Nam,
+
+kernel test robot noticed the following build errors:
+
+[auto build test ERROR on trace/for-next]
+[also build test ERROR on tip/x86/core tip/x86/mm linus/master v6.14-rc6 next-20250313]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Nam-Cao/rv-Add-undef-TRACE_INCLUDE_FILE/20250312-011043
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace for-next
+patch link:    https://lore.kernel.org/r/90868f1dd49680ec63c961ec8c72ceb64f1af091.1741708239.git.namcao%40linutronix.de
+patch subject: [PATCH 02/10] rv: Let the reactors take care of buffers
+config: parisc-randconfig-002-20250313 (https://download.01.org/0day-ci/archive/20250313/202503132350.aM5NZ6Vh-lkp@intel.com/config)
+compiler: hppa-linux-gcc (GCC) 14.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250313/202503132350.aM5NZ6Vh-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202503132350.aM5NZ6Vh-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+   kernel/trace/rv/reactor_printk.c: In function 'rv_printk_reaction':
+>> kernel/trace/rv/reactor_printk.c:20:9: error: implicit declaration of function 'vprintk_deferred'; did you mean '_printk_deferred'? [-Wimplicit-function-declaration]
+      20 |         vprintk_deferred(msg, args);
+         |         ^~~~~~~~~~~~~~~~
+         |         _printk_deferred
+
+
+vim +20 kernel/trace/rv/reactor_printk.c
+
+    14	
+    15	static void rv_printk_reaction(const char *msg, ...)
+    16	{
+    17		va_list args;
+    18	
+    19		va_start(args, msg);
+  > 20		vprintk_deferred(msg, args);
+    21		va_end(args);
+    22	}
+    23	
 
 -- 
-
-Joel Granados
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
