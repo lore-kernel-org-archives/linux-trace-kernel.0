@@ -1,33 +1,28 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F0AC266183;
-	Thu, 13 Mar 2025 11:05:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D25E1EEA28
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 13 Mar 2025 11:15:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741863903; cv=none; b=SeYzX0/BdDSpmjT8pzM6ldWi9OIP7YZbEEEEsJtBFBuxfRE++BwXNr3mNuAKNoXP0+0vMQ/vTL4ADZ0GwgoB4PXxKwAr3wnvWdApyW+yZBRzZauLy7ewk75diUrcO8iiOAi1a0lcOIG1N15gRpoZdrL9/ueLg3613BjoQS5nTjQ=
+	t=1741864542; cv=none; b=iO77t7JNIfkHSEeMnXtm5G5yzLhYqYivysLCGhas1NJ4RWDdm0V+LLi2RrtLeABwZ9oa1mgEzSNtYxc3OOLJgdzL4DIOzhAFuvRvq883lL7jxtrFYSLj8PgawknbVagnvyOjDxJ9oJnhfzwfcn+xjqqpAqroqB/jKrT3Ejw9dM4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741863903; c=relaxed/simple;
-	bh=LMCJFtaWFhDocxmK7YSZdLwpqnzpwliApoktuPoLZvo=;
+	s=arc-20240116; t=1741864542; c=relaxed/simple;
+	bh=GNpYchAuYwmMYYAakf+KN/D2MypHj81WxObaMRuBASs=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Vi8ahLRedxfuuNRzyo82rxwv7ObElPzvFoiC5iwJA+p5PLMLw9ThFoVyXMW+hcWGF7AQg57SqsB7ZNUevrZUdjxKz2BMQgnNfdo5ujWh+jjV/8LxBn3CVtM6FhU8hPNEsGBv3OhvNzcXgVffkFibrxIdascBJbC05ZI+6El+2cE=
+	 MIME-Version:Content-Type; b=gUInFaSuF0yoFNI64Nf3nULuz/ck7Q/HfgFgiLmknyfSrgLwby8LNDfVDKKVjQcMCXAHKemMgwg16Itmch83dBSV1CmLUmY9tEUZYEFNGCgo7mAz3xlJWCwaszCE2ErZLuh/VAuORh1AjxvPxqWmbtLtorzAjbBKXIMZO/Yw0fM=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3C374C4CEDD;
-	Thu, 13 Mar 2025 11:05:01 +0000 (UTC)
-Date: Thu, 13 Mar 2025 07:04:57 -0400
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B5127C4CEDD;
+	Thu, 13 Mar 2025 11:15:40 +0000 (UTC)
+Date: Thu, 13 Mar 2025 07:15:37 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
-To: Bagas Sanjaya <bagasdotme@gmail.com>
-Cc: Purva Yeshi <purvayeshi550@gmail.com>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Jonathan Corbet <corbet@lwn.net>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org
-Subject: Re: [PATCH v3 2/2] docs: tracing: Reduce maxdepth in index
- documentation
-Message-ID: <20250313070457.647c8c57@batman.local.home>
-In-Reply-To: <Z9JKqVvG1iw0bFXR@archie.me>
-References: <20250312124717.7208-1-purvayeshi550@gmail.com>
-	<20250312134907.06d27d78@batman.local.home>
-	<Z9JKqVvG1iw0bFXR@archie.me>
+To: Dan Carpenter <dan.carpenter@linaro.org>
+Cc: linux-trace-kernel@vger.kernel.org
+Subject: Re: [bug report] tracing: Have persistent trace instances save
+ module addresses
+Message-ID: <20250313071537.19ad59df@batman.local.home>
+In-Reply-To: <44c5deaa-b094-4852-90f9-52f3fb10e67a@stanley.mountain>
+References: <44c5deaa-b094-4852-90f9-52f3fb10e67a@stanley.mountain>
 X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -38,20 +33,21 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Thu, 13 Mar 2025 10:02:01 +0700
-Bagas Sanjaya <bagasdotme@gmail.com> wrote:
+On Thu, 13 Mar 2025 11:50:12 +0300
+Dan Carpenter <dan.carpenter@linaro.org> wrote:
 
-> If you'd like to generate a patch series, you can refer to thoughtbot
-> blogpost at [1].
-
-??
-
-This is already a patch series.
-
+>     9421                 tscratch = ring_buffer_meta_scratch(buf->buffer, &scratch_size);
+> --> 9422                 setup_trace_scratch(tr, tscratch, scratch_size);  
 > 
-> And you can also add cover letter by passing --cover-letter to
-> git-format-patch(1).
+> If ring_buffer_alloc_range() fails then scratch_size is uninitialized.
+> This is "harmless".  According to the C standard, it's undefined but in
+> the kernel we would allow it if setup_trace_scratch() is inlined.  Which
+> it probably will be.  The other thing is that if it's not inline the
+> UBSan detector will complain about these.
+> 
+> The compiler basically always initializes stack variables to zero these
+> days so adding an "= 0;" doesn't change runtime at all.
 
-It's simple enough it doesn't need a cover letter.
+Sure.
 
 -- Steve
