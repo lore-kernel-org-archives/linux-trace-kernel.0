@@ -1,112 +1,120 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70F602356D8;
-	Wed, 12 Mar 2025 17:49:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D804134AC;
+	Thu, 13 Mar 2025 01:00:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741801752; cv=none; b=secaKax4Qm8bWyWLzOBOZGLbfHwXqxThuNH3j90Pl3tMpaM+xBbfI6GtsK7OonJiJ5RMKwWX+SAHGpD/Yrxz3Vn4JgGYV6iip6E2Rysh+X1rHWKx0xQcK22nPMnkD7IBw7nL2G74hrh5qvRBxDb0qzq7QdF38GwYownQhF7GRNM=
+	t=1741827616; cv=none; b=HgGQ27CQO3V5CE9Nvp2KOdQMVxaGNcXlxFa/lZTMa+R+NsZlOTXxlfGUSFxbUByDJlMViZJp4/O+Ws9joZwqWSTwedxsv5LS+IgTU6nmYb8V4LZ0a3nWqHzW6rB0+aS+6KjOmgO+A+nhHPG91AvFqvUi1NbwRs2CI/zEQFJw/KY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741801752; c=relaxed/simple;
-	bh=lLJWHEM+0LtiO3tRkYJg2vMxDcl8li5cHF/S91wLMtQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=qfno2KSyGs4e5ubrAVdwen+ULqzK5y3KkKQCiR33SVYRzv9EclZAS2J6gN5oqovDyX9ljZpkfgSQHb/8SHcHEcqDvk7FG8Y6hhpMUbE4uxI2CFLSjFpNtAro+2/egT1rby4VTAN8gSzKPXztFl4nielPYuQfmbJHzz6JvitVwjM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A2264C4CEEA;
-	Wed, 12 Mar 2025 17:49:10 +0000 (UTC)
-Date: Wed, 12 Mar 2025 13:49:07 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Purva Yeshi <purvayeshi550@gmail.com>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Jonathan Corbet <corbet@lwn.net>,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- linux-doc@vger.kernel.org
-Subject: Re: [PATCH v3 2/2] docs: tracing: Reduce maxdepth in index
- documentation
-Message-ID: <20250312134907.06d27d78@batman.local.home>
-In-Reply-To: <20250312124717.7208-1-purvayeshi550@gmail.com>
-References: <20250312124717.7208-1-purvayeshi550@gmail.com>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1741827616; c=relaxed/simple;
+	bh=7xUY1S6zXxsXXT8asLU92YS/TfvLV/gFRXP7obNkQWM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=GGBpprCBQd6asSN7dnTgPcw/blf3GoQ2Efq+XM1gguVYBcgRZzu/HRMoU7tg5fNmqkazyFiUmThG9iHhDdoW1gw/5LGSdl3iN5V1aDDuuui7z8J0pEtapJXL4lyuzjlkkjD1hVu7L8/7xgT66qRjyWCJVCfRTpDIziNt3dhMLpw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sZE6MNvX; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sZE6MNvX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5F1C0C4CEDD;
+	Thu, 13 Mar 2025 01:00:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741827614;
+	bh=7xUY1S6zXxsXXT8asLU92YS/TfvLV/gFRXP7obNkQWM=;
+	h=From:To:Cc:Subject:Date:From;
+	b=sZE6MNvXD8vRI3+AKi4f6VMLXNyuG4M2XRMz93jmTIlfeI2FzUhnDXdLZGmGjJte+
+	 ysFbVDq08W4vEoEF9OZfNvxkin/VWmmhP5FpqdhSLDsXbIDWpGJ68EcAK0OMZdNDcX
+	 DiBX3vUH+jZRUbgMGNtzDW3qK4UpzEfBdELtUmRJ8yH707evO5ozPWcnGgWtbGIIJ9
+	 aTAaVmCnv/iIF6AyMFOELVJRoQbva4rlNpDBWcgY65apXhJ2KfON/ULC14zD2vRb4b
+	 JYNnR3bvkKoAPPYRzQi2/Id8IS4h8kn6TRPpkio3knxzrPyDRJWuLVTo7ZtRZkd9C0
+	 9CAMmxG33aSLg==
+From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Subject: [PATCH] tracing: tprobe-events: Fix leakage of module refcount
+Date: Thu, 13 Mar 2025 10:00:10 +0900
+Message-ID: <174182761071.83274.18334217580449925882.stgit@devnote2>
+X-Mailer: git-send-email 2.43.0
+User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On Wed, 12 Mar 2025 18:17:17 +0530
-Purva Yeshi <purvayeshi550@gmail.com> wrote:
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-> Reduce :maxdepth: from 2 to 1 in index.rst to simplify the table of
-> contents, showing only top-level document titles for better readability.
-> 
-> Signed-off-by: Purva Yeshi <purvayeshi550@gmail.com>
-> ---
->  Documentation/trace/index.rst | 10 +++++-----
->  1 file changed, 5 insertions(+), 5 deletions(-)
-> 
-> diff --git a/Documentation/trace/index.rst b/Documentation/trace/index.rst
-> index 6b268194f..5ddd47ee7 100644
-> --- a/Documentation/trace/index.rst
-> +++ b/Documentation/trace/index.rst
-> @@ -14,7 +14,7 @@ This section provides an overview of Linux tracing mechanisms
->  and debugging approaches.
->  
->  .. toctree::
-> -   :maxdepth: 2
-> +   :maxdepth: 1
+When enabling the tracepoint at loading module, the target module
+refcount is incremented by find_tracepoint_in_module(). But it is
+unnecessary because the module is not unloaded while processing
+module loading callbacks.
+Moreover, the refcount is not decremented in that function.
+To be clear the module refcount handling, move the try_module_get()
+callsite to trace_fprobe_create_internal(), where it is actually
+required.
 
-If you made this the first patch, you would only need to modify one place.
+Fixes: 57a7e6de9e30 ("tracing/fprobe: Support raw tracepoints on future loaded modules")
+Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Cc: stable@vger.kernel.org
+---
+ kernel/trace/trace_fprobe.c |   21 ++++++++-------------
+ 1 file changed, 8 insertions(+), 13 deletions(-)
 
-This is a patch series. If the end result is going to be maxdepth 1,
-you shouldn't add a bunch of maxdepth 2 and then in the next patch make
-them all maxdepth 1 as the only change.
-
-Just change the one maxdepth 1 first, and then you can update the code
-with the new maxdepth of 1.
-
--- Steve
-
-
->  
->     debugging
->     tracepoints
-> @@ -28,7 +28,7 @@ The following are the primary tracing frameworks integrated into
->  the Linux kernel.
->  
->  .. toctree::
-> -   :maxdepth: 2
-> +   :maxdepth: 1
->  
->     ftrace
->     ftrace-design
-> @@ -47,7 +47,7 @@ A detailed explanation of event tracing mechanisms and their
->  applications.
->  
->  .. toctree::
-> -   :maxdepth: 2
-> +   :maxdepth: 1
->  
->     events
->     events-kmem
-> @@ -65,7 +65,7 @@ This section covers tracing features that monitor hardware
->  interactions and system performance.
->  
->  .. toctree::
-> -   :maxdepth: 2
-> +   :maxdepth: 1
->  
->     intel_th
->     stm
-> @@ -85,7 +85,7 @@ These tools allow tracing user-space applications and
->  interactions.
->  
->  .. toctree::
-> -   :maxdepth: 2
-> +   :maxdepth: 1
->  
->     user_events
->  
+diff --git a/kernel/trace/trace_fprobe.c b/kernel/trace/trace_fprobe.c
+index 88a80953ae5e..985ff98272da 100644
+--- a/kernel/trace/trace_fprobe.c
++++ b/kernel/trace/trace_fprobe.c
+@@ -920,13 +920,8 @@ static void __find_tracepoint_module_cb(struct tracepoint *tp, struct module *mo
+ 
+ 	if (!data->tpoint && !strcmp(data->tp_name, tp->name)) {
+ 		data->tpoint = tp;
+-		if (!data->mod) {
++		if (!data->mod)
+ 			data->mod = mod;
+-			if (!try_module_get(data->mod)) {
+-				data->tpoint = NULL;
+-				data->mod = NULL;
+-			}
+-		}
+ 	}
+ }
+ 
+@@ -938,13 +933,7 @@ static void __find_tracepoint_cb(struct tracepoint *tp, void *priv)
+ 		data->tpoint = tp;
+ }
+ 
+-/*
+- * Find a tracepoint from kernel and module. If the tracepoint is in a module,
+- * this increments the module refcount to prevent unloading until the
+- * trace_fprobe is registered to the list. After registering the trace_fprobe
+- * on the trace_fprobe list, the module refcount is decremented because
+- * tracepoint_probe_module_cb will handle it.
+- */
++/* Find a tracepoint from kernel and module. */
+ static struct tracepoint *find_tracepoint(const char *tp_name,
+ 					  struct module **tp_mod)
+ {
+@@ -973,6 +962,7 @@ static void reenable_trace_fprobe(struct trace_fprobe *tf)
+ 	}
+ }
+ 
++/* Find a tracepoint from specified module. */
+ static struct tracepoint *find_tracepoint_in_module(struct module *mod,
+ 						    const char *tp_name)
+ {
+@@ -1179,6 +1169,11 @@ static int trace_fprobe_create_internal(int argc, const char *argv[],
+ 	if (is_tracepoint) {
+ 		ctx->flags |= TPARG_FL_TPOINT;
+ 		tpoint = find_tracepoint(symbol, &tp_mod);
++		/* lock module until register this tprobe. */
++		if (tp_mod && !try_module_get(tp_mod)) {
++			tpoint = NULL;
++			tp_mod = NULL;
++		}
+ 		if (tpoint) {
+ 			ctx->funcname = kallsyms_lookup(
+ 				(unsigned long)tpoint->probestub,
 
