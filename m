@@ -1,387 +1,109 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 961281FAC5A
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 13 Mar 2025 11:39:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89948266B40;
+	Thu, 13 Mar 2025 12:16:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741865985; cv=none; b=brz4thdmaAXuJu1MUAQessmzBwWOfsigbN0IEnDqMC9KZEP1EKwLrC7LoPpV6UmIezGHfdy/wej8LIfDKo/8l6x44MgyLU0IBmmROJU+vS7gUuEYzngaV9gkajuOX6tckapuyfFFyBgeh5TBDSKVc66FmLpOtgKUzqaRF6NtjD8=
+	t=1741868185; cv=none; b=nfzDnRHyaOlz/WuyyV+0ccNHuZbupeSD2Qf6lttm377H0vq9dTU7lkes8Eak4Vx5C6ibnsMRF5A/X8mY0MNrV3/RuV7OiDdVGGk/SkrhU+8gIfxTQVIW1VvvSjLhZMotfzAZcOlatNA4Ldg+Pd1CtLA54o/lQgot8LtjRlE3leY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741865985; c=relaxed/simple;
-	bh=WspJSa+WQloTKKzpPKDm4359IcbTRmm/+F3Z5YD0Zi4=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=fru5IzR3H0tSALwTfT3GeUQzXvJRscgrrLj3jKm1SzijHSDVhQDiUDp2VG7qC/JS3+tm1g0R52tTpf1WtOwbDSZ7pUc513frxGl5/Z4nCicxfejGwquqjeKWXjLI6Oow/oCTGVwKls8AxLnKpsEawkBQOqn4IWGeQ95q73V4EOY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=QZKD4Vpi; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1741868185; c=relaxed/simple;
+	bh=+TIjaWLq+k8j709rR1HauZvIDScpqyb45V6w2bWtKHM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=T4HTWp0tMOU+tbOhz3jTO64af19oJHU+TEEfWNR9QC76xP0IlH01/5QsyaxjAO9b1tNlZkrGw0y29jO8gZV/c7V8dZvoNcbBYOu4OcZqXo/PBG2BPCIyD9syWJ4Gfgzr4lN+FF/5LxV3Ba6gGHoqewd3EKsJWYFiQ7RNZrUjcRU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Roxd87ae; arc=none smtp.client-ip=209.85.214.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QZKD4Vpi"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1741865982;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=WspJSa+WQloTKKzpPKDm4359IcbTRmm/+F3Z5YD0Zi4=;
-	b=QZKD4Vpiwerz/rCNXu/+xQnuYrUg335eeQnAEsSmOkfLzkNw8n4q2VTOIfw35f45PAH/du
-	peqd8hLylCdU8rc8jTaShxn4ajcc6l95U0QqSXFBipO9QGkscgkWojVQmw3Mqiczvi/evS
-	1SaPkCwJt7FMV12pcwkgos9d1aonqJ8=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-682-WsmGMJbXN8CU7ChcjNNkkg-1; Thu, 13 Mar 2025 07:39:41 -0400
-X-MC-Unique: WsmGMJbXN8CU7ChcjNNkkg-1
-X-Mimecast-MFC-AGG-ID: WsmGMJbXN8CU7ChcjNNkkg_1741865980
-Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-43cec217977so4346685e9.0
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 13 Mar 2025 04:39:41 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Roxd87ae"
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-22355618fd9so16202495ad.3;
+        Thu, 13 Mar 2025 05:16:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1741868184; x=1742472984; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=fm8fq5i0vpAjTWwW3jwRc1uPshAS1XnTW97HiaXAENI=;
+        b=Roxd87aezQfpGPSbvyXc8BDi8EwGZR3BYyrtLSU7dE+60ANO/R9XUSeoB1qWpamM4c
+         2gnWCD6uo8MurvmHA57jJbeh2SbyrydJTjPUCHURhI+swI8BOj66w0bmmvZZjVzITsfZ
+         oHaNN4PmlT88Y6GwFT4Ltla+k9dEzTyQXp3wgVzGgcpbFvSJxnVN0mhBpWjKzQmzUn6d
+         WDQtoC2S/Z6GG6r23LcnM+O0wqVMK1fqRdAYhcac49XcokUqDH+ZZbK9OTyJUiwJGc+5
+         HAiVIkgh+0HRq8U/vNM871zvThAuaEYSgMYpxhFlf/4dYmdqe+dAIU6wskhdc6zHQW5F
+         O58Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741865980; x=1742470780;
-        h=mime-version:user-agent:content-transfer-encoding:autocrypt
-         :references:in-reply-to:date:cc:to:from:subject:message-id
+        d=1e100.net; s=20230601; t=1741868184; x=1742472984;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=QBKFPkywWLlyqcwAktL0j35GbM9v3hWST4pP/Wm7RKk=;
-        b=QxEsa+KfJEV/SCsqpVhcwQVL2rIZKUNWZ+GTxcV2DjYte0CD1e3ImTwSEMXUsu2P2Y
-         wZZI8xsgYqI17YJg6nXVT0MmYc1TD89xgBy0KJb7dcqj5J5gr2dszRWfbMSMFxpvquiV
-         20olTjQR9xl1Cz/CJosp0w+zfHc/aigFrLoixYqC5y+hybFhL63Mmo/2EzSYv4TtLldj
-         9NtjrOpZncwKMEHc5dCXmtyn3JMRtHKmlz/8SqI2syKep21L5IV5JfUNOFISqJguMWsx
-         WLjXyw2mQ4gsmHxuV1xtDchfNqYNHsZ144WT5ZGQ9bAai7DNuZx9KMJGBq9h/Ej74z2M
-         il6w==
-X-Forwarded-Encrypted: i=1; AJvYcCVZ94viKjVbKL6uhUvNvjlyOE8IVfIA0Hs6SUR+HCAI/xZQEhR9NPd2+bn0grWFfuDjvAxRgmNpWoeGiANRB6tIr24=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxu++Z4GTzXfN+xpeCLUdW1E9xuc0OllcLODC0vQGwStXG6B6nv
-	7HrNieSy7qyb+afz+L21Pjp4wSG1EWNmNKr+9vLkztLl/TCyl1Igl1hLJ5D3Ld+gWmnyIfQGVCL
-	mfBmtbq3lRd/tNyA/QwOVBRsVe30CSYSmqlBhZrdzoOOMV1uJycjc+zB8iqwq+BZtTcz9WA==
-X-Gm-Gg: ASbGncve5CYJSHSYdYGNCpy1GRpHZIs5pLtbcavrvwAB45LgPyL5pusWTXwaaADiHaD
-	1qY/h1ZDK/TBs3FgE++wXZJMYMbLb4tJnAeUvFWIvolaHZ8mYxy8oTQVxgjKKoqraXmsHS9XPeP
-	AqrC90Ynk1u23I+er9DOHKboI8Nlg+R6vrmpeQwoOte34yJQpWhbmQIkL68v7TE7LW6uxOKknmP
-	ACxVR6E2SUFR65W/jjNPB1IBCSWvl6CTVA8xgEy8e0NbrCr+eBT+Nxp84ZDMv6jzHP2Q8S388cJ
-	OIYLb6qz51bVzb/mx/cGLkhXKz64k11o3oSEhSrYhA==
-X-Received: by 2002:a05:600c:4ec9:b0:43c:fe15:41dd with SMTP id 5b1f17b1804b1-43cfe154363mr125796605e9.6.1741865980202;
-        Thu, 13 Mar 2025 04:39:40 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFjxTTxy7wV75Pg+Ic27UIp9nAkCa7Y0291ZqkbOwBvzG41JZxvnc2mwuuU4wnuQFYwkDO5RQ==
-X-Received: by 2002:a05:600c:4ec9:b0:43c:fe15:41dd with SMTP id 5b1f17b1804b1-43cfe154363mr125796415e9.6.1741865979832;
-        Thu, 13 Mar 2025 04:39:39 -0700 (PDT)
-Received: from gmonaco-thinkpadt14gen3.rmtit.csb ([185.107.56.35])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43d188b22f4sm18014315e9.1.2025.03.13.04.39.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Mar 2025 04:39:39 -0700 (PDT)
-Message-ID: <1bf27354248772fa7b8d15fdb305353f6e212966.camel@redhat.com>
-Subject: Re: [PATCH 02/10] rv: Let the reactors take care of buffers
-From: Gabriele Monaco <gmonaco@redhat.com>
-To: Nam Cao <namcao@linutronix.de>
-Cc: Steven Rostedt <rostedt@goodmis.org>, john.ogness@linutronix.de, 
-	linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org, Petr
- Mladek	 <pmladek@suse.com>, Sergey Senozhatsky <senozhatsky@chromium.org>
-Date: Thu, 13 Mar 2025 12:39:36 +0100
-In-Reply-To: <20250313081659.N-X57_b_@linutronix.de>
-References: <cover.1741708239.git.namcao@linutronix.de>
-	 <90868f1dd49680ec63c961ec8c72ceb64f1af091.1741708239.git.namcao@linutronix.de>
-	 <e3f6e9a2e859e2c65ab960942543b8660f86edbc.camel@redhat.com>
-	 <20250313081659.N-X57_b_@linutronix.de>
-Autocrypt: addr=gmonaco@redhat.com; prefer-encrypt=mutual;
- keydata=mDMEZuK5YxYJKwYBBAHaRw8BAQdAmJ3dM9Sz6/Hodu33Qrf8QH2bNeNbOikqYtxWFLVm0
- 1a0JEdhYnJpZWxlIE1vbmFjbyA8Z21vbmFjb0ByZWRoYXQuY29tPoiZBBMWCgBBFiEEysoR+AuB3R
- Zwp6j270psSVh4TfIFAmbiuWMCGwMFCQWjmoAFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgk
- Q70psSVh4TfJzZgD/TXjnqCyqaZH/Y2w+YVbvm93WX2eqBqiVZ6VEjTuGNs8A/iPrKbzdWC7AicnK
- xyhmqeUWOzFx5P43S1E1dhsrLWgP
-User-Agent: Evolution 3.54.3 (3.54.3-1.fc41)
+        bh=fm8fq5i0vpAjTWwW3jwRc1uPshAS1XnTW97HiaXAENI=;
+        b=UMBXaW/Qfvcgz5XEVvE82OzNSSigI2VcdA5ElKi/ahBzn46gO6P05Q07JpZnwbWcfu
+         w7pv7DkCMlT/DF9YiLMo6+OCQCqmhpWoMXktmUHaxAhoFHJNOzM9P6EJTJQiROY4YmKQ
+         WedSWhlfEbfClzu3/mIV/vr8ltX9EPVqyodl8x+oRnNty5hlXuF/4A7YxgNuM2w+rjpu
+         Di0KqhLW134aYaNuIwJuL2bh2Wpbb0jX5GHXpVgRGAXgGr/VSE7sJV/qxmTOhn00ZRiR
+         cPdK5gNJrsSdDArLs8OsALqYHWja48L/yK9fH3oF4tjtcgnxzCn3XICpp4JH51s0+F+g
+         Je6Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUHgCOvhBfMz33cIN4nFNwULHCFVmOz3Tb/JC0d3/ZUtI/SvF2c9WsnSUobWBUP1pl/DITkb2NZiWc8oA794wl+LEiN@vger.kernel.org, AJvYcCXB7ChE9a4cyMBrRbW4MdU3YtaoRr7Mnd/UCbebyRVGhkHi9yc26D+KLHBW5ogbOkwE0MjmvSVNtrM=@vger.kernel.org, AJvYcCXX4uftehqc7Ji7jJW4xbwFkACXdh4h7TGijyQTTJT47NLM31Itwa8NPm+oS33CXenG6gRHmUlUHLC3NiKy@vger.kernel.org
+X-Gm-Message-State: AOJu0YzLQ+FJ5zOoTepBQHA0FxPCzuP88JKXq1SWUPzmzaCSBKQWHplE
+	dRczVHGSgkh1JbYH5EWvY0p7wcRB7kPAU4Iwvv46NGAg813ABaz+
+X-Gm-Gg: ASbGncuo2eG7siTWqafMmhNw8RTg8U/zxL5/dz+ZzazTdjH/Ym29UdkHkt31LElv3ZF
+	DP+gjvAm3qi8ANXTfVaFOOWYf21YxS+Bxb/rfWpGDcn/kF71ZG3pioAiZfON9xST4Jgln7D0YMJ
+	mai6ePqHIJ3yqt4k+Galn8+XHBqGLKs6NsFskshNzHJU9MQ9h1Z6jlaAD/2uSV3P6cMb+hTkv9B
+	JE+CqilUAws1YhQvMpKq/Px8CjFa32Be5MSpoOTU+TtqaeuhR9BpcCb06/LaC+mzidwXr+7NPF+
+	Rcp/7ajWhQh4rnoDlxIdWhE60pjlgCmN5mhuf82jxpR3hYRdJtGf
+X-Google-Smtp-Source: AGHT+IHQtvAx5vR6EcoVx3cqc3qpwWGM7hmtHRZwrnH2OnV0qoF4IGFFKA3P5vGN9Xmq9qQXGCx1xA==
+X-Received: by 2002:a17:902:e84d:b0:221:78a1:27fb with SMTP id d9443c01a7336-22592e21969mr157466725ad.11.1741868183631;
+        Thu, 13 Mar 2025 05:16:23 -0700 (PDT)
+Received: from [192.168.0.150] ([103.124.138.155])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-225c6ba6c6bsm11691775ad.150.2025.03.13.05.16.20
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 13 Mar 2025 05:16:22 -0700 (PDT)
+Message-ID: <4cc0a072-3eaf-4fbf-a334-012aacf9039f@gmail.com>
+Date: Thu, 13 Mar 2025 19:16:17 +0700
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: FSa1fxNbJa-ve6-oMwEwiQqDkUf4r3gcc6ESWx0QPBU_1741865980
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 2/2] docs: tracing: Reduce maxdepth in index
+ documentation
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Purva Yeshi <purvayeshi550@gmail.com>,
+ Masami Hiramatsu <mhiramat@kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Jonathan Corbet <corbet@lwn.net>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org
+References: <20250312124717.7208-1-purvayeshi550@gmail.com>
+ <20250312134907.06d27d78@batman.local.home> <Z9JKqVvG1iw0bFXR@archie.me>
+ <20250313070457.647c8c57@batman.local.home>
+Content-Language: en-US
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+In-Reply-To: <20250313070457.647c8c57@batman.local.home>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
+On 3/13/25 18:04, Steven Rostedt wrote:
+> On Thu, 13 Mar 2025 10:02:01 +0700
+> Bagas Sanjaya <bagasdotme@gmail.com> wrote:
+> 
+>> If you'd like to generate a patch series, you can refer to thoughtbot
+>> blogpost at [1].
+> 
+> ??
+> 
+> This is already a patch series.
+> 
+>>
+>> And you can also add cover letter by passing --cover-letter to
+>> git-format-patch(1).
+> 
+> It's simple enough it doesn't need a cover letter.
+> 
 
+I mean I'm directing my reply to Purva.
 
-On Thu, 2025-03-13 at 09:16 +0100, Nam Cao wrote:
-> Hi Gabriele,
->=20
-> On Wed, Mar 12, 2025 at 08:58:56AM +0100, Gabriele Monaco wrote:
-> > On Tue, 2025-03-11 at 18:05 +0100, Nam Cao wrote:
-> > > diff --git a/include/rv/da_monitor.h b/include/rv/da_monitor.h
-> > > index 510c88bfabd4..c55d45544a16 100644
-> > > --- a/include/rv/da_monitor.h
-> > > +++ b/include/rv/da_monitor.h
-> > > @@ -16,58 +16,11 @@
-> > > =C2=A0#include <linux/bug.h>
-> > > =C2=A0#include <linux/sched.h>
-> > > =C2=A0
-> > > -#ifdef CONFIG_RV_REACTORS
-> > > -
-> > > -#define DECLARE_RV_REACTING_HELPERS(name,
-> > > type)=09=09=09=09=09=09=09\
-> > > -static char
-> > > REACT_MSG_##name[1024];=09=09=09=09=09=09
-> > > =09=09\
-> > > -
-> > > =09=09=09=09=09=09=09=09
-> > > =09=09=09=09\
-> > > -static inline char *format_react_msg_##name(type curr_state,
-> > > type
-> > > event)=09=09=09\
-> > > -
-> > > {=09=09=09=09=09=09=09=09
-> > > =09=09=09=09\
-> > > -=09snprintf(REACT_MSG_##name,
-> > > 1024,=09=09=09=09=09=09=09\
-> > > -=09=09 "rv: monitor %s does not allow event %s on
-> > > state
-> > > %s\n",=09=09=09\
-> > > -=09=09
-> > > #name,=09=09=09=09=09=09=09=09
-> > > =09=09\
-> > > -=09=09
-> > > model_get_event_name_##name(event),=09=09=09=09
-> > > =09=09\
-> > > -=09=09
-> > > model_get_state_name_##name(curr_state));=09=09=09
-> > > =09=09\
-> > > -=09return
-> > > REACT_MSG_##name;=09=09=09=09=09=09
-> > > =09=09\
-> > > -
-> > > }=09=09=09=09=09=09=09=09
-> > > =09=09=09=09\
-> > > -
-> > > =09=09=09=09=09=09=09=09
-> > > =09=09=09=09\
-> > > -static void cond_react_##name(char
-> > > *msg)=09=09=09=09=09=09=09\
-> > > -
-> > > {=09=09=09=09=09=09=09=09
-> > > =09=09=09=09\
-> > > -=09if
-> > > (rv_##name.react)=09=09=09=09=09=09
-> > > =09=09=09\
-> > > -
-> > > =09=09rv_##name.react(msg);=09=09=09=09
-> > > =09=09=09=09\
-> > > -
-> > > }=09=09=09=09=09=09=09=09
-> > > =09=09=09=09\
-> > > -
-> > > =09=09=09=09=09=09=09=09
-> > > =09=09=09=09\
-> > > -static bool
-> > > rv_reacting_on_##name(void)=09=09=09=09=09
-> > > =09=09=09\
-> > > -
-> > > {=09=09=09=09=09=09=09=09
-> > > =09=09=09=09\
-> > > -=09return
-> > > rv_reacting_on();=09=09=09=09=09=09
-> > > =09=09\
-> > > -}
-> > > -
-> > > -#else /* CONFIG_RV_REACTOR */
-> > > -
-> > > -#define DECLARE_RV_REACTING_HELPERS(name,
-> > > type)=09=09=09=09=09=09=09\
-> > > -static inline char *format_react_msg_##name(type curr_state,
-> > > type
-> > > event)=09=09=09\
-> > > -
-> > > {=09=09=09=09=09=09=09=09
-> > > =09=09=09=09\
-> > > -=09return
-> > > NULL;=09=09=09=09=09=09=09=09
-> > > =09=09\
-> > > -
-> > > }=09=09=09=09=09=09=09=09
-> > > =09=09=09=09\
-> > > -
-> > > =09=09=09=09=09=09=09=09
-> > > =09=09=09=09\
-> > > -static void cond_react_##name(char
-> > > *msg)=09=09=09=09=09=09=09\
-> > > -
-> > > {=09=09=09=09=09=09=09=09
-> > > =09=09=09=09\
-> > > -
-> > > =09return;=09=09=09=09=09=09
-> > > =09=09=09=09=09\
-> > > -
-> > > }=09=09=09=09=09=09=09=09
-> > > =09=09=09=09\
-> > > -
-> > > =09=09=09=09=09=09=09=09
-> > > =09=09=09=09\
-> > > -static bool
-> > > rv_reacting_on_##name(void)=09=09=09=09=09
-> > > =09=09=09\
-> > > -
-> > > {=09=09=09=09=09=09=09=09
-> > > =09=09=09=09\
-> > > -=09return
-> > > 0;=09=09=09=09=09=09=09=09
-> > > =09=09\
-> > > -}
-> > > -#endif
-> > > -
-> >=20
-> > I don't think you need to remove those helper functions, why not
-> > just
-> > having format_react_msg_ prepare the arguments for react?
->=20
-> I'm not sure what you mean. Making format_react_msg_* a macro that is
-> preprocessed into arguments? Then make cond_react_*() a variadic
-> function,
-> so that we can "pass" format_react_msg_* to it?
->=20
-> Going that way would also need a vreact() variant, as cond_react_*()
-> cannot
-> pass on the variadic arguments to react().
->=20
-> Instead, is it cleaner to do the below?
+Thanks anyway.
 
-Hi Nam,
-
-you're right, I got a bit confused, all I meant was to find a way not
-to repeat the arguments for implicit and per-task monitors.
-What you propose seems perfect to me.
-
-Also for the sake of simplifying things, a bit like you started, we
-could have the reacting_on() check inside cond_react and drop the per-
-monitor function. I believe the initial idea was to have a reacting_on
-toggle for each monitor but since it isn't the case, we don't really
-need it.
-
-Thanks,
-Gabriele
-
->=20
-> diff --git a/include/rv/da_monitor.h b/include/rv/da_monitor.h
-> index 510c88bfabd4..e185ebf894a4 100644
-> --- a/include/rv/da_monitor.h
-> +++ b/include/rv/da_monitor.h
-> @@ -19,22 +19,14 @@
-> =C2=A0#ifdef CONFIG_RV_REACTORS
-> =C2=A0
-> =C2=A0#define DECLARE_RV_REACTING_HELPERS(name,
-> type)=09=09=09=09=09=09=09\
-> -static char
-> REACT_MSG_##name[1024];=09=09=09=09=09=09=09=09\
-> -
-> =09=09=09=09=09=09=09=09=09=09=09=09\
-> -static inline char *format_react_msg_##name(type curr_state, type
-> event)=09=09=09\
-> -
-> {=09=09=09=09=09=09=09=09=09=09=09=09\
-> -=09snprintf(REACT_MSG_##name,
-> 1024,=09=09=09=09=09=09=09\
-> -=09=09 "rv: monitor %s does not allow event %s on state
-> %s\n",=09=09=09\
-> -=09=09
-> #name,=09=09=09=09=09=09=09=09=09=09\
-> -=09=09
-> model_get_event_name_##name(event),=09=09=09=09=09=09\
-> -=09=09
-> model_get_state_name_##name(curr_state));=09=09=09=09=09\
-> -=09return
-> REACT_MSG_##name;=09=09=09=09=09=09=09=09\
-> -
-> }=09=09=09=09=09=09=09=09=09=09=09=09\
-> -
-> =09=09=09=09=09=09=09=09=09=09=09=09\
-> -static void cond_react_##name(char
-> *msg)=09=09=09=09=09=09=09\
-> +static void cond_react_##name(type curr_state, type
-> event)=09=09=09=09=09\
-> =C2=A0{=09=09=09=09=09=09=09=09
-> =09=09=09=09\
-> -=09if
-> (rv_##name.react)=09=09=09=09=09=09=09=09=09\
-> -
-> =09=09rv_##name.react(msg);=09=09=09=09=09=09=09=09\
-> +=09if
-> (!rv_##name.react)=09=09=09=09=09=09=09=09=09\
-> +=09=09return;=09=09=09=09=09
-> =09=09=09=09=09\
-> +=09rv_##name.react("rv: monitor %s does not allow event %s on
-> state %s\n",=09=09=09\
-> +=09=09=09#name,=09=09=09=09=09
-> =09=09=09=09\
-> +=09=09=09model_get_event_name_##name(event),=09
-> =09=09=09=09\
-> +=09=09=09model_get_state_name_##name(curr_state));
-> =09=09=09=09\
-> =C2=A0}=09=09=09=09=09=09=09=09
-> =09=09=09=09\
-> =C2=A0=09=09=09=09=09=09=09=09
-> =09=09=09=09\
-> =C2=A0static bool
-> rv_reacting_on_##name(void)=09=09=09=09=09=09=09=09\
-> @@ -45,12 +37,7 @@ static bool
-> rv_reacting_on_##name(void)=09=09=09=09=09=09=09=09\
-> =C2=A0#else /* CONFIG_RV_REACTOR */
-> =C2=A0
-> =C2=A0#define DECLARE_RV_REACTING_HELPERS(name,
-> type)=09=09=09=09=09=09=09\
-> -static inline char *format_react_msg_##name(type curr_state, type
-> event)=09=09=09\
-> -
-> {=09=09=09=09=09=09=09=09=09=09=09=09\
-> -=09return
-> NULL;=09=09=09=09=09=09=09=09=09=09\
-> -
-> }=09=09=09=09=09=09=09=09=09=09=09=09\
-> -
-> =09=09=09=09=09=09=09=09=09=09=09=09\
-> -static void cond_react_##name(char
-> *msg)=09=09=09=09=09=09=09\
-> +static void cond_react_##name(type curr_state, type
-> event)=09=09=09=09=09\
-> =C2=A0{=09=09=09=09=09=09=09=09
-> =09=09=09=09\
-> =C2=A0=09return;=09=09=09=09=09=09
-> =09=09=09=09=09\
-> =C2=A0}=09=09=09=09=09=09=09=09
-> =09=09=09=09\
-> @@ -171,7 +158,7 @@ da_event_##name(struct da_monitor *da_mon, enum
-> events_##name event)=09=09=09=09\
-> =C2=A0=09}=09=09=09=09=09=09=09
-> =09=09=09=09\
-> =C2=A0=09=09=09=09=09=09=09=09
-> =09=09=09=09\
-> =C2=A0=09if
-> (rv_reacting_on_##name())=09=09=09=09=09=09=09=09\
-> -
-> =09=09cond_react_##name(format_react_msg_##name(curr_state, event));=09=
-=09=09\
-> +=09=09cond_react_##name(curr_state,
-> event);=09=09=09=09=09=09\
-> =C2=A0=09=09=09=09=09=09=09=09
-> =09=09=09=09\
-> =C2=A0=09trace_error_##name(model_get_state_name_##name(curr_state),
-> =09=09=09=09\
-> =C2=A0=09=09=09=C2=A0=C2=A0
-> model_get_event_name_##name(event));=09=09=09=09=09\
-> @@ -203,7 +190,7 @@ static inline bool da_event_##name(struct
-> da_monitor *da_mon, struct task_struct
-> =C2=A0=09}=09=09=09=09=09=09=09
-> =09=09=09=09\
-> =C2=A0=09=09=09=09=09=09=09=09
-> =09=09=09=09\
-> =C2=A0=09if
-> (rv_reacting_on_##name())=09=09=09=09=09=09=09=09\
-> -
-> =09=09cond_react_##name(format_react_msg_##name(curr_state, event));=09=
-=09=09\
-> +=09=09cond_react_##name(curr_state,
-> event);=09=09=09=09=09=09\
-> =C2=A0=09=09=09=09=09=09=09=09
-> =09=09=09=09\
-> =C2=A0=09trace_error_##name(tsk-
-> >pid,=09=09=09=09=09=09=09=09\
-> =C2=A0=09=09=09=C2=A0=C2=A0
-> model_get_state_name_##name(curr_state),=09=09=09=09\
->=20
-> Best regards,
-> Nam
->=20
-
+-- 
+An old man doll... just what I always wanted! - Clara
