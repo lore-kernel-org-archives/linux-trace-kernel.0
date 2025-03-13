@@ -1,167 +1,97 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0E2735944
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 13 Mar 2025 14:10:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7D9C267B6F;
+	Thu, 13 Mar 2025 14:44:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741875047; cv=none; b=U2vKvgyW3vdrzyjbxNvtgl6YhIqtKKG4HbvV42wvwf87iZSaGnqzaSfql6syBUrBCiQghpR1djj6qflTEENdG23HSoNbRWKda0HhPeaxSqyt2cAsuHP3sfclC7RnST/eDdHPNWKVHtzkQ7UwWGRWVu3jS7nEXBzLgi4qU+zdCLE=
+	t=1741877091; cv=none; b=olM095cG4ahaXUPaMeT+n3VjxAakT5NKGvIqWR4TWiTdPxdyA0QaRpSS3mRmbBdZbzIDQyaol1eVRhDzpgtk9F/8RB0VOIuPyHsmf1OmO0RlA1Lit3MqFYb/rB/Mtj7lpUEsEqJ4yO20tUr78v2m3gewlDV1AAsaZoqaSC4I1N0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741875047; c=relaxed/simple;
-	bh=EJUTitUtD81Y4bLuGqwLvb2dQonGPDfF1oZONJIlL4o=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=BpREpiwIuuJwjGoQtfCFVR7ExL5wAQ5pTBINkU8Nun0PUaivWIPRGNaOkQ0elhQsV9GVprW6kDZ2y0yMEz/ii5rPXH5zx+ZA3yb71Ia7o8+Yl+SwMCOlxnT0PwkuTtqbkLBrYMhJZlh/wQYKEkVJe1M7i/U2t+000HeCNxN2iVc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=P1mAiq9r; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="P1mAiq9r"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1741875043;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=dKqf08821exowg6WUhMV197zYPDi7Ol6Vs+4dmfDUQU=;
-	b=P1mAiq9rqQgVIv3jMmT4Cc1UXx0RnXJGdoEMSoexKICI6K88PlGERQFYcFnYMPAO+aSQHC
-	A5w5F15T48iRkjR4XxZRduZVskxfWviBVtow2aIsJ7dwjZoPZfC7hHfknheXTVBlAIcv8L
-	xRXpLwkeR5dgRnr95H0GTneIPTVq50U=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-191-H1vHTVnzNvC551eOvE71Ng-1; Thu,
- 13 Mar 2025 10:10:42 -0400
-X-MC-Unique: H1vHTVnzNvC551eOvE71Ng-1
-X-Mimecast-MFC-AGG-ID: H1vHTVnzNvC551eOvE71Ng_1741875041
-Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id BFEED180AF57;
-	Thu, 13 Mar 2025 14:10:41 +0000 (UTC)
-Received: from fedora.brq.redhat.com (unknown [10.43.17.52])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 5BE6B300376F;
-	Thu, 13 Mar 2025 14:10:39 +0000 (UTC)
-From: Tomas Glozar <tglozar@redhat.com>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: linux-trace-kernel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	John Kacur <jkacur@redhat.com>,
-	Luis Goncalves <lgoncalv@redhat.com>,
-	Costa Shulyupin <costa.shul@redhat.com>,
-	Tomas Glozar <tglozar@redhat.com>
-Subject: [PATCH] rtla: Fix segfault in save_trace_to_file call
-Date: Thu, 13 Mar 2025 15:10:34 +0100
-Message-ID: <20250313141034.299117-1-tglozar@redhat.com>
+	s=arc-20240116; t=1741877091; c=relaxed/simple;
+	bh=l7GsMMZMGmSfErdZ8McttU2Xh1wov44VSJprx2ImFro=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=YsZN6z2ydUQkM380OxkMzXU41IGGlizaegVEin5M6BNhXINseU0XCpeX1CwV08eIZiZKKdQAy3rYN4tS0paa2AMl6eadpSiLGieKoFEMy6EwEmt2fZRP4/sqmAssnmWEpwqsoW6q92iZz1GZ7AlOfa4IKcAiTfqRMFJDddMJkNM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F2084C4CEDD;
+	Thu, 13 Mar 2025 14:44:49 +0000 (UTC)
+Date: Thu, 13 Mar 2025 10:44:46 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Tengda Wu <wutengda@huaweicloud.com>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Zheng Yejian <zhengyejian1@huawei.com>,
+ linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] tracing: Correct the refcount for hist/hist_debug file
+ if single_open() fails
+Message-ID: <20250313104446.7b31820e@batman.local.home>
+In-Reply-To: <20250313103719.1191073-1-wutengda@huaweicloud.com>
+References: <20250313103719.1191073-1-wutengda@huaweicloud.com>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Running rtla with exit on threshold, but without saving trace leads to a
-segmenetation fault:
+On Thu, 13 Mar 2025 10:37:19 +0000
+Tengda Wu <wutengda@huaweicloud.com> wrote:
 
-$ rtla timerlat hist -T 10
-...
-Max timerlat IRQ latency from idle: 4.29 us in cpu 0
-Segmentation fault
+> The function event_{hist,hist_debug}_open() maintains the refcount of
+> 'file->tr' and 'file' through tracing_open_file_tr(), but it does not
+> roll back these counts when the subsequent single_open() call fails,
+> leading to a refcount leak.
+> 
+> A very obvious case is that if the hist/hist_debug file belongs to a
+> certain instance, the failure of single_open() will prevent the deletion
+> of that instance, as it relies on the condition 'tr->ref == 1' within
+> __remove_instance().
+> 
+> Fix this by calling tracing_release_file_tr() to correct the refcount
+> when single_open() fails.
+> 
+> Fixes: 1cc111b9cddc ("tracing: Fix uaf issue when open the hist or hist_debug file")
+> Signed-off-by: Tengda Wu <wutengda@huaweicloud.com>
+> Cc: stable@vger.kernel.org # v6.7+
+> ---
+>  kernel/trace/trace_events_hist.c | 9 +++++++--
+>  1 file changed, 7 insertions(+), 2 deletions(-)
+> 
+> diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events_hist.c
+> index ad7419e24055..900b06fa8505 100644
+> --- a/kernel/trace/trace_events_hist.c
+> +++ b/kernel/trace/trace_events_hist.c
+> @@ -5702,8 +5702,10 @@ static int event_hist_open(struct inode *inode, struct file *file)
+>  	/* Clear private_data to avoid warning in single_open() */
+>  	file->private_data = NULL;
+>  	ret = single_open(file, hist_show, hist_file);
+> -	if (ret)
+> +	if (ret) {
+>  		kfree(hist_file);
+> +		tracing_release_file_tr(inode, file);
+> +	}
 
-This is caused by null pointer deference in the call of
-save_trace_to_file, which attempts to dereference an uninitialized
-osnoise_tool variable:
+Hmm, this function has a couple more error path exits after taking the
+ref count. If this is to be fixed, let's fix it completely. Each of
+those error paths need to call tracing_release_file_tr().
 
-save_trace_to_file(record->trace.inst, params->trace_output);
-                   ^ this is uninitialized if params->trace_output is
-                     not set
+-- Steve
 
-Fix this by not attempting to dereference "record" if it is NULL and
-passing NULL instead. As a safety measure, the first field is also
-checked for NULL inside save_trace_to_file.
 
-Fixes: dc4d4e7c72d1 ("rtla: Refactor save_trace_to_file")
-Signed-off-by: Tomas Glozar <tglozar@redhat.com>
----
-Note: As this fixes a commit in linux-next, the Fixes commit ID might
-have to be adjusted.
-
- tools/tracing/rtla/src/osnoise_hist.c  | 3 ++-
- tools/tracing/rtla/src/osnoise_top.c   | 3 ++-
- tools/tracing/rtla/src/timerlat_hist.c | 3 ++-
- tools/tracing/rtla/src/timerlat_top.c  | 3 ++-
- tools/tracing/rtla/src/trace.c         | 2 +-
- 5 files changed, 9 insertions(+), 5 deletions(-)
-
-diff --git a/tools/tracing/rtla/src/osnoise_hist.c b/tools/tracing/rtla/src/osnoise_hist.c
-index 7c6ef67ef3e6..f4c9051c33c4 100644
---- a/tools/tracing/rtla/src/osnoise_hist.c
-+++ b/tools/tracing/rtla/src/osnoise_hist.c
-@@ -983,7 +983,8 @@ int osnoise_hist_main(int argc, char *argv[])
- 
- 	if (osnoise_trace_is_off(tool, record)) {
- 		printf("rtla osnoise hit stop tracing\n");
--		save_trace_to_file(record->trace.inst, params->trace_output);
-+		save_trace_to_file(record ? record->trace.inst : NULL,
-+				   params->trace_output);
- 	}
- 
- out_hist:
-diff --git a/tools/tracing/rtla/src/osnoise_top.c b/tools/tracing/rtla/src/osnoise_top.c
-index 0eeefbbbf317..dacec2f99017 100644
---- a/tools/tracing/rtla/src/osnoise_top.c
-+++ b/tools/tracing/rtla/src/osnoise_top.c
-@@ -813,7 +813,8 @@ int osnoise_top_main(int argc, char **argv)
- 
- 	if (osnoise_trace_is_off(tool, record)) {
- 		printf("osnoise hit stop tracing\n");
--		save_trace_to_file(record->trace.inst, params->trace_output);
-+		save_trace_to_file(record ? record->trace.inst : NULL,
-+				   params->trace_output);
- 	}
- 
- out_top:
-diff --git a/tools/tracing/rtla/src/timerlat_hist.c b/tools/tracing/rtla/src/timerlat_hist.c
-index 93d0c9e45020..822c068b4776 100644
---- a/tools/tracing/rtla/src/timerlat_hist.c
-+++ b/tools/tracing/rtla/src/timerlat_hist.c
-@@ -1473,7 +1473,8 @@ int timerlat_hist_main(int argc, char *argv[])
- 		if (!params->no_aa)
- 			timerlat_auto_analysis(params->stop_us, params->stop_total_us);
- 
--		save_trace_to_file(record->trace.inst, params->trace_output);
-+		save_trace_to_file(record ? record->trace.inst : NULL,
-+				   params->trace_output);
- 	}
- 
- out_hist:
-diff --git a/tools/tracing/rtla/src/timerlat_top.c b/tools/tracing/rtla/src/timerlat_top.c
-index 3894ac37d81c..c3196a0bb585 100644
---- a/tools/tracing/rtla/src/timerlat_top.c
-+++ b/tools/tracing/rtla/src/timerlat_top.c
-@@ -1295,7 +1295,8 @@ int timerlat_top_main(int argc, char *argv[])
- 		if (!params->no_aa)
- 			timerlat_auto_analysis(params->stop_us, params->stop_total_us);
- 
--		save_trace_to_file(record->trace.inst, params->trace_output);
-+		save_trace_to_file(record ? record->trace.inst : NULL,
-+				   params->trace_output);
- 	} else if (params->aa_only) {
- 		/*
- 		 * If the trace did not stop with --aa-only, at least print the
-diff --git a/tools/tracing/rtla/src/trace.c b/tools/tracing/rtla/src/trace.c
-index 74ed2f6208ba..69cbc48d53d3 100644
---- a/tools/tracing/rtla/src/trace.c
-+++ b/tools/tracing/rtla/src/trace.c
-@@ -75,7 +75,7 @@ int save_trace_to_file(struct tracefs_instance *inst, const char *filename)
- 	int out_fd, in_fd;
- 	int retval = -1;
- 
--	if (!filename)
-+	if (!inst || !filename)
- 		return 0;
- 
- 	in_fd = tracefs_instance_file_open(inst, file, O_RDONLY);
--- 
-2.48.1
+>  
+>  	return ret;
+>  }
+> @@ -5979,7 +5981,10 @@ static int event_hist_debug_open(struct inode *inode, struct file *file)
+>  
+>  	/* Clear private_data to avoid warning in single_open() */
+>  	file->private_data = NULL;
+> -	return single_open(file, hist_debug_show, file);
+> +	ret = single_open(file, hist_debug_show, file);
+> +	if (ret)
+> +		tracing_release_file_tr(inode, file);
+> +	return ret;
+>  }
+>  
+>  const struct file_operations event_hist_debug_fops = {
 
