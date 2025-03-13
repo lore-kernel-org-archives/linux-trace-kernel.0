@@ -1,140 +1,111 @@
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67B4F2620C1
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 13 Mar 2025 08:50:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AFAB266578;
+	Thu, 13 Mar 2025 10:51:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741855820; cv=none; b=cRM5XyWdo3st8qqWUSYzIsD1ObAyjuYziRj9EpFLIT1Sye5AD/eA7vFU1NjdncFCRZhszfsSYkjJnpK6JNeQ2iczCilbD4HuwFXwuMCcytQg9+VhBESihES6Rhb37HS5B3Vq3prQQMfeYKY34XX0Bl34D/KlLptjfLHV/Ysidog=
+	t=1741863068; cv=none; b=W/9OI+7xFVulpgFfAjGL19u+VXsMcOqjUGvfHpGmImKdqHfO5yy4D3fORSlJ2FSxJ8jPfIUvlUYBkJWxwYDLsgk0jqd6w/wG5k2ogl4ySwmrfcDR3LKgRPlX2nd2GiA49JB1avW0CwXPW7weg7e6q6/HYSQUy8vzMzaau+FOenk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741855820; c=relaxed/simple;
-	bh=79GHDmBWysM/3jVf+zt1nRrMiKGwdFe0zoLTIR2YYtA=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=bdRuImg6i1Fcx1ynaV1CQT1iy5RV8TZ9Izgg6g8v8PCy9JRVprfz8HPBhDbA+dqpw9EydY7yZIW22TzzeyBbD2lekKP/jXAyAXC1J7F8Jk0IBq7jPTxaVJ97g7+ijNNOYZLU6gFG/1BI/lJjpq94xQSLvAHcM9xW2eyChUe4CM0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=id7DepZO; arc=none smtp.client-ip=209.85.221.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="id7DepZO"
-Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-3914aba1ce4so525297f8f.2
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 13 Mar 2025 01:50:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1741855816; x=1742460616; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=wmkjdIv7fv9Uqg4OxsprnahPlrw/JaEwOjqhTm503qk=;
-        b=id7DepZO8bwCQ+S4+dEUovtHJHKutrQaMOy5Kwre0FCEtGK3jpn+GhwPvar5pPBrAO
-         /jdujwf2SIWureyeAKdQMEDI3IfLDagUT7JzNFVbydzGzZn6TQFzruLG+4qAFUXFoOa9
-         InAn75QxJJvDL2Tv1G/MP8HiR/EwmeM+zkI21IWlXN71PflMDAlRdk0yuhSVibP7W4Hy
-         /G9B6lJsP+GWEJmOgFLKczALDLB1UxLBiEKDyPsysQXBD3yhOg2V9/lVId64ryqnFS3/
-         OyNA3Xw1n/StgjezojA3UM3WbdL5QMfsTCOBQ1xNipuKnW8uQRspAgdu2ffFxWVc83Ij
-         k7Ig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741855816; x=1742460616;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=wmkjdIv7fv9Uqg4OxsprnahPlrw/JaEwOjqhTm503qk=;
-        b=qXBhbc1pVRpawYSlsEJX7JwggFFnCNboclkRZz4GUjhrlE18fCasnbzZfTCbaw7z7W
-         9piOG4oNjS0KteJOXfl9XcUygXhPPW3npU17K0Ni/zrx1DWkZXwy/e7MkYESwoecGR4j
-         TKKl8KTnEHA082mU/gCWLQaGCpqk2ijG4k6RST2xf2VtPYw7hpe4F6+SshOT8kNspNDt
-         0XRcT7FjF5jdPkF+anTntUV0FXdKqww95LsyRTZ9/gzcPBx6oOr7lnR/6aWx6fLzN5JI
-         XKPyDiD/jOXxBQkdofzWHrnXUhF8tQF2MhKawVvxy8FTnVe0InRWqE5wX++eMxjadWHY
-         Crxg==
-X-Gm-Message-State: AOJu0YzAO5fcGi4RgGnkyq3HpoQhwCALSt/TNYyHMjb1cv6sUBGUD/ac
-	3xZUp5SYolaUzZ4NNwJMNfJ16VvR30VcBT1OsG62TzDIT+GfBQbhpUTs14RcFKA=
-X-Gm-Gg: ASbGncuPWRX2Lp0NvRPwS7/BSrNwJH/EmG/I++HrdCnAcQ5hMdBQS3ztmcISqgwZbWI
-	icmMYgyNBRAxBgUhtJPi3evueGblg+pg6DDmu13MrUHJ6kbm88Av9UUDnYjfps0zcZT68jK/I6P
-	1rA60pLhGeiFcpIJ6aC9HnYsCSg9zOxgtg9nuRn0Eji4YK2PfXk8M2Qr4VEbh8vuxZ6jzYL8uWu
-	ge7vRgml8TYX79LX/tW4TQ+XZF6N6hxhaULOpYW8Kgmgya/8lsi1D1vWJqcmAR1IZWBUxYgOPFZ
-	fNvw2fyPJ3AATWtCesKOkooBp74vXuQUdjdgaxA8ydBTtQp9Zw==
-X-Google-Smtp-Source: AGHT+IHEQ0kPh8U2Ut8pvkSdI7mQEg7p1aceM0zbPZaSu8Tipe96jusCA4PEZATBihVbXbVtlBOpBA==
-X-Received: by 2002:a05:6000:402a:b0:38f:2efb:b829 with SMTP id ffacd0b85a97d-39132db8f39mr20521140f8f.50.1741855816527;
-        Thu, 13 Mar 2025 01:50:16 -0700 (PDT)
-Received: from localhost ([196.207.164.177])
-        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-395cb318af0sm1360326f8f.73.2025.03.13.01.50.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Mar 2025 01:50:16 -0700 (PDT)
-Date: Thu, 13 Mar 2025 11:50:12 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: linux-trace-kernel@vger.kernel.org
-Subject: [bug report] tracing: Have persistent trace instances save module
- addresses
-Message-ID: <44c5deaa-b094-4852-90f9-52f3fb10e67a@stanley.mountain>
+	s=arc-20240116; t=1741863068; c=relaxed/simple;
+	bh=VlSKajxwCcrAGC2H4wSEe/GQJ2Aq09jTQ6WAdOURlA4=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=MxpK3LbHL2LlvOv56MvoD+u9b43TdtgXj7POSeHXsKWpJUud56weJwgHgtjn7Y10H2VUIadcq9JylYBfu5qTJ5gfFolv+2DkRujX+05z/f+VcPTEYQ/C/7LrTFDpnM8VwG9SJaaMd0jZIrIhWxQr4uF9mRULTIHhVYHO3TenzFU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.93.142])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4ZD46G4ZFDz4f3jYl;
+	Thu, 13 Mar 2025 18:50:46 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.75])
+	by mail.maildlp.com (Postfix) with ESMTP id B01CC1A0D4C;
+	Thu, 13 Mar 2025 18:51:03 +0800 (CST)
+Received: from huawei.com (unknown [10.67.174.45])
+	by APP2 (Coremail) with SMTP id Syh0CgBHUGORuNJn1k9ZGQ--.22745S2;
+	Thu, 13 Mar 2025 18:51:03 +0800 (CST)
+From: Tengda Wu <wutengda@huaweicloud.com>
+To: Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Zheng Yejian <zhengyejian1@huawei.com>,
+	linux-trace-kernel@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] tracing: Correct the refcount for hist/hist_debug file if single_open() fails
+Date: Thu, 13 Mar 2025 10:37:19 +0000
+Message-Id: <20250313103719.1191073-1-wutengda@huaweicloud.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:Syh0CgBHUGORuNJn1k9ZGQ--.22745S2
+X-Coremail-Antispam: 1UD129KBjvJXoW7Aw1kur43JrW8Jr4kJrW3GFg_yoW8CF45pa
+	95Jrs8Kr18JF1vg3Z7Aan7u34fC3yktrW7Wa4Du34fJrn8X34FqanrKrW5ZF1YqrZ5XrWj
+	va1jgFyjkrWUZaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUyEb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7Cj
+	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
+	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
+	6I80ewAv7VC0I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
+	Cjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxkF7I0En4kS14v26r126r1DMxAIw28IcxkI
+	7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxV
+	Cjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY
+	6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6x
+	AIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY
+	1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU1yE_tUUUUU==
+X-CM-SenderInfo: pzxwv0hjgdqx5xdzvxpfor3voofrz/
 
-Hello Steven Rostedt,
+The function event_{hist,hist_debug}_open() maintains the refcount of
+'file->tr' and 'file' through tracing_open_file_tr(), but it does not
+roll back these counts when the subsequent single_open() call fails,
+leading to a refcount leak.
 
-Commit dca91c1c5468 ("tracing: Have persistent trace instances save
-module addresses") from Mar 5, 2025 (linux-next), leads to the
-following Smatch static checker warning:
+A very obvious case is that if the hist/hist_debug file belongs to a
+certain instance, the failure of single_open() will prevent the deletion
+of that instance, as it relies on the condition 'tr->ref == 1' within
+__remove_instance().
 
-	kernel/trace/trace.c:9422 allocate_trace_buffer()
-	error: uninitialized symbol 'scratch_size'.
+Fix this by calling tracing_release_file_tr() to correct the refcount
+when single_open() fails.
 
-kernel/trace/trace.c
-    9403 static int
-    9404 allocate_trace_buffer(struct trace_array *tr, struct array_buffer *buf, int size)
-    9405 {
-    9406         enum ring_buffer_flags rb_flags;
-    9407         struct trace_scratch *tscratch;
-    9408         unsigned int scratch_size;
-    9409 
-    9410         rb_flags = tr->trace_flags & TRACE_ITER_OVERWRITE ? RB_FL_OVERWRITE : 0;
-    9411 
-    9412         buf->tr = tr;
-    9413 
-    9414         if (tr->range_addr_start && tr->range_addr_size) {
-    9415                 /* Add scratch buffer to handle 128 modules */
-    9416                 buf->buffer = ring_buffer_alloc_range(size, rb_flags, 0,
-    9417                                                       tr->range_addr_start,
-    9418                                                       tr->range_addr_size,
-    9419                                                       struct_size(tscratch, entries, 128));
-    9420 
-    9421                 tscratch = ring_buffer_meta_scratch(buf->buffer, &scratch_size);
---> 9422                 setup_trace_scratch(tr, tscratch, scratch_size);
+Fixes: 1cc111b9cddc ("tracing: Fix uaf issue when open the hist or hist_debug file")
+Signed-off-by: Tengda Wu <wutengda@huaweicloud.com>
+Cc: stable@vger.kernel.org # v6.7+
+---
+ kernel/trace/trace_events_hist.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-If ring_buffer_alloc_range() fails then scratch_size is uninitialized.
-This is "harmless".  According to the C standard, it's undefined but in
-the kernel we would allow it if setup_trace_scratch() is inlined.  Which
-it probably will be.  The other thing is that if it's not inline the
-UBSan detector will complain about these.
+diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events_hist.c
+index ad7419e24055..900b06fa8505 100644
+--- a/kernel/trace/trace_events_hist.c
++++ b/kernel/trace/trace_events_hist.c
+@@ -5702,8 +5702,10 @@ static int event_hist_open(struct inode *inode, struct file *file)
+ 	/* Clear private_data to avoid warning in single_open() */
+ 	file->private_data = NULL;
+ 	ret = single_open(file, hist_show, hist_file);
+-	if (ret)
++	if (ret) {
+ 		kfree(hist_file);
++		tracing_release_file_tr(inode, file);
++	}
+ 
+ 	return ret;
+ }
+@@ -5979,7 +5981,10 @@ static int event_hist_debug_open(struct inode *inode, struct file *file)
+ 
+ 	/* Clear private_data to avoid warning in single_open() */
+ 	file->private_data = NULL;
+-	return single_open(file, hist_debug_show, file);
++	ret = single_open(file, hist_debug_show, file);
++	if (ret)
++		tracing_release_file_tr(inode, file);
++	return ret;
+ }
+ 
+ const struct file_operations event_hist_debug_fops = {
+-- 
+2.34.1
 
-The compiler basically always initializes stack variables to zero these
-days so adding an "= 0;" doesn't change runtime at all.
-
-    9423 
-    9424                 /*
-    9425                  * This is basically the same as a mapped buffer,
-    9426                  * with the same restrictions.
-    9427                  */
-    9428                 tr->mapped++;
-    9429         } else {
-    9430                 buf->buffer = ring_buffer_alloc(size, rb_flags);
-    9431         }
-    9432         if (!buf->buffer)
-    9433                 return -ENOMEM;
-    9434 
-    9435         buf->data = alloc_percpu(struct trace_array_cpu);
-    9436         if (!buf->data) {
-    9437                 ring_buffer_free(buf->buffer);
-    9438                 buf->buffer = NULL;
-    9439                 return -ENOMEM;
-    9440         }
-    9441 
-    9442         /* Allocate the first page for all buffers */
-    9443         set_buffer_entries(&tr->array_buffer,
-    9444                            ring_buffer_size(tr->array_buffer.buffer, 0));
-    9445 
-    9446         return 0;
-    9447 }
-
-regards,
-dan carpenter
