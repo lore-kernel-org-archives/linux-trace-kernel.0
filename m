@@ -1,75 +1,75 @@
-Received: from relmlie5.idc.renesas.com (relmlor1.renesas.com [210.160.252.171])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8C93A1C861D;
-	Fri, 14 Mar 2025 09:59:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.160.252.171
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CCE73C6BA;
+	Fri, 14 Mar 2025 12:25:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741946364; cv=none; b=raaOi8f77Ox8vaJlU4LK/t/483CwU3a+W0sigjSIFEvZUaqtjHvVm7Vo+a46wg048LR9G7XWMOpnzRBxb+Wv03uOLH1HpuWPNnFTB6aLsy6yMYfT74LPs+3JrNrqpHt+aLBe2tArMiwefevvMg5JUiA01iRhoJRIhTp15K9YgKc=
+	t=1741955141; cv=none; b=PPHAkSR2eVpFs1t7qvhyXEo+NilAYkj9suhrZMZ2aMD9YwqxHj7ae7BlMeO4kwiGG1m2/fNciXvO+0ebNXnyaugr5xOfJ/qwOV+cZ8hfS2kbDy2KieOM8vOWl0VjiTPJNRmqNuFf4hBk/x38BlXjbDtXt2NYgytG0+rLzX+tbfU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741946364; c=relaxed/simple;
-	bh=BfJs3xJ/8+3DBAd628hTkwQQpWB7LTqi4Flk588dWvo=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=AgQRVmAAe5oDSwSFURW2FDhL9SrToKBCjrLKuMIisqDNxy61OKtCSIpFkFi0VPrKxdtVkB2T/mT2GzjZywMzdzTIRl31hR4IbDZ+7rJgu3ctccmi4iL+sppIik+DsUm4kWiFyNypRRyuLN1E45PBmT5E35JbMKjPz655lN+Am2M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com; spf=pass smtp.mailfrom=bp.renesas.com; arc=none smtp.client-ip=210.160.252.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bp.renesas.com
-X-CSE-ConnectionGUID: g2FWTGohR9eXJyPCkx3HuA==
-X-CSE-MsgGUID: mTHgU7qSSXezUobjR1s75w==
-Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
-  by relmlie5.idc.renesas.com with ESMTP; 14 Mar 2025 18:59:13 +0900
-Received: from localhost.localdomain (unknown [10.226.92.208])
-	by relmlir5.idc.renesas.com (Postfix) with ESMTP id 848B6401FD9E;
-	Fri, 14 Mar 2025 18:59:11 +0900 (JST)
-From: Biju Das <biju.das.jz@bp.renesas.com>
-To: rostedt@goodmis.org,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Cc: akpm@linux-foundation.org,
-	mark.rutland@arm.com,
-	mathieu.desnoyers@efficios.com,
-	mhiramat@kernel.org,
-	biju.das.jz@bp.renesas.com
-Subject: [PATCH v4 0/8] ring-buffer/tracing: Save module information in persistent memory
-Date: Fri, 14 Mar 2025 09:59:04 +0000
-Message-ID: <20250305164539.379008535@goodmis.org> (raw)
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250305164539.379008535@goodmis.org>
-References: <20250305164539.379008535@goodmis.org>
+	s=arc-20240116; t=1741955141; c=relaxed/simple;
+	bh=C3ajX4JAUrPquYgWiiRnIxeWnSa1+l96cAGrlH5vXnE=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=gCwV5gblvJ0lEjDKedm5fkUJjKrtgZdD4KkI1gn3HWPWJl88+mtdZtCzwA7jIXbvc6HCejPezODhNaUTnl1S1pb9WgJU6vN7tI1AVWnAcbYb2hFGJYAjFGXeYbij1wbIMx7S+9TualLCVNodp1cxNH3ifg+5CAyvfG7xE+RG33g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 215A4C4CEE3;
+	Fri, 14 Mar 2025 12:25:37 +0000 (UTC)
+Date: Fri, 14 Mar 2025 08:25:34 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Petr Mladek <pmladek@suse.com>
+Cc: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>, linux-mm@kvack.org, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Andrew Morton <akpm@linux-foundation.org>, Michael Petlan
+ <mpetlan@redhat.com>, Veronika Molnarova <vmolnaro@redhat.com>, Suren
+ Baghdasaryan <surenb@google.com>, Rasmus Villemoes
+ <linux@rasmusvillemoes.dk>, Andy Shevchenko
+ <andriy.shevchenko@linux.intel.com>, Tamir Duberstein <tamird@gmail.com>,
+ Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [RESEND][PATCH] tracing: gfp: Remove duplication of recording
+ GFP flags
+Message-ID: <20250314082534.57ef07c4@batman.local.home>
+In-Reply-To: <20250313125313.4f3d98f4@batman.local.home>
+References: <20250225135611.1942b65c@gandalf.local.home>
+	<Z9L5HsVzQ0bVZtjp@pathway.suse.cz>
+	<20250313125313.4f3d98f4@batman.local.home>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Message-ID: <20250314095904.hMaUc3cXhr61SvDz_MN3Az8hojWmC8zsKuFudYNTIIw@z>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-From: Steven Rostedt <rostedt@goodmis.org>
+On Thu, 13 Mar 2025 12:53:13 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
+> > --- a/include/trace/events/mmflags.h
+> > +++ b/include/trace/events/mmflags.h
+> > @@ -101,7 +101,7 @@ TRACE_DEFINE_ENUM(___GFP_LAST_BIT);
+> >  	gfpflag_string(GFP_DMA32),		\
+> >  	gfpflag_string(__GFP_RECLAIM),		\
+> >  	TRACE_GFP_FLAGS				\
+> > -	{ 0, "none" }
+> > +	{ 0, NULL }
+> >  
+> >  #define show_gfp_flags(flags)						\
+> >  	(flags) ? __print_flags(flags, "|", __def_gfpflag_names		\
+> > 
+> > It seems to be safe because the callers end up the cycle when .name == NULL.
+> > 
+> > I think that it actually allows to remove similar trailing {} but I am not sure
+> > if we want it.  
+> 
+> Hmm, I could get rid of that last one with this patch. What do you think?
 
-> This updates the persistent instance to record what modules were
-> loaded and what addresses they were loaded at.
+OK, I think this is too hacky, and it only affects tracing if there's a
+flag not defined (which never happened so I didn't see this issue).
 
+I'll just go with your approach.
 
+You want to send a formal patch?
 
-This series is giving build error on linux-next for 2 days(next-20250314
-and next-20250313) on Renesas RZ/G3E SMARC EVK platform (ARM64)
-
-Reverting trace related commits fixes the build issue.
-
-build-errors:
-kernel/trace/trace.c: In function ‘save_mod’:
-kernel/trace/trace.c:6041:45: error: invalid use of undefined type ‘struct module’
- 6041 |         entry->mod_addr = (unsigned long)mod->mem[MOD_TEXT].base;
-      |                                             ^~
-  CC      net/ethtool/phc_vclocks.o
-kernel/trace/trace.c:6041:51: error: ‘MOD_TEXT’ undeclared (first use in this function)
- 6041 |         entry->mod_addr = (unsigned long)mod->mem[MOD_TEXT].base;
-      |                                                   ^~~~~~~~
-kernel/trace/trace.c:6041:51: note: each undeclared identifier is reported only once for each function it appears in
-  CC      fs/proc/cpuinfo.o
-
- 
- 
-
-
+-- Steve
