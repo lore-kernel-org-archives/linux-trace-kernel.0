@@ -1,166 +1,134 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A4B52E3390;
-	Thu, 13 Mar 2025 16:53:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98A5A2E3383;
+	Fri, 14 Mar 2025 00:57:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741884801; cv=none; b=mN9095mdC2W8aqNPmF0rh0sTsT4Gp2cNVK0umgVeidWYrJuFg/w9uGz0mV6HHqmPdPzJyZOEQe6WAnFPU5StUVPzCjEOmBFgGBBuuCvkVXa/D5ECUkogBKdowgjMC+uSCfB1VIKVNlJ5h856LLPzpmQ2SmpKxs0tHnchf8cNyM0=
+	t=1741913851; cv=none; b=iZNLlfW+wMH8Aua5ahlS+SJx8SoWX7P95wovW0RNVQHFle5l/AZuCg6J4j3X847LRNH82G4gCVKo3I3Ps3lQPJMCQFGTWUo0s8lwj2Wh9V3MY0P4y2Z1wXCJHRQAABr49lGMceD24LnuEOwwzqhe3DuTfyNy+zyZtR6tD8qCpV0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741884801; c=relaxed/simple;
-	bh=bZu+cNOOnGA6AZDPhiyFBGA4fxgl6uShkg70d/HmjjI=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=m6l0+VoKkzss/uyb3iAnAFAr7OOaUjU50+NA6YZIDn0YfXXxwz8kOILnuF9+dCeaU8PrvuP9K2eZpXqkbN+H5sGggwVMdW+qlxJl0spnsa+MF7ZZRn1GJ/GfUuCLaMgabO+7i30jrpbA6qzBDOShbVD+729oVDlmtN3VhJsoCS0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B5988C4CEDD;
-	Thu, 13 Mar 2025 16:53:16 +0000 (UTC)
-Date: Thu, 13 Mar 2025 12:53:13 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Petr Mladek <pmladek@suse.com>
-Cc: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>, linux-mm@kvack.org, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Andrew Morton <akpm@linux-foundation.org>, Michael Petlan
- <mpetlan@redhat.com>, Veronika Molnarova <vmolnaro@redhat.com>, Suren
- Baghdasaryan <surenb@google.com>, Rasmus Villemoes
- <linux@rasmusvillemoes.dk>, Andy Shevchenko
- <andriy.shevchenko@linux.intel.com>, Tamir Duberstein <tamird@gmail.com>,
- Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [RESEND][PATCH] tracing: gfp: Remove duplication of recording
- GFP flags
-Message-ID: <20250313125313.4f3d98f4@batman.local.home>
-In-Reply-To: <Z9L5HsVzQ0bVZtjp@pathway.suse.cz>
-References: <20250225135611.1942b65c@gandalf.local.home>
-	<Z9L5HsVzQ0bVZtjp@pathway.suse.cz>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1741913851; c=relaxed/simple;
+	bh=vBTlnOmgxZWKGka4jRBvC3fk3Xwx7Sqyo+qnil3kH7g=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=CHflmXXXVQbL8EQs4X8uzO+McGTd/G9BTiRaEwdVE7x/vcg4U/V9ovCvRs5JDUxOqQUlqyhzfFihYoE4mn+YuOACOG+5zeYm3iceBO2BtUlEs+hmxxpeBt+W9rdD2V5hIGTovWEJYeuB4yHg33RrPOSzR7zUJm5u2Q+hEZC+9TM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.216])
+	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4ZDQtj69Fpz4f3jrh;
+	Fri, 14 Mar 2025 08:57:01 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.252])
+	by mail.maildlp.com (Postfix) with ESMTP id 50D9D1A138F;
+	Fri, 14 Mar 2025 08:57:24 +0800 (CST)
+Received: from [10.67.110.36] (unknown [10.67.110.36])
+	by APP3 (Coremail) with SMTP id _Ch0CgC3V8LzftNn+P1aGQ--.6324S2;
+	Fri, 14 Mar 2025 08:57:24 +0800 (CST)
+Message-ID: <1921659c-9bf7-4fd5-97e7-512da777461f@huaweicloud.com>
+Date: Fri, 14 Mar 2025 08:57:22 +0800
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] tracing: Correct the refcount for hist/hist_debug file if
+ single_open() fails
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Zheng Yejian <zhengyejian1@huawei.com>, linux-trace-kernel@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250313103719.1191073-1-wutengda@huaweicloud.com>
+ <20250313104446.7b31820e@batman.local.home>
+Content-Language: en-US
+From: Tengda Wu <wutengda@huaweicloud.com>
+In-Reply-To: <20250313104446.7b31820e@batman.local.home>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:_Ch0CgC3V8LzftNn+P1aGQ--.6324S2
+X-Coremail-Antispam: 1UD129KBjvJXoW7tr4xuF4rCr4DZF4xAr43Wrg_yoW8Kw1rpr
+	Z5Gan8KF18tFy8K3Z7AFs7uryfZ3y8trW7WFyqgayrtrn8u340gFWDK3y5uF15trs5JrWI
+	va1jgFy29rW5ZFJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUymb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7Cj
+	xVAFwI0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I
+	0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40E
+	x7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x
+	0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7CjxVAaw2AFwI0_JF0_Jw1l42xK82IYc2Ij64vI
+	r41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8Gjc
+	xK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0
+	cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8V
+	AvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E
+	14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07jjVbkUUUUU=
+X-CM-SenderInfo: pzxwv0hjgdqx5xdzvxpfor3voofrz/
 
-On Thu, 13 Mar 2025 16:26:22 +0100
-Petr Mladek <pmladek@suse.com> wrote:
+Hi Steven,
 
-> This causes regression in the printf selftest:
+On 2025/3/13 22:44, Steven Rostedt wrote:
+> On Thu, 13 Mar 2025 10:37:19 +0000
+> Tengda Wu <wutengda@huaweicloud.com> wrote:
 > 
-> # modprobe test_printf
-> modprobe: ERROR: could not insert 'test_printf': Invalid argument
+>> The function event_{hist,hist_debug}_open() maintains the refcount of
+>> 'file->tr' and 'file' through tracing_open_file_tr(), but it does not
+>> roll back these counts when the subsequent single_open() call fails,
+>> leading to a refcount leak.
+>>
+>> A very obvious case is that if the hist/hist_debug file belongs to a
+>> certain instance, the failure of single_open() will prevent the deletion
+>> of that instance, as it relies on the condition 'tr->ref == 1' within
+>> __remove_instance().
+>>
+>> Fix this by calling tracing_release_file_tr() to correct the refcount
+>> when single_open() fails.
+>>
+>> Fixes: 1cc111b9cddc ("tracing: Fix uaf issue when open the hist or hist_debug file")
+>> Signed-off-by: Tengda Wu <wutengda@huaweicloud.com>
+>> Cc: stable@vger.kernel.org # v6.7+
+>> ---
+>>  kernel/trace/trace_events_hist.c | 9 +++++++--
+>>  1 file changed, 7 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events_hist.c
+>> index ad7419e24055..900b06fa8505 100644
+>> --- a/kernel/trace/trace_events_hist.c
+>> +++ b/kernel/trace/trace_events_hist.c
+>> @@ -5702,8 +5702,10 @@ static int event_hist_open(struct inode *inode, struct file *file)
+>>  	/* Clear private_data to avoid warning in single_open() */
+>>  	file->private_data = NULL;
+>>  	ret = single_open(file, hist_show, hist_file);
+>> -	if (ret)
+>> +	if (ret) {
+>>  		kfree(hist_file);
+>> +		tracing_release_file_tr(inode, file);
+>> +	}
 > 
-> # dmesg | tail 
-> [   46.206779] test_printf: vsnprintf(buf, 256, "%pGg", ...) returned 15, expected 10
-> [   46.208192] test_printf: vsnprintf(buf, 3, "%pGg", ...) returned 15, expected 10
-> [   46.208196] test_printf: vsnprintf(buf, 0, "%pGg", ...) returned 15, expected 10
-> [   46.208199] test_printf: kvasprintf(..., "%pGg", ...) returned 'none|0xfc000000', expected '0xfc000000'
-> [   46.208202] test_printf: vsnprintf(buf, 256, "%pGg", ...) returned 26, expected 21
-> [   46.208204] test_printf: vsnprintf(buf, 17, "%pGg", ...) returned 26, expected 21
-> [   46.208206] test_printf: vsnprintf(buf, 0, "%pGg", ...) returned 26, expected 21
-> [   46.208209] test_printf: kvasprintf(..., "%pGg", ...) returned '__GFP_HIGH|none|0xfc000000', expected '__GFP_HIGH|0xfc000000'
-> [   46.208865] test_printf: failed 8 out of 448 tests
+> Hmm, this function has a couple more error path exits after taking the
+> ref count. If this is to be fixed, let's fix it completely. Each of
+> those error paths need to call tracing_release_file_tr().
 > 
->     => vprintf() started printing the "none|" string.  
-> 
-> It seems to me that "{ 0, "none" }" was added as an "innocent" entry
-> to avoid the trailing "," generated by TRACE_GFP_FLAGS. So, it is
-> not really needed.
-> 
-> In fact, I think that it probably causes similar regression in the
-> trace output because the logic in trace_print_flags_seq()
-> seems to be the same as in format_flags() in lib/vsprintf.c.
-> 
-> The following worked for me:
-> 
-> diff --git a/include/trace/events/mmflags.h b/include/trace/events/mmflags.h
-> index 82371177ef79..15aae955a10b 100644
-> --- a/include/trace/events/mmflags.h
-> +++ b/include/trace/events/mmflags.h
-> @@ -101,7 +101,7 @@ TRACE_DEFINE_ENUM(___GFP_LAST_BIT);
->  	gfpflag_string(GFP_DMA32),		\
->  	gfpflag_string(__GFP_RECLAIM),		\
->  	TRACE_GFP_FLAGS				\
-> -	{ 0, "none" }
-> +	{ 0, NULL }
->  
->  #define show_gfp_flags(flags)						\
->  	(flags) ? __print_flags(flags, "|", __def_gfpflag_names		\
-> 
-> It seems to be safe because the callers end up the cycle when .name == NULL.
-> 
-> I think that it actually allows to remove similar trailing {} but I am not sure
-> if we want it.
+> -- Steve
 
-Hmm, I could get rid of that last one with this patch. What do you think?
+Oops, I got it. The v2 is coming soon. Thanks a lot.
 
-diff --git a/include/trace/events/mmflags.h b/include/trace/events/mmflags.h
-index 82371177ef79..74af49c33d14 100644
---- a/include/trace/events/mmflags.h
-+++ b/include/trace/events/mmflags.h
-@@ -37,26 +37,26 @@
- 	TRACE_GFP_EM(HARDWALL)			\
- 	TRACE_GFP_EM(THISNODE)			\
- 	TRACE_GFP_EM(ACCOUNT)			\
--	TRACE_GFP_EM(ZEROTAGS)
-+	TRACE_GFP_EME(ZEROTAGS)
- 
- #ifdef CONFIG_KASAN_HW_TAGS
- # define TRACE_GFP_FLAGS_KASAN			\
--	TRACE_GFP_EM(SKIP_ZERO)			\
--	TRACE_GFP_EM(SKIP_KASAN)
-+	TRACE_COMMA TRACE_GFP_EM(SKIP_ZERO)	\
-+	TRACE_GFP_EME(SKIP_KASAN)
- #else
- # define TRACE_GFP_FLAGS_KASAN
- #endif
- 
- #ifdef CONFIG_LOCKDEP
- # define TRACE_GFP_FLAGS_LOCKDEP		\
--	TRACE_GFP_EM(NOLOCKDEP)
-+	TRACE_COMMA TRACE_GFP_EME(NOLOCKDEP)
- #else
- # define TRACE_GFP_FLAGS_LOCKDEP
- #endif
- 
- #ifdef CONFIG_SLAB_OBJ_EXT
- # define TRACE_GFP_FLAGS_SLAB			\
--	TRACE_GFP_EM(NO_OBJ_EXT)
-+	TRACE_COMMA TRACE_GFP_EME(NO_OBJ_EXT)
- #else
- # define TRACE_GFP_FLAGS_SLAB
- #endif
-@@ -69,6 +69,10 @@
- 
- #undef TRACE_GFP_EM
- #define TRACE_GFP_EM(a) TRACE_DEFINE_ENUM(___GFP_##a##_BIT);
-+#undef TRACE_GFP_EME
-+#define TRACE_GFP_EME(a) TRACE_DEFINE_ENUM(___GFP_##a##_BIT);
-+#undef TRACE_COMMA
-+#define TRACE_COMMA
- 
- TRACE_GFP_FLAGS
- 
-@@ -84,6 +88,10 @@ TRACE_DEFINE_ENUM(___GFP_LAST_BIT);
-  */
- #undef TRACE_GFP_EM
- #define TRACE_GFP_EM(a) gfpflag_string(__GFP_##a),
-+#undef TRACE_GFP_EME
-+#define TRACE_GFP_EME(a) gfpflag_string(__GFP_##a)
-+#undef TRACE_COMMA
-+#define TRACE_COMMA ,
- 
- #define __def_gfpflag_names			\
- 	gfpflag_string(GFP_TRANSHUGE),		\
-@@ -100,8 +108,7 @@ TRACE_DEFINE_ENUM(___GFP_LAST_BIT);
- 	gfpflag_string(GFP_DMA),		\
- 	gfpflag_string(GFP_DMA32),		\
- 	gfpflag_string(__GFP_RECLAIM),		\
--	TRACE_GFP_FLAGS				\
--	{ 0, "none" }
-+	TRACE_GFP_FLAGS
- 
- #define show_gfp_flags(flags)						\
- 	(flags) ? __print_flags(flags, "|", __def_gfpflag_names		\
+-- Tengda
 
--- Steve
+> 
+> 
+>>  
+>>  	return ret;
+>>  }
+>> @@ -5979,7 +5981,10 @@ static int event_hist_debug_open(struct inode *inode, struct file *file)
+>>  
+>>  	/* Clear private_data to avoid warning in single_open() */
+>>  	file->private_data = NULL;
+>> -	return single_open(file, hist_debug_show, file);
+>> +	ret = single_open(file, hist_debug_show, file);
+>> +	if (ret)
+>> +		tracing_release_file_tr(inode, file);
+>> +	return ret;
+>>  }
+>>  
+>>  const struct file_operations event_hist_debug_fops = {
+
