@@ -1,101 +1,108 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EAE01FDE2B;
-	Fri, 14 Mar 2025 15:50:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 730AF2036E8;
+	Fri, 14 Mar 2025 16:08:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741967457; cv=none; b=Qn06Dc6bTFolbCW6OZhLmvMEdorb71rHVBZU1zzDH7FZNym+ClAcKS/EWsoXyMF6WKIIw2JN2c5pymdpmNKy32fBgfWM7Si0Y6/55E0F3nca3QD9pgi5NDn2MjmYQVfw/h/yZDeUmgws/q/57dj7941aiqJrlr1K7In6aONmU/w=
+	t=1741968502; cv=none; b=hhc603QO7LseSH/bPjhu4ouFiphAK9I4gdeUqmldggAPciM12TZOQhK1OST7yyt4hFScXCXH+fJuR/EPYWg6qDWADt1ZsPGxlOgFxh7N0SkwoCsey3EnVPfC1AjTmy1GgXgxF77TBw2DpDz+UyN0sds7t7jVJ6UXDm+uYA7Yi9U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741967457; c=relaxed/simple;
-	bh=AKNeT7I9L8uYDztJZF47bgZZU5WqdSoQ6VPicq2vYtg=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=aAk7xvJOsZd3rgSUNzMTV4G6gB2LskEfTSzgdWvKREuuFbvs1iEJQcsWDqLiy1Kc+mFXYV6TqslSzEH8+HoQAQvzELLyMhhwDpas1bdP2MNc8PjdZlM0QeB4+dHAUCtVTEo2DIP8DZ0CbV+sHfM2+TAiDWjMiGvz2Yc48FAlD04=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IcYq5A0O; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741968502; c=relaxed/simple;
+	bh=XqcsY6o6fpXWY2codHVy3UgJNf7GA85mCt53UwBExks=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=BbJbBK4vjKOizdbbKy92JwhjUmcpPsvn1H3c4k/+xrDPPRz1XU4zNSsfN618LePQIyooJPv7vx5Cb+ECdLp+SZZA19FJoBFRnHhd7wAxK0hCnWSl+HRi86pOg2CR2MZnjJbst3DOzU7+2S+cV+vniIJu71ArKtnYVbgHya4zHdY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=n6trQHKl; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=BShPwRx7; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IcYq5A0O"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5E6F5C4CEE3;
-	Fri, 14 Mar 2025 15:50:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741967457;
-	bh=AKNeT7I9L8uYDztJZF47bgZZU5WqdSoQ6VPicq2vYtg=;
-	h=From:To:Cc:Subject:Date:From;
-	b=IcYq5A0O4zwSX0dY32dildB5YMgA3Le31v0uy4ihF6T8Yr7Qy7+9GNqRyhViXI3It
-	 TC5yJyCJq9mjay+sgZ77jSpVCrN7lC6dSWu8nGq1LaFWjhN9GnIysuD9LNVza0XN41
-	 8GQ0GPhQaoT7/kMdi4kBP0B9Z3PfmO4wdDI8L9HCb3qBYhXUZVCM6IIJSP2LOQ9R5D
-	 96a3ucRwRFK1E8mDKaS8BPK7gmDnf51n34aOMDxbV3/pnkdtajVCOs91lrRWu8pGCy
-	 ZtQmiQRpfsAp97053Z24az+2c7c1L8MzKvUZvsxDfsDs+v6ZZE2c0RVUl1ZGoBabmI
-	 lLSuISDX78msQ==
-From: Arnd Bergmann <arnd@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Arnd Bergmann <arnd@arndb.de>,
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="n6trQHKl";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="BShPwRx7"
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1741968498;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ev8xxyCWrO7UYEFMB8bMIA2a0AaTG/gUghwzI4DhR2o=;
+	b=n6trQHKl78YEElXSiECySNw0hwZCvK/W4LRwxf+jTEO7sU1uPOuzYYNorxddMIA5RHU/P9
+	eqNvlsGOHryl2J+9/NBSQyfwktE1qGIGSDRzXuajLS771Hti8ufTjJlzTinnrxy5H6qDO1
+	qunpO0pA5F9khK3+QMuQWhtKt5Lk3zhc9LizbKmQfqvAw8ppEY3/oxhkKfc3NyT+P/WCw8
+	RjcVR763eJSu0H7v/bHz4EuOuV1rh9V5nIawoflTql41EHmQ3YdCzGIUxLcKtuBqaXfNeR
+	HWa7vQ3IK+1UIbY96biCqzMcI1NXcOaJJ8c8U2PvFx93O27NmPk6iyZ9Sj7ZIg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1741968498;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ev8xxyCWrO7UYEFMB8bMIA2a0AaTG/gUghwzI4DhR2o=;
+	b=BShPwRx7mUK1yn3qgIU25R77XSDnl1aA3xx4c0F0x9M5Uu7Y+K7tz68Vh+2XG/vVwGBUIa
+	/d/GbzmC8jpWR3AA==
+To: linux-kernel@vger.kernel.org,
+	linux-rt-devel@lists.linux.dev
+Cc: Ben Segall <bsegall@google.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Ingo Molnar <mingo@redhat.com>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Mel Gorman <mgorman@suse.de>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Shrikanth Hegde <sshegde@linux.ibm.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Valentin Schneider <vschneid@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Will Deacon <will@kernel.org>,
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
 	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Vincent Donnefort <vdonnefort@google.com>,
-	Huang Yiwei <quic_hyiwei@quicinc.com>,
-	linux-kernel@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH] tracing: fix build without CONFIG_MODULES
-Date: Fri, 14 Mar 2025 16:50:49 +0100
-Message-Id: <20250314155052.4170214-1-arnd@kernel.org>
-X-Mailer: git-send-email 2.39.5
+Subject: [PATCH v4 9/9] tracing: Use preempt_model_str().
+Date: Fri, 14 Mar 2025 17:08:10 +0100
+Message-ID: <20250314160810.2373416-10-bigeasy@linutronix.de>
+In-Reply-To: <20250314160810.2373416-1-bigeasy@linutronix.de>
+References: <20250314160810.2373416-1-bigeasy@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
 
-From: Arnd Bergmann <arnd@arndb.de>
+Use preempt_model_str() instead of manually conducting the preemption
+model.
 
-The tracing code fails to build when CONFIG_MODULES is disabled:
-
-kernel/trace/trace.c: In function 'save_mod':
-kernel/trace/trace.c:6041:45: error: invalid use of undefined type 'struct module'
- 6041 |         entry->mod_addr = (unsigned long)mod->mem[MOD_TEXT].base;
-      |                                             ^~
-
-The problem here is that 'struct module' is not defined in this configuration.
-
-Enclose the functions in another #ifdef, just like other parts of this file
-already are.
-
-Fixes: dca91c1c5468 ("tracing: Have persistent trace instances save module addresses")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Cc: Steven Rostedt <rostedt@goodmis.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: linux-trace-kernel@vger.kernel.org
+Acked-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 ---
- kernel/trace/trace.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ kernel/trace/trace.c | 7 +------
+ 1 file changed, 1 insertion(+), 6 deletions(-)
 
 diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index a6105b6dcc2b..51c030b9887e 100644
+index 0e6d517e74e0f..fd3cb2b2ab829 100644
 --- a/kernel/trace/trace.c
 +++ b/kernel/trace/trace.c
-@@ -6019,6 +6019,7 @@ struct trace_scratch {
- 
- static DEFINE_MUTEX(scratch_mutex);
- 
-+#ifdef CONFIG_MODULES
- static int save_mod(struct module *mod, void *data)
- {
- 	struct trace_array *tr = data;
-@@ -6043,6 +6044,7 @@ static int save_mod(struct module *mod, void *data)
- 
- 	return 0;
- }
-+#endif
- 
- static void update_last_data(struct trace_array *tr)
- {
-@@ -6060,7 +6062,9 @@ static void update_last_data(struct trace_array *tr)
- 		tscratch->nr_entries = 0;
- 
- 		guard(mutex)(&scratch_mutex);
-+#ifdef CONFIG_MODULES
- 		module_for_each_mod(save_mod, tr);
-+#endif
- 	}
- 
- 	if (!(tr->flags & TRACE_ARRAY_FL_LAST_BOOT))
--- 
-2.39.5
+@@ -4100,12 +4100,7 @@ print_trace_header(struct seq_file *m, struct trace_=
+iterator *iter)
+ 		   entries,
+ 		   total,
+ 		   buf->cpu,
+-		   preempt_model_none()      ? "server" :
+-		   preempt_model_voluntary() ? "desktop" :
+-		   preempt_model_full()      ? "preempt" :
+-		   preempt_model_lazy()	     ? "lazy"    :
+-		   preempt_model_rt()        ? "preempt_rt" :
+-		   "unknown",
++		   preempt_model_str(),
+ 		   /* These are reserved for later use */
+ 		   0, 0, 0, 0);
+ #ifdef CONFIG_SMP
+--=20
+2.47.2
 
