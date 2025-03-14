@@ -1,138 +1,168 @@
-Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F19C6C8C7;
-	Fri, 14 Mar 2025 07:07:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D5581953A9;
+	Fri, 14 Mar 2025 08:55:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741936045; cv=none; b=U4nxFmrqPx9fCM2RGWfLkrTxnEH+C3m+sYRLW2g5skzn0JjMoL2WxRq8OZ2qcQOixrmTbSdyNToglX96NbjEsEDCTmDzo4M4dG/LZ5FC6aKese0xhfS3DllQMmN5zoU0rZa+tQG87pE+nfGt2YKQBwbK2ZZapq4DL3r8t7O6Sp4=
+	t=1741942533; cv=none; b=uTUUqJwORTDt0la5RZs1ACxBsLLzWcm4BF6pdx/NWmJwePSFpJl+ZG5JJCbhHeBTakjXb7Tj9F0S44eOEz/ppM6TMSmhHeMJOU3AYTO0rEkXi2jnjN5H+Dwy0MFDdHb2Z2YzQf3N9y4nZj7CGKlvVozTuoWgZKoL9/O6RQtjyiw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741936045; c=relaxed/simple;
-	bh=+kOlz/Q28jG0cYfTsBiLwIHMZVZA54BpzkbvmNbTCks=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=SDUjUa96/p/yGOztZfRjNoBEXcpO8pjc0chnGdfyR405X/J4B2nhuwgC6WyuVANkScdCm0QYHrcN32NavY+K+oM0YcLres2GlZaAdEg8itc955ds/b6NAbVGKCrMyBFnHX5ey5sgl575F5j6I+6zEJRmgt3VdJg0JccW5DNEsms=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.93.142])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4ZDb5X1p4rz4f3jXT;
-	Fri, 14 Mar 2025 15:06:56 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id B14CE1A084E;
-	Fri, 14 Mar 2025 15:07:18 +0800 (CST)
-Received: from huawei.com (unknown [10.67.174.45])
-	by APP4 (Coremail) with SMTP id gCh0CgDXN1yf1dNnGzXOGQ--.57039S2;
-	Fri, 14 Mar 2025 15:07:18 +0800 (CST)
-From: Tengda Wu <wutengda@huaweicloud.com>
-To: Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Zheng Yejian <zhengyejian1@huawei.com>,
-	linux-trace-kernel@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2] tracing: Correct the refcount if the hist/hist_debug file fails to open
-Date: Fri, 14 Mar 2025 06:53:35 +0000
-Message-Id: <20250314065335.1202817-1-wutengda@huaweicloud.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1741942533; c=relaxed/simple;
+	bh=eUpx6PPv6NUTNUR44/ALbykGGVYEXEgsQa3CHMneV3s=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=jBxdyZjlIHNGTB2m1e+gL0CjfTJw2PVQSZmVULBjP1cWtpXiS4uMiR8oV01F9KZi1A9fagsIT7AtBS8OegwusDHi9+YfBLD09ikjZY+UixpPQS5B0jtDhxvRu5G3xYGvtjMeysJdRkRgJK8JtyvvfJRmjHsi+MbbO3i5wFbTz5s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kNXgSNgM; arc=none smtp.client-ip=209.85.214.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kNXgSNgM"
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-22355618fd9so37102895ad.3;
+        Fri, 14 Mar 2025 01:55:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1741942532; x=1742547332; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=0iL2j1fTRrW48+4gZ+gvHRZFd3B7e5O0a++OqZvQyu8=;
+        b=kNXgSNgMzySaje4eMJFQ5bgAhPkR0i3zc+6i7PmAFBczBsAeqxOZUyOEuEdvTxQngi
+         q95oZwLiDyp/XovKwls80s+Uu8szc7XZU5Tn4CBEOht49UUjuhiBaIFFbeY7hY0Jffo9
+         6+hq7JsALoaJyGSH3W6QAMh46wuFIHvVVQITIWG5Zzmkx9J2mTIwto7vxfSMFTeJVDKP
+         PEX+pz8Hw8F14Mjn/c+zWm2PfikGZdazoN6Oe6wFHSi6NfvipcWX3C7zgCdkEJu7YEBb
+         0micvu5nZaz+eolKFdw1JDWoA1YLjOFIIgIjZDrctquBJ7GpZqXq+K2hZ9CHkDsMtm+D
+         gEGA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741942532; x=1742547332;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=0iL2j1fTRrW48+4gZ+gvHRZFd3B7e5O0a++OqZvQyu8=;
+        b=aoAx2Bnl+swb+mlg2Pxig74D2Te9K2nYsPI8AEdR583OiCCR6uiCdrFcTK0msx8CFh
+         z4zxjaaqlTjqH0Bmx80ralh12Z4faw1iTxQ1NMs+jfMRujGxnQKaCvlrZo7Fn4KX6Per
+         5MeTFdK8OvK7rNMez/UJnZaSWQ651xlo+cXbPyFfJ9CBB4Up+6Gce2QqGLd8qYa/OYs7
+         1nJJ22YuN0+OdAB01ksT2S4c5w67jrqIewGECiWL2tT3/5OjgeUzZhwf9RThdfg14Bwi
+         hhryCnO0TBF1lxNJjTeZerzrRjMNR7Yj+DZbis0cB6CJHiHm0oBuRPHj/o3mMyNiITkO
+         OiEw==
+X-Forwarded-Encrypted: i=1; AJvYcCV9E28lMZhEFIfZeVP1N63zy8ztIWTZTYw5Fu5nBxwHOgjwcCUc0HtWEOi7uAXcLGcswm/NcbVp8jSMjc/H@vger.kernel.org, AJvYcCVOQQABiRNlIqqzj10byTjLygx6z+OakhbyGMmHBGaNpe9GwXGbJvwPEIs9Q/dAjOp1yfXPVNYnXTo=@vger.kernel.org, AJvYcCWo2wf2UT8ybxFKNXEOoDocOvHJFbAlPu02jcBpABRsOwYEmXnRVjNTuniLmlonkL9GoZWolnT6vibuvtRB9XntdSrj@vger.kernel.org
+X-Gm-Message-State: AOJu0YxaFKPluA+2xovX4SDOg/Qx2w1NQi+N8Nfon7kvB66Bdl9Pmo+q
+	KEQnck2/yRn9ssB8sRvjKDnsCFBn0Qao9LULSUMGmukDCIp6Jphn
+X-Gm-Gg: ASbGncuXx2tiXFKzdv6gtVMcO+o7AF4S4CmKyUyhuaf3QIUCpkLcwD3pXkD8pJv1h2Z
+	jgMYlENJfoddyffVWhmq7jpcidZHhqeZIyppp4ofyRszglAWvXh3BaqJ1GrjSX5sg98QQex9uRz
+	DKb+GyX4Jli0pTACqHsJ4ULteRxD+JklpvIidyGFq4cXGZnjKjLtW3SBBzXJz5FdB9UOAdHIvWF
+	HIBcnp9Pp59rD3jp71eN432QjHvAIoQD/cyX0x1z5QDRRC0MBpuXgYiwEOuGBwhCrV6IphOGsAG
+	F6CcRKd8ZPSGDe3sHySIIhf6J6IsgT6JWvP/IZBCKXaRvb2mFmYJWketGqpqxFq3BkKCMRKxab0
+	6kOfwEV0l/jjy8rpv/SxC1B4V
+X-Google-Smtp-Source: AGHT+IFZnVe3YyGRQyCS39o3yTmwtM/2BsUUU3P1VtBnahMC/I2S/5KtSeKdgJ+N92yAqjKj/JrkiQ==
+X-Received: by 2002:a17:902:c949:b0:223:5945:ffd5 with SMTP id d9443c01a7336-225e0af042bmr22225235ad.32.1741942531583;
+        Fri, 14 Mar 2025 01:55:31 -0700 (PDT)
+Received: from ?IPV6:2409:4081:1112:2682:6150:d7c3:7955:f419? ([2409:4081:1112:2682:6150:d7c3:7955:f419])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-225c6ba6913sm25001395ad.142.2025.03.14.01.55.28
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 14 Mar 2025 01:55:31 -0700 (PDT)
+Message-ID: <8147edd6-074e-4888-a7a0-798c8d0de612@gmail.com>
+Date: Fri, 14 Mar 2025 14:25:25 +0530
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 2/2] docs: tracing: Reduce maxdepth in index
+ documentation
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Jonathan Corbet <corbet@lwn.net>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org
+References: <20250312124717.7208-1-purvayeshi550@gmail.com>
+ <20250312134907.06d27d78@batman.local.home>
+Content-Language: en-US
+From: Purva Yeshi <purvayeshi550@gmail.com>
+In-Reply-To: <20250312134907.06d27d78@batman.local.home>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgDXN1yf1dNnGzXOGQ--.57039S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7Aw1kur43AFy7XrWxAr15XFb_yoW5JF4Upr
-	WrJrn8Kry8J3WIgr1fAan7ZFyfZ3y8tFWxWa4Du34ftrn8W34Fqay7K345ZF15trZ5Jrya
-	qa1qgry2krWUuaDanT9S1TB71UUUUUDqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUyEb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
-	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
-	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
-	Cjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxkF7I0En4kS14v26r1q6r43MxAIw28IcxkI
-	7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxV
-	Cjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY
-	6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6x
-	AIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY
-	1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU1ZmRUUUUUU==
-X-CM-SenderInfo: pzxwv0hjgdqx5xdzvxpfor3voofrz/
 
-The function event_{hist,hist_debug}_open() maintains the refcount of
-'file->tr' and 'file' through tracing_open_file_tr(). However, it does
-not roll back these counts on subsequent failure paths, resulting in a
-refcount leak.
+On 12/03/25 23:19, Steven Rostedt wrote:
+> On Wed, 12 Mar 2025 18:17:17 +0530
+> Purva Yeshi <purvayeshi550@gmail.com> wrote:
+> 
+>> Reduce :maxdepth: from 2 to 1 in index.rst to simplify the table of
+>> contents, showing only top-level document titles for better readability.
+>>
+>> Signed-off-by: Purva Yeshi <purvayeshi550@gmail.com>
+>> ---
+>>   Documentation/trace/index.rst | 10 +++++-----
+>>   1 file changed, 5 insertions(+), 5 deletions(-)
+>>
+>> diff --git a/Documentation/trace/index.rst b/Documentation/trace/index.rst
+>> index 6b268194f..5ddd47ee7 100644
+>> --- a/Documentation/trace/index.rst
+>> +++ b/Documentation/trace/index.rst
+>> @@ -14,7 +14,7 @@ This section provides an overview of Linux tracing mechanisms
+>>   and debugging approaches.
+>>   
+>>   .. toctree::
+>> -   :maxdepth: 2
+>> +   :maxdepth: 1
+> 
+> If you made this the first patch, you would only need to modify one place.
+> 
+> This is a patch series. If the end result is going to be maxdepth 1,
+> you shouldn't add a bunch of maxdepth 2 and then in the next patch make
+> them all maxdepth 1 as the only change.
+> 
+> Just change the one maxdepth 1 first, and then you can update the code
+> with the new maxdepth of 1.
+> 
+> -- Steve
 
-A very obvious case is that if the hist/hist_debug file belongs to a
-specific instance, the refcount leak will prevent the deletion of that
-instance, as it relies on the condition 'tr->ref == 1' within
-__remove_instance().
+Hi Steven,
 
-Fix this by calling tracing_release_file_tr() on all failure paths in
-event_{hist,hist_debug}_open() to correct the refcount.
+Got it. If I understand correctly, you’re suggesting that I reorder the 
+patches so that the 'maxdepth' change happens first. That way, I won’t 
+introduce maxdepth: 2 only to change it in the next patch. Does that 
+sound right?
 
-Fixes: 1cc111b9cddc ("tracing: Fix uaf issue when open the hist or hist_debug file")
-Signed-off-by: Tengda Wu <wutengda@huaweicloud.com>
-Cc: stable@vger.kernel.org # v6.7+
----
-v2: Fix all error path exits after taking the refcount.
-
- kernel/trace/trace_events_hist.c | 24 ++++++++++++++++++------
- 1 file changed, 18 insertions(+), 6 deletions(-)
-
-diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events_hist.c
-index ad7419e24055..53dc6719181e 100644
---- a/kernel/trace/trace_events_hist.c
-+++ b/kernel/trace/trace_events_hist.c
-@@ -5689,12 +5689,16 @@ static int event_hist_open(struct inode *inode, struct file *file)
- 	guard(mutex)(&event_mutex);
- 
- 	event_file = event_file_data(file);
--	if (!event_file)
--		return -ENODEV;
-+	if (!event_file) {
-+		ret = -ENODEV;
-+		goto err;
-+	}
- 
- 	hist_file = kzalloc(sizeof(*hist_file), GFP_KERNEL);
--	if (!hist_file)
--		return -ENOMEM;
-+	if (!hist_file) {
-+		ret = -ENOMEM;
-+		goto err;
-+	}
- 
- 	hist_file->file = file;
- 	hist_file->last_act = get_hist_hit_count(event_file);
-@@ -5702,9 +5706,14 @@ static int event_hist_open(struct inode *inode, struct file *file)
- 	/* Clear private_data to avoid warning in single_open() */
- 	file->private_data = NULL;
- 	ret = single_open(file, hist_show, hist_file);
--	if (ret)
-+	if (ret) {
- 		kfree(hist_file);
-+		goto err;
-+	}
- 
-+	return 0;
-+err:
-+	tracing_release_file_tr(inode, file);
- 	return ret;
- }
- 
-@@ -5979,7 +5988,10 @@ static int event_hist_debug_open(struct inode *inode, struct file *file)
- 
- 	/* Clear private_data to avoid warning in single_open() */
- 	file->private_data = NULL;
--	return single_open(file, hist_debug_show, file);
-+	ret = single_open(file, hist_debug_show, file);
-+	if (ret)
-+		tracing_release_file_tr(inode, file);
-+	return ret;
- }
- 
- const struct file_operations event_hist_debug_fops = {
--- 
-2.34.1
+> 
+> 
+>>   
+>>      debugging
+>>      tracepoints
+>> @@ -28,7 +28,7 @@ The following are the primary tracing frameworks integrated into
+>>   the Linux kernel.
+>>   
+>>   .. toctree::
+>> -   :maxdepth: 2
+>> +   :maxdepth: 1
+>>   
+>>      ftrace
+>>      ftrace-design
+>> @@ -47,7 +47,7 @@ A detailed explanation of event tracing mechanisms and their
+>>   applications.
+>>   
+>>   .. toctree::
+>> -   :maxdepth: 2
+>> +   :maxdepth: 1
+>>   
+>>      events
+>>      events-kmem
+>> @@ -65,7 +65,7 @@ This section covers tracing features that monitor hardware
+>>   interactions and system performance.
+>>   
+>>   .. toctree::
+>> -   :maxdepth: 2
+>> +   :maxdepth: 1
+>>   
+>>      intel_th
+>>      stm
+>> @@ -85,7 +85,7 @@ These tools allow tracing user-space applications and
+>>   interactions.
+>>   
+>>   .. toctree::
+>> -   :maxdepth: 2
+>> +   :maxdepth: 1
+>>   
+>>      user_events
+>>   
+> 
 
