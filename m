@@ -1,214 +1,201 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f226.google.com (mail-pl1-f226.google.com [209.85.214.226])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59F56204C3F;
-	Fri, 14 Mar 2025 19:57:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AAF928F1
+	for <linux-trace-kernel@vger.kernel.org>; Sat, 15 Mar 2025 01:00:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.226
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741982233; cv=none; b=e2DFpw6r9Du2wDp2lZ0QlR8a5o3A/5d3/pIXCBjiiHicf50luOc3BkU1YSMVwyP8MJHft1H9kzYI2LQLS5XvzokgANXe8PwWDma+gFSMnuhUyGUDqdf7K7gUvy9mD1LzscN9Lq9x9XvZ50EGu/rw9ndV9AmOTs0vk7E07rWDML0=
+	t=1742000417; cv=none; b=OJ2RKAmcexp4q6hievC8pSXInl0/3f93r2/FhZo3mC3qguUtNWkv5QjCjLtJHyZPisNGlgBJcvz+18Py2IchJ8RjORGd+pYnrHAM6nmF6fK4BYL0RdlGrd0VeAjJKGF1q8M+Rk/51LQuPB1mUPdv3HioOpFbxeZWyZldJ80Ayqs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741982233; c=relaxed/simple;
-	bh=C/ne6vcmKI6OX7I+ZSHTClMRatk/4KOdl9Td/8MPFNE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=gHQ9IHLq5E0nEgqTduxPQnsK63LVFcEYZAeoTns767sDKwmtjTHLUFYis5T77gTZ3brpY+20Ik8w7vlkw5uMldoXqZszfO4yJW0AccJnFNyKprCKQOrgThjhO/bq/UvaFR1VEoZE1Smfz2H1KCs4X2Bljoz3GtkLV5ry8fa+7d4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R+eFvV4N; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1742000417; c=relaxed/simple;
+	bh=UT/EYsTa1amOk6NZBx+c1+6vvGQiM6MSvPTUS00Ww30=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tN8k/ttKoxNmiSnV7tTWA5oRg5nxkiCxkZZZ9wDQU7uy2LWXvEFYrOrFu4xOXRp9QvznoArE3CeQWYcBMJWlWeClpqDMdkeeltK+rpFtBiHcElapPWpYrjGdnAnYXf+/55d5H46lvdDkGW6FLOpTocGV0hpT2wHUovLCmcBOJsk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=HvVsw8wK; arc=none smtp.client-ip=209.85.214.226
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=purestorage.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R+eFvV4N"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C6FB8C4CEED;
-	Fri, 14 Mar 2025 19:57:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741982232;
-	bh=C/ne6vcmKI6OX7I+ZSHTClMRatk/4KOdl9Td/8MPFNE=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=R+eFvV4NtGA88LBZUHrnvkCzxg3zH+SCvBsjvCXkIk2lQnC9NMN0bbgpKY8lA/ms/
-	 TQzu1Cwi/dq7rUCZI02OJ0GgAEc5BiVNxDoPF/LMP2XYP+1fOV10PX9qCZ//yh1HbI
-	 J2mqkhjkxIQ7JsNqQS9JJux/Ivm6KS2OfeFptnraODcEjfUGw3kJMh0od1Rhheem6s
-	 uScoumsJH+BNRupW76v9QztIlzqqRA6SZq50F1kJRoLmlG3+1YT0TrPLNpFuDzbbBJ
-	 mBdkQDumz2yqUyAkcTkG1lGsPYJLqJkfO44l6NJM7oy6Wmtg4zS27FV1HGOFr9TDKU
-	 Go0t1/VcWokag==
-Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-5495c1e1b63so2960692e87.0;
-        Fri, 14 Mar 2025 12:57:12 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVudpX1ymHWEwmDu79oTm3QhbQqFwdiqujqqjEo/VAXbVG41gfcyLlynKcP/c/RVAX4Tx7BpHCLxpLcceUp5zR/W8fV@vger.kernel.org, AJvYcCXccL+sx5ghJwjSoB0J4MAiKKtZm05A9OfCh32Oymg8hTDCCPIWKG7K7eBUKfWm8En3GXjnRvctkUysNPg=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxu4uAf7OAzI6/nPwi0HKKQdUTS32i2Xqh+TAcanLhyE7T1mUfS
-	7UtK5J48a1K65f3hWYndHdqZVyzff+4EKLxqkPRUY+PeYuxJbvKwuyQNoQ/WzsIU7YSVsfz7m8E
-	qCztqa5eVJ8/b+hv3xF96GzRm6bc=
-X-Google-Smtp-Source: AGHT+IG+otLNYQ+ig42Y1BWjES4bCT6/mZauAjCUgwfhV2DY99PBbypCivkkIQ2IddJ5wXxpiv8RDwNPOGnrDEau3v0=
-X-Received: by 2002:a05:6512:2823:b0:548:794f:f9dd with SMTP id
- 2adb3069b0e04-549c38f1d97mr1269568e87.10.1741982231472; Fri, 14 Mar 2025
- 12:57:11 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="HvVsw8wK"
+Received: by mail-pl1-f226.google.com with SMTP id d9443c01a7336-22359001f1aso68658635ad.3
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 14 Mar 2025 18:00:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=purestorage.com; s=google2022; t=1742000414; x=1742605214; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=uOMjItR1goBV0o4ylCjo9wmyBauT42lJmyQjqZQYP3M=;
+        b=HvVsw8wKI6y7UWuLOzXGrsFdNAI9HrrPriOJ3ja5Wr7zIk+iOWZ4k2oQmyVBTLETp8
+         R8BZyx3anfmDXmZVQNrfzvCWv6uvKLAF3DX+1ugpv6Q348tNQsCt8Mkil369tpuiLn2C
+         YiuCTQvI9EQDz8j1dhmFpfK2iIZ4FcR7rsGNiXLLwiU4POtMF6EUTxDez56LIw4gAG4G
+         8L4B0mitZyO1hRMkV7zLrE/ww3KfzpQAZBMNzF+82Q0eALJuF8cAJUkmFqPdHTUVA2vL
+         ypuRS95S3xXYnSn2xV44TVd2lKqmb+RwJd+JpX6uLrnGj+pwuHSnR6OxfI1zVu+rPEsF
+         P31A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742000414; x=1742605214;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=uOMjItR1goBV0o4ylCjo9wmyBauT42lJmyQjqZQYP3M=;
+        b=Tw7ewgiu6c8kwPLRgfYJNGnSjIzBlrc+IXuWUOetrvQhPjnUBA/OZ270Gko1gXvAHP
+         WtzwGo50pfCF+14QtrvTZQrmzNXQpkuVG5/NbMhh2KkNeHW340cqV1rxNC1ala9DUp1/
+         UkBaRaXBFqBm4fjzuHYFpweKmCOhZk0RnyiRAd7Yow8afBRfW1+Ysg8q1o1Gx3e9ookH
+         MhgQ30JwFFsMC0qVGOYggnLy9k3kTZCpSnHtuM9JzH7acTVgTgcFJkXlew9rjjeVxIh6
+         za61MTmlxiA5K+Ng9ahS43AD3PE+yCQ/7vmSBI2u1XpiEkbF1h6SkB+MfKHQIlMM4/Um
+         nbpg==
+X-Forwarded-Encrypted: i=1; AJvYcCXLcUOHdOyProB/5cubqslwL2yIIp6v+IMcmUEyiuFTzjSaGeTmQZqYrWWSmEmcY9kMdFjwyZmdI0rzCZrWzAFrI6Q=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyARSES21sq6Az81TLvp73gQHj+oXdiGCzmQ1EmFza77BMRLPEY
+	Jjm4QWxAsdSk8vYbK94ODiWRAmhHx6aqEF6mnJIOmTdL0yLicXTVrr60oMqojiQvQgoU5sy369D
+	NT20sH7Z5MDCaWi/J/SKS2TV/9eRbhblYvoVqhRDYnW/6KHcx
+X-Gm-Gg: ASbGncuBMnjUtxeGSznlPZTZhdrBNzP2S1fpDC9a3YnVm6akSf1uCWDE8XSCpYikZyc
+	m3FkCsS49HfBq/EKHK12LQ7K4Q9QpoAA3iJ4tNfIV2iWIG0a9+rL3OKAguPLofRRO3LiE/HV5KR
+	/JoDcnCKokyto72Ut1ItaBQG/lrbs+XmPz3mGWemMHjfuJDWLkQMFSK/D88K2efJVMjNimAsIFw
+	mTMXoODLYcWfCDpHajFFBEK6FYYZFw3rPB+Q8jxgoyaef7SV9nYx4jc5ihrsTPWr4ESuD89ikno
+	cPTdLeNU4mkBtn5jo/z7pbLG6CDepOsfdRs=
+X-Google-Smtp-Source: AGHT+IFb1A0ZnC9OiXaxMAvCNlG4iNHcUTDySK3FTx1OU9pxiTuot2YHOpf6EZcqMTgFPVqmhVHneOK+j511
+X-Received: by 2002:a17:902:e750:b0:223:90ec:80f0 with SMTP id d9443c01a7336-225e0a6b3f8mr62407775ad.22.1742000414166;
+        Fri, 14 Mar 2025 18:00:14 -0700 (PDT)
+Received: from c7-smtp-2023.dev.purestorage.com ([2620:125:9017:12:36:3:5:0])
+        by smtp-relay.gmail.com with ESMTPS id d9443c01a7336-225c6b5e136sm1974935ad.34.2025.03.14.18.00.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 14 Mar 2025 18:00:14 -0700 (PDT)
+X-Relaying-Domain: purestorage.com
+Received: from dev-ushankar.dev.purestorage.com (dev-ushankar.dev.purestorage.com [10.7.70.36])
+	by c7-smtp-2023.dev.purestorage.com (Postfix) with ESMTP id 43D5E340314;
+	Fri, 14 Mar 2025 19:00:13 -0600 (MDT)
+Received: by dev-ushankar.dev.purestorage.com (Postfix, from userid 1557716368)
+	id 3ADF6E40231; Fri, 14 Mar 2025 19:00:13 -0600 (MDT)
+Date: Fri, 14 Mar 2025 19:00:12 -0600
+From: Uday Shankar <ushankar@purestorage.com>
+To: Masahiro Yamada <masahiroy@kernel.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nicolas Schier <nicolas@fjasle.eu>,
+	linux-trace-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org
+Subject: Re: [PATCH 2/2] kbuild: rpm-pkg: build debuginfo and debugsource RPMs
+Message-ID: <Z9TRHKj8l47gb2Mx@dev-ushankar.dev.purestorage.com>
+References: <20250210-debuginfo-v1-0-368feb58292a@purestorage.com>
+ <20250210-debuginfo-v1-2-368feb58292a@purestorage.com>
+ <CAK7LNAQz-BKmWNuw+CWfPHWVmN6x3cpj941_iAp_5xdq+eS1DQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250210-debuginfo-v1-0-368feb58292a@purestorage.com> <20250210-debuginfo-v1-2-368feb58292a@purestorage.com>
-In-Reply-To: <20250210-debuginfo-v1-2-368feb58292a@purestorage.com>
-From: Masahiro Yamada <masahiroy@kernel.org>
-Date: Sat, 15 Mar 2025 04:56:35 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAQz-BKmWNuw+CWfPHWVmN6x3cpj941_iAp_5xdq+eS1DQ@mail.gmail.com>
-X-Gm-Features: AQ5f1JqwXXZvxlBZJSJi0uCPviVL-QF1FTEoHuzeB3oY02PO7mwhOuBonUR6s1o
-Message-ID: <CAK7LNAQz-BKmWNuw+CWfPHWVmN6x3cpj941_iAp_5xdq+eS1DQ@mail.gmail.com>
-Subject: Re: [PATCH 2/2] kbuild: rpm-pkg: build debuginfo and debugsource RPMs
-To: Uday Shankar <ushankar@purestorage.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Nathan Chancellor <nathan@kernel.org>, 
-	Nicolas Schier <nicolas@fjasle.eu>, linux-trace-kernel@vger.kernel.org, 
-	linux-kbuild@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAK7LNAQz-BKmWNuw+CWfPHWVmN6x3cpj941_iAp_5xdq+eS1DQ@mail.gmail.com>
 
-Sorry for the long delay.
+On Sat, Mar 15, 2025 at 04:56:35AM +0900, Masahiro Yamada wrote:
+> Sorry for the long delay.
 
+No worries and thanks for the review!
 
-On Tue, Feb 11, 2025 at 10:12=E2=80=AFAM Uday Shankar <ushankar@purestorage=
-.com> wrote:
-> Note that this feature is incompatible with CONFIG_MODULE_COMPRESS -
-> if it is turned on, the module .ko files are compressed before
-> find-debuginfo.sh sees them, and it will not be able to extract
-> debuginfo from them. There are two potential paths forward here:
-> - teach find-debuginfo.sh to extract debuginfo from compressed kernel
->   modules
-> - teach the kernel build process to produce split debuginfo and then
->   package that directly, bypassing find-debuginfo.sh
+> On Tue, Feb 11, 2025 at 10:12 AM Uday Shankar <ushankar@purestorage.com> wrote:
+> > Note that this feature is incompatible with CONFIG_MODULE_COMPRESS -
+> > if it is turned on, the module .ko files are compressed before
+> > find-debuginfo.sh sees them, and it will not be able to extract
+> > debuginfo from them. There are two potential paths forward here:
+> > - teach find-debuginfo.sh to extract debuginfo from compressed kernel
+> >   modules
+> > - teach the kernel build process to produce split debuginfo and then
+> >   package that directly, bypassing find-debuginfo.sh
+> 
+> 
+> 'make bindeb-pkg'  (Debian package) is able to build the debug package with
+> CONFIG_MODULE_COMPRESS enabled.
+> (see scripts/package/builddeb if you are interested)
+> I have not checked if this works for 'make binrpm-pkg' or not.
+> If this is a tricky case, I am OK with giving up CONFIG_MODULE_COMPRESS.
 
+scripts/package/builddeb is able to do this because it is more hands-on
+with the debuginfo generation - it invokes objcopy --only-keep-debug
+directly. Meanwhile for rpm-pkg we are relying on find-debuginfo.sh for
+the debuginfo generation - we just set things up appropriately (meaning
+that we mark everything to be stripped as executable), and
+find-debuginfo.sh does the rest. This means we can get debuginfo without
+working as hard, but our flexibility is limited - without nasty hacks,
+we cannot really handle compressed modules unless/until
+find-debuginfo.sh is patched to handle them.
 
-'make bindeb-pkg'  (Debian package) is able to build the debug package with
-CONFIG_MODULE_COMPRESS enabled.
-(see scripts/package/builddeb if you are interested)
-I have not checked if this works for 'make binrpm-pkg' or not.
-If this is a tricky case, I am OK with giving up CONFIG_MODULE_COMPRESS.
+I could try revising this to remove the dependency on find-debuginfo.sh
+and strip the debuginfo ourselves. Then we could handle compressed
+modules the same way that deb-pkg does.
 
+> > +# make modules executable so that find-debuginfo.sh strips them
+> > +find %{buildroot}/lib/modules/%{KERNELRELEASE} -name "*.ko" -type f \
+> > +       | xargs --no-run-if-empty chmod u+x
+> 
+> This seems necessary and correct.
+> 
+> One side-effect I noticed is that *.ko under /lib/modules/$(uname -r)/
+> now have +x permissions. (Previously, they were non-executables).
+> 
+> I checked Fedora. Modules under /lib/modules/$(uname -r)/
+> do not have +x permissions.
+> 
+> Do you know how Fedora's kernel.spec handles this?
 
+I'm looking at
 
-> But leaving CONFIG_MODULE_COMPRESS off seems common, so taking this
-> patch as is still feels useful.
->
-> Signed-off-by: Uday Shankar <ushankar@purestorage.com>
-> ---
->  scripts/package/kernel.spec | 31 +++++++++++++++++++++++++++++--
->  scripts/package/mkspec      |  3 +++
->  2 files changed, 32 insertions(+), 2 deletions(-)
->
-> diff --git a/scripts/package/kernel.spec b/scripts/package/kernel.spec
-> index ac3e5ac01d8a4daa031bc9e70b792a68f74c388b..efd7b1f43c64c8324bb0a6e54=
-0f2ba5f77f9de1e 100644
-> --- a/scripts/package/kernel.spec
-> +++ b/scripts/package/kernel.spec
-> @@ -2,8 +2,6 @@
->  %{!?_arch: %define _arch dummy}
->  %{!?make: %define make make}
->  %define makeflags %{?_smp_mflags} ARCH=3D%{ARCH}
-> -%define __spec_install_post /usr/lib/rpm/brp-compress || :
-> -%define debug_package %{nil}
->
->  Name: kernel
->  Summary: The Linux Kernel
-> @@ -46,6 +44,24 @@ This package provides kernel headers and makefiles suf=
-ficient to build modules
->  against the %{version} kernel package.
->  %endif
->
-> +%if %{with_debuginfo}
-> +# list of debuginfo-related options taken from distribution spec files
-> +%undefine _include_minidebuginfo
-> +%undefine _find_debuginfo_dwz_opts
-> +%undefine _unique_build_ids
-> +%undefine _unique_debug_names
-> +%undefine _unique_debug_srcs
-> +%undefine _debuginfo_subpackages
-> +%global _find_debuginfo_opts -r
-> +%global _missing_build_ids_terminate_build 1
-> +%global _no_recompute_build_ids 1
-> +%{debug_package}
-> +%endif
-> +# some (but not all) versions of rpmbuild emit %%debug_package with
-> +# %%install. since we've already emitted it manually, that would cause
-> +# a package redefinition error. ensure that doesn't happen
-> +%define debug_package %{nil}
-> +
->  %prep
->  %setup -q -n linux
->  cp %{SOURCE1} .config
-> @@ -89,8 +105,19 @@ ln -fns /usr/src/kernels/%{KERNELRELEASE} %{buildroot=
-}/lib/modules/%{KERNELRELEA
->         echo "%exclude /lib/modules/%{KERNELRELEASE}/build"
->  } > %{buildroot}/kernel.list
->
-> +# make modules executable so that find-debuginfo.sh strips them
-> +find %{buildroot}/lib/modules/%{KERNELRELEASE} -name "*.ko" -type f \
-> +       | xargs --no-run-if-empty chmod u+x
+https://koji.fedoraproject.org/koji/buildinfo?buildID=2661097
 
-This seems necessary and correct.
+The spec file for that package actually does something similar to what
+we're doing above; it has this excerpt
 
-One side-effect I noticed is that *.ko under /lib/modules/$(uname -r)/
-now have +x permissions. (Previously, they were non-executables).
+# mark modules executable so that strip-to-file can strip them
+xargs --no-run-if-empty chmod u+x < modnames
 
-I checked Fedora. Modules under /lib/modules/$(uname -r)/
-do not have +x permissions.
+But later on it compresses the modules, using some RPM macro magic to
+ensure that happens _after_ find-debuginfo.sh has seen and stripped the
+executable modules. The compression eats the executable bit.
 
-Do you know how Fedora's kernel.spec handles this?
+> > +
+> > +%if %{with_debuginfo}
+> > +mkdir -p %{buildroot}/usr/lib/debug/lib/modules/%{KERNELRELEASE}
+> > +cp vmlinux %{buildroot}/usr/lib/debug/lib/modules/%{KERNELRELEASE}
+> > +%endif
+> > +
+> >  %clean
+> >  rm -rf %{buildroot}
+> > +rm -f debugfiles.list debuglinks.list debugsourcefiles.list debugsources.list \
+> > +       elfbins.list
+> >
+> >  %post
+> >  if [ -x /usr/bin/kernel-install ]; then
+> > diff --git a/scripts/package/mkspec b/scripts/package/mkspec
+> > index 4dc1466dfc815c110eb7206f83dd874b17f5170f..4c96bdca381a2fb4cc57415ca914d14e37e16caa 100755
+> > --- a/scripts/package/mkspec
+> > +++ b/scripts/package/mkspec
+> > @@ -23,6 +23,9 @@ else
+> >  echo '%define with_devel 0'
+> >  fi
+> >
+> > +WITH_DEBUGINFO=$(grep -c CONFIG_DEBUG_INFO=y include/config/auto.conf)
+> > +echo "%define with_debuginfo ${WITH_DEBUGINFO}"
+> > +
+> 
+> How about this code?
+> 
+> if grep -q CONFIG_DEBUG_INFO=y include/config/auto.conf; then
+> echo '%define with_debuginfo %{?_without_debuginfo: 0}
+> %{?!_without_debuginfo: 1}'
+> else
+> echo '%define with_debuginfo 0'
+> fi
+> 
+> This allows users to skip the debuginfo package
+> and aligns with the existing code a few lines above.
+> 
+> Also, it is compatible with Fedora's kernel.spec.
+> https://src.fedoraproject.org/rpms/kernel/blob/rawhide/f/kernel.spec#_236
+> 
+> 
+> If you do not support CONFIG_MODULE_COMPRESS,
+> you can check it here.
 
+Yes, both suggestions make sense, thanks. Will implement these in v2.
 
-
-> +
-> +%if %{with_debuginfo}
-> +mkdir -p %{buildroot}/usr/lib/debug/lib/modules/%{KERNELRELEASE}
-> +cp vmlinux %{buildroot}/usr/lib/debug/lib/modules/%{KERNELRELEASE}
-> +%endif
-> +
->  %clean
->  rm -rf %{buildroot}
-> +rm -f debugfiles.list debuglinks.list debugsourcefiles.list debugsources=
-.list \
-> +       elfbins.list
->
->  %post
->  if [ -x /usr/bin/kernel-install ]; then
-> diff --git a/scripts/package/mkspec b/scripts/package/mkspec
-> index 4dc1466dfc815c110eb7206f83dd874b17f5170f..4c96bdca381a2fb4cc57415ca=
-914d14e37e16caa 100755
-> --- a/scripts/package/mkspec
-> +++ b/scripts/package/mkspec
-> @@ -23,6 +23,9 @@ else
->  echo '%define with_devel 0'
->  fi
->
-> +WITH_DEBUGINFO=3D$(grep -c CONFIG_DEBUG_INFO=3Dy include/config/auto.con=
-f)
-> +echo "%define with_debuginfo ${WITH_DEBUGINFO}"
-> +
-
-How about this code?
-
-if grep -q CONFIG_DEBUG_INFO=3Dy include/config/auto.conf; then
-echo '%define with_debuginfo %{?_without_debuginfo: 0}
-%{?!_without_debuginfo: 1}'
-else
-echo '%define with_debuginfo 0'
-fi
-
-This allows users to skip the debuginfo package
-and aligns with the existing code a few lines above.
-
-Also, it is compatible with Fedora's kernel.spec.
-https://src.fedoraproject.org/rpms/kernel/blob/rawhide/f/kernel.spec#_236
-
-
-If you do not support CONFIG_MODULE_COMPRESS,
-you can check it here.
-
-
->  cat<<EOF
->  %define ARCH ${ARCH}
->  %define KERNELRELEASE ${KERNELRELEASE}
->
-> --
-> 2.34.1
->
->
-
-
---=20
-Best Regards
-Masahiro Yamada
