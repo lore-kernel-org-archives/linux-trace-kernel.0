@@ -1,138 +1,91 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f200.google.com (mail-il1-f200.google.com [209.85.166.200])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FBD818B47C;
-	Sun, 16 Mar 2025 12:21:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B60419CC0C
+	for <linux-trace-kernel@vger.kernel.org>; Sun, 16 Mar 2025 22:21:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742127717; cv=none; b=aJNZdi7f1FB2sngK8NmWfp0W6jaMeD6EHlIF0b2rZ8HJsN3mWNzrJtVxyq8tzVBSoiN7km+GxETHM6kPkfPpXHr7wlcCHl9zq4TVYQBCB50jUGTgLTWK9r+t8F0710wiUARwn/XF9ghBUrdo3LkBPImXayQH6QvPFonG+uXLIS0=
+	t=1742163692; cv=none; b=qm4fCJGvqZUzaEPDe8k9Auu7qWYjBYu1eonVo9FqSeKtA+zoTY1tg93KAjy1NhCjIcZVT2z+1y5Cz2UvWXg2x18PWrAPsQsk7yXZGZuOY1QB+NcGuxwLXO8r1DCx+CgmrFlEDhE/uX05wtXY6+TLOppopW6IydKUbivJrg1HJac=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742127717; c=relaxed/simple;
-	bh=y26tfEd3RrwIby+c9q4PmhmcouiauWQ8HV8iy1l4U3M=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=mEOfDLUQ4koRgudZSX/BXh+dQjT43OkMAZRkNER4UmxsayWcfAo+UJili18ZBoe5rDzVfflVtYmz4iJLatfoPzhSHJQpWuUUhhQO2w4dq7PnV2RimPXE5uEf8tjihwo4hBckL5+Kc7Rn32Pi5WLycYCA/QucyX3bq6kYyd/U3e8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aZPActpl; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aZPActpl"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6641EC4CEDD;
-	Sun, 16 Mar 2025 12:21:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742127717;
-	bh=y26tfEd3RrwIby+c9q4PmhmcouiauWQ8HV8iy1l4U3M=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=aZPActplDB7iTUEFZYECTRc5twmgJVus7StJps9Bke4kX5VDlfPir5JuriSqc7gNS
-	 GWgAd2wz+oKPrho5rgWsNYIUIRxZZOcrfCVyKPHYGsWX+rNzcFKyjGqHzlLoTwhC/C
-	 F2UhWrXfod5voQ5hw90+I8rEm4SuLDvTFisUPYZeLzY/MDthNsFfgprdYqAdNHxGvP
-	 LPb5/S5yJx12AcOfRNLMzfTXv8Xnj4MGTqMxamnJALlraBYHSbxW6Rd/qyMXeEtUNI
-	 bNSyXKQa9Am3AA7Aw23XzdjKMokC6BaRyB7rVlnF7CazvLT0zDfdx9gMlnbL8NDo7k
-	 ijXLPyXbg6C6Q==
-From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH 4/4] selftests: tracing: Enable fprobe events before checking enable_functions
-Date: Sun, 16 Mar 2025 21:21:52 +0900
-Message-ID: <174212771234.348872.14455715715729686727.stgit@devnote2>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <174212767109.348872.18231451508464729427.stgit@devnote2>
-References: <174212767109.348872.18231451508464729427.stgit@devnote2>
-User-Agent: StGit/0.19
+	s=arc-20240116; t=1742163692; c=relaxed/simple;
+	bh=f/bkzuKJBrCQQFvFO7kQ6QMquwdda1sZmGWNQShxsnA=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=if4O2YuAtCq+R8t52uxAQy+kVXXbiZvpfGFGTTdD1CZ8rKBPhc2krSTy195YlLBqAqL61s+7EcMp8DvehPkc5eST7cFzl5JwaFUWfgmWR0L2STHf8jF+oz9uGccEFwMWUANdNtBGpmXTWegVufPgTHrthTpmOEe1ucjSo1+nhqM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.200
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f200.google.com with SMTP id e9e14a558f8ab-3d2b3882febso32459845ab.1
+        for <linux-trace-kernel@vger.kernel.org>; Sun, 16 Mar 2025 15:21:30 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742163689; x=1742768489;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=vytDXSrDTUIA50F7Adluh0AaQUpx4RGewUd+6TVCqd4=;
+        b=WqQ8WHGftjVrmiY/itIeY3jG4NsolDRgWyACpKqBJejm0jHpjykRFV4+8IFnX0lR+X
+         50JH9+K8682bAXy5NYCoy4/01FZen0xZIQC4KhAdPulqMufDZZ2v/tDKxJtKlma+skNA
+         WV7F2sWQj3FoBaNHur9sFBKbhwl1vNhfmamCz2Tey8u1QhVA3lbXbnZvrkmSXMp7YRJB
+         JqzQ3P99qIe0PoG1fTXOFt8jnUyU4Dowsi0p0gcX1kpRfHGBpHcGf3I6O4DyGRnwI4Kv
+         SvxrZyTRQ9tYC7lV2y8GzM60BcvxPgsFN8EED2j+W7mc8hySI3OPeTTUl3NqYcyaVSwf
+         ZFCQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXHlHJk0NHrNiOFiBLyuGdi2gbFsO68VH+PlaNHN/HHCfIF3H3LzLGqay21NIcGqdPkwDKYf6eLv2RFCSoyBz3ni6k=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwwIx0ZDLJ5tmWsT2xRwQtxmQhOUhywL62Zzhtgpvp/CL4pDwUo
+	fzMRcxpSg20tu8Cots2eWvj5elMgVXCxEzrFIHANYmWhSHquewXAlVpM4x6FcL/2ugL2O2ZKnAl
+	NReKi4CAIL1N0ud+lrFuBA81OptNQU4tCBn0fnbUs0ocTkzI8H29fkTo=
+X-Google-Smtp-Source: AGHT+IEn+wquHBPxIpt0ermTcUKPWlfXqft6IlQRcDVJwMRJPcgYXM63WiE55Bj7+8ezsWoTIlKXO2u/bBJ0a2JmahvU1f3NbVfO
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a05:6e02:184e:b0:3d4:3ab3:e1c9 with SMTP id
+ e9e14a558f8ab-3d483a6e932mr96942565ab.15.1742163689656; Sun, 16 Mar 2025
+ 15:21:29 -0700 (PDT)
+Date: Sun, 16 Mar 2025 15:21:29 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67d74ee9.050a0220.2ca2c6.0003.GAE@google.com>
+Subject: [syzbot] Monthly trace report (Mar 2025)
+From: syzbot <syzbot+listdef366be10f5531c250b@syzkaller.appspotmail.com>
+To: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	mhiramat@kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Hello trace maintainers/developers,
 
-Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+This is a 31-day syzbot report for the trace subsystem.
+All related reports/information can be found at:
+https://syzkaller.appspot.com/upstream/s/trace
+
+During the period, 1 new issues were detected and 0 were fixed.
+In total, 15 issues are still open and 42 have already been fixed.
+
+Some of the still happening issues:
+
+Ref Crashes Repro Title
+<1> 1480    Yes   WARNING in format_decode (3)
+                  https://syzkaller.appspot.com/bug?extid=e2c932aec5c8a6e1d31c
+<2> 162     Yes   WARNING in bpf_get_stack_raw_tp
+                  https://syzkaller.appspot.com/bug?extid=ce35de20ed6652f60652
+<3> 37      Yes   INFO: task hung in blk_trace_ioctl (4)
+                  https://syzkaller.appspot.com/bug?extid=ed812ed461471ab17a0c
+<4> 34      Yes   WARNING in blk_register_tracepoints
+                  https://syzkaller.appspot.com/bug?extid=c54ded83396afee31eb1
+<5> 16      Yes   WARNING in get_probe_ref
+                  https://syzkaller.appspot.com/bug?extid=8672dcb9d10011c0a160
+<6> 15      Yes   WARNING in tracepoint_probe_unregister (3)
+                  https://syzkaller.appspot.com/bug?extid=a1d25e53cd4a10f7f2d3
+<7> 7       Yes   INFO: task hung in blk_trace_remove (2)
+                  https://syzkaller.appspot.com/bug?extid=2373f6be3e6de4f92562
+
 ---
- .../ftrace/test.d/dynevent/add_remove_fprobe.tc    |   30 +++++++++++++-------
- 1 file changed, 19 insertions(+), 11 deletions(-)
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-diff --git a/tools/testing/selftests/ftrace/test.d/dynevent/add_remove_fprobe.tc b/tools/testing/selftests/ftrace/test.d/dynevent/add_remove_fprobe.tc
-index 449f9d8be746..603dad73e7e8 100644
---- a/tools/testing/selftests/ftrace/test.d/dynevent/add_remove_fprobe.tc
-+++ b/tools/testing/selftests/ftrace/test.d/dynevent/add_remove_fprobe.tc
-@@ -12,6 +12,18 @@ PLACE3="schedule_timeout"
- 
- echo "f:myevent1 $PLACE" >> dynamic_events
- 
-+echo "f:myevent2 $PLACE%return" >> dynamic_events
-+
-+# add another event
-+echo "f:myevent3 $PLACE2" >> dynamic_events
-+
-+grep -q myevent1 dynamic_events
-+grep -q myevent2 dynamic_events
-+grep -q myevent3 dynamic_events
-+test -d events/fprobes/myevent1
-+test -d events/fprobes/myevent2
-+
-+echo 1 > events/fprobes/myevent1/enable
- # Make sure the event is attached and is the only one
- grep -q $PLACE enabled_functions
- cnt=`cat enabled_functions | wc -l`
-@@ -19,29 +31,22 @@ if [ $cnt -ne 1 ]; then
- 	exit_fail
- fi
- 
--echo "f:myevent2 $PLACE%return" >> dynamic_events
--
-+echo 1 > events/fprobes/myevent2/enable
- # It should till be the only attached function
- cnt=`cat enabled_functions | wc -l`
- if [ $cnt -ne 1 ]; then
- 	exit_fail
- fi
- 
--# add another event
--echo "f:myevent3 $PLACE2" >> dynamic_events
--
-+echo 1 > events/fprobes/myevent3/enable
-+# If the function is different, the attached function should be increased
- grep -q $PLACE2 enabled_functions
- cnt=`cat enabled_functions | wc -l`
- if [ $cnt -ne 2 ]; then
- 	exit_fail
- fi
- 
--grep -q myevent1 dynamic_events
--grep -q myevent2 dynamic_events
--grep -q myevent3 dynamic_events
--test -d events/fprobes/myevent1
--test -d events/fprobes/myevent2
--
-+echo 0 > events/fprobes/myevent2/enable
- echo "-:myevent2" >> dynamic_events
- 
- grep -q myevent1 dynamic_events
-@@ -53,6 +58,7 @@ if [ $cnt -ne 2 ]; then
- 	exit_fail
- fi
- 
-+echo 0 > events/fprobes/enable
- echo > dynamic_events
- 
- # Should have none left
-@@ -63,12 +69,14 @@ fi
- 
- echo "f:myevent4 $PLACE" >> dynamic_events
- 
-+echo 1 > events/fprobes/myevent4/enable
- # Should only have one enabled
- cnt=`cat enabled_functions | wc -l`
- if [ $cnt -ne 1 ]; then
- 	exit_fail
- fi
- 
-+echo 0 > events/fprobes/enable
- echo > dynamic_events
- 
- # Should have none left
+To disable reminders for individual bugs, reply with the following command:
+#syz set <Ref> no-reminders
 
+To change bug's subsystems, reply with:
+#syz set <Ref> subsystems: new-subsystem
+
+You may send multiple commands in a single email message.
