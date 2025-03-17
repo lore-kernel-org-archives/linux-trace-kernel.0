@@ -1,91 +1,81 @@
-Received: from mail-il1-f200.google.com (mail-il1-f200.google.com [209.85.166.200])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out30-124.freemail.mail.aliyun.com (out30-124.freemail.mail.aliyun.com [115.124.30.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B60419CC0C
-	for <linux-trace-kernel@vger.kernel.org>; Sun, 16 Mar 2025 22:21:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3129B79D2;
+	Mon, 17 Mar 2025 01:55:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742163692; cv=none; b=qm4fCJGvqZUzaEPDe8k9Auu7qWYjBYu1eonVo9FqSeKtA+zoTY1tg93KAjy1NhCjIcZVT2z+1y5Cz2UvWXg2x18PWrAPsQsk7yXZGZuOY1QB+NcGuxwLXO8r1DCx+CgmrFlEDhE/uX05wtXY6+TLOppopW6IydKUbivJrg1HJac=
+	t=1742176543; cv=none; b=V8pZH44xEUIINa/OZGW6lcAa3MNQFw6T42opBoZSu3WpaHsBHW0oEe2yIQ4eZZsd4M2UQqQqlonbFP8Ukkf3JugfAtxwlSl0LWAarUMsNvEyizSE5gCp0Yb5uRiSVEAUicz/XvmV3MwLQCwOAfd4U/XpIT+uT4JKrC0iQaE7NRM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742163692; c=relaxed/simple;
-	bh=f/bkzuKJBrCQQFvFO7kQ6QMquwdda1sZmGWNQShxsnA=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=if4O2YuAtCq+R8t52uxAQy+kVXXbiZvpfGFGTTdD1CZ8rKBPhc2krSTy195YlLBqAqL61s+7EcMp8DvehPkc5eST7cFzl5JwaFUWfgmWR0L2STHf8jF+oz9uGccEFwMWUANdNtBGpmXTWegVufPgTHrthTpmOEe1ucjSo1+nhqM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.200
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f200.google.com with SMTP id e9e14a558f8ab-3d2b3882febso32459845ab.1
-        for <linux-trace-kernel@vger.kernel.org>; Sun, 16 Mar 2025 15:21:30 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742163689; x=1742768489;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=vytDXSrDTUIA50F7Adluh0AaQUpx4RGewUd+6TVCqd4=;
-        b=WqQ8WHGftjVrmiY/itIeY3jG4NsolDRgWyACpKqBJejm0jHpjykRFV4+8IFnX0lR+X
-         50JH9+K8682bAXy5NYCoy4/01FZen0xZIQC4KhAdPulqMufDZZ2v/tDKxJtKlma+skNA
-         WV7F2sWQj3FoBaNHur9sFBKbhwl1vNhfmamCz2Tey8u1QhVA3lbXbnZvrkmSXMp7YRJB
-         JqzQ3P99qIe0PoG1fTXOFt8jnUyU4Dowsi0p0gcX1kpRfHGBpHcGf3I6O4DyGRnwI4Kv
-         SvxrZyTRQ9tYC7lV2y8GzM60BcvxPgsFN8EED2j+W7mc8hySI3OPeTTUl3NqYcyaVSwf
-         ZFCQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXHlHJk0NHrNiOFiBLyuGdi2gbFsO68VH+PlaNHN/HHCfIF3H3LzLGqay21NIcGqdPkwDKYf6eLv2RFCSoyBz3ni6k=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwwIx0ZDLJ5tmWsT2xRwQtxmQhOUhywL62Zzhtgpvp/CL4pDwUo
-	fzMRcxpSg20tu8Cots2eWvj5elMgVXCxEzrFIHANYmWhSHquewXAlVpM4x6FcL/2ugL2O2ZKnAl
-	NReKi4CAIL1N0ud+lrFuBA81OptNQU4tCBn0fnbUs0ocTkzI8H29fkTo=
-X-Google-Smtp-Source: AGHT+IEn+wquHBPxIpt0ermTcUKPWlfXqft6IlQRcDVJwMRJPcgYXM63WiE55Bj7+8ezsWoTIlKXO2u/bBJ0a2JmahvU1f3NbVfO
+	s=arc-20240116; t=1742176543; c=relaxed/simple;
+	bh=7GlVFROGhQYP4W1Es7a2w1q7aJ6QXK6BRS5zZWU3QQc=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=YXKK/O8Ksgxt8I4irvxblSoj5wzWXcYIEY0WCyx9BGAik3LTKjBelip824MR8dB+I4msUmdMcGrSA7JwGcHdSlZfRPQ8QLiaIwdL/iDqmlRUMWQ+bPYwg37QqzaQMhEusXOG0idjMgc/O62OehjHIa/92gcGQxUuP7E8lGRA9y8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=H0ZXvlJ4; arc=none smtp.client-ip=115.124.30.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="H0ZXvlJ4"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1742176532; h=From:To:Subject:Date:Message-Id:MIME-Version:Content-Type;
+	bh=uoBZcHvTXH4zImpYvULitH9EJk+5AMCPZ8jdSfBBn3Y=;
+	b=H0ZXvlJ4nLA15O8RSaDh3B1fYDg8Q9xjBB9soC776N95v8O6SJISQZgmtOZiPXhQ7OhUhemEf/Wp97l+Pv9oDeu9NwMV42LO7bjAhlRKIlPoBAfcdaaIIYekSdo4fq2MJYvGY60TsbHXDm+vLKMquVq4LuJVta3CqMfsR3lTNmQ=
+Received: from localhost(mailfrom:jiapeng.chong@linux.alibaba.com fp:SMTPD_---0WRXQteu_1742176525 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Mon, 17 Mar 2025 09:55:31 +0800
+From: Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
+To: rostedt@goodmis.org
+Cc: mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	Jiapeng Chong <jiapeng.chong@linux.alibaba.com>,
+	Abaci Robot <abaci@linux.alibaba.com>
+Subject: [PATCH -next] ring-buffer: Remove the unused variable bmeta
+Date: Mon, 17 Mar 2025 09:55:24 +0800
+Message-Id: <20250317015524.3902-1-jiapeng.chong@linux.alibaba.com>
+X-Mailer: git-send-email 2.32.0.3.g01195cf9f
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:184e:b0:3d4:3ab3:e1c9 with SMTP id
- e9e14a558f8ab-3d483a6e932mr96942565ab.15.1742163689656; Sun, 16 Mar 2025
- 15:21:29 -0700 (PDT)
-Date: Sun, 16 Mar 2025 15:21:29 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67d74ee9.050a0220.2ca2c6.0003.GAE@google.com>
-Subject: [syzbot] Monthly trace report (Mar 2025)
-From: syzbot <syzbot+listdef366be10f5531c250b@syzkaller.appspotmail.com>
-To: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	mhiramat@kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Hello trace maintainers/developers,
+Variable bmeta is not effectively used, so delete it.
 
-This is a 31-day syzbot report for the trace subsystem.
-All related reports/information can be found at:
-https://syzkaller.appspot.com/upstream/s/trace
+kernel/trace/ring_buffer.c:1952:27: warning: variable ‘bmeta’ set but not used.
 
-During the period, 1 new issues were detected and 0 were fixed.
-In total, 15 issues are still open and 42 have already been fixed.
-
-Some of the still happening issues:
-
-Ref Crashes Repro Title
-<1> 1480    Yes   WARNING in format_decode (3)
-                  https://syzkaller.appspot.com/bug?extid=e2c932aec5c8a6e1d31c
-<2> 162     Yes   WARNING in bpf_get_stack_raw_tp
-                  https://syzkaller.appspot.com/bug?extid=ce35de20ed6652f60652
-<3> 37      Yes   INFO: task hung in blk_trace_ioctl (4)
-                  https://syzkaller.appspot.com/bug?extid=ed812ed461471ab17a0c
-<4> 34      Yes   WARNING in blk_register_tracepoints
-                  https://syzkaller.appspot.com/bug?extid=c54ded83396afee31eb1
-<5> 16      Yes   WARNING in get_probe_ref
-                  https://syzkaller.appspot.com/bug?extid=8672dcb9d10011c0a160
-<6> 15      Yes   WARNING in tracepoint_probe_unregister (3)
-                  https://syzkaller.appspot.com/bug?extid=a1d25e53cd4a10f7f2d3
-<7> 7       Yes   INFO: task hung in blk_trace_remove (2)
-                  https://syzkaller.appspot.com/bug?extid=2373f6be3e6de4f92562
-
+Reported-by: Abaci Robot <abaci@linux.alibaba.com>
+Closes: https://bugzilla.openanolis.cn/show_bug.cgi?id=19524
+Signed-off-by: Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
 ---
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+ kernel/trace/ring_buffer.c | 3 ---
+ 1 file changed, 3 deletions(-)
 
-To disable reminders for individual bugs, reply with the following command:
-#syz set <Ref> no-reminders
+diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+index 1f9f3fd7e23d..229427fe0c2f 100644
+--- a/kernel/trace/ring_buffer.c
++++ b/kernel/trace/ring_buffer.c
+@@ -1949,7 +1949,6 @@ static void rb_meta_validate_events(struct ring_buffer_per_cpu *cpu_buffer)
+ static void rb_range_meta_init(struct trace_buffer *buffer, int nr_pages, int scratch_size)
+ {
+ 	struct ring_buffer_cpu_meta *meta;
+-	struct ring_buffer_meta *bmeta;
+ 	unsigned long *subbuf_mask;
+ 	unsigned long delta;
+ 	void *subbuf;
+@@ -1964,8 +1963,6 @@ static void rb_range_meta_init(struct trace_buffer *buffer, int nr_pages, int sc
+ 	if (rb_meta_init(buffer, scratch_size))
+ 		valid = true;
+ 
+-	bmeta = buffer->meta;
+-
+ 	for (cpu = 0; cpu < nr_cpu_ids; cpu++) {
+ 		void *next_meta;
+ 
+-- 
+2.32.0.3.g01195cf9f
 
-To change bug's subsystems, reply with:
-#syz set <Ref> subsystems: new-subsystem
-
-You may send multiple commands in a single email message.
