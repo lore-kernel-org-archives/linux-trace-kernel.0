@@ -1,80 +1,84 @@
-Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1869D1F941;
-	Mon, 17 Mar 2025 22:47:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.79.88.28
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CF77155753;
+	Tue, 18 Mar 2025 01:25:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742251666; cv=none; b=srzVKHa6E/ZIFR4rSpo8JStknjQYNHqjJPCcWsr2vq8Ii2fTdZYDzb0NQQX3Txw+1FSrtT8RzuRCma7Y9xYOMS28y9OVz6DmLLpxPBMA0S+BtmCzprKZg42coAqdOBYRtmIULQy1Eew1I8J60BhY5Z8GXY4MsUdGjkhkQJ6mZjw=
+	t=1742261155; cv=none; b=Hwo7K1PHyariF3tZl6iYFX8UReOejEI6QBF/AXI1AEfOFVKFP4fspLmudmduQDm9jTIhhwVa4QlyIS2Rx8HzksoEXflQPsX5Yqxg9p197hAmxKRVTe43MvewdZxG55V7ubdIWu2x9ThXNsynkYFody7lT9Ik+txjqu9w1CjQoGc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742251666; c=relaxed/simple;
-	bh=7pGLlYwqFnVH5ubLC9+Fc3grydgjmhWeDX+NIdBHqgw=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=ZWVdLrIi7RxH8slq1b79RjfCeO47l8Zg/x57vVhPeZyLxYpx9wE9w0cQiipC+3kDDGfWXfc8Sc8JlMnxVnybE+WXTilo9zt6e5XccUp6zVFksm0BGL5aHpmCpTPAop7vd301tGO6Qs5xO8rOE6NuX+AugDyhheXc6ZXGQ+sE64E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net; spf=pass smtp.mailfrom=lwn.net; dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b=bgpujGS7; arc=none smtp.client-ip=45.79.88.28
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lwn.net
+	s=arc-20240116; t=1742261155; c=relaxed/simple;
+	bh=UXjn0fyrQYkQwF6j4cJrc5p9zVRAfkUTomr9zTyax1w=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=HCZzGUX1oodoMcCquC8HZ45L3u+gheopniirdVtrZEE3i81BHSye7OFalRYm/CKZdYJOUfxvsyvO/SBIot2sd+mioJFS/q9dVlMzhNXivvyp618wWFBH8mRtfF8WYTtVi6WQiwCS8glhPROcVkOy6/ovGbD7WARR8iyRpYmDr4g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mj89zOK/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="bgpujGS7"
-DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net 3C36341061
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
-	t=1742251662; bh=7pGLlYwqFnVH5ubLC9+Fc3grydgjmhWeDX+NIdBHqgw=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=bgpujGS7/KosD742Bb37WalnTCUfFf/mZaNMKB+7f71XB+GbAUbtd96I56/x6Dc/R
-	 wROT1/otuKwFGJK0qofdvRf30/AnWF8rybR1SSkRxJyOPIqQbe+YjlTErjVd6bKNRt
-	 dr1pwK+IRO4IjIFgew2SKj6QC73Y/7QvoTRbNUxBEZCq8h4QFuV/DVBnhrPEIsfDBN
-	 A47eiAEhmB6m8bxznkxPkMt5M4Ar1BWCB1x3CM+Ep15xPTUB7eChieh9tMHefp8ZQu
-	 baq0IPLj7R74xWpHLNnx3mbQiE6AQg+nNm4JH5gAlskTVi3s3rGSWiyFUJDMTEnVj+
-	 8+1etF4JHFxMQ==
-Received: from localhost (unknown [IPv6:2601:280:4600:2da9::1fe])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by ms.lwn.net (Postfix) with ESMTPSA id 3C36341061;
-	Mon, 17 Mar 2025 22:47:42 +0000 (UTC)
-From: Jonathan Corbet <corbet@lwn.net>
-To: Tomas Glozar <tglozar@redhat.com>, "Luis Claudio R. Goncalves"
- <lgoncalv@redhat.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>,
- linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org, John Kacur <jkacur@redhat.com>
-Subject: Re: [PATCH 4/4] Documentation/rtla: Include BPF sample collection
-In-Reply-To: <CAP4=nvRCtRwXReMt8+vxjLVqtL_pR9OyKo0HS417+93QR84mUA@mail.gmail.com>
-References: <20250311114936.148012-1-tglozar@redhat.com>
- <20250311114936.148012-5-tglozar@redhat.com> <Z9A1oN_XdMguNgHy@uudg.org>
- <CAP4=nvRCtRwXReMt8+vxjLVqtL_pR9OyKo0HS417+93QR84mUA@mail.gmail.com>
-Date: Mon, 17 Mar 2025 16:47:41 -0600
-Message-ID: <87cyefe0ky.fsf@trenco.lwn.net>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mj89zOK/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 198D6C4CEE3;
+	Tue, 18 Mar 2025 01:25:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742261154;
+	bh=UXjn0fyrQYkQwF6j4cJrc5p9zVRAfkUTomr9zTyax1w=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=mj89zOK/dpjyod76yrzVqnJjFsPqWJQDD8HMoRqSMWCqv06ldoOFwklPUapLc3CbG
+	 Q234Avd3V8u8m6fmbSYn65xLIxHpsIxk3KVjRQSD/o8G2wT1cCHgDTwGfUdNkfEGDF
+	 rOuetg1/FZZMk85aqKxJ3CBKkzSvGkR4pPcCyJadEk0LiSTfIbPxKzxhora8vNH1OG
+	 Z3PwtgPjkuUX//I9RwVmHKjhIsTOMmeLhy2WBkvNEtAtuxpmkeNvIMNt3DTcpxkz0u
+	 mksZyjrGpZPMCjfC71RTmIYJZkpiAHLgSFC3GepQ3+eFBMsnll6iuB5AcGbdao9Boy
+	 UhftkA4ptGSog==
+Date: Tue, 18 Mar 2025 10:25:52 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 1/2] tracing: Fix a compilation error without
+ CONFIG_MODULES
+Message-Id: <20250318102552.7c7400873fa3f304cbefa9b6@kernel.org>
+In-Reply-To: <20250314054257.3218dc35@batman.local.home>
+References: <174188320269.3845006.11920186078507571954.stgit@mhiramat.tok.corp.google.com>
+	<174188321162.3845006.12665585959241736399.stgit@mhiramat.tok.corp.google.com>
+	<20250314054257.3218dc35@batman.local.home>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Tomas Glozar <tglozar@redhat.com> writes:
+On Fri, 14 Mar 2025 05:42:57 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-> =C3=BAt 11. 3. 2025 v 14:07 odes=C3=ADlatel Luis Claudio R. Goncalves
-> <lgoncalv@redhat.com> napsal:
->>
->> In the last phrase, s/is/are/. So that "If either... or... are unavailab=
-le".
->>
->> Luis
->>
->
-> All references I found on this topic say the verb should be singular
-> (since both "BPF" and "the osnoise:timerlat_sample tracepoint" are
-> singular). Search for "either or subject verb agreement", e.g. [1].
->
-> [1] https://www.englishgrammar.org/subjectverb-agreement-2/
+> On Fri, 14 Mar 2025 01:26:51 +0900
+> "Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
+> 
+> > @@ -6040,9 +6042,10 @@ static void update_last_data(struct trace_array *tr)
+> >  		memset(tscratch->entries, 0,
+> >  		       flex_array_size(tscratch, entries, tscratch->nr_entries));
+> >  		tscratch->nr_entries = 0;
+> > -
+> > +#ifdef CONFIG_MODULES
+> >  		guard(mutex)(&scratch_mutex);
+> >  		module_for_each_mod(save_mod, tr);
+> > +#endif
+> >  	}
+> 
+> Hmm, I think the real fix for this would be to make
+> module_for_each_mod() a nop when modules are not configured.
 
-I concur with that reasoning, FWIW.
+Yeah, but in this case, save_mod() need to be removed too[*]. Or is it
+better to make save_mod() a nop too?
 
-What is the intended path to get this one upstream; should I take it?
+[*] https://lore.kernel.org/oe-kbuild-all/202503142045.0sE1neLa-lkp@intel.com/
 
-Thanks,
+Thank you,
 
-jon
+> 
+> -- Steve
+> 
+
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
