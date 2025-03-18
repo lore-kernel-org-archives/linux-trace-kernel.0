@@ -1,72 +1,74 @@
-Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
+Received: from mail-pj1-f44.google.com (mail-pj1-f44.google.com [209.85.216.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83C51207656;
-	Tue, 18 Mar 2025 11:27:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBF191598F4;
+	Tue, 18 Mar 2025 11:32:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742297267; cv=none; b=pIr/dEHndp1IAZC+U0bvXFydOalMnfF5APY0y41IcpUmga3nva+s69PgOUZ064HoCcsNr6d0CbdDzbm2nC0d1u0qwa+B7z5GOOA/dsjgzGU+c6h1BRVjHPKKZvNwRYQJFr2B/Pr98epxrFKnWcsx/+sOzRf7InD21bhYLKB3eFI=
+	t=1742297575; cv=none; b=qC5TgPzkGkcWhs3C3sreaLOtFp4xr+w8T4kPJu9WUuup2utZ4ZzwfeFuFWytZkr7XKN5aYxtm4VrEtTJV0BfhockASmyLLkyGEmOkv/epLfPGcU6rQLrucVr/9IyhuqB5BYpfe8IKI4tbTzwi5Zl5w2YfQPZ3CeZNYKXNtjwqSI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742297267; c=relaxed/simple;
-	bh=7grknlphHpAkNnmLwLYUSBqyQUugIdELO0U72gMOS/w=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=WJrGnp2ykySECnvpX4fhwoWRmioNj2PGOxpRKKf7UPW0pNkxSG/HrSZW4G+CBhmIGKTrOGQ8SV503tv7UW/qUz+USN9GgLt1VQlcpFQ0z9Cahsqjon30Wb1BplQ5zOqgMNYdu4CXxI9wq/lBndKZBlJAAjivmg5gR+CskMHWzrM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iqpOCCaT; arc=none smtp.client-ip=209.85.216.53
+	s=arc-20240116; t=1742297575; c=relaxed/simple;
+	bh=DOLg4qCV36A7TvJtJdyAix1jKsHX7JjPHQ2ArcXagQ4=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Jvc6zWiHbJeX90vS0O3V1wXRTvXH+IMiWmizTMu59zbNYtjSMgfFRJYcFLrQRE+e1LAj7EXqHcDaNLDbh66Z3+OE7SKNH22O7ihmHuZXy22iCe72coHj2JdjOcHOymvAVTZm9rrStufI/+iQiXBcKR0iAk2xOjZgPoWcuHIhHCA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Wro0Y2o6; arc=none smtp.client-ip=209.85.216.44
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iqpOCCaT"
-Received: by mail-pj1-f53.google.com with SMTP id 98e67ed59e1d1-300f92661fcso4927565a91.3;
-        Tue, 18 Mar 2025 04:27:46 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Wro0Y2o6"
+Received: by mail-pj1-f44.google.com with SMTP id 98e67ed59e1d1-2f9d3d0f55dso5471192a91.1;
+        Tue, 18 Mar 2025 04:32:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1742297266; x=1742902066; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1742297569; x=1742902369; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=IcvcsPCsb52a0zF8mgEmM6gyp48rWfVJrSpx8wGcdyI=;
-        b=iqpOCCaTZxS7pdt6yQLsENCjJ+XH8Nhqq/HTH1kvD1/Y0jXxgPxYLhBRw+OQNA9B9P
-         OG23Be7oOu6sOT5Ng08fuS7pytstzr3xD4/sI74EOaU4ihEVeUQDOCT1aNx5N4Hhe7hJ
-         9Uj1GL2HIr/dO4LxonOELveM5OwjvGihRzDXV7p01n93LK7ADOS/s4jvtKJS0g7bYxFf
-         8UMEng3QMUCCKzvpsF6ScY9PRkkebv5TO9BYt61HUiyLHnjg7ATqpdJgTvHRRaQsRQXN
-         BjraNHmOufqROAh5HSTkNzGqx+4AFvKfHNRwaEz8sbVa4xRg/8HzBJo6+R9EjGQqGs/m
-         lgAg==
+        bh=llCyBpyuPyimvCR5J3EoIvDpQdWHHcfEhpAsJ9dqxHU=;
+        b=Wro0Y2o60lKu2t8BsWuAzV8bMqztZtSKcDTZbJxEiyYYLZqOfjpVwfTK6yMpHBjz/s
+         cWUL41Yu3eh2DJoYRZjC2yjwKC3ACRadVZ6ZlEVztaqa+GgP5aBgvqgDN0h+6VZu3S4f
+         v1iNMjXpYZeMpIXSX6GQQpDfF/UDezXZPER0QrK108omi+axxJDHOov2BSZLAqEEWRrC
+         mAYmNESoN2ix6dbyAZBRCOMyqk3d7PpfOwDZnY9wlce2YYJWzHQuKHeIFuxxXL58E9RO
+         PLiC9kyAe8oIS6eRLMn8VBj3Xvg2nxadxa0MJ4YdivtXyxwl3GvpoO97oJQAp4S2b8Hb
+         71JA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742297266; x=1742902066;
+        d=1e100.net; s=20230601; t=1742297569; x=1742902369;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=IcvcsPCsb52a0zF8mgEmM6gyp48rWfVJrSpx8wGcdyI=;
-        b=ZZTeGYMWDPuTJ3yOcFJPawfE5VGedwv9U9aVXl7AHyER3HHupzaSXHUX2Z0FXgpfja
-         MhzVlLqQz4m8Ht9yoYpM5BFIUPcg79tKKKp5M0VKxdiTcIcnJQN2Aeg9PJ97c+g1F577
-         pPNN8/NNcyhfQYi4buJKdiM3VkFLX1D6q0ep7z6EPaIpGS+fzu3o/DqQic++lr/2h6nq
-         WuH5hl2XkRZDqq65BM+uYWkEN7ZN6W9fhI28KaRxLhntv7tbR1oQhSEHuK0kPX4p1ZHv
-         bcfrEbmKzNnPKJMJiaNCxK2mEle1cw3udplpdA1lYdxNjhSV6YrRT/SHDAR75KJKuvUx
-         LvgQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVPKC0SGmsX/tteITsivH2efitIMP8RQC/APwhug0jwlv909HGSqu4f4Wua48pnZYb+epe6Ye/bYoZSUJ6CDYzGMmTW@vger.kernel.org, AJvYcCWMxTszBbeOYfrC6QLDXGN/T3cQTnP+yXL+2tSTlcpJ6fSlFb8XSIP4mvndEb/5mDRMWTl430JOPYhq540=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyoYok6f5xR3BNu+OAvKMgEL593sW/8U6PdfTbwqVOY3TSiVOU2
-	rqY52zqopU7uAemxG1gF13DfnXYeFNIcIpwpyMYlP9Fw1KG4+S1odnVRJdjNeWPKPg==
-X-Gm-Gg: ASbGncsmKx0+jl7GFBx4Y4NsKYb35pANzxY6+RO7tV0BS8ZFT2Srb7yPfAryuIPShoZ
-	q2pGD5R6Phhh9IC/pYXc2W+5770bayCg67r7pV/7YkG7l0/T/h4XORQfWVN3Deuqrm6sZdvfuAa
-	5HdY32EEblv77CpFLruINp9EnijnuMNQ+IQ4naVBXFPBYm3rT5hGYg8PULFEkhHjIF2y/lmvH64
-	YwX1AS4bPb1pz2Q7LWD2LSHZIQNl2VzYp+p4uVIKyW5S1xzqkvhQyCOy0FEF1yjCfbqJfBPAN9v
-	ZbAi5JtGGu33vb7wUpSwYMlXbqfTsJD+IWR9YKczqB/dM5DT9GoU30/EvIdttOdovxNM
-X-Google-Smtp-Source: AGHT+IE++RFcy6kw6hUjKVp1ZoCBUNo8R8FXnlvnWyV9smNvJP8u/r5hHiAs8ThA5ytPoND6N4rDHg==
-X-Received: by 2002:a17:90a:e7ce:b0:2ea:5dea:eb0a with SMTP id 98e67ed59e1d1-301a5b0065dmr2577387a91.4.1742297265271;
-        Tue, 18 Mar 2025 04:27:45 -0700 (PDT)
-Received: from localhost.localdomain ([183.242.254.176])
-        by smtp.googlemail.com with ESMTPSA id 98e67ed59e1d1-3015353462asm7885564a91.27.2025.03.18.04.27.41
-        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Tue, 18 Mar 2025 04:27:44 -0700 (PDT)
-From: Miaoqian Lin <linmq006@gmail.com>
-To: Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Tom Zanussi <zanussi@kernel.org>,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Cc: linmq006@gmail.com
-Subject: [PATCH] tracing: Fix error handling in event_trigger_parse
-Date: Tue, 18 Mar 2025 19:27:37 +0800
-Message-Id: <20250318112737.4174-1-linmq006@gmail.com>
-X-Mailer: git-send-email 2.39.5 (Apple Git-154)
+        bh=llCyBpyuPyimvCR5J3EoIvDpQdWHHcfEhpAsJ9dqxHU=;
+        b=TqeIEqOKdYX1vbHarTBNh539waSfZh4+dxY/E6sbFuvLNLqQpd/BwHY3ECY0lsMGrM
+         IxNDC5rbyMZVf5TZtrVV6uelAZ2XK5fAd3b8p3y/cIZePLIbST9KU9ZpOnaCC/RhSwEL
+         ryp4MAbJRX9KDFoE2PheuqrJWe0lOSpfMH3Zf4y54Tgx+WCMaff72gxTeC4DOO4KXrnB
+         i+5r2DjSK6CKWf1jpk6wU6zz6sHCI9bvL6uGXr8U08cbMHXwf/RnDAej2juPMs3Z4viA
+         j/+v/5J+qpcH0QirHZpdJwj/eOBQEJ1j2hHCcRCsYiszQauFuOohciDOIHqG2EE0S/M4
+         Oo0Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVBbTdoaGPjiQqHdW1qfQwmLG0PTradRigVDY4OUb6llhSwfkxRPiHGVdo0mgaMhQBW2GSxpTiNDMI=@vger.kernel.org, AJvYcCXMK66+zFSx4R4pU6gLsZAwSITkI16fzwNxtWvnTxv9Y2MHkMAFZc/GiMi8VNP6QN+dUrmaTknFMj8hKjkz+wOalgMN@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw3QRvv54sG9YFbtbNG/94BH0YqyPofpmEDNF3Q+MQpS67VhfEp
+	ttuIiweM+W2RuaY9iWyjStWcwt0xvM6/ELbIck3eRObl5fP2SjLa
+X-Gm-Gg: ASbGnctfNOvUkQJGAk8tWL6M5ukJD7Acm+aUuH3iJFFFFu63rxIQDiVD7FpJYC6mY4L
+	7WzTOEm+JO+jdQl1AkenJjhOMTb4CZQZUUHKYgjrkslv//LYZ1PeSAbaPvkQ/YwYfiVly192/iZ
+	cU/BsgjNzCEemwA3s0KQVpH9tzpOOtqW46QzTxY4kf2qN5ReixThNzKFcc57xSllxCtXr3SRtcb
+	iG7m/Xtl0lw+SpuvrgFFotJOAZ7cUCbPM1AvGmt4kHWYVaYDdtS+CUwrMOifH8kzv3reYjSUY3e
+	iX+0D/OGwvzwjzJDHl6OtwEBzViT4gTE1tXCt+Ui1l4VDRdgyeXzBbMRYBtLSJtWqf16cU9+ffg
+	=
+X-Google-Smtp-Source: AGHT+IFC4kGCuKFADzEYkuZqmtcTWDGH6kHXcC7o1xX775e+lgRcF41Lg5LZn6d0S5J2XICWin9wNg==
+X-Received: by 2002:a17:90b:4a11:b0:2ef:31a9:95c6 with SMTP id 98e67ed59e1d1-301a5b13817mr3095801a91.14.1742297568976;
+        Tue, 18 Mar 2025 04:32:48 -0700 (PDT)
+Received: from purva-IdeaPad-Gaming-3-15IHU6.. ([14.139.108.62])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-225c6bbec04sm91832555ad.191.2025.03.18.04.32.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Mar 2025 04:32:48 -0700 (PDT)
+From: Purva Yeshi <purvayeshi550@gmail.com>
+To: rostedt@goodmis.org,
+	mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com,
+	corbet@lwn.net
+Cc: linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	Purva Yeshi <purvayeshi550@gmail.com>
+Subject: [PATCH v4 1/2] docs: tracing: Reduce maxdepth in index.rst for clarity
+Date: Tue, 18 Mar 2025 17:02:29 +0530
+Message-Id: <20250318113230.24950-1-purvayeshi550@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -75,39 +77,34 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-According to event_trigger_alloc() doc, event_trigger_free() should be
-used to free an event_trigger_data object. This fixes a mismatch introduced
-when kzalloc was replaced with event_trigger_alloc without updating
-the corresponding deallocation calls.
+Reduce :maxdepth: from 2 to 1 in index.rst to simplify the table of
+contents, showing only top-level document titles for better readability.
 
-Fixes: e1f187d09e11 ("tracing: Have existing event_command.parse() implementations use helpers")
-Signed-off-by: Miaoqian Lin <linmq006@gmail.com>
+Signed-off-by: Purva Yeshi <purvayeshi550@gmail.com>
 ---
- kernel/trace/trace_events_trigger.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+V1 - https://lore.kernel.org/all/20250204133616.27694-1-purvayeshi550@gmail.com/
+V2 - https://lore.kernel.org/lkml/20250206141453.139613-1-purvayeshi550@gmail.com/
+V3 - https://lore.kernel.org/all/20250312124717.7208-1-purvayeshi550@gmail.com/
+V4 - Reorder patches to apply the 'maxdepth' change first, then refactor
+the index documentation to avoid introducing maxdepth: 2 only to modify
+it in the next patch.
 
-diff --git a/kernel/trace/trace_events_trigger.c b/kernel/trace/trace_events_trigger.c
-index d45448947094..8389314b8c2d 100644
---- a/kernel/trace/trace_events_trigger.c
-+++ b/kernel/trace/trace_events_trigger.c
-@@ -995,7 +995,7 @@ event_trigger_parse(struct event_command *cmd_ops,
+ Documentation/trace/index.rst | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/Documentation/trace/index.rst b/Documentation/trace/index.rst
+index 2c991dc96..fecc4adf7 100644
+--- a/Documentation/trace/index.rst
++++ b/Documentation/trace/index.rst
+@@ -3,7 +3,7 @@ Linux Tracing Technologies
+ ==========================
  
- 	if (remove) {
- 		event_trigger_unregister(cmd_ops, file, glob+1, trigger_data);
--		kfree(trigger_data);
-+		event_trigger_free(trigger_data);
- 		ret = 0;
- 		goto out;
- 	}
-@@ -1022,7 +1022,7 @@ event_trigger_parse(struct event_command *cmd_ops,
+ .. toctree::
+-   :maxdepth: 2
++   :maxdepth: 1
  
-  out_free:
- 	event_trigger_reset_filter(cmd_ops, trigger_data);
--	kfree(trigger_data);
-+	event_trigger_free(trigger_data);
- 	goto out;
- }
- 
+    ftrace-design
+    tracepoint-analysis
 -- 
-2.39.5 (Apple Git-154)
+2.34.1
 
