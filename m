@@ -1,33 +1,50 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1A49FEACD;
-	Tue, 18 Mar 2025 18:09:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 437031F3FDC;
+	Tue, 18 Mar 2025 20:48:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742321394; cv=none; b=ZEv+8ijfjOWVEIFNs2ga7EVFtvp1feRj8edrqebChv8Vl01LEZkir0kbEO1RZROnGoY5FduMWgNal+x7JaXZC7s7wzNSSBWiBupybQDdA5lSpr9I1jki/GsLRnYv10R4mX/IbHMwqJfF4PyloQoxyhCK+NY4DT7ph3aH5JoHtRY=
+	t=1742330934; cv=none; b=jJfq8YhVjMA7AoHP29IEEgkD97yPKw15V65eTJ12TRFKLtrrz0EeaTOJGJB47Yn3agD/j26SIb45ryLTykpKUM8hz/qdgbFOs7skt8Ced0X8IBUFMGfoYnNPOA66Po7NP9YVNoReHjdqDVmS9jIr+8aucaugNKtpguLWPRpTX/U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742321394; c=relaxed/simple;
-	bh=j2USuNtKynOfTt0kkhPFVKse5rfuH9138xAYkMcmjzk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=B3dKtr3tn1H1Z2uXtqVXPWsN/Q3QhFjxOURMcVXzQuSkEXC4kx1v99iFcVf1eGUNdJDnTZ0uWV62KXNxSnkl/4no5Dol3sawoCdAjbkJHbDEiLnEZdtWtOqBCOKj18maLmcpQCJS9zAykY+7AqU6vIuEj2cGm/0/5v+C4M1vhXM=
+	s=arc-20240116; t=1742330934; c=relaxed/simple;
+	bh=Onx+0LsIZ2ltycXQSzL79FM6FqL0cWVeyD1K2eT+kq4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ghzQEpH+4U+Zo+TDeCGlOi5feXgaBYTTo/jgV28wc79MvcIj7O7buZrYxvJJoYlZSQvIVi0bcdUV68yA4cEQII4KOftwQnB9rUKXoJp7hE/zeTPT4mCLyIqfPhXe/5bmC4whk+y1YUvQBBajHa+Hmyix6r53JE7X1e4m8wsnzoE=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id ECA2613D5;
-	Tue, 18 Mar 2025 11:09:56 -0700 (PDT)
-Received: from e132430.arm.com (unknown [10.57.85.21])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 1951D3F694;
-	Tue, 18 Mar 2025 11:09:46 -0700 (PDT)
-From: Douglas RAILLARD <douglas.raillard@arm.com>
-To: rostedt@goodmis.org
-Cc: douglas.raillard@arm.com,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8E7DF13D5;
+	Tue, 18 Mar 2025 13:48:59 -0700 (PDT)
+Received: from u200865.usa.arm.com (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 97D0A3F694;
+	Tue, 18 Mar 2025 13:48:50 -0700 (PDT)
+From: Jeremy Linton <jeremy.linton@arm.com>
+To: linux-trace-kernel@vger.kernel.org
+Cc: linux-perf-users@vger.kernel.org,
+	mhiramat@kernel.org,
+	oleg@redhat.com,
+	peterz@infradead.org,
+	acme@kernel.org,
+	namhyung@kernel.org,
+	mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org,
+	irogers@google.com,
+	adrian.hunter@intel.com,
+	kan.liang@linux.intel.com,
+	thiago.bauermann@linaro.org,
+	broonie@kernel.org,
+	yury.khrustalev@arm.com,
+	kristina.martsenko@arm.com,
+	liaochang1@huawei.com,
+	catalin.marinas@arm.com,
+	will@kernel.org,
+	linux-arm-kernel@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH] tracing: Fix synth event printk format for str fields
-Date: Tue, 18 Mar 2025 18:09:38 +0000
-Message-ID: <20250318180939.227696-1-douglas.raillard@arm.com>
-X-Mailer: git-send-email 2.43.0
+	Jeremy Linton <jeremy.linton@arm.com>
+Subject: [PATCH 0/7] arm64: Enable UPROBES with GCS
+Date: Tue, 18 Mar 2025 15:48:34 -0500
+Message-ID: <20250318204841.373116-1-jeremy.linton@arm.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -36,32 +53,41 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Douglas Raillard <douglas.raillard@arm.com>
+Currently uprobes and the Arm Guarded Control Stack (GCS) feature are
+exclusive of each other. This restriction needs to be lifted in order
+to utilize GCS for generic Linux distro images where the expectation
+is that core debugging features like uprobes work.
 
-The printk format for synth event uses "%.*s" to print string fields,
-but then only passes the pointer part as var arg.
+This series adds some user accessors to read/push/pop the userspace
+shadow stack. It then utilizes those functions in the uprobe paths
+as needed to synchronize GCS with the changes in control flow at
+probe locations. 
 
-Add the missing precision var arg.
+Along the way we fix a bug in the core gcs task handling and export
+some uprobe quality of life functionality for use in arch specific code.
 
-Signed-off-by: Douglas Raillard <douglas.raillard@arm.com>
----
- kernel/trace/trace_events_synth.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+The KCONFIG restriction is then dropped.
 
-diff --git a/kernel/trace/trace_events_synth.c b/kernel/trace/trace_events_synth.c
-index e3f7d09e5512..274b9b1d9f7d 100644
---- a/kernel/trace/trace_events_synth.c
-+++ b/kernel/trace/trace_events_synth.c
-@@ -620,7 +620,8 @@ static int __set_synth_event_print_fmt(struct synth_event *event,
- 		if (event->fields[i]->is_string &&
- 		    event->fields[i]->is_dynamic)
- 			pos += snprintf(buf + pos, LEN_OR_ZERO,
--				", __get_str(%s)", event->fields[i]->name);
-+				", (int)__get_dynamic_array_len(%s), __get_str(%s)",
-+				event->fields[i]->name, event->fields[i]->name);
- 		else if (event->fields[i]->is_stack)
- 			pos += snprintf(buf + pos, LEN_OR_ZERO,
- 				", __get_stacktrace(%s)", event->fields[i]->name);
+Jeremy Linton (7):
+  arm64/gcs: task_gcs_el0_enable() should use passed task
+  arm64: probes: Break ret out from bl/blr
+  arm64: uaccess: Add additional userspace GCS accessors
+  arm64: probes: Add GCS support to bl/blr/ret
+  arm64: uprobes: Add GCS support to uretprobes
+  uprobes: Allow the use of uprobe_warn() in arch code
+  arm64: Kconfig: Remove GCS restrictions on UPROBES
+
+ arch/arm64/Kconfig                       |  1 -
+ arch/arm64/include/asm/gcs.h             |  2 +-
+ arch/arm64/include/asm/uaccess.h         | 42 ++++++++++++++++++++++++
+ arch/arm64/kernel/probes/decode-insn.c   |  7 ++--
+ arch/arm64/kernel/probes/simulate-insn.c | 42 +++++++++++++++++++++---
+ arch/arm64/kernel/probes/simulate-insn.h |  3 +-
+ arch/arm64/kernel/probes/uprobes.c       | 34 +++++++++++++++++++
+ include/linux/uprobes.h                  |  1 +
+ kernel/events/uprobes.c                  |  2 +-
+ 9 files changed, 122 insertions(+), 12 deletions(-)
+
 -- 
-2.43.0
+2.48.1
 
