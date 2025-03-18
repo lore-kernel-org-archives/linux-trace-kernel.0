@@ -1,22 +1,22 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CFCD2EACD;
-	Tue, 18 Mar 2025 18:09:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1A49FEACD;
+	Tue, 18 Mar 2025 18:09:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742321363; cv=none; b=QZy2urm0EdLvH6jC2RqVgPOikHV72ytubnvFkkOagHTFryOMECZWqMzi1bYM1QJyBfWHjxs1i24ojC345eJHkJYWCiPVm/tPaJoDq0wJ7aTIrYZWaWyV1yQYSvTCgGRZe97ckov1mSWHrh/EqU5ST9oyQVkZIpx31UpyCncPWo0=
+	t=1742321394; cv=none; b=ZEv+8ijfjOWVEIFNs2ga7EVFtvp1feRj8edrqebChv8Vl01LEZkir0kbEO1RZROnGoY5FduMWgNal+x7JaXZC7s7wzNSSBWiBupybQDdA5lSpr9I1jki/GsLRnYv10R4mX/IbHMwqJfF4PyloQoxyhCK+NY4DT7ph3aH5JoHtRY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742321363; c=relaxed/simple;
-	bh=gL+b1yskOtM8nv5UYME0i0AR/DkzUhAbPpvDM0oUkAo=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=GWEpk8BsGWu3vmKWHYsvv5b1iWq8CDWQDe5o9SCslJGOBVgylozE8hIfv7lx8EbPxVEaD3qsM44NDs/GAZbU+OmGBiQzH8n9cQV7kowDKGkHg+4bCWSrob55hulgovZIwKJZTXPWNCmqU6mO7xqCirVds39oQ5+3l1JHpWXnvk4=
+	s=arc-20240116; t=1742321394; c=relaxed/simple;
+	bh=j2USuNtKynOfTt0kkhPFVKse5rfuH9138xAYkMcmjzk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=B3dKtr3tn1H1Z2uXtqVXPWsN/Q3QhFjxOURMcVXzQuSkEXC4kx1v99iFcVf1eGUNdJDnTZ0uWV62KXNxSnkl/4no5Dol3sawoCdAjbkJHbDEiLnEZdtWtOqBCOKj18maLmcpQCJS9zAykY+7AqU6vIuEj2cGm/0/5v+C4M1vhXM=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 806A813D5;
-	Tue, 18 Mar 2025 11:09:29 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id ECA2613D5;
+	Tue, 18 Mar 2025 11:09:56 -0700 (PDT)
 Received: from e132430.arm.com (unknown [10.57.85.21])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 87F203F694;
-	Tue, 18 Mar 2025 11:09:19 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 1951D3F694;
+	Tue, 18 Mar 2025 11:09:46 -0700 (PDT)
 From: Douglas RAILLARD <douglas.raillard@arm.com>
 To: rostedt@goodmis.org
 Cc: douglas.raillard@arm.com,
@@ -24,9 +24,9 @@ Cc: douglas.raillard@arm.com,
 	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
 	linux-kernel@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH] tracing: Ensure module defining synth event cannot be unloaded while tracing
-Date: Tue, 18 Mar 2025 18:09:05 +0000
-Message-ID: <20250318180906.226841-1-douglas.raillard@arm.com>
+Subject: [PATCH] tracing: Fix synth event printk format for str fields
+Date: Tue, 18 Mar 2025 18:09:38 +0000
+Message-ID: <20250318180939.227696-1-douglas.raillard@arm.com>
 X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -38,68 +38,30 @@ Content-Transfer-Encoding: 8bit
 
 From: Douglas Raillard <douglas.raillard@arm.com>
 
-Currently, using synth_event_delete() will fail if the event is being
-used (tracing in progress), but that is normally done in the module exit
-function. At that stage, failing is problematic as returning a non-zero
-status means the module will become locked (impossible to unload or
-reload again).
+The printk format for synth event uses "%.*s" to print string fields,
+but then only passes the pointer part as var arg.
 
-Instead, ensure the module exit function does not get called in the
-first place by increasing the module refcnt when the event is enabled.
+Add the missing precision var arg.
 
 Signed-off-by: Douglas Raillard <douglas.raillard@arm.com>
 ---
- kernel/trace/trace_events_synth.c | 30 +++++++++++++++++++++++++++++-
- 1 file changed, 29 insertions(+), 1 deletion(-)
+ kernel/trace/trace_events_synth.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
 diff --git a/kernel/trace/trace_events_synth.c b/kernel/trace/trace_events_synth.c
-index e3f7d09e5512..bb7ef6e76991 100644
+index e3f7d09e5512..274b9b1d9f7d 100644
 --- a/kernel/trace/trace_events_synth.c
 +++ b/kernel/trace/trace_events_synth.c
-@@ -852,6 +852,34 @@ static struct trace_event_fields synth_event_fields_array[] = {
- 	{}
- };
- 
-+static int synth_event_reg(struct trace_event_call *call,
-+		    enum trace_reg type, void *data)
-+{
-+	struct synth_event *event = container_of(call, struct synth_event, call);
-+
-+	switch (type) {
-+	case TRACE_REG_REGISTER:
-+	case TRACE_REG_PERF_REGISTER:
-+		if (!try_module_get(event->mod))
-+			return -EBUSY;
-+		break;
-+	default:
-+		break;
-+	}
-+
-+	int ret = trace_event_reg(call, type, data);
-+
-+	switch (type) {
-+	case TRACE_REG_UNREGISTER:
-+	case TRACE_REG_PERF_UNREGISTER:
-+		module_put(event->mod);
-+		break;
-+	default:
-+		break;
-+	}
-+	return ret;
-+}
-+
- static int register_synth_event(struct synth_event *event)
- {
- 	struct trace_event_call *call = &event->call;
-@@ -881,7 +909,7 @@ static int register_synth_event(struct synth_event *event)
- 		goto out;
- 	}
- 	call->flags = TRACE_EVENT_FL_TRACEPOINT;
--	call->class->reg = trace_event_reg;
-+	call->class->reg = synth_event_reg;
- 	call->class->probe = trace_event_raw_event_synth;
- 	call->data = event;
- 	call->tp = event->tp;
+@@ -620,7 +620,8 @@ static int __set_synth_event_print_fmt(struct synth_event *event,
+ 		if (event->fields[i]->is_string &&
+ 		    event->fields[i]->is_dynamic)
+ 			pos += snprintf(buf + pos, LEN_OR_ZERO,
+-				", __get_str(%s)", event->fields[i]->name);
++				", (int)__get_dynamic_array_len(%s), __get_str(%s)",
++				event->fields[i]->name, event->fields[i]->name);
+ 		else if (event->fields[i]->is_stack)
+ 			pos += snprintf(buf + pos, LEN_OR_ZERO,
+ 				", __get_stacktrace(%s)", event->fields[i]->name);
 -- 
 2.43.0
 
