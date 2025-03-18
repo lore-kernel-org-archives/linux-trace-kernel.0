@@ -1,343 +1,122 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 999EC20D500;
-	Tue, 18 Mar 2025 13:39:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A548220CCDE;
+	Tue, 18 Mar 2025 14:22:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742305164; cv=none; b=kAzqfW3LZxCU475JudHMGXT9HlpIhdhBNNYutbTd4cCd6FyewUqQuJIMORWjYSK6oNqCFkBAMIJbk3Mbq9TUVcyyC7X/Od9Vru0NAuGkBhCCJJL8EplapY6EKV62wD4riLnyih3IgqfEl997K5g8r2IgxxNjKyzaVfMMn+ZijLs=
+	t=1742307757; cv=none; b=oV0YjsROnaEkePq2hDlHUC/8ad0q4CMXQmHAUA/fxBXtER2AdvVP47lnWJqcNBC99+CZEQ4SXf586Fz7OyXaYsXP68DsZPDT/Bz5xEAnYVoxxKYsB3Pi7AJvNi+Z/Bb3ESWUHY6r0tRhb7SWPMxibLCRlYsq9A4Hq+nZh4qXwco=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742305164; c=relaxed/simple;
-	bh=aGEDXsXkSVDpfNUB07MO05XWgQqMVTqlJV42K3CAcJ8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=PDvd5ReYcLcVUUpelpg5iPzG3l7eLemKKK53+I+Qr/snkWGiRm+gxi8YkhTQuAbZh4yZGc2T0i8RAb2ETeRZdv6khxyg+IovA0mEVTRrnUcJs+7+4u4o5UCwRd6DJIXUv3XknPQAp0qDjvKScOBz+x5nrV8mhVAcA/915JfcGIk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZnKQd1aV; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1742307757; c=relaxed/simple;
+	bh=bhxjBtgp4kDQksgqi1xMuHbxYBdn6tncSJ72WND0hEM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=aATVvpCDwunAqrg63TfE5UgNMxuz6uLWmlBwl/aT+iIYM7RgejAtUm/L2+UYP4u+EunWAq3zXpN8dekzl91uRk6pE8WNcKNhMM2jxoMIl9oXbpOd+Z5+XGZLTa8ldMbssqFSvvvLZQei8GkEUz40hlobbITYfL+XulAHkThz6tQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ePBB5nTX; arc=none smtp.client-ip=209.85.214.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZnKQd1aV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 53F9CC4CEDD;
-	Tue, 18 Mar 2025 13:39:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742305164;
-	bh=aGEDXsXkSVDpfNUB07MO05XWgQqMVTqlJV42K3CAcJ8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ZnKQd1aVM8DM2yCcXJTaL+C85SJBtnC35AmHV4mTpeZgh/77J6W5r5+8lwVtzIerv
-	 yHXY6yHVjXBPUdzyxl3uYzq/95NnFU02916cC45S9EMuJeO1O5Z7C6z4vbtviXRCwv
-	 xIqTV4j5YBieYVCFPJ+yqJPPUcj4nVklmbJ+nKfQ0RlZ6rhUI2mMmG8wUe575LNdkL
-	 3gnnkHIs1h4bvRKjXAUaS8y43RBLAHF+mqS9MnrRNOcoaIXFzEghtkbWdZWdvyh35k
-	 f3Y9DQd59vsmYesKeeROcaRU0MD/GU9l3+yiRop681X/dOkAL46ezmAGYkB4tJRJm4
-	 YMc8pubg2pwbA==
-From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH v5 2/2] tracing: Show last module text symbols in the stacktrace
-Date: Tue, 18 Mar 2025 22:39:21 +0900
-Message-ID:  <174230516153.2909896.11459658533253319657.stgit@mhiramat.tok.corp.google.com>
-X-Mailer: git-send-email 2.49.0.rc1.451.g8f38331e32-goog
-In-Reply-To:  <174230514441.2909896.16487286892751735867.stgit@mhiramat.tok.corp.google.com>
-References:  <174230514441.2909896.16487286892751735867.stgit@mhiramat.tok.corp.google.com>
-User-Agent: StGit/0.19
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ePBB5nTX"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-22622ddcc35so43413555ad.2;
+        Tue, 18 Mar 2025 07:22:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1742307754; x=1742912554; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=38DYhU9NeR63OPkTYaO3IDcR1iMpXAwYZ8MimJ8MOoY=;
+        b=ePBB5nTXoEW3nM0MNbWQ8BUiSex8V5KKP1SjIIbv0Hd/NBq1+9mn2wy1meQMKvTojW
+         X6V2oQg9UkAGAE7dOhAiUgw+kyDpR9rqlXcApm9OuFteXGJgdilAOnojoZ0P4p6faqyU
+         Dt9V1I50I61ija6T5ybG8PaetmqT712TuXhdNxPDBrCo9jPB6gW/1Cd65bfidIbb3IeT
+         /oUiVLija5kX2yPxLZDXG0of16p2u1suY7YxVgJP+Edz4qgF5SxmdX4Lz+ISgHuTq5cc
+         z5nJ5Fc6HlKl/ewV28/ZP/6F32FMgcfG3hCoERsG4odFKa93qn5839ytDKh72H67U5Wh
+         xp4A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742307754; x=1742912554;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=38DYhU9NeR63OPkTYaO3IDcR1iMpXAwYZ8MimJ8MOoY=;
+        b=EfCKKmRemx6oCxCfilGg2hLfdHOoUHjDwZaEY2T+5DviJHoZ6Ynt7gO3uCWwOSKCEL
+         /W41cwRBdI5z5AP7oSIRZIFYCKmqskaBH2AD7pM92G5L+DH2ktibYttL4BiTOFV6FI0K
+         CfTVJviFoooNxzwHlqj+3V6XXXVvjePeXbYjIMjtVdOP8Bgcx5Qabc2+GYYs7vKTDbBQ
+         6YDWAs4NgnQsE963A+GHTBbMXi7s5fr/m5OsJgXw6VIr9/BuqIWclWFYqi/dNxBNoJUT
+         pM+oTIsc251QQTBXLEtKysD74CN8FF1IXDCEpfpBzgB7Z3xCsYhKnM2MlT6dz/6vjXZu
+         rm8Q==
+X-Forwarded-Encrypted: i=1; AJvYcCU2NCxLRbv5Q2FmmD2evSISCx3xOqddvilu4qvrJALgisrgCrIlnUEQSDQP2ireXKDgPdWv4XjVFuo=@vger.kernel.org, AJvYcCWr1aVBlt+9Zow+/4H1prQ79bTZj8nlg2ZbJij5m9YUyk9riiiVRcth3/3wdS0R73wjYQClI4SWdcws6qmsU+f+gzcY@vger.kernel.org
+X-Gm-Message-State: AOJu0YyY0EjC6iA3/K4JcxLeJbDlPP99mZ428ZsWNpYSrmLRIrv8Pys+
+	2FwWRXGfVUl9NuCmTGbeeF9399hNEGpngs3dwolQZwcZkqoVdoHI
+X-Gm-Gg: ASbGnctkkM6cYsZh5E9bQWfweVGHGrbM5XvdlKSMfRbNu+2/Phy8YEDLLFqMhQRXcbS
+	z+C0DNtn+i3NNTBWVWYMRSIh3oUt8DMN1uAlp8pSxoaCn3fmspliizguO2oNw4/0cBehOJ9KoO9
+	aXoLULhqVKdDxXf9MYrmJFEcaNGEUYbf/kUVVRtOcS/Q/5a675E+vKNKozQaBslkBMOp1vA8bMx
+	nhChvcx5J2xWEym2GqCVed8b1oj0IAi8jwyDdbNIa8q1oMfx32lkivlqAjol2I28jFGW5icwqKk
+	z+HYcinYrOYgKzUKY1Iyhoyp6EdBjXDG8ucxW4dFU1OjsIV/I4uER24=
+X-Google-Smtp-Source: AGHT+IHfn0YOiCrJgDVT6D9vqLwbLWYvefBjGXOzK93X9X8ZKF+gyG7wU5swUF3rcICsNkfF/3qi5Q==
+X-Received: by 2002:a05:6a00:1398:b0:736:3e50:bfec with SMTP id d2e1a72fcca58-737572301a9mr6633064b3a.8.1742307753469;
+        Tue, 18 Mar 2025 07:22:33 -0700 (PDT)
+Received: from archie.me ([103.124.138.155])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73711694e40sm9868696b3a.139.2025.03.18.07.22.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Mar 2025 07:22:32 -0700 (PDT)
+Received: by archie.me (Postfix, from userid 1000)
+	id 1D388420A74B; Tue, 18 Mar 2025 21:22:30 +0700 (WIB)
+Date: Tue, 18 Mar 2025 21:22:29 +0700
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+To: Purva Yeshi <purvayeshi550@gmail.com>, rostedt@goodmis.org,
+	mhiramat@kernel.org, mathieu.desnoyers@efficios.com, corbet@lwn.net
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org
+Subject: Re: [PATCH v4 1/2] docs: tracing: Reduce maxdepth in index.rst for
+ clarity
+Message-ID: <Z9mBpct7G7FigDjB@archie.me>
+References: <20250318113230.24950-1-purvayeshi550@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-
-Since the previous boot trace buffer can include module text address in
-the stacktrace. As same as the kernel text address, convert the module
-text address using the module address information.
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="UJyZX/jSXsbpe7Bj"
+Content-Disposition: inline
+In-Reply-To: <20250318113230.24950-1-purvayeshi550@gmail.com>
 
 
-Reported-by: kernel test robot <lkp@intel.com>
-Closes: https://lore.kernel.org/oe-kbuild-all/202503112205.joXgt8gR-lkp@intel.com/
-Closes: https://lore.kernel.org/oe-kbuild-all/202503112303.D7g66VSd-lkp@intel.com/
-Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
----
- Changes in v4:
-  - Move module_delta to trace_array again.
-  - Use bsearch for lookup module_delta.
-  - Revert the boolean logic to avoid '!',
-  - Fix !CONFIG_MODULES compile errors.
----
- kernel/trace/trace.c        |  128 +++++++++++++++++++++++++++++++++++++++++--
- kernel/trace/trace.h        |    3 +
- kernel/trace/trace_output.c |    4 +
- 3 files changed, 128 insertions(+), 7 deletions(-)
+--UJyZX/jSXsbpe7Bj
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index 68abea81e51a..94d89053c033 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -49,6 +49,7 @@
- #include <linux/fsnotify.h>
- #include <linux/irq_work.h>
- #include <linux/workqueue.h>
-+#include <linux/sort.h>
- 
- #include <asm/setup.h> /* COMMAND_LINE_SIZE and kaslr_offset() */
- 
-@@ -6001,6 +6002,57 @@ struct trace_scratch {
- 
- static DEFINE_MUTEX(scratch_mutex);
- 
-+static int cmp_mod_entry(const void *key, const void *pivot)
-+{
-+	unsigned long addr = (unsigned long)key;
-+	const struct trace_mod_entry *ent = pivot;
-+
-+	if (addr >= ent[0].mod_addr && addr < ent[1].mod_addr)
-+		return 0;
-+	else
-+		return addr - ent->mod_addr;
-+}
-+
-+/**
-+ * trace_adjust_address() - Adjust prev boot address to current address.
-+ * @tr: Persistent ring buffer's trace_array.
-+ * @addr: Address in @tr which is adjusted.
-+ */
-+unsigned long trace_adjust_address(struct trace_array *tr, unsigned long addr)
-+{
-+	struct trace_scratch *tscratch;
-+	struct trace_mod_entry *entry;
-+	long *module_delta;
-+	int idx = 0, nr_entries;
-+
-+	/* If we don't have last boot delta, return the address */
-+	if (!(tr->flags & TRACE_ARRAY_FL_LAST_BOOT))
-+		return addr;
-+
-+	tscratch = tr->scratch;
-+	/* if there is no tscrach, module_delta must be NULL. */
-+	module_delta = READ_ONCE(tr->module_delta);
-+	if (!module_delta || tscratch->entries[0].mod_addr > addr)
-+		return addr + tr->text_delta;
-+
-+	/* Note that entries must be sorted. */
-+	nr_entries = tscratch->nr_entries;
-+	if (nr_entries == 1 ||
-+	    tscratch->entries[nr_entries - 1].mod_addr < addr)
-+		idx = nr_entries - 1;
-+	else {
-+		entry = __inline_bsearch((void *)addr,
-+				tscratch->entries,
-+				nr_entries - 1,
-+				sizeof(tscratch->entries[0]),
-+				cmp_mod_entry);
-+		if (entry)
-+			idx = entry - tscratch->entries;
-+	}
-+
-+	return addr + module_delta[idx];
-+}
-+
- #ifdef CONFIG_MODULES
- static int save_mod(struct module *mod, void *data)
- {
-@@ -6036,6 +6088,7 @@ static int save_mod(struct module *mod, void *data)
- static void update_last_data(struct trace_array *tr)
- {
- 	struct trace_scratch *tscratch;
-+	long *module_delta;
- 
- 	if (!(tr->flags & TRACE_ARRAY_FL_BOOT))
- 		return;
-@@ -6070,6 +6123,8 @@ static void update_last_data(struct trace_array *tr)
- 		return;
- 
- 	tscratch = tr->scratch;
-+	module_delta = READ_ONCE(tr->module_delta);
-+	WRITE_ONCE(tr->module_delta, NULL);
- 
- 	/* Set the persistent ring buffer meta data to this address */
- #ifdef CONFIG_RANDOMIZE_BASE
-@@ -6078,6 +6133,8 @@ static void update_last_data(struct trace_array *tr)
- 	tscratch->kaslr_addr = 0;
- #endif
- 	tr->flags &= ~TRACE_ARRAY_FL_LAST_BOOT;
-+
-+	kfree(module_delta);
- }
- 
- /**
-@@ -9349,10 +9406,46 @@ static struct dentry *trace_instance_dir;
- static void
- init_tracer_tracefs(struct trace_array *tr, struct dentry *d_tracer);
- 
-+#ifdef CONFIG_MODULES
-+static int make_mod_delta(struct module *mod, void *data)
-+{
-+	struct trace_scratch *tscratch;
-+	struct trace_mod_entry *entry;
-+	struct trace_array *tr = data;
-+	long *module_delta;
-+	int i;
-+
-+	tscratch = tr->scratch;
-+	module_delta = READ_ONCE(tr->module_delta);
-+	for (i = 0; i < tscratch->nr_entries; i++) {
-+		entry = &tscratch->entries[i];
-+		if (!strcmp(mod->name, entry->mod_name)) {
-+			if (mod->state == MODULE_STATE_GOING)
-+				module_delta[i] = 0;
-+			else
-+				module_delta[i] = (unsigned long)mod->mem[MOD_TEXT].base
-+						 - entry->mod_addr;
-+			break;
-+		}
-+	}
-+	return 0;
-+}
-+#endif
-+
-+static int mod_addr_comp(const void *a, const void *b, const void *data)
-+{
-+	const struct trace_mod_entry *e1 = a;
-+	const struct trace_mod_entry *e2 = b;
-+
-+	return e1->mod_addr > e2->mod_addr ? 1 : -1;
-+}
-+
- static void setup_trace_scratch(struct trace_array *tr,
- 				struct trace_scratch *tscratch, unsigned int size)
- {
- 	struct trace_mod_entry *entry;
-+	long *module_delta;
-+	int i, nr_entries;
- 
- 	if (!tscratch)
- 		return;
-@@ -9369,7 +9462,7 @@ static void setup_trace_scratch(struct trace_array *tr,
- 		goto reset;
- 
- 	/* Check if each module name is a valid string */
--	for (int i = 0; i < tscratch->nr_entries; i++) {
-+	for (i = 0; i < tscratch->nr_entries; i++) {
- 		int n;
- 
- 		entry = &tscratch->entries[i];
-@@ -9383,6 +9476,26 @@ static void setup_trace_scratch(struct trace_array *tr,
- 		if (n == MODULE_NAME_LEN)
- 			goto reset;
- 	}
-+
-+	/* Sort the entries so that we can find appropriate module from address. */
-+	nr_entries = tscratch->nr_entries;
-+	sort_r(tscratch->entries, nr_entries, sizeof(struct trace_mod_entry),
-+	       mod_addr_comp, NULL, NULL);
-+
-+	if (IS_ENABLED(CONFIG_MODULES)) {
-+		module_delta = kcalloc(nr_entries, sizeof(long), GFP_KERNEL);
-+		if (!module_delta) {
-+			pr_info("module_delta allocation failed. Not able to decode module address.");
-+			goto reset;
-+		}
-+	} else
-+		module_delta = NULL;
-+	WRITE_ONCE(tr->module_delta, module_delta);
-+
-+#ifdef CONFIG_MODULES
-+	/* Scan modules to make text delta for modules. */
-+	module_for_each_mod(make_mod_delta, tr);
-+#endif
- 	return;
-  reset:
- 	/* Invalid trace modules */
-@@ -10108,19 +10221,23 @@ static bool trace_array_active(struct trace_array *tr)
- 	return trace_events_enabled(tr, NULL) > 1;
- }
- 
--static void trace_module_record(struct module *mod)
-+static void trace_module_record(struct module *mod, bool add)
- {
- 	struct trace_array *tr;
-+	unsigned long flags;
- 
- 	list_for_each_entry(tr, &ftrace_trace_arrays, list) {
-+		flags = tr->flags & (TRACE_ARRAY_FL_BOOT | TRACE_ARRAY_FL_LAST_BOOT);
- 		/* Update any persistent trace array that has already been started */
--		if ((tr->flags & (TRACE_ARRAY_FL_BOOT | TRACE_ARRAY_FL_LAST_BOOT)) ==
--		    TRACE_ARRAY_FL_BOOT) {
-+		if (flags == TRACE_ARRAY_FL_BOOT && add) {
- 			/* Only update if the trace array is active */
- 			if (trace_array_active(tr)) {
- 				guard(mutex)(&scratch_mutex);
- 				save_mod(mod, tr);
- 			}
-+		} else if (flags & TRACE_ARRAY_FL_LAST_BOOT) {
-+			/* Update delta if the module loaded in previous boot */
-+			make_mod_delta(mod, tr);
- 		}
- 	}
- }
-@@ -10133,10 +10250,11 @@ static int trace_module_notify(struct notifier_block *self,
- 	switch (val) {
- 	case MODULE_STATE_COMING:
- 		trace_module_add_evals(mod);
--		trace_module_record(mod);
-+		trace_module_record(mod, true);
- 		break;
- 	case MODULE_STATE_GOING:
- 		trace_module_remove_evals(mod);
-+		trace_module_record(mod, false);
- 		break;
- 	}
- 
-diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
-index 0d6efb8a1179..b6a4d3032e5c 100644
---- a/kernel/trace/trace.h
-+++ b/kernel/trace/trace.h
-@@ -350,6 +350,7 @@ struct trace_array {
- 	unsigned long		range_addr_size;
- 	char			*range_name;
- 	long			text_delta;
-+	long			*module_delta;
- 	void			*scratch; /* pointer in persistent memory */
- 	int			scratch_size;
- 
-@@ -466,6 +467,8 @@ extern int tracing_set_clock(struct trace_array *tr, const char *clockstr);
- 
- extern bool trace_clock_in_ns(struct trace_array *tr);
- 
-+extern unsigned long trace_adjust_address(struct trace_array *tr, unsigned long addr);
-+
- /*
-  * The global tracer (top) should be the first trace array added,
-  * but we check the flag anyway.
-diff --git a/kernel/trace/trace_output.c b/kernel/trace/trace_output.c
-index 03d56f711ad1..1ad54fcf25cb 100644
---- a/kernel/trace/trace_output.c
-+++ b/kernel/trace/trace_output.c
-@@ -5,6 +5,7 @@
-  * Copyright (C) 2008 Red Hat Inc, Steven Rostedt <srostedt@redhat.com>
-  *
-  */
-+#include "trace.h"
- #include <linux/module.h>
- #include <linux/mutex.h>
- #include <linux/ftrace.h>
-@@ -1248,7 +1249,6 @@ static enum print_line_t trace_stack_print(struct trace_iterator *iter,
- 	struct trace_seq *s = &iter->seq;
- 	unsigned long *p;
- 	unsigned long *end;
--	long delta = iter->tr->text_delta;
- 
- 	trace_assign_type(field, iter->ent);
- 	end = (unsigned long *)((long)iter->ent + iter->ent_size);
-@@ -1265,7 +1265,7 @@ static enum print_line_t trace_stack_print(struct trace_iterator *iter,
- 			trace_seq_puts(s, "[FTRACE TRAMPOLINE]\n");
- 			continue;
- 		}
--		seq_print_ip_sym(s, (*p) + delta, flags);
-+		seq_print_ip_sym(s, trace_adjust_address(iter->tr, *p), flags);
- 		trace_seq_putc(s, '\n');
- 	}
- 
+On Tue, Mar 18, 2025 at 05:02:29PM +0530, Purva Yeshi wrote:
+> diff --git a/Documentation/trace/index.rst b/Documentation/trace/index.rst
+> index 2c991dc96..fecc4adf7 100644
+> --- a/Documentation/trace/index.rst
+> +++ b/Documentation/trace/index.rst
+> @@ -3,7 +3,7 @@ Linux Tracing Technologies
+>  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D
+> =20
+>  .. toctree::
+> -   :maxdepth: 2
+> +   :maxdepth: 1
+> =20
+>     ftrace-design
+>     tracepoint-analysis
 
+LGTM, thanks!
+
+Reviewed-by: Bagas Sanjaya <bagasdotme@gmail.com>
+
+--=20
+An old man doll... just what I always wanted! - Clara
+
+--UJyZX/jSXsbpe7Bj
+Content-Type: application/pgp-signature; name=signature.asc
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZ9mBnwAKCRD2uYlJVVFO
+o0jEAQC7OPAraS6ohemlhA4Ek88bLqk2VU+WWwCNlNJwUj8qgwD/eIMVDcV/FFZW
+IS4ho0D+usixVNFETzxpIw4cnm7UwQE=
+=YS9d
+-----END PGP SIGNATURE-----
+
+--UJyZX/jSXsbpe7Bj--
