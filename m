@@ -1,43 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CF77155753;
-	Tue, 18 Mar 2025 01:25:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76E6381749;
+	Tue, 18 Mar 2025 02:07:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742261155; cv=none; b=Hwo7K1PHyariF3tZl6iYFX8UReOejEI6QBF/AXI1AEfOFVKFP4fspLmudmduQDm9jTIhhwVa4QlyIS2Rx8HzksoEXflQPsX5Yqxg9p197hAmxKRVTe43MvewdZxG55V7ubdIWu2x9ThXNsynkYFody7lT9Ik+txjqu9w1CjQoGc=
+	t=1742263623; cv=none; b=dxEWdSW6EW43DEYYAeRVdlYJClrfetEgcp2TUNEMKcq/+7hFEveZnOC0VSn9Q6RPnPpCmIConxOKu86f2StCv44JmDUekIuKpOdZPYczdSU0xKiUGHsngAkt+q7sIoaUt5Rz8sa0KCxq6JDKFedBE0PHT1eCOq95zF/YHh97ZWA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742261155; c=relaxed/simple;
-	bh=UXjn0fyrQYkQwF6j4cJrc5p9zVRAfkUTomr9zTyax1w=;
+	s=arc-20240116; t=1742263623; c=relaxed/simple;
+	bh=Hh5p9FFcqND1o5HA7sfG6uEdJJxe4gC7Q+CWEDduIuA=;
 	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=HCZzGUX1oodoMcCquC8HZ45L3u+gheopniirdVtrZEE3i81BHSye7OFalRYm/CKZdYJOUfxvsyvO/SBIot2sd+mioJFS/q9dVlMzhNXivvyp618wWFBH8mRtfF8WYTtVi6WQiwCS8glhPROcVkOy6/ovGbD7WARR8iyRpYmDr4g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mj89zOK/; arc=none smtp.client-ip=10.30.226.201
+	 Mime-Version:Content-Type; b=NIHs3elgis+TZW4dHnfRr6AOjXpgrGROdiDVJ5kzGU6RZ+GlKhu87lahvuLMf6fNZqXYzRXstJzj+QkOeEdTysuXc84iEqp2ARmtSIa2VrqHV58uuucUv1PeLrEaUqFxL+wXq6koZ0wbA7Ij5K+Ons0aryinw53BYb/F6M6zOLo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tEtuFURq; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mj89zOK/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 198D6C4CEE3;
-	Tue, 18 Mar 2025 01:25:53 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tEtuFURq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 10768C4CEE3;
+	Tue, 18 Mar 2025 02:07:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742261154;
-	bh=UXjn0fyrQYkQwF6j4cJrc5p9zVRAfkUTomr9zTyax1w=;
+	s=k20201202; t=1742263622;
+	bh=Hh5p9FFcqND1o5HA7sfG6uEdJJxe4gC7Q+CWEDduIuA=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=mj89zOK/dpjyod76yrzVqnJjFsPqWJQDD8HMoRqSMWCqv06ldoOFwklPUapLc3CbG
-	 Q234Avd3V8u8m6fmbSYn65xLIxHpsIxk3KVjRQSD/o8G2wT1cCHgDTwGfUdNkfEGDF
-	 rOuetg1/FZZMk85aqKxJ3CBKkzSvGkR4pPcCyJadEk0LiSTfIbPxKzxhora8vNH1OG
-	 Z3PwtgPjkuUX//I9RwVmHKjhIsTOMmeLhy2WBkvNEtAtuxpmkeNvIMNt3DTcpxkz0u
-	 mksZyjrGpZPMCjfC71RTmIYJZkpiAHLgSFC3GepQ3+eFBMsnll6iuB5AcGbdao9Boy
-	 UhftkA4ptGSog==
-Date: Tue, 18 Mar 2025 10:25:52 +0900
+	b=tEtuFURqQZLz9OMfOF9dbLuTjdbavdZdn7JpiRnxRYe5H84DM0nDW6gdx7PYBvApt
+	 25OBX4H/yELojDNuJ3H9lV4srgb6aROHTYu/f7IeMQ8O8dYvvJnKKYghlxOoHYLkwE
+	 7HxyGLjjGq9xWhTbHDfDYq41L+46ZuVytLUWo4A4GEZxKo5TAv5aAbN18I6Gqqujnd
+	 frTpLb3D93dQa2bOLbe5yU8AnKBNr3Kq+fFfCkZZu0rHu6G1YfB/RdTpqjjmJHDbuP
+	 0aF20bbJBexZO17mvTvQpBkvMfGOnqXrw60KHySE2SnTQNlodJ0vD98TRbpRwFLGb5
+	 SeHvHYItzd3fw==
+Date: Tue, 18 Mar 2025 11:07:00 +0900
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+To: Gabriele Paoloni <gpaoloni@redhat.com>
+Cc: rostedt@goodmis.org, mathieu.desnoyers@efficios.com,
  linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 1/2] tracing: Fix a compilation error without
- CONFIG_MODULES
-Message-Id: <20250318102552.7c7400873fa3f304cbefa9b6@kernel.org>
-In-Reply-To: <20250314054257.3218dc35@batman.local.home>
-References: <174188320269.3845006.11920186078507571954.stgit@mhiramat.tok.corp.google.com>
-	<174188321162.3845006.12665585959241736399.stgit@mhiramat.tok.corp.google.com>
-	<20250314054257.3218dc35@batman.local.home>
+Subject: Re: [RFC PATCH] tracing: fix return value in
+ __ftrace_event_enable_disable for TRACE_REG_UNREGISTER
+Message-Id: <20250318110700.510f05df7e113180503fc036@kernel.org>
+In-Reply-To: <20250314125725.6425-1-gpaoloni@redhat.com>
+References: <20250314125725.6425-1-gpaoloni@redhat.com>
 X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -48,35 +46,57 @@ Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Fri, 14 Mar 2025 05:42:57 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
+On Fri, 14 Mar 2025 13:57:25 +0100
+Gabriele Paoloni <gpaoloni@redhat.com> wrote:
 
-> On Fri, 14 Mar 2025 01:26:51 +0900
-> "Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
+> When __ftrace_event_enable_disable invokes the class callback to
+> unregister the event, the return value is not reported up to the
+> caller, hence leading to event unregister failures being silently
+> ignored.
 > 
-> > @@ -6040,9 +6042,10 @@ static void update_last_data(struct trace_array *tr)
-> >  		memset(tscratch->entries, 0,
-> >  		       flex_array_size(tscratch, entries, tscratch->nr_entries));
-> >  		tscratch->nr_entries = 0;
-> > -
-> > +#ifdef CONFIG_MODULES
-> >  		guard(mutex)(&scratch_mutex);
-> >  		module_for_each_mod(save_mod, tr);
-> > +#endif
-> >  	}
+> This patch assigns the ret variable to the invocation of the
+> event unregister callback, so that its return value is stored
+> and reported to the caller.
+
+Just out of curiosity, have you saw such issue? I think
+event unregister should be succeeded or it warns the
+fault.
+
 > 
-> Hmm, I think the real fix for this would be to make
-> module_for_each_mod() a nop when modules are not configured.
+> Signed-off-by: Gabriele Paoloni <gpaoloni@redhat.com>
+> ---
+> Sending this as RFC since I am not sure if checking the ret
+> value is really needed.
+> I have been mainly driven by the implementation of
+> disable_trace_kprobe, disable_trace_fprobe,
+> tracepoint_probe_unregister, disable_trace_eprobe that can
+> return an error.
+> 
+>  kernel/trace/trace_events.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
+> index 513de9ceb80e..8d92b271ce0d 100644
+> --- a/kernel/trace/trace_events.c
+> +++ b/kernel/trace/trace_events.c
+> @@ -790,7 +790,7 @@ static int __ftrace_event_enable_disable(struct trace_event_file *file,
+>  				clear_bit(EVENT_FILE_FL_RECORDED_TGID_BIT, &file->flags);
+>  			}
+>  
+> -			call->class->reg(call, TRACE_REG_UNREGISTER, file);
+> +			ret = call->class->reg(call, TRACE_REG_UNREGISTER, file);
 
-Yeah, but in this case, save_mod() need to be removed too[*]. Or is it
-better to make save_mod() a nop too?
-
-[*] https://lore.kernel.org/oe-kbuild-all/202503142045.0sE1neLa-lkp@intel.com/
+This is not enough. As same as enable failure, this function needs to handle
+this error to report it and break.
 
 Thank you,
 
+>  		}
+>  		/* If in SOFT_MODE, just set the SOFT_DISABLE_BIT, else clear it */
+>  		if (file->flags & EVENT_FILE_FL_SOFT_MODE)
+> -- 
+> 2.48.1
 > 
-> -- Steve
 > 
 
 
