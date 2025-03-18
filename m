@@ -1,221 +1,116 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09A5B1598F4;
-	Tue, 18 Mar 2025 11:32:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B05320B7ED;
+	Tue, 18 Mar 2025 11:35:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742297580; cv=none; b=Kz22MQ/lwxBTA+4RRsWnFPoeFU3l13BSaMSj+/LAs4FjuWeln4qhU/QFm9LNUUKUK4G03Zx0OVY2lqAGw7fmE8IXYFCabZ5n0p1TYsp9KfxJU2UJt8tWgU5LGP3W49mEZ3BuusvH0hpQu+w3/By1AfwIKue/S/a2Mnm4K2ZNAGU=
+	t=1742297748; cv=none; b=BTI7j/42oF5NDkifalMWIdPs7oonYWVKyARgMCvpOuwFeDz+wS+vK3ERyWpTi73fmBwlrYx+zWzkbH4wMKOHpEdG9o0+g/ArIXWc2BDO9OXG6N1dcmLAaSBuhRFT+MiGH39fok0etdPnWSO3kL92jn2kbESRK+3BlhU/Uzlgh8U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742297580; c=relaxed/simple;
-	bh=t3+jC4VJlxk7zq+3qZl0kMOIe8AnJdJUdZcI1datJuI=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=bOEq4gVXnDDoRh2RcVha2QjSAYt/GnUkOcEubknS/6/NgqojxQ10oHxM4vVQWqu/PdPNEnJARIsxSBjPbYrsxgUkwkNRXejmF1OHlBteaJoMD0eSOHt5GRWzNejbaPuS+XgWXab5HJv/vm2mMoRmxFIqrQf4b81lwxO64hGrDb0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Z8VOKcCb; arc=none smtp.client-ip=209.85.214.176
+	s=arc-20240116; t=1742297748; c=relaxed/simple;
+	bh=Oo5Rb8+Ng9GPmuJ70nHR1J7BG8YZnuFUuDLGpMRu5Ls=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=L1wsjQKuIWYnz+yEHK087PpkHb9+KJe3H0lWZZ2vlkxWmx76QNWteTmE02oVy5QAcWQei5LBhWtiJ4iy4WjzZjpnO64EZd+iy1CNuXSGxps9Lfy6ntp7LRW56UuVpox/gEm1eyqVs5YxrhQwL+M1zF4P+vqL5JPo7O44VqzN9CE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iX0YmYwN; arc=none smtp.client-ip=209.85.216.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z8VOKcCb"
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-22403cbb47fso100069475ad.0;
-        Tue, 18 Mar 2025 04:32:58 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iX0YmYwN"
+Received: by mail-pj1-f53.google.com with SMTP id 98e67ed59e1d1-2ff80290debso4704597a91.3;
+        Tue, 18 Mar 2025 04:35:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1742297578; x=1742902378; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=wKBd9Bhy+gsBxPu8xslCpaBwZDvHZAfH/ojcsdhmdaA=;
-        b=Z8VOKcCbLpVL2eRSLNNpc4idLj798IftjxcwOAj3OhoG62OpQ6YILL1Kwc03n6DzqS
-         vzZzf0oUjU98XdT0MakxBo9l8vMuUpMifGKxp6Tm53LS3vWDYQQpVFm/Rz5MO6iytHEi
-         0LC2vPxkNWWUJEZnt6GRZ4wKjSBj7ZY/YB8QLZCLeP/Hd833B46gmhx/nOubIndsC8hp
-         OEOHN861CUeb0XZfb/3SdFmdO4H/fJ3Vymf3rhfQ0/XqaSAzmkl5NwA1jCIBetQnT4Hr
-         EMyaAzFxuTImP9oN0HctrovObH1+/V68Or8miZr3jAE4tCikZtIf3nSw98aa85qysnjb
-         T+iw==
+        d=gmail.com; s=20230601; t=1742297747; x=1742902547; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=lt93u+3xE/W+Cmzf7bmN03zxBQ/l7okUOSYfUSihUhQ=;
+        b=iX0YmYwN1WU7Vkj9ZpNTNxx0gEp6c4IMHldeyCJFC6RiUM3POYaLBlWnRHJ/mPuXvd
+         Crt3Ba1DB/Qg08l700PtUuhsIqEkLsaMv1O1MYG99n5nL7QHiPbaW3y5njeGaNK4/+za
+         P/npgveTgPStStEwMXV309fG/5mxspGMfZPCmfd8Uywr7qwAl+B2d6SIKg96Czqx1jQM
+         /rLGPMtm3cXdyz15HvBflqxpCtwMmabBuEol6FoEstzK3aDJaeDmh8CFM8cijgRHnuPZ
+         A9QSC9qCAi4Zf4415lFg0eQa26UOilJh87UqvtMXJq0rzMOflC0boLsZ2cFBO7wSG1dU
+         0ORA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742297578; x=1742902378;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=wKBd9Bhy+gsBxPu8xslCpaBwZDvHZAfH/ojcsdhmdaA=;
-        b=srubSNdHDbxvbfocUe1gj4KRkHi+qk5Hzanz8hocZdvZ0imHwPA87BYvecuI0AY4Bq
-         SYBT/ArOeBb5uCGzR9v9UIsKr5ttRj2o86Fu2vU2/1TrXuuE2UWw+XEmCFfVj2WUnOa4
-         mpCfF909t6LCcHLKbQDKrz4WD/S7nw+d8csTqCgSxglOVX3Yu8F9RoQ1Tz1Vc+ubg7Li
-         tp+TUf+fXbgIg6nrJJvPEOlFgEhdXctzVYBpc0koE3Uo67rxMujngr2HLtMYgsewko+9
-         Gn+wzAXkyDvM/enHZAzXJRpMQob485JGzVT934obhNIb9Aohh3362liD/+NFH+3zKNXL
-         W5sg==
-X-Forwarded-Encrypted: i=1; AJvYcCUqAxNl8Riyzy4KFqufNrOiQsEpcX8wY5qdug4KoKcEBbw0DaXN1Y9yIyobBBVDvpJw5CVa9Ebp0eznGFynd1NTDSG1@vger.kernel.org, AJvYcCWyE2JCmYs6lYN0AAJhS4R2VWkkZzKYmVEvsIdbC4rVmxPT8Q6nkcaArWruC8FkjFCIxcMDFqrBllQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxExlQDl59kN+IsaFgFPxbaZw8svZJ1LGXcXR085jISIE6L/HkT
-	lZmXKXqiYd2wQcclYDSx3QJ3ufUpqVQ1vrxnue8xfMUPQC/fuDhT
-X-Gm-Gg: ASbGncsgvUyQVNHUbZsFyIEn1oTjKmmqkbb/Lggx/xrg+ak6154ZjHCK85BqYmLMFEN
-	TDwzIv5RpetBHxuP/DnQWrtQXQ980+lnBAH6nxdTcoddcZOVBJtLHHl113YN0enK9OObqP/+SLU
-	YezzinuIg72l8Z6+mWDaAOWH+45iQHaUeyrpXmwwJet2aNOBszmqmpJvgJTdBe/kPEMJ/oekq1S
-	H5IAS9L6+qHSlLUK1fmLqOypAOLcFiRDImP0VMkMTTJCAhNI01sZ4+xkj2YMkACX7FUJ+exdV6z
-	6bg1rZHYIyWXT9PHSJSrZoqHCqBx1qeFFMxDwXGLxaWia51hXMqL8zfEUJD1DZuLynxd09fVlH4
-	=
-X-Google-Smtp-Source: AGHT+IHKPxw4IPJ8WJ6QMFC/eVf5/8iWBVOTDdkbkgmi38/bwkOr9z11nynP+PACUOHffHH69duOdg==
-X-Received: by 2002:a17:903:22c8:b0:220:faa2:c917 with SMTP id d9443c01a7336-225e0af8c73mr239070955ad.34.1742297578151;
-        Tue, 18 Mar 2025 04:32:58 -0700 (PDT)
-Received: from purva-IdeaPad-Gaming-3-15IHU6.. ([14.139.108.62])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-225c6bbec04sm91832555ad.191.2025.03.18.04.32.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Mar 2025 04:32:57 -0700 (PDT)
-From: Purva Yeshi <purvayeshi550@gmail.com>
-To: rostedt@goodmis.org,
-	mhiramat@kernel.org,
-	mathieu.desnoyers@efficios.com,
-	corbet@lwn.net
-Cc: linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	Purva Yeshi <purvayeshi550@gmail.com>
-Subject: [PATCH v4 2/2] docs: tracing: Refactor index.rst for clarity
-Date: Tue, 18 Mar 2025 17:02:30 +0530
-Message-Id: <20250318113230.24950-2-purvayeshi550@gmail.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250318113230.24950-1-purvayeshi550@gmail.com>
-References: <20250318113230.24950-1-purvayeshi550@gmail.com>
+        d=1e100.net; s=20230601; t=1742297747; x=1742902547;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=lt93u+3xE/W+Cmzf7bmN03zxBQ/l7okUOSYfUSihUhQ=;
+        b=vdE7ey0jg2dPzcyQrDmfWttXq10GbaP1KawI045S5i5uRhKkvDRHMz4gqoOxL/iDfz
+         dd0nazbhlHy2KNkT5Uin4pRP0j3I/2o4UzE1nlhW+rh6Rn68lnB5dX+L2TCi9CnhGgdM
+         I7DIaz4Hxit4SMomlfEliHsWq09vYuDeWB8iQKpQn/a5c7DVbDKB1igxrI7+lIPNYf43
+         KRIe6ZqfoPQ+pDTLFlBhe8yne085h8B9tJXzvFud3OJWIiYQsJuUXFeiw9x/5XgwDP98
+         UnOrM4OgIGInq9nQcLWGyuq0BnggXbmo61iayn0r/7DD+N5Ylnr3O1SEczABC5GINTmK
+         +WiQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUD07Iu0w58mITKlNYUfo1V/vrS06+GBVixJg1Y00xSpR27gopXW/srrD3Gp+7Z6Pnu3ILzm4TApZ3AMyZtjPHT3Guc@vger.kernel.org, AJvYcCVsQqvNLOmt0+CX4V8tO5nGETEftWhtLlJpFGizziOf9n+ekPiGuAIxqZPX+sTVkBuM5gR8IQXLMeu1BGDv@vger.kernel.org, AJvYcCWQRIGCm3Yje/biRNlAdAcntJ6cgdeFLHHnwO04OBK8Kde/ThZhqKHQHEUPkPu3GhnR7yqwI/A6lLk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyTzh4v6RCObbTrn2hJszO+O2ImKylBRFSK6ZdHXogjCGwfF5uR
+	4wOHPwX2Sa/ZuMa0nihByJe5Pf6ULkNA2yyQ+kTC2wyWa/tGti7A
+X-Gm-Gg: ASbGncuaPzOIrtvanXEB2a9FO1NxgR0s3mhX6lhcF8FNwqqxRXVBMBs5mynLt7WNomo
+	sW086GlIPvPA33MKBFJ4OIsj2UBMW3MnifuIBjOx2kMv3Wo8ieF5q5Od+H9V+fUP0T8LXhA7DU7
+	NPLKxzitDYS/3w14zaWqs7dUs3kIOW9UQpIgm4RfRkwMNLGv3chq64iuoc6hgoenRd2BEzDaPzj
+	wBEo9cQPd+vbYfk1r3xOI9kEGuoMXMQvIgtIF8MYCQDAp9u8fdzETJAGEIo2bOajzOXN+FjakzU
+	w6mTDUbjwkGcPOMMKvecLjZJtrfvnCd/+kRdc35gBae7SFstA42O4A==
+X-Google-Smtp-Source: AGHT+IFVaY96rQ1MIKrGux34tD4f7j0/KybkBdC4jQu1kYtIggPHmETgmVeeIdlXlbNhYJBdy9z39A==
+X-Received: by 2002:a17:90b:3d06:b0:2ff:7cb8:6eca with SMTP id 98e67ed59e1d1-301a5b8a043mr3242659a91.24.1742297746631;
+        Tue, 18 Mar 2025 04:35:46 -0700 (PDT)
+Received: from [192.168.0.125] ([14.139.108.62])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3015364ebe0sm7910944a91.43.2025.03.18.04.35.42
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 18 Mar 2025 04:35:46 -0700 (PDT)
+Message-ID: <23f1706f-e12e-4a4a-9919-6e654df8cc31@gmail.com>
+Date: Tue, 18 Mar 2025 17:05:39 +0530
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 2/2] docs: tracing: Reduce maxdepth in index
+ documentation
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Bagas Sanjaya <bagasdotme@gmail.com>,
+ Masami Hiramatsu <mhiramat@kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Jonathan Corbet <corbet@lwn.net>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org
+References: <20250312124717.7208-1-purvayeshi550@gmail.com>
+ <20250312134907.06d27d78@batman.local.home> <Z9JKqVvG1iw0bFXR@archie.me>
+ <20250313070457.647c8c57@batman.local.home>
+ <4cc0a072-3eaf-4fbf-a334-012aacf9039f@gmail.com>
+ <b1882a1f-3ed0-4307-8a34-3236bdfb79a6@gmail.com>
+ <20250314084155.20c3e662@batman.local.home>
+Content-Language: en-US
+From: Purva Yeshi <purvayeshi550@gmail.com>
+In-Reply-To: <20250314084155.20c3e662@batman.local.home>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Refactor Documentation/trace/index.rst to improve clarity, structure,
-and organization. Reformat sections and add appropriate headings for
-better readability.
+On 14/03/25 18:11, Steven Rostedt wrote:
+> On Fri, 14 Mar 2025 14:26:37 +0530
+> Purva Yeshi <purvayeshi550@gmail.com> wrote:
+> 
+>> Thanks for the reference. I will keep this in mind for future patch
+>> series and include a cover letter.
+> 
+> Note, a cover letter isn't really necessary here. Why? because these
+> are pretty much two agnostic patches. One fixes the maxdepth, the other
+> is changing the layout for readability.
+> 
+> Cover letters are best when there's a bigger picture being had. That
+> is, the patch series is set out to accomplish a single goal that is
+> broken up into little steps. A cover letter explains what the goal is
+> and why and how. Each patch after that explains what that patch is
+> doing (why and how), but from the focus of that particular change.
+> 
+> As these patches could theoretically be sent as two separate patches
+> and not as a series as they don't really share the same goal, a cover
+> letter's only purpose here would be to make the email thread look a 
+> little nicer ;-)  But that's about it.
+> 
+> -- Steve
 
-Improve section grouping and refine descriptions for better usability.
+Got it! Thanks for the clarification Steve.
 
-Signed-off-by: Purva Yeshi <purvayeshi550@gmail.com>
----
- Documentation/trace/index.rst | 94 +++++++++++++++++++++++++++++------
- 1 file changed, 79 insertions(+), 15 deletions(-)
-
-diff --git a/Documentation/trace/index.rst b/Documentation/trace/index.rst
-index fecc4adf7..5ddd47ee7 100644
---- a/Documentation/trace/index.rst
-+++ b/Documentation/trace/index.rst
-@@ -1,39 +1,103 @@
--==========================
--Linux Tracing Technologies
--==========================
-+================================
-+Linux Tracing Technologies Guide
-+================================
-+
-+Tracing in the Linux kernel is a powerful mechanism that allows
-+developers and system administrators to analyze and debug system
-+behavior. This guide provides documentation on various tracing
-+frameworks and tools available in the Linux kernel.
-+
-+Introduction to Tracing
-+-----------------------
-+
-+This section provides an overview of Linux tracing mechanisms
-+and debugging approaches.
- 
- .. toctree::
-    :maxdepth: 1
- 
--   ftrace-design
-+   debugging
-+   tracepoints
-    tracepoint-analysis
-+   ring-buffer-map
-+
-+Core Tracing Frameworks
-+-----------------------
-+
-+The following are the primary tracing frameworks integrated into
-+the Linux kernel.
-+
-+.. toctree::
-+   :maxdepth: 1
-+
-    ftrace
-+   ftrace-design
-    ftrace-uses
--   fprobe
-    kprobes
-    kprobetrace
-    uprobetracer
-    fprobetrace
--   tracepoints
-+   fprobe
-+   ring-buffer-design
-+
-+Event Tracing and Analysis
-+--------------------------
-+
-+A detailed explanation of event tracing mechanisms and their
-+applications.
-+
-+.. toctree::
-+   :maxdepth: 1
-+
-    events
-    events-kmem
-    events-power
-    events-nmi
-    events-msr
--   mmiotrace
-+   boottime-trace
-    histogram
-    histogram-design
--   boottime-trace
--   debugging
--   hwlat_detector
--   osnoise-tracer
--   timerlat-tracer
-+
-+Hardware and Performance Tracing
-+--------------------------------
-+
-+This section covers tracing features that monitor hardware
-+interactions and system performance.
-+
-+.. toctree::
-+   :maxdepth: 1
-+
-    intel_th
--   ring-buffer-design
--   ring-buffer-map
-    stm
-    sys-t
-    coresight/index
--   user_events
-    rv/index
-    hisi-ptt
-+   mmiotrace
-+   hwlat_detector
-+   osnoise-tracer
-+   timerlat-tracer
-+
-+User-Space Tracing
-+------------------
-+
-+These tools allow tracing user-space applications and
-+interactions.
-+
-+.. toctree::
-+   :maxdepth: 1
-+
-+   user_events
-+
-+Additional Resources
-+--------------------
-+
-+For more details, refer to the respective documentation of each
-+tracing tool and framework.
-+
-+.. only:: subproject and html
-+
-+   Indices
-+   =======
-+
-+   * :ref:`genindex`
-\ No newline at end of file
--- 
-2.34.1
-
+Best Regards,
+Purva Yeshi
