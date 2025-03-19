@@ -1,197 +1,146 @@
-Received: from out-185.mta0.migadu.com (out-185.mta0.migadu.com [91.218.175.185])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1246F2116F5;
-	Wed, 19 Mar 2025 18:47:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.185
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D940D21420F;
+	Wed, 19 Mar 2025 19:03:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742410076; cv=none; b=LpQsbo0PjjIuJuSx4fPq8ViFOQ0fjB5y1C/+KJNiRTp2Mcu/c5e3CCBRfJH9thyurI0a9ZMDYh9FbT4iVjx8uZNeL8YgNdA8sFxUhP5ZsaNk4qmfbHzdIufBCGtU6oDBEBqbEjNUMLKl9ojsn2uk10RtRZ8Mx45wB0GUQ64U5JM=
+	t=1742410986; cv=none; b=bGsozvgNKI/8rwYydt8iOv8HyYAzvTzmwqEO73kT/j3WWd1ptqxb8FG4NXZCzrVeZCgo/ig/e6Aw+ntzMvmKuJQrrWg7ROgFRW40hAmScOZ9862WphnNaoklzD54HlkMoHsAq+LSJZW/lUloRoqt3KJB534KFsQRCcQtX1KV8qQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742410076; c=relaxed/simple;
-	bh=Z67lfJxfXOSQRQn2QgIM7XZlMuhz0KwFLbCo1PIaWSw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=epwxGcHsOZI8YdYLKE/WHNcxOcE+2wVYNOlzuGRDTMXaMX24RDU4bVVL2RhuJ2YYLLj24e6di7zrODAHPfeJZg4edpdWMjHDXgRRsHbV1WREEeQ/Axfvg78u5HgJcnFidrfznr6km2q6xf4KeuxYcmsJ2aBog9ReOWWn8j/W1WE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=xaQi4Ef4; arc=none smtp.client-ip=91.218.175.185
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1742410986; c=relaxed/simple;
+	bh=D35b4j9CFL1Mc8HCuSxeJyE56B1TcVvE1e7E8+/SBTw=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=Q6rKosq0a9EWh5KlWApp0ugW3rJ23wIyZjMeB2XZNtv6k6va4DnW8rTXVAlOfPcit1d1zozRkHNJcbP/Nu/AF9GUt5CSuvjkFGGEasgYZJZ6xwmVw9GyDoOVgEAHPGO+oOWjbekNsPYMfetByFwys3lwtPr5iZao6YJsMe3sCgo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=f+XQt0Gj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="xaQi4Ef4"
-Date: Wed, 19 Mar 2025 18:47:31 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1742410061;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=zqyBVaYb9ts4lSaXiElKMyansdaMcGaJGQGVhzkplWo=;
-	b=xaQi4Ef4746B+A1AJBeekKoem5X9BsU2Zv43rk34K1b57B9N/UUB0WB7+ebMMyAm4dfIwQ
-	po8r8m5IqUgNRKUb/IkSMFPDZP7ikmojvJbVFmFRwuujjWoxhQaSwuSjM3plvtnggGTY0s
-	MOiuRmYvVaZE3dOZtPg1/9XMdLYCzcU=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Yosry Ahmed <yosry.ahmed@linux.dev>
-To: Borislav Petkov <bp@alien8.de>
-Cc: Brendan Jackman <jackmanb@google.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>, Andy Lutomirski <luto@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>, x86@kernel.org,
-	linux-kernel@vger.kernel.org, linux-alpha@vger.kernel.org,
-	linux-snps-arc@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org,
-	linux-hexagon@vger.kernel.org, loongarch@lists.linux.dev,
-	linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
-	linux-openrisc@vger.kernel.org, linux-parisc@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
-	linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-	sparclinux@vger.kernel.org, linux-um@lists.infradead.org,
-	linux-arch@vger.kernel.org, linux-mm@kvack.org,
-	linux-trace-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, kvm@vger.kernel.org,
-	linux-efi@vger.kernel.org, Junaid Shahid <junaids@google.com>
-Subject: Re: [PATCH RFC v2 04/29] mm: asi: Add infrastructure for boot-time
- enablement
-Message-ID: <Z9sRQ0cK0rupEiT-@google.com>
-References: <20250110-asi-rfc-v2-v2-0-8419288bc805@google.com>
- <20250110-asi-rfc-v2-v2-4-8419288bc805@google.com>
- <20250319172935.GMZ9r-_zzXhyhHBLfj@fat_crate.local>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="f+XQt0Gj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D2C4CC4CEEC;
+	Wed, 19 Mar 2025 19:03:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742410985;
+	bh=D35b4j9CFL1Mc8HCuSxeJyE56B1TcVvE1e7E8+/SBTw=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=f+XQt0GjaDUUcI1pL5vZM1th+rzkl+5k9MyNn4peQ0vAxmbYXIkRJwspgsNrGcV3s
+	 1c9WiSkhauExm8Il9NmNc8ycFsm8jPvbqkfwVpDUMrzgEwMwLyT8UXEUdF3UYjB58f
+	 QFxmIHny772Fpkh6H/Vm1eECjrFsQpSbwQBDHwwVt4S2O0S1u3U4BAboBcGAIYCqQP
+	 jeq89f2nEpujVrvR9J++72WY1BQw2OUZkTOQ92UtTuTui8g6CfQbCfmCpu2jktKTc0
+	 k4Qu3prnH5IuqyGv3twLljLNr8vJXT7swDyQiaOvPKW0QOO7RkD7x/PMZMKm20RuUg
+	 ZQ2w/KfyW8K6A==
+Message-ID: <02549e50e26565ffb54ea943af87c19f40692576.camel@kernel.org>
+Subject: Re: [PATCH] tracing: Fix error handling in event_trigger_parse
+From: Tom Zanussi <zanussi@kernel.org>
+To: Masami Hiramatsu <mhiramat@kernel.org>, Miaoqian Lin <linmq006@gmail.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>, Mathieu Desnoyers
+	 <mathieu.desnoyers@efficios.com>, linux-kernel@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org
+Date: Wed, 19 Mar 2025 14:03:03 -0500
+In-Reply-To: <20250319090650.fe63164eac3ac32bb559ffc8@kernel.org>
+References: <20250318112737.4174-1-linmq006@gmail.com>
+	 <20250319090650.fe63164eac3ac32bb559ffc8@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.3-0ubuntu1 
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250319172935.GMZ9r-_zzXhyhHBLfj@fat_crate.local>
-X-Migadu-Flow: FLOW_OUT
 
-On Wed, Mar 19, 2025 at 06:29:35PM +0100, Borislav Petkov wrote:
-> On Fri, Jan 10, 2025 at 06:40:30PM +0000, Brendan Jackman wrote:
-> > Add a boot time parameter to control the newly added X86_FEATURE_ASI.
-> > "asi=on" or "asi=off" can be used in the kernel command line to enable
-> > or disable ASI at boot time. If not specified, ASI enablement depends
-> > on CONFIG_ADDRESS_SPACE_ISOLATION_DEFAULT_ON, which is off by default.
-> 
-> I don't know yet why we need this default-on thing...
+Hi Masami,
 
-It's a convenience to avoid needing to set asi=on if you want ASI to be
-on by default. It's similar to HUGETLB_PAGE_OPTIMIZE_VMEMMAP_DEFAULT_ON
-or ZSWAP_DEFAULT_ON.
+On Wed, 2025-03-19 at 09:06 +0900, Masami Hiramatsu wrote:
+> On Tue, 18 Mar 2025 19:27:37 +0800
+> Miaoqian Lin <linmq006@gmail.com> wrote:
+>=20
+> > According to event_trigger_alloc() doc, event_trigger_free() should be
+> > used to free an event_trigger_data object. This fixes a mismatch introd=
+uced
+> > when kzalloc was replaced with event_trigger_alloc without updating
+> > the corresponding deallocation calls.
+> >=20
+>=20
+> Hmm, it seems more complicated problems are there. e.g. in `remove =3D tr=
+ue`
+> case, since the trigger_data is not initialized (no event_trigger_init())=
+,
+> the `trigger_data->ref` is 0. Thus, ;
+>=20
+> static void
+> event_trigger_free(struct event_trigger_data *data)
+> {
+> 	if (WARN_ON_ONCE(data->ref <=3D 0))
+> 		return;
+>=20
+> 	data->ref--;
+> 	if (!data->ref)
+> 		trigger_data_free(data);
+> }
+>=20
+> this will never call `trigger_data_free(data)`.=20
+>=20
+> But latter part(after out_free) seems correct.
+>=20
+> Tom, could you check it?
+>=20
 
-[..]
-> > @@ -175,7 +184,11 @@ static __always_inline bool asi_is_restricted(void)
-> >  	return (bool)asi_get_current();
-> >  }
-> >  
-> > -/* If we exit/have exited, can we stay that way until the next asi_enter? */
-> > +/*
-> > + * If we exit/have exited, can we stay that way until the next asi_enter?
-> 
-> What is that supposed to mean here?
+In both these cases, the code calls kfree() directly in order to avoid
+the WARN_ON_ONCE(data->ref) check.
 
-asi_is_relaxed() checks if the thread is outside an ASI critical
-section.
+In the first case (remove), trigger_data is only being used as a test
+object and will never have data->ref incremented.
 
-I say "the thread" because it will also return true if we are executing
-an interrupt that arrived during the critical section, even though the
-interrupt handler is not technically part of the critical section.
+The second case is the failure case, which is also dealing with a
+trigger_data object that hasn't been successfully registered and
+therefore has a 0 data->ref.
 
-Now the reason it says "if we exit we stay that way" is probably
-referring to the fact that an asi_exit() when interrupting a critical
-section will be undone in the interrupt epilogue by re-entering ASI.
+So perhaps the event_trigger_alloc doc should be changed to something
+like:
 
-I agree the wording here is confusing. We should probably describe this
-more explicitly and probably rename the function after the API
-discussions you had in the previous patch.
+"Use event_trigger_free() to free a successfully registered
+event_trigger_data object."
 
-> 
-> > + *
-> > + * When ASI is disabled, this returns true.
-> > + */
-> >  static __always_inline bool asi_is_relaxed(void)
-> >  {
-> >  	return !asi_get_target(current);
-[..]
-> > @@ -66,10 +73,36 @@ const char *asi_class_name(enum asi_class_id class_id)
-> >  	return asi_class_names[class_id];
-> >  }
-> >  
-> > +void __init asi_check_boottime_disable(void)
-> > +{
-> > +	bool enabled = IS_ENABLED(CONFIG_MITIGATION_ADDRESS_SPACE_ISOLATION_DEFAULT_ON);
-> > +	char arg[4];
-> > +	int ret;
-> > +
-> > +	ret = cmdline_find_option(boot_command_line, "asi", arg, sizeof(arg));
-> > +	if (ret == 3 && !strncmp(arg, "off", 3)) {
-> > +		enabled = false;
-> > +		pr_info("ASI disabled through kernel command line.\n");
-> > +	} else if (ret == 2 && !strncmp(arg, "on", 2)) {
-> > +		enabled = true;
-> > +		pr_info("Ignoring asi=on param while ASI implementation is incomplete.\n");
-> > +	} else {
-> > +		pr_info("ASI %s by default.\n",
-> > +			enabled ? "enabled" : "disabled");
-> > +	}
-> > +
-> > +	if (enabled)
-> > +		pr_info("ASI enablement ignored due to incomplete implementation.\n");
-> 
-> Incomplete how?
+Thanks,
 
-This is referring to the fact that ASI is still not fully/correctly
-functional, but it will be after the following patches.
+Tom
 
-I think it will be clearer if we just add the feature flag here so that
-we have something to check for in the following patches, but add the
-infrastructure for boot-time enablement at the end of the series when
-the impelemntation is complete.
+> Thank you,
+>=20
+> > Fixes: e1f187d09e11 ("tracing: Have existing event_command.parse() impl=
+ementations use helpers")
+> > Signed-off-by: Miaoqian Lin <linmq006@gmail.com>
+> > ---
+> > =C2=A0kernel/trace/trace_events_trigger.c | 4 ++--
+> > =C2=A01 file changed, 2 insertions(+), 2 deletions(-)
+> >=20
+> > diff --git a/kernel/trace/trace_events_trigger.c b/kernel/trace/trace_e=
+vents_trigger.c
+> > index d45448947094..8389314b8c2d 100644
+> > --- a/kernel/trace/trace_events_trigger.c
+> > +++ b/kernel/trace/trace_events_trigger.c
+> > @@ -995,7 +995,7 @@ event_trigger_parse(struct event_command *cmd_ops,
+> > =C2=A0
+> > =C2=A0	if (remove) {
+> > =C2=A0		event_trigger_unregister(cmd_ops, file, glob+1, trigger_data);
+> > -		kfree(trigger_data);
+> > +		event_trigger_free(trigger_data);
+> > =C2=A0		ret =3D 0;
+> > =C2=A0		goto out;
+> > =C2=A0	}
+> > @@ -1022,7 +1022,7 @@ event_trigger_parse(struct event_command *cmd_ops=
+,
+> > =C2=A0
+> > =C2=A0 out_free:
+> > =C2=A0	event_trigger_reset_filter(cmd_ops, trigger_data);
+> > -	kfree(trigger_data);
+> > +	event_trigger_free(trigger_data);
+> > =C2=A0	goto out;
+> > =C2=A0}
+> > =C2=A0
+> > --=20
+> > 2.39.5 (Apple Git-154)
+> >=20
+> >=20
+>=20
+>=20
 
-Basically start by a feature flag that has no way of being enabled, use
-it in the implmentation, then add means of enabling it.
-
-> 
-> > +}
-> > +
-> >  static void __asi_destroy(struct asi *asi)
-> >  {
-> > -	lockdep_assert_held(&asi->mm->asi_init_lock);
-> > +	WARN_ON_ONCE(asi->ref_count <= 0);
-> > +	if (--(asi->ref_count) > 0)
-> 
-> Switch that to
-> 
-> include/linux/kref.h
-> 
-> It gives you a sanity-checking functionality too so you don't need the WARN...
-
-I think we hve internal changes that completely get rid of this
-ref_count and simplifies the lifetime handling that we can squash here.
-We basically keep ASI objects around until the process is torn down,
-which makes this simpler and avoids the need for complex synchronization
-when we try to context switch or run userspace without exiting ASI
-(spoiler alert :) ).
-
-> 
-> > +		return;
-> >  
-> > +	free_pages((ulong)asi->pgd, PGD_ALLOCATION_ORDER);
-> > +	memset(asi, 0, sizeof(struct asi));
-> 
-> And then you can do:
-> 
-> 	if (kref_put())
-> 		free_pages...
-> 
-> and so on.
-> 
-> Thx.
-> 
-> -- 
-> Regards/Gruss,
->     Boris.
-> 
-> https://people.kernel.org/tglx/notes-about-netiquette
-> 
