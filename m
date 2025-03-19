@@ -1,125 +1,97 @@
-Received: from mail-vk1-f179.google.com (mail-vk1-f179.google.com [209.85.221.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5DBF254AEA
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 19 Mar 2025 11:31:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E80E2253F20
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 19 Mar 2025 12:01:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742383890; cv=none; b=TMwmWqCRkwmyOavNd/j1wVPyeG8JGpfDg//c1tvjfXhlgoe7VvvdMxDEFxmO51evkijtITgOR33Jz4UUboTb5Xa8/qVLzPVAVP4MmM0GkOkpYPMyw/AD6AKiTJhy4eTHM8g61EpiplwCZ628Zn84ZMNJSOPly5nqe6qi7o0CKx0=
+	t=1742385685; cv=none; b=Bj4J7o7McJQ2xiMbKSKF5v91I0RdWXPwg8wBOlvTa7ANWa3HV0O+fDXQuY0h6LohQ8MqTzniE9/I3lk7kScliorNgNhmGt+faLdfPRBAbFS3O6IEcgqKfR/lqTYyEFnHI4T4kZHQr5yXTfJVobA1E/GgS2tOh4c/8ABUO9RhbBg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742383890; c=relaxed/simple;
-	bh=uHypwcrRHl+SgqVLmPSjnzt1sQS71BQ4kVSWgN/L4Bw=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=XwY3jNTXTWjzz/zgMn1CCVqmXGJS9dRi00HSnmDLZQlwFEvVWVZokhQKtXdtJ1bGS41S2NJ1V7w8/yBW2puLnakrdHKDeBPNNGFgR6esl+S5GFOKS1OwMXmKeVYcRE5ZA7afMxUatldtPgv9UBQgmgdvqjavwHszwi/RPvPV+VM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=BcRrRpWV; arc=none smtp.client-ip=209.85.221.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1742385685; c=relaxed/simple;
+	bh=X0xBK3bLzDuZkB26jELnSzSPI6NgmsFq0dxeZWxGeIw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dDVjtp0rP8VmFoUu2266tY3b/jWdk46+sOAUxwfm+OahDd0X77l4PLivdP4Hlsy/IYa3bMwc3hSKSfuRKbeHW3m/hg9RHygHcNhOMw3bK0J4b4az/hNnK8SJgxb4bakximOyhL2PbGU6Wb5AMIcgNIQKETdQhbckcP4HSww6v+Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=FX475B3Z; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BcRrRpWV"
-Received: by mail-vk1-f179.google.com with SMTP id 71dfb90a1353d-5240317b3e0so2498716e0c.0
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 19 Mar 2025 04:31:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1742383887; x=1742988687; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=m+jLPHrj8ZPA3XVCoYQzPMElmxuzbulUtWiqu8pWMqw=;
-        b=BcRrRpWVb7MZF3k/jM7ouDfaXOufcFIbdwq73Fpk+3RYA7/zUS8U11k7iJqR7lIEw/
-         DmrkNfVno29assWrVc9OEGLqP0/XgAGHdCa5189zpSCVcQ0L1b7Vcl9ELG5mYNYVLLf7
-         294PAR6GO29Hyw56iy+n0akVz6nsBRxCq9aDRTlCngSr7W3nYZLGG4Mf1F1sTmiZ0AN7
-         I5HzvOZYzcLUr61o2NnTaj2KOEjdLurdsw2SzB/hYeb385Ol6CiJhtw20QS4SM+HtUqO
-         c+F72XGDEuY752GsrHRz/mpGvIX5dJA2AXuQSjTrBWYdWNwRcvLhEQfpcZMxUdwave55
-         JVVA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742383887; x=1742988687;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=m+jLPHrj8ZPA3XVCoYQzPMElmxuzbulUtWiqu8pWMqw=;
-        b=EMxZsYXZoAa6qNh7sJ/L/l95DQyeV3hX45CxJmnFVgUezeHELh9QVAk7aMPxZIM8D9
-         tzr0vXb/EcNZc4Rh9biqvO7Dr8khJ/zLfppzMg0WIcScF7B6y7dbqWxFrswZu8Iq+Z9S
-         wlxMyZrlHjDtaLY7H0RB0PPVVVdbtzO3Tmf+3rbRH0Ua65MssqmBZENnm2iYktXM5g2f
-         +acLIaIrEvtcV/3gPgJuIzCfsKBfi6STjviCLehrI4ox5A8GFlgXtQmdDRZyNGd82QyD
-         mGGU6P2KN7+yjDRAU+FavT6Dd35plDEvo5nqtzOqdXOgtUbKwK9KxLr358YAzayv+r91
-         AJlg==
-X-Forwarded-Encrypted: i=1; AJvYcCX27V4+XMMyc4XJ7NTyC9PFT8U71ATHFSFaknEDLpkzxPoV68NCz47J3N1OHekhkPy3IXAjhL0TNDWqutQsxUKsIVg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzpYD57Pd2Pzk+sXD37mnfvf/L+qtXmAB/bG+AlqRpDlLCNyBmd
-	+2u8xTxy40LjuS3xuDGGlLcoAJXrCkxNVjed8OnRU6JlKPHUMLntC0XoMawyl3+XXQfxbDOnE2a
-	+rGpi6JPrFEabBpm58xJ9LKpBWjzNaJe2VxPPZQ==
-X-Gm-Gg: ASbGncuH67kZ8I1M1YBWLGtdnyz0vuPitz1S5391oyKQn8HXcrSlESE7CzcqECbCxud
-	8Y/VokZjpIAgke4Oew46DfVRC3GUGd5gZEs0ksrYHlQXcJXIPLP/RNGfLc/+S4DMJCJYubwvmDz
-	RnRVUbvt597c3Ab7kjtwdoCB4hbRA6rXps+8YR3KzevdMkGJ5CVh6mo9eW3Rj0GiAACpNLUA==
-X-Google-Smtp-Source: AGHT+IEafdpVOBAa5pTQIO6t8jfUeEW2i1TdUhI5BgPgwIlXHBkKShF7vYcOGmK23Sd3ddxvxbUeCyPxJMm1D573itI=
-X-Received: by 2002:a05:6122:309f:b0:516:230b:eec with SMTP id
- 71dfb90a1353d-5258912107amr1143140e0c.5.1742383887486; Wed, 19 Mar 2025
- 04:31:27 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FX475B3Z"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1742385682;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=YqwTqw0LkuMJVhI7nUbav86stM0t9airgBDOJOw1FA0=;
+	b=FX475B3ZFDDiSoLkdi+OMbj4WsALAywL/aA9jiD824iBwiuZ6zoAv+b7GHNG7lNljAWbWZ
+	z/a2y9eMb+YHtrqki1Fipf+sWVnYP8jsMCPkbMWrTM4sRRv2ybOSZdIXOBiM9zQIh/VjBc
+	nf8CGyrzPT2A0csvawzWhBlyZAhtZ4E=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-554-Ep91YsP_MAa5nA-2OQLbTA-1; Wed,
+ 19 Mar 2025 08:01:16 -0400
+X-MC-Unique: Ep91YsP_MAa5nA-2OQLbTA-1
+X-Mimecast-MFC-AGG-ID: Ep91YsP_MAa5nA-2OQLbTA_1742385673
+Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id EC50F180AF69;
+	Wed, 19 Mar 2025 12:01:11 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.226.12])
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 5D85E1801751;
+	Wed, 19 Mar 2025 12:01:02 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Wed, 19 Mar 2025 13:00:39 +0100 (CET)
+Date: Wed, 19 Mar 2025 13:00:29 +0100
+From: Oleg Nesterov <oleg@redhat.com>
+To: David Hildenbrand <david@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+	Matthew Wilcox <willy@infradead.org>,
+	Russell King <linux@armlinux.org.uk>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	Tong Tiangen <tongtiangen@huawei.com>
+Subject: Re: [PATCH v2 3/3] kernel/events/uprobes: uprobe_write_opcode()
+ rewrite
+Message-ID: <20250319120028.GA26879@redhat.com>
+References: <20250318221457.3055598-1-david@redhat.com>
+ <20250318221457.3055598-4-david@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Wed, 19 Mar 2025 17:01:16 +0530
-X-Gm-Features: AQ5f1Jom0KVj0bHEN5s3vaEzIeI9v3O6c6_HQfHuayaz3HGWB-1p8XHKc-Q7AtI
-Message-ID: <CA+G9fYs62qxt1PajEp2A8uUmQFeAsC2JBV2wuspbAxz_hFF7CA@mail.gmail.com>
-Subject: next-20250319: arm shmobile_defconfig trace.c undefined type 'struct module'
-To: open list <linux-kernel@vger.kernel.org>, 
-	Linux trace kernel <linux-trace-kernel@vger.kernel.org>, lkft-triage@lists.linaro.org
-Cc: Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Dan Carpenter <dan.carpenter@linaro.org>, Arnd Bergmann <arnd@arndb.de>, 
-	Anders Roxell <anders.roxell@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250318221457.3055598-4-david@redhat.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
 
-Regressions on arm the shmobile_defconfig builds failed with clang-20 and gcc-13
+On 03/18, David Hildenbrand wrote:
+>
+> +	if (unlikely(!folio_test_anon(folio))) {
+> +		VM_WARN_ON_ONCE(is_register);
+> +		goto out;
+> +	}
 
-First seen on the next-20250312
- Good: next-20250311
- Bad:  next-20250312 .. next-20250319
+Don't we need folio_put() before "goto out" ?
 
-Regressions found on arm:
- - gcc-13-shmobile_defconfig
- - gcc-8-shmobile_defconfig
- - clang-20-shmobile_defconfig
+Other than that, for this series:
 
-Regression Analysis:
- - New regression? Yes
- - Reproducible? Yes
+Acked-by: Oleg Nesterov <oleg@redhat.com>
 
-Build regression: arm shmobile_defconfig trace.c undefined type 'struct module'
-Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
-
-## Build log
-kernel/trace/trace.c: In function 'save_mod':
-kernel/trace/trace.c:6036:45: error: invalid use of undefined type
-'struct module'
- 6036 |         entry->mod_addr = (unsigned long)mod->mem[MOD_TEXT].base;
-      |                                             ^~
-kernel/trace/trace.c:6036:51: error: 'MOD_TEXT' undeclared (first use
-in this function)
- 6036 |         entry->mod_addr = (unsigned long)mod->mem[MOD_TEXT].base;
-      |                                                   ^~~~~~~~
-
-## Source
-* Kernel version: 6.14.0-rc7
-* Git tree: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
-* Git sha: ff7f9b199e3f4cc7d61df5a9a26a7cbb5c1492e6
-* Git describe: next-20250319
-* Project details:
-https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20250319
-
-## Build
-* Build log: https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20250319/testrun/27672563/suite/build/test/gcc-13-shmobile_defconfig/log
-* Build history:
-https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20250319/testrun/27672563/suite/build/test/gcc-13-shmobile_defconfig/history/
-* Build details:
-https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20250319/testrun/27672563/suite/build/test/gcc-13-shmobile_defconfig
-* Build link: https://storage.tuxsuite.com/public/linaro/lkft/builds/2uX2E69ngTqvrymzOdYQz0JQ16z/
-* Kernel config:
-https://storage.tuxsuite.com/public/linaro/lkft/builds/2uX2E69ngTqvrymzOdYQz0JQ16z/config
-
-## Steps to reproduce
- - tuxmake --runtime podman --target-arch arm --toolchain gcc-13
---kconfig shmobile_defconfig
-
-
---
-Linaro LKFT
-https://lkft.linaro.org
