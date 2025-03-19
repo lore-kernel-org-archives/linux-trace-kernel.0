@@ -1,194 +1,149 @@
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 560D51D516F
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 19 Mar 2025 15:27:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCD751DE3C8
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 19 Mar 2025 16:21:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742398065; cv=none; b=ZvCNXeQLEXKADtNtxp/CQYo6XvDNQUvZGHnItl8w4nKREkRGAKBI/kTLX+5oMxiTTuteB1JwnRg6MuAinL5risiLmKY0Q2hOiQ9oS7T2SO4MZWEgiu9rLd64jZ+LbzubGWB60sdaJqyUK6vV+jUrK8BWYFliwG45qut78/NhFdU=
+	t=1742401291; cv=none; b=lYUYh+i23/q9itPqlWt73Xuoc+lEohGhCaMjjc1VJ7NY284hQIKMyUkX0GhowSMmnIRmkXbE++ItU6mMhKdIpaLI6gH2kl9hUka967y1U2TmosYEpfGRu3Aw54RXaxNmxDgN9bwme4Ryt5V+FFEQLyqNK/4/PaOeLaZnuLPYhAg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742398065; c=relaxed/simple;
-	bh=euhzxAcsa73HCMGqXYqF6lj+RKd5O6xHJAkh/9JGCvA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TUJ7Tve10aW1yL55qzqFiTxUYfCOZRjDUKDyQz52S92pufL853ZnmsVgBr19OgSXcqYQJpaLSZ6sVwHuqCdfJ/HnAlk9gb40mamqMkzMyTrdCKf9fs29zgfYOHGclZ9Tnd+2+QC6L2/cZLTGFRtGcEmZAvzLqDqeZbUu+7X4nEg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=ZcesKens; arc=none smtp.client-ip=209.85.128.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
+	s=arc-20240116; t=1742401291; c=relaxed/simple;
+	bh=lq9X6f5rVWemxyluvt6OwcygPboGXhQUAKNek3zdLrw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=FOKaMwbIKyPvKxYQ2XCR00wnNV89KqSaJ4sePckJ8js6SBrPLeASUchrLWvY9yAdzcbbRHBZCk/QMSJnuTuX6sUh91dqYfIqq6N24c8HKqFsYjSyQVcR73CFoalzmcsefcuhSE187JcUNXaH8+Wsx7+/JFQDWMJoEr7qMHPKFuY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=LAtMgXrL; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="ZcesKens"
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-4394a0c65fcso42645115e9.1
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 19 Mar 2025 08:27:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ventanamicro.com; s=google; t=1742398061; x=1743002861; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=TgxY2KZtIrmQRpExe3D1+RTeBDiOjEYNGghBrLG3UzU=;
-        b=ZcesKens/7Zl1OU6NXgF44SWcIiLXK0gBaUNPset5LrD9e6/T8HHYOfIy98gRZ90x9
-         L9/K51nj0UIPXPrYnVpYbR0hwrsZu3b7zBUgvsuvGOuda25sunnPwr6y2QmSQYuSBBFI
-         3RL481luYyd+wzj+q2d1s1lRGp4hg/5IDQb/o7eEDYpgiD+mW4H29loZAv9QeV7UHr9j
-         rzVdpioKGxwc+iHBCS2CGonnDfKlY9x+z/OoYnKi32rF0lTJg+iMm/7LsHpRhlzo03kY
-         WZ89dOuN8UN8o03Spza4+9Kg3xohaWVLW48e0Xa7VaaFmAR5/0nkrBR3om1a5QKNgVee
-         1IHA==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LAtMgXrL"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1742401288;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=JOpqJkUFS2tciZtn6NxMptpspHchhF4kFtYH07Hzmws=;
+	b=LAtMgXrLCH4lhWmg/DvaWatBUHEVucrRqXYFgeF/1saAYRT3CqEUumpA4I+Lyur4Po5pt8
+	T+hNY0HVFsiS2dRsQYM6QTf5RTvEqQ8WF+lKvXHH7LMUBFQSruUjkiUlnQs5cbAf8V4IT7
+	QYaVxLRwQ+pJofbzh8DLIMCubbLaHm4=
+Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com
+ [209.85.160.199]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-587-dC8Bx__ZNRmyp4GlLPuc1w-1; Wed, 19 Mar 2025 12:21:27 -0400
+X-MC-Unique: dC8Bx__ZNRmyp4GlLPuc1w-1
+X-Mimecast-MFC-AGG-ID: dC8Bx__ZNRmyp4GlLPuc1w_1742401287
+Received: by mail-qt1-f199.google.com with SMTP id d75a77b69052e-47682f9e7b9so118753571cf.2
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 19 Mar 2025 09:21:27 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742398061; x=1743002861;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=TgxY2KZtIrmQRpExe3D1+RTeBDiOjEYNGghBrLG3UzU=;
-        b=GSkTPZjts4P5+b6DNP8UZljugu639cc5Eesg3hVIPGCQ0+XaWpqw5Bznt2oU0q5Si9
-         nyJ3Fh9A70d50CmX8Zy4X3p6RQVSmVPdpVUkEVEF6PfUZNT6wjhwetCJDBJUCcUkmvRE
-         ZLSmpGaL4N7bXLbHP5/g9T0vvU6zQhhrk04S5+4QP51nGdieMYtPMxc1tM6/qZn2byWd
-         dwOSGuWyLfKSx+040eiOvG4N5AglU6xYkbWvkufPZCf/cXzt40IB9bF3hQmlgCFSu01b
-         mm2OEGPuyJLtHsNOddTdx+pP1AtgKScPrPtv1RJO0Wa3jtxlPJslOS7GOs75gecSab9I
-         byHw==
-X-Forwarded-Encrypted: i=1; AJvYcCVSOil1n09cC4HhXUxRmBGaSy8HvLyg232lzvTGUGY9DPBvSqAQbRFMxzzWBrzHJIvextKvYvC79bFRNveHUDcyqX4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz7xkQm5vanyEE+wNl+pcEI4Xa2jN4QlRN8A5389dOhy+nVs59P
-	1lBICAhEIIUTCQbWyLen48AzFUlrHvifN+msy9h6MHVzi56Cka+JBO2814hUTG0=
-X-Gm-Gg: ASbGnctucOyp9lEAkpvHoMjVApd0upX00gZKHxUWoxLHDPHLHhjEXmdET+0SOeVkrHJ
-	uITjaKSUrpHotz7jcPgYt9L6eS2KYGO8kk0mn5KKG5ZefIZr1sFO0VVExw9CeRz7mvHPjgbfVYW
-	p3fIFsF6ZCqkH1m4hIGtpYJOiTl6wpL+yw3BbpMnuBrgGTt5NZzss0xFL++d6yaF10xBlYmPgln
-	zpyYm6X/mHTz8NpbFyS1q3xAhfCN6qLH03A5X9eAljN+MV6L59el/+KPSFEJWLEz/g0DjnZ9ZUj
-	U8+cTYf0mZvGM+vUwPYR+h55sGx+Xjqf
-X-Google-Smtp-Source: AGHT+IFeAXnl0WTivUPXfKcPs3cJUq9v6gC9hg13Hq54tpqSOLgPB+ibA2L8ZApJrBJf1YYPrQEiJw==
-X-Received: by 2002:a05:600c:5250:b0:43c:fc0c:7f33 with SMTP id 5b1f17b1804b1-43d43781e4emr30994685e9.2.1742398061429;
-        Wed, 19 Mar 2025 08:27:41 -0700 (PDT)
-Received: from localhost ([2a02:8308:a00c:e200::59a5])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43d43f855efsm21731865e9.34.2025.03.19.08.27.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Mar 2025 08:27:40 -0700 (PDT)
-Date: Wed, 19 Mar 2025 16:27:39 +0100
-From: Andrew Jones <ajones@ventanamicro.com>
-To: Charlie Jenkins <charlie@rivosinc.com>
-Cc: Paul Walmsley <paul.walmsley@sifive.com>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Ard Biesheuvel <ardb@kernel.org>, 
-	Ben Dooks <ben.dooks@codethink.co.uk>, Pasha Bouzarjomehri <pasha@rivosinc.com>, 
-	Emil Renner Berthing <emil.renner.berthing@canonical.com>, Alexandre Ghiti <alexghiti@rivosinc.com>, 
-	Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, Albert Ou <aou@eecs.berkeley.edu>, 
-	Peter Zijlstra <peterz@infradead.org>, Josh Poimboeuf <jpoimboe@kernel.org>, 
-	Jason Baron <jbaron@akamai.com>, linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH v9 1/2] riscv: Move nop definition to insn-def.h
-Message-ID: <20250319-3bf29b05bf02bfdaa32b261c@orel>
-References: <20250318-runtime_const_riscv-v9-0-ddd3534d3e8e@rivosinc.com>
- <20250318-runtime_const_riscv-v9-1-ddd3534d3e8e@rivosinc.com>
+        d=1e100.net; s=20230601; t=1742401287; x=1743006087;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=JOpqJkUFS2tciZtn6NxMptpspHchhF4kFtYH07Hzmws=;
+        b=f53piNgq7T4jSfhsOteQb5CEIihefeZEtSiSK6t5dImu810v+Ai+Y5D+d/yUCbDjdG
+         XGD5sMgofSAliDDpEQwfuYCT/lBR66R5Vddj4nYs8yX+bcH5hW35scJqjeL60OThMlKc
+         tmX6GVXlKLR7rO1Mu+VqaDAPoYOoE7USt9BvdvxOCKSlud1t4tyVvjQlkohg7XKc2gFD
+         RJiDonRs9VUn2+Ie9eazKbHKrXJ3l06Miqlf++bj3r73tH4rhwG1D8LpYj5J+cBpH8jg
+         sG4lC1mBC/tM+z+p46p6Nirc7kCdGfDxd2NQZAUg4HftuAoPFe2CoIoU28H3tjHckYSf
+         fdXg==
+X-Forwarded-Encrypted: i=1; AJvYcCXS3DLtJ50ePnLNHQ+BTEvq4plMbY5IYyAI0edMfcTBGbO+C+51rGc3tkj9QoICYGmREi2YDa/e5OfGKaWQRSpfrQ4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzSZGztGhVLa8x2dV9tbl1yzjBKxBw1LntFdBRL+HDt4QlLwcJZ
+	Yz9niF9Ni7N5yRtNZUxCz8zpiroAU5mKHsz8Y/nGN2KdqCuEJAlD6CDxApAsvXIwv9wu0YEICb5
+	h43XtXWqahMyqvC43LNT2tC5Oedr2nVAx7rshRCL4J3kx/oPbzrUUl60DtM4ySYnTHckXxdV3Rp
+	AlmbcIqEAuMzK5MIlhsEaIlCn7SRspl+D97yw8sfBA/5au
+X-Gm-Gg: ASbGnctunCIkrmXE2c68QqJQYRoTxuDG78sClUbbKN+GhmzC9mmqELqhLaQSkbgfxLt
+	mh/GYpmCmtNmtvXYTK8UPZzsaYmcqp6RFJOir9yfJjKs8tIcjcaOxLelmKLKJ6enAnnC0MGwXj0
+	Iql8Y/gGmiVMWJdNTluY1GDUXxvpw/Xg==
+X-Received: by 2002:a05:622a:248d:b0:476:a969:90c5 with SMTP id d75a77b69052e-4770835ee45mr47927961cf.24.1742401286953;
+        Wed, 19 Mar 2025 09:21:26 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEq0WBTdUbfxwEVbo37+U0Z4XQZwzQBI6UK5QfoVOWzEKA+jKrkY6HS88cD6LTiUix9oV0Ssh8A6+qBy79YGiY=
+X-Received: by 2002:a05:622a:248d:b0:476:a969:90c5 with SMTP id
+ d75a77b69052e-4770835ee45mr47927731cf.24.1742401286668; Wed, 19 Mar 2025
+ 09:21:26 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250318-runtime_const_riscv-v9-1-ddd3534d3e8e@rivosinc.com>
+References: <20250314125725.6425-1-gpaoloni@redhat.com> <20250318110700.510f05df7e113180503fc036@kernel.org>
+ <20250319051317.670ba86c@batman.local.home>
+In-Reply-To: <20250319051317.670ba86c@batman.local.home>
+From: Gabriele Paoloni <gpaoloni@redhat.com>
+Date: Wed, 19 Mar 2025 17:21:14 +0100
+X-Gm-Features: AQ5f1JqNVJcfdW-NN-v_3Y6r0ZqLbaTg-J7YEdwOWjVrfDSN-7gsg_RUGixj8UU
+Message-ID: <CA+wEVJbraZfyF1-4J41maJHtBYUAZBNWMUA9z+PWPXYeR5jumw@mail.gmail.com>
+Subject: Re: [RFC PATCH] tracing: fix return value in __ftrace_event_enable_disable
+ for TRACE_REG_UNREGISTER
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>, mathieu.desnoyers@efficios.com, 
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: tJtYDjwle1hZTyX7dYF18kflmNYx42N9g5mWakRHRTo_1742401287
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Mar 18, 2025 at 05:38:45PM -0700, Charlie Jenkins wrote:
-> We have duplicated the definition of the nop instruction in ftrace.h and
-> in jump_label.c. Move this definition into the generic file insn-def.h
-> so that they can share the definition with each other and with future
-> files.
-> 
-> Signed-off-by: Charlie Jenkins <charlie@rivosinc.com>
-> ---
->  arch/riscv/include/asm/ftrace.h   | 1 -
->  arch/riscv/include/asm/insn-def.h | 2 ++
->  arch/riscv/kernel/ftrace.c        | 6 +++---
->  arch/riscv/kernel/jump_label.c    | 4 ++--
->  4 files changed, 7 insertions(+), 6 deletions(-)
-> 
-> diff --git a/arch/riscv/include/asm/ftrace.h b/arch/riscv/include/asm/ftrace.h
-> index c4721ce44ca474654b37b3d51bc0a63d46bc1eff..b7f361a50f6445d02a0d88eef5547ee27c1fb52e 100644
-> --- a/arch/riscv/include/asm/ftrace.h
-> +++ b/arch/riscv/include/asm/ftrace.h
-> @@ -79,7 +79,6 @@ struct dyn_arch_ftrace {
->  #define AUIPC_RA		(0x00000097)
->  #define JALR_T0			(0x000282e7)
->  #define AUIPC_T0		(0x00000297)
-> -#define NOP4			(0x00000013)
->  
->  #define to_jalr_t0(offset)						\
->  	(((offset & JALR_OFFSET_MASK) << JALR_SHIFT) | JALR_T0)
-> diff --git a/arch/riscv/include/asm/insn-def.h b/arch/riscv/include/asm/insn-def.h
-> index 9a913010cdd93cdfdd93f467e7880e20cce0dd2b..0a1fc5134f29da190554c59f8cee3b5374c9aa2d 100644
-> --- a/arch/riscv/include/asm/insn-def.h
-> +++ b/arch/riscv/include/asm/insn-def.h
-> @@ -200,4 +200,6 @@
->  #define ZAWRS_WRS_NTO	".4byte 0x00d00073"
->  #define ZAWRS_WRS_STO	".4byte 0x01d00073"
->  
-> +#define RISCV_INSN_NOP4	0x00000013U
+On Wed, Mar 19, 2025 at 10:13=E2=80=AFAM Steven Rostedt <rostedt@goodmis.or=
+g> wrote:
+>
+> On Tue, 18 Mar 2025 11:07:00 +0900
+> Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
+>
+> > > --- a/kernel/trace/trace_events.c
+> > > +++ b/kernel/trace/trace_events.c
+> > > @@ -790,7 +790,7 @@ static int __ftrace_event_enable_disable(struct t=
+race_event_file *file,
+> > >                             clear_bit(EVENT_FILE_FL_RECORDED_TGID_BIT=
+, &file->flags);
+> > >                     }
+> > >
+> > > -                   call->class->reg(call, TRACE_REG_UNREGISTER, file=
+);
+> > > +                   ret =3D call->class->reg(call, TRACE_REG_UNREGIST=
+ER, file);
+> >
+> > This is not enough. As same as enable failure, this function needs to h=
+andle
+> > this error to report it and break.
+>
+> Perhaps all we should do here is:
+>
+>                         WARN_ON_ONCE(ret);
 
-This should be _AC(0x00000013, U), but since this is the first of its kind
-(all other defines are of the form ".4byte ..." -- either explicitly, like
-the ones above, or through the INSN_* macros), then it feels like it
-either doesn't belong here at all or that we should provide it and a
-".4byte ..." version.
+Yes I was trying to address the request from Masami however,
+if we look at the error path of TRACE_REG_REGISTER what happens is:
 
-Thanks,
-drew
+ret =3D call->class->reg(call, TRACE_REG_REGISTER, file);
+if (ret) {
+   if (cmd)
+       tracing_stop_cmdline_record();
+    if (tgid)
+       tracing_stop_tgid_record();
+    pr_info("event trace: Could not enable event "
+       "%s\n", trace_event_name(call));
+    break;
 
-> +
->  #endif /* __ASM_INSN_DEF_H */
-> diff --git a/arch/riscv/kernel/ftrace.c b/arch/riscv/kernel/ftrace.c
-> index 3524db5e4fa014a4594465f849d898a030bfb7b8..674dcdfae7a149c339f1e791adb450535f22991b 100644
-> --- a/arch/riscv/kernel/ftrace.c
-> +++ b/arch/riscv/kernel/ftrace.c
-> @@ -36,7 +36,7 @@ static int ftrace_check_current_call(unsigned long hook_pos,
->  				     unsigned int *expected)
->  {
->  	unsigned int replaced[2];
-> -	unsigned int nops[2] = {NOP4, NOP4};
-> +	unsigned int nops[2] = {RISCV_INSN_NOP4, RISCV_INSN_NOP4};
->  
->  	/* we expect nops at the hook position */
->  	if (!expected)
-> @@ -68,7 +68,7 @@ static int __ftrace_modify_call(unsigned long hook_pos, unsigned long target,
->  				bool enable, bool ra)
->  {
->  	unsigned int call[2];
-> -	unsigned int nops[2] = {NOP4, NOP4};
-> +	unsigned int nops[2] = {RISCV_INSN_NOP4, RISCV_INSN_NOP4};
->  
->  	if (ra)
->  		make_call_ra(hook_pos, target, call);
-> @@ -97,7 +97,7 @@ int ftrace_make_call(struct dyn_ftrace *rec, unsigned long addr)
->  int ftrace_make_nop(struct module *mod, struct dyn_ftrace *rec,
->  		    unsigned long addr)
->  {
-> -	unsigned int nops[2] = {NOP4, NOP4};
-> +	unsigned int nops[2] = {RISCV_INSN_NOP4, RISCV_INSN_NOP4};
->  
->  	if (patch_insn_write((void *)rec->ip, nops, MCOUNT_INSN_SIZE))
->  		return -EPERM;
-> diff --git a/arch/riscv/kernel/jump_label.c b/arch/riscv/kernel/jump_label.c
-> index 654ed159c830b3d5e34ac58bf367107066eb73a1..b4c1a6a3fbd28533552036194f27ed206bea305d 100644
-> --- a/arch/riscv/kernel/jump_label.c
-> +++ b/arch/riscv/kernel/jump_label.c
-> @@ -11,8 +11,8 @@
->  #include <asm/bug.h>
->  #include <asm/cacheflush.h>
->  #include <asm/text-patching.h>
-> +#include <asm/insn-def.h>
->  
-> -#define RISCV_INSN_NOP 0x00000013U
->  #define RISCV_INSN_JAL 0x0000006fU
->  
->  bool arch_jump_label_transform_queue(struct jump_entry *entry,
-> @@ -33,7 +33,7 @@ bool arch_jump_label_transform_queue(struct jump_entry *entry,
->  			(((u32)offset & GENMASK(10,  1)) << (21 -  1)) |
->  			(((u32)offset & GENMASK(20, 20)) << (31 - 20));
->  	} else {
-> -		insn = RISCV_INSN_NOP;
-> +		insn = RISCV_INSN_NOP4;
->  	}
->  
->  	if (early_boot_irqs_disabled) {
-> 
-> -- 
-> 2.43.0
-> 
-> 
-> _______________________________________________
-> linux-riscv mailing list
-> linux-riscv@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-riscv
+In this case it makes sense since it will undo what was done before
+enabling the trace event. However I don't think it would make sense
+to invoke tracing_start_cmdline_record and/or tracing_start_tgid_record
+if the unregister callbacks fails since the event could be in a sort of
+unknown state (i.e. we cannot trust the event to still be enabled).
+
+Also it is probably not appropriate to log the event using exclusively
+
+         pr_info("event trace: Could not disable event "
+                 "%s\n", trace_event_name(call));
+
+So I would agree with Steven or else
+
+      if (ret)
+           pr_warn("event trace: Could not disable event "
+                   "%s\n", trace_event_name(call));
+
+Many thanks for the review
+Gab
+>
+> -- Steve
+>
+
