@@ -1,162 +1,154 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F34901C9B6C;
-	Wed, 19 Mar 2025 14:34:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AA53A16BE3A;
+	Wed, 19 Mar 2025 14:51:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742394873; cv=none; b=f5t4ONnSBZY1kzO7exnxCNx3P7vct3OvapQZx/qFXtsWbmqccMCOJYSDc4FBXN6yrrzZeLq9d0iEMkDJs6UK8hWxVg9oqfQUDkP+mOHjjFZ+6nGEWUeLf8JZ/rt66ExbcsL49ZiQlCULyR7D6sA18ZQXRgPy0d4dtjMK/ben0vY=
+	t=1742395908; cv=none; b=uQnPMOLkeDeuOpImzPjdBgMwk2N7t+cLXbCQXITS0JjUTrxGgaj1q51J6n8R2fBEQ5Z1JRGc+xr3bElwTnYA9FRDPlpAMf3jAzcvcmIVnFsdxGcyhQv1CsDv9siyDBEEBwCjJ5Zo+49UJ4R8rFL+MgQW38SFG8y5ZroAptWKFhY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742394873; c=relaxed/simple;
-	bh=3pq6FRyIzrjv4SPWeUepBB3TqevtfuHC4XLYdOXn3XE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mf0L667JsovQk3ljfxjp+AOy62PbWkPKmEAuzQHoyJenAezatpHFWfxSwASa25nomWJ7VIeF4o+hpZ91QikVtp7v4zkjuFM/Eu3kGXty//Ckdz8ZYcKtZaDhDEES0tS33kanCW3BfwhBxxtucTsf3NFOg6GbLUjI2gBqQY+GvGw=
+	s=arc-20240116; t=1742395908; c=relaxed/simple;
+	bh=8fnh+mxNSdWC4xYUebdlycVe1MnQjASavmalZ/YWqzM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=FRGUOC/c4QcM8oPCPcZPmWu5LsquEojaBmG3EANDehJxsfUT7DkQnQiKTBZGbOAk9LL4tUs8+kCk7tSzi3cti2SppKBptYlvltjWyxQn8sozpL9PrUc6UEdrC/M01tjf3rV+wolaq77CDw4/u9PtFlI+8nFG9f3j3BUaVW0b/1E=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5AA0AFEC;
-	Wed, 19 Mar 2025 07:34:39 -0700 (PDT)
-Received: from J2N7QTR9R3 (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 278053F673;
-	Wed, 19 Mar 2025 07:34:28 -0700 (PDT)
-Date: Wed, 19 Mar 2025 14:34:25 +0000
-From: Mark Rutland <mark.rutland@arm.com>
-To: Jeremy Linton <jeremy.linton@arm.com>
-Cc: linux-trace-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-	mhiramat@kernel.org, oleg@redhat.com, peterz@infradead.org,
-	acme@kernel.org, namhyung@kernel.org,
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-	irogers@google.com, adrian.hunter@intel.com,
-	kan.liang@linux.intel.com, thiago.bauermann@linaro.org,
-	broonie@kernel.org, yury.khrustalev@arm.com,
-	kristina.martsenko@arm.com, liaochang1@huawei.com,
-	catalin.marinas@arm.com, will@kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 6/7] uprobes: Allow the use of uprobe_warn() in arch code
-Message-ID: <Z9rV8YbThvW2r69-@J2N7QTR9R3>
-References: <20250318204841.373116-1-jeremy.linton@arm.com>
- <20250318204841.373116-7-jeremy.linton@arm.com>
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 360E8106F;
+	Wed, 19 Mar 2025 07:51:54 -0700 (PDT)
+Received: from [10.1.39.66] (e132430.arm.com [10.1.39.66])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E29473F694;
+	Wed, 19 Mar 2025 07:51:44 -0700 (PDT)
+Message-ID: <3732e7f8-a452-4f65-8e8b-1575c01d33b9@arm.com>
+Date: Wed, 19 Mar 2025 14:51:42 +0000
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250318204841.373116-7-jeremy.linton@arm.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 3/3] tracing: Rename trace_synth() to synth_event_trace2()
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc: rostedt@goodmis.org, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+References: <20250318180814.226644-1-douglas.raillard@arm.com>
+ <20250318180814.226644-3-douglas.raillard@arm.com>
+ <20250319223728.ca7a5ac6fa37798d17bd2e29@kernel.org>
+Content-Language: en-US
+From: Douglas Raillard <douglas.raillard@arm.com>
+In-Reply-To: <20250319223728.ca7a5ac6fa37798d17bd2e29@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Tue, Mar 18, 2025 at 03:48:40PM -0500, Jeremy Linton wrote:
-> The uprobe_warn function is limited to the uprobe core,
-> but the functionality is useful to report arch specific errors.
+On 19-03-2025 13:37, Masami Hiramatsu (Google) wrote:
+> On Tue, 18 Mar 2025 18:08:12 +0000
+> Douglas RAILLARD <douglas.raillard@arm.com> wrote:
 > 
-> Drop the static so it can be used in those code paths.
+>> From: Douglas Raillard <douglas.raillard@arm.com>
+>>
+>> Rename the frehsly exposed trace_synth() to synth_event_trace2() to
+>> comply with the existing naming convention. Since synth_event_trace()
+>> already exists (and operates on a "struct trace_event_file *"), use a
+>> new name for it.
+>>
 > 
-> Signed-off-by: Jeremy Linton <jeremy.linton@arm.com>
+> I don't like this '2' and similar version digit naming for the functions.
+> Can you choose another better name?
 
-NAK to the arm64 additions.
+I was hoping for some suggestions as I don't like it either :)
 
-There is no reason to print a warning message for something that does
-not adversely affect the kernel, and where buggy or malicious userspace
-can trigger the warning when the kernel is behaving correctly.
+The natural prefix for functions operating on "struct synth_event *" would by "synth_event_*",
+but most of the existing API already uses the "synth_event_*" prefix, and is using
+"struct trace_event_file*".
 
-This isn't even ratelimited.
+> BTW, can you also write a cover mail so that what is the goal of this
+> series, background and results? 
 
-Mark.
+Ok, I'll respin the series with a proper cover letter. The gist is I was following the doc [1] on how
+to create a synthetic event, trying to apply that to a kernel module we have that needs to create new events.
 
-> ---
->  arch/arm64/kernel/probes/simulate-insn.c | 8 ++++++--
->  arch/arm64/kernel/probes/uprobes.c       | 4 ++++
->  include/linux/uprobes.h                  | 1 +
->  kernel/events/uprobes.c                  | 2 +-
->  4 files changed, 12 insertions(+), 3 deletions(-)
+Unfortunately, it turned out that all the exposed APIs to emit the events (such as synth_event_trace()) require
+getting a "struct trace_event_file*" before the call. This breaks when a user starts creating instances in tracefs,
+as each instance will have its own "struct trace_event_file*". The way this is done for normal trace events is
+that each instance registers a probe on the tracepoint with the struct trace_event_file* as the void *data pointer.
+Then when the tracepoint is called, all the probes are called and the event data is copied in all instances in which
+it was enabled.
+
+Although the synthetic event API does create that tracepoint and has an appropriate probe function, none of the exposed API
+I could find make use of it. The exception is trace_events_hist.c had its own private version of it that actually calls all
+the probes of the tracepoint "manually", so that the event is correctly emitted in all the instances it was enabled in. This
+is the function touched by this patch.
+
+So that means that as it stands:
+1. The exposed API is only really usable with the "NULL" struct trace_event_file*, which maps to the top-level one.
+2. If a user creates an instance and enables the event in it using tracefs, the code that emits the event using the existing API
+    will completely ignore that and keep emitting the event in the top-level instance that it was wired to do.
+
+Approximately nothing in the synth event API that takes a "struct trace_event_file*" will work properly with user-created instances.
+
+[1] https://docs.kernel.org/trace/events.html#dyamically-creating-synthetic-event-definitions
+
 > 
-> diff --git a/arch/arm64/kernel/probes/simulate-insn.c b/arch/arm64/kernel/probes/simulate-insn.c
-> index 1fc9bb69b1eb..fe637fec8f36 100644
-> --- a/arch/arm64/kernel/probes/simulate-insn.c
-> +++ b/arch/arm64/kernel/probes/simulate-insn.c
-> @@ -56,8 +56,10 @@ static inline void update_lr(struct pt_regs *regs, long addr)
->  
->  	if (user_mode(regs) && task_gcs_el0_enabled(current)) {
->  		push_user_gcs(addr + 4,	 &err);
-> -		if (err)
-> +		if (err) {
-> +			uprobe_warn(current, "GCS stack push failure");
->  			force_sig(SIGSEGV);
-> +		}
->  	}
->  	procedure_link_pointer_set(regs, addr + 4);
->  }
-> @@ -160,8 +162,10 @@ simulate_ret(u32 opcode, long addr, struct pt_regs *regs)
->  
->  	if (user_mode(regs) && task_gcs_el0_enabled(current)) {
->  		ret_addr = pop_user_gcs(&err);
-> -		if (err || ret_addr != procedure_link_pointer(regs))
-> +		if (err || ret_addr != procedure_link_pointer(regs)) {
-> +			uprobe_warn(current, "GCS RET address mismatch");
->  			force_sig(SIGSEGV);
-> +		}
->  	}
->  
->  }
-> diff --git a/arch/arm64/kernel/probes/uprobes.c b/arch/arm64/kernel/probes/uprobes.c
-> index 5e72409a255a..9349d521316c 100644
-> --- a/arch/arm64/kernel/probes/uprobes.c
-> +++ b/arch/arm64/kernel/probes/uprobes.c
-> @@ -54,6 +54,7 @@ int arch_uprobe_analyze_insn(struct arch_uprobe *auprobe, struct mm_struct *mm,
->  
->  	switch (arm_probe_decode_insn(insn, &auprobe->api)) {
->  	case INSN_REJECTED:
-> +		uprobe_warn(current, "Unsupported instruction at probe location");
->  		return -EINVAL;
->  
->  	case INSN_GOOD_NO_SLOT:
-> @@ -169,6 +170,7 @@ arch_uretprobe_hijack_return_addr(unsigned long trampoline_vaddr,
->  		gcspr = read_sysreg_s(SYS_GCSPR_EL0);
->  		gcs_ret_vaddr = load_user_gcs((unsigned long __user *)gcspr, &err);
->  		if (err) {
-> +			uprobe_warn(current, "GCS stack not available for retprobe");
->  			force_sig(SIGSEGV);
->  			goto out;
->  		}
-> @@ -180,11 +182,13 @@ arch_uretprobe_hijack_return_addr(unsigned long trampoline_vaddr,
->  		 * a GCS exception.
->  		 */
->  		if (gcs_ret_vaddr != orig_ret_vaddr)	{
-> +			uprobe_warn(current, "LR/GCS mismatch, likely due to incorrectly placed retprobe");
->  			orig_ret_vaddr = -1;
->  			goto out;
->  		}
->  		put_user_gcs(trampoline_vaddr, (unsigned long __user *) gcspr, &err);
->  		if (err) {
-> +			uprobe_warn(current, "GCS stack update failure during retprobe");
->  			force_sig(SIGSEGV);
->  			goto out;
->  		}
-> diff --git a/include/linux/uprobes.h b/include/linux/uprobes.h
-> index b1df7d792fa1..9578ef1ea5a3 100644
-> --- a/include/linux/uprobes.h
-> +++ b/include/linux/uprobes.h
-> @@ -185,6 +185,7 @@ struct uprobes_state {
->  };
->  
->  extern void __init uprobes_init(void);
-> +extern void uprobe_warn(struct task_struct *t, const char *msg);
->  extern int set_swbp(struct arch_uprobe *aup, struct mm_struct *mm, unsigned long vaddr);
->  extern int set_orig_insn(struct arch_uprobe *aup, struct mm_struct *mm, unsigned long vaddr);
->  extern bool is_swbp_insn(uprobe_opcode_t *insn);
-> diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
-> index b4ca8898fe17..613c1c76f227 100644
-> --- a/kernel/events/uprobes.c
-> +++ b/kernel/events/uprobes.c
-> @@ -118,7 +118,7 @@ struct xol_area {
->  	unsigned long 			vaddr;		/* Page(s) of instruction slots */
->  };
->  
-> -static void uprobe_warn(struct task_struct *t, const char *msg)
-> +void uprobe_warn(struct task_struct *t, const char *msg)
->  {
->  	pr_warn("uprobe: %s:%d failed to %s\n", current->comm, current->pid, msg);
->  }
-> -- 
-> 2.48.1
+> Thank you,
 > 
+>> Signed-off-by: Douglas Raillard <douglas.raillard@arm.com>
+>> ---
+>>   include/linux/trace_events.h      | 2 +-
+>>   kernel/trace/trace_events_hist.c  | 2 +-
+>>   kernel/trace/trace_events_synth.c | 4 ++--
+>>   3 files changed, 4 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/include/linux/trace_events.h b/include/linux/trace_events.h
+>> index e069d84a73f0..753ce8aecfe4 100644
+>> --- a/include/linux/trace_events.h
+>> +++ b/include/linux/trace_events.h
+>> @@ -521,7 +521,7 @@ struct synth_event;
+>>   
+>>   extern struct synth_event *synth_event_find(const char *name);
+>>   
+>> -extern void trace_synth(struct synth_event *event, u64 *var_ref_vals,
+>> +extern void synth_event_trace2(struct synth_event *event, u64 *var_ref_vals,
+>>   			       unsigned int *var_ref_idx);
+>>   
+>>   extern int synth_event_delete(const char *name);
+>> diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events_hist.c
+>> index 7067f6fedb1a..ee0fee123c91 100644
+>> --- a/kernel/trace/trace_events_hist.c
+>> +++ b/kernel/trace/trace_events_hist.c
+>> @@ -822,7 +822,7 @@ static void action_trace(struct hist_trigger_data *hist_data,
+>>   {
+>>   	struct synth_event *event = data->synth_event;
+>>   
+>> -	trace_synth(event, var_ref_vals, data->var_ref_idx);
+>> +	synth_event_trace2(event, var_ref_vals, data->var_ref_idx);
+>>   }
+>>   
+>>   struct hist_var_data {
+>> diff --git a/kernel/trace/trace_events_synth.c b/kernel/trace/trace_events_synth.c
+>> index 4a9a44d37ffc..8837aa258479 100644
+>> --- a/kernel/trace/trace_events_synth.c
+>> +++ b/kernel/trace/trace_events_synth.c
+>> @@ -850,7 +850,7 @@ EXPORT_SYMBOL_GPL(synth_event_find);
+>>   typedef void (*synth_probe_func_t) (void *__data, u64 *var_ref_vals,
+>>   				    unsigned int *var_ref_idx);
+>>   
+>> -void trace_synth(struct synth_event *event, u64 *var_ref_vals,
+>> +void synth_event_trace2(struct synth_event *event, u64 *var_ref_vals,
+>>   			       unsigned int *var_ref_idx)
+>>   {
+>>   	struct tracepoint *tp = event->tp;
+>> @@ -873,7 +873,7 @@ void trace_synth(struct synth_event *event, u64 *var_ref_vals,
+>>   		}
+>>   	}
+>>   }
+>> -EXPORT_SYMBOL_GPL(trace_synth);
+>> +EXPORT_SYMBOL_GPL(synth_event_trace2);
+>>   
+>>   static struct trace_event_fields synth_event_fields_array[] = {
+>>   	{ .type = TRACE_FUNCTION_TYPE,
+>> -- 
+>> 2.43.0
+>>
+> 
+> 
+
