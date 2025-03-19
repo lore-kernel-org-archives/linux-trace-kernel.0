@@ -1,146 +1,129 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D940D21420F;
-	Wed, 19 Mar 2025 19:03:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BA3D1DEFE3;
+	Wed, 19 Mar 2025 19:05:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742410986; cv=none; b=bGsozvgNKI/8rwYydt8iOv8HyYAzvTzmwqEO73kT/j3WWd1ptqxb8FG4NXZCzrVeZCgo/ig/e6Aw+ntzMvmKuJQrrWg7ROgFRW40hAmScOZ9862WphnNaoklzD54HlkMoHsAq+LSJZW/lUloRoqt3KJB534KFsQRCcQtX1KV8qQ=
+	t=1742411159; cv=none; b=aX2SWxy34HAL3taZ7b81UI5Qu7u7iTxgFx1g91kDG0oRA+azXrKc03AZCy4Gy4tbnt6ubT+5WDwsyBKUmsipgt7s9wDvSpaVFlgIlA0HsxMQr2MN/lD89DEZXMyy6poZQ76+eRLuycF+wsEcLM0rhXzipv06OTzFmTVDvm91HYU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742410986; c=relaxed/simple;
-	bh=D35b4j9CFL1Mc8HCuSxeJyE56B1TcVvE1e7E8+/SBTw=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=Q6rKosq0a9EWh5KlWApp0ugW3rJ23wIyZjMeB2XZNtv6k6va4DnW8rTXVAlOfPcit1d1zozRkHNJcbP/Nu/AF9GUt5CSuvjkFGGEasgYZJZ6xwmVw9GyDoOVgEAHPGO+oOWjbekNsPYMfetByFwys3lwtPr5iZao6YJsMe3sCgo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=f+XQt0Gj; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1742411159; c=relaxed/simple;
+	bh=sJawFSll4DDsNbIIypsVF/1RVSmQdUWhzvkwBwTdtok=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=L2+HGvoAFl3pGKgFnqIQjr47R0EM9RVGMt+6jum+Na9XY5uhaNQOGlAUGzrmzAoBnFqrCYE0QvF5yKjIfwKlg1kS72iK9n7EXHtoGwxRROXcSVVU6CTZupjmATgwQbgvBggUb/VEMbpQXYlQCyzl9ibAuEwkIHXUWXcfYYfAQJs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FHeyzWpf; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="f+XQt0Gj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D2C4CC4CEEC;
-	Wed, 19 Mar 2025 19:03:04 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FHeyzWpf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4C819C4CEE9;
+	Wed, 19 Mar 2025 19:05:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742410985;
-	bh=D35b4j9CFL1Mc8HCuSxeJyE56B1TcVvE1e7E8+/SBTw=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=f+XQt0GjaDUUcI1pL5vZM1th+rzkl+5k9MyNn4peQ0vAxmbYXIkRJwspgsNrGcV3s
-	 1c9WiSkhauExm8Il9NmNc8ycFsm8jPvbqkfwVpDUMrzgEwMwLyT8UXEUdF3UYjB58f
-	 QFxmIHny772Fpkh6H/Vm1eECjrFsQpSbwQBDHwwVt4S2O0S1u3U4BAboBcGAIYCqQP
-	 jeq89f2nEpujVrvR9J++72WY1BQw2OUZkTOQ92UtTuTui8g6CfQbCfmCpu2jktKTc0
-	 k4Qu3prnH5IuqyGv3twLljLNr8vJXT7swDyQiaOvPKW0QOO7RkD7x/PMZMKm20RuUg
-	 ZQ2w/KfyW8K6A==
-Message-ID: <02549e50e26565ffb54ea943af87c19f40692576.camel@kernel.org>
-Subject: Re: [PATCH] tracing: Fix error handling in event_trigger_parse
-From: Tom Zanussi <zanussi@kernel.org>
-To: Masami Hiramatsu <mhiramat@kernel.org>, Miaoqian Lin <linmq006@gmail.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Mathieu Desnoyers
-	 <mathieu.desnoyers@efficios.com>, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org
-Date: Wed, 19 Mar 2025 14:03:03 -0500
-In-Reply-To: <20250319090650.fe63164eac3ac32bb559ffc8@kernel.org>
-References: <20250318112737.4174-1-linmq006@gmail.com>
-	 <20250319090650.fe63164eac3ac32bb559ffc8@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.3-0ubuntu1 
+	s=k20201202; t=1742411159;
+	bh=sJawFSll4DDsNbIIypsVF/1RVSmQdUWhzvkwBwTdtok=;
+	h=From:To:Cc:Subject:Date:From;
+	b=FHeyzWpf4Q5nWCbA04lQuh1lhTD2pPBfcwxwG8c0GbN676xoXViNH061I3S8X5hta
+	 0MWnIvE3gbipN0oLMn4+u3QwK/xyWR6w5iNKNUTtXtTjLp2LrWYK/D8F3eMlFPeWGh
+	 A3wKw7QEwvx5oo2v+wcdubx2V2cPRqfzNnLDiGcxDe6KifPot3vGlBcMBU6VKTn4t+
+	 OdrD0R59GjY4kziUrSslijgjzBvMCBxTDuQ/fo3GWIZ5mHrQeAbL+VHLMpjWcPkAF0
+	 IESQGOM+E9ZdNUbhr7jvV9KMa+dKokAb1dPXbdv9HRzBsxJTEW4FzWj6Dy1eHrvCfZ
+	 qvOAlsVUYAApQ==
+From: Sasha Levin <sashal@kernel.org>
+To: rostedt@goodmis.org,
+	mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com
+Cc: linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	Sasha Levin <sashal@kernel.org>
+Subject: [PATCH] tracing: Use hashtable.h for event_hash
+Date: Wed, 19 Mar 2025 15:05:45 -0400
+Message-Id: <20250319190545.3058319-1-sashal@kernel.org>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Hi Masami,
+Convert the event_hash array in trace_output.c to use the generic
+hashtable implementation from hashtable.h instead of the manually
+implemented hash table.
 
-On Wed, 2025-03-19 at 09:06 +0900, Masami Hiramatsu wrote:
-> On Tue, 18 Mar 2025 19:27:37 +0800
-> Miaoqian Lin <linmq006@gmail.com> wrote:
->=20
-> > According to event_trigger_alloc() doc, event_trigger_free() should be
-> > used to free an event_trigger_data object. This fixes a mismatch introd=
-uced
-> > when kzalloc was replaced with event_trigger_alloc without updating
-> > the corresponding deallocation calls.
-> >=20
->=20
-> Hmm, it seems more complicated problems are there. e.g. in `remove =3D tr=
-ue`
-> case, since the trigger_data is not initialized (no event_trigger_init())=
-,
-> the `trigger_data->ref` is 0. Thus, ;
->=20
-> static void
-> event_trigger_free(struct event_trigger_data *data)
-> {
-> 	if (WARN_ON_ONCE(data->ref <=3D 0))
-> 		return;
->=20
-> 	data->ref--;
-> 	if (!data->ref)
-> 		trigger_data_free(data);
-> }
->=20
-> this will never call `trigger_data_free(data)`.=20
->=20
-> But latter part(after out_free) seems correct.
->=20
-> Tom, could you check it?
->=20
+This simplifies the code and makes it more maintainable by using the
+standard hashtable API defined in hashtable.h.
 
-In both these cases, the code calls kfree() directly in order to avoid
-the WARN_ON_ONCE(data->ref) check.
+Rename EVENT_HASHSIZE to EVENT_HASH_BITS to properly reflect its new
+meaning as the number of bits for the hashtable size.
 
-In the first case (remove), trigger_data is only being used as a test
-object and will never have data->ref incremented.
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ kernel/trace/trace_output.c | 19 +++++++------------
+ 1 file changed, 7 insertions(+), 12 deletions(-)
 
-The second case is the failure case, which is also dealing with a
-trigger_data object that hasn't been successfully registered and
-therefore has a 0 data->ref.
-
-So perhaps the event_trigger_alloc doc should be changed to something
-like:
-
-"Use event_trigger_free() to free a successfully registered
-event_trigger_data object."
-
-Thanks,
-
-Tom
-
-> Thank you,
->=20
-> > Fixes: e1f187d09e11 ("tracing: Have existing event_command.parse() impl=
-ementations use helpers")
-> > Signed-off-by: Miaoqian Lin <linmq006@gmail.com>
-> > ---
-> > =C2=A0kernel/trace/trace_events_trigger.c | 4 ++--
-> > =C2=A01 file changed, 2 insertions(+), 2 deletions(-)
-> >=20
-> > diff --git a/kernel/trace/trace_events_trigger.c b/kernel/trace/trace_e=
-vents_trigger.c
-> > index d45448947094..8389314b8c2d 100644
-> > --- a/kernel/trace/trace_events_trigger.c
-> > +++ b/kernel/trace/trace_events_trigger.c
-> > @@ -995,7 +995,7 @@ event_trigger_parse(struct event_command *cmd_ops,
-> > =C2=A0
-> > =C2=A0	if (remove) {
-> > =C2=A0		event_trigger_unregister(cmd_ops, file, glob+1, trigger_data);
-> > -		kfree(trigger_data);
-> > +		event_trigger_free(trigger_data);
-> > =C2=A0		ret =3D 0;
-> > =C2=A0		goto out;
-> > =C2=A0	}
-> > @@ -1022,7 +1022,7 @@ event_trigger_parse(struct event_command *cmd_ops=
-,
-> > =C2=A0
-> > =C2=A0 out_free:
-> > =C2=A0	event_trigger_reset_filter(cmd_ops, trigger_data);
-> > -	kfree(trigger_data);
-> > +	event_trigger_free(trigger_data);
-> > =C2=A0	goto out;
-> > =C2=A0}
-> > =C2=A0
-> > --=20
-> > 2.39.5 (Apple Git-154)
-> >=20
-> >=20
->=20
->=20
+diff --git a/kernel/trace/trace_output.c b/kernel/trace/trace_output.c
+index 03d56f711ad14..3144d020e6c6f 100644
+--- a/kernel/trace/trace_output.c
++++ b/kernel/trace/trace_output.c
+@@ -12,15 +12,16 @@
+ #include <linux/sched/clock.h>
+ #include <linux/sched/mm.h>
+ #include <linux/idr.h>
++#include <linux/hashtable.h>
+ 
+ #include "trace_output.h"
+ 
+-/* must be a power of 2 */
+-#define EVENT_HASHSIZE	128
++/* 2^7 = 128 */
++#define EVENT_HASH_BITS 7
+ 
+ DECLARE_RWSEM(trace_event_sem);
+ 
+-static struct hlist_head event_hash[EVENT_HASHSIZE] __read_mostly;
++static DEFINE_HASHTABLE(event_hash, EVENT_HASH_BITS);
+ 
+ enum print_line_t trace_print_bputs_msg_only(struct trace_iterator *iter)
+ {
+@@ -694,11 +695,8 @@ int trace_print_lat_context(struct trace_iterator *iter)
+ struct trace_event *ftrace_find_event(int type)
+ {
+ 	struct trace_event *event;
+-	unsigned key;
+ 
+-	key = type & (EVENT_HASHSIZE - 1);
+-
+-	hlist_for_each_entry(event, &event_hash[key], node) {
++	hash_for_each_possible(event_hash, event, node, type) {
+ 		if (event->type == type)
+ 			return event;
+ 	}
+@@ -753,7 +751,6 @@ void trace_event_read_unlock(void)
+  */
+ int register_trace_event(struct trace_event *event)
+ {
+-	unsigned key;
+ 	int ret = 0;
+ 
+ 	down_write(&trace_event_sem);
+@@ -786,9 +783,7 @@ int register_trace_event(struct trace_event *event)
+ 	if (event->funcs->binary == NULL)
+ 		event->funcs->binary = trace_nop_print;
+ 
+-	key = event->type & (EVENT_HASHSIZE - 1);
+-
+-	hlist_add_head(&event->node, &event_hash[key]);
++	hash_add(event_hash, &event->node, event->type);
+ 
+ 	ret = event->type;
+  out:
+@@ -803,7 +798,7 @@ EXPORT_SYMBOL_GPL(register_trace_event);
+  */
+ int __unregister_trace_event(struct trace_event *event)
+ {
+-	hlist_del(&event->node);
++	hash_del(&event->node);
+ 	free_trace_event_type(event->type);
+ 	return 0;
+ }
+-- 
+2.39.5
 
