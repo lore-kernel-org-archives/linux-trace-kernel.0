@@ -1,103 +1,130 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB5351F4E37;
-	Wed, 19 Mar 2025 13:24:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34D31253B60;
+	Wed, 19 Mar 2025 13:29:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742390664; cv=none; b=pg5fcJjXgcwj5WEPrFq/yuWIYgyzbcZt9rG6jpF+nVHkgnruWo4T2cMcki8LwbLi4+8ttunRisSjodHjsITNC2CsgJ349mu7oJ5Ykb8n2RcpN+ZBP9BWFmuhTntBeM2d2SeYBoYH4evHj3HCJTomMeUEyF09OnR817mSOcmkQMg=
+	t=1742390999; cv=none; b=B6oHiLkd8/BwOytLxkGpVMpeytGCcQMz2w1pc/V0DD55PejsObIq5CALF+8aYvQfFflQBaNU57/l+litnS5uKxKQD9YhPrXV0jTs4vqvHgkYTOvUYJOzmIPb479DNzKVqFbAfYwFvn3fMjT9zb05uHuoyUNH7PW0qBGZNmxgZYc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742390664; c=relaxed/simple;
-	bh=x7BqLBdqa0Pofxy9h5kGhmOuImsx3iazNrFoBrSorSY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JumOWhxx1PDL3kY/6wbe0EQJOnNZoB786BM5mzGxx1Jx9dT4eOjaSlCy3FXxxiEnaPO0GH56CGBxbUHpxan1dQXRSbY+ycgMgiXFzfY8ipEO538CmnN2rBqhaFXPOKhiZetrVtt07QXsmYMeFX+1F0Ier4ERIVf1f0cdHg5TbLM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dY0uhdBn; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1742390999; c=relaxed/simple;
+	bh=L3zkG5wkdf9levIxPwOzxunDMgNfSmvM+Dhstn7lFMs=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=r5EPCTglQE9zJcGsc02h9v0+6x1xA5/9vjj1qN4DVE3LwOfCy0xlDcBetiKU534cy9qgP6CeoWRNk1M3RAb+xXDtf1Kcos56BA1DiFlLs0SbyKHi6pS8jZe2n9u0EOhfTyzOyoCeFBhi5deE6KbzBm3e3+g/7TBXtqtFIAAVQw4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Z5LvZbzD; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dY0uhdBn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D71F8C4CEE9;
-	Wed, 19 Mar 2025 13:24:18 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Z5LvZbzD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 290CDC4CEE9;
+	Wed, 19 Mar 2025 13:29:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742390663;
-	bh=x7BqLBdqa0Pofxy9h5kGhmOuImsx3iazNrFoBrSorSY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=dY0uhdBn28SH0CjpOoq/FAsOG2uKdYmM1HX81wMJugzVl73UsBe9PEmGw+EsyY039
-	 CGFfZbV2Sri5OVqUc8x6VGNTz+girkqdKFB8KuiIKqV7VfEBO6s/kq/vQHKHZa8d8+
-	 yoOeQcejJVgrYDV/l1QUyyZ1leb7PXxORwlGJjrY+8wCtqaMm1JsJywG/pJxQPIj6l
-	 E4xmnc7cV3HS9O9QMbTkwAV7CvfgLrpdq9EKy6LNZFQrOfGBtcN9KIkjlBYX4E8tcX
-	 +p4zFuluOehct4IwB5f9EAVzj58JvyG5pxOvnIwmXIQpR8AU+K3h2F0WuXBCkyhXsp
-	 lkTSPI+tUefEw==
-Date: Wed, 19 Mar 2025 13:24:15 +0000
-From: Mark Brown <broonie@kernel.org>
-To: Jeremy Linton <jeremy.linton@arm.com>
-Cc: linux-trace-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-	mhiramat@kernel.org, oleg@redhat.com, peterz@infradead.org,
-	acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-	irogers@google.com, adrian.hunter@intel.com,
-	kan.liang@linux.intel.com, thiago.bauermann@linaro.org,
-	yury.khrustalev@arm.com, kristina.martsenko@arm.com,
-	liaochang1@huawei.com, catalin.marinas@arm.com, will@kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/7] arm64: uaccess: Add additional userspace GCS
- accessors
-Message-ID: <50a0920d-3e3d-4e96-b68a-a7a0d78c3695@sirena.org.uk>
-References: <20250318204841.373116-1-jeremy.linton@arm.com>
- <20250318204841.373116-4-jeremy.linton@arm.com>
+	s=k20201202; t=1742390997;
+	bh=L3zkG5wkdf9levIxPwOzxunDMgNfSmvM+Dhstn7lFMs=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=Z5LvZbzDHkwilSgVWZ5dAnzNuav8+5oNYdF/MIr7MBiXYz3MuPO3YRoq12u5YC4vg
+	 nHlJztUkZWG2rplLgMB2Y3prRqiOm9MGkgT5Bnbb20VlskXgYq1zL2GYEkv6bPEoT2
+	 iOBIRE76JyX9Y9qxc2qszU8mu3Yso9k3njeC9ruOqmH1QIaPtyqr4JTMGezfAjeLov
+	 FzCYbB/oprB8y/lMg4XKfS4/Mof45vnb5X2wUSLk4AsVY1kIZkQCdBXbs09QdM4eAt
+	 tBdpOxSBa/E+ayPilaML2LRylEoiuYWtolxiKzrlMqKFa5sTHOB3KJV7s9Y0p77Pp8
+	 uBNTtQnoZrtIQ==
+Date: Wed, 19 Mar 2025 22:29:53 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Douglas RAILLARD <douglas.raillard@arm.com>
+Cc: rostedt@goodmis.org, Masami Hiramatsu <mhiramat@kernel.org>, Mathieu
+ Desnoyers <mathieu.desnoyers@efficios.com>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH] tracing: Ensure module defining synth event cannot be
+ unloaded while tracing
+Message-Id: <20250319222953.3c741b520a8686c8e0a9b1d9@kernel.org>
+In-Reply-To: <20250318180906.226841-1-douglas.raillard@arm.com>
+References: <20250318180906.226841-1-douglas.raillard@arm.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="Lrxbu3I30TVdgrcC"
-Content-Disposition: inline
-In-Reply-To: <20250318204841.373116-4-jeremy.linton@arm.com>
-X-Cookie: Chairman of the Bored.
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
+On Tue, 18 Mar 2025 18:09:05 +0000
+Douglas RAILLARD <douglas.raillard@arm.com> wrote:
 
---Lrxbu3I30TVdgrcC
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+> From: Douglas Raillard <douglas.raillard@arm.com>
+> 
+> Currently, using synth_event_delete() will fail if the event is being
+> used (tracing in progress), but that is normally done in the module exit
+> function. At that stage, failing is problematic as returning a non-zero
+> status means the module will become locked (impossible to unload or
+> reload again).
+> 
+> Instead, ensure the module exit function does not get called in the
+> first place by increasing the module refcnt when the event is enabled.
+> 
 
-On Tue, Mar 18, 2025 at 03:48:37PM -0500, Jeremy Linton wrote:
+OK, I think this is correct way to fix that scenario.
 
-> +static inline u64 load_user_gcs(unsigned long __user *addr, int *err)
+Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+
+Thank you,
+
+> Signed-off-by: Douglas Raillard <douglas.raillard@arm.com>
+> ---
+>  kernel/trace/trace_events_synth.c | 30 +++++++++++++++++++++++++++++-
+>  1 file changed, 29 insertions(+), 1 deletion(-)
+> 
+> diff --git a/kernel/trace/trace_events_synth.c b/kernel/trace/trace_events_synth.c
+> index e3f7d09e5512..bb7ef6e76991 100644
+> --- a/kernel/trace/trace_events_synth.c
+> +++ b/kernel/trace/trace_events_synth.c
+> @@ -852,6 +852,34 @@ static struct trace_event_fields synth_event_fields_array[] = {
+>  	{}
+>  };
+>  
+> +static int synth_event_reg(struct trace_event_call *call,
+> +		    enum trace_reg type, void *data)
 > +{
-> +	unsigned long ret;
-> +	u64 load;
+> +	struct synth_event *event = container_of(call, struct synth_event, call);
 > +
-> +	if (!access_ok((char __user *)addr, sizeof(load))) {
-> +		*err = -EFAULT;
-> +		return 0;
+> +	switch (type) {
+> +	case TRACE_REG_REGISTER:
+> +	case TRACE_REG_PERF_REGISTER:
+> +		if (!try_module_get(event->mod))
+> +			return -EBUSY;
+> +		break;
+> +	default:
+> +		break;
 > +	}
 > +
-> +	gcsb_dsync();
-> +	ret = copy_from_user(&load, addr, sizeof(load));
-> +	if (ret != 0)
-> +		*err = ret;
-> +	return load;
+> +	int ret = trace_event_reg(call, type, data);
+> +
+> +	switch (type) {
+> +	case TRACE_REG_UNREGISTER:
+> +	case TRACE_REG_PERF_UNREGISTER:
+> +		module_put(event->mod);
+> +		break;
+> +	default:
+> +		break;
+> +	}
+> +	return ret;
 > +}
+> +
+>  static int register_synth_event(struct synth_event *event)
+>  {
+>  	struct trace_event_call *call = &event->call;
+> @@ -881,7 +909,7 @@ static int register_synth_event(struct synth_event *event)
+>  		goto out;
+>  	}
+>  	call->flags = TRACE_EVENT_FL_TRACEPOINT;
+> -	call->class->reg = trace_event_reg;
+> +	call->class->reg = synth_event_reg;
+>  	call->class->probe = trace_event_raw_event_synth;
+>  	call->data = event;
+>  	call->tp = event->tp;
+> -- 
+> 2.43.0
+> 
 
-A GCS load done by the hardware will verify that we are loading from GCS
-memory (the accesses are marked as AccessType_GCS in the pseudocode
-which is then validated in for example S1CheckPermissions()).  Sadly
-there's no equivalent of GCSSTR so we'd need to do the permission check
-ourselves to match this behaviour.
 
---Lrxbu3I30TVdgrcC
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmfaxX4ACgkQJNaLcl1U
-h9B6kAf/aWTyBGHINz3SHkUd7B2qgPUiRdB16ns0/PHI44Me7B9WwzgUi4S60ku3
-k9adlWzZXOVABsny7iREC/F24FgqxbT1hBSK/TXZPGJvubnkOahLXD7iXkANnMhh
-lbnr++1qFc9tXTMuq3sFmGZA8u+RgavrZ1x7WdTkVQ/PkrY1tIOefK9+ut0RydD5
-T7inRjdUC1ee6CorJqprrnC/G/VIi/lgg+DlpkDWW1teV49ASSim7nIhlZ4U+JVQ
-Di39GgQj5uQyndh4r7fp1YuRBd5SyhjrWTce/XX06ctkUug6aZndsirvSKdQJQQL
-0slQcyJA5dGCPUeUuvDRv2ghKhJ/1g==
-=QTs9
------END PGP SIGNATURE-----
-
---Lrxbu3I30TVdgrcC--
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
