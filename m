@@ -1,175 +1,197 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D0F71A264A
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 19 Mar 2025 12:03:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0CF32505B2
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 19 Mar 2025 12:07:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742385781; cv=none; b=C7te8nc2NSetd2dSfsufmsyxF0kTjy18kA+Ihagxr7LLizzEhJbhIC5BaDSNDqaGiM9mp01ZyAUgD8ChjrzxTY49+Y0G+IEqAzXzMOtcNIRewAEc71U6jeCVH3jhF9XafaeHkM2vE86v6O+HGwzO9GToWtLrpx2UC+NGYP1KSlc=
+	t=1742386022; cv=none; b=INCV+6fO4T0tJXldB459h0ZhOXJO+RYk3gWqtp1+v0XHy/5dVkRWFd41xh3RlIRQe0IXzqGhOpreu5RaW0+44zvKMSBbTIrlk7D5XZVUBCfc/EEqo7c9Kt29mguiXSkDeLlyzu0iJz5YYW/eU7QgBxOVwjiCZ2z3j1z/SczA1Cw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742385781; c=relaxed/simple;
-	bh=0FwV0HNcL+vt4qpXO6jzr792i6b6LgV0sJ5JC4nVi0U=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ntB6mNCMuoTm5lPL86HOTGkl5D/3lnm5tDtNYCjE8ixw0ilxzeL6QuxfDUnSNO/v1pcVmFxYENsqlFpDw1+ygKeeK0R4Ek5VXpanA8Os7SGqWxyn6/BF/UONnBm4ssrsuHEAmyYstSu54BGCC+POJpGBz2u8QUoQr7z7hUkSRlg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Y20+15DA; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1742386022; c=relaxed/simple;
+	bh=Os55gpHmtBaFoy4EizyVtukjFDIwLYhxxp9IlZe9pBM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=PUAtU31Pmx77nknU3NO75olT5MeIlxo9quTMBB5RmwGoRh0HDgD33a/yZVbuFsAr77wollP9pM19gUPyOz+sOBw7pnfy6aImi82JMxpC1UGhWtdEQdQlj6Yvz50maZG01mkWSFHST7xSl9VcD4CYaadIdXtbX78NKrPCfxenySU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=Mpl/L6AE; arc=none smtp.client-ip=209.85.218.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Y20+15DA"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1742385779;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=7gn15plHVRiqXpFBn0Z9q9dTxOPDKBEPCsHLFphLWXc=;
-	b=Y20+15DAQhAkFq3bvd7HKEgB0wHKYqiQcPn9ZtAlUqqQAYzSPTKiRUQvaRqE8r7Gof9Hgm
-	87+jiRYSjXGrPHczw+xZqy4KwY+8i2YPtcEpD08bf5eG2q9z+lqvBjT5u947CUNTL72+1M
-	QkaUrC4/Zy6/CLAy6+nQfCah4lCf6IE=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-651-vn8M0qMUPjybsGdYOJcvGg-1; Wed, 19 Mar 2025 08:02:57 -0400
-X-MC-Unique: vn8M0qMUPjybsGdYOJcvGg-1
-X-Mimecast-MFC-AGG-ID: vn8M0qMUPjybsGdYOJcvGg_1742385777
-Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-43bd0586b86so24362565e9.3
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 19 Mar 2025 05:02:57 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="Mpl/L6AE"
+Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-ac28e66c0e1so1062438466b.0
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 19 Mar 2025 05:07:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1742386019; x=1742990819; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=78siVUcrqX50+D3XL3UtIOYlvRh1M9mNDzyv1u3Bamk=;
+        b=Mpl/L6AE/fWxBzDbsr5G/MRNmGPjxYnzcXdj0AQafQg1/pKQo1bKsPAp9YsjjTom5D
+         rW19/7Mnc4uAk14ezi4MeAER+Rf3ojL3Aiui/xSSeMmgUlc2BvygEvfxkSDrINbBMcbD
+         LUHcL+H5G68yP2tgIRml4XfaqdC05q3u54zO3bHUFxqhlO9iYs5LjyqXjBhvKBh1M/rI
+         FYARSSpP27Xk2kw5w8Ozr5lKZorUThMV8vaUvur8qrJBslWsKgkkzM+36wZAaREJqUta
+         XtyldBYaE8EksgGZDQ4vGVAZmG2j2WtQ8PaD/Tk7bNaHROkObBgEgthBnj/0fO+wJbij
+         qsfg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742385777; x=1742990577;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=7gn15plHVRiqXpFBn0Z9q9dTxOPDKBEPCsHLFphLWXc=;
-        b=P8I0hUYQ9vnta9joDKc6syoQZcT/aBiICTt5cGkwZ+UESy+C8b+HajQT+lqLu316ua
-         7OT5Lx6V4FXpR5qU0eRcpLUxYwMayJL+/mlJoGBZNMDoMPxp3Y8hY9gXJ3ZTH3T+i8jX
-         Nar6SBV/RJ2UTeTIRAurjwjruA+EPximCPv6m0HBLoqA6iEhnDC+ByJR4xPPs9IFt6BN
-         1d6n5JEeWv1fvT4rMrC7XsS0NMeWyf28wpM3FJBJ0/94x1nn69LabMLNCrjR5WLH0miS
-         +P5dyf43GiuLqHcZe3TNt9LquYWVTFjTxuEeo57aBOdtqfKUU/UTHZKOhvkVn3xB82Nn
-         LcNw==
-X-Forwarded-Encrypted: i=1; AJvYcCVyPrmd0wx2fWjLfYVpuHGl+ioCMII6V1dgSJa+AhQFs585mNKvx5t+f9dNMRnzsznQYS+UCeAwHBP43UkxpBG0ytk=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyy8sMsp8da+gDZ5wWLyKvr7YNLV+nR+BTsWkulcr36tFK5xW5x
-	mV2OC7MMlsu7mf8kgZvmeqYNJTWSzZeCUpwAriHB/cX+Tl7y10bwrZ7Feb6MyxRZpPVbGNHCP7d
-	VmuY2Nn9mgCXXtXTlLSetN9he9fOguVhTBlbL7oBiWF17X+4xotjWFyRzD8IQJRq8rb/6ng==
-X-Gm-Gg: ASbGncvUGGThZobobyBM1ACKRjWQRCySvTty4xWXH3K3wCzIUGSfxTftJBJs7XGNdcH
-	KBTI87tAlFv6xvnpNpep1P2SDKs8M8omgLUoT+oqClnY+wYxkLXkQu4DZhGMdRrMokvBTzIXAbE
-	DVLA3vEKrsa8pfall4TM01SADCC/M/PJyN9TZHcR21tybmL2tDsudPHON481ZT3xkZaeqhuiPZF
-	iEnlDfI+aubOPEggPgCo437WnuK3BoSe9BwO4esfmd9SBdmPKtdHQeI72akBFxjTHaM2D0X63TI
-	Y60MSFkjmNcAwMdGVLouYniejRGHIk9dYsWMNfF6BW6c501mFL0ENjuv+HznRkwkVgr4E+NM9lH
-	dJy4LAbyBeEhwjMHcG7g2LqdGyvCjKaRlU91ukN2DXpU=
-X-Received: by 2002:a05:600c:46c6:b0:43c:f5fe:5c26 with SMTP id 5b1f17b1804b1-43d43786292mr21442815e9.4.1742385775901;
-        Wed, 19 Mar 2025 05:02:55 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEO9wFO2nTkTUlJSs58/meqK0dfmIPHPe7ubDLeTE+LBbIu5UE13qcBy19o/yn3H77bmuGCZw==
-X-Received: by 2002:a05:600c:46c6:b0:43c:f5fe:5c26 with SMTP id 5b1f17b1804b1-43d43786292mr21439295e9.4.1742385773180;
-        Wed, 19 Mar 2025 05:02:53 -0700 (PDT)
-Received: from ?IPV6:2003:cb:c705:df00:67e8:5c3d:de72:4929? (p200300cbc705df0067e85c3dde724929.dip0.t-ipconnect.de. [2003:cb:c705:df00:67e8:5c3d:de72:4929])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43d440ed4cbsm16960215e9.34.2025.03.19.05.02.51
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 19 Mar 2025 05:02:52 -0700 (PDT)
-Message-ID: <d0f0cbb3-6284-4060-afdb-ea828b9e909d@redhat.com>
-Date: Wed, 19 Mar 2025 13:02:50 +0100
+        d=1e100.net; s=20230601; t=1742386019; x=1742990819;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=78siVUcrqX50+D3XL3UtIOYlvRh1M9mNDzyv1u3Bamk=;
+        b=OBh4dEEYEhBLt0+qoniiynwfEtOyyW7IJRhdNL1H43UcV7IqlEJNsu7YBq+WIiQ98L
+         oravTz/7aQ1IkqkpLw1N/cXci0gCi2p9n6E5OpxszotXL9bzWQRzH1hUSCidIiRsAgot
+         AahuQirRpe2YsemWUkXDTeiCybgYXywI2Few6SJD4ktftvHJOscYlGYFmjthetNcSa6V
+         ReFfIjag3ghyyH7SNJGn/AL+OIGNZ9+1CVjvRH95moAnY67CwIoRbrtcUBgBfuuC9Wtl
+         BWjK7Sm1Cu5Xbv4zgZTzGLSlk9NhFXTPm47n+GqTNVFvKx0EcUe2d16a2LZXXBRznuK1
+         tafA==
+X-Forwarded-Encrypted: i=1; AJvYcCUOLr+FL1aIc9yKSj8v2noy+CmNpGCQY1zc1rBgmOA7J99vZP6IcjQ1i4njEOulK7qSRXfJmszg+FfxQMr57Zp7g5M=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxk7Me83SrhD+dTsDJxrBk2H6luhJjx6Ali/Hj6iyw5PKZfmwsc
+	ZfTdlBoXfH+n1UUO5AzRnsKPHZsHu2+UlkIzkcyFEIr6/XSVCMwqhyioZZ6fa5WgX+lRt7FS1W5
+	Ux6oq8suIUV/iseyqTHETH6WBrUGTKR276ikglA==
+X-Gm-Gg: ASbGnct5qttrnF3PvjywoQh+YAlJZNHFInn4wGjzTJjP3X/OljcmVEeMBE+UHdPqbj+
+	Wqo+xAgcBuWf3Z2y6IBGFAycLAh6cb4X+sUoEpdmk0cuG6WkYIujuT14P0C313uW95VuSgPpktD
+	j8IP+Kmd5tVJnU7Qdu7BkH35eRsNtRMkyWNFOp3X2L17fZ7gv9A10P6ikEQjw=
+X-Google-Smtp-Source: AGHT+IGiAtZ6MEUzl0vHpywyUjhVa6wLjc70DoixDCEpsVWavF8Jtx8EFXS/HyAo6VIz+Kt+JJ/9K+rKpTmj5VxB2jg=
+X-Received: by 2002:a17:907:d786:b0:ac2:c26:5608 with SMTP id
+ a640c23a62f3a-ac3b7abbc17mr276281066b.8.1742386018860; Wed, 19 Mar 2025
+ 05:06:58 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 3/3] kernel/events/uprobes: uprobe_write_opcode()
- rewrite
-To: Oleg Nesterov <oleg@redhat.com>
-Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
- linux-arm-kernel@lists.infradead.org, linux-trace-kernel@vger.kernel.org,
- linux-perf-users@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>,
- Andrii Nakryiko <andrii.nakryiko@gmail.com>,
- Matthew Wilcox <willy@infradead.org>, Russell King <linux@armlinux.org.uk>,
- Masami Hiramatsu <mhiramat@kernel.org>, Peter Zijlstra
- <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>,
- "Liang, Kan" <kan.liang@linux.intel.com>,
- Tong Tiangen <tongtiangen@huawei.com>
-References: <20250318221457.3055598-1-david@redhat.com>
- <20250318221457.3055598-4-david@redhat.com>
- <20250319120028.GA26879@redhat.com>
-From: David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <20250319120028.GA26879@redhat.com>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: n1UddocEZPhKCI4Cofg0n_gzP_L_HL4ukEUGKDMffA8_1742385777
-X-Mimecast-Originator: redhat.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20250318-runtime_const_riscv-v9-0-ddd3534d3e8e@rivosinc.com> <20250318-runtime_const_riscv-v9-1-ddd3534d3e8e@rivosinc.com>
+In-Reply-To: <20250318-runtime_const_riscv-v9-1-ddd3534d3e8e@rivosinc.com>
+From: Alexandre Ghiti <alexghiti@rivosinc.com>
+Date: Wed, 19 Mar 2025 13:06:48 +0100
+X-Gm-Features: AQ5f1JqRGfd7xwZfyu2cdRM57q3At-EAnqsxfbHWxk-qnkLR0BlmB6Gp6NGNBVY
+Message-ID: <CAHVXubjbfVmU4PFD8s-uRF03KjtVKyyUsCHxhKQ6vXJfFhsVzA@mail.gmail.com>
+Subject: Re: [PATCH v9 1/2] riscv: Move nop definition to insn-def.h
+To: Charlie Jenkins <charlie@rivosinc.com>
+Cc: Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
+	Ard Biesheuvel <ardb@kernel.org>, Ben Dooks <ben.dooks@codethink.co.uk>, 
+	Pasha Bouzarjomehri <pasha@rivosinc.com>, 
+	Emil Renner Berthing <emil.renner.berthing@canonical.com>, Steven Rostedt <rostedt@goodmis.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Albert Ou <aou@eecs.berkeley.edu>, Peter Zijlstra <peterz@infradead.org>, 
+	Josh Poimboeuf <jpoimboe@kernel.org>, Jason Baron <jbaron@akamai.com>, linux-riscv@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 19.03.25 13:00, Oleg Nesterov wrote:
-> On 03/18, David Hildenbrand wrote:
->>
->> +	if (unlikely(!folio_test_anon(folio))) {
->> +		VM_WARN_ON_ONCE(is_register);
->> +		goto out;
->> +	}
-> 
-> Don't we need folio_put() before "goto out" ?
-> 
+Hi Charlie,
 
-Yes, thanks! ... as always, the result of some last-minute reshuffling :)
+On Wed, Mar 19, 2025 at 1:39=E2=80=AFAM Charlie Jenkins <charlie@rivosinc.c=
+om> wrote:
+>
+> We have duplicated the definition of the nop instruction in ftrace.h and
+> in jump_label.c. Move this definition into the generic file insn-def.h
+> so that they can share the definition with each other and with future
+> files.
+>
+> Signed-off-by: Charlie Jenkins <charlie@rivosinc.com>
+> ---
+>  arch/riscv/include/asm/ftrace.h   | 1 -
+>  arch/riscv/include/asm/insn-def.h | 2 ++
+>  arch/riscv/kernel/ftrace.c        | 6 +++---
+>  arch/riscv/kernel/jump_label.c    | 4 ++--
+>  4 files changed, 7 insertions(+), 6 deletions(-)
+>
+> diff --git a/arch/riscv/include/asm/ftrace.h b/arch/riscv/include/asm/ftr=
+ace.h
+> index c4721ce44ca474654b37b3d51bc0a63d46bc1eff..b7f361a50f6445d02a0d88eef=
+5547ee27c1fb52e 100644
+> --- a/arch/riscv/include/asm/ftrace.h
+> +++ b/arch/riscv/include/asm/ftrace.h
+> @@ -79,7 +79,6 @@ struct dyn_arch_ftrace {
+>  #define AUIPC_RA               (0x00000097)
+>  #define JALR_T0                        (0x000282e7)
+>  #define AUIPC_T0               (0x00000297)
+> -#define NOP4                   (0x00000013)
+>
+>  #define to_jalr_t0(offset)                                             \
+>         (((offset & JALR_OFFSET_MASK) << JALR_SHIFT) | JALR_T0)
+> diff --git a/arch/riscv/include/asm/insn-def.h b/arch/riscv/include/asm/i=
+nsn-def.h
+> index 9a913010cdd93cdfdd93f467e7880e20cce0dd2b..0a1fc5134f29da190554c59f8=
+cee3b5374c9aa2d 100644
+> --- a/arch/riscv/include/asm/insn-def.h
+> +++ b/arch/riscv/include/asm/insn-def.h
+> @@ -200,4 +200,6 @@
+>  #define ZAWRS_WRS_NTO  ".4byte 0x00d00073"
+>  #define ZAWRS_WRS_STO  ".4byte 0x01d00073"
+>
+> +#define RISCV_INSN_NOP4        0x00000013U
+> +
+>  #endif /* __ASM_INSN_DEF_H */
+> diff --git a/arch/riscv/kernel/ftrace.c b/arch/riscv/kernel/ftrace.c
+> index 3524db5e4fa014a4594465f849d898a030bfb7b8..674dcdfae7a149c339f1e791a=
+db450535f22991b 100644
+> --- a/arch/riscv/kernel/ftrace.c
+> +++ b/arch/riscv/kernel/ftrace.c
+> @@ -36,7 +36,7 @@ static int ftrace_check_current_call(unsigned long hook=
+_pos,
+>                                      unsigned int *expected)
+>  {
+>         unsigned int replaced[2];
+> -       unsigned int nops[2] =3D {NOP4, NOP4};
+> +       unsigned int nops[2] =3D {RISCV_INSN_NOP4, RISCV_INSN_NOP4};
+>
+>         /* we expect nops at the hook position */
+>         if (!expected)
+> @@ -68,7 +68,7 @@ static int __ftrace_modify_call(unsigned long hook_pos,=
+ unsigned long target,
+>                                 bool enable, bool ra)
+>  {
+>         unsigned int call[2];
+> -       unsigned int nops[2] =3D {NOP4, NOP4};
+> +       unsigned int nops[2] =3D {RISCV_INSN_NOP4, RISCV_INSN_NOP4};
+>
+>         if (ra)
+>                 make_call_ra(hook_pos, target, call);
+> @@ -97,7 +97,7 @@ int ftrace_make_call(struct dyn_ftrace *rec, unsigned l=
+ong addr)
+>  int ftrace_make_nop(struct module *mod, struct dyn_ftrace *rec,
+>                     unsigned long addr)
+>  {
+> -       unsigned int nops[2] =3D {NOP4, NOP4};
+> +       unsigned int nops[2] =3D {RISCV_INSN_NOP4, RISCV_INSN_NOP4};
+>
+>         if (patch_insn_write((void *)rec->ip, nops, MCOUNT_INSN_SIZE))
+>                 return -EPERM;
+> diff --git a/arch/riscv/kernel/jump_label.c b/arch/riscv/kernel/jump_labe=
+l.c
+> index 654ed159c830b3d5e34ac58bf367107066eb73a1..b4c1a6a3fbd28533552036194=
+f27ed206bea305d 100644
+> --- a/arch/riscv/kernel/jump_label.c
+> +++ b/arch/riscv/kernel/jump_label.c
+> @@ -11,8 +11,8 @@
+>  #include <asm/bug.h>
+>  #include <asm/cacheflush.h>
+>  #include <asm/text-patching.h>
+> +#include <asm/insn-def.h>
+>
+> -#define RISCV_INSN_NOP 0x00000013U
+>  #define RISCV_INSN_JAL 0x0000006fU
+>
+>  bool arch_jump_label_transform_queue(struct jump_entry *entry,
+> @@ -33,7 +33,7 @@ bool arch_jump_label_transform_queue(struct jump_entry =
+*entry,
+>                         (((u32)offset & GENMASK(10,  1)) << (21 -  1)) |
+>                         (((u32)offset & GENMASK(20, 20)) << (31 - 20));
+>         } else {
+> -               insn =3D RISCV_INSN_NOP;
+> +               insn =3D RISCV_INSN_NOP4;
+>         }
+>
+>         if (early_boot_irqs_disabled) {
+>
+> --
+> 2.43.0
+>
 
-> Other than that, for this series:
-> 
-> Acked-by: Oleg Nesterov <oleg@redhat.com>
-> 
+Reviewed-by: Alexandre Ghiti <alexghiti@rivosinc.com>
+Tested-by: Alexandre Ghiti <alexghiti@rivosinc.com>
 
+Thanks,
 
--- 
-Cheers,
-
-David / dhildenb
-
+Alex
