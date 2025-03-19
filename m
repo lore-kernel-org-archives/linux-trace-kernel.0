@@ -1,99 +1,124 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1C307EEB1;
-	Wed, 19 Mar 2025 16:40:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 940881E8323;
+	Wed, 19 Mar 2025 17:03:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742402446; cv=none; b=BRObtNhlyB4csLBymSLHHbpkTi5nQG/LDdFPRIfJkUT4SDM6HZlzt2M1itAOaqohJFwN7URPgL3PZRtNrS2SCGUE7LuT+QlvNNwLSfLonqsegzbsfzUyV858PW2skFGkOINbL+U7IFRRX0FN0bdCJo2aDrj0cwYp1v2JjpOlHvc=
+	t=1742403795; cv=none; b=C6j+wAgUKAjWQIb/8Tj0y0XkOUWizGit2NknZSvzNbsBYwSSDvVu5P7rme69SXOeN11d6Okvi9NIN/OoEYywWmgeW2xKfWBnybQXxTK9Lda99lYZczE3BxTjCnF38V5e5qAYeg+Oibe69BICPbg9ebN3vLk0XyMYVp/qynxMOm0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742402446; c=relaxed/simple;
-	bh=JrJZuwLoh4aqSlgAozvpLCYm9cpSeXuWTWgJoWvOwd4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=KsRuZqGV5gf1R8AH5B+Pv3tqXLZHGJ8mqhTLl9E859dNBZJK60orVSFOCPJqh8AJtTRGNDml5svUIzmrRDCneyDJWr8i05iBspwhPS8j1mipY+vKtL4AlXxAOzcZrBLD/nkPnoi/UHcYt8oV9CvKvnyuU56xezJCeAHxqyEdnVE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 317DB113E;
-	Wed, 19 Mar 2025 09:40:50 -0700 (PDT)
-Received: from [192.168.20.16] (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id F11163F694;
-	Wed, 19 Mar 2025 09:40:36 -0700 (PDT)
-Message-ID: <83cf1b26-3a30-47fd-93e9-84903193bf07@arm.com>
-Date: Wed, 19 Mar 2025 11:40:35 -0500
+	s=arc-20240116; t=1742403795; c=relaxed/simple;
+	bh=aEenN2rtAVG/y027IH9IeDfb7ILU1h7EudrieTStR2Y=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=OyyroKmehIkr+UM1JzaMcTT4hlIvXERc2gUN1xSni6uvcQm/XC4eO2RwVzODcvmRjdVmgCNLjA77ryGvbMitDrZWE5RHO6liuSOzbcE0qfJaGzzuOlDDGOcQQCdBrmrw+1RLjDE8KSTu2FSQW+7VzC9xcO0uYI7Q+/CFM62AQrY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G1Hm0lqv; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G1Hm0lqv"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id F0DA9C4CEE8;
+	Wed, 19 Mar 2025 17:03:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742403795;
+	bh=aEenN2rtAVG/y027IH9IeDfb7ILU1h7EudrieTStR2Y=;
+	h=From:Subject:Date:To:Cc:Reply-To:From;
+	b=G1Hm0lqvzcrldNm8t0q8Yyp1HHlcXN+LswnBSDG+goqXb3oDNX+2DSsueT6K1ebSd
+	 0bqX4igggEjCsykDiLk+6IufR1JE7uhfHauet1xoRdvQKW88zY4zIlvJ23GbqYMZqT
+	 qjpQGmYSzGajgpTgYv4he/dXb1RzlhssK7Z5yb3IEH90304sS/X5+2q1galfInLKxo
+	 e4tzYU4/4EBYOsdVS1r9a7iZUhNmTtQXFOqBtNe4p+THxsXsLTeJOnzT6HZCN1tLb3
+	 0+pI1+bBAUKxaPP0pt3Ro7U5C7V8Syuq82xzuqfmD7iK8RuQu29lc7WgExVvHQ8Ugb
+	 jMUlewwp0FhrQ==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0FA7C35FFC;
+	Wed, 19 Mar 2025 17:03:14 +0000 (UTC)
+From: Nikhil Jha via B4 Relay <devnull+njha.janestreet.com@kernel.org>
+Subject: [PATCH v2 0/2] fix gss seqno handling to be more rfc-compliant
+Date: Wed, 19 Mar 2025 13:02:38 -0400
+Message-Id: <20250319-rfc2203-seqnum-cache-v2-0-2c98b859f2dd@janestreet.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 6/7] uprobes: Allow the use of uprobe_warn() in arch code
-To: Oleg Nesterov <oleg@redhat.com>
-Cc: linux-trace-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
- mhiramat@kernel.org, peterz@infradead.org, acme@kernel.org,
- namhyung@kernel.org, mark.rutland@arm.com,
- alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com,
- adrian.hunter@intel.com, kan.liang@linux.intel.com,
- thiago.bauermann@linaro.org, broonie@kernel.org, yury.khrustalev@arm.com,
- kristina.martsenko@arm.com, liaochang1@huawei.com, catalin.marinas@arm.com,
- will@kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org
-References: <20250318204841.373116-1-jeremy.linton@arm.com>
- <20250318204841.373116-7-jeremy.linton@arm.com>
- <20250319145057.GA10753@redhat.com>
-Content-Language: en-US
-From: Jeremy Linton <jeremy.linton@arm.com>
-In-Reply-To: <20250319145057.GA10753@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-B4-Tracking: v=1; b=H4sIAK742mcC/x3MTQ5AMBBA4avIrE1SU/V3FbGQmjILRRsiEXfXW
+ H6L9x6IHIQjdNkDgS+JsvkEyjOwy+hnRpmSgRQZpYsSg7NESmPkw58r2tEujIZ0005F6UxVQ0r
+ 3wE7uf9sP7/sBx9CHy2YAAAA=
+X-Change-ID: 20250314-rfc2203-seqnum-cache-52389d14f567
+To: Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>, 
+ Chuck Lever <chuck.lever@oracle.com>, Jeff Layton <jlayton@kernel.org>, 
+ Neil Brown <neilb@suse.de>, Olga Kornievskaia <okorniev@redhat.com>, 
+ Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>, 
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+ Simon Horman <horms@kernel.org>, Steven Rostedt <rostedt@goodmis.org>, 
+ Masami Hiramatsu <mhiramat@kernel.org>, 
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ netdev@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+ Nikhil Jha <njha@janestreet.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1742403794; l=2309;
+ i=njha@janestreet.com; s=20250314; h=from:subject:message-id;
+ bh=aEenN2rtAVG/y027IH9IeDfb7ILU1h7EudrieTStR2Y=;
+ b=G5nQT809qbEmXwOvoaSrMtCSMogF7ODItEYkYescwgV3YjoixFzV6RzTnGWdsI8AjlXkLzyJq
+ FZ0MZHZGAuwBJf4+nCLEaL8KvzVKIsmuwHkHlGD4X1DapwUl28dpjkT
+X-Developer-Key: i=njha@janestreet.com; a=ed25519;
+ pk=92gWYi0ImmcatlW+pFEFh9viqpRf/PE8phYeWuNeGaA=
+X-Endpoint-Received: by B4 Relay for njha@janestreet.com/20250314 with
+ auth_id=360
+X-Original-From: Nikhil Jha <njha@janestreet.com>
+Reply-To: njha@janestreet.com
 
-Hi,
+When the client retransmits an operation (for example, because the
+server is slow to respond), a new GSS sequence number is associated with
+the XID. In the current kernel code the original sequence number is
+discarded. Subsequently, if a response to the original request is
+received there will be a GSS sequence number mismatch. A mismatch will
+trigger another retransmit, possibly repeating the cycle, and after some
+number of failed retries EACCES is returned.
 
-On 3/19/25 9:51 AM, Oleg Nesterov wrote:
-> On 03/18, Jeremy Linton wrote:
->>
->> --- a/include/linux/uprobes.h
->> +++ b/include/linux/uprobes.h
->> @@ -185,6 +185,7 @@ struct uprobes_state {
->>   };
->>   
->>   extern void __init uprobes_init(void);
->> +extern void uprobe_warn(struct task_struct *t, const char *msg);
->>   extern int set_swbp(struct arch_uprobe *aup, struct mm_struct *mm, unsigned long vaddr);
->>   extern int set_orig_insn(struct arch_uprobe *aup, struct mm_struct *mm, unsigned long vaddr);
->>   extern bool is_swbp_insn(uprobe_opcode_t *insn);
->> diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
->> index b4ca8898fe17..613c1c76f227 100644
->> --- a/kernel/events/uprobes.c
->> +++ b/kernel/events/uprobes.c
->> @@ -118,7 +118,7 @@ struct xol_area {
->>   	unsigned long 			vaddr;		/* Page(s) of instruction slots */
->>   };
->>   
->> -static void uprobe_warn(struct task_struct *t, const char *msg)
->> +void uprobe_warn(struct task_struct *t, const char *msg)
->>   {
->>   	pr_warn("uprobe: %s:%d failed to %s\n", current->comm, current->pid, msg);
->>   }
-> 
-> Oh, no, please don't.
-> 
-> uprobe_warn() is ugly and needs changes. If nothing else it doesn't even use
-> its "t" argument.
+RFC2203, section 5.3.3.1 suggests a possible solution... “cache the
+RPCSEC_GSS sequence number of each request it sends” and "compute the
+checksum of each sequence number in the cache to try to match the
+checksum in the reply's verifier." This is what FreeBSD’s implementation
+does (rpc_gss_validate in sys/rpc/rpcsec_gss/rpcsec_gss.c).
 
-Ha, I didn't look that closely at it. That is basically the same bug 1/7 
-here is fixing for the gcs task function!
+However, even with this cache, retransmits directly caused by a seqno
+mismatch can still cause a bad message interleaving that results in this
+bug. The RFC already suggests ignoring incorrect seqnos on the server
+side, and this seems symmetric, so this patchset also applies that
+behavior to the client.
 
-This is in its own patch to allow it to be easily dropped, which is what 
-will happen as I'm aware of previous variations of this discussion.
+These two patches are *not* dependent on each other. I tested them by
+delaying packets with a Python script hooked up to NFQUEUE. If it would
+be helpful I can send this script along as well.
 
-While Mark R's perspective is valid, it remains worthwhile to again 
-point out that the uprobes subsystem (and a few like it) is a bit of a 
-mystery box. Some of these error conditions are very opaque for a user 
-who isn't also sufficiently familiar with uprobes to be able to both 
-find the code as well as understand or instrument it when it tosses an 
-error. Discoverability is made more difficult by the extensive use of 
-inline/static. End users try to work around this. For example Brendan 
-Gregg's perf-tools uprobe wrapper will dump the last two lines of the 
-kernel log when it hits unexpected errors.
+Signed-off-by: Nikhil Jha <njha@janestreet.com>
+---
+Changes since v1:
+ * Maintain the invariant that the first seqno is always first in
+   rq_seqnos, so that it doesn't need to be stored twice.
+ * Minor formatting, and resending with proper mailing-list headers so the
+   patches are easier to work with.
+
+---
+Nikhil Jha (2):
+      sunrpc: implement rfc2203 rpcsec_gss seqnum cache
+      sunrpc: don't immediately retransmit on seqno miss
+
+ include/linux/sunrpc/xprt.h    | 17 +++++++++++-
+ include/trace/events/rpcgss.h  |  4 +--
+ include/trace/events/sunrpc.h  |  2 +-
+ net/sunrpc/auth_gss/auth_gss.c | 59 ++++++++++++++++++++++++++----------------
+ net/sunrpc/clnt.c              |  9 +++++--
+ net/sunrpc/xprt.c              |  3 ++-
+ 6 files changed, 64 insertions(+), 30 deletions(-)
+---
+base-commit: 7eb172143d5508b4da468ed59ee857c6e5e01da6
+change-id: 20250314-rfc2203-seqnum-cache-52389d14f567
+
+Best regards,
+-- 
+Nikhil Jha <njha@janestreet.com>
+
 
