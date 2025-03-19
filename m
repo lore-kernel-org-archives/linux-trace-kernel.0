@@ -1,64 +1,65 @@
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93F251DE88D
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 19 Mar 2025 18:35:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 932B2209F54
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 19 Mar 2025 18:35:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742409333; cv=none; b=CSXiD7v/pplnkLJCALpCElo01m16ViLL4OkmjJWd8og6GFeYNuZW5GdiPpq7dZECWcsVqDcfSoO2whp/oj+7CQuTGgHhBFONttfIwecTs3IgdTkx7a8+wBo/HkIDpJv+xXOGimAS695KcC4AJy5Bat+ZNfxWLqp29Bty84uaO+4=
+	t=1742409334; cv=none; b=Vx+9GcuEaZ8rfHHf6bzUvb+6AttdoR0knuphva0LCulBesi1TxBQpFuK1AvubJx0HAOM5DJ6Iq36NvxnecjGm0Lc9DmLD2uo2H97YquGVys54G+sO2K0eS3/U93/Jua3be1PinWacKHl5cdzTLYC+Vjtb5GikfLbaPvJNoyEimw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742409333; c=relaxed/simple;
-	bh=W5HAab9oDLuYRICYvlEMdiuN+/zGZj7GP8xToCVp9CQ=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=X/ND2hhMx5KHnffrmI8EBjRZTgyW7U44+/R7lnYEy5miHONy6n+fv4mPO356KFHj3tiQbiJ1+7vsyJTVPLQGdGAhJWATQrLXqGhu4sMPEqJCu8lIDYYYzFLv8PD6BXjYReVwgsxUPqw3Z6dXRoarmj+R60RtUQ/S0/cZ/l1vMx8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=jRXGJ4Wf; arc=none smtp.client-ip=209.85.214.174
+	s=arc-20240116; t=1742409334; c=relaxed/simple;
+	bh=jcUMUpSTP0w83s8S9BETds7fzlXnkTNKzrbHYn+Xbas=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=MLaXwb4dEJdTX3ac4mGG6Z3xy6/dcL6GnzUd8xfRiuDPSZUIveN3tr/VHfldN1mf5dL4IJlY441sLIMup/e8FknLC9zXm1ojtquYfK2sLoACFaBrXhWaTvxNJzsUtsO6hq5CAp/o91639qtcrOSDrXKBnogAqXvXTUQxQIEurGA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=oZBJfn6J; arc=none smtp.client-ip=209.85.214.169
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="jRXGJ4Wf"
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-2241053582dso48301825ad.1
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 19 Mar 2025 11:35:30 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="oZBJfn6J"
+Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-22403cbb47fso139131925ad.0
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 19 Mar 2025 11:35:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1742409330; x=1743014130; darn=vger.kernel.org;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=QLB94k0pWwcNjDTf4HpckyyyYqaKP2kOAdvgI5dwRD0=;
-        b=jRXGJ4WfWTm9LASP0UvenWq4ViVW1HhYnusFn0J9ycLLNdB5rgvODkcnOoqG+Ljx3v
-         zcjX9s0qVMOqcXZzG3mn1+yGlw/+55PLFgZnwkIIjK8fNi+nRn6kFVXnbmcC+igoVQwo
-         fAt4sm3ndgfJHfHJ8LcKtwpfmdEL+oeFFaN4eCRAFU1jOq6Zc1BhCkE49RJF8doBnYpz
-         p73IkW06CPAnwD/GDVa2PPsSDRh/wuQL4CWheLtTSpxYfGDaPEwlDL8OeX2u86baf5ut
-         SyG7QZN6ftQV+BtCdYJi3BeGNEvDFX8Yz4KflnUMy2xx7PpBUQsCce9iLKi5mINyGLwm
-         L+kg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742409330; x=1743014130;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1742409332; x=1743014132; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=QLB94k0pWwcNjDTf4HpckyyyYqaKP2kOAdvgI5dwRD0=;
-        b=bUZ758kWy0YNI40+DbPEPUMwLhBz1UfAlhPXfRJVM+c6L1EpH4yfNV3nGtXM1ZNmsi
-         oyBajqeCV9w29BiVc/9Bi2w/VNoUxAiEsgA47R8ZBrfSDSnkxLxaogDXsiP+EVH7ncSw
-         W37KDz/w1ye6S45dmIwcKUhy08oYwHMfs1VuOCzlCt6eTMaWVyHkW+pXuELtX+6AKx42
-         BT6Pjg+dhpxVfRBmh3NskUBJW/11GD6AmZEoDCLSDkEXYnSera9BI4e4iqG3D3xIdkgY
-         yNM9uMhIMW+53yNJL2bGwiCajcoDN0dO9GzMsRpc43pcBWJt1iMlkrVR24zArFn+E0hp
-         U1mg==
-X-Forwarded-Encrypted: i=1; AJvYcCVEzfLJBf8bIeiNkI5Yujfu7pIMyk6p+jU4ogA7Duq4S3RNBWnqIIfzEz2gjLdoIIey04ytWJLKn1wp50QyE4r0Gco=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyBKD9W5UvQr4QYe2bbqyPXGfYT3NKtWJfKcaRgsz6tlYTFr6AS
-	9idcZ1cL6kYMuX2KJyUwK3OX46txla+5HrwxS9Y3FEotT2QihxHNAuJshgKRDrI=
-X-Gm-Gg: ASbGncvizmuM838NcHzn5pQdL1vE6GdkzB4UyVwFwaPfublH+8T561zhEQNo7Fx/Q59
-	Swzdq2x4NL/zeKKObNdt+LyIS14KMUpzOV2+hwvJox7O8W4UkT8+1oFIQHvmEuTl3so8C+/ADm0
-	vAOczd3eKlOu2YFJhdsNkDz1h5t415HerjYP5bXqRRs9kOUyvqkU6dwnPH5c9d2zyMUA19HIrLM
-	Cnz4W+9rZ7Yiz9hYxfgTl9RvyuZePCkyh5rgquA3fmWXilxYHspbbpvOlcvwM8yMWQCcTSa9hxE
-	jOHtt7sndPSMAiqXyxD8Dj6tWhnG5d3WHBxo5vfVP5YSKm2q8WEwWeP7JaUT
-X-Google-Smtp-Source: AGHT+IFVencsDHsxhBLdjviuxV/nTve4fWCDhTlSSgoJ73p52e8QK2ha6x6mXRahaOg9bIfOX//V7Q==
-X-Received: by 2002:a05:6a00:98f:b0:736:42a8:a742 with SMTP id d2e1a72fcca58-7376d631f92mr6684951b3a.11.1742409329749;
-        Wed, 19 Mar 2025 11:35:29 -0700 (PDT)
+        bh=uR51xah4xxVpBSnTg/IV2alN19Fnn1YAZeJAKTDPRYQ=;
+        b=oZBJfn6J8e1I1RR3TSXpin8y3GUwoJ/0w/Mv0eVB/KEgLjCsIBWPZZhK+YhfeAYfKL
+         wsw+0WTsxsoE693WUGHER019/1CXbBku94mVty/ZzOC5TsDrhxoMulH2fg3ixwLxkdus
+         hpOtd8PqaSwBgy38yvemR1ERGeOWNFU5auxm6XXEmF2zXufCWRZr+GPARNKtNFiT+KYl
+         ISRuXVYJLsQCQqKj7hx+CFU2f60yBlNyqadaI8FJRDXiEfJ6BY1F83A9AOe27XiAIvb0
+         ix6kft3caaFVxLeqLIMXVqJJWeUCcL6o6lluSdTj6tOkLGRP1b+r+GkyvzSh9SmEyjkL
+         A6Fg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742409332; x=1743014132;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=uR51xah4xxVpBSnTg/IV2alN19Fnn1YAZeJAKTDPRYQ=;
+        b=D5MKZ5FdV+IZqg3uMFUUS6kzl0HgSLQpaN8X4xSuu6dKwAsB0DvXuNXrJzIj/WcmEj
+         KOsfuhhGFobCgKZKlZQY9swXaIjsSpBH5VpzxSz8mBd8OpSopcSWtlLysTnxyKzfGPMM
+         1BL9teSszf4Zco1yjFudTu/bKaoiEpXZwopLZ8cIC8aqZKy83+fftKkFfh728pmtZXcz
+         wicBcMT4ajYfvffbvh20JlKvrTds18catqbCK9NZTr4MAEZaCGIXpgatZ3z9dLmHrFlN
+         4LbAcMufpYUmYFvA9YQEkmPokFRkGhsDqn0ttcpbTUCr0mDi6P6Vf1Jc7ZCg9GS3s4WT
+         OKPg==
+X-Forwarded-Encrypted: i=1; AJvYcCVEsFTChP+No+U/0lvVYasj02Kvtc1xVBqBITf445OM1IMRa43a3EGYq9REVjG6CbtrjY79IXdt56L/m9yg246Fn10=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxK6324BTjbNiFEW7uGd5mgxJw04dcvd2trSNAG1TTTND35ANAM
+	tkxFe1Rad3yQJlMhjDYpaN1jOvDcL0GGBbisB7caFQTGy2VEvZtiF7yWKuJzDtA=
+X-Gm-Gg: ASbGnctL0m5abUquwCJ59VAJxSbAtdLYuk/XQRYiyYpgXTi7pgdVSRlriuyi4NTOg10
+	bVylR67Trx3rSRF/v+B0Q2C1tQtA6XCVUb6dacLa6D13hMAiBvSZNFP98lFW/AxSYCSaxeQEYGk
+	AFL8tY2qMmHuitiW1BLEjhU5qJ1Me4BmwFoeQNYCyGQiuFSRS5UBm1+hy7qasp472c1AU76GMac
+	RRbWWfjTnvxdrcdqpVDUfOAonkGVlNfC4nWPISBAku3IjcUZPOxhd+jtvOUQw4iLgN9T0BaQPyE
+	A0tOGNB1tsFTfCifl7nUyecJmmnOU1oVaItofm2oP7cy5whJaX6g66c4VVCX
+X-Google-Smtp-Source: AGHT+IGVWjR9gQffmmSDn2uRl9PI4o0YcgivPHUzO9gwlKWf+ydGj9+4bhZ79+++dyKX8S+kHEzYqQ==
+X-Received: by 2002:a05:6a00:1486:b0:736:3979:369e with SMTP id d2e1a72fcca58-7377a83e678mr333529b3a.9.1742409331719;
+        Wed, 19 Mar 2025 11:35:31 -0700 (PDT)
 Received: from charlie.ba.rivosinc.com ([64.71.180.162])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7371167e109sm11993844b3a.115.2025.03.19.11.35.27
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7371167e109sm11993844b3a.115.2025.03.19.11.35.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Mar 2025 11:35:28 -0700 (PDT)
+        Wed, 19 Mar 2025 11:35:30 -0700 (PDT)
 From: Charlie Jenkins <charlie@rivosinc.com>
-Subject: [PATCH v10 0/2] riscv: Add runtime constant support
-Date: Wed, 19 Mar 2025 11:35:18 -0700
-Message-Id: <20250319-runtime_const_riscv-v10-0-745b31a11d65@rivosinc.com>
+Date: Wed, 19 Mar 2025 11:35:19 -0700
+Subject: [PATCH v10 1/2] riscv: Move nop definition to insn-def.h
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -67,13 +68,9 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAGYO22cC/43Q3UoDMRAF4Fcpe20kk8mvV76HSMkmE5sLdyWpQ
- Sl9d9OCdJEUvJwD881wTlOlkqlOT7vTVKjlmtelD8AfdlM4+OWNWI49mAQXioNAVj6XY36nfVi
- XetyXXENjOkSrJJGwYKa++VEo5a8r+/La50Oux7V8X680uKS/nhl6DRgw49TMBZIXfH4uua01L
- +ExrO/ThWziH4zojFOeTEjOeHQDBreMHTPYGQAnhLOORMQBIzcM8jEjO9O3dZAwm9mFAaNujOD
- jrpvqzBw0GNQe+08DRm8YEGNGdwYpcZB6RhhWbLbMnW5MZ0giGI2gTEoDxt4Y5GrM2M4kr3VCq
- W30o27chrn3jWOcxRhRoYxIlv4w5/P5BxAjYmzyAgAA
-X-Change-ID: 20250123-runtime_const_riscv-6cd854ee2817
+Message-Id: <20250319-runtime_const_riscv-v10-1-745b31a11d65@rivosinc.com>
+References: <20250319-runtime_const_riscv-v10-0-745b31a11d65@rivosinc.com>
+In-Reply-To: <20250319-runtime_const_riscv-v10-0-745b31a11d65@rivosinc.com>
 To: Paul Walmsley <paul.walmsley@sifive.com>, 
  Palmer Dabbelt <palmer@dabbelt.com>, Ard Biesheuvel <ardb@kernel.org>, 
  Ben Dooks <ben.dooks@codethink.co.uk>, 
@@ -88,89 +85,110 @@ To: Paul Walmsley <paul.walmsley@sifive.com>,
 Cc: linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
  linux-trace-kernel@vger.kernel.org, Charlie Jenkins <charlie@rivosinc.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3346; i=charlie@rivosinc.com;
- h=from:subject:message-id; bh=W5HAab9oDLuYRICYvlEMdiuN+/zGZj7GP8xToCVp9CQ=;
- b=owGbwMvMwCXWx5hUnlvL8Y3xtFoSQ/ptvowLqtdfbshw2Xz1884ba15c+cgRezlkuu4FO1W36
- aKfreM0O0pZGMS4GGTFFFl4rjUwt97RLzsqWjYBZg4rE8gQBi5OAZiI/VaGX8yPm1Yw+srpR2+S
- UOWcsf+wpuWmw5vrDrFWLjRsbTNQ38/wv3jV4Q3lDLNsDe/Lzp8W9W1yyZLzYlciOiulzndtmG5
- lzgsA
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3767; i=charlie@rivosinc.com;
+ h=from:subject:message-id; bh=jcUMUpSTP0w83s8S9BETds7fzlXnkTNKzrbHYn+Xbas=;
+ b=owGbwMvMwCXWx5hUnlvL8Y3xtFoSQ/ptvvxq/RDmibtNz5uscts8ac62l2u5nj+7yXlDs8vcN
+ ps55eeBjlIWBjEuBlkxRRaeaw3MrXf0y46Klk2AmcPKBDKEgYtTACZy5zzD/3pjQ+OmwJJV33kz
+ FGoiNDfuCTmU2Fq+7kRMp678tu+vohj+2RW06e8ocriTLtd+/Ud0QlCJo3+K71TJ0yvj5u59eU+
+ KCQA=
 X-Developer-Key: i=charlie@rivosinc.com; a=openpgp;
  fpr=7D834FF11B1D8387E61C776FFB10D1F27D6B1354
 
-Ard brought this to my attention in this patch [1].
-
-I benchmarked this patch on the Nezha D1 (which does not contain Zba or
-Zbkb so it uses the default algorithm) by navigating through a large
-directory structure. I created a 1000-deep directory structure and then
-cd and ls through it. With this patch there was a 0.57% performance
-improvement.
-
-[1] https://lore.kernel.org/lkml/CAMj1kXE4DJnwFejNWQu784GvyJO=aGNrzuLjSxiowX_e7nW8QA@mail.gmail.com/
+We have duplicated the definition of the nop instruction in ftrace.h and
+in jump_label.c. Move this definition into the generic file insn-def.h
+so that they can share the definition with each other and with future
+files.
 
 Signed-off-by: Charlie Jenkins <charlie@rivosinc.com>
+Reviewed-by: Alexandre Ghiti <alexghiti@rivosinc.com>
+Tested-by: Alexandre Ghiti <alexghiti@rivosinc.com>
 ---
-Changes in v10:
-- Use _AC() instead of just adding U to the end of a constant
-- Link to v9: https://lore.kernel.org/r/20250318-runtime_const_riscv-v9-0-ddd3534d3e8e@rivosinc.com
+ arch/riscv/include/asm/ftrace.h   | 1 -
+ arch/riscv/include/asm/insn-def.h | 3 +++
+ arch/riscv/kernel/ftrace.c        | 6 +++---
+ arch/riscv/kernel/jump_label.c    | 4 ++--
+ 4 files changed, 8 insertions(+), 6 deletions(-)
 
-Changes in v9:
-- Fix bug where stale register data may be used when an lui is replaced
-  with a nop. In the following addiw, add to register x0 instead of the
-  stale register to resolve.
-- Add locks for text_mutex before using patch_insn_write()
-- Link to v8: https://lore.kernel.org/r/20250305-runtime_const_riscv-v8-1-fa66f3468dac@rivosinc.com
+diff --git a/arch/riscv/include/asm/ftrace.h b/arch/riscv/include/asm/ftrace.h
+index c4721ce44ca474654b37b3d51bc0a63d46bc1eff..b7f361a50f6445d02a0d88eef5547ee27c1fb52e 100644
+--- a/arch/riscv/include/asm/ftrace.h
++++ b/arch/riscv/include/asm/ftrace.h
+@@ -79,7 +79,6 @@ struct dyn_arch_ftrace {
+ #define AUIPC_RA		(0x00000097)
+ #define JALR_T0			(0x000282e7)
+ #define AUIPC_T0		(0x00000297)
+-#define NOP4			(0x00000013)
+ 
+ #define to_jalr_t0(offset)						\
+ 	(((offset & JALR_OFFSET_MASK) << JALR_SHIFT) | JALR_T0)
+diff --git a/arch/riscv/include/asm/insn-def.h b/arch/riscv/include/asm/insn-def.h
+index 9a913010cdd93cdfdd93f467e7880e20cce0dd2b..71060a2f838e24200e3eb4ad8dfb32ef6bd2f57a 100644
+--- a/arch/riscv/include/asm/insn-def.h
++++ b/arch/riscv/include/asm/insn-def.h
+@@ -199,5 +199,8 @@
+ #define RISCV_PAUSE	".4byte 0x100000f"
+ #define ZAWRS_WRS_NTO	".4byte 0x00d00073"
+ #define ZAWRS_WRS_STO	".4byte 0x01d00073"
++#define RISCV_NOP4	".4byte 0x00000013"
++
++#define RISCV_INSN_NOP4	_AC(0x00000013, U)
+ 
+ #endif /* __ASM_INSN_DEF_H */
+diff --git a/arch/riscv/kernel/ftrace.c b/arch/riscv/kernel/ftrace.c
+index 3524db5e4fa014a4594465f849d898a030bfb7b8..674dcdfae7a149c339f1e791adb450535f22991b 100644
+--- a/arch/riscv/kernel/ftrace.c
++++ b/arch/riscv/kernel/ftrace.c
+@@ -36,7 +36,7 @@ static int ftrace_check_current_call(unsigned long hook_pos,
+ 				     unsigned int *expected)
+ {
+ 	unsigned int replaced[2];
+-	unsigned int nops[2] = {NOP4, NOP4};
++	unsigned int nops[2] = {RISCV_INSN_NOP4, RISCV_INSN_NOP4};
+ 
+ 	/* we expect nops at the hook position */
+ 	if (!expected)
+@@ -68,7 +68,7 @@ static int __ftrace_modify_call(unsigned long hook_pos, unsigned long target,
+ 				bool enable, bool ra)
+ {
+ 	unsigned int call[2];
+-	unsigned int nops[2] = {NOP4, NOP4};
++	unsigned int nops[2] = {RISCV_INSN_NOP4, RISCV_INSN_NOP4};
+ 
+ 	if (ra)
+ 		make_call_ra(hook_pos, target, call);
+@@ -97,7 +97,7 @@ int ftrace_make_call(struct dyn_ftrace *rec, unsigned long addr)
+ int ftrace_make_nop(struct module *mod, struct dyn_ftrace *rec,
+ 		    unsigned long addr)
+ {
+-	unsigned int nops[2] = {NOP4, NOP4};
++	unsigned int nops[2] = {RISCV_INSN_NOP4, RISCV_INSN_NOP4};
+ 
+ 	if (patch_insn_write((void *)rec->ip, nops, MCOUNT_INSN_SIZE))
+ 		return -EPERM;
+diff --git a/arch/riscv/kernel/jump_label.c b/arch/riscv/kernel/jump_label.c
+index 654ed159c830b3d5e34ac58bf367107066eb73a1..b4c1a6a3fbd28533552036194f27ed206bea305d 100644
+--- a/arch/riscv/kernel/jump_label.c
++++ b/arch/riscv/kernel/jump_label.c
+@@ -11,8 +11,8 @@
+ #include <asm/bug.h>
+ #include <asm/cacheflush.h>
+ #include <asm/text-patching.h>
++#include <asm/insn-def.h>
+ 
+-#define RISCV_INSN_NOP 0x00000013U
+ #define RISCV_INSN_JAL 0x0000006fU
+ 
+ bool arch_jump_label_transform_queue(struct jump_entry *entry,
+@@ -33,7 +33,7 @@ bool arch_jump_label_transform_queue(struct jump_entry *entry,
+ 			(((u32)offset & GENMASK(10,  1)) << (21 -  1)) |
+ 			(((u32)offset & GENMASK(20, 20)) << (31 - 20));
+ 	} else {
+-		insn = RISCV_INSN_NOP;
++		insn = RISCV_INSN_NOP4;
+ 	}
+ 
+ 	if (early_boot_irqs_disabled) {
 
-Changes in v8:
-- Rebase to linux v6.14-rc5
-- Link to v7: https://lore.kernel.org/r/20250218-runtime_const_riscv-v7-1-e431763157ff@rivosinc.com
-
-Changes in v7:
-- Added benchmarking info
-- Added CONFIG_RISCV_ISA_ZBA and CONFIG_RISCV_ISA_ZBKB to check that the
-  compiler supports the extensions.
-- Link to v6: https://lore.kernel.org/r/20250212-runtime_const_riscv-v6-1-3ef0146b310b@rivosinc.com
-
-Changes in v6:
-- .option arch only became officially supported by clang in version 17.
-  Add a config to check that and guard the alternatives uses .option
-  arch.
-- Link to v5: https://lore.kernel.org/r/20250203-runtime_const_riscv-v5-1-bc61736a3229@rivosinc.com
-
-Changes in v5:
-- Split instructions into 16-bit parcels to avoid alignment (Emil)
-- Link to v4: https://lore.kernel.org/r/20250130-runtime_const_riscv-v4-1-2d36c41b7b9c@rivosinc.com
-
-Changes in v4:
-- Add newlines after riscv32 assembler directives
-- Align instructions along 32-bit boundary (Emil)
-- Link to v3: https://lore.kernel.org/r/20250128-runtime_const_riscv-v3-1-11922989e2d3@rivosinc.com
-
-Changes in v3:
-- Leverage "pack" instruction for runtime_const_ptr() to reduce hot path
-  by 3 instructions if Zbkb is supported. Suggested by Pasha Bouzarjomehri (pasha@rivosinc.com)
-- Link to v2: https://lore.kernel.org/r/20250127-runtime_const_riscv-v2-1-95ae7cf97a39@rivosinc.com
-
-Changes in v2:
-- Treat instructions as __le32 and do proper conversions (Ben)
-- Link to v1: https://lore.kernel.org/r/20250127-runtime_const_riscv-v1-1-795b023ea20b@rivosinc.com
-
----
-Charlie Jenkins (2):
-      riscv: Move nop definition to insn-def.h
-      riscv: Add runtime constant support
-
- arch/riscv/Kconfig                     |  22 +++
- arch/riscv/include/asm/asm.h           |   1 +
- arch/riscv/include/asm/ftrace.h        |   1 -
- arch/riscv/include/asm/insn-def.h      |   3 +
- arch/riscv/include/asm/runtime-const.h | 265 +++++++++++++++++++++++++++++++++
- arch/riscv/kernel/ftrace.c             |   6 +-
- arch/riscv/kernel/jump_label.c         |   4 +-
- arch/riscv/kernel/vmlinux.lds.S        |   3 +
- 8 files changed, 299 insertions(+), 6 deletions(-)
----
-base-commit: 2014c95afecee3e76ca4a56956a936e23283f05b
-change-id: 20250123-runtime_const_riscv-6cd854ee2817
 -- 
-- Charlie
+2.43.0
 
