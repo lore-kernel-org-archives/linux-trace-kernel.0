@@ -1,154 +1,107 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AA53A16BE3A;
-	Wed, 19 Mar 2025 14:51:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6C421EF36E
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 19 Mar 2025 14:52:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742395908; cv=none; b=uQnPMOLkeDeuOpImzPjdBgMwk2N7t+cLXbCQXITS0JjUTrxGgaj1q51J6n8R2fBEQ5Z1JRGc+xr3bElwTnYA9FRDPlpAMf3jAzcvcmIVnFsdxGcyhQv1CsDv9siyDBEEBwCjJ5Zo+49UJ4R8rFL+MgQW38SFG8y5ZroAptWKFhY=
+	t=1742395928; cv=none; b=mwaPkDxSKkw42QWVcTozsKDXdWEzVf9QarDzmFT/d3Td9o7a9W/NBJioHv/oSLh9vMaaedHKnwvICwd+UW1YK+ndslfJ3td85uidIMUzxsyWspGHQm/vYQJIMTrxw9C66owxkydCjcEdhZIPjWZjLgDfjbuow1TbjPszH4c+8Jo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742395908; c=relaxed/simple;
-	bh=8fnh+mxNSdWC4xYUebdlycVe1MnQjASavmalZ/YWqzM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=FRGUOC/c4QcM8oPCPcZPmWu5LsquEojaBmG3EANDehJxsfUT7DkQnQiKTBZGbOAk9LL4tUs8+kCk7tSzi3cti2SppKBptYlvltjWyxQn8sozpL9PrUc6UEdrC/M01tjf3rV+wolaq77CDw4/u9PtFlI+8nFG9f3j3BUaVW0b/1E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 360E8106F;
-	Wed, 19 Mar 2025 07:51:54 -0700 (PDT)
-Received: from [10.1.39.66] (e132430.arm.com [10.1.39.66])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E29473F694;
-	Wed, 19 Mar 2025 07:51:44 -0700 (PDT)
-Message-ID: <3732e7f8-a452-4f65-8e8b-1575c01d33b9@arm.com>
-Date: Wed, 19 Mar 2025 14:51:42 +0000
+	s=arc-20240116; t=1742395928; c=relaxed/simple;
+	bh=fmThr+0j5ZXRTB6Jpny73eJBulXT9fTCmES60M34KXI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UZYgZ6jKozd/k8OBoQVJ+ywXtM91rQzfnG8osS41u3pPKv55l3M2qri6f8tGKatDAMMxpnmkwa6C3IlzxpPFDFpU7qAAAy0eFPrpkSCGfTBtK7Qy68PVSXAEVoh98KkDemW65wTpU65RweJh30WbxTTctjoc8xSKw8ky0X3Hf68=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=GTYTEee3; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GTYTEee3"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1742395926;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=rwWKRC3nWivzyNEP1S1vISXANNiFB9MsZAJYGEURD2o=;
+	b=GTYTEee3Y/19GZXFtO7XJE0PUX/9F3U/sFXNj3dGuN5siZ6YbozIYG3sVusOGgQjdsLjY+
+	aC3vDLIbQYX4cGP53xFDD+7w0SSN+GGZFL98EHiodkD7HPsvUP2r7Fu03oYlCQTzmk6F0x
+	5oZ9HwozYj7yykT7G4uJi6y7k0twd4w=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-647-y1tPtKyJNL6OPCxZd64RTw-1; Wed,
+ 19 Mar 2025 10:51:59 -0400
+X-MC-Unique: y1tPtKyJNL6OPCxZd64RTw-1
+X-Mimecast-MFC-AGG-ID: y1tPtKyJNL6OPCxZd64RTw_1742395916
+Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 1A6B71800349;
+	Wed, 19 Mar 2025 14:51:56 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.226.12])
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id C5A693001D12;
+	Wed, 19 Mar 2025 14:51:46 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Wed, 19 Mar 2025 15:51:23 +0100 (CET)
+Date: Wed, 19 Mar 2025 15:51:13 +0100
+From: Oleg Nesterov <oleg@redhat.com>
+To: Jeremy Linton <jeremy.linton@arm.com>
+Cc: linux-trace-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+	mhiramat@kernel.org, peterz@infradead.org, acme@kernel.org,
+	namhyung@kernel.org, mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+	irogers@google.com, adrian.hunter@intel.com,
+	kan.liang@linux.intel.com, thiago.bauermann@linaro.org,
+	broonie@kernel.org, yury.khrustalev@arm.com,
+	kristina.martsenko@arm.com, liaochang1@huawei.com,
+	catalin.marinas@arm.com, will@kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 6/7] uprobes: Allow the use of uprobe_warn() in arch code
+Message-ID: <20250319145057.GA10753@redhat.com>
+References: <20250318204841.373116-1-jeremy.linton@arm.com>
+ <20250318204841.373116-7-jeremy.linton@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/3] tracing: Rename trace_synth() to synth_event_trace2()
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc: rostedt@goodmis.org, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-References: <20250318180814.226644-1-douglas.raillard@arm.com>
- <20250318180814.226644-3-douglas.raillard@arm.com>
- <20250319223728.ca7a5ac6fa37798d17bd2e29@kernel.org>
-Content-Language: en-US
-From: Douglas Raillard <douglas.raillard@arm.com>
-In-Reply-To: <20250319223728.ca7a5ac6fa37798d17bd2e29@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250318204841.373116-7-jeremy.linton@arm.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
 
-On 19-03-2025 13:37, Masami Hiramatsu (Google) wrote:
-> On Tue, 18 Mar 2025 18:08:12 +0000
-> Douglas RAILLARD <douglas.raillard@arm.com> wrote:
-> 
->> From: Douglas Raillard <douglas.raillard@arm.com>
->>
->> Rename the frehsly exposed trace_synth() to synth_event_trace2() to
->> comply with the existing naming convention. Since synth_event_trace()
->> already exists (and operates on a "struct trace_event_file *"), use a
->> new name for it.
->>
-> 
-> I don't like this '2' and similar version digit naming for the functions.
-> Can you choose another better name?
+On 03/18, Jeremy Linton wrote:
+>
+> --- a/include/linux/uprobes.h
+> +++ b/include/linux/uprobes.h
+> @@ -185,6 +185,7 @@ struct uprobes_state {
+>  };
+>  
+>  extern void __init uprobes_init(void);
+> +extern void uprobe_warn(struct task_struct *t, const char *msg);
+>  extern int set_swbp(struct arch_uprobe *aup, struct mm_struct *mm, unsigned long vaddr);
+>  extern int set_orig_insn(struct arch_uprobe *aup, struct mm_struct *mm, unsigned long vaddr);
+>  extern bool is_swbp_insn(uprobe_opcode_t *insn);
+> diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
+> index b4ca8898fe17..613c1c76f227 100644
+> --- a/kernel/events/uprobes.c
+> +++ b/kernel/events/uprobes.c
+> @@ -118,7 +118,7 @@ struct xol_area {
+>  	unsigned long 			vaddr;		/* Page(s) of instruction slots */
+>  };
+>  
+> -static void uprobe_warn(struct task_struct *t, const char *msg)
+> +void uprobe_warn(struct task_struct *t, const char *msg)
+>  {
+>  	pr_warn("uprobe: %s:%d failed to %s\n", current->comm, current->pid, msg);
+>  }
 
-I was hoping for some suggestions as I don't like it either :)
+Oh, no, please don't.
 
-The natural prefix for functions operating on "struct synth_event *" would by "synth_event_*",
-but most of the existing API already uses the "synth_event_*" prefix, and is using
-"struct trace_event_file*".
+uprobe_warn() is ugly and needs changes. If nothing else it doesn't even use
+its "t" argument.
 
-> BTW, can you also write a cover mail so that what is the goal of this
-> series, background and results? 
-
-Ok, I'll respin the series with a proper cover letter. The gist is I was following the doc [1] on how
-to create a synthetic event, trying to apply that to a kernel module we have that needs to create new events.
-
-Unfortunately, it turned out that all the exposed APIs to emit the events (such as synth_event_trace()) require
-getting a "struct trace_event_file*" before the call. This breaks when a user starts creating instances in tracefs,
-as each instance will have its own "struct trace_event_file*". The way this is done for normal trace events is
-that each instance registers a probe on the tracepoint with the struct trace_event_file* as the void *data pointer.
-Then when the tracepoint is called, all the probes are called and the event data is copied in all instances in which
-it was enabled.
-
-Although the synthetic event API does create that tracepoint and has an appropriate probe function, none of the exposed API
-I could find make use of it. The exception is trace_events_hist.c had its own private version of it that actually calls all
-the probes of the tracepoint "manually", so that the event is correctly emitted in all the instances it was enabled in. This
-is the function touched by this patch.
-
-So that means that as it stands:
-1. The exposed API is only really usable with the "NULL" struct trace_event_file*, which maps to the top-level one.
-2. If a user creates an instance and enables the event in it using tracefs, the code that emits the event using the existing API
-    will completely ignore that and keep emitting the event in the top-level instance that it was wired to do.
-
-Approximately nothing in the synth event API that takes a "struct trace_event_file*" will work properly with user-created instances.
-
-[1] https://docs.kernel.org/trace/events.html#dyamically-creating-synthetic-event-definitions
-
-> 
-> Thank you,
-> 
->> Signed-off-by: Douglas Raillard <douglas.raillard@arm.com>
->> ---
->>   include/linux/trace_events.h      | 2 +-
->>   kernel/trace/trace_events_hist.c  | 2 +-
->>   kernel/trace/trace_events_synth.c | 4 ++--
->>   3 files changed, 4 insertions(+), 4 deletions(-)
->>
->> diff --git a/include/linux/trace_events.h b/include/linux/trace_events.h
->> index e069d84a73f0..753ce8aecfe4 100644
->> --- a/include/linux/trace_events.h
->> +++ b/include/linux/trace_events.h
->> @@ -521,7 +521,7 @@ struct synth_event;
->>   
->>   extern struct synth_event *synth_event_find(const char *name);
->>   
->> -extern void trace_synth(struct synth_event *event, u64 *var_ref_vals,
->> +extern void synth_event_trace2(struct synth_event *event, u64 *var_ref_vals,
->>   			       unsigned int *var_ref_idx);
->>   
->>   extern int synth_event_delete(const char *name);
->> diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events_hist.c
->> index 7067f6fedb1a..ee0fee123c91 100644
->> --- a/kernel/trace/trace_events_hist.c
->> +++ b/kernel/trace/trace_events_hist.c
->> @@ -822,7 +822,7 @@ static void action_trace(struct hist_trigger_data *hist_data,
->>   {
->>   	struct synth_event *event = data->synth_event;
->>   
->> -	trace_synth(event, var_ref_vals, data->var_ref_idx);
->> +	synth_event_trace2(event, var_ref_vals, data->var_ref_idx);
->>   }
->>   
->>   struct hist_var_data {
->> diff --git a/kernel/trace/trace_events_synth.c b/kernel/trace/trace_events_synth.c
->> index 4a9a44d37ffc..8837aa258479 100644
->> --- a/kernel/trace/trace_events_synth.c
->> +++ b/kernel/trace/trace_events_synth.c
->> @@ -850,7 +850,7 @@ EXPORT_SYMBOL_GPL(synth_event_find);
->>   typedef void (*synth_probe_func_t) (void *__data, u64 *var_ref_vals,
->>   				    unsigned int *var_ref_idx);
->>   
->> -void trace_synth(struct synth_event *event, u64 *var_ref_vals,
->> +void synth_event_trace2(struct synth_event *event, u64 *var_ref_vals,
->>   			       unsigned int *var_ref_idx)
->>   {
->>   	struct tracepoint *tp = event->tp;
->> @@ -873,7 +873,7 @@ void trace_synth(struct synth_event *event, u64 *var_ref_vals,
->>   		}
->>   	}
->>   }
->> -EXPORT_SYMBOL_GPL(trace_synth);
->> +EXPORT_SYMBOL_GPL(synth_event_trace2);
->>   
->>   static struct trace_event_fields synth_event_fields_array[] = {
->>   	{ .type = TRACE_FUNCTION_TYPE,
->> -- 
->> 2.43.0
->>
-> 
-> 
+Oleg.
 
