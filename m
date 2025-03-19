@@ -1,149 +1,99 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCD751DE3C8
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 19 Mar 2025 16:21:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1C307EEB1;
+	Wed, 19 Mar 2025 16:40:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742401291; cv=none; b=lYUYh+i23/q9itPqlWt73Xuoc+lEohGhCaMjjc1VJ7NY284hQIKMyUkX0GhowSMmnIRmkXbE++ItU6mMhKdIpaLI6gH2kl9hUka967y1U2TmosYEpfGRu3Aw54RXaxNmxDgN9bwme4Ryt5V+FFEQLyqNK/4/PaOeLaZnuLPYhAg=
+	t=1742402446; cv=none; b=BRObtNhlyB4csLBymSLHHbpkTi5nQG/LDdFPRIfJkUT4SDM6HZlzt2M1itAOaqohJFwN7URPgL3PZRtNrS2SCGUE7LuT+QlvNNwLSfLonqsegzbsfzUyV858PW2skFGkOINbL+U7IFRRX0FN0bdCJo2aDrj0cwYp1v2JjpOlHvc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742401291; c=relaxed/simple;
-	bh=lq9X6f5rVWemxyluvt6OwcygPboGXhQUAKNek3zdLrw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=FOKaMwbIKyPvKxYQ2XCR00wnNV89KqSaJ4sePckJ8js6SBrPLeASUchrLWvY9yAdzcbbRHBZCk/QMSJnuTuX6sUh91dqYfIqq6N24c8HKqFsYjSyQVcR73CFoalzmcsefcuhSE187JcUNXaH8+Wsx7+/JFQDWMJoEr7qMHPKFuY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=LAtMgXrL; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LAtMgXrL"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1742401288;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=JOpqJkUFS2tciZtn6NxMptpspHchhF4kFtYH07Hzmws=;
-	b=LAtMgXrLCH4lhWmg/DvaWatBUHEVucrRqXYFgeF/1saAYRT3CqEUumpA4I+Lyur4Po5pt8
-	T+hNY0HVFsiS2dRsQYM6QTf5RTvEqQ8WF+lKvXHH7LMUBFQSruUjkiUlnQs5cbAf8V4IT7
-	QYaVxLRwQ+pJofbzh8DLIMCubbLaHm4=
-Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com
- [209.85.160.199]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-587-dC8Bx__ZNRmyp4GlLPuc1w-1; Wed, 19 Mar 2025 12:21:27 -0400
-X-MC-Unique: dC8Bx__ZNRmyp4GlLPuc1w-1
-X-Mimecast-MFC-AGG-ID: dC8Bx__ZNRmyp4GlLPuc1w_1742401287
-Received: by mail-qt1-f199.google.com with SMTP id d75a77b69052e-47682f9e7b9so118753571cf.2
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 19 Mar 2025 09:21:27 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742401287; x=1743006087;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=JOpqJkUFS2tciZtn6NxMptpspHchhF4kFtYH07Hzmws=;
-        b=f53piNgq7T4jSfhsOteQb5CEIihefeZEtSiSK6t5dImu810v+Ai+Y5D+d/yUCbDjdG
-         XGD5sMgofSAliDDpEQwfuYCT/lBR66R5Vddj4nYs8yX+bcH5hW35scJqjeL60OThMlKc
-         tmX6GVXlKLR7rO1Mu+VqaDAPoYOoE7USt9BvdvxOCKSlud1t4tyVvjQlkohg7XKc2gFD
-         RJiDonRs9VUn2+Ie9eazKbHKrXJ3l06Miqlf++bj3r73tH4rhwG1D8LpYj5J+cBpH8jg
-         sG4lC1mBC/tM+z+p46p6Nirc7kCdGfDxd2NQZAUg4HftuAoPFe2CoIoU28H3tjHckYSf
-         fdXg==
-X-Forwarded-Encrypted: i=1; AJvYcCXS3DLtJ50ePnLNHQ+BTEvq4plMbY5IYyAI0edMfcTBGbO+C+51rGc3tkj9QoICYGmREi2YDa/e5OfGKaWQRSpfrQ4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzSZGztGhVLa8x2dV9tbl1yzjBKxBw1LntFdBRL+HDt4QlLwcJZ
-	Yz9niF9Ni7N5yRtNZUxCz8zpiroAU5mKHsz8Y/nGN2KdqCuEJAlD6CDxApAsvXIwv9wu0YEICb5
-	h43XtXWqahMyqvC43LNT2tC5Oedr2nVAx7rshRCL4J3kx/oPbzrUUl60DtM4ySYnTHckXxdV3Rp
-	AlmbcIqEAuMzK5MIlhsEaIlCn7SRspl+D97yw8sfBA/5au
-X-Gm-Gg: ASbGnctunCIkrmXE2c68QqJQYRoTxuDG78sClUbbKN+GhmzC9mmqELqhLaQSkbgfxLt
-	mh/GYpmCmtNmtvXYTK8UPZzsaYmcqp6RFJOir9yfJjKs8tIcjcaOxLelmKLKJ6enAnnC0MGwXj0
-	Iql8Y/gGmiVMWJdNTluY1GDUXxvpw/Xg==
-X-Received: by 2002:a05:622a:248d:b0:476:a969:90c5 with SMTP id d75a77b69052e-4770835ee45mr47927961cf.24.1742401286953;
-        Wed, 19 Mar 2025 09:21:26 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEq0WBTdUbfxwEVbo37+U0Z4XQZwzQBI6UK5QfoVOWzEKA+jKrkY6HS88cD6LTiUix9oV0Ssh8A6+qBy79YGiY=
-X-Received: by 2002:a05:622a:248d:b0:476:a969:90c5 with SMTP id
- d75a77b69052e-4770835ee45mr47927731cf.24.1742401286668; Wed, 19 Mar 2025
- 09:21:26 -0700 (PDT)
+	s=arc-20240116; t=1742402446; c=relaxed/simple;
+	bh=JrJZuwLoh4aqSlgAozvpLCYm9cpSeXuWTWgJoWvOwd4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=KsRuZqGV5gf1R8AH5B+Pv3tqXLZHGJ8mqhTLl9E859dNBZJK60orVSFOCPJqh8AJtTRGNDml5svUIzmrRDCneyDJWr8i05iBspwhPS8j1mipY+vKtL4AlXxAOzcZrBLD/nkPnoi/UHcYt8oV9CvKvnyuU56xezJCeAHxqyEdnVE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 317DB113E;
+	Wed, 19 Mar 2025 09:40:50 -0700 (PDT)
+Received: from [192.168.20.16] (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id F11163F694;
+	Wed, 19 Mar 2025 09:40:36 -0700 (PDT)
+Message-ID: <83cf1b26-3a30-47fd-93e9-84903193bf07@arm.com>
+Date: Wed, 19 Mar 2025 11:40:35 -0500
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250314125725.6425-1-gpaoloni@redhat.com> <20250318110700.510f05df7e113180503fc036@kernel.org>
- <20250319051317.670ba86c@batman.local.home>
-In-Reply-To: <20250319051317.670ba86c@batman.local.home>
-From: Gabriele Paoloni <gpaoloni@redhat.com>
-Date: Wed, 19 Mar 2025 17:21:14 +0100
-X-Gm-Features: AQ5f1JqNVJcfdW-NN-v_3Y6r0ZqLbaTg-J7YEdwOWjVrfDSN-7gsg_RUGixj8UU
-Message-ID: <CA+wEVJbraZfyF1-4J41maJHtBYUAZBNWMUA9z+PWPXYeR5jumw@mail.gmail.com>
-Subject: Re: [RFC PATCH] tracing: fix return value in __ftrace_event_enable_disable
- for TRACE_REG_UNREGISTER
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>, mathieu.desnoyers@efficios.com, 
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: tJtYDjwle1hZTyX7dYF18kflmNYx42N9g5mWakRHRTo_1742401287
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 6/7] uprobes: Allow the use of uprobe_warn() in arch code
+To: Oleg Nesterov <oleg@redhat.com>
+Cc: linux-trace-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+ mhiramat@kernel.org, peterz@infradead.org, acme@kernel.org,
+ namhyung@kernel.org, mark.rutland@arm.com,
+ alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com,
+ adrian.hunter@intel.com, kan.liang@linux.intel.com,
+ thiago.bauermann@linaro.org, broonie@kernel.org, yury.khrustalev@arm.com,
+ kristina.martsenko@arm.com, liaochang1@huawei.com, catalin.marinas@arm.com,
+ will@kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org
+References: <20250318204841.373116-1-jeremy.linton@arm.com>
+ <20250318204841.373116-7-jeremy.linton@arm.com>
+ <20250319145057.GA10753@redhat.com>
+Content-Language: en-US
+From: Jeremy Linton <jeremy.linton@arm.com>
+In-Reply-To: <20250319145057.GA10753@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Wed, Mar 19, 2025 at 10:13=E2=80=AFAM Steven Rostedt <rostedt@goodmis.or=
-g> wrote:
->
-> On Tue, 18 Mar 2025 11:07:00 +0900
-> Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
->
-> > > --- a/kernel/trace/trace_events.c
-> > > +++ b/kernel/trace/trace_events.c
-> > > @@ -790,7 +790,7 @@ static int __ftrace_event_enable_disable(struct t=
-race_event_file *file,
-> > >                             clear_bit(EVENT_FILE_FL_RECORDED_TGID_BIT=
-, &file->flags);
-> > >                     }
-> > >
-> > > -                   call->class->reg(call, TRACE_REG_UNREGISTER, file=
-);
-> > > +                   ret =3D call->class->reg(call, TRACE_REG_UNREGIST=
-ER, file);
-> >
-> > This is not enough. As same as enable failure, this function needs to h=
-andle
-> > this error to report it and break.
->
-> Perhaps all we should do here is:
->
->                         WARN_ON_ONCE(ret);
+Hi,
 
-Yes I was trying to address the request from Masami however,
-if we look at the error path of TRACE_REG_REGISTER what happens is:
+On 3/19/25 9:51 AM, Oleg Nesterov wrote:
+> On 03/18, Jeremy Linton wrote:
+>>
+>> --- a/include/linux/uprobes.h
+>> +++ b/include/linux/uprobes.h
+>> @@ -185,6 +185,7 @@ struct uprobes_state {
+>>   };
+>>   
+>>   extern void __init uprobes_init(void);
+>> +extern void uprobe_warn(struct task_struct *t, const char *msg);
+>>   extern int set_swbp(struct arch_uprobe *aup, struct mm_struct *mm, unsigned long vaddr);
+>>   extern int set_orig_insn(struct arch_uprobe *aup, struct mm_struct *mm, unsigned long vaddr);
+>>   extern bool is_swbp_insn(uprobe_opcode_t *insn);
+>> diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
+>> index b4ca8898fe17..613c1c76f227 100644
+>> --- a/kernel/events/uprobes.c
+>> +++ b/kernel/events/uprobes.c
+>> @@ -118,7 +118,7 @@ struct xol_area {
+>>   	unsigned long 			vaddr;		/* Page(s) of instruction slots */
+>>   };
+>>   
+>> -static void uprobe_warn(struct task_struct *t, const char *msg)
+>> +void uprobe_warn(struct task_struct *t, const char *msg)
+>>   {
+>>   	pr_warn("uprobe: %s:%d failed to %s\n", current->comm, current->pid, msg);
+>>   }
+> 
+> Oh, no, please don't.
+> 
+> uprobe_warn() is ugly and needs changes. If nothing else it doesn't even use
+> its "t" argument.
 
-ret =3D call->class->reg(call, TRACE_REG_REGISTER, file);
-if (ret) {
-   if (cmd)
-       tracing_stop_cmdline_record();
-    if (tgid)
-       tracing_stop_tgid_record();
-    pr_info("event trace: Could not enable event "
-       "%s\n", trace_event_name(call));
-    break;
+Ha, I didn't look that closely at it. That is basically the same bug 1/7 
+here is fixing for the gcs task function!
 
-In this case it makes sense since it will undo what was done before
-enabling the trace event. However I don't think it would make sense
-to invoke tracing_start_cmdline_record and/or tracing_start_tgid_record
-if the unregister callbacks fails since the event could be in a sort of
-unknown state (i.e. we cannot trust the event to still be enabled).
+This is in its own patch to allow it to be easily dropped, which is what 
+will happen as I'm aware of previous variations of this discussion.
 
-Also it is probably not appropriate to log the event using exclusively
-
-         pr_info("event trace: Could not disable event "
-                 "%s\n", trace_event_name(call));
-
-So I would agree with Steven or else
-
-      if (ret)
-           pr_warn("event trace: Could not disable event "
-                   "%s\n", trace_event_name(call));
-
-Many thanks for the review
-Gab
->
-> -- Steve
->
+While Mark R's perspective is valid, it remains worthwhile to again 
+point out that the uprobes subsystem (and a few like it) is a bit of a 
+mystery box. Some of these error conditions are very opaque for a user 
+who isn't also sufficiently familiar with uprobes to be able to both 
+find the code as well as understand or instrument it when it tosses an 
+error. Discoverability is made more difficult by the extensive use of 
+inline/static. End users try to work around this. For example Brendan 
+Gregg's perf-tools uprobe wrapper will dump the last two lines of the 
+kernel log when it hits unexpected errors.
 
