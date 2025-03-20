@@ -1,199 +1,101 @@
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.4])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CD65B149DFF;
-	Thu, 20 Mar 2025 03:24:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.4
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75E5C1EB9E3
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 20 Mar 2025 09:02:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742441049; cv=none; b=lde/E8CwZ1crFCBsJe+YuJQ6B8+zCGdd5OjHN3gBE+STQaeDf3OJePvKtWfD7Edq9I707+zcHjNfg7u1K6/UivV2kp/vjs4GSzIuuD4W9kJze39Z0d2M7XctdFpSXDTzwE0IM5I2SOws/Udhc+iHxU8efseKbK6z4Ty9x79zluc=
+	t=1742461359; cv=none; b=OHA2n2UfnHgrMnaCzyqQpvxyBz/wX1LzMa+85eQ+o5//8AfdB6kq0aaMt3b46Wt0dJYRPxFTO4p/5gKeMz7ihavVWe1y1+6e+HJouiJoFt5lC72QCw3Vj7rS2fQ1upqRgDZc4bfJFIo7aGjx3/WjN+UXzaFBUDiRFdh1UJJDDr0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742441049; c=relaxed/simple;
-	bh=aEcWMfjm1bCPdKe7pjajiGT9FEWUXjCGx5Pn/ARpbSY=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=G84tdavsL06r7/jNtWpdCk6+KZRfQy6Ivo3Om2TxohzhoWBqaaXQrg/e6CJ8+gPevyy0J6ERVPKF4QyoYMR5tQ3QEna5bUscn7RyezN/I1vMG8jzEWXP3UhtY8sDW32IeUszOj76+zOOjsHA/aB0s2OfhOk7yoTtLDnk2Y8Y8ZQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=Qnvtby7G; arc=none smtp.client-ip=220.197.31.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1742461359; c=relaxed/simple;
+	bh=pGrzZsD7jQD4q+HpXNfMs+ajcvDEH8ArFztx4QnT5O4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pK9KcFc01NXcTSXjrULjY1yJrPTWXTycAHJcJs1z2QDROgzapYNETELsBp3o9PA9WHmVJ5oG0b0aiOTwPjf13ehOrvuS/Cc+V3dqWmvHJ4EcaJMWhYXCwvF0L1SCf5XbtmGIw13pHWUqcU0WNBz0oeol5YlVwu+3YDV9I54B5GQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=If9Q4JJk; arc=none smtp.client-ip=209.85.128.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="Qnvtby7G"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=xR0Iz
-	hlv8+KjRs5JtDrVEB30IM6yfMqQ6O1XS7dIyK8=; b=Qnvtby7Gcbz3CYyYwbT7W
-	6dSB38u2blUqRVdPncslaYVfzLit2kiry+xTL7HeXjPFavahwTRtO0HYRBMypjm0
-	N7rSFYOeXy3libYCIKg3p+WKcGmYIczrSGJj9Je2sDfnMlivKGjEOWLyko6KgtQI
-	fSKXr+5VovseuKi5Ipdqyc=
-Received: from localhost.localdomain (unknown [])
-	by gzsmtp2 (Coremail) with SMTP id PSgvCgDXx48cittn7MfiAA--.19947S2;
-	Thu, 20 Mar 2025 11:23:09 +0800 (CST)
-From: Feng Yang <yangfeng59949@163.com>
-To: ast@kernel.org,
-	daniel@iogearbox.net,
-	andrii@kernel.org,
-	martin.lau@linux.dev,
-	eddyz87@gmail.com,
-	song@kernel.org,
-	yonghong.song@linux.dev,
-	john.fastabend@gmail.com,
-	kpsingh@kernel.org,
-	sdf@fomichev.me,
-	haoluo@google.com,
-	jolsa@kernel.org,
-	mattbobrowski@google.com,
-	rostedt@goodmis.org,
-	mhiramat@kernel.org,
-	mathieu.desnoyers@efficios.com
-Cc: bpf@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="If9Q4JJk"
+Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-43cf0d787eeso5395455e9.3
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 20 Mar 2025 02:02:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ventanamicro.com; s=google; t=1742461356; x=1743066156; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=72uAcvX5/rJRkialBraZlcCWh3cO7qq403Dc9iTXm5o=;
+        b=If9Q4JJkjEBVVzG0hxA/8zqxT9dhbAx2BRcb1XkAOFsU3ReicbKkGFVENv4A0S2TXH
+         x8WyT34JHFfUtINwfWNgZZvuKcNRC/poA/bG6ic66qtu9Xmp0ycGJRs19M9gbtFbDZ86
+         dXQ/Z6UECNg2a95YzwMq7a1twsp9BFIeJLCwdjO6cnmCDd/nGsiSZBqO+ipWu50AlQwV
+         4GIyMd8HqWPxqGadMVZicadBvkiAKu3srh6xXkk3sBSYXpBYqvJor+0ibHzOySECrDCk
+         uyu9V5GkVSoy2JBHH2oV/RIIYaK50yIS1pU+Cuz72idYNVZFN4sepxnRoLdiGQuVXJtr
+         F3Lw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742461356; x=1743066156;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=72uAcvX5/rJRkialBraZlcCWh3cO7qq403Dc9iTXm5o=;
+        b=WLWhdwjRmX9lvDErDYR9LvaKx6YsgLl837pEhCIO6qb7LdPnU7M/CCBcW1wsNhppPh
+         5mbR7f8Xt7pqos9gV43bMn8bFNvcBJ0twqiUmp2nQuy9bSywRZhsjF99UPFS78KIXTMl
+         XQNuasL5PvhaJUNt6LNfpchEcOzp30nQGx814r8ITAv6n62YixKcgjQb7aKnEpNQWIua
+         7FOe3NFUVCrvCRkJ2q07cI6rIaR2QGkq9Y9nkyEMMARakdHmDe7K2u0ltKgbNuEyrJ7n
+         FbJ/wxsJcJRrpbS77V4t0/OVBoMRwPZVgFYmokrEL6WXuo5TBSUFnLObWSY7bb3akouE
+         2UWA==
+X-Forwarded-Encrypted: i=1; AJvYcCXfONnpfVm0AcKenn01UkCAMsAyosffGZP5mZR+O4ED2+StiffD/iuPd3eP6ifD69SC73YXqYS1KwV5xoobPoB9ixg=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw0RNz0/Tl9b5j2Ft2IxjvAsdqxI8lCfd8u3ADsbcYiF0INIbSB
+	rVA/EtdM2x+IKhoHobUWf81A6yEGhmj4YsQ3Xc3CfmlbgmC+zZ+LLxFUX55YrK0=
+X-Gm-Gg: ASbGnctzFlTANfKGnbPfEsleIs5m+5Jzn/bVU7vBnzm04RM2OCbjtMNoG3DOqr7S4D5
+	7IuXmOxsDVqlWiSLTM4wU8T3OIy145WkCTP8HBVrOX41+JN5dx5DOXaK7boJASpLAiOTXca8rk1
+	7a77VmE/JZQOK4v9CYfDZsIMSUysaRdJC2xtZovFiiHsJ8e8ky+YrP/GBTisCb98UyhKBhyZM7i
+	O7K4CcRwn6Mqx9UZ6S/Yx2lucKUuSc+mAELwIaUfoxg2m/MmL7Y8ATcukz/uEffCBn2fYRJArW+
+	/wLCR5dUkMwjko9nxUDreNJcQlCq4qKF
+X-Google-Smtp-Source: AGHT+IGEgBOjhueRBJQDOOD+YjPfNJuNtGPXMADUyLrPBgDpdIBjVWb7iZ7LsyjAfh/7UNsZ+oLmUA==
+X-Received: by 2002:a05:6000:1565:b0:391:122c:8b2 with SMTP id ffacd0b85a97d-399795ae3a9mr2247824f8f.31.1742461355604;
+        Thu, 20 Mar 2025 02:02:35 -0700 (PDT)
+Received: from localhost ([2a02:8308:a00c:e200::59a5])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-395c7df413esm22708633f8f.20.2025.03.20.02.02.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 20 Mar 2025 02:02:34 -0700 (PDT)
+Date: Thu, 20 Mar 2025 10:02:33 +0100
+From: Andrew Jones <ajones@ventanamicro.com>
+To: Charlie Jenkins <charlie@rivosinc.com>
+Cc: Paul Walmsley <paul.walmsley@sifive.com>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Ard Biesheuvel <ardb@kernel.org>, 
+	Ben Dooks <ben.dooks@codethink.co.uk>, Pasha Bouzarjomehri <pasha@rivosinc.com>, 
+	Emil Renner Berthing <emil.renner.berthing@canonical.com>, Alexandre Ghiti <alexghiti@rivosinc.com>, 
+	Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, Albert Ou <aou@eecs.berkeley.edu>, 
+	Peter Zijlstra <peterz@infradead.org>, Josh Poimboeuf <jpoimboe@kernel.org>, 
+	Jason Baron <jbaron@akamai.com>, linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
 	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH] bpf: Remove duplicate judgments
-Date: Thu, 20 Mar 2025 11:22:58 +0800
-Message-Id: <20250320032258.116156-1-yangfeng59949@163.com>
-X-Mailer: git-send-email 2.25.1
+Subject: Re: [PATCH v10 1/2] riscv: Move nop definition to insn-def.h
+Message-ID: <20250320-25d2b6edb008a666151b786f@orel>
+References: <20250319-runtime_const_riscv-v10-0-745b31a11d65@rivosinc.com>
+ <20250319-runtime_const_riscv-v10-1-745b31a11d65@rivosinc.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:PSgvCgDXx48cittn7MfiAA--.19947S2
-X-Coremail-Antispam: 1Uf129KBjvJXoW3Ww4rZF4DKF45XF43Zr1kXwb_yoW7Cr1DpF
-	nxtrZxCrs2vw42qFy7Jr1fZa4Yyr9rZ3yUWaykKw18ur4UZr4xtF12kF42gF1rAr98G347
-	u3yvvFZ0kFyI93JanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jerWrUUUUU=
-X-CM-SenderInfo: p1dqww5hqjkmqzuzqiywtou0bp/1tbiTR4WeGfbhvJuSQAAsS
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250319-runtime_const_riscv-v10-1-745b31a11d65@rivosinc.com>
 
-From: Feng Yang <yangfeng@kylinos.cn>
+On Wed, Mar 19, 2025 at 11:35:19AM -0700, Charlie Jenkins wrote:
+> We have duplicated the definition of the nop instruction in ftrace.h and
+> in jump_label.c. Move this definition into the generic file insn-def.h
+> so that they can share the definition with each other and with future
+> files.
+> 
+> Signed-off-by: Charlie Jenkins <charlie@rivosinc.com>
+> Reviewed-by: Alexandre Ghiti <alexghiti@rivosinc.com>
+> Tested-by: Alexandre Ghiti <alexghiti@rivosinc.com>
+> ---
+>  arch/riscv/include/asm/ftrace.h   | 1 -
+>  arch/riscv/include/asm/insn-def.h | 3 +++
+>  arch/riscv/kernel/ftrace.c        | 6 +++---
+>  arch/riscv/kernel/jump_label.c    | 4 ++--
+>  4 files changed, 8 insertions(+), 6 deletions(-)
 
-Most of the judgments also exist in bpf_base_func_deto, remove them.
-
-Signed-off-by: Feng Yang <yangfeng@kylinos.cn>
----
- kernel/trace/bpf_trace.c | 72 ----------------------------------------
- 1 file changed, 72 deletions(-)
-
-diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
-index 6b07fa7081d9..c89b25344422 100644
---- a/kernel/trace/bpf_trace.c
-+++ b/kernel/trace/bpf_trace.c
-@@ -1443,56 +1443,14 @@ bpf_tracing_func_proto(enum bpf_func_id func_id, const struct bpf_prog *prog)
- 	const struct bpf_func_proto *func_proto;
- 
- 	switch (func_id) {
--	case BPF_FUNC_map_lookup_elem:
--		return &bpf_map_lookup_elem_proto;
--	case BPF_FUNC_map_update_elem:
--		return &bpf_map_update_elem_proto;
--	case BPF_FUNC_map_delete_elem:
--		return &bpf_map_delete_elem_proto;
--	case BPF_FUNC_map_push_elem:
--		return &bpf_map_push_elem_proto;
--	case BPF_FUNC_map_pop_elem:
--		return &bpf_map_pop_elem_proto;
--	case BPF_FUNC_map_peek_elem:
--		return &bpf_map_peek_elem_proto;
--	case BPF_FUNC_map_lookup_percpu_elem:
--		return &bpf_map_lookup_percpu_elem_proto;
--	case BPF_FUNC_ktime_get_ns:
--		return &bpf_ktime_get_ns_proto;
--	case BPF_FUNC_ktime_get_boot_ns:
--		return &bpf_ktime_get_boot_ns_proto;
--	case BPF_FUNC_tail_call:
--		return &bpf_tail_call_proto;
--	case BPF_FUNC_get_current_task:
--		return &bpf_get_current_task_proto;
--	case BPF_FUNC_get_current_task_btf:
--		return &bpf_get_current_task_btf_proto;
--	case BPF_FUNC_task_pt_regs:
--		return &bpf_task_pt_regs_proto;
- 	case BPF_FUNC_get_current_uid_gid:
- 		return &bpf_get_current_uid_gid_proto;
- 	case BPF_FUNC_get_current_comm:
- 		return &bpf_get_current_comm_proto;
--	case BPF_FUNC_trace_printk:
--		return bpf_get_trace_printk_proto();
- 	case BPF_FUNC_get_smp_processor_id:
- 		return &bpf_get_smp_processor_id_proto;
--	case BPF_FUNC_get_numa_node_id:
--		return &bpf_get_numa_node_id_proto;
- 	case BPF_FUNC_perf_event_read:
- 		return &bpf_perf_event_read_proto;
--	case BPF_FUNC_get_prandom_u32:
--		return &bpf_get_prandom_u32_proto;
--	case BPF_FUNC_probe_read_user:
--		return &bpf_probe_read_user_proto;
--	case BPF_FUNC_probe_read_kernel:
--		return security_locked_down(LOCKDOWN_BPF_READ_KERNEL) < 0 ?
--		       NULL : &bpf_probe_read_kernel_proto;
--	case BPF_FUNC_probe_read_user_str:
--		return &bpf_probe_read_user_str_proto;
--	case BPF_FUNC_probe_read_kernel_str:
--		return security_locked_down(LOCKDOWN_BPF_READ_KERNEL) < 0 ?
--		       NULL : &bpf_probe_read_kernel_str_proto;
- #ifdef CONFIG_ARCH_HAS_NON_OVERLAPPING_ADDRESS_SPACE
- 	case BPF_FUNC_probe_read:
- 		return security_locked_down(LOCKDOWN_BPF_READ_KERNEL) < 0 ?
-@@ -1502,10 +1460,6 @@ bpf_tracing_func_proto(enum bpf_func_id func_id, const struct bpf_prog *prog)
- 		       NULL : &bpf_probe_read_compat_str_proto;
- #endif
- #ifdef CONFIG_CGROUPS
--	case BPF_FUNC_cgrp_storage_get:
--		return &bpf_cgrp_storage_get_proto;
--	case BPF_FUNC_cgrp_storage_delete:
--		return &bpf_cgrp_storage_delete_proto;
- 	case BPF_FUNC_current_task_under_cgroup:
- 		return &bpf_current_task_under_cgroup_proto;
- #endif
-@@ -1513,20 +1467,6 @@ bpf_tracing_func_proto(enum bpf_func_id func_id, const struct bpf_prog *prog)
- 		return &bpf_send_signal_proto;
- 	case BPF_FUNC_send_signal_thread:
- 		return &bpf_send_signal_thread_proto;
--	case BPF_FUNC_perf_event_read_value:
--		return &bpf_perf_event_read_value_proto;
--	case BPF_FUNC_ringbuf_output:
--		return &bpf_ringbuf_output_proto;
--	case BPF_FUNC_ringbuf_reserve:
--		return &bpf_ringbuf_reserve_proto;
--	case BPF_FUNC_ringbuf_submit:
--		return &bpf_ringbuf_submit_proto;
--	case BPF_FUNC_ringbuf_discard:
--		return &bpf_ringbuf_discard_proto;
--	case BPF_FUNC_ringbuf_query:
--		return &bpf_ringbuf_query_proto;
--	case BPF_FUNC_jiffies64:
--		return &bpf_jiffies64_proto;
- 	case BPF_FUNC_get_task_stack:
- 		return prog->sleepable ? &bpf_get_task_stack_sleepable_proto
- 				       : &bpf_get_task_stack_proto;
-@@ -1534,12 +1474,6 @@ bpf_tracing_func_proto(enum bpf_func_id func_id, const struct bpf_prog *prog)
- 		return &bpf_copy_from_user_proto;
- 	case BPF_FUNC_copy_from_user_task:
- 		return &bpf_copy_from_user_task_proto;
--	case BPF_FUNC_snprintf_btf:
--		return &bpf_snprintf_btf_proto;
--	case BPF_FUNC_per_cpu_ptr:
--		return &bpf_per_cpu_ptr_proto;
--	case BPF_FUNC_this_cpu_ptr:
--		return &bpf_this_cpu_ptr_proto;
- 	case BPF_FUNC_task_storage_get:
- 		if (bpf_prog_check_recur(prog))
- 			return &bpf_task_storage_get_recur_proto;
-@@ -1548,18 +1482,12 @@ bpf_tracing_func_proto(enum bpf_func_id func_id, const struct bpf_prog *prog)
- 		if (bpf_prog_check_recur(prog))
- 			return &bpf_task_storage_delete_recur_proto;
- 		return &bpf_task_storage_delete_proto;
--	case BPF_FUNC_for_each_map_elem:
--		return &bpf_for_each_map_elem_proto;
--	case BPF_FUNC_snprintf:
--		return &bpf_snprintf_proto;
- 	case BPF_FUNC_get_func_ip:
- 		return &bpf_get_func_ip_proto_tracing;
- 	case BPF_FUNC_get_branch_snapshot:
- 		return &bpf_get_branch_snapshot_proto;
- 	case BPF_FUNC_find_vma:
- 		return &bpf_find_vma_proto;
--	case BPF_FUNC_trace_vprintk:
--		return bpf_get_trace_vprintk_proto();
- 	default:
- 		break;
- 	}
--- 
-2.43.0
-
+Reviewed-by: Andrew Jones <ajones@ventanamicro.com>
