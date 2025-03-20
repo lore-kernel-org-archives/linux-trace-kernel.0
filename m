@@ -1,75 +1,75 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3BA9227EA3
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 20 Mar 2025 20:36:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AB7B1E0DD9
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 20 Mar 2025 20:42:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742502981; cv=none; b=bObYEWB/hurRzW/KC6D8hv2qoKRHSCtcc5X5nNz9qJAgs/qR7FWElr/PmkVqJ5/aR6NftsY8fAHquYZfor76SKQLuzoDGxFQbOpN/slJXYXvawLIH+/cXOxxmFGYCQPvAJ7biHPY5/2jt7daTdwBaxHEw3D5IDlvKVwEehY6nxc=
+	t=1742503381; cv=none; b=MOJl6uIpSRjeunYitVqLONy1tJNxwL0Q0DpB8TSbSSbjfh4clsHN9/ft8+XPVtzjqj3S/Kbbo5YSRMx7NvlQHQ7Inmo3jmU0A+asXODAbZVCw1gUQAFnWr7MuIxw9Rw7F0OPJwT85Vli7hTMjat4S76MrrjFzKHJVhB8T/MHzss=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742502981; c=relaxed/simple;
-	bh=HNI3+8j2uUg+iUrX5QfJ8q4x1m2XlYX6YegdFOe8SbQ=;
+	s=arc-20240116; t=1742503381; c=relaxed/simple;
+	bh=Xdh/MJnCIprNyk5gQo7vfrxF4hS9VbcpNTXzPMRPSTY=;
 	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=lEvNKfsQJkvcPqezkAAkYy+8hZVCCzwSHBZqrUz/F5TMG8CU1ywTGE9ZMbFch1JwNNsSnH/lLoRiJgQvj03+rIXPViRbL4xK1ra6r773EiMO2mdnPO+udvYCaxMHL6ikuiWKNF3wrHq3vjiwMBgV9K2vfpdsaLULySQ0ZjkKtqw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=jQmCA8Gh; arc=none smtp.client-ip=170.10.133.124
+	 MIME-Version:Content-Type; b=LfcJKlD/6bF8OGl6Zz2RkJWg0cGvn3KY1aMlzTfRJVfTUrEi8of9JA9x+84qLcY/pn6l4ZN9970imDdDktvtoiXruUEKknDQOd7jgaf06nN779DwCmB9Poz0ub4r8+SyAQ63SXTSFmeuziDzZ3QNIgf7t+nLVzmsdm1SobCT+D8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ITipPvyU; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="jQmCA8Gh"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ITipPvyU"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1742502978;
+	s=mimecast20190719; t=1742503378;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=wt6bgZEsyM6VG0/rKn/P//sJOGO57/PIOicF9noce8g=;
-	b=jQmCA8GhfGw/6z6DCM5KOZjwqZq2QKp/+D0y/T/GJqvPxl2W9eNBUOF5xvPnr6Rd6A3QOI
-	A6f49oU/ncgLBGDt61PEUxOOi490s7hGQUepIQUxy7a2aT1D+vK5OdtgedbmaBmhuXRg+r
-	nTeMBLzw9sTX/+GtQw+UhouTW1GKRjY=
-Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com
- [209.85.160.200]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=Lk0vo4ySgcjWcYyqJYaGojYKQ2mTUpyWgtMJYQlkL3c=;
+	b=ITipPvyU0es/gAYc/5fZy+eBasaPdbvaubi0L9k/nZwC749dmnQPGHAJVQYLzGcJnHG2rx
+	JF5/KZnMgnnGHfiQvLJwhq1VdHcCwBm4wW0VydfB5kpnU/hfCvsKpl8PvykCje1SQp0gqv
+	yJ4xU8aEgc8hBGeW3i+vq1gk83dPcDM=
+Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com
+ [209.85.219.69]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-622-E5zljbB6ONuoQkwf8onKGA-1; Thu, 20 Mar 2025 16:36:17 -0400
-X-MC-Unique: E5zljbB6ONuoQkwf8onKGA-1
-X-Mimecast-MFC-AGG-ID: E5zljbB6ONuoQkwf8onKGA_1742502977
-Received: by mail-qt1-f200.google.com with SMTP id d75a77b69052e-47689dc0f6dso21263331cf.3
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 20 Mar 2025 13:36:17 -0700 (PDT)
+ us-mta-15-cWHvCZTKPnucERY-yB6bhg-1; Thu, 20 Mar 2025 16:42:57 -0400
+X-MC-Unique: cWHvCZTKPnucERY-yB6bhg-1
+X-Mimecast-MFC-AGG-ID: cWHvCZTKPnucERY-yB6bhg_1742503377
+Received: by mail-qv1-f69.google.com with SMTP id 6a1803df08f44-6e19e09cc20so21489686d6.2
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 20 Mar 2025 13:42:57 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742502977; x=1743107777;
+        d=1e100.net; s=20230601; t=1742503377; x=1743108177;
         h=mime-version:references:message-id:in-reply-to:subject:cc:to:from
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=wt6bgZEsyM6VG0/rKn/P//sJOGO57/PIOicF9noce8g=;
-        b=M41S3fRiiu/zbyZXCJyPBxG9FsjbcSR577bVZ4rzA7asmfcobYpTgVfc0/iVgqiQxF
-         vATCSo9jV9QpGIi/lLSMUSYXHyDH5ghhsBfg2u8YT1b0RRwqdV4/rqimHxlSlUXi9T+p
-         fPH7nEBIbOjn/Y784xvcU2Ls24oNuyK3tXZibjIKsGEi+CeS7PF79c8Q9dbAfmzX7qSv
-         +Y39Tspo+X+Pso4QemgrGQgN9TkNYkjg0l6LZERu5lsjKImED2VAPZkk7Zdt0iab8vJR
-         XnACl50Ys5fKjJ46npHjqTTQVwphUerKKeW1IO524T8GMDqWTSFnqYYwiQKnCHWXUIT7
-         q35w==
-X-Forwarded-Encrypted: i=1; AJvYcCVxYxgr5kn5SuoqbeBwIFVRPZYxQG4YfITr07nfoOAep7Ki2GL+EVCRMYUyidqYc89r44A6qGzs5dWX/73GpbJUDgM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwZO29lndACRMlg6VOLtLwChWy1NRsQoCVEhfwD8MgsECgAdKVV
-	khQbF9API6qRSrFvziEE1KPDULrgVgJ08dWshRXN4zlyOSQ3q6RvSvBVDv0UWH9iwcVJXZ7u4/1
-	TQnd0ZhSbbWqw192OXi+9txu3WdbqxCjVL/1Z/xaX1H8f07d0uhuktN5i7NbfG1y4dc9opg==
-X-Gm-Gg: ASbGncvytu4GNCAgSQo6ImUGmyT1BAwoqOu0MnX8uGCDJ9D0zzHOpRhPECaWOfotH+4
-	VsZmr3XbIqcPMEs0X5bHQWaboo1eYVXQlQV7Q+oes6AtqFeCmBj50WnlI+PSdJjSj+tq8aBFycA
-	/ldcKqp+xaKFRyPdlDT33pUuxcJaSIUV/IG5Kck+1W7hrSb1L60hytAP6owtqDKviw2QM7hmMpT
-	sCMBtSUFuIpfIh9Qesqst4Yf9GTTODkQpcjXIXs3uDr0sLxQtA2G7F2wLYMUHvdxdjgsvVtN3yw
-X-Received: by 2002:a05:622a:1f89:b0:476:7bd1:68dd with SMTP id d75a77b69052e-4771de7deadmr13620601cf.50.1742502977168;
-        Thu, 20 Mar 2025 13:36:17 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFc6nQvnoQrcX1ByqFsZNWw+StGQCeklVgridhqC3mGlG9suOczgaIZuDOEPlY7AITfEcVPCg==
-X-Received: by 2002:a05:622a:1f89:b0:476:7bd1:68dd with SMTP id d75a77b69052e-4771de7deadmr13620071cf.50.1742502976694;
-        Thu, 20 Mar 2025 13:36:16 -0700 (PDT)
+        bh=Lk0vo4ySgcjWcYyqJYaGojYKQ2mTUpyWgtMJYQlkL3c=;
+        b=udlkWB83SGgvYPdVn6hZLQSvN1FW3PV1rqK5IFY+RSS2CqdqGYOKubfonh8tnzWCo9
+         YYQwvaTuB6zIpvLPRIUoWBkzhQbeqKVABvEiQ0H10svLd85PADFu6lq24CDXXaxuXBdX
+         uqGZSFgdfndpCizZphJO57/Lo8PY8M0yYGk6hOmwGoEjpBXQe1i4RMH2Y9nLvRuX/i7c
+         yciNEjtVAUhQTakqSP15+MR3ShtYye7X/MlhjPS5Vt3H1ZCx7W20Yw2OEr6GEgoT1aou
+         8hYaWVsspI7xqYKIAf2Mv6LC0hVlX8YUOS+AU1FCRtHVCTGow2EhW0yKqV596oU8cC56
+         dTzA==
+X-Forwarded-Encrypted: i=1; AJvYcCVgs5p9S8wDau8qoDkb0H0z3T63neuKOHeN7sGFZGaDeeQ6p+Z3e7/nhzKFd9QUaemYh5+AsgDuVrUgSjmt6tt3smg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwYIVmZwK3V0DBeftoql9h5YMeUzUgWjE00sSKn2YegH5RleAGP
+	OHBUsp76EBYAxLJkYgPlmQqqVsxAxHBZOb6SORbDzvObizQU9fz7AUc5jdMNC7ujRuYRRRBlvL8
+	5XndYkXBPHyzU+lT5+b8Bg8idHLJwOEP05Vfau3gKZ5H5koZ3A39yYh1wyG7QBtNjvl2RCA==
+X-Gm-Gg: ASbGncs0Nw45iC4CZHSDNsC66nMbVhneBtM10/lmA2uLnG89hqFmiRmFosgX1R4g7q7
+	Scejji5mYvF8Q8NIv8qYUrnYaZq6646XBQ8TqYdWI86wgCLH93wJabrqfEQbCq5NVXwcnE/Upcu
+	GW/VRTlKYg58tJanNmBGagz6hlPZBd78vLjSquCw/bG678vUD/GlOUua5eOF46pGpIknRb7Jbpg
+	Gvwz5b85wQF1qNJgPqwjYfcuC5IdgBdYSLrzFcB3TCPofOPDzQZPZ6WB+ubY1TaXzhpUyopk1x1
+X-Received: by 2002:ac8:5ac3:0:b0:477:1f29:e80f with SMTP id d75a77b69052e-4771f29e85fmr1879701cf.4.1742503376810;
+        Thu, 20 Mar 2025 13:42:56 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGMG1UpKj1xwg60B9Ao0w2zuv2Lvk2uR3IbSS3I1F5A4BrQHvbrmH05TUt/jndE9B9USAOUbA==
+X-Received: by 2002:ac8:5ac3:0:b0:477:1f29:e80f with SMTP id d75a77b69052e-4771f29e85fmr1879321cf.4.1742503376308;
+        Thu, 20 Mar 2025 13:42:56 -0700 (PDT)
 Received: from fionn ([76.69.33.37])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4771d6361b6sm2726701cf.74.2025.03.20.13.36.15
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4771d18f7d4sm2876801cf.37.2025.03.20.13.42.55
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Mar 2025 13:36:16 -0700 (PDT)
-Date: Thu, 20 Mar 2025 16:36:05 -0400 (EDT)
+        Thu, 20 Mar 2025 13:42:55 -0700 (PDT)
+Date: Thu, 20 Mar 2025 16:42:44 -0400 (EDT)
 From: John Kacur <jkacur@redhat.com>
 To: Tomas Glozar <tglozar@redhat.com>
 cc: Steven Rostedt <rostedt@goodmis.org>, linux-trace-kernel@vger.kernel.org, 
     linux-kernel@vger.kernel.org, Luis Goncalves <lgoncalv@redhat.com>
-Subject: Re: [PATCH 5/6] rtla/tests: Reset osnoise options before check
-In-Reply-To: <20250320092500.101385-6-tglozar@redhat.com>
-Message-ID: <ea016692-37b4-7d18-ffcc-3c7a145bf59e@redhat.com>
-References: <20250320092500.101385-1-tglozar@redhat.com> <20250320092500.101385-6-tglozar@redhat.com>
+Subject: Re: [PATCH 6/6] rtla/tests: Test setting default options
+In-Reply-To: <20250320092500.101385-7-tglozar@redhat.com>
+Message-ID: <72c05486-1b49-242e-478d-e83c367e16fa@redhat.com>
+References: <20250320092500.101385-1-tglozar@redhat.com> <20250320092500.101385-7-tglozar@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -77,7 +77,7 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: IZL389On2Q_Z5_WMGQONjPrtCgkXhaeJ8IEUQ_04n7s_1742502977
+X-Mimecast-MFC-PROC-ID: _6I4IUIEngB0qg_v3F8_z1t2CoHPgS8vF6i_fZGzYeY_1742503377
 X-Mimecast-Originator: redhat.com
 Content-Type: text/plain; charset=US-ASCII
 
@@ -85,87 +85,78 @@ Content-Type: text/plain; charset=US-ASCII
 
 On Thu, 20 Mar 2025, Tomas Glozar wrote:
 
-> Remove any dangling tracing instances from previous improperly exited
-> runs of rtla, and reset osnoise options to default before running a test
-> case.
+> Add function to test engine to test with pre-set osnoise options, and
+> use it to test whether osnoise period (as an example) is set correctly.
 > 
-> This ensures that the test results are deterministic. Specific test
-> cases checked that rtla behaves correctly even when the tracer state is
-> not clean will be added later.
+> The test works by pre-setting a high period of 10 minutes and stop on
+> threshold. Thus, it is easy to check whether rtla is properly resetting
+> the period to default: if it is, the test will complete on time, since
+> the first sample will overflow the threshold. If not, it will time out.
 > 
 > Signed-off-by: Tomas Glozar <tglozar@redhat.com>
 > ---
->  tools/tracing/rtla/tests/engine.sh | 40 ++++++++++++++++++++++++++++++
->  1 file changed, 40 insertions(+)
+>  tools/tracing/rtla/tests/engine.sh | 26 ++++++++++++++++++++++++++
+>  tools/tracing/rtla/tests/osnoise.t |  6 ++++++
+>  2 files changed, 32 insertions(+)
 > 
 > diff --git a/tools/tracing/rtla/tests/engine.sh b/tools/tracing/rtla/tests/engine.sh
-> index 64d0446dc28e..5db8aa4bc031 100644
+> index 5db8aa4bc031..b1697b3e3f52 100644
 > --- a/tools/tracing/rtla/tests/engine.sh
 > +++ b/tools/tracing/rtla/tests/engine.sh
-> @@ -8,12 +8,44 @@ test_begin() {
->  	[ -n "$TEST_COUNT" ] && echo "1..$TEST_COUNT"
+> @@ -61,6 +61,32 @@ check() {
+>  	fi
 >  }
 >  
-> +reset_osnoise() {
-> +	# Reset osnoise options to default and remove any dangling instances created
-> +	# by improperly exited rtla runs.
-> +	pushd /sys/kernel/tracing || return 1
+> +check_with_osnoise_options() {
+> +	# Do the same as "check", but with pre-set osnoise options.
+> +	# Note: rtla should reset the osnoise options, this is used to test
+> +	# if it indeed does so.
+> +	# Save original arguments
+> +	arg1=$1
+> +	arg2=$2
 > +
-> +	# Remove dangling instances created by previous rtla run
-> +	echo 0 > tracing_thresh
-> +	cd instances
-> +	for i in osnoise_top osnoise_hist timerlat_top timerlat_hist
-> +	do
-> +		[ ! -d "$i" ] && continue
-> +		rmdir "$i"
-> +	done
-> +
-> +	# Reset options to default
-> +	# Note: those are copied from the default values of osnoise_data
-> +	# in kernel/trace/trace_osnoise.c
-> +	cd ../osnoise
-> +	echo all > cpus
-> +	echo DEFAULTS > options
-> +	echo 1000000 > period_us
-> +	echo 0 > print_stack
-> +	echo 1000000 > runtime_us
-> +	echo 0 > stop_tracing_total_us
-> +	echo 0 > stop_tracing_us
-> +	echo 1000 > timerlat_period_us
-> +
-> +	popd
-> +}
-> +
->  check() {
->  	# Simple check: run rtla with given arguments and test exit code.
->  	# If TEST_COUNT is set, run the test. Otherwise, just count.
->  	ctr=$(($ctr + 1))
->  	if [ -n "$TEST_COUNT" ]
->  	then
-> +		# Reset osnoise options before running test.
+> +	# Apply osnoise options (if not dry run)
+> +	if [ -n "$TEST_COUNT" ]
+> +	then
 > +		[ "$NO_RESET_OSNOISE" == 1 ] || reset_osnoise
->  		# Run rtla; in case of failure, include its output as comment
->  		# in the test results.
->  		result=$(stdbuf -oL $TIMEOUT "$RTLA" $2 2>&1); exitcode=$?
-> @@ -37,6 +69,14 @@ unset_timeout() {
->  	unset TIMEOUT
+> +		shift
+> +		while shift
+> +		do
+> +			[ "$1" == "" ] && continue
+> +			option=$(echo $1 | cut -d '=' -f 1)
+> +			value=$(echo $1 | cut -d '=' -f 2)
+> +			echo "option: $option, value: $value"
+> +			echo "$value" > "/sys/kernel/tracing/osnoise/$option" || return 1
+> +		done
+> +	fi
+> +
+> +	NO_RESET_OSNOISE=1 check "$arg1" "$arg2"
+> +}
+> +
+>  set_timeout() {
+>  	TIMEOUT="timeout -v -k 15s $1"
 >  }
+> diff --git a/tools/tracing/rtla/tests/osnoise.t b/tools/tracing/rtla/tests/osnoise.t
+> index 86596e547893..e5995c03c790 100644
+> --- a/tools/tracing/rtla/tests/osnoise.t
+> +++ b/tools/tracing/rtla/tests/osnoise.t
+> @@ -16,4 +16,10 @@ check "verify the  --trace param" \
+>  check "verify the --entries/-E param" \
+>  	"osnoise hist -P F:1 -c 0 -r 900000 -d 1M -b 10 -E 25"
 >  
-> +set_no_reset_osnoise() {
-> +	NO_RESET_OSNOISE=1
-> +}
+> +# Test setting default period by putting an absurdly high period
+> +# and stopping on threshold.
+> +# If default period is not set, this will time out.
+> +check_with_osnoise_options "apply default period" \
+> +	"osnoise hist -s 1" period_us=600000000
 > +
-> +unset_no_reset_osnoise() {
-> +	unset NO_RESET_OSNOISE
-> +}
-> +
->  test_end() {
->  	# If running without TEST_COUNT, tests are not actually run, just
->  	# counted. In that case, re-run the test with the correct count.
+>  test_end
 > -- 
 > 2.48.1
 > 
 > 
 > 
-Reviewed by: John Kacur <jkacur@redhat.com>
+looks correct
+change "stop" to "stopping" in description
+Reviewed-by: John Kacur <jkacur@redhat.com>
 
