@@ -1,134 +1,188 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f74.google.com (mail-wm1-f74.google.com [209.85.128.74])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB106224B04
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 20 Mar 2025 09:25:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABAB4222560
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 20 Mar 2025 10:44:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742462750; cv=none; b=MLqi1c+Ij6d7GR9x2GkVqOpcPjZU0zYqGUnjkBTzcAm7mkAurfUTF+DZaCCvIsArqM7voeNs/6P8joOE9Gib2lrQO7/VIhlSrC0pHuFYZFCzll4JVH/NycZ0RHIG7cxILm5i0q7OnOcxGYOoRMwpW8NS37jvuj+3WTd6DN72Dps=
+	t=1742467484; cv=none; b=Cs5D2x7+lDtSHBu3cVK0/K2lDjVEUCSUzr1W0e+G4lg2EJ4KArXNLxzcSyQZRpZ2ZX924Me8Qsq9I6Xe+G4AKSJSMQgD+b/YOViScxSdar2nBnt+pP6eVVxTilpyD8O0254vrDVbQDca9KcDGaaWznmPbgvrR82tcd+VqESZdi0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742462750; c=relaxed/simple;
-	bh=afK5kfyLJ+jIjJ4vwjb3JDpdVL0cAE/6NVYqfX8hiBc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=fTESof0VY1L+07nizq0KXBQYJTOlB4/Lte8KvyQaPWrplIwVF/AOUZMLMqx+88NCBGV8eIVbvDJEmQkSTMtaa7LvScbAE3H8glfy6PUhBf7JS7HQzudqBS98jEDMAZ6JRlaSWQP3UlZUcMFF6RFZFiKtTzIeWlJ782kr2h5Ytmw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=BAOoyvJ3; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1742467484; c=relaxed/simple;
+	bh=O8zyyL1p84aMCSSYT842uw6SFy2rTfsgAblLzeFkCR0=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=lJ8eonGPsmPvyK72szt0OP3t+VTT6Pr0d/d1GNxdhK5JZzVvTCtz3bDuf3KkjD3/+387AghssP/h9R+6nx+ZJBeJM3bBCP1huby4+jMl2QlGiZ6p2zGWzoqNhvOIExGZaoJ9aKTNEZD7qGKJ8YYR+iQg1J/3iUbngcTi7FtKXJk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--jackmanb.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Kdj3JpaA; arc=none smtp.client-ip=209.85.128.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--jackmanb.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BAOoyvJ3"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1742462747;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=/wj+SBQ7tiNK5u+4wmenajZgLWXoMWGnFcZQdGUZeTQ=;
-	b=BAOoyvJ3KfylcYqeOGUMA5/smO2ucRB2Ct7k+Xw9l+kKb9S/nKK7d7QQyTPoF9zMiTN1nX
-	ke5XBTaHANzESiwVUH33InOXWU8k/SR8xKM54r1hz6xyCY0C9jlieVWrpN2BNpFtRt6a0t
-	SeTr4BJp9bdexlf7ZBJZZpJ13EpHYyI=
-Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-551-XLPrVcufPTGkUeNvrHuEJg-1; Thu,
- 20 Mar 2025 05:25:44 -0400
-X-MC-Unique: XLPrVcufPTGkUeNvrHuEJg-1
-X-Mimecast-MFC-AGG-ID: XLPrVcufPTGkUeNvrHuEJg_1742462743
-Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 0F96519560B1;
-	Thu, 20 Mar 2025 09:25:43 +0000 (UTC)
-Received: from fedora.redhat.com (unknown [10.45.224.73])
-	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id CB22819560AF;
-	Thu, 20 Mar 2025 09:25:40 +0000 (UTC)
-From: Tomas Glozar <tglozar@redhat.com>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: linux-trace-kernel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	John Kacur <jkacur@redhat.com>,
-	Luis Goncalves <lgoncalv@redhat.com>,
-	Tomas Glozar <tglozar@redhat.com>
-Subject: [PATCH 6/6] rtla/tests: Test setting default options
-Date: Thu, 20 Mar 2025 10:25:00 +0100
-Message-ID: <20250320092500.101385-7-tglozar@redhat.com>
-In-Reply-To: <20250320092500.101385-1-tglozar@redhat.com>
-References: <20250320092500.101385-1-tglozar@redhat.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Kdj3JpaA"
+Received: by mail-wm1-f74.google.com with SMTP id 5b1f17b1804b1-43d3b211d0eso9419105e9.1
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 20 Mar 2025 03:44:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1742467480; x=1743072280; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=j11DFSETqOLtc+vMOz1k4rHgXFA118EedepjEdU8Zqw=;
+        b=Kdj3JpaAcTMsJX0fWv0whfnlnrjaZjQkUoIxaVNNWymywgQ1lxYjwO8r7iq1JNp6QM
+         Ojbu13PJrvGpih/A3lZ8h//bm+lQo87tlhkP9QV9OC12v7CPJ6kEgjQXJce0C5ni+hLc
+         WK8hRYGR3L0Fg1Ms6LVwx4HmFLLx967l5J71fKJh2+DS8uT7oCIJlhzicsDfSOQYSkWF
+         sHWVXfORZG9aTGDrruW97o37vT+nFRgMDzAibG+h4BCecMAJVWL9zR8i+Q2//u9V8cvF
+         qTDTgtuLxb6b7EYFGNlNI/IdDW+67sG2wCaCd7GvxlgTKp/aIF7rCtp1mbYDuCw4iql2
+         FLfw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742467480; x=1743072280;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=j11DFSETqOLtc+vMOz1k4rHgXFA118EedepjEdU8Zqw=;
+        b=GzkYiZKEUpi2i0UDSNROpCLDEj1FiJtNIlPBmH1NiFBdN/0QJG7AX3ydTF1DJVFtNv
+         OIIZWAqIsMbiS9gN0D7Ibd/e+fATbreLeDScgs/AvuRiDMcrP5RZjpG9rF0vYg7hN46A
+         KgWEoQaSOVVUDvxrkmONPhfR2EbOiIL38g1IBQW0jMTwlG4VSWVJG2ukBqkjM+grMC6U
+         jmbOBnF0rm5+x7bmyLPu4s1s5Llgyq36GGIHo313f9hPQRbzC+vhAfIGeJrOPE4/1f2A
+         Nyfx1u0TF/o/52jocbw4aZt+x25Kk4XNX1z/vGiwnsRly9PyxOu1/Uk2zi7iF2ShDrB2
+         fIpA==
+X-Forwarded-Encrypted: i=1; AJvYcCWOYnkKjowa1iPSDW3pUlWaF1+dybi76r68cv/liFpfB/6zJlULgwa7sk+3sp7/zLcR6hjBky1Yy6+4YPOyYOq+n5s=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxMgCKrb+61Os8tlyb/f6tEfAjdoagKqO4STP4F3zd9iW44J7PD
+	+ua6UlhxUGLVnOwWKRU2q2MlwEsRqYZou2kKzMIJKKQTjnc70pBkBxTlgBvNBlV4w0kVgdWSSvT
+	J8yJ4dpnJYw==
+X-Google-Smtp-Source: AGHT+IHmhdHTuCMOMffmpvyIMCzJObzjHJotMPvb7/CKZriBN1WJ2Qe2CHVhTxdEuiWThlixsbw8H9oOiShQMA==
+X-Received: from wmgg15.prod.google.com ([2002:a05:600d:f:b0:43b:c450:ea70])
+ (user=jackmanb job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:600c:1da2:b0:439:5f04:4f8d with SMTP id 5b1f17b1804b1-43d49187ba9mr20806165e9.12.1742467480075;
+ Thu, 20 Mar 2025 03:44:40 -0700 (PDT)
+Date: Thu, 20 Mar 2025 10:44:38 +0000
+In-Reply-To: <Z9sRQ0cK0rupEiT-@google.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
+Mime-Version: 1.0
+References: <20250110-asi-rfc-v2-v2-0-8419288bc805@google.com>
+ <20250110-asi-rfc-v2-v2-4-8419288bc805@google.com> <20250319172935.GMZ9r-_zzXhyhHBLfj@fat_crate.local>
+ <Z9sRQ0cK0rupEiT-@google.com>
+X-Mailer: aerc 0.18.2
+Message-ID: <D8L164U8HBTB.G5MS86AIISLM@google.com>
+Subject: Re: [PATCH RFC v2 04/29] mm: asi: Add infrastructure for boot-time enablement
+From: Brendan Jackman <jackmanb@google.com>
+To: Yosry Ahmed <yosry.ahmed@linux.dev>, Borislav Petkov <bp@alien8.de>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>, 
+	Andy Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
+	Josh Poimboeuf <jpoimboe@kernel.org>, Pawan Gupta <pawan.kumar.gupta@linux.intel.com>, 
+	<x86@kernel.org>, <linux-kernel@vger.kernel.org>, 
+	<linux-alpha@vger.kernel.org>, <linux-snps-arc@lists.infradead.org>, 
+	<linux-arm-kernel@lists.infradead.org>, <linux-csky@vger.kernel.org>, 
+	<linux-hexagon@vger.kernel.org>, <loongarch@lists.linux.dev>, 
+	<linux-m68k@lists.linux-m68k.org>, <linux-mips@vger.kernel.org>, 
+	<linux-openrisc@vger.kernel.org>, <linux-parisc@vger.kernel.org>, 
+	<linuxppc-dev@lists.ozlabs.org>, <linux-riscv@lists.infradead.org>, 
+	<linux-s390@vger.kernel.org>, <linux-sh@vger.kernel.org>, 
+	<sparclinux@vger.kernel.org>, <linux-um@lists.infradead.org>, 
+	<linux-arch@vger.kernel.org>, <linux-mm@kvack.org>, 
+	<linux-trace-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>, 
+	<kvm@vger.kernel.org>, <linux-efi@vger.kernel.org>, 
+	Junaid Shahid <junaids@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
-Add function to test engine to test with pre-set osnoise options, and
-use it to test whether osnoise period (as an example) is set correctly.
+On Wed Mar 19, 2025 at 6:47 PM UTC, Yosry Ahmed wrote:
+> On Wed, Mar 19, 2025 at 06:29:35PM +0100, Borislav Petkov wrote:
+> > On Fri, Jan 10, 2025 at 06:40:30PM +0000, Brendan Jackman wrote:
+> > > Add a boot time parameter to control the newly added X86_FEATURE_ASI.
+> > > "asi=on" or "asi=off" can be used in the kernel command line to enable
+> > > or disable ASI at boot time. If not specified, ASI enablement depends
+> > > on CONFIG_ADDRESS_SPACE_ISOLATION_DEFAULT_ON, which is off by default.
+> > 
+> > I don't know yet why we need this default-on thing...
+>
+> It's a convenience to avoid needing to set asi=on if you want ASI to be
+> on by default. It's similar to HUGETLB_PAGE_OPTIMIZE_VMEMMAP_DEFAULT_ON
+> or ZSWAP_DEFAULT_ON.
+>
+> [..]
+> > > @@ -175,7 +184,11 @@ static __always_inline bool asi_is_restricted(void)
+> > >  	return (bool)asi_get_current();
+> > >  }
+> > >  
+> > > -/* If we exit/have exited, can we stay that way until the next asi_enter? */
+> > > +/*
+> > > + * If we exit/have exited, can we stay that way until the next asi_enter?
+> > 
+> > What is that supposed to mean here?
+>
+> asi_is_relaxed() checks if the thread is outside an ASI critical
+> section.
+>
+> I say "the thread" because it will also return true if we are executing
+> an interrupt that arrived during the critical section, even though the
+> interrupt handler is not technically part of the critical section.
+>
+> Now the reason it says "if we exit we stay that way" is probably
+> referring to the fact that an asi_exit() when interrupting a critical
+> section will be undone in the interrupt epilogue by re-entering ASI.
+>
+> I agree the wording here is confusing. We should probably describe this
+> more explicitly and probably rename the function after the API
+> discussions you had in the previous patch.
 
-The test works by pre-setting a high period of 10 minutes and stop on
-threshold. Thus, it is easy to check whether rtla is properly resetting
-the period to default: if it is, the test will complete on time, since
-the first sample will overflow the threshold. If not, it will time out.
+Yeah, this is confusing. It's trying to very concisely define the
+concept of "relaxed" but now I see it through Boris' eyes I realise
+it's really unhelpful to try and do that. And yeah we should probably
+just rework the terminology/API.
 
-Signed-off-by: Tomas Glozar <tglozar@redhat.com>
----
- tools/tracing/rtla/tests/engine.sh | 26 ++++++++++++++++++++++++++
- tools/tracing/rtla/tests/osnoise.t |  6 ++++++
- 2 files changed, 32 insertions(+)
+To re-iterate what Yosry said, aside from my too-clever comment style
+the more fundamental thing that's confusing here is that, using the
+terminology currently in the code there are two concepts at play:
 
-diff --git a/tools/tracing/rtla/tests/engine.sh b/tools/tracing/rtla/tests/engine.sh
-index 5db8aa4bc031..b1697b3e3f52 100644
---- a/tools/tracing/rtla/tests/engine.sh
-+++ b/tools/tracing/rtla/tests/engine.sh
-@@ -61,6 +61,32 @@ check() {
- 	fi
- }
- 
-+check_with_osnoise_options() {
-+	# Do the same as "check", but with pre-set osnoise options.
-+	# Note: rtla should reset the osnoise options, this is used to test
-+	# if it indeed does so.
-+	# Save original arguments
-+	arg1=$1
-+	arg2=$2
-+
-+	# Apply osnoise options (if not dry run)
-+	if [ -n "$TEST_COUNT" ]
-+	then
-+		[ "$NO_RESET_OSNOISE" == 1 ] || reset_osnoise
-+		shift
-+		while shift
-+		do
-+			[ "$1" == "" ] && continue
-+			option=$(echo $1 | cut -d '=' -f 1)
-+			value=$(echo $1 | cut -d '=' -f 2)
-+			echo "option: $option, value: $value"
-+			echo "$value" > "/sys/kernel/tracing/osnoise/$option" || return 1
-+		done
-+	fi
-+
-+	NO_RESET_OSNOISE=1 check "$arg1" "$arg2"
-+}
-+
- set_timeout() {
- 	TIMEOUT="timeout -v -k 15s $1"
- }
-diff --git a/tools/tracing/rtla/tests/osnoise.t b/tools/tracing/rtla/tests/osnoise.t
-index 86596e547893..e5995c03c790 100644
---- a/tools/tracing/rtla/tests/osnoise.t
-+++ b/tools/tracing/rtla/tests/osnoise.t
-@@ -16,4 +16,10 @@ check "verify the  --trace param" \
- check "verify the --entries/-E param" \
- 	"osnoise hist -P F:1 -c 0 -r 900000 -d 1M -b 10 -E 25"
- 
-+# Test setting default period by putting an absurdly high period
-+# and stopping on threshold.
-+# If default period is not set, this will time out.
-+check_with_osnoise_options "apply default period" \
-+	"osnoise hist -s 1" period_us=600000000
-+
- test_end
--- 
-2.48.1
+- The critical section: this is the path from asi_enter() to
+  asi_relax(). The critical section can be interrupted, and code
+  running in those interupts is not said to be "in the critical
+  section".
 
+- Being "tense" vs "relaxed". Being "tense" means the _task_ is in a
+  critical section, but the current code might not be.
+
+This distinction is theoretically relevant because e.g. it's a bug to
+access sensitive data in a critical section, but it's OK to access it
+while in the tense state (we will switch to the restricted address
+space, but this is OK because we will have a chance to asi_enter()
+again before we get back to the untrusted code). 
+
+BTW, just to be clear:
+
+1. Both of these are only relevant to code that's pretty deeply aware
+   of ASI. (TLB flushing code, entry code, stuff like that).
+
+2. To be honest whenever you write:
+
+     if (asi_in_critical_section())
+
+   You probably mean:
+
+     if (WARN_ON(asi_in_critical_section()))
+
+   For example if we try to flush the TLB in the critical section,
+   there's a thing we can do to handle it. But that really shouldn't
+   be necessary.  We want the critical section code to be very small
+   and straight-line code.
+
+   And indeed in the present code we don't use
+   asi_in_critical_section() for anything bur WARNing.
+
+> asi_is_relaxed() checks if the thread is outside an ASI critical
+> section.
+
+Now I see it written this way, this is probably the best way to
+conceptualise it. Instead of having two concepts "tense/relaxed" vs
+"ASI critical section" we could just say "the task is in a critical
+section" vs "the CPU is in a critical section". So we could have
+something like:
+
+bool asi_task_critical(void);
+bool asi_cpu_critical(void);
+
+(They could also accept an argument for the task/CPU, but I can't see
+any reason why you'd peek at another context like that).
+
+--
+
+For everything else, Ack to Boris or +1 to Yosry respectively.
