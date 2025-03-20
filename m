@@ -1,49 +1,50 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AE3C226541;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63F86226CF9;
 	Thu, 20 Mar 2025 18:09:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742494176; cv=none; b=EyhbcktGEMti6LUbUdC58VBchVv4YUR6v3z9Ps72RSwfraCpEMj8G394YworCqknvw5+O+7Zm5Ut4k2t2O56DXw56xppZRva2Ed6MYls6OzeKvQk++rkNj8z51HTKn3gJ+sL/tcM9OdLNjNSdW8Nuq2P2FqDjPrRWYupg+1Za5w=
+	t=1742494177; cv=none; b=TnmSlqxFufZMfItubCpeLEnY0YEXiZapDwwtFZ5+0E9jHuPeklgP7Atr6AT6xX2IClLysDQUDNhfMY6Crh7kQBfVmFpd5s8Fvx6KBiKQ9DjcLH6dhaRWltIpI4l+MK5TQ0mTpL3XbYCE6iC6pk/g+TMAocez5H6hFs9gHdi6o1w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742494176; c=relaxed/simple;
-	bh=ubxtZyh8stIn5q0xWikfoRweT1uoZ+QsdH/F25+V/ks=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=jnTGExood+aYZpqK1be1WphRWVO0kKojz9/xckSZJfO75qX2e14TCxx465vuouk4D/bVdBp0e75CG/r8GaheKv8kmfMwB/m2wqvg7f1hXl9UVMEYAlM1NBWMTu79nK4L8h5LcCvyYxioyo1Yd/Q/+/61PEfxrf628bXJvKJsAaA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dzMTzAyu; arc=none smtp.client-ip=198.175.65.9
+	s=arc-20240116; t=1742494177; c=relaxed/simple;
+	bh=KSdjX0FfUSl7y+GxVDh/faeFQui6+tylS4V+elc6NWs=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=oU5jCGcnB4G8hFeBMznLicYMYT3CJTXw9xyzawlsd/EJj0qTu67vvwS/QjGExOs6ENO4wu4v/GnmtK5FF2aAuJiXL4s96fklb5QuKv0pmPB1Zn9KBGWMZjyNi1TrzagC9BHzRu+Xi2A5ooZBr9hcW6CkrnN/TSfnxN9UpnbmU44=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SQDbvkg6; arc=none smtp.client-ip=198.175.65.9
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dzMTzAyu"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SQDbvkg6"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
   t=1742494175; x=1774030175;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=ubxtZyh8stIn5q0xWikfoRweT1uoZ+QsdH/F25+V/ks=;
-  b=dzMTzAyuz8//f+EPUpU2O44blqo0hsoM7n/GjjpjPiQZ/h25upNt8ltW
-   0rAFCVV6RpmW4XZE8e6RJdzWVH+dPCcmtWIg+V2HZAXOIq4OJRpU1SQTl
-   ZyZGM6gP49O00UcOZcWHetT15hz6JlfGnAQEqx7yBD4lC9zrd1uT+E0Im
-   eSZDDBrWRyBAWdK6RbPK2MWrTS70QrGyNEbRhcyKsf1CmC3QJpahQDa/n
-   cOgAqrcBsvy6tsyL4CGPzwoAhCjk5bYCEU/1GaFp5yPocU5vb5d8wu9A6
-   J2Kl+RjxNb0Z4l1+vAzTGusOPHRY9FPKd/KDWMjMW1ziVAtfsH1kU6ow+
-   w==;
-X-CSE-ConnectionGUID: A6wiTs6QQGmDwdRkkyP9dA==
-X-CSE-MsgGUID: URsf0/YpTWimB9KvhP9LRg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11379"; a="66208799"
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=KSdjX0FfUSl7y+GxVDh/faeFQui6+tylS4V+elc6NWs=;
+  b=SQDbvkg6NyGd/2VX/wJZUfhCgXxpRo3VFOb7tkTi9nIFEouugb8GhrxY
+   E/DzhUsnGO6RCmZYMw0h0R7XIvlayQsxRXdA7W8bcxCY4rd+CWmZ0xVBP
+   NBzyVA6dQoU+64ADKOYBfW2yjYv9W/0pm+LEGQX0HJoClF8babJ8qCtT7
+   4IDea+6cFIVE3KeCaXS60hhASBib1Gj7Zf7kSowQCfS1/TEtYYgR0E+R6
+   23zAgzoM35iKRF8mM1Ksvv9ZvJFFRs+AHPtT+e/wYF+i3u85R6VQpUZ+s
+   d+ofsTJIEYA7fktci+7AZlgoQxCOSz7oYLashYxtK0Ywsq7Whxv4jJmNv
+   Q==;
+X-CSE-ConnectionGUID: tSK0cLZVSCuSl9/CQP1e7w==
+X-CSE-MsgGUID: S/H8pdHmQzi2cDheoWCf5g==
+X-IronPort-AV: E=McAfee;i="6700,10204,11379"; a="66208809"
 X-IronPort-AV: E=Sophos;i="6.14,262,1736841600"; 
-   d="scan'208";a="66208799"
+   d="scan'208";a="66208809"
 Received: from fmviesa002.fm.intel.com ([10.60.135.142])
   by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Mar 2025 11:09:32 -0700
-X-CSE-ConnectionGUID: nt4lqcnGT1qXGgDoHxqSJQ==
-X-CSE-MsgGUID: Diip9h8ORh2XDfNhU7qMYg==
+X-CSE-ConnectionGUID: Q3uWJba8ShmIoJZ26CMBow==
+X-CSE-MsgGUID: EXOOtSFjSzWVx27gaNKn7w==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.14,262,1736841600"; 
-   d="scan'208";a="146405836"
+   d="scan'208";a="146405838"
 Received: from black.fi.intel.com ([10.237.72.28])
   by fmviesa002.fm.intel.com with ESMTP; 20 Mar 2025 11:09:29 -0700
 Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id 869F52A0; Thu, 20 Mar 2025 20:09:27 +0200 (EET)
+	id 97B3A126; Thu, 20 Mar 2025 20:09:27 +0200 (EET)
 From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To: Petr Mladek <pmladek@suse.com>,
 	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
@@ -60,10 +61,12 @@ Cc: John Ogness <john.ogness@linutronix.de>,
 	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
 	Andrew Morton <akpm@linux-foundation.org>,
 	Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Subject: [PATCH v1 0/6] vsprintf: Add __printf attribute to where it's required
-Date: Thu, 20 Mar 2025 20:04:21 +0200
-Message-ID: <20250320180926.4002817-1-andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v1 1/6] seq_buf: Mark binary printing functions with __printf() attribute
+Date: Thu, 20 Mar 2025 20:04:22 +0200
+Message-ID: <20250320180926.4002817-2-andriy.shevchenko@linux.intel.com>
 X-Mailer: git-send-email 2.47.2
+In-Reply-To: <20250320180926.4002817-1-andriy.shevchenko@linux.intel.com>
+References: <20250320180926.4002817-1-andriy.shevchenko@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -73,39 +76,33 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-This whole series started from a simple fix (see the last patch)
-to make GCC (Debian 14.2.0-17) happy when compiling with `make W=1`
-(note, that CONFIG_WERROR=y and all warnings break the build!)
-down to a rabbit hole.
+Binary printing functions are using printf() type of format, and compiler
+is not happy about them as is:
 
-The series is organised in a strict order and can't be split or
-reshuffled, otherwise see above.
+lib/seq_buf.c:162:17: error: function ‘seq_buf_bprintf’ might be a candidate for ‘gnu_printf’ format attribute [-Werror=suggest-attribute=format]
 
-Also note the last patch has a bit of a hackish approach and
-I have no idea how to fix it differently, I tried a few different,
-all failed. So, if you think there is a better one, please advise!
+Fix the compilation errors by adding __printf() attribute.
 
-I believe the best route for the series is printk tree with immutable
-tag or branch for the others.
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ include/linux/seq_buf.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Andy Shevchenko (6):
-  seq_buf: Mark binary printing functions with __printf() attribute
-  seq_file: Mark binary printing functions with __printf() attribute
-  tracing: Mark binary printing functions with __printf() attribute
-  vsnprintf: Mark binary printing functions with __printf() attribute
-  vsnprintf: Mark pointer() with __printf() attribute
-  vsnprintf: Mark va_format() with __printf() attribute
-
- include/linux/printk.h    |  5 ++++-
- include/linux/seq_buf.h   |  4 ++--
- include/linux/seq_file.h  |  1 +
- include/linux/string.h    |  4 ++--
- include/linux/trace_seq.h |  7 ++++---
- kernel/trace/trace.c      |  3 ---
- kernel/trace/trace.h      | 16 +++++++++-------
- lib/vsprintf.c            |  9 +++++----
- 8 files changed, 27 insertions(+), 22 deletions(-)
-
+diff --git a/include/linux/seq_buf.h b/include/linux/seq_buf.h
+index fe41da005970..52791e070506 100644
+--- a/include/linux/seq_buf.h
++++ b/include/linux/seq_buf.h
+@@ -167,8 +167,8 @@ extern int seq_buf_hex_dump(struct seq_buf *s, const char *prefix_str,
+ 			    const void *buf, size_t len, bool ascii);
+ 
+ #ifdef CONFIG_BINARY_PRINTF
+-extern int
+-seq_buf_bprintf(struct seq_buf *s, const char *fmt, const u32 *binary);
++__printf(2, 0)
++int seq_buf_bprintf(struct seq_buf *s, const char *fmt, const u32 *binary);
+ #endif
+ 
+ void seq_buf_do_printk(struct seq_buf *s, const char *lvl);
 -- 
 2.47.2
 
