@@ -1,188 +1,182 @@
-Received: from mail-wm1-f74.google.com (mail-wm1-f74.google.com [209.85.128.74])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABAB4222560
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 20 Mar 2025 10:44:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A97A27701;
+	Thu, 20 Mar 2025 11:42:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742467484; cv=none; b=Cs5D2x7+lDtSHBu3cVK0/K2lDjVEUCSUzr1W0e+G4lg2EJ4KArXNLxzcSyQZRpZ2ZX924Me8Qsq9I6Xe+G4AKSJSMQgD+b/YOViScxSdar2nBnt+pP6eVVxTilpyD8O0254vrDVbQDca9KcDGaaWznmPbgvrR82tcd+VqESZdi0=
+	t=1742470927; cv=none; b=tJcdi/rc0R3EK7qXJZBDOB2NLahOXJV2Ye78L400yLrevJc9ffK1qF1mxmAuXSxyaUAtE4HLhO2tbLoMKfxBVm9HSL/8npQvV9fUR2SjnxRbD+++eUtbuOFR58nd+TE2BEFM03HxPMz/PY01P+H1Wn3brylGZH0a09yLeuht5KU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742467484; c=relaxed/simple;
-	bh=O8zyyL1p84aMCSSYT842uw6SFy2rTfsgAblLzeFkCR0=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=lJ8eonGPsmPvyK72szt0OP3t+VTT6Pr0d/d1GNxdhK5JZzVvTCtz3bDuf3KkjD3/+387AghssP/h9R+6nx+ZJBeJM3bBCP1huby4+jMl2QlGiZ6p2zGWzoqNhvOIExGZaoJ9aKTNEZD7qGKJ8YYR+iQg1J/3iUbngcTi7FtKXJk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--jackmanb.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Kdj3JpaA; arc=none smtp.client-ip=209.85.128.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--jackmanb.bounces.google.com
+	s=arc-20240116; t=1742470927; c=relaxed/simple;
+	bh=HMRR1e3vegCWtPNgWb/evYFL7zXfhK3xc62fYep7GTA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=it5Goph02HafD7ieZa+Irbgy/uUgfcZF0EN4TprX0oGIPUDhKDggKkZ4UStT788assY4pj1h4P/2Yhso9HMm/CsA0/FoD+T2vvyPzpl8iYTaj3VwUcAtHpMB4rcE7Q7QJ1h5Gp0O0iwUOTU/ymZAAruCdBZCfKzronLOdAVgksk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=j0wskPf2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Kdj3JpaA"
-Received: by mail-wm1-f74.google.com with SMTP id 5b1f17b1804b1-43d3b211d0eso9419105e9.1
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 20 Mar 2025 03:44:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1742467480; x=1743072280; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=j11DFSETqOLtc+vMOz1k4rHgXFA118EedepjEdU8Zqw=;
-        b=Kdj3JpaAcTMsJX0fWv0whfnlnrjaZjQkUoIxaVNNWymywgQ1lxYjwO8r7iq1JNp6QM
-         Ojbu13PJrvGpih/A3lZ8h//bm+lQo87tlhkP9QV9OC12v7CPJ6kEgjQXJce0C5ni+hLc
-         WK8hRYGR3L0Fg1Ms6LVwx4HmFLLx967l5J71fKJh2+DS8uT7oCIJlhzicsDfSOQYSkWF
-         sHWVXfORZG9aTGDrruW97o37vT+nFRgMDzAibG+h4BCecMAJVWL9zR8i+Q2//u9V8cvF
-         qTDTgtuLxb6b7EYFGNlNI/IdDW+67sG2wCaCd7GvxlgTKp/aIF7rCtp1mbYDuCw4iql2
-         FLfw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742467480; x=1743072280;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=j11DFSETqOLtc+vMOz1k4rHgXFA118EedepjEdU8Zqw=;
-        b=GzkYiZKEUpi2i0UDSNROpCLDEj1FiJtNIlPBmH1NiFBdN/0QJG7AX3ydTF1DJVFtNv
-         OIIZWAqIsMbiS9gN0D7Ibd/e+fATbreLeDScgs/AvuRiDMcrP5RZjpG9rF0vYg7hN46A
-         KgWEoQaSOVVUDvxrkmONPhfR2EbOiIL38g1IBQW0jMTwlG4VSWVJG2ukBqkjM+grMC6U
-         jmbOBnF0rm5+x7bmyLPu4s1s5Llgyq36GGIHo313f9hPQRbzC+vhAfIGeJrOPE4/1f2A
-         Nyfx1u0TF/o/52jocbw4aZt+x25Kk4XNX1z/vGiwnsRly9PyxOu1/Uk2zi7iF2ShDrB2
-         fIpA==
-X-Forwarded-Encrypted: i=1; AJvYcCWOYnkKjowa1iPSDW3pUlWaF1+dybi76r68cv/liFpfB/6zJlULgwa7sk+3sp7/zLcR6hjBky1Yy6+4YPOyYOq+n5s=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxMgCKrb+61Os8tlyb/f6tEfAjdoagKqO4STP4F3zd9iW44J7PD
-	+ua6UlhxUGLVnOwWKRU2q2MlwEsRqYZou2kKzMIJKKQTjnc70pBkBxTlgBvNBlV4w0kVgdWSSvT
-	J8yJ4dpnJYw==
-X-Google-Smtp-Source: AGHT+IHmhdHTuCMOMffmpvyIMCzJObzjHJotMPvb7/CKZriBN1WJ2Qe2CHVhTxdEuiWThlixsbw8H9oOiShQMA==
-X-Received: from wmgg15.prod.google.com ([2002:a05:600d:f:b0:43b:c450:ea70])
- (user=jackmanb job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:600c:1da2:b0:439:5f04:4f8d with SMTP id 5b1f17b1804b1-43d49187ba9mr20806165e9.12.1742467480075;
- Thu, 20 Mar 2025 03:44:40 -0700 (PDT)
-Date: Thu, 20 Mar 2025 10:44:38 +0000
-In-Reply-To: <Z9sRQ0cK0rupEiT-@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="j0wskPf2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 21EA4C4CEDD;
+	Thu, 20 Mar 2025 11:42:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742470926;
+	bh=HMRR1e3vegCWtPNgWb/evYFL7zXfhK3xc62fYep7GTA=;
+	h=From:To:Cc:Subject:Date:From;
+	b=j0wskPf2nXkswNfKuvs7Wj/jv9Ox9vLIBfdoRid56LnX9zSCo+g0I/zIUxSLaQnwK
+	 zsJo7/RfZ8FT+DiqE/L9P7vkwsiVNdEkbuPeCodtJ5lCxdBW96sZikfumkbdhaGrKp
+	 aYSk/b5WYMLUa1OGXri5GtJvjnZwdBc5ZFPB4eKEe0t4EeswpDscHD/h10Zf5x/Yh/
+	 cKgB3iW4o3vVJjkmXROXplBG5Th3cmnzKYw32+IVOc6iO3PXf7UTYSAHE003sv/pUA
+	 Dz4w3bQ28lltzsSSyxGj3HHfSb0Sqo64E/G+6R3kjtbHhzltnnM9mIsIT4dLF7Cc8D
+	 MjDPuujalt0Hw==
+From: Jiri Olsa <jolsa@kernel.org>
+To: Oleg Nesterov <oleg@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Andrii Nakryiko <andrii@kernel.org>
+Cc: Eyal Birger <eyal.birger@gmail.com>,
+	kees@kernel.org,
+	bpf@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	x86@kernel.org,
+	Song Liu <songliubraving@fb.com>,
+	Yonghong Song <yhs@fb.com>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Hao Luo <haoluo@google.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Alan Maguire <alan.maguire@oracle.com>,
+	David Laight <David.Laight@ACULAB.COM>,
+	=?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <thomas@t-8ch.de>
+Subject: [PATCH RFCv3 00/23] uprobes: Add support to optimize usdt probes on x86_64
+Date: Thu, 20 Mar 2025 12:41:35 +0100
+Message-ID: <20250320114200.14377-1-jolsa@kernel.org>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250110-asi-rfc-v2-v2-0-8419288bc805@google.com>
- <20250110-asi-rfc-v2-v2-4-8419288bc805@google.com> <20250319172935.GMZ9r-_zzXhyhHBLfj@fat_crate.local>
- <Z9sRQ0cK0rupEiT-@google.com>
-X-Mailer: aerc 0.18.2
-Message-ID: <D8L164U8HBTB.G5MS86AIISLM@google.com>
-Subject: Re: [PATCH RFC v2 04/29] mm: asi: Add infrastructure for boot-time enablement
-From: Brendan Jackman <jackmanb@google.com>
-To: Yosry Ahmed <yosry.ahmed@linux.dev>, Borislav Petkov <bp@alien8.de>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>, 
-	Andy Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
-	Josh Poimboeuf <jpoimboe@kernel.org>, Pawan Gupta <pawan.kumar.gupta@linux.intel.com>, 
-	<x86@kernel.org>, <linux-kernel@vger.kernel.org>, 
-	<linux-alpha@vger.kernel.org>, <linux-snps-arc@lists.infradead.org>, 
-	<linux-arm-kernel@lists.infradead.org>, <linux-csky@vger.kernel.org>, 
-	<linux-hexagon@vger.kernel.org>, <loongarch@lists.linux.dev>, 
-	<linux-m68k@lists.linux-m68k.org>, <linux-mips@vger.kernel.org>, 
-	<linux-openrisc@vger.kernel.org>, <linux-parisc@vger.kernel.org>, 
-	<linuxppc-dev@lists.ozlabs.org>, <linux-riscv@lists.infradead.org>, 
-	<linux-s390@vger.kernel.org>, <linux-sh@vger.kernel.org>, 
-	<sparclinux@vger.kernel.org>, <linux-um@lists.infradead.org>, 
-	<linux-arch@vger.kernel.org>, <linux-mm@kvack.org>, 
-	<linux-trace-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>, 
-	<kvm@vger.kernel.org>, <linux-efi@vger.kernel.org>, 
-	Junaid Shahid <junaids@google.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Wed Mar 19, 2025 at 6:47 PM UTC, Yosry Ahmed wrote:
-> On Wed, Mar 19, 2025 at 06:29:35PM +0100, Borislav Petkov wrote:
-> > On Fri, Jan 10, 2025 at 06:40:30PM +0000, Brendan Jackman wrote:
-> > > Add a boot time parameter to control the newly added X86_FEATURE_ASI.
-> > > "asi=on" or "asi=off" can be used in the kernel command line to enable
-> > > or disable ASI at boot time. If not specified, ASI enablement depends
-> > > on CONFIG_ADDRESS_SPACE_ISOLATION_DEFAULT_ON, which is off by default.
-> > 
-> > I don't know yet why we need this default-on thing...
->
-> It's a convenience to avoid needing to set asi=on if you want ASI to be
-> on by default. It's similar to HUGETLB_PAGE_OPTIMIZE_VMEMMAP_DEFAULT_ON
-> or ZSWAP_DEFAULT_ON.
->
-> [..]
-> > > @@ -175,7 +184,11 @@ static __always_inline bool asi_is_restricted(void)
-> > >  	return (bool)asi_get_current();
-> > >  }
-> > >  
-> > > -/* If we exit/have exited, can we stay that way until the next asi_enter? */
-> > > +/*
-> > > + * If we exit/have exited, can we stay that way until the next asi_enter?
-> > 
-> > What is that supposed to mean here?
->
-> asi_is_relaxed() checks if the thread is outside an ASI critical
-> section.
->
-> I say "the thread" because it will also return true if we are executing
-> an interrupt that arrived during the critical section, even though the
-> interrupt handler is not technically part of the critical section.
->
-> Now the reason it says "if we exit we stay that way" is probably
-> referring to the fact that an asi_exit() when interrupting a critical
-> section will be undone in the interrupt epilogue by re-entering ASI.
->
-> I agree the wording here is confusing. We should probably describe this
-> more explicitly and probably rename the function after the API
-> discussions you had in the previous patch.
+hi,
+this patchset adds support to optimize usdt probes on top of 5-byte
+nop instruction.
 
-Yeah, this is confusing. It's trying to very concisely define the
-concept of "relaxed" but now I see it through Boris' eyes I realise
-it's really unhelpful to try and do that. And yeah we should probably
-just rework the terminology/API.
+The generic approach (optimize all uprobes) is hard due to emulating
+possible multiple original instructions and its related issues. The
+usdt case, which stores 5-byte nop seems much easier, so starting
+with that.
 
-To re-iterate what Yosry said, aside from my too-clever comment style
-the more fundamental thing that's confusing here is that, using the
-terminology currently in the code there are two concepts at play:
+The basic idea is to replace breakpoint exception with syscall which
+is faster on x86_64. For more details please see changelog of patch 8.
 
-- The critical section: this is the path from asi_enter() to
-  asi_relax(). The critical section can be interrupted, and code
-  running in those interupts is not said to be "in the critical
-  section".
+The run_bench_uprobes.sh benchmark triggers uprobe (on top of different
+original instructions) in a loop and counts how many of those happened
+per second (the unit below is million loops).
 
-- Being "tense" vs "relaxed". Being "tense" means the _task_ is in a
-  critical section, but the current code might not be.
+There's big speed up if you consider current usdt implementation
+(uprobe-nop) compared to proposed usdt (uprobe-nop5):
 
-This distinction is theoretically relevant because e.g. it's a bug to
-access sensitive data in a critical section, but it's OK to access it
-while in the tense state (we will switch to the restricted address
-space, but this is OK because we will have a chance to asi_enter()
-again before we get back to the untrusted code). 
+current:
+        usermode-count :  152.604 ± 0.044M/s
+        syscall-count  :   13.359 ± 0.042M/s
+-->     uprobe-nop     :    3.229 ± 0.002M/s
+        uprobe-push    :    3.086 ± 0.004M/s
+        uprobe-ret     :    1.114 ± 0.004M/s
+        uprobe-nop5    :    1.121 ± 0.005M/s
+        uretprobe-nop  :    2.145 ± 0.002M/s
+        uretprobe-push :    2.070 ± 0.001M/s
+        uretprobe-ret  :    0.931 ± 0.001M/s
+        uretprobe-nop5 :    0.957 ± 0.001M/s
 
-BTW, just to be clear:
+after the change:
+        usermode-count :  152.448 ± 0.244M/s
+        syscall-count  :   14.321 ± 0.059M/s
+        uprobe-nop     :    3.148 ± 0.007M/s
+        uprobe-push    :    2.976 ± 0.004M/s
+        uprobe-ret     :    1.068 ± 0.003M/s
+-->     uprobe-nop5    :    7.038 ± 0.007M/s
+        uretprobe-nop  :    2.109 ± 0.004M/s
+        uretprobe-push :    2.035 ± 0.001M/s
+        uretprobe-ret  :    0.908 ± 0.001M/s
+        uretprobe-nop5 :    3.377 ± 0.009M/s
 
-1. Both of these are only relevant to code that's pretty deeply aware
-   of ASI. (TLB flushing code, entry code, stuff like that).
+I see bit more speed up on Intel (above) compared to AMD. The big nop5
+speed up is partly due to emulating nop5 and partly due to optimization.
 
-2. To be honest whenever you write:
+The key speed up we do this for is the USDT switch from nop to nop5:
+        uprobe-nop     :    3.148 ± 0.007M/s
+        uprobe-nop5    :    7.038 ± 0.007M/s
 
-     if (asi_in_critical_section())
 
-   You probably mean:
+rfc v3 changes:
+- I tried to have just single syscall for both entry and return uprobe,
+  but it turned out to be slower than having two separated syscalls,
+  probably due to extra save/restore processing we have to do for
+  argument reg, I see differences like:
 
-     if (WARN_ON(asi_in_critical_section()))
+    2 syscalls:      uprobe-nop5    :    7.038 ± 0.007M/s
+    1 syscall:       uprobe-nop5    :    6.943 ± 0.003M/s
 
-   For example if we try to flush the TLB in the critical section,
-   there's a thing we can do to handle it. But that really shouldn't
-   be necessary.  We want the critical section code to be very small
-   and straight-line code.
+- use instructions (nop5/int3/call) to determine the state of the
+  uprobe update in the process
+- removed endbr instruction from uprobe trampoline
+- seccomp changes
 
-   And indeed in the present code we don't use
-   asi_in_critical_section() for anything bur WARNing.
+pending todo (or follow ups):
+- shadow stack fails for uprobe session setup, will fix it in next version
+- use PROCMAP_QUERY in tests
+- alloc 'struct uprobes_state' for mm_struct only when needed [Andrii]
 
-> asi_is_relaxed() checks if the thread is outside an ASI critical
-> section.
+thanks,
+jirka
 
-Now I see it written this way, this is probably the best way to
-conceptualise it. Instead of having two concepts "tense/relaxed" vs
-"ASI critical section" we could just say "the task is in a critical
-section" vs "the CPU is in a critical section". So we could have
-something like:
 
-bool asi_task_critical(void);
-bool asi_cpu_critical(void);
+Cc: Eyal Birger <eyal.birger@gmail.com>
+Cc: kees@kernel.org
+---
+Jiri Olsa (23):
+      uprobes: Rename arch_uretprobe_trampoline function
+      uprobes: Make copy_from_page global
+      uprobes: Move ref_ctr_offset update out of uprobe_write_opcode
+      uprobes: Add uprobe_write function
+      uprobes: Add nbytes argument to uprobe_write_opcode
+      uprobes: Add orig argument to uprobe_write and uprobe_write_opcode
+      uprobes: Remove breakpoint in unapply_uprobe under mmap_write_lock
+      uprobes/x86: Add uprobe syscall to speed up uprobe
+      uprobes/x86: Add mapping for optimized uprobe trampolines
+      uprobes/x86: Add support to emulate nop5 instruction
+      uprobes/x86: Add support to optimize uprobes
+      selftests/bpf: Use 5-byte nop for x86 usdt probes
+      selftests/bpf: Reorg the uprobe_syscall test function
+      selftests/bpf: Rename uprobe_syscall_executed prog to test_uretprobe_multi
+      selftests/bpf: Add uprobe/usdt syscall tests
+      selftests/bpf: Add hit/attach/detach race optimized uprobe test
+      selftests/bpf: Add uprobe syscall sigill signal test
+      selftests/bpf: Add optimized usdt variant for basic usdt test
+      selftests/bpf: Add uprobe_regs_equal test
+      selftests/bpf: Change test_uretprobe_regs_change for uprobe and uretprobe
+      selftests/bpf: Add 5-byte nop uprobe trigger bench
+      seccomp: passthrough uprobe systemcall without filtering
+      selftests/seccomp: validate uprobe syscall passes through seccomp
 
-(They could also accept an argument for the task/CPU, but I can't see
-any reason why you'd peek at another context like that).
-
---
-
-For everything else, Ack to Boris or +1 to Yosry respectively.
+ arch/arm/probes/uprobes/core.c                              |   2 +-
+ arch/x86/entry/syscalls/syscall_64.tbl                      |   1 +
+ arch/x86/include/asm/uprobes.h                              |   7 ++
+ arch/x86/kernel/uprobes.c                                   | 540 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-
+ include/linux/syscalls.h                                    |   2 +
+ include/linux/uprobes.h                                     |  19 +++-
+ kernel/events/uprobes.c                                     | 141 +++++++++++++++++-------
+ kernel/fork.c                                               |   1 +
+ kernel/seccomp.c                                            |  32 ++++--
+ kernel/sys_ni.c                                             |   1 +
+ tools/testing/selftests/bpf/bench.c                         |  12 +++
+ tools/testing/selftests/bpf/benchs/bench_trigger.c          |  42 ++++++++
+ tools/testing/selftests/bpf/benchs/run_bench_uprobes.sh     |   2 +-
+ tools/testing/selftests/bpf/prog_tests/uprobe_syscall.c     | 453 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++------
+ tools/testing/selftests/bpf/prog_tests/usdt.c               |  38 ++++---
+ tools/testing/selftests/bpf/progs/uprobe_syscall.c          |   4 +-
+ tools/testing/selftests/bpf/progs/uprobe_syscall_executed.c |  41 ++++++-
+ tools/testing/selftests/bpf/sdt.h                           |   9 +-
+ tools/testing/selftests/bpf/test_kmods/bpf_testmod.c        |  11 +-
+ tools/testing/selftests/seccomp/seccomp_bpf.c               | 107 ++++++++++++++----
+ 20 files changed, 1338 insertions(+), 127 deletions(-)
