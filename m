@@ -1,55 +1,66 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57D2122069E;
-	Thu, 20 Mar 2025 11:46:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BF291EDA3A
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 20 Mar 2025 12:24:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742471184; cv=none; b=WuoMehbOnmIqP5xYCiZe+aoT8u83kkZmKSH36Ik+cQNPtoIiMRqqlhGWNg0/yH9BAuL56XjmkuE/r/J1irjuObhuqa7HExaP4zlIztDq9z6VKCyfdVsZUAJYfUPco5uZo9WWyNgP6Fa2Qi8AOaLY6wzTVAaMitWNtL622UMip5k=
+	t=1742473473; cv=none; b=IoAmjveGa8dFlWKXT6d6kHyjR6cDP+k/zD4RsAfqBcOFgtlXyP6xpKw4y2Oc4ioYNS84UQuXfdEM59X5NlWmyFm8MTBpWHD3M7SuIrtSkEX3ykOzrLNE5sAWzSyR0CaR2BuLrWs3ZKe2nBHdAg0hWtEeGvrXTNCgZ7K9N+q4Jxg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742471184; c=relaxed/simple;
-	bh=AAFB/NCthdq0rf230MlMoOzGwG+K6ke/b4IU4zIQqyQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=HNYTrWXFNTS9Jt/ASUTLCo+/+f4uj1c1A1G1WBL32mHrJ/hYvgQWIg/50SK7M4zzL7J+GSWG+JmYqclxKqx87FkUmrJpie+zXGNEsLUSQT1bdYtkkdla6rBzz11XpYZgH223O6syabeBPQEIuBRu6EK1WyTnyaM/zFnzinY21jI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JkxcIW7i; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1742473473; c=relaxed/simple;
+	bh=dpO6ubdCV4Jcojf4GwweKX78np6EMp++yJkz2nXW+U0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OXLRYvDsjjeIVAR71vWNu8XZwpPaAm6gt+RhZr51J0cSuNAPlbVz7Pn/qAJw43hGTDg62znMjiulMwgnZKblnOPKRUGZJ4/Dl8QpQ9bWp9hrPAAaN1Q+oV2WK3RYyUykLnVYJ+8Mb0JqJtyssb0VK//XosDmROq5S3D39YN2idQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=diH5hrVo; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JkxcIW7i"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 809C6C4CEDD;
-	Thu, 20 Mar 2025 11:46:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742471183;
-	bh=AAFB/NCthdq0rf230MlMoOzGwG+K6ke/b4IU4zIQqyQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=JkxcIW7ipMis8LnLWr3BqKdkQgGZpt0AQNskj1AuOppWOC+Yq6/pAcqoYeBHG3oFS
-	 N2YtpwkfwhihxOQ+Yyig3mHXJFhJPkRBEyPjrpkhVuNpYh85cDeNNNN0M288aqVZh9
-	 v5t01imCKx34Wb4mr5dCBhcG60j5w1nWVPNSfXAM3vsWMYYcvayK9kHOBcZhHRTXd0
-	 PA623yrviGwMn/Kh+dj/Dv508wGY5VkEgOQMrMFgTfPiigPjlHFWMC4IEO3W+5XcX0
-	 1uJ7oRoRK8KdNz/6Q8+Zs/jlrHoBiciQCnJ5Qm/tYcuWB78MGvGsiO8srhg/NJTEWg
-	 TXwWIB3LLpD5g==
-From: Jiri Olsa <jolsa@kernel.org>
-To: Oleg Nesterov <oleg@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Andrii Nakryiko <andrii@kernel.org>
-Cc: Kees Cook <keescook@chromium.org>,
-	Eyal Birger <eyal.birger@gmail.com>,
-	bpf@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	x86@kernel.org,
-	Song Liu <songliubraving@fb.com>,
-	Yonghong Song <yhs@fb.com>,
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="diH5hrVo"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1742473471;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=4uGZqzYjztCp2uORK/QZb2BhLpTrU8dIV38xdYBgzA8=;
+	b=diH5hrVoIQn3Jr/Cl8X5KWoYDiXesrCkxTloAQ8PQ3M6MrWQtL3vys0xX9cDvTwjcgDnyj
+	3qUFaLX0moPKed50bNhFHOMBGtGrG6sHnhLsOL7mOAAGw4JuSI8/wrT3dNI/YXVD9Q+G3Q
+	NJwHWUKjV+bguZ4ofnFyw/0lAvI1hgk=
+Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-440-oED42QQlNRmQAD0mRp2UNQ-1; Thu,
+ 20 Mar 2025 08:24:27 -0400
+X-MC-Unique: oED42QQlNRmQAD0mRp2UNQ-1
+X-Mimecast-MFC-AGG-ID: oED42QQlNRmQAD0mRp2UNQ_1742473465
+Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id EADB01933B41;
+	Thu, 20 Mar 2025 12:24:24 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.226.12])
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 1B77C1800370;
+	Thu, 20 Mar 2025 12:24:17 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Thu, 20 Mar 2025 13:23:52 +0100 (CET)
+Date: Thu, 20 Mar 2025 13:23:44 +0100
+From: Oleg Nesterov <oleg@redhat.com>
+To: Jiri Olsa <jolsa@kernel.org>, David Hildenbrand <david@redhat.com>
+Cc: Peter Zijlstra <peterz@infradead.org>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Eyal Birger <eyal.birger@gmail.com>, kees@kernel.org,
+	bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, x86@kernel.org,
+	Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
 	John Fastabend <john.fastabend@gmail.com>,
-	Hao Luo <haoluo@google.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
+	Hao Luo <haoluo@google.com>, Steven Rostedt <rostedt@goodmis.org>,
 	Masami Hiramatsu <mhiramat@kernel.org>,
 	Alan Maguire <alan.maguire@oracle.com>,
 	David Laight <David.Laight@ACULAB.COM>,
-	=?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <thomas@t-8ch.de>
-Subject: [PATCH RFCv3 23/23] selftests/seccomp: validate uprobe syscall passes through seccomp
-Date: Thu, 20 Mar 2025 12:41:58 +0100
-Message-ID: <20250320114200.14377-24-jolsa@kernel.org>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250320114200.14377-1-jolsa@kernel.org>
+	Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas@t-8ch.de>
+Subject: Re: [PATCH RFCv3 00/23] uprobes: Add support to optimize usdt probes
+ on x86_64
+Message-ID: <20250320122343.GC11256@redhat.com>
 References: <20250320114200.14377-1-jolsa@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -57,228 +68,28 @@ List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250320114200.14377-1-jolsa@kernel.org>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
 
-Adding uprobe checks into the current uretprobe tests.
+On 03/20, Jiri Olsa wrote:
+>
+> hi,
+> this patchset adds support to optimize usdt probes on top of 5-byte
+> nop instruction.
 
-All the related tests are now executed with attached uprobe
-or uretprobe or without any probe.
+Just in case... This series conflicts with (imo very important) changes
+from David,
 
-Renaming the test fixture to uprobe, because it seems better.
+	[PATCH v2 0/3] kernel/events/uprobes: uprobe_write_opcode() rewrite
+	https://lore.kernel.org/all/20250318221457.3055598-1-david@redhat.com/
 
-Cc: Kees Cook <keescook@chromium.org>
-Cc: Eyal Birger <eyal.birger@gmail.com>
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
----
- tools/testing/selftests/seccomp/seccomp_bpf.c | 107 ++++++++++++++----
- 1 file changed, 86 insertions(+), 21 deletions(-)
+I think they should be merged first.
 
-diff --git a/tools/testing/selftests/seccomp/seccomp_bpf.c b/tools/testing/selftests/seccomp/seccomp_bpf.c
-index 14ba51b52095..794787786968 100644
---- a/tools/testing/selftests/seccomp/seccomp_bpf.c
-+++ b/tools/testing/selftests/seccomp/seccomp_bpf.c
-@@ -73,6 +73,14 @@
- #define noinline __attribute__((noinline))
- #endif
- 
-+#ifndef __nocf_check
-+#define __nocf_check __attribute__((nocf_check))
-+#endif
-+
-+#ifndef __naked
-+#define __naked __attribute__((__naked__))
-+#endif
-+
- #ifndef PR_SET_NO_NEW_PRIVS
- #define PR_SET_NO_NEW_PRIVS 38
- #define PR_GET_NO_NEW_PRIVS 39
-@@ -4893,7 +4901,36 @@ TEST(tsync_vs_dead_thread_leader)
- 	EXPECT_EQ(0, status);
- }
- 
--noinline int probed(void)
-+#ifdef __x86_64__
-+
-+/*
-+ * We need naked probed_uprobe function. Using __nocf_check
-+ * check to skip possible endbr64 instruction and ignoring
-+ * -Wattributes, otherwise the compilation might fail.
-+ */
-+#pragma GCC diagnostic push
-+#pragma GCC diagnostic ignored "-Wattributes"
-+
-+__naked __nocf_check noinline int probed_uprobe(void)
-+{
-+	/*
-+	 * Optimized uprobe is possible only on top of nop5 instruction.
-+	 */
-+	asm volatile ("                                 \n"
-+		".byte 0x0f, 0x1f, 0x44, 0x00, 0x00     \n"
-+		"ret                                    \n"
-+	);
-+}
-+#pragma GCC diagnostic pop
-+
-+#else
-+noinline int probed_uprobe(void)
-+{
-+	return 1;
-+}
-+#endif
-+
-+noinline int probed_uretprobe(void)
- {
- 	return 1;
- }
-@@ -4946,35 +4983,46 @@ static ssize_t get_uprobe_offset(const void *addr)
- 	return found ? (uintptr_t)addr - start + base : -1;
- }
- 
--FIXTURE(URETPROBE) {
-+FIXTURE(UPROBE) {
- 	int fd;
- };
- 
--FIXTURE_VARIANT(URETPROBE) {
-+FIXTURE_VARIANT(UPROBE) {
- 	/*
--	 * All of the URETPROBE behaviors can be tested with either
--	 * uretprobe attached or not
-+	 * All of the U(RET)PROBE behaviors can be tested with either
-+	 * u(ret)probe attached or not
- 	 */
- 	bool attach;
-+	/*
-+	 * Test both uprobe and uretprobe.
-+	 */
-+	bool uretprobe;
- };
- 
--FIXTURE_VARIANT_ADD(URETPROBE, attached) {
-+FIXTURE_VARIANT_ADD(UPROBE, not_attached) {
-+	.attach = false,
-+	.uretprobe = false,
-+};
-+
-+FIXTURE_VARIANT_ADD(UPROBE, uprobe_attached) {
- 	.attach = true,
-+	.uretprobe = false,
- };
- 
--FIXTURE_VARIANT_ADD(URETPROBE, not_attached) {
--	.attach = false,
-+FIXTURE_VARIANT_ADD(UPROBE, uretprobe_attached) {
-+	.attach = true,
-+	.uretprobe = true,
- };
- 
--FIXTURE_SETUP(URETPROBE)
-+FIXTURE_SETUP(UPROBE)
- {
- 	const size_t attr_sz = sizeof(struct perf_event_attr);
- 	struct perf_event_attr attr;
- 	ssize_t offset;
- 	int type, bit;
- 
--#ifndef __NR_uretprobe
--	SKIP(return, "__NR_uretprobe syscall not defined");
-+#if !defined(__NR_uprobe) || !defined(__NR_uretprobe)
-+	SKIP(return, "__NR_uprobe ot __NR_uretprobe syscalls not defined");
- #endif
- 
- 	if (!variant->attach)
-@@ -4984,12 +5032,17 @@ FIXTURE_SETUP(URETPROBE)
- 
- 	type = determine_uprobe_perf_type();
- 	ASSERT_GE(type, 0);
--	bit = determine_uprobe_retprobe_bit();
--	ASSERT_GE(bit, 0);
--	offset = get_uprobe_offset(probed);
-+
-+	if (variant->uretprobe) {
-+		bit = determine_uprobe_retprobe_bit();
-+		ASSERT_GE(bit, 0);
-+	}
-+
-+	offset = get_uprobe_offset(variant->uretprobe ? probed_uretprobe : probed_uprobe);
- 	ASSERT_GE(offset, 0);
- 
--	attr.config |= 1 << bit;
-+	if (variant->uretprobe)
-+		attr.config |= 1 << bit;
- 	attr.size = attr_sz;
- 	attr.type = type;
- 	attr.config1 = ptr_to_u64("/proc/self/exe");
-@@ -5000,7 +5053,7 @@ FIXTURE_SETUP(URETPROBE)
- 			   PERF_FLAG_FD_CLOEXEC);
- }
- 
--FIXTURE_TEARDOWN(URETPROBE)
-+FIXTURE_TEARDOWN(UPROBE)
- {
- 	/* we could call close(self->fd), but we'd need extra filter for
- 	 * that and since we are calling _exit right away..
-@@ -5014,11 +5067,17 @@ static int run_probed_with_filter(struct sock_fprog *prog)
- 		return -1;
- 	}
- 
--	probed();
-+	/*
-+	 * Uprobe is optimized after first hit, so let's hit twice.
-+	 */
-+	probed_uprobe();
-+	probed_uprobe();
-+
-+	probed_uretprobe();
- 	return 0;
- }
- 
--TEST_F(URETPROBE, uretprobe_default_allow)
-+TEST_F(UPROBE, uprobe_default_allow)
- {
- 	struct sock_filter filter[] = {
- 		BPF_STMT(BPF_RET|BPF_K, SECCOMP_RET_ALLOW),
-@@ -5031,7 +5090,7 @@ TEST_F(URETPROBE, uretprobe_default_allow)
- 	ASSERT_EQ(0, run_probed_with_filter(&prog));
- }
- 
--TEST_F(URETPROBE, uretprobe_default_block)
-+TEST_F(UPROBE, uprobe_default_block)
- {
- 	struct sock_filter filter[] = {
- 		BPF_STMT(BPF_LD|BPF_W|BPF_ABS,
-@@ -5048,11 +5107,14 @@ TEST_F(URETPROBE, uretprobe_default_block)
- 	ASSERT_EQ(0, run_probed_with_filter(&prog));
- }
- 
--TEST_F(URETPROBE, uretprobe_block_uretprobe_syscall)
-+TEST_F(UPROBE, uprobe_block_syscall)
- {
- 	struct sock_filter filter[] = {
- 		BPF_STMT(BPF_LD|BPF_W|BPF_ABS,
- 			offsetof(struct seccomp_data, nr)),
-+#ifdef __NR_uprobe
-+		BPF_JUMP(BPF_JMP|BPF_JEQ|BPF_K, __NR_uprobe, 1, 2),
-+#endif
- #ifdef __NR_uretprobe
- 		BPF_JUMP(BPF_JMP|BPF_JEQ|BPF_K, __NR_uretprobe, 0, 1),
- #endif
-@@ -5067,11 +5129,14 @@ TEST_F(URETPROBE, uretprobe_block_uretprobe_syscall)
- 	ASSERT_EQ(0, run_probed_with_filter(&prog));
- }
- 
--TEST_F(URETPROBE, uretprobe_default_block_with_uretprobe_syscall)
-+TEST_F(UPROBE, uprobe_default_block_with_syscall)
- {
- 	struct sock_filter filter[] = {
- 		BPF_STMT(BPF_LD|BPF_W|BPF_ABS,
- 			offsetof(struct seccomp_data, nr)),
-+#ifdef __NR_uprobe
-+		BPF_JUMP(BPF_JMP|BPF_JEQ|BPF_K, __NR_uprobe, 3, 0),
-+#endif
- #ifdef __NR_uretprobe
- 		BPF_JUMP(BPF_JMP|BPF_JEQ|BPF_K, __NR_uretprobe, 2, 0),
- #endif
--- 
-2.49.0
+(and I am not sure yet, but it seems that we should cleanup (fix?) the
+ update_ref_ctr() logic before other changes).
+
+Oleg.
 
