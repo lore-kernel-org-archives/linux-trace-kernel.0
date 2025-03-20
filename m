@@ -1,75 +1,75 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6258936AF5
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 20 Mar 2025 20:31:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3BA9227EA3
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 20 Mar 2025 20:36:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742502721; cv=none; b=Z2yMmwiPoeSaw/dFRrsf7L7H3ZSVAQkiunSrV5MgxdNMfgnsuI0jnGdD9JBo4i6dCfSqaqtzcAWZgOCfmg0TsgMTxpWkEhONk3SLewpW5q89j9w1UB3MHY+JuZ6I9ADoJWeMHrAcEEXjstOHxfVkkaHjjqIpu52943aEhj1Hsmk=
+	t=1742502981; cv=none; b=bObYEWB/hurRzW/KC6D8hv2qoKRHSCtcc5X5nNz9qJAgs/qR7FWElr/PmkVqJ5/aR6NftsY8fAHquYZfor76SKQLuzoDGxFQbOpN/slJXYXvawLIH+/cXOxxmFGYCQPvAJ7biHPY5/2jt7daTdwBaxHEw3D5IDlvKVwEehY6nxc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742502721; c=relaxed/simple;
-	bh=2tV+k+LBk+tVq13k3Y51obWTupsNyQ9CIrTpML8b0kc=;
+	s=arc-20240116; t=1742502981; c=relaxed/simple;
+	bh=HNI3+8j2uUg+iUrX5QfJ8q4x1m2XlYX6YegdFOe8SbQ=;
 	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=PONrsjLbDB/s8tL7lqPHb8/gwdlw3rnNnp9e96rEGOTH1eEuzdeTcRXx9RAP0GFQOe1Y07m4jGh2ANmeSYI6EA+2VnGDVu8rdYZK7fQ598J/SqX9piPYYaqdmVifZFTDeqzi/y31XnSDbbrflD/zNdXxHbKwVAujJF5LTpH0+pU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=U/966yxx; arc=none smtp.client-ip=170.10.133.124
+	 MIME-Version:Content-Type; b=lEvNKfsQJkvcPqezkAAkYy+8hZVCCzwSHBZqrUz/F5TMG8CU1ywTGE9ZMbFch1JwNNsSnH/lLoRiJgQvj03+rIXPViRbL4xK1ra6r773EiMO2mdnPO+udvYCaxMHL6ikuiWKNF3wrHq3vjiwMBgV9K2vfpdsaLULySQ0ZjkKtqw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=jQmCA8Gh; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="U/966yxx"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="jQmCA8Gh"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1742502718;
+	s=mimecast20190719; t=1742502978;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Cs78ufWo2bSJSKRY/bRQ3KlIEcRDlnNhDJQo1byueYo=;
-	b=U/966yxxe72wcDW0YCVFkjTr5R3LZ/pFFXdOpvTYTbVN33JQUiY2XJR2wqJz4BpxS0cV3a
-	AEgHITSwPgbUCTXBxiJSM6dFW8EtMoozT6klOP39PB8rLBKBu2HZivYmj0Evdi8e2J9Awk
-	Xt95ORwB5XTFVhk4Fbnw2Dd8DMh4Smw=
-Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com
- [209.85.160.198]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=wt6bgZEsyM6VG0/rKn/P//sJOGO57/PIOicF9noce8g=;
+	b=jQmCA8GhfGw/6z6DCM5KOZjwqZq2QKp/+D0y/T/GJqvPxl2W9eNBUOF5xvPnr6Rd6A3QOI
+	A6f49oU/ncgLBGDt61PEUxOOi490s7hGQUepIQUxy7a2aT1D+vK5OdtgedbmaBmhuXRg+r
+	nTeMBLzw9sTX/+GtQw+UhouTW1GKRjY=
+Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com
+ [209.85.160.200]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-494-Q6n2_8BbMUmgKZlAqZZsxg-1; Thu, 20 Mar 2025 16:31:56 -0400
-X-MC-Unique: Q6n2_8BbMUmgKZlAqZZsxg-1
-X-Mimecast-MFC-AGG-ID: Q6n2_8BbMUmgKZlAqZZsxg_1742502715
-Received: by mail-qt1-f198.google.com with SMTP id d75a77b69052e-476b2179079so22665911cf.1
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 20 Mar 2025 13:31:55 -0700 (PDT)
+ us-mta-622-E5zljbB6ONuoQkwf8onKGA-1; Thu, 20 Mar 2025 16:36:17 -0400
+X-MC-Unique: E5zljbB6ONuoQkwf8onKGA-1
+X-Mimecast-MFC-AGG-ID: E5zljbB6ONuoQkwf8onKGA_1742502977
+Received: by mail-qt1-f200.google.com with SMTP id d75a77b69052e-47689dc0f6dso21263331cf.3
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 20 Mar 2025 13:36:17 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742502715; x=1743107515;
+        d=1e100.net; s=20230601; t=1742502977; x=1743107777;
         h=mime-version:references:message-id:in-reply-to:subject:cc:to:from
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Cs78ufWo2bSJSKRY/bRQ3KlIEcRDlnNhDJQo1byueYo=;
-        b=KcPOX5sFG5s5Vboy5K12tPt3Obwa9Hle5IQ7Pmj0u6LwLc2UdmgZorIysry7VzhKGu
-         oIUzo7TS8ikFt9C9/KZQyvUMOc5xoeB3MNwd+SdvsXFJjSkLKEiq+llnYVkbf2gc+VT+
-         fiflwdhf6Y2zRfFypIX94JQNPHo0hO4RFuo+ZHuVhkQJf7DnqLyUC25xagp1wxswmfCM
-         WGxCKoanFQKYXERV1TOVOLtFKMmnTVZK5g0jhEjMVeiWGmliL1Ma3bGreVMf7vYWI0JP
-         tf8BaHN/lwKus277dlSPPF/xPH5f/b7+cYC+YA1AgDXJ9gTvhuKCQvooXgZTJHp2bhJE
-         /fYQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVjl7A2jctunZLVDvkiD00otnNn+nAI1DSFbTrxLB8nudoM13St70EicGiDZQmfzTnZw2i0FZ6CbLNYAXXAM2ujWc4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwD3bN7zSM7+aCSYdEYypHK/eiij1sq4kTGPKDE5RBqCRN9hT2e
-	0vj8l6u+hsS16vVfEy+lC7KZn3TPJLMPMtTYmSEOVaZ7tOcNtapQUM2xIZEBri5ogWmcmnZQf7f
-	QI6GtURVujHYJvYnb3FRV1aPVMp39bzT/B3a+6MbnIZtmJy/tdeeg64eZTM0OU7UqlKCWsA==
-X-Gm-Gg: ASbGnct+uX41PGYf58bhIG53c31ca8gVnhVur39s1vZgZMKybHcMbWTll8bjPNLWUZz
-	xmtgNRh0O7kwitfoC5tgaphuo8cxvjx8MqVfrJzwU6r6hC4MBiGBt2CqZ1M26lufHEIUKeRlS07
-	DVJSiws+0pu7HNqC5oRk24uqBHru26AOns85dKJQHuFN/H0GK/Xeitn+if402IPAXP0OGXMJMZd
-	YVEt6KTv1t8N+36v4w/ByBdDvvmsDHQYayeZ+QmaSOeyt7G/3MAHOavGpHr/NFneyVwK2IkgKit
-X-Received: by 2002:ac8:71ce:0:b0:477:1eec:e355 with SMTP id d75a77b69052e-4771eed082bmr2367141cf.3.1742502715245;
-        Thu, 20 Mar 2025 13:31:55 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEbgJAMPPYKZh9vIiVrvuQuTmRjSYeYhTU4Xkf9NWImKq7CokOQ3ONC+sh5/MiuNZxDyvWfIw==
-X-Received: by 2002:ac8:71ce:0:b0:477:1eec:e355 with SMTP id d75a77b69052e-4771eed082bmr2366741cf.3.1742502714704;
-        Thu, 20 Mar 2025 13:31:54 -0700 (PDT)
+        bh=wt6bgZEsyM6VG0/rKn/P//sJOGO57/PIOicF9noce8g=;
+        b=M41S3fRiiu/zbyZXCJyPBxG9FsjbcSR577bVZ4rzA7asmfcobYpTgVfc0/iVgqiQxF
+         vATCSo9jV9QpGIi/lLSMUSYXHyDH5ghhsBfg2u8YT1b0RRwqdV4/rqimHxlSlUXi9T+p
+         fPH7nEBIbOjn/Y784xvcU2Ls24oNuyK3tXZibjIKsGEi+CeS7PF79c8Q9dbAfmzX7qSv
+         +Y39Tspo+X+Pso4QemgrGQgN9TkNYkjg0l6LZERu5lsjKImED2VAPZkk7Zdt0iab8vJR
+         XnACl50Ys5fKjJ46npHjqTTQVwphUerKKeW1IO524T8GMDqWTSFnqYYwiQKnCHWXUIT7
+         q35w==
+X-Forwarded-Encrypted: i=1; AJvYcCVxYxgr5kn5SuoqbeBwIFVRPZYxQG4YfITr07nfoOAep7Ki2GL+EVCRMYUyidqYc89r44A6qGzs5dWX/73GpbJUDgM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwZO29lndACRMlg6VOLtLwChWy1NRsQoCVEhfwD8MgsECgAdKVV
+	khQbF9API6qRSrFvziEE1KPDULrgVgJ08dWshRXN4zlyOSQ3q6RvSvBVDv0UWH9iwcVJXZ7u4/1
+	TQnd0ZhSbbWqw192OXi+9txu3WdbqxCjVL/1Z/xaX1H8f07d0uhuktN5i7NbfG1y4dc9opg==
+X-Gm-Gg: ASbGncvytu4GNCAgSQo6ImUGmyT1BAwoqOu0MnX8uGCDJ9D0zzHOpRhPECaWOfotH+4
+	VsZmr3XbIqcPMEs0X5bHQWaboo1eYVXQlQV7Q+oes6AtqFeCmBj50WnlI+PSdJjSj+tq8aBFycA
+	/ldcKqp+xaKFRyPdlDT33pUuxcJaSIUV/IG5Kck+1W7hrSb1L60hytAP6owtqDKviw2QM7hmMpT
+	sCMBtSUFuIpfIh9Qesqst4Yf9GTTODkQpcjXIXs3uDr0sLxQtA2G7F2wLYMUHvdxdjgsvVtN3yw
+X-Received: by 2002:a05:622a:1f89:b0:476:7bd1:68dd with SMTP id d75a77b69052e-4771de7deadmr13620601cf.50.1742502977168;
+        Thu, 20 Mar 2025 13:36:17 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFc6nQvnoQrcX1ByqFsZNWw+StGQCeklVgridhqC3mGlG9suOczgaIZuDOEPlY7AITfEcVPCg==
+X-Received: by 2002:a05:622a:1f89:b0:476:7bd1:68dd with SMTP id d75a77b69052e-4771de7deadmr13620071cf.50.1742502976694;
+        Thu, 20 Mar 2025 13:36:16 -0700 (PDT)
 Received: from fionn ([76.69.33.37])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4771d51fec4sm2708811cf.52.2025.03.20.13.31.53
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4771d6361b6sm2726701cf.74.2025.03.20.13.36.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Mar 2025 13:31:54 -0700 (PDT)
-Date: Thu, 20 Mar 2025 16:31:42 -0400 (EDT)
+        Thu, 20 Mar 2025 13:36:16 -0700 (PDT)
+Date: Thu, 20 Mar 2025 16:36:05 -0400 (EDT)
 From: John Kacur <jkacur@redhat.com>
 To: Tomas Glozar <tglozar@redhat.com>
 cc: Steven Rostedt <rostedt@goodmis.org>, linux-trace-kernel@vger.kernel.org, 
     linux-kernel@vger.kernel.org, Luis Goncalves <lgoncalv@redhat.com>
-Subject: Re: [PATCH 4/6] rtla: Always set all tracer options
-In-Reply-To: <20250320092500.101385-5-tglozar@redhat.com>
-Message-ID: <8e41f0ee-7534-eedb-0a67-184ac195baf4@redhat.com>
-References: <20250320092500.101385-1-tglozar@redhat.com> <20250320092500.101385-5-tglozar@redhat.com>
+Subject: Re: [PATCH 5/6] rtla/tests: Reset osnoise options before check
+In-Reply-To: <20250320092500.101385-6-tglozar@redhat.com>
+Message-ID: <ea016692-37b4-7d18-ffcc-3c7a145bf59e@redhat.com>
+References: <20250320092500.101385-1-tglozar@redhat.com> <20250320092500.101385-6-tglozar@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -77,7 +77,7 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: 19KMAWizT_Yp-DIRRwUg_OxA0Nq_AdrWuacX0taNqVc_1742502715
+X-Mimecast-MFC-PROC-ID: IZL389On2Q_Z5_WMGQONjPrtCgkXhaeJ8IEUQ_04n7s_1742502977
 X-Mimecast-Originator: redhat.com
 Content-Type: text/plain; charset=US-ASCII
 
@@ -85,238 +85,87 @@ Content-Type: text/plain; charset=US-ASCII
 
 On Thu, 20 Mar 2025, Tomas Glozar wrote:
 
-> rtla currently only sets tracer options that are explicitly set by the
-> user, with the exception of OSNOISE_WORKLOAD.
+> Remove any dangling tracing instances from previous improperly exited
+> runs of rtla, and reset osnoise options to default before running a test
+> case.
 > 
-> This leads to improper behavior in case rtla is run with those options
-> not set to the default value. rtla does reset them to the original
-> value upon exiting, but that does not protect it from starting with
-> non-default values set either by an improperly exited rtla or by another
-> user of the tracers.
+> This ensures that the test results are deterministic. Specific test
+> cases checked that rtla behaves correctly even when the tracer state is
+> not clean will be added later.
 > 
-> For example, after running this command:
-> 
-> $ echo 1 > /sys/kernel/tracing/osnoise/stop_tracing_us
-> 
-> all runs of rtla will stop at the 1us threshold, even if not requested
-> by the user:
-> 
-> $ rtla osnoise hist
-> Index   CPU-000   CPU-001
-> 1             8         5
-> 2             5         9
-> 3             1         2
-> 4             6         1
-> 5             2         1
-> 6             0         1
-> 8             1         1
-> 12            0         1
-> 14            1         0
-> 15            1         0
-> over:         0         0
-> count:       25        21
-> min:          1         1
-> avg:       3.68      3.05
-> max:         15        12
-> rtla osnoise hit stop tracing
-> 
-> Fix the problem by setting the default value for all tracer options if
-> the user has not provided their own value.
-> 
-> For most of the options, it's enough to just drop the if clause checking
-> for the value being set. For cpus, "all" is used as the default value,
-> and for osnoise default period and runtime, default values of
-> the osnoise_data variable in trace_osnoise.c are used.
-> 
-> Fixes: 1eceb2fc2ca5 ("rtla/osnoise: Add osnoise top mode")
-> Fixes: 829a6c0b5698 ("rtla/osnoise: Add the hist mode")
-> Fixes: a828cd18bc4a ("rtla: Add timerlat tool and timelart top mode")
-> Fixes: 1eeb6328e8b3 ("rtla/timerlat: Add timerlat hist mode")
 > Signed-off-by: Tomas Glozar <tglozar@redhat.com>
 > ---
->  tools/tracing/rtla/src/osnoise.c  | 56 ++++++++++++++---------------
->  tools/tracing/rtla/src/timerlat.c | 59 +++++++++++++++----------------
->  2 files changed, 56 insertions(+), 59 deletions(-)
+>  tools/tracing/rtla/tests/engine.sh | 40 ++++++++++++++++++++++++++++++
+>  1 file changed, 40 insertions(+)
 > 
-> diff --git a/tools/tracing/rtla/src/osnoise.c b/tools/tracing/rtla/src/osnoise.c
-> index a71618d876e9..2dc3e4539e99 100644
-> --- a/tools/tracing/rtla/src/osnoise.c
-> +++ b/tools/tracing/rtla/src/osnoise.c
-> @@ -17,6 +17,9 @@
+> diff --git a/tools/tracing/rtla/tests/engine.sh b/tools/tracing/rtla/tests/engine.sh
+> index 64d0446dc28e..5db8aa4bc031 100644
+> --- a/tools/tracing/rtla/tests/engine.sh
+> +++ b/tools/tracing/rtla/tests/engine.sh
+> @@ -8,12 +8,44 @@ test_begin() {
+>  	[ -n "$TEST_COUNT" ] && echo "1..$TEST_COUNT"
+>  }
 >  
->  #include "osnoise.h"
->  
-> +#define DEFAULT_SAMPLE_PERIOD	1000000			/* 1s */
-> +#define DEFAULT_SAMPLE_RUNTIME	1000000			/* 1s */
+> +reset_osnoise() {
+> +	# Reset osnoise options to default and remove any dangling instances created
+> +	# by improperly exited rtla runs.
+> +	pushd /sys/kernel/tracing || return 1
 > +
->  /*
->   * osnoise_get_cpus - return the original "osnoise/cpus" content
->   *
-> @@ -1127,46 +1130,43 @@ osnoise_apply_config(struct osnoise_tool *tool, struct osnoise_params *params)
->  	if (!params->sleep_time)
->  		params->sleep_time = 1;
->  
-> -	if (params->cpus) {
-> -		retval = osnoise_set_cpus(tool->context, params->cpus);
-> -		if (retval) {
-> -			err_msg("Failed to apply CPUs config\n");
-> -			goto out_err;
-> -		}
-> +	retval = osnoise_set_cpus(tool->context, params->cpus ? params->cpus : "all");
-> +	if (retval) {
-> +		err_msg("Failed to apply CPUs config\n");
-> +		goto out_err;
->  	}
->  
->  	if (params->runtime || params->period) {
->  		retval = osnoise_set_runtime_period(tool->context,
->  						    params->runtime,
->  						    params->period);
-> -		if (retval) {
-> -			err_msg("Failed to set runtime and/or period\n");
-> -			goto out_err;
-> -		}
-> +	} else {
-> +		retval = osnoise_set_runtime_period(tool->context,
-> +						    DEFAULT_SAMPLE_PERIOD,
-> +						    DEFAULT_SAMPLE_RUNTIME);
->  	}
->  
-> -	if (params->stop_us) {
-> -		retval = osnoise_set_stop_us(tool->context, params->stop_us);
-> -		if (retval) {
-> -			err_msg("Failed to set stop us\n");
-> -			goto out_err;
-> -		}
-> +	if (retval) {
-> +		err_msg("Failed to set runtime and/or period\n");
-> +		goto out_err;
->  	}
->  
-> -	if (params->stop_total_us) {
-> -		retval = osnoise_set_stop_total_us(tool->context, params->stop_total_us);
-> -		if (retval) {
-> -			err_msg("Failed to set stop total us\n");
-> -			goto out_err;
-> -		}
-> +	retval = osnoise_set_stop_us(tool->context, params->stop_us);
-> +	if (retval) {
-> +		err_msg("Failed to set stop us\n");
-> +		goto out_err;
->  	}
->  
-> -	if (params->threshold) {
-> -		retval = osnoise_set_tracing_thresh(tool->context, params->threshold);
-> -		if (retval) {
-> -			err_msg("Failed to set tracing_thresh\n");
-> -			goto out_err;
-> -		}
-> +	retval = osnoise_set_stop_total_us(tool->context, params->stop_total_us);
-> +	if (retval) {
-> +		err_msg("Failed to set stop total us\n");
-> +		goto out_err;
-> +	}
+> +	# Remove dangling instances created by previous rtla run
+> +	echo 0 > tracing_thresh
+> +	cd instances
+> +	for i in osnoise_top osnoise_hist timerlat_top timerlat_hist
+> +	do
+> +		[ ! -d "$i" ] && continue
+> +		rmdir "$i"
+> +	done
 > +
-> +	retval = osnoise_set_tracing_thresh(tool->context, params->threshold);
-> +	if (retval) {
-> +		err_msg("Failed to set tracing_thresh\n");
-> +		goto out_err;
->  	}
->  
->  	if (params->hk_cpus) {
-> diff --git a/tools/tracing/rtla/src/timerlat.c b/tools/tracing/rtla/src/timerlat.c
-> index 448fb1f7d3a6..c29e2ba2d7d8 100644
-> --- a/tools/tracing/rtla/src/timerlat.c
-> +++ b/tools/tracing/rtla/src/timerlat.c
-> @@ -16,6 +16,8 @@
->  
->  #include "timerlat.h"
->  
-> +#define DEFAULT_TIMERLAT_PERIOD	1000			/* 1ms */
+> +	# Reset options to default
+> +	# Note: those are copied from the default values of osnoise_data
+> +	# in kernel/trace/trace_osnoise.c
+> +	cd ../osnoise
+> +	echo all > cpus
+> +	echo DEFAULTS > options
+> +	echo 1000000 > period_us
+> +	echo 0 > print_stack
+> +	echo 1000000 > runtime_us
+> +	echo 0 > stop_tracing_total_us
+> +	echo 0 > stop_tracing_us
+> +	echo 1000 > timerlat_period_us
 > +
->  /*
->   * timerlat_apply_config - apply common configs to the initialized tool
->   */
-> @@ -27,49 +29,44 @@ timerlat_apply_config(struct osnoise_tool *tool, struct timerlat_params *params)
->  	if (!params->sleep_time)
->  		params->sleep_time = 1;
->  
-> -	if (params->cpus) {
-> -		retval = osnoise_set_cpus(tool->context, params->cpus);
-> -		if (retval) {
-> -			err_msg("Failed to apply CPUs config\n");
-> -			goto out_err;
-> -		}
-> -	} else {
-> +	retval = osnoise_set_cpus(tool->context, params->cpus ? params->cpus : "all");
-> +	if (retval) {
-> +		err_msg("Failed to apply CPUs config\n");
-> +		goto out_err;
-> +	}
+> +	popd
+> +}
 > +
-> +	if (!params->cpus) {
->  		for (i = 0; i < sysconf(_SC_NPROCESSORS_CONF); i++)
->  			CPU_SET(i, &params->monitored_cpus);
->  	}
+>  check() {
+>  	# Simple check: run rtla with given arguments and test exit code.
+>  	# If TEST_COUNT is set, run the test. Otherwise, just count.
+>  	ctr=$(($ctr + 1))
+>  	if [ -n "$TEST_COUNT" ]
+>  	then
+> +		# Reset osnoise options before running test.
+> +		[ "$NO_RESET_OSNOISE" == 1 ] || reset_osnoise
+>  		# Run rtla; in case of failure, include its output as comment
+>  		# in the test results.
+>  		result=$(stdbuf -oL $TIMEOUT "$RTLA" $2 2>&1); exitcode=$?
+> @@ -37,6 +69,14 @@ unset_timeout() {
+>  	unset TIMEOUT
+>  }
 >  
-> -	if (params->stop_us) {
-> -		retval = osnoise_set_stop_us(tool->context, params->stop_us);
-> -		if (retval) {
-> -			err_msg("Failed to set stop us\n");
-> -			goto out_err;
-> -		}
-> +	retval = osnoise_set_stop_us(tool->context, params->stop_us);
-> +	if (retval) {
-> +		err_msg("Failed to set stop us\n");
-> +		goto out_err;
->  	}
->  
-> -	if (params->stop_total_us) {
-> -		retval = osnoise_set_stop_total_us(tool->context, params->stop_total_us);
-> -		if (retval) {
-> -			err_msg("Failed to set stop total us\n");
-> -			goto out_err;
-> -		}
-> +	retval = osnoise_set_stop_total_us(tool->context, params->stop_total_us);
-> +	if (retval) {
-> +		err_msg("Failed to set stop total us\n");
-> +		goto out_err;
->  	}
->  
->  
-> -	if (params->timerlat_period_us) {
-> -		retval = osnoise_set_timerlat_period_us(tool->context, params->timerlat_period_us);
-> -		if (retval) {
-> -			err_msg("Failed to set timerlat period\n");
-> -			goto out_err;
-> -		}
-> +	retval = osnoise_set_timerlat_period_us(tool->context,
-> +						params->timerlat_period_us ?
-> +						params->timerlat_period_us :
-> +						DEFAULT_TIMERLAT_PERIOD);
-> +	if (retval) {
-> +		err_msg("Failed to set timerlat period\n");
-> +		goto out_err;
->  	}
->  
->  
-> -	if (params->print_stack) {
-> -		retval = osnoise_set_print_stack(tool->context, params->print_stack);
-> -		if (retval) {
-> -			err_msg("Failed to set print stack\n");
-> -			goto out_err;
-> -		}
-> +	retval = osnoise_set_print_stack(tool->context, params->print_stack);
-> +	if (retval) {
-> +		err_msg("Failed to set print stack\n");
-> +		goto out_err;
->  	}
->  
->  	if (params->hk_cpus) {
+> +set_no_reset_osnoise() {
+> +	NO_RESET_OSNOISE=1
+> +}
+> +
+> +unset_no_reset_osnoise() {
+> +	unset NO_RESET_OSNOISE
+> +}
+> +
+>  test_end() {
+>  	# If running without TEST_COUNT, tests are not actually run, just
+>  	# counted. In that case, re-run the test with the correct count.
 > -- 
 > 2.48.1
 > 
 > 
 > 
-Reviewed-by: John Kacur <jkacur@redhat.com>
+Reviewed by: John Kacur <jkacur@redhat.com>
 
