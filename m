@@ -1,55 +1,72 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f174.google.com (mail-qt1-f174.google.com [209.85.160.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41C7722D7A1
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 21 Mar 2025 17:08:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D0A61D5AC0;
+	Fri, 21 Mar 2025 17:51:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742576918; cv=none; b=kTCM+o++eKQHgqYJsr0v6fMX0qo1ykb2EKpslNcxdYuTvEEkjhYYkoEn6k6853PoqFoRHjqRCqvrsy4MwKPaYlZMD9ZucCWNDJ5gg0oCpGdSyOg4UWa63+qpbrcpfbA2QZNWOPYVqzEGx4in3dulczcfKe+rgc5m9EZtl6ANiCY=
+	t=1742579505; cv=none; b=mvhXeaTzyNPZ84R5BpsITrSwZ5706Fzd1AZSAQNOVT4aFoyupTP8g2DdQJIslS9LGmawwJYUFiSb5fCZngAxeCwBCqq22EjMb9xAbQu6GAuo4LYbNyKwdL1VZg6UdFhg1fUkQdxRwnepDKgGSGhnKX9ydsxOrMelnRCfYaCmgnY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742576918; c=relaxed/simple;
-	bh=9S4qEH3PVlnFOGK2lxW2awQ9ZZN4/6rIeDszBH+aXZ4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=fMszXD2t++Ya23+tvxq6v6iH0ZU2R37GhzUeB9qAvswOjcKmIFvvC5kHsdDbMjp9CW8QiTDyRnwskrQ+jJWUl8E2ZqI9yYv4wzEZfNUjX5rAsiUPDkRoSQ5Tm06Z9iL8zeIPIlW1UgRDwGdnUHArighoWcgYxewFzc63dvRNf9U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=UgmCG7Jn; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1742579505; c=relaxed/simple;
+	bh=tD2ZR9D7QvqsfkSfAe1yCGUMId49srQfFGxm2Jl0rPw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=tUnMIz4+SMpcI6eX8pNChPXWwyQXDCGfV3B1g9nCnKB7dGIqgUOqHkLUgtIos8kWPd7vPQpSDr3aeW/jMbhiXoiODdKUdo+OvTbKOSAzjO2B+G30n2NxtA6XfcmwPTjGiwmhGaRwnaKn/NGgGGwIGvyjldJEVfGRn3hXBBBZvXM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hflQxNdn; arc=none smtp.client-ip=209.85.160.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UgmCG7Jn"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1742576914;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=N0hYg2vhPmp2fQhhtWVW+roP5z+OtzA4zuLIcnrampE=;
-	b=UgmCG7JngsvgjI8Q011l+0Y9K5u1fK9+jH9oolOCWdrWT+taupvNRfjeXYSNwwZo8cWtUC
-	Ev0H2BNnGr7NR9pFn0Pb+oo91KpuM/EQiyCSOPI1ErNdAJeMQ2NXVacU9mdT1k/lx2FJtQ
-	T2e/0chXuCanJWqgE9DoPSMz6JmpZIE=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-540-oDYfgOSTOdmU9Lb4PFJx2A-1; Fri,
- 21 Mar 2025 13:08:33 -0400
-X-MC-Unique: oDYfgOSTOdmU9Lb4PFJx2A-1
-X-Mimecast-MFC-AGG-ID: oDYfgOSTOdmU9Lb4PFJx2A_1742576911
-Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 3E3EA195E92A;
-	Fri, 21 Mar 2025 17:08:31 +0000 (UTC)
-Received: from fedora.. (unknown [10.44.33.245])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 0A81E3001D16;
-	Fri, 21 Mar 2025 17:08:27 +0000 (UTC)
-From: Gabriele Paoloni <gpaoloni@redhat.com>
-To: rostedt@goodmis.org,
-	mhiramat@kernel.org,
-	mathieu.desnoyers@efficios.com,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Cc: Gabriele Paoloni <gpaoloni@redhat.com>
-Subject: [PATCH v2] tracing: fix return value in __ftrace_event_enable_disable for TRACE_REG_UNREGISTER
-Date: Fri, 21 Mar 2025 18:08:21 +0100
-Message-ID: <20250321170821.101403-1-gpaoloni@redhat.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hflQxNdn"
+Received: by mail-qt1-f174.google.com with SMTP id d75a77b69052e-476a720e806so20252011cf.0;
+        Fri, 21 Mar 2025 10:51:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1742579503; x=1743184303; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=RiGKE4wQb5jTm9v2pVb8bGo+XwD3946juIP+VJ/KZVM=;
+        b=hflQxNdnitxJyrsHHgKGTAzkG3Ycp7Fv5u+RicZ6tU5G8ryMwWn/Y5Ln/WuLKJNh1G
+         80claCf8UkRSql5o+SgvqhHuG1HmwF1WJl67Vw6v9lDsSGKD6+Z+zTw1NRtGaMqmj4vh
+         dDQxCVLkhFj88I1UM0Z6rjX3b4hRD+QPdgdZHhMx889xar3ApkDq1lieWtzkiUnC6Zaq
+         rjbQONHTHo2hyFG0Qnt7h2zPyAcpWPy93ERrjxhuFxHXJyT1YOv7yGJQX6pv9AqsRlfK
+         gI1j5uRc8LNL7fAWm4dsJan+cBAsTGTsE2JwA9ANJFnwzDt+6scCnLd5SRbyVZDVO5/j
+         c53g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742579503; x=1743184303;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:sender:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=RiGKE4wQb5jTm9v2pVb8bGo+XwD3946juIP+VJ/KZVM=;
+        b=nlnUl7RRLjiq+bZCqfVIzdIVv3z9rqUXCbtzGj/3WaHabZnHPkiRuj0MkSFVGi6NWV
+         SesUcLFGx0Vm5TIKYdh2euN3QPQdG+XQxK6br2d4f96Tz04nrDLyrPjwqdlYNwSw3mlL
+         lQX8+04S1VCWL2NtKMnzvjB4KF+BqArPsnwRcuSmez7kowKo6Lje1rmY08H0KIWXKAQf
+         WjEgAJMBHtWn4AZXClfXt6alkD92U5yGHIbckknau1+gVxOTTyJfby8xcoETLEl+vvmg
+         orS8ldioqR08elFBgyL6PyjbVqW/YPFJGEGkHAcs1ZQN+MKqc7whyxFPS+8VPJWgcaYN
+         hdHA==
+X-Forwarded-Encrypted: i=1; AJvYcCU0jz+/uLKZS4UprtoEgXQENBLbb0S82AS/hqwh9vpU2dV9EbTXHPI33GhfgS3H14IvXcHx1Ji1XIVKSuM=@vger.kernel.org, AJvYcCUmvLGoibge9vQu4044wIAckc929VoVecBiR3LNlTjdpEteJ/qfc42MJV0+eMH215ZS/IVSbuGDMj1+n+0pxMssLzrF@vger.kernel.org
+X-Gm-Message-State: AOJu0YwG727W9JUCDkQ9OKwPMMH7pVO++wjoioqZSUGPfrLVuXiBFpwU
+	6Tq7Evao75afUiUAqRhrbkhIGQjv9WnEoF8v5YjHc6zTn361rDuT
+X-Gm-Gg: ASbGncs9HsEuKcQEIIpnSc90hWedhHQ/JfLLOYmvyZ/GyyDzLKmX+CBHSPoSFte9Ww4
+	la1s1xPKSqFn2X3whRj1x+gm9q2gCzqvmael7Is1FqiIbIfUgKsnyWOfN2v837FtsyhduaLuXzV
+	OoCDyo4rnI8O1Wwm2LP5GKob5nv3OY34f6WmnRn1FLU8JM3/9C3YI0LMRmf+OeVt+K7GWZoZ836
+	CS9rGItUGwZZOBdVEkEOaw1C2fSkTuDW3ZajphnlApMluvOC0fN5t5oOS/HbJJe2WxHoZYJvEyG
+	SXwtZDwqaVV6cV/Kf4ch+YVIbMIA0CfCj57ygPuvEctc
+X-Google-Smtp-Source: AGHT+IGZphiRhRmT2hmnZJwCfrZavv5AvU6vIoQevJb9rGGFWGDfEZQbs0ZWBz+gV1sr5zZ5mEg30w==
+X-Received: by 2002:a05:622a:17cd:b0:476:8825:99bf with SMTP id d75a77b69052e-4771dda676cmr67435841cf.27.1742579502768;
+        Fri, 21 Mar 2025 10:51:42 -0700 (PDT)
+Received: from fionn.redhat.com ([76.69.33.37])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c5b92b2beasm157777085a.3.2025.03.21.10.51.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 21 Mar 2025 10:51:42 -0700 (PDT)
+Sender: John Kacur <jkacur@gmail.com>
+From: John Kacur <jkacur@redhat.com>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Tomas Glozar <tglozar@redhat.com>,
+	"Luis Claudio R . Goncalves" <lgoncalv@redhat.com>,
+	linux-trace-kernel@vger.kernel.org,
+	lkml <linux-kernel@vger.kernel.org>,
+	John Kacur <jkacur@redhat.com>
+Subject: [PATCH] rtla: Add the ability to create ctags and etags
+Date: Fri, 21 Mar 2025 13:50:53 -0400
+Message-ID: <20250321175053.29048-1-jkacur@redhat.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -57,44 +74,62 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
 
-When __ftrace_event_enable_disable invokes the class callback to
-unregister the event, the return value is not reported up to the
-caller, hence leading to event unregister failures being silently
-ignored.
+- Add the ability to create and remove ctags and etags, using the following
+make tags
+make TAGS
+make tags_clean
 
-This patch assigns the ret variable to the invocation of the
-event unregister callback, so that its return value is stored
-and reported to the caller, and it raises a warning in case
-of error.
+- fix a comment in Makefile.rtla with the correct spelling and don't
+  imply that the ability to create an rtla tarball will be removed
 
-Signed-off-by: Gabriele Paoloni <gpaoloni@redhat.com>
+Signed-off-by: John Kacur <jkacur@redhat.com>
 ---
-Changes from v1:
-     Added WARN_ON_ONCE(ret) according to the feedbacks from
-     v1 RFC [1]
+ tools/tracing/rtla/Makefile.rtla | 17 +++++++++++++++--
+ 1 file changed, 15 insertions(+), 2 deletions(-)
 
-[1] https://lore.kernel.org/linux-trace-kernel/20250314125725.6425-1-gpaoloni@redhat.com/T/#u
----
- kernel/trace/trace_events.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
-index 513de9ceb80e..8e7603acca21 100644
---- a/kernel/trace/trace_events.c
-+++ b/kernel/trace/trace_events.c
-@@ -790,7 +790,9 @@ static int __ftrace_event_enable_disable(struct trace_event_file *file,
- 				clear_bit(EVENT_FILE_FL_RECORDED_TGID_BIT, &file->flags);
- 			}
+diff --git a/tools/tracing/rtla/Makefile.rtla b/tools/tracing/rtla/Makefile.rtla
+index cc1d6b615475..08c1b40883d3 100644
+--- a/tools/tracing/rtla/Makefile.rtla
++++ b/tools/tracing/rtla/Makefile.rtla
+@@ -34,6 +34,8 @@ INSTALL		:= install
+ MKDIR		:= mkdir
+ STRIP		:= strip
+ BINDIR		:= /usr/bin
++CTAGS		:= ctags
++ETAGS		:= ctags -e
  
--			call->class->reg(call, TRACE_REG_UNREGISTER, file);
-+			ret = call->class->reg(call, TRACE_REG_UNREGISTER, file);
+ .PHONY: install
+ install: doc_install
+@@ -47,6 +49,18 @@ install: doc_install
+ 	@test ! -f $(DESTDIR)$(BINDIR)/timerlat || $(RM) $(DESTDIR)$(BINDIR)/timerlat
+ 	@$(LN) -s rtla $(DESTDIR)$(BINDIR)/timerlat
+ 
++.PHONY: tags
++tags:
++	$(CTAGS) -R --extras=+f --c-kinds=+p src
 +
-+			WARN_ON_ONCE(ret);
- 		}
- 		/* If in SOFT_MODE, just set the SOFT_DISABLE_BIT, else clear it */
- 		if (file->flags & EVENT_FILE_FL_SOFT_MODE)
++.PHONY: TAGS
++TAGS:
++	$(ETAGS) -R --extras=+f --c-kinds=+p src
++
++.PHONY: tags_clean
++tags_clean:
++	$(RM) tags TAGS
++
+ .PHONY: doc doc_clean doc_install
+ doc:
+ 	$(MAKE) -C $(DOCSRC)
+@@ -57,8 +71,7 @@ doc_clean:
+ doc_install:
+ 	$(MAKE) -C $(DOCSRC) install
+ 
+-# This section is neesary for the tarball, when the tarball
+-# support is removed, we can delete these entries.
++# This section is necessary to make the rtla tarball
+ NAME		:= rtla
+ DIRS		:= src
+ FILES		:= Makefile README.txt
 -- 
 2.48.1
 
