@@ -1,92 +1,112 @@
-Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11C342236E9
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 20 Mar 2025 22:02:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.52
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.5])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BEFCD1DF248;
+	Fri, 21 Mar 2025 04:36:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742508142; cv=none; b=pcgnaydMgxR43MoPPCZhe/opc9cZwSNoc7yqL00U/mr5sYiahFkzJDtWgSxKytIXJuQUmuBWrc1AMX1c2WHX+ZjR5DAgKDWWWeGQWD8q/BLQgseraPUYYGaAEV+C4KopWCm1NNprZ2UcKKcWjr8/fQT39MZlB7mAjcUchQ25ZRE=
+	t=1742531814; cv=none; b=Dt9wxCWZmLAscXXVLAxG8Ydm9hBLa/gGVKO94qiMeUbEn8XYj6sDdMb3uOtjpCGIo0hp2uIqbrx13Socy9ecmq8YA3oIOofIQZTDbOrfiyhbMY8mo9Jy75NzWJOCfvQMA3sDuc6e8n3jzdGAROs1bloiEvFahDNNQ62KnGmOfmg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742508142; c=relaxed/simple;
-	bh=cTDl606SdAshXgfXIPLIxd9v6lfdZ0MuOBEOH6UNRYI=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=mqjAKwbQMH/VLwnPYl//Mfr9rZtwYVxo1LKjSdsVVbBAfJVJ/Rni2btPAXVwN3jikDdDsopmSfOOUc+RivPEMsIw+paH5oj4iztI4lS1gq73vwi+XUz0g2tVYSupWBJvcl7aNqffCM+DGt+cMWHFBdSh99dl1031ajoHKeh7uSU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=arista.com; spf=pass smtp.mailfrom=arista.com; dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b=YsGBnXUz; arc=none smtp.client-ip=209.85.167.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=arista.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arista.com
+	s=arc-20240116; t=1742531814; c=relaxed/simple;
+	bh=t0i7SiFUWByjspuwZXWi2oX+opfdd37i61RQzSXbxd4=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=fp7MDbRxwuCubBOm87LMAgjoRhqcBsQTAbNVl+SRIG/7ETwzFYZIOISG+6dvn2VjcTa3yx0Zqtwh4UkOflLgRGPRRCvxJbtICIDeCILBXOcsgoqo5JTU+fuD4VV+1rFwFZnQP1awID/GB3qz+4j3cStgbf5/e/AAjlzktFSOwdM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=AEBRVxEH; arc=none smtp.client-ip=117.135.210.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="YsGBnXUz"
-Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-5499bd3084aso1261853e87.0
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 20 Mar 2025 15:02:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=arista.com; s=google; t=1742508138; x=1743112938; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=+4Vpvh+DuCRZBn/ix37HYztXrs8lPgicnPsSqe30+XA=;
-        b=YsGBnXUzBFso83KDwI69yiU7Gxog5usb/LrTfIbD2A3Ivj2QfRFlivfHfwM3f42Mgg
-         wcqb17oAO5tt8YhsXdkjwD/xXdBe3KppJmwUrWetZy/nqTdEfe8BMDRV53LxteSYZupZ
-         kih9SIJkqSJOZSDaoBePf+0Rs7URw6dUIs6R3xZujayFItgBYEtgfYTfBYuQFNL25vRp
-         VevWXI3rynRjPNAri5QRnEMQ93YLyw1HUvl3d5UmTakPsonAPY4OrPZVE56CqAt6Ck6q
-         9nNgwVI4p96ikCioHkQpU2eaVFsaZxChLte/6pEySRSMjMMIryHhud5IvoAsxlBDZTJc
-         4ktA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742508138; x=1743112938;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=+4Vpvh+DuCRZBn/ix37HYztXrs8lPgicnPsSqe30+XA=;
-        b=YOMv2y3XRqL25HrmA4DuUE5Yzli3U/DnvrUsY+Su+SLXjW55Jfc2BckxVl0TxkeOcu
-         542iSKQz5g3mse2UeirsQvm6+GmENT85ujqriob1SQsSvMtFa6IacBqn9xr+aa33gQIk
-         GDNyfj9hD5e+DuMm+5JuiiaI9C4fSscycj8UM/r5xcZyN98YVFkBD7HBqEGqPt1dh7eN
-         GJHQBXr+zXhSgbzylt2atVpxCLn6kR9kXFWa7NYOwkOIL5aVN55dV/A6+G57iIBlH1Zf
-         dEciFJLNjI8dG4uohrmh3/C7EDYVtt6jAmV9Pm3W9b0UKpFeQrsa5n+Tq+xNgowRZg3R
-         Lk7Q==
-X-Gm-Message-State: AOJu0YyHBQKoAK9rbPMraFKiapWo23s3AJNEHL9LuGkyfrmJ4ao5R3Fk
-	PwYYcBjC1H4goQAZqY34f5OLje7iNDFMTcrJ90RwYCTzKhgpe9LKcSOGPFAfPNx9W4t/ZJMOFsy
-	zaWwRiT1vA+3/IRdHJw9hUNWahBU95XiQ5Uy3lMd8AcrAVdypkMQQ
-X-Gm-Gg: ASbGncthKnl5lfEl5LN5fK5dn1GBvuQducqTcyoV4r6phpCoxkPo70iJa8Gf8UmIrmC
-	DnoHuOYPY0iOcm1KXkLjt0RSlAQn0wjlzIFlacyQpBjasun4JqtDK3WCWNJ8wPVQBoGMXmisWOt
-	cVARPHqYwWt4V/gtxUNqWD70bh
-X-Google-Smtp-Source: AGHT+IGjXBYbdo9XENf7HeKIma3YsHYADF620UeY3OFOtHtsx47W4CWJPpupoWWKC8cihKjp0LlzJDhG+ZZ5DtdiZEc=
-X-Received: by 2002:a05:6512:3087:b0:545:ea9:1a24 with SMTP id
- 2adb3069b0e04-54ad647ea1fmr330237e87.14.1742508137977; Thu, 20 Mar 2025
- 15:02:17 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="AEBRVxEH"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=Z3pCP
+	xJVXUUIxdhsJWQMXxWW0e4Bl3BXgVM1YB2G9Vw=; b=AEBRVxEH2NGvW5hB8z5F6
+	LWvOhF1bHllsstptTw5do9/ZWVcza3pHKg9vY+VTCVPlPUJnQdKoreBMhii96f6l
+	DjhqyQWd2rBYHdAcfPCyT1PCkyUDlmNJZ0KW7TXJ1MUFL2eeL8HqKlHO9HFDzAFU
+	zI/ginTmlW/IE3w9ooFaPI=
+Received: from localhost.localdomain (unknown [])
+	by gzga-smtp-mtada-g1-0 (Coremail) with SMTP id _____wD3zxSh7NxnVIVvAw--.47506S2;
+	Fri, 21 Mar 2025 12:35:46 +0800 (CST)
+From: Feng Yang <yangfeng59949@163.com>
+To: song@kernel.org
+Cc: andrii@kernel.org,
+	ast@kernel.org,
+	bpf@vger.kernel.org,
+	daniel@iogearbox.net,
+	eddyz87@gmail.com,
+	haoluo@google.com,
+	john.fastabend@gmail.com,
+	jolsa@kernel.org,
+	kpsingh@kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	martin.lau@linux.dev,
+	mathieu.desnoyers@efficios.com,
+	mattbobrowski@google.com,
+	mhiramat@kernel.org,
+	rostedt@goodmis.org,
+	sdf@fomichev.me,
+	yangfeng59949@163.com,
+	yonghong.song@linux.dev
+Subject: Re: [PATCH] bpf: Remove duplicate judgments
+Date: Fri, 21 Mar 2025 12:35:43 +0800
+Message-Id: <20250321043543.174426-1-yangfeng59949@163.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <CAPhsuW4iVUdwhgDsnwy0oeiPhdfMSrRfEcXSFHw7bqXtBVzPyQ@mail.gmail.com>
+References: <CAPhsuW4iVUdwhgDsnwy0oeiPhdfMSrRfEcXSFHw7bqXtBVzPyQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Sahil Gupta <s.gupta@arista.com>
-Date: Thu, 20 Mar 2025 17:02:06 -0500
-X-Gm-Features: AQ5f1Jpi_WGvUcTS3nYYtvPeSUsI73Ncsh4vxHq7MqDnU7ZYu5ADrVkcloox-vA
-Message-ID: <CABEuK16m+msavH79AZxTRSqOsS5MQmOnsZZ8tZuKY5WWwz3bFw@mail.gmail.com>
-Subject: ftrace: sorttable unable to sort ELF64 on 32-bit host
-To: rostedt@goodmis.org
-Cc: linux-trace-kernel@vger.kernel.org, Dmitry Safonov <dima@arista.com>, 
-	Kevin Mitchell <kevmitch@arista.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wD3zxSh7NxnVIVvAw--.47506S2
+X-Coremail-Antispam: 1Uf129KBjvJXoW7uFyxur13GFyDAFWDAF48Xrb_yoW8XF45p3
+	y7Ar90vr1vyw47XrsYyws8J3Z7Kr1rWrWkWr97t343Zr45u39rtFWxGFy5K3s3Zryakay7
+	Xw42q39IkFy7Aa7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0JUoOJnUUUUU=
+X-CM-SenderInfo: p1dqww5hqjkmqzuzqiywtou0bp/1tbiwgMXeGfc6olCWQAAst
 
-Hi Steven,
+On Thu, 20 Mar 2025 09:45:17 -0700 Song Liu <song@kernel.org> wrote:
+>
+> On Wed, Mar 19, 2025 at 8:23 PM Feng Yang <yangfeng59949@163.com> wrote:
+> >
+> > From: Feng Yang <yangfeng@kylinos.cn>
+> >
+> > Most of the judgments also exist in bpf_base_func_deto, remove them.
+>
+> "Most" of them also exist is not enough. Please make sure that this does
+> not introduce any behavior change. For example, we should not remove
+> return of bpf_perf_event_read_value_proto.
 
-On 6.12.0, sorttable is unable to sort 64-bit ELFs on 32-bit hosts
-because of the parsing of the start_mcount_loc and stop_mcount_loc
-values in get_mcount_loc():
+in trace/bpf_trace.c:
+const struct bpf_func_proto *bpf_get_perf_event_read_value_proto(void)
+{
+	return &bpf_perf_event_read_value_proto;
+}
+in bpf/core.c:
+const struct bpf_func_proto * __weak bpf_get_perf_event_read_value_proto(void)
+{
+	return NULL;
+}
 
-  *_start = strtoul(start_buff, NULL, 16);
+And weak symbols will be covered
+nm vmlinux | grep bpf_get_perf_event_read_value_proto
+ffffffff814b90e0 T bpf_get_perf_event_read_value_proto
+ffffffff814b90d0 T __pfx_bpf_get_perf_event_read_value_proto
 
-and
+So the return of bpf_perf_event_read_value_proto can be done through the bpf_base_func_proto function.
+bpf_base_func_proto
+	......
+	case BPF_FUNC_perf_event_read_value:
+		return bpf_get_perf_event_read_value_proto();
 
- *_stop = strtoul(stop_buff, NULL, 16);
+I think this can be removed.
 
-This code makes the (often correct) assumption that the host and the
-target have the same architecture, however it runs into issues when
-compiling for a 64-bit target on a 32-bit host, as unsigned long is
-shorter than the pointer width. As a result, I've noticed that both
-start and stop max out at 2^32 - 1.
+> For future patches, please read Documentation/bpf/bpf_devel_QA.rst
+> and follow rules for email subject, etc. For example, this patch should
+> have a subject like "[PATCH bpf-next] xxx".
 
-It seems that commit 4acda8ed fixes this issue inadvertently by
-directly extracting them from the ELF using the correct width. I'm
-wondering if it is possible to backport this as well as the other
-sorttable refactors to 6.12.0 since they fix this issue.
+Thank you very much for your suggestion. I will pay attention to it next time.
 
-Thanks,
-Sahil
+> Thanks,
+> Song
+
+
