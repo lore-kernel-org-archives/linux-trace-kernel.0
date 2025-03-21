@@ -1,135 +1,115 @@
-Received: from mail-qt1-f174.google.com (mail-qt1-f174.google.com [209.85.160.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D0A61D5AC0;
-	Fri, 21 Mar 2025 17:51:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.174
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0EE9E2A1C9;
+	Fri, 21 Mar 2025 23:43:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742579505; cv=none; b=mvhXeaTzyNPZ84R5BpsITrSwZ5706Fzd1AZSAQNOVT4aFoyupTP8g2DdQJIslS9LGmawwJYUFiSb5fCZngAxeCwBCqq22EjMb9xAbQu6GAuo4LYbNyKwdL1VZg6UdFhg1fUkQdxRwnepDKgGSGhnKX9ydsxOrMelnRCfYaCmgnY=
+	t=1742600614; cv=none; b=JiECF/f1vv0Id89V7bTE6MnU2BJKXHVrhxfM6dxcanhJB3R91bOkEhc1J01RLCQ+nBV/EjqfIBo1dpQoVTT4hQsvv1BvCVEMFryLilf9E9TBb/g+LsDvIqX5NdIWQwaVAdou7hzmBqbmJRsO89DG44ftcQ9fL/OjCmkyOpaa03U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742579505; c=relaxed/simple;
-	bh=tD2ZR9D7QvqsfkSfAe1yCGUMId49srQfFGxm2Jl0rPw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=tUnMIz4+SMpcI6eX8pNChPXWwyQXDCGfV3B1g9nCnKB7dGIqgUOqHkLUgtIos8kWPd7vPQpSDr3aeW/jMbhiXoiODdKUdo+OvTbKOSAzjO2B+G30n2NxtA6XfcmwPTjGiwmhGaRwnaKn/NGgGGwIGvyjldJEVfGRn3hXBBBZvXM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hflQxNdn; arc=none smtp.client-ip=209.85.160.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hflQxNdn"
-Received: by mail-qt1-f174.google.com with SMTP id d75a77b69052e-476a720e806so20252011cf.0;
-        Fri, 21 Mar 2025 10:51:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1742579503; x=1743184303; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:sender:from:to:cc:subject:date:message-id:reply-to;
-        bh=RiGKE4wQb5jTm9v2pVb8bGo+XwD3946juIP+VJ/KZVM=;
-        b=hflQxNdnitxJyrsHHgKGTAzkG3Ycp7Fv5u+RicZ6tU5G8ryMwWn/Y5Ln/WuLKJNh1G
-         80claCf8UkRSql5o+SgvqhHuG1HmwF1WJl67Vw6v9lDsSGKD6+Z+zTw1NRtGaMqmj4vh
-         dDQxCVLkhFj88I1UM0Z6rjX3b4hRD+QPdgdZHhMx889xar3ApkDq1lieWtzkiUnC6Zaq
-         rjbQONHTHo2hyFG0Qnt7h2zPyAcpWPy93ERrjxhuFxHXJyT1YOv7yGJQX6pv9AqsRlfK
-         gI1j5uRc8LNL7fAWm4dsJan+cBAsTGTsE2JwA9ANJFnwzDt+6scCnLd5SRbyVZDVO5/j
-         c53g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742579503; x=1743184303;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:sender:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=RiGKE4wQb5jTm9v2pVb8bGo+XwD3946juIP+VJ/KZVM=;
-        b=nlnUl7RRLjiq+bZCqfVIzdIVv3z9rqUXCbtzGj/3WaHabZnHPkiRuj0MkSFVGi6NWV
-         SesUcLFGx0Vm5TIKYdh2euN3QPQdG+XQxK6br2d4f96Tz04nrDLyrPjwqdlYNwSw3mlL
-         lQX8+04S1VCWL2NtKMnzvjB4KF+BqArPsnwRcuSmez7kowKo6Lje1rmY08H0KIWXKAQf
-         WjEgAJMBHtWn4AZXClfXt6alkD92U5yGHIbckknau1+gVxOTTyJfby8xcoETLEl+vvmg
-         orS8ldioqR08elFBgyL6PyjbVqW/YPFJGEGkHAcs1ZQN+MKqc7whyxFPS+8VPJWgcaYN
-         hdHA==
-X-Forwarded-Encrypted: i=1; AJvYcCU0jz+/uLKZS4UprtoEgXQENBLbb0S82AS/hqwh9vpU2dV9EbTXHPI33GhfgS3H14IvXcHx1Ji1XIVKSuM=@vger.kernel.org, AJvYcCUmvLGoibge9vQu4044wIAckc929VoVecBiR3LNlTjdpEteJ/qfc42MJV0+eMH215ZS/IVSbuGDMj1+n+0pxMssLzrF@vger.kernel.org
-X-Gm-Message-State: AOJu0YwG727W9JUCDkQ9OKwPMMH7pVO++wjoioqZSUGPfrLVuXiBFpwU
-	6Tq7Evao75afUiUAqRhrbkhIGQjv9WnEoF8v5YjHc6zTn361rDuT
-X-Gm-Gg: ASbGncs9HsEuKcQEIIpnSc90hWedhHQ/JfLLOYmvyZ/GyyDzLKmX+CBHSPoSFte9Ww4
-	la1s1xPKSqFn2X3whRj1x+gm9q2gCzqvmael7Is1FqiIbIfUgKsnyWOfN2v837FtsyhduaLuXzV
-	OoCDyo4rnI8O1Wwm2LP5GKob5nv3OY34f6WmnRn1FLU8JM3/9C3YI0LMRmf+OeVt+K7GWZoZ836
-	CS9rGItUGwZZOBdVEkEOaw1C2fSkTuDW3ZajphnlApMluvOC0fN5t5oOS/HbJJe2WxHoZYJvEyG
-	SXwtZDwqaVV6cV/Kf4ch+YVIbMIA0CfCj57ygPuvEctc
-X-Google-Smtp-Source: AGHT+IGZphiRhRmT2hmnZJwCfrZavv5AvU6vIoQevJb9rGGFWGDfEZQbs0ZWBz+gV1sr5zZ5mEg30w==
-X-Received: by 2002:a05:622a:17cd:b0:476:8825:99bf with SMTP id d75a77b69052e-4771dda676cmr67435841cf.27.1742579502768;
-        Fri, 21 Mar 2025 10:51:42 -0700 (PDT)
-Received: from fionn.redhat.com ([76.69.33.37])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c5b92b2beasm157777085a.3.2025.03.21.10.51.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Mar 2025 10:51:42 -0700 (PDT)
-Sender: John Kacur <jkacur@gmail.com>
-From: John Kacur <jkacur@redhat.com>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Tomas Glozar <tglozar@redhat.com>,
-	"Luis Claudio R . Goncalves" <lgoncalv@redhat.com>,
-	linux-trace-kernel@vger.kernel.org,
-	lkml <linux-kernel@vger.kernel.org>,
-	John Kacur <jkacur@redhat.com>
-Subject: [PATCH] rtla: Add the ability to create ctags and etags
-Date: Fri, 21 Mar 2025 13:50:53 -0400
-Message-ID: <20250321175053.29048-1-jkacur@redhat.com>
-X-Mailer: git-send-email 2.48.1
+	s=arc-20240116; t=1742600614; c=relaxed/simple;
+	bh=9BMWcrvzRhGLestX25VAPEzSH1aQ6OUzo7S4ac1yvbA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Ei04YxrVmMUPmaoj0Y9tSFtdypF4pi1kBwzYPvWf+xNDEq2L+7xpeiXSQxUXnvAhAjEwheHibYaxUW0MsDV6aITTZxNc2UNS4DWbCcCTOODt+eX7UOi5V6Mze5Is7/GbOsgCpfo9PSqGpc/YSRqMFUc9DOwhyz7UnfljcIgmaSI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3AA87113E;
+	Fri, 21 Mar 2025 16:43:37 -0700 (PDT)
+Received: from [192.168.20.16] (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 71F853F673;
+	Fri, 21 Mar 2025 16:43:25 -0700 (PDT)
+Message-ID: <e8ada81d-0e10-412b-8792-035bc63113a6@arm.com>
+Date: Fri, 21 Mar 2025 18:43:23 -0500
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 3/7] arm64: uaccess: Add additional userspace GCS
+ accessors
+To: Mark Brown <broonie@kernel.org>
+Cc: linux-trace-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+ mhiramat@kernel.org, oleg@redhat.com, peterz@infradead.org, acme@kernel.org,
+ namhyung@kernel.org, mark.rutland@arm.com,
+ alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com,
+ adrian.hunter@intel.com, kan.liang@linux.intel.com,
+ thiago.bauermann@linaro.org, yury.khrustalev@arm.com,
+ kristina.martsenko@arm.com, liaochang1@huawei.com, catalin.marinas@arm.com,
+ will@kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org
+References: <20250318204841.373116-1-jeremy.linton@arm.com>
+ <20250318204841.373116-4-jeremy.linton@arm.com>
+ <50a0920d-3e3d-4e96-b68a-a7a0d78c3695@sirena.org.uk>
+Content-Language: en-US
+From: Jeremy Linton <jeremy.linton@arm.com>
+In-Reply-To: <50a0920d-3e3d-4e96-b68a-a7a0d78c3695@sirena.org.uk>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-- Add the ability to create and remove ctags and etags, using the following
-make tags
-make TAGS
-make tags_clean
+Hi,
 
-- fix a comment in Makefile.rtla with the correct spelling and don't
-  imply that the ability to create an rtla tarball will be removed
+On 3/19/25 8:24 AM, Mark Brown wrote:
+> On Tue, Mar 18, 2025 at 03:48:37PM -0500, Jeremy Linton wrote:
+> 
+>> +static inline u64 load_user_gcs(unsigned long __user *addr, int *err)
+>> +{
+>> +	unsigned long ret;
+>> +	u64 load;
+>> +
+>> +	if (!access_ok((char __user *)addr, sizeof(load))) {
+>> +		*err = -EFAULT;
+>> +		return 0;
+>> +	}
+>> +
+>> +	gcsb_dsync();
+>> +	ret = copy_from_user(&load, addr, sizeof(load));
+>> +	if (ret != 0)
+>> +		*err = ret;
+>> +	return load;
+>> +}
+> 
+> A GCS load done by the hardware will verify that we are loading from GCS
+> memory (the accesses are marked as AccessType_GCS in the pseudocode
+> which is then validated in for example S1CheckPermissions()).  Sadly
+> there's no equivalent of GCSSTR so we'd need to do the permission check
+> ourselves to match this behaviour.
 
-Signed-off-by: John Kacur <jkacur@redhat.com>
----
- tools/tracing/rtla/Makefile.rtla | 17 +++++++++++++++--
- 1 file changed, 15 insertions(+), 2 deletions(-)
+Right, except that if I grab the VMA as a placeholder for the page, 
+check to see if its a VM_SHADOW_STACK under any of 
+map_read_lock()/lock_vma_under_rcu()/etc and then perform the access, 
+the resulting possible fault will have problems with vma locking. 
+Otherwise there ends up being a few different races that at the moment 
+I've not yet figured out how to fix without making a big mess. For 
+example, we can reduce that possible window, by reading the 
+value/locking and checking shadow stack state/dropping the 
+lock/rereading the value, or some other construct but it seems pointless 
+because the suggested problem is that we might be creating a way to 
+bypass some of the shadow stack security. In which case, leaving a 
+little race is likely the same as leaving it wide open.
 
-diff --git a/tools/tracing/rtla/Makefile.rtla b/tools/tracing/rtla/Makefile.rtla
-index cc1d6b615475..08c1b40883d3 100644
---- a/tools/tracing/rtla/Makefile.rtla
-+++ b/tools/tracing/rtla/Makefile.rtla
-@@ -34,6 +34,8 @@ INSTALL		:= install
- MKDIR		:= mkdir
- STRIP		:= strip
- BINDIR		:= /usr/bin
-+CTAGS		:= ctags
-+ETAGS		:= ctags -e
- 
- .PHONY: install
- install: doc_install
-@@ -47,6 +49,18 @@ install: doc_install
- 	@test ! -f $(DESTDIR)$(BINDIR)/timerlat || $(RM) $(DESTDIR)$(BINDIR)/timerlat
- 	@$(LN) -s rtla $(DESTDIR)$(BINDIR)/timerlat
- 
-+.PHONY: tags
-+tags:
-+	$(CTAGS) -R --extras=+f --c-kinds=+p src
-+
-+.PHONY: TAGS
-+TAGS:
-+	$(ETAGS) -R --extras=+f --c-kinds=+p src
-+
-+.PHONY: tags_clean
-+tags_clean:
-+	$(RM) tags TAGS
-+
- .PHONY: doc doc_clean doc_install
- doc:
- 	$(MAKE) -C $(DOCSRC)
-@@ -57,8 +71,7 @@ doc_clean:
- doc_install:
- 	$(MAKE) -C $(DOCSRC) install
- 
--# This section is neesary for the tarball, when the tarball
--# support is removed, we can delete these entries.
-+# This section is necessary to make the rtla tarball
- NAME		:= rtla
- DIRS		:= src
- FILES		:= Makefile README.txt
--- 
-2.48.1
+
+Otherwise, maybe we can ignore the problem, or just refuse to allow 
+probes on 'RET' instructions which seems to be the main problematic 
+case. Although, given we don't really know if GCS is enabled until the 
+probe is hit, SIGSEG'ing the target process is a big hammer.
+
+Ignoring it might be a valid option. I guess it could to be one of those 
+"if the user puts a uprobe on a RET some of the shadow stack security is 
+reduced" footguns. If an attacker can also manipulate the address space 
+in a way to exploit it then its probably game over anyway. Ideally, the 
+kernel would warn on this, but per the conversation around patch 6/7 
+that seems to be off the table.
+
+
+
+
+
+
+
+
+
+
+
 
