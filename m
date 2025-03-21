@@ -1,90 +1,122 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26960B664;
-	Fri, 21 Mar 2025 05:23:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.2])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7BB251F1531;
+	Fri, 21 Mar 2025 09:53:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.2
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742534597; cv=none; b=LtPlVwmgKCMiTWzwgeMkyDwf6Yak0jM9ZKfFpPauXOzxbcmgRAPPmiwvChu5MOMSAQ0mFDyaRkJv2Se8cN6d91m3dRkseRUVdAjYPeI3duv6/reU83+iIDFtZdZmwcC34VYZMSP5xHzwCNhJLExLFPZHzKc2Dd4WaEo/rdaYiPM=
+	t=1742550808; cv=none; b=I57nvYrd2lMWq8pyNkvKJMlChzpRYJUmZiXMNrHUbzD2cPuJLntyvtCXFSkOtcJ0uuzEEXMmBQCM41Rdig25e3yAtOTyifim1n/dQv6zd/5Me3UAvpbiuBJ3i3FqTOPk+yoxml7dnskQQvI2Rtkx+fB+X7UwGyTz65rh/En9HxA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742534597; c=relaxed/simple;
-	bh=E6c8yK84C89HoPFiEFinS0EjwpTJRV07MOBEu/aAJTg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=E9yNzk62n8MVXo698bzc17RuWr2X3D5E5Tj+nzD1PiB2Sm0ct2N5Btv//GlunKCfxwou+7ZmBSsl/sPmneNv/dpmHG6BXp3tO5H+8kNbugfx2pZFRAC3NHiKO970nax8EXey8NGPBVbtWiruC70uJcNoM0xvcYCSFv8a9tiV5dI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CRnYpGOz; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1742550808; c=relaxed/simple;
+	bh=XKNZ6wUbfUUJwumVzJVxuP6qyuUd5Q1xxGKx66EOtdM=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ZgQjRfmUv+yfV6E5wWgk2IUlGjClZ6p6WVRHYVygZEi6cyaxLiuwKz/IGLMf0XFXLzT9bkTn5q7ebn/8dRSpa9Ya9eoM7Crrpzn8N3bGWyMP6/b7wfk/xdBtdoPGm4DZgFQvA3zciOPUhbxvtXZofTV3u019fMOkdiMAT87VTJ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=QYxXqkUU; arc=none smtp.client-ip=220.197.31.2
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CRnYpGOz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8988AC4CEE9;
-	Fri, 21 Mar 2025 05:23:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742534595;
-	bh=E6c8yK84C89HoPFiEFinS0EjwpTJRV07MOBEu/aAJTg=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=CRnYpGOzEfM8aJwh9fnEkhcwLLLYBQoxd4sDvvoZQm6Flv+HmQ85IQ9LQLZxlGLdz
-	 gswNxBsbbRY6iVVJIqG9+NlPf272L9gfUSzIS6whik+U6bYDxobXiZOMyE0NL1z1pk
-	 UwOH+DZjz+37SjBvyqOMTg5XRgwmAcXw5BCdJebsSGCdIZw17+cVEOPj0jo5r9mfxU
-	 rmFYzm8duXU7h9PvG6TITQYHWPwjLe68AtzsOB0OcaOJBNuoYKRw96d0rhZInwq/F+
-	 Co/nfBt3tlHs+rLcTRKbQQA7oI1z82nghAO7ep7VGG4oGix2znUBNLty6iPRlF46WY
-	 Gw/Y4uM0ldG9Q==
-Received: by mail-il1-f170.google.com with SMTP id e9e14a558f8ab-3d589ed2b63so13351735ab.0;
-        Thu, 20 Mar 2025 22:23:15 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUjwY+PvVE74zsK/HtnnY7pSxTBfERq+HUglQJNyNANBILs4vskivwEYrSSyZ+5fzXT9rM+/wksQz+liA67y0A93pBo@vger.kernel.org, AJvYcCWq7owqUtKD4816mk6QcHjePAydKfmFpsK4Iw5d1OMz+OfRq2M4+6Z4HIzIkHgnvM/vr+ulchkrJOaGH0xJ@vger.kernel.org, AJvYcCXpd6zqKPlIf/uSGuwGh3aElepxR9tYHBCDgYkBilHZ0HBlFS+j7trhEZUA4w2F+f6P+IY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxx0LN47Uqy3rvmOPCj2Zv1l1ee+N6VYWg60q1VolVMxhsLX7b2
-	JX3Au0MrDqFCL1NhJHKeNEFst75u2py/w3zoDhzKFtrvoKvAGXDMSgksNGpCnE4RrWzngwxs99F
-	nMsV6IIW5cnENSMNOveIGC4ZteEk=
-X-Google-Smtp-Source: AGHT+IEwISaEBnZ21nhzvd43jl4Y9ul3C0vkkBQDzVwqaCPKWPyqVpKVp7wenBaV98AEKa/PQNa7HuofNUk4BLuDl1k=
-X-Received: by 2002:a05:6e02:160b:b0:3d4:70ab:f96f with SMTP id
- e9e14a558f8ab-3d5960f4142mr25197885ab.8.1742534594904; Thu, 20 Mar 2025
- 22:23:14 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="QYxXqkUU"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=++OTN
+	zdXkTPaGKYdvu87lvAPQjNiOrcVxjsUv7eK/2E=; b=QYxXqkUUMShENiM3sOe6M
+	ctiOn7U4cFxhQ7Vz8M15MMp+BDDMYjH1zsENBhJUNefIgrC6KSD80fu0Y2EP3rxq
+	8Lhhj7DRQ8IFiSI5HihS5zXz/7MkvNcg2ImIUpYhtf7qsuLD5Cz0bAYDZoj3VlIS
+	9zuNm8Bl7Qc6zd8RonXnSY=
+Received: from localhost.localdomain (unknown [])
+	by gzga-smtp-mtada-g0-1 (Coremail) with SMTP id _____wDnz3L1Nt1nzZiaAw--.17933S4;
+	Fri, 21 Mar 2025 17:52:54 +0800 (CST)
+From: Ran Xiaokai <ranxiaokai627@163.com>
+To: rostedt@goodmis.org,
+	mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com,
+	vishalc@linux.ibm.com,
+	bristot@redhat.com
+Cc: stable@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	ran.xiaokai@zte.com.cn
+Subject: [PATCH V2] tracing/osnoise: Fix possible recursive locking for cpus_read_lock()
+Date: Fri, 21 Mar 2025 09:52:49 +0000
+Message-Id: <20250321095249.2739397-1-ranxiaokai627@163.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAPhsuW4iVUdwhgDsnwy0oeiPhdfMSrRfEcXSFHw7bqXtBVzPyQ@mail.gmail.com>
- <20250321043543.174426-1-yangfeng59949@163.com>
-In-Reply-To: <20250321043543.174426-1-yangfeng59949@163.com>
-From: Song Liu <song@kernel.org>
-Date: Thu, 20 Mar 2025 22:23:03 -0700
-X-Gmail-Original-Message-ID: <CAPhsuW5-m9cjewV7obGagx9edMRFpoL3xDQMWyCckR2Ro=+=Qw@mail.gmail.com>
-X-Gm-Features: AQ5f1Jogk838i_TVA9zg2Oooxe4NwZhsXY4fK7Oh8nxWLua-e5lvjvX8mjvuakE
-Message-ID: <CAPhsuW5-m9cjewV7obGagx9edMRFpoL3xDQMWyCckR2Ro=+=Qw@mail.gmail.com>
-Subject: Re: [PATCH] bpf: Remove duplicate judgments
-To: Feng Yang <yangfeng59949@163.com>
-Cc: andrii@kernel.org, ast@kernel.org, bpf@vger.kernel.org, 
-	daniel@iogearbox.net, eddyz87@gmail.com, haoluo@google.com, 
-	john.fastabend@gmail.com, jolsa@kernel.org, kpsingh@kernel.org, 
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	martin.lau@linux.dev, mathieu.desnoyers@efficios.com, 
-	mattbobrowski@google.com, mhiramat@kernel.org, rostedt@goodmis.org, 
-	sdf@fomichev.me, yonghong.song@linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wDnz3L1Nt1nzZiaAw--.17933S4
+X-Coremail-Antispam: 1Uf129KBjvJXoW7uF4xWw1ftryUCr1kWr17Wrg_yoW8uF45p3
+	93tFyxtr4Uuryqvw1UZw18Gry8X3y5XFWUt34vqw1fAwnruw47XrWjga4Fq345ury5ZFWj
+	9a4jkrWjvw4DXw7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jjtC7UUUUU=
+X-CM-SenderInfo: xudq5x5drntxqwsxqiywtou0bp/1tbiqAEXTGfdMFyzYgAAs1
 
-On Thu, Mar 20, 2025 at 9:36=E2=80=AFPM Feng Yang <yangfeng59949@163.com> w=
-rote:
->
-[...]
->
-> So the return of bpf_perf_event_read_value_proto can be done through the =
-bpf_base_func_proto function.
-> bpf_base_func_proto
->         ......
->         case BPF_FUNC_perf_event_read_value:
->                 return bpf_get_perf_event_read_value_proto();
->
-> I think this can be removed.
+From: Ran Xiaokai <ran.xiaokai@zte.com.cn>
 
-I see. I misunderstood this part because I was reading code before
-ae0a457f5d33c336f3c4259a258f8b537531a04b. Now it looks good.
+Lockdep reports this deadlock log:
 
-Acked-by: Song Liu <song@kernel.org>
+osnoise: could not start sampling thread
+============================================
+WARNING: possible recursive locking detected
+--------------------------------------------
+       CPU0
+       ----
+  lock(cpu_hotplug_lock);
+  lock(cpu_hotplug_lock);
 
-> > For future patches, please read Documentation/bpf/bpf_devel_QA.rst
-> > and follow rules for email subject, etc. For example, this patch should
-> > have a subject like "[PATCH bpf-next] xxx".
->
-> Thank you very much for your suggestion. I will pay attention to it next =
-time.
->
+ Call Trace:
+  <TASK>
+  print_deadlock_bug+0x282/0x3c0
+  __lock_acquire+0x1610/0x29a0
+  lock_acquire+0xcb/0x2d0
+  cpus_read_lock+0x49/0x120
+  stop_per_cpu_kthreads+0x7/0x60
+  start_kthread+0x103/0x120
+  osnoise_hotplug_workfn+0x5e/0x90
+  process_one_work+0x44f/0xb30
+  worker_thread+0x33e/0x5e0
+  kthread+0x206/0x3b0
+  ret_from_fork+0x31/0x50
+  ret_from_fork_asm+0x11/0x20
+  </TASK>
+
+This is the deadlock scenario:
+osnoise_hotplug_workfn()
+  guard(cpus_read_lock)();      // first lock call
+  start_kthread(cpu)
+    if (IS_ERR(kthread)) {
+      stop_per_cpu_kthreads(); {
+        cpus_read_lock();      // second lock call. Cause the AA deadlock
+      }
+    }
+
+It is not necessary to call stop_per_cpu_kthreads() which stops osnoise
+kthread for every other CPUs in the system if a failure occurs during
+hotplug of a certain CPU.
+For start_per_cpu_kthreads(), if the start_kthread() call fails,
+this function calls stop_per_cpu_kthreads() to handle the error.
+Therefore, similarly, there is no need to call stop_per_cpu_kthreads()
+again within start_kthread().
+So just remove stop_per_cpu_kthreads() from start_kthread to solve this issue.
+
+Fixes: c8895e271f79 ("trace/osnoise: Support hotplug operations")
+Signed-off-by: Ran Xiaokai <ran.xiaokai@zte.com.cn>
+---
+ kernel/trace/trace_osnoise.c | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/kernel/trace/trace_osnoise.c b/kernel/trace/trace_osnoise.c
+index 647516a73fa2..e732c9e37e14 100644
+--- a/kernel/trace/trace_osnoise.c
++++ b/kernel/trace/trace_osnoise.c
+@@ -2006,7 +2006,6 @@ static int start_kthread(unsigned int cpu)
+ 
+ 	if (IS_ERR(kthread)) {
+ 		pr_err(BANNER "could not start sampling thread\n");
+-		stop_per_cpu_kthreads();
+ 		return -ENOMEM;
+ 	}
+ 
+-- 
+2.17.1
+
+
