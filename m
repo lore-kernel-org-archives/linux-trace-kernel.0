@@ -1,30 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C914913635C;
-	Fri, 21 Mar 2025 16:35:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C867022CBC9
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 21 Mar 2025 16:36:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742574956; cv=none; b=TnI0oQT9A+DMnRMsvES9AXbrSe3NXJZTXGY8UnD0Q7rlUwGOI71zPnVLJi7XVD7DNDUbDoafMjiYnhu9u5NAU57OXxLO9FWVtyRWP8jLHFoJ1vZ67JZHJzk+cIUu/U1Tkj+0ltx4Mfq70IPcxRiEqgPjKNddTkE5U6C5OD6Yb5U=
+	t=1742575015; cv=none; b=Bu17rC2OhSFWXD2vQLDhj0xPRCzjVQwDnWVdvz2CCkbAwm1Y7TJqJD8MfQe325KwHFgYvQVoNhccGByxLh7d60u9w1yRWNJo27cZcCVQq1f3If2293UFsNLxxnQVmS2sYeGvxqy517pkj9TstLNH8pW5d3zOXO5fr98AxzX6040=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742574956; c=relaxed/simple;
-	bh=ILlemZsayEdRfxZ61YOCOgsOyqKPjidLCoD28+dx1t4=;
+	s=arc-20240116; t=1742575015; c=relaxed/simple;
+	bh=1of9Uk4n7biohAeTpjqwyk96pJt0YLg4fTWMMq2MQAM=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=f5HrCBeAHBEz8WpTw1eZ/ke2oKZd3QWVmBOQx7XJs/ZyyFcK4SuVJLFDl16ZXK5zd8ZwVbY398Pb+B0//Dr4EeBnfx9tIXuJCjWdH+Ec3LNjXeCu+1O78JXCll2f3eNMi6vYmYXtbMVqCVsio7KfNBAXQa41khutpaaOSdycHgQ=
+	 MIME-Version:Content-Type; b=V08hHrZloT8ICVKdrtIb56voCqmiz1xu2TVt5nZUW8E+/eO56LafSYqa2Zf+hCXJ47Rk5Q6y78CUQMFnQscmyYbMt5Q6v4iYqMhjss8liqIayyUXfNR94f4Yr2iOntnGF38luCpql+PhGcTrBjJIyDBgcZyf02GAYi+ZbJuzHWI=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 693F2C4CEE3;
-	Fri, 21 Mar 2025 16:35:54 +0000 (UTC)
-Date: Fri, 21 Mar 2025 12:35:50 -0400
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BCE81C4CEE8;
+	Fri, 21 Mar 2025 16:36:53 +0000 (UTC)
+Date: Fri, 21 Mar 2025 12:36:50 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
-To: Arnd Bergmann <arnd@kernel.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Vincent Donnefort
- <vdonnefort@google.com>, Huang Yiwei <quic_hyiwei@quicinc.com>,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH] tracing: fix build without CONFIG_MODULES
-Message-ID: <20250321123550.31efa14e@batman.local.home>
-In-Reply-To: <20250314155052.4170214-1-arnd@kernel.org>
-References: <20250314155052.4170214-1-arnd@kernel.org>
+To: "Theodore Ts'o" <tytso@mit.edu>
+Cc: Mark Rutland <mark.rutland@arm.com>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Andrew Morton
+ <akpm@linux-foundation.org>, Masami Hiramatsu <mhiramat@kernel.org>,
+ linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH] tracing: Have persistent trace instances save module
+ addresses
+Message-ID: <20250321123650.5042267c@batman.local.home>
+In-Reply-To: <20250321155422.GA1290637@mit.edu>
+References: <20250321155422.GA1290637@mit.edu>
 X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -35,34 +36,27 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Fri, 14 Mar 2025 16:50:49 +0100
-Arnd Bergmann <arnd@kernel.org> wrote:
+On Fri, 21 Mar 2025 11:54:22 -0400
+"Theodore Ts'o" <tytso@mit.edu> wrote:
 
-> From: Arnd Bergmann <arnd@arndb.de>
+> On Wed, Mar 05, 2025 at 11:45:45AM -0500, Steven Rostedt wrote:
+> > For trace instances that are mapped to persistent memory, have them use
+> > the scratch area to save the currently loaded modules. This will allow
+> > where the modules have been loaded on the next boot so that their
+> > addresses can be deciphered by using where they were loaded previously.  
 > 
-> The tracing code fails to build when CONFIG_MODULES is disabled:
+> Hi,
 > 
-> kernel/trace/trace.c: In function 'save_mod':
-> kernel/trace/trace.c:6041:45: error: invalid use of undefined type 'struct module'
->  6041 |         entry->mod_addr = (unsigned long)mod->mem[MOD_TEXT].base;
->       |                                             ^~
+> When building against linux-next today, I found that this commit
+> breaks builds when the kernel hasn't enabled CONFIG_MODULES.  Could
+> you please take a look?
 > 
-> The problem here is that 'struct module' is not defined in this configuration.
-> 
-> Enclose the functions in another #ifdef, just like other parts of this file
-> already are.
-> 
-> Fixes: dca91c1c5468 ("tracing: Have persistent trace instances save module addresses")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> ---
+> Many thanks!!
+>
 
-Thanks, but Masami already sent one fix where I commented on and he
-then sent an update:
-
-  https://lore.kernel.org/all/174188321162.3845006.12665585959241736399.stgit@mhiramat.tok.corp.google.com/
-
-and the update:
-
-  https://lore.kernel.org/all/174230515367.2909896.8132122175220657625.stgit@mhiramat.tok.corp.google.com/
+Yeah, Masami has a fix already. I've been traveling for OSPM and
+haven't had the time to apply and test it.
 
 -- Steve
+
+  https://lore.kernel.org/all/174230515367.2909896.8132122175220657625.stgit@mhiramat.tok.corp.google.com/
