@@ -1,105 +1,68 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 243E8263885;
-	Mon, 24 Mar 2025 16:17:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1A632641E9
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 24 Mar 2025 17:35:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742833082; cv=none; b=qdWFLadbh7/8yJnrILBTt1qlNfmVPs1mPRjZ9HSkTDxFGLotmlmop+NTWuYDOv+2GX30q4pgOHEY61c7uj9/5cwb3QNBqgDoXFuf9/5EwlJDwEqu7zoVbfCaDiMFWf+PsDJqoVbDXuCPKXgMB1zcvPWnFWKd4d5Y5UhBBd2dhEs=
+	t=1742837738; cv=none; b=nugBlbLquSiBDiJ2P4/PrOHK+KK5A3Uhgr1JNnTcRxxUZX4xVABckkvwW6hxBPqRTrdWPkRora0++ziBcsp6dUHnBUu0Azq+vEqHN7fkOhA73NaWrNjGXUapLBlOEZfor8FXxkxqhzVgyKgcA0/ovBtiaQuXYTqrET6fxqZfPQM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742833082; c=relaxed/simple;
-	bh=r1CWYmSitq8ffSacjnIINz9x92kI2IJzQEeKRfc58Ts=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ch8uaiOhsDO5XqXfrY6EHC51u4otvBRldrsT9jdwW6hmXOnCgMh40cnazML8E0Wg9y/sbGwz1WbyeyVuoH9+7WV7RZUQyyEt9XmbvLizHHoexETltRI9PoDDt9Ru7XcIYFhm+2vR/RvhBtX/EcI1EvLznIGePjK0A3YDdT/BxvA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eZGdRWRs; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eZGdRWRs"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1742833080; x=1774369080;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=r1CWYmSitq8ffSacjnIINz9x92kI2IJzQEeKRfc58Ts=;
-  b=eZGdRWRsbgik6YQdoteM/UOgNEZdJ/qbsbJ+MhSPo5mlJ9mtVplbmmzi
-   VjxOa6wmRR0OVeVjTP5spQHVHO4A2CyxiU8p/X1it4Mpi2Yalrk0GvjvS
-   a9jzoBXgSAtAEcn6BMBKMjth4bICRYsgl+jb14fF5j3U9/uGj2fRncOOK
-   mAXsxplPCIVY18Dj7JhF8R2KYKv0qGXM7b9+W9SvHFgMgV2HcIQk7RJ/c
-   yh7TYirHqJVNDkc6gSzyxH9XmIPSoBZ6gybGfOL3p3yuwhDkRKyjXnk3u
-   6cQcKorAGQM4v/6nXRewyfIlFtLeFj9UyEoclrNMFNE9kZyhtWU/dV5Od
-   w==;
-X-CSE-ConnectionGUID: owDA7x07TMuQ1WFl944HWw==
-X-CSE-MsgGUID: 4fh7HGukQnq0zZuOavSDjg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11383"; a="55426930"
-X-IronPort-AV: E=Sophos;i="6.14,272,1736841600"; 
-   d="scan'208";a="55426930"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2025 09:17:57 -0700
-X-CSE-ConnectionGUID: MI0HGLbxSTSEOprtpndLBg==
-X-CSE-MsgGUID: kP5VE1NRTm6Z+IaGNcSjZQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,272,1736841600"; 
-   d="scan'208";a="155000896"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by orviesa002.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2025 09:17:53 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1twkUn-00000005UlE-391E;
-	Mon, 24 Mar 2025 18:17:49 +0200
-Date: Mon, 24 Mar 2025 18:17:49 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Petr Mladek <pmladek@suse.com>,
-	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-	Kees Cook <kees@kernel.org>,
-	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	John Ogness <john.ogness@linutronix.de>,
-	Sergey Senozhatsky <senozhatsky@chromium.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Subject: Re: [PATCH v1 1/6] seq_buf: Mark binary printing functions with
- __printf() attribute
-Message-ID: <Z-GFrV3B1eoK0wrq@smile.fi.intel.com>
-References: <20250320180926.4002817-1-andriy.shevchenko@linux.intel.com>
- <20250320180926.4002817-2-andriy.shevchenko@linux.intel.com>
- <20250324120430.0620a8f6@gandalf.local.home>
+	s=arc-20240116; t=1742837738; c=relaxed/simple;
+	bh=RpBLtOXKiH1p5B3iug5omfQIiNraZHTtcByyp1or7Zk=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=F629DwB++stBXhjEuikdIj3oyIPUu5qgc9kxIHrtAfplMKi64GvKEdQ7P1IxnbGNdIU12td56zjXkXjth+ypBNa1t2d6PQ5YbVqU82hfA5FVXANhG7X9HWNjTG3TKuCZjxLX9jW49Tp/2KOgOjg/YJya7I8bM/lip+BhU8EZaXw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C9588C4CEDD;
+	Mon, 24 Mar 2025 17:35:37 +0000 (UTC)
+Date: Mon, 24 Mar 2025 13:36:19 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Sahil Gupta <s.gupta@arista.com>
+Cc: linux-trace-kernel@vger.kernel.org, Kevin Mitchell
+ <kevmitch@arista.com>, Dmitry Safonov <dima@arista.com>
+Subject: Re: ftrace: sorttable unable to sort ELF64 on 32-bit host
+Message-ID: <20250324133619.6c3babf7@gandalf.local.home>
+In-Reply-To: <CABEuK15=+Bo7xkBn5ufytVowt0j3fVEsdGVsryn1zH8KxfoCyQ@mail.gmail.com>
+References: <CABEuK15=+Bo7xkBn5ufytVowt0j3fVEsdGVsryn1zH8KxfoCyQ@mail.gmail.com>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250324120430.0620a8f6@gandalf.local.home>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Mon, Mar 24, 2025 at 12:04:30PM -0400, Steven Rostedt wrote:
-> On Thu, 20 Mar 2025 20:04:22 +0200
-> Andy Shevchenko <andriy.shevchenko@linux.intel.com> wrote:
+On Thu, 20 Mar 2025 16:54:58 -0500
+Sahil Gupta <s.gupta@arista.com> wrote:
+
+> Hi Steven,
 > 
-> > Binary printing functions are using printf() type of format, and compiler
-> > is not happy about them as is:
-> > 
-> > lib/seq_buf.c:162:17: error: function ‘seq_buf_bprintf’ might be a candidate for ‘gnu_printf’ format attribute [-Werror=suggest-attribute=format]
-> > 
-> > Fix the compilation errors by adding __printf() attribute.
-> > 
+> On 6.12.0, sorttable is unable to sort 64-bit ELFs on 32-bit hosts because
+> of the parsing of the start_mcount_loc and stop_mcount_loc values in
+> get_mcount_loc():
 > 
-> Should also note the removal of "extern"
+>   *_start = strtoul(start_buff, NULL, 16);
+> 
+> and
+> 
+>  *_stop = strtoul(stop_buff, NULL, 16);
+> 
+> This code makes the (often correct) assumption that the host and the target
+> have the same architecture, however it runs into issues when compiling for
+> a 64-bit target on a 32-bit host, as unsigned long is shorter than the
+> pointer width. As a result, I've noticed that both start and stop max out
+> at 2^32 - 1.
 
-Ah, just noticed that you are looking at v1, there is also v2 available:
-20250321144822.324050-1-andriy.shevchenko@linux.intel.com
+So this has been broken for some time?
 
-Thank you for the review, nevertheless!
+> 
+> It seems that commit 4acda8ed fixes this issue inadvertently by directly
+> extracting them from the ELF using the correct width. I'm wondering if it
+> is possible to backport this as well as the other sorttable refactors to
+> 6.12.0 since they fix this issue.
 
--- 
-With Best Regards,
-Andy Shevchenko
+You should ask Greg KH on this.
 
+-- Steve
 
