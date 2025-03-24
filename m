@@ -1,43 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C402314F98;
-	Mon, 24 Mar 2025 02:35:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D26C23A9;
+	Mon, 24 Mar 2025 05:45:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742783751; cv=none; b=jo4LKu1NUmc+Ev8U6oUsRCUpo+5wHYMuqtsgESE3dTzrDIcP46rcaZsbm+9tPL+CQFvrYm9hufc2d8hmPSqOD1Rbi6KIcXh88NDGS7i6JpscTjfq7WeuO39LMwCBZlPuiLTQDJXVHdDvtyUaAPQQk9IM9GuHdAM2lR779+/d/uM=
+	t=1742795156; cv=none; b=AjmaIxK3AoRrQvsy1boC49ibilsMCEX0bC+AxGbDtBU8NDHPm6jkkrvaNgN0GM67wUO/IQfBHk1Boq43wCJHMgyF/SpSdTrDgU7Q9e5Ck0fotWn1QlaBxaZ5ARGfl4IrNYlHhoCQ+tWhfRTGvnj7Ts9bDjgx1YWQxOCAZP0W8kY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742783751; c=relaxed/simple;
-	bh=xAFn0lYBGzrmag+aR3lSQ/jnbdF7nDNylnf7HpAI05U=;
+	s=arc-20240116; t=1742795156; c=relaxed/simple;
+	bh=0jvW7nz7pOOA0IOuCXljauxGCOytip26AbipW7bgnGk=;
 	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=IDesyb9R4mpa1MZ/DN4pQbTRn/2yL2PIeDFdhTRVvY5sjNX0mC68ZqpqvGTkKO7zhJbaUr364qDkpjYwhkLHhuWNPybnYLIk1J52kYsWLusYBfxteCsgdIvO25JDODWKGDz5LbQhSNAnk7TQe+/xlz4v/aT4+afxUf1kT5uTozk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WBAO8AHM; arc=none smtp.client-ip=10.30.226.201
+	 Mime-Version:Content-Type; b=HRh6vKLp3CEY11ydeVcMIDiJHgZYvvXXFVKL1/BhJDJrPpsSGXNzAR82dPDer4Q1fKM70h8jPXKFyMKhooK0SYubf5F8UGtcDVooYGKL/BaCt2VinkRX+zd5BnOREFml0xa1EQWbsHc62UA5ygxvqDqKpyHtwXKw5zGwvsanoIE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=REIdq1Q2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WBAO8AHM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 070CBC4CEE8;
-	Mon, 24 Mar 2025 02:35:49 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="REIdq1Q2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EEC86C4CEDD;
+	Mon, 24 Mar 2025 05:45:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742783751;
-	bh=xAFn0lYBGzrmag+aR3lSQ/jnbdF7nDNylnf7HpAI05U=;
+	s=k20201202; t=1742795155;
+	bh=0jvW7nz7pOOA0IOuCXljauxGCOytip26AbipW7bgnGk=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=WBAO8AHMOxOeZjkDJmvhOuBONAVHCS2C3jtZSx/UZyEqFnCgQq0mLv49MYg5jJQD0
-	 tiHHfXHdW7X4kclgspl7Q4PbT0bX0q54fnpSMWRhpdtu0KGw5jTiql5iFFne8+EoZO
-	 +LZjhgRM3/wLA2kdJrnYcCeosHcVdQx0PNkF4ZgZ3kierqCR0keocHgRTLDp2fhEUL
-	 z3FXwGKdTIbQneZCg0GBSg319fevISnYeEmYcHj248mCsApkOGiq1IXHmaa0ki9MTK
-	 L/HLM8lqgcoSWMVu3DVZlSQogOF6WeErP45etQewAhQfeUzeHbvy6Hmpz0OUn1sAiQ
-	 S8Z+AOflrHGYQ==
-Date: Mon, 24 Mar 2025 11:35:47 +0900
+	b=REIdq1Q2LUUxZwRNgCX6Fpay85QeDfW1H/ysEYqCTdGazj6TLpiLBOcY5fHtaSHIo
+	 XBFkPes7cAFISuEzaeb/l3ZDuULTIoEUho+lTqNz4hV2I7rBRhXcGSH7a9EUUKYmJJ
+	 n2p7Vo6MWg+ZjuZyjX3qObKnQes7JxW9CWur42/XfWeSnh4GfGr620TgAkaFS3yHxr
+	 hvN721nqxvOiUI0LtmLgVSThVKoc0SSVTpY6xpEt1KmBaHdL0iu+T59gG+BF/N2nZP
+	 IC0VJpUumWIcCtmexmO9gBAWPZTjx/jpae0r3wYlIHAEK1M8LqsrIekRrNMM9Ss3vB
+	 lx7dpFMosiaPw==
+Date: Mon, 24 Mar 2025 14:45:51 +0900
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
+To: Douglas Raillard <douglas.raillard@arm.com>, Steven Rostedt
+ <rostedt@goodmis.org>
 Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
  linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 2/2] tracing: Show last module text symbols in the
- stacktrace
-Message-Id: <20250324113547.681fe2cd2f90a00a1e74c1a0@kernel.org>
-In-Reply-To: <20250321125203.61585a02@batman.local.home>
-References: <174230514441.2909896.16487286892751735867.stgit@mhiramat.tok.corp.google.com>
-	<174230516153.2909896.11459658533253319657.stgit@mhiramat.tok.corp.google.com>
-	<20250321125203.61585a02@batman.local.home>
+Subject: Re: [PATCH] tracing: Fix synth event printk format for str fields
+Message-Id: <20250324144551.fc290f9cf9f57b3d2f205354@kernel.org>
+In-Reply-To: <9d234136-05b9-46b6-849f-901df83bf54c@arm.com>
+References: <20250318180939.227696-1-douglas.raillard@arm.com>
+	<20250319211858.6d8166e3fb202e6e5a658557@kernel.org>
+	<9d234136-05b9-46b6-849f-901df83bf54c@arm.com>
 X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -48,109 +48,82 @@ Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Fri, 21 Mar 2025 12:52:03 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
+On Wed, 19 Mar 2025 14:34:19 +0000
+Douglas Raillard <douglas.raillard@arm.com> wrote:
 
-> On Tue, 18 Mar 2025 22:39:21 +0900
-> "Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
+> Hi,
 > 
+> On 19-03-2025 12:18, Masami Hiramatsu (Google) wrote:
+> > Hi,
+> > 
+> > On Tue, 18 Mar 2025 18:09:38 +0000
+> > Douglas RAILLARD <douglas.raillard@arm.com> wrote:
+> > 
+> >> From: Douglas Raillard <douglas.raillard@arm.com>
+> >>
+> >> The printk format for synth event uses "%.*s" to print string fields,
+> >> but then only passes the pointer part as var arg.
+> >>
+> >> Add the missing precision var arg.
+> > 
+> > I'm not sure what you want to. Would you mean showing the string length too?
+> > But I think actual output(*) shows only string, right?
+> > 
+> > (*) the output data which can be read from `trace` file.
 > 
-> > +/**
-> > + * trace_adjust_address() - Adjust prev boot address to current address.
-> > + * @tr: Persistent ring buffer's trace_array.
-> > + * @addr: Address in @tr which is adjusted.
-> > + */
-> > +unsigned long trace_adjust_address(struct trace_array *tr, unsigned long addr)
-> > +{
-> > +	struct trace_scratch *tscratch;
-> > +	struct trace_mod_entry *entry;
-> > +	long *module_delta;
-> > +	int idx = 0, nr_entries;
-> > +
-> > +	/* If we don't have last boot delta, return the address */
-> > +	if (!(tr->flags & TRACE_ARRAY_FL_LAST_BOOT))
-> > +		return addr;
-> > +
-> > +	tscratch = tr->scratch;
-> > +	/* if there is no tscrach, module_delta must be NULL. */
-> > +	module_delta = READ_ONCE(tr->module_delta);
+> The "%.*s" printf/printk format specifier has 2 components:
+> 1. the "*" part that in printf documentation called the "precision"
+> 2. the "s" part that is called the "specifier"
 > 
-> What protects this from being freed after it is read?
+> For a "s" specifier, the precision is interpreted as the number of chars to display from that string.
+> In any case, using "*" as precision means the value is passed dynamically, as a parameter to printf/printk,
+> before the actual char *. Both those args are consumed by printk to display "%.*s", the precision is never
+> displayed on its own.
 > 
-> > +	if (!module_delta || tscratch->entries[0].mod_addr > addr)
-> > +		return addr + tr->text_delta;
-> > +
-> > +	/* Note that entries must be sorted. */
-> > +	nr_entries = tscratch->nr_entries;
-> > +	if (nr_entries == 1 ||
-> > +	    tscratch->entries[nr_entries - 1].mod_addr < addr)
-> > +		idx = nr_entries - 1;
-> > +	else {
-> > +		entry = __inline_bsearch((void *)addr,
-> > +				tscratch->entries,
-> > +				nr_entries - 1,
-> > +				sizeof(tscratch->entries[0]),
-> > +				cmp_mod_entry);
-> > +		if (entry)
-> > +			idx = entry - tscratch->entries;
-> > +	}
-> > +
-> > +	return addr + module_delta[idx];
-> > +}
-> > +
-> >  #ifdef CONFIG_MODULES
-> >  static int save_mod(struct module *mod, void *data)
-> >  {
-> > @@ -6036,6 +6088,7 @@ static int save_mod(struct module *mod, void *data)
-> >  static void update_last_data(struct trace_array *tr)
-> >  {
-> >  	struct trace_scratch *tscratch;
-> > +	long *module_delta;
-> >  
-> >  	if (!(tr->flags & TRACE_ARRAY_FL_BOOT))
-> >  		return;
-> > @@ -6070,6 +6123,8 @@ static void update_last_data(struct trace_array *tr)
-> >  		return;
-> >  
-> >  	tscratch = tr->scratch;
-> > +	module_delta = READ_ONCE(tr->module_delta);
+> In the current state, synthetic event use "%.*s" for string fields, but then only a single `__get_str(field)`
+> is passed to printk, so it's missing the precision arg. Both trace-cmd and our parser report an error because of that.
 > 
-> Say if a reader read tr->module_delta before the NULL write.
-> 
-> > +	WRITE_ONCE(tr->module_delta, NULL);
-> >  
-> >  	/* Set the persistent ring buffer meta data to this address */
-> >  #ifdef CONFIG_RANDOMIZE_BASE
-> > @@ -6078,6 +6133,8 @@ static void update_last_data(struct trace_array *tr)
-> >  	tscratch->kaslr_addr = 0;
-> >  #endif
-> >  	tr->flags &= ~TRACE_ARRAY_FL_LAST_BOOT;
-> > +
-> > +	kfree(module_delta);
-> 
-> Why is this safe?
-> 
-> I don't see any synchronization between setting NULL and freeing this,
-> like RCU would do.
+> The alternative would be to just use "%s" instead of "%.*s", but I assume whoever wrote the code initially had a reason
+> to use the precision (maybe to print non-null-terminated strings ?), so I simply fixed the arguments.
 
-Ah, I thought it is OK that module_delta = NULL for kfree(), but
-there could be UAF case?  update_last_data() is protected by trace_types_lock,
-so update_last_data() itself is serialized. But trace_adjust_address() is
-not. Hmm, yeah, it is not enough checking by TRACE_ARRAY_FL_LAST_BOOT flag.
+Ah, got it. It seems that the first precision parameter is for limiting
+the length of the string according to the commit;
 
-OK, then what about this?
+https://lore.kernel.org/all/b6bdb34e70d970e8026daa3503db6b8e5cdad524.1601848695.git.zanussi@kernel.org/T/#u
 
-- free module_delta with rcu_free()
-- protect trace_adjust_address() by rcu_read_lock()
+So, I think it should always print the STR_VAR_LEN_MAX value.
+Steve, can you check it?
 
 Thank you,
 
 > 
-> -- Steve
-> 
-> 
-> >  }
 > > 
+> > Thank you,
+> > 
+> >>
+> >> Signed-off-by: Douglas Raillard <douglas.raillard@arm.com>
+> >> ---
+> >>   kernel/trace/trace_events_synth.c | 3 ++-
+> >>   1 file changed, 2 insertions(+), 1 deletion(-)
+> >>
+> >> diff --git a/kernel/trace/trace_events_synth.c b/kernel/trace/trace_events_synth.c
+> >> index e3f7d09e5512..274b9b1d9f7d 100644
+> >> --- a/kernel/trace/trace_events_synth.c
+> >> +++ b/kernel/trace/trace_events_synth.c
+> >> @@ -620,7 +620,8 @@ static int __set_synth_event_print_fmt(struct synth_event *event,
+> >>   		if (event->fields[i]->is_string &&
+> >>   		    event->fields[i]->is_dynamic)
+> >>   			pos += snprintf(buf + pos, LEN_OR_ZERO,
+> >> -				", __get_str(%s)", event->fields[i]->name);
+> >> +				", (int)__get_dynamic_array_len(%s), __get_str(%s)",
+> >> +				event->fields[i]->name, event->fields[i]->name);
+> >>   		else if (event->fields[i]->is_stack)
+> >>   			pos += snprintf(buf + pos, LEN_OR_ZERO,
+> >>   				", __get_stacktrace(%s)", event->fields[i]->name);
+> >> -- 
+> >> 2.43.0
+> >>
+> 
 
 
 -- 
