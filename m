@@ -1,31 +1,36 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8373819F42D
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 24 Mar 2025 19:06:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3042F84D08;
+	Mon, 24 Mar 2025 19:19:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742843183; cv=none; b=HmqX2Nu8ftWVqURoSIu/znMHMl8XOsUD/LIYxHrag3G5QZVopzu0EjK3S36Ag5/EGNSPI3Yt4SHWCCtXscI78iHz/x3sUxjAO/W6AXxR9nGTMDBBMMnZOxehtrIncNZs3shaRdm1uEthVrqgULAdCgLaAcqr6Akl7byFju7/Htw=
+	t=1742843973; cv=none; b=MvXrzHp4KyL8Q+Rg5I3+KahuMFLlVBI1a5ccTuR8ZHghB1d4Sdw+HDXv7Du1LbRa5HJURuZpgtbfRV82JzJcS/mYpNEsBSqNKjIExZtTeX6iIr9KRKL2nkzuRNByn3aUnXy3HDrNU4mX1TuiZXSEKZIMGB/PfpJHlVkp8J/iAFQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742843183; c=relaxed/simple;
-	bh=3tLaR0BuE2jKlIg/iBJo1y5mS6P8W1RXgdqh/DB4jkA=;
+	s=arc-20240116; t=1742843973; c=relaxed/simple;
+	bh=fqnEprHyp29eEzNNsQAHHHd77WVKBIYKI6z30Kl4dAQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=pGiijIF2q+9W+216O1Hxn/khTf+pOxEXLRdLek3iOHx7/f5+ZEw4zw8uhniLIIrU3kNaZErelf7m1U1ns0giBcIxPdYw/eCBxlN8/V1AWN5FNq/rqupmZcbNWaQ3oyf0RKOdnj9YsWCFofz9pwm71T2peBZAebLqK6Ak4s1qcjY=
+	 MIME-Version:Content-Type; b=Iut4RkIFEo4ge5CrdBzwnQ2K49K15O0zgWO843wSZgyGVTUT/koReelhmMwX6M3Hq1s59qIZ7vU1Rk96Fo7R9un2K6XrO0hx3N2XpOos9hjWQ9mokr4SH7Wp5jJQVHqYtu9yh4RvIzrgs6X4SVKJS0NL/KtpqtSyQ+wovALnbgc=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 62985C4CEDD;
-	Mon, 24 Mar 2025 19:06:22 +0000 (UTC)
-Date: Mon, 24 Mar 2025 15:07:03 -0400
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 395E5C4CEDD;
+	Mon, 24 Mar 2025 19:19:31 +0000 (UTC)
+Date: Mon, 24 Mar 2025 15:20:12 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: Sahil Gupta <s.gupta@arista.com>, linux-trace-kernel@vger.kernel.org,
- Kevin Mitchell <kevmitch@arista.com>, Dmitry Safonov <dima@arista.com>
-Subject: Re: ftrace: sorttable unable to sort ELF64 on 32-bit host
-Message-ID: <20250324150703.69665622@gandalf.local.home>
-In-Reply-To: <2025032424-custard-volley-bbb6@gregkh>
-References: <CABEuK15=+Bo7xkBn5ufytVowt0j3fVEsdGVsryn1zH8KxfoCyQ@mail.gmail.com>
-	<20250324133619.6c3babf7@gandalf.local.home>
-	<CABEuK15jWHSU8LaRXc1EzvhiLdBHeM9E+sKs7VyP47RRSxG6cg@mail.gmail.com>
-	<2025032424-custard-volley-bbb6@gregkh>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Christophe JAILLET <christophe.jaillet@wanadoo.fr>, Kees Cook
+ <kees@kernel.org>, "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, Andy Shevchenko <andy@kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Andrew Morton
+ <akpm@linux-foundation.org>, Petr Mladek <pmladek@suse.com>, Rasmus
+ Villemoes <linux@rasmusvillemoes.dk>, Sergey Senozhatsky
+ <senozhatsky@chromium.org>
+Subject: Re: [PATCH v2 4/6] vsnprintf: Mark binary printing functions with
+ __printf() attribute
+Message-ID: <20250324152012.413380d8@gandalf.local.home>
+In-Reply-To: <20250321144822.324050-5-andriy.shevchenko@linux.intel.com>
+References: <20250321144822.324050-1-andriy.shevchenko@linux.intel.com>
+	<20250321144822.324050-5-andriy.shevchenko@linux.intel.com>
 X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -33,31 +38,41 @@ List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, 24 Mar 2025 11:52:33 -0700
-Greg KH <gregkh@linuxfoundation.org> wrote:
+On Fri, 21 Mar 2025 16:40:50 +0200
+Andy Shevchenko <andriy.shevchenko@linux.intel.com> wrote:
 
-> <formletter>
-> 
-> This is not the correct way to submit patches for inclusion in the
-> stable kernel tree.  Please read:
->     https://www.kernel.org/doc/html/latest/process/stable-kernel-rules.html
-> for how to do this properly.
-> 
-> </formletter>
+> Binary printf() functions are using printf() type of format, and compiler
+> is not happy about them as is:
+>=20
+> lib/vsprintf.c:3130:47: error: function =E2=80=98vbin_printf=E2=80=99 mig=
+ht be a candidate for =E2=80=98gnu_printf=E2=80=99 format attribute [-Werro=
+r=3Dsuggest-attribute=3Dformat]
+> lib/vsprintf.c:3298:33: error: function =E2=80=98bstr_printf=E2=80=99 mig=
+ht be a candidate for =E2=80=98gnu_printf=E2=80=99 format attribute [-Werro=
+r=3Dsuggest-attribute=3Dformat]
 
-Hi Greg,
+BTW, I find it disturbing that the compiler is set to "error" on a warning
+that "might be a candidate". What happens if it is not? We have to play
+games to quiet it.
 
-This isn't a patch submission. It's more of a question if something should
-be backported because it happens to fix a long standing issue.
+Adding __printf() attributes to stubs seems to be a case of the compiler
+causing more problems than its worth :-/
 
-It appears that the ftrace mcount sorttable code was broken if you built a
-64 bit kernel on a 32 bit machine. I'm guessing it was broken since 5.17?
-A recent update to this code coincidentally fixes that issue. That update
-landed in 6.14. The question is, is it fine to backport the changes that
-fix this? It may not be totally trivial to do so, but I could likely just
-backport the changes that address this issue.
+I honestly hate this error on warning because it causes real pain when
+debugging. There's a lot of times I don't know if the value is long or long
+long, and when I get it wrong, my printk() causes the build to fail. It's
+especially annoying when both long and long long are the same size!
+
+Fixing theses stupid errors takes a non trivial amount of time away from
+actual debugging.
 
 -- Steve
+
+
+>=20
+> Fix the compilation errors by adding __printf() attribute.
+>=20
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
