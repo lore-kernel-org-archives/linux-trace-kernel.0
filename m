@@ -1,63 +1,63 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 836B61E633C;
-	Mon, 24 Mar 2025 11:36:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3965925F7AC;
+	Mon, 24 Mar 2025 13:39:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742816164; cv=none; b=hKttQixCHda/0lOLdxfHWrPTMdFNf6970Bv/L8+WamgxeSpU5LDndgxt6vRRdiCSUWJfshDoVdxWJfFZPngAd3+PoBhZ/8L2n7AKDmIacct9YxmNH013dSJEZ32U8jZcZG7IrZt3yks+3fscxdSekiko4MRJGfvUh7EoggHldmc=
+	t=1742823565; cv=none; b=R3FXFmrppb0IR5o0M3SpeWBF7H1v9AI+Fm8MORDHQupUpivM1UuZKql04TqQF8oTCH3j4XfPO8oDm/rBgXT2x6SOzoZUhMrDdwSy8yrU1zlKVAi3XmXUD3w/U3lytvidQBKwgDqHfNg+cc4maH5L26u2JqOaofY/gfZhCFIJEPo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742816164; c=relaxed/simple;
-	bh=ytcy48div7CFIbiXZhMFGrSyuBr3KX93xUGDCThz93c=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=imcV92wNz8BwJWkoo34kbH1B52vr2J3b5jzVrAEBcWxnpRySpgzIo3mXJD/rV+1XzZw2INRfOhdf7JIcCtlhpqXwC9kV39ZZ5IKpN1ofjfMlXv5PfNWl7NG/I0npwMlFBBZqxkyQnEl1g9HR/yI46Mjlt7Om7NEiC88zgjre1t8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=qwYnnJty; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="qwYnnJty"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=sYdr3C6pKaGDkQFwyBPg1o8YgdweUacsqf/nfU8wmZA=; b=qwYnnJtyMgyVR/DP2CDRSItzSG
-	2Vg3Xj6DNrZpFId4M7Wq+gxxfaS6MOojxl0U1h70dTME+6O4rdWOLkD5i9StgqBdX5jnm2oGOz6eh
-	FfQtaOhcjwErU0yCyBM6gecfiJmn6kr0URPcxkKWCXdtGjwkwJxrh9O6RXWi8zenYbil/FvsF1Wdm
-	nDCgfZFb0sbxCnHvfOQO2RPvGek7sUzGGsTloJ593f4cex5v2e2CUqM8+xJxUAP+9k8RDrG/gD2kK
-	ikTU5bdKnugKv3yll+htPv/Ew3fBOgoHGNMEO0kkVaq3t0AfOmZVr5+IESbMj+Z0RBFSmsnJX0F8d
-	2v4+musw==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1twg60-00000000YJI-0w10;
-	Mon, 24 Mar 2025 11:35:56 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 3C95E3004AF; Mon, 24 Mar 2025 12:35:55 +0100 (CET)
-Date: Mon, 24 Mar 2025 12:35:55 +0100
-From: Peter Zijlstra <peterz@infradead.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Gabriele Monaco <gmonaco@redhat.com>, linux-kernel@vger.kernel.org,
-	Ingo Molnar <mingo@redhat.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	linux-trace-kernel@vger.kernel.org,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>
-Subject: Re: [PATCH v5 1/9] sched: Add sched tracepoints for RV task model
-Message-ID: <20250324113555.GC14944@noisy.programming.kicks-ass.net>
-References: <20250305140406.350227-1-gmonaco@redhat.com>
- <20250305140406.350227-2-gmonaco@redhat.com>
- <20250307123849.1e5d7543@gandalf.local.home>
+	s=arc-20240116; t=1742823565; c=relaxed/simple;
+	bh=EzpZ5jy/OB0YYBQlrkWGvh1GOdX8+dvl0ffEE/Sm/+s=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=C8MmK83YavMNYXiMwN8X6pxuPUIaDvBuLGH8qJ+QXEDhNJnWmyAmo7WmdreZocnscnqVS3Mb0DAo+dCzpPUmK2SEbRHkRFU2EsgL3aQnl+DyKujJwWSU8QfkpiTx4BToC9sQNRFU6YYVJcUSBWqzeRyYa/gvHN6Iv4pASDQ2RNE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 007D9C4CEE9;
+	Mon, 24 Mar 2025 13:39:23 +0000 (UTC)
+Date: Mon, 24 Mar 2025 09:40:05 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Douglas Raillard <douglas.raillard@arm.com>
+Cc: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH] tracing: Fix synth event printk format for str fields
+Message-ID: <20250324094005.045cd547@gandalf.local.home>
+In-Reply-To: <a5af352b-9f0d-4280-8d7b-e72597e6265d@arm.com>
+References: <20250318180939.227696-1-douglas.raillard@arm.com>
+	<20250319211858.6d8166e3fb202e6e5a658557@kernel.org>
+	<9d234136-05b9-46b6-849f-901df83bf54c@arm.com>
+	<20250324144551.fc290f9cf9f57b3d2f205354@kernel.org>
+	<a5af352b-9f0d-4280-8d7b-e72597e6265d@arm.com>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250307123849.1e5d7543@gandalf.local.home>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Fri, Mar 07, 2025 at 12:38:49PM -0500, Steven Rostedt wrote:
+On Mon, 24 Mar 2025 10:18:50 +0000
+Douglas Raillard <douglas.raillard@arm.com> wrote:
+
+> > https://lore.kernel.org/all/b6bdb34e70d970e8026daa3503db6b8e5cdad524.1601848695.git.zanussi@kernel.org/T/#u
+> > 
+> > So, I think it should always print the STR_VAR_LEN_MAX value.  
 > 
-> Can I get an Acked-by from one of the scheduler maintainers?
+> That makes sense. It's tempting to keep the actual length value though as native Rust strings are not null-terminated, so
+> it could make it nicer to emit events from Rust code. From a cursory look, the in-tree Rust code seems to be using both
+> &str and &CStr (the latter being null-terminated for FFI needs) so I'm not sure what's the plan around those
+> and what's the established convention if any.
+> 
+> > Steve, can you check it?
 
-Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+So I did take this patch, but thinking about this more, I may remove it.
+
+The __get_str() doesn't expect a string end. The parser should limit it, as
+the length of the string is saved in the ring buffer. Just like other trace
+events where dynamically size strings only use "%s" and __get_str().
+
+I think the real fix is to replace the "%.*s" with "%s".
+
+-- Steve
