@@ -1,33 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3965925F7AC;
-	Mon, 24 Mar 2025 13:39:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD00925F970;
+	Mon, 24 Mar 2025 14:29:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742823565; cv=none; b=R3FXFmrppb0IR5o0M3SpeWBF7H1v9AI+Fm8MORDHQupUpivM1UuZKql04TqQF8oTCH3j4XfPO8oDm/rBgXT2x6SOzoZUhMrDdwSy8yrU1zlKVAi3XmXUD3w/U3lytvidQBKwgDqHfNg+cc4maH5L26u2JqOaofY/gfZhCFIJEPo=
+	t=1742826560; cv=none; b=dMX9hup8aKAPYBR8kAe0bGTJHPwS3doObB3DxOGvw0H5hMaQL1CcSiV3oUxeXzW7N9s1HWQQNro/7V8CYPXDIDBxt5KwgSb205uFrF6l7VaGf1zBrDAeDDI1Qmfy5pE0VXde1ihY1NWB64lWHrMFcejFH+LqLUTPEkGkZOMWBq8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742823565; c=relaxed/simple;
-	bh=EzpZ5jy/OB0YYBQlrkWGvh1GOdX8+dvl0ffEE/Sm/+s=;
+	s=arc-20240116; t=1742826560; c=relaxed/simple;
+	bh=jZ5QUKjHm3bpfL6bHQ9yCWM/FDvqIqAUg1jPYhCsX44=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=C8MmK83YavMNYXiMwN8X6pxuPUIaDvBuLGH8qJ+QXEDhNJnWmyAmo7WmdreZocnscnqVS3Mb0DAo+dCzpPUmK2SEbRHkRFU2EsgL3aQnl+DyKujJwWSU8QfkpiTx4BToC9sQNRFU6YYVJcUSBWqzeRyYa/gvHN6Iv4pASDQ2RNE=
+	 MIME-Version:Content-Type; b=QIzTH+fFoS8t4DLIEjJsRA22ret999XNq1s1RqRRObNOiBZtXv5maWwRZn8OdmNUgnYLYi7UFA870iViltMnGorq6R6MC5JoY3E/I5/z4v3NYkPP+zKXkHH+yjOkOhkBlX34U32Z/CDVweJLaChX3d4yJzZFYlxctVrp1OkYUoM=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 007D9C4CEE9;
-	Mon, 24 Mar 2025 13:39:23 +0000 (UTC)
-Date: Mon, 24 Mar 2025 09:40:05 -0400
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9ECB6C4CEE9;
+	Mon, 24 Mar 2025 14:29:19 +0000 (UTC)
+Date: Mon, 24 Mar 2025 10:30:00 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
-To: Douglas Raillard <douglas.raillard@arm.com>
-Cc: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>, Mathieu Desnoyers
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc: Douglas Raillard <douglas.raillard@arm.com>, Mathieu Desnoyers
  <mathieu.desnoyers@efficios.com>, linux-kernel@vger.kernel.org,
  linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH] tracing: Fix synth event printk format for str fields
-Message-ID: <20250324094005.045cd547@gandalf.local.home>
-In-Reply-To: <a5af352b-9f0d-4280-8d7b-e72597e6265d@arm.com>
-References: <20250318180939.227696-1-douglas.raillard@arm.com>
-	<20250319211858.6d8166e3fb202e6e5a658557@kernel.org>
-	<9d234136-05b9-46b6-849f-901df83bf54c@arm.com>
-	<20250324144551.fc290f9cf9f57b3d2f205354@kernel.org>
-	<a5af352b-9f0d-4280-8d7b-e72597e6265d@arm.com>
+Subject: Re: [PATCH 3/3] tracing: Rename trace_synth() to
+ synth_event_trace2()
+Message-ID: <20250324103000.479f83dd@gandalf.local.home>
+In-Reply-To: <20250324152945.e47bc6d1e491658cfc6924fe@kernel.org>
+References: <20250318180814.226644-1-douglas.raillard@arm.com>
+	<20250318180814.226644-3-douglas.raillard@arm.com>
+	<20250319223728.ca7a5ac6fa37798d17bd2e29@kernel.org>
+	<3732e7f8-a452-4f65-8e8b-1575c01d33b9@arm.com>
+	<20250324152945.e47bc6d1e491658cfc6924fe@kernel.org>
 X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -38,26 +39,23 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Mon, 24 Mar 2025 10:18:50 +0000
-Douglas Raillard <douglas.raillard@arm.com> wrote:
+On Mon, 24 Mar 2025 15:29:45 +0900
+Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
 
-> > https://lore.kernel.org/all/b6bdb34e70d970e8026daa3503db6b8e5cdad524.1601848695.git.zanussi@kernel.org/T/#u
-> > 
-> > So, I think it should always print the STR_VAR_LEN_MAX value.  
+> Yeah, because those are mainly for the tests, and we are expecting that if
+> any modules wants to emit its events, it will define new trace-events and
+> use it instead of synthetic events. The synthetic events are for
+> programming via tracefs, not reporting from the kernel modules.
+> It is confusing if any synthetic events are reported without any origin of
+> real trace event. (so, it is an intermadiate event type.) IOW, We expect
+> that synthetic event is reported by other events via event trigger.
+> The current APIs are just for testing.
 > 
-> That makes sense. It's tempting to keep the actual length value though as native Rust strings are not null-terminated, so
-> it could make it nicer to emit events from Rust code. From a cursory look, the in-tree Rust code seems to be using both
-> &str and &CStr (the latter being null-terminated for FFI needs) so I'm not sure what's the plan around those
-> and what's the established convention if any.
-> 
-> > Steve, can you check it?
+> Hmm, I should hide those by CONFIG_SYNTH_EVENT_TESTS.
 
-So I did take this patch, but thinking about this more, I may remove it.
-
-The __get_str() doesn't expect a string end. The parser should limit it, as
-the length of the string is saved in the ring buffer. Just like other trace
-events where dynamically size strings only use "%s" and __get_str().
-
-I think the real fix is to replace the "%.*s" with "%s".
+Perhaps we should remove synth_event_trace() from the include/linux header
+file, and move it to kernel/trace/trace.h? That way it is only used for
+internal purposes, and not exposed to modules. You could wrap the export
+with a #ifdef CONFIG_SYNTH_EVENT_TESTS.
 
 -- Steve
