@@ -1,192 +1,132 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00655291E;
-	Mon, 24 Mar 2025 06:29:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 21A8725D8E1;
+	Mon, 24 Mar 2025 10:19:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742797790; cv=none; b=dqViy40hnIbFyevpdxRNoKvJfbTsAjj0m9zrPr3F8l5YgeYd1RLDo8THB08aQY6fUFew73bHoSBRcabwqmdlSpilB1euhR9jmhCMGHj4G4UOtdhak+SJXOJvfpS8EPypNNcPqgif1dOEZE6l46UlLWYrB45R2t+ORQX/oz+pc6I=
+	t=1742811543; cv=none; b=m8LZH1Ww7qCxboRFF0gM4u/Kz2rn20C2YcLI5JhWM6PKrlcdbIC+exF0OaXLHc/1hAYR1RaPtqbeBA/env6gARTUg04tXjc/vuIkwGcaK0oYi0mgXkBAewvmUsvDSYdNy1dDU42WiMl1EV+3GlkkIbsqlRvZGwCtQ42UANXWIVU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742797790; c=relaxed/simple;
-	bh=j0HuqL2AATJYFT1QnDwQ3aiw/QaT5J8zqE2ndjJtY08=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=pq0kRxq7cRuWcG8qIgr/sP0vyqrO11pR87kIlmLtjG5KLEnqzNqpAGHeaPIua0V58TTJh4l13jvFPzw1WUHkwDmUSz1YPwlGGQq6qtfddSDXGepu21SElSDKVpdd2W5aylXKm2TWbmV38oLXPzQRZ2Hgxj4L1n/uGcEVt6BnLC8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PD92DmTf; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PD92DmTf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 07146C4CEDD;
-	Mon, 24 Mar 2025 06:29:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742797789;
-	bh=j0HuqL2AATJYFT1QnDwQ3aiw/QaT5J8zqE2ndjJtY08=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=PD92DmTfeHHUViTaKsg4gXy2B3Opb/QErZHWTU6FbufFeVAF2JTM8z7E4PJ2qLAuy
-	 uMl5IbDC232zBgxxlgWAvlg4NSr9MqJr3TTrKv1L8vU6oFqA+3pQHkbUDRMlo1eNju
-	 GOdFLB3+sdEHfD7UvQkciz6J7FKrH7w9gMNHSeP6kT62h8t8RdCIUcIVKiLWRlWzYZ
-	 qkyen+gniFLSvZpZIQcIwQNPfqme6/OpGiQkPFEUwwUphWfAyq/vrCtZsUnfOCHRvT
-	 Ae+IA/J0cHvpkcyZCZLANrasx5cBGV7Fx++jnzEjDCdTNc8+ESVFgAtBUcR8yljyOl
-	 LN38tv9nmR0Ww==
-Date: Mon, 24 Mar 2025 15:29:45 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Douglas Raillard <douglas.raillard@arm.com>
-Cc: rostedt@goodmis.org, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/3] tracing: Rename trace_synth() to
- synth_event_trace2()
-Message-Id: <20250324152945.e47bc6d1e491658cfc6924fe@kernel.org>
-In-Reply-To: <3732e7f8-a452-4f65-8e8b-1575c01d33b9@arm.com>
-References: <20250318180814.226644-1-douglas.raillard@arm.com>
-	<20250318180814.226644-3-douglas.raillard@arm.com>
-	<20250319223728.ca7a5ac6fa37798d17bd2e29@kernel.org>
-	<3732e7f8-a452-4f65-8e8b-1575c01d33b9@arm.com>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1742811543; c=relaxed/simple;
+	bh=9rq2nJDVTpNtebFu0O0NSHqfeNp/dCiYbreZxeitcxY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=SfadF9lcijCKSBu28d1tMmhXkd+EvZGvgjvyBOSn3BDkUpZCVpD9V+Mv6pUGA7Js0Fm59zqHJjArz+uD2vrjFAnpDEG8NYCXvLFNRFb5mAYhDpSjJ7LUukUi9L+d2fTZ2Nf+3ecg9Gz09wxSUWANLlvnyYs61cWDChckJNBDePA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6E15F1A2D;
+	Mon, 24 Mar 2025 03:19:00 -0700 (PDT)
+Received: from [10.1.38.52] (e132430.arm.com [10.1.38.52])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EBB273F63F;
+	Mon, 24 Mar 2025 03:18:51 -0700 (PDT)
+Message-ID: <a5af352b-9f0d-4280-8d7b-e72597e6265d@arm.com>
+Date: Mon, 24 Mar 2025 10:18:50 +0000
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] tracing: Fix synth event printk format for str fields
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
+ Steven Rostedt <rostedt@goodmis.org>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+References: <20250318180939.227696-1-douglas.raillard@arm.com>
+ <20250319211858.6d8166e3fb202e6e5a658557@kernel.org>
+ <9d234136-05b9-46b6-849f-901df83bf54c@arm.com>
+ <20250324144551.fc290f9cf9f57b3d2f205354@kernel.org>
+Content-Language: en-US
+From: Douglas Raillard <douglas.raillard@arm.com>
+In-Reply-To: <20250324144551.fc290f9cf9f57b3d2f205354@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On Wed, 19 Mar 2025 14:51:42 +0000
-Douglas Raillard <douglas.raillard@arm.com> wrote:
-
-> On 19-03-2025 13:37, Masami Hiramatsu (Google) wrote:
-> > On Tue, 18 Mar 2025 18:08:12 +0000
-> > Douglas RAILLARD <douglas.raillard@arm.com> wrote:
-> > 
-> >> From: Douglas Raillard <douglas.raillard@arm.com>
-> >>
-> >> Rename the frehsly exposed trace_synth() to synth_event_trace2() to
-> >> comply with the existing naming convention. Since synth_event_trace()
-> >> already exists (and operates on a "struct trace_event_file *"), use a
-> >> new name for it.
-> >>
-> > 
-> > I don't like this '2' and similar version digit naming for the functions.
-> > Can you choose another better name?
+On 24-03-2025 05:45, Masami Hiramatsu (Google) wrote:
+> On Wed, 19 Mar 2025 14:34:19 +0000
+> Douglas Raillard <douglas.raillard@arm.com> wrote:
 > 
-> I was hoping for some suggestions as I don't like it either :)
+>> Hi,
+>>
+>> On 19-03-2025 12:18, Masami Hiramatsu (Google) wrote:
+>>> Hi,
+>>>
+>>> On Tue, 18 Mar 2025 18:09:38 +0000
+>>> Douglas RAILLARD <douglas.raillard@arm.com> wrote:
+>>>
+>>>> From: Douglas Raillard <douglas.raillard@arm.com>
+>>>>
+>>>> The printk format for synth event uses "%.*s" to print string fields,
+>>>> but then only passes the pointer part as var arg.
+>>>>
+>>>> Add the missing precision var arg.
+>>>
+>>> I'm not sure what you want to. Would you mean showing the string length too?
+>>> But I think actual output(*) shows only string, right?
+>>>
+>>> (*) the output data which can be read from `trace` file.
+>>
+>> The "%.*s" printf/printk format specifier has 2 components:
+>> 1. the "*" part that in printf documentation called the "precision"
+>> 2. the "s" part that is called the "specifier"
+>>
+>> For a "s" specifier, the precision is interpreted as the number of chars to display from that string.
+>> In any case, using "*" as precision means the value is passed dynamically, as a parameter to printf/printk,
+>> before the actual char *. Both those args are consumed by printk to display "%.*s", the precision is never
+>> displayed on its own.
+>>
+>> In the current state, synthetic event use "%.*s" for string fields, but then only a single `__get_str(field)`
+>> is passed to printk, so it's missing the precision arg. Both trace-cmd and our parser report an error because of that.
+>>
+>> The alternative would be to just use "%s" instead of "%.*s", but I assume whoever wrote the code initially had a reason
+>> to use the precision (maybe to print non-null-terminated strings ?), so I simply fixed the arguments.
 > 
-> The natural prefix for functions operating on "struct synth_event *" would by "synth_event_*",
-> but most of the existing API already uses the "synth_event_*" prefix, and is using
-> "struct trace_event_file*".
+> Ah, got it. It seems that the first precision parameter is for limiting
+> the length of the string according to the commit;
 > 
-> > BTW, can you also write a cover mail so that what is the goal of this
-> > series, background and results? 
+> https://lore.kernel.org/all/b6bdb34e70d970e8026daa3503db6b8e5cdad524.1601848695.git.zanussi@kernel.org/T/#u
 > 
-> Ok, I'll respin the series with a proper cover letter. The gist is I was following the doc [1] on how
-> to create a synthetic event, trying to apply that to a kernel module we have that needs to create new events.
+> So, I think it should always print the STR_VAR_LEN_MAX value.
+
+That makes sense. It's tempting to keep the actual length value though as native Rust strings are not null-terminated, so
+it could make it nicer to emit events from Rust code. From a cursory look, the in-tree Rust code seems to be using both
+&str and &CStr (the latter being null-terminated for FFI needs) so I'm not sure what's the plan around those
+and what's the established convention if any.
+
+> Steve, can you check it?
 > 
-> Unfortunately, it turned out that all the exposed APIs to emit the events (such as synth_event_trace()) require
-> getting a "struct trace_event_file*" before the call. This breaks when a user starts creating instances in tracefs,
-> as each instance will have its own "struct trace_event_file*".
-
-Yeah, because those are mainly for the tests, and we are expecting that if
-any modules wants to emit its events, it will define new trace-events and
-use it instead of synthetic events. The synthetic events are for
-programming via tracefs, not reporting from the kernel modules.
-It is confusing if any synthetic events are reported without any origin of
-real trace event. (so, it is an intermadiate event type.) IOW, We expect
-that synthetic event is reported by other events via event trigger.
-The current APIs are just for testing.
-
-Hmm, I should hide those by CONFIG_SYNTH_EVENT_TESTS.
-
-> The way this is done for normal trace events is
-> that each instance registers a probe on the tracepoint with the struct trace_event_file* as the void *data pointer.
-> Then when the tracepoint is called, all the probes are called and the event data is copied in all instances in which
-> it was enabled.
+> Thank you,
 > 
-> Although the synthetic event API does create that tracepoint and has an appropriate probe function, none of the exposed API
-> I could find make use of it. The exception is trace_events_hist.c had its own private version of it that actually calls all
-> the probes of the tracepoint "manually", so that the event is correctly emitted in all the instances it was enabled in. This
-> is the function touched by this patch.
-
-No, please don't touch the synthetic events for reporting any events via
-kernel modules. Those should use normal trace events for avoiding the
-confusion.
-
-Would you have any reason not to use normal trace events?
+>>
+>>>
+>>> Thank you,
+>>>
+>>>>
+>>>> Signed-off-by: Douglas Raillard <douglas.raillard@arm.com>
+>>>> ---
+>>>>    kernel/trace/trace_events_synth.c | 3 ++-
+>>>>    1 file changed, 2 insertions(+), 1 deletion(-)
+>>>>
+>>>> diff --git a/kernel/trace/trace_events_synth.c b/kernel/trace/trace_events_synth.c
+>>>> index e3f7d09e5512..274b9b1d9f7d 100644
+>>>> --- a/kernel/trace/trace_events_synth.c
+>>>> +++ b/kernel/trace/trace_events_synth.c
+>>>> @@ -620,7 +620,8 @@ static int __set_synth_event_print_fmt(struct synth_event *event,
+>>>>    		if (event->fields[i]->is_string &&
+>>>>    		    event->fields[i]->is_dynamic)
+>>>>    			pos += snprintf(buf + pos, LEN_OR_ZERO,
+>>>> -				", __get_str(%s)", event->fields[i]->name);
+>>>> +				", (int)__get_dynamic_array_len(%s), __get_str(%s)",
+>>>> +				event->fields[i]->name, event->fields[i]->name);
+>>>>    		else if (event->fields[i]->is_stack)
+>>>>    			pos += snprintf(buf + pos, LEN_OR_ZERO,
+>>>>    				", __get_stacktrace(%s)", event->fields[i]->name);
+>>>> -- 
+>>>> 2.43.0
+>>>>
+>>
 
 Thank you,
 
-> 
-> So that means that as it stands:
-> 1. The exposed API is only really usable with the "NULL" struct trace_event_file*, which maps to the top-level one.
-> 2. If a user creates an instance and enables the event in it using tracefs, the code that emits the event using the existing API
->     will completely ignore that and keep emitting the event in the top-level instance that it was wired to do.
-> 
-> Approximately nothing in the synth event API that takes a "struct trace_event_file*" will work properly with user-created instances.
-> 
-> [1] https://docs.kernel.org/trace/events.html#dyamically-creating-synthetic-event-definitions
-> 
-> > 
-> > Thank you,
-> > 
-> >> Signed-off-by: Douglas Raillard <douglas.raillard@arm.com>
-> >> ---
-> >>   include/linux/trace_events.h      | 2 +-
-> >>   kernel/trace/trace_events_hist.c  | 2 +-
-> >>   kernel/trace/trace_events_synth.c | 4 ++--
-> >>   3 files changed, 4 insertions(+), 4 deletions(-)
-> >>
-> >> diff --git a/include/linux/trace_events.h b/include/linux/trace_events.h
-> >> index e069d84a73f0..753ce8aecfe4 100644
-> >> --- a/include/linux/trace_events.h
-> >> +++ b/include/linux/trace_events.h
-> >> @@ -521,7 +521,7 @@ struct synth_event;
-> >>   
-> >>   extern struct synth_event *synth_event_find(const char *name);
-> >>   
-> >> -extern void trace_synth(struct synth_event *event, u64 *var_ref_vals,
-> >> +extern void synth_event_trace2(struct synth_event *event, u64 *var_ref_vals,
-> >>   			       unsigned int *var_ref_idx);
-> >>   
-> >>   extern int synth_event_delete(const char *name);
-> >> diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events_hist.c
-> >> index 7067f6fedb1a..ee0fee123c91 100644
-> >> --- a/kernel/trace/trace_events_hist.c
-> >> +++ b/kernel/trace/trace_events_hist.c
-> >> @@ -822,7 +822,7 @@ static void action_trace(struct hist_trigger_data *hist_data,
-> >>   {
-> >>   	struct synth_event *event = data->synth_event;
-> >>   
-> >> -	trace_synth(event, var_ref_vals, data->var_ref_idx);
-> >> +	synth_event_trace2(event, var_ref_vals, data->var_ref_idx);
-> >>   }
-> >>   
-> >>   struct hist_var_data {
-> >> diff --git a/kernel/trace/trace_events_synth.c b/kernel/trace/trace_events_synth.c
-> >> index 4a9a44d37ffc..8837aa258479 100644
-> >> --- a/kernel/trace/trace_events_synth.c
-> >> +++ b/kernel/trace/trace_events_synth.c
-> >> @@ -850,7 +850,7 @@ EXPORT_SYMBOL_GPL(synth_event_find);
-> >>   typedef void (*synth_probe_func_t) (void *__data, u64 *var_ref_vals,
-> >>   				    unsigned int *var_ref_idx);
-> >>   
-> >> -void trace_synth(struct synth_event *event, u64 *var_ref_vals,
-> >> +void synth_event_trace2(struct synth_event *event, u64 *var_ref_vals,
-> >>   			       unsigned int *var_ref_idx)
-> >>   {
-> >>   	struct tracepoint *tp = event->tp;
-> >> @@ -873,7 +873,7 @@ void trace_synth(struct synth_event *event, u64 *var_ref_vals,
-> >>   		}
-> >>   	}
-> >>   }
-> >> -EXPORT_SYMBOL_GPL(trace_synth);
-> >> +EXPORT_SYMBOL_GPL(synth_event_trace2);
-> >>   
-> >>   static struct trace_event_fields synth_event_fields_array[] = {
-> >>   	{ .type = TRACE_FUNCTION_TYPE,
-> >> -- 
-> >> 2.43.0
-> >>
-> > 
-> > 
-> 
+Douglas
 
-
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
