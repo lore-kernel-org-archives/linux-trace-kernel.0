@@ -1,26 +1,26 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DBA0264FA5;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 359B7266B51;
 	Tue, 25 Mar 2025 21:38:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742938715; cv=none; b=sq2gRK841VY5gZ3LywbvaOfckyfnJGPZ3c0ktLi8F7+ZMucAvH5ebxIL16P+lVYKcZifE6XdSDsTFAOSvBX+xsAfEp3yXq4orzDffGGn/pDLkiUKmRiec1GUcJ2nPbLV87xDODtkw8x/x+31GYFfUA/a7mjG+sRGhD0dxwtADHA=
+	t=1742938715; cv=none; b=JYis09+BGZts2K/8XRxbs9f6OVeu+oiv1HnDw5aOEJdgkucXmKZQ+A2yMYRt/eW9YlM8lwQFIrcvUfSavQXLa1ejABXejeUxfNHogmhUdBBLRN1iKA3BWW4URzNC62aQ2/yWK/cksiNy+cQg5kcX3IWAO5O6bgfQt13ItxJl0ho=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1742938715; c=relaxed/simple;
-	bh=JwBJp+fkMF6eEE7wxfkSU1SfjN5fgSBP10J0R75ipcU=;
+	bh=zduBI9phQ5jreSKmekDgvVSgzegkxRf2r7wk3Nb9d/M=;
 	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=iEX6FfdOcl9dXAvYsi2Y3PQ41/JYn0+2Th1uKYwlcAnJb0juIGXuH+C5cPWQn45gTlj/7Ph6eCs0S1+7b7bqGWLE8mElmUKTqAdNLvtx8bNodcupPEqiI1XGgyl2bSwMW7nvaMu01gZxr5fsbZ+mdzyxJlrCWIzPoK2AUusZmfo=
+	 Content-Type; b=asSjdcLZDQYgxKhQ3W2mSpIlcIHqJjPgd+NmGbvxK6diJgQjHk4oxuJjw9U84sPH/V0VIkdmxOpwSqAtJgCAyNT25pjXZ/JeYSr7u/JtoPwZRAF7U4dIFiK5la5t+zVGc7yO3xBiCDaNoC0HBn7krlkzrrMYO0hJsAgZB2CQuDI=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AFA03C4CEEE;
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C645AC4CEF1;
 	Tue, 25 Mar 2025 21:38:34 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.98)
 	(envelope-from <rostedt@goodmis.org>)
-	id 1txBzT-00000002Vf6-3EYT;
+	id 1txBzT-00000002Vfa-3vXa;
 	Tue, 25 Mar 2025 17:39:19 -0400
-Message-ID: <20250325213919.624181915@goodmis.org>
+Message-ID: <20250325213919.790882670@goodmis.org>
 User-Agent: quilt/0.68
-Date: Tue, 25 Mar 2025 17:38:47 -0400
+Date: Tue, 25 Mar 2025 17:38:48 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org,
  linux-trace-kernel@vger.kernel.org
@@ -28,7 +28,8 @@ Cc: Masami Hiramatsu <mhiramat@kernel.org>,
  Mark Rutland <mark.rutland@arm.com>,
  Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
  Andrew Morton <akpm@linux-foundation.org>
-Subject: [PATCH v2 2/4] tracing: Show function names when possible when listing fields
+Subject: [PATCH v2 3/4] tracing: Only return an adjusted address if it matches the kernel
+ address
 References: <20250325213845.844200633@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -40,62 +41,47 @@ Content-Type: text/plain; charset=UTF-8
 
 From: Steven Rostedt <rostedt@goodmis.org>
 
-When the "fields" option is enabled, the "print fmt" of the trace event is
-ignored and only the fields are printed. But some fields contain function
-pointers. Instead of just showing the hex value in this case, show the
-function name when possible:
+The trace_adjust_address() will take a given address and examine the
+persistent ring buffer to see if the address matches a module that is
+listed there. If it does not, it will just adjust the value to the core
+kernel delta. But if the address was for something that was not part of
+the core kernel text or data it should not be adjusted.
 
-Instead of having:
-
- # echo 1 > options/fields
- # cat trace
- [..]
-  kmem_cache_free: call_site=0xffffffffa9afcf31 (-1448095951) ptr=0xffff888124452910 (-131386736039664) name=kmemleak_object
-
-Have it output:
-
-  kmem_cache_free: call_site=rcu_do_batch+0x3d1/0x14a0 (-1768960207) ptr=0xffff888132ea5ed0 (854220496) name=kmemleak_object
+Check the result of the adjustment and only return the adjustment if it
+lands in the current kernel text or data. If not, return the original
+address.
 
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- kernel/trace/trace_output.c | 22 ++++++++++++++++------
- 1 file changed, 16 insertions(+), 6 deletions(-)
+ kernel/trace/trace.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/kernel/trace/trace_output.c b/kernel/trace/trace_output.c
-index ca8e09436a0a..ef6307a6ca5e 100644
---- a/kernel/trace/trace_output.c
-+++ b/kernel/trace/trace_output.c
-@@ -935,14 +935,24 @@ static void print_fields(struct trace_iterator *iter, struct trace_event_call *c
- 					break;
- 				}
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index 7ca8a0dbd4fa..85128ef96246 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -6023,6 +6023,7 @@ unsigned long trace_adjust_address(struct trace_array *tr, unsigned long addr)
+ 	struct trace_module_delta *module_delta;
+ 	struct trace_scratch *tscratch;
+ 	struct trace_mod_entry *entry;
++	unsigned long raddr;
+ 	int idx = 0, nr_entries;
  
--				trace_seq_printf(&iter->seq, "0x%x (%d)",
--						 *(unsigned int *)pos,
--						 *(unsigned int *)pos);
-+				if (sizeof(long) == 4)
-+					trace_seq_printf(&iter->seq, "%pS (%d)",
-+							 *(void **)pos,
-+							 *(unsigned int *)pos);
-+				else
-+					trace_seq_printf(&iter->seq, "0x%x (%d)",
-+							 *(unsigned int *)pos,
-+							 *(unsigned int *)pos);
- 				break;
- 			case 8:
--				trace_seq_printf(&iter->seq, "0x%llx (%lld)",
--						 *(unsigned long long *)pos,
--						 *(unsigned long long *)pos);
-+				if (sizeof(long) == 8)
-+					trace_seq_printf(&iter->seq, "%pS (%lld)",
-+							 *(void **)pos,
-+							 *(unsigned long long *)pos);
-+				else
-+					trace_seq_printf(&iter->seq, "0x%llx (%lld)",
-+							 *(unsigned long long *)pos,
-+							 *(unsigned long long *)pos);
- 				break;
- 			default:
- 				trace_seq_puts(&iter->seq, "<INVALID-SIZE>");
+ 	/* If we don't have last boot delta, return the address */
+@@ -6034,8 +6035,11 @@ unsigned long trace_adjust_address(struct trace_array *tr, unsigned long addr)
+ 	tscratch = tr->scratch;
+ 	/* if there is no tscrach, module_delta must be NULL. */
+ 	module_delta = READ_ONCE(tr->module_delta);
+-	if (!module_delta || tscratch->entries[0].mod_addr > addr)
+-		return addr + tr->text_delta;
++	if (!module_delta || tscratch->entries[0].mod_addr > addr) {
++		raddr = addr + tr->text_delta;
++		return is_kernel_core_data(raddr) || is_kernel_rodata(raddr) ||
++			__is_kernel(raddr) ? raddr : addr;
++	}
+ 
+ 	/* Note that entries must be sorted. */
+ 	nr_entries = tscratch->nr_entries;
 -- 
 2.47.2
 
