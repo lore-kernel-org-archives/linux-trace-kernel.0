@@ -1,123 +1,119 @@
-Received: from mail-vk1-f175.google.com (mail-vk1-f175.google.com [209.85.221.175])
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A7A31F5617
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 25 Mar 2025 09:46:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D60941DEFC8
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 25 Mar 2025 10:15:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742896007; cv=none; b=qIGcH6tRXDHTG0sgSeny/0NOl6A/n3U2E+hekCMA1ffytGYPDZxxdC8SsPPqPXOAZ7lNzrRtDO/DCdCGs9jXH9SLkbQHJJxAA008cleAJyF6M6GocQIGHC6BxBae/ZQR6a20qclBEs+uCkGidkM84Sg+kfpk2vZo6YishmuZ/3s=
+	t=1742897725; cv=none; b=YFC8BmKJ8WABjkscZ3cuMe8/GMYLgdO6ffVv6ora8W2EDLaRAKX37d0MzWw71bc+P9BOgLQy6ghC5BlG/kBr7On4E7gCt6l9cFbA+ryw27x0ngRmx9oOuQxfNfkCosMrq+DMQdRp4TZUbYeKhgAyCqWk6g1V+mXttm1SZCmCsLA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742896007; c=relaxed/simple;
-	bh=GjiEbFoY/UGEFhuXgO4Md7Z3mYQ2MwEfWlLsdmw7Djs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=cvDqYGRO3zySKsDoQHN7V6WwcqR3RqQZnJY2SCImtuDPzLc0nScmDeYzcqZnKmmxsU95+6gfySBXWFMB4Eg1SFqz0TlQ3opkpdKZNuPTD5uTCWtVqHNgMHZyHicHUn+nb+rxXyiRo78QZIs6Y8lwl8DrJRXa3Yj/zjpw4uQ0B5s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=IzuE9DBj; arc=none smtp.client-ip=209.85.221.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1742897725; c=relaxed/simple;
+	bh=gBxlLT5ivpGDh72oKPJ3CBVf2yMPWUqCIsclGPiI0ug=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=K9OFwLS4oc+TqEGQQX1kvTKAGg6vwMc4AqSub0ANdUF5eyvly7GQu0WsmThfToOi6hoEHCx9YQ64i3eNcZZX50uxZYcxfXmE+/qio3tZoJUiYGGtR5jhxf/aDRVCVHh0FlXUkyz2Y6cOWMY/TbXAIPK0EZuP/VAtgq7bCTbBaUo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=Fc6lIOAK; arc=none smtp.client-ip=209.85.128.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IzuE9DBj"
-Received: by mail-vk1-f175.google.com with SMTP id 71dfb90a1353d-523f19d39d3so2578598e0c.2
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 25 Mar 2025 02:46:46 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="Fc6lIOAK"
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-43bb6b0b898so51551375e9.1
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 25 Mar 2025 03:15:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1742896005; x=1743500805; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=b2lX5tfn7tIpxTTiRAKwTMrvBSHE/QiBFZ33eS8Haa8=;
-        b=IzuE9DBjsaK7i0FVTeTco33PyMaRUhGg6jiRpeJnywHlXM0QEHN7gdCOQS99uFb6yH
-         V1Bzig90qRFLv3Xn6aJrOaM7nK/e9sXIhnSXYRpyRyCp9WBq2J9kyIATYAwS/bODK0Q1
-         fJJaLdLwYtmWsloYIF5ccKZYt5Ee328qlEKpfH4rFgjhqgUY461VgQuzf+9cCpCvMnZC
-         FeMofV9GRQ/Gvr5lzfPjGdMym9olp+hdxGM8EywFNeevRUKmQDGq0oJH7GsbpR8zorxB
-         DS39/Iyxa/vtDKvCZf7sTxr1xBUX6dTqIccjd5ehRryD0i+xviBH1dAu5dL02m2dv7zp
-         tRsQ==
+        d=suse.com; s=google; t=1742897721; x=1743502521; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=VSbCNl4BxWO8IbyHRgNtn/a7Rf0u1sJorrF8gojdNyo=;
+        b=Fc6lIOAKpCOraZEvR/fbMV5DPHBT9DVzUJxny4j4iSVPija1FrydvR31VLyl9m0P+3
+         st+zmzGmXGZ73QIc3dXalcaw91I5w3P7vT426vY5pUqgLyziJcfoqOdbgodK+8P9vKh6
+         2poKQl7dd/2hNfG2GG3wenA7LXBMeIIyOACwJ+eEviS/HHsqvObC7FX5QZ7PwDsX+Wpj
+         xH2NV4KxrEtTLzbDlFjxSAs+SxBRrlgSfl3ccvgU+0qneT8Vu/5toPBGhYI2TQvWUr5X
+         UiwNQkLTv+lMQGSVrABaVF55REQI17nfgtaAtzXZoZM225/5YsKBN92o01tcCHg2RT0S
+         9/cg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742896005; x=1743500805;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=b2lX5tfn7tIpxTTiRAKwTMrvBSHE/QiBFZ33eS8Haa8=;
-        b=sGsBnuSrsKDy6FKeQuaJxInzEs2cn06sovSiWaLB1P0s8ozw2Clb6GP/hVSbqk3nTt
-         Gmo0X513TnQp4PuhCO6zMogFXiqMVloe67rPkRz93e0ZtbjPpZPQ+cOKs6vieODM/yxC
-         AcDRqVu5XGWvgWdub9TK3bE9uxJCOMVI/OtqJ0EJfL32Bm9mwpiSaiNDLKoyPesmngdh
-         ACfqUtYbIm5U05SYSRD/Ortc7IT4J8lOXHfu7EYwAWN+h3RpQV0F/drI/2OPPNmfgP4B
-         SLiHavEDQvikPKq3E+XBZehu7ndwj44uDZfvsm27c9329jlJwTjWNB8yK/kGwS2ODP/Y
-         M1Yg==
-X-Forwarded-Encrypted: i=1; AJvYcCX756Igt+mIBhPCUrgSV9WVobluuoTDckNPBJdkm4cDeb6UDGp406T+OtEFac6dDTmxwYY2BBflPknW24nYtNE5ZGc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwljKnyQWN98B17WacXMhn2ISgfursan09Wx8t0nFXUXZcWemOj
-	ItBr2Lc6BIjfIpdv512xEHZI69596X/K/bY6QquFfri0lAh9wP2G+t+BMNY79H99HDNL7amhKwP
-	hw6iYdG+DeJCChbEGC3LHRjdCsAfcl/OyJKSUdA==
-X-Gm-Gg: ASbGncunbGjbM2AFSZjVANtJ/WN0wR+KTeqaapAFjZCWupKpO8skv8it9TSA8OPy/cl
-	jA3LAi376LPF4YmzTTYrL3aZFmKkQ0pgC96L3tBG02FR3bOhpbEiQJB/szEnRJZQOy0/QVKrjHw
-	2n3tSxuaMMEzZHMjg6jOFERfTva6vH/3EP+szc7FNWANcZgNOw6kitq1r5e0A=
-X-Google-Smtp-Source: AGHT+IH//1u3lm0gEX6665f+nDZ4nWHXHyc8at04VLjpmQ8T0A2klnwJ74tyli52akhfB8SGxJAMgSoflf1CfRHTSfc=
-X-Received: by 2002:a05:6102:3e8b:b0:4c1:9159:859c with SMTP id
- ada2fe7eead31-4c50d51d56amr10977038137.15.1742896004860; Tue, 25 Mar 2025
- 02:46:44 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1742897721; x=1743502521;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=VSbCNl4BxWO8IbyHRgNtn/a7Rf0u1sJorrF8gojdNyo=;
+        b=gTs5gKeOZOREtvFLNdI6s8ez+z2Odj/gaLYDBlj+aGqLa/eZcQ5ZqJ9bNsAIdxiVz/
+         /I1OgdwUz78sriiHlZYDvtX57AMY5Cgpjt4DQDU7EHqDvklvYSBEnsgF/dhWDbekk30+
+         mMH5TtfsVtwdGJyTxA/Ta9SlidrCciC6VqcNdIFoXK+klWecZB/F8bzJrbHzWyxlQjr9
+         WLlL/bZVvDQlvoP4b9AQg8ltZlHmLq6gt3U1SLxZabcnkhnGQYkmTz3UIowMiyAZrpQF
+         Ms4MkMXggQ3LpJnewUhl157Qu0Dh/hdNjjY9k7wFu4zhL7U1hD2/769VGerP5YUQozaV
+         hJZQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWHtKOUMblm7La4Reyfd3JthP9Rmcwf/tuyrACnhPPA+jBDWYL+kKiOQEsGSOVyvqqsN5XlqPd83cECOAJldKo/Tko=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy6ZrSR6C2wbkyez6oLSaeORBokXl+EErhcajAqegWf0zKIUvB8
+	67qfifn88zKiNNQ1ts+q8wkZNdk+v+9DNZMLo/GVFVdfFxqQTU1xOHxvh6dH4tk=
+X-Gm-Gg: ASbGnctXRTEavEOH/FZ3KUybyTv8OWo0/0by2dCx70g+GyW4Jlf8uM2d0wFqJ4oONeC
+	tx0eCaPxqahJthotRBQ+eLXxG6uN3syADgYUyBnP/Pno0glSiuRzj/fuT40WPyBCxelP9SbGRlh
+	NSfLiwhohg30Ca7HWOFwdYkxRih9rUY2d1c6huOiY6KZhKhBIkWpZkAThDpa/QvmWLqUWk1DOEj
+	ftpvaubpcrS7eQSMrhQfiyLJjGER61e21W8htXora7J2QWBOo1ZYw9nkMLoKE0NuHpONY8lYF56
+	vd5S2gBaPBLjG14O+PuPWZrEtfVXqIJs50hVdvFU0hiH
+X-Google-Smtp-Source: AGHT+IEHsfS3jwIQd3DXLtKs6BlMXePkgOPcd8GrAW7V3JTw8OOWk8DEnFNJlXsh14KOgVQNsnrCHg==
+X-Received: by 2002:a05:600c:4584:b0:43c:efed:733e with SMTP id 5b1f17b1804b1-43d509f58b4mr147592855e9.14.1742897721087;
+        Tue, 25 Mar 2025 03:15:21 -0700 (PDT)
+Received: from pathway.suse.cz ([193.86.92.181])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43d4fceb780sm149735745e9.4.2025.03.25.03.15.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 25 Mar 2025 03:15:20 -0700 (PDT)
+Date: Tue, 25 Mar 2025 11:15:19 +0100
+From: Petr Mladek <pmladek@suse.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+	Kees Cook <kees@kernel.org>, Steven Rostedt <rostedt@goodmis.org>,
+	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	Andy Shevchenko <andy@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+	Sergey Senozhatsky <senozhatsky@chromium.org>
+Subject: Re: [PATCH v2 0/6] vsprintf: Add __printf attribute to where it's
+ required
+Message-ID: <Z-KCNy7Qu2vFdwVx@pathway.suse.cz>
+References: <20250321144822.324050-1-andriy.shevchenko@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CA+G9fYs62qxt1PajEp2A8uUmQFeAsC2JBV2wuspbAxz_hFF7CA@mail.gmail.com>
- <CA+G9fYu54p6zQpX3Kw4dy+Yy3BM66r_iawvLchPvsB_Sq_wCNQ@mail.gmail.com> <20250324103313.2bc42730@gandalf.local.home>
-In-Reply-To: <20250324103313.2bc42730@gandalf.local.home>
-From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Tue, 25 Mar 2025 15:16:32 +0530
-X-Gm-Features: AQ5f1Jr22uNyEeSzPJIeFAGaU0oB0Z0_gFBkxqProEQ282Ldn9GhG4OhHPUzA3k
-Message-ID: <CA+G9fYuFNCoSvZMYYpqMT1SC-p2W9Ra1EuwV6p2kiOH61Uxecg@mail.gmail.com>
-Subject: Re: next-20250319: arm shmobile_defconfig trace.c undefined type
- 'struct module'
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: open list <linux-kernel@vger.kernel.org>, 
-	Linux trace kernel <linux-trace-kernel@vger.kernel.org>, lkft-triage@lists.linaro.org, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Dan Carpenter <dan.carpenter@linaro.org>, 
-	Arnd Bergmann <arnd@arndb.de>, Anders Roxell <anders.roxell@linaro.org>, 
-	Mark Rutland <mark.rutland@arm.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	Andrew Morton <akpm@linux-foundation.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250321144822.324050-1-andriy.shevchenko@linux.intel.com>
 
-On Mon, 24 Mar 2025 at 20:02, Steven Rostedt <rostedt@goodmis.org> wrote:
->
-> On Wed, 19 Mar 2025 19:42:42 +0530
-> Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
->
-> > On Wed, 19 Mar 2025 at 17:01, Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
-> > >
-> > > Regressions on arm the shmobile_defconfig builds failed with clang-20 and gcc-13
-> > >
-> > > First seen on the next-20250312
-> > >  Good: next-20250311
-> > >  Bad:  next-20250312 .. next-20250319
-> > >
-> > > Regressions found on arm:
-> > >  - gcc-13-shmobile_defconfig
-> > >  - gcc-8-shmobile_defconfig
-> > >  - clang-20-shmobile_defconfig
-> > >
-> > > Regression Analysis:
-> > >  - New regression? Yes
-> > >  - Reproducible? Yes
-> > >
-> > > Build regression: arm shmobile_defconfig trace.c undefined type 'struct module'
-> > > Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
-> >
-> > Anders bisected this build regression to the following commit,
-> >
-> > # first bad commit:
-> >    [dca91c1c54686914dec4dabea8bae4f365c02007]
-> >    tracing: Have persistent trace instances save module addresses
-> >
-> > Lore link,
-> >  - https://lore.kernel.org/all/CA+G9fYs62qxt1PajEp2A8uUmQFeAsC2JBV2wuspbAxz_hFF7CA@mail.gmail.com/
->
-> The fix should have been pushed to linux-next already.
->
-> Could you test the latest linux-next?
+On Fri 2025-03-21 16:40:46, Andy Shevchenko wrote:
+> This whole series started from a simple fix (see the last patch)
+> to make GCC (Debian 14.2.0-17) happy when compiling with `make W=1`
+> (note, that CONFIG_WERROR=y and all warnings break the build!)
+> down to a rabbit hole.
+> 
+> However starting from v2 the last patch doesn't require the first
+> part, I prefer still to have them since the functions, while being
+> _binary_ printf()-like, are still printf()-like. It also puts in align
+> the tracing stuff with the rest and fixes the wrong parameter value.
+> 
+> These first 4 patches are organised in a strict order and can't be
+> reshuffled, otherwise it will produce a warnings in between.
+> 
+> I believe the best route for the series is printk tree with immutable
+> tag or branch for the others.
+> 
+> Alternatively the first 4 patches can be applied first as they
+> are pretty much straightforward. They also can be squashed to one
+> (as the same topic behind), but it all is up to the respective
+> maintainers.
 
-The reported issue is fixed on tag: next-20250324.
-Please refer below link for more details,
+The whole series looks good to me:
 
-Link:
- - https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20250324/testrun/27735288/suite/build/test/gcc-13-shmobile_defconfig/history/
+Reviewed-by: Petr Mladek <pmladek@suse.com>
 
-- Naresh
+I am going to push it via the printk tree. I think about doing
+so as a second pull request by the end of this merge window.
+
+Anyway, I am going to wait few more days for eventual feedback
+or push back.
+
+Best Regards,
+Petr
