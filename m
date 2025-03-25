@@ -1,140 +1,123 @@
-Received: from mail-qt1-f174.google.com (mail-qt1-f174.google.com [209.85.160.174])
+Received: from mail-vk1-f175.google.com (mail-vk1-f175.google.com [209.85.221.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D58DD1A5B89;
-	Tue, 25 Mar 2025 08:12:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A7A31F5617
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 25 Mar 2025 09:46:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742890323; cv=none; b=ZpWN2UI48qcAt9Ofqub5+6HFPHncZ6Arvd6UBdpZ44YuL2nbe+eL5GY0baOLDQQAqU2+DX1KOw3nloQngoYDGXDo6BTwP6h0wgPG3VSPabUxpgwiBMWDDcdAQKOKSUZXtCFeFqDEOKeN/V/vZIllVhLmpXquSbhgxWcopIyZ/Ig=
+	t=1742896007; cv=none; b=qIGcH6tRXDHTG0sgSeny/0NOl6A/n3U2E+hekCMA1ffytGYPDZxxdC8SsPPqPXOAZ7lNzrRtDO/DCdCGs9jXH9SLkbQHJJxAA008cleAJyF6M6GocQIGHC6BxBae/ZQR6a20qclBEs+uCkGidkM84Sg+kfpk2vZo6YishmuZ/3s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742890323; c=relaxed/simple;
-	bh=l3pgQA1U4vKTNf/KxkOtihkRRMDf1d1IdFUh6Y4HDO0=;
+	s=arc-20240116; t=1742896007; c=relaxed/simple;
+	bh=GjiEbFoY/UGEFhuXgO4Md7Z3mYQ2MwEfWlLsdmw7Djs=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=oLYu0jEP6ObqdYkvNy6Q8zvyNfKHguBM/KpHU94k9GdvAZjnjBCcP63I0o+bwGqYthdOBiZLwxDlR3Q/X9PsKVuwzjZjdtRF9a6bOebe/JXba8V3vo7QiXtjDZmpiYTh2nAdo7J10vwxSrQq8seTOD2XxbO2m/RM0N6aycV2Ga8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.160.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-qt1-f174.google.com with SMTP id d75a77b69052e-474f0c1e1c6so81469161cf.1;
-        Tue, 25 Mar 2025 01:12:01 -0700 (PDT)
+	 To:Cc:Content-Type; b=cvDqYGRO3zySKsDoQHN7V6WwcqR3RqQZnJY2SCImtuDPzLc0nScmDeYzcqZnKmmxsU95+6gfySBXWFMB4Eg1SFqz0TlQ3opkpdKZNuPTD5uTCWtVqHNgMHZyHicHUn+nb+rxXyiRo78QZIs6Y8lwl8DrJRXa3Yj/zjpw4uQ0B5s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=IzuE9DBj; arc=none smtp.client-ip=209.85.221.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IzuE9DBj"
+Received: by mail-vk1-f175.google.com with SMTP id 71dfb90a1353d-523f19d39d3so2578598e0c.2
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 25 Mar 2025 02:46:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1742896005; x=1743500805; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=b2lX5tfn7tIpxTTiRAKwTMrvBSHE/QiBFZ33eS8Haa8=;
+        b=IzuE9DBjsaK7i0FVTeTco33PyMaRUhGg6jiRpeJnywHlXM0QEHN7gdCOQS99uFb6yH
+         V1Bzig90qRFLv3Xn6aJrOaM7nK/e9sXIhnSXYRpyRyCp9WBq2J9kyIATYAwS/bODK0Q1
+         fJJaLdLwYtmWsloYIF5ccKZYt5Ee328qlEKpfH4rFgjhqgUY461VgQuzf+9cCpCvMnZC
+         FeMofV9GRQ/Gvr5lzfPjGdMym9olp+hdxGM8EywFNeevRUKmQDGq0oJH7GsbpR8zorxB
+         DS39/Iyxa/vtDKvCZf7sTxr1xBUX6dTqIccjd5ehRryD0i+xviBH1dAu5dL02m2dv7zp
+         tRsQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742890320; x=1743495120;
+        d=1e100.net; s=20230601; t=1742896005; x=1743500805;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=4ZC0G6MVz9EIHwJ/4QeHnpY6DgPswOWy+fhpxGY/Dqk=;
-        b=esD6r3dCfCCrZ7lGCP6tBOZoZ94O5w7ufJBNwyTrAMLwqeDTpDqT+472hNc9MOcDCE
-         2n+nzDtGrkdBeVlmAbEfv9wUISjYuaIsfIK+V071FttbhsNt4zqWHSVaiaW+ViPIL68R
-         D0KUSbAec8MHIBXOPG3PdyoCtp7HXVturLHZyZR0yPTRlnK38czfXm9l4XxImwMlryBl
-         lmMElq1Mr7gv0rag2mkYzSCoshxVSgi8kvCF244sGcDx0WLinDIMiLrXiKkgR3lIPWlf
-         plr4FdqlD7MTkpG62D5oI/SOnnw0GrI9yu9olGjrq21BXVVYh9tTqlNKznNijcQY26Pp
-         jP6A==
-X-Forwarded-Encrypted: i=1; AJvYcCVVvOuGAR0GgUHUKVxqoTgu9IsgXdjrUbSThu7s8SJlOYF/Qnp2kSHGE4Upth5IcyZvgLpkFybvdjc=@vger.kernel.org, AJvYcCVijNCbH65JH+ME6aId0EPCw+P97hQwzcwnkotgkX6ewbgyflX75TIPJv7tKaxHEA+b1VWNoNfVbHmPiQfdiAkW@vger.kernel.org, AJvYcCWV84DJFX5NlI3BKvJmMITpIZRtNGUsThFXLkevsP/xXgjHGO0FE8oj4QiFAACvASUHbRG6e+ZF1GIvOo9OUpGzZrTd@vger.kernel.org, AJvYcCXXxfISxwL0Q0fRm3/MKBikJiBgrUyumjbkixzXBLaWmQtjyyojGLzRhVoeQO7dXKaCCNPaHm5pWwMCghDi@vger.kernel.org
-X-Gm-Message-State: AOJu0YxshZfS2oE0fIQlKNnkn57g+qCykK1R8WIVTnlZ6wmebgXNkdOR
-	JEyprjlP2bPokexnO822vbKkcSHCOXWpIB1fC05X/EWjRt9WBSpIFDkuaHQ+
-X-Gm-Gg: ASbGncv4+JrXwiM/Lmz8JSLrzpV/GAQrd2nPYAeUjkI09nZX29uJCjWx7nqt7LIRt3p
-	D7WQj29CriY22oc/E9dHasWoG8jLicR/T3jUt3MXgnCQ1NZxI36fpVw9fEfhm/QD//8Ni0lYwDT
-	UYF9mDVtZOnS3B2K9qWsQN5JXYe5Zen7J6h56yM8zGbKW3gZ3DRklF/OtH2V8y8fmSjPNgaNm/5
-	n/73Uj9XjSzgdcGw5YQXSFZOa2WgT7Z+CoAvC/VccTJM60XYSCS1QKp6REF4TrCJoUhoHZzOiWm
-	dv3MscQYXpJk1DKy7RpC41B9Xuy3QaLnh19q/nQntHNm2t0z/mU+leyjIZ/siIdaDh1G3V/Fpox
-	gwLzUwo4oA6E=
-X-Google-Smtp-Source: AGHT+IHRuYBdgv5CMYIjs0GWcwd0bsBW/6PeQyINMZ+bSfilx4dZBJ1dVxL8R5V3KYfbWDW4Zckcrg==
-X-Received: by 2002:a05:6214:f62:b0:6d4:1680:612d with SMTP id 6a1803df08f44-6eb3f1a731bmr234175116d6.0.1742890320257;
-        Tue, 25 Mar 2025 01:12:00 -0700 (PDT)
-Received: from mail-qk1-f178.google.com (mail-qk1-f178.google.com. [209.85.222.178])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6eb3ef0efd9sm54173736d6.11.2025.03.25.01.11.59
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 25 Mar 2025 01:12:00 -0700 (PDT)
-Received: by mail-qk1-f178.google.com with SMTP id af79cd13be357-7c54b651310so810212485a.0;
-        Tue, 25 Mar 2025 01:11:59 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCU1V22TBGt0T1NkQmeL2wLhr2iq4DfHy8jrUIqM8KobF1As4PMNGKfQByaRGWe+z8gJsFRL9hU6vjlgRr4YXgug@vger.kernel.org, AJvYcCW+cNo86oSHm8ACu7lM9tDRFtNO4MCz5UQPtA2QshYkksT+sTgleO0qJr8pIFb2OOdFyrEyaZjH85IT6/sB@vger.kernel.org, AJvYcCWRkhrlzTB85NNdk9mmr4b/6dm9Ie0wmZZNxiuLPK49S53B+ozDb+I8wzFJDLBBw9Ploc9WjCoI6KRfvR3RclgEaNZp@vger.kernel.org, AJvYcCXp2r9VHiZuppe6rkoXeYJ80itSiktOJRbsNUI55o+e+tSrbDyuQTvAKhWtqwAuBcf8+Kz/5YdNlic=@vger.kernel.org
-X-Received: by 2002:a05:6102:5241:b0:4c4:dead:59a3 with SMTP id
- ada2fe7eead31-4c50d496a1cmr12372942137.2.1742889884357; Tue, 25 Mar 2025
- 01:04:44 -0700 (PDT)
+        bh=b2lX5tfn7tIpxTTiRAKwTMrvBSHE/QiBFZ33eS8Haa8=;
+        b=sGsBnuSrsKDy6FKeQuaJxInzEs2cn06sovSiWaLB1P0s8ozw2Clb6GP/hVSbqk3nTt
+         Gmo0X513TnQp4PuhCO6zMogFXiqMVloe67rPkRz93e0ZtbjPpZPQ+cOKs6vieODM/yxC
+         AcDRqVu5XGWvgWdub9TK3bE9uxJCOMVI/OtqJ0EJfL32Bm9mwpiSaiNDLKoyPesmngdh
+         ACfqUtYbIm5U05SYSRD/Ortc7IT4J8lOXHfu7EYwAWN+h3RpQV0F/drI/2OPPNmfgP4B
+         SLiHavEDQvikPKq3E+XBZehu7ndwj44uDZfvsm27c9329jlJwTjWNB8yK/kGwS2ODP/Y
+         M1Yg==
+X-Forwarded-Encrypted: i=1; AJvYcCX756Igt+mIBhPCUrgSV9WVobluuoTDckNPBJdkm4cDeb6UDGp406T+OtEFac6dDTmxwYY2BBflPknW24nYtNE5ZGc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwljKnyQWN98B17WacXMhn2ISgfursan09Wx8t0nFXUXZcWemOj
+	ItBr2Lc6BIjfIpdv512xEHZI69596X/K/bY6QquFfri0lAh9wP2G+t+BMNY79H99HDNL7amhKwP
+	hw6iYdG+DeJCChbEGC3LHRjdCsAfcl/OyJKSUdA==
+X-Gm-Gg: ASbGncunbGjbM2AFSZjVANtJ/WN0wR+KTeqaapAFjZCWupKpO8skv8it9TSA8OPy/cl
+	jA3LAi376LPF4YmzTTYrL3aZFmKkQ0pgC96L3tBG02FR3bOhpbEiQJB/szEnRJZQOy0/QVKrjHw
+	2n3tSxuaMMEzZHMjg6jOFERfTva6vH/3EP+szc7FNWANcZgNOw6kitq1r5e0A=
+X-Google-Smtp-Source: AGHT+IH//1u3lm0gEX6665f+nDZ4nWHXHyc8at04VLjpmQ8T0A2klnwJ74tyli52akhfB8SGxJAMgSoflf1CfRHTSfc=
+X-Received: by 2002:a05:6102:3e8b:b0:4c1:9159:859c with SMTP id
+ ada2fe7eead31-4c50d51d56amr10977038137.15.1742896004860; Tue, 25 Mar 2025
+ 02:46:44 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250219153938.24966-1-boqun.feng@gmail.com> <20250219153938.24966-11-boqun.feng@gmail.com>
-In-Reply-To: <20250219153938.24966-11-boqun.feng@gmail.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Tue, 25 Mar 2025 09:04:31 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdX6dy9_tmpLkpcnGzxyRbe6qSWYukcPp=H1GzZdyd3qBQ@mail.gmail.com>
-X-Gm-Features: AQ5f1JoE7ZunbEn2lIWdcQ0LTcplBdC2QyWAfIuaecNnkHmcPWNAR1fB65H0kiQ
-Message-ID: <CAMuHMdX6dy9_tmpLkpcnGzxyRbe6qSWYukcPp=H1GzZdyd3qBQ@mail.gmail.com>
-Subject: Re: [PATCH rcu 10/11] srcu: Add FORCE_NEED_SRCU_NMI_SAFE Kconfig for testing
-To: Boqun Feng <boqun.feng@gmail.com>, "Paul E. McKenney" <paulmck@kernel.org>
-Cc: rcu@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, 
-	Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Frederic Weisbecker <frederic@kernel.org>, 
-	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>, Joel Fernandes <joel@joelfernandes.org>, 
-	Josh Triplett <josh@joshtriplett.org>, Uladzislau Rezki <urezki@gmail.com>, 
-	Lai Jiangshan <jiangshanlai@gmail.com>, Zqiang <qiang.zhang1211@gmail.com>, 
-	Davidlohr Bueso <dave@stgolabs.net>, Shuah Khan <shuah@kernel.org>, 
-	Andrew Morton <akpm@linux-foundation.org>, Thomas Huth <thuth@redhat.com>, 
-	"Borislav Petkov (AMD)" <bp@alien8.de>, Ard Biesheuvel <ardb@kernel.org>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Josh Poimboeuf <jpoimboe@kernel.org>, 
-	Yury Norov <yury.norov@gmail.com>, Valentin Schneider <vschneid@redhat.com>, linux-doc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org
+References: <CA+G9fYs62qxt1PajEp2A8uUmQFeAsC2JBV2wuspbAxz_hFF7CA@mail.gmail.com>
+ <CA+G9fYu54p6zQpX3Kw4dy+Yy3BM66r_iawvLchPvsB_Sq_wCNQ@mail.gmail.com> <20250324103313.2bc42730@gandalf.local.home>
+In-Reply-To: <20250324103313.2bc42730@gandalf.local.home>
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Tue, 25 Mar 2025 15:16:32 +0530
+X-Gm-Features: AQ5f1Jr22uNyEeSzPJIeFAGaU0oB0Z0_gFBkxqProEQ282Ldn9GhG4OhHPUzA3k
+Message-ID: <CA+G9fYuFNCoSvZMYYpqMT1SC-p2W9Ra1EuwV6p2kiOH61Uxecg@mail.gmail.com>
+Subject: Re: next-20250319: arm shmobile_defconfig trace.c undefined type
+ 'struct module'
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: open list <linux-kernel@vger.kernel.org>, 
+	Linux trace kernel <linux-trace-kernel@vger.kernel.org>, lkft-triage@lists.linaro.org, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Dan Carpenter <dan.carpenter@linaro.org>, 
+	Arnd Bergmann <arnd@arndb.de>, Anders Roxell <anders.roxell@linaro.org>, 
+	Mark Rutland <mark.rutland@arm.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	Andrew Morton <akpm@linux-foundation.org>
 Content-Type: text/plain; charset="UTF-8"
 
-Hi Boqun, Paul,
-
-On Wed, 19 Feb 2025 at 16:44, Boqun Feng <boqun.feng@gmail.com> wrote:
-> From: "Paul E. McKenney" <paulmck@kernel.org>
+On Mon, 24 Mar 2025 at 20:02, Steven Rostedt <rostedt@goodmis.org> wrote:
 >
-> The srcu_read_lock_nmisafe() and srcu_read_unlock_nmisafe() functions
-> map to __srcu_read_lock() and __srcu_read_unlock() on systems like x86
-> that have NMI-safe this_cpu_inc() operations.  This makes the underlying
-> __srcu_read_lock_nmisafe() and __srcu_read_unlock_nmisafe() functions
-> difficult to test on (for example) x86 systems, allowing bugs to creep in.
+> On Wed, 19 Mar 2025 19:42:42 +0530
+> Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
 >
-> This commit therefore creates a FORCE_NEED_SRCU_NMI_SAFE Kconfig that
-> forces those underlying functions to be used even on systems where they
-> are not needed, thus providing better testing coverage.
+> > On Wed, 19 Mar 2025 at 17:01, Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
+> > >
+> > > Regressions on arm the shmobile_defconfig builds failed with clang-20 and gcc-13
+> > >
+> > > First seen on the next-20250312
+> > >  Good: next-20250311
+> > >  Bad:  next-20250312 .. next-20250319
+> > >
+> > > Regressions found on arm:
+> > >  - gcc-13-shmobile_defconfig
+> > >  - gcc-8-shmobile_defconfig
+> > >  - clang-20-shmobile_defconfig
+> > >
+> > > Regression Analysis:
+> > >  - New regression? Yes
+> > >  - Reproducible? Yes
+> > >
+> > > Build regression: arm shmobile_defconfig trace.c undefined type 'struct module'
+> > > Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+> >
+> > Anders bisected this build regression to the following commit,
+> >
+> > # first bad commit:
+> >    [dca91c1c54686914dec4dabea8bae4f365c02007]
+> >    tracing: Have persistent trace instances save module addresses
+> >
+> > Lore link,
+> >  - https://lore.kernel.org/all/CA+G9fYs62qxt1PajEp2A8uUmQFeAsC2JBV2wuspbAxz_hFF7CA@mail.gmail.com/
 >
-> Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
-> Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
-
-Thanks for your patch, which is now commit 536e8b9b80bc7a0a ("srcu:
-Add FORCE_NEED_SRCU_NMI_SAFE Kconfig for testing") in linus/master
-
-> --- a/kernel/rcu/Kconfig
-> +++ b/kernel/rcu/Kconfig
-> @@ -65,6 +65,17 @@ config TREE_SRCU
->         help
->           This option selects the full-fledged version of SRCU.
+> The fix should have been pushed to linux-next already.
 >
-> +config FORCE_NEED_SRCU_NMI_SAFE
-> +       bool "Force selection of NEED_SRCU_NMI_SAFE"
+> Could you test the latest linux-next?
 
-What am I supposed to answer here? "n" I guess.
-What about distro and allmodconfig kernels?
+The reported issue is fixed on tag: next-20250324.
+Please refer below link for more details,
 
-> +       depends on !TINY_SRCU
-> +       select NEED_SRCU_NMI_SAFE
-> +       default n
-> +       help
-> +         This option forces selection of the NEED_SRCU_NMI_SAFE
-> +         Kconfig option, allowing testing of srcu_read_lock_nmisafe()
-> +         and srcu_read_unlock_nmisafe() on architectures (like x86)
-> +         that select the ARCH_HAS_NMI_SAFE_THIS_CPU_OPS Kconfig option.
+Link:
+ - https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20250324/testrun/27735288/suite/build/test/gcc-13-shmobile_defconfig/history/
 
-Perhaps this should depend on ARCH_HAS_NMI_SAFE_THIS_CPU_OPS?
-
-> +
->  config NEED_SRCU_NMI_SAFE
->         def_bool HAVE_NMI && !ARCH_HAS_NMI_SAFE_THIS_CPU_OPS && !TINY_SRCU
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+- Naresh
