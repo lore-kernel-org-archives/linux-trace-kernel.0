@@ -1,489 +1,136 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mx01.omp.ru (mx01.omp.ru [90.154.21.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57E0325FA1C;
-	Tue, 25 Mar 2025 17:05:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1896313633F;
+	Tue, 25 Mar 2025 17:19:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.154.21.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742922346; cv=none; b=f603fTw0OroYcARiXG1M0hutT4c6dgd6MEPx5GZ58pSsw4Je8BL8WaPjFCRrd7OOSOmOK/gX7d5bJIEGFKK/5r+P/Gdr0OAC9Cyn2VC5Nh5soqYj7kdWpYI1TRe5Id7pe4AbUOFMuGPUcKF/M1ZMqfGxQPbt+k/Tafoz03slA4c=
+	t=1742923195; cv=none; b=JVnlwqVX6P2mPQEyZ+/VCGqJ4P18sGpLohEiLA42NvMdcuwFnvm6Gts6MotbeIPjngeCkr7IXavTEdHtxZ54NYjKzjnieHJbw52OYu20xq+NTnzQV8+qEdFr9x29mvagLSgEdt93kTrsER3utBA5TBu0NaZouBObCpg2MWJ/vlo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742922346; c=relaxed/simple;
-	bh=xpgy+4QyhrxRrntZgFv3b4LawDvQKmKr7j81RNkK5xo=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ARNsMETKyXKalvuNTUGkG6fQXKKgg866fNGlkfIqVDNgkdb8DD9OGf92l9ano0D076xzp6YlFuF1kujWfh9RQ1Vu1Gkvcphl0jPhUNwc1MtEbC+wnqkip4dwdKiC74JGBbx3qW0Te6RlCOJdWsxy4C4+1lLKPnNJMsok0t7dQgM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 45DC8C4CEEA;
-	Tue, 25 Mar 2025 17:05:45 +0000 (UTC)
-Date: Tue, 25 Mar 2025 13:06:28 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/4] tracing: tprobe-events: Support multiple tprobes on
- the same tracepoint
-Message-ID: <20250325130628.3a9e234c@gandalf.local.home>
-In-Reply-To: <174212769289.348872.12945848497242748827.stgit@devnote2>
-References: <174212767109.348872.18231451508464729427.stgit@devnote2>
-	<174212769289.348872.12945848497242748827.stgit@devnote2>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1742923195; c=relaxed/simple;
+	bh=XhmLROfnnL3FtaOH27gIOe9sbljr3QNEJt4khOaoGEw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=thXfkLpcysvlslOLNwAsjXCeCS6JfK6KctSbO2VGPV3RuKnyk0b5C13uS18qMml/OaXFTQll1YJumJb0xtEBlz6OVXMzXwT+u0OP1YIXmFUMXF7N6mj6jdKsM0A+dPbTQIyLF0c2blFZmvdsLhtgQIwwYgh2AD86/cle9R4yFAI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=omp.ru; spf=pass smtp.mailfrom=omp.ru; arc=none smtp.client-ip=90.154.21.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=omp.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=omp.ru
+Received: from [192.168.2.102] (213.87.136.199) by msexch01.omp.ru
+ (10.188.4.12) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.2.1258.12; Tue, 25 Mar
+ 2025 20:19:41 +0300
+Message-ID: <05fec753-cdaa-45a5-a029-b6435c30eb07@omp.ru>
+Date: Tue, 25 Mar 2025 20:19:39 +0300
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH V3 25/43] rv64ilp32_abi: exec: Adapt 64lp64 env and
+ argv
+To: <guoren@kernel.org>, <arnd@arndb.de>, <gregkh@linuxfoundation.org>,
+	<torvalds@linux-foundation.org>, <paul.walmsley@sifive.com>,
+	<palmer@dabbelt.com>, <anup@brainfault.org>, <atishp@atishpatra.org>,
+	<oleg@redhat.com>, <kees@kernel.org>, <tglx@linutronix.de>,
+	<will@kernel.org>, <mark.rutland@arm.com>, <brauner@kernel.org>,
+	<akpm@linux-foundation.org>, <rostedt@goodmis.org>, <edumazet@google.com>,
+	<unicorn_wang@outlook.com>, <inochiama@outlook.com>, <gaohan@iscas.ac.cn>,
+	<shihua@iscas.ac.cn>, <jiawei@iscas.ac.cn>, <wuwei2016@iscas.ac.cn>,
+	<drew@pdp7.com>, <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+	<ctsai390@andestech.com>, <wefu@redhat.com>, <kuba@kernel.org>,
+	<pabeni@redhat.com>, <josef@toxicpanda.com>, <dsterba@suse.com>,
+	<mingo@redhat.com>, <peterz@infradead.org>, <boqun.feng@gmail.com>,
+	<xiao.w.wang@intel.com>, <qingfang.deng@siflower.com.cn>,
+	<leobras@redhat.com>, <jszhang@kernel.org>, <conor.dooley@microchip.com>,
+	<samuel.holland@sifive.com>, <yongxuan.wang@sifive.com>,
+	<luxu.kernel@bytedance.com>, <david@redhat.com>, <ruanjinjie@huawei.com>,
+	<cuiyunhui@bytedance.com>, <wangkefeng.wang@huawei.com>,
+	<qiaozhe@iscas.ac.cn>
+CC: <ardb@kernel.org>, <ast@kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-riscv@lists.infradead.org>, <kvm@vger.kernel.org>,
+	<kvm-riscv@lists.infradead.org>, <linux-mm@kvack.org>,
+	<linux-crypto@vger.kernel.org>, <bpf@vger.kernel.org>,
+	<linux-input@vger.kernel.org>, <linux-perf-users@vger.kernel.org>,
+	<linux-serial@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
+	<linux-arch@vger.kernel.org>, <maple-tree@lists.infradead.org>,
+	<linux-trace-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
+	<linux-atm-general@lists.sourceforge.net>, <linux-btrfs@vger.kernel.org>,
+	<netfilter-devel@vger.kernel.org>, <coreteam@netfilter.org>,
+	<linux-nfs@vger.kernel.org>, <linux-sctp@vger.kernel.org>,
+	<linux-usb@vger.kernel.org>, <linux-media@vger.kernel.org>
+References: <20250325121624.523258-1-guoren@kernel.org>
+ <20250325121624.523258-26-guoren@kernel.org>
+Content-Language: en-US
+From: Sergey Shtylyov <s.shtylyov@omp.ru>
+Organization: Open Mobile Platform
+In-Reply-To: <20250325121624.523258-26-guoren@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: msexch01.omp.ru (10.188.4.12) To msexch01.omp.ru
+ (10.188.4.12)
+X-KSE-ServerInfo: msexch01.omp.ru, 9
+X-KSE-AntiSpam-Interceptor-Info: scan successful
+X-KSE-AntiSpam-Version: 6.1.1, Database issued on: 03/25/2025 16:50:54
+X-KSE-AntiSpam-Status: KAS_STATUS_NOT_DETECTED
+X-KSE-AntiSpam-Method: none
+X-KSE-AntiSpam-Rate: 0
+X-KSE-AntiSpam-Info: Lua profiles 192097 [Mar 25 2025]
+X-KSE-AntiSpam-Info: Version: 6.1.1.11
+X-KSE-AntiSpam-Info: Envelope from: s.shtylyov@omp.ru
+X-KSE-AntiSpam-Info: LuaCore: 51 0.3.51
+ 68896fb0083a027476849bf400a331a2d5d94398
+X-KSE-AntiSpam-Info: {rep_avail}
+X-KSE-AntiSpam-Info: {Tracking_from_domain_doesnt_match_to}
+X-KSE-AntiSpam-Info:
+	omp.ru:7.1.1;127.0.0.199:7.1.2;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1
+X-KSE-AntiSpam-Info: {Tracking_ip_hunter}
+X-KSE-AntiSpam-Info: FromAlignment: s
+X-KSE-AntiSpam-Info: ApMailHostAddress: 213.87.136.199
+X-KSE-AntiSpam-Info: Rate: 0
+X-KSE-AntiSpam-Info: Status: not_detected
+X-KSE-AntiSpam-Info: Method: none
+X-KSE-AntiSpam-Info: Auth:dmarc=temperror header.from=omp.ru;spf=temperror
+ smtp.mailfrom=omp.ru;dkim=none
+X-KSE-Antiphishing-Info: Clean
+X-KSE-Antiphishing-ScanningType: Heuristic
+X-KSE-Antiphishing-Method: None
+X-KSE-Antiphishing-Bases: 03/25/2025 16:52:00
+X-KSE-Antivirus-Interceptor-Info: scan successful
+X-KSE-Antivirus-Info: Clean, bases: 3/25/2025 3:18:00 PM
+X-KSE-Attachment-Filter-Triggered-Rules: Clean
+X-KSE-Attachment-Filter-Triggered-Filters: Clean
+X-KSE-BulkMessagesFiltering-Scan-Result: InTheLimit
 
-On Sun, 16 Mar 2025 21:21:33 +0900
-"Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
+On 3/25/25 3:16 PM, guoren@kernel.org wrote:
 
-> diff --git a/kernel/trace/trace_fprobe.c b/kernel/trace/trace_fprobe.c
-> index 08def94f9ca6..863c9343a939 100644
-> --- a/kernel/trace/trace_fprobe.c
-> +++ b/kernel/trace/trace_fprobe.c
-> @@ -21,7 +21,6 @@
->  #define FPROBE_EVENT_SYSTEM "fprobes"
->  #define TRACEPOINT_EVENT_SYSTEM "tracepoints"
->  #define RETHOOK_MAXACTIVE_MAX 4096
-> -#define TRACEPOINT_STUB ERR_PTR(-ENOENT)
->  
->  static int trace_fprobe_create(const char *raw_command);
->  static int trace_fprobe_show(struct seq_file *m, struct dyn_event *ev);
-> @@ -38,6 +37,89 @@ static struct dyn_event_operations trace_fprobe_ops = {
->  	.match = trace_fprobe_match,
->  };
->  
-> +struct tracepoint_user {
-> +	struct tracepoint	*tpoint;
-> +	unsigned int		refcount;
-> +};
-> +
-> +static bool tracepoint_user_is_registered(struct tracepoint_user *tuser)
-> +{
-> +	return tuser && tuser->tpoint;
-> +}
-> +
-> +static int tracepoint_user_register(struct tracepoint_user *tuser)
-> +{
-> +	struct tracepoint *tpoint = tuser->tpoint;
-> +
-> +	if (!tpoint)
-> +		return 0;
-> +
-> +	return tracepoint_probe_register_prio_may_exist(tpoint,
-> +					tpoint->probestub, NULL, 0);
-> +}
-> +
-> +static void tracepoint_user_unregister(struct tracepoint_user *tuser)
-> +{
-> +	if (!tuser->tpoint)
-> +		return;
-> +
-> +	WARN_ON_ONCE(tracepoint_probe_unregister(tuser->tpoint, tuser->tpoint->probestub, NULL));
-> +	tuser->tpoint = NULL;
-> +}
-> +
-> +static unsigned long tracepoint_user_ip(struct tracepoint_user *tuser)
-> +{
-> +	if (!tuser->tpoint)
-> +		return 0UL;
-> +
-> +	return (unsigned long)tuser->tpoint->probestub;
-> +}
-> +
-> +static bool tracepoint_user_within_module(struct tracepoint_user *tuser,
-> +					  struct module *mod)
-> +{
-> +	return within_module(tracepoint_user_ip(tuser), mod);
-> +}
-> +
-> +static struct tracepoint_user *tracepoint_user_allocate(struct tracepoint *tpoint)
-> +{
-> +	struct tracepoint_user *tuser __free(kfree) = NULL;
-
-Do you really want to use __free() here?
-
-> +
-> +	tuser = kzalloc(sizeof(*tuser), GFP_KERNEL);
-> +	if (!tuser)
-> +		return NULL;
-
-This is the only failure case in the function and tuser is NULL.
-
-
-> +	tuser->tpoint = tpoint;
-> +	tuser->refcount = 1;
-> +
-> +	return_ptr(tuser);
-
-In fact, "kfree()" will never be called in this function, why the __free()?
-
-
-> +}
-> +
-> +/* These must be called with event_mutex */
-> +static void tracepoint_user_get(struct tracepoint_user *tuser)
-> +{
-> +	tuser->refcount++;
-> +}
-> +
-> +static void tracepoint_user_put(struct tracepoint_user *tuser)
-> +{
-> +	if (--tuser->refcount > 0)
-> +		return;
-> +
-> +	if (tracepoint_user_is_registered(tuser))
-> +		tracepoint_user_unregister(tuser);
-> +	kfree(tuser);
-> +}
-> +
-> +static const char *tracepoint_user_lookup(struct tracepoint_user *tuser, char *buf)
-> +{
-> +	struct tracepoint *tpoint = tuser->tpoint;
-> +
-> +	if (!tpoint)
-> +		return NULL;
-> +
-> +	return kallsyms_lookup((unsigned long)tpoint->probestub, NULL, NULL, NULL, buf);
-> +}
-> +
->  /*
->   * Fprobe event core functions
->   */
-> @@ -45,7 +127,7 @@ struct trace_fprobe {
->  	struct dyn_event	devent;
->  	struct fprobe		fp;
->  	const char		*symbol;
-> -	struct tracepoint	*tpoint;
-> +	struct tracepoint_user	*tuser;
->  	struct trace_probe	tp;
->  };
->  
-> @@ -75,7 +157,7 @@ static bool trace_fprobe_is_return(struct trace_fprobe *tf)
->  
->  static bool trace_fprobe_is_tracepoint(struct trace_fprobe *tf)
->  {
-> -	return tf->tpoint != NULL;
-> +	return tf->tuser != NULL;
->  }
->  
->  static const char *trace_fprobe_symbol(struct trace_fprobe *tf)
-> @@ -125,6 +207,57 @@ static bool trace_fprobe_is_registered(struct trace_fprobe *tf)
->  	return fprobe_is_registered(&tf->fp);
->  }
->  
-> +static struct tracepoint *find_tracepoint(const char *tp_name,
-> +	struct module **tp_mod);
-> +
-> +/*
-> + * Get tracepoint_user if exist, or allocate new one. If tracepoint is on a
-> + * module, get its refcounter.
-> + */
-> +static struct tracepoint_user *
-> +trace_fprobe_get_tracepoint_user(const char *name, struct module **pmod)
-> +{
-> +	struct tracepoint_user *tuser __free(kfree) = NULL;
-> +	struct tracepoint *tpoint;
-> +	struct trace_fprobe *tf;
-> +	struct dyn_event *dpos;
-> +	struct module *mod __free(module_put) = NULL;
-> +	int ret;
-> +
-> +	tpoint = find_tracepoint(name, &mod);
-> +	if (mod && !try_module_get(mod)) {
-
-I'm curious to what would cause this, and why we would want to continue?
-
-So, find_tracepoint() found a tracepoint with a module attached, but
-try_module_get() fails.
-
-> +		mod = NULL;
-> +		tpoint = NULL;
-
-What's the purpose of setting these to NULL and continuing?
-
-I'm confused.
-
-> +	}
-> +	/* tpoint can be NULL, but we don't care here. */
-> +
-> +	/* Search existing tracepoint_user */
-> +	for_each_trace_fprobe(tf, dpos) {
-> +		if (!trace_fprobe_is_tracepoint(tf))
-> +			continue;
-> +		if (!strcmp(tf->symbol, name)) {
-
-If the try_module_get() failed, can this every be true? What happens if the
-tracepoint it found belonged to another module?
-
-> +			tracepoint_user_get(tf->tuser);
-> +			*pmod = no_free_ptr(mod);
-> +			return tf->tuser;
-> +		}
-> +	}
-> +
-> +	/* Not found, allocate and register new tracepoint_user. */
-> +	tuser = tracepoint_user_allocate(tpoint);
-> +	if (!tuser)
-> +		return NULL;
-> +
-> +	if (tpoint) {
-> +		/* If the tracepoint is not loaded, tpoint can be NULL. */
-> +		ret = tracepoint_user_register(tuser);
-> +		if (ret)
-> +			return ERR_PTR(ret);
-> +	}
-> +
-> +	*pmod = no_free_ptr(mod);
-> +	return_ptr(tuser);
-> +}
-> +
->  /*
->   * Note that we don't verify the fetch_insn code, since it does not come
->   * from user space.
-> @@ -410,6 +543,8 @@ static void free_trace_fprobe(struct trace_fprobe *tf)
->  {
->  	if (tf) {
->  		trace_probe_cleanup(&tf->tp);
-> +		if (tf->tuser)
-> +			tracepoint_user_put(tf->tuser);
->  		kfree(tf->symbol);
->  		kfree(tf);
+> From: "Guo Ren (Alibaba DAMO Academy)" <guoren@kernel.org>
+> 
+> The rv64ilp32 abi reuses the env and argv memory layout of the
+> lp64 abi, so leave the space to fit the lp64 struct layout.
+> 
+> Signed-off-by: Guo Ren (Alibaba DAMO Academy) <guoren@kernel.org>
+> ---
+>  fs/exec.c | 4 ++++
+>  1 file changed, 4 insertions(+)
+> 
+> diff --git a/fs/exec.c b/fs/exec.c
+> index 506cd411f4ac..548d18b7ae92 100644
+> --- a/fs/exec.c
+> +++ b/fs/exec.c
+> @@ -424,6 +424,10 @@ static const char __user *get_user_arg_ptr(struct user_arg_ptr argv, int nr)
 >  	}
-> @@ -424,7 +559,7 @@ DEFINE_FREE(free_trace_fprobe, struct trace_fprobe *, if (!IS_ERR_OR_NULL(_T)) f
->  static struct trace_fprobe *alloc_trace_fprobe(const char *group,
->  					       const char *event,
->  					       const char *symbol,
-> -					       struct tracepoint *tpoint,
-> +					       struct tracepoint_user *tuser,
->  					       int nargs, bool is_return)
->  {
->  	struct trace_fprobe *tf __free(free_trace_fprobe) = NULL;
-> @@ -443,7 +578,7 @@ static struct trace_fprobe *alloc_trace_fprobe(const char *group,
->  	else
->  		tf->fp.entry_handler = fentry_dispatcher;
+>  #endif
 >  
-> -	tf->tpoint = tpoint;
-> +	tf->tuser = tuser;
->  
->  	ret = trace_probe_init(&tf->tp, event, group, false, nargs);
->  	if (ret < 0)
-> @@ -709,19 +844,11 @@ static int unregister_fprobe_event(struct trace_fprobe *tf)
->  
->  static int __regsiter_tracepoint_fprobe(struct trace_fprobe *tf)
->  {
-> -	struct tracepoint *tpoint = tf->tpoint;
-> -	unsigned long ip = (unsigned long)tpoint->probestub;
-> -	int ret;
-> +	unsigned long ip = tracepoint_user_ip(tf->tuser);
-> +
-> +	if (!ip)
-> +		return -ENOENT;
->  
-> -	/*
-> -	 * Here, we do 2 steps to enable fprobe on a tracepoint.
-> -	 * At first, put __probestub_##TP function on the tracepoint
-> -	 * and put a fprobe on the stub function.
-> -	 */
-> -	ret = tracepoint_probe_register_prio_may_exist(tpoint,
-> -				tpoint->probestub, NULL, 0);
-> -	if (ret < 0)
-> -		return ret;
->  	return register_fprobe_ips(&tf->fp, &ip, 1);
->  }
->  
-> @@ -753,7 +880,7 @@ static int __register_trace_fprobe(struct trace_fprobe *tf)
->  	if (trace_fprobe_is_tracepoint(tf)) {
->  
->  		/* This tracepoint is not loaded yet */
-> -		if (tf->tpoint == TRACEPOINT_STUB)
-> +		if (!tracepoint_user_is_registered(tf->tuser))
->  			return 0;
->  
->  		return __regsiter_tracepoint_fprobe(tf);
-> @@ -770,9 +897,8 @@ static void __unregister_trace_fprobe(struct trace_fprobe *tf)
->  		unregister_fprobe(&tf->fp);
->  		memset(&tf->fp, 0, sizeof(tf->fp));
->  		if (trace_fprobe_is_tracepoint(tf)) {
-> -			tracepoint_probe_unregister(tf->tpoint,
-> -					tf->tpoint->probestub, NULL);
-> -			tf->tpoint = NULL;
-> +			tracepoint_user_put(tf->tuser);
-> +			tf->tuser = NULL;
->  		}
->  	}
->  }
-> @@ -975,7 +1101,7 @@ static int __tracepoint_probe_module_cb(struct notifier_block *self,
->  					unsigned long val, void *data)
->  {
->  	struct tp_module *tp_mod = data;
-> -	struct tracepoint *tpoint;
-> +	struct tracepoint_user *tuser;
->  	struct trace_fprobe *tf;
->  	struct dyn_event *pos;
->  
-> @@ -984,21 +1110,48 @@ static int __tracepoint_probe_module_cb(struct notifier_block *self,
->  
->  	mutex_lock(&event_mutex);
->  	for_each_trace_fprobe(tf, pos) {
-> -		if (val == MODULE_STATE_COMING && tf->tpoint == TRACEPOINT_STUB) {
-> +		if (!trace_fprobe_is_tracepoint(tf))
-> +			continue;
-> +
-> +		if (val == MODULE_STATE_COMING) {
-> +			/*
-> +			 * If any tracepoint used by tprobe is in the module,
-> +			 * register the stub.
-> +			 */
-> +			struct tracepoint *tpoint;
-> +
->  			tpoint = find_tracepoint_in_module(tp_mod->mod, tf->symbol);
-> -			if (tpoint) {
-> -				tf->tpoint = tpoint;
-> -				if (!WARN_ON_ONCE(__regsiter_tracepoint_fprobe(tf)) &&
-> -				    trace_probe_is_enabled(&tf->tp))
-> -					reenable_trace_fprobe(tf);
-> -			}
-> -		} else if (val == MODULE_STATE_GOING && tp_mod->mod == tf->mod) {
-> -			unregister_fprobe(&tf->fp);
-> -			if (trace_fprobe_is_tracepoint(tf)) {
-> -				tracepoint_probe_unregister(tf->tpoint,
-> -					tf->tpoint->probestub, NULL);
-> -				tf->tpoint = TRACEPOINT_STUB;
-> +			/* This is not a tracepoint in this module. Skip it. */
-> +			if (!tpoint)
-> +				continue;
-> +
-> +			tuser = tf->tuser;
-> +			/* If the tracepoint is no registered yet, register it. */
+> +#if defined(CONFIG_64BIT) && (BITS_PER_LONG == 32)
 
-					    "is not registered yet"
+   Parens don't seem necessary...
 
-> +			if (!tracepoint_user_is_registered(tuser)) {
-> +				tuser->tpoint = tpoint;
-> +				if (WARN_ON_ONCE(tracepoint_user_register(tuser)))
-> +					continue;
->  			}
-> +
-> +			/* Finally enable fprobe on this module. */
-> +			if (!WARN_ON_ONCE(__regsiter_tracepoint_fprobe(tf)) &&
-> +			    trace_probe_is_enabled(&tf->tp))
-> +				reenable_trace_fprobe(tf);
-> +		} else if (val == MODULE_STATE_GOING) {
-> +			tuser = tf->tuser;
-> +			/* Unregister all tracepoint_user in this module. */
-> +			if (tracepoint_user_is_registered(tuser) &&
-> +			    tracepoint_user_within_module(tuser, tp_mod->mod))
-> +				tracepoint_user_unregister(tuser);
-> +
+> +	nr = nr * 2;
 
+   Why not nr *= 2?
 
-> +			/*
-> +			 * Here we need to handle shared tracepoint_user case.
-> +			 * Such tuser is unregistered, but trace_fprobe itself
-> +			 * is registered. (Note this only handles tprobes.)
-> +			 */
-> +			if (!tracepoint_user_is_registered(tuser) &&
-> +			    trace_fprobe_is_registered(tf))
-> +				unregister_fprobe(&tf->fp);
+[...]
 
-This looks to be unregistering every tprobe even if it's not in the module.
-
-The old code had:
-
-		} else if (val == MODULE_STATE_GOING && tp_mod->mod == tf->mod) {
-
-And the new code has:
-
-		} else if (val == MODULE_STATE_GOING) {
-
-
-Where's the check here to see if tf is used by the module?
-
--- Steve
-
->  		}
->  	}
->  	mutex_unlock(&event_mutex);
-> @@ -1067,7 +1220,9 @@ static int parse_symbol_and_return(int argc, const char *argv[],
->  	return 0;
->  }
->  
-> -DEFINE_FREE(module_put, struct module *, if (_T) module_put(_T))
-> +DEFINE_FREE(tuser_put, struct tracepoint_user *,
-> +	if (!IS_ERR_OR_NULL(_T))
-> +		tracepoint_user_put(_T))
->  
->  static int trace_fprobe_create_internal(int argc, const char *argv[],
->  					struct traceprobe_parse_context *ctx)
-> @@ -1097,6 +1252,8 @@ static int trace_fprobe_create_internal(int argc, const char *argv[],
->  	 *  FETCHARG:TYPE : use TYPE instead of unsigned long.
->  	 */
->  	struct trace_fprobe *tf __free(free_trace_fprobe) = NULL;
-> +	struct tracepoint_user *tuser __free(tuser_put) = NULL;
-> +	struct module *mod __free(module_put) = NULL;
->  	int i, new_argc = 0, ret = 0;
->  	bool is_return = false;
->  	char *symbol __free(kfree) = NULL;
-> @@ -1108,8 +1265,6 @@ static int trace_fprobe_create_internal(int argc, const char *argv[],
->  	char abuf[MAX_BTF_ARGS_LEN];
->  	char *dbuf __free(kfree) = NULL;
->  	bool is_tracepoint = false;
-> -	struct module *tp_mod __free(module_put) = NULL;
-> -	struct tracepoint *tpoint = NULL;
->  
->  	if ((argv[0][0] != 'f' && argv[0][0] != 't') || argc < 2)
->  		return -ECANCELED;
-> @@ -1162,25 +1317,18 @@ static int trace_fprobe_create_internal(int argc, const char *argv[],
->  
->  	if (is_tracepoint) {
->  		ctx->flags |= TPARG_FL_TPOINT;
-> -		tpoint = find_tracepoint(symbol, &tp_mod);
-> -		/* lock module until register this tprobe. */
-> -		if (tp_mod && !try_module_get(tp_mod)) {
-> -			tpoint = NULL;
-> -			tp_mod = NULL;
-> -		}
-> -		if (tpoint) {
-> -			ctx->funcname = kallsyms_lookup(
-> -				(unsigned long)tpoint->probestub,
-> -				NULL, NULL, NULL, sbuf);
-> -		} else if (IS_ENABLED(CONFIG_MODULES)) {
-> -				/* This *may* be loaded afterwards */
-> -				tpoint = TRACEPOINT_STUB;
-> -				ctx->funcname = symbol;
-> -		} else {
-> +		tuser = trace_fprobe_get_tracepoint_user(symbol, &mod);
-> +		if (!tuser)
-> +			return -ENOMEM;
-> +		if (IS_ERR(tuser)) {
->  			trace_probe_log_set_index(1);
->  			trace_probe_log_err(0, NO_TRACEPOINT);
-> -			return -EINVAL;
-> +			return PTR_ERR(tuser);
->  		}
-> +		ctx->funcname = tracepoint_user_lookup(tuser, sbuf);
-> +		/* If tracepoint is not loaded yet, use symbol name as funcname. */
-> +		if (!ctx->funcname)
-> +			ctx->funcname = symbol;
->  	} else
->  		ctx->funcname = symbol;
->  
-> @@ -1204,13 +1352,14 @@ static int trace_fprobe_create_internal(int argc, const char *argv[],
->  		return ret;
->  
->  	/* setup a probe */
-> -	tf = alloc_trace_fprobe(group, event, symbol, tpoint, argc, is_return);
-> +	tf = alloc_trace_fprobe(group, event, symbol, tuser, argc, is_return);
->  	if (IS_ERR(tf)) {
->  		ret = PTR_ERR(tf);
->  		/* This must return -ENOMEM, else there is a bug */
->  		WARN_ON_ONCE(ret != -ENOMEM);
->  		return ret;
->  	}
-> +	tuser = NULL; /* Move tuser to tf. */
->  
->  	/* parse arguments */
->  	for (i = 0; i < argc; i++) {
+MBR, Sergey
 
