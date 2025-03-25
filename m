@@ -1,138 +1,106 @@
-Received: from mail-vk1-f169.google.com (mail-vk1-f169.google.com [209.85.221.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC84D8635E;
-	Tue, 25 Mar 2025 15:36:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EA4A1A316E
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 25 Mar 2025 15:48:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742917001; cv=none; b=DchVrM9l6tOft0aRexf7a/HkI77KiWFSannPhrbB/22mcRTSVWh0fKuiy9kIDqKtVZSXebcUpx6nJ8OM82x9fWHXlCxMya5Y8EWD9vBOUZhiGWs+mWmRh/k5RmQueOsHTq57+Cu7zdQ9xMIzFJdZnTQDmTz2csS8Kcn9HiOAs08=
+	t=1742917735; cv=none; b=HBKzEMyNGBMec7bgcXU6ag00r3wYLInMdqfaL6DDqojCcLnVOHNC3h8q7k0KQy7eMRCp29GEBzU1B3/c96Rz0mKC0UePvbhqBkQVysKCkJ+RCyJbqHna3BR/uGtj0c/wOzRrdsFHZEd52hxxrfqkEM9pVIPsF9nOpRK/YMriNXk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742917001; c=relaxed/simple;
-	bh=lQGhDpTA02pg2SXSqztof85HVwIN4KdjwfWy9lQVkTI=;
+	s=arc-20240116; t=1742917735; c=relaxed/simple;
+	bh=yqgGOiWrNPG+wQbjX2ddul66Titgdg7RfSlbjzQ1Hks=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ncUqwnBPKxQjvM+k378FPvDCnP8zBZheu6ZBrWaqI7Dh6gevnBmvbi2BLfuu4lDrSi6QsP5vEs9OJ/2UwgJ31LH8AseEM3PaAqoJw2phZaA3LeK9qD/IuIAsUJy3pfPabCamA7mrM8qat9TQfDEHPUk9p82xlKkNL+uDcdHNtdo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-vk1-f169.google.com with SMTP id 71dfb90a1353d-523edc385caso2301108e0c.3;
-        Tue, 25 Mar 2025 08:36:39 -0700 (PDT)
+	 To:Cc:Content-Type; b=WvMcNZp9I8CamJjDK22uqh4G19hh1faAdgib4annLskpq+fQAPpuLsBN2CoUDcOqSYsxLHYV2HMnchl6VjLSh8LgnBY0kfhZeyKGIBIemtBhx/nwN+duINwI6jICkkAXNBGU9ZaoQbJ7NmGiCLQhN3eF4oMCzB1sG3IEh/0fHf4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=BqhMHwwg; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BqhMHwwg"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1742917732;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=yqgGOiWrNPG+wQbjX2ddul66Titgdg7RfSlbjzQ1Hks=;
+	b=BqhMHwwglYXCD5/8d7Iq3lZBU0IbAwbKVCFfyMc0T1ZMgkWO1COlpEZI+eK/5PTVfjLECq
+	ifZ05WOl97r5mRLqUNB24NkyjL1F4tJSHh177VaLcbMJSxsKtDCxsq/clfit25ZKBg/7+c
+	aB+j8DLoK7k+0KjxZyGamQbeh3L6uhg=
+Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
+ [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-349-fwCWwJG2OMOwmgbWl6cI2g-1; Tue, 25 Mar 2025 11:48:51 -0400
+X-MC-Unique: fwCWwJG2OMOwmgbWl6cI2g-1
+X-Mimecast-MFC-AGG-ID: fwCWwJG2OMOwmgbWl6cI2g_1742917730
+Received: by mail-ej1-f72.google.com with SMTP id a640c23a62f3a-ac3dca41591so432786966b.1
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 25 Mar 2025 08:48:51 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742916998; x=1743521798;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Rg9s2GhxzbMU0JYpYKXzsavBxYRuo5kJ2cdSM+OjLA0=;
-        b=WR3MtpB7tyQWT0DiK0WR8FgGqmeW3iU0+6xATHg83RkIAZyUO4QptRTJ9/u3GNAofO
-         INhYYT/3P8TQUpn/vryXOrNgUTwrFQznjeH8y7gOkK1fJj20I96O93gVA3qfkaigYcUH
-         c22DD8D3EZEvLqhkQKcUo2916nk7wzwqxTFwukpfj5Wxo6+7OERMGc39QE1sLbBWPNts
-         qFg3cFahrGMpD8sUSvZo/ffWELsVKKx1TSiEvseV0FACsceRp2SQvBuL34S6Is6Usi5r
-         IJBaIIM/SUJ3Dn5GLX3KdbsR7GePh9g5aLDaQqfkrSnwoP7DodV2nADpNy2PAfNb0qer
-         QSlA==
-X-Forwarded-Encrypted: i=1; AJvYcCUXD+SZMC2ZmAAwOj/IcAJIFg14GFTBSBOTuD5105ot4NTwkQ3kh8Q5D6ShLn7D2+6bORT98yVSxtRo1Bu/nG2WK20i@vger.kernel.org, AJvYcCUnTF42ZmJI9ZSwGD9wmDq3f8E+ijKxVmpiAdj6yRR2WOOdFnqWWmDD06RGbo0OKHzjklLyAv7brkI=@vger.kernel.org, AJvYcCV9zfqBc2VAX+Lj0T6UG24i3tGU0VjgNcAbwLiwS0Vt3QXyeIJmR2Www2aMFBaX5f5lf/Pfxcr0fXebx3rabX/C@vger.kernel.org, AJvYcCVfRewQc8VwD8OChtnlORSrYB6Ye1vR7UOS4cdyMlIpvF+FeA/PyjKPRCNvJn8jC1NtdkGC@vger.kernel.org, AJvYcCXEHvCp5akvBmBqf9JS1G5mHjLomgAMlJLlna5xTi12+o+NT7dd9oDQhDd99z+8NlAV1+a0IJeCkjZ7cMfz@vger.kernel.org
-X-Gm-Message-State: AOJu0YwtFa+U1mVUXj1z2aeFYzpCtUUKmO+qtwq3ZJYRCtah9o/t1EWa
-	s6CExzQt8qPJRMnpq7ZDIRaCcZ4Afk1/3aQIdrF5hvRu0oGMUhM+ilbbocfj5nI=
-X-Gm-Gg: ASbGncs+8q1uPeXl6tpKPvUAYj79sMCxIbVUeizfHlGQPIa88/R1qHnw4b5B1DaJV4y
-	9g3QYyzbqaAhvEpDZAG7pel5nsBEKI70eccUyQnn3dO2A3wp9U2LzhM1hDtckwPew9u424TmofB
-	m1yYA57w2icD6hg4iMOTllComn4q99LqlS2x6lobduXHzt4tXcHjon9qjkGRPydlpfpKJzj38WH
-	N3uG4CByF0+loSJvojGO7dBOC6Ww27SgAFYbq3zo4uYkv6SvIB8hkpTeuWDqrDzoT+R8oknZIN2
-	8s02hYioTfjzkAfpx2GofD7F6kb4EF/F/iYIyC5xFgxdhzKMjacBpoWuRkM2CyhJljS04Bjv9Ap
-	eXVx9PYwPNl1f9sPs4A==
-X-Google-Smtp-Source: AGHT+IFBNoQDtRZGqjnnu3M3m2DBMWZp4QMOg2nQtXviEZdBxZFbnw3mVIQmVQTtI+CJ7vju/lUJDw==
-X-Received: by 2002:a05:6122:4312:b0:518:865e:d177 with SMTP id 71dfb90a1353d-525a8560bc1mr12001534e0c.9.1742916998084;
-        Tue, 25 Mar 2025 08:36:38 -0700 (PDT)
-Received: from mail-ua1-f51.google.com (mail-ua1-f51.google.com. [209.85.222.51])
-        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-86f9f3a3f6esm2078313241.11.2025.03.25.08.36.37
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 25 Mar 2025 08:36:37 -0700 (PDT)
-Received: by mail-ua1-f51.google.com with SMTP id a1e0cc1a2514c-86d69774081so2483414241.0;
-        Tue, 25 Mar 2025 08:36:37 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCV1bnQctZBes+NBe5tPxOM2lFpWn803hpO7YTvTfza93Kr7xOXn1+8uY7UUxnzStpYiySUeyWt4OspLhJdFJ1OefSbP@vger.kernel.org, AJvYcCWA/TdUOkW34smvSDRSjL4Ju+Py+VDFy27OeApRSoKH+5Oizqn0axTDHI5qcSZevAmIHmk/yBTX+zV+FYTx@vger.kernel.org, AJvYcCWC86aiWICremCZBZzzZcvQC0uWR7PKx4KyK/XZuEq1kyLNgDn7kuBCN2Mm8mut3Jb6lmLK@vger.kernel.org, AJvYcCXJkMQp4Qi+wAVcMGhlqkOEOatJAb7NXIhkWqpocdy7AibPojLNTV74CwVrheKuS623e+VTRn+wrbqMSHID3WIE@vger.kernel.org, AJvYcCXoIx7MVLNavdI6D1MF2Me53j7n/PUIhequvaOcXSILl99nj1Dfj2goOhVDO2OOBQ5Yux6rvsfDWs8=@vger.kernel.org
-X-Received: by 2002:a05:6102:c92:b0:4c1:9439:f70 with SMTP id
- ada2fe7eead31-4c50d4b8f63mr12298813137.6.1742916997318; Tue, 25 Mar 2025
- 08:36:37 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1742917730; x=1743522530;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=yqgGOiWrNPG+wQbjX2ddul66Titgdg7RfSlbjzQ1Hks=;
+        b=M3XxVDRUljtNmM9aO+1YspRZkskr1sMTnmOh60PPZuhUXaJjQxqX1E9SUhJyubqxDN
+         526rHpFy5XxwA8Nh5+yStS9I6gDLJl6KVOluK4uERg/g9fiwOU62LnXT7KceSiz/Ijqn
+         4mXXbnB+zz8Tkk8nK/6KLee4GAcC4iJE1/ZF4XmnTAOc7gf6lUndQupOVGB2Q1U2PufA
+         cLHgJOjoW4zHQG2KQYlFW082DswrNEqxz0FKoQBo8y6RL6qcBy98HBYe0VJ3xzPh1i7Z
+         toVZxZKYUU4x3+hawmPlLAchM3gHjXiU91hexK2dx3h+YWN9fXMkIvY5QwgnKUpFs5GJ
+         1RmA==
+X-Forwarded-Encrypted: i=1; AJvYcCWS/UFbVgHVaLyvCRQLVWMPtUf7UWiQycSPd5N3Yc2cER6bBNCcROPv0f2hwUNLcCh5/CJJrwE4b7E7K2vmeQ26oo4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwKuWedVo4duoIDiZWDRe1kuaymz188o482gfFD2vdjNelOUewA
+	cmGHykICH2RfPGzwMdiFHAzsC+C8K/AbDpInLUaF9ovPOkTLYtQ1KZ0q3e22NT8mrOvwgp/sAgG
+	+OS02jfM1YPcjyUUjNaDKm6/Dtbdm6Tnn2SM92pReWbSlf/qiiU7m5BxxRQZyyJ2IO1hOyhl8mK
+	mgqmHur9WeDpELY8nsXdgDutAzUgjwUFhpEbfp6oCRGLkd
+X-Gm-Gg: ASbGnctg/riXYNESN9SudvwOJR8HixSjpuTbMPi060WFM41vuwgrnpjD7vDLDlIiuI0
+	c8HkCF8t7rsxLAWG51AkR7LY0HIv9PV/L7hl+I1A3HzspnYsPNuNV8SdBLNtEHeHWpA6G+rx48g
+	==
+X-Received: by 2002:a17:907:f50a:b0:ac3:45b5:d325 with SMTP id a640c23a62f3a-ac3f253011emr1834030566b.52.1742917730277;
+        Tue, 25 Mar 2025 08:48:50 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFD64oBfGmIy4l7ipkxycYxKe6ZIbenXBCa1X1NVXvuOTgJbZUFc6bXWv82qD2ySlajcuBwkr3lQOUImvYCoOM=
+X-Received: by 2002:a17:907:f50a:b0:ac3:45b5:d325 with SMTP id
+ a640c23a62f3a-ac3f253011emr1834028166b.52.1742917729882; Tue, 25 Mar 2025
+ 08:48:49 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250219153938.24966-1-boqun.feng@gmail.com> <20250219153938.24966-11-boqun.feng@gmail.com>
- <CAMuHMdX6dy9_tmpLkpcnGzxyRbe6qSWYukcPp=H1GzZdyd3qBQ@mail.gmail.com>
- <5bf94fdb-7556-4b34-ba21-389dfa1df4f7@paulmck-laptop> <CAMuHMdVVQWZCUFT2uF+QSQz-GzOz2PvugkeatA6bDQeNHU9PSA@mail.gmail.com>
- <b4ac95ce-7cfd-4d31-aa7d-54ef04f4ae24@paulmck-laptop>
-In-Reply-To: <b4ac95ce-7cfd-4d31-aa7d-54ef04f4ae24@paulmck-laptop>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Tue, 25 Mar 2025 16:36:23 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdXsuKMLrg5qmS3oTAWfv3Ph34Hq5jeid974+RoTAR2Rkw@mail.gmail.com>
-X-Gm-Features: AQ5f1JrYtc3XhYgX4YuVml3CpXoCyQpmzApZic48oP74LpqYdOUZOpuYsHWB5oU
-Message-ID: <CAMuHMdXsuKMLrg5qmS3oTAWfv3Ph34Hq5jeid974+RoTAR2Rkw@mail.gmail.com>
-Subject: Re: [PATCH rcu 10/11] srcu: Add FORCE_NEED_SRCU_NMI_SAFE Kconfig for testing
-To: paulmck@kernel.org
-Cc: Boqun Feng <boqun.feng@gmail.com>, rcu@vger.kernel.org, 
-	Jonathan Corbet <corbet@lwn.net>, Steven Rostedt <rostedt@goodmis.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	Frederic Weisbecker <frederic@kernel.org>, Neeraj Upadhyay <neeraj.upadhyay@kernel.org>, 
-	Joel Fernandes <joel@joelfernandes.org>, Josh Triplett <josh@joshtriplett.org>, 
-	Uladzislau Rezki <urezki@gmail.com>, Lai Jiangshan <jiangshanlai@gmail.com>, 
-	Zqiang <qiang.zhang1211@gmail.com>, Davidlohr Bueso <dave@stgolabs.net>, 
-	Shuah Khan <shuah@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, 
-	Thomas Huth <thuth@redhat.com>, "Borislav Petkov (AMD)" <bp@alien8.de>, Ard Biesheuvel <ardb@kernel.org>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Josh Poimboeuf <jpoimboe@kernel.org>, 
-	Yury Norov <yury.norov@gmail.com>, Valentin Schneider <vschneid@redhat.com>, linux-doc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org
+References: <20250322183439.393533-2-costa.shul@redhat.com>
+In-Reply-To: <20250322183439.393533-2-costa.shul@redhat.com>
+From: Tomas Glozar <tglozar@redhat.com>
+Date: Tue, 25 Mar 2025 16:48:36 +0100
+X-Gm-Features: AQ5f1Jr0dsAtsjzTVe3U7QzJt6ah2IQQOliT5wpbbU_ZQBdQgNVZsG0gU14KJaI
+Message-ID: <CAP4=nvTXEO=i7Rf4ONOpr89XoFLnkGYKp78xMLZk4yYh6dnZEA@mail.gmail.com>
+Subject: Re: [PATCH v1] rtla: Fix crash due to NULL record dereference
+To: Costa Shulyupin <costa.shul@redhat.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>, Daniel Bristot de Oliveira <bristot@kernel.org>, 
+	John Kacur <jkacur@redhat.com>, "Luis Claudio R. Goncalves" <lgoncalv@redhat.com>, 
+	Eder Zulian <ezulian@redhat.com>, Dan Carpenter <dan.carpenter@linaro.org>, 
+	Gabriele Monaco <gmonaco@redhat.com>, linux-trace-kernel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: 46A8xmzzb2sWXsALssuMje6vmL-NIDdHxUzP2OIsAKo_1742917730
+X-Mimecast-Originator: redhat.com
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Paul,
-
-On Tue, 25 Mar 2025 at 16:08, Paul E. McKenney <paulmck@kernel.org> wrote:
-> commit 2245ef8605a80726548253d885b4cadd97f69f3b
-> Author: Paul E. McKenney <paulmck@kernel.org>
-> Date:   Tue Mar 25 07:31:45 2025 -0700
+so 22. 3. 2025 v 19:40 odes=C3=ADlatel Costa Shulyupin
+<costa.shul@redhat.com> napsal:
 >
->     srcu: Make FORCE_NEED_SRCU_NMI_SAFE depend on RCU_EXPERT
+> The previous patch introduced a crash by dereferencing record,
+> which can be NULL.
 >
->     The FORCE_NEED_SRCU_NMI_SAFE is useful only for those wishing to test
->     the SRCU code paths that accommodate architectures that do not have
->     NMI-safe per-CPU operations, that is, those architectures that do not
->     select the ARCH_HAS_NMI_SAFE_THIS_CPU_OPS Kconfig option.  As such, this
->     is a specialized Kconfig option that is not intended for casual users.
+> Add checks to prevent the crash.
 >
->     This commit therefore hides it behind the RCU_EXPERT Kconfig option.
->     Given that this new FORCE_NEED_SRCU_NMI_SAFE Kconfig option has no effect
->     unless the ARCH_HAS_NMI_SAFE_THIS_CPU_OPS Kconfig option is also selected,
->     it also depends on this Kconfig option.
->
->     [ paulmck: Apply Geert Uytterhoeven feedback. ]
->
->     Reported-by: Geert Uytterhoeven <geert@linux-m68k.org>
->     Closes: https://lore.kernel.org/all/CAMuHMdX6dy9_tmpLkpcnGzxyRbe6qSWYukcPp=H1GzZdyd3qBQ@mail.gmail.com/
->     Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
->
-> diff --git a/kernel/rcu/Kconfig b/kernel/rcu/Kconfig
-> index b3f985d41717a..ceaf6594f634c 100644
-> --- a/kernel/rcu/Kconfig
-> +++ b/kernel/rcu/Kconfig
-> @@ -68,6 +68,8 @@ config TREE_SRCU
->  config FORCE_NEED_SRCU_NMI_SAFE
->         bool "Force selection of NEED_SRCU_NMI_SAFE"
->         depends on !TINY_SRCU
-> +       depends on RCU_EXPERT
-> +       depends on ARCH_HAS_NMI_SAFE_THIS_CPU_OPS
->         select NEED_SRCU_NMI_SAFE
->         default n
->         help
+> Signed-off-by: Costa Shulyupin <costa.shul@redhat.com>
 
-LGTM, so
-Reviewed-by: Geert Uytterhoeven <geert@linux-m68k.org>
+This is a duplicate of my fix [1]. I added a NULL check inside the
+function and made the callers pass NULL if the record instance is not
+initialized.
 
-Gr{oetje,eeting}s,
+[1] https://lore.kernel.org/linux-trace-kernel/20250313141034.299117-1-tglo=
+zar@redhat.com/
 
-                        Geert
+Tomas
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
