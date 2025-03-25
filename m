@@ -1,160 +1,107 @@
-Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com [209.85.208.169])
+Received: from mail-pl1-f196.google.com (mail-pl1-f196.google.com [209.85.214.196])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7906325E81E
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 25 Mar 2025 18:10:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5CB025D539;
+	Tue, 25 Mar 2025 18:12:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.196
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742926232; cv=none; b=noewFEZVoNYVYLrOE1jUnyZSskDROps+h2vwb6vvnejt39foM7/1BHraiK589QHG2hYayRLWtvmyLeQ2BZ7o2MbV87zCHkvelEf82Ym2FNYE3LkO+ln33rOPBWrljJQDPF2SyG0ZtMTTaSO+7yziDOk2r4RoRcM9YOq0d+k/hOc=
+	t=1742926381; cv=none; b=Q4D3MpgNT3+uOfVvoFXrReMF/cvvK5KX+c4WEuNfT++eUxM4nk4m6QcCQwClpA+4WyeQpBaLRcGB1mczn3/PvsgjRD9d45Tq33m1pRiA1+hE3I4oQCo2k0QogdVTBivKoE4bwXf0cP14YISRonWG/+jupsEl46Z/0Jl2H0k+azc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742926232; c=relaxed/simple;
-	bh=G7r1GbsPLmnxGwSjE5gsz+gadLNPnSru255ddOGFLTY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=LZJ1dd1l6gUINm3ryybcs2KhDchFMS4kajtAw4VjIg9nr7/NRM5wx5/0/CSB5FPj7c+GTiKfEoPrPSskNHbUg9uhvyE6/p6piqBscCn5CdSDS+HXl0rRi0krIZoo0iVzqu2zmxwewkAGOzzysx3EQ+x8VriEIQYi4zui0TPTCXU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=arista.com; spf=pass smtp.mailfrom=arista.com; dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b=HBOWgvPY; arc=none smtp.client-ip=209.85.208.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=arista.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arista.com
+	s=arc-20240116; t=1742926381; c=relaxed/simple;
+	bh=Of251HQ2q5cxsY/TsYis8iQx6GfJSkMigkv74PfR3CA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=sI4u1u+N4GhKejXWalLCEj5fizZicF7CG6HaNB7uJz+Hovh6mVWA7rTtH5DREaO1Md748gLSa2X2f7jGFA5U226r9eIJDJ1MJ3bFmoXBf8MGdJxNw4sI4/RPzNoS/Nj2Dsc035e2OAFd5xqESNi5nl1s0KdhwxQBxxKXroBDebQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fPIrSC4Z; arc=none smtp.client-ip=209.85.214.196
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="HBOWgvPY"
-Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-30c091b54aaso59622001fa.3
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 25 Mar 2025 11:10:30 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fPIrSC4Z"
+Received: by mail-pl1-f196.google.com with SMTP id d9443c01a7336-227914acd20so1541245ad.1;
+        Tue, 25 Mar 2025 11:12:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=arista.com; s=google; t=1742926228; x=1743531028; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=JdkDWndGvAqxTQdNuG9qdKJumGJGvc4+oXPHz+QmmLY=;
-        b=HBOWgvPYNzr1bCgstHLM2glV6U+h8InnDtGkJ0ovgIRZyNkLAsJtv4WL2qTDH7Bkt+
-         A5vWthwsvkdmo4Oe3Mr4KICzFINdxYgrgiDa56LI5LNQ804CDTjhdD3bXmoi2ZJU2v++
-         HAmWArIMZaGOhqyel/2DaQHTYwAaA3LkZqCqJQIg6XJ+1B4dKyAWh5dF9UFN5yomP/bU
-         RhiQg3qyt89D1p7r3vNtIM3AMsU5RBsNf33r/g7JhyrlPbPwquQA8BezFznNsCIUSIrI
-         s6TdDZZormXWlMyQ90e9oDks9mzemr0MmV8RB7q9RHw1GXs9uyIXa8F/ae6Wg8lV8Lwo
-         /EIg==
+        d=gmail.com; s=20230601; t=1742926379; x=1743531179; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=7kBM0Q+fmEzW4RYLW8fg9ad2QLsCRCJ5pUcxYAi3GFI=;
+        b=fPIrSC4ZzXmvfIXTCpKrnkWIHLFnzWJjLXR7A9EI2wNla2GQaHMeiqJ7CYgwHO5K2/
+         /s4MkF44vOba6DADjh43TlZFAI+zHtWKw4iWITCtCYw0go+9Qryn4bjYGDOUMdRcLSok
+         MJKtDqDu9sm5BGxYmo7XyZb5nw1uKV/xqbpUVeI55fAE6hJB8F5He4HlBVpP5Q97zr9W
+         u8o2QiInEqCEKW5FvpkTzlOYZtO7xyJEXqc5Q8Brwb/IaTQp3F3nfSfFrV5evmqqypvV
+         jN/OIx5r1GF6KweD4gbsYD/ceBVEFF50Y2crrrlT7xufQtMPnDoMmDGjhQGZN+rZ7xy7
+         xSsw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742926228; x=1743531028;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=JdkDWndGvAqxTQdNuG9qdKJumGJGvc4+oXPHz+QmmLY=;
-        b=HGF2a9ixE7Ae3l5JdDIRyJDdgFmeRwlm+gAkunirJ2Lp5hTuVRlz7yZp3Smc7LDOYS
-         KuWAZ8Uwy3+LSxWh34E62FVZJrv7JSx2TZJQ17djfz/3jUX3g+eJsmjdnJ8Tek6xNN2w
-         PsInM3+wJTJDnhJ0a23gYZZp7GX1dZtoKogWCbO95/4rsiD8c/KL0H/qZ8h9eVu7v8zB
-         KB6w0TRT13Gcy+sOrNUJgG0nTOzCA9wBG2YcLIjsJyaj5E/W+GzlJwp+uVU8sQIuZ9zL
-         UsEeNtVdjA2MO4UajDg3hWinHYS3xkD3pneP0GH931z+qJjPkE1Q1BRnL3rf7p0Ys1eH
-         QmjQ==
-X-Forwarded-Encrypted: i=1; AJvYcCX74CmUrn7kerOEsesEF+jUPkcgZWJzcyWaSxNKlhzi4u8XEFpw4BvcqUZtPsXipN7bfGCsQSPxD4hAR5BodfoozNg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwnmTur7PqV/FacU6YqdBO51vTnQSc/1VyXMFfNyjrcH5pm13Hw
-	XKmX2G4pS1OgT6jpmswqRDwrjZJMHzqb0T3U7fZTm9Xc9Hvt6nUOfGnbgJgN1domqoViWQatKxA
-	ncRqoKctGUVtVl07wp/Tb+3ZpSYuP7F6cxgsT
-X-Gm-Gg: ASbGncvxbAE/hdVRBI7GPOhTn/tn9cRdiBORN8p0a99X9EGMJILb14bip5tj94O0vS7
-	nKkpWuharQm3Phtl0aqR3ERMw63zSsxhDMhT+RSFS4xIue95tVPw71mPQ4ZNheKqLO6LwzXox35
-	HUgOuv3VhVRHBo/ql5AivXpvU3PBfVM7+DtwY=
-X-Google-Smtp-Source: AGHT+IEEWuzPv4jhYI5e9TnREp4dt9M5G/jSb7CHGQBe+UYbUlr8OZjHY6oWKj08v7HeJt/k8ZhE0iKgEMqBb+IUsYI=
-X-Received: by 2002:a2e:be9f:0:b0:30b:f775:bae5 with SMTP id
- 38308e7fff4ca-30d7e1ffc0emr64727201fa.6.1742926228467; Tue, 25 Mar 2025
- 11:10:28 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1742926379; x=1743531179;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=7kBM0Q+fmEzW4RYLW8fg9ad2QLsCRCJ5pUcxYAi3GFI=;
+        b=FvqjfUYw+KJ/nrwQpzYS+Uo5a5wgi84/NfHp53MttXTs3djAcLZP+xOgzVTkvPi90g
+         AVbMJr0ES25RwPgbRLNZId2TAP0v8NV6HSfXzxV9bbnFJSfCbLjm0e6uzZZ7QnLWZG+d
+         eyrQY91rxxxJZ/5MLN9LpS6cdM094GZmswi5gXSyxEXM6608kRzHcuvVk99oAhsuK3z8
+         m4xc98JFRSpHK50EbfdP+NeOCF694DwhvTf13YaIg4VnkBSr6RyEy65Wa6E6OP02px7z
+         gTAqV2lg3woz7OFcIlwsAkLBudf+b1IGbVtJ0u25UA/omqiP4HeLR9mcmA8OpOOUoYpd
+         fdsg==
+X-Forwarded-Encrypted: i=1; AJvYcCVWM7QmLYMNDcpEnk6vLta7qr42nCNFUanD0HdB/lklalRqSH33qLAHy4Pr290bRGKMQMXbpaDGSTQERaI=@vger.kernel.org, AJvYcCVX1GRKdbhtmrLbhKfhxm6VaCmoDGRjgCcqgar3GKIEzkS5Vdu3WcjqOr1z8NxYXPyONOnsLaQtLIk5wQw/b4CJs6cy@vger.kernel.org
+X-Gm-Message-State: AOJu0YzkauzoiqRMLbaE1jUPc8dXhRgpI319sowVU0Tqi7mqTghxpT+s
+	OrwKqtTckJ+AQ58MwfYr9xQGdvtJq3A6BNv57jBfHtPB+UqFbZ+XBUMauiPu
+X-Gm-Gg: ASbGncsbGc0CaaQNMEQw1XKXcS1oS7IeYzvhGo4eGtQuczLC2MMc02qliykFC69S9ir
+	IyOKQrRSc5GjSqjd+mn72QliXKpIKCUGLYLu7hv/oyQxNkzGRghNZtfwASkNAoFi/BqLNyDGxwN
+	E8YYUnT9hHo2RLLtwAtHM46JLmYQ3bsgAqGjEJtnDnQrYya3FIihRl7BsGrh4JRgMi8Qv1gAdGH
+	BHvB0MvMWiUReV+twD7CCgWOt22Rh9mMcYDJexWwrWuzfvN2Sk4urq3V323ii3mSyuYMNJh+xeP
+	8sUHP+775dd3h5T1WA2mIwGNHz/qouAiCbYZJ8oTErxVYCEgsSM4Jf8aCTChroj1FgCbcH9JePQ
+	=
+X-Google-Smtp-Source: AGHT+IGFMrc9fy6MGw4jUYCBi024LtAKv0RGaW9FtoMkZZKy6OaOQNNbGkhf5zAaY6BH5S8JxJ6RXQ==
+X-Received: by 2002:a05:6a20:9d94:b0:1ee:5f21:6720 with SMTP id adf61e73a8af0-1fe938f0d44mr1154958637.16.1742926378546;
+        Tue, 25 Mar 2025 11:12:58 -0700 (PDT)
+Received: from sid-Inspiron-15-3525.. ([106.222.230.230])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-af8a2a29177sm9418237a12.62.2025.03.25.11.12.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 25 Mar 2025 11:12:58 -0700 (PDT)
+From: Siddarth G <siddarthsgml@gmail.com>
+To: rostedt@goodmis.org,
+	mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com
+Cc: skhan@linuxfoundation.org,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	Siddarth G <siddarthsgml@gmail.com>
+Subject: [PATCH] tracing: Replace strncpy with memcpy for fixed-length substring copy
+Date: Tue, 25 Mar 2025 23:42:32 +0530
+Message-ID: <20250325181232.38284-1-siddarthsgml@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CABEuK15=+Bo7xkBn5ufytVowt0j3fVEsdGVsryn1zH8KxfoCyQ@mail.gmail.com>
- <20250324133619.6c3babf7@gandalf.local.home> <CABEuK15jWHSU8LaRXc1EzvhiLdBHeM9E+sKs7VyP47RRSxG6cg@mail.gmail.com>
- <2025032424-custard-volley-bbb6@gregkh> <20250324150703.69665622@gandalf.local.home>
- <2025032548-happily-saxophone-4079@gregkh> <20250325081551.270947fe@gandalf.local.home>
- <CABEuK14t7XR5Oi7kD13AHt-cQ8nc+mM8kojMkSh_WXbbNZbcyw@mail.gmail.com> <20250325140223.534df027@gandalf.local.home>
-In-Reply-To: <20250325140223.534df027@gandalf.local.home>
-From: Sahil Gupta <s.gupta@arista.com>
-Date: Tue, 25 Mar 2025 13:10:17 -0500
-X-Gm-Features: AQ5f1JoXsnXMVfcaXuov1qge3FFsLlwswCC3ne_ge-cKSrjD8aBB-M3RKvv8OrM
-Message-ID: <CABEuK15DRcNDj4Gscw3xuonJ5uCrqb34qB-+MzyAmxZn=h_X=Q@mail.gmail.com>
-Subject: Re: ftrace: sorttable unable to sort ELF64 on 32-bit host
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: gregkh@linuxfoundation.org, linux-trace-kernel@vger.kernel.org, 
-	Kevin Mitchell <kevmitch@arista.com>, Dmitry Safonov <dima@arista.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Tue, 25 Mar 2025 11:01:41 -0700 (PDT)
-Steven Rostedt <rostedt@goodmis.org> wrote:
+checkpatch.pl reports the following warning:
+WARNING: Prefer strscpy, strscpy_pad, or __nonstring over strncpy
+(see: https://github.com/KSPP/linux/issues/90)
 
-> I'm not against you doing that, but it is specific for your setup.
->
-> If you do this, make sure to test it by enabling:
->
->   CONFIG_FTRACE_SORT_STARTUP_TEST
->
-> Which will verify that the table is indeed sorted at run time. There coul=
-d
-> be another bug that could make it build, but not sort it properly, and
-> without that config, you may not know, but it will cause ftrace to not wo=
-rk
-> properly.
+In synth_field_string_size(), replace strncpy() with memcpy() to copy 'len'
+characters from 'start' to 'buf'. The code manually adds a NUL terminator
+after the copy, making memcpy safe here.
 
-That sounds good to me. I didn't use CONFIG_FTRACE_SORT_STARTUP_TEST,
-but I manually verified the section was sorted by checking the ELF
-using a Python script. Maybe that is something we can consider adding
-as a build step in the future?
+Signed-off-by: Siddarth G <siddarthsgml@gmail.com>
+---
+ kernel/trace/trace_events_synth.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Sahil
+diff --git a/kernel/trace/trace_events_synth.c b/kernel/trace/trace_events_synth.c
+index e3f7d09e5512..1aaa9a5e2aca 100644
+--- a/kernel/trace/trace_events_synth.c
++++ b/kernel/trace/trace_events_synth.c
+@@ -207,7 +207,7 @@ static int synth_field_string_size(char *type)
+ 	if (len == 0)
+ 		return 0; /* variable-length string */
+ 
+-	strncpy(buf, start, len);
++	memcpy(buf, start, len);
+ 	buf[len] = '\0';
+ 
+ 	err = kstrtouint(buf, 0, &size);
+-- 
+2.43.0
 
-
-On Tue, Mar 25, 2025 at 1:01=E2=80=AFPM Steven Rostedt <rostedt@goodmis.org=
-> wrote:
->
-> On Tue, 25 Mar 2025 12:52:43 -0500
-> Sahil Gupta <s.gupta@arista.com> wrote:
->
-> > On Tue, 25 Mar 2025 05:15:10 -0700 (PDT)
-> > Steven Rostedt <rostedt@goodmis.org> wrote:
-> >
-> > > How important is it for you to build 64 bit kernels
-> > > on 32 bit machines?
-> >
-> > Yeah I don't disagree at all, it is a fairly idiosyncratic thing to
-> > do. There are some historical and business justifications for still
-> > building 32-bit in the first place, but until we deduplicate the
-> > kernel build, we will continue to have this issue.
->
-> Note, that the regression is only the failure in the build of your setup.
-> As your setup never supported sorting the mcount location at build time,
-> that part is not the regression.
->
-> >
-> > > One solution may be to simply disable
-> > > mcount sorting at build time when it is detected that the host is 32 =
-bit
-> > > and the target is 64 bit.
-> >
-> > We are currently doing this. I imagine the performance difference is
-> > trivial but if we can sort at build time, we might as well. I have a
-> > fairly simple alternate solution that isn't backporting all of those
-> > patches. The core idea is to introduce another macro, parse_addr, that
-> > is defined as
-> >
-> >  # define parse_addr(buf) strtoull(buf, NULL, 16)
-> >
-> > when SORTTABLE_64 is defined and
-> >
-> >  # define parse_addr(buf) strtoul(buf, NULL, 16)
-> >
-> > when it isn't. Seems like a fair thing to do considering unsigned long
-> > long is guaranteed to be at least 64-bit and unsigned long is
-> > guaranteed to be at least 32-bit. I can post the patch in a stable-
-> > thread.
->
-> I'm not against you doing that, but it is specific for your setup.
->
-> If you do this, make sure to test it by enabling:
->
->   CONFIG_FTRACE_SORT_STARTUP_TEST
->
-> Which will verify that the table is indeed sorted at run time. There coul=
-d
-> be another bug that could make it build, but not sort it properly, and
-> without that config, you may not know, but it will cause ftrace to not wo=
-rk
-> properly.
->
-> -- Steve
