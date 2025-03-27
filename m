@@ -1,111 +1,148 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C497A155C83;
-	Thu, 27 Mar 2025 15:48:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74D261A2554
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 27 Mar 2025 16:20:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743090503; cv=none; b=E3Lxf02vTVn6NxgShzG2YzfxDgVLxHZ4vWmvuxOskRU1incdG6XV5E/MQqjYc7jK88kTP15I995ca+gH2CVxOL1XsQH9kKOfq7KacQO3+O5Yu0JEAGIK2Z2tP2j7iw2zZR1+iW5tR/UrWUUXy5BB11NPEU6p7PsqJhG2YyxULr8=
+	t=1743092414; cv=none; b=u/Y3IrL4zfPztmqB5Kqbz09UtzaB6ABhZYb7ijHbUTOzlIE2Kb49ajpAyhiaL118qNkz7CSxMFu10k5+h2cOvAsQrjZmDenhjJiCV5HHo6SHfWDO8p0j7GE2VLHB8s3izd/HEFMeLHxmlWZYsnhKjiRD2bl/m+hbOFn8lS4aBtE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743090503; c=relaxed/simple;
-	bh=47j3I74ks2/O4s0BYb1TImz8jQ4IkN1cpagyuQxWYLA=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=s+VxkusMMxTsRRQngh2kPZTjqLvOCexUwsNx3IE+fIR7f1Nd/uPvZUOY3T3HeoNMdedn72bTGKIE7H+8QukRIT10FJEv6AakzSugxE9ezyOM/MT8V8xnTPLKAGPU9R0nF7K6cTCE/v60Ws1sP74uyP/MDI5azycv1qwtvFMuzhs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 98E94C4CEDD;
-	Thu, 27 Mar 2025 15:48:22 +0000 (UTC)
-Date: Thu, 27 Mar 2025 11:49:11 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Libo Chen <libo.chen@oracle.com>
-Subject: [PATCH] tracing: Verify event formats that have "%*p.."
-Message-ID: <20250327114911.2c713511@gandalf.local.home>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1743092414; c=relaxed/simple;
+	bh=d7ElXG12q67ts9hPo9D4cCi81eQhC4QyN/csAlxbkk8=;
+	h=Date:Subject:In-Reply-To:CC:From:To:Message-ID:Mime-Version:
+	 Content-Type; b=DA99Nw5NNFKroq+bZq/9dQfffZBBhtg/uVfvxkzRW7lf99C2RBwV5guYj38Xu802JHhKeoEA8yuVXntpIxncze++yxtlyBBpoE8b4ud2U7ZbY8Ulfy6Q7KMLhYGfa16gaSUnZBsUGBZ+UsMEoKloH8u4Nwk1o+Mu7JuySpX4Cac=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dabbelt.com; spf=pass smtp.mailfrom=dabbelt.com; dkim=pass (2048-bit key) header.d=dabbelt-com.20230601.gappssmtp.com header.i=@dabbelt-com.20230601.gappssmtp.com header.b=kOYAPj8Z; arc=none smtp.client-ip=209.85.214.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dabbelt.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dabbelt.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=dabbelt-com.20230601.gappssmtp.com header.i=@dabbelt-com.20230601.gappssmtp.com header.b="kOYAPj8Z"
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-22398e09e39so27896795ad.3
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 27 Mar 2025 09:20:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=dabbelt-com.20230601.gappssmtp.com; s=20230601; t=1743092410; x=1743697210; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:to:from:cc
+         :in-reply-to:subject:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=hQcfqS6ONRy4v+VAuw1r1bUFP3B6ufIgzXQvK3yZp0M=;
+        b=kOYAPj8ZAlZLOFNhrs9mchTgodx5+USr5guYG8Kx5M0JP8ixbwK1esti7rpswrGb06
+         rZ8bzKVq45I+F4VCYLj8Uyzv45ccDb4WFH942uFTDyknzHTy0czdcynotfuRLD2wg5js
+         9s1l+cPdq9QnkCuoEXgL6Mm+Oiy+oFZf5Yo4i+Q7RKiBePhd2E17Wv2UbwxAi5DtKxTB
+         JsVtgXqlomwNDp5h8fp8aMZdPPnYqZCWtkFo/vCEykJ/kRXGKYKXo+g3PrjhCX/nSS1t
+         FI5ZCmh2PQ14BKCflq1wX58jeyx9oUNg0aEAG1kI4tifINMvDnXCesxjzWtQG7O/35PI
+         ZZxw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743092410; x=1743697210;
+        h=content-transfer-encoding:mime-version:message-id:to:from:cc
+         :in-reply-to:subject:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=hQcfqS6ONRy4v+VAuw1r1bUFP3B6ufIgzXQvK3yZp0M=;
+        b=nfH/KA2izW/fwtyJkhdIIqNRf4E5UQUyDuifr3JhRcCth1kbB3qxJfzUNPad5A9cE0
+         0GXJcyIrd+56zg7PUpwu8hJa6qNa4bsDgpdHytEMWfHsKs1iZqCh90bw7ovhoHbZ1PP8
+         kRI8CoJ0LgZ3F90Wlax4dpDZkV0znBeCGN0CFgDmynZMMNzmKLpUECeWI4jMZ491kYR9
+         MuCv40ztmpzqPdupH6oRMc4s1FBdmclfpw22nqv3dk3aVCaQ5id4Hl22FRhu3EKMMlH6
+         dKEwus/mUTD5N722eZ7yhiKcYBoUbHo3GtQ7YsyTIMyjmy2hSnqXj4sN5yUy3ImoW4qV
+         5VkA==
+X-Forwarded-Encrypted: i=1; AJvYcCU+joAYZov/hEZunFXXq+bbcJGYCWEZyL6KuRmCzKev+AatdIdJ/HcZ/n+oDJgiUcmRzyM/rTizdzkuqBeac/2qN3s=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwDME2RrZ6PRT43kMYMyx/RrVGBE3hTi4Mjtm51Ytgf7AzMLxYi
+	bunYh8ycJXYbDm08b40LBDE4DwzI6B2qOpugYeJ8E5nXOd2Tw7wpqlD2WF1PnOo=
+X-Gm-Gg: ASbGncsj+0eli06UpMs1ulvEFY1JJ/Rx6izuBvI4FgFOe746wD8subeg0h3pns7kQXW
+	H8Rc+HgKo70Pt7DWC1OO9SPZrGhXvPhqd5dvA0uO0WGJsg5MuchUbEvqq2uvFv+kamtZloYyr7N
+	4dQsH/RdsqttqM5ABnRn6wj/1SxqpPLYY47VUrWblPElZmefCfzXl9tMZYp/63sAZhupJjMTVES
+	KzxXbd99ll+TImLgXGOOCViWdu4BoWEkzw+1fqz594j5u5gxaMRgwst7O+qcWGSr74+p3Nx4CGY
+	qC1Tb0ZoDweqB5YWztkWOUpkGIYriHWm+KnEOw==
+X-Google-Smtp-Source: AGHT+IGhXmi8JOjZOP3Ikj3wo/1uBU9qt49Ql5SLHckRbeVG8HWYg9iWFYIxA94kzN1K7mL9F21TaQ==
+X-Received: by 2002:a17:903:22d2:b0:223:4816:3e9e with SMTP id d9443c01a7336-22804857854mr57168615ad.13.1743092410377;
+        Thu, 27 Mar 2025 09:20:10 -0700 (PDT)
+Received: from localhost ([50.145.13.30])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7390618e4b6sm14534202b3a.180.2025.03.27.09.20.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 27 Mar 2025 09:20:09 -0700 (PDT)
+Date: Thu, 27 Mar 2025 09:20:09 -0700 (PDT)
+X-Google-Original-Date: Thu, 27 Mar 2025 09:20:00 PDT (-0700)
+Subject:     Re: [RFC PATCH V3 00/43] rv64ilp32_abi: Build CONFIG_64BIT kernel-self with ILP32 ABI
+In-Reply-To: <svu4xdeo7a7ve3vorvgbkjxzrqmqk5oztgtfpbg556wjw4x7vc@yg4esoipmt7g>
+CC: david@redhat.com, peterz@infradead.org, guoren@kernel.org,
+  Arnd Bergmann <arnd@arndb.de>, Greg KH <gregkh@linuxfoundation.org>,
+  Linus Torvalds <torvalds@linux-foundation.org>, Paul Walmsley <paul.walmsley@sifive.com>, anup@brainfault.org,
+  atishp@atishpatra.org, oleg@redhat.com, kees@kernel.org, tglx@linutronix.de,
+  Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>, brauner@kernel.org,
+  akpm@linux-foundation.org, rostedt@goodmis.org, edumazet@google.com, unicorn_wang@outlook.com,
+  inochiama@outlook.com, gaohan@iscas.ac.cn, shihua@iscas.ac.cn, jiawei@iscas.ac.cn,
+  wuwei2016@iscas.ac.cn, drew@pdp7.com, prabhakar.mahadev-lad.rj@bp.renesas.com, ctsai390@andestech.com,
+  wefu@redhat.com, kuba@kernel.org, pabeni@redhat.com, josef@toxicpanda.com, dsterba@suse.com,
+  mingo@redhat.com, boqun.feng@gmail.com, xiao.w.wang@intel.com, qingfang.deng@siflower.com.cn,
+  leobras@redhat.com, jszhang@kernel.org, Conor Dooley <conor.dooley@microchip.com>,
+  samuel.holland@sifive.com, yongxuan.wang@sifive.com, luxu.kernel@bytedance.com, ruanjinjie@huawei.com,
+  cuiyunhui@bytedance.com, wangkefeng.wang@huawei.com, qiaozhe@iscas.ac.cn,
+  Ard Biesheuvel <ardb@kernel.org>, ast@kernel.org, linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
+  kvm@vger.kernel.org, kvm-riscv@lists.infradead.org, linux-mm@kvack.org,
+  linux-crypto@vger.kernel.org, bpf@vger.kernel.org, linux-input@vger.kernel.org,
+  linux-perf-users@vger.kernel.org, linux-serial@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+  linux-arch@vger.kernel.org, maple-tree@lists.infradead.org, linux-trace-kernel@vger.kernel.org,
+  netdev@vger.kernel.org, linux-atm-general@lists.sourceforge.net, linux-btrfs@vger.kernel.org,
+  netfilter-devel@vger.kernel.org, coreteam@netfilter.org, linux-nfs@vger.kernel.org, linux-sctp@vger.kernel.org,
+  linux-usb@vger.kernel.org, linux-media@vger.kernel.org
+From: Palmer Dabbelt <palmer@dabbelt.com>
+To: Liam.Howlett@oracle.com
+Message-ID: <mhng-e8248074-b79c-42f6-986f-9993851b6be2@palmer-ri-x1c9a>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0 (MHng)
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-From: Steven Rostedt <rostedt@goodmis.org>
+On Tue, 25 Mar 2025 12:23:39 PDT (-0700), Liam.Howlett@oracle.com wrote:
+> * David Hildenbrand <david@redhat.com> [250325 14:52]:
+>> On 25.03.25 13:26, Peter Zijlstra wrote:
+>> > On Tue, Mar 25, 2025 at 08:15:41AM -0400, guoren@kernel.org wrote:
+>> > > From: "Guo Ren (Alibaba DAMO Academy)" <guoren@kernel.org>
+>> > >
+>> > > Since 2001, the CONFIG_64BIT kernel has been built with the LP64 ABI,
+>> > > but this patchset allows the CONFIG_64BIT kernel to use an ILP32 ABI
+>> >
+>> > I'm thinking you're going to be finding a metric ton of assumptions
+>> > about 'unsigned long' being 64bit when 64BIT=y throughout the kernel.
+>> >
+>> > I know of a couple of places where 64BIT will result in different math
+>> > such that a 32bit 'unsigned long' will trivially overflow.
 
-The trace event verifier checks the formats of trace events to make sure
-that they do not point at memory that is not in the trace event itself or
-in data that will never be freed. If an event references data that was
-allocated when the event triggered and that same data is freed before the
-event is read, then the kernel can crash by reading freed memory.
+Ya, I write code that assumes "unsigned long" is the size of a register 
+pretty regularly.
 
-The verifier runs at boot up (or module load) and scans the print formats
-of the events and checks their arguments to make sure that dereferenced
-pointers are safe. If the format uses "%*p.." the verifier will ignore it,
-and that could be dangerous. Cover this case as well.
+>> >
+>> > Please, don't do this. This adds a significant maintenance burden on all
+>> > of us.
+>> >
+>>
+>> Fully agreed.
+>
+> I would go further and say I do not want this to go in.
 
-Also add to the sample code a use case of "%*pbl".
+Seems reasonable to me, and I think it's also been the general sentiment 
+when this stuff comes up.  This specific implementation seems 
+particularly clunky, but I agree that it's going to be painful to do 
+this sort of thing.
 
-Link: https://lore.kernel.org/all/bcba4d76-2c3f-4d11-baf0-02905db953dd@oracle.com/
+> The open ended maintenance burden is not worth extending hardware life
+> of a board with 16mb of ram (If I understand your 2023 LPC slides
+> correctly).
 
-Reported-by: Libo Chen <libo.chen@oracle.com>
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
- kernel/trace/trace_events.c                | 7 +++++++
- samples/trace_events/trace-events-sample.h | 8 ++++++--
- 2 files changed, 13 insertions(+), 2 deletions(-)
+We can already run full 32-bit kernels on 64-bit hardware.  The hardware 
+needs to support configurable XLEN, but there's systems out there that 
+do already.
 
-diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
-index 7b3ef1d26167..34e7b4af9f88 100644
---- a/kernel/trace/trace_events.c
-+++ b/kernel/trace/trace_events.c
-@@ -470,6 +470,7 @@ static void test_event_printk(struct trace_event_call *call)
- 			case '%':
- 				continue;
- 			case 'p':
-+ do_pointer:
- 				/* Find dereferencing fields */
- 				switch (fmt[i + 1]) {
- 				case 'B': case 'R': case 'r':
-@@ -498,6 +499,12 @@ static void test_event_printk(struct trace_event_call *call)
- 						continue;
- 					if (fmt[i + j] == '*') {
- 						star = true;
-+						/* Handle %*pbl case */
-+						if (!j && fmt[i + 1] == 'p') {
-+							arg++;
-+							i++;
-+							goto do_pointer;
-+						}
- 						continue;
- 					}
- 					if ((fmt[i + j] == 's')) {
-diff --git a/samples/trace_events/trace-events-sample.h b/samples/trace_events/trace-events-sample.h
-index 999f78d380ae..0622c9e3f2be 100644
---- a/samples/trace_events/trace-events-sample.h
-+++ b/samples/trace_events/trace-events-sample.h
-@@ -319,7 +319,8 @@ TRACE_EVENT(foo_bar,
- 		__assign_cpumask(cpum, cpumask_bits(mask));
- 	),
- 
--	TP_printk("foo %s %d %s %s %s %s %s %s (%s) (%s) %s", __entry->foo, __entry->bar,
-+	TP_printk("foo %s %d %s %s %s %s %s %s (%s) (%s) %s [%d] %*pbl",
-+		  __entry->foo, __entry->bar,
- 
- /*
-  * Notice here the use of some helper functions. This includes:
-@@ -370,7 +371,10 @@ TRACE_EVENT(foo_bar,
- 
- 		  __get_str(str), __get_str(lstr),
- 		  __get_bitmask(cpus), __get_cpumask(cpum),
--		  __get_str(vstr))
-+		  __get_str(vstr),
-+	         __get_dynamic_array_len(cpus),
-+	         __get_dynamic_array_len(cpus),
-+	         __get_dynamic_array(cpus))
- );
- 
- /*
--- 
-2.47.2
+It's not like any of the existing RISC-V stuff ships in meaningful 
+volumes.  So I think it's fine to just say that vendors who want tiny 
+memories should build hardware that plays nice with those constraints, 
+and vendors who build hardware that doesn't make any sense get to pick 
+up the pieces.
 
+I get RISC-V is where people go to have crazy ideas, but there's got to 
+be a line somewhere...
+
+>
+> Thank you,
+> Liam
