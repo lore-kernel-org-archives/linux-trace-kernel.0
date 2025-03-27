@@ -1,104 +1,75 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mail3.lpse.lkpp.go.id (mail2.lpse.lkpp.go.id [103.55.160.152])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 170911B4251
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 27 Mar 2025 08:13:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE90A1CAA85
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 27 Mar 2025 09:31:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.55.160.152
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743063191; cv=none; b=lzfF7ampl1mGGeddfF4u6jKSWLsnTE179dwY1ba+ZvNv6V2/M+13ME28lK5T2gK8um453d9D1k2/4Pc93MDHX5FKGFh0p9ZRkibrtgKnQHAlcbdY+S1xl1MsVdaAeJtVIKDmWCIy9WGjXAuF6B2AykfSXq7P1H82alQFeVg9oqY=
+	t=1743067909; cv=none; b=H5TaI+mrCkPls4u+a6CWfx94uIibkXa/GutFdTElhpsRB5jbdJ8h9y8Upr/ce/KV3Yeyw+9nkPaVC4m0qzvQVU+AP1nhAZiwOUi2CYs58dchPH1y3bQII1oT+7HVsLMMeORysVdTkRizW0hIt/dxNija4DQHisEZpaWUvVRXhl4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743063191; c=relaxed/simple;
-	bh=EbLVbiQlpgq9YG5GIB6FTYiL142vhrzXNYAki+1MxhU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=YJCgEv62IZ/tQAnmnUtQRurdUHzH9wzwK2leyEKJPwzK96Nkp6U1hQZhoCmnQg87CDHLTgxGDtDB10WuP6DRRk0mj6Y8tJsI5pVPX+wmFw5rinYxMVgyLe++BEdJ041Q8m/wuWZ4appvzmpJRZFY1u05nAgLwFRVoDtAs5zSEms=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=f78DWvXA; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="f78DWvXA"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1743063188;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=BoCOhkTM9KFlUbaH9jkH+YVNAgo79G44mPoieSkwGDM=;
-	b=f78DWvXAx/NG0TSZGc7y2zPLAxrr8GSFKRABKJw+1MgSDaeASEzz/QtUPHrUUgJftlEOmr
-	RM7QWzc22VvPAQ8OErl9boAsRRlCuP4JKTyYshlKcelfn5saZFLfblPYHMGaRHUD7UaI8q
-	0cT3cA37pVfQsPq3xAY/kgsamlVfEDE=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-99-0gFCmPBwPF2fHA64dZ9CNg-1; Thu,
- 27 Mar 2025 04:13:05 -0400
-X-MC-Unique: 0gFCmPBwPF2fHA64dZ9CNg-1
-X-Mimecast-MFC-AGG-ID: 0gFCmPBwPF2fHA64dZ9CNg_1743063184
-Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 0E94F1809CA5;
-	Thu, 27 Mar 2025 08:13:04 +0000 (UTC)
-Received: from gmonaco-thinkpadt14gen3.rmtit.com (unknown [10.44.32.86])
-	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 6E48B1956095;
-	Thu, 27 Mar 2025 08:13:00 +0000 (UTC)
-From: Gabriele Monaco <gmonaco@redhat.com>
-To: Jonathan Corbet <corbet@lwn.net>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Gabriele Monaco <gmonaco@redhat.com>,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Cc: Stephen Rothwell <sfr@canb.auug.org.au>
-Subject: [PATCH next] Documentation/rv: Add sched pages to the indices
-Date: Thu, 27 Mar 2025 09:12:40 +0100
-Message-ID: <20250327081240.46422-1-gmonaco@redhat.com>
+	s=arc-20240116; t=1743067909; c=relaxed/simple;
+	bh=yX/HUEArgxAuc3R2cUhlvLuGpwX74Hql+acxSqkXmDo=;
+	h=Content-Type:MIME-Version:Subject:To:From:Date:Message-Id; b=OW/2LmmBRU2e6VUlaDdDuW6+O2EcydvldzjsuzePjnw6E/r2sliHLmITRiRI+qui6hvk14L99ylfWU4mfM/RSSSWkNrdl8QeQ+wFi9DtdGRB8JZEQqtRAQLVxKGJsFKJpcLbAwV4bX+aOsc3jjRhrDSu+5zsLV0oBpyB/BUjT5M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=weboxcoders.com; spf=fail smtp.mailfrom=weboxcoders.com; arc=none smtp.client-ip=103.55.160.152
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=weboxcoders.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=weboxcoders.com
+Received: from localhost (localhost [127.0.0.1])
+	by mail3.lpse.lkpp.go.id (Postfix) with ESMTP id 02433147593
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 27 Mar 2025 16:11:28 +0700 (WIB)
+X-Virus-Scanned: Debian amavisd-new at mail7.lpse.lkpp.go.id
+Received: from mail3.lpse.lkpp.go.id ([127.0.0.1])
+	by localhost (mail2.lpse.lkpp.go.id [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id Ebqqu7j6AOsA for <linux-trace-kernel@vger.kernel.org>;
+	Thu, 27 Mar 2025 16:11:27 +0700 (WIB)
+Received: from [77.239.124.122] (localhost [127.0.0.1])
+	by mail3.lpse.lkpp.go.id (Postfix) with ESMTP id 3CC9C12D7CA
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 27 Mar 2025 16:11:09 +0700 (WIB)
+Content-Type: text/plain; charset="iso-8859-1"
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
+Content-Transfer-Encoding: quoted-printable
+Content-Description: Mail message body
+Subject: gloria
+To: linux-trace-kernel@vger.kernel.org
+From: "Gloria"<info@weboxcoders.com>
+Date: Thu, 27 Mar 2025 10:11:07 +0100
+Reply-To: office@pgindonesia.net
+Message-Id: <20250327091109.3CC9C12D7CA@mail3.lpse.lkpp.go.id>
 
-The pages Documentation/tools/rv/rv-mon-sched.rst and
-Documentation/trace/rv/monitor_sched.rst were introduced but not
-included in any index.
+Hello.....
 
-Add them to the respective indices.
 
-Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
-Fixes: 03abeaa63c08 ("Documentation/rv: Add docs for the sched monitors")
-Signed-off-by: Gabriele Monaco <gmonaco@redhat.com>
----
- Documentation/tools/rv/index.rst | 1 +
- Documentation/trace/rv/index.rst | 1 +
- 2 files changed, 2 insertions(+)
+Good day to you I am writing this message to you to seek your
+consent regarding onward investment plan,  in any country of yours.
 
-diff --git a/Documentation/tools/rv/index.rst b/Documentation/tools/rv/index.rst
-index 8fd16d91d..64ba2efe2 100644
---- a/Documentation/tools/rv/index.rst
-+++ b/Documentation/tools/rv/index.rst
-@@ -15,6 +15,7 @@ Runtime verification (rv) tool
-    rv-mon
-    rv-mon-wip
-    rv-mon-wwnr
-+   rv-mon-sched
- 
- .. only::  subproject and html
- 
-diff --git a/Documentation/trace/rv/index.rst b/Documentation/trace/rv/index.rst
-index 15fa96610..e80e0057f 100644
---- a/Documentation/trace/rv/index.rst
-+++ b/Documentation/trace/rv/index.rst
-@@ -12,3 +12,4 @@ Runtime Verification
-    da_monitor_instrumentation.rst
-    monitor_wip.rst
-    monitor_wwnr.rst
-+   monitor_sched.rst
+My name is Ms Gloria Johson., I'm the CEO of AMP
+Resources  LTD. We are involved in all sectors of oil and gas production.
 
-base-tree: git://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace.git
-trace-latency-v6.15
-base-commit: 4ffef9579ffc51647c5eb55869fb310f3c1e2db2
--- 
-2.49.0
+Our operation range from crude extraction , transportation, retail and dist=
+ribution. =
 
+I am a Canadian born Russian resident in Saint Petersburg
+Russia. =
+
+
+Because of the war in Russia ,  I want to start moving my funds to a truste=
+d person.
+funds out of countries i mentioned as  I can't no longer stand the hard san=
+ctions, over my funds in Holland and Paris and UK
+Base on.russian sanctions  is facing as a result of Putin and his stubbornn=
+ess. I
+have deposits i would like to move, each of the deposit is 20m l need a tru=
+sted
+person to manage the heritage.
+
+
+
+
+
+Best regards,
+
+Ms Gloria Johson.
