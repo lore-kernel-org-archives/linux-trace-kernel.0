@@ -1,104 +1,83 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB6A5749C;
-	Thu, 27 Mar 2025 02:02:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4267E749C;
+	Thu, 27 Mar 2025 03:23:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743040939; cv=none; b=k3zsuNeHjaSrXpsDcXSYUGjzVjzWkwruRZKs3zC2OVfWjnrTmIq3AY9sIUp3YQAdz0Plb4VEKfTeoKnhp6C1n4QtWqA3Vu9oqUHEgrEYxtcGymgGrvU6AK68MIzIUQvPtT/Jiz44aVonzpOV/cofJkWb7O2NjIus82ygXFtb5YQ=
+	t=1743045832; cv=none; b=IeetTyXYZlgRZOxcB7UIhuN0xOMcmBsUvj2eLzN9vJv4NyRwO0BkKhCdTyxNLUowuS6T0CM1iVrxYmbtls33eWHvRyQGSXVUhuJwF51svOR44X323arsOniQqRDFEM615n4rOQ4/6/tQqEE9C6UXkRmzvSc/pZqvUlzca1sdPyQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743040939; c=relaxed/simple;
-	bh=QTm8aqWhBr/Vv2WvqLMhBkqrqN8N/oJe1ueW/F/El1o=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=mY1eKKbZBcpy1TjkYiyWR8bNfnZ2iP34AJcXyckn6Tvjc/DWk1piTSQfjZ1P49iNIhSeCUYccRuNjfHzJmGxhIidWL9OiBD79DC2/f3X/oacHwMtRAreMtOGgPy1qzCYWS95G1DlFxUZHoZeKYU9NgqIWbjz+XKy2OY80f259T4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D0BD2C4CEE2;
-	Thu, 27 Mar 2025 02:02:17 +0000 (UTC)
-Date: Wed, 26 Mar 2025 22:03:04 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>
-Subject: [PATCH] tracing: Use _text and the kernel offset in last_boot_info
-Message-ID: <20250326220304.38dbedcd@gandalf.local.home>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1743045832; c=relaxed/simple;
+	bh=MQhcmVMYslup6LMuf3wI469Rp6j+4KOBFl4QW6WH2ps=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=ByeoihBdn/x/c82VrXDVnuTJZmgi+2Sd5zi6kTUvOq4goB/cU668Ljlf/YIpMNYMqxt0hLcjDpMZB5pJMp1RkRVXPP+BteZVHPAj8zsZb3F5ULGOPTJMq4CK9pwkRcpU+H+y71V+eS7NEuY0qthKmQm97sQo1w6PL0aoYTWhsio=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cylU1Ld4; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cylU1Ld4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B0AD5C4CEDD;
+	Thu, 27 Mar 2025 03:23:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743045831;
+	bh=MQhcmVMYslup6LMuf3wI469Rp6j+4KOBFl4QW6WH2ps=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=cylU1Ld428ydr51w5e0flPy+LqyTLOSg2LlqPrpePd5oHB8HePBVwPJbhH9XxUx8B
+	 uZTTg2t1jgl/XxBxmQsPpjD5bqcRmrDRy0G9sxbtnIs9qXqcFMs0iWrufDlvrf3Ch5
+	 axLZt4jcoiZ9ofb+dZjuV56junB8mrZsNLryoFt8HMl7y7sAOho5WeiKr7W8jlztE8
+	 S5Ola6+X3xZDtcO6uNsfo+D7t+WWrBAnNJZcGScat6gLuyhTqDZw+l211Gj3Mcr9JC
+	 eQ9rUvzjqUv3K9jyGjovklgZc+hFL7FwusGgs1kqbkHm5y0M+YMz2qA+lpbrc/BzeD
+	 w6GnP97Jl3sSg==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 33CE7380AAFD;
+	Thu, 27 Mar 2025 03:24:29 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH v10 0/2] riscv: Add runtime constant support
+From: patchwork-bot+linux-riscv@kernel.org
+Message-Id: 
+ <174304586800.1549280.4422095379937225029.git-patchwork-notify@kernel.org>
+Date: Thu, 27 Mar 2025 03:24:28 +0000
+References: <20250319-runtime_const_riscv-v10-0-745b31a11d65@rivosinc.com>
+In-Reply-To: <20250319-runtime_const_riscv-v10-0-745b31a11d65@rivosinc.com>
+To: Charlie Jenkins <charlie@rivosinc.com>
+Cc: linux-riscv@lists.infradead.org, paul.walmsley@sifive.com,
+ palmer@dabbelt.com, ardb@kernel.org, ben.dooks@codethink.co.uk,
+ pasha@rivosinc.com, emil.renner.berthing@canonical.com,
+ alexghiti@rivosinc.com, rostedt@goodmis.org, mhiramat@kernel.org,
+ mark.rutland@arm.com, aou@eecs.berkeley.edu, peterz@infradead.org,
+ jpoimboe@kernel.org, jbaron@akamai.com, ajones@ventanamicro.com,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
 
-From: Steven Rostedt <rostedt@goodmis.org>
+Hello:
 
-Instead of using kaslr_offset() just record the location of "_text". This
-makes it possible for user space to use either the System.map or
-/proc/kallsyms as what to map all addresses to functions with.
+This series was applied to riscv/linux.git (for-next)
+by Alexandre Ghiti <alexghiti@rivosinc.com>:
 
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
- kernel/trace/trace.c | 18 ++++++------------
- 1 file changed, 6 insertions(+), 12 deletions(-)
+On Wed, 19 Mar 2025 11:35:18 -0700 you wrote:
+> Ard brought this to my attention in this patch [1].
+> 
+> I benchmarked this patch on the Nezha D1 (which does not contain Zba or
+> Zbkb so it uses the default algorithm) by navigating through a large
+> directory structure. I created a 1000-deep directory structure and then
+> cd and ls through it. With this patch there was a 0.57% performance
+> improvement.
+> 
+> [...]
 
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index 85128ef96246..3b8f5e3313e0 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -51,7 +51,7 @@
- #include <linux/workqueue.h>
- #include <linux/sort.h>
- 
--#include <asm/setup.h> /* COMMAND_LINE_SIZE and kaslr_offset() */
-+#include <asm/setup.h> /* COMMAND_LINE_SIZE */
- 
- #include "trace.h"
- #include "trace_output.h"
-@@ -5995,7 +5995,7 @@ struct trace_mod_entry {
- };
- 
- struct trace_scratch {
--	unsigned long		kaslr_addr;
-+	unsigned long		text_addr;
- 	unsigned long		nr_entries;
- 	struct trace_mod_entry	entries[];
- };
-@@ -6137,11 +6137,7 @@ static void update_last_data(struct trace_array *tr)
- 	kfree_rcu(module_delta, rcu);
- 
- 	/* Set the persistent ring buffer meta data to this address */
--#ifdef CONFIG_RANDOMIZE_BASE
--	tscratch->kaslr_addr = kaslr_offset();
--#else
--	tscratch->kaslr_addr = 0;
--#endif
-+	tscratch->text_addr = (unsigned long)_text;
- }
- 
- /**
-@@ -7000,7 +6996,7 @@ static void show_last_boot_header(struct seq_file *m, struct trace_array *tr)
- 	 * should not be the same as the current boot.
- 	 */
- 	if (tscratch && (tr->flags & TRACE_ARRAY_FL_LAST_BOOT))
--		seq_printf(m, "%lx\t[kernel]\n", tscratch->kaslr_addr);
-+		seq_printf(m, "%lx\t[kernel]\n", tscratch->text_addr);
- 	else
- 		seq_puts(m, "# Current\n");
- }
-@@ -9465,10 +9461,8 @@ static void setup_trace_scratch(struct trace_array *tr,
- 	tr->scratch = tscratch;
- 	tr->scratch_size = size;
- 
--#ifdef CONFIG_RANDOMIZE_BASE
--	if (tscratch->kaslr_addr)
--		tr->text_delta = kaslr_offset() - tscratch->kaslr_addr;
--#endif
-+	if (tscratch->text_addr)
-+		tr->text_delta = (unsigned long)_text - tscratch->text_addr;
- 
- 	if (struct_size(tscratch, entries, tscratch->nr_entries) > size)
- 		goto reset;
+Here is the summary with links:
+  - [v10,1/2] riscv: Move nop definition to insn-def.h
+    https://git.kernel.org/riscv/c/afa8a93932aa
+  - [v10,2/2] riscv: Add runtime constant support
+    https://git.kernel.org/riscv/c/a44fb5722199
+
+You are awesome, thank you!
 -- 
-2.47.2
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
 
