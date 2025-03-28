@@ -1,162 +1,416 @@
-Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D01F39ACC;
-	Fri, 28 Mar 2025 20:22:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84498126C02;
+	Fri, 28 Mar 2025 22:08:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743193341; cv=none; b=U1AvU7TbHIiLndlUxF53M3CurXrlhHo0EyQz6XbAS87UTOcJiOGhJMXKo0mzwFad9vFKiQ/ZnCD+aPr8zFvB6LUwq1YOE3f03Ne+nyxkmfmBjqmzQ7ETBC3lkktWgwGrnyKupul9cUCLWrQDd7UTAoBs3xrPvjewoaPu9TFxNIg=
+	t=1743199709; cv=none; b=DYD9CNN+y5EN933jpQsZYGVpSHSx8tS0WVPuCxE19JdGOk6rguZ1MIHN6kKUjkYcJ21ty3nmiS7Yo9qasbO5UFEu2kZbmm6yeRa4nEtBPGz3N+gtkAJ1dPxi2IH2KmOzYzJ6zYHlAaNj+98ag/MP18kNN36UrHNB9sz10gbbXTY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743193341; c=relaxed/simple;
-	bh=/etE71/id3ceolRXKlzmXm3tnfpln2efZFUL8YBPH0I=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=XGVZVE/doBxZoNjTj7DDm/0ZS/8MH0WFOD4qFIGvHnKb1nbOBIiMgzTl4h0fNLtVsiKGGzIjDBXKNPcYi68lPobIdrKWtWAeH65gINR/BuGIVrBdZEZ3Lbs34nyZhoUScwTT6Y26JBF8ccY3oS9vft2k0yO4ZfRZO+qx05xKYhY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=W5XrPi+X; arc=none smtp.client-ip=209.85.167.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W5XrPi+X"
-Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-5499659e669so2597212e87.3;
-        Fri, 28 Mar 2025 13:22:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743193337; x=1743798137; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=0wj+8bmV44ertfc1KXsCnlrp/qCwTX9DeMuvBdHVn6I=;
-        b=W5XrPi+XbsrsiUV/5LKz8+p7UywMNbE0PpE/GJeHtAOTY2bButPkdqGgvB+ayvIQDU
-         4jcJT7M93ljdRGFkaC0EKrNh7clA0Nq/q3ZhLIY7iPykdqPP4sjvzpnQrYRJ4eeDcID9
-         z5V10ARbLfDVzu9o4HC/q7yse1TBF/Jucquztuk2CyeEhuGC4zxKEfRjjGI5zkOkKasG
-         6R0u5HmjiDoq1EaDZzPgl8U1Rdm8Tc9f07JFvCU/FEK5GfzsLtejXyjshrVh7oPkDLQ1
-         x/98CC1t5Q7IGu0VNI6i7hz67vAAiAcpNGBL+rmcpobolrGsO6ysJG1ft88Ho3ee5eBr
-         c/Yw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743193337; x=1743798137;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=0wj+8bmV44ertfc1KXsCnlrp/qCwTX9DeMuvBdHVn6I=;
-        b=eAFafWxEZCUMtNYtUMK23tmy6tLSb2C8vMxlOIZXW1lJjEDy/+poaHGAPIOYYBfd4r
-         rYyWTzRVKahFHPZjFeD+288D4LxqIiGXqfTCeeS0+aEzGBER96ewXjxXVspdPpkLFLMn
-         hk91yJsN4ZPH5w06fkjaGamp9NReLnbgIkiScDvkKuw/VFfavwmRg5pD5dh7IzzmmwCQ
-         FHnepCjwq290EeSz6iGyuM6JzXpqb7NHA8sS4iy0TzPd4BFig3h2dw4IIj2O3ASM0pMp
-         osadqSlvhBIZMB4Kge2vxU3zxSDrIUFwL9G6UV9rwohWUtwn5nSiNjELDYof8nembvM+
-         CsSA==
-X-Forwarded-Encrypted: i=1; AJvYcCVqK1mkWnl0XoMiA2jxSkcNwDcwSwqL2OBEK3U9MbtuHhEs535EPdun1PzHKvWan2eYy+av+IMBBtplLrKe9R7KO9gL@vger.kernel.org, AJvYcCXTOGvG/cNgGTiOhIVvd9AFJIHt/RgHhUEjRjyEEyld755Y3xONFIXLjfIpc6Eo0vo2ICd1e+ZIR0T9yL0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzxPLjYgTRdKmFJjw8UByXjOEPit5Dm3BBfJW3pYu2eKZ9ms5kb
-	bmNDcW2TQamWn0HGarsjApwh2WDnZCHcylZXAJ3P8kGMcIlKgkf+
-X-Gm-Gg: ASbGncs0GnGeWrrwBACABqemXBNfBHo4q8IIzN/opCltSbh8Se75A96X6qIz4BbKnzp
-	3M9sNMHijKOA2VfKL/l07BQoXhV/ZqUVy55i5q91sP1pTR9rKcbQkMmY8M8UibiM8y5xoBVOyJy
-	1PtU0Z1LulR6PPaN5lWTKSVOVcXkH95TcT9TombHOf/XefuLR3DXtfZUceZBcY5i0dW6LWwVAnp
-	Vm3H0Bxp8okGvICLfYtpPK3EFb2P1Ik5fJZ2ynQDMqWYrE4MzCCzw56I/RAmq62WXLQONXsWLHu
-	MV4Y20EVL63kYdDZ5mOdwEU0Hhf8pIt+97LU+bdg5R78bVbCmFK1ORXmb4bCocNaohAPbFC+c7U
-	qKvtuLCLFo7HvPz4BT0xJ3bMA+4rRIQ==
-X-Google-Smtp-Source: AGHT+IE4u4FzN8OB5WtN6BsBdAIoYyWb07aOVKhGmzjbmccuBZV4PXNpyJk39F0lyANDcUCWp1u0sg==
-X-Received: by 2002:a05:6512:a8c:b0:549:91db:c14b with SMTP id 2adb3069b0e04-54b10dbcc7cmr211591e87.8.1743193336898;
-        Fri, 28 Mar 2025 13:22:16 -0700 (PDT)
-Received: from ?IPV6:2001:678:a5c:1202:4fb5:f16a:579c:6dcb? (soda.int.kasm.eu. [2001:678:a5c:1202:4fb5:f16a:579c:6dcb])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54b0957fa73sm411017e87.140.2025.03.28.13.22.15
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 28 Mar 2025 13:22:16 -0700 (PDT)
-Message-ID: <dfc8ee31-2f81-4895-a11d-413641daf8c0@gmail.com>
-Date: Fri, 28 Mar 2025 21:22:15 +0100
+	s=arc-20240116; t=1743199709; c=relaxed/simple;
+	bh=ZgJ+AWk5KJ4GtcLA6o/LyclEDZu1vNM3iNyHyD4VLS4=;
+	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
+	 Content-Type; b=TZvmrOr6Eh4IMjV5048m1XnPoZhRjUNdP9d0fb+quCzNcyTzENegsZnUpt8dKFrjyUyCP5ujmwTsGALUp+PvvFRX6O/7csYYghwosBvGMVrosULixs/hNYVwObDdz+Ya0aUjhz9DTxFMFDvI+ygjjatlhZu4bS8C6Cct616wvRY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 13A9AC4CEE4;
+	Fri, 28 Mar 2025 22:08:29 +0000 (UTC)
+Received: from rostedt by gandalf with local (Exim 4.98)
+	(envelope-from <rostedt@goodmis.org>)
+	id 1tyHtB-000000044CK-1uyt;
+	Fri, 28 Mar 2025 18:09:21 -0400
+Message-ID: <20250328220921.313758454@goodmis.org>
+User-Agent: quilt/0.68
+Date: Fri, 28 Mar 2025 18:08:37 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+Cc: Linus Torvalds <torvalds@linux-foundation.org>,
+ Masami Hiramatsu <mhiramat@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Vincent Donnefort <vdonnefort@google.com>,
+ Vlastimil Babka <vbabka@suse.cz>
+Subject: [PATCH 1/2] tracing: ring-buffer: Have the ring buffer code do the vmap of
+ physical memory
+References: <20250328220836.812222422@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v10 2/2] riscv: Add runtime constant support
-To: Charlie Jenkins <charlie@rivosinc.com>
-Cc: Paul Walmsley <paul.walmsley@sifive.com>,
- Palmer Dabbelt <palmer@dabbelt.com>, Ard Biesheuvel <ardb@kernel.org>,
- Ben Dooks <ben.dooks@codethink.co.uk>,
- Pasha Bouzarjomehri <pasha@rivosinc.com>,
- Emil Renner Berthing <emil.renner.berthing@canonical.com>,
- Alexandre Ghiti <alexghiti@rivosinc.com>,
- Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Albert Ou <aou@eecs.berkeley.edu>, Peter Zijlstra <peterz@infradead.org>,
- Josh Poimboeuf <jpoimboe@kernel.org>, Jason Baron <jbaron@akamai.com>,
- Andrew Jones <ajones@ventanamicro.com>, linux-riscv@lists.infradead.org,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-References: <20250319-runtime_const_riscv-v10-0-745b31a11d65@rivosinc.com>
- <20250319-runtime_const_riscv-v10-2-745b31a11d65@rivosinc.com>
- <cc8f3525-20b7-445b-877b-2add28a160a2@gmail.com> <Z-b9xGX7SaPgQq15@ghost>
-Content-Language: en-US, sv-SE
-From: Klara Modin <klarasmodin@gmail.com>
-In-Reply-To: <Z-b9xGX7SaPgQq15@ghost>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
 
-On 3/28/25 20:51, Charlie Jenkins wrote:
-> On Fri, Mar 28, 2025 at 04:42:42PM +0100, Klara Modin wrote:
->> Hi,
->>
->> On 3/19/25 19:35, Charlie Jenkins wrote:
->>> Implement the runtime constant infrastructure for riscv. Use this
->>> infrastructure to generate constants to be used by the d_hash()
->>> function.
->>>
->>> This is the riscv variant of commit 94a2bc0f611c ("arm64: add 'runtime
->>> constant' support") and commit e3c92e81711d ("runtime constants: add
->>> x86 architecture support").
->>
->> This patch causes the following build failure for me:
->>
->> fs/dcache.c: Assembler messages:
->> fs/dcache.c:157: Error: attempt to move .org backwards
->> fs/dcache.c:157: Error: attempt to move .org backwards
->> fs/dcache.c:157: Error: attempt to move .org backwards
->> fs/dcache.c:157: Error: attempt to move .org backwards
->> fs/dcache.c:157: Error: attempt to move .org backwards
->> make[3]: *** [scripts/Makefile.build:203: fs/dcache.o] Error 1
-> 
-> Thank you for the report, this seems like a binutils issue potentially.
-> I will look into it. Here is a minimally reproducible example:
-> 
-> 886 :
-> .option push
-> .option norvc
-> 	nop
-> 	nop
-> .option pop
-> 887 :
-> 888 :
-> .option push
-> .option norvc
-> .option arch,+zba
-> 	nop
-> 	nop
-> .option pop
-> 889 :
-> .org	. - (887b - 886b) + (889b - 888b)
-> .org	. - (889b - 888b) + (887b - 886b)
-> 
-> Removing the ".option arch,+zba" fixes the issue but that shouldn't
-> matter...
+From: Steven Rostedt <rostedt@goodmis.org>
 
-I tried again with GCC 14.2 and 12.4 (with the same binutils version) 
-after Alex's answer and couldn't see the issue with these. I got the 
-same result with your example. If I invoke `as` directly it doesn't 
-happen either.
+Currently, when reserve_mem is used on the kernel command line to reserve
+"persistent" memory to map the ring buffer on. The tracing code will do
+the vmap() on the physical memory provided by reserve_mem and pass that to
+ring_buffer_alloc_range() where it will map the ring buffer on top of the
+given memory. It will also look at the current content of the memory there
+and if the memory already contains valid content, it will use that content
+for the ring buffer.
 
-The issue might be with GCC 15 then?
+But this method makes the ring buffer code not know where that memory came
+from. Here, the tracing code used vmap() but it could have also used
+vmalloc(), or whatever. And many of these methods may not be supported by
+the ring buffer code.
 
-Regards,
-Klara Modin
+Instead, rename ring_buffer_alloc_range() to ring_buffer_alloc_physical()
+where contiguous physical memory is passed to the ring buffer code, and it
+will be responsible for mapping it as well as freeing it. This simplifies
+the callers from having to keep track of whether the code is mapped or
+not.
 
-> 
-> - Charlie
-> 
->>
->> The value of CONFIG_RISCV_ISA_ZBKB doesn't seem to have an impact. Reverting
->> the patch on top of next-20250328 resolved the issue for me. I attached the
->> generated fs/dcache.s.
->>
->> Please let me know if there's anything else you need.
->>
->> Regards,
->> Klara Modin
->>
+The ring buffer can also take control of whether it can memory map the
+buffer to user space or not. Currently it does not allow this physical
+memory to be mapped to user space, but now that it has control over the
+struct pages of this memory, it can easily do so in the future.
+
+As the ring buffer mapping of a physical memory mapped buffer will now
+fail, the tracing code no longer keeps track if the buffer is the "last
+boot" buffer or not and will try to map it anyway. It will still fail, but
+when the ring buffer code is modified to allow it, it will then succeed.
+
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+ include/linux/ring_buffer.h | 19 ++++----
+ kernel/trace/ring_buffer.c  | 86 ++++++++++++++++++++++++++++++++-----
+ kernel/trace/trace.c        | 65 +++++++---------------------
+ 3 files changed, 101 insertions(+), 69 deletions(-)
+
+diff --git a/include/linux/ring_buffer.h b/include/linux/ring_buffer.h
+index 56e27263acf8..a31dff0a9f09 100644
+--- a/include/linux/ring_buffer.h
++++ b/include/linux/ring_buffer.h
+@@ -89,11 +89,11 @@ void ring_buffer_discard_commit(struct trace_buffer *buffer,
+ struct trace_buffer *
+ __ring_buffer_alloc(unsigned long size, unsigned flags, struct lock_class_key *key);
+ 
+-struct trace_buffer *__ring_buffer_alloc_range(unsigned long size, unsigned flags,
+-					       int order, unsigned long start,
+-					       unsigned long range_size,
+-					       unsigned long scratch_size,
+-					       struct lock_class_key *key);
++struct trace_buffer *__ring_buffer_alloc_physical(unsigned long size, unsigned flags,
++						  int order, unsigned long start,
++						  unsigned long range_size,
++						  unsigned long scratch_size,
++						  struct lock_class_key *key);
+ 
+ void *ring_buffer_meta_scratch(struct trace_buffer *buffer, unsigned int *size);
+ 
+@@ -113,11 +113,11 @@ void *ring_buffer_meta_scratch(struct trace_buffer *buffer, unsigned int *size);
+  * traced by ftrace, it can produce lockdep warnings. We need to keep each
+  * ring buffer's lock class separate.
+  */
+-#define ring_buffer_alloc_range(size, flags, order, start, range_size, s_size)	\
++#define ring_buffer_alloc_physical(size, flags, order, start, range_size, s_size) \
+ ({									\
+ 	static struct lock_class_key __key;				\
+-	__ring_buffer_alloc_range((size), (flags), (order), (start),	\
+-				  (range_size), (s_size), &__key);	\
++	__ring_buffer_alloc_physical((size), (flags), (order), (start),	\
++				     (range_size), (s_size), &__key);	\
+ })
+ 
+ typedef bool (*ring_buffer_cond_fn)(void *data);
+@@ -235,7 +235,8 @@ int ring_buffer_subbuf_order_set(struct trace_buffer *buffer, int order);
+ int ring_buffer_subbuf_size_get(struct trace_buffer *buffer);
+ 
+ enum ring_buffer_flags {
+-	RB_FL_OVERWRITE		= 1 << 0,
++	RB_FL_OVERWRITE		= BIT(0),
++	RB_FL_PHYSICAL		= BIT(1),
+ };
+ 
+ #ifdef CONFIG_RING_BUFFER
+diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+index f25966b3a1fc..0f5481d8d0b1 100644
+--- a/kernel/trace/ring_buffer.c
++++ b/kernel/trace/ring_buffer.c
+@@ -17,6 +17,7 @@
+ #include <linux/uaccess.h>
+ #include <linux/hardirq.h>
+ #include <linux/kthread.h>	/* for self test */
++#include <linux/vmalloc.h>	/* for vmap */
+ #include <linux/module.h>
+ #include <linux/percpu.h>
+ #include <linux/mutex.h>
+@@ -556,6 +557,8 @@ struct trace_buffer {
+ 
+ 	struct ring_buffer_meta		*meta;
+ 
++	unsigned long			phys_start;
++
+ 	unsigned int			subbuf_size;
+ 	unsigned int			subbuf_order;
+ 	unsigned int			max_data_size;
+@@ -2351,6 +2354,43 @@ static void rb_free_cpu_buffer(struct ring_buffer_per_cpu *cpu_buffer)
+ 	kfree(cpu_buffer);
+ }
+ 
++static unsigned long map_pages(unsigned long *start, unsigned long *end)
++{
++	struct page **pages;
++	phys_addr_t page_start;
++	unsigned long page_count;
++	unsigned long size;
++	unsigned long i;
++	void *vaddr;
++
++	/* Make sure the mappings are page aligned */
++	*start = ALIGN(*start, PAGE_SIZE);
++
++	size = *end - *start;
++
++	/* The size must fit full pages */
++	page_count = size >> PAGE_SHIFT;
++
++	if (!page_count)
++		return 0;
++
++	page_start = *start;
++	pages = kmalloc_array(page_count, sizeof(struct page *), GFP_KERNEL);
++	if (!pages)
++		return 0;
++
++	for (i = 0; i < page_count; i++) {
++		phys_addr_t addr = page_start + i * PAGE_SIZE;
++		pages[i] = pfn_to_page(addr >> PAGE_SHIFT);
++	}
++	vaddr = vmap(pages, page_count, VM_MAP, PAGE_KERNEL);
++	kfree(pages);
++
++	*end = *start + page_count * PAGE_SIZE;
++
++	return (unsigned long)vaddr;
++}
++
+ static struct trace_buffer *alloc_buffer(unsigned long size, unsigned flags,
+ 					 int order, unsigned long start,
+ 					 unsigned long end,
+@@ -2395,14 +2435,26 @@ static struct trace_buffer *alloc_buffer(unsigned long size, unsigned flags,
+ 	if (!buffer->buffers)
+ 		goto fail_free_cpumask;
+ 
+-	/* If start/end are specified, then that overrides size */
++	/* If start/end are specified, then this is a physical mapping */
+ 	if (start && end) {
+ 		unsigned long buffers_start;
++		unsigned long addr;
+ 		unsigned long ptr;
++		u64 size;
+ 		int n;
+ 
+-		/* Make sure that start is word aligned */
+-		start = ALIGN(start, sizeof(long));
++		addr = map_pages(&start, &end);
++		if (!addr)
++			goto fail_free_cpumask;
++
++		/* end and start have have been updated for alignment */
++		size = end - start;
++
++		buffer->phys_start = start;
++		buffer->flags |= RB_FL_PHYSICAL;
++
++		start = addr;
++		end = start + size;
+ 
+ 		/* scratch_size needs to be aligned too */
+ 		scratch_size = ALIGN(scratch_size, sizeof(long));
+@@ -2479,6 +2531,9 @@ static struct trace_buffer *alloc_buffer(unsigned long size, unsigned flags,
+ 	}
+ 	kfree(buffer->buffers);
+ 
++	if (buffer->phys_start)
++		vunmap((void *)buffer->phys_start);
++
+  fail_free_cpumask:
+ 	free_cpumask_var(buffer->cpumask);
+ 
+@@ -2508,11 +2563,11 @@ struct trace_buffer *__ring_buffer_alloc(unsigned long size, unsigned flags,
+ EXPORT_SYMBOL_GPL(__ring_buffer_alloc);
+ 
+ /**
+- * __ring_buffer_alloc_range - allocate a new ring_buffer from existing memory
++ * __ring_buffer_alloc_physical - allocate a new ring_buffer from physical memory
+  * @size: the size in bytes per cpu that is needed.
+  * @flags: attributes to set for the ring buffer.
+  * @order: sub-buffer order
+- * @start: start of allocated range
++ * @start: start of the physical memory range
+  * @range_size: size of allocated range
+  * @scratch_size: size of scratch area (for preallocated memory buffers)
+  * @key: ring buffer reader_lock_key.
+@@ -2522,11 +2577,11 @@ EXPORT_SYMBOL_GPL(__ring_buffer_alloc);
+  * when the buffer wraps. If this flag is not set, the buffer will
+  * drop data when the tail hits the head.
+  */
+-struct trace_buffer *__ring_buffer_alloc_range(unsigned long size, unsigned flags,
+-					       int order, unsigned long start,
+-					       unsigned long range_size,
+-					       unsigned long scratch_size,
+-					       struct lock_class_key *key)
++struct trace_buffer *__ring_buffer_alloc_physical(unsigned long size, unsigned flags,
++						  int order, unsigned long start,
++						  unsigned long range_size,
++						  unsigned long scratch_size,
++						  struct lock_class_key *key)
+ {
+ 	return alloc_buffer(size, flags, order, start, start + range_size,
+ 			    scratch_size, key);
+@@ -2569,6 +2624,9 @@ ring_buffer_free(struct trace_buffer *buffer)
+ 	kfree(buffer->buffers);
+ 	free_cpumask_var(buffer->cpumask);
+ 
++	if (buffer->flags & RB_FL_PHYSICAL)
++		vunmap((void *)buffer->phys_start);
++
+ 	kfree(buffer);
+ }
+ EXPORT_SYMBOL_GPL(ring_buffer_free);
+@@ -7138,6 +7196,14 @@ int ring_buffer_map(struct trace_buffer *buffer, int cpu,
+ 	unsigned long flags, *subbuf_ids;
+ 	int err = 0;
+ 
++	/*
++	 * Currently, this does not support vmap()'d buffers.
++	 * Return -ENODEV as that is what is returned when a file
++	 * does not support memory mapping.
++	 */
++	if (buffer->flags & RB_FL_PHYSICAL)
++		return -ENODEV;
++
+ 	if (!cpumask_test_cpu(cpu, buffer->cpumask))
+ 		return -EINVAL;
+ 
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index 14c38fcd6f9e..20724d64e02e 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -8492,10 +8492,6 @@ static int tracing_buffers_mmap(struct file *filp, struct vm_area_struct *vma)
+ 	struct trace_iterator *iter = &info->iter;
+ 	int ret = 0;
+ 
+-	/* Currently the boot mapped buffer is not supported for mmap */
+-	if (iter->tr->flags & TRACE_ARRAY_FL_BOOT)
+-		return -ENODEV;
+-
+ 	ret = get_snapshot_map(iter->tr);
+ 	if (ret)
+ 		return ret;
+@@ -8503,8 +8499,8 @@ static int tracing_buffers_mmap(struct file *filp, struct vm_area_struct *vma)
+ 	ret = ring_buffer_map(iter->array_buffer->buffer, iter->cpu_file, vma);
+ 	if (ret)
+ 		put_snapshot_map(iter->tr);
+-
+-	vma->vm_ops = &tracing_buffers_vmops;
++	else
++		vma->vm_ops = &tracing_buffers_vmops;
+ 
+ 	return ret;
+ }
+@@ -9520,10 +9516,17 @@ allocate_trace_buffer(struct trace_array *tr, struct array_buffer *buf, int size
+ 
+ 	if (tr->range_addr_start && tr->range_addr_size) {
+ 		/* Add scratch buffer to handle 128 modules */
+-		buf->buffer = ring_buffer_alloc_range(size, rb_flags, 0,
+-						      tr->range_addr_start,
+-						      tr->range_addr_size,
+-						      struct_size(tscratch, entries, 128));
++		buf->buffer = ring_buffer_alloc_physical(size, rb_flags, 0,
++							 tr->range_addr_start,
++							 tr->range_addr_size,
++							 struct_size(tscratch, entries, 128));
++		if (!buf->buffer) {
++			pr_warn("Tracing: Failed to map boot instance %s\n", tr->name);
++			return -1;
++		}
++
++		pr_info("Tracing: mapped boot instance %s at physical memory %lx of size 0x%lx\n",
++			tr->name, tr->range_addr_start, tr->range_addr_size);
+ 
+ 		tscratch = ring_buffer_meta_scratch(buf->buffer, &scratch_size);
+ 		setup_trace_scratch(tr, tscratch, scratch_size);
+@@ -9600,9 +9603,6 @@ static void free_trace_buffers(struct trace_array *tr)
+ #ifdef CONFIG_TRACER_MAX_TRACE
+ 	free_trace_buffer(&tr->max_buffer);
+ #endif
+-
+-	if (tr->range_addr_start)
+-		vunmap((void *)tr->range_addr_start);
+ }
+ 
+ static void init_trace_flags_index(struct trace_array *tr)
+@@ -9795,31 +9795,6 @@ static int instance_mkdir(const char *name)
+ 	return ret;
+ }
+ 
+-static u64 map_pages(u64 start, u64 size)
+-{
+-	struct page **pages;
+-	phys_addr_t page_start;
+-	unsigned int page_count;
+-	unsigned int i;
+-	void *vaddr;
+-
+-	page_count = DIV_ROUND_UP(size, PAGE_SIZE);
+-
+-	page_start = start;
+-	pages = kmalloc_array(page_count, sizeof(struct page *), GFP_KERNEL);
+-	if (!pages)
+-		return 0;
+-
+-	for (i = 0; i < page_count; i++) {
+-		phys_addr_t addr = page_start + i * PAGE_SIZE;
+-		pages[i] = pfn_to_page(addr >> PAGE_SHIFT);
+-	}
+-	vaddr = vmap(pages, page_count, VM_MAP, PAGE_KERNEL);
+-	kfree(pages);
+-
+-	return (u64)(unsigned long)vaddr;
+-}
+-
+ /**
+  * trace_array_get_by_name - Create/Lookup a trace array, given its name.
+  * @name: The name of the trace array to be looked up/created.
+@@ -10708,7 +10683,6 @@ __init static void enable_instances(void)
+ 	while ((curr_str = strsep(&str, "\t"))) {
+ 		phys_addr_t start = 0;
+ 		phys_addr_t size = 0;
+-		unsigned long addr = 0;
+ 		bool traceprintk = false;
+ 		bool traceoff = false;
+ 		char *flag_delim;
+@@ -10773,22 +10747,13 @@ __init static void enable_instances(void)
+ 			rname = kstrdup(tok, GFP_KERNEL);
+ 		}
+ 
+-		if (start) {
+-			addr = map_pages(start, size);
+-			if (addr) {
+-				pr_info("Tracing: mapped boot instance %s at physical memory %pa of size 0x%lx\n",
+-					name, &start, (unsigned long)size);
+-			} else {
+-				pr_warn("Tracing: Failed to map boot instance %s\n", name);
+-				continue;
+-			}
+-		} else {
++		if (!start) {
+ 			/* Only non mapped buffers have snapshot buffers */
+ 			if (IS_ENABLED(CONFIG_TRACER_MAX_TRACE))
+ 				do_allocate_snapshot(name);
+ 		}
+ 
+-		tr = trace_array_create_systems(name, NULL, addr, size);
++		tr = trace_array_create_systems(name, NULL, (unsigned long)start, size);
+ 		if (IS_ERR(tr)) {
+ 			pr_warn("Tracing: Failed to create instance buffer %s\n", curr_str);
+ 			continue;
+-- 
+2.47.2
+
+
