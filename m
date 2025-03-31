@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA4111E87B;
-	Mon, 31 Mar 2025 15:35:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7C07219A86;
+	Mon, 31 Mar 2025 15:35:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743435340; cv=none; b=r+vMl6xzri5+Afz4eVLhLMHJqpVjl7rNpFtpgnBvLprS5FukKYu/pBkk1IbkIbRVIUBL5KKrn7pSW/0jJtODup/sOh5/DqYTFGyiKbHNpKRILiZwl1LaoSeLXIqpVBvCyrce6mA1vFNAIxazYv8YkeN+3cOGrONWhNLk3YXg0PU=
+	t=1743435349; cv=none; b=u6q75kbTbvCxw9E/Mw+OfPpKKCM6Hcrtdb914o+MYTprxdxfsjvE0zJYahOZwW/AEd8TrOU4Qj58X/EmXpjvaxaie8OWJouKOoRKdDYzbF77mr15Nw/xZXCZPbXnVCqncourjCmTKqT9Q8r45BUw9aTriYs95uOOI4wbNqqAqaY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743435340; c=relaxed/simple;
-	bh=XfxUmWlDoXAenKpS0CquwXTLrNbsbqfRSmcog6/7CvM=;
+	s=arc-20240116; t=1743435349; c=relaxed/simple;
+	bh=yQOq3ijcsgaMxYFKtUgpeKZ8mf3Gj6j+uhFM2nMXZhY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=qAZvPK/CC6MTYEea7Bk8fOSw1EAB3x4J1mY7hybwO6UxLtfnfDoNgnrkG7O8VvCnSlB2FU6jiIYlphvUEZ1WFsRu6muW3oouk7xcX8deNNS5+KluuIYQTIKDPyHULf+h5Be1mQSjrNGwDZS9GVKMtYNJQM/peCBgVBoM4QljgTU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KbBFnhx7; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=fPlCNovo02EMh5Ulo/rLvkxW7eYH7nq668uFAKst5Hj5GCzGb0MLybf6Hmb5zkWg1hw2lJf49ATyGiaUkoXAHDu2OccHi1F5O6wiC6FQl1RwOIbIadCwAWOqTvG61Z8775H+7c/0kRRzuUi5wNM/Suu8YcEhOunY258Nwk4/S14=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rioaz8vk; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KbBFnhx7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1AD07C4CEE3;
-	Mon, 31 Mar 2025 15:35:37 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rioaz8vk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 252A7C4CEE3;
+	Mon, 31 Mar 2025 15:35:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743435339;
-	bh=XfxUmWlDoXAenKpS0CquwXTLrNbsbqfRSmcog6/7CvM=;
+	s=k20201202; t=1743435348;
+	bh=yQOq3ijcsgaMxYFKtUgpeKZ8mf3Gj6j+uhFM2nMXZhY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=KbBFnhx7RU1dsjDDTXm6RfyBot0/Tl0E+NcECfT+04AArRxNETUcyzCOhhebhkySN
-	 FGMePSypqVb2U3dGIP06TACMS3wWR9eNK4ZVXio+BgwyAvRkSBdKz9QVBD/Kkic3Kv
-	 BzOL+0rhxnGDTbMhlMEQOx+V0Blkdnt1Y+8pxaclFpW+3a6Tq9AiJ+j5HvVCIYxTFZ
-	 N2/ZPuKulKvL9Hb2ZvsA9n891YzIb6CpzSnnVecbcmYSK3kodMeEoaKanw36QWMGzw
-	 Yln1Sw6UW1uW5r2hE9ep2NT3QIfcd72H2oxaUpwJkrL7yN3HjxhvxBf06PFvDIfJeN
-	 FTlgCHGwvFTvA==
+	b=rioaz8vkZNdXF9T1FmhfNh5z/DvmbSYRKntVxDloT71HcNkzizVz2rCzCdX5/Ga8h
+	 oqOjmNOMSD2jt5S+hY4Bwl4PnayumN0Zs0fb8LyDtXV9nvebk+ZiSkWSykvq8jzffg
+	 OGt6WT1jjSz0dXscwliatzS9DPdjMF+VIyeg9sTFxNj8Y31lC7L9Np9StAV4XywgE5
+	 KZcfKIG8TP/l5R4AgI42vuT63qnmc91i/+6vC6NNxM+rinK44u6Yybck2a3CLMssE+
+	 ROuc+8vNjhIfgdDuw6kqPFq7FSdNlW3MkcwuLUG6oVLbhlE6e1Ly4G1XbCq3L3sYs/
+	 HgrsHop5gIeCw==
 From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
 To: Steven Rostedt <rostedt@goodmis.org>
 Cc: Masami Hiramatsu <mhiramat@kernel.org>,
 	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
 	linux-kernel@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH v2 1/7] tracing: fprobe events: Fix possible UAF on modules
-Date: Tue,  1 Apr 2025 00:35:36 +0900
-Message-ID: <174343533593.843280.8788277038071990492.stgit@devnote2>
+Subject: [PATCH v2 2/7] tracing: fprobe: Cleanup fprobe hash when module unloading
+Date: Tue,  1 Apr 2025 00:35:44 +0900
+Message-ID: <174343534473.843280.13988101014957210732.stgit@devnote2>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <174343532655.843280.15317319860632975273.stgit@devnote2>
 References: <174343532655.843280.15317319860632975273.stgit@devnote2>
@@ -50,80 +50,141 @@ Content-Transfer-Encoding: 8bit
 
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-Commit ac91052f0ae5 ("tracing: tprobe-events: Fix leakage of module
-refcount") moved try_module_get() from __find_tracepoint_module_cb()
-to find_tracepoint() caller, but that introduced a possible UAF
-because the module can be unloaded before try_module_get(). In this
-case, the module object should be freed too. Thus, try_module_get()
-does not only fail but may access to the freed object.
+Cleanup fprobe address hash table on module unloading because the
+target symbols will be disappeared when unloading module and not
+sure the same symbol is mapped on the same address.
 
-To avoid that, try_module_get() in __find_tracepoint_module_cb()
-again.
+Note that this is at least disables the fprobes if a part of target
+symbols on the unloaded modules. Unlike kprobes, fprobe does not
+re-enable the probe point by itself. To do that, the caller should
+take care register/unregister fprobe when loading/unloading modules.
+This simplifies the fprobe state managememt related to the module
+loading/unloading.
 
-Fixes: ac91052f0ae5 ("tracing: tprobe-events: Fix leakage of module refcount")
-Cc: stable@vger.kernel.org
 Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 ---
- kernel/trace/trace_fprobe.c |   26 +++++++++++++++++---------
- 1 file changed, 17 insertions(+), 9 deletions(-)
+ kernel/trace/fprobe.c |  103 ++++++++++++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 101 insertions(+), 2 deletions(-)
 
-diff --git a/kernel/trace/trace_fprobe.c b/kernel/trace/trace_fprobe.c
-index 985ff98272da..2cd9ff1049f1 100644
---- a/kernel/trace/trace_fprobe.c
-+++ b/kernel/trace/trace_fprobe.c
-@@ -919,9 +919,15 @@ static void __find_tracepoint_module_cb(struct tracepoint *tp, struct module *mo
- 	struct __find_tracepoint_cb_data *data = priv;
+diff --git a/kernel/trace/fprobe.c b/kernel/trace/fprobe.c
+index cb86f90d4b1e..95c6e3473a76 100644
+--- a/kernel/trace/fprobe.c
++++ b/kernel/trace/fprobe.c
+@@ -89,8 +89,11 @@ static bool delete_fprobe_node(struct fprobe_hlist_node *node)
+ {
+ 	lockdep_assert_held(&fprobe_mutex);
  
- 	if (!data->tpoint && !strcmp(data->tp_name, tp->name)) {
--		data->tpoint = tp;
--		if (!data->mod)
-+		/* If module is not specified, try getting module refcount. */
-+		if (!data->mod && mod) {
-+			/* If failed to get refcount, ignore this tracepoint. */
-+			if (!try_module_get(mod))
-+				return;
+-	WRITE_ONCE(node->fp, NULL);
+-	hlist_del_rcu(&node->hlist);
++	/* Avoid double deleting */
++	if (READ_ONCE(node->fp) != NULL) {
++		WRITE_ONCE(node->fp, NULL);
++		hlist_del_rcu(&node->hlist);
++	}
+ 	return !!find_first_fprobe_node(node->addr);
+ }
+ 
+@@ -411,6 +414,102 @@ static void fprobe_graph_remove_ips(unsigned long *addrs, int num)
+ 		ftrace_set_filter_ips(&fprobe_graph_ops.ops, addrs, num, 1, 0);
+ }
+ 
++#ifdef CONFIG_MODULES
 +
- 			data->mod = mod;
-+		}
-+		data->tpoint = tp;
- 	}
- }
- 
-@@ -933,7 +939,11 @@ static void __find_tracepoint_cb(struct tracepoint *tp, void *priv)
- 		data->tpoint = tp;
- }
- 
--/* Find a tracepoint from kernel and module. */
-+/*
-+ * Find a tracepoint from kernel and module. If the tracepoint is on the module,
-+ * the module's refcount is incremented and returned as *@tp_mod. Thus, if it is
-+ * not NULL, caller must call module_put(*tp_mod) after used the tracepoint.
-+ */
- static struct tracepoint *find_tracepoint(const char *tp_name,
- 					  struct module **tp_mod)
++#define FPROBE_IPS_BATCH_INIT 8
++/* instruction pointer address list */
++struct fprobe_addr_list {
++	int index;
++	int size;
++	unsigned long *addrs;
++};
++
++static int fprobe_addr_list_add(struct fprobe_addr_list *alist, unsigned long addr)
++{
++	unsigned long *addrs;
++
++	if (alist->index >= alist->size)
++		return -ENOMEM;
++
++	alist->addrs[alist->index++] = addr;
++	if (alist->index < alist->size)
++		return 0;
++
++	/* Expand the address list */
++	addrs = kcalloc(alist->size * 2, sizeof(*addrs), GFP_KERNEL);
++	if (!addrs)
++		return -ENOMEM;
++
++	memcpy(addrs, alist->addrs, alist->size * sizeof(*addrs));
++	alist->size *= 2;
++	kfree(alist->addrs);
++	alist->addrs = addrs;
++
++	return 0;
++}
++
++static void fprobe_remove_node_in_module(struct module *mod, struct hlist_head *head,
++					struct fprobe_addr_list *alist)
++{
++	struct fprobe_hlist_node *node;
++	int ret = 0;
++
++	hlist_for_each_entry_rcu(node, head, hlist) {
++		if (!within_module(node->addr, mod))
++			continue;
++		if (delete_fprobe_node(node))
++			continue;
++		/*
++		 * If failed to update alist, just continue to update hlist.
++		 * Therefore, at list user handler will not hit anymore.
++		 */
++		if (!ret)
++			ret = fprobe_addr_list_add(alist, node->addr);
++	}
++}
++
++/* Handle module unloading to manage fprobe_ip_table. */
++static int fprobe_module_callback(struct notifier_block *nb,
++				  unsigned long val, void *data)
++{
++	struct fprobe_addr_list alist = {.size = FPROBE_IPS_BATCH_INIT};
++	struct module *mod = data;
++	int i;
++
++	if (val != MODULE_STATE_GOING)
++		return NOTIFY_DONE;
++
++	alist.addrs = kcalloc(alist.size, sizeof(*alist.addrs), GFP_KERNEL);
++	/* If failed to alloc memory, we can not remove ips from hash. */
++	if (!alist.addrs)
++		return NOTIFY_DONE;
++
++	mutex_lock(&fprobe_mutex);
++	for (i = 0; i < FPROBE_IP_TABLE_SIZE; i++)
++		fprobe_remove_node_in_module(mod, &fprobe_ip_table[i], &alist);
++
++	if (alist.index < alist.size && alist.index > 0)
++		ftrace_set_filter_ips(&fprobe_graph_ops.ops,
++				      alist.addrs, alist.index, 1, 0);
++	mutex_unlock(&fprobe_mutex);
++
++	kfree(alist.addrs);
++
++	return NOTIFY_DONE;
++}
++
++static struct notifier_block fprobe_module_nb = {
++	.notifier_call = fprobe_module_callback,
++	.priority = 0,
++};
++
++static int __init init_fprobe_module(void)
++{
++	return register_module_notifier(&fprobe_module_nb);
++}
++early_initcall(init_fprobe_module);
++#endif
++
+ static int symbols_cmp(const void *a, const void *b)
  {
-@@ -962,7 +972,10 @@ static void reenable_trace_fprobe(struct trace_fprobe *tf)
- 	}
- }
- 
--/* Find a tracepoint from specified module. */
-+/*
-+ * Find a tracepoint from specified module. In this case, this does not get the
-+ * module's refcount. The caller must ensure the module is not freed.
-+ */
- static struct tracepoint *find_tracepoint_in_module(struct module *mod,
- 						    const char *tp_name)
- {
-@@ -1169,11 +1182,6 @@ static int trace_fprobe_create_internal(int argc, const char *argv[],
- 	if (is_tracepoint) {
- 		ctx->flags |= TPARG_FL_TPOINT;
- 		tpoint = find_tracepoint(symbol, &tp_mod);
--		/* lock module until register this tprobe. */
--		if (tp_mod && !try_module_get(tp_mod)) {
--			tpoint = NULL;
--			tp_mod = NULL;
--		}
- 		if (tpoint) {
- 			ctx->funcname = kallsyms_lookup(
- 				(unsigned long)tpoint->probestub,
+ 	const char **str_a = (const char **) a;
 
