@@ -1,119 +1,130 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A0321E0E0B
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 31 Mar 2025 20:47:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 546E321B9C1;
+	Mon, 31 Mar 2025 20:57:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743454079; cv=none; b=PlMmaflH4QLrPWh+dzMEuqBh4gPiAOjn5RhTasXhzuMqa2i/zgLk2WdrdBeC3Ohwmf13uMvRdcUatZe0f7RqeSWKWjk1vuEsAFpeCqj5UOCUi4oZ3BzGd7Xe43rVpk03/M8/KkHjnE+9DSdZUQILSX59kVpPnQMFD2mjIJCP0AI=
+	t=1743454625; cv=none; b=pr7doJOrsnoThz0a4b0oq9WqNP4Oe7cH/4GvshacpRCQiN+OuODmizAj7+uhnBn3XwFN+RATL1J/JQnWj3kTWJDVLVgSVK4bTV4cBtxvWjvTxnsO+03aZlmFqDqTrelDaO1hrPI7GaTqDgkpffk1Phbn91O1Qe25lF96rIySyNY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743454079; c=relaxed/simple;
-	bh=tv0nA08POILAAqGWy14m3N6kItXW+3kMFSaB74kI3N0=;
-	h=From:In-Reply-To:References:To:Cc:Subject:MIME-Version:
-	 Content-Type:Date:Message-ID; b=rMLzZSpTN6kCoZ8ta3+9s9pNX+oiEsWgZctHkcyg9RcstR85KPZ9ndfDntVyBsn2ZICvAj2MO7wEE+UvfUwTQdD2pa3Lbt4jrTDT86jI6eZn8vIIYZKCZvyNY5hAz7GmcNfpjJdgB25sWf/qFbrD1sWizBsDsAlyDQOCyCWU0YQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=FD2GDYTP; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FD2GDYTP"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1743454076;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=rPsm0V0jwFb/CAGVhHad9xohOJQN3D43emc/SoqswrQ=;
-	b=FD2GDYTPdc7kEC/TP4b+5+WRdbUP4lAbkZTSW5GB5Dts2U6t1sXigq8om5pfcZ6XaTkhq4
-	sxfYKogKlfzG5ZQ/ADVS2EPnOFfaj6LpgFFhunuPUJZhI3MHNfmAu3y5rAgUf1eXxpihwx
-	0Zg7oqqiFw462VZv4uJACoHZabwTWmU=
-Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-224-kaaHAsq5PUqIzd9MWJHpVg-1; Mon,
- 31 Mar 2025 16:47:51 -0400
-X-MC-Unique: kaaHAsq5PUqIzd9MWJHpVg-1
-X-Mimecast-MFC-AGG-ID: kaaHAsq5PUqIzd9MWJHpVg_1743454069
-Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 329FA195608A;
-	Mon, 31 Mar 2025 20:47:49 +0000 (UTC)
-Received: from warthog.procyon.org.uk (unknown [10.42.28.40])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 41655180175A;
-	Mon, 31 Mar 2025 20:47:46 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-	Kingdom.
-	Registered in England and Wales under Company Registration No. 3798903
-From: David Howells <dhowells@redhat.com>
-In-Reply-To: <67e9006d.050a0220.1547ec.0097.GAE@google.com>
-References: <67e9006d.050a0220.1547ec.0097.GAE@google.com>
-To: syzbot <syzbot+ab13429207fe1c8c92e8@syzkaller.appspotmail.com>
-Cc: dhowells@redhat.com, linux-afs@lists.infradead.org,
-    linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-    marc.dionne@auristor.com, mathieu.desnoyers@efficios.com,
-    mhiramat@kernel.org, rostedt@goodmis.org,
-    syzkaller-bugs@googlegroups.com
-Subject: Re: [syzbot] [afs?] WARNING: ODEBUG bug in delete_node (3)
+	s=arc-20240116; t=1743454625; c=relaxed/simple;
+	bh=grjGL6ZIKMvZ89GhSxoNkBZGfmrbW7YwQq6dlnLMIhU=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=KFg9PnrYAW5ZK70ClaggW7NLKztYZNI0Cx9rrdsP8/Ya3ijhtIUCybBnFALa6QZHJpMmy5iCIClTLCPKVe5yfHCykw5lUfeNcnalbw4jyGoclcE302iV9LcbzEs3J3qNHhJaCSrLQ2FKrQVuTZoNxYF4n9xULKJ/IbCRJZu21kc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 40A55C4CEE3;
+	Mon, 31 Mar 2025 20:57:03 +0000 (UTC)
+Date: Mon, 31 Mar 2025 16:58:01 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Masami
+ Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Andrew Morton
+ <akpm@linux-foundation.org>, Vincent Donnefort <vdonnefort@google.com>,
+ Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>, Kees
+ Cook <kees@kernel.org>, Tony Luck <tony.luck@intel.com>, "Guilherme G.
+ Piccoli" <gpiccoli@igalia.com>, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] tracing: ring-buffer: Have the ring buffer code
+ do the vmap of physical memory
+Message-ID: <20250331165801.715aba48@gandalf.local.home>
+In-Reply-To: <CAHk-=wi5pLoe3szxLREQGGJuWU0w_POK9Sv6717UH3b7OvvfjQ@mail.gmail.com>
+References: <20250331143426.947281958@goodmis.org>
+	<20250331143532.459810712@goodmis.org>
+	<CAHk-=whUOfVucfJRt7E0AH+GV41ELmS4wJqxHDnui6Giddfkzw@mail.gmail.com>
+	<20250331133906.48e115f5@gandalf.local.home>
+	<CAHk-=wi5pLoe3szxLREQGGJuWU0w_POK9Sv6717UH3b7OvvfjQ@mail.gmail.com>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <531209.1743454065.1@warthog.procyon.org.uk>
-Content-Transfer-Encoding: quoted-printable
-Date: Mon, 31 Mar 2025 21:47:45 +0100
-Message-ID: <531210.1743454065@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-#syz test: git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.gi=
-t master
+On Mon, 31 Mar 2025 12:12:08 -0700
+Linus Torvalds <torvalds@linux-foundation.org> wrote:
 
-commit db7a516159869b19f237c73bd75599bbe0bfcc4d
-Author: David Howells <dhowells@redhat.com>
-Date:   Fri Mar 28 16:46:58 2025 +0000
 
-    afs: Fix afs_dynroot_readdir() to not use the RCU read lock
-    =
+> > OK, so I did copy this from fs/pstore/ram_core.c as this does basically the
+> > same thing as pstore. And it looks like pstore should be updated too.  
+> 
+> Please just stop copying code from random drivers or filesystems.
 
-    afs_dynroot_readdir() uses the RCU read lock to walk the cell list whi=
-lst
-    emitting cell automount entries - but dir_emit() may write to a usersp=
-ace
-    buffer, thereby causing a fault to occur and waits to happen.
-    =
+Note, I did not blindly copy it. I knew ramoops did exactly what I wanted
+to do, so I looked at how it did it. I read the code, it looked reasonable,
+and I mapped it.
 
-    Fix afs_dynroot_readdir() to get a shared lock on net->cells_lock inst=
-ead.
-    =
+I needed a way to map physical memory to vmap memory. How am I supposed to
+know it was not doing it the proper way?
 
-    Fixes: 1d0b929fc070 ("afs: Change dynroot to create contents on demand=
-")
-    Reported-by: syzbot+3b6c5c6a1d0119b687a1@syzkaller.appspotmail.com
-    Signed-off-by: David Howells <dhowells@redhat.com>
-    cc: Marc Dionne <marc.dionne@auristor.com>
-    cc: linux-afs@lists.infradead.org
-    cc: linux-fsdevel@vger.kernel.org
+> 
+> Christ.
+> 
+> I've said this before: core kernel code has higher quality
+> requirements than random drivers (or even random filesystems).
 
-diff --git a/fs/afs/dynroot.c b/fs/afs/dynroot.c
-index 691e0ae607a1..8c6130789fde 100644
---- a/fs/afs/dynroot.c
-+++ b/fs/afs/dynroot.c
-@@ -348,9 +348,9 @@ static int afs_dynroot_readdir(struct file *file, stru=
-ct dir_context *ctx)
- 	}
- =
+I did not believe pstore was a random file system. It does similar code
+that tracing does.
 
- 	if ((unsigned long long)ctx->pos <=3D AFS_MAX_DYNROOT_CELL_INO) {
--		rcu_read_lock();
-+		down_read(&net->cells_lock);
- 		ret =3D afs_dynroot_readdir_cells(net, ctx);
--		rcu_read_unlock();
-+		up_read(&net->cells_lock);
- 	}
- 	return ret;
- }
+> 
+> You can't copy crazy incorrect snippets from random sources and put it
+> in core kernel code.
 
+Note, even though this code lives in kernel/, it is not much different than
+pstore code. It's a way to trace / debug the kernel, very much like pstore
+in that it's used to debug. I saw that code was written in 2012 and thought
+it was mature. It made sense, and yes I could have looked for a range, but
+I trusted the people who wrote that code. This wasn't just a random looking
+at something and copying it. I really wanted to understand how it worked.
+
+And I did talk with some of the mm folks, and they seemed OK with this.
+
+
+> If it's not part of the kernel memory allocator, it does not
+> necessarily have a "struct page *" associated with it. Using a pointer
+> to 'struct page' and passing it off is just fundamentally more than a
+> bug: it's seriously and deeply broken.
+> 
+> It's probably much more obviously broken if the physical addresses
+> came from a PCI device, and this all just happens to work because it's
+> actually real RAM and we ended up having a 'struct page []' for it for
+> some random reason.
+
+Note, this only works with RAM.
+
+
+> Or it might just be because that memory *has* been in the E280 memory
+> map before it was reserved, and the 'strict page' arrays may have been
+> sized for the original E280 information, not the "after stealing"
+> information.
+
+I guess you mean E820.
+
+Mike can correct me if I'm wrong, but the memory that was stolen was actual
+memory returned by the system (E820 in x86). It reserves the memory before
+the memory allocation reserves this memory. So what reserve_mem returns is
+valid memory that can be used by memory allocator, but is currently just
+"reserved" which means it wants to prevent the allocator from using it.
+
+
+> And yes, I'm not at all surprised that we'd have other mis-users of
+> this. We have some very historical code that depends on reserved pages
+> going back all the way to linux-0.01 I suspect, because things like
+> the original VGA code knew that the physical addresses were in the
+> BIOS hole region that was backed by 'struct page'.
+
+I believe this is what Mike set up. A way to have normal RAM reserved
+before it gets added to the memory allocator. This was by design.
+
+In fact, if you do pull my v2[*] pull request of the ring buffer code (that
+removes this user space mapping of the persistent ring buffer logic) it
+actually adds the ability to free the memory and add it back into the memory
+allocator.
+
+ https://lore.kernel.org/linux-trace-kernel/173989134814.230693.18199312930337815629.stgit@devnote2/
+
+-- Steve
+
+[*] https://lore.kernel.org/all/20250328173533.7fa7810d@gandalf.local.home/
