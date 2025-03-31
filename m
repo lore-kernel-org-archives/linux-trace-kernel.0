@@ -1,91 +1,74 @@
-Received: from out-178.mta1.migadu.com (out-178.mta1.migadu.com [95.215.58.178])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F18FD1DE884
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 31 Mar 2025 09:48:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5799B1E32A3;
+	Mon, 31 Mar 2025 12:23:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743414503; cv=none; b=IvQf0KwCbAAYifWU0lLNAJWIvAyEnA2b1LAkGl0yOhEr/6L4tJ3cnjKASL+/T74HdY7Cco8oaqaf11v2nJB7Bcbjx3MA1C5e1EiCAmhmzE3Gg8TtyXvna185HqR6YSHadbDnuB3c+s1baw2pkPzSdYc230IgRU2RlWOGBqAjbsw=
+	t=1743423823; cv=none; b=hKtpJB+TvQDXP4AJKXdPSkEWaEMvdjljREp/dpOVxNUeDnB4vwg/im4ki0PQEU5MBcPAKWLtz4iPVdbpnhAk+R3anANZwf8L3YeGyoaHjP/RHuekp2u8LFHYQAFBQCupxCu0HZ0yrUKE2DQUKkzIGHTIjloqSKPWvWjHqi9OUdE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743414503; c=relaxed/simple;
-	bh=NzhgIP+mGQ4W0FZZ4z+rjwuiSBsl4UldHISVpGjwMLs=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=fllTCLu9m1ehZzeD995JLvcQeB2dr2cD/c6RBLCkkZzbIBWtKPg+GFXjt3L19UUJ6EW+9GdGMs4cVvK6ee74Gp9+dq4wH8/oyZDhPsGbWfslwOqya+SOtB/xLfM8uibwS1n1CayrJXftrW0n4lXNKPT95Klvpmad2ffh8R4Xl8I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=jTztKrYn; arc=none smtp.client-ip=95.215.58.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1743423823; c=relaxed/simple;
+	bh=mk08bQi7oAvb4CjdeBzWQKC/iPCDoQmDNgmxnk+Bdhg=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=lECgUX5tu9knLt2FlR5aQ/2+KkmRngS+lQ03S5nZPCNqP20absDupSUO0VptYQsyvdLtyCHBMQiG3uCO+GAJixLzflkKAQOhq1lFb/9UubuxvLydUwptf6JBmiOK85j9AGgIV0KL263EPBnkOvVDLCznVsW0qVLQHOmBWlPWBro=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AavBOCrt; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="jTztKrYn"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1743414490;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=UyUrTgpXdHKKZlTezNXfLIKziuKXRmHvZa1e0YMWZvE=;
-	b=jTztKrYnA8IOCXe3ptnUHJ1vImVoTcF5079lKHCE63wX9O4hF//jQUswhjiz0EdtTqEhYp
-	mS0RxpfbmrhkUVOdgcfruYH2SBn62Hh0Ja16nBKVTYgeCc2JcrkKTlW7wE+89EmLF8CEOS
-	MA/E/67kP6StiQ1MPt4s4uHvdq5C2mc=
-From: Tao Chen <chen.dylane@linux.dev>
-To: song@kernel.org,
-	jolsa@kernel.org,
-	ast@kernel.org,
-	daniel@iogearbox.net,
-	andrii@kernel.org,
-	martin.lau@linux.dev,
-	eddyz87@gmail.com,
-	yonghong.song@linux.dev,
-	john.fastabend@gmail.com,
-	kpsingh@kernel.org,
-	sdf@fomichev.me,
-	haoluo@google.com,
-	rostedt@goodmis.org,
-	mhiramat@kernel.org,
-	mathieu.desnoyers@efficios.com,
-	laoar.shao@gmail.com
-Cc: bpf@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	Tao Chen <chen.dylane@linux.dev>
-Subject: [PATCH bpf-next 2/2] bpf: Check link_create parameter for multi_uprobe
-Date: Mon, 31 Mar 2025 17:47:45 +0800
-Message-Id: <20250331094745.336010-2-chen.dylane@linux.dev>
-In-Reply-To: <20250331094745.336010-1-chen.dylane@linux.dev>
-References: <20250331094745.336010-1-chen.dylane@linux.dev>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AavBOCrt"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DE58FC4CEE3;
+	Mon, 31 Mar 2025 12:23:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743423822;
+	bh=mk08bQi7oAvb4CjdeBzWQKC/iPCDoQmDNgmxnk+Bdhg=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=AavBOCrty/NkMy1yF1lq2/E5BFrj8LLFvrYNwVI0RFpwvmJ4X5bq1+41189Rt7+kY
+	 66MppxJDtuKU5+ctmLwFDd1cqLIqfZ6M8QU6m7y6z2MazWPrMlZpqjZw9Y4QVdHWXi
+	 ako2wn8tqCFhEsH/6+jau68O9I2MKM1OyfArI1josJKeyOqQwvVo9v4n0MsqhsS7HG
+	 nYseLIooXuj1o8obu6RsVQj3yyFUgnFAx8ihM6b7oUlYG08T52vMWrXFw527ARu4CI
+	 UcskJghq1+P3Jl9gyvQr/7iyR6CUdXLeFLx1YAyDG7D8560jMuIZyFb9aa3MHLvSPm
+	 IOLSuRs4x0a6w==
+Date: Mon, 31 Mar 2025 21:23:37 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Brian Masney <bmasney@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ aruiz@redhat.com
+Subject: Re: [PATCH 0/2] tools/bootconfig: allow overriding CFLAGS and
+ LDFLAGS
+Message-Id: <20250331212337.3e9e4a5c50f5d3f16a95b120@kernel.org>
+In-Reply-To: <20250328183858.1417835-1-bmasney@redhat.com>
+References: <20250328183858.1417835-1-bmasney@redhat.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-The target_fd and flags in link_create no used in multi_uprobe
-, return -EINVAL if they assigned, keep it same as other link
-attach apis.
+On Fri, 28 Mar 2025 14:38:56 -0400
+Brian Masney <bmasney@redhat.com> wrote:
 
-Fixes: 89ae89f53d20 ("bpf: Add multi uprobe link")
-Signed-off-by: Tao Chen <chen.dylane@linux.dev>
----
- kernel/trace/bpf_trace.c | 3 +++
- 1 file changed, 3 insertions(+)
+> Allow the user to override the CFLAGS and LDFLAGS similar to what's
+> currently done on other kernel tools. These changes allows bootconfig to
+> be compiled with the hardened compiler and linker flags.
+> 
+> Brian Masney (2):
+>   tools/bootconfig: allow overriding CFLAGS assignment
+>   tools/bootconfig: specify LDFLAGS as an argument to CC
+> 
 
-diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
-index 2f206a2a2..f7ebf17e3 100644
---- a/kernel/trace/bpf_trace.c
-+++ b/kernel/trace/bpf_trace.c
-@@ -3385,6 +3385,9 @@ int bpf_uprobe_multi_link_attach(const union bpf_attr *attr, struct bpf_prog *pr
- 	if (sizeof(u64) != sizeof(void *))
- 		return -EOPNOTSUPP;
- 
-+	if (attr->link_create.target_fd || attr->link_create.flags)
-+		return -EINVAL;
-+
- 	if (!is_uprobe_multi(prog))
- 		return -EINVAL;
- 
+Both looks good to me. Let me pick those up.
+
+Thanks!
+
+>  tools/bootconfig/Makefile | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> -- 
+> 2.47.0
+> 
+
+
 -- 
-2.43.0
-
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
