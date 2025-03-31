@@ -1,30 +1,32 @@
-Received: from out-181.mta0.migadu.com (out-181.mta0.migadu.com [91.218.175.181])
+Received: from out-178.mta1.migadu.com (out-178.mta1.migadu.com [95.215.58.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B91E19259F
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 31 Mar 2025 09:47:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F18FD1DE884
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 31 Mar 2025 09:48:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743414479; cv=none; b=Dp8CtJrvLLtp7cF5dPtDP5DrtosyPePKzU0aRzTKWqXvzg1E2hQMnPRn9J73C+qtRhXk4y4U0eDEVHUNRXL5Jeae51sVq2S2mVX/bdNLQJOCwhHlOjs6fU3jSQdgHbtV6ex1oYMzpguR/4FaUxlPcKpE633sPFspdIMnASPgY2o=
+	t=1743414503; cv=none; b=IvQf0KwCbAAYifWU0lLNAJWIvAyEnA2b1LAkGl0yOhEr/6L4tJ3cnjKASL+/T74HdY7Cco8oaqaf11v2nJB7Bcbjx3MA1C5e1EiCAmhmzE3Gg8TtyXvna185HqR6YSHadbDnuB3c+s1baw2pkPzSdYc230IgRU2RlWOGBqAjbsw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743414479; c=relaxed/simple;
-	bh=qW71JueQyZ8CXYAUt8EBBRnReSVMaIj7h1nmuaJsu6o=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=TSDGMEqBfKDRTtX2OxVGfh7w+OSrSb6br1j6//+oc7sIqPSnwiEJbMFS5pQ4e3ncyOEaDLa7wcj0XXMPlOluq8aoWcwtvyqaOOnKdQV0flSRj8fpzOud+6/28uh9Sx4XiGqwjZkRURd0h/rVK8QUbeMUGH4YAYMrI8bzl4PU0BE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=lCdrsYKV; arc=none smtp.client-ip=91.218.175.181
+	s=arc-20240116; t=1743414503; c=relaxed/simple;
+	bh=NzhgIP+mGQ4W0FZZ4z+rjwuiSBsl4UldHISVpGjwMLs=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=fllTCLu9m1ehZzeD995JLvcQeB2dr2cD/c6RBLCkkZzbIBWtKPg+GFXjt3L19UUJ6EW+9GdGMs4cVvK6ee74Gp9+dq4wH8/oyZDhPsGbWfslwOqya+SOtB/xLfM8uibwS1n1CayrJXftrW0n4lXNKPT95Klvpmad2ffh8R4Xl8I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=jTztKrYn; arc=none smtp.client-ip=95.215.58.178
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="lCdrsYKV"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="jTztKrYn"
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1743414473;
+	t=1743414490;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=tn2VNzmzUAUwZ48Xp6pSAVp7xWEWB+IDyqbSXAEKDQ4=;
-	b=lCdrsYKV0grW61XBMQGFyJbZWBRN6OKpdzI1/e+ZFet5tXIdb4gAyR9dyn0K51eUVxPVY9
-	2t4cIyr1I9ZnR1Il9xt754tFEcdahVSs1qbAQB2PM3H8XTd4bcJLQrN4NJzJX/BP8SxI62
-	4A3JVjrBOP/gxlZNotTa+ofPO76l8I0=
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=UyUrTgpXdHKKZlTezNXfLIKziuKXRmHvZa1e0YMWZvE=;
+	b=jTztKrYnA8IOCXe3ptnUHJ1vImVoTcF5079lKHCE63wX9O4hF//jQUswhjiz0EdtTqEhYp
+	mS0RxpfbmrhkUVOdgcfruYH2SBn62Hh0Ja16nBKVTYgeCc2JcrkKTlW7wE+89EmLF8CEOS
+	MA/E/67kP6StiQ1MPt4s4uHvdq5C2mc=
 From: Tao Chen <chen.dylane@linux.dev>
 To: song@kernel.org,
 	jolsa@kernel.org,
@@ -46,9 +48,11 @@ Cc: bpf@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org,
 	Tao Chen <chen.dylane@linux.dev>
-Subject: [PATCH bpf-next 1/2] bpf: Check link_create parameter for multi_kprobe
-Date: Mon, 31 Mar 2025 17:47:44 +0800
-Message-Id: <20250331094745.336010-1-chen.dylane@linux.dev>
+Subject: [PATCH bpf-next 2/2] bpf: Check link_create parameter for multi_uprobe
+Date: Mon, 31 Mar 2025 17:47:45 +0800
+Message-Id: <20250331094745.336010-2-chen.dylane@linux.dev>
+In-Reply-To: <20250331094745.336010-1-chen.dylane@linux.dev>
+References: <20250331094745.336010-1-chen.dylane@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -58,28 +62,28 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Migadu-Flow: FLOW_OUT
 
-The target_fd and flags in link_create no used in multi_kprobe
+The target_fd and flags in link_create no used in multi_uprobe
 , return -EINVAL if they assigned, keep it same as other link
 attach apis.
 
-Fixes: 0dcac2725406 ("bpf: Add multi kprobe link")
+Fixes: 89ae89f53d20 ("bpf: Add multi uprobe link")
 Signed-off-by: Tao Chen <chen.dylane@linux.dev>
 ---
  kernel/trace/bpf_trace.c | 3 +++
  1 file changed, 3 insertions(+)
 
 diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
-index 13bef2462..2f206a2a2 100644
+index 2f206a2a2..f7ebf17e3 100644
 --- a/kernel/trace/bpf_trace.c
 +++ b/kernel/trace/bpf_trace.c
-@@ -2993,6 +2993,9 @@ int bpf_kprobe_multi_link_attach(const union bpf_attr *attr, struct bpf_prog *pr
+@@ -3385,6 +3385,9 @@ int bpf_uprobe_multi_link_attach(const union bpf_attr *attr, struct bpf_prog *pr
  	if (sizeof(u64) != sizeof(void *))
  		return -EOPNOTSUPP;
  
 +	if (attr->link_create.target_fd || attr->link_create.flags)
 +		return -EINVAL;
 +
- 	if (!is_kprobe_multi(prog))
+ 	if (!is_uprobe_multi(prog))
  		return -EINVAL;
  
 -- 
