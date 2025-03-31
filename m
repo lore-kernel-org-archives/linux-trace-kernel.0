@@ -1,26 +1,26 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2069921C16E;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8529221C190;
 	Mon, 31 Mar 2025 14:34:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743431674; cv=none; b=YEjU50/9v6XIpEmFU0509ppKxYqE7OPJT1vqTmJxyjxBBJpdZOmJaek3ny3u1qLsZawOEfeeBR+Af1iW92s2Tuxl6N75PUBqQioULtwNfZgiLCgg4VQIq9VIK/qdRHiIfhgskDmUD0+iJOIXSSbnmGbRDNlvrm4IM7sDsoTr/GE=
+	t=1743431674; cv=none; b=gKiVniE2cnqrDAZPgyVNxD9Csbm0SHOhF2iFbORvF1Y5gSmqoGKBYeN+VtWNAzQjYEJcDjiuYZYe6dygoJbx2Nv5hjo61hvzTPG2kVkqMHf0QRLj9N5mqm9XebX41ST0XC2oziqigHqwnMxVkU3fZoVu+quNwElhJog/j0Ipdy0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1743431674; c=relaxed/simple;
-	bh=6P/iSs4dSHVA63nA+HwqNLTKJJQI2AkjTx/BUwwen4w=;
+	bh=QK0iMtmHe/fpoIG5UIR046tnnV3BgOIQDLWpxeUCYok=;
 	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=lKEUJE8bUhxU8LFZpJ0naPnS85SuMumVRWeFGKVjMEx8Dd7mKBC7rhDxizB62cD1UobJzfkzses0fGFjQNtwdavR3Q93PMR3DHI2e58WnT6fNICtmyPf+tXIQKhG/EKU3SLUm5iuUMp7OMeM1LmkOM21mwt5Mho6iRZgzMz4bG4=
+	 Content-Type; b=J5VC89P+k9w7bAHQ8zMxBVRGPgdFZDQsLB+/k/rSjqYZ6Lc1Jicbe9Btatpih7BltaBAz8hWTYaPQyii21klSW6GDSpa8AIhbPlvDtp/3l3TXmpfppsGEcChMnedveKxMHs5GIPMOh0YEHzFHMq/w9o68wH25poJxL8Qn1TqX0k=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EC7CBC4CEEE;
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 00522C4CEEB;
 	Mon, 31 Mar 2025 14:34:33 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.98)
 	(envelope-from <rostedt@goodmis.org>)
-	id 1tzGEe-00000005pAm-2Z1p;
+	id 1tzGEe-00000005pBG-3G8C;
 	Mon, 31 Mar 2025 10:35:32 -0400
-Message-ID: <20250331143532.459810712@goodmis.org>
+Message-ID: <20250331143532.630811525@goodmis.org>
 User-Agent: quilt/0.68
-Date: Mon, 31 Mar 2025 10:34:27 -0400
+Date: Mon, 31 Mar 2025 10:34:28 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org,
  linux-trace-kernel@vger.kernel.org
@@ -31,8 +31,7 @@ Cc: Linus Torvalds <torvalds@linux-foundation.org>,
  Andrew Morton <akpm@linux-foundation.org>,
  Vincent Donnefort <vdonnefort@google.com>,
  Vlastimil Babka <vbabka@suse.cz>
-Subject: [PATCH v2 1/2] tracing: ring-buffer: Have the ring buffer code do the vmap of
- physical memory
+Subject: [PATCH v2 2/2] ring-buffer: Allow persistent ring buffers to be mmapped
 References: <20250331143426.947281958@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -44,372 +43,249 @@ Content-Type: text/plain; charset=UTF-8
 
 From: Steven Rostedt <rostedt@goodmis.org>
 
-Currently, when reserve_mem is used on the kernel command line to reserve
-"persistent" memory to map the ring buffer on. The tracing code will do
-the vmap() on the physical memory provided by reserve_mem and pass that to
-ring_buffer_alloc_range() where it will map the ring buffer on top of the
-given memory. It will also look at the current content of the memory there
-and if the memory already contains valid content, it will use that content
-for the ring buffer.
+The persistent ring buffer uses vmap()'d memory to map the reserved memory
+from boot. But the user space mmap() to the ring buffer requires
+virt_to_page() to return a valid page. But that only works for core kernel
+addresses and not for vmap() addresses.
 
-But this method makes the ring buffer code not know where that memory came
-from. Here, the tracing code used vmap() but it could have also used
-vmalloc(), or whatever. And many of these methods may not be supported by
-the ring buffer code.
+To address this, save the physical and virtual address of where the
+persistent memory is mapped. Create a rb_struct_page() helper function
+that returns the page via virt_to_page() for normal buffer pages that were
+allocated with page_alloc() but for the physical memory vmap()'d pages, it
+uses the saved physical and virtual addresses of where the memory was
+located to calculate the physical address of the virtual page that needs
+the struct page. Then it uses pfn_to_page() to get the page for that
+physical address.
 
-Instead, rename ring_buffer_alloc_range() to ring_buffer_alloc_physical()
-where contiguous physical memory is passed to the ring buffer code, and it
-will be responsible for mapping it as well as freeing it. This simplifies
-the callers from having to keep track of whether the code is mapped or
-not.
+New helper functions are created for flushing the cache for architectures
+that need it between user and kernel space.
 
-The ring buffer can also take control of whether it can memory map the
-buffer to user space or not. Currently it does not allow this physical
-memory to be mapped to user space, but now that it has control over the
-struct pages of this memory, it can easily do so in the future.
+Also, the persistent memory uses the page->id for its own purpose where as
+the user mmap buffer currently uses that for the subbuf array mapped to
+user space. If the buffer is a persistent buffer, use the page index into
+that buffer as the identifier instead of the page->id.
 
-As the ring buffer mapping of a physical memory mapped buffer will now
-fail, the tracing code no longer keeps track if the buffer is the "last
-boot" buffer or not and will try to map it anyway. It will still fail, but
-when the ring buffer code is modified to allow it, it will then succeed.
+That is, the page->id for a persistent buffer, represents the order of the
+buffer is in the link list. ->id == 0 means it is the reader page.
+When a reader page is swapped, the new reader page's ->id gets zero, and
+the old reader page gets the ->id of the page that it swapped with.
+
+The user space mapping has the ->id is the index of where it was mapped in
+user space and does not change while it is mapped.
+
+Since the persistent buffer is fixed in its location, the index of where
+a page is in the memory range can be used as the "id" to put in the meta
+page array, and it can be mapped in the same order to user space as it is
+in the persistent memory.
+
+A new rb_page_id() helper function is used to get and set the id depending
+on if the page is a normal memory allocated buffer or a physical memory
+mapped buffer.
+
+Link: https://lore.kernel.org/all/CAHk-=wgD9MQOoMAGtT=fXZsWY39exRVyZgxuBXix4u=1bdHA=g@mail.gmail.com/
 
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- include/linux/ring_buffer.h | 19 ++++----
- kernel/trace/ring_buffer.c  | 86 ++++++++++++++++++++++++++++++++-----
- kernel/trace/trace.c        | 65 +++++++---------------------
- 3 files changed, 101 insertions(+), 69 deletions(-)
+ kernel/trace/ring_buffer.c | 110 +++++++++++++++++++++++++++++++------
+ 1 file changed, 93 insertions(+), 17 deletions(-)
 
-diff --git a/include/linux/ring_buffer.h b/include/linux/ring_buffer.h
-index 56e27263acf8..a31dff0a9f09 100644
---- a/include/linux/ring_buffer.h
-+++ b/include/linux/ring_buffer.h
-@@ -89,11 +89,11 @@ void ring_buffer_discard_commit(struct trace_buffer *buffer,
- struct trace_buffer *
- __ring_buffer_alloc(unsigned long size, unsigned flags, struct lock_class_key *key);
- 
--struct trace_buffer *__ring_buffer_alloc_range(unsigned long size, unsigned flags,
--					       int order, unsigned long start,
--					       unsigned long range_size,
--					       unsigned long scratch_size,
--					       struct lock_class_key *key);
-+struct trace_buffer *__ring_buffer_alloc_physical(unsigned long size, unsigned flags,
-+						  int order, unsigned long start,
-+						  unsigned long range_size,
-+						  unsigned long scratch_size,
-+						  struct lock_class_key *key);
- 
- void *ring_buffer_meta_scratch(struct trace_buffer *buffer, unsigned int *size);
- 
-@@ -113,11 +113,11 @@ void *ring_buffer_meta_scratch(struct trace_buffer *buffer, unsigned int *size);
-  * traced by ftrace, it can produce lockdep warnings. We need to keep each
-  * ring buffer's lock class separate.
-  */
--#define ring_buffer_alloc_range(size, flags, order, start, range_size, s_size)	\
-+#define ring_buffer_alloc_physical(size, flags, order, start, range_size, s_size) \
- ({									\
- 	static struct lock_class_key __key;				\
--	__ring_buffer_alloc_range((size), (flags), (order), (start),	\
--				  (range_size), (s_size), &__key);	\
-+	__ring_buffer_alloc_physical((size), (flags), (order), (start),	\
-+				     (range_size), (s_size), &__key);	\
- })
- 
- typedef bool (*ring_buffer_cond_fn)(void *data);
-@@ -235,7 +235,8 @@ int ring_buffer_subbuf_order_set(struct trace_buffer *buffer, int order);
- int ring_buffer_subbuf_size_get(struct trace_buffer *buffer);
- 
- enum ring_buffer_flags {
--	RB_FL_OVERWRITE		= 1 << 0,
-+	RB_FL_OVERWRITE		= BIT(0),
-+	RB_FL_PHYSICAL		= BIT(1),
- };
- 
- #ifdef CONFIG_RING_BUFFER
 diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-index f25966b3a1fc..36665754340f 100644
+index 36665754340f..c95cb1e0cc0a 100644
 --- a/kernel/trace/ring_buffer.c
 +++ b/kernel/trace/ring_buffer.c
-@@ -17,6 +17,7 @@
- #include <linux/uaccess.h>
- #include <linux/hardirq.h>
- #include <linux/kthread.h>	/* for self test */
-+#include <linux/vmalloc.h>	/* for vmap */
- #include <linux/module.h>
- #include <linux/percpu.h>
- #include <linux/mutex.h>
-@@ -556,6 +557,8 @@ struct trace_buffer {
- 
+@@ -558,6 +558,7 @@ struct trace_buffer {
  	struct ring_buffer_meta		*meta;
  
-+	unsigned long			phys_start;
-+
+ 	unsigned long			phys_start;
++	unsigned long			virt_start;
+ 
  	unsigned int			subbuf_size;
  	unsigned int			subbuf_order;
- 	unsigned int			max_data_size;
-@@ -2351,6 +2354,43 @@ static void rb_free_cpu_buffer(struct ring_buffer_per_cpu *cpu_buffer)
- 	kfree(cpu_buffer);
- }
+@@ -2455,6 +2456,7 @@ static struct trace_buffer *alloc_buffer(unsigned long size, unsigned flags,
  
-+static unsigned long map_pages(unsigned long *start, unsigned long *end)
-+{
-+	struct page **pages;
-+	phys_addr_t page_start;
-+	unsigned long size;
-+	unsigned long page_count;
-+	unsigned long i;
-+	void *vaddr;
-+
-+	/* Make sure the mappings are page aligned */
-+	*start = ALIGN(*start, PAGE_SIZE);
-+
-+	size = *end - *start;
-+
-+	/* The size must fit full pages */
-+	page_count = size >> PAGE_SHIFT;
-+
-+	if (!page_count)
-+		return 0;
-+
-+	page_start = *start;
-+	pages = kmalloc_array(page_count, sizeof(struct page *), GFP_KERNEL);
-+	if (!pages)
-+		return 0;
-+
-+	for (i = 0; i < page_count; i++) {
-+		phys_addr_t addr = page_start + i * PAGE_SIZE;
-+		pages[i] = pfn_to_page(addr >> PAGE_SHIFT);
-+	}
-+	vaddr = vmap(pages, page_count, VM_MAP, PAGE_KERNEL);
-+	kfree(pages);
-+
-+	*end = *start + page_count * PAGE_SIZE;
-+
-+	return (unsigned long)vaddr;
-+}
-+
- static struct trace_buffer *alloc_buffer(unsigned long size, unsigned flags,
- 					 int order, unsigned long start,
- 					 unsigned long end,
-@@ -2395,14 +2435,26 @@ static struct trace_buffer *alloc_buffer(unsigned long size, unsigned flags,
- 	if (!buffer->buffers)
- 		goto fail_free_cpumask;
- 
--	/* If start/end are specified, then that overrides size */
-+	/* If start/end are specified, then this is a physical mapping */
- 	if (start && end) {
- 		unsigned long buffers_start;
-+		unsigned long addr;
- 		unsigned long ptr;
-+		u64 size;
- 		int n;
- 
--		/* Make sure that start is word aligned */
--		start = ALIGN(start, sizeof(long));
-+		addr = map_pages(&start, &end);
-+		if (!addr)
-+			goto fail_free_cpumask;
-+
-+		/* end and start have have been updated for alignment */
-+		size = end - start;
-+
-+		buffer->phys_start = start;
-+		buffer->flags |= RB_FL_PHYSICAL;
-+
-+		start = addr;
-+		end = start + size;
+ 		start = addr;
+ 		end = start + size;
++		buffer->virt_start = start;
  
  		/* scratch_size needs to be aligned too */
  		scratch_size = ALIGN(scratch_size, sizeof(long));
-@@ -2479,6 +2531,9 @@ static struct trace_buffer *alloc_buffer(unsigned long size, unsigned flags,
- 	}
- 	kfree(buffer->buffers);
- 
-+	if (buffer->phys_start)
-+		vunmap((void *)buffer->phys_start);
-+
-  fail_free_cpumask:
- 	free_cpumask_var(buffer->cpumask);
- 
-@@ -2508,11 +2563,11 @@ struct trace_buffer *__ring_buffer_alloc(unsigned long size, unsigned flags,
- EXPORT_SYMBOL_GPL(__ring_buffer_alloc);
- 
- /**
-- * __ring_buffer_alloc_range - allocate a new ring_buffer from existing memory
-+ * __ring_buffer_alloc_physical - allocate a new ring_buffer from physical memory
-  * @size: the size in bytes per cpu that is needed.
-  * @flags: attributes to set for the ring buffer.
-  * @order: sub-buffer order
-- * @start: start of allocated range
-+ * @start: start of the physical memory range
-  * @range_size: size of allocated range
-  * @scratch_size: size of scratch area (for preallocated memory buffers)
-  * @key: ring buffer reader_lock_key.
-@@ -2522,11 +2577,11 @@ EXPORT_SYMBOL_GPL(__ring_buffer_alloc);
-  * when the buffer wraps. If this flag is not set, the buffer will
-  * drop data when the tail hits the head.
-  */
--struct trace_buffer *__ring_buffer_alloc_range(unsigned long size, unsigned flags,
--					       int order, unsigned long start,
--					       unsigned long range_size,
--					       unsigned long scratch_size,
--					       struct lock_class_key *key)
-+struct trace_buffer *__ring_buffer_alloc_physical(unsigned long size, unsigned flags,
-+						  int order, unsigned long start,
-+						  unsigned long range_size,
-+						  unsigned long scratch_size,
-+						  struct lock_class_key *key)
- {
- 	return alloc_buffer(size, flags, order, start, start + range_size,
- 			    scratch_size, key);
-@@ -2569,6 +2624,9 @@ ring_buffer_free(struct trace_buffer *buffer)
- 	kfree(buffer->buffers);
- 	free_cpumask_var(buffer->cpumask);
- 
-+	if (buffer->flags & RB_FL_PHYSICAL)
-+		vunmap((void *)buffer->phys_start);
-+
- 	kfree(buffer);
+@@ -6058,6 +6060,80 @@ static void rb_clear_buffer_page(struct buffer_page *page)
+ 	page->read = 0;
  }
- EXPORT_SYMBOL_GPL(ring_buffer_free);
-@@ -7138,6 +7196,14 @@ int ring_buffer_map(struct trace_buffer *buffer, int cpu,
+ 
++/*
++ * Get the struct page for the given buffer page.
++ *
++ * For normal ring buffer pages that are allocated via page_alloc()
++ * the struct page can simply be retrieved via virt_to_page().
++ *
++ * But if the buffer was created via a physical mapping and vmap()
++ * was used to get to the virtual addresses, use the stored virtual
++ * and physical of the start address to calculate the original
++ * physical address of the given page and use pfn_to_page() to return
++ * the struct page.
++ */
++static struct page *rb_struct_page(struct trace_buffer *buffer, void *vaddr)
++{
++	if (buffer->flags & RB_FL_PHYSICAL) {
++		unsigned long addr = (unsigned long)vaddr;
++
++		addr -= buffer->virt_start;
++		addr += buffer->phys_start;
++		return pfn_to_page(addr >> PAGE_SHIFT);
++	}
++	return virt_to_page(vaddr);
++}
++
++/* Some archs do not have data cache coherency between kernel and user-space */
++static void rb_flush_buffer_page(struct trace_buffer *buffer,
++				 struct buffer_page *bpage)
++{
++	struct page *page = rb_struct_page(buffer, bpage->page);
++
++	flush_dcache_folio(page_folio(page));
++}
++
++/* The user mapped meta page is always allocated via page_alloc() */
++static void rb_flush_meta(void *meta)
++{
++	struct page *page = virt_to_page(meta);
++
++	flush_dcache_folio(page_folio(page));
++}
++
++/*
++ * When the buffer is memory mapped to user space, each sub buffer
++ * has a unique id that is used by the meta data to tell the user
++ * where the current reader page is.
++ *
++ * For a normal allocated ring buffer, the id is saved in the buffer page
++ * id field, and updated via this function.
++ *
++ * But for a physical memory mapped buffer, the id is already assigned for
++ * memory ording in the physical memory layout and can not be used. Instead
++ * the index of where the page lies in the memory layout is used.
++ *
++ * For the normal pages, set the buffer page id with the passed in @id
++ * value and return that.
++ *
++ * For memory mapped pages, get the page index in the physical memory layout
++ * and return that as the id.
++ */
++static int rb_page_id(struct ring_buffer_per_cpu *cpu_buffer,
++		      struct buffer_page *bpage, int id)
++{
++	/*
++	 * For boot buffers, the id is the index,
++	 * otherwise, set the buffer page with this id
++	 */
++	if (cpu_buffer->ring_meta)
++		id = rb_meta_subbuf_idx(cpu_buffer->ring_meta, bpage->page);
++	else
++		bpage->id = id;
++
++	return id;
++}
++
+ static void rb_update_meta_page(struct ring_buffer_per_cpu *cpu_buffer)
+ {
+ 	struct trace_buffer_meta *meta = cpu_buffer->meta_page;
+@@ -6066,15 +6142,16 @@ static void rb_update_meta_page(struct ring_buffer_per_cpu *cpu_buffer)
+ 		return;
+ 
+ 	meta->reader.read = cpu_buffer->reader_page->read;
+-	meta->reader.id = cpu_buffer->reader_page->id;
++	meta->reader.id = rb_page_id(cpu_buffer, cpu_buffer->reader_page,
++				     cpu_buffer->reader_page->id);
++
+ 	meta->reader.lost_events = cpu_buffer->lost_events;
+ 
+ 	meta->entries = local_read(&cpu_buffer->entries);
+ 	meta->overrun = local_read(&cpu_buffer->overrun);
+ 	meta->read = cpu_buffer->read;
+ 
+-	/* Some archs do not have data cache coherency between kernel and user-space */
+-	flush_dcache_folio(virt_to_folio(cpu_buffer->meta_page));
++	rb_flush_meta(meta);
+ }
+ 
+ static void
+@@ -6982,23 +7059,29 @@ static void rb_setup_ids_meta_page(struct ring_buffer_per_cpu *cpu_buffer,
+ 	struct trace_buffer_meta *meta = cpu_buffer->meta_page;
+ 	unsigned int nr_subbufs = cpu_buffer->nr_pages + 1;
+ 	struct buffer_page *first_subbuf, *subbuf;
++	int cnt = 0;
+ 	int id = 0;
+ 
+-	subbuf_ids[id] = (unsigned long)cpu_buffer->reader_page->page;
+-	cpu_buffer->reader_page->id = id++;
++	id = rb_page_id(cpu_buffer, cpu_buffer->reader_page, id);
++	subbuf_ids[id++] = (unsigned long)cpu_buffer->reader_page->page;
++	cnt++;
+ 
+ 	first_subbuf = subbuf = rb_set_head_page(cpu_buffer);
+ 	do {
++		id = rb_page_id(cpu_buffer, subbuf, id);
++
+ 		if (WARN_ON(id >= nr_subbufs))
+ 			break;
+ 
+ 		subbuf_ids[id] = (unsigned long)subbuf->page;
+-		subbuf->id = id;
+ 
+ 		rb_inc_page(&subbuf);
+ 		id++;
++		cnt++;
+ 	} while (subbuf != first_subbuf);
+ 
++	WARN_ON(cnt != nr_subbufs);
++
+ 	/* install subbuf ID to kern VA translation */
+ 	cpu_buffer->subbuf_ids = subbuf_ids;
+ 
+@@ -7134,6 +7217,7 @@ static int __rb_map_vma(struct ring_buffer_per_cpu *cpu_buffer,
+ 	if (!pgoff) {
+ 		unsigned long meta_page_padding;
+ 
++		/* The meta page is always allocated via alloc_page() */
+ 		pages[p++] = virt_to_page(cpu_buffer->meta_page);
+ 
+ 		/*
+@@ -7163,7 +7247,8 @@ static int __rb_map_vma(struct ring_buffer_per_cpu *cpu_buffer,
+ 			goto out;
+ 		}
+ 
+-		page = virt_to_page((void *)cpu_buffer->subbuf_ids[s]);
++		page = rb_struct_page(cpu_buffer->buffer,
++				      (void *)cpu_buffer->subbuf_ids[s]);
+ 
+ 		for (; off < (1 << (subbuf_order)); off++, page++) {
+ 			if (p >= nr_pages)
+@@ -7196,14 +7281,6 @@ int ring_buffer_map(struct trace_buffer *buffer, int cpu,
  	unsigned long flags, *subbuf_ids;
  	int err = 0;
  
-+	/*
-+	 * Currently, this does not support vmap()'d buffers.
-+	 * Return -ENODEV as that is what is returned when a file
-+	 * does not support memory mapping.
-+	 */
-+	if (buffer->flags & RB_FL_PHYSICAL)
-+		return -ENODEV;
-+
+-	/*
+-	 * Currently, this does not support vmap()'d buffers.
+-	 * Return -ENODEV as that is what is returned when a file
+-	 * does not support memory mapping.
+-	 */
+-	if (buffer->flags & RB_FL_PHYSICAL)
+-		return -ENODEV;
+-
  	if (!cpumask_test_cpu(cpu, buffer->cpumask))
  		return -EINVAL;
  
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index 14c38fcd6f9e..20724d64e02e 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -8492,10 +8492,6 @@ static int tracing_buffers_mmap(struct file *filp, struct vm_area_struct *vma)
- 	struct trace_iterator *iter = &info->iter;
- 	int ret = 0;
+@@ -7384,8 +7461,7 @@ int ring_buffer_map_get_reader(struct trace_buffer *buffer, int cpu)
+ 	goto consume;
  
--	/* Currently the boot mapped buffer is not supported for mmap */
--	if (iter->tr->flags & TRACE_ARRAY_FL_BOOT)
--		return -ENODEV;
--
- 	ret = get_snapshot_map(iter->tr);
- 	if (ret)
- 		return ret;
-@@ -8503,8 +8499,8 @@ static int tracing_buffers_mmap(struct file *filp, struct vm_area_struct *vma)
- 	ret = ring_buffer_map(iter->array_buffer->buffer, iter->cpu_file, vma);
- 	if (ret)
- 		put_snapshot_map(iter->tr);
--
--	vma->vm_ops = &tracing_buffers_vmops;
-+	else
-+		vma->vm_ops = &tracing_buffers_vmops;
+ out:
+-	/* Some archs do not have data cache coherency between kernel and user-space */
+-	flush_dcache_folio(virt_to_folio(cpu_buffer->reader_page->page));
++	rb_flush_buffer_page(buffer, cpu_buffer->reader_page);
  
- 	return ret;
- }
-@@ -9520,10 +9516,17 @@ allocate_trace_buffer(struct trace_array *tr, struct array_buffer *buf, int size
+ 	rb_update_meta_page(cpu_buffer);
  
- 	if (tr->range_addr_start && tr->range_addr_size) {
- 		/* Add scratch buffer to handle 128 modules */
--		buf->buffer = ring_buffer_alloc_range(size, rb_flags, 0,
--						      tr->range_addr_start,
--						      tr->range_addr_size,
--						      struct_size(tscratch, entries, 128));
-+		buf->buffer = ring_buffer_alloc_physical(size, rb_flags, 0,
-+							 tr->range_addr_start,
-+							 tr->range_addr_size,
-+							 struct_size(tscratch, entries, 128));
-+		if (!buf->buffer) {
-+			pr_warn("Tracing: Failed to map boot instance %s\n", tr->name);
-+			return -1;
-+		}
-+
-+		pr_info("Tracing: mapped boot instance %s at physical memory %lx of size 0x%lx\n",
-+			tr->name, tr->range_addr_start, tr->range_addr_size);
- 
- 		tscratch = ring_buffer_meta_scratch(buf->buffer, &scratch_size);
- 		setup_trace_scratch(tr, tscratch, scratch_size);
-@@ -9600,9 +9603,6 @@ static void free_trace_buffers(struct trace_array *tr)
- #ifdef CONFIG_TRACER_MAX_TRACE
- 	free_trace_buffer(&tr->max_buffer);
- #endif
--
--	if (tr->range_addr_start)
--		vunmap((void *)tr->range_addr_start);
- }
- 
- static void init_trace_flags_index(struct trace_array *tr)
-@@ -9795,31 +9795,6 @@ static int instance_mkdir(const char *name)
- 	return ret;
- }
- 
--static u64 map_pages(u64 start, u64 size)
--{
--	struct page **pages;
--	phys_addr_t page_start;
--	unsigned int page_count;
--	unsigned int i;
--	void *vaddr;
--
--	page_count = DIV_ROUND_UP(size, PAGE_SIZE);
--
--	page_start = start;
--	pages = kmalloc_array(page_count, sizeof(struct page *), GFP_KERNEL);
--	if (!pages)
--		return 0;
--
--	for (i = 0; i < page_count; i++) {
--		phys_addr_t addr = page_start + i * PAGE_SIZE;
--		pages[i] = pfn_to_page(addr >> PAGE_SHIFT);
--	}
--	vaddr = vmap(pages, page_count, VM_MAP, PAGE_KERNEL);
--	kfree(pages);
--
--	return (u64)(unsigned long)vaddr;
--}
--
- /**
-  * trace_array_get_by_name - Create/Lookup a trace array, given its name.
-  * @name: The name of the trace array to be looked up/created.
-@@ -10708,7 +10683,6 @@ __init static void enable_instances(void)
- 	while ((curr_str = strsep(&str, "\t"))) {
- 		phys_addr_t start = 0;
- 		phys_addr_t size = 0;
--		unsigned long addr = 0;
- 		bool traceprintk = false;
- 		bool traceoff = false;
- 		char *flag_delim;
-@@ -10773,22 +10747,13 @@ __init static void enable_instances(void)
- 			rname = kstrdup(tok, GFP_KERNEL);
- 		}
- 
--		if (start) {
--			addr = map_pages(start, size);
--			if (addr) {
--				pr_info("Tracing: mapped boot instance %s at physical memory %pa of size 0x%lx\n",
--					name, &start, (unsigned long)size);
--			} else {
--				pr_warn("Tracing: Failed to map boot instance %s\n", name);
--				continue;
--			}
--		} else {
-+		if (!start) {
- 			/* Only non mapped buffers have snapshot buffers */
- 			if (IS_ENABLED(CONFIG_TRACER_MAX_TRACE))
- 				do_allocate_snapshot(name);
- 		}
- 
--		tr = trace_array_create_systems(name, NULL, addr, size);
-+		tr = trace_array_create_systems(name, NULL, (unsigned long)start, size);
- 		if (IS_ERR(tr)) {
- 			pr_warn("Tracing: Failed to create instance buffer %s\n", curr_str);
- 			continue;
 -- 
 2.47.2
 
