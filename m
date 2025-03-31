@@ -1,188 +1,198 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B399139D1B;
-	Mon, 31 Mar 2025 17:38:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EA4186347
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 31 Mar 2025 19:12:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743442690; cv=none; b=uXkl+5cGKXO6UUoI/QRQV507Z9UCZh7d4/dVawCFySKS6A4MZ+ZIUC4a9rz3g+glQlHqXg5j0zEuSvMtPYypZW+R77mrGpBOtnEpxjnBvO6g/3GBBDP0VmG9d/l2yWIvFvyXSs6vDfgF2jZ7zOoLt6ydzUOQt184JeXdGZisEy4=
+	t=1743448350; cv=none; b=bkTPjJ1q/QbR6+UCxqemswzKHvchkub4wU7wuE0u8bOzmIDmZaqjEqewxk03VZWuJCsmbwAN0HcVuzqVhr2qQrkws3JldfDedvfI0ePNQ3qjHNNONcMfX0gAfB/mC7spaJ+/kFSZal+mV8zBr1tkrXBWaBAg7YKkNF8nSwnIXOU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743442690; c=relaxed/simple;
-	bh=4iXrT9ZY4Xoqd9GGuS3SRMQkL/GITaKNwVGMJSBVvCs=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=uWUrxolAoASE25IYDpdQTjB2YqMbu+XhelmddvTwd7nkDexPg4XdMNO4qxy8lsctxprxXj5a2hlLgoOnwoWwYO0/BzXtwqc8CbIVMS+L8PWxS3SW6RijmtXc5+QQll6QzQgCsno53MR55fIv4I3pbBiQLa0gF68YztfuggdBtW4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6D453C4CEE3;
-	Mon, 31 Mar 2025 17:38:08 +0000 (UTC)
-Date: Mon, 31 Mar 2025 13:39:06 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Masami
- Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Andrew Morton
- <akpm@linux-foundation.org>, Vincent Donnefort <vdonnefort@google.com>,
- Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>, Kees
- Cook <kees@kernel.org>, Tony Luck <tony.luck@intel.com>, "Guilherme G.
- Piccoli" <gpiccoli@igalia.com>, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] tracing: ring-buffer: Have the ring buffer code
- do the vmap of physical memory
-Message-ID: <20250331133906.48e115f5@gandalf.local.home>
-In-Reply-To: <CAHk-=whUOfVucfJRt7E0AH+GV41ELmS4wJqxHDnui6Giddfkzw@mail.gmail.com>
-References: <20250331143426.947281958@goodmis.org>
-	<20250331143532.459810712@goodmis.org>
-	<CAHk-=whUOfVucfJRt7E0AH+GV41ELmS4wJqxHDnui6Giddfkzw@mail.gmail.com>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1743448350; c=relaxed/simple;
+	bh=PV4ZWuWia5BRoS43j+c6MY1tfA+wTbXjkY0S7EwOtLk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Ot1y4mQbrnnF8d6LtFihbtch0AbfuQFhvLjBBdLaDvfVXAWnctK1by31OehxGZ3mBg9HMDotbY6XQLu4EHY9bXv3vlAmJIm1kQ/v3YqBZMpAlLyQxzE/L4WN97H4JgmvSPivrcHDQIA5OShsVAOBG6WIl5LJ6/MCfk6l/SXyuZI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=XKPDXeOB; arc=none smtp.client-ip=209.85.218.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="XKPDXeOB"
+Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-ac2bb7ca40bso965538766b.3
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 31 Mar 2025 12:12:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google; t=1743448347; x=1744053147; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=CAyEvyF8shhlI0zeiTAETM+fQKaZCzqYYXdl5MvqdzQ=;
+        b=XKPDXeOBFA/d+PsWHXYk+mDmBVw91oBq0Oozb9nS176VLTwhL/9UBwETf/+8PU8Ow/
+         EDZMbzYWvBDghf8ea9HpY3jhVh7XMHRYkySeB44V3D94qQjmTPwiYlq50f2UVefM3p6g
+         F5wYqxUZvgvehBJKiNjUcKQ1Kkx7GQB3T+iYU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743448347; x=1744053147;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=CAyEvyF8shhlI0zeiTAETM+fQKaZCzqYYXdl5MvqdzQ=;
+        b=TftMV3HtNSLMxXEC+J6oJnECwR60wrJKSf2fiNrcm/iy2TT2MXF16YE/4M4i59hb3H
+         B3qKHAIZWm1aLwZTKVWVCeiRvuEEGe7rROoAJIkE5bJWUcWOsRifHBwrNcIZOGFdKsrL
+         JHLTfWMhtjSiXAgTQKQ2SdbeXS4EuVp29xY62qyGKdFOYBh3tHESodseebMympwMr445
+         D5bHpWZl3pGHSQBa2KOSf/ZRWbuwrN01gdWRpT+KOJBO4jwPCT+BVSB/dyJTzIYQKtFs
+         JISIcTByjZdXQzQtuxFUPnHgthNLBsFnJLt6vSU3jzo86mUWmTNH6RbBR7IYH0L8n7Rb
+         Kx8g==
+X-Forwarded-Encrypted: i=1; AJvYcCXYXrdCRfewXKZVpeDwM65unz1vZpCKnHCaxHVRFWhQoU/1RYJAFdUvsyWPnjO2tam3niTAVQztQiy6MmkoyY1bJyg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyOSpDZGCoUdrgi6RcM7xOpUGdPZGTfIzq41rCpw8EnaIKTUB05
+	QEl4WKRoCMAb/v9XX2wvi5N3dNg7EpXDw/ZNp0C8MbG3h7ht0kszpYyXNpK5ieiEvLEHp3KiC82
+	2cX0=
+X-Gm-Gg: ASbGncsDE6F2xc09DlZDCuwikeEccUV2x1lPdoeufBchvAdymjKvzja9bfAoMn5xz8P
+	1Qw0Mv1z/9jyqmrWAcCg3IO6hsemlUMWOgXyAsn/RcuxVV5KAlNsU0FvvHZycmsic/J8fMOGePn
+	qPHgV6JkKQBsePUR2Ehp8zXygoAjnjIj58A/rVEp/a7MuAyEROI6Ua1GqijdDw5gl2VD7GtyyXl
+	ddd4vDfU2XVNtDZEQ3z2LUR1yfWcHFvwSQ1EYTcLaIDNnnsIWUnGSzuCnlkTsBscf0GHbIOproY
+	JWcDD6C5mB/8O6E8cH8Uw2yLOjT+beCtsfvQkwoAeSvsGFQA51TkheRaNeTYOLEzo4vQNRxI49N
+	VDBLwM77+lhZai6d9/Q4=
+X-Google-Smtp-Source: AGHT+IFGZCKtWWzXrIXXAJtu0E1AEFACIUJldLYfEK46G7RYz8EzHhhVO5QU++TG2mf5avkc74mNgA==
+X-Received: by 2002:a17:906:c108:b0:ac3:bd68:24f0 with SMTP id a640c23a62f3a-ac782af62cfmr33675566b.7.1743448346557;
+        Mon, 31 Mar 2025 12:12:26 -0700 (PDT)
+Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com. [209.85.208.54])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac71967fd28sm660600866b.126.2025.03.31.12.12.25
+        for <linux-trace-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 31 Mar 2025 12:12:25 -0700 (PDT)
+Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-5e6ff035e9aso4482411a12.0
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 31 Mar 2025 12:12:25 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVsH566hMCVNjlP8r+D33pCDF6NAA94y3/iqG799zvQRE3L75dMxoLOkrE/x3FkVQrCwHWIwPN1JZF0fvkC8lOePVw=@vger.kernel.org
+X-Received: by 2002:a17:907:2cc5:b0:abf:73ba:fd60 with SMTP id
+ a640c23a62f3a-ac782be130dmr33191366b.29.1743448345444; Mon, 31 Mar 2025
+ 12:12:25 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20250331143426.947281958@goodmis.org> <20250331143532.459810712@goodmis.org>
+ <CAHk-=whUOfVucfJRt7E0AH+GV41ELmS4wJqxHDnui6Giddfkzw@mail.gmail.com> <20250331133906.48e115f5@gandalf.local.home>
+In-Reply-To: <20250331133906.48e115f5@gandalf.local.home>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Mon, 31 Mar 2025 12:12:08 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wi5pLoe3szxLREQGGJuWU0w_POK9Sv6717UH3b7OvvfjQ@mail.gmail.com>
+X-Gm-Features: AQ5f1JpTB-4kVjtmNv0aborYt6qti1nP5IpkPDDowc_-kPaTaqaDeELjzSuvoaw
+Message-ID: <CAHk-=wi5pLoe3szxLREQGGJuWU0w_POK9Sv6717UH3b7OvvfjQ@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] tracing: ring-buffer: Have the ring buffer code do
+ the vmap of physical memory
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Andrew Morton <akpm@linux-foundation.org>, 
+	Vincent Donnefort <vdonnefort@google.com>, Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>, 
+	Kees Cook <kees@kernel.org>, Tony Luck <tony.luck@intel.com>, 
+	"Guilherme G. Piccoli" <gpiccoli@igalia.com>, linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Mon, 31 Mar 2025 09:55:28 -0700
-Linus Torvalds <torvalds@linux-foundation.org> wrote:
+On Mon, 31 Mar 2025 at 10:38, Steven Rostedt <rostedt@goodmis.org> wrote:
+>
+> I just did this to be robust in case what was passed in was not aligned. In
+> all my use cases, it is.
 
+I really think that ALIGN() is absolutely the opposite of robust.
 
-> > +       /* Make sure the mappings are page aligned */
-> > +       *start = ALIGN(*start, PAGE_SIZE);  
-> 
-> The above is *completely* unacceptable.
-> 
-> There is no way in hell that ALIGN() can ever be right.
+It silently just makes incorrect values generate incorrect code.
 
-I just did this to be robust in case what was passed in was not aligned. In
-all my use cases, it is.
+Robust is dealing correctly with incorrect values, not making it
+incorrect data just create even more incorrect data.
 
-> 
-> You don't even fix up the low bits of the returned virtual address, so
-> you literally return the virtual address of something that doesn't
-> match what was passed in.
-> 
-> So if you pass it a starting area that isn't page-aligned, it now
-> randomly gives you complete crap back, and includes some random
-> unrelated part in the mapping.
-> 
-> So no. That needs to be a
-> 
->         if (*start & PAGE_MASK)
->                 return NULL;
+> OK, so I did copy this from fs/pstore/ram_core.c as this does basically the
+> same thing as pstore. And it looks like pstore should be updated too.
 
-No problem, will update. As I said, I just added that to not map something
-that wasn't part of what was passed in. But returning error if it's not
-page aligned works for me too.
+Please just stop copying code from random drivers or filesystems.
 
-> 
-> or whatever. Because just randomly corrupting the base address by
-> ignoring the low bits is not ok.
-> 
-> > +       /* The size must fit full pages */
-> > +       page_count = size >> PAGE_SHIFT;  
-> 
-> This part works, simply because truncating the size is fine. It won't
-> all get mapped, but that's the caller's problem, at least the code
-> isn't returning random crap that has random other data in it.
-> 
-> That said, I don't see the point. If you want to virtually map
-> physical pages, they need to be full pages, otherwise the end result
-> gets randomly truncated. So I think that while this is much better
-> than the "return random crap that doesn't make any sense", it should
-> be the same rule: just don't allow mapping partial pages.
-> 
-> So make it be
-> 
->         if (size & PAGE_MASK)
->                 return NULL;
-> 
-> instead, and just enforce the fact that allocations have to be sanely
-> aligned for vmap.
+Christ.
 
-Again, I'm happy to error out on non alignment. I'll just update the
-documentation to say it must be page size aligned. Currently it shows an
-example of using 4096 for alignment, but that should be changed to
-explicitly say to have it page aligned, as some archs (ppc) have 64K pages.
+I've said this before: core kernel code has higher quality
+requirements than random drivers (or even random filesystems).
 
-> 
-> Anyway, that takes care of the horrific interface. However, there's
-> another issue:
-> 
-> > +       pages = kmalloc_array(page_count, sizeof(struct page *), GFP_KERNEL);  
-> 
-> you create this pointless array of pages. Why? It's a physically
-> contiguous area.
-> 
-> You do that just because you want to use vmap() to map that contiguous
-> area one page at a time.
-> 
-> But this is NOT a new thing. It's exactly what every single PCI device
-> with a random physical memory region BAR needs to do. And no, they
-> don't create arrays of 'struct page *', because they use memory that
-> doesn't even have page backing.
-> 
-> So we actually have interfaces to do linear virtual mappings of
-> physical pages that *predate* vmap(), and do the right thing without
-> any of these games.
+You can't copy crazy incorrect snippets from random sources and put it
+in core kernel code.
 
-[ Added the pstore folks ]
+> This is due to what the "reserve_mem" kernel command line feature gives
+> back. It reserves physical memory that is not part of the kernel memory
+> allocator (it also works with memmap ie. memmap=12M$0x284500000, which also
+> requires physical memory addresses that are not part of the memory
+> allocator).
 
-OK, so I did copy this from fs/pstore/ram_core.c as this does basically the
-same thing as pstore. And it looks like pstore should be updated too.
+Yeah, so in that case turning those into "struct page *" is
+horrendously wrong, because you've literally taken it away from the
+memory management.
 
-> 
-> Yes, the legacy versions of interfaces are all for IO memory, but we
-> do have things like vmap_page_range() which should JustWork(tm).
-> 
-> Yeah, you'll need to do something like
-> 
->         unsigned long vmap_start, vmap_end;
-> 
->         area = get_vm_area(size, VM_IOREMAP);
->         if (!area)
->                 return NULL;
-> 
->         vmap_start = (unsigned long) area->addr;
->         vmap_end = vmap_start + size;
-> 
->         ret = vmap_page_range(vmap_start, vmap_end,
->                 *start, prot_nx(PAGE_KERNEL));
-> 
->         if (ret < 0) {
->                 free_vm_area(area);
->                 return NULL;
->         }
-> 
-> and the above is *entirely* untested and maybe there's something wrong
-> there, but the concept should work, and when you don't do it a page at
-> a time, you not only don't need the kmalloc_array(), it should even do
-> things like be able to use large page mappings if the alignment and
-> size work out.
-> 
-> That said, the old code is *really* broken to begin with. I don't
-> understand why you want to vmap() a contiguous physical range. Either
-> it's real pages to begin with, and you can just use "page_address()"
-> to get a virtual address, it's *not* real pages, and doing
-> "pfn_to_page()" is actively wrong, because it creates a fake 'struct
-> page *' pointer that isn't valid.
-> 
-> Is this all just for some disgusting HIGHMEM use (in which case you
-> need the virtual mapping because of HIGHMEM)? Is there any reason to
-> support HIGHMEM in this area at all?
-> 
-> So I'm not sure why this code does all this horror in the first place.
-> Either it's all just confused code that just didn't know what it was
-> doing and just happened to work (very possible..) or there is
-> something odd going on.
+If it's not part of the kernel memory allocator, it does not
+necessarily have a "struct page *" associated with it. Using a pointer
+to 'struct page' and passing it off is just fundamentally more than a
+bug: it's seriously and deeply broken.
 
-[ Adding Mike Rapoport ]
+It's probably much more obviously broken if the physical addresses
+came from a PCI device, and this all just happens to work because it's
+actually real RAM and we ended up having a 'struct page []' for it for
+some random reason.
 
-This is due to what the "reserve_mem" kernel command line feature gives
-back. It reserves physical memory that is not part of the kernel memory
-allocator (it also works with memmap ie. memmap=12M$0x284500000, which also
-requires physical memory addresses that are not part of the memory
-allocator).
+But the generral rule is that if all you have physical RAM addresses,
+you can use them as phys_addr_t (or turn them into pfn's, which is
+just the page index of the physical address).
 
-It's up to the user to map it to virtual memory. The same is true for
-ramoops in pstore.
+I think that *completely* bogus code worked only entirely due to luck
+- the 'struct page *' was never actually dereferenced, and it got
+turned back into a pfn and then a page table entry by the vmap code
+using purely address arithmetic (page_to_phys() and page_to_pfn()).
 
--- Steve
+So it probably only ever used pointer calculations, although some of
+those actually can end up depending on dereferencing 'struct page' (to
+find the base zone of the page, to find the mapping).
+
+Add even with just pointer games, that should actually have triggered
+a warning in vmap_pages_pte_range() from this:
+
+                if (WARN_ON(!pfn_valid(page_to_pfn(page))))
+
+which I suspect means that we actually *do* end up having 'struct
+page' backing for those..
+
+Looking closer...
+
+I think what happened is that reserve_mem() actually does end up
+giving you pages that have the 'struct page' backing store even if
+they aren't mapped. Which makes the 'struct page' pointer stuff work,
+and those pages end up working as 'reserved pages'.
+
+And I suspect that happens exactly because we had users that mis-used
+these 'struct page *' things, so it might even be intentional.
+
+Or it might just be because that memory *has* been in the E280 memory
+map before it was reserved, and the 'strict page' arrays may have been
+sized for the original E280 information, not the "after stealing"
+information.
+
+I didn't go look into that early memory reservation code, but I would
+not be surprised if there have been fixups to work around bugs like
+this. I haven't had to look at it in ages, but maybe the bootmem code
+knows that bootmem allocations then might be given back to the VM and
+need to have those 'struct page' backing store things
+
+Or - and this is also entirely possible - maybe you were just very
+lucky indeed because the code to allocate the 'struct page' regions
+ends up intentionally over-allocating and rounding things up.
+
+Because of how the buddy allocator works, each 'struct page' array
+needs to be rounded up to the maximum page allocation, so I think we
+always allocate the page arrays of a memory zone up to at least
+PAGE_SIZE << NR_PAGE_ORDERS boundaries (so 8MB-aligned, I think). So
+there's fundamnetally some slop in there.
+
+Anyway, if you allocated them as physical addresses outside of the
+regular MM code, you should not use 'struct page' in *any* form.  You
+really can't just turn any random physical address into a page, unless
+it came from the page allocator.
+
+And yes, I'm not at all surprised that we'd have other mis-users of
+this. We have some very historical code that depends on reserved pages
+going back all the way to linux-0.01 I suspect, because things like
+the original VGA code knew that the physical addresses were in the
+BIOS hole region that was backed by 'struct page'.
+
+                Linus
