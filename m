@@ -1,126 +1,97 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72D803234;
-	Mon, 31 Mar 2025 14:05:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C667A3234;
+	Mon, 31 Mar 2025 14:08:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743429912; cv=none; b=lVfkgiADIAsHQps3I3TV05VEVexajTc6JGRf8EVNBwa+fjR4fe30KBGBII8/uUHyR83JkRAvPkfOp41ddNJMUr9wQZxHoxfOFIDbdtD3K3hc7NJT6DwuhhpViYTRaIZHc2op3b5OzWYNXhItCKud0KhTLjFqwzwix29AGIr5R/M=
+	t=1743430125; cv=none; b=QOAEgpHA5Fc4BxrXrPz8Eezx5jvhW3aQxhras0xYdHgwubP6ij6vZDzKywJ6OX1Z7X/hcYHBXcJZkFdzr7zIXfnyRNlyh2mROOPlVVnh5bXGU2Chjh4w8k9v0Ks2jpI47GfWLsyVCraUFl8hIBnHTVFvQJfJ2XtvLRONjYXrVbw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743429912; c=relaxed/simple;
-	bh=XfxUmWlDoXAenKpS0CquwXTLrNbsbqfRSmcog6/7CvM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=JuX+3oLLoM+ojieyNMiuWC11xGlZZgE1iI00PH0IZSw+aR1Zxa6x5F2mM25Gq8WxLGSBupsgN7olvNqmkxgDKbQ6psn9M4WsukMqpG1ltnog0mV7sGzIRQrykW/GJc4vB+HhpPqvVhjECtMoT49EAccrWmHrfrcqly1N25qfd70=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SdUZN1Dv; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SdUZN1Dv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 86171C4CEE3;
-	Mon, 31 Mar 2025 14:05:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743429911;
-	bh=XfxUmWlDoXAenKpS0CquwXTLrNbsbqfRSmcog6/7CvM=;
-	h=From:To:Cc:Subject:Date:From;
-	b=SdUZN1DvHmeu+pbYLuf62LFELRotRIeDATP+c1zVR6LjGmc7wZ0oE1PWjdPmfdRgv
-	 VEg/gaPZ6208sL+BVhSTFnntkt2y3+Fwk2k8gea//xcgo+S0xfNnNxdv4cS+5aohJ7
-	 Nk+qqnwQjOb9U/XWbdzfH9Ul0/i3f5IbE7UmZvCV7dEEmqHcAPKGN3e6HKWGWGYGGv
-	 nUCM8I19YNmOmvs8WwmhpDIIRkI0htLhjJIDEtt5MWq6miQDDFQFWDPgbYSH64YLle
-	 zH4vGmu2RSwD+Kn+DLEZVpXKIFeO0P/1TuMP7QM6FaITKgnvNcGO2RmZqlsk7N3AIC
-	 R9uJTUk/QoIMA==
-From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH] tracing: fprobe events: Fix possible UAF on modules
-Date: Mon, 31 Mar 2025 23:05:07 +0900
-Message-ID: <174342990779.781946.9138388479067729366.stgit@devnote2>
-X-Mailer: git-send-email 2.43.0
-User-Agent: StGit/0.19
+	s=arc-20240116; t=1743430125; c=relaxed/simple;
+	bh=PToFCzKfDCXNFnIrJqTIZCDzDC0JavZmtnFBn7bZiJ4=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=VjPPcnJm+7UDN9brkiM74vzMJbLri3j09yggDBGBY8iUVnayyZZS4Bc2ZzW3dCEFAYiVgdNs6naZ1DHHocQuyA7ExtTSMHVzbQlNL+JUDBBYtwskyfsGjQh2Y4KWFfSERBcqaOCG8clT38GS+/mkY0ywLltlGbM7E00S8pZhHnw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 06E1BC4CEE3;
+	Mon, 31 Mar 2025 14:08:42 +0000 (UTC)
+Date: Mon, 31 Mar 2025 10:09:40 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Shung-Hsi Yu <shung-hsi.yu@suse.com>
+Cc: "Naveen N. Rao" <naveen@kernel.org>, Hari Bathini
+ <hbathini@linux.ibm.com>, bpf@vger.kernel.org, Michael Ellerman
+ <mpe@ellerman.id.au>, Mark Rutland <mark.rutland@arm.com>, Daniel Borkmann
+ <daniel@iogearbox.net>, Masahiro Yamada <masahiroy@kernel.org>, Nicholas
+ Piggin <npiggin@gmail.com>, Alexei Starovoitov <ast@kernel.org>, Masami
+ Hiramatsu <mhiramat@kernel.org>, Andrii Nakryiko <andrii@kernel.org>,
+ Christophe Leroy <christophe.leroy@csgroup.eu>, Vishal Chourasia
+ <vishalc@linux.ibm.com>, Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+ Miroslav Benes <mbenes@suse.cz>, Michal =?UTF-8?B?U3VjaMOhbmVr?=
+ <msuchanek@suse.de>, linux-kernel@vger.kernel.org,
+ linuxppc-dev@lists.ozlabs.org, linux-trace-kernel@vger.kernel.org,
+ live-patching@vger.kernel.org
+Subject: Re: [BUG?] ppc64le: fentry BPF not triggered after live patch
+ (v6.14)
+Message-ID: <20250331100940.3dc5e23a@gandalf.local.home>
+In-Reply-To: <rwmwrvvtg3pd7qrnt3of6dideioohwhsplancoc2gdrjran7bg@j5tqng6loymr>
+References: <rwmwrvvtg3pd7qrnt3of6dideioohwhsplancoc2gdrjran7bg@j5tqng6loymr>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+On Mon, 31 Mar 2025 21:19:36 +0800
+Shung-Hsi Yu <shung-hsi.yu@suse.com> wrote:
 
-Commit ac91052f0ae5 ("tracing: tprobe-events: Fix leakage of module
-refcount") moved try_module_get() from __find_tracepoint_module_cb()
-to find_tracepoint() caller, but that introduced a possible UAF
-because the module can be unloaded before try_module_get(). In this
-case, the module object should be freed too. Thus, try_module_get()
-does not only fail but may access to the freed object.
+> Hi all,
+> 
+> On ppc64le (v6.14, kernel config attached), I've observed that fentry
+> BPF programs stop being invoked after the target kernel function is live
+> patched. This occurs regardless of whether the BPF program was attached
+> before or after the live patch. I believe fentry/fprobe on ppc64le is
+> added with [1].
+> 
+> Steps to reproduce on ppc64le:
+> - Use bpftrace (v0.10.0+) to attach a BPF program to cmdline_proc_show
+>   with fentry (kfunc is the older name bpftrace used for fentry, used
+>   here for max compatability)
+> 
+>     bpftrace -e 'kfunc:cmdline_proc_show { printf("%lld: cmdline_proc_show() called by %s\n", nsecs(), comm) }'
+> 
+> - Run `cat /proc/cmdline` and observe bpftrace output
+> 
+> - Load samples/livepatch/livepatch-sample.ko
+> 
+> - Run `cat /proc/cmdline` again. Observe "this has been live patched" in
+>   output, but no new bpftrace output.
+> 
+> Note: once the live patching module is disabled through the sysfs interface
+> the BPF program invocation is restored.
+> 
+> Is this the expected interaction between fentry BPF and live patching?
+> On x86_64 it does _not_ happen, so I'd guess the behavior on ppc64le is
+> unintended. Any insights appreciated.
 
-To avoid that, try_module_get() in __find_tracepoint_module_cb()
-again.
+Hmm, I'm not sure how well BPF function attachment and live patching
+interact. Can you see if on x86 the live patch is actually updated when a
+BPF program is attached?
 
-Fixes: ac91052f0ae5 ("tracing: tprobe-events: Fix leakage of module refcount")
-Cc: stable@vger.kernel.org
-Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
----
- kernel/trace/trace_fprobe.c |   26 +++++++++++++++++---------
- 1 file changed, 17 insertions(+), 9 deletions(-)
+Would be even more interesting to see how BPF reading the return code works
+with live patching, as it calls the function directly from the BPF
+trampoline. I wonder, does it call the live patched function, or does it
+call the original one?
 
-diff --git a/kernel/trace/trace_fprobe.c b/kernel/trace/trace_fprobe.c
-index 985ff98272da..2cd9ff1049f1 100644
---- a/kernel/trace/trace_fprobe.c
-+++ b/kernel/trace/trace_fprobe.c
-@@ -919,9 +919,15 @@ static void __find_tracepoint_module_cb(struct tracepoint *tp, struct module *mo
- 	struct __find_tracepoint_cb_data *data = priv;
- 
- 	if (!data->tpoint && !strcmp(data->tp_name, tp->name)) {
--		data->tpoint = tp;
--		if (!data->mod)
-+		/* If module is not specified, try getting module refcount. */
-+		if (!data->mod && mod) {
-+			/* If failed to get refcount, ignore this tracepoint. */
-+			if (!try_module_get(mod))
-+				return;
-+
- 			data->mod = mod;
-+		}
-+		data->tpoint = tp;
- 	}
- }
- 
-@@ -933,7 +939,11 @@ static void __find_tracepoint_cb(struct tracepoint *tp, void *priv)
- 		data->tpoint = tp;
- }
- 
--/* Find a tracepoint from kernel and module. */
-+/*
-+ * Find a tracepoint from kernel and module. If the tracepoint is on the module,
-+ * the module's refcount is incremented and returned as *@tp_mod. Thus, if it is
-+ * not NULL, caller must call module_put(*tp_mod) after used the tracepoint.
-+ */
- static struct tracepoint *find_tracepoint(const char *tp_name,
- 					  struct module **tp_mod)
- {
-@@ -962,7 +972,10 @@ static void reenable_trace_fprobe(struct trace_fprobe *tf)
- 	}
- }
- 
--/* Find a tracepoint from specified module. */
-+/*
-+ * Find a tracepoint from specified module. In this case, this does not get the
-+ * module's refcount. The caller must ensure the module is not freed.
-+ */
- static struct tracepoint *find_tracepoint_in_module(struct module *mod,
- 						    const char *tp_name)
- {
-@@ -1169,11 +1182,6 @@ static int trace_fprobe_create_internal(int argc, const char *argv[],
- 	if (is_tracepoint) {
- 		ctx->flags |= TPARG_FL_TPOINT;
- 		tpoint = find_tracepoint(symbol, &tp_mod);
--		/* lock module until register this tprobe. */
--		if (tp_mod && !try_module_get(tp_mod)) {
--			tpoint = NULL;
--			tp_mod = NULL;
--		}
- 		if (tpoint) {
- 			ctx->funcname = kallsyms_lookup(
- 				(unsigned long)tpoint->probestub,
+-- Steve
+
+
+> 
+> 
+> Thanks,
+> Shung-Hsi Yu
+> 
+> 1: https://lore.kernel.org/all/20241030070850.1361304-2-hbathini@linux.ibm.com/
 
