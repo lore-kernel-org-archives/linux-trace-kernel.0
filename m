@@ -1,33 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A9AC20F076;
-	Tue,  1 Apr 2025 21:33:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AD342153FB;
+	Tue,  1 Apr 2025 21:40:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743543197; cv=none; b=jWhphUAxR68oja+rswE7Q3Fa/Ym+a1RzRrtnvNfA5efIvSAKOkARcsf6KQ9d3jWo/GWeJ3KRdqJYAB9+FnAjc+pZBcNg8dNZDztZZKrTTxi2l2muEz4OkCZXw4BXJjZ35eCgCHERuCzc9sfBWLo2PKs+AjVENfwTh6hQRs+sELU=
+	t=1743543657; cv=none; b=Hrkpm3Di1ETr4xj02PpnGy4/GqxFXZb63AtBglha7P+3XPnkXF7UGYD8UYNiPe5zKZNj+SbeTEP6v3ksU4KMij1ZKh2Q6YWbd5BAdWyQMvy8LlktqcD4j+w9NDAzXvYuiThRIdivU0id4eTHvI4cjEhJiVmgBiiM0MH0zJg+BzI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743543197; c=relaxed/simple;
-	bh=kTSm0TvgXhQ2yyhmVqFkKcV9aTRY7zcrGSvLR1DWT8s=;
+	s=arc-20240116; t=1743543657; c=relaxed/simple;
+	bh=Wo2t4WURzFdT8+579o/Bqb3j0d3axCM41klZm2o6hQw=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=DwbCcKRU42UUhn7wuI1UwfjEgm9zu2hLNbJTnUVRJcxkVBHAm1c18QoRLM/wZf+KisDK8GX/HW312+DKhretP6U80pVcwdfbt7Be+AQ6GucJnto3avCYNuBzufUukA0l4a8WAavIeeXcYONd5Iuzy3KiCSYAMab772AXECh2lxU=
+	 MIME-Version:Content-Type; b=b3pYxjyUbBGtWDy/1mqxGLRrxG0l+TusBRWVZgqke7sN1rKA+0AFu0iPxDhA2UOV6l/jM9BwJAPq0mxydtJ0r/OnkZtEQiiOSlZtC0mu/XfzK8Sj9jbDTFWcGtNeNMmNVMv+1H3MrIV9tc1Uukwl1o8xbcev+c73j3GEiuYRdQc=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 858EFC4CEE4;
-	Tue,  1 Apr 2025 21:33:15 +0000 (UTC)
-Date: Tue, 1 Apr 2025 17:34:16 -0400
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E50F0C4CEE8;
+	Tue,  1 Apr 2025 21:40:54 +0000 (UTC)
+Date: Tue, 1 Apr 2025 17:41:55 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
-To: Andrii Nakryiko <andrii@kernel.org>
-Cc: linux-trace-kernel@vger.kernel.org, peterz@infradead.org,
- mingo@kernel.org, bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
- kernel-team@meta.com, mhocko@kernel.org, oleg@redhat.com,
- brauner@kernel.org, glider@google.com, mhiramat@kernel.org,
- mathieu.desnoyers@efficios.com, akpm@linux-foundation.org
-Subject: Re: [PATCH] exit: add trace_task_exit() tracepoint before
- current->mm is reset
-Message-ID: <20250401173416.45a164c8@gandalf.local.home>
-In-Reply-To: <20250401173249.42d43a28@gandalf.local.home>
-References: <20250401184021.2591443-1-andrii@kernel.org>
-	<20250401173249.42d43a28@gandalf.local.home>
+To: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mathieu
+ Desnoyers <mathieu.desnoyers@efficios.com>, Andrew Morton
+ <akpm@linux-foundation.org>, Vincent Donnefort <vdonnefort@google.com>,
+ Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>, Jann
+ Horn <jannh@google.com>
+Subject: Re: [PATCH v3 3/5] tracing: Use vmap_page_range() to map memmap
+ ring buffer
+Message-ID: <20250401174156.4e9d3b23@gandalf.local.home>
+In-Reply-To: <20250401203331.901028151@goodmis.org>
+References: <20250401202549.409271454@goodmis.org>
+	<20250401203331.901028151@goodmis.org>
 X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -38,25 +39,22 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Tue, 1 Apr 2025 17:32:49 -0400
+On Tue, 01 Apr 2025 16:25:52 -0400
 Steven Rostedt <rostedt@goodmis.org> wrote:
 
-> static void exit_mm(void)
-> {
-> 	struct mm_struct *mm = current->mm;
-> 
-> 	exit_mm_release(current, mm);
-> 	trace_exit_mm(mm);
-> 
-> ??
+> -static u64 map_pages(u64 start, u64 size)
+> +static u64 map_pages(unsigned long start, unsigned long size)
+>  {
+> -	struct page **pages;
+> -	phys_addr_t page_start;
+> -	unsigned int page_count;
+> -	unsigned int i;
+> -	void *vaddr;
+> +        unsigned long vmap_start, vmap_end;
 
-That should have been:
+Bah, looks like I have whitespace issues. Will send an update to fix this
+and the change log for patch 4.
 
-static void exit_mm(void)
-{
-	struct mm_struct *mm = current->mm;
-
-	trace_exit_mm(mm);
-	exit_mm_release(current, mm);
-
--- Steve
+> +	struct vm_struct *area;
+> +	int ret;
+>  
