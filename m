@@ -1,26 +1,26 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BC661EE7DC;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BBBC1DF258;
 	Tue,  1 Apr 2025 21:52:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743544352; cv=none; b=PreJkT1qbe6wLIrZUS+FQJlWL7HQxJJ0MqKHfJq1ahjhblAU3JMFKVEAuNZO9tWK+iIgN9agOM5AH3SSEvr+p8zWcuRO0d6nHkiG0C3ckSFW2sI5w9FJc+JRxtjrKjUNVzNRL6jKx++9zI3nUFuaxt59Nst+qncLbvsola0xmHY=
+	t=1743544352; cv=none; b=mJrpDcff5eMJGga2Vf5vadu7dyuU9aMS2GjAJk5j9u6wSC+kfMjxqIMpuaQ91OwCwJH9ujbty9GYbJA4rzyds79FKCMNCnKceciq2O6vgsUleehOl0QyX9goHxCoobAcv/oDj6WPX7t307N3WT1RMoyIJZzgFWKDG1g+vx61cRM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1743544352; c=relaxed/simple;
-	bh=6yjoeCeodFKoXwavmmiW4zwQKrdFiBoqWO5IBqPSnkM=;
+	bh=Iyp390rbcCwAnXTaQmy8r08tCmhbu0jByvK7exZghUU=;
 	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=rk52P0RfotXZbZocXuwuAjtAy1kGdQ0E6eg1WPE6R3xWelPiy+tgwfLA80jAw1ZGIld38pV+JUuM/g/EjW3PtN05VQeFQ3pzn7He1+N2/fill6AtWifS/MALSotcnaq+Gu5KL7L1t8h4d309QtsERNQFRjwMMUKnuW4SZaGgcQk=
+	 Content-Type; b=ajtUZlW+TzxE9iMuHPBrBI1J1AAep7ZYLL0SMFAz8AOmZojZ18X/EvbthMnA2qoJHhqwTTDPbN7TGvakxMEoFuytlmj0AUxg7zs/Qxl/tRzQVlZNxj7TSt0VTa0nDeyb/mPiOMCrZI4Sgx0wwhT8rCPhsmqwUOLMR1sWAfYyjMo=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 98D6AC4CEE8;
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B2349C4CEED;
 	Tue,  1 Apr 2025 21:52:31 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.98)
 	(envelope-from <rostedt@goodmis.org>)
-	id 1tzjY5-00000006JuO-1hky;
+	id 1tzjY5-00000006Jus-2R6j;
 	Tue, 01 Apr 2025 17:53:33 -0400
-Message-ID: <20250401215333.257648667@goodmis.org>
+Message-ID: <20250401215333.427506494@goodmis.org>
 User-Agent: quilt/0.68
-Date: Tue, 01 Apr 2025 17:51:16 -0400
+Date: Tue, 01 Apr 2025 17:51:17 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org,
  linux-trace-kernel@vger.kernel.org
@@ -33,7 +33,8 @@ Cc: Linus Torvalds <torvalds@linux-foundation.org>,
  Vlastimil Babka <vbabka@suse.cz>,
  Mike Rapoport <rppt@kernel.org>,
  Jann Horn <jannh@google.com>
-Subject: [PATCH v4 1/4] tracing: Enforce the persistent ring buffer to be page aligned
+Subject: [PATCH v4 2/4] tracing: Have reserve_mem use phys_to_virt() and separate from memmap
+ buffer
 References: <20250401215115.602501043@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -45,69 +46,123 @@ Content-Type: text/plain; charset=UTF-8
 
 From: Steven Rostedt <rostedt@goodmis.org>
 
-Enforce that the address and the size of the memory used by the persistent
-ring buffer is page aligned. Also update the documentation to reflect this
-requirement.
+The reserve_mem kernel command line option may pass back a physical
+address, but the memory is still part of the normal memory just like
+using memblock_reserve() would be. This means that the physical memory
+returned by the reserve_mem command line option can be converted directly
+to virtual memory by simply using phys_to_virt().
 
-Link: https://lore.kernel.org/all/CAHk-=whUOfVucfJRt7E0AH+GV41ELmS4wJqxHDnui6Giddfkzw@mail.gmail.com/
+When freeing the buffer allocated by reserve_mem, use free_reserved_area().
 
-Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
+Because the persistent ring buffer can also be allocated via the memmap
+option, which *is* different than normal memory as it cannot be added back
+to the buddy system, it must be treated differently. It still needs to be
+virtually mapped to have access to it. It also can not be freed nor can it
+ever be memory mapped to user space.
+
+Create a new trace_array flag called TRACE_ARRAY_FL_MEMMAP which gets set
+if the buffer is created by the memmap option, and this will prevent the
+buffer from being memory mapped by user space.
+
+Also increment the ref count for memmap'ed buffers so that they can never
+be freed.
+
+Link: https://lore.kernel.org/all/Z-wFszhJ_9o4dc8O@kernel.org/
+
+Suggested-by: Mike Rapoport <rppt@kernel.org>
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- Documentation/admin-guide/kernel-parameters.txt |  2 ++
- Documentation/trace/debugging.rst               |  2 ++
- kernel/trace/trace.c                            | 12 ++++++++++++
- 3 files changed, 16 insertions(+)
+ kernel/trace/trace.c | 28 ++++++++++++++++++++++------
+ kernel/trace/trace.h |  1 +
+ 2 files changed, 23 insertions(+), 6 deletions(-)
 
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index 3435a062a208..f904fd8481bd 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -7266,6 +7266,8 @@
- 			This is just one of many ways that can clear memory. Make sure your system
- 			keeps the content of memory across reboots before relying on this option.
- 
-+			NB: Both the mapped address and size must be page aligned for the architecture.
-+
- 			See also Documentation/trace/debugging.rst
- 
- 
-diff --git a/Documentation/trace/debugging.rst b/Documentation/trace/debugging.rst
-index 54fb16239d70..d54bc500af80 100644
---- a/Documentation/trace/debugging.rst
-+++ b/Documentation/trace/debugging.rst
-@@ -136,6 +136,8 @@ kernel, so only the same kernel is guaranteed to work if the mapping is
- preserved. Switching to a different kernel version may find a different
- layout and mark the buffer as invalid.
- 
-+NB: Both the mapped address and size must be page aligned for the architecture.
-+
- Using trace_printk() in the boot instance
- -----------------------------------------
- By default, the content of trace_printk() goes into the top level tracing
 diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index de6d7f0e6206..de9c237e5826 100644
+index de9c237e5826..d960f80701bd 100644
 --- a/kernel/trace/trace.c
 +++ b/kernel/trace/trace.c
-@@ -10788,6 +10788,18 @@ __init static void enable_instances(void)
- 		}
+@@ -8505,6 +8505,10 @@ static int tracing_buffers_mmap(struct file *filp, struct vm_area_struct *vma)
+ 	struct trace_iterator *iter = &info->iter;
+ 	int ret = 0;
  
- 		if (start) {
-+			/* Start and size must be page aligned */
-+			if (start & ~PAGE_MASK) {
-+				pr_warn("Tracing: mapping start addr %lx is not page aligned\n",
-+					(unsigned long)start);
-+				continue;
-+			}
-+			if (size & ~PAGE_MASK) {
-+				pr_warn("Tracing: mapping size %lx is not page aligned\n",
-+					(unsigned long)size);
-+				continue;
-+			}
++	/* A memmap'ed buffer is not supported for user space mmap */
++	if (iter->tr->flags & TRACE_ARRAY_FL_MEMMAP)
++		return -ENODEV;
 +
- 			addr = map_pages(start, size);
+ 	/* Currently the boot mapped buffer is not supported for mmap */
+ 	if (iter->tr->flags & TRACE_ARRAY_FL_BOOT)
+ 		return -ENODEV;
+@@ -9615,8 +9619,12 @@ static void free_trace_buffers(struct trace_array *tr)
+ 	free_trace_buffer(&tr->max_buffer);
+ #endif
+ 
+-	if (tr->range_addr_start)
+-		vunmap((void *)tr->range_addr_start);
++	if (tr->range_addr_start) {
++		void *start = (void *)tr->range_addr_start;
++		void *end = start + tr->range_addr_size;
++
++		free_reserved_area(start, end, 0, tr->range_name);
++	}
+ }
+ 
+ static void init_trace_flags_index(struct trace_array *tr)
+@@ -10710,6 +10718,7 @@ static inline void do_allocate_snapshot(const char *name) { }
+ __init static void enable_instances(void)
+ {
+ 	struct trace_array *tr;
++	bool memmap_area = false;
+ 	char *curr_str;
+ 	char *name;
+ 	char *str;
+@@ -10778,6 +10787,7 @@ __init static void enable_instances(void)
+ 					name);
+ 				continue;
+ 			}
++			memmap_area = true;
+ 		} else if (tok) {
+ 			if (!reserve_mem_find_by_name(tok, &start, &size)) {
+ 				start = 0;
+@@ -10800,7 +10810,10 @@ __init static void enable_instances(void)
+ 				continue;
+ 			}
+ 
+-			addr = map_pages(start, size);
++			if (memmap_area)
++				addr = map_pages(start, size);
++			else
++				addr = (unsigned long)phys_to_virt(start);
  			if (addr) {
  				pr_info("Tracing: mapped boot instance %s at physical memory %pa of size 0x%lx\n",
+ 					name, &start, (unsigned long)size);
+@@ -10827,10 +10840,13 @@ __init static void enable_instances(void)
+ 			update_printk_trace(tr);
+ 
+ 		/*
+-		 * If start is set, then this is a mapped buffer, and
+-		 * cannot be deleted by user space, so keep the reference
+-		 * to it.
++		 * memmap'd buffers can not be freed.
+ 		 */
++		if (memmap_area) {
++			tr->flags |= TRACE_ARRAY_FL_MEMMAP;
++			tr->ref++;
++		}
++
+ 		if (start) {
+ 			tr->flags |= TRACE_ARRAY_FL_BOOT | TRACE_ARRAY_FL_LAST_BOOT;
+ 			tr->range_name = no_free_ptr(rname);
+diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
+index c20f6bcc200a..f9513dc14c37 100644
+--- a/kernel/trace/trace.h
++++ b/kernel/trace/trace.h
+@@ -447,6 +447,7 @@ enum {
+ 	TRACE_ARRAY_FL_BOOT		= BIT(1),
+ 	TRACE_ARRAY_FL_LAST_BOOT	= BIT(2),
+ 	TRACE_ARRAY_FL_MOD_INIT		= BIT(3),
++	TRACE_ARRAY_FL_MEMMAP		= BIT(4),
+ };
+ 
+ #ifdef CONFIG_MODULES
 -- 
 2.47.2
 
