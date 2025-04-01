@@ -1,90 +1,145 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BA7D79FE;
-	Tue,  1 Apr 2025 17:58:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 106BB1DB54C;
+	Tue,  1 Apr 2025 18:40:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743530332; cv=none; b=YSmYef53D8x/M9ehAr+02cmbfUHAj4ZOSFMfxB2/GQwRn558j79DOgM8rnOZOXpXWd9qXxKE0JOPplXgAx8beoRTuXGXRsMtOM56rLEdmeul88KZgvEuW+TxriDuwu6YPrsAePSYShO94T0qUAupOm5NnvkZ51NHFzkHNeaCvfM=
+	t=1743532824; cv=none; b=BHlo9DKNTnb0UEakeE+NNB59cmE4IiT+Nb/jG0cwXntuvfJKNEiJmErYG5WwPRrX3wLmxhs5eGLPs4QbFHW0HXCtZq70o0xe5LnAMVn61itbfifQIpmgP2uTyku8fLcSDstAgndcYWiBR8kRctFv5ou+qcEvpngq6ftt7+6/jZk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743530332; c=relaxed/simple;
-	bh=wiGocuCPvltfWWje9XoaBmB3Bty+R3cKGynKNs7ru6w=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RGy60X+37DNounJG7mG6nJwXw0Xz5egudQ8pLbCmOIXsnmJO8GK7/tNRId5USuZ9Ck+Es8oxi2I+oJwLF3IGfYIDV72HqokSxhaXAXe5AjSjPYP5MWwDRgIR7UIvaX6XpsYfSV7l7R9m6ZetArYYy8nxlNEBDOiOkBoEqbeUT4U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OOtMo4dh; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743532824; c=relaxed/simple;
+	bh=gZ1+RQEab4vrqAsPEapyigxdzJWkp5QH7zI+l/5q5S8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=gkbDozG8p1Q4YUNueocLulnxXzb7nV9swjcLp6GjBME5z4R5Xowe4bCU/9e/vWk1oJUf7eGUjd/xGN4wNWWeUf8/jSnbQviAvKoPIX8qQb1yjc0yo4lm5BoOrci6bsXoxRf4KgtfyrnwUvzHAiV1ILZfCJ2hrBpXrsJRZFNYt5o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H/A7c/Us; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OOtMo4dh"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0B847C4CEE4;
-	Tue,  1 Apr 2025 17:58:46 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H/A7c/Us"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 55326C4CEE4;
+	Tue,  1 Apr 2025 18:40:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743530331;
-	bh=wiGocuCPvltfWWje9XoaBmB3Bty+R3cKGynKNs7ru6w=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=OOtMo4dhzFu0UvTT47V/tlPt5W8cfdYm5/embeWyUCu1HaA6a2kSi5ThOvHBljjRm
-	 bkBw+2mIDvULCHj/BwF58PBcs4dT3WyJCVMYpbn0u1k9wkYyZoHtLUzEMmFzJrWeaR
-	 qJQAEYLw1tl5Y536VjSqvyLC2TfGXUusJDXZtFE+JhD0YlIfLTSS07po2r8xib9i5h
-	 rDUhOUqIV04EmDSOM75nnnT/KPY7Y2vjU72lDmhL73doeH6H/qqBziRRK4OCHMf9Z4
-	 KuG6COmbw9YZb715l0YWi9HJMY+I44yVf9UhuJPLERuadLEjk/05QKRxBPAr6MGZOo
-	 5TDsSfyFGoBEQ==
-Date: Tue, 1 Apr 2025 20:58:43 +0300
-From: Mike Rapoport <rppt@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>,
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Vincent Donnefort <vdonnefort@google.com>,
-	Vlastimil Babka <vbabka@suse.cz>, Kees Cook <kees@kernel.org>,
-	Tony Luck <tony.luck@intel.com>,
-	"Guilherme G. Piccoli" <gpiccoli@igalia.com>,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] tracing: ring-buffer: Have the ring buffer code
- do the vmap of physical memory
-Message-ID: <Z-wpU6649BjlHZFU@kernel.org>
-References: <20250331143532.459810712@goodmis.org>
- <CAHk-=whUOfVucfJRt7E0AH+GV41ELmS4wJqxHDnui6Giddfkzw@mail.gmail.com>
- <20250331133906.48e115f5@gandalf.local.home>
- <CAHk-=wi5pLoe3szxLREQGGJuWU0w_POK9Sv6717UH3b7OvvfjQ@mail.gmail.com>
- <20250331165801.715aba48@gandalf.local.home>
- <CAHk-=whRNxdkLC6Z91g-_RbrRsUo6K6+nvRWqccjsOycwUe_JQ@mail.gmail.com>
- <Z-u4Tzz9J8hSk6G7@kernel.org>
- <20250401111159.7632a0fa@gandalf.local.home>
- <Z-wFszhJ_9o4dc8O@kernel.org>
- <20250401115423.3b6a926d@gandalf.local.home>
+	s=k20201202; t=1743532823;
+	bh=gZ1+RQEab4vrqAsPEapyigxdzJWkp5QH7zI+l/5q5S8=;
+	h=From:To:Cc:Subject:Date:From;
+	b=H/A7c/Us1yDKaHJbJdN82uz2RHgMprCU/s4YHpO5ufSKanu/6hFsnuyNYWYumO9VC
+	 6d8ZOWbS+ZV6ExDokfT1CSiL+oouUlD3Ih6WnBInvQFf4i0klcFVbMHmmKKFnchqpO
+	 Ivkd2n8xE5m/xuMr/huKooP7QWSRcaWFf7ClVLQ+mw+/rRKWmH5Nu7bQ1QouHzJL6S
+	 PsblQWvweMrcGunD6gr0t4nVsOtxQyXw7SA5cvS7PmipxBS9BCbE6EmUDpydJBUm8/
+	 dV8V2n03nANAVaUTkvzgciaBDPwiy3Orj07igWay44Yuzt/Nr7Lp3nhyjnkSbsOo3e
+	 1UGxUYRl0mbKg==
+From: Andrii Nakryiko <andrii@kernel.org>
+To: linux-trace-kernel@vger.kernel.org,
+	peterz@infradead.org,
+	mingo@kernel.org
+Cc: bpf@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	kernel-team@meta.com,
+	mhocko@kernel.org,
+	rostedt@goodmis.org,
+	oleg@redhat.com,
+	brauner@kernel.org,
+	glider@google.com,
+	mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com,
+	akpm@linux-foundation.org,
+	Andrii Nakryiko <andrii@kernel.org>
+Subject: [PATCH] exit: add trace_task_exit() tracepoint before current->mm is reset
+Date: Tue,  1 Apr 2025 11:40:21 -0700
+Message-ID: <20250401184021.2591443-1-andrii@kernel.org>
+X-Mailer: git-send-email 2.47.1
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250401115423.3b6a926d@gandalf.local.home>
+Content-Transfer-Encoding: 8bit
 
-On Tue, Apr 01, 2025 at 11:54:23AM -0400, Steven Rostedt wrote:
-> On Tue, 1 Apr 2025 18:26:43 +0300
-> Mike Rapoport <rppt@kernel.org> wrote:
-> 
-> > > But if I use vmap_page_range(), how do I give that back to the memory allocator?  
-> > 
-> > But you don't need neither vmap() nor vmap_page_range() to have kernel page
-> > tables for memory that you get from reserve_mem. It's already mapped and
-> > plain phys_to_virt() gives you the virtual address you can use.
-> 
-> Oh! That makes things so much easier! Especially since that means it should
-> work like the normal buffer where virt_to_page() should also work. Right?
+It is useful to be able to access current->mm to, say, record a bunch of
+VMA information right before the task exits (e.g., for stack
+symbolization reasons when dealing with short-lived processes that exit
+in the middle of profiling session). We currently do have
+trace_sched_process_exit() in the exit path, but it is called a bit too
+late, after exit_mm() resets current->mm to NULL, which makes it
+unsuitable for inspecting and recording task's mm_struct-related data
+when tracing process lifetimes.
 
-Right.
+There is a particularly suitable place, though, right after
+taskstats_exit() is called, but before we do exit_mm(). taskstats
+performs a similar kind of accounting that some applications do with
+BPF, and so co-locating them seems like a good fit.
+
+Moving trace_sched_process_exit() a bit earlier would solve this problem
+as well, and I'm open to that. But this might potentially change its
+semantics a little, and so instead of risking that, I went for adding
+a new trace_task_exit() tracepoint instead. Tracepoints have zero
+overhead at runtime, unless actively traced, so this seems acceptable.
+
+Also, existing trace_sched_process_exit() tracepoint is notoriously
+missing `group_dead` flag that is certainly useful in practice and some
+of our production applications have to work around this. So plumb
+`group_dead` through while at it, to have a richer and more complete
+tracepoint.
+
+Signed-off-by: Andrii Nakryiko <andrii@kernel.org>
+---
+ include/trace/events/task.h | 24 ++++++++++++++++++++++++
+ kernel/exit.c               |  2 ++
+ 2 files changed, 26 insertions(+)
+
+diff --git a/include/trace/events/task.h b/include/trace/events/task.h
+index af535b053033..98f4ec060073 100644
+--- a/include/trace/events/task.h
++++ b/include/trace/events/task.h
+@@ -53,6 +53,30 @@ TRACE_EVENT(task_rename,
+ 		  __entry->oldcomm, __entry->newcomm, __entry->oom_score_adj)
+ );
  
-> Now I do support mapping the persistent ring buffer via memmap, but I can
-> just give up on allowing that to be memory mapped to user space, or even
-> freed.
-
-It can't be freed without jumping through some hoops, and mapping it to
-user space is hassle as well. 
-  
++TRACE_EVENT(task_exit,
++
++	TP_PROTO(struct task_struct *task, bool group_dead),
++
++	TP_ARGS(task, group_dead),
++
++	TP_STRUCT__entry(
++		__field(	pid_t,	pid)
++		__array(	char,	comm, TASK_COMM_LEN)
++		__field(	bool,	group_dead)
++	),
++
++	TP_fast_assign(
++		__entry->pid = task->pid;
++		memcpy(__entry->comm, task->comm, TASK_COMM_LEN);
++		__entry->group_dead = group_dead;
++	),
++
++	TP_printk("pid=%d comm=%s group_dead=%s",
++		__entry->pid, __entry->comm,
++		__entry->group_dead ? "true" : "false"
++	)
++);
++
+ /**
+  * task_prctl_unknown - called on unknown prctl() option
+  * @option:	option passed
+diff --git a/kernel/exit.c b/kernel/exit.c
+index c2e6c7b7779f..8496fc07f9c8 100644
+--- a/kernel/exit.c
++++ b/kernel/exit.c
+@@ -54,6 +54,7 @@
+ #include <linux/init_task.h>
+ #include <linux/perf_event.h>
+ #include <trace/events/sched.h>
++#include <trace/events/task.h>
+ #include <linux/hw_breakpoint.h>
+ #include <linux/oom.h>
+ #include <linux/writeback.h>
+@@ -937,6 +938,7 @@ void __noreturn do_exit(long code)
+ 
+ 	tsk->exit_code = code;
+ 	taskstats_exit(tsk, group_dead);
++	trace_task_exit(tsk, group_dead);
+ 
+ 	exit_mm();
+ 
 -- 
-Sincerely yours,
-Mike.
+2.47.1
+
