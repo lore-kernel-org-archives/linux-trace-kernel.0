@@ -1,35 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2015820AF6D;
-	Tue,  1 Apr 2025 22:12:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C29D1EB196;
+	Tue,  1 Apr 2025 22:15:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743545536; cv=none; b=daKdAfSESfkI1ORBGnO1SaXmXzHNlEnmyfA+aWx1f/k0nmSWWibtWNyLdTe5feLdq/CvW+8JO57LnWDsJ2EsA06eb+IKLinMdOleNggiKJPuASv0VQocoy74k37LBjZlQaccuuBs6uIMYFEo+8agTv4o87SKYiXNn0LoOCt5Paw=
+	t=1743545741; cv=none; b=TwNx8hifKlFcBIUjxki7OsPF+3wfufE+Yqf2BH+tEo5+0apYxLeHdGTrgOTZF28+AvuJxgNZ6K55fmoFOVo+Gua//PKhn3poZFRG5v+padYhrKjJwGFIKxOBjSFMCHMT0bnuAXsYufdzZKCK72Sc69lbH2SATlAphGJvGIqbgJ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743545536; c=relaxed/simple;
-	bh=ueHFFVU8Pe2CZjt2gOmYKxtkwcIGkQ3hW9/7TQz/OQM=;
+	s=arc-20240116; t=1743545741; c=relaxed/simple;
+	bh=pOoI5K03fFatVj0NubhzsEhDG1rIDb3ydkPNk4fejUE=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=fodVucwBCLMK1FB/QTSs/K/sKXNLxXppwti7Bd8dmYROec6/g/o+SEYihxc+/RvjUOvhw20fGp0ao33GXkQ2rqEdZthBmIwOm7i59Jh4tlioX/vs0QMQaj1UfN2uJct3I2s0NNfKnaY0PX3Fy9sqbqwWzZRJ8rki29si3EovsGQ=
+	 MIME-Version:Content-Type; b=QBdJO+p6aQseDulIBpDyg/ooopENMExnBrmbDsl7ItGlV1svROsT4yJE7J/ed2epMt6ZtptON5XTHCTmwtyYnQYhzX71kM+8XFuC3vUv1087mp60dLGvte9ig/TO4YVLLXe5aHxw+hBIJad+gh3AaVtqW9CVIUncAPdWrSQcilI=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E69F2C4CEE4;
-	Tue,  1 Apr 2025 22:12:13 +0000 (UTC)
-Date: Tue, 1 Apr 2025 18:13:15 -0400
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ADCD9C4CEE4;
+	Tue,  1 Apr 2025 22:15:39 +0000 (UTC)
+Date: Tue, 1 Apr 2025 18:16:40 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
-To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc: Andrii Nakryiko <andrii@kernel.org>, linux-trace-kernel@vger.kernel.org,
- peterz@infradead.org, mingo@kernel.org, bpf@vger.kernel.org,
- linux-kernel@vger.kernel.org, kernel-team@meta.com, mhocko@kernel.org,
- oleg@redhat.com, brauner@kernel.org, glider@google.com,
- mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
- akpm@linux-foundation.org
-Subject: Re: [PATCH] exit: add trace_task_exit() tracepoint before
- current->mm is reset
-Message-ID: <20250401181315.524161b5@gandalf.local.home>
-In-Reply-To: <CAEf4BzYB1dvFF=7x-H3UDo4=qWjdhOO1Wqo9iFyz235u+xp9+g@mail.gmail.com>
-References: <20250401184021.2591443-1-andrii@kernel.org>
-	<20250401173249.42d43a28@gandalf.local.home>
-	<CAEf4BzYB1dvFF=7x-H3UDo4=qWjdhOO1Wqo9iFyz235u+xp9+g@mail.gmail.com>
+To: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Linus
+ Torvalds <torvalds@linux-foundation.org>, Mark Rutland
+ <mark.rutland@arm.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Andrew Morton <akpm@linux-foundation.org>, Vincent Donnefort
+ <vdonnefort@google.com>, Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport
+ <rppt@kernel.org>, Jann Horn <jannh@google.com>
+Subject: Re: [PATCH v4 2/4] tracing: Have reserve_mem use phys_to_virt() and
+ separate from memmap buffer
+Message-ID: <20250401181640.09bb0333@gandalf.local.home>
+In-Reply-To: <20250401215333.427506494@goodmis.org>
+References: <20250401215115.602501043@goodmis.org>
+	<20250401215333.427506494@goodmis.org>
 X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -40,17 +39,58 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Tue, 1 Apr 2025 15:04:11 -0700
-Andrii Nakryiko <andrii.nakryiko@gmail.com> wrote:
+On Tue, 01 Apr 2025 17:51:17 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-> How bad would it be to just move trace_sched_process_exit() then? (and
-> add group_dead there, as you mentioned)?
+> @@ -9615,8 +9619,12 @@ static void free_trace_buffers(struct trace_array *tr)
+>  	free_trace_buffer(&tr->max_buffer);
+>  #endif
+>  
+> -	if (tr->range_addr_start)
+> -		vunmap((void *)tr->range_addr_start);
+> +	if (tr->range_addr_start) {
+> +		void *start = (void *)tr->range_addr_start;
+> +		void *end = start + tr->range_addr_size;
+> +
+> +		free_reserved_area(start, end, 0, tr->range_name);
+> +	}
+>  }
+>  
+>  static void init_trace_flags_index(struct trace_array *tr)
 
-I personally don't have an issue with that. In fact, the one place I used
-the sched_process_exit tracepoint, I had to change to use
-sched_process_free because it does too much after that.
+Masami,
 
-OK, let's just move the sched_process_exit tracepoint. It's in an arbitrary
-location anyway.
+Note, your patch to free the persistent ring buffer wasn't fully
+functional, as it only did the "vunmap()". That doesn't return the buffer
+back to the buddy allocator. What you saw was just the freeing of all the
+other descriptors that make up a trace instance.
+
+Before this patch:
+
+  ~# free
+                 total        used        free      shared  buff/cache   available
+  Mem:         8185908      297404     7825896         916      162288     7888504
+  Swap:        7812092           0     7812092
+  ~# rmdir /sys/kernel/tracing/instances/boot_mapped
+  ~# free
+                 total        used        free      shared  buff/cache   available
+  Mem:         8206384      297956     7845904         916      162260     7908428
+  Swap:        7812092           0     7812092
+
+Amount freed: 7845904 - 7825896 = 20008 (20M)
+
+After this patch:
+
+  ~# free
+                 total        used        free      shared  buff/cache   available
+  Mem:         8185912      301808     7820696         920      162860     7884104
+  Swap:        7812092           0     7812092
+  ~# rmdir /sys/kernel/tracing/instances/boot_mapped
+  ~# free
+                 total        used        free      shared  buff/cache   available
+  Mem:         8226868      295968     7867644         920      162836     7930900
+  Swap:        7812092           0     7812092
+
+Amount freed: 7867644 - 7820696 = 46948 (46M)!
 
 -- Steve
