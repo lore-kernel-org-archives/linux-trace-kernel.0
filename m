@@ -1,26 +1,26 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAEC120E32B;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF319214221;
 	Tue,  1 Apr 2025 20:32:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743539550; cv=none; b=EOglPOhRwRiDDv5pwXehJl0Ylo5mWv4UkhhA+tKVtJARqhEvvvYKhTj1AfzWt00CI1HmThuUXq9DOM1jqcjD5xbXHTmjb4A1j4kGiR6yyJX3VpBWjzuy8h5z8D6NZgN7Hg6Ly8HEHo7E79aQJ5rNc7juAxR8fpdoHV5BNwl/AMk=
+	t=1743539550; cv=none; b=TaXtyx4HU6N171CHkg5KNF1eRiJfPV6VCF90nDPXLnk5DPtdRd1pnVMqvdBpZuUBzkjA4EJw6/qzCSQ2tO5mQhULTWyuQSQoU1KDuln4b3FRqZE8BbD8N46h4iqcsKkE2AkC5yVFagAB5hKEWRqmyoV/LhGDzzMii1Uei7b9hCo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1743539550; c=relaxed/simple;
-	bh=ZFM9eZYL0PvWeKjx6LDsMsM3kKFi6vLW7UHPBAVvvts=;
+	bh=Gp13WAunse4VyJM266TXO63VppQOLLyoxgk8UnWLdwU=;
 	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=a5h5y52L4b7xTkimNULRA/OGCtdvnVheWds3W0vzw9jlji2h5kn7TjK/9J08kWFeD2tRClir0F5tBv6PbKKKoHrH80vTu2VkavFYYMZqxDCTACr2lVLMxTDU9tH9ec7FDrTXOxuVFzlgB+z5iO7uhX2KJ7e6RRnZv3JCYhBLv1k=
+	 Content-Type; b=bNByDEs1OSwv1/71huR0jAsDIEu3AMD1brlomXgPKAN4Aq7Pnz065OpbQMZt2kfJXMdWltEPqVk4majIDLZaPtse0C/GQVTENignWsgKKQjmh3eECUayzP6aWy+bHoErRC2trXMcca4Vb2na9Rv7zqWLVTzS4GHqsgvk8bCaUVs=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 521E6C4CEF1;
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B5F47C4CEE4;
 	Tue,  1 Apr 2025 20:32:30 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.98)
 	(envelope-from <rostedt@goodmis.org>)
-	id 1tziIe-00000006IeK-0CvO;
+	id 1tziIe-00000006IfI-1fDZ;
 	Tue, 01 Apr 2025 16:33:32 -0400
-Message-ID: <20250401203331.901028151@goodmis.org>
+Message-ID: <20250401203332.246646011@goodmis.org>
 User-Agent: quilt/0.68
-Date: Tue, 01 Apr 2025 16:25:52 -0400
+Date: Tue, 01 Apr 2025 16:25:54 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org,
  linux-trace-kernel@vger.kernel.org
@@ -33,7 +33,7 @@ Cc: Linus Torvalds <torvalds@linux-foundation.org>,
  Vlastimil Babka <vbabka@suse.cz>,
  Mike Rapoport <rppt@kernel.org>,
  Jann Horn <jannh@google.com>
-Subject: [PATCH v3 3/5] tracing: Use vmap_page_range() to map memmap ring buffer
+Subject: [PATCH v3 5/5] ring-buffer: Allow reserve_mem persistent ring buffers to be mmapped
 References: <20250401202549.409271454@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -45,78 +45,144 @@ Content-Type: text/plain; charset=UTF-8
 
 From: Steven Rostedt <rostedt@goodmis.org>
 
-The code to map the physical memory retrieved by memmap currently
-allocates an array of pages to cover the physical memory and then calls
-vmap() to map it to a virtual address. Instead of using this temporary
-array of struct page descriptors, simply use vmap_page_range() that can
-directly map the contiguous physical memory to a virtual address.
+When the persistent ring buffer is created from the memory returned by
+reserve_mem there is nothing prohibiting it to be memory mapped to user
+space. The memory is the same as the pages allocated by alloc_page().
 
-Link: https://lore.kernel.org/all/CAHk-=whUOfVucfJRt7E0AH+GV41ELmS4wJqxHDnui6Giddfkzw@mail.gmail.com/
+The way the memory is managed by the ring buffer code is slightly
+different though and needs to be addressed.
 
-Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
+The persistent memory uses the page->id for its own purpose where as the
+user mmap buffer currently uses that for the subbuf array mapped to user
+space. If the buffer is a persistent buffer, use the page index into that
+buffer as the identifier instead of the page->id.
+
+That is, the page->id for a persistent buffer, represents the order of the
+buffer is in the link list. ->id == 0 means it is the reader page.
+When a reader page is swapped, the new reader page's ->id gets zero, and
+the old reader page gets the ->id of the page that it swapped with.
+
+The user space mapping has the ->id is the index of where it was mapped in
+user space and does not change while it is mapped.
+
+Since the persistent buffer is fixed in its location, the index of where
+a page is in the memory range can be used as the "id" to put in the meta
+page array, and it can be mapped in the same order to user space as it is
+in the persistent memory.
+
+A new rb_page_id() helper function is used to get and set the id depending
+on if the page is a normal memory allocated buffer or a physical memory
+mapped buffer.
+
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- kernel/trace/trace.c | 35 +++++++++++++++++------------------
- 1 file changed, 17 insertions(+), 18 deletions(-)
+ kernel/trace/ring_buffer.c | 49 ++++++++++++++++++++++++++++++++++----
+ kernel/trace/trace.c       |  4 ----
+ 2 files changed, 45 insertions(+), 8 deletions(-)
 
+diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+index d4b0f7b55cce..f7a10f754066 100644
+--- a/kernel/trace/ring_buffer.c
++++ b/kernel/trace/ring_buffer.c
+@@ -6000,6 +6000,39 @@ static void rb_clear_buffer_page(struct buffer_page *page)
+ 	page->read = 0;
+ }
+ 
++/*
++ * When the buffer is memory mapped to user space, each sub buffer
++ * has a unique id that is used by the meta data to tell the user
++ * where the current reader page is.
++ *
++ * For a normal allocated ring buffer, the id is saved in the buffer page
++ * id field, and updated via this function.
++ *
++ * But for a fixed memory mapped buffer, the id is already assigned for
++ * fixed memory ording in the memory layout and can not be used. Instead
++ * the index of where the page lies in the memory layout is used.
++ *
++ * For the normal pages, set the buffer page id with the passed in @id
++ * value and return that.
++ *
++ * For fixed memory mapped pages, get the page index in the memory layout
++ * and return that as the id.
++ */
++static int rb_page_id(struct ring_buffer_per_cpu *cpu_buffer,
++		      struct buffer_page *bpage, int id)
++{
++	/*
++	 * For boot buffers, the id is the index,
++	 * otherwise, set the buffer page with this id
++	 */
++	if (cpu_buffer->ring_meta)
++		id = rb_meta_subbuf_idx(cpu_buffer->ring_meta, bpage->page);
++	else
++		bpage->id = id;
++
++	return id;
++}
++
+ static void rb_update_meta_page(struct ring_buffer_per_cpu *cpu_buffer)
+ {
+ 	struct trace_buffer_meta *meta = cpu_buffer->meta_page;
+@@ -6008,7 +6041,9 @@ static void rb_update_meta_page(struct ring_buffer_per_cpu *cpu_buffer)
+ 		return;
+ 
+ 	meta->reader.read = cpu_buffer->reader_page->read;
+-	meta->reader.id = cpu_buffer->reader_page->id;
++	meta->reader.id = rb_page_id(cpu_buffer, cpu_buffer->reader_page,
++				     cpu_buffer->reader_page->id);
++
+ 	meta->reader.lost_events = cpu_buffer->lost_events;
+ 
+ 	meta->entries = local_read(&cpu_buffer->entries);
+@@ -6924,23 +6959,29 @@ static void rb_setup_ids_meta_page(struct ring_buffer_per_cpu *cpu_buffer,
+ 	struct trace_buffer_meta *meta = cpu_buffer->meta_page;
+ 	unsigned int nr_subbufs = cpu_buffer->nr_pages + 1;
+ 	struct buffer_page *first_subbuf, *subbuf;
++	int cnt = 0;
+ 	int id = 0;
+ 
+-	subbuf_ids[id] = (unsigned long)cpu_buffer->reader_page->page;
+-	cpu_buffer->reader_page->id = id++;
++	id = rb_page_id(cpu_buffer, cpu_buffer->reader_page, id);
++	subbuf_ids[id++] = (unsigned long)cpu_buffer->reader_page->page;
++	cnt++;
+ 
+ 	first_subbuf = subbuf = rb_set_head_page(cpu_buffer);
+ 	do {
++		id = rb_page_id(cpu_buffer, subbuf, id);
++
+ 		if (WARN_ON(id >= nr_subbufs))
+ 			break;
+ 
+ 		subbuf_ids[id] = (unsigned long)subbuf->page;
+-		subbuf->id = id;
+ 
+ 		rb_inc_page(&subbuf);
+ 		id++;
++		cnt++;
+ 	} while (subbuf != first_subbuf);
+ 
++	WARN_ON(cnt != nr_subbufs);
++
+ 	/* install subbuf ID to kern VA translation */
+ 	cpu_buffer->subbuf_ids = subbuf_ids;
+ 
 diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index e33f3b092e2e..1d7d2b772a74 100644
+index 1d7d2b772a74..5e7f8113c024 100644
 --- a/kernel/trace/trace.c
 +++ b/kernel/trace/trace.c
-@@ -50,6 +50,7 @@
- #include <linux/irq_work.h>
- #include <linux/workqueue.h>
- #include <linux/sort.h>
-+#include <linux/io.h> /* vmap_page_range() */
+@@ -8497,10 +8497,6 @@ static int tracing_buffers_mmap(struct file *filp, struct vm_area_struct *vma)
+ 	if (iter->tr->flags & TRACE_ARRAY_FL_MEMMAP)
+ 		return -ENODEV;
  
- #include <asm/setup.h> /* COMMAND_LINE_SIZE */
- 
-@@ -9803,29 +9804,27 @@ static int instance_mkdir(const char *name)
- 	return ret;
- }
- 
--static u64 map_pages(u64 start, u64 size)
-+static u64 map_pages(unsigned long start, unsigned long size)
- {
--	struct page **pages;
--	phys_addr_t page_start;
--	unsigned int page_count;
--	unsigned int i;
--	void *vaddr;
-+        unsigned long vmap_start, vmap_end;
-+	struct vm_struct *area;
-+	int ret;
- 
--	page_count = DIV_ROUND_UP(size, PAGE_SIZE);
-+        area = get_vm_area(size, VM_IOREMAP);
-+        if (!area)
-+                return 0;
- 
--	page_start = start;
--	pages = kmalloc_array(page_count, sizeof(struct page *), GFP_KERNEL);
--	if (!pages)
--		return 0;
-+        vmap_start = (unsigned long) area->addr;
-+        vmap_end = vmap_start + size;
- 
--	for (i = 0; i < page_count; i++) {
--		phys_addr_t addr = page_start + i * PAGE_SIZE;
--		pages[i] = pfn_to_page(addr >> PAGE_SHIFT);
--	}
--	vaddr = vmap(pages, page_count, VM_MAP, PAGE_KERNEL);
--	kfree(pages);
-+        ret = vmap_page_range(vmap_start, vmap_end,
-+			      start, pgprot_nx(PAGE_KERNEL));
-+        if (ret < 0) {
-+                free_vm_area(area);
-+                return 0;
-+        }
- 
--	return (u64)(unsigned long)vaddr;
-+	return (u64)vmap_start;
- }
- 
- /**
+-	/* Currently the boot mapped buffer is not supported for mmap */
+-	if (iter->tr->flags & TRACE_ARRAY_FL_BOOT)
+-		return -ENODEV;
+-
+ 	ret = get_snapshot_map(iter->tr);
+ 	if (ret)
+ 		return ret;
 -- 
 2.47.2
 
