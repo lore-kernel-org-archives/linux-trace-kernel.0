@@ -1,145 +1,172 @@
 Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com [209.85.216.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83122F4ED;
-	Tue,  1 Apr 2025 22:04:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA2D01E8854;
+	Tue,  1 Apr 2025 22:06:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743545065; cv=none; b=aNIm+hjprvRmjPEKha2LurscRWghkQY+ZG8r8bdCw0WK1NukdXHdWcpaN7NdHMxn7Rn2Z5Jk0q58xzCIMdF6Uxgu+cPVP0eIaDNFUH26ZpxybsDWN09gDKrSt1eMbWu5jvmHR9PIhtg+yJJ124ivBpPy4iZGmt6/ZrpNrgNWB0o=
+	t=1743545196; cv=none; b=WuqlFd+6udyafMW01qVkV3zgtjecYZNpb5pVI/adVmGiUAKXUCnxY9fk11gKowuf3Q9LKTRSaDNTLnJfPVCMZBnxJ74yU0WcdObc/3KQusa/0+92XI0Nb5/MRGrvN+iXEyVQJCYy+qBANWKhVQPk8EzktYzBm4xYc8uBC4lr94Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743545065; c=relaxed/simple;
-	bh=kNeM3AfjvmVAgQkPZnV5x2QcbPKtM5Qu243dN60BN7w=;
+	s=arc-20240116; t=1743545196; c=relaxed/simple;
+	bh=8AQAvDyaMhMVY2j4SU5UMr5j7ffgLFtEfYWwHBYe7pI=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=h1l2flO/uVl9B+Ta2G3yOln73FYiJSiC2hC0frXFce/nyOw2DkyYs0Egu3EtJCa/aY0Y4vk1dCA8SLxToMy+a9qwkOJxN93FINfwp/UkPk7xcrsYrnD887ehalpUFMSoXjocFB040AtotFHACfEJpv6Ny9z71l6IZ1WfGBjfeYs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eFuyc1Em; arc=none smtp.client-ip=209.85.216.52
+	 To:Cc:Content-Type; b=cVrGUJ/v8327oazPzE2+Ub+jrYT1nR3RVduyjGkbZE+/bZxMQ07q84VHTtC5s/TMGmuu3A7DL8sLh2k9vfRJs1HLD9m7APXAG4QF74muxhzNuR3q3uoktSxkmON41rZOv3O+SAFjvxvKryhF3WteUZcBgBpbyXvymaTKCQbthrU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cjpasMac; arc=none smtp.client-ip=209.85.216.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eFuyc1Em"
-Received: by mail-pj1-f52.google.com with SMTP id 98e67ed59e1d1-30549dacd53so474776a91.1;
-        Tue, 01 Apr 2025 15:04:24 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cjpasMac"
+Received: by mail-pj1-f52.google.com with SMTP id 98e67ed59e1d1-303a66af07eso8343913a91.2;
+        Tue, 01 Apr 2025 15:06:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743545064; x=1744149864; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1743545194; x=1744149994; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=LYYJD7xkUBqu9ap/Y96qrO8h5YwCvqqRfC+EFJyEBAQ=;
-        b=eFuyc1Em0B5EQZUvQ5jprAr6RioGUozOJvEA5mARQyY1iFbo1jeF53tGmHW6QXdDI/
-         1D0q9iGu2WF7hdm7LWTEhgiWhU062ZeuoNrZP/3l/5mE2/87nPb/fXWQQ1XhuPvxmjWu
-         ADAPNF1Qzab1ULt4ggoMbPtQ4eoXyBmWGaamQandkEuQSp88rpubiqM9EMgyV2Ac8w4Z
-         L+/W13Hi7+1ayyE3M88yP6ZlOCf1kMLXPhsMuEc9Y+zX1BEbaSjW968PS+xRGW8TBUpL
-         +QZDa4z4Rd0iLPHG2q1VktP7T95Poq4QB26xJKCNBRTW6h8cA4WUkdG97vsAQsf5hfev
-         zD0g==
+        bh=aYu6Zg/XFavoCXahu5FxZXJJfvgTGH8lEtVwhtwJVMg=;
+        b=cjpasMacNHor+E11k8iK0m+9AR6KX8Xf00PlYDQ9shIPDCPYMQgc5GD63fT6JJC4Du
+         r67+GgrqIDzsltZaSlitfDbG51Hn/jGQ95QO/6KAt1pj1lhbIuXr8jNG6CPPYOpTIi2C
+         TO/HhdiC528dciM5J8UOPl0vb9wgDQUn7r5Bvk5ovlwgtH/1lH2R1KTkdHoEOe4Gx/xL
+         SUtwFDOViPcVhdgZOpZwATnEY0CE+GZO9lwIublV5GA60UwEEyMhA9zLYq+YDiCsSERf
+         R9zbWfSSSnCmvrhBcBMsm8+O74833Vw0gaA8w84rRMG7j76qQRNu6jkCP+3iHNONdrMm
+         GT+Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743545064; x=1744149864;
+        d=1e100.net; s=20230601; t=1743545194; x=1744149994;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=LYYJD7xkUBqu9ap/Y96qrO8h5YwCvqqRfC+EFJyEBAQ=;
-        b=M26urWfaNqYfUZ//AwhqK24M7TWeZcRIqipAnxBOxDPjBvCSVWie/uZ7iVHADcFRGl
-         sGbx9c8wVb7/id1VpP3rUEPqw3ZTmjpEoboaB/hqHpPlsEkH1+HzbWJqntwVY7EJ4xLc
-         3JK/WgYxI6LN8bKR2Hbk5Vbv3+WeYfqSl+s714RyKx+BDox+GBxT0uPlTez0gcoFoB8c
-         nTjowuC7cPAOvvMdSApHhWkKaN9sPBtIrFjhbTAfhy3/32SlbpNaLv9D9R6xlcVT4YKc
-         vd/P8bmtlifCnSdXYEeI9U1svOXNMcNsw2jmbPP5XO064sZaqmDPiBBZnSeZX/m9Gc9y
-         3fMg==
-X-Forwarded-Encrypted: i=1; AJvYcCU4knnvsneR3Iapm/8TDMnEnOCWyefEjJs4ne85VX/v4fKYUuv3EEZQUVjQpFXbPrr3iNCXkXZi15IqQq5a@vger.kernel.org, AJvYcCUfkdKHvEdKTAIOsaxtx4lZV6+Jx9TzNZ0bjbx0KMUvTfX55mpfp1foEDOs46Zh6sW6M6RyZhkZtwMlZzW0XNkWisoC@vger.kernel.org, AJvYcCWjB23GvB9xBRnDCA39cFiSQ6alZoKZpxCGbMhTa0dCC4JxM5hG9QFUGJPcIlE8sKEFIRI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyJeptK1DfBArRhXX2BxsjS9ERKylWNggw4DcADI3SShlquRVLh
-	q/yKuOcxPsdPMJqBYegbl9fP+grlHfWIxNR6/48WmwiDi2WO06Ivcy8qyfUF8XVQsF8IUNzQ/UJ
-	nMOqa4nnT7gA7dBC0BjSPfUykKAQ=
-X-Gm-Gg: ASbGncuXKfjieZC5Us6ztaKZBSJDuOZvvEQ4cwYUMlexjbAJmb9MNihGjn5vK1JcfpD
-	R5CGr6l91aZGK5XSME4IoOBfln9UcJNwwv+D0UF4qBA/YfuxOD08LFEsrrxCd81AVosronrphIp
-	gOZtLD3pZBUDS0/kvrchsYKZR2nViY8459Pkq5xcfMNw==
-X-Google-Smtp-Source: AGHT+IH61ZC+ygiGLUwoWNS9qjFPvZFm8o+P28rd4NNUJn+1Mq/jAQo0sDEThx6KTrPqjsKiXrLNfDZkPmd/cVWkhRA=
-X-Received: by 2002:a17:90b:51cd:b0:2fa:603e:905c with SMTP id
- 98e67ed59e1d1-3056b6b84c7mr2262676a91.2.1743545063643; Tue, 01 Apr 2025
- 15:04:23 -0700 (PDT)
+        bh=aYu6Zg/XFavoCXahu5FxZXJJfvgTGH8lEtVwhtwJVMg=;
+        b=iBsx9IVLbRJdPeziDUWa1rSuDMLwy4hg0F4TqleBUGtKM0h1rOBZghytfcayjfKuKm
+         kFm2t40/gRUw6FTZwtRJoLheLKnHoSlZqbicremyUa7Z0Y3hfDrdvIQabQbMf5D8o243
+         0IrSGHZ457dAvho3RrynwpcmBTvbTHIhDsT2RwuRfJcFrM30Is419OPEttDcejxhSRSu
+         KFJBd6TH4kS0GtlkCM4SRTmiAHciagF8wkulE9FFicqUgZge5PZerHjMThQBmPnzuEeo
+         TnuXvvmLNgZN7V5tlHN9JglUdJgLulzKXJ5NiGwTnqLuvzIuUaRScivw6gSoCmhAsLvN
+         Me4Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUT7WjP91t1iuskR8bONkyLD26S5EZVxfRXFTgtWBlqq+zxK0XpHZ3EeeTj5B1dRbDWZU+DQNTpbS2bDxrA9mGGvAVJ@vger.kernel.org, AJvYcCUdcgb51eqRyaWojQH23J6v6xUItFJgo0IijODJllM8cCjB43Dn7w7JX71u22eFI62EkLs=@vger.kernel.org, AJvYcCWQ2iMtKUdr/xT1rDYmCpltfaqJ9uYXssl37n0OvjJSPIppgNu4/kx9MIGiwK5Twmc39GsHpU/7Uk3+0NSh@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz4UyFLlQ+1Qm8Az7MrpkQ1rUl0weXXle3tzAc6pcQZ0D0MFWbf
+	kaMlFvMra3s+YiHSVI4pY5aHc1BSL37cO7S107uHkLa+Bkf0KhVhE1r/1kB8ME8ly77k6kOySBB
+	P8OqAMqto8DFxZ+qNiQ+HjUOkEWs=
+X-Gm-Gg: ASbGnctCIwxQYmwzXjiVYYu7QNZCvdNbPu6c2B5CVu7CAp1upDA0v3nF2GF+aZhp9o3
+	Zu8ySP2pDFjuAiUmFpyIidmdTkWUeu8iFF5YGnN6INDkSduxnsIhYc9/Yzvxda4bs12OnJhTnL2
+	LpP/zgjsOz+dzFwxxb1mFSmI5UIlhahy3OnUWOtVhZRQ==
+X-Google-Smtp-Source: AGHT+IERvPaxBrysC+e4JCILAIsd31ntmN6WeywrcyfH6dFJvTx3/pK+K72W5sGe0tkTAMO7WNYQtZ81EwwOZncae0Q=
+X-Received: by 2002:a17:90b:2882:b0:305:2d27:7c9f with SMTP id
+ 98e67ed59e1d1-3056ee486b4mr500672a91.16.1743545194043; Tue, 01 Apr 2025
+ 15:06:34 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250401184021.2591443-1-andrii@kernel.org> <20250401173249.42d43a28@gandalf.local.home>
-In-Reply-To: <20250401173249.42d43a28@gandalf.local.home>
+References: <20250331094745.336010-1-chen.dylane@linux.dev>
+ <20250331094745.336010-2-chen.dylane@linux.dev> <Z-vH_HiJhR3cwLhF@krava> <918395a6-122c-4fb0-9761-892b8020b95e@linux.dev>
+In-Reply-To: <918395a6-122c-4fb0-9761-892b8020b95e@linux.dev>
 From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Tue, 1 Apr 2025 15:04:11 -0700
-X-Gm-Features: AQ5f1Jr1cQJuU0xbDn4ROMgihO8o5vD3rAc_UvCumbOLWLOzqP9DNWn-HVzWBf4
-Message-ID: <CAEf4BzYB1dvFF=7x-H3UDo4=qWjdhOO1Wqo9iFyz235u+xp9+g@mail.gmail.com>
-Subject: Re: [PATCH] exit: add trace_task_exit() tracepoint before current->mm
- is reset
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Andrii Nakryiko <andrii@kernel.org>, linux-trace-kernel@vger.kernel.org, 
-	peterz@infradead.org, mingo@kernel.org, bpf@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, kernel-team@meta.com, mhocko@kernel.org, 
-	oleg@redhat.com, brauner@kernel.org, glider@google.com, mhiramat@kernel.org, 
-	mathieu.desnoyers@efficios.com, akpm@linux-foundation.org
+Date: Tue, 1 Apr 2025 15:06:22 -0700
+X-Gm-Features: AQ5f1JoI5vh6vg03OkQDgd1VCZ65IlMVf5VqtxtJnJMul4apg8nLqtuyww6UCHg
+Message-ID: <CAEf4BzbOirQiAmowckX8OeiFUTR8yfkO6m+kY96VMy5f9rG26A@mail.gmail.com>
+Subject: Re: [PATCH bpf-next 2/2] bpf: Check link_create parameter for multi_uprobe
+To: Tao Chen <chen.dylane@linux.dev>
+Cc: Jiri Olsa <olsajiri@gmail.com>, song@kernel.org, ast@kernel.org, 
+	daniel@iogearbox.net, andrii@kernel.org, martin.lau@linux.dev, 
+	eddyz87@gmail.com, yonghong.song@linux.dev, john.fastabend@gmail.com, 
+	kpsingh@kernel.org, sdf@fomichev.me, haoluo@google.com, rostedt@goodmis.org, 
+	mhiramat@kernel.org, mathieu.desnoyers@efficios.com, laoar.shao@gmail.com, 
+	bpf@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Apr 1, 2025 at 2:31=E2=80=AFPM Steven Rostedt <rostedt@goodmis.org>=
- wrote:
+On Tue, Apr 1, 2025 at 5:40=E2=80=AFAM Tao Chen <chen.dylane@linux.dev> wro=
+te:
 >
-> On Tue,  1 Apr 2025 11:40:21 -0700
-> Andrii Nakryiko <andrii@kernel.org> wrote:
+> =E5=9C=A8 2025/4/1 19:03, Jiri Olsa =E5=86=99=E9=81=93:
+> > On Mon, Mar 31, 2025 at 05:47:45PM +0800, Tao Chen wrote:
+> >> The target_fd and flags in link_create no used in multi_uprobe
+> >> , return -EINVAL if they assigned, keep it same as other link
+> >> attach apis.
+> >>
+> >> Fixes: 89ae89f53d20 ("bpf: Add multi uprobe link")
+> >> Signed-off-by: Tao Chen <chen.dylane@linux.dev>
+> >> ---
+> >>   kernel/trace/bpf_trace.c | 3 +++
+> >>   1 file changed, 3 insertions(+)
+> >>
+> >> diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
+> >> index 2f206a2a2..f7ebf17e3 100644
+> >> --- a/kernel/trace/bpf_trace.c
+> >> +++ b/kernel/trace/bpf_trace.c
+> >> @@ -3385,6 +3385,9 @@ int bpf_uprobe_multi_link_attach(const union bpf=
+_attr *attr, struct bpf_prog *pr
+> >>      if (sizeof(u64) !=3D sizeof(void *))
+> >>              return -EOPNOTSUPP;
+> >>
+> >> +    if (attr->link_create.target_fd || attr->link_create.flags)
+> >> +            return -EINVAL;
+> >
+> > I think the CI is failing because usdt code does uprobe multi detection
+> > with target_fd =3D -1 and it fails and perf-uprobe fallback will fail o=
+n
+> > not having enough file descriptors
+> >
 >
-> Hi Andrii,
+> Hi jiri
 >
-> > It is useful to be able to access current->mm to, say, record a bunch o=
-f
-> > VMA information right before the task exits (e.g., for stack
-> > symbolization reasons when dealing with short-lived processes that exit
-> > in the middle of profiling session). We currently do have
-> > trace_sched_process_exit() in the exit path, but it is called a bit too
-> > late, after exit_mm() resets current->mm to NULL, which makes it
-> > unsuitable for inspecting and recording task's mm_struct-related data
-> > when tracing process lifetimes.
+> As you said, i found it, thanks.
 >
-> My fear of adding another task exit trace event is that it will get a
-> bit confusing as that we now have trace_sched_process_exit() and also
-> trace_task_exit() with slightly different semantics.
->
-> How about adding a trace_exit_mm()? Add that to the exit_mm() code?
-
-This is kind of the worst of both worlds, no? We still have a new
-tracepoint, but this one can't tell if it's a `group_dead` situation
-or not... I can pass group_dead into exit_mm(), but it will be just
-for the sake of that new tracepoint.
-
-How bad would it be to just move trace_sched_process_exit() then? (and
-add group_dead there, as you mentioned)?
-
->
-> static void exit_mm(void)
+> static int probe_uprobe_multi_link(int token_fd)
 > {
->         struct mm_struct *mm =3D current->mm;
+>          LIBBPF_OPTS(bpf_prog_load_opts, load_opts,
+>                  .expected_attach_type =3D BPF_TRACE_UPROBE_MULTI,
+>                  .token_fd =3D token_fd,
+>                  .prog_flags =3D token_fd ? BPF_F_TOKEN_FD : 0,
+>          );
+>          LIBBPF_OPTS(bpf_link_create_opts, link_opts);
+>          struct bpf_insn insns[] =3D {
+>                  BPF_MOV64_IMM(BPF_REG_0, 0),
+>                  BPF_EXIT_INSN(),
+>          };
+>          int prog_fd, link_fd, err;
+>          unsigned long offset =3D 0;
 >
->         exit_mm_release(current, mm);
->         trace_exit_mm(mm);
+>          prog_fd =3D bpf_prog_load(BPF_PROG_TYPE_KPROBE, NULL, "GPL",
+>                                  insns, ARRAY_SIZE(insns), &load_opts);
+>          if (prog_fd < 0)
+>                  return -errno;
 >
-> ??
+>          /* Creating uprobe in '/' binary should fail with -EBADF. */
+>          link_opts.uprobe_multi.path =3D "/";
+>          link_opts.uprobe_multi.offsets =3D &offset;
+>          link_opts.uprobe_multi.cnt =3D 1;
 >
+>          link_fd =3D bpf_link_create(prog_fd, -1, BPF_TRACE_UPROBE_MULTI,
+> &link_opts);
+>
+> > but I think at this stage we will brake some user apps by introducing
+> > this check, link ebpf go library, which passes 0
 > >
-> > There is a particularly suitable place, though, right after
-> > taskstats_exit() is called, but before we do exit_mm(). taskstats
-> > performs a similar kind of accounting that some applications do with
-> > BPF, and so co-locating them seems like a good fit.
-> >
-> > Moving trace_sched_process_exit() a bit earlier would solve this proble=
-m
-> > as well, and I'm open to that. But this might potentially change its
-> > semantics a little, and so instead of risking that, I went for adding
-> > a new trace_task_exit() tracepoint instead. Tracepoints have zero
-> > overhead at runtime, unless actively traced, so this seems acceptable.
-> >
-> > Also, existing trace_sched_process_exit() tracepoint is notoriously
-> > missing `group_dead` flag that is certainly useful in practice and some
-> > of our production applications have to work around this. So plumb
-> > `group_dead` through while at it, to have a richer and more complete
-> > tracepoint.
 >
-> There should be no problem adding group_dead to the
-> trace_sched_process_exit() trace event. Adding fields should never cause
-> any user API breakage.
+> So is it ok just check the flags?
+
+good catch, Jiri! Yep, let's validate just flags?
+
+pw-bot: cr
+
 >
-> -- Steve
+> > jirka
+> >
+> >
+> >> +
+> >>      if (!is_uprobe_multi(prog))
+> >>              return -EINVAL;
+> >>
+> >> --
+> >> 2.43.0
+> >>
+>
+>
+> --
+> Best Regards
+> Tao Chen
 >
