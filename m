@@ -1,143 +1,104 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E82271E7C02;
-	Tue,  1 Apr 2025 19:28:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45F104C85;
+	Tue,  1 Apr 2025 20:32:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743535723; cv=none; b=h6HqXeEHvw11uSzzKYl7paJdd4f/lxbOZjlPwAidQR9vGn6mgmdbVqNSicI4QSpnkwnMnQKfTeV0LYwz1Qu73mTYUwVbKPtHYSZNuDDHOdYFU1aux2GRWDRMOF29CSjWbzXfHTS9pFEwQDEdHtoXfqLplYD/Nss9hhIes41ns9w=
+	t=1743539550; cv=none; b=J8DftLjIijkg5o+urtXYpy5CkB2whAv3xQ6ykvIWIjbOilTb+KChGGWR2imXqbuwq0Qx8ejs5QNDkChoJGVo98xTkopTJF6vCcCz5hqX6RlBKR9QsHCYIZm+ko79jRsq505l6KEED8/Bpi6ub5mLXJSF6yocaXLG9JSsJcSere8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743535723; c=relaxed/simple;
-	bh=MVpO4VaTcru+BmvxoHYy51uFa0XePQy4IVWWKC/dItU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=W6ISOwmoC4FFZPBS6NYPb7uq/+5KpswY4l3H3nMa9QfroGjw0ZM88rqLdwb/K7toe8kOtBV0zxqvWeiEZe6YhoSzhpuU66rLkwC7JrWyV71GbaINOFKWbIGhw9WJdvfIAuETnf0f13r6i1NZcG+Ob+DQXSdVYT7Fj+0Amh1lpU0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=byeaJBNR; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="byeaJBNR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A8892C4CEE5;
-	Tue,  1 Apr 2025 19:28:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743535720;
-	bh=MVpO4VaTcru+BmvxoHYy51uFa0XePQy4IVWWKC/dItU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=byeaJBNRrzh+RDHWOK3VOpW1obL/hnTlDiIvpTQ0a1s/wYR6PWSqBUzYXksg0eQid
-	 lgxY0Q0+sNREBFJKlhvruETVHYs2W3J4/XKTJpm9nh78TSQVAEa2XR8D5Cmdlb5cQy
-	 P7PYBizvRYC2a2Gtft/znwlhgxaVZtdaKEXC2mx1bSLWHOMLAcoI42BxOv76KPpRfO
-	 kFMfs6j2YnXGref7V8CP1vqJ19rKK1whdTrqHP5PRxlW6/vCZsOuvkdv79Wv4ufIIb
-	 FDDP/1hLsdPPncD7I+wZTM1oZwwUA9hkgRWXNLweHxGHTFHjzgMOHboZvnyLG/bKEg
-	 BYSo7CcVkjLFA==
-Date: Tue, 1 Apr 2025 12:28:33 -0700
-From: Nathan Chancellor <nathan@kernel.org>
-To: Charlie Jenkins <charlie@rivosinc.com>
-Cc: Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Ben Dooks <ben.dooks@codethink.co.uk>,
-	Pasha Bouzarjomehri <pasha@rivosinc.com>,
-	Emil Renner Berthing <emil.renner.berthing@canonical.com>,
-	Alexandre Ghiti <alexghiti@rivosinc.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Jason Baron <jbaron@akamai.com>,
-	Andrew Jones <ajones@ventanamicro.com>,
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, llvm@lists.linux.dev
-Subject: Re: [PATCH v10 2/2] riscv: Add runtime constant support
-Message-ID: <20250401192833.GA3645424@ax162>
-References: <20250319-runtime_const_riscv-v10-0-745b31a11d65@rivosinc.com>
- <20250319-runtime_const_riscv-v10-2-745b31a11d65@rivosinc.com>
+	s=arc-20240116; t=1743539550; c=relaxed/simple;
+	bh=rEmdcZLXYxDN2vfbOB7BVcj2LM4H14D/E3gVEVWZP94=;
+	h=Message-ID:Date:From:To:Cc:Subject; b=mNh1Vx6C9tDfhJCVrxtpNxvtD8Z8MpgRQdSDIYgBShPyUWL+QUWV/qH591X6RyNVUW1EyILOBqlX93fNmRgysYxoqXQfBOOz8CG+h6hqEv0kflOBari4pUBlgZwutKrJGithVE+nF8DQgXFK+Tgglvzas77kaV6P/tW/1lR+fFs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 12ABFC4CEE8;
+	Tue,  1 Apr 2025 20:32:30 +0000 (UTC)
+Received: from rostedt by gandalf with local (Exim 4.98)
+	(envelope-from <rostedt@goodmis.org>)
+	id 1tziId-00000006Ico-2DnA;
+	Tue, 01 Apr 2025 16:33:31 -0400
+Message-ID: <20250401202549.409271454@goodmis.org>
+User-Agent: quilt/0.68
+Date: Tue, 01 Apr 2025 16:25:49 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+Cc: Linus Torvalds <torvalds@linux-foundation.org>,
+ Masami Hiramatsu <mhiramat@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Vincent Donnefort <vdonnefort@google.com>,
+ Vlastimil Babka <vbabka@suse.cz>,
+ Mike Rapoport <rppt@kernel.org>,
+ Jann Horn <jannh@google.com>
+Subject: [PATCH v3 0/5] ring-buffer: Allow persistent memory to be user space mmapped
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250319-runtime_const_riscv-v10-2-745b31a11d65@rivosinc.com>
 
-Hi Charlie,
 
-On Wed, Mar 19, 2025 at 11:35:20AM -0700, Charlie Jenkins wrote:
-> Implement the runtime constant infrastructure for riscv. Use this
-> infrastructure to generate constants to be used by the d_hash()
-> function.
-> 
-> This is the riscv variant of commit 94a2bc0f611c ("arm64: add 'runtime
-> constant' support") and commit e3c92e81711d ("runtime constants: add
-> x86 architecture support").
-> 
-> Signed-off-by: Charlie Jenkins <charlie@rivosinc.com>
-> Reviewed-by: Alexandre Ghiti <alexghiti@rivosinc.com>
-...
-> diff --git a/arch/riscv/include/asm/runtime-const.h b/arch/riscv/include/asm/runtime-const.h
-...
-> +#define RISCV_RUNTIME_CONST_64_ZBA				\
-> +	".option push\n\t"					\
-> +	".option arch,+zba\n\t"					\
-> +	"slli	%[__tmp],%[__tmp],32\n\t"			\
-> +	"add.uw %[__ret],%[__ret],%[__tmp]\n\t"			\
-> +	"nop\n\t"						\
-> +	"nop\n\t"						\
-> +	".option pop\n\t"					\
-...
-> +#if defined(CONFIG_RISCV_ISA_ZBA) && defined(CONFIG_RISCV_ISA_ZBKB)
-...
-> +#elif defined(CONFIG_RISCV_ISA_ZBA)
-> +#define runtime_const_ptr(sym)						\
-> +({									\
-> +	typeof(sym) __ret, __tmp;					\
-> +	asm_inline(RISCV_RUNTIME_CONST_64_PREAMBLE			\
-> +		ALTERNATIVE(						\
-> +			RISCV_RUNTIME_CONST_64_BASE,			\
-> +			RISCV_RUNTIME_CONST_64_ZBA,			\
-> +			0, RISCV_ISA_EXT_ZBA, 1				\
-> +		)							\
-> +		RISCV_RUNTIME_CONST_64_POSTAMBLE(sym)			\
-> +		: [__ret] "=r" (__ret), [__tmp] "=r" (__tmp));		\
-> +	__ret;								\
-> +})
+Now that I learned that the memory passed back from reserve_mem is part
+of the memory allocator and just "reserved" and the memory is already
+virtually mapped, it can simply use phys_to_virt() on the physical memory
+that is returned to get the virtual mapping for that memory!
+  (Thanks Mike!)
 
-This breaks the build for clang versions 16 and earlier because they do
-not support '.option arch' and it is used in CONFIG_RISCV_ISA_ZBA, which
-has no dependencies and it is default on.
+That makes things much easier, especially since it means that the memory
+returned by reserve_mem is no different than the memory retrieved by
+page_alloc(). This allows that memory to be memory mapped to user space
+no differently than it is mapped by the normal buffer.
 
-  $ make -skj"$(nproc)" ARCH=riscv LLVM=1 mrproper defconfig fs/dcache.o
-  fs/dcache.c:117:9: warning: unknown option, expected 'push', 'pop', 'rvc', 'norvc', 'relax' or 'norelax' [-Winline-asm]
-          return runtime_const_ptr(dentry_hashtable) +
-                 ^
-  arch/riscv/include/asm/runtime-const.h:103:4: note: expanded from macro 'runtime_const_ptr'
-                          RISCV_RUNTIME_CONST_64_ZBA,                     \
-                          ^
-  arch/riscv/include/asm/runtime-const.h:57:17: note: expanded from macro 'RISCV_RUNTIME_CONST_64_ZBA'
-          ".option push\n\t"                                      \
-                         ^
-  <inline asm>:32:10: note: instantiated into assembly here
-          .option arch,+zba
-                  ^
-  fs/dcache.c:117:9: error: instruction requires the following: 'Zba' (Address Generation Instructions)
-          return runtime_const_ptr(dentry_hashtable) +
-                 ^
-  arch/riscv/include/asm/runtime-const.h:103:4: note: expanded from macro 'runtime_const_ptr'
-                          RISCV_RUNTIME_CONST_64_ZBA,                     \
-                          ^
-  arch/riscv/include/asm/runtime-const.h:59:30: note: expanded from macro 'RISCV_RUNTIME_CONST_64_ZBA'
-          "slli   %[__tmp],%[__tmp],32\n\t"                       \
-                                        ^
-  <inline asm>:34:2: note: instantiated into assembly here
-          add.uw a2,a2,a3
-          ^
-  ...
+This new series does the following:
 
-  $ rg 'OPTION_ARCH|ZBA' .config
-  364:CONFIG_RISCV_ISA_ZBA=y
+- Enforce the memory mapping is page aligned (both the address and the
+  size). If not, it errors out.
 
-Should it grow a dependency on AS_HAS_OPTION_ARCH or should there be a
-different fix?
+- Use phys_to_virt() to get to the virtual memory from the reserve_mem
+  returned addresses. Also use free_reserved_area() to give it
+  back to the buddy allocator when it is freed.
 
-Cheers,
-Nathan
+- Treat the buffer allocated via memmap differently. It still needs to
+  be virtually mapped (cannot use phys_to_virt) and it must not be
+  freed nor memory mapped to user space. A new flag is added when a buffer
+  is created this way to prevent it from ever being memory mapped to user
+  space and the ref count is upped so that it can never be freed.
+
+- Use vmap_page_range() instead of using kmalloc_array() to create an array
+  of struct pages for vmap().
+
+- Use flush_kernel_vmap_range() instead of flush_dcache_folio()
+
+- Allow the reserve_mem persistent ring buffer to be memory mapped.
+  There is no difference now with how the memory is mapped to user space,
+  only the accounting of what pages are mapped where is updated as
+  the meta data is different between the two.
+
+Note, the first 4 patches makes the code a bit more correct. Especially
+since the vunmap() does not give the buffer back to the buddy allocator.
+I will be looking to get the first 4 patches into this merge window.
+
+The last patch which enables he persistent memory mapping to user space can
+wait till the 6.16.
+
+Changes since v2: https://lore.kernel.org/all/20250331143426.947281958@goodmis.org/
+
+- Basically a full rewrite once I found out that you can get the virtual
+  address of the memory returned by reserve_mem via phys_to_virt()!
+
+Steven Rostedt (5):
+      tracing: Enforce the persistent ring buffer to be page aligned
+      tracing: Have reserve_mem use phys_to_virt() and separate from memmap buffer
+      tracing: Use vmap_page_range() to map memmap ring buffer
+      ring-buffer: Use flush_kernel_vmap_range() over flush_dcache_folio()
+      ring-buffer: Allow reserve_mem persistent ring buffers to be mmapped
+
+----
+ Documentation/admin-guide/kernel-parameters.txt |  2 +
+ Documentation/trace/debugging.rst               |  2 +
+ kernel/trace/ring_buffer.c                      | 54 ++++++++++++++++--
+ kernel/trace/trace.c                            | 75 ++++++++++++++++---------
+ kernel/trace/trace.h                            |  1 +
+ 5 files changed, 102 insertions(+), 32 deletions(-)
