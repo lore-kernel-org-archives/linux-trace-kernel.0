@@ -1,116 +1,111 @@
-Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECA3B54654
-	for <linux-trace-kernel@vger.kernel.org>; Tue,  1 Apr 2025 00:49:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 680CF86353;
+	Tue,  1 Apr 2025 01:01:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743468570; cv=none; b=Ll8ZyB8VkA8PEgVbATzwPJLdTX0Yeaw6sjPNz9jVLfIMsuUKwfc3vuwtc9aCbiGOO0c2vH/OyplRT6CGAB402a1cH8X9CH1dBjzWGgEDNZQbXDoVxmXzkGZNVJTKQMb4noczzlE89JB4+PVMss9IYh7Kjegrf5Ub55bZG0Z57XQ=
+	t=1743469308; cv=none; b=OUvod/Yhp/utHDW8APJ4ARSH9Zt87rEnxRUQQnWous2rozL6sXL+LvqZ8/Vuf9VbR/Kntlw6+P5vuS8nAwE0srtA+/pqzA2Gitxc81EL2YRQerMIUkFVZ5F4B1UpO3UDWkhGMfYidRxrWDQhVp+7leVU4FWqBhLWEQP9b35dSls=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743468570; c=relaxed/simple;
-	bh=OUTcZq07JBkgTrYml5GuZJ2vQhCaARTC9w+Z21EM7tE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=aYGNnIq/yi0AOuxqtHtrX8PDlhl/+s6QLuZlD5tU2lLzUefYR87pos0Ca8btJN7vZf6trNZk9TL29KkOMfYFTYOakgAbAHQorVrWhx3BnPpv0X62tWZQDSRaJph5sZiHD3EHqbSOYsD7SS/BG78T+uaGARHoblD/PTTLhs2sU84=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=QRcaOUvl; arc=none smtp.client-ip=209.85.208.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="QRcaOUvl"
-Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-5efe8d9eb12so2084634a12.1
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 31 Mar 2025 17:49:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1743468566; x=1744073366; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=vqJ2N3VREVt47VEa4RxuNWaTBMsssQWWo8kvJYNbQLk=;
-        b=QRcaOUvlPOKx8CF/pXQKGrqy3fS9mIj8ystH1ObZE+7CIHxDzwmcjsTxxAfatgEA+T
-         0UJvUCOwPkFq8Rw2ohVGu2Gg6ukn2iEuZmfPNSrDtiocEO/CBl7L1lo4RZH1t3jn9Ljq
-         4jiAhH3Lcqo75qbRDewmVvWymwBp7d50XAJl4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743468566; x=1744073366;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=vqJ2N3VREVt47VEa4RxuNWaTBMsssQWWo8kvJYNbQLk=;
-        b=hZLh92kKSvjmlYxL9+VHgFf442UDcCZNIIFiQOhY9RaVWd2dIvX7FgAL8VeRCRdfuH
-         4NetL4eReTqkIEwYwfuxqqxuh5JmHu+XlXd+NwRBFFWBBm4bSZUvYYotEGaZqQe1Yn5I
-         /WKwgpn8aeEi+mz8HF5gYbog7Qa5FXgPf4zxNaz7PDYaqpW828h6dipTSJfqlJiuYtsV
-         9mxndz8cCCmgCMPAFtZF8egQuFqGZPz+baqDfPWLp59HuQi+2XYdP96NV3AJYj8JPSxf
-         +6G+Fv4lOHYhls1/0sclna3kpYN63axod2T87fZchWUCnGe5WPnH5U4ES8IedoYbqHYu
-         9jrQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVAPL/8zzjY5r1i9EnFF2mV0noSOOCm8kyn3C+p17b28yT9GONhlD3RP4oIhc7670oSaWLb9nXqMWZuqTFMxnTQx6c=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwZWh8GpQxozcs9A8ZV6g3ZZsb0KWs8ZX2KKxQ31o3EG2zkEARc
-	f0cwuFXG4Ls1LSS8VA6iHjEWPa/iOxpcoqgbdGRarBVrHSpPW/9X/w/uWwXreCY1bYM6pqHitpw
-	75/Y=
-X-Gm-Gg: ASbGncssfQbbEVuxrw/cKwns8M06pojl8pCyGctah+Mk6tS3Q255jLJjBR6JOI/RiGO
-	7UMAXsK34zvZ7/+aWw0Atk9Ufl1gF8306DDzrkexIAOIpvSChJRGI+PWMmAqf1DyjyYl2eUO9ET
-	IQ4fVbqG50Qe4OxY4Mq+nusK+puCGnx6AJLNwZwLafvW4uVznikR3Old6DWEQy5tu9i/bzHG7b+
-	YtNdZrnErLdEJDGFyZOKIzac2B7Sz3SPPpwiX8MhMXAzpMZUcvK27zpKENTczl2TbIWjdyswszM
-	nZzRE6FP4220e0OYKQR2Ld84kW8TSLdOSNYHEXApi1ptC6/CInNEkMt8BqceJP0WKlozmVKvanr
-	9fsj+8Oi0JsAaFH8y9q2fW8H/Jxo1Yg==
-X-Google-Smtp-Source: AGHT+IHJbmpzgmcpMhZOliLKIZplnKxd3Sm8hi1T17guQ/iZwTivhUWCxlNcpblUKbA658GPYI9oCg==
-X-Received: by 2002:a05:6402:34d6:b0:5ed:c6aa:8c68 with SMTP id 4fb4d7f45d1cf-5edfcbd221dmr9234990a12.5.1743468566031;
-        Mon, 31 Mar 2025 17:49:26 -0700 (PDT)
-Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com. [209.85.218.42])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5edc16ef8d2sm6523511a12.38.2025.03.31.17.49.24
-        for <linux-trace-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 31 Mar 2025 17:49:24 -0700 (PDT)
-Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-abbb12bea54so1024717166b.0
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 31 Mar 2025 17:49:24 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVKYrsOSkBQYYq2CJ2YOQF+6wF7mcPdImlVp+8Q6/igIibC84RxQ5LE42BwLhbFK+uO64+QlANLU1BxiV1ONou5MEw=@vger.kernel.org
-X-Received: by 2002:a17:907:97c9:b0:ac3:3fe7:b254 with SMTP id
- a640c23a62f3a-ac738a152d0mr1032969566b.4.1743468563964; Mon, 31 Mar 2025
- 17:49:23 -0700 (PDT)
+	s=arc-20240116; t=1743469308; c=relaxed/simple;
+	bh=kFndhdL1+Fi31s7M82lXfVwQLCJS7fRhq/+SXk7OKa8=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=W/PHJ9baBizLpQ5wIvbjdFdx0gFu8BVSew78u+a5aOsrKK/ONtzHiLD9Mz1VWU8M1CleHYfyOUho2DSYDJ8LBhh9iM2eYCEt4jmoBCKNvc9OJd6RXkauheTulGIIY6fkBChJ9NnY1F0zkE7N1UQXVT9iQP8eKb96Z33L7HMQvc4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7F526C4CEE3;
+	Tue,  1 Apr 2025 01:01:46 +0000 (UTC)
+Date: Mon, 31 Mar 2025 21:02:45 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Jann Horn <jannh@google.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Masami
+ Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Andrew Morton
+ <akpm@linux-foundation.org>, Vincent Donnefort <vdonnefort@google.com>,
+ Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>, Kees
+ Cook <kees@kernel.org>, Tony Luck <tony.luck@intel.com>, "Guilherme G.
+ Piccoli" <gpiccoli@igalia.com>, linux-hardening@vger.kernel.org, Matthew
+ Wilcox <willy@infradead.org>
+Subject: Re: [PATCH v2 1/2] tracing: ring-buffer: Have the ring buffer code
+ do the vmap of physical memory
+Message-ID: <20250331210245.585fff23@gandalf.local.home>
+In-Reply-To: <CAG48ez3w0my4Rwttbc5tEbNsme6tc0mrSN95thjXUFaJ3aQ6SA@mail.gmail.com>
+References: <20250331143426.947281958@goodmis.org>
+	<20250331143532.459810712@goodmis.org>
+	<CAHk-=whUOfVucfJRt7E0AH+GV41ELmS4wJqxHDnui6Giddfkzw@mail.gmail.com>
+	<20250331133906.48e115f5@gandalf.local.home>
+	<CAHk-=wi5pLoe3szxLREQGGJuWU0w_POK9Sv6717UH3b7OvvfjQ@mail.gmail.com>
+	<20250331165801.715aba48@gandalf.local.home>
+	<CAHk-=whRNxdkLC6Z91g-_RbrRsUo6K6+nvRWqccjsOycwUe_JQ@mail.gmail.com>
+	<20250331194251.02a4c238@gandalf.local.home>
+	<CAG48ez3w0my4Rwttbc5tEbNsme6tc0mrSN95thjXUFaJ3aQ6SA@mail.gmail.com>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250331143426.947281958@goodmis.org> <20250331143532.459810712@goodmis.org>
- <CAHk-=whUOfVucfJRt7E0AH+GV41ELmS4wJqxHDnui6Giddfkzw@mail.gmail.com>
- <20250331133906.48e115f5@gandalf.local.home> <CAHk-=wi5pLoe3szxLREQGGJuWU0w_POK9Sv6717UH3b7OvvfjQ@mail.gmail.com>
- <20250331165801.715aba48@gandalf.local.home> <CAHk-=whRNxdkLC6Z91g-_RbrRsUo6K6+nvRWqccjsOycwUe_JQ@mail.gmail.com>
- <20250331194251.02a4c238@gandalf.local.home> <CAHk-=wiDQpOeXi_GjKB7Mrh93Zbd__4k+FF_vJd+-prbaacEug@mail.gmail.com>
- <20250331203014.5108200c@gandalf.local.home> <CAHk-=wg0wQb+CbUk2GY0CeVuTQvq67-oYR0nL8wGgySia3ce7g@mail.gmail.com>
-In-Reply-To: <CAHk-=wg0wQb+CbUk2GY0CeVuTQvq67-oYR0nL8wGgySia3ce7g@mail.gmail.com>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Mon, 31 Mar 2025 17:49:07 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wh4b8hNT5XRDj9M4damUmij2bJGaRamqQ_icEkVUv8svg@mail.gmail.com>
-X-Gm-Features: AQ5f1JoBkC_QKfs81TmJ3LMb4XougE5RrROka215j19iecgzoAx9QaQPEIrhB0Y
-Message-ID: <CAHk-=wh4b8hNT5XRDj9M4damUmij2bJGaRamqQ_icEkVUv8svg@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] tracing: ring-buffer: Have the ring buffer code do
- the vmap of physical memory
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Andrew Morton <akpm@linux-foundation.org>, 
-	Vincent Donnefort <vdonnefort@google.com>, Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>, 
-	Kees Cook <kees@kernel.org>, Tony Luck <tony.luck@intel.com>, 
-	"Guilherme G. Piccoli" <gpiccoli@igalia.com>, linux-hardening@vger.kernel.org, 
-	Matthew Wilcox <willy@infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
- On Mon, 31 Mar 2025 at 17:38, Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
->
-> So *this* is the kind of "bad in a different way" I could imagine:
-> things that probably should be cleaned up and be available to generic
-> code, but very few people have cared, and so they are used in ad-hoc
-> places and haven't been sufficiently generalized and cleaned up.
+On Tue, 1 Apr 2025 02:09:10 +0200
+Jann Horn <jannh@google.com> wrote:
 
-Of course, the good news is that (a) few people care - which is why we
-are in this situation - and (b) the people who *do* care about these
-issues tend to be both responsible and responsive.
+> On Tue, Apr 1, 2025 at 1:41=E2=80=AFAM Steven Rostedt <rostedt@goodmis.or=
+g> wrote:
+> > On Mon, 31 Mar 2025 14:42:38 -0700
+> > Linus Torvalds <torvalds@linux-foundation.org> wrote:
+> > =20
+> > > .. and *after* you've given it back to the memory allocator, and it
+> > > gets allocated using the page allocators, at that point ahead and use
+> > > 'struct page' as much as you want.
+> > >
+> > > Before that, don't. Even if it might work. Because you didn't allocate
+> > > it as a struct page, and for all you know it might be treated as a
+> > > different hotplug memory zone or whatever when given back. =20
+> >
+> > Hmm, so if we need to map this memory to user space memory, then I can't
+> > use the method from this patch series, if I have to avoid struct page.
+> >
+> > Should I then be using vm_iomap_memory() passing in the physical addres=
+s? =20
+>=20
+> For mapping random physical memory ranges into userspace, we have
+> helpers like remap_pfn_range() (the easy option, for use in an mmap
+> handler, in case you want to want to map one contiguous physical
+> region into userspace) and vmf_insert_pfn() (for use in a page fault
+> handler, in case you want to map random physical pages into userspace
+> on demand).
 
-So not some unfixable morass, more of a "one or two architectures may
-care, and we might have to extend interfaces that haven't been used
-this way before".
+Note, I believe that Linus brought up the issue that because this physical
+memory is not currently part of the memory allocator (it's not aware of it
+yet), that the getting struct page or a "pfn" for it may not be reliable.
 
-For example, just adding flush_dcache_range() into
-include/asm-generic/cacheflush.h should be more-or-less trivial, with
-the same kinds of "architectures can make clear they have their own
-optimized version".
+>=20
+> > As for architectures that do not have user/kernel data cache coherency,=
+ how
+> > does one flush the page when there's an update on the kernel side so th=
+at
+> > the user side doesn't see stale data? =20
+>=20
+> flush_kernel_vmap_range() (and invalidate_kernel_vmap_range() for the
+> other direction) might be what you want... I found those by going
+> backwards from an arch-specific cache-flushing implementation.
+>=20
+> > As the code currently uses flush_dcache_folio(), I'm guessing there's an
+> > easy way to create a folio that points to physical memory that's not pa=
+rt
+> > of the memory allocator? =20
+>=20
+> Creating your own folio structs sounds like a bad idea; folio structs
+> are supposed to be in specific kernel memory regions. For example,
+> conversions from folio* to physical address can involve pointer
+> arithmetic on the folio*, or they can involve reading members of the
+> pointed-to folio.
 
-              Linus
+Linus already mentioned flush_cache_range() which looks to be the thing to
+use.
+
+-- Steve
+
