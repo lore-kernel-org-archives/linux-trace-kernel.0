@@ -1,52 +1,53 @@
-Received: from YT5PR01CU002.outbound.protection.outlook.com (mail-canadacentralazon11021131.outbound.protection.outlook.com [40.107.192.131])
+Received: from YT3PR01CU008.outbound.protection.outlook.com (mail-canadacentralazon11020100.outbound.protection.outlook.com [52.101.189.100])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFC6B23BD09;
-	Wed,  2 Apr 2025 15:01:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.192.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6716320E328;
+	Wed,  2 Apr 2025 15:03:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.189.100
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743606119; cv=fail; b=ZebR5MQ6+b/Nx9pbcakn/eBEiedhd5jRyhlBffUHeu4oo6X3Jn/wPN/hogpbEYq9KnEbgbwmrmO3UFrOVsE7bgElLVYQoRMH24qJZw4Tzw1T/exxI6hV0kpySCHNfTVuzcxquwIqsUpk9rCtDzr3CSK1XEuBW3YcBpnJs2lJ+eE=
+	t=1743606215; cv=fail; b=gRC8fSYHfaOLBMqO5NP9tlcJFbxsMmnZ3LZHjDPSNqbG36LRg8KdvlleeZpAMXKTHmpfAKqrdfPcRrr0BGwO4AMiJv2KdUJj7Kz6gZQ17BV7x8hb9ATeTys265Sik3ADIAjwOTFK5bfs/USoJfBzhNNWFvkdZ5mYWLTG3dbml+s=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743606119; c=relaxed/simple;
-	bh=3q4VvFlKVzXqbG+hLTiN2et+eF078XZKdT9IURtnb2s=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=XgDJNa2OkfoaXfUuC5evqCU0QKA7eGi/YQzr8aZR2fK4SG1oegLyjknoLv02MKrGIiKlJlRsmGLBSVgd0WIm8I2IY9asWfEQuuaBxAXuBesmujEM37aUh2vsp60fwF284WysllpL6Cg1qss7OB3BaoNjHx65DMcrChSOiJEUGV8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com; spf=pass smtp.mailfrom=efficios.com; dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b=S4p2Lskc; arc=fail smtp.client-ip=40.107.192.131
+	s=arc-20240116; t=1743606215; c=relaxed/simple;
+	bh=mXgf2aW5eL6bWvP38yzPzrbMvBteKD8LJqIA1o1strQ=;
+	h=Message-ID:Date:Subject:From:To:Cc:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=s7uHHUsfjc/QaY911M3mf0EgyXi5pyxqwOD2pknCuK1IeldAowSdofopEAm3jqXuv3YgOkvCp8k/Q5uYir0cGA1c7NFxwvgzpj3U2S0GDXFGIqwz+UcYjI8jhc1NihDVkNiOOog5/3Ut3A9YUsWY28NsJmgHXpyiIVJQPiNycGU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com; spf=pass smtp.mailfrom=efficios.com; dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b=UchLVe3f; arc=fail smtp.client-ip=52.101.189.100
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=efficios.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="S4p2Lskc"
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="UchLVe3f"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=hw1xyje4cXELJIE04stkB1j1C8gFZLYeeOkF8/CDIGcJXIJ6ndmtmzrKTpcmHxQW9yqnR9lttWgRwaXUn6QxvZC6M+cm7gZTBWPcUTUpXIhxbuAwh+hXszJNJyfE4HKwegZ6OHH2yh0Dzm3kEfOb8ILGqP0Kl314tX1WIIqO9FGChrXxikgbP+r6YDkzYLxiVGnoVCPhxoHmO0ydJaeGxM+aLjF1Ul/SdcB9y89o6qQ5xu4pFj1wFUyqpMkG53wkPiY9bAauCA/K8BidyJCAU4+D737Xscf8rtGYfAoUoVyxGyI87jtwX3g1+8+wznMcKOLUdquG1A04I4HOrs9uTw==
+ b=KMUVVvhclb7Ls16MPqIis9b9cTtTdQtxeUDF43BQMSxq/gS4fCqbXfGIcQMyn+qDyjEJSu4PpfqHqOklW2LV4fEfvwEkfpgjM+8E3pWjD/a1ucrCYxkMZvgJKPdDOq//D1K6aU/XaYz6cwbijNWy7Z2RmBwvaxYp/+GxFaU6gbRwsIoqjtksxiRE9PzHI5ZD3YX8ug8fBcZMFwHY5vOUbYYxnR4wF/+tSelMh02NQa71QFsvclsPCwPmNPqs0VMOBCECQjjFkgR56vPHh+q+tETokaL52ZXsBVHpbTONG/6FYrNDRshlDvFqh3I/C+/wnl0udlJs0xG9U3a8si3jqA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=uCJ8aOs18XujtreepvNoGBchHjh7hJYhR5eKPsW6NrM=;
- b=CUsCJavMYBGBJ7OuBmghYnkfxX4RzfLOgsDbk/zdEE0KcItyVzK1YliUAb+3CjcsaZm9dYdwfFmIwCgnyLsfqDu/AAbDzpg6eTu/AHIBrQ2c4cTczjM5gW2ZZ9kvKqxAdsBf+1NDFFgxUetndSCdXtQEli7SlJYkit7XJu+EQOcH9itNQ8p8227P4kDKZNi9PX41kDcpipqojXeJqMmKP/5wGxaet96ghHhYDR5esDhtAVgkSwYQ5+PfJH0Ba/Vk5g47DZ8V3KufiFVt5gPHRFNoYN44rypbFe6+fIjWzMwoiLTOAFkkCYlKU05opdZsexuIz0/w937aIwBEFaMsHA==
+ bh=vYQeAuXnt729Ma0bTQOtUCeGZ8F7csjG/7a/I4uU5O4=;
+ b=QBR8CdlM9W2fZqMJvsl2OzlY1tLBffjEObRioftbIX2js5nCdGh5Sfvb0RylF2OFhODmBMynkb3n/X4ngc+/aPLtW9bMTltSQ5l/m8zl5/Zy3Vl9NQCRJUiG53KQDuBewqMnwL8gBBIE9RnqIg8wD0D3PguriD+FKrM1IstEb7WFK5BuSRYnisD2BKxvt8Y0pFEwGyo0CPEgcIBWqdlq6607O6AvhjAqZKk3ih7fp1iZhJqhEOpq+qR6ZA4x8PaQr7bCSyGpyzBwTmNJ0w/oyrmcsoO2UwIftGSEd7DytmYJ2/TeLvv6okklQJJwT7pqY50lZQ08WFzKSMNfZjT7ig==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=efficios.com; dmarc=pass action=none header.from=efficios.com;
  dkim=pass header.d=efficios.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
  s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=uCJ8aOs18XujtreepvNoGBchHjh7hJYhR5eKPsW6NrM=;
- b=S4p2LskcfoX9IQXBt/J7reNGchgkAOQVDFjelvYJJ6Z2lbwjRLmjLj3uIXyj2IoF2n2Q1YsD1lLdZV+WO43JUfANDD+GVSduXdoDRyCarHlCkJUVameoW1v3hyDyd6IOza7CjWRY7rqVWBbvzB7/oECf2ugatKoF+ZSLS8uc5wQgb3caBP7+6JbWoHkJYdwhiAVO9CgwkBABBWw3+lIpAYSjLdmyvCxJwUy73wq7v0VFnZrJtxIv710luFfKIdhcn71pVrLWFcrVMB+4jvN5UNPUpVxxSD4euyFuF+jnQT711cV3a+28EDioJTb6WxmMTYVGsongV32CPWui+pgm3A==
+ bh=vYQeAuXnt729Ma0bTQOtUCeGZ8F7csjG/7a/I4uU5O4=;
+ b=UchLVe3fIn04h+uSMzVgQokBhJ6+lIbAhbci+FHYQiYUZuRy89ZZbJflxTQWwE4Vaoy4SjoNZUe00TzlFVtk3lhABNcI0mfP5NPdS/lN6rqNvwrtWL9RnU708zViO2YCCo7bMpRLP3O4XBVWPEsKc5L5EaVof+9DxAmQz+XdjYf3l92q3Yh2um0mYtay7EuAbwoXXE59cPddoQfjXhe1PSqR4GlGi8VMuISNUh9QezkSDxRaAMiL291h4F2UTsxRE+nSCp3Oq7AUBXCx7OYxNevQORyogWSymkQ9gy7kdMJbKFd0er1so+7lD7dm1P1i8Dj1FOr2EuO6ut5/48CC0w==
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=efficios.com;
 Received: from YT3PR01MB9171.CANPRD01.PROD.OUTLOOK.COM (2603:10b6:b01:a0::18)
- by QB1PPF7FD4E7D79.CANPRD01.PROD.OUTLOOK.COM (2603:10b6:c08::254) with
+ by YT3PR01MB11060.CANPRD01.PROD.OUTLOOK.COM (2603:10b6:b01:13f::9) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8583.42; Wed, 2 Apr
- 2025 15:01:47 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.50; Wed, 2 Apr
+ 2025 15:03:29 +0000
 Received: from YT3PR01MB9171.CANPRD01.PROD.OUTLOOK.COM
  ([fe80::5393:fe91:357f:3ccf]) by YT3PR01MB9171.CANPRD01.PROD.OUTLOOK.COM
  ([fe80::5393:fe91:357f:3ccf%6]) with mapi id 15.20.8534.045; Wed, 2 Apr 2025
- 15:01:47 +0000
-Message-ID: <a9a816d8-ce2f-4c89-a798-ef565febb906@efficios.com>
-Date: Wed, 2 Apr 2025 11:01:46 -0400
+ 15:03:29 +0000
+Message-ID: <2bf00be2-9ab9-442b-b68e-04ae7075ed1f@efficios.com>
+Date: Wed, 2 Apr 2025 11:03:28 -0400
 User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH v5 1/4] tracing: Enforce the persistent ring buffer to be
  page aligned
+From: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
 To: Mike Rapoport <rppt@kernel.org>, Steven Rostedt <rostedt@goodmis.org>
 Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
  Linus Torvalds <torvalds@linux-foundation.org>,
@@ -56,13 +57,13 @@ Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
  Jann Horn <jannh@google.com>
 References: <20250401225811.008143218@goodmis.org>
  <20250401225842.261475465@goodmis.org> <Z-0BrT-OxGvaWM1H@kernel.org>
-From: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+ <a9a816d8-ce2f-4c89-a798-ef565febb906@efficios.com>
 Content-Language: en-US
-In-Reply-To: <Z-0BrT-OxGvaWM1H@kernel.org>
+In-Reply-To: <a9a816d8-ce2f-4c89-a798-ef565febb906@efficios.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: QB1P288CA0023.CANP288.PROD.OUTLOOK.COM
- (2603:10b6:c00:2d::36) To YT3PR01MB9171.CANPRD01.PROD.OUTLOOK.COM
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: QB1P288CA0028.CANP288.PROD.OUTLOOK.COM
+ (2603:10b6:c00:2d::41) To YT3PR01MB9171.CANPRD01.PROD.OUTLOOK.COM
  (2603:10b6:b01:a0::18)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -71,221 +72,240 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: YT3PR01MB9171:EE_|QB1PPF7FD4E7D79:EE_
-X-MS-Office365-Filtering-Correlation-Id: 592c4c86-0269-4f25-35d4-08dd71f74a2a
+X-MS-TrafficTypeDiagnostic: YT3PR01MB9171:EE_|YT3PR01MB11060:EE_
+X-MS-Office365-Filtering-Correlation-Id: 977b6bd7-12b4-458d-fb30-08dd71f78715
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|7416014|376014;
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|7416014|376014;
 X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?Y3pHOXhwNFc5UktmRjFmcXJRZVlxMHBPZTJqWWxsSTQ1UFYzUHh6VXRCZU1R?=
- =?utf-8?B?VUFYSzhGYnNFU0h2SmJpRWlFOHI0K2o1SnJZbGdkMnBIU0hwTk5hVVRJbkpO?=
- =?utf-8?B?WUlacncxUVhNY0hZVW4vbXpSS29iYjZWQ1FtY2ZSL1cvYUMrRHpjdkxQMDdH?=
- =?utf-8?B?bGpuS2pFaEt2OTlyWURsbWFNcEpuMy9WM3o1ODVDU0FmK0ttN2Q5cnE4MklB?=
- =?utf-8?B?NWpGSEpVSWFYU1duemRNbWFrT25WVGJwSXFDZ0dXeW9UQ2ZVdk9HdTdObzNT?=
- =?utf-8?B?V1BpQ2Uxb1FJZW0rZ0EyNWtiWHh2WGhkU01WNWlONGFaUmQxZEFVY0svUWlT?=
- =?utf-8?B?WHNMRUt3R1VnOHRlVDJyZDh1dlJkM1dNeXNWK1pYdmRSMEx0czBSeHNDM2hr?=
- =?utf-8?B?NE5SWTFMbnlvZENXZFhwdkZtd0tTbEVXNXhCWmJvRG15TCtsR0dScjNlWkFu?=
- =?utf-8?B?NDRBTndyc3dDSDAzd1I2MXpLT3NhcUVZWUFGbC9GdysrWDRpVWV4dk1WbUJW?=
- =?utf-8?B?SEcxMUxFME9vSFRWemJRSC9tWSt4Nml4dWt5cTZxL2hlUzY0RlcyenJzRmxF?=
- =?utf-8?B?SWNQZGR4YnBIb0k3Zi96ZHdvRmRyMWVCN2kyMWlOTmlObS9sMTdnZ0ZJRHVx?=
- =?utf-8?B?SHJCRHRmMXhwbVRmV045SU9FTjZuL21hTWVMK01LM2tmL1pCM1NZdWFHQ3dJ?=
- =?utf-8?B?MkJHbVRIWE4xTTNCWWVxZGplUzRWejlpN3Rka3l4MmpSNW1Dc05Iek5aWlZX?=
- =?utf-8?B?dGZHalpFZHc2WjE1ME83dURCSHFtd0VWOG1IbVR6aUdmV3d6dDV5ZWs2TVRs?=
- =?utf-8?B?ZG83V2VzTFR6dWdPeEZQbm5ZMWNFN3pyUStWUEZ3U0FVTllrYkR4WE1HSXA0?=
- =?utf-8?B?RzZpczY3NUVWMzZ6T05wUytFMmNHRHBJQ2p2Y0NhMmJjVzY0N0VnYmtUTlBG?=
- =?utf-8?B?dG1URzJLOFVLMlQxUnR0eFBabUdoallpM1p0ZDg2L1FkL2kyOFFkeVRPODhJ?=
- =?utf-8?B?bElPaGV1V09TMmVaRnRpbmFnam5rVmFUNHRnSEZhWkpUdkM4RXVIajZRUERZ?=
- =?utf-8?B?UEl4NGJ6dzZvaWNqSFprQktQUmdKN2xEU1E2cHdJSEkwYnA3TkkzVHJKYXBo?=
- =?utf-8?B?WmxLRmhYUFBhSEwzdHJGNTNOYXdnWGgwajJOd3NVTEhIeUxJUmRPL0VlQW9H?=
- =?utf-8?B?aWwrc2dqODZFdHV4YmJLaVpCWU5BOTNZVnF5aDZzaHpmK3Zjc2FnNWMyTSth?=
- =?utf-8?B?RU1NUGNhZ1B5OHNWZVNaOTdLSFVtempCUHFkUE5KdkJFdHVlcjdFbjlIUDFO?=
- =?utf-8?B?QllMR0FSNWNZem9GRlJHZlFNZXVyaHdwWCtJNTJEQ0wvMzhPK2MrZVI0WkpI?=
- =?utf-8?B?L0k5QlJXSnMrTCtrQ0hiL2svS0w3RDNiZ2VEWTIvU0xkcTRxMG1sK0tZQUZ3?=
- =?utf-8?B?Z3R2ZkExUkw5dWZyMWlRSFVTaFdQM1ZJT2dDSWVxSVplc2pQeUtoMVJxMlM3?=
- =?utf-8?B?QmV3N2U2QnRxa01TdE5jakMyVjhKbnNDT2dBcWFVS1lnU0pKWFpHUmticUpE?=
- =?utf-8?B?ekU3OGdCRUg2ZUNTM2xrMHZ6ZGlGSExjeGowN0lqT0VHbjRWWWcwbi9WOTlR?=
- =?utf-8?B?YUN1ZExqcnNvYWNLR3RlOTJBdSs1aWthZUVXaFV1Sk5WN1pNOFkvUEtVTm4v?=
- =?utf-8?B?UGNHaklTUTBlRHd3Q2p3clNNRHRFWk1Ua1FZUnNkd1M5MzV1Z05mdkozTXZq?=
- =?utf-8?Q?dvmsVT6DpcvqpmKSqzexZRuvq2lSZoxGbOHdflG?=
+	=?utf-8?B?eVU2SlZzeWRROXFHcnVLaGxZbHoyOFdDU0VKbHZHek5Vc0RPa2VReHQ5eU9X?=
+ =?utf-8?B?SFpuMHJad1dNMzI5UHJPTFQydHZSWlBBWHZTQUFZNHdwQTBGOVl3a2xrNjlG?=
+ =?utf-8?B?OFg2ZURPOW5mM1JDWEgvUXNkSzRHeHA3OGsvbXVoeVBKMmE0QlQxeER0Si9h?=
+ =?utf-8?B?QVNieGd6bS8wUDVqUWJGbjdPNU52cVJhR25LL2YvSVlvOXRvcTA3Z3pMYkQz?=
+ =?utf-8?B?Zy9LSEFvMy9ZZTVVazM2U2NVOXV0MHIwdlMyQ09kZERTQnVuSXdQZHFrcmdt?=
+ =?utf-8?B?VGFqV3FyN2VDdkF0UVM4ZitMbzJiYVVMekFqakJ2RkxNbThmczVtazM3WE0v?=
+ =?utf-8?B?Mm84NlZlWDhXajd6dGNDaWpiTCt1WEJCT2R3VDZEU3VUbXVjVUVMYzBTYUF3?=
+ =?utf-8?B?WWZrVGJNSHdIUVdaWGxtMWJmUHlMVDlUenpFcnZkUDU4ZHVPZC9pYkgyQjQz?=
+ =?utf-8?B?QkoyKzdZSXY5VDRwazhKeWNZNmFrbERMZ3lyTGJ0RGJLZXJYaGhpNlZXN05v?=
+ =?utf-8?B?Q1BaY05IalBYSENEVVNqdG82ak1hUDRGSXNjM0JLOGZIYytSNHpGbThOVEpR?=
+ =?utf-8?B?V0tOeXBLcTMyS04xMkY4aE5SVUY0eGYyVXJYaGRKZ2xZTmhXakdhWDhJdWxQ?=
+ =?utf-8?B?U3RLTVRHWmU3V1d1K0NKeHpVN2Z1SnRLeW5mSlVldWhHbjhKU0V3ZHZHaDAy?=
+ =?utf-8?B?R0I4czM2aHgwSWhnaUZIMS9wd2luOUU4eW0ybUtyN0RId3BGVEt2WG5oVjkr?=
+ =?utf-8?B?bmpSSHpqNjR2OWUrNGV3ZmtnRFdJT2twMXNMeHpwYWtPMU5XUEp5bGE1M0ZT?=
+ =?utf-8?B?M0pXQzBuQkdZSUVpSGxCSExjS05iTzVFR1VIQVlmT0J4b0M0TkVCUHFaZjJP?=
+ =?utf-8?B?cHoza2dNR09MeXJPbkNYYUczMG5NOGZGeHVIb2dmREd5Zy82Vm0xWEhRYWJo?=
+ =?utf-8?B?TDNGVVZ1OU9JMERpM1ZEL041Ymp5OUhFZnZodTBJeHpNYS9seHhncFNvY3I4?=
+ =?utf-8?B?YVVyNXIrY3ZZV0Z2VncrQUYyRjNpdGVFZ1pxSlJ4Mm1WK0thQWtlZ0pPeFNY?=
+ =?utf-8?B?dldWV2tkTlhySWxnaGttb2NWNDA1d2xmY3gvcEhWTjk3ZldtOTRNN1hMY1FC?=
+ =?utf-8?B?aFFVOG1RZHlVUmRVdXg0SU5LMldOM0RBMGdkVkRvaVdvcmQyN2hYYUlzTXNi?=
+ =?utf-8?B?UHY2cnBWRmtTelhFdlhvUmcwc0VTRTlwTVFXb2NvZFNYYWwrUE5jRXVMTGps?=
+ =?utf-8?B?SE4wUVdrem95MGVHaVhSUXYxTTJwSVVGRnpkOW82anU4ZnJMaS9NNlk0Uklo?=
+ =?utf-8?B?T0ZieWwrUHYvZ3V3eG9USWZrZE1tdlA5WmRQYjdBeGdxRW8zbWNsekNvSWR6?=
+ =?utf-8?B?RWVpOGVZQks2Vy96a2RuVW5tNFM4TlM3c2NNcXp6N0xQRzc3ZHkwUkNzRnI2?=
+ =?utf-8?B?T3pBLytKYjEvdXFwRDJDYUdhTDNqMHlBRHNieEl3ZGYwM3RXUnEwRGZHTlJD?=
+ =?utf-8?B?NHBOYWFtV1owamlzTVVyWHlrNTIyYUU1QzJMejlvWjNoTzB1OTFNS2NYWUpF?=
+ =?utf-8?B?cHE0MzhHajlEVXNFRE1rWlZTdWpFaVVaTkM2cVBPYWplbGxUREwvcHFiZm9r?=
+ =?utf-8?B?RWRPMjI4aWNzaDVDK090dFN0SStWeVVHNHVrK3ZCb2NwQ01PQ2ZvZFUxR2JT?=
+ =?utf-8?B?TWk3L2daTk51dEF4OEFlRys3d1RCMEljdDRwSUZWYjA0S0gzYU5vaFZsRjJo?=
+ =?utf-8?B?SmsvSTVuUWpyNjdXNzdSelZVZHFKUWlWVFRFS3hvR3VOazhGQ1Bma3VOUFQ0?=
+ =?utf-8?Q?uy8a+bgz6xxMkymGVVCATOFBX+nAMisrEWM/A=3D?=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:YT3PR01MB9171.CANPRD01.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(7416014)(376014);DIR:OUT;SFP:1102;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:YT3PR01MB9171.CANPRD01.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(7416014)(376014);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?V0RJcDRWaXowdzgvL09aL3pMc3ZYSFk2YWMwK0xIdWFoNXQ3cEhpN3Jjajcz?=
- =?utf-8?B?eXg2VXA1TXZ6TXFkMnpsalBYOUJEZG1EdG9CZXJOZGN6MG93bnp5T0VyS21p?=
- =?utf-8?B?TDZVMFBydUhsRjlLQ21CblZjVm9ZZ20wQ293MGxYcG0rMmdveFByVmIrM1ov?=
- =?utf-8?B?NTkxOUhGNEo5K1pJb2FWRGQxdjRwWEVWczliWjU4VnRpZy9ibXFoZUtXemp6?=
- =?utf-8?B?cTVTc2FoamdkUkRGK05OcnNnS2QvRnJJd0tWcVZOS3NYek9SN3NxUmQ2TkN5?=
- =?utf-8?B?ZmlrMXRaOHFHRC9ralhRSzA4bXRIZFZtTnZIamc4bGVJV01xQ2NtbE1LMHAw?=
- =?utf-8?B?QzZJcTVUd3NFTURBWnNzdEwyRE5TOVNEallUSWVpWWR1NzBGN1BiWVhiM3lP?=
- =?utf-8?B?b2JhNVpVSjkyWW82b2xkc21HdU9uaDR5cHprL256UXNQOFVSckRDY29BODRX?=
- =?utf-8?B?dGRYV0k4SEMvNlBXaEVJTDRxM2F5bC9KQ0ptUmdPOHJicjdpYks5UHZwTU4y?=
- =?utf-8?B?RXVocm11OThQSlYxdWZKM0hwZEJqOGNPRGtxOWFRaUFIUkMySFlpSG5TZTlh?=
- =?utf-8?B?YnJlNE1ma2VCejh1emMxaENpc3lGNzdURUZsZk5HS29QRzR1TGZyVktVS0lq?=
- =?utf-8?B?cG4yc0NYcU1KTXFucnpEcHhLU2RlOFpZSkhTWjVpT1gyYWtRTGNKK3FpWkxu?=
- =?utf-8?B?OE12dVRLSmozWmJlTGkrSStvMHhNRitpYURBZnNkc0pxZ1B5eDFRR1BGMVdI?=
- =?utf-8?B?TkN2VWNQZXdkTHBQZjIxUFpjNnRXZU5vMGJ4TFpWUlBIVjdBTFFQZHk0cENE?=
- =?utf-8?B?TGxwR1VwcGVKaE9VNHJUZGc2TTRPakVpSTBjWFZlSmJ4TE5SVytZSmZqeUY4?=
- =?utf-8?B?MkV2NGxsUC9Lc2VJTWI4QlZ4ZTlhRDg4aVc0blg1OWNIMkp5VU16UXNYOSs5?=
- =?utf-8?B?T1o1eTlva3BLckovNWpQTnpXRFprNTRENkpzeGZGMkVBL0cxK2YrbnR3b29J?=
- =?utf-8?B?eTF1a0IyZEJMZTQrZ3hwN3JPUlJxa1NkVC8rN3gwVzY5cHJEUjNhdzk4UzhB?=
- =?utf-8?B?eEpoVWZhN0FYeXNsSm9zV3BBZlR5UGpScXFUbDdqNkpIVEl6OHpTemNaamNQ?=
- =?utf-8?B?em9xQjhqZG53dnNZd1V4MFduV1VYNXpJZXhZcTdMcUhQMEQwb0dkSGZYY0VX?=
- =?utf-8?B?WTZPQkhzVjdWaXM1V1hxV2hlQVR0dU1NU0FRZDBGdzBDckUra2FsVXZwWHBH?=
- =?utf-8?B?NllQejFmZzJxeHNMdVRxay8wK0J4dVJNZFpDc0RVR3NKekpFNGRqOVRQMXNT?=
- =?utf-8?B?TVlDQngrR0UxS3JGOHJGWHoyb2NRbk1ibnVaanU3WkM5T1BMSTFxWHE4WmdB?=
- =?utf-8?B?ZjE2YnNMblh5L0ZjTWpsWXltaGJRTHBRNllRRVRvWDJQR1d5SlZxaFpqdW8r?=
- =?utf-8?B?Wk5jcUN2NVVXcmluaStMSTFWNGYwQWtZd0lZbEtLR2Yzd1pxbFY1TUxkWmx0?=
- =?utf-8?B?eU9UV2owbDkvVUVYSy9hV1RCNXFXbkR6RXUyUkdFTU02LzcweERyYXVIVisr?=
- =?utf-8?B?QlBvL3FYZU1LdDY0bTQrNjBpcU5YZnpzSTFiVjY1Z0MxUjBMeDNBa0tFKytW?=
- =?utf-8?B?cUcvbkZ4ZWJ3alpsMW5vV2puSUUzVzA3cUg4SXdCL3BWcERSUGFjZXZtL3JP?=
- =?utf-8?B?ajNLMWdPNkFjY29PaloxVnI0NXBrTS9xUzg4Q29NRmdaUVNSM2Q5bHdNeWZG?=
- =?utf-8?B?amtKaVE0c0hLSXNvZC9Jb0twcU5WTzhwY2NJU01BdzZYbTh6YlJvL3FsMzd3?=
- =?utf-8?B?SFV4OWpUZnFXRENMMUU1a3BTNks3SHVIeTFIejhNWTVrUzg4ZDdISTM0N0xy?=
- =?utf-8?B?SjdJd08yNk13cnU3RWthSGcyVVZ6WDlvM2d3WFZKMlJIdXk4eW1aTi8vSXBx?=
- =?utf-8?B?RHZRYnU3VmFsVnRFSlJSTERnTGJxNkZ4aHFkZ3VJN285RDdTRE5ObTlpUEhI?=
- =?utf-8?B?bGJuVTVqbHpvQ3VjUmhwcVhkTStRRlRIeER0bmlaMGIyUndSbC8yYU5iMy81?=
- =?utf-8?B?a3daUmNoMk80RFA2VXRDK1ZVL2xhSWRlMlFiMDlXaGdVWkxYZDM3cE5SUGlN?=
- =?utf-8?B?bzBGdm5lUzdkR1IyVVNaaGt3c2RMQUZxK2tjdUtwUXVlU2dsQ015WFhKdmxk?=
- =?utf-8?Q?c57M2GjQPzJB6lqqg2r9naU=3D?=
+	=?utf-8?B?aUZFWE03NUNaaS9WN1h4bGVNMis3dlcwLzJQU2dzbElUcHRSZEgxRkZqUCtY?=
+ =?utf-8?B?K0wwY1VJeHdLN1BCUG00ZHBGNm5vNENqb3FraDF5WVZSeGxaNmVGUTVrTk5Y?=
+ =?utf-8?B?S0ZjNUtmNGNaVzNpbWtReVRoLzM5YVgrRlhrN083SjV1Y0k2Q3BWYWIyTU5C?=
+ =?utf-8?B?MWZ0SGdCOXp6bFhtT0E2b1ZLcTgyVDJWOVVXYkZkbHpzK3FTUlA3VGQ4VFZp?=
+ =?utf-8?B?ZS9vR3gwcjNlRGhmLzl4QzhSb24veVBXMjN4OWMyMDlJd2lJL1JCTXRiTEtN?=
+ =?utf-8?B?cGxmSkpIbkx2b014SmVMbGZzdWhrN2pOL1FXekxRNkJmdW1QRWhBTTNaUWQz?=
+ =?utf-8?B?U0NkWWhMSVhrMVhKR0w1TjlWTmRORi9rTUNFSEw2YzV4YVFaQUNDanBKUUNG?=
+ =?utf-8?B?akZRaEkvMDJwZjFTWUg3dXN1MnBKckJSM3htd2w2MmhrWUY3WEdBbnZIRklx?=
+ =?utf-8?B?MjFTK05BZi9UMFpVS0d6dWtyRHdXMkhXR0NIM2NCWEZCN0tkQU9FRnptTWoy?=
+ =?utf-8?B?eDdxTUFUSmYzK1IyS2VMR0RneHR4TFhnWGRhY21zTGRLNEFsQm9qNGl6UGk2?=
+ =?utf-8?B?M1lselA0cjQ4TUsrQzFETHMwc1prR3IyTTRKaW55S3NHMDIrWW5FbWdpZWZE?=
+ =?utf-8?B?OXZWUlR1OGVxbEtadk5sbGpaenhpZ2g3OUh5UklHSGJ3Y0pDY2tqaTFQK0hT?=
+ =?utf-8?B?MUhNd2VHemFFcWUrVURjT2ZTaHN6V1NzSWtaNncrOXZ6RnpDSGFZU0t6dEZQ?=
+ =?utf-8?B?dmpNMTRTYXlQS3ZYbkp1L1QzVE1ycE1PdjdYV2hpTG9jaXp2MDhyT3I5aTUr?=
+ =?utf-8?B?LzBNUFJaam1JUXovYTVCOUQybE0rTThieTZvSmx3Qm9ZUityc09wa2dVTE01?=
+ =?utf-8?B?NW16S0hhN0h4cUYyT0VLN1BVcmVuU0VOVFdRbUpJRXNUamF1bEJMcTYvTTl2?=
+ =?utf-8?B?T1ZxODVLQnZHdE9wOGx5UVR3UHdTTUJLUGtycGNNQi8vQWVzVFJmVnpFOWFE?=
+ =?utf-8?B?OUFGVy82ZUVQZ1JxaDBTcVF2OGRLYnJIVnhINUVraG1hc1RvT3lKRGdyNU5E?=
+ =?utf-8?B?N2xtTStUZEtBN3g5d1Fnb2h5SzRUblBUK25PK3FnVGRYaHpmR1BoTlUxdEZn?=
+ =?utf-8?B?NkhTUUQxRDBFWnM0TW5ZR2UvcjlIVzFLTjBYZnh0R0svcjBJWE56RlVLczNV?=
+ =?utf-8?B?cjlna2tIMCtRRW5mMklFQ1ZkOXZ4RHEyZC8ybjdDOUZDZm9zOVZ4UGxUOCtL?=
+ =?utf-8?B?aGUvOFg0RDhod1NqTm11MitpallTNWRqZkRIZUN0UitGOVpub2kxSjBTbkh1?=
+ =?utf-8?B?ME02YVJNcHBBVklrOGo0NGFiSEZBaS8veE9tUk1xWVF5ZjNVblphKzdzb3Rw?=
+ =?utf-8?B?b2hNQXpneTEwNkF3ZXVXRGlBNUNYMy9rTWZlTWtPT1M5cm9LNkZaTCs2b29R?=
+ =?utf-8?B?TmlacFRDOTN2bDZUcDJEWGVIdmdyV21LWWVUWnVXMnJ0QUpVUXhJWkNsd01u?=
+ =?utf-8?B?d085MDdhZmFvaERNbkRkWDRoZTI5YXhUN3AyaGxwMkRlVVhBWTE5RXNZSHJ2?=
+ =?utf-8?B?aDVBTmxjeHdsM283MVFDdnNOQWhnOHNXVXhRZlZZN0E2R2xWQ0xOSXNXMDI5?=
+ =?utf-8?B?dCtObGYwVDlIVHNLNU9JQnNTdWxWK0gvMy9YU3VTWXZrTGhueDBHak1VVUVX?=
+ =?utf-8?B?RmFuSVdISFViUzJacDl0aXBkT2NzVXVmVFNQSVVzcEhXMUJ5NWdZc053cXMz?=
+ =?utf-8?B?RC9oV3MrbjFhdGl0MGlaSjhYSVJtVXBYQlVab2xJTGpjc2hkWE1MV3VmMWxi?=
+ =?utf-8?B?MTNqYUxNMUtKOElvT2V5bU5Idno4NGw1V3FFd2JWdlBYKzkzdXhOQlVvd1RO?=
+ =?utf-8?B?b2FHTm9CUnd6YWZWR2hkYmpneitEQnNjaDBEZnhMMFdkcFB6TldwQ0I3WjY4?=
+ =?utf-8?B?NVIvcEpBUGFSNlZXNzZVUzQvY2NSMlhDaEdZcHNHZG9MVlFEK1lHYkFmQ1Jr?=
+ =?utf-8?B?SVNla0tPTVdNWjJtblJUb3MxR1AxSEkwWlVaTUdZa0RONStKbjdpTVNWTnBZ?=
+ =?utf-8?B?dDNPank4NmtFQ2lmN1JONVdKSmFRMGkrQW1OZHl5dmJQWHZWWUJpeXp4aGZr?=
+ =?utf-8?B?V1FNTm1NcG8yeDVNNjN3MUQ3ZWg5VENyVlRDWFRFamw2NTR5bldjdm9UQ1ds?=
+ =?utf-8?Q?mQ7+r4u7O48acjglnvYB3fA=3D?=
 X-OriginatorOrg: efficios.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 592c4c86-0269-4f25-35d4-08dd71f74a2a
+X-MS-Exchange-CrossTenant-Network-Message-Id: 977b6bd7-12b4-458d-fb30-08dd71f78715
 X-MS-Exchange-CrossTenant-AuthSource: YT3PR01MB9171.CANPRD01.PROD.OUTLOOK.COM
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Apr 2025 15:01:47.4229
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Apr 2025 15:03:29.6220
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 4f278736-4ab6-415c-957e-1f55336bd31e
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: WygkRvRi5YQIPiQJpgncHrB1owBtyiOuagPtUbwil8pBnA8dptHyTj/3yGgbLb9mLA4FHagm6eF70sCEWIkXrilPa8d7aGR1TuAGSqMJrjQ=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: QB1PPF7FD4E7D79
+X-MS-Exchange-CrossTenant-UserPrincipalName: obMnvKzu5dZxHbakF7fRrtgvs/eA23nRZtGPSK/auwtX4jG5cVQeLdAc3TNhOyh8d7MsI+SL+g0Zn48Emsh2xaYxn8s8DAjFHRwwxFWnm1A=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: YT3PR01MB11060
 
-On 2025-04-02 05:21, Mike Rapoport wrote:
-> On Tue, Apr 01, 2025 at 06:58:12PM -0400, Steven Rostedt wrote:
->> From: Steven Rostedt <rostedt@goodmis.org>
->>
->> Enforce that the address and the size of the memory used by the persistent
->> ring buffer is page aligned. Also update the documentation to reflect this
->> requirement.
-
-I've been loosely following this thread, and I'm confused about one
-thing.
-
-AFAIU the goal is to have the ftrace persistent ring buffer written to
-through a memory range mapped by vmap_page_range(), and userspace maps
-the buffer with its own virtual mappings.
-
-With respect to architectures with aliasing dcache, is the plan:
-
-A) To make sure all persistent ring buffer mappings are aligned on
-    SHMLBA:
-
-Quoting "Documentation/core-api/cachetlb.rst":
-
-   Is your port susceptible to virtual aliasing in its D-cache?
-   Well, if your D-cache is virtually indexed, is larger in size than
-   PAGE_SIZE, and does not prevent multiple cache lines for the same
-   physical address from existing at once, you have this problem.
-
-   If your D-cache has this problem, first define asm/shmparam.h SHMLBA
-   properly, it should essentially be the size of your virtually
-   addressed D-cache (or if the size is variable, the largest possible
-   size).  This setting will force the SYSv IPC layer to only allow user
-   processes to mmap shared memory at address which are a multiple of
-   this value.
-
-or
-
-B) to flush both the kernel and userspace mappings when a ring buffer
-    page is handed over from writer to reader ?
-
-I've seen both approaches being discussed in the recent threads, with
-some participants recommending approach (A), but then the code
-revisions that follow take approach (B).
-
-AFAIU, it we are aiming for approach (A), then I'm missing where
-vmap_page_range() guarantees that the _kernel_ virtual mapping is
-SHMLBA aligned. AFAIU, only user mappings are aligned on SHMLBA.
-
-And if we aiming towards approach (A), then the explicit flushing
-is not needed when handing over pages from writer to reader.
-
-Please let me know if I'm missing something,
-
-Thanks,
-
-Mathieu
-
->>
->> Link: https://lore.kernel.org/all/CAHk-=whUOfVucfJRt7E0AH+GV41ELmS4wJqxHDnui6Giddfkzw@mail.gmail.com/
->>
->> Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
->> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
->> ---
->>   Documentation/admin-guide/kernel-parameters.txt |  2 ++
->>   Documentation/trace/debugging.rst               |  2 ++
->>   kernel/trace/trace.c                            | 12 ++++++++++++
->>   3 files changed, 16 insertions(+)
->>
->> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
->> index 3435a062a208..f904fd8481bd 100644
->> --- a/Documentation/admin-guide/kernel-parameters.txt
->> +++ b/Documentation/admin-guide/kernel-parameters.txt
->> @@ -7266,6 +7266,8 @@
->>   			This is just one of many ways that can clear memory. Make sure your system
->>   			keeps the content of memory across reboots before relying on this option.
->>   
->> +			NB: Both the mapped address and size must be page aligned for the architecture.
->> +
->>   			See also Documentation/trace/debugging.rst
->>   
->>   
->> diff --git a/Documentation/trace/debugging.rst b/Documentation/trace/debugging.rst
->> index 54fb16239d70..d54bc500af80 100644
->> --- a/Documentation/trace/debugging.rst
->> +++ b/Documentation/trace/debugging.rst
->> @@ -136,6 +136,8 @@ kernel, so only the same kernel is guaranteed to work if the mapping is
->>   preserved. Switching to a different kernel version may find a different
->>   layout and mark the buffer as invalid.
->>   
->> +NB: Both the mapped address and size must be page aligned for the architecture.
->> +
->>   Using trace_printk() in the boot instance
->>   -----------------------------------------
->>   By default, the content of trace_printk() goes into the top level tracing
->> diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
->> index de6d7f0e6206..de9c237e5826 100644
->> --- a/kernel/trace/trace.c
->> +++ b/kernel/trace/trace.c
->> @@ -10788,6 +10788,18 @@ __init static void enable_instances(void)
->>   		}
->>   
->>   		if (start) {
->> +			/* Start and size must be page aligned */
->> +			if (start & ~PAGE_MASK) {
->> +				pr_warn("Tracing: mapping start addr %lx is not page aligned\n",
->> +					(unsigned long)start);
->> +				continue;
->> +			}
->> +			if (size & ~PAGE_MASK) {
->> +				pr_warn("Tracing: mapping size %lx is not page aligned\n",
->> +					(unsigned long)size);
->> +				continue;
->> +			}
+On 2025-04-02 11:01, Mathieu Desnoyers wrote:
+> On 2025-04-02 05:21, Mike Rapoport wrote:
+>> On Tue, Apr 01, 2025 at 06:58:12PM -0400, Steven Rostedt wrote:
+>>> From: Steven Rostedt <rostedt@goodmis.org>
+>>>
+>>> Enforce that the address and the size of the memory used by the 
+>>> persistent
+>>> ring buffer is page aligned. Also update the documentation to reflect 
+>>> this
+>>> requirement.
 > 
-> Better use %pa for printing physical address as on 32-bit systems
-> phys_addr_t may be unsigned long long:
+
+[ Please disregard this duplicate message and consider
+   https://lore.kernel.org/lkml/c3e395d7-0c64-44d0-a0a7-57205b2ab712@efficios.com/T/#m461e6111397b33c037f6fb746ed74ffbd0a4340f
+   instead. ]
+
+> I've been loosely following this thread, and I'm confused about one
+> thing.
 > 
-> 	pr_warn("Tracing: mapping size %pa is not page aligned\n", &size);
+> AFAIU the goal is to have the ftrace persistent ring buffer written to
+> through a memory range mapped by vmap_page_range(), and userspace maps
+> the buffer with its own virtual mappings.
 > 
->> +
->>   			addr = map_pages(start, size);
->>   			if (addr) {
->>   				pr_info("Tracing: mapped boot instance %s at physical memory %pa of size 0x%lx\n",
->> -- 
->> 2.47.2
+> With respect to architectures with aliasing dcache, is the plan:
+> 
+> A) To make sure all persistent ring buffer mappings are aligned on
+>     SHMLBA:
+> 
+> Quoting "Documentation/core-api/cachetlb.rst":
+> 
+>    Is your port susceptible to virtual aliasing in its D-cache?
+>    Well, if your D-cache is virtually indexed, is larger in size than
+>    PAGE_SIZE, and does not prevent multiple cache lines for the same
+>    physical address from existing at once, you have this problem.
+> 
+>    If your D-cache has this problem, first define asm/shmparam.h SHMLBA
+>    properly, it should essentially be the size of your virtually
+>    addressed D-cache (or if the size is variable, the largest possible
+>    size).  This setting will force the SYSv IPC layer to only allow user
+>    processes to mmap shared memory at address which are a multiple of
+>    this value.
+> 
+> or
+> 
+> B) to flush both the kernel and userspace mappings when a ring buffer
+>     page is handed over from writer to reader ?
+> 
+> I've seen both approaches being discussed in the recent threads, with
+> some participants recommending approach (A), but then the code
+> revisions that follow take approach (B).
+> 
+> AFAIU, it we are aiming for approach (A), then I'm missing where
+> vmap_page_range() guarantees that the _kernel_ virtual mapping is
+> SHMLBA aligned. AFAIU, only user mappings are aligned on SHMLBA.
+> 
+> And if we aiming towards approach (A), then the explicit flushing
+> is not needed when handing over pages from writer to reader.
+> 
+> Please let me know if I'm missing something,
+> 
+> Thanks,
+> 
+> Mathieu
+> 
+>>>
+>>> Link: https://lore.kernel.org/all/CAHk- 
+>>> =whUOfVucfJRt7E0AH+GV41ELmS4wJqxHDnui6Giddfkzw@mail.gmail.com/
+>>>
+>>> Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
+>>> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+>>> ---
+>>>   Documentation/admin-guide/kernel-parameters.txt |  2 ++
+>>>   Documentation/trace/debugging.rst               |  2 ++
+>>>   kernel/trace/trace.c                            | 12 ++++++++++++
+>>>   3 files changed, 16 insertions(+)
+>>>
+>>> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/ 
+>>> Documentation/admin-guide/kernel-parameters.txt
+>>> index 3435a062a208..f904fd8481bd 100644
+>>> --- a/Documentation/admin-guide/kernel-parameters.txt
+>>> +++ b/Documentation/admin-guide/kernel-parameters.txt
+>>> @@ -7266,6 +7266,8 @@
+>>>               This is just one of many ways that can clear memory. 
+>>> Make sure your system
+>>>               keeps the content of memory across reboots before 
+>>> relying on this option.
+>>> +            NB: Both the mapped address and size must be page 
+>>> aligned for the architecture.
+>>> +
+>>>               See also Documentation/trace/debugging.rst
+>>> diff --git a/Documentation/trace/debugging.rst b/Documentation/trace/ 
+>>> debugging.rst
+>>> index 54fb16239d70..d54bc500af80 100644
+>>> --- a/Documentation/trace/debugging.rst
+>>> +++ b/Documentation/trace/debugging.rst
+>>> @@ -136,6 +136,8 @@ kernel, so only the same kernel is guaranteed to 
+>>> work if the mapping is
+>>>   preserved. Switching to a different kernel version may find a 
+>>> different
+>>>   layout and mark the buffer as invalid.
+>>> +NB: Both the mapped address and size must be page aligned for the 
+>>> architecture.
+>>> +
+>>>   Using trace_printk() in the boot instance
+>>>   -----------------------------------------
+>>>   By default, the content of trace_printk() goes into the top level 
+>>> tracing
+>>> diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+>>> index de6d7f0e6206..de9c237e5826 100644
+>>> --- a/kernel/trace/trace.c
+>>> +++ b/kernel/trace/trace.c
+>>> @@ -10788,6 +10788,18 @@ __init static void enable_instances(void)
+>>>           }
+>>>           if (start) {
+>>> +            /* Start and size must be page aligned */
+>>> +            if (start & ~PAGE_MASK) {
+>>> +                pr_warn("Tracing: mapping start addr %lx is not page 
+>>> aligned\n",
+>>> +                    (unsigned long)start);
+>>> +                continue;
+>>> +            }
+>>> +            if (size & ~PAGE_MASK) {
+>>> +                pr_warn("Tracing: mapping size %lx is not page 
+>>> aligned\n",
+>>> +                    (unsigned long)size);
+>>> +                continue;
+>>> +            }
 >>
+>> Better use %pa for printing physical address as on 32-bit systems
+>> phys_addr_t may be unsigned long long:
 >>
+>>     pr_warn("Tracing: mapping size %pa is not page aligned\n", &size);
+>>
+>>> +
+>>>               addr = map_pages(start, size);
+>>>               if (addr) {
+>>>                   pr_info("Tracing: mapped boot instance %s at 
+>>> physical memory %pa of size 0x%lx\n",
+>>> -- 
+>>> 2.47.2
+>>>
+>>>
+>>
+> 
 > 
 
 
