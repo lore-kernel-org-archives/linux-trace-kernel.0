@@ -1,26 +1,26 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFF5523C384;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08B5F23C8A2;
 	Wed,  2 Apr 2025 14:48:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743605330; cv=none; b=X67id3tcNqAi55ylX4sd9N3JORDtDbLSDdYArJIe/oskCwvNfpc2y2kMxX2RyxsXOdtneM66+xRNn9h2kjYWSJaE5oNY7gXW6ZHp1Y6RYjP+Lb7jbnhl1JyJKGAXDsms9LpfnKQtEkRijC3R3bOS/nx2G5E6kFuBvAaw4z81qyE=
+	t=1743605331; cv=none; b=H8Rs99GqIecEu8BN+8H4DiCwwRz7wsPi1Y1GkP0fpSjhL8RCB9Ig8XQHPw/aPf1tA3BdDS0r0AjlWKorHxKMUMiY22h0eO/RAESC8VEnkMUGhGbDzdgvwSxsdAodnFLAdLIpNqSj0goklXKsu+lHkkwbi0AyMLNiKC4xj0aVXF4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743605330; c=relaxed/simple;
-	bh=4iNFYvlarmr3OWHl0Ppc9yyZFCTE2C9loNtBYGawdHw=;
+	s=arc-20240116; t=1743605331; c=relaxed/simple;
+	bh=foiVaB0xCH0+i3jeZk8KsERy/lVTTajbEH937lGNGjk=;
 	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=k5Z54uhQJohPDnwsNYAgBvFWIntC4vdt/nLmYzQt/mJ+5FQgIGH4EYx2qGe1GR5dyuiFWR5IOYdhjT//3v7hNhAi/zP3dutpmgURU4jZDbic/UFrtmvrb8Hghuh5Cigugp2br1ryTCybwhmaLreFvUHl5mOQj7m+Twd6jxfJkS0=
+	 Content-Type; b=agQt8HO6TX6M/OsxmLJkX2vU1JR044BtWgViT5yZoZ5UhDB5HoadDiFcN/ZUAPSW4R9dv3oqe9+S10A5LlFADkxF/cH7y0LXhESVkMVYlPVwjVje6uhW59gZGZZvgXXq+z1yCENHy/XJL/ET8mTmihjmzCsGzD5BEDBwOJwi35M=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 70604C4CEEF;
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7F9B7C4CEF1;
 	Wed,  2 Apr 2025 14:48:50 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.98)
 	(envelope-from <rostedt@goodmis.org>)
-	id 1tzzPd-00000006SP8-3lhZ;
-	Wed, 02 Apr 2025 10:49:53 -0400
-Message-ID: <20250402144953.754618481@goodmis.org>
+	id 1tzzPe-00000006SPc-0IWG;
+	Wed, 02 Apr 2025 10:49:54 -0400
+Message-ID: <20250402144953.920792197@goodmis.org>
 User-Agent: quilt/0.68
-Date: Wed, 02 Apr 2025 10:49:06 -0400
+Date: Wed, 02 Apr 2025 10:49:07 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org,
  linux-trace-kernel@vger.kernel.org
@@ -32,8 +32,9 @@ Cc: Linus Torvalds <torvalds@linux-foundation.org>,
  Vincent Donnefort <vdonnefort@google.com>,
  Vlastimil Babka <vbabka@suse.cz>,
  Mike Rapoport <rppt@kernel.org>,
- Jann Horn <jannh@google.com>
-Subject: [PATCH v6 3/4] tracing: Use vmap_page_range() to map memmap ring buffer
+ Jann Horn <jannh@google.com>,
+ stable@vger.kernel.org
+Subject: [PATCH v6 4/4] ring-buffer: Use flush_kernel_vmap_range() over flush_dcache_folio()
 References: <20250402144903.993276623@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -45,77 +46,55 @@ Content-Type: text/plain; charset=UTF-8
 
 From: Steven Rostedt <rostedt@goodmis.org>
 
-The code to map the physical memory retrieved by memmap currently
-allocates an array of pages to cover the physical memory and then calls
-vmap() to map it to a virtual address. Instead of using this temporary
-array of struct page descriptors, simply use vmap_page_range() that can
-directly map the contiguous physical memory to a virtual address.
+Some architectures do not have data cache coherency between user and
+kernel space. For these architectures, the cache needs to be flushed on
+both the kernel and user addresses so that user space can see the updates
+the kernel has made.
 
-Link: https://lore.kernel.org/all/CAHk-=whUOfVucfJRt7E0AH+GV41ELmS4wJqxHDnui6Giddfkzw@mail.gmail.com/
+Instead of using flush_dcache_folio() and playing with virt_to_folio()
+within the call to that function, use flush_kernel_vmap_range() which
+takes the virtual address and does the work for those architectures that
+need it.
 
-Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
+This also fixes a bug where the flush of the reader page only flushed one
+page. If the sub-buffer order is 1 or more, where the sub-buffer size
+would be greater than a page, it would miss the rest of the sub-buffer
+content, as the "reader page" is not just a page, but the size of a
+sub-buffer.
+
+Link: https://lore.kernel.org/all/CAG48ez3w0my4Rwttbc5tEbNsme6tc0mrSN95thjXUFaJ3aQ6SA@mail.gmail.com/
+
+Cc: stable@vger.kernel.org
+Fixes: 117c39200d9d7 ("ring-buffer: Introducing ring-buffer mapping functions");
+Suggested-by: Jann Horn <jannh@google.com>
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- kernel/trace/trace.c | 33 ++++++++++++++++-----------------
- 1 file changed, 16 insertions(+), 17 deletions(-)
+ kernel/trace/ring_buffer.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index e58b72e61573..f6531cd3176b 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -50,6 +50,7 @@
- #include <linux/irq_work.h>
- #include <linux/workqueue.h>
- #include <linux/sort.h>
-+#include <linux/io.h> /* vmap_page_range() */
+diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+index f25966b3a1fc..d4b0f7b55cce 100644
+--- a/kernel/trace/ring_buffer.c
++++ b/kernel/trace/ring_buffer.c
+@@ -6016,7 +6016,7 @@ static void rb_update_meta_page(struct ring_buffer_per_cpu *cpu_buffer)
+ 	meta->read = cpu_buffer->read;
  
- #include <asm/setup.h> /* COMMAND_LINE_SIZE */
- 
-@@ -9796,29 +9797,27 @@ static int instance_mkdir(const char *name)
- 	return ret;
+ 	/* Some archs do not have data cache coherency between kernel and user-space */
+-	flush_dcache_folio(virt_to_folio(cpu_buffer->meta_page));
++	flush_kernel_vmap_range(cpu_buffer->meta_page, PAGE_SIZE);
  }
  
--static u64 map_pages(u64 start, u64 size)
-+static u64 map_pages(unsigned long start, unsigned long size)
- {
--	struct page **pages;
--	phys_addr_t page_start;
--	unsigned int page_count;
--	unsigned int i;
--	void *vaddr;
--
--	page_count = DIV_ROUND_UP(size, PAGE_SIZE);
-+	unsigned long vmap_start, vmap_end;
-+	struct vm_struct *area;
-+	int ret;
+ static void
+@@ -7319,7 +7319,8 @@ int ring_buffer_map_get_reader(struct trace_buffer *buffer, int cpu)
  
--	page_start = start;
--	pages = kmalloc_array(page_count, sizeof(struct page *), GFP_KERNEL);
--	if (!pages)
-+	area = get_vm_area(size, VM_IOREMAP);
-+	if (!area)
- 		return 0;
+ out:
+ 	/* Some archs do not have data cache coherency between kernel and user-space */
+-	flush_dcache_folio(virt_to_folio(cpu_buffer->reader_page->page));
++	flush_kernel_vmap_range(cpu_buffer->reader_page->page,
++				buffer->subbuf_size + BUF_PAGE_HDR_SIZE);
  
--	for (i = 0; i < page_count; i++) {
--		phys_addr_t addr = page_start + i * PAGE_SIZE;
--		pages[i] = pfn_to_page(addr >> PAGE_SHIFT);
-+	vmap_start = (unsigned long) area->addr;
-+	vmap_end = vmap_start + size;
-+
-+	ret = vmap_page_range(vmap_start, vmap_end,
-+			      start, pgprot_nx(PAGE_KERNEL));
-+	if (ret < 0) {
-+		free_vm_area(area);
-+		return 0;
- 	}
--	vaddr = vmap(pages, page_count, VM_MAP, PAGE_KERNEL);
--	kfree(pages);
+ 	rb_update_meta_page(cpu_buffer);
  
--	return (u64)(unsigned long)vaddr;
-+	return (u64)vmap_start;
- }
- 
- /**
 -- 
 2.47.2
 
