@@ -1,62 +1,103 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7612917555;
-	Wed,  2 Apr 2025 16:00:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F17B7136E37
+	for <linux-trace-kernel@vger.kernel.org>; Wed,  2 Apr 2025 16:42:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743609648; cv=none; b=s5yGj14tL0Uk+9ljhPgWZhLKqKG/7vrJ1KBbIX20kCRzszNubzCVdjjBohgbVEY9l5iNhKOoKqTUvCVis5a6Fh0F8casg3yGcVGh1A5NW6FYSq5MuoSWHMMB5UVM2uO3xHq9ZfVYvpcTZYlATTbG3ox8y9Fua43A74QycL6jBys=
+	t=1743612142; cv=none; b=euEO7KHgD7+gkBf6yDphdemWyo9612rOSWNfGiueasEDW3i95qy33+hXCmDSC7FvxMquQ/QJuff+a21tJpVoia52Rx/3d0OB+zaXC7MlgwQhn/qSOX1Wo5wdmDnIMF02I0BBqJYKyH/zEi3NOGdtk7Ic/4EsxHE0SzSVZ0ayMhQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743609648; c=relaxed/simple;
-	bh=F64onNLt2w+tibZxIY7uH0D8/mcd+XRJO+M4Fp+BG8w=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=QolNdK5VWAUj/yxRqP0jpzY8XNY66x5kyNrPe2FQ3Y4LTX2olIt/SlkHyWIFIR/6vUirGRWB5hoQ41zqn0ZXeJP6BsZJV8K2ALVJT+RlGWmYCUnGgAsx8VMWtptjLZ44vx2XSzIJcuoWluwDJt5i/pamHLwGibafGjG296i/2Ls=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3E1C2C4CEE5;
-	Wed,  2 Apr 2025 16:00:46 +0000 (UTC)
-Date: Wed, 2 Apr 2025 12:01:49 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: David Ahern <dsahern@kernel.org>
-Cc: Breno Leitao <leitao@debian.org>, Eric Dumazet <edumazet@google.com>,
- Neal Cardwell <ncardwell@google.com>, Kuniyuki Iwashima
- <kuniyu@amazon.com>, Masami Hiramatsu <mhiramat@kernel.org>, Mathieu
- Desnoyers <mathieu.desnoyers@efficios.com>, "David S. Miller"
- <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni
- <pabeni@redhat.com>, Simon Horman <horms@kernel.org>,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, kernel-team@meta.com,
- yonghong.song@linux.dev
-Subject: Re: [PATCH net-next] trace: tcp: Add tracepoint for tcp_sendmsg()
-Message-ID: <20250402120149.4ca403b1@gandalf.local.home>
-In-Reply-To: <102dfbdc-4626-4a9c-ab8a-c8ce015a1f36@kernel.org>
-References: <20250224-tcpsendmsg-v1-1-bac043c59cc8@debian.org>
-	<CANn89iLybqJ22LVy00KUOVscRr8GQ88AcJ3Oy9MjBUgN=or0jA@mail.gmail.com>
-	<559f3da9-4b3d-41c2-bf44-18329f76e937@kernel.org>
-	<20250226-cunning-innocent-degu-d6c2fe@leitao>
-	<7e148fd2-b4b7-49a1-958f-4b0838571245@kernel.org>
-	<20250226-daft-inchworm-of-love-3a98c2@leitao>
-	<CANn89iKwO6yiBS_AtcR-ymBaA83uLh8sCh6znWE__+a-tC=qhQ@mail.gmail.com>
-	<70168c8f-bf52-4279-b4c4-be64527aa1ac@kernel.org>
-	<Z+00OTntj9ALlxuj@gmail.com>
-	<102dfbdc-4626-4a9c-ab8a-c8ce015a1f36@kernel.org>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1743612142; c=relaxed/simple;
+	bh=jDMS7s/QqERhxp6/24eiwlAd0eMfjngKpnVvj0XkLKQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=GdfyLVziLp1IlOSXqgehbY5Tb9M2bXcsJ7fqalgy55eBS7+bXfY/bHbGbjFZu0TmGAsF7+AgLZGP7SxOmlfRZiGwm3ImFLLHSPCvXngN49NCre3uDVHD6yfOlWjoqTXLl1qfj03qi/j93w9YMAyfZz54fQAyvV8nI03siFvFpyU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=fUa6MEmF; arc=none smtp.client-ip=209.85.218.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="fUa6MEmF"
+Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-ac297cbe017so202739666b.0
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 02 Apr 2025 09:42:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google; t=1743612139; x=1744216939; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=PiI+w7mkKlftQ5tbROJbiyp27FCKTbLNo5OCEHanpjQ=;
+        b=fUa6MEmFiAFLnnMoaAYsEze4TkUuRyRmrXEqXXIvcFtXbERU058DFbuC8cOVQMARY6
+         FgEAFO/B6PLiFVxAeMUPeBhlrs6HNF76fTb+kJgf/SeEjuor8G0iZrxZnDOVCdJqgc8v
+         Q2oiB33bia5h6HkTddyrjv6zrkbJbkBeRayVU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743612139; x=1744216939;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=PiI+w7mkKlftQ5tbROJbiyp27FCKTbLNo5OCEHanpjQ=;
+        b=JGUmSCRY621+c+ifNZBPaRvGKcJXdoLzjaahIEQQiln278U9fOkeID4jQclHaxaSEq
+         oFRWBxx/WozEwofpHoFQ4CNEsMeTYRXySrc7mblWKzBn+9ZouIF6/AkUt9SkBPjnzosq
+         aYxTpMrqbBxfoHYiGSMWvwWppADQigilwmUr9VlM9ulRzk2rA44KCIZmg0SRw4VEIiQF
+         IfQtmiK8ZqJOTHAiOUfxlkzig/00YiMVxINEYfGoinMxuHxbSoUBM1K9EdgM/QGU0EUx
+         NTCdSI/Dbf5upSRcOHWUVoAVkdN7CUTcLG0yiKPRpIr+XWfy5Wommjihg+JLqL8/3v+E
+         aFHA==
+X-Forwarded-Encrypted: i=1; AJvYcCVOgFNgOApHpko43rPlqGzHo5LvzZHl9VnEAtRTkehugVQbi8rSlArboEeMJjdEG5oomFaNRbhqjXZDwxjrYTFMcp8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwnX48XS1w47+HUehL4utI/3k2r40FFO1CyfrXDuHnfC5zlPOku
+	jfx4yAYQ3cp/V9dn39h15Qbcr9ZNn95y6C9FlGRKtIiBu49ySLg+qIarN0V6LsyPPNkC6OjtQ34
+	Bh4U=
+X-Gm-Gg: ASbGncsj/CJcLMYVmJPFGCYiiQf7MuZO9xvQ7EGDxi7PPNQhWErNgvvkcmdnnXtu6Pz
+	HJVYxgE/xRVdhmjmnWWXQ54etVLbhJGmlHRf62o2+lK/1RfvH2b2tPIwE/N6YlW5hsfnsfqwpPE
+	c8A989OlDmcGOa/KgwnCcKWIQT7huXpc0HmlKJx1Bolnetf4VrNZozSYBSf3xrCe9hJx+ebNExc
+	gsIsUviyXDaNHcXbuJaHQIYYR7SmR7J/UI7FnFZ9diBO0KOdRxQQthOyP+FpKw6qBzoBrLBet0H
+	sNFW7aXaVk4nuIabDjQF05QEGO8WjvVhBnLY1YVCus8HZOlrnFnl3vymlxAdoiAkWfZi71KPv1L
+	FDWy1bWEhNMf2zLucFmU=
+X-Google-Smtp-Source: AGHT+IFOFR75b0sCNTAT6mLsMrLiQyvS2Z34c6k+2Qr6yZQ/ZML2ozUX3uFPMMJwzse6mjNH12Ig+Q==
+X-Received: by 2002:a17:907:7eaa:b0:ac7:7e35:ec09 with SMTP id a640c23a62f3a-ac7b6c57edcmr20871866b.12.1743612138740;
+        Wed, 02 Apr 2025 09:42:18 -0700 (PDT)
+Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com. [209.85.218.51])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac719621718sm950784266b.102.2025.04.02.09.42.17
+        for <linux-trace-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 02 Apr 2025 09:42:17 -0700 (PDT)
+Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-ab771575040so212361866b.1
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 02 Apr 2025 09:42:17 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUcK6Eazv0e58j4H/m46+l/M+4JqC3sf8sF51j/E5XaMmgm9H9ShBlhJ6pidlQ3C4LVWldyjF1sKOzFihwzLrkms+Q=@vger.kernel.org
+X-Received: by 2002:a17:907:72c9:b0:ac1:ecb0:ca98 with SMTP id
+ a640c23a62f3a-ac7b7184e0dmr16775366b.26.1743612136665; Wed, 02 Apr 2025
+ 09:42:16 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20250401225811.008143218@goodmis.org> <20250401225842.597899085@goodmis.org>
+In-Reply-To: <20250401225842.597899085@goodmis.org>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Wed, 2 Apr 2025 09:42:00 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wifCDa6FfRKzeioYuEqJFTeXnYQ1DpeuYsmmn59NWuakQ@mail.gmail.com>
+X-Gm-Features: AQ5f1Jo_6jfKVd2ZZL5O-Nn69rU-B6u26vp9pp03kbk_PkBqnLF3DFsRfWV2_Ok
+Message-ID: <CAHk-=wifCDa6FfRKzeioYuEqJFTeXnYQ1DpeuYsmmn59NWuakQ@mail.gmail.com>
+Subject: Re: [PATCH v5 3/4] tracing: Use vmap_page_range() to map memmap ring buffer
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Andrew Morton <akpm@linux-foundation.org>, 
+	Vincent Donnefort <vdonnefort@google.com>, Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>, 
+	Jann Horn <jannh@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On Wed, 2 Apr 2025 08:11:03 -0600
-David Ahern <dsahern@kernel.org> wrote:
+On Tue, 1 Apr 2025 at 15:57, Steven Rostedt <rostedt@goodmis.org> wrote:
+>
+> The code to map the physical memory retrieved by memmap currently
+> allocates an array of pages to cover the physical memory and then calls
+> vmap() to map it to a virtual address. Instead of using this temporary
+> array of struct page descriptors, simply use vmap_page_range() that can
+> directly map the contiguous physical memory to a virtual address.
 
-> How about passing in the sk reference here; not needed for trace
-> entries, but makes it directly accessible for bpf programs.
+Wait, what?
 
-Not to mention event probes (dynamic trace events that can be attached to
-existing events and the fields can be dereferenced). One day I'll add
-documentation about event probes as they have been in the kernel since 5.15! :-p
+Didn't you just say that you can just use page_address() for the kernel mapping?
 
--- Steve
+So the whole vmap thing is entirely unnecessary in the first place.
+
+Including the simpler vmap_page_range().
+
+             Linus
