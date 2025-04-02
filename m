@@ -1,182 +1,124 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A4A719F40F;
-	Wed,  2 Apr 2025 09:24:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CE3E236454;
+	Wed,  2 Apr 2025 10:27:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743585860; cv=none; b=fL8G59h0pt/Dz2UoZYLIfdMMN8CdO1I19kX12N61h9bClJ84WybqiUlKN5vrcv4n1YmrNoIG/NGiEdDXyCeI1ejLcpPeQw85pufUXmn8Sm/sqg6sBGNBITAvWr5K2kt/0LOeZwAUe3ctkaDtdx1hEltePCMC+v2+sUh9cotAJ0c=
+	t=1743589672; cv=none; b=PcVrdY/bMxSPzLlHFcI1SevqJQt2j3I7lV8jXb7nyisaFDFCqBbi8hv3RjaGbdoLk4u32GJQkBvHneA3WbsEoj/3ArgUUMNy2JwKvxqPwuMXmAtMiQ00E+4PANPsQiUzMoMNLppjAIvWs5B5/TzlgMVkuY3ZYfAh+h7xVe4MruU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743585860; c=relaxed/simple;
-	bh=S+RammdvGgPNtJem3pUChnkx0mUdR8uHfmfIr5vdu+s=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hYcesJPgEI0GnuJjxsehbUqyFJsAMfhUrkPORjUhEJe+Ix7egjocNLoPPvn2QECR4AVLN5nnawDh2DRr24ynIqt9EoPX0fa3DQkqxIyaZryTXmwjLfel78N+kRS0CVhqexcZllahDnQpKsHy1djnp+kG4DITLKCVeH9O65VfHNo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=exZp2R/X; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743589672; c=relaxed/simple;
+	bh=eeLoqleT0q+WUMWnv3fDw55O+C1cpprufM4gJ9k/rd4=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=EpqOkCMGwbw2AesC1l6eD8cFErMye6TcG5AwTdDBA5+V3Zf/pmrh9sw2Y9EeY6bDuFAEQR3JTGGA12XSxtNORwgX95z1hqQej9K2Tv5xmTlPL81eGNVRoCEtQw1MiU3IgWo1fXUWZCpjO7CRu3ootWv7inR8JnEQ4hZqdUM5NlY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PjMalyPr; arc=none smtp.client-ip=209.85.128.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="exZp2R/X"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 55BDAC4CEDD;
-	Wed,  2 Apr 2025 09:24:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743585860;
-	bh=S+RammdvGgPNtJem3pUChnkx0mUdR8uHfmfIr5vdu+s=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=exZp2R/X99eCiYjF/oaz5HTlQ9d4p5R+yI1ZlBwLewSLWYpT8mFZAaf2hDMdXT+YO
-	 UDrdiY1FUneyZKMmugVo0jziVpDpelufoOnnVcsOQ2DNPAWBgCG7f6NnHDzNE6E0bE
-	 fjlIz77sKyHfy2iqG+QlwUSGt61wjaKGAjVxo1VfvjC+18H5Qnvft4g3NEw9m4qlJC
-	 Nbt2UTMgz9ocSDp5brO6YB31zUUemL9MVzbhH2tYX87NOzucgFSIN3QrlDDwPFOR2t
-	 AHwTSV3OS7IRwz2P3aqn7vzbHyZ+jfY0tEMcsfi23ZugdfSm654i+oisuS6LUDzjTT
-	 4Sj3pY1DG6Jtw==
-Date: Wed, 2 Apr 2025 12:24:12 +0300
-From: Mike Rapoport <rppt@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Vincent Donnefort <vdonnefort@google.com>,
-	Vlastimil Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>
-Subject: Re: [PATCH v5 2/4] tracing: Have reserve_mem use phys_to_virt() and
- separate from memmap buffer
-Message-ID: <Z-0CPFGDqcUt-fMp@kernel.org>
-References: <20250401225811.008143218@goodmis.org>
- <20250401225842.429332654@goodmis.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PjMalyPr"
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-43d0782d787so43199325e9.0;
+        Wed, 02 Apr 2025 03:27:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743589668; x=1744194468; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:date:from:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=+k78tSb5ZA1zmXxb3m00fnDBewWredn7OcohwmOAeu4=;
+        b=PjMalyPrLAiQtT7u2pMITMyICfPFLl1fqEn6HwTdVNz3dBbceeBYb4uBb1eI0v7nKI
+         HhDVs3yFjkUM/Z4yc8b+M8CItRJP4xoHUdBPByuZtFCuA3hZ233boHfx8Y8L+xtEWBu1
+         QrDj98zx5PBb9ZltPvblk7AnN+zL9VTMy9041RFVhK3RIka/x9JwwqoyBsj6r7lf4FFt
+         +71YlKuomBSYUp8WbKHcfL+aQuYHGPkItI1UqaUpt/ex8gTZ15TuyuCnByCLkps5rXPZ
+         9CuHM/E4GwxJ04JIziGsoXdXTOVtpwNJCIEgBxTiNBhtEBnGXQwxnE4PlyCCCyiivJFZ
+         cvsA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743589668; x=1744194468;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:date:from
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=+k78tSb5ZA1zmXxb3m00fnDBewWredn7OcohwmOAeu4=;
+        b=TLjsKNlA5TIZ6vmU2fIOggqmOOTj1Uzj46OFjOtJazzX5XN8GvEnTSPqIaYNOahifu
+         VMbsR9wV+F3dB7wujx0Sp80w8PsYDu6SIl6V2vpkvgUgYEXOYws5kw+9uBKYi1ZgLQG/
+         HaUhGAhTeWcGkG8H4uFWaU2oeRLdsqZe3I0znvSCXPBjFOjo2oSn7Xki/1Ny7qhz/cCW
+         c55742OiILGda95ILOJag8d+rTVV6TbeKy/Drh6jALEh+ctsY2VSHgTorWt1jZ/nJDbX
+         NMydAYgAU699GUTYG0M8hQ42mdhqGKLOMN4UHl0j+XdGehwLGf5ilZf7kVVfgQgHXVVF
+         26MQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU3Q+5Fg+25C8X+NWNXcGLKqlBlSsoiRW4WHda71sTX6jJZo36vImr/DZsGQh5xQNcCrD/qwSz9OF6DOHCj@vger.kernel.org, AJvYcCWssWXdNNLkH70kKsnwNUSEnB0tnjMB9LJfcvh6TQnratSa7R4XosrCtNCCmMgRZUxWevQ=@vger.kernel.org, AJvYcCWtXa+nteArVEXovTtg8xbWb7QKQZU75hCCCqmi0OYZ4me2boNRaZulh2oNG2j0DN08ZGYJQRU5Jfitkcs7qoRC1jFU@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyc6NTra5/QVvhfXTmQIxSqcwMZwfGItleWMb84XwcDbvDz7tu3
+	UyWJ9bSJg5KGk1EAWxpU5IoCUL9RzJhl5paMJSwH9bhzQBrE+u4s
+X-Gm-Gg: ASbGncu/uPG8aNPCqgqW7uIvZuHSr2v7dN1Ud/E8tyOqnFCqbFfwfNrmC6cRTos62Ng
+	uzVO4K651iqSaM0fZQ5vFx6EuD1/CHvhgsrsrdF+al89TXArFxW/eA9CfukgcJq04b+OK3riuoi
+	+ug9jJYriAnxSrBSZsVwQKtRMoy2cw/yu5d8t/GFo5zKC9+Pq91BuLDGUJ0f9ZHQfm+vk/H5nPP
+	Xc9aw4ioDseEB52so4JDL5I2dMoSP3FjimIH/MqAVYiyVUpGIYHOkqz5Ztg3A6Ev/rdTR0jkP4x
+	5lb422DDFqjlnXq0N6FHM61i6SL38WhAMQHwNnAe4xL56G85tS2mAMq5o2l8l1tMMxgd9A==
+X-Google-Smtp-Source: AGHT+IFleKFYOWRpC3v9vuGJk33DcAzU872/yQKBydvXVfpJMSmUuNbUIfy+XpRWiVZAvuvoODgrEA==
+X-Received: by 2002:a05:600c:314b:b0:43c:ea1a:720c with SMTP id 5b1f17b1804b1-43db624b452mr173766045e9.18.1743589668387;
+        Wed, 02 Apr 2025 03:27:48 -0700 (PDT)
+Received: from krava (pokorny-hyundai2.faster.cz. [77.240.177.173])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43eb5fd0d36sm16067175e9.10.2025.04.02.03.27.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Apr 2025 03:27:47 -0700 (PDT)
+From: Jiri Olsa <olsajiri@gmail.com>
+X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
+Date: Wed, 2 Apr 2025 12:27:45 +0200
+To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	linux-trace-kernel@vger.kernel.org, peterz@infradead.org,
+	mingo@kernel.org, bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
+	kernel-team@meta.com, mhocko@kernel.org, oleg@redhat.com,
+	brauner@kernel.org, glider@google.com, mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com, akpm@linux-foundation.org
+Subject: Re: [PATCH] exit: add trace_task_exit() tracepoint before
+ current->mm is reset
+Message-ID: <Z-0RIXmHHGrXb5HH@krava>
+References: <20250401184021.2591443-1-andrii@kernel.org>
+ <20250401173249.42d43a28@gandalf.local.home>
+ <CAEf4BzYB1dvFF=7x-H3UDo4=qWjdhOO1Wqo9iFyz235u+xp9+g@mail.gmail.com>
+ <20250401181315.524161b5@gandalf.local.home>
+ <CAEf4Bzbq1AMdpBysK-OqJPwrKpibyLk9RffiwEU9xdGwwHC_3w@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250401225842.429332654@goodmis.org>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAEf4Bzbq1AMdpBysK-OqJPwrKpibyLk9RffiwEU9xdGwwHC_3w@mail.gmail.com>
 
-On Tue, Apr 01, 2025 at 06:58:13PM -0400, Steven Rostedt wrote:
-> From: Steven Rostedt <rostedt@goodmis.org>
+On Tue, Apr 01, 2025 at 03:17:01PM -0700, Andrii Nakryiko wrote:
+> On Tue, Apr 1, 2025 at 3:12 PM Steven Rostedt <rostedt@goodmis.org> wrote:
+> >
+> > On Tue, 1 Apr 2025 15:04:11 -0700
+> > Andrii Nakryiko <andrii.nakryiko@gmail.com> wrote:
+> >
+> > > How bad would it be to just move trace_sched_process_exit() then? (and
+> > > add group_dead there, as you mentioned)?
+> >
+> > I personally don't have an issue with that. In fact, the one place I used
+> > the sched_process_exit tracepoint, I had to change to use
+> > sched_process_free because it does too much after that.
 > 
-> The reserve_mem kernel command line option may pass back a physical
-> address, but the memory is still part of the normal memory just like
-> using memblock_reserve() would be. This means that the physical memory
+> heh, I ran into that as well just recently and also had to use
+> sched_process_free instead of sched_process_exit, because between exit
+> and free we still can get sched_switch tracepoint trigger (so it's a
+> bit too early to clean up whatever per-task state I maintain in BPF
+> program).
+> 
+> So yeah, I'm up for that as well, will send v2 just moving and
+> extending the existing tracepoint. Thanks!
 
-... using memblock_alloc() would be
++1, it'd be great to have the group_dead info, we also need
+to have some workarounds for that
 
-> returned by the reserve_mem command line option can be converted directly
-> to virtual memory by simply using phys_to_virt().
-> 
-> When freeing the buffer there's no need to call vunmap() anymore as the
-> memory allocated by reserve_mem is freed by the call to
-> reserve_mem_release_by_name().
-> 
-> Because the persistent ring buffer can also be allocated via the memmap
-> option, which *is* different than normal memory as it cannot be added back
-> to the buddy system, it must be treated differently. It still needs to be
-> virtually mapped to have access to it. It also can not be freed nor can it
-> ever be memory mapped to user space.
-> 
-> Create a new trace_array flag called TRACE_ARRAY_FL_MEMMAP which gets set
-> if the buffer is created by the memmap option, and this will prevent the
-> buffer from being memory mapped by user space.
-> 
-> Also increment the ref count for memmap'ed buffers so that they can never
-> be freed.
-> 
-> Link: https://lore.kernel.org/all/Z-wFszhJ_9o4dc8O@kernel.org/
-> 
-> Suggested-by: Mike Rapoport <rppt@kernel.org>
-> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-> ---
->  kernel/trace/trace.c | 23 ++++++++++++++++-------
->  kernel/trace/trace.h |  1 +
->  2 files changed, 17 insertions(+), 7 deletions(-)
-> 
-> diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-> index de9c237e5826..2f9c91f26d5b 100644
-> --- a/kernel/trace/trace.c
-> +++ b/kernel/trace/trace.c
-> @@ -8505,6 +8505,10 @@ static int tracing_buffers_mmap(struct file *filp, struct vm_area_struct *vma)
->  	struct trace_iterator *iter = &info->iter;
->  	int ret = 0;
->  
-> +	/* A memmap'ed buffer is not supported for user space mmap */
-> +	if (iter->tr->flags & TRACE_ARRAY_FL_MEMMAP)
-> +		return -ENODEV;
-> +
->  	/* Currently the boot mapped buffer is not supported for mmap */
->  	if (iter->tr->flags & TRACE_ARRAY_FL_BOOT)
->  		return -ENODEV;
-> @@ -9614,9 +9618,6 @@ static void free_trace_buffers(struct trace_array *tr)
->  #ifdef CONFIG_TRACER_MAX_TRACE
->  	free_trace_buffer(&tr->max_buffer);
->  #endif
-> -
-> -	if (tr->range_addr_start)
-> -		vunmap((void *)tr->range_addr_start);
->  }
->  
->  static void init_trace_flags_index(struct trace_array *tr)
-> @@ -10710,6 +10711,7 @@ static inline void do_allocate_snapshot(const char *name) { }
->  __init static void enable_instances(void)
->  {
->  	struct trace_array *tr;
-> +	bool memmap_area = false;
->  	char *curr_str;
->  	char *name;
->  	char *str;
-> @@ -10778,6 +10780,7 @@ __init static void enable_instances(void)
->  					name);
->  				continue;
->  			}
-> +			memmap_area = true;
->  		} else if (tok) {
->  			if (!reserve_mem_find_by_name(tok, &start, &size)) {
->  				start = 0;
-> @@ -10800,7 +10803,10 @@ __init static void enable_instances(void)
->  				continue;
->  			}
->  
-> -			addr = map_pages(start, size);
-> +			if (memmap_area)
-> +				addr = map_pages(start, size);
-> +			else
-> +				addr = (unsigned long)phys_to_virt(start);
->  			if (addr) {
->  				pr_info("Tracing: mapped boot instance %s at physical memory %pa of size 0x%lx\n",
->  					name, &start, (unsigned long)size);
-> @@ -10827,10 +10833,13 @@ __init static void enable_instances(void)
->  			update_printk_trace(tr);
->  
->  		/*
-> -		 * If start is set, then this is a mapped buffer, and
-> -		 * cannot be deleted by user space, so keep the reference
-> -		 * to it.
-> +		 * memmap'd buffers can not be freed.
->  		 */
-> +		if (memmap_area) {
-> +			tr->flags |= TRACE_ARRAY_FL_MEMMAP;
-> +			tr->ref++;
-> +		}
-> +
->  		if (start) {
->  			tr->flags |= TRACE_ARRAY_FL_BOOT | TRACE_ARRAY_FL_LAST_BOOT;
->  			tr->range_name = no_free_ptr(rname);
-> diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
-> index c20f6bcc200a..f9513dc14c37 100644
-> --- a/kernel/trace/trace.h
-> +++ b/kernel/trace/trace.h
-> @@ -447,6 +447,7 @@ enum {
->  	TRACE_ARRAY_FL_BOOT		= BIT(1),
->  	TRACE_ARRAY_FL_LAST_BOOT	= BIT(2),
->  	TRACE_ARRAY_FL_MOD_INIT		= BIT(3),
-> +	TRACE_ARRAY_FL_MEMMAP		= BIT(4),
->  };
->  
->  #ifdef CONFIG_MODULES
-> -- 
-> 2.47.2
-> 
-> 
+thanks,
+jirka
 
--- 
-Sincerely yours,
-Mike.
+> 
+> >
+> > OK, let's just move the sched_process_exit tracepoint. It's in an arbitrary
+> > location anyway.
+> >
+> > -- Steve
+> 
