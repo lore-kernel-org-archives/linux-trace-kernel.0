@@ -1,101 +1,101 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6652221B9D8;
-	Tue,  1 Apr 2025 22:57:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F216420CCFB
+	for <linux-trace-kernel@vger.kernel.org>; Wed,  2 Apr 2025 07:14:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743548261; cv=none; b=RK6niMXEvDmCI/whPjxx9EJIWRAV2xRNLsjo2NCtBHtpNHtcfG6mpodSHa/BPh4qLeDO+aSaxw5DwYhMA0163x3ItrcWu7H0vVw4sJ7X5gwRb7ZzecGXLY0RAjsxfO4zBxpntb+3I8/dwT3bzx0OpEj6PSm7PYN8lOfBTfnZN4M=
+	t=1743578098; cv=none; b=M6LATrotY20uFt5Zj8FWwzPgq640C32QgU/C78LBY48CjA8w3VaVmJKIaW0heEz2wKhEUqBuyNkpmjxgojw6Sun5teEhW+qBvFK0RVOP3eyCUsphIJoLHEIpE52CO0kWgOYlIICB1RZx4x9mAXvpZmOP+wGL9YStkH9VZAdthk4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743548261; c=relaxed/simple;
-	bh=VVGWqO0rzDMb+s8nP/lH2okTAPFnAxC1NyA5C3vFxbM=;
-	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=dAkL3OMh/lXPlPU9VqxaYh1ZWS0kaPaFygtoasp8/tbg54k0R3xzr9E1wQNZby6MsXHu+F/mnnDxUKaMcpgvfXEzD1ADPRlqVZuhjE6DD9BJwcq/Vp/QY8cy5bkuCZsFo9VOn9D2osV/YoIYkt5uUFoeMjyXnx9Htg66GJKVOCs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EC197C4CEEF;
-	Tue,  1 Apr 2025 22:57:40 +0000 (UTC)
-Received: from rostedt by gandalf with local (Exim 4.98)
-	(envelope-from <rostedt@goodmis.org>)
-	id 1tzkZ8-00000006KaE-3rST;
-	Tue, 01 Apr 2025 18:58:42 -0400
-Message-ID: <20250401225842.769455187@goodmis.org>
-User-Agent: quilt/0.68
-Date: Tue, 01 Apr 2025 18:58:15 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
+	s=arc-20240116; t=1743578098; c=relaxed/simple;
+	bh=FOtpYeBp4zVQl3ctHjTlko2k1XohN/LrcFybr1axKz4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=naPLJyX7hf0+xhQK9kmfJ7gO3VPGCL1l/fLVf2LGThoxVbcIzi2wmKLV9xYI3vGYH0KOw19mysPR8s9NigDJpT6nBHnkb4JVuiJz3Ozy+Yir0KfE8AubywQyeP/VzwxuH+w3Lum94IIBOEjaMfut5FFl7irRp7d7lo+nERdvyug=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=eQ2VJsyE; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eQ2VJsyE"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1743578094;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=qh1ya57MIjo5Lkmn722x+JI5fDV/4skd8xfb1oy7zXs=;
+	b=eQ2VJsyEhmmqbjyJKvRKn7MXWDXPQrqFWH12HyyJ5roLbY3+PDxozHytyj9efK9ybjR2ae
+	C1BmHEjRnTn7/1e7DC4PvQZziuVp9zS2uv06YLbdcwd0r//I0cTVfyVQT6Ua7YVyFZrdC8
+	Ap0OgBBTIjcdTTtbCs6faAv0VhroUqc=
+Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-328-XcjVldcLPfmmluMdhWpxZg-1; Wed,
+ 02 Apr 2025 03:14:49 -0400
+X-MC-Unique: XcjVldcLPfmmluMdhWpxZg-1
+X-Mimecast-MFC-AGG-ID: XcjVldcLPfmmluMdhWpxZg_1743578087
+Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 591C11955BC9;
+	Wed,  2 Apr 2025 07:14:47 +0000 (UTC)
+Received: from gmonaco-thinkpadt14gen3.rmtit.com (unknown [10.45.224.220])
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 11FE3180174E;
+	Wed,  2 Apr 2025 07:14:43 +0000 (UTC)
+From: Gabriele Monaco <gmonaco@redhat.com>
 To: linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
-Cc: Linus Torvalds <torvalds@linux-foundation.org>,
- Masami Hiramatsu <mhiramat@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- Vincent Donnefort <vdonnefort@google.com>,
- Vlastimil Babka <vbabka@suse.cz>,
- Mike Rapoport <rppt@kernel.org>,
- Jann Horn <jannh@google.com>,
- stable@vger.kernel.org
-Subject: [PATCH v5 4/4] ring-buffer: Use flush_kernel_vmap_range() over flush_dcache_folio()
-References: <20250401225811.008143218@goodmis.org>
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Gabriele Monaco <gmonaco@redhat.com>,
+	linux-trace-kernel@vger.kernel.org
+Cc: kernel test robot <lkp@intel.com>,
+	Julia Lawall <julia.lawall@inria.fr>
+Subject: [PATCH] rv: Fix missing unlock on double nested monitors return path
+Date: Wed,  2 Apr 2025 09:13:52 +0200
+Message-ID: <20250402071351.19864-2-gmonaco@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
 
-From: Steven Rostedt <rostedt@goodmis.org>
+RV doesn't support nested monitors having children monitors themselves
+and exits with the EINVAL code. However, it returns without unlocking
+the rv_interface_lock.
 
-Some architectures do not have data cache coherency between user and
-kernel space. For these architectures, the cache needs to be flushed on
-both the kernel and user addresses so that user space can see the updates
-the kernel has made.
+Unlock the lock before returning from the initialisation function.
 
-Instead of using flush_dcache_folio() and playing with virt_to_folio()
-within the call to that function, use flush_kernel_vmap_range() which
-takes the virtual address and does the work for those architectures that
-need it.
-
-This also fixes a bug where the flush of the reader page only flushed one
-page. If the sub-buffer order is 1 or more, where the sub-buffer size
-would be greater than a page, it would miss the rest of the sub-buffer
-content, as the "reader page" is not just a page, but the size of a
-sub-buffer.
-
-Link: https://lore.kernel.org/all/CAG48ez3w0my4Rwttbc5tEbNsme6tc0mrSN95thjXUFaJ3aQ6SA@mail.gmail.com/
-
-Cc: stable@vger.kernel.org
-Fixes: 117c39200d9d7 ("ring-buffer: Introducing ring-buffer mapping functions");
-Suggested-by: Jann Horn <jannh@google.com>
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+Fixes: cb85c660fcd4 ("rv: Add option for nested monitors and include sched")
+Reported-by: kernel test robot <lkp@intel.com>
+Reported-by: Julia Lawall <julia.lawall@inria.fr>
+Closes: https://lore.kernel.org/r/202503310200.UBXGitB4-lkp@intel.com
+Signed-off-by: Gabriele Monaco <gmonaco@redhat.com>
 ---
- kernel/trace/ring_buffer.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-index d8d7b28e2c2f..c0f877d39a24 100644
---- a/kernel/trace/ring_buffer.c
-+++ b/kernel/trace/ring_buffer.c
-@@ -6016,7 +6016,7 @@ static void rb_update_meta_page(struct ring_buffer_per_cpu *cpu_buffer)
- 	meta->read = cpu_buffer->read;
+This fix is not critical since currently no nested monitor registers
+nested monitors and doing so would require another review for inclusion
+in the kernel code.
+
+ kernel/trace/rv/rv.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/kernel/trace/rv/rv.c b/kernel/trace/rv/rv.c
+index 50344aa9f7f93..968c5c3b02464 100644
+--- a/kernel/trace/rv/rv.c
++++ b/kernel/trace/rv/rv.c
+@@ -809,7 +809,8 @@ int rv_register_monitor(struct rv_monitor *monitor, struct rv_monitor *parent)
+ 	if (p && rv_is_nested_monitor(p)) {
+ 		pr_info("Parent monitor %s is already nested, cannot nest further\n",
+ 			parent->name);
+-		return -EINVAL;
++		retval = -EINVAL;
++		goto out_unlock;
+ 	}
  
- 	/* Some archs do not have data cache coherency between kernel and user-space */
--	flush_dcache_folio(virt_to_folio(cpu_buffer->meta_page));
-+	flush_kernel_vmap_range(cpu_buffer->meta_page, PAGE_SIZE);
- }
- 
- static void
-@@ -7319,7 +7319,8 @@ int ring_buffer_map_get_reader(struct trace_buffer *buffer, int cpu)
- 
- out:
- 	/* Some archs do not have data cache coherency between kernel and user-space */
--	flush_dcache_folio(virt_to_folio(cpu_buffer->reader_page->page));
-+	flush_kernel_vmap_range(cpu_buffer->reader_page->page,
-+				buffer->subbuf_size + BUF_PAGE_HDR_SIZE);
- 
- 	rb_update_meta_page(cpu_buffer);
- 
+ 	r = kzalloc(sizeof(struct rv_monitor_def), GFP_KERNEL);
+
+base-commit: acc4d5ff0b61eb1715c498b6536c38c1feb7f3c1
 -- 
-2.47.2
-
+2.49.0
 
