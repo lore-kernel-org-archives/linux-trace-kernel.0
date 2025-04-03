@@ -1,51 +1,52 @@
-Received: from out-189.mta0.migadu.com (out-189.mta0.migadu.com [91.218.175.189])
+Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C79601E3DF4
-	for <linux-trace-kernel@vger.kernel.org>; Thu,  3 Apr 2025 00:00:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.189
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 547FE194AC7;
+	Thu,  3 Apr 2025 06:00:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743638457; cv=none; b=lS175K01KogVdXlmTVHiMhdBUzD+NrqOwaQXpRCOAEZ3w890fL/kqL0rTvjvTM4o0g5D40iM/PItbsBRNNcqnqM9rnU6rtabfc8FplePsV5Fmv6zKLbgO7iEONE1Wq9Xn1loXmNk8IL+DAShGwhGvKaAHSXJMgiSmGn9TTIxNb4=
+	t=1743660018; cv=none; b=TLbo4a+GIwNIBooaQ7PEiagHHHwKGvkhML4PnGOP4Myl+1jALlYY9mcktQ33fIOzk8wR8F+ghxAZDFUqI6oVanC/NaaIlg8oJ8ObGGQ44x3m7EvDjtwAgAQlLI7WwJnz7OCdL9DnNddc9oqD1WVq8yQbXHLGue93Ddj5tutR/MQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743638457; c=relaxed/simple;
-	bh=N+5czGiKNIfXpcO8ryGWeAvIF9qFsbtnJ/AWcAjAtfk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=k37HyVPIAGRKnv2guM0aeSgSlvaQr6ycOn4Cg3iEVIm2NjjxZY4sM+uCyihGbKbpIfVWz9ii7gYZyi5S3NoXyCJBncMSS8qnbq41qob+mkUm0lLRP1geuLbLZQLRAnr2JGjKxrOAp87HGVne39uzhOo1qg6cLSICQkIuBPMGFpY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=an8qUAGu; arc=none smtp.client-ip=91.218.175.189
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1743660018; c=relaxed/simple;
+	bh=GgGLK/JKAFdo0H9wSAMZLdeL31KlQxn4teieuzIC7e4=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=KQRf57wG6QAS086LUr/ASYY18toHeX8UZcOV4K9vhuX2FaIU5uDq+HWldBKi3UEIlytLHlLibOzPELOidmj70RCHSybRLHxnigA2gZM5oFEA8gcA14bpSM2PjKtinmUqyKeqdFEFdNqk4r5mYN8F/cBoBTpeigHxSqoV7tdrMhw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=gdYF5TZd; arc=none smtp.client-ip=144.6.53.87
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="an8qUAGu"
-Date: Wed, 2 Apr 2025 17:00:34 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1743638442;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=NBVywoZb0NEn0WwM4pPg/B+f3OtNhSDn+vmBeEDlF7c=;
-	b=an8qUAGuyhMYlilculWrL5DNR/oDu+DDo0lVvJk2VlaXl0uFGifvakKKysQ5FnrJAy+pfv
-	UK13v7/PRjNor8WI6v3guxShOFydlWRmvq3erqHaDgQUNmRSWzRXicp0N1m4oSepfeLdGr
-	ohH+Nt2KE7OKUM0ih0pVYdvqTHDKgoo=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Shakeel Butt <shakeel.butt@linux.dev>
-To: Sweet Tea Dorminy <sweettea-kernel@dorminy.me>
-Cc: Andrew Morton <akpm@linux-foundation.org>, 
-	Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Dennis Zhou <dennis@kernel.org>, Tejun Heo <tj@kernel.org>, 
-	Christoph Lameter <cl@linux.com>, Martin Liu <liumartin@google.com>, 
-	David Rientjes <rientjes@google.com>, Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>, 
-	Johannes Weiner <hannes@cmpxchg.org>, Sweet Tea Dorminy <sweettea@google.com>, 
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, "Liam R . Howlett" <Liam.Howlett@oracle.com>, 
-	Suren Baghdasaryan <surenb@google.com>, Vlastimil Babka <vbabka@suse.cz>, 
-	Christian Brauner <brauner@kernel.org>, Wei Yang <richard.weiyang@gmail.com>, 
-	David Hildenbrand <david@redhat.com>, Miaohe Lin <linmiaohe@huawei.com>, 
-	Al Viro <viro@zeniv.linux.org.uk>, linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, Yu Zhao <yuzhao@google.com>, 
-	Roman Gushchin <roman.gushchin@linux.dev>, Mateusz Guzik <mjguzik@gmail.com>
-Subject: Re: [RFC PATCH v2] mm: use per-numa-node atomics instead of
- percpu_counters
-Message-ID: <2m3wwqpha2jlo4zjn6xbucahfufej75gbaxxgh4j4h67pgrw7b@diodkog7ygk3>
-References: <20250331223516.7810-2-sweettea-kernel@dorminy.me>
+	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="gdYF5TZd"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
+	s=formenos; h=In-Reply-To:Content-Type:MIME-Version:Message-ID:Subject:Cc:To:
+	From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:References:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=5NwkqZuewG0v34YS2DSouf6H/+kIB+PU0H+C6MMnpBo=; b=gdYF5TZdvGh9Vwsn8O2FKNpeb4
+	UQ9rL8LYkC1s+dWDW0+bG+nYwSBEtkWifq11PtQTeIqvCmHfYpJxJDSH1io13BwcPqWxuWpankDqV
+	tXKofZLYSY1EPbR4v05KKktU6v3q2KLPBSqRosSSQlw+HHBIxa+m+yguVd2X6zqrAosfc0BBcPOTx
+	5//aIrcnM3WkGfnOT7CXJ1zGO+o9JSMciu/zMwEgbipJ6EeoDL/s3oPx6aOpgLD1EiQwXuolAGaER
+	THtitDTc94QXgCbx0U9wxtEroTG9WFv5eCImTRBuv12jshe42t/8SqoDuCrhSk6dxi32GUnxjgZ76
+	orbc10aQ==;
+Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
+	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
+	id 1u0Dc4-00COSZ-0p;
+	Thu, 03 Apr 2025 13:59:41 +0800
+Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Thu, 03 Apr 2025 13:59:40 +0800
+Date: Thu, 3 Apr 2025 13:59:40 +0800
+From: Herbert Xu <herbert@gondor.apana.org.au>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: rostedt@goodmis.org, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, mhiramat@kernel.org,
+	mark.rutland@arm.com, mathieu.desnoyers@efficios.com,
+	akpm@linux-foundation.org, vdonnefort@google.com, vbabka@suse.cz,
+	rppt@kernel.org, kees@kernel.org, tony.luck@intel.com,
+	gpiccoli@igalia.com, linux-hardening@vger.kernel.org,
+	willy@infradead.org, Eric Biggers <ebiggers@kernel.org>,
+	Michael Ellerman <mpe@ellerman.id.au>
+Subject: Re: [PATCH v2 1/2] tracing: ring-buffer: Have the ring buffer code
+ do the vmap of physical memory
+Message-ID: <Z-4jzImykAbHK2Gz@gondor.apana.org.au>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -54,152 +55,53 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250331223516.7810-2-sweettea-kernel@dorminy.me>
-X-Migadu-Flow: FLOW_OUT
+In-Reply-To: <CAHk-=wg0wQb+CbUk2GY0CeVuTQvq67-oYR0nL8wGgySia3ce7g@mail.gmail.com>
+X-Newsgroups: apana.lists.os.linux.kernel
 
-On Mon, Mar 31, 2025 at 06:35:14PM -0400, Sweet Tea Dorminy wrote:
-> [Resend as requested as RFC and minus prereq-patch-id junk]
+Linus Torvalds <torvalds@linux-foundation.org> wrote:
+>
+> There's a flush_dcache_range() thing too, but I don't see a single use
+> of that function in generic code, so I suspect that one is currently
+> purely for architecture-specific drivers and doesn't work in egneral.
 > 
-> Recently, several internal services had an RSS usage regression as part of a
-> kernel upgrade. Previously, they were on a pre-6.2 kernel and were able to
-> read RSS statistics in a backup watchdog process to monitor and decide if
-> they'd overrun their memory budget.
+> So *this* is the kind of "bad in a different way" I could imagine:
+> things that probably should be cleaned up and be available to generic
+> code, but very few people have cared, and so they are used in ad-hoc
+> places and haven't been sufficiently generalized and cleaned up.
 
-Any reason these applications are not using memcg stats/usage instead of
-RSS? RSS is not the only memory comsumption for these applications.
+There is no fallback implementation of flush_dcache_range for the
+architectures that don't need it.
 
-> Now, however, a representative service
-> with five threads, expected to use about a hundred MB of memory, on a 250-cpu
-> machine had memory usage tens of megabytes different from the expected amount
-> -- this constituted a significant percentage of inaccuracy, causing the
-> watchdog to act.
+It would be nice to have that, as doing it by hand is pretty silly:
 
-Are these 5 threads jump all over the 250 cpus?
+static inline void scatterwalk_done_dst(struct scatter_walk *walk,
+					unsigned int nbytes)
+{
+	scatterwalk_unmap(walk);
+	/*
+	 * Explicitly check ARCH_IMPLEMENTS_FLUSH_DCACHE_PAGE instead of just
+	 * relying on flush_dcache_page() being a no-op when not implemented,
+	 * since otherwise the BUG_ON in sg_page() does not get optimized out.
+	 * This also avoids having to consider whether the loop would get
+	 * reliably optimized out or not.
+	 */
+	if (ARCH_IMPLEMENTS_FLUSH_DCACHE_PAGE) {
+		struct page *base_page;
+		unsigned int offset;
+		int start, end, i;
 
-> 
-> This was a result of f1a7941243c1 ("mm: convert mm's rss stats into
-> percpu_counter") [1].  Previously, the memory error was bounded by
-> 64*nr_threads pages, a very livable megabyte. Now, however, as a result of
-> scheduler decisions moving the threads around the CPUs, the memory error could
-> be as large as a gigabyte.
+		base_page = sg_page(walk->sg);
+		offset = walk->offset;
+		start = offset >> PAGE_SHIFT;
+		end = start + (nbytes >> PAGE_SHIFT);
+		end += (offset_in_page(offset) + offset_in_page(nbytes) +
+			PAGE_SIZE - 1) >> PAGE_SHIFT;
+		for (i = start; i < end; i++)
+			flush_dcache_page(nth_page(base_page, i));
+	}
 
-Applications with 10s of thousands of threads is very normal at Google.
-So, inaccuracy should be comparable for such applications.
-
-> 
-> This is a really tremendous inaccuracy for any few-threaded program on a
-> large machine and impedes monitoring significantly. These stat counters are
-> also used to make OOM killing decisions, so this additional inaccuracy could
-> make a big difference in OOM situations -- either resulting in the wrong
-> process being killed, or in less memory being returned from an OOM-kill than
-> expected.
-> 
-> Finally, while the change to percpu_counter does significantly improve the
-> accuracy over the previous per-thread error for many-threaded services, it does
-> also have performance implications - up to 12% slower for short-lived processes
-> and 9% increased system time in make test workloads [2].
-> 
-> A previous attempt to address this regression by Peng Zhang [3] used a hybrid
-> approach with delayed allocation of percpu memory for rss_stats, showing
-> promising improvements of 2-4% for process operations and 6.7% for page
-> faults.
-> 
-> This RFC takes a different direction by replacing percpu_counters with a
-> more efficient set of per-NUMA-node atomics. The approach:
-> 
-> - Uses one atomic per node up to a bound to reduce cross-node updates.
-> - Keeps a similar batching mechanism, with a smaller batch size.
-> - Eliminates the use of a spin lock during batch updates, bounding stat
->   update latency.
-> - Reduces percpu memory usage and thus thread startup time.
-
-That one atomic per node will easily become a bottleneck for
-applications with a lot of threads particularly on the system where
-there are a lot of cpus per numa node.
-
-> 
-> Most importantly, this bounds the total error to 32 times the number of NUMA
-> nodes, significantly smaller than previous error bounds.
-> 
-> On a 112-core machine, lmbench showed comparable results before and after this
-> patch.  However, on a 224 core machine, performance improvements were
-
-How many cpus per node for each of these machines?
-
-> significant over percpu_counter:
-> - Pagefault latency improved by 8.91%
-
-The following fork ones are understandable as percpu counter allocation
-is involved but the above page fault latency needs some explanation.
-
-> - Process fork latency improved by 6.27%
-> - Process fork/execve latency improved by 6.06%
-> - Process fork/exit latency improved by 6.58%
-> 
-> will-it-scale also showed significant improvements on these machines.
-
-Are these process ones or the threads ones?
-
-> 
-> [1] https://lore.kernel.org/all/20221024052841.3291983-1-shakeelb@google.com/
-> [2] https://lore.kernel.org/all/20230608111408.s2minsenlcjow7q3@quack3/
-> [3] https://lore.kernel.org/all/20240418142008.2775308-1-zhangpeng362@huawei.com/
-> 
-> Signed-off-by: Sweet Tea Dorminy <sweettea-kernel@dorminy.me>
-> Cc: Yu Zhao <yuzhao@google.com>
-> Cc: Roman Gushchin <roman.gushchin@linux.dev>
-> Cc: Shakeel Butt <shakeel.butt@linux.dev>
-> Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-> Cc: Mateusz Guzik <mjguzik@gmail.com>
-> Cc: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-> 
-> ---
-> 
-> This is mostly a resend of an earlier patch, where I made an utter hash
-> of specifying a base commit (and forgot to update my commit text to not
-> call it an RFC, and forgot to update my email to the one I use for
-> upstream work...). This is based on akpm/mm-unstable as of today.
-> 
-> v1 can be found at
-> https://lore.kernel.org/lkml/20250325221550.396212-1-sweettea-kernel@dorminy.me/
-> 
-> Some interesting ideas came out of that discussion: Mathieu Desnoyers
-> has a design doc for a improved percpu counter, multi-level, with
-> constant drift, at 
-> https://lore.kernel.org/lkml/a89cb4d9-088e-4ed6-afde-f1b097de8db9@efficios.com/
-> and would like performance comparisons against just reducing the batch
-> size in the existing code;
-
-You can do the experiments with different batch sizes in the existing
-code without waiting for Mathieu's multi-level percpu counter.
-
-> and Mateusz Guzik would also like a more general solution and is also
-> working to fix the performance issues by caching mm state. Finally,
-> Lorenzo Stoakes nacks, as it's too speculative and needs more
-> discussion.
-> 
-> I think the important part is that this improves accuracy; the current
-> scheme is difficult to use on many-cored machines. It improves
-> performance, but there are tradeoffs; but it tightly bounds the
-> inaccuracy so that decisions can actually be reasonably made with the
-> resulting numbers.
-> 
-> This patch assumes that intra-NUMA node atomic updates are very cheap
-
-The above statement/assumption needs experimental data.
-
-> and that
-> assigning CPUs to an atomic counter by numa_node_id() % 16 is suitably
-> balanced. However, if each atomic were shared by only, say, eight CPUs from the
-> same NUMA node, this would further reduce atomic contention at the cost of more
-> memory and more complicated assignment of CPU to atomic index. I don't think
-> that additional complication is worth it given that this scheme seems to get
-> good performance, but it might be. I do need to actually test the impact
-> on a many-cores-one-NUMA-node machine, and I look forward to testing out
-> Mathieu's heirarchical percpu counter with bounded error.
-> 
-
-I am still not buying the 'good performance' point. To me we might need
-to go with reduced batch size of existing approach or multi level
-approach from Mathieu (I still have to see Mateusz and Kairui's
-proposals).
+Cheers,
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
