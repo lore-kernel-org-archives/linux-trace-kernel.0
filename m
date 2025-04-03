@@ -1,130 +1,140 @@
-Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF3E71514F6;
-	Thu,  3 Apr 2025 16:39:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C88E19CC39;
+	Thu,  3 Apr 2025 16:45:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743698379; cv=none; b=QDLhwVJVrFmvNNc0QDIsR1nAJgL25drsfZqV8UeyMylLptpfVrnsjcZweWxP4X9q/n2Xe/APpxYLRo/CzcAzeNA52aTnPesjag1fllPsr4VGQ6HS+wbYiv/DxJZq7RG12AnRkUd+IdHdXZTgIH+5of63EitcDSy7G4BXTHErCWE=
+	t=1743698752; cv=none; b=N2lJ89bcimn1xjYbuwKdvcM6bpy8GOM00+qP8ddxs38boAGPwzZ3EVYK0k/Efu9M9sgBkClF7zxwxueNGb1O0itHfUQAFiUt1LwtnQf6aYmXV5cQL+2ra0shl6ORNJI6DJhcj94mBGyfWuweoXYSL7Vbh7hCYYDBGlSa/3IvrZM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743698379; c=relaxed/simple;
-	bh=QsquTBzgOmkr9/ysxz/GY+SPh+eIH8M6tMImN0n3NDc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=FiC6rkoKTMOgl42usyTs0YSZM/9C7CfzOJwaogB+8HLsv+DyBW+SqC5W0sQg4jwdwkNN1OXCwSxWVYksi7Eox/Z1Fz16GtqAJX1mKkLWPXpSJQaoBcthwyaqpfTweiAyI+HiCkEoCvd6HRfEopd2jddy1uKGH1HoWeg1sFcy5AE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=D1J6WKnf; arc=none smtp.client-ip=209.85.208.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743698752; c=relaxed/simple;
+	bh=QlqqyTgfhOBUsMseHj0iRoTR9OP1M3MGpYbSHK7gYic=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kcJ971uW0RyzA+x2TPNO8vEz41cAV3Eu+O0gcOwFFBwt5Fi1RHlAuaDRADiDCZ2uJ0eur3vCqCkE6sm7O/Y7a32R8+r0aoDrBgd/fVbC/g6tR1jaAMBsP1I1GAcZ6IpW+jprYZH5TMQlAoW+LcnZab296f67wmhb7cnO0MW5Wis=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m0mntNNz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D1J6WKnf"
-Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-5e5e0caa151so2061404a12.0;
-        Thu, 03 Apr 2025 09:39:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743698376; x=1744303176; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=QsquTBzgOmkr9/ysxz/GY+SPh+eIH8M6tMImN0n3NDc=;
-        b=D1J6WKnf5ui3TeIC/R1Awes0mMLdZQOKxBYRiRJmwFvzwfHt0Fw6F2U57d8dACxlk1
-         ndIHVEHv7NIzwR7Ira1YpKVxw1C1GfZX72NzV85rI9fySBC95i/+Yc5hMX25oQsi4LDE
-         VYzw+cz0b9r+ME7Ce9RCy1zxxCOasZLM+w877jAw6N7tu4aIuI1rXSjf3D5nDnAmH1WA
-         fD4+jRsGO9v3o3uATT9q2rSIC2IxPxdKcV7z5shjIetnEg3gzIY+b5BfTTPpJZ/SGJVR
-         GgRVn16yyq4Z4vyU/MZ9zMHejEfrYptIowla69WdRqduEZHqXy4Teg28Bk+Y9TxDHFAx
-         ahUg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743698376; x=1744303176;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=QsquTBzgOmkr9/ysxz/GY+SPh+eIH8M6tMImN0n3NDc=;
-        b=LS+l4wn5G5hxKxAONMZDqQO+iect84AcB+pQFOllTaWx3AHwLBUDRG1FxjqjJInhpd
-         RV0spxw8WwMOGTPbtN5z+wTEiK74oTq6Otzhwh1+MjIPS2G6Jfqxp8haRfTiSOpoO3Ls
-         j8E3HOsamIs0tRULhFo5/mkOJ4cGPgBQa5NwA9fxDnMyP8/rCwuu8Pnv7c+Hbsy2pIfk
-         CliLQBs/MfYTZt5AjQ2aq8cPCjspGDbdA7zGc9qvQzY6Or+8QgLflJSmq0aWrSWcI0FI
-         ByrFbzAVnkNX6bYX+WmETGEhzRT3fN8FEgL+pDISt3IDQa0iwW3iWLDAWR5wrvLDbRhK
-         1t2g==
-X-Forwarded-Encrypted: i=1; AJvYcCUabXrTNqIPBkJIpMGfNOD4hWOVkwqVjL1NGds/7SsxWmZug/VMt0RgKQlg3ukyi3STFjiBA2ijJgwLYqY=@vger.kernel.org, AJvYcCWePkM8nltoqT9xCk3YDJDK0TJWp+rCXjhIHVZcyvp0ukVxcjF0048cCaTFQvcT1SWOFMvGUMO8reb8Xj0PMAwgr9m5@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxrw+HKcqchxbr6BVSRo9Ml08yCytY8sGN48VlcRrL4iZAh4q31
-	CmlOy0X0t3gKVqBPvV22sdSsW/hSbQ6A3+eN1zf10s7kBJ22wg6y/+Gm+V2iDbPA7nSp7NTNRlh
-	QHIqHz8pvXUH2XzFh4BB/PjcZtws=
-X-Gm-Gg: ASbGncvk/PgiYBHoT5QVFsfLqzzgnDToBuKgJzQd2vEzh3D/YI+VJQjw0dvi6KoFJHl
-	AJ7Lfxg3qnLZ5gpwyEW85Ise5srole1cm0+6qI/9LFATn4oWgM2rOdeq14Yyav3v5xaJbFHrlk/
-	8KH9vWY4Ht5dv1QaAwrqIKdqrA
-X-Google-Smtp-Source: AGHT+IHwXZTdMgLzXp7QCCwNxDBR2dVogVg7DgrbpojvC2yqGK8Fv9w9GNmWMTZeRDGVJpYZV7xR1c970wAge9hCFQQ=
-X-Received: by 2002:a05:6402:42c4:b0:5dc:94ce:42a6 with SMTP id
- 4fb4d7f45d1cf-5edfd9f795fmr19692799a12.22.1743698375723; Thu, 03 Apr 2025
- 09:39:35 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m0mntNNz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E7EC1C4CEE3;
+	Thu,  3 Apr 2025 16:45:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743698752;
+	bh=QlqqyTgfhOBUsMseHj0iRoTR9OP1M3MGpYbSHK7gYic=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=m0mntNNzRmV6GKNQWRx6dyXta5EpZ4+jICdyeitrea0jCYexlG241JBHs1nCNuqd4
+	 eSda6m+R7PYLlXN6LXMh/HhPOh26+KGmEm+NFmSFYezoyLFSy4T1tdHh5nF16nxblP
+	 OBdBR7DXyhfYBDSJe4157HLEwCh6MaqfwzVl7FDPXjGYZ2jnFINMN/ZbEqHTRHfuhb
+	 XMBhOrJPV05l2m/8S+uNbD55cM8NcnawXR5x0oFNciKe/hXGE8ks8k8sMWDXqeTTC8
+	 rdaV7rjTRKoJHgWIL23/N1xw6hsz5+WrOBMWv8h+G12Uv+YL4DbcMjKMh/ZNmtw7rp
+	 j0Ql0iexXV8Uw==
+Date: Thu, 3 Apr 2025 09:45:48 -0700
+From: Kees Cook <kees@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>,
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Vincent Donnefort <vdonnefort@google.com>,
+	Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
+	Tony Luck <tony.luck@intel.com>,
+	"Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] tracing: ring-buffer: Have the ring buffer code
+ do the vmap of physical memory
+Message-ID: <202504030941.E0AA2E023@keescook>
+References: <20250331143426.947281958@goodmis.org>
+ <20250331143532.459810712@goodmis.org>
+ <CAHk-=whUOfVucfJRt7E0AH+GV41ELmS4wJqxHDnui6Giddfkzw@mail.gmail.com>
+ <20250331133906.48e115f5@gandalf.local.home>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250331223516.7810-2-sweettea-kernel@dorminy.me>
-In-Reply-To: <20250331223516.7810-2-sweettea-kernel@dorminy.me>
-From: Mateusz Guzik <mjguzik@gmail.com>
-Date: Thu, 3 Apr 2025 18:39:23 +0200
-X-Gm-Features: ATxdqUEt9Pz10N02XrpS39HolmBCJKRettgtdx6EOudxklUyVCrn5fPBZffA18k
-Message-ID: <CAGudoHF_sD0T9JHSpJyJiBqKd2cO+5jFjvNBpEx4Mp+uK044PQ@mail.gmail.com>
-Subject: Re: [RFC PATCH v2] mm: use per-numa-node atomics instead of percpu_counters
-To: Sweet Tea Dorminy <sweettea-kernel@dorminy.me>
-Cc: Andrew Morton <akpm@linux-foundation.org>, Steven Rostedt <rostedt@goodmis.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	Dennis Zhou <dennis@kernel.org>, Tejun Heo <tj@kernel.org>, Christoph Lameter <cl@linux.com>, 
-	Martin Liu <liumartin@google.com>, David Rientjes <rientjes@google.com>, 
-	=?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
-	Shakeel Butt <shakeel.butt@linux.dev>, Johannes Weiner <hannes@cmpxchg.org>, 
-	Sweet Tea Dorminy <sweettea@google.com>, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, 
-	"Liam R . Howlett" <Liam.Howlett@oracle.com>, Suren Baghdasaryan <surenb@google.com>, 
-	Vlastimil Babka <vbabka@suse.cz>, Christian Brauner <brauner@kernel.org>, 
-	Wei Yang <richard.weiyang@gmail.com>, David Hildenbrand <david@redhat.com>, 
-	Miaohe Lin <linmiaohe@huawei.com>, Al Viro <viro@zeniv.linux.org.uk>, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	Yu Zhao <yuzhao@google.com>, Roman Gushchin <roman.gushchin@linux.dev>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250331133906.48e115f5@gandalf.local.home>
 
-On Tue, Apr 1, 2025 at 12:36=E2=80=AFAM Sweet Tea Dorminy
-<sweettea-kernel@dorminy.me> wrote:
->
-> [Resend as requested as RFC and minus prereq-patch-id junk]
->
-> Recently, several internal services had an RSS usage regression as part o=
-f a
-> kernel upgrade. Previously, they were on a pre-6.2 kernel and were able t=
-o
-> read RSS statistics in a backup watchdog process to monitor and decide if
-> they'd overrun their memory budget. Now, however, a representative servic=
-e
-> with five threads, expected to use about a hundred MB of memory, on a 250=
--cpu
-> machine had memory usage tens of megabytes different from the expected am=
-ount
-> -- this constituted a significant percentage of inaccuracy, causing the
-> watchdog to act.
->
-[snip]
-> I think the important part is that this improves accuracy; the current
-> scheme is difficult to use on many-cored machines. It improves
-> performance, but there are tradeoffs; but it tightly bounds the
-> inaccuracy so that decisions can actually be reasonably made with the
-> resulting numbers.
->
+On Mon, Mar 31, 2025 at 01:39:06PM -0400, Steven Rostedt wrote:
+> On Mon, 31 Mar 2025 09:55:28 -0700
+> Linus Torvalds <torvalds@linux-foundation.org> wrote:
+> > Anyway, that takes care of the horrific interface. However, there's
+> > another issue:
+> > 
+> > > +       pages = kmalloc_array(page_count, sizeof(struct page *), GFP_KERNEL);  
+> > 
+> > you create this pointless array of pages. Why? It's a physically
+> > contiguous area.
+> > 
+> > You do that just because you want to use vmap() to map that contiguous
+> > area one page at a time.
+> > 
+> > But this is NOT a new thing. It's exactly what every single PCI device
+> > with a random physical memory region BAR needs to do. And no, they
+> > don't create arrays of 'struct page *', because they use memory that
+> > doesn't even have page backing.
+> > 
+> > So we actually have interfaces to do linear virtual mappings of
+> > physical pages that *predate* vmap(), and do the right thing without
+> > any of these games.
+> 
+> [ Added the pstore folks ]
+> 
+> OK, so I did copy this from fs/pstore/ram_core.c as this does basically the
+> same thing as pstore. And it looks like pstore should be updated too.
 
-Even disregarding this specific report, a prior patch submission
-points a result which is so off that it already constitutes a bug:
-https://lwn.net/ml/linux-kernel/20220728204511.56348-1-ryncsn@gmail.com/
+I think we're talking about persistent_ram_vmap()? That code predates my
+maintainership, but I'm happy to update it to use better APIs.
 
-So something definitely needs to be done to improve the accuracy. But
-that always will be a tradeoff vs update performance.
+> > Yes, the legacy versions of interfaces are all for IO memory, but we
+> > do have things like vmap_page_range() which should JustWork(tm).
+> > 
+> > Yeah, you'll need to do something like
+> > 
+> >         unsigned long vmap_start, vmap_end;
+> > 
+> >         area = get_vm_area(size, VM_IOREMAP);
+> >         if (!area)
+> >                 return NULL;
+> > 
+> >         vmap_start = (unsigned long) area->addr;
+> >         vmap_end = vmap_start + size;
+> > 
+> >         ret = vmap_page_range(vmap_start, vmap_end,
+> >                 *start, prot_nx(PAGE_KERNEL));
+> > 
+> >         if (ret < 0) {
+> >                 free_vm_area(area);
+> >                 return NULL;
+> >         }
+> > 
+> > and the above is *entirely* untested and maybe there's something wrong
+> > there, but the concept should work, and when you don't do it a page at
+> > a time, you not only don't need the kmalloc_array(), it should even do
+> > things like be able to use large page mappings if the alignment and
+> > size work out.
+> > 
+> > That said, the old code is *really* broken to begin with. I don't
+> > understand why you want to vmap() a contiguous physical range. Either
+> > it's real pages to begin with, and you can just use "page_address()"
+> > to get a virtual address, it's *not* real pages, and doing
+> > "pfn_to_page()" is actively wrong, because it creates a fake 'struct
+> > page *' pointer that isn't valid.
+> > 
+> > Is this all just for some disgusting HIGHMEM use (in which case you
+> > need the virtual mapping because of HIGHMEM)? Is there any reason to
+> > support HIGHMEM in this area at all?
+> > 
+> > So I'm not sure why this code does all this horror in the first place.
+> > Either it's all just confused code that just didn't know what it was
+> > doing and just happened to work (very possible..) or there is
+> > something odd going on.
 
-This brings me to a question: how often does the watchdog thing look
-at the stats?
+pstore tries to work with either real RAM or with iomem things. What
+is there now Currently Works Fine, but should this be using
+vmap_page_range()?
 
-I wonder if it would make sense add another file to proc, similar to
-"status", but returning *exact* values. So in particular with percpu
-counters it would walk all CPUs on to generate the answer.
-
-Then interested parties would still get an accurate count and not get
-in the way, provided they don't relentlessly do it.
---=20
-Mateusz Guzik <mjguzik gmail.com>
+-- 
+Kees Cook
