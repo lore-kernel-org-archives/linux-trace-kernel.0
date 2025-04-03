@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 895E42550A1;
-	Thu,  3 Apr 2025 19:10:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FD1B28D820;
+	Thu,  3 Apr 2025 19:11:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743707434; cv=none; b=vE3y2869n3fvcxxXaMRibaAnlVSj7cE5p3HH9kgX0fd0R3Thr04ppv5z8ppn6wgHPdlVWShZe7tcIQZofdgGfUMvjOopT2BwfmU+hO1MyQkB/dH+v09e7Lva0ORYz9EIUcv4gdN46GqPDWyH7GpzJ2TQXy+805ni6vDKoOgjC3M=
+	t=1743707467; cv=none; b=LBjZy4mxlIpLjg+AS+ttz9ycyARJoKzp4TZ+zbBE0nJCijLM37xLlTWNcHfoymHEzShHm02tbc2Fb1imSlMUyAAPGqeieGlvpTFuAzJkNDjl6BpL9rl91pV6m0sqsYiWtdEx5kwGNDWnJHa5coPDjVcTd8h60QK+AXkgP4cqO+0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743707434; c=relaxed/simple;
-	bh=M/wi6FmdA2Th9ljBZgm7EqqQkpGRVjiB0NHic6xMy84=;
+	s=arc-20240116; t=1743707467; c=relaxed/simple;
+	bh=l5MUbTrOGiGw2HyOanR1u4xw+ejijXw9Uu8b9vJx5tQ=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=rVev2aEJ1YsltThWrTkgs0ZeP0/egWTtDcDdxpCQU0ND7lR5GN2ZnquIx9h8sAaenuSjIZmOc7GrSM5yVpFZFDjgFX+fU+VA97tSB9IhF1vsP/7RBKt/Noy0AN6a3KyJMS0y82vjstfmktVhKx33v41RWdQYVGuHRpf9zQ4BT9g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sf/IYZ2e; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=NZN3iIc+MzNn9mLEPpXgH0G8LsuR3rj9rst1xjgvHFwleZZ7VbsHYwfCk8d2Rf7H4tJfx/gknpaTqoSaEM18r2QyUskQHq96Dbd28aN7UQdpvZmKdiXtCSAcaTpj/Z0gAjauPhzD1Psf0GXIZXdfH2X1eM2Ik04Rb+Ae6RTwick=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=A70YS/hp; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sf/IYZ2e"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9B347C4CEE3;
-	Thu,  3 Apr 2025 19:10:33 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A70YS/hp"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7E6F2C4CEE3;
+	Thu,  3 Apr 2025 19:11:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743707434;
-	bh=M/wi6FmdA2Th9ljBZgm7EqqQkpGRVjiB0NHic6xMy84=;
+	s=k20201202; t=1743707467;
+	bh=l5MUbTrOGiGw2HyOanR1u4xw+ejijXw9Uu8b9vJx5tQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=sf/IYZ2eXAf2mifTRvRRcAsWxtFS9dBNmEy9kXp2Qbyv7D6dnv6ugObGRu+oJGYcV
-	 sVbzbTNMV0g5jJ/zTi3FMWuEnFx2ZWmH9Ol0alhLCEv3uR+l9gRZ0iaTlBSV5ubm0K
-	 Cbs0l8XNkFUzRVRPm8uP2F4HK3f0IYmZI4j+tWm8NNAwFcPLmklLtYn+D0cnJtCdqi
-	 wYdD7Ub92KnkDFSJ12U2yu44LRSrE1N0bIj1HUXcSiZqGAaRT9XoMEn4laMcchmiHG
-	 fB6NlWfMdsO3Q+g1GYzFhDFFLbtX4p5DjXJkqLInsTeT0pF37CZpitGp842U4DN23G
-	 6hI5rixJLKUiA==
+	b=A70YS/hpmlLzRlVe7JhoRn+LtybAzFHX3OfTxGDv0/HUvaG9Ny01o40npq9HSsLU1
+	 oV9Qh9Sfj6Z4ybkdT4guM0lmVtUViJVhNFclTxpyN31OctcH6q/By4sHg+4huEnSe8
+	 MMdMJP1gERj5LcokOp4IWrpt2msFBK+NanMTcdYVZJFnN6QU6PdkkJHWKsb9yTHyhe
+	 +Uf9lo6yp6Gma9pWJrLT1C09Rs0/wBYviEsJ3wI90331kDZsW5rh5u9q3IODzA3jfP
+	 fyFgKC2PDt+Dqd+r0PPBokHpw2hMyNkiMUMYmaZZlDBD8V82I2oFhFW1iLDn110i/N
+	 03dxiE5/zTlFg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
@@ -34,12 +34,12 @@ Cc: Gabriele Paoloni <gpaoloni@redhat.com>,
 	Sasha Levin <sashal@kernel.org>,
 	mhiramat@kernel.org,
 	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.10 14/15] tracing: fix return value in __ftrace_event_enable_disable for TRACE_REG_UNREGISTER
-Date: Thu,  3 Apr 2025 15:10:01 -0400
-Message-Id: <20250403191002.2678588-14-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 13/14] tracing: fix return value in __ftrace_event_enable_disable for TRACE_REG_UNREGISTER
+Date: Thu,  3 Apr 2025 15:10:35 -0400
+Message-Id: <20250403191036.2678799-13-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250403191002.2678588-1-sashal@kernel.org>
-References: <20250403191002.2678588-1-sashal@kernel.org>
+In-Reply-To: <20250403191036.2678799-1-sashal@kernel.org>
+References: <20250403191036.2678799-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -48,7 +48,7 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 5.10.235
+X-stable-base: Linux 5.4.291
 Content-Transfer-Encoding: 8bit
 
 From: Gabriele Paoloni <gpaoloni@redhat.com>
@@ -74,10 +74,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 3 insertions(+), 1 deletion(-)
 
 diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
-index 4b5a8d7275be7..92693e2140a94 100644
+index 958789fe4cef7..77df1e28fa329 100644
 --- a/kernel/trace/trace_events.c
 +++ b/kernel/trace/trace_events.c
-@@ -411,7 +411,9 @@ static int __ftrace_event_enable_disable(struct trace_event_file *file,
+@@ -405,7 +405,9 @@ static int __ftrace_event_enable_disable(struct trace_event_file *file,
  				clear_bit(EVENT_FILE_FL_RECORDED_TGID_BIT, &file->flags);
  			}
  
