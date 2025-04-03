@@ -1,30 +1,30 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27AD72512E0;
-	Thu,  3 Apr 2025 17:18:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4610B2512D7;
+	Thu,  3 Apr 2025 17:41:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743700715; cv=none; b=i1+wXVVBKzpJQ7cMNHmBuZKDYU0V6dGIvWfgwM3EaeLqWXce6jqw3LwhOrEI8WKP4AGL5BzXFhKzl9N+it6T6h8IxX52Bv9xYmJxZ52OjgRv5WBcYsIy0Fkh1DcmEJhj7m+XuHCks40+UMcdNP8LXsfjSCrklJEjmMZxfJahwyg=
+	t=1743702083; cv=none; b=OLUn6mw17OTAi2/qusASGb28Q8rYaVMC149XQ8ncbEhoLuEbs6gORfgKG5u/QXYmLpJCKVq7ATJy4LzoLp8I5JZCeX5QmP+QZjn2nqwNLFg1+B3yNdGS2JblUEtL+inaMLfm3zTf9HFxkA0AxRk4+TQEA/xNt5wJHmnj6jDZCrg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743700715; c=relaxed/simple;
-	bh=JMkDDHBDyKlRbikHBbieyAgNp47h6azH3ZEguardqr0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Cu2U89kfJt4cFVqx0Y23BVAkKVxVS6jc2rbWmNz+CRII2YnzFfOa3bB/WYqGuMF9hF4BXePAAyDjejWANqPvvlmPFSwqDWozF7l+4x0CkZyxgManVGLd2OWkUFAhDRzeDl+uJbzdM2Az5jrl+Y7w6sB4cMM3biZsOsVOVUloGB0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=A9neEYBT; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743702083; c=relaxed/simple;
+	bh=VqD/t5nfqw17dzit8tCO0MFU7uzAr2vAyVsp8uT21lA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=S3RDPaoR2ztGy9mwiWNWZlTm6gRKKNxkWN//XqdbtFeNU4mJ5Yily+Flxr3ldmg2rRQPXKqQIdCrHQUabrbDLtbRRfbduA0bPh/0jzap/ZJ7oE/Wlrd/7eEt0V9i1VUZP1HY0JoA4RmFHYFS8DEqZliephWsPU0ClKEuRH28K1A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mLC3oJDD; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A9neEYBT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7585BC4CEE3;
-	Thu,  3 Apr 2025 17:18:33 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mLC3oJDD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8A0FFC4CEE3;
+	Thu,  3 Apr 2025 17:41:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743700713;
-	bh=JMkDDHBDyKlRbikHBbieyAgNp47h6azH3ZEguardqr0=;
+	s=k20201202; t=1743702082;
+	bh=VqD/t5nfqw17dzit8tCO0MFU7uzAr2vAyVsp8uT21lA=;
 	h=From:To:Cc:Subject:Date:From;
-	b=A9neEYBT73loDDXOKV+0XL5LIbjctwYCC2zMRgWdPxZGvVx8FliWWjO9o97OWxZ0j
-	 TYrST72/sCFHYwJqTUOZrn/G6gzJbOwGbpjp4++4CNv6S0LCbXye9bppbk+XhfcB1x
-	 VI0xJeqe7bPmyg9Umnba1CFAcg66lpQr9vepqwR+4vP3ofZ/ZJnFMQF2UM7EOjaEkR
-	 IMpfL8wYCaHL9lHOs2YPHcfAeLvmcnt3OcMp+7OperfJcpzsV+uOHPMcgBjQeBY5wf
-	 yFakXJ6XiGNK+4oEZSNpfJd0BFcLgOpjRNLiz6xIqHtLcJpifytK0pFmsz9NYeYpkL
-	 B55++AQUZ6FlQ==
+	b=mLC3oJDD2SB7qBcpiuio99hpZYTBZSj/QQWL0jrta/VMOKjfkBQ/c+w8u4cCxfRML
+	 vkvbFT1+PBKvyWbcpBDCoqBWt8s++6GBimYGaXKoxUrPaM4YSJBd97j33Mh+2UMINl
+	 ENyb+BTI9sexh3lZp47Yp3UoPo0RXviGNqYKbPCFR/gjiUloQg+ny21IGwtzYAj0oB
+	 6M2MhIxpMk5/1nzgsuSBGx+Cd712KoKU2MpPjpgE8OTC5eZKVVBVf5qqdTm3R/5oKv
+	 DPjj38qpFB5DQrwZ/lp/XnOXbdPz0Q+jz31yzAtZnThBEUcSQCbl2+mLi9IFNkutci
+	 2D0OhinJ0oaxg==
 From: Andrii Nakryiko <andrii@kernel.org>
 To: linux-trace-kernel@vger.kernel.org,
 	peterz@infradead.org,
@@ -32,15 +32,18 @@ To: linux-trace-kernel@vger.kernel.org,
 Cc: bpf@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	kernel-team@meta.com,
+	mhocko@kernel.org,
 	rostedt@goodmis.org,
 	oleg@redhat.com,
+	brauner@kernel.org,
+	glider@google.com,
 	mhiramat@kernel.org,
-	bigeasy@linutronix.de,
-	ast@kernel.org,
+	mathieu.desnoyers@efficios.com,
+	akpm@linux-foundation.org,
 	Andrii Nakryiko <andrii@kernel.org>
-Subject: [PATCH tip/perf] uprobes: avoid false lockdep splat in uprobe timer callback
-Date: Thu,  3 Apr 2025 10:18:31 -0700
-Message-ID: <20250403171831.3803479-1-andrii@kernel.org>
+Subject: [PATCH] exit: document sched_process_exit and sched_process_template relation
+Date: Thu,  3 Apr 2025 10:41:20 -0700
+Message-ID: <20250403174120.4087794-1-andrii@kernel.org>
 X-Mailer: git-send-email 2.47.1
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -50,62 +53,37 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Avoid a false-positive lockdep warning in PREEMPT_RT configuration when
-using write_seqcount_begin() in uprobe timer callback by using
-raw_write_* APIs. Uprobe's use of timer callback is guaranteed to not
-race with itself, and as such seqcount's insistence on having hardirqs
-disabled on the writer side is irrelevant. So switch to raw_ variants of
-seqcount API instead of disabling hardirqs unnecessarily.
+Add an explicit note pointing out that sched_process_exit tracepoint is,
+conceptually, related to sched_process_template and should be kept in
+sync (though, on the best effort basis).
 
-Also, point out in the comments more explicitly why we use seqcount
-despite our reader side being rather simple and never retrying. We favor
-well-maintained kernel primitive in favor of open-coding our own memory
-barriers.
+This is a follow-up to [0], and can hopefully be just folded in when applying.
 
-Link: https://lore.kernel.org/bpf/CAADnVQLLOHZmPO4X_dQ+cTaSDvzdWHzA0qUqQDhLFYL3D6xPxg@mail.gmail.com/
-Reported-by: Alexei Starovoitov <ast@kernel.org>
-Suggested-by: Sebastian Sewior <bigeasy@linutronix.de>
-Fixes: 8622e45b5da1 ("uprobes: Reuse return_instances between multiple uretprobes within task")
+  [0] https://lore.kernel.org/linux-trace-kernel/20250402180925.90914-1-andrii@kernel.org/
+
+Suggested-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Andrii Nakryiko <andrii@kernel.org>
 ---
- kernel/events/uprobes.c | 13 +++++++++++--
- 1 file changed, 11 insertions(+), 2 deletions(-)
+ include/trace/events/sched.h | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
-index 70c84b9d7be3..6d7e7da0fbbc 100644
---- a/kernel/events/uprobes.c
-+++ b/kernel/events/uprobes.c
-@@ -1944,6 +1944,9 @@ static void free_ret_instance(struct uprobe_task *utask,
- 	 * to-be-reused return instances for future uretprobes. If ri_timer()
- 	 * happens to be running right now, though, we fallback to safety and
- 	 * just perform RCU-delated freeing of ri.
-+	 * Admittedly, this is a rather simple use of seqcount, but it nicely
-+	 * abstracts away all the necessary memory barriers, so we use
-+	 * a well-supported kernel primitive here.
- 	 */
- 	if (raw_seqcount_try_begin(&utask->ri_seqcount, seq)) {
- 		/* immediate reuse of ri without RCU GP is OK */
-@@ -2004,12 +2007,18 @@ static void ri_timer(struct timer_list *timer)
- 	/* RCU protects return_instance from freeing. */
- 	guard(rcu)();
+diff --git a/include/trace/events/sched.h b/include/trace/events/sched.h
+index 05a14f2b35c3..3bec9fb73a36 100644
+--- a/include/trace/events/sched.h
++++ b/include/trace/events/sched.h
+@@ -326,7 +326,11 @@ DEFINE_EVENT(sched_process_template, sched_process_free,
+ 	     TP_ARGS(p));
  
--	write_seqcount_begin(&utask->ri_seqcount);
-+	/* See free_ret_instance() for notes on seqcount use.
-+	 * We also employ raw API variants to avoid lockdep false-positive
-+	 * warning complaining about hardirqs not being disabled. We have
-+	 * a guarantee that this timer callback won't race with itself, so no
-+	 * need to disable hardirqs.
-+	 */
-+	raw_write_seqcount_begin(&utask->ri_seqcount);
+ /*
+- * Tracepoint for a task exiting:
++ * Tracepoint for a task exiting.
++ * Note, it's a superset of sched_process_template and should be kept
++ * compatible as much as possible. sched_process_exits has an extra
++ * `group_dead` argument, so sched_process_template can't be used,
++ * unfortunately, just like sched_migrate_task above.
+  */
+ TRACE_EVENT(sched_process_exit,
  
- 	for_each_ret_instance_rcu(ri, utask->return_instances)
- 		hprobe_expire(&ri->hprobe, false);
- 
--	write_seqcount_end(&utask->ri_seqcount);
-+	raw_write_seqcount_end(&utask->ri_seqcount);
- }
- 
- static struct uprobe_task *alloc_utask(void)
 -- 
 2.47.1
 
