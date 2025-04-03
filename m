@@ -1,129 +1,67 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73A4622F17A;
-	Thu,  3 Apr 2025 19:19:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A822253F26;
+	Thu,  3 Apr 2025 19:35:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743707950; cv=none; b=B1x3AQH0mYK+KFfs7nD1zVCBjfvCEi02j3dtrA1XwnjU5b3VCSKw4ZWrjT6NHxyuKxs95R+rHIvgqazy7TCv01ivL+9njXU3dD6wfAPGhTH8dLN27XHaxqzBU9rnTBS+P/Smxf1df1wUuULXTp+8vBBqZjqZkYDeTaDYnOBmjUg=
+	t=1743708947; cv=none; b=Ib1AH+84P61AVadT+n6+OpCrX1g1ZH7CKI6T8RCA9rTf+tDKjErJ5ATnfC/F6+SkoMQLrIO2jk8Vzq+VkCEuXFNDPO71JLOFPBkNTeCmxnNPAVNpB0Cn9uRo5K18SESBHTffrXY3pGuOoQtTzHcTGV45zfwN4CiLZGdEZVijnAA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743707950; c=relaxed/simple;
-	bh=fBQsgzhOFTxDhActCtAHHoEV/ZR75bscRiQhnUnzfL0=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=rx9j3n2inHxzGNi01mNhhWYeDhc7Q8gYYCnPqdv1pr/Vi3o3WmuMJZ3NUxcl8tvS3TVV1WQRgnZOMiZCZr+2Rx/be8AINJd0f/k+Jx3ucyWOq0QWx76OosxaTfEO29b+nvg+7w6irXQG6tuKTA+6a6OvFtiax/k5idBjPY87DmI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S+NKIu71; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S+NKIu71"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A05E4C4CEE8;
-	Thu,  3 Apr 2025 19:19:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743707950;
-	bh=fBQsgzhOFTxDhActCtAHHoEV/ZR75bscRiQhnUnzfL0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=S+NKIu71KaEFa6t8+4Ipl2wn5os/2W2N8qxrBwyNFx5aDCVuWdXYiKyvcH5Bfk+Bq
-	 x1DnODZ5/Xo1lIQPwruYW6XTlk/PVfDWZDIIRwKsapBbnBmjuiHY80QcpvNX2vs+aC
-	 JQfLAMOcYkNBoCpSSPzeym60vJqbAdJ3oPirhKjCYflbQU6/Jc4wheNlzCV4J9YMpe
-	 AzQrb982MW7T9dP1iRMfO8Nixk9L2+yae6dYphqtYruMWvdCKBDIVUdfM26maiP/Wh
-	 tR6f8LwSRLYMe6Koohb3qvHhx09kSeHcE5+2Jn9W3rGymZx9nE8Fzqztd2g0U13aI7
-	 mqBw/EbUV4d+Q==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Sasha Levin <sashal@kernel.org>,
-	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.6 21/23] tracing: probe-events: Add comments about entry data storing code
-Date: Thu,  3 Apr 2025 15:18:14 -0400
-Message-Id: <20250403191816.2681439-21-sashal@kernel.org>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250403191816.2681439-1-sashal@kernel.org>
-References: <20250403191816.2681439-1-sashal@kernel.org>
+	s=arc-20240116; t=1743708947; c=relaxed/simple;
+	bh=SfudcGVvgUwCu02nkG9Exu6y8ntGP9LdeWrTt3lMa5A=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=D6z8B36xHcElE6oJ/Z90XdW56h/K/1oY9Da0eaP9WLVET/Fv4BUDQCw1uDZfWQHeKWzvnx4AydnglUqFwWvuA+e66TEsqHE9sIB/RvIkjBcvluIydo4+vapqArou/062bXSRAhn6OQK5KdRF/zL6rdGQQ0n9j7DWYxo2D5NXskQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A9956C4CEE3;
+	Thu,  3 Apr 2025 19:35:45 +0000 (UTC)
+Date: Thu, 3 Apr 2025 15:36:51 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Devaansh Kumar <devaanshk840@gmail.com>
+Cc: mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
+ linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
+ skhan@linuxfoundation.org, linux-kernel-mentees@lists.linuxfoundation.org
+Subject: Re: [PATCH] tracing: Replace deprecated strncpy() with memcpy() for
+ stack_trace_filter_buf
+Message-ID: <20250403153651.1188135b@gandalf.local.home>
+In-Reply-To: <20250403191342.1244863-1-devaanshk840@gmail.com>
+References: <20250403191342.1244863-1-devaanshk840@gmail.com>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.6.85
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+On Fri,  4 Apr 2025 00:43:40 +0530
+Devaansh Kumar <devaanshk840@gmail.com> wrote:
 
-[ Upstream commit bb9c6020f4c3a07a90dc36826cb5fbe83f09efd5 ]
+> @@ -537,14 +538,16 @@ stack_trace_sysctl(struct ctl_table *table, int write, void *buffer,
+>  	return ret;
+>  }
+>  
+> -static char stack_trace_filter_buf[COMMAND_LINE_SIZE+1] __initdata;
+> +static char stack_trace_filter_buf[COMMAND_LINE_SIZE+1] __initdata __nonstring;
+>  
+>  static __init int enable_stacktrace(char *str)
+>  {
+>  	int len;
+>  
+> -	if ((len = str_has_prefix(str, "_filter=")))
+> -		strncpy(stack_trace_filter_buf, str + len, COMMAND_LINE_SIZE);
+> +	len = str_has_prefix(str, "_filter=");
+> +
+> +	if (len)
+> +		memcpy(stack_trace_filter_buf, str + len, sizeof(stack_trace_filter_buf));
 
-Add comments about entry data storing code to __store_entry_arg() and
-traceprobe_get_entry_data_size(). These are a bit complicated because of
-building the entry data storing code and scanning it.
+Hmm, this location looks like it can just use strscpy().
 
-This just add comments, no behavior change.
+-- Steve
 
-Link: https://lore.kernel.org/all/174061715004.501424.333819546601401102.stgit@devnote2/
 
-Reported-by: Steven Rostedt <rostedt@goodmis.org>
-Closes: https://lore.kernel.org/all/20250226102223.586d7119@gandalf.local.home/
-Reviewed-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- kernel/trace/trace_probe.c | 28 ++++++++++++++++++++++++++++
- 1 file changed, 28 insertions(+)
-
-diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
-index 8c73156a7eb94..606190239c877 100644
---- a/kernel/trace/trace_probe.c
-+++ b/kernel/trace/trace_probe.c
-@@ -769,6 +769,10 @@ static int check_prepare_btf_string_fetch(char *typename,
- 
- #ifdef CONFIG_HAVE_FUNCTION_ARG_ACCESS_API
- 
-+/*
-+ * Add the entry code to store the 'argnum'th parameter and return the offset
-+ * in the entry data buffer where the data will be stored.
-+ */
- static int __store_entry_arg(struct trace_probe *tp, int argnum)
- {
- 	struct probe_entry_arg *earg = tp->entry_arg;
-@@ -792,6 +796,20 @@ static int __store_entry_arg(struct trace_probe *tp, int argnum)
- 		tp->entry_arg = earg;
- 	}
- 
-+	/*
-+	 * The entry code array is repeating the pair of
-+	 * [FETCH_OP_ARG(argnum)][FETCH_OP_ST_EDATA(offset of entry data buffer)]
-+	 * and the rest of entries are filled with [FETCH_OP_END].
-+	 *
-+	 * To reduce the redundant function parameter fetching, we scan the entry
-+	 * code array to find the FETCH_OP_ARG which already fetches the 'argnum'
-+	 * parameter. If it doesn't match, update 'offset' to find the last
-+	 * offset.
-+	 * If we find the FETCH_OP_END without matching FETCH_OP_ARG entry, we
-+	 * will save the entry with FETCH_OP_ARG and FETCH_OP_ST_EDATA, and
-+	 * return data offset so that caller can find the data offset in the entry
-+	 * data buffer.
-+	 */
- 	offset = 0;
- 	for (i = 0; i < earg->size - 1; i++) {
- 		switch (earg->code[i].op) {
-@@ -825,6 +843,16 @@ int traceprobe_get_entry_data_size(struct trace_probe *tp)
- 	if (!earg)
- 		return 0;
- 
-+	/*
-+	 * earg->code[] array has an operation sequence which is run in
-+	 * the entry handler.
-+	 * The sequence stopped by FETCH_OP_END and each data stored in
-+	 * the entry data buffer by FETCH_OP_ST_EDATA. The FETCH_OP_ST_EDATA
-+	 * stores the data at the data buffer + its offset, and all data are
-+	 * "unsigned long" size. The offset must be increased when a data is
-+	 * stored. Thus we need to find the last FETCH_OP_ST_EDATA in the
-+	 * code array.
-+	 */
- 	for (i = 0; i < earg->size; i++) {
- 		switch (earg->code[i].op) {
- 		case FETCH_OP_END:
--- 
-2.39.5
-
+>  
+>  	stack_tracer_enabled = 1;
+>  	return 1;
+> -- 
