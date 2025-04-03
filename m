@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EBF01EEA2C;
-	Thu,  3 Apr 2025 19:15:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78BA22080F1;
+	Thu,  3 Apr 2025 19:16:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743707709; cv=none; b=sqd8JQSXlJnPnZIk+a5a3SyYqUvC0nwvm3A+ZWg9CWnh8FcdhDkbcY1M5hhsaq37CDUhm9c7B33TNa17YY3gPIr4aRspJR19RXSwUw/yt1WUyudMEuxl4pw3a6Y34lgquqIvut3/s12KQ4kZ3Djs86LOfBnKM3T6jY04LAq5zxU=
+	t=1743707811; cv=none; b=iAHO5aWmgw6NDLmOaBKPqjSxsC5kICMqlWR4N0cPxwym3ITEcx1OXehXpvdtyYudS7Gmebm2ae7SuQrDUNRa3tubuTr9uhnCfqlz5PuuwbR4XP8JC+k4M7tPxuvZmTxGj8TqutFNPiYgt8UnC1UYyng5k29ZtBqIciVuXaXYiOo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743707709; c=relaxed/simple;
-	bh=r+jGbRe1qTe8mUrlj+W7WsE9TH+Jz+fpGST/vO7nmD4=;
+	s=arc-20240116; t=1743707811; c=relaxed/simple;
+	bh=4Z0q3Xs/H9AZcmWQTqJHE7x55UJuKGQjIQM0FFvzNiQ=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=CiRTdw4NmI6NQGWjko6lrDoZ5+KF25VM6DMs7ji5+pkcrb6vuPhGXolEAAhHnn4Bc7jCI5WPHil5BmzQ2zq62HnJBXxPZ+l3w+EtbXOzb3+IOg0SKnDB1v1YIKGJvA4a2619bq4E8ZkW+dNmUYyfx6Jk4AVzG85kxG1rAdHoDko=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FqCmGQEK; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=WqXcSgojr0XIstgeHmW6ylxNoU287CLpcbRgYh06tch5SiaJR9x/w/WEIpEmCYuZr0hrwwBNjAyQdKpO0hESfoFJNaguchd643TJ/e7i8J/l0+oj6Eqiq8U2uewPB+kG+2gWQuyJEAF5Euey8i3Ma+mn7dZUoX2tFH9VUAKCW7o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VOijUDnB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FqCmGQEK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6A8B7C4CEEB;
-	Thu,  3 Apr 2025 19:15:08 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VOijUDnB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 34F83C4CEE3;
+	Thu,  3 Apr 2025 19:16:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743707709;
-	bh=r+jGbRe1qTe8mUrlj+W7WsE9TH+Jz+fpGST/vO7nmD4=;
+	s=k20201202; t=1743707810;
+	bh=4Z0q3Xs/H9AZcmWQTqJHE7x55UJuKGQjIQM0FFvzNiQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=FqCmGQEKYX9+FiNNvDnDGagtQHTx0NWstKhNhe0toXdZ1jGXhvHeD5h5HIKiPA0ml
-	 ClVZk6qe8my7LlScFhsEtKENrq4go2Y8rfqD+GChxjfHvMi2LH3iKhJVN0+HMZAiQN
-	 EwJdWF1wVZwKws7K67lslMQaTjnTeVKorz2+KooEp4l5UIr741xZ3beBn2Ex9cgosx
-	 X4nUWXitkF95h6hbwqXn+d4qlaoceZygDPaGfEWX4EbZTQsAOfFbG3VjVyHmUq77+c
-	 UQztI7REm3hTvpwJx8o4yG9rcrcFosaqJ2LxuoqgtgJb312A0VsClHbaddtWClhepQ
-	 rzql+7kxy1dYA==
+	b=VOijUDnBQCX8CT3Cv831Wx783jMn1h6P3bVkpisCGeWx2S+0lxEyRe5F4qPt5W6L6
+	 E5DssNj8qXMiGunhyCMJZ3qLjKOCortEjgooq9CMn8QOOt2VJ7S1kxqXZeu/cNlii/
+	 kf6caJeabIaga0CvOcvYzdheBhiWReh74wV+Sc9IUlBHxKuv+AAu1FT+58RsXjHAch
+	 wb0mFxBRUEj023PYlDRwYnoRLCe0/SO8awfGiOqDrSlkcY4rxK/T8LKv64Sd8heTM8
+	 yfVLn4dCF62bNKfacGqodJK2BJK8yuIIzCr1VoehP1JFGznf/IPGtmNaWv5/5vlbNs
+	 ZvBgp2DpQdE4w==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
@@ -33,12 +33,12 @@ Cc: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
 	Steven Rostedt <rostedt@goodmis.org>,
 	Sasha Levin <sashal@kernel.org>,
 	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.14 41/44] tracing: probe-events: Add comments about entry data storing code
-Date: Thu,  3 Apr 2025 15:13:10 -0400
-Message-Id: <20250403191313.2679091-41-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.13 34/37] tracing: probe-events: Add comments about entry data storing code
+Date: Thu,  3 Apr 2025 15:15:10 -0400
+Message-Id: <20250403191513.2680235-34-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250403191313.2679091-1-sashal@kernel.org>
-References: <20250403191313.2679091-1-sashal@kernel.org>
+In-Reply-To: <20250403191513.2680235-1-sashal@kernel.org>
+References: <20250403191513.2680235-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -47,7 +47,7 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.14
+X-stable-base: Linux 6.13.9
 Content-Transfer-Encoding: 8bit
 
 From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
@@ -72,7 +72,7 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 28 insertions(+)
 
 diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
-index 8f58ee1e8858a..2eeecb6c95eea 100644
+index 16a5e368e7b77..578919962e5df 100644
 --- a/kernel/trace/trace_probe.c
 +++ b/kernel/trace/trace_probe.c
 @@ -770,6 +770,10 @@ static int check_prepare_btf_string_fetch(char *typename,
