@@ -1,134 +1,118 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A7F924EF7E;
-	Thu,  3 Apr 2025 15:30:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4DFA24EF7B;
+	Thu,  3 Apr 2025 16:02:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743694211; cv=none; b=A5xCbm72Uo2dxPEaz4QtNaymJnPlT1lFAe874EbxHqb9QrIwqHal0ZBXJAC0Rk9Rg2O87tELsJQSRCzRuzEo7Nkxl6ujHsCfMGY8sqZMnAaec2qrlTgh056aHPMj1HLlElS/WXwwQZHeRNNd5f7H1tI5aC6gCICTYcSgnRjWBpk=
+	t=1743696134; cv=none; b=Jkqfbrp3TXbfPlCl00hrUi1V++EWenRfqNtLNySDaKgWr/Dv1Gc8wNZpFKyuWazGIdbGFZXK/S875m8TKhBocNG4YXbThceHArZVbJsfwjyMbe5BTRdGxNJ+ciOk3DV8r5FDP7i5guWixdDj99ELSmyiuouF8pAlXPjL7DxmyvQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743694211; c=relaxed/simple;
-	bh=q4ROEx0k0EcOszxzPv3EkCrjgDjbH5aqcKwGDoSp5+c=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VcvA2MPHgOOOvDp94B/oTLujMsBBZSaJVcAUKe6d9TDanArycdEuBEUm/5sQtP9QbNW+IAePOQggwZs35XziMObZHHvlISAhRvMaezvtMoRr4rfXAItLM1D594wJ8D2sqQoqo6vNJ75EIjTx8IcWgec3EOhkfbL/tBdP/NDWi74=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jMzK8cwz; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743696134; c=relaxed/simple;
+	bh=m7tu4rDfq00695S+IZ3bQyVVACf9bPRtoApVmM5hPGs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=QEarw+BLUSwYSOdn8/0U7SOGaV7jjXsJJwupGGt11z1kddk5Gle9BWs15vlkZoxYK2qUPPvj8+nd/VyYUfSr3HjSDdaArkASu7ecfVWv0Y00HZrDZG8pB0TEeFMFTJZww+GVe4Opz53QT8/Qb/2vBw5+rmTqBp3qDevQ6yIwtbs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=R7yhYwBW; arc=none smtp.client-ip=209.85.210.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jMzK8cwz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 569F4C4CEEB;
-	Thu,  3 Apr 2025 15:30:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743694211;
-	bh=q4ROEx0k0EcOszxzPv3EkCrjgDjbH5aqcKwGDoSp5+c=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=jMzK8cwzjq9uC/pC8ANF+KmdYBqLQvnFUUxyINaU6JRruJdCSamzVMRYZb6BgrQ7F
-	 IHDVXZ+J6YlKCt3FetCFAXdkukDoPcYIzQ2xPJJLh2xfnX9m/ZlSxf4X6/QLuirjaN
-	 U5rqIG8nevtMexftmBXD6igwydxqy3wSJNUEPZGbwcyrRwQV+vh5/MvN1IRtUW4FD2
-	 oWCIWbB1j49kpVlk03Vh/e4KFemlGPSRvPm8+ouN/GlPYDFkPKgssFIlTrrMR50Dr2
-	 SJCnEHW6nh8DrCxXCBRuvHku/Onj9sQhkpTagraOEjDI6WaVbXSwGLZ8PLqmuza3F/
-	 Y6tsDUe4oz/Dg==
-Date: Thu, 3 Apr 2025 20:56:26 +0530
-From: Naveen N Rao <naveen@kernel.org>
-To: Jiri Olsa <olsajiri@gmail.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>, 
-	Shung-Hsi Yu <shung-hsi.yu@suse.com>, Hari Bathini <hbathini@linux.ibm.com>, bpf@vger.kernel.org, 
-	Michael Ellerman <mpe@ellerman.id.au>, Mark Rutland <mark.rutland@arm.com>, 
-	Daniel Borkmann <daniel@iogearbox.net>, Masahiro Yamada <masahiroy@kernel.org>, 
-	Nicholas Piggin <npiggin@gmail.com>, Alexei Starovoitov <ast@kernel.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Andrii Nakryiko <andrii@kernel.org>, 
-	Christophe Leroy <christophe.leroy@csgroup.eu>, Vishal Chourasia <vishalc@linux.ibm.com>, 
-	Mahesh J Salgaonkar <mahesh@linux.ibm.com>, Miroslav Benes <mbenes@suse.cz>, 
-	Michal =?utf-8?B?U3VjaMOhbmVr?= <msuchanek@suse.de>, linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, 
-	linux-trace-kernel@vger.kernel.org, live-patching@vger.kernel.org, Song Liu <song@kernel.org>
-Subject: Re: [BUG?] ppc64le: fentry BPF not triggered after live patch (v6.14)
-Message-ID: <xcym3f3rnakaokcf55266czlm5iuh6gv32yl2hplr2hh4uknz3@jusk2mxbrcvw>
-References: <rwmwrvvtg3pd7qrnt3of6dideioohwhsplancoc2gdrjran7bg@j5tqng6loymr>
- <20250331100940.3dc5e23a@gandalf.local.home>
- <Z-vgigjuor5awkh-@krava>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R7yhYwBW"
+Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-736b350a22cso952782b3a.1;
+        Thu, 03 Apr 2025 09:02:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743696132; x=1744300932; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ERaBmqCIf0T5YAHhV0wCrhXIl+DoA74R7uuluo5dCww=;
+        b=R7yhYwBWov0JXyYo5UGDN3DNz03tI5VL4Gvgrvnztvsniv+7ObtJ1JFWSJ4ujlp1Gs
+         w0jVhos1uz+ZivzX6uge6DRGrdCaCP1m2dYlKwiA1JDM9Kia82d5FEwaMNgwE0ujPZfb
+         o548TRtJsgwmpEg4CCmTXyT7rk08P6rgrk8SHEK3yzQU4ipHeNRkqA3VdLpEGFv+uiMf
+         d6+IXiMKbIwbddKbnQb8RDzfWivC76nrmPZ1GT5jELSA/nWtEEXuOEkFgOdvOWnFmjTC
+         GwcMvKkwULP9UdME/FOoK30Q/QIFIugMfgavmfH/9FvFjEy69c6hsiChwRz52BX3nF2K
+         tA1Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743696132; x=1744300932;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ERaBmqCIf0T5YAHhV0wCrhXIl+DoA74R7uuluo5dCww=;
+        b=cXOy0Ne3Xxus2+yV/sBAHVwttp9ijLpiRxVh71sopBcZa4atsn36tIxEj1Ct00s5FN
+         9b5kI/i5YAGw9KXoA4hujQQZkapDEqQIT992ShLXV9jyDUf0fkDVF13+HtNKku+PDizE
+         0gi/IlwHi7eFY2K1tVGYm22XPX8x20il5K2E1TGudamJMlQQL1FN6wdOEGz7l2pkSz1l
+         1vJtucc6L5DV3hRCsA3mPwpW3s6/8xiR1wdAOWvksvLsAeREaIh8H6hY6zjFobKG9U8k
+         /5UDAp0Go6Z38SMFiM5D/KmRoMNN1czSEHR2uaJ1DBlFkSpcSYKVBWk+fvq3bdd8I4XN
+         baNw==
+X-Forwarded-Encrypted: i=1; AJvYcCVN3l26BG9AeVW1cvOy1xozc/A1BPmcCtKL4CcD3yI0nbP1CKJXFTlikrcJAKH+u74O0yy9rVHb12Ju6QGa@vger.kernel.org, AJvYcCWKncyN0gc7sxV53bUit57yHvL6zcVaBiAqRMdbmbO3H6VIHkAPbDkatgXdGYJhXddZABY=@vger.kernel.org, AJvYcCX9cnp2khn2MmevJtEhGt5Z87g5KJ1ZrwoBCfy0pWw0MbkaFl1vYwNjSrB52ttSFX/YknHq7WGR46O8vTGbntOU5vmF@vger.kernel.org
+X-Gm-Message-State: AOJu0YxtwPh/39HEcuGe6RuzkB4TxAm5aD5dVJvtr334hA7Oj3rSu184
+	u+p58oEeUjBnax/7JSDWOsuIK10WPRs38LwQAunl/Kmagc6rgRcyM3nkm4hBdWEeVEGiqQ66o9z
+	9Cgr23+43vZOYoaAs4GzF3tFVpYE=
+X-Gm-Gg: ASbGncuHDgsRg46dOiAKsjOVH9xvFR+XDyNqCxyM1x8llAszsl4uDKZEhxx2++0eVNH
+	d4nlW/VkysBypxjWDXeWhxZxsvGiwofGXAdDPXBKSc2APGylH+nfsAJbwnbiv3ppCV8Ufjf90AK
+	WrguIzsidvJXX+cqEy7BPivtqUoknwVxBIcn0n5tPxnQ==
+X-Google-Smtp-Source: AGHT+IFrnDbDbO9hh52XP1EFEhRczxV4AfHIekgrm8+a4QyhKJnT3NAnmiuxSphpvehUvVydL2WYUP+18gU4tmITRhE=
+X-Received: by 2002:a05:6a00:2381:b0:736:5753:12f7 with SMTP id
+ d2e1a72fcca58-739e48cf381mr188334b3a.3.1743696131261; Thu, 03 Apr 2025
+ 09:02:11 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z-vgigjuor5awkh-@krava>
+References: <20250402180925.90914-1-andrii@kernel.org> <Z-6TDh1MUT49lvjk@gmail.com>
+ <20250403110615.7a51b793@gandalf.local.home> <Z-6lPadt51e7jcXd@gmail.com>
+In-Reply-To: <Z-6lPadt51e7jcXd@gmail.com>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Thu, 3 Apr 2025 09:01:59 -0700
+X-Gm-Features: AQ5f1Jq_ruvyVGPvzIEu_GKFQv45bDPlWqzaU4Z2mJaYsY8ahuIN2Oa34tScXbo
+Message-ID: <CAEf4BzagjTyA+OWzWatrHvHu0wpzWBDJT=-qh+NWYTNAtjRWxQ@mail.gmail.com>
+Subject: Re: [PATCH v2] exit: move and extend sched_process_exit() tracepoint
+To: Ingo Molnar <mingo@kernel.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>, Andrii Nakryiko <andrii@kernel.org>, 
+	linux-trace-kernel@vger.kernel.org, peterz@infradead.org, bpf@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, kernel-team@meta.com, mhocko@kernel.org, 
+	oleg@redhat.com, brauner@kernel.org, glider@google.com, mhiramat@kernel.org, 
+	mathieu.desnoyers@efficios.com, akpm@linux-foundation.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Apr 01, 2025 at 02:48:10PM +0200, Jiri Olsa wrote:
-> On Mon, Mar 31, 2025 at 10:09:40AM -0400, Steven Rostedt wrote:
-> > On Mon, 31 Mar 2025 21:19:36 +0800
-> > Shung-Hsi Yu <shung-hsi.yu@suse.com> wrote:
-> > 
-> > > Hi all,
-> > > 
-> > > On ppc64le (v6.14, kernel config attached), I've observed that fentry
-> > > BPF programs stop being invoked after the target kernel function is live
-> > > patched. This occurs regardless of whether the BPF program was attached
-> > > before or after the live patch. I believe fentry/fprobe on ppc64le is
-> > > added with [1].
-> > > 
-> > > Steps to reproduce on ppc64le:
-> > > - Use bpftrace (v0.10.0+) to attach a BPF program to cmdline_proc_show
-> > >   with fentry (kfunc is the older name bpftrace used for fentry, used
-> > >   here for max compatability)
-> > > 
-> > >     bpftrace -e 'kfunc:cmdline_proc_show { printf("%lld: cmdline_proc_show() called by %s\n", nsecs(), comm) }'
-> > > 
-> > > - Run `cat /proc/cmdline` and observe bpftrace output
-> > > 
-> > > - Load samples/livepatch/livepatch-sample.ko
-> > > 
-> > > - Run `cat /proc/cmdline` again. Observe "this has been live patched" in
-> > >   output, but no new bpftrace output.
-> > > 
-> > > Note: once the live patching module is disabled through the sysfs interface
-> > > the BPF program invocation is restored.
-> > > 
-> > > Is this the expected interaction between fentry BPF and live patching?
-> > > On x86_64 it does _not_ happen, so I'd guess the behavior on ppc64le is
-> > > unintended. Any insights appreciated.
+On Thu, Apr 3, 2025 at 8:12=E2=80=AFAM Ingo Molnar <mingo@kernel.org> wrote=
+:
+>
+>
+> * Steven Rostedt <rostedt@goodmis.org> wrote:
+>
+> > On Thu, 3 Apr 2025 15:54:22 +0200
+> > Ingo Molnar <mingo@kernel.org> wrote:
+> >
+> > > This feels really fragile, could you please at least add a comment
+> > > that points out that this is basically an extension of
+> > > sched_process_template, and that it should remain a subset of it,
+> > > or something to that end?
+> >
+> > Is there any dependency on this?
+> >
+> > I don't know of any other dependency to why this was a template other t=
+han
+> > to save memory.
+>
+> Uhm, to state the obvious: to not replicate the same definitions over
+> and over again three times times, for 3 scheduler tracepoints that
+> share the record format?
+>
+> Removing just a single sched_process_template use bloats the source and
+> adds in potential fragility:
+>
+>  2 files changed, 26 insertions(+), 4 deletions(-)
+>
+> So my request is to please at least add a comment that points the
+> reader to the shared record format between sched_process_exit and the
+> other two tracepoints.
 
-We haven't addressed this particular interaction in the powerpc support 
-for ftrace direct and BPF trampolines. Right now, live patching takes 
-priority so we call the livepatch'ed function and skip further ftrace 
-direct calls.
+Sounds good, no problem. I'll send a follow up patch which Andrew can
+fold, if he prefers.
 
-I'm curious if this works on arm64 with which we share support for 
-DYNAMIC_FTRACE_WITH_CALL_OPS.
-
-> > 
-> > Hmm, I'm not sure how well BPF function attachment and live patching
-> > interact. Can you see if on x86 the live patch is actually updated when a
-> > BPF program is attached?
-> 
-> above works for me on x86, there's both 'this has been live patched'
-> and bpftrace output
-> 
-> > 
-> > Would be even more interesting to see how BPF reading the return code works
-> > with live patching, as it calls the function directly from the BPF
-> > trampoline. I wonder, does it call the live patched function, or does it
-> > call the original one?
-> 
-> yes, that should work, Song fixed some time ago with:
->   00963a2e75a8 bpf: Support bpf_trampoline on functions with IPMODIFY (e.g. livepatch)
-
-We don't support BPF_TRAMP_F_ORIG_STACK today, and I am not sure that 
-will be easy to support with the out-of-line stubs we are using for 
-ftrace.
-
-Today, we support one of livepatch or a direct caller from 
-ftrace_caller. Livepatch takes priority. We could call the direct caller 
-first, but that will only work if it is guaranteed to call the 
-livepatched function (i.e., if the direct call is to a bpf trampoline 
-with BPF_TRAMP_F_CALL_ORIG). Otherwise, we will need to call the 
-livepatched function after that, but we don't return to ftrace_caller 
-from the livepatch handler.
-
-Not sure which of those interactions are valid between a livepatch and a 
-direct caller (with and without BPF_TRAMP_F_CALL_ORIG), and if all 
-combinations of those need to be supported.
-
-
-- Naveen
-
+>
+> Thanks,
+>
+>         Ingo
