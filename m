@@ -1,118 +1,130 @@
-Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
+Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4DFA24EF7B;
-	Thu,  3 Apr 2025 16:02:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF3E71514F6;
+	Thu,  3 Apr 2025 16:39:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743696134; cv=none; b=Jkqfbrp3TXbfPlCl00hrUi1V++EWenRfqNtLNySDaKgWr/Dv1Gc8wNZpFKyuWazGIdbGFZXK/S875m8TKhBocNG4YXbThceHArZVbJsfwjyMbe5BTRdGxNJ+ciOk3DV8r5FDP7i5guWixdDj99ELSmyiuouF8pAlXPjL7DxmyvQ=
+	t=1743698379; cv=none; b=QDLhwVJVrFmvNNc0QDIsR1nAJgL25drsfZqV8UeyMylLptpfVrnsjcZweWxP4X9q/n2Xe/APpxYLRo/CzcAzeNA52aTnPesjag1fllPsr4VGQ6HS+wbYiv/DxJZq7RG12AnRkUd+IdHdXZTgIH+5of63EitcDSy7G4BXTHErCWE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743696134; c=relaxed/simple;
-	bh=m7tu4rDfq00695S+IZ3bQyVVACf9bPRtoApVmM5hPGs=;
+	s=arc-20240116; t=1743698379; c=relaxed/simple;
+	bh=QsquTBzgOmkr9/ysxz/GY+SPh+eIH8M6tMImN0n3NDc=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=QEarw+BLUSwYSOdn8/0U7SOGaV7jjXsJJwupGGt11z1kddk5Gle9BWs15vlkZoxYK2qUPPvj8+nd/VyYUfSr3HjSDdaArkASu7ecfVWv0Y00HZrDZG8pB0TEeFMFTJZww+GVe4Opz53QT8/Qb/2vBw5+rmTqBp3qDevQ6yIwtbs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=R7yhYwBW; arc=none smtp.client-ip=209.85.210.169
+	 To:Cc:Content-Type; b=FiC6rkoKTMOgl42usyTs0YSZM/9C7CfzOJwaogB+8HLsv+DyBW+SqC5W0sQg4jwdwkNN1OXCwSxWVYksi7Eox/Z1Fz16GtqAJX1mKkLWPXpSJQaoBcthwyaqpfTweiAyI+HiCkEoCvd6HRfEopd2jddy1uKGH1HoWeg1sFcy5AE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=D1J6WKnf; arc=none smtp.client-ip=209.85.208.46
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R7yhYwBW"
-Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-736b350a22cso952782b3a.1;
-        Thu, 03 Apr 2025 09:02:12 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D1J6WKnf"
+Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-5e5e0caa151so2061404a12.0;
+        Thu, 03 Apr 2025 09:39:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743696132; x=1744300932; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1743698376; x=1744303176; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=ERaBmqCIf0T5YAHhV0wCrhXIl+DoA74R7uuluo5dCww=;
-        b=R7yhYwBWov0JXyYo5UGDN3DNz03tI5VL4Gvgrvnztvsniv+7ObtJ1JFWSJ4ujlp1Gs
-         w0jVhos1uz+ZivzX6uge6DRGrdCaCP1m2dYlKwiA1JDM9Kia82d5FEwaMNgwE0ujPZfb
-         o548TRtJsgwmpEg4CCmTXyT7rk08P6rgrk8SHEK3yzQU4ipHeNRkqA3VdLpEGFv+uiMf
-         d6+IXiMKbIwbddKbnQb8RDzfWivC76nrmPZ1GT5jELSA/nWtEEXuOEkFgOdvOWnFmjTC
-         GwcMvKkwULP9UdME/FOoK30Q/QIFIugMfgavmfH/9FvFjEy69c6hsiChwRz52BX3nF2K
-         tA1Q==
+        bh=QsquTBzgOmkr9/ysxz/GY+SPh+eIH8M6tMImN0n3NDc=;
+        b=D1J6WKnf5ui3TeIC/R1Awes0mMLdZQOKxBYRiRJmwFvzwfHt0Fw6F2U57d8dACxlk1
+         ndIHVEHv7NIzwR7Ira1YpKVxw1C1GfZX72NzV85rI9fySBC95i/+Yc5hMX25oQsi4LDE
+         VYzw+cz0b9r+ME7Ce9RCy1zxxCOasZLM+w877jAw6N7tu4aIuI1rXSjf3D5nDnAmH1WA
+         fD4+jRsGO9v3o3uATT9q2rSIC2IxPxdKcV7z5shjIetnEg3gzIY+b5BfTTPpJZ/SGJVR
+         GgRVn16yyq4Z4vyU/MZ9zMHejEfrYptIowla69WdRqduEZHqXy4Teg28Bk+Y9TxDHFAx
+         ahUg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743696132; x=1744300932;
+        d=1e100.net; s=20230601; t=1743698376; x=1744303176;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=ERaBmqCIf0T5YAHhV0wCrhXIl+DoA74R7uuluo5dCww=;
-        b=cXOy0Ne3Xxus2+yV/sBAHVwttp9ijLpiRxVh71sopBcZa4atsn36tIxEj1Ct00s5FN
-         9b5kI/i5YAGw9KXoA4hujQQZkapDEqQIT992ShLXV9jyDUf0fkDVF13+HtNKku+PDizE
-         0gi/IlwHi7eFY2K1tVGYm22XPX8x20il5K2E1TGudamJMlQQL1FN6wdOEGz7l2pkSz1l
-         1vJtucc6L5DV3hRCsA3mPwpW3s6/8xiR1wdAOWvksvLsAeREaIh8H6hY6zjFobKG9U8k
-         /5UDAp0Go6Z38SMFiM5D/KmRoMNN1czSEHR2uaJ1DBlFkSpcSYKVBWk+fvq3bdd8I4XN
-         baNw==
-X-Forwarded-Encrypted: i=1; AJvYcCVN3l26BG9AeVW1cvOy1xozc/A1BPmcCtKL4CcD3yI0nbP1CKJXFTlikrcJAKH+u74O0yy9rVHb12Ju6QGa@vger.kernel.org, AJvYcCWKncyN0gc7sxV53bUit57yHvL6zcVaBiAqRMdbmbO3H6VIHkAPbDkatgXdGYJhXddZABY=@vger.kernel.org, AJvYcCX9cnp2khn2MmevJtEhGt5Z87g5KJ1ZrwoBCfy0pWw0MbkaFl1vYwNjSrB52ttSFX/YknHq7WGR46O8vTGbntOU5vmF@vger.kernel.org
-X-Gm-Message-State: AOJu0YxtwPh/39HEcuGe6RuzkB4TxAm5aD5dVJvtr334hA7Oj3rSu184
-	u+p58oEeUjBnax/7JSDWOsuIK10WPRs38LwQAunl/Kmagc6rgRcyM3nkm4hBdWEeVEGiqQ66o9z
-	9Cgr23+43vZOYoaAs4GzF3tFVpYE=
-X-Gm-Gg: ASbGncuHDgsRg46dOiAKsjOVH9xvFR+XDyNqCxyM1x8llAszsl4uDKZEhxx2++0eVNH
-	d4nlW/VkysBypxjWDXeWhxZxsvGiwofGXAdDPXBKSc2APGylH+nfsAJbwnbiv3ppCV8Ufjf90AK
-	WrguIzsidvJXX+cqEy7BPivtqUoknwVxBIcn0n5tPxnQ==
-X-Google-Smtp-Source: AGHT+IFrnDbDbO9hh52XP1EFEhRczxV4AfHIekgrm8+a4QyhKJnT3NAnmiuxSphpvehUvVydL2WYUP+18gU4tmITRhE=
-X-Received: by 2002:a05:6a00:2381:b0:736:5753:12f7 with SMTP id
- d2e1a72fcca58-739e48cf381mr188334b3a.3.1743696131261; Thu, 03 Apr 2025
- 09:02:11 -0700 (PDT)
+        bh=QsquTBzgOmkr9/ysxz/GY+SPh+eIH8M6tMImN0n3NDc=;
+        b=LS+l4wn5G5hxKxAONMZDqQO+iect84AcB+pQFOllTaWx3AHwLBUDRG1FxjqjJInhpd
+         RV0spxw8WwMOGTPbtN5z+wTEiK74oTq6Otzhwh1+MjIPS2G6Jfqxp8haRfTiSOpoO3Ls
+         j8E3HOsamIs0tRULhFo5/mkOJ4cGPgBQa5NwA9fxDnMyP8/rCwuu8Pnv7c+Hbsy2pIfk
+         CliLQBs/MfYTZt5AjQ2aq8cPCjspGDbdA7zGc9qvQzY6Or+8QgLflJSmq0aWrSWcI0FI
+         ByrFbzAVnkNX6bYX+WmETGEhzRT3fN8FEgL+pDISt3IDQa0iwW3iWLDAWR5wrvLDbRhK
+         1t2g==
+X-Forwarded-Encrypted: i=1; AJvYcCUabXrTNqIPBkJIpMGfNOD4hWOVkwqVjL1NGds/7SsxWmZug/VMt0RgKQlg3ukyi3STFjiBA2ijJgwLYqY=@vger.kernel.org, AJvYcCWePkM8nltoqT9xCk3YDJDK0TJWp+rCXjhIHVZcyvp0ukVxcjF0048cCaTFQvcT1SWOFMvGUMO8reb8Xj0PMAwgr9m5@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxrw+HKcqchxbr6BVSRo9Ml08yCytY8sGN48VlcRrL4iZAh4q31
+	CmlOy0X0t3gKVqBPvV22sdSsW/hSbQ6A3+eN1zf10s7kBJ22wg6y/+Gm+V2iDbPA7nSp7NTNRlh
+	QHIqHz8pvXUH2XzFh4BB/PjcZtws=
+X-Gm-Gg: ASbGncvk/PgiYBHoT5QVFsfLqzzgnDToBuKgJzQd2vEzh3D/YI+VJQjw0dvi6KoFJHl
+	AJ7Lfxg3qnLZ5gpwyEW85Ise5srole1cm0+6qI/9LFATn4oWgM2rOdeq14Yyav3v5xaJbFHrlk/
+	8KH9vWY4Ht5dv1QaAwrqIKdqrA
+X-Google-Smtp-Source: AGHT+IHwXZTdMgLzXp7QCCwNxDBR2dVogVg7DgrbpojvC2yqGK8Fv9w9GNmWMTZeRDGVJpYZV7xR1c970wAge9hCFQQ=
+X-Received: by 2002:a05:6402:42c4:b0:5dc:94ce:42a6 with SMTP id
+ 4fb4d7f45d1cf-5edfd9f795fmr19692799a12.22.1743698375723; Thu, 03 Apr 2025
+ 09:39:35 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250402180925.90914-1-andrii@kernel.org> <Z-6TDh1MUT49lvjk@gmail.com>
- <20250403110615.7a51b793@gandalf.local.home> <Z-6lPadt51e7jcXd@gmail.com>
-In-Reply-To: <Z-6lPadt51e7jcXd@gmail.com>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Thu, 3 Apr 2025 09:01:59 -0700
-X-Gm-Features: AQ5f1Jq_ruvyVGPvzIEu_GKFQv45bDPlWqzaU4Z2mJaYsY8ahuIN2Oa34tScXbo
-Message-ID: <CAEf4BzagjTyA+OWzWatrHvHu0wpzWBDJT=-qh+NWYTNAtjRWxQ@mail.gmail.com>
-Subject: Re: [PATCH v2] exit: move and extend sched_process_exit() tracepoint
-To: Ingo Molnar <mingo@kernel.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Andrii Nakryiko <andrii@kernel.org>, 
-	linux-trace-kernel@vger.kernel.org, peterz@infradead.org, bpf@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, kernel-team@meta.com, mhocko@kernel.org, 
-	oleg@redhat.com, brauner@kernel.org, glider@google.com, mhiramat@kernel.org, 
-	mathieu.desnoyers@efficios.com, akpm@linux-foundation.org
+References: <20250331223516.7810-2-sweettea-kernel@dorminy.me>
+In-Reply-To: <20250331223516.7810-2-sweettea-kernel@dorminy.me>
+From: Mateusz Guzik <mjguzik@gmail.com>
+Date: Thu, 3 Apr 2025 18:39:23 +0200
+X-Gm-Features: ATxdqUEt9Pz10N02XrpS39HolmBCJKRettgtdx6EOudxklUyVCrn5fPBZffA18k
+Message-ID: <CAGudoHF_sD0T9JHSpJyJiBqKd2cO+5jFjvNBpEx4Mp+uK044PQ@mail.gmail.com>
+Subject: Re: [RFC PATCH v2] mm: use per-numa-node atomics instead of percpu_counters
+To: Sweet Tea Dorminy <sweettea-kernel@dorminy.me>
+Cc: Andrew Morton <akpm@linux-foundation.org>, Steven Rostedt <rostedt@goodmis.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	Dennis Zhou <dennis@kernel.org>, Tejun Heo <tj@kernel.org>, Christoph Lameter <cl@linux.com>, 
+	Martin Liu <liumartin@google.com>, David Rientjes <rientjes@google.com>, 
+	=?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
+	Shakeel Butt <shakeel.butt@linux.dev>, Johannes Weiner <hannes@cmpxchg.org>, 
+	Sweet Tea Dorminy <sweettea@google.com>, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, 
+	"Liam R . Howlett" <Liam.Howlett@oracle.com>, Suren Baghdasaryan <surenb@google.com>, 
+	Vlastimil Babka <vbabka@suse.cz>, Christian Brauner <brauner@kernel.org>, 
+	Wei Yang <richard.weiyang@gmail.com>, David Hildenbrand <david@redhat.com>, 
+	Miaohe Lin <linmiaohe@huawei.com>, Al Viro <viro@zeniv.linux.org.uk>, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	Yu Zhao <yuzhao@google.com>, Roman Gushchin <roman.gushchin@linux.dev>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Apr 3, 2025 at 8:12=E2=80=AFAM Ingo Molnar <mingo@kernel.org> wrote=
-:
+On Tue, Apr 1, 2025 at 12:36=E2=80=AFAM Sweet Tea Dorminy
+<sweettea-kernel@dorminy.me> wrote:
 >
+> [Resend as requested as RFC and minus prereq-patch-id junk]
 >
-> * Steven Rostedt <rostedt@goodmis.org> wrote:
+> Recently, several internal services had an RSS usage regression as part o=
+f a
+> kernel upgrade. Previously, they were on a pre-6.2 kernel and were able t=
+o
+> read RSS statistics in a backup watchdog process to monitor and decide if
+> they'd overrun their memory budget. Now, however, a representative servic=
+e
+> with five threads, expected to use about a hundred MB of memory, on a 250=
+-cpu
+> machine had memory usage tens of megabytes different from the expected am=
+ount
+> -- this constituted a significant percentage of inaccuracy, causing the
+> watchdog to act.
 >
-> > On Thu, 3 Apr 2025 15:54:22 +0200
-> > Ingo Molnar <mingo@kernel.org> wrote:
-> >
-> > > This feels really fragile, could you please at least add a comment
-> > > that points out that this is basically an extension of
-> > > sched_process_template, and that it should remain a subset of it,
-> > > or something to that end?
-> >
-> > Is there any dependency on this?
-> >
-> > I don't know of any other dependency to why this was a template other t=
-han
-> > to save memory.
+[snip]
+> I think the important part is that this improves accuracy; the current
+> scheme is difficult to use on many-cored machines. It improves
+> performance, but there are tradeoffs; but it tightly bounds the
+> inaccuracy so that decisions can actually be reasonably made with the
+> resulting numbers.
 >
-> Uhm, to state the obvious: to not replicate the same definitions over
-> and over again three times times, for 3 scheduler tracepoints that
-> share the record format?
->
-> Removing just a single sched_process_template use bloats the source and
-> adds in potential fragility:
->
->  2 files changed, 26 insertions(+), 4 deletions(-)
->
-> So my request is to please at least add a comment that points the
-> reader to the shared record format between sched_process_exit and the
-> other two tracepoints.
 
-Sounds good, no problem. I'll send a follow up patch which Andrew can
-fold, if he prefers.
+Even disregarding this specific report, a prior patch submission
+points a result which is so off that it already constitutes a bug:
+https://lwn.net/ml/linux-kernel/20220728204511.56348-1-ryncsn@gmail.com/
 
->
-> Thanks,
->
->         Ingo
+So something definitely needs to be done to improve the accuracy. But
+that always will be a tradeoff vs update performance.
+
+This brings me to a question: how often does the watchdog thing look
+at the stats?
+
+I wonder if it would make sense add another file to proc, similar to
+"status", but returning *exact* values. So in particular with percpu
+counters it would walk all CPUs on to generate the answer.
+
+Then interested parties would still get an accurate count and not get
+in the way, provided they don't relentlessly do it.
+--=20
+Mateusz Guzik <mjguzik gmail.com>
