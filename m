@@ -1,67 +1,133 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A822253F26;
-	Thu,  3 Apr 2025 19:35:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D08D18DB37;
+	Fri,  4 Apr 2025 00:04:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743708947; cv=none; b=Ib1AH+84P61AVadT+n6+OpCrX1g1ZH7CKI6T8RCA9rTf+tDKjErJ5ATnfC/F6+SkoMQLrIO2jk8Vzq+VkCEuXFNDPO71JLOFPBkNTeCmxnNPAVNpB0Cn9uRo5K18SESBHTffrXY3pGuOoQtTzHcTGV45zfwN4CiLZGdEZVijnAA=
+	t=1743725068; cv=none; b=R2mK8KlwLlUeVbUP88cNa6mSpU5FxBLsqf3C2n0SfdXU8LJNzXaKAraxMk0aEu2w6hJvumaTBQgnDtPXK27BdWy4KZ5Cv1dat7olMs4S8/aExSP8WAU+zjBobdHCvHijwfQ3NCP7lm4TaRrXj5znIGoQ7h76lARbdHdFiXDCSQE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743708947; c=relaxed/simple;
-	bh=SfudcGVvgUwCu02nkG9Exu6y8ntGP9LdeWrTt3lMa5A=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=D6z8B36xHcElE6oJ/Z90XdW56h/K/1oY9Da0eaP9WLVET/Fv4BUDQCw1uDZfWQHeKWzvnx4AydnglUqFwWvuA+e66TEsqHE9sIB/RvIkjBcvluIydo4+vapqArou/062bXSRAhn6OQK5KdRF/zL6rdGQQ0n9j7DWYxo2D5NXskQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A9956C4CEE3;
-	Thu,  3 Apr 2025 19:35:45 +0000 (UTC)
-Date: Thu, 3 Apr 2025 15:36:51 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Devaansh Kumar <devaanshk840@gmail.com>
-Cc: mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
- linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
- skhan@linuxfoundation.org, linux-kernel-mentees@lists.linuxfoundation.org
-Subject: Re: [PATCH] tracing: Replace deprecated strncpy() with memcpy() for
- stack_trace_filter_buf
-Message-ID: <20250403153651.1188135b@gandalf.local.home>
-In-Reply-To: <20250403191342.1244863-1-devaanshk840@gmail.com>
-References: <20250403191342.1244863-1-devaanshk840@gmail.com>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1743725068; c=relaxed/simple;
+	bh=h8Y5gwjb+IBqDKPNN1tzYMAuRLBQHGrsKDnugg4LOvk=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=hjxJj5gmoNG/aDAJe7G0P3dOG4VJ2+rT7J3NWjfYRpjZnbASHl+GnakVC4Xl8jdNiNjwKG4kwrXob4vMmm58fytaVxmenXyMK9ptQDN3+DnrNEs1O1D5Fo/nMETy39xuu0/OWKs7vPRiKc1/SY/GuczN/rML1tguCEPu05CFsCY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MwX2/86F; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MwX2/86F"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4B49DC4CEE5;
+	Fri,  4 Apr 2025 00:04:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743725067;
+	bh=h8Y5gwjb+IBqDKPNN1tzYMAuRLBQHGrsKDnugg4LOvk=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=MwX2/86FQqzqk4W7Z5IL6+7krJpfYioBqkpQ0LNy8NjKdEnx6iNdwfoBxETQBNugm
+	 tT1paKC0lptEgU7sG2tQ/PSl+T77c7l8ONPMpFNoyQejaI3Tk7NyXlX70PZCFBWrUn
+	 WSelcjwDOZUfADDkOGDonhdskG2LUdhnsyLLdeNR4ww9fil3U0I1n/0P8IN/fLkmh1
+	 G+DMiNRz706v91eLC2n0ycXGsmmPOr2BdlXtHbDgLODIDuN0lcVCfTfhAAtlbxFeXw
+	 e0ZvGGcoRt4h7+c/V/2V79CEZSqYXgWQCYOR+Bg8ZYpax14eF/vrzGWIy2nBZMNnhj
+	 0CKFBlrNEFAAQ==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Alexei Starovoitov <ast@kernel.org>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Sasha Levin <sashal@kernel.org>,
+	kpsingh@kernel.org,
+	mattbobrowski@google.com,
+	daniel@iogearbox.net,
+	song@kernel.org,
+	rostedt@goodmis.org,
+	mhiramat@kernel.org,
+	bpf@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.14 11/23] bpf: Fix deadlock between rcu_tasks_trace and event_mutex.
+Date: Thu,  3 Apr 2025 20:03:48 -0400
+Message-Id: <20250404000402.2688049-11-sashal@kernel.org>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250404000402.2688049-1-sashal@kernel.org>
+References: <20250404000402.2688049-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.14
+Content-Transfer-Encoding: 8bit
 
-On Fri,  4 Apr 2025 00:43:40 +0530
-Devaansh Kumar <devaanshk840@gmail.com> wrote:
+From: Alexei Starovoitov <ast@kernel.org>
 
-> @@ -537,14 +538,16 @@ stack_trace_sysctl(struct ctl_table *table, int write, void *buffer,
->  	return ret;
->  }
->  
-> -static char stack_trace_filter_buf[COMMAND_LINE_SIZE+1] __initdata;
-> +static char stack_trace_filter_buf[COMMAND_LINE_SIZE+1] __initdata __nonstring;
->  
->  static __init int enable_stacktrace(char *str)
->  {
->  	int len;
->  
-> -	if ((len = str_has_prefix(str, "_filter=")))
-> -		strncpy(stack_trace_filter_buf, str + len, COMMAND_LINE_SIZE);
-> +	len = str_has_prefix(str, "_filter=");
-> +
-> +	if (len)
-> +		memcpy(stack_trace_filter_buf, str + len, sizeof(stack_trace_filter_buf));
+[ Upstream commit 4580f4e0ebdf8dc8d506ae926b88510395a0c1d1 ]
 
-Hmm, this location looks like it can just use strscpy().
+Fix the following deadlock:
+CPU A
+_free_event()
+  perf_kprobe_destroy()
+    mutex_lock(&event_mutex)
+      perf_trace_event_unreg()
+        synchronize_rcu_tasks_trace()
 
--- Steve
+There are several paths where _free_event() grabs event_mutex
+and calls sync_rcu_tasks_trace. Above is one such case.
 
+CPU B
+bpf_prog_test_run_syscall()
+  rcu_read_lock_trace()
+    bpf_prog_run_pin_on_cpu()
+      bpf_prog_load()
+        bpf_tracing_func_proto()
+          trace_set_clr_event()
+            mutex_lock(&event_mutex)
 
->  
->  	stack_tracer_enabled = 1;
->  	return 1;
-> -- 
+Delegate trace_set_clr_event() to workqueue to avoid
+such lock dependency.
+
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+Signed-off-by: Andrii Nakryiko <andrii@kernel.org>
+Acked-by: Andrii Nakryiko <andrii@kernel.org>
+Link: https://lore.kernel.org/bpf/20250224221637.4780-1-alexei.starovoitov@gmail.com
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ kernel/trace/bpf_trace.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
+
+diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
+index adc947587eb81..2fbae86961d1f 100644
+--- a/kernel/trace/bpf_trace.c
++++ b/kernel/trace/bpf_trace.c
+@@ -392,7 +392,7 @@ static const struct bpf_func_proto bpf_trace_printk_proto = {
+ 	.arg2_type	= ARG_CONST_SIZE,
+ };
+ 
+-static void __set_printk_clr_event(void)
++static void __set_printk_clr_event(struct work_struct *work)
+ {
+ 	/*
+ 	 * This program might be calling bpf_trace_printk,
+@@ -405,10 +405,11 @@ static void __set_printk_clr_event(void)
+ 	if (trace_set_clr_event("bpf_trace", "bpf_trace_printk", 1))
+ 		pr_warn_ratelimited("could not enable bpf_trace_printk events");
+ }
++static DECLARE_WORK(set_printk_work, __set_printk_clr_event);
+ 
+ const struct bpf_func_proto *bpf_get_trace_printk_proto(void)
+ {
+-	__set_printk_clr_event();
++	schedule_work(&set_printk_work);
+ 	return &bpf_trace_printk_proto;
+ }
+ 
+@@ -451,7 +452,7 @@ static const struct bpf_func_proto bpf_trace_vprintk_proto = {
+ 
+ const struct bpf_func_proto *bpf_get_trace_vprintk_proto(void)
+ {
+-	__set_printk_clr_event();
++	schedule_work(&set_printk_work);
+ 	return &bpf_trace_vprintk_proto;
+ }
+ 
+-- 
+2.39.5
+
