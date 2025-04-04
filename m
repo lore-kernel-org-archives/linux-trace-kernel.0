@@ -1,120 +1,96 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF70B17A305;
-	Fri,  4 Apr 2025 08:36:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 314CC19E804
+	for <linux-trace-kernel@vger.kernel.org>; Fri,  4 Apr 2025 08:46:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743755804; cv=none; b=hEIr8L6GHusA3hQuXAUNRSWBc4+PzZF0e9u0E9Y0xehRlw0GLu3OrINszleUOiX00cezb5Hpke3EkllSuZTGfCnroqGR0jnJFTKgYCWd6WmSCzDq3Ua442VFqG4wTFSkX9cV8EAttsnbmOlDtjt0NDC7DZGhlpwYFwn5jTbY4bo=
+	t=1743756364; cv=none; b=P7DA/E0kz+Ik/L1r3GxJkD+Oicmq/2dMT1iICPIRVYZSV/KnpIGQQmAoiqK+YmNzuRtaRmSv1xFhEXpp36UDM5a0ISsIbrHNFTZuKA3iA3nBch5DZ0TZNJ0NlcE+uodjfMyWNUB3ei8rmp8PUTuYsnyj9Rxmlb4dlCDq22tQMd0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743755804; c=relaxed/simple;
-	bh=VTfhpIHcF6m/bQCKrSzeEFziB0k07MobSdEDyrf259k=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kYcEX5EHdHPEltNE7VXbhq8spDHIqZcyXlIG/dbYHhk/psygx8m55Ce4v12XuehaJjvPC6Nk832i19akPZgFL99B0AsPD2CfFtjficyNeY5QfMKlYMyeIrvKoTNOOx7+0vGCBb9yrm2xtDtlu2rmWuG10E1R6ZNO2bHVTmhCf0o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AtofxsJ5; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743756364; c=relaxed/simple;
+	bh=55w/VlvPRY6e7SnqUOleIYymHuuR1CoCZShX5ta66N0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=m9KALyPEm+rXy5yxBGFqUwNt3vNnwq008JRk8unUWtWllf+vUtQFbqJiJnk+bjl2DDSRB0IQgvq99f1pXydKA1z2HKQOMuMTrTzaqMBkYSchRJRkFmz4+vkFkXWz+OxWBIlPPOn5eQVFH8IQlmV0FcpYzj7OPN+za+0if+TR9gw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=KlrqP44F; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AtofxsJ5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5B854C4CEDD;
-	Fri,  4 Apr 2025 08:36:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743755804;
-	bh=VTfhpIHcF6m/bQCKrSzeEFziB0k07MobSdEDyrf259k=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=AtofxsJ5r9dHvM9LnkHomR8DcDOnHrvmFU/KtG1qZ7eA5mr8+Cwjpxf5rb8l5aTxM
-	 yYQAgTL4f5nrx717/m+TLJLqPnQ5CgH6kxpvVl4ktt1EG62BupzReXdKnXOaKnXjT8
-	 OPQ2uI8p+OZ/xWpumu4eFv6BIac6/lRikcAPlkhUWhVzRiEqQoeEjxLD4yY1KLoSna
-	 /MXtIAdO72kitl5g6AKpNfkmFkzbFoXBsiOpzQzhXGhoBT9O7LPFLbR6bFVpc7DHoY
-	 PGCz+3yaAyK9r0kBCDbIqOWt/CVlhpeDe/c9AVqj9WwgrXt6E4WUQ9QVWQsACKTwf8
-	 b0IK8VBZxrVuQ==
-Date: Fri, 4 Apr 2025 10:36:38 +0200
-From: Ingo Molnar <mingo@kernel.org>
-To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	linux-trace-kernel@vger.kernel.org, peterz@infradead.org,
-	bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
-	kernel-team@meta.com, rostedt@goodmis.org, oleg@redhat.com,
-	mhiramat@kernel.org, ast@kernel.org
-Subject: Re: [PATCH tip/perf] uprobes: avoid false lockdep splat in uprobe
- timer callback
-Message-ID: <Z--aFoGN4Pm9cx8J@gmail.com>
-References: <20250403171831.3803479-1-andrii@kernel.org>
- <20250403174917.OLHfwBp-@linutronix.de>
- <CAEf4BzasxUn+Ywi-=TtP+S+i4VBLnKvYCkxPCz63o4zEXT9QZw@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KlrqP44F"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1743756360;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Uzpx/ks+8dU83bQ2k/Wg2tkl4O8ewZUp90aomwDKfgQ=;
+	b=KlrqP44FunuBOFsV0sOKO4T2JJL+9GY+IGQFOPb/XpAP3QE4ETG3VOIhp1J7LqUHI4dcvi
+	qvCD+L0NESkyd2MFO2aQINKgrt5tMy61ioTkXN623J7RTdI5dH/s5FwBCMbZ4NNzmw47UN
+	WI2i49Bj4+Wiyz8C1wCUhbuRAqRfE6E=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-472-6ulgx4waO4Ct2kLNXvwf3A-1; Fri,
+ 04 Apr 2025 04:45:59 -0400
+X-MC-Unique: 6ulgx4waO4Ct2kLNXvwf3A-1
+X-Mimecast-MFC-AGG-ID: 6ulgx4waO4Ct2kLNXvwf3A_1743756358
+Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 3FDFD180AB19;
+	Fri,  4 Apr 2025 08:45:58 +0000 (UTC)
+Received: from gmonaco-thinkpadt14gen3.rmtit.com (unknown [10.44.32.143])
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id C86E3180B487;
+	Fri,  4 Apr 2025 08:45:55 +0000 (UTC)
+From: Gabriele Monaco <gmonaco@redhat.com>
+To: linux-kernel@vger.kernel.org,
+	Steven Rostedt <rostedt@goodmis.org>,
+	linux-trace-kernel@vger.kernel.org
+Cc: Gabriele Monaco <gmonaco@redhat.com>,
+	Tomas Glozar <tglozar@redhat.com>,
+	Juri Lelli <jlelli@redhat.com>
+Subject: [RFC PATCH 1/9] tools/rv: Do not skip idle in trace
+Date: Fri,  4 Apr 2025 10:45:14 +0200
+Message-ID: <20250404084512.98552-12-gmonaco@redhat.com>
+In-Reply-To: <20250404084512.98552-11-gmonaco@redhat.com>
+References: <20250404084512.98552-11-gmonaco@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAEf4BzasxUn+Ywi-=TtP+S+i4VBLnKvYCkxPCz63o4zEXT9QZw@mail.gmail.com>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
 
+Currently, the userspace RV tool skips trace events triggered by the RV
+tool itself, this can be changed by passing the parameter -s, which sets
+the variable config_my_pid to 0 (instead of the tool's PID).
+The current condition for per-task monitors (config_has_id) does not
+check that config_my_pid isn't 0 to skip. In case we pass -s, we show
+events triggered by RV but don't show those triggered by idle (PID 0).
 
-* Andrii Nakryiko <andrii.nakryiko@gmail.com> wrote:
+Fix the condition to account this scenario.
 
-> On Thu, Apr 3, 2025 at 10:49 AM Sebastian Andrzej Siewior
-> <bigeasy@linutronix.de> wrote:
-> >
-> > On 2025-04-03 10:18:31 [-0700], Andrii Nakryiko wrote:
-> > > Avoid a false-positive lockdep warning in PREEMPT_RT configuration when
-> > > using write_seqcount_begin() in uprobe timer callback by using
-> > > raw_write_* APIs. Uprobe's use of timer callback is guaranteed to not
-> > > race with itself, and as such seqcount's insistence on having hardirqs
-> > preemption, not hardirqs
-> >
-> > > disabled on the writer side is irrelevant. So switch to raw_ variants of
-> > > seqcount API instead of disabling hardirqs unnecessarily.
-> > >
-> > > Also, point out in the comments more explicitly why we use seqcount
-> > > despite our reader side being rather simple and never retrying. We favor
-> > > well-maintained kernel primitive in favor of open-coding our own memory
-> > > barriers.
-> >
-> > Thank you.
-> >
-> > > Link: https://lore.kernel.org/bpf/CAADnVQLLOHZmPO4X_dQ+cTaSDvzdWHzA0qUqQDhLFYL3D6xPxg@mail.gmail.com/
-> > > Reported-by: Alexei Starovoitov <ast@kernel.org>
-> > > Suggested-by: Sebastian Sewior <bigeasy@linutronix.de>
-> > > Fixes: 8622e45b5da1 ("uprobes: Reuse return_instances between multiple uretprobes within task")
-> > > Signed-off-by: Andrii Nakryiko <andrii@kernel.org>
-> > > ---
-> > >  kernel/events/uprobes.c | 13 +++++++++++--
-> > >  1 file changed, 11 insertions(+), 2 deletions(-)
-> > >
-> > > diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
-> > > index 70c84b9d7be3..6d7e7da0fbbc 100644
-> > > --- a/kernel/events/uprobes.c
-> > > +++ b/kernel/events/uprobes.c
-> > > @@ -1944,6 +1944,9 @@ static void free_ret_instance(struct uprobe_task *utask,
-> > >        * to-be-reused return instances for future uretprobes. If ri_timer()
-> > >        * happens to be running right now, though, we fallback to safety and
-> > >        * just perform RCU-delated freeing of ri.
-> > > +      * Admittedly, this is a rather simple use of seqcount, but it nicely
-> > > +      * abstracts away all the necessary memory barriers, so we use
-> > > +      * a well-supported kernel primitive here.
-> > >        */
-> > >       if (raw_seqcount_try_begin(&utask->ri_seqcount, seq)) {
-> > >               /* immediate reuse of ri without RCU GP is OK */
-> > > @@ -2004,12 +2007,18 @@ static void ri_timer(struct timer_list *timer)
-> > >       /* RCU protects return_instance from freeing. */
-> > >       guard(rcu)();
-> > >
-> > > -     write_seqcount_begin(&utask->ri_seqcount);
-> >
-> > > +     /* See free_ret_instance() for notes on seqcount use.
-> >
-> > This is not a proper multi line comment.
-> 
-> yep, will fix; no, uprobe is not networking, this style is just
-> ingrained in my brain from working in BPF code base for a while
+Fixes: 6d60f89691fc ("tools/rv: Add in-kernel monitor interface")
+Signed-off-by: Gabriele Monaco <gmonaco@redhat.com>
+---
+ tools/verification/rv/src/in_kernel.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-... and this example underlines why we've been asking the networking 
-folks for years to use the standard Linux kernel coding style for 
-comments, instead of creating this pointless noise & inconsistency.
+diff --git a/tools/verification/rv/src/in_kernel.c b/tools/verification/rv/src/in_kernel.c
+index c0dcee795c0de..72b03bae021cd 100644
+--- a/tools/verification/rv/src/in_kernel.c
++++ b/tools/verification/rv/src/in_kernel.c
+@@ -429,7 +429,7 @@ ikm_event_handler(struct trace_seq *s, struct tep_record *record,
+ 
+ 	tep_get_common_field_val(s, trace_event, "common_pid", record, &pid, 1);
+ 
+-	if (config_has_id && (config_my_pid == id))
++	if (config_my_pid && config_has_id && (config_my_pid == id))
+ 		return 0;
+ 	else if (config_my_pid && (config_my_pid == pid))
+ 		return 0;
+-- 
+2.49.0
 
-Thanks,
-
-	Ingo
