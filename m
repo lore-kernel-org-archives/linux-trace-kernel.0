@@ -1,51 +1,51 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D08D18DB37;
-	Fri,  4 Apr 2025 00:04:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66C601E7C01;
+	Fri,  4 Apr 2025 00:05:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743725068; cv=none; b=R2mK8KlwLlUeVbUP88cNa6mSpU5FxBLsqf3C2n0SfdXU8LJNzXaKAraxMk0aEu2w6hJvumaTBQgnDtPXK27BdWy4KZ5Cv1dat7olMs4S8/aExSP8WAU+zjBobdHCvHijwfQ3NCP7lm4TaRrXj5znIGoQ7h76lARbdHdFiXDCSQE=
+	t=1743725118; cv=none; b=tOPCfuKpX2KOJu7cCinGVhWbdP/F5k0+flSAHy6qucfqeWT80z1CPYzXFmOceVOj5lQ/kIXP+8sazYIpylbKtjcugdg0c8D4T8xvtEXEf69DrgZrmrtIA0HkE/XzCSjpmcw8p5dCOm/oaNUNCWMz1E+tRt0GjFlSwva9nH0Jnqo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743725068; c=relaxed/simple;
-	bh=h8Y5gwjb+IBqDKPNN1tzYMAuRLBQHGrsKDnugg4LOvk=;
+	s=arc-20240116; t=1743725118; c=relaxed/simple;
+	bh=PFnM5LjoAR7cGmB0S9l3LZS4WvW7TOkVuyAIaMeuV10=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=hjxJj5gmoNG/aDAJe7G0P3dOG4VJ2+rT7J3NWjfYRpjZnbASHl+GnakVC4Xl8jdNiNjwKG4kwrXob4vMmm58fytaVxmenXyMK9ptQDN3+DnrNEs1O1D5Fo/nMETy39xuu0/OWKs7vPRiKc1/SY/GuczN/rML1tguCEPu05CFsCY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MwX2/86F; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=I+ylAfvMMZXhc5q2kqtbpBu1vdmhweEJha3bGrdTZ1T8yx0QPmnhY1tPiSawBBmYMhfIlxV/drsQAlBApS5tj90+FiW1NexFDYV7+0FwX7g3K8AuwlPhVF691qvvc4tPcgvh8nrlsBW5SSvdqV/7Z4iPQxYOfbie1mhlNeU4TRs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IQ8hMeBt; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MwX2/86F"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4B49DC4CEE5;
-	Fri,  4 Apr 2025 00:04:26 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IQ8hMeBt"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E3040C4CEE3;
+	Fri,  4 Apr 2025 00:05:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743725067;
-	bh=h8Y5gwjb+IBqDKPNN1tzYMAuRLBQHGrsKDnugg4LOvk=;
+	s=k20201202; t=1743725118;
+	bh=PFnM5LjoAR7cGmB0S9l3LZS4WvW7TOkVuyAIaMeuV10=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=MwX2/86FQqzqk4W7Z5IL6+7krJpfYioBqkpQ0LNy8NjKdEnx6iNdwfoBxETQBNugm
-	 tT1paKC0lptEgU7sG2tQ/PSl+T77c7l8ONPMpFNoyQejaI3Tk7NyXlX70PZCFBWrUn
-	 WSelcjwDOZUfADDkOGDonhdskG2LUdhnsyLLdeNR4ww9fil3U0I1n/0P8IN/fLkmh1
-	 G+DMiNRz706v91eLC2n0ycXGsmmPOr2BdlXtHbDgLODIDuN0lcVCfTfhAAtlbxFeXw
-	 e0ZvGGcoRt4h7+c/V/2V79CEZSqYXgWQCYOR+Bg8ZYpax14eF/vrzGWIy2nBZMNnhj
-	 0CKFBlrNEFAAQ==
+	b=IQ8hMeBt9LZ0DG4UqoR/53zeeAUsOP6rzu2czab3PrCLTBWg9lArI6o5eiKEEo72t
+	 vbXQWwmuSlEwDavKwnf2BDZg2CpCJIIE94JoeXkTarcEQi6KBmdD2wGUBEV3xs90f4
+	 hIRdneLAhTon8lK3yXhupHBPtAiLv1yR5b0gHu6I1zN9+4j/W3j5JBk4Cpr+TD7TsJ
+	 YJ+vorvcWi8pdSM6ZVKCbxwwkX/QI6fB3DIh65rwtigpP5sRf+VwAVcFTD+q1n5S7b
+	 inY8GpRWGkalKMi2jpRh7NHNyUGI1H7XoDpegka4fkJyD1lMm2E5QaZ+nbtQDVSmwZ
+	 kNJKai5f+fQFw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
 Cc: Alexei Starovoitov <ast@kernel.org>,
 	Andrii Nakryiko <andrii@kernel.org>,
 	Sasha Levin <sashal@kernel.org>,
+	song@kernel.org,
 	kpsingh@kernel.org,
 	mattbobrowski@google.com,
 	daniel@iogearbox.net,
-	song@kernel.org,
 	rostedt@goodmis.org,
 	mhiramat@kernel.org,
 	bpf@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.14 11/23] bpf: Fix deadlock between rcu_tasks_trace and event_mutex.
-Date: Thu,  3 Apr 2025 20:03:48 -0400
-Message-Id: <20250404000402.2688049-11-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.13 11/22] bpf: Fix deadlock between rcu_tasks_trace and event_mutex.
+Date: Thu,  3 Apr 2025 20:04:40 -0400
+Message-Id: <20250404000453.2688371-11-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250404000402.2688049-1-sashal@kernel.org>
-References: <20250404000402.2688049-1-sashal@kernel.org>
+In-Reply-To: <20250404000453.2688371-1-sashal@kernel.org>
+References: <20250404000453.2688371-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -54,7 +54,7 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.14
+X-stable-base: Linux 6.13.9
 Content-Transfer-Encoding: 8bit
 
 From: Alexei Starovoitov <ast@kernel.org>
@@ -94,10 +94,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 4 insertions(+), 3 deletions(-)
 
 diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
-index adc947587eb81..2fbae86961d1f 100644
+index 2c2205e91fee9..24479ef395d49 100644
 --- a/kernel/trace/bpf_trace.c
 +++ b/kernel/trace/bpf_trace.c
-@@ -392,7 +392,7 @@ static const struct bpf_func_proto bpf_trace_printk_proto = {
+@@ -403,7 +403,7 @@ static const struct bpf_func_proto bpf_trace_printk_proto = {
  	.arg2_type	= ARG_CONST_SIZE,
  };
  
@@ -106,7 +106,7 @@ index adc947587eb81..2fbae86961d1f 100644
  {
  	/*
  	 * This program might be calling bpf_trace_printk,
-@@ -405,10 +405,11 @@ static void __set_printk_clr_event(void)
+@@ -416,10 +416,11 @@ static void __set_printk_clr_event(void)
  	if (trace_set_clr_event("bpf_trace", "bpf_trace_printk", 1))
  		pr_warn_ratelimited("could not enable bpf_trace_printk events");
  }
@@ -119,7 +119,7 @@ index adc947587eb81..2fbae86961d1f 100644
  	return &bpf_trace_printk_proto;
  }
  
-@@ -451,7 +452,7 @@ static const struct bpf_func_proto bpf_trace_vprintk_proto = {
+@@ -462,7 +463,7 @@ static const struct bpf_func_proto bpf_trace_vprintk_proto = {
  
  const struct bpf_func_proto *bpf_get_trace_vprintk_proto(void)
  {
