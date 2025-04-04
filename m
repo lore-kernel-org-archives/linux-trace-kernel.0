@@ -1,118 +1,85 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87BBF25E47A;
-	Fri,  4 Apr 2025 19:48:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC4F7221F0B
+	for <linux-trace-kernel@vger.kernel.org>; Fri,  4 Apr 2025 20:04:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743796133; cv=none; b=CNWvbxCXB2Ah/z5bir8x4NI/lkWZgeNTqzHNaETKdnzfRf4Xg1FGwRskjUdRxwsVUlk4tv2fj6+jQQIGtVr2f3Wp4vht3UGu4r3huxHA0657/ANnrk6A0P6BVCcPDkAFDLdcm1GSAJ46IwzVFqwRLkPTBkYg8JMC4eQjcmA8KW8=
+	t=1743797083; cv=none; b=sFTiTR52eOZVd5cr1TnSsCJRUERKxWphGD8cS73n63nkQpORocUFxhK1aYMasmpdkp8DNQC6jvOqzchfN4H3UpAq93gZqSD3rWNf3XN/TYGO8coqHKfVQyK5CUYG5HycqXAUaPzQh5+hfP2eU44m2Bt8uJns6NNyzPwAo9DSQ/o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743796133; c=relaxed/simple;
-	bh=w/HltpRhBBVQFwjgzs/dYbYhW/3xO9NUtumk3pY68d0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=cVAZdd1qZM25N4jbGW2AjIi2xnRUw502w7sB/ledjocv6y5viQ4yWFUgI96XEUIYPNMxJ09+F7BKFXsm5wwuh1v9uZ0WKVxuVjxz36Sd2qyIs9fZUSsZ8gVe1XJUsKCbpleklttOyb+1Vu+QqWvrhyH7kwSmb4TYQNagdS4pQVM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dyrh9fQW; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743797083; c=relaxed/simple;
+	bh=IvhhTUIiW/q5zcRrtTNnMYdCLxAmDvUAWeXeyHuVrZk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cZ15V9J8uz2XE0aiazcN6L6CuUlps7sV60xidLqtfFf43mJJ717gHCyaLIlQYuFWk0uNbW36LKiF/+uinpooHMtsbUWv4KvZiKLUyjvj2rBTFHdVfobAiIcySRwhOw5NyX3FcImQCZK73br218DVRVpMUZv539TtbfMeqGwV4w8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=A2A4MqAs; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dyrh9fQW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C5AF9C4CEDD;
-	Fri,  4 Apr 2025 19:48:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743796132;
-	bh=w/HltpRhBBVQFwjgzs/dYbYhW/3xO9NUtumk3pY68d0=;
-	h=From:To:Cc:Subject:Date:From;
-	b=dyrh9fQWxEcLRlBytymZ+hhNHJ+zSpk02rNCp7ayQUMwBSp3xvusjtnqr2EZ4r+20
-	 eZT9dUWtMhKhmjsTztcjF3DUzs2kCaa6Tf8/3zGjnWZ1nonK9IqF+9rbR+5ASFdPol
-	 YyFBssEdXrP48kh5BtyKoP9vh8vDANujBpzwwotZH3TMn0KYKFg2uAD+l/JZmfbMuT
-	 UCKha2PsnS7RHxXq5cDOglMi8zr4TGS0lLAmIruXzt+BIjr5mDvh1mh/VUwtFPtHUc
-	 6W9bORxc5bXA9vGIRKDSVdYzjes5T2toynAmFk6Fc6MFawSKu4QqYYkWjumHH99/GG
-	 6I1yKg/2ZLflw==
-From: Andrii Nakryiko <andrii@kernel.org>
-To: linux-trace-kernel@vger.kernel.org,
-	peterz@infradead.org,
-	mingo@kernel.org
-Cc: bpf@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	kernel-team@meta.com,
-	rostedt@goodmis.org,
-	oleg@redhat.com,
-	mhiramat@kernel.org,
-	bigeasy@linutronix.de,
-	ast@kernel.org,
-	Andrii Nakryiko <andrii@kernel.org>
-Subject: [PATCH v2 tip/perf] uprobes: avoid false lockdep splat in uprobe timer callback
-Date: Fri,  4 Apr 2025 12:48:48 -0700
-Message-ID: <20250404194848.2109539-1-andrii@kernel.org>
-X-Mailer: git-send-email 2.47.1
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="A2A4MqAs"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1743797080;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=IvhhTUIiW/q5zcRrtTNnMYdCLxAmDvUAWeXeyHuVrZk=;
+	b=A2A4MqAstFjlSFzcHGXAAuCeOE6uQ49awr7+LhjOIQ9l+6+jmmkNC34wCicl9w6Piv+fKK
+	4Y5QuY6/WdHkMGcRx984dfQh5YrPQfuNEVuzXnulGEkEuLbx7POwyK0QxI/qeBMGjTuM3C
+	tfvdEamEAjitsfXe6eY+wT7LpCJBx1M=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-591-_AB5LUwCNciRrLpL4MbUMw-1; Fri,
+ 04 Apr 2025 16:04:34 -0400
+X-MC-Unique: _AB5LUwCNciRrLpL4MbUMw-1
+X-Mimecast-MFC-AGG-ID: _AB5LUwCNciRrLpL4MbUMw_1743797072
+Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 504C819560B8;
+	Fri,  4 Apr 2025 20:04:32 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.144])
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 1B9D71809B74;
+	Fri,  4 Apr 2025 20:04:27 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Fri,  4 Apr 2025 22:03:57 +0200 (CEST)
+Date: Fri, 4 Apr 2025 22:03:52 +0200
+From: Oleg Nesterov <oleg@redhat.com>
+To: Andrii Nakryiko <andrii@kernel.org>
+Cc: linux-trace-kernel@vger.kernel.org, peterz@infradead.org,
+	mingo@kernel.org, bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
+	kernel-team@meta.com, rostedt@goodmis.org, mhiramat@kernel.org,
+	bigeasy@linutronix.de, ast@kernel.org
+Subject: Re: [PATCH v2 tip/perf] uprobes: avoid false lockdep splat in uprobe
+ timer callback
+Message-ID: <20250404200351.GI3720@redhat.com>
+References: <20250404194848.2109539-1-andrii@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250404194848.2109539-1-andrii@kernel.org>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
 
-Avoid a false-positive lockdep warning in PREEMPT_RT configuration when
-using write_seqcount_begin() in uprobe timer callback by using
-raw_write_* APIs. Uprobe's use of timer callback is guaranteed to not
-race with itself for a given uprobe_task, and as such seqcount's
-insistence on having preemption disabled on the writer side is
-irrelevant. So switch to raw_ variants of seqcount API instead of
-disabling preemption unnecessarily.
+On 04/04, Andrii Nakryiko wrote:
+>
+> Also, point out in the comments more explicitly why we use seqcount
+> despite our reader side being rather simple and never retrying. We favor
+> well-maintained kernel primitive in favor of open-coding our own memory
+> barriers.
+>
+> Link: https://lore.kernel.org/bpf/CAADnVQLLOHZmPO4X_dQ+cTaSDvzdWHzA0qUqQDhLFYL3D6xPxg@mail.gmail.com/
+> Reported-by: Alexei Starovoitov <ast@kernel.org>
+> Suggested-by: Sebastian Siewior <bigeasy@linutronix.de>
+> Fixes: 8622e45b5da1 ("uprobes: Reuse return_instances between multiple uretprobes within task")
+> Signed-off-by: Andrii Nakryiko <andrii@kernel.org>
 
-Also, point out in the comments more explicitly why we use seqcount
-despite our reader side being rather simple and never retrying. We favor
-well-maintained kernel primitive in favor of open-coding our own memory
-barriers.
+LGTM. FWIW,
 
-Link: https://lore.kernel.org/bpf/CAADnVQLLOHZmPO4X_dQ+cTaSDvzdWHzA0qUqQDhLFYL3D6xPxg@mail.gmail.com/
-Reported-by: Alexei Starovoitov <ast@kernel.org>
-Suggested-by: Sebastian Siewior <bigeasy@linutronix.de>
-Fixes: 8622e45b5da1 ("uprobes: Reuse return_instances between multiple uretprobes within task")
-Signed-off-by: Andrii Nakryiko <andrii@kernel.org>
----
-v1->v2:
-  - fix comment style and s/hardirqs/preemption/ (Sebastian);
-  - improved added comment based on Sebastian's suggestions.
-
- kernel/events/uprobes.c | 15 +++++++++++++--
- 1 file changed, 13 insertions(+), 2 deletions(-)
-
-diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
-index 70c84b9d7be3..0f05bae49827 100644
---- a/kernel/events/uprobes.c
-+++ b/kernel/events/uprobes.c
-@@ -1944,6 +1944,9 @@ static void free_ret_instance(struct uprobe_task *utask,
- 	 * to-be-reused return instances for future uretprobes. If ri_timer()
- 	 * happens to be running right now, though, we fallback to safety and
- 	 * just perform RCU-delated freeing of ri.
-+	 * Admittedly, this is a rather simple use of seqcount, but it nicely
-+	 * abstracts away all the necessary memory barriers, so we use
-+	 * a well-supported kernel primitive here.
- 	 */
- 	if (raw_seqcount_try_begin(&utask->ri_seqcount, seq)) {
- 		/* immediate reuse of ri without RCU GP is OK */
-@@ -2004,12 +2007,20 @@ static void ri_timer(struct timer_list *timer)
- 	/* RCU protects return_instance from freeing. */
- 	guard(rcu)();
- 
--	write_seqcount_begin(&utask->ri_seqcount);
-+	/*
-+	 * See free_ret_instance() for notes on seqcount use.
-+	 * We also employ raw API variants to avoid lockdep false-positive
-+	 * warning complaining about enabled preemption. The timer can only be
-+	 * invoked once for a uprobe_task. Therefore there can only be one
-+	 * writer. The reader does not require an even sequence count to make
-+	 * progress, so it is OK to remain preemptible on PREEMPT_RT.
-+	 */
-+	raw_write_seqcount_begin(&utask->ri_seqcount);
- 
- 	for_each_ret_instance_rcu(ri, utask->return_instances)
- 		hprobe_expire(&ri->hprobe, false);
- 
--	write_seqcount_end(&utask->ri_seqcount);
-+	raw_write_seqcount_end(&utask->ri_seqcount);
- }
- 
- static struct uprobe_task *alloc_utask(void)
--- 
-2.47.1
+Acked-by: Oleg Nesterov <oleg@redhat.com>
 
