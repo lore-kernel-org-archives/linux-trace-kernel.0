@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66C601E7C01;
-	Fri,  4 Apr 2025 00:05:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D2DA1F8F09;
+	Fri,  4 Apr 2025 00:06:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743725118; cv=none; b=tOPCfuKpX2KOJu7cCinGVhWbdP/F5k0+flSAHy6qucfqeWT80z1CPYzXFmOceVOj5lQ/kIXP+8sazYIpylbKtjcugdg0c8D4T8xvtEXEf69DrgZrmrtIA0HkE/XzCSjpmcw8p5dCOm/oaNUNCWMz1E+tRt0GjFlSwva9nH0Jnqo=
+	t=1743725166; cv=none; b=XbsJ2s6KjfKXFISdi0HWIAomADC6sRowwewny58Ug5O5WrX793a4katN9yk928uw04pVFq+evgqD4gaEzh2Xn2JY3k3/RGyMz078Ra/FlAnIfjlJCHSPng/RGb9DP8q1Ermwa2bXVQ9f6xLL/4Bae7dkjfKdmkJCOA4ePhObuWs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743725118; c=relaxed/simple;
-	bh=PFnM5LjoAR7cGmB0S9l3LZS4WvW7TOkVuyAIaMeuV10=;
+	s=arc-20240116; t=1743725166; c=relaxed/simple;
+	bh=KeQabmXxC4Y82ajO6kP1JKaGMpfZvEtcGVDdcAuuq3E=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=I+ylAfvMMZXhc5q2kqtbpBu1vdmhweEJha3bGrdTZ1T8yx0QPmnhY1tPiSawBBmYMhfIlxV/drsQAlBApS5tj90+FiW1NexFDYV7+0FwX7g3K8AuwlPhVF691qvvc4tPcgvh8nrlsBW5SSvdqV/7Z4iPQxYOfbie1mhlNeU4TRs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IQ8hMeBt; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=kGR+rvbjfzSj+Ih/TRSHzbtlacT3ZB4oYne64Cfq+tigZOujAnvssbjV7vyMGugErFZ93DtvNaQ9h785ZEGafLseU32LExo6N/nOITAcXRbZwYSDB6DMKj9pAOKLF0stwku7pk755+YDe6m8YZrXl3vmBHhZePc9KgK7hElfZGY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KCQZIgNs; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IQ8hMeBt"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E3040C4CEE3;
-	Fri,  4 Apr 2025 00:05:16 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KCQZIgNs"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3B364C4CEE5;
+	Fri,  4 Apr 2025 00:06:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743725118;
-	bh=PFnM5LjoAR7cGmB0S9l3LZS4WvW7TOkVuyAIaMeuV10=;
+	s=k20201202; t=1743725164;
+	bh=KeQabmXxC4Y82ajO6kP1JKaGMpfZvEtcGVDdcAuuq3E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=IQ8hMeBt9LZ0DG4UqoR/53zeeAUsOP6rzu2czab3PrCLTBWg9lArI6o5eiKEEo72t
-	 vbXQWwmuSlEwDavKwnf2BDZg2CpCJIIE94JoeXkTarcEQi6KBmdD2wGUBEV3xs90f4
-	 hIRdneLAhTon8lK3yXhupHBPtAiLv1yR5b0gHu6I1zN9+4j/W3j5JBk4Cpr+TD7TsJ
-	 YJ+vorvcWi8pdSM6ZVKCbxwwkX/QI6fB3DIh65rwtigpP5sRf+VwAVcFTD+q1n5S7b
-	 inY8GpRWGkalKMi2jpRh7NHNyUGI1H7XoDpegka4fkJyD1lMm2E5QaZ+nbtQDVSmwZ
-	 kNJKai5f+fQFw==
+	b=KCQZIgNsTe9acZUmnMwkJKxpX11TbLd4SpSSisplsQQAbGQjP1TNwgh+VSb1Ypstk
+	 fKq6Nz3/SDB1UH36Q6SFgjftSFcfjHwNzL346+NBEYO3Oh3cmpz3tdZbRj+f31WTQl
+	 tQFORxANC+qp0VSJM5PEGQIMCCFD/uTBNqNqJ6U7alzsHGYH2+9GoLhDGJdjgYnuSj
+	 ed2EOWHZ7yX2EixZk6cBxLutMCQcFjyQRHJ0BPa+IvxKGrJ8H9NFMm5TRAH/FFOQld
+	 3+Zfoo+62GmFgfMON5g1AxLtx9BOtZmmXzAoZpXsG3l+6IbnJ/lM/KRGdqBmBhZGxC
+	 kzB9bMeeBGA+Q==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
@@ -40,12 +40,12 @@ Cc: Alexei Starovoitov <ast@kernel.org>,
 	mhiramat@kernel.org,
 	bpf@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.13 11/22] bpf: Fix deadlock between rcu_tasks_trace and event_mutex.
-Date: Thu,  3 Apr 2025 20:04:40 -0400
-Message-Id: <20250404000453.2688371-11-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.12 10/20] bpf: Fix deadlock between rcu_tasks_trace and event_mutex.
+Date: Thu,  3 Apr 2025 20:05:30 -0400
+Message-Id: <20250404000541.2688670-10-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250404000453.2688371-1-sashal@kernel.org>
-References: <20250404000453.2688371-1-sashal@kernel.org>
+In-Reply-To: <20250404000541.2688670-1-sashal@kernel.org>
+References: <20250404000541.2688670-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -54,7 +54,7 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.13.9
+X-stable-base: Linux 6.12.21
 Content-Transfer-Encoding: 8bit
 
 From: Alexei Starovoitov <ast@kernel.org>
@@ -94,7 +94,7 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 4 insertions(+), 3 deletions(-)
 
 diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
-index 2c2205e91fee9..24479ef395d49 100644
+index 449efaaa387a6..cf45759fd4fc0 100644
 --- a/kernel/trace/bpf_trace.c
 +++ b/kernel/trace/bpf_trace.c
 @@ -403,7 +403,7 @@ static const struct bpf_func_proto bpf_trace_printk_proto = {
