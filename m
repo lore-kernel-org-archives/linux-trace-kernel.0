@@ -1,202 +1,270 @@
-Received: from YQZPR01CU011.outbound.protection.outlook.com (mail-canadaeastazon11020113.outbound.protection.outlook.com [52.101.191.113])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8FC97E0E4;
-	Fri,  4 Apr 2025 16:02:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.191.113
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743782533; cv=fail; b=jjxcQ+gEJmP8K+yvF2Ege9T8S7iKH2WovmscG/x16Yr7OkDhSNewH+TS7dthIwhVVfq6miWHWP0egDtzkvTnxALHN6pr3NMjaK3MlbRN8wcXwQPX5eEnlgLhe3n5Nidakbob9s2scmJOxATIIIpaYTBmGtN6raniM6fsbPLcRqI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743782533; c=relaxed/simple;
-	bh=wwtJOatsAVq06+SoiZSMfKtddg2CLFCs5+s3eaPr0G0=;
-	h=Message-ID:Date:Subject:From:To:Cc:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=uBiTavp2K4mgsXOk6nTeaR8Gls8H+cfRfu0iw+H3XuJjBJNlSmXrcUY565/5SmcEoYtPH69tjhDK9mAEVJVCvScIftaxDh6Q63+pdOCVUVDC2TwpQW3ccF0xW3oJzVhcMBAhLRcjF2sTkVqY/otFlHlRaiimVzNLdJPZsYBtOXo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com; spf=pass smtp.mailfrom=efficios.com; dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b=V++S+sSp; arc=fail smtp.client-ip=52.101.191.113
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=efficios.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEAD71DA53;
+	Fri,  4 Apr 2025 16:51:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.42
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1743785512; cv=none; b=cqeuJKOsgcQmf7zMhBAEQjiFpODr9lnue5A69J9V6ax0MZG3e5+EVHKhmxCyAKjkInnGPchzP2TuIK6FTF9eDxucTqmco0o267htj8t/uJln2jLjDyhDDWrMASkgpdDPc6P8i4+xYCTKDt95loLqYu+Zg5hZfIydJJDdR88AI88=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1743785512; c=relaxed/simple;
+	bh=k/1i68EDhtfGaWp4Zjr/ho+pU2UjPOi9WaiMdKbnryI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=l9dLy1ulWQoSBj9zcZl1ynZUmuR/ns41+qb87jY1AUlj5xcdsuYB8Gx0B9x/nUeiLDSL+4chFmUFyil+jEH0EirU2/hROtjdb5dRh8Kfkb9mlcd9g3pGK8mApaLp72LKMnA7jaYb5ByVTnKRrkW4BeSckjETFi7GzSfBy0OWKcc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DFIKEcV/; arc=none smtp.client-ip=209.85.167.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="V++S+sSp"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=U3G6eoI7zOi6HKXFbkpkpS3xtXHW+AEYHD4Xzri2Ku71Yk/pSSvI00y348LvbyuLrib85UGcrHBBTefLzqV+2sDZrvqj8cT5TGQif3lGBSSfDsLcR+YfyHEQHjOut4dtfMjF/DsgSyv1mcqKIgZTqEKe/gNik1CSq/DumvN+bAwUWal/OerQcBwMyq4F0awU3hSLfxsftz+ZFjvi7JmpKVJa1lHKfermjM5spASm36X6VQTnCKbqQ3H3lMHRVbnq2nVTjdioV6vpZUOQnJycoy47J1wGNWdufRrsoPnFiI4p8jSjpTloZtgxjRVODJsngI8mh/jgymHEDxU+82souA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=faWwF0wKg/ZAftRayruqYrIqkatTCOYF1U7XzwJZIaM=;
- b=eLtkl+cSIm9JaLT8Wl9R6L7TcK9JU70tR5GQ0avT2klig+zzhmawXm3O+hlLHBWVy/JTShH2wxrRHHK1g0bIHr2XPPc5xU9BaSX2Qptzy7z0LNQaYmJ+Y1O0lol8tc9VDjwRBagHqOwBeBGTa1PwYfFNWClq6MyzTyAaXFNFeuHRT58MyH2d+nXkC4EWVPIJuNH2n7Mu6kUUFGQqgANUAC125uQDI/pbptO1OfPR1pvJVtRKt8oFngtSOaZdv8fNavKR0s/6ShhhChciHNetwYJM9yTZTKYfP/yo2VzLI6UzoNSGmPC9/THKQMQSSMaIK35UJFJ1B/ehsPffk7+IeA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=efficios.com; dmarc=pass action=none header.from=efficios.com;
- dkim=pass header.d=efficios.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=faWwF0wKg/ZAftRayruqYrIqkatTCOYF1U7XzwJZIaM=;
- b=V++S+sSpGByIYAeJALTmxTTxfLxoVtgUoJLlAu1p3TKogeat5MKSK3kPsORV/H3H6PTE9SfhTciE8CXNt/ubiZgdNqKXKQGiCSyR5C/Lu0MTuA+7j7ROPLtuhzaVmnkM8jmL4FegQLwBlHpzezhKpJ7xL5nXl7hG+t/Xewy1JNGAZW7KSZxeu7XnC7FCH60vl1GrrnDOTbmbo6sB01Ssbf9yIXP+CGCAuEn39RB8Ljl6PKHVi5J2doNOiDYJYK9J1pDoJ8TA/3LRqG/sekB/YDaevbIFSaqxULT3Uycu0GK88polXlamuBgoTzoaivkK+YpVc1nIdXgDRN/fiBlP/Q==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=efficios.com;
-Received: from YT2PR01MB9175.CANPRD01.PROD.OUTLOOK.COM (2603:10b6:b01:be::5)
- by YT2PR01MB5790.CANPRD01.PROD.OUTLOOK.COM (2603:10b6:b01:56::6) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8606.27; Fri, 4 Apr
- 2025 16:02:07 +0000
-Received: from YT2PR01MB9175.CANPRD01.PROD.OUTLOOK.COM
- ([fe80::50f1:2e3f:a5dd:5b4]) by YT2PR01MB9175.CANPRD01.PROD.OUTLOOK.COM
- ([fe80::50f1:2e3f:a5dd:5b4%4]) with mapi id 15.20.8534.044; Fri, 4 Apr 2025
- 16:02:07 +0000
-Message-ID: <c14de67b-d644-4e6a-83f4-610fbf9bc43a@efficios.com>
-Date: Fri, 4 Apr 2025 12:02:05 -0400
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH v2] mm: use per-numa-node atomics instead of
- percpu_counters
-From: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-To: Shakeel Butt <shakeel.butt@linux.dev>,
- Sweet Tea Dorminy <sweettea-kernel@dorminy.me>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
- Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Dennis Zhou <dennis@kernel.org>,
- Tejun Heo <tj@kernel.org>, Christoph Lameter <cl@linux.com>,
- Martin Liu <liumartin@google.com>, David Rientjes <rientjes@google.com>,
- =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
- Johannes Weiner <hannes@cmpxchg.org>, Sweet Tea Dorminy
- <sweettea@google.com>, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
- "Liam R . Howlett" <Liam.Howlett@oracle.com>,
- Suren Baghdasaryan <surenb@google.com>, Vlastimil Babka <vbabka@suse.cz>,
- Christian Brauner <brauner@kernel.org>, Wei Yang
- <richard.weiyang@gmail.com>, David Hildenbrand <david@redhat.com>,
- Miaohe Lin <linmiaohe@huawei.com>, Al Viro <viro@zeniv.linux.org.uk>,
- linux-mm@kvack.org, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, Yu Zhao <yuzhao@google.com>,
- Roman Gushchin <roman.gushchin@linux.dev>, Mateusz Guzik <mjguzik@gmail.com>
-References: <20250331223516.7810-2-sweettea-kernel@dorminy.me>
- <2m3wwqpha2jlo4zjn6xbucahfufej75gbaxxgh4j4h67pgrw7b@diodkog7ygk3>
- <55c89f03-6120-43d1-a620-46d8ca8aba4e@efficios.com>
-Content-Language: en-US
-In-Reply-To: <55c89f03-6120-43d1-a620-46d8ca8aba4e@efficios.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: YQBP288CA0032.CANP288.PROD.OUTLOOK.COM
- (2603:10b6:c01:9d::17) To YT2PR01MB9175.CANPRD01.PROD.OUTLOOK.COM
- (2603:10b6:b01:be::5)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DFIKEcV/"
+Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-54b166fa41bso2383508e87.0;
+        Fri, 04 Apr 2025 09:51:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743785509; x=1744390309; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=zCJOxCsq4sP6eihazz9u78w+Z/VcmA1ipTY8uGgwWqQ=;
+        b=DFIKEcV/OOdulk04GAl1peHltsDAkEdoSYSR5wdx3P0NJpRFiTHzIydB0i/z/q6pT6
+         erzUK8Gw307/D5njZSlJdHdAMIcLV80XODWAAR9YDyB6h2QCJoWeEl8SA3lV2S3BZygW
+         1JxeUxIHk6LNxtMt9/HRVqQOu7IQiPP+lpVwldbW3iR0iwWBhMOI7KD5KtpYgmzyHQ+L
+         Bng+R61Sp0vykGsFo8oArBmCLAKzp7NYjGA3UgKe6cDK8siroOCSsNtzPzVNn8t0uk3Z
+         RRH9RLTEEC+0h33C9rISMLP5fodMtzBteT4LRY/jOWowSUVUtj18f2db2PPC08posjP5
+         X2eA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743785509; x=1744390309;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=zCJOxCsq4sP6eihazz9u78w+Z/VcmA1ipTY8uGgwWqQ=;
+        b=VXtB2QrNw5zmqKd50KHyJ/36QntZbbQtzyn3iJSzMos1AWtC/ows0Y3FYYXsGAe67c
+         BPoPQV+z5l2gc0nWX3F/jzmoUlASqXpk2UFe5HBezFN/xzT5TIvJRX+92O+glc7L1+M6
+         jTu1W9NP6HksRKGUxhgSRn8H8K0Ew9UgrFf0i92nF1uZfqcooquCLfOAjDEzjQct1ovM
+         QklDJK68975plHRasNzyGlL0dZQJQO+SmE+OP4mncYJpb4z7PvJxy2csvT9vSKxmzBPW
+         LurZqgFMxIVxpWrOW4Dhivh80fEqFjJDbU9ZN+dyPoKayxUgtL0ixAkejBJMEsdSLkis
+         eMkw==
+X-Forwarded-Encrypted: i=1; AJvYcCUkJLp0EwCDYNnl/kRy5O1hOMxP/wn2LgX+4WKrR7eo2XOWAR9cKQ2cJ154ij0q5ovMsUFwvtvo/oGUf/zpCvvfLl+S@vger.kernel.org, AJvYcCXZJr4zP5rDGmnZ55t2zgEEoIXabuIgp3ziAPrcdvMj+e01oBugJX+qyrxNQ3YGUXpdTbxW2GgK90dUFko=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy/lHACUsAUjHEbi4MVC1HC2mXSqi5+IhpBW0+fT6ESQUwvR29L
+	1KwY3+J2CyZwGgmRhha4Qkhu9GJd5+LrIbry+YlliHRNzNdeJrEm4Snp7PgRbTfXDQUn9vrR6c8
+	h4Tc01VFoBiWSjGySvblZV1emKSQ=
+X-Gm-Gg: ASbGncuVN2TRZDn7ml1ZBZbIKUjNV1Ramz7LBoEmK3OoCzNmPfDxOoAbkf9Wnh/u/Ow
+	fk3RniMSDVB3QHOBPILxpFOOZ6Kt8FKe14wc4h2s+Of8Rwdo1lOonn8xMdXoR+e+EJdzgmkReOV
+	qtM79umVQw7TdzVXqNeyH/lyxkIg==
+X-Google-Smtp-Source: AGHT+IGzzdDf2+O+E4/8+jxtfp2u1ZLEf3GLMetOJ2O4e5uP72yC+bvImYtxfvw5tvT6UgNEgQsHq4u2w0+aFxWqr1w=
+X-Received: by 2002:a05:6512:4013:b0:549:66d8:a1d2 with SMTP id
+ 2adb3069b0e04-54c232e2686mr1144449e87.19.1743785508633; Fri, 04 Apr 2025
+ 09:51:48 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: YT2PR01MB9175:EE_|YT2PR01MB5790:EE_
-X-MS-Office365-Filtering-Correlation-Id: 9020d39c-7938-4ed5-f3e8-08dd73920c9a
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|7416014|1800799024|366016;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?Ly90ZzVrSXVxdEN0LzBnR080QUpiamM5MCtHZ01xWkNnMGNnWlVwL0xPbEhY?=
- =?utf-8?B?aUlRUzR2ZHlST1h3TThlZE1kM09UOFROSnhWMzNwSVhLcmtaWWpZNU9WSnRk?=
- =?utf-8?B?ODZqcldmTThyMkRHTUFjNksxbmxCOFFtYiszQkx4TngyZlhjYkJUMVJUeXdO?=
- =?utf-8?B?U2d1ZUpUYnpVbzFkS05JL3htS2R1TWo3WDhzd3J3YUplTFE2TXBNL1llemV0?=
- =?utf-8?B?Qm5yTmJLRUtZYk1IZ0k2N2N2WXA5bG52NjNRZlVucjJtcTlxTlhHNWZsYmFH?=
- =?utf-8?B?UkZYZyt2ZmxPMC9Dd1o4L0VqUGpYVWRXeTRwWlNTNHBQR201Wkh3N1U2ZnZM?=
- =?utf-8?B?MTJtRmdyOTY2eDA2VzNlajZKZTdHVHdmRXZhYkEwVTg2LzQ4UHpETEJCaDc0?=
- =?utf-8?B?QlY0NncwRDhWZXNxUDBjdTJlcC9UUlRKWkNpRnJ6VlZtQ085cDcwYXZPWVQz?=
- =?utf-8?B?eUtkNlNKWm1HNW5oeW1Gb1Rnc3I1Z3JyV2pEMXVCM3R0azhSSmNQVG5HOTJo?=
- =?utf-8?B?MkFjMHk4bnhSZWg4Y0RZdGZnSlRNTzdEVVhQNDIrcGdublgyNjU0VDlGZlBL?=
- =?utf-8?B?SnlScEpLRVV0b1MxK1lJc1g1N2lXTTgzbm8rT2NHUFVQY2g0aUFLTGZjUURK?=
- =?utf-8?B?ZFFPNU52YUlOR2FmY1Nxdnk3WGE4eW5BNjhwOHUrbVRPbzFpRzYxZWY3eTRU?=
- =?utf-8?B?YjhjM05YYUJ3K0NZZXliZTZHNnNHTVRMM2VHeTNnR05zY1Z3S1RsYlhGVWhQ?=
- =?utf-8?B?TkJsU2U5QVRhSVVyN01qU0FYZTlweHRpcGNHTVI4L1pXY1VHd3RHK2plUDhQ?=
- =?utf-8?B?Q3MzM0RMR09GM0lpck0yNEtvZTZ4R2tzZFlxaHBaTTRTUmVKWWRBMXltcEZR?=
- =?utf-8?B?WWYrMm41bGwyMG5WbjdPTnRmd1N4Vmg2aWhxN1VZUEhoRVE3TW12SVVhSTZK?=
- =?utf-8?B?WWp5TUl2SDNYSXVIakFsQ2VCOUFHa3VrZ0VtRUlWL3FOYjZrTldYYU1VMEhY?=
- =?utf-8?B?WjNtQmdrMVVmWStLR0tZK3ovczlJZm0yRERjMmZCVTFKa0xGRmJrN0VxTFNV?=
- =?utf-8?B?d3BYS0d1SENhaWZsb0ZGRm1IMS9PMDJsdXMwdEhmQnJDWjM3NmNINFdyWm9t?=
- =?utf-8?B?N0xVSjZlSm5zTDBtalpBNXVzc1NKeVJKZm9WdW0wUnpnaW9KVURUN0tLcjVk?=
- =?utf-8?B?Y1BPcFRZWjdSdkhORVIwY3E4K0xMUjR5Z1l1TmVZSEdKTVd2cGhQd0Q2WVN6?=
- =?utf-8?B?cmt1OXBVK201ais4VUd4UnYwY3IyRUZJdmpRNklZNlIyVzVRMXk1eFFKcU5H?=
- =?utf-8?B?QWNIajZySzE3QnhINGpMb25lL3RWUUVwblIvb090Z0xETjh1NE5YZEhVMk5E?=
- =?utf-8?B?TlVHWVNEMm5FU0tZc3hWeTlkV0NTdzR0RUlQMkFOVERMeWZPbWxzK3UwZzlG?=
- =?utf-8?B?ZUJFdWR2T1VpeGFGS0EvVHU2VUFlNnNmZW9YVisrQ0hMVWFFeUxGM1pyTTRT?=
- =?utf-8?B?Tm1vODZjTVl0Wm9mWmJnOGZHdUlodVBaUGJjNmNXS1pRZlQ5MkcwUXg3cmhR?=
- =?utf-8?B?VWhtSzhDNmFoeUtBUGp3VVR0Vmg1YVhrQXJMUmMxZnRTQ3VORzhsN2xsT05D?=
- =?utf-8?B?RXZYaEdqQUQ1VjV6ZjdENW1ZV2JZRWhwZ0dOcTdXaE1hSHFIV3pvckh6bVdK?=
- =?utf-8?B?TmhCaDBDQUNFYnFTdEhzVGF5Vk11bEVvVTNnMU5NMUR0UVRZTlNPeW1QQUFk?=
- =?utf-8?Q?cqkfnsFiZZoND3YZHwQog419qFB2UAizJywe6Vj?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:YT2PR01MB9175.CANPRD01.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(1800799024)(366016);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?ODNHcUJLV1g5Y2JWZUMwRHcxdnB6d0hVN0ZRSndSSHNtRndqaVdmN3lnU2lj?=
- =?utf-8?B?cm9rSGpPdlVvSjRNeGNBSzJOZlkyZCtsWEIxYnA3T0RkVkJWSTdGQmptcFdv?=
- =?utf-8?B?MnE3OThXZzlDUDNhR0Y2ZWFSWTVnUVdPZGJWajdyV0lRTFVJVzQxcTRUSzlK?=
- =?utf-8?B?SUFjckowaEw5NTFLVzB0WTlZM0I4R05PaTRPeUFvUDJtN2RkanlKVllrRlFH?=
- =?utf-8?B?WFJROE1KV0dxMXhTYWF3aHBVMjNOdGdRN2U0MXZOOXhvM1lEY2g0OFJLR0ps?=
- =?utf-8?B?UC9HZkE3LzBBUXZ6ekpLME5SU1V2S3BUYXVsMW94V0IxUTh0QXppL1J5WVpv?=
- =?utf-8?B?RjJ0d0hIQVBqN1ZSb0plZzlhaEhoU1B0Q2tCOHZhYXFVV1VFMElUelNJMkdZ?=
- =?utf-8?B?cHpyeHI5S2RFS0xNODNPNmRzRXMrN29kL3FUYTJFODVOa1NFdDF3aDRyNFF2?=
- =?utf-8?B?RGEwZThKUlMrVCtJUCtBZXJLWTloTHJ2Nld3MktlakNLRGJTVzBUV0RCd2hy?=
- =?utf-8?B?UUVSbG9jRXdTeXFVcHZIekJQdTQxbUpQZzB3bWUvNnZhQ2tZczNhYUZ5UXdo?=
- =?utf-8?B?a3h1WkRYOFZPL3JwUEVuWEEzdkxwdUhuYnp1VUFYSlRLdFpPalNPV3J2OGdM?=
- =?utf-8?B?cERhTHVPL2lOdGVjTUgzWFVFajh4d25VSGExbEdKYXdZQXl4RmpJRnZRN0li?=
- =?utf-8?B?eHd6TkpTT0hEMjBTM09POUpNeCt3QXZycENiUHRHYWNxbWZwZHZTeGdSZnp4?=
- =?utf-8?B?U3B4dEQ3VDZyS0tMb241R2NNSDFzcEwxT0dYZ0QySnlZeSsxQldoVDM0S0xS?=
- =?utf-8?B?eWNjSjJZYmRFclArMTQ1c0ViclJqU0V5N0g1YVJwNGJjbVQ3aTNDbkNjR2RO?=
- =?utf-8?B?RG8zcGttN0ordUtYZXJkVlU0L1hQQUp3VGtzekZsWWU4NllBKzhKdi8rdFJw?=
- =?utf-8?B?dXZkaDlvMktSVWRBSjBxcTlGczgwdEFMMWZkSGphWG5oOEphMUIvb2NwVXVm?=
- =?utf-8?B?R2VmY1VKbnZsUFlESVNWM1poR1hZNzV0UExNQ1pOOW9pOFpmRUw4dkdia0l5?=
- =?utf-8?B?d2wwTFF4ejlYWDI1T3ZaUXIvMEl3bDNMcWJGL0lqRmIweXR1M3JsREtUVk9i?=
- =?utf-8?B?R0xFY0k4NzRSZ2Y4THNudURaRFN4d2doaXB0R2RGUHRIMWxrcU03MW5KYlBL?=
- =?utf-8?B?V0s4R00rallnZU4yMjFZaGoyS1grU2xpQ0ozL2xPbFUxOUxEVmRXL0MwTFVu?=
- =?utf-8?B?UmEzUmJ3TEtoNlFnMTc0dFJhUlphYTA2dlJNV3Z3b0M3bkNhcGRabjZDOUpV?=
- =?utf-8?B?UHYvRXUrbWV3eG56eUJaemhlUUVXNmRkRWJKRmozbGc2YVRzeTYxM3dFMTFT?=
- =?utf-8?B?OUh6YUZGaUs0WTJaR3g1c3JnMFU0Zld4SXN3V0RSQWxLeCsrdmpkSkJmVWR0?=
- =?utf-8?B?c0hteTVWcGdQZ1ZVK3VOR1lUU2R4UnoyTnJIU2c3TUpwdzQwNlZhYklTSXJ3?=
- =?utf-8?B?cFRBV1RYdzd3eS9rMkdxWFI1VzQ2ajZySkRaa1NIc1J1a0NGak9obnM0T014?=
- =?utf-8?B?dUJSK0l5TWpVcVhTRWN5aUNRRHRlVU5OdGxOVXViZWY5aDdlOEhoaWhWUXV0?=
- =?utf-8?B?azc4UmlxRFExRXYrQ082enVYT21ER1RGandFMWhTUnFaN1kxaGRybUk1aTFH?=
- =?utf-8?B?a0VLcFBjQ3NNMmF1Zmg5NFJlQlBMOVVZQm9WZlhrcEZUNUR2bkt4bHk0TzZC?=
- =?utf-8?B?cHAwa3hYSXBob2crenpHd2x4SVFpY0ZlR0k0OXdZalZoODdqUHB4Skl5U0l5?=
- =?utf-8?B?ZjRRWERnMXZxVkQvSVk3bXByb1plS092R0w3Tmt4bGlJUDF5VmpHN2VZYTQy?=
- =?utf-8?B?NHVHaFJ5dm9TNmo0emZwNTR3VWZJUk13QmlGV3dFTEh1UVBtZkg1d3hBeGxD?=
- =?utf-8?B?ZllFczVyVFlkMlg2WlJDR2wxY25VOEc2ZGxxVVhOM1ZjYlJVS0FqQWJHZGR1?=
- =?utf-8?B?VDZQKzI0aUpzNGFsVFlINjVpNkFadXRqcmdLamJJNjhWV0dqWW5LZ21ZSFkx?=
- =?utf-8?B?Mmg0YkE1U3pBRS9YT2pkOUpUcEs4TnZDVWN2bkk3TkZRYkJjamxQSnRINzkv?=
- =?utf-8?B?VTdEQkQrV3VMNTVaOTZhdVB2ekY3bjlrdWFPUTVucEcvWTc0U3JVV21Udisw?=
- =?utf-8?Q?+rEMVZKbheUGVv6RXPxRXCI=3D?=
-X-OriginatorOrg: efficios.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9020d39c-7938-4ed5-f3e8-08dd73920c9a
-X-MS-Exchange-CrossTenant-AuthSource: YT2PR01MB9175.CANPRD01.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Apr 2025 16:02:07.3780
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4f278736-4ab6-415c-957e-1f55336bd31e
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: zlI5Dbl8FKDyn1wSOQjd7ew5JJUrsmfqxVTc1owKNVeC4xnEhqv3QyILdO8+EdE3R+dTHb9MbrhLHsb+s6+5oyiAao8d0cMBGns2cX8y/nc=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: YT2PR01MB5790
+References: <20250331223516.7810-2-sweettea-kernel@dorminy.me>
+ <CAMgjq7AroDCKTfJzJRr++8H2b3eTd=MeUqwkPUX4ixRVqZw6-A@mail.gmail.com> <CAGudoHH7OUHG2HHrjzqkiqgYXzLEtovCptHpxkyVNPwSMHWfrw@mail.gmail.com>
+In-Reply-To: <CAGudoHH7OUHG2HHrjzqkiqgYXzLEtovCptHpxkyVNPwSMHWfrw@mail.gmail.com>
+From: Kairui Song <ryncsn@gmail.com>
+Date: Sat, 5 Apr 2025 00:51:32 +0800
+X-Gm-Features: ATxdqUHJHnHN5IVy15yQ4251S2SiHtKLSV0rTOnKNbdjM_u66PODTpuuzvggkbw
+Message-ID: <CAMgjq7C_W3dfYQ6DJT4QCza1DCtCE7yUdiManQSxCKOENxTm_g@mail.gmail.com>
+Subject: Re: [RFC PATCH v2] mm: use per-numa-node atomics instead of percpu_counters
+To: Mateusz Guzik <mjguzik@gmail.com>
+Cc: Sweet Tea Dorminy <sweettea-kernel@dorminy.me>, Andrew Morton <akpm@linux-foundation.org>, 
+	Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Dennis Zhou <dennis@kernel.org>, 
+	Tejun Heo <tj@kernel.org>, Christoph Lameter <cl@linux.com>, Martin Liu <liumartin@google.com>, 
+	David Rientjes <rientjes@google.com>, =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
+	Shakeel Butt <shakeel.butt@linux.dev>, Johannes Weiner <hannes@cmpxchg.org>, 
+	Sweet Tea Dorminy <sweettea@google.com>, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, 
+	"Liam R . Howlett" <Liam.Howlett@oracle.com>, Suren Baghdasaryan <surenb@google.com>, 
+	Vlastimil Babka <vbabka@suse.cz>, Christian Brauner <brauner@kernel.org>, 
+	Wei Yang <richard.weiyang@gmail.com>, David Hildenbrand <david@redhat.com>, 
+	Miaohe Lin <linmiaohe@huawei.com>, Al Viro <viro@zeniv.linux.org.uk>, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	Yu Zhao <yuzhao@google.com>, Roman Gushchin <roman.gushchin@linux.dev>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 2025-04-03 13:59, Mathieu Desnoyers wrote:
-> On 2025-04-02 20:00, Shakeel Butt wrote:
->> On Mon, Mar 31, 2025 at 06:35:14PM -0400, Sweet Tea Dorminy wrote:
-> [...]
->> I am still not buying the 'good performance' point. To me we might need
->> to go with reduced batch size of existing approach or multi level
->> approach from Mathieu (I still have to see Mateusz and Kairui's
->> proposals).
-> 
-> Here is an initial userspace prototype of my hierarchical split counters:
-> 
-> https://github.com/compudj/librseq/blob/percpu-counter/include/rseq/ 
-> percpu-counter.h
-> https://github.com/compudj/librseq/blob/percpu-counter/src/percpu-counter.c
-> 
+On Thu, Apr 3, 2025 at 10:31=E2=80=AFPM Mateusz Guzik <mjguzik@gmail.com> w=
+rote:
+>
+> On Tue, Apr 1, 2025 at 5:27=E2=80=AFAM Kairui Song <ryncsn@gmail.com> wro=
+te:
+> >
+> > On Tue, Apr 1, 2025 at 6:36=E2=80=AFAM Sweet Tea Dorminy
+> > <sweettea-kernel@dorminy.me> wrote:
+> > >
+> > > [Resend as requested as RFC and minus prereq-patch-id junk]
+> > >
+> > > Recently, several internal services had an RSS usage regression as pa=
+rt of a
+> > > kernel upgrade. Previously, they were on a pre-6.2 kernel and were ab=
+le to
+> > > read RSS statistics in a backup watchdog process to monitor and decid=
+e if
+> > > they'd overrun their memory budget. Now, however, a representative se=
+rvice
+> > > with five threads, expected to use about a hundred MB of memory, on a=
+ 250-cpu
+> > > machine had memory usage tens of megabytes different from the expecte=
+d amount
+> > > -- this constituted a significant percentage of inaccuracy, causing t=
+he
+> > > watchdog to act.
+> > >
+> > > This was a result of f1a7941243c1 ("mm: convert mm's rss stats into
+> > > percpu_counter") [1].  Previously, the memory error was bounded by
+> > > 64*nr_threads pages, a very livable megabyte. Now, however, as a resu=
+lt of
+> > > scheduler decisions moving the threads around the CPUs, the memory er=
+ror could
+> > > be as large as a gigabyte.
+> > >
+> > > This is a really tremendous inaccuracy for any few-threaded program o=
+n a
+> > > large machine and impedes monitoring significantly. These stat counte=
+rs are
+> > > also used to make OOM killing decisions, so this additional inaccurac=
+y could
+> > > make a big difference in OOM situations -- either resulting in the wr=
+ong
+> > > process being killed, or in less memory being returned from an OOM-ki=
+ll than
+> > > expected.
+> > >
+> > > Finally, while the change to percpu_counter does significantly improv=
+e the
+> > > accuracy over the previous per-thread error for many-threaded service=
+s, it does
+> > > also have performance implications - up to 12% slower for short-lived=
+ processes
+> > > and 9% increased system time in make test workloads [2].
+> > >
+> > > A previous attempt to address this regression by Peng Zhang [3] used =
+a hybrid
+> > > approach with delayed allocation of percpu memory for rss_stats, show=
+ing
+> > > promising improvements of 2-4% for process operations and 6.7% for pa=
+ge
+> > > faults.
+> > >
+> > > This RFC takes a different direction by replacing percpu_counters wit=
+h a
+> > > more efficient set of per-NUMA-node atomics. The approach:
+> > >
+> > > - Uses one atomic per node up to a bound to reduce cross-node updates=
+.
+> > > - Keeps a similar batching mechanism, with a smaller batch size.
+> > > - Eliminates the use of a spin lock during batch updates, bounding st=
+at
+> > >   update latency.
+> > > - Reduces percpu memory usage and thus thread startup time.
+> > >
+> > > Most importantly, this bounds the total error to 32 times the number =
+of NUMA
+> > > nodes, significantly smaller than previous error bounds.
+> > >
+> > > On a 112-core machine, lmbench showed comparable results before and a=
+fter this
+> > > patch.  However, on a 224 core machine, performance improvements were
+> > > significant over percpu_counter:
+> > > - Pagefault latency improved by 8.91%
+> > > - Process fork latency improved by 6.27%
+> > > - Process fork/execve latency improved by 6.06%
+> > > - Process fork/exit latency improved by 6.58%
+> > >
+> > > will-it-scale also showed significant improvements on these machines.
+> > >
+> > > [1] https://lore.kernel.org/all/20221024052841.3291983-1-shakeelb@goo=
+gle.com/
+> > > [2] https://lore.kernel.org/all/20230608111408.s2minsenlcjow7q3@quack=
+3/
+> > > [3] https://lore.kernel.org/all/20240418142008.2775308-1-zhangpeng362=
+@huawei.com/
+> >
+> > Hi, thanks for the idea.
+> >
+> > I'd like to mention my previous work on this:
+> > https://lwn.net/ml/linux-kernel/20220728204511.56348-1-ryncsn@gmail.com=
+/
+> >
+> > Basically using one global percpu counter instead of a per-task one, an=
+d
+> > flush each CPU's sub-counter on context_switch (if next->active_mm !=3D
+> > current->active_mm, no switch for IRQ or kthread).
+> > More like a percpu stash.
+> >
+> > Benchmark looks great and the fast path is super fast (just a
+> > this_cpu_add). context_switch is also fine because the scheduler would
+> > try to keep one task on the same CPU  to make better use of cache. And
+> > it can leverage the cpu bitmap like tlb shootdown to optimize the
+> > whole thing.
+> >
+> > The error and total memory consumption are both lower than current desi=
+gn too.
+>
 
-I've updated my branches to use unsigned long counters rather than
-signed. This eliminates tricky 32-bit/64-bit overflow corner-cases and
-should not have significant impact in practice.
+Thanks for checking the patch.
 
-Thanks,
+> Note there are 2 unrelated components in that patchset:
+> - one per-cpu instance of rss counters which is rolled up on context
+> switches, avoiding the costly counter alloc/free on mm
+> creation/teardown
+> - cpu iteration in get_mm_counter
+>
+> The allocation problem is fixable without abandoning the counters, see
+> my other e -mail (tl;dr let mm's hanging out in slab caches *keep* the
+> counters). This aspect has to be solved anyway due to mm_alloc_cid().
+> Providing a way to sort it out covers *both* the rss counters and the
+> cid thing.
 
-Mathieu
+It's not just about the fork performance, on some servers there could
+be ~100K processes and ~200 CPUs, that will be hundreds of MBs of
+memory just for the counters.
 
--- 
-Mathieu Desnoyers
-EfficiOS Inc.
-https://www.efficios.com
+And nowadays it's not something uncommon for a desktop to have ~64
+CPUs and ~10K processes.
+
+If we use a single shared "per-cpu" counter (as in the patch), the
+total consumption will always be only about just dozens of bytes.
+
+>
+> In your patchset the accuracy increase comes at the expense of walking
+> all CPUs every time, while a big part of the point of using percpu
+> counters is to have a good enough approximation somewhere that this is
+> not necessary.
+
+It usually doesn't walk all CPUs, only the CPUs that actually used
+that mm_struct, by checking mm_struct's cpu_bitmap. I didn't check if
+all arch uses that bitmap though.
+
+It's true that one CPU having its bit set on one mm_struct's
+cpu_bitmap doesn't mean it updated the RSS counter so there will be
+false positives, the false positive rate is low as schedulers don't
+shuffle processes between processors randomly, and not every process
+will be ran at a period.
+
+Also per my observation the reader side is much colder compared to
+updater for /proc.
+
+>
+> Indeed the stock kernel fails to achieve that at the moment and as you
+> can see there is discussion how to tackle it. It is a general percpu
+> counter problem.
+>
+> I verified get_mm_counter is issued in particular on mmap and munmap.
+> On high core count boxes (hundreds of cores) the mandatory all CPU
+> walk has to be a problem, especially if a given process is also highly
+> multi-threaded and mmap/munmap heavy.
+>
+> Thus I think your patchset would also benefit from some form of
+> distribution of the counter other than just per-cpu and the one
+> centralized value. At the same time if RSS accuracy is your only
+> concern and you don't care about walking the CPUs, then you could
+> modify the current code to also do it.
+>
+> Or to put it differently, while it may be changing the scheme to have
+> a local copy makes sense, the patchset is definitely not committable
+> in the proposed form -- it really wants to have better quality caching
+> of the state.
+> --
+> Mateusz Guzik <mjguzik gmail.com>
