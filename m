@@ -1,228 +1,151 @@
-Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
+Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAD6D13B2BB;
-	Fri,  4 Apr 2025 20:36:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B23C1CA81;
+	Sat,  5 Apr 2025 02:30:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743798995; cv=none; b=FzaRGmpMlFEqr5/G8aeLgQqWnhEe0/roQWz0XCSt8B8jygiuIwuXUZ0hqXPOcOOc6UKZXWSBVRl6yHanWGYALncT4ezASQGUnvILppnnEoJWTDxU55lH/pAKgptnfhosCr3mEBaFCFziFPd138pak+ax882CSlaqgrKcg4Zd/LY=
+	t=1743820224; cv=none; b=uMnKENxwKRzmkt44xIvrzmZM+WjQjuUEHv711ibcMCYUHLH9HOUAXV2YAyFJeQwzL3J1m+ah2l/cEeBxZ9kbDQIXCvzugXxS/bjI0tBoT6M0jCso7izwJj9XZnDU1t553AQers4N07R0WaPSeyAOD7blVk9k/w89R91hSHXXZzQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743798995; c=relaxed/simple;
-	bh=oZ+uHXnN6Eq5MDglk3rZaokAt1rj3Rf2rGiJuTgOaao=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=XYDvYp1IFvw7VfLn/Z41NUsryxFNqKAeFXEtFVV/+++oRlL13PRcOgJ8fopcNyNx/4LBcL9Qw6SWrcAynBAQ8APdM4wVqXmsfXg2xheEsNdpuTfN6EKeFbI5wGYb23EuecnHEvsfk8QLkGpQMHUqLA8AZMKgbkCjIqIM5UQILzU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FMzpFy+6; arc=none smtp.client-ip=209.85.218.47
+	s=arc-20240116; t=1743820224; c=relaxed/simple;
+	bh=+7j4PgUkLIuOXJL8HP5/H20XgqTYFkm2muPJyGGj9zk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LLTH8D/48gF1pIr714Y1ndElAGnByJ0WW37Vfsf61qcoE14ioK03Q7SkpgdZU8oe5FRgkjmLNCAv/0v7EbCLDy+Naqas2i/5KH6lYA/60uutYAsZpoAL1OzEHGcPTIyKWyzVVxXXXZA0XRyqGdY94xs9j3XcP3sWZJedFW3GoL4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mSe6T+9Z; arc=none smtp.client-ip=209.85.208.43
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FMzpFy+6"
-Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-ac339f53df9so401753166b.1;
-        Fri, 04 Apr 2025 13:36:33 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mSe6T+9Z"
+Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-5e5e22e6ed2so3815524a12.3;
+        Fri, 04 Apr 2025 19:30:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743798992; x=1744403792; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=22rGuIvOQunhBDK/LM5k3yagn0EKg9yG1SFBFh0NvKk=;
-        b=FMzpFy+6hIpx6hAgejGfYtqLZ27P3ngy+8aKIuONaw1bAIPpsOJvVK51pfIqfFy0AI
-         UYvmMjRKcLf2cvc1ZDzlwJmEfVzt7eOol7Gs0NCRILgy8FBdF6IwaRgVNoBvotJNMO78
-         iFFRt8UvF1NAsoKAZTMeeQ5hEClGRMqm6xItCeWFAUr7wBcgCvKTeUR/1A4n37WFHITM
-         nsjGRy8Sh1DHUMW328ivTaQW3ngZhmsduCHLGDYbZUiOHVMC/Q2RdMnGcrKYOvJqErbI
-         5OpGPjNyaEMjPPLuqGuyIDODd3eR0Z17Ufzx+zAtiKFc5IjLM/N/+yHFP0WyNRlAfjit
-         tEow==
+        d=gmail.com; s=20230601; t=1743820220; x=1744425020; darn=vger.kernel.org;
+        h=user-agent:in-reply-to:content-transfer-encoding
+         :content-disposition:mime-version:references:reply-to:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=IS15rDDOUaZvubbeDN/CRQmwSnCO8pmZhHDJU2CSssA=;
+        b=mSe6T+9ZaAr2b1sXCfvGC5+e/Q9C3urJSuYo1iPsZCz8mJxbjP9C2lYMvAZdaHoHHJ
+         N2BkmTAQ5M+n1Ww/+uuDAz/kP2rbUA0QyYtaKRy0vGgaf/r/nG7YXnw6M/Hn9rgv1xk/
+         8vUWLH+TeqCTDzRS9sW4keG2i5FtxjgZQJIm4VD39Bn8AER06sxHrcbE0EkHwWMvAVUp
+         y0CT0eMExT/LhBgM/KW7tr1N22lJ3o+gDgtYQdBdf7IbC8zbzHGGA4o9zQ7av5Bmie1H
+         SMsKuNlr1VhyTbR9venn4lX5BYWv+8n53Iu25cdTyEhHprDvptgoFtzwYZTyUVQ/YKK/
+         bwTQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743798992; x=1744403792;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=22rGuIvOQunhBDK/LM5k3yagn0EKg9yG1SFBFh0NvKk=;
-        b=prwK4JznhFVHAXVcQiMRna1D80DwD2203WcxZ536iQ1rMBf+KcGP7sa8Gz1EQfbjki
-         v40GKCKXZhhzuefpjVnvIBMgyeQ1MUC7QUXRtgcrH9KPhyGjEOurJi33OPI+h8dl7uQj
-         drYf4HC6+R+GRt6f1MGmN5pzcUMWQgQq8WuajbcfEPq8jA4BAAQTwDO9AHpB8RT4oAbY
-         6H3SmNoeOBXRuOuI0BVM9WTnBwC3TFKXjQSh8VhiZXnBb9AdPSwzkU390el5fxZYIncU
-         dTi9q27YLj/jetgvG2ghLOiY6tamwTQg3Yjr6l/JHXpfUfdFc03Z7s3kbZlOrSnqFhYt
-         yANQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVnPWzB78qwa2OejTAicHuZMe/jjcP8cqHC71mZ31H6pRB2QioaPtntOLvb4jJGaCrRpK0=@vger.kernel.org, AJvYcCXPM5JyTlqSejbZWqZ/IB8b307BN76m/joXUFJhvOwYh3RsPzZrzVCPFFz2RX0bodqNvvqQIhUA+1Kk+0fP@vger.kernel.org, AJvYcCXwqTkP3SI/VzyiuLv8KFSix4H74L+ThhRSkaVdB+wowzYHjRCZPaGGX126/UD/9Lu+aT9Qt1EsYPFcvP7jYYYanAyo@vger.kernel.org
-X-Gm-Message-State: AOJu0YxQXBrk0v/i45xIjZekPwKMFytwvJsKAaT5Q9VNyYAXWlQpee0V
-	UHxpbRD4seGL2dDfjftcnXaGoTFYLgaJDg4trCHtYgf7ExBnp0yJIiABPBNIjrxLlw6K9RD67DT
-	JvWtCNhBN43CJDFRO7yvsz3Htl1Q=
-X-Gm-Gg: ASbGncsa3BqSKMtxwUYuDHpoAtIcNetS29X4cf8PC5juIavwpXzAimk9iG5xK1X1qTi
-	dVNn7q9bx/MRMjqvgLhC2MiQvI6d+wBT7HTUSprH0ARa+FA+Zo2w4Fp6kHSomEW7dcUGjV3UZx0
-	FRlCOdSNiCIZHOhG7aCYniPxeM3xlUPfZ3wBp5TYTeJg==
-X-Google-Smtp-Source: AGHT+IHjapuNheEE1B5WwLY6Un8SFoG+Z1JYZRyJb1SBIi6ru6JwNIa1EU9Kj2/LMSEjc40/hKKD41tHn/36MzsajHU=
-X-Received: by 2002:a17:907:7ea6:b0:ac2:49b1:166f with SMTP id
- a640c23a62f3a-ac7d1b9c1d3mr351905166b.52.1743798991708; Fri, 04 Apr 2025
- 13:36:31 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1743820220; x=1744425020;
+        h=user-agent:in-reply-to:content-transfer-encoding
+         :content-disposition:mime-version:references:reply-to:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=IS15rDDOUaZvubbeDN/CRQmwSnCO8pmZhHDJU2CSssA=;
+        b=T2QPpvD+t0SS+1t27nuNnXwXr7q1MMdPlkOCU9uxpkzm6ejpvsB4ND4Gqn/2mna0xs
+         qdmS6l4m0WVYvxh6M25UEx83korCbx0qcXrFPHwiiloIro9/pJ/lFgTLOghPnol/nDDy
+         zOvaVek8yqftMhYtC9ZCnFg2oflEkAilFxBHnJXfAPY0c118IazP8/o42rY7oFcKO1FB
+         T1fMNNPLrfShchGEKcpFH4PMnmbztahJv4dwYkqG5LouhwFd4nmKH/bsGfs/hgckJ/k7
+         h8ZordSVOBgjvDEaescOreUQ16y4XuSfccUxZdVIxEJCi/e5i9FOmCAmV9tXXn841T5M
+         qQ6A==
+X-Forwarded-Encrypted: i=1; AJvYcCV4DUNrS7c/VyHyRWTpvgNqcFnq08vcfrOV1BqghROb8lj6QexM7Yy2turBmu7gXvINAuv1E/BOyb0gZNv34pj5JNOM@vger.kernel.org, AJvYcCWrVdH0KcY16qT2wHYsES6UVl2GyyTltIHuc4wB3LYoNgfMJIzRrTJQW6bISeI8nznKOU/xuG30C9KRGIc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwwG2ztm5Hwzq4vCfJYN+JLRHzgPIIyezFtHnwEFy5KwKXp/6H3
+	RZzEEHZCKew4Z26gcGwIwk3Y+LU5AEUB938oCXJRdN0v2jKbwdTu
+X-Gm-Gg: ASbGncuPH/M4NQ2ZhW7okxWfzd7ELlQmwDteiAwSvjFfew9ghqMMuoj0WNd+zPNGsx8
+	c1E640pHv34+AgiiIEljH7L6Ogngkk01pA529Nr6UvcTbvGlEUmDFtHubDNKzWAEWN6riQvPJMl
+	tXx1x01pyVyZogy/mk+4rIunM2x5eYa1HXs/s6pXPkffkXKNGx97bFq14zjLfbNKIJPiIlzaPMd
+	X+syHZnWfrOaONYHy/IsBzV8IvDHdDhp/65sdPfr0Suzqiwie0a52VWrqizbtq5GE+z5By8Lefo
+	j8/Xgmsm6q8q+gn4/MFaHXKHqDlmykhQrSnU6oLWWrxG
+X-Google-Smtp-Source: AGHT+IE7wFn6ERJrBkfR1Q7/KnqdJjGKd1nUQ/1w3C9FdGeL3AF2csZF/cfRhKp8Z4EAaS7twttq5A==
+X-Received: by 2002:a05:6402:90e:b0:5e6:1996:7902 with SMTP id 4fb4d7f45d1cf-5f0b6631b4bmr4006673a12.32.1743820220359;
+        Fri, 04 Apr 2025 19:30:20 -0700 (PDT)
+Received: from localhost ([185.92.221.13])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5f087ed1f40sm3097531a12.26.2025.04.04.19.30.19
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 04 Apr 2025 19:30:19 -0700 (PDT)
+Date: Sat, 5 Apr 2025 02:30:18 +0000
+From: Wei Yang <richard.weiyang@gmail.com>
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	Mark Rutland <mark.rutland@arm.com>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Mike Rapoport <rppt@kernel.org>, linux-mm@kvack.org
+Subject: Re: [PATCH v4 1/2] mm/memblock: Add reserved memory release function
+Message-ID: <20250405023018.g2ae52nrz2757b3n@master>
+Reply-To: Wei Yang <richard.weiyang@gmail.com>
+References: <173989132750.230693.15749600013776132201.stgit@devnote2>
+ <173989133862.230693.14094993331347437600.stgit@devnote2>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250320114200.14377-1-jolsa@kernel.org>
-In-Reply-To: <20250320114200.14377-1-jolsa@kernel.org>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Fri, 4 Apr 2025 13:36:13 -0700
-X-Gm-Features: ATxdqUEjv_eTLpR4AhUyXDmhZP5NtRr7hFALL9VnOTAuoWp4qBtNPdKFLgL_ky0
-Message-ID: <CAEf4BzY2zKPM9JHgn_wa8yCr8q5KntE5w8g=AoT2MnrD2Dx6gA@mail.gmail.com>
-Subject: Re: [PATCH RFCv3 00/23] uprobes: Add support to optimize usdt probes
- on x86_64
-To: Jiri Olsa <jolsa@kernel.org>
-Cc: Oleg Nesterov <oleg@redhat.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Andrii Nakryiko <andrii@kernel.org>, Eyal Birger <eyal.birger@gmail.com>, kees@kernel.org, 
-	bpf@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, x86@kernel.org, 
-	Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>, 
-	John Fastabend <john.fastabend@gmail.com>, Hao Luo <haoluo@google.com>, 
-	Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Alan Maguire <alan.maguire@oracle.com>, David Laight <David.Laight@aculab.com>, 
-	=?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas@t-8ch.de>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <173989133862.230693.14094993331347437600.stgit@devnote2>
+User-Agent: NeoMutt/20170113 (1.7.2)
 
-On Thu, Mar 20, 2025 at 4:42=E2=80=AFAM Jiri Olsa <jolsa@kernel.org> wrote:
+On Wed, Feb 19, 2025 at 12:08:58AM +0900, Masami Hiramatsu (Google) wrote:
+>From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 >
-> hi,
-> this patchset adds support to optimize usdt probes on top of 5-byte
-> nop instruction.
+>Add reserve_mem_release_by_name() to release a reserved memory region
+>with a given name. This allows us to release reserved memory which is
+>defined by kernel cmdline, after boot.
 >
-> The generic approach (optimize all uprobes) is hard due to emulating
-> possible multiple original instructions and its related issues. The
-> usdt case, which stores 5-byte nop seems much easier, so starting
-> with that.
+>Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+>Acked-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+>Cc: Andrew Morton <akpm@linux-foundation.org>
+>Cc: linux-mm@kvack.org
+>---
+> Changes in v4:
+>  - Use free_reserved_area() according to Mike's comment.
+> Changes in v2:
+>  - Rename reserved_mem_* to reserve_mem_*.
+>---
+> include/linux/mm.h |    1 +
+> mm/memblock.c      |   66 +++++++++++++++++++++++++++++++++++++++++++---------
+> 2 files changed, 55 insertions(+), 12 deletions(-)
 >
-> The basic idea is to replace breakpoint exception with syscall which
-> is faster on x86_64. For more details please see changelog of patch 8.
->
-> The run_bench_uprobes.sh benchmark triggers uprobe (on top of different
-> original instructions) in a loop and counts how many of those happened
-> per second (the unit below is million loops).
->
-> There's big speed up if you consider current usdt implementation
-> (uprobe-nop) compared to proposed usdt (uprobe-nop5):
->
-> current:
->         usermode-count :  152.604 =C2=B1 0.044M/s
->         syscall-count  :   13.359 =C2=B1 0.042M/s
-> -->     uprobe-nop     :    3.229 =C2=B1 0.002M/s
->         uprobe-push    :    3.086 =C2=B1 0.004M/s
->         uprobe-ret     :    1.114 =C2=B1 0.004M/s
->         uprobe-nop5    :    1.121 =C2=B1 0.005M/s
->         uretprobe-nop  :    2.145 =C2=B1 0.002M/s
->         uretprobe-push :    2.070 =C2=B1 0.001M/s
->         uretprobe-ret  :    0.931 =C2=B1 0.001M/s
->         uretprobe-nop5 :    0.957 =C2=B1 0.001M/s
->
-> after the change:
->         usermode-count :  152.448 =C2=B1 0.244M/s
->         syscall-count  :   14.321 =C2=B1 0.059M/s
->         uprobe-nop     :    3.148 =C2=B1 0.007M/s
->         uprobe-push    :    2.976 =C2=B1 0.004M/s
->         uprobe-ret     :    1.068 =C2=B1 0.003M/s
-> -->     uprobe-nop5    :    7.038 =C2=B1 0.007M/s
->         uretprobe-nop  :    2.109 =C2=B1 0.004M/s
->         uretprobe-push :    2.035 =C2=B1 0.001M/s
->         uretprobe-ret  :    0.908 =C2=B1 0.001M/s
->         uretprobe-nop5 :    3.377 =C2=B1 0.009M/s
->
-> I see bit more speed up on Intel (above) compared to AMD. The big nop5
-> speed up is partly due to emulating nop5 and partly due to optimization.
->
-> The key speed up we do this for is the USDT switch from nop to nop5:
->         uprobe-nop     :    3.148 =C2=B1 0.007M/s
->         uprobe-nop5    :    7.038 =C2=B1 0.007M/s
->
->
-> rfc v3 changes:
-> - I tried to have just single syscall for both entry and return uprobe,
->   but it turned out to be slower than having two separated syscalls,
->   probably due to extra save/restore processing we have to do for
->   argument reg, I see differences like:
->
->     2 syscalls:      uprobe-nop5    :    7.038 =C2=B1 0.007M/s
->     1 syscall:       uprobe-nop5    :    6.943 =C2=B1 0.003M/s
->
-> - use instructions (nop5/int3/call) to determine the state of the
->   uprobe update in the process
-> - removed endbr instruction from uprobe trampoline
-> - seccomp changes
->
-> pending todo (or follow ups):
-> - shadow stack fails for uprobe session setup, will fix it in next versio=
-n
-> - use PROCMAP_QUERY in tests
-> - alloc 'struct uprobes_state' for mm_struct only when needed [Andrii]
+>diff --git a/include/linux/mm.h b/include/linux/mm.h
+>index 7b1068ddcbb7..1ee9e7447485 100644
+>--- a/include/linux/mm.h
+>+++ b/include/linux/mm.h
+>@@ -4123,6 +4123,7 @@ void vma_pgtable_walk_begin(struct vm_area_struct *vma);
+> void vma_pgtable_walk_end(struct vm_area_struct *vma);
+> 
+> int reserve_mem_find_by_name(const char *name, phys_addr_t *start, phys_addr_t *size);
+>+int reserve_mem_release_by_name(const char *name);
+> 
+> #ifdef CONFIG_64BIT
+> int do_mseal(unsigned long start, size_t len_in, unsigned long flags);
+>diff --git a/mm/memblock.c b/mm/memblock.c
+>index 95af35fd1389..8cd95f60015d 100644
+>--- a/mm/memblock.c
+>+++ b/mm/memblock.c
+>@@ -16,6 +16,7 @@
+> #include <linux/kmemleak.h>
+> #include <linux/seq_file.h>
+> #include <linux/memblock.h>
+>+#include <linux/mutex.h>
+> 
+> #include <asm/sections.h>
+> #include <linux/io.h>
+>@@ -2283,6 +2284,7 @@ struct reserve_mem_table {
+> };
+> static struct reserve_mem_table reserved_mem_table[RESERVE_MEM_MAX_ENTRIES];
+> static int reserved_mem_count;
+>+static DEFINE_MUTEX(reserve_mem_lock);
+> 
 
-All the pending TODO stuff seems pretty minor. So is there anything
-else holding your patch set from graduating out of RFC status?
+This looks break the memblock tests in tools/testing/memblock.
 
-David's uprobe_write_opcode() patch set landed, so you should be ready
-to rebase and post a proper v1 now, right?
+memblock.c:2289:8: warning: type defaults to ‘int’ in declaration of ‘DEFINE_MUTEX’ [-Wimplicit-int]
+ 2289 | static DEFINE_MUTEX(reserve_mem_lock);
+      |        ^~~~~~~~~~~~
+memblock.c:2289:1: warning: parameter names (without types) in function declaration
+ 2289 | static DEFINE_MUTEX(reserve_mem_lock);
+      | ^~~~~~
+memblock.c: In function ‘reserve_mem_find_by_name’:
+memblock.c:2332:9: warning: implicit declaration of function ‘guard’ [-Wimplicit-function-declaration]
+ 2332 |         guard(mutex)(&reserve_mem_lock);
+      |         ^~~~~
 
-Performance wins are huge, looking forward to this making it into the
-kernel soon!
-
->
-> thanks,
-> jirka
->
->
-> Cc: Eyal Birger <eyal.birger@gmail.com>
-> Cc: kees@kernel.org
-> ---
-> Jiri Olsa (23):
->       uprobes: Rename arch_uretprobe_trampoline function
->       uprobes: Make copy_from_page global
->       uprobes: Move ref_ctr_offset update out of uprobe_write_opcode
->       uprobes: Add uprobe_write function
->       uprobes: Add nbytes argument to uprobe_write_opcode
->       uprobes: Add orig argument to uprobe_write and uprobe_write_opcode
->       uprobes: Remove breakpoint in unapply_uprobe under mmap_write_lock
->       uprobes/x86: Add uprobe syscall to speed up uprobe
->       uprobes/x86: Add mapping for optimized uprobe trampolines
->       uprobes/x86: Add support to emulate nop5 instruction
->       uprobes/x86: Add support to optimize uprobes
->       selftests/bpf: Use 5-byte nop for x86 usdt probes
->       selftests/bpf: Reorg the uprobe_syscall test function
->       selftests/bpf: Rename uprobe_syscall_executed prog to test_uretprob=
-e_multi
->       selftests/bpf: Add uprobe/usdt syscall tests
->       selftests/bpf: Add hit/attach/detach race optimized uprobe test
->       selftests/bpf: Add uprobe syscall sigill signal test
->       selftests/bpf: Add optimized usdt variant for basic usdt test
->       selftests/bpf: Add uprobe_regs_equal test
->       selftests/bpf: Change test_uretprobe_regs_change for uprobe and ure=
-tprobe
->       selftests/bpf: Add 5-byte nop uprobe trigger bench
->       seccomp: passthrough uprobe systemcall without filtering
->       selftests/seccomp: validate uprobe syscall passes through seccomp
->
->  arch/arm/probes/uprobes/core.c                              |   2 +-
->  arch/x86/entry/syscalls/syscall_64.tbl                      |   1 +
->  arch/x86/include/asm/uprobes.h                              |   7 ++
->  arch/x86/kernel/uprobes.c                                   | 540 ++++++=
-+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++=
-+++++++++-
->  include/linux/syscalls.h                                    |   2 +
->  include/linux/uprobes.h                                     |  19 +++-
->  kernel/events/uprobes.c                                     | 141 ++++++=
-+++++++++++-------
->  kernel/fork.c                                               |   1 +
->  kernel/seccomp.c                                            |  32 ++++--
->  kernel/sys_ni.c                                             |   1 +
->  tools/testing/selftests/bpf/bench.c                         |  12 +++
->  tools/testing/selftests/bpf/benchs/bench_trigger.c          |  42 ++++++=
-++
->  tools/testing/selftests/bpf/benchs/run_bench_uprobes.sh     |   2 +-
->  tools/testing/selftests/bpf/prog_tests/uprobe_syscall.c     | 453 ++++++=
-++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++------
->  tools/testing/selftests/bpf/prog_tests/usdt.c               |  38 ++++--=
--
->  tools/testing/selftests/bpf/progs/uprobe_syscall.c          |   4 +-
->  tools/testing/selftests/bpf/progs/uprobe_syscall_executed.c |  41 ++++++=
--
->  tools/testing/selftests/bpf/sdt.h                           |   9 +-
->  tools/testing/selftests/bpf/test_kmods/bpf_testmod.c        |  11 +-
->  tools/testing/selftests/seccomp/seccomp_bpf.c               | 107 ++++++=
-++++++++----
->  20 files changed, 1338 insertions(+), 127 deletions(-)
