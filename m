@@ -1,95 +1,205 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E5D32222B4;
-	Mon,  7 Apr 2025 20:08:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F726158553;
+	Mon,  7 Apr 2025 23:52:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744056492; cv=none; b=bUJO64/w7BJtzH4RpgnCSa69Bwg26wFu2cn305xpp4C4v4rvjQFr536KBOgCYRsEG6p88tWqWCkTEDR0K5UJ3Z9YHL93eOOz/b6EVIkDJbYvdvx47BPMElaKGRIdPDWgutVJD+g++5wx2uEhDa5Lrg2eAYE/DCk/K6y2yjATcHM=
+	t=1744069965; cv=none; b=fLJGHQW9YCOMrQtWOjQx4RkpNDED7BwXGcEl+GPAH10r/7t43Lki0ROCcnstLwrzETPEteh48TtbPPrk/i1akz2usMvQYd/FxYRU6SmaLntGaQ5wybPQenBFPu9LT5FOl5gdvsuo6X6awfglnryTWTDIVJCAEP1MZ6LwODLwK14=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744056492; c=relaxed/simple;
-	bh=20stuSGvYmMIDzBJ1uUogt6bLz0H4E+TAVS8IFvSFEs=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=NhsLNiRObdnHF357Pt07NfOjNxq1vIverf9RLWc/g98nVyyiXdGfD55dJX8mKNfYl7IH7ptsyZ46EkQgVXoM3eql6Cd4wznDyloXl7HEgHSCl6EgroxsmkI/U3iKWzGsGbDaFPVz2lQYKlaOoeDBYvdV4dqME5n6KZ/VAc1bMg8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 67CF1C4CEE9;
-	Mon,  7 Apr 2025 20:08:09 +0000 (UTC)
-Date: Mon, 7 Apr 2025 16:09:24 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Andy Chiu <andybnac@gmail.com>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- mark.rutland@arm.com, mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
- bjorn@rivosinc.com, puranjay12@gmail.com, alexghiti@rivosinc.com,
- paul.walmsley@sifive.com, greentime.hu@sifive.com, nick.hu@sifive.com,
- nylon.chen@sifive.com, eric.lin@sifive.com, vicent.chen@sifive.com,
- zong.li@sifive.com, yongxuan.wang@sifive.com, samuel.holland@sifive.com,
- olivia.chu@sifive.com, c2232430@gmail.com
-Subject: Re: [PATCH] ftrace: properly merge notrace hash
-Message-ID: <20250407160924.7c28fffd@gandalf.local.home>
-In-Reply-To: <20250407180745.42848-1-andybnac@gmail.com>
-References: <20250407180745.42848-1-andybnac@gmail.com>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1744069965; c=relaxed/simple;
+	bh=dzGktIUZU1o/dBewqA+of++k9Aa6ip9OH8DCeWqgB94=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=p6E5+vcZaHH9Ejf5IfXZlUk3oyASjXGcRLu/0JuUkPnnWl7EnAKjU1JbYdik7l0iasHArmTTvSSrqW2JvqSeY5DWNjd94+qSWDd7UDgCOYEX7doQTPToow+q6VvdBsQDl8nI2EwJURiXXs09Neh+1qdcnK2ISZTW+p7GaGFF3Uw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vRGcSRDD; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vRGcSRDD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 74629C4CEDD;
+	Mon,  7 Apr 2025 23:52:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744069964;
+	bh=dzGktIUZU1o/dBewqA+of++k9Aa6ip9OH8DCeWqgB94=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=vRGcSRDDfe0LXL6fTXSLBDk8LBfDhfwIIsFAv1MgBr9vlsUa0dB4DGwUw1e6yUO8T
+	 R8vGRH8kCukD/H6lwKZ7ON27cQkowDMFGKmLSATTM15M7ti93q6S3NmMOj5K3OiYgx
+	 CQ3KxTWKRUp+NEdnL+oeFtQ37vEsV6aPlNriz0t+6kVX1L8pOMxYwAPvXfiPNYagK2
+	 caWm/xYWvzKg3DeWFf9lPeFs2T0i1tEmhQvcwaircIoznzJoEt0xps5UXgkJyDjP5a
+	 e5DKoGsx3AmdZ45EVha03nkgeB+/pyATc7QTk7bnk4DnH/RWqrxEe7XOZYn3OMdBV3
+	 M4lPQH3amzL7w==
+Date: Tue, 8 Apr 2025 08:52:41 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/7] tracing: fprobe: Cleanup fprobe hash when module
+ unloading
+Message-Id: <20250408085241.cfd5f87e8197fa6f938e87b0@kernel.org>
+In-Reply-To: <174343534473.843280.13988101014957210732.stgit@devnote2>
+References: <174343532655.843280.15317319860632975273.stgit@devnote2>
+	<174343534473.843280.13988101014957210732.stgit@devnote2>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
+Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Tue,  8 Apr 2025 02:07:44 +0800
-Andy Chiu <andybnac@gmail.com> wrote:
+On Tue,  1 Apr 2025 00:35:44 +0900
+"Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
 
-> The global notrace hash should be jointly decided by the intersection of
-> each subops's notrace hash, but not the filter hash.
+> From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 > 
-> Fixes: 5fccc7552ccb ("ftrace: Add subops logic to allow one ops to manage many")
-> Signed-off-by: Andy Chiu <andybnac@gmail.com>
+> Cleanup fprobe address hash table on module unloading because the
+> target symbols will be disappeared when unloading module and not
+> sure the same symbol is mapped on the same address.
+> 
+> Note that this is at least disables the fprobes if a part of target
+> symbols on the unloaded modules. Unlike kprobes, fprobe does not
+> re-enable the probe point by itself. To do that, the caller should
+> take care register/unregister fprobe when loading/unloading modules.
+> This simplifies the fprobe state managememt related to the module
+> loading/unloading.
+> 
+
+I think this is a kind of fix for commit 4346ba160409 ("fprobe: Rewrite
+ fprobe on function-graph tracer") which introduced the fprobe_hlist_node.
+
+Fixes: 4346ba160409 ("fprobe: Rewrite fprobe on function-graph tracer")
+
+Thanks,
+
+> Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 > ---
->  kernel/trace/ftrace.c | 11 +++++------
->  1 file changed, 5 insertions(+), 6 deletions(-)
+>  kernel/trace/fprobe.c |  103 ++++++++++++++++++++++++++++++++++++++++++++++++-
+>  1 file changed, 101 insertions(+), 2 deletions(-)
 > 
-> diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-> index 1a48aedb5255..ee662f380b61 100644
-> --- a/kernel/trace/ftrace.c
-> +++ b/kernel/trace/ftrace.c
-> @@ -3526,18 +3526,17 @@ int ftrace_startup_subops(struct ftrace_ops *ops, struct ftrace_ops *subops, int
->  	    ftrace_hash_empty(subops->func_hash->notrace_hash)) {
->  		notrace_hash = EMPTY_HASH;
->  	} else {
-> -		size_bits = max(ops->func_hash->filter_hash->size_bits,
-> -				subops->func_hash->filter_hash->size_bits);
-> +		size_bits = max(ops->func_hash->notrace_hash->size_bits,
-> +				subops->func_hash->notrace_hash->size_bits);
->  		notrace_hash = alloc_ftrace_hash(size_bits);
->  		if (!notrace_hash) {
-> -			free_ftrace_hash(filter_hash);
-> +			free_ftrace_hash(notrace_hash);
->  			return -ENOMEM;
->  		}
+> diff --git a/kernel/trace/fprobe.c b/kernel/trace/fprobe.c
+> index cb86f90d4b1e..95c6e3473a76 100644
+> --- a/kernel/trace/fprobe.c
+> +++ b/kernel/trace/fprobe.c
+> @@ -89,8 +89,11 @@ static bool delete_fprobe_node(struct fprobe_hlist_node *node)
+>  {
+>  	lockdep_assert_held(&fprobe_mutex);
 >  
-> -		ret = intersect_hash(&notrace_hash, ops->func_hash->filter_hash,
-> -				     subops->func_hash->filter_hash);
-> +		ret = intersect_hash(&notrace_hash, ops->func_hash->notrace_hash,
-> +				     subops->func_hash->notrace_hash);
+> -	WRITE_ONCE(node->fp, NULL);
+> -	hlist_del_rcu(&node->hlist);
+> +	/* Avoid double deleting */
+> +	if (READ_ONCE(node->fp) != NULL) {
+> +		WRITE_ONCE(node->fp, NULL);
+> +		hlist_del_rcu(&node->hlist);
+> +	}
+>  	return !!find_first_fprobe_node(node->addr);
+>  }
+>  
+> @@ -411,6 +414,102 @@ static void fprobe_graph_remove_ips(unsigned long *addrs, int num)
+>  		ftrace_set_filter_ips(&fprobe_graph_ops.ops, addrs, num, 1, 0);
+>  }
+>  
+> +#ifdef CONFIG_MODULES
+> +
+> +#define FPROBE_IPS_BATCH_INIT 8
+> +/* instruction pointer address list */
+> +struct fprobe_addr_list {
+> +	int index;
+> +	int size;
+> +	unsigned long *addrs;
+> +};
+> +
+> +static int fprobe_addr_list_add(struct fprobe_addr_list *alist, unsigned long addr)
+> +{
+> +	unsigned long *addrs;
+> +
+> +	if (alist->index >= alist->size)
+> +		return -ENOMEM;
+> +
+> +	alist->addrs[alist->index++] = addr;
+> +	if (alist->index < alist->size)
+> +		return 0;
+> +
+> +	/* Expand the address list */
+> +	addrs = kcalloc(alist->size * 2, sizeof(*addrs), GFP_KERNEL);
+> +	if (!addrs)
+> +		return -ENOMEM;
+> +
+> +	memcpy(addrs, alist->addrs, alist->size * sizeof(*addrs));
+> +	alist->size *= 2;
+> +	kfree(alist->addrs);
+> +	alist->addrs = addrs;
+> +
+> +	return 0;
+> +}
+> +
+> +static void fprobe_remove_node_in_module(struct module *mod, struct hlist_head *head,
+> +					struct fprobe_addr_list *alist)
+> +{
+> +	struct fprobe_hlist_node *node;
+> +	int ret = 0;
+> +
+> +	hlist_for_each_entry_rcu(node, head, hlist) {
+> +		if (!within_module(node->addr, mod))
+> +			continue;
+> +		if (delete_fprobe_node(node))
+> +			continue;
+> +		/*
+> +		 * If failed to update alist, just continue to update hlist.
+> +		 * Therefore, at list user handler will not hit anymore.
+> +		 */
+> +		if (!ret)
+> +			ret = fprobe_addr_list_add(alist, node->addr);
+> +	}
+> +}
+> +
+> +/* Handle module unloading to manage fprobe_ip_table. */
+> +static int fprobe_module_callback(struct notifier_block *nb,
+> +				  unsigned long val, void *data)
+> +{
+> +	struct fprobe_addr_list alist = {.size = FPROBE_IPS_BATCH_INIT};
+> +	struct module *mod = data;
+> +	int i;
+> +
+> +	if (val != MODULE_STATE_GOING)
+> +		return NOTIFY_DONE;
+> +
+> +	alist.addrs = kcalloc(alist.size, sizeof(*alist.addrs), GFP_KERNEL);
+> +	/* If failed to alloc memory, we can not remove ips from hash. */
+> +	if (!alist.addrs)
+> +		return NOTIFY_DONE;
+> +
+> +	mutex_lock(&fprobe_mutex);
+> +	for (i = 0; i < FPROBE_IP_TABLE_SIZE; i++)
+> +		fprobe_remove_node_in_module(mod, &fprobe_ip_table[i], &alist);
+> +
+> +	if (alist.index < alist.size && alist.index > 0)
+> +		ftrace_set_filter_ips(&fprobe_graph_ops.ops,
+> +				      alist.addrs, alist.index, 1, 0);
+> +	mutex_unlock(&fprobe_mutex);
+> +
+> +	kfree(alist.addrs);
+> +
+> +	return NOTIFY_DONE;
+> +}
+> +
+> +static struct notifier_block fprobe_module_nb = {
+> +	.notifier_call = fprobe_module_callback,
+> +	.priority = 0,
+> +};
+> +
+> +static int __init init_fprobe_module(void)
+> +{
+> +	return register_module_notifier(&fprobe_module_nb);
+> +}
+> +early_initcall(init_fprobe_module);
+> +#endif
+> +
+>  static int symbols_cmp(const void *a, const void *b)
+>  {
+>  	const char **str_a = (const char **) a;
+> 
 
-Thanks for catching this.
 
-
->  		if (ret < 0) {
-> -			free_ftrace_hash(filter_hash);
-
-The filter_hash still needs to be freed, as it could have been allocated in
-the previous if statement and never used (both the filter_hash and
-notrace_hash get used at the end of the function via ftrace_update_ops().
-
-Care to send a v2?
-
--- Steve
-
-
->  			free_ftrace_hash(notrace_hash);
->  			return ret;
->  		}
-
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
