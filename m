@@ -1,31 +1,36 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBE021F30DE;
-	Mon,  7 Apr 2025 14:46:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C18371F9F70;
+	Mon,  7 Apr 2025 15:22:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744037173; cv=none; b=p0M27UJsF7yb4F0Rf+nml9YEIvaoowHkcl9+OY0aNBSFNaZMvadr4QLOud6/waMwBiorRk/PQtmLb89rJde2wmeU7+aMF3YBR1RIztXM4kV1ZbGG4mcpH2gfkjGVluY67lqNLTXrCRX3k8V19j5jhHnj5kd1H/LXIu/hmG90zpU=
+	t=1744039358; cv=none; b=YfD0+Fz6Itv1jWbdGKKmHkKr6wf3K5QmamIz0ilP4ppbYzUD/fjLl6FHZDzek8HQBr5SjTigjBCRLTk4yxcnvktbGQfD4uLELeV5bV82TUbKyjPaCSFRVoA9WympHglk810cTGwtYr+PlV8U+ZOCD0SSlGxJRgKgz3Iv48UidiQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744037173; c=relaxed/simple;
-	bh=pdZC+n3I/tFEuvosD6rfBo76t/HztMAlcqp68U2CG7g=;
+	s=arc-20240116; t=1744039358; c=relaxed/simple;
+	bh=Fyy15kwhH1t3BBHKQP8IoJ5dLieJYZ+OgC0xKokOJFM=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=GMUgyGP/R+cDM0CHVqhFhW4Iad6e/c1rJfaotJXcrOnr2bxO7N6WJvPFMaEyAJQ+sNBSBnI7BARHIW5fVs6xQRch8Qz57RPxUWhd2GV8HqLYFdkrMSLeLZQ72QYz8oeE1P03ym+2VLmFwyIZh4FEDENDk27lDGeLZ7NrT0sw8qU=
+	 MIME-Version:Content-Type; b=f93lO586ynKChvTVIbcDsRIOuCUPB4M4S0Iv0u6Lc9fNUMjhIwZXFn92ytdbB1rJmVlL/vxQ4A0dWIeqGUjltyiarEx7cMfcCYeD7W8uG+jkLLCPR0CU3SjVt2FcME3Z1NX5LAQxKJYkImChJGTG8Y6Wftz+YlpKr5QI8aymPBQ=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1BF64C4CEE8;
-	Mon,  7 Apr 2025 14:46:12 +0000 (UTC)
-Date: Mon, 7 Apr 2025 10:47:27 -0400
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5B91EC4CEDD;
+	Mon,  7 Apr 2025 15:22:37 +0000 (UTC)
+Date: Mon, 7 Apr 2025 11:23:52 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Tom Zanussi <zanussi@kernel.org>
-Subject: Re: [PATCH v3] tracing: Move histogram trigger variables from stack
- to per CPU structure
-Message-ID: <20250407104727.32c1eada@gandalf.local.home>
-In-Reply-To: <20250407111551.507e6e2a683a5028bcf62a2c@kernel.org>
-References: <20250404144008.0c47e4d7@gandalf.local.home>
-	<20250407111551.507e6e2a683a5028bcf62a2c@kernel.org>
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Linus
+ Torvalds <torvalds@linux-foundation.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mathieu
+ Desnoyers <mathieu.desnoyers@efficios.com>, Andrew Morton
+ <akpm@linux-foundation.org>, Vincent Donnefort <vdonnefort@google.com>,
+ Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>, Jann
+ Horn <jannh@google.com>
+Subject: Re: [PATCH v6 3/4] tracing: Use vmap_page_range() to map memmap
+ ring buffer
+Message-ID: <20250407112352.264e12b0@gandalf.local.home>
+In-Reply-To: <4f8ece8b-8862-4f7c-8ede-febd28f8a9fe@roeck-us.net>
+References: <20250402144903.993276623@goodmis.org>
+	<20250402144953.754618481@goodmis.org>
+	<4f8ece8b-8862-4f7c-8ede-febd28f8a9fe@roeck-us.net>
 X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -36,33 +41,43 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Mon, 7 Apr 2025 11:15:51 +0900
-Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
+On Sun, 6 Apr 2025 10:39:27 -0700
+Guenter Roeck <linux@roeck-us.net> wrote:
 
-> > +static int alloc_hist_pad(void)
-> > +{
-> > +	lockdep_assert_held(&event_mutex);
-> > +
-> > +	if (refcount_read(&hist_pad_ref)) {
-> > +		refcount_inc(&hist_pad_ref);  
-> 
-> nit: If this always runs under event_mutex, do we need to use atomic
-> refcount_t?
+> non-MMU builds (xtensa:nommu_kc705_defconfig):
 
-refcount has a bunch of debugging that will trigger if the refcount
-goes bad (negative and such) so that I don't need to add those checks.
-
-Basically, refcount is for refcounting, and this is a ref counter ;-)
-
-It's a slow path, so I don't care about the added overhead from using an
-atomic.
+Bah!
 
 > 
-> Others looks good to me.
-> 
-> Reviewed-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> kernel/trace/trace.o:(.init.literal+0x250): undefined reference to `get_vm_area'
 
-Thanks!
+Does this fix it?
+
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index b581e388a9d9..8ddf6b17215c 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -9806,6 +9806,7 @@ static int instance_mkdir(const char *name)
+ 	return ret;
+ }
+ 
++#ifdef CONFIG_MMU
+ static u64 map_pages(unsigned long start, unsigned long size)
+ {
+ 	unsigned long vmap_start, vmap_end;
+@@ -9828,6 +9829,12 @@ static u64 map_pages(unsigned long start, unsigned long size)
+ 
+ 	return (u64)vmap_start;
+ }
++#else
++static inline u64 map_pages(unsigned long start, unsigned long size)
++{
++	return 0;
++}
++#endif
+ 
+ /**
+  * trace_array_get_by_name - Create/Lookup a trace array, given its name.
+
 
 -- Steve
-
