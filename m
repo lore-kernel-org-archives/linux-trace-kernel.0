@@ -1,86 +1,132 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6127C1B4156;
-	Mon,  7 Apr 2025 17:06:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9070E2192E2;
+	Mon,  7 Apr 2025 18:07:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744045562; cv=none; b=nHsWUP6ClQmOKmsN61iyvWdJW5OlTAjfDjyL0xooRll3j+O0QJcVu+/aNjCXVsWcusMIwfO5E1u2H420B0Vje6AV/WwfWMcixi7WiLCIIQzvR3BsVtX5QyDeKxDsTLXgAVmquNggURLoH4b6vyafoH11BCxrVzGXDnmyEilX9Rw=
+	t=1744049279; cv=none; b=G7kRNXrMyEKrXH4hMRlkvfjfu0JEwPcopsaFbvB0/8QQ/iCBnuSWIWwy7Mv+9zUELHuKdZdu971ZpJ8cKx0XAiB3GbMV00dLuVig9E7DGKy4yh9Hx3w/SUwPEwA4sjcWy0HR6h5viVb6Sfe2w75kYeZDp8V7AFwmCP+WosZaTpI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744045562; c=relaxed/simple;
-	bh=9V0lfouGxb5UozP7FtMEYe9s2GtpCHTjoBx36GD2Qlk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HIi/8shyOooiOOB/BQIXXtB6WL2UBqp9aYPwFlcR/gG+uzIijX5fgP+sAL0eQlDX+wVhy8yPZoGEWqtoBv7W7gs/fEDjOOVl8hf10+fcD6I6cuHP2hwZJaDf8KMZYqWb7kFI6N8lm/SBUUHjllp4aQwR+FP4DgGjKSe6qoR5uSE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=j/+VevJb; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744049279; c=relaxed/simple;
+	bh=/df2Ey3ne83fw7bnn9fR1uwqWEyMkT/oNl6KFsmfLFw=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=HiQFv/kIngS4R1DeHMyIaQiioNQDws9+46b9ZZtdGvGBKSdvZg1A7yUfjv8PnSYTx1IsKUN15rUv39q28LokrJGytRnptF1+86rW1+3nF+sgMM2CqJ0H5w/wLkdp7xDV3pjVcet+TLY+aNYRGqItk5vTASA+SKgepn4Ba84gM9M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PN/vZoH5; arc=none smtp.client-ip=209.85.214.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="j/+VevJb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CA755C4CEDD;
-	Mon,  7 Apr 2025 17:05:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744045561;
-	bh=9V0lfouGxb5UozP7FtMEYe9s2GtpCHTjoBx36GD2Qlk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=j/+VevJbO6nXb6efJ/NAN8+sUvGwif2YsuAM6CyluJIekZnpnuFSQKSQ55EjvFo20
-	 VJs9EUREZwI+SJ4razifPQTTg2vZb9EBpNRt3udJ9uQ+Q6H7kLXG8ykCCHBBe76/SP
-	 lVG76iCG5gXA7UdNCh0QMAVb2rUHoFYYZu7O9vRij4LoqvI9Bc8BVtjmUh6KU3nDxc
-	 fjWEYcJHqUvKekC2qi44aLG3mWpnyRsw5lvGsoRSNAaVKY2DdvZ0/qX0wQtl9pveq9
-	 CItszg5yvM4xn9Qw7KNYGjZa2185La6hrjeYs7vVie6wMhS1VnYiX+oYVzjjQSChyM
-	 3NCfzjhBou3jw==
-Date: Mon, 7 Apr 2025 18:05:55 +0100
-From: Mark Brown <broonie@kernel.org>
-To: Jeremy Linton <jeremy.linton@arm.com>
-Cc: linux-trace-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-	mhiramat@kernel.org, oleg@redhat.com, peterz@infradead.org,
-	acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-	irogers@google.com, adrian.hunter@intel.com,
-	kan.liang@linux.intel.com, thiago.bauermann@linaro.org,
-	yury.khrustalev@arm.com, kristina.martsenko@arm.com,
-	liaochang1@huawei.com, catalin.marinas@arm.com, will@kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/6] arm64/gcs: task_gcs_el0_enable() should use
- passed task
-Message-ID: <e786824f-c339-4ebc-bdda-11c240b0e4de@sirena.org.uk>
-References: <20250407161951.560865-1-jeremy.linton@arm.com>
- <20250407161951.560865-2-jeremy.linton@arm.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PN/vZoH5"
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-224191d92e4so43508635ad.3;
+        Mon, 07 Apr 2025 11:07:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744049276; x=1744654076; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=3JGLx9cA1TljZmfuEUh/FVufeozZmgO73O0M8+k3RKY=;
+        b=PN/vZoH5SEI9MLXCbtvurGAkPaMmXHc02egz+skg/Ig8i4kUHeHn+u64DDLLQ1JrFg
+         bLm+Bb/sNl2NgaDQXnDchsYH0J/FWt2YlcfT+h50zFgBWSBwREBNQQM3uA1xOW+V3Ov3
+         3LPhc68Ol2mXB7C8couXL093bZwOPus/zG5KriyxfBz2iY+5SHw2dje4AweIDw4HDdFk
+         xsW6Kc/mxi6kx8sQJgMn182k/s8BkTkHX2dFzTnu8D8By6Y08iBhZkZ6wI56C3biaEqa
+         RBXUbj5TCZLNT04MH0+gu9CkEC/pxcLD7pIUSaFfmfpKj4b2f15mL9ZfJFr+YzL/kB4V
+         IODg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744049276; x=1744654076;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=3JGLx9cA1TljZmfuEUh/FVufeozZmgO73O0M8+k3RKY=;
+        b=IAYeAQt9/Brdtu9G8cSxC4T2ZwCSRhDTFF5Mb9RIil2OFVx9+QNAI8rapGBKCriIqy
+         eQggdvs3J22byfChha3DJUiqM8tlXG/CiEtURWPKznXz3eA7ZGI6pCM3+9kDM4Gmitl1
+         LImn9y11U9BxueXof53GYHZIN/4L5e8SO/KQ08WvRXVOpJi1OeXPS3FGlBK34GftL1/y
+         Mq+nenVkAhufEXceuzR/w7a6LkMOkgyLy89KWyCBSk1iOdiRBc2gNLPfnipzxse1xBcQ
+         tPBWjFA0D8uXpPjgIYNK7Owy0hPrfgcbfReYXJgbIDFzlq7U8KN6cA1Nn+ynna+eY+O9
+         HNAg==
+X-Forwarded-Encrypted: i=1; AJvYcCUoWDgXjoaZ/LeiI8k+jW34NsT7rJ33ZEfg8xy+eJwiwg811TTmzaFyzSdL/SGlR44ZqBgcL0hc2imT4ggkg38Rdvzt@vger.kernel.org, AJvYcCXtBszMBi+zcgbmUSKciRwAJbeOh90DW3Bm9BV8GbVHRCWdhW1e1xWKI7VAF68TLQEwMr3/mLodTTqNa+E=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw70MkIxRg60modu7dMdT1iZLrFj73teuynK1+YQ5+Xws1Jt8Jo
+	B6zk5ogNkNqHTLWflXj0K/dhLnegvl0+Mb3xNec5UjQLKr9BOk4S
+X-Gm-Gg: ASbGncsNmjoz4D1tOmiw7CWKgZ0yD1XxmsSGbgpkLFCD/28Np33tv+5gYn93kzvdNEW
+	UZ08S8PzzTx/7qP1FQyvDBiUAf3XQKxw5E+euZe/7NnRpLwoFU49+fxcgEbRXefNWbskj6DRAfW
+	FgRie8NbllSvJ8ETbY9M+iUH7G55q90nK/3uPKW2kGOItbPRs+fSOcb4/4jvRsVmGnCIIV3n7n+
+	mtkuznLgF4sXYSqcas7erhhepiJ36W9nqZ29ziGvrtlR9urqUXj8LTT2YuHEGU9uBHLq1OsH8Nv
+	zvce6isQNm7gugLs/5cx4V9RAYIYz5srQYRCN3vGq7oq9yof5ikZtqUhpzP9u7jordyaTsAtHMN
+	0+vAH4kAHcVTmqMgfG9L5K+SzlI6VvLuWMQ==
+X-Google-Smtp-Source: AGHT+IEpZypmsJX+3x4lxGaOQe/NCjso9+9m/W+K10wS4dQshHoiI9ILyOjFk6fPXQuZEHwd7JKxdA==
+X-Received: by 2002:a17:902:f54f:b0:223:88af:2c30 with SMTP id d9443c01a7336-22a8a0583d6mr178366325ad.16.1744049275791;
+        Mon, 07 Apr 2025 11:07:55 -0700 (PDT)
+Received: from localhost.localdomain (118-160-134-247.dynamic-ip.hinet.net. [118.160.134.247])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-229787763b3sm83736725ad.236.2025.04.07.11.07.52
+        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
+        Mon, 07 Apr 2025 11:07:55 -0700 (PDT)
+From: Andy Chiu <andybnac@gmail.com>
+To: rostedt@goodmis.org,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Cc: mark.rutland@arm.com,
+	mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com,
+	Andy Chiu <andybnac@gmail.com>,
+	bjorn@rivosinc.com,
+	puranjay12@gmail.com,
+	alexghiti@rivosinc.com,
+	paul.walmsley@sifive.com,
+	greentime.hu@sifive.com,
+	nick.hu@sifive.com,
+	nylon.chen@sifive.com,
+	eric.lin@sifive.com,
+	vicent.chen@sifive.com,
+	zong.li@sifive.com,
+	yongxuan.wang@sifive.com,
+	samuel.holland@sifive.com,
+	olivia.chu@sifive.com,
+	c2232430@gmail.com
+Subject: [PATCH] ftrace: properly merge notrace hash
+Date: Tue,  8 Apr 2025 02:07:44 +0800
+Message-Id: <20250407180745.42848-1-andybnac@gmail.com>
+X-Mailer: git-send-email 2.39.3 (Apple Git-145)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="dpNB0fpoEEl2bnSN"
-Content-Disposition: inline
-In-Reply-To: <20250407161951.560865-2-jeremy.linton@arm.com>
-X-Cookie: Meester, do you vant to buy a duck?
+Content-Transfer-Encoding: 8bit
 
+The global notrace hash should be jointly decided by the intersection of
+each subops's notrace hash, but not the filter hash.
 
---dpNB0fpoEEl2bnSN
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Fixes: 5fccc7552ccb ("ftrace: Add subops logic to allow one ops to manage many")
+Signed-off-by: Andy Chiu <andybnac@gmail.com>
+---
+ kernel/trace/ftrace.c | 11 +++++------
+ 1 file changed, 5 insertions(+), 6 deletions(-)
 
-On Mon, Apr 07, 2025 at 11:19:46AM -0500, Jeremy Linton wrote:
-> Mark Rutland noticed that the task parameter is ignored and
-> 'current' is being used instead. Since this is usually
-> what its passed, it hasn't yet been causing problems but likely
-> will as the code gets more testing.
+diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+index 1a48aedb5255..ee662f380b61 100644
+--- a/kernel/trace/ftrace.c
++++ b/kernel/trace/ftrace.c
+@@ -3526,18 +3526,17 @@ int ftrace_startup_subops(struct ftrace_ops *ops, struct ftrace_ops *subops, int
+ 	    ftrace_hash_empty(subops->func_hash->notrace_hash)) {
+ 		notrace_hash = EMPTY_HASH;
+ 	} else {
+-		size_bits = max(ops->func_hash->filter_hash->size_bits,
+-				subops->func_hash->filter_hash->size_bits);
++		size_bits = max(ops->func_hash->notrace_hash->size_bits,
++				subops->func_hash->notrace_hash->size_bits);
+ 		notrace_hash = alloc_ftrace_hash(size_bits);
+ 		if (!notrace_hash) {
+-			free_ftrace_hash(filter_hash);
++			free_ftrace_hash(notrace_hash);
+ 			return -ENOMEM;
+ 		}
+ 
+-		ret = intersect_hash(&notrace_hash, ops->func_hash->filter_hash,
+-				     subops->func_hash->filter_hash);
++		ret = intersect_hash(&notrace_hash, ops->func_hash->notrace_hash,
++				     subops->func_hash->notrace_hash);
+ 		if (ret < 0) {
+-			free_ftrace_hash(filter_hash);
+ 			free_ftrace_hash(notrace_hash);
+ 			return ret;
+ 		}
+-- 
+2.39.3 (Apple Git-145)
 
-Reviewed-by: Mark Brown <broonie@kernel.org>
-
---dpNB0fpoEEl2bnSN
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmf0BfIACgkQJNaLcl1U
-h9CBHgf+PvE8MD+KytGjnYRLpCcxcNcm3+mVrqBbfnyr/Jwxx/PfLhkgt5YGCuAH
-spQ5q/5j0j3MjBPvdBP1xen3M3vFvsnlz1RAGK9vpbe67lLaGKioUv+5SbuepvJg
-cW7KGtZINGAJRJx6OnVojBgdbCx4CY10+uLap1B0XW/wH9xadMK8o7RsmfHGwYiQ
-dIGjCH2nZY128IluiEtdI7lUduVZOcvV3+ZYNypRzeHpDT7xWNlSw9InZK6W5LJg
-oKGsNFEPQ3it8kKOzyhZ8yYA2YiEceXtQf3NOZlee91Zjr4JE2z3l/f6uqAEtWdx
-q+yHWxpyDdVUs0gEg+xmUUQ86KwPcg==
-=hlgQ
------END PGP SIGNATURE-----
-
---dpNB0fpoEEl2bnSN--
