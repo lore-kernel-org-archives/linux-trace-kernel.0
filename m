@@ -1,93 +1,105 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 013F218DB2B;
-	Mon,  7 Apr 2025 01:40:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09471AD5A;
+	Mon,  7 Apr 2025 01:43:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743990038; cv=none; b=mrhEx6bX4RTV4o2oZCMXEqjHqXeH37hWKc7ugr5ihPitSP2+0cEjLmnyQbEI0nVjyHt8SfAUixSOJdZiAW80aJXAgk8GNw7+RXiwbJwWJjz1rxG5DOW7v7BAZ8mrsbJ4EBYafBh/O+vkbc4k6tD57gunBjHrFlBtkfmazbqXSMg=
+	t=1743990238; cv=none; b=o5xO8gPxgHXTF9009tTTmbz60JEXI/NtIKWABLXs7L2B6FA8gQUXbD+oEDl4hxuXWkw8HYD5/iFNTPydTq7Lhk5phEDjixVfk0B4zs5VNHC6v+10EXgvfzUbCaFsCuDj4xPjTtSePbQXD9CltGNmR0/wys0aXmBU/4n52dVnpIk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743990038; c=relaxed/simple;
-	bh=Okrp/iU8s6vx/iSN7wKtk1uNblTS/UT+9eq+ZTcQgRM=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=OpVqa+LFrCncV3c6tXwIYn98MIAueNqtL1U8hpO1mbH/aAzeAaecDKd4suqbayBrNeOpQKBVtDOBlJ4x7ItlcCNFS9sA6YB+zHsaU5pK2lh7ommq/Cdehh3jba0Xmf1hUlXNJ3SvOXDI1Gz0IibGN0Ro2qJTBOooMIAMqbcXg9w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=N170TU05; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743990238; c=relaxed/simple;
+	bh=YaxfyaahaOVirPTxQFyiHvZmst3YssmDcY0w+WZuZgU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=h3Qm72uwfAcJAhcaO+Js6yPlK+SDmb4gyTFP6Y6hm2/Suyt/cTHaYl6l9xE91cKfj7q0qov7wI/ZC9FezpBRFkGZkYa+1GV0E3/UmE13u/cx6ywy8/uqCqyMK2irJeF092X4Slm6EJJSZ9rDtMVdgJovACZ/NyItKPehOOybohA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qWTbW/32; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="N170TU05"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 47B3AC4CEE9;
-	Mon,  7 Apr 2025 01:40:35 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qWTbW/32"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 26135C4CEE3;
+	Mon,  7 Apr 2025 01:43:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743990037;
-	bh=Okrp/iU8s6vx/iSN7wKtk1uNblTS/UT+9eq+ZTcQgRM=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=N170TU05rFjJdB/HBNmWwg/z2F0XYYkqY3cPK/MtzcCOjJ+8KUi2KSicxFKj5ehjX
-	 uuJ7tEaWnOKzotfF0U//ksEQkSNP3lTaIrAwEiYqTeXqfrb0u1ogba9kQuC2v6qF5I
-	 ZAULcNMzdLVfXer4yssF5hWk6/1lCN0vt1n5fdui5Xunx5UewUqJQrF4o3gSV2HLWx
-	 uEXdejAaLsckmYuwa2lOUKi/XrLhmA9SARJgH54Cl3kNf0toxo2cOMGPI60g3kqUT4
-	 s+qMHRXh2WjVeQ4p0+zn12l4q1sCte6EsIe2+3Yz8FcW6ZNMg6jEYOYJzS0GYagYw1
-	 RGMT3BOMoDRgQ==
-Date: Mon, 7 Apr 2025 10:40:32 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-Cc: Wei Yang <richard.weiyang@gmail.com>, Steven Rostedt
- <rostedt@goodmis.org>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Andrew Morton
- <akpm@linux-foundation.org>, Mike Rapoport <rppt@kernel.org>,
- linux-mm@kvack.org
-Subject: Re: [PATCH v4 1/2] mm/memblock: Add reserved memory release
- function
-Message-Id: <20250407104032.162f1d10e9ab885c72bfac8c@kernel.org>
-In-Reply-To: <20250407093351.5514960330bebbe07b707431@kernel.org>
-References: <173989132750.230693.15749600013776132201.stgit@devnote2>
-	<173989133862.230693.14094993331347437600.stgit@devnote2>
-	<20250405023018.g2ae52nrz2757b3n@master>
-	<20250407093351.5514960330bebbe07b707431@kernel.org>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=k20201202; t=1743990236;
+	bh=YaxfyaahaOVirPTxQFyiHvZmst3YssmDcY0w+WZuZgU=;
+	h=From:To:Cc:Subject:Date:From;
+	b=qWTbW/32IPeahfjqzPtj1A2/Bx18EVmxYADS1NW/pbZl4ep2dJusCRv+e0sdfKgON
+	 ZOqX/Dpnq8wqU+oA9RPB2gyNizfkYMrsiKMj2xn2h32Uw5R9XyotDCn+Zzswt2B6tP
+	 Ze/xgzD99fCizgreNgSisaFOXQ+qA34NSJlCBUYEaFeVEbOEkTRMu2zNtT84nqTlpj
+	 bZlJdye/LpjMyKcLd7vTz1i2Jb4a+kSL4f8Xb2Iwyw1iBUloGhuXfvD4TNo+vsrG5d
+	 6sND+eSelbK61GRnSU0tKDdomkKM+ivDGZbUjwdn1W0Tswxwum/ao9ZKw4393c2YlD
+	 U1ts2dmrHc1pA==
+From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+To: Wei Yang <richard.weiyang@gmail.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Mike Rapoport <rppt@kernel.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	Mark Rutland <mark.rutland@arm.com>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	linux-mm@kvack.org,
+	Masami Hiramatsu <mhiramat@kernel.org>
+Subject: [PATCH] memblock tests: Fix mutex related build error
+Date: Mon,  7 Apr 2025 10:43:51 +0900
+Message-ID: <174399023133.47537.7375975856054461445.stgit@devnote2>
+X-Mailer: git-send-email 2.43.0
+User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On Mon, 7 Apr 2025 09:33:51 +0900
-Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-> But this is fragile by design. As I did for lib/bootconfig and
-> tools/bootconfig, you should use __KERNEL__ and makes it not depending on
-> the kernel header files because it does not expected to be used in user
-> space.
-> Even if I added mutex.h, it stopped with another reason.
-> 
-> test -L linux/memblock.h || ln -s ../../../../include/linux/memblock.h linux/memblock.h
-> test -L asm/asm.h || ln -s ../../../arch/x86/include/asm/asm.h asm/asm.h
-> test -L asm/cmpxchg.h || ln -s ../../../arch/x86/include/asm/cmpxchg.h asm/cmpxchg.h
-> cc -I. -I../../include -Wall -O2 -fsanitize=address -fsanitize=undefined -D CONFIG_PHYS_ADDR_T_64BIT   -c -o main.o main.c
-> test -L memblock.c || ln -s ../../../mm/memblock.c memblock.c
-> cc -I. -I../../include -Wall -O2 -fsanitize=address -fsanitize=undefined -D CONFIG_PHYS_ADDR_T_64BIT   -c -o memblock.o memblock.c
-> memblock.c: In function 'memblock_add_range.isra':
-> memblock.c:685:17: warning: 'end_rgn' may be used uninitialized [-Wmaybe-uninitialized]
->   685 |                 memblock_merge_regions(type, start_rgn, end_rgn);
->       |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> memblock.c:591:42: note: 'end_rgn' was declared here
->   591 |         int idx, nr_new, start_rgn = -1, end_rgn;
->       |                                          ^~~~~~~
-> cc -I. -I../../include -Wall -O2 -fsanitize=address -fsanitize=undefined -D CONFIG_PHYS_ADDR_T_64BIT   -c -o lib/slab.o lib/slab.c
-> cc -I. -I../../include -Wall -O2 -fsanitize=address -fsanitize=undefined -D CONFIG_PHYS_ADDR_T_64BIT   -c -o mmzone.o mmzone.c
-> cc -I. -I../../include -Wall -O2 -fsanitize=address -fsanitize=undefined -D CONFIG_PHYS_ADDR_T_64BIT   -c -o slab.o ../../lib/slab.c
-> ../../lib/slab.c:6:10: fatal error: urcu/uatomic.h: No such file or directory
->     6 | #include <urcu/uatomic.h>
->       |          ^~~~~~~~~~~~~~~~
-> compilation terminated.
-> make: *** [<builtin>: slab.o] Error 1
+Fix mutex and free_reserved_area() related build errors which have
+been introduced by commit 74e2498ccf7b ("mm/memblock: Add reserved
+memory release function").
 
-Ah, sorry. This is from liburcu. I installed the package and fixes the issue.
-Let me send the patch.
+Fixes: 74e2498ccf7b ("mm/memblock: Add reserved memory release function")
+Reported-by: Wei Yang <richard.weiyang@gmail.com>
+Closes: https://lore.kernel.org/all/20250405023018.g2ae52nrz2757b3n@master/
+Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+---
+ tools/testing/memblock/internal.h    |    6 ++++++
+ tools/testing/memblock/linux/mutex.h |   14 ++++++++++++++
+ 2 files changed, 20 insertions(+)
+ create mode 100644 tools/testing/memblock/linux/mutex.h
 
-Thank you,
+diff --git a/tools/testing/memblock/internal.h b/tools/testing/memblock/internal.h
+index 1cf82acb2a3e..0ab4b53bb4f3 100644
+--- a/tools/testing/memblock/internal.h
++++ b/tools/testing/memblock/internal.h
+@@ -24,4 +24,10 @@ static inline void accept_memory(phys_addr_t start, unsigned long size)
+ {
+ }
+ 
++static inline unsigned long free_reserved_area(void *start, void *end,
++					       int poison, const char *s)
++{
++	return 0;
++}
++
+ #endif
+diff --git a/tools/testing/memblock/linux/mutex.h b/tools/testing/memblock/linux/mutex.h
+new file mode 100644
+index 000000000000..ae3f497165d6
+--- /dev/null
++++ b/tools/testing/memblock/linux/mutex.h
+@@ -0,0 +1,14 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef _MUTEX_H
++#define _MUTEX_H
++
++#define DEFINE_MUTEX(name) int name
++
++static inline void dummy_mutex_guard(int *name)
++{
++}
++
++#define guard(mutex)	\
++	dummy_##mutex##_guard
++
++#endif /* _MUTEX_H */
+\ No newline at end of file
 
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
