@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C08122370A;
-	Mon,  7 Apr 2025 18:16:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDF562571A8;
+	Mon,  7 Apr 2025 18:17:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744049817; cv=none; b=IZb6yAEj1x/3iRvHN0vp3bVhcx8RGhZjTUslxLZs0/TJx8F6Isc88N1mTBvOYBDDxen6PenLpomhqQC46XptYWKwH8LlMpestXUMxKbPH9oWnUyY4jb6W7yUkY89hol/CyeYP4scE8ZpNvIJlM6tqMJw4h6H/1aJRUHRtHIgHMk=
+	t=1744049836; cv=none; b=twausSYPlFDow7ft+2n0o1CY173WbBup74wWaHhkm365q9ER4HePYcX25oD5i+Yseipak5z+1xjPkET3UJfSSgPsbXkHeSTW12qpqDeWJmuJjo/sIBLIR5BEav1QyVQFPWsF4CEAk+M+bAA0B4rzh+hkwbMdkDB457Ffn6zBjs8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744049817; c=relaxed/simple;
-	bh=6Lf93JT3Xvu2Mb6ilt4pqZnmbF7Ya6FG/rpcM9omG3Y=;
+	s=arc-20240116; t=1744049836; c=relaxed/simple;
+	bh=qT2j5ZJR+Dq6olGIe1OfD89FFUehYKvWOkCkE+6C25o=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=D5IUzZu3BDS8Y4vNuPb7WOpL5WyzuzGUE6tPIiTD6ml9UIn1Ua1kEcgJrN9moCaK53MuS58UsGT+/W+FpNoGdfZ4t0RCnfTabT2J6xT22tAHfPK6Mo6tx3YrkgHK6r6T12/1oWHKPHiJ3jzgU3HOZqCu3IK4MI6NHQVZZJ7O+IE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YJsWGyQC; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=JvTVD+l4jnwAOVmTTpNZLR9EAEN39IEWYtJv6StlM94TZK3U6qbWkIJvO06ZCaXVq/YYFyoqgfc3zGCeI3YCFqeMP7m/IDq2pz6OxsnPlhKeJlNcoLDDChP4/QTFUM6pZRQdlDm3jKlypiDj46ggDY9+S2xG/vfDnZcYFunVHls=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oKYlNsID; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YJsWGyQC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 90E1BC4CEDD;
-	Mon,  7 Apr 2025 18:16:54 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oKYlNsID"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9A70FC4CEE7;
+	Mon,  7 Apr 2025 18:17:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744049816;
-	bh=6Lf93JT3Xvu2Mb6ilt4pqZnmbF7Ya6FG/rpcM9omG3Y=;
+	s=k20201202; t=1744049836;
+	bh=qT2j5ZJR+Dq6olGIe1OfD89FFUehYKvWOkCkE+6C25o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=YJsWGyQCF4EyBFtcMUaQ0Imszai/+zIrUOvoRHRPy6h6bFPXIWK5KlvMwVSJFKfjR
-	 0OLV5WVsRv6x+uGbJJ4AjErGCNd2aG8ymLyMJq2GTk8BJDGRo9EHH//1qAFutgN/DQ
-	 8x6ZMH3YYlywzHFn+qhRuXP7vAL9wbwz5A2CvxEFs5OHcd5ZBGW4sg0F0u35tHCmlD
-	 lZ56XobXkp5+S4JjctlUgd2bvdzqUdvqmbQVuya1SvsyZzZBKOOqaeSqvA0JAndYe6
-	 m6hkbb5lRo6vsIEmwi//Zcvt4kAtslF0aRuvbXaf+GEcAh6h5gOhfTikkJlKAPClv+
-	 fcHgdud3IyUUw==
+	b=oKYlNsIDe7baQlPcyooJ1ZFiNJ/SQE67Q3/WffUQCLZkWnwPQaZZuIdTywjMaVI1b
+	 4ntlAKYystcenQYFAqiqwpFnvUpTW1hu5nDnwx29/kMcw4Nh0sQr91sPGLhS5MNKch
+	 ePnP2HrviTTxKe/3iTru3cFbKLWISRcZhALhWC6UYklCoWJrly6GVeZ5+qIyGLGh4L
+	 9ew/9SolMrXDwaJAOpp/HwZOz7MErNkVpkAiVC/YZq+Wrq7dyHqZ7hBBh5Bv36RyDm
+	 qNp51AUO4gPohX9wlm+C6TQ0KYXU483w+EU4tV07Gm9nKAIwSK0D0Q9902HxFtCLmi
+	 FDOIakPfTyVjQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
@@ -46,15 +46,14 @@ Cc: Steven Rostedt <rostedt@goodmis.org>,
 	bp@alien8.de,
 	ardb@kernel.org,
 	gregkh@linuxfoundation.org,
-	jpoimboe@kernel.org,
 	linux-doc@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.14 8/9] tracing: Enforce the persistent ring buffer to be page aligned
-Date: Mon,  7 Apr 2025 14:16:34 -0400
-Message-Id: <20250407181635.3184105-8-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.13 7/8] tracing: Enforce the persistent ring buffer to be page aligned
+Date: Mon,  7 Apr 2025 14:16:57 -0400
+Message-Id: <20250407181658.3184231-7-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250407181635.3184105-1-sashal@kernel.org>
-References: <20250407181635.3184105-1-sashal@kernel.org>
+In-Reply-To: <20250407181658.3184231-1-sashal@kernel.org>
+References: <20250407181658.3184231-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -63,7 +62,7 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.14.1
+X-stable-base: Linux 6.13.10
 Content-Transfer-Encoding: 8bit
 
 From: Steven Rostedt <rostedt@goodmis.org>
@@ -95,10 +94,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  3 files changed, 14 insertions(+)
 
 diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index fb8752b42ec85..71861643ef143 100644
+index 3872bc6ec49d6..0a60a60cf7a7b 100644
 --- a/Documentation/admin-guide/kernel-parameters.txt
 +++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -7241,6 +7241,8 @@
+@@ -6926,6 +6926,8 @@
  			This is just one of many ways that can clear memory. Make sure your system
  			keeps the content of memory across reboots before relying on this option.
  
@@ -121,10 +120,10 @@ index 54fb16239d703..d54bc500af80b 100644
  -----------------------------------------
  By default, the content of trace_printk() goes into the top level tracing
 diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index 0e6d517e74e0f..50aa6d5908329 100644
+index 13f817afba4c2..2f72d05570d04 100644
 --- a/kernel/trace/trace.c
 +++ b/kernel/trace/trace.c
-@@ -10427,6 +10427,16 @@ __init static void enable_instances(void)
+@@ -10403,6 +10403,16 @@ __init static void enable_instances(void)
  		}
  
  		if (start) {
