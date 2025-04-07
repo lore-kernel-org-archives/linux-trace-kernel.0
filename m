@@ -1,299 +1,86 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB62320DD59;
-	Mon,  7 Apr 2025 16:37:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6127C1B4156;
+	Mon,  7 Apr 2025 17:06:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744043857; cv=none; b=aDh5DTy4Zmw2ripdZzdqJAKmUxjfdD0WcHTLnmQ7DmfbV9woVqBytePA6HdJOpi53GzsdDCFQ/PvngK8wXgGj9LKuBoRFgds5rCkezRQMjU+mXDDp8LGDqqmmQFE9kWK+HfxEN396Hkxz3WV+g/Cfg/ivaVfPVLF+efB5bQfo9I=
+	t=1744045562; cv=none; b=nHsWUP6ClQmOKmsN61iyvWdJW5OlTAjfDjyL0xooRll3j+O0QJcVu+/aNjCXVsWcusMIwfO5E1u2H420B0Vje6AV/WwfWMcixi7WiLCIIQzvR3BsVtX5QyDeKxDsTLXgAVmquNggURLoH4b6vyafoH11BCxrVzGXDnmyEilX9Rw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744043857; c=relaxed/simple;
-	bh=yAFU7V07a3Q+AzZVclL3WAZKHludpv3xo0NfhVK60nw=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=YBr21XLgqvYqgoaiXcDTxKbj1Mnv17DeOHcFSiGbgZFkct1qQAZLveV8KF1trWJbSN5pieJCNxWGfdxPA4u7zz2OEO0m/iyn0zl1iFe6fhSK6Ji1mak4kIufP95rD2jNRswPB8vNDUIck61cToY93KzrHs2XkY1am053gvvN/RI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1CCD5C4CEDD;
-	Mon,  7 Apr 2025 16:37:37 +0000 (UTC)
-Date: Mon, 7 Apr 2025 12:38:51 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Tom Zanussi <zanussi@kernel.org>
-Subject: [PATCH v2] tracing: Move histogram trigger variables from stack to
- per CPU structure
-Message-ID: <20250407123851.74ea8d58@gandalf.local.home>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1744045562; c=relaxed/simple;
+	bh=9V0lfouGxb5UozP7FtMEYe9s2GtpCHTjoBx36GD2Qlk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HIi/8shyOooiOOB/BQIXXtB6WL2UBqp9aYPwFlcR/gG+uzIijX5fgP+sAL0eQlDX+wVhy8yPZoGEWqtoBv7W7gs/fEDjOOVl8hf10+fcD6I6cuHP2hwZJaDf8KMZYqWb7kFI6N8lm/SBUUHjllp4aQwR+FP4DgGjKSe6qoR5uSE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=j/+VevJb; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="j/+VevJb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CA755C4CEDD;
+	Mon,  7 Apr 2025 17:05:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744045561;
+	bh=9V0lfouGxb5UozP7FtMEYe9s2GtpCHTjoBx36GD2Qlk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=j/+VevJbO6nXb6efJ/NAN8+sUvGwif2YsuAM6CyluJIekZnpnuFSQKSQ55EjvFo20
+	 VJs9EUREZwI+SJ4razifPQTTg2vZb9EBpNRt3udJ9uQ+Q6H7kLXG8ykCCHBBe76/SP
+	 lVG76iCG5gXA7UdNCh0QMAVb2rUHoFYYZu7O9vRij4LoqvI9Bc8BVtjmUh6KU3nDxc
+	 fjWEYcJHqUvKekC2qi44aLG3mWpnyRsw5lvGsoRSNAaVKY2DdvZ0/qX0wQtl9pveq9
+	 CItszg5yvM4xn9Qw7KNYGjZa2185La6hrjeYs7vVie6wMhS1VnYiX+oYVzjjQSChyM
+	 3NCfzjhBou3jw==
+Date: Mon, 7 Apr 2025 18:05:55 +0100
+From: Mark Brown <broonie@kernel.org>
+To: Jeremy Linton <jeremy.linton@arm.com>
+Cc: linux-trace-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+	mhiramat@kernel.org, oleg@redhat.com, peterz@infradead.org,
+	acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+	irogers@google.com, adrian.hunter@intel.com,
+	kan.liang@linux.intel.com, thiago.bauermann@linaro.org,
+	yury.khrustalev@arm.com, kristina.martsenko@arm.com,
+	liaochang1@huawei.com, catalin.marinas@arm.com, will@kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/6] arm64/gcs: task_gcs_el0_enable() should use
+ passed task
+Message-ID: <e786824f-c339-4ebc-bdda-11c240b0e4de@sirena.org.uk>
+References: <20250407161951.560865-1-jeremy.linton@arm.com>
+ <20250407161951.560865-2-jeremy.linton@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="dpNB0fpoEEl2bnSN"
+Content-Disposition: inline
+In-Reply-To: <20250407161951.560865-2-jeremy.linton@arm.com>
+X-Cookie: Meester, do you vant to buy a duck?
 
-From: Steven Rostedt <rostedt@goodmis.org>
 
-The histogram trigger has three somewhat large arrays on the kernel stack:
+--dpNB0fpoEEl2bnSN
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-	unsigned long entries[HIST_STACKTRACE_DEPTH];
-	u64 var_ref_vals[TRACING_MAP_VARS_MAX];
-	char compound_key[HIST_KEY_SIZE_MAX];
+On Mon, Apr 07, 2025 at 11:19:46AM -0500, Jeremy Linton wrote:
+> Mark Rutland noticed that the task parameter is ignored and
+> 'current' is being used instead. Since this is usually
+> what its passed, it hasn't yet been causing problems but likely
+> will as the code gets more testing.
 
-Checking the function event_hist_trigger() stack frame size, it currently
-uses 816 bytes for its stack frame due to these variables!
+Reviewed-by: Mark Brown <broonie@kernel.org>
 
-Instead, allocate a per CPU structure that holds these arrays for each
-context level (normal, softirq, irq and NMI). That is, each CPU will have
-4 of these structures. This will be allocated when the first histogram
-trigger is enabled and freed when the last is disabled. When the
-histogram callback triggers, it will request this structure. The request
-will disable preemption, get the per CPU structure at the index of the
-per CPU variable, and increment that variable.
+--dpNB0fpoEEl2bnSN
+Content-Type: application/pgp-signature; name="signature.asc"
 
-The callback will use the arrays in this structure to perform its work and
-then release the structure. That in turn will simply decrement the per CPU
-index and enable preemption.
+-----BEGIN PGP SIGNATURE-----
 
-Moving the variables from the kernel stack to the per CPU structure brings
-the stack frame of event_hist_trigger() down to just 112 bytes.
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmf0BfIACgkQJNaLcl1U
+h9CBHgf+PvE8MD+KytGjnYRLpCcxcNcm3+mVrqBbfnyr/Jwxx/PfLhkgt5YGCuAH
+spQ5q/5j0j3MjBPvdBP1xen3M3vFvsnlz1RAGK9vpbe67lLaGKioUv+5SbuepvJg
+cW7KGtZINGAJRJx6OnVojBgdbCx4CY10+uLap1B0XW/wH9xadMK8o7RsmfHGwYiQ
+dIGjCH2nZY128IluiEtdI7lUduVZOcvV3+ZYNypRzeHpDT7xWNlSw9InZK6W5LJg
+oKGsNFEPQ3it8kKOzyhZ8yYA2YiEceXtQf3NOZlee91Zjr4JE2z3l/f6uqAEtWdx
+q+yHWxpyDdVUs0gEg+xmUUQ86KwPcg==
+=hlgQ
+-----END PGP SIGNATURE-----
 
-Fixes: 067fe038e70f6 ("tracing: Add variable reference handling to hist tri=
-ggers")
-Reviewed-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
-Changes since v1: https://lore.kernel.org/20250404144008.0c47e4d7@gandalf.l=
-ocal.home
-
-- Fix compiler error.
-
-  I upgraded my compiler and then this patch gave me this error:
-
-   /work/git/test-linux.git/kernel/trace/trace_events_hist.c: In function =
-=E2=80=98event_hist_trigger=E2=80=99:
-   /work/git/test-linux.git/kernel/trace/trace_events_hist.c:5363:59: error=
-: passing argument 1 of =E2=80=98stack_trace_save=E2=80=99 from pointer to =
-non-enclosed address space
-    5363 |                                 stack_trace_save(hist_pads->entr=
-ies, HIST_STACKTRACE_DEPTH,
-         |                                                  ~~~~~~~~~^~~~~~=
-~~~
-   /work/git/test-linux.git/include/linux/stacktrace.h:70:46: note: expecte=
-d =E2=80=98long unsigned int *=E2=80=99 but argument is of type =E2=80=98__=
-seg_gs long unsigned int *=E2=80=99
-      70 | unsigned int stack_trace_save(unsigned long *store, unsigned int=
- size,
-         |                               ~~~~~~~~~~~~~~~^~~~~
-   make[5]: *** [/work/git/test-linux.git/scripts/Makefile.build:203: kerne=
-l/trace/trace_events_hist.o] Error 1
-
-  That was passing the per-cpu array directly into stack_trace_save().
-  Instead, assign the array to unsigned long *entries, and pass that.
-
- kernel/trace/trace_events_hist.c | 120 +++++++++++++++++++++++++++----
- 1 file changed, 105 insertions(+), 15 deletions(-)
-
-diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events_h=
-ist.c
-index 1260c23cfa5f..0ec692f80aef 100644
---- a/kernel/trace/trace_events_hist.c
-+++ b/kernel/trace/trace_events_hist.c
-@@ -5246,17 +5246,94 @@ hist_trigger_actions(struct hist_trigger_data *hist=
-_data,
- 	}
- }
-=20
-+/*
-+ * The hist_pad structure is used to save information to create
-+ * a histogram from the histogram trigger. It's too big to store
-+ * on the stack, so when the histogram trigger is initialized
-+ * a percpu array of 4 hist_pad structures is allocated.
-+ * This will cover every context from normal, softirq, irq and NMI
-+ * in the very unlikely event that a tigger happens at each of
-+ * these contexts and interrupts a currently active trigger.
-+ */
-+struct hist_pad {
-+	unsigned long		entries[HIST_STACKTRACE_DEPTH];
-+	u64			var_ref_vals[TRACING_MAP_VARS_MAX];
-+	char			compound_key[HIST_KEY_SIZE_MAX];
-+};
-+
-+static struct hist_pad __percpu *hist_pads;
-+static DEFINE_PER_CPU(int, hist_pad_cnt);
-+static refcount_t hist_pad_ref;
-+
-+/* One hist_pad for every context (normal, softirq, irq, NMI) */
-+#define MAX_HIST_CNT 4
-+
-+static int alloc_hist_pad(void)
-+{
-+	lockdep_assert_held(&event_mutex);
-+
-+	if (refcount_read(&hist_pad_ref)) {
-+		refcount_inc(&hist_pad_ref);
-+		return 0;
-+	}
-+
-+	hist_pads =3D __alloc_percpu(sizeof(struct hist_pad) * MAX_HIST_CNT,
-+				   __alignof__(struct hist_pad));
-+	if (!hist_pads)
-+		return -ENOMEM;
-+
-+	refcount_set(&hist_pad_ref, 1);
-+	return 0;
-+}
-+
-+static void free_hist_pad(void)
-+{
-+	lockdep_assert_held(&event_mutex);
-+
-+	if (!refcount_dec_and_test(&hist_pad_ref))
-+		return;
-+
-+	free_percpu(hist_pads);
-+	hist_pads =3D NULL;
-+}
-+
-+static struct hist_pad *get_hist_pad(void)
-+{
-+	struct hist_pad *hist_pad;
-+	int cnt;
-+
-+	if (WARN_ON_ONCE(!hist_pads))
-+		return NULL;
-+
-+	preempt_disable();
-+
-+	hist_pad =3D per_cpu_ptr(hist_pads, smp_processor_id());
-+
-+	if (this_cpu_read(hist_pad_cnt) =3D=3D MAX_HIST_CNT) {
-+		preempt_enable();
-+		return NULL;
-+	}
-+
-+	cnt =3D this_cpu_inc_return(hist_pad_cnt) - 1;
-+
-+	return &hist_pad[cnt];
-+}
-+
-+static void put_hist_pad(void)
-+{
-+	this_cpu_dec(hist_pad_cnt);
-+	preempt_enable();
-+}
-+
- static void event_hist_trigger(struct event_trigger_data *data,
- 			       struct trace_buffer *buffer, void *rec,
- 			       struct ring_buffer_event *rbe)
- {
- 	struct hist_trigger_data *hist_data =3D data->private_data;
- 	bool use_compound_key =3D (hist_data->n_keys > 1);
--	unsigned long entries[HIST_STACKTRACE_DEPTH];
--	u64 var_ref_vals[TRACING_MAP_VARS_MAX];
--	char compound_key[HIST_KEY_SIZE_MAX];
- 	struct tracing_map_elt *elt =3D NULL;
- 	struct hist_field *key_field;
-+	struct hist_pad *hist_pad;
- 	u64 field_contents;
- 	void *key =3D NULL;
- 	unsigned int i;
-@@ -5264,12 +5341,18 @@ static void event_hist_trigger(struct event_trigger=
-_data *data,
- 	if (unlikely(!rbe))
- 		return;
-=20
--	memset(compound_key, 0, hist_data->key_size);
-+	hist_pad =3D get_hist_pad();
-+	if (!hist_pad)
-+		return;
-+
-+	memset(hist_pad->compound_key, 0, hist_data->key_size);
-=20
- 	for_each_hist_key_field(i, hist_data) {
- 		key_field =3D hist_data->fields[i];
-=20
- 		if (key_field->flags & HIST_FIELD_FL_STACKTRACE) {
-+			unsigned long *entries =3D hist_pad->entries;
-+
- 			memset(entries, 0, HIST_STACKTRACE_SIZE);
- 			if (key_field->field) {
- 				unsigned long *stack, n_entries;
-@@ -5293,26 +5376,31 @@ static void event_hist_trigger(struct event_trigger=
-_data *data,
- 		}
-=20
- 		if (use_compound_key)
--			add_to_key(compound_key, key, key_field, rec);
-+			add_to_key(hist_pad->compound_key, key, key_field, rec);
- 	}
-=20
- 	if (use_compound_key)
--		key =3D compound_key;
-+		key =3D hist_pad->compound_key;
-=20
- 	if (hist_data->n_var_refs &&
--	    !resolve_var_refs(hist_data, key, var_ref_vals, false))
--		return;
-+	    !resolve_var_refs(hist_data, key, hist_pad->var_ref_vals, false))
-+		goto out;
-=20
- 	elt =3D tracing_map_insert(hist_data->map, key);
- 	if (!elt)
--		return;
-+		goto out;
-=20
--	hist_trigger_elt_update(hist_data, elt, buffer, rec, rbe, var_ref_vals);
-+	hist_trigger_elt_update(hist_data, elt, buffer, rec, rbe, hist_pad->var_r=
-ef_vals);
-=20
--	if (resolve_var_refs(hist_data, key, var_ref_vals, true))
--		hist_trigger_actions(hist_data, elt, buffer, rec, rbe, key, var_ref_vals=
-);
-+	if (resolve_var_refs(hist_data, key, hist_pad->var_ref_vals, true)) {
-+		hist_trigger_actions(hist_data, elt, buffer, rec, rbe,
-+				     key, hist_pad->var_ref_vals);
-+	}
-=20
- 	hist_poll_wakeup();
-+
-+ out:
-+	put_hist_pad();
- }
-=20
- static void hist_trigger_stacktrace_print(struct seq_file *m,
-@@ -6157,6 +6245,9 @@ static int event_hist_trigger_init(struct event_trigg=
-er_data *data)
- {
- 	struct hist_trigger_data *hist_data =3D data->private_data;
-=20
-+	if (alloc_hist_pad() < 0)
-+		return -ENOMEM;
-+
- 	if (!data->ref && hist_data->attrs->name)
- 		save_named_trigger(hist_data->attrs->name, data);
-=20
-@@ -6201,6 +6292,7 @@ static void event_hist_trigger_free(struct event_trig=
-ger_data *data)
-=20
- 		destroy_hist_data(hist_data);
- 	}
-+	free_hist_pad();
- }
-=20
- static const struct event_trigger_ops event_hist_trigger_ops =3D {
-@@ -6216,9 +6308,7 @@ static int event_hist_trigger_named_init(struct event=
-_trigger_data *data)
-=20
- 	save_named_trigger(data->named_data->name, data);
-=20
--	event_hist_trigger_init(data->named_data);
--
--	return 0;
-+	return event_hist_trigger_init(data->named_data);
- }
-=20
- static void event_hist_trigger_named_free(struct event_trigger_data *data)
---=20
-2.47.2
-
+--dpNB0fpoEEl2bnSN--
