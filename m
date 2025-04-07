@@ -1,63 +1,63 @@
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52A2621ABC9;
-	Mon,  7 Apr 2025 18:08:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BEDD21D5AF;
+	Mon,  7 Apr 2025 18:09:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744049339; cv=none; b=G7SnExuFe+MOck/zjMyIIjeuLpRRY0xIKWt/4QemifAKnPBX0WPOhAmc/MzSvKiPqAu8XI/zOFBpNekHrW9H83dysmnjSQHb2ps6gzYMaAOk1hvZ0HMDLlE9wXAVGdPETjLKQTax5ptvT3BObZ2SduFITc8wwKrlEmY9voz30+8=
+	t=1744049348; cv=none; b=jhFa6qUdHrdNsH++DvclOSR9HfIsRXrInLmU2EnWOcyCZwLvaUNNHtqQA1ouhlq7jopZhuqSrGtzsCAA7Ue4hk5+kv6nbi3fbOWk1qqmCbxpkqiIE43KyeCwuWnsHn8b66MZGWN/orJN0ayywgjtQESniXgwnV0eriVffd7kL7E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744049339; c=relaxed/simple;
-	bh=ixCQP1rtUlOwa63aCKnKtMUaKI5FIrMsujmdH53+dco=;
+	s=arc-20240116; t=1744049348; c=relaxed/simple;
+	bh=vkdSGG1bHOqDDzpPpSuU9cSraWNrCoVM/uSZFmON9C4=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Pebf6PraND+aHWKmJyIYrjA1hVtej1wPQCXi/dJ3kbiCIc2YwT9leRu8pobPOyHiKaPaU0hwnOgHLRNzi6/oVeHEMt8pBJslMwUTP7IYLqDAfJGX8fFsha87Qb1appoc1JUGWDr7QfxUiM9oVMElAk0JRdxn95P6Hlfefkd50Dw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MK4B9Q6D; arc=none smtp.client-ip=209.85.214.179
+	 MIME-Version; b=j+6Qkio2xb7DGDJISr/UVW1A6r9pPMYE1MeF7wQ8Eax7SwTmiXd5q9zh9+EJXp/oRL8hcoUReQdrRtkpajfFmngBoGRFXHQW+twmrkXCu72q8n4Nvq+tc7p9vIs0teuC5VYKw4+8887rhptuFBQiHHNexYDWQIvyj+G9Y0pGTkc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ew7PUWkt; arc=none smtp.client-ip=209.85.214.180
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MK4B9Q6D"
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-223fb0f619dso45792715ad.1;
-        Mon, 07 Apr 2025 11:08:58 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ew7PUWkt"
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-22435603572so44176585ad.1;
+        Mon, 07 Apr 2025 11:09:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744049337; x=1744654137; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1744049347; x=1744654147; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=6GxvBXScR5G8/guPuwFtybfdLT7Xp8U7BWpl4kN1kr8=;
-        b=MK4B9Q6DdMIqGW6ZLzd2K4/Bh09XQzDAf7Rf+jeVuUZC12+OqPh7H1Hx3jIuyUJcGq
-         U+qeuGxuZi/XTBpfetKVHZjW65r7RV7LKLcZ5XdW/kPRkkx3ntfzqNsWBO5cBHBYKzQZ
-         av2uSTt/zqkCtfxuwCJFeKFhOub31pbqbOAIksb9QidLDfTSN2pTSFB8dXU41QLprvb3
-         DlJAGhbfQmStv7+4408I2C4gjh8UyuFG6CEsqoaOi7qWQTy7E6MDWsiYtYGW9A8F7CHn
-         dBXX/XXyK/wFc0PtdQD1+KmW9XERc78NkHzMMyuExIw1+XO6X1vWt6YKd9nZpNjN1Y29
-         DN2g==
+        bh=sO5QthxwGi/gITP2al2MfjRxPqfuU0a+mulRSQDMGlk=;
+        b=Ew7PUWkt+Mxq7wG45zpJUDbjySs06aWY9QKTI2VNuImqHbEcvLkwNEqu/Fh4HDyaKs
+         TtQsObkN5fZmtgDj9dxPWTmmOFVIok08uhQTkn/P+Ol6wPCTVFQYQNxxRbEBRZ/6m6oy
+         2Gx9iaDL4ESpB8sf+33JpP/7CqFjRlIvZOYp/zU+f1RmQBj6kFaWX3vAqNIkGVyIK4RI
+         LGRBUsspP8tERGTKpxFqVAzKnWJFjT03qopNcwqGvotWt69gCKPRrqfzBj6sup7VrtUc
+         xOINFe53jPOJ/VhXqyhCMR7Rt06PqtPKdoBEmuGMfj0jUROgDoprXtLNueGmiQ41yTD6
+         Wzug==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744049337; x=1744654137;
+        d=1e100.net; s=20230601; t=1744049347; x=1744654147;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=6GxvBXScR5G8/guPuwFtybfdLT7Xp8U7BWpl4kN1kr8=;
-        b=iD2WkoFfPM4ySh3qj0VIwgL0pldXaZKWhb5QA4uVgMg607q7OzrpG2cKxGZlfEhIbq
-         8OISoBfJ0UTw7heiMrVaFy1PuGQjWHf6CmP2h05HxLornWlCbSMZtiR+jl4hAc6PIRSb
-         pnjfxnAkK5xvLu9zpygFEK8zUHfEcIZZIwCQRqBy2spiF8eXh+rVmJIMycaFi4RWedkt
-         ubh0EU/Qu2aRTiPq81IAVa6eeKI6suR1XVfEIO8S0QH8ne84LmJ3S2xpXlPULs6VhjST
-         Ibdl8EiFQnG3F9GpAECxbhnqsX4YQfFj0AqJIbnrEIY3WNWFHO87UYV7C4TDasud4sAJ
-         THQw==
-X-Forwarded-Encrypted: i=1; AJvYcCVnr3AInsmKzr+rsw4Fc0kSzVikYqF2VqB2vhcpFNEY7Pt0sp2KM5FkMnwg5H3mWKzgvxPeI5z3Kp8c1tyWiEfHbCkd@vger.kernel.org, AJvYcCWH5hkG028vycbNymqQ+gbu+Dl4ybNJk1kcNtbANggTy3l6cYbx/kQRgxfYQherJXQ8x24TFWDEciFgXbE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyoIZkuauCC54SoxAWDVsNaCbxNn4js02BPH+afr2SksDSUQTQP
-	5bd5qnKywQ5KvKFFWfs91SsUPX/O5oRm63kt5wCXRdknH+Y0ZQ3F
-X-Gm-Gg: ASbGncuN0GXbc1y383ucQ3bxj1o6EvPm1gBegYjrWQ11yZx9z140WD6n2NeilMwgrXL
-	Z/gqHi1ymURxlKdKUEA4S2gvAED+kjnbWY9359RGSuJc7vblbw7gzGPQNTWjnDjA2osf4qeq7uj
-	Id2Vg/7qSMRtEmhbWn1iEe4pteRjc83aFUTrQH/fpgjY2UuJCNZ87yTwi51jWYYyqT4qHb8Mdh7
-	fTS82e2kVQgo8gaMWH7KatLeSkdNk8blqlvEIkOhG6mclqXDs+dI2sWP7ZA2YHDtzMDq5J3aXMy
-	s/O2yU89u21p52gDJOwa1DEYOlFeEDklIr/5ythw3FjSwKyx/6Zt8TLF0eLZYSdKac6H2jAEUdU
-	LL74VAhPkCEsgIFgGflU3bNsKvWzchVaLJw==
-X-Google-Smtp-Source: AGHT+IEWDNqLKG23YHG2EaPKmPmMuBuN2vxb7Eb0UfS1Xfx3xzd34GxBwfA03Pt5nMI3Pt2fEK34Sw==
-X-Received: by 2002:a17:903:230f:b0:223:517c:bfa1 with SMTP id d9443c01a7336-22a8a0a3a59mr190569785ad.38.1744049337341;
-        Mon, 07 Apr 2025 11:08:57 -0700 (PDT)
+        bh=sO5QthxwGi/gITP2al2MfjRxPqfuU0a+mulRSQDMGlk=;
+        b=WtXUORuZ1ptdbyzbXCANdRpzh1yNdt75BMNjXj7BBmBuqltCPEwcoJ272jo0+lCzmz
+         gRRAn7HxzGXgzXreevF6xQ5c7/FOB3yzbFrZ2u4XUAMp32qiR8imIsD+xgHsCWEkNJBl
+         7lQF71GMzHMWxaPKEw11InTofupTMTZbVP0ASiB09D19jEMQlJ8UbpMvGdMp/qikOkrH
+         W7yKxNaBSegnduTQ+TD/ANSFuCyQfOXu7D2pkA1wYqd/18zcnvQpvLVz70bwKcNCC2oq
+         dyeUWBr2+6Ve/8EEE9GzQTavBU86CW+QOnilbeUZcMOHnMwpHeDBjeVnrJyPkJz+PVJm
+         O61Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUS5B8w8Q2IZq3IFB132lu1s3RaVKn6DOnTdplv4mnDmbJh4oEidFxchO+craDDIyJJmujumv/ECENljVA=@vger.kernel.org, AJvYcCWzd4zMf7P70bmQULfmK6Gl1HMkJnrX7fz0noOAPYMR/OwfeGOWDsvfWXxv7TGRBc/xhE8shKG67i2UdDV12YnoKf7a@vger.kernel.org
+X-Gm-Message-State: AOJu0YwebN5B/Zf/B0KyP+zFrwXLU9Pq08P/Qo2Qe5wzkwAH0z7px97y
+	aa/toB4sJqD5biCxP3JOOoy+/orUKQUNMUHOXJ9jhV5LZQjW+lgI
+X-Gm-Gg: ASbGncto3rLQ2ykFETVtKpIuZjT4kG08/gDZOKfny6l4Z7BmVBfP5o2TtJFjAFRn1Qc
+	ogGxgHdb8dno0T186XZ3BbI4kQyH0FmOy6TSXsXaAKEvHjBA9a6BbxvLzhCLN8haGNUAuYVGCum
+	Zx2t7aPX+xeGiZ2EUuG8cAdCnMHn278j8hZs2+wkYeo2j7QiodYGpRQJ+Bs78pI5ugU5FWw8aB2
+	Y0qQBbebwdBIXXTDY595M0lSXBfck0TMydwLlPqcpXan6Uyjmt2C7NVYT9oaHMssq09AvoxXM+s
+	kcMTs/cnNY8850bg1aGBLFLJQrMF4XtL1uoWr47AR0/+1sG8mjcQHPkhBICbpLn57SvAMqmmJih
+	GLPDkiXHGZaNL3esEdjq8fTAPm4YhSyRWsg==
+X-Google-Smtp-Source: AGHT+IEQoZKg5b+MyAfF5MYRIteTGVeC6PLB8bj9Qd+rDjzyW2lPRPeTqlPF4OleAXMNaZHG2RYIiw==
+X-Received: by 2002:a17:903:283:b0:21f:1549:a563 with SMTP id d9443c01a7336-22a8a858f64mr170136425ad.2.1744049346653;
+        Mon, 07 Apr 2025 11:09:06 -0700 (PDT)
 Received: from localhost.localdomain (118-160-134-247.dynamic-ip.hinet.net. [118.160.134.247])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2297865e03esm84282455ad.146.2025.04.07.11.08.53
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2297865e03esm84282455ad.146.2025.04.07.11.09.02
         (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Mon, 07 Apr 2025 11:08:56 -0700 (PDT)
+        Mon, 07 Apr 2025 11:09:06 -0700 (PDT)
 From: Andy Chiu <andybnac@gmail.com>
 To: linux-riscv@lists.infradead.org,
 	alexghiti@rivosinc.com,
@@ -66,6 +66,7 @@ Cc: Andy Chiu <andybnac@gmail.com>,
 	linux-kernel@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org,
 	Mark Rutland <mark.rutland@arm.com>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
 	Alexandre Ghiti <alex@ghiti.fr>,
 	bjorn@rivosinc.com,
 	puranjay12@gmail.com,
@@ -80,9 +81,9 @@ Cc: Andy Chiu <andybnac@gmail.com>,
 	samuel.holland@sifive.com,
 	olivia.chu@sifive.com,
 	c2232430@gmail.com
-Subject: [PATCH v4 02/12] riscv: ftrace factor out code defined by !WITH_ARG
-Date: Tue,  8 Apr 2025 02:08:26 +0800
-Message-Id: <20250407180838.42877-2-andybnac@gmail.com>
+Subject: [PATCH v4 04/12] kernel: ftrace: export ftrace_sync_ipi
+Date: Tue,  8 Apr 2025 02:08:28 +0800
+Message-Id: <20250407180838.42877-4-andybnac@gmail.com>
 X-Mailer: git-send-email 2.39.3 (Apple Git-145)
 In-Reply-To: <20250407180838.42877-1-andybnac@gmail.com>
 References: <20250407180838.42877-1-andybnac@gmail.com>
@@ -94,110 +95,43 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-DYNAMIC_FTRACE selects DYNAMIC_FTRACE_WITH_ARGS and mcount-dyn.S in
-riscv, so we can remove ifdef jargons of WITH_ARG when it is known that
-DYNAMIC_FTRACE is true.
+The following ftrace patch for riscv uses a data store to update ftrace
+function. Therefore, a romote fence is required to order it against
+function_trace_op updates. The mechanism is similar to the fence between
+function_trace_op and update_ftrace_func in the generic ftrace, so we
+leverage the same ftrace_sync_ipi function.
 
 Signed-off-by: Andy Chiu <andybnac@gmail.com>
 ---
-Changelog v4:
- - Add anew patch that makes ftrace and its asm easier to maintain
----
- arch/riscv/kernel/ftrace.c     | 15 ---------------
- arch/riscv/kernel/mcount-dyn.S | 34 ----------------------------------
- 2 files changed, 49 deletions(-)
+ include/linux/ftrace.h | 1 +
+ kernel/trace/ftrace.c  | 2 +-
+ 2 files changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/arch/riscv/kernel/ftrace.c b/arch/riscv/kernel/ftrace.c
-index 674dcdfae7a1..1fd10555c580 100644
---- a/arch/riscv/kernel/ftrace.c
-+++ b/arch/riscv/kernel/ftrace.c
-@@ -210,7 +210,6 @@ void prepare_ftrace_return(unsigned long *parent, unsigned long self_addr,
+diff --git a/include/linux/ftrace.h b/include/linux/ftrace.h
+index fbabc3d848b3..0d4eec574707 100644
+--- a/include/linux/ftrace.h
++++ b/include/linux/ftrace.h
+@@ -807,6 +807,7 @@ extern void ftrace_call(void);
+ extern void ftrace_regs_call(void);
+ extern void mcount_call(void);
+ 
++void ftrace_sync_ipi(void *data);
+ void ftrace_modify_all_code(int command);
+ 
+ #ifndef FTRACE_ADDR
+diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+index ee662f380b61..d06bd4a046de 100644
+--- a/kernel/trace/ftrace.c
++++ b/kernel/trace/ftrace.c
+@@ -188,7 +188,7 @@ static void ftrace_pid_func(unsigned long ip, unsigned long parent_ip,
+ 	op->saved_func(ip, parent_ip, op, fregs);
  }
  
- #ifdef CONFIG_DYNAMIC_FTRACE
--#ifdef CONFIG_DYNAMIC_FTRACE_WITH_ARGS
- void ftrace_graph_func(unsigned long ip, unsigned long parent_ip,
- 		       struct ftrace_ops *op, struct ftrace_regs *fregs)
+-static void ftrace_sync_ipi(void *data)
++void ftrace_sync_ipi(void *data)
  {
-@@ -231,19 +230,5 @@ void ftrace_graph_func(unsigned long ip, unsigned long parent_ip,
- 	if (!function_graph_enter_regs(old, ip, frame_pointer, parent, fregs))
- 		*parent = return_hooker;
- }
--#else /* CONFIG_DYNAMIC_FTRACE_WITH_ARGS */
--extern void ftrace_graph_call(void);
--int ftrace_enable_ftrace_graph_caller(void)
--{
--	return __ftrace_modify_call((unsigned long)&ftrace_graph_call,
--				    (unsigned long)&prepare_ftrace_return, true, true);
--}
--
--int ftrace_disable_ftrace_graph_caller(void)
--{
--	return __ftrace_modify_call((unsigned long)&ftrace_graph_call,
--				    (unsigned long)&prepare_ftrace_return, false, true);
--}
--#endif /* CONFIG_DYNAMIC_FTRACE_WITH_ARGS */
- #endif /* CONFIG_DYNAMIC_FTRACE */
- #endif /* CONFIG_FUNCTION_GRAPH_TRACER */
-diff --git a/arch/riscv/kernel/mcount-dyn.S b/arch/riscv/kernel/mcount-dyn.S
-index e988bd26b28b..3f06b40bb6c8 100644
---- a/arch/riscv/kernel/mcount-dyn.S
-+++ b/arch/riscv/kernel/mcount-dyn.S
-@@ -56,8 +56,6 @@
- 	addi	sp, sp, ABI_SIZE_ON_STACK
- 	.endm
- 
--#ifdef CONFIG_DYNAMIC_FTRACE_WITH_ARGS
--
- /**
- * SAVE_ABI_REGS - save regs against the ftrace_regs struct
- *
-@@ -149,36 +147,6 @@
- 	mv	a3, sp
- 	.endm
- 
--#endif /* CONFIG_DYNAMIC_FTRACE_WITH_ARGS */
--
--#ifndef CONFIG_DYNAMIC_FTRACE_WITH_ARGS
--SYM_FUNC_START(ftrace_caller)
--	SAVE_ABI
--
--	addi	a0, t0, -FENTRY_RA_OFFSET
--	la	a1, function_trace_op
--	REG_L	a2, 0(a1)
--	mv	a1, ra
--	mv	a3, sp
--
--SYM_INNER_LABEL(ftrace_call, SYM_L_GLOBAL)
--	call	ftrace_stub
--
--#ifdef CONFIG_FUNCTION_GRAPH_TRACER
--	addi	a0, sp, ABI_RA
--	REG_L	a1, ABI_T0(sp)
--	addi	a1, a1, -FENTRY_RA_OFFSET
--#ifdef HAVE_FUNCTION_GRAPH_FP_TEST
--	mv	a2, s0
--#endif
--SYM_INNER_LABEL(ftrace_graph_call, SYM_L_GLOBAL)
--	call	ftrace_stub
--#endif
--	RESTORE_ABI
--	jr	t0
--SYM_FUNC_END(ftrace_caller)
--
--#else /* CONFIG_DYNAMIC_FTRACE_WITH_ARGS */
- SYM_FUNC_START(ftrace_caller)
- 	mv	t1, zero
- 	SAVE_ABI_REGS
-@@ -194,8 +162,6 @@ SYM_INNER_LABEL(ftrace_call, SYM_L_GLOBAL)
- 	jr	t1
- SYM_FUNC_END(ftrace_caller)
- 
--#endif /* CONFIG_DYNAMIC_FTRACE_WITH_ARGS */
--
- #ifdef CONFIG_DYNAMIC_FTRACE_WITH_DIRECT_CALLS
- SYM_CODE_START(ftrace_stub_direct_tramp)
- 	jr	t0
+ 	/* Probably not needed, but do it anyway */
+ 	smp_rmb();
 -- 
 2.39.3 (Apple Git-145)
 
