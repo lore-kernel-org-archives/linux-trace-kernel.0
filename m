@@ -1,156 +1,90 @@
-Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
+Received: from mail-qt1-f181.google.com (mail-qt1-f181.google.com [209.85.160.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 968BE12CDAE;
-	Tue,  8 Apr 2025 07:46:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3FC31E5203
+	for <linux-trace-kernel@vger.kernel.org>; Tue,  8 Apr 2025 14:21:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744098391; cv=none; b=dU4opwW/6m9Ux9Bx4fVj/ioPBDtzaamVXNg5ZabPyXoK//rScyFfDIDRpV+b9R64Io06ocg+8CJfXmUUf6Quiyaj0XfjaV9OX6YdTZRT3Q09EGSPGwLuK+toivNIFVw5vpZPCca+DNx94OvZJlAbyEcWp85/kOsm8bAA5B3a+8s=
+	t=1744122068; cv=none; b=u3lPJaNqEGxyCf+gsNtvaTGH+fiQF0FVBvqCicAb69uTa8HvKbQZkMSp3i02VGBk/39IMNdEoabzsnZgmjKW30Pvc04fCH2+6X4RVSYxZFHprumck3GvB044tAy+6Z4WURbxZpnAEjmdh1D4RQLKmzZaN0fKt4YcQ+c8PB/qwu0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744098391; c=relaxed/simple;
-	bh=CYWLgNMUz1gmoCTVrt8FUVjBZYckyum9T6o9Eaioln4=;
+	s=arc-20240116; t=1744122068; c=relaxed/simple;
+	bh=9LUiR7PTDvwrWg9rxE99SiAC7XkyUDcQQ79rs37XpYY=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=gTqzgOUmGvzU7IU/d0th+To8w6/ez86G0msY32yK5ZHwxEdjYSa4Oah2IpC26pBmdfuO+v/1tIRn5p//FiIsEmQFhdzSXzZZJ3JSfmRLUADzywvCoSSmk8kjZc9E9n4Yhb5RbLifP4qCkUF6ERgQzxx70OFiC/1+MLdZRMv1SXU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XyQLQ8xT; arc=none smtp.client-ip=209.85.208.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 To:Cc:Content-Type; b=MNQx2dkNH6aqhzynY8EIyXcXq6fljCoaG4WGaD9ABmDGc1OMkaBNEhz7FXCy/P1DxTtxecPArs2JgixcRgRf/SWqpZHgVKzD1rAhkU3ql2T0MX3Tl30p6r3slgeWyJHZQa4rycy2SP5Y/xrgKOVSkOpsOfLkv+QGMNXsE7o5Uik=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=V9T0IYEE; arc=none smtp.client-ip=209.85.160.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XyQLQ8xT"
-Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-5e673822f76so8667425a12.2;
-        Tue, 08 Apr 2025 00:46:29 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="V9T0IYEE"
+Received: by mail-qt1-f181.google.com with SMTP id d75a77b69052e-476805acddaso65592671cf.1
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 08 Apr 2025 07:21:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744098388; x=1744703188; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1744122066; x=1744726866; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=CYWLgNMUz1gmoCTVrt8FUVjBZYckyum9T6o9Eaioln4=;
-        b=XyQLQ8xTk3VMWKkzGctVxVLDtavM4QgjwNOnhWJ6Q1ZHInFUTIRGj6a8IE+9JJNjJw
-         cI1JatD6DGiszy07MUdVoV6NIEmdFKvkkC444HxQRrY8kXviwCqOk86Y01RLatUm3o5A
-         tlIliT1MSfB30mZYA3tJzf756eVc0LK5Tj9pQ5lP21zdrjGxAZoRg7UtxmnFVAFOZACw
-         jG9zu7W5pUR5qJ+eU29dbe9MwQ0XKw6Hw4kbOyBkhB4koYs2svEgUlg1aJbEMYo2ejUA
-         TWHRbu51F1MqsdCCurhD2BQBAWJzed6RrPAgBy8zmaY2tRhd/PfyMr3Mkjf+m+60jWxf
-         N0vQ==
+        bh=9LUiR7PTDvwrWg9rxE99SiAC7XkyUDcQQ79rs37XpYY=;
+        b=V9T0IYEE3qVTY6mmuXij78lr1MdVVDdorwT8L6dOA9QSgdQpIMGH8P/OfYjvmHU6MZ
+         Ye2uIoVp0K5PxC3TJkPgWlE4+wJ9mp/IWFgyoClxvCllSIGk2eO0KC9DO6cX+pYtXUUO
+         SZpl29OS3vBmX9kwPBdvy894epxri89W7/Ww0lpcUaGj5/e2FgcJFlrAEz+pGBfqPu8h
+         dlX5c8OYbDrw5B1OJw64PAxk+V+WD4vmT3E6gi6eM/LW8uTZ8wHX1QV+IZdg0DlzBhlX
+         Df8GYKxFOFCxv8K2sQDFUdhUJv4B1Xyaz0Ujz4p3JoHVxgmVFHHbTnBiqTtCQqvuDYFt
+         ZyBw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744098388; x=1744703188;
+        d=1e100.net; s=20230601; t=1744122066; x=1744726866;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=CYWLgNMUz1gmoCTVrt8FUVjBZYckyum9T6o9Eaioln4=;
-        b=T3uX1GRAoLM4g7Jv66rwC6M6/p2mez1iS+dKc7kRhVy/OjBl2ZMTqzUUVuMu3NolCh
-         eM3uW2ID+vmn/AEJ5MZdnFpBOl+Fy6mYbB9P4PH4VtzZ/xVtfYpfxxnjhay8bnhOowm2
-         FZ0HrHd8SXSMyqPluUIu9NroLyg39yuxqBaxocNKxS3/K/Rz/VzEv2RV9QogmqCDvt2L
-         2YsrBZmsFzZRT7GH3BpfVkYVO70dnctj/qdOTwYFcU053OfTkKYwzaG5StFoK1AdaB2W
-         adJYRaoKZKjtiE/mgGa5XkA/Twgqp3w1eBLp+gdhaBTpdinM2fE4MtsC6h3pdrwSHtB0
-         /m4Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUYDH5DGMP8iSr8R4UfOl97Y8FQmAlVvWy46x4UB4BWGZFz+PItyF4m5KjVSJ6Db6tgINrK0nFm5poSM+Y=@vger.kernel.org, AJvYcCUmYPvQrjp54ouEcPFaw2DIQY+gjG3cRxofvQL00wVtdtAP+Mye682S+HNRK0TAYwmaMWHFvSfSW8Mh1gzv/Q1D2chV@vger.kernel.org
-X-Gm-Message-State: AOJu0YzOEoMenkgSIECEDsY1KkLTbrPJhMfFdU58hSckDa2/jQFY5hmn
-	WvE73SebqgZX90XnZcb6PoDxeUxL8Iu4PIrMbIthN13LfOwkLERteIZM3ZRZ+Ww78o3yczeZ71N
-	9ulyQ6zK/vQseCcL7iyGA21wlJcg=
-X-Gm-Gg: ASbGncvpsbflzkQbL9FH5t+qTAo9VL3RNLrTyq4JQXXXxOnWi/D68VYxlZitiaHU5qf
-	h4LWMNi8OCZoX86hKqcpcR20F5absfmSQTeZTsVts8UNzTETHvNhod4jvUy4a5aF/A+xsGyA+lA
-	UupyAjJZNXjy0vAFV5VIDcOoZ6
-X-Google-Smtp-Source: AGHT+IFmG6MLnSUDQL0TyguKXOKi9sZPAf8BJ1l0ld/2h6vDza1UJsGTRfqurp3q32bdQUAB0t99uhb/N1ovjRQpxIM=
-X-Received: by 2002:a05:6402:1ece:b0:5e6:466e:5866 with SMTP id
- 4fb4d7f45d1cf-5f0b6606682mr13812283a12.25.1744098387736; Tue, 08 Apr 2025
- 00:46:27 -0700 (PDT)
+        bh=9LUiR7PTDvwrWg9rxE99SiAC7XkyUDcQQ79rs37XpYY=;
+        b=riZqHQh6W7UfFwygiyUk/n5LxhMQHr2Pb8lGIhJiMlHN6jwnrINzSbGU0+n1Ui+1Yf
+         qAgGQ25lQQk3afS/tRVSz0sB/Xd7I/g2vrjish5sZ7itAvLL4okODkCxnSOEHn0OGRl0
+         iQp0U8BnBKZSPO2xI7yifW2kYtK/JUtNqIDKSmeo/vv38kK3ppDfvx3bgG68t2Sf15a5
+         bcW4R5yWoPiJ/jdyMgqRQ4WKv+tSSNmJlE4mlaqdb7xJUkRzDNH6u4EoTOGXnbBWLyQX
+         p45PksiSzKuni1jxaefU3G7Pwc0TuZhfHdG/+vp5NI917lTVCZZpIfnva5IsVdxxED+o
+         sxYA==
+X-Forwarded-Encrypted: i=1; AJvYcCVtx13ke65zWZTfsfB5PGJhOkCDWCgKvchNisc3wz5sT0yaLOZXNq81appS8BjovVXZkxWt2/icrQxrd78AgBnM7b8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw5XrMiHpOsT7s1J2GTpCx5y372yiJcM4tAzIahuNCKE+xgNwn5
+	1OX7T3ZwO/UAMPdpmO67NuSAUXlGUQhYcy7k+/S6fkbAjx9C0DGy09Z8g/+UGPlwULtJfY4GsXl
+	N2VYZIlEOk78iMhN8uxZiO+CyiHC07MYoiEMT
+X-Gm-Gg: ASbGncsdUxmfNTqZJ0g0GNKIrIzgVjlbTXHiFNNqQ6K0UyZ0zDYniZ7GvE4xyn/x+sO
+	zAFhQkZCCll3XfQx633wZ1Trew9m5pq9bs988TAwWQ8d6bITms+sNtNWt+PFZvYCgSZAtl6va3A
+	Wg4RTTthYGRwERTbWC56kccPEJOwM=
+X-Google-Smtp-Source: AGHT+IHe0hj3kpMdODzPEab+0hnyLxRp3lwRaBDWBtyUVJnvgjIFRxw2OHX8Wu13fIGiVvbcI5UawKfjdnv+PSgzq0Y=
+X-Received: by 2002:a05:622a:50f:b0:477:1eeb:3f79 with SMTP id
+ d75a77b69052e-4792593079amr167695771cf.10.1744122065465; Tue, 08 Apr 2025
+ 07:21:05 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250331223516.7810-2-sweettea-kernel@dorminy.me>
- <CAMgjq7AroDCKTfJzJRr++8H2b3eTd=MeUqwkPUX4ixRVqZw6-A@mail.gmail.com>
- <CAGudoHH7OUHG2HHrjzqkiqgYXzLEtovCptHpxkyVNPwSMHWfrw@mail.gmail.com> <CAMgjq7C_W3dfYQ6DJT4QCza1DCtCE7yUdiManQSxCKOENxTm_g@mail.gmail.com>
-In-Reply-To: <CAMgjq7C_W3dfYQ6DJT4QCza1DCtCE7yUdiManQSxCKOENxTm_g@mail.gmail.com>
-From: Mateusz Guzik <mjguzik@gmail.com>
-Date: Tue, 8 Apr 2025 09:46:15 +0200
-X-Gm-Features: ATxdqUEpX6XFuXeA6vg0-rN_JsZ2MEwWgX3OKplmGxlA9qwyfA2V1kLMwyG-s0c
-Message-ID: <CAGudoHHQ4y0Z_A0yzpfim_wGFVUuF3NaLgNtWUiquiCby6Ppkg@mail.gmail.com>
-Subject: Re: [RFC PATCH v2] mm: use per-numa-node atomics instead of percpu_counters
-To: Kairui Song <ryncsn@gmail.com>
-Cc: Sweet Tea Dorminy <sweettea-kernel@dorminy.me>, Andrew Morton <akpm@linux-foundation.org>, 
-	Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Dennis Zhou <dennis@kernel.org>, 
-	Tejun Heo <tj@kernel.org>, Christoph Lameter <cl@linux.com>, Martin Liu <liumartin@google.com>, 
-	David Rientjes <rientjes@google.com>, =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
-	Shakeel Butt <shakeel.butt@linux.dev>, Johannes Weiner <hannes@cmpxchg.org>, 
-	Sweet Tea Dorminy <sweettea@google.com>, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, 
-	"Liam R . Howlett" <Liam.Howlett@oracle.com>, Suren Baghdasaryan <surenb@google.com>, 
-	Vlastimil Babka <vbabka@suse.cz>, Christian Brauner <brauner@kernel.org>, 
-	Wei Yang <richard.weiyang@gmail.com>, David Hildenbrand <david@redhat.com>, 
-	Miaohe Lin <linmiaohe@huawei.com>, Al Viro <viro@zeniv.linux.org.uk>, linux-mm@kvack.org, 
+References: <20250407-tcpsendmsg-v2-0-9f0ea843ef99@debian.org> <20250407-tcpsendmsg-v2-1-9f0ea843ef99@debian.org>
+In-Reply-To: <20250407-tcpsendmsg-v2-1-9f0ea843ef99@debian.org>
+From: Eric Dumazet <edumazet@google.com>
+Date: Tue, 8 Apr 2025 16:20:54 +0200
+X-Gm-Features: ATxdqUG59MLSRiNhWQPkOOa9OdWbQyDElShn-Wt3VcaJs3Il64-B--EKQXDitB8
+Message-ID: <CANn89i+7DUKF4uH_NxBq4xb+7qanF4bQC=FTj5A4OODU8reghQ@mail.gmail.com>
+Subject: Re: [PATCH net-next v2 1/2] net: pass const to msg_data_left()
+To: Breno Leitao <leitao@debian.org>
+Cc: David Ahern <dsahern@kernel.org>, Neal Cardwell <ncardwell@google.com>, 
+	Kuniyuki Iwashima <kuniyu@amazon.com>, Steven Rostedt <rostedt@goodmis.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	"David S. Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	Simon Horman <horms@kernel.org>, Song Liu <song@kernel.org>, 
+	Yonghong Song <yonghong.song@linux.dev>, netdev@vger.kernel.org, 
 	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	Yu Zhao <yuzhao@google.com>, Roman Gushchin <roman.gushchin@linux.dev>
+	kernel-team@meta.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Apr 4, 2025 at 6:51=E2=80=AFPM Kairui Song <ryncsn@gmail.com> wrote=
-:
+On Mon, Apr 7, 2025 at 3:40=E2=80=AFPM Breno Leitao <leitao@debian.org> wro=
+te:
 >
-> On Thu, Apr 3, 2025 at 10:31=E2=80=AFPM Mateusz Guzik <mjguzik@gmail.com>=
- wrote:
-> > Note there are 2 unrelated components in that patchset:
-> > - one per-cpu instance of rss counters which is rolled up on context
-> > switches, avoiding the costly counter alloc/free on mm
-> > creation/teardown
-> > - cpu iteration in get_mm_counter
-> >
-> > The allocation problem is fixable without abandoning the counters, see
-> > my other e -mail (tl;dr let mm's hanging out in slab caches *keep* the
-> > counters). This aspect has to be solved anyway due to mm_alloc_cid().
-> > Providing a way to sort it out covers *both* the rss counters and the
-> > cid thing.
+> The msg_data_left() function doesn't modify the struct msghdr parameter,
+> so mark it as const. This allows the function to be used with const
+> references, improving type safety and making the API more flexible.
 >
-> It's not just about the fork performance, on some servers there could
-> be ~100K processes and ~200 CPUs, that will be hundreds of MBs of
-> memory just for the counters.
->
-> And nowadays it's not something uncommon for a desktop to have ~64
-> CPUs and ~10K processes.
->
-> If we use a single shared "per-cpu" counter (as in the patch), the
-> total consumption will always be only about just dozens of bytes.
->
+> Signed-off-by: Breno Leitao <leitao@debian.org>
 
-I agree there is a tradeoff here and your approach saves memory in
-exchange for more work during a context switch.
-
-I have no opinion which way to go here.
-
-> >
-> > In your patchset the accuracy increase comes at the expense of walking
-> > all CPUs every time, while a big part of the point of using percpu
-> > counters is to have a good enough approximation somewhere that this is
-> > not necessary.
->
-> It usually doesn't walk all CPUs, only the CPUs that actually used
-> that mm_struct, by checking mm_struct's cpu_bitmap. I didn't check if
-> all arch uses that bitmap though.
->
-> It's true that one CPU having its bit set on one mm_struct's
-> cpu_bitmap doesn't mean it updated the RSS counter so there will be
-> false positives, the false positive rate is low as schedulers don't
-> shuffle processes between processors randomly, and not every process
-> will be ran at a period.
->
-> Also per my observation the reader side is much colder compared to
-> updater for /proc.
->
-
-Per my comment, the read thing happens a lot for mmap and munmap so it
-cannot be taken lightly. You can check yourself with bpftrace.
-
-While I can agree vast majority of processes are not very thread-heavy
-and vast majority of machines out there don't have hundreds of cores,
-this does have to behave sanely for the cases which *do* exhibit these
-conditions. For example a box with > 200 cores and 200+ threads to
-boot, all running on the entirety of the box.
-
-In your patch as posted fetching the value will force the walk *a lot*
-and is consequently a no-go. This aspect needs to be dealt with for
-the patchset to be ok. Otherwise few months down the road someone else
-will show up and complain about a new slowdown stemming from it.
-
---=20
-Mateusz Guzik <mjguzik gmail.com>
+Reviewed-by: Eric Dumazet <edumazet@google.com>
