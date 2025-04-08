@@ -1,177 +1,75 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from gentwo.org (gentwo.org [62.72.0.81])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58CFF23E34A;
-	Tue,  8 Apr 2025 21:13:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04B7025525E;
+	Tue,  8 Apr 2025 21:44:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.72.0.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744146811; cv=none; b=V5cXiZeTaNFrPpLPCz4pVJ494iLRRrqKyhpaRjaz9ZVZVlGvCvh5SadFJUisvLawv3ZuZYL12YdcxwNV5d6l0rN0jTdpDOAEUVxuyRyKxYeXIIbblULII3JJsIyfkdw7n25rpfhiaT7dIEHEev3yhS8KwiggaMoq6Gbd7waJbm0=
+	t=1744148693; cv=none; b=E/J6KcOlwPu08BaFCZFRd2x61E4S+VtFKZIe7pqNdICU1r/WZvMPlKYFu+j0IL0ViYSJOFvjf1Zh2E+/5TO9RPCEG/a3Y5X/g3pMHugYzIdZi9fRLyfOspEA0hGwGSpg3eSBHnqePg1N1GdVLdsrCA/4/XI9liE+x2eutfns0Xw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744146811; c=relaxed/simple;
-	bh=ILfVuLymqUPwgpbXMf4YH+PUBfgIPrXUs3zMoGXuMG8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=pMCBpECzr79h64FBIRp6I9ZhjD/kuiJlb6zS7sLAob9GqL9dQ4ft4LtQ9ujLnlRiWTRVVhUFuX22TmVg8sWIN/PU+V+fpATKaGISaJKDyLkHqON/6mNDBCpG0oKrAbkCLBKvJwlEg6UjMj9H25lS/KdMSERz+6QR5Vy4wXvbuAY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ENEsh+Vz; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744148693; c=relaxed/simple;
+	bh=6srHW5qh8Uap0ryDmqBLLWjegtWKolNGZsB6CSsqmJ8=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=CjbkAdqucdYMkHpEp0Km7vd3CbuARVsDLyfrR/mqzVkXfIeaGIqbcWhNFa00xReMiFPqvNsKVG3bmMYxUcP0x8TL1BSbbMQKnfx7kOtuRbIwxQPzVGvhWv+6SH2a8/Ti0Bspmpf71SOzeIxvzubsOKKnRUA6jMvKG7Wb+gOTiaI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=gentwo.org; spf=pass smtp.mailfrom=gentwo.org; dkim=pass (1024-bit key) header.d=gentwo.org header.i=@gentwo.org header.b=X17M4ZrK; arc=none smtp.client-ip=62.72.0.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=gentwo.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gentwo.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ENEsh+Vz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 38383C4CEE5;
-	Tue,  8 Apr 2025 21:13:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744146810;
-	bh=ILfVuLymqUPwgpbXMf4YH+PUBfgIPrXUs3zMoGXuMG8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ENEsh+VzuzIhPCsEeaeTB/LwS9l2I5lCTSUa0s9kW/wRflw3wb74mXu7vRH88LTvT
-	 0lgmT5rkiG13hQqOhuoisBXKAoozc5ShSLkElOMT+j0XY4GAcoiqyZVY9EfKhJDr2w
-	 KhPwlEacG0dbfg/wZV5sLlLLAN7mvTK7a2onHbyeREMGGrhUK/jcWlMDEdrMKaLp6w
-	 xYrHkIGBYHkvJ55bIA8uFHeM0zffysTKIxJBRQjKDuNONvZD3+7d4s8z65WrnAnAST
-	 Nh8o6qEvy4IppfL+DhyDGoejH9fi6IVjRFkC8snO8d6FPDCR0b4yAgukRmN/i4Vq2U
-	 7E663lyCTcoNQ==
-From: Jiri Olsa <jolsa@kernel.org>
-To: Oleg Nesterov <oleg@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Andrii Nakryiko <andrii@kernel.org>
-Cc: bpf@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	x86@kernel.org,
-	Song Liu <songliubraving@fb.com>,
-	Yonghong Song <yhs@fb.com>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Hao Luo <haoluo@google.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Alan Maguire <alan.maguire@oracle.com>
-Subject: [PATCH 2/2] selftests/bpf: Add 5-byte nop uprobe trigger bench
-Date: Tue,  8 Apr 2025 23:13:10 +0200
-Message-ID: <20250408211310.51491-2-jolsa@kernel.org>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250408211310.51491-1-jolsa@kernel.org>
-References: <20250408211310.51491-1-jolsa@kernel.org>
+	dkim=pass (1024-bit key) header.d=gentwo.org header.i=@gentwo.org header.b="X17M4ZrK"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gentwo.org;
+	s=default; t=1744147319;
+	bh=6srHW5qh8Uap0ryDmqBLLWjegtWKolNGZsB6CSsqmJ8=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+	b=X17M4ZrKiLtjDdVFS2xjmp4xpY6Z8s/msCSXy8Lj9Kxlt8jP4ktfpK/RpAOocquCS
+	 nCPPRisNdTTBM8+5DGjNgB/Y2XzFVGP2Sgcc2X4UQvoj8GxhSuUookTPin+SEeOYYi
+	 OJDEdVEXA3bvUDdONzspvDlXhGxNQdmvIwl1zA7k=
+Received: by gentwo.org (Postfix, from userid 1003)
+	id 190B5406EB; Tue,  8 Apr 2025 14:21:59 -0700 (PDT)
+Received: from localhost (localhost [127.0.0.1])
+	by gentwo.org (Postfix) with ESMTP id 16201401F1;
+	Tue,  8 Apr 2025 14:21:59 -0700 (PDT)
+Date: Tue, 8 Apr 2025 14:21:59 -0700 (PDT)
+From: "Christoph Lameter (Ampere)" <cl@gentwo.org>
+To: "Paul E. McKenney" <paulmck@kernel.org>
+cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+    Sweet Tea Dorminy <sweettea@google.com>, Mateusz Guzik <mjguzik@gmail.com>, 
+    linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>, 
+    Steven Rostedt <rostedt@goodmis.org>, 
+    Masami Hiramatsu <mhiramat@kernel.org>, Dennis Zhou <dennis@kernel.org>, 
+    Tejun Heo <tj@kernel.org>, Martin Liu <liumartin@google.com>, 
+    David Rientjes <rientjes@google.com>, christian.koenig@amd.com, 
+    Shakeel Butt <shakeel.butt@linux.dev>, 
+    Johannes Weiner <hannes@cmpxchg.org>, 
+    Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, 
+    "Liam R . Howlett" <Liam.Howlett@oracle.com>, 
+    Suren Baghdasaryan <surenb@google.com>, Vlastimil Babka <vbabka@suse.cz>, 
+    Christian Brauner <brauner@kernel.org>, 
+    Wei Yang <richard.weiyang@gmail.com>, David Hildenbrand <david@redhat.com>, 
+    Miaohe Lin <linmiaohe@huawei.com>, Al Viro <viro@zeniv.linux.org.uk>, 
+    linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org, 
+    Yu Zhao <yuzhao@google.com>, Roman Gushchin <roman.gushchin@linux.dev>, 
+    Matthew Wilcox <willy@infradead.org>
+Subject: Re: [RFC PATCH v2] Introduce Hierarchical Per-CPU Counters
+In-Reply-To: <9f42144b-dca9-41b0-a80b-2e402cb5ab98@paulmck-laptop>
+Message-ID: <8897b4e1-b5ba-807d-7bc4-5a6080a93462@gentwo.org>
+References: <20250408160508.991738-1-mathieu.desnoyers@efficios.com> <f90d7646-99a3-48f5-ba2e-850c73592080@gentwo.org> <f014a9bb-0653-4682-8608-7fe6e2ad5ee6@efficios.com> <c013632c-b4ca-fb3d-9be5-b02ca5a3d859@gentwo.org>
+ <9f42144b-dca9-41b0-a80b-2e402cb5ab98@paulmck-laptop>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
 
-Add 5-byte nop uprobe trigger bench (x86_64 specific) to measure
-uprobes/uretprobes on top of nop5 instruction.
+On Tue, 8 Apr 2025, Paul E. McKenney wrote:
 
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
----
- tools/testing/selftests/bpf/bench.c           | 12 ++++++
- .../selftests/bpf/benchs/bench_trigger.c      | 42 +++++++++++++++++++
- .../selftests/bpf/benchs/run_bench_uprobes.sh |  2 +-
- 3 files changed, 55 insertions(+), 1 deletion(-)
+> RCU handles this by iterating from zero to nr_cpu_ids, which is set during
+> early boot.  It also builds its tree-shaped data structures during early
+> boot based on nr_cpu_ids.
 
-diff --git a/tools/testing/selftests/bpf/bench.c b/tools/testing/selftests/bpf/bench.c
-index 1bd403a5ef7b..0fd8c9b0d38f 100644
---- a/tools/testing/selftests/bpf/bench.c
-+++ b/tools/testing/selftests/bpf/bench.c
-@@ -526,6 +526,12 @@ extern const struct bench bench_trig_uprobe_multi_push;
- extern const struct bench bench_trig_uretprobe_multi_push;
- extern const struct bench bench_trig_uprobe_multi_ret;
- extern const struct bench bench_trig_uretprobe_multi_ret;
-+#ifdef __x86_64__
-+extern const struct bench bench_trig_uprobe_nop5;
-+extern const struct bench bench_trig_uretprobe_nop5;
-+extern const struct bench bench_trig_uprobe_multi_nop5;
-+extern const struct bench bench_trig_uretprobe_multi_nop5;
-+#endif
- 
- extern const struct bench bench_rb_libbpf;
- extern const struct bench bench_rb_custom;
-@@ -586,6 +592,12 @@ static const struct bench *benchs[] = {
- 	&bench_trig_uretprobe_multi_push,
- 	&bench_trig_uprobe_multi_ret,
- 	&bench_trig_uretprobe_multi_ret,
-+#ifdef __x86_64__
-+	&bench_trig_uprobe_nop5,
-+	&bench_trig_uretprobe_nop5,
-+	&bench_trig_uprobe_multi_nop5,
-+	&bench_trig_uretprobe_multi_nop5,
-+#endif
- 	/* ringbuf/perfbuf benchmarks */
- 	&bench_rb_libbpf,
- 	&bench_rb_custom,
-diff --git a/tools/testing/selftests/bpf/benchs/bench_trigger.c b/tools/testing/selftests/bpf/benchs/bench_trigger.c
-index 32e9f194d449..82327657846e 100644
---- a/tools/testing/selftests/bpf/benchs/bench_trigger.c
-+++ b/tools/testing/selftests/bpf/benchs/bench_trigger.c
-@@ -333,6 +333,20 @@ static void *uprobe_producer_ret(void *input)
- 	return NULL;
- }
- 
-+#ifdef __x86_64__
-+__nocf_check __weak void uprobe_target_nop5(void)
-+{
-+	asm volatile (".byte 0x0f, 0x1f, 0x44, 0x00, 0x00");
-+}
-+
-+static void *uprobe_producer_nop5(void *input)
-+{
-+	while (true)
-+		uprobe_target_nop5();
-+	return NULL;
-+}
-+#endif
-+
- static void usetup(bool use_retprobe, bool use_multi, void *target_addr)
- {
- 	size_t uprobe_offset;
-@@ -448,6 +462,28 @@ static void uretprobe_multi_ret_setup(void)
- 	usetup(true, true /* use_multi */, &uprobe_target_ret);
- }
- 
-+#ifdef __x86_64__
-+static void uprobe_nop5_setup(void)
-+{
-+	usetup(false, false /* !use_multi */, &uprobe_target_nop5);
-+}
-+
-+static void uretprobe_nop5_setup(void)
-+{
-+	usetup(true, false /* !use_multi */, &uprobe_target_nop5);
-+}
-+
-+static void uprobe_multi_nop5_setup(void)
-+{
-+	usetup(false, true /* use_multi */, &uprobe_target_nop5);
-+}
-+
-+static void uretprobe_multi_nop5_setup(void)
-+{
-+	usetup(true, true /* use_multi */, &uprobe_target_nop5);
-+}
-+#endif
-+
- const struct bench bench_trig_syscall_count = {
- 	.name = "trig-syscall-count",
- 	.validate = trigger_validate,
-@@ -506,3 +542,9 @@ BENCH_TRIG_USERMODE(uprobe_multi_ret, ret, "uprobe-multi-ret");
- BENCH_TRIG_USERMODE(uretprobe_multi_nop, nop, "uretprobe-multi-nop");
- BENCH_TRIG_USERMODE(uretprobe_multi_push, push, "uretprobe-multi-push");
- BENCH_TRIG_USERMODE(uretprobe_multi_ret, ret, "uretprobe-multi-ret");
-+#ifdef __x86_64__
-+BENCH_TRIG_USERMODE(uprobe_nop5, nop5, "uprobe-nop5");
-+BENCH_TRIG_USERMODE(uretprobe_nop5, nop5, "uretprobe-nop5");
-+BENCH_TRIG_USERMODE(uprobe_multi_nop5, nop5, "uprobe-multi-nop5");
-+BENCH_TRIG_USERMODE(uretprobe_multi_nop5, nop5, "uretprobe-multi-nop5");
-+#endif
-diff --git a/tools/testing/selftests/bpf/benchs/run_bench_uprobes.sh b/tools/testing/selftests/bpf/benchs/run_bench_uprobes.sh
-index af169f831f2f..03f55405484b 100755
---- a/tools/testing/selftests/bpf/benchs/run_bench_uprobes.sh
-+++ b/tools/testing/selftests/bpf/benchs/run_bench_uprobes.sh
-@@ -2,7 +2,7 @@
- 
- set -eufo pipefail
- 
--for i in usermode-count syscall-count {uprobe,uretprobe}-{nop,push,ret}
-+for i in usermode-count syscall-count {uprobe,uretprobe}-{nop,push,ret,nop5}
- do
- 	summary=$(sudo ./bench -w2 -d5 -a trig-$i | tail -n1 | cut -d'(' -f1 | cut -d' ' -f3-)
- 	printf "%-15s: %s\n" $i "$summary"
--- 
-2.49.0
+nr_cpu_ids is better but there are funky things like the default bios of a
+major server vendor indicating 256 or so possible cpus although only 2
+were installed. Thus nr_cpu_id is 256. Presumably some hardware
+configurations can support onlining 256 cpus....
 
