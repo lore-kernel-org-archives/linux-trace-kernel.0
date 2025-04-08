@@ -1,231 +1,144 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f169.google.com (mail-pg1-f169.google.com [209.85.215.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93EE8218845;
-	Tue,  8 Apr 2025 15:25:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2D0F23C8B2;
+	Tue,  8 Apr 2025 15:55:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744125958; cv=none; b=inwO0ywAsHNyOjoRVqrUXwt5WwAVWsVe/ztNy/uuzXydIbkorYictI3ksNuNIbyWmRL5qy8m7AXM7zhzAxz5vryA2BC7VRQHb1mxGiDb1JMcIYiXIjg77IVth4pE5U/QFlxluotriYeTVimGxeLaxfuz8Y4LR++Yno4RnJXMjBs=
+	t=1744127733; cv=none; b=cqmPZqWB8I1OVdFqZuHqJof/UWcL9RJ2GovV6j76G2jPoZh6FFpOM/XOckjGv6s4WmmWfYa3oGEX376uQ3OAVz9zt0TjjCsvon0wYutAEuhag7HcROC9SIyyNeJUJ5VA9bTYM5JMnlo/scqs5Y6Qyj3sy0rK12iLYidigKv/x/8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744125958; c=relaxed/simple;
-	bh=yuI/cONYo5jk3KMIQmLPYSuRaUFLK1KbDTV531UBS4c=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=NRFMCypYVtv/GrCJm1YFMFsso+kPjLZEc893Qo8BdZ7GLWr2tQGB7rnOvm+WOhlb1s1jPdg5YljECXou27cRCPwkhCF0uuSZw0B6Hq/jlHMxX/kEz0NcVUIdBIryooBhE4on3EdT/K6c4E83QvM6KgfndN+TqMeOEe/PA/ilR2A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7CF20C4CEE5;
-	Tue,  8 Apr 2025 15:25:57 +0000 (UTC)
-Date: Tue, 8 Apr 2025 11:27:14 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>
-Subject: [PATCH] tracing: Allow the top level trace_marker to write into
- another instance
-Message-ID: <20250408112714.403a4368@gandalf.local.home>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1744127733; c=relaxed/simple;
+	bh=Grp1Pw0/iwvWKb8SP7ouGiFqbuZhmL2YaxkwVJ6Lsjk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=dVbYnml4nNqXCg8rCu4ex4jzSnBhVUIsydQRZHZX0DxkeL+v7Re8wf3cOE763D1Ks00kvfNgEJZ9VmugaESIn1VUijZ4ZcCZbe6xuzgyTiKVjcGmCCwIgEHM2wpt3GJpfCZRLlOs4wcHxB7s8j94tpLVg5dgT9R/RBzUbAzAZ/g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=C9ZYQSdN; arc=none smtp.client-ip=209.85.215.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C9ZYQSdN"
+Received: by mail-pg1-f169.google.com with SMTP id 41be03b00d2f7-ad5236e6fd6so5246229a12.0;
+        Tue, 08 Apr 2025 08:55:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744127731; x=1744732531; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=2r8d4CoqNWfbO+vOmunolZhghnfaufTr/d12tmCx3c8=;
+        b=C9ZYQSdNYqqGDo0aSZafrUwgKH9HDhrWCyhJ3VQH+8nmh7j4eQjDSmT0SOL+Lzi61p
+         b00tHSc5nugAmLaxMKo597W/DyMqsuiJcS4bSTk7ATR8yfNljvTo6tQU2prJQaKPeLjU
+         mt3j1dJ9vdAciCJ/Zv4ZJPznrXiOysNH3WQtTgA1sdZz0fpYFknGSohG3FwoR9bqS/Ib
+         Wp7CLyx9Bpx+IKsBbKsnKvM9XjxsYBeR0LC6gW3DWEyKfdNqUpGf2YC7SFGrzwuZAjqe
+         nviGePYRyVMeWkHKWRjeLppZ3o2mSQTOG5M/lIpT54GT5ZUY+MvaiJhBb8CfUO3iyGxl
+         AUmw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744127731; x=1744732531;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=2r8d4CoqNWfbO+vOmunolZhghnfaufTr/d12tmCx3c8=;
+        b=TymIhgzcribH+vJUbdrkpBJ3RI9fbssZ0MgCwOHOQ0haTpCsq2I5s66YJDAMju2t+g
+         D++SK37w/2e8cdaybeQBtle+mHAth3NUqRkvVUY+i3pKnoJpK0C4w0M8DGKSFKF+hGju
+         eenwA9/V1sT1vGfOKvVjJgcoGDx7A+a+TMU+eVnddgYqfn1kNDgizEXlW9JIHPgfg5Gc
+         3G7D6UqNSfr/0ONn3TKggABowOqIWCgzZmcJNsoeQNf8mbrwWyMJu4mFIn57TLJQpzjd
+         M8XhFUkqfA+zhlkZVK6CoST+eoWCHvoVV+BuQuAxzyJGR74QmQyDz/7Dxns8nsjMtXF3
+         A6Nw==
+X-Forwarded-Encrypted: i=1; AJvYcCX7PXX6cNZtgB/HKzxVff1i5h/WANSUtuI/NCq2WT6vu5DhSuVLOP/cuBAireZpA4nnp8HK+oIFsyNDy/CN3HhzQqc=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx6dN2L3EUICX6sEkC6gt5A8zguCEfR/3LT86PLDOQOD2EJDhd2
+	knQfLgqiG5/WpgYvuEt/bRs0GwyM71MA8D4Dy65j2JXTfKgowABDb/mz2kZCQqpB9eaMt0YxHg0
+	235P+9p1I3WufSsmZQCDDy4oZr1X6bxl5
+X-Gm-Gg: ASbGncsXX5xmNy1tiK0tKISdwv2B9N927jNfg1TXzyuCJkz9zbQsnGpBnEOY0CHvfwo
+	S/0eBSFtAxfbwhigIk8hpRTYWWxeKtJ+DpmrbKG7uSVj00Awm/53rrXsH9BQBHS7LVUAYrYJmsY
+	dsh51lqosRBCpcvgkh96eomWrsCfCV
+X-Google-Smtp-Source: AGHT+IEdAdNI/m0mDZDBYf6Uybrhu+VFgs+XsaRN6/KpawOjlF83g1h1SFl0iYxOHt2R9GHMGaZXsz4fEgl+jAnloHw=
+X-Received: by 2002:a17:90a:c890:b0:2ff:53a4:74f0 with SMTP id
+ 98e67ed59e1d1-306a48acec4mr23379143a91.29.1744127730882; Tue, 08 Apr 2025
+ 08:55:30 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20250407180745.42848-1-andybnac@gmail.com> <20250407160924.7c28fffd@gandalf.local.home>
+In-Reply-To: <20250407160924.7c28fffd@gandalf.local.home>
+From: Andy Chiu <andybnac@gmail.com>
+Date: Tue, 8 Apr 2025 23:55:19 +0800
+X-Gm-Features: ATxdqUH2NmCkB2Z6aSwDjJk1d3UhdbibANS3Y8DMTs7j6Xq0075pr7HoeVndza4
+Message-ID: <CAFTtA3N=fB9Yr3EiTUpGzF2imtwgnVEextyL3+V1wiTJ_jp+WA@mail.gmail.com>
+Subject: Re: [PATCH] ftrace: properly merge notrace hash
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	mark.rutland@arm.com, mhiramat@kernel.org, mathieu.desnoyers@efficios.com, 
+	bjorn@rivosinc.com, puranjay12@gmail.com, alexghiti@rivosinc.com, 
+	paul.walmsley@sifive.com, greentime.hu@sifive.com, nick.hu@sifive.com, 
+	nylon.chen@sifive.com, eric.lin@sifive.com, zong.li@sifive.com, 
+	yongxuan.wang@sifive.com, samuel.holland@sifive.com, olivia.chu@sifive.com, 
+	c2232430@gmail.com, vincent.chen@sifive.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Steven Rostedt <rostedt@goodmis.org>
+Steven Rostedt <rostedt@goodmis.org> =E6=96=BC 2025=E5=B9=B44=E6=9C=888=E6=
+=97=A5 =E9=80=B1=E4=BA=8C =E4=B8=8A=E5=8D=884:08=E5=AF=AB=E9=81=93=EF=BC=9A
+>
+> On Tue,  8 Apr 2025 02:07:44 +0800
+> Andy Chiu <andybnac@gmail.com> wrote:
+>
+> > The global notrace hash should be jointly decided by the intersection o=
+f
+> > each subops's notrace hash, but not the filter hash.
+> >
+> > Fixes: 5fccc7552ccb ("ftrace: Add subops logic to allow one ops to mana=
+ge many")
+> > Signed-off-by: Andy Chiu <andybnac@gmail.com>
+> > ---
+> >  kernel/trace/ftrace.c | 11 +++++------
+> >  1 file changed, 5 insertions(+), 6 deletions(-)
+> >
+> > diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+> > index 1a48aedb5255..ee662f380b61 100644
+> > --- a/kernel/trace/ftrace.c
+> > +++ b/kernel/trace/ftrace.c
+> > @@ -3526,18 +3526,17 @@ int ftrace_startup_subops(struct ftrace_ops *op=
+s, struct ftrace_ops *subops, int
+> >           ftrace_hash_empty(subops->func_hash->notrace_hash)) {
+> >               notrace_hash =3D EMPTY_HASH;
+> >       } else {
+> > -             size_bits =3D max(ops->func_hash->filter_hash->size_bits,
+> > -                             subops->func_hash->filter_hash->size_bits=
+);
+> > +             size_bits =3D max(ops->func_hash->notrace_hash->size_bits=
+,
+> > +                             subops->func_hash->notrace_hash->size_bit=
+s);
+> >               notrace_hash =3D alloc_ftrace_hash(size_bits);
+> >               if (!notrace_hash) {
+> > -                     free_ftrace_hash(filter_hash);
+> > +                     free_ftrace_hash(notrace_hash);
+> >                       return -ENOMEM;
+> >               }
+> >
+> > -             ret =3D intersect_hash(&notrace_hash, ops->func_hash->fil=
+ter_hash,
+> > -                                  subops->func_hash->filter_hash);
+> > +             ret =3D intersect_hash(&notrace_hash, ops->func_hash->not=
+race_hash,
+> > +                                  subops->func_hash->notrace_hash);
+>
+> Thanks for catching this.
+>
+>
+> >               if (ret < 0) {
+> > -                     free_ftrace_hash(filter_hash);
+>
+> The filter_hash still needs to be freed, as it could have been allocated =
+in
+> the previous if statement and never used (both the filter_hash and
+> notrace_hash get used at the end of the function via ftrace_update_ops().
+>
+> Care to send a v2?
 
-There are applications that have it hard coded to write into the top level
-trace_marker instance (/sys/kernel/tracing/trace_marker). This can be
-annoying if a profiler is using that instance for other work, or if it
-needs all writes to go into a new instance.
+Yes, thanks for reminding! Let me send a v2 with filter_hash freed on
+this condition.
 
-A new option is created called "redirect_trace_marker". By default, the
-top level has this set, as that is the default buffer that writing into
-the top level trace_marker file will go to. But now if an instance is
-created and sets this option, all writes into the top level trace_marker
-will be redirected into that instance buffer just as if an application
-were to write into the instance's trace_marker file.
-
-Only one instance can have this option set. If the option is set in
-another instance, then it will clear the option from the previous
-instance.
-
-The top level instance can set this option but it can not clear it, and
-it will bring the writing of the trace_marker back to its buffer.
-
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
- Documentation/trace/ftrace.rst | 15 +++++++++
- kernel/trace/trace.c           | 60 +++++++++++++++++++++++++++++++---
- kernel/trace/trace.h           |  1 +
- 3 files changed, 71 insertions(+), 5 deletions(-)
-
-diff --git a/Documentation/trace/ftrace.rst b/Documentation/trace/ftrace.rst
-index c9e88bf65709..6b3915139347 100644
---- a/Documentation/trace/ftrace.rst
-+++ b/Documentation/trace/ftrace.rst
-@@ -1205,6 +1205,21 @@ Here are the available options:
- 	default instance. The only way the top level instance has this flag
- 	cleared, is by it being set in another instance.
- 
-+  redirect_trace_marker
-+	This is similar to the trace_printk_dest option above, but it works
-+	for the top level trace_marker (/sys/kernel/tracing/trace_marker).
-+	If there are applications that hard code writing into the top level
-+	trace_marker file, and the tooling would like it to go into an
-+	instance, this option can be used. Create an instance and set this
-+	option, and then all writes into the top level trace_marker file will
-+	be redirected into that instance.
-+
-+	This flag cannot be cleared by the top level instance, as it is the
-+	default instance. The only way the top level instance has this flag
-+	cleared, is by it being set in another instance. By setting this flag
-+	in the top level instance, it will put the writing into the
-+	trace_marker file back into the top level instance buffer.
-+
-   annotate
- 	It is sometimes confusing when the CPU buffers are full
- 	and one CPU buffer had a lot of events recently, thus
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index 8ddf6b17215c..ec7e15434759 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -493,7 +493,8 @@ EXPORT_SYMBOL_GPL(unregister_ftrace_export);
- 	 TRACE_ITER_ANNOTATE | TRACE_ITER_CONTEXT_INFO |		\
- 	 TRACE_ITER_RECORD_CMD | TRACE_ITER_OVERWRITE |			\
- 	 TRACE_ITER_IRQ_INFO | TRACE_ITER_MARKERS |			\
--	 TRACE_ITER_HASH_PTR | TRACE_ITER_TRACE_PRINTK)
-+	 TRACE_ITER_HASH_PTR | TRACE_ITER_TRACE_PRINTK |		\
-+	 TRACE_ITER_REDIRECT_MARKER)
- 
- /* trace_options that are only supported by global_trace */
- #define TOP_LEVEL_TRACE_FLAGS (TRACE_ITER_PRINTK |			\
-@@ -501,7 +502,8 @@ EXPORT_SYMBOL_GPL(unregister_ftrace_export);
- 
- /* trace_flags that are default zero for instances */
- #define ZEROED_TRACE_FLAGS \
--	(TRACE_ITER_EVENT_FORK | TRACE_ITER_FUNC_FORK | TRACE_ITER_TRACE_PRINTK)
-+	(TRACE_ITER_EVENT_FORK | TRACE_ITER_FUNC_FORK | TRACE_ITER_TRACE_PRINTK | \
-+	 TRACE_ITER_REDIRECT_MARKER)
- 
- /*
-  * The global_trace is the descriptor that holds the top-level tracing
-@@ -512,6 +514,7 @@ static struct trace_array global_trace = {
- };
- 
- static struct trace_array *printk_trace = &global_trace;
-+static struct trace_array *marker_trace = &global_trace;
- 
- static __always_inline bool printk_binsafe(struct trace_array *tr)
- {
-@@ -534,6 +537,16 @@ static void update_printk_trace(struct trace_array *tr)
- 	tr->trace_flags |= TRACE_ITER_TRACE_PRINTK;
- }
- 
-+static void update_marker_trace(struct trace_array *tr)
-+{
-+	if (marker_trace == tr)
-+		return;
-+
-+	marker_trace->trace_flags &= ~TRACE_ITER_REDIRECT_MARKER;
-+	marker_trace = tr;
-+	tr->trace_flags |= TRACE_ITER_REDIRECT_MARKER;
-+}
-+
- void trace_set_ring_buffer_expanded(struct trace_array *tr)
- {
- 	if (!tr)
-@@ -4755,8 +4768,22 @@ int tracing_single_release_file_tr(struct inode *inode, struct file *filp)
- 
- static int tracing_mark_open(struct inode *inode, struct file *filp)
- {
-+	struct trace_array *tr = inode->i_private;
-+	int ret;
-+
- 	stream_open(inode, filp);
--	return tracing_open_generic_tr(inode, filp);
-+
-+	/* The top level marker can have it redirected to an instance */
-+	if (tr == &global_trace)
-+		tr = marker_trace;
-+
-+	ret = tracing_check_open_get_tr(tr);
-+	if (ret)
-+		return ret;
-+
-+	filp->private_data = tr;
-+
-+	return 0;
- }
- 
- static int tracing_release(struct inode *inode, struct file *file)
-@@ -4799,7 +4826,7 @@ static int tracing_release(struct inode *inode, struct file *file)
- 
- int tracing_release_generic_tr(struct inode *inode, struct file *file)
- {
--	struct trace_array *tr = inode->i_private;
-+	struct trace_array *tr = file->private_data;
- 
- 	trace_array_put(tr);
- 	return 0;
-@@ -5189,7 +5216,8 @@ int set_tracer_flag(struct trace_array *tr, unsigned int mask, int enabled)
- {
- 	if ((mask == TRACE_ITER_RECORD_TGID) ||
- 	    (mask == TRACE_ITER_RECORD_CMD) ||
--	    (mask == TRACE_ITER_TRACE_PRINTK))
-+	    (mask == TRACE_ITER_TRACE_PRINTK) ||
-+	    (mask == TRACE_ITER_REDIRECT_MARKER))
- 		lockdep_assert_held(&event_mutex);
- 
- 	/* do nothing if flag is already set */
-@@ -5220,6 +5248,25 @@ int set_tracer_flag(struct trace_array *tr, unsigned int mask, int enabled)
- 		}
- 	}
- 
-+	if (mask == TRACE_ITER_REDIRECT_MARKER) {
-+		if (enabled) {
-+			update_marker_trace(tr);
-+		} else {
-+			/*
-+			 * The global_trace cannot clear this.
-+			 * It's flag only gets cleared if another instance sets it.
-+			 */
-+			if (marker_trace == &global_trace)
-+				return -EINVAL;
-+			/*
-+			 * An instance must always have it set.
-+			 * by default, that's the global_trace instane.
-+			 */
-+			if (marker_trace == tr)
-+				update_marker_trace(&global_trace);
-+		}
-+	}
-+
- 	if (enabled)
- 		tr->trace_flags |= mask;
- 	else
-@@ -9897,6 +9944,9 @@ static int __remove_instance(struct trace_array *tr)
- 	if (printk_trace == tr)
- 		update_printk_trace(&global_trace);
- 
-+	if (marker_trace == tr)
-+		update_marker_trace(&global_trace);
-+
- 	tracing_set_nop(tr);
- 	clear_ftrace_function_probes(tr);
- 	event_trace_del_tracer(tr);
-diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
-index 79be1995db44..602457eda8e8 100644
---- a/kernel/trace/trace.h
-+++ b/kernel/trace/trace.h
-@@ -1368,6 +1368,7 @@ extern int trace_get_user(struct trace_parser *parser, const char __user *ubuf,
- 		C(MARKERS,		"markers"),		\
- 		C(EVENT_FORK,		"event-fork"),		\
- 		C(TRACE_PRINTK,		"trace_printk_dest"),	\
-+		C(REDIRECT_MARKER,	"redirect_trace_marker"),\
- 		C(PAUSE_ON_TRACE,	"pause-on-trace"),	\
- 		C(HASH_PTR,		"hash-ptr"),	/* Print hashed pointer */ \
- 		FUNCTION_FLAGS					\
--- 
-2.47.2
-
+Regards,
+Andy
