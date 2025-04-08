@@ -1,44 +1,42 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-170.mta0.migadu.com (out-170.mta0.migadu.com [91.218.175.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 483522AE86;
-	Tue,  8 Apr 2025 21:46:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B6BA22173D
+	for <linux-trace-kernel@vger.kernel.org>; Tue,  8 Apr 2025 22:12:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744148815; cv=none; b=RBOn5a2cER8iNDm4AECc66xBwJ5lSfB4Ugs9kVxI7Ix8/OXVLC3ZFkt7fBwbMuvu6gxGpmaDMbQqe2NioXULK4iFIUS+Eb9TNxCRcAY6R9mwpMoBsnaNa6HWQGpD+mp2QmgAokkJKPqvhqHpGsqJ5qCWEzoF4knAI4+xjAElyIg=
+	t=1744150360; cv=none; b=Al2M5/BBi8xIs3+nw3eirfHiWPxboblvRX7UjzZZiJLYLdjfNmHh7Xj41gvD7Slp8z+UH5gPVnQNaJyxK2oWb10m6OMwX+tX9tzpaaxAMlz/xcOUKOO0WCKR+2jxqVwBn5P/yE4hZjh/vQ24VB4FuogGGh37onT6yTlAFjxU5cM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744148815; c=relaxed/simple;
-	bh=1CdAX/Vmooyt36OrpOM3FfcJ8S7Qqx8DS2vhZPGpQxk=;
+	s=arc-20240116; t=1744150360; c=relaxed/simple;
+	bh=qhFLT1sxb4YcqbiDWhSlGBfJywzZ4IUAVuk32gSvyRU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LZZ7/rQA8nrqc+nXEiABC9WmLkoU8ojqAGcs3BLvx87KGQKFgrXuLgAI11qsZtYwFLAyB5yKnCew0ycsdTPaoooCPedxLd0pDQiqhdbq87vD/bJQywVRr+ezNl/VUnWEMfYyTK1Oa7RYQwuXxfVwTs/vxN/xPy/bw1Ndbq3Pv0o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RHzBe7Ah; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=IEFboVH11t6RqhcmJKaRSYXgfUeqiuAZCdz8mjr1gpmQ1FEApJMuhn0h6TPJNsPR+4pz9ATTcQ56y1JtMnKuwai7xc37j2on9Y1bgRMe6aZ24sAE32pi84iGExJuv7KhUjaDdho6hhVPUt5bNo7DOatuG6grh7XQQ9RCx72SXv0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=cErtYA/O; arc=none smtp.client-ip=91.218.175.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RHzBe7Ah"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A651CC4CEE5;
-	Tue,  8 Apr 2025 21:46:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744148813;
-	bh=1CdAX/Vmooyt36OrpOM3FfcJ8S7Qqx8DS2vhZPGpQxk=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-	b=RHzBe7Ahi8SWAAKvssPgiUVjk4o5e6hl9o3XPI7cMA+N4NaGuw2u5qgL2crXGiIBr
-	 zWMkZA0akpNat/jb4ZTbQ9Z/U5TTNiyVDJGfrVkQ7LGOcaOp+b/6MXXI6GM19fqRx3
-	 KjyV7TtSi7UjABbLWNGLQAacqVKtXMw0fsAaANg+phXp8669HhEfY69f/8o0prYDEw
-	 MEpSIy8eZyh8ajc+/wFM6+Wj5LT+4GB4r14PtamtAqTslvZfKagwhwClZsoaaTVcij
-	 pTb0CLCBMH7kaxgf9vRsbojxaB/2Ax2/2563qCP+mpfa7CYGoyFJ3PbQ5l3dz55Ozs
-	 kD8o8INbW70OQ==
-Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-	id 473FDCE0F64; Tue,  8 Apr 2025 14:46:53 -0700 (PDT)
-Date: Tue, 8 Apr 2025 14:46:53 -0700
-From: "Paul E. McKenney" <paulmck@kernel.org>
-To: "Christoph Lameter (Ampere)" <cl@gentwo.org>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Sweet Tea Dorminy <sweettea@google.com>,
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="cErtYA/O"
+Date: Tue, 8 Apr 2025 22:12:17 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1744150346;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=s2wPsDuusYDf71v3DeNeWAxNbKxR+CVPefFzBRS96uE=;
+	b=cErtYA/O/BdV+KS0Mrqub2uMCUCXuY9uyQM2TrHpIEYBIISYN274V/rYMsjirEsFGl8XMD
+	Ne8VwR4KwyOP14rQhu99BvvuyPOjMJ2dBYPMkXwZ5YdChxBgfyPcH80cs8pnScWKllFP+c
+	ftBGvZgweM/tg3OaNzi06a5Ih90lVC8=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Roman Gushchin <roman.gushchin@linux.dev>
+To: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: Sweet Tea Dorminy <sweettea@google.com>,
 	Mateusz Guzik <mjguzik@gmail.com>, linux-kernel@vger.kernel.org,
 	Andrew Morton <akpm@linux-foundation.org>,
+	"Paul E. McKenney" <paulmck@kernel.org>,
 	Steven Rostedt <rostedt@goodmis.org>,
 	Masami Hiramatsu <mhiramat@kernel.org>,
 	Dennis Zhou <dennis@kernel.org>, Tejun Heo <tj@kernel.org>,
-	Martin Liu <liumartin@google.com>,
+	Christoph Lameter <cl@linux.com>, Martin Liu <liumartin@google.com>,
 	David Rientjes <rientjes@google.com>, christian.koenig@amd.com,
 	Shakeel Butt <shakeel.butt@linux.dev>,
 	Johannes Weiner <hannes@cmpxchg.org>,
@@ -52,17 +50,10 @@ Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
 	Miaohe Lin <linmiaohe@huawei.com>,
 	Al Viro <viro@zeniv.linux.org.uk>, linux-mm@kvack.org,
 	linux-trace-kernel@vger.kernel.org, Yu Zhao <yuzhao@google.com>,
-	Roman Gushchin <roman.gushchin@linux.dev>,
 	Matthew Wilcox <willy@infradead.org>
 Subject: Re: [RFC PATCH v2] Introduce Hierarchical Per-CPU Counters
-Message-ID: <077bfec0-c918-48b1-b133-36b4bba5d66a@paulmck-laptop>
-Reply-To: paulmck@kernel.org
+Message-ID: <Z_WfQbPIBHqRXGz9@google.com>
 References: <20250408160508.991738-1-mathieu.desnoyers@efficios.com>
- <f90d7646-99a3-48f5-ba2e-850c73592080@gentwo.org>
- <f014a9bb-0653-4682-8608-7fe6e2ad5ee6@efficios.com>
- <c013632c-b4ca-fb3d-9be5-b02ca5a3d859@gentwo.org>
- <9f42144b-dca9-41b0-a80b-2e402cb5ab98@paulmck-laptop>
- <8897b4e1-b5ba-807d-7bc4-5a6080a93462@gentwo.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -71,29 +62,40 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <8897b4e1-b5ba-807d-7bc4-5a6080a93462@gentwo.org>
+In-Reply-To: <20250408160508.991738-1-mathieu.desnoyers@efficios.com>
+X-Migadu-Flow: FLOW_OUT
 
-On Tue, Apr 08, 2025 at 02:21:59PM -0700, Christoph Lameter (Ampere) wrote:
-> On Tue, 8 Apr 2025, Paul E. McKenney wrote:
+On Tue, Apr 08, 2025 at 12:05:08PM -0400, Mathieu Desnoyers wrote:
+> * Motivation
 > 
-> > RCU handles this by iterating from zero to nr_cpu_ids, which is set during
-> > early boot.  It also builds its tree-shaped data structures during early
-> > boot based on nr_cpu_ids.
+> The purpose of this hierarchical split-counter scheme is to:
 > 
-> nr_cpu_ids is better but there are funky things like the default bios of a
-> major server vendor indicating 256 or so possible cpus although only 2
-> were installed. Thus nr_cpu_id is 256. Presumably some hardware
-> configurations can support onlining 256 cpus....
+> - Minimize contention when incrementing and decrementing counters,
+> - Provide fast access to a sum approximation,
+> - Provide a sum approximation with an acceptable accuracy level when
+>   scaling to many-core systems.
+> - Provide approximate and precise comparison of two counters, and
+>   between a counter and a value.
+> 
+> It aims at fixing the per-mm RSS tracking which has become too
+> inaccurate for OOM killer purposes on large many-core systems [1].
 
-Indeed there are.  So some portions of RCU build for nr_cpu_ids but
-activate portions of the data structures (e.g., spawn kthreads) only
-for those CPUs that actually come online at least once.
+It might be an overkill for the task from the memory overhead perspective.
+Sure, for a very large process on a large machine it makes total sense,
+but for smaller process it will waste a ton of memory.
 
-But should we really be optimizing to that degree for that sort of
-breakage?  Just extra data structure, who cares?
+Also, for relatively small number of CPUs (e.g. 8) it's also an overkill
+from the complexity standpoint.
 
-Yes, I do understand that the vendor in question, whoever it is, would
-not consider their default BIOS to be broken.  They are welcome to
-their opinion.  ;-)
+But as an idea it makes total sense to me, maybe just applicable to some
+other tasks, e.g. global memory stats.
 
-							Thanx, Paul
+For the RSS tracking I wonder if what we really need is to go back to the
+per-thread caching, but with some time-based propagation. E.g. a thread
+should dump their cached value on going to sleep or being rescheduled.
+This will bound the error to (64 * number of currently running threads),
+which should be acceptable. We can also think of making the central counter
+be an upper bound by increasing it first and moving the "pre-charged" value
+to per-thread counters.
+
+Thanks!
