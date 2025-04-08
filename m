@@ -1,173 +1,85 @@
-Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp-fw-6001.amazon.com (smtp-fw-6001.amazon.com [52.95.48.154])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FC9B241CA3;
-	Tue,  8 Apr 2025 20:22:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A8CF2500DE;
+	Tue,  8 Apr 2025 20:54:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.95.48.154
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744143724; cv=none; b=E/8ncXEv/weVAPvzN+kWMDvf8jES9W+2fHveskWK2t0IlmPAdElDx+8t8y98UiQVsvjk51ba/rwhLA3wyQ/yeg1zBVZBG2ftTaS2Oax8u6Adyrg8BuWbg5rMCUIdx/k3Hm+OgR/nvESBMiaaOkp9Ekbj5piUU4cI6gXNIBZ4kn8=
+	t=1744145678; cv=none; b=XYSBD0h45vBuehaRbV5FVjju0bx6nEBGXnFUUdIeGlBnpbXtu0r37/9GJFPW/XSCmxYhBsHepXUoA0m/Hju3KV69xZno+8WT4kjuhX2EW4esbQhkmH83i6qClOEZ189sav8AYjrjrQtoVRPODjOHdKkyjNsr+pWArfJmk5m9v8U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744143724; c=relaxed/simple;
-	bh=umrs8nf1yHNtTlHW+5uJsZQYBs+rN/lSC5eqcpjo5J0=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eMm3eELzTRYauY2mcaEa6bENMLt+lPx4f7Bnqn7uXxx5zkJXzeFPx/bDqrcsW8/pa68I/2KRYLuBI8mS7TY7vT2XwbCp+Q047HrIV7xXvQL/tTWRkRYgTa0hAbGggqbxjSzBicyqtAmZCxR15+ePfDMoeYW/dStNNrFaoFzDrXE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FJ0LmU+x; arc=none smtp.client-ip=209.85.218.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744145678; c=relaxed/simple;
+	bh=draSekVRrKC87FpGV0FSHqnUcDGLKadJ0kmEvf3/eJc=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=BpYDv0n+vKaOWUinnXBltepUCoVEZg6VtJqQ+ISUBVQRuHAwP/zQqgofEk73QIZHYosM7xoKSMVfA5qltb/kcxAaCHynsOHhs6zrCGBk33r/tOhEHbedqooA5eyKAuOjk1fBCFMvUMp8fIuoGARHD+bdhSUVPHZIn2paBJoMRfs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.co.jp; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=tUx2zsvI; arc=none smtp.client-ip=52.95.48.154
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.jp
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FJ0LmU+x"
-Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-ac29fd22163so1045235266b.3;
-        Tue, 08 Apr 2025 13:22:02 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="tUx2zsvI"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744143721; x=1744748521; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:date:from:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=iMt1r/F2XNN27MwBAL3KuI/cRUpPDfyeHOKGNdC7QJM=;
-        b=FJ0LmU+xLqk/XDKAtqt+EnVawddlAboTK/rVKSgL+kFR4Q+LPQIk4cJblGImmbSnDV
-         A9X9mXJwyIlv7T+1fdRRj13kkFu7z1+iYLGKwwc0cow5rJSZkFBmyfsme1zufkBVttfv
-         S0oMI+lXGsgP2VJJD4g+3IXuoHmlOQf2VnFf05SWvK+OwcKY2UIE10wB7SljVXxAnOHs
-         AWjI6iszD4g8obq/AG6+wpwRjmVYn9FlUzxIdFfMuyBKOKEQyQ08TqRKlWFI2OsDCQvF
-         OY0SbG2YmCtfvUhO9aMv/Q16dIja+y8dkHjQbI3lrTm7UX8DuSwdBBa48jXEEwYuwRJF
-         CQlw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744143721; x=1744748521;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:date:from
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=iMt1r/F2XNN27MwBAL3KuI/cRUpPDfyeHOKGNdC7QJM=;
-        b=rLJslD44c3jkG56DQx35Wn51HpxAtNxSa0vuuKdlf33FcISy1GYABbr32fEW3cvGb5
-         41iYL9dz17uiFU+xWJCN0cnRjDrMex3G+Mgy3rx62XrjudH3bgeZpLKBZnmdYhXwHBwW
-         oc1Z3q0JXjHwtQxHR+n3r/YJzhxUZBkFMY21FK8DpATXmtRUW5pZZZCaOvxkpKPNGN1K
-         b7cwSHht2LPP/9gWtAPwgTIbH969VI71HdbBR6UgS3Mn4paGivg+iQQikmKQ2ELeZiwc
-         2S1XYwRx7TAc8IHmuTHpJiOJKgQ4mF3K7CHFWpbb4wHG6aiNpELhUIJXvrZDt1G5uFLe
-         v7eg==
-X-Forwarded-Encrypted: i=1; AJvYcCVTrWbG3Z1FcJkdC4lG7IlKHCJzTI2cw580/7GfwS+c/tllfmpQ1JmxSU3rxksWkxxkIbU=@vger.kernel.org, AJvYcCWOZnTHJg183sn4lfctd0v37QA4fUW9QQFqkTHKRm9STAWV86AcWdYi7LcTCGjQFR5rMIhYwh+d6pm9+2JB@vger.kernel.org, AJvYcCXxaKdjHWWKSA1y1p3uvwzYKn44k7Mrcfh1+l6nc512a/H2HsBm/dx5GOpn98bfkkXlCuzSJ/pUgAz0EjuFqzompt3V@vger.kernel.org
-X-Gm-Message-State: AOJu0YxoyApPVKHp85AnGFfD4pQO3CbL+4E4dFsECMPfux7mUUtwmiXZ
-	gbyFUyMGeP/uXunXrB8KhZoJt2xqO1tjXmS8b0ZnxJOODRSvwlyB
-X-Gm-Gg: ASbGncv7He1L1cGe2DJb5tjyVY8QgcArKVmwgxHFP21i5jTrviDcTU9nEiqlBNvBsqw
-	IB0zaCyxfxlJWfL1IzxiDUi/MF+ZL6sWh+NErUFNi4/NW+aHUYi624/LAdWZDX7/2OudVCr+9yY
-	AfxLF2v01/ZhZ687eULQAQ3BDELCWzElPps0E9vCpNF1mmfuL8ezFX5S0380gx7/eepW5Wp27D2
-	q4pXyYSm5hnDoN/V060GlPXQozCdmCWhTviHR4junsFZ6IuovTg4nwByLUOQhyfhpUfWOPEBMGT
-	OgvdI7w9qN/DdpDgr4UvHVxL+qeqT1Ksm5kYVebR7moanuIRdCU=
-X-Google-Smtp-Source: AGHT+IHQON87cPPvrYmjqYx0pWOKi6qv9xnfs2gXXYPnfEV4LpZ6EgpJixyC3wJVZaC1H/fq4IyIjA==
-X-Received: by 2002:a17:907:968b:b0:ac6:ff34:d046 with SMTP id a640c23a62f3a-aca9b614b22mr63937766b.2.1744143720387;
-        Tue, 08 Apr 2025 13:22:00 -0700 (PDT)
-Received: from krava (85-193-35-57.rib.o2.cz. [85.193.35.57])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac7db5eb6e9sm787644066b.21.2025.04.08.13.21.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Apr 2025 13:21:59 -0700 (PDT)
-From: Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date: Tue, 8 Apr 2025 22:21:57 +0200
-To: Jiri Olsa <olsajiri@gmail.com>
-Cc: Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-	Oleg Nesterov <oleg@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	x86@kernel.org, Song Liu <songliubraving@fb.com>,
-	Yonghong Song <yhs@fb.com>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Hao Luo <haoluo@google.com>, Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Alan Maguire <alan.maguire@oracle.com>,
-	David Laight <David.Laight@aculab.com>,
-	Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas@t-8ch.de>
-Subject: Re: [PATCH RFCv3 10/23] uprobes/x86: Add support to emulate nop5
- instruction
-Message-ID: <Z_WFZT3rZtjts3u-@krava>
-References: <20250320114200.14377-1-jolsa@kernel.org>
- <20250320114200.14377-11-jolsa@kernel.org>
- <CAEf4BzY8z8r5uGEFjtNVm0L2JBwQ1ZPP2gqgsVqheqBkPiJ-9g@mail.gmail.com>
- <Z_Ox7ibkULkJ_2Lx@krava>
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1744145677; x=1775681677;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=JOYQdAT9aHVDW60xlrEBrMfxxClVahQwTUxrVj9X9eo=;
+  b=tUx2zsvInR6X1m36MSF8frosmvYtnS+b9LManc7RHUJT8/qhLbhHO6QI
+   p4rRwyVItAueUxUX5KGOMvnpwYEjYiAwtRuXANCVhEpBClVw9yGk78AIs
+   4DTFpAH4nuM8NLoqFxm7cbWL0/JuYSq6zKz76VZPyVIZEfOJz2F/tb3pL
+   4=;
+X-IronPort-AV: E=Sophos;i="6.15,199,1739836800"; 
+   d="scan'208";a="478673300"
+Received: from iad12-co-svc-p1-lb1-vlan2.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.43.8.2])
+  by smtp-border-fw-6001.iad6.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2025 20:54:31 +0000
+Received: from EX19MTAUWB001.ant.amazon.com [10.0.38.20:26062]
+ by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.21.195:2525] with esmtp (Farcaster)
+ id 4872f542-0cb8-43af-aeea-9f5d1821a2f5; Tue, 8 Apr 2025 20:54:30 +0000 (UTC)
+X-Farcaster-Flow-ID: 4872f542-0cb8-43af-aeea-9f5d1821a2f5
+Received: from EX19D004ANA001.ant.amazon.com (10.37.240.138) by
+ EX19MTAUWB001.ant.amazon.com (10.250.64.248) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
+ Tue, 8 Apr 2025 20:54:29 +0000
+Received: from 6c7e67bfbae3.amazon.com (10.106.100.5) by
+ EX19D004ANA001.ant.amazon.com (10.37.240.138) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
+ Tue, 8 Apr 2025 20:54:25 +0000
+From: Kuniyuki Iwashima <kuniyu@amazon.com>
+To: <leitao@debian.org>
+CC: <davem@davemloft.net>, <dsahern@kernel.org>, <edumazet@google.com>,
+	<horms@kernel.org>, <kernel-team@meta.com>, <kuba@kernel.org>,
+	<kuniyu@amazon.com>, <linux-kernel@vger.kernel.org>,
+	<linux-trace-kernel@vger.kernel.org>, <mathieu.desnoyers@efficios.com>,
+	<mhiramat@kernel.org>, <ncardwell@google.com>, <netdev@vger.kernel.org>,
+	<pabeni@redhat.com>, <rostedt@goodmis.org>, <song@kernel.org>,
+	<yonghong.song@linux.dev>
+Subject: Re: [PATCH net-next v3 2/2] trace: tcp: Add tracepoint for tcp_sendmsg_locked()
+Date: Tue, 8 Apr 2025 13:54:13 -0700
+Message-ID: <20250408205417.84283-1-kuniyu@amazon.com>
+X-Mailer: git-send-email 2.48.1
+In-Reply-To: <20250408-tcpsendmsg-v3-2-208b87064c28@debian.org>
+References: <20250408-tcpsendmsg-v3-2-208b87064c28@debian.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <Z_Ox7ibkULkJ_2Lx@krava>
+Content-Type: text/plain
+X-ClientProxiedBy: EX19D033UWC003.ant.amazon.com (10.13.139.217) To
+ EX19D004ANA001.ant.amazon.com (10.37.240.138)
 
-On Mon, Apr 07, 2025 at 01:07:26PM +0200, Jiri Olsa wrote:
-> On Fri, Apr 04, 2025 at 01:33:11PM -0700, Andrii Nakryiko wrote:
-> > On Thu, Mar 20, 2025 at 4:43 AM Jiri Olsa <jolsa@kernel.org> wrote:
-> > >
-> > > Adding support to emulate nop5 as the original uprobe instruction.
-> > >
-> > > Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-> > > ---
-> > >  arch/x86/kernel/uprobes.c | 16 ++++++++++++++++
-> > >  1 file changed, 16 insertions(+)
-> > >
-> > 
-> > This optimization is independent from the sys_uprobe, right? Maybe
-> > send it as a stand-alone patch and let's land it sooner?
+From: Breno Leitao <leitao@debian.org>
+Date: Tue, 08 Apr 2025 11:32:02 -0700
+> Add a tracepoint to monitor TCP send operations, enabling detailed
+> visibility into TCP message transmission.
 > 
-> ok, will send it separately
+> Create a new tracepoint within the tcp_sendmsg_locked function,
+> capturing traditional fields along with size_goal, which indicates the
+> optimal data size for a single TCP segment. Additionally, a reference to
+> the struct sock sk is passed, allowing direct access for BPF programs.
+> The implementation is largely based on David's patch[1] and suggestions.
 > 
-> > Also, how hard would it be to do the same for other nopX instructions?
-> 
-> will check, might be easy
+> Link: https://lore.kernel.org/all/70168c8f-bf52-4279-b4c4-be64527aa1ac@kernel.org/ [1]
+> Signed-off-by: Breno Leitao <leitao@debian.org>
 
-we can't do all at the moment, nop1-nop8 are fine, but uprobe won't
-attach on nop9/10/11 due unsupported prefix.. I guess insn decode
-would need to be updated first
-
-I'll send the nop5 emulation change, because of above and also I don't
-see practical justification to emulate other nops
-
-jirka
-
-
----
-diff --git a/arch/x86/kernel/uprobes.c b/arch/x86/kernel/uprobes.c
-index 9194695662b2..6616cc9866cc 100644
---- a/arch/x86/kernel/uprobes.c
-+++ b/arch/x86/kernel/uprobes.c
-@@ -608,6 +608,21 @@ static void riprel_post_xol(struct arch_uprobe *auprobe, struct pt_regs *regs)
- 		*sr = utask->autask.saved_scratch_register;
- 	}
- }
-+
-+static bool emulate_nop_insn(struct arch_uprobe *auprobe)
-+{
-+	unsigned int i;
-+
-+	/*
-+	 * Uprobe is only allowed to be attached on nop1 through nop8. Further nop
-+	 * instructions have unsupported prefix and uprobe fails to attach on them.
-+	 */
-+	for (i = 1; i < 9; i++) {
-+		if (!memcmp(&auprobe->insn, x86_nops[i], i))
-+			return true;
-+	}
-+	return false;
-+}
- #else /* 32-bit: */
- /*
-  * No RIP-relative addressing on 32-bit
-@@ -621,6 +636,10 @@ static void riprel_pre_xol(struct arch_uprobe *auprobe, struct pt_regs *regs)
- static void riprel_post_xol(struct arch_uprobe *auprobe, struct pt_regs *regs)
- {
- }
-+static bool emulate_nop_insn(struct arch_uprobe *auprobe)
-+{
-+	return false;
-+}
- #endif /* CONFIG_X86_64 */
- 
- struct uprobe_xol_ops {
-@@ -840,6 +859,9 @@ static int branch_setup_xol_ops(struct arch_uprobe *auprobe, struct insn *insn)
- 	insn_byte_t p;
- 	int i;
- 
-+	if (emulate_nop_insn(auprobe))
-+		goto setup;
-+
- 	switch (opc1) {
- 	case 0xeb:	/* jmp 8 */
- 	case 0xe9:	/* jmp 32 */
+Reviewed-by: Kuniyuki Iwashima <kuniyu@amazon.com>
