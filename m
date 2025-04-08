@@ -1,65 +1,64 @@
-Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78B34238D39;
-	Tue,  8 Apr 2025 17:01:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09E4921859D;
+	Tue,  8 Apr 2025 17:02:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744131672; cv=none; b=bJ/5vWMPGVhAwimNcsz56OagY4UhXKYzJX0aeircBJC3SH5sbymR7+eGbAgu3FmkFxF+vlcxDLixtRhDMFa3DjTUQz/qlAKgJg54W5wV3RGkX6sgBjH3NYixgpTjZYGOrCu16I/0ZddZoiIB8Gc2ml/34URR7B5A/8tlZd4jIro=
+	t=1744131756; cv=none; b=a8jMQdCdCcY9jO0Tr9kpvdsrzFPpcX5Ihk+XB5wEIw3s+q56qJU1wAjGl4muMcPZSaScRRAM9ipH4ze5y3UjNPhUR6LDoGUccaXKQZ8Oi1BVvPmKoL5XzdPKOrsBsSD+dl57rvLTHnDTrzkjaRonZE2NTK8ax+Mbz+8Mzxoujx8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744131672; c=relaxed/simple;
-	bh=WgAC3NdMaIecTLeADsVuS5ebef9u2457qsKF7XllYzo=;
+	s=arc-20240116; t=1744131756; c=relaxed/simple;
+	bh=XpUvcH2fYKG/3+mJ7A6C90dV2a9DMLUENSZbwm6BhHg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rGRE0e9PXwzXWZaTjKlapYBxHZnztppEpdYmIWIxXyIy26hUtyX9EvlmOhzE+4U37GCk3QZ0KZiQABP4dAD0TmfM0Pc/LENUQeHwh8XguJ5n+P3ARfTHm3VD5HK13IcrDCltLzR4fOtP9HENz/N045ythtQVEOz+NL1jEqyhESs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.218.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-ac2bb7ca40bso669746766b.3;
-        Tue, 08 Apr 2025 10:01:10 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744131669; x=1744736469;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=3loSWOdm7A/muGSbHbp/mlDMJUWeJ6VlPIjx21/XSgA=;
-        b=wN8Uuyi3uJJYrwBRQMY7FzUmt+mlZ/O+WW/ImORBiEMzR2JHBVYgU76hkzNxTKHlwp
-         V4g/7ZHEu4vXfFTijdIu3CpBvfxkKohWWn+9V4opxJeRXkjioypSWV1c+xp9RXgWSqxv
-         bGcE/6j7BofLiTR4pKWR4zZY/rjS1n6mv5TT1QFZ7lFmpugUJ8QpFbOiDg6YAOIBrfRU
-         +R6If5SON+DktRlmnpi0/IcsHA+Mt9HMbdcwGuPW/5KiTNnnrS1Tr8Ktzk/Skca3C7Re
-         Ovo/ynBMeYoJ5gjYmvoiaBOQhWm02U7P7Z2l51fuLTrQ5m8YgheUp72FtjkgwsL845jN
-         g8dw==
-X-Forwarded-Encrypted: i=1; AJvYcCUEdm9Tw2fSkrlwWFHeS6WJdjUUMHefUrLacc046hptJNpqtZ6wBpiq8MZ5eXf8U61WR4TemZ/of6enVlc=@vger.kernel.org, AJvYcCVd+b8s++npqtLBILgPdED8j2AQblxBCLB77cMQrrW4ycBybI1ZIGfmrvo2kPyXPcIYdrh73RYBkxM9GLR7YjjaMjJh@vger.kernel.org, AJvYcCVnRId1BGXgUOIQgSoQKPseJJ9bXUM9+h0lPthmrEb1YM3tLaH3ugpW7htIOlDTeroRQglfixEY@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywv4jcUl0ybxcrQqJjXm6xu+SnyFKN2plCzvtvHP7rFf7ccbzeR
-	yj5JD3RHbwnef4ovE8925j5WKxMsGBLmLW7eTtXOsk3619iZdIIF
-X-Gm-Gg: ASbGnct/6OI+Q7KurWr7GlYnVOsY6IWjYjhVhTflPxBscQsJavsB5uNKIYJ0Tj0qYLL
-	8itjz9OxSf3EMJe406uay3mpNwGiD5mkV51yaKBQlviOt3VoMLQIY0XikJVa+tn0Zc4u4uIljjm
-	HcPE+tVjDtQXay2sOCk8mIanphh4PF2L5hd0gn7zHZ6wkfn7XtVEpu2ILg1q/EV+coAPdOrq8PU
-	ih+J5WYXNWj5p49T2XgCc3WqvnDKVycL9G4seQhGxr6MZdjhTAcGAEqHQ21cevMT4JBH9mDC0Ry
-	KKGRIvv5bbub64FOv3oI7Tny/cmYx1Om
-X-Google-Smtp-Source: AGHT+IHDbgqPfbcqHmYeawiEypB+7MDmdtDPRJCMoLpHc5sdwdwL6CJJJT6ib6Kw/XcApllac97xtw==
-X-Received: by 2002:a17:907:9801:b0:ac7:33d0:dbe with SMTP id a640c23a62f3a-ac7d18cb7f9mr1744076266b.33.1744131668369;
-        Tue, 08 Apr 2025 10:01:08 -0700 (PDT)
-Received: from gmail.com ([2a03:2880:30ff::])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac7c01c10dcsm940755466b.180.2025.04.08.10.01.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Apr 2025 10:01:08 -0700 (PDT)
-Date: Tue, 8 Apr 2025 10:01:05 -0700
-From: Breno Leitao <leitao@debian.org>
-To: David Ahern <dsahern@kernel.org>
-Cc: Kuniyuki Iwashima <kuniyu@amazon.com>, davem@davemloft.net,
-	edumazet@google.com, horms@kernel.org, kernel-team@meta.com,
-	kuba@kernel.org, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, mathieu.desnoyers@efficios.com,
-	mhiramat@kernel.org, ncardwell@google.com, netdev@vger.kernel.org,
-	pabeni@redhat.com, rostedt@goodmis.org, song@kernel.org,
-	yonghong.song@linux.dev
-Subject: Re: [PATCH net-next v2 2/2] trace: tcp: Add tracepoint for
- tcp_sendmsg_locked()
-Message-ID: <Z/VWUVk+mHXTENms@gmail.com>
-References: <20250407-tcpsendmsg-v2-2-9f0ea843ef99@debian.org>
- <20250408010143.11193-1-kuniyu@amazon.com>
- <Z/UyZNiYUq9qrZds@gmail.com>
- <b85ddaa3-6115-466c-8fc9-84b58d55e4b4@kernel.org>
+	 Content-Type:Content-Disposition:In-Reply-To; b=gLNhWUtDtD0S6TvB61Je5qWQQO1XMAoZJCIGmbwMNN4I8fsfjqQgHmc7/b6wWI7CM1aqZmH/VlkBFsSLLMEv5rV37s7gxrQ3/AKBIh0mwXYRn3EKuEDl/MIcPn2Jgxueg1P79NJ51CC0tjPNLcpWO0suVdx61tkHslNEX5bDwi8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=pNvxRd/r; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="pNvxRd/r"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=Wthvw+g3VPjsBqYkn9PtU805EB50LUzQbJZB+kkRP04=; b=pNvxRd/rFKeuHejFP1UqBVVtJu
+	wMFhn1znqYKaW/mLFjcM8+qpr5O392zgVI00cx12Ur6Rp6K+DE3Mglx/ManTL0g+3uJ6tazndBE2Q
+	ew7Yo8AXeN7BLV0RSw5TffIiB7mEF5f85jPFWjjmwogHsITM7S0mLtBrcZ8KjM3lXoqusTb3DwK6O
+	ilicc3T2BPad5dHtMSYfolaqiX+dTMYFNykY1BKO/mtvqVhauIS29BvQOsZYvkOE7B1Jt4NTyTv3c
+	RZ/31JCEQI2IWe9u16RVO32pOAUC6PsWLXiEJfi5qWNVZGFSjqM+xQwfvOVsd1veTRO6VvjGX8sUs
+	IQ+9PECA==;
+Received: from willy by casper.infradead.org with local (Exim 4.98.1 #2 (Red Hat Linux))
+	id 1u2CKR-000000000Fo-0n3G;
+	Tue, 08 Apr 2025 17:01:39 +0000
+Date: Tue, 8 Apr 2025 18:01:39 +0100
+From: Matthew Wilcox <willy@infradead.org>
+To: "Christoph Lameter (Ampere)" <cl@gentwo.org>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Sweet Tea Dorminy <sweettea@google.com>,
+	Mateusz Guzik <mjguzik@gmail.com>, linux-kernel@vger.kernel.org,
+	Andrew Morton <akpm@linux-foundation.org>,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Dennis Zhou <dennis@kernel.org>, Tejun Heo <tj@kernel.org>,
+	Martin Liu <liumartin@google.com>,
+	David Rientjes <rientjes@google.com>, christian.koenig@amd.com,
+	Shakeel Butt <shakeel.butt@linux.dev>,
+	Johannes Weiner <hannes@cmpxchg.org>,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	"Liam R . Howlett" <Liam.Howlett@oracle.com>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Christian Brauner <brauner@kernel.org>,
+	Wei Yang <richard.weiyang@gmail.com>,
+	David Hildenbrand <david@redhat.com>,
+	Miaohe Lin <linmiaohe@huawei.com>,
+	Al Viro <viro@zeniv.linux.org.uk>, linux-mm@kvack.org,
+	linux-trace-kernel@vger.kernel.org, Yu Zhao <yuzhao@google.com>,
+	Roman Gushchin <roman.gushchin@linux.dev>
+Subject: Re: [RFC PATCH v2] Introduce Hierarchical Per-CPU Counters
+Message-ID: <Z_VWc6Z90rhfyLBp@casper.infradead.org>
+References: <20250408160508.991738-1-mathieu.desnoyers@efficios.com>
+ <f90d7646-99a3-48f5-ba2e-850c73592080@gentwo.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -68,53 +67,32 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <b85ddaa3-6115-466c-8fc9-84b58d55e4b4@kernel.org>
+In-Reply-To: <f90d7646-99a3-48f5-ba2e-850c73592080@gentwo.org>
 
-On Tue, Apr 08, 2025 at 09:16:51AM -0600, David Ahern wrote:
-> On 4/8/25 8:27 AM, Breno Leitao wrote:
-> > 
-> > 	SEC("tracepoint/tcp/tcp_sendmsg_locked")
+On Tue, Apr 08, 2025 at 09:37:18AM -0700, Christoph Lameter (Ampere) wrote:
+> > The hierarchical per-CPU counters propagate a sum approximation through
+> > a binary tree. When reaching the batch size, the carry is propagated
+> > through a binary tree which consists of log2(nr_cpu_ids) levels. The
+> > batch size for each level is twice the batch size of the prior level.
 > 
-> Try `raw_tracepoint/tcp/tcp_sendmsg_locked`.
-> 
-> This is the form I use for my tracepoint based packet capture (not tied
-> to this tracepoint, but traces inside our driver) and it works fine.
+> A binary tree? Could we do this N-way? Otherwise the tree will be 8 levels
+> on a 512 cpu machine. Given the inflation of the number of cpus this
+> scheme better work up to 8K cpus.
 
-Thanks. I was not able to get this crashing as well. In fact, the
-following program fails to be loaded:
+I find that a fan-out somewhere between 8 and 16 works well in practice.
+log16(512) gives a 3 level tree as does a log8 tree.  log16(8192) is a 4
+level tree whereas log8(8192) is a 5 level tree.  Not a big difference
+either way.
 
-	SEC("raw_tracepoint/tcp/tcp_sendmsg_locked")
-	int bpf_tcp_sendmsg_locked(struct bpf_raw_tracepoint_args *ctx)
-	{
-		void *skb_addr = (void *) ctx->args[0];
+Somebody was trying to persuade me that a new tree type that maintained
+additional information at each level of the tree to make some operations
+log(log(N)) would be a better idea than a B-tree that is log(N).  I
+countered that a wider tree made the argument unsound at any size tree
+up to 100k.  And we don't tend to have _that_ many objects in a
+data structure inside the kernel.
 
-		bpf_printk("deref %d\n", *(int *) skb_addr);
+ceil(log14(100,000)) = 5
+ceil(log2(log2(100,000))) = 5
 
-		return 0;
-	}
-
-libbpf refuses to load it, and drumps:
-
-	libbpf: prog 'bpf_tcp_sendmsg_locked': BPF program load failed: Permission denied
-	libbpf: prog 'bpf_tcp_sendmsg_locked': -- BEGIN PROG LOAD LOG --
-	0: R1=ctx() R10=fp0
-	; void *skb_addr = (void *) ctx->args[0]; @ tcp_sendmsg_locked_bpf.c:18
-	0: (79) r1 = *(u64 *)(r1 +0)          ; R1_w=scalar()
-	; bpf_printk("deref %d\n", *(int *) skb_addr); @ tcp_sendmsg_locked_bpf.c:20
-	1: (61) r3 = *(u32 *)(r1 +0)
-	R1 invalid mem access 'scalar'
-	processed 2 insns (limit 1000000) max_states_per_insn 0 total_states 0 peak_states 0 mark_read 0
-	-- END PROG LOAD LOG --
-	libbpf: prog 'bpf_tcp_sendmsg_locked': failed to load: -13
-	libbpf: failed to load object 'tcp_sendmsg_locked_bpf.o'
-	Failed to load BPF object: -13
-
-> As suggested, you might need to update raw_tp_null_args
-
-Thanks for confirming it. I will update raw_tp_null_args, assuming that
-the problem exists but I am failing to reproduce it.
-
-I will send an updated version soon.
-
-Thanks
---breno
+at a million, there's actually a gap, 6 vs 5.  But constant factors
+become a much larger factor than scalability arguments at that point.
