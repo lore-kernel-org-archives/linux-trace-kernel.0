@@ -1,204 +1,156 @@
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.4])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2386E26138B;
-	Tue,  8 Apr 2025 07:13:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.4
+Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 968BE12CDAE;
+	Tue,  8 Apr 2025 07:46:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744096391; cv=none; b=Gz17tScl7Ih+jN+P3reuMR/es4S9n3K9SMUApZ8S0hU+PZguP3FcVU72eQzSTMLcEmzXcrzTc4kfvk7+3ms8Kyb9n3btOj0DaWV6X7tb3v/EaCfiW8jcdFSbpqkfBuNKU6AK0AvKhFKCG/XA83+UVsTswrsP/LUXJJPR8Zq/gc8=
+	t=1744098391; cv=none; b=dU4opwW/6m9Ux9Bx4fVj/ioPBDtzaamVXNg5ZabPyXoK//rScyFfDIDRpV+b9R64Io06ocg+8CJfXmUUf6Quiyaj0XfjaV9OX6YdTZRT3Q09EGSPGwLuK+toivNIFVw5vpZPCca+DNx94OvZJlAbyEcWp85/kOsm8bAA5B3a+8s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744096391; c=relaxed/simple;
-	bh=boIkEt8dItdsmjNV3paAR24yWpziMldq7x6bxy4tfA4=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=sZN9unL9KiZ3FQ94Ash148JeS5eK/UcY6+9faxFu9S8dqYR8GyQBj085A0B1rhrZ/pbxTPBTpYd7SgMeh0dlcHtCx9OsM9XwfDgruWEjipLiDuPtLaI2TX3iSctg+iUtDclG4wAYilZQGnIP3Qmn6VrOdlOePQNdfZhq4RhLEwM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=OClhXKoB; arc=none smtp.client-ip=220.197.31.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1744098391; c=relaxed/simple;
+	bh=CYWLgNMUz1gmoCTVrt8FUVjBZYckyum9T6o9Eaioln4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=gTqzgOUmGvzU7IU/d0th+To8w6/ez86G0msY32yK5ZHwxEdjYSa4Oah2IpC26pBmdfuO+v/1tIRn5p//FiIsEmQFhdzSXzZZJ3JSfmRLUADzywvCoSSmk8kjZc9E9n4Yhb5RbLifP4qCkUF6ERgQzxx70OFiC/1+MLdZRMv1SXU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XyQLQ8xT; arc=none smtp.client-ip=209.85.208.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="OClhXKoB"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=TjmkK
-	cbdBteYcdY1oy1hg8QPf8yjTbl5uA4hIJiAC/4=; b=OClhXKoBVIv13mx9VO4ew
-	bUgmbfurlhtCYplCbHY6gtyUeNYRTugY3eB7aG0BvrFQbk4nJ6ZIvrbmuoxFR+Y/
-	V8GVXR0GCLrccuANfkq/XExz1huncWXPF29tu8d1iBWyxZpgjXkXdhfkr0C7FP2I
-	4Qr1JO63kpsBFfVlyPfS8k=
-Received: from localhost.localdomain (unknown [116.128.244.169])
-	by gzsmtp5 (Coremail) with SMTP id QCgvCgCHEuM3zPRnLTyQTw--.34625S2;
-	Tue, 08 Apr 2025 15:11:52 +0800 (CST)
-From: Feng Yang <yangfeng59949@163.com>
-To: ast@kernel.org,
-	daniel@iogearbox.net,
-	andrii@kernel.org,
-	martin.lau@linux.dev,
-	eddyz87@gmail.com,
-	song@kernel.org,
-	yonghong.song@linux.dev,
-	john.fastabend@gmail.com,
-	kpsingh@kernel.org,
-	sdf@fomichev.me,
-	haoluo@google.com,
-	jolsa@kernel.org,
-	mattbobrowski@google.com,
-	rostedt@goodmis.org,
-	mhiramat@kernel.org,
-	mathieu.desnoyers@efficios.com
-Cc: bpf@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH bpf-next v2] bpf: Remove duplicate judgments
-Date: Tue,  8 Apr 2025 15:11:51 +0800
-Message-Id: <20250408071151.229329-1-yangfeng59949@163.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XyQLQ8xT"
+Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-5e673822f76so8667425a12.2;
+        Tue, 08 Apr 2025 00:46:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744098388; x=1744703188; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=CYWLgNMUz1gmoCTVrt8FUVjBZYckyum9T6o9Eaioln4=;
+        b=XyQLQ8xTk3VMWKkzGctVxVLDtavM4QgjwNOnhWJ6Q1ZHInFUTIRGj6a8IE+9JJNjJw
+         cI1JatD6DGiszy07MUdVoV6NIEmdFKvkkC444HxQRrY8kXviwCqOk86Y01RLatUm3o5A
+         tlIliT1MSfB30mZYA3tJzf756eVc0LK5Tj9pQ5lP21zdrjGxAZoRg7UtxmnFVAFOZACw
+         jG9zu7W5pUR5qJ+eU29dbe9MwQ0XKw6Hw4kbOyBkhB4koYs2svEgUlg1aJbEMYo2ejUA
+         TWHRbu51F1MqsdCCurhD2BQBAWJzed6RrPAgBy8zmaY2tRhd/PfyMr3Mkjf+m+60jWxf
+         N0vQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744098388; x=1744703188;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=CYWLgNMUz1gmoCTVrt8FUVjBZYckyum9T6o9Eaioln4=;
+        b=T3uX1GRAoLM4g7Jv66rwC6M6/p2mez1iS+dKc7kRhVy/OjBl2ZMTqzUUVuMu3NolCh
+         eM3uW2ID+vmn/AEJ5MZdnFpBOl+Fy6mYbB9P4PH4VtzZ/xVtfYpfxxnjhay8bnhOowm2
+         FZ0HrHd8SXSMyqPluUIu9NroLyg39yuxqBaxocNKxS3/K/Rz/VzEv2RV9QogmqCDvt2L
+         2YsrBZmsFzZRT7GH3BpfVkYVO70dnctj/qdOTwYFcU053OfTkKYwzaG5StFoK1AdaB2W
+         adJYRaoKZKjtiE/mgGa5XkA/Twgqp3w1eBLp+gdhaBTpdinM2fE4MtsC6h3pdrwSHtB0
+         /m4Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUYDH5DGMP8iSr8R4UfOl97Y8FQmAlVvWy46x4UB4BWGZFz+PItyF4m5KjVSJ6Db6tgINrK0nFm5poSM+Y=@vger.kernel.org, AJvYcCUmYPvQrjp54ouEcPFaw2DIQY+gjG3cRxofvQL00wVtdtAP+Mye682S+HNRK0TAYwmaMWHFvSfSW8Mh1gzv/Q1D2chV@vger.kernel.org
+X-Gm-Message-State: AOJu0YzOEoMenkgSIECEDsY1KkLTbrPJhMfFdU58hSckDa2/jQFY5hmn
+	WvE73SebqgZX90XnZcb6PoDxeUxL8Iu4PIrMbIthN13LfOwkLERteIZM3ZRZ+Ww78o3yczeZ71N
+	9ulyQ6zK/vQseCcL7iyGA21wlJcg=
+X-Gm-Gg: ASbGncvpsbflzkQbL9FH5t+qTAo9VL3RNLrTyq4JQXXXxOnWi/D68VYxlZitiaHU5qf
+	h4LWMNi8OCZoX86hKqcpcR20F5absfmSQTeZTsVts8UNzTETHvNhod4jvUy4a5aF/A+xsGyA+lA
+	UupyAjJZNXjy0vAFV5VIDcOoZ6
+X-Google-Smtp-Source: AGHT+IFmG6MLnSUDQL0TyguKXOKi9sZPAf8BJ1l0ld/2h6vDza1UJsGTRfqurp3q32bdQUAB0t99uhb/N1ovjRQpxIM=
+X-Received: by 2002:a05:6402:1ece:b0:5e6:466e:5866 with SMTP id
+ 4fb4d7f45d1cf-5f0b6606682mr13812283a12.25.1744098387736; Tue, 08 Apr 2025
+ 00:46:27 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:QCgvCgCHEuM3zPRnLTyQTw--.34625S2
-X-Coremail-Antispam: 1Uf129KBjvJXoW3Ww4rZF4DKF45XF43Zr1kXwb_yoW7Zw1kpF
-	nxtrZxCrs2vw42qFy7Jr1fZa4Yy3srZ3yUWaykKw18ur4UZr4xtF12kF42gF1rAr98G347
-	u3yvvFZ0kFyI93JanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jeksgUUUUU=
-X-CM-SenderInfo: p1dqww5hqjkmqzuzqiywtou0bp/1tbiwhApeGf0xeHvSgAAsR
+References: <20250331223516.7810-2-sweettea-kernel@dorminy.me>
+ <CAMgjq7AroDCKTfJzJRr++8H2b3eTd=MeUqwkPUX4ixRVqZw6-A@mail.gmail.com>
+ <CAGudoHH7OUHG2HHrjzqkiqgYXzLEtovCptHpxkyVNPwSMHWfrw@mail.gmail.com> <CAMgjq7C_W3dfYQ6DJT4QCza1DCtCE7yUdiManQSxCKOENxTm_g@mail.gmail.com>
+In-Reply-To: <CAMgjq7C_W3dfYQ6DJT4QCza1DCtCE7yUdiManQSxCKOENxTm_g@mail.gmail.com>
+From: Mateusz Guzik <mjguzik@gmail.com>
+Date: Tue, 8 Apr 2025 09:46:15 +0200
+X-Gm-Features: ATxdqUEpX6XFuXeA6vg0-rN_JsZ2MEwWgX3OKplmGxlA9qwyfA2V1kLMwyG-s0c
+Message-ID: <CAGudoHHQ4y0Z_A0yzpfim_wGFVUuF3NaLgNtWUiquiCby6Ppkg@mail.gmail.com>
+Subject: Re: [RFC PATCH v2] mm: use per-numa-node atomics instead of percpu_counters
+To: Kairui Song <ryncsn@gmail.com>
+Cc: Sweet Tea Dorminy <sweettea-kernel@dorminy.me>, Andrew Morton <akpm@linux-foundation.org>, 
+	Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Dennis Zhou <dennis@kernel.org>, 
+	Tejun Heo <tj@kernel.org>, Christoph Lameter <cl@linux.com>, Martin Liu <liumartin@google.com>, 
+	David Rientjes <rientjes@google.com>, =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
+	Shakeel Butt <shakeel.butt@linux.dev>, Johannes Weiner <hannes@cmpxchg.org>, 
+	Sweet Tea Dorminy <sweettea@google.com>, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, 
+	"Liam R . Howlett" <Liam.Howlett@oracle.com>, Suren Baghdasaryan <surenb@google.com>, 
+	Vlastimil Babka <vbabka@suse.cz>, Christian Brauner <brauner@kernel.org>, 
+	Wei Yang <richard.weiyang@gmail.com>, David Hildenbrand <david@redhat.com>, 
+	Miaohe Lin <linmiaohe@huawei.com>, Al Viro <viro@zeniv.linux.org.uk>, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	Yu Zhao <yuzhao@google.com>, Roman Gushchin <roman.gushchin@linux.dev>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Feng Yang <yangfeng@kylinos.cn>
+On Fri, Apr 4, 2025 at 6:51=E2=80=AFPM Kairui Song <ryncsn@gmail.com> wrote=
+:
+>
+> On Thu, Apr 3, 2025 at 10:31=E2=80=AFPM Mateusz Guzik <mjguzik@gmail.com>=
+ wrote:
+> > Note there are 2 unrelated components in that patchset:
+> > - one per-cpu instance of rss counters which is rolled up on context
+> > switches, avoiding the costly counter alloc/free on mm
+> > creation/teardown
+> > - cpu iteration in get_mm_counter
+> >
+> > The allocation problem is fixable without abandoning the counters, see
+> > my other e -mail (tl;dr let mm's hanging out in slab caches *keep* the
+> > counters). This aspect has to be solved anyway due to mm_alloc_cid().
+> > Providing a way to sort it out covers *both* the rss counters and the
+> > cid thing.
+>
+> It's not just about the fork performance, on some servers there could
+> be ~100K processes and ~200 CPUs, that will be hundreds of MBs of
+> memory just for the counters.
+>
+> And nowadays it's not something uncommon for a desktop to have ~64
+> CPUs and ~10K processes.
+>
+> If we use a single shared "per-cpu" counter (as in the patch), the
+> total consumption will always be only about just dozens of bytes.
+>
 
-Many judgments and bpf_base_func_proto functions are repetitive, remove them.
+I agree there is a tradeoff here and your approach saves memory in
+exchange for more work during a context switch.
 
-Signed-off-by: Feng Yang <yangfeng@kylinos.cn>
-Acked-by: Song Liu <song@kernel.org>
----
-Changes in v2:
-- Only modify patch description information.
-- Link to v1: https://lore.kernel.org/all/20250320032258.116156-1-yangfeng59949@163.com/
----
- kernel/trace/bpf_trace.c | 72 ----------------------------------------
- 1 file changed, 72 deletions(-)
+I have no opinion which way to go here.
 
-diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
-index 6b07fa7081d9..c89b25344422 100644
---- a/kernel/trace/bpf_trace.c
-+++ b/kernel/trace/bpf_trace.c
-@@ -1443,56 +1443,14 @@ bpf_tracing_func_proto(enum bpf_func_id func_id, const struct bpf_prog *prog)
- 	const struct bpf_func_proto *func_proto;
- 
- 	switch (func_id) {
--	case BPF_FUNC_map_lookup_elem:
--		return &bpf_map_lookup_elem_proto;
--	case BPF_FUNC_map_update_elem:
--		return &bpf_map_update_elem_proto;
--	case BPF_FUNC_map_delete_elem:
--		return &bpf_map_delete_elem_proto;
--	case BPF_FUNC_map_push_elem:
--		return &bpf_map_push_elem_proto;
--	case BPF_FUNC_map_pop_elem:
--		return &bpf_map_pop_elem_proto;
--	case BPF_FUNC_map_peek_elem:
--		return &bpf_map_peek_elem_proto;
--	case BPF_FUNC_map_lookup_percpu_elem:
--		return &bpf_map_lookup_percpu_elem_proto;
--	case BPF_FUNC_ktime_get_ns:
--		return &bpf_ktime_get_ns_proto;
--	case BPF_FUNC_ktime_get_boot_ns:
--		return &bpf_ktime_get_boot_ns_proto;
--	case BPF_FUNC_tail_call:
--		return &bpf_tail_call_proto;
--	case BPF_FUNC_get_current_task:
--		return &bpf_get_current_task_proto;
--	case BPF_FUNC_get_current_task_btf:
--		return &bpf_get_current_task_btf_proto;
--	case BPF_FUNC_task_pt_regs:
--		return &bpf_task_pt_regs_proto;
- 	case BPF_FUNC_get_current_uid_gid:
- 		return &bpf_get_current_uid_gid_proto;
- 	case BPF_FUNC_get_current_comm:
- 		return &bpf_get_current_comm_proto;
--	case BPF_FUNC_trace_printk:
--		return bpf_get_trace_printk_proto();
- 	case BPF_FUNC_get_smp_processor_id:
- 		return &bpf_get_smp_processor_id_proto;
--	case BPF_FUNC_get_numa_node_id:
--		return &bpf_get_numa_node_id_proto;
- 	case BPF_FUNC_perf_event_read:
- 		return &bpf_perf_event_read_proto;
--	case BPF_FUNC_get_prandom_u32:
--		return &bpf_get_prandom_u32_proto;
--	case BPF_FUNC_probe_read_user:
--		return &bpf_probe_read_user_proto;
--	case BPF_FUNC_probe_read_kernel:
--		return security_locked_down(LOCKDOWN_BPF_READ_KERNEL) < 0 ?
--		       NULL : &bpf_probe_read_kernel_proto;
--	case BPF_FUNC_probe_read_user_str:
--		return &bpf_probe_read_user_str_proto;
--	case BPF_FUNC_probe_read_kernel_str:
--		return security_locked_down(LOCKDOWN_BPF_READ_KERNEL) < 0 ?
--		       NULL : &bpf_probe_read_kernel_str_proto;
- #ifdef CONFIG_ARCH_HAS_NON_OVERLAPPING_ADDRESS_SPACE
- 	case BPF_FUNC_probe_read:
- 		return security_locked_down(LOCKDOWN_BPF_READ_KERNEL) < 0 ?
-@@ -1502,10 +1460,6 @@ bpf_tracing_func_proto(enum bpf_func_id func_id, const struct bpf_prog *prog)
- 		       NULL : &bpf_probe_read_compat_str_proto;
- #endif
- #ifdef CONFIG_CGROUPS
--	case BPF_FUNC_cgrp_storage_get:
--		return &bpf_cgrp_storage_get_proto;
--	case BPF_FUNC_cgrp_storage_delete:
--		return &bpf_cgrp_storage_delete_proto;
- 	case BPF_FUNC_current_task_under_cgroup:
- 		return &bpf_current_task_under_cgroup_proto;
- #endif
-@@ -1513,20 +1467,6 @@ bpf_tracing_func_proto(enum bpf_func_id func_id, const struct bpf_prog *prog)
- 		return &bpf_send_signal_proto;
- 	case BPF_FUNC_send_signal_thread:
- 		return &bpf_send_signal_thread_proto;
--	case BPF_FUNC_perf_event_read_value:
--		return &bpf_perf_event_read_value_proto;
--	case BPF_FUNC_ringbuf_output:
--		return &bpf_ringbuf_output_proto;
--	case BPF_FUNC_ringbuf_reserve:
--		return &bpf_ringbuf_reserve_proto;
--	case BPF_FUNC_ringbuf_submit:
--		return &bpf_ringbuf_submit_proto;
--	case BPF_FUNC_ringbuf_discard:
--		return &bpf_ringbuf_discard_proto;
--	case BPF_FUNC_ringbuf_query:
--		return &bpf_ringbuf_query_proto;
--	case BPF_FUNC_jiffies64:
--		return &bpf_jiffies64_proto;
- 	case BPF_FUNC_get_task_stack:
- 		return prog->sleepable ? &bpf_get_task_stack_sleepable_proto
- 				       : &bpf_get_task_stack_proto;
-@@ -1534,12 +1474,6 @@ bpf_tracing_func_proto(enum bpf_func_id func_id, const struct bpf_prog *prog)
- 		return &bpf_copy_from_user_proto;
- 	case BPF_FUNC_copy_from_user_task:
- 		return &bpf_copy_from_user_task_proto;
--	case BPF_FUNC_snprintf_btf:
--		return &bpf_snprintf_btf_proto;
--	case BPF_FUNC_per_cpu_ptr:
--		return &bpf_per_cpu_ptr_proto;
--	case BPF_FUNC_this_cpu_ptr:
--		return &bpf_this_cpu_ptr_proto;
- 	case BPF_FUNC_task_storage_get:
- 		if (bpf_prog_check_recur(prog))
- 			return &bpf_task_storage_get_recur_proto;
-@@ -1548,18 +1482,12 @@ bpf_tracing_func_proto(enum bpf_func_id func_id, const struct bpf_prog *prog)
- 		if (bpf_prog_check_recur(prog))
- 			return &bpf_task_storage_delete_recur_proto;
- 		return &bpf_task_storage_delete_proto;
--	case BPF_FUNC_for_each_map_elem:
--		return &bpf_for_each_map_elem_proto;
--	case BPF_FUNC_snprintf:
--		return &bpf_snprintf_proto;
- 	case BPF_FUNC_get_func_ip:
- 		return &bpf_get_func_ip_proto_tracing;
- 	case BPF_FUNC_get_branch_snapshot:
- 		return &bpf_get_branch_snapshot_proto;
- 	case BPF_FUNC_find_vma:
- 		return &bpf_find_vma_proto;
--	case BPF_FUNC_trace_vprintk:
--		return bpf_get_trace_vprintk_proto();
- 	default:
- 		break;
- 	}
--- 
-2.43.0
+> >
+> > In your patchset the accuracy increase comes at the expense of walking
+> > all CPUs every time, while a big part of the point of using percpu
+> > counters is to have a good enough approximation somewhere that this is
+> > not necessary.
+>
+> It usually doesn't walk all CPUs, only the CPUs that actually used
+> that mm_struct, by checking mm_struct's cpu_bitmap. I didn't check if
+> all arch uses that bitmap though.
+>
+> It's true that one CPU having its bit set on one mm_struct's
+> cpu_bitmap doesn't mean it updated the RSS counter so there will be
+> false positives, the false positive rate is low as schedulers don't
+> shuffle processes between processors randomly, and not every process
+> will be ran at a period.
+>
+> Also per my observation the reader side is much colder compared to
+> updater for /proc.
+>
 
+Per my comment, the read thing happens a lot for mmap and munmap so it
+cannot be taken lightly. You can check yourself with bpftrace.
+
+While I can agree vast majority of processes are not very thread-heavy
+and vast majority of machines out there don't have hundreds of cores,
+this does have to behave sanely for the cases which *do* exhibit these
+conditions. For example a box with > 200 cores and 200+ threads to
+boot, all running on the entirety of the box.
+
+In your patch as posted fetching the value will force the walk *a lot*
+and is consequently a no-go. This aspect needs to be dealt with for
+the patchset to be ok. Otherwise few months down the road someone else
+will show up and complain about a new slowdown stemming from it.
+
+--=20
+Mateusz Guzik <mjguzik gmail.com>
