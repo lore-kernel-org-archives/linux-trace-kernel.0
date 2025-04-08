@@ -1,87 +1,111 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CB78EEB1;
-	Tue,  8 Apr 2025 21:00:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09F6A2417D4;
+	Tue,  8 Apr 2025 21:13:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744146040; cv=none; b=OC2w0L3mU/OXy8+wDpHHtJ3WFsZx27Ww7j8CPDqoS2bvfkpm1i+Ihe3tUlfQxUsZX8xbx0KEM3+NCO28LfuHO7X45kXV+5w1iUpnE9n+esh4lztXUpL4LudjYWMw8+uud8QaGvVjnh71d1d7cGgHYuZVvQBhybHBHLehUCHgt38=
+	t=1744146799; cv=none; b=bRmQqIl3AsCShJ4qPtRwvBDJiodNXfZmnVe7QYWUVqlYxKhLt/BJ9MAOEQZQvXCR+agKhYr2xmZnL/wxTfvoHfrYEYxmsROg9zgZkCC72QQyBPAzpZETMEcs/c6yh5AB9NxHnhZBiHwUo+0ZFfMUtcE4qQSSVO71r1zmUcOFVZM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744146040; c=relaxed/simple;
-	bh=bGKOijQVu1+pUuCKBs23IqehlZaimz7v9u8pcZR2Vhg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lMYZ+Og4ZCG4lZO4Z13EsgFywFOs8qj3/KGxzPgae1fOvt2Tu0gMZLkt/NQvLATGfvOSMgDdUMlzbccKQcYPxWliptNXW6xjVL+v9gBrnbwnxgFwPrAK0hywek38kNe6/FZtHbqUotSwP6foMZQsYljAxlgh5PWwEkF3fcptHDE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=juoz0Svt; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744146799; c=relaxed/simple;
+	bh=4XTGbVk3H1/JsZw2yQHbbPJty1TmOM+R+b0T4ZYIRxk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=QRB0NXb0rG8XwhA1IRcYNHdhVF2rLS0AtiejwR9/rHOFmyCQn586HLYyTvpfNNtqKNGJTEzzgBFMru0etk9Y1d9wgn4mz9cZVQUCpeoWQdNxJx5Ua/EKz6KYS5MPqyS5EBp3sAne9M/QB+NnJRYn4bLCr4ARwAJK/DA2M8peSjY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=J/KNCsgN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="juoz0Svt"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DD138C4CEE5;
-	Tue,  8 Apr 2025 21:00:39 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="J/KNCsgN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 81952C4CEE5;
+	Tue,  8 Apr 2025 21:13:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744146040;
-	bh=bGKOijQVu1+pUuCKBs23IqehlZaimz7v9u8pcZR2Vhg=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-	b=juoz0SvtB4cb5Bz7qspYMWrGzklrpJW9yZHr19p1rm9otYvpFvHQj+v7wWlAZbMBP
-	 c1IrIOlwI6/LJcCVPmnrAXuEwRifXpVb92xx2LjqeTeYgVUmlumqlkLeyQ7YTBf4uX
-	 rF3HXgs0TkK+R3/GNPqVwLFq3sPZ/Bg70nWXAHZxeg8jRyE2OZePXSXuFSAYlgf5l1
-	 CvN1+bvnRa02VtHuYNTYOdTNFOhiF2VliNffq63fR4hyPtvccZ9nuRyYgt4t8PLts7
-	 Rcb2ghCoUo3oDCneOUIJq6tImWQ+xmCMjIzhgVM8BDIkwVCyiw3qUF09cB7NToWATT
-	 cDZ7n7z5uKhKA==
-Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-	id 882DACE0F64; Tue,  8 Apr 2025 14:00:39 -0700 (PDT)
-Date: Tue, 8 Apr 2025 14:00:39 -0700
-From: "Paul E. McKenney" <paulmck@kernel.org>
-To: "Christoph Lameter (Ampere)" <cl@gentwo.org>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Sweet Tea Dorminy <sweettea@google.com>,
-	Mateusz Guzik <mjguzik@gmail.com>, linux-kernel@vger.kernel.org,
-	Andrew Morton <akpm@linux-foundation.org>,
+	s=k20201202; t=1744146798;
+	bh=4XTGbVk3H1/JsZw2yQHbbPJty1TmOM+R+b0T4ZYIRxk=;
+	h=From:To:Cc:Subject:Date:From;
+	b=J/KNCsgNDM2p+TlgPyOus1HIQuqdQ7KbF8LMEssSK015qYHBfbcl8CWKwXCh8dg9W
+	 k5lzI/tNkoR8h2sbAxOA2KCF27KcGrEfZNj8UL4GPKvlD24MpKr22MxkZzsuvHEZZO
+	 +GvjUsCHhdH/iNGf6YXuDiZaDcShro/bUz/W3E6Rbgw8W95dkE6dJd06dhz5KBepML
+	 ONeaUPq7C/XtYhnBl+yJirRIcwNmzyRyBjQ+uqwmT9ussWiFun61WKMmTIC06bQh90
+	 tRHj5zcXQxKQV3x+vdnocNgKgzDE3/AYBg1aiVMZtQeMZuA8zm9uCdJf4LYzQcZ8Kc
+	 FpG8pXedhCz0w==
+From: Jiri Olsa <jolsa@kernel.org>
+To: Oleg Nesterov <oleg@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Andrii Nakryiko <andrii@kernel.org>
+Cc: bpf@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	x86@kernel.org,
+	Song Liu <songliubraving@fb.com>,
+	Yonghong Song <yhs@fb.com>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Hao Luo <haoluo@google.com>,
 	Steven Rostedt <rostedt@goodmis.org>,
 	Masami Hiramatsu <mhiramat@kernel.org>,
-	Dennis Zhou <dennis@kernel.org>, Tejun Heo <tj@kernel.org>,
-	Martin Liu <liumartin@google.com>,
-	David Rientjes <rientjes@google.com>, christian.koenig@amd.com,
-	Shakeel Butt <shakeel.butt@linux.dev>,
-	Johannes Weiner <hannes@cmpxchg.org>,
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	"Liam R . Howlett" <Liam.Howlett@oracle.com>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	Christian Brauner <brauner@kernel.org>,
-	Wei Yang <richard.weiyang@gmail.com>,
-	David Hildenbrand <david@redhat.com>,
-	Miaohe Lin <linmiaohe@huawei.com>,
-	Al Viro <viro@zeniv.linux.org.uk>, linux-mm@kvack.org,
-	linux-trace-kernel@vger.kernel.org, Yu Zhao <yuzhao@google.com>,
-	Roman Gushchin <roman.gushchin@linux.dev>,
-	Matthew Wilcox <willy@infradead.org>
-Subject: Re: [RFC PATCH v2] Introduce Hierarchical Per-CPU Counters
-Message-ID: <9f42144b-dca9-41b0-a80b-2e402cb5ab98@paulmck-laptop>
-Reply-To: paulmck@kernel.org
-References: <20250408160508.991738-1-mathieu.desnoyers@efficios.com>
- <f90d7646-99a3-48f5-ba2e-850c73592080@gentwo.org>
- <f014a9bb-0653-4682-8608-7fe6e2ad5ee6@efficios.com>
- <c013632c-b4ca-fb3d-9be5-b02ca5a3d859@gentwo.org>
+	Alan Maguire <alan.maguire@oracle.com>
+Subject: [PATCH 1/2] uprobes/x86: Add support to emulate nop5 instruction
+Date: Tue,  8 Apr 2025 23:13:09 +0200
+Message-ID: <20250408211310.51491-1-jolsa@kernel.org>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <c013632c-b4ca-fb3d-9be5-b02ca5a3d859@gentwo.org>
+Content-Transfer-Encoding: 8bit
 
-On Tue, Apr 08, 2025 at 01:44:25PM -0700, Christoph Lameter (Ampere) wrote:
-> On Tue, 8 Apr 2025, Mathieu Desnoyers wrote:
-> 
-> > Currently percpu_counter_tree_precise_sum_unbiased() iterates on each
-> > possible cpu, which does not require cpu hotplug integration.
-> 
-> Well that looks like a performance issue if you have a system that can
-> expand to 8K cpus but currently only has 16 or so online.
+Adding support to emulate nop5 as the original uprobe instruction.
 
-RCU handles this by iterating from zero to nr_cpu_ids, which is set during
-early boot.  It also builds its tree-shaped data structures during early
-boot based on nr_cpu_ids.
+This change speeds up uprobe on top of nop5 and is a preparation for
+usdt probe optimization, that will be done on top of nop5 instruction.
 
-							Thanx, Paul
+With this change the usdt probe on top of nop5 won't take the performance
+hit compared to usdt probe on top of standard nop instruction.
+
+Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+---
+ arch/x86/kernel/uprobes.c | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
+
+diff --git a/arch/x86/kernel/uprobes.c b/arch/x86/kernel/uprobes.c
+index 9194695662b2..63cc68e19da6 100644
+--- a/arch/x86/kernel/uprobes.c
++++ b/arch/x86/kernel/uprobes.c
+@@ -608,6 +608,16 @@ static void riprel_post_xol(struct arch_uprobe *auprobe, struct pt_regs *regs)
+ 		*sr = utask->autask.saved_scratch_register;
+ 	}
+ }
++
++static int is_nop5_insn(uprobe_opcode_t *insn)
++{
++	return !memcmp(insn, x86_nops[5], 5);
++}
++
++static bool emulate_nop5_insn(struct arch_uprobe *auprobe)
++{
++	return is_nop5_insn((uprobe_opcode_t *) &auprobe->insn);
++}
+ #else /* 32-bit: */
+ /*
+  * No RIP-relative addressing on 32-bit
+@@ -621,6 +631,10 @@ static void riprel_pre_xol(struct arch_uprobe *auprobe, struct pt_regs *regs)
+ static void riprel_post_xol(struct arch_uprobe *auprobe, struct pt_regs *regs)
+ {
+ }
++static bool emulate_nop5_insn(struct arch_uprobe *auprobe)
++{
++	return false;
++}
+ #endif /* CONFIG_X86_64 */
+ 
+ struct uprobe_xol_ops {
+@@ -852,6 +866,8 @@ static int branch_setup_xol_ops(struct arch_uprobe *auprobe, struct insn *insn)
+ 		break;
+ 
+ 	case 0x0f:
++		if (emulate_nop5_insn(auprobe))
++			goto setup;
+ 		if (insn->opcode.nbytes != 2)
+ 			return -ENOSYS;
+ 		/*
+-- 
+2.49.0
+
