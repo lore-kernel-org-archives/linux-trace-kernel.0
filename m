@@ -1,42 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22CCA255E2A;
-	Tue,  8 Apr 2025 23:32:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8B6924169E;
+	Tue,  8 Apr 2025 23:37:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744155169; cv=none; b=ouDi8ZJSXeQ120tofvUyM4tvtr3iGsjhTHO87jTepQQ0yW8/iUbHYigoeVNu4RHHyNsyw944JNrmanHpnIorSYuE1LyyWJb9xv1rZ/EiLAf6af6dHrP1B740NK36B43WgIkZ1I+CT+0Vg3E+Ss9WHl+kvIRODftwyM9a9xwYQpM=
+	t=1744155424; cv=none; b=Mn/9ZTD/d/3ljGme3hBwYPLB29qqynzfaaSfNcQDXlU1eXTnJLKMVSOxlciujlLX6B4zS0HC2lIhTp1IvXzMoEwSXpROT/+d8n9wQ2BwhNAe6RG/mJst2wcfyWy/y3XoMVrw0/w4MEAcxwGxt5RNnLclZYoGGa6e+mDtv2Q+gM0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744155169; c=relaxed/simple;
-	bh=4Wj0V/sdjK7Bj+UsZ7gBZyJe9Ip13SHd681Di5KHvy0=;
+	s=arc-20240116; t=1744155424; c=relaxed/simple;
+	bh=qeBpWOGfbzJOiCA+hJbPkYPDneCqlrg4wZjdvh8DyT0=;
 	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=lkO2/IBnCRV+CDTkuejBBOeE340X+aNa3eM+Ry8f3R7t4Cup4q2zvBgN/YyQpx1TDCOCWB0yBaFT2gTjNyl/KfgjHkVy7FqnURxISp7UWgxNZeql3EmV90ZKF64thC0KX+Okc9PZP2H45IeLSWU3LEtdFCHwjE3LRcYQAzAvJU4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ACW48yAW; arc=none smtp.client-ip=10.30.226.201
+	 Mime-Version:Content-Type; b=Kbvh9MqFXFSdadMvrPQn6T4QYo8Av4xaWjT4DfEUEVyrIKswRvGqQk9/8zSlX5AsPbbHRSice00DfWm3YC0sj7b5WnV+Aqnl18d91vVDq2o9Ddv2xiC7SNZAhi+tSFqzQ7vseztrKCUIPAnz3uLkeh9Bk2hBt8oCuhj+aw3Uvms=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mJaDqAgD; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ACW48yAW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7B962C4CEE5;
-	Tue,  8 Apr 2025 23:32:47 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mJaDqAgD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 725E8C4CEE5;
+	Tue,  8 Apr 2025 23:37:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744155168;
-	bh=4Wj0V/sdjK7Bj+UsZ7gBZyJe9Ip13SHd681Di5KHvy0=;
+	s=k20201202; t=1744155424;
+	bh=qeBpWOGfbzJOiCA+hJbPkYPDneCqlrg4wZjdvh8DyT0=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=ACW48yAWsAhFhSJKEtYaNp1n1wmFRdQZ6FM7lYv3lyHO0KBL/si2LjfbV4ihveHGS
-	 voS+BIPmrC55a7uHtHraZATz1eRmb5akIQPx5kctRQf6aZ4uTuEuzNlWgYKNeVh0LH
-	 CyB3RNuNQ236qlQi23rQK3zQL8Z4Scwsm3aylpjurBWx1cD13CNBEvETWK9CHG9HLH
-	 H6TCtjPLaPmPc2V/yNzNI69u175lDJP9eSNXcfoMTL2KS1ixnifjF5nNo0zGpXbGAn
-	 8cDC/lyoJLQVGwkRo860HeVODG4e0yWx6t1iieZkBOkxtDRxeS44JbgFjEuarazw35
-	 Lqh7S+Lx8pbcw==
-Date: Wed, 9 Apr 2025 08:32:44 +0900
+	b=mJaDqAgDhT7NyTXj0SNQLNfYR7g62SMYxdeXXe5/AGznNqblaZmLUyyXNFVObzMoC
+	 dxn0Fihnox9zkhwzcwqXZBoAsQqDlvjQiA/1MPOs9elK8RBNTYCtcfz4KoD2cpdyHa
+	 M9NhRTmyLCwMbIn9mqTr7IBkYCUjkUisDotcUK0oxc5oyQfmALq9fm9w5aBRV/VfLr
+	 rtsJtkzbPDeh7owLrrA9ipR6pCTiM4kO6nBBVxdw2wfp4V9oIl94p7Uc7HT7070uMg
+	 AAaUHoSjTTBKs2fDWAmvL1eZCYVC3fLnnrY/1bM1RSVcnr/69BkWA56sf7VmKreatV
+	 rb+nqmNQsAvTw==
+Date: Wed, 9 Apr 2025 08:36:58 +0900
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 To: Steven Rostedt <rostedt@goodmis.org>
 Cc: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
  <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu
  <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Tom Zanussi <zanussi@kernel.org>
-Subject: Re: [PATCH] tracing: Add common_comm to histograms
-Message-Id: <20250409083244.fe29885ef4f9253977a2bf61@kernel.org>
-In-Reply-To: <20250407154912.3c6c6246@gandalf.local.home>
-References: <20250407154912.3c6c6246@gandalf.local.home>
+ Tom Zanussi <zanussi@kernel.org>, Douglas Raillard
+ <douglas.raillard@arm.com>
+Subject: Re: [PATCH] tracing: Do not add length to print format in synthetic
+ events
+Message-Id: <20250409083658.25c2687da3fad617514f8b22@kernel.org>
+In-Reply-To: <20250407154139.69955768@gandalf.local.home>
+References: <20250407154139.69955768@gandalf.local.home>
 X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -47,173 +49,61 @@ Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Mon, 7 Apr 2025 15:49:12 -0400
+On Mon, 7 Apr 2025 15:41:39 -0400
 Steven Rostedt <rostedt@goodmis.org> wrote:
 
 > From: Steven Rostedt <rostedt@goodmis.org>
 > 
-> If one wants to trace the name of the task that wakes up a process and
-> pass that to the synthetic events, there's nothing currently that lets the
-> synthetic events do that. Add a "common_comm" to the histogram logic that
-> allows histograms save the current->comm as a variable that can be passed
-> through and added to a synthetic event:
+> The following causes a vsnprintf fault:
 > 
->  # cd /sys/kernel/tracing
->  # echo 's:wake_lat char[] waker; char[] wakee; u64 delta;' >> dynamic_events
->  # echo 'hist:keys=pid:comm=common_comm:ts=common_timestamp.usecs if !(common_flags & 0x18)' > events/sched/sched_waking/trigger
->  # echo 'hist:keys=next_pid:wake_comm=$comm:delta=common_timestamp.usecs-$ts:onmatch(sched.sched_waking).trace(wake_lat,$wake_comm,next_comm,$delta)' > events/sched/sched_switch/trigger
+>   # echo 's:wake_lat char[] wakee; u64 delta;' >> /sys/kernel/tracing/dynamic_events
+>   # echo 'hist:keys=pid:ts=common_timestamp.usecs if !(common_flags & 0x18)' > /sys/kernel/tracing/events/sched/sched_waking/trigger
+>   # echo 'hist:keys=next_pid:delta=common_timestamp.usecs-$ts:onmatch(sched.sched_waking).trace(wake_lat,next_comm,$delta)' > /sys/kernel/tracing/events/sched/sched_switch/trigger
 > 
-> The above will create a synthetic trace event that will save both the name
-> of the waker and the wakee but only if the wakeup did not happen in a hard
-> or soft interrupt context.
+> Because the synthetic event's "wakee" field is created as a dynamic string
+> (even though the string copied is not). The print format to print the
+> dynamic string changed from "%*s" to "%s" because another location
+> (__set_synth_event_print_fmt()) exported this to user space, and user
+> space did not need that. But it is still used in print_synth_event(), and
+> the output looks like:
 > 
-> The "common_comm" is used to save the task->comm at the time of the
-> initial event and is passed via the "comm" variable to the second event,
-> and that is saved as the "waker" field in the "wake_lat" synthetic event.
+>           <idle>-0       [001] d..5.   193.428167: wake_lat: wakee=(efault)sshd-sessiondelta=155
+>     sshd-session-879     [001] d..5.   193.811080: wake_lat: wakee=(efault)kworker/u34:5delta=58
+>           <idle>-0       [002] d..5.   193.811198: wake_lat: wakee=(efault)bashdelta=91
+>             bash-880     [002] d..5.   193.811371: wake_lat: wakee=(efault)kworker/u35:2delta=21
+>           <idle>-0       [001] d..5.   193.811516: wake_lat: wakee=(efault)sshd-sessiondelta=129
+>     sshd-session-879     [001] d..5.   193.967576: wake_lat: wakee=(efault)kworker/u34:5delta=50
+> 
+> The length isn't needed as the string is always nul terminated. Just print
+> the string and not add the length (which was hard coded to the max string
+> length anyway).
 > 
 
-Looks good to me.
+Good catch!
 
 Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-BTW, the string field size must always be MAX_FILTER_STR_VAL (for comparing
-with other string filters, which checks the size at first.)
-Somewhere we should comment it.
+Thanks!
 
-Thank you,
-
+> Cc: stable@vger.kernel.org
+> Fixes: 4d38328eb442d ("tracing: Fix synth event printk format for str fields");
 > Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 > ---
->  kernel/trace/trace_events_hist.c | 51 ++++++++++++++++++++++++++------
->  1 file changed, 42 insertions(+), 9 deletions(-)
+>  kernel/trace/trace_events_synth.c | 1 -
+>  1 file changed, 1 deletion(-)
 > 
-> diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events_hist.c
-> index e85bc59c0421..58c9535f61df 100644
-> --- a/kernel/trace/trace_events_hist.c
-> +++ b/kernel/trace/trace_events_hist.c
-> @@ -114,6 +114,7 @@ enum hist_field_fn {
->  	HIST_FIELD_FN_BUCKET,
->  	HIST_FIELD_FN_TIMESTAMP,
->  	HIST_FIELD_FN_CPU,
-> +	HIST_FIELD_FN_COMM,
->  	HIST_FIELD_FN_STRING,
->  	HIST_FIELD_FN_DYNSTRING,
->  	HIST_FIELD_FN_RELDYNSTRING,
-> @@ -506,6 +507,7 @@ enum hist_field_flags {
->  	HIST_FIELD_FL_CONST		= 1 << 18,
->  	HIST_FIELD_FL_PERCENT		= 1 << 19,
->  	HIST_FIELD_FL_GRAPH		= 1 << 20,
-> +	HIST_FIELD_FL_COMM		= 1 << 21,
->  };
+> diff --git a/kernel/trace/trace_events_synth.c b/kernel/trace/trace_events_synth.c
+> index 969f48742d72..33cfbd4ed76d 100644
+> --- a/kernel/trace/trace_events_synth.c
+> +++ b/kernel/trace/trace_events_synth.c
+> @@ -370,7 +370,6 @@ static enum print_line_t print_synth_event(struct trace_iterator *iter,
+>  				union trace_synth_field *data = &entry->fields[n_u64];
 >  
->  struct var_defs {
-> @@ -885,6 +887,15 @@ static u64 hist_field_cpu(struct hist_field *hist_field,
->  	return cpu;
->  }
->  
-> +static u64 hist_field_comm(struct hist_field *hist_field,
-> +			  struct tracing_map_elt *elt,
-> +			  struct trace_buffer *buffer,
-> +			  struct ring_buffer_event *rbe,
-> +			  void *event)
-> +{
-> +	return (u64)(unsigned long)current->comm;
-> +}
-> +
->  /**
->   * check_field_for_var_ref - Check if a VAR_REF field references a variable
->   * @hist_field: The VAR_REF field to check
-> @@ -1338,6 +1349,8 @@ static const char *hist_field_name(struct hist_field *field,
->  		field_name = hist_field_name(field->operands[0], ++level);
->  	else if (field->flags & HIST_FIELD_FL_CPU)
->  		field_name = "common_cpu";
-> +	else if (field->flags & HIST_FIELD_FL_COMM)
-> +		field_name = "common_comm";
->  	else if (field->flags & HIST_FIELD_FL_EXPR ||
->  		 field->flags & HIST_FIELD_FL_VAR_REF) {
->  		if (field->system) {
-> @@ -2015,6 +2028,13 @@ static struct hist_field *create_hist_field(struct hist_trigger_data *hist_data,
->  		goto out;
->  	}
->  
-> +	if (flags & HIST_FIELD_FL_COMM) {
-> +		hist_field->fn_num = HIST_FIELD_FN_COMM;
-> +		hist_field->size = MAX_FILTER_STR_VAL;
-> +		hist_field->type = "char[]";
-> +		goto out;
-> +	}
-> +
->  	if (WARN_ON_ONCE(!field))
->  		goto out;
->  
-> @@ -2359,9 +2379,11 @@ parse_field(struct hist_trigger_data *hist_data, struct trace_event_file *file,
->  			hist_data->attrs->ts_in_usecs = true;
->  	} else if (strcmp(field_name, "common_stacktrace") == 0) {
->  		*flags |= HIST_FIELD_FL_STACKTRACE;
-> -	} else if (strcmp(field_name, "common_cpu") == 0)
-> +	} else if (strcmp(field_name, "common_cpu") == 0) {
->  		*flags |= HIST_FIELD_FL_CPU;
-> -	else if (strcmp(field_name, "hitcount") == 0)
-> +	} else if (strcmp(field_name, "common_comm") == 0) {
-> +		*flags |= HIST_FIELD_FL_COMM | HIST_FIELD_FL_STRING;
-> +	} else if (strcmp(field_name, "hitcount") == 0)
->  		*flags |= HIST_FIELD_FL_HITCOUNT;
->  	else {
->  		field = trace_find_event_field(file->event_call, field_name);
-> @@ -2377,6 +2399,8 @@ parse_field(struct hist_trigger_data *hist_data, struct trace_event_file *file,
->  				*flags |= HIST_FIELD_FL_CPU;
->  			} else if (field && field->filter_type == FILTER_STACKTRACE) {
->  				*flags |= HIST_FIELD_FL_STACKTRACE;
-> +			} else if (field && field->filter_type == FILTER_COMM) {
-> +				*flags |= HIST_FIELD_FL_COMM | HIST_FIELD_FL_STRING;
->  			} else {
->  				hist_err(tr, HIST_ERR_FIELD_NOT_FOUND,
->  					 errpos(field_name));
-> @@ -4327,6 +4351,8 @@ static u64 hist_fn_call(struct hist_field *hist_field,
->  		return hist_field_timestamp(hist_field, elt, buffer, rbe, event);
->  	case HIST_FIELD_FN_CPU:
->  		return hist_field_cpu(hist_field, elt, buffer, rbe, event);
-> +	case HIST_FIELD_FN_COMM:
-> +		return hist_field_comm(hist_field, elt, buffer, rbe, event);
->  	case HIST_FIELD_FN_STRING:
->  		return hist_field_string(hist_field, elt, buffer, rbe, event);
->  	case HIST_FIELD_FN_DYNSTRING:
-> @@ -5212,14 +5238,19 @@ static inline void add_to_key(char *compound_key, void *key,
->  	size_t size = key_field->size;
->  
->  	if (key_field->flags & HIST_FIELD_FL_STRING) {
-> -		struct ftrace_event_field *field;
->  
-> -		field = key_field->field;
-> -		if (field->filter_type == FILTER_DYN_STRING ||
-> -		    field->filter_type == FILTER_RDYN_STRING)
-> -			size = *(u32 *)(rec + field->offset) >> 16;
-> -		else if (field->filter_type == FILTER_STATIC_STRING)
-> -			size = field->size;
-> +		if (key_field->flags & HIST_FIELD_FL_COMM) {
-> +			size = strlen((char *)key);
-> +		} else {
-> +			struct ftrace_event_field *field;
-> +
-> +			field = key_field->field;
-> +			if (field->filter_type == FILTER_DYN_STRING ||
-> +			    field->filter_type == FILTER_RDYN_STRING)
-> +				size = *(u32 *)(rec + field->offset) >> 16;
-> +			else if (field->filter_type == FILTER_STATIC_STRING)
-> +				size = field->size;
-> +		}
->  
->  		/* ensure NULL-termination */
->  		if (size > key_field->size - 1)
-> @@ -6097,6 +6128,8 @@ static void hist_field_print(struct seq_file *m, struct hist_field *hist_field)
->  
->  	if (hist_field->flags & HIST_FIELD_FL_CPU)
->  		seq_puts(m, "common_cpu");
-> +	if (hist_field->flags & HIST_FIELD_FL_COMM)
-> +		seq_puts(m, "common_comm");
->  	else if (hist_field->flags & HIST_FIELD_FL_CONST)
->  		seq_printf(m, "%llu", hist_field->constant);
->  	else if (field_name) {
+>  				trace_seq_printf(s, print_fmt, se->fields[i]->name,
+> -						 STR_VAR_LEN_MAX,
+>  						 (char *)entry + data->as_dynamic.offset,
+>  						 i == se->n_fields - 1 ? "" : " ");
+>  				n_u64++;
 > -- 
 > 2.47.2
 > 
