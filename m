@@ -1,98 +1,127 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from smtp-fw-6002.amazon.com (smtp-fw-6002.amazon.com [52.95.49.90])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09E4921859D;
-	Tue,  8 Apr 2025 17:02:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0875223024C;
+	Tue,  8 Apr 2025 17:12:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.95.49.90
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744131756; cv=none; b=a8jMQdCdCcY9jO0Tr9kpvdsrzFPpcX5Ihk+XB5wEIw3s+q56qJU1wAjGl4muMcPZSaScRRAM9ipH4ze5y3UjNPhUR6LDoGUccaXKQZ8Oi1BVvPmKoL5XzdPKOrsBsSD+dl57rvLTHnDTrzkjaRonZE2NTK8ax+Mbz+8Mzxoujx8=
+	t=1744132372; cv=none; b=YJu8OccKPFGAMMn+J5VmxTVioEX5M58SMEPNohlu3qd0PTnmHDBn08S2Ep1znB1GphZouEBW0ebJxuy6w5OsqyVUuO+vQhy00CSgx/4z4q4tTSN1Cd+UcuB8IDSk8oKs1L3ngzcxM9DzVWkBzi1Jc+UEZ5kc0TOzPYRdU5GDtWI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744131756; c=relaxed/simple;
-	bh=XpUvcH2fYKG/3+mJ7A6C90dV2a9DMLUENSZbwm6BhHg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gLNhWUtDtD0S6TvB61Je5qWQQO1XMAoZJCIGmbwMNN4I8fsfjqQgHmc7/b6wWI7CM1aqZmH/VlkBFsSLLMEv5rV37s7gxrQ3/AKBIh0mwXYRn3EKuEDl/MIcPn2Jgxueg1P79NJ51CC0tjPNLcpWO0suVdx61tkHslNEX5bDwi8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=pNvxRd/r; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1744132372; c=relaxed/simple;
+	bh=Pj34+P8socyPgDvsKTOjkxt1ShfPBwPzx2cS+bfx3+8=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=spciSKqeLq7nJ0FC0P2hnuvwLkfcTRlsy33yQrB7+7pLQlKPMMrQSnEeSW3WKwkjCj+PeLVtaG6uCAKQewRmN1phfkQ1pSUKmJTbn6AHQoO+UtJj5jqLnjt55YYyHlHZ2jvvE0Ie5CDrP2krUiFsHI8gNIMFjUUpPG6i649G4rI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.co.jp; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=JG3m4znX; arc=none smtp.client-ip=52.95.49.90
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.jp
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="pNvxRd/r"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=Wthvw+g3VPjsBqYkn9PtU805EB50LUzQbJZB+kkRP04=; b=pNvxRd/rFKeuHejFP1UqBVVtJu
-	wMFhn1znqYKaW/mLFjcM8+qpr5O392zgVI00cx12Ur6Rp6K+DE3Mglx/ManTL0g+3uJ6tazndBE2Q
-	ew7Yo8AXeN7BLV0RSw5TffIiB7mEF5f85jPFWjjmwogHsITM7S0mLtBrcZ8KjM3lXoqusTb3DwK6O
-	ilicc3T2BPad5dHtMSYfolaqiX+dTMYFNykY1BKO/mtvqVhauIS29BvQOsZYvkOE7B1Jt4NTyTv3c
-	RZ/31JCEQI2IWe9u16RVO32pOAUC6PsWLXiEJfi5qWNVZGFSjqM+xQwfvOVsd1veTRO6VvjGX8sUs
-	IQ+9PECA==;
-Received: from willy by casper.infradead.org with local (Exim 4.98.1 #2 (Red Hat Linux))
-	id 1u2CKR-000000000Fo-0n3G;
-	Tue, 08 Apr 2025 17:01:39 +0000
-Date: Tue, 8 Apr 2025 18:01:39 +0100
-From: Matthew Wilcox <willy@infradead.org>
-To: "Christoph Lameter (Ampere)" <cl@gentwo.org>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Sweet Tea Dorminy <sweettea@google.com>,
-	Mateusz Guzik <mjguzik@gmail.com>, linux-kernel@vger.kernel.org,
-	Andrew Morton <akpm@linux-foundation.org>,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Dennis Zhou <dennis@kernel.org>, Tejun Heo <tj@kernel.org>,
-	Martin Liu <liumartin@google.com>,
-	David Rientjes <rientjes@google.com>, christian.koenig@amd.com,
-	Shakeel Butt <shakeel.butt@linux.dev>,
-	Johannes Weiner <hannes@cmpxchg.org>,
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	"Liam R . Howlett" <Liam.Howlett@oracle.com>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	Christian Brauner <brauner@kernel.org>,
-	Wei Yang <richard.weiyang@gmail.com>,
-	David Hildenbrand <david@redhat.com>,
-	Miaohe Lin <linmiaohe@huawei.com>,
-	Al Viro <viro@zeniv.linux.org.uk>, linux-mm@kvack.org,
-	linux-trace-kernel@vger.kernel.org, Yu Zhao <yuzhao@google.com>,
-	Roman Gushchin <roman.gushchin@linux.dev>
-Subject: Re: [RFC PATCH v2] Introduce Hierarchical Per-CPU Counters
-Message-ID: <Z_VWc6Z90rhfyLBp@casper.infradead.org>
-References: <20250408160508.991738-1-mathieu.desnoyers@efficios.com>
- <f90d7646-99a3-48f5-ba2e-850c73592080@gentwo.org>
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="JG3m4znX"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1744132372; x=1775668372;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=KiccT77guSl05qwq/f8E1x1Iwhvgdns3YBbXrIazhCo=;
+  b=JG3m4znXJR1B+uHXHOaXqgN2TtbUD2mGflo29pSaSmCARhyqY/o1ct2o
+   /Zb/eKaQ7TGbfi8BjKmpKMubfU0/vtPRH6yR3qLio/EDucwAgWM2Jh6Cy
+   Pca6g20R1p6DN7xfCpt4ksRz4WJVb6ziE6K+ypsJQigynLdMyguWU8MUO
+   s=;
+X-IronPort-AV: E=Sophos;i="6.15,198,1739836800"; 
+   d="scan'208";a="487678219"
+Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO smtpout.prod.us-east-1.prod.farcaster.email.amazon.dev) ([10.43.8.6])
+  by smtp-border-fw-6002.iad6.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2025 17:12:48 +0000
+Received: from EX19MTAUWB002.ant.amazon.com [10.0.7.35:13538]
+ by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.47.159:2525] with esmtp (Farcaster)
+ id c75f37ee-019c-4161-b594-54f7ed1f0739; Tue, 8 Apr 2025 17:12:47 +0000 (UTC)
+X-Farcaster-Flow-ID: c75f37ee-019c-4161-b594-54f7ed1f0739
+Received: from EX19D004ANA001.ant.amazon.com (10.37.240.138) by
+ EX19MTAUWB002.ant.amazon.com (10.250.64.231) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
+ Tue, 8 Apr 2025 17:12:45 +0000
+Received: from 6c7e67bfbae3.amazon.com (10.106.100.5) by
+ EX19D004ANA001.ant.amazon.com (10.37.240.138) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
+ Tue, 8 Apr 2025 17:12:40 +0000
+From: Kuniyuki Iwashima <kuniyu@amazon.com>
+To: <leitao@debian.org>
+CC: <davem@davemloft.net>, <dsahern@kernel.org>, <edumazet@google.com>,
+	<horms@kernel.org>, <kernel-team@meta.com>, <kuba@kernel.org>,
+	<kuniyu@amazon.com>, <linux-kernel@vger.kernel.org>,
+	<linux-trace-kernel@vger.kernel.org>, <mathieu.desnoyers@efficios.com>,
+	<mhiramat@kernel.org>, <ncardwell@google.com>, <netdev@vger.kernel.org>,
+	<pabeni@redhat.com>, <rostedt@goodmis.org>, <song@kernel.org>,
+	<yonghong.song@linux.dev>
+Subject: Re: [PATCH net-next v2 2/2] trace: tcp: Add tracepoint for tcp_sendmsg_locked()
+Date: Tue, 8 Apr 2025 10:12:14 -0700
+Message-ID: <20250408171231.35951-1-kuniyu@amazon.com>
+X-Mailer: git-send-email 2.48.1
+In-Reply-To: <Z/VWUVk+mHXTENms@gmail.com>
+References: <Z/VWUVk+mHXTENms@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <f90d7646-99a3-48f5-ba2e-850c73592080@gentwo.org>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: EX19D033UWA004.ant.amazon.com (10.13.139.85) To
+ EX19D004ANA001.ant.amazon.com (10.37.240.138)
 
-On Tue, Apr 08, 2025 at 09:37:18AM -0700, Christoph Lameter (Ampere) wrote:
-> > The hierarchical per-CPU counters propagate a sum approximation through
-> > a binary tree. When reaching the batch size, the carry is propagated
-> > through a binary tree which consists of log2(nr_cpu_ids) levels. The
-> > batch size for each level is twice the batch size of the prior level.
+From: Breno Leitao <leitao@debian.org>
+Date: Tue, 8 Apr 2025 10:01:05 -0700
+> On Tue, Apr 08, 2025 at 09:16:51AM -0600, David Ahern wrote:
+> > On 4/8/25 8:27 AM, Breno Leitao wrote:
+> > > 
+> > > 	SEC("tracepoint/tcp/tcp_sendmsg_locked")
+> > 
+> > Try `raw_tracepoint/tcp/tcp_sendmsg_locked`.
+> > 
+> > This is the form I use for my tracepoint based packet capture (not tied
+> > to this tracepoint, but traces inside our driver) and it works fine.
 > 
-> A binary tree? Could we do this N-way? Otherwise the tree will be 8 levels
-> on a 512 cpu machine. Given the inflation of the number of cpus this
-> scheme better work up to 8K cpus.
+> Thanks. I was not able to get this crashing as well. In fact, the
+> following program fails to be loaded:
+> 
+> 	SEC("raw_tracepoint/tcp/tcp_sendmsg_locked")
 
-I find that a fan-out somewhere between 8 and 16 works well in practice.
-log16(512) gives a 3 level tree as does a log8 tree.  log16(8192) is a 4
-level tree whereas log8(8192) is a 5 level tree.  Not a big difference
-either way.
+Try SEC("tp_btf/tcp_sendmsg_locked") and access the raw argument
+(struct sk_buff *skb) instead of bpf_raw_tracepoint_args.
 
-Somebody was trying to persuade me that a new tree type that maintained
-additional information at each level of the tree to make some operations
-log(log(N)) would be a better idea than a B-tree that is log(N).  I
-countered that a wider tree made the argument unsound at any size tree
-up to 100k.  And we don't tend to have _that_ many objects in a
-data structure inside the kernel.
+The original report used it and I was able to reproduce it
+at that time.
 
-ceil(log14(100,000)) = 5
-ceil(log2(log2(100,000))) = 5
+https://lore.kernel.org/netdev/Z50zebTRzI962e6X@debian.debian/
 
-at a million, there's actually a gap, 6 vs 5.  But constant factors
-become a much larger factor than scalability arguments at that point.
+
+> 	int bpf_tcp_sendmsg_locked(struct bpf_raw_tracepoint_args *ctx)
+> 	{
+> 		void *skb_addr = (void *) ctx->args[0];
+> 
+> 		bpf_printk("deref %d\n", *(int *) skb_addr);
+> 
+> 		return 0;
+> 	}
+> 
+> libbpf refuses to load it, and drumps:
+> 
+> 	libbpf: prog 'bpf_tcp_sendmsg_locked': BPF program load failed: Permission denied
+> 	libbpf: prog 'bpf_tcp_sendmsg_locked': -- BEGIN PROG LOAD LOG --
+> 	0: R1=ctx() R10=fp0
+> 	; void *skb_addr = (void *) ctx->args[0]; @ tcp_sendmsg_locked_bpf.c:18
+> 	0: (79) r1 = *(u64 *)(r1 +0)          ; R1_w=scalar()
+> 	; bpf_printk("deref %d\n", *(int *) skb_addr); @ tcp_sendmsg_locked_bpf.c:20
+> 	1: (61) r3 = *(u32 *)(r1 +0)
+> 	R1 invalid mem access 'scalar'
+> 	processed 2 insns (limit 1000000) max_states_per_insn 0 total_states 0 peak_states 0 mark_read 0
+> 	-- END PROG LOAD LOG --
+> 	libbpf: prog 'bpf_tcp_sendmsg_locked': failed to load: -13
+> 	libbpf: failed to load object 'tcp_sendmsg_locked_bpf.o'
+> 	Failed to load BPF object: -13
+> 
+> > As suggested, you might need to update raw_tp_null_args
+> 
+> Thanks for confirming it. I will update raw_tp_null_args, assuming that
+> the problem exists but I am failing to reproduce it.
+> 
+> I will send an updated version soon.
