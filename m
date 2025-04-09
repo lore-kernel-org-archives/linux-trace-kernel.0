@@ -1,49 +1,49 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 929BC25D918
-	for <linux-trace-kernel@vger.kernel.org>; Wed,  9 Apr 2025 11:29:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DDEE1CDFCE
+	for <linux-trace-kernel@vger.kernel.org>; Wed,  9 Apr 2025 11:50:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744198172; cv=none; b=SQv65/ebv0obwa5d4xC2wRPIMO9zenm8EqJa7U2Hw9N8qsazYj0T4YRwLEC9Ncu0vGrMeJY46g4wsloAjHHiZAm3yyfeAlCnZoy0oGEK+STS9ttZJP0BNIxnFNzmeOpMe8lHPEgf4BnWDO441kgs3H7YU2g868SgnonSXjrwkkM=
+	t=1744199441; cv=none; b=eOSpZ1rfI5v3TZSMNkYwQ1oB6ZVgVzX8eSzvfJotXCE+4zkVzX7fAg2eWAY6w9eF6N0vnGsZW5VgNpCiY4WUhCQbSBjJrTq1gt0lm+xaNuriUvEgiVpEnOOG8cHTO7Y5PL1py9cugBWw7NK9ohpvI/jdvKjf7u18vGUBlJlWxYs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744198172; c=relaxed/simple;
-	bh=zXYaCCk7Xexl/noIb6OuPUIMVrNTYDA8ydr6oeZbr1Q=;
+	s=arc-20240116; t=1744199441; c=relaxed/simple;
+	bh=iz7hGUeThO2pOoFkEYLyC60rVxruxbslzIpusyrw9nU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CL9nlIlSPIUzh2DqJ9k0sChUbEHopy+a8EbTIlEFOIN1Cerc4G1WyYgrkNaKcVrAunfCaJb28SpOD0u0TcylYIVpCSbXNrVQ57mcrv5tXZIbOjmAD50e3L5n3Nt3vubv1KvS+QfTHpxZBLLa4IXykQV5d/hIgvxtmqWCj0sra+U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=XcN+u0A9; arc=none smtp.client-ip=170.10.129.124
+	 Content-Type:Content-Disposition:In-Reply-To; b=eNeA1Vube+elejSkqLNINEQym/wDLHZ2BMlit1SqKRcorTOsY3q9Vl/fnBXjK+o9+Fl+5VgsuJWZXzj+XZFvdJ1qDmnFvYGVEI36OEe/Ugm2BCV1Tf9YzbtBJfM2wELskJqOV4lMVVFeQqMng+1lu976Dp/XaXMCSx9qbjD2APY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=gUQ0NhGh; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XcN+u0A9"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gUQ0NhGh"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744198169;
+	s=mimecast20190719; t=1744199438;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=L9Of+gzTbsEE9FaHMGyGpxjiy7YHu1Oa9tXAD/zDQnY=;
-	b=XcN+u0A9A+esPM0geR1yEjY+BR0j8s3FLa/h/XdxedkAc81HRYTieAn78aGwXIr6mQP/wI
-	8CUWtv6uvVrbu2UT0qeMFGmR8LgAH9oTx60bXuOjoT/8EIZ8KNxM3oCamC6+w9k/FxW7b/
-	LNx/x2eyAns5f17aHyv7IgN0xXt8nqw=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+	bh=SMmVG5+2jOdZ04N8c2MqDN4J62ryFfX+ENG76OzBjCU=;
+	b=gUQ0NhGhr02L3zt2Hhi33SgYjFVp/WC3CzsBNTQIWyw39PrW0Y1zC7UxbwjlBlHdEX6G9X
+	wOz9olAWd1OAaMgzYcg/3pa5PAxe+9VW0ApdLa6GBExxobFwuN6crmhcFaTGYQFSq1M8qx
+	uPN32MfDamPdbSB5S9Z/nFcgvK4Vqmo=
+Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-547-2Sb6ZC_POsi-lpR4UKm0UQ-1; Wed,
- 09 Apr 2025 07:29:23 -0400
-X-MC-Unique: 2Sb6ZC_POsi-lpR4UKm0UQ-1
-X-Mimecast-MFC-AGG-ID: 2Sb6ZC_POsi-lpR4UKm0UQ_1744198161
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-655-mNAEURH2MSySMaaGVWqqiw-1; Wed,
+ 09 Apr 2025 07:50:35 -0400
+X-MC-Unique: mNAEURH2MSySMaaGVWqqiw-1
+X-Mimecast-MFC-AGG-ID: mNAEURH2MSySMaaGVWqqiw_1744199433
 Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 06B321800257;
-	Wed,  9 Apr 2025 11:29:21 +0000 (UTC)
+	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 20E791955DCC;
+	Wed,  9 Apr 2025 11:50:33 +0000 (UTC)
 Received: from dhcp-27-174.brq.redhat.com (unknown [10.44.34.54])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 18DE1180B487;
-	Wed,  9 Apr 2025 11:29:15 +0000 (UTC)
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 3028B180B488;
+	Wed,  9 Apr 2025 11:50:27 +0000 (UTC)
 Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Wed,  9 Apr 2025 13:28:45 +0200 (CEST)
-Date: Wed, 9 Apr 2025 13:28:39 +0200
+	oleg@redhat.com; Wed,  9 Apr 2025 13:49:57 +0200 (CEST)
+Date: Wed, 9 Apr 2025 13:49:51 +0200
 From: Oleg Nesterov <oleg@redhat.com>
 To: Jiri Olsa <jolsa@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>,
@@ -56,8 +56,9 @@ Cc: Peter Zijlstra <peterz@infradead.org>,
 	Masami Hiramatsu <mhiramat@kernel.org>,
 	Alan Maguire <alan.maguire@oracle.com>
 Subject: Re: [PATCH 1/2] uprobes/x86: Add support to emulate nop5 instruction
-Message-ID: <20250409112839.GA32748@redhat.com>
+Message-ID: <20250409114950.GB32748@redhat.com>
 References: <20250408211310.51491-1-jolsa@kernel.org>
+ <20250409112839.GA32748@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -66,88 +67,38 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250408211310.51491-1-jolsa@kernel.org>
+In-Reply-To: <20250409112839.GA32748@redhat.com>
 User-Agent: Mutt/1.5.24 (2015-08-30)
 X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
 
-On 04/08, Jiri Olsa wrote:
+On 04/09, Oleg Nesterov wrote:
 >
+> For the moment, lets forget about compat tasks on a 64-bit kernel, can't
+> we simply do something like below?
+
+...
+
 > --- a/arch/x86/kernel/uprobes.c
 > +++ b/arch/x86/kernel/uprobes.c
-> @@ -608,6 +608,16 @@ static void riprel_post_xol(struct arch_uprobe *auprobe, struct pt_regs *regs)
->  		*sr = utask->autask.saved_scratch_register;
->  	}
->  }
-> +
-> +static int is_nop5_insn(uprobe_opcode_t *insn)
-> +{
-> +	return !memcmp(insn, x86_nops[5], 5);
-> +}
-> +
-> +static bool emulate_nop5_insn(struct arch_uprobe *auprobe)
-> +{
-> +	return is_nop5_insn((uprobe_opcode_t *) &auprobe->insn);
-> +}
-
-Why do we need 2 functions? Can't branch_setup_xol_ops() just use
-is_nop5_insn(insn->kaddr) ?
-
->  #else /* 32-bit: */
->  /*
->   * No RIP-relative addressing on 32-bit
-> @@ -621,6 +631,10 @@ static void riprel_pre_xol(struct arch_uprobe *auprobe, struct pt_regs *regs)
->  static void riprel_post_xol(struct arch_uprobe *auprobe, struct pt_regs *regs)
->  {
->  }
-> +static bool emulate_nop5_insn(struct arch_uprobe *auprobe)
-> +{
-> +	return false;
-> +}
-
-Hmm, why? I mean, why we can't emulate x86_nops[5] if !CONFIG_X86_64 ?
-
-OTOH. What if the kernel is 64-bit, but the probed task is 32-bit and it
-uses the 64-bit version of BYTES_NOP5?
-
-Perhaps this is fine, I simply don't know, so let me ask...
-
-> @@ -852,6 +866,8 @@ static int branch_setup_xol_ops(struct arch_uprobe *auprobe, struct insn *insn)
->  		break;
->
->  	case 0x0f:
-> +		if (emulate_nop5_insn(auprobe))
+> @@ -840,12 +840,16 @@ static int branch_setup_xol_ops(struct arch_uprobe *auprobe, struct insn *insn)
+>  	insn_byte_t p;
+>  	int i;
+>  
+> +	/* prefix* + nop[i]; same as jmp with .offs = 0 */
+> +	for (i = 1; i <= ASM_NOP_MAX; ++i) {
+> +		if (!memcmp(insn->kaddr, x86_nops[i], i))
 > +			goto setup;
+> +	}
+> +
+>  	switch (opc1) {
+>  	case 0xeb:	/* jmp 8 */
+>  	case 0xe9:	/* jmp 32 */
+>  		break;
+> -	case 0x90:	/* prefix* + nop; same as jmp with .offs = 0 */
+> -		goto setup;
 
-I think this will work, but if we want to emulate nop5, then perhaps
-we can do the same for other nops?
-
-For the moment, lets forget about compat tasks on a 64-bit kernel, can't
-we simply do something like below?
+OK, I guess we can't remove this "case 0x90" because of prefixes, please
+ignore this part.
 
 Oleg.
----
-
-diff --git a/arch/x86/kernel/uprobes.c b/arch/x86/kernel/uprobes.c
-index 9194695662b2..76d2cceca6c4 100644
---- a/arch/x86/kernel/uprobes.c
-+++ b/arch/x86/kernel/uprobes.c
-@@ -840,12 +840,16 @@ static int branch_setup_xol_ops(struct arch_uprobe *auprobe, struct insn *insn)
- 	insn_byte_t p;
- 	int i;
- 
-+	/* prefix* + nop[i]; same as jmp with .offs = 0 */
-+	for (i = 1; i <= ASM_NOP_MAX; ++i) {
-+		if (!memcmp(insn->kaddr, x86_nops[i], i))
-+			goto setup;
-+	}
-+
- 	switch (opc1) {
- 	case 0xeb:	/* jmp 8 */
- 	case 0xe9:	/* jmp 32 */
- 		break;
--	case 0x90:	/* prefix* + nop; same as jmp with .offs = 0 */
--		goto setup;
- 
- 	case 0xe8:	/* call relative */
- 		branch_clear_offset(auprobe, insn);
 
