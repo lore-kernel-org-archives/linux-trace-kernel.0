@@ -1,163 +1,97 @@
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2070.outbound.protection.outlook.com [40.107.236.70])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f177.google.com (mail-qt1-f177.google.com [209.85.160.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 334F1259C;
-	Wed,  9 Apr 2025 04:46:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.70
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744174018; cv=fail; b=TWzbAVTMo24Yt2IaIP/NWlpLX1bfXpzemoejkzYb11sTQVHBX3P6qwuZxfkz4tTC4KY/9HnoXft+h+nUOMJVxtIpqwNCOjDA9qmaKwSGGSdS83YuWEfTWOUo78d4Jz9Nbnnse56ph7SyxRJn6tv769MmwJZCd7Fbvup1KX9Knbw=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744174018; c=relaxed/simple;
-	bh=VQQM1fJ6c2J0J6fW9ZV1Z879+4kH5DLYrMFQAn2ujTQ=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=S5zrhOlFq+jmWwk/oJuyqmgbIbPBoPoFfm70uyGWXtkuDuPoDtvGPAAxhV+yWEb18e53QMlakFVrGp4YzEFUtq3XWAx3fivG5dk5jqtZQRo5etRO3sJGn94HnM2oaPXB1qzadtz3XXC4rsfFvh2WBSOtfZHNiOZBQsb8FQFvwyI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=B45mN0dL; arc=fail smtp.client-ip=40.107.236.70
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF7F3254868
+	for <linux-trace-kernel@vger.kernel.org>; Wed,  9 Apr 2025 07:14:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.177
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744182847; cv=none; b=LK20DmR4IIbLMlA0enhHKHmb1xuwab9fExkeOBdCn7GLSwo5aTY3ZbFGtuX2dGpj0XQ/lH6d42+FkdUwsLIfd12BoCmdYJKJEYmE/w/vqCMcp5lTlmNU6Cx1PtFIynkopNZGAOyAYM3GR924v20cT0QC9PzIYw5isY33kcxLgQU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744182847; c=relaxed/simple;
+	bh=o4u22On0K74aCLxCe4KHlANGFU1KZOeJn9PZNDHqBII=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=MVc43Jg1dA0uCgcLvXYYhnZMb1YgWsZgVNdhWan3CEi0FBN1pog8gA8qoXGDHg7spfN5PT7ABoUyYqfqBu1rjyo9VUxWioo7XBbBc7YA89l3sGEWAmm8AgEQFHadEbIuyLfdAe7kV+xIZq03oBgTWt+9JYcBKXKWS+wVB/HnejE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ekCQmfKE; arc=none smtp.client-ip=209.85.160.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="B45mN0dL"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=yHIKSyX4jvn9/7RbD/a+j3gv8TajkMx10mbVK7EflV+uMJiI/EBLmQ/4nOM5kCZPRYC9ZgwCb/wF4RxH+mlny6jqUOEpvX1lOzb/yX0QH8bGeEuODEtMnwRL5Fc35/RLCne4aPhAVJvdDLjVdj8Ng4wJ5L+tfNJo1Wz592f5WhSchkFIaT/l+AvD1c6fJWAuoRW+TOBQIp3hsZ7ghrYsuSeJbPHHyrapP0TTAXahL25/z4TeopyI4NP181bzfcR5kFSR2EJ2IrERiA3Y4+0XYjWb0KS4sxw0RFCAqBTisfaf6ctwv/LipPzvPSOLrHE8TpyBiQi0KCWXSAxMwAiYig==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=iPTaBtUbn4d+fDCbqvosbx/WF2lCxqCgAz1U+tWVQSI=;
- b=I0bN2PTOhYg/aK7IrmUbJkg5fx+HM0qShpLz4Lc6zMzk48p1+Oj20cKzFQH52tB8dwtWkEsG3qfZqeITo6P9G7Fwokj3r2TdoauB8tVYaZEjShbkLnquzFLjRui7NOKEkqTBiR+cC/M6McfWdcwK3I6tGOgOLNdeL0EWmUCBOGJOiWOU1cmNAW727TZDxtoxHIo8e7OmzXvZdWX5Mpzz/Mwu5m9rX57PYVOvyih1LwYYB4bwDHUeWlwN8FGuUkfrgP762ENp0N0lih+sxaurOnnuJ+tP8jftlKjXTEhunmvUE00bB5hUU1RIF7LVMGDSWpt7r8FHX4J0/XUfAM12/A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=goodmis.org smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=iPTaBtUbn4d+fDCbqvosbx/WF2lCxqCgAz1U+tWVQSI=;
- b=B45mN0dLj6wPwBXbdzMSsG25I/fMVrp5JhbKsc3U+7+jewO7gPmHP78cQ6Aqn4Vn/3sbcMCAdBZrnCQkH33YwuP1/PZgSs3KUDnP4BACQz1Ba5X1lgdqRcN+x1Ay4ezU8slhSeDn24N68NyAYEwdsa+Y46vFRBSEvYY6P0NZifM=
-Received: from DS7PR03CA0162.namprd03.prod.outlook.com (2603:10b6:5:3b2::17)
- by IA0PPF8CAB220A1.namprd12.prod.outlook.com (2603:10b6:20f:fc04::bd9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.21; Wed, 9 Apr
- 2025 04:46:52 +0000
-Received: from DS1PEPF0001708F.namprd03.prod.outlook.com
- (2603:10b6:5:3b2:cafe::d3) by DS7PR03CA0162.outlook.office365.com
- (2603:10b6:5:3b2::17) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8606.36 via Frontend Transport; Wed,
- 9 Apr 2025 04:46:52 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- DS1PEPF0001708F.mail.protection.outlook.com (10.167.17.139) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8606.22 via Frontend Transport; Wed, 9 Apr 2025 04:46:52 +0000
-Received: from dellg853host.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 8 Apr
- 2025 23:46:50 -0500
-From: Ayush Jain <Ayush.jain3@amd.com>
-To: <rostedt@goodmis.org>, <mhiramat@kernel.org>,
-	<mathieu.desnoyers@efficios.com>, <linux-kernel@vger.kernel.org>,
-	<linux-trace-kernel@vger.kernel.org>, <linux-kselftest@vger.kernel.org>
-CC: <Naveen.Rao@amd.com>, <Kalpana.Shetty@amd.com>, <Narasimhan.V@amd.com>,
-	Ayush Jain <Ayush.jain3@amd.com>
-Subject: [PATCH v2] selftests/ftrace: Convert poll to a gen_file
-Date: Wed, 9 Apr 2025 04:46:32 +0000
-Message-ID: <20250409044632.363285-1-Ayush.jain3@amd.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ekCQmfKE"
+Received: by mail-qt1-f177.google.com with SMTP id d75a77b69052e-476964b2c1dso106040061cf.3
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 09 Apr 2025 00:14:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1744182845; x=1744787645; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=o4u22On0K74aCLxCe4KHlANGFU1KZOeJn9PZNDHqBII=;
+        b=ekCQmfKEB0bLWZzXtd7R2oH2sSK14iQ2pma12G0EcIvhTlGB5SzYD+FgtuHYRw2Ziv
+         omL2HXb+4fJjfL/p/Xo6SNAkjcTaoFkU1s6RAPZ+TM0i75czBtd9YFBdwfmbDCGnS9R6
+         N/uMZVezf3JMPZb38v+Zbn5iTlPumqS+2SSWkdwnYavt6JFgEUiv+wc9xB+eJEZypHh9
+         gMjWJpEyz556pzyVvs43uDl82DSSbFZ7XDTR3exeKDf0t5BFnsw1LMoZo/e1RdvRzZ9r
+         OXkD0+UHehK8C0/iex+frri3vn2aEBBt3adjC5LInhzD4JrYmcCKSJU4HS2lwnw66Ows
+         jbaA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744182845; x=1744787645;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=o4u22On0K74aCLxCe4KHlANGFU1KZOeJn9PZNDHqBII=;
+        b=TtiWdb+dJKWcxMz9F3Xar5ohIz6pIZi6F6wreTHaAqclb3YryfPtQARn0sJlOFwhae
+         /4QEAfaN7w5May/O2DAfBkI+SEGXJCCs7ahWEr9dCxQiLd9r7bln3JfzyZkEuhpO8tp4
+         UqQQh4lDxFSeQANWHjekydOqLcs3bG4IjW1zaPp+bIW4C+25YeK8bTNUT9FzseV4iTcP
+         xb/PsgzRJsOSD5XZlQT3MU+I2LnS1N9S9uYkqKLzpPIHiNgDzsa+tOmgwFXG7dfQRHNP
+         7ytKELOnnly2pWTMWXkMBbqbz7vQ3FUBJJ2Wj79Z4skj4hDXH26JJmi8B8weZsIZMJil
+         Tg+g==
+X-Forwarded-Encrypted: i=1; AJvYcCUMmCHIcBrrO9tVO6XsxzJlPqueh+RdBEF+RFAq4p1yNF762FBqqLBWaPcNRFhxow0K/Anrs7mZlyc3DvGolReOteY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzKei+yU3upzxCWc2Xp7uYVQYlh9NEvJYN7AOduZ22hFwKJJb7V
+	7YMhgF7fHItHUmdVPoIvS5Ao3MkIbq362kPvgxD3NytAiHLGetxWUMhUXpDkfz5d9oDJq8hKZvc
+	axMnClbDjxIknVlTRlxVni7ok4QjNOYS316up
+X-Gm-Gg: ASbGncs0yKNduHb3Ifn2L1io09Qe1s8pEtwsZr0AnU/UZEVlTgJky8eqHRb3hYw3Y+p
+	BzIluOUxHVuNGE91oUAERBvEig7AOK7cCNYUsfQbgJs3xYMaMED4doCNug/ouYN/TqTXbFGQy0L
+	t5lGAF1nmtyAMn2Jo7K8Aoxw==
+X-Google-Smtp-Source: AGHT+IEPf+bMOSyPAyRRT5FnYt/dQDrDJkP7fgIqSBGifSkvX0GxrGH6i7XdUzqfrW17ujqWAY4wjqbjwcnaYpM00XA=
+X-Received: by 2002:a05:622a:1209:b0:475:ce:3c59 with SMTP id
+ d75a77b69052e-479600c94ffmr21204371cf.30.1744182844448; Wed, 09 Apr 2025
+ 00:14:04 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS1PEPF0001708F:EE_|IA0PPF8CAB220A1:EE_
-X-MS-Office365-Filtering-Correlation-Id: 56e49e43-fab2-4c04-e27b-08dd77218bf8
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|36860700013|82310400026|376014|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?03nc5xIBz4Z1yZips5ccpk8I28+dZO/hWJFz48ocLGihLZGDWCOVan5eJOW+?=
- =?us-ascii?Q?NxxB7gcneJsqS4Iq6ORyT+lSTxV6rfJo9ua485PRSvsoF064THjcId+5kj9z?=
- =?us-ascii?Q?uUDNNMU/5c27Voibbx8ByReE3SqTEW0f7iaGfAkgzSjgZ238+cOUlyqWkB/B?=
- =?us-ascii?Q?W6+yVwL4K7f9waWDI7c4VXFY7UPwB3v7Tm8Qem8JmTYxjS1ObHweEDRSHdRW?=
- =?us-ascii?Q?cWrKlQ5yseYrUjrGvD4gNpta8IoJyhTt/mrRAMYgUI9Rty/AEevDPIi1WEVn?=
- =?us-ascii?Q?NIfoMRJfqk9LIONSPxjriXQy3dqWcMhTcaZLwiVDKW6tok5yNJ9MdtV2xWjm?=
- =?us-ascii?Q?9KrYWvBHm+v1JSz9osy0VeohztsRfrvuiSrrmPB9VM3XlPORmI4EFRyC8f0X?=
- =?us-ascii?Q?g7gOAIGQKJu8IZYclfwMV/WzrJtKIpxvzLf1pQNMGji/0Kfhw/Y4dTf7Lr8H?=
- =?us-ascii?Q?K5N2flZc5J7G0AhG5k/GTSfQowTjHXVCDrYUs70iAmDfTMpjgJW0l9BlcADe?=
- =?us-ascii?Q?kXBTVsBmDb/o6Vin1TauGCCBHjzJUpjDmYrwmPMuM2Iv1bePH9gYjdHa7Nzl?=
- =?us-ascii?Q?ejauwvq1j8XnyM/AatNOef4P91qcYFpyUtmSWZSGS65xilyksY1JZgI5dw1+?=
- =?us-ascii?Q?m9kzw1fFhaYcPdL7FRYn0flSKpDQn6f+vcfym0fdtYSia3U1tFkxQ49b3LHH?=
- =?us-ascii?Q?R1Sl48O4wQMfmflOHmeiGIR76NtuXaZKK5gqp3XBQK5J/FHowsJFHMHGkQFf?=
- =?us-ascii?Q?TXsvphR5MXOwRxQm7KnR7RjOcyBDj0mNT534zVYoT6s+PijgyS6FnU7LBgaG?=
- =?us-ascii?Q?FIRHcDhUV4LdCt8R7vWP8V9Z2gcoYinoMu8kpQ50x5iWy4vT70yBaElnS/aS?=
- =?us-ascii?Q?6WofYLtzE/UwWER2pkK6dOH4zlPj6voJOeny3NH8HFi/9CXuGu3GQFVqwTec?=
- =?us-ascii?Q?e8Y86CPjLW4rDZLFeIt/i7HLck5VeM5wSyORdARNe9ageQO/UazcJ5x2M3K6?=
- =?us-ascii?Q?aa7G5amIcjOrwbBPzVkkNmzHSXE3YchXx09fdA+3S8ggmAeekTDtgaSKQSbq?=
- =?us-ascii?Q?qoeFMBxdsbOn5AEq5glM3Zl6gtJMZNHXinlT3bjXwtYN8n0WeiE0F6vkkTHv?=
- =?us-ascii?Q?nWItI07vVt84KZAmqD7feAWjbpWOpcxYMmeTpeQfcSudbkwcvvJSPJSxP6pZ?=
- =?us-ascii?Q?UJOc6/guFgGpz3w0Ox3wZ/JnRJ2YcOeMd08nadtVCNUy3INgrURDPYaQhKu1?=
- =?us-ascii?Q?It4gjeOQS7d2YS1oVxdWxrFd/0rosoZICgO3bE7yjlgauxAXCfSvyf3LiPN2?=
- =?us-ascii?Q?vt0auEqq6rgEwXIWykUijMYIVhPzEUL44oQlNGXFT4I396KDm8gnNAmuWN6V?=
- =?us-ascii?Q?sHdoliG9ABQqg+lJ/2oqipk7ZjEFfjjywUW7A57odWu5T6hJVAWF9DzmxG3n?=
- =?us-ascii?Q?WhesfSvblBgX/XgZt8HjKoSMbQb9YXVogpsVeJQu6wN3cxuY3/AIexK2S95y?=
- =?us-ascii?Q?95t7cq1bNPg9wwzeN6K4B5AITi1eSK1FviFN?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(82310400026)(376014)(1800799024);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Apr 2025 04:46:52.1667
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 56e49e43-fab2-4c04-e27b-08dd77218bf8
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	DS1PEPF0001708F.namprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PPF8CAB220A1
+References: <20250408-tcpsendmsg-v3-0-208b87064c28@debian.org> <20250408-tcpsendmsg-v3-2-208b87064c28@debian.org>
+In-Reply-To: <20250408-tcpsendmsg-v3-2-208b87064c28@debian.org>
+From: Eric Dumazet <edumazet@google.com>
+Date: Wed, 9 Apr 2025 09:13:53 +0200
+X-Gm-Features: ATxdqUExgIlhI5h9g1kuJu6S49AR43PpGh5RclwAbpAXHtSKJ9IcrrdS9kYyTqQ
+Message-ID: <CANn89iKr2kfCakou8id62C5ic95HF5RCps9a2cUv5FL3yjAGdg@mail.gmail.com>
+Subject: Re: [PATCH net-next v3 2/2] trace: tcp: Add tracepoint for tcp_sendmsg_locked()
+To: Breno Leitao <leitao@debian.org>
+Cc: David Ahern <dsahern@kernel.org>, Neal Cardwell <ncardwell@google.com>, 
+	Kuniyuki Iwashima <kuniyu@amazon.com>, Steven Rostedt <rostedt@goodmis.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	"David S. Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	Simon Horman <horms@kernel.org>, Song Liu <song@kernel.org>, 
+	Yonghong Song <yonghong.song@linux.dev>, netdev@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	kernel-team@meta.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Poll program is a helper to ftracetest, thus make it a
-generic file and remove it from being run as a test.
+On Tue, Apr 8, 2025 at 8:32=E2=80=AFPM Breno Leitao <leitao@debian.org> wro=
+te:
+>
+> Add a tracepoint to monitor TCP send operations, enabling detailed
+> visibility into TCP message transmission.
+>
+> Create a new tracepoint within the tcp_sendmsg_locked function,
+> capturing traditional fields along with size_goal, which indicates the
+> optimal data size for a single TCP segment. Additionally, a reference to
+> the struct sock sk is passed, allowing direct access for BPF programs.
+> The implementation is largely based on David's patch[1] and suggestions.
+>
+> Link: https://lore.kernel.org/all/70168c8f-bf52-4279-b4c4-be64527aa1ac@ke=
+rnel.org/ [1]
+> Signed-off-by: Breno Leitao <leitao@debian.org>
 
-Currently when executing tests using
-    $ make run_tests
-      CC       poll
-    TAP version 13
-    1..2
-    # timeout set to 0
-    # selftests: ftrace: poll
-    # Error: Polling file is not specified
-    not ok 1 selftests: ftrace: poll # exit=255
-
-Fix this by using TEST_GEN_FILES to build the 'poll' binary as a helper
-rather than as a test.
-
-Fixes: 80c3e28528ff ("selftests/tracing: Add hist poll() support test")
-
-Signed-off-by: Ayush Jain <Ayush.jain3@amd.com>
----
- tools/testing/selftests/ftrace/Makefile | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/tools/testing/selftests/ftrace/Makefile b/tools/testing/selftests/ftrace/Makefile
-index 49d96bb16355..7c12263f8260 100644
---- a/tools/testing/selftests/ftrace/Makefile
-+++ b/tools/testing/selftests/ftrace/Makefile
-@@ -6,6 +6,6 @@ TEST_PROGS := ftracetest-ktap
- TEST_FILES := test.d settings
- EXTRA_CLEAN := $(OUTPUT)/logs/*
- 
--TEST_GEN_PROGS = poll
-+TEST_GEN_FILES := poll
- 
- include ../lib.mk
--- 
-2.34.1
-
+Reviewed-by: Eric Dumazet <edumazet@google.com>
