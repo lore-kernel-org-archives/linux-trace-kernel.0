@@ -1,99 +1,82 @@
-Received: from out-178.mta1.migadu.com (out-178.mta1.migadu.com [95.215.58.178])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 641472676C2
-	for <linux-trace-kernel@vger.kernel.org>; Wed,  9 Apr 2025 16:41:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C389326FD99;
+	Wed,  9 Apr 2025 16:47:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744216872; cv=none; b=jE6f6/m9mVgLWmt25Bnazz/VjNK9mhUcGfyCGpRkJQHFmqjUWtJbbuclgBdAIowS5AAUMbPYP7IxV2pSMw2QzaDPz5QuXxCzTTBFeOkTUbfnliIcAM+QE7I7xZEa1b7oIu/Rkw5OdYvO39cPty56KEQ5AJDDsyqjYK1UzQC+mrI=
+	t=1744217257; cv=none; b=RXRl+/BwY3bGm0BKGE5yzUfim6nh1LtHmMVlMlqMLm1m6vxTo5uRlvBnYeGGqF/DeIBDu6rIPsuTPanRdBKRqh53FXts/dRuRh28/2OsBlGzWv8peS6zHTCz1zNyJAsmUMOWrDjXM7sxMLQv2h9paQ/747eMUyf6pmxm8zdYgxc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744216872; c=relaxed/simple;
-	bh=fHtzsqyFXqsqKFMN9o9Jg6YNOCKqxpR3FTSVZ+RDgH0=;
-	h=MIME-Version:Date:Content-Type:From:Message-ID:Subject:To:Cc:
-	 In-Reply-To:References; b=G3djfxHDcUr311Rh9fi29cgPlZx9Id+ZuoZNyj6uuqvxzvDXLVidw/wGLPfymA2Sez+bmEDsGPPVnblc+jKKctprq1FDEEsVVd6a98WRyNbL6lvv77haRec3jSgtKWdyBbd5jYVNphNP+eESSo8F0LMkmoUDeRa/7Ed5DFfTNdA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=flbivy0e; arc=none smtp.client-ip=95.215.58.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="flbivy0e"
+	s=arc-20240116; t=1744217257; c=relaxed/simple;
+	bh=Hjw4v5OLo085UBRbutbpnMjWuHi68TiVyARn066UPRg=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=MtwkTyAdhIl7ep3hGpffnVhBWQfVTr1e9zW9lOpsHU33SHon2He7EJWs5auu9j6wQ4i/X9NSqvv+Cg8JyXk0Yytps3GOWG6Ix5TAn4CTFpC8nNXSqJaUBlfo49Z5zUUjE/zAr5SUY1KfMEYKTVhdTq3BkAstAiikhLm9sL4QOGI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1C303C4CEE2;
+	Wed,  9 Apr 2025 16:47:36 +0000 (UTC)
+Date: Wed, 9 Apr 2025 12:48:55 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Ayush Jain <Ayush.jain3@amd.com>
+Cc: <mhiramat@kernel.org>, <mathieu.desnoyers@efficios.com>,
+ <linux-kernel@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
+ <linux-kselftest@vger.kernel.org>, <Naveen.Rao@amd.com>,
+ <Kalpana.Shetty@amd.com>, <Narasimhan.V@amd.com>, Shuah Khan
+ <skhan@linuxfoundation.org>
+Subject: Re: [PATCH v2] selftests/ftrace: Convert poll to a gen_file
+Message-ID: <20250409124855.4dc8fd58@gandalf.local.home>
+In-Reply-To: <20250409044632.363285-1-Ayush.jain3@amd.com>
+References: <20250409044632.363285-1-Ayush.jain3@amd.com>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1744216857;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=2uGpDWEkSr9vFQIbcnhzKP72TVIYwsPwOclwYbiHadg=;
-	b=flbivy0eFa+1D3pp6XHzZXXaM/vyuD5kjKwpfeicfcJahclQRmqKai7pLKfClVn6NcPBQC
-	odIONTf6B+d8QdgqeOfH3lULncL5hgF3qn7uCwEK0WVJQ9LLe9Vdz+hHiSn0MtHIhGIkfE
-	Ou1Ya23bcILo4UFR8vebqPRdjlCCe4M=
-Date: Wed, 09 Apr 2025 16:40:55 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: "Jiayuan Chen" <jiayuan.chen@linux.dev>
-Message-ID: <c292a4c4daa4d27f5062a23bd871ac58285ec406@linux.dev>
-TLS-Required: No
-Subject: Re: [PATCH bpf-next v1] bpf, sockmap: Introduce tracing capability
- for sockmap
-To: "Steven Rostedt" <rostedt@goodmis.org>
-Cc: bpf@vger.kernel.org, mrpre@163.com, "Alexei Starovoitov"
- <ast@kernel.org>, "Daniel Borkmann" <daniel@iogearbox.net>, "John
- Fastabend" <john.fastabend@gmail.com>, "Andrii Nakryiko"
- <andrii@kernel.org>, "Martin  KaFai Lau" <martin.lau@linux.dev>, "Eduard
- Zingerman" <eddyz87@gmail.com>, "Song Liu" <song@kernel.org>, "Yonghong
- Song" <yonghong.song@linux.dev>, "KP  Singh" <kpsingh@kernel.org>,
- "Stanislav Fomichev" <sdf@fomichev.me>, "Hao Luo" <haoluo@google.com>,
- "Jiri Olsa" <jolsa@kernel.org>, "Jakub Sitnicki" <jakub@cloudflare.com>,
- "Masami Hiramatsu" <mhiramat@kernel.org>, "Mathieu  Desnoyers"
- <mathieu.desnoyers@efficios.com>, "David S. Miller"
- <davem@davemloft.net>, "Eric Dumazet" <edumazet@google.com>, "Jakub
- Kicinski" <kuba@kernel.org>, "Paolo Abeni" <pabeni@redhat.com>, "Simon
- Horman" <horms@kernel.org>, "Jesper Dangaard Brouer" <hawk@kernel.org>,
- linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
-In-Reply-To: <20250409121125.48510acb@gandalf.local.home>
-References: <20250409102937.15632-1-jiayuan.chen@linux.dev>
- <20250409121125.48510acb@gandalf.local.home>
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-April 10, 2025 at 24:11, "Steven Rostedt" <rostedt@goodmis.org> wrote:
+On Wed, 9 Apr 2025 04:46:32 +0000
+Ayush Jain <Ayush.jain3@amd.com> wrote:
 
->=20
->=20On Wed, 9 Apr 2025 18:29:33 +0800
->=20
->=20Jiayuan Chen <jiayuan.chen@linux.dev> wrote:
->=20
->=20>=20
->=20> +#define trace_sockmap_skmsg_redirect(sk, prog, msg, act) \
-> >  + trace_sockmap_redirect((sk), "msg", (prog), (msg)->sg.size, (act))
-> >  +
-> >  +#define trace_sockmap_skb_redirect(sk, prog, skb, act) \
-> >  + trace_sockmap_redirect((sk), "skb", (prog), (skb)->len, (act))
-> >  +
-> >  +TRACE_EVENT(sockmap_redirect,
-> >  + TP_PROTO(const struct sock *sk, const char *type,
-> >  + const struct bpf_prog *prog, int length, int act),
-> >  + TP_ARGS(sk, type, prog, length, act),
-> >  +
-> >  + TP_STRUCT__entry(
-> >  + __field(const void *, sk)
-> >  + __field(const char *, type)
-> >=20
->=20
-> On 64bit, const char * is 8 bytes, and you are pointing it to a string =
-of
-> size 4 bytes (3 chars and '\0'). Why not just make it a constant string=
-, or
-> better yet, an enum?
->=20
->=20-- Steve
->
-Using an enum is indeed more appropriate in TRACE.
+> Poll program is a helper to ftracetest, thus make it a
+> generic file and remove it from being run as a test.
+> 
+> Currently when executing tests using
+>     $ make run_tests
+>       CC       poll
+>     TAP version 13
+>     1..2
+>     # timeout set to 0
+>     # selftests: ftrace: poll
+>     # Error: Polling file is not specified
+>     not ok 1 selftests: ftrace: poll # exit=255
+> 
+> Fix this by using TEST_GEN_FILES to build the 'poll' binary as a helper
+> rather than as a test.
+> 
+> Fixes: 80c3e28528ff ("selftests/tracing: Add hist poll() support test")
+> 
+> Signed-off-by: Ayush Jain <Ayush.jain3@amd.com>
 
-Thank you for the suggestion.
+Acked-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+
+-- Steve
+
+> ---
+>  tools/testing/selftests/ftrace/Makefile | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/tools/testing/selftests/ftrace/Makefile b/tools/testing/selftests/ftrace/Makefile
+> index 49d96bb16355..7c12263f8260 100644
+> --- a/tools/testing/selftests/ftrace/Makefile
+> +++ b/tools/testing/selftests/ftrace/Makefile
+> @@ -6,6 +6,6 @@ TEST_PROGS := ftracetest-ktap
+>  TEST_FILES := test.d settings
+>  EXTRA_CLEAN := $(OUTPUT)/logs/*
+>  
+> -TEST_GEN_PROGS = poll
+> +TEST_GEN_FILES := poll
+>  
+>  include ../lib.mk
+
