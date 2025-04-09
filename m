@@ -1,82 +1,134 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C389326FD99;
-	Wed,  9 Apr 2025 16:47:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D28CF1DFFC;
+	Wed,  9 Apr 2025 17:04:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744217257; cv=none; b=RXRl+/BwY3bGm0BKGE5yzUfim6nh1LtHmMVlMlqMLm1m6vxTo5uRlvBnYeGGqF/DeIBDu6rIPsuTPanRdBKRqh53FXts/dRuRh28/2OsBlGzWv8peS6zHTCz1zNyJAsmUMOWrDjXM7sxMLQv2h9paQ/747eMUyf6pmxm8zdYgxc=
+	t=1744218292; cv=none; b=eAHMeB6ryfmLaY9rNilxOPmaOUMdsBcs/UC9renNmbCJuM0Ea5l+dCXlRM6zs3bOYSSgXbv7Wl81ZKTgSS5Ig7cQEmgMSG6m/t6SQaqAkDegnP5cy52B1ITm9FcqvGcagf518RWx+WS/O1W3SkgsFdZFlX61/2pUL6n8ledyAIA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744217257; c=relaxed/simple;
-	bh=Hjw4v5OLo085UBRbutbpnMjWuHi68TiVyARn066UPRg=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=MtwkTyAdhIl7ep3hGpffnVhBWQfVTr1e9zW9lOpsHU33SHon2He7EJWs5auu9j6wQ4i/X9NSqvv+Cg8JyXk0Yytps3GOWG6Ix5TAn4CTFpC8nNXSqJaUBlfo49Z5zUUjE/zAr5SUY1KfMEYKTVhdTq3BkAstAiikhLm9sL4QOGI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1C303C4CEE2;
-	Wed,  9 Apr 2025 16:47:36 +0000 (UTC)
-Date: Wed, 9 Apr 2025 12:48:55 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Ayush Jain <Ayush.jain3@amd.com>
-Cc: <mhiramat@kernel.org>, <mathieu.desnoyers@efficios.com>,
- <linux-kernel@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
- <linux-kselftest@vger.kernel.org>, <Naveen.Rao@amd.com>,
- <Kalpana.Shetty@amd.com>, <Narasimhan.V@amd.com>, Shuah Khan
- <skhan@linuxfoundation.org>
-Subject: Re: [PATCH v2] selftests/ftrace: Convert poll to a gen_file
-Message-ID: <20250409124855.4dc8fd58@gandalf.local.home>
-In-Reply-To: <20250409044632.363285-1-Ayush.jain3@amd.com>
-References: <20250409044632.363285-1-Ayush.jain3@amd.com>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1744218292; c=relaxed/simple;
+	bh=AK63bXsws5LI+IIQAeopP/uy2WwZqDIcj/MXMgiB7g0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=I2Faq7RvFhNxgV818WlRfWH3Sdgz/1WEAh+vYucPaECv1HG9nmT4XrfEVR+PsVBtVvoCA3YoYdjSlyeTSSL355Dd9CN5ogQiPs0B6y2zuQxbAhNyWvnsO5LpSWGiVZ0JJOknFMfFObv2NZJDxfT0d1dghPQGk+Ai4hOaPZrjZFs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bIwpPEVa; arc=none smtp.client-ip=209.85.216.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bIwpPEVa"
+Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-3014ae35534so5852672a91.0;
+        Wed, 09 Apr 2025 10:04:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744218290; x=1744823090; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=klGbrW2mzbCdR+XeXsx1uph/j4tkgJ+FLETarobmc34=;
+        b=bIwpPEVaIA51//rxdBCYippJnNQhm/GjFU6gUHN/+VytrjZLHXlOQfvYvKx1L2ab2y
+         xozRRwpe+QZ0W3tCLM3LwIpjlN+Tw3du1HlFQRCTLcHaeo8ZSCQlLTyNstt24NjDnymG
+         UkqdgwiryiZPOw4Ypb/iHvlEMpgdEgY/ay0TrXUwHlI+TkvsHLo+X5WcIKuZVmdAcfg8
+         n4J68y9+ZdY1fRe/hvrH8xRkayfk7p+O+rZ/TUovLoV/E34Ps4c/LPPQqmqnA2IJmCY6
+         REIt4RX/6DN8aGyRrV87WX3h+v07Zw5n3jl9vsfbrZNeOPdnABeQUJ3wCPLInhh0v3F6
+         HYyw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744218290; x=1744823090;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=klGbrW2mzbCdR+XeXsx1uph/j4tkgJ+FLETarobmc34=;
+        b=Cbwh7HyFoCa7Yr7wLz0iurkYgjoAArboYbPtHIY/Uxy6+nijjQdvLEuelUBajZljjk
+         P2mW6Pgym7JMIeCFiZ3pEdvEt6k6+70dOuN4nyy+NuzrT158IKz89h0Ws2AYiTTiEddR
+         VBBx9kyQZ0m5jrwaj041QV1GQwZkD7W8c4ZEfYiZrmT4e4PdMDTxqMRYDSnDWpwXcq5J
+         ElNIiVxHpVKA04bxDuOhO6L9q7lqXpFWiGF80cd9nWloviPMc9K3Y+DvD0xaCWGVS3Ut
+         Hcv5li3hGKiy/+3iq3w3oXaaynJIySmjNwdeKfY9t4x5zeKkMq2JcCXslRClCbvku6js
+         zJkw==
+X-Forwarded-Encrypted: i=1; AJvYcCU8LpF3GdalMpQkcaN4V++V97VgUxueorm4UbbG7HkO8SfXBZlVfEOV0MXcUKkEfLSeV0Y87RpJ@vger.kernel.org, AJvYcCWeQ1jY6uzjC7cgFrJt3e8G9iAjRe5Bg14iRnJ3XTA+uGuv6BC7qcCrwuP+rKAE+qe7kwBM/3Xp6wdYmWg=@vger.kernel.org, AJvYcCX3I1D9UcPXXnbq6igSTp53d7BEmajLHQOPqtSkhGGEofDsTQCeuCOHFR4PMyBlpY+uSXvxyybDpxy6J6Fj6HloIgac@vger.kernel.org
+X-Gm-Message-State: AOJu0YyyIpYxWeRQQS9SdefBeFxnoyxtGtKZPss4lNQu43VbIwTqpAY0
+	Mg+0+A5CmybW1xm4D+S5RJtu4EnzLj02YZoJN+24ZtG2wT8E3r2E
+X-Gm-Gg: ASbGncszd5PvgNbxPh62UtE/LThZQGdSABVG+/al/fHrZlQNy8PJjqqSXWjRQlyu8zW
+	mEH+bXwCXXRzC6zQwbH+x4RuM0RdklQUL5rj28IJEg81h9cPFwZwvH27LzlHw+78ieTKW2Pv9jo
+	l8ZrqNKzjW/J64jMC10OCM4GZGBjrdEV9862chdPFwtXdfZTxektIThyJaiSowuHV2hIK1CSdJ6
+	Qq5TTOw8mq57zSySQRPjv/nGoxjhmaCVlVJ5idLhQs4A/VFHc1YTnRBTQCbXKEdqdLypBjeWgMZ
+	8FKHDElc5NVZeFXZa2cL1x5zoE30OHSWPk6I0YVxIjM1
+X-Google-Smtp-Source: AGHT+IH1GJQRsQdL8vsxW2i6J/AcLPmhbW7dGfFqiXayketC4IAZW8FIee9qDIlr5sPY9tyxW/kMew==
+X-Received: by 2002:a17:90b:270b:b0:301:1bce:c26f with SMTP id 98e67ed59e1d1-306dd324830mr3507098a91.3.1744218289915;
+        Wed, 09 Apr 2025 10:04:49 -0700 (PDT)
+Received: from localhost ([129.210.115.104])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-306df06a767sm1890018a91.6.2025.04.09.10.04.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 09 Apr 2025 10:04:49 -0700 (PDT)
+Date: Wed, 9 Apr 2025 10:04:48 -0700
+From: Cong Wang <xiyou.wangcong@gmail.com>
+To: Jiayuan Chen <jiayuan.chen@linux.dev>
+Cc: bpf@vger.kernel.org, mrpre@163.com, Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>,
+	Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
+	Jakub Sitnicki <jakub@cloudflare.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>,
+	Jesper Dangaard Brouer <hawk@kernel.org>,
+	linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH bpf-next v1] bpf, sockmap: Introduce tracing capability
+ for sockmap
+Message-ID: <Z/aosJ3uvzTZTEXS@pop-os.localdomain>
+References: <20250409102937.15632-1-jiayuan.chen@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250409102937.15632-1-jiayuan.chen@linux.dev>
 
-On Wed, 9 Apr 2025 04:46:32 +0000
-Ayush Jain <Ayush.jain3@amd.com> wrote:
-
-> Poll program is a helper to ftracetest, thus make it a
-> generic file and remove it from being run as a test.
+On Wed, Apr 09, 2025 at 06:29:33PM +0800, Jiayuan Chen wrote:
+> Sockmap has the same high-performance forwarding capability as XDP, but
+> operates at Layer 7.
 > 
-> Currently when executing tests using
->     $ make run_tests
->       CC       poll
->     TAP version 13
->     1..2
->     # timeout set to 0
->     # selftests: ftrace: poll
->     # Error: Polling file is not specified
->     not ok 1 selftests: ftrace: poll # exit=255
+> Introduce tracing capability for sockmap, similar to XDP, to trace the
+> execution results of BPF programs without modifying the programs
+> themselves, similar to the existing trace_xdp_redirect{_map}.
 > 
-> Fix this by using TEST_GEN_FILES to build the 'poll' binary as a helper
-> rather than as a test.
+> It is crucial for debugging BPF programs, especially in production
+> environments.
 > 
-> Fixes: 80c3e28528ff ("selftests/tracing: Add hist poll() support test")
+> Additionally, a header file was added to bpf_trace.h to automatically
+> generate tracepoints.
 > 
-> Signed-off-by: Ayush Jain <Ayush.jain3@amd.com>
-
-Acked-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-
--- Steve
-
-> ---
->  tools/testing/selftests/ftrace/Makefile | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> Test results:
+> $ echo "1" > /sys/kernel/tracing/events/sockmap/enable
 > 
-> diff --git a/tools/testing/selftests/ftrace/Makefile b/tools/testing/selftests/ftrace/Makefile
-> index 49d96bb16355..7c12263f8260 100644
-> --- a/tools/testing/selftests/ftrace/Makefile
-> +++ b/tools/testing/selftests/ftrace/Makefile
-> @@ -6,6 +6,6 @@ TEST_PROGS := ftracetest-ktap
->  TEST_FILES := test.d settings
->  EXTRA_CLEAN := $(OUTPUT)/logs/*
->  
-> -TEST_GEN_PROGS = poll
-> +TEST_GEN_FILES := poll
->  
->  include ../lib.mk
+> skb:
+> sockmap_redirect: sk=00000000d3266a8d, type=skb, family=2, protocol=6, \
+> prog_id=73, length=256, action=PASS
+> 
+> msg:
+> sockmap_redirect: sk=00000000528c7614, type=msg, family=2, protocol=6, \
+> prog_id=185, length=5, action=REDIRECT
+> 
+> tls:
+> sockmap_redirect: sk=00000000d04d2224, type=skb, family=2, protocol=6, \
+> prog_id=143, length=35, action=PASS
+> 
+> strparser:
+> sockmap_skb_strp_parse: sk=00000000ecab0b30, family=2, protocol=6, \
+> prog_id=170, size=5
 
+Nice work!
+
+While you are on it, could we also trace skb->_sk_redir bits too? It is
+very useful to distinguish, at least, ingress from egress redirection.
+
+Thanks!
