@@ -1,88 +1,67 @@
-Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D28CF1DFFC;
-	Wed,  9 Apr 2025 17:04:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29CCF270EDF
+	for <linux-trace-kernel@vger.kernel.org>; Wed,  9 Apr 2025 17:59:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744218292; cv=none; b=eAHMeB6ryfmLaY9rNilxOPmaOUMdsBcs/UC9renNmbCJuM0Ea5l+dCXlRM6zs3bOYSSgXbv7Wl81ZKTgSS5Ig7cQEmgMSG6m/t6SQaqAkDegnP5cy52B1ITm9FcqvGcagf518RWx+WS/O1W3SkgsFdZFlX61/2pUL6n8ledyAIA=
+	t=1744221548; cv=none; b=bVZXqyvO07xaE6le3n4WWrZcus1dmur7QoiIxQcUW6O7tfr0SKQQgRzXycIyB23P+7egkLwhEUg4cgaMAJaQS5LNDJu5/MzsVln1XSvv3Dr1XJSCvc0sa+OsSoIYGsy17JQBAMv5clo6Q2OaQUxCGLFltfuSfb2YGXPV1U3NRpU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744218292; c=relaxed/simple;
-	bh=AK63bXsws5LI+IIQAeopP/uy2WwZqDIcj/MXMgiB7g0=;
+	s=arc-20240116; t=1744221548; c=relaxed/simple;
+	bh=2IVHJf7ar/rNWEmTTIZ8rQp5BCVRHkVPJ+ZwK/9yBjI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=I2Faq7RvFhNxgV818WlRfWH3Sdgz/1WEAh+vYucPaECv1HG9nmT4XrfEVR+PsVBtVvoCA3YoYdjSlyeTSSL355Dd9CN5ogQiPs0B6y2zuQxbAhNyWvnsO5LpSWGiVZ0JJOknFMfFObv2NZJDxfT0d1dghPQGk+Ai4hOaPZrjZFs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bIwpPEVa; arc=none smtp.client-ip=209.85.216.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=cv/6YAybIlpzHVU7KrHiOBFlXwf8j0f0nTrcxKSjphA9DxgeHODMjESp8Pqx6g30mrHG/Q1+gIPxAROnG+AqUmpFm+v6lSoOVGFNFzcAlDfLuI68SlXPKliXf1x2VFhsTCPhkdYkVZRAtPLHQ3qE0a/mnfliosyA/kZNq3I4FPE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=TMncm1TX; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bIwpPEVa"
-Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-3014ae35534so5852672a91.0;
-        Wed, 09 Apr 2025 10:04:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744218290; x=1744823090; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=klGbrW2mzbCdR+XeXsx1uph/j4tkgJ+FLETarobmc34=;
-        b=bIwpPEVaIA51//rxdBCYippJnNQhm/GjFU6gUHN/+VytrjZLHXlOQfvYvKx1L2ab2y
-         xozRRwpe+QZ0W3tCLM3LwIpjlN+Tw3du1HlFQRCTLcHaeo8ZSCQlLTyNstt24NjDnymG
-         UkqdgwiryiZPOw4Ypb/iHvlEMpgdEgY/ay0TrXUwHlI+TkvsHLo+X5WcIKuZVmdAcfg8
-         n4J68y9+ZdY1fRe/hvrH8xRkayfk7p+O+rZ/TUovLoV/E34Ps4c/LPPQqmqnA2IJmCY6
-         REIt4RX/6DN8aGyRrV87WX3h+v07Zw5n3jl9vsfbrZNeOPdnABeQUJ3wCPLInhh0v3F6
-         HYyw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744218290; x=1744823090;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=klGbrW2mzbCdR+XeXsx1uph/j4tkgJ+FLETarobmc34=;
-        b=Cbwh7HyFoCa7Yr7wLz0iurkYgjoAArboYbPtHIY/Uxy6+nijjQdvLEuelUBajZljjk
-         P2mW6Pgym7JMIeCFiZ3pEdvEt6k6+70dOuN4nyy+NuzrT158IKz89h0Ws2AYiTTiEddR
-         VBBx9kyQZ0m5jrwaj041QV1GQwZkD7W8c4ZEfYiZrmT4e4PdMDTxqMRYDSnDWpwXcq5J
-         ElNIiVxHpVKA04bxDuOhO6L9q7lqXpFWiGF80cd9nWloviPMc9K3Y+DvD0xaCWGVS3Ut
-         Hcv5li3hGKiy/+3iq3w3oXaaynJIySmjNwdeKfY9t4x5zeKkMq2JcCXslRClCbvku6js
-         zJkw==
-X-Forwarded-Encrypted: i=1; AJvYcCU8LpF3GdalMpQkcaN4V++V97VgUxueorm4UbbG7HkO8SfXBZlVfEOV0MXcUKkEfLSeV0Y87RpJ@vger.kernel.org, AJvYcCWeQ1jY6uzjC7cgFrJt3e8G9iAjRe5Bg14iRnJ3XTA+uGuv6BC7qcCrwuP+rKAE+qe7kwBM/3Xp6wdYmWg=@vger.kernel.org, AJvYcCX3I1D9UcPXXnbq6igSTp53d7BEmajLHQOPqtSkhGGEofDsTQCeuCOHFR4PMyBlpY+uSXvxyybDpxy6J6Fj6HloIgac@vger.kernel.org
-X-Gm-Message-State: AOJu0YyyIpYxWeRQQS9SdefBeFxnoyxtGtKZPss4lNQu43VbIwTqpAY0
-	Mg+0+A5CmybW1xm4D+S5RJtu4EnzLj02YZoJN+24ZtG2wT8E3r2E
-X-Gm-Gg: ASbGncszd5PvgNbxPh62UtE/LThZQGdSABVG+/al/fHrZlQNy8PJjqqSXWjRQlyu8zW
-	mEH+bXwCXXRzC6zQwbH+x4RuM0RdklQUL5rj28IJEg81h9cPFwZwvH27LzlHw+78ieTKW2Pv9jo
-	l8ZrqNKzjW/J64jMC10OCM4GZGBjrdEV9862chdPFwtXdfZTxektIThyJaiSowuHV2hIK1CSdJ6
-	Qq5TTOw8mq57zSySQRPjv/nGoxjhmaCVlVJ5idLhQs4A/VFHc1YTnRBTQCbXKEdqdLypBjeWgMZ
-	8FKHDElc5NVZeFXZa2cL1x5zoE30OHSWPk6I0YVxIjM1
-X-Google-Smtp-Source: AGHT+IH1GJQRsQdL8vsxW2i6J/AcLPmhbW7dGfFqiXayketC4IAZW8FIee9qDIlr5sPY9tyxW/kMew==
-X-Received: by 2002:a17:90b:270b:b0:301:1bce:c26f with SMTP id 98e67ed59e1d1-306dd324830mr3507098a91.3.1744218289915;
-        Wed, 09 Apr 2025 10:04:49 -0700 (PDT)
-Received: from localhost ([129.210.115.104])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-306df06a767sm1890018a91.6.2025.04.09.10.04.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Apr 2025 10:04:49 -0700 (PDT)
-Date: Wed, 9 Apr 2025 10:04:48 -0700
-From: Cong Wang <xiyou.wangcong@gmail.com>
-To: Jiayuan Chen <jiayuan.chen@linux.dev>
-Cc: bpf@vger.kernel.org, mrpre@163.com, Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TMncm1TX"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1744221546;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=1KffZz9Dem6U0r6zjOlio/dUN4rNSBX5e2RmuPvDORI=;
+	b=TMncm1TXTvc/6VaQ7F32Atb1N3hJz3amxlt9cix+P71gB9f4zzQ4x802Cmlo/Uauq77g+s
+	yUKxxmgt+/fGN7xcgyd8dnSrPXvGRIb7qRjckxoFFWRWUaSyd6YOLcgGWo8HcUM27dpYQ/
+	Z2AS6a4XXMMBOG9HnPoMGYLS4MzME+M=
+Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-637-LdkqEh4uOg2XhSJJaFnvvg-1; Wed,
+ 09 Apr 2025 13:59:02 -0400
+X-MC-Unique: LdkqEh4uOg2XhSJJaFnvvg-1
+X-Mimecast-MFC-AGG-ID: LdkqEh4uOg2XhSJJaFnvvg_1744221540
+Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 0C07F195608B;
+	Wed,  9 Apr 2025 17:59:00 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.44.34.54])
+	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 307211955DCE;
+	Wed,  9 Apr 2025 17:58:54 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Wed,  9 Apr 2025 19:58:24 +0200 (CEST)
+Date: Wed, 9 Apr 2025 19:58:19 +0200
+From: Oleg Nesterov <oleg@redhat.com>
+To: Jiri Olsa <olsajiri@gmail.com>
+Cc: Peter Zijlstra <peterz@infradead.org>,
+	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	x86@kernel.org, Song Liu <songliubraving@fb.com>,
+	Yonghong Song <yhs@fb.com>,
 	John Fastabend <john.fastabend@gmail.com>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Martin KaFai Lau <martin.lau@linux.dev>,
-	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
-	Yonghong Song <yonghong.song@linux.dev>,
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>,
-	Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
-	Jakub Sitnicki <jakub@cloudflare.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
+	Hao Luo <haoluo@google.com>, Steven Rostedt <rostedt@goodmis.org>,
 	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>,
-	Jesper Dangaard Brouer <hawk@kernel.org>,
-	linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH bpf-next v1] bpf, sockmap: Introduce tracing capability
- for sockmap
-Message-ID: <Z/aosJ3uvzTZTEXS@pop-os.localdomain>
-References: <20250409102937.15632-1-jiayuan.chen@linux.dev>
+	Alan Maguire <alan.maguire@oracle.com>
+Subject: Re: [PATCH 1/2] uprobes/x86: Add support to emulate nop5 instruction
+Message-ID: <20250409175818.GE32748@redhat.com>
+References: <20250408211310.51491-1-jolsa@kernel.org>
+ <20250409112839.GA32748@redhat.com>
+ <Z_ZjIerx-QvY7BSI@krava>
+ <20250409131115.GD32748@redhat.com>
+ <Z_aiWdks8SA3mtX6@krava>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -91,44 +70,68 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250409102937.15632-1-jiayuan.chen@linux.dev>
+In-Reply-To: <Z_aiWdks8SA3mtX6@krava>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
 
-On Wed, Apr 09, 2025 at 06:29:33PM +0800, Jiayuan Chen wrote:
-> Sockmap has the same high-performance forwarding capability as XDP, but
-> operates at Layer 7.
-> 
-> Introduce tracing capability for sockmap, similar to XDP, to trace the
-> execution results of BPF programs without modifying the programs
-> themselves, similar to the existing trace_xdp_redirect{_map}.
-> 
-> It is crucial for debugging BPF programs, especially in production
-> environments.
-> 
-> Additionally, a header file was added to bpf_trace.h to automatically
-> generate tracepoints.
-> 
-> Test results:
-> $ echo "1" > /sys/kernel/tracing/events/sockmap/enable
-> 
-> skb:
-> sockmap_redirect: sk=00000000d3266a8d, type=skb, family=2, protocol=6, \
-> prog_id=73, length=256, action=PASS
-> 
-> msg:
-> sockmap_redirect: sk=00000000528c7614, type=msg, family=2, protocol=6, \
-> prog_id=185, length=5, action=REDIRECT
-> 
-> tls:
-> sockmap_redirect: sk=00000000d04d2224, type=skb, family=2, protocol=6, \
-> prog_id=143, length=35, action=PASS
-> 
-> strparser:
-> sockmap_skb_strp_parse: sk=00000000ecab0b30, family=2, protocol=6, \
-> prog_id=170, size=5
+On 04/09, Jiri Olsa wrote:
+>
+> > Just it looks a bit strange to me. Even if we do not have a use-case
+> > for other nops, why we can't emulate them all just for consistency?
+>
+> we can, I went with nop5 just for simplicity, if you think
+> having all nops support is better, let's do that
 
-Nice work!
+Well... Let me repeat, I am not really arguing and I do not want to delay
+your next changes. We can always cleanup this code later. Please see below.
 
-While you are on it, could we also trace skb->_sk_redir bits too? It is
-very useful to distinguish, at least, ingress from egress redirection.
+> I checked and compact process executes 64bit nops just fine,
+> so we should be ok there
 
-Thanks!
+OK. Then, for your original patch:
+
+Acked-by: Oleg Nesterov <oleg@redhat.com>
+
+I'd only ask to define is_nop5_insn/emulate_nop5_insn regardless of
+CONFIG_X86_64.  I understand that we have no reason to emulate nop5
+on the 32-bit kernel, but at the same time I don't see any reason to
+complicate this code to explicitly "nack" nop5 in this case.
+
+As for the new version below:
+
+> --- a/arch/x86/kernel/uprobes.c
+> +++ b/arch/x86/kernel/uprobes.c
+> @@ -840,12 +840,16 @@ static int branch_setup_xol_ops(struct arch_uprobe *auprobe, struct insn *insn)
+>  	insn_byte_t p;
+>  	int i;
+>
+> +	/* x86_nops[i]; same as jmp with .offs = 0 */
+> +	for (i = 1; i <= ASM_NOP_MAX; ++i) {
+> +		if (!memcmp(insn->kaddr, x86_nops[i], i))
+> +			goto setup;
+> +	}
+
+Well, yes, I'd personally obviously prefer this version ;) Just because
+it looks a bit more clear/consistent to me. But this is subjective.
+
+And,
+
+> -	case 0x90:	/* prefix* + nop; same as jmp with .offs = 0 */
+> -		goto setup;
+
+No, this is wrong. Please see my reply to myself,
+https://lore.kernel.org/all/20250409114950.GB32748@redhat.com/
+
+This way we can no longer emulate, say, "rep; nop". Exactly because
+either way memcmp(x86_nops[i]) checks the whole instruction.
+
+Probably we don't really care, but still this patch shouldn't add any
+"regression".
+
+So, let me repeat. Up to you. Whatever you prefer. I just tried to
+understand your patch.
+
+You have my ACK in any case.
+
+Oleg.
+
