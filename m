@@ -1,25 +1,26 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC40A267392;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0B042673B7;
 	Wed,  9 Apr 2025 15:26:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744212360; cv=none; b=XnLh1sZ1y+sYh418TgIgBKalbNg35D/o8fVc5q3sfjFiYUiWxANMM0hmnvelOJaP9w4KXi3y/H9NHL2nTqlWb3tiUFPN3S2nuOC9u1LLgeP2GswLT/tgs/ComgAWSGXr7feDDoAtg8VP8IfzIy5/TwNe/rNnFK9nJXkPL352NsY=
+	t=1744212360; cv=none; b=czM5XsnIe7g6O7P4zbmSpXpuBue9WdCEgdfCqSGz4NbN+oCJrTec5EpghhOHg+J7UMH1tbhOkxZcemJ9G/seOWLIrRmh5ygeQMOoPexBBXbWwEdT6Ms38zmGvDYxJ4h0a4VGhx7L3+G4PIa1w21D0XEgK3WBu2HaKDfC0ym31QA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1744212360; c=relaxed/simple;
-	bh=HuGjzSJBxJfnhAXNbzT7vAN2Hq3vYmNgvnmqaup+qJU=;
-	h=Message-ID:Date:From:To:Cc:Subject; b=m6bjAbkQC0ItB/nTCunVCXpxAhZv7oOmGguKfrlZf/UUwU3CuGNclO1vfjjUxI3/hdIa7RXEfCZlOdcQPwV7wWzU+OV0n9mMLm8GV0odrl90wisZyIZwtToM0AC5dLhHtM/aMZh7ktdW5dPc0UtdpYFcT/0T2+vvyXxuS8cGXas=
+	bh=FLXkb/GHsHQdvXLgkljGBSUeoixp2fv24xJ28bkaTeY=;
+	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
+	 Content-Type; b=DvKMvZJbzofWNSKsCvMvmqbjEYNkJPkhs5H2JVSGDM02rLY6TuSxLnSoK1sTcf8gvNwxnlc0EbNwSoodHCttavpGCAdiuxBQXwLq0b13UNAh9fu7OWQZuvRKffs71A1DGJlFkNmPwiTJ+G7UfFKAZkTCiiwo6L3ENQybHHKs++I=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 31924C4CEE7;
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 583A0C4CEE9;
 	Wed,  9 Apr 2025 15:26:00 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.98)
 	(envelope-from <rostedt@goodmis.org>)
-	id 1u2XKi-00000008kQa-0mBg;
+	id 1u2XKi-00000008kRa-2EMv;
 	Wed, 09 Apr 2025 11:27:20 -0400
-Message-ID: <20250409151549.788068911@goodmis.org>
+Message-ID: <20250409152720.380778379@goodmis.org>
 User-Agent: quilt/0.68
-Date: Wed, 09 Apr 2025 11:15:49 -0400
+Date: Wed, 09 Apr 2025 11:15:51 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org,
  linux-trace-kernel@vger.kernel.org
@@ -30,68 +31,218 @@ Cc: Masami Hiramatsu <mhiramat@kernel.org>,
  Shuah Khan <skhan@linuxfoundation.org>,
  linux-kselftest@vger.kernel.org,
  Andy Chiu <andybnac@gmail.com>
-Subject: [PATCH 0/2] ftrace: Fix subops accounting
+Subject: [PATCH 2/2] tracing/selftest: Add test to better test subops filtering of
+ function graph
+References: <20250409151549.788068911@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 
-A fix [1] came in that fixed the notrace_filter side of the subops processing
-of the function graph tracer. When I started testing that fix, I discovered
-that the many more functions were being enabled than were being traced.
+From: Steven Rostedt <rostedt@goodmis.org>
 
-The function graph infrastructure uses ftrace to hook to functions. It has
-a single ftrace_ops to manage all the users of function graph. Each
-individual user (tracing, bpf, fprobes, etc) has its own ftrace_ops to
-track the functions it will have its callback called from. These
-ftrace_ops are "subops" to the main ftrace_ops of the function graph
-infrastructure.
+A bug was discovered that showed the accounting of the subops of the
+ftrace_ops filtering was incorrect. Add a new test to better test the
+filtering.
 
-Each ftrace_ops has a filter_hash and a notrace_hash that is defined as:
+This test creates two instances, where it will add various filters to both
+the set_ftrace_filter and the set_ftrace_notrace files and enable
+function_graph. Then it looks into the enabled_functions file to make sure
+that the filters are behaving correctly.
 
-  Only trace functions that are in the filter_hash but not in the
-  notrace_hash.
-
-If the filter_hash is empty, it means to trace all functions.
-If the notrace_hash is empty, it means do not disable any function.
-
-The function graph main ftrace_ops needs to be a superset containing all
-the functions to be traced by all the subops it has. The algorithm to
-perform this merge was incorrect. It was merging the filter_hashes
-of all the subops and taking the intersect of all the notrace_hashes
-of the subops. But by taking the intersect of all the notrace_hashes
-it ignored how those notrace_hashes are dependent on the associated
-filter_hashes of each individual subops.
-
-Instead, modify the algorithm to be a bit simpler and correct.
-
-First, when adding a new subops, do not add the notrace_hash if the
-filter_hash is not empty. Instead, just add the functions that are in the
-filter_hash of the subops but not in the notrace_hash of the subops into the
-main ops filter_hash. There's no reason to add anything to the main ops
-notrace_hash for this case.
-
-The notrace_hash of the main ops should only be non empty iff all subops
-filter_hashes are empty (meaning to trace all functions) and all subops
-notrace_hashes have the same functions.
-
-That is, the main ops notrace_hash is empty if any subops filter_hash is
-non empty.
-
-The main ops notrace_hash only has content in it if all subops
-filter_hashes are empty, and the content are only functions that intersect
-all the subops notrace_hashes. If any subops notrace_hash is empty, then
-so is the main ops notrace_hash.
-
-[1] https://lore.kernel.org/all/20250408160258.48563-1-andybnac@gmail.com/
-
-Steven Rostedt (2):
-      ftrace: Fix accounting of subop hashes
-      tracing/selftest: Add test to better test subops filtering of function graph
-
-----
- kernel/trace/ftrace.c                              | 314 ++++++++++++---------
- .../ftrace/test.d/ftrace/fgraph-multi-filter.tc    | 177 ++++++++++++
- 2 files changed, 354 insertions(+), 137 deletions(-)
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+ .../test.d/ftrace/fgraph-multi-filter.tc      | 177 ++++++++++++++++++
+ 1 file changed, 177 insertions(+)
  create mode 100644 tools/testing/selftests/ftrace/test.d/ftrace/fgraph-multi-filter.tc
+
+diff --git a/tools/testing/selftests/ftrace/test.d/ftrace/fgraph-multi-filter.tc b/tools/testing/selftests/ftrace/test.d/ftrace/fgraph-multi-filter.tc
+new file mode 100644
+index 000000000000..b6d6a312ead5
+--- /dev/null
++++ b/tools/testing/selftests/ftrace/test.d/ftrace/fgraph-multi-filter.tc
+@@ -0,0 +1,177 @@
++#!/bin/sh
++# SPDX-License-Identifier: GPL-2.0
++# description: ftrace - function graph filters
++# requires: set_ftrace_filter function_graph:tracer
++
++# Make sure that function graph filtering works
++
++INSTANCE1="instances/test1_$$"
++INSTANCE2="instances/test2_$$"
++
++WD=`pwd`
++
++do_reset() {
++    cd $WD
++    if [ -d $INSTANCE1 ]; then
++	echo nop > $INSTANCE1/current_tracer
++	rmdir $INSTANCE1
++    fi
++    if [ -d $INSTANCE2 ]; then
++	echo nop > $INSTANCE2/current_tracer
++	rmdir $INSTANCE2
++    fi
++}
++
++mkdir $INSTANCE1
++if ! grep -q function_graph $INSTANCE1/available_tracers; then
++    echo "function_graph not allowed with instances"
++    rmdir $INSTANCE1
++    exit_unsupported
++fi
++
++mkdir $INSTANCE2
++
++fail() { # msg
++    do_reset
++    echo $1
++    exit_fail
++}
++
++disable_tracing
++clear_trace
++
++function_count() {
++    search=$1
++    vsearch=$2
++
++    if [ -z "$search" ]; then
++	cat enabled_functions | wc -l
++    elif [ -z "$vsearch" ]; then
++	grep $search enabled_functions | wc -l
++    else
++	grep $search enabled_functions | grep $vsearch| wc -l
++    fi
++}
++
++set_fgraph() {
++    instance=$1
++    filter="$2"
++    notrace="$3"
++
++    echo "$filter" > $instance/set_ftrace_filter
++    echo "$notrace" > $instance/set_ftrace_notrace
++    echo function_graph > $instance/current_tracer
++}
++
++check_functions() {
++    orig_cnt=$1
++    test=$2
++
++    cnt=`function_count $test`
++    if [ $cnt -gt $orig_cnt ]; then
++	fail
++    fi
++}
++
++check_cnt() {
++    orig_cnt=$1
++    search=$2
++    vsearch=$3
++
++    cnt=`function_count $search $vsearch`
++    if [ $cnt -gt $orig_cnt ]; then
++	fail
++    fi
++}
++
++reset_graph() {
++    instance=$1
++    echo nop > $instance/current_tracer
++}
++
++# get any functions that were enabled before the test
++total_cnt=`function_count`
++sched_cnt=`function_count sched`
++lock_cnt=`function_count lock`
++time_cnt=`function_count time`
++clock_cnt=`function_count clock`
++locks_clock_cnt=`function_count locks clock`
++clock_locks_cnt=`function_count clock locks`
++
++# Trace functions with "sched" but not "time"
++set_fgraph $INSTANCE1 '*sched*' '*time*'
++
++# Make sure "time" isn't listed
++check_functions $time_cnt 'time'
++instance1_cnt=`function_count`
++
++# Trace functions with "lock" but not "clock"
++set_fgraph $INSTANCE2 '*lock*' '*clock*'
++instance1_2_cnt=`function_count`
++
++# Turn off the first instance
++reset_graph $INSTANCE1
++
++# The second instance doesn't trace "clock" functions
++check_functions $clock_cnt 'clock'
++instance2_cnt=`function_count`
++
++# Start from a clean slate
++reset_graph $INSTANCE2
++check_functions $total_cnt
++
++# Trace functions with "lock" but not "clock"
++set_fgraph $INSTANCE2 '*lock*' '*clock*'
++
++# This should match the last time instance 2 was by itself
++cnt=`function_count`
++if [ $instance2_cnt -ne $cnt ]; then
++    fail
++fi
++
++# And it should not be tracing "clock" functions
++check_functions $clock_cnt 'clock'
++
++# Trace functions with "sched" but not "time"
++set_fgraph $INSTANCE1 '*sched*' '*time*'
++
++# This should match the last time both instances were enabled
++cnt=`function_count`
++if [ $instance1_2_cnt -ne $cnt ]; then
++    fail
++fi
++
++# Turn off the second instance
++reset_graph $INSTANCE2
++
++# This should match the last time instance 1 was by itself
++cnt=`function_count`
++if [ $instance1_cnt -ne $cnt ]; then
++    fail
++fi
++
++# And it should not be tracing "time" functions
++check_functions $time_cnt 'time'
++
++# Start from a clean slate
++reset_graph $INSTANCE1
++check_functions $total_cnt
++
++# Enable all functions but those that have "locks"
++set_fgraph $INSTANCE1 '' '*locks*'
++
++# Enable all functions but those that have "clock"
++set_fgraph $INSTANCE2 '' '*clock*'
++
++# If a function has "locks" it should not have "clock"
++check_cnt $locks_clock_cnt locks clock
++
++# If a function has "clock" it should not have "locks"
++check_cnt $clock_locks_cnt clock locks
++
++reset_graph $INSTANCE1
++reset_graph $INSTANCE2
++
++do_reset
++
++exit 0
+-- 
+2.47.2
+
+
