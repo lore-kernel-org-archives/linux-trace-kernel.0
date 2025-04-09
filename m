@@ -1,282 +1,153 @@
-Received: from out-170.mta1.migadu.com (out-170.mta1.migadu.com [95.215.58.170])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7AA925D554
-	for <linux-trace-kernel@vger.kernel.org>; Wed,  9 Apr 2025 10:29:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 929BC25D918
+	for <linux-trace-kernel@vger.kernel.org>; Wed,  9 Apr 2025 11:29:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744194601; cv=none; b=a5yoAQw0uEf6FljemEg42xUo57hqUfh4CVYV+nRGM96ufjhF/xnprPBoKcJbig7+mw7Lr/UEoEgZxpKMHJATd8H1nGHkQrzXevb0QJqyv3Wh/9fY/agyv89GERFaSbUiVKCaQ7nQRTqWpggSZ1zfNffzaY1o8pMsvUXUgqyygJk=
+	t=1744198172; cv=none; b=SQv65/ebv0obwa5d4xC2wRPIMO9zenm8EqJa7U2Hw9N8qsazYj0T4YRwLEC9Ncu0vGrMeJY46g4wsloAjHHiZAm3yyfeAlCnZoy0oGEK+STS9ttZJP0BNIxnFNzmeOpMe8lHPEgf4BnWDO441kgs3H7YU2g868SgnonSXjrwkkM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744194601; c=relaxed/simple;
-	bh=WQk83JuPuQX2fSNl/OKOGc35+sSgfnC9FLi+eV/1Z4A=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=hp23ydSkwO09EuO/2FWHM2XzN7FFgXdDgdWvdETHI2ZJMSr9FCeFtbP/3R3A/q5ONPdJjreA5q8a68vSxTnRrHS7r4JdEn5sBirgnz16M+7tha13mpeF82tsbGA3rlXb0hzqc3ZvfaX31iHvZgxHxOYdjt2fX8tVk6DefJqBFxU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=URr6BBK3; arc=none smtp.client-ip=95.215.58.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1744198172; c=relaxed/simple;
+	bh=zXYaCCk7Xexl/noIb6OuPUIMVrNTYDA8ydr6oeZbr1Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CL9nlIlSPIUzh2DqJ9k0sChUbEHopy+a8EbTIlEFOIN1Cerc4G1WyYgrkNaKcVrAunfCaJb28SpOD0u0TcylYIVpCSbXNrVQ57mcrv5tXZIbOjmAD50e3L5n3Nt3vubv1KvS+QfTHpxZBLLa4IXykQV5d/hIgvxtmqWCj0sra+U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=XcN+u0A9; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="URr6BBK3"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1744194596;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XcN+u0A9"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1744198169;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=tVjoel3accGTvriYfDQCUCAxB4fdnEejpHrDGJrVaco=;
-	b=URr6BBK36GF8FRT9ASyYKMCuY2UJLHSxLZu4gdJzyjDDmhSvKVSruxFiPU64s3ACJIP+vr
-	A8QaJ+YG9O447840kX6fdKi+j8V7tSZKg+qx2hkfTC6YOKa8IRz4jZnU0ePs117q9KWUfd
-	26m7vdffmeNppHNYwAbukuQ1kg+Nf8s=
-From: Jiayuan Chen <jiayuan.chen@linux.dev>
-To: bpf@vger.kernel.org
-Cc: mrpre@163.com,
-	Jiayuan Chen <jiayuan.chen@linux.dev>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=L9Of+gzTbsEE9FaHMGyGpxjiy7YHu1Oa9tXAD/zDQnY=;
+	b=XcN+u0A9A+esPM0geR1yEjY+BR0j8s3FLa/h/XdxedkAc81HRYTieAn78aGwXIr6mQP/wI
+	8CUWtv6uvVrbu2UT0qeMFGmR8LgAH9oTx60bXuOjoT/8EIZ8KNxM3oCamC6+w9k/FxW7b/
+	LNx/x2eyAns5f17aHyv7IgN0xXt8nqw=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-547-2Sb6ZC_POsi-lpR4UKm0UQ-1; Wed,
+ 09 Apr 2025 07:29:23 -0400
+X-MC-Unique: 2Sb6ZC_POsi-lpR4UKm0UQ-1
+X-Mimecast-MFC-AGG-ID: 2Sb6ZC_POsi-lpR4UKm0UQ_1744198161
+Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 06B321800257;
+	Wed,  9 Apr 2025 11:29:21 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.44.34.54])
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 18DE1180B487;
+	Wed,  9 Apr 2025 11:29:15 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Wed,  9 Apr 2025 13:28:45 +0200 (CEST)
+Date: Wed, 9 Apr 2025 13:28:39 +0200
+From: Oleg Nesterov <oleg@redhat.com>
+To: Jiri Olsa <jolsa@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>,
+	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	x86@kernel.org, Song Liu <songliubraving@fb.com>,
+	Yonghong Song <yhs@fb.com>,
 	John Fastabend <john.fastabend@gmail.com>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Martin KaFai Lau <martin.lau@linux.dev>,
-	Eduard Zingerman <eddyz87@gmail.com>,
-	Song Liu <song@kernel.org>,
-	Yonghong Song <yonghong.song@linux.dev>,
-	KP Singh <kpsingh@kernel.org>,
-	Stanislav Fomichev <sdf@fomichev.me>,
-	Hao Luo <haoluo@google.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Jakub Sitnicki <jakub@cloudflare.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
+	Hao Luo <haoluo@google.com>, Steven Rostedt <rostedt@goodmis.org>,
 	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>,
-	Jesper Dangaard Brouer <hawk@kernel.org>,
-	linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH bpf-next v1] bpf, sockmap: Introduce tracing capability for sockmap
-Date: Wed,  9 Apr 2025 18:29:33 +0800
-Message-ID: <20250409102937.15632-1-jiayuan.chen@linux.dev>
+	Alan Maguire <alan.maguire@oracle.com>
+Subject: Re: [PATCH 1/2] uprobes/x86: Add support to emulate nop5 instruction
+Message-ID: <20250409112839.GA32748@redhat.com>
+References: <20250408211310.51491-1-jolsa@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250408211310.51491-1-jolsa@kernel.org>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
 
-Sockmap has the same high-performance forwarding capability as XDP, but
-operates at Layer 7.
+On 04/08, Jiri Olsa wrote:
+>
+> --- a/arch/x86/kernel/uprobes.c
+> +++ b/arch/x86/kernel/uprobes.c
+> @@ -608,6 +608,16 @@ static void riprel_post_xol(struct arch_uprobe *auprobe, struct pt_regs *regs)
+>  		*sr = utask->autask.saved_scratch_register;
+>  	}
+>  }
+> +
+> +static int is_nop5_insn(uprobe_opcode_t *insn)
+> +{
+> +	return !memcmp(insn, x86_nops[5], 5);
+> +}
+> +
+> +static bool emulate_nop5_insn(struct arch_uprobe *auprobe)
+> +{
+> +	return is_nop5_insn((uprobe_opcode_t *) &auprobe->insn);
+> +}
 
-Introduce tracing capability for sockmap, similar to XDP, to trace the
-execution results of BPF programs without modifying the programs
-themselves, similar to the existing trace_xdp_redirect{_map}.
+Why do we need 2 functions? Can't branch_setup_xol_ops() just use
+is_nop5_insn(insn->kaddr) ?
 
-It is crucial for debugging BPF programs, especially in production
-environments.
+>  #else /* 32-bit: */
+>  /*
+>   * No RIP-relative addressing on 32-bit
+> @@ -621,6 +631,10 @@ static void riprel_pre_xol(struct arch_uprobe *auprobe, struct pt_regs *regs)
+>  static void riprel_post_xol(struct arch_uprobe *auprobe, struct pt_regs *regs)
+>  {
+>  }
+> +static bool emulate_nop5_insn(struct arch_uprobe *auprobe)
+> +{
+> +	return false;
+> +}
 
-Additionally, a header file was added to bpf_trace.h to automatically
-generate tracepoints.
+Hmm, why? I mean, why we can't emulate x86_nops[5] if !CONFIG_X86_64 ?
 
-Test results:
-$ echo "1" > /sys/kernel/tracing/events/sockmap/enable
+OTOH. What if the kernel is 64-bit, but the probed task is 32-bit and it
+uses the 64-bit version of BYTES_NOP5?
 
-skb:
-sockmap_redirect: sk=00000000d3266a8d, type=skb, family=2, protocol=6, \
-prog_id=73, length=256, action=PASS
+Perhaps this is fine, I simply don't know, so let me ask...
 
-msg:
-sockmap_redirect: sk=00000000528c7614, type=msg, family=2, protocol=6, \
-prog_id=185, length=5, action=REDIRECT
+> @@ -852,6 +866,8 @@ static int branch_setup_xol_ops(struct arch_uprobe *auprobe, struct insn *insn)
+>  		break;
+>
+>  	case 0x0f:
+> +		if (emulate_nop5_insn(auprobe))
+> +			goto setup;
 
-tls:
-sockmap_redirect: sk=00000000d04d2224, type=skb, family=2, protocol=6, \
-prog_id=143, length=35, action=PASS
+I think this will work, but if we want to emulate nop5, then perhaps
+we can do the same for other nops?
 
-strparser:
-sockmap_skb_strp_parse: sk=00000000ecab0b30, family=2, protocol=6, \
-prog_id=170, size=5
+For the moment, lets forget about compat tasks on a 64-bit kernel, can't
+we simply do something like below?
 
-Signed-off-by: Jiayuan Chen <jiayuan.chen@linux.dev>
+Oleg.
 ---
- MAINTAINERS                    |  1 +
- include/linux/bpf_trace.h      |  2 +-
- include/trace/events/sockmap.h | 89 ++++++++++++++++++++++++++++++++++
- net/core/skmsg.c               |  6 +++
- 4 files changed, 97 insertions(+), 1 deletion(-)
- create mode 100644 include/trace/events/sockmap.h
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index a7a1d121a83e..578e16d86853 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -4420,6 +4420,7 @@ L:	netdev@vger.kernel.org
- L:	bpf@vger.kernel.org
- S:	Maintained
- F:	include/linux/skmsg.h
-+F:	include/trace/events/sockmap.h
- F:	net/core/skmsg.c
- F:	net/core/sock_map.c
- F:	net/ipv4/tcp_bpf.c
-diff --git a/include/linux/bpf_trace.h b/include/linux/bpf_trace.h
-index ddf896abcfb6..896346fb2b46 100644
---- a/include/linux/bpf_trace.h
-+++ b/include/linux/bpf_trace.h
-@@ -3,5 +3,5 @@
- #define __LINUX_BPF_TRACE_H__
+diff --git a/arch/x86/kernel/uprobes.c b/arch/x86/kernel/uprobes.c
+index 9194695662b2..76d2cceca6c4 100644
+--- a/arch/x86/kernel/uprobes.c
++++ b/arch/x86/kernel/uprobes.c
+@@ -840,12 +840,16 @@ static int branch_setup_xol_ops(struct arch_uprobe *auprobe, struct insn *insn)
+ 	insn_byte_t p;
+ 	int i;
  
- #include <trace/events/xdp.h>
--
-+#include <trace/events/sockmap.h>
- #endif /* __LINUX_BPF_TRACE_H__ */
-diff --git a/include/trace/events/sockmap.h b/include/trace/events/sockmap.h
-new file mode 100644
-index 000000000000..2a69b011e88f
---- /dev/null
-+++ b/include/trace/events/sockmap.h
-@@ -0,0 +1,89 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#undef TRACE_SYSTEM
-+#define TRACE_SYSTEM sockmap
++	/* prefix* + nop[i]; same as jmp with .offs = 0 */
++	for (i = 1; i <= ASM_NOP_MAX; ++i) {
++		if (!memcmp(insn->kaddr, x86_nops[i], i))
++			goto setup;
++	}
 +
-+#if !defined(_TRACE_SOCKMAP_H) || defined(TRACE_HEADER_MULTI_READ)
-+#define _TRACE_SOCKMAP_H
-+
-+#include <linux/filter.h>
-+#include <linux/tracepoint.h>
-+#include <linux/bpf.h>
-+#include <linux/skmsg.h>
-+
-+TRACE_DEFINE_ENUM(__SK_DROP);
-+TRACE_DEFINE_ENUM(__SK_PASS);
-+TRACE_DEFINE_ENUM(__SK_REDIRECT);
-+TRACE_DEFINE_ENUM(__SK_NONE);
-+
-+#define show_act(x) \
-+	__print_symbolic(x, \
-+		{ __SK_DROP,		"DROP" }, \
-+		{ __SK_PASS,		"PASS" }, \
-+		{ __SK_REDIRECT,	"REDIRECT" }, \
-+		{ __SK_NONE,		"NONE" })
-+
-+#define trace_sockmap_skmsg_redirect(sk, prog, msg, act)	\
-+	trace_sockmap_redirect((sk), "msg", (prog), (msg)->sg.size, (act))
-+
-+#define trace_sockmap_skb_redirect(sk, prog, skb, act)		\
-+	trace_sockmap_redirect((sk), "skb", (prog), (skb)->len, (act))
-+
-+TRACE_EVENT(sockmap_redirect,
-+	    TP_PROTO(const struct sock *sk, const char *type,
-+		     const struct bpf_prog *prog, int length, int act),
-+	    TP_ARGS(sk, type, prog, length, act),
-+
-+	TP_STRUCT__entry(
-+		__field(const void *, sk)
-+		__field(const char *, type)
-+		__field(__u16, family)
-+		__field(__u16, protocol)
-+		__field(int, prog_id)
-+		__field(int, length)
-+		__field(int, act)
-+	),
-+
-+	TP_fast_assign(
-+		__entry->sk		= sk;
-+		__entry->type		= type;
-+		__entry->family		= sk->sk_family;
-+		__entry->protocol	= sk->sk_protocol;
-+		__entry->prog_id	= prog->aux->id;
-+		__entry->length		= length;
-+		__entry->act		= act;
-+	),
-+
-+	TP_printk("sk=%p, type=%s, family=%d, protocol=%d, prog_id=%d, length=%d, action=%s",
-+		  __entry->sk, __entry->type, __entry->family, __entry->protocol,
-+		  __entry->prog_id, __entry->length,
-+		  show_act(__entry->act))
-+);
-+
-+TRACE_EVENT(sockmap_skb_strp_parse,
-+	    TP_PROTO(const struct sock *sk, const struct bpf_prog *prog,
-+		     int size),
-+	    TP_ARGS(sk, prog, size),
-+
-+	TP_STRUCT__entry(
-+		__field(const void *, sk)
-+		__field(__u16, family)
-+		__field(__u16, protocol)
-+		__field(int, prog_id)
-+		__field(int, size)
-+	),
-+
-+	TP_fast_assign(
-+		__entry->sk		= sk;
-+		__entry->family		= sk->sk_family;
-+		__entry->protocol	= sk->sk_protocol;
-+		__entry->prog_id	= prog->aux->id;
-+		__entry->size		= size;
-+	),
-+
-+	TP_printk("sk=%p, family=%d, protocol=%d, prog_id=%d, size=%d",
-+		  __entry->sk, __entry->family, __entry->protocol,
-+		  __entry->prog_id, __entry->size)
-+);
-+#endif /* _TRACE_SOCKMAP_H */
-+
-+#include <trace/define_trace.h>
-diff --git a/net/core/skmsg.c b/net/core/skmsg.c
-index 0ddc4c718833..9fb948f3b1eb 100644
---- a/net/core/skmsg.c
-+++ b/net/core/skmsg.c
-@@ -9,6 +9,7 @@
- #include <net/tcp.h>
- #include <net/tls.h>
- #include <trace/events/sock.h>
-+#include <trace/events/sockmap.h>
+ 	switch (opc1) {
+ 	case 0xeb:	/* jmp 8 */
+ 	case 0xe9:	/* jmp 32 */
+ 		break;
+-	case 0x90:	/* prefix* + nop; same as jmp with .offs = 0 */
+-		goto setup;
  
- static bool sk_msg_try_coalesce_ok(struct sk_msg *msg, int elem_first_coalesce)
- {
-@@ -904,6 +905,7 @@ int sk_psock_msg_verdict(struct sock *sk, struct sk_psock *psock,
- 		sock_hold(psock->sk_redir);
- 	}
- out:
-+	trace_sockmap_skmsg_redirect(sk, prog, msg, ret);
- 	rcu_read_unlock();
- 	return ret;
- }
-@@ -975,6 +977,7 @@ int sk_psock_tls_strp_read(struct sk_psock *psock, struct sk_buff *skb)
- 		ret = bpf_prog_run_pin_on_cpu(prog, skb);
- 		ret = sk_psock_map_verd(ret, skb_bpf_redirect_fetch(skb));
- 		skb->sk = NULL;
-+		trace_sockmap_skb_redirect(psock->sk, prog, skb, ret);
- 	}
- 	sk_psock_tls_verdict_apply(skb, psock, ret);
- 	rcu_read_unlock();
-@@ -1084,6 +1087,7 @@ static void sk_psock_strp_read(struct strparser *strp, struct sk_buff *skb)
- 		skb_bpf_set_strparser(skb);
- 		ret = sk_psock_map_verd(ret, skb_bpf_redirect_fetch(skb));
- 		skb->sk = NULL;
-+		trace_sockmap_skb_redirect(sk, prog, skb, ret);
- 	}
- 	sk_psock_verdict_apply(psock, skb, ret);
- out:
-@@ -1107,6 +1111,7 @@ static int sk_psock_strp_parse(struct strparser *strp, struct sk_buff *skb)
- 		skb->sk = psock->sk;
- 		ret = bpf_prog_run_pin_on_cpu(prog, skb);
- 		skb->sk = NULL;
-+		trace_sockmap_skb_strp_parse(psock->sk, prog, ret);
- 	}
- 	rcu_read_unlock();
- 	return ret;
-@@ -1211,6 +1216,7 @@ static int sk_psock_verdict_recv(struct sock *sk, struct sk_buff *skb)
- 		skb_bpf_redirect_clear(skb);
- 		ret = bpf_prog_run_pin_on_cpu(prog, skb);
- 		ret = sk_psock_map_verd(ret, skb_bpf_redirect_fetch(skb));
-+		trace_sockmap_skb_redirect(psock->sk, prog, skb, ret);
- 	}
- 	ret = sk_psock_verdict_apply(psock, skb, ret);
- 	if (ret < 0)
--- 
-2.47.1
+ 	case 0xe8:	/* call relative */
+ 		branch_clear_offset(auprobe, insn);
 
