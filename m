@@ -1,137 +1,333 @@
-Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-172.mta0.migadu.com (out-172.mta0.migadu.com [91.218.175.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D684284B30;
-	Thu, 10 Apr 2025 12:22:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31C7C1F873E
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 10 Apr 2025 14:27:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744287748; cv=none; b=GvH59p/VWLBOGkurvhdknr77KQ6zdHv8y9LHmkVbGPt3TRH7eS+CIv12KNIzDiA4Oy1Nt0PWdLewFs4+xsJxkbRkY5fmR+0+j1Y9HHl6CVQdlXy4GvSmpXzUxB3VI8pNS/mByTeFNPuN8ITHVavh+I6JiexYYhFwdkE/G40kO0s=
+	t=1744295245; cv=none; b=ad4OtMikShOmB4eOybC/4fbPEAgMao9kKVg47ji7ovv7SNCDu89JDV2yZl4uab4GFfFjGUSjeGbi8np2mOFUltRkIcRThYcDXhsJvj5N1MP7DF+Xx9/CsdFjgYXrBaxgZVYvzGiHJdo4Zj4PHf8syZwNMxI3UfR+nvpd3dujeoM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744287748; c=relaxed/simple;
-	bh=m3T4/LOg6mYcuQRnQtlKLSapjHOQqaJt4bIwTyZHRf0=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=PkXK/Pcw44OU3182Z4y+7uLb7luU/kb4Y634A08TmJHhyFW/jVgjJfZ80z0AtmJAz0MCuLgdBt94z1V/C10BYRu6xsUwj9DY/2dXOOsQKKIHegTL5VqsZvScCjUQ3enx8zT12KMZIF60h66tJ6pS5TZu1V03ce9Q8z2K0CPh1VM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.208.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-5e5e1a38c1aso896881a12.2;
-        Thu, 10 Apr 2025 05:22:25 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744287744; x=1744892544;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=X5UtJ2tlPuNevHqoiIq62Zf5tsaNGNxrKWyoL0OmWnY=;
-        b=Ac331d+RUSBRwfzO2QsS+iiEnFUrrSA+F6cficdPoZlG+oiARKNgMHHszuFf/BYALQ
-         Rx9au60XIrPsLs5X9MAnlZIl9aW7o3DsxbrHL601PvzRljkdN9O3lQ6aXiTqIDhusDqw
-         JrblDKAxu24ie2tk5gULPd6bpvs2+3clm+Eyqr7mVLfs1jKEscZ41dHlQCQPS0rZckk8
-         7mxmzpQw7y+uhawkUaKgxPGciAVjAohkfUHCqElcECq5K9ET3MIJ8leaYMBM7YZafzjs
-         FzwjVueqUyuRtnG3ek5JP+ebHVYH6rHBoYCyXHknT7wuY8kYejkZc2HC1GkCpDiL3KuD
-         fruQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVGCEUwlxulxEjW8btb5dqvSxGLDKaxXU5A834U2PNwK70AxtSVT6K2KARQlKkoM9qSMoO23mlNnVOYaJRhJ3krCwk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzlUvtR6cPuXpObbiSCI5eWWTjH4MiH7KVW9G0Nov1BTpqhDlb8
-	jcRWWPrd6Ys+cB9EIZjAunk9MtEzVwOrv0/PUk8RMyQTDpLvnXspyGmw2w==
-X-Gm-Gg: ASbGncureOb75nALv5h697hD07SHYm+v8wodeHRYH0lhPs4w8gVEFKHQrBg00cYQf07
-	zVdk/Uncrf8I9/j4XlT0PpMtze6SjuRasj/MsAIAgcuFSmUD06kghKolsYTMedJyfN3JolZ8Sau
-	jGMQ8J9NlvLbGbzuoMwMtypF7CFScs5BTlcBJByAKUqaoJHtInpbDrfDoiWWeAAV3vO4Kxw2nK5
-	VR4NTBrQ71rSugrtwBrR/ftNbSj2f/b0PUA5pzD60fzdG7ZGbVRWWA9ZMK7YTZtN+Arss0Vl7+V
-	JdKrJwrgxS51Bv3F7hyKW/siJsaZ
-X-Google-Smtp-Source: AGHT+IFnH+H/ypVsNPfD3gE4vTJKggvKhoU2bgrwMaI4jIVbqoop5MG7+2BV8LE04jhQKBDRfY6qzw==
-X-Received: by 2002:a05:6402:390c:b0:5f0:a6bd:78d3 with SMTP id 4fb4d7f45d1cf-5f32932db0amr2206716a12.34.1744287743936;
-        Thu, 10 Apr 2025 05:22:23 -0700 (PDT)
-Received: from localhost ([2a03:2880:30ff::])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5f2fec02372sm2019462a12.8.2025.04.10.05.22.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Apr 2025 05:22:23 -0700 (PDT)
-From: Breno Leitao <leitao@debian.org>
-Date: Thu, 10 Apr 2025 05:22:21 -0700
-Subject: [PATCH] tracing: fprobe: Fix RCU warning message in list traversal
+	s=arc-20240116; t=1744295245; c=relaxed/simple;
+	bh=brhRcL/BA3B7ayxZCilOde7eFu+DE09Bp210LvtFnKg=;
+	h=MIME-Version:Date:Content-Type:From:Message-ID:Subject:To:Cc:
+	 In-Reply-To:References; b=CZAglXajWPV1v4OuZWxTEzDV/eamXES7w4aPlYEiX0Fw9LLo94+yQmNszW3Deb2RD1WAGjByNvwAOObAgwTkIEwkNXPSo61qPnO76UXES4WGh2P9S/X4LlOtxWagTB5PhVp1sXOhvkSeBJXHyNcJ/nyURLpLUExQA1vjdrmXWCU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Y6SZsQaG; arc=none smtp.client-ip=91.218.175.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Y6SZsQaG"
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1744295239;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=pen+hTCi9Y0t6tkeXWgyEYw/3+/q7c9d33Ri3lI9qsM=;
+	b=Y6SZsQaGbhuKaFQxQJXLzu9VuBRzLyBRcr2xzt/+kfdp36cUBZi3yBrxhWAMrONFS20CQG
+	GjuI6Tgtr82vmGj0iQMqzjj8RL7otQ8C50uhO9lFA7B0WnRPngcAuwzT/247rwygKo5SaL
+	BRjvd2xMMm7/0WcJBOQY7DHmq9/hasU=
+Date: Thu, 10 Apr 2025 14:27:17 +0000
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250410-fprobe-v1-1-068ef5f41436@debian.org>
-X-B4-Tracking: v=1; b=H4sIAPy392cC/x3MTQqAIBAG0KsM3zpBrSi9SrToZ6zZpChEIN096
- B3gVRTOwgWeKjLfUiRe8GQawnYu18FKdniC1bbXndEqpBxXVntgZwY3Bt1uaAgpc5Dnj6b5fT9
- FudLnWAAAAA==
-X-Change-ID: 20250410-fprobe-dfe91798f03c
-To: Steven Rostedt <rostedt@goodmis.org>, 
- Masami Hiramatsu <mhiramat@kernel.org>, 
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
- kernel-team@meta.com, Breno Leitao <leitao@debian.org>
-X-Mailer: b4 0.15-dev-42535
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1905; i=leitao@debian.org;
- h=from:subject:message-id; bh=m3T4/LOg6mYcuQRnQtlKLSapjHOQqaJt4bIwTyZHRf0=;
- b=owEBbQKS/ZANAwAIATWjk5/8eHdtAcsmYgBn97f+oMcon9v5l4QT+NPNxcyQjtiToAHIw2kTM
- M6GeKHuxm+JAjMEAAEIAB0WIQSshTmm6PRnAspKQ5s1o5Of/Hh3bQUCZ/e3/gAKCRA1o5Of/Hh3
- bZpYD/4916gqkWKh1P+bnr3Xk5pA8UV3fnEhW/W3D7KlfRjFSmxOp+SbzCqU/bnw+vI5hqxGzKX
- 2ieSGnqlQu0DugGr4r4hbc1DLer9Vgw3jFuj3muWfXc0hy1sD9XRuiqkbgcAL57vyu7x8GZqmL6
- yyewFXXYtwGOoAiNl3zn3PhF6wHryotW3sO/mF3j6z7eYUE52Q48X/O/vOejDyEcgeGOVRhS/D6
- iQ7TYOHCMMeay4Iq05zmFmqz8SreDC2vJvg7EZxpuOS7wfJTBdcahxgj9wYSHcq624BFqzhVvPk
- JSsl/vycP7iAy+P9wygmW1wjyrnhRmxm6pdRkl+nTpLzzidilYQyrvULjTAFWKFM4BKQFc3T2qt
- CR+Gosza5iHEgy7rmR2UGqbGeU+8BhLm0Ts68XFWt3+U/WVVmBLHYdQOkvKOTvlUcBVukRPrK7T
- GL8fwYDp6Y/HxUmFLHbuZVRmk/gALSa8WZYDA7ztZGisTTDc1K5NCEZrNbj7ILMr2KhH6D74Vy2
- LUnhxlfjMOF+IePxImgn4iwm3Gdtw0PmqFywDGd1JUZkxeLUNrDvfenzcoMXngH/UhC0hyvT6gN
- ZRSkPRytBJ9LJkYyLPB3X/gCoTJMRaNo/jwlmbYzqbQI3kFQrWMxYMjvXzyBKHbewpEJMVPOSuO
- gRBD3mfApREf+GQ==
-X-Developer-Key: i=leitao@debian.org; a=openpgp;
- fpr=AC8539A6E8F46702CA4A439B35A3939FFC78776D
+Content-Transfer-Encoding: quoted-printable
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: "Jiayuan Chen" <jiayuan.chen@linux.dev>
+Message-ID: <0cfe4cc98a818d83a9b4bbe55006a17a7452ee38@linux.dev>
+TLS-Required: No
+Subject: Re: [PATCH bpf-next v1] bpf, sockmap: Introduce tracing capability
+ for sockmap
+To: "Jakub Sitnicki" <jakub@cloudflare.com>
+Cc: bpf@vger.kernel.org, mrpre@163.com, "Alexei Starovoitov"
+ <ast@kernel.org>, "Daniel Borkmann" <daniel@iogearbox.net>, "John
+ Fastabend" <john.fastabend@gmail.com>, "Andrii Nakryiko"
+ <andrii@kernel.org>, "Martin  KaFai Lau" <martin.lau@linux.dev>, "Eduard
+ Zingerman" <eddyz87@gmail.com>, "Song Liu" <song@kernel.org>, "Yonghong
+ Song" <yonghong.song@linux.dev>, "KP  Singh" <kpsingh@kernel.org>,
+ "Stanislav Fomichev" <sdf@fomichev.me>, "Hao  Luo" <haoluo@google.com>,
+ "Jiri Olsa" <jolsa@kernel.org>, "Steven Rostedt" <rostedt@goodmis.org>,
+ "Masami Hiramatsu" <mhiramat@kernel.org>, "Mathieu  Desnoyers"
+ <mathieu.desnoyers@efficios.com>, "David S. Miller"
+ <davem@davemloft.net>, "Eric Dumazet" <edumazet@google.com>, "Jakub 
+ Kicinski" <kuba@kernel.org>, "Paolo Abeni" <pabeni@redhat.com>, "Simon 
+ Horman" <horms@kernel.org>, "Jesper Dangaard Brouer" <hawk@kernel.org>,
+ linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+In-Reply-To: <87ikncgyyd.fsf@cloudflare.com>
+References: <20250409102937.15632-1-jiayuan.chen@linux.dev>
+ <87ikncgyyd.fsf@cloudflare.com>
+X-Migadu-Flow: FLOW_OUT
 
-When CONFIG_PROVE_RCU_LIST is enabled, fprobe triggers the following
-warning:
+April 10, 2025 at 17:14, "Jakub Sitnicki" <jakub@cloudflare.com> wrote:
 
-    WARNING: suspicious RCU usage
-    kernel/trace/fprobe.c:457 RCU-list traversed in non-reader section!!
 
-    other info that might help us debug this:
-	#1: ffffffff863c4e08 (fprobe_mutex){+.+.}-{4:4}, at: fprobe_module_callback+0x7b/0x8c0
 
-    Call Trace:
-	fprobe_module_callback
-	notifier_call_chain
-	blocking_notifier_call_chain
+>=20
+>=20On Wed, Apr 09, 2025 at 06:29 PM +08, Jiayuan Chen wrote:
+>=20
+>=20>=20
+>=20> Sockmap has the same high-performance forwarding capability as XDP,=
+ but
+> >=20
+>=20>  operates at Layer 7.
+> >=20
+>=20>  Introduce tracing capability for sockmap, similar to XDP, to trace=
+ the
+> >=20
+>=20>  execution results of BPF programs without modifying the programs
+> >=20
+>=20>  themselves, similar to the existing trace_xdp_redirect{_map}.
+> >=20
+>=20>  It is crucial for debugging BPF programs, especially in production
+> >=20
+>=20>  environments.
+> >=20
+>=20>  Additionally, a header file was added to bpf_trace.h to automatica=
+lly
+> >=20
+>=20>  generate tracepoints.
+> >=20
+>=20>  Test results:
+> >=20
+>=20>  $ echo "1" > /sys/kernel/tracing/events/sockmap/enable
+> >=20
+>=20>  skb:
+> >=20
+>=20>  sockmap_redirect: sk=3D00000000d3266a8d, type=3Dskb, family=3D2, p=
+rotocol=3D6, \
+> >=20
+>=20>  prog_id=3D73, length=3D256, action=3DPASS
+> >=20
+>=20>  msg:
+> >=20
+>=20>  sockmap_redirect: sk=3D00000000528c7614, type=3Dmsg, family=3D2, p=
+rotocol=3D6, \
+> >=20
+>=20>  prog_id=3D185, length=3D5, action=3DREDIRECT
+> >=20
+>=20>  tls:
+> >=20
+>=20>  sockmap_redirect: sk=3D00000000d04d2224, type=3Dskb, family=3D2, p=
+rotocol=3D6, \
+> >=20
+>=20>  prog_id=3D143, length=3D35, action=3DPASS
+> >=20
+>=20>  strparser:
+> >=20
+>=20>  sockmap_skb_strp_parse: sk=3D00000000ecab0b30, family=3D2, protoco=
+l=3D6, \
+> >=20
+>=20>  prog_id=3D170, size=3D5
+> >=20
+>=20>  Signed-off-by: Jiayuan Chen <jiayuan.chen@linux.dev>
+> >=20
+>=20>  ---
+> >=20
+>=20>  MAINTAINERS | 1 +
+> >=20
+>=20>  include/linux/bpf_trace.h | 2 +-
+> >=20
+>=20>  include/trace/events/sockmap.h | 89 ++++++++++++++++++++++++++++++=
+++++
+> >=20
+>=20>  net/core/skmsg.c | 6 +++
+> >=20
+>=20>  4 files changed, 97 insertions(+), 1 deletion(-)
+> >=20
+>=20>  create mode 100644 include/trace/events/sockmap.h
+> >=20
+>=20>  diff --git a/MAINTAINERS b/MAINTAINERS
+> >=20
+>=20>  index a7a1d121a83e..578e16d86853 100644
+> >=20
+>=20>  --- a/MAINTAINERS
+> >=20
+>=20>  +++ b/MAINTAINERS
+> >=20
+>=20>  @@ -4420,6 +4420,7 @@ L: netdev@vger.kernel.org
+> >=20
+>=20>  L: bpf@vger.kernel.org
+> >=20
+>=20>  S: Maintained
+> >=20
+>=20>  F: include/linux/skmsg.h
+> >=20
+>=20>  +F: include/trace/events/sockmap.h
+> >=20
+>=20>  F: net/core/skmsg.c
+> >=20
+>=20>  F: net/core/sock_map.c
+> >=20
+>=20>  F: net/ipv4/tcp_bpf.c
+> >=20
+>=20>  diff --git a/include/linux/bpf_trace.h b/include/linux/bpf_trace.h
+> >=20
+>=20>  index ddf896abcfb6..896346fb2b46 100644
+> >=20
+>=20>  --- a/include/linux/bpf_trace.h
+> >=20
+>=20>  +++ b/include/linux/bpf_trace.h
+> >=20
+>=20>  @@ -3,5 +3,5 @@
+> >=20
+>=20>  #define __LINUX_BPF_TRACE_H__
+> >=20
+>=20>=20=20
+>=20>=20
+>=20>  #include <trace/events/xdp.h>
+> >=20
+>=20>  -
+> >=20
+>=20>  +#include <trace/events/sockmap.h>
+> >=20
+>=20>  #endif /* __LINUX_BPF_TRACE_H__ */
+> >=20
+>=20>  diff --git a/include/trace/events/sockmap.h b/include/trace/events=
+/sockmap.h
+> >=20
+>=20>  new file mode 100644
+> >=20
+>=20>  index 000000000000..2a69b011e88f
+> >=20
+>=20>  --- /dev/null
+> >=20
+>=20>  +++ b/include/trace/events/sockmap.h
+> >=20
+>=20>  @@ -0,0 +1,89 @@
+> >=20
+>=20>  +/* SPDX-License-Identifier: GPL-2.0 */
+> >=20
+>=20>  +#undef TRACE_SYSTEM
+> >=20
+>=20>  +#define TRACE_SYSTEM sockmap
+> >=20
+>=20>  +
+> >=20
+>=20>  +#if !defined(_TRACE_SOCKMAP_H) || defined(TRACE_HEADER_MULTI_READ=
+)
+> >=20
+>=20>  +#define _TRACE_SOCKMAP_H
+> >=20
+>=20>  +
+> >=20
+>=20>  +#include <linux/filter.h>
+> >=20
+>=20>  +#include <linux/tracepoint.h>
+> >=20
+>=20>  +#include <linux/bpf.h>
+> >=20
+>=20>  +#include <linux/skmsg.h>
+> >=20
+>=20>  +
+> >=20
+>=20>  +TRACE_DEFINE_ENUM(__SK_DROP);
+> >=20
+>=20>  +TRACE_DEFINE_ENUM(__SK_PASS);
+> >=20
+>=20>  +TRACE_DEFINE_ENUM(__SK_REDIRECT);
+> >=20
+>=20>  +TRACE_DEFINE_ENUM(__SK_NONE);
+> >=20
+>=20>  +
+> >=20
+>=20>  +#define show_act(x) \
+> >=20
+>=20>  + __print_symbolic(x, \
+> >=20
+>=20>  + { __SK_DROP, "DROP" }, \
+> >=20
+>=20>  + { __SK_PASS, "PASS" }, \
+> >=20
+>=20>  + { __SK_REDIRECT, "REDIRECT" }, \
+> >=20
+>=20>  + { __SK_NONE, "NONE" })
+> >=20
+>=20>  +
+> >=20
+>=20>  +#define trace_sockmap_skmsg_redirect(sk, prog, msg, act) \
+> >=20
+>=20>  + trace_sockmap_redirect((sk), "msg", (prog), (msg)->sg.size, (act=
+))
+> >=20
+>=20>  +
+> >=20
+>=20>  +#define trace_sockmap_skb_redirect(sk, prog, skb, act) \
+> >=20
+>=20>  + trace_sockmap_redirect((sk), "skb", (prog), (skb)->len, (act))
+> >=20
+>=20>  +
+> >=20
+>=20>  +TRACE_EVENT(sockmap_redirect,
+> >=20
+>=20>  + TP_PROTO(const struct sock *sk, const char *type,
+> >=20
+>=20>  + const struct bpf_prog *prog, int length, int act),
+> >=20
+>=20>  + TP_ARGS(sk, type, prog, length, act),
+> >=20
+>=20>  +
+> >=20
+>=20>  + TP_STRUCT__entry(
+> >=20
+>=20>  + __field(const void *, sk)
+> >=20
+>=20>  + __field(const char *, type)
+> >=20
+>=20>  + __field(__u16, family)
+> >=20
+>=20>  + __field(__u16, protocol)
+> >=20
+>=20>  + __field(int, prog_id)
+> >=20
+>=20>  + __field(int, length)
+> >=20
+>=20>  + __field(int, act)
+> >=20
+>=20>  + ),
+> >=20
+>=20>  +
+> >=20
+>=20>  + TP_fast_assign(
+> >=20
+>=20>  + __entry->sk =3D sk;
+> >=20
+>=20>  + __entry->type =3D type;
+> >=20
+>=20>  + __entry->family =3D sk->sk_family;
+> >=20
+>=20>  + __entry->protocol =3D sk->sk_protocol;
+> >=20
+>=20>  + __entry->prog_id =3D prog->aux->id;
+> >=20
+>=20>  + __entry->length =3D length;
+> >=20
+>=20>  + __entry->act =3D act;
+> >=20
+>=20>  + ),
+> >=20
+>=20>  +
+> >=20
+>=20>  + TP_printk("sk=3D%p, type=3D%s, family=3D%d, protocol=3D%d, prog_=
+id=3D%d, length=3D%d, action=3D%s",
+> >=20
+>=20>  + __entry->sk, __entry->type, __entry->family, __entry->protocol,
+> >=20
+>=20>  + __entry->prog_id, __entry->length,
+> >=20
+>=20>  + show_act(__entry->act))
+> >=20
+>=20
+> sk address is useful if you're going to attach a bpf program to the
+> tracepoint. Not so much if you're printing the recorded trace.
+>=20
+>=20I'd print the netns and the socket inode instead, or in addition to.
+> These can be cross-referenced against `lsns` and `ss` output.
 
-This warning occurs because fprobe_remove_node_in_module() traverses an
-RCU list using RCU primitives without holding an RCU read lock. However,
-the function is only called from fprobe_module_callback(), which holds
-the fprobe_mutex lock that provides sufficient protection for safely
-traversing the list.
+Good suggestions. I will print all of this.
+sk address helps us track connection more easily.
 
-Fix the warning by specifying the locking design to the
-CONFIG_PROVE_RCU_LIST mechanism. Add the lockdep_is_held() argument to
-hlist_for_each_entry_rcu() to inform the RCU checker that fprobe_mutex
-provides the required protection.
-
-Fixes: a3dc2983ca7b90 ("tracing: fprobe: Cleanup fprobe hash when module unloading")
-Signed-off-by: Breno Leitao <leitao@debian.org>
----
- kernel/trace/fprobe.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/kernel/trace/fprobe.c b/kernel/trace/fprobe.c
-index 95c6e3473a76b..ba7ff14f5339b 100644
---- a/kernel/trace/fprobe.c
-+++ b/kernel/trace/fprobe.c
-@@ -454,7 +454,8 @@ static void fprobe_remove_node_in_module(struct module *mod, struct hlist_head *
- 	struct fprobe_hlist_node *node;
- 	int ret = 0;
- 
--	hlist_for_each_entry_rcu(node, head, hlist) {
-+	hlist_for_each_entry_rcu(node, head, hlist,
-+				 lockdep_is_held(&fprobe_mutex)) {
- 		if (!within_module(node->addr, mod))
- 			continue;
- 		if (delete_fprobe_node(node))
-
----
-base-commit: 3b07108ada81a8ebcebf1fe61367b4e436c895bd
-change-id: 20250410-fprobe-dfe91798f03c
-
-Best regards,
--- 
-Breno Leitao <leitao@debian.org>
-
+Thanks~
