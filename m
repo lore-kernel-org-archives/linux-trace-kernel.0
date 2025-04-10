@@ -1,83 +1,154 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-174.mta0.migadu.com (out-174.mta0.migadu.com [91.218.175.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EB7F21C18A;
-	Wed,  9 Apr 2025 23:40:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E51B1A3150
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 10 Apr 2025 01:19:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744242015; cv=none; b=e+yAd7BKRjOMyfR4g4z27qelnTNUJubGRRMLq+DWxlQi/jx9b7qA2psG+dVmS34AdGVy/gb+YJVLrsAEqnCo5nxecCZdV3enHsEfOAmmUwfQXMyRYKN215G0ZUDAKRXAbBDLytC9l6grnO9hfiX+TuYK2awUsg8KSRhfkPLYTu8=
+	t=1744247966; cv=none; b=RGEESSaTBEdjXBvT2jUSdD9kx5XVH4Ch6digU/ZShiUo3SJ9XSOmeIoWBAMulgvf0+VeB52YCu1rQkrgU5wONsVut7Wo/ggwOHKby4w7gKenjjVQtZ5gqESIvWqEVzgqjNlNk829CU2aDgqOjrGMqB5wHX0K3courJH/dBrOwwA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744242015; c=relaxed/simple;
-	bh=14PKKDLENZFH1SGpMbnvyTFTgJJEJGfeGEhIALWz2MA=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=hJHHWsdd8w8wrFaqt2kysGrZkjEQlHQ7Cp2DQIk/OVVC27ActM4U6nIHlLrMIWxf8AWK3Lx08LzCJONnZKZ/GsWiWT8A4My9+LU1RxRRA8Pq2A5zBrpGCWdHqPVZ0Yl54SjwSpvmqIo8k+PV5bvrAUQorRvMJlUVyRpYFbSxY9U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kEw2Qz0s; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744247966; c=relaxed/simple;
+	bh=+695x7pXlPBW4JoEVk0G/GsLItaAy4Iw2gNHwnHxeKU=;
+	h=MIME-Version:Date:Content-Type:From:Message-ID:Subject:To:Cc:
+	 In-Reply-To:References; b=Ogn/y8Fo3sjQWd3O2+tRmNZfeFnzUx8PF5tSCCvL5MClArlgyy3eJvjrdIfYeiGElncAMJMp+ofZOJj5+9CFVe4YBYkbELU6rLD132q5JRy0hZsszDFa+8h3QGqe34X8H5G91d4w8sVBGRpBTNIb/lHIOddkQYvr7qMYahN3vQI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=GAcXiJHG; arc=none smtp.client-ip=91.218.175.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kEw2Qz0s"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EE8E9C4CEE3;
-	Wed,  9 Apr 2025 23:40:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744242015;
-	bh=14PKKDLENZFH1SGpMbnvyTFTgJJEJGfeGEhIALWz2MA=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=kEw2Qz0sEE8+fCWYaisJKKDs7lAxeLrCF2dRRdh+K1znaJBMvMK7Kc1SZb2Ku7rMr
-	 ciBtIOMdg8iC5SA4Py3R6vRaxOc2UEiGJUzC/A5dH0YzFUWgZx+k0T1M6gv/DgYcfe
-	 Jj5eSoLkUQoM+Dkntiy2EHSWKJ5QSalACKKKFIDB3r0O9iEUaEmfFepPLvio75znjg
-	 sJRTgDT+hqy02rsxOJslMzw85yem8AyWJ24MHuGj8CaS/j8Rmyi8Z7qHjblK74gZxC
-	 a4S+59uCJI6rOtnSRSA3n4KOEWkbYrx8N6hv2p9QYrO6q36ibl2vtE45uat2coa5+M
-	 ZcSidx5xw0Nkw==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id ADCFE38111DC;
-	Wed,  9 Apr 2025 23:40:53 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="GAcXiJHG"
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH bpf-next v2 1/2] bpf: Check link_create parameter for
- multi_kprobe
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <174424205228.3077267.12250129138735203026.git-patchwork-notify@kernel.org>
-Date: Wed, 09 Apr 2025 23:40:52 +0000
-References: <20250407035752.1108927-1-chen.dylane@linux.dev>
-In-Reply-To: <20250407035752.1108927-1-chen.dylane@linux.dev>
-To: Tao Chen <chen.dylane@linux.dev>
-Cc: song@kernel.org, jolsa@kernel.org, ast@kernel.org, daniel@iogearbox.net,
- andrii@kernel.org, martin.lau@linux.dev, eddyz87@gmail.com,
- yonghong.song@linux.dev, john.fastabend@gmail.com, kpsingh@kernel.org,
- sdf@fomichev.me, haoluo@google.com, rostedt@goodmis.org, mhiramat@kernel.org,
- mathieu.desnoyers@efficios.com, laoar.shao@gmail.com, bpf@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1744247952;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=VwjIhL5eq5nuQH6KgO5e7NYXc2vM8c1wzFZaJmX6O2s=;
+	b=GAcXiJHGnyDBkayIqUeCiyu7aMXAjter9wJQKpd97FONtEJHyKqKoDubyMXwzB1eWQfFoL
+	/83eZu+U7YthXohR6oeZYn4FdhhjnTIS3NqIVs/NexOPxf24HlwtTMd73gYpb3NwLJPisK
+	IkrroqAAaGWUJnaEeTYmMIJqFKlOUGM=
+Date: Thu, 10 Apr 2025 01:19:09 +0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: "Jiayuan Chen" <jiayuan.chen@linux.dev>
+Message-ID: <b560604b7b97a58d13c60655747b30a5b9f27a4d@linux.dev>
+TLS-Required: No
+Subject: Re: [PATCH bpf-next v1] bpf, sockmap: Introduce tracing capability
+ for sockmap
+To: "Cong Wang" <xiyou.wangcong@gmail.com>
+Cc: bpf@vger.kernel.org, mrpre@163.com, "Alexei Starovoitov"
+ <ast@kernel.org>, "Daniel Borkmann" <daniel@iogearbox.net>, "John
+ Fastabend" <john.fastabend@gmail.com>, "Andrii Nakryiko"
+ <andrii@kernel.org>, "Martin KaFai Lau" <martin.lau@linux.dev>, "Eduard
+ Zingerman" <eddyz87@gmail.com>, "Song Liu" <song@kernel.org>, "Yonghong
+ Song" <yonghong.song@linux.dev>, "KP Singh" <kpsingh@kernel.org>,
+ "Stanislav Fomichev" <sdf@fomichev.me>, "Hao Luo" <haoluo@google.com>,
+ "Jiri Olsa" <jolsa@kernel.org>, "Jakub Sitnicki" <jakub@cloudflare.com>,
+ "Steven Rostedt" <rostedt@goodmis.org>, "Masami Hiramatsu"
+ <mhiramat@kernel.org>, "Mathieu Desnoyers"
+ <mathieu.desnoyers@efficios.com>, "David S. Miller"
+ <davem@davemloft.net>, "Eric Dumazet" <edumazet@google.com>, "Jakub
+ Kicinski" <kuba@kernel.org>, "Paolo Abeni" <pabeni@redhat.com>, "Simon
+ Horman" <horms@kernel.org>, "Jesper Dangaard Brouer" <hawk@kernel.org>,
+ linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+In-Reply-To: <Z/aosJ3uvzTZTEXS@pop-os.localdomain>
+References: <20250409102937.15632-1-jiayuan.chen@linux.dev>
+ <Z/aosJ3uvzTZTEXS@pop-os.localdomain>
+X-Migadu-Flow: FLOW_OUT
 
-Hello:
+April 10, 2025 at 01:04, "Cong Wang" <xiyou.wangcong@gmail.com> wrote:
+>=20
+>=20On Wed, Apr 09, 2025 at 06:29:33PM +0800, Jiayuan Chen wrote:
+>=20
+>=20>=20
+>=20> Sockmap has the same high-performance forwarding capability as XDP,=
+ but
+> >=20
+>=20>  operates at Layer 7.
+> >=20
+>=20>=20=20
+>=20>=20
+>=20>  Introduce tracing capability for sockmap, similar to XDP, to trace=
+ the
+> >=20
+>=20>  execution results of BPF programs without modifying the programs
+> >=20
+>=20>  themselves, similar to the existing trace_xdp_redirect{_map}.
+> >=20
+>=20>=20=20
+>=20>=20
+>=20>  It is crucial for debugging BPF programs, especially in production
+> >=20
+>=20>  environments.
+> >=20
+>=20>=20=20
+>=20>=20
+>=20>  Additionally, a header file was added to bpf_trace.h to automatica=
+lly
+> >=20
+>=20>  generate tracepoints.
+> >=20
+>=20>=20=20
+>=20>=20
+>=20>  Test results:
+> >=20
+>=20>  $ echo "1" > /sys/kernel/tracing/events/sockmap/enable
+> >=20
+>=20>=20=20
+>=20>=20
+>=20>  skb:
+> >=20
+>=20>  sockmap_redirect: sk=3D00000000d3266a8d, type=3Dskb, family=3D2, p=
+rotocol=3D6, \
+> >=20
+>=20>  prog_id=3D73, length=3D256, action=3DPASS
+> >=20
+>=20>=20=20
+>=20>=20
+>=20>  msg:
+> >=20
+>=20>  sockmap_redirect: sk=3D00000000528c7614, type=3Dmsg, family=3D2, p=
+rotocol=3D6, \
+> >=20
+>=20>  prog_id=3D185, length=3D5, action=3DREDIRECT
+> >=20
+>=20>=20=20
+>=20>=20
+>=20>  tls:
+> >=20
+>=20>  sockmap_redirect: sk=3D00000000d04d2224, type=3Dskb, family=3D2, p=
+rotocol=3D6, \
+> >=20
+>=20>  prog_id=3D143, length=3D35, action=3DPASS
+> >=20
+>=20>=20=20
+>=20>=20
+>=20>  strparser:
+> >=20
+>=20>  sockmap_skb_strp_parse: sk=3D00000000ecab0b30, family=3D2, protoco=
+l=3D6, \
+> >=20
+>=20>  prog_id=3D170, size=3D5
+> >=20
+>=20
+> Nice work!
+>=20
+>=20While you are on it, could we also trace skb->_sk_redir bits too? It =
+is
+>=20
+>=20very useful to distinguish, at least, ingress from egress redirection=
+.
+>=20
+>=20Thanks!
+>
 
-This series was applied to bpf/bpf-next.git (master)
-by Andrii Nakryiko <andrii@kernel.org>:
-
-On Mon,  7 Apr 2025 11:57:51 +0800 you wrote:
-> The flags in link_create no used in multi_kprobe, return -EINVAL if
-> they assigned, keep it same as other link attach apis. Perhaps due to
-> their usage habits, users may set the target_fd to -1. Therefore, no
-> check is carried out here, and it is kept consistent with the multi_uprobe.
-> 
-> Fixes: 0dcac2725406 ("bpf: Add multi kprobe link")
-> Signed-off-by: Tao Chen <chen.dylane@linux.dev>
-> 
-> [...]
-
-Here is the summary with links:
-  - [bpf-next,v2,1/2] bpf: Check link_create parameter for multi_kprobe
-    https://git.kernel.org/bpf/bpf-next/c/243911982aa9
-  - [bpf-next,v2,2/2] bpf: Check link_create parameter for multi_uprobe
-    https://git.kernel.org/bpf/bpf-next/c/a76116f422c4
-
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
-
+Thanks for your suggestion!
+The skb->_sk_redir contains a lot of important information about
+redirection, so it's definitely worth including.
