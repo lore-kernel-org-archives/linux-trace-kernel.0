@@ -1,102 +1,209 @@
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0EF738F80;
-	Thu, 10 Apr 2025 03:28:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.5])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B90E51DFDE;
+	Thu, 10 Apr 2025 07:03:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744255739; cv=none; b=fKa5Kxmh0bPwCdUbF9W5Wgo40uPsm169A1GGarCrL0ZNNgg4XciL7GMTKDe/h6/8+jlSuE4j7zLsxLxyrkMvx7dNakt+9tF5u27QZT+zPIP/zsy/DGSeIjJoaV5DsPJsk7eoG84Y6ODRYbYhTx2/WInBI6qEyhJxbEs8HaDOr20=
+	t=1744268628; cv=none; b=Rf3n5j25zTZWVar0KZ7Dzctw86ls8OHq8bSSIr58VLOJhgFC53ocYcj2OWHzlY5SJ/OTTL2jDnB5pKiGU4gIl2eiAktfrexHSzDVcN4GCBYtRQcmSQgEhxz/vkxLotQJjm/ZJ39HadbpyPo/59RY+oydSwEEW2fJ+hLmUd5Vhh4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744255739; c=relaxed/simple;
-	bh=1qT4p9/yASHkVfBVycY5L9QDkHM4BA+IQXyvAReAm0g=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=c7hNMKhoF23aIELNjaMt3pGTFwbElweZqLRM1tHefrEuyxK9dh0OqsIOg4+I2KbUvzsvnUwnBhP5s8mdwMiSHJEuKeQmVCho199wk5Sa1MIfaoQMR9EkMpxWtnLq4Ynn9jwjAkY9hbOFlsa9xrra6rik+PJs3x3tFkcV1Ami2zw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KBa7mlap; arc=none smtp.client-ip=209.85.128.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744268628; c=relaxed/simple;
+	bh=bZLY15UrVGK7p97LG2OmtwjcZajPk3Fv1tuBhvNIjMg=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=QkuSt4iwjVmdbLnWVpHywQkFks8Am0XmioKGvVbebAJebf1+4NindtuLH3iB5IBgEh3MhaBVxt1/U4mI1YS6f29vP1Tuk4/udUR6vRUq53gz9m7pww0Yl0OrE68wSqOPx7CxvC2+3VegD01C0yB3I6TtM/z0bhg4Mxa34VXJQjg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=V1clprFc; arc=none smtp.client-ip=117.135.210.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KBa7mlap"
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-43d0c18e84eso1515135e9.3;
-        Wed, 09 Apr 2025 20:28:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744255736; x=1744860536; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=1qT4p9/yASHkVfBVycY5L9QDkHM4BA+IQXyvAReAm0g=;
-        b=KBa7mlapEi+XYZ1G7ob00H/Gj6IZR9kKJIdqFmUo6VVVd8/FQkz1YsC0fu8oaJGJL1
-         tedgv52S8CqvFC516b9w3ulePMJ0kn4VG+OD+bA4UcIQJoYPII4zqpzjJmeE7UWl0s+q
-         rGuJoxeGQ1e4bCemEY51xPtLZvzvMZV6dYSv174XPnIiIOolVA8H4YLMGHms0QFA2bZx
-         XbSHY1MY0O+8pesPoRBY20BP9Zj3qM9vo9QFG4x9UA+FLdP0LUIBe7NER4z7JejZqJzq
-         UN16u9W0C3ggnAusQml0NKGOImlOljkrF2Vu6yUXIFI6t5HOdaU+PQtAv5E0QvXlYTUS
-         e1Sw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744255736; x=1744860536;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=1qT4p9/yASHkVfBVycY5L9QDkHM4BA+IQXyvAReAm0g=;
-        b=RElQqV90WDiuMLP228tLhZE5wnyPZTnM4RQLoXcVFra5vhCp+7pwtBIZDY8a7iwL85
-         759vCzmTpztSe8ke+mqp5mgJGw+yOCwkpZidkA0QqzBA2yH3qzawI4plELcney3mUt7d
-         KvySYtNa0nPJsyudyXPfKh/mqSZ2Rel2eryG1kkIYMabylc7LAwZBdoaVr75+16McZRX
-         B6v0Nhx8F77e6XDckuEGOzQImBwGy6Uag6Ipr3FMiT/PwnBCnYOektrvpC3o72MHAzDo
-         Z2YhQ+pROvkZA8KgVAHYSxEZMvnUtilarsDTwaCrhwNCrdBMLn2p8lEOPTvFCFQMCeRl
-         Gkeg==
-X-Forwarded-Encrypted: i=1; AJvYcCUpE0xz8wZgSL0iUodjVorMlb6IcNiLjPJAcZC0im4sztH5UicDqbbqNbhFI46ZGjBA6Qu2czyATnX7oYA5@vger.kernel.org, AJvYcCV2nlneVOcm71IZmDT5YjXfd30mETWCHV8ubZToGvBRtpy/VWMM1uVSnt2UJV3T2VeOwOo=@vger.kernel.org, AJvYcCXL6En3dPo16G21GwAROZt/xFIlhsQEN9UwbBlJIjNYnri1FfQpPZnoIlUb8w9Pn7epTUQwDA/vL904JcJ3ST1fCwjE@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxa/N9Bm2xWoEQQjVG9VepVyqK9xCygcCUex24iNXfARKaXmxe8
-	1EBR3lcrj2objFf6ofCI2KWWYdA3ZjWT9WveDh6+Hcb/3a3V33TXZhwjSV3ue2leQQa7fxyTAmt
-	EzPrS6DnWJS8X3KQ5D5QqjlM21Ag=
-X-Gm-Gg: ASbGncscjpcKgldVdBUQR4cwzN6wjukgqZV9dPk+sMrab7csXDlM4/9s2KKkFoDk8vV
-	63IVcyzuNvVPPunzBKOJnJb9dDOyG9k1BBQ6+J0DxKJ5UXIBbxOGQgUv4a9akD28WUOc/3YSCX4
-	wmkfGZzdeAyp2e7GBZlYEZEsjtxipPy23bVm1liQ==
-X-Google-Smtp-Source: AGHT+IGaWEojXqplR70DbA9KIqtKUCqO8VdfLfrSloms0d9yOELhm5b7xSv8e9WS2CXXMJ/1dZ+1aka/ieMX4Fqfd8o=
-X-Received: by 2002:a05:600c:1c86:b0:43d:160:cd97 with SMTP id
- 5b1f17b1804b1-43f2ff9afa2mr3886615e9.25.1744255735922; Wed, 09 Apr 2025
- 20:28:55 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="V1clprFc"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=CnPiI
+	i+40Nq8IcPg6K0qCX4b4qsQqX8RZrW3I0ARU+w=; b=V1clprFcSYL5hj6EdrKA/
+	ZvKFdBpjr6yT9+dg7+1YdX+thh8ahiBMaJT4MVUdw/U7dpVGGafHBkkfCB3VWhvf
+	iTo3Ic8iK1g6yaC1qQOTeF+l84ndxcoEIZ2HkP/wu6O1RH2sJdkjRqj/O4IrCCS/
+	xio5MB4R5GF2TMerhFUzJE=
+Received: from localhost.localdomain (unknown [])
+	by gzga-smtp-mtada-g1-2 (Coremail) with SMTP id _____wD3f7EibfdnHOEjFg--.20679S2;
+	Thu, 10 Apr 2025 15:02:59 +0800 (CST)
+From: Feng Yang <yangfeng59949@163.com>
+To: ast@kernel.org,
+	daniel@iogearbox.net,
+	andrii@kernel.org,
+	martin.lau@linux.dev,
+	eddyz87@gmail.com,
+	song@kernel.org,
+	yonghong.song@linux.dev,
+	john.fastabend@gmail.com,
+	kpsingh@kernel.org,
+	sdf@fomichev.me,
+	haoluo@google.com,
+	jolsa@kernel.org,
+	mattbobrowski@google.com,
+	rostedt@goodmis.org,
+	mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com
+Cc: bpf@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Subject: [PATCH bpf-next v3] bpf: Remove redundant checks
+Date: Thu, 10 Apr 2025 15:02:58 +0800
+Message-Id: <20250410070258.276759-1-yangfeng59949@163.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250408071151.229329-1-yangfeng59949@163.com>
-In-Reply-To: <20250408071151.229329-1-yangfeng59949@163.com>
-From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date: Wed, 9 Apr 2025 20:28:44 -0700
-X-Gm-Features: ATxdqUECZ8hBo3V-Su9Z4qQwgeWEVH-SqaCOC-Ef80OY_wkuUAeTqwDGyTS9qH8
-Message-ID: <CAADnVQKAUWaiV-D1noBnWvLgvXCr1PNQvby+0arFei+tSwzz1w@mail.gmail.com>
-Subject: Re: [PATCH bpf-next v2] bpf: Remove duplicate judgments
-To: Feng Yang <yangfeng59949@163.com>
-Cc: Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, Eduard <eddyz87@gmail.com>, 
-	Song Liu <song@kernel.org>, Yonghong Song <yonghong.song@linux.dev>, 
-	John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>, 
-	Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Matt Bobrowski <mattbobrowski@google.com>, Steven Rostedt <rostedt@goodmis.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	bpf <bpf@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
-	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wD3f7EibfdnHOEjFg--.20679S2
+X-Coremail-Antispam: 1Uf129KBjvJXoWxKr4kJFy8XF15Zr1rWw13twb_yoW7tF1rpF
+	sxtrZxCrs2vw42qFy7Jr1fZa4Yy3srX3y5WaykKw18ur4UZr47tF12kF42gF1rAr98G347
+	u3yvvFZ0kFyI93JanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jerWrUUUUU=
+X-CM-SenderInfo: p1dqww5hqjkmqzuzqiywtou0bp/1tbiwgMreGf3aJu3wAAAsG
 
-On Tue, Apr 8, 2025 at 12:13=E2=80=AFAM Feng Yang <yangfeng59949@163.com> w=
-rote:
->
-> From: Feng Yang <yangfeng@kylinos.cn>
->
-> Many judgments and bpf_base_func_proto functions are repetitive, remove t=
-hem.
+From: Feng Yang <yangfeng@kylinos.cn>
 
-Judgments?!
+Many conditional checks in switch-case are redundant
+with bpf_base_func_proto and should be removed.
 
-"
-A judgment is a court's official ruling that resolves a legal case,
-determining the rights and obligations of the parties involved
-"
+Signed-off-by: Feng Yang <yangfeng@kylinos.cn>
+Acked-by: Song Liu <song@kernel.org>
+---
+Changes in v3:
+- Only modify patch description information.
+- Link to v2: https://lore.kernel.org/all/20250408071151.229329-1-yangfeng59949@163.com/
 
-Please use AI or human help to make commit log readable.
+Changes in v2:
+- Only modify patch description information.
+- Link to v1: https://lore.kernel.org/all/20250320032258.116156-1-yangfeng59949@163.com/
+---
+ kernel/trace/bpf_trace.c | 72 ----------------------------------------
+ 1 file changed, 72 deletions(-)
 
-English is a second language for lots of developers and maintainers,
-but please try harder.
+diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
+index 6b07fa7081d9..c89b25344422 100644
+--- a/kernel/trace/bpf_trace.c
++++ b/kernel/trace/bpf_trace.c
+@@ -1443,56 +1443,14 @@ bpf_tracing_func_proto(enum bpf_func_id func_id, const struct bpf_prog *prog)
+ 	const struct bpf_func_proto *func_proto;
+ 
+ 	switch (func_id) {
+-	case BPF_FUNC_map_lookup_elem:
+-		return &bpf_map_lookup_elem_proto;
+-	case BPF_FUNC_map_update_elem:
+-		return &bpf_map_update_elem_proto;
+-	case BPF_FUNC_map_delete_elem:
+-		return &bpf_map_delete_elem_proto;
+-	case BPF_FUNC_map_push_elem:
+-		return &bpf_map_push_elem_proto;
+-	case BPF_FUNC_map_pop_elem:
+-		return &bpf_map_pop_elem_proto;
+-	case BPF_FUNC_map_peek_elem:
+-		return &bpf_map_peek_elem_proto;
+-	case BPF_FUNC_map_lookup_percpu_elem:
+-		return &bpf_map_lookup_percpu_elem_proto;
+-	case BPF_FUNC_ktime_get_ns:
+-		return &bpf_ktime_get_ns_proto;
+-	case BPF_FUNC_ktime_get_boot_ns:
+-		return &bpf_ktime_get_boot_ns_proto;
+-	case BPF_FUNC_tail_call:
+-		return &bpf_tail_call_proto;
+-	case BPF_FUNC_get_current_task:
+-		return &bpf_get_current_task_proto;
+-	case BPF_FUNC_get_current_task_btf:
+-		return &bpf_get_current_task_btf_proto;
+-	case BPF_FUNC_task_pt_regs:
+-		return &bpf_task_pt_regs_proto;
+ 	case BPF_FUNC_get_current_uid_gid:
+ 		return &bpf_get_current_uid_gid_proto;
+ 	case BPF_FUNC_get_current_comm:
+ 		return &bpf_get_current_comm_proto;
+-	case BPF_FUNC_trace_printk:
+-		return bpf_get_trace_printk_proto();
+ 	case BPF_FUNC_get_smp_processor_id:
+ 		return &bpf_get_smp_processor_id_proto;
+-	case BPF_FUNC_get_numa_node_id:
+-		return &bpf_get_numa_node_id_proto;
+ 	case BPF_FUNC_perf_event_read:
+ 		return &bpf_perf_event_read_proto;
+-	case BPF_FUNC_get_prandom_u32:
+-		return &bpf_get_prandom_u32_proto;
+-	case BPF_FUNC_probe_read_user:
+-		return &bpf_probe_read_user_proto;
+-	case BPF_FUNC_probe_read_kernel:
+-		return security_locked_down(LOCKDOWN_BPF_READ_KERNEL) < 0 ?
+-		       NULL : &bpf_probe_read_kernel_proto;
+-	case BPF_FUNC_probe_read_user_str:
+-		return &bpf_probe_read_user_str_proto;
+-	case BPF_FUNC_probe_read_kernel_str:
+-		return security_locked_down(LOCKDOWN_BPF_READ_KERNEL) < 0 ?
+-		       NULL : &bpf_probe_read_kernel_str_proto;
+ #ifdef CONFIG_ARCH_HAS_NON_OVERLAPPING_ADDRESS_SPACE
+ 	case BPF_FUNC_probe_read:
+ 		return security_locked_down(LOCKDOWN_BPF_READ_KERNEL) < 0 ?
+@@ -1502,10 +1460,6 @@ bpf_tracing_func_proto(enum bpf_func_id func_id, const struct bpf_prog *prog)
+ 		       NULL : &bpf_probe_read_compat_str_proto;
+ #endif
+ #ifdef CONFIG_CGROUPS
+-	case BPF_FUNC_cgrp_storage_get:
+-		return &bpf_cgrp_storage_get_proto;
+-	case BPF_FUNC_cgrp_storage_delete:
+-		return &bpf_cgrp_storage_delete_proto;
+ 	case BPF_FUNC_current_task_under_cgroup:
+ 		return &bpf_current_task_under_cgroup_proto;
+ #endif
+@@ -1513,20 +1467,6 @@ bpf_tracing_func_proto(enum bpf_func_id func_id, const struct bpf_prog *prog)
+ 		return &bpf_send_signal_proto;
+ 	case BPF_FUNC_send_signal_thread:
+ 		return &bpf_send_signal_thread_proto;
+-	case BPF_FUNC_perf_event_read_value:
+-		return &bpf_perf_event_read_value_proto;
+-	case BPF_FUNC_ringbuf_output:
+-		return &bpf_ringbuf_output_proto;
+-	case BPF_FUNC_ringbuf_reserve:
+-		return &bpf_ringbuf_reserve_proto;
+-	case BPF_FUNC_ringbuf_submit:
+-		return &bpf_ringbuf_submit_proto;
+-	case BPF_FUNC_ringbuf_discard:
+-		return &bpf_ringbuf_discard_proto;
+-	case BPF_FUNC_ringbuf_query:
+-		return &bpf_ringbuf_query_proto;
+-	case BPF_FUNC_jiffies64:
+-		return &bpf_jiffies64_proto;
+ 	case BPF_FUNC_get_task_stack:
+ 		return prog->sleepable ? &bpf_get_task_stack_sleepable_proto
+ 				       : &bpf_get_task_stack_proto;
+@@ -1534,12 +1474,6 @@ bpf_tracing_func_proto(enum bpf_func_id func_id, const struct bpf_prog *prog)
+ 		return &bpf_copy_from_user_proto;
+ 	case BPF_FUNC_copy_from_user_task:
+ 		return &bpf_copy_from_user_task_proto;
+-	case BPF_FUNC_snprintf_btf:
+-		return &bpf_snprintf_btf_proto;
+-	case BPF_FUNC_per_cpu_ptr:
+-		return &bpf_per_cpu_ptr_proto;
+-	case BPF_FUNC_this_cpu_ptr:
+-		return &bpf_this_cpu_ptr_proto;
+ 	case BPF_FUNC_task_storage_get:
+ 		if (bpf_prog_check_recur(prog))
+ 			return &bpf_task_storage_get_recur_proto;
+@@ -1548,18 +1482,12 @@ bpf_tracing_func_proto(enum bpf_func_id func_id, const struct bpf_prog *prog)
+ 		if (bpf_prog_check_recur(prog))
+ 			return &bpf_task_storage_delete_recur_proto;
+ 		return &bpf_task_storage_delete_proto;
+-	case BPF_FUNC_for_each_map_elem:
+-		return &bpf_for_each_map_elem_proto;
+-	case BPF_FUNC_snprintf:
+-		return &bpf_snprintf_proto;
+ 	case BPF_FUNC_get_func_ip:
+ 		return &bpf_get_func_ip_proto_tracing;
+ 	case BPF_FUNC_get_branch_snapshot:
+ 		return &bpf_get_branch_snapshot_proto;
+ 	case BPF_FUNC_find_vma:
+ 		return &bpf_find_vma_proto;
+-	case BPF_FUNC_trace_vprintk:
+-		return bpf_get_trace_vprintk_proto();
+ 	default:
+ 		break;
+ 	}
+-- 
+2.43.0
 
-pw-bot: cr
