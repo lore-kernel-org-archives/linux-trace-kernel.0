@@ -1,333 +1,112 @@
-Received: from out-172.mta0.migadu.com (out-172.mta0.migadu.com [91.218.175.172])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31C7C1F873E
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 10 Apr 2025 14:27:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 411721DC9B0
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 10 Apr 2025 15:36:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744295245; cv=none; b=ad4OtMikShOmB4eOybC/4fbPEAgMao9kKVg47ji7ovv7SNCDu89JDV2yZl4uab4GFfFjGUSjeGbi8np2mOFUltRkIcRThYcDXhsJvj5N1MP7DF+Xx9/CsdFjgYXrBaxgZVYvzGiHJdo4Zj4PHf8syZwNMxI3UfR+nvpd3dujeoM=
+	t=1744299405; cv=none; b=VWPI3I5Vgnsft9rlqX3BybLD9zN3Acf4FRy/yde4sT2zCjqNd+14jFICb9AQdZPnG2G+pWyeQVngJhQxOJN+DEodXmsNqITb7a/HEi4bhuuoyw/UkwgZic33h5C9eM5XrjEUDXVOVDVR1hZZ+bbc1jZHi9DyZMLxnSHJ+sieewQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744295245; c=relaxed/simple;
-	bh=brhRcL/BA3B7ayxZCilOde7eFu+DE09Bp210LvtFnKg=;
-	h=MIME-Version:Date:Content-Type:From:Message-ID:Subject:To:Cc:
-	 In-Reply-To:References; b=CZAglXajWPV1v4OuZWxTEzDV/eamXES7w4aPlYEiX0Fw9LLo94+yQmNszW3Deb2RD1WAGjByNvwAOObAgwTkIEwkNXPSo61qPnO76UXES4WGh2P9S/X4LlOtxWagTB5PhVp1sXOhvkSeBJXHyNcJ/nyURLpLUExQA1vjdrmXWCU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Y6SZsQaG; arc=none smtp.client-ip=91.218.175.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1744299405; c=relaxed/simple;
+	bh=FmX3aoH1aBtX5KhUCEOGKZyMyiYbfK3Hi1ItVvkoEzc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=LVcruFt27nWpBIHe4sNUSWMbvcgEZgkn1+VpQMl1INKpC9Dmk/Gd/aj9IGG8rN+8IWPToQNs/2w8kHj0kWyMkkDO08NTLKtX5pcmm6SGMan2wplRh+d/1CB+7sLt1PqeJY8DmOvFnLbMFUjTYEcQi7g/c54TAgU1wuCy61xy5N4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=WzRzuuVG; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Y6SZsQaG"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WzRzuuVG"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1744299401;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=t+uixq6iFVjeynAJZ/kgd5IdlPdxMY+eI4356Zi/haI=;
+	b=WzRzuuVGq+sxVpA9jX1Nvn9qO5eKkXWhPjPvNAUOatbbAhWEu/hQAYwoNnKFdqH8UOBtvV
+	b1HlVHqCFbQh+FiHlEZgL46f46Etq3ggO+LE+q24FNRjcPwvavdrjsp4PwRkWAkbK3M7WS
+	WlyeeGAPCJST8G8TR9GjFSJYpbB9+Y8=
+Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
+ [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-413-JiScko6sMd-2fOjXCNmkHw-1; Thu, 10 Apr 2025 11:36:40 -0400
+X-MC-Unique: JiScko6sMd-2fOjXCNmkHw-1
+X-Mimecast-MFC-AGG-ID: JiScko6sMd-2fOjXCNmkHw_1744299399
+Received: by mail-ej1-f71.google.com with SMTP id a640c23a62f3a-ab68fbe53a4so136100766b.2
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 10 Apr 2025 08:36:40 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744299398; x=1744904198;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=t+uixq6iFVjeynAJZ/kgd5IdlPdxMY+eI4356Zi/haI=;
+        b=uyWQfaPky1Q6XdgLhuhVi/JB5+h1v2K4r6xEZNXj4P9LEwgEbrqJI49rpwQAFr8Nav
+         Y2TbJ2UebMcJIJJZ8xx0PPsxT9+01mQsFhXJ8NiBj5vYHXrFnxkA4bsZSNyPIqakAzHa
+         lMiS7rbFcLBB8fbEURMqsIYedJtz377U1wflF2hlFcnN2WZ3cG4safZQHEinqjV7CP4J
+         X2ePLMtxOawa8CyIXzWJkk/jjxNG7th9iucxOzBEh493PevDFen2yzAag5uMgxKgjOqD
+         CDuNRgvjf+r7oYyMGuoSm12lk6eHleGpnnuCsZxN5vwIvMNruOW8zk/KcsG3WpQGmwuR
+         KWCg==
+X-Forwarded-Encrypted: i=1; AJvYcCVu3LcAiSXEBXBK7bOlfA9mz3mcdmG0PjElF3bpZX3RQyY03w1SPZ63K1LWDKYw29lV7JLPz9GWVGPrSBh8GUuuSHc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwDYOwsQ8FSl1vOWdLkB0U7EbykFIaRVchXJQpps6STOI4Nz8OE
+	/Hwq8k7jIwVJtpfAKOt0R/xiJD91MAZdVNP4JCzmtxU1tqI9hMe8mcWU3GSZEJs8F1DpMKH4bSj
+	5bGEpjWz6MQSse/SuJNUwTxXjr14cL0W2otvd3NvM77yq8PUXXtVTSltNZ/j46ljcdbWJjyOHRW
+	wAEtIQBOdoolZpDBTO6E7KIU8XrB0GpXYJM5GYb8hIe5saMGUB1s3zunE=
+X-Gm-Gg: ASbGncsPWk+SZ2eifRiQSyvvOCirJMEwqL3oIrG/z5H+oQe/hjPhoqvNCUw0brn7o/d
+	UvAwVJJKRiGwc+U7ZZJayJKPjoDk5mwvYhdcdv+hmeJ+twOeaMnTJfuMJNhC16CY069QN
+X-Received: by 2002:a17:907:2d87:b0:ac2:7f28:684e with SMTP id a640c23a62f3a-acabd126b90mr273866066b.6.1744299398267;
+        Thu, 10 Apr 2025 08:36:38 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IF+XC/M6wH9xagKDAi9bhg9vzgdhpHdMgqtWeDFPDrWeCmSsw/+nm+DFGhupT4ZrKArw6KRhIOnbJXaUYZxK1E=
+X-Received: by 2002:a17:907:2d87:b0:ac2:7f28:684e with SMTP id
+ a640c23a62f3a-acabd126b90mr273864766b.6.1744299397942; Thu, 10 Apr 2025
+ 08:36:37 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1744295239;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=pen+hTCi9Y0t6tkeXWgyEYw/3+/q7c9d33Ri3lI9qsM=;
-	b=Y6SZsQaGbhuKaFQxQJXLzu9VuBRzLyBRcr2xzt/+kfdp36cUBZi3yBrxhWAMrONFS20CQG
-	GjuI6Tgtr82vmGj0iQMqzjj8RL7otQ8C50uhO9lFA7B0WnRPngcAuwzT/247rwygKo5SaL
-	BRjvd2xMMm7/0WcJBOQY7DHmq9/hasU=
-Date: Thu, 10 Apr 2025 14:27:17 +0000
-Content-Type: text/plain; charset="utf-8"
+References: <20250328183858.1417835-1-bmasney@redhat.com> <20250331212337.3e9e4a5c50f5d3f16a95b120@kernel.org>
+In-Reply-To: <20250331212337.3e9e4a5c50f5d3f16a95b120@kernel.org>
+From: Brian Masney <bmasney@redhat.com>
+Date: Thu, 10 Apr 2025 11:36:26 -0400
+X-Gm-Features: ATxdqUFWXGDODT6yTtCf6BC2LWlH7sonW_FuG54wwjQcn0T593Jielx3o6yMKTs
+Message-ID: <CABx5tqKFzi2-_eTmQ1K+NvW+TSZOMUz83+Z0NHb7C2FEut23UA@mail.gmail.com>
+Subject: Re: [PATCH 0/2] tools/bootconfig: allow overriding CFLAGS and LDFLAGS
+To: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	aruiz@redhat.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: t79swAYFPp4pYliOQLbFofp4LmZHx6dc3It-C9QjJiE_1744299399
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: "Jiayuan Chen" <jiayuan.chen@linux.dev>
-Message-ID: <0cfe4cc98a818d83a9b4bbe55006a17a7452ee38@linux.dev>
-TLS-Required: No
-Subject: Re: [PATCH bpf-next v1] bpf, sockmap: Introduce tracing capability
- for sockmap
-To: "Jakub Sitnicki" <jakub@cloudflare.com>
-Cc: bpf@vger.kernel.org, mrpre@163.com, "Alexei Starovoitov"
- <ast@kernel.org>, "Daniel Borkmann" <daniel@iogearbox.net>, "John
- Fastabend" <john.fastabend@gmail.com>, "Andrii Nakryiko"
- <andrii@kernel.org>, "Martin  KaFai Lau" <martin.lau@linux.dev>, "Eduard
- Zingerman" <eddyz87@gmail.com>, "Song Liu" <song@kernel.org>, "Yonghong
- Song" <yonghong.song@linux.dev>, "KP  Singh" <kpsingh@kernel.org>,
- "Stanislav Fomichev" <sdf@fomichev.me>, "Hao  Luo" <haoluo@google.com>,
- "Jiri Olsa" <jolsa@kernel.org>, "Steven Rostedt" <rostedt@goodmis.org>,
- "Masami Hiramatsu" <mhiramat@kernel.org>, "Mathieu  Desnoyers"
- <mathieu.desnoyers@efficios.com>, "David S. Miller"
- <davem@davemloft.net>, "Eric Dumazet" <edumazet@google.com>, "Jakub 
- Kicinski" <kuba@kernel.org>, "Paolo Abeni" <pabeni@redhat.com>, "Simon 
- Horman" <horms@kernel.org>, "Jesper Dangaard Brouer" <hawk@kernel.org>,
- linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
-In-Reply-To: <87ikncgyyd.fsf@cloudflare.com>
-References: <20250409102937.15632-1-jiayuan.chen@linux.dev>
- <87ikncgyyd.fsf@cloudflare.com>
-X-Migadu-Flow: FLOW_OUT
 
-April 10, 2025 at 17:14, "Jakub Sitnicki" <jakub@cloudflare.com> wrote:
+Hi Masami,
 
+On Mon, Mar 31, 2025 at 8:23=E2=80=AFAM Masami Hiramatsu <mhiramat@kernel.o=
+rg> wrote:
+> On Fri, 28 Mar 2025 14:38:56 -0400
+> Brian Masney <bmasney@redhat.com> wrote:
+>
+> > Allow the user to override the CFLAGS and LDFLAGS similar to what's
+> > currently done on other kernel tools. These changes allows bootconfig t=
+o
+> > be compiled with the hardened compiler and linker flags.
+> >
+> > Brian Masney (2):
+> >   tools/bootconfig: allow overriding CFLAGS assignment
+> >   tools/bootconfig: specify LDFLAGS as an argument to CC
+> >
+>
+> Both looks good to me. Let me pick those up.
 
+Should these show up in linux-next by now? I see them in your tree at:
 
->=20
->=20On Wed, Apr 09, 2025 at 06:29 PM +08, Jiayuan Chen wrote:
->=20
->=20>=20
->=20> Sockmap has the same high-performance forwarding capability as XDP,=
- but
-> >=20
->=20>  operates at Layer 7.
-> >=20
->=20>  Introduce tracing capability for sockmap, similar to XDP, to trace=
- the
-> >=20
->=20>  execution results of BPF programs without modifying the programs
-> >=20
->=20>  themselves, similar to the existing trace_xdp_redirect{_map}.
-> >=20
->=20>  It is crucial for debugging BPF programs, especially in production
-> >=20
->=20>  environments.
-> >=20
->=20>  Additionally, a header file was added to bpf_trace.h to automatica=
-lly
-> >=20
->=20>  generate tracepoints.
-> >=20
->=20>  Test results:
-> >=20
->=20>  $ echo "1" > /sys/kernel/tracing/events/sockmap/enable
-> >=20
->=20>  skb:
-> >=20
->=20>  sockmap_redirect: sk=3D00000000d3266a8d, type=3Dskb, family=3D2, p=
-rotocol=3D6, \
-> >=20
->=20>  prog_id=3D73, length=3D256, action=3DPASS
-> >=20
->=20>  msg:
-> >=20
->=20>  sockmap_redirect: sk=3D00000000528c7614, type=3Dmsg, family=3D2, p=
-rotocol=3D6, \
-> >=20
->=20>  prog_id=3D185, length=3D5, action=3DREDIRECT
-> >=20
->=20>  tls:
-> >=20
->=20>  sockmap_redirect: sk=3D00000000d04d2224, type=3Dskb, family=3D2, p=
-rotocol=3D6, \
-> >=20
->=20>  prog_id=3D143, length=3D35, action=3DPASS
-> >=20
->=20>  strparser:
-> >=20
->=20>  sockmap_skb_strp_parse: sk=3D00000000ecab0b30, family=3D2, protoco=
-l=3D6, \
-> >=20
->=20>  prog_id=3D170, size=3D5
-> >=20
->=20>  Signed-off-by: Jiayuan Chen <jiayuan.chen@linux.dev>
-> >=20
->=20>  ---
-> >=20
->=20>  MAINTAINERS | 1 +
-> >=20
->=20>  include/linux/bpf_trace.h | 2 +-
-> >=20
->=20>  include/trace/events/sockmap.h | 89 ++++++++++++++++++++++++++++++=
-++++
-> >=20
->=20>  net/core/skmsg.c | 6 +++
-> >=20
->=20>  4 files changed, 97 insertions(+), 1 deletion(-)
-> >=20
->=20>  create mode 100644 include/trace/events/sockmap.h
-> >=20
->=20>  diff --git a/MAINTAINERS b/MAINTAINERS
-> >=20
->=20>  index a7a1d121a83e..578e16d86853 100644
-> >=20
->=20>  --- a/MAINTAINERS
-> >=20
->=20>  +++ b/MAINTAINERS
-> >=20
->=20>  @@ -4420,6 +4420,7 @@ L: netdev@vger.kernel.org
-> >=20
->=20>  L: bpf@vger.kernel.org
-> >=20
->=20>  S: Maintained
-> >=20
->=20>  F: include/linux/skmsg.h
-> >=20
->=20>  +F: include/trace/events/sockmap.h
-> >=20
->=20>  F: net/core/skmsg.c
-> >=20
->=20>  F: net/core/sock_map.c
-> >=20
->=20>  F: net/ipv4/tcp_bpf.c
-> >=20
->=20>  diff --git a/include/linux/bpf_trace.h b/include/linux/bpf_trace.h
-> >=20
->=20>  index ddf896abcfb6..896346fb2b46 100644
-> >=20
->=20>  --- a/include/linux/bpf_trace.h
-> >=20
->=20>  +++ b/include/linux/bpf_trace.h
-> >=20
->=20>  @@ -3,5 +3,5 @@
-> >=20
->=20>  #define __LINUX_BPF_TRACE_H__
-> >=20
->=20>=20=20
->=20>=20
->=20>  #include <trace/events/xdp.h>
-> >=20
->=20>  -
-> >=20
->=20>  +#include <trace/events/sockmap.h>
-> >=20
->=20>  #endif /* __LINUX_BPF_TRACE_H__ */
-> >=20
->=20>  diff --git a/include/trace/events/sockmap.h b/include/trace/events=
-/sockmap.h
-> >=20
->=20>  new file mode 100644
-> >=20
->=20>  index 000000000000..2a69b011e88f
-> >=20
->=20>  --- /dev/null
-> >=20
->=20>  +++ b/include/trace/events/sockmap.h
-> >=20
->=20>  @@ -0,0 +1,89 @@
-> >=20
->=20>  +/* SPDX-License-Identifier: GPL-2.0 */
-> >=20
->=20>  +#undef TRACE_SYSTEM
-> >=20
->=20>  +#define TRACE_SYSTEM sockmap
-> >=20
->=20>  +
-> >=20
->=20>  +#if !defined(_TRACE_SOCKMAP_H) || defined(TRACE_HEADER_MULTI_READ=
-)
-> >=20
->=20>  +#define _TRACE_SOCKMAP_H
-> >=20
->=20>  +
-> >=20
->=20>  +#include <linux/filter.h>
-> >=20
->=20>  +#include <linux/tracepoint.h>
-> >=20
->=20>  +#include <linux/bpf.h>
-> >=20
->=20>  +#include <linux/skmsg.h>
-> >=20
->=20>  +
-> >=20
->=20>  +TRACE_DEFINE_ENUM(__SK_DROP);
-> >=20
->=20>  +TRACE_DEFINE_ENUM(__SK_PASS);
-> >=20
->=20>  +TRACE_DEFINE_ENUM(__SK_REDIRECT);
-> >=20
->=20>  +TRACE_DEFINE_ENUM(__SK_NONE);
-> >=20
->=20>  +
-> >=20
->=20>  +#define show_act(x) \
-> >=20
->=20>  + __print_symbolic(x, \
-> >=20
->=20>  + { __SK_DROP, "DROP" }, \
-> >=20
->=20>  + { __SK_PASS, "PASS" }, \
-> >=20
->=20>  + { __SK_REDIRECT, "REDIRECT" }, \
-> >=20
->=20>  + { __SK_NONE, "NONE" })
-> >=20
->=20>  +
-> >=20
->=20>  +#define trace_sockmap_skmsg_redirect(sk, prog, msg, act) \
-> >=20
->=20>  + trace_sockmap_redirect((sk), "msg", (prog), (msg)->sg.size, (act=
-))
-> >=20
->=20>  +
-> >=20
->=20>  +#define trace_sockmap_skb_redirect(sk, prog, skb, act) \
-> >=20
->=20>  + trace_sockmap_redirect((sk), "skb", (prog), (skb)->len, (act))
-> >=20
->=20>  +
-> >=20
->=20>  +TRACE_EVENT(sockmap_redirect,
-> >=20
->=20>  + TP_PROTO(const struct sock *sk, const char *type,
-> >=20
->=20>  + const struct bpf_prog *prog, int length, int act),
-> >=20
->=20>  + TP_ARGS(sk, type, prog, length, act),
-> >=20
->=20>  +
-> >=20
->=20>  + TP_STRUCT__entry(
-> >=20
->=20>  + __field(const void *, sk)
-> >=20
->=20>  + __field(const char *, type)
-> >=20
->=20>  + __field(__u16, family)
-> >=20
->=20>  + __field(__u16, protocol)
-> >=20
->=20>  + __field(int, prog_id)
-> >=20
->=20>  + __field(int, length)
-> >=20
->=20>  + __field(int, act)
-> >=20
->=20>  + ),
-> >=20
->=20>  +
-> >=20
->=20>  + TP_fast_assign(
-> >=20
->=20>  + __entry->sk =3D sk;
-> >=20
->=20>  + __entry->type =3D type;
-> >=20
->=20>  + __entry->family =3D sk->sk_family;
-> >=20
->=20>  + __entry->protocol =3D sk->sk_protocol;
-> >=20
->=20>  + __entry->prog_id =3D prog->aux->id;
-> >=20
->=20>  + __entry->length =3D length;
-> >=20
->=20>  + __entry->act =3D act;
-> >=20
->=20>  + ),
-> >=20
->=20>  +
-> >=20
->=20>  + TP_printk("sk=3D%p, type=3D%s, family=3D%d, protocol=3D%d, prog_=
-id=3D%d, length=3D%d, action=3D%s",
-> >=20
->=20>  + __entry->sk, __entry->type, __entry->family, __entry->protocol,
-> >=20
->=20>  + __entry->prog_id, __entry->length,
-> >=20
->=20>  + show_act(__entry->act))
-> >=20
->=20
-> sk address is useful if you're going to attach a bpf program to the
-> tracepoint. Not so much if you're printing the recorded trace.
->=20
->=20I'd print the netns and the socket inode instead, or in addition to.
-> These can be cross-referenced against `lsns` and `ss` output.
+https://web.git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace.git/l=
+og/?h=3Dbootconfig/tools
 
-Good suggestions. I will print all of this.
-sk address helps us track connection more easily.
+But not in the for-next branch.
 
-Thanks~
+Thanks,
+Brian
+
