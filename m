@@ -1,264 +1,255 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2136C2040A8
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 10 Apr 2025 08:53:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3949920F065
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 10 Apr 2025 09:14:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744275224; cv=none; b=Vr7k/AQSMm666vKcZDWfx+ssjyuIKQzdxyjta+8lwxhr2cbe9s+PkL+KjnDJXD5QcXenBlUz8EzeUC/wvSuOrOqzjMBWFReG50R/q4FHOpxi6H3rXcLqHf3lXSudWpsXTufv6eDixO0uEA5GJc+cuy5dmIaqp4lYKUqyz1Tbubs=
+	t=1744276496; cv=none; b=Ins+Kwrr34bfHDcgwTlnc7P82DAYkHWIx//wmQHG+zrsDu+opF2kyymwjeR2XB1KXORwfeYWOj49D73G7GZFiNkhhD86ahPcrJ3qdfdEfCwi0AULqn7StXaCOI+OyHuym7R896LZW0UngYPJi3wWhlNpKKUFbO5kdCd+zkzECho=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744275224; c=relaxed/simple;
-	bh=fVLSQBRdXbHr2MS5+vi7RGVvfjmTrBOZyZlbctzX2cc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 In-Reply-To:Content-Type:Content-Disposition; b=eDNWMj+vcFxrlUSxsuNoF7NVgpuLfiAZM60CXQXlH0NcHMGJY2WJytUItJf3hOa7pL59eiXQKoPqTuAzoLTqMqVII7oXPLdJ+yw9+uK8FTKmsoaCu0633puUZWqEXfjCU4aG6+9Ncypt8AMMlwG79qSNw6Vj3xY7tLWhHco0m0o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=TCpTonVv; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1744276496; c=relaxed/simple;
+	bh=BB4/5TGrnhxBSJ0n+TSMCvwIVPBKE7itG7Q9AayME5c=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=oUJGH4rRBCoiRIwtliOiFHFuFJyqzvgrQ4xQo8f0wXXcnPPn1++jagi+RDLGD8bwXQxrXJ5Xuat4cW+HN8redKC2v0PqHwckqp+1j3rcEsrf6IbwDgVeVKwdy3ZGfg34mbkSYnwBb9jRLfLZOnTeOvT11cx6wI1k0fAArKDBvLQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cloudflare.com; spf=pass smtp.mailfrom=cloudflare.com; dkim=pass (2048-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b=GAFZnsnp; arc=none smtp.client-ip=209.85.208.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cloudflare.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cloudflare.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TCpTonVv"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744275220;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=1SmiyRMjzQQqXjsSoU5Im9okCaP3DYrJ1REzbecGMgA=;
-	b=TCpTonVvuigIvCbx17poL+0fkQIE/fhaY6Fuyr3aIjeh2vc9gTPTQjmbjrM955xPFeJafS
-	aGUUv7Bi7PfETgKHsMC7S8SQzm8X4cDwwhkD3Iiu+0oEGoPfmF9eAGnZ3eRcd7wmRy/M/Z
-	fXxX31WdfEOactaNXgh3eTfRmxx8cSY=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-127-E8_n8n9DMSGPhT_Lz9ltlg-1; Thu, 10 Apr 2025 04:53:38 -0400
-X-MC-Unique: E8_n8n9DMSGPhT_Lz9ltlg-1
-X-Mimecast-MFC-AGG-ID: E8_n8n9DMSGPhT_Lz9ltlg_1744275218
-Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-43d00017e9dso4305985e9.0
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 10 Apr 2025 01:53:38 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b="GAFZnsnp"
+Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-5e5b6f3025dso843608a12.1
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 10 Apr 2025 02:14:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cloudflare.com; s=google09082023; t=1744276492; x=1744881292; darn=vger.kernel.org;
+        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=aa2azPnFakTpFa9UzfA6jXivdaPZndDwlyHzJIAIWaw=;
+        b=GAFZnsnpRJeAHLdROOpYsz0wjbpakJLXM/FfiSfFLHW45PSUU5ZB5KGQprfWawm/5g
+         U9teKmKbd9wpJEnajGRlAJVNaS4zD2YmqRNoBOy7xpfsekWf6dbCKSG26y9L4uAccYJE
+         HEAtWGCIcDdysUZTv/CjgpIPt1Zj8rzEFRMh8S6elJxNSciVyWn5GkdR6GRHCcchunku
+         amygJqKWxHN7fHHEqMVkBKewCrUiMiMbyKM0a7nNoJmzR1rG4Sm+8+fjVmMzmzdBCA9x
+         hAduX6izk9bQtUP7SUDFMRW9e1PMDVXTtxBpykr3kHMh7xb874J3ox96kn35STtbUx1K
+         jC6Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744275217; x=1744880017;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=1SmiyRMjzQQqXjsSoU5Im9okCaP3DYrJ1REzbecGMgA=;
-        b=feyS3BZ4E4r2sszbCGHKfyzcXV1Uwkc4bWrsaH6hNqXEjoJcchUZQWHcBdBp55RPBY
-         fMDhz9g3IjoAuSN1PYWTZHKys1WCJVuU2+hsSw3VOIheFp/OL4ysbNYN4Ipp5la39ckx
-         8DnHHMzdScJTcNfzFQxMN4B5x0+yq6E/6OuJVPfIF6AYtK7bSsVMk3ZajF009f4vh3xJ
-         Tx3DJ+Iw8gmZl8QMJAG6h93eDfiqTJLmQLWl2gf5IAu8zxDsNIF3JwN5xxtlZjpBd05t
-         ov+gERVs60gQb36q+4AMG+EDjIEkACRxbKdZHs6hQT4PRdW0HsU14gN61RNNzvUEnB3F
-         lQDw==
-X-Forwarded-Encrypted: i=1; AJvYcCVKR61wTkEHTv4qUAWb7JPdN6gz3/XQBxK8maJlj79hWTJTE/SFClyN44CRtFfwVQV9u5Z0fGUSPMlQnM0uHXUiDr0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzFVZgeji7WxZiAFkrPX8R0F/OQuYDI6EPAw8zAmG9Ssh6h82ld
-	1WKCEn9izhXiUULlvuY9qppRKMrSr5pJLUp+jP+YFQ2PqC+MuYtqzn4WlT/qOCoC6feLKGnp0qA
-	KuQtK0FJfO7iqCS0wXQvCQj/muYh9NVuN3rPoI+StYJnIpUpmn2DgsERRY86LYsvYvp4B+Q==
-X-Gm-Gg: ASbGnctfatFhzD4oXpsdymTNcfrXdi0xCZ9TTiYcPwySnw7/H6G5MfBQBuz4i3WlYVB
-	mjNp0+QuwZJSnjZnbYnp40bjmOJROCbICQspcGq7jnBAxvMQuJyaRPzuG7hgwW4K4tE4C4pIxZ5
-	RwCOK8/1Gq7m3+hZWcue80FsY4X3i+aw0ADz7DdK+iGTWVEXXWcko4/Ctq+7hRSSNL+yegJI0WL
-	u0GFUiQno+f8pRJ2Kgt/VFz5aQLFwdLYJ/P1DvlV1LxhlLtj+f72fhiUtWVoL2rMFsAzagIGEWA
-	dBERO43IJX3587/RvOWenTzYcN1YEBHpz/RQ3i65hTA=
-X-Received: by 2002:a05:600c:3b0d:b0:43c:ea40:ae4a with SMTP id 5b1f17b1804b1-43f2d98b709mr23626995e9.31.1744275217430;
-        Thu, 10 Apr 2025 01:53:37 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHkgjS6DJy42J7oCRD/T/lyrUvWYjKsmRJi3sXXVt5rMwqXTVWXcayHO7ebX6QAYtA3nxJyWA==
-X-Received: by 2002:a05:600c:3b0d:b0:43c:ea40:ae4a with SMTP id 5b1f17b1804b1-43f2d98b709mr23626755e9.31.1744275217030;
-        Thu, 10 Apr 2025 01:53:37 -0700 (PDT)
-Received: from jlelli-thinkpadt14gen4.remote.csb ([176.206.22.101])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39d893f0a75sm4175687f8f.62.2025.04.10.01.53.36
+        d=1e100.net; s=20230601; t=1744276492; x=1744881292;
+        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=aa2azPnFakTpFa9UzfA6jXivdaPZndDwlyHzJIAIWaw=;
+        b=vgwqTncItTSgYgV6rhyQamPOX8d6LNpE9SyJy0qRKe8B49luWHej5vbf7KB/vHfre8
+         pjwzxQwWIPOfVnPfqJcpXCxFY71m7aL1AkbS7gmUGBI0GqU7WWINlMf5kng80yhMuYGL
+         BnQVqMqWuJZOcFCcPwnk+ihp32+2TVnvfZAQqr5oh+0o05nqUzwx/puesvJJME3dl36v
+         +FPtFWpFkJbQ68+lHEhjTNzjmIMwuDzoo9nu5wXGWWLNupB2urmMYmnwliIxy2diZadj
+         2VYlBs2jekLn5OjnwB2hSqHUgNCn4VEM8R1Rf1Q7MDeA0xOrFUvXc/onZoJWTH/qrs/E
+         O5Lw==
+X-Forwarded-Encrypted: i=1; AJvYcCUZNe+qo31DgvBMYPZh2fIs7ma2WkXzGIS1A4jxgWkPzQE/KVKAGL3V66uPaWGHfCbsHYV7tcXImj+NxrAAcNH8MW4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YykHp2Iz7Xy+X+IP4XObe3jEBFDQwDaTzAuZxOrTfKtSAOdtcMl
+	AGzoMKd5y7qnwPOTzzK4fbJWMY3KPCTx9OfJ80qB9QU5kR3Ge2nyOP3ABYKC3lA=
+X-Gm-Gg: ASbGncvgUedjY9xNw98qbr7O4E7HHYuI2vLTzzTaobB/fpDQ7DopHEVq4w2z5p6Acu1
+	LOTPHq18cmNH9WlGENppWLD9IMZfxJOkS/Aat5QR71vpGducdQFL9pWc0h1BifCGBd5W5Sn6ZMq
+	p7chmukwc5k0xQ8F0+gE0mqG8oA6U+sfExFJOe13Lbu18I0TD2wiin1BeK+nhY08UQrN3XVqU9+
+	GcQORxTrCwgoYk63O8RoviKQbTY6VjJV5XzJGaTciO20iTq8WblD8tEf7QZvY4o1jEJg+8k+wDf
+	nR6wO13Jh1/8lOSF7QtTYzooiaM1BblQ
+X-Google-Smtp-Source: AGHT+IGfxqUkbMd28wiwc7XZNYJ7mbGiot17Ko65didG+wzVbB4h0j9zcUm8YACTZu3LT8jeyD945Q==
+X-Received: by 2002:a05:6402:84f:b0:5f0:d893:bf8a with SMTP id 4fb4d7f45d1cf-5f32929653bmr1608468a12.20.1744276492476;
+        Thu, 10 Apr 2025 02:14:52 -0700 (PDT)
+Received: from cloudflare.com ([2a09:bac5:506a:2dc::49:1e5])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5f2fbd54286sm1997958a12.81.2025.04.10.02.14.51
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Apr 2025 01:53:36 -0700 (PDT)
-Date: Thu, 10 Apr 2025 10:53:34 +0200
-From: Juri Lelli <juri.lelli@redhat.com>
-To: Gabriele Monaco <gmonaco@redhat.com>
-Cc: linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-	Ingo Molnar <mingo@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Tomas Glozar <tglozar@redhat.com>, Juri Lelli <jlelli@redhat.com>
-Subject: Re: [RFC PATCH 9/9] rv: Add srs per-task monitor
-Message-ID: <Z_eHDlLIG2SZwyfY@jlelli-thinkpadt14gen4.remote.csb>
-References: <20250404084512.98552-11-gmonaco@redhat.com>
- <20250404084512.98552-20-gmonaco@redhat.com>
+        Thu, 10 Apr 2025 02:14:51 -0700 (PDT)
+From: Jakub Sitnicki <jakub@cloudflare.com>
+To: Jiayuan Chen <jiayuan.chen@linux.dev>
+Cc: bpf@vger.kernel.org,  mrpre@163.com,  Alexei Starovoitov
+ <ast@kernel.org>,  Daniel Borkmann <daniel@iogearbox.net>,  John Fastabend
+ <john.fastabend@gmail.com>,  Andrii Nakryiko <andrii@kernel.org>,  Martin
+ KaFai Lau <martin.lau@linux.dev>,  Eduard Zingerman <eddyz87@gmail.com>,
+  Song Liu <song@kernel.org>,  Yonghong Song <yonghong.song@linux.dev>,  KP
+ Singh <kpsingh@kernel.org>,  Stanislav Fomichev <sdf@fomichev.me>,  Hao
+ Luo <haoluo@google.com>,  Jiri Olsa <jolsa@kernel.org>,  Steven Rostedt
+ <rostedt@goodmis.org>,  Masami Hiramatsu <mhiramat@kernel.org>,  Mathieu
+ Desnoyers <mathieu.desnoyers@efficios.com>,  "David S. Miller"
+ <davem@davemloft.net>,  Eric Dumazet <edumazet@google.com>,  Jakub
+ Kicinski <kuba@kernel.org>,  Paolo Abeni <pabeni@redhat.com>,  Simon
+ Horman <horms@kernel.org>,  Jesper Dangaard Brouer <hawk@kernel.org>,
+  linux-kernel@vger.kernel.org,  netdev@vger.kernel.org,
+  linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH bpf-next v1] bpf, sockmap: Introduce tracing capability
+ for sockmap
+In-Reply-To: <20250409102937.15632-1-jiayuan.chen@linux.dev> (Jiayuan Chen's
+	message of "Wed, 9 Apr 2025 18:29:33 +0800")
+References: <20250409102937.15632-1-jiayuan.chen@linux.dev>
+Date: Thu, 10 Apr 2025 11:14:50 +0200
+Message-ID: <87ikncgyyd.fsf@cloudflare.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20250404084512.98552-20-gmonaco@redhat.com>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: NVA1bqBeMOwBk3YRE5C7GiOfR4xDDQaP60agmPwZrDg_1744275218
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Type: text/plain
 
-Hi Gabriele,
-
-On 04/04/25 10:45, Gabriele Monaco wrote:
-> Add a per-task monitor for task switches as part of the sched model:
-> 
-> * srs:
->     Monitor to describe conditions for different types of task switch.
->     This monitor enforces rules such as preempt after setting need
->     for reschedule and suspend after setting a task to sleepable.
-> 
-> This new monitor implies the previously introduced snroc (set non
-> runnable on its own context), so replace that monitor with srs.
-> 
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Signed-off-by: Gabriele Monaco <gmonaco@redhat.com>
+On Wed, Apr 09, 2025 at 06:29 PM +08, Jiayuan Chen wrote:
+> Sockmap has the same high-performance forwarding capability as XDP, but
+> operates at Layer 7.
+>
+> Introduce tracing capability for sockmap, similar to XDP, to trace the
+> execution results of BPF programs without modifying the programs
+> themselves, similar to the existing trace_xdp_redirect{_map}.
+>
+> It is crucial for debugging BPF programs, especially in production
+> environments.
+>
+> Additionally, a header file was added to bpf_trace.h to automatically
+> generate tracepoints.
+>
+> Test results:
+> $ echo "1" > /sys/kernel/tracing/events/sockmap/enable
+>
+> skb:
+> sockmap_redirect: sk=00000000d3266a8d, type=skb, family=2, protocol=6, \
+> prog_id=73, length=256, action=PASS
+>
+> msg:
+> sockmap_redirect: sk=00000000528c7614, type=msg, family=2, protocol=6, \
+> prog_id=185, length=5, action=REDIRECT
+>
+> tls:
+> sockmap_redirect: sk=00000000d04d2224, type=skb, family=2, protocol=6, \
+> prog_id=143, length=35, action=PASS
+>
+> strparser:
+> sockmap_skb_strp_parse: sk=00000000ecab0b30, family=2, protocol=6, \
+> prog_id=170, size=5
+>
+> Signed-off-by: Jiayuan Chen <jiayuan.chen@linux.dev>
 > ---
-
-...
-
-> +Monitor srs
-> +-----------
+>  MAINTAINERS                    |  1 +
+>  include/linux/bpf_trace.h      |  2 +-
+>  include/trace/events/sockmap.h | 89 ++++++++++++++++++++++++++++++++++
+>  net/core/skmsg.c               |  6 +++
+>  4 files changed, 97 insertions(+), 1 deletion(-)
+>  create mode 100644 include/trace/events/sockmap.h
+>
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index a7a1d121a83e..578e16d86853 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -4420,6 +4420,7 @@ L:	netdev@vger.kernel.org
+>  L:	bpf@vger.kernel.org
+>  S:	Maintained
+>  F:	include/linux/skmsg.h
+> +F:	include/trace/events/sockmap.h
+>  F:	net/core/skmsg.c
+>  F:	net/core/sock_map.c
+>  F:	net/ipv4/tcp_bpf.c
+> diff --git a/include/linux/bpf_trace.h b/include/linux/bpf_trace.h
+> index ddf896abcfb6..896346fb2b46 100644
+> --- a/include/linux/bpf_trace.h
+> +++ b/include/linux/bpf_trace.h
+> @@ -3,5 +3,5 @@
+>  #define __LINUX_BPF_TRACE_H__
+>  
+>  #include <trace/events/xdp.h>
+> -
+> +#include <trace/events/sockmap.h>
+>  #endif /* __LINUX_BPF_TRACE_H__ */
+> diff --git a/include/trace/events/sockmap.h b/include/trace/events/sockmap.h
+> new file mode 100644
+> index 000000000000..2a69b011e88f
+> --- /dev/null
+> +++ b/include/trace/events/sockmap.h
+> @@ -0,0 +1,89 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +#undef TRACE_SYSTEM
+> +#define TRACE_SYSTEM sockmap
 > +
-> +The switch after resched or sleep (srs) monitor describes conditions for
-> +different types of task switch. This is a complex model, below we are going to
-
-Quite the ASCII art indeed. :-)
-
-> +explain it step by step. Unfortunately splitting this into smaller monitor is
-> +not trivial due to some shared events such as ``switch_in``::
-
-Not splitting, but maybe providing several separate diagrams for the key
-cases and transitions might help grasping the complete picture? Not
-sure, just a thought.
-
-In the below, set_{sleepable,runnable} corresponds to set_state_
-{sleepable,runnable} in the code, does it? Not a big deal, but I was
-confused at first.
-
-Thanks,
-Juri
-
+> +#if !defined(_TRACE_SOCKMAP_H) || defined(TRACE_HEADER_MULTI_READ)
+> +#define _TRACE_SOCKMAP_H
 > +
-> +                                                      set_runnable
-> +                                  |                        wakeup +---+
-> +                                  |                   switch_vain |   |
-> +                                  v                               |   v      wakeup
-> +                         #================================================#  set_runnable
-> +      switch_in          H                                                H <----------+
-> +    +------------------> H                    running                     H            |
-> +    |                    H                                                H -----+     |
-> +    |                    #================================================#      |     |
-> +    |                         |        |                |         ^    ^         |     |
-> +    |                         |  switch_yield      need_resched   |    |         |     |
-> +    |                         |        |      need_resched_lazy   |    |         |     |
-> +    |                set_sleepable     v                |         |    |         |     |
-> +    |                         |      +-------------+    |         |    |         |     |
-> +    |                +--------+----> |  preempted  | ---+- switch_in   |         |     |
-> +    |                |        |      +-------------+    |              |         |     |
-> +    |        switch_preempt   |        |                |              |         |     |
-> +    |        switch_yield     |   need_resched          |   +- switch_vain       |     |
-> +    |                |        |        v                |   |                    |     |
-> +    |                |        |      +-------------+    |   |                    |     |
-> +    |  need_resched -+--------+----> | resched_out |    |   |                    |     |
-> +    |  |             |        |      +-------------+    |   |                    |     |
-> +    |  |             |        |        |                |   |     need_resched   |     |
-> +    |  |             |        |    switch_in            |   |     wakeup         |     |
-> +    |  |             |        |        v                v   |     set_runnable   |     |
-> +    |  |             |        |      +--------------------------+ -------+       |     |
-> +    |  |             |        |      |                          |        |       |     |
-> +    |  |             +--------+----- |       rescheduling       | <------+       |     |
-> +    |  |                      |      |                          |                |     |
-> +    |  |                      |      +--------------------------+ -----------+   |     |
-> +    |  |                      |        |           ^ wakeup                  |   |     |
-> +    |  |                      |  set_sleepable   set_runnable                |   |     |
-> +    |  |                      |        v           |                         |   |     |
-> +    |  |   +------------------+----- +---------------------------+           |   |     |
-> +    |  |   |                  |      |                           |           |   |     |
-> + +--+--+---+------------------+----> |     resched_sleepable     | ---+      |   |     |
-> + |  |  |   |                  |      |                           |    |      |   |     |
-> + |  |  |   |    +-------------+----> +---------------------------+    |      |   |     |
-> + |  |  |   |    |             |        |           ^      |           |      |   |     |
-> + |  |  |   |    |             |  switch_preempt    | need_resched     |      |   |     |
-> + |  |  |   |    |             |        |           | set_sleepable    |      |   |     |
-> + |  |  |   |    |             |        v           +------+           |      |   |     |
-> + |  |  |   |    |             |       +---------------------------+ --+------+---+-----+--+
-> + |  |  |   |    |             |       |    preempted_sleepable    |   |      |   |     |  |
-> + |  |  |   |    |             |       +---------------------------+ --+------+---+--+  |  |
-> + |  |  |   |    |             |         |             ^               |      |   |  |  |  |
-> + |  |  |   |    |             |     switch_in   switch_preempt        |      |   |  |  |  |
-> + |  |  |   |    |             |         v             |          switch_vain |   |  |  |  |
-> + |  |  |   |    |             |        +-------------------------+    |      |   |  |  |  |
-> + |  |  |   |    |             +------> |                         | <--+      |   |  |  |  |
-> + |  |  |   |    |                      |        sleepable        |           |   |  |  |  |
-> + |  |  |   |    +- need_resched------- |                         | ----------+---+--+--+  |
-> + |  |  |   |       need_resched_lazy   +-------------------------+           |   |  |     |
-> + |  |  |   |                              |      ^      |          switch_block  |  |     |
-> + |  |  |   |                              |      | set_sleepable             |   |  |     |
-> + |  |  |   |                      switch_block   | switch_vain    +----------+   |  |     |
-> + |  |  |   |                    switch_suspend   +------+         |              |  |     |
-> + |  |  |   |                              v                       v              |  |     |
-> + |  |  |   |   switch_block          +-----------------------------+  switch_block  |     |
-> + |  |  |   +-switch_suspend--------> |          sleeping           | <-----------+  |     |
-> + |  |  |                             +-----------------------------+                |     |
-> + |  |  |                               | wakeup                                     |     |
-> + |  |  |                               v                                            |     |
-> + |  |  +- need_resched ------------- +-------------+  wakeup                        |     |
-> + |  |                                |   waking    | <------------------------------+     |
-> + |  +------------------------------- +-------------+                                      |
-> + |                                                                                        |
-> + |                         +-----------------------+                                      |
-> + +----- switch_in -------- | resched_out_sleepable | <-- sched_need_resched --------------+
-> +                           +-----------------------+
+> +#include <linux/filter.h>
+> +#include <linux/tracepoint.h>
+> +#include <linux/bpf.h>
+> +#include <linux/skmsg.h>
 > +
-> +Types of switches:
+> +TRACE_DEFINE_ENUM(__SK_DROP);
+> +TRACE_DEFINE_ENUM(__SK_PASS);
+> +TRACE_DEFINE_ENUM(__SK_REDIRECT);
+> +TRACE_DEFINE_ENUM(__SK_NONE);
 > +
-> +* ``switch_in``:
-> +  a non running task is scheduled in, this leads to ``running`` if the task is
-> +  runnable and ``sleepable`` if the task was preempted before sleeping.
-> +* ``switch_suspend``:
-> +  a task puts itself to sleep, this can happen only after explicitly setting
-> +  the task to ``sleepable``. After a task is suspended, it needs to be woken up
-> +  (``waking`` state) before being switched in again. The task can be set to
-> +  ``resched_sleepable`` via a ``need_resched`` but not preempted, in which case it
-> +  is equivalent to ``sleepable``.
-> +  Setting the task's state to ``sleepable`` can be reverted before switching if it
-> +  is woken up or set to runnable.
-> +* ``switch_blocked``:
-> +  a special case of a ``switch_suspend`` where the task is waiting on a
-> +  sleeping RT lock (``PREEMPT_RT`` only), it is common to see wakeup and set
-> +  state events racing with each other and this leads the model to perceive this
-> +  type of switch when the task is not set to sleepable. This is a limitation of
-> +  the model in SMP system and workarounds may require to slow down the
-> +  scheduler.
-> +* ``switch_yield``:
-> +  a task explicitly calls the scheduler, this looks like a preemption as the
-> +  task is still runnable but the ``need_resched`` flag is not set. It can
-> +  happen after a ``yield`` system call or from the idle task.
-> +* ``switch_preempt``:
-> +  a task is ``preempted``, this can happen after the need for ``rescheduling``
-> +  has been set, also in its ``lazy`` flavour. ``need_resched`` can be set as a
-> +  flag to the task or in the per-core preemption count, either of them can
-> +  trigger a preemption.
-> +  The task was previously running and can be switched in directly, but it is
-> +  possible that a task is preempted after it sets itself as ``sleepable``
-> +  (``preempted_sleepable``), in this condition, once the task is switched back
-> +  in, it will not be ``running`` but continue its sleeping process in
-> +  ``sleepable``.
-> +* ``switch_vain``:
-> +  a task goes through the scheduler but it is picked as the next task to run,
-> +  hence no real task switch occurs. Since we run the scheduler, this clears the
-> +  need to reschedule.
+> +#define show_act(x) \
+> +	__print_symbolic(x, \
+> +		{ __SK_DROP,		"DROP" }, \
+> +		{ __SK_PASS,		"PASS" }, \
+> +		{ __SK_REDIRECT,	"REDIRECT" }, \
+> +		{ __SK_NONE,		"NONE" })
 > +
+> +#define trace_sockmap_skmsg_redirect(sk, prog, msg, act)	\
+> +	trace_sockmap_redirect((sk), "msg", (prog), (msg)->sg.size, (act))
+> +
+> +#define trace_sockmap_skb_redirect(sk, prog, skb, act)		\
+> +	trace_sockmap_redirect((sk), "skb", (prog), (skb)->len, (act))
+> +
+> +TRACE_EVENT(sockmap_redirect,
+> +	    TP_PROTO(const struct sock *sk, const char *type,
+> +		     const struct bpf_prog *prog, int length, int act),
+> +	    TP_ARGS(sk, type, prog, length, act),
+> +
+> +	TP_STRUCT__entry(
+> +		__field(const void *, sk)
+> +		__field(const char *, type)
+> +		__field(__u16, family)
+> +		__field(__u16, protocol)
+> +		__field(int, prog_id)
+> +		__field(int, length)
+> +		__field(int, act)
+> +	),
+> +
+> +	TP_fast_assign(
+> +		__entry->sk		= sk;
+> +		__entry->type		= type;
+> +		__entry->family		= sk->sk_family;
+> +		__entry->protocol	= sk->sk_protocol;
+> +		__entry->prog_id	= prog->aux->id;
+> +		__entry->length		= length;
+> +		__entry->act		= act;
+> +	),
+> +
+> +	TP_printk("sk=%p, type=%s, family=%d, protocol=%d, prog_id=%d, length=%d, action=%s",
+> +		  __entry->sk, __entry->type, __entry->family, __entry->protocol,
+> +		  __entry->prog_id, __entry->length,
+> +		  show_act(__entry->act))
 
-...
+sk address is useful if you're going to attach a bpf program to the
+tracepoint. Not so much if you're printing the recorded trace.
 
-> +enum events_srs {
-> +	sched_need_resched_srs = 0,
-> +	sched_need_resched_lazy_srs,
-> +	sched_set_state_runnable_srs,
-> +	sched_set_state_sleepable_srs,
-> +	sched_switch_blocking_srs,
-> +	sched_switch_in_srs,
-> +	sched_switch_preempt_srs,
-> +	sched_switch_suspend_srs,
-> +	sched_switch_vain_srs,
-> +	sched_switch_yield_srs,
-> +	sched_wakeup_srs,
-> +	event_max_srs
-> +};
+I'd print the netns and the socket inode instead, or in addition to.
+These can be cross-referenced against `lsns` and `ss` output.
+
+> +);
 > +
-
+> +TRACE_EVENT(sockmap_skb_strp_parse,
+> +	    TP_PROTO(const struct sock *sk, const struct bpf_prog *prog,
+> +		     int size),
+> +	    TP_ARGS(sk, prog, size),
+> +
+> +	TP_STRUCT__entry(
+> +		__field(const void *, sk)
+> +		__field(__u16, family)
+> +		__field(__u16, protocol)
+> +		__field(int, prog_id)
+> +		__field(int, size)
+> +	),
+> +
+> +	TP_fast_assign(
+> +		__entry->sk		= sk;
+> +		__entry->family		= sk->sk_family;
+> +		__entry->protocol	= sk->sk_protocol;
+> +		__entry->prog_id	= prog->aux->id;
+> +		__entry->size		= size;
+> +	),
+> +
+> +	TP_printk("sk=%p, family=%d, protocol=%d, prog_id=%d, size=%d",
+> +		  __entry->sk, __entry->family, __entry->protocol,
+> +		  __entry->prog_id, __entry->size)
+> +);
+> +#endif /* _TRACE_SOCKMAP_H */
+> +
+> +#include <trace/define_trace.h>
