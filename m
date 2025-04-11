@@ -1,165 +1,107 @@
-Received: from mail-qv1-f99.google.com (mail-qv1-f99.google.com [209.85.219.99])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D3C02C80
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 11 Apr 2025 16:17:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.99
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B23D2367D9
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 11 Apr 2025 16:33:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744388278; cv=none; b=q+P7TBRp5BDH+mPvdX8W6o2oAkFDh1gd9qv1sBn/8etZpDg45MXiFbx6tAHF5uG9C/8D1dQm2+b+1MGAvHpMFrRlH+o5XrnDK4tg3CXrxu8VNGB+w52N7pWp1s9a2R8/o/95VaUOuHi7SbW3qCm84SUcWVm6VIGDZ+3gKNH2iiI=
+	t=1744389215; cv=none; b=EiDQy5jp/w1Ov8TkbBRmdkGPvWhVEFP2dc3HABmga/lmVRmnmni39b7m+PKReziqTM4eIemkzrOti7wNnKzDUyuEsmIpf9v71zAJxG4IDH4m/JtM8lX679Q8dkAaU+v1s2Wn0ZYou07pHQkDYmeBJZPR2jJ51Sm1lSwxElJCH6w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744388278; c=relaxed/simple;
-	bh=KP2RaWUafBmA0oEogZi6scAsh+hqCLzFLKjiCrsxxtw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=sy10qSrzAuDc9eOi47i+9YZ6punWuSp5UcWZ7icuNWwSqjGENnumKrsx95cWq27Qb1eqFT85rdf6iy+sSboqYp2yAzYuIHBc1UsDpWfCr0cu0IyPRvCkPDErMr9bLYgYX8HBIRb1mDdyngRXio80t4BdzZbz3e1bY1XNz7eJgsE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=cAa0k9oQ; arc=none smtp.client-ip=209.85.219.99
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=purestorage.com
+	s=arc-20240116; t=1744389215; c=relaxed/simple;
+	bh=om9nbYY+KdTzhbx+Sci7wStJf0iLFQJL8AB1prjTKfM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=oWfPNcS1XWXj0czLPum+PXCKuaSKdS16PZPheHtml8QI6p6caRnlSPhdl6W5MO2KFBqZsHtzMHo8MIWbgBWb4EoymuqoL+Ay2sa1/3YA2/uQhBZlry25Vf1vvnSSaWip9J9HMNAr9Dv2hJVYx4lphEYl+41MvZ8garV5j58Vws0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=PGwhVadp; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="cAa0k9oQ"
-Received: by mail-qv1-f99.google.com with SMTP id 6a1803df08f44-6ed2172c58eso2255686d6.2
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 11 Apr 2025 09:17:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=purestorage.com; s=google2022; t=1744388275; x=1744993075; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=RYQ1Awm7jT8q0TCxAtt2I3/JHwOa1nftjKAz6rDAB3M=;
-        b=cAa0k9oQUw8gWf+wWrJYuZxjHzfuiFgzTEzOU+V9CCZvb1nJ+OU5XCNRn3t2pg7eRN
-         ie68FEoxIH9ycIdL/1y5+Y1R9i+xNerBY1uVGPLrmLWz7T/XFdQ5WJrvQSeqJXe1taPS
-         o1+6oFuYkwgHf5WIfh7n8aXSQ2rQZbHSnLlSi6u36Y/I69aksCbocOBx8CDBO/0P4SRZ
-         4tTPJIESzMP2UZ97GJIvuH1i7iRaO3sQG4f+rlrH0/rm/Lai9fjusIVVBEDHp6Qe70rq
-         pntWc/OpYc3hCX7+9K7XNDBnowQ1mMwQs7tHovbnw0iv0S1DfDQY4eBH7B+GenG9dHCO
-         KwVw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744388275; x=1744993075;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=RYQ1Awm7jT8q0TCxAtt2I3/JHwOa1nftjKAz6rDAB3M=;
-        b=BC+JXK58wVbHPz0QycqRSDJ7aYgVFei6UcfHlJmJ0AXbf7GZaIF7FmYpwrBG31qMEa
-         G9jf9o8lhYg/xNhiS6V+js38gFBvh9BIiL8XOd4EShVRYubI+Lx7UhKY/dz6M8AyHyr2
-         CFQUnx0xuyeelMNyl+IDJapB0AKZk9RyeiCIUzAPy7QJ7H3ktD+asfayUkYLN+FaeGSj
-         32+itpT5KfCIyhV/Pae7kty3gYtI4mDehrzPI7UDYbsk83vSq5ucFjBg3Qdom/Fak6WD
-         I1mLQKntbwtdB42Zgt1D7Z3E6vHaHfMyRT7Uk3LIpJr+s6WrfzneyxuFnYSuaqrF61mf
-         coLA==
-X-Forwarded-Encrypted: i=1; AJvYcCV+1sEfVnYcTQj4Lt1X4aAhT6GfsQRF8iwjsh/q9Uhi9vxPuMbI0D8JMQtYPh8xaV+PqbLNQrRlsaJoToM2NOSMIYw=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw6QJOD82e3xhhwwYpkHcd3vehghfiRiU4ZBOStn2Q0NMRwFKFE
-	PpF0OWvjSK/jAadTGgNFnmGKwRHTEo7CDns5Wof8F0xfMOSoF3Ktj4+FCQs04v3NYX/x77iWT3Z
-	6evBuI6dWA1hoD7wnVLxqXwcevWCHG0WLg8C9fwPxYTzbFL9p
-X-Gm-Gg: ASbGncvsTSMBifcPCICeMZOTZ9WoY4ittfNdHOHIzAMU9h5iE8YMJHksS3UJYuqEJ7n
-	UEdWXyoHQT/7/hTAk9xFmFYMLxgnGmgCfMiPWoW7HK8z1rYZRTaYTuGB8RGmFqznd+bi1l/QtMf
-	74yLfwEhrRvmIS0uWBI2erP6R0ttIAlT1m19leMxq6m//eH5rwowZNoBz43Urfc0YNtFNH72RBr
-	MTll8+ie3GTaGJ/xd0nZ43D68zBOsA/BDEvGWJeYNXKsBC876KBu5hs30QHFP8NOGfJlB93/O/7
-	djLqYpnZhh6Q1wu+JHvcgf9YkIpQVA==
-X-Google-Smtp-Source: AGHT+IGyXtJUelEeTrI9PO9zYxEbOAMa4KjH3KhcKQWJOI2gGu9pzXcD3jwqgXdC4OFN2hVEZ2Em+TwYVBpM
-X-Received: by 2002:a05:6214:409:b0:6e8:9fc6:e41 with SMTP id 6a1803df08f44-6f23f164237mr17764476d6.10.1744388275256;
-        Fri, 11 Apr 2025 09:17:55 -0700 (PDT)
-Received: from c7-smtp-2023.dev.purestorage.com ([2620:125:9017:12:36:3:5:0])
-        by smtp-relay.gmail.com with ESMTPS id 6a1803df08f44-6f0de96e48asm3974236d6.25.2025.04.11.09.17.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Apr 2025 09:17:55 -0700 (PDT)
-X-Relaying-Domain: purestorage.com
-Received: from dev-csander.dev.purestorage.com (unknown [IPv6:2620:125:9007:640:ffff::418a])
-	by c7-smtp-2023.dev.purestorage.com (Postfix) with ESMTP id 40E2B3402B1;
-	Fri, 11 Apr 2025 10:17:54 -0600 (MDT)
-Received: by dev-csander.dev.purestorage.com (Postfix, from userid 1557716354)
-	id 35CDBE41DAB; Fri, 11 Apr 2025 10:17:54 -0600 (MDT)
-From: Caleb Sander Mateos <csander@purestorage.com>
-To: Steven Rostedt <rostedt@goodmis.org>,
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PGwhVadp"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1744389211;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=QaXhGD+EESkN0U5oQ1NX+Je+maGDUC3Z+TV9kV3doiU=;
+	b=PGwhVadpxrq453G79e4pHBRatPpVj45s3orU7rMEtWrfwYo503+EupkNYHUjNRbpkb5pLh
+	9rKyjiYEVpr0tvAc9b71T7lZ6eGoowBmwFb0cZuK2Lpq9L0md2ZSHbcAhUHIixJWIWKlvx
+	+RXoxczMMc6IqWrADN6xYVuSmsgbbUk=
+Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-575-ZH1NnPKVPMW98a8LUrDwLQ-1; Fri,
+ 11 Apr 2025 12:33:27 -0400
+X-MC-Unique: ZH1NnPKVPMW98a8LUrDwLQ-1
+X-Mimecast-MFC-AGG-ID: ZH1NnPKVPMW98a8LUrDwLQ_1744389205
+Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 3A75A1954B36;
+	Fri, 11 Apr 2025 16:33:25 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.222])
+	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id A5DB91955DCE;
+	Fri, 11 Apr 2025 16:33:19 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Fri, 11 Apr 2025 18:32:49 +0200 (CEST)
+Date: Fri, 11 Apr 2025 18:32:43 +0200
+From: Oleg Nesterov <oleg@redhat.com>
+To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc: Jiri Olsa <jolsa@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>, Andrii Nakryiko <andrii@kernel.org>,
+	bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, x86@kernel.org,
+	Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Hao Luo <haoluo@google.com>, Steven Rostedt <rostedt@goodmis.org>,
 	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: "Liam R . Howlett" <Liam.Howlett@Oracle.com>,
-	Caleb Sander Mateos <csander@purestorage.com>,
-	Eric Mueller <emueller@purestorage.com>,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH] mm: remove unused mmap tracepoints
-Date: Fri, 11 Apr 2025 10:17:45 -0600
-Message-ID: <20250411161746.1043239-1-csander@purestorage.com>
-X-Mailer: git-send-email 2.45.2
+	Alan Maguire <alan.maguire@oracle.com>
+Subject: Re: [PATCHv2 perf/core 1/2] uprobes/x86: Add support to emulate nop
+ instructions
+Message-ID: <20250411163242.GI5322@redhat.com>
+References: <20250411121756.567274-1-jolsa@kernel.org>
+ <CAEf4BzbvMYJf5LLxwamYpzzu=Sewzti-FR-9o4AGfU+KZu0b1Q@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAEf4BzbvMYJf5LLxwamYpzzu=Sewzti-FR-9o4AGfU+KZu0b1Q@mail.gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
 
-The vma_mas_szero and vma_store tracepoints are unused since commit
-fbcc3104b843 ("mmap: convert __vma_adjust() to use vma iterator").
-Remove them so they are no longer listed as available tracepoints.
+On 04/11, Andrii Nakryiko wrote:
+>
+> > --- a/arch/x86/kernel/uprobes.c
+> > +++ b/arch/x86/kernel/uprobes.c
+> > @@ -840,6 +840,12 @@ static int branch_setup_xol_ops(struct arch_uprobe *auprobe, struct insn *insn)
+> >         insn_byte_t p;
+> >         int i;
+> >
+> > +       /* x86_nops[i]; same as jmp with .offs = 0 */
+> > +       for (i = 1; i <= ASM_NOP_MAX; ++i) {
+>
+> i <= ASM_NOP_MAX && i <= insn->length
+>
+> ?
+>
+> otherwise what prevents us from reading past the actual instruction bytes?
 
-Reported-by: Eric Mueller <emueller@purestorage.com>
-Signed-off-by: Caleb Sander Mateos <csander@purestorage.com>
----
- include/trace/events/mmap.h | 52 -------------------------------------
- 1 file changed, 52 deletions(-)
+Well, copy_insn() just copies MAX_UINSN_BYTES into arch_uprobe.insn[].
+If, say, the 1st 11 bytes of arch_uprobe.insn (or insn->kaddr) match
+x86_nops[11] then insn->length must be 11, or insn_decode() is buggy?
 
-diff --git a/include/trace/events/mmap.h b/include/trace/events/mmap.h
-index f8d61485de16..ee2843a5daef 100644
---- a/include/trace/events/mmap.h
-+++ b/include/trace/events/mmap.h
-@@ -41,62 +41,10 @@ TRACE_EVENT(vm_unmapped_area,
- 		__entry->total_vm, __entry->flags, __entry->length,
- 		__entry->low_limit, __entry->high_limit, __entry->align_mask,
- 		__entry->align_offset)
- );
- 
--TRACE_EVENT(vma_mas_szero,
--	TP_PROTO(struct maple_tree *mt, unsigned long start,
--		 unsigned long end),
--
--	TP_ARGS(mt, start, end),
--
--	TP_STRUCT__entry(
--			__field(struct maple_tree *, mt)
--			__field(unsigned long, start)
--			__field(unsigned long, end)
--	),
--
--	TP_fast_assign(
--			__entry->mt		= mt;
--			__entry->start		= start;
--			__entry->end		= end;
--	),
--
--	TP_printk("mt_mod %p, (NULL), SNULL, %lu, %lu,",
--		  __entry->mt,
--		  (unsigned long) __entry->start,
--		  (unsigned long) __entry->end
--	)
--);
--
--TRACE_EVENT(vma_store,
--	TP_PROTO(struct maple_tree *mt, struct vm_area_struct *vma),
--
--	TP_ARGS(mt, vma),
--
--	TP_STRUCT__entry(
--			__field(struct maple_tree *, mt)
--			__field(struct vm_area_struct *, vma)
--			__field(unsigned long, vm_start)
--			__field(unsigned long, vm_end)
--	),
--
--	TP_fast_assign(
--			__entry->mt		= mt;
--			__entry->vma		= vma;
--			__entry->vm_start	= vma->vm_start;
--			__entry->vm_end		= vma->vm_end - 1;
--	),
--
--	TP_printk("mt_mod %p, (%p), STORE, %lu, %lu,",
--		  __entry->mt, __entry->vma,
--		  (unsigned long) __entry->vm_start,
--		  (unsigned long) __entry->vm_end
--	)
--);
--
--
- TRACE_EVENT(exit_mmap,
- 	TP_PROTO(struct mm_struct *mm),
- 
- 	TP_ARGS(mm),
- 
--- 
-2.45.2
+> or, actually, shouldn't we just check memcmp(x86_nops[insn->length])
+> if insn->length < ASM_NOP_MAX ?
+
+Hmm... agreed.
+
+Either way this check can't (doesn't even try to) detect, say,
+"rep; BYTES_NOP5", so we do not care if insn->length == 6 in this case.
+
+Good point!
+
+Oleg.
 
