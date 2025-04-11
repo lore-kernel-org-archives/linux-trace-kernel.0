@@ -1,27 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DC26230D08;
-	Fri, 11 Apr 2025 17:28:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10B1C230D35;
+	Fri, 11 Apr 2025 17:32:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744392532; cv=none; b=cqV4Q0fKgXCxJ6FqKxNxOGrKLlOsLSLgJngo8fFlrlCjlOaYh5/J3bfkwMTLAYn3z8MgXBeveWwSqvAOV0OKgF1MOlXi6oVRkZv4hDvJlAfRNGz2KabFlNKfJWXSdM8nXy1nOnjVuw80EhiV0/582Y87S+ylTDKyxkLOWIUvHdk=
+	t=1744392745; cv=none; b=emywwYRt9vVYoJGXmHFD55MrZB1gx2TljuePJ0/DbyC6s8fBbrBlzygRGi6bA1cv0ldTCVbfhzB7RwhSBgA/oje/A56s2EIXiEiOa8ALtxYBHjHWU43mqCXsUMDk+zdE60lJU8fzja5ANaOSWJgRPlMK0UKSkdb7zgiaAD69kF0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744392532; c=relaxed/simple;
-	bh=N/YDbXopgajU9CXeGj4104OGoJtHsueTri0WdMFP9x0=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=dqI74RojcCAPCBUd9+++YHdbEVD68gCsDAemiW4EacI500mvoZXu102cBaYpOxfD1FJIM7YH4mNKzzGnyMenHcJ3AlpQ2h2Qs6J1Ixrbu7OzwiDJpav7tbu7os98lqS0WxARr/SAJO1fIy1kA++FqoLH9g8E9L/n8Ql2atlO/dc=
+	s=arc-20240116; t=1744392745; c=relaxed/simple;
+	bh=8UJVOTaqMOUXwqVG2cSezf+/NN8n6SPcvSZu3a0lZzY=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ArF3Ac36xdXeyOMgR98YpscvaBefmTJL/pJ8NJI/8q922Z21DAPfOyR7LwnPFxALFhpaVLslSAJjyCTQjftAyd18gyRVrj00aiX5N83GFuN/EZBHdCafI4XvqgSxkykFXt1NhUYYhVAEDx6IW7b8o730lU07jr+acpEkAkwE7kE=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2FAACC4CEE8;
-	Fri, 11 Apr 2025 17:28:51 +0000 (UTC)
-Date: Fri, 11 Apr 2025 13:30:15 -0400
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B68DAC4CEE2;
+	Fri, 11 Apr 2025 17:32:22 +0000 (UTC)
+Date: Fri, 11 Apr 2025 13:33:47 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
-To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland
+To: Mark Brown <broonie@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ bpf@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland
  <mark.rutland@arm.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Mark Brown <broonie@kernel.org>
-Subject: [PATCH] ftrace: Do not have print_graph_retval() add a newline
-Message-ID: <20250411133015.015ca393@gandalf.local.home>
+ Andrew Morton <akpm@linux-foundation.org>, Sven Schnelle
+ <svens@linux.ibm.com>, Paul Walmsley <paul.walmsley@sifive.com>, Palmer
+ Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, Guo Ren
+ <guoren@kernel.org>, Donglin Peng <dolinux.peng@gmail.com>, Zheng Yejian
+ <zhengyejian@huaweicloud.com>, Aishwarya.TCV@arm.com
+Subject: Re: [PATCH v4 2/4] ftrace: Add support for function argument to
+ graph tracer
+Message-ID: <20250411133347.014986f9@gandalf.local.home>
+In-Reply-To: <20250411130200.76b52a61@gandalf.local.home>
+References: <20250227185804.639525399@goodmis.org>
+	<20250227185822.810321199@goodmis.org>
+	<ccc40f2b-4b9e-4abd-8daf-d22fce2a86f0@sirena.org.uk>
+	<20250410131745.04c126eb@gandalf.local.home>
+	<c41e5ee7-18ba-40cf-8a31-19062d94f7b9@sirena.org.uk>
+	<20250411124552.36564a07@gandalf.local.home>
+	<20250411124849.30d612ed@gandalf.local.home>
+	<20250411130200.76b52a61@gandalf.local.home>
 X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -32,85 +47,33 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-From: Steven Rostedt <rostedt@goodmis.org>
+On Fri, 11 Apr 2025 13:02:00 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-The retval and retaddr options for function_graph tracer will add a
-comment at the end of a function for both leaf and non leaf functions that
-looks like:
+> diff --git a/kernel/trace/trace_functions_graph.c b/kernel/trace/trace_functions_graph.c
+> index 2f077d4158e5..718f6e84cc83 100644
+> --- a/kernel/trace/trace_functions_graph.c
+> +++ b/kernel/trace/trace_functions_graph.c
+> @@ -971,11 +971,10 @@ print_graph_entry_leaf(struct trace_iterator *iter,
+>  
+>  		if (args_size >= FTRACE_REGS_MAX_ARGS * sizeof(long)) {
+>  			print_function_args(s, entry->args, ret_func);
+> -			trace_seq_putc(s, ';');
+> +			trace_seq_puts(s, ";\n");
+>  		} else
+> -			trace_seq_puts(s, "();");
+> +			trace_seq_puts(s, "();\n");
+>  	}
+> -	trace_seq_printf(s, "\n");
+>  
+>  	print_graph_irq(iter, graph_ret->func, TRACE_GRAPH_RET,
+>  			cpu, iter->ent->pid, flags);
 
-               __wake_up_common(); /* ret=0x1 */
+I changed the patch to have print_graph_retval() simply not add a newline,
+and instead just have the caller always print the newline.
 
-               } /* pick_next_task_fair ret=0x0 */
+I should have never let that function do that. But when it was added, there
+wasn't as many options, so it didn't look so bad, so I didn't ask for that
+to be changed.
 
-The function print_graph_retval() adds a newline after the "*/". But if
-that's not called, the caller function needs to make sure there's a
-newline added.
-
-This is confusing and when the function parameters code was added, it
-added a newline even when calling print_graph_retval() as the fact that
-the print_graph_retval() function prints a newline isn't obvious.
-
-This caused an extra newline to be printed and that made it fail the
-selftests when the retval option was set, as the selftests were not
-expecting blank lines being injected into the trace.
-
-Instead of having print_graph_retval() print a newline, just have the
-caller always print the newline regardless if it calls print_graph_retval()
-or not. This not only fixes this bug, but it also simplifies the code.
-
-Reported-by: Mark Brown <broonie@kernel.org>
-Closes: https://lore.kernel.org/all/ccc40f2b-4b9e-4abd-8daf-d22fce2a86f0@sirena.org.uk/
-Fixes: ff5c9c576e754 ("ftrace: Add support for function argument to graph tracer")
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
- kernel/trace/trace_functions_graph.c | 11 +++++------
- 1 file changed, 5 insertions(+), 6 deletions(-)
-
-diff --git a/kernel/trace/trace_functions_graph.c b/kernel/trace/trace_functions_graph.c
-index 2f077d4158e5..0c357a89c58e 100644
---- a/kernel/trace/trace_functions_graph.c
-+++ b/kernel/trace/trace_functions_graph.c
-@@ -880,8 +880,6 @@ static void print_graph_retval(struct trace_seq *s, struct ftrace_graph_ent_entr
- 
- 		if (print_retval || print_retaddr)
- 			trace_seq_puts(s, " /*");
--		else
--			trace_seq_putc(s, '\n');
- 	} else {
- 		print_retaddr = false;
- 		trace_seq_printf(s, "} /* %ps", func);
-@@ -899,7 +897,7 @@ static void print_graph_retval(struct trace_seq *s, struct ftrace_graph_ent_entr
- 	}
- 
- 	if (!entry || print_retval || print_retaddr)
--		trace_seq_puts(s, " */\n");
-+		trace_seq_puts(s, " */");
- }
- 
- #else
-@@ -975,7 +973,7 @@ print_graph_entry_leaf(struct trace_iterator *iter,
- 		} else
- 			trace_seq_puts(s, "();");
- 	}
--	trace_seq_printf(s, "\n");
-+	trace_seq_putc(s, '\n');
- 
- 	print_graph_irq(iter, graph_ret->func, TRACE_GRAPH_RET,
- 			cpu, iter->ent->pid, flags);
-@@ -1313,10 +1311,11 @@ print_graph_return(struct ftrace_graph_ret_entry *retentry, struct trace_seq *s,
- 		 * that if the funcgraph-tail option is enabled.
- 		 */
- 		if (func_match && !(flags & TRACE_GRAPH_PRINT_TAIL))
--			trace_seq_puts(s, "}\n");
-+			trace_seq_puts(s, "}");
- 		else
--			trace_seq_printf(s, "} /* %ps */\n", (void *)func);
-+			trace_seq_printf(s, "} /* %ps */", (void *)func);
- 	}
-+	trace_seq_putc(s, '\n');
- 
- 	/* Overrun */
- 	if (flags & TRACE_GRAPH_PRINT_OVERRUN)
--- 
-2.47.2
-
+-- Steve
