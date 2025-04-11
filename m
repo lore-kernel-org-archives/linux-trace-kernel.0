@@ -1,107 +1,102 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B23D2367D9
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 11 Apr 2025 16:33:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A215233148;
+	Fri, 11 Apr 2025 16:44:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744389215; cv=none; b=EiDQy5jp/w1Ov8TkbBRmdkGPvWhVEFP2dc3HABmga/lmVRmnmni39b7m+PKReziqTM4eIemkzrOti7wNnKzDUyuEsmIpf9v71zAJxG4IDH4m/JtM8lX679Q8dkAaU+v1s2Wn0ZYou07pHQkDYmeBJZPR2jJ51Sm1lSwxElJCH6w=
+	t=1744389872; cv=none; b=XZdS3A+p2GuWCHqiVJlD3lhocReqZsLgQjUm6FZm3X+NYUw1ljj7DzM/8VOQu0iHJViXV7a+6OD2CH4TYFTi8QhN+nfpjt4ArI8mxS6hji8f+/Qst0MZdB1CDwb82jCwwt/C0qdcFCUgtyQyhGAxmQ6ZHPqRA/TFefx3lYYw0W0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744389215; c=relaxed/simple;
-	bh=om9nbYY+KdTzhbx+Sci7wStJf0iLFQJL8AB1prjTKfM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oWfPNcS1XWXj0czLPum+PXCKuaSKdS16PZPheHtml8QI6p6caRnlSPhdl6W5MO2KFBqZsHtzMHo8MIWbgBWb4EoymuqoL+Ay2sa1/3YA2/uQhBZlry25Vf1vvnSSaWip9J9HMNAr9Dv2hJVYx4lphEYl+41MvZ8garV5j58Vws0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=PGwhVadp; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PGwhVadp"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744389211;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=QaXhGD+EESkN0U5oQ1NX+Je+maGDUC3Z+TV9kV3doiU=;
-	b=PGwhVadpxrq453G79e4pHBRatPpVj45s3orU7rMEtWrfwYo503+EupkNYHUjNRbpkb5pLh
-	9rKyjiYEVpr0tvAc9b71T7lZ6eGoowBmwFb0cZuK2Lpq9L0md2ZSHbcAhUHIixJWIWKlvx
-	+RXoxczMMc6IqWrADN6xYVuSmsgbbUk=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-575-ZH1NnPKVPMW98a8LUrDwLQ-1; Fri,
- 11 Apr 2025 12:33:27 -0400
-X-MC-Unique: ZH1NnPKVPMW98a8LUrDwLQ-1
-X-Mimecast-MFC-AGG-ID: ZH1NnPKVPMW98a8LUrDwLQ_1744389205
-Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 3A75A1954B36;
-	Fri, 11 Apr 2025 16:33:25 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.222])
-	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id A5DB91955DCE;
-	Fri, 11 Apr 2025 16:33:19 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Fri, 11 Apr 2025 18:32:49 +0200 (CEST)
-Date: Fri, 11 Apr 2025 18:32:43 +0200
-From: Oleg Nesterov <oleg@redhat.com>
-To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc: Jiri Olsa <jolsa@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>, Andrii Nakryiko <andrii@kernel.org>,
-	bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, x86@kernel.org,
-	Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Hao Luo <haoluo@google.com>, Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Alan Maguire <alan.maguire@oracle.com>
-Subject: Re: [PATCHv2 perf/core 1/2] uprobes/x86: Add support to emulate nop
- instructions
-Message-ID: <20250411163242.GI5322@redhat.com>
-References: <20250411121756.567274-1-jolsa@kernel.org>
- <CAEf4BzbvMYJf5LLxwamYpzzu=Sewzti-FR-9o4AGfU+KZu0b1Q@mail.gmail.com>
+	s=arc-20240116; t=1744389872; c=relaxed/simple;
+	bh=L/mb+QQWwTatT5L5Nejifp0o/+LSgqAg5l4QjS3xCZM=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=piROzL/mhdaIcJ2oeFz1SgzZjMIzKt28Eq43rP4CqHa3Ez+kTpIxPi++AOo1C5IGWtW/aJ4mOTE7z0etQeTFE35239d9/dXeUazjy8mdGIMQAaI5+8l33s88ceeh5U9hA1PEx+gmRFEb0bxx2oKYtMW2E3ST+wa8lDDqj1p8KW4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 38296C4CEED;
+	Fri, 11 Apr 2025 16:44:30 +0000 (UTC)
+Date: Fri, 11 Apr 2025 12:45:52 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Mark Brown <broonie@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ bpf@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland
+ <mark.rutland@arm.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Andrew Morton <akpm@linux-foundation.org>, Sven Schnelle
+ <svens@linux.ibm.com>, Paul Walmsley <paul.walmsley@sifive.com>, Palmer
+ Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, Guo Ren
+ <guoren@kernel.org>, Donglin Peng <dolinux.peng@gmail.com>, Zheng Yejian
+ <zhengyejian@huaweicloud.com>, Aishwarya.TCV@arm.com
+Subject: Re: [PATCH v4 2/4] ftrace: Add support for function argument to
+ graph tracer
+Message-ID: <20250411124552.36564a07@gandalf.local.home>
+In-Reply-To: <c41e5ee7-18ba-40cf-8a31-19062d94f7b9@sirena.org.uk>
+References: <20250227185804.639525399@goodmis.org>
+	<20250227185822.810321199@goodmis.org>
+	<ccc40f2b-4b9e-4abd-8daf-d22fce2a86f0@sirena.org.uk>
+	<20250410131745.04c126eb@gandalf.local.home>
+	<c41e5ee7-18ba-40cf-8a31-19062d94f7b9@sirena.org.uk>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAEf4BzbvMYJf5LLxwamYpzzu=Sewzti-FR-9o4AGfU+KZu0b1Q@mail.gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On 04/11, Andrii Nakryiko wrote:
->
-> > --- a/arch/x86/kernel/uprobes.c
-> > +++ b/arch/x86/kernel/uprobes.c
-> > @@ -840,6 +840,12 @@ static int branch_setup_xol_ops(struct arch_uprobe *auprobe, struct insn *insn)
-> >         insn_byte_t p;
-> >         int i;
-> >
-> > +       /* x86_nops[i]; same as jmp with .offs = 0 */
-> > +       for (i = 1; i <= ASM_NOP_MAX; ++i) {
->
-> i <= ASM_NOP_MAX && i <= insn->length
->
-> ?
->
-> otherwise what prevents us from reading past the actual instruction bytes?
+On Fri, 11 Apr 2025 14:00:40 +0100
+Mark Brown <broonie@kernel.org> wrote:
 
-Well, copy_insn() just copies MAX_UINSN_BYTES into arch_uprobe.insn[].
-If, say, the 1st 11 bytes of arch_uprobe.insn (or insn->kaddr) match
-x86_nops[11] then insn->length must be 11, or insn_decode() is buggy?
+> On Thu, Apr 10, 2025 at 01:17:45PM -0400, Steven Rostedt wrote:
+> > Mark Brown <broonie@kernel.org> wrote:  
+> 
+> > > We've been seeing the PID filters selftest failing for a while on
+> > > several arm64 systems, a bisect I managed to run without running into
+> > > any confounding issues pointed to this patch which is in mainline as
+> > > ff5c9c576e75.  It's in the ftrace code, but I'm not immediately seeing
+> > > the relevance.  Output from a failing run:  
+> 
+> > Hmm, I wonder if there's junk being added into the trace.  
+> 
+> > Can you add this patch, and show me the output when it fails again?  
+> 
 
-> or, actually, shouldn't we just check memcmp(x86_nops[insn->length])
-> if insn->length < ASM_NOP_MAX ?
+Can you show the information before this output, to see what it is actually
+testing?
 
-Hmm... agreed.
+> # # + cat trace
+> # # # tracer: function_graph
+> # # #
+> # # # CPU  TASK/PID         DURATION                  FUNCTION CALLS
+> # # # |     |    |           |   |                     |   |   |   |
+> # # 0)  ftracet-5190  | ! 537.633 us  |  kernel_clone(); /* ret=0x1470 */
+> # # 
+> # # 0)  ftracet-5190  | ! 508.253 us  |  kernel_clone(); /* ret=0x1471 */
+> # # 
+> # # 0)  ftracet-5190  | ! 215.716 us  |  kernel_clone(); /* ret=0x1476 */
+> # # 
+> # # 0)  ftracet-5190  | ! 493.890 us  |  kernel_clone(); /* ret=0x147b */
+> # # 
+> # # + fail PID filtering not working?
+> 
+> ...
+> 
+> # # + cat trace
+> # # # tracer: function_graph
+> # # #
+> # # # CPU  TASK/PID         DURATION                  FUNCTION CALLS
+> # # # |     |    |           |   |                     |   |   |   |
+> # # 0) ftracet-12279  | ! 598.118 us  |  kernel_clone(); /* ret=0x301f */
+> # # 
+> # # 0) ftracet-12279  | ! 492.539 us  |  kernel_clone(); /* ret=0x3020 */
+> # # 
+> # # 0) ftracet-12279  | ! 231.104 us  |  kernel_clone(); /* ret=0x3025 */
+> # # 
+> # # 0) ftracet-12279  | ! 555.566 us  |  kernel_clone(); /* ret=0x302a */
+> # # 
+> # # + fail PID filtering not working?
 
-Either way this check can't (doesn't even try to) detect, say,
-"rep; BYTES_NOP5", so we do not care if insn->length == 6 in this case.
+Also, is it possible to just enable function_graph tarcing and see if it
+adds these blank lines between events?
 
-Good point!
-
-Oleg.
-
+-- Steve
