@@ -1,20 +1,20 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 118FE218AA3;
-	Fri, 11 Apr 2025 17:00:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF0EA221DB3;
+	Fri, 11 Apr 2025 17:11:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744390838; cv=none; b=KqHkc4F6/gf0PVRT6vfn+whAYBobVnYjvC5vOgdjqezLh1YC78/lYdh/hD74Iiig6a7mxjapoF4mG1oT2K5taYkxX7w9k1l5JWlf3ZdW4/qGhsi9kAOmTtCk0ovW2sfo8emGkYLaUBU/nsNX4dk4fJTB/vIifGU7fpQxhi5SMa8=
+	t=1744391492; cv=none; b=OTi12D3HzXxKh5XmSh1E2O4bZ9GkvHLNvkD/PNJzMTvLrwEdWEgTBJvhiSvVLkMm7DfUR59lc44AfcC+FGNINDuzOIra/Oa2P4AwtoiN2O2OSvhwFT1Fog9dQsMg0/DheMIp4mQCbDJigarES4zHJvIDnsv3EST8zMlhi8cL9mM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744390838; c=relaxed/simple;
-	bh=hO4XGME8TAzrE0q5v6+x5le7ATOxe1KHXdX7KCcunQ0=;
+	s=arc-20240116; t=1744391492; c=relaxed/simple;
+	bh=BiAve9al5LDiCb8Dy9WpZ7PL+zzjdXGewisDWrORLt8=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=CUXPRZdOZhQgcxvzgJv4Cq3wjdeK6e/SOQGgtdEyf2hFnCjhGA+EtP+ZS/EgZapnE5xVWgpzr0KiQzPb0tiWOJGAT1PdWqaP+4llJ9FsoDkj0TlL4fBjzm9dEYB37sIkuk4wKCnbkos+tyd2ZPYfn6TXHGLWOaYV+IStFfF3w9g=
+	 MIME-Version:Content-Type; b=gxQ3nyT76X2CE17aAr8dMJo9MTA2rRAWxRTsqlch5zSsZkh+SfDEX8Kmvgyhkkiy/tF9ydNCBCnaa44BaFF8Tmg4kn2jInXShSDUG5dgmYdyqS7lAq5LgPW4djWJPkt11H5R2RsH9w5NzlzJo43yXuzppa2BG2uEaI2mNLKEQ4s=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CE6DAC4CEE2;
-	Fri, 11 Apr 2025 17:00:35 +0000 (UTC)
-Date: Fri, 11 Apr 2025 13:02:00 -0400
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5A2AFC4CEE2;
+	Fri, 11 Apr 2025 17:11:30 +0000 (UTC)
+Date: Fri, 11 Apr 2025 13:12:54 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
 To: Mark Brown <broonie@kernel.org>
 Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
@@ -27,15 +27,15 @@ Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
  <zhengyejian@huaweicloud.com>, Aishwarya.TCV@arm.com
 Subject: Re: [PATCH v4 2/4] ftrace: Add support for function argument to
  graph tracer
-Message-ID: <20250411130200.76b52a61@gandalf.local.home>
-In-Reply-To: <20250411124849.30d612ed@gandalf.local.home>
+Message-ID: <20250411131254.3e6155ea@gandalf.local.home>
+In-Reply-To: <2edc0ba8-2f45-40dc-86d9-5ab7cea8938c@sirena.org.uk>
 References: <20250227185804.639525399@goodmis.org>
 	<20250227185822.810321199@goodmis.org>
 	<ccc40f2b-4b9e-4abd-8daf-d22fce2a86f0@sirena.org.uk>
 	<20250410131745.04c126eb@gandalf.local.home>
 	<c41e5ee7-18ba-40cf-8a31-19062d94f7b9@sirena.org.uk>
 	<20250411124552.36564a07@gandalf.local.home>
-	<20250411124849.30d612ed@gandalf.local.home>
+	<2edc0ba8-2f45-40dc-86d9-5ab7cea8938c@sirena.org.uk>
 X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -46,43 +46,79 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Fri, 11 Apr 2025 12:48:49 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
+On Fri, 11 Apr 2025 17:58:32 +0100
+Mark Brown <broonie@kernel.org> wrote:
 
-> On Fri, 11 Apr 2025 12:45:52 -0400
-> Steven Rostedt <rostedt@goodmis.org> wrote:
+> On Fri, Apr 11, 2025 at 12:45:52PM -0400, Steven Rostedt wrote:
+> > Mark Brown <broonie@kernel.org> wrote:  
+> > > On Thu, Apr 10, 2025 at 01:17:45PM -0400, Steven Rostedt wrote:  
 > 
-> > Also, is it possible to just enable function_graph tarcing and see if it
-> > adds these blank lines between events?  
+> > > > Hmm, I wonder if there's junk being added into the trace.    
 > 
-> Never mind. When I enable the funcgraph-retval option, I get the blank
-> lines too.
+> > > > Can you add this patch, and show me the output when it fails again?    
 > 
-> There's likely an added '\n' that shouldn't be. Let me go look.
+> > Can you show the information before this output, to see what it is actually
+> > testing?  
 > 
+> Here's a bit more of the context - this is literally just the ftrace
+> selftests so it'll be doing whatever that does, there's a huge amount of
+> log splat generated when enumerating all the triggers.  I do note that
+> it appears to assume there's a ping binary which might confusing things,
+> though I'm surprised that'd be a regression rather than something that
+> just never worked:
 
-Found it, and yes it is the commit you bisected it to:
+Thanks, even though I figured it out...
 
-It added a '\n' when the retval option would print one too.
+> # # + yield
+> # # + ping 127.0.0.1 -c 1
+> # # ./ftracetest: 179: /opt/kselftest/ftrace/test.d/ftrace/func-filter-pid.tc: ping: not found
 
-This should fix it:
+The ping was just a way to add some extra noise, as sometimes, the system
+just went totally idle, and nothing else showed up.
 
-diff --git a/kernel/trace/trace_functions_graph.c b/kernel/trace/trace_functions_graph.c
-index 2f077d4158e5..718f6e84cc83 100644
---- a/kernel/trace/trace_functions_graph.c
-+++ b/kernel/trace/trace_functions_graph.c
-@@ -971,11 +971,10 @@ print_graph_entry_leaf(struct trace_iterator *iter,
- 
- 		if (args_size >= FTRACE_REGS_MAX_ARGS * sizeof(long)) {
- 			print_function_args(s, entry->args, ret_func);
--			trace_seq_putc(s, ';');
-+			trace_seq_puts(s, ";\n");
- 		} else
--			trace_seq_puts(s, "();");
-+			trace_seq_puts(s, "();\n");
- 	}
--	trace_seq_printf(s, "\n");
- 
- 	print_graph_irq(iter, graph_ret->func, TRACE_GRAPH_RET,
- 			cpu, iter->ent->pid, flags);
+> # # + sleep .001
+> # # + cat trace
+> # # + grep -v ^#
+> # # + grep 5190
+> # # + wc -l
+> # # + count_pid=2
+> # # + cat trace
+> # # + grep -v ^#
+> # # + grep -v 5190
+> # # + wc -l
+> # # + count_other=3
+
+This is what I was looking for. The "count_other" is the number of lines of
+output that wasn't due to a '#' or something with '5190'.
+
+> # # + [ 2 -eq 0 -o 3 -ne 0 ]
+
+And it was expecting zero.
+
+> # # + cat trace
+> # # # tracer: function_graph
+> # # #
+> # # # CPU  TASK/PID         DURATION                  FUNCTION CALLS
+> # # # |     |    |           |   |                     |   |   |   |
+> # # 0)  ftracet-5190  | ! 537.633 us  |  kernel_clone(); /* ret=0x1470 */
+> # # 
+> # # 0)  ftracet-5190  | ! 508.253 us  |  kernel_clone(); /* ret=0x1471 */
+> # # 
+> # # 0)  ftracet-5190  | ! 215.716 us  |  kernel_clone(); /* ret=0x1476 */
+> # # 
+> # # 0)  ftracet-5190  | ! 493.890 us  |  kernel_clone(); /* ret=0x147b */
+
+But it found 3 blank lines!
+
+> That'll take a bit more arranging, I'm running these tests as batch jobs
+> in CI infrastructure.  I'll try to have a look.  The only other test
+> that actually failed was:
+> 
+> # not ok 25 Checking dynamic events limitations
+> 
+> which isn't flagged as a regression (there's some other UNRESOLVED ones).
+
+Hmm, don't know about that one.
+
 -- Steve
+
