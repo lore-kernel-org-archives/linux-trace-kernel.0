@@ -1,89 +1,128 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADCD42367BA
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 11 Apr 2025 12:48:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FD0CF507;
+	Fri, 11 Apr 2025 13:00:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744375738; cv=none; b=VTiYluPlO7c090dSN56MkcpYF3UGwdIeVfIihebmx/d6TIE5qAppMzG1CSSzAjUcJUYXRxyOzEoJDBY39WN0Yd1n2ihJHIqFkts18xAz5GiPts+xx0GxgIeriOg2GjWdkpuZbYnJUPipalACE32yhSIJZQKLcvolJgHtucjCuiU=
+	t=1744376447; cv=none; b=cXQkLMShj5JxU3vqZX0U1aMS7kLlQ9R2M7bPiVEmwKmtAxcB4G1D5gOK8GyyTagd9wEGmc4h1BFLF3MC7XHK8/78XQno0cfwpYBTsOJQhsb1OKseYrW19IXrKE1wJEQMyMXMmBzejiGgWuefj44VaE/JjX1fG3WLTUmxnhDkdr0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744375738; c=relaxed/simple;
-	bh=BcC98ws7X2rPc51yx5q6n6PNb7iZ49cCMtEKJk2Evo0=;
+	s=arc-20240116; t=1744376447; c=relaxed/simple;
+	bh=/ZEKz6Ap10nF4f/52Rp4RQNHrF7H+B+QSIeJAgxNiXQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LgnhA6jw5J04j0/QJkhvkLDtz1+fkfHLj/RQc3HbuAlM+YoK5h7VMCu6oQJ0Ny3togfwpMM4tLv8D9ajXBI094/5bkua35Xd+2ZJ5R8wp8botvEpEVFdA1rX1m3thfqNWGqFduKi+Ae9vXQZVu64iwp8hRAHY6C7htcr1kWI1B0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=bPip5nOB; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=uU/suN8w/58mdsqiboYH25SFD6BrnAOeWJR1/HG3F1eydIed6r3elZYnm5mZskE2ZN2bvlsizv9Cz2tx0DGRPp4HcbtUmJqZ45FjDROMiNAkyfhkFQ7Q90mD3xtVFbCZZ/L5rfD5albd3506zZz5+g74v2M8vMYYj432tVwnYeM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cmwbmXQy; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bPip5nOB"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744375735;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=TrutyA31aFwEpX5Hu60jTx9GaJXm6qHgLzII0vBWWqU=;
-	b=bPip5nOBCI3osRolK6spfE1ZBT89qGhl3v+CjR9b3wWbVKxtJv5fjaILShGg2ARTWMXw4z
-	hLJfpQUsJw5vk3cBzpetqeVTVPLCcvaVgpTdjXveUlIuh5nsjV0daVheQSi4araGHoUUka
-	3tnQQeZv4blEaGjsOMCEbUopGfOyLxQ=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-449-9lGNpQCmNfK6zLJmOCGtyA-1; Fri,
- 11 Apr 2025 08:48:49 -0400
-X-MC-Unique: 9lGNpQCmNfK6zLJmOCGtyA-1
-X-Mimecast-MFC-AGG-ID: 9lGNpQCmNfK6zLJmOCGtyA_1744375727
-Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id B2E9F180025F;
-	Fri, 11 Apr 2025 12:48:46 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.222])
-	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 714E71956094;
-	Fri, 11 Apr 2025 12:48:40 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Fri, 11 Apr 2025 14:48:11 +0200 (CEST)
-Date: Fri, 11 Apr 2025 14:48:03 +0200
-From: Oleg Nesterov <oleg@redhat.com>
-To: Jiri Olsa <jolsa@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>,
-	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	x86@kernel.org, Song Liu <songliubraving@fb.com>,
-	Yonghong Song <yhs@fb.com>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Hao Luo <haoluo@google.com>, Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Alan Maguire <alan.maguire@oracle.com>
-Subject: Re: [PATCHv2 perf/core 1/2] uprobes/x86: Add support to emulate nop
- instructions
-Message-ID: <20250411124802.GE5322@redhat.com>
-References: <20250411121756.567274-1-jolsa@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cmwbmXQy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 67CC0C4CEE2;
+	Fri, 11 Apr 2025 13:00:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744376446;
+	bh=/ZEKz6Ap10nF4f/52Rp4RQNHrF7H+B+QSIeJAgxNiXQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=cmwbmXQyQmaNzgHM5UW7kxWwECHpgQNEF9au0fBDX2ruta6x6AKJpWdC+P6LfgpIh
+	 1bNUvoPs0UxNdO46JXtL2n64TlINA5Gbw9Af3w2n1KLRSFkVrs+Nzujgtbzk22gH/r
+	 EnxfCEFmaVPXNVbcXIA7sA+ZrvTmNadeVUu8ds9LZVUkrLzrxB0SXrQ78jdB8QHt0i
+	 9TyOkFWoW4LJgBWvZWys5BRGMiaUjnNPrf0tT/pLdb8DBtDyCuZXdJnJuamIaRrNcj
+	 Bj3Jrte8HMRNGYSv2vpJv9DY5WTSV4fwp8zv6AqvLNMAn1QpKg/bLo2dyu7aZrvQIH
+	 BNDTq5hDMgWeA==
+Date: Fri, 11 Apr 2025 14:00:40 +0100
+From: Mark Brown <broonie@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	bpf@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Sven Schnelle <svens@linux.ibm.com>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, Guo Ren <guoren@kernel.org>,
+	Donglin Peng <dolinux.peng@gmail.com>,
+	Zheng Yejian <zhengyejian@huaweicloud.com>, Aishwarya.TCV@arm.com
+Subject: Re: [PATCH v4 2/4] ftrace: Add support for function argument to
+ graph tracer
+Message-ID: <c41e5ee7-18ba-40cf-8a31-19062d94f7b9@sirena.org.uk>
+References: <20250227185804.639525399@goodmis.org>
+ <20250227185822.810321199@goodmis.org>
+ <ccc40f2b-4b9e-4abd-8daf-d22fce2a86f0@sirena.org.uk>
+ <20250410131745.04c126eb@gandalf.local.home>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="t4387NN2++IjFTy4"
+Content-Disposition: inline
+In-Reply-To: <20250410131745.04c126eb@gandalf.local.home>
+X-Cookie: You will be awarded some great honor.
+
+
+--t4387NN2++IjFTy4
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250411121756.567274-1-jolsa@kernel.org>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
+Content-Transfer-Encoding: quoted-printable
 
-On 04/11, Jiri Olsa wrote:
->
-> --- a/arch/x86/kernel/uprobes.c
-> +++ b/arch/x86/kernel/uprobes.c
-> @@ -840,6 +840,12 @@ static int branch_setup_xol_ops(struct arch_uprobe *auprobe, struct insn *insn)
->  	insn_byte_t p;
->  	int i;
->
-> +	/* x86_nops[i]; same as jmp with .offs = 0 */
-> +	for (i = 1; i <= ASM_NOP_MAX; ++i) {
-> +		if (!memcmp(insn->kaddr, x86_nops[i], i))
-> +			goto setup;
-> +	}
+On Thu, Apr 10, 2025 at 01:17:45PM -0400, Steven Rostedt wrote:
+> Mark Brown <broonie@kernel.org> wrote:
 
-Acked-by: Oleg Nesterov <oleg@redhat.com>
+> > We've been seeing the PID filters selftest failing for a while on
+> > several arm64 systems, a bisect I managed to run without running into
+> > any confounding issues pointed to this patch which is in mainline as
+> > ff5c9c576e75.  It's in the ftrace code, but I'm not immediately seeing
+> > the relevance.  Output from a failing run:
 
+> Hmm, I wonder if there's junk being added into the trace.
+
+> Can you add this patch, and show me the output when it fails again?
+
+# # + cat trace
+# # # tracer: function_graph
+# # #
+# # # CPU  TASK/PID         DURATION                  FUNCTION CALLS
+# # # |     |    |           |   |                     |   |   |   |
+# # 0)  ftracet-5190  | ! 537.633 us  |  kernel_clone(); /* ret=3D0x1470 */
+# #=20
+# # 0)  ftracet-5190  | ! 508.253 us  |  kernel_clone(); /* ret=3D0x1471 */
+# #=20
+# # 0)  ftracet-5190  | ! 215.716 us  |  kernel_clone(); /* ret=3D0x1476 */
+# #=20
+# # 0)  ftracet-5190  | ! 493.890 us  |  kernel_clone(); /* ret=3D0x147b */
+# #=20
+# # + fail PID filtering not working?
+
+=2E..
+
+# # + cat trace
+# # # tracer: function_graph
+# # #
+# # # CPU  TASK/PID         DURATION                  FUNCTION CALLS
+# # # |     |    |           |   |                     |   |   |   |
+# # 0) ftracet-12279  | ! 598.118 us  |  kernel_clone(); /* ret=3D0x301f */
+# #=20
+# # 0) ftracet-12279  | ! 492.539 us  |  kernel_clone(); /* ret=3D0x3020 */
+# #=20
+# # 0) ftracet-12279  | ! 231.104 us  |  kernel_clone(); /* ret=3D0x3025 */
+# #=20
+# # 0) ftracet-12279  | ! 555.566 us  |  kernel_clone(); /* ret=3D0x302a */
+# #=20
+# # + fail PID filtering not working?
+
+--t4387NN2++IjFTy4
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmf5EncACgkQJNaLcl1U
+h9CrlAf/TNqY5kicOOZuvNtiEkPQN69ZobTjonV0uaJ4qa9bDB0xT8KeagqVfOvr
+TKVIVNv3IN4fmq0lilq968zb7FFvUwlGaQwsxAzoJ89Vi9uHaKb7r9epBkjUekIn
+2S0SyYKYahi5xgTMASJoaBH4Q2/NyVaihAepttjRab7U+J7GdUwGnYlGkOL9I467
+fvRl1SAMMuL/D5z4E2fPDNKcK8XpCRirxgBx9IeFn+A6hMuyEspwnRGFDiByNj1a
+t7+8liq5SUDObVOVFzvUsWeLwmaO36G1aAW5BVvPuUDnJpY++ekqiMMWy54P+mN8
+S3LkIGFWwLUzuaCo0MVFuPSa8h5J+w==
+=uNd9
+-----END PGP SIGNATURE-----
+
+--t4387NN2++IjFTy4--
