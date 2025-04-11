@@ -1,109 +1,91 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC1421E0DD9;
-	Fri, 11 Apr 2025 17:39:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D91F121A453;
+	Fri, 11 Apr 2025 17:47:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744393153; cv=none; b=p5qXRrqymSBz0HXYXsAYL90YweFXFQNu9DFtIJHjHbcVOWzfROOsWfpL3mYugemJ47pbg4lfAsgmGuuEXJslmUgAq62m9+AdONWBnK/UjpZN/ZV5X0/v4Wkd/Mwo3G3P2fuLwu3QHA31EqGMtn+BOIJ/Ufwc+d1gZXpD5zHnGnc=
+	t=1744393657; cv=none; b=cmP/9FxqcXSBGM8SMkEJoGEn8ab1uVI0SzIMeu9P8m/LUmO0bi/imGThyLNWaVs8VMzsuLSs3Ono4Yddh0l+i13wH4QHz4a8q2DPC3yL+KIHOg7US0+qhYIpUYRfEyQnf0XHIOy7Q5pBuYrq+0GLBS6aEGMtAvn3HvJt7LzU22o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744393153; c=relaxed/simple;
-	bh=vg7IgRdOXXWxOmnksER+VmkPMSbOnygUaoZ9aleekhw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qg4CUA15VE7wUKXvI0oL9X4MPJDec7Lh4cBWCVZr/1XbaVnDfx1YtQIVU1m33H2qsOEjE9h70qNDu7Jqh5XQGV2YGWDjlrlY+4xxzwLMdexaBN59CZtv38XltXfvTTBkJzYhW9v81qoZHUYPWZZhXgZjvyBr64aOvoeJOFvn5DU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=t8c2fw+t; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744393657; c=relaxed/simple;
+	bh=bfuy0UA9p/zb6TIf3DftZKynlUpLVsiEOUkLpbyelpk=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=JyzLhfUnG4bIfeCxgJZSwwap2VHi/XjE6bu6C9gYSoFcrxVoQLWI6lCZkIZceoZKxWlJrPkB1MxBJwjmyj3qajExA28O1f3YEpvggQUlN9+OeELbynrLZSBrUozauwTYFYXYmKfdDmHPG6k1MOmz0SrRbu6ss98+L7vWEArYcVE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gIalh53d; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="t8c2fw+t"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 63969C4CEE8;
-	Fri, 11 Apr 2025 17:39:08 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gIalh53d"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2C19CC4CEE2;
+	Fri, 11 Apr 2025 17:47:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744393152;
-	bh=vg7IgRdOXXWxOmnksER+VmkPMSbOnygUaoZ9aleekhw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=t8c2fw+tbUYho9vwZ94zgfU7ymDA6d4XO6Kmf/hN0I8ficbS30Zd30msb0jRfCBo+
-	 F/xsFj8uQ4y6REEG4bbvZqrwc66MeYB2yhGWcksD8vQB7wG2dA3VIIeZ+jIN8vi6Hl
-	 GKGQk/L37pr1INnguElzoX1Dp2UwljT0tV/4cozogHHNPwv6JrVaIjPnKQASNnJHii
-	 eGe0amunxDyNpRuKAKfDRe+DwHFrPmNDuB17s8Mamos03aaFpL2w37rdJIb3zOGlkO
-	 hHYt9APFDHvyriG0G9PEKdi7ckjYjnsH7cV57s53bDeRTMNvZ1efsMsRlOnOiEj3En
-	 JH/qNHbGrWgKg==
-Date: Fri, 11 Apr 2025 18:39:05 +0100
-From: Mark Brown <broonie@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	bpf@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	s=k20201202; t=1744393656;
+	bh=bfuy0UA9p/zb6TIf3DftZKynlUpLVsiEOUkLpbyelpk=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=gIalh53dUAg4F6cGXsYJmdS2fCHDdNfaKzUbJNHt+gpu7jsUK+d7iK3LPTCbj2kb2
+	 /pkmkNj9SV08jHypugGOjGGTVOcMX5rtrsW7XKoBC/rDpruO9MSnjxZ2vA/1BEAs38
+	 IOU5jNeRnZT+iTzKfXxiUbMqM6sPSJIIbOa1f+WSUWtMsTB7PPJUlthu3rrJ9Xn/kN
+	 P8NDAZe3XUL/Niuk98YS6XMNlX8jV7HhACm+1RXiJA//oKOlwu7JMzJRT3g+b/8OIp
+	 Y+OydXVE2f2+XP7miMvfIvZ2a618qjUHNxJjQI2nlE7D2UWaeYb++s3wsAg+q2p6Q2
+	 Q2646NXL/7Puw==
+From: SeongJae Park <sj@kernel.org>
+To: "Liam R. Howlett" <Liam.Howlett@oracle.com>
+Cc: SeongJae Park <sj@kernel.org>,
 	Andrew Morton <akpm@linux-foundation.org>,
-	Sven Schnelle <svens@linux.ibm.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>, Guo Ren <guoren@kernel.org>,
-	Donglin Peng <dolinux.peng@gmail.com>,
-	Zheng Yejian <zhengyejian@huaweicloud.com>, Aishwarya.TCV@arm.com
-Subject: Re: [PATCH v4 2/4] ftrace: Add support for function argument to
- graph tracer
-Message-ID: <350786cc-9e40-4396-ab95-4f10d69122fb@sirena.org.uk>
-References: <20250227185804.639525399@goodmis.org>
- <20250227185822.810321199@goodmis.org>
- <ccc40f2b-4b9e-4abd-8daf-d22fce2a86f0@sirena.org.uk>
- <20250410131745.04c126eb@gandalf.local.home>
- <c41e5ee7-18ba-40cf-8a31-19062d94f7b9@sirena.org.uk>
- <20250411124552.36564a07@gandalf.local.home>
- <2edc0ba8-2f45-40dc-86d9-5ab7cea8938c@sirena.org.uk>
- <20250411131254.3e6155ea@gandalf.local.home>
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Subject: Re: [PATCH] MAINTAINERS: Add mmap trace events to MEMORY MAPPING
+Date: Fri, 11 Apr 2025 10:47:34 -0700
+Message-Id: <20250411174734.51719-1-sj@kernel.org>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250411173328.8172-1-Liam.Howlett@oracle.com>
+References: 
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="l4yZ4AuyN960k5am"
-Content-Disposition: inline
-In-Reply-To: <20250411131254.3e6155ea@gandalf.local.home>
-X-Cookie: You will be awarded some great honor.
+Content-Transfer-Encoding: 8bit
+
+On Fri, 11 Apr 2025 13:33:28 -0400 "Liam R. Howlett" <Liam.Howlett@oracle.com> wrote:
+
+> MEMORY MAPPING does not list the mmap.h trace point file, but does list
+> the mmap.c file.  Couple the trace points with the users and authors of
+> the trace points for notifications of updates.
+> 
+> Cc:Andrew Morton <akpm@linux-foundation.org>
+> Cc:Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+> Cc:Vlastimil Babka <vbabka@suse.cz>
+> Cc:Jann Horn <jannh@google.com>
+> Signed-off-by: Liam R. Howlett <Liam.Howlett@oracle.com>
+
+Aced-by: SeongJae Park <sj@kernel.org>
+
+> ---
+>  MAINTAINERS | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 4c7fdc41a6bfb..d8e9a10adc81d 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -15571,6 +15571,7 @@ L:	linux-mm@kvack.org
+>  S:	Maintained
+>  W:	http://www.linux-mm.org
+>  T:	git git://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm
+> +F:	include/trace/events/mmap.h
+
+Should mmap_lock.h also be added here?
+
+>  F:	mm/mlock.c
+>  F:	mm/mmap.c
+>  F:	mm/mprotect.c
+> -- 
+> 2.43.0
 
 
---l4yZ4AuyN960k5am
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Fri, Apr 11, 2025 at 01:12:54PM -0400, Steven Rostedt wrote:
-> Mark Brown <broonie@kernel.org> wrote:
-
-> > That'll take a bit more arranging, I'm running these tests as batch jobs
-> > in CI infrastructure.  I'll try to have a look.  The only other test
-> > that actually failed was:
-
-> > # not ok 25 Checking dynamic events limitations
-
-> > which isn't flagged as a regression (there's some other UNRESOLVED ones).
-
-> Hmm, don't know about that one.
-
-The tail end of the log there is:
-
-# # + TEST_STRING=p vfs_read 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59 60 61 62 63 64 65 66 67 68 69 70 71 72 73 74 75 76 77 78 79 80 81 82 83 84 85 86 87 88 89 90 91 92 93 94 95 96 97 98 99 100 101 102 103 104 105 106 107 108 109 110 111 112 113 114 115 116 117 118 119 120 121 122 123 124 125 126 127
-# # + TEST_STRING=p vfs_read 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59 60 61 62 63 64 65 66 67 68 69 70 71 72 73 74 75 76 77 78 79 80 81 82 83 84 85 86 87 88 89 90 91 92 93 94 95 96 97 98 99 100 101 102 103 104 105 106 107 108 109 110 111 112 113 114 115 116 117 118 119 120 121 122 123 124 125 126 127 128
-# # + echo p vfs_read 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59 60 61 62 63 64 65 66 67 68 69 70 71 72 73 74 75 76 77 78 79 80 81 82 83 84 85 86 87 88 89 90 91 92 93 94 95 96 97 98 99 100 101 102 103 104 105 106 107 108 109 110 111 112 113 114 115 116 117 118 119 120 121 122 123 124 125 126 127 128
-# # ./ftracetest: 16: echo: echo: I/O error
-
-which smells a bit of a shell incompatibility issue.  I'll try to find
-time to have a look.
-
---l4yZ4AuyN960k5am
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmf5U7gACgkQJNaLcl1U
-h9BV9QgAggpMP7vcZOw7vW/v1btFz0u8noa4OBFLsRVXcQcS2QsVRvEfN00apOCN
-mkU1zyqJPWCj1BKSVGiNCoPN4qXyuVlFf4E7zFjviTJt3BwG26CgRMFBRPXRYz4t
-AWZZIdkk3j38oodkVGxDWEZ1KN5SMelkotU0EENmtbBm7U3sa0Hp/gOWPNShuNcI
-i3QwGf5dm9g/fyF5b8va6zSicI2kYsMmg5TzKc3cenuoUuTfFO5UBdT3IOMO+5F+
-jsXirVCEjMcK3LZOx3g/fbHq8wN4bhO1rRD/9a5Fj5u2UlDTssWO/eXKGFGc0fDY
-wUJ1GopQvxwp88O8IsvQJaiJi6aOeA==
-=PcLN
------END PGP SIGNATURE-----
-
---l4yZ4AuyN960k5am--
+Thanks,
+SJ
