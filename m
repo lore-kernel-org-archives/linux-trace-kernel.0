@@ -1,363 +1,491 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5084229899F;
-	Fri, 11 Apr 2025 07:38:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46BCF2980AC
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 11 Apr 2025 08:39:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744357099; cv=none; b=koh0vxQjgOnj54OpqwCyJxBl0g7fRiKwfROxQKe6erP/OYslPfn118UEMrkygial6MUfauxNeqI4fhureY9KgOV/LeK/mLKuVNQUHuvpwcjFaEUy157l2INqzX+xI6OMNvmw7Z0oLfbk9M7CEn88hUa44WbL9kbct5nl+EWomwM=
+	t=1744360789; cv=none; b=n3YpgGW290U1BPQ6MmbcczW8N1AbUeWVDZNrBZGyX2cbyUkdDMrIkC9gLVgNXP5ZU5i1St29OkHZoltoILlIMPC3yNIMnAf81qKl5pB3i8lA4vtb0iMuwF/lNfm8Vycql35GZvI15o28eQ7eFFvxGg8/lJl6U1Kobv8ZmlJ5iZw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744357099; c=relaxed/simple;
-	bh=+6zOyEuDRNIdYv5j0ZizKTOddHaPhYvOXga0YTpRM68=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=BpgGAMgc1Vd39kewHDkF9a4k8te4VAedWiAUqsMbDiUa8nWHJ0r0J/zrdB6fPs2sfW2qvuY8YwX97PCyqXyyPO67bW0HLwz47zJIoNKyi0D2alws+4YBp/WGNm4Pmht+Wb76Tcwzv3FoqSThA1r1D2OV2Wmwk42YhYgBorVY6yA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=b5qttIrp; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=1Q1+UFco; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1744360789; c=relaxed/simple;
+	bh=SxPGPpgrMbUEuyB3IqluZZrBh9ZphK4uPmwnn2Pxs58=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Up3W36P0gz+5Bxms+eyVLaw8HvhmZ14+RAFa09fGx/QM9l2QG99C1IeUGiO6ZSCKyvPQ5rR62OGtyGR8CqUNx1iQA34pnk9q2Kl+iiQ3UYvXh1nMIsPXKPoeFG6Ukj9E/+MdcwSLyW9b4hf24yUxk0KdSJysMePHQ2IWHXUE5vs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=MYvKeJy+; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="b5qttIrp";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="1Q1+UFco"
-From: Nam Cao <namcao@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1744357093;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MYvKeJy+"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1744360786;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=RBmDrhu0Y2boD5jF26ggcoAtTCTRqgDeFKAQWZPdoF8=;
-	b=b5qttIrpDkpQwlivCD+hVWgAfFUwB2Gw2Ji6eC1nGW1frRf7lrpPulX7Ta/qotxELABNax
-	cJmLzn7Y7xtVgnlsv6+3SYQUmeydQYPSyajeJFwBp9eGBZxOULseYDd5gE8XdPu3Gyi1Ip
-	r+DEtnTtHvtKiTCX1iUUmCrEpG8vahyobdd36/yFnHG2gLXlS2Kes0NeJ2haf8p+Ih7G49
-	Mtcxwa8PqtVLa7nHuyJrPeE6Q7H6zwJJRefRfnPS1XqY6r9FlUlbd6kzbXuoWDxUyUOghR
-	AlaJeWr0ZemjgOJrqsTJFAAnZyuam93VFvkdlhPCyH6Y84hg4ZMYzay6MK/+eQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1744357093;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=RBmDrhu0Y2boD5jF26ggcoAtTCTRqgDeFKAQWZPdoF8=;
-	b=1Q1+UFco+iXSwfZiKaZv1A/TWlXNwzatkGQwlapQSNGthsLfDmgU3qmIZtezT05bLF5BvP
-	5hrip2WfW9EKPoBw==
-To: Steven Rostedt <rostedt@goodmis.org>,
-	Gabriele Monaco <gmonaco@redhat.com>,
-	linux-trace-kernel@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: john.ogness@linutronix.de,
-	Nam Cao <namcao@linutronix.de>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Alexandre Ghiti <alex@ghiti.fr>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	x86@kernel.org,
-	"H . Peter Anvin" <hpa@zytor.com>,
-	Andy Lutomirski <luto@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-riscv@lists.infradead.org
-Subject: [PATCH v2 19/22] rv: Add rtapp_pagefault monitor
-Date: Fri, 11 Apr 2025 09:37:35 +0200
-Message-Id: <f57547af5e8c836f5c548f624e61f3e0002ce0b4.1744355018.git.namcao@linutronix.de>
-In-Reply-To: <cover.1744355018.git.namcao@linutronix.de>
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=SxPGPpgrMbUEuyB3IqluZZrBh9ZphK4uPmwnn2Pxs58=;
+	b=MYvKeJy+Os7SXg2DEQRfSkDt6gczjfUD3tq1/uRFf9ZuXTWF2ABu45AflPq8/JIpL0hePa
+	ztgcPop6WFA0T1Zn7SJl//JU0ehLUyFKgqgYuP2lYTEx5Xu51wysJbNTs6kImTPYHbaW9D
+	kdsfRXPafe91H+jccpv7wT/dsl0y0e0=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-449-TXAT_ggbPCSDveaz1Pd_CA-1; Fri, 11 Apr 2025 04:39:45 -0400
+X-MC-Unique: TXAT_ggbPCSDveaz1Pd_CA-1
+X-Mimecast-MFC-AGG-ID: TXAT_ggbPCSDveaz1Pd_CA_1744360784
+Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-43ceb011ea5so10666875e9.2
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 11 Apr 2025 01:39:44 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744360784; x=1744965584;
+        h=mime-version:user-agent:content-transfer-encoding:autocrypt
+         :references:in-reply-to:date:cc:to:from:subject:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=4kbzhowOrdb284WCQY6VYg5xlBwQ2Vxr3h44Uzh92yk=;
+        b=TGjqwkG2ckOrA5eKg+/PGMP8241p4uMhMewbRVI8yVbgGpvx0CpERLWlM1ytpioHPQ
+         P0ZUWsSuuteRuv+2JN/wcs38adZPOAwh22oCCnB5hF1E3ohlBShsmTVh+5TZKTo7+Nsi
+         uU6f421EXaZtWaaU7Lyw+XMvU0nGXGfSk6iq8IgMz1++3WO8l4PDtAs73e1E4f8fJ/at
+         oKyPIGT35V57xj2syz+iyPXYFvsPUzsEuMJjNtHFyATyrFbKBifZY1eH4MIIuDA1eekT
+         XQCRwr7vl60SlxhQt5gxOMEHl+vFzz7RNi0zobteVMxqbikrdkPtLBO1/ryG6U2tVvGe
+         Jpiw==
+X-Forwarded-Encrypted: i=1; AJvYcCUpEy9M5W5UA7ihcsc7B/FSnv1YNFODwkd47XddkcTgXMzmDmJr+UTZKRheVKzU2Eog98GaIcWGhCjEZBy35mFDIp4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy3bsPVFJqRSdpOWqwz0wvMTZ3IQesn7nWp+S+XGojXZhvjZEU/
+	lVsdiDXZl6CPpS48GmPF/GAj9s97vnTH29RC+8LGuFiDOBWqdvGwGQgdME2Gygn94AwqJUOKrPK
+	oiz0Hg/l8/+xMZvaf60XGGHcR79RoIdPORSBl8SMJhow4Y7owZzziQNwmMrVO7A5ds59+Bw==
+X-Gm-Gg: ASbGnct9lBRYFV7nuxluMMDbeP/+SdBmTGEdZIBK3FrkE9kU8S2GGvXLCWihXaXSH38
+	i4eOjYTO4ufq2IKmubEz67XYQLhPPIystHAt3PWHK6ZjjvC0E6Egb5gDPOybXveaiNXZXqVdmth
+	TK5mPFJFgGvck2C3PjoNeJ79FA1KpvdQ5IPfxgPx0Ls86Ja1mfQqoCXXsIcSjfcfTxv7PcnDC6I
+	21Zqvg8iOkqgE++pzE4uM4xkxHVDKsYJBKXW4Zgn6JRl0u8afiwhwXV8t+uSJY2jmTIyl0SjoeK
+	nOg62G7ZSn6eMzSwoW0bH6M1tp4c2sPRDJMFxA==
+X-Received: by 2002:a05:600c:348f:b0:43c:f597:d584 with SMTP id 5b1f17b1804b1-43f3a9b039fmr12927245e9.29.1744360783869;
+        Fri, 11 Apr 2025 01:39:43 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEJZJQoEi7GiI72EPYHpaydqlLw3rRu5pjFRDqfw++7ZZIgj9Ga/PdXmA0PYbR0EkLquJO+Ng==
+X-Received: by 2002:a05:600c:348f:b0:43c:f597:d584 with SMTP id 5b1f17b1804b1-43f3a9b039fmr12927025e9.29.1744360783464;
+        Fri, 11 Apr 2025 01:39:43 -0700 (PDT)
+Received: from gmonaco-thinkpadt14gen3.rmtit.csb ([185.107.56.40])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43f233a2f08sm76432275e9.12.2025.04.11.01.39.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 11 Apr 2025 01:39:42 -0700 (PDT)
+Message-ID: <40ad385f81151320a3c9d380d35a0504d15e0041.camel@redhat.com>
+Subject: Re: [PATCH v2 03/22] rv: Let the reactors take care of buffers
+From: Gabriele Monaco <gmonaco@redhat.com>
+To: Nam Cao <namcao@linutronix.de>, Steven Rostedt <rostedt@goodmis.org>, 
+	linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: john.ogness@linutronix.de, Petr Mladek <pmladek@suse.com>, Sergey
+ Senozhatsky <senozhatsky@chromium.org>
+Date: Fri, 11 Apr 2025 10:39:40 +0200
+In-Reply-To: <fb397e38b56f3eab7b7f662fef4860ee4fbda873.1744355018.git.namcao@linutronix.de>
 References: <cover.1744355018.git.namcao@linutronix.de>
+	 <fb397e38b56f3eab7b7f662fef4860ee4fbda873.1744355018.git.namcao@linutronix.de>
+Autocrypt: addr=gmonaco@redhat.com; prefer-encrypt=mutual;
+ keydata=mDMEZuK5YxYJKwYBBAHaRw8BAQdAmJ3dM9Sz6/Hodu33Qrf8QH2bNeNbOikqYtxWFLVm0
+ 1a0JEdhYnJpZWxlIE1vbmFjbyA8Z21vbmFjb0ByZWRoYXQuY29tPoiZBBMWCgBBFiEEysoR+AuB3R
+ Zwp6j270psSVh4TfIFAmbiuWMCGwMFCQWjmoAFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgk
+ Q70psSVh4TfJzZgD/TXjnqCyqaZH/Y2w+YVbvm93WX2eqBqiVZ6VEjTuGNs8A/iPrKbzdWC7AicnK
+ xyhmqeUWOzFx5P43S1E1dhsrLWgP
+User-Agent: Evolution 3.54.3 (3.54.3-1.fc41)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: -CHgFceGs3_m_F1u9NUbqppF7ylr8NbhiJfVhUzOFtY_1744360784
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Userspace real-time applications may have design flaws that they raise
-page faults in real-time threads, and thus have unexpected latencies.
 
-Add an linear temporal logic monitor to detect this scenario.
 
-Signed-off-by: Nam Cao <namcao@linutronix.de>
----
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Will Deacon <will@kernel.org>
-Cc: Paul Walmsley <paul.walmsley@sifive.com>
-Cc: Palmer Dabbelt <palmer@dabbelt.com>
-Cc: Albert Ou <aou@eecs.berkeley.edu>
-Cc: Alexandre Ghiti <alex@ghiti.fr>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: x86@kernel.org
-Cc: H. Peter Anvin <hpa@zytor.com>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-riscv@lists.infradead.org
----
- kernel/trace/rv/Kconfig                       |  1 +
- kernel/trace/rv/Makefile                      |  1 +
- kernel/trace/rv/monitors/pagefault/Kconfig    | 11 +++
- .../trace/rv/monitors/pagefault/pagefault.c   | 83 +++++++++++++++++++
- .../trace/rv/monitors/pagefault/pagefault.h   | 57 +++++++++++++
- .../rv/monitors/pagefault/pagefault_trace.h   | 14 ++++
- kernel/trace/rv/rv_trace.h                    |  1 +
- tools/verification/models/rtapp/pagefault.ltl |  1 +
- 8 files changed, 169 insertions(+)
- create mode 100644 kernel/trace/rv/monitors/pagefault/Kconfig
- create mode 100644 kernel/trace/rv/monitors/pagefault/pagefault.c
- create mode 100644 kernel/trace/rv/monitors/pagefault/pagefault.h
- create mode 100644 kernel/trace/rv/monitors/pagefault/pagefault_trace.h
- create mode 100644 tools/verification/models/rtapp/pagefault.ltl
+On Fri, 2025-04-11 at 09:37 +0200, Nam Cao wrote:
+> Each RV monitor has one static buffer to send to the reactors. If
+> multiple
+> errors are detected simultaneously, the one buffer could be
+> overwritten.
+>=20
+> Instead, leave it to the reactors to handle buffering.
+>=20
+> Signed-off-by: Nam Cao <namcao@linutronix.de>
+> ---
+> Cc: Petr Mladek <pmladek@suse.com>
+> Cc: John Ogness <john.ogness@linutronix.de>
+> Cc: Sergey Senozhatsky <senozhatsky@chromium.org>
+> ---
+> =C2=A0include/linux/panic.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 3 +++
+> =C2=A0include/linux/printk.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0 |=C2=A0 5 ++++
+> =C2=A0include/linux/rv.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 9 +++++--
+> =C2=A0include/rv/da_monitor.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0 | 45 +++++++-----------------------
+> --
+> =C2=A0kernel/panic.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 17 ++++++++----
+> =C2=A0kernel/printk/internal.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0 |=C2=A0 1 -
+> =C2=A0kernel/trace/rv/reactor_panic.c=C2=A0 |=C2=A0 8 ++++--
+> =C2=A0kernel/trace/rv/reactor_printk.c |=C2=A0 8 ++++--
+> =C2=A0kernel/trace/rv/rv_reactors.c=C2=A0=C2=A0=C2=A0 |=C2=A0 2 +-
+> =C2=A09 files changed, 50 insertions(+), 48 deletions(-)
+>=20
+> diff --git a/include/linux/panic.h b/include/linux/panic.h
+> index 54d90b6c5f47..3522f8c441f4 100644
+> --- a/include/linux/panic.h
+> +++ b/include/linux/panic.h
+> @@ -3,6 +3,7 @@
+> =C2=A0#define _LINUX_PANIC_H
+> =C2=A0
+> =C2=A0#include <linux/compiler_attributes.h>
+> +#include <linux/stdarg.h>
+> =C2=A0#include <linux/types.h>
+> =C2=A0
+> =C2=A0struct pt_regs;
+> @@ -10,6 +11,8 @@ struct pt_regs;
+> =C2=A0extern long (*panic_blink)(int state);
+> =C2=A0__printf(1, 2)
+> =C2=A0void panic(const char *fmt, ...) __noreturn __cold;
+> +__printf(1, 0)
+> +void vpanic(const char *fmt, va_list args) __noreturn __cold;
+> =C2=A0void nmi_panic(struct pt_regs *regs, const char *msg);
+> =C2=A0void check_panic_on_warn(const char *origin);
+> =C2=A0extern void oops_enter(void);
+> diff --git a/include/linux/printk.h b/include/linux/printk.h
+> index 4217a9f412b2..1b7eebe13f14 100644
+> --- a/include/linux/printk.h
+> +++ b/include/linux/printk.h
+> @@ -154,6 +154,7 @@ int vprintk_emit(int facility, int level,
+> =C2=A0
+> =C2=A0asmlinkage __printf(1, 0)
+> =C2=A0int vprintk(const char *fmt, va_list args);
+> +__printf(1, 0) int vprintk_deferred(const char *fmt, va_list args);
+> =C2=A0
+> =C2=A0asmlinkage __printf(1, 2) __cold
+> =C2=A0int _printk(const char *fmt, ...);
+> @@ -213,6 +214,10 @@ int vprintk(const char *s, va_list args)
+> =C2=A0{
+> =C2=A0=09return 0;
+> =C2=A0}
+> +__printf(1, 0) int vprintk_deferred(const char *fmt, va_list args)
+> +{
+> +=09return 0;
+> +}
+> =C2=A0static inline __printf(1, 2) __cold
+> =C2=A0int _printk(const char *s, ...)
+> =C2=A0{
 
-diff --git a/kernel/trace/rv/Kconfig b/kernel/trace/rv/Kconfig
-index 5c407d291661..6f86d8501e87 100644
---- a/kernel/trace/rv/Kconfig
-+++ b/kernel/trace/rv/Kconfig
-@@ -42,6 +42,7 @@ source "kernel/trace/rv/monitors/scpd/Kconfig"
- source "kernel/trace/rv/monitors/snep/Kconfig"
- source "kernel/trace/rv/monitors/sncid/Kconfig"
- source "kernel/trace/rv/monitors/rtapp/Kconfig"
-+source "kernel/trace/rv/monitors/pagefault/Kconfig"
- # Add new monitors here
-=20
- config RV_REACTORS
-diff --git a/kernel/trace/rv/Makefile b/kernel/trace/rv/Makefile
-index 9b28c2419995..353ecf939d0e 100644
---- a/kernel/trace/rv/Makefile
-+++ b/kernel/trace/rv/Makefile
-@@ -13,6 +13,7 @@ obj-$(CONFIG_RV_MON_SCPD) +=3D monitors/scpd/scpd.o
- obj-$(CONFIG_RV_MON_SNEP) +=3D monitors/snep/snep.o
- obj-$(CONFIG_RV_MON_SNCID) +=3D monitors/sncid/sncid.o
- obj-$(CONFIG_RV_MON_RTAPP) +=3D monitors/rtapp/rtapp.o
-+obj-$(CONFIG_RV_MON_PAGEFAULT) +=3D monitors/pagefault/pagefault.o
- # Add new monitors here
- obj-$(CONFIG_RV_REACTORS) +=3D rv_reactors.o
- obj-$(CONFIG_RV_REACT_PRINTK) +=3D reactor_printk.o
-diff --git a/kernel/trace/rv/monitors/pagefault/Kconfig b/kernel/trace/rv/m=
-onitors/pagefault/Kconfig
-new file mode 100644
-index 000000000000..b31dee208459
---- /dev/null
-+++ b/kernel/trace/rv/monitors/pagefault/Kconfig
-@@ -0,0 +1,11 @@
-+# SPDX-License-Identifier: GPL-2.0-only
-+#
-+config RV_MON_PAGEFAULT
-+	depends on RV
-+	select RV_LTL_MONITOR
-+	depends on RV_MON_RTAPP
-+	default y
-+	select LTL_MON_EVENTS_ID
-+	bool "pagefault monitor"
-+	help
-+	  Monitor that real-time tasks do not raise page faults
-diff --git a/kernel/trace/rv/monitors/pagefault/pagefault.c b/kernel/trace/=
-rv/monitors/pagefault/pagefault.c
-new file mode 100644
-index 000000000000..9f7a4cba39a1
---- /dev/null
-+++ b/kernel/trace/rv/monitors/pagefault/pagefault.c
-@@ -0,0 +1,83 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#include <linux/ftrace.h>
-+#include <linux/tracepoint.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/init.h>
-+#include <linux/rv.h>
-+#include <rv/instrumentation.h>
-+
-+#define MODULE_NAME "pagefault"
-+
-+#include <rv_trace.h>
-+#include <trace/events/exceptions.h>
-+#include <monitors/rtapp/rtapp.h>
-+
-+#include "pagefault.h"
-+#include <rv/ltl_monitor.h>
-+
-+static void ltl_atoms_fetch(struct task_struct *task, struct ltl_monitor *=
-mon)
-+{
-+	ltl_atom_set(mon, LTL_RT, rt_task(task));
-+}
-+
-+static void ltl_atoms_init(struct task_struct *task, struct ltl_monitor *m=
-on, bool task_creation)
-+{
-+	if (task_creation)
-+		ltl_atom_set(mon, LTL_PAGEFAULT, false);
-+}
-+
-+static void handle_page_fault(void *data, unsigned long address, struct pt=
-_regs *regs,
-+			      unsigned long error_code)
-+{
-+	ltl_atom_pulse(current, LTL_PAGEFAULT, true);
-+}
-+
-+static int enable_pagefault(void)
-+{
-+	int retval;
-+
-+	retval =3D ltl_monitor_init();
-+	if (retval)
-+		return retval;
-+
-+	rv_attach_trace_probe("pagefault", page_fault_kernel, handle_page_fault);
-+	rv_attach_trace_probe("pagefault", page_fault_user, handle_page_fault);
-+
-+	return 0;
-+}
-+
-+static void disable_pagefault(void)
-+{
-+	rv_pagefault.enabled =3D 0;
-+
-+	rv_detach_trace_probe("rtapp_pagefault", page_fault_kernel, handle_page_f=
-ault);
-+	rv_detach_trace_probe("rtapp_pagefault", page_fault_user, handle_page_fau=
-lt);
-+
-+	ltl_monitor_destroy();
-+}
-+
-+static struct rv_monitor rv_pagefault =3D {
-+	.name =3D "pagefault",
-+	.description =3D "Monitor that RT tasks do not raise page faults",
-+	.enable =3D enable_pagefault,
-+	.disable =3D disable_pagefault,
-+};
-+
-+static int __init register_pagefault(void)
-+{
-+	rv_register_monitor(&rv_pagefault, &rv_rtapp);
-+	return 0;
-+}
-+
-+static void __exit unregister_pagefault(void)
-+{
-+	rv_unregister_monitor(&rv_pagefault);
-+}
-+
-+module_init(register_pagefault);
-+module_exit(unregister_pagefault);
-+
-+MODULE_LICENSE("GPL");
-+MODULE_AUTHOR("Nam Cao <namcao@linutronix.de>");
-+MODULE_DESCRIPTION("pagefault: Monitor that RT tasks do not raise page fau=
-lts");
-diff --git a/kernel/trace/rv/monitors/pagefault/pagefault.h b/kernel/trace/=
-rv/monitors/pagefault/pagefault.h
-new file mode 100644
-index 000000000000..f4535c83f7d1
---- /dev/null
-+++ b/kernel/trace/rv/monitors/pagefault/pagefault.h
-@@ -0,0 +1,57 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+
-+#include <linux/rv.h>
-+
-+#define MONITOR_NAME pagefault
-+
-+enum ltl_atom {
-+	LTL_PAGEFAULT,
-+	LTL_RT,
-+	LTL_NUM_ATOM
-+};
-+static_assert(LTL_NUM_ATOM <=3D RV_MAX_LTL_ATOM);
-+
-+static const char *ltl_atom_str(enum ltl_atom atom)
-+{
-+	static const char *const names[] =3D {
-+		"p",
-+		"r",
-+	};
-+
-+	return names[atom];
-+}
-+
-+enum ltl_buchi_state {
-+	S0,
-+	RV_NUM_BA_STATES
-+};
-+static_assert(RV_NUM_BA_STATES <=3D RV_MAX_BA_STATES);
-+
-+static void ltl_start(struct task_struct *task, struct ltl_monitor *mon)
-+{
-+	bool pagefault =3D test_bit(LTL_PAGEFAULT, mon->atoms);
-+	bool val3 =3D !pagefault;
-+	bool rt =3D test_bit(LTL_RT, mon->atoms);
-+	bool val1 =3D !rt;
-+	bool val4 =3D val1 || val3;
-+
-+	if (val4)
-+		__set_bit(S0, mon->states);
-+}
-+
-+static void
-+ltl_possible_next_states(struct ltl_monitor *mon, unsigned int state, unsi=
-gned long *next)
-+{
-+	bool pagefault =3D test_bit(LTL_PAGEFAULT, mon->atoms);
-+	bool val3 =3D !pagefault;
-+	bool rt =3D test_bit(LTL_RT, mon->atoms);
-+	bool val1 =3D !rt;
-+	bool val4 =3D val1 || val3;
-+
-+	switch (state) {
-+	case S0:
-+		if (val4)
-+			__set_bit(S0, next);
-+		break;
-+	}
-+}
-diff --git a/kernel/trace/rv/monitors/pagefault/pagefault_trace.h b/kernel/=
-trace/rv/monitors/pagefault/pagefault_trace.h
-new file mode 100644
-index 000000000000..fe1f82597b1a
---- /dev/null
-+++ b/kernel/trace/rv/monitors/pagefault/pagefault_trace.h
-@@ -0,0 +1,14 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+
-+/*
-+ * Snippet to be included in rv_trace.h
-+ */
-+
-+#ifdef CONFIG_RV_MON_PAGEFAULT
-+DEFINE_EVENT(event_ltl_monitor_id, event_pagefault,
-+	     TP_PROTO(struct task_struct *task, char *states, char *atoms, char *=
-next),
-+	     TP_ARGS(task, states, atoms, next));
-+DEFINE_EVENT(error_ltl_monitor_id, error_pagefault,
-+	     TP_PROTO(struct task_struct *task),
-+	     TP_ARGS(task));
-+#endif /* CONFIG_RV_MON_PAGEFAULT */
-diff --git a/kernel/trace/rv/rv_trace.h b/kernel/trace/rv/rv_trace.h
-index f9fb848bae91..02c906c9745b 100644
---- a/kernel/trace/rv/rv_trace.h
-+++ b/kernel/trace/rv/rv_trace.h
-@@ -172,6 +172,7 @@ TRACE_EVENT(error_ltl_monitor_id,
-=20
- 	TP_printk("%s[%d]: violation detected", __get_str(comm), __entry->pid)
- );
-+#include <monitors/pagefault/pagefault_trace.h>
- // Add new monitors based on CONFIG_LTL_MON_EVENTS_ID here
- #endif /* CONFIG_LTL_MON_EVENTS_ID */
- #endif /* _TRACE_RV_H */
-diff --git a/tools/verification/models/rtapp/pagefault.ltl b/tools/verifica=
-tion/models/rtapp/pagefault.ltl
-new file mode 100644
-index 000000000000..d7ce62102733
---- /dev/null
-+++ b/tools/verification/models/rtapp/pagefault.ltl
-@@ -0,0 +1 @@
-+RULE =3D always (RT imply not PAGEFAULT)
---=20
-2.39.5
+From the RV perspective this patch looks really good to me, although
+you're doing a bit more than just RV here.
+I hate to be the one telling you to split patches (22 is already scary
+as it is!) but probably the vpanic and vprintk_deferred belong in
+separate patches.
+
+Feel free to mark the RV part (and also 1/22 2/22)
+
+Reviewed-by: Gabriele Monaco <gmonaco@redhat.com>
+
+Thanks,
+Gabriele
+
+> diff --git a/include/linux/rv.h b/include/linux/rv.h
+> index 3452b5e4b29e..c7c18c06911b 100644
+> --- a/include/linux/rv.h
+> +++ b/include/linux/rv.h
+> @@ -38,7 +38,7 @@ union rv_task_monitor {
+> =C2=A0struct rv_reactor {
+> =C2=A0=09const char=09=09*name;
+> =C2=A0=09const char=09=09*description;
+> -=09void=09=09=09(*react)(char *msg);
+> +=09__printf(1, 2) void=09(*react)(const char *msg, ...);
+> =C2=A0};
+> =C2=A0#endif
+> =C2=A0
+> @@ -50,7 +50,7 @@ struct rv_monitor {
+> =C2=A0=09void=09=09=09(*disable)(void);
+> =C2=A0=09void=09=09=09(*reset)(void);
+> =C2=A0#ifdef CONFIG_RV_REACTORS
+> -=09void=09=09=09(*react)(char *msg);
+> +=09__printf(1, 2) void=09(*react)(const char *msg, ...);
+> =C2=A0#endif
+> =C2=A0};
+> =C2=A0
+> @@ -64,6 +64,11 @@ void rv_put_task_monitor_slot(int slot);
+> =C2=A0bool rv_reacting_on(void);
+> =C2=A0int rv_unregister_reactor(struct rv_reactor *reactor);
+> =C2=A0int rv_register_reactor(struct rv_reactor *reactor);
+> +#else
+> +bool rv_reacting_on(void)
+> +{
+> +=09return false;
+> +}
+> =C2=A0#endif /* CONFIG_RV_REACTORS */
+> =C2=A0
+> =C2=A0#endif /* CONFIG_RV */
+> diff --git a/include/rv/da_monitor.h b/include/rv/da_monitor.h
+> index 510c88bfabd4..15f9ed4e4bb6 100644
+> --- a/include/rv/da_monitor.h
+> +++ b/include/rv/da_monitor.h
+> @@ -19,45 +19,22 @@
+> =C2=A0#ifdef CONFIG_RV_REACTORS
+> =C2=A0
+> =C2=A0#define DECLARE_RV_REACTING_HELPERS(name,
+> type)=09=09=09=09=09=09=09\
+> -static char
+> REACT_MSG_##name[1024];=09=09=09=09=09=09=09=09\
+> -
+> =09=09=09=09=09=09=09=09=09=09=09=09\
+> -static inline char *format_react_msg_##name(type curr_state, type
+> event)=09=09=09\
+> -
+> {=09=09=09=09=09=09=09=09=09=09=09=09\
+> -=09snprintf(REACT_MSG_##name,
+> 1024,=09=09=09=09=09=09=09\
+> -=09=09 "rv: monitor %s does not allow event %s on state
+> %s\n",=09=09=09\
+> -=09=09
+> #name,=09=09=09=09=09=09=09=09=09=09\
+> -=09=09
+> model_get_event_name_##name(event),=09=09=09=09=09=09\
+> -=09=09
+> model_get_state_name_##name(curr_state));=09=09=09=09=09\
+> -=09return
+> REACT_MSG_##name;=09=09=09=09=09=09=09=09\
+> -
+> }=09=09=09=09=09=09=09=09=09=09=09=09\
+> -
+> =09=09=09=09=09=09=09=09=09=09=09=09\
+> -static void cond_react_##name(char
+> *msg)=09=09=09=09=09=09=09\
+> +static void cond_react_##name(type curr_state, type
+> event)=09=09=09=09=09\
+> =C2=A0{=09=09=09=09=09=09=09=09
+> =09=09=09=09\
+> -=09if
+> (rv_##name.react)=09=09=09=09=09=09=09=09=09\
+> -
+> =09=09rv_##name.react(msg);=09=09=09=09=09=09=09=09\
+> -
+> }=09=09=09=09=09=09=09=09=09=09=09=09\
+> -
+> =09=09=09=09=09=09=09=09=09=09=09=09\
+> -static bool
+> rv_reacting_on_##name(void)=09=09=09=09=09=09=09=09\
+> -
+> {=09=09=09=09=09=09=09=09=09=09=09=09\
+> -=09return
+> rv_reacting_on();=09=09=09=09=09=09=09=09\
+> +=09if (!rv_reacting_on() ||
+> !rv_##name.react)=09=09=09=09=09=09\
+> +=09=09return;=09=09=09=09=09
+> =09=09=09=09=09\
+> +=09rv_##name.react("rv: monitor %s does not allow event %s on
+> state %s\n",=09=09=09\
+> +=09=09=09#name,=09=09=09=09=09
+> =09=09=09=09\
+> +=09=09=09model_get_event_name_##name(event),=09
+> =09=09=09=09\
+> +=09=09=09model_get_state_name_##name(curr_state));
+> =09=09=09=09\
+> =C2=A0}
+> =C2=A0
+> =C2=A0#else /* CONFIG_RV_REACTOR */
+> =C2=A0
+> =C2=A0#define DECLARE_RV_REACTING_HELPERS(name,
+> type)=09=09=09=09=09=09=09\
+> -static inline char *format_react_msg_##name(type curr_state, type
+> event)=09=09=09\
+> -
+> {=09=09=09=09=09=09=09=09=09=09=09=09\
+> -=09return
+> NULL;=09=09=09=09=09=09=09=09=09=09\
+> -
+> }=09=09=09=09=09=09=09=09=09=09=09=09\
+> -
+> =09=09=09=09=09=09=09=09=09=09=09=09\
+> -static void cond_react_##name(char
+> *msg)=09=09=09=09=09=09=09\
+> +static void cond_react_##name(type curr_state, type
+> event)=09=09=09=09=09\
+> =C2=A0{=09=09=09=09=09=09=09=09
+> =09=09=09=09\
+> =C2=A0=09return;=09=09=09=09=09=09
+> =09=09=09=09=09\
+> -
+> }=09=09=09=09=09=09=09=09=09=09=09=09\
+> -
+> =09=09=09=09=09=09=09=09=09=09=09=09\
+> -static bool
+> rv_reacting_on_##name(void)=09=09=09=09=09=09=09=09\
+> -
+> {=09=09=09=09=09=09=09=09=09=09=09=09\
+> -=09return
+> 0;=09=09=09=09=09=09=09=09=09=09\
+> =C2=A0}
+> =C2=A0#endif
+> =C2=A0
+> @@ -170,8 +147,7 @@ da_event_##name(struct da_monitor *da_mon, enum
+> events_##name event)=09=09=09=09\
+> =C2=A0=09=09return
+> true;=09=09=09=09=09=09=09=09=09\
+> =C2=A0=09}=09=09=09=09=09=09=09
+> =09=09=09=09\
+> =C2=A0=09=09=09=09=09=09=09=09
+> =09=09=09=09\
+> -=09if
+> (rv_reacting_on_##name())=09=09=09=09=09=09=09=09\
+> -
+> =09=09cond_react_##name(format_react_msg_##name(curr_state, event));=09=
+=09=09\
+> +=09cond_react_##name(curr_state,
+> event);=09=09=09=09=09=09=09\
+> =C2=A0=09=09=09=09=09=09=09=09
+> =09=09=09=09\
+> =C2=A0=09trace_error_##name(model_get_state_name_##name(curr_state),
+> =09=09=09=09\
+> =C2=A0=09=09=09=C2=A0=C2=A0
+> model_get_event_name_##name(event));=09=09=09=09=09\
+> @@ -202,8 +178,7 @@ static inline bool da_event_##name(struct
+> da_monitor *da_mon, struct task_struct
+> =C2=A0=09=09return
+> true;=09=09=09=09=09=09=09=09=09\
+> =C2=A0=09}=09=09=09=09=09=09=09
+> =09=09=09=09\
+> =C2=A0=09=09=09=09=09=09=09=09
+> =09=09=09=09\
+> -=09if
+> (rv_reacting_on_##name())=09=09=09=09=09=09=09=09\
+> -
+> =09=09cond_react_##name(format_react_msg_##name(curr_state, event));=09=
+=09=09\
+> +=09cond_react_##name(curr_state,
+> event);=09=09=09=09=09=09=09\
+> =C2=A0=09=09=09=09=09=09=09=09
+> =09=09=09=09\
+> =C2=A0=09trace_error_##name(tsk-
+> >pid,=09=09=09=09=09=09=09=09\
+> =C2=A0=09=09=09=C2=A0=C2=A0
+> model_get_state_name_##name(curr_state),=09=09=09=09\
+> diff --git a/kernel/panic.c b/kernel/panic.c
+> index d8635d5cecb2..df799d784b61 100644
+> --- a/kernel/panic.c
+> +++ b/kernel/panic.c
+> @@ -277,17 +277,16 @@ static void panic_other_cpus_shutdown(bool
+> crash_kexec)
+> =C2=A0}
+> =C2=A0
+> =C2=A0/**
+> - *=09panic - halt the system
+> + *=09vpanic - halt the system
+> =C2=A0 *=09@fmt: The text string to print
+> =C2=A0 *
+> =C2=A0 *=09Display a message, then perform cleanups.
+> =C2=A0 *
+> =C2=A0 *=09This function never returns.
+> =C2=A0 */
+> -void panic(const char *fmt, ...)
+> +void vpanic(const char *fmt, va_list args)
+> =C2=A0{
+> =C2=A0=09static char buf[1024];
+> -=09va_list args;
+> =C2=A0=09long i, i_next =3D 0, len;
+> =C2=A0=09int state =3D 0;
+> =C2=A0=09int old_cpu, this_cpu;
+> @@ -338,9 +337,7 @@ void panic(const char *fmt, ...)
+> =C2=A0
+> =C2=A0=09console_verbose();
+> =C2=A0=09bust_spinlocks(1);
+> -=09va_start(args, fmt);
+> =C2=A0=09len =3D vscnprintf(buf, sizeof(buf), fmt, args);
+> -=09va_end(args);
+> =C2=A0
+> =C2=A0=09if (len && buf[len - 1] =3D=3D '\n')
+> =C2=A0=09=09buf[len - 1] =3D '\0';
+> @@ -477,7 +474,17 @@ void panic(const char *fmt, ...)
+> =C2=A0=09=09mdelay(PANIC_TIMER_STEP);
+> =C2=A0=09}
+> =C2=A0}
+> +EXPORT_SYMBOL(vpanic);
+> =C2=A0
+> +/* Identical to vpanic(), except it takes variadic arguments instead
+> of va_list */
+> +void panic(const char *fmt, ...)
+> +{
+> +=09va_list args;
+> +
+> +=09va_start(args, fmt);
+> +=09vpanic(fmt, args);
+> +=09va_end(args);
+> +}
+> =C2=A0EXPORT_SYMBOL(panic);
+> =C2=A0
+> =C2=A0#define TAINT_FLAG(taint, _c_true, _c_false,
+> _module)=09=09=09\
+> diff --git a/kernel/printk/internal.h b/kernel/printk/internal.h
+> index a91bdf802967..28afdeb58412 100644
+> --- a/kernel/printk/internal.h
+> +++ b/kernel/printk/internal.h
+> @@ -71,7 +71,6 @@ int vprintk_store(int facility, int level,
+> =C2=A0=09=09=C2=A0 const char *fmt, va_list args);
+> =C2=A0
+> =C2=A0__printf(1, 0) int vprintk_default(const char *fmt, va_list args);
+> -__printf(1, 0) int vprintk_deferred(const char *fmt, va_list args);
+> =C2=A0
+> =C2=A0void __printk_safe_enter(void);
+> =C2=A0void __printk_safe_exit(void);
+> diff --git a/kernel/trace/rv/reactor_panic.c
+> b/kernel/trace/rv/reactor_panic.c
+> index 0186ff4cbd0b..2587f23db80b 100644
+> --- a/kernel/trace/rv/reactor_panic.c
+> +++ b/kernel/trace/rv/reactor_panic.c
+> @@ -13,9 +13,13 @@
+> =C2=A0#include <linux/init.h>
+> =C2=A0#include <linux/rv.h>
+> =C2=A0
+> -static void rv_panic_reaction(char *msg)
+> +static void rv_panic_reaction(const char *msg, ...)
+> =C2=A0{
+> -=09panic(msg);
+> +=09va_list args;
+> +
+> +=09va_start(args, msg);
+> +=09vpanic(msg, args);
+> +=09va_end(args);
+> =C2=A0}
+> =C2=A0
+> =C2=A0static struct rv_reactor rv_panic =3D {
+> diff --git a/kernel/trace/rv/reactor_printk.c
+> b/kernel/trace/rv/reactor_printk.c
+> index 178759dbf89f..a15db3fc8b82 100644
+> --- a/kernel/trace/rv/reactor_printk.c
+> +++ b/kernel/trace/rv/reactor_printk.c
+> @@ -12,9 +12,13 @@
+> =C2=A0#include <linux/init.h>
+> =C2=A0#include <linux/rv.h>
+> =C2=A0
+> -static void rv_printk_reaction(char *msg)
+> +static void rv_printk_reaction(const char *msg, ...)
+> =C2=A0{
+> -=09printk_deferred(msg);
+> +=09va_list args;
+> +
+> +=09va_start(args, msg);
+> +=09vprintk_deferred(msg, args);
+> +=09va_end(args);
+> =C2=A0}
+> =C2=A0
+> =C2=A0static struct rv_reactor rv_printk =3D {
+> diff --git a/kernel/trace/rv/rv_reactors.c
+> b/kernel/trace/rv/rv_reactors.c
+> index 9501ca886d83..4ce6ebb9d095 100644
+> --- a/kernel/trace/rv/rv_reactors.c
+> +++ b/kernel/trace/rv/rv_reactors.c
+> @@ -490,7 +490,7 @@ void reactor_cleanup_monitor(struct
+> rv_monitor_def *mdef)
+> =C2=A0/*
+> =C2=A0 * Nop reactor register
+> =C2=A0 */
+> -static void rv_nop_reaction(char *msg)
+> +static void rv_nop_reaction(const char *msg, ...)
+> =C2=A0{
+> =C2=A0}
+> =C2=A0
 
