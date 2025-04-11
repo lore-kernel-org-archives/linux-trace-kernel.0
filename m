@@ -1,145 +1,134 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 910FC1F8BDD;
-	Fri, 11 Apr 2025 15:09:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3632C3FB31;
+	Fri, 11 Apr 2025 16:02:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744384167; cv=none; b=EPCiOLsJQkTBa138Wa4OYOgXOHYnoIQ/7WDqqXmrQTiMtu3ke1m+9RL0pc34Kl3W3L7zvyhqyteKimMOicZwbi1WVFUKUoCjwfKOqA0mY0jUPAiTrOmHHT1tYHHHsusMDA8Z9WGaxCCxT6jLkI+AW4B5uanNzNengNJhyK0OASU=
+	t=1744387345; cv=none; b=cB6G7K1WRXOr3jaoeR2UoTSdAO3SbOt61ehUVIoYAmceRZnd9O2/NkdQHdoN0fajcSpxhFi12bGMS7gBvHO1yhUEC38rkqtFYxNwdQnt5qo/l4IFwjlx+izegEc4u8a2TesYG7zaBwQlLDCSrq7WAID0nSomh++NBFPMXZ8Uis0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744384167; c=relaxed/simple;
-	bh=xyb6zXpVTHYI5oHHidMO4UGACvo/hzgyyyMUVF8C+tY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=gnnEHG24k4RzJ+1RZMXZQfM8vOw2/Df4rD9dEdQRMKcHN8lowQ+C6VrScwi6/4DbCzsx/hpGy/EFEAuX6ZOxIO6oeWzPraE8fpMiTyemZpjLUBG/yGQbMLy1HFZeGWdBZP25nSUaoQHbGxpyARCHP46Sz29RZcUO9lCou+oG1Ng=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4D13D153B;
-	Fri, 11 Apr 2025 08:09:24 -0700 (PDT)
-Received: from [192.168.20.16] (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 24B0B3F59E;
-	Fri, 11 Apr 2025 08:09:19 -0700 (PDT)
-Message-ID: <cef3f3db-7dcc-4f0f-b6c9-c8336b4a9433@arm.com>
-Date: Fri, 11 Apr 2025 10:09:18 -0500
+	s=arc-20240116; t=1744387345; c=relaxed/simple;
+	bh=FBhKAhCk/Hs4jh6mOB55KPo132DTLmqr0zUPgw6DWE4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=iulaEI19wTMDTv1FfBS8E6ptjqUAmFfo7ltPBZaREJDHzw90POe+bhpdk1aIbn+q/+Gs0TWNd4o7rRJbL5ZTjiTZORvzhEmtRhlfl5eYCLpndL3BLsuXQg99A0iDCHWCZiX+OdXo47RTo4XJbB72pRSxtowtK4S+/KFe7Xp3mcc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bnjiYj6k; arc=none smtp.client-ip=209.85.214.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bnjiYj6k"
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-223fd89d036so28663275ad.1;
+        Fri, 11 Apr 2025 09:02:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744387343; x=1744992143; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=C3DPNfADpRbO1wif/yzIDEg2UdfSfF1zHSCMQvWGdmc=;
+        b=bnjiYj6k6QuOY4HRTlpR+uwXSq9zZrkMmgd7kp966jIEVi33vPuVTcUZDnCO2EfKop
+         U/OOu4Enq8iNVQzTuO+872xTjsiXxs2ssBiluNRFHrOcZ+2kUHkeB5u7reysnyHGJlVw
+         FdYaI7NtcXmF4fFIDTDanLa6MOalkZ9JxqJvyFJ/OJs9licThWUO/wC6ZE3na1dmQcp5
+         n97vg4+Q9NlE1/xcBI5RPMuw6R01eU/Fh2KMTmv6uqFuLQWPfT/utdBjrFwaz91IT1Rv
+         fAioWEmha/zrw/L3XDfIYNbBuxOtsyPb11kUdBc4bG9bE4g68Ynsf1pFVTWRiD1cfscA
+         YwVA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744387343; x=1744992143;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=C3DPNfADpRbO1wif/yzIDEg2UdfSfF1zHSCMQvWGdmc=;
+        b=XYF4E9PJypIJIMa9L4i8TJdXubLZsN5U1edTTgTmBN6PNLcQ3ewh4uRAyXVF1iUtzS
+         LsTeUB0PGMaOq8PFzJWt8Te/ELrFG/Ci6Fn2DTTZc1woro7rPjpSeKOBfgy2iIeiSaoL
+         Rd6V1G7NfitYjC4fBKl7glyg7V4RHZpohltNWTbmNWKjL0+7NQCbeSau1KZR/zYjg0ry
+         sVAQj5nk8ZYKE8WqMwIWF1gS+g7R5Rvf6AhBabt6na8wY+vRV99qHmtty1YULhrdw8NF
+         gmlTYZaUKD+Rz/Xf19emLZLNdAzzRCaafdXOgl8dFW818SDCY6rDF0/yqc2MtWEpODQn
+         0TDQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUwZa3LRXb5aUVKo0mVKbDsg7wbjVCyisdg8i2efN7peJK1ztKPahgoMoS/rsN3IrINh1xFhqFUU/N4I39bwRI1w6uk@vger.kernel.org, AJvYcCV6mmuh82YQyxZzcnYvT4gEZxqkGUiUMZzLG075Fp0NXVH3ICKXhb2VsOiqcwsbk3vftCoZi39g0aE3K1YA@vger.kernel.org, AJvYcCWupsh5INAoZGbrw7EdmfhaOp0Qq4WolxL/CgxRlNEV/sQbMx6PlmdzYdJdFAjPzapiUdY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzITOh3RACCP4FPNNaZ64AotDTdvmOpTx/z1By0vBA3/0Hawzdp
+	x9nwUikqSGgX4RaOZsuKSMJPhZAPLGdpwlF3b1YzMDsjqsuUkPMTmlr07X0ZLPR98yB/FipW+wo
+	h//OFt7WlnIPn5y61QhwQI4JVb/k=
+X-Gm-Gg: ASbGncs6ZXDo/CqGJy043ApfKMzPWfS1vnbOuESSdWm1+kfbDN1JoQpAkKbd8InCvzA
+	3QRpldyZuEhCZ4RX9qHRDcn3maWbIAlcZFv2iEsoSWeVAQ5S8dv0c8YR3SF01p0Li4sy4OmPbI/
+	2Xb6UPiyu3PIT9iooNPIE8UXUfMDlsyShA9mOv
+X-Google-Smtp-Source: AGHT+IGE6SwOYErmeGW2zkfo9iEtcidg/4bcd7sx1oOsxjrLzNGHC5Ih6AYkQc+8dfsKufqVyATMTAoEoVaFDP5FwK0=
+X-Received: by 2002:a17:902:d544:b0:224:f12:3735 with SMTP id
+ d9443c01a7336-22bea4c622cmr51167305ad.31.1744387342268; Fri, 11 Apr 2025
+ 09:02:22 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 4/6] arm64: probes: Add GCS support to bl/blr/ret
-To: linux-trace-kernel@vger.kernel.org
-Cc: linux-perf-users@vger.kernel.org, mhiramat@kernel.org, oleg@redhat.com,
- peterz@infradead.org, acme@kernel.org, namhyung@kernel.org,
- mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org,
- irogers@google.com, adrian.hunter@intel.com, kan.liang@linux.intel.com,
- thiago.bauermann@linaro.org, broonie@kernel.org, yury.khrustalev@arm.com,
- kristina.martsenko@arm.com, liaochang1@huawei.com, catalin.marinas@arm.com,
- will@kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org
-References: <20250407161951.560865-1-jeremy.linton@arm.com>
- <20250407161951.560865-5-jeremy.linton@arm.com>
-Content-Language: en-US
-From: Jeremy Linton <jeremy.linton@arm.com>
-In-Reply-To: <20250407161951.560865-5-jeremy.linton@arm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20250411121756.567274-1-jolsa@kernel.org>
+In-Reply-To: <20250411121756.567274-1-jolsa@kernel.org>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Fri, 11 Apr 2025 09:02:10 -0700
+X-Gm-Features: ATxdqUFMdxe1xSqNq0fGhqgKKXiKqkLATtLR8xwfoX2J_XiJhj9ETSYhQ_MQ18U
+Message-ID: <CAEf4BzbvMYJf5LLxwamYpzzu=Sewzti-FR-9o4AGfU+KZu0b1Q@mail.gmail.com>
+Subject: Re: [PATCHv2 perf/core 1/2] uprobes/x86: Add support to emulate nop instructions
+To: Jiri Olsa <jolsa@kernel.org>
+Cc: Oleg Nesterov <oleg@redhat.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@kernel.org>, Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	x86@kernel.org, Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>, 
+	John Fastabend <john.fastabend@gmail.com>, Hao Luo <haoluo@google.com>, 
+	Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Alan Maguire <alan.maguire@oracle.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi,
-
-On 4/7/25 11:19 AM, Jeremy Linton wrote:
-> The arm64 probe simulation doesn't currently have logic in place
-> to deal with GCS and this results in core dumps if probes are inserted
-> at control flow locations. Fix-up bl, blr and ret to manipulate the
-> shadow stack as needed.
-> 
-> While we manipulate and validate the shadow stack correctly, the
-> hardware provides additional security by only allowing GCS operations
-> against pages which are marked to support GCS. For writing there is
-> gcssttr() which enforces this, but there isn't an equivalent for
-> reading. This means that uprobe users should be aware that probing on
-> control flow instructions which require reading the shadow stack (ex:
-> ret) offers lower security guarantees than what is achieved without
-> the uprobe active.
-> 
-> Signed-off-by: Jeremy Linton <jeremy.linton@arm.com>
+On Fri, Apr 11, 2025 at 5:18=E2=80=AFAM Jiri Olsa <jolsa@kernel.org> wrote:
+>
+> Adding support to emulate all nop instructions as the original uprobe
+> instruction.
+>
+> This change speeds up uprobe on top of all nop instructions and is a
+> preparation for usdt probe optimization, that will be done on top of
+> nop5 instruction.
+>
+> With this change the usdt probe on top of nop5 won't take the performance
+> hit compared to usdt probe on top of standard nop instruction.
+>
+> Suggested-by: Oleg Nesterov <oleg@redhat.com>
+> Suggested-by: Andrii Nakryiko <andrii@kernel.org>
+> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
 > ---
->   arch/arm64/kernel/probes/simulate-insn.c | 28 ++++++++++++++++++++----
->   1 file changed, 24 insertions(+), 4 deletions(-)
-> 
-> diff --git a/arch/arm64/kernel/probes/simulate-insn.c b/arch/arm64/kernel/probes/simulate-insn.c
-> index 09a0b36122d0..1fc9bb69b1eb 100644
-> --- a/arch/arm64/kernel/probes/simulate-insn.c
-> +++ b/arch/arm64/kernel/probes/simulate-insn.c
-> @@ -13,6 +13,7 @@
->   #include <asm/traps.h>
->   
->   #include "simulate-insn.h"
-> +#include "asm/gcs.h"
->   
->   #define bbl_displacement(insn)		\
->   	sign_extend32(((insn) & 0x3ffffff) << 2, 27)
-> @@ -49,6 +50,18 @@ static inline u32 get_w_reg(struct pt_regs *regs, int reg)
->   	return lower_32_bits(pt_regs_read_reg(regs, reg));
->   }
->   
-> +static inline void update_lr(struct pt_regs *regs, long addr)
-> +{
-> +	int err = 0;
-> +
-> +	if (user_mode(regs) && task_gcs_el0_enabled(current)) {
-> +		push_user_gcs(addr + 4,	 &err);
-> +		if (err)
-> +			force_sig(SIGSEGV);
-> +	}
-> +	procedure_link_pointer_set(regs, addr + 4);
-> +}
-> +
->   static bool __kprobes check_cbz(u32 opcode, struct pt_regs *regs)
->   {
->   	int xn = opcode & 0x1f;
-> @@ -107,9 +120,8 @@ simulate_b_bl(u32 opcode, long addr, struct pt_regs *regs)
->   {
->   	int disp = bbl_displacement(opcode);
->   
-> -	/* Link register is x30 */
->   	if (opcode & (1 << 31))
-> -		set_x_reg(regs, 30, addr + 4);
-> +		update_lr(regs, addr);
->   
->   	instruction_pointer_set(regs, addr + disp);
->   }
-> @@ -133,17 +145,25 @@ simulate_br_blr(u32 opcode, long addr, struct pt_regs *regs)
->   	/* update pc first in case we're doing a "blr lr" */
->   	instruction_pointer_set(regs, get_x_reg(regs, xn));
->   
-> -	/* Link register is x30 */
->   	if (((opcode >> 21) & 0x3) == 1)
-> -		set_x_reg(regs, 30, addr + 4);
-> +		update_lr(regs, addr);
->   }
->   
->   void __kprobes
->   simulate_ret(u32 opcode, long addr, struct pt_regs *regs)
->   {
-> +	u64 ret_addr;
-> +	int err = 0;
->   	int xn = (opcode >> 5) & 0x1f;
->   
->   	instruction_pointer_set(regs, get_x_reg(regs, xn));
-> +
-> +	if (user_mode(regs) && task_gcs_el0_enabled(current)) {
-> +		ret_addr = pop_user_gcs(&err);
-> +		if (err || ret_addr != procedure_link_pointer(regs))
-> +			force_sig(SIGSEGV);
-> +	}
-> +
->   }
+> v2 changes:
+> - follow Adndrii/Oleg's suggestion and emulate all the nops
+>
+>  arch/x86/kernel/uprobes.c | 6 ++++++
+>  1 file changed, 6 insertions(+)
+>
+> diff --git a/arch/x86/kernel/uprobes.c b/arch/x86/kernel/uprobes.c
+> index 9194695662b2..262960189a1c 100644
+> --- a/arch/x86/kernel/uprobes.c
+> +++ b/arch/x86/kernel/uprobes.c
+> @@ -840,6 +840,12 @@ static int branch_setup_xol_ops(struct arch_uprobe *=
+auprobe, struct insn *insn)
+>         insn_byte_t p;
+>         int i;
+>
+> +       /* x86_nops[i]; same as jmp with .offs =3D 0 */
+> +       for (i =3D 1; i <=3D ASM_NOP_MAX; ++i) {
 
-I was looking at this earlier this week and decided that this routine 
-should have a return added following the force_sig(), and moving the 
-instruction_pointer_set() below that. That syncs the behavior with what 
-would happen without the uprobe active when ret_addr != LR. Then I 
-dumped the 'xn' too.
+i <=3D ASM_NOP_MAX && i <=3D insn->length
+
+?
+
+otherwise what prevents us from reading past the actual instruction bytes?
 
 
+or, actually, shouldn't we just check memcmp(x86_nops[insn->length])
+if insn->length < ASM_NOP_MAX ?
+
+
+> +               if (!memcmp(insn->kaddr, x86_nops[i], i))
+> +                       goto setup;
+> +       }
+> +
+>         switch (opc1) {
+>         case 0xeb:      /* jmp 8 */
+>         case 0xe9:      /* jmp 32 */
+> --
+> 2.49.0
+>
