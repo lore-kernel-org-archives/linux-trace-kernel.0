@@ -1,116 +1,117 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f194.google.com (mail-yw1-f194.google.com [209.85.128.194])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E00B0230BE8;
-	Sat, 12 Apr 2025 22:19:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D7C14438B;
+	Sun, 13 Apr 2025 01:30:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744496346; cv=none; b=aTYnVC2Ahyh3RYZ3/wL2OvAPLRLaabqIp9WYaInROwRa6qh/LGDH2vvVW5cyA6R1ijNgrcTyP+2dPXgMdmmnYSRUG9afIBT8JJshHp3XeCt89KrcCwNGOrX/ZzKHRWMdq//UAd6pqURI23BUptzHs30B+t++9U/sSXE3mLQCzL4=
+	t=1744507803; cv=none; b=gBGf2ifQOirB7siLgbXP6jtE7sU5i3vF0MWemmdhgMcWggiZ/R3TwppVHV9ojkaQL1k+bpioyWxICFpytdNTI9yGsxwwQgTyWM4gULBJRfEMK3+WSqtG4P/xy+9w/cowP2L2kBv23Bt6sLHZQwY+9yFpcFQH05ZSN1oCHOjF5og=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744496346; c=relaxed/simple;
-	bh=kuDzUPnqWpY0LD79GLgwgUxFC5auipRyUTvXSYUi+Ro=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=QVC3auRTyM+j4EkRBGhFDQCKJg9dlGp7po+StH4ZzP+v3becnB+vxj5yOjBwizoul3Mu5i8zN1NLVlgocOZFtlzNhgKbPyfhN9rsWqMeXVG5o9kKEL9bM/y1EMeUvwWiZsbT6cQ8ZGKxRuHTy9EXhjR8EW8J7JnEC65EvJaZDQU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=XzIN2DJL; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1744507803; c=relaxed/simple;
+	bh=5fNOBcVjfYFLDZl5pf99fl0h33tY1w76IiR3dq4rbGM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=tl3gIOZZ4swOk9VINzQyl0EOJbkaJDhmkL1DBKfJarC9mOGgLqKjQyAHEeDsOaN+wK8syRE6QQe9B9g26wcJhw9cpUioVLjd3r9Xc9f+TQYU6VJxWHEbrD9MGu/+pBtwwD0NSwfFpEFbdrC/5r64CgVeozXl4p1G6LdeFtJJQgU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Sd45fcXh; arc=none smtp.client-ip=209.85.128.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="XzIN2DJL"
-Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53CL33nO018067;
-	Sat, 12 Apr 2025 22:18:54 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:date:from:message-id:mime-version
-	:subject:to; s=pp1; bh=d0l23QETrR86BKTGbFZIBjSDN/xiASYRlseP/4Z2R
-	Xo=; b=XzIN2DJLe4OZ0qNNLRZct1hgIJO8l1XPeDUFmXm+3D+V2zkXcTuceguep
-	GUyE5WH1lrRA1y6muLuIKlQCtehzUTtHsXHXwgu3JPMINefEtvQy+SpHEcHnPGc1
-	w85iFJ32kgissl9xGRLkFQ0bkrDevm51Uz4GUeE8VDI3mDA2nlgOMT13LpsWc9MD
-	toViVae+fRHyE4YV8KbzLcRQV327m1qrPoxclAHUtPS/MuMjS+xTeSlbAuL0D933
-	M0RDE1fkf+sFM7zRDyZZJBJ2V3rON1dH70RT48HilNNAdudyosvVxB2JRywwnHWY
-	tyuyDJcpvp08vzwRJGddMvOUgbTRg==
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45yyrfgbv8-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sat, 12 Apr 2025 22:18:54 +0000 (GMT)
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 53CJkYx5002378;
-	Sat, 12 Apr 2025 22:18:53 GMT
-Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 45ygs7bc18-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sat, 12 Apr 2025 22:18:53 +0000
-Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
-	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 53CMInWv35521206
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Sat, 12 Apr 2025 22:18:49 GMT
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id A8CA620065;
-	Sat, 12 Apr 2025 22:18:49 +0000 (GMT)
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 221BF20069;
-	Sat, 12 Apr 2025 22:18:49 +0000 (GMT)
-Received: from heavy.ibmuc.com (unknown [9.179.5.213])
-	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Sat, 12 Apr 2025 22:18:49 +0000 (GMT)
-From: Ilya Leoshkevich <iii@linux.ibm.com>
-To: Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Sven Schnelle <svens@linux.ibm.com>, linux-kernel@vger.kernel.org,
-        linux-trace-kernel@vger.kernel.org, Heiko Carstens <hca@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Ilya Leoshkevich <iii@linux.ibm.com>
-Subject: [PATCH v2 0/2] ftrace: Expose call graph depth as unsigned int
-Date: Sun, 13 Apr 2025 00:10:42 +0200
-Message-ID: <20250412221847.17310-1-iii@linux.ibm.com>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Sd45fcXh"
+Received: by mail-yw1-f194.google.com with SMTP id 00721157ae682-6feb229b716so32306717b3.3;
+        Sat, 12 Apr 2025 18:30:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744507801; x=1745112601; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=bDGOK2rvZtMRdI3871C6jFgU1x4ph9W3mi1bLdqpRSc=;
+        b=Sd45fcXhSKGbY0oVtV6iACfDNNNeRzaRE+xo/d3lZ7BrGd19/sS6LO3W5j4yDEAdZC
+         6dvg390ToJDAumzrs4BV84GYxLs4W/muux0u1rOs1O2doVBB54FmvX+ZAgVTsfBwg6GK
+         l23XxnRlRwnfbUfJZx3PDeovdDAO4sxCf5P9M5EQA3YakbXdBjOjupJsNXizWly6zuti
+         ZyYKslCRdaA6ofDz0B5KqBifwNswf5Hr4Y7Xhu/NalZLuTxfG4pSIzeqMFgyqWNZFyqv
+         NRzh2r4evI9pkGq5VrHWOXeFc2N5KOH7D8qjtkscV5hNz2buDCBSX4yvdgmW3Ql6LfUd
+         5iog==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744507801; x=1745112601;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=bDGOK2rvZtMRdI3871C6jFgU1x4ph9W3mi1bLdqpRSc=;
+        b=GeuA98fGtUoS/OjwynUl+R760kUvGwbxOMdlgpkPAaCx9qsbEj6ydSTyBVwfTW91GW
+         4Ge66Ajm7+G5o4O5ZUCJRdhC/3+nmvXVcyH0HbhXcsjL3TNmNp0vOsu9LwESWjnrJi59
+         lYDnQShaz7hfQay0oNO6ydaelLafb7Fi1wTV2kpLFnAbHyv5uY1mtAu5cVXLugE/zzjT
+         OQ5ccpdCfbORVW3vw8Aa6OMczc2CTlz2mCmTnfrA0ZXTWSxbeYOFOJelTAatav/q5bGk
+         14a1jZBQlRGlQNV3E7GskuJ9LnLsR7qBlYPHo7kB9yFwvBIUuNslG+ji0pFgrTyoai4R
+         tj+A==
+X-Forwarded-Encrypted: i=1; AJvYcCUSEeSpUGhJZbSzmwF21iO5unCG7TwrY26VSPSKRadc3XjOS4ocCTW8rWMK9uhmS59IQ9UV//UTGi18EFfO@vger.kernel.org, AJvYcCWa9aqXUdc/SqPeenXrPfxb1mfc1fZXTgTc4zL9UGpOKE1SUZVztAUYgJjPOIGIZFqDQgU=@vger.kernel.org, AJvYcCXkyjdRJp3+HdLRBOqhMMJHtyfSPB0or6oPrSDXREuMeE1vYnaxlvjhhabU3kNUM0ab4nP6g55Ynm1Aq5KNWom0bBoy@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyi7TDLy6Q+v91/ALvtCUHGTdGCQ9tpzwG4NUNG2EzVbAqtwWkl
+	KYpqLSjH6/ISCEprxmo2MnhvSuADHCBi2OR/aNL2dm+ixh5sGAkB7mS+Jvi8ie6AEjvf2+sO/Ch
+	qWe6bo/XwYBhu7kUHu8TTzCrSwZM=
+X-Gm-Gg: ASbGncu8jxV2dVYD3WyDKMPgxm+X5CCvpNY0prb50cQQkxxlBbPvXe0bzczU18TaM4A
+	LmGAZtSOTxumqcjjDR8AwASF4AzIHIJexGtUDRIA+n5wIcP+iIVgZsEo/ySSKfCFykz73WTwGC2
+	bSRmG9p5xN5dKaippe7+i4hw==
+X-Google-Smtp-Source: AGHT+IGXxOte3NMOaVe/HO0xCxf0esswZS/+knV1xXymAlSzxRKLH1oK0PB3X5bFm3GPZClwZgzo99jac4upt0n+D4A=
+X-Received: by 2002:a05:690c:6a0a:b0:6f7:ae31:fdf with SMTP id
+ 00721157ae682-705599c93a0mr133264767b3.12.1744507801003; Sat, 12 Apr 2025
+ 18:30:01 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: FM2qqSMySAtrzL5J-7TMtZvbtZAcDFsG
-X-Proofpoint-GUID: FM2qqSMySAtrzL5J-7TMtZvbtZAcDFsG
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-12_10,2025-04-10_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 suspectscore=0
- adultscore=0 phishscore=0 impostorscore=0 mlxscore=0 lowpriorityscore=0
- mlxlogscore=973 spamscore=0 bulkscore=0 malwarescore=0 priorityscore=1501
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2504120170
+References: <20250412133348.92718-1-dongml2@chinatelecom.cn>
+ <20250412100939.7f8dbbb7@batman.local.home> <CADxym3bAy4aV=UJU9ge0vw055C2DzC=zubjhOBSay_88CkW+hQ@mail.gmail.com>
+ <CADxym3bAXpqC3awWBTm+zc4Wn348=7cYVCN_+em=b5qPimUTYQ@mail.gmail.com> <20250412104518.2b4598d3@batman.local.home>
+In-Reply-To: <20250412104518.2b4598d3@batman.local.home>
+From: Menglong Dong <menglong8.dong@gmail.com>
+Date: Sun, 13 Apr 2025 09:32:01 +0800
+X-Gm-Features: ATxdqUHA8BWvLt6A3aq8c30EViPQk7776ZFKMdg2rBc1AeXyB5SRGv8Hfl_bhlc
+Message-ID: <CADxym3Zzqw3SNP8Ef7pvTJLzOvt+PUvKguaAB2qRiaWM3GN8aQ@mail.gmail.com>
+Subject: Re: [PATCH bpf] ftrace: fix incorrect hash size in register_ftrace_direct()
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: mhiramat@kernel.org, mark.rutland@arm.com, mathieu.desnoyers@efficios.com, 
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	bpf@vger.kernel.org, Menglong Dong <dongml2@chinatelecom.cn>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-v1: https://lore.kernel.org/lkml/20250411172207.61332-1-iii@linux.ibm.com/
-v1 -> v2: Use unsigned int instead of int.
-          Add a follow-up patch that changes depth to unsigned int in
-          all events.
+On Sat, Apr 12, 2025 at 10:45=E2=80=AFPM Steven Rostedt <rostedt@goodmis.or=
+g> wrote:
+>
+> On Sat, 12 Apr 2025 22:36:56 +0800
+> Menglong Dong <menglong8.dong@gmail.com> wrote:
+>
+> > > Yeah, this seems to make more sense. And I'll send a V2
+> > > later.
+> > >
+> > > BTW, Should we still keep the "size =3D min(size, 32)" logic
+> >
+> > Oops, I mean "size =3D  max(size, 32); size =3D fls(size);" here :/
+> >
+> > > to avoid the hash bits being too small, just like the origin
+> > > logic in "dup_hash"?
+> > >
+>
+> If you have 5 functions, why do you need more that 5 buckets?
+>
+>         size =3D 5;
+>         size =3D max(5, 32); // size =3D 32
+>         size =3D fls(size); // size =3D 5
+>         alloc_ftrace_hash(size);
+>
+>                 size =3D 1 << size; // size =3D 32
+>                 hash->buckets =3D kcalloc(size, ...);
+>
+> Now you have 32 buckets for 5 functions. Why waste the memory?
+>
+> If you add more functions, the hash bucket size will get updated.
 
-Hi,
+Yeah, I see. The hash bucket will be reallocated when we
+add more functions to the direct_funtions, so it is not
+necessary to make the budget size large here.
 
-This series changes the type of depth in all call graph events to
-unsigned int.
+Thanks!
+Menglong Dong
 
-Patch 1 fixes a size mismatch issue in ftrace_graph_ent_entry, which
-causes trace-cmd on 64-bit big-endian systems to output a lot of bogus
-spaces, rendering it unusable.
-
-Patch 2 changes type of depth in all other events to unsigned int in
-order to better reflect its semantics: it can only be negative
-internally, but recorded values are always non-negative.
-
-Best regards,
-Ilya
-
-Ilya Leoshkevich (2):
-  ftrace: Fix type of ftrace_graph_ent_entry.depth
-  ftrace: Expose call graph depth as unsigned int
-
- kernel/trace/trace_entries.h | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
-
--- 
-2.49.0
-
+>
+> -- Steve
