@@ -1,141 +1,355 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B5B315B54C;
-	Mon, 14 Apr 2025 23:37:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 000FC1F4CB7
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 14 Apr 2025 23:40:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744673842; cv=none; b=bdBmH2akiTjzhgpYuFUCascg33LJBB6/SnEHZBoIGDs6kKeSN1KqdKG6GxV4EzFkCi+sDl9dPQIlvKAW/NFzNkaBP0hTwaNAVfp+L8/wTD/Ui62BkJAkTTh7ZZgEEfvSdH38tDEYYwMsGgswdce4W5n3dT4RcU+AO/I8NofAJGg=
+	t=1744674033; cv=none; b=k611gw3rIvWw7Ib/u4PyWw5RflPWIZduAFVrS5IigWOOdGK6vPrCxSK/LGn9O2e9XSKQyFJu7g8IPtGTrgamEHk7/NQL/FbC+YESyawD90LQW3yMLyhg7Q9PcJJH5YwPyxJoSqCq2+mFQg3CJJ8xCP49IW+oCW8rDDxXDSLGnqg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744673842; c=relaxed/simple;
-	bh=5YhM4OF79FNxcqN9wzVPw1rP4jzYZ6nO9osaCcUX96I=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Cce0CbcHisye0ZSQ9Rlp8NhrQY1Yckw+eaVqe0MrL0EPb+97V+nNPOJkBXjgOAEEhPYi82Fg+o3ZJQlUUpYKdIl6E8QfZm5Gtz+Rr1yV2eniYnvap/nr5G7f3anB9WJ87WSJRYw8DTr8qF8WhZl9N+IXEQAGr2/t0bJZ8NzdzuY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZIVhF12C; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1744674033; c=relaxed/simple;
+	bh=v3SOwTl2r95Ney8s3d9zNXFL66CISZjaoynRKegj5yU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=E22aOxC+OtbisXNaorqVb9eerE1hxEL7quEMXmdkvrsJpMmoSQ1VoibEmP+dtzhhqMCST8b27bnO53QCNzGJOSr2ll+1I2RN09xgXeD/AINZPqcY1enwMEKB+lPLAffmf1lhM/hLhpnGPHIRFUnE6oqkobjQRs0Tz4fuLvVPgog=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=IW8YBJtR; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZIVhF12C"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1744673841; x=1776209841;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=5YhM4OF79FNxcqN9wzVPw1rP4jzYZ6nO9osaCcUX96I=;
-  b=ZIVhF12Co1wUPtlBzQrxmkfV9chGewfk5s+9LPjHAbTPT506WMvTrsJW
-   Ua1k067JeQuOXqdCyEK5N678YK+Yv91MRbH3LGJyqGk0Xh16UyMOVTZ5T
-   Ml38JpT72dMAlvO49ZeEjOGJNPXx7K2bJPMTGf1UBIIxIc1O4Ni8ZYg2v
-   OZ6yX8oX4XP8WZPJxOjZQ+I+abNAnojVFb1QGd+p2omlKZ/+rlFwVwWzT
-   LUbdrhG1rxz30i/AHpN6tGpXHOS2fBGht6pQu1Z8dTc8FWKzDbrl2MKFd
-   Ak6uIRQYkQRte6RV0zBIe2+GL+fkdMxVY+gZwVQh9sawgXFgb0jMYPASl
-   g==;
-X-CSE-ConnectionGUID: iEtniNnaSBiVGc0/GBOt4g==
-X-CSE-MsgGUID: m7B04P7XRz2QEUXDwMkEPw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11403"; a="46073688"
-X-IronPort-AV: E=Sophos;i="6.15,213,1739865600"; 
-   d="scan'208";a="46073688"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2025 16:37:20 -0700
-X-CSE-ConnectionGUID: bsGeB27oRWy6llquppN4fg==
-X-CSE-MsgGUID: U2n0qvsURUSz5qJhXj38ig==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,213,1739865600"; 
-   d="scan'208";a="153135023"
-Received: from johunt-mobl9.ger.corp.intel.com (HELO [10.124.222.39]) ([10.124.222.39])
-  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2025 16:37:19 -0700
-Message-ID: <d64ec287-c85e-4b50-beac-4517462882f6@intel.com>
-Date: Mon, 14 Apr 2025 16:37:19 -0700
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IW8YBJtR"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1744674029;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=J2OiIsf2W8yk+5b++Qe2omt2QBDI07vwI1CVDpMYdO8=;
+	b=IW8YBJtRpg7AHratOakekrYkEOzo268CUBzkla7CYnuoby9sNnChx5NNRUyoa5BRO2Qthh
+	+xV7CV69wt+QdHpmPvQR3DbAhQKgNHtx9eml6yjBtu260Dil5nbXFXv2A4t7FhtamSsR9B
+	Tlj7aAe1FuHEP1j9w16hW4YULgmg4rI=
+Received: from mail-yb1-f197.google.com (mail-yb1-f197.google.com
+ [209.85.219.197]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-389-RgHzbudSP7igD3fUOkCDqw-1; Mon, 14 Apr 2025 19:40:28 -0400
+X-MC-Unique: RgHzbudSP7igD3fUOkCDqw-1
+X-Mimecast-MFC-AGG-ID: RgHzbudSP7igD3fUOkCDqw_1744674028
+Received: by mail-yb1-f197.google.com with SMTP id 3f1490d57ef6-e6df140fda2so1137697276.3
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 14 Apr 2025 16:40:28 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744674028; x=1745278828;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=J2OiIsf2W8yk+5b++Qe2omt2QBDI07vwI1CVDpMYdO8=;
+        b=X6+CYhKiFktvwgZrvTQYBJwZAEWIR2oRz2OLwc+w6YAQoN5rHSNjoiaTbnAIUtNsjh
+         3u5ZcLG6WMcF6uW2SldNKs97TLbwQtuETi7pxrWdEcj9VEmxB9wHzLodMydDCM0sO+2n
+         aPjtQ0BgDa7Ya4GYfpM3S9x/X/7kInARRc3PJSddhL8aWdLag/jsS9EJ5PdY9xjg7bLL
+         Dsw1l4EXepGK0aIgnIvNv8YPvlUliXocuCxkddd+RlVxlh0Z1x6Y1ItAV+drZFYG7Dpi
+         xsite3ro1h9E8Htw5LZb7detHUkzwv3Daaj5/Gc6u1grof7ZbHhpiqUWWU4tpyY4/Iru
+         zmXQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUS4+ws6AzFDp6vmUplln7FKRFNOAFX/71H8qXNpy8bik8x/E+t+PyCpaNP4UhZuOEqsjG7EVDfTEo2VROU0lwgTck=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzXpVurhVuNm+nsQpSsEin6BCwotDNP2wviBdr38bQ2KG1Pckog
+	sHebPweFkWLsxIZq3poUJRECQIq0y2Ncy9R3r2iXvSbkb9Q+D4nk3RECBEMtaYBpvYT7urjrpBh
+	gImjh/cKkuUw+lVcWp8fOTG7gEcjgj5r+iJhhNhRx23UFH4gWHUGbXKrv7gHUjQhmrw6IuPLnh6
+	ImJhyk2TB1V2V6bLMb+EFFNSXwysJ8GZlrBwD32Okw7EjK
+X-Gm-Gg: ASbGncsPMN1fXtD7FUJudn5rc+K5nXM3NpvulO3OcX/It4PECjvU0ZTFBoY314nFMLM
+	ppo9mhqyOdb8wvozf7YRyCm2G186ZJ8wOQfTpDqjuXWYRquMNunm/iL4eZN/EShVEDEfwp6jZjj
+	rqdxSO5BY=
+X-Received: by 2002:a05:6902:1b81:b0:e60:9dd3:38c9 with SMTP id 3f1490d57ef6-e704de7aa84mr21194679276.7.1744674027829;
+        Mon, 14 Apr 2025 16:40:27 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFsa05k09ZEyzrJpdWgRU+tnATSjobx4Yocj67TnkEdOCqy2gsYruBCtGmLiUfT7BQ630Z7RXLReRvIiw2zlPI=
+X-Received: by 2002:a05:6902:1b81:b0:e60:9dd3:38c9 with SMTP id
+ 3f1490d57ef6-e704de7aa84mr21194642276.7.1744674027458; Mon, 14 Apr 2025
+ 16:40:27 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] x86/tracing: introduce enter/exit tracepoint pairs for
- page faults
-To: Junxuan Liao <ljx@cs.wisc.edu>, linux-trace-kernel@vger.kernel.org,
- linux-kernel@vger.kernel.org, x86@kernel.org
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- "H. Peter Anvin" <hpa@zytor.com>, Steven Rostedt <rostedt@goodmis.org>,
- Masami Hiramatsu <mhiramat@kernel.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- "Paul E. McKenney" <paulmck@kernel.org>
-References: <e7d4cd81-c0a5-446c-95d2-6142d660c15b@cs.wisc.edu>
- <214abd94-7fb3-4515-a1ae-a60abe81af88@intel.com>
- <a40a1add-00a5-49bd-887a-5fc722c9814a@cs.wisc.edu>
- <41e7d947-d59f-41a9-a540-d3c07e4678c4@cs.wisc.edu>
-From: Dave Hansen <dave.hansen@intel.com>
-Content-Language: en-US
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-In-Reply-To: <41e7d947-d59f-41a9-a540-d3c07e4678c4@cs.wisc.edu>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20250414220557.35388-1-npache@redhat.com> <20250414220557.35388-7-npache@redhat.com>
+ <CAA1CXcAo2gUmD8=0xKw-y=rLyUz0PyO7ObHB3ukG1LGikJY27g@mail.gmail.com>
+In-Reply-To: <CAA1CXcAo2gUmD8=0xKw-y=rLyUz0PyO7ObHB3ukG1LGikJY27g@mail.gmail.com>
+From: Nico Pache <npache@redhat.com>
+Date: Mon, 14 Apr 2025 17:40:01 -0600
+X-Gm-Features: ATxdqUEqbiSySwg_g9kH4ICQWgseNWYHKE0lhhrHgMaiepLYzEBI-8jaq7Rw1iY
+Message-ID: <CAA1CXcCKTEs4HBagtf4kJ+sUONWqutRC2OKoqY=n7iKd=R8zRQ@mail.gmail.com>
+Subject: Re: [PATCH v3 06/12] khugepaged: introduce khugepaged_scan_bitmap for
+ mTHP support
+To: linux-mm@kvack.org, linux-doc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Cc: akpm@linux-foundation.org, corbet@lwn.net, rostedt@goodmis.org, 
+	mhiramat@kernel.org, mathieu.desnoyers@efficios.com, david@redhat.com, 
+	baohua@kernel.org, baolin.wang@linux.alibaba.com, ryan.roberts@arm.com, 
+	willy@infradead.org, peterx@redhat.com, ziy@nvidia.com, 
+	wangkefeng.wang@huawei.com, usamaarif642@gmail.com, sunnanyong@huawei.com, 
+	vishal.moola@gmail.com, thomas.hellstrom@linux.intel.com, 
+	yang@os.amperecomputing.com, kirill.shutemov@linux.intel.com, 
+	aarcange@redhat.com, raquini@redhat.com, dev.jain@arm.com, 
+	anshuman.khandual@arm.com, catalin.marinas@arm.com, tiwai@suse.de, 
+	will@kernel.org, dave.hansen@linux.intel.com, jack@suse.cz, cl@gentwo.org, 
+	jglisse@google.com, surenb@google.com, zokeefe@google.com, hannes@cmpxchg.org, 
+	rientjes@google.com, mhocko@suse.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: w8we-gkxYqODDH5XMVMRS7RGkjhCT5C8gcsvnNeo1vA_1744674028
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 4/14/25 16:22, Junxuan Liao wrote:
-> On 4/14/25 6:14 PM, Junxuan Liao wrote:
->> Do people find separate user/kernel tracepoints useful? For me, I can
->> check regs in eBPF tracing code instead.
-> I think it might be good to add a field to the tracepoints to indicate
-> whether it's in user space or not.
+On Mon, Apr 14, 2025 at 5:06=E2=80=AFPM Nico Pache <npache@redhat.com> wrot=
+e:
+>
+> On Mon, Apr 14, 2025 at 4:07=E2=80=AFPM Nico Pache <npache@redhat.com> wr=
+ote:
+> >
+> > khugepaged scans PMD ranges for potential collapse to a hugepage. To ad=
+d
+> > mTHP support we use this scan to instead record chunks of fully utilize=
+d
+> > sections of the PMD.
+> >
+> > create a bitmap to represent a PMD in order MIN_MTHP_ORDER chunks.
+> > by default we will set this to order 3. The reasoning is that for 4K 51=
+2
+> > PMD size this results in a 64 bit bitmap which has some optimizations.
+> > For other arches like ARM64 64K, we can set a larger order if needed.
+> >
+> > khugepaged_scan_bitmap uses a stack struct to recursively scan a bitmap
+> > that represents chunks of utilized regions. We can then determine what
+> > mTHP size fits best and in the following patch, we set this bitmap whil=
+e
+> > scanning the PMD.
+> >
+> > max_ptes_none is used as a scale to determine how "full" an order must
+> > be before being considered for collapse.
+> >
+> > If a order is set to "always" lets always collapse to that order in a
+> > greedy manner.
+> >
+> > Signed-off-by: Nico Pache <npache@redhat.com>
+> > ---
+> >  include/linux/khugepaged.h |  4 ++
+> >  mm/khugepaged.c            | 94 ++++++++++++++++++++++++++++++++++----
+> >  2 files changed, 89 insertions(+), 9 deletions(-)
+> >
+> > diff --git a/include/linux/khugepaged.h b/include/linux/khugepaged.h
+> > index 1f46046080f5..60d41215bc1a 100644
+> > --- a/include/linux/khugepaged.h
+> > +++ b/include/linux/khugepaged.h
+> > @@ -1,6 +1,10 @@
+> >  /* SPDX-License-Identifier: GPL-2.0 */
+> >  #ifndef _LINUX_KHUGEPAGED_H
+> >  #define _LINUX_KHUGEPAGED_H
+> > +#define KHUGEPAGED_MIN_MTHP_ORDER      3
+> Somehow managed to drop
+> #define KHUGEPAGED_MIN_MTHP_ORDER 2
+> When cleaning up my patches.
+>
+> Sending a V4 of just this patch in reply to this email.
+>
+> Sorry for the noise...
 
-Sounds sane to me.  Doing something like this:
+Sorry more noise...
 
-        TP_STRUCT__entry(
-                __field(                unsigned long, address  )
-                __field(                unsigned long, ip       )
-+               __field(                bool	     , user_mode)
-                __field(                unsigned long, error_code )
-        ),
+The #define KHUGEPAGED_MIN_MTHP_ORDER 2 fixup got merged into the
+wrong commit, and is actually in 07/12. If we take this V4, the merge
+will clean up the 07/12 commit with no additional changes.
 
-        TP_fast_assign(
-                 __entry->address = address;
-                 __entry->ip         = regs->ip;
-+                __entry->user_mode  = user_mode(regs);
-                 __entry->error_code = error_code;
-        ),
+If sending out a V4 of 07/12 is needed please let me know.
+>
+>
+>
+> > +#define KHUGEPAGED_MIN_MTHP_NR (1<<KHUGEPAGED_MIN_MTHP_ORDER)
+> > +#define MAX_MTHP_BITMAP_SIZE  (1 << (ilog2(MAX_PTRS_PER_PTE) - KHUGEPA=
+GED_MIN_MTHP_ORDER))
+> > +#define MTHP_BITMAP_SIZE  (1 << (HPAGE_PMD_ORDER - KHUGEPAGED_MIN_MTHP=
+_ORDER))
+> >
+> >  extern unsigned int khugepaged_max_ptes_none __read_mostly;
+> >  #ifdef CONFIG_TRANSPARENT_HUGEPAGE
+> > diff --git a/mm/khugepaged.c b/mm/khugepaged.c
+> > index dfecedc6a515..5a3be30096fc 100644
+> > --- a/mm/khugepaged.c
+> > +++ b/mm/khugepaged.c
+> > @@ -94,6 +94,11 @@ static DEFINE_READ_MOSTLY_HASHTABLE(mm_slots_hash, M=
+M_SLOTS_HASH_BITS);
+> >
+> >  static struct kmem_cache *mm_slot_cache __ro_after_init;
+> >
+> > +struct scan_bit_state {
+> > +       u8 order;
+> > +       u16 offset;
+> > +};
+> > +
+> >  struct collapse_control {
+> >         bool is_khugepaged;
+> >
+> > @@ -102,6 +107,18 @@ struct collapse_control {
+> >
+> >         /* nodemask for allocation fallback */
+> >         nodemask_t alloc_nmask;
+> > +
+> > +       /*
+> > +        * bitmap used to collapse mTHP sizes.
+> > +        * 1bit =3D order KHUGEPAGED_MIN_MTHP_ORDER mTHP
+> > +        */
+> > +       DECLARE_BITMAP(mthp_bitmap, MAX_MTHP_BITMAP_SIZE);
+> > +       DECLARE_BITMAP(mthp_bitmap_temp, MAX_MTHP_BITMAP_SIZE);
+> > +       struct scan_bit_state mthp_bitmap_stack[MAX_MTHP_BITMAP_SIZE];
+> > +};
+> > +
+> > +struct collapse_control khugepaged_collapse_control =3D {
+> > +       .is_khugepaged =3D true,
+> >  };
+> >
+> >  /**
+> > @@ -851,10 +868,6 @@ static void khugepaged_alloc_sleep(void)
+> >         remove_wait_queue(&khugepaged_wait, &wait);
+> >  }
+> >
+> > -struct collapse_control khugepaged_collapse_control =3D {
+> > -       .is_khugepaged =3D true,
+> > -};
+> > -
+> >  static bool khugepaged_scan_abort(int nid, struct collapse_control *cc=
+)
+> >  {
+> >         int i;
+> > @@ -1118,7 +1131,8 @@ static int alloc_charge_folio(struct folio **foli=
+op, struct mm_struct *mm,
+> >
+> >  static int collapse_huge_page(struct mm_struct *mm, unsigned long addr=
+ess,
+> >                               int referenced, int unmapped,
+> > -                             struct collapse_control *cc)
+> > +                             struct collapse_control *cc, bool *mmap_l=
+ocked,
+> > +                                 u8 order, u16 offset)
+> >  {
+> >         LIST_HEAD(compound_pagelist);
+> >         pmd_t *pmd, _pmd;
+> > @@ -1137,8 +1151,12 @@ static int collapse_huge_page(struct mm_struct *=
+mm, unsigned long address,
+> >          * The allocation can take potentially a long time if it involv=
+es
+> >          * sync compaction, and we do not need to hold the mmap_lock du=
+ring
+> >          * that. We will recheck the vma after taking it again in write=
+ mode.
+> > +        * If collapsing mTHPs we may have already released the read_lo=
+ck.
+> >          */
+> > -       mmap_read_unlock(mm);
+> > +       if (*mmap_locked) {
+> > +               mmap_read_unlock(mm);
+> > +               *mmap_locked =3D false;
+> > +       }
+> >
+> >         result =3D alloc_charge_folio(&folio, mm, cc, HPAGE_PMD_ORDER);
+> >         if (result !=3D SCAN_SUCCEED)
+> > @@ -1273,12 +1291,72 @@ static int collapse_huge_page(struct mm_struct =
+*mm, unsigned long address,
+> >  out_up_write:
+> >         mmap_write_unlock(mm);
+> >  out_nolock:
+> > +       *mmap_locked =3D false;
+> >         if (folio)
+> >                 folio_put(folio);
+> >         trace_mm_collapse_huge_page(mm, result =3D=3D SCAN_SUCCEED, res=
+ult);
+> >         return result;
+> >  }
+> >
+> > +// Recursive function to consume the bitmap
+> > +static int khugepaged_scan_bitmap(struct mm_struct *mm, unsigned long =
+address,
+> > +                       int referenced, int unmapped, struct collapse_c=
+ontrol *cc,
+> > +                       bool *mmap_locked, unsigned long enabled_orders=
+)
+> > +{
+> > +       u8 order, next_order;
+> > +       u16 offset, mid_offset;
+> > +       int num_chunks;
+> > +       int bits_set, threshold_bits;
+> > +       int top =3D -1;
+> > +       int collapsed =3D 0;
+> > +       int ret;
+> > +       struct scan_bit_state state;
+> > +       bool is_pmd_only =3D (enabled_orders =3D=3D (1 << HPAGE_PMD_ORD=
+ER));
+> > +
+> > +       cc->mthp_bitmap_stack[++top] =3D (struct scan_bit_state)
+> > +               { HPAGE_PMD_ORDER - KHUGEPAGED_MIN_MTHP_ORDER, 0 };
+> > +
+> > +       while (top >=3D 0) {
+> > +               state =3D cc->mthp_bitmap_stack[top--];
+> > +               order =3D state.order + KHUGEPAGED_MIN_MTHP_ORDER;
+> > +               offset =3D state.offset;
+> > +               num_chunks =3D 1 << (state.order);
+> > +               // Skip mTHP orders that are not enabled
+> > +               if (!test_bit(order, &enabled_orders))
+> > +                       goto next;
+> > +
+> > +               // copy the relavant section to a new bitmap
+> > +               bitmap_shift_right(cc->mthp_bitmap_temp, cc->mthp_bitma=
+p, offset,
+> > +                                 MTHP_BITMAP_SIZE);
+> > +
+> > +               bits_set =3D bitmap_weight(cc->mthp_bitmap_temp, num_ch=
+unks);
+> > +               threshold_bits =3D (HPAGE_PMD_NR - khugepaged_max_ptes_=
+none - 1)
+> > +                               >> (HPAGE_PMD_ORDER - state.order);
+> > +
+> > +               //Check if the region is "almost full" based on the thr=
+eshold
+> > +               if (bits_set > threshold_bits || is_pmd_only
+> > +                       || test_bit(order, &huge_anon_orders_always)) {
+> > +                       ret =3D collapse_huge_page(mm, address, referen=
+ced, unmapped, cc,
+> > +                                       mmap_locked, order, offset * KH=
+UGEPAGED_MIN_MTHP_NR);
+> > +                       if (ret =3D=3D SCAN_SUCCEED) {
+> > +                               collapsed +=3D (1 << order);
+> > +                               continue;
+> > +                       }
+> > +               }
+> > +
+> > +next:
+> > +               if (state.order > 0) {
+> > +                       next_order =3D state.order - 1;
+> > +                       mid_offset =3D offset + (num_chunks / 2);
+> > +                       cc->mthp_bitmap_stack[++top] =3D (struct scan_b=
+it_state)
+> > +                               { next_order, mid_offset };
+> > +                       cc->mthp_bitmap_stack[++top] =3D (struct scan_b=
+it_state)
+> > +                               { next_order, offset };
+> > +                       }
+> > +       }
+> > +       return collapsed;
+> > +}
+> > +
+> >  static int khugepaged_scan_pmd(struct mm_struct *mm,
+> >                                    struct vm_area_struct *vma,
+> >                                    unsigned long address, bool *mmap_lo=
+cked,
+> > @@ -1445,9 +1523,7 @@ static int khugepaged_scan_pmd(struct mm_struct *=
+mm,
+> >         pte_unmap_unlock(pte, ptl);
+> >         if (result =3D=3D SCAN_SUCCEED) {
+> >                 result =3D collapse_huge_page(mm, address, referenced,
+> > -                                           unmapped, cc);
+> > -               /* collapse_huge_page will return with the mmap_lock re=
+leased */
+> > -               *mmap_locked =3D false;
+> > +                                           unmapped, cc, mmap_locked, =
+HPAGE_PMD_ORDER, 0);
+> >         }
+> >  out:
+> >         trace_mm_khugepaged_scan_pmd(mm, &folio->page, writable, refere=
+nced,
+> > --
+> > 2.48.1
+> >
 
-seems highly superior to having two sets of tracepoints and static keys.
