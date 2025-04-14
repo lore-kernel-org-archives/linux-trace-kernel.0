@@ -1,178 +1,118 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73760257AC8;
-	Mon, 14 Apr 2025 08:37:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 721371684AE;
+	Mon, 14 Apr 2025 11:54:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744619831; cv=none; b=Stbgxv8g/Oi+SSM2Ia41xXOs8L6QztJGq0Q6V+ksl86ekW2tyN6Wfjm0PqugyqrFKlPbdtxsIeiE6XQuaRilKb0r8+jtUNCJLPKuhRhyY70QYSm04OIZz9zKVUXg9ouW/ITJuvjBExmfD38JDbf0SgYTdDg8P2aqm/mFNfhGDOs=
+	t=1744631701; cv=none; b=VX8+8OS37RbKVWuxqP7F0lNaFilfgwf6+TnXecBhKr/nuvYVM4jHq+UIN6uFtdO493fmSD2Y0VgKW0vIRISUYs/0gNjQficpkPKTiOMgmvDJZ3PFsuSHx9Hc6vhhaQ1KDjRr4tisIgPWTFeLjjqcCSLc753ICmagYKMl1hYK+xY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744619831; c=relaxed/simple;
-	bh=ILfVuLymqUPwgpbXMf4YH+PUBfgIPrXUs3zMoGXuMG8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=h/yuHvvMlh5+89TJHRvNFa12Gh/HS3Y5PtZRj/QIC4UzU7C1fXH7hQKv7set3tRxnOq6P/EOfjZXiuOtHmJRiJ+C3hqy1PRxpweElzi2EfQKx3nXKPEyaoOBeiJdMeUejYsuD4goOdyXbbauXVi10FEeA23T6kqAUDLjttDWm10=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PUORlXWG; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744631701; c=relaxed/simple;
+	bh=jUon0xsIAf39XK7R0f7zGH5y3a+2qTlsy3SgS8J3sp0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=aZXmFlOEOM6wneAXG9/13MywpRA+LO+Zf6rPv4IWd9lmJzzBDBCe6WzTwCKsvu+SjpIdqkYVDeBq2e4dWGzWpbbHrIRyJOpP47TfUFyF5yVSD+v6EYoJpZAb41hmGBWIVDZGbl3NoYK6l1f8UX6j7c1cBnPqleqflHo4uSXIswo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hq/DHZAO; arc=none smtp.client-ip=198.175.65.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PUORlXWG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6065FC4CEE2;
-	Mon, 14 Apr 2025 08:37:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744619829;
-	bh=ILfVuLymqUPwgpbXMf4YH+PUBfgIPrXUs3zMoGXuMG8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=PUORlXWGNnHHahoPhzF4DZv/OALWNt0eFb/uC11ZVanquRj2zy720YonfUZGMUxPC
-	 R0F7CT3pc39JXDd4sxNDmy6hDsOjvCXXjRZtfPkRvqf6Aouv2bckEj30BmtDeXT9ln
-	 1cmx/JDoLsDLWP0NVgCF3ZdpadbxYFieP6ODwOycvDZgmCh/XizMNycr5kDohJD48u
-	 akSy8XG/IbF6osmoQqxE6WrbJFCd7RralBFMano+cnmccInF7mTQHLXYlhbhMGRF9+
-	 pxUIxyHLRsYuoavlUhlV9vPNCokflkJvo/vZNIIxKzI8c82a7rkT/g2xLEmMkkDQwS
-	 JHlxB9/EZNMKQ==
-From: Jiri Olsa <jolsa@kernel.org>
-To: Oleg Nesterov <oleg@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>,
-	Andrii Nakryiko <andrii@kernel.org>
-Cc: bpf@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	x86@kernel.org,
-	Song Liu <songliubraving@fb.com>,
-	Yonghong Song <yhs@fb.com>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Hao Luo <haoluo@google.com>,
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hq/DHZAO"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1744631700; x=1776167700;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=jUon0xsIAf39XK7R0f7zGH5y3a+2qTlsy3SgS8J3sp0=;
+  b=hq/DHZAODAX8egwulkvStoNLZqUFcBp3s6cX1fqYCtP2yz5qogPGSQEH
+   5OEbvtPJCK6WcBgtSHeuMpo47zSDtVQDxOrPsNmr4xMVQpFlrd2aClThk
+   oXTde+QkAIJuzuoznEQtA47gePHP885cEiaDA9+zTYlGpxD4iyTC0Xair
+   n6DdvFKveYvActpdlhHFjt2uS3uSX46yY9TFTdxndbtXzzNFWMvjpDdxL
+   AF87wCD1Gegzx21Z5FBDZOj2PBuR+wbksj4IqDWavvKNlu/tAiYlV+ZpL
+   +zzMCtN+/xN2HaPuzmU9zrvszHBw8o44g5ccoER3FhTLxg4h6PqpYBiEg
+   Q==;
+X-CSE-ConnectionGUID: KoGoaPLQRROdH40bQYzvdw==
+X-CSE-MsgGUID: MrJnkncBTQ6WxpdRR3E20w==
+X-IronPort-AV: E=McAfee;i="6700,10204,11402"; a="46186516"
+X-IronPort-AV: E=Sophos;i="6.15,212,1739865600"; 
+   d="scan'208";a="46186516"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2025 04:54:59 -0700
+X-CSE-ConnectionGUID: eJd6RnMmTU2XFtQmnOQqBQ==
+X-CSE-MsgGUID: u8qeO+m7SXGY03+CMkeYWg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,212,1739865600"; 
+   d="scan'208";a="134638722"
+Received: from lkp-server01.sh.intel.com (HELO b207828170a5) ([10.239.97.150])
+  by orviesa003.jf.intel.com with ESMTP; 14 Apr 2025 04:54:52 -0700
+Received: from kbuild by b207828170a5 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1u4IOn-000E98-2k;
+	Mon, 14 Apr 2025 11:54:49 +0000
+Date: Mon, 14 Apr 2025 19:54:40 +0800
+From: kernel test robot <lkp@intel.com>
+To: Jiayuan Chen <jiayuan.chen@linux.dev>, bpf@vger.kernel.org
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev, mrpre@163.com,
+	Jiayuan Chen <jiayuan.chen@linux.dev>,
+	Jakub Sitnicki <jakub@cloudflare.com>,
+	Cong Wang <xiyou.wangcong@gmail.com>,
 	Steven Rostedt <rostedt@goodmis.org>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>,
+	Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
 	Masami Hiramatsu <mhiramat@kernel.org>,
-	Alan Maguire <alan.maguire@oracle.com>
-Subject: [PATCHv3 perf/core 2/2] selftests/bpf: Add 5-byte nop uprobe trigger bench
-Date: Mon, 14 Apr 2025 10:36:47 +0200
-Message-ID: <20250414083647.1234007-2-jolsa@kernel.org>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250414083647.1234007-1-jolsa@kernel.org>
-References: <20250414083647.1234007-1-jolsa@kernel.org>
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>,
+	Jesper Dangaard Brouer <hawk@kernel.org>,
+	linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH bpf-next v2] bpf, sockmap: Introduce tracing capability
+ for sockmap
+Message-ID: <202504141925.PFNOfZzb-lkp@intel.com>
+References: <20250411091634.336371-1-jiayuan.chen@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250411091634.336371-1-jiayuan.chen@linux.dev>
 
-Add 5-byte nop uprobe trigger bench (x86_64 specific) to measure
-uprobes/uretprobes on top of nop5 instruction.
+Hi Jiayuan,
 
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
----
- tools/testing/selftests/bpf/bench.c           | 12 ++++++
- .../selftests/bpf/benchs/bench_trigger.c      | 42 +++++++++++++++++++
- .../selftests/bpf/benchs/run_bench_uprobes.sh |  2 +-
- 3 files changed, 55 insertions(+), 1 deletion(-)
+kernel test robot noticed the following build errors:
 
-diff --git a/tools/testing/selftests/bpf/bench.c b/tools/testing/selftests/bpf/bench.c
-index 1bd403a5ef7b..0fd8c9b0d38f 100644
---- a/tools/testing/selftests/bpf/bench.c
-+++ b/tools/testing/selftests/bpf/bench.c
-@@ -526,6 +526,12 @@ extern const struct bench bench_trig_uprobe_multi_push;
- extern const struct bench bench_trig_uretprobe_multi_push;
- extern const struct bench bench_trig_uprobe_multi_ret;
- extern const struct bench bench_trig_uretprobe_multi_ret;
-+#ifdef __x86_64__
-+extern const struct bench bench_trig_uprobe_nop5;
-+extern const struct bench bench_trig_uretprobe_nop5;
-+extern const struct bench bench_trig_uprobe_multi_nop5;
-+extern const struct bench bench_trig_uretprobe_multi_nop5;
-+#endif
- 
- extern const struct bench bench_rb_libbpf;
- extern const struct bench bench_rb_custom;
-@@ -586,6 +592,12 @@ static const struct bench *benchs[] = {
- 	&bench_trig_uretprobe_multi_push,
- 	&bench_trig_uprobe_multi_ret,
- 	&bench_trig_uretprobe_multi_ret,
-+#ifdef __x86_64__
-+	&bench_trig_uprobe_nop5,
-+	&bench_trig_uretprobe_nop5,
-+	&bench_trig_uprobe_multi_nop5,
-+	&bench_trig_uretprobe_multi_nop5,
-+#endif
- 	/* ringbuf/perfbuf benchmarks */
- 	&bench_rb_libbpf,
- 	&bench_rb_custom,
-diff --git a/tools/testing/selftests/bpf/benchs/bench_trigger.c b/tools/testing/selftests/bpf/benchs/bench_trigger.c
-index 32e9f194d449..82327657846e 100644
---- a/tools/testing/selftests/bpf/benchs/bench_trigger.c
-+++ b/tools/testing/selftests/bpf/benchs/bench_trigger.c
-@@ -333,6 +333,20 @@ static void *uprobe_producer_ret(void *input)
- 	return NULL;
- }
- 
-+#ifdef __x86_64__
-+__nocf_check __weak void uprobe_target_nop5(void)
-+{
-+	asm volatile (".byte 0x0f, 0x1f, 0x44, 0x00, 0x00");
-+}
-+
-+static void *uprobe_producer_nop5(void *input)
-+{
-+	while (true)
-+		uprobe_target_nop5();
-+	return NULL;
-+}
-+#endif
-+
- static void usetup(bool use_retprobe, bool use_multi, void *target_addr)
- {
- 	size_t uprobe_offset;
-@@ -448,6 +462,28 @@ static void uretprobe_multi_ret_setup(void)
- 	usetup(true, true /* use_multi */, &uprobe_target_ret);
- }
- 
-+#ifdef __x86_64__
-+static void uprobe_nop5_setup(void)
-+{
-+	usetup(false, false /* !use_multi */, &uprobe_target_nop5);
-+}
-+
-+static void uretprobe_nop5_setup(void)
-+{
-+	usetup(true, false /* !use_multi */, &uprobe_target_nop5);
-+}
-+
-+static void uprobe_multi_nop5_setup(void)
-+{
-+	usetup(false, true /* use_multi */, &uprobe_target_nop5);
-+}
-+
-+static void uretprobe_multi_nop5_setup(void)
-+{
-+	usetup(true, true /* use_multi */, &uprobe_target_nop5);
-+}
-+#endif
-+
- const struct bench bench_trig_syscall_count = {
- 	.name = "trig-syscall-count",
- 	.validate = trigger_validate,
-@@ -506,3 +542,9 @@ BENCH_TRIG_USERMODE(uprobe_multi_ret, ret, "uprobe-multi-ret");
- BENCH_TRIG_USERMODE(uretprobe_multi_nop, nop, "uretprobe-multi-nop");
- BENCH_TRIG_USERMODE(uretprobe_multi_push, push, "uretprobe-multi-push");
- BENCH_TRIG_USERMODE(uretprobe_multi_ret, ret, "uretprobe-multi-ret");
-+#ifdef __x86_64__
-+BENCH_TRIG_USERMODE(uprobe_nop5, nop5, "uprobe-nop5");
-+BENCH_TRIG_USERMODE(uretprobe_nop5, nop5, "uretprobe-nop5");
-+BENCH_TRIG_USERMODE(uprobe_multi_nop5, nop5, "uprobe-multi-nop5");
-+BENCH_TRIG_USERMODE(uretprobe_multi_nop5, nop5, "uretprobe-multi-nop5");
-+#endif
-diff --git a/tools/testing/selftests/bpf/benchs/run_bench_uprobes.sh b/tools/testing/selftests/bpf/benchs/run_bench_uprobes.sh
-index af169f831f2f..03f55405484b 100755
---- a/tools/testing/selftests/bpf/benchs/run_bench_uprobes.sh
-+++ b/tools/testing/selftests/bpf/benchs/run_bench_uprobes.sh
-@@ -2,7 +2,7 @@
- 
- set -eufo pipefail
- 
--for i in usermode-count syscall-count {uprobe,uretprobe}-{nop,push,ret}
-+for i in usermode-count syscall-count {uprobe,uretprobe}-{nop,push,ret,nop5}
- do
- 	summary=$(sudo ./bench -w2 -d5 -a trig-$i | tail -n1 | cut -d'(' -f1 | cut -d' ' -f3-)
- 	printf "%-15s: %s\n" $i "$summary"
+[auto build test ERROR on bpf-next/master]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Jiayuan-Chen/bpf-sockmap-Introduce-tracing-capability-for-sockmap/20250414-093146
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/bpf/bpf-next.git master
+patch link:    https://lore.kernel.org/r/20250411091634.336371-1-jiayuan.chen%40linux.dev
+patch subject: [PATCH bpf-next v2] bpf, sockmap: Introduce tracing capability for sockmap
+config: arm64-randconfig-001-20250414 (https://download.01.org/0day-ci/archive/20250414/202504141925.PFNOfZzb-lkp@intel.com/config)
+compiler: clang version 21.0.0git (https://github.com/llvm/llvm-project f819f46284f2a79790038e1f6649172789734ae8)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250414/202504141925.PFNOfZzb-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202504141925.PFNOfZzb-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+>> ld.lld: error: undefined symbol: sock_i_ino
+   >>> referenced by sockmap.h:70 (include/trace/events/sockmap.h:70)
+   >>>               kernel/bpf/core.o:(trace_event_raw_event_sockmap_redirect) in archive vmlinux.a
+   >>> referenced by sockmap.h:121 (include/trace/events/sockmap.h:121)
+   >>>               kernel/bpf/core.o:(trace_event_raw_event_sockmap_strparser) in archive vmlinux.a
+
 -- 
-2.49.0
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
