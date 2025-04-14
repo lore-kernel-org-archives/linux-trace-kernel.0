@@ -1,124 +1,72 @@
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+Received: from mx0b-007b0c01.pphosted.com (mx0b-007b0c01.pphosted.com [205.220.177.71])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71449289342;
-	Mon, 14 Apr 2025 17:41:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BD3018E20;
+	Mon, 14 Apr 2025 20:36:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.71
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744652468; cv=fail; b=AyCnhbiXuw0Yp6/uPw0ZBcvq99OdEY/or0032mW1S+msFaf7abVug2pTDxJlklfLFyMnM5tBrt6InbJO3TT8XrdOTMtaFPa6SGvb4yPnascWIJ80RiuOvrvFrNolcRlsA5lk0YpD4eWf1mY/LVZVQPjkZAkN7cETlpilqcSVQ3c=
+	t=1744662994; cv=fail; b=Ya/QZeWhO+LGalexKAZUkUD/O68Cqinh5Ojqwei84w8MMZEiGrGQFz3OlIJuWBhofhjbUD2isCmz3PT2zaTiTis+g+ePZeZKXOCHWBl/8IF92+ZY0DLACFj/TMGvJelX7sjfSwPPkkRXbs0s8SiTNFSixstJdulkrran3Dk7gro=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744652468; c=relaxed/simple;
-	bh=zBWFyWeb3D52myv1+41u9abYKw3DYzdEtCe8Gug/3HU=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=kS5FpOWPk8MiA1FqL1fna2If6qAt5oeH6WFCjR+/29m65JYOclh0xPmfogoQx3Dat2Vu34fZFmT4g80uhrdLOnZMv5RIzaSbUySd278a6BGGWflzkbx+HGe/wGezIPkDt3BJ8BWGvyiyW0TE94O18DdpbMP2MWYsaiJKIbNAj4A=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=nel4hWUS; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=BOMstMBj; arc=fail smtp.client-ip=205.220.165.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	s=arc-20240116; t=1744662994; c=relaxed/simple;
+	bh=v4xh7eDsEMC4aIX9XC9xr7b1tsZt+JcT3o+Qxgk+9YA=;
+	h=Message-ID:Date:From:Subject:To:Cc:Content-Type:MIME-Version; b=o9Or3m/gfz4QDfsG/SYbabjTD4AIgubTfDxmgr1q1MbYU+9DktMeAcGgrUg11MoghHH8cnKdCF3Sp1MVGdXys51xwJNSRFNjdTyqef9BRlwtfjwbTVNSvRdeuRDFhj+9AVIjZWZKCVOD00cP3sdQA6bzXjzu1eknt5uxS9WJwAk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cs.wisc.edu; spf=pass smtp.mailfrom=cs.wisc.edu; dkim=pass (2048-bit key) header.d=cs.wisc.edu header.i=@cs.wisc.edu header.b=GfDdW0be; arc=fail smtp.client-ip=205.220.177.71
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cs.wisc.edu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cs.wisc.edu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="nel4hWUS";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="BOMstMBj"
-Received: from pps.filterd (m0246629.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53EHHO2L011666;
-	Mon, 14 Apr 2025 17:39:53 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=
-	corp-2023-11-20; bh=twvTjhFahYt/Bj0vzZT85afB3JN3REzO22d/+S1+MC4=; b=
-	nel4hWUSu+xQ/j4LJaDNdEQEJXVYWSmWwCqxRG/ThD/CPcdZp0eeh40Y9VokrgvM
-	6kPn5uiPgzAAxL8kZBOMr+/GpE3TFw5ozWPqssuMbHbcBJtrEMmsbMQ4/t/28M0w
-	RMwCceFpn3Om6jF8uDp7d+hyoRZCXovuSwUasUGD1DWLm26EF3nowYt5o1l8IWaY
-	bP9HfGzEUpfHIoim/HhZOvGJJQcJvX/WZcQ1QXDePu+vpzLE/OX8TcuN8SE+CtOo
-	LpdbOKCJAyR+mtOfRBwHAFANggn6azo8zgdLIYRoSPKd3bNb3bwnSdWGejKxFz+Y
-	pzA4ys02qFh4IAoybrp6SQ==
-Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.appoci.oracle.com [138.1.114.2])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 4616mf82c2-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 14 Apr 2025 17:39:53 +0000 (GMT)
-Received: from pps.filterd (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 53EHa73w009275;
-	Mon, 14 Apr 2025 17:39:52 GMT
-Received: from nam12-dm6-obe.outbound.protection.outlook.com (mail-dm6nam12lp2171.outbound.protection.outlook.com [104.47.59.171])
-	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 460d3gtxhf-2
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 14 Apr 2025 17:39:52 +0000
+	dkim=pass (2048-bit key) header.d=cs.wisc.edu header.i=@cs.wisc.edu header.b="GfDdW0be"
+Received: from pps.filterd (m0316046.ppops.net [127.0.0.1])
+	by mx0b-007b0c01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53EIqMKY028844;
+	Mon, 14 Apr 2025 15:35:45 -0500
+Received: from nam02-sn1-obe.outbound.protection.outlook.com (mail-sn1nam02lp2047.outbound.protection.outlook.com [104.47.57.47])
+	by mx0b-007b0c01.pphosted.com (PPS) with ESMTPS id 4608n31tmp-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 14 Apr 2025 15:35:44 -0500 (CDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=C2wHyCA/+B7u1+4PecQtdQtPRe+0l/zlrS0f/Id2vv3q1YabNZhPtyNDvEJ/1vYnVIx5Z2I2fLPuvo3B0pvFxg3VRTTxLLeGSYUJymS5fj1ICjzHaxeasQ1aOlQ7pgea6Xg2w5Bmjjfz/d/y44LmcrnP3ldAdSIRM0fYo1LtPC5pJ9FCZqCowtbSjJ5Jh64rfu6KiR7F7uCP/Ll2mlGDz9wxQbcCqUZmYi37T1qXz9Z5E9li3RLNi0YcvsmUjKmJPkppFYq21zFaRR5nK1ZrVRI08748rTCTCbY/YVwVHLoYI6vF7+rIAx5h76PCnsDJ15XR2X6JjRWTJRxhvtTd2Q==
+ b=tIX3QZVP3c33eYxh4hklGbW0ulGpzHqLQwD0c4IGXQPZ1+t1XAXxvkGs6L6qUwbgEfa2vqEW7qj0Uf+diiyl6a9zkyDGsYWitpmV3JqaFnkn7q48OyTdS3z8TCxEDqBtXNxDPj8qlelTr7xuR2yWdoVTuM+GcpDlRNXLwyb3k/jISxQQkVw2qkTzR3AHhHTy6CdUjEQGVxM5lO5pQbx9QZ4oEt+8W9cVPEa/Ur17VRfzQwoJq7UQAmmZCXm72TEuRDR4/3jUZ7Zjuz72X/JQSnLvkx/YNjiqtGUMQr6hYEwBw4zqwauFEbsSl9uNPT3ES1CkPwFwCNiua+JOxGZipA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=twvTjhFahYt/Bj0vzZT85afB3JN3REzO22d/+S1+MC4=;
- b=STiL0dNkDnOMGIE19IFE3NVscW6EaW8H6sVpE71E8MfpjJb07/8GhYEbw1mHNhdrx0KsJYdbbFUPfx1sB+8wMm8DCCXuChFLSSaO4EkdgSazO2QClyde0B0fqiEslDBjA/XplYfs/u/lJT/6sGTau5B528S7Dkh5FRP1L5SbRc0Aboe5IPY5hsavlAxUvXkLgQgLK9iLxEWrE9SjLi8oJlIdCD+aShTKfNf3YdBLK1SbJQlZwSfrTkfH58gzEoC3jpbv4BXgZhBNxoKWSyQexa4NPfJkMMhRdR8y+XrVgkYIw3C178LEQiO7HRJnNpCMTQmxjW9xEroK7bySATcD/Q==
+ bh=nBBheZoW40t854ecFlKtBQXGV0NOwLBJrwQ4EkrYMpM=;
+ b=I7SC3SQevQWl7bwyO8aU2dlYdUNkXcot0OwI2bR98ddP0URLtRiV2d/pHC19k/Fgjl82ZphUfH2dODWuq2nAAHDz0ijIozZ4TOnOaboyPPh6W16BfXmhr2kORCBpjXLk5DXsGWcWCOrYB1crmgVpuv4FGFMB6TNHlYZT4ZUiBvuH/nCyszTN7sD2v2beMxjAgpS33I4CyTVkhfIO7D4T11oxYp5S2oHs5uU8SZzCmiRSsH178KtcewUkyjwIzCY+KBQpoYzU/Wyjbia/khK9W1yzw4z24UYv48P9UFTtAZjcWeQgtZEnDSeM359MyY9RzonRNUkYJmQr8FqpJ1hUtw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ smtp.mailfrom=cs.wisc.edu; dmarc=pass action=none header.from=cs.wisc.edu;
+ dkim=pass header.d=cs.wisc.edu; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cs.wisc.edu;
+ s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=twvTjhFahYt/Bj0vzZT85afB3JN3REzO22d/+S1+MC4=;
- b=BOMstMBjpzmetOw8FjNwG9Ej9ErDUnFfF8GXlhHd2WtaadLof+Ur+sYB/FPKMUVXLyJBRTCNdjthrWeR98ddEP57bbOu9YfGHi79eOVKagZuPWlLluZzZmPorDfl2K8RhhbkQqQbSJwkn2eVvGB/wMy9MoSxUZS209Wbdfg3I0E=
-Received: from BN0PR10MB5128.namprd10.prod.outlook.com (2603:10b6:408:117::24)
- by DM4PR10MB6837.namprd10.prod.outlook.com (2603:10b6:8:107::17) with
+ bh=nBBheZoW40t854ecFlKtBQXGV0NOwLBJrwQ4EkrYMpM=;
+ b=GfDdW0beSAHef2WHDkYFZjd1ciw/wJEusGpiFYRVA7oAJEtPcxO42E5HF9FLYjKtNBYq7xH/w21N65Vvsavb8vDHb5/10kh98jVdtsrYdbRG4pUAacyqtnbMJtmsO6T8DnRLwWkjiGL9J9MGLTBzw03Yt0zrcZjf482tkYMQukWXRyBezUR41K04imbqzUiLLc6PjN/Fs7azBXQhm64gmaLY/IaK6OgUu4Sl736jh2CfwVQ1is+XzqjD2il0oEftyIRiGWNd9brhGqPhJgqx2bC4wL0Wbm98bXWmYcEbnbSgYppLKpx+ZmmMULsw7f6CZY3pzOvOPMXTgdM9NcJ8dA==
+Received: from DS7PR06MB6808.namprd06.prod.outlook.com (2603:10b6:5:2d2::10)
+ by DM8PR06MB7815.namprd06.prod.outlook.com (2603:10b6:8:37::15) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.32; Mon, 14 Apr
- 2025 17:39:48 +0000
-Received: from BN0PR10MB5128.namprd10.prod.outlook.com
- ([fe80::743a:3154:40da:cf90]) by BN0PR10MB5128.namprd10.prod.outlook.com
- ([fe80::743a:3154:40da:cf90%7]) with mapi id 15.20.8632.030; Mon, 14 Apr 2025
- 17:39:48 +0000
-Message-ID: <18713073-342e-48b2-9864-24004445e234@oracle.com>
-Date: Mon, 14 Apr 2025 13:39:37 -0400
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.33; Mon, 14 Apr
+ 2025 20:35:43 +0000
+Received: from DS7PR06MB6808.namprd06.prod.outlook.com
+ ([fe80::76b2:e1c8:9a15:7a1c]) by DS7PR06MB6808.namprd06.prod.outlook.com
+ ([fe80::76b2:e1c8:9a15:7a1c%5]) with mapi id 15.20.8632.030; Mon, 14 Apr 2025
+ 20:35:43 +0000
+Message-ID: <e7d4cd81-c0a5-446c-95d2-6142d660c15b@cs.wisc.edu>
+Date: Mon, 14 Apr 2025 15:35:41 -0500
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3] mm: alloc_pages_bulk: support both simple and
- full-featured API
-To: Yunsheng Lin <linyunsheng@huawei.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Yishai Hadas
- <yishaih@nvidia.com>, Jason Gunthorpe <jgg@ziepe.ca>,
-        Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Alex Williamson <alex.williamson@redhat.com>, Chris Mason <clm@fb.com>,
-        Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>,
-        Gao Xiang <xiang@kernel.org>, Chao Yu <chao@kernel.org>,
-        Yue Hu <zbestahu@gmail.com>, Jeffle Xu <jefflexu@linux.alibaba.com>,
-        Sandeep Dhavale <dhavale@google.com>, Jeff Layton <jlayton@kernel.org>,
-        Neil Brown <neilb@suse.de>, Olga Kornievskaia <okorniev@redhat.com>,
-        Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu
- <mhiramat@kernel.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Martin KaFai Lau
- <martin.lau@linux.dev>,
-        Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
-        Yonghong Song <yonghong.song@linux.dev>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>,
-        Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>,
-        Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>
-Cc: Luiz Capitulino <luizcap@redhat.com>,
-        Mel Gorman <mgorman@techsingularity.net>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, virtualization@lists.linux.dev,
-        linux-btrfs@vger.kernel.org, linux-erofs@lists.ozlabs.org,
-        linux-mm@kvack.org, linux-nfs@vger.kernel.org,
-        linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org,
-        netdev@vger.kernel.org
-References: <20250414120819.3053967-1-linyunsheng@huawei.com>
 Content-Language: en-US
-From: Chuck Lever <chuck.lever@oracle.com>
-In-Reply-To: <20250414120819.3053967-1-linyunsheng@huawei.com>
+From: Junxuan Liao <ljx@cs.wisc.edu>
+Subject: [PATCH] x86/tracing: introduce enter/exit tracepoint pairs for page
+ faults
+To: linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        x86@kernel.org
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: CH2PR07CA0042.namprd07.prod.outlook.com
- (2603:10b6:610:5b::16) To BN0PR10MB5128.namprd10.prod.outlook.com
- (2603:10b6:408:117::24)
+X-ClientProxiedBy: BL1PR13CA0187.namprd13.prod.outlook.com
+ (2603:10b6:208:2be::12) To DS7PR06MB6808.namprd06.prod.outlook.com
+ (2603:10b6:5:2d2::10)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -126,546 +74,291 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN0PR10MB5128:EE_|DM4PR10MB6837:EE_
-X-MS-Office365-Filtering-Correlation-Id: 68dfc740-0b6f-4f3f-e5d9-08dd7b7b5a45
-X-LD-Processed: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b,ExtAddr
+X-MS-TrafficTypeDiagnostic: DS7PR06MB6808:EE_|DM8PR06MB7815:EE_
+X-MS-Office365-Filtering-Correlation-Id: f84048de-9307-430c-3d05-08dd7b93ed64
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
- BCL:0;ARA:13230040|366016|7416014|376014|1800799024|921020;
+	BCL:0;ARA:13230040|41320700013|366016|376014|7416014|1800799024;
 X-Microsoft-Antispam-Message-Info:
- =?utf-8?B?K0wxNlkyVGlhdXh0dTJobWVINUdXbTRMR2VZSjZoU1hydHJNQU1ReW1PekR4?=
- =?utf-8?B?WDkyUkZLeXBZOHRHV0F4U3A5NEZlWDBsQ28rTERuT2hYMUVUdUliM2tqejRy?=
- =?utf-8?B?M0tPMzF0ekdwQVIwUi91YjlEbzV6YVVLQkJuS0ZtSWVYMzRxVXE3UG12NEhj?=
- =?utf-8?B?ZXlLcGJnRlZ5M3ZVY1NpTDhiTnpYUmxzb0VPYlZKYkREci9pOVBzZ0tWekdX?=
- =?utf-8?B?ZnF0V3IvMWd5T3R6ZGoyOHE0NE1IY01CbVl1eHk4QmluSjF3MzBWQnA4UDlV?=
- =?utf-8?B?REJBcWorZkZ3M3Nlano1YWRMVHd1RlBtMXJCUU50cVNYblFTTjRlSnBnNnJ5?=
- =?utf-8?B?dDhEaHk2NjVaUVJUYm5nNTdkYWEwdHJaY0tCMFNWOU9nb1lxdWtXQWhEZm04?=
- =?utf-8?B?eklzaXdlQkVrcDFNaGtTTHVOZm1PNHVyU3JBdkh0UElFQy8ra245Y1RqTjlW?=
- =?utf-8?B?aFZoTUpNMDF4WHExTmNLSnVOOU5rSWM0YWN2bFFuWEJqWE11K3FvcU9ha241?=
- =?utf-8?B?QzhSRXFxNUt4SmtVU1pFMmJvbkcrYkNzVXNoU01ZUDRqTmVhWlhmNi9RM3JU?=
- =?utf-8?B?bGs5QTM4T1M2d1ZIZ3IydEtvclJQUTBvSkJEVGVCbXpWL0NycXhSWE5PRDBN?=
- =?utf-8?B?bjV4bXNIa2xtWmU1b041K0JDMEIvTFg4a1YvSVVpUHliS084Q2ZRVUQ3cnU0?=
- =?utf-8?B?alovYkhCM1h1TGc3aElraDRNbUVpc0QySlFOWVpzbjlOWHBqdG84OXhmYTNz?=
- =?utf-8?B?dk1oblljcHZ3SjdZeXZuVUttZEMrRWRlZkljVUdadjYvM1dZdlphM2h6Q3VJ?=
- =?utf-8?B?b0pDa0c4NTB2dmE4dHpObmI5emZ2NVFWa0JsWS9zZVg2N3E2dDNsa2ZIV3NP?=
- =?utf-8?B?VUtvN0NTTkJrWmR5ZkduY3V3Y2wvamtFS0Zkbys4UHdQUFVFUXRQMGdWTmp6?=
- =?utf-8?B?NHROZklzNFgveFFrSDh6cGJuQUozbDd1eWZ3MkZKRE1WcmhZZnV4YWtSdlh2?=
- =?utf-8?B?VkMvMzMvVVRHSmlVOWVTWjBaYlIwUHJiWDFUcGZRaDhpLzhySUQzaGJTdTVG?=
- =?utf-8?B?aHhLRVEyTDR3RCthSm4wNUpkRERxRkQxbkxlc1Jyc3prREhjVWlXWFp0K2wy?=
- =?utf-8?B?OFRjazhqMStOSkF6RnFnYnVnSTZFMndaK2tRMEtxUUJMaW0yOThleU5qT3FC?=
- =?utf-8?B?UVBuWWZ3ZlpTVG53eEVEWmV3WTBOSE5kdlNsVnA1THRqWStqSDFJeklDR1Yy?=
- =?utf-8?B?QUFsUi9PblhzZXVmVjBvRlhvZ2ZNT01odjdzTHYwL0ZURE1IU29abUVjdHR6?=
- =?utf-8?B?bUl0Nm9qZVVWNVJMdSsrbzFJQWx0NlZwZEY1RlZBTjFNMVNkci9pS3FGc2Rx?=
- =?utf-8?B?dzF6K1JYeGVxSHA2WTBTSnBjS0Z6WUM0N3ZnRWdtcEQ0Sms4TDlHc2VwQjVO?=
- =?utf-8?B?bEJ2ckN3ZjZTaC8raTFQS0FRM1JlTFpCYi9rcEN3anZJUHFDeDFWaXBJS1lq?=
- =?utf-8?B?Mis4bGkvUDBMMUlkMlQ1UVl5eWNURmlVbWIrS0I5eHFuc3czS3psMS92SUZB?=
- =?utf-8?B?MWFtUCs0WW56RG5ib0VOYnhNck0xOXZqZnRwRFJHc2JNbUYxUkQwekIram9o?=
- =?utf-8?B?OXdmQ2lKblpBRVg3WEs1ZTEyQUJuRGZxTk1jZkhXZVA5bS9LVEhKc1JpbWxm?=
- =?utf-8?B?elNIclowTC9BdEJlWUZ5Uk5ZTSt2RkpkdS9nS1J2a0hLelpSRzhwNEJwU25h?=
- =?utf-8?B?SzZwOS9kd0RWUllmY0NYdll4SzVmV0E0SWVsQWp0R0w3L1FqOGxhamEyQ2pT?=
- =?utf-8?B?VlllczRjR0Fhc0VSODczZUxvZTZBblNwVUpBRzc0aWZsRUV6V2Zucm9FRGdJ?=
- =?utf-8?B?N3hwWFpvZVowY3p2d2lpRFNlNkVLUlBXaDlBUUtuWXpGclF1UXJBWE1QTHNv?=
- =?utf-8?B?YWkvWCtyRXY2YmxSa1ZlY1VzZHJRNmdsVlpEbEFoQ1VaQ0xUQWlITHV0azF5?=
- =?utf-8?B?RE9mU2NTMWNnPT0=?=
+	=?utf-8?B?elZ1SmdtbDM1RVVhNlI5bXZGTTRxdjVGbEx3U1hQbUdCdk9ldW5ZNnBVMTJl?=
+ =?utf-8?B?cUM2Mkc2c1ArY2xnS3VxSGVaTW5nY0hwc3E2ZXpTdnZrZldhQTRCVW15MUdz?=
+ =?utf-8?B?Rkk1VGRJME5UeEhLdXRMTStpSnhwRHZkcEozdDA0VGtOWk0waGZFUjVuM2w1?=
+ =?utf-8?B?WUZJa0taZVcxakZnbytjdkJ0NFk1dVc2bFd0L3Y0VWF0eVc1eVZjTllqL3M0?=
+ =?utf-8?B?eWZzZ1lkOVU3bHMyQmVpeXJ0MVhyN0NZYUVTeTU3d2dRTHpGUENFL0NtYVh1?=
+ =?utf-8?B?dFZsUEROQ1p6QUFHYTVXYTJGYVdMWjd3S25yam9vbjJnQnlGNXQwMzRxZE5i?=
+ =?utf-8?B?cHcrcWRDWmRvMXZTOElLaXRaQ2RLcmRzRlhsSHVKUm95dE1pT1RIejhrbUsv?=
+ =?utf-8?B?ZW01WXRwbjNKS05xRkJPcytjZDRSQWFMdGVISkZlUlNhMzY3L09xNXA4czlx?=
+ =?utf-8?B?clNEWERoSDhGU0JjM3VFWG9uRVpJYVk0b21yby9UZ0hnWC93clJQMmVFTjdy?=
+ =?utf-8?B?TStEbi9LcEhhVzRuS3N5bHN4RGIwUjFXcng4b0pqT3hJTUgvNGdPcEdkWW5w?=
+ =?utf-8?B?dHh2akZ1amxVOURnRzBmcE1YYndYcGlrZWtMRGdzSEpnV1BlejZLZmdlUTM2?=
+ =?utf-8?B?U3ZxMG03OG14Q3R3czJwYjV0aExsYWVxaTBiclVycmw5MlV0YkRjTXNuUFRi?=
+ =?utf-8?B?a1NJZVUzeUJERUtSZTVWdTBoWHpmd1pBVDBkOGtwMXdFZ1c5R3l5QjFxbEZP?=
+ =?utf-8?B?UmxhaDRhZ050Y21CS0kxS3FGRmlVYk9PbG90VjQybXc0TlE2RjFnSnpQRVBx?=
+ =?utf-8?B?V2ZNS093ZlQ2bCtDL21EblJ5VFYzMzZYL3VxSTM1TE0wc2FPZXN5WmUvdTFk?=
+ =?utf-8?B?YkNVUDE2b1RUMlNKb2xnWHJ1MmxMODhYLzRHS0FaYVU3eDk0OFVoNWkza0ty?=
+ =?utf-8?B?L3BtL29MbW44TEEvbFNmWHd0Q2dENWp1THNOL2IwRHZLeXFndzdKaUlUcGdU?=
+ =?utf-8?B?cTc0cjlrQlA0RlY1Zmp6Ti9RQTlpWUczY3dOa2xUaUtjOUhHWkZjUzN0UVNF?=
+ =?utf-8?B?ek9MZmpCZ3dEZ2xEZmNsZ1RQQS92Q01Qc1IrdmlwdVFZTWlXek82d3ltT2FY?=
+ =?utf-8?B?T1RweWw0OTVOVHJtZERPWWRSNjVKYmhzTEd6QkVBS0pNWnVtTkU1ZWN0VFMv?=
+ =?utf-8?B?NGRibGwrNisyUm5ZY3FFYTBOU3JHK0NLRVdIVko2ZUpSM2JYNW5wK3AwQ09r?=
+ =?utf-8?B?WEJjKzFsMkovRTdMak11YWljVUhKMFF4ejdta2trVWViTHhWTUEzTnhlSFY5?=
+ =?utf-8?B?YXdmdEtETlRRMnpmN29KVGp3SDJTaFRmZWFPOGtGOUVqbzUydDRCNWl1VWNs?=
+ =?utf-8?B?VUtpMjY0ejFONU41WW5BMUcyTFFkYzhjMGV6VUJJUWVsYVIxVEFGK2dqQXQr?=
+ =?utf-8?B?ZnJndjBIVlZRQjJIbmdEUUxIbmJ4VjRzaFNDLyt6ZWQ4T0ZpT0tTcWgvUUxV?=
+ =?utf-8?B?ZGhjK3NjQVRjbzJRUUlmNC81NnN4QnRMSXNTL0tMQW4weEVpN09BSDV2cWYr?=
+ =?utf-8?B?bEZweEU4czBOUGJ1ZkZuUnVmYkpqS3FsQTdxbGVMbmpZMk5TL0tFNnlFMVdM?=
+ =?utf-8?B?TGRsWjZ1L0o4Mktab3lCOFo5Q2dZMllOeE0ybk0zUTJMRGpUUk5FUWZ1S0Vy?=
+ =?utf-8?B?QW0xQlU3MmlibmRqUGNzTlVJK0dPVnlBV1VJM29EUWpjOCt3K216bWVnOHk0?=
+ =?utf-8?B?VVlNSmd5ZHVNa04rRUtQTUkvNEl0cU1wN0x1dzYyL0MwMENRKzc3SDNlQ1lr?=
+ =?utf-8?B?NTArWHJvdmFCN2YzNW0wTEs1ZHpzMmZtcEFqRVNIa0xCUFV0cHMydjI4cTlu?=
+ =?utf-8?B?clFCR2MrdDc1ZmdrcWt2Z0dOZ2tLakhzUVVPNXY3ajFYV1R0TStiL1krWTBM?=
+ =?utf-8?Q?MdTppuaiJeY=3D?=
 X-Forefront-Antispam-Report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR10MB5128.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(7416014)(376014)(1800799024)(921020);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR06MB6808.namprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(41320700013)(366016)(376014)(7416014)(1800799024);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
- =?utf-8?B?MzNZb2lRbm9CZU1ra0F3NXpvREcxdG9uU3oxdWtYY2hLaktmYi9nMkVGcnI5?=
- =?utf-8?B?ajR1SEVMOGVXdkVuWnNqTmhTL1VQS3E0SXo2RzJYRHBrTFhYVUxPRmg1cDNk?=
- =?utf-8?B?UFdBU0xCN0tsOUhVU3R6VTVka2RsM3VvWTZjblNicDJCYXFTZE4wRHh2WG5T?=
- =?utf-8?B?QW1UUXVkY1F0UDhwTE02Z2ZGVXZTLzkrb2VzV1BTZ2dUckFyMUtKbHVRYS9S?=
- =?utf-8?B?TDF6VG5wOGovUjJvNG9OeGljR21qdXBkcERWanp4Q3FiNTIvbHVCNTVKTzVD?=
- =?utf-8?B?bHVxTkFTdXl6M1Z3bndCN2JtQmRUTmdrZHEyMjd0aEZpZTNSTW52V3VLRTJN?=
- =?utf-8?B?QVZGS3JscXNJSWExTFNicTVWcW1aQmhtZkE1WWhNZnV4dmpCNnI0eWdmb3ZL?=
- =?utf-8?B?R0JJS1dCc2ZyRDYwMjZuZVNvanVWWGRNU2x4cW5idnFkcUUzOUsvWHQ3WUh1?=
- =?utf-8?B?TnZ1Y00xV05wS0x6ckU2TmhxS1JXbm9nTnhDUXBrZmFVdG9Sc0Zla2N0UWN6?=
- =?utf-8?B?UVNKaEp3eitOcFVSa3UwcFNhVjhCazQyM0diQUZmb2hhS0hqZ0ZnNTNMYXFt?=
- =?utf-8?B?cDk4NU5RYWxrMVBGNUx1L2twYlFwRWtQWnRwUU5RbndaVEI3TnV4TElWTG5L?=
- =?utf-8?B?Zi9vMTRSa2Vtakl1UU8xc09sQ3FQMy9XZ294aU1HeFJ5diswV05YbWpBeDlj?=
- =?utf-8?B?NVFZV2Z5U0dFeDZwRGdISHZ3RUZlTWU4emRnUGFHMS9JV0JaMWJld2JCd1Mx?=
- =?utf-8?B?R3N2dmE1Y0ZKeUJ4K01lMzNsWFNLTU0wbnkvYjlic3UwdVVkMkU1bnRQbXZF?=
- =?utf-8?B?aUliVllXeUQ0SE0rMy9XUjlPcEtRMldORFBocWQ0K2Y1Z3E0K1htY0VhOTZj?=
- =?utf-8?B?cFJpV1RMQ3VWSk1jS1ZSTzQ2bnV6OVdBNTJKNTVEY3BWNkFqY0RtRlZrZXYv?=
- =?utf-8?B?Q2xEVHhkbXdmMDFaMTlDZnJVekZMN1ZoR2VyV0pIR2hldFNLb1FhZSt3ZGZs?=
- =?utf-8?B?YUpTNjMzYXh1Z0xQRUdBcWpHaXdaUjZoL2NaZWlQVEJBWHZTOS8xMk4vT0hX?=
- =?utf-8?B?cG1saHU4N2dqSEQrbmVjbXd2bkM2QWFkMkg2dTAwRm9pWm1rNGFjMTNVRHZ4?=
- =?utf-8?B?cFh2V0tRd0VWbG1yYUVaUUpCdmpaa1pvSHluM25tVDJkSEpyN253WlZReTI0?=
- =?utf-8?B?a3pnMVNNSGplM3d3cVBBaGJpQTJvK2VjejI3a0dZZWdpSjNneUdvZDQ4UG90?=
- =?utf-8?B?REE1bHdhVUJmQlVpQWMxUWplai9HeUhnb0E3R2dtNDF3TCtlQmtIQ3NQWDZY?=
- =?utf-8?B?SnpFS0ZkdzQ1aEZOclUyOXQzekJBaWtjQVVVamZEdEJ3RWdjQjF4MER4Q3hW?=
- =?utf-8?B?c3dWbVVzNzlhcU1nNWNFR0VvbHpUcVEvRnRGTkdwUFc2aG05Z0xEcVVUNmhq?=
- =?utf-8?B?bWU0aHNGT25maTZKMkRNYlNJSlBoQmRvU1F5aDkrS0tQOUlxcXZ2dkNnTU9t?=
- =?utf-8?B?RWMybmpEb2JINEdic2RMTU5UUTZDYUY5Qm11eU9FbUJ4Slg3aDcvR3hMMVlN?=
- =?utf-8?B?dlY4N3diN1NBbzM4cGFZUjFRK1ovRFdFcDhwMnpjdi9FOEJuSGkxL3hGOFJL?=
- =?utf-8?B?Z2lHUlJJMERzSDJnS3laNUF3TDRra2VpQlVueW5hb3RPdDQ4UUJMaHhKZEcr?=
- =?utf-8?B?cU03NW11WXI0eUk5Rk50SzdmdFV0RHk0MHZVMnZMQ0hnWU5sbTVNbGI2UHRW?=
- =?utf-8?B?REF2dG8yNVRGOTFGM2xKMEk3Q25MaEJMZUMraWI5dm9mQWN4ZmlieWVobis5?=
- =?utf-8?B?UW5jVHNsZ3Uvbm1FWVFteG4wdk9kclhxTXBZSDQ0U1VnL0QraDdET0pmb29O?=
- =?utf-8?B?VVpud0dNYW1NRkZsd3A4Q2hEanJNWlJLcStWRU55UVE1V1gxdFUyMHBtQmFs?=
- =?utf-8?B?YVJiOG9lNDRicUVhUjBhY0F6YnVZL3p1WlFRZ3UwaW5aWis2M0NGREpWeXI5?=
- =?utf-8?B?RDVtV0RrallJUWtsWGFYSDNnWWRWTFQ4bDArZ0FTcTBVTXJZdmlkMjc4NnMr?=
- =?utf-8?B?WFcyM1hQcFF5M0ZlcysvdGFWN0hveWFQRzA5REdSUVduVXNiN1hGTlNyNm45?=
- =?utf-8?B?R2RZbGpOcU9MOEwzRHRVUXQzb1pQeEFuZmdIOHNYb1J0OGhwUW9nMi9XemR0?=
- =?utf-8?B?cVE9PQ==?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	i3MnWikRG12s02G4TAkfV4sVof+iJejWPlosUfTjXjI8vV1jWQFyVB3NGAzsM47bx9Kn42jVVnxTARbGBSGa+Prl1926te7aNFMyLDNweSfGdJXnBQqsfL2CWVM0yp50bYE/5iCQ/IHK4YwFrmj2gxX3HzNKFBWOy9DTL9Lw5OLnCvkTrt6NDsTxvbkpYaUZw3ls2qWzZpE4csflqRldGKZUFRoREDoK3PdID5Fv7dO747L7SPF+qLUxooy/fSUHoXzNlazCBH+ZMAY5aXfyMYmDEa+H06Y6tgHIvnUdHAJX/Xz7MM2VfkJa9gP0Z1/rwR/KrCThAWZamSpNU/mLgjVlrwWZqy8jWlTEnXcPr3lnRlL/BtnfwpGjsgzK6LQebmCyLcCaZfUZFngQhACn+0lEBQDaKLytegbn+6gnzbX9PFufzZfIQG5kVKDBDxOfhzmwexoQSpGsM5nJhOYS5YOzQXVwLXn4mSl1SBgXvKUNut/x2bJo8DH9WCWhAIUPTgFA/cthkff3F+PNJlHz9wZzGbLuC9AM4d2lLE9DnYAT2CGhU/zVo5Ffop0VtpQWlOp6x7zrsRrKxkGydft0Koo+aMupkCjeLp8QFt6aeVc=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 68dfc740-0b6f-4f3f-e5d9-08dd7b7b5a45
-X-MS-Exchange-CrossTenant-AuthSource: BN0PR10MB5128.namprd10.prod.outlook.com
+	=?utf-8?B?dXc5dWZFcW9zQzVWMnEzVmVlZFhDeUNyNHJzZnNHeUt1OVBBSm83R0xiZGV0?=
+ =?utf-8?B?VWVkRE9YT0x0QVZoWGtVVkF1Z09nR1NhMXNlUC9jVFcxT3dCRXpQdUpDTEp1?=
+ =?utf-8?B?NmxsdlFxRmI3eUxERWdwSDhjSytVc05OZURsb1N3aDk5ZERzaGZPTUU5UlJn?=
+ =?utf-8?B?QjllaTRNYnlNVFpYL3JKemZLQ3lCdDl1NFlzQ21mdjI0WnhBank4MEtNU3Vo?=
+ =?utf-8?B?bmNxV2R0N1lrY1hZaFNMdGJHSjVtcU44aEdNOGNzdldSZWRKNjYxUkkreDJG?=
+ =?utf-8?B?c3RSbVQzN2pDYTVJVlgzU1Z1NUt4NHQyWFlhaC9zM0ZQbXB3Q3BmeFROUXhS?=
+ =?utf-8?B?R0FQWHB3MVlhc2JVL3lLWkhURUpobUtWRWp5dmFxQXN6clptSmhQVW9reFJ3?=
+ =?utf-8?B?cDZkNXpsRGpsZytWK1ZJYVM4MVdSeUM0NWhUV2g2L1lkZ3Q3bHJZL0xudm02?=
+ =?utf-8?B?Sk1Xa09pNW9nZXIyYkR4cEtWSDlPUU5XUU52SzZXK3hhTWJoR1phclB2eUgy?=
+ =?utf-8?B?eWgrNk9nWGFBRWtndTlxMThISU5pMEdNeSsxME1BOVp6L0h5MHcycFVoNjRM?=
+ =?utf-8?B?Mk5kTG40K0VRamhsZUhJUW1YTE9vRTd1MHlSOHdyQ280Vy9FMTNmNjJjM3hL?=
+ =?utf-8?B?bTFjLzE1SzJOaVNDMmI0T2RHS2hVYjRLcXdadWczOUJUWU4xVDBsbWVDV1E0?=
+ =?utf-8?B?Q1hwWWE3QkFOQ3MyY0FXUHViU1d6Y2VDeVZVZG1xVFVQVk92NWJUV3hRMFc5?=
+ =?utf-8?B?ZDIxcmhUVU5YbVBqTU5DSnZWUGhEc21pSXJIUVAxUzZnd3l1cEtFNDQ2QXdN?=
+ =?utf-8?B?UVB3RTVhaGtTRy9mb3paWWp0Q2owUHdkbU03R0FObjArN2NMeTVPNlV5VDNw?=
+ =?utf-8?B?VVNwTWNxcURpbjNPOE03M0ZkenBKUHlvQ0Z3cTgxUTVFdHpHWnIzVy9FeTV4?=
+ =?utf-8?B?SEI4bGJrTjdqeDM5S2I5c1IwSnhyT2JOMHlFOWwrREJFc0xBeWJWbjlqVVRq?=
+ =?utf-8?B?K2xhSmFCaTdGakh1WG8vVGRYYTJEWmFacjhwVUtmTWJNNWNETndxOVNCdmFJ?=
+ =?utf-8?B?bU1FSld1TmdDczd5MGpabTFPYzQ4OExjdnViMVdJZ0hOTWJMczgzWE0zUzls?=
+ =?utf-8?B?NTlKWXRKTGV5THpCUTNqNWJzWmF3N1p4YWZSYnJ3SDVWUzV4aUdmMk1XWVRL?=
+ =?utf-8?B?RElmbnF2MnIwWWhrQW54Wk0xNDFKT3dLV3VaZlVSeWljZjkvTkRnbWVydUNv?=
+ =?utf-8?B?eGRPcG90Uys5ZE4yQS9IY1JzZkpJcWpKdEVITU5Dc1VDMXRtWG1VWk5icm1C?=
+ =?utf-8?B?V3RsRnhJQWZTVDM4emFjL2tzWjhieldqZzZPR1JqQmc4emxpZE42cnhCQ2Y2?=
+ =?utf-8?B?MEs0QTV0Tnp2Y3VaVXBqaGJ5SXBxdmE4RVVaNnFiSlo3a1JjdExIdDY3Q2Nx?=
+ =?utf-8?B?bHRWVzRYZ2hvcjhaRDJqRmtxdXljNkp4Wkg4VEFZQnNTekptbWlzQVQ2YlFw?=
+ =?utf-8?B?UmR6WVR5c1h1cXlaMFdrR21XR3pjWUttVk42R3UrMWFaTTB0Z0R6OHNVeC8r?=
+ =?utf-8?B?Mmg4Z054bVVnaFZxdlhnakpEUVBSUkRtSkdxaTV2ZDBjd3Rod2FIVXJnOHJC?=
+ =?utf-8?B?dGxvNzFjRVd5VUlQc0RZYWdpbVlWZ0xpd0J6dnRPNVVxZGlJbnFMWU05OFNR?=
+ =?utf-8?B?a1h2V0E3NGdQUCtkVGlJdHFYY3VoREhxdkhzZXNmSEhZaEFZSndlV0pLckR6?=
+ =?utf-8?B?VU04UFdnVGtyWFJWeENsdEZNN0s1MTVybnJnOU54SnlBZ2F0TlAzQjNQY2Nh?=
+ =?utf-8?B?WDBzZlJvcVdCMHhIK29hY2g0Z1FqMDlIZ1drQk5LTmhjWlNhd2JiYm5SMzU2?=
+ =?utf-8?B?VWwrTmx5OVZRWHdlMHBmY3Q2WWlTVVMxZ2NuTytMODh3TjBQODZtek12SDJ1?=
+ =?utf-8?B?VDBpL1NqY1ljcW82ZDBFNWxlMzRDNzFlRGpRSzNYM0lOam10bXM3a1FhNGtK?=
+ =?utf-8?B?SmYwM1dKd0pjMU4rMFhrVVhQeHlwWG4xNTVpcmJKcXdyUVk1YlFRUk1aNTZB?=
+ =?utf-8?B?aTNVZS96bGRjZ1JqaUVHRW0zVHpEdm5EdnU2aHdSNDdEd3pEZ2xVcGQzd2pU?=
+ =?utf-8?Q?P9o1XQQQShyiUgZHurBfEhAcH?=
+X-OriginatorOrg: cs.wisc.edu
+X-MS-Exchange-CrossTenant-Network-Message-Id: f84048de-9307-430c-3d05-08dd7b93ed64
+X-MS-Exchange-CrossTenant-AuthSource: DS7PR06MB6808.namprd06.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Apr 2025 17:39:48.3556
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Apr 2025 20:35:43.1210
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-Id: 2ca68321-0eda-4908-88b2-424a8cb4b0f9
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: KldcPxEnlftYzdJ4zHBTYoi2p32hP6mQ812N4twiMjJDXU7IOuzRaf1LvWHSiWn6U75O8y7YzCmZRtNkhzteSg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR10MB6837
+X-MS-Exchange-CrossTenant-UserPrincipalName: 5r9kuL/Su0zPHg1l4lhMtAj+9txRmjsc4z0hMtGQr67X4NyW5lx7860uphkUGmkbrmMsuRXvVuPEHQF8WP3Y1w==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM8PR06MB7815
+X-Proofpoint-ORIG-GUID: jfqK44b7QBNiCMD8nFYtW1ja3J_edf25
+X-Authority-Analysis: v=2.4 cv=R+MDGcRX c=1 sm=1 tr=0 ts=67fd71a1 cx=c_pps a=RoG0BMNHDmmKSZcrvsSD+g==:117 a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19 a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
+ a=XR8D0OoHHMoA:10 a=3-xYBkHg-QkA:10 a=VwQbUJbxAAAA:8 a=E2wWf0L7ji8XHI0cZFEA:9 a=QEXdDO2ut3YA:10
+X-Proofpoint-GUID: jfqK44b7QBNiCMD8nFYtW1ja3J_edf25
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-14_06,2025-04-10_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 bulkscore=0 malwarescore=0
- mlxlogscore=999 phishscore=0 suspectscore=0 spamscore=0 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2502280000
- definitions=main-2504140128
-X-Proofpoint-GUID: ka1G80Hla1V6DvHCRvbXKQeHrC9Pm626
-X-Proofpoint-ORIG-GUID: ka1G80Hla1V6DvHCRvbXKQeHrC9Pm626
+ definitions=2025-04-14_07,2025-04-10_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ adultscore=0 spamscore=0 impostorscore=0 mlxscore=0 lowpriorityscore=0
+ malwarescore=0 clxscore=1011 phishscore=0 suspectscore=0 bulkscore=0
+ mlxlogscore=699 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504140150
 
-On 4/14/25 8:08 AM, Yunsheng Lin wrote:
-> As mentioned in [1], it seems odd to check NULL elements in
-> the middle of page bulk allocating, and it seems caller can
-> do a better job of bulk allocating pages into a whole array
-> sequentially without checking NULL elements first before
-> doing the page bulk allocation for most of existing users
-> by passing 'page_array + allocated' and 'nr_pages - allocated'
-> when calling subsequent page bulk alloc API so that NULL
-> checking can be avoided, see the pattern in mm/mempolicy.c.
-> 
-> Through analyzing of existing bulk allocation API users, it
-> seems only the fs users are depending on the assumption of
-> populating only NULL elements, see:
-> commit 91d6ac1d62c3 ("btrfs: allocate page arrays using bulk page allocator")
-> commit d6db47e571dc ("erofs: do not use pagepool in z_erofs_gbuf_growsize()")
-> commit f6e70aab9dfe ("SUNRPC: refresh rq_pages using a bulk page allocator")
-> commit 88e4d41a264d ("SUNRPC: Use __alloc_bulk_pages() in svc_init_buffer()")
-> 
-> The current API adds a mental burden for most users. For most
-> users, their code would be much cleaner if the interface accepts
-> an uninitialised array with length, and were told how many pages
-> had been stored in that array, so support one simple and one
-> full-featured to meet the above different use cases as below:
-> - alloc_pages_bulk() would be given an uninitialised array of page
->   pointers and a required count and would return the number of
->   pages that were allocated.
-> - alloc_pages_bulk_refill() would be given an initialised array
->   of page pointers some of which might be NULL. It would attempt
->   to allocate pages for the non-NULL pointers, return 0 if all
->   pages are allocated, -EAGAIN if at least one page allocated,
->   ok to try again immediately or -ENOMEM if don't bother trying
->   again soon, which provides a more consistent semantics than the
->   current API as mentioned in [2], at the cost of the pages might
->   be getting re-ordered to make the implementation simpler.
-> 
-> Change the existing fs users to use the full-featured API, except
-> for the one for svc_init_buffer() in net/sunrpc/svc.c. Other
-> existing callers can use the simple API as they seems to be passing
-> all NULL elements via memset, kzalloc, etc, only remove unnecessary
-> memset for existing users calling the simple API in this patch.
-> 
-> The test result for xfstests full test:
-> Before this patch:
-> btrfs/default: 1061 tests, 3 failures, 290 skipped, 13152 seconds
->   Failures: btrfs/012 btrfs/226
->   Flaky: generic/301: 60% (3/5)
-> Totals: 1073 tests, 290 skipped, 13 failures, 0 errors, 12540s
-> 
-> nfs/loopback: 530 tests, 3 failures, 392 skipped, 3942 seconds
->   Failures: generic/464 generic/551
->   Flaky: generic/650: 40% (2/5)
-> Totals: 542 tests, 392 skipped, 12 failures, 0 errors, 3799s
-> 
-> After this patch:
-> btrfs/default: 1061 tests, 2 failures, 290 skipped, 13446 seconds
->   Failures: btrfs/012 btrfs/226
-> Totals: 1069 tests, 290 skipped, 10 failures, 0 errors, 12853s
-> 
-> nfs/loopback: 530 tests, 3 failures, 392 skipped, 4103 seconds
->   Failures: generic/464 generic/551
->   Flaky: generic/650: 60% (3/5)
-> Totals: 542 tests, 392 skipped, 13 failures, 0 errors, 3933s
+Rename page_fault_{user,kernel} to page_fault_{user,kernel}_enter, and
+add the exit counterparts. This might be useful for measuring page fault
+handling latencies.
 
-Hi -
+The exit tracepoints use a separate static key.
 
-The "after" run for NFS took longer, and not by a little bit. Can you
-explain the difference?
+Signed-off-by: Junxuan Liao <ljx@cs.wisc.edu>
+Link: https://lore.kernel.org/9e2ac1e3-d07d-4f17-970e-6b7a5248a5bb@cs.wisc.edu
+---
+ arch/x86/include/asm/trace/common.h     | 18 ++++++++++----
+ arch/x86/include/asm/trace/exceptions.h | 32 ++++++++++++++++++++-----
+ arch/x86/kernel/tracepoint.c            | 22 +++++++++++++----
+ arch/x86/mm/fault.c                     | 21 +++++++++++++---
+ 4 files changed, 75 insertions(+), 18 deletions(-)
 
-You can expunge the flakey test (generic/650) to help make the results
-more directly comparable. 650 is a CPU hot-plugging test.
-
-
-> The stress test also suggest there is no regression for the erofs
-> too.
-> 
-> Using the simple API also enable the caller to not zero the array
-> before calling the page bulk allocating API, which has about 1~2 ns
-> performance improvement for time_bench_page_pool03_slow() test case
-> of page_pool in a x86 vm system, this reduces some performance impact
-> of fixing the DMA API misuse problem in [3], performance improves
-> from 87.886 ns to 86.429 ns.
-> 
-> Also a temporary patch to enable the using of full-featured API in
-> page_pool suggests that the new full-featured API doesn't seem to have
-> noticeable performance impact for the existing users, like SUNRPC, btrfs
-> and erofs.
-> 
-> 1. https://lore.kernel.org/all/bd8c2f5c-464d-44ab-b607-390a87ea4cd5@huawei.com/
-> 2. https://lore.kernel.org/all/180818a1-b906-4a0b-89d3-34cb71cc26c9@huawei.com/
-> 3. https://lore.kernel.org/all/20250212092552.1779679-1-linyunsheng@huawei.com/
-> CC: Jesper Dangaard Brouer <hawk@kernel.org>
-> CC: Luiz Capitulino <luizcap@redhat.com>
-> CC: Mel Gorman <mgorman@techsingularity.net>
-> Suggested-by: Neil Brown <neilb@suse.de>
-> Acked-by: Jeff Layton <jlayton@kernel.org>
-> Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
-> ---
-> V3:
-> 1. Provide both simple and full-featured API as suggested by NeilBrown.
-> 2. Do the fs testing as suggested in V2.
-> 
-> V2:
-> 1. Drop RFC tag.
-> 2. Fix a compile error for xfs.
-> 3. Defragmemt the page_array for SUNRPC and btrfs.
-> ---
->  drivers/vfio/pci/mlx5/cmd.c       |  2 --
->  drivers/vfio/pci/virtio/migrate.c |  2 --
->  fs/btrfs/extent_io.c              | 21 +++++++++---------
->  fs/erofs/zutil.c                  | 11 +++++----
->  include/linux/gfp.h               | 37 +++++++++++++++++++++++++++++++
->  include/trace/events/sunrpc.h     | 12 +++++-----
->  kernel/bpf/arena.c                |  1 -
->  mm/page_alloc.c                   | 32 +++++---------------------
->  net/core/page_pool.c              |  3 ---
->  net/sunrpc/svc_xprt.c             | 12 ++++++----
->  10 files changed, 72 insertions(+), 61 deletions(-)
-> 
-> diff --git a/drivers/vfio/pci/mlx5/cmd.c b/drivers/vfio/pci/mlx5/cmd.c
-> index 11eda6b207f1..fb094527715f 100644
-> --- a/drivers/vfio/pci/mlx5/cmd.c
-> +++ b/drivers/vfio/pci/mlx5/cmd.c
-> @@ -446,8 +446,6 @@ static int mlx5vf_add_migration_pages(struct mlx5_vhca_data_buffer *buf,
->  		if (ret)
->  			goto err_append;
->  		buf->allocated_length += filled * PAGE_SIZE;
-> -		/* clean input for another bulk allocation */
-> -		memset(page_list, 0, filled * sizeof(*page_list));
->  		to_fill = min_t(unsigned int, to_alloc,
->  				PAGE_SIZE / sizeof(*page_list));
->  	} while (to_alloc > 0);
-> diff --git a/drivers/vfio/pci/virtio/migrate.c b/drivers/vfio/pci/virtio/migrate.c
-> index ba92bb4e9af9..9f003a237dec 100644
-> --- a/drivers/vfio/pci/virtio/migrate.c
-> +++ b/drivers/vfio/pci/virtio/migrate.c
-> @@ -91,8 +91,6 @@ static int virtiovf_add_migration_pages(struct virtiovf_data_buffer *buf,
->  		if (ret)
->  			goto err_append;
->  		buf->allocated_length += filled * PAGE_SIZE;
-> -		/* clean input for another bulk allocation */
-> -		memset(page_list, 0, filled * sizeof(*page_list));
->  		to_fill = min_t(unsigned int, to_alloc,
->  				PAGE_SIZE / sizeof(*page_list));
->  	} while (to_alloc > 0);
-> diff --git a/fs/btrfs/extent_io.c b/fs/btrfs/extent_io.c
-> index 197f5e51c474..51ef15703900 100644
-> --- a/fs/btrfs/extent_io.c
-> +++ b/fs/btrfs/extent_io.c
-> @@ -623,21 +623,22 @@ int btrfs_alloc_page_array(unsigned int nr_pages, struct page **page_array,
->  			   bool nofail)
->  {
->  	const gfp_t gfp = nofail ? (GFP_NOFS | __GFP_NOFAIL) : GFP_NOFS;
-> -	unsigned int allocated;
-> -
-> -	for (allocated = 0; allocated < nr_pages;) {
-> -		unsigned int last = allocated;
-> +	int ret;
->  
-> -		allocated = alloc_pages_bulk(gfp, nr_pages, page_array);
-> -		if (unlikely(allocated == last)) {
-> +	do {
-> +		ret = alloc_pages_bulk_refill(gfp, nr_pages, page_array);
-> +		if (unlikely(ret == -ENOMEM)) {
->  			/* No progress, fail and do cleanup. */
-> -			for (int i = 0; i < allocated; i++) {
-> -				__free_page(page_array[i]);
-> -				page_array[i] = NULL;
-> +			for (int i = 0; i < nr_pages; i++) {
-> +				if (page_array[i]) {
-> +					__free_page(page_array[i]);
-> +					page_array[i] = NULL;
-> +				}
->  			}
->  			return -ENOMEM;
->  		}
-> -	}
-> +	} while (ret == -EAGAIN);
-> +
->  	return 0;
->  }
->  
-> diff --git a/fs/erofs/zutil.c b/fs/erofs/zutil.c
-> index 55ff2ab5128e..6ce11a8a261c 100644
-> --- a/fs/erofs/zutil.c
-> +++ b/fs/erofs/zutil.c
-> @@ -68,7 +68,7 @@ int z_erofs_gbuf_growsize(unsigned int nrpages)
->  	struct page **tmp_pages = NULL;
->  	struct z_erofs_gbuf *gbuf;
->  	void *ptr, *old_ptr;
-> -	int last, i, j;
-> +	int ret, i, j;
->  
->  	mutex_lock(&gbuf_resize_mutex);
->  	/* avoid shrinking gbufs, since no idea how many fses rely on */
-> @@ -86,12 +86,11 @@ int z_erofs_gbuf_growsize(unsigned int nrpages)
->  		for (j = 0; j < gbuf->nrpages; ++j)
->  			tmp_pages[j] = gbuf->pages[j];
->  		do {
-> -			last = j;
-> -			j = alloc_pages_bulk(GFP_KERNEL, nrpages,
-> -					     tmp_pages);
-> -			if (last == j)
-> +			ret = alloc_pages_bulk_refill(GFP_KERNEL, nrpages,
-> +						      tmp_pages);
-> +			if (ret == -ENOMEM)
->  				goto out;
-> -		} while (j != nrpages);
-> +		} while (ret == -EAGAIN);
->  
->  		ptr = vmap(tmp_pages, nrpages, VM_MAP, PAGE_KERNEL);
->  		if (!ptr)
-> diff --git a/include/linux/gfp.h b/include/linux/gfp.h
-> index c9fa6309c903..cf6100981fd6 100644
-> --- a/include/linux/gfp.h
-> +++ b/include/linux/gfp.h
-> @@ -244,6 +244,43 @@ unsigned long alloc_pages_bulk_mempolicy_noprof(gfp_t gfp,
->  #define alloc_pages_bulk(_gfp, _nr_pages, _page_array)		\
->  	__alloc_pages_bulk(_gfp, numa_mem_id(), NULL, _nr_pages, _page_array)
->  
-> +/*
-> + * alloc_pages_bulk_refill_noprof - Refill order-0 pages to an array
-> + * @gfp: GFP flags for the allocation when refilling
-> + * @nr_pages: The size of refilling array
-> + * @page_array: The array to refill order-0 pages
-> + *
-> + * Note that only NULL elements are populated with pages and the pages might
-> + * get re-ordered.
-> + *
-> + * Return 0 if all pages are refilled, -EAGAIN if at least one page is refilled,
-> + * ok to try again immediately or -ENOMEM if no page is refilled and don't
-> + * bother trying again soon.
-> + */
-> +static inline int alloc_pages_bulk_refill_noprof(gfp_t gfp, int nr_pages,
-> +						 struct page **page_array)
-> +{
-> +	int allocated = 0, i;
-> +
-> +	for (i = 0; i < nr_pages; i++) {
-> +		if (page_array[i]) {
-> +			swap(page_array[allocated], page_array[i]);
-> +			allocated++;
-> +		}
-> +	}
-> +
-> +	i = alloc_pages_bulk_noprof(gfp, numa_mem_id(), NULL,
-> +				    nr_pages - allocated,
-> +				    page_array + allocated);
-> +	if (likely(allocated + i == nr_pages))
-> +		return 0;
-> +
-> +	return i ? -EAGAIN : -ENOMEM;
-> +}
-> +
-> +#define alloc_pages_bulk_refill(...)				\
-> +	alloc_hooks(alloc_pages_bulk_refill_noprof(__VA_ARGS__))
-> +
->  static inline unsigned long
->  alloc_pages_bulk_node_noprof(gfp_t gfp, int nid, unsigned long nr_pages,
->  				   struct page **page_array)
-> diff --git a/include/trace/events/sunrpc.h b/include/trace/events/sunrpc.h
-> index 5d331383047b..cb8899f1cbdc 100644
-> --- a/include/trace/events/sunrpc.h
-> +++ b/include/trace/events/sunrpc.h
-> @@ -2143,23 +2143,23 @@ TRACE_EVENT(svc_wake_up,
->  TRACE_EVENT(svc_alloc_arg_err,
->  	TP_PROTO(
->  		unsigned int requested,
-> -		unsigned int allocated
-> +		int ret
->  	),
->  
-> -	TP_ARGS(requested, allocated),
-> +	TP_ARGS(requested, ret),
->  
->  	TP_STRUCT__entry(
->  		__field(unsigned int, requested)
-> -		__field(unsigned int, allocated)
-> +		__field(int, ret)
->  	),
->  
->  	TP_fast_assign(
->  		__entry->requested = requested;
-> -		__entry->allocated = allocated;
-> +		__entry->ret = ret;
->  	),
->  
-> -	TP_printk("requested=%u allocated=%u",
-> -		__entry->requested, __entry->allocated)
-> +	TP_printk("requested=%u ret=%d",
-> +		__entry->requested, __entry->ret)
->  );
->  
->  DECLARE_EVENT_CLASS(svc_deferred_event,
-> diff --git a/kernel/bpf/arena.c b/kernel/bpf/arena.c
-> index 0d56cea71602..9022c4440814 100644
-> --- a/kernel/bpf/arena.c
-> +++ b/kernel/bpf/arena.c
-> @@ -445,7 +445,6 @@ static long arena_alloc_pages(struct bpf_arena *arena, long uaddr, long page_cnt
->  			return 0;
->  	}
->  
-> -	/* zeroing is needed, since alloc_pages_bulk() only fills in non-zero entries */
->  	pages = kvcalloc(page_cnt, sizeof(struct page *), GFP_KERNEL);
->  	if (!pages)
->  		return 0;
-> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-> index d7cfcfa2b077..59a4fe23e62a 100644
-> --- a/mm/page_alloc.c
-> +++ b/mm/page_alloc.c
-> @@ -4784,9 +4784,6 @@ static inline bool prepare_alloc_pages(gfp_t gfp_mask, unsigned int order,
->   * This is a batched version of the page allocator that attempts to
->   * allocate nr_pages quickly. Pages are added to the page_array.
->   *
-> - * Note that only NULL elements are populated with pages and nr_pages
-> - * is the maximum number of pages that will be stored in the array.
-> - *
->   * Returns the number of pages in the array.
->   */
->  unsigned long alloc_pages_bulk_noprof(gfp_t gfp, int preferred_nid,
-> @@ -4802,29 +4799,18 @@ unsigned long alloc_pages_bulk_noprof(gfp_t gfp, int preferred_nid,
->  	struct alloc_context ac;
->  	gfp_t alloc_gfp;
->  	unsigned int alloc_flags = ALLOC_WMARK_LOW;
-> -	int nr_populated = 0, nr_account = 0;
-> -
-> -	/*
-> -	 * Skip populated array elements to determine if any pages need
-> -	 * to be allocated before disabling IRQs.
-> -	 */
-> -	while (nr_populated < nr_pages && page_array[nr_populated])
-> -		nr_populated++;
-> +	int nr_populated = 0;
->  
->  	/* No pages requested? */
->  	if (unlikely(nr_pages <= 0))
->  		goto out;
->  
-> -	/* Already populated array? */
-> -	if (unlikely(nr_pages - nr_populated == 0))
-> -		goto out;
-> -
->  	/* Bulk allocator does not support memcg accounting. */
->  	if (memcg_kmem_online() && (gfp & __GFP_ACCOUNT))
->  		goto failed;
->  
->  	/* Use the single page allocator for one page. */
-> -	if (nr_pages - nr_populated == 1)
-> +	if (nr_pages == 1)
->  		goto failed;
->  
->  #ifdef CONFIG_PAGE_OWNER
-> @@ -4896,24 +4882,16 @@ unsigned long alloc_pages_bulk_noprof(gfp_t gfp, int preferred_nid,
->  	/* Attempt the batch allocation */
->  	pcp_list = &pcp->lists[order_to_pindex(ac.migratetype, 0)];
->  	while (nr_populated < nr_pages) {
-> -
-> -		/* Skip existing pages */
-> -		if (page_array[nr_populated]) {
-> -			nr_populated++;
-> -			continue;
-> -		}
-> -
->  		page = __rmqueue_pcplist(zone, 0, ac.migratetype, alloc_flags,
->  								pcp, pcp_list);
->  		if (unlikely(!page)) {
->  			/* Try and allocate at least one page */
-> -			if (!nr_account) {
-> +			if (!nr_populated) {
->  				pcp_spin_unlock(pcp);
->  				goto failed_irq;
->  			}
->  			break;
->  		}
-> -		nr_account++;
->  
->  		prep_new_page(page, 0, gfp, 0);
->  		set_page_refcounted(page);
-> @@ -4923,8 +4901,8 @@ unsigned long alloc_pages_bulk_noprof(gfp_t gfp, int preferred_nid,
->  	pcp_spin_unlock(pcp);
->  	pcp_trylock_finish(UP_flags);
->  
-> -	__count_zid_vm_events(PGALLOC, zone_idx(zone), nr_account);
-> -	zone_statistics(zonelist_zone(ac.preferred_zoneref), zone, nr_account);
-> +	__count_zid_vm_events(PGALLOC, zone_idx(zone), nr_populated);
-> +	zone_statistics(zonelist_zone(ac.preferred_zoneref), zone, nr_populated);
->  
->  out:
->  	return nr_populated;
-> diff --git a/net/core/page_pool.c b/net/core/page_pool.c
-> index 7745ad924ae2..2431d2f6d610 100644
-> --- a/net/core/page_pool.c
-> +++ b/net/core/page_pool.c
-> @@ -541,9 +541,6 @@ static noinline netmem_ref __page_pool_alloc_pages_slow(struct page_pool *pool,
->  	if (unlikely(pool->alloc.count > 0))
->  		return pool->alloc.cache[--pool->alloc.count];
->  
-> -	/* Mark empty alloc.cache slots "empty" for alloc_pages_bulk */
-> -	memset(&pool->alloc.cache, 0, sizeof(void *) * bulk);
-> -
->  	nr_pages = alloc_pages_bulk_node(gfp, pool->p.nid, bulk,
->  					 (struct page **)pool->alloc.cache);
->  	if (unlikely(!nr_pages))
-> diff --git a/net/sunrpc/svc_xprt.c b/net/sunrpc/svc_xprt.c
-> index ae25405d8bd2..1191686fc0af 100644
-> --- a/net/sunrpc/svc_xprt.c
-> +++ b/net/sunrpc/svc_xprt.c
-> @@ -653,7 +653,8 @@ static bool svc_alloc_arg(struct svc_rqst *rqstp)
->  {
->  	struct svc_serv *serv = rqstp->rq_server;
->  	struct xdr_buf *arg = &rqstp->rq_arg;
-> -	unsigned long pages, filled, ret;
-> +	unsigned long pages;
-> +	int ret;
->  
->  	pages = (serv->sv_max_mesg + 2 * PAGE_SIZE) >> PAGE_SHIFT;
->  	if (pages > RPCSVC_MAXPAGES) {
-> @@ -663,9 +664,12 @@ static bool svc_alloc_arg(struct svc_rqst *rqstp)
->  		pages = RPCSVC_MAXPAGES;
->  	}
->  
-> -	for (filled = 0; filled < pages; filled = ret) {
-> -		ret = alloc_pages_bulk(GFP_KERNEL, pages, rqstp->rq_pages);
-> -		if (ret > filled)
-> +	while (true) {
-> +		ret = alloc_pages_bulk_refill(GFP_KERNEL, pages, rqstp->rq_pages);
-> +		if (!ret)
-> +			break;
-> +
-> +		if (ret == -EAGAIN)
->  			/* Made progress, don't sleep yet */
->  			continue;
->  
-
-
+diff --git a/arch/x86/include/asm/trace/common.h b/arch/x86/include/asm/trace/common.h
+index f0f9bcdb74d9..4b289be75173 100644
+--- a/arch/x86/include/asm/trace/common.h
++++ b/arch/x86/include/asm/trace/common.h
+@@ -2,11 +2,21 @@
+ #define _ASM_TRACE_COMMON_H
+ 
+ #ifdef CONFIG_TRACING
+-DECLARE_STATIC_KEY_FALSE(trace_pagefault_key);
+-#define trace_pagefault_enabled()			\
+-	static_branch_unlikely(&trace_pagefault_key)
++DECLARE_STATIC_KEY_FALSE(trace_pagefault_enter_key);
++DECLARE_STATIC_KEY_FALSE(trace_pagefault_exit_key);
++#define trace_pagefault_enter_enabled() \
++	static_branch_unlikely(&trace_pagefault_enter_key)
++#define trace_pagefault_exit_enabled() \
++	static_branch_unlikely(&trace_pagefault_exit_key)
+ #else
+-static inline bool trace_pagefault_enabled(void) { return false; }
++static inline bool trace_pagefault_enter_enabled(void)
++{
++	return false;
++}
++static inline bool trace_pagefault_exit_enabled(void)
++{
++	return false;
++}
+ #endif
+ 
+ #endif
+diff --git a/arch/x86/include/asm/trace/exceptions.h b/arch/x86/include/asm/trace/exceptions.h
+index 6b1e87194809..76729fcdb249 100644
+--- a/arch/x86/include/asm/trace/exceptions.h
++++ b/arch/x86/include/asm/trace/exceptions.h
+@@ -8,8 +8,10 @@
+ #include <linux/tracepoint.h>
+ #include <asm/trace/common.h>
+ 
+-extern int trace_pagefault_reg(void);
+-extern void trace_pagefault_unreg(void);
++extern int trace_pagefault_enter_reg(void);
++extern void trace_pagefault_enter_unreg(void);
++extern int trace_pagefault_exit_reg(void);
++extern void trace_pagefault_exit_unreg(void);
+ 
+ DECLARE_EVENT_CLASS(x86_exceptions,
+ 
+@@ -34,15 +36,33 @@ DECLARE_EVENT_CLASS(x86_exceptions,
+ 		  (void *)__entry->address, (void *)__entry->ip,
+ 		  __entry->error_code) );
+ 
+-#define DEFINE_PAGE_FAULT_EVENT(name)				\
++#define DEFINE_PAGE_FAULT_EVENT(name, reg, unreg)		\
+ DEFINE_EVENT_FN(x86_exceptions, name,				\
+ 	TP_PROTO(unsigned long address,	struct pt_regs *regs,	\
+ 		 unsigned long error_code),			\
+ 	TP_ARGS(address, regs, error_code),			\
+-	trace_pagefault_reg, trace_pagefault_unreg);
++	reg, unreg)
+ 
+-DEFINE_PAGE_FAULT_EVENT(page_fault_user);
+-DEFINE_PAGE_FAULT_EVENT(page_fault_kernel);
++DEFINE_PAGE_FAULT_EVENT(
++	page_fault_user_enter,
++	trace_pagefault_enter_reg,
++	trace_pagefault_enter_unreg
++);
++DEFINE_PAGE_FAULT_EVENT(
++	page_fault_user_exit,
++	trace_pagefault_exit_reg,
++	trace_pagefault_exit_unreg
++);
++DEFINE_PAGE_FAULT_EVENT(
++	page_fault_kernel_enter,
++	trace_pagefault_enter_reg,
++	trace_pagefault_enter_unreg
++);
++DEFINE_PAGE_FAULT_EVENT(
++	page_fault_kernel_exit,
++	trace_pagefault_exit_reg,
++	trace_pagefault_exit_unreg
++);
+ 
+ #undef TRACE_INCLUDE_PATH
+ #undef TRACE_INCLUDE_FILE
+diff --git a/arch/x86/kernel/tracepoint.c b/arch/x86/kernel/tracepoint.c
+index 03ae1caaa878..108285046226 100644
+--- a/arch/x86/kernel/tracepoint.c
++++ b/arch/x86/kernel/tracepoint.c
+@@ -7,15 +7,27 @@
+ 
+ #include <asm/trace/exceptions.h>
+ 
+-DEFINE_STATIC_KEY_FALSE(trace_pagefault_key);
++DEFINE_STATIC_KEY_FALSE(trace_pagefault_enter_key);
++DEFINE_STATIC_KEY_FALSE(trace_pagefault_exit_key);
+ 
+-int trace_pagefault_reg(void)
++int trace_pagefault_enter_reg(void)
+ {
+-	static_branch_inc(&trace_pagefault_key);
++	static_branch_inc(&trace_pagefault_enter_key);
+ 	return 0;
+ }
+ 
+-void trace_pagefault_unreg(void)
++void trace_pagefault_enter_unreg(void)
+ {
+-	static_branch_dec(&trace_pagefault_key);
++	static_branch_dec(&trace_pagefault_enter_key);
++}
++
++int trace_pagefault_exit_reg(void)
++{
++	static_branch_inc(&trace_pagefault_exit_key);
++	return 0;
++}
++
++void trace_pagefault_exit_unreg(void)
++{
++	static_branch_dec(&trace_pagefault_exit_key);
+ }
+diff --git a/arch/x86/mm/fault.c b/arch/x86/mm/fault.c
+index 296d294142c8..cd933edf1e19 100644
+--- a/arch/x86/mm/fault.c
++++ b/arch/x86/mm/fault.c
+@@ -1455,13 +1455,26 @@ static __always_inline void
+ trace_page_fault_entries(struct pt_regs *regs, unsigned long error_code,
+ 			 unsigned long address)
+ {
+-	if (!trace_pagefault_enabled())
++	if (!trace_pagefault_enter_enabled())
+ 		return;
+ 
+ 	if (user_mode(regs))
+-		trace_page_fault_user(address, regs, error_code);
++		trace_page_fault_user_enter(address, regs, error_code);
+ 	else
+-		trace_page_fault_kernel(address, regs, error_code);
++		trace_page_fault_kernel_enter(address, regs, error_code);
++}
++
++static __always_inline void
++trace_page_fault_exits(struct pt_regs *regs, unsigned long error_code,
++			 unsigned long address)
++{
++	if (!trace_pagefault_exit_enabled())
++		return;
++
++	if (user_mode(regs))
++		trace_page_fault_user_exit(address, regs, error_code);
++	else
++		trace_page_fault_kernel_exit(address, regs, error_code);
+ }
+ 
+ static __always_inline void
+@@ -1487,6 +1500,8 @@ handle_page_fault(struct pt_regs *regs, unsigned long error_code,
+ 		 */
+ 		local_irq_disable();
+ 	}
++
++	trace_page_fault_exits(regs, error_code, address);
+ }
+ 
+ DEFINE_IDTENTRY_RAW_ERRORCODE(exc_page_fault)
 -- 
-Chuck Lever
+2.48.1
+
