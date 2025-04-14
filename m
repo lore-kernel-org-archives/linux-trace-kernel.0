@@ -1,146 +1,187 @@
-Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B17B433CB;
-	Sun, 13 Apr 2025 19:05:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06011AD51;
+	Mon, 14 Apr 2025 03:00:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744571139; cv=none; b=DKeLTbAUBR+7fkVSKcEUahc3GUViKcvkS+y4zLeAgbcsKLGqNnzarPT/XSPviyXxqYXy8Qkgcw0gGNztIWb8GfBUjQRI9ZsDTlPjD6U1lUsH9g0LVcsxQLG8+BIC4IsXVAUuLI4QESQXitRGOm19/45rZ5XcfBhfHSz84U1gboQ=
+	t=1744599618; cv=none; b=ZaU9+aP7XBccwZIXlEaE6Ji5jbbFIE2QdYaAHOsZcGdSAiwhFR6N0jV92gIKj5PE5pKRwnPzV0FNfgQ31GmaYx64f5Fyb+r11kJEZCjTek+Tf+71qFv5SOJiiR+ScZDhS54bXj5SvE3kA3B912QKG+TgOfUiVLlnOmbxJefBGEg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744571139; c=relaxed/simple;
-	bh=xUnKC2hZKUmPIBqtRRkzkS6vfis+UZR9gckCd7oR4K8=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ftmKiJAe3qtvxEVKoKenjbCdUiZ6g9LpHGMuNfYHvP4zV1MDtd/D1pX95KF1rgzURbgXZtvFVS9ubHjQ8RNpBdI7EFC/T+IiWGNEqcwxIwri8lmmOUDHnnL7IMWkN1pj7FHfItfc4xBi+R9RV/rjJmCzXq0siNf0vH0F4lOo4lc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BhnlpVey; arc=none smtp.client-ip=209.85.208.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744599618; c=relaxed/simple;
+	bh=5jqtjDnwxSBtJOLqJhkrIDIeuZ+V3NY6fYonRrvqp90=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=rYU9r+GL4IUe5yrQyPoJzQYJkwtcsyfTlMS9uf39D0CyFB3HVk7YfWLLdicyEHhLCoztSMx+yuWnUgh9XJJml8QYHCakQT3iHFdD4wzeIboHcOS0bm7LiWrHLh6WW79PCegSvLTfKHamc1idFJXbIzJBLnbID5Iroqc73hm9jNo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pB0MDPhQ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BhnlpVey"
-Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-5e686d39ba2so6600808a12.2;
-        Sun, 13 Apr 2025 12:05:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744571136; x=1745175936; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=FFn3MVQl1YlknMdPpZVW/TuKNAh9MSgO8m58OGfYfe0=;
-        b=BhnlpVeyglx58XPSlQkG//ZwTYH6JyI3mqy9UNgxidsAt1IMiaGOyRxp+dibFnF/f9
-         vi/B1KdEo1jLxO+uFb/Obi34cGUXKfNOUUBmrpac95jkFIxqU08yWF7jIbpGYJZi6RkJ
-         mClf3RBEFrf8kkoLETfWijnJ1qJlijIZ4FghVoBeusqIMLnZ5KPq5jbdV0B+cvoIF6cN
-         3MG5K/h625KWyLj/4I6PdyciY9uO+XjnRgo4GzjbU3wAFcgYt1s9RmTGg/tt6kCfauMe
-         sS919Ir57G/+WBBamFOl5yW/3mdzWOK0/7KWCMhYkoq7tBYyiWH3jcqpGWjQVojpHewT
-         eXuw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744571136; x=1745175936;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=FFn3MVQl1YlknMdPpZVW/TuKNAh9MSgO8m58OGfYfe0=;
-        b=AS6BB2j5MOmw+7BvISJy/Tm6WMt9RgJ6hv3UNkDHnzaERD7qOUEP23Y5XCNsPPjOaH
-         9SoeKoOC17UcTiYYMpSxH5Vt8mdR9id653/OcD5Q2kMvV3QS0O0eklJKBa5JMB76jsYq
-         b/t70LPnQ3ucKpaAycwJIqIqj3w8DOGUpCMy4xM0kOGT5SftIpTFgkqCgl+Iqtt7O2JC
-         nRzeuDGPiVRDsNJP+LGP4e1/iyc6lqZttIZFnyUjsyqOaNiJg1vGhcLz8RiJlj4KsjHg
-         HVIgteYYbECBNKws6ZevjhNiaxmgyhgcK8eUtaxLs/cjy85gp7TVQcbBtzP/QVq0In4e
-         yxCw==
-X-Forwarded-Encrypted: i=1; AJvYcCV7lNZ1REzoeqChNDd+ZMmcUq1OVrX0FtFcah6FCnYzvqMnPwQp5ZrpdIVncRgAMaCqO9p6lau6zUztqX6wpojYEnuu@vger.kernel.org, AJvYcCWjh2/A1lxr6UJ5JFItuq276PXUvn6xG/ryUPI64xUCN4RVYVdbA9RPCTiOCIYNT2AfQDMuh3p1bDlhBrKM@vger.kernel.org, AJvYcCXcHjIHX1c5hjZEqYb6/RW6a6D2N828sDfc2q9M5BM4r+oGBOfMLs67Szu7OAL+S7bQaLs=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy8aGtCsqfAOR9ulX81XBPdCdjoF/Zl2ECmWKceccslmwGglHL6
-	8MJgekR9KsR0FXZHUS5vck/OUOvF1aWDziI0rQ7cDICADWNZsDSL
-X-Gm-Gg: ASbGncu6ZbUELqfUmLvata9pH2CIn+CaefsDBeWBODHOr+i+JjSjBV1CJoZ9mmL8Xjg
-	Et6p2S0jgyq0gFx6yye0/oEtfalTX82bqTegMncGEVtYa2iBUEYpoOWbbSZW5Q9lGtDEER0vlE1
-	xpOptDA/fck5MBZkFidA9Dj+XBwYpNqPZp72+AvIAMMXfyDgkHeyPbf0V1uN/HkbiqxYKeN8fhy
-	Y5Hc5PHvy0ATNnJNT6MnNdFMjErmsBLGoxts0BMEQ8qHuqhqsiHxzL0DW6qBhawqLOZNWrXesZm
-	tSxVVuNty9twv2T6/laoNhGCsMf9yl0hUma5+x2Pt5LEJJCPLGkjb6In
-X-Google-Smtp-Source: AGHT+IE2rlqatkj2ISFm4XV3Kag3gIMpJ+YFGxMKfNE+sdEV9FSc5wiV5XyQ+8Jv6lyEPxkR4AdsRw==
-X-Received: by 2002:a05:6402:27cd:b0:5ed:3228:d005 with SMTP id 4fb4d7f45d1cf-5f36f876401mr7080158a12.6.1744571135454;
-        Sun, 13 Apr 2025 12:05:35 -0700 (PDT)
-Received: from krava (ip4-95-82-160-96.cust.nbox.cz. [95.82.160.96])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5f36f069dedsm3810613a12.41.2025.04.13.12.05.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 13 Apr 2025 12:05:34 -0700 (PDT)
-From: Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date: Sun, 13 Apr 2025 21:05:29 +0200
-To: Oleg Nesterov <oleg@redhat.com>
-Cc: Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>, Andrii Nakryiko <andrii@kernel.org>,
-	bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, x86@kernel.org,
-	Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Hao Luo <haoluo@google.com>, Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Alan Maguire <alan.maguire@oracle.com>
-Subject: Re: [PATCHv2 perf/core 1/2] uprobes/x86: Add support to emulate nop
- instructions
-Message-ID: <Z_wK-XUmQtx1xybs@krava>
-References: <20250411121756.567274-1-jolsa@kernel.org>
- <CAEf4BzbvMYJf5LLxwamYpzzu=Sewzti-FR-9o4AGfU+KZu0b1Q@mail.gmail.com>
- <20250411163242.GI5322@redhat.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pB0MDPhQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 672D1C4CEDD;
+	Mon, 14 Apr 2025 03:00:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744599617;
+	bh=5jqtjDnwxSBtJOLqJhkrIDIeuZ+V3NY6fYonRrvqp90=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=pB0MDPhQL7p6oIMgPI1fAmxmJIgBN28j0xDVJprSB5RgElYT2p9L6x+zIucWU6gP+
+	 YK3JlSbJ7ftWXyoLTb8l+/NAqAZEVloyHymir9UiCeBdUaoflp7DGUnrQRiyzGlqYP
+	 aJy1bgu9tkcY2A5EP9NSPQ3GvhV9Wg8k1qc7mwEIr44ldFg57MiNSZrCh6KjeO8UM1
+	 94vfgqBnEMz9gsgEQZTFx9NtG6J2KdwmsHnmQGoJc7+J/onzOrXpvjHKZWBn/Oohck
+	 lXnl+X68P+/N/4wt1lJVaua+bPYCzpqhGuu71wYgd4yVAE6FdYBygAtlEwrIDjFapZ
+	 fuqojo9xOAjjg==
+Date: Mon, 14 Apr 2025 12:00:13 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mathieu
+ Desnoyers <mathieu.desnoyers@efficios.com>, Andrew Morton
+ <akpm@linux-foundation.org>, Sven Schnelle <svens@linux.ibm.com>, Paul
+ Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>,
+ Albert Ou <aou@eecs.berkeley.edu>, Guo Ren <guoren@kernel.org>, Donglin
+ Peng <dolinux.peng@gmail.com>, Zheng Yejian <zhengyejian@huaweicloud.com>,
+ Aishwarya.TCV@arm.com
+Subject: Re: [PATCH v4 2/4] ftrace: Add support for function argument to
+ graph tracer
+Message-Id: <20250414120013.895b0cc99e52c41eb8ec3774@kernel.org>
+In-Reply-To: <20250411152610.64d555bf@gandalf.local.home>
+References: <20250227185804.639525399@goodmis.org>
+	<20250227185822.810321199@goodmis.org>
+	<ccc40f2b-4b9e-4abd-8daf-d22fce2a86f0@sirena.org.uk>
+	<20250410131745.04c126eb@gandalf.local.home>
+	<c41e5ee7-18ba-40cf-8a31-19062d94f7b9@sirena.org.uk>
+	<20250411124552.36564a07@gandalf.local.home>
+	<2edc0ba8-2f45-40dc-86d9-5ab7cea8938c@sirena.org.uk>
+	<20250411131254.3e6155ea@gandalf.local.home>
+	<350786cc-9e40-4396-ab95-4f10d69122fb@sirena.org.uk>
+	<9dafc156-1272-4039-a9c0-3448a1bd6d1f@sirena.org.uk>
+	<20250411142427.3abfb3c3@gandalf.local.home>
+	<20250411143132.56096f76@gandalf.local.home>
+	<20250411151358.1d4fd8c7@gandalf.local.home>
+	<20250411152610.64d555bf@gandalf.local.home>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250411163242.GI5322@redhat.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Fri, Apr 11, 2025 at 06:32:43PM +0200, Oleg Nesterov wrote:
-> On 04/11, Andrii Nakryiko wrote:
-> >
-> > > --- a/arch/x86/kernel/uprobes.c
-> > > +++ b/arch/x86/kernel/uprobes.c
-> > > @@ -840,6 +840,12 @@ static int branch_setup_xol_ops(struct arch_uprobe *auprobe, struct insn *insn)
-> > >         insn_byte_t p;
-> > >         int i;
-> > >
-> > > +       /* x86_nops[i]; same as jmp with .offs = 0 */
-> > > +       for (i = 1; i <= ASM_NOP_MAX; ++i) {
-> >
-> > i <= ASM_NOP_MAX && i <= insn->length
-> >
-> > ?
-> >
-> > otherwise what prevents us from reading past the actual instruction bytes?
-> 
-> Well, copy_insn() just copies MAX_UINSN_BYTES into arch_uprobe.insn[].
-> If, say, the 1st 11 bytes of arch_uprobe.insn (or insn->kaddr) match
-> x86_nops[11] then insn->length must be 11, or insn_decode() is buggy?
-> 
-> > or, actually, shouldn't we just check memcmp(x86_nops[insn->length])
-> > if insn->length < ASM_NOP_MAX ?
-
-nice, did not think of that
+On Fri, 11 Apr 2025 15:26:10 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
 > 
-> Hmm... agreed.
+> Replying to my email as it appears gmail blocked it. Probably due to all
+> the escape characters my output had. Resending with that cut out.
 > 
-> Either way this check can't (doesn't even try to) detect, say,
-> "rep; BYTES_NOP5", so we do not care if insn->length == 6 in this case.
+> Masami, I was sent a message from gmail that it blocked this from you.
+
+Hi, I could find it. Let me reply!
+
 > 
-> Good point!
+> If you want to see the original email:
+> 
+>   https://lore.kernel.org/all/20250411151358.1d4fd8c7@gandalf.local.home/
+> 
+> -- Steve
+> 
+> On Fri, 11 Apr 2025 15:13:58 -0400
+> Steven Rostedt <rostedt@goodmis.org> wrote:
+> 
+> > On Fri, 11 Apr 2025 14:31:32 -0400
+> > Steven Rostedt <rostedt@goodmis.org> wrote:
+> > 
+> > > Hmm, I just tested this, and it fails on my box too (I test on a debian VM).
+> > > 
+> > > It fails with and without setting it to bash. I'll take a look too.  
+> > 
+> > Hmm, maybe it is a bashism.
+> > 
+> > The test has this:
+> > 
+> >   # Max arguments limitation
+> >   MAX_ARGS=128
+> >   EXCEED_ARGS=$((MAX_ARGS + 1))
+> > 
+> >   check_max_args() { # event_header
+> >     TEST_STRING=$1
+> >     # Acceptable
+> >     for i in `seq 1 $MAX_ARGS`; do
+> >       TEST_STRING="$TEST_STRING \\$i"
+> >     done
+> >     echo "$TEST_STRING" >> dynamic_events
+> >     echo > dynamic_events
+> >     # Error
+> >     TEST_STRING="$TEST_STRING \\$EXCEED_ARGS"
+> >     ! echo "$TEST_STRING" >> dynamic_events
+> >     return 0
+> >   }
+> > 
+> >   # Kprobe max args limitation
+> >   if grep -q "kprobe_events" README; then
+> >     check_max_args "p vfs_read"
+> >   fi
+> > 
+> > So I tried manually executing this in bash:
+> > 
+> > --------------------------8<--------------------------
+> > # TEST_STRING='p vfs_read'
+> > # for i in `seq 1 128`; do TEST_STRING="$TEST_STRING \\$i" ; done
+> > # echo $TEST_STRING
+> > p vfs_read \1 \2
+> 
+> [ This  is cut out to see if it doesn't trigger gmail blocking it again! ]
+> 
+> > # echo "$TEST_STRING" >> /sys/kernel/tracing/dynamic_events
+> > # echo $?
+> > 0
+> > # cat /sys/kernel/tracing/dynamic_events
+> > p:kprobes/p_vfs_read_0 vfs_read arg1=\1
+> 
+> [ This  is cut out to see if it doesn't trigger gmail blocking it again! ]
+> 
+> > -------------------------->8--------------------------  
+> > 
+> > Doing the same in dash:
+> > 
+> > --------------------------8<--------------------------
+> > # dash
+> > # TEST_STRING='p vfs_read'
+> > # for i in `seq 1 128`; do TEST_STRING="$TEST_STRING \\$i" ; done
+> > # echo $TEST_STRING
+> > p vfs_read         \8 \9 	 
+> 
+> [ This  is cut out to see if it doesn't trigger gmail blocking it again! ]
+> 
+> > # echo "$TEST_STRING" >> /sys/kernel/tracing/dynamic_events
+> > dash: 8: echo: echo: I/O error
+> > -------------------------->8--------------------------  
+> > 
+> > Looks like dash will translate those "\#" into the ASCII equivalent,
+> > whereas bash does not.
+> > 
+> > This patch seems to fix it:
+> > 
+> > diff --git a/tools/testing/selftests/ftrace/test.d/dynevent/dynevent_limitations.tc b/tools/testing/selftests/ftrace/test.d/dynevent/dynevent_limitations.tc
+> > index 6b94b678741a..ebe2a34cbf92 100644
+> > --- a/tools/testing/selftests/ftrace/test.d/dynevent/dynevent_limitations.tc
+> > +++ b/tools/testing/selftests/ftrace/test.d/dynevent/dynevent_limitations.tc
+> > @@ -11,7 +11,7 @@ check_max_args() { # event_header
+> >    TEST_STRING=$1
+> >    # Acceptable
+> >    for i in `seq 1 $MAX_ARGS`; do
+> > -    TEST_STRING="$TEST_STRING \\$i"
+> > +    TEST_STRING="$TEST_STRING \\\\$i"
+> >    done
+> >    echo "$TEST_STRING" >> dynamic_events
+> >    echo > dynamic_events
+> > 
+> > 
+> > Masami, you just recently added this test (it's dated March 27th 2025), did
+> > you mean to write in the ASCII characters? Why the backslash?
+> > 
+> > -- Steve
+> 
 
-I'll run tests and send formal patch for change below
 
-thanks,
-jirka
-
-
----
-diff --git a/arch/x86/kernel/uprobes.c b/arch/x86/kernel/uprobes.c
-index 9194695662b2..6d383839e839 100644
---- a/arch/x86/kernel/uprobes.c
-+++ b/arch/x86/kernel/uprobes.c
-@@ -840,6 +840,11 @@ static int branch_setup_xol_ops(struct arch_uprobe *auprobe, struct insn *insn)
- 	insn_byte_t p;
- 	int i;
- 
-+	/* x86_nops[insn->length]; same as jmp with .offs = 0 */
-+	if (insn->length <= ASM_NOP_MAX &&
-+	    !memcmp(insn->kaddr, x86_nops[insn->length], insn->length))
-+		goto setup;
-+
- 	switch (opc1) {
- 	case 0xeb:	/* jmp 8 */
- 	case 0xe9:	/* jmp 32 */
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
