@@ -1,110 +1,192 @@
-Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 487C41A83F2;
-	Mon, 14 Apr 2025 21:25:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3D941B0F3C
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 14 Apr 2025 22:06:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744665935; cv=none; b=qD6awZDpZZC5q42oJlnArr9BtLU/Pq+onGrMuAwuowE2b4mY1B8fJgJ3Vy3DZU7fNEHVQBNEDi8slSbwU5/oAsa1df2QMkgS7PhxlZ2IMSvzgsgGjB2ZGlvH84X7m19wXMrsVGfns84vnDDgAbYfNBg4aElfVgQrBXOymiOM/vM=
+	t=1744668406; cv=none; b=S3mplDg8Ck/u0duNftq+hdXE41T/G0Otbs+G6IdBuBMCOMEPQOzXdxNd85bx0uVdadt+VmKR8QDfNRSGG162tD7TAyIkD5QAe9tIzJ4G05oHuzj94BgsH2h5vJoFxR2xoCXltv+quMuWkL4pEWPsgnD9cpwBhrJXkQ1svAa7JQE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744665935; c=relaxed/simple;
-	bh=N4BFEDl7uYJZ/uee6Yh5jrAWw8mBsknP61/45paC1Mc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lsViYzfuhdyI21i7aZ2bEFU39OPkQcO8B1YpT8INf+vxMETZjG8IWXPVCeadpt/TLNe5YcjqwLs2s7Xrr8JbnFRfBUvD5OD/hLf6SwNCCVjqn5wUgJn798MjBY9xZx0CM+ZuKlcY1gwX29G5VmhLTW7SdV3i7fCMCaXIZ/Zq8pY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iprZvO/B; arc=none smtp.client-ip=209.85.214.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744668406; c=relaxed/simple;
+	bh=fejDswuf7V0RzMSrs0ALv14zz8fbbeLCxWpLbydMRfA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=hfSj7WfU9R0wyvGInnTpFsAT4/kI1twieF1x/bax3r8sa5X5rkf2PMbFeUnG+mZAt3m0BPclFBnWZTVCfpfwYMuBy05SkhKqARhA27lIhLNfpRkwVx7XqQPNyYZfen6bQeYTHgm4RQlfSD3xNdfspQ1auWrI8v6bagSAifMtX5o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=O8v7dh2o; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iprZvO/B"
-Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-225477548e1so46803305ad.0;
-        Mon, 14 Apr 2025 14:25:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744665933; x=1745270733; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=u1IQBK50cTzuspbb54qXzEgBNmv1ZuYACNvXUgrmt94=;
-        b=iprZvO/B9S2fQNXB5AFWQtXBCz3xY2V5ZLQlqJcTxMwJXasIAxvyg3B2e08enEM8w9
-         CigXEN3y1F33YK+wrgZ3ykhX5EdvE4KVPH9SM81W9XU2TwpudvkpnTTG1150yxIX5Zis
-         1t14vUsWYs+cTwz8sLnOJUOonm/bjA0BsDz2CuuHI/l7QMrBlxglifvTe+G7jcIpkFdC
-         tHdrYk/GnAFvauIy3lA1ZDJOae4v7PwJ4vwZ8XGnsbBY5xKPuyppzOoplEybRfE3YUiY
-         MdN3uORktmvXk8gB+DjuC1qMEet2g5m7qFapSq7ptVsbZ/VpVczHXuIx7BjneJZKNcux
-         qXoA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744665933; x=1745270733;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=u1IQBK50cTzuspbb54qXzEgBNmv1ZuYACNvXUgrmt94=;
-        b=WpTFhcc2oybi8yXKPKciBeEihtxYTK3z0AvnCc5aQdh+1izJWzeAX72rT/OaN0F1Y8
-         hMSN6rrMbsjX04m3+njBEFTEu/WWa2a/V5gWqSMWWlgtPJte/Kuo+fALPrzq8j036t4S
-         4oJkZWL4/ylS1L2vtTo2XwLb8K/IoplmwuOsN7so8tfNdQyCvhCrjZTloM9Po2a1Xfqh
-         nzBiE6/dt6URbcRSMhumynmjDP60fdNBtIZ5Er/hihEECF4Dgsm+uabi3H1GsUKUbzCZ
-         E8XGV51+NZ++V9XT1Sazq/x+PtwPVY3rXvx1AdTWcs1XzqqYVaCRhWZjFBAp2RythQ1w
-         p8/Q==
-X-Forwarded-Encrypted: i=1; AJvYcCU/DtncBTYX0K21c4CdOu2bZRtJDmBv3ZXdv+JslaM3MdUoHLmNrxzkaUR4dcjDqELaS2HzZXCp@vger.kernel.org, AJvYcCUXyO+wD8Hdgdc1LwUl9YHIYopYncK5RMuOJHq4Iq/t0MpVikkDQVH3B5LQ1+K2V7akhGYj/VzgBdMWV1s=@vger.kernel.org, AJvYcCUcbPPyn0xgaowJwhfkEi/Hbmn2+fmFUxgLIHPqB5WcFD6YbAwerrLnFw3S3QaAOqgZ2hFhk1DUoP+dyiPv5COl/0AU@vger.kernel.org
-X-Gm-Message-State: AOJu0YzRTUuFaI8+Vty/PjfrFbzBkViScW5OVAARovs5SN5QLdHtEHzZ
-	LlHEimP1+fx4arX1Zr/bbxoFq3RSpUd+jgBJc4m/7C/nGb1ERp2H
-X-Gm-Gg: ASbGncuZ72oBQTSmmj70gMSagbCESBiVDeaxSZ6kVV3C1+6SZHZu+PdxVmh137jsJwy
-	gzMAGQlx4kLaDMsS/9y6851ygbVVkN7XzdPqhs36rzwYpbzfc6kLjR7wrRPMSK8zzSLXx86qiXR
-	DxS9ufTANXxM1BJ0ujQltrVSR2asJCcRqfQeodIsDjcBPDWrJ4Ulu93JESezelEr5D9SfBakduX
-	1h6k5vFq2V77fItQePmsBIEH7LaQwZDVBjviuDONzDHSpKaE+1228SBzFPqrG7/2IiwcqeKmHWw
-	4Oh7U+VH3iOeokwBwtwcSutTm65uivV25Da4fYS+KFQy
-X-Google-Smtp-Source: AGHT+IFSueGj0QdNKNpNqsLVoIp4A4P4xbJ2sCbD0cXBKvhK0NSuw7f6ErhqZ15aCkOjkYVOXZ5F1Q==
-X-Received: by 2002:a17:902:f709:b0:223:fabd:4f99 with SMTP id d9443c01a7336-22bea4953demr206548995ad.5.1744665933444;
-        Mon, 14 Apr 2025 14:25:33 -0700 (PDT)
-Received: from localhost ([129.210.115.104])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22ac7ccb82fsm103617715ad.219.2025.04.14.14.25.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 14 Apr 2025 14:25:32 -0700 (PDT)
-Date: Mon, 14 Apr 2025 14:25:31 -0700
-From: Cong Wang <xiyou.wangcong@gmail.com>
-To: Jiayuan Chen <jiayuan.chen@linux.dev>
-Cc: bpf@vger.kernel.org, mrpre@163.com,
-	Jakub Sitnicki <jakub@cloudflare.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Martin KaFai Lau <martin.lau@linux.dev>,
-	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
-	Yonghong Song <yonghong.song@linux.dev>,
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>,
-	Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>,
-	Jesper Dangaard Brouer <hawk@kernel.org>,
-	linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="O8v7dh2o"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1744668401;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=7A+Lf5b6+QKJm+ZLr2WSKVaUqffwZGw3fSnH07I2CYs=;
+	b=O8v7dh2oFUqnbkgFDw8SmYSVWlwFJKt1r64W8K0g8QDJZzgTnUE5Hs93HaJvH6FBGDwOBE
+	LK1k4G0j+wiJpzEQkwuYGfcdlTz5YKx3c5lDLd8GPJWhV2V6xJI+3NVtGqSpuLj2yhpXW5
+	Wvy91Z6DXa3p8PAIu+ofUyJCu3Htzbs=
+Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-403-XqYKilyTPFGcWBaK2QIohA-1; Mon,
+ 14 Apr 2025 18:06:37 -0400
+X-MC-Unique: XqYKilyTPFGcWBaK2QIohA-1
+X-Mimecast-MFC-AGG-ID: XqYKilyTPFGcWBaK2QIohA_1744668393
+Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 5595A195609E;
+	Mon, 14 Apr 2025 22:06:32 +0000 (UTC)
+Received: from h1.redhat.com (unknown [10.22.64.91])
+	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id AA0131956094;
+	Mon, 14 Apr 2025 22:06:22 +0000 (UTC)
+From: Nico Pache <npache@redhat.com>
+To: linux-mm@kvack.org,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH bpf-next v3 1/2] bpf, sockmap: Introduce tracing
- capability for sockmap
-Message-ID: <Z/19S2yMP/2TViMa@pop-os.localdomain>
-References: <20250414161153.14990-1-jiayuan.chen@linux.dev>
+Cc: akpm@linux-foundation.org,
+	corbet@lwn.net,
+	rostedt@goodmis.org,
+	mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com,
+	david@redhat.com,
+	baohua@kernel.org,
+	baolin.wang@linux.alibaba.com,
+	ryan.roberts@arm.com,
+	willy@infradead.org,
+	peterx@redhat.com,
+	ziy@nvidia.com,
+	wangkefeng.wang@huawei.com,
+	usamaarif642@gmail.com,
+	sunnanyong@huawei.com,
+	vishal.moola@gmail.com,
+	thomas.hellstrom@linux.intel.com,
+	yang@os.amperecomputing.com,
+	kirill.shutemov@linux.intel.com,
+	aarcange@redhat.com,
+	raquini@redhat.com,
+	dev.jain@arm.com,
+	anshuman.khandual@arm.com,
+	catalin.marinas@arm.com,
+	tiwai@suse.de,
+	will@kernel.org,
+	dave.hansen@linux.intel.com,
+	jack@suse.cz,
+	cl@gentwo.org,
+	jglisse@google.com,
+	surenb@google.com,
+	zokeefe@google.com,
+	hannes@cmpxchg.org,
+	rientjes@google.com,
+	mhocko@suse.com
+Subject: [PATCH v3 00/12] khugepaged: mTHP support
+Date: Mon, 14 Apr 2025 16:05:45 -0600
+Message-ID: <20250414220557.35388-1-npache@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250414161153.14990-1-jiayuan.chen@linux.dev>
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
 
-On Tue, Apr 15, 2025 at 12:11:45AM +0800, Jiayuan Chen wrote:
-> +#ifndef __TRACE_SOCKMAP_HELPER_ONCE_ONLY
-> +#define __TRACE_SOCKMAP_HELPER_ONCE_ONLY
-> +
-> +enum sockmap_direct_type {
-> +	SOCKMAP_REDIR_NONE	= 0,
-> +	SOCKMAP_REDIR_INGRESS,
-> +	SOCKMAP_REDIR_EGRESS,
-> +};
+The following series provides khugepaged and madvise collapse with the
+capability to collapse regions to mTHPs.
 
-I am curious why you need to define them here since you already pass
-'ingress' as a parameter? Is it possible to reuse the BPF_F_INGRESS bit?
+To achieve this we generalize the khugepaged functions to no longer depend
+on PMD_ORDER. Then during the PMD scan, we keep track of chunks of pages
+(defined by MTHP_MIN_ORDER) that are utilized. This info is tracked
+using a bitmap. After the PMD scan is done, we do binary recursion on the
+bitmap to find the optimal mTHP sizes for the PMD range. The restriction
+on max_ptes_none is removed during the scan, to make sure we account for
+the whole PMD range. When no mTHP size is enabled, the legacy behavior of
+khugepaged is maintained. max_ptes_none will be scaled by the attempted
+collapse order to determine how full a THP must be to be eligible. If a
+mTHP collapse is attempted, but contains swapped out, or shared pages, we
+dont perform the collapse.
 
-Thanks!
+With the default max_ptes_none=511, the code should keep its most of its
+original behavior. To exercise mTHP collapse we need to set max_ptes_none<=255.
+With max_ptes_none > HPAGE_PMD_NR/2 you will experience collapse "creep" and
+constantly promote mTHPs to the next available size.
+
+Patch 1:     Some refactoring to combine madvise_collapse and khugepaged
+Patch 2:     Refactor/rename hpage_collapse
+Patch 3-5:   Generalize khugepaged functions for arbitrary orders
+Patch 6-9:   The mTHP patches
+Patch 10-11: Tracing/stats
+Patch 12:    Documentation
+
+---------
+ Testing
+---------
+- Built for x86_64, aarch64, ppc64le, and s390x
+- selftests mm
+- I created a test script that I used to push khugepaged to its limits while
+   monitoring a number of stats and tracepoints. The code is available
+   here[1] (Run in legacy mode for these changes and set mthp sizes to inherit)
+   The summary from my testings was that there was no significant regression
+   noticed through this test. In some cases my changes had better collapse
+   latencies, and was able to scan more pages in the same amount of time/work,
+   but for the most part the results were consistent.
+- redis testing. I tested these changes along with my defer changes
+  (see followup post for more details).
+- some basic testing on 64k page size.
+- lots of general use. These changes have been running in my VM for some time.
+
+Changes since V2:
+- corrected legacy behavior for khugepaged and madvise_collapse
+- added proper mTHP stat tracking
+- Minor changes to prevent a nested lock on non-split-lock arches
+- Took Devs version of alloc_charge_folio as it has the proper stats
+- Skip cases were trying to collapse to a lower order would still fail
+- Fixed cases were the bitmap was not being updated properly
+- Moved Documentation update to this series instead of the defer set
+- Minor bugs discovered during testing and review
+- Minor "nit" cleanup
+
+
+Changes since V1 [2]:
+- Minor bug fixes discovered during review and testing
+- removed dynamic allocations for bitmaps, and made them stack based
+- Adjusted bitmap offset from u8 to u16 to support 64k pagesize.
+- Updated trace events to include collapsing order info.
+- Scaled max_ptes_none by order rather than scaling to a 0-100 scale.
+- No longer require a chunk to be fully utilized before setting the bit. Use
+   the same max_ptes_none scaling principle to achieve this.
+- Skip mTHP collapse that requires swapin or shared handling. This helps prevent
+   some of the "creep" that was discovered in v1.
+
+[1] - https://gitlab.com/npache/khugepaged_mthp_test
+[2] - https://lore.kernel.org/lkml/20250108233128.14484-1-npache@redhat.com/
+
+Dev Jain (1):
+  khugepaged: generalize alloc_charge_folio()
+
+Nico Pache (11):
+  introduce khugepaged_collapse_single_pmd to unify khugepaged and
+    madvise_collapse
+  khugepaged: rename hpage_collapse_* to khugepaged_*
+  khugepaged: generalize hugepage_vma_revalidate for mTHP support
+  khugepaged: generalize __collapse_huge_page_* for mTHP support
+  khugepaged: introduce khugepaged_scan_bitmap for mTHP support
+  khugepaged: add mTHP support
+  khugepaged: skip collapsing mTHP to smaller orders
+  khugepaged: avoid unnecessary mTHP collapse attempts
+  khugepaged: improve tracepoints for mTHP orders
+  khugepaged: add per-order mTHP khugepaged stats
+  Documentation: mm: update the admin guide for mTHP collapse
+
+ Documentation/admin-guide/mm/transhuge.rst |   9 +-
+ include/linux/huge_mm.h                    |   5 +
+ include/linux/khugepaged.h                 |   4 +
+ include/trace/events/huge_memory.h         |  34 +-
+ mm/huge_memory.c                           |  11 +
+ mm/khugepaged.c                            | 457 ++++++++++++++-------
+ 6 files changed, 368 insertions(+), 152 deletions(-)
+
+-- 
+2.48.1
+
