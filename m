@@ -1,123 +1,114 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29956E552;
-	Tue, 15 Apr 2025 01:07:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 226A4E552;
+	Tue, 15 Apr 2025 01:09:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744679250; cv=none; b=jPeegKXZps6ClqaRjZYzcVzcC+jCwXQxNk5EUKu0Q7/W/fSI+EOKh5XRYDJLEN4vTQvxRXCrqXXdl0QLH6XorDhzmB4VHfHSlLYT7Z5e8w6hxlWxqgzTvOesDJzXcvAFwjTHsFplSTagnAH106ZfYIxQHSp1rOCcN6dbYZi9iGA=
+	t=1744679391; cv=none; b=LUkwTzfstxbUyQH6SngvLjyvZSgrkpeDlvp7VJ/Xyd4mOPFwZJq/Tk6c4B/4rpWvXg5ukeXHxYGToqa5hVLdES8AxnfjD27j2Ec0hjxAEj3ZXAJxI4fMDu0TMoDmCera7qda6NcXoDAPI0k9MFyfZ2F6jlSchswSysepPBLHzc8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744679250; c=relaxed/simple;
-	bh=KEKYNbGROJcLOPsF4oFGeclcgykvueLsJrKulbwE26I=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=IVhxYZhiNVTZpIr2NR9gcAnL8q8133Ww5rjAcQhF9WSi6fgL8IC1h202KYY/DjAf/7tBSzCh8NNmjJvWPh7aJLB1J6DXl7rDAGnS10Za8RRdub6dWgDfuDLk9umQzPHeMUsu7GfGzEZzzsm9XGAhzmpZNylnTQOReaShG2I7E0k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8A14CC4CEE2;
-	Tue, 15 Apr 2025 01:07:28 +0000 (UTC)
-Date: Mon, 14 Apr 2025 21:09:00 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Mark Rutland <mark.rutland@arm.com>, Mark
- Brown <broonie@kernel.org>, Shuah Khan <skhan@linuxfoundation.org>,
- linux-kselftest@vger.kernel.org
-Subject: [PATCH] selftests/ftrace: Differentiate bash and dash in
- dynevent_limitations.tc
-Message-ID: <20250414210900.4de5e8b9@gandalf.local.home>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1744679391; c=relaxed/simple;
+	bh=LMeLUEKg5xDcGioaeFPFvRZ04XyTLfjMaXAPpjddU/4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=HuRkLtnVsiEl5lFtBSvqmPDL440LIEj+OUAI9AUx0rw5spjKA1B4RQ4CK+1GHgCy6QmMPqNjhNSjSyqO7A5LsQsb55Hs9sZKBTherHYNrfITSLnI3jqE4mD5VHkp03sw1AL3/m+f1RXprusBZWdrBT1THXakkU7p1D0JTRWT7Vc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=mGWRfMcB; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="mGWRfMcB"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description;
+	bh=tkpYvkCIQ/uMw3T3hwTBxYM93KgGHR0Qg2Z4WopPNg8=; b=mGWRfMcBluKY5szv4YyyZdWO0A
+	tGJjrHZD61V16NoOYr/Bdp8TvKCrOZ0D7brHyZfAtH/OGTRderEz/ZNE9KpG7c7G7+hsH64EcH53N
+	3lmD4riYUr5WpDa22yfHucMb3N+5L/ABxB3TC5CVq6cDcc7Bo3uEOzl+aqvO7RegCZ9ZPQFxqAlbx
+	fhNLtFz+t0eW4D6rBqZMyRZUjKScqdPhzfNCsT5EQufORCl095Tdnu16bPWWXN7bR/vd1H+sRd+E+
+	VKpgtst32G/nkc+OmCBmS2Xx0XRR9jFSLR3o4wkpuOjf+GPPC0IXRML3OWBMGSBq7Jc5qhRP7LV2J
+	ItGDSmSA==;
+Received: from [50.39.124.201] (helo=[192.168.254.17])
+	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1u4Uns-00000007kMN-3dik;
+	Tue, 15 Apr 2025 01:09:33 +0000
+Message-ID: <984797ec-9073-4a83-b3ee-7c5041f2d423@infradead.org>
+Date: Mon, 14 Apr 2025 18:09:22 -0700
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 12/12] Documentation: mm: update the admin guide for
+ mTHP collapse
+To: Nico Pache <npache@redhat.com>, linux-mm@kvack.org,
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+Cc: akpm@linux-foundation.org, corbet@lwn.net, rostedt@goodmis.org,
+ mhiramat@kernel.org, mathieu.desnoyers@efficios.com, david@redhat.com,
+ baohua@kernel.org, baolin.wang@linux.alibaba.com, ryan.roberts@arm.com,
+ willy@infradead.org, peterx@redhat.com, ziy@nvidia.com,
+ wangkefeng.wang@huawei.com, usamaarif642@gmail.com, sunnanyong@huawei.com,
+ vishal.moola@gmail.com, thomas.hellstrom@linux.intel.com,
+ yang@os.amperecomputing.com, kirill.shutemov@linux.intel.com,
+ aarcange@redhat.com, raquini@redhat.com, dev.jain@arm.com,
+ anshuman.khandual@arm.com, catalin.marinas@arm.com, tiwai@suse.de,
+ will@kernel.org, dave.hansen@linux.intel.com, jack@suse.cz, cl@gentwo.org,
+ jglisse@google.com, surenb@google.com, zokeefe@google.com,
+ hannes@cmpxchg.org, rientjes@google.com, mhocko@suse.com
+References: <20250414220557.35388-1-npache@redhat.com>
+ <20250414220557.35388-13-npache@redhat.com>
+Content-Language: en-US
+From: Randy Dunlap <rdunlap@infradead.org>
+In-Reply-To: <20250414220557.35388-13-npache@redhat.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-From: Steven Rostedt <rostedt@goodmis.org>
 
-bash and dash evaluate variables differently.
-dash will evaluate '\\' every time it is read whereas bash does not.
 
-  TEST_STRING="$TEST_STRING \\$i"
-  echo $TEST_STRING
+On 4/14/25 3:05 PM, Nico Pache wrote:
+> Now that we can collapse to mTHPs lets update the admin guide to
+> reflect these changes and provide proper guidence on how to utilize it.
+> 
+> Signed-off-by: Nico Pache <npache@redhat.com>
+> ---
+>  Documentation/admin-guide/mm/transhuge.rst | 9 ++++++++-
+>  1 file changed, 8 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/admin-guide/mm/transhuge.rst b/Documentation/admin-guide/mm/transhuge.rst
+> index dff8d5985f0f..f0d4e78cedaa 100644
+> --- a/Documentation/admin-guide/mm/transhuge.rst
+> +++ b/Documentation/admin-guide/mm/transhuge.rst
+> @@ -63,7 +63,7 @@ often.
+>  THP can be enabled system wide or restricted to certain tasks or even
+>  memory ranges inside task's address space. Unless THP is completely
+>  disabled, there is ``khugepaged`` daemon that scans memory and
+> -collapses sequences of basic pages into PMD-sized huge pages.
+> +collapses sequences of basic pages into huge pages.
+>  
+>  The THP behaviour is controlled via :ref:`sysfs <thp_sysfs>`
+>  interface and using madvise(2) and prctl(2) system calls.
+> @@ -144,6 +144,13 @@ hugepage sizes have enabled="never". If enabling multiple hugepage
+>  sizes, the kernel will select the most appropriate enabled size for a
+>  given allocation.
+>  
+> +khugepaged uses max_ptes_none scaled to the order of the enabled mTHP size to
+> +determine collapses. When using mTHPs its recommended to set max_ptes_none low.
 
-With i=123
-On bash, that will print "\123"
-but on dash, that will print the escape sequence of \123 as the \ will be
-interpreted again in the echo.
+                                         it's
 
-The dynevent_limitations.tc test created a very large list of arguments to
-test the maximum number of arguments to pass to the dynamic events file.
-It had a loop of:
+> +Ideally less than HPAGE_PMD_NR / 2 (255 on 4k page size). This will prevent
 
-   TEST_STRING=$1
-   # Acceptable
-   for i in `seq 1 $MAX_ARGS`; do
-     TEST_STRING="$TEST_STRING \\$i"
-   done
-   echo "$TEST_STRING" >> dynamic_events
+   ^^^ not a sentence
 
-This worked fine on bash, but when run on dash it failed.
+> +undesired "creep" behavior that leads to continuously collapsing to a larger
+> +mTHP size. max_ptes_shared and max_ptes_swap have no effect when collapsing to a
+> +mTHP, and mTHP collapse will fail on shared or swapped out pages.
+> +
+>  It's also possible to limit defrag efforts in the VM to generate
+>  anonymous hugepages in case they're not immediately free to madvise
+>  regions or to never try to defrag memory and simply fallback to regular
 
-This was due to dash interpreting the "\\$i" twice. Once when it was
-assigned to TEST_STRING and a second time with the echo $TEST_STRING.
-
-bash does not process the backslash more than the first time.
-
-To solve this, assign a double backslash to a variable "bs" and then echo
-it to "ts". If "ts" changes, it is dash, if not, it is bash. Then update
-"bs" accordingly, and use that to assign TEST_STRING.
-
-Now this could possibly just check if "$BASH" is defined or not, but this
-is testing if the issue exists and not just which shell is being used.
-
-Fixes: 581a7b26ab364 ("selftests/ftrace: Add dynamic events argument limitation test case")
-Reported-by: Mark Brown <broonie@kernel.org>
-Closes: https://lore.kernel.org/all/ccc40f2b-4b9e-4abd-8daf-d22fce2a86f0@sirena.org.uk/
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
- .../test.d/dynevent/dynevent_limitations.tc   | 23 ++++++++++++++++++-
- 1 file changed, 22 insertions(+), 1 deletion(-)
-
-diff --git a/tools/testing/selftests/ftrace/test.d/dynevent/dynevent_limitations.tc b/tools/testing/selftests/ftrace/test.d/dynevent/dynevent_limitations.tc
-index 6b94b678741a..885631c02623 100644
---- a/tools/testing/selftests/ftrace/test.d/dynevent/dynevent_limitations.tc
-+++ b/tools/testing/selftests/ftrace/test.d/dynevent/dynevent_limitations.tc
-@@ -7,11 +7,32 @@
- MAX_ARGS=128
- EXCEED_ARGS=$((MAX_ARGS + 1))
- 
-+# bash and dash evaluate variables differently.
-+# dash will evaluate '\\' every time it is read whereas bash does not.
-+#
-+#   TEST_STRING="$TEST_STRING \\$i"
-+#   echo $TEST_STRING
-+#
-+# With i=123
-+# On bash, that will print "\123"
-+# but on dash, that will print the escape sequence of \123 as the \ will
-+# be interpreted again in the echo.
-+#
-+# Set a variable "bs" to save a double backslash, then echo that
-+# to "ts" to see if $ts changed or not. If it changed, it's dash,
-+# if not, it's bash, and then bs can equal a single backslash.
-+bs='\\'
-+ts=`echo $bs`
-+if [ "$ts" = '\\' ]; then
-+  # this is bash
-+  bs='\'
-+fi
-+
- check_max_args() { # event_header
-   TEST_STRING=$1
-   # Acceptable
-   for i in `seq 1 $MAX_ARGS`; do
--    TEST_STRING="$TEST_STRING \\$i"
-+    TEST_STRING="$TEST_STRING $bs$i"
-   done
-   echo "$TEST_STRING" >> dynamic_events
-   echo > dynamic_events
 -- 
-2.47.2
+~Randy
 
