@@ -1,159 +1,173 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FEA62741B8
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 15 Apr 2025 09:05:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53327242922
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 15 Apr 2025 09:32:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744707947; cv=none; b=LXTid/yfuDvjr0M4ipVfrVc8tcmVfPP6W4WKE5lqLWlunz4tJW3oHg3krivTURg6hBjZhz3AF2tCGjL1al+QiFcm/o5bZlR9tcLzzE85HwurCbTqdMhgtNrIIEgHcILTRgPfb/BrscMXfnwtODHtaBF6jlRinU/WXNrrWpKj88g=
+	t=1744709570; cv=none; b=aqJ+M7sFT2wNkOCEFCrhKzS1j0xc3NPf2UaYFjLS9/lcb+vuds9LUdSWYdYNGZu0UqHtj5WP5f7n9+8SAfBkPbWA43wAK42USCMsLeB9+hbJ+hrBi3/Caimsw2/Yf1mFzEdjPd/H3bVhz5ccyQ+bWXpMtL1dKIjgHKNcOpLRAjs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744707947; c=relaxed/simple;
-	bh=xbAWn0WSfoitO1KDMc0+QCcVSYyO/mBipbxolJ9HPJk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=QElxGaMulr6vTVzsUZlh3Frm1r4RW+sVAZ3BqpYCiok3D5QNYbRIvS+HV3KILqj4cOR9f918lggbL6Wzt/EaRJqcN4WyiosFGqgnHVzhj3GykGEACyvpJ5iEt57i9p+vYgoFjmodwtKabZf6+/P1ba+uyI1mnQVEDa+A8H33CHs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=MpwAHHON; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=8dMuj+Hj; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=MpwAHHON; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=8dMuj+Hj; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1744709570; c=relaxed/simple;
+	bh=lOiRTAybYayb9gL8oPxlmFEgR3nBNh/2YNLccv8btMM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=U+kM3fM+gjrKIjf9VahG53ebZAjpq8bC15gZif7gHNjltRJJGsz8914IP8XlOLIwCzYvqvXbauSafr/J5dnH0CCsws8PQRPSqApHHjaNaCk6sFdpHZtzXUsDG7cAiXYUbCbWUNVuO9334KUtIlMjChGr5e6+LbPUhGyMqivtrg0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=H9HEHjdz; arc=none smtp.client-ip=209.85.128.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="MpwAHHON";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="8dMuj+Hj";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="MpwAHHON";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="8dMuj+Hj"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 7A3C921164;
-	Tue, 15 Apr 2025 09:05:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1744707942; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=iVoKDLF5pncIUIiH8TIsHzaAW0W0nHN55ljr4oVTt4M=;
-	b=MpwAHHONHUVv1EjrR5f1v0LcABnG+WymlxxV4WfboUKtUaGnsvvwrdoKUifhtrQHnk9f0I
-	FplYkA0tnTTh9RWo1zEC9UQAvcyhwNPRJXkY2a1RxtXYtL38fTwR5hpYfim0/08BBXtnCl
-	HQ3EB70JF/j3SiUlx6I/vSkTy7wGrL8=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1744707942;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=iVoKDLF5pncIUIiH8TIsHzaAW0W0nHN55ljr4oVTt4M=;
-	b=8dMuj+Hj1w7VX41un+Yx+MhN+P7E3bTubd35YA7IxAdxq7/WcyUw7u52hL9G7CW9ej2SB2
-	pc7ENqs+LZUHWfDQ==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=MpwAHHON;
-	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=8dMuj+Hj
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1744707942; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=iVoKDLF5pncIUIiH8TIsHzaAW0W0nHN55ljr4oVTt4M=;
-	b=MpwAHHONHUVv1EjrR5f1v0LcABnG+WymlxxV4WfboUKtUaGnsvvwrdoKUifhtrQHnk9f0I
-	FplYkA0tnTTh9RWo1zEC9UQAvcyhwNPRJXkY2a1RxtXYtL38fTwR5hpYfim0/08BBXtnCl
-	HQ3EB70JF/j3SiUlx6I/vSkTy7wGrL8=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1744707942;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=iVoKDLF5pncIUIiH8TIsHzaAW0W0nHN55ljr4oVTt4M=;
-	b=8dMuj+Hj1w7VX41un+Yx+MhN+P7E3bTubd35YA7IxAdxq7/WcyUw7u52hL9G7CW9ej2SB2
-	pc7ENqs+LZUHWfDQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 6569A13A89;
-	Tue, 15 Apr 2025 09:05:42 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id MJZrGGYh/mexUAAAD6G6ig
-	(envelope-from <vbabka@suse.cz>); Tue, 15 Apr 2025 09:05:42 +0000
-Message-ID: <cbf5b354-48b4-4f25-97c3-7b76fd332c41@suse.cz>
-Date: Tue, 15 Apr 2025 11:05:42 +0200
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="H9HEHjdz"
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-43cfe63c592so58052025e9.2
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 15 Apr 2025 02:32:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1744709567; x=1745314367; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=1ChKRr0CjrlXB651WgPg2zkL245D+bFasqL3VFnfqBY=;
+        b=H9HEHjdz/BRXLwHJSMBh7G7zPlpZPO4vZk2A2tQLwsV8qjXGhHdNkNC3/e8sb1GG6S
+         /A4r7mdQJ0i6dEM1gcjBg/c65o4Yq6WdPo904QWydEVZPrTWzG6Tr00YCuaPuSxsKm7t
+         lEomD5l32s0F8TXMNPVnjH76Tk/70gKzQmEfroDYRP/39BTh9ZTxiumwp2z85D8nsfJM
+         4MX6US+9GffYbo5Ye3z60/FRi1wJ/SHdwkWSRWI8SydBuktg+vL7xWGxwh3Ri2eyrfNV
+         KTcInNvuM9Ne7Ue4JV62JPuUpfNc/qJCJPrBM+1RgUvxHaeoXRanwbYheNaarhZCLz24
+         yjNw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744709567; x=1745314367;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=1ChKRr0CjrlXB651WgPg2zkL245D+bFasqL3VFnfqBY=;
+        b=Zl2eGvCFLgMG4Lrg3yLv34ctS9qXSLH1xzml34JiQ9JEGOdq0GGV8MFMaky3RK96j7
+         XtUJ3c+URy/SDrDtQgxI3mjsikhOkUjW2WOkq6JmpvaElf392nIawtvqPt9Y+rJ9wdAr
+         19TJSrJ95gRcjBT/6PpdSRfbe6QfkHjR9qOw7VqVjiCRRHqxfo7lYgbWTS3wTfMSEla6
+         E+f446AZ0S0dT6h9HcrIXhRo7obIRFesG13siM3EDtmQ6f3JzIj3lKyhtkyB0I206RAi
+         0GMpywnQCL7Xixf5ZdhrtILXII6URxig4dktHG8Uw9IRPwt3FmBNA1Ycnx8+dABVpgNS
+         uf4A==
+X-Forwarded-Encrypted: i=1; AJvYcCXPKb+GnXAGgKabnLiwykfjVFBIzMs00NmyhIQq0x64KTpF9jbY8AmrB3RQov80CFCAhuv/aGFrz8RrnaJ+ozwbFJI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YylTJBFjCf9PdkTwYRfDqHRCVX+M6/YcUo1LBH9Mj8pZOZEyl5P
+	75ROS3dvWnueWDSGgLAM9+xoj6jIjiF6CkCnFqWtm0faMW28rNEydsfKQcvyjE4=
+X-Gm-Gg: ASbGnct7O/HXdYb7oyExB7yX0O4a/LfKAQLGMuHW2z172uuwie55s91KzAu8Lr7Gwea
+	VJKMnBoNt1Z0u+hVCUY4VGfdVgrDq2W2vrRD+PXuwTughpYyG1ui3TDB19j7QzHo3+g4Zy2P0jA
+	TSnP/iHQrKaoKrvZkOp/NPnXJgiG/eAV7woJMWtPfK78n2X4sBbEaVgQ5Q44PvalGtFetjgs3nb
+	l133bgPjkOd+1JMhOju5ve7bKPCv/PbPmIS/dRzMF8/3fIS7qLytEZBHdNDN+/1g8GIeIy3J7Uo
+	Cjn1yqsRlpfjls95luIdaqyXBAKMDzdop4YCrKd/d48=
+X-Google-Smtp-Source: AGHT+IEGMxNjBijRd5ZIgU9ekSNtXsFNAXAuAYjOiFrUbssXpLTKzHUZ7y47I01Bc0l8S/SL3FcMWQ==
+X-Received: by 2002:a05:600c:1c8e:b0:439:6118:c188 with SMTP id 5b1f17b1804b1-43f3a95c43amr120754165e9.19.1744709566592;
+        Tue, 15 Apr 2025 02:32:46 -0700 (PDT)
+Received: from pathway.suse.cz ([176.114.240.130])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43f235a5e90sm201822225e9.38.2025.04.15.02.32.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 15 Apr 2025 02:32:46 -0700 (PDT)
+Date: Tue, 15 Apr 2025 11:32:44 +0200
+From: Petr Mladek <pmladek@suse.com>
+To: Nam Cao <namcao@linutronix.de>
+Cc: Steven Rostedt <rostedt@goodmis.org>,
+	Gabriele Monaco <gmonaco@redhat.com>,
+	linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
+	john.ogness@linutronix.de,
+	Sergey Senozhatsky <senozhatsky@chromium.org>
+Subject: Re: [PATCH v2 03/22] rv: Let the reactors take care of buffers
+Message-ID: <Z_4nvJEB-RXX9T0n@pathway.suse.cz>
+References: <cover.1744355018.git.namcao@linutronix.de>
+ <fb397e38b56f3eab7b7f662fef4860ee4fbda873.1744355018.git.namcao@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] MAINTAINERS: Add mmap trace events to MEMORY MAPPING
-To: "Liam R. Howlett" <Liam.Howlett@oracle.com>,
- Andrew Morton <akpm@linux-foundation.org>
-Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
- Masami Hiramatsu <mhiramat@kernel.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-References: <20250411173328.8172-1-Liam.Howlett@oracle.com>
-Content-Language: en-US
-From: Vlastimil Babka <vbabka@suse.cz>
-In-Reply-To: <20250411173328.8172-1-Liam.Howlett@oracle.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: 7A3C921164
-X-Spam-Score: -4.51
-X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-4.51 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	RCVD_TLS_ALL(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[8];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo,suse.cz:dkim,suse.cz:mid,suse.cz:email];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	DKIM_TRACE(0.00)[suse.cz:+]
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spam-Flag: NO
-X-Spam-Level: 
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <fb397e38b56f3eab7b7f662fef4860ee4fbda873.1744355018.git.namcao@linutronix.de>
 
-On 4/11/25 19:33, Liam R. Howlett wrote:
-> MEMORY MAPPING does not list the mmap.h trace point file, but does list
-> the mmap.c file.  Couple the trace points with the users and authors of
-> the trace points for notifications of updates.
+On Fri 2025-04-11 09:37:19, Nam Cao wrote:
+> Each RV monitor has one static buffer to send to the reactors. If multiple
+> errors are detected simultaneously, the one buffer could be overwritten.
 > 
-> Cc:Andrew Morton <akpm@linux-foundation.org>
-> Cc:Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-> Cc:Vlastimil Babka <vbabka@suse.cz>
-> Cc:Jann Horn <jannh@google.com>
-> Signed-off-by: Liam R. Howlett <Liam.Howlett@oracle.com>
-
-Acked-by: Vlastimil Babka <vbabka@suse.cz>
-
-> ---
->  MAINTAINERS | 1 +
->  1 file changed, 1 insertion(+)
+> Instead, leave it to the reactors to handle buffering.
 > 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 4c7fdc41a6bfb..d8e9a10adc81d 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -15571,6 +15571,7 @@ L:	linux-mm@kvack.org
->  S:	Maintained
->  W:	http://www.linux-mm.org
->  T:	git git://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm
-> +F:	include/trace/events/mmap.h
->  F:	mm/mlock.c
->  F:	mm/mmap.c
->  F:	mm/mprotect.c
+>  include/linux/panic.h            |  3 +++
+>  include/linux/printk.h           |  5 ++++
+>  include/linux/rv.h               |  9 +++++--
+>  include/rv/da_monitor.h          | 45 +++++++-------------------------
+>  kernel/panic.c                   | 17 ++++++++----
+>  kernel/printk/internal.h         |  1 -
+>  kernel/trace/rv/reactor_panic.c  |  8 ++++--
+>  kernel/trace/rv/reactor_printk.c |  8 ++++--
+>  kernel/trace/rv/rv_reactors.c    |  2 +-
+>  9 files changed, 50 insertions(+), 48 deletions(-)
 
+For the changes in the printk and panic code:
+
+Reviewed-by: Petr Mladek <pmladek@suse.com>    # printk, panic
+
+I have just briefly looked at the changes in the rv code.
+I wonder if a __printf(1, 2) declaration might be needed
+in the printk and panic reactors code, see below.
+
+> --- a/include/linux/rv.h
+> +++ b/include/linux/rv.h
+> @@ -38,7 +38,7 @@ union rv_task_monitor {
+>  struct rv_reactor {
+>  	const char		*name;
+>  	const char		*description;
+> -	void			(*react)(char *msg);
+> +	__printf(1, 2) void	(*react)(const char *msg, ...);
+>  };
+>  #endif
+>  
+> @@ -50,7 +50,7 @@ struct rv_monitor {
+>  	void			(*disable)(void);
+>  	void			(*reset)(void);
+>  #ifdef CONFIG_RV_REACTORS
+> -	void			(*react)(char *msg);
+> +	__printf(1, 2) void	(*react)(const char *msg, ...);
+>  #endif
+>  };
+>  
+> --- a/kernel/trace/rv/reactor_printk.c
+> +++ b/kernel/trace/rv/reactor_printk.c
+> @@ -12,9 +12,13 @@
+>  #include <linux/init.h>
+>  #include <linux/rv.h>
+>  
+> -static void rv_printk_reaction(char *msg)
+> +static void rv_printk_reaction(const char *msg, ...)
+
+I wonder whether "make W=1 kernel/trace/rv/reactor_printk.o" would
+start complaining about that this function is a candidate for
+‘gnu_printf’ format attribute.
+
+I am not sure. Maybe it is enough that this function is later assigned to
+the .react callback in struct rv_reactor.
+
+I wanted to tried it myself. But I was not able to compile the
+code in linux-next. I got something like:
+
+./include/linux/rv.h: In function ‘rv_ltl_valid_state’:
+./include/linux/rv.h:55:43: error: ‘struct ltl_monitor’ has no member named ‘states’
+   55 |         for (int i = 0; i < ARRAY_SIZE(mon->states); ++i) {
+      |                                           ^~
+...
+
+I am actually not sure against which tree I should apply this patchset.
+It did apply on linux-next after skipping the 1st patch.
+But it does not compile there.
+
+And there are more conflicts when I tried to apply it
+on Linus' master.
+
+>  {
+> -	printk_deferred(msg);
+> +	va_list args;
+> +
+> +	va_start(args, msg);
+> +	vprintk_deferred(msg, args);
+> +	va_end(args);
+>  }
+
+The __printf statement might be missing also in the other two
+reactors (panic, nop).
+
+Best Regards,
+Petr
