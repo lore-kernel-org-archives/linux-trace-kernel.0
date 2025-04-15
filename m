@@ -1,70 +1,152 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A99120DF4;
-	Tue, 15 Apr 2025 17:38:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36D5623D289;
+	Tue, 15 Apr 2025 22:58:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744738736; cv=none; b=QKYjlRI6Gj/rkAZt5ak+mj4mv0xTXYRke4b3OolLsTHet/Pk8gmUkV4neFKo/Dq1aEpWuC47dkJl6m9hsOrPiq1Yh/ltxGeu1qRZBuCQ2nbVQ7+9WARo2WGqCn259AuXXDU9LLTq0TROajnpUgkjQQae7AU7PbEZTxokbVOMDlE=
+	t=1744757917; cv=none; b=CH/sGrk6+1xzT8QNtQuDA+mIanjA1NfmjTZJRwERzFOsIC3+MvtC5yOax71W3bntSbo3RoZmI6ZpppAml4lTiuO4YUnuDow2rc5Q8+7bT9LvTQnQoqba3WAYzR25e+oX0aVSQnkbe1DttPTWg2vbIH4fVFkBsI7qVWRX4zJ1sgg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744738736; c=relaxed/simple;
-	bh=yLY33CQdf7L6MMr+9Op0Qh6MZholl6UqzNTWJlzwb9k=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=PzvZ20sbJ3QXDtMB/mdhBF9dw5fWFtzMcs0kOQC7AsYKudKG6gFw4zEkftP7sjjYpK6rdxI4RQ5WzuXjPBPH8qkwEzYlcB8045EApfje2Kkp+CIFtQFrFo4998CEtgd/hX4yHx1SPycGHJtpHzqukrUhgGVxml3rEXfpa9ULq10=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F1E45C4CEE9;
-	Tue, 15 Apr 2025 17:38:53 +0000 (UTC)
-Date: Tue, 15 Apr 2025 13:40:28 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Mark Brown <broonie@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- bpf@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland
- <mark.rutland@arm.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Andrew Morton <akpm@linux-foundation.org>, Sven Schnelle
- <svens@linux.ibm.com>, Paul Walmsley <paul.walmsley@sifive.com>, Palmer
- Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, Guo Ren
- <guoren@kernel.org>, Donglin Peng <dolinux.peng@gmail.com>, Zheng Yejian
- <zhengyejian@huaweicloud.com>, Aishwarya.TCV@arm.com
-Subject: Re: [PATCH v4 2/4] ftrace: Add support for function argument to
- graph tracer
-Message-ID: <20250415134028.4ae1569e@gandalf.local.home>
-In-Reply-To: <350786cc-9e40-4396-ab95-4f10d69122fb@sirena.org.uk>
-References: <20250227185804.639525399@goodmis.org>
-	<20250227185822.810321199@goodmis.org>
-	<ccc40f2b-4b9e-4abd-8daf-d22fce2a86f0@sirena.org.uk>
-	<20250410131745.04c126eb@gandalf.local.home>
-	<c41e5ee7-18ba-40cf-8a31-19062d94f7b9@sirena.org.uk>
-	<20250411124552.36564a07@gandalf.local.home>
-	<2edc0ba8-2f45-40dc-86d9-5ab7cea8938c@sirena.org.uk>
-	<20250411131254.3e6155ea@gandalf.local.home>
-	<350786cc-9e40-4396-ab95-4f10d69122fb@sirena.org.uk>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1744757917; c=relaxed/simple;
+	bh=PQncLWSp8vRGUs7I1MsLblxC/UpK+WOGWqJsvx3Sq8c=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=ru6ICTNdKcjyLTDjGDEXQXEeI2qwwS0QE/EEn8V9e0UGz425bSjij09jRFd7Ua3jHc/DUUL8Jl9+boPpv5N4A6OvRmqg+uiA1KjFJW2IsZ6IUAec5ctm+P7DeiGn8YsqYKjCHRkjI6MThU0xp2q1G3ELDRyNspixyief6qn8i5M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hH5pwmgS; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hH5pwmgS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9EAF8C4CEE7;
+	Tue, 15 Apr 2025 22:58:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744757916;
+	bh=PQncLWSp8vRGUs7I1MsLblxC/UpK+WOGWqJsvx3Sq8c=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=hH5pwmgSxfq+VoEhSL5scVumpahKB/YEGsZoOCs8XkbGyk9d9UD7PCrluz8BVphAd
+	 DqX7lLZRDwRObVjVX9YkuOD6kXlt1g7GtNEbw6BC+WSzPXREvYHB8PU8x+1YoytRjt
+	 2NVERi74WurTWwdX5RcnlUUb1TeyD3kDMj+P5WVfCakbhRujk+2YSpvwVwT0FcNYvL
+	 kSrdkvMYiRZZwuzm9Ak+nmC3hTiTFI24M2V3qdso0Te+dQzL64mYqvQXU4MYWcieYS
+	 9AyYJFjACfDuW9zS6zQaxY9WGzhzY35vdqJ4NmL5EK/GcSnkoY51H2eX1h+5GMdpQX
+	 bNM7ROTxP7RgQ==
+Date: Wed, 16 Apr 2025 07:58:32 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Mark Rutland <mark.rutland@arm.com>, Mark Brown <broonie@kernel.org>, Shuah
+ Khan <skhan@linuxfoundation.org>, linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH] selftests/ftrace: Differentiate bash and dash in
+ dynevent_limitations.tc
+Message-Id: <20250416075832.cd27bcb52b7e31d0f5717273@kernel.org>
+In-Reply-To: <20250414210900.4de5e8b9@gandalf.local.home>
+References: <20250414210900.4de5e8b9@gandalf.local.home>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
+Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Fri, 11 Apr 2025 18:39:05 +0100
-Mark Brown <broonie@kernel.org> wrote:
+On Mon, 14 Apr 2025 21:09:00 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-> The tail end of the log there is:
+> From: Steven Rostedt <rostedt@goodmis.org>
 > 
-> # # + TEST_STRING=p vfs_read 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59 60 61 62 63 64 65 66 67 68 69 70 71 72 73 74 75 76 77 78 79 80 81 82 83 84 85 86 87 88 89 90 91 92 93 94 95 96 97 98 99 100 101 102 103 104 105 106 107 108 109 110 111 112 113 114 115 116 117 118 119 120 121 122 123 124 125 126 127
-> # # + TEST_STRING=p vfs_read 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59 60 61 62 63 64 65 66 67 68 69 70 71 72 73 74 75 76 77 78 79 80 81 82 83 84 85 86 87 88 89 90 91 92 93 94 95 96 97 98 99 100 101 102 103 104 105 106 107 108 109 110 111 112 113 114 115 116 117 118 119 120 121 122 123 124 125 126 127 128
-> # # + echo p vfs_read 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59 60 61 62 63 64 65 66 67 68 69 70 71 72 73 74 75 76 77 78 79 80 81 82 83 84 85 86 87 88 89 90 91 92 93 94 95 96 97 98 99 100 101 102 103 104 105 106 107 108 109 110 111 112 113 114 115 116 117 118 119 120 121 122 123 124 125 126 127 128
-> # # ./ftracetest: 16: echo: echo: I/O error
+> bash and dash evaluate variables differently.
+> dash will evaluate '\\' every time it is read whereas bash does not.
 > 
-> which smells a bit of a shell incompatibility issue.  I'll try to find
-> time to have a look.
+>   TEST_STRING="$TEST_STRING \\$i"
+>   echo $TEST_STRING
+> 
+> With i=123
+> On bash, that will print "\123"
+> but on dash, that will print the escape sequence of \123 as the \ will be
+> interpreted again in the echo.
+> 
+> The dynevent_limitations.tc test created a very large list of arguments to
+> test the maximum number of arguments to pass to the dynamic events file.
+> It had a loop of:
+> 
+>    TEST_STRING=$1
+>    # Acceptable
+>    for i in `seq 1 $MAX_ARGS`; do
+>      TEST_STRING="$TEST_STRING \\$i"
+>    done
+>    echo "$TEST_STRING" >> dynamic_events
+> 
+> This worked fine on bash, but when run on dash it failed.
+> 
+> This was due to dash interpreting the "\\$i" twice. Once when it was
+> assigned to TEST_STRING and a second time with the echo $TEST_STRING.
+> 
+> bash does not process the backslash more than the first time.
+> 
+> To solve this, assign a double backslash to a variable "bs" and then echo
+> it to "ts". If "ts" changes, it is dash, if not, it is bash. Then update
+> "bs" accordingly, and use that to assign TEST_STRING.
+> 
+> Now this could possibly just check if "$BASH" is defined or not, but this
+> is testing if the issue exists and not just which shell is being used.
+> 
 
-Mark, can you test this patch to see if it fixes this?:
+Thanks for fixing this issue!
 
-(I need to update the "Closes:" tag to be this email and not the top of the thread)
+Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-  https://lore.kernel.org/all/20250414210900.4de5e8b9@gandalf.local.home/
+Thank you!
 
--- Steve
+> Fixes: 581a7b26ab364 ("selftests/ftrace: Add dynamic events argument limitation test case")
+> Reported-by: Mark Brown <broonie@kernel.org>
+> Closes: https://lore.kernel.org/all/ccc40f2b-4b9e-4abd-8daf-d22fce2a86f0@sirena.org.uk/
+> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+> ---
+>  .../test.d/dynevent/dynevent_limitations.tc   | 23 ++++++++++++++++++-
+>  1 file changed, 22 insertions(+), 1 deletion(-)
+> 
+> diff --git a/tools/testing/selftests/ftrace/test.d/dynevent/dynevent_limitations.tc b/tools/testing/selftests/ftrace/test.d/dynevent/dynevent_limitations.tc
+> index 6b94b678741a..885631c02623 100644
+> --- a/tools/testing/selftests/ftrace/test.d/dynevent/dynevent_limitations.tc
+> +++ b/tools/testing/selftests/ftrace/test.d/dynevent/dynevent_limitations.tc
+> @@ -7,11 +7,32 @@
+>  MAX_ARGS=128
+>  EXCEED_ARGS=$((MAX_ARGS + 1))
+>  
+> +# bash and dash evaluate variables differently.
+> +# dash will evaluate '\\' every time it is read whereas bash does not.
+> +#
+> +#   TEST_STRING="$TEST_STRING \\$i"
+> +#   echo $TEST_STRING
+> +#
+> +# With i=123
+> +# On bash, that will print "\123"
+> +# but on dash, that will print the escape sequence of \123 as the \ will
+> +# be interpreted again in the echo.
+> +#
+> +# Set a variable "bs" to save a double backslash, then echo that
+> +# to "ts" to see if $ts changed or not. If it changed, it's dash,
+> +# if not, it's bash, and then bs can equal a single backslash.
+> +bs='\\'
+> +ts=`echo $bs`
+> +if [ "$ts" = '\\' ]; then
+> +  # this is bash
+> +  bs='\'
+> +fi
+> +
+>  check_max_args() { # event_header
+>    TEST_STRING=$1
+>    # Acceptable
+>    for i in `seq 1 $MAX_ARGS`; do
+> -    TEST_STRING="$TEST_STRING \\$i"
+> +    TEST_STRING="$TEST_STRING $bs$i"
+>    done
+>    echo "$TEST_STRING" >> dynamic_events
+>    echo > dynamic_events
+> -- 
+> 2.47.2
+> 
+
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
