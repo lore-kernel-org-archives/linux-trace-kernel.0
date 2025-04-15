@@ -1,79 +1,80 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A19D296D3D
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 15 Apr 2025 13:12:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17A385336D
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 15 Apr 2025 13:22:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744722751; cv=none; b=ia28SiBzRaj2AbL8YJvm0p3nRID1TXIkypngN4alQoFfWKv2Do9C+TeR9yQav1TpmHNIxemYvWMkrLBQFQh9slxNOD8MY6f1b+5vOWvIN8WJGnjn2Ji6GwAQOeEWA+kkqDt+ktH9Xfxgv7xeJF1CriE1xJn9DHK46ut7op3qdUQ=
+	t=1744723342; cv=none; b=XIqSuat+0rLqOG6xHWpyOATD+Z4vtZreO63atVmn99v9Us9J5KKcMnGlRy/jgtnuiXgbTPp4665ugO4mZaffyzyGpwNFmQw6t24qAH+wgi+zzr0QWR9nSwbAFO/Ewljf/8Eai8MKsPt8n0/gPbfF0MjkE/LTXjBOQwvOR1E7Il0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744722751; c=relaxed/simple;
-	bh=O3EZDyxyG/XjjjOz2D8BAc2/DKYtl/58kBgjmDFmg4g=;
+	s=arc-20240116; t=1744723342; c=relaxed/simple;
+	bh=uhrdF/Esb1J5fkXzShpFrMmHaVmoJl8veFfF6D6zqs0=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=FrCfZwsexaVdLIQgMKLQmivYLlm55UubWv6Yc4JtirC8unc2htHOvTZhfY7pm+a3IPReuajDcwGWDBCD+wE9Pcm+zUx0BS/MojSZX4aj7i8kuEcvhokbV5QZVkP7Dd6BPStkKhz0M7H/ewKUo833pJx9tWvW9keRXmFWq9UkpJ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ULioHqlG; arc=none smtp.client-ip=170.10.133.124
+	 MIME-Version:Content-Type; b=NXv49sRRHnjgX4k2Cg9aujRjYzqgFEHhgGB1UFBMn+bLkAJVmNf5n3SjmCCVmEiC7c06bl639ChvAMZblUQguxKqWH0IhatALrap1r6jo2w98ghhPaxrgCiMX2fkoZYkrOI2L8SxRQ9ISk0M5F5p1XWSEDgLoWrLtfRgdsDtSnA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=X22hzQX8; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ULioHqlG"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="X22hzQX8"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744722748;
+	s=mimecast20190719; t=1744723340;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=4k892aDAMWLaTLLT54wWyKa/KFEvtq0nCWCvqVRRKtU=;
-	b=ULioHqlGxtvTcFPUOb1s5BzisKE3+ZQ9Hzw3jQ/EHYZF3rA+fqvnHDZVOafcr/pCibG3No
-	ncHQBqGKE4w7trk6hzmNh3BnZqYPnvoqPffEGPa36o1K3hzU/DuxCWoatb8mlEmZj93CNG
-	IRm2hg7lHf5m0a2mPs9fcUzdlTi1gdI=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=uhrdF/Esb1J5fkXzShpFrMmHaVmoJl8veFfF6D6zqs0=;
+	b=X22hzQX8Gz+x5qhyKi83KaV5dmfWEyqy+kJkgO4uP0pY9fsGBq5rMpSprYrmi/aszn+qDT
+	ZPJujtg5F2mIPgOfUo3NvOXkIKlzo89WwOqLxt0vO5LCGYrvDXOI2ECIys+jx7FuYmU5vr
+	sXdcZAo2Ew9xhOzGbKRN0CJWCzkZGs0=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-228-RGb66xD5OXa4JOb-WjBm7Q-1; Tue, 15 Apr 2025 09:12:27 -0400
-X-MC-Unique: RGb66xD5OXa4JOb-WjBm7Q-1
-X-Mimecast-MFC-AGG-ID: RGb66xD5OXa4JOb-WjBm7Q_1744722746
-Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-399744f742bso2098241f8f.1
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 15 Apr 2025 06:12:26 -0700 (PDT)
+ us-mta-577-Ss8D-tCeOeOnTD63FvtJPg-1; Tue, 15 Apr 2025 09:22:13 -0400
+X-MC-Unique: Ss8D-tCeOeOnTD63FvtJPg-1
+X-Mimecast-MFC-AGG-ID: Ss8D-tCeOeOnTD63FvtJPg_1744723332
+Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-43f405810b4so21066795e9.1
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 15 Apr 2025 06:22:12 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744722746; x=1745327546;
+        d=1e100.net; s=20230601; t=1744723332; x=1745328132;
         h=mime-version:user-agent:content-transfer-encoding:autocrypt
          :references:in-reply-to:date:cc:to:from:subject:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=4k892aDAMWLaTLLT54wWyKa/KFEvtq0nCWCvqVRRKtU=;
-        b=nlCxgAWQ4aGPE0lIfS1J0QHBo5AMPeXq04P7SjvyBNwWEEPpm3tpO2YpYQuoGnqeFb
-         TjWNBVHZN0qWp71w+OmUs0PCrj/Q6V5vdwxX/DxNQV2dsnmlDU8WfEdExmTOiZOurMSD
-         dOyRmNhEEiC5e2PLkTTWEVDunYdJT+qHYyFsJOEfS/WeB8pm8HdcVkyzY8Rd+rrL/yGS
-         xQxeSGKVx02vrJNpX2TT8YuMja+55FPBzF4PFJc979eSjSJ63dVmkUfOk4VWQ6bYa3ls
-         IiCkae4cQGmV74bmgXEZGLm1cvb+XmCkxFnmCqi4HAx9ArP+gu+7G8L3Md9qFwUJX1hS
-         pVzw==
-X-Forwarded-Encrypted: i=1; AJvYcCVw9Dag0sk/BRR5QeB+mH+GBJMn2iX6Z1Xcb8/1ti+yX5V/2KayqDw5spsWwgmQXGIGFsD0qkbMJrxCgdYFPXT4KVo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyhlrgSkiCnLbucQdNK6UJ0035In35uAcfWLCGRLiLStA0ZEhbf
-	qqu9PNopvp88wl6CyX0hKEtvTKloWNQYj6flyzUHV2VHp7JUG02K6Hqnyj203xzHbkzD9XpWeye
-	8TJtZ3Vn8Pzru/A0kAaLML0CmuoFf+BN7AGHu8xtCc7NgFBGU9eKH1UUWbwNDWjRO8lomIw==
-X-Gm-Gg: ASbGncsOkBEUg3NNWFtTtxzPzTIKuEBindNK6V+0MFdSCCFjVcRMP5VNRKFOYOCSrul
-	hkOiMTI3yD+SYFrX5xu7DW9AHbQ44Erfu5AUc9nbGmOr3USzai2+LKzLvTbDdLZbOe+hqAhYzC8
-	6Wd+flOA+sgBR42pVAPy2U+7GpEkinun5ydfelPCLo6oAipaSsdODTTqNUqmZ9rqtEIHO1FsR4i
-	aFR3KVG8KLprxAvetdOqLFapKdlgK7KnN+gzuWiVLBCsWvD8YYMnjHJNtcXu9W/7h3mb7dazZEj
-	49QBFGKKb07LpymyC/BD87PngwVZ65/7xIyyGqU=
-X-Received: by 2002:a05:6000:4211:b0:39c:266c:423 with SMTP id ffacd0b85a97d-39e9f3c997cmr13539685f8f.0.1744722745641;
-        Tue, 15 Apr 2025 06:12:25 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEd9Vgr+5VknMvjpTJWS1SSUGPluf6BdV1c9glXEsAHcSrbckzMw1C1+EJLe73+zi+Ujd2OFQ==
-X-Received: by 2002:a05:6000:4211:b0:39c:266c:423 with SMTP id ffacd0b85a97d-39e9f3c997cmr13539636f8f.0.1744722745197;
-        Tue, 15 Apr 2025 06:12:25 -0700 (PDT)
+        bh=uhrdF/Esb1J5fkXzShpFrMmHaVmoJl8veFfF6D6zqs0=;
+        b=G0DEhdJylrJAWIUeRwif3v0i8lyVXm1uCox5/Bxk0MB1njRwGr2ttMZVenLyVlfemE
+         GL8gEsX8Ne16vRkKmkerSDf0xoYBIf+HeVdki7gT3tVqRoaAVyME7qGDPYdgpj66oPxN
+         qiO9w63s8nyrUiJU6dXbDnVYQ2MR3qCnLlNEUr72xbCLQMrjoLuauFe7VQIuwIOOdh0D
+         qicNaj/gMQbBFq8sszv1RKehze5eKEx/1B0okJoOXIcJtMrlLdSXgn1bHqeH7E9VRBt8
+         QIROX52tCOyiFnAQkhuh55P1tGcKwJCJq3YIb8JtFx23toFRzFUb/uDpfwoyet9wbIa7
+         xKfw==
+X-Forwarded-Encrypted: i=1; AJvYcCV1dz1noed81cE8+OWX+gLx9K6t4kPD0IO8YVfTH37PnLb95AkQyZB6A+Py+AB/9cYPL9CkFsDA0qWG5sfqZef+Bgw=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy07g7I9igKmvpaSWIiQLYEhccUdZXkPyFEymx1Y2Yotz25ziD/
+	C5j/+CKZFoizm+1EZb5l3Qpn/S3S9ZdW0ofabHfEKsQKbXIz0o6Z3JwYGSspcV2FBFWTDvMqYGT
+	aXeQVlrw9NGF2ZXYlEXaxOXiDX6yePT1NE5nO5Fxw2Fg2YgvOgQi9S/XbzDAHqLI1xOuj0um9cJ
+	UPFHOC
+X-Gm-Gg: ASbGncvj489UFo0RrJ/0x4L5O6FXQSW63ytDt1TZBVNP7tA7PzMT3FqlHz26wZgR8BD
+	kboZTyvOfUNskMj2LnCmqJET9R8gtyWxLgs0b3hlOZYMXtrdb8NQrh6m/Nc4aChNJRQ8PDvmCNI
+	MQ7JT/xHHvS21K+dgS66q83g45nyd3SHkNkarTLBF5S+tZsnEg87vLJUcj6NsU8kPPe+xmpIzkI
+	C+bAYsfQt2Lyeef4chcX9exgH+Ek4w8FVkpRb0Yc4uljaGVp5if1Po8yewwbHlGGUqBnFR2TzpU
+	j2Uv/GMcVP0mLgTfA1Enh6EPlxlN4SSS6+4JDqE=
+X-Received: by 2002:a05:600c:3b9d:b0:43d:934:ea97 with SMTP id 5b1f17b1804b1-43f3a9af8c5mr158421145e9.27.1744723331643;
+        Tue, 15 Apr 2025 06:22:11 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHrVIzsw/MlpQYyplsS+Pm66g9UgnCSwiS+3mjL8gHm4frhdQDR9k80Sd+ubKTZl8EgLKeS4w==
+X-Received: by 2002:a05:600c:3b9d:b0:43d:934:ea97 with SMTP id 5b1f17b1804b1-43f3a9af8c5mr158420855e9.27.1744723331224;
+        Tue, 15 Apr 2025 06:22:11 -0700 (PDT)
 Received: from gmonaco-thinkpadt14gen3.rmtit.csb ([195.174.134.30])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39eae96cfdbsm14037812f8f.40.2025.04.15.06.12.24
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43f207c8fb4sm211039285e9.35.2025.04.15.06.22.10
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 15 Apr 2025 06:12:24 -0700 (PDT)
-Message-ID: <67d9e857fd4fbfe590c9472f1c74b6f22560d952.camel@redhat.com>
-Subject: Re: [PATCH v2 21/22] rv: Add documentation for rtapp monitor
+        Tue, 15 Apr 2025 06:22:10 -0700 (PDT)
+Message-ID: <63d8320abb309ef649780af44d14b9d993bab697.camel@redhat.com>
+Subject: Re: [PATCH v2 13/22] rv: Add support for LTL monitors
 From: Gabriele Monaco <gmonaco@redhat.com>
 To: Nam Cao <namcao@linutronix.de>, Steven Rostedt <rostedt@goodmis.org>, 
 	linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc: john.ogness@linutronix.de
-Date: Tue, 15 Apr 2025 15:12:23 +0200
-In-Reply-To: <9d5b01d8bdff50081d6ad17be0474c8c355aa139.1744355018.git.namcao@linutronix.de>
+Date: Tue, 15 Apr 2025 15:22:09 +0200
+In-Reply-To: <5dbd62940b252ee49777e9c4298eadd644bf6526.1744355018.git.namcao@linutronix.de>
 References: <cover.1744355018.git.namcao@linutronix.de>
-	 <9d5b01d8bdff50081d6ad17be0474c8c355aa139.1744355018.git.namcao@linutronix.de>
+	 <5dbd62940b252ee49777e9c4298eadd644bf6526.1744355018.git.namcao@linutronix.de>
 Autocrypt: addr=gmonaco@redhat.com; prefer-encrypt=mutual;
  keydata=mDMEZuK5YxYJKwYBBAHaRw8BAQdAmJ3dM9Sz6/Hodu33Qrf8QH2bNeNbOikqYtxWFLVm0
  1a0JEdhYnJpZWxlIE1vbmFjbyA8Z21vbmFjb0ByZWRoYXQuY29tPoiZBBMWCgBBFiEEysoR+AuB3R
@@ -88,219 +89,223 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: IFNkPgvj7glWw-OCrqP0ScmzWXATmWeETBRVLHpACIg_1744722746
+X-Mimecast-MFC-PROC-ID: Jgc3hCsuyYgFB6BeoGr_GeYjqLhi72KL9jcPHmogG50_1744723332
 X-Mimecast-Originator: redhat.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-
-
 On Fri, 2025-04-11 at 09:37 +0200, Nam Cao wrote:
-> Add documentation describing the rtapp monitor.
+> While attempting to implement DA monitors for some complex
+> specifications,
+> deterministic automaton is found to be inappropriate as the
+> specification
+> language. The automaton is complicated, hard to understand, and
+> error-prone.
+>=20
+> For these cases, linear temporal logic is more suitable as the
+> specification language.
+>=20
+> Add support for linear temporal logic runtime verification monitor.
+>=20
+> For all the details, see the documentations added by this commit.
 >=20
 > Signed-off-by: Nam Cao <namcao@linutronix.de>
 > ---
-> =C2=A0Documentation/trace/rv/monitor_rtapp.rst | 105
-> +++++++++++++++++++++++
-> =C2=A01 file changed, 105 insertions(+)
-> =C2=A0create mode 100644 Documentation/trace/rv/monitor_rtapp.rst
->=20
-> diff --git a/Documentation/trace/rv/monitor_rtapp.rst
-> b/Documentation/trace/rv/monitor_rtapp.rst
-> new file mode 100644
-> index 000000000000..1cd188039a7e
-> --- /dev/null
-> +++ b/Documentation/trace/rv/monitor_rtapp.rst
-> @@ -0,0 +1,105 @@
-> +Scheduler monitors
-> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> +
-> +- Name: rtapp
-> +- Type: container for multiple monitors
-> +- Author: Nam Cao <namcao@linutronix.de>
-> +
-> +Description
-> +-----------
-> +
-> +Real-time applications may have design flaws such that they
-> experience unexpected latency and fail
-> +to meet their time requirements. Often, these flaws follow a few
-> patterns:
-> +
-> +=C2=A0 - Page faults: A real-time thread may access memory that does not
-> have a mapped physical backing
-> +=C2=A0=C2=A0=C2=A0 or must first be copied (such as for copy-on-write). =
-Thus a page
-> fault is raised and the kernel
-> +=C2=A0=C2=A0=C2=A0 must first perform the expensive action. This causes =
-significant
-> delays to the real-time thread
-> +=C2=A0 - Priority inversion: A real-time thread blocks waiting for a
-> lower-priority thread. This causes
-> +=C2=A0=C2=A0=C2=A0 the real-time thread to effectively take on the sched=
-uling
-> priority of the lower-priority
-> +=C2=A0=C2=A0=C2=A0 thread. For example, the real-time thread needs to ac=
-cess a
-> shared resource that is protected by
-> +=C2=A0=C2=A0=C2=A0 a non-pi-mutex, but the mutex is currently owned by a=
- non-real-
-> time thread.
-> +
-> +The `rtapp` monitor detects these patterns. It aids developers to
-> identify reasons for unexpected
-> +latency with real-time applications. It is a container of multiple
-> sub-monitors described in the
-> +following sections.
-> +
-> +Monitor pagefault
+> =C2=A0Documentation/trace/rv/index.rst=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0 1 +
+> =C2=A0.../trace/rv/linear_temporal_logic.rst=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0 |=C2=A0 97 +++
+> =C2=A0Documentation/trace/rv/monitor_synthesis.rst=C2=A0 | 141 ++++-
+> =C2=A0include/linux/rv.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 56 +-
+> =C2=A0include/rv/ltl_monitor.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0 | 184 ++++++
+> =C2=A0kernel/fork.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=
+=A0 5 +-
+> =C2=A0kernel/trace/rv/Kconfig=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0 |=C2=A0=C2=A0 7 +
+> =C2=A0kernel/trace/rv/rv_trace.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+ |=C2=A0 47 ++
+> =C2=A0tools/verification/rvgen/.gitignore=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0 3 +
+> =C2=A0tools/verification/rvgen/Makefile=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0 2 +
+> =C2=A0tools/verification/rvgen/__main__.py=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0 3 +-
+> =C2=A0tools/verification/rvgen/rvgen/ltl2ba.py=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 | 552
 > ++++++++++++++++++
+> =C2=A0tools/verification/rvgen/rvgen/ltl2k.py=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0 | 242 ++++++++
+> =C2=A0.../verification/rvgen/templates/ltl2k/main.c | 102 ++++
+> =C2=A0.../rvgen/templates/ltl2k/trace.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 14 +
+> =C2=A015 files changed, 1431 insertions(+), 25 deletions(-)
+> =C2=A0create mode 100644 Documentation/trace/rv/linear_temporal_logic.rst
+> =C2=A0create mode 100644 include/rv/ltl_monitor.h
+> =C2=A0create mode 100644 tools/verification/rvgen/.gitignore
+> =C2=A0create mode 100644 tools/verification/rvgen/rvgen/ltl2ba.py
+> =C2=A0create mode 100644 tools/verification/rvgen/rvgen/ltl2k.py
+> =C2=A0create mode 100644 tools/verification/rvgen/templates/ltl2k/main.c
+> =C2=A0create mode 100644 tools/verification/rvgen/templates/ltl2k/trace.h
+>=20
+> diff --git a/Documentation/trace/rv/index.rst
+> b/Documentation/trace/rv/index.rst
+> index 8e411b76ec82..2a27f6bc9429 100644
+> --- a/Documentation/trace/rv/index.rst
+> +++ b/Documentation/trace/rv/index.rst
+> @@ -8,6 +8,7 @@ Runtime Verification
+> =C2=A0
+> =C2=A0=C2=A0=C2=A0 runtime-verification.rst
+> =C2=A0=C2=A0=C2=A0 deterministic_automata.rst
+> +=C2=A0=C2=A0 linear_temporal_logic.rst
+> =C2=A0=C2=A0=C2=A0 monitor_synthesis.rst
+> =C2=A0=C2=A0=C2=A0 da_monitor_instrumentation.rst
+> =C2=A0=C2=A0=C2=A0 monitor_wip.rst
+> diff --git a/Documentation/trace/rv/linear_temporal_logic.rst
+> b/Documentation/trace/rv/linear_temporal_logic.rst
+> new file mode 100644
+> index 000000000000..68574370eec3
+> --- /dev/null
+> +++ b/Documentation/trace/rv/linear_temporal_logic.rst
+> @@ -0,0 +1,97 @@
+> +Introduction
+> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
 > +
-> +The `pagefault` monitor reports real-time tasks raising page faults.
-> Its specification is::
+> +Runtime verification monitor is a verification technique which
+> checks that the kernel follows a
+> +specification. It does so by using tracepoints to monitor the
+> kernel's execution trace, and
+> +verifying that the execution trace sastifies the specification.
 > +
-> +=C2=A0 RULE =3D always (RT imply not PAGEFAULT)
+> +Initially, the specification can only be written in the form of
+> deterministic automaton (DA).
+> +However, while attempting to implement DA monitors for some complex
+> specifications, deterministic
+> +automaton is found to be inappropriate as the specification
+> language. The automaton is complicated,
+> +hard to understand, and error-prone.
 > +
-> +To fix warnings reported by this monitor, `mlockall()` or `mlock()`
-> can be used to ensure physical
-> +backing for memory.
+> +Thus, RV monitors based on linear temporal logic (LTL) are
+> introduced. This type of monitor uses LTL
+> +as specification instead of DA. For some cases, writing the
+> specification as LTL is more concise and
+> +intuitive.
 > +
-> +This monitor may have false negatives because the pages used by the
-> real-time threads may just
-> +happen to be directly available during testing. To minimize this,
-> the system can be put under memory
-> +pressure (e.g. invoking the OOM killer using a program that does
-> `ptr =3D malloc(SIZE_OF_RAM);
-> +memset(ptr, 0, SIZE_OF_RAM);`) so that the kernel executes
-> aggressive strategies to recycle as much
-> +physical memory as possible.
+> +Documents regarding LTL are widely available on the internet, this
+> document will not go into
+> +details.
 > +
-> +Monitor sleep
-> ++++++++++++++
+> +Grammar
+> +=3D=3D=3D=3D=3D=3D=3D=3D
 > +
-> +The `sleep` monitor reports real-time threads sleeping in a manner
-> that may cause undesirable
-> +latency. Real-time applications should only put a real-time thread
-> to sleep for one of the following
-> +reasons:
+> +Unlike some existing syntax, kernel's implementation of LTL is more
+> verbose. This is motivated by
+> +considering that the people who read the LTL specifications may not
+> be well-versed in LTL.
 > +
-> +=C2=A0 - Cyclic work: real-time thread sleeps waiting for the next cycle=
-.
-> For this case, only the
-> +=C2=A0=C2=A0=C2=A0 `nanosleep` syscall should be used. No other method i=
-s safe for
-> real-time. For example, threads
-> +=C2=A0=C2=A0=C2=A0 waiting for timerfd can be woken by softirq which pro=
-vides no
-> real-time guarantee.
-> +=C2=A0 - Real-time thread waiting for something to happen (e.g. another
-> thread releasing shared
-> +=C2=A0=C2=A0=C2=A0 resources, or a completion signal from another thread=
-). In this
-> case, only futexes with priority
-> +=C2=A0=C2=A0=C2=A0 inheritance (PI) should be used. Applications usually=
- do not use
-> futexes directly, but use PI
-> +=C2=A0=C2=A0=C2=A0 mutexes and PI condition variables which are built on=
- top of
-> futexes. Be aware that the C
-> +=C2=A0=C2=A0=C2=A0 library might not implement conditional variables as =
-safe for
-> real-time. As an alternative, the
-> +=C2=A0=C2=A0=C2=A0 librtpi library exists to provide a conditional varia=
-ble
-> implementation that is correct for
-> +=C2=A0=C2=A0=C2=A0 real-time applications in Linux.
+> +Grammar:
+> +=C2=A0=C2=A0=C2=A0 ltl ::=3D opd | ( ltl ) | ltl binop ltl | unop ltl
 > +
-> +Beside the reason for sleeping, the eventual waker should also be
-> real-time-safe. Namely, one of:
+> +Operands (opd):
+> +=C2=A0=C2=A0=C2=A0 true, false, user-defined names consisting of upper-c=
+ase
+> characters, digits, and underscore.
 > +
-> +=C2=A0 - An equal-or-higher-priority thread
-> +=C2=A0 - Hard interrupt handler
-> +=C2=A0 - Non-maskable interrupt handler
+> +Unary Operators (unop):
+> +=C2=A0=C2=A0=C2=A0 always
+> +=C2=A0=C2=A0=C2=A0 eventually
+> +=C2=A0=C2=A0=C2=A0 not
 > +
-> +This monitor's warning usually means one of the following:
+> +Binary Operators (binop):
+> +=C2=A0=C2=A0=C2=A0 until
+> +=C2=A0=C2=A0=C2=A0 and
+> +=C2=A0=C2=A0=C2=A0 or
+> +=C2=A0=C2=A0=C2=A0 imply
+> +=C2=A0=C2=A0=C2=A0 equivalent
 > +
-> +=C2=A0 - Real-time thread is blocked by a non-real-time thread (e.g. due
-> to contention on a mutex without
-> +=C2=A0=C2=A0=C2=A0 priority inheritance). This is priority inversion.
-> +=C2=A0 - Time-critical work waits for something which is not safe for
-> real-time (e.g. timerfd).
-> +=C2=A0 - The work executed by the real-time thread does not need to run
-> at real-time priority at all.
-> +=C2=A0=C2=A0=C2=A0 This is not a problem for the real-time thread itself=
-, but it is
-> potentially taking the CPU away
-> +=C2=A0=C2=A0=C2=A0 from other important real-time work.
+> +This grammar is ambiguous: operator precedence is not defined.
+> Parentheses must be used.
 > +
-> +Application developers may purposely choose to have their real-time
-> application sleep in a way that
-> +is not safe for real-time. It is debatable whether that is a
-> problem. Application developers must
-> +analyze the warnings to make a proper assessment.
+> +Example linear temporal logic
+> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D
+> +.. code-block::
 > +
-> +The monitor's specification is::
+> +=C2=A0=C2=A0 RAIN imply (GO_OUTSIDE imply HAVE_UMBRELLA)
 > +
-> +=C2=A0 RULE =3D always (RT imply (SLEEP imply (RT_FRIENDLY_SLEEP or
-> ALLOWLIST)))
+> +means: if it is raining, going outside means having an umbrella.
 > +
-> +=C2=A0 RT_FRIENDLY_SLEEP =3D (RT_VALID_SLEEP_REASON or KERNEL_THREAD)
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 and ((not WAKE) until RT_FRIENDLY_WAKE)
+> +.. code-block::
 > +
-> +=C2=A0 RT_VALID_SLEEP_REASON =3D PI_FUTEX or NANOSLEEP
+> +=C2=A0=C2=A0 RAIN imply (WET until not RAIN)
 > +
-> +=C2=A0 RT_FRIENDLY_WAKE =3D WOKEN_BY_EQUAL_OR_HIGHER_PRIO
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 or WOKEN_BY_HARDIRQ
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 or WOKEN_BY_NMI
+> +means: if it is raining, it is going to be wet until the rain stops.
 > +
-> +=C2=A0 ALLOWLIST =3D BLOCK_ON_RT_MUTEX
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 or TASK_IS_=
-RCU
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 or TASK_IS_=
-MIGRATION
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 or KTHREAD_=
-SHOULD_STOP
+> +.. code-block::
 > +
-> +Beside the scenarios described above, this specification also handle
-> some special cases:
+> +=C2=A0=C2=A0 RAIN imply eventually not RAIN
 > +
-> +=C2=A0 - `KERNEL_THREAD`: kernel tasks do not have any pattern that can
-> be recognized as valid real-time
-> +=C2=A0=C2=A0=C2=A0 sleeping reasons. Therefore sleeping reason is not ch=
-ecked for
-> kernel tasks.
-> +=C2=A0 - `RT_SLEEP_WHITELIST`: to handle known false positives with
-> kernel tasks.
+> +means: if it is raining, rain will eventually stop.
+> +
+> +The above examples are referring to the current time instance only.
+> For kernel verification, the
+> +`always` operator is usually desirable, to specify that something is
+> always true at the present and
+> +for all future. For example::
+> +
+> +=C2=A0=C2=A0=C2=A0 always (RAIN imply eventually not RAIN)
+> +
+> +means: *all* rain eventually stops.
+> +
+> +In the above examples, `RAIN`, `GO_OUTSIDE`, `HAVE_UMBRELLA` and
+> `WET` are the "atomic
+> +propositions".
+> +
+> +Monitor synthesis
+> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> +
+> +To synthesize an LTL into a kernel monitor, the `rvgen` tool can be
+> used:
+> +`tools/verification/rvgen`. The specification needs to be provided
+> as a file, and it must have a
+> +"RULE =3D LTL" assignment. For example::
+> +
+> +=C2=A0=C2=A0=C2=A0 RULE =3D always (ACQUIRE imply ((not KILLED and not C=
+RASHED) until
+> RELEASE))
+> +
+> +which says: if `ACQUIRE`, then `RELEASE` must happen before `KILLED`
+> or `CRASHED`.
+> +
+> +The LTL can be broken down using sub-expressions. The above is
+> equivalent to:
+> +
+> +=C2=A0=C2=A0 .. code-block::
+> +
+> +=C2=A0=C2=A0=C2=A0 RULE =3D always (ACQUIRE imply (ALIVE until RELEASE))
+> +=C2=A0=C2=A0=C2=A0 ALIVE =3D not KILLED and not CRASHED
+> +
+> +From this specification, `rvgen` generates the C implementation of a
+> Buchi automaton - a
+> +non-deterministic state machine which checks the satisfiability of
+> the LTL. See
+> +Documentation/trace/rv/monitor_synthesis.rst for details on using
+> `rvgen`.
 
-Is this what you call ALLOWLIST?
+You probably read a lot to write this, do you mind adding a brief
+Reference section for the curious reader? Asking for a friend ;)
 
-Just out of curiosity, normal kernel threads are not forced to follow a
-VALID_SLEEP_REASON but need RT_FRIENDLY_WAKE, how are tasks like RCU
-and migration not following this?
+Something like
+https://docs.kernel.org/trace/rv/deterministic_automata.html#references
+would do.
 
-The monitors are not designed for deadline tasks, any plan to extend to
-those too?
-
-Other than this, nice explanation and monitors, thanks.
-
-Reviewed-by: Gabriele Monaco <gmonaco@redhat.com>
-
-> +=C2=A0 - `BLOCK_ON_RT_MUTEX` is included in the allowlist due to its
-> implementation. In the release path
-> +=C2=A0=C2=A0=C2=A0 of rt_mutex, a boosted task is de-boosted before waki=
-ng the
-> rt_mutex's waiter. Consequently, the
-> +=C2=A0=C2=A0=C2=A0 monitor may see a real-time-unsafe wakeup (e.g. non-r=
-eal-time
-> task waking real-time task). This
-> +=C2=A0=C2=A0=C2=A0 is actually real-time-safe because preemption is disa=
-ble for the
-> duration.
-Typo:
-
-+    is actually real-time-safe because preemption is disable**d** for
-the duration.
+Thanks,
+Gabriele
 
