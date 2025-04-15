@@ -1,66 +1,81 @@
-Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2E1B27F74F
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 15 Apr 2025 07:42:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FEA62741B8
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 15 Apr 2025 09:05:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744702944; cv=none; b=QDbM1xe8dhYKuVR9QVn8eirpXhIWo9TDa1Yhlf6TfJiQjLCdyRHXOliBPV95GE3C3PbFrsYW3OEEuD2gBC3ASkyuao2AXC3B3pTIlj1Na9uILtq75Y2UtriOmCgzOixoRxbpmPe817YpS2f41UALHhgfDhDD+Po35jkUq7U3TQA=
+	t=1744707947; cv=none; b=LXTid/yfuDvjr0M4ipVfrVc8tcmVfPP6W4WKE5lqLWlunz4tJW3oHg3krivTURg6hBjZhz3AF2tCGjL1al+QiFcm/o5bZlR9tcLzzE85HwurCbTqdMhgtNrIIEgHcILTRgPfb/BrscMXfnwtODHtaBF6jlRinU/WXNrrWpKj88g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744702944; c=relaxed/simple;
-	bh=uK2/Dxz411mr86DPhoimn0/NYOMMuBpqlFIDU660bk8=;
+	s=arc-20240116; t=1744707947; c=relaxed/simple;
+	bh=xbAWn0WSfoitO1KDMc0+QCcVSYyO/mBipbxolJ9HPJk=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=pgLZPQkB1FbR0yRSSO6hP3gvgCLvM40m9alsja0stdWlxFKjGQhvqZWfMKQgRc9ywfgEwvBv7zuFg4xyaogMZ2zRLuCk6omi/qSadmNLMAPwg4bSyhBE0ZVZDXZahNacDaykzfkkPI5FnatdIi8D7W/JWm3e47Am0TQBd02jsIQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mandelbit.com; spf=pass smtp.mailfrom=mandelbit.com; dkim=pass (2048-bit key) header.d=mandelbit.com header.i=@mandelbit.com header.b=RoQKc07K; arc=none smtp.client-ip=209.85.218.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mandelbit.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mandelbit.com
+	 In-Reply-To:Content-Type; b=QElxGaMulr6vTVzsUZlh3Frm1r4RW+sVAZ3BqpYCiok3D5QNYbRIvS+HV3KILqj4cOR9f918lggbL6Wzt/EaRJqcN4WyiosFGqgnHVzhj3GykGEACyvpJ5iEt57i9p+vYgoFjmodwtKabZf6+/P1ba+uyI1mnQVEDa+A8H33CHs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=MpwAHHON; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=8dMuj+Hj; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=MpwAHHON; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=8dMuj+Hj; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mandelbit.com header.i=@mandelbit.com header.b="RoQKc07K"
-Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-ac289147833so1038898066b.2
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 15 Apr 2025 00:42:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=mandelbit.com; s=google; t=1744702941; x=1745307741; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=z6aIxFI0Ol1WOfMYVyYLmlgjphiUFu7Rh53Xz6QKHBQ=;
-        b=RoQKc07K+3U6TXhYAVa7M4aG0SXwVgGV467pslv//wggfo5Vnhhjnw+5lhaicpdmWh
-         sJ6w7WgDXXhkntC1nIikdYiI1jYx+DwUkbKSmG/GI/wPG1dF8bMVabi/8L/ohsURcv7H
-         wDNyrRVD5CSeddIAhZz6Ay0SnwzXKD6Z/rYx8Qo9z9EQ9e9Z1fD29R0lkJWPCfuegwmd
-         NDQEUx+++vyXR+GOfJ5nqrLPuhxh3FtGH4eIIb+J56g7tsDywaf4qvDzpKzdm7jUtCKU
-         eFIPRtdHyg4ZsI8RPlFL4Ic5mXeHeJuNSKzc/jFg8iwpoKTQHPkUi7v8VryS9RaCz5o/
-         1x+w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744702941; x=1745307741;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=z6aIxFI0Ol1WOfMYVyYLmlgjphiUFu7Rh53Xz6QKHBQ=;
-        b=pBqKOnJmaUncmpbPDfzUMqrp+SGrolVgWKPZwS5J2JmxVJhUXaW9wgfIsy4f+HB/WC
-         fJnLCagpeoqpc9VDdwsLulCxqeaUaCDSE85C1hLBTqPMI+RuiVIXShf0ycFmukuhoLLv
-         +N0M7nJuipIFOxoeY74cX8SNleqI/xqZ0kqeMnZFseFLU+iuqwpRR7+YGcAMz5eIzFKM
-         iL3vWZukCtgneoXsapEYKE8wdkYX+u0myKfD1VmJzFJPiZCNnQq9rt79r+BbQhmv56Hx
-         YdX5jPUFSqyJxPCcD+BtA42mKx3er58HLKZjh9yhMSEseRxyat7lA7nMVu6RjwCKqrjb
-         5Sdw==
-X-Forwarded-Encrypted: i=1; AJvYcCV316WZDN7GEkWqMXklpUO0+szLp/soWU/2OSps+aIU1gmvH/dKiMifPwoHWYb5BM3c81uMFgNs/ye+JUlEtGXNAkQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzga+g2DmKpStk2MGX4QIFrglUFGwQqeRNuNKbu0++UDxM0AIb5
-	NLo7D5qgbRSP1W981hxZVi6KwrnggfWY5LcDR4CSjOxVSR4/6k4fEKv7KWEC6W8=
-X-Gm-Gg: ASbGncuDUTTrn8uBrO/luKxyr0Suz2AQdwFI/WiCU+u8NgzNEiO4MohLhgnEc/Gp1zY
-	VCghQpRZmtMxh2+rHETnS6SxDe8pgP39Ag6vb2oICoUP4RN7DNhbEqio7sacpTmYJDENcV6Zcig
-	pmLRanHp+xYeQ67i2cE4Cx0wwfQN3oOKJaNoBIVZVEKfaVIX/6Myh2ygE9fu2vppTrznFUtarI7
-	T3Ag4O5/IaoNKjoKkw7lN7tOBqbuIqXHtaPEsXOu0Gvt9Co4L7eJ/pI046/NK20OpQStT00/zJZ
-	QaUs7zI4dKQljrlHr/q5faXAF9lVfBMALjZL5U4OBs4igjAs8StOkgg3miM4ynRFKlzwjojno1C
-	EB2uktg==
-X-Google-Smtp-Source: AGHT+IHWuUmjwnhSNam4loWc9ZSrLB56k66TTcvhhaYiN2BAECONe1UrVOovbVL6pOGwZ0wV2SidVg==
-X-Received: by 2002:a17:906:4fcd:b0:abf:641a:5727 with SMTP id a640c23a62f3a-acad3456dbemr1531749366b.7.1744702940732;
-        Tue, 15 Apr 2025 00:42:20 -0700 (PDT)
-Received: from ?IPV6:2001:67c:2fbc:1:83ac:73b4:720f:dc99? ([2001:67c:2fbc:1:83ac:73b4:720f:dc99])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-acaa1bb312bsm1056251366b.15.2025.04.15.00.42.19
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 15 Apr 2025 00:42:20 -0700 (PDT)
-Message-ID: <6ec928b7-6980-4e9a-bab5-654c91db4a95@mandelbit.com>
-Date: Tue, 15 Apr 2025 09:42:18 +0200
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="MpwAHHON";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="8dMuj+Hj";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="MpwAHHON";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="8dMuj+Hj"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 7A3C921164;
+	Tue, 15 Apr 2025 09:05:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1744707942; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=iVoKDLF5pncIUIiH8TIsHzaAW0W0nHN55ljr4oVTt4M=;
+	b=MpwAHHONHUVv1EjrR5f1v0LcABnG+WymlxxV4WfboUKtUaGnsvvwrdoKUifhtrQHnk9f0I
+	FplYkA0tnTTh9RWo1zEC9UQAvcyhwNPRJXkY2a1RxtXYtL38fTwR5hpYfim0/08BBXtnCl
+	HQ3EB70JF/j3SiUlx6I/vSkTy7wGrL8=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1744707942;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=iVoKDLF5pncIUIiH8TIsHzaAW0W0nHN55ljr4oVTt4M=;
+	b=8dMuj+Hj1w7VX41un+Yx+MhN+P7E3bTubd35YA7IxAdxq7/WcyUw7u52hL9G7CW9ej2SB2
+	pc7ENqs+LZUHWfDQ==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=MpwAHHON;
+	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=8dMuj+Hj
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1744707942; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=iVoKDLF5pncIUIiH8TIsHzaAW0W0nHN55ljr4oVTt4M=;
+	b=MpwAHHONHUVv1EjrR5f1v0LcABnG+WymlxxV4WfboUKtUaGnsvvwrdoKUifhtrQHnk9f0I
+	FplYkA0tnTTh9RWo1zEC9UQAvcyhwNPRJXkY2a1RxtXYtL38fTwR5hpYfim0/08BBXtnCl
+	HQ3EB70JF/j3SiUlx6I/vSkTy7wGrL8=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1744707942;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=iVoKDLF5pncIUIiH8TIsHzaAW0W0nHN55ljr4oVTt4M=;
+	b=8dMuj+Hj1w7VX41un+Yx+MhN+P7E3bTubd35YA7IxAdxq7/WcyUw7u52hL9G7CW9ej2SB2
+	pc7ENqs+LZUHWfDQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 6569A13A89;
+	Tue, 15 Apr 2025 09:05:42 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id MJZrGGYh/mexUAAAD6G6ig
+	(envelope-from <vbabka@suse.cz>); Tue, 15 Apr 2025 09:05:42 +0000
+Message-ID: <cbf5b354-48b4-4f25-97c3-7b76fd332c41@suse.cz>
+Date: Tue, 15 Apr 2025 11:05:42 +0200
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -68,102 +83,77 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] tracing: fprobe: Fix RCU warning message in list
- traversal
-To: Breno Leitao <leitao@debian.org>, Steven Rostedt <rostedt@goodmis.org>,
+Subject: Re: [PATCH] MAINTAINERS: Add mmap trace events to MEMORY MAPPING
+To: "Liam R. Howlett" <Liam.Howlett@oracle.com>,
+ Andrew Morton <akpm@linux-foundation.org>
+Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
  Masami Hiramatsu <mhiramat@kernel.org>,
  Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- kernel-team@meta.com
-References: <20250410-fprobe-v1-1-068ef5f41436@debian.org>
+References: <20250411173328.8172-1-Liam.Howlett@oracle.com>
 Content-Language: en-US
-From: Antonio Quartulli <antonio@mandelbit.com>
-Autocrypt: addr=antonio@mandelbit.com; keydata=
- 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
-Organization: Mandelbit SRL
-In-Reply-To: <20250410-fprobe-v1-1-068ef5f41436@debian.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+From: Vlastimil Babka <vbabka@suse.cz>
+In-Reply-To: <20250411173328.8172-1-Liam.Howlett@oracle.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
+X-Rspamd-Queue-Id: 7A3C921164
+X-Spam-Score: -4.51
+X-Rspamd-Action: no action
+X-Spamd-Result: default: False [-4.51 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	RCVD_TLS_ALL(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[8];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo,suse.cz:dkim,suse.cz:mid,suse.cz:email];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	DKIM_TRACE(0.00)[suse.cz:+]
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spam-Flag: NO
+X-Spam-Level: 
 
-
-
-On 10/04/2025 14:22, Breno Leitao wrote:
-> When CONFIG_PROVE_RCU_LIST is enabled, fprobe triggers the following
-> warning:
+On 4/11/25 19:33, Liam R. Howlett wrote:
+> MEMORY MAPPING does not list the mmap.h trace point file, but does list
+> the mmap.c file.  Couple the trace points with the users and authors of
+> the trace points for notifications of updates.
 > 
->      WARNING: suspicious RCU usage
->      kernel/trace/fprobe.c:457 RCU-list traversed in non-reader section!!
-> 
->      other info that might help us debug this:
-> 	#1: ffffffff863c4e08 (fprobe_mutex){+.+.}-{4:4}, at: fprobe_module_callback+0x7b/0x8c0
-> 
->      Call Trace:
-> 	fprobe_module_callback
-> 	notifier_call_chain
-> 	blocking_notifier_call_chain
-> 
-> This warning occurs because fprobe_remove_node_in_module() traverses an
-> RCU list using RCU primitives without holding an RCU read lock. However,
-> the function is only called from fprobe_module_callback(), which holds
-> the fprobe_mutex lock that provides sufficient protection for safely
-> traversing the list.
-> 
-> Fix the warning by specifying the locking design to the
-> CONFIG_PROVE_RCU_LIST mechanism. Add the lockdep_is_held() argument to
-> hlist_for_each_entry_rcu() to inform the RCU checker that fprobe_mutex
-> provides the required protection.
-> 
-> Fixes: a3dc2983ca7b90 ("tracing: fprobe: Cleanup fprobe hash when module unloading")
-> Signed-off-by: Breno Leitao <leitao@debian.org>
+> Cc:Andrew Morton <akpm@linux-foundation.org>
+> Cc:Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+> Cc:Vlastimil Babka <vbabka@suse.cz>
+> Cc:Jann Horn <jannh@google.com>
+> Signed-off-by: Liam R. Howlett <Liam.Howlett@oracle.com>
 
-I just hit this issue and I verified that the patch actually solves it 
-without causing side effects.
+Acked-by: Vlastimil Babka <vbabka@suse.cz>
 
-FWIW
-
-Tested-by: Antonio Quartulli <antonio@mandelbit.com>
-
--- 
-Antonio Quartulli
-
-CEO and Co-Founder
-Mandelbit Srl
-https://www.mandelbit.com
+> ---
+>  MAINTAINERS | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 4c7fdc41a6bfb..d8e9a10adc81d 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -15571,6 +15571,7 @@ L:	linux-mm@kvack.org
+>  S:	Maintained
+>  W:	http://www.linux-mm.org
+>  T:	git git://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm
+> +F:	include/trace/events/mmap.h
+>  F:	mm/mlock.c
+>  F:	mm/mmap.c
+>  F:	mm/mprotect.c
 
