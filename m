@@ -1,104 +1,107 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from out-188.mta0.migadu.com (out-188.mta0.migadu.com [91.218.175.188])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F0312820DA;
-	Tue, 15 Apr 2025 09:53:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D99132417C8
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 15 Apr 2025 11:04:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744710827; cv=none; b=IiQIgtGPHw3vrVew8meKc2fFEfhK1ERgQpqbvYQsta1aWjXvgfZJzOWNBivH3TJaScQ9WVdPr5r/jBfvE2AVt1HDD5nKqozc7Sc3vwm4+Ix+ESOIpBBhaAsl9y5E4Tx9/ccX1MLOR2On3/KAOuS9ZlQtB+tRg27Ono4oak/2RDs=
+	t=1744715083; cv=none; b=F/uyePClLzmj+oRN0t9/mqiEmwOJBPwirHP9foKCeUYyGVupMtB+uEf0c/aYfS7XvDT1v2OgkP7NUpJuZwbdGuuRCg2CRPX+ST5+GXzaTEZGGN3KSP/MbMBQpRNNTqFExohT5+l0CcU9/uZYTomYismtwqUt7TNhhYyKFDELUjo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744710827; c=relaxed/simple;
-	bh=66TnW4SOtGzp5v6VIUNe9BjzhFVkjEi7U5Kmf7WsX1k=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ONklbUMmImQSbO6Fg1UpFmmZlHLLB2xIrcWhY2dlXXTQLAQwVCaKQqpzpvABw9J6AKvBEa0sQTSbjcOPNEn7MPK9iGASuVRHFtMirZ1vCE+Qux9CR2eJuzC8FxSrFIGDx0zk2MFfILEHW/ydge3SfhtSo9b3cQKhuWTzv2omFLk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=fWtCgUS1; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=pz0Ku3Qr; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1744715083; c=relaxed/simple;
+	bh=GSu6JHo+YSCZ8F3pdRafzygNXm1hMM/Juu0glZnvuCU=;
+	h=MIME-Version:Date:Content-Type:From:Message-ID:Subject:To:Cc:
+	 In-Reply-To:References; b=V5iu/Y79vGVW7noRe+dtOOHzEUwfnpJwvT39XRQZdT/sa8DF0CGIs+/e57CAJGmWZGf02AoJCLKQETbSxovRTrVfraS0B5p91y0QKbdYv3x1QvdOR+XD1F2CFyhX1qXRhWO9g2aWVhRZ/99wEJCgvauxYGA/qA1Jw7GsAwxhqHQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Z2liOoDp; arc=none smtp.client-ip=91.218.175.188
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="fWtCgUS1";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="pz0Ku3Qr"
-Date: Tue, 15 Apr 2025 11:53:37 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1744710823;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=rzJBTlMzPXw0a7LzFKrBuI48h6PPHoSnzloyT7nn9xU=;
-	b=fWtCgUS1INPtNPp6mg/xKVo/qWfa6g21rKC/tqk/10NGKqCbhKRvg+pUwtYnGiCqXJVMmk
-	K0LuSo8dsQ3l6wRcUBea5VLA5mRctEhlFNKerEn5o7ruAjre6wkGfV1v3cMhNRttSvtlGs
-	iY46uQRf3PByP8sEbJUX5mzNPm4z0ROA32/NWsmAZ9AjD33hLXa0byaBTVaWW3/jIJSOdm
-	MEDz9TF51IM2q9z39VzqIVtvS6hv+CCE8Vn7BX3tOvvXjO1UFCWju2I1bZAuhBlQTv9fFp
-	5b3am1UbLbSxisHReRA70rTAThiitxyM8zW/y3m2gUIoNTyc1omrb0x3jx8sQw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1744710823;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=rzJBTlMzPXw0a7LzFKrBuI48h6PPHoSnzloyT7nn9xU=;
-	b=pz0Ku3Qrlkki3PoAnVtysKkBI4boV4cM+TigLDvAzA+XPfPZlD06YRsCAT4VNcZ+rPfEY6
-	zHDWp5kSikEnIHAQ==
-From: Nam Cao <namcao@linutronix.de>
-To: Petr Mladek <pmladek@suse.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>,
-	Gabriele Monaco <gmonaco@redhat.com>,
-	linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
-	john.ogness@linutronix.de,
-	Sergey Senozhatsky <senozhatsky@chromium.org>
-Subject: Re: [PATCH v2 03/22] rv: Let the reactors take care of buffers
-Message-ID: <20250415095337.oB4AYRA6@linutronix.de>
-References: <cover.1744355018.git.namcao@linutronix.de>
- <fb397e38b56f3eab7b7f662fef4860ee4fbda873.1744355018.git.namcao@linutronix.de>
- <Z_4nvJEB-RXX9T0n@pathway.suse.cz>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Z2liOoDp"
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <Z_4nvJEB-RXX9T0n@pathway.suse.cz>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1744715078;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=fbbEvmW5ERCV6V3g0BQvaj+wv5+2mrjsX8ION5ZUGEQ=;
+	b=Z2liOoDpBAthCTgDeMWcJWeim/QFw+glL9/xaSwlyqtGJyeauIlabk9niKOZMPYjfHgBzh
+	FsYiV11/pKzTpBy0e1rofeZFzFsMBAqsDvD6JxbqiwI4ZSrLm53lP9McBeip/W8BxgW8z9
+	Sbj5KiXaSCi+EbSX9V8bFMtKTZiQO0Q=
+Date: Tue, 15 Apr 2025 11:04:36 +0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: "Jiayuan Chen" <jiayuan.chen@linux.dev>
+Message-ID: <e60b4acd2780eed0a0f89ee40df32cf518545cc4@linux.dev>
+TLS-Required: No
+Subject: Re: [PATCH bpf-next v3 1/2] bpf, sockmap: Introduce tracing
+ capability for sockmap
+To: "Cong Wang" <xiyou.wangcong@gmail.com>
+Cc: bpf@vger.kernel.org, mrpre@163.com, "Jakub Sitnicki"
+ <jakub@cloudflare.com>, "Steven Rostedt" <rostedt@goodmis.org>, "Alexei
+ Starovoitov" <ast@kernel.org>, "Daniel Borkmann" <daniel@iogearbox.net>,
+ "John Fastabend" <john.fastabend@gmail.com>, "Andrii Nakryiko"
+ <andrii@kernel.org>, "Martin KaFai Lau" <martin.lau@linux.dev>, "Eduard
+ Zingerman" <eddyz87@gmail.com>, "Song Liu" <song@kernel.org>, "Yonghong
+ Song" <yonghong.song@linux.dev>, "KP Singh" <kpsingh@kernel.org>,
+ "Stanislav Fomichev" <sdf@fomichev.me>, "Hao Luo" <haoluo@google.com>,
+ "Jiri Olsa" <jolsa@kernel.org>, "Masami Hiramatsu" <mhiramat@kernel.org>,
+ "Mathieu Desnoyers" <mathieu.desnoyers@efficios.com>, "David S. Miller"
+ <davem@davemloft.net>, "Eric Dumazet" <edumazet@google.com>, "Jakub
+ Kicinski" <kuba@kernel.org>, "Paolo Abeni" <pabeni@redhat.com>, "Simon
+ Horman" <horms@kernel.org>, "Jesper Dangaard Brouer" <hawk@kernel.org>,
+ linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+In-Reply-To: <Z/19S2yMP/2TViMa@pop-os.localdomain>
+References: <20250414161153.14990-1-jiayuan.chen@linux.dev>
+ <Z/19S2yMP/2TViMa@pop-os.localdomain>
+X-Migadu-Flow: FLOW_OUT
 
-On Tue, Apr 15, 2025 at 11:32:44AM +0200, Petr Mladek wrote:
-> On Fri 2025-04-11 09:37:19, Nam Cao wrote:
-> > -static void rv_printk_reaction(char *msg)
-> > +static void rv_printk_reaction(const char *msg, ...)
-> 
-> I wonder whether "make W=1 kernel/trace/rv/reactor_printk.o" would
-> start complaining about that this function is a candidate for
-> ‘gnu_printf’ format attribute.
+April 15, 2025 at 05:25, "Cong Wang" <xiyou.wangcong@gmail.com> wrote:
 
-I checked, it does. Thanks for pointing it out.
+>=20
+>=20On Tue, Apr 15, 2025 at 12:11:45AM +0800, Jiayuan Chen wrote:
+>=20
+>=20>=20
+>=20> +#ifndef __TRACE_SOCKMAP_HELPER_ONCE_ONLY
+> >  +#define __TRACE_SOCKMAP_HELPER_ONCE_ONLY
+> >  +
+> >  +enum sockmap_direct_type {
+> >  + SOCKMAP_REDIR_NONE =3D 0,
+> >  + SOCKMAP_REDIR_INGRESS,
+> >  + SOCKMAP_REDIR_EGRESS,
+> >  +};
+> >=20
+>=20
+> I am curious why you need to define them here since you already pass
+> 'ingress' as a parameter? Is it possible to reuse the BPF_F_INGRESS bit=
+?
+> Thanks!
+>
 
-> I am not sure. Maybe it is enough that this function is later assigned to
-> the .react callback in struct rv_reactor.
-> 
-> I wanted to tried it myself. But I was not able to compile the
-> code in linux-next. I got something like:
-> 
-> ./include/linux/rv.h: In function ‘rv_ltl_valid_state’:
-> ./include/linux/rv.h:55:43: error: ‘struct ltl_monitor’ has no member named ‘states’
->    55 |         for (int i = 0; i < ARRAY_SIZE(mon->states); ++i) {
->       |                                           ^~
+The lowest bit of skb->_redir being 0 indicates EGRESS, so we cannot use
+the built-in __print_flag for output in this case, since it requires the
+corresponding bit to be set to 1.
 
-This is a problem with the series. For now, you could "fix" this error with
-CONFIG_RV_MON_RTAPP=y. I will fix it up properly in the next version.
-> ...
-> 
-> I am actually not sure against which tree I should apply this patchset.
-> It did apply on linux-next after skipping the 1st patch.
-> But it does not compile there.
+We could certainly do this instead:
+'''
+if (act !=3D REDIRECT)
+    redir =3D "none"
+else if (flag & BPF_F_INGRESS)
+    redir =3D "ingress"
+else
+    redir =3D "egress"
+'''
+However, as Steven mentioned earlier, using an enum instead would be bett=
+er
+here for trace_event.
 
-linux-next is supposed to be fine. It doesn't build due to a problem
-introduced by this series.
+Of course, we could directly print the hexadecimal value of _redir, but
+that would result in poor readability.
 
-> The __printf statement might be missing also in the other two
-> reactors (panic, nop).
-
-Yes. Will be fixed.
-
-Thanks for the review!
-Nam
+Thanks~
