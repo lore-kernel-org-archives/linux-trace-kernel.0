@@ -1,71 +1,76 @@
-Received: from mx0b-007b0c01.pphosted.com (mx0b-007b0c01.pphosted.com [205.220.177.71])
+Received: from mx0a-007b0c01.pphosted.com (mx0a-007b0c01.pphosted.com [205.220.165.71])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DFED199947;
-	Tue, 15 Apr 2025 01:19:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.71
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A76820010A;
+	Tue, 15 Apr 2025 01:23:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.71
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744679971; cv=fail; b=jCim4hnNfDKJaUYsC1ZPmgulg+ycmcnsyzrEc3qozFRtlenmntc6jF6aE9D9JCMjOXXGW6ZvJ9U9n6rxwWdEiIcl6riXCK1cfDB2G2tRSRqBlt/dA49O5nkFJ0jZTYqw52jQuQHA/9af+zbHVXvGK2bZ9MTr6NiPw0zbY5oNCE8=
+	t=1744680228; cv=fail; b=ibi8jovL0gyoxO1mxeQkvmpBFhJlylPM5gO57MTFEYW0JMIH4vF2HejUoH8wzOjMYriS4VGRUgz/GIWPBtLPBcGiYEFhtDHTZdRnrXd8b/qBEwBX54cZnE4nBbpkz6jhwKd5SfAxRzGwyQhCAE8aNDtnUjd7jx1BuwmpBOefr04=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744679971; c=relaxed/simple;
-	bh=v0htc9iXuOjwf/xeepH3vLtqGKOi6g56Cz6xBERX6xE=;
-	h=Message-ID:Date:From:Subject:To:Cc:Content-Type:MIME-Version; b=hFDNktcxGuPc2PAXw/ZzNqOazikQ30FEYkGFkvrvt2mY6MRS7T0rlxed2uZomzRMqefT1ivSSPwmTWfPC9z6czkFtlC6678tiYk9OGjfYRSQasx5zgKLysuCAEx4yPe87nmtvAoICTH5/fbfHB05my+XX31djqHvXC4Q0mK6lTA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cs.wisc.edu; spf=pass smtp.mailfrom=cs.wisc.edu; dkim=pass (2048-bit key) header.d=cs.wisc.edu header.i=@cs.wisc.edu header.b=jIZFoJbu; arc=fail smtp.client-ip=205.220.177.71
+	s=arc-20240116; t=1744680228; c=relaxed/simple;
+	bh=RNBCFCJLcVX58hpeetOz6AMwsClnELTHwqFTvB9rhsw=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=Ato/Hnma0H3EjAnf2/va8dF9S0PjSekMYjL2Pzo1EN0sq6+i1FZv3UPjD+gEy8CFEwzm1gDdBXMszEpYPIKi0fgYTSUXWy2HddthOBYfD+UCgFFdpFPfWRZfomuHynWqZNYF6O/iUf7L9iTuizMv+Q+2Jc5n+JE7MMfqCLyLVCQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cs.wisc.edu; spf=pass smtp.mailfrom=cs.wisc.edu; dkim=pass (2048-bit key) header.d=cs.wisc.edu header.i=@cs.wisc.edu header.b=qhxWnFo8; arc=fail smtp.client-ip=205.220.165.71
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cs.wisc.edu
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cs.wisc.edu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cs.wisc.edu header.i=@cs.wisc.edu header.b="jIZFoJbu"
-Received: from pps.filterd (m0316047.ppops.net [127.0.0.1])
-	by mx0b-007b0c01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53EIU1oZ017454;
-	Mon, 14 Apr 2025 20:19:03 -0500
-Received: from ch1pr05cu001.outbound.protection.outlook.com (mail-northcentralusazlp17010007.outbound.protection.outlook.com [40.93.20.7])
-	by mx0b-007b0c01.pphosted.com (PPS) with ESMTPS id 46080vurr8-1
+	dkim=pass (2048-bit key) header.d=cs.wisc.edu header.i=@cs.wisc.edu header.b="qhxWnFo8"
+Received: from pps.filterd (m0316039.ppops.net [127.0.0.1])
+	by mx0a-007b0c01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53EIDBiJ013106;
+	Mon, 14 Apr 2025 20:23:21 -0500
+Received: from nam04-dm6-obe.outbound.protection.outlook.com (mail-dm6nam04lp2043.outbound.protection.outlook.com [104.47.73.43])
+	by mx0a-007b0c01.pphosted.com (PPS) with ESMTPS id 460a96ueu8-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 14 Apr 2025 20:19:02 -0500 (CDT)
+	Mon, 14 Apr 2025 20:23:21 -0500 (CDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=liyj877kNKUF0VKRN8ixw8myGTBkZQ+zlSazWexUVqjhQOUOYcwe7PGizDDq+IcLZp1+oVV1Di+GfbWoPppdqFU/YOkpEAKcU3wasZ30AzU6bZMym7WGe5L8D8d/JkWIa6xPgAFQUsnyuAOb/FkkxmYx1icMWTrwY2OfzY9xjLqTBvMN/rnyDatI0t73aiAAsPL00oYxTq2Pp1blRfNKcVpFB8RC46mmPbuB8AVAbyhLxG9ofGN78f9vO0yv+ZJIHoYLquJxaDQalCMIHfwLb63ABMxXbSiRXLGTl5yPD9mHSpfL66tNHFrXtjlNxBkbCeDVQMEqEjsYBjd6zCSQiQ==
+ b=lxZKh2C6BDwGSCPneEXS9YicAlEItu0MoXfP8xrrTvM9YSwKkNUb6p4ne2qGDIWfV/DFb07F9kmAt1Xht7CAvTu3qdx+2y4m3CeteMd2JNWHGEESSb9iafSZeiDT8y5mPxe3OsZKT6wU9pIjTL1D7FLxX5HkGQHuydyhvxLw545wvzt4AOKOqdCFTFBlvpOvZagxPmjMnd1b69wwUGSfOrRLWlwng+NoFkLGESn9ancE3++68ojHSGjyqbYau08SE3487nDQ6YVOgO0L9cNFvaLsQRUEFiO4lQF018qhTUOAcmv1Oy0fPudbTS0OHbb+q5Axu84Um1wbM4TYcw0wrA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Qf3hZUhyjyqM8cCQGmdHIB72qrl2QRtTAG1MGGEMg9o=;
- b=cM0+Ag2rfimI1nWHZYpvNbLE76Bmvljr7iwGkIAUouscRQe26W3j6s84/wDhxrqBPYiKBk9WumnsjeBR5AKOyWLF0GUOy4Q0Mdnoh7kY1Vr9KtIcR2qHV3xBZ4u2xhy1IU3qKOsdurKOd1987DWkl1ubqsZlJgfR5IAJjNA81vmpHZcBiM7Hi9x5jFszqmfslbVlDU/6fAFpGveagyyAr3kZ/z4xjLP62l4L4zm+lYwdvClLfXRnJ/5crsCB1j8eiEqweQyOdraoOfz4WW2OR4cNB67h03EgXVgx9wRcL7hVPZ2ILJrvNVJ9sjLsZVZGP9WgQIpeqCPhflCqW7oYVQ==
+ bh=KT2MyHWhSKD4tH6UDPT2TIQ2KzLn3Ten0vU8qD/D0mc=;
+ b=g4Eo/kzY9kpIQf+WXsS0iRgtWggtvahW8gH6B3vWg01+VUoL0p3tXp3MeG/bL7ddSxp5Ts+pzdeLWVM1vW0HSbBXHJqfDIppDU4ON0i3TEICsEtJ4HZXdsMPYmRfs0x4yNTC6pzXxlJBhroR/XYg8Gwmfi6UA//Y3wYWaDsMPCiXjKvlALMvkMUdGh/PkOmUG3K4jEqtTa+J+36bJ2ET2UKQ6yBlxEMFbj9KA6K1fdInfa7/W4bWgHGllQ2lYK0anEiAA/i1AkJ0AE4c3/MIH8eUvr3Htc2lEOu6Xu2qX7FJrnp77H2Fd3jhplCTUoAg9WHlhZ5IAUzdrgamfI8JdA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=cs.wisc.edu; dmarc=pass action=none header.from=cs.wisc.edu;
  dkim=pass header.d=cs.wisc.edu; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cs.wisc.edu;
  s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Qf3hZUhyjyqM8cCQGmdHIB72qrl2QRtTAG1MGGEMg9o=;
- b=jIZFoJbuIGY+GbHWZfoAzrj62oicdqckFlFI/JWHyVsgtjuEFlr3RgkRbaaoNisq+6/NSoS781FKAJF8rJjA+KNNDPIw14nLybJf0RbIWi+LzgSKv5dKS2ZMHhyuo8l+vAQn9XaPIpHsUbCMaaODbIRCHS2YBmvuCJemTIT50R9d9rRCDwhvvBblvwQLMuiYJmSyNSXZpR8r8Y6IQ3S2a5lIQB7Z+oZvlSTYytDcdnIrRo1la0w2CnWcsu0fggcI906B++N/uV4ZXcr7FgWE3pvqkbqpemc1KxlNefbDHzQprv1lz5MbB1/LBHXnsvbZUnxX89HVz+38cnM03XnWUQ==
+ bh=KT2MyHWhSKD4tH6UDPT2TIQ2KzLn3Ten0vU8qD/D0mc=;
+ b=qhxWnFo8F9n1dFA+/hUe3IaMwOBmtPA3so90eDfD6/neoldKxhZBhmlqjXBrck40j6MR3ysOL/M5J3q8kbUy4YKLPSXD4R/M6b4EUQag3EnvSbf48KSqIE5a+z75E91fALDDW26Ro+N5w9JSwlyz82GCrqT2QDijXlfomg6n8LwU/2VB23dAc1OQ0PUfF2GfeWVY9lgRm+4wFqWepQGHtnf4EYhB97l6dWsxw6Rx1S8STiMI/uTg+QPmyGyohs/aIyNg7WFdYU75ZruYmRABgXrJXU3cyHtV/s0UyipSF2wB6A5lwo+cbrTnI5C6YxOdgbmtLvNDQdhBoisaFuztqg==
 Received: from DS7PR06MB6808.namprd06.prod.outlook.com (2603:10b6:5:2d2::10)
- by CH2PR06MB6454.namprd06.prod.outlook.com (2603:10b6:610:81::20) with
+ by IA3PR06MB10404.namprd06.prod.outlook.com (2603:10b6:208:511::16) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8606.33; Tue, 15 Apr
- 2025 01:18:59 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.34; Tue, 15 Apr
+ 2025 01:23:19 +0000
 Received: from DS7PR06MB6808.namprd06.prod.outlook.com
  ([fe80::76b2:e1c8:9a15:7a1c]) by DS7PR06MB6808.namprd06.prod.outlook.com
  ([fe80::76b2:e1c8:9a15:7a1c%5]) with mapi id 15.20.8632.030; Tue, 15 Apr 2025
- 01:18:57 +0000
-Message-ID: <6cd4879b-5cb8-4f1e-b662-d9470a95a46c@cs.wisc.edu>
-Date: Mon, 14 Apr 2025 20:18:55 -0500
+ 01:23:19 +0000
+Message-ID: <ce3acc00-6332-45b6-890d-d215488d8c46@cs.wisc.edu>
+Date: Mon, 14 Apr 2025 20:23:17 -0500
 User-Agent: Mozilla Thunderbird
-From: Junxuan Liao <ljx@cs.wisc.edu>
-Subject: [PATCH v2] x86/tracing: introduce enter/exit tracepoint pairs for
+Subject: Re: [PATCH] x86/tracing: introduce enter/exit tracepoint pairs for
  page faults
-To: linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        x86@kernel.org
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-        Borislav Petkov <bp@alien8.de>,
+To: Steven Rostedt <rostedt@goodmis.org>, Borislav Petkov <bp@alien8.de>
+Cc: linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        x86@kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
         Dave Hansen <dave.hansen@linux.intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Steven Rostedt <rostedt@goodmis.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
         Masami Hiramatsu <mhiramat@kernel.org>,
         Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
         "Paul E. McKenney" <paulmck@kernel.org>
+References: <e7d4cd81-c0a5-446c-95d2-6142d660c15b@cs.wisc.edu>
+ <20250414205441.GGZ_12Eew18bGcPTG0@fat_crate.local>
+ <20250414182050.213480aa@gandalf.local.home>
 Content-Language: en-US
+From: Junxuan Liao <ljx@cs.wisc.edu>
+In-Reply-To: <20250414182050.213480aa@gandalf.local.home>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: BL1PR13CA0363.namprd13.prod.outlook.com
- (2603:10b6:208:2c0::8) To DS7PR06MB6808.namprd06.prod.outlook.com
+X-ClientProxiedBy: MN2PR07CA0025.namprd07.prod.outlook.com
+ (2603:10b6:208:1a0::35) To DS7PR06MB6808.namprd06.prod.outlook.com
  (2603:10b6:5:2d2::10)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -74,303 +79,128 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS7PR06MB6808:EE_|CH2PR06MB6454:EE_
-X-MS-Office365-Filtering-Correlation-Id: fee95bf7-7666-4922-43f5-08dd7bbb7e5c
+X-MS-TrafficTypeDiagnostic: DS7PR06MB6808:EE_|IA3PR06MB10404:EE_
+X-MS-Office365-Filtering-Correlation-Id: 55e6b441-b3de-486b-9c23-08dd7bbc1ad2
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|41320700013|1800799024|7416014|376014;
+	BCL:0;ARA:13230040|41320700013|366016|376014|7416014|1800799024;
 X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?L09mMkZGM3FaWFpxS2tsTm0rMjhWbE1rdEhLQS9jdEZGRW85cmx2RUIxTTQ1?=
- =?utf-8?B?MFZabWtDeUVqdlg0Z2VldkxXM1owUndEem5UNVh2Mk5HczQ2TUN3VjdqcG1l?=
- =?utf-8?B?Z1UrOXZIYVRGNkdYM2RuS3Q5bmFsS3Y1QXN1TUVPSGp0N1lJVUd2Zm9vSkQ1?=
- =?utf-8?B?czVwaVVIQnpzOTNKNWhyR0pFY04yZzhCS0FOS1Y2enFUWGo4elBkN0RwcW9M?=
- =?utf-8?B?OUFHQXYvY3R3SVk3QzgrdTFkVTNzZk1kd0ZCU0k1N0liR2JjQS9OSmtIOWxY?=
- =?utf-8?B?S0llZ0VFS1FVd1BhVEtySldGa1U3dDBqRFVNdUJYbjRrZmw5Y1B3RmZJL1VU?=
- =?utf-8?B?eEgyb0NiMmdrQ29uTi8xRkZPZ1pPL3lVUFQwVTV5eHJoVFJ3RStJa3dYU0RI?=
- =?utf-8?B?TzR5TndWTWFFM3JGOUlIZ25oc01raDl0UmdxZzhRcHY0dWJrT0hLU3NEMnUw?=
- =?utf-8?B?R0NyNCtYalVHVVRVaE5ERXFIUUVVSi8yeWE3d0ZWMWhpajB3SjVDazIydG9q?=
- =?utf-8?B?Mi9zeVphV0syUDJnSllBSVc4R1NHZlBrUnRyOS93VU5ITkVmNHQ1ajdNSjJW?=
- =?utf-8?B?T1k5d2ZaTnQzVDJod2JSSFRGQThXZmp4KzBGMVNncDN6eGV2TTJjaExkUy9B?=
- =?utf-8?B?NiszRzJvckpkbTlBYmYwRDBNZ1IrdURIcFBYRHNDYmdiRTcvQ2NYVGRUMmNQ?=
- =?utf-8?B?M2pWSFZVSnhXYTJsdklQODZyYUJ1T3lzN1lqZ1hrVVl4bDVOZE5icmRxclk4?=
- =?utf-8?B?ais0cDZ4Z25LSU83d3poVXE1Z04xNXVoWTN5T0liMGxHSHVFY0ErVWF4U0Js?=
- =?utf-8?B?QTY4dWIrMWF6R0NNa3lVZEI4ZHY5NE9CTDNvbkt2anRaSmFFYjdhM1JmaDRE?=
- =?utf-8?B?NEpmeWpSaXdUa0RhMGplU3V2aEtZRFdsVDdUTUQxUk9ubEZQcCtBRSs0NFJa?=
- =?utf-8?B?cW11Tkh4V3FpdTFkUytaOVk4TDVJRENpLy9JU2ptSjJyKzdOcXJKdm8ycnNV?=
- =?utf-8?B?WW5zUVJhZDU1RGx0K2ZrZWtDKzhZYXoxTXNGSVc4NEo0QlJHNkJDNVAvcnJO?=
- =?utf-8?B?bXJ6dnhNaElvMHgzb1R4b0UyZysvNXRndElPY3dPUE5Ra2d2WGw2cUxCZnFN?=
- =?utf-8?B?UVh0NXFseXdubG1oU0ZJU1NsYUpCWjlONzR5TUNhcm5NRm1aRUFpeHpDcVEy?=
- =?utf-8?B?OUVWTUtLb1dtZHRIdzN4QndCN3pyejZxVytUSVhEcTNkc3JaT08wSzZBYmRh?=
- =?utf-8?B?cVNWT1crWlVUcW9qTmhOZzFnR2orTXZRY2pMSVF6a1pDa3lVOExvQ2IyZTZG?=
- =?utf-8?B?VGQzUFcrVjZyUW1WQXpaWk9DeHFubFl0dXZuR0NBdEVZdFE2d2xlaVczZUMy?=
- =?utf-8?B?L3NHVUc2bmVoNzU1ei9GclNlVGRFai9oUTUwU2gvVmE2MlY5MExoK1Y2YVpw?=
- =?utf-8?B?anM3a3hyRW9NV2s2bUVUN2dYRlNxVm4zUWFPanZWTWRRd1VkdWJkSEN4R0pU?=
- =?utf-8?B?aEQ5OGg3MnJSMjVRNkx2enZrTnJyY1JQc3AvYzdEVW92NEwwTGpHS3NRNHhR?=
- =?utf-8?B?aFJsOGpmT08xS2tYOWUyZXpadmhrcHA5QUdNNWxoYjV2MHFNSll5SUVyV1Fn?=
- =?utf-8?B?NStnQUlBV2ZkOXl2RndWN2dHTzR0NU9KQ2hlS3VvYkVHekN2Qi9RcnRHNWFI?=
- =?utf-8?B?K1h0TCtNclcxR0x5dlhWLy9hVHEvQmpoSXFsWGJ2QUtBSHpyOEo1a2svTjFI?=
- =?utf-8?B?T3NOcUI3VzVha1M4MEM0T1FvVG5vTzBiWFFHU0p1b2hpUmw4dW5McUxKdElt?=
- =?utf-8?B?NGNPMDhsd1dqWDBUclQrOWlhU2crZ0Y0ZWEzRGhwVGdid1BDOUdVN3Q5bStw?=
- =?utf-8?B?WkdqSVVrTCtXS0xXTnVJeUlGOXZBMDIvY0VXZ01mV2hiWmpUWG1ZQmVQNWw3?=
- =?utf-8?Q?XqZS1XzKFzw=3D?=
+	=?utf-8?B?amdOSlhxajV4bDR4R2ptVElqaGlKSkd0TWluMDArWHZoQ2dyeWI5bmUvY0xP?=
+ =?utf-8?B?dUtDak5YUWZaVG1VQzh1QjR4L2xwVFJPY2k5ajkzV1gyOUNYY2lncjZRYm1i?=
+ =?utf-8?B?SGhuY3plcDcvR2FHWEFVclZmSmZENkRBQVNsOHlhZXlPajFZZ25QQVd0MG5t?=
+ =?utf-8?B?aDQ5enZ5NWp4SFA2SkpHQnNrdWs3QkMxeHhBbVBJUzAzTEI4RlpiQ3UwVDZp?=
+ =?utf-8?B?NFlxd0NENXZ1MSttZ3EySkgzYjl3WE5oZnJWSFlNTEtldnZaTzlXRDN0V0kw?=
+ =?utf-8?B?eEFLK1VWdDJWditFSlk3aFNMNy80K3FJSmRpN0J3ditVYm9ySCtsOHV3bi91?=
+ =?utf-8?B?NkRGZEVMWTVEUG1pNnRpcTh3VEpmY0lDTWhkSTJjaDhrZmVKOHFZZVFzZ1Zl?=
+ =?utf-8?B?RnRhaytsRGF1bTBNdGpSUWpVNEZLd1BRZlBoSzQ1b0lTajNaOXBZYW9idVRM?=
+ =?utf-8?B?cUE3TkZybWtSOHh5ZU5iSkhhS0dpU0kwQ043aUozZHVzNEhORVlnUEhMZEtY?=
+ =?utf-8?B?VnVCcmJZZnBXM0J1NE82YWhvQ2FyQ3RQSmgralR4cTBZRlYzVXhVUE40ZVhk?=
+ =?utf-8?B?T1FPdEplNytseDFoemQ1TUJtYUowREY2RWtzSWVvNVRhck9IdVhaMkhGUEsx?=
+ =?utf-8?B?ZWk2Rm5ud1JQbFdDNEJDUHdYUnB1dmY1YzJ1WVpiYVVFZWdMTmFpU1gvbnFm?=
+ =?utf-8?B?ZW1VRmMxMDhaa092bWJuUW92a2pKeld0OUpsOTU5cGNUTWdQR01lZGs2MjFU?=
+ =?utf-8?B?Mklia3ZwTnV6bG1nTkhSTTN1ZkNmQkNYdjdUaW9BVlFLZUVNTnovelkzSnRN?=
+ =?utf-8?B?VDJvbk9jckYveFZ6NStpRVp5eXFVWGtYczBTQVBrMDNQb3loVzhLelJ1VlZy?=
+ =?utf-8?B?dFdoeXZUQWdkOHRIb0ZRamZYTE9BNW4zSWtmRlFhMkJLYUtQMnQxL1pwS2FL?=
+ =?utf-8?B?U29Vd0V6aEdkbnBOMTBZbDZGTWtsOEN0N0FCb1grWE12VXRuR0ZQRzQrbTBI?=
+ =?utf-8?B?a0J5bkFBOWxseG1VSmVvSi82UHF0S256cnlTVFVMVFdLVzJtd3RvMEJXL0Nk?=
+ =?utf-8?B?ei9NS2J6LytBcWtsY3k2bHdDaHNyeGNPM0xxamRERnAzVEhlVFJrUDVGaWpK?=
+ =?utf-8?B?Ny9Ueko1QXNJYVhOcURCTjZ5VDMwemJxU3FyQ0d1TU5LdlU0R3lWVEdTcHp3?=
+ =?utf-8?B?U21iQzZKSHNJWnBFdUZnaENZaThtdW5SU3o3NGRKNmVrWVc0S2VtQ05Rb0JX?=
+ =?utf-8?B?dzk2T0xIOXFGeTVSMDhHM1QzR0ZIZ2NQK0llN1Y2dWNhZ1cxbk8waitnc1pu?=
+ =?utf-8?B?NFpSVXdENFBPRDZNbG1SRDN2YkM4WHg1WmpPZWdZQnpwNW91L1FWa1RlRFh5?=
+ =?utf-8?B?T3JQUFJjNFhLaHdDSkdRQVJaU1NkWnRDMWo4Wm9vSEpWRFB2QjFDMVpNODFv?=
+ =?utf-8?B?dUpDRmRDWlMxbjFUVk1TREtaZzlqSloranpvWndOblJsTFQ4SWdwR3lKcHNJ?=
+ =?utf-8?B?V1l0bk1vSlhjVHpwMkFrTXlQZE1Eak9XRy9pL0ZkV3ZiNlpSeVNsUm4wMlZ6?=
+ =?utf-8?B?SXMvaDJEaUg1OUMxOTNudkN1T0l3dHp6eEJKUXJGaEJFOGxUUlhxYzhmRzNC?=
+ =?utf-8?B?VGZzcGlOb240b0I4RW91OFg5eU51dDlMUEtlS3hteXJKYXBjWVoxNXRYc3Aw?=
+ =?utf-8?B?ejBIaXZuaW9jOUI2Nm42UjhxZktVbjZ0NlBua3IrSGpoQlBjYm4vOEkycXBN?=
+ =?utf-8?B?bDRXU1dndnpWVTU1eHZ1dkx1WkJLTGhwclpJWnQzYnJiYVZ4OWxuOGR4MDNx?=
+ =?utf-8?B?WHl4NXU1cGJ5Q0EwZCttWVdYY2Z0SnZrL29IcEVpbFJQcjM4eStPbmFvNlVC?=
+ =?utf-8?B?ZjRrM2ZBT2ZRQVJLNkYzWEV1Wk1oTUZ2b01oQ3JzTWhkU1E9PQ==?=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR06MB6808.namprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(41320700013)(1800799024)(7416014)(376014);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR06MB6808.namprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(41320700013)(366016)(376014)(7416014)(1800799024);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?UGFqU0I1VkM3TytCN0pBcjlyanF0NHVUMzE5Rk9BR09XYzFQUEtwWjlFT2JQ?=
- =?utf-8?B?Ym8xTU9BQzdzT3BCZnpHeHNybUhMb2twVzZ4Qjl1d281dFF3NmI3VEc1cHo1?=
- =?utf-8?B?NzhsUjREQ3l1ZG10VGNLemJHUXlsWWxyeVI5TW1KeExPaTFENVk0RVJUMGw2?=
- =?utf-8?B?UjFSQ0RXOUJZenpmSFlTNlkvNDVsQWlMZmRkOG9uV29EbEVGUVVjOVkxcDFU?=
- =?utf-8?B?NmwvNkEzMFYyU2dmY25Hb0ZPT1hTcE9GSWNHTDQ5RzREK1paOUtsNENSWisw?=
- =?utf-8?B?YndhZlA5YldLdmFYSlBaQjFUTmszNDNPZ1RidGhLTlFUVEpJUDlnT3NkbTMz?=
- =?utf-8?B?SWNlRXQ4Uk5XMlFFUVl6a0pFdjNOeXQyamFYczlhcktEZ01KTnNyaVg3eFda?=
- =?utf-8?B?MWt4Y0poNWhNREFEamp1elkwQVd5N05nL3VTSC9Sd09sbWgvTWk4SjdDNU9L?=
- =?utf-8?B?bWcvbWNDYWJPdkN3RHNJenpwd213MTlneDcyL0MycXpzQ2pLNGd3cGtKbnR6?=
- =?utf-8?B?ak9LR0hlQWtWUmU2Sit0RWw2ZDZkd2h5WG4wcndodGRCUGtoRi82bnNGNGt4?=
- =?utf-8?B?UVBCVnBFbkFrQmFPSk9mZGozVWdMVkU0RVV2dnVUbGxVMjF3Ymd6K2NpNDBt?=
- =?utf-8?B?Vi9VQndoOVhyODJtbTg5Tk45cHF1SXF3Q0VyYTlmczZhN0Qyeld3WGxJMHRt?=
- =?utf-8?B?NC81LzZTS3M3MWw0ZmljWVROWUprRVFnN0VaUHhpdWhyeVBtYTRJcU9SNEpU?=
- =?utf-8?B?T0h2ZmxEQUxndEZWaEhaNUczTE1mc0hBc0F3ZSthbmZSNEtSMkt1ZTEvSnRa?=
- =?utf-8?B?ZnFqNElyK3VoR1JSUjB3VDJPRjVQeTM1ODhucXBtb0czaVkwRUh6US9WazYv?=
- =?utf-8?B?R1VvaC9GbFpIczBaNkVVNXJjQ3BlRGlLZHkxTGVFVDB0eUZCd09jckpuZ1Nw?=
- =?utf-8?B?UnBGY0VnZVhxL2tPQVFMMTlBNEo2V3VzYWN1NVNiWU9zV1JtNUl5emV6WVd2?=
- =?utf-8?B?NzJEZEwvVloxdlZDM2h1ZmtyemNRdnV0Q0hhWkM4VVN0R0xXRXQ2dDVKb1p1?=
- =?utf-8?B?bFRxZ3hNRGhETjVkcU5SQ21oaGN1UklxR0NxYml5STA0MjlLQmZmSlo4KzNG?=
- =?utf-8?B?VzQrN3pRVXpwMFlML1JhaVg4QmxmL1BHOXViQ3gxNW9PT2E1RFV6eUNObk44?=
- =?utf-8?B?Vno2VlUyOEN6dk1hTHdrSkJqN2cxbWk4N2RjdDNvc0R1dnZ6WXRwS3pGQjhM?=
- =?utf-8?B?Mi9GS0pzZzZ3K0pkRHk1QzBBZGd6ZVVUeU5QZ1JrcG9JN3RRckFKYlp5ZWRr?=
- =?utf-8?B?aVdGM3d2MEdCN3E0ckRjYXV3c2ZuMXcwL3FsTmM1Q1JGK1RueE5ycklHNkZG?=
- =?utf-8?B?blM3THpkNi9QZlNTOXlrVTZlRnRsUlVLcUFCTDUvOWNQOGN4MDlQdjdFL3M0?=
- =?utf-8?B?YTZjaVh2TThxdWh4THlVYmpvSzVueUhoaXBkZGNoeDlvdzVQNmplazBxaktp?=
- =?utf-8?B?MmMydURjdmRwSkpOS3JNR2IzT09YVFRwQm9LQ0wybWtYZ0J3akFpQ2cyRUJh?=
- =?utf-8?B?K21NYkNHY0hmWTBac0hNclhBRXFWdWw0NVUzNWhCazQyTE1YeGZySzdxRkhB?=
- =?utf-8?B?ZFFrSk5VSzVOTTZBR1NKZTRLOTA5WHl0MVFPb3B6MEtpWGhPeGxDSGZ3SVIr?=
- =?utf-8?B?VU1PTGlNNmlIZjVpSzFNOU5GbEgzbEdYdDltYVd0bWxwZEloVHRuSTFTN1E3?=
- =?utf-8?B?Yzh0dllBOE1TYU1OVlVIYWNHenZHcUpCRXdXK3Q0MVlLb1I2ei9pakpYNmZt?=
- =?utf-8?B?NUpDWlROVlF1Rk9uak5wL21LMTU3NE5MaDcwNHFpc051NVJOWEpFUTkwTEpK?=
- =?utf-8?B?WFo5M3hIMFlwUTYvb2pESEZXZjAwQmd1TDRmUDlGTXNndmlwR3l6VnAzckNM?=
- =?utf-8?B?ampJTzFncFdKQ3lLeUQzZW1yeFZOajh0dGxiME5vU1UvckhqNVp6cmhaSkhz?=
- =?utf-8?B?V2lsVWpzeUVDWlhwejlPem9CSFlrTTBWU293YU96REVJSFlrRTh4NDJ3UXpl?=
- =?utf-8?B?NndzaVV2N09yTUUvMG1GUFhLNHNkb2EyZTQzTm5pd2FVdDFmUEJxYitkVDRw?=
- =?utf-8?Q?HchQ=3D?=
+	=?utf-8?B?Y3lxV0NXTm5xVHdkeWlGYkxoTEVpbUI0bldpT1duN3pwSW42QnpXTnlvcVNC?=
+ =?utf-8?B?Sm4vb1gvTGJ6bW02aDZwYjBReVRDYXkxamp5TEhEZHZFVmZZNC9yaTFVa2pw?=
+ =?utf-8?B?UERJdUZDcVNzUXZPazE5eVlRVFlCYnR0RDF4eTdwL25WV21wMGNBMnRoRXIw?=
+ =?utf-8?B?NGQ5ZHVDcUM2d3JFenhDWDU2aG8wRXZ1UzRDaDRLa3RqSDN1VFduOGU1N3FW?=
+ =?utf-8?B?WHEzbEZ6eU80TXpmMS91VmJMU2tZbEVDdVJIdjRqWDcraFVTSGpNQ0p3RXBI?=
+ =?utf-8?B?UUpPMTMyTTY3N1diRFV0TVhuYzVEa09QMUh3ZEJDY0MwREZxY1NtejRaUDR2?=
+ =?utf-8?B?S2xpUi9BQjNodUh2dWlxckJCY0pvMUplTDNsQ1l4ZGVnRE5pRHRKSm5lRkVV?=
+ =?utf-8?B?dnAxUmU1Yk96QlZsam5BOW5lOHFLTW9WbXBLeklRZC8xNGNOOHM3cVRGNnYw?=
+ =?utf-8?B?UmhGaFFuZEw1S0Y4VXFpVWg2ZUxpWittdlc0YkhRYTNLYm9tLzhZQ1NxYlZv?=
+ =?utf-8?B?L0tPUzJPWklrOUt2NDRtR0NPdjlwQWRPTEFKUEtZcU95YkdUeTFKOGZNOTVD?=
+ =?utf-8?B?R0dEMXErWm8zZVpUNTBSbDFFV3o3NjR0b25Jb1N5VXMwcmhReGVJZjU4MUdi?=
+ =?utf-8?B?aCswVlpKS2ZOZExFTE5wNStMQUNTRjZzQk1qL2JPR3dkZ2xQN2F3RFg5ZFQ2?=
+ =?utf-8?B?ODVWbXV2bGYyWjY3dStpN2hxekF2UjNEZG1mNmExNXFnbUpIcnZZVERmTVFx?=
+ =?utf-8?B?MndYdHlURjlYdC85QldEd3lvbkFqaXJxSGZWYUUyby9mZTVjeGQyWFRQODI1?=
+ =?utf-8?B?RHdobngrUWVKWDJGK0x3ZlY1UjBSc2tDOTdrOTlJUnFQZC9Ra3VPZXhwUDR2?=
+ =?utf-8?B?c1ljVklFN3VMRXF5cDN4bWxaeFZVQU5jUlVxYVMwSFlXWm51c0FBanUyMGpy?=
+ =?utf-8?B?THNPVUJnRUNST1JkMkNOYzlFcXVpaCt2Ui80aUhLYTNiSGp6VFV3QjJZMGxS?=
+ =?utf-8?B?SEZya2NCaFllNzNvYmtWUWpOejUxUE9WT1BJbkh0cndRRGpXTklDS3FwUEVM?=
+ =?utf-8?B?dmo0UGpQR2E2VFRNNFN1VTF5RnUwRUxsaC9aWWtsaSszVDZQdmNCZ2JhaTNI?=
+ =?utf-8?B?MDhHK3lNeWNEZlczT0dEaTVHQjRpZXhhRXJiZEM3NHJXd1ZJaC9nelNjRTdM?=
+ =?utf-8?B?Mk9pSFBjNkdxM3JsNGpGSmJJcmIxWHdPNDhuVG5jOGZLc0U5OWFtSG8ybEUy?=
+ =?utf-8?B?QTJtUExpQm5ZWXVFUWsvRkI4RzVLNnFxM1c0SGM0VkNZV3ZQSnUwbjZSaXJH?=
+ =?utf-8?B?cU9kTCt0aHhSb1ZDM1ljSGNIVmV4YmJtWW5zRlp5VDhQUGUrR0dRUHRVdE5W?=
+ =?utf-8?B?dlc4OEdENjJYT1ZYRHMvMFF1czRYeXRYL0wxakdLLy90cTVtMnYxTG1aNEhO?=
+ =?utf-8?B?VlJpTkFnTTZnUDJISW1nY3FBdER1NUdqZUxGaDc5UjA5TGZiZGxraGxiSm5z?=
+ =?utf-8?B?NVRvRDlicW85Um9YVEJkNlJYSnB6UUF1aC8xUmpwZGtKOS9GYkUvcXRja09a?=
+ =?utf-8?B?eEpGRFM5Tm55U2lISTZMcG1ZRUlmdDRkb1NhbzFuWTRueGh4SGx1RHkzNlFC?=
+ =?utf-8?B?aHNLa3pZYlJPQkdLcWt2bnVFV1ZqMEFFWGVwNXpXK0h5dWRXVVl4ZXd4OUlH?=
+ =?utf-8?B?dFpPcUgraFdmaE9GeDh1NktWUU54eXlnWHB3OHlvYXVaVXowdjVXSXhkTzc0?=
+ =?utf-8?B?bVp6RTFyZ2g0N1ArTk9zSE1nOTduUHJLOFNBZStEaFFKR2JEZXNZTlNYb0RQ?=
+ =?utf-8?B?OERmak94TnZXbXdYLzZmVzM2SzErb1FVbUJ2NDBwbFpZbDU4Qk1sc0RQN0Y3?=
+ =?utf-8?B?TUtjblVVVVB6aW41ZlYwd3NkSExidnVUZkFaK0hnZmNObmRZdmxSWnZzRWN5?=
+ =?utf-8?B?dHdQRTlueHpHbkFXS3ljakg0dGlHZ1VFRkJYK1Z6U3c3bzVjL25oY2dLSE5H?=
+ =?utf-8?B?ZVB0V1d1TUhKZ3pDWkZObm5CVUlXRzVSb3ZKekhleVkxaUhJNGJ1R1FxZ1h5?=
+ =?utf-8?B?QmNJNlNVcnRxOTczdG9ZWlhKUmFqeEJQMG5QQ0dEWTB1M2JweTBVRmFYMDFU?=
+ =?utf-8?Q?hjsM=3D?=
 X-OriginatorOrg: cs.wisc.edu
-X-MS-Exchange-CrossTenant-Network-Message-Id: fee95bf7-7666-4922-43f5-08dd7bbb7e5c
+X-MS-Exchange-CrossTenant-Network-Message-Id: 55e6b441-b3de-486b-9c23-08dd7bbc1ad2
 X-MS-Exchange-CrossTenant-AuthSource: DS7PR06MB6808.namprd06.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Apr 2025 01:18:56.8887
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Apr 2025 01:23:19.6492
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 2ca68321-0eda-4908-88b2-424a8cb4b0f9
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 0hqBXE32NoLH59n+BEc2V+bgP7dfBua49rrqqXGUhUlEnmq+4mhKbaRLqmZQDgdJ6XyFa2wUppBufAyxSMEXSw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR06MB6454
-X-Authority-Analysis: v=2.4 cv=TozmhCXh c=1 sm=1 tr=0 ts=67fdb406 cx=c_pps a=2D6/CIrCIWs5X5ruZf5FWQ==:117 a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19 a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
- a=XR8D0OoHHMoA:10 a=3-xYBkHg-QkA:10 a=VwQbUJbxAAAA:8 a=x30EXVXcAAAA:8 a=LuFYPtAr6PD7joxTrIIA:9 a=QEXdDO2ut3YA:10 a=yI8jHdU-MAB4nH2QTHtW:22
-X-Proofpoint-GUID: jRPyeeLZ79g6m-f4FIPmvIHbbA_mLCgB
-X-Proofpoint-ORIG-GUID: jRPyeeLZ79g6m-f4FIPmvIHbbA_mLCgB
+X-MS-Exchange-CrossTenant-UserPrincipalName: M4GAL+sz8aLN5SZ94YH7wwlnrw04FrpGoGgAV4+TjnOdY2kCAoPbhTGI4rz1FDXxEA8u9S3lYsDyHc6HzNaBzw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA3PR06MB10404
+X-Proofpoint-ORIG-GUID: aBwjXTkxGvtc0k2L-e4Z6euNpp_daSOa
+X-Authority-Analysis: v=2.4 cv=CM4qXQrD c=1 sm=1 tr=0 ts=67fdb509 cx=c_pps a=YmitjTGdGiwdiEq1Q8pHfg==:117 a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19 a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
+ a=XR8D0OoHHMoA:10 a=3-xYBkHg-QkA:10 a=WEzg3AYU7VnzdkWqtLAA:9 a=QEXdDO2ut3YA:10
+X-Proofpoint-GUID: aBwjXTkxGvtc0k2L-e4Z6euNpp_daSOa
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-14_08,2025-04-10_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0
- priorityscore=1501 impostorscore=0 lowpriorityscore=0 phishscore=0
- malwarescore=0 clxscore=1015 mlxlogscore=917 adultscore=0 mlxscore=0
- suspectscore=0 bulkscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ definitions=2025-04-15_01,2025-04-10_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 impostorscore=0
+ spamscore=0 bulkscore=0 mlxscore=0 priorityscore=1501 adultscore=0
+ mlxlogscore=558 malwarescore=0 clxscore=1015 suspectscore=0
+ lowpriorityscore=0 classifier=spam authscore=0 authtc=n/a authcc=
  route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2504150004
+ definitions=main-2504150005
 
-Merge page_fault_{user,kernel}, rename it page_fault_enter, and add
-page_fault_exit. This pair is useful for measuring page fault handling
-latencies.
+On 4/14/25 5:20 PM, Steven Rostedt wrote:
+> It's useful for me ;-)
+> The above shows a histogram in microseconds where the buckets increase in a
+> power of two. The biggest bucket is between 2^4 (16) and 2^5 (32) microseconds
+> with 108790 hits.
 
-Add a new field to the merged tracepoints to indicate whether the page
-fault happened in userspace. We no longer need the static key associated,
-since it was used just to avoid checking user_mode when the tracepoints
-were disabled.
+With patch v2, I can do something similar in bpftrace too. :)
 
-Signed-off-by: Junxuan Liao <ljx@cs.wisc.edu>
-Link: https://lore.kernel.org/9e2ac1e3-d07d-4f17-970e-6b7a5248a5bb@cs.wisc.edu
----
-v1 -> v2:
-Merge the user and kerenl tracepoints. Remove the static keys.
+tracepoint:exceptions:page_fault_enter
+/ args.user_mode == true /
+{
+    @start[tid] = nsecs;
+}
 
- arch/x86/include/asm/trace/common.h      | 12 ------------
- arch/x86/include/asm/trace/exceptions.h  | 15 +++++++--------
- arch/x86/include/asm/trace/irq_vectors.h |  1 -
- arch/x86/kernel/Makefile                 |  2 --
- arch/x86/kernel/tracepoint.c             | 21 ---------------------
- arch/x86/mm/fault.c                      | 16 ++--------------
- 6 files changed, 9 insertions(+), 58 deletions(-)
- delete mode 100644 arch/x86/include/asm/trace/common.h
- delete mode 100644 arch/x86/kernel/tracepoint.c
+tracepoint:exceptions:page_fault_exit
+/ args.user_mode == true /
+{
+    @lat[tid] = hist(nsecs - @start[tid]);
+}
 
-diff --git a/arch/x86/include/asm/trace/common.h b/arch/x86/include/asm/trace/common.h
-deleted file mode 100644
-index f0f9bcdb74d9..000000000000
---- a/arch/x86/include/asm/trace/common.h
-+++ /dev/null
-@@ -1,12 +0,0 @@
--#ifndef _ASM_TRACE_COMMON_H
--#define _ASM_TRACE_COMMON_H
--
--#ifdef CONFIG_TRACING
--DECLARE_STATIC_KEY_FALSE(trace_pagefault_key);
--#define trace_pagefault_enabled()			\
--	static_branch_unlikely(&trace_pagefault_key)
--#else
--static inline bool trace_pagefault_enabled(void) { return false; }
--#endif
--
--#endif
-diff --git a/arch/x86/include/asm/trace/exceptions.h b/arch/x86/include/asm/trace/exceptions.h
-index 6b1e87194809..f98c9024cbe3 100644
---- a/arch/x86/include/asm/trace/exceptions.h
-+++ b/arch/x86/include/asm/trace/exceptions.h
-@@ -6,10 +6,6 @@
- #define _TRACE_PAGE_FAULT_H
- 
- #include <linux/tracepoint.h>
--#include <asm/trace/common.h>
--
--extern int trace_pagefault_reg(void);
--extern void trace_pagefault_unreg(void);
- 
- DECLARE_EVENT_CLASS(x86_exceptions,
- 
-@@ -21,17 +17,20 @@ DECLARE_EVENT_CLASS(x86_exceptions,
- 	TP_STRUCT__entry(
- 		__field(		unsigned long, address	)
- 		__field(		unsigned long, ip	)
-+		__field(		bool         , user_mode)
- 		__field(		unsigned long, error_code )
- 	),
- 
- 	TP_fast_assign(
- 		__entry->address = address;
- 		__entry->ip = regs->ip;
-+		__entry->user_mode = user_mode(regs);
- 		__entry->error_code = error_code;
- 	),
- 
--	TP_printk("address=%ps ip=%ps error_code=0x%lx",
-+	TP_printk("address=%ps ip=%ps %s error_code=0x%lx",
- 		  (void *)__entry->address, (void *)__entry->ip,
-+		  __entry->user_mode ? "user" : "kernel",
- 		  __entry->error_code) );
- 
- #define DEFINE_PAGE_FAULT_EVENT(name)				\
-@@ -39,10 +38,10 @@ DEFINE_EVENT_FN(x86_exceptions, name,				\
- 	TP_PROTO(unsigned long address,	struct pt_regs *regs,	\
- 		 unsigned long error_code),			\
- 	TP_ARGS(address, regs, error_code),			\
--	trace_pagefault_reg, trace_pagefault_unreg);
-+	NULL, NULL)
- 
--DEFINE_PAGE_FAULT_EVENT(page_fault_user);
--DEFINE_PAGE_FAULT_EVENT(page_fault_kernel);
-+DEFINE_PAGE_FAULT_EVENT(page_fault_enter);
-+DEFINE_PAGE_FAULT_EVENT(page_fault_exit);
- 
- #undef TRACE_INCLUDE_PATH
- #undef TRACE_INCLUDE_FILE
-diff --git a/arch/x86/include/asm/trace/irq_vectors.h b/arch/x86/include/asm/trace/irq_vectors.h
-index 88e7f0f3bf62..7408bebdfde0 100644
---- a/arch/x86/include/asm/trace/irq_vectors.h
-+++ b/arch/x86/include/asm/trace/irq_vectors.h
-@@ -6,7 +6,6 @@
- #define _TRACE_IRQ_VECTORS_H
- 
- #include <linux/tracepoint.h>
--#include <asm/trace/common.h>
- 
- #ifdef CONFIG_X86_LOCAL_APIC
- 
-diff --git a/arch/x86/kernel/Makefile b/arch/x86/kernel/Makefile
-index b43eb7e384eb..69edc88e0f2c 100644
---- a/arch/x86/kernel/Makefile
-+++ b/arch/x86/kernel/Makefile
-@@ -102,7 +102,6 @@ obj-$(CONFIG_FUNCTION_TRACER)	+= ftrace_$(BITS).o
- obj-$(CONFIG_FUNCTION_GRAPH_TRACER) += ftrace.o
- obj-$(CONFIG_FTRACE_SYSCALLS)	+= ftrace.o
- obj-$(CONFIG_X86_TSC)		+= trace_clock.o
--obj-$(CONFIG_TRACING)		+= trace.o
- obj-$(CONFIG_RETHOOK)		+= rethook.o
- obj-$(CONFIG_VMCORE_INFO)	+= vmcore_info_$(BITS).o
- obj-$(CONFIG_KEXEC_CORE)	+= machine_kexec_$(BITS).o
-@@ -139,7 +138,6 @@ obj-$(CONFIG_OF)			+= devicetree.o
- obj-$(CONFIG_UPROBES)			+= uprobes.o
- 
- obj-$(CONFIG_PERF_EVENTS)		+= perf_regs.o
--obj-$(CONFIG_TRACING)			+= tracepoint.o
- obj-$(CONFIG_SCHED_MC_PRIO)		+= itmt.o
- obj-$(CONFIG_X86_UMIP)			+= umip.o
- 
-diff --git a/arch/x86/kernel/tracepoint.c b/arch/x86/kernel/tracepoint.c
-deleted file mode 100644
-index 03ae1caaa878..000000000000
---- a/arch/x86/kernel/tracepoint.c
-+++ /dev/null
-@@ -1,21 +0,0 @@
--// SPDX-License-Identifier: GPL-2.0
--/*
-- * Copyright (C) 2013 Seiji Aguchi <seiji.aguchi@hds.com>
-- */
--#include <linux/jump_label.h>
--#include <linux/atomic.h>
--
--#include <asm/trace/exceptions.h>
--
--DEFINE_STATIC_KEY_FALSE(trace_pagefault_key);
--
--int trace_pagefault_reg(void)
--{
--	static_branch_inc(&trace_pagefault_key);
--	return 0;
--}
--
--void trace_pagefault_unreg(void)
--{
--	static_branch_dec(&trace_pagefault_key);
--}
-diff --git a/arch/x86/mm/fault.c b/arch/x86/mm/fault.c
-index 296d294142c8..eda312707fde 100644
---- a/arch/x86/mm/fault.c
-+++ b/arch/x86/mm/fault.c
-@@ -1451,24 +1451,10 @@ void do_user_addr_fault(struct pt_regs *regs,
- }
- NOKPROBE_SYMBOL(do_user_addr_fault);
- 
--static __always_inline void
--trace_page_fault_entries(struct pt_regs *regs, unsigned long error_code,
--			 unsigned long address)
--{
--	if (!trace_pagefault_enabled())
--		return;
--
--	if (user_mode(regs))
--		trace_page_fault_user(address, regs, error_code);
--	else
--		trace_page_fault_kernel(address, regs, error_code);
--}
--
- static __always_inline void
- handle_page_fault(struct pt_regs *regs, unsigned long error_code,
- 			      unsigned long address)
- {
--	trace_page_fault_entries(regs, error_code, address);
- 
- 	if (unlikely(kmmio_fault(regs, address)))
- 		return;
-@@ -1535,7 +1521,9 @@ DEFINE_IDTENTRY_RAW_ERRORCODE(exc_page_fault)
- 	state = irqentry_enter(regs);
- 
- 	instrumentation_begin();
-+	trace_page_fault_enter(address, regs, error_code);
- 	handle_page_fault(regs, error_code, address);
-+	trace_page_fault_exit(address, regs, error_code);
- 	instrumentation_end();
- 
- 	irqentry_exit(regs, state);
--- 
-2.48.1
-
+Junxuan
