@@ -1,107 +1,152 @@
-Received: from out-188.mta0.migadu.com (out-188.mta0.migadu.com [91.218.175.188])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f193.google.com (mail-pl1-f193.google.com [209.85.214.193])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D99132417C8
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 15 Apr 2025 11:04:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.188
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8290288C88;
+	Tue, 15 Apr 2025 11:28:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.193
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744715083; cv=none; b=F/uyePClLzmj+oRN0t9/mqiEmwOJBPwirHP9foKCeUYyGVupMtB+uEf0c/aYfS7XvDT1v2OgkP7NUpJuZwbdGuuRCg2CRPX+ST5+GXzaTEZGGN3KSP/MbMBQpRNNTqFExohT5+l0CcU9/uZYTomYismtwqUt7TNhhYyKFDELUjo=
+	t=1744716507; cv=none; b=UADVPHBMJzm7rP0Mw/vFBP95oXrRyeXTXm7JcHCRRfXLCP0ogx4Ldo7Ozq3Cl9/y1yySNtW3OrW5+YgYyotMutNK0m27nhMhbCphnCV2AecQtHck3h5Edp2hPoIowD0fWhrO33qECuRu+wM8cyeGRyMMVL+rgr6VtHjQ4iknDB0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744715083; c=relaxed/simple;
-	bh=GSu6JHo+YSCZ8F3pdRafzygNXm1hMM/Juu0glZnvuCU=;
-	h=MIME-Version:Date:Content-Type:From:Message-ID:Subject:To:Cc:
-	 In-Reply-To:References; b=V5iu/Y79vGVW7noRe+dtOOHzEUwfnpJwvT39XRQZdT/sa8DF0CGIs+/e57CAJGmWZGf02AoJCLKQETbSxovRTrVfraS0B5p91y0QKbdYv3x1QvdOR+XD1F2CFyhX1qXRhWO9g2aWVhRZ/99wEJCgvauxYGA/qA1Jw7GsAwxhqHQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Z2liOoDp; arc=none smtp.client-ip=91.218.175.188
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1744716507; c=relaxed/simple;
+	bh=zjo+6QiCbQI7Wkdf1JLfiryh8Y4sey5HoOLlYs3E73w=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=AWPrQo89HgTpZGhTLEfH0pml91vQJFFjGpGx3mJtCDy84GdLfRRgNn+FnJqtUjl7Kuglk56H6Z/M+WcJbL1QiPhkrzoynjO9Q2Fyv1fQ/OVpYF9KBYmsFdczKlLu9mJiGsaY7S1KYLpiX5rLNha3Oa1wwjj4rUNj/04cnQYd1qA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iCTEsJ8o; arc=none smtp.client-ip=209.85.214.193
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Z2liOoDp"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iCTEsJ8o"
+Received: by mail-pl1-f193.google.com with SMTP id d9443c01a7336-2264aefc45dso79516315ad.0;
+        Tue, 15 Apr 2025 04:28:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744716505; x=1745321305; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=DztHw6xaBRM0pi7U2Teie2x2Tea4xhzgq5VCzCNtwYg=;
+        b=iCTEsJ8oOv/eKhsymlpSuqQUEfyLW35qZ8uyaSpJsBiAzKw4GtSoWxffe1cmgPP5+Q
+         0wU8zoFbeepqujZXQf5V58rQMVlo2DgxO2AFcM7YLbSoQa09E//0YsSMIKeczzcuVO4S
+         N5ljnGidehE55P3YOcXkUIVmvIdLWdsoma2QzGpFZBh3bUP0FqEKkiv2l8nJ9o6LOQ3q
+         ZltFyyP/ckbLqUiDYuqZHLqtanMijvDLTJth+VXDJtgi+2WoX7zBWjMATjvp+uy3whUY
+         e1SYx72nVI5IdgBPzgVnK9MMutqWxDzN+cMSgBJJolile9U2U4gy20Ocq2fx1CPaaOA9
+         hhcA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744716505; x=1745321305;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=DztHw6xaBRM0pi7U2Teie2x2Tea4xhzgq5VCzCNtwYg=;
+        b=eLq0Yep2V6aasW+doCbQ6PwGLz/a+Wzxr0+MeS2GRjNidjkuUXxL67lpu1eOT5Mkr+
+         XefGz4sr81qLR9zCOSdwCDR9yq67MKmnHFssxDDeG3M3f6pJq2ARQpqMvGJ3KT+lLq33
+         q9OHWhs57SSkQ3lr5FSYIm/v7hPUdiyxNhOizEDWsL0VNqMCohsJ1BEWBYk/vrTCqe0j
+         IIMs9kEk0cEknuI0RQ8XQ9weleA8zUwN4Ubxft+DyIqoE14bURXAOoZsY3Ujmho9SmeX
+         fjPIK1UHq322j5p3V2Vsf5Am4JNMgZ0zGPxm45/HUXVDEWK7wD+LaA8xyIB4LDWSfRcE
+         hFRA==
+X-Forwarded-Encrypted: i=1; AJvYcCVF2k3OPlIhXxE7GZggGBykl/MBPY1vmupb+gRIRASAvifQCQ2bw3uDOkbW9vFZYwkA8auH7+BE962RULWOK9ZBz9Bq@vger.kernel.org, AJvYcCVT0+Y2opYweYzHyDdvjNAUkInIXFmE9FJoZqPMuI4JD88gbDCUOvXy9YzMNby8xQKTKH3p6SIcnvwlF+w=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywc+ucnMLEchY79ctHyy2wkxsDSGtHyR71pDim3BLtSpbf2nfHs
+	Q4+YpAU8d8ToodIbpKgIBI2PNV8QjSFE0IBOW6ege1ouTofXFOu1
+X-Gm-Gg: ASbGnctR07CaHmqVFs2zA6Od3H7INvoV0xQ+8rwMF49ZJoDRYHpEIlBk9QpdvHjSp/T
+	8SrqOJUaSrbB1ezQXfSo/hBZDnA7cpXobdPwshecIoiDpzpISsMbbPDBqJG5oHOVLbPXCXjkZbC
+	Qssndyg9sJ7ul3Wt9M62yXCxX0GqgX7lhUmuXXNumlmIXFhD6jflZHFkeIhPl9jqgpitzw+hiBd
+	KPXNIsquQuvg6er4Z9bpGDfs+9flLrK7QYVapm3QUS7Xx0dwFGkxOFtlxd7iVt6K/dQ14JPy7UK
+	jl1FvLf1azQjZulDoA6qUSQVydgL0/nTF+r0FoFwdSwUTcF6wT+MfIl/
+X-Google-Smtp-Source: AGHT+IHY9Bs1VQ391f8Z/Js9FKuUCUYZYk8EDJjf4B4MK8pBuEjQk4Wn3P6pKuv58EC/ylCxOsXniw==
+X-Received: by 2002:a17:903:1c7:b0:220:e5be:29c7 with SMTP id d9443c01a7336-22bea4f180fmr244295615ad.39.1744716504736;
+        Tue, 15 Apr 2025 04:28:24 -0700 (PDT)
+Received: from localhost.localdomain ([43.129.244.20])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73bd22f0fb7sm8444627b3a.109.2025.04.15.04.28.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 15 Apr 2025 04:28:24 -0700 (PDT)
+From: Jin Guo <menglong8.dong@gmail.com>
+X-Google-Original-From: Jin Guo <guoj17@chinatelecom.cn>
+To: rostedt@goodmis.org
+Cc: mhiramat@kernel.org,
+	mark.rutland@arm.com,
+	mathieu.desnoyers@efficios.com,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	Jin Guo <guoj17@chinatelecom.cn>
+Subject: [PATCH] ftrace: make ftrace_location() more accurate
+Date: Tue, 15 Apr 2025 19:27:50 +0800
+Message-Id: <20250415112750.1477339-1-guoj17@chinatelecom.cn>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1744715078;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=fbbEvmW5ERCV6V3g0BQvaj+wv5+2mrjsX8ION5ZUGEQ=;
-	b=Z2liOoDpBAthCTgDeMWcJWeim/QFw+glL9/xaSwlyqtGJyeauIlabk9niKOZMPYjfHgBzh
-	FsYiV11/pKzTpBy0e1rofeZFzFsMBAqsDvD6JxbqiwI4ZSrLm53lP9McBeip/W8BxgW8z9
-	Sbj5KiXaSCi+EbSX9V8bFMtKTZiQO0Q=
-Date: Tue, 15 Apr 2025 11:04:36 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: "Jiayuan Chen" <jiayuan.chen@linux.dev>
-Message-ID: <e60b4acd2780eed0a0f89ee40df32cf518545cc4@linux.dev>
-TLS-Required: No
-Subject: Re: [PATCH bpf-next v3 1/2] bpf, sockmap: Introduce tracing
- capability for sockmap
-To: "Cong Wang" <xiyou.wangcong@gmail.com>
-Cc: bpf@vger.kernel.org, mrpre@163.com, "Jakub Sitnicki"
- <jakub@cloudflare.com>, "Steven Rostedt" <rostedt@goodmis.org>, "Alexei
- Starovoitov" <ast@kernel.org>, "Daniel Borkmann" <daniel@iogearbox.net>,
- "John Fastabend" <john.fastabend@gmail.com>, "Andrii Nakryiko"
- <andrii@kernel.org>, "Martin KaFai Lau" <martin.lau@linux.dev>, "Eduard
- Zingerman" <eddyz87@gmail.com>, "Song Liu" <song@kernel.org>, "Yonghong
- Song" <yonghong.song@linux.dev>, "KP Singh" <kpsingh@kernel.org>,
- "Stanislav Fomichev" <sdf@fomichev.me>, "Hao Luo" <haoluo@google.com>,
- "Jiri Olsa" <jolsa@kernel.org>, "Masami Hiramatsu" <mhiramat@kernel.org>,
- "Mathieu Desnoyers" <mathieu.desnoyers@efficios.com>, "David S. Miller"
- <davem@davemloft.net>, "Eric Dumazet" <edumazet@google.com>, "Jakub
- Kicinski" <kuba@kernel.org>, "Paolo Abeni" <pabeni@redhat.com>, "Simon
- Horman" <horms@kernel.org>, "Jesper Dangaard Brouer" <hawk@kernel.org>,
- linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
-In-Reply-To: <Z/19S2yMP/2TViMa@pop-os.localdomain>
-References: <20250414161153.14990-1-jiayuan.chen@linux.dev>
- <Z/19S2yMP/2TViMa@pop-os.localdomain>
-X-Migadu-Flow: FLOW_OUT
+Content-Transfer-Encoding: 8bit
 
-April 15, 2025 at 05:25, "Cong Wang" <xiyou.wangcong@gmail.com> wrote:
+The function ftrace_location is used to lookup the ftrace location with an
+ip. However, the result that it returns can be wrong in some case.
 
->=20
->=20On Tue, Apr 15, 2025 at 12:11:45AM +0800, Jiayuan Chen wrote:
->=20
->=20>=20
->=20> +#ifndef __TRACE_SOCKMAP_HELPER_ONCE_ONLY
-> >  +#define __TRACE_SOCKMAP_HELPER_ONCE_ONLY
-> >  +
-> >  +enum sockmap_direct_type {
-> >  + SOCKMAP_REDIR_NONE =3D 0,
-> >  + SOCKMAP_REDIR_INGRESS,
-> >  + SOCKMAP_REDIR_EGRESS,
-> >  +};
-> >=20
->=20
-> I am curious why you need to define them here since you already pass
-> 'ingress' as a parameter? Is it possible to reuse the BPF_F_INGRESS bit=
-?
-> Thanks!
->
+Let's image that we have the following kallsyms:
 
-The lowest bit of skb->_redir being 0 indicates EGRESS, so we cannot use
-the built-in __print_flag for output in this case, since it requires the
-corresponding bit to be set to 1.
+  ffffffff812c35f0 T sys_ni_syscall
+  ffffffff812c38b0 W __pfx___x64_sys_io_pgetevents_time32
+  ffffffff812c38c0 W __x64_sys_io_pgetevents_time32
 
-We could certainly do this instead:
-'''
-if (act !=3D REDIRECT)
-    redir =3D "none"
-else if (flag & BPF_F_INGRESS)
-    redir =3D "ingress"
-else
-    redir =3D "egress"
-'''
-However, as Steven mentioned earlier, using an enum instead would be bett=
-er
-here for trace_event.
+And the symbol has corresponding ftrace location like this:
 
-Of course, we could directly print the hexadecimal value of _redir, but
-that would result in poor readability.
+  ffffffff812c35f4 sys_ni_syscall
+  ffffffff812c3624 __ftrace_invalid_address___52
+  ffffffff812c3654 __ftrace_invalid_address___100
+  ffffffff812c3684 __ftrace_invalid_address___148
+  ffffffff812c36b4 __ftrace_invalid_address___196
+  ffffffff812c36e4 __ftrace_invalid_address___244
+  ffffffff812c3714 __ftrace_invalid_address___292
+  ffffffff812c3744 __ftrace_invalid_address___340
+  ffffffff812c3774 __ftrace_invalid_address___388
+  ffffffff812c37a4 __ftrace_invalid_address___436
+  ffffffff812c37d4 __ftrace_invalid_address___484
+  ffffffff812c3804 __ftrace_invalid_address___532
+  ffffffff812c3834 __ftrace_invalid_address___580
+  ffffffff812c3864 __ftrace_invalid_address___628
+  ffffffff812c3894 __ftrace_invalid_address___676
+  ffffffff812c38c4 __x64_sys_io_pgetevents_time32
+  ffffffff812c38f4 __ia32_sys_io_pgetevents_time32
 
-Thanks~
+When we want to lookup the ftrace location for sys_ni_syscall, the ftrace
+location "ffffffff812c3894" can be returned, which is totally wrong.
+
+The reason is that we get a wrong function size from
+kallsyms_lookup_size_offset(), because of the existing of weak functions.
+And when we lookup with ftrace_location_range(), it will return the first
+matched location between 0xffffffff812c35f0 and ffffffff812c38c0, as it
+searches by binary on a page.
+
+When the macro "FTRACE_MCOUNT_MAX_OFFSET" exists, we can limit the lookup
+size no more than FTRACE_MCOUNT_MAX_OFFSET to avoid such error.
+
+The victim of this problem can be BPF_PROG_TYPE_TRACING. When we want to
+hook the function sys_ni_syscall with BPF_FENTRY, it will attach
+to __ftrace_invalid_address___676(0xffffffff812c3894) successfully
+instead, and the user totally can't aware it, which is dangerous.
+
+Signed-off-by: Jin Guo <guoj17@chinatelecom.cn>
+---
+ kernel/trace/ftrace.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
+
+diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+index 1a48aedb5255..8c9a4009c997 100644
+--- a/kernel/trace/ftrace.c
++++ b/kernel/trace/ftrace.c
+@@ -1658,8 +1658,13 @@ unsigned long ftrace_location(unsigned long ip)
+ 			return 0;
+ 
+ 		/* map sym+0 to __fentry__ */
+-		if (!offset)
+-			loc = ftrace_location_range(ip, ip + size - 1);
++		if (!offset) {
++			size -= 1;
++#ifdef FTRACE_MCOUNT_MAX_OFFSET
++			size = min(size, FTRACE_MCOUNT_MAX_OFFSET);
++#endif
++			loc = ftrace_location_range(ip, ip + size);
++		}
+ 	}
+ 	return loc;
+ }
+-- 
+2.39.5
+
