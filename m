@@ -1,64 +1,64 @@
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF9A71C1F0D;
-	Wed, 16 Apr 2025 02:41:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E4DB2036FE;
+	Wed, 16 Apr 2025 02:41:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744771273; cv=none; b=Tgs+f7zLdTrmSuDKu8ueEv/d4b6RBGaRW81srqSZdCH63WB0cQDO3klOoA/yXWDBSdxZmWN6AQXp4OziXu6x76OBuS3QI+E8SavJbnvuB8wHy9CYMkKhtw/BymfnMRJzi8tLmJTuWiGzGML4uqu8wS0g+Y1gQKuhWG9fwr9BapM=
+	t=1744771275; cv=none; b=iBqmizxtTpT88n20pfWC3EZNLu+hWvhEVAv2y6otUBCa6QR4AsBt+1mJmtslMEjVZ+CI+Ugt3lgdSEGLL/FlW67u/X6qhWOdWlf9Aro2MhAO+oVdcAYolC6hGIDA8B/w+N+XFLUl1UZwEKqDSChgKbiL4bO9iPu/C1mc4JjmW+U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744771273; c=relaxed/simple;
-	bh=Xc8xw3hxV3CDZ5ujZguWo4EmICMiDPARXFyRwwCsA08=;
+	s=arc-20240116; t=1744771275; c=relaxed/simple;
+	bh=FkRVXNKC+xRNgc/OogGMUQ/Jfwn+EsKyLG3NXD9DFt0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=rUnBxvbd+1BmKHz0gknT0ojqt4ZGAP8e56Mmw4dld0AXRtffPsec6hZoEWAQwc5NZC0AUUZqKOD0jBhCZN6BBqKTq5C0DH4ntSI3SBef7bq9nimF52E5Wz/1Tv4uCRje6pZMbRUUPvHBszuNg5nX29qy+GhLR5VTa8ELyeuLihA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AQmqAkuN; arc=none smtp.client-ip=209.85.214.173
+	 MIME-Version; b=sqDunQl3KBN2spVegFlthkBHPsNrEyu1DgXpxnzw5Te7uqZ9VLMTJml/Zm0QE0npeY6cgVKbEpZxYkJ5Bm54LQpu8ViUY4JGaJkblu4Ep0XdAZKtYT0CNo4ZBmnBfKWHZJSbojx8Z1AJQttWF5/OW8i0P9weUQpisqfzt+jOIYQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hfFYnB0G; arc=none smtp.client-ip=209.85.210.171
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AQmqAkuN"
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-225477548e1so60955235ad.0;
-        Tue, 15 Apr 2025 19:41:11 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hfFYnB0G"
+Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-736c062b1f5so5300268b3a.0;
+        Tue, 15 Apr 2025 19:41:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744771271; x=1745376071; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1744771273; x=1745376073; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=vXkqo6TKSX6t7ZAXZKIH5ShAea/hHXshLCL5Qq7EMDA=;
-        b=AQmqAkuN7DRmfKxEOvVFir5NFG4iU9SMrDn3wTMpkCytSVaQ1kVlBHDtwd0bfmn9D7
-         rNkXuYM9A39qriuFLzoT09lJ/NzrejOEJ6RVOKths0vILejIVwUuj0yU4wuXVmuofZ8F
-         75XwTSoJwxbOfLTV+2YRoLVhIn2aCHUWKPjzwgG5AL61ZpzWTz+Yuan77Ru3p0a5CcOe
-         7RAltdbTWsgGwO29xou6CNBJE7BrxOWTnTJKKomozjJ66AQGElj6/vNw3fmakY22shwF
-         4IJPHVdcapIV2MomaBzzd+eBcWzbsJpIfi3c4rHgD5za0U3xgEF4NGJGezXV8SDM4rej
-         FBOA==
+        bh=gz61i8qUAV8iWVz6x3ob8yDD7RMdWM4zec8L4BtHgq0=;
+        b=hfFYnB0GuijkdfkCXvPeDhcCoMedHou9e3U4Ke9NBdlXOqVrP8N9AuIEGoPb/TroVP
+         0tDjRze3xaSCIs94o2nND055RUlk8JbE4+i6+GCbQyD8pSquXUIrFNEnyEut5AeDbQT0
+         8lhfzZv5kL1I/iSLoZgzygnwALyFsyOFFkIHL/ZAIAwF9RpkNjOq51RFBMaD2GOfOCN7
+         /DyjwoHys66VLXcN5ZiYss+fY48OJJYqzjuNNvUxBq0DHF0ecRsDjp0mePGCBtnGFf7b
+         IxfiQGBChPZ0YBPRRz5aarfTxIGjkC6J4/un/r1LUZczOW2zccFdA3bIBe4hr0u2b5Xd
+         ZZgA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744771271; x=1745376071;
+        d=1e100.net; s=20230601; t=1744771273; x=1745376073;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=vXkqo6TKSX6t7ZAXZKIH5ShAea/hHXshLCL5Qq7EMDA=;
-        b=MkxtlgAJaUiJufTmvoQKWGSm6k3t8kB/LRitdKgcEX8JaAx0zPE6meN+v1Qh1wQY0I
-         03oYExLjkfVNrf0rIIxNalKiMXtD73jTnUGSTNdPnkKDQWLQGOPB6NG+zuy5qx+JLXqU
-         lOz48aGVlKY7aAh1vZaL/7S9XXRvfu2cYaZ+NxF6NSgpQr5sfJ6AJSRb7L6aaCDWKLWT
-         r0ko4wf/O+jCujoMhw1G7emBUuwUPadzIjajxdt0ju+xOeL0unGyq9Hyz56zpa6U52nx
-         QtI+fJTwxGcuIHHnREo5V9FOfrTChBwiJZuvohtPVOTYJK1Z6zhw67hVCI2utNbWSJb2
-         nq+A==
-X-Forwarded-Encrypted: i=1; AJvYcCVDUm4HZHAUpphyJS/sXYC0PSHCZz++sb+BOwkjnMgcwVB7SYNGGK/9LUIcBd6nq4qT3kvgKBY2yLirBQgYi78yqJDD@vger.kernel.org, AJvYcCXLZAw5YSXmGpJ4ZlZSJHZ8n8Os54fB7m9W9K2pDI1ZzMrMl/tF0jqUGyiPul98+rCuXF6FPAK7+lQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxLEslAR4sLYw3cfbtrt5Q2EAz0sBQKNv7Wo9nWmARgzsqN6FDj
-	OTVrTfzTY8xyksmFejVVSZYBe8MIUL6XYOQJaECQJAFAvuTXIZOv
-X-Gm-Gg: ASbGncv8j2DExYkf6LAsqvA1f/pYuwp/20BTk28RglKh6PQSWLJl8vQrBR334mq5oNc
-	ID6MLy06iGspitGNAlPcvXW6G25AdCLtFPbAyxiQnhuZnGWm/gHINpxXHBASMEOiVo/lk3pXvj/
-	bohDMZyWXp2uzx7IpkhY2nOpqYIoylbPYNEjaMSVcWthjHOjiTU9sbngZBu2byie6HpysKkStfu
-	IFGE0CBs/oPaRzJFpVBwoKz98om9lkgzSFH9IPBuXdurhTv1b2KwZxBQ4q3jcWLzD81z6rxmiHf
-	pJe7yQZkgoFbfrIHCcFpxRBzYlPspz5n3wAaSGyR3GXLYbJJlUo=
-X-Google-Smtp-Source: AGHT+IGhQPQTZvgj5JfOoamRE+JyVGmk6X9+B6/t/4sctUG9QWja+swZGEjVn046cUZhAIitUoUOiQ==
-X-Received: by 2002:a17:902:f70d:b0:224:1781:a950 with SMTP id d9443c01a7336-22c358d67abmr2412205ad.14.1744771271029;
-        Tue, 15 Apr 2025 19:41:11 -0700 (PDT)
+        bh=gz61i8qUAV8iWVz6x3ob8yDD7RMdWM4zec8L4BtHgq0=;
+        b=NKzEKpCxnRrceSYF8hCkaXEU/mY9AW8ISoV6CdmIe1Eks5EeF+BRRdc+BTKSGOKh/o
+         wKAYc2yDOxLGxAkynGjpOI3zkklnvSb27QphSd3lnIe0RvJaxm7YOKnuW/Jm3CZ/h811
+         8eNQOPNfGitLRtuag8aUVitoWqSbcUzOGejSSSfmEXb3RJ6x1K79c4QCGLSlowxBWb7n
+         hV9H3v8B3M/MsQ25qyJ4x+C2RSCv5w4ZP/54lu4PI1t80unh1x3Y/33Kvn7RwL9TM6U7
+         qlcSwMu8rFy5uzD8XxCCqvVlSp7kg7Z2O7RrvztIou2eZDMzQP5Qo0vQQsQhsl8JurAi
+         zoew==
+X-Forwarded-Encrypted: i=1; AJvYcCUtMT5DXC1H+HHZ3OpGg5pUa9Jwc49SFN2fmRyuaL3zhi5yhy69mCE2hqZVvhbcbC67MIqEHN++9CinO5jjbH7TQOyT@vger.kernel.org, AJvYcCVBqVdNigffgehQtLNYhJCYt4QvObMMtx+UUpn1AbIXP0Vvf86yk1SAe4XI67IwZMUb2rdMJtA/lHw=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx5vE9QJ584XuJe9HWCkbGqwZhNgY6RJWFOgOyMSq+VW+lQEwk4
+	5twqxT8Wgkxiek75oayJ2+X8C0L1isITgiOGLB/8ApvidxsS5z7Y
+X-Gm-Gg: ASbGnctWRcvgzbQcilRBePCrt87cBF0NroztO6c7V47ablcR993/LhTHsWwcgWxLK9+
+	PGErop88kFtLx826AdozBiZGD/WzrsSSO2SBdMKrUUgamcADYUu1NDW2KDlYNGq5OPkjElhS5PG
+	79vXKaXgcchd33NaEd37tmr1Y5dBZ0adnjm2M9eGPVJAFpg/8KkkRCoZRbipS8j6xVUH+NRcHnQ
+	Q38j7vNCL29+kO2gUW/pvZwsPEv0mES1RE100nIyAygyevc3grGpdECmdKcjl0j9B/d9CXeLP0O
+	uJFZ53zEx+lxt7WmiXSnYrbiF7hHG4bk1RQIW8jM
+X-Google-Smtp-Source: AGHT+IFfUEzNIryQz89qnSW6EHeHIDprzvq1Opi7prfrJilb79SQZ0vICHBxEkRo1GhqH48jZT4g1g==
+X-Received: by 2002:a05:6a20:c6c9:b0:1f5:6e00:14db with SMTP id adf61e73a8af0-203adfb92b8mr2268458637.14.1744771273446;
+        Tue, 15 Apr 2025 19:41:13 -0700 (PDT)
 Received: from archie.me ([103.124.138.155])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22c33faacc3sm2719765ad.143.2025.04.15.19.41.09
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73bd230db26sm9585956b3a.134.2025.04.15.19.41.10
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 15 Apr 2025 19:41:10 -0700 (PDT)
+        Tue, 15 Apr 2025 19:41:11 -0700 (PDT)
 Received: by archie.me (Postfix, from userid 1000)
-	id 694AE4209E48; Wed, 16 Apr 2025 09:41:08 +0700 (WIB)
+	id 32F724209E43; Wed, 16 Apr 2025 09:41:08 +0700 (WIB)
 From: Bagas Sanjaya <bagasdotme@gmail.com>
 To: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
 	Linux Kernel Tracing <linux-trace-kernel@vger.kernel.org>,
@@ -69,9 +69,9 @@ Cc: Steven Rostedt <rostedt@goodmis.org>,
 	Jonathan Corbet <corbet@lwn.net>,
 	Bagas Sanjaya <bagasdotme@gmail.com>,
 	Purva Yeshi <purvayeshi550@gmail.com>
-Subject: [PATCH v2 2/2] Documentation: trace: Refactor toctree
-Date: Wed, 16 Apr 2025 09:40:50 +0700
-Message-ID: <20250416024050.19735-3-bagasdotme@gmail.com>
+Subject: [PATCH v2 1/2] Documentation: trace: Reduce toctree depth
+Date: Wed, 16 Apr 2025 09:40:49 +0700
+Message-ID: <20250416024050.19735-2-bagasdotme@gmail.com>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250416024050.19735-1-bagasdotme@gmail.com>
 References: <20250416024050.19735-1-bagasdotme@gmail.com>
@@ -81,153 +81,37 @@ List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3405; i=bagasdotme@gmail.com; h=from:subject; bh=a0TtvdIBmqsYsTZpArUeSZwUiXWSFs372vAVFVbqzU0=; b=owGbwMvMwCX2bWenZ2ig32LG02pJDOn/xX+zNDb9+B2mzWgrs+Xb5VtFTRVdSnMfTdzZyDfRe PmSt7PFO0pZGMS4GGTFFFkmJfI1nd5lJHKhfa0jzBxWJpAhDFycAjAR0VqG/yX7XFatLopZ9DDs WPUF3f9W7TPq1xzds8iuQ0nMmfNO3FuG/xX7Hy2rcRLYfsPwJMOG7CmO4bfZPx0S3Pjd1sJ3zqa AdF4A
+X-Developer-Signature: v=1; a=openpgp-sha256; l=883; i=bagasdotme@gmail.com; h=from:subject; bh=AQ4ZMsp1WQ2xp62jywJ81Dto/a0A0hC0Yy88xBN79Qc=; b=owGbwMvMwCX2bWenZ2ig32LG02pJDOn/xX+7R8fKtPW/ltjjKfKiV3tSyYO2/rP9lj93WR83Y zjzbYVaRykLgxgXg6yYIsukRL6m07uMRC60r3WEmcPKBDKEgYtTACYSzMPwPygw5/otVf89z9OC uie1/f57wftX8+Wd9uuqW0q+7nv1TIfhf6GEKJ/MDsdoXWWtn8waTYuvpku8sWSXTzM/K/bjDfs udgA=
 X-Developer-Key: i=bagasdotme@gmail.com; a=openpgp; fpr=701B806FDCA5D3A58FFB8F7D7C276C64A5E44A1D
 Content-Transfer-Encoding: 8bit
 
 From: Purva Yeshi <purvayeshi550@gmail.com>
 
-Refactor table of contents of kernel tracing subsystem docs to improve
-clarity, structure, and organization:
-
-- Reformat sections and add appropriate headings
-- Improve section grouping and refine descriptions for each group
-- Add docs intro paragraph
+Reduce toctree depth from 2 to 1 so that only docs titles are listed
+in the toctree.
 
 Signed-off-by: Purva Yeshi <purvayeshi550@gmail.com>
 Reviewed-by: Bagas Sanjaya <bagasdotme@gmail.com>
-Link: https://lore.kernel.org/r/20250318113230.24950-2-purvayeshi550@gmail.com
-[Bagas: massage commit message and address reviews]
-Co-developed-by: Bagas Sanjaya <bagasdotme@gmail.com>
+Link: https://lore.kernel.org/r/20250318113230.24950-1-purvayeshi550@gmail.com
+[Bagas: massage commit message]
 Signed-off-by: Bagas Sanjaya <bagasdotme@gmail.com>
 ---
- Documentation/trace/index.rst | 96 +++++++++++++++++++++++++++++------
- 1 file changed, 80 insertions(+), 16 deletions(-)
+ Documentation/trace/index.rst | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/Documentation/trace/index.rst b/Documentation/trace/index.rst
-index fecc4adf70a830..cc1dc5a087e8b1 100644
+index 2c991dc96ace60..fecc4adf70a830 100644
 --- a/Documentation/trace/index.rst
 +++ b/Documentation/trace/index.rst
-@@ -1,39 +1,103 @@
--==========================
--Linux Tracing Technologies
--==========================
-+================================
-+Linux Tracing Technologies Guide
-+================================
-+
-+Tracing in the Linux kernel is a powerful mechanism that allows
-+developers and system administrators to analyze and debug system
-+behavior. This guide provides documentation on various tracing
-+frameworks and tools available in the Linux kernel.
-+
-+Introduction to Tracing
-+-----------------------
-+
-+This section provides an overview of Linux tracing mechanisms
-+and debugging approaches.
+@@ -3,7 +3,7 @@ Linux Tracing Technologies
+ ==========================
  
  .. toctree::
-    :maxdepth: 1
+-   :maxdepth: 2
++   :maxdepth: 1
  
--   ftrace-design
-+   debugging
-+   tracepoints
+    ftrace-design
     tracepoint-analysis
-+   ring-buffer-map
-+
-+Core Tracing Frameworks
-+-----------------------
-+
-+The following are the primary tracing frameworks integrated into
-+the Linux kernel.
-+
-+.. toctree::
-+   :maxdepth: 1
-+
-    ftrace
-+   ftrace-design
-    ftrace-uses
--   fprobe
-    kprobes
-    kprobetrace
--   uprobetracer
-    fprobetrace
--   tracepoints
-+   fprobe
-+   ring-buffer-design
-+
-+Event Tracing and Analysis
-+--------------------------
-+
-+A detailed explanation of event tracing mechanisms and their
-+applications.
-+
-+.. toctree::
-+   :maxdepth: 1
-+
-    events
-    events-kmem
-    events-power
-    events-nmi
-    events-msr
--   mmiotrace
-+   boottime-trace
-    histogram
-    histogram-design
--   boottime-trace
--   debugging
--   hwlat_detector
--   osnoise-tracer
--   timerlat-tracer
-+
-+Hardware and Performance Tracing
-+--------------------------------
-+
-+This section covers tracing features that monitor hardware
-+interactions and system performance.
-+
-+.. toctree::
-+   :maxdepth: 1
-+
-    intel_th
--   ring-buffer-design
--   ring-buffer-map
-    stm
-    sys-t
-    coresight/index
--   user_events
-    rv/index
-    hisi-ptt
-+   mmiotrace
-+   hwlat_detector
-+   osnoise-tracer
-+   timerlat-tracer
-+
-+User-Space Tracing
-+------------------
-+
-+These tools allow tracing user-space applications and
-+interactions.
-+
-+.. toctree::
-+   :maxdepth: 1
-+
-+   user_events
-+   uprobetracer
-+
-+Additional Resources
-+--------------------
-+
-+For more details, refer to the respective documentation of each
-+tracing tool and framework.
-+
-+.. only:: subproject and html
-+
-+   Indices
-+   =======
-+
-+   * :ref:`genindex`
 -- 
 An old man doll... just what I always wanted! - Clara
 
