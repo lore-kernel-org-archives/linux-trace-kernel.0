@@ -1,110 +1,156 @@
-Received: from mail-il1-f177.google.com (mail-il1-f177.google.com [209.85.166.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4ABAF224880
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 16 Apr 2025 18:52:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DF3B1DC9A8;
+	Wed, 16 Apr 2025 19:12:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744829548; cv=none; b=nbSN3Ecmkjjc5DTwmdJwhyftgWo6Lx3FUAJHEluA5K5HVHDZqpneSdFLdM+CQVUU4JDlve+QpFIR3vYlZScrTFWc8S+geLSpRwI/m3giXVASOL7QJVrOqP8DtOAyn+rJcLhYUC5Mhlsh3mfrGeomxDlk8EQlevcY9yqlEp+HYLU=
+	t=1744830778; cv=none; b=lVofmbo/1eN70DUkzcjY3hE4e9ud9593DUOodTQVAviX1AN5kgqdY7e1O3Fuw7W+wNABBO5diSvdKoV5kAAXUPDaUtbZUpAdqcpnszlY4ElWgN58Ckga3+CuY9csBlNNVOoP+pHqtE7p7bfogsEHgtrRugWl9WCfxCvkuFKFOEU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744829548; c=relaxed/simple;
-	bh=MP3MEPXxiW0y+zqENt1iZmdSIe99ISiyPFjriypvPQI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=HPngMsKJgEOGY8OGCKa/dBv0EvbspnyMJuPYGxHzoBQpkr3j+W+NQ9AnamyRSSNAR43sXDOqylv63uDX5s0ZG1oM8pmDH0/O3u5R/Gl08zlfoomo2SOtg37m0ZF409aMMsIESe0c0z3NYLwkY1hkH+L1d/YMOOn8TdPuXUKbLhc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=GohNG6cH; arc=none smtp.client-ip=209.85.166.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1744830778; c=relaxed/simple;
+	bh=iatlY8Otc7jUlJCI6WWtmoQI1SPoqEcsrg7uf98UOS8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=bAjx94+jjRDkOVM40T95BysoWzMarhmKiameqzuC41Qzodaj0P7glc02+D8EfH1zLn1QCZ6tvdCwL7WIW/2IDb1+jIBP3RKOp/Pc6c0JR2m9BRptGER3k9L9szYUdOaUEN8dWX5/6Af3MECN9LAqV4SgS7Q3LleekTlbsOJvm5k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=pdkOfOEv; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="GohNG6cH"
-Received: by mail-il1-f177.google.com with SMTP id e9e14a558f8ab-3d81768268dso69255ab.3
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 16 Apr 2025 11:52:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1744829544; x=1745434344; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=p7MoVykQROxUe2maoaPkdBQ7x8hTpGUg8xmb62S+DQ8=;
-        b=GohNG6cHFcpOKsh9M0P/tMzijNuEpfgFkxsjeynZuSnwKEj/RR4y8lr4afR2aTX0F4
-         Ae1EfrNLOOYinNvCrqh4LL97clCiMs1p7KszoeO8m1NV7yMTXpw7fRxWM044PUux/H00
-         sTpater66STZmD1BUni9+LQxE9bUX34Qk9KZY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744829544; x=1745434344;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=p7MoVykQROxUe2maoaPkdBQ7x8hTpGUg8xmb62S+DQ8=;
-        b=fqwMnIsusict/oQ8IcUK6MXB143i9oB9T5zKRmboEDI+R9WGVdXxrYHRjwAMwAkn78
-         IAXKTeBrmpILQ9oYbehJRru+XekzCSkyXnpuCQ8pFgQ1GIZ3AGWnJDbCgj3ELRXNlmE3
-         xjj3vD+hvzBMkVGNI13Dd3CTEi97efvfLtzo31FqHiAeiuY7ptjkRBEEOves/qaNDH/e
-         fL+NknqQhN5feJKcfUKYkf4OsncfrwSSAZAYGTmxj8ABP27UyyFZ9Vi9mZaLvVvVYyPO
-         WNWPHg3sKTcI475u2ho9FedIM4Jb4unRGEFawM2LqCxDndeLkdCjpFIENyuzFLMewAx3
-         lSZA==
-X-Forwarded-Encrypted: i=1; AJvYcCWSJ1AH4tC5WGHLsC3r3p8hqL/PUcLRgUL31kJP70eVKxkOVegSDtlO/Lb4+9xOkjSE4b7x5mXxZaw7dzmObS7rsyE=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw/o966kvJor/CHtv9CnuW3kXjymvVhAIPQ2LK6JykwqdyQjQLr
-	ecHo7zqeG2MVkGYpjymyuKdk7gxf1IDJSpxi1EU5XtTaNczvnnimMZAqO8M2gyY=
-X-Gm-Gg: ASbGncvII56OfIovre+VZg8pcdA2bBkFSJthn07lAtkcnU626Cf6bS1sow6Ls1BercB
-	Dy/g5QLBBp22TxwtvYnieXWFDcNubh8tw29P0Fsw3ZPr5KnNoJ0O3rIbbJHyVdkGJYallfYQ9RN
-	Mb/flRoDSNfU2gr43RYalUxPsorT29FAnEs+t6GvSCJVFhhE0GkjbzXY4XsA3eG+XXXV+QiKlDR
-	xMUApBdUdOZFL4YyE4yUa+9MxcB7y1xF5mFCkoSNWwgnfL56mZsj1Ti2NvG+0h045UrQr3ak6tR
-	poSukriA+lhMgwVG2Mn3WuBBqt2y7w7oTDKTcEKSWjrdef8avqc=
-X-Google-Smtp-Source: AGHT+IGIdvCjfpOGUqUnUYJh8CVNLblQA7dCofVWf09VAklKBR/jcQuZcH92lgy+WOSL6Lk0pA4EKQ==
-X-Received: by 2002:a05:6e02:1fe4:b0:3d4:3d63:e076 with SMTP id e9e14a558f8ab-3d815b5e781mr30114755ab.18.1744829544363;
-        Wed, 16 Apr 2025 11:52:24 -0700 (PDT)
-Received: from [192.168.1.14] ([38.175.170.29])
-        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4f505d16a79sm3773037173.50.2025.04.16.11.52.23
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 16 Apr 2025 11:52:23 -0700 (PDT)
-Message-ID: <55ab926b-26a5-4497-a6f5-8ea18ba8e454@linuxfoundation.org>
-Date: Wed, 16 Apr 2025 12:52:23 -0600
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="pdkOfOEv"
+Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53GFqcZe027027;
+	Wed, 16 Apr 2025 19:12:35 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=pp1; bh=5bVoQhRxSHkGr6TY9+5f66L5dBMTDsjOME//X7Hjj
+	KU=; b=pdkOfOEvN62aqrT7Hkd7s9tauuRJkc/949fzZgteMXnB1bQy70XneVpoS
+	Py5SQEv2sOADQaHzOj89pC5Hji55F5LKas1gGXNoUe0Y5fUQwSBl20+yNaeMQV+W
+	uIaHUFiGifdL5xtKSB4W/u4thi7axj6YNf4A9Lo3PhGDwbOSAws85nrRAOI5oS9u
+	dBMVUjQZcuJMM5cmFBoZ3kK/3f58poY9jxpmtAz6nu7sO6msfuUVdW1BADcMPphQ
+	Nt2oW+X+bFMumzty5P9n7SE0YHF+0FDs9dqv0NlKg9Hfdn9qSXGhxae5I/bQlCoY
+	IxYjN3fQ04ms4JKVw5XYc8tnfJ5CA==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 461ykt5fvu-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 16 Apr 2025 19:12:34 +0000 (GMT)
+Received: from m0360072.ppops.net (m0360072.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 53GJ4jNR011645;
+	Wed, 16 Apr 2025 19:12:34 GMT
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 461ykt5fvs-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 16 Apr 2025 19:12:34 +0000 (GMT)
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 53GGeLCC001308;
+	Wed, 16 Apr 2025 19:12:33 GMT
+Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4602w024dp-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 16 Apr 2025 19:12:33 +0000
+Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
+	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 53GJCV1D52691280
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 16 Apr 2025 19:12:31 GMT
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 8872720043;
+	Wed, 16 Apr 2025 19:12:31 +0000 (GMT)
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id DB8D220040;
+	Wed, 16 Apr 2025 19:12:28 +0000 (GMT)
+Received: from li-bd3f974c-2712-11b2-a85c-df1cec4d728e.ibm.com.com (unknown [9.43.31.13])
+	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Wed, 16 Apr 2025 19:12:28 +0000 (GMT)
+From: Hari Bathini <hbathini@linux.ibm.com>
+To: linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
+Cc: linux-trace-kernel@vger.kernel.org,
+        Madhavan Srinivasan <maddy@linux.ibm.com>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        "Naveen N. Rao" <naveen@kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>, Viktor Malik <vmalik@redhat.com>,
+        stable@vger.kernel.org
+Subject: [PATCH] powerpc64/ftrace: fix clobbered r15 during livepatching
+Date: Thu, 17 Apr 2025 00:42:27 +0530
+Message-ID: <20250416191227.201146-1-hbathini@linux.ibm.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] selftests/ftrace: Differentiate bash and dash in
- dynevent_limitations.tc
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
- LKML <linux-kernel@vger.kernel.org>,
- Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Mark Rutland <mark.rutland@arm.com>, Mark Brown <broonie@kernel.org>,
- linux-kselftest@vger.kernel.org, Shuah Khan <skhan@linuxfoundation.org>
-References: <20250414210900.4de5e8b9@gandalf.local.home>
- <20250416075832.cd27bcb52b7e31d0f5717273@kernel.org>
- <658670d0-086b-49e9-85ac-3e002fa8322b@linuxfoundation.org>
- <20250415205442.2437cea3@batman.local.home>
-Content-Language: en-US
-From: Shuah Khan <skhan@linuxfoundation.org>
-In-Reply-To: <20250415205442.2437cea3@batman.local.home>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: RExilqnc7muosd1G7WgmXGXtFx9G8IzB
+X-Proofpoint-ORIG-GUID: 7BFbAqo1ZZtZryXpjuDeAOot7P7BB71v
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-16_07,2025-04-15_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 mlxscore=0
+ suspectscore=0 lowpriorityscore=0 bulkscore=0 spamscore=0 adultscore=0
+ priorityscore=1501 phishscore=0 mlxlogscore=281 clxscore=1011
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2502280000 definitions=main-2504160155
 
-On 4/15/25 18:54, Steven Rostedt wrote:
-> On Tue, 15 Apr 2025 17:03:44 -0600
-> Shuah Khan <skhan@linuxfoundation.org> wrote:
-> 
->>> Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
->>>    
->>
->> Steve, do you want me to pick this up for rc3?
-> 
-> Hi Shuah,
-> 
-> Yes, can you please. But can you change the Closes tag to:
-> 
-> Closes: https://lore.kernel.org/all/350786cc-9e40-4396-ab95-4f10d69122fb@sirena.org.uk/
-> 
-> Because the one I had was the top of the thread which is about a
-> different bug. Mark mentioned this bug in the middle of the thread and
-> the above link is where Mark mentioned it.
-> 
+While r15 is clobbered always with PPC_FTRACE_OUT_OF_LINE, it is
+not restored in livepatch sequence leading to not so obvious fails
+like below:
 
-Done. Applied to linux-kselftest fixes branch for next rc.
-https://web.git.kernel.org/pub/scm/linux/kernel/git/shuah/linux-kselftest.git/log/?h=fixes
+  BUG: Unable to handle kernel data access on write at 0xc0000000000f9078
+  Faulting instruction address: 0xc0000000018ff958
+  Oops: Kernel access of bad area, sig: 11 [#1]
+  ...
+  NIP:  c0000000018ff958 LR: c0000000018ff930 CTR: c0000000009c0790
+  REGS: c00000005f2e7790 TRAP: 0300   Tainted: G              K      (6.14.0+)
+  MSR:  8000000000009033 <SF,EE,ME,IR,DR,RI,LE>  CR: 2822880b  XER: 20040000
+  CFAR: c0000000008addc0 DAR: c0000000000f9078 DSISR: 0a000000 IRQMASK: 1
+  GPR00: c0000000018f2584 c00000005f2e7a30 c00000000280a900 c000000017ffa488
+  GPR04: 0000000000000008 0000000000000000 c0000000018f24fc 000000000000000d
+  GPR08: fffffffffffe0000 000000000000000d 0000000000000000 0000000000008000
+  GPR12: c0000000009c0790 c000000017ffa480 c00000005f2e7c78 c0000000000f9070
+  GPR16: c00000005f2e7c90 0000000000000000 0000000000000000 0000000000000000
+  GPR20: 0000000000000000 c00000005f3efa80 c00000005f2e7c60 c00000005f2e7c88
+  GPR24: c00000005f2e7c60 0000000000000001 c0000000000f9078 0000000000000000
+  GPR28: 00007fff97960000 c000000017ffa480 0000000000000000 c0000000000f9078
+  ...
+  Call Trace:
+    check_heap_object+0x34/0x390 (unreliable)
+  __mutex_unlock_slowpath.isra.0+0xe4/0x230
+  seq_read_iter+0x430/0xa90
+  proc_reg_read_iter+0xa4/0x200
+  vfs_read+0x41c/0x510
+  ksys_read+0xa4/0x190
+  system_call_exception+0x1d0/0x440
+  system_call_vectored_common+0x15c/0x2ec
 
-thanks,
--- Shuah
+Fix it by restoring r15 always.
+
+Fixes: eec37961a56a ("powerpc64/ftrace: Move ftrace sequence out of line")
+Reported-by: Viktor Malik <vmalik@redhat.com>
+Closes: https://lore.kernel.org/lkml/1aec4a9a-a30b-43fd-b303-7a351caeccb7@redhat.com
+Cc: stable@vger.kernel.org # v6.13+
+Signed-off-by: Hari Bathini <hbathini@linux.ibm.com>
+---
+ arch/powerpc/kernel/trace/ftrace_entry.S | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/powerpc/kernel/trace/ftrace_entry.S b/arch/powerpc/kernel/trace/ftrace_entry.S
+index 2c1b24100eca..3565c67fc638 100644
+--- a/arch/powerpc/kernel/trace/ftrace_entry.S
++++ b/arch/powerpc/kernel/trace/ftrace_entry.S
+@@ -212,10 +212,10 @@
+ 	bne-	1f
+ 
+ 	mr	r3, r15
++1:	mtlr	r3
+ 	.if \allregs == 0
+ 	REST_GPR(15, r1)
+ 	.endif
+-1:	mtlr	r3
+ #endif
+ 
+ 	/* Restore gprs */
+-- 
+2.49.0
 
