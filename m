@@ -1,53 +1,61 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E9E622D4E2;
-	Wed, 16 Apr 2025 06:52:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88C5F2309A7;
+	Wed, 16 Apr 2025 06:52:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744786324; cv=none; b=Wh0ZSQJC4jG1rkSeOKJ2UODBJ1/LLccG7HcUarfyJWWbmMjeSGAmQOX/i0V7QME3xSzqMoyNoYM9vHn56pyfjg1rjJFkfa0KzmlZpaoBCS916IjXHx3tm3Fd1q5gAzuORCacOz93WRUAcvDTfWyMlCZKawhIx+X20kUzdVYWG+g=
+	t=1744786325; cv=none; b=lk3HoDjyqPMsykO2omAhazYWC4vI5HBbWZOLpv7+Ryulj7//BCLWOY6cgQIuufiF6tVhCD2VkLSiE25sP4mAjtAjdqqhXFmM5s4tOWthtjDyFCIe+lfKNv/AwNoO1SEoAzusPKwdRt+/AJIXFvvb5jFj+j2CKuv+G/bECBPgPJ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744786324; c=relaxed/simple;
-	bh=WgE1aO9YUvOmlhuTjVRspOHWrraepbPoXdmSTVuPrz4=;
+	s=arc-20240116; t=1744786325; c=relaxed/simple;
+	bh=oEyGbTvoth7vmSAJ/obSmdU7SImAIuoZDjOIF1BYGRU=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=n80pXSmwps2wmovKb7HARyVCYo6q4yC3Ht+2n0JudlDp07//Y5TJRRwanN1VZ3I65FDSLhaV3wYoZREpJizSFAGx9LEp0HRYZgBHV46h0zY1XZ68fTwk/6zayY2D4SzvQQzbdBmvOKt3utR4+gEFcpMTlb3+giuj2nBf4adn7+8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=iN1q22+3; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=+u3PiEcl; arc=none smtp.client-ip=193.142.43.55
+	 MIME-Version; b=TwWhvmj4FZvptVq9ezKYxAF5k6VqeYx3trESdQxO45WVqOZh2dir0P3GGBBQAHjw0FRxEsHWcwvrXiqV5PIJnpdUU72Nt6f4rHr2zJTBjbjYMgy1/5UNjJxFRidRrcwBVb/GEtLyJW9//S9ntNLk6yDplin9f1ceQ7ZfAo5Q+9A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=q5cqr2w8; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Qets8VWS; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="iN1q22+3";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="+u3PiEcl"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="q5cqr2w8";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Qets8VWS"
 From: Nam Cao <namcao@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1744786317;
+	s=2020; t=1744786320;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=WwJdSQU9Mp7gY25s96zSaz0i/71ZPlHWpcJ0xxxuTBQ=;
-	b=iN1q22+3hRt9s6gkC/jFxDYNduEET3f2Dy4M5gGh8NWx7dRDFHJE+PIiGLmRRx7dKu8GR6
-	f0IGPYMKekCUv5/nMeOFr4i3ZRMZrF55+jHkVglDz5dVn3pqEGXr2/g55NyvZZLujdmSJO
-	jj2jn2IllXKwybtYA34mtfhffBeU2nq98n+7V9ocWSEV2lOQmOHHe3fuOu6vQ+0pGa38Ln
-	n8bnBDm1GsodyMm4qJF1gl3t/MLo9JJkseEkuDyy4/Ls9Cp6S8O+XVkPaN+VHVCKNJubFX
-	m7Ki/00vFGXdDBZa0L/VrO0PycjTvqE0VTBVRmSBtNqJY3H/b4Z6WoUAZPuuWw==
+	bh=eoysUVIr9RMMwEjwkmOmSOvor7eg1lyUe7b2Nqa/AGs=;
+	b=q5cqr2w8HjhwGq3rkGXkydZ1nopz7+75JvdrvCmVILNnq9U2H86NAu1fgxwvf9kqgff9BQ
+	IhGDxomV+8kShx5rQpAKJrpMjzSyHWKX+Bbv5Qnzsb3AvwYwgURuBPlGul3aVX6iMameoD
+	y47M9uIWbo58CgB04ZcQClnQUuenwzNFQpkztI4XXbu112iNxReFKLxiYZUZc/ms6wCp9p
+	s6IpViyW+3r040bphMYBk5x9x6fIjlEIXVGEkh9wxmJ6yWXqKsFmJ/oeuenXWzvmoB7DPi
+	PRKR9DJWK9SUvBhQrKxFBPJ5zO+AA9fARpyrjG8be+MXII557noHY9mEQ+GZbg==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1744786317;
+	s=2020e; t=1744786320;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=WwJdSQU9Mp7gY25s96zSaz0i/71ZPlHWpcJ0xxxuTBQ=;
-	b=+u3PiEclLldP9VUhW0OqvIqdYk6497mviT1Ygcn4QJbjayY0M/cwMipf9wCj3JbGktWrPQ
-	lbVY/zmJgTIH06BA==
+	bh=eoysUVIr9RMMwEjwkmOmSOvor7eg1lyUe7b2Nqa/AGs=;
+	b=Qets8VWSjQBkMC66sF3+jn4UxSEjc0Tjz543eMOfzFcsz57NKtXTPJLeTPgWVSZAD1fzPJ
+	Walz3hcVRD6zpQCg==
 To: Steven Rostedt <rostedt@goodmis.org>,
 	Gabriele Monaco <gmonaco@redhat.com>,
 	linux-trace-kernel@vger.kernel.org,
 	linux-kernel@vger.kernel.org
 Cc: john.ogness@linutronix.de,
-	Nam Cao <namcao@linutronix.de>
-Subject: [PATCH v3 10/22] Documentation/rv: Prepare monitor synthesis document for LTL inclusion
-Date: Wed, 16 Apr 2025 08:51:16 +0200
-Message-Id: <ae8789b000413617f5ca07db276a47389cc3b894.1744785335.git.namcao@linutronix.de>
+	Nam Cao <namcao@linutronix.de>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Andy Lutomirski <luto@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>
+Subject: [PATCH v3 16/22] x86/tracing: Move page fault trace points to generic
+Date: Wed, 16 Apr 2025 08:51:22 +0200
+Message-Id: <36a964689f188c30ebda496d1ab7c89a45226af6.1744785335.git.namcao@linutronix.de>
 In-Reply-To: <cover.1744785335.git.namcao@linutronix.de>
 References: <cover.1744785335.git.namcao@linutronix.de>
 Precedence: bulk
@@ -58,119 +66,88 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Monitor synthesis from deterministic automaton and linear temporal logic
-have a lot in common. Therefore a single document should describe both.
+Page fault trace points are interesting for other architectures as well.
+Move them to be generic.
 
-Change da_monitor_synthesis.rst to monitor_synthesis.rst. LTL monitor
-synthesis will be added to this file by a follow-up commit.
-
-This makes the diff far easier to read. If renaming and adding LTL info is
-done in a single commit, git wouldn't recognize it as a rename, but a file
-removal and a file addition.
-
-While at it, correct the old dot2k commands to the new rvgen commands.
-
-Reviewed-by: Gabriele Monaco <gmonaco@redhat.com>
 Signed-off-by: Nam Cao <namcao@linutronix.de>
 ---
- Documentation/trace/rv/index.rst              |  2 +-
- ...or_synthesis.rst =3D> monitor_synthesis.rst} | 20 +++++++++----------
- 2 files changed, 11 insertions(+), 11 deletions(-)
- rename Documentation/trace/rv/{da_monitor_synthesis.rst =3D> monitor_synth=
-esis.rst} (92%)
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: x86@kernel.org
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+---
+ arch/x86/mm/fault.c                                 |  2 +-
+ .../asm/trace =3D> include/trace/events}/exceptions.h | 13 ++++---------
+ 2 files changed, 5 insertions(+), 10 deletions(-)
+ rename {arch/x86/include/asm/trace =3D> include/trace/events}/exceptions.h=
+ (79%)
 
-diff --git a/Documentation/trace/rv/index.rst b/Documentation/trace/rv/inde=
-x.rst
-index e80e0057feb4..8e411b76ec82 100644
---- a/Documentation/trace/rv/index.rst
-+++ b/Documentation/trace/rv/index.rst
-@@ -8,7 +8,7 @@ Runtime Verification
+diff --git a/arch/x86/mm/fault.c b/arch/x86/mm/fault.c
+index 7e3e51fa1f95..ad4cb1502316 100644
+--- a/arch/x86/mm/fault.c
++++ b/arch/x86/mm/fault.c
+@@ -38,7 +38,7 @@
+ #include <asm/sev.h>			/* snp_dump_hva_rmpentry()	*/
 =20
-    runtime-verification.rst
-    deterministic_automata.rst
--   da_monitor_synthesis.rst
-+   monitor_synthesis.rst
-    da_monitor_instrumentation.rst
-    monitor_wip.rst
-    monitor_wwnr.rst
-diff --git a/Documentation/trace/rv/da_monitor_synthesis.rst b/Documentatio=
-n/trace/rv/monitor_synthesis.rst
-similarity index 92%
-rename from Documentation/trace/rv/da_monitor_synthesis.rst
-rename to Documentation/trace/rv/monitor_synthesis.rst
-index 0a92729c8a9b..85624062073b 100644
---- a/Documentation/trace/rv/da_monitor_synthesis.rst
-+++ b/Documentation/trace/rv/monitor_synthesis.rst
-@@ -1,5 +1,5 @@
--Deterministic Automata Monitor Synthesis
--=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-+Runtime Verification Monitor Synthesis
-+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+ #define CREATE_TRACE_POINTS
+-#include <asm/trace/exceptions.h>
++#include <trace/events/exceptions.h>
 =20
- The starting point for the application of runtime verification (RV) techni=
-ques
- is the *specification* or *modeling* of the desired (or undesired) behavior
-@@ -36,24 +36,24 @@ below::
-                                   |  +----> panic ?
-                                   +-------> <user-specified>
+ /*
+  * Returns 0 if mmiotrace is disabled, or if the fault is not
+diff --git a/arch/x86/include/asm/trace/exceptions.h b/include/trace/events=
+/exceptions.h
+similarity index 79%
+rename from arch/x86/include/asm/trace/exceptions.h
+rename to include/trace/events/exceptions.h
+index 34bc8214a2d7..a631f8de8917 100644
+--- a/arch/x86/include/asm/trace/exceptions.h
++++ b/include/trace/events/exceptions.h
+@@ -7,7 +7,7 @@
 =20
--DA monitor synthesis
-+RV monitor synthesis
- --------------------
+ #include <linux/tracepoint.h>
 =20
- The synthesis of automata-based models into the Linux *RV monitor* abstrac=
-tion
--is automated by the dot2k tool and the rv/da_monitor.h header file that
-+is automated by the rvgen tool and the rv/da_monitor.h header file that
- contains a set of macros that automatically generate the monitor's code.
+-DECLARE_EVENT_CLASS(x86_exceptions,
++DECLARE_EVENT_CLASS(exceptions,
 =20
--dot2k
-+rvgen
- -----
+ 	TP_PROTO(unsigned long address, struct pt_regs *regs,
+ 		 unsigned long error_code),
+@@ -22,7 +22,7 @@ DECLARE_EVENT_CLASS(x86_exceptions,
 =20
--The dot2k utility leverages dot2c by converting an automaton model in
-+The rvgen utility leverages dot2c by converting an automaton model in
- the DOT format into the C representation [1] and creating the skeleton of
- a kernel monitor in C.
+ 	TP_fast_assign(
+ 		__entry->address =3D address;
+-		__entry->ip =3D regs->ip;
++		__entry->ip =3D instruction_pointer(regs);
+ 		__entry->error_code =3D error_code;
+ 	),
 =20
- For example, it is possible to transform the wip.dot model present in
- [1] into a per-cpu monitor with the following command::
+@@ -30,18 +30,13 @@ DECLARE_EVENT_CLASS(x86_exceptions,
+ 		  (void *)__entry->address, (void *)__entry->ip,
+ 		  __entry->error_code) );
 =20
--  $ dot2k -d wip.dot -t per_cpu
-+  $ rvgen monitor -c da -s wip.dot -t per_cpu
+-DEFINE_EVENT(x86_exceptions, page_fault_user,
++DEFINE_EVENT(exceptions, page_fault_user,
+ 	TP_PROTO(unsigned long address,	struct pt_regs *regs, unsigned long error=
+_code),
+ 	TP_ARGS(address, regs, error_code));
+-
+-DEFINE_EVENT(x86_exceptions, page_fault_kernel,
++DEFINE_EVENT(exceptions, page_fault_kernel,
+ 	TP_PROTO(unsigned long address,	struct pt_regs *regs, unsigned long error=
+_code),
+ 	TP_ARGS(address, regs, error_code));
 =20
- This will create a directory named wip/ with the following files:
+-#undef TRACE_INCLUDE_PATH
+-#undef TRACE_INCLUDE_FILE
+-#define TRACE_INCLUDE_PATH .
+-#define TRACE_INCLUDE_FILE exceptions
+ #endif /*  _TRACE_PAGE_FAULT_H */
 =20
-@@ -87,7 +87,7 @@ the second for monitors with per-cpu instances, and the t=
-hird with per-task
- instances.
-=20
- In all cases, the 'name' argument is a string that identifies the monitor,=
- and
--the 'type' argument is the data type used by dot2k on the representation of
-+the 'type' argument is the data type used by rvgen on the representation of
- the model in C.
-=20
- For example, the wip model with two states and three events can be
-@@ -134,7 +134,7 @@ Final remarks
- -------------
-=20
- With the monitor synthesis in place using the rv/da_monitor.h and
--dot2k, the developer's work should be limited to the instrumentation
-+rvgen, the developer's work should be limited to the instrumentation
- of the system, increasing the confidence in the overall approach.
-=20
- [1] For details about deterministic automata format and the translation
-@@ -142,6 +142,6 @@ from one representation to another, see::
-=20
-   Documentation/trace/rv/deterministic_automata.rst
-=20
--[2] dot2k appends the monitor's name suffix to the events enums to
-+[2] rvgen appends the monitor's name suffix to the events enums to
- avoid conflicting variables when exporting the global vmlinux.h
- use by BPF programs.
+ /* This part must be outside protection */
 --=20
 2.39.5
 
