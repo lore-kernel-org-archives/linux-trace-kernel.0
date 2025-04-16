@@ -1,82 +1,80 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB8D62DFA49
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 16 Apr 2025 13:05:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CD3A2DFA49
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 16 Apr 2025 13:21:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744808724; cv=none; b=D6+AhCW9/zIQvIHvpeAWhUX35L1/O8FifW23GnnLjTY42qRvVOtKvjKKl+N+5JIUlJyTI/QJxKx9NwRPdna3KTnWrOas/839MahGNve005lIgjeGTInoLYWqIcYH8HMgz++z5Wqk1wzNPF9UZo6AJUNO1K67n6VjelKQi+7C7U8=
+	t=1744809686; cv=none; b=qwaL2aYgOAuDE//N7ZW03xm5xqhEv7AB/TM0Dn5kDmafc4QZY4ZWd/BfK3NAiwqZpZC0VDsk7Dsoe1bmbbLf0JqQbO1UVFSIp7CNA7CnTzey3GNMbDCYFig03pBb1XP5ylsK7ygn4ztG6gxqIhU2vGHo/Pmn9mEigEYGATUZ0M0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744808724; c=relaxed/simple;
-	bh=0t4VLapPKqq/NCvfTFTO1EtBUdVWXUsjvuGVDfawVIM=;
+	s=arc-20240116; t=1744809686; c=relaxed/simple;
+	bh=6qDOkMxb4uwi4C+sMU88UdzrbRA70ECxVu1lHG3TSZg=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=PMMMHaSXY6JoZwMdfFUyusP+LLfLZnspOrcQ6M1TLzTMoa0aI1fe4Gm3QwUBBnUJNlt5WwyPlAebgmGoia9iHCSnWTm72bwRVpI/aoLBKw63qNSE/xW2zzbxseVAgeqD6eFoXoDWVvpGmc0B9IU5C76KvqCkmqz8NPnVgrI2FSU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=QljT/KAw; arc=none smtp.client-ip=170.10.129.124
+	 MIME-Version:Content-Type; b=iDUdx5j0nQRVYXwQSzxzy2CpOZggiampzhVxsG5ah6Rjj5yqlHDoDCbir3x8JT6CTnWteP8s8mPt4EMzsXRitwYb29WiVQ351vKbVFU/XXPK0jQo6eWFD2bZIyhs4s0tpYIdqK9R1/dDjHrIIuV+tlHueczoS+nGZ2M0iTesdio=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Y66rUF6A; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QljT/KAw"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Y66rUF6A"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1744808721;
+	s=mimecast20190719; t=1744809682;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=0t4VLapPKqq/NCvfTFTO1EtBUdVWXUsjvuGVDfawVIM=;
-	b=QljT/KAw3W4EaGZ6/OYbEJ6cR+RxMAQDkBnY2F/Ia+MvB0KC7L2QTV6rO1vUqSTwacjAQM
-	zPdQrH3h7ydeIUXH5ceG+ZWqQBNVB2cHQtr4DTAHHQDl78MGpIyaG06KKuAAGqYHt4Q0nF
-	hDtRWqNJ4rwRXrv5za64wHZX2ytj6fw=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=GPUk7S55YOzEgmzsgGsI6hmnKOYibxkXOmywdG39gmw=;
+	b=Y66rUF6An4WaMzcNPJzOuh6pDxgyIBhzl64qV0tVwdTig+oK1PdDyaeCaoLBmOG+s3KkVO
+	iKoR5uAoxT6SAwXJ9M/ZwWDmbbuPHAeZVpuNorcYkvipUoSNoWb789XydNvMuu1z7uKknr
+	/HyThSaiQYzoGh3vcIDiZIjLx/L1sQ8=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-511-vjHny608Pl6tt3kWGsah5Q-1; Wed, 16 Apr 2025 09:05:20 -0400
-X-MC-Unique: vjHny608Pl6tt3kWGsah5Q-1
-X-Mimecast-MFC-AGG-ID: vjHny608Pl6tt3kWGsah5Q_1744808719
-Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-3912e4e2033so3043519f8f.0
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 16 Apr 2025 06:05:20 -0700 (PDT)
+ us-mta-215-lQlIS70NMwSxVoKYDdUg3Q-1; Wed, 16 Apr 2025 09:21:21 -0400
+X-MC-Unique: lQlIS70NMwSxVoKYDdUg3Q-1
+X-Mimecast-MFC-AGG-ID: lQlIS70NMwSxVoKYDdUg3Q_1744809680
+Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-43cf327e9a2so57171245e9.3
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 16 Apr 2025 06:21:20 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744808719; x=1745413519;
+        d=1e100.net; s=20230601; t=1744809680; x=1745414480;
         h=mime-version:user-agent:content-transfer-encoding:autocrypt
          :references:in-reply-to:date:cc:to:from:subject:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=0t4VLapPKqq/NCvfTFTO1EtBUdVWXUsjvuGVDfawVIM=;
-        b=qBwuUy1DOg/65LEwZ+/dIVQo5e5vHvDOQaWTv+u8E0umc/0zFlhPdrK3OqCqIBggmk
-         srUkmFXGOTPWW1QQLQ5k71yrWA+AuYtLf/+mmrol9rio99r3wYkEu7j/3OrVBUbXTuca
-         xzZkhEFfCi9XCtQj4cRRjnKNKcVuQiZN3zTJ0H6priEhH4Lq3TTiVv46DyIgG9MN8Y/E
-         PajW9QWuyxQjZ7WMJZfMsA9wzqs8zJKK1G6wXDQLK2ZLeVPWoMQNAaHZAcGkQGTlVR2N
-         UYeVvewW73S5j1F1RVkwG20XVwH45eYuZrE7K7F5MU5nEfS2TtDWiXCWRnSNDMtsOIr+
-         Izjw==
-X-Forwarded-Encrypted: i=1; AJvYcCWjatUtjw4SroSMFNUGusTXI+5CBfJupeWG9W4mTWZwZlwf9b/bSl0sqj6uOsjyCghHiKAELvi4YHP+A0iktJc8gt8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzuGkf6aQC0zG8QrTdbEX+wiAzONbzFftwU3b1mLoMMePr5GpkZ
-	OmObdSqpF+OFMHVUUiYW9ZCtTMheulE2y7q22Qc9bnQBxOtqAwTT/C9meQUG1CkolrDaupydK65
-	KZHYui+fyy82W4rrG65FLQKQA5/LsdzY4J19zOVbpK6gZM0q7up+S1VUn7M8i4ierP8M0TQ==
-X-Gm-Gg: ASbGnctMUFSCGgM9Tjgd7NJ6hTgDWfnGZlAU1A/PfkeDVA/9XGTUon7HANjNSDMaCTD
-	4f6R967UpbEoHz+O6ASrf8vCe53egTLFDPjkO8SMweWGOI+h1/vpVrrcK+HXcNNf2qE/vn/ZtJf
-	3Al5F1Xpwrkv5em5F+aZxzSzGqhM5GcHLRlYvvnIPSjLv2D6bkm37SM/uafdQuS+bYgpaza/oD+
-	jjJnERpMckZlQ8BjnYvUZF/Vec240hYMRuHSrDiG4lxsV4vrRS5fNQ6o/j4IrsEMQgozVQRYlVp
-	hK7jnQiNoJ0tWpXjzta6AEEySFbfpvAtH0rPFyg=
-X-Received: by 2002:a05:6000:40dc:b0:397:3900:ef80 with SMTP id ffacd0b85a97d-39ee5b16f89mr1611337f8f.22.1744808717668;
-        Wed, 16 Apr 2025 06:05:17 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEl1j5qX7h1Fb7JP2V6qMn6Vh8PpIoyN7toiLk20qwy9JMdjQIjz/o3KeEGWWsPW0kvTpj8Wg==
-X-Received: by 2002:a05:6000:40dc:b0:397:3900:ef80 with SMTP id ffacd0b85a97d-39ee5b16f89mr1611091f8f.22.1744808715086;
-        Wed, 16 Apr 2025 06:05:15 -0700 (PDT)
+        bh=iLcmeEHhQu4t5/fOTfsl0eEoFzLCIFF8jRXHmES78Sc=;
+        b=kxsqoDnduwLIWojHMjB2bewLgV6faT+LUz8XJNyXoF1+vhGN7o7zkNfmfxCSt6lFgC
+         7s1c9vL220pOm6fMXYMTKx5cmHY4nH3IZyAdc/ti2maEJM/ddtk0eKs/Dvg6ZunfAql5
+         I8TEKaedB3U4TmgPpgRVpmc+ZlLgYsTkPdTHpv3NkulvoEzmbEN8WcRLGcn/pXcqPJMz
+         CqvQBrDfUuHKqxBJIef3WNhYRq9MRPwQys430YHCEN7gTEhlx0XLabVCMBZFTxdosglA
+         uPIL2nr8OehRCdF2Yt8CYkHCwGzB5P6uJx/h4bbE7i8tHweqUKl5wdk5+Val4CdtkQRl
+         FSeQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU92PtJBF+pbIasfIAn0CkRpv11p6sTM8NVCJ8T1daguPAcwTa3YhYczelXiak6cieubXbaer1MbhDUlMxa97Jcpa8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxKYQmW59/xIGUi1r77rTSL0Yf7xtbyKb4sgCLv9usqV/t3wvkn
+	HKOOS0l8A9OK2zZ5LPPL92fUDfm8pWKHCBIf678ZT7dTDCI2BwUNmVj0xvoeOFtQ4dKXKPAlmGE
+	3w7cu5r3WzTfsXFDOGP3wCoN9MgRRNbePYPswez8jqSVYg13elkGj6PONA3VVfRb6wZEEqQ==
+X-Gm-Gg: ASbGncs/SmZoa1K+/Adym8nS5bG3nWV5nOPE33UUemRivqHSA7XzxuVBGmX1c77Mr+j
+	+nrN603+ZhBI66/nhpC3GptdKvAwcY04o6SEdRjKsXLJd0PfjIcLOFZNwRS0gZvK2iGNYecFUck
+	VtF34rkv3Pi5nURjgkJTLp1POnMfS2STn5N1qRFmfsBdkHhyGJlBBNAiFagjnGWweiksYiw9Jgt
+	ILhhuGm4XCGUMdWgkIZJ1HMTawkEoFzdMB7966vdJeSau4lr9ZrmeB4Amz80qWZautIw/c7X+Hc
+	kWGN5/t681nkeybRpIHXP9XWGvmeNceCKlSzcLM=
+X-Received: by 2002:a05:600c:5027:b0:43c:ed61:2c26 with SMTP id 5b1f17b1804b1-4405d63755emr21863015e9.17.1744809679900;
+        Wed, 16 Apr 2025 06:21:19 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IE7Djq9SWrrpiO8bXOqEu/XPy2I2jw2h75iPK6dKs1f1vXPaVg8R8MiEtrFZ22y0ex9c50Mbg==
+X-Received: by 2002:a05:600c:5027:b0:43c:ed61:2c26 with SMTP id 5b1f17b1804b1-4405d63755emr21862775e9.17.1744809679510;
+        Wed, 16 Apr 2025 06:21:19 -0700 (PDT)
 Received: from gmonaco-thinkpadt14gen3.rmtit.csb ([195.174.134.30])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39eae978018sm16850822f8f.49.2025.04.16.06.05.13
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4405b5adb6fsm21254595e9.40.2025.04.16.06.21.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 16 Apr 2025 06:05:14 -0700 (PDT)
-Message-ID: <c152e0f5f431739eb2aa5fb78ef6e17521f3826b.camel@redhat.com>
-Subject: Re: [PATCH v3 13/22] rv: Add support for LTL monitors
+        Wed, 16 Apr 2025 06:21:19 -0700 (PDT)
+Message-ID: <e766f1fa039da6bc560ce5290ec0d5ce5ba24fc5.camel@redhat.com>
+Subject: Re: [PATCH v3 09/22] verification/dot2k: Prepare the frontend for
+ LTL inclusion
 From: Gabriele Monaco <gmonaco@redhat.com>
-To: Nam Cao <namcao@linutronix.de>
-Cc: Steven Rostedt <rostedt@goodmis.org>,
- linux-trace-kernel@vger.kernel.org, 	linux-kernel@vger.kernel.org,
- john.ogness@linutronix.de
-Date: Wed, 16 Apr 2025 15:05:12 +0200
-In-Reply-To: <20250416115658.AkFAts-B@linutronix.de>
+To: Nam Cao <namcao@linutronix.de>, Steven Rostedt <rostedt@goodmis.org>, 
+	linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: john.ogness@linutronix.de
+Date: Wed, 16 Apr 2025 15:21:17 +0200
+In-Reply-To: <af31461eae544f9aea6fb3e1c16a0bd24574ef56.1744785335.git.namcao@linutronix.de>
 References: <cover.1744785335.git.namcao@linutronix.de>
-	 <19f424c910bfa0f4854117e3f8771aeb6e98a9d2.1744785335.git.namcao@linutronix.de>
-	 <4edad1940b2d05f1997895d4bbc11f02a921e8e5.camel@redhat.com>
-	 <20250416115658.AkFAts-B@linutronix.de>
+	 <af31461eae544f9aea6fb3e1c16a0bd24574ef56.1744785335.git.namcao@linutronix.de>
 Autocrypt: addr=gmonaco@redhat.com; prefer-encrypt=mutual;
  keydata=mDMEZuK5YxYJKwYBBAHaRw8BAQdAmJ3dM9Sz6/Hodu33Qrf8QH2bNeNbOikqYtxWFLVm0
  1a0JEdhYnJpZWxlIE1vbmFjbyA8Z21vbmFjb0ByZWRoYXQuY29tPoiZBBMWCgBBFiEEysoR+AuB3R
@@ -91,142 +89,362 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: edw-JBG8CUh4pqGEjuoPctPmSOtY_Sfw-vcOYroytaY_1744808719
+X-Mimecast-MFC-PROC-ID: YUtE7lOHwMJrxQaxCfUygMRUaC6e4OzCHfo4USvPJzo_1744809680
 X-Mimecast-Originator: redhat.com
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: quoted-printable
 
-CgpPbiBXZWQsIDIwMjUtMDQtMTYgYXQgMTM6NTYgKzAyMDAsIE5hbSBDYW8gd3JvdGU6Cj4gT24g
-V2VkLCBBcHIgMTYsIDIwMjUgYXQgMTE6MzQ6NTNBTSArMDIwMCwgR2FicmllbGUgTW9uYWNvIHdy
-b3RlOgo+ID4gT24gV2VkLCAyMDI1LTA0LTE2IGF0IDA4OjUxICswMjAwLCBOYW0gQ2FvIHdyb3Rl
-Ogo+ID4gPiDCoCNlbmRpZiAvKiBDT05GSUdfREFfTU9OX0VWRU5UU19JRCAqLwo+ID4gPiArI2lm
-IENPTkZJR19MVExfTU9OX0VWRU5UU19JRAo+ID4gPiArVFJBQ0VfRVZFTlQoZXZlbnRfbHRsX21v
-bml0b3JfaWQsCj4gPiA+ICsKPiA+ID4gKwlUUF9QUk9UTyhzdHJ1Y3QgdGFza19zdHJ1Y3QgKnRh
-c2ssIGNoYXIgKnN0YXRlcywgY2hhcgo+ID4gPiAqYXRvbXMsIGNoYXIgKm5leHQpLAo+ID4gPiAr
-Cj4gPiA+ICsJVFBfQVJHUyh0YXNrLCBzdGF0ZXMsIGF0b21zLCBuZXh0KSwKPiA+ID4gKwo+ID4g
-PiArCVRQX1NUUlVDVF9fZW50cnkoCj4gPiA+ICsJCV9fc3RyaW5nKGNvbW0sIHRhc2stPmNvbW0p
-Cj4gPiA+ICsJCV9fZmllbGQocGlkX3QsIHBpZCkKPiA+ID4gKwkJX19zdHJpbmcoc3RhdGVzLCBz
-dGF0ZXMpCj4gPiA+ICsJCV9fc3RyaW5nKGF0b21zLCBhdG9tcykKPiA+ID4gKwkJX19zdHJpbmco
-bmV4dCwgbmV4dCkKPiA+ID4gKwkpLAo+ID4gPiArCj4gPiA+ICsJVFBfZmFzdF9hc3NpZ24oCj4g
-PiA+ICsJCV9fYXNzaWduX3N0cihjb21tKTsKPiA+ID4gKwkJX19lbnRyeS0+cGlkID0gdGFzay0+
-cGlkOwo+ID4gPiArCQlfX2Fzc2lnbl9zdHIoc3RhdGVzKTsKPiA+ID4gKwkJX19hc3NpZ25fc3Ry
-KGF0b21zKTsKPiA+ID4gKwkJX19hc3NpZ25fc3RyKG5leHQpOwo+ID4gPiArCSksCj4gPiA+ICsK
-PiA+ID4gKwlUUF9wcmludGsoIiVzWyVkXTogKCVzKSB4ICglcykgLT4gKCVzKSIsCj4gPiA+IF9f
-Z2V0X3N0cihjb21tKSwKPiA+ID4gX19lbnRyeS0+cGlkLCBfX2dldF9zdHIoc3RhdGVzKSwKPiA+
-ID4gKwkJwqAgX19nZXRfc3RyKGF0b21zKSwgX19nZXRfc3RyKG5leHQpKQo+ID4gPiArKTsKPiA+
-ID4gKwo+ID4gPiArVFJBQ0VfRVZFTlQoZXJyb3JfbHRsX21vbml0b3JfaWQsCj4gPiA+ICsKPiA+
-ID4gKwlUUF9QUk9UTyhzdHJ1Y3QgdGFza19zdHJ1Y3QgKnRhc2spLAo+ID4gPiArCj4gPiA+ICsJ
-VFBfQVJHUyh0YXNrKSwKPiA+ID4gKwo+ID4gPiArCVRQX1NUUlVDVF9fZW50cnkoCj4gPiA+ICsJ
-CV9fc3RyaW5nKGNvbW0sIHRhc2stPmNvbW0pCj4gPiA+ICsJCV9fZmllbGQocGlkX3QsIHBpZCkK
-PiA+ID4gKwkpLAo+ID4gPiArCj4gPiA+ICsJVFBfZmFzdF9hc3NpZ24oCj4gPiA+ICsJCV9fYXNz
-aWduX3N0cihjb21tKTsKPiA+ID4gKwkJX19lbnRyeS0+cGlkID0gdGFzay0+cGlkOwo+ID4gPiAr
-CSksCj4gPiA+ICsKPiA+ID4gKwlUUF9wcmludGsoIiVzWyVkXTogdmlvbGF0aW9uIGRldGVjdGVk
-IiwgX19nZXRfc3RyKGNvbW0pLAo+ID4gCj4gPiBJbiB5b3VyIHdvcmtmbG93IHlvdSdyZSBwcm9i
-YWJseSB1c2luZyBldmVudHMgYW5kIGVycm9ycyB0b2dldGhlciwKPiA+IGJ1dAo+ID4gd291bGRu
-J3QgaXQgaGVscCBwcmludGluZyB0aGUgYXRvbXMgdG9nZXRoZXIgd2l0aCB0aGUgdmlvbGF0aW9u
-Cj4gPiBkZXRlY3RlZD8KPiA+IEF0IGxlYXN0IHRvIGdpdmUgYSBjbHVlIG9uIHRoZSBlcnJvciBp
-biBjYXNlIHRoZSB1c2VyIGRvZXNuJ3Qgd2FudAo+ID4gdG8KPiA+IHNlZSB0aGUgZW50aXJlIHRy
-YWNlICh3aGljaCBtaWdodCBiZSBuZWVkZWQgZm9yIGEgZnVsbCBkZWJ1Zwo+ID4gdGhvdWdoKS4K
-PiA+IAo+ID4gVGhlIHNhbWUgY291bGQgYmUgc2FpZCBmcm9tIHJlYWN0b3JzLCB0aGUgdXNlciBk
-b2Vzbid0IGhhdmUgbXVjaAo+ID4gaW5mb3JtYXRpb24gdG8gaW5mZXIgd2hhdCB3ZW50IHdyb25n
-Lgo+IAo+IEFjdHVhbGx5IG15IGludGVudGlvbiBmb3IgdGhlICJldmVudCIgdHJhY2Vwb2ludHMg
-YXJlIG9ubHkgZm9yCj4gZGVidWdnaW5nCj4gdGhlIG1vbml0b3IgaXRzZWxmLiBJIGRvbid0IHdh
-bnQgdG8gYm90aGVyIHVzZXJzIHdpdGggdGhlIELDvGNoaQo+IGF1dG9tYXRvbiwKPiBiZWNhdXNl
-IHRoYXQncyBpbXBsZW1lbnRhdGlvbiBkZXRhaWxzLgo+IAo+IFRoZSAiZXJyb3IiIHRyYWNlcG9p
-bnRzIHNob3VsZCBiZSBlbm91Z2ggZm9yIGlkZW50aWZ5aW5nIHByb2JsZW1zCj4gd2l0aAo+IHJl
-YWx0aW1lIGFwcGxpY2F0aW9ucy4gQmVjYXVzZSBlcnJvcnMgZnJvbSB0aGUgbW9uaXRvcnMgYXJl
-Cj4gdW5hbWJpZ3VvdXM6Cj4gCj4gwqAgLSBwYWdlZmF1bHQgbW9uaXRvcjogZXJyb3IgbWVhbnMg
-YW4gUlQgdGFzayBpcyByYWlzaW5nIHBhZ2VmYXVsdAo+IMKgIC0gc2xlZXAgbW9uaXRvcjogZXJy
-b3IgbWVhbnMgYW4gUlQgdGFzayBpcyBkZWxheWVkIHVuYm91bmRlZGx5Cj4gCj4gVGhhdCBhbmQg
-YSBzdGFja3RyYWNlIChlLmcuIGZyb20gcGVyZikgaXMgZW5vdWdoIHRvIHVuZGVyc3RhbmQgdGhl
-Cj4gcHJvYmxlbS4KPiBUaGF0IHdhcyBhbGwgSSBuZWVkIHRvIGlkZW50aWZ5aW5nIHByb2JsZW1z
-IHdpdGggcGlwZXdpcmUgdXNpbmcgdGhlCj4gbW9uaXRvcnMuCj4gCj4gSW4gdGhlIGZ1dHVyZSwg
-d2UgY2FuIGhhdmUgb3RoZXIgbW9uaXRvcnMgd2hvc2Ugd2FybmluZ3MgYXJlCj4gYW1iaWd1b3Vz
-LCBhbmQKPiBhIG1vcmUgZGV0YWlsZWQgZXJyb3IgbWVzc2FnZSB3aWxsIGJlIG5lY2Vzc2FyeS4g
-QnV0IGZvciBub3csIEkgdGhpbmsKPiB3ZQo+IGNhbiBrZWVwIGl0IHNpbXBsZS4KPiAKCk1taCBh
-bHJpZ2h0LCBtYWtlcyBzZW5zZSwgeW91IGNhbiBpZ25vcmUgaXQgdGhlbi4KCj4gPiA+ICtkZWYg
-YWJicmV2aWF0ZV9hdG9tcyhhdG9tczogbGlzdFtzdHJdKSAtPiBsaXN0W3N0cl06Cj4gPiA+ICvC
-oMKgwqAgYWJicnMgPSBsaXN0KCkKPiA+ID4gK8KgwqDCoCBmb3IgYXRvbSBpbiBhdG9tczoKPiA+
-ID4gK8KgwqDCoMKgwqDCoMKgIHNpemUgPSAxCj4gPiA+ICvCoMKgwqDCoMKgwqDCoCB3aGlsZSBU
-cnVlOgo+ID4gPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBhYmJyID0gYXRvbVs6c2l6ZV0KPiA+
-ID4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqAgaWYgc3VtKGEuc3RhcnRzd2l0aChhYmJyKSBmb3Ig
-YSBpbiBhdG9tcykgPT0gMToKPiA+ID4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBi
-cmVhawo+ID4gPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBzaXplICs9IDEKPiA+ID4gK8KgwqDC
-oMKgwqDCoMKgIGFiYnJzLmFwcGVuZChhYmJyLmxvd2VyKCkpCj4gPiA+ICvCoMKgwqAgcmV0dXJu
-IGFiYnJzCj4gPiAKPiA+IEkgZ2V0IHRoaXMgaXMganVzdCBhIG1hdHRlciBvZiBwcmVmZXJlbmNl
-LCBzbyBmZWVsIGZyZWUgdG8gaWdub3JlCj4gPiBteQo+ID4gc3VnZ2VzdGlvbi4KPiA+IFRoaXMg
-YWJicmV2aWF0aW9uIGFsZ29yaXRobSBkb2Vzbid0IHdvcmsgdG9vIHdlbGwgd2l0aCBhdG9tcwo+
-ID4gc3RhcnRpbmcKPiA+IHdpdGggdGhlIHNhbWUgc3Vic3RyaW5nIGFuZCBjYW4gcHJvZHVjZSBz
-b21lIHVuZXhwZWN0ZWQgcmVzdWx0Ogo+ID4gCj4gPiBMVExfQkxPQ0tfT05fUlRfTVVURVg6wqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGIsCj4gPiBMVExfS0VSTkVMX1RIUkVBRDrCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBrZSwKPiA+IExUTF9LVEhSRUFEX1NI
-T1VMRF9TVE9QOsKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGt0LAo+ID4gTFRMX05BTk9TTEVF
-UDrCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIG4sCj4gPiBM
-VExfUElfRlVURVg6wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgIHAsCj4gPiBMVExfUlQ6wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgIHIsCj4gPiBMVExfU0xFRVA6wqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHMsCj4gPiBMVExfVEFTS19JU19N
-SUdSQVRJT046wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHRhc2tfaXNfbSwKPiA+IExU
-TF9UQVNLX0lTX1JDVTrCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAg
-dGFza19pc19yLAo+ID4gTFRMX1dBS0U6wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgd2EsCj4gPiBMVExfV09LRU5fQllfRVFVQUxfT1JfSElH
-SEVSX1BSSU86wqDCoMKgIHdva2VuX2J5X2UsCj4gPiBMVExfV09LRU5fQllfSEFSRElSUTrCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCB3b2tlbl9ieV9oLAo+ID4gTFRMX1dPS0VOX0JZ
-X05NSTrCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHdva2VuX2J5X24s
-Cj4gPiAKPiA+ICJ3b2tlbl9ieV8qIiBhbmQgInRhc2tfaXNfKiIgYXRvbSBjYW4gZ2V0IHVubmVj
-ZXNzYXJpbHkgbG9uZyBhbmQKPiA+IHdoaWxlIHJlYWRpbmcgImt0IiBJIG1pZ2h0IHRoaW5rIGFi
-b3V0IGtlcm5lbF90aHJlYWQuCj4gPiAKPiA+IEkgd2FzIHRoaW5raW5nIGFib3V0IHNvbWV0aGlu
-ZyBsaWtlOgo+ID4gCj4gPiBMVExfQkxPQ0tfT05fUlRfTVVURVg6wqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgIGJfb19yX20KPiA+IExUTF9LRVJORUxfVEhSRUFEOsKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGtfdAo+ID4gTFRMX0tUSFJFQURfU0hPVUxEX1NUT1A6
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAga19zX3MKPiA+IExUTF9OQU5PU0xFRVA6wqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBuCj4gPiBMVExfUElfRlVU
-RVg6wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHBfZgo+
-ID4gTFRMX1JUOsKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoCByCj4gPiBMVExfU0xFRVA6wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHMKPiA+IExUTF9UQVNLX0lTX01JR1JBVElPTjrC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgdF9pX20KPiA+IExUTF9UQVNLX0lTX1JDVTrC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgdF9pX3IKPiA+IExUTF9X
-QUtFOsKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgIHcKPiA+IExUTF9XT0tFTl9CWV9FUVVBTF9PUl9ISUdIRVJfUFJJTzrCoMKgwqAgd19iX2Vf
-b19oX3AKPiA+IExUTF9XT0tFTl9CWV9IQVJESVJROsKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgIHdfYl9oCj4gPiBMVExfV09LRU5fQllfTk1JOsKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqAgd19iX24KPiA+IAo+ID4gb3IgZXZlbgo+ID4gCj4gPiBMVExfQkxP
-Q0tfT05fUlRfTVVURVg6wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGJfbQo+ID4gTFRM
-X0tFUk5FTF9USFJFQUQ6wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAga190
-Cj4gPiBMVExfS1RIUkVBRF9TSE9VTERfU1RPUDrCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBr
-X3Nfcwo+ID4gTFRMX05BTk9TTEVFUDrCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgIG4KPiA+IExUTF9QSV9GVVRFWDrCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgcF9mCj4gPiBMVExfUlQ6wqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHIKPiA+IExUTF9TTEVF
-UDrCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAg
-cwo+ID4gTFRMX1RBU0tfSVNfTUlHUkFUSU9OOsKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oCB0X20KPiA+IExUTF9UQVNLX0lTX1JDVTrCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqAgdF9yCj4gPiBMVExfV0FLRTrCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCB3Cj4gPiBMVExfV09LRU5fQllfRVFVQUxfT1Jf
-SElHSEVSX1BSSU86wqDCoMKgIHdfZV9oX3AKPiA+IExUTF9XT0tFTl9CWV9IQVJESVJROsKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHdfaAo+ID4gTFRMX1dPS0VOX0JZX05NSTrCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHdfbgo+ID4gCj4gPiBJIHVzZWQg
-dGhlIGZvbGxvd2luZyBjb2RlIHRvIGNvbWUgdXAgd2l0aCB0aGlzOgo+ID4gCj4gPiBkZWYgYWJi
-cmV2aWF0ZV9hdG9tcyhhdG9tczogbGlzdFtzdHJdKSAtPiBsaXN0W3N0cl06Cj4gPiDCoMKgwqAg
-IyBjb21wbGV0ZWx5IGFyYml0cmFyeS4uCj4gPiDCoMKgwqAgc2tpcCA9IFsgImlzIiwgImJ5Iiwg
-Im9yIiwgImFuZCIgXQo+ID4gwqDCoMKgIGRlZiBhYmJyIChuLCBzKToKPiA+IMKgwqDCoMKgwqDC
-oMKgIHJldHVybiAnXycuam9pbih3b3JkWzpuXSBmb3Igd29yZCBpbiBzLmxvd2VyKCkuc3BsaXQo
-J18nKQo+ID4gaWYgd29yZCBub3QgaW4gc2tpcCkKPiA+IMKgwqDCoCBmb3IgbiBpbiByYW5nZSgx
-LCAzMik6Cj4gPiDCoMKgwqDCoMKgwqDCoCBhYmJycyA9IFthYmJyKG4sIGEpIGZvciBhIGluIGF0
-b21zXQo+ID4gwqDCoMKgwqDCoMKgwqAgaWYgbGVuKGFiYnJzKSA9PSBsZW4oc2V0KGFiYnJzKSk6
-Cj4gPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHJldHVybiBhYmJycwo+ID4gCj4gPiBXaGljaCBj
-b3VsZCBldmVuIGJlIHR1bmVkIHRvIHVzZSAyIGxldHRlcnMgcGVyIGJsb2NrIGluc3RlYWQgb2Yg
-MQo+ID4gKGltcHJvdmluZyByZWFkYWJpbGl0eSBieSBhIGxvdCBhY3R1YWxseSkuLgo+ID4gJ2Js
-X29uX3J0X211JywgJ2tlX3RoJywgJ2t0X3NoX3N0JywgJ25hJywgJ3BpX2Z1JywgJ3J0JywgJ3Ns
-JywKPiA+ICd0YV9taScsCj4gPiAndGFfcmMnLCAnd2EnLCAnd29fZXFfaGlfcHInLCAnd29faGEn
-LCAnd29fbm0nCj4gPiAKPiA+IFdoYXQgZG8geW91IHRoaW5rPwo+IAo+IFllcywgdGhpcyB3b3Vs
-ZCBiZSB2ZXJ5IG5pY2UuIEJ1dCBhcyBtZW50aW9uZWQsIHRoaXMgaXMgbWFpbmx5IGZvcgo+IGRl
-YnVnZ2luZyB0aGUgbW9uaXRvcnMsIG5vdCBmb3IgZW5kIHVzZXJzLiBUaGVyZWZvcmUgSSBkb24n
-dCB3YW50IHRvCj4gc3BlbmQKPiB0b28gbXVjaCBlbmVyZ3kgb24gaXQuCj4gCj4gTGV0IG1lIHNl
-ZSBob3cgIm5pY2UiIHdlIGNhbiBtYWtlIGl0IHdpdGhvdXQgc3BlbmRpbmcgdG9vIG1hbnkgaG91
-cnMuCj4gVGhhbmtzIGZvciB0aGUgc3VnZ2VzdGlvbiEKPiAKClN1cmUsIGRvIHdoYXQgeW91IHNl
-ZSBmaXQuCkZyb20gbXkgcG9pbnQgb2YgdmlldyB0aGUgbW9uaXRvcnMgKDE5LTIwLzIyKSBhbmQg
-c3ludGhlc2lzIGxvb2sgZ29vZC4KClJldmlld2VkLWJ5OiBHYWJyaWVsZSBNb25hY28gPGdtb25h
-Y29AcmVkaGF0LmNvbT4KClRoYW5rcywKR2FicmllbGUK
+
+
+On Wed, 2025-04-16 at 08:51 +0200, Nam Cao wrote:
+> The dot2k tool has some code that can be reused for linear temporal
+> logic
+> monitor. Prepare its frontend for LTL inclusion:
+>=20
+> =C2=A0 1. Rename to be generic: rvgen
+>=20
+> =C2=A0 2. Replace the parameter --dot with 2 parameters:
+> =C2=A0=C2=A0=C2=A0=C2=A0 --class: to specific the monitor class, can be '=
+da' or 'ltl'
+> =C2=A0=C2=A0=C2=A0=C2=A0 --spec: the monitor specification file, .dot fil=
+e for DA, and
+> .ltl
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =
+file for LTL
+>=20
+> The old command:
+>=20
+> =C2=A0 python3 dot2/dot2k monitor -d wip.dot -t per_cpu
+>=20
+> is equivalent to the new commands:
+>=20
+> =C2=A0 python3 dot2/dot2k monitor -c da -s wip.dot -t per_cpu
+
+Some more things changed here:
+
+  python3 rvgen monitor -c da -s wip.dot -t per_cpu
+
+For the rest, all changes in the scripts (11-12/22) look good to me.
+
+Reviewed-by: Gabriele Monaco <gmonaco@redhat.com>
+
+Thanks,
+Gabriele
+
+>=20
+> Signed-off-by: Nam Cao <namcao@linutronix.de>
+> ---
+> =C2=A0tools/verification/{dot2 =3D> rvgen}/Makefile=C2=A0=C2=A0=C2=A0 | 1=
+0 +++++-----
+> =C2=A0.../{dot2/dot2k =3D> rvgen/__main__.py}=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 18 +++++++++++++---
+> --
+> =C2=A0tools/verification/{dot2 =3D> rvgen}/dot2c=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0 |=C2=A0 2 +-
+> =C2=A0.../{dot2 =3D> rvgen}/dot2k_templates/Kconfig=C2=A0=C2=A0=C2=A0 |=
+=C2=A0 0
+> =C2=A0.../dot2k_templates/Kconfig_container=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 0
+> =C2=A0.../{dot2 =3D> rvgen}/dot2k_templates/main.c=C2=A0=C2=A0=C2=A0=C2=
+=A0 |=C2=A0 0
+> =C2=A0.../dot2k_templates/main_container.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 0
+> =C2=A0.../dot2k_templates/main_container.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 0
+> =C2=A0.../{dot2 =3D> rvgen}/dot2k_templates/trace.h=C2=A0=C2=A0=C2=A0 |=
+=C2=A0 0
+> =C2=A0.../{dot2 =3D> rvgen/rvgen}/automata.py=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 0
+> =C2=A0.../{dot2 =3D> rvgen/rvgen}/dot2c.py=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 2 +-
+> =C2=A0.../{dot2 =3D> rvgen/rvgen}/dot2k.py=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 10 +++++-----
+> =C2=A012 files changed, 25 insertions(+), 17 deletions(-)
+> =C2=A0rename tools/verification/{dot2 =3D> rvgen}/Makefile (55%)
+> =C2=A0rename tools/verification/{dot2/dot2k =3D> rvgen/__main__.py} (72%)
+> =C2=A0rename tools/verification/{dot2 =3D> rvgen}/dot2c (97%)
+> =C2=A0rename tools/verification/{dot2 =3D> rvgen}/dot2k_templates/Kconfig
+> (100%)
+> =C2=A0rename tools/verification/{dot2 =3D>
+> rvgen}/dot2k_templates/Kconfig_container (100%)
+> =C2=A0rename tools/verification/{dot2 =3D> rvgen}/dot2k_templates/main.c
+> (100%)
+> =C2=A0rename tools/verification/{dot2 =3D>
+> rvgen}/dot2k_templates/main_container.c (100%)
+> =C2=A0rename tools/verification/{dot2 =3D>
+> rvgen}/dot2k_templates/main_container.h (100%)
+> =C2=A0rename tools/verification/{dot2 =3D> rvgen}/dot2k_templates/trace.h
+> (100%)
+> =C2=A0rename tools/verification/{dot2 =3D> rvgen/rvgen}/automata.py (100%=
+)
+> =C2=A0rename tools/verification/{dot2 =3D> rvgen/rvgen}/dot2c.py (99%)
+> =C2=A0rename tools/verification/{dot2 =3D> rvgen/rvgen}/dot2k.py (98%)
+>=20
+> diff --git a/tools/verification/dot2/Makefile
+> b/tools/verification/rvgen/Makefile
+> similarity index 55%
+> rename from tools/verification/dot2/Makefile
+> rename to tools/verification/rvgen/Makefile
+> index 021beb07a521..cea9c21c3bce 100644
+> --- a/tools/verification/dot2/Makefile
+> +++ b/tools/verification/rvgen/Makefile
+> @@ -3,7 +3,7 @@ INSTALL=3Dinstall
+> =C2=A0prefix=C2=A0 ?=3D /usr
+> =C2=A0bindir=C2=A0 ?=3D $(prefix)/bin
+> =C2=A0mandir=C2=A0 ?=3D $(prefix)/share/man
+> -miscdir ?=3D $(prefix)/share/dot2
+> +miscdir ?=3D $(prefix)/share/rvgen
+> =C2=A0srcdir=C2=A0 ?=3D $(prefix)/src
+> =C2=A0
+> =C2=A0PYLIB=C2=A0 ?=3D $(shell python3 -c 'import sysconfig;=C2=A0 print
+> (sysconfig.get_path("purelib"))')
+> @@ -16,11 +16,11 @@ clean:
+> =C2=A0
+> =C2=A0.PHONY: install
+> =C2=A0install:
+> -=09$(INSTALL) automata.py -D -m 644
+> $(DESTDIR)$(PYLIB)/dot2/automata.py
+> -=09$(INSTALL) dot2c.py -D -m 644
+> $(DESTDIR)$(PYLIB)/dot2/dot2c.py
+> +=09$(INSTALL) rvgen/automata.py -D -m 644
+> $(DESTDIR)$(PYLIB)/rvgen/automata.py
+> +=09$(INSTALL) rvgen/dot2c.py -D -m 644
+> $(DESTDIR)$(PYLIB)/rvgen/dot2c.py
+> =C2=A0=09$(INSTALL) dot2c -D -m 755 $(DESTDIR)$(bindir)/
+> -=09$(INSTALL) dot2k.py -D -m 644
+> $(DESTDIR)$(PYLIB)/dot2/dot2k.py
+> -=09$(INSTALL) dot2k -D -m 755 $(DESTDIR)$(bindir)/
+> +=09$(INSTALL) rvgen/dot2k.py -D -m 644
+> $(DESTDIR)$(PYLIB)/rvgen/dot2k.py
+> +=09$(INSTALL) __main__.py -D -m 755 $(DESTDIR)$(bindir)/rvgen
+> =C2=A0
+> =C2=A0=09mkdir -p ${miscdir}/
+> =C2=A0=09cp -rp dot2k_templates $(DESTDIR)$(miscdir)/
+> diff --git a/tools/verification/dot2/dot2k
+> b/tools/verification/rvgen/__main__.py
+> similarity index 72%
+> rename from tools/verification/dot2/dot2k
+> rename to tools/verification/rvgen/__main__.py
+> index 133fb17d9d47..994d320ad2d1 100644
+> --- a/tools/verification/dot2/dot2k
+> +++ b/tools/verification/rvgen/__main__.py
+> @@ -9,11 +9,11 @@
+> =C2=A0#=C2=A0=C2=A0 Documentation/trace/rv/da_monitor_synthesis.rst
+> =C2=A0
+> =C2=A0if __name__ =3D=3D '__main__':
+> -=C2=A0=C2=A0=C2=A0 from dot2.dot2k import dot2k
+> +=C2=A0=C2=A0=C2=A0 from rvgen.dot2k import dot2k
+> =C2=A0=C2=A0=C2=A0=C2=A0 import argparse
+> =C2=A0=C2=A0=C2=A0=C2=A0 import sys
+> =C2=A0
+> -=C2=A0=C2=A0=C2=A0 parser =3D argparse.ArgumentParser(description=3D'tra=
+nsform .dot
+> file into kernel rv monitor')
+> +=C2=A0=C2=A0=C2=A0 parser =3D argparse.ArgumentParser(description=3D'Gen=
+erate kernel rv
+> monitor')
+> =C2=A0=C2=A0=C2=A0=C2=A0 parser.add_argument("-D", "--description", dest=
+=3D"description",
+> required=3DFalse)
+> =C2=A0=C2=A0=C2=A0=C2=A0 parser.add_argument("-a", "--auto_patch", dest=
+=3D"auto_patch",
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ac=
+tion=3D"store_true", required=3DFalse,
+> @@ -25,7 +25,9 @@ if __name__ =3D=3D '__main__':
+> =C2=A0=C2=A0=C2=A0=C2=A0 monitor_parser.add_argument('-n', "--model_name"=
+,
+> dest=3D"model_name")
+> =C2=A0=C2=A0=C2=A0=C2=A0 monitor_parser.add_argument("-p", "--parent", de=
+st=3D"parent",
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 required=3DFalse, help=3D"Cre=
+ate a
+> monitor nested to parent")
+> -=C2=A0=C2=A0=C2=A0 monitor_parser.add_argument('-d', "--dot", dest=3D"do=
+t_file")
+> +=C2=A0=C2=A0=C2=A0 monitor_parser.add_argument('-c', "--class",
+> dest=3D"monitor_class",
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 help=3D"Monitor class, either \"da\=
+"
+> or \"ltl\"")
+> +=C2=A0=C2=A0=C2=A0 monitor_parser.add_argument('-s', "--spec", dest=3D"s=
+pec",
+> help=3D"Monitor specification file")
+> =C2=A0=C2=A0=C2=A0=C2=A0 monitor_parser.add_argument('-t', "--monitor_typ=
+e",
+> dest=3D"monitor_type",
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 help=3Df"Available options: {=
+',
+> '.join(dot2k.monitor_types.keys())}")
+> =C2=A0
+> @@ -36,8 +38,14 @@ if __name__ =3D=3D '__main__':
+> =C2=A0
+> =C2=A0=C2=A0=C2=A0=C2=A0 try:
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if params.subcmd =3D=3D =
+"monitor":
+> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 print=
+("Opening and parsing the dot file %s" %
+> params.dot_file)
+> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 monit=
+or =3D dot2k(params.dot_file, params.monitor_type,
+> vars(params))
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 print=
+("Opening and parsing the specification file %s" %
+> params.spec)
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if pa=
+rams.monitor_class =3D=3D "da":
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0 monitor =3D dot2k(params.spec, params.monitor_type,
+> vars(params))
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 elif =
+params.monitor_class =3D=3D "ltl":
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0 raise NotImplementedError
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 else:
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0 print("Unknown monitor class:",
+> params.monitor_class)
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0 sys.exit(1)
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 else:
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =
+monitor =3D dot2k(None, None, vars(params))
+> =C2=A0=C2=A0=C2=A0=C2=A0 except Exception as e:
+> diff --git a/tools/verification/dot2/dot2c
+> b/tools/verification/rvgen/dot2c
+> similarity index 97%
+> rename from tools/verification/dot2/dot2c
+> rename to tools/verification/rvgen/dot2c
+> index 3fe89ab88b65..bf0c67c5b66c 100644
+> --- a/tools/verification/dot2/dot2c
+> +++ b/tools/verification/rvgen/dot2c
+> @@ -14,7 +14,7 @@
+> =C2=A0#=C2=A0=C2=A0 Documentation/trace/rv/deterministic_automata.rst
+> =C2=A0
+> =C2=A0if __name__ =3D=3D '__main__':
+> -=C2=A0=C2=A0=C2=A0 from dot2 import dot2c
+> +=C2=A0=C2=A0=C2=A0 from rvgen import dot2c
+> =C2=A0=C2=A0=C2=A0=C2=A0 import argparse
+> =C2=A0=C2=A0=C2=A0=C2=A0 import sys
+> =C2=A0
+> diff --git a/tools/verification/dot2/dot2k_templates/Kconfig
+> b/tools/verification/rvgen/dot2k_templates/Kconfig
+> similarity index 100%
+> rename from tools/verification/dot2/dot2k_templates/Kconfig
+> rename to tools/verification/rvgen/dot2k_templates/Kconfig
+> diff --git
+> a/tools/verification/dot2/dot2k_templates/Kconfig_container
+> b/tools/verification/rvgen/dot2k_templates/Kconfig_container
+> similarity index 100%
+> rename from tools/verification/dot2/dot2k_templates/Kconfig_container
+> rename to tools/verification/rvgen/dot2k_templates/Kconfig_container
+> diff --git a/tools/verification/dot2/dot2k_templates/main.c
+> b/tools/verification/rvgen/dot2k_templates/main.c
+> similarity index 100%
+> rename from tools/verification/dot2/dot2k_templates/main.c
+> rename to tools/verification/rvgen/dot2k_templates/main.c
+> diff --git a/tools/verification/dot2/dot2k_templates/main_container.c
+> b/tools/verification/rvgen/dot2k_templates/main_container.c
+> similarity index 100%
+> rename from tools/verification/dot2/dot2k_templates/main_container.c
+> rename to tools/verification/rvgen/dot2k_templates/main_container.c
+> diff --git a/tools/verification/dot2/dot2k_templates/main_container.h
+> b/tools/verification/rvgen/dot2k_templates/main_container.h
+> similarity index 100%
+> rename from tools/verification/dot2/dot2k_templates/main_container.h
+> rename to tools/verification/rvgen/dot2k_templates/main_container.h
+> diff --git a/tools/verification/dot2/dot2k_templates/trace.h
+> b/tools/verification/rvgen/dot2k_templates/trace.h
+> similarity index 100%
+> rename from tools/verification/dot2/dot2k_templates/trace.h
+> rename to tools/verification/rvgen/dot2k_templates/trace.h
+> diff --git a/tools/verification/dot2/automata.py
+> b/tools/verification/rvgen/rvgen/automata.py
+> similarity index 100%
+> rename from tools/verification/dot2/automata.py
+> rename to tools/verification/rvgen/rvgen/automata.py
+> diff --git a/tools/verification/dot2/dot2c.py
+> b/tools/verification/rvgen/rvgen/dot2c.py
+> similarity index 99%
+> rename from tools/verification/dot2/dot2c.py
+> rename to tools/verification/rvgen/rvgen/dot2c.py
+> index fa2816ac7b61..6009caf568d9 100644
+> --- a/tools/verification/dot2/dot2c.py
+> +++ b/tools/verification/rvgen/rvgen/dot2c.py
+> @@ -13,7 +13,7 @@
+> =C2=A0# For further information, see:
+> =C2=A0#=C2=A0=C2=A0 Documentation/trace/rv/deterministic_automata.rst
+> =C2=A0
+> -from dot2.automata import Automata
+> +from .automata import Automata
+> =C2=A0
+> =C2=A0class Dot2c(Automata):
+> =C2=A0=C2=A0=C2=A0=C2=A0 enum_suffix =3D ""
+> diff --git a/tools/verification/dot2/dot2k.py
+> b/tools/verification/rvgen/rvgen/dot2k.py
+> similarity index 98%
+> rename from tools/verification/dot2/dot2k.py
+> rename to tools/verification/rvgen/rvgen/dot2k.py
+> index 9ec99e297012..e29462413194 100644
+> --- a/tools/verification/dot2/dot2k.py
+> +++ b/tools/verification/rvgen/rvgen/dot2k.py
+> @@ -8,13 +8,13 @@
+> =C2=A0# For further information, see:
+> =C2=A0#=C2=A0=C2=A0 Documentation/trace/rv/da_monitor_synthesis.rst
+> =C2=A0
+> -from dot2.dot2c import Dot2c
+> +from .dot2c import Dot2c
+> =C2=A0import platform
+> =C2=A0import os
+> =C2=A0
+> =C2=A0class dot2k(Dot2c):
+> =C2=A0=C2=A0=C2=A0=C2=A0 monitor_types =3D { "global" : 1, "per_cpu" : 2,=
+ "per_task" : 3 }
+> -=C2=A0=C2=A0=C2=A0 monitor_templates_dir =3D "dot2/dot2k_templates/"
+> +=C2=A0=C2=A0=C2=A0 monitor_templates_dir =3D "rvgen/dot2k_templates/"
+> =C2=A0=C2=A0=C2=A0=C2=A0 rv_dir =3D "kernel/trace/rv"
+> =C2=A0=C2=A0=C2=A0=C2=A0 monitor_type =3D "per_cpu"
+> =C2=A0
+> @@ -60,14 +60,14 @@ class dot2k(Dot2c):
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if platform.system() !=
+=3D "Linux":
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =
+raise OSError("I can only run on Linux.")
+> =C2=A0
+> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 kernel_path =3D
+> "/lib/modules/%s/build/tools/verification/dot2/dot2k_templates/" %
+> (platform.release())
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 kernel_path =3D
+> "/lib/modules/%s/build/tools/verification/rvgen/dot2k_templates/" %
+> (platform.release())
+> =C2=A0
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if os.path.exists(kernel=
+_path):
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =
+self.monitor_templates_dir =3D kernel_path
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =
+return
+> =C2=A0
+> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if os.path.exists("/usr/share=
+/dot2/dot2k_templates/"):
+> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 self.=
+monitor_templates_dir =3D
+> "/usr/share/dot2/dot2k_templates/"
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if os.path.exists("/usr/share=
+/rvgen/dot2k_templates/"):
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 self.=
+monitor_templates_dir =3D
+> "/usr/share/rvgen/dot2k_templates/"
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =
+return
+> =C2=A0
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 raise FileNotFoundError(=
+"Could not find the template
+> directory, do you have the kernel source installed?")
 
