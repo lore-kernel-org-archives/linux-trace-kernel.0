@@ -1,80 +1,81 @@
-Received: from smtp-fw-52005.amazon.com (smtp-fw-52005.amazon.com [52.119.213.156])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BEEC1E1C29;
-	Wed, 16 Apr 2025 19:36:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.119.213.156
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FBC5214235;
+	Wed, 16 Apr 2025 20:52:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744832191; cv=none; b=PktyomSdGIwO8AHHLa5RmFEBMjYwnDdZgM81CjQ8O42elYRYS5zVz2sfEPbweMqEYANDnXuK9wE1j8kYp/zWYDCFFKmW0Q9FcJbA3rkrL9RxhLZOyEh5UqnCcfY2XcLmFA5Jy5viV9Q6cHOtzc39uX2mdWypZEpEypeWd5WEXKw=
+	t=1744836765; cv=none; b=s/HJ5qQ8kAJypd7fluMR8AYjFhalboMg4hG18UgdNuwQg6QfFrEZuvGmwqFRwVZ0V3Broex6k+aiNxkXAnlOZYNDqs1JSA21nP/vvbC6SwOE8qPYww/beqApTzzag2D0wnJ+d+NGGnluEG/8+8Df4Tiue3kOyyyw69CS8QX4KYs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744832191; c=relaxed/simple;
-	bh=sk6ZmLktKothKrYB9u4OPRZZ9exvwEOGkfDKvVDQXFM=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=FzwYlJ0Cg/PqWqwMwL0YvCVgDEm6md4mcXF9ACPaG1TtD7u2XqHTUQiN5B/IOYvzjIZ7YFZCb2yqTCNTw2PihIQlc3m1yR/Z+QOAiZZRv6/ijtnuaRPEF6ylEN/q4ptMPAMJIHooXz9pIy2VHpYXdmaceDpuINFmJC+0Km40f9U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.co.jp; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=SyR+q4kC; arc=none smtp.client-ip=52.119.213.156
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.jp
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="SyR+q4kC"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1744832190; x=1776368190;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=6RBUxFztchZw7glVy76c73uvPI+lQYsfYgGiS/Z1R6E=;
-  b=SyR+q4kCZBuo+JbSRBJfIkYhlr3m1JtTYHHZr3m8/5b0gaVk10CMXmWF
-   9TgBC3K5pMuUiTHNVXPXNbhwlOGbQqadDrkwvnjJk/k23InIufEZTBtx6
-   T0JXmjfZ0iGeYUmOFqwD7sPZ7h9+bkFFND/U/ESKyv4MdjdY5L7RgE56p
-   A=;
-X-IronPort-AV: E=Sophos;i="6.15,217,1739836800"; 
-   d="scan'208";a="736205495"
-Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.43.8.6])
-  by smtp-border-fw-52005.iad7.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2025 19:36:04 +0000
-Received: from EX19MTAUWC002.ant.amazon.com [10.0.21.151:32778]
- by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.18.160:2525] with esmtp (Farcaster)
- id b2479079-6d46-40d9-b761-533cc65d24df; Wed, 16 Apr 2025 19:36:03 +0000 (UTC)
-X-Farcaster-Flow-ID: b2479079-6d46-40d9-b761-533cc65d24df
-Received: from EX19D004ANA001.ant.amazon.com (10.37.240.138) by
- EX19MTAUWC002.ant.amazon.com (10.250.64.143) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
- Wed, 16 Apr 2025 19:36:02 +0000
-Received: from 6c7e67bfbae3.amazon.com (10.187.170.18) by
- EX19D004ANA001.ant.amazon.com (10.37.240.138) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
- Wed, 16 Apr 2025 19:35:58 +0000
-From: Kuniyuki Iwashima <kuniyu@amazon.com>
-To: <leitao@debian.org>
-CC: <andrew+netdev@lunn.ch>, <davem@davemloft.net>, <edumazet@google.com>,
-	<kernel-team@meta.com>, <kuba@kernel.org>, <kuniyu@amazon.com>,
-	<linux-kernel@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
-	<mathieu.desnoyers@efficios.com>, <mhiramat@kernel.org>,
-	<ncardwell@google.com>, <netdev@vger.kernel.org>, <pabeni@redhat.com>,
-	<rostedt@goodmis.org>
-Subject: Re: [PATCH net-next] trace: tcp: Add const qualifier to skb parameter in tcp_probe event
-Date: Wed, 16 Apr 2025 12:35:28 -0700
-Message-ID: <20250416193542.19206-1-kuniyu@amazon.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250416-tcp_probe-v1-1-1edc3c5a1cb8@debian.org>
-References: <20250416-tcp_probe-v1-1-1edc3c5a1cb8@debian.org>
+	s=arc-20240116; t=1744836765; c=relaxed/simple;
+	bh=f0OYppxEavlfyHTNKLYVKPUYMvnUbW49R6+sWigyn6U=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=Ciupaw8Lgsty1bMAz2GH+FhkRjV2P6M9g9yepxT2liO+gOJtHRAN8+nWQYYDD1h64sF490HfiuWWbLzoO0yeYQJi6jORqfkNGa7H1T3DKWvR64nbrjTWi0ICcQoTJux7w//bdsFG1eZmjy9frYBEc0TMENj0p2K1+S3Fs94ImWE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1A339C4CEE2;
+	Wed, 16 Apr 2025 20:52:43 +0000 (UTC)
+Date: Wed, 16 Apr 2025 16:54:20 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Mark Rutland <mark.rutland@arm.com>
+Subject: [PATCH] ftrace: Comment that ftrace_func_mapper is freed with
+ free_ftrace_hash()
+Message-ID: <20250416165420.5c717420@gandalf.local.home>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: EX19D033UWC003.ant.amazon.com (10.13.139.217) To
- EX19D004ANA001.ant.amazon.com (10.37.240.138)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-From: Breno Leitao <leitao@debian.org>
-Date: Wed, 16 Apr 2025 10:06:12 -0700
-> Change the tcp_probe tracepoint to accept a const struct sk_buff
-> parameter instead of a non-const one. This improves type safety and
-> better reflects that the skb is not modified within the tracepoint
-> implementation.
-> 
-> Signed-off-by: Breno Leitao <leitao@debian.org>
+From: Steven Rostedt <rostedt@goodmis.org>
 
-Reviewed-by: Kuniyuki Iwashima <kuniyu@amazon.com>
+The structure ftrace_func_mapper only contains a single field and that is
+a ftrace_hash. It is used to abstract it out from a normal hash to control
+users of how it gets modified.
+
+The freeing of a ftrace_func_mapper structure is:
+
+  free_ftrace_hash(&mapper->hash);
+
+Without context, this looks like a bug. It should be commented that it is
+not a bug and it is freed this way.
+
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+ kernel/trace/ftrace.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
+
+diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+index a8a02868b435..19b902b8de2b 100644
+--- a/kernel/trace/ftrace.c
++++ b/kernel/trace/ftrace.c
+@@ -5160,8 +5160,12 @@ struct ftrace_func_map {
+ 	void				*data;
+ };
+ 
++/*
++ * Note, ftrace_func_mapper is freed by free_ftrace_hash(&mapper->hash).
++ * The hash field must be the first field.
++ */
+ struct ftrace_func_mapper {
+-	struct ftrace_hash		hash;
++	struct ftrace_hash		hash;	/* Must be first! */
+ };
+ 
+ /**
+@@ -5296,6 +5300,7 @@ void free_ftrace_func_mapper(struct ftrace_func_mapper *mapper,
+ 			}
+ 		}
+ 	}
++	/* This also frees the mapper itself */
+ 	free_ftrace_hash(&mapper->hash);
+ }
+ 
+-- 
+2.47.2
 
