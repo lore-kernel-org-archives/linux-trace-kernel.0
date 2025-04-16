@@ -1,81 +1,155 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FBC5214235;
-	Wed, 16 Apr 2025 20:52:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CD0E221DA5;
+	Wed, 16 Apr 2025 21:55:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744836765; cv=none; b=s/HJ5qQ8kAJypd7fluMR8AYjFhalboMg4hG18UgdNuwQg6QfFrEZuvGmwqFRwVZ0V3Broex6k+aiNxkXAnlOZYNDqs1JSA21nP/vvbC6SwOE8qPYww/beqApTzzag2D0wnJ+d+NGGnluEG/8+8Df4Tiue3kOyyyw69CS8QX4KYs=
+	t=1744840560; cv=none; b=Tr6S7OSW9znjsU4YWOYhR/5MaG0vnPPz/uxFjyC6YhKBEKYZ3kA8ECJbcEZbq9sXHf38BoDw0juvi86m1P95SaYSk2Sk7uaouqRdmZDB4c5QEE8U0j4/pS8lj89puaiG7fMSIC3x4yUWpXqdAxc/gZ0rd4usbpD4uimnTFb0PZI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744836765; c=relaxed/simple;
-	bh=f0OYppxEavlfyHTNKLYVKPUYMvnUbW49R6+sWigyn6U=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=Ciupaw8Lgsty1bMAz2GH+FhkRjV2P6M9g9yepxT2liO+gOJtHRAN8+nWQYYDD1h64sF490HfiuWWbLzoO0yeYQJi6jORqfkNGa7H1T3DKWvR64nbrjTWi0ICcQoTJux7w//bdsFG1eZmjy9frYBEc0TMENj0p2K1+S3Fs94ImWE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1A339C4CEE2;
-	Wed, 16 Apr 2025 20:52:43 +0000 (UTC)
-Date: Wed, 16 Apr 2025 16:54:20 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Mark Rutland <mark.rutland@arm.com>
-Subject: [PATCH] ftrace: Comment that ftrace_func_mapper is freed with
- free_ftrace_hash()
-Message-ID: <20250416165420.5c717420@gandalf.local.home>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1744840560; c=relaxed/simple;
+	bh=lhcwbKPVRhdT6kYZMbI6MCrEmej6mQZJQIMAK/iLsaQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=B2g3z/Cjkh4BTyxf999RCI55Jsl67cee5TnydrVBcrvWNk/bTIo71ueImvpJ8H+f4Ygw+8dOn3fffIKBJdBYqp00GleEw3ZxanTaynrgqwFbI44/nQkcQWwo9EqPEzgd+6DWF1rO3XELearuQJOzCWGV2FG5ufeVR6NWKE4mI+s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KNptsbOK; arc=none smtp.client-ip=209.85.210.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KNptsbOK"
+Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-7399838db7fso160774b3a.0;
+        Wed, 16 Apr 2025 14:55:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744840556; x=1745445356; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=QvgTWFOB2qqsT2gvW8Ts4LYL+E6VLhdjnWeu9wuM0qo=;
+        b=KNptsbOKsYCMGMlV2Yp+fhWpI9vvmHurRB+pV07gE/Iw+CxJjM7dcE8CJD8LJJu0Ci
+         9tMWZsFUBacReanciMO8qFepa0bvK81h5t/hpLgZnKT73Rv5TgTwmLcDYSM+6G8PRHZc
+         u96z5zGGecgf53XnVT3rG8zCHuZB7X/zDy39RTf+xxpEtEDbdDzGFt/QbQ9hsjIGOLfn
+         dU1iUd0pzapdYS5XwoT4bxaR9Vj6pHi1nHV5xJgnszmbpSy/mIx7xAQrecO/VSzqYrmF
+         sOTwZUDMq5D2WSKq2cubVI9ovGjRu5oveABC9bOVf5KJOoGxdL4KZKcTVn1XQW7Fyf1E
+         qJSQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744840556; x=1745445356;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=QvgTWFOB2qqsT2gvW8Ts4LYL+E6VLhdjnWeu9wuM0qo=;
+        b=Yb92iexwJkQwjwxg+UtmFA0UqFwB2qsqsAyG3kIu6GGDXd116C2FUBk7AurK/kQZb5
+         3j7xBeslbgvBIWAB8coHaK9uU1NHsUJzzpBY3a0/ZAQOCLHgTaNfe8hJbGrHntDdT7TR
+         YDYM/QwcUxJp8d0J0QmiXLzrhsr81J76yY3D/hkj5G2V2xukcd/+yFCLnUgmS11t7gkX
+         RDmgD7Wm9EqBaLLZpHuK8aftfdHyoJMvQ7RzBYAI9mpVNIwL+TzsL1lmZ8QNJTSBPMDd
+         TW9F35MpLp/faeWAjfNfDvbKqAwQ8kuxfdOOEJKFNIrnT7DrHi7B673d8TgNroJ2GUvJ
+         36+Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVRWoBGilHhFPbFn+7F73L3q4/skgLbSSNAdiX5+YrUHtZe+7W3Eev+KlZycPexrjce0AuWZuHVLfOOqj7Y@vger.kernel.org, AJvYcCVevcOy5NnC+aFvKuxvXoVj2390lW3mk/a17fH6w+nYScUIy+sBhU3AYmuvvY/tb4a+ZQAmeNl/xPRznW4/je0kpAnc@vger.kernel.org, AJvYcCVh6q+SEo7qZNgnzIEc8GU96cDDdIE5xL4O88dCAlRkXccJPs3yjbn0MG/PO5TS9uohHFI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy4wyPfUUUYQhdgamXc+Xu3CUXgzr/ELd15iC16OIyTdLDfhXQM
+	nwpR1bKsjgLNJu9o6cTn5XP3U6wCUeHz2Q8NtS98FFH2qoR+aBw9R/WcQiYz8gx35f/3yOnTbir
+	WE0LmtVQ9d6Gqh4y+psEaHw0CiM0=
+X-Gm-Gg: ASbGncvBT3wmBIiXGa9/TvDf8SvBt2uKqVCjU5D+uHxbElebQLQcklC0wwz5KWX5KpH
+	eUihz4QreXEAHpQu1ValI9Q02MB6dcvfAA9bWKvLIuhSeL5akNiAeJGUDtCSl1+GrovZUPZ748K
+	LKyuKb0cakMTswC7wMbQA62R4yXetmo5tPSenzgA==
+X-Google-Smtp-Source: AGHT+IHvIQixrAQdwsCTdh1GAxix6g9Del+gDgRZCEmjPlvhovZqA/cUFeAPLqBhVqXk0OeKqvy7+iSvRcbZ/ddq5Co=
+X-Received: by 2002:a05:6a00:35ca:b0:736:476b:fccc with SMTP id
+ d2e1a72fcca58-73cf2a7466bmr675709b3a.8.1744840556239; Wed, 16 Apr 2025
+ 14:55:56 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20250410070258.276759-1-yangfeng59949@163.com>
+In-Reply-To: <20250410070258.276759-1-yangfeng59949@163.com>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Wed, 16 Apr 2025 14:55:43 -0700
+X-Gm-Features: ATxdqUEri2B4k1JC2L-7cp9JCUkFXx4Zbp6ziY-0nhDjM4z8AgOOsHlwGfpeeCA
+Message-ID: <CAEf4Bzai7NL-3=1SVi4-WWYWEY6Lzrb8GBfKnt6FG8sNm2OMRQ@mail.gmail.com>
+Subject: Re: [PATCH bpf-next v3] bpf: Remove redundant checks
+To: Feng Yang <yangfeng59949@163.com>
+Cc: ast@kernel.org, daniel@iogearbox.net, andrii@kernel.org, 
+	martin.lau@linux.dev, eddyz87@gmail.com, song@kernel.org, 
+	yonghong.song@linux.dev, john.fastabend@gmail.com, kpsingh@kernel.org, 
+	sdf@fomichev.me, haoluo@google.com, jolsa@kernel.org, 
+	mattbobrowski@google.com, rostedt@goodmis.org, mhiramat@kernel.org, 
+	mathieu.desnoyers@efficios.com, bpf@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Steven Rostedt <rostedt@goodmis.org>
+On Thu, Apr 10, 2025 at 12:03=E2=80=AFAM Feng Yang <yangfeng59949@163.com> =
+wrote:
+>
+> From: Feng Yang <yangfeng@kylinos.cn>
+>
+> Many conditional checks in switch-case are redundant
+> with bpf_base_func_proto and should be removed.
+>
+> Signed-off-by: Feng Yang <yangfeng@kylinos.cn>
+> Acked-by: Song Liu <song@kernel.org>
+> ---
+> Changes in v3:
+> - Only modify patch description information.
+> - Link to v2: https://lore.kernel.org/all/20250408071151.229329-1-yangfen=
+g59949@163.com/
+>
+> Changes in v2:
+> - Only modify patch description information.
+> - Link to v1: https://lore.kernel.org/all/20250320032258.116156-1-yangfen=
+g59949@163.com/
+> ---
+>  kernel/trace/bpf_trace.c | 72 ----------------------------------------
+>  1 file changed, 72 deletions(-)
+>
 
-The structure ftrace_func_mapper only contains a single field and that is
-a ftrace_hash. It is used to abstract it out from a normal hash to control
-users of how it gets modified.
+All this looks good, I checked that those functions indeed are allowed
+in bpf_base_func_proto. The only (minor) differences are capabilities,
+bpf_base_func_proto() correctly guards some of the helpers with
+CAP_BPF and/or CAP_PERFMON checks, while bpf_tracing_func_proto()
+doesn't seem to bother (which is either a bug or any tracing prog
+implies CAP_BPF and CAP_PERFMON, I'm not sure, didn't check).
 
-The freeing of a ftrace_func_mapper structure is:
+But I think we can take it further and remove even more stuff from
+bpf_tracing_func_proto and/or add more stuff into bpf_base_func_proto
+(perhaps as a few patches in a series, so it's easier to review and
+validate).
 
-  free_ftrace_hash(&mapper->hash);
+Basically, except for a few custom implementations that depend on
+tracing program type (like get_stack and others like that), if
+something is OK to call from a tracing program it should be ok to call
+from any program type. And as such it can (should?) be added to
+bpf_base_func_proto, IMO.
 
-Without context, this looks like a bug. It should be commented that it is
-not a bug and it is freed this way.
+P.S. I'd name the patch/series as "bpf: streamline allowed helpers
+between tracing and base sets" or something like that to make the
+purpose clearer
 
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
- kernel/trace/ftrace.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+[...]
 
-diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-index a8a02868b435..19b902b8de2b 100644
---- a/kernel/trace/ftrace.c
-+++ b/kernel/trace/ftrace.c
-@@ -5160,8 +5160,12 @@ struct ftrace_func_map {
- 	void				*data;
- };
- 
-+/*
-+ * Note, ftrace_func_mapper is freed by free_ftrace_hash(&mapper->hash).
-+ * The hash field must be the first field.
-+ */
- struct ftrace_func_mapper {
--	struct ftrace_hash		hash;
-+	struct ftrace_hash		hash;	/* Must be first! */
- };
- 
- /**
-@@ -5296,6 +5300,7 @@ void free_ftrace_func_mapper(struct ftrace_func_mapper *mapper,
- 			}
- 		}
- 	}
-+	/* This also frees the mapper itself */
- 	free_ftrace_hash(&mapper->hash);
- }
- 
--- 
-2.47.2
+>         case BPF_FUNC_get_current_uid_gid:
+>                 return &bpf_get_current_uid_gid_proto;
+>         case BPF_FUNC_get_current_comm:
+>                 return &bpf_get_current_comm_proto;
 
+I'm surprised these two are not part of bpf_base_func_proto, tbh...
+maybe let's move them there while we are cleaning all this up?
+
+pw-bot: cr
+
+> -       case BPF_FUNC_trace_printk:
+> -               return bpf_get_trace_printk_proto();
+>         case BPF_FUNC_get_smp_processor_id:
+>                 return &bpf_get_smp_processor_id_proto;
+
+this one should be cleaned up as well and
+bpf_get_smp_processor_id_proto removed. All BPF programs either
+disable CPU preemption or CPU migration, so bpf_base_func_proto's
+implementation should work just fine (but please do it as a separate
+patch)
+
+> -       case BPF_FUNC_get_numa_node_id:
+> -               return &bpf_get_numa_node_id_proto;
+>         case BPF_FUNC_perf_event_read:
+>                 return &bpf_perf_event_read_proto;
+
+[...]
