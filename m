@@ -1,152 +1,108 @@
-Received: from mail-yw1-f196.google.com (mail-yw1-f196.google.com [209.85.128.196])
+Received: from mail-yw1-f195.google.com (mail-yw1-f195.google.com [209.85.128.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B4981DA31F;
-	Wed, 16 Apr 2025 01:08:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.196
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05E935227;
+	Wed, 16 Apr 2025 01:48:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744765714; cv=none; b=EIb4Q/ZAEz4HZ/TJTs5A8olQ9zRTyoJ1f9bT6ff5R0WPDou6uiTkVL3GH/CwB+YJHvTAs7qGZWrGji55bgkoEKhKxEQ8kkO0TWJooUrlcWtOXFHvmZPI/8m24wr8jph2sOfFj6vw37VFBGmQ+GfbJmNEZntLYdcjNwwcg4G0r4c=
+	t=1744768093; cv=none; b=DH0o9pdSIKQ/+9jft6FNDYU8VVJeresGpeV+pbFPRdIkeFOvFTDchHS0gDpgvcIazS12hcGbXh8asVjRfbsOiJbPeAPUw3oitD9UJgZsTnq871y1/1d6kvXVeu5PbUEtn6QbJEhudwVfJHQwxQebvtwl11uHHVWXpiVW9UcGf00=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744765714; c=relaxed/simple;
-	bh=24Pj5QnVkkLGfnJr0G5AfJt9DVnlfVPreKS2E55Q0Eo=;
+	s=arc-20240116; t=1744768093; c=relaxed/simple;
+	bh=LmRYGZfdjzKD+GNeB7ijBk/znXqeRMAfPREUU9oAlno=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=sjd2vSF+4X1MR6nnFI4cdU5mNkWa3IxlQwXuJQZrcF6P3LDFsKnFE3G5mNR8H8fxcWjaXgN3okDX7VUkj1l3W28oyw4N/3OhU+eJMop6sCWmYiL/MmGkrxHg3X1PUuuirDhGE2JEEJyrhDClkl9Iu7ynq2fDuV+RXPhvob0i3zc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Gx8bp6/Q; arc=none smtp.client-ip=209.85.128.196
+	 To:Cc:Content-Type; b=MX2JcuJln1rOblgGv6Ouy9F4JJbXeneTrT3FWDeyUkwOE3CUBEl5GeAD/F1zfeQ+Q2XDT7epT9WY9lDu6lBcDIlCfsAcUgrQh3nuvj078zY6nQFk0ScPKcvukBdytJcXxAaoe4lWDh0mgOTCfRYieqes3HXTlFzHs0s9qrC7WWU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Wn8sCCRK; arc=none smtp.client-ip=209.85.128.195
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Gx8bp6/Q"
-Received: by mail-yw1-f196.google.com with SMTP id 00721157ae682-6f6ca9a3425so73139727b3.2;
-        Tue, 15 Apr 2025 18:08:31 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Wn8sCCRK"
+Received: by mail-yw1-f195.google.com with SMTP id 00721157ae682-70565ccf3bcso39707667b3.0;
+        Tue, 15 Apr 2025 18:48:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744765711; x=1745370511; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1744768091; x=1745372891; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=nae8iA9Q44bLOPIklEeda/m4+BCHuPMc/pHieS0xpfQ=;
-        b=Gx8bp6/QMJPBH+3bbM4rXpV8wp+gI0HJbjQ8u2vsxX0yuwHMfNzLcqDo/up84Llord
-         p6imXBAdLyNmWTrZXrrVQVp6XdSbb+FxJRcvxYvj/ss1qfbWu0ZkEEWwZ7J2YzMNylrx
-         Fgj+VUMXj/XzewdtNCkFzBCjuLN2lOufcao8AyKdJEfcZfba1Ugl9FMGS+f5mEVqnFaf
-         5uVen5BFXhxH+qfv14cjDPI9aYGpjytFWG/KryYEK2EoMTwFk7asOZmfLvlkbNfuC9MC
-         HhWNBHwPSJS1GQtshKcuU5fEkUrqT85qNav0phfOJvZmDdTdoyp48Kzh9LZYslau3Wsi
-         8Nhw==
+        bh=xqLmF3Z6t3I+6keU46Rahz1Y3IvBRd9Ly3KaUnN+N7o=;
+        b=Wn8sCCRK9EOLtICz88DpWRUB0/2LdwnOtzagFKWCL7qbHJUeefHtEgPNaSWRjgZZ6D
+         U9GbTr0ElmsptOB6Q6T7RQwvdxvdHNE4Ls51y1rlejIErSlo02uN9LRXhxB31QHNGJjp
+         fzG0g6IUVMGNSv5B78wvUSlro3idjotntqSl5ZP++7r5TkA8gE3Vw+rZOPCqi7gm7feR
+         aoSZiwHCDhn5XFqVNLYic0jKcWRWkWDlT86KpGsQR58WjrCiHxmNScgzdcnx1hG3G9+m
+         Cmfqabq1aGHaWAbRnZaTu23NkrYJltXyrQEUdS+U5Ndmoy8VxYzEUjMJ7OexTshSF7ft
+         TjAA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744765711; x=1745370511;
+        d=1e100.net; s=20230601; t=1744768091; x=1745372891;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=nae8iA9Q44bLOPIklEeda/m4+BCHuPMc/pHieS0xpfQ=;
-        b=mUMHwSE2TWJwB3koR2f4vwiVbZRiqLkQaXNHhVUCRN4TLaBJ4lDAPYlIq//OF7FBKD
-         bWFb52RH9v6mrg4zxOBcR7GrhvG2sw1/+Pta044viLl1AdcYJoQc3lJcZbdkx4ANYzBw
-         w1KVKEn55YJ7LiCBQH0GPNGyP2RmFF8ccqQyFNLLn+DMtGiAemfNosMPv5KNHiR9AU/X
-         g6eHOg/JQJdOt8jU4XL8Ds/Y+8YK8AvHeZ8mvF2lQjf/Sy+HoiSNKruarPVKiiqFJI/y
-         8GvZoNXL+RIBzL1KfQrnQTrIKws67PZGyvrzAzPjNy7hQf/fB4WLUAfbnTZ/cBbXN1DI
-         j2Ag==
-X-Forwarded-Encrypted: i=1; AJvYcCUciDjY3kM08AtSNpkewYTocjRpxT+PmYpBlVrISNeHC0VsQAlfPfvv8N4+vxkGUQeh1NNcj8zhBzmSBmUT@vger.kernel.org, AJvYcCWbnflrfeUs57lLKB0mYR+p29sA7y0CQUNefA+EYma/62UN62WDkwabaZpNG5i0FLX3Ix+a80bdBvq/K3fcwpUX7TlM@vger.kernel.org, AJvYcCXFsksgehe579tQXkm0bkxmitRpLQwMYgPbTdRPEEjsDu3Tps9lZehhiSElRoDv8IqIQ6M=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyp2VBMBjsi47Jn6VRHXwXulrePbIm6u7VHD2klojuSNkFNHfz5
-	Ef9DxMTAbbn2sSc53zXQPtutZ+QyNEhJwET5R5wCAvywSbvu5R/Cekj3B0Ed0xSJ6DJlTLMj7WM
-	9Rs4B8ZtlMWu17SQOOSnJtV1o6E0=
-X-Gm-Gg: ASbGncvY7WQaPn6cZrwUQqcOqAlwQQqLsyONrcrrBMwyY8TtKI5pO0DbGecy6R4pRUK
-	z2eGBwiGxw5qHqRwmrd3G/JZ9Kawkcvm9rnyAFEWa2Cf4sfCb41/SDKUHH789yHK/2OHsCUWbxk
-	Sy6G+esgHzckttULq84XC7fA==
-X-Google-Smtp-Source: AGHT+IErozDlBEtdi3kw+kK2RMiMLcVJupyXpukTsMbcRfzHTw8qXYapvuK6UCyQRpv5sk9NgzQQexQH7kAbCBffMJQ=
-X-Received: by 2002:a05:690c:6009:b0:6f9:af1f:fdd0 with SMTP id
- 00721157ae682-706ad1d8a76mr23158377b3.31.1744765710804; Tue, 15 Apr 2025
- 18:08:30 -0700 (PDT)
+        bh=xqLmF3Z6t3I+6keU46Rahz1Y3IvBRd9Ly3KaUnN+N7o=;
+        b=U2wXEY+Ksk3O9LUyYb/8HAeHnnoxNDmoFKbQ8TyWlWf1T4mbwbQ1w55DPu6SAX3tsO
+         HKcT4io27WPK3eROkrg3wtT87wPr1O1B++VUjVWP0WgWSvUBtwC+j1+ipV+as8sQ/E9U
+         b1gEsJZAEjUe+uc+YPforl+cHvK59c4S7/l55peQkJBwKf6E/8kr1FPUMZxAcETr7GJU
+         7nt3UCpfirW44QVx+csNC5EFJIQe02455dGrXcjuv7rbN2OtiD4M4xsONVKAimKt2ueU
+         KQpSh3urUAYCyz0lHWZdWNl7eAKu8zqwOScZ7iQjVWPazadJdzlk58s4uMfGMKbz7njO
+         sc/A==
+X-Forwarded-Encrypted: i=1; AJvYcCUaeBVqo1lAso58LdAZa8t+IS5h14ybAIHU5ZSN/Sa4KqCTDeMQVAcTschvKjo6AkrH6U6cllc6UwMgPFw=@vger.kernel.org, AJvYcCWH/mCmMmkije0EbPd8K2rAD8EOYCtOAcSCVEXfojHCxvNPsTBsgsTPS4scIUyzaIOSUnXS1Khl0RAPQL3Iaxfw35RR@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywd0k7awKN8UgXO+ZfHEiAx1hkJVIonlYox6sg8rNtN+HtIHK+m
+	c678PHyqi8/ey9aMDAf8FVdfdSlXhfE1CdlHLTLVHU2WTyugbtjUGUdspFobMB6hHa5z1Fk20XG
+	U7alIYZ//qMp/EgeAPX57ZVV6xY3j/u9k23A=
+X-Gm-Gg: ASbGncvC140fLYIyx+/53MaP4CxwCJRTOHiVqXBHJMveZYgdH/Au4RQyj7NJkqh7wS7
+	IOcvb9alCRHZfz7SYo/z+5o9InjZ+kn/LmqOASin4wm63U3P1ZBPLxD0Z+tICkVJdr/LTXGbZXi
+	oxhLKmeg8NC+rhPU+GmIuNAg==
+X-Google-Smtp-Source: AGHT+IH6C4g81eZKeTeUb9hCFSy4U/5I3cBEhngWsJsQqyVX/TxQ+f+/ZVXpEgAzRxOjX2mWC8EQzFip8VeewplAl20=
+X-Received: by 2002:a05:690c:6c0a:b0:700:a6a1:66ae with SMTP id
+ 00721157ae682-706b32a622dmr1004437b3.16.1744768090833; Tue, 15 Apr 2025
+ 18:48:10 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250413014444.36724-1-dongml2@chinatelecom.cn>
- <20250414160528.3fd76062ad194bdffff515b5@kernel.org> <CAEf4BzbyqNAPrOR7cR+2PKCy+cXoEftWufFbhMv73QPFZM+ysw@mail.gmail.com>
-In-Reply-To: <CAEf4BzbyqNAPrOR7cR+2PKCy+cXoEftWufFbhMv73QPFZM+ysw@mail.gmail.com>
+References: <20250415112750.1477339-1-guoj17@chinatelecom.cn> <20250415074633.3cf7546d@gandalf.local.home>
+In-Reply-To: <20250415074633.3cf7546d@gandalf.local.home>
 From: Menglong Dong <menglong8.dong@gmail.com>
-Date: Wed, 16 Apr 2025 09:06:14 +0800
-X-Gm-Features: ATxdqUH3BxeiuPSItNg15YgITrPiruh7-ARebQqerIosErclXgD5_4u5RLQsuuI
-Message-ID: <CADxym3a2sr-CB=G-ryew+LV3tcbZ1EZ6kzbAPDyQmV=xbaF4bQ@mail.gmail.com>
-Subject: Re: [PATCH bpf v2] ftrace: fix incorrect hash size in register_ftrace_direct()
-To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, rostedt@goodmis.org, mark.rutland@arm.com, 
-	mathieu.desnoyers@efficios.com, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org, 
-	Menglong Dong <dongml2@chinatelecom.cn>
+Date: Wed, 16 Apr 2025 09:45:54 +0800
+X-Gm-Features: ATxdqUGoxV7-FrLDOfL0otb9nTJnPoreiefCjKG7AC-p9lj_cIcVamgdmnzlrjE
+Message-ID: <CADxym3bjjp8edgbpAct0GKno3NGLxs2Pd0hod94r7u_2jGUC5w@mail.gmail.com>
+Subject: Re: [PATCH] ftrace: make ftrace_location() more accurate
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: mhiramat@kernel.org, mark.rutland@arm.com, mathieu.desnoyers@efficios.com, 
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	Jin Guo <guoj17@chinatelecom.cn>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Apr 16, 2025 at 7:14=E2=80=AFAM Andrii Nakryiko
-<andrii.nakryiko@gmail.com> wrote:
+On Tue, Apr 15, 2025 at 7:45=E2=80=AFPM Steven Rostedt <rostedt@goodmis.org=
+> wrote:
 >
-> On Mon, Apr 14, 2025 at 12:05=E2=80=AFAM Masami Hiramatsu <mhiramat@kerne=
-l.org> wrote:
-> >
-> > On Sun, 13 Apr 2025 09:44:44 +0800
-> > Menglong Dong <menglong8.dong@gmail.com> wrote:
-> >
-> > > The maximum of the ftrace hash bits is made fls(32) in
-> > > register_ftrace_direct(), which seems illogical. So, we fix it by mak=
-ing
-> > > the max hash bits FTRACE_HASH_MAX_BITS instead.
-> > >
-> >
-> > Loogs good to me.
-> >
-> > Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> >
-> > Thanks!
-> >
+> On Tue, 15 Apr 2025 19:27:50 +0800
+> Jin Guo <menglong8.dong@gmail.com> wrote:
 >
-> I'm a bit confused by the "[PATCH bpf]" prefix... This fix doesn't
-> seem to be BPF-related, so I'm not sure why it would go through the
-> bpf tree. I presume Masami or Steven will route it through their tree,
-> is that right?
+> > The function ftrace_location is used to lookup the ftrace location with=
+ an
+> > ip. However, the result that it returns can be wrong in some case.
+> >
+> > Let's image that we have the following kallsyms:
+> >
+> >   ffffffff812c35f0 T sys_ni_syscall
+> >   ffffffff812c38b0 W __pfx___x64_sys_io_pgetevents_time32
+> >   ffffffff812c38c0 W __x64_sys_io_pgetevents_time32
 >
+> Have you tried the latest kernel? because on x86, weak functions that are
+> not used should no longer be in the ftrace table. That is, you should nev=
+er
+> see __ftrace_invalid_addres_* anymore.
+>
+> See https://lore.kernel.org/all/20250218195918.255228630@goodmis.org/
+>
+> That was just added this merge window, which would make your patch obsole=
+te.
 
-Sorry about the confusing......I throught the register_ftrace_direct()
-is mainly used by BPF, and it should go to the ftrace tree :/
+Hi, Steve
 
-Thanks!
-Menglong Dong
+you are right, I haven't updated my code in over a month, and
+the latest kernel works fine.
 
 >
-> > > Fixes: d05cb470663a ("ftrace: Fix modification of direct_function has=
-h while in use")
-> > > Signed-off-by: Menglong Dong <dongml2@chinatelecom.cn>
-> > > ---
-> > > v2:
-> > > - thanks for Steven's advice, we fix the problem by making the max ha=
-sh
-> > >   bits FTRACE_HASH_MAX_BITS instead.
-> > > ---
-> > >  kernel/trace/ftrace.c | 7 ++++---
-> > >  1 file changed, 4 insertions(+), 3 deletions(-)
-> > >
-> > > diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-> > > index 1a48aedb5255..d153ad13e0e0 100644
-> > > --- a/kernel/trace/ftrace.c
-> > > +++ b/kernel/trace/ftrace.c
-> > > @@ -5914,9 +5914,10 @@ int register_ftrace_direct(struct ftrace_ops *=
-ops, unsigned long addr)
-> > >
-> > >       /* Make a copy hash to place the new and the old entries in */
-> > >       size =3D hash->count + direct_functions->count;
-> > > -     if (size > 32)
-> > > -             size =3D 32;
-> > > -     new_hash =3D alloc_ftrace_hash(fls(size));
-> > > +     size =3D fls(size);
-> > > +     if (size > FTRACE_HASH_MAX_BITS)
-> > > +             size =3D FTRACE_HASH_MAX_BITS;
-> > > +     new_hash =3D alloc_ftrace_hash(size);
-> > >       if (!new_hash)
-> > >               goto out_unlock;
-> > >
-> > > --
-> > > 2.39.5
-> > >
-> > >
-> >
-> >
-> > --
-> > Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> >
+> -- Steve
