@@ -1,242 +1,115 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f54.google.com (mail-qv1-f54.google.com [209.85.219.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCA1A2248B0;
-	Wed, 16 Apr 2025 19:24:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BED0219A79;
+	Wed, 16 Apr 2025 19:34:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744831490; cv=none; b=YVIrBuuuT/byfdrx4VZoJUiSj/LlgSzBmXUIdf/qU99O1jQWisWUcUVtMeQa2mdAF7h6xARXu1PxW1shsar7JNF23uoaEGec9sw9Bg6giZja5eHTgv4pz0ulvHchmJo4+27n6kW1Jr/EPO/I0u5YC/fixGQmxnVn2VV52RFlyas=
+	t=1744832084; cv=none; b=nmq8Wfa5fatopBSlEf48qJXgvW2Ple87vPJFjwbne4aSou6zu6wjE3tWx7CANPrSxk3K1LkL1f53U8hkQ7+WLLs6jE9Q36ngr5XSBg7GtxzljUaSpRJtM1hadpA8cWYxi3CPCmy1eeaOUJ9id7dGUqViMISTKWf07VTaMOGb1Jc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744831490; c=relaxed/simple;
-	bh=xFZVWYzhCLeAtFnklnvSHAQjs0ozX8nCpx2s2TD445U=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=MSakIlWI2Tt3wlij55LKsqSg7BKTg5UVVfYyH9DYmwCwpGqeVtQVkG9UsfPCt2DeFiY0w5lXCPoKPyBYMX3slqODeTcNgb282VO+8aG3eeTHu53W0CmRqw/KmKhA6aIu1QDEBY+gZhx7N9jjV7cZvMR0FyPHtcwlOT7Y2VTA33Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=tqq+QE+1; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1744832084; c=relaxed/simple;
+	bh=1zN9X6yDeiS9IW9n32HYclfLjKjxXCQgDbUK6JkkPkg=;
+	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
+	 Mime-Version:Content-Type; b=FO3syFjQq4xEzQU6xfurerIyRw1VEKAaH1z+4d8kmGoxH8cVmJVkd4XmzSggJjkQwDGAtbKaf9dA4nluV2M0JKquCbUgY2PULmpe9Ey9s1QHM2qaRgg1Ye5DSSkhS5fZJsiHLmc/ErXh1MUo51oiu8prmHFt9I4hJkq+rZ5hQTA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CVgXA/nv; arc=none smtp.client-ip=209.85.219.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="tqq+QE+1"
-Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53GJAPJG028081;
-	Wed, 16 Apr 2025 19:24:13 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=ESx9ZW
-	YVOviol+gu5GvYE6oR3Czemj4YTpdoVBjfivQ=; b=tqq+QE+1bs1NNEGlMeSu3z
-	io3UDLsM8JzWosI5jAPs9RmMYH6RWPpQaLCK/U6koMFhxX/VnyAPrI1CofeCwCpt
-	N3fg5iNEA19wkR0MWEk7wIDePmGRxUiZDhONI1cxWGthRZP8LD9/a9DpgyD8laOl
-	Q7Z4II0vHIS8ulJZwjeo5tm1r69TrC8ioR9po3UEEifdrQ8/NoZI5QQukwxEUjmm
-	eHmoS4A0qaSDfKlqaEOHpx3Q9VN4iYyBvEEolZ2k0PlKbrZwg5kzsyyTUTi23O8B
-	aD9mzlnQlsrwniMNxhEBk8Q1XJjQRBx7zN2SvK1OLnwDdTbKQBHFIqmsHR7vWlxA
-	==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 461ykt5hnv-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 16 Apr 2025 19:24:13 +0000 (GMT)
-Received: from m0360072.ppops.net (m0360072.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 53GJN91l017855;
-	Wed, 16 Apr 2025 19:24:12 GMT
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 461ykt5hnq-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 16 Apr 2025 19:24:12 +0000 (GMT)
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 53GIQxdf017204;
-	Wed, 16 Apr 2025 19:24:11 GMT
-Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 46040m1u6u-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 16 Apr 2025 19:24:11 +0000
-Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
-	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 53GJO7tr36635100
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 16 Apr 2025 19:24:07 GMT
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id B519920043;
-	Wed, 16 Apr 2025 19:24:07 +0000 (GMT)
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id F0B4E20040;
-	Wed, 16 Apr 2025 19:24:02 +0000 (GMT)
-Received: from [9.43.31.13] (unknown [9.43.31.13])
-	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Wed, 16 Apr 2025 19:24:02 +0000 (GMT)
-Message-ID: <796f0cc9-a506-48e4-8c0e-f16e5af74a59@linux.ibm.com>
-Date: Thu, 17 Apr 2025 00:54:01 +0530
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CVgXA/nv"
+Received: by mail-qv1-f54.google.com with SMTP id 6a1803df08f44-6ecf99dd567so868876d6.0;
+        Wed, 16 Apr 2025 12:34:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744832080; x=1745436880; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:subject:references
+         :in-reply-to:message-id:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Gz4jCp6R4OrveGAeCbVTPU91qgzQT2hPcqVU16N6WY8=;
+        b=CVgXA/nvbDbqrWi0BrJwRjj+uxOzAzNiepPZOV8vkZgJriuAPJWsb2MI6caj7BkRNm
+         fSc+F+N8z/NEaDYiw7BkXj0kzaWo9BJqq0119ZF7sD/lcqS0qOW0FEd7jaBj6uGtJQpg
+         2EZBFRaSeh39qi2KgV11M8cxEnYqSYDU20fkanzTVkpl171tK5x9O0BFZ4kkeLLC08HA
+         g5x1Vova+2VgXu62uHLOI5P/8riH390Y2mYOkYWn0oJVaaFXJL3QBAH3QzbIPmnKCW7C
+         LPuQD1sIDlaJtxNAFk5vpS7WF5KniAfJ0PhJEmCkDgZkxsIyFqsEkiyx293S3cQfbzbX
+         EuRg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744832080; x=1745436880;
+        h=content-transfer-encoding:mime-version:subject:references
+         :in-reply-to:message-id:cc:to:from:date:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=Gz4jCp6R4OrveGAeCbVTPU91qgzQT2hPcqVU16N6WY8=;
+        b=LJXYoVNHZSEed3/b0yCV6cxupXhdLfft1tNAFATnkfTd5XV2KGeEFGUeMIZjokCTC/
+         M0BvMUNQwF0aQwqD+Ts3odywbclEKTcJDNEa6Ut0DNyeCqwKKxLPz7/IEpjgxQd5ktDu
+         aNN+0TLzLZPwI3uioQlO0UYNp3u+jnD4N/DaZmkU03qjTx3KL5OY91pbtSF29O6GHPbo
+         P9tjZo0XIg+knwFDSufP3SfP2C8Wp+nLajYsENUyOLL5UTtwbe79mhQhLqVst+ETIleK
+         LvECzu5BsKVwIbzqYDzmEk7LCds1WGcQZWZZUgBaJOW3ZBTR2BRS17rBxLTYj6rbJLrV
+         ymvw==
+X-Forwarded-Encrypted: i=1; AJvYcCUgv1RUYG3/3skfn/8fZKTyrydGUHgEt4VEwFRr5LSNPcwefgc8QvCZ6TDTgvTE3dq1rqukYUjM2yI8kKs=@vger.kernel.org, AJvYcCVdpGnimWZsp3XzbnNKBbW2ZNa6rx7uIvWVJA8lFPrJprqAPUqcM3hy+P2rVZHpuuHcgoFWbE8X5clXyflhwet6diqg@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz6imuEIWTLTbOFfyLzHn5FOSoeLZvDQYYoxhxb3wlIOGkY2Dr2
+	2Zj8xNU8e4m/cMsdAcX+S0nGzE4UAOa0sXeazjHwEZvOHEf6vOah
+X-Gm-Gg: ASbGncvtTmH5M6DfCohuRIWv8ARKeh4xxncrPZtezyRg51MOyYCQK2EoByIOMQM5X4W
+	9/jSeFCTHCR/lovdrrrTlXafyHi487jjdY7IOZj6GadR72CCHWVHgpIaRILlLtDWvpmN1GpE1zX
+	b7EVV01wsyGmOQ1mssGQW5BT0PcAeMaQ6XfxtzOi7+zZlQObJWGvIjV3Ees54fMo/6W58Xv1KzG
+	W6amJzGVYCzr1UduTTDsFPoDND+vgYh+kQD+wgmZ+gco0FpluPp24bHmQNnXwyquIdowUsRJh86
+	lCRXlWgmIJc32JX20ab1dc1nHZ51RWWBqORGb+HkSu5EIlVr0SJIUChtuYtHpG3jqA7boL7VA7A
+	AdN2RWDvz7I+fPOTyHWyg
+X-Google-Smtp-Source: AGHT+IFz3TMw+fdTGgJPSgCnpNEMY2Hsn+/wirjgyY+ZXnp17SPLHUcKa/dIsNFQJ7i08rr/6azZaQ==
+X-Received: by 2002:a05:6214:19c8:b0:6e8:ee68:b4a1 with SMTP id 6a1803df08f44-6f2b2f22a1fmr46961416d6.8.1744832079844;
+        Wed, 16 Apr 2025 12:34:39 -0700 (PDT)
+Received: from localhost (141.139.145.34.bc.googleusercontent.com. [34.145.139.141])
+        by smtp.gmail.com with UTF8SMTPSA id 6a1803df08f44-6f0dea10825sm118667666d6.116.2025.04.16.12.34.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 16 Apr 2025 12:34:39 -0700 (PDT)
+Date: Wed, 16 Apr 2025 15:34:38 -0400
+From: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
+To: Breno Leitao <leitao@debian.org>, 
+ Willem de Bruijn <willemdebruijn.kernel@gmail.com>, 
+ Steven Rostedt <rostedt@goodmis.org>, 
+ Masami Hiramatsu <mhiramat@kernel.org>, 
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+ "David S. Miller" <davem@davemloft.net>, 
+ David Ahern <dsahern@kernel.org>, 
+ Eric Dumazet <edumazet@google.com>, 
+ Jakub Kicinski <kuba@kernel.org>, 
+ Paolo Abeni <pabeni@redhat.com>, 
+ Simon Horman <horms@kernel.org>, 
+ kuniyu@amazon.com
+Cc: netdev@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, 
+ linux-trace-kernel@vger.kernel.org, 
+ yonghong.song@linux.dev, 
+ song@kernel.org, 
+ kernel-team@meta.com, 
+ Breno Leitao <leitao@debian.org>
+Message-ID: <6800064ea440f_fc9d7294c4@willemb.c.googlers.com.notmuch>
+In-Reply-To: <20250416-udp_sendmsg-v1-1-1a886b8733c2@debian.org>
+References: <20250416-udp_sendmsg-v1-1-1a886b8733c2@debian.org>
+Subject: Re: [PATCH net-next] udp: Add tracepoint for udp_sendmsg()
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [BUG?] ppc64le: fentry BPF not triggered after live patch (v6.14)
-To: Viktor Malik <vmalik@redhat.com>, Shung-Hsi Yu <shung-hsi.yu@suse.com>,
-        "Naveen N. Rao" <naveen@kernel.org>, bpf@vger.kernel.org
-Cc: Michael Ellerman <mpe@ellerman.id.au>,
-        Mark Rutland
- <mark.rutland@arm.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        Vishal Chourasia <vishalc@linux.ibm.com>,
-        Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
-        Miroslav Benes <mbenes@suse.cz>,
-        =?UTF-8?Q?Michal_Such=C3=A1nek?= <msuchanek@suse.de>,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-trace-kernel@vger.kernel.org, live-patching@vger.kernel.org
-References: <rwmwrvvtg3pd7qrnt3of6dideioohwhsplancoc2gdrjran7bg@j5tqng6loymr>
- <1aec4a9a-a30b-43fd-b303-7a351caeccb7@redhat.com>
-Content-Language: en-US
-From: Hari Bathini <hbathini@linux.ibm.com>
-In-Reply-To: <1aec4a9a-a30b-43fd-b303-7a351caeccb7@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Mime-Version: 1.0
+Content-Type: text/plain;
+ charset=utf-8
 Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: JJAZFXP6kaIp9kJeQ6dHn81nUA9Q_RDO
-X-Proofpoint-ORIG-GUID: BNinUJpqI94Ol0cDOhk9_8_wuVqysaFZ
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-16_07,2025-04-15_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 mlxscore=0
- suspectscore=0 lowpriorityscore=0 bulkscore=0 spamscore=0 adultscore=0
- priorityscore=1501 phishscore=0 mlxlogscore=999 clxscore=1015
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2502280000 definitions=main-2504160155
 
+Breno Leitao wrote:
+> Add a lightweight tracepoint to monitor UDP send message operations,
+> similar to the recently introduced tcp_sendmsg_locked() trace event in
+> commit 0f08335ade712 ("trace: tcp: Add tracepoint for
+> tcp_sendmsg_locked()")
+> 
+> This implementation uses DECLARE_TRACE instead of TRACE_EVENT to avoid
+> creating extensive trace event infrastructure and exporting to tracefs,
+> keeping it minimal and efficient.
+> 
+> Since this patch creates a rawtracepoint, it can be accessed using
+> standard tracing tools like bpftrace:
+> 
+>     rawtracepoint:udp_sendmsg_tp {
+>         ...
+>     }
 
+What does this enable beyond kfunc:udp_sendmsg?
 
-On 07/04/25 2:12 pm, Viktor Malik wrote:
-> On 3/31/25 15:19, Shung-Hsi Yu wrote:
->> Hi all,
->>
->> On ppc64le (v6.14, kernel config attached), I've observed that fentry
->> BPF programs stop being invoked after the target kernel function is live
->> patched. This occurs regardless of whether the BPF program was attached
->> before or after the live patch. I believe fentry/fprobe on ppc64le is
->> added with [1].
->>
->> Steps to reproduce on ppc64le:
->> - Use bpftrace (v0.10.0+) to attach a BPF program to cmdline_proc_show
->>    with fentry (kfunc is the older name bpftrace used for fentry, used
->>    here for max compatability)
->>
->>      bpftrace -e 'kfunc:cmdline_proc_show { printf("%lld: cmdline_proc_show() called by %s\n", nsecs(), comm) }'
->>
->> - Run `cat /proc/cmdline` and observe bpftrace output
->>
->> - Load samples/livepatch/livepatch-sample.ko
->>
->> - Run `cat /proc/cmdline` again. Observe "this has been live patched" in
->>    output, but no new bpftrace output.
->>
->> Note: once the live patching module is disabled through the sysfs interface
->> the BPF program invocation is restored.
->>
->> Is this the expected interaction between fentry BPF and live patching?
->> On x86_64 it does _not_ happen, so I'd guess the behavior on ppc64le is
->> unintended. Any insights appreciated.
-> 
-> I'm not sure if this is related but I found out that when a kernel is
-> compiled with KASAN=y (full config attached), the above steps without
-> the bpftrace part lead to a kernel panic upon running the second `cat
-> /proc/cmdline` command (the livepatched one).
-> 
-> Here's the relevant part of the kdump:
-> 
-> [  457.405298] BUG: Unable to handle kernel data access on write at 0xc0000000000f9078
-> [  457.405320] Faulting instruction address: 0xc0000000018ff958
-> [  457.405328] Oops: Kernel access of bad area, sig: 11 [#1]
-> [  457.405336] LE PAGE_SIZE=64K MMU=Hash  SMP NR_CPUS=8192 NUMA pSeries
-> [  457.405347] Modules linked in: livepatch_sample(K) bonding tls rfkill vmx_crypto ibmveth pseries_rng sg fuse loop nfnetlink vsock_loopback vmw_vsock_virtio_transport_common vsock xfs sd_mod ibmvscsi scsi_transport_srp dm_mirror dm_region_hash dm_log dm_mod
-> [  457.405410] CPU: 6 UID: 0 PID: 5141 Comm: cat Kdump: loaded Tainted: G              K     6.14.0+ #9 VOLUNTARY
-> [  457.405424] Tainted: [K]=LIVEPATCH
-> [  457.405430] Hardware name: IBM,9009-22A POWER9 (architected) 0x4e0202 0xf000005 of:IBM,FW910.00 (VL910_062) hv:phyp pSeries
-> [  457.405440] NIP:  c0000000018ff958 LR: c0000000018ff930 CTR: c0000000009c0790
-> [  457.405449] REGS: c00000005f2e7790 TRAP: 0300   Tainted: G              K      (6.14.0+)
-> [  457.405459] MSR:  8000000000009033 <SF,EE,ME,IR,DR,RI,LE>  CR: 2822880b  XER: 20040000
-> [  457.405484] CFAR: c0000000008addc0 DAR: c0000000000f9078 DSISR: 0a000000 IRQMASK: 1
-> GPR00: c0000000018f2584 c00000005f2e7a30 c00000000280a900 c000000017ffa488
-> GPR04: 0000000000000008 0000000000000000 c0000000018f24fc 000000000000000d
-> GPR08: fffffffffffe0000 000000000000000d 0000000000000000 0000000000008000
-> GPR12: c0000000009c0790 c000000017ffa480 c00000005f2e7c78 c0000000000f9070
-> GPR16: c00000005f2e7c90 0000000000000000 0000000000000000 0000000000000000
-> GPR20: 0000000000000000 c00000005f3efa80 c00000005f2e7c60 c00000005f2e7c88
-> GPR24: c00000005f2e7c60 0000000000000001 c0000000000f9078 0000000000000000
-> GPR28: 00007fff97960000 c000000017ffa480 0000000000000000 c0000000000f9078
-> [  457.405605] NIP [c0000000018ff958] _raw_spin_lock_irqsave+0x68/0x110
-> [  457.405619] LR [c0000000018ff930] _raw_spin_lock_irqsave+0x40/0x110
-> [  457.405630] Call Trace:
-> [  457.405635] [c00000005f2e7a30] [c000000000941804] check_heap_object+0x34/0x390 (unreliable)
-> [  457.405651] [c00000005f2e7a70] [c0000000018f2584] __mutex_unlock_slowpath.isra.0+0xe4/0x230
-> [  457.405665] [c00000005f2e7af0] [c0000000009c2f50] seq_read_iter+0x430/0xa90
-> [  457.405679] [c00000005f2e7c00] [c000000000aade04] proc_reg_read_iter+0xa4/0x200
-> [  457.405692] [c00000005f2e7c40] [c00000000095345c] vfs_read+0x41c/0x510
-> [  457.405705] [c00000005f2e7d30] [c0000000009545d4] ksys_read+0xa4/0x190
-> [  457.405716] [c00000005f2e7d90] [c00000000003a3f0] system_call_exception+0x1d0/0x440
-> [  457.405729] [c00000005f2e7e50] [c00000000000cedc] system_call_vectored_common+0x15c/0x2ec
-> [  457.405744] --- interrupt: 3000 at 0x7fff97e75044
-> [  457.405755] NIP:  00007fff97e75044 LR: 00007fff97e75044 CTR: 0000000000000000
-> [  457.405764] REGS: c00000005f2e7e80 TRAP: 3000   Tainted: G              K      (6.14.0+)
-> [  457.405773] MSR:  800000000280f033 <SF,VEC,VSX,EE,PR,FP,ME,IR,DR,RI,LE>  CR: 48222804  XER: 00000000
-> [  457.405805] IRQMASK: 0
-> GPR00: 0000000000000003 00007fffc1908930 00007fff97f87100 0000000000000003
-> GPR04: 00007fff97960000 0000000000040000 0000000000000000 00007fff97f80248
-> GPR08: 0000000000000002 0000000000000000 0000000000000000 0000000000000000
-> GPR12: 0000000000000000 00007fff9805a5a0 0000000000000000 0000000000000000
-> GPR16: 0000000000000000 0000000000040000 00007fffc19091c8 0000000000000000
-> GPR20: 0000000000000000 0000000000000000 0000000000000000 00007fff9804f470
-> GPR24: 0000000000000000 0000000000040000 00007fffc190f1c5 000000007ff00000
-> GPR28: 0000000000000003 00007fff97960000 0000000000040000 0000000000000003
-> [  457.405916] NIP [00007fff97e75044] 0x7fff97e75044
-> [  457.405924] LR [00007fff97e75044] 0x7fff97e75044
-> [  457.405932] --- interrupt: 3000
-> [  457.405938] Code: 386d0008 4afae43d 60000000 a13d0008 3d00fffe 5529083c 61290001 7d40f829 7d474079 40c20018 7d474038 7ce74b78 <7ce0f92d> 40c2ffe8 7c2004ac 794a03e1
-> [  457.405981] ---[ end trace 0000000000000000 ]---
-> [  457.419259] pstore: backend (nvram) writing error (-1)
-> 
-> Interestingly, the panic doesn't occur when the bpftrace process is
-> running. Then, running `cat /proc/cmdline` works (even prints the
-> expected livepatched message) but doesn't appear in bpftrace output, as
-> Shung-Hsi observed.
-> 
-> On a kernel with KASAN=n, no panic happens.
-> 
-> This panic doesn't seem to be related to BPF (as it happens when no BPF
-> programs are involved) but it involves livepatch and occurs for the same
-> sequence of commands, so the two cases may be related. In this case, I
-> suspect that the issue is caused by an incorrect interaction of
-> livepatch and the ftrace changes introduced for BPF trampolines [1].
-> 
-> FWIW, there is patch cfec8463d9a1 ("powerpc/ftrace: Fix ftrace bug with
-> KASAN=y") which is fixing a bug in [1] appearing on KASAN=y kernel but
-> I'm not sure if it's related to this issue.
-
-Thanks for reporting this, Viktor.
-There was a bug in how clobbered register was restored in livepatch path
-leading this failure. Posted the fix patch upstream [1]
-
-FWIW, the problem Shung-Hsi observed still exists. Will try and get that
-working..
-
-- Hari
-
-[1] 
-https://lore.kernel.org/linuxppc-dev/20250416191227.201146-1-hbathini@linux.ibm.com/
-
-> 
-> Viktor
-> 
-> [1] https://lore.kernel.org/all/20241030070850.1361304-1-hbathini@linux.ibm.com/
-> 
->>
->>
->> Thanks,
->> Shung-Hsi Yu
->>
->> 1: https://lore.kernel.org/all/20241030070850.1361304-2-hbathini@linux.ibm.com/
-
+The arguments are the same, unlike the TCP tracepoint.
