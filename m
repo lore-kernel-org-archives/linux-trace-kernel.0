@@ -1,123 +1,145 @@
-Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDCF221517B;
-	Wed, 16 Apr 2025 17:06:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D82F8214A7C;
+	Wed, 16 Apr 2025 17:47:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744823183; cv=none; b=dswdJ0vePdQTMzp8aWSZ320/DHlz91pcI9yyxAI/WAvE35OwH8d/LxLOadYjQJTFaPL2EjmDZCMf34afoewxkSQkWx4l0XkpxOtmYv3mGXPgl87H42OciigPJmT1Pp0bzuaNVvGAyi/9IkcBwaP3T+UF5+otUF+x0P7DB44iyyI=
+	t=1744825667; cv=none; b=rxGzfc35mJSs0Zqc6gqTpI8z1to0TpQbBeupRA5nNtkOaSYiDpe7tiGeQ6QScQlsv7EvQtmpZOqB97PCbnK8eYPSw5mp3NMDcVIxMWk/AwAor8g8fBfU57fYxnv0kk7RE9GOScH63xT41teGysXDVFE9osckibZGKEzCzH3FYV8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744823183; c=relaxed/simple;
-	bh=d0f/eZxJsYBPNzP+ypgNu+3Y2vNYtC0mQ/V9+GgyiiY=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=QPPmP+UM6kowS2FyGDxEN4NAb+F5b/12TV3fLjvF9UBt98zL4qPjJR0FJOWud2mx1TV4xgk83VbaT1LIB8u+CfQC4OstpYlFuZSSeSEj03XxFxbtN/uGl+hEH0a5ed/kxOJnTgaCeD+Ahpa7ucHnsxZTuFAXEwQC4+reA58chhc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.208.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-5e677f59438so10322956a12.2;
-        Wed, 16 Apr 2025 10:06:21 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744823180; x=1745427980;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=FT7KrIUQ+zDqya9cxR8Wwm/RYrGSzwBKh8Xo9H7htOg=;
-        b=nEPOWlShfqahKQtNBeY3rucDmD9pzvxpSNvyKIFv9TR+UG7zHFv/StIR0NSdutM9cC
-         vkHWpe0a0wSBKCuUHSkxsuUp/Lzlv8AKSqFh9/XDCwuO8V1ROvU8wqeX+AqZqfYzWQlk
-         QE+o+E90WiBL28oM4UQ2ei+ymzZnAaCUHMvSrUtcECkyITAypjvF1vqREa7PsRyIf0+C
-         HtHk9Ndmx66xOWMCvpZ95rJpLEEf103CnWCz1Oeb0Ik8bTwtFzidSY8G//EgC/bpY7UW
-         i8V/o8WBiV0bOYeqmWVLiUGoAK2XmEk00Jwbo7HOtbhyeGeC7xjOyIb65xvM/Teq5ee/
-         BtSg==
-X-Forwarded-Encrypted: i=1; AJvYcCXGdIGZqoMUxziQw22zgG3F9Y9glJem6nOslDIsJQlAuYc1nGiaaYesJToLsfLTan7JZ1tnkOecsCrMWDM=@vger.kernel.org, AJvYcCXsS0cMUdRVhPPEr4fzkrerorfWjvLCXREKJmfeYJS2AHU0pnwN2FmTZLuzV18oJAczaIZZnDN0xovpiaC3o01+zbRZ@vger.kernel.org
-X-Gm-Message-State: AOJu0YxZ/wixi7METYFxBmEXVBqgSubK3VjIVM1jaovNtKMp9CxmrPFO
-	B7j0MeMIq5Aqk5q/7fJUs1VoJrq+eONUQ7Mas0kYCBr6PCEZpEyc
-X-Gm-Gg: ASbGnct93a0x+LGZUtB/pIrNHakIWHLVkkLeMeDbl0ErhzbFZGJwxG+ve7p44hLv5Vc
-	zHDySZEYbFHu8tqgU+inbnJUSQ164SaiB1eI4ofn8eh13OAC9XZxjTZHmVnCZef8tAQNHLCpuLJ
-	3OarIFiQ40Ct2O1wRWmBAPVE+pCHsJ7oXV7TDdrPIc+bHJkWvz1PWC9id8t1vt6/gHrSJ+w2LJ6
-	8nW3I6nYsMI0iVX7VYnElnO0hCVmdjV3ILMOm3kTM2pBI4jqKbxti2J2nVVOtgjlUzGGsz3Gg3X
-	Pk0+LaDprfdTmdAtx9CjXaj7cyMMRV4=
-X-Google-Smtp-Source: AGHT+IE46/jYtgnagWUq61/qNPpt6WU70ixrUVCo1T58uk5wl7XVhFk+rPViX3UF3CcLvypIq25TSA==
-X-Received: by 2002:a05:6402:3490:b0:5e5:bfab:51f with SMTP id 4fb4d7f45d1cf-5f4b6df5c7cmr2542173a12.0.1744823179647;
-        Wed, 16 Apr 2025 10:06:19 -0700 (PDT)
-Received: from localhost ([2a03:2880:30ff:5::])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5f36ee54d8fsm8850935a12.12.2025.04.16.10.06.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 16 Apr 2025 10:06:19 -0700 (PDT)
-From: Breno Leitao <leitao@debian.org>
-Date: Wed, 16 Apr 2025 10:06:12 -0700
-Subject: [PATCH net-next] trace: tcp: Add const qualifier to skb parameter
- in tcp_probe event
+	s=arc-20240116; t=1744825667; c=relaxed/simple;
+	bh=0xMXmPv9am/4yzAmlbNd701D43MOUvuzuBbid2PYMTE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KpdBodWfORSZ/zlF23YP7DRKMTX9N/ujjkWl/6LAFGWyJM3nM01Ds54L3rop3eEdKwCBIJTtonZX4mGwG0wxNMsnM5LW8z3D4qV4BjPSLDpg71V2NizAERxgKYHQVgF2aW2WxWsyvPf1FmYntBjGPK2xf/aiQ3m7bA2T2Vcf5fU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=iskdI9Wf; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="iskdI9Wf"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 3E11540E0200;
+	Wed, 16 Apr 2025 17:47:35 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id F0yZudtRwPqi; Wed, 16 Apr 2025 17:47:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1744825651; bh=k6oIrl/lthiSaffLzih6SQfaq9THlmrqB4n+2W0D0+Q=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=iskdI9Wf4NoqrwbLdDcNG3JkNiUVFl9RNIHnGQ5mmkZBYfIhUOMnlOBLHuYxH5rUt
+	 oBiZnDiFvczeuE8sz8jXBJDTJ4Tw3hrILTRgBuwoeZwAyk22i+VSu+zEEZDysfmu8e
+	 KY60ZSg7M7kilFski7lw//XmoWOidxdv3hajf0hvY9vVf9IKOO65J9XHBEGRmqTYYG
+	 QSYMIRDHOIE75VVW0ferdfkvm3CHJIi0FZ+Vn8dswo1NWj/oQwMbw1muJZj01HlfRZ
+	 m3nIC6yQm3w8XBwREeuAxB5ibp9INgn+j+TyDNGZNQheMGjRCQmDNHtKBWFCcVkw4/
+	 h17sKx8uCCm730W4sLbyr9xErNApIuKrUcA1GsFsZZU9nvJdhtEUJJDS7uLPwIcdKx
+	 IzAMB9rfwAs43kB0sAM8g3b4bungROLYQkOtIQ+aq4Xqxb01WVmvWzeArKDAI1+6+F
+	 cNXyN5+nFRO1Q1jmB4dqoMZHtX2dipxKEiKVftYNLQsigv1yHfEQ5KEkY1jpbZ6v8/
+	 /Xc4h5WcSWaSvgGdj/b67cWpzd/zuTCesGud2UwwIL48ofAdvcGiA22cnSYmcNavMI
+	 pgBnQpe6utUyFOMJxvSQVrpd9I6QF1kVsxNWjNmTRH8UB4JNsG3qOVZD/FIXDnyRyB
+	 E6WGCuQABS8dWzu58ifjWZ20=
+Received: from zn.tnic (p579690ee.dip0.t-ipconnect.de [87.150.144.238])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 79D7040E016E;
+	Wed, 16 Apr 2025 17:47:19 +0000 (UTC)
+Date: Wed, 16 Apr 2025 19:47:14 +0200
+From: Borislav Petkov <bp@alien8.de>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Junxuan Liao <ljx@cs.wisc.edu>, linux-trace-kernel@vger.kernel.org,
+	linux-kernel@vger.kernel.org, x86@kernel.org,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	"Paul E. McKenney" <paulmck@kernel.org>
+Subject: Re: [PATCH] x86/tracing: introduce enter/exit tracepoint pairs for
+ page faults
+Message-ID: <20250416174714.GGZ__tIi3yNzNKoKFE@fat_crate.local>
+References: <e7d4cd81-c0a5-446c-95d2-6142d660c15b@cs.wisc.edu>
+ <20250414205441.GGZ_12Eew18bGcPTG0@fat_crate.local>
+ <20250414182050.213480aa@gandalf.local.home>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250416-tcp_probe-v1-1-1edc3c5a1cb8@debian.org>
-X-B4-Tracking: v=1; b=H4sIAIPj/2cC/x3MWwqAIBAF0K0M9zvB3uFWIqJsqvkxUYlA2nvQW
- cDJiByEIwxlBL4lyuVgqCwI9lzcwUo2GEKlq1Y3ZaeS9bMP18pK66au+832w9KiIPjAuzz/NcJ
- xUo6fhOl9P8T7gqRlAAAA
-X-Change-ID: 20250416-tcp_probe-004337dc78a5
-To: Eric Dumazet <edumazet@google.com>, 
- Neal Cardwell <ncardwell@google.com>, Kuniyuki Iwashima <kuniyu@amazon.com>, 
- Steven Rostedt <rostedt@goodmis.org>, 
- Masami Hiramatsu <mhiramat@kernel.org>, 
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, pabeni@redhat.com, 
- andrew+netdev@lunn.ch, kuba@kernel.org, davem@davemloft.net
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-trace-kernel@vger.kernel.org, kernel-team@meta.com, 
- Breno Leitao <leitao@debian.org>
-X-Mailer: b4 0.15-dev-42535
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1057; i=leitao@debian.org;
- h=from:subject:message-id; bh=d0f/eZxJsYBPNzP+ypgNu+3Y2vNYtC0mQ/V9+GgyiiY=;
- b=owEBbQKS/ZANAwAIATWjk5/8eHdtAcsmYgBn/+OKru1t39LuwcXgqrOsIm8r8vW5na2pFwQVt
- k2vZ4db8NqJAjMEAAEIAB0WIQSshTmm6PRnAspKQ5s1o5Of/Hh3bQUCZ//jigAKCRA1o5Of/Hh3
- bZEHD/4tWh2Qvw/qIU8EA/nnuzjl3TEwife+HTbot1I8APw8xLC8ySLIbbulMMtgd6jTvsY4iUG
- GMtaSGj2B2u6+o05sLaKiYDEnYcZrD9LGs10/+CSr14VnBGDFU1IaiEyr4yH4iYzD/gVkFxnQCk
- 0sSpxMHUCxbOnFs1H0Lybc3Um7iKiJazCCRGSjfzPrW0U2WE2YRYYeHYqPE8mFq4zYXkhD65pGH
- lAPf6z+5OoE2PB/2yKvVtv1tpBCnjMRDsNW+/jfHD4eBTpckk0CYPCPJneT5D33uMi19BHB/EcR
- 0FClBeTMqT2ZHRcE1mvdrYdZN5BsmH0JwdByhkISjkWQYQop3xEcgy52FJOAQ8jxxSPYb39MJjF
- zeeMSOVW9jDV2oEXceB+MzGgMKYOp0CJeVK7RpDNub7acKbotYRek60RjN1qw2dBF038mTMrCoS
- t41Rpd7IRR5eJKkXySNt9GNvs2hZuI+2ImUwyJaLznStPKT4efHYtsDDBTGj8igDflF4Pa8jX1m
- 6itgrh6m9a0IR/tUIVQdK/4lAk2ziOJFNAgOba09QX2xe0kO+oErG79ZLtzx+L6FfrojI0MxNFp
- IJX+dRgZ+I3h5IgOQZE9G6WXkHZcUK7TmmAKgLlCJZNz8MMJwiYmlZRyDZzma/OGih2TAGOx4cz
- 5NmmU0NU1Nr7xiw==
-X-Developer-Key: i=leitao@debian.org; a=openpgp;
- fpr=AC8539A6E8F46702CA4A439B35A3939FFC78776D
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250414182050.213480aa@gandalf.local.home>
 
-Change the tcp_probe tracepoint to accept a const struct sk_buff
-parameter instead of a non-const one. This improves type safety and
-better reflects that the skb is not modified within the tracepoint
-implementation.
+On Mon, Apr 14, 2025 at 06:20:50PM -0400, Steven Rostedt wrote:
+> It's useful for me ;-)
 
-Signed-off-by: Breno Leitao <leitao@debian.org>
----
-Sending this for net-next to avoid bringing this to stable tree, which
-would make backport harder for not a big benefit.
----
- include/trace/events/tcp.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+That's why I CCed you.
 
-diff --git a/include/trace/events/tcp.h b/include/trace/events/tcp.h
-index 75d3d53a3832c..53e878fa14d14 100644
---- a/include/trace/events/tcp.h
-+++ b/include/trace/events/tcp.h
-@@ -293,7 +293,7 @@ DECLARE_TRACE(tcp_cwnd_reduction_tp,
- 
- TRACE_EVENT(tcp_probe,
- 
--	TP_PROTO(struct sock *sk, struct sk_buff *skb),
-+	TP_PROTO(struct sock *sk, const struct sk_buff *skb),
- 
- 	TP_ARGS(sk, skb),
- 
+I suspected you'd have "your mustard to share". :-P
 
----
-base-commit: 40ad72f88a65814ffeb1ab362074c6f8c4dc3f61
-change-id: 20250416-tcp_probe-004337dc78a5
+>  # cd /sys/kernel/tracing
+>  # echo 's:user_faults u64 delta;' >> dynamic_events
+>  # echo 'hist:keys=common_pid:ts0=common_timestamp.usecs' >> events/exceptions/page_fault_user_enter/trigger
+>  # echo 'hist:keys=common_pid:delta=common_timestamp.usecs-$ts0:onmatch(exceptions.page_fault_user_enter).trace(user_faults,$delta)' >> events/exceptions/page_fault_user_exit/trigger
+> 
+>  # cd /work/git/trace-cmd.git
+>  # echo 'hist:keys=delta.log2:sort=delta if COMM == "cc1"' > /sys/kernel/tracing/events/synthetic/user_faults/trigger
 
-Best regards,
+OMG, this tracing thing has turned into a language almost. I hope you're
+documenting those fancy use cases...
+
+>  # make
+> [..]
+> 
+>  # cat /sys/kernel/tracing/events/synthetic/user_faults/hist
+> # event histogram
+> #
+> # trigger info: hist:keys=delta.log2:vals=hitcount:sort=delta.log2:size=2048 if COMM == "cc1" [active]
+> #
+> 
+> { delta: ~ 2^0  } hitcount:          1
+> { delta: ~ 2^1  } hitcount:        334
+> { delta: ~ 2^2  } hitcount:       4090
+> { delta: ~ 2^3  } hitcount:      86037
+> { delta: ~ 2^4  } hitcount:     108790
+> { delta: ~ 2^5  } hitcount:      27387
+> { delta: ~ 2^6  } hitcount:       6015
+> { delta: ~ 2^7  } hitcount:        481
+> { delta: ~ 2^8  } hitcount:        134
+> { delta: ~ 2^9  } hitcount:         74
+> { delta: ~ 2^10 } hitcount:         54
+> { delta: ~ 2^11 } hitcount:          6
+> 
+> Totals:
+>     Hits: 233403
+>     Entries: 12
+>     Dropped: 0
+> 
+> 
+> The above shows a histogram in microseconds where the buckets increase in a
+> power of two. The biggest bucket is between 2^4 (16) and 2^5 (32) microseconds
+> with 108790 hits.
+> 
+> The longest bucket of 2^11 (2ms) to 2^12 (4ms) had 6 hits.
+> 
+> And when sframes is supported, it will be able to show the user space stack
+> trace of where the longest page faults occur.
+
+Ok, so AFAIU, this gives you how long user page faults take and apparently for
+someone this is important info.
+
+Now if only that info were in the commit message along with the usage scenario
+so that people can *actually* do what you guys are bragging about...
+
+:-P
+
+Thx.
+
 -- 
-Breno Leitao <leitao@debian.org>
+Regards/Gruss,
+    Boris.
 
+https://people.kernel.org/tglx/notes-about-netiquette
