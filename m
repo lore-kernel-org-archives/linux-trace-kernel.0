@@ -1,115 +1,162 @@
-Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CB2112B93;
-	Thu, 17 Apr 2025 11:42:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6CF4241136
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 17 Apr 2025 12:30:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744890152; cv=none; b=SyXHhsDCdbq4dQGw/h4XDttT+tdtasd/PR7wuH9eMr3/FS+YSVz9lqIIhNI5LWa95aswxvbyyCc3do1I+vti69D4xrjwKmKW0CfkdivaqzeoCzgNscGj1Thqtvn4nlDEmldXDmWChAipvYJfMlhR/tKydN4zxAxTjPAo7kgLoIg=
+	t=1744893015; cv=none; b=MEseL7QUteMqbWuDzFA1pkLk/owXBxX6SxYZi7KLCYr5JaSpprQYhzxCyHbGRARkEYg6FtA4Chw+bJrHWBSEw4MzVRgwP5fDyZLOn9cr2SxLZCoPjVndLMPM7EiqNZOIAHrm09EA+oEK2/QEu7MwJLRd/ba1gwRPIdl16OsRw+0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744890152; c=relaxed/simple;
-	bh=CPd0GCM24ayWy7MHkJZn7zbc5mTFXULN2Z19tNHvWxo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dFOCSl9tR3o/tkfRlpk4r8bgrMEm6//DTHKD9lwDXbaSUoY9LT1d3o+4Hlb6dGAt1L1QxvN/bO+WvR0ZpabZHxj6DgwG/DRfroxWL/SL/INT83MN7KAEzh9Fqbr6KcqXKO574uPXIaxwNlVqaoNYH+T3kUwtex/nmDYbG24xFUA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.208.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-5f6214f189bso102114a12.2;
-        Thu, 17 Apr 2025 04:42:30 -0700 (PDT)
+	s=arc-20240116; t=1744893015; c=relaxed/simple;
+	bh=nY0rq5mas9QDGLGuiBxaKLim9Mix5whLIwBPkgEx7rI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=sDxyH4vMG8i7EZU+tqbAfwZ8mjmnGaIh04/T0iJGl75Ec94pg8uHiCvSYS5dj9OrIXyaht+Nc82VPSCJSM9HxwkCn7sZYJ9nTa8raAXy6E1vLikmkaTGqTiNZX4FrZrI339i9fHnV8fIJjsTQNbuRg5EsTu+3sPyvv9pn37VH9I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Lq6Wc3pd; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Lq6Wc3pd"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1744893012;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=yhMyX45oy8j7OuPZBUX0GxcKvnTqCUj4i4UmRZNxPfY=;
+	b=Lq6Wc3pdUs+OD515yfFw2XXcUNEfBNX3V3Ea4YosJ75XQELTyK6g6APyCXr71MiGZqtUmz
+	f+e/Q0EouMnBEXcD3D0bxJNcB3chQNpqbOETW0Z4f7PbrWQSfCi5fSlkONheWWrsZ2GTyO
+	JvnWrmKI1gDzIUmbh7XMg8gWfAA+J9g=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-689-pMjgVr5iPMe-irhSI6-BlA-1; Thu, 17 Apr 2025 08:30:10 -0400
+X-MC-Unique: pMjgVr5iPMe-irhSI6-BlA-1
+X-Mimecast-MFC-AGG-ID: pMjgVr5iPMe-irhSI6-BlA_1744893010
+Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-3913aaf1e32so400492f8f.0
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 17 Apr 2025 05:30:10 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744890149; x=1745494949;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=sNx+ddNaE8eAigdlhQFQqI5NmsEB8TR3H/8O6yqaYoY=;
-        b=AxcvRqekuxoyx8I2ET88pZckSYxNrJH3eJwZtvYXDxI8DNabz/Sg8amasYDyHN6Fal
-         MaEVfzn9cnty2ySgadWVsLbMpgFFfMe7wLpMbB7VyvJ/HGl8jmKsIybXcCIsRC+aUqkK
-         z9DhnmsQgEzL2HXFsnMrWZb8Og2ex0HHcDRqrak2iONO/S77nLupwgI+yCYgAlugAu4j
-         AD9i5yn8ixEEm+cuWNkasyKliPEi6Yipz8dTH/5tDki/gFBBOLgCglBjA+l4+hAZG6FG
-         /Rc6TmLPBG8+y+coQ3/odv2MsTgNtXuo56pFE86X6uHEroTnvQWkihtlWLa4mMAnnpzM
-         EgIw==
-X-Forwarded-Encrypted: i=1; AJvYcCU2bDGwCdTyqrt27T738zygAHMi9iTKUluq1IJKBPK1bC9Ha4Gg/Riwb1Wc2SK2MHbjU75IgVD+79UJ8uA=@vger.kernel.org, AJvYcCUPAlMWbAINt5PKVf50tllto7f0DR5HY96WMIISemGadqNeZ+EN5qC9WAYe0aUcwXy2Y+zLol8ve2CM0LLyHHTh7CWn@vger.kernel.org, AJvYcCXYYbTd2LrS1x0FzmC6hZMMuTEdRiMCgeDwW4pG1UrMSO9lpfs+xyc7b2NrdT6jZnES1Nz9Z2UV@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywm3AI7cqJW3O13egOXS34Z5A2pgiSXHqEy58kzrkvVbwJscEK7
-	Z7JLo6lwNRUhjdAyESll70d2Yvpq5jKlipFmBlGz1BIZdGtXjmAr
-X-Gm-Gg: ASbGncvSxwBwJWegjpsms+ZsTOEgTaYADNHuOOKBsOkIEEcUhr60HhStTD9eVdYQvu7
-	xL6dDSAujkcd43+P3IY5RbkgqASaKtHSU1lzYwHYBhyQbuD1FuGW/aCkEHJFq5EXaTSMjtGLqAw
-	Gw5b6jT091I9QmQCXO6mNWjJ4DdODMTV1LLgWnoPzG1sJQQFJMt/HoMHNO6IC7wkjDn3cxFlos2
-	+gObUe74Bnpz5zCXEklyRzgMuqgsEwRt7Zw/8SvFAkqy7JuaoSnduxe4EFA49Yb5Xu6eJcFOh25
-	ogAQppY+IQptszmRwhGfSvEO0v40dv+H
-X-Google-Smtp-Source: AGHT+IEG0nj7+X986PDK+2BfnVdeZrPBCfuj9lz9dnbQeJQ31uRdMJIwqLMlUkT7HUXaNyl+5avzQA==
-X-Received: by 2002:a17:907:7da4:b0:ac7:81bd:60e3 with SMTP id a640c23a62f3a-acb42a4ae8cmr493942966b.27.1744890148912;
-        Thu, 17 Apr 2025 04:42:28 -0700 (PDT)
-Received: from gmail.com ([2a03:2880:30ff:73::])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-acb5f3006a3sm90684666b.151.2025.04.17.04.42.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 17 Apr 2025 04:42:28 -0700 (PDT)
-Date: Thu, 17 Apr 2025 04:42:25 -0700
-From: Breno Leitao <leitao@debian.org>
-To: David Ahern <dsahern@kernel.org>
-Cc: Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>, kuniyu@amazon.com,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, yonghong.song@linux.dev,
-	song@kernel.org, kernel-team@meta.com
-Subject: Re: [PATCH net-next] udp: Add tracepoint for udp_sendmsg()
-Message-ID: <aADpIftw30HBT8pq@gmail.com>
-References: <20250416-udp_sendmsg-v1-1-1a886b8733c2@debian.org>
- <4dd9504c-4bce-4acd-874c-8eed8c311a2f@kernel.org>
+        d=1e100.net; s=20230601; t=1744893010; x=1745497810;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=yhMyX45oy8j7OuPZBUX0GxcKvnTqCUj4i4UmRZNxPfY=;
+        b=E1PP5mJdYL55gaIF2P8t5RGNj+JkIhAhlw6RzrxUPLKvQhQLnlilGhwbkZnXTuokwm
+         gssymE1u6AJQGzyNn0cZJn/B0ip5bfQ5IJ/+A0IQ93u0V2ATjpeqBx0ASW6prgGos0Vm
+         ZQ0ZQBPZ1Sk4GMsOWh/VQekCInh7Pl0kFl74NTTi51U0DuEZtC4sdT7pWUWZVl6U2B/S
+         EayE4FZgS7m8u3+N+SRabVBRGmshlqRKtr0Q6BrHpZ2hHj/yCOi8jT5FW3fXUVxP8gXx
+         ErOw9FzJIFwZ+X5ci7DbucwJl7+1AibUPRT5hN5iX/LXdLH4RN7KUTGXSShGTvoMe5M8
+         hoOw==
+X-Gm-Message-State: AOJu0YwAJaRp/09k1sGnibmW1cmoc6m1DYyPrjXgtSjt5zDGfosNBS3C
+	LlOYZ8cgYmbbx9VGCRyByxm2OP/4xqrZnHDMsKzm7deXA7PQvWjtfEqqViLXynFb5SnsWaf5Ax/
+	ho526/Cmkjga8JA5jgL0351xgmEmB7Jw3wrOyuZpWukWpTT7U16pS/qCfN6k55az8QYcS
+X-Gm-Gg: ASbGncsf63qBaN2KfDcJTkukLBeOWuU0SS0xUlsffeYxt5QaWi378tPJybrgGoz+wLI
+	h6Dvg2Z/0T4tRjnjTycJjb6II+t1t4vnDbG/pIFTCVTirs6GML1/uImyhbscKERUFPkVvkN76/d
+	LXkMie265CVQ4X5iMRygwjXC2whIoYPU+ZkzfrzgCprFQYUFjMBbeA/RWPIREy3YBy0oay86Jrf
+	HH2UQZREMMDOSg1HZtPkV/a1AHd5I2Chwtakfz2e7Hkh6WZ7AWHuwn8J/Z15E4l9/SbcFUD1rLD
+	fdvKtCiVbWxMx++sSYEvqUzZHWYVaj8=
+X-Received: by 2002:a5d:64ae:0:b0:38b:d7d2:12f6 with SMTP id ffacd0b85a97d-39ee5b10eb7mr5582941f8f.2.1744893009615;
+        Thu, 17 Apr 2025 05:30:09 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGM+EJsa6GxQG1p+PKq+EFBpaq5Cqq9HZNJaYx3ETePAwU12QpiixwVwkoc85pVDuylnTVdww==
+X-Received: by 2002:a5d:64ae:0:b0:38b:d7d2:12f6 with SMTP id ffacd0b85a97d-39ee5b10eb7mr5582912f8f.2.1744893009131;
+        Thu, 17 Apr 2025 05:30:09 -0700 (PDT)
+Received: from [172.20.10.3] (37-48-9-64.nat.epc.tmcz.cz. [37.48.9.64])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39eaf43ce3bsm20457233f8f.66.2025.04.17.05.30.07
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 17 Apr 2025 05:30:08 -0700 (PDT)
+Message-ID: <0a3e442f-339a-44ad-aad8-c21ec342c5a8@redhat.com>
+Date: Thu, 17 Apr 2025 14:30:06 +0200
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <4dd9504c-4bce-4acd-874c-8eed8c311a2f@kernel.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] powerpc64/ftrace: fix clobbered r15 during livepatching
+To: Hari Bathini <hbathini@linux.ibm.com>,
+ linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
+Cc: linux-trace-kernel@vger.kernel.org,
+ Madhavan Srinivasan <maddy@linux.ibm.com>,
+ Nicholas Piggin <npiggin@gmail.com>,
+ Christophe Leroy <christophe.leroy@csgroup.eu>,
+ Michael Ellerman <mpe@ellerman.id.au>, "Naveen N. Rao" <naveen@kernel.org>,
+ Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Steven Rostedt <rostedt@goodmis.org>, stable@vger.kernel.org
+References: <20250416191227.201146-1-hbathini@linux.ibm.com>
+From: Viktor Malik <vmalik@redhat.com>
+In-Reply-To: <20250416191227.201146-1-hbathini@linux.ibm.com>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: _1hFeUILkWsxEXM_1837zwJIMCRkueZHYxp91g5NqBI_1744893010
+X-Mimecast-Originator: redhat.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hello David,
-
-On Wed, Apr 16, 2025 at 04:16:26PM -0700, David Ahern wrote:
-> On 4/16/25 1:23 PM, Breno Leitao wrote:
-> > diff --git a/net/ipv4/udp.c b/net/ipv4/udp.c
-> > index f9f5b92cf4b61..8c2902504a399 100644
-> > --- a/net/ipv4/udp.c
-> > +++ b/net/ipv4/udp.c
-> > @@ -1345,6 +1345,8 @@ int udp_sendmsg(struct sock *sk, struct msghdr *msg, size_t len)
-> >  		connected = 1;
-> >  	}
-> >  
-> > +	trace_udp_sendmsg_tp(sk, msg);
+On 4/16/25 21:12, Hari Bathini wrote:
+> While r15 is clobbered always with PPC_FTRACE_OUT_OF_LINE, it is
+> not restored in livepatch sequence leading to not so obvious fails
+> like below:
 > 
-> why `_tp` suffix? the usual naming is trace_${func}
+>   BUG: Unable to handle kernel data access on write at 0xc0000000000f9078
+>   Faulting instruction address: 0xc0000000018ff958
+>   Oops: Kernel access of bad area, sig: 11 [#1]
+>   ...
+>   NIP:  c0000000018ff958 LR: c0000000018ff930 CTR: c0000000009c0790
+>   REGS: c00000005f2e7790 TRAP: 0300   Tainted: G              K      (6.14.0+)
+>   MSR:  8000000000009033 <SF,EE,ME,IR,DR,RI,LE>  CR: 2822880b  XER: 20040000
+>   CFAR: c0000000008addc0 DAR: c0000000000f9078 DSISR: 0a000000 IRQMASK: 1
+>   GPR00: c0000000018f2584 c00000005f2e7a30 c00000000280a900 c000000017ffa488
+>   GPR04: 0000000000000008 0000000000000000 c0000000018f24fc 000000000000000d
+>   GPR08: fffffffffffe0000 000000000000000d 0000000000000000 0000000000008000
+>   GPR12: c0000000009c0790 c000000017ffa480 c00000005f2e7c78 c0000000000f9070
+>   GPR16: c00000005f2e7c90 0000000000000000 0000000000000000 0000000000000000
+>   GPR20: 0000000000000000 c00000005f3efa80 c00000005f2e7c60 c00000005f2e7c88
+>   GPR24: c00000005f2e7c60 0000000000000001 c0000000000f9078 0000000000000000
+>   GPR28: 00007fff97960000 c000000017ffa480 0000000000000000 c0000000000f9078
+>   ...
+>   Call Trace:
+>     check_heap_object+0x34/0x390 (unreliable)
+>   __mutex_unlock_slowpath.isra.0+0xe4/0x230
+>   seq_read_iter+0x430/0xa90
+>   proc_reg_read_iter+0xa4/0x200
+>   vfs_read+0x41c/0x510
+>   ksys_read+0xa4/0x190
+>   system_call_exception+0x1d0/0x440
+>   system_call_vectored_common+0x15c/0x2ec
+> 
+> Fix it by restoring r15 always.
+> 
+> Fixes: eec37961a56a ("powerpc64/ftrace: Move ftrace sequence out of line")
+> Reported-by: Viktor Malik <vmalik@redhat.com>
+> Closes: https://lore.kernel.org/lkml/1aec4a9a-a30b-43fd-b303-7a351caeccb7@redhat.com
+> Cc: stable@vger.kernel.org # v6.13+
+> Signed-off-by: Hari Bathini <hbathini@linux.ibm.com>
 
-I got the impression that DECLARE_TRACE() raw tracepoints names end up
-in _tp():
+After applying the patch, the panic doesn't happen anymore and livepatch
+works as expected.
 
-	include/trace/events/tcp.h
-	DECLARE_TRACE(tcp_cwnd_reduction_tp,
+Thanks!
 
-	include/trace/events/sched.h
-	DECLARE_TRACE(pelt_cfs_tp,
-	DECLARE_TRACE(pelt_rt_tp,
-	DECLARE_TRACE(pelt_dl_tp,
-	DECLARE_TRACE(pelt_hw_tp,
-	DECLARE_TRACE(pelt_irq_tp,
-	DECLARE_TRACE(pelt_se_tp,
-	DECLARE_TRACE(sched_cpu_capacity_tp,
-	DECLARE_TRACE(sched_overutilized_tp,
-	DECLARE_TRACE(sched_util_est_cfs_tp,
-	DECLARE_TRACE(sched_util_est_se_tp,
-	DECLARE_TRACE(sched_update_nr_running_tp,
-	DECLARE_TRACE(sched_compute_energy_tp,
-	DECLARE_TRACE(sched_entry_tp,
-	DECLARE_TRACE(sched_exit_tp,
+Tested-by: Viktor Malik <vmalik@redhat.com>
 
-But, I am happy to remove _tp if that is not correct.
+> ---
+>  arch/powerpc/kernel/trace/ftrace_entry.S | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/arch/powerpc/kernel/trace/ftrace_entry.S b/arch/powerpc/kernel/trace/ftrace_entry.S
+> index 2c1b24100eca..3565c67fc638 100644
+> --- a/arch/powerpc/kernel/trace/ftrace_entry.S
+> +++ b/arch/powerpc/kernel/trace/ftrace_entry.S
+> @@ -212,10 +212,10 @@
+>  	bne-	1f
+>  
+>  	mr	r3, r15
+> +1:	mtlr	r3
+>  	.if \allregs == 0
+>  	REST_GPR(15, r1)
+>  	.endif
+> -1:	mtlr	r3
+>  #endif
+>  
+>  	/* Restore gprs */
 
-Thanks,
---breno
