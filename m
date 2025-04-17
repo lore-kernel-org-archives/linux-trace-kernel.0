@@ -1,32 +1,28 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9AE741C63;
-	Thu, 17 Apr 2025 20:32:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CF571FBEA2;
+	Thu, 17 Apr 2025 22:28:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744921978; cv=none; b=YMHV/b+rbq4ZxZY2lPtBLl3dHIBYvHetTDqb1ndwInWUWx+h6wk0YLvUC45ZNMcx0lR+1ajbJv6XkDODuAoi5PU1OOTqXjBGFpNXAYFQ8ys5K37pVQmaATz7kiqF+lLVnrDSUt3f1aAWf9hhzUizjbC/C0gtf/JY5DI7m2yFdPE=
+	t=1744928906; cv=none; b=S8baYGCSHJmJsJkQ37URv1XF+ELnMQ4knNRrPOrR4LqQcwAzOSnQlk1wy9D8dVINpE1OksIrov9w+UB04IVu04KRKW+crFn4J7fBPZs3T1/XFuH+9GIWQJqmiX+hUEuC8s/jOQQyAz8/LxV/iD1tz4fuML3xaB3PzJ2dEU4TnOQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744921978; c=relaxed/simple;
-	bh=m23KjCoPEHiG9Nh0xssttmwcgzej8sTFwc5KLi6yrMo=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=cwDC6rlH/i+z/kQLOVaas+I+hQqZaVAJ4HEkbwJNEhj/1YPvA5Uo456mVRR41kqomMwfNq/sHK4Pcj3Nt6fa+FCHShXzCRz22GZ4EMJ10pPCxm3Iy3F/Y704rVTG3u9waoiOTFbt5FI65WRfNlYXtm6D+CCrs2ocg2WgoyKhtsI=
+	s=arc-20240116; t=1744928906; c=relaxed/simple;
+	bh=LUxes0u84hfgI+/C68y4xKDFHbrXB3K7ZMDX8LMqB7Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=BDij/prZWlPV/fHrNuOdcbbvUrNLT/pn07NACoynzmJUCQuvcI+2fWlfkd4Iy/eQDpA0FzApDNA7GNlcd/SNKVK/ianJDrq1deQjVHdLzc9khqL8U4wT1Zep1+AXi0XQWx4bM+REjhUUNT0rybDdJ/W5psAxFhCGSSawfU3dCfo=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9A90AC4CEE4;
-	Thu, 17 Apr 2025 20:32:57 +0000 (UTC)
-Date: Thu, 17 Apr 2025 16:34:36 -0400
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DFF04C4CEE4;
+	Thu, 17 Apr 2025 22:28:23 +0000 (UTC)
+Date: Thu, 17 Apr 2025 18:30:03 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
-To: Junxuan Liao <ljx@cs.wisc.edu>
-Cc: Frederic Weisbecker <frederic@kernel.org>, "Paul E. McKenney"
- <paulmck@kernel.org>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Subject: Re: Interface for enabling context tracking
-Message-ID: <20250417163436.599e50a1@gandalf.local.home>
-In-Reply-To: <3ce02a98-0ac2-4d34-b6f7-ba85088399d7@cs.wisc.edu>
-References: <9e2ac1e3-d07d-4f17-970e-6b7a5248a5bb@cs.wisc.edu>
-	<20250410150555.7797d195@gandalf.local.home>
-	<3ce02a98-0ac2-4d34-b6f7-ba85088399d7@cs.wisc.edu>
+To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Andrii Nakryiko
+ <andrii.nakryiko@gmail.com>, Mykyta Yatsenko <mykyta.yatsenko5@gmail.com>,
+ Andrew Morton <akpm@linux-foundation.org>
+Subject: [PATCH] tracing: Fix filter string testing
+Message-ID: <20250417183003.505835fb@gandalf.local.home>
 X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -37,21 +33,46 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Thu, 17 Apr 2025 14:10:53 -0500
-Junxuan Liao <ljx@cs.wisc.edu> wrote:
+From: Steven Rostedt <rostedt@goodmis.org>
 
-> Just found out that the exit tracepoints for syscalls aren't always
-> exactly preceding the exit to userspace. The kernel can still spend
-> quite some time in task_work_run after the tracepoints are triggered.
-> Has that bothered you before?
+The filter string testing uses strncpy_from_kernel/user_nofault() to
+retrieve the string to test the filter against. The if() statement was
+incorrect as it considered 0 as a fault, when it is only negative that it
+faulted.
 
-It's been a while, but what I usually do when I want to see entry into the
-kernel is also to run:
+Link: https://lore.kernel.org/all/CAEf4BzbVPQ=BjWztmEwBPRKHUwNfKBkS3kce-Rzka6zvbQeVpg@mail.gmail.com/
 
-  trace-cmd set -p function_graph --max-graph-depth 1
+Cc: stable@vger.kernel.org
+Fixes: 77360f9bbc7e5 ("tracing: Add test for user space strings when filtering on string pointers")
+Reported-by: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Reported-by: Mykyta Yatsenko <mykyta.yatsenko5@gmail.com>
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+ kernel/trace/trace_events_filter.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Which tracks the first function call into the kernel. It obviously now
-misses entry and exit from user mode due to noinstr, but if a task_work
-function is called, it will usually catch that too.
+diff --git a/kernel/trace/trace_events_filter.c b/kernel/trace/trace_events_filter.c
+index 0993dfc1c5c1..2048560264bb 100644
+--- a/kernel/trace/trace_events_filter.c
++++ b/kernel/trace/trace_events_filter.c
+@@ -808,7 +808,7 @@ static __always_inline char *test_string(char *str)
+ 	kstr = ubuf->buffer;
+ 
+ 	/* For safety, do not trust the string pointer */
+-	if (!strncpy_from_kernel_nofault(kstr, str, USTRING_BUF_SIZE))
++	if (strncpy_from_kernel_nofault(kstr, str, USTRING_BUF_SIZE) < 0)
+ 		return NULL;
+ 	return kstr;
+ }
+@@ -827,7 +827,7 @@ static __always_inline char *test_ustring(char *str)
+ 
+ 	/* user space address? */
+ 	ustr = (char __user *)str;
+-	if (!strncpy_from_user_nofault(kstr, ustr, USTRING_BUF_SIZE))
++	if (strncpy_from_user_nofault(kstr, ustr, USTRING_BUF_SIZE) < 0)
+ 		return NULL;
+ 
+ 	return kstr;
+-- 
+2.47.2
 
--- Steve
