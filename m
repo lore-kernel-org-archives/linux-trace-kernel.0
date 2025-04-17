@@ -1,130 +1,86 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1A0DA94A;
-	Thu, 17 Apr 2025 05:17:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E363C1DE2DB;
+	Thu, 17 Apr 2025 05:42:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744867053; cv=none; b=JB5HbDTEk6mzI+xMue2xHUWEhM+vYIvrO4Kxg3xm534cwkUmKFkZRvNIexoGetprqKR7xrj5nXuChQW6ZlHCKqNdUgBlKvXuBBNAWsTRS1aUigoWfcJdKZJKh687Mg0jBOxwk37kRr1YfosJIeAPWhu0hj1Jbow91YQTxw07rOY=
+	t=1744868555; cv=none; b=BUUkKvv7rcDYb0qggwbmBf6ZOdEisaMMS2r8KvaliAZM4uvAtARSJZ59y8iGRS6NMbyr8pgseRWgZIReINvgUdAIDq7ve3SMQa4/TqapOicdYQ/qTrEQdRNKq/wOiZgTxU6pDHXxC5KRTYzNJKx7mlxPmscVdPHtYnP4ns3+qOo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744867053; c=relaxed/simple;
-	bh=6EgLG4gGOWWwoixoJY8+Na03ZmFU57CDaO0m9BfGgV0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=czvXSUi1qNO5DEzJ8Cw4jLLgN7HqXSH743+lL6VvzQ5EJtB/t2IZf2O5E/Z+qBQs7Xx86NfSWkReZzPAPTPVtkRf32GE1dzGOTWzzclzYU9KKo8OlHeAFEOzphwOLZq9Vw6wBwdFco6aoYN1c1m46H6kACMkEwxaEs7qxxQ5t68=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hXjS/Tsu; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744868555; c=relaxed/simple;
+	bh=VdQb6IRmYJ6SmHypJkX+d7rS/wBDlH/MG+oC2rhXsTk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KjRGaV8+jV/mjGbtyG1vuUC5RhTLKtzxQ0dp4tM64MqCBFLqMWU6YkGizjpXwugeco0MNfOZDCnnq4UXPRjdkLWzEvu1Vf9t9quKjPVn12CyA/SWGhvPNw///Cj0POQizfJAnsTCN+zgz05EY/Lf9ybposBKrqjGOMyZhQBJElY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=btMWYgKn; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Fj7waKfB; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hXjS/Tsu"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5EA7CC4CEE7;
-	Thu, 17 Apr 2025 05:17:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744867053;
-	bh=6EgLG4gGOWWwoixoJY8+Na03ZmFU57CDaO0m9BfGgV0=;
-	h=From:To:Cc:Subject:Date:From;
-	b=hXjS/Tsu1IvtdZEHvu8TmVrAsXFEuQVk4fMFoefDfUD/nzpO3lPdbnsNnCKFJlxdF
-	 1w40F759jSMvC58vkprQcGOy6tZLKmqL2Su/1XPNiFXEGoRMflm6ypGrmiYRMAc2Cv
-	 LZAPAnkD+5Niv8Xmitvym96CtJgVXZEWLzHyTwXlipm0h+G1FfmuEubzDQufAI7L+R
-	 5AFna/DFZbJ23eDwKbZd2sAkqrv8oP7VzVAQYP8wp3sp7ls4AZTTu58ps7UbikReri
-	 uM+jyVUXTsIO/OHF9d5qalRVwabOq+DevdY0Ox0yxh1BwqDbWGAcT7J2oh9EOMFgQ5
-	 3fMl09dZu45NQ==
-From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH v2] tracing: Record trace_clock and recover when reboot
-Date: Thu, 17 Apr 2025 14:17:29 +0900
-Message-ID:  <174486704950.3973933.810283141514120282.stgit@mhiramat.tok.corp.google.com>
-X-Mailer: git-send-email 2.49.0.777.g153de2bbd5-goog
-User-Agent: StGit/0.19
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="btMWYgKn";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Fj7waKfB"
+Date: Thu, 17 Apr 2025 07:42:20 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1744868546;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=g8njsPKCjIHIKwSLd0/crxihlFEZBxm3kDfkalCi8mc=;
+	b=btMWYgKnhXIWpbPu4UMcJWnqCVel1kdeLpSpxVT2PEQskteowMfil2Gx2aHwOK5HCniyf7
+	tyubT3JlmspfldzCBD8wtINaigoKizi0bahIocCUluinEO7HJEEYXCI9/+mcgMQJWI1mW+
+	4igvcz0Ay19hE/eQGhgelrkR/b1kvZ6emaWAqY1ogi9EedzR1rYtMj6FbuX7kLOHxD042Q
+	a4OX2QPrtgtlq+wXXDYY9CdMfvh+aI7+bp2Km9kQl2T0lJep6lL1ceTjtXxeoGSY9V5BJH
+	9FKggfELOEvPEKcS7EgZBKAkHNnVEXqn4mXLIRmpffNxfboIuhws50KpHFKiug==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1744868546;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=g8njsPKCjIHIKwSLd0/crxihlFEZBxm3kDfkalCi8mc=;
+	b=Fj7waKfBQxOHvPzTsj6lL2+rcXsYVkaoBi7qc5BiT9syEq2z7yFG2wEsfyRaJQYR58c1BU
+	Kj6H6/jMns30gKAg==
+From: Nam Cao <namcao@linutronix.de>
+To: Gabriele Monaco <gmonaco@redhat.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>,
+	linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
+	john.ogness@linutronix.de
+Subject: Re: [PATCH v3 14/22] rv: Add rtapp container monitor
+Message-ID: <20250417054220.x_NLyn_L@linutronix.de>
+References: <cover.1744785335.git.namcao@linutronix.de>
+ <7d1a7337879b991ed454d1457d44a15dabc4b3f7.1744785335.git.namcao@linutronix.de>
+ <0a41e42243d2c102b159bed4b231f143bda02243.camel@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <0a41e42243d2c102b159bed4b231f143bda02243.camel@redhat.com>
 
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+On Wed, Apr 16, 2025 at 09:32:43AM +0200, Gabriele Monaco wrote:
+> On Wed, 2025-04-16 at 08:51 +0200, Nam Cao wrote:
+> > diff --git a/kernel/trace/rv/monitors/rtapp/Kconfig
+> > b/kernel/trace/rv/monitors/rtapp/Kconfig
+> > new file mode 100644
+> > index 000000000000..94689d66a79c
+> > --- /dev/null
+> > +++ b/kernel/trace/rv/monitors/rtapp/Kconfig
+> > @@ -0,0 +1,6 @@
+> > +config RV_MON_RTAPP
+> > +	depends on RV
+> 	depends on RV_PER_TASK_MONITORS >= 2
+> 
+> Not sure we want to be that picky, but what about making sure we can
+> run the monitor in its entirety?
 
-Record trace_clock information in the trace_scratch area and recover
-the trace_clock when boot, so that reader can docode the timestamp
-correctly.
-Note that since most trace_clocks records the timestamp in nano-
-seconds, this is not a bug. But some trace_clock, like counter and
-tsc will record the counter value. Only for those trace_clock user
-needs this information.
+That makes sense. But CONFIG_RV_PER_TASK_MONITORS doesn't exist yet at this
+point. I will add this in the commit adding CONFIG_RV_PER_TASK_MONITORS.
 
-Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
----
- Changes in v2:
-   - instead of exposing it via last_boot_info, set the current
-     trace_clock as the same clock we used in the last boot.
----
- include/linux/trace_clock.h |    2 ++
- kernel/trace/trace.c        |   17 +++++++++++++++++
- 2 files changed, 19 insertions(+)
+> Ignore this if your use case doesn't expect both monitors to be run
+> together.
+> 
+> Other than that
+> Reviewed-by: Gabriele Monaco <gmonaco@redhat.com>
 
-diff --git a/include/linux/trace_clock.h b/include/linux/trace_clock.h
-index 00e8f98c940f..2245848270d2 100644
---- a/include/linux/trace_clock.h
-+++ b/include/linux/trace_clock.h
-@@ -15,6 +15,8 @@
- 
- #include <asm/trace_clock.h>
- 
-+#define TRACE_CLOCK_NAME_MAX 16
-+
- extern u64 notrace trace_clock_local(void);
- extern u64 notrace trace_clock(void);
- extern u64 notrace trace_clock_jiffies(void);
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index 8ddf6b17215c..6ce5d05ec64d 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -6004,6 +6004,7 @@ struct trace_mod_entry {
- };
- 
- struct trace_scratch {
-+	char			clock[TRACE_CLOCK_NAME_MAX];
- 	unsigned long		text_addr;
- 	unsigned long		nr_entries;
- 	struct trace_mod_entry	entries[];
-@@ -6114,6 +6115,8 @@ static void update_last_data(struct trace_array *tr)
- 	if (tr->scratch) {
- 		struct trace_scratch *tscratch = tr->scratch;
- 
-+		strscpy(tscratch->clock, trace_clocks[tr->clock_id].name,
-+			TRACE_CLOCK_NAME_MAX);
- 		memset(tscratch->entries, 0,
- 		       flex_array_size(tscratch, entries, tscratch->nr_entries));
- 		tscratch->nr_entries = 0;
-@@ -7289,6 +7292,12 @@ int tracing_set_clock(struct trace_array *tr, const char *clockstr)
- 	tracing_reset_online_cpus(&tr->max_buffer);
- #endif
- 
-+	if (tr->scratch && !(tr->flags & TRACE_ARRAY_FL_LAST_BOOT)) {
-+		struct trace_scratch *tscratch = tr->scratch;
-+
-+		strscpy(tscratch->clock, trace_clocks[i].name, TRACE_CLOCK_NAME_MAX);
-+	}
-+
- 	mutex_unlock(&trace_types_lock);
- 
- 	return 0;
-@@ -9514,6 +9523,14 @@ static void setup_trace_scratch(struct trace_array *tr,
- 
- 	/* Scan modules to make text delta for modules. */
- 	module_for_each_mod(make_mod_delta, tr);
-+
-+	/* Set trace_clock as the same of the previous boot. */
-+	if (tscratch->clock[0]) {
-+		if (tracing_set_clock(tr, tscratch->clock) < 0) {
-+			pr_info("the previous trace_clock info is not valid.");
-+			goto reset;
-+		}
-+	}
- 	return;
-  reset:
- 	/* Invalid trace modules */
-
+Thanks!
+Nam
