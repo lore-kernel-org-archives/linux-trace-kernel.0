@@ -1,360 +1,200 @@
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-007b0c01.pphosted.com (mx0a-007b0c01.pphosted.com [205.220.165.71])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF63D250C15;
-	Thu, 17 Apr 2025 18:58:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744916312; cv=none; b=nVUTqrzjd7u3odh1HV4bJJxAws8xCxo6B+I2culGkOmWbk08fCJ4XuXdXr5T0hZGAu1RwknvDln7ccAgA8gZfDa39P3NdKAfLi8++RuKxRR0MSVMFJIKUP+qHwnDXqb8laNUJG+3ahP8C+5Fts9ObuimG/4pZhjylImFW+ZMUWo=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744916312; c=relaxed/simple;
-	bh=8CmoRriRyFYHBixZL/sCTGY1bigSueRq4oH621iAsgA=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version; b=qNJSIuoM5NXoIJyQHWOD1K4n0v1HRDXLMTpWXgdGTImSrlJ9oYYpMLiNLS5b+XpxH/lTunJmxkxbB29CsC2k25eh/1OsI4ae9ewb/1iIllXpi7eGQGkeUcG7eTxnfFbpDvL2Dmlh0xKhFNDGcKHuVb2VeujYoAUn9V8dqjFCXyw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-43ce71582e9so9464695e9.1;
-        Thu, 17 Apr 2025 11:58:30 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744916309; x=1745521109;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=p3zm44wKFTQ/Kk8Jlchw5I9yDW5/t3thKxZTe9gayVY=;
-        b=Q1HkLviiunwj0ULCe9CDr0PJdKCY2+jP88TiSn+qW9SYdskE6GJwd3dxUJDuiIOd5Y
-         +mnWBqcawYiyU8uqKbBPDHz567F4uu60owhqJUvDEaGVaJuMnuZO+MPg8Mj6l+JaHPg1
-         7m4nZYXzNX4Dhekgyvc1cn5Apk4qP2mydnRrdeWJ0SMI8b3nnVnsZIFNoLeyKV3KdHNn
-         5BuwU7e2fyqH6o+V21wzTlmq8keHXKcq/SZ4T1YnmP0ng1t4fcGRpCgzuTn8f9nUKunX
-         Lzbvi1wCOZ15glfakoYcfZSQiMUvuwR6uCuvxQhSyeqi5jbYn0Zn9djfntnzPxKksXZ8
-         3E0g==
-X-Forwarded-Encrypted: i=1; AJvYcCUu4Bf66qdxFOZe+pQzi8zSf0Y5yf+DlPIW82g6YokFWUQla/u4hbt7B6Qd1T++GR1aXROuh3hdfJ7OaxoeKPuxa5HJ@vger.kernel.org, AJvYcCXWm5h/YyfkTffqQIko5SC94nmi0W6lgltAAbz3NQRsOume3CGYHWVA3VPEw37br3XwvwBQIyjd3Dp8DYg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyNPQFTHqxpBI6cwPiZn/YKNqs/FmdKXabvtP61mZdxnBt1CEwV
-	eeu1c5UQo1U8ev/Pjcp0hxVvJBWiJTARw4GA1uR1JiRvDuvUVWdo
-X-Gm-Gg: ASbGncvCnOY0mXLDf2G8NAggCzY3SmY/PWjgCiro2ETF08sDHTX/+8gQbGil3IfG7Ne
-	lKqcC5bHkUqdfqOZrEhHg7MrEq/nzl9ejIviqAwl4vYe6bLlmav3j+gln9eDo8OJKoPvYOwrinH
-	a4pfxE1ejOTDLLSV2GyhHXtws2l/XnyfGomH1mXhdfPwR1EDFv24z5dP00xW6gS9rFNFuprSF/X
-	R8QK9KPWe+eEikmXWGMfC+VmQ/+AEi7k9VzAWa+Da2vt8DASQQIRVCqBf/bCvtxr73oUm5A/Dpg
-	RDnQY0ZAretynKg5BW/TbEAXZ0hvk9fk0LsplRaTQdZNjXOzybNT8UlEIIc/j1oXfA==
-X-Google-Smtp-Source: AGHT+IEVZ3kQFa3O2/hzn7qbIAkoloCFkN+GKmIgRPcq25lYxJpYGZE8cGMsFX/6UPD4M4rRn3aCYw==
-X-Received: by 2002:a05:6000:1844:b0:39c:2665:2bfc with SMTP id ffacd0b85a97d-39efbaf1332mr44960f8f.52.1744916308685;
-        Thu, 17 Apr 2025 11:58:28 -0700 (PDT)
-Received: from costa-tp.bos2.lab ([2a00:a041:e280:5300:f8dc:acb8:77bb:8cf8])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39efa5a2300sm420680f8f.101.2025.04.17.11.58.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 17 Apr 2025 11:58:28 -0700 (PDT)
-From: Costa Shulyupin <costa.shul@redhat.com>
-To: Steven Rostedt <rostedt@goodmis.org>,
-	Tomas Glozar <tglozar@redhat.com>,
-	Daniel Bristot de Oliveira <bristot@kernel.org>,
-	John Kacur <jkacur@redhat.com>,
-	Costa Shulyupin <costa.shul@redhat.com>,
-	"Luis Claudio R. Goncalves" <lgoncalv@redhat.com>,
-	Eder Zulian <ezulian@redhat.com>,
-	Dan Carpenter <dan.carpenter@linaro.org>,
-	Jan Stancek <jstancek@redhat.com>,
-	linux-trace-kernel@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2] rtla: Set distinctive exit value for failed tests
-Date: Thu, 17 Apr 2025 21:56:16 +0300
-Message-ID: <20250417185757.2194541-1-costa.shul@redhat.com>
-X-Mailer: git-send-email 2.48.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6C0214B092;
+	Thu, 17 Apr 2025 19:11:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.71
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744917076; cv=fail; b=isDo6ahuJuIszY/SS5MjK6A3EpXKWY896ChrPo20l2ckFJTlZQIaDvP9QCbz3kdwl99UH9D7sB/mkFlZN2wZNqh0emVvZ6xG/e+X/NxFEhsBcHZUucYcaaoCzlDH1ob+wZDf0ld1uOWCTpSnjVengWOnZ6YnY9xaL8bH1GFrp6s=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744917076; c=relaxed/simple;
+	bh=JgjYcKjVIvRmD3GScMOEw1Dk3iTdHv8oYt7c+ERpLpM=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=p0b+ueNX6+aPvsXavzJqp7gstwt+1pX3KGiicr68yzO4Fzn2CVVZ99hCPOj5zSa7f1AD3IwXHHMJVTTW80CyWsEMATbBlSIPbs0ewqo0e62zOWTE4bl5s2xb9c5OEJGin/4T8Dw9mlxcx96COhB9o8ods2bxqhsV9oF0w+4ljyU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cs.wisc.edu; spf=pass smtp.mailfrom=cs.wisc.edu; dkim=pass (2048-bit key) header.d=cs.wisc.edu header.i=@cs.wisc.edu header.b=v9LerM07; arc=fail smtp.client-ip=205.220.165.71
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cs.wisc.edu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cs.wisc.edu
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=cs.wisc.edu header.i=@cs.wisc.edu header.b="v9LerM07"
+Received: from pps.filterd (m0316038.ppops.net [127.0.0.1])
+	by mx0a-007b0c01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53HGi4R0027917;
+	Thu, 17 Apr 2025 14:10:57 -0500
+Received: from bn8pr05cu002.outbound.protection.outlook.com (mail-eastus2azlp17011029.outbound.protection.outlook.com [40.93.12.29])
+	by mx0a-007b0c01.pphosted.com (PPS) with ESMTPS id 4635e29b1w-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 17 Apr 2025 14:10:56 -0500 (CDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=S0My9ot9of+kY0h+APEPxt8NkF5/wyTyxybzr2apZDYtkbPkzFingQwKJ29wqc90zJ+o9ZznYQTkxie51nanzV7qb+m2i8xdspVZyd/t2HmhVQhEPW3bUhj7bFCT4e8vDTUncD++xGN8qh5PxInIPoGHHfVNEiCj8fBHXiZbaTzJ++dbstTn8lMjq9+AxdARWS3eRs9ZC19JP6GDJpkd07zZ2jBbYnKTZVZcSPgQ3cbhSvOQDq1tctmNgUJuKNPc8xTPbEvMEVjyYkGRuyu1pQ3coZfi7cfUQkdYt/7nApjoxE8/ljDJg+T7reBSscvP4b4hHrUHWhbcfKrPx76IwA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=BV8XcQygdczgNu3yndQ/Nm9lVhkGpbf4DeRxlVTskZE=;
+ b=sSAX4pCN66yuw7QdLlbUzpp77yfs8UW//mVeYDeGh0tMtMjpS0u0hrRRh8EeccKnLmjwXJYLt1SrNW3DnJ3yvxo7Jr4DJcSZNkNdr6kKZaMR6nAnCRE+d/78pkfd2+W+SDPETthfRVckbQSXrl+pP7p7GLTJAgs9d9zlMznaQ6YJCmhHegnZm3ZqaEaUqzb7+34lpZa6r45c8PJ+0cFes2vihwInvqIrmC7cWE5OqUzE+Ur79tlL0IgQWqDwFftPNaG+nVGdHtPKxZbV6xHCVPtSabI58ehvGD4dCb2ji/2Z43NtQbFBcAbu4QWftEgRpjRZaLTJzT6hIsicUi/Fmg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=cs.wisc.edu; dmarc=pass action=none header.from=cs.wisc.edu;
+ dkim=pass header.d=cs.wisc.edu; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cs.wisc.edu;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=BV8XcQygdczgNu3yndQ/Nm9lVhkGpbf4DeRxlVTskZE=;
+ b=v9LerM07fUQlCgP5xL1xtBWsLRzl+JcmenoN0hDmzS42FceVDBZIhLowsSWVazMWzHkdcfn8J8SmajdwV/PNNNZxQBQ3pA5tJCwj/h/kdTzXZPeATztAAC+qixJQN0FXnD6GF6pnD0X30/+3gArHsKDc5rEPy4TNWYHN8uXu9qm35XErJ8VlSgQuaYDA4qWYilEHRemRBodSjhMVdSmssg3Q9RobDLU+k9UHigmQcu+/+kn699FWDID09N0mvmLy99Zr1dV0+lIp0hfT9alYL9i7L8+lrWobZXv0fKPmfCCrJe2MkRSAy0v4x1sXBKsBdOzoBlxE/XFoq2LNSDN5Zw==
+Received: from DS7PR06MB6808.namprd06.prod.outlook.com (2603:10b6:5:2d2::10)
+ by PH0PR06MB7302.namprd06.prod.outlook.com (2603:10b6:510:2e::24) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.36; Thu, 17 Apr
+ 2025 19:10:55 +0000
+Received: from DS7PR06MB6808.namprd06.prod.outlook.com
+ ([fe80::76b2:e1c8:9a15:7a1c]) by DS7PR06MB6808.namprd06.prod.outlook.com
+ ([fe80::76b2:e1c8:9a15:7a1c%5]) with mapi id 15.20.8655.022; Thu, 17 Apr 2025
+ 19:10:54 +0000
+Message-ID: <3ce02a98-0ac2-4d34-b6f7-ba85088399d7@cs.wisc.edu>
+Date: Thu, 17 Apr 2025 14:10:53 -0500
+User-Agent: Mozilla Thunderbird
+Subject: Re: Interface for enabling context tracking
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Frederic Weisbecker <frederic@kernel.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>, linux-kernel@vger.kernel.org,
+        linux-trace-kernel@vger.kernel.org,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+References: <9e2ac1e3-d07d-4f17-970e-6b7a5248a5bb@cs.wisc.edu>
+ <20250410150555.7797d195@gandalf.local.home>
+Content-Language: en-US
+From: Junxuan Liao <ljx@cs.wisc.edu>
+In-Reply-To: <20250410150555.7797d195@gandalf.local.home>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: MN0PR03CA0009.namprd03.prod.outlook.com
+ (2603:10b6:208:52f::14) To DS7PR06MB6808.namprd06.prod.outlook.com
+ (2603:10b6:5:2d2::10)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS7PR06MB6808:EE_|PH0PR06MB7302:EE_
+X-MS-Office365-Filtering-Correlation-Id: 696685e2-8364-4cbc-b184-08dd7de393cd
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|41320700013|376014|366016;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?SGlmNWM3NVFlSXptcjZ3M1g0WllNZ2IyV2FNNnoxTVoxbWJhSHYxejFlUi96?=
+ =?utf-8?B?N1VOKytKVE9GUEp1LzBRVCsyT29XbDhOdUgwQUpiNXVUNmdtWEF4Y3FNMU5r?=
+ =?utf-8?B?T2tndnliNi9jcVN3Z3NReFZlRU9qUHhNOTRnbkxqN1hQTTFKT0I4Zk1HNkpp?=
+ =?utf-8?B?NmJSdG90UmZhTWU2M3hJaWtYMWVmMVFTV254VWNWcWVScWUvcS9iR1FHbTZB?=
+ =?utf-8?B?N3hZOWJKR1B6cWhlWkVFV05FM09iQjZBbVdmRnZ0MFNjOHNFem9TMmdCRzhw?=
+ =?utf-8?B?TnlHa2JQOWJNa0o3dWQyMFp2L3RUcVZRMDZJZ3htQUVPeDNvS3lxZXlZRG5p?=
+ =?utf-8?B?Mk5hSi9RWFV1bWZlQ2VuV01SQzRzRjNwcnFMSUx6aGppNzJQV0NITzhHZGcw?=
+ =?utf-8?B?UEhiUUtDdWJ4Rk05dkxsaHhlSC9LT1hPcFR1dXprSDV0elEzWkdnWWFxWjEw?=
+ =?utf-8?B?c2VUdVhlbzY1NmNuQVhKcUhuK0RkWDZhSjl0KzdRTzBGRmlaajAxZ0ladmp4?=
+ =?utf-8?B?R0U5NmdQV0hKS0FSb3pIN0EwcUJkRkNjbXpWS2Z0M0hhd1YxcGJuTzhJbmk2?=
+ =?utf-8?B?dHJkdE1QWEV5UnZIM0ZXeXd6b0Q5TzBwb01JSUtPb2Vsc3laTVVMZG80VGpE?=
+ =?utf-8?B?ZzVrUDVMTTgrU2xxWGtuN21HcmZkdDY5LzU4UFFWc0hhUEVHVzFIU1ZLanpK?=
+ =?utf-8?B?N1M4TnJJdUsvQkNydk95cE9YZ3dDRkdyU0lQQ0F3MmdHNGh3dHpjMHZZdXd3?=
+ =?utf-8?B?VkF1VnB6YjlZZGNEYlRvdDFGbUZ0MmZ4SHFUK0R6akx1Q3RvaElJNm5xSFd5?=
+ =?utf-8?B?S3ZRYmpvWFNxU0Z5LzlnZHhId0RpcEN3R1lFVDlLVCszY3R5V1ROQ1I0N1lR?=
+ =?utf-8?B?SWx6RjBSWDB6UXlZTkhKK1BxdlQwWG16V2NxK0ZTSFlvL1RRVUFBa2tzdFNz?=
+ =?utf-8?B?aFdtejNiblVZTHRPMFVDaFZBck1wVWRTRkRPMzVXK29NOGVXY2NzckkrV1RY?=
+ =?utf-8?B?Q0FzdDhvaTl3TXpieGx3a2tVUlJFY1ZhcE9BREhORkIwVHlLLzFVcnVSV0lt?=
+ =?utf-8?B?d0YzQ0xGNklWQVJnNlp2Q0xqcUFIaGZ2elo1LzJ6ek1QSlB5d1ZqbytNdXdV?=
+ =?utf-8?B?UlZxZmlxa29sTW55bkZEb2lLTmxCNGZzdWxwN2hVaFdFU1p6YTBDbDRFU0Vu?=
+ =?utf-8?B?dmVBSmhyWi9SWmtGUFBoaElXSVZzY2pndGEvRlZheFhUb2VCL1RXYW5HaElD?=
+ =?utf-8?B?eGFHQTE1eXBOZlR2QUdSS1ZaeEpzYk9pRHhmR1lJSUs3SmswSE1YUkpjNk1z?=
+ =?utf-8?B?Z290VFk3Yml6YTdCb3R3SEtYTHc2MTYvSFRKNVdRbnpyVkIyb1Y4TXdQU21X?=
+ =?utf-8?B?blY3dDIxTGJaUU5VTnVBQVFqNnU1UytXSTB2cmZlNmVyMGszR2toL05QQm5h?=
+ =?utf-8?B?OXFPSkhJcUxLWGJUcFRIZjNab2tEZ0lGS3lrSFlFQmVyVEpVOVg0ZzJ5czJC?=
+ =?utf-8?B?ZWg1T3c2bVRMSTZGNjVGL0VKM2p0cVpYOWQ3MjIzWk9LVGF4Y01IQy9UTDB1?=
+ =?utf-8?B?ZUE4TUg2OENzbWlER1RZNjQ4dlpHT2hsTnpwdndyUHQ3c0R2MFE3MzFieThh?=
+ =?utf-8?B?d3lUNmt1UFBmc3dxbWxiRXBHL2NxRlBWMzEzMmdTbjdCQ3p2UVJsZHphVVp5?=
+ =?utf-8?B?QmhzWlJoR0gzdm84NlpLS2ltZXNSREpoR1RzUDFFZXIrSWdjVXNianVxWjhh?=
+ =?utf-8?B?a084OWVXR1AzZWxiaUtERmlibHFwcGxBTm1Ebk5zSlRCSGQ2azVQMFF0K0xZ?=
+ =?utf-8?B?ZG9UVTBtTG9LdlEyQjZVeWtacDkydjJQRVc5eGR5V3lOTW1rRitxV2VoU0ZZ?=
+ =?utf-8?B?WnRWaWZPcnlkbTdBaklsakswVEZJVG1OTFVGVVJ2MGp1SGo5cFRiajBRcjFI?=
+ =?utf-8?Q?Ifvbd/xHsv0=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR06MB6808.namprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(41320700013)(376014)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?Zi82blBqaXBHZFFCR1VMOVpSMXd6N0s2TStTWUN4cFcreCtNRndnNFhOMGp0?=
+ =?utf-8?B?UGtTamNndVRMVHJHSHJlN20zU1pTZjBqVUF1L00xQ084N1lXYkxEeEluY0gx?=
+ =?utf-8?B?NFI2WlREL0w3VUJwTkU1cjNWc2xFRUhxMEVVTDFpc0pFRk1CWVZST3Qwd1lh?=
+ =?utf-8?B?Uk1DazZKaS9TSmswWm1QTlYySUJZYmVtRVNpNEcxWnd0RXJaUjUvaERza1ZY?=
+ =?utf-8?B?c3E0bSszZE5XSXNIOWFmVXNTMmVvUnVnYmY4dkRBSnhnTnVVdUhVZGJmclEz?=
+ =?utf-8?B?ZjVEbWFWL2o1YlR0c2YwQTdGeEVzR1JOVEcwQmhYTEVJcHR1QVB4a3Rqb28x?=
+ =?utf-8?B?Y09aT0k2WjFncjIzVFlaR2kxSXhmQnM2VFB1bWlQeDM4UzJRSHJKL2tOZm1r?=
+ =?utf-8?B?bXRQQkd0a3FnbUQwUEcvWHQxSHMvQlBPWGJ1WXE0TTJxNk5ZYmFld1hBelh0?=
+ =?utf-8?B?RHJxVUNsS1JwaGxsZk0rYTg3bm5rTVFhVnl3N01ZRmpRVERXekxmU1hMaEtW?=
+ =?utf-8?B?ZzRpbTEyRDg0QytvaVl4dDlFMytoSUZwMEZVRVN2OTBHakxXcXQwZ1YxYXZS?=
+ =?utf-8?B?Z2lDSHBhNENFVUtNQTJEcGdsSkpLTUhWYlMzSy9KRzZCQStMRzZMcGdUTGI4?=
+ =?utf-8?B?YUgxUGtTbFZRQ2QvSUJrN2dBQU43Zk1MY3NkU2x3MlNyR200TUdlMHR3R0Zr?=
+ =?utf-8?B?OGsxUjBkR203ZjVYTXd0Y1JLdllWTGl0QnllQldHTDVzN1hDMEpMRDQyNGRO?=
+ =?utf-8?B?RTBTbDlOK1VKWnZCSCtoVXdZTTlKOEFnRXVZb2h0QnV5UlBwUDQrYVA3dkVn?=
+ =?utf-8?B?TkhXRGVsejFtREw2TmZ6ampvR3laaklRS25yOVYrNXBEc2xPMzRUSFBmaFh5?=
+ =?utf-8?B?R2wrNjNTczRKTlJqeFNWdFRPRXNQbU9iL0djOVNHMW9scms1TytBYWlHa0hi?=
+ =?utf-8?B?anpmSFp5bm5TUmQvQ2NoUEVYS2ZMVjlBdUVOcnhNSTA5aXBYUWNWOGROYlIv?=
+ =?utf-8?B?WG92OWtWL0k0RnVNY2M4QVplRkEwaHQ1TEc2aENkVmhFUmNHcFI4THcyNkg2?=
+ =?utf-8?B?U1p5L3BsY0Iwd1ZPRlpBQmhCV04yZUI4MlhVcUFxZk9yWnNCYy9uRDdjeWlu?=
+ =?utf-8?B?U3E2RjFHbW9zMEo1RWlJNXpkWVVHYk9RcGJGV2kyS2RnbHdnR3VKYjdONTFw?=
+ =?utf-8?B?N2ErbEU3YW1LZXo3b1RvbzkvZDA1NG5GMHhYQ0gwZWx2QUk4eEtTMittRmsw?=
+ =?utf-8?B?dkVtb1RybGtZZmpUL0gvWXl6OHFwMXRjMTFERk8vSTZ5UkpBaWFhSHhiSHFn?=
+ =?utf-8?B?aDJMUmtvbVdBcVhhMXZNUTRxSStpK2NlM2ozSVFnWFY1WXJ5djN3QTJCeWs1?=
+ =?utf-8?B?bXU0UE5Qak4ySFo2OGFZeDQzQzhYdk1XK1FiZEhIOTlLdzRlREMydjVYL25Y?=
+ =?utf-8?B?WGcxSm9iaXV5WVIrREtpRHU4S0R5ekdYY2tTNXJ2cUFXYUwyM0JCZEUramly?=
+ =?utf-8?B?OVo5K0ZQck45Y0sxVXByK01iTFdYUXhMM0F0VWxaTEYzSFB0aW5vdk84WWcw?=
+ =?utf-8?B?Slo3bGNNbFh0R3pTdkFJeDVrZVE0UU5NV3JQT2FIei9ZVlRHcFUxb3ZzZHAx?=
+ =?utf-8?B?VWV0WmJUMklhTnNOdzYrb3dnMXArQkVldld4R25KK2N2TGhOYnhxYWY3UTNl?=
+ =?utf-8?B?cFpieUpJenFob1BXUFF1L01BZE5EWG9BMzZZbmVDMFJPaUI2dVlxRC9nRHlt?=
+ =?utf-8?B?MGRqTUFoa05BbC84UXA2ZnBYNzdNemFQSzlDNjd6YngvYWFwZStYekoybnBO?=
+ =?utf-8?B?TTZBQi8rdnF1b1lkRXFDalZadlA0T1ZPbDJ4VnZQQzRoYVpudDRBb1RBeGp5?=
+ =?utf-8?B?cDRGdXlnUi9PNXVnVDdpQzkvTmNJMy82dUZVWXlSMUkvWWdWOUxJZnU1VjZW?=
+ =?utf-8?B?R2Z3cXk3aGxWWjgzbVFqZW5La0FhTTlxQS9NYWZYQVlRYitnbWU4Rm9hRlY0?=
+ =?utf-8?B?ZnJOV1NmWHUxWm9uSStMVmtMQ3cvc1NnbHdpSnhRNkRYWGN1L0FxWDE5Rk9Q?=
+ =?utf-8?B?aEpTR1JIbVl2ZFZlODFDOUNndi9xSi9jNDk2MGhPaWVzdlJMWUNzL2E3a2J4?=
+ =?utf-8?Q?nF40=3D?=
+X-OriginatorOrg: cs.wisc.edu
+X-MS-Exchange-CrossTenant-Network-Message-Id: 696685e2-8364-4cbc-b184-08dd7de393cd
+X-MS-Exchange-CrossTenant-AuthSource: DS7PR06MB6808.namprd06.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Apr 2025 19:10:54.8876
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 2ca68321-0eda-4908-88b2-424a8cb4b0f9
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: /uUAIFm2X+aQ1oWSJOnUq5NCxqlzWopIyiwpHcDvLPFBlrSd4MFBPTzeliq8Gk0xpZEjMvUvaoCN+HgqP4cqPQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR06MB7302
+X-Proofpoint-ORIG-GUID: 5BoO2LERTgL9rG--mGfM8NAjE3BfHE56
+X-Authority-Analysis: v=2.4 cv=Nu/Rc9dJ c=1 sm=1 tr=0 ts=68015240 cx=c_pps a=djVjp5eVWc/OO4qUaLGr8w==:117 a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19 a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
+ a=XR8D0OoHHMoA:10 a=3-xYBkHg-QkA:10 a=wlpZQ0607Aa1vfJP9VsA:9 a=QEXdDO2ut3YA:10
+X-Proofpoint-GUID: 5BoO2LERTgL9rG--mGfM8NAjE3BfHE56
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-17_06,2025-04-17_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
+ priorityscore=1501 bulkscore=0 malwarescore=0 mlxscore=0 mlxlogscore=662
+ adultscore=0 lowpriorityscore=0 clxscore=1015 spamscore=0 phishscore=0
+ suspectscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2504170140
 
-A test is considered failed when a sample trace exceeds the threshold.
-Failed tests return the same exit code as passed tests, requiring test
-frameworks to determine the result by searching for "hit stop tracing"
-in the output.
 
-Assign a distinct exit code for failed tests to enable the use of shell
-expressions and seamless integration with testing frameworks without the
-need to parse output.
+On 4/10/25 2:05 PM, Steven Rostedt wrote:
+> I think the best thing to do is to add trace events in all areas that enter
+> and exit the kernel normally (where noinstr is turned off). There's already
+> one for page faults on entry. It's been on my todo list to add one for page
+> fault exit (as I do care for how long they last.
+> 
+> I believe the irq vectors also have entry and exits trace events.
+> 
+> What else is missing?
+> 
+> -- Steve
 
-Add enum type for return value.
+Just found out that the exit tracepoints for syscalls aren't always
+exactly preceding the exit to userspace. The kernel can still spend
+quite some time in task_work_run after the tracepoints are triggered.
+Has that bothered you before?
 
-Update `make check`.
-
-Signed-off-by: Costa Shulyupin <costa.shul@redhat.com>
-
----
-v2: Expanded the patch description as requested by Tomas
-
----
- tools/tracing/rtla/src/osnoise_hist.c  |  5 +++--
- tools/tracing/rtla/src/osnoise_top.c   |  5 +++--
- tools/tracing/rtla/src/timerlat_hist.c |  5 +++--
- tools/tracing/rtla/src/timerlat_top.c  |  5 +++--
- tools/tracing/rtla/src/utils.h         |  6 ++++++
- tools/tracing/rtla/tests/engine.sh     |  7 +++++--
- tools/tracing/rtla/tests/hwnoise.t     |  4 ++--
- tools/tracing/rtla/tests/osnoise.t     |  6 +++---
- tools/tracing/rtla/tests/timerlat.t    | 12 ++++++------
- 9 files changed, 34 insertions(+), 21 deletions(-)
-
-diff --git a/tools/tracing/rtla/src/osnoise_hist.c b/tools/tracing/rtla/src/osnoise_hist.c
-index d9d15c8f27c71..8d579bcee7090 100644
---- a/tools/tracing/rtla/src/osnoise_hist.c
-+++ b/tools/tracing/rtla/src/osnoise_hist.c
-@@ -766,8 +766,8 @@ int osnoise_hist_main(int argc, char *argv[])
- 	struct osnoise_params *params;
- 	struct osnoise_tool *record = NULL;
- 	struct osnoise_tool *tool = NULL;
-+	enum result return_value = ERROR;
- 	struct trace_instance *trace;
--	int return_value = 1;
- 	int retval;
- 
- 	params = osnoise_hist_parse_args(argc, argv);
-@@ -889,12 +889,13 @@ int osnoise_hist_main(int argc, char *argv[])
- 
- 	osnoise_print_stats(params, tool);
- 
--	return_value = 0;
-+	return_value = PASSED;
- 
- 	if (osnoise_trace_is_off(tool, record)) {
- 		printf("rtla osnoise hit stop tracing\n");
- 		save_trace_to_file(record ? record->trace.inst : NULL,
- 				   params->trace_output);
-+		return_value = FAILED;
- 	}
- 
- out_hist:
-diff --git a/tools/tracing/rtla/src/osnoise_top.c b/tools/tracing/rtla/src/osnoise_top.c
-index 3455ee73e2e69..2c12780c8aa92 100644
---- a/tools/tracing/rtla/src/osnoise_top.c
-+++ b/tools/tracing/rtla/src/osnoise_top.c
-@@ -594,8 +594,8 @@ int osnoise_top_main(int argc, char **argv)
- 	struct osnoise_params *params;
- 	struct osnoise_tool *record = NULL;
- 	struct osnoise_tool *tool = NULL;
-+	enum result return_value = ERROR;
- 	struct trace_instance *trace;
--	int return_value = 1;
- 	int retval;
- 
- 	params = osnoise_top_parse_args(argc, argv);
-@@ -715,12 +715,13 @@ int osnoise_top_main(int argc, char **argv)
- 
- 	osnoise_print_stats(params, tool);
- 
--	return_value = 0;
-+	return_value = PASSED;
- 
- 	if (osnoise_trace_is_off(tool, record)) {
- 		printf("osnoise hit stop tracing\n");
- 		save_trace_to_file(record ? record->trace.inst : NULL,
- 				   params->trace_output);
-+		return_value = FAILED;
- 	}
- 
- out_top:
-diff --git a/tools/tracing/rtla/src/timerlat_hist.c b/tools/tracing/rtla/src/timerlat_hist.c
-index 9d9efeedc4c2c..36d2294c963d1 100644
---- a/tools/tracing/rtla/src/timerlat_hist.c
-+++ b/tools/tracing/rtla/src/timerlat_hist.c
-@@ -1141,11 +1141,11 @@ int timerlat_hist_main(int argc, char *argv[])
- 	struct timerlat_params *params;
- 	struct osnoise_tool *record = NULL;
- 	struct timerlat_u_params params_u;
-+	enum result return_value = ERROR;
- 	struct osnoise_tool *tool = NULL;
- 	struct osnoise_tool *aa = NULL;
- 	struct trace_instance *trace;
- 	int dma_latency_fd = -1;
--	int return_value = 1;
- 	pthread_t timerlat_u;
- 	int retval;
- 	int nr_cpus, i;
-@@ -1378,7 +1378,7 @@ int timerlat_hist_main(int argc, char *argv[])
- 
- 	timerlat_print_stats(params, tool);
- 
--	return_value = 0;
-+	return_value = PASSED;
- 
- 	if (osnoise_trace_is_off(tool, record) && !stop_tracing) {
- 		printf("rtla timerlat hit stop tracing\n");
-@@ -1388,6 +1388,7 @@ int timerlat_hist_main(int argc, char *argv[])
- 
- 		save_trace_to_file(record ? record->trace.inst : NULL,
- 				   params->trace_output);
-+		return_value = FAILED;
- 	}
- 
- out_hist:
-diff --git a/tools/tracing/rtla/src/timerlat_top.c b/tools/tracing/rtla/src/timerlat_top.c
-index 79cb6f28967fc..7365e08fe9866 100644
---- a/tools/tracing/rtla/src/timerlat_top.c
-+++ b/tools/tracing/rtla/src/timerlat_top.c
-@@ -985,12 +985,12 @@ int timerlat_top_main(int argc, char *argv[])
- 	struct timerlat_params *params;
- 	struct osnoise_tool *record = NULL;
- 	struct timerlat_u_params params_u;
-+	enum result return_value = ERROR;
- 	struct osnoise_tool *top = NULL;
- 	struct osnoise_tool *aa = NULL;
- 	struct trace_instance *trace;
- 	int dma_latency_fd = -1;
- 	pthread_t timerlat_u;
--	int return_value = 1;
- 	char *max_lat;
- 	int retval;
- 	int nr_cpus, i;
-@@ -1197,7 +1197,7 @@ int timerlat_top_main(int argc, char *argv[])
- 
- 	timerlat_print_stats(params, top);
- 
--	return_value = 0;
-+	return_value = PASSED;
- 
- 	if (osnoise_trace_is_off(top, record) && !stop_tracing) {
- 		printf("rtla timerlat hit stop tracing\n");
-@@ -1207,6 +1207,7 @@ int timerlat_top_main(int argc, char *argv[])
- 
- 		save_trace_to_file(record ? record->trace.inst : NULL,
- 				   params->trace_output);
-+		return_value = FAILED;
- 	} else if (params->aa_only) {
- 		/*
- 		 * If the trace did not stop with --aa-only, at least print the
-diff --git a/tools/tracing/rtla/src/utils.h b/tools/tracing/rtla/src/utils.h
-index 101d4799a0090..a2a6f89f342d0 100644
---- a/tools/tracing/rtla/src/utils.h
-+++ b/tools/tracing/rtla/src/utils.h
-@@ -83,3 +83,9 @@ int auto_house_keeping(cpu_set_t *monitored_cpus);
- 
- #define ns_to_usf(x) (((double)x/1000))
- #define ns_to_per(total, part) ((part * 100) / (double)total)
-+
-+enum result {
-+	PASSED = 0, /* same as EXIT_SUCCESS */
-+	ERROR = 1,  /* same as EXIT_FAILURE, an error in arguments */
-+	FAILED = 2, /* test hit the stop tracing condition */
-+};
-diff --git a/tools/tracing/rtla/tests/engine.sh b/tools/tracing/rtla/tests/engine.sh
-index b1697b3e3f528..f2616a8e4179e 100644
---- a/tools/tracing/rtla/tests/engine.sh
-+++ b/tools/tracing/rtla/tests/engine.sh
-@@ -39,6 +39,7 @@ reset_osnoise() {
- }
- 
- check() {
-+	expected_exitcode=${3:-0}
- 	# Simple check: run rtla with given arguments and test exit code.
- 	# If TEST_COUNT is set, run the test. Otherwise, just count.
- 	ctr=$(($ctr + 1))
-@@ -49,7 +50,7 @@ check() {
- 		# Run rtla; in case of failure, include its output as comment
- 		# in the test results.
- 		result=$(stdbuf -oL $TIMEOUT "$RTLA" $2 2>&1); exitcode=$?
--		if [ $exitcode -eq 0 ]
-+		if [ $exitcode -eq $expected_exitcode ]
- 		then
- 			echo "ok $ctr - $1"
- 		else
-@@ -68,12 +69,14 @@ check_with_osnoise_options() {
- 	# Save original arguments
- 	arg1=$1
- 	arg2=$2
-+	arg3=$3
- 
- 	# Apply osnoise options (if not dry run)
- 	if [ -n "$TEST_COUNT" ]
- 	then
- 		[ "$NO_RESET_OSNOISE" == 1 ] || reset_osnoise
- 		shift
-+		shift
- 		while shift
- 		do
- 			[ "$1" == "" ] && continue
-@@ -84,7 +87,7 @@ check_with_osnoise_options() {
- 		done
- 	fi
- 
--	NO_RESET_OSNOISE=1 check "$arg1" "$arg2"
-+	NO_RESET_OSNOISE=1 check "$arg1" "$arg2" "$arg3"
- }
- 
- set_timeout() {
-diff --git a/tools/tracing/rtla/tests/hwnoise.t b/tools/tracing/rtla/tests/hwnoise.t
-index bbed175805374..5f71401a139e6 100644
---- a/tools/tracing/rtla/tests/hwnoise.t
-+++ b/tools/tracing/rtla/tests/hwnoise.t
-@@ -10,11 +10,11 @@ check "verify help page" \
- check "detect noise higher than one microsecond" \
- 	"hwnoise -c 0 -T 1 -d 5s -q"
- check "set the automatic trace mode" \
--	"hwnoise -a 5 -d 30s"
-+	"hwnoise -a 5 -d 30s" 2
- check "set scheduling param to the osnoise tracer threads" \
- 	"hwnoise -P F:1 -c 0 -r 900000 -d 1M -q"
- check "stop the trace if a single sample is higher than 1 us" \
--	"hwnoise -s 1 -T 1 -t -d 30s"
-+	"hwnoise -s 1 -T 1 -t -d 30s" 2
- check "enable a trace event trigger" \
- 	"hwnoise -t -e osnoise:irq_noise trigger=\"hist:key=desc,duration:sort=desc,duration:vals=hitcount\" -d 1m"
- 
-diff --git a/tools/tracing/rtla/tests/osnoise.t b/tools/tracing/rtla/tests/osnoise.t
-index e5995c03c790f..44908fc01abfd 100644
---- a/tools/tracing/rtla/tests/osnoise.t
-+++ b/tools/tracing/rtla/tests/osnoise.t
-@@ -10,9 +10,9 @@ check "verify help page" \
- check "verify the --priority/-P param" \
- 	"osnoise top -P F:1 -c 0 -r 900000 -d 1M -q"
- check "verify the --stop/-s param" \
--	"osnoise top -s 30 -T 1 -t"
-+	"osnoise top -s 30 -T 1 -t" 2
- check "verify the  --trace param" \
--	"osnoise hist -s 30 -T 1 -t"
-+	"osnoise hist -s 30 -T 1 -t" 2
- check "verify the --entries/-E param" \
- 	"osnoise hist -P F:1 -c 0 -r 900000 -d 1M -b 10 -E 25"
- 
-@@ -20,6 +20,6 @@ check "verify the --entries/-E param" \
- # and stopping on threshold.
- # If default period is not set, this will time out.
- check_with_osnoise_options "apply default period" \
--	"osnoise hist -s 1" period_us=600000000
-+	"osnoise hist -s 1" 2 period_us=600000000
- 
- test_end
-diff --git a/tools/tracing/rtla/tests/timerlat.t b/tools/tracing/rtla/tests/timerlat.t
-index e939ff71d6be3..579c12a85e8f3 100644
---- a/tools/tracing/rtla/tests/timerlat.t
-+++ b/tools/tracing/rtla/tests/timerlat.t
-@@ -21,21 +21,21 @@ export RTLA_NO_BPF=$option
- check "verify help page" \
- 	"timerlat --help"
- check "verify -s/--stack" \
--	"timerlat top -s 3 -T 10 -t"
-+	"timerlat top -s 3 -T 10 -t" 2
- check "verify -P/--priority" \
- 	"timerlat top -P F:1 -c 0 -d 1M -q"
- check "test in nanoseconds" \
--	"timerlat top -i 2 -c 0 -n -d 30s"
-+	"timerlat top -i 2 -c 0 -n -d 30s" 2
- check "set the automatic trace mode" \
--	"timerlat top -a 5 --dump-tasks"
-+	"timerlat top -a 5 --dump-tasks" 2
- check "print the auto-analysis if hits the stop tracing condition" \
--	"timerlat top --aa-only 5"
-+	"timerlat top --aa-only 5" 2
- check "disable auto-analysis" \
--	"timerlat top -s 3 -T 10 -t --no-aa"
-+	"timerlat top -s 3 -T 10 -t --no-aa" 2
- check "verify -c/--cpus" \
- 	"timerlat hist -c 0 -d 30s"
- check "hist test in nanoseconds" \
--	"timerlat hist -i 2 -c 0 -n -d 30s"
-+	"timerlat hist -i 2 -c 0 -n -d 30s" 2
- done
- 
- test_end
--- 
-2.48.1
-
+--
+Junxuan
