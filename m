@@ -1,119 +1,127 @@
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.2])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 750AB22A1CB;
-	Thu, 17 Apr 2025 09:54:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.2
+Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9866A23956D;
+	Thu, 17 Apr 2025 11:32:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744883673; cv=none; b=GMqrAEMM1i6JN/9ueaCzFJ/C/orbbiOOl8tOU9ZmU/fCdzHSDhIasJJIaTp2fEgUS/7g0Bd9Q8sPtOq83di6P9O/2G8jOzOVzdchFOPmoIH6OP8S/KpinDX2PsWUZzkzpV6vycGUTjKuXwnboLJ1fO2ngjJZLi6HWOCUn8vAAMY=
+	t=1744889522; cv=none; b=iSHluGr9sTU2GccCatgxrqxvTueEM4oPmosg4DTfikdOm+LzQlSZe+un3M9egm3XP1t0Hn2C0lLpNPnUYVHhL7rJ5RFNchMA5PEL1vDHhTUQUDLcibuiVI0n60nckTo0VFbWyfDGoH2APw/H6cdPMRJ3WbLy+oywADTb01Cv7CY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744883673; c=relaxed/simple;
-	bh=Qfe/CBGkmZbL6EmYdCa433SjCrHvAu5pxnjtFrFLdkg=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=O+fXhJSgBPm1So8n8NCKj3VzNvy23pmnV/8WD2BeLlNe+zZU8HlFKv7K7Df8Roh4GDkePSamHlovgZUF+8TaPmI6EPheAcZVQ8FuM98yQYnQoj1/K6WKPzfzUrLrFtf4j1Pxuc+JU6qILN3cZiql8fNABk5l6Da5LYyYFe0mkIA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=a0dzhG81; arc=none smtp.client-ip=117.135.210.2
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="a0dzhG81"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=brCIu
-	T7WOka4QsCGcvoP2O2amwg+o0P7EpSsxEuWZgs=; b=a0dzhG81c0zNMx5DKhCLf
-	0Ek45TfufCikzbBLn8u6S28Z4hrwb1mrQQja0/8SN952ruJkGL5TIoHHgQPrSOHk
-	AQ3yX/4n8ybG6b9rkw3M2o6VxIb3VIJrW/mH5Z+Vm0ce5YraRZgprxQA3LO4caiv
-	gwWtgBge3Lqp7LBRwP8kxA=
-Received: from localhost.localdomain (unknown [])
-	by gzga-smtp-mtada-g1-3 (Coremail) with SMTP id _____wDXH0hxzwBoI3LbAQ--.843S2;
-	Thu, 17 Apr 2025 17:52:51 +0800 (CST)
-From: Feng Yang <yangfeng59949@163.com>
-To: andrii.nakryiko@gmail.com
-Cc: andrii@kernel.org,
-	ast@kernel.org,
-	bpf@vger.kernel.org,
-	daniel@iogearbox.net,
-	eddyz87@gmail.com,
-	haoluo@google.com,
-	john.fastabend@gmail.com,
-	jolsa@kernel.org,
-	kpsingh@kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	martin.lau@linux.dev,
-	mathieu.desnoyers@efficios.com,
-	mattbobrowski@google.com,
-	mhiramat@kernel.org,
-	rostedt@goodmis.org,
-	sdf@fomichev.me,
-	song@kernel.org,
-	yangfeng59949@163.com,
-	yonghong.song@linux.dev
-Subject: Re: [PATCH bpf-next v3] bpf: Remove redundant checks
-Date: Thu, 17 Apr 2025 17:52:45 +0800
-Message-Id: <20250417095245.388120-1-yangfeng59949@163.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <CAEf4Bzai7NL-3=1SVi4-WWYWEY6Lzrb8GBfKnt6FG8sNm2OMRQ@mail.gmail.com>
-References: <CAEf4Bzai7NL-3=1SVi4-WWYWEY6Lzrb8GBfKnt6FG8sNm2OMRQ@mail.gmail.com>
+	s=arc-20240116; t=1744889522; c=relaxed/simple;
+	bh=CtN2uHgb1NyUBudgvvRWzNh1KaO46exRTxvJdTqFaPQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DY4en8m61j42xqjM2g4wT1Uc07O/avZTT0t/kOue2eJ2RZmZrQ6zmYM0nmwjg5tDJ6AS3ZSivJkSjQRLAzmCQcQHg2K3n3YKsBDU5dcEWWBN49KnFdNkpdn53xWRc5zBJ+xI/XhH4BGRMuU1h6UO4+BaR1InZ5OfnBi04V9CBGk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.208.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-5ed43460d6bso1074864a12.0;
+        Thu, 17 Apr 2025 04:32:00 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744889519; x=1745494319;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=jrCgsSPeTbv6ZtB0KQCzqyqRTg9cqGn94RPdFydJybE=;
+        b=e5n1pPCEIFTgkLhxN0/CmRA+bx2nRT3g1wARyMeK5zpWrdhAqlteNGkwc8RcgYi+CP
+         6LjhJDaGvAlg6Ge6+lz1Uhn0vfwGlxS4WwPAKhX/GsCrswc23U1ZQ2gtVD1fCUPekNS0
+         WSMLMWxfNXQXO1FwcoaxQiybk94eG8cHcAefl0uWQ2Jsop5x3ZUVyfM0s6f5MhG+w//r
+         J/Up3r2B06t6hTADroJ5S7dEBQVZ9TGNs65CnsL9GR4zP+VVAFGwuk5zqvHiX8+4357E
+         vo5LgDbRb2iGEnw11HdQ+2Oophz1nSJ0f3ThfKPYZSwX/Ttm6ks71yCU7W1xlWZxy8NT
+         MIEA==
+X-Forwarded-Encrypted: i=1; AJvYcCXTXNJV/UQFeG6Ebhe5dRu6/Vvzd2WCy4mNKOFxFln91bkXP0l0su0+oHAIW1PYHMwz8aBDLqx6LULepLg=@vger.kernel.org, AJvYcCXZW/Bf+ElBFRWX6CMa29Wk8zjPDobFKOS5ZaNNoE8wz0Pfr2dcNASruMCDNCFr+GlGIqxD42+J@vger.kernel.org, AJvYcCXr/Sf3MdX9lBZGTnQlY9Wdd1cbAXzGfm2w637mc8ec5H/yhs9wHJx8D1Ib77c+Jq8J78cqQoIsIVudkJyExaxfEHXL@vger.kernel.org
+X-Gm-Message-State: AOJu0YwDpMLFMzTttE7TJpGGDHl5nCewbXvMnCXRgBBrJkKTD3ccXJFg
+	p0dhEjcgDWRTxYhA60ELieV30l0O4NT4bToHFgNaWeeKtOG55rqY
+X-Gm-Gg: ASbGnctmpqDWhitVgMYSc3GcU+gT8stsXAHHdytUVAzfN3YG3wl+QyYNwKinJhJLSe0
+	V4T4J5JExZowp6k8cySbpPGZn3hYnjy1yPBQ69nK5/5QsYbgIUYpJd5pTi0hGxbbfUNvoCanbnA
+	UWtIeivOWqUCnxQNyj5cHhtgU2Q74s+B7mtVTN9Me3rCPmy7hFhiJAv1dQQ4sAA1/a734COreIz
+	gvS4MWzzKC6LNjoXvHFzuHhnBrXwyqrdAUQSmR5dFj26Gp9OgLThr/gfVGwAIogXB5uPsgUQ/Bw
+	7wlhhYuD9LlnkdeKvfwweKxPmdsobem7WOjtg8sRDQ==
+X-Google-Smtp-Source: AGHT+IGxA9Hf/ORmBiX3EsGsQ+lHUMmc7HAeGV3DKGvVn28b9CeYys7216ndWydAeCXQyTKeEGtb3g==
+X-Received: by 2002:a05:6402:2387:b0:5f4:d22e:28c3 with SMTP id 4fb4d7f45d1cf-5f4d22e29a8mr1391178a12.4.1744889518572;
+        Thu, 17 Apr 2025 04:31:58 -0700 (PDT)
+Received: from gmail.com ([2a03:2880:30ff:6::])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5f36ee54fa9sm9886770a12.1.2025.04.17.04.31.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 17 Apr 2025 04:31:58 -0700 (PDT)
+Date: Thu, 17 Apr 2025 04:31:55 -0700
+From: Breno Leitao <leitao@debian.org>
+To: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	David Ahern <dsahern@kernel.org>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>, kuniyu@amazon.com,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, yonghong.song@linux.dev,
+	song@kernel.org, kernel-team@meta.com
+Subject: Re: [PATCH net-next] udp: Add tracepoint for udp_sendmsg()
+Message-ID: <aADmq6cGLe3yD9Qx@gmail.com>
+References: <20250416-udp_sendmsg-v1-1-1a886b8733c2@debian.org>
+ <6800064ea440f_fc9d7294c4@willemb.c.googlers.com.notmuch>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wDXH0hxzwBoI3LbAQ--.843S2
-X-Coremail-Antispam: 1Uf129KBjvJXoWxJr45tw4fWr1xAFWfKr48JFb_yoW8WFWfp3
-	W7Ar15Ar4kGa4Ut3sxJrs5ZFyrur13X3yxJwnakas09FsrZFyUJry3ta12vF95Zr95Ga4x
-	ZanFqrW5tFyIqa7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0JUoOJnUUUUU=
-X-CM-SenderInfo: p1dqww5hqjkmqzuzqiywtou0bp/1tbiwgUyeGgAyKnWlwAAsF
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <6800064ea440f_fc9d7294c4@willemb.c.googlers.com.notmuch>
 
-On Wed, 16 Apr 2025 14:55:43 -0700, Andrii Nakryiko <andrii.nakryiko@gmail.com> wrote:
+Hello Willem,
 
-[......]
-> I'm surprised these two are not part of bpf_base_func_proto, tbh...
-> maybe let's move them there while we are cleaning all this up?
+On Wed, Apr 16, 2025 at 03:34:38PM -0400, Willem de Bruijn wrote:
+> Breno Leitao wrote:
+> > Add a lightweight tracepoint to monitor UDP send message operations,
+> > similar to the recently introduced tcp_sendmsg_locked() trace event in
+> > commit 0f08335ade712 ("trace: tcp: Add tracepoint for
+> > tcp_sendmsg_locked()")
+> > 
+> > This implementation uses DECLARE_TRACE instead of TRACE_EVENT to avoid
+> > creating extensive trace event infrastructure and exporting to tracefs,
+> > keeping it minimal and efficient.
+> > 
+> > Since this patch creates a rawtracepoint, it can be accessed using
+> > standard tracing tools like bpftrace:
+> > 
+> >     rawtracepoint:udp_sendmsg_tp {
+> >         ...
+> >     }
 > 
-> pw-bot: cr
-> 
-> > -       case BPF_FUNC_trace_printk:
-> > -               return bpf_get_trace_printk_proto();
-> >         case BPF_FUNC_get_smp_processor_id:
-> >                 return &bpf_get_smp_processor_id_proto;
-> 
-> this one should be cleaned up as well and
-> bpf_get_smp_processor_id_proto removed. All BPF programs either
-> disable CPU preemption or CPU migration, so bpf_base_func_proto's
-> implementation should work just fine (but please do it as a separate
-> patch)
-> 
+> What does this enable beyond kfunc:udp_sendmsg?
 
-BPF_CALL_0(bpf_get_smp_processor_id)
-{
-	return smp_processor_id();
-}
-const struct bpf_func_proto bpf_get_smp_processor_id_proto = {
-	.func		= bpf_get_smp_processor_id,
-	.gpl_only	= false,
-	.ret_type	= RET_INTEGER,
-	.allow_fastcall	= true,
-};
-When attempting to remove bpf_get_smp_processor_id_proto,
-it was observed that bpf_get_smp_processor_id is extensively used.
-Should we also replace all instances of bpf_get_smp_processor_id with bpf_get_raw_cpu_id in these cases?
+A few things come to mind when evaluating the use of tracepoints.
 
-For example:
-#define ___BPF_FUNC_MAPPER(FN, ctx...)			\
-        ......
-	FN(get_smp_processor_id, 8, ##ctx)		\
+One significant advantage is that tracepoints provide a stable API where
+programs can hook into, making it easier for users to interact with key
+functions.
 
-samples/bpf/sockex3_kern.c:
-static struct globals *this_cpu_globals(void)
-{
-        u32 key = bpf_get_smp_processor_id();
-        return bpf_map_lookup_elem(&percpu_map, &key);
-}
-and so on......
-Thanks.
-> > -       case BPF_FUNC_get_numa_node_id:
-> > -               return &bpf_get_numa_node_id_proto;
-> >         case BPF_FUNC_perf_event_read:
-> >                 return &bpf_perf_event_read_proto;
+However, kfunc/kprobes has some notable disadvantages. For instance,
+partial or total inlining can cause hooks to fail, which is not ideal
+and can lead to issues (mainly when we have partial inlines, and the
+hook works _sometimes_).
 
+In contrast, tracepoints create a more stable API for users to hook
+into, eliminating the need to patch the kernel with noinline function
+attributes. This solution may be ugly, but it is a common practice.
+(and this is my main goal with it, remove `noinline` from our internal
+kernel)
+
+While tracepoints are not officially considered stable APIs, they tend
+to be "more stable" in practice due to their deliberate and strategic
+placement. As a result, they are less likely to get renamed or changed
+frequently.
+
+Additionally, tracepoints offer performance benefits, being faster than
+both kfunc and kprobes. 
+
+For further discussion on this topic, please refer to same discussion in
+VFS:
+
+https://lore.kernel.org/bpf/20250118033723.GV1977892@ZenIV/T/#m4c2fb2d904e839b34800daf8578dff0b9abd69a0
+
+Thanks
+--breno
