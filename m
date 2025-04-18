@@ -1,79 +1,163 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2A3F219ED;
-	Fri, 18 Apr 2025 02:50:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.5])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 51B34770E2;
+	Fri, 18 Apr 2025 03:41:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744944622; cv=none; b=pPi0iC+kNtwSs3gqXZ7cSlDpTBfKcEebKQQbArmoOvFgnjN9AZno7d+BDh7Tq3+icwmleW7Yc0vbfqnq8y9OXecPKUPN4hwZKEwTiOe4+mrkoa4QKnZP3GKv6QXObt883amnNgbsZTz6ajgstPCOvErnllOVhirpzvgikTRUDeQ=
+	t=1744947701; cv=none; b=uR7a6nN10Y/jjhreDwhd/nk8h5qIQKCnp93G32wQZO5JGL6w9qGXD0L53YFjOIUTscJqfKfXURKe5P2i7drIU8zoFbOAHASTSZMkmO/D06j8ckry20QHAn8x5ccPmvuOQ2DsjLzuwnAM1maGcCvMoMlEK1jEBkjxWN9Vb+Pc87s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744944622; c=relaxed/simple;
-	bh=jGrq8tE+7YaPDd/xmPS8CKHr6eL02Q7LBXtFoqx9d1U=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=DrSe+rJQs4dsmwWExbJODikG0rLP+grWwoPO42MR5aqgyWshQZ0GRbDbuBijZk9kAwOuVsRE8y6cE+u2MkMOLVOAC5It59d+e+LoNhBStXy7NVrTy+BSACyuVUcDRtDoyABcLEXfNrtpAhYgenXpzpjmIPnax/KaZJy65s4EGGU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fsMo7VHy; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744947701; c=relaxed/simple;
+	bh=lBgE/VTwfPL/98uIqYAL2OGCRqK6PQxVZcPsVcJjVlo=;
+	h=From:To:Cc:Subject:Date:Message-Id; b=ouTrZrEwTTyovL9LJGtS31bqAXXvbPnJfBZfKHHuv/af0jqoOpSLJXVFuHJ4qp1Dgmjic0ZtKTrJwW9oVLGTKuzWrq2gxBTGi5acAxXNzMb+hfzmwTeg1oubiW5Rv3FbYmaE7LJ7zx2DQawmOva4YHYxvsmd3zeL1qkUbNgxL/c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=P5cKFKig; arc=none smtp.client-ip=117.135.210.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fsMo7VHy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1C47AC4CEE4;
-	Fri, 18 Apr 2025 02:50:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744944622;
-	bh=jGrq8tE+7YaPDd/xmPS8CKHr6eL02Q7LBXtFoqx9d1U=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=fsMo7VHygmGy/jQuNAxeTIH45lseIn2JeBjB4QMNT1GDl9g7aJq+jg2+vkyNIy4bF
-	 36U7lQius+JyUfGnb/CTXbr06/HlF0+FAhdfsaSJnXY+In1hXWEecjy/jzhqPRtVB1
-	 xsBl5ofbMAZ10MHk2e6qnZzeImRyi1TjWOEca3YIA2qsSqAhFhqVrw/G39Pe0M4Um3
-	 NCJI5D5FhYfX9sd+7Zp6CQ4yFxhn7n21LNQhf+sCbi1l7iV1efKE2jkd8geIQ5js1z
-	 tio4O0ELJfMMdZRyEmapl6y8Cmb2/IZC+Yf1pfDCe+iJXgjuI1ieUvtrC9OxVKxceG
-	 UeCAgmLfgFglA==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 70D90380AAEB;
-	Fri, 18 Apr 2025 02:51:01 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="P5cKFKig"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:Subject:Date:Message-Id; bh=Q1buKkeBBzshig53X4
+	Su1cjMDcBScgw+OeLMBh2Msks=; b=P5cKFKigmEICtLzPFpjFmLX7oCVSe5PpwZ
+	LhViNNa8ObsMph7IET805fCHhSxCcr2fnq+UM27qFfwGMK1/ynvP8P492C1moLz+
+	vdXoGuRkHOuEXmC4abIlXslW72BVJEV1xCo5nv0uQtFCXl7sPN5jEZ6Zet8MOHwM
+	iOEalOxUE=
+Received: from yang-Virtual-Machine.mshome.net (unknown [])
+	by gzga-smtp-mtada-g1-2 (Coremail) with SMTP id _____wAHp3fKyQFo8gRoAg--.90S2;
+	Fri, 18 Apr 2025 11:40:58 +0800 (CST)
+From: Feng Yang <yangfeng59949@163.com>
+To: ast@kernel.org,
+	daniel@iogearbox.net,
+	andrii@kernel.org,
+	martin.lau@linux.dev,
+	eddyz87@gmail.com,
+	song@kernel.org,
+	yonghong.song@linux.dev
+Cc: bpf@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	netdev@vger.kernel.org,
+	Feng Yang <yangfeng@kylinos.cn>
+Subject: [PATCH bpf-next] bpf: Remove bpf_get_smp_processor_id_proto
+Date: Fri, 18 Apr 2025 11:40:55 +0800
+Message-Id: <20250418034055.5757-1-yangfeng59949@163.com>
+X-Mailer: git-send-email 2.17.1
+X-CM-TRANSID:_____wAHp3fKyQFo8gRoAg--.90S2
+X-Coremail-Antispam: 1Uf129KBjvJXoWxCrWDWFW8Ww43GrWUWw1rWFg_yoWrurWUpF
+	n8Ary3Cr4kta1aq3srJrs2va45A34UZ3y8Ca48G34Y9r4qvr9rt3WUtF4a9FyrZry2k343
+	Aa1jqrWYkryIqa7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07UD739UUUUU=
+X-CM-SenderInfo: p1dqww5hqjkmqzuzqiywtou0bp/1tbiTg0zeGgBxEjF+AAAsQ
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net-next] trace: tcp: Add const qualifier to skb parameter
- in tcp_probe event
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <174494466027.88264.11686966435646986323.git-patchwork-notify@kernel.org>
-Date: Fri, 18 Apr 2025 02:51:00 +0000
-References: <20250416-tcp_probe-v1-1-1edc3c5a1cb8@debian.org>
-In-Reply-To: <20250416-tcp_probe-v1-1-1edc3c5a1cb8@debian.org>
-To: Breno Leitao <leitao@debian.org>
-Cc: edumazet@google.com, ncardwell@google.com, kuniyu@amazon.com,
- rostedt@goodmis.org, mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
- pabeni@redhat.com, andrew+netdev@lunn.ch, kuba@kernel.org,
- davem@davemloft.net, netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, kernel-team@meta.com
 
-Hello:
+From: Feng Yang <yangfeng@kylinos.cn>
 
-This patch was applied to netdev/net-next.git (main)
-by Jakub Kicinski <kuba@kernel.org>:
+All BPF programs either disable CPU preemption or CPU migration,
+so the bpf_get_smp_processor_id_proto can be safely removed,
+and the bpf_get_raw_smp_processor_id_proto in bpf_base_func_proto works perfectly.
 
-On Wed, 16 Apr 2025 10:06:12 -0700 you wrote:
-> Change the tcp_probe tracepoint to accept a const struct sk_buff
-> parameter instead of a non-const one. This improves type safety and
-> better reflects that the skb is not modified within the tracepoint
-> implementation.
-> 
-> Signed-off-by: Breno Leitao <leitao@debian.org>
-> 
-> [...]
+Suggested-by: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Signed-off-by: Feng Yang <yangfeng@kylinos.cn>
+---
+ include/linux/bpf.h      |  1 -
+ kernel/bpf/core.c        |  1 -
+ kernel/bpf/helpers.c     | 12 ------------
+ kernel/trace/bpf_trace.c |  2 --
+ net/core/filter.c        |  6 ------
+ 5 files changed, 22 deletions(-)
 
-Here is the summary with links:
-  - [net-next] trace: tcp: Add const qualifier to skb parameter in tcp_probe event
-    https://git.kernel.org/netdev/net-next/c/1df4a945444f
-
-You are awesome, thank you!
+diff --git a/include/linux/bpf.h b/include/linux/bpf.h
+index 3f0cc89c0622..36e525141556 100644
+--- a/include/linux/bpf.h
++++ b/include/linux/bpf.h
+@@ -3316,7 +3316,6 @@ extern const struct bpf_func_proto bpf_map_peek_elem_proto;
+ extern const struct bpf_func_proto bpf_map_lookup_percpu_elem_proto;
+ 
+ extern const struct bpf_func_proto bpf_get_prandom_u32_proto;
+-extern const struct bpf_func_proto bpf_get_smp_processor_id_proto;
+ extern const struct bpf_func_proto bpf_get_numa_node_id_proto;
+ extern const struct bpf_func_proto bpf_tail_call_proto;
+ extern const struct bpf_func_proto bpf_ktime_get_ns_proto;
+diff --git a/kernel/bpf/core.c b/kernel/bpf/core.c
+index ba6b6118cf50..1ad41a16b86e 100644
+--- a/kernel/bpf/core.c
++++ b/kernel/bpf/core.c
+@@ -2943,7 +2943,6 @@ const struct bpf_func_proto bpf_spin_unlock_proto __weak;
+ const struct bpf_func_proto bpf_jiffies64_proto __weak;
+ 
+ const struct bpf_func_proto bpf_get_prandom_u32_proto __weak;
+-const struct bpf_func_proto bpf_get_smp_processor_id_proto __weak;
+ const struct bpf_func_proto bpf_get_numa_node_id_proto __weak;
+ const struct bpf_func_proto bpf_ktime_get_ns_proto __weak;
+ const struct bpf_func_proto bpf_ktime_get_boot_ns_proto __weak;
+diff --git a/kernel/bpf/helpers.c b/kernel/bpf/helpers.c
+index e3a2662f4e33..2d2bfb2911f8 100644
+--- a/kernel/bpf/helpers.c
++++ b/kernel/bpf/helpers.c
+@@ -149,18 +149,6 @@ const struct bpf_func_proto bpf_get_prandom_u32_proto = {
+ 	.ret_type	= RET_INTEGER,
+ };
+ 
+-BPF_CALL_0(bpf_get_smp_processor_id)
+-{
+-	return smp_processor_id();
+-}
+-
+-const struct bpf_func_proto bpf_get_smp_processor_id_proto = {
+-	.func		= bpf_get_smp_processor_id,
+-	.gpl_only	= false,
+-	.ret_type	= RET_INTEGER,
+-	.allow_fastcall	= true,
+-};
+-
+ BPF_CALL_0(bpf_get_numa_node_id)
+ {
+ 	return numa_node_id();
+diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
+index 0f5906f43d7c..39360cd6baf1 100644
+--- a/kernel/trace/bpf_trace.c
++++ b/kernel/trace/bpf_trace.c
+@@ -1462,8 +1462,6 @@ bpf_tracing_func_proto(enum bpf_func_id func_id, const struct bpf_prog *prog)
+ 		return &bpf_get_current_comm_proto;
+ 	case BPF_FUNC_trace_printk:
+ 		return bpf_get_trace_printk_proto();
+-	case BPF_FUNC_get_smp_processor_id:
+-		return &bpf_get_smp_processor_id_proto;
+ 	case BPF_FUNC_get_numa_node_id:
+ 		return &bpf_get_numa_node_id_proto;
+ 	case BPF_FUNC_perf_event_read:
+diff --git a/net/core/filter.c b/net/core/filter.c
+index bc6828761a47..7f7ec913ddbc 100644
+--- a/net/core/filter.c
++++ b/net/core/filter.c
+@@ -8264,8 +8264,6 @@ tc_cls_act_func_proto(enum bpf_func_id func_id, const struct bpf_prog *prog)
+ 		return &bpf_set_hash_proto;
+ 	case BPF_FUNC_perf_event_output:
+ 		return &bpf_skb_event_output_proto;
+-	case BPF_FUNC_get_smp_processor_id:
+-		return &bpf_get_smp_processor_id_proto;
+ 	case BPF_FUNC_skb_under_cgroup:
+ 		return &bpf_skb_under_cgroup_proto;
+ 	case BPF_FUNC_get_socket_cookie:
+@@ -8343,8 +8341,6 @@ xdp_func_proto(enum bpf_func_id func_id, const struct bpf_prog *prog)
+ 	switch (func_id) {
+ 	case BPF_FUNC_perf_event_output:
+ 		return &bpf_xdp_event_output_proto;
+-	case BPF_FUNC_get_smp_processor_id:
+-		return &bpf_get_smp_processor_id_proto;
+ 	case BPF_FUNC_csum_diff:
+ 		return &bpf_csum_diff_proto;
+ 	case BPF_FUNC_xdp_adjust_head:
+@@ -8570,8 +8566,6 @@ lwt_out_func_proto(enum bpf_func_id func_id, const struct bpf_prog *prog)
+ 		return &bpf_get_hash_recalc_proto;
+ 	case BPF_FUNC_perf_event_output:
+ 		return &bpf_skb_event_output_proto;
+-	case BPF_FUNC_get_smp_processor_id:
+-		return &bpf_get_smp_processor_id_proto;
+ 	case BPF_FUNC_skb_under_cgroup:
+ 		return &bpf_skb_under_cgroup_proto;
+ 	default:
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
+2.39.0.windows.2
 
