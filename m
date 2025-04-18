@@ -1,122 +1,104 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 401E841760;
-	Fri, 18 Apr 2025 21:40:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EA2D233128;
+	Fri, 18 Apr 2025 22:15:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745012407; cv=none; b=BfsS+z2wpJLW72b/btZFHkEnUTUY0VdQdbXIz6awXobmEKkNoOdMdesWhFrHMkOJx1PbNsIRtqsKZOAFZa4Wk503vpi3vlORGGyArT7fsaj0hYiaFeo41SvUaKswulrJ7NoFmY4aUNWMgkP6Aaz2zQPcHR64xlXNyeZQvpWk7Ag=
+	t=1745014514; cv=none; b=c5oXpBcWooGsgvRAaVvwR3hz8QL1/ApnpAl9xkla/GeXRDQhShGOw7dj6CO4gTof/KYq5VHLFoJxptxqASb8u1SEjiPF7peAsExijovGEMlGtNPPSFX2SDtAYgWtEaLLLz5EToQS53waSI6ZPRuv9+YoyOBtPbeDmBvkeoKBPns=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745012407; c=relaxed/simple;
-	bh=sQEx6WpaCkvi5Us7tJM0a9nl3EWEOVwUYkXrEEL6APA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gTSPri5M4JEqwTnPHUw0a4qLwIwUjVD2Dp/I6IrLyqxoypY6lnPbYVcxIJp7FoO2LLhjyR0XtIxSBQFU08n2ZVcGxFvn9IlsIh41larf8Z7PZA+Dry+GRJt6do3Pkxzj7s6vhe7uDzcfnqEU504FSqChWrIFDtG+RT/DdnhvVwc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=jcn++Xx+; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1745014514; c=relaxed/simple;
+	bh=MDBxHsJCkRfwaYkN4xwKGOxP9+1Gn8TJMJCH3XDi0T0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=MO56RV7XUNZeeT3okJdGnrZjrasB+IR4LewPjRzbSjuQge+EI2XC8bSLCgcdVvxPC/NygnOXUp6H8UnweB0H1Y3mNq5CiLKVYXtVeSIC8aajeKARe/Q4IzFt/RkzRrgQUPExY9IfV671ioVAetBT9UWI6zsVX0eRa+P15VcwOsM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WZ0UBZDh; arc=none smtp.client-ip=209.85.210.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="jcn++Xx+"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id CB61840E0214;
-	Fri, 18 Apr 2025 21:40:02 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id ZQKSbkzc1mB7; Fri, 18 Apr 2025 21:39:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1745012398; bh=v7R7rbBwsqRL92iwFhFa621dkOiszs3z49cg4ID99vc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=jcn++Xx+48DhLijziurjXTK5hrKPIUEK5a1xIC9z1nL7wqe9VrwPdIQNcArRhSjBG
-	 fuQ+UA9NLJmNaAvPbj4L1lvX61v1c4bPImdLkQVo2BgEsfa5IXC8ozcK67iQ81Abbj
-	 ONQd4ISB+PQii5tgcWFKFCgWTOjo8um2pGb2C6R1ydEv9CAE9AVC/gELfo6XDq2JOt
-	 2fIC9qia/rfZUiu7vp8WNaOpO0+4PDCAbnXZjmivkdgQ3/ZLnOqO57YnQGBvhSBd8I
-	 CRGHI822G1+5xSeYXLUrd3MgNdNpt4nUJ/ezf3/8eMdcimHp3NuKDLHiVPGrgd+S4A
-	 v2qmWWQwx5NnM/ZzcYo97s7C2xLoK+UrlBBwH7Ns1ObfXkk/e+3fZzBDNbCKXIW0gi
-	 U6ulRGLEgCtGZgUxHsNANRQ0b6GmWTp4WSgNfrkSc+i2k1+Gt0HgnDq30NqJxaFFfQ
-	 Cp3vsx9GOe8qYln+6KzhFqhcj3Qxm48UNt6tz+niYsgOAD65F5VLoALvluaNI2s0wp
-	 ac8HJ2igVLk61yc/GV/Y/Qks6eCUxRo0t7/oRKG5T9GCcVFj93/g4z0byWyylgMuPK
-	 ZF9eILscrj2vghM8j1Q+LuUULutm4cKeDVnFBz3xvwKL23lU7GZ/LUWEkVbMNwhs/r
-	 KcFQv7MbwDG4phxqBpmwqixk=
-Received: from zn.tnic (p579690ee.dip0.t-ipconnect.de [87.150.144.238])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id AE43040E023A;
-	Fri, 18 Apr 2025 21:39:46 +0000 (UTC)
-Date: Fri, 18 Apr 2025 23:39:45 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Junxuan Liao <ljx@cs.wisc.edu>, linux-trace-kernel@vger.kernel.org,
-	linux-kernel@vger.kernel.org, x86@kernel.org,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	"Paul E. McKenney" <paulmck@kernel.org>
-Subject: Re: [PATCH] x86/tracing: introduce enter/exit tracepoint pairs for
- page faults
-Message-ID: <20250418213945.GJaALGod4-j86Squ43@fat_crate.local>
-References: <e7d4cd81-c0a5-446c-95d2-6142d660c15b@cs.wisc.edu>
- <20250414205441.GGZ_12Eew18bGcPTG0@fat_crate.local>
- <20250414182050.213480aa@gandalf.local.home>
- <20250416174714.GGZ__tIi3yNzNKoKFE@fat_crate.local>
- <20250416140115.5b836b33@gandalf.local.home>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WZ0UBZDh"
+Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-73972a54919so1983253b3a.3;
+        Fri, 18 Apr 2025 15:15:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745014512; x=1745619312; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=SvuW99/2oNvthIJgT8GkH4cc6GT8kdWdVq16cR06I+0=;
+        b=WZ0UBZDhRfkD1b0YZZ0iU5Zby8LJqad4nEVEBbny49lShzzTM/hgGqeOX51oyWcQIx
+         iOFJwFsTOiSGKwaFLblL6IMifURrms05X8UQFZ97w49a3ZIO2yUCdsCuHElu5Dcb8dxZ
+         SSc1OYZXav1/HYdkV3x7ePUuYGO8/3f1ZXJ2waYW+TUq2y/7Ujr7bUrLfg/gZYfxJetv
+         nxG7GR1Vos77F8K1KAhN5sa3bz9XIkx5ty3CnClIxLfwOY9J3rYSNrlgaQUVK35kRRYH
+         /1v92Ix9zGWgfZzFkiLWxRFmtCGmcjQaMR8Dn66tB1ILUjIxqK0asITm816eThsicrkr
+         pnEg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745014512; x=1745619312;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=SvuW99/2oNvthIJgT8GkH4cc6GT8kdWdVq16cR06I+0=;
+        b=iAfx7qVIn4fBwyVeDWBvG48BxaIQwRJXSunv7d+v2hmKYL0P3omTpUXLvFiT1TFKuR
+         Jpu9EH8bGWHUG87Y8FWll3a84dZPVfIjaYw69HQXexJhc+Y1Cgj8+aJwGVCuzUr9UoYd
+         83wY6w7fQVYbYqZAeqkl5jijGqY+ChdFSPWsxwiatQ9CY+EQPt6bEb+8YEhUCoGcuKRa
+         0at9o9pV961OqhqKl7k/1bnfQpg9XIM4k11fKBZkB6ygyhszKWQfO5mTizz+AbgWKDM8
+         gKiz/+RUfa/5N5t13qoss/s8RPqtmNXdC0o5ziAH8BPorJlsnraCN9x++DKrt4oco34Y
+         k3Og==
+X-Forwarded-Encrypted: i=1; AJvYcCWi1T8IKfuhhZJhvMx6d0132pFce9aIakyHIAsRJh1x/7skWCBf6A29+ptcJ1K+hroYuaa5hAiEmIPto3fiM82Y1th9@vger.kernel.org, AJvYcCXQCn33pp1kTaCNfkFe1fkLi0ygmkPhSg00pJ6j7yl4ADEiE3ya78n+dKM2RtAHVVLYWDsMraphNTf0Ah0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzCokuiYg1uJuH2X3cHpW0Q/27dDY4Uw39CBdnr+iK+5gT3DWiR
+	4evkkBtGf8arSznlwfsGtH3GYBdPtLBzaLZMf2RiVAFI5IFic2ic1CoT9SK/C+8=
+X-Gm-Gg: ASbGnct65sMGX/fChbWMSQ0x9WLqxprBaEBTw/I6LtYfHpRxSwZRpjNTaU923iV8+Hh
+	t9Jscd5l+CZpo3PSdunmQPHxFrjB4Mtvf9Mtk01LwP8l0z9p4HCLOeWDJmwiY+5KC0b+ThfrupP
+	gHCwrFK8ZWJ5XiJ137qs3DFCW5OmiMlU/p9bJ8b+nngzqW9a56bnuCqlyyJ8PChym3YVqyKG0Lc
+	agl0/9o1KgdqcBMudZzBtiaQqCW2mKcOtdndVqPQBGVoTXCseJCFRkbDcQfUkoUU+fQsxy4T8Nn
+	Sj8McUmfnFvNEumChTz1m8JNBcWDtjWSsok67/UB
+X-Google-Smtp-Source: AGHT+IGJ4CYpI2OHYR0RVZJ8yOR76RsDFeBV5X07FEPK/XxIkWSq2ein7aEwe5oJolKQY3P1d1Q9Eg==
+X-Received: by 2002:a05:6a20:9e48:b0:1f5:7007:9eb8 with SMTP id adf61e73a8af0-203cbc55934mr5974149637.16.1745014511665;
+        Fri, 18 Apr 2025 15:15:11 -0700 (PDT)
+Received: from fedora.nitk.ac.in ([2a09:bac5:3d50:1a46::29e:5f])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b0db13a3396sm1873880a12.28.2025.04.18.15.15.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 18 Apr 2025 15:15:11 -0700 (PDT)
+From: Devaansh Kumar <devaanshk840@gmail.com>
+To: rostedt@goodmis.org,
+	mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com
+Cc: Devaansh Kumar <devaanshk840@gmail.com>,
+	linux-trace-kernel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	skhan@linuxfoundation.org,
+	linux-kernel-mentees@lists.linuxfoundation.org
+Subject: [PATCH v4] tracing: Replace deprecated strncpy() with strscpy() for stack_trace_filter_buf
+Date: Sat, 19 Apr 2025 03:44:41 +0530
+Message-ID: <20250418221443.1067938-1-devaanshk840@gmail.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250416140115.5b836b33@gandalf.local.home>
+Content-Transfer-Encoding: 8bit
 
-On Wed, Apr 16, 2025 at 02:01:15PM -0400, Steven Rostedt wrote:
-> The above was created by:
-> 
->  # trace-cmd sqlhist -e -n user_faults SELECT TIMESTAMP_DELTA_USECS as delta FROM page_fault_user_enter as start JOIN \
->      page_fault_user_exit as end ON start.common_pid = end.common_pid
+strncpy() is deprecated for NUL-terminated destination buffers and must
+be replaced by strscpy().
 
-Pfff, that's SQL.
+See issue: https://github.com/KSPP/linux/issues/90
 
-You're too old fashioned - you need an AI thing now :-P
+Signed-off-by: Devaansh Kumar <devaanshk840@gmail.com>
+---
+ kernel/trace/trace_stack.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-So tell me: I as a silly user, how do I figure out how to use trace-cmd?
-I guess it has docs somewhere...
-
-And apparently I need trace-cmd now - I can't type all that into sysfs... Or
-I guess I can use trace-cmd to generate the commands and then I can echo them
-into the target machine.
-
-I.e., ftrace still doesn't need a special tool to be used...
-
-> This was just a simple example. I rather see where in the kernel it happens.
-> I can still use the synthetic events and user stack trace to find where the
-> big faults occur.
-
-Right, so it would be great to have the actual use case in a patch's commit
-message... i.e., why is a patch important.
-
-> > Now if only that info were in the commit message along with the usage scenario
-> > so that people can *actually* do what you guys are bragging about...
-> 
-> I plan on adding things like this to Documentation/trace/debugging.rst
-> 
-> I need to get time out to add a bunch of helpful tricks there.
-
-Yap, please.
-
-I have to admit I was able to catch a trace for tglx using only the ftrace
-documentation we have so it must be good. But moar is better. :-P
-
-Thx man!
-
+diff --git a/kernel/trace/trace_stack.c b/kernel/trace/trace_stack.c
+index 14c6f272c4d8..0f2253f3bc8c 100644
+--- a/kernel/trace/trace_stack.c
++++ b/kernel/trace/trace_stack.c
+@@ -542,7 +542,7 @@ static __init int enable_stacktrace(char *str)
+ 	int len;
+ 
+ 	if ((len = str_has_prefix(str, "_filter=")))
+-		strncpy(stack_trace_filter_buf, str + len, COMMAND_LINE_SIZE);
++		strscpy(stack_trace_filter_buf, str + len, sizeof(stack_trace_filter_buf));
+ 
+ 	stack_tracer_enabled = 1;
+ 	return 1;
 -- 
-Regards/Gruss,
-    Boris.
+2.49.0
 
-https://people.kernel.org/tglx/notes-about-netiquette
