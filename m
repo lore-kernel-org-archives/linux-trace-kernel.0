@@ -1,94 +1,79 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33FA824B26;
-	Fri, 18 Apr 2025 02:33:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2A3F219ED;
+	Fri, 18 Apr 2025 02:50:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744943606; cv=none; b=qlMl/uUiXV/hgTuNl0S0lquVblonJC6yvITKZSKSBVQCOj2LwL/d0C29AKDbrJvgSQaUYbqBqhsZB9ffPa9BKw/wqSRx3lhA+hJ8glo6UUPW0mbbWG66M87YKAcvsG0rw5+GvgkBJqdyLKOuUU+40ihdfEL5fkt6lPu85mRWJTw=
+	t=1744944622; cv=none; b=pPi0iC+kNtwSs3gqXZ7cSlDpTBfKcEebKQQbArmoOvFgnjN9AZno7d+BDh7Tq3+icwmleW7Yc0vbfqnq8y9OXecPKUPN4hwZKEwTiOe4+mrkoa4QKnZP3GKv6QXObt883amnNgbsZTz6ajgstPCOvErnllOVhirpzvgikTRUDeQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744943606; c=relaxed/simple;
-	bh=vdoD8mAekMk2DLn46rTvueCQQJNuDdSYh73OMRSjfTU=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=thINpu4TgCHp+SGUoV0dCE7u5sWIHTA6vIdjjRaMk495A6N23rHcHKnfvhd5DM9/P/UVYrnCJGIurrzKgyUQiepgK5EXgHHm7smI2duWJgBigY5OBeu/fbRGKHJBBLyKuVlDYwIJl54Xg6T4NmMzKGRrYSyCT9G19MZumDkrYhA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 73717C4CEE4;
-	Fri, 18 Apr 2025 02:33:24 +0000 (UTC)
-Date: Thu, 17 Apr 2025 22:33:23 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: LKML <linux-kernel@vger.kernel.org>, Linux trace kernel
- <linux-trace-kernel@vger.kernel.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Andrew Morton
- <akpm@linux-foundation.org>, Shuah Khan <skhan@linuxfoundation.org>,
- linux-kselftest@vger.kernel.org
-Subject: [PATCH] tracing: selftests: Add testing a user string to filters
-Message-ID: <20250417223323.3edb4f6c@batman.local.home>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1744944622; c=relaxed/simple;
+	bh=jGrq8tE+7YaPDd/xmPS8CKHr6eL02Q7LBXtFoqx9d1U=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=DrSe+rJQs4dsmwWExbJODikG0rLP+grWwoPO42MR5aqgyWshQZ0GRbDbuBijZk9kAwOuVsRE8y6cE+u2MkMOLVOAC5It59d+e+LoNhBStXy7NVrTy+BSACyuVUcDRtDoyABcLEXfNrtpAhYgenXpzpjmIPnax/KaZJy65s4EGGU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fsMo7VHy; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fsMo7VHy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1C47AC4CEE4;
+	Fri, 18 Apr 2025 02:50:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744944622;
+	bh=jGrq8tE+7YaPDd/xmPS8CKHr6eL02Q7LBXtFoqx9d1U=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=fsMo7VHygmGy/jQuNAxeTIH45lseIn2JeBjB4QMNT1GDl9g7aJq+jg2+vkyNIy4bF
+	 36U7lQius+JyUfGnb/CTXbr06/HlF0+FAhdfsaSJnXY+In1hXWEecjy/jzhqPRtVB1
+	 xsBl5ofbMAZ10MHk2e6qnZzeImRyi1TjWOEca3YIA2qsSqAhFhqVrw/G39Pe0M4Um3
+	 NCJI5D5FhYfX9sd+7Zp6CQ4yFxhn7n21LNQhf+sCbi1l7iV1efKE2jkd8geIQ5js1z
+	 tio4O0ELJfMMdZRyEmapl6y8Cmb2/IZC+Yf1pfDCe+iJXgjuI1ieUvtrC9OxVKxceG
+	 UeCAgmLfgFglA==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 70D90380AAEB;
+	Fri, 18 Apr 2025 02:51:01 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net-next] trace: tcp: Add const qualifier to skb parameter
+ in tcp_probe event
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <174494466027.88264.11686966435646986323.git-patchwork-notify@kernel.org>
+Date: Fri, 18 Apr 2025 02:51:00 +0000
+References: <20250416-tcp_probe-v1-1-1edc3c5a1cb8@debian.org>
+In-Reply-To: <20250416-tcp_probe-v1-1-1edc3c5a1cb8@debian.org>
+To: Breno Leitao <leitao@debian.org>
+Cc: edumazet@google.com, ncardwell@google.com, kuniyu@amazon.com,
+ rostedt@goodmis.org, mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
+ pabeni@redhat.com, andrew+netdev@lunn.ch, kuba@kernel.org,
+ davem@davemloft.net, netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, kernel-team@meta.com
 
-From: Steven Rostedt <rostedt@goodmis.org>
+Hello:
 
-Running the following commands was broken:
+This patch was applied to netdev/net-next.git (main)
+by Jakub Kicinski <kuba@kernel.org>:
 
-  # cd /sys/kernel/tracing
-  # echo "filename.ustring ~ \"/proc*\"" > events/syscalls/sys_enter_openat/filter
-  # echo 1 > events/syscalls/sys_enter_openat/enable
-  # ls /proc/$$/maps
-  # cat trace
+On Wed, 16 Apr 2025 10:06:12 -0700 you wrote:
+> Change the tcp_probe tracepoint to accept a const struct sk_buff
+> parameter instead of a non-const one. This improves type safety and
+> better reflects that the skb is not modified within the tracepoint
+> implementation.
+> 
+> Signed-off-by: Breno Leitao <leitao@debian.org>
+> 
+> [...]
 
-And would produce nothing when it should have produced something like:
+Here is the summary with links:
+  - [net-next] trace: tcp: Add const qualifier to skb parameter in tcp_probe event
+    https://git.kernel.org/netdev/net-next/c/1df4a945444f
 
-      ls-1192    [007] .....  8169.828333: sys_openat(dfd: ffffffffffffff9c, filename: 7efc18359904, flags: 80000, mode: 0)
-
-Add a test to check this case so that it will be caught if it breaks
-again.
-
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
-Shuah, I'm Cc'ing you on this for your information, but I'll take it
-through my tree as it will be attached with the fix, as it will fail
-without it.
-
- .../test.d/filter/event-filter-function.tc    | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
-
-diff --git a/tools/testing/selftests/ftrace/test.d/filter/event-filter-function.tc b/tools/testing/selftests/ftrace/test.d/filter/event-filter-function.tc
-index 118247b8dd84..ab449a2cea8c 100644
---- a/tools/testing/selftests/ftrace/test.d/filter/event-filter-function.tc
-+++ b/tools/testing/selftests/ftrace/test.d/filter/event-filter-function.tc
-@@ -80,6 +80,25 @@ if [ $misscnt -gt 0 ]; then
- 	exit_fail
- fi
- 
-+# Check strings too
-+if [ -f events/syscalls/sys_enter_openat/filter ]; then
-+	echo "filename.ustring ~ \"*test.d*\"" > events/syscalls/sys_enter_openat/filter
-+	echo 1 > events/syscalls/sys_enter_openat/enable
-+	echo 1 > tracing_on
-+	ls /bin/sh
-+	nocnt=`grep openat trace | wc -l`
-+	ls $TEST_DIR
-+	echo 0 > tracing_on
-+	hitcnt=`grep openat trace | wc -l`;
-+	echo 0 > events/syscalls/sys_enter_openat/enable
-+	if [ $nocnt -gt 0 ]; then
-+		exit_fail
-+	fi
-+	if [ $hitcnt -eq 0 ]; then
-+		exit_fail
-+	fi
-+fi
-+
- reset_events_filter
- 
- exit 0
+You are awesome, thank you!
 -- 
-2.47.2
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
 
