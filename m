@@ -1,312 +1,136 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f173.google.com (mail-il1-f173.google.com [209.85.166.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDA9E1D5165;
-	Fri, 18 Apr 2025 14:59:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 509642153FE
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 18 Apr 2025 16:19:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744988365; cv=none; b=RAKKz8sm3z/Z6DWFfYLMYem0LpxBQTnJPK3HF/mgdqKgc4L43DAflUOlOoErSJ7dSJlTb+4NSfdglk9SC/WOaMMACzD2Xqv3qGJmFd/WxJ467Haxz40zJOti6SBJ3mTWVweNkx4+H2Gy/xQGG1aH1qoAwvPovDBhyWOcnS5W9E8=
+	t=1744993144; cv=none; b=e0EyuwE2Wp7upvuzAT9KApoxU+dEL8p+W2I0ePar7U0zQAiNFn1Z2+I3hbk2lrU4JK0hTD8wzWtx5AnNzvF7Ac3MNYFlh3H2pgZGzF14zIO2TxJU2co5y3zMXqDX11CHKVW73GnmF3KqXtkM8fx+Jjuz3onwIf58oZ2EpxJ0+mY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744988365; c=relaxed/simple;
-	bh=zI4zgny698iLQgZdjN1Cqg7bZA8XtHJ4zrXxnFQdX+o=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=PgEFNASnqKQzMtDzpglMnohwRpks58TGb+057pX3ydbVld28AP8vNoU55ow0offIxwnAWBCD5E4xCD8pi2meMLI8llERto8uoOKXG8ZHmfif+SEAWGPXwEiFXi4Ew5YoyR7vYPsou2/SBFcqyA40DTVLMRXeNyZbJLTusC2hUzo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BEDA4C4CEE2;
-	Fri, 18 Apr 2025 14:59:23 +0000 (UTC)
-Date: Fri, 18 Apr 2025 11:01:04 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Masami Hiramatsu
- <mhiramat@kernel.org>, Peter Zijlstra <peterz@infradead.org>, David Ahern
- <dsahern@kernel.org>, Juri Lelli <juri.lelli@gmail.com>, Breno Leitao
- <leitao@debian.org>, netdev@vger.kernel.org, Alexei Starovoitov
- <alexei.starovoitov@gmail.com>, Andrii Nakryiko
- <andrii.nakryiko@gmail.com>, bpf@vger.kernel.org, Gabriele Monaco
- <gmonaco@redhat.com>
-Subject: [RFC][PATCH] tracepoint: Have tracepoints created with
- DECLARE_TRACE() have _tp suffix
-Message-ID: <20250418110104.12af6883@gandalf.local.home>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1744993144; c=relaxed/simple;
+	bh=pEQkVLsnkE1RxkW4tmeDCCG5BRacLN6ef5ZA7YDStxQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=GCNeI9196xvUKGE12rq+QsFJ/mDfJ0rp70dWZAZpU7w/sBVWJGgQfafvLcIvfYIfad1Y55Ava845QpaidAB93O/doUA8NgodyfOyUt6zy8D5QOMPnG7fstseG+gkTQRccsImrZP/e4jVOBwUmHBg+q4GtjMK5ZAz35Qs6OuA0rU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com; spf=pass smtp.mailfrom=sifive.com; dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b=F9VzvW29; arc=none smtp.client-ip=209.85.166.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sifive.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="F9VzvW29"
+Received: by mail-il1-f173.google.com with SMTP id e9e14a558f8ab-3d8dcc7cd17so2132115ab.1
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 18 Apr 2025 09:19:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google; t=1744993141; x=1745597941; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=ePfKgP0uKVNFgoT+zVQWJDPRxOOn/U+ue7Il0AVta4I=;
+        b=F9VzvW29U6wQHoo+E3S3SpoJdx1O3lIlgWoLnbGvyuqd/iQtSbqhnurCQKIq1AqJRb
+         BSez9qC7YwFvvGq9Epe1jRhpRFCU230d1H6jL++NlhtwYSdkfkiUY4gHe8ToKwdyVJ0Q
+         79GQFUyDRawqqZ8CLEMmq4OwaNG9Wo0O7NnZIFFAAnkqBnOcm7z7hM7kRMDyzMoK9GB3
+         7i15k31q9pMIS6BjZi8Kcz1msdQvHWm8u/coCXjywHezwKz8JjxcxQms0ykV5Xr+3Nxp
+         Ab93uEQwwj8V4Unw/VYQctLFNY6ADIwXLJN1GKhSgiJFQ9YSuzKRCJ/v5bGuN/smq9iM
+         1qqA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744993141; x=1745597941;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ePfKgP0uKVNFgoT+zVQWJDPRxOOn/U+ue7Il0AVta4I=;
+        b=Oo9V5q6JX1u3yjyL1gD1nZO9XTSCWLVSfITpNZlHDQ3148E8I6d16n/I2/pbKGycP3
+         AtWKVDIzaRv9cCfcJCdWSFki6763SkXbARK9IdRgXpjgAwvwU4HUfeOY8PGEQgQNO3F/
+         /hJEbYIROXS/Bpbn1nfK/hZPBF3vWud6M7/q83A77PLR+mGlgD29S71+3gS7Vut3mUkL
+         MMoiNocZEo7ca0dCeo34c2wQTSRIJjtYfiDd+vAHNp6m4BGSuPubaGccwk23xO6GyKZK
+         ebxN/p5ywqF6KP+N/89GbTpUembmaUsoTPiyRk9r8iYNBuTpXDzg5qvfSmmOFcP+LnrQ
+         koZQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU+Sk5OHoKUL8m9sGKMqpgim2NHTtowGqCcB51EMjbywVLVpP2QiKEmyeJ0vfrfp7IWItpxUsg6pt3vy/3AZSI6pOA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YznI/98r7qFSWC3Oj12yARirkj07h2np7m1BrVcivfHznKP3jKT
+	E9ETUQmsdbHQk2C0fzwvRRfugkB8HUA0SIIuI2clE4pGX11UBsKOODp9tczss0A=
+X-Gm-Gg: ASbGnctqYTs/XQ9W0m6xbP9olOk8bT6BVr8qawY3ae8o02dRQO2qPDb1rENo2zyQYzU
+	bIXbul67p1ElW44zdstNPV74q/cb9JnCAyjsQRGqx9SfYAl2Lg/apnH2tOtiK5m6dghyuA9WJ6Z
+	Vkx8BdRsbgrBI2FhNhuZTo1dDdBTNzqkP8H41ALhrKd8jTTyotyaoniw1ojRGKrZpQiJwsv89if
+	Dxr63CvhaAcQq+Flk2wqmHvCNwUbaqAsQwsmxRYPEkWdp/Od/4zjgjJuXtvaK9MPysOqpWOcAF7
+	HsYa7+w32masSpErSZd4xFuABdkUK0I6KtQ4kOENA/daa4WfqGIT3Ayx6w==
+X-Google-Smtp-Source: AGHT+IEvYD8CyOarFeAdARgzHXcquFCOFcE3q2vpY4E/2mOeo90KFv9nv8xpCX6+Lrf2zXFCiqzeag==
+X-Received: by 2002:a05:6e02:178b:b0:3d4:6ed4:e0a with SMTP id e9e14a558f8ab-3d8b69608b7mr23960585ab.4.1744993141239;
+        Fri, 18 Apr 2025 09:19:01 -0700 (PDT)
+Received: from [100.64.0.1] ([170.85.6.166])
+        by smtp.gmail.com with ESMTPSA id e9e14a558f8ab-3d821d43a1bsm5092915ab.32.2025.04.18.09.18.59
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 18 Apr 2025 09:19:00 -0700 (PDT)
+Message-ID: <b864fc90-1297-4e1d-8487-61049e23e405@sifive.com>
+Date: Fri, 18 Apr 2025 11:18:59 -0500
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH fixes] riscv: uprobes: Add missing fence.i after building
+ the XOL buffer
+To: =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@kernel.org>,
+ Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
+ <palmer@dabbelt.com>, Alexandre Ghiti <alex@ghiti.fr>,
+ linux-riscv@lists.infradead.org, Guo Ren <guoren@kernel.org>
+Cc: =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@rivosinc.com>,
+ Masami Hiramatsu <mhiramat@kernel.org>, Oleg Nesterov <oleg@redhat.com>,
+ Peter Zijlstra <peterz@infradead.org>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+References: <20250417074952.1315641-1-bjorn@kernel.org>
+Content-Language: en-US
+From: Samuel Holland <samuel.holland@sifive.com>
+In-Reply-To: <20250417074952.1315641-1-bjorn@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-From: Steven Rostedt <rostedt@goodmis.org>
+Hi Björn,
 
-Most tracepoints in the kernel are created with TRACE_EVENT(). The
-TRACE_EVENT() macro (and DECLARE_EVENT_CLASS() and DEFINE_EVENT() where in
-reality, TRACE_EVENT() is just a helper macro that calls those other two
-macros), will create not only a tracepoint (the function trace_<event>()
-used in the kernel), it also exposes the tracepoint to user space along
-with defining what fields will be saved by that tracepoint.
+On 2025-04-17 2:49 AM, Björn Töpel wrote:
+> From: Björn Töpel <bjorn@rivosinc.com>
+> 
+> The XOL (execute out-of-line) buffer is used to single-step the
+> replaced instruction(s) for uprobes. The RISC-V port was missing a
+> proper fence.i (i$ flushing) after constructing the XOL buffer, which
+> can result in incorrect execution of stale/broken instructions.
+> 
+> This was found running the BPF selftests "test_progs:
+> uprobe_autoattach, attach_probe" on the Spacemit K1/X60, where the
+> uprobes tests randomly blew up.
+> 
+> Fixes: 74784081aac8 ("riscv: Add uprobes supported")
+> Signed-off-by: Björn Töpel <bjorn@rivosinc.com>
+> ---
+>  arch/riscv/kernel/probes/uprobes.c | 9 +--------
+>  1 file changed, 1 insertion(+), 8 deletions(-)
+> 
+> diff --git a/arch/riscv/kernel/probes/uprobes.c b/arch/riscv/kernel/probes/uprobes.c
+> index 4b3dc8beaf77..4faef92dd771 100644
+> --- a/arch/riscv/kernel/probes/uprobes.c
+> +++ b/arch/riscv/kernel/probes/uprobes.c
+> @@ -176,13 +176,6 @@ void arch_uprobe_copy_ixol(struct page *page, unsigned long vaddr,
+>  		*(uprobe_opcode_t *)dst = __BUG_INSN_32;
+>  	}
+>  
+> +	flush_icache_range((unsigned long)dst, (unsigned long)dst + len);
 
-There are a few places that tracepoints are created in the kernel that are
-not exposed to userspace via tracefs. They can only be accessed from code
-within the kernel. These tracepoints are created with DEFINE_TRACE()
+This works because flush_icache_range currently ignores the range, but
+semantically is not quite right, because of the line just above the context that
+increments dst. If the range was respected, this would only flush the ebreak,
+not the preceding single-stepped instruction.
 
-Most of these tracepoints end with "_tp". This is useful as when the
-developer sees that, they know that the tracepoint is for in-kernel only
-and is not exposed to user space.
+Regards,
+Samuel
 
-Instead of making this only a process to add "_tp", enforce it by making
-the DECLARE_TRACE() append the "_tp" suffix to the tracepoint. This
-requires adding DECLARE_TRACE_EVENT() macros for the TRACE_EVENT() macro
-to use that keeps the original name.
-
-Link: https://lore.kernel.org/all/20250418083351.20a60e64@gandalf.local.home/
-
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
- include/linux/tracepoint.h   | 38 ++++++++++++++++++++++++------------
- include/trace/bpf_probe.h    |  4 ++--
- include/trace/define_trace.h | 17 +++++++++++++++-
- include/trace/events/sched.h | 30 ++++++++++++++--------------
- include/trace/events/tcp.h   |  2 +-
- 5 files changed, 60 insertions(+), 31 deletions(-)
-
-diff --git a/include/linux/tracepoint.h b/include/linux/tracepoint.h
-index a351763e6965..826ce3f8e1f8 100644
---- a/include/linux/tracepoint.h
-+++ b/include/linux/tracepoint.h
-@@ -464,16 +464,30 @@ static inline struct tracepoint *tracepoint_ptr_deref(tracepoint_ptr_t *p)
- #endif
- 
- #define DECLARE_TRACE(name, proto, args)				\
--	__DECLARE_TRACE(name, PARAMS(proto), PARAMS(args),		\
-+	__DECLARE_TRACE(name##_tp, PARAMS(proto), PARAMS(args),		\
- 			cpu_online(raw_smp_processor_id()),		\
- 			PARAMS(void *__data, proto))
- 
- #define DECLARE_TRACE_CONDITION(name, proto, args, cond)		\
--	__DECLARE_TRACE(name, PARAMS(proto), PARAMS(args),		\
-+	__DECLARE_TRACE(name##_tp, PARAMS(proto), PARAMS(args),		\
- 			cpu_online(raw_smp_processor_id()) && (PARAMS(cond)), \
- 			PARAMS(void *__data, proto))
- 
- #define DECLARE_TRACE_SYSCALL(name, proto, args)			\
-+	__DECLARE_TRACE_SYSCALL(name##_tp, PARAMS(proto), PARAMS(args),	\
-+				PARAMS(void *__data, proto))
-+
-+#define DECLARE_TRACE_EVENT(name, proto, args)				\
-+	__DECLARE_TRACE(name, PARAMS(proto), PARAMS(args),		\
-+			cpu_online(raw_smp_processor_id()),		\
-+			PARAMS(void *__data, proto))
-+
-+#define DECLARE_TRACE_EVENT_CONDITION(name, proto, args, cond)		\
-+	__DECLARE_TRACE(name, PARAMS(proto), PARAMS(args),		\
-+			cpu_online(raw_smp_processor_id()) && (PARAMS(cond)), \
-+			PARAMS(void *__data, proto))
-+
-+#define DECLARE_TRACE_EVENT_SYSCALL(name, proto, args)			\
- 	__DECLARE_TRACE_SYSCALL(name, PARAMS(proto), PARAMS(args),	\
- 				PARAMS(void *__data, proto))
- 
-@@ -591,32 +605,32 @@ static inline struct tracepoint *tracepoint_ptr_deref(tracepoint_ptr_t *p)
- 
- #define DECLARE_EVENT_CLASS(name, proto, args, tstruct, assign, print)
- #define DEFINE_EVENT(template, name, proto, args)		\
--	DECLARE_TRACE(name, PARAMS(proto), PARAMS(args))
-+	DECLARE_TRACE_EVENT(name, PARAMS(proto), PARAMS(args))
- #define DEFINE_EVENT_FN(template, name, proto, args, reg, unreg)\
--	DECLARE_TRACE(name, PARAMS(proto), PARAMS(args))
-+	DECLARE_TRACE_EVENT(name, PARAMS(proto), PARAMS(args))
- #define DEFINE_EVENT_PRINT(template, name, proto, args, print)	\
--	DECLARE_TRACE(name, PARAMS(proto), PARAMS(args))
-+	DECLARE_TRACE_EVENT(name, PARAMS(proto), PARAMS(args))
- #define DEFINE_EVENT_CONDITION(template, name, proto,		\
- 			       args, cond)			\
--	DECLARE_TRACE_CONDITION(name, PARAMS(proto),		\
-+	DECLARE_TRACE_EVENT_CONDITION(name, PARAMS(proto),	\
- 				PARAMS(args), PARAMS(cond))
- 
- #define TRACE_EVENT(name, proto, args, struct, assign, print)	\
--	DECLARE_TRACE(name, PARAMS(proto), PARAMS(args))
-+	DECLARE_TRACE_EVENT(name, PARAMS(proto), PARAMS(args))
- #define TRACE_EVENT_FN(name, proto, args, struct,		\
- 		assign, print, reg, unreg)			\
--	DECLARE_TRACE(name, PARAMS(proto), PARAMS(args))
--#define TRACE_EVENT_FN_COND(name, proto, args, cond, struct,		\
-+	DECLARE_TRACE_EVENT(name, PARAMS(proto), PARAMS(args))
-+#define TRACE_EVENT_FN_COND(name, proto, args, cond, struct,	\
- 		assign, print, reg, unreg)			\
--	DECLARE_TRACE_CONDITION(name, PARAMS(proto),	\
-+	DECLARE_TRACE_EVENT_CONDITION(name, PARAMS(proto),	\
- 			PARAMS(args), PARAMS(cond))
- #define TRACE_EVENT_CONDITION(name, proto, args, cond,		\
- 			      struct, assign, print)		\
--	DECLARE_TRACE_CONDITION(name, PARAMS(proto),		\
-+	DECLARE_TRACE_EVENT_CONDITION(name, PARAMS(proto),	\
- 				PARAMS(args), PARAMS(cond))
- #define TRACE_EVENT_SYSCALL(name, proto, args, struct, assign,	\
- 			    print, reg, unreg)			\
--	DECLARE_TRACE_SYSCALL(name, PARAMS(proto), PARAMS(args))
-+	DECLARE_TRACE_EVENT_SYSCALL(name, PARAMS(proto), PARAMS(args))
- 
- #define TRACE_EVENT_FLAGS(event, flag)
- 
-diff --git a/include/trace/bpf_probe.h b/include/trace/bpf_probe.h
-index 183fa2aa2935..fbfe83b939ac 100644
---- a/include/trace/bpf_probe.h
-+++ b/include/trace/bpf_probe.h
-@@ -119,8 +119,8 @@ static inline void bpf_test_buffer_##call(void)				\
- 
- #undef DECLARE_TRACE
- #define DECLARE_TRACE(call, proto, args)				\
--	__BPF_DECLARE_TRACE(call, PARAMS(proto), PARAMS(args))		\
--	__DEFINE_EVENT(call, call, PARAMS(proto), PARAMS(args), 0)
-+	__BPF_DECLARE_TRACE(call##_tp, PARAMS(proto), PARAMS(args))		\
-+	__DEFINE_EVENT(call##_tp, call##_tp, PARAMS(proto), PARAMS(args), 0)
- 
- #undef DECLARE_TRACE_WRITABLE
- #define DECLARE_TRACE_WRITABLE(call, proto, args, size) \
-diff --git a/include/trace/define_trace.h b/include/trace/define_trace.h
-index ed52d0506c69..b2ba5a80583f 100644
---- a/include/trace/define_trace.h
-+++ b/include/trace/define_trace.h
-@@ -74,10 +74,18 @@
- 
- #undef DECLARE_TRACE
- #define DECLARE_TRACE(name, proto, args)	\
--	DEFINE_TRACE(name, PARAMS(proto), PARAMS(args))
-+	DEFINE_TRACE(name##_tp, PARAMS(proto), PARAMS(args))
- 
- #undef DECLARE_TRACE_CONDITION
- #define DECLARE_TRACE_CONDITION(name, proto, args, cond)	\
-+	DEFINE_TRACE(name##_tp, PARAMS(proto), PARAMS(args))
-+
-+#undef DECLARE_TRACE_EVENT
-+#define DECLARE_TRACE_EVENT(name, proto, args)	\
-+	DEFINE_TRACE(name, PARAMS(proto), PARAMS(args))
-+
-+#undef DECLARE_TRACE_EVENT_CONDITION
-+#define DECLARE_TRACE_EVENT_CONDITION(name, proto, args, cond)	\
- 	DEFINE_TRACE(name, PARAMS(proto), PARAMS(args))
- 
- /* If requested, create helpers for calling these tracepoints from Rust. */
-@@ -115,6 +123,11 @@
- #undef DECLARE_TRACE_CONDITION
- #define DECLARE_TRACE_CONDITION(name, proto, args, cond)
- 
-+#undef DECLARE_TRACE_EVENT
-+#define DECLARE_TRACE_EVENT(name, proto, args)
-+#undef DECLARE_TRACE_EVENT_CONDITION
-+#define DECLARE_TRACE_EVENT_CONDITION(name, proto, args, cond)
-+
- #ifdef TRACEPOINTS_ENABLED
- #include <trace/trace_events.h>
- #include <trace/perf.h>
-@@ -136,6 +149,8 @@
- #undef TRACE_HEADER_MULTI_READ
- #undef DECLARE_TRACE
- #undef DECLARE_TRACE_CONDITION
-+#undef DECLARE_TRACE_EVENT
-+#undef DECLARE_TRACE_EVENT_CONDITION
- 
- /* Only undef what we defined in this file */
- #ifdef UNDEF_TRACE_INCLUDE_FILE
-diff --git a/include/trace/events/sched.h b/include/trace/events/sched.h
-index 8994e97d86c1..152fc8b37aa5 100644
---- a/include/trace/events/sched.h
-+++ b/include/trace/events/sched.h
-@@ -773,64 +773,64 @@ TRACE_EVENT(sched_wake_idle_without_ipi,
-  *
-  * Postfixed with _tp to make them easily identifiable in the code.
-  */
--DECLARE_TRACE(pelt_cfs_tp,
-+DECLARE_TRACE(pelt_cfs,
- 	TP_PROTO(struct cfs_rq *cfs_rq),
- 	TP_ARGS(cfs_rq));
- 
--DECLARE_TRACE(pelt_rt_tp,
-+DECLARE_TRACE(pelt_rt,
- 	TP_PROTO(struct rq *rq),
- 	TP_ARGS(rq));
- 
--DECLARE_TRACE(pelt_dl_tp,
-+DECLARE_TRACE(pelt_dl,
- 	TP_PROTO(struct rq *rq),
- 	TP_ARGS(rq));
- 
--DECLARE_TRACE(pelt_hw_tp,
-+DECLARE_TRACE(pelt_hw,
- 	TP_PROTO(struct rq *rq),
- 	TP_ARGS(rq));
- 
--DECLARE_TRACE(pelt_irq_tp,
-+DECLARE_TRACE(pelt_irq,
- 	TP_PROTO(struct rq *rq),
- 	TP_ARGS(rq));
- 
--DECLARE_TRACE(pelt_se_tp,
-+DECLARE_TRACE(pelt_se,
- 	TP_PROTO(struct sched_entity *se),
- 	TP_ARGS(se));
- 
--DECLARE_TRACE(sched_cpu_capacity_tp,
-+DECLARE_TRACE(sched_cpu_capacity,
- 	TP_PROTO(struct rq *rq),
- 	TP_ARGS(rq));
- 
--DECLARE_TRACE(sched_overutilized_tp,
-+DECLARE_TRACE(sched_overutilized,
- 	TP_PROTO(struct root_domain *rd, bool overutilized),
- 	TP_ARGS(rd, overutilized));
- 
--DECLARE_TRACE(sched_util_est_cfs_tp,
-+DECLARE_TRACE(sched_util_est_cfs,
- 	TP_PROTO(struct cfs_rq *cfs_rq),
- 	TP_ARGS(cfs_rq));
- 
--DECLARE_TRACE(sched_util_est_se_tp,
-+DECLARE_TRACE(sched_util_est_se,
- 	TP_PROTO(struct sched_entity *se),
- 	TP_ARGS(se));
- 
--DECLARE_TRACE(sched_update_nr_running_tp,
-+DECLARE_TRACE(sched_update_nr_running,
- 	TP_PROTO(struct rq *rq, int change),
- 	TP_ARGS(rq, change));
- 
--DECLARE_TRACE(sched_compute_energy_tp,
-+DECLARE_TRACE(sched_compute_energy,
- 	TP_PROTO(struct task_struct *p, int dst_cpu, unsigned long energy,
- 		 unsigned long max_util, unsigned long busy_time),
- 	TP_ARGS(p, dst_cpu, energy, max_util, busy_time));
- 
--DECLARE_TRACE(sched_entry_tp,
-+DECLARE_TRACE(sched_entry,
- 	TP_PROTO(bool preempt, unsigned long ip),
- 	TP_ARGS(preempt, ip));
- 
--DECLARE_TRACE(sched_exit_tp,
-+DECLARE_TRACE(sched_exit,
- 	TP_PROTO(bool is_switch, unsigned long ip),
- 	TP_ARGS(is_switch, ip));
- 
--DECLARE_TRACE_CONDITION(sched_set_state_tp,
-+DECLARE_TRACE_CONDITION(sched_set_state,
- 	TP_PROTO(struct task_struct *tsk, int state),
- 	TP_ARGS(tsk, state),
- 	TP_CONDITION(!!(tsk->__state) != !!state));
-diff --git a/include/trace/events/tcp.h b/include/trace/events/tcp.h
-index 1a40c41ff8c3..4f9fa1b5b89b 100644
---- a/include/trace/events/tcp.h
-+++ b/include/trace/events/tcp.h
-@@ -259,7 +259,7 @@ TRACE_EVENT(tcp_retransmit_synack,
- 		  __entry->saddr_v6, __entry->daddr_v6)
- );
- 
--DECLARE_TRACE(tcp_cwnd_reduction_tp,
-+DECLARE_TRACE(tcp_cwnd_reduction,
- 	TP_PROTO(const struct sock *sk, int newly_acked_sacked,
- 		 int newly_lost, int flag),
- 	TP_ARGS(sk, newly_acked_sacked, newly_lost, flag)
--- 
-2.47.2
+>  	kunmap_atomic(kaddr);
+> -
+> -	/*
+> -	 * We probably need flush_icache_user_page() but it needs vma.
+> -	 * This should work on most of architectures by default. If
+> -	 * architecture needs to do something different it can define
+> -	 * its own version of the function.
+> -	 */
+> -	flush_dcache_page(page);
+>  }
+> 
+> base-commit: 1a1d569a75f3ab2923cb62daf356d102e4df2b86
 
