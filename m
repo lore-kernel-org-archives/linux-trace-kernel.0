@@ -1,117 +1,161 @@
-Received: from quail.birch.relay.mailchannels.net (quail.birch.relay.mailchannels.net [23.83.209.151])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBDF94CB5B;
-	Fri, 18 Apr 2025 17:18:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.209.151
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744996705; cv=pass; b=bsl6LwxZpm4dhr5Xxr+FKmPTKOfvCzHAnSdzFjoOShqkeQSthwzDkaqTNWrkoExdp2LjBvWZS9OuCW1GOsz/Y4mYE7UvvrOkPlGpBrrr2v6+tagFMpsLwdCbwLLLwRgoBZAWAVgvTDVUifHVhxsuov4XofCeBz/emCJL1+kEwMo=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744996705; c=relaxed/simple;
-	bh=nivJx+aWC/Paw9D42txKHWZuy3RESONw1UI4RDLpNAE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=h4oasKlbbJlZsZzQXi9ULzkLzJgAYhIJ37LTTyqBPJKtqkLaOtmQ6QyX4RnEdFO3zBDOxFKu3XHpXyEiqAbRaef/MLR7NxCvEFoaEpU/hS4F2AiSjG8nLIVUSSURvmAtzrCYxwzt0ydNSjFTbDaWMTgR7xvQIA1CE0rMhZS69dU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=pass smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=WpjFVcl0; arc=pass smtp.client-ip=23.83.209.151
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=stgolabs.net
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AC0E217734
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 18 Apr 2025 17:18:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1744996728; cv=none; b=KqWpH1mnvK8ZAE4cCzedNAbjaO5zOvecODCmho2ASdJRxG5mn85ofkqH60//z9X0k+vpyR5weJoq8Ua+Z+mlqxjqqXRDMkHNcoGt77Bg3spjCAqp/GvJfqzsAP2kHEMlVTjn3ai2c9Xw/t9lnO5ZieBy+eqAv8oBeB7yqEPSfAc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1744996728; c=relaxed/simple;
+	bh=+a1M5i9PKv67XR80Jx0OMOovmU/sGspbAiljC2qwxuE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=p0n+xHpW1/zajCjtzYvqksjTYIYG8D/rY0p0f5qNqUDiM1r2V497gte+9YvZvY5gwczv+CNUZB8DjP4NRdaidvOZeD0ZV2MMCvILchedJ5u2qancTNNBpXh9C6JCFLZOzJMTvnefGkt07NK2XLcGTVGUJZzTvsSXDWG92pdbp5o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=EnT3Niis; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="WpjFVcl0"
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-	by relay.mailchannels.net (Postfix) with ESMTP id 6A654211ED;
-	Fri, 18 Apr 2025 17:08:34 +0000 (UTC)
-Received: from pdx1-sub0-mail-a237.dreamhost.com (100-103-157-141.trex-nlb.outbound.svc.cluster.local [100.103.157.141])
-	(Authenticated sender: dreamhost)
-	by relay.mailchannels.net (Postfix) with ESMTPA id CC8FF211A5;
-	Fri, 18 Apr 2025 17:08:33 +0000 (UTC)
-ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1744996114; a=rsa-sha256;
-	cv=none;
-	b=kgBcrXx0hv8mf7vIrzYjUNpQBN43GIjYFoBFgk0xFodyGAzmCWVnT0oWS2etWrKnqNXUjc
-	okpHnYRuXshLwTXcRZSJFAc6pf0Et1RlaZZTHnc5bykNFfJHQKrNRleYLz8PHME8d66LxP
-	36eTHyagX7wXUyNVPNm+sDAxX45mSitKrSgTgzBUphZrsHZMQjwmFlnPjL8DMO6HG7wBHU
-	X7IH4oRLReevtNhhQFpJQiCbeg1mJuSUgKryR+83KS6zfMOtyyfdJAU19A/zO/5sEQqZen
-	ELbhFOIzCx0zYd/36A9sUPxm9gWeIfJcg9KQVFjEY09jjSotUky0jHPX4aoKoQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
- d=mailchannels.net;
-	s=arc-2022; t=1744996114;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EnT3Niis"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1744996725;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references:dkim-signature;
-	bh=nivJx+aWC/Paw9D42txKHWZuy3RESONw1UI4RDLpNAE=;
-	b=VRM0tfHxg0QIuHjAFWy/a/8USNMx/g5z52kxu97w7PoJ3rJAcMkFDEXQoPzxVVQDRJZMp2
-	uMqzrYRAagZxyJmcY8sI2Utvw5twyoZfKP2I7OF7bOIDu1EQPH9t2HUz/Mw6BQbr4KYCt+
-	K/ewJfMxD+zyAXPTydKiksqHw334jrCp9C2h9gxJJcd5MN4RCZCBoOOVTOVfi3X9g0P43a
-	UXIGwqyOhKgYurBGnOMpTrnc1YqHCMUA32pJpLtdYrSNQPt5xP1NzzT5h3o+4NH+OGVD2i
-	NBLAwQDQB8vcu2zpYGaTXZnRxGlNh6oPTA3+Tg4fk4XiiVxBlOrEs9ZjnK0BUQ==
-ARC-Authentication-Results: i=1;
-	rspamd-77f95b8c6b-727mx;
-	auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-X-MC-Relay: Neutral
-X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
-X-MailChannels-Auth-Id: dreamhost
-X-Invention-Whispering: 04b2fc347a10453f_1744996114220_1610682428
-X-MC-Loop-Signature: 1744996114220:4071012686
-X-MC-Ingress-Time: 1744996114219
-Received: from pdx1-sub0-mail-a237.dreamhost.com (pop.dreamhost.com
- [64.90.62.162])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-	by 100.103.157.141 (trex/7.0.3);
-	Fri, 18 Apr 2025 17:08:34 +0000
-Received: from offworld (ip72-199-50-187.sd.sd.cox.net [72.199.50.187])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: dave@stgolabs.net)
-	by pdx1-sub0-mail-a237.dreamhost.com (Postfix) with ESMTPSA id 4ZfLnX6zHzzZh;
-	Fri, 18 Apr 2025 10:08:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
-	s=dreamhost; t=1744996113;
-	bh=nivJx+aWC/Paw9D42txKHWZuy3RESONw1UI4RDLpNAE=;
-	h=Date:From:To:Cc:Subject:Content-Type;
-	b=WpjFVcl0xSzTJgGelxpfP8g84RwjiUFsPAF2LmooMkr9BgN9Q6PbCxpafsVorEtdY
-	 uq4xRm77ubp/3z5UplKcwMb+32XenpFoz2S/5Nc1LPJqqg55bop+U0/YzbS/Wghp0U
-	 /4rLWdTQL+KUcakg6GyOlJ03D4LJMSVIWdKhjH6cGAe6mxaZaadp3SJp0zIIPkS3t2
-	 4vd3WR+4/rdMS9hPquv3kx2izPRR8KXaIW9yBdvTf7Lk4Gz9/axENv4RlzC6vzu4DH
-	 NRk9XFJ2KnNIVE9YQ8KNFGM5dAqyQZCSxLr6bZy8iItWneqjL8YO29zyet25xWbGyJ
-	 VCIayLZC5C4nw==
-Date: Fri, 18 Apr 2025 10:08:30 -0700
-From: Davidlohr Bueso <dave@stgolabs.net>
-To: nifan.cxl@gmail.com
-Cc: rostedt@goodmis.org, mhiramat@kernel.org, willy@infradead.org,
-	akpm@linux-foundation.org, david@redhat.com, fan.ni@samsung.com,
-	yang@os.amperecomputing.com, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, linux-mm@kvack.org,
-	npache@redhat.com, mcgrof@kernel.org, a.manzanares@samsung.com
-Subject: Re: [PATCH] khugepaged: Refactor
- trace_mm_collapse_huge_page_isolate() to take folio instead of page
-Message-ID: <20250418170830.csed2ihb6ypbrncm@offworld>
-Mail-Followup-To: nifan.cxl@gmail.com, rostedt@goodmis.org,
-	mhiramat@kernel.org, willy@infradead.org, akpm@linux-foundation.org,
-	david@redhat.com, fan.ni@samsung.com, yang@os.amperecomputing.com,
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	linux-mm@kvack.org, npache@redhat.com, mcgrof@kernel.org,
-	a.manzanares@samsung.com
-References: <20250417171758.142745-1-nifan.cxl@gmail.com>
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=gkdw8gsBY7I9in1XRxPqFzuV9M+R9WrhUEzgOn2phl0=;
+	b=EnT3Niis9W0xH/rf+w7QkxHie+SPx28muraQzn9JZQtJop7AqTE9c7XZQxrRQ3iKaWmhAN
+	415T1p2HlgmMvvnMwNWYicL77XpD1JyQHgYVb+zNk1Xci5bhCgryI8xcA9umVb9WEgjv+C
+	gCFwzRfryVmVy6mRan/XO8VfneL/X4I=
+Received: from mail-yb1-f200.google.com (mail-yb1-f200.google.com
+ [209.85.219.200]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-656-etAWFxTFNLq2ofwsy9LX8Q-1; Fri, 18 Apr 2025 13:18:43 -0400
+X-MC-Unique: etAWFxTFNLq2ofwsy9LX8Q-1
+X-Mimecast-MFC-AGG-ID: etAWFxTFNLq2ofwsy9LX8Q_1744996723
+Received: by mail-yb1-f200.google.com with SMTP id 3f1490d57ef6-e6dfe7c8d4cso2931167276.0
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 18 Apr 2025 10:18:43 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744996723; x=1745601523;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=gkdw8gsBY7I9in1XRxPqFzuV9M+R9WrhUEzgOn2phl0=;
+        b=eurF9mPnnJnNCHewaLMtKpPECvN798zWWqVevAxCCqdlmK7WmRSlXHYt6z9she/B3S
+         oLExM6Cw5cO23Batd4M5/xdzJ5uya7at9pdAvw6qvDMyEarSKzlrEoHYS1CGj7WhgIyc
+         SLL8A4cDQi9eex1CKzs7wwAx07szQIU3MicHD4xSZqQdwSRidEB9QnS2RlcwxJXAHNAv
+         /Xf+rSiwPZeBpURbZ8fxUHgfctcs+5ggKJN8+KPrS3KFHaIx17weWvMohZm6x6Ee4jmd
+         JatWPVEpudk+u+18hsUWTcE1YnJCRScWpU2F2PRS/f2Tbk8rOHrVuX0w7s0tCj/cQiNI
+         E0AA==
+X-Forwarded-Encrypted: i=1; AJvYcCWCC78ni92ORz6BhBZalGKeXXVCmochLlv0rHQWiC167Qa1tTfap6XjZMRcNcVh8alN626vEUDyI8rgchf/0X9RCZw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzU3vvSt0WMkB9FwCkP6CoUj80GRX4j6mhfLALljb0R3flMe5FE
+	4x3BBcj8o5+6NhnzKv/iA+ou02wemM9eWL+9FZd/99aAXKZXni2xXTb7IiJv4xGcOIjULoeHo2H
+	a6pe5f3ELI3ZFwuoOlpgTw+uBuRMbpAJH1HaV98FvnVaK9+I1CX15blG3AQc4I4Y4Ji5AduLdpQ
+	wC+qgc6PhfeS/NOizdStz3epGP4wWQ6M5/go2ki8y8ZJ0U
+X-Gm-Gg: ASbGncsPfyYoxUvf2XY1A9ywFyapVmcteRNthe83rNEPt7qWpVKTsmXyJBefntTRobi
+	J7s45aaqfUXziPFdXJjPQlbxquv6kSiQqWhty03pqMWCez+8/VPzNUwOhid39odkApdp2hLqED0
+	oGMUvYZec=
+X-Received: by 2002:a05:6902:1685:b0:e6d:eea7:35c3 with SMTP id 3f1490d57ef6-e7297dcb74emr4915473276.11.1744996723385;
+        Fri, 18 Apr 2025 10:18:43 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHgO3yGvbKJV4mk2YjiCklYNqNWcRnEs03RKhS2nZ9xH55/2YEz6HN6ctlOeQ69EMUsvvUuE8HxshphvDhfc0s=
+X-Received: by 2002:a05:6902:1685:b0:e6d:eea7:35c3 with SMTP id
+ 3f1490d57ef6-e7297dcb74emr4915431276.11.1744996723007; Fri, 18 Apr 2025
+ 10:18:43 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
+References: <20250417171758.142745-1-nifan.cxl@gmail.com>
 In-Reply-To: <20250417171758.142745-1-nifan.cxl@gmail.com>
-User-Agent: NeoMutt/20220429
+From: Nico Pache <npache@redhat.com>
+Date: Fri, 18 Apr 2025 11:18:17 -0600
+X-Gm-Features: ATxdqUHGLN0lFeajQ8s0PmbZ6wgOIx5rwI7HcqHdz6FT6fADQxCAu1ui4DqSWqY
+Message-ID: <CAA1CXcB06JD9Fp4c7GGU3NHEm4W-aV7TS7JW7eWxshJEM4t2_w@mail.gmail.com>
+Subject: Re: [PATCH] khugepaged: Refactor trace_mm_collapse_huge_page_isolate()
+ to take folio instead of page
+To: nifan.cxl@gmail.com
+Cc: rostedt@goodmis.org, mhiramat@kernel.org, willy@infradead.org, 
+	akpm@linux-foundation.org, david@redhat.com, fan.ni@samsung.com, 
+	yang@os.amperecomputing.com, linux-kernel@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, linux-mm@kvack.org, mcgrof@kernel.org, 
+	a.manzanares@samsung.com, dave@stgolabs.net
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: zBnv8h-YJdGspKaS2OwsS9McTJavgz5NUobec6JieZQ_1744996723
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, 17 Apr 2025, nifan.cxl@gmail.com wrote:
-
->From: Fan Ni <fan.ni@samsung.com>
+On Thu, Apr 17, 2025 at 11:18=E2=80=AFAM <nifan.cxl@gmail.com> wrote:
 >
->trace_mm_collapse_huge_page_isolate() is only used in
->__collapse_huge_page_isolate(), which passes in the head page of a
->folio, so refactor it to take folio directly.
+> From: Fan Ni <fan.ni@samsung.com>
 >
->Signed-off-by: Fan Ni <fan.ni@samsung.com>
+> trace_mm_collapse_huge_page_isolate() is only used in
+> __collapse_huge_page_isolate(), which passes in the head page of a
+> folio, so refactor it to take folio directly.
+>
+> Signed-off-by: Fan Ni <fan.ni@samsung.com>
+Looks good!
 
-Reviewed-by: Davidlohr Bueso <dave@stgolabs.net>
+Reviewed-by: Nico Pache <npache@redhat.com>
+
+> ---
+>  include/trace/events/huge_memory.h | 6 +++---
+>  mm/khugepaged.c                    | 4 ++--
+>  2 files changed, 5 insertions(+), 5 deletions(-)
+>
+> diff --git a/include/trace/events/huge_memory.h b/include/trace/events/hu=
+ge_memory.h
+> index 9d5c00b0285c..a73699f000de 100644
+> --- a/include/trace/events/huge_memory.h
+> +++ b/include/trace/events/huge_memory.h
+> @@ -116,10 +116,10 @@ TRACE_EVENT(mm_collapse_huge_page,
+>
+>  TRACE_EVENT(mm_collapse_huge_page_isolate,
+>
+> -       TP_PROTO(struct page *page, int none_or_zero,
+> +       TP_PROTO(struct folio *folio, int none_or_zero,
+>                  int referenced, bool  writable, int status),
+>
+> -       TP_ARGS(page, none_or_zero, referenced, writable, status),
+> +       TP_ARGS(folio, none_or_zero, referenced, writable, status),
+>
+>         TP_STRUCT__entry(
+>                 __field(unsigned long, pfn)
+> @@ -130,7 +130,7 @@ TRACE_EVENT(mm_collapse_huge_page_isolate,
+>         ),
+>
+>         TP_fast_assign(
+> -               __entry->pfn =3D page ? page_to_pfn(page) : -1;
+> +               __entry->pfn =3D folio ? folio_pfn(folio) : -1;
+>                 __entry->none_or_zero =3D none_or_zero;
+>                 __entry->referenced =3D referenced;
+>                 __entry->writable =3D writable;
+> diff --git a/mm/khugepaged.c b/mm/khugepaged.c
+> index b8838ba8207a..950d147cd95e 100644
+> --- a/mm/khugepaged.c
+> +++ b/mm/khugepaged.c
+> @@ -696,13 +696,13 @@ static int __collapse_huge_page_isolate(struct vm_a=
+rea_struct *vma,
+>                 result =3D SCAN_LACK_REFERENCED_PAGE;
+>         } else {
+>                 result =3D SCAN_SUCCEED;
+> -               trace_mm_collapse_huge_page_isolate(&folio->page, none_or=
+_zero,
+> +               trace_mm_collapse_huge_page_isolate(folio, none_or_zero,
+>                                                     referenced, writable,=
+ result);
+>                 return result;
+>         }
+>  out:
+>         release_pte_pages(pte, _pte, compound_pagelist);
+> -       trace_mm_collapse_huge_page_isolate(&folio->page, none_or_zero,
+> +       trace_mm_collapse_huge_page_isolate(folio, none_or_zero,
+>                                             referenced, writable, result)=
+;
+>         return result;
+>  }
+> --
+> 2.47.2
+>
+
