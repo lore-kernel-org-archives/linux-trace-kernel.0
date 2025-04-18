@@ -1,163 +1,74 @@
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.5])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 51B34770E2;
-	Fri, 18 Apr 2025 03:41:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.5
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D239C1DA21;
+	Fri, 18 Apr 2025 04:57:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744947701; cv=none; b=uR7a6nN10Y/jjhreDwhd/nk8h5qIQKCnp93G32wQZO5JGL6w9qGXD0L53YFjOIUTscJqfKfXURKe5P2i7drIU8zoFbOAHASTSZMkmO/D06j8ckry20QHAn8x5ccPmvuOQ2DsjLzuwnAM1maGcCvMoMlEK1jEBkjxWN9Vb+Pc87s=
+	t=1744952279; cv=none; b=Hk1wTV1vy0x35/8r51TIqOBM3FCtmFqA/prRYg1MmwDhZkDUAh9wqrISSH5oW633YG/4tvLk1tJu4XogpRmNFI2D5C/p+uNZP+S8Kw77ORHGCrMQZS5YMKOGf9MqwV99hRB5l4vvTGkhMPgUQ/sNHen51OYmo9X4Op1qUyX8Yik=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744947701; c=relaxed/simple;
-	bh=lBgE/VTwfPL/98uIqYAL2OGCRqK6PQxVZcPsVcJjVlo=;
-	h=From:To:Cc:Subject:Date:Message-Id; b=ouTrZrEwTTyovL9LJGtS31bqAXXvbPnJfBZfKHHuv/af0jqoOpSLJXVFuHJ4qp1Dgmjic0ZtKTrJwW9oVLGTKuzWrq2gxBTGi5acAxXNzMb+hfzmwTeg1oubiW5Rv3FbYmaE7LJ7zx2DQawmOva4YHYxvsmd3zeL1qkUbNgxL/c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=P5cKFKig; arc=none smtp.client-ip=117.135.210.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1744952279; c=relaxed/simple;
+	bh=Q61wTq6fwgjLh5awYrNAIdvOCp25B2Jr/uabG+oMO64=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=SVNzhP/omuK2r5Ug/9DIn3re9/xjdn/qtqShR0dbisaWb09lgK5Y7jKsUlfIVlBNwY49lm7cIH44EPFex2cHV+24RrgaRPCzUmjQESyKATnEYtH8l2S0GfaKbCg91mQmP1fh+XSmBYqx3qKQbwvzzSEzJamSMLKbDgDw72n2ezQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KjGLgKK8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="P5cKFKig"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:Subject:Date:Message-Id; bh=Q1buKkeBBzshig53X4
-	Su1cjMDcBScgw+OeLMBh2Msks=; b=P5cKFKigmEICtLzPFpjFmLX7oCVSe5PpwZ
-	LhViNNa8ObsMph7IET805fCHhSxCcr2fnq+UM27qFfwGMK1/ynvP8P492C1moLz+
-	vdXoGuRkHOuEXmC4abIlXslW72BVJEV1xCo5nv0uQtFCXl7sPN5jEZ6Zet8MOHwM
-	iOEalOxUE=
-Received: from yang-Virtual-Machine.mshome.net (unknown [])
-	by gzga-smtp-mtada-g1-2 (Coremail) with SMTP id _____wAHp3fKyQFo8gRoAg--.90S2;
-	Fri, 18 Apr 2025 11:40:58 +0800 (CST)
-From: Feng Yang <yangfeng59949@163.com>
-To: ast@kernel.org,
-	daniel@iogearbox.net,
-	andrii@kernel.org,
-	martin.lau@linux.dev,
-	eddyz87@gmail.com,
-	song@kernel.org,
-	yonghong.song@linux.dev
-Cc: bpf@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	netdev@vger.kernel.org,
-	Feng Yang <yangfeng@kylinos.cn>
-Subject: [PATCH bpf-next] bpf: Remove bpf_get_smp_processor_id_proto
-Date: Fri, 18 Apr 2025 11:40:55 +0800
-Message-Id: <20250418034055.5757-1-yangfeng59949@163.com>
-X-Mailer: git-send-email 2.17.1
-X-CM-TRANSID:_____wAHp3fKyQFo8gRoAg--.90S2
-X-Coremail-Antispam: 1Uf129KBjvJXoWxCrWDWFW8Ww43GrWUWw1rWFg_yoWrurWUpF
-	n8Ary3Cr4kta1aq3srJrs2va45A34UZ3y8Ca48G34Y9r4qvr9rt3WUtF4a9FyrZry2k343
-	Aa1jqrWYkryIqa7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07UD739UUUUU=
-X-CM-SenderInfo: p1dqww5hqjkmqzuzqiywtou0bp/1tbiTg0zeGgBxEjF+AAAsQ
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KjGLgKK8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5F0EFC4CEE2;
+	Fri, 18 Apr 2025 04:57:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744952278;
+	bh=Q61wTq6fwgjLh5awYrNAIdvOCp25B2Jr/uabG+oMO64=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=KjGLgKK8d6sZljrbs5FdZqujTm44FkLncXnR9NFJCG3TYFhabcUbdtqkT93e7sZq0
+	 F+WR2G+++bElk0F1wfM/xw0iYpFvAG2TCeZUQGht8QajqCzLFzCGJcBTfIX3To32C5
+	 rGCmhtwn0dUeJk7O6jYYFwpo0g+iBUJMpKWRU5PBjsmLx/RtzB/EkqtSacSuA3zGql
+	 xHTZ6DZ1cQHfGiDv1xTGx58yTSWh2uFYrjqzwRND6PmBeL4jMHwSzzfrSArTUAOfp9
+	 HgzErg1EghwnTqsNUYngCPp/mObvlunaAUX1y1JZbXt7mbDfytC5UqC/gmi9aJ3Pj5
+	 uBaVCQYQkBWcg==
+Message-ID: <1b17ce33-015f-4a10-9a98-ebea586c3ce4@kernel.org>
+Date: Thu, 17 Apr 2025 21:57:56 -0700
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next] udp: Add tracepoint for udp_sendmsg()
+Content-Language: en-US
+To: Breno Leitao <leitao@debian.org>
+Cc: Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
+ Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Simon Horman <horms@kernel.org>, kuniyu@amazon.com, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ yonghong.song@linux.dev, song@kernel.org, kernel-team@meta.com
+References: <20250416-udp_sendmsg-v1-1-1a886b8733c2@debian.org>
+ <4dd9504c-4bce-4acd-874c-8eed8c311a2f@kernel.org>
+ <aADpIftw30HBT8pq@gmail.com>
+ <8dc4d1a8-184b-4d0d-9b38-d5b65ce7e2a6@kernel.org>
+ <aAElmpUWd6D7UBZY@gmail.com>
+From: David Ahern <dsahern@kernel.org>
+In-Reply-To: <aAElmpUWd6D7UBZY@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-From: Feng Yang <yangfeng@kylinos.cn>
+On 4/17/25 10:00 AM, Breno Leitao wrote:
+>> $ git grep trace_ net drivers/net | grep _tp
+>> net/bpf/test_run.c:	trace_bpf_trigger_tp(nonce);
+>> net/ipv4/tcp_input.c:	trace_tcp_cwnd_reduction_tp(sk,
+>> newly_acked_sacked, newly_lost, flag);
+> 
+> Do we want to rename them and remove the _tp? I suppose it is OK given
+> that tracepoints are not expected to be stable?
+> 
+> Also, if we have consensus about this patch, I will remove the _tp from
+> it.
+> 
 
-All BPF programs either disable CPU preemption or CPU migration,
-so the bpf_get_smp_processor_id_proto can be safely removed,
-and the bpf_get_raw_smp_processor_id_proto in bpf_base_func_proto works perfectly.
-
-Suggested-by: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Signed-off-by: Feng Yang <yangfeng@kylinos.cn>
----
- include/linux/bpf.h      |  1 -
- kernel/bpf/core.c        |  1 -
- kernel/bpf/helpers.c     | 12 ------------
- kernel/trace/bpf_trace.c |  2 --
- net/core/filter.c        |  6 ------
- 5 files changed, 22 deletions(-)
-
-diff --git a/include/linux/bpf.h b/include/linux/bpf.h
-index 3f0cc89c0622..36e525141556 100644
---- a/include/linux/bpf.h
-+++ b/include/linux/bpf.h
-@@ -3316,7 +3316,6 @@ extern const struct bpf_func_proto bpf_map_peek_elem_proto;
- extern const struct bpf_func_proto bpf_map_lookup_percpu_elem_proto;
- 
- extern const struct bpf_func_proto bpf_get_prandom_u32_proto;
--extern const struct bpf_func_proto bpf_get_smp_processor_id_proto;
- extern const struct bpf_func_proto bpf_get_numa_node_id_proto;
- extern const struct bpf_func_proto bpf_tail_call_proto;
- extern const struct bpf_func_proto bpf_ktime_get_ns_proto;
-diff --git a/kernel/bpf/core.c b/kernel/bpf/core.c
-index ba6b6118cf50..1ad41a16b86e 100644
---- a/kernel/bpf/core.c
-+++ b/kernel/bpf/core.c
-@@ -2943,7 +2943,6 @@ const struct bpf_func_proto bpf_spin_unlock_proto __weak;
- const struct bpf_func_proto bpf_jiffies64_proto __weak;
- 
- const struct bpf_func_proto bpf_get_prandom_u32_proto __weak;
--const struct bpf_func_proto bpf_get_smp_processor_id_proto __weak;
- const struct bpf_func_proto bpf_get_numa_node_id_proto __weak;
- const struct bpf_func_proto bpf_ktime_get_ns_proto __weak;
- const struct bpf_func_proto bpf_ktime_get_boot_ns_proto __weak;
-diff --git a/kernel/bpf/helpers.c b/kernel/bpf/helpers.c
-index e3a2662f4e33..2d2bfb2911f8 100644
---- a/kernel/bpf/helpers.c
-+++ b/kernel/bpf/helpers.c
-@@ -149,18 +149,6 @@ const struct bpf_func_proto bpf_get_prandom_u32_proto = {
- 	.ret_type	= RET_INTEGER,
- };
- 
--BPF_CALL_0(bpf_get_smp_processor_id)
--{
--	return smp_processor_id();
--}
--
--const struct bpf_func_proto bpf_get_smp_processor_id_proto = {
--	.func		= bpf_get_smp_processor_id,
--	.gpl_only	= false,
--	.ret_type	= RET_INTEGER,
--	.allow_fastcall	= true,
--};
--
- BPF_CALL_0(bpf_get_numa_node_id)
- {
- 	return numa_node_id();
-diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
-index 0f5906f43d7c..39360cd6baf1 100644
---- a/kernel/trace/bpf_trace.c
-+++ b/kernel/trace/bpf_trace.c
-@@ -1462,8 +1462,6 @@ bpf_tracing_func_proto(enum bpf_func_id func_id, const struct bpf_prog *prog)
- 		return &bpf_get_current_comm_proto;
- 	case BPF_FUNC_trace_printk:
- 		return bpf_get_trace_printk_proto();
--	case BPF_FUNC_get_smp_processor_id:
--		return &bpf_get_smp_processor_id_proto;
- 	case BPF_FUNC_get_numa_node_id:
- 		return &bpf_get_numa_node_id_proto;
- 	case BPF_FUNC_perf_event_read:
-diff --git a/net/core/filter.c b/net/core/filter.c
-index bc6828761a47..7f7ec913ddbc 100644
---- a/net/core/filter.c
-+++ b/net/core/filter.c
-@@ -8264,8 +8264,6 @@ tc_cls_act_func_proto(enum bpf_func_id func_id, const struct bpf_prog *prog)
- 		return &bpf_set_hash_proto;
- 	case BPF_FUNC_perf_event_output:
- 		return &bpf_skb_event_output_proto;
--	case BPF_FUNC_get_smp_processor_id:
--		return &bpf_get_smp_processor_id_proto;
- 	case BPF_FUNC_skb_under_cgroup:
- 		return &bpf_skb_under_cgroup_proto;
- 	case BPF_FUNC_get_socket_cookie:
-@@ -8343,8 +8341,6 @@ xdp_func_proto(enum bpf_func_id func_id, const struct bpf_prog *prog)
- 	switch (func_id) {
- 	case BPF_FUNC_perf_event_output:
- 		return &bpf_xdp_event_output_proto;
--	case BPF_FUNC_get_smp_processor_id:
--		return &bpf_get_smp_processor_id_proto;
- 	case BPF_FUNC_csum_diff:
- 		return &bpf_csum_diff_proto;
- 	case BPF_FUNC_xdp_adjust_head:
-@@ -8570,8 +8566,6 @@ lwt_out_func_proto(enum bpf_func_id func_id, const struct bpf_prog *prog)
- 		return &bpf_get_hash_recalc_proto;
- 	case BPF_FUNC_perf_event_output:
- 		return &bpf_skb_event_output_proto;
--	case BPF_FUNC_get_smp_processor_id:
--		return &bpf_get_smp_processor_id_proto;
- 	case BPF_FUNC_skb_under_cgroup:
- 		return &bpf_skb_under_cgroup_proto;
- 	default:
--- 
-2.39.0.windows.2
+I am only asking for consistency. Based on existing networking
+instances, consistency is no _tp suffix.
 
