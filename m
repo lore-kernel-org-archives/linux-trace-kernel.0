@@ -1,63 +1,73 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41783204583;
-	Thu, 17 Apr 2025 23:29:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 935F42A1D7;
+	Fri, 18 Apr 2025 00:34:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744932569; cv=none; b=LNcw/r0lq7By8gZU1GYMo14vIswet9Z0Ji3y6WFP3n98m040fCzQlnOMc56GnnUAAbqCP1+/WJWy4c5cEUa1yWqmV687Gznd+d4q7JelzodjUtYnd/tdjGVjPLSvoEQMfJcSGP5itAaV022SQwuxbG0k1zDGSSTwHdDdB5On1K8=
+	t=1744936477; cv=none; b=OyxZ0WH4ZVwM/Y7XLDWU65zFNsWcUCik6AJHOCnGCLS7yYO8bftySQ9aPRfpyLm4AwuXXViUBlrt0FInUpu8Ze2EvA97zDrPWHtTw8u035nr7OYuE1Y28lOU1PCYvxXZ3etQYiTmyoZd/9VtSv9I6S6XdvoYoYRhGRiinyTWG50=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744932569; c=relaxed/simple;
-	bh=wjYgKY975jAFrgsX+2PJ2j8ySX7rgcB8HC8tFI9lXTI=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=kPNj2lCAr5/17Ww71QF2mjD8KCeDM+GsimmFPlGrICxgpbnZU46Yc/i7HQm2R2S5bKHBYsiNn4vhdASECqTE1nP0ASBNh4KMkhkbNd0f8gZ7MysA3P2zG4DrXWaJA51Iw4WpdJpW/olpIApGk8LZ4GeOGa/dY6Hqf7yqtSHaWys=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=jEv6yVEb; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="jEv6yVEb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 22DB6C4CEE4;
-	Thu, 17 Apr 2025 23:29:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-	s=korg; t=1744932568;
-	bh=wjYgKY975jAFrgsX+2PJ2j8ySX7rgcB8HC8tFI9lXTI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=jEv6yVEba3ZswWp5mklpexfv2IRZvURZ4QIWTMv3cmgl009NEq7N4/lK7oDJkdnvj
-	 cftSMi3Se1rZgYH+IORieYtFEyXrqUocKStYDWE/iZL6IlLBkpmAvgc8Tu28esR5ou
-	 vIsQXBfxjNjMaVRWnnbYHVxpCgE59YAvrJCczFEY=
-Date: Thu, 17 Apr 2025 16:29:27 -0700
-From: Andrew Morton <akpm@linux-foundation.org>
-To: Steven Rostedt <rostedt@goodmis.org>
+	s=arc-20240116; t=1744936477; c=relaxed/simple;
+	bh=cBSvAwhKrRG0vCUUb/QRYu1HPi/TZiqVAC2UB9DmaY0=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=s959QXA5pmcf6PUc4LsrpMQkoKzFJ1Aza0yC5iCRPuhDib5DN3biyYKmtxFzMW9doF+YixsJ32DSRli9kgMCpkhwPc6VZPvGNv9rMMUbMJT/k5IJHtnK3TKMGuQLQpiRKLBeD6Rzrs+oDQX4nMvknUN7s/s0dvYcIjgMfK0dCJg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 067DBC4CEE4;
+	Fri, 18 Apr 2025 00:34:35 +0000 (UTC)
+Date: Thu, 17 Apr 2025 20:34:38 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Andrew Morton <akpm@linux-foundation.org>
 Cc: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
  <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu
  <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
  Andrii Nakryiko <andrii.nakryiko@gmail.com>, Mykyta Yatsenko
  <mykyta.yatsenko5@gmail.com>
 Subject: Re: [PATCH] tracing: Fix filter string testing
-Message-Id: <20250417162927.e1117ce02e612e29a34985ef@linux-foundation.org>
-In-Reply-To: <20250417183003.505835fb@gandalf.local.home>
+Message-ID: <20250417203438.413da315@batman.local.home>
+In-Reply-To: <20250417162927.e1117ce02e612e29a34985ef@linux-foundation.org>
 References: <20250417183003.505835fb@gandalf.local.home>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	<20250417162927.e1117ce02e612e29a34985ef@linux-foundation.org>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
+MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Thu, 17 Apr 2025 18:30:03 -0400 Steven Rostedt <rostedt@goodmis.org> wrote:
+On Thu, 17 Apr 2025 16:29:27 -0700
+Andrew Morton <akpm@linux-foundation.org> wrote:
 
-> From: Steven Rostedt <rostedt@goodmis.org>
+> On Thu, 17 Apr 2025 18:30:03 -0400 Steven Rostedt <rostedt@goodmis.org> wrote:
 > 
-> The filter string testing uses strncpy_from_kernel/user_nofault() to
-> retrieve the string to test the filter against. The if() statement was
-> incorrect as it considered 0 as a fault, when it is only negative that it
-> faulted.
+> > From: Steven Rostedt <rostedt@goodmis.org>
+> > 
+> > The filter string testing uses strncpy_from_kernel/user_nofault() to
+> > retrieve the string to test the filter against. The if() statement was
+> > incorrect as it considered 0 as a fault, when it is only negative that it
+> > faulted.  
+> 
+> changelog forgot to describe the userspace-visible effects of the bug?
+> 
+> > Cc: stable@vger.kernel.org  
+> 
+> Which is more important when proposing this!
+> 
 
-changelog forgot to describe the userspace-visible effects of the bug?
+I can update the change log to show how it's broken. In fact, I'm
+working on a selftest to catch it if it breaks again.
 
-> Cc: stable@vger.kernel.org
+  # cd /sys/kernel/tracing
+  # echo "filename.ustring ~ \"/proc*\"" > events/syscalls/sys_enter_openat/filter
+  # ls /proc/$$/maps
+  # cat trace
 
-Which is more important when proposing this!
+If it works you get:
 
+              ls-1192    [007] .....  8169.828333: sys_openat(dfd: ffffffffffffff9c, filename: 7efc18359904, flags: 80000, mode: 0)
 
+If not, you get nothing!
+
+-- Steve
