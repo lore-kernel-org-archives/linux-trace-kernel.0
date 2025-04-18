@@ -1,74 +1,91 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D239C1DA21;
-	Fri, 18 Apr 2025 04:57:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7957F25487A;
+	Fri, 18 Apr 2025 07:04:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744952279; cv=none; b=Hk1wTV1vy0x35/8r51TIqOBM3FCtmFqA/prRYg1MmwDhZkDUAh9wqrISSH5oW633YG/4tvLk1tJu4XogpRmNFI2D5C/p+uNZP+S8Kw77ORHGCrMQZS5YMKOGf9MqwV99hRB5l4vvTGkhMPgUQ/sNHen51OYmo9X4Op1qUyX8Yik=
+	t=1744959884; cv=none; b=Qercxyl2dND9XEynJ7glzP5KYYNBv71rczlz3Gue8vvJVZNEgxaS1bfUnH0BfFUKBg0v3fyBajafZ5jbAnO2ZgDZG6Y1r7oUK52vAgJ5W44p5J/CjgHeqQSDD94WujRCP6wmDyURFYhYabCH0fYDkJLfSMGpBNw57KsU068ZLRU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744952279; c=relaxed/simple;
-	bh=Q61wTq6fwgjLh5awYrNAIdvOCp25B2Jr/uabG+oMO64=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=SVNzhP/omuK2r5Ug/9DIn3re9/xjdn/qtqShR0dbisaWb09lgK5Y7jKsUlfIVlBNwY49lm7cIH44EPFex2cHV+24RrgaRPCzUmjQESyKATnEYtH8l2S0GfaKbCg91mQmP1fh+XSmBYqx3qKQbwvzzSEzJamSMLKbDgDw72n2ezQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KjGLgKK8; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744959884; c=relaxed/simple;
+	bh=+KIilC/KK10PFDQbziKDb23AVy0Bd3WaO5GJCqpwodc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PqkGwK3jmJON2DucK1seF/Nw/NbJA3BlGMCqpE41FKX46uTdmrIH5KZNLQ0rkxKA78ULbl1rYDL3C39NS8xUK3gUddnGcW0gdEZs1hNwzSU0S0TCViYLchEWPd7gwCAao2c1ipxiMVmyxF+dJ5A3Q3nOCl2tR7BIxEaonQA5r+E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GD1MaHrQ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KjGLgKK8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5F0EFC4CEE2;
-	Fri, 18 Apr 2025 04:57:57 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GD1MaHrQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3221AC4CEE2;
+	Fri, 18 Apr 2025 07:04:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744952278;
-	bh=Q61wTq6fwgjLh5awYrNAIdvOCp25B2Jr/uabG+oMO64=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=KjGLgKK8d6sZljrbs5FdZqujTm44FkLncXnR9NFJCG3TYFhabcUbdtqkT93e7sZq0
-	 F+WR2G+++bElk0F1wfM/xw0iYpFvAG2TCeZUQGht8QajqCzLFzCGJcBTfIX3To32C5
-	 rGCmhtwn0dUeJk7O6jYYFwpo0g+iBUJMpKWRU5PBjsmLx/RtzB/EkqtSacSuA3zGql
-	 xHTZ6DZ1cQHfGiDv1xTGx58yTSWh2uFYrjqzwRND6PmBeL4jMHwSzzfrSArTUAOfp9
-	 HgzErg1EghwnTqsNUYngCPp/mObvlunaAUX1y1JZbXt7mbDfytC5UqC/gmi9aJ3Pj5
-	 uBaVCQYQkBWcg==
-Message-ID: <1b17ce33-015f-4a10-9a98-ebea586c3ce4@kernel.org>
-Date: Thu, 17 Apr 2025 21:57:56 -0700
+	s=k20201202; t=1744959883;
+	bh=+KIilC/KK10PFDQbziKDb23AVy0Bd3WaO5GJCqpwodc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=GD1MaHrQf7F4sFX62+d0KZnhJ+YiUfKB9JdvR7t5uihY6MeMLljCCGOKOsWkU1ncW
+	 yGI7Ce+N+9XvByDTP45l69juq3Mt6582wIiKgUGmYhiHR0NKl7eGTbiNTP34iwyIOU
+	 qZujrxatZ1SmU2ORTFHM3rYosNtbpRjjPIWxv5e8AGBP00tKCjxGkD83nyF+hy2wFy
+	 QncPStZS8OOpskiVwJZCC9CWbnNTwGi7wWmoNmodyZS7bVBiK1NP4k571Pyanrr7z0
+	 iF27zPXDTWJS3cViu41U9hSbT7e0JTzYYD8yb+i97ROc+dUTOHaau/ioy7SX7i7Pou
+	 VjroniTZSoUCA==
+Date: Fri, 18 Apr 2025 09:04:38 +0200
+From: Ingo Molnar <mingo@kernel.org>
+To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc: Jiri Olsa <jolsa@kernel.org>, Oleg Nesterov <oleg@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	x86@kernel.org, Song Liu <songliubraving@fb.com>,
+	Yonghong Song <yhs@fb.com>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Hao Luo <haoluo@google.com>, Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Alan Maguire <alan.maguire@oracle.com>
+Subject: Re: [PATCHv3 perf/core 2/2] selftests/bpf: Add 5-byte nop uprobe
+ trigger bench
+Message-ID: <aAH5hvMQ41FUlKPu@gmail.com>
+References: <20250414083647.1234007-1-jolsa@kernel.org>
+ <20250414083647.1234007-2-jolsa@kernel.org>
+ <CAEf4Bzadf-k7vcDWm40yjpq7P4dYEr5pKTKsgthvWs_GqvoRNA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next] udp: Add tracepoint for udp_sendmsg()
-Content-Language: en-US
-To: Breno Leitao <leitao@debian.org>
-Cc: Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
- Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Simon Horman <horms@kernel.org>, kuniyu@amazon.com, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- yonghong.song@linux.dev, song@kernel.org, kernel-team@meta.com
-References: <20250416-udp_sendmsg-v1-1-1a886b8733c2@debian.org>
- <4dd9504c-4bce-4acd-874c-8eed8c311a2f@kernel.org>
- <aADpIftw30HBT8pq@gmail.com>
- <8dc4d1a8-184b-4d0d-9b38-d5b65ce7e2a6@kernel.org>
- <aAElmpUWd6D7UBZY@gmail.com>
-From: David Ahern <dsahern@kernel.org>
-In-Reply-To: <aAElmpUWd6D7UBZY@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAEf4Bzadf-k7vcDWm40yjpq7P4dYEr5pKTKsgthvWs_GqvoRNA@mail.gmail.com>
 
-On 4/17/25 10:00 AM, Breno Leitao wrote:
->> $ git grep trace_ net drivers/net | grep _tp
->> net/bpf/test_run.c:	trace_bpf_trigger_tp(nonce);
->> net/ipv4/tcp_input.c:	trace_tcp_cwnd_reduction_tp(sk,
->> newly_acked_sacked, newly_lost, flag);
-> 
-> Do we want to rename them and remove the _tp? I suppose it is OK given
-> that tracepoints are not expected to be stable?
-> 
-> Also, if we have consensus about this patch, I will remove the _tp from
-> it.
-> 
 
-I am only asking for consistency. Based on existing networking
-instances, consistency is no _tp suffix.
+* Andrii Nakryiko <andrii.nakryiko@gmail.com> wrote:
 
+> On Mon, Apr 14, 2025 at 1:37 AM Jiri Olsa <jolsa@kernel.org> wrote:
+> >
+> > Add 5-byte nop uprobe trigger bench (x86_64 specific) to measure
+> > uprobes/uretprobes on top of nop5 instruction.
+> >
+> > Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+> > ---
+> >  tools/testing/selftests/bpf/bench.c           | 12 ++++++
+> >  .../selftests/bpf/benchs/bench_trigger.c      | 42 +++++++++++++++++++
+> >  .../selftests/bpf/benchs/run_bench_uprobes.sh |  2 +-
+> >  3 files changed, 55 insertions(+), 1 deletion(-)
+> >
+> 
+> LGTM. Should we land this benchmark patch through the bpf-next tree?
+> It won't break anything, just will be slower until patch #1 gets into
+> bpf-next as well, which is fine.
+> 
+> Ingo or Peter, any objections to me routing this patch separately
+> through bpf-next?
+> 
+> But either way:
+> 
+> Acked-by: Andrii Nakryiko <andrii@kernel.org>
+
+I've applied this to the perf tree with a few readability edits to the 
+changelogs and the new tags added in.
+
+Thanks,
+
+	Ingo
