@@ -1,30 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 673D21465B4;
-	Sat, 19 Apr 2025 11:14:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3B311465B4;
+	Sat, 19 Apr 2025 11:14:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745061255; cv=none; b=rWWtZX80VSyJb69rFZwHaxvFP7vXbyLwOsuhH9Jam4GD+L82dpPPxd+In42mhjFDrd7Jf/ckNde8M3JAD0XEvFmY/85D9q8i8Y9OgpTscBiDideYwYD+pITO/bRahdVqGy3vifn0IV4arTeD/9M1qkYoQ6Hti+9onMVYY7TngnE=
+	t=1745061259; cv=none; b=j9qLdExdyJw9ZFzGI4WIC/QPyeRxeO6FcrguOhF49ZylszPa46JVquJ8GXms1RaCSvdL59SRoeORoD0Us7fxiGGCcfXNv+vlQ6Aneej8zuXM//YMWT+zC6+4TjRWIeITi+d9X/NuWd72UdYFskl2qokg67GiZLMS5k2UgaCY8kE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745061255; c=relaxed/simple;
-	bh=segElHCdNM8ilr7pmILb8lXK5VF5TR88ipNEBHcLsPc=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=mEJHEmLwhxN5nuallqUUuB8UjOE54tjpjRogWD0QwLZq8yP8OPkwiY/IABBT/Sxn+5dYYy1Hcmg2NVEjcZT1fksZSAQrEKUF6UjrKUGtsTumBi1flWDXxAWNrz95fQ1lVuDP29LYiUNjqU3n3xDxCWzXD0E2SlUPOlgZ9BMcArs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=p9I0MntS; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745061259; c=relaxed/simple;
+	bh=APWc4grnPuA6kcsjMvSMPXOhVagQmv1VtrP1a4NmFOc=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=i/PCseTFcOnUwh+CCjgeMEIqNCrWv/CMkN4s4tDdDrbpTdZSeGMhFLSVxQ7aC47RJ1QmCxZojbWaUnpMyIs0sND4q6UnLyGC9F8LY2Es0wkuD9604xtzgXp6nBbKer8OwiiFzCGJLhbtWltTzfqvi6In85vIW3niZkbaatite9Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=f6+48xzP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="p9I0MntS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 89A0BC4CEE7;
-	Sat, 19 Apr 2025 11:14:11 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="f6+48xzP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 40AA9C4CEED;
+	Sat, 19 Apr 2025 11:14:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745061254;
-	bh=segElHCdNM8ilr7pmILb8lXK5VF5TR88ipNEBHcLsPc=;
-	h=From:To:Cc:Subject:Date:From;
-	b=p9I0MntSvW1uw/BeLSdDhPqUwYf/vaDyPZqOKL059Qh5TfLQcpVcr2zt5g6fsMogc
-	 XPenoURL2fS3Z9oR5E6KDASQK4Sse4ycp5B42jRvE5uoUQ4pt66oBJMHV8xaqcggm1
-	 jJgz6rsV6wlwGiuyfIXrcBgFc1F2jNclGv+A6XPAho4e5x8E93gvnh7O9ww2v17m3C
-	 /zwWd6fjDfemXZoX/bET96HrOSIXfKPSGNitTUoLL46Z9fiAGgFGaYbblnUTMf7emb
-	 6vxwVrHy6PJwcfqSCg4UuKjPI3dEjadY+h735liz2Q3Ii0bix/0dKTAh77pnDd/tPq
-	 cWqForpJxz2Ow==
+	s=k20201202; t=1745061258;
+	bh=APWc4grnPuA6kcsjMvSMPXOhVagQmv1VtrP1a4NmFOc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=f6+48xzPBxS9tQTp55oCDih3fLT7Uzh+QubZ3dAoAgEG3NVEgoDU6ZrGxuwvzBzqr
+	 veQvPDcvxip++K0KyH4xhF7gDBGFbQ2r4FKqtCNZh1DqUasydvaHk0zskRDb5wiRJX
+	 nuOBb0dGORn8oWS0hai5ZHUhy/rPtCAZz68FfsHM4hXTmez8ANH7DshJa5n1Kw+Bug
+	 UMD2BucwqFzKl/90mxruIZ7MsWDej2QiY1n3o1AHdrYFjueGJBUz44r66sT/MZ2mxR
+	 7vPwDaD29cMVEGLjzDvbGvgX23U953+GpezVRb09h65fZXh+DLOkOYT7d3PlWN1Yd4
+	 YLKlervkiJXnw==
 From: =?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn@kernel.org>
 To: Paul Walmsley <paul.walmsley@sifive.com>,
 	Palmer Dabbelt <palmer@dabbelt.com>,
@@ -38,10 +39,12 @@ Cc: =?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn@rivosinc.com>,
 	Peter Zijlstra <peterz@infradead.org>,
 	linux-kernel@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH fixes v2 1/2] riscv: Replace function-like macro by static inline function
-Date: Sat, 19 Apr 2025 13:13:59 +0200
-Message-ID: <20250419111402.1660267-1-bjorn@kernel.org>
+Subject: [PATCH fixes v2 2/2] riscv: uprobes: Add missing fence.i after building the XOL buffer
+Date: Sat, 19 Apr 2025 13:14:00 +0200
+Message-ID: <20250419111402.1660267-2-bjorn@kernel.org>
 X-Mailer: git-send-email 2.45.2
+In-Reply-To: <20250419111402.1660267-1-bjorn@kernel.org>
+References: <20250419111402.1660267-1-bjorn@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -53,54 +56,51 @@ Content-Transfer-Encoding: 8bit
 
 From: Björn Töpel <bjorn@rivosinc.com>
 
-The flush_icache_range() function is implemented as a "function-like
-macro with unused parameters", which can result in "unused variables"
-warnings.
+The XOL (execute out-of-line) buffer is used to single-step the
+replaced instruction(s) for uprobes. The RISC-V port was missing a
+proper fence.i (i$ flushing) after constructing the XOL buffer, which
+can result in incorrect execution of stale/broken instructions.
 
-Replace the macro with a static inline function, as advised by
-Documentation/process/coding-style.rst.
+This was found running the BPF selftests "test_progs:
+uprobe_autoattach, attach_probe" on the Spacemit K1/X60, where the
+uprobes tests randomly blew up.
 
-Fixes: 08f051eda33b ("RISC-V: Flush I$ when making a dirty page executable")
+Reviewed-by: Guo Ren <guoren@kernel.org>
+Fixes: 74784081aac8 ("riscv: Add uprobes supported")
 Signed-off-by: Björn Töpel <bjorn@rivosinc.com>
 ---
- arch/riscv/include/asm/cacheflush.h | 15 ++++++++++-----
- 1 file changed, 10 insertions(+), 5 deletions(-)
+v2: Correct flush range (Samuel)
+---
+ arch/riscv/kernel/probes/uprobes.c | 10 ++--------
+ 1 file changed, 2 insertions(+), 8 deletions(-)
 
-diff --git a/arch/riscv/include/asm/cacheflush.h b/arch/riscv/include/asm/cacheflush.h
-index 8de73f91bfa3..b59ffeb668d6 100644
---- a/arch/riscv/include/asm/cacheflush.h
-+++ b/arch/riscv/include/asm/cacheflush.h
-@@ -34,11 +34,6 @@ static inline void flush_dcache_page(struct page *page)
- 	flush_dcache_folio(page_folio(page));
+diff --git a/arch/riscv/kernel/probes/uprobes.c b/arch/riscv/kernel/probes/uprobes.c
+index 4b3dc8beaf77..cc15f7ca6cc1 100644
+--- a/arch/riscv/kernel/probes/uprobes.c
++++ b/arch/riscv/kernel/probes/uprobes.c
+@@ -167,6 +167,7 @@ void arch_uprobe_copy_ixol(struct page *page, unsigned long vaddr,
+ 	/* Initialize the slot */
+ 	void *kaddr = kmap_atomic(page);
+ 	void *dst = kaddr + (vaddr & ~PAGE_MASK);
++	unsigned long start = (unsigned long)dst;
+ 
+ 	memcpy(dst, src, len);
+ 
+@@ -176,13 +177,6 @@ void arch_uprobe_copy_ixol(struct page *page, unsigned long vaddr,
+ 		*(uprobe_opcode_t *)dst = __BUG_INSN_32;
+ 	}
+ 
++	flush_icache_range(start, start + len);
+ 	kunmap_atomic(kaddr);
+-
+-	/*
+-	 * We probably need flush_icache_user_page() but it needs vma.
+-	 * This should work on most of architectures by default. If
+-	 * architecture needs to do something different it can define
+-	 * its own version of the function.
+-	 */
+-	flush_dcache_page(page);
  }
- 
--/*
-- * RISC-V doesn't have an instruction to flush parts of the instruction cache,
-- * so instead we just flush the whole thing.
-- */
--#define flush_icache_range(start, end) flush_icache_all()
- #define flush_icache_user_page(vma, pg, addr, len)	\
- do {							\
- 	if (vma->vm_flags & VM_EXEC)			\
-@@ -78,6 +73,16 @@ void flush_icache_mm(struct mm_struct *mm, bool local);
- 
- #endif /* CONFIG_SMP */
- 
-+/*
-+ * RISC-V doesn't have an instruction to flush parts of the instruction cache,
-+ * so instead we just flush the whole thing.
-+ */
-+#define flush_icache_range flush_icache_range
-+static inline void flush_icache_range(unsigned long start, unsigned long end)
-+{
-+	flush_icache_all();
-+}
-+
- extern unsigned int riscv_cbom_block_size;
- extern unsigned int riscv_cboz_block_size;
- void riscv_init_cbo_blocksizes(void);
-
-base-commit: 8560697b23dc2f405cb463af2b17256a9888129d
 -- 
 2.45.2
 
