@@ -1,138 +1,104 @@
-Received: from mail-qv1-f48.google.com (mail-qv1-f48.google.com [209.85.219.48])
+Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A88EE86338;
-	Sat, 19 Apr 2025 09:29:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64ED553AC;
+	Sat, 19 Apr 2025 09:33:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745054980; cv=none; b=OnWc6IHiiRoVLQiHctsAjWZ+zvMl08gmbTld7AnTnQMn75I++XvZ2NONVwY/A7XKmFsPyvNaRGcfn5nQW+na3cyx+bMXYWDuq22x6vzBiy+vgsBw7fzPMFCEfKVVKlkGtam+F+zJxxrsQ8LLjxNKO3qpIitBQr2b3he/KMN62/Y=
+	t=1745055192; cv=none; b=iq8fCi8frxHgW99EBghVqKu9/X980igdNNhFalMZtoBfbctfzXNfEwObzMrY3jV6gxik1G02HQddozi4b0NsXG7JNEhi85JLzH3ij/N2ccfImaqDiyMoGvWyQOF2kWrGabK0A9F1+/ljaVeJ/bOKDKxbGpdn7P860DEWCVKh4ok=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745054980; c=relaxed/simple;
-	bh=L3jZIvRFT7zN+24GKgD77xybabb7mNcnO1t8/PPFTbY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=YYGv8AxA+R2vhiMs05SWiXokqkglcNNOnwaG/6uPXU74sguB6pJKFfLG3izDGAUpDkr4TXVTgLh1nVW/jGKjIn7l5KteBhPjZGlVU24Wjz8/AQosHAGJ6FBUCcxG/Yt4LQOhlqI5q217kPVM76lfzSnK/+T+7r+a5Y4j0RkzpXU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ca1ZV90O; arc=none smtp.client-ip=209.85.219.48
+	s=arc-20240116; t=1745055192; c=relaxed/simple;
+	bh=GJyS5j49HwboXosecKbk01w2vmZBIhpnREZRlsh+SmU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=RQWquZGWeenoryPaEE0i0yhN3yp6DnOcm76nLyDyM9kfYetOG/K7+0QS9GpDyA3kIPVjOfllrCwfePl+5f0uLh5MIHSf8rXJVUwWLuF1XDa7mLmdextP55GvWy4e6puiTe5IY1ADF1SQqPV9isR/tVSPeAnrMcP0Tm15sC6JJkQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CCDKMMJB; arc=none smtp.client-ip=209.85.210.174
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ca1ZV90O"
-Received: by mail-qv1-f48.google.com with SMTP id 6a1803df08f44-6f0ad74483fso29106506d6.1;
-        Sat, 19 Apr 2025 02:29:38 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CCDKMMJB"
+Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-736a7e126c7so2101702b3a.3;
+        Sat, 19 Apr 2025 02:33:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745054977; x=1745659777; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=V4aMm4u8KPovDgrH6Sr7DHo7zVlQ5dKxL0+Timy+s2U=;
-        b=Ca1ZV90ODxEGh7RpkkgaL8LDHbF37iFQOpdItHoZ7Yn1yzkgXjQ/Jg7GYzfGc1MI4F
-         qEkgiQkzpDvC3cRrqpW0mbx1Go/zfUMI9PoOKDn53ANCamO724yTaAZb4phjmew9tgt4
-         fZTYK3W0wPImrhBhFaoIUhiAALuKxklA3diNcH/G6qTmxN6dEwB94ya+jXdgTEemGW1X
-         P0BTeF1r0mYqJT9GWka6lHh3x3ruLKQ0IeHdGrRQ74WOQd6uFt6IweGx0+QuRiUVSqzD
-         cd77Nt8omD94MoPoGbqnE6AxLrw6Kyxq4meBQAzJpveFnsoQ84EIHn440iBSx7B/A3Nf
-         yw3Q==
+        d=gmail.com; s=20230601; t=1745055190; x=1745659990; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=jNBsSgAcJG4HwgrA5SXirxxEQY4MUp9geatSnVOp64U=;
+        b=CCDKMMJBvjz2VMa/A6+kNghNY4zZUdZkYXGFXF1xvZA9yR3Z2ybuyeUK9QLVMFR6D9
+         3w6+abZSBUWCzSo8pYT+6NcCiyMiv3qExJkdpk+2XLIIohwvk2FrJ1sHOJmUGtYFhxxv
+         +CeyQi2lrihMJhud5PCJeSXeRl0AORkbL2JC+effHYbY68A8FE/ioTgAJ+Vs9Vz0TlVx
+         kL3K9ngRKrL8YVOIs5hEj0+CDkJP4IxQdJXI0aI+y+wixVwy3Y5LZphagX1+FlPpD0cV
+         vDqpMQLyZMwTEZQ0G5iwsloGFQjyezRYvR+KlEgfVr6ZPlcXS3frxh1Q57psJWi2sP6Z
+         biNA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745054977; x=1745659777;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=1e100.net; s=20230601; t=1745055190; x=1745659990;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=V4aMm4u8KPovDgrH6Sr7DHo7zVlQ5dKxL0+Timy+s2U=;
-        b=h0NXuCs0o2nnZFCtkkJVQh4VGcQIW0v6vDZGrfwfJ2aYqgCKDGhnY0seTkI1z547vd
-         +OFeERQUmmfGwSgX5NujLB7jnSbn6FPMoVnVRvZnwgqAkw/kLiXFXpGR3LOYrxoyi99p
-         TB5H8TmAqU7NZqFKRVvj67R1fjMFxKWGKTV+EMeUgwQO/fNxlJoCUBbdolG3Zz7jEEB4
-         DFMeJ8Jtbloq3gZ02cSVSUf5QwtMVBCuV5N6X94BuUS6tfIe4YQEOcayluIoX9jQVOV/
-         RAADJWCxOP9aHZGSw4S+8SFBUMLH85MvqCys6Ytl766S/A0+inp7f5vM2r/pyXM8lNTM
-         48Kg==
-X-Forwarded-Encrypted: i=1; AJvYcCV0V3dusdbuQ4EdRbCx7TWwbSB5nDYBWLCqtwWEtauEzlKxZlSf3Wp/bSi0p+e2YjjJ5k2nxa+8YTr/Gqf8QAW8n3Mu@vger.kernel.org, AJvYcCWDgzLVWIRdVd3p5d4SU243h+BVNMvJizg3lLracxCLK+IWtOJs/1cGOONIkxHRos/evi/GxP0u9BwtNAs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxLOLMb90/8ffdHNgrCwqKFKyNdL/voBzccI/KAGYGETV/rQ1c9
-	HAhRcXh8IHIvDeapdcIqD6YiQZBlRrvkdw8CLn+7aeHE0PS0g/fEIX3fQ1kWcPIpKefaxoz5qFu
-	ojU1R0y+zBBc+gATmxht6/NX2T04=
-X-Gm-Gg: ASbGncvDbndngubv+SzizgkARC/l34LLzxlSo0UBCIrJ3jCMtttNXlaYB11UDEQUpC2
-	w6OuspCL32mu6kiYMDCQYAI7ei9eYvsvwUbtW/g6eOXrO96k2AXkGWC1iiOKQu6gUSmlpb1VO3R
-	YtwSTTy2vo/jYH7YXQa7Ytqk5zYXQ7Q4X66G8FJdQ8
-X-Google-Smtp-Source: AGHT+IEzSUF0PN2hp/Gtr/+iJqMvfT8qG9nhtQrv9EiomNxhI8pyF8WH8lioqPhwIzbQ5eHBpQM4Hl8d3Xkk+C3gW+0=
-X-Received: by 2002:ad4:5d4a:0:b0:6e6:61f1:458a with SMTP id
- 6a1803df08f44-6f2c454e561mr99974026d6.14.1745054977419; Sat, 19 Apr 2025
- 02:29:37 -0700 (PDT)
+        bh=jNBsSgAcJG4HwgrA5SXirxxEQY4MUp9geatSnVOp64U=;
+        b=Lxi8WBUo+xHpmY55FsDDs3SaTe8XgZRjbUafAMKBGo4dj9UYfTz6bSNcE//oAj5HS8
+         OMR4ZTl88SdWdzJmPP5Bc7s9Bi0gebIkdvGnZkZt8u1U2tfR0f+awBh0GZEvSvm5bOv/
+         iy+H9O6V4HQB+IpUDyEF1SGLTwsPU0zb1g/uNyZqgLNVpCDTz2vnfO8dKolGmRHBYWqw
+         OqG9oCAOdzBSXrgLdYIXIXr81+U+fV4H+ekHqacktXLaD4hmseHcFH112fL509fgUh9V
+         ++DuB7hUsQoEBgXgFbvQ1izvXtsOuvmIcDQS3ejb9SaBR6tmmV5A+aOhEaVqmKynEvW+
+         K5hQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVqxIoSMqkz+tZOIHhOJntqnc1xG9UmglyWwh3bxbATAtKcCGdEV1Sfl0pcsGQ36jIur0AmtU37w1cZ7yY=@vger.kernel.org, AJvYcCX7YVbv19Wi0XKUMbI8YmKPcLN6Biwaq7t0Mh+sCM4LViuRbQ5ACiCMjZ0bseJZAtRJKW0ZpVibWO1Or57KWhfQErOK@vger.kernel.org
+X-Gm-Message-State: AOJu0YwRhBiil4tCpeVgpkvN+3oO0P99/y1UvpivHp7v6UfUHXk4COvU
+	wG72YZbaNjWKt/Xz9FaxcrdpJqBoeutHYU1HcaHlZhb4T+mSMgo+
+X-Gm-Gg: ASbGncskUD3SAaLQUTzACl+qI4ughlLkeOc3wSmySFXpp0wH9nU2ENdxcZ/jRDaTY8q
+	YnUi1oQEB1sWIVixjAwBpWj0oje5JmiWu+CyDDuDVi/eALG4FQm7Sx2WTJFximVBjOEN+uNt+zU
+	vLQioqp/t6slWrQayApyQTsvXBaWSMdNWSeHJ3gVcuL9yuyIE0eIc/lIwN8jQHJW3YHRfk9EhtZ
+	BP/NKea0hplnK6kXRMyEFqbo6kR/94dSrttrzk+WRa/zmigo3aHXe3LgA4AAsM6K6ZBGlhj900y
+	rv1Vq3JNLN4uSFpbB9nrh1Dv4LE29gCIXP7Zh2t8
+X-Google-Smtp-Source: AGHT+IFaHnGJ1Xe8+ZQ76q9t831ngy+tZUUZlxsycSo2CKF753PTc5bk/NuURZDEmhZuDgrZQ/HhWw==
+X-Received: by 2002:a05:6a00:2285:b0:736:4d05:2e2e with SMTP id d2e1a72fcca58-73dc149716dmr7054022b3a.6.1745055190509;
+        Sat, 19 Apr 2025 02:33:10 -0700 (PDT)
+Received: from fedora.nitk.ac.in ([2a09:bac5:3d52:11c3::1c5:d1])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73dbf8e46e3sm3056375b3a.59.2025.04.19.02.33.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 19 Apr 2025 02:33:10 -0700 (PDT)
+From: Devaansh Kumar <devaanshk840@gmail.com>
+To: rostedt@goodmis.org,
+	mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com
+Cc: Devaansh Kumar <devaanshk840@gmail.com>,
+	linux-trace-kernel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	skhan@linuxfoundation.org,
+	linux-kernel-mentees@lists.linuxfoundation.org
+Subject: [PATCH v5] tracing: Replace deprecated strncpy() with strscpy() for stack_trace_filter_buf
+Date: Sat, 19 Apr 2025 15:02:59 +0530
+Message-ID: <20250419093300.1575072-1-devaanshk840@gmail.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250418221443.1067938-1-devaanshk840@gmail.com> <20250418224555.5b8b8232@batman.local.home>
-In-Reply-To: <20250418224555.5b8b8232@batman.local.home>
-From: Devaansh Kumar <devaanshk840@gmail.com>
-Date: Sat, 19 Apr 2025 14:59:25 +0530
-X-Gm-Features: ATxdqUG0pXnNpetJs8q58l01fGlH1NyIhqnV12gdFCtoWWynJdXAqpFRLsa3emk
-Message-ID: <CA+RTe_gcBZh43txCyG6hQX5GF0bYbg8swJ5iPm4usanMn8BDAg@mail.gmail.com>
-Subject: Re: [PATCH v4] tracing: Replace deprecated strncpy() with strscpy()
- for stack_trace_filter_buf
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: mhiramat@kernel.org, mathieu.desnoyers@efficios.com, 
-	linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	skhan@linuxfoundation.org, linux-kernel-mentees@lists.linuxfoundation.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-On Sat, 19 Apr 2025 at 08:15, Steven Rostedt <rostedt@goodmis.org> wrote:
->
-> On Sat, 19 Apr 2025 03:44:41 +0530
-> Devaansh Kumar <devaanshk840@gmail.com> wrote:
->
-> > diff --git a/kernel/trace/trace_stack.c b/kernel/trace/trace_stack.c
-> > index 14c6f272c4d8..0f2253f3bc8c 100644
-> > --- a/kernel/trace/trace_stack.c
-> > +++ b/kernel/trace/trace_stack.c
-> > @@ -542,7 +542,7 @@ static __init int enable_stacktrace(char *str)
-> >       int len;
-> >
-> >       if ((len = str_has_prefix(str, "_filter=")))
-> > -             strncpy(stack_trace_filter_buf, str + len, COMMAND_LINE_SIZE);
-> > +             strscpy(stack_trace_filter_buf, str + len, sizeof(stack_trace_filter_buf));
->
-> Is the sizeof() needed?
->
-> From include/linux/string.h:
->
-> /**
->  * strscpy - Copy a C-string into a sized buffer
->  * @dst: Where to copy the string to
->  * @src: Where to copy the string from
->  * @...: Size of destination buffer (optional)
->  *
->  * Copy the source string @src, or as much of it as fits, into the
->  * destination @dst buffer. The behavior is undefined if the string
->  * buffers overlap. The destination @dst buffer is always NUL terminated,
->  * unless it's zero-sized.
->  *
->  * The size argument @... is only required when @dst is not an array, or
->  * when the copy needs to be smaller than sizeof(@dst).
->  *
->  * Preferred to strncpy() since it always returns a valid string, and
->  * doesn't unnecessarily force the tail of the destination buffer to be
->  * zero padded. If padding is desired please use strscpy_pad().
->  *
->  * Returns the number of characters copied in @dst (not including the
->  * trailing %NUL) or -E2BIG if @size is 0 or the copy from @src was
->  * truncated.
->  */
-> #define strscpy(dst, src, ...)  \
->         CONCATENATE(__strscpy, COUNT_ARGS(__VA_ARGS__))(dst, src, __VA_ARGS__)
->
-> With stack_trace_filter_buf defined as:
->
->   static char stack_trace_filter_buf[COMMAND_LINE_SIZE+1] __initdata;
->
-> This looks like a text book example of just having that be:
->
->                 strscpy(stack_trace_filter_buf, str + len);
->
+strncpy() is deprecated for NUL-terminated destination buffers and must
+be replaced by strscpy().
 
-Right I have tested it, just using strscpy(stack_trace_filter_buf, str
-+ len) works.
+See issue: https://github.com/KSPP/linux/issues/90
 
+Signed-off-by: Devaansh Kumar <devaanshk840@gmail.com>
+---
+ kernel/trace/trace_stack.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> -- Steve
->
->
-> >
-> >       stack_tracer_enabled = 1;
-> >       return 1;
+diff --git a/kernel/trace/trace_stack.c b/kernel/trace/trace_stack.c
+index 14c6f272c4d8..4c349db381cb 100644
+--- a/kernel/trace/trace_stack.c
++++ b/kernel/trace/trace_stack.c
+@@ -542,7 +542,7 @@ static __init int enable_stacktrace(char *str)
+ 	int len;
+ 
+ 	if ((len = str_has_prefix(str, "_filter=")))
+-		strncpy(stack_trace_filter_buf, str + len, COMMAND_LINE_SIZE);
++		strscpy(stack_trace_filter_buf, str + len);
+ 
+ 	stack_tracer_enabled = 1;
+ 	return 1;
+-- 
+2.49.0
+
