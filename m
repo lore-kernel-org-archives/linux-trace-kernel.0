@@ -1,343 +1,83 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F343BCA64;
-	Tue, 22 Apr 2025 07:00:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 39D4B15B115;
+	Tue, 22 Apr 2025 07:49:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745305227; cv=none; b=HQlm8zb9QX1G+BPWw4DdkmTZRthbfDESt3i9hJ3Hftb7JcK1YFSH2RnCVjzLCS1udDgpBHwi8Rz6nQEifWuL5E+Nj7PCYuON/7JpSGtxqbwZaXEF6kPJpYn0kYB7GMgvMKh9dmOeLdF0mP12Q8/1vmbe/tSW4ogZGyQ6yPTA12s=
+	t=1745308169; cv=none; b=KjlsxZfc9KjpRtwHPKLxwoFXP0JnzyZP7Hw6lu2H9zHpjKxlea0HeqW4cbKIopr3Fz8JTefLQInL8UyfYpA/Bm1mQWhbYOCsvJeWdYqtqL+v2KRb9jLiWmXblBLMSPq7ySY1sQF7r7bKAsNKytSUDfVDgu6IXrPKwfvXWCjiycc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745305227; c=relaxed/simple;
-	bh=9UlJ4qWtAN1HujoOVpR0ZontGjwWd/yVLwxzn+LakOo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RA2bUrOP0M4JbgjzqzGvdU0ccZWlusQpfktpCEDaTWK7/t3d91jyeyVDBEczGWJZP7EI4rs9pDqH/CVbimelG9cnj9mZtaGPw/Eq4LDKgq8aXqDdqf36PX4iWgfULSkzEenWJHqrlcXzErHaXHH0MpL5ygQT/8UUznZCWaN6Ruo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=u3vozAG4; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="u3vozAG4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 67C63C4CEEA;
-	Tue, 22 Apr 2025 07:00:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745305226;
-	bh=9UlJ4qWtAN1HujoOVpR0ZontGjwWd/yVLwxzn+LakOo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=u3vozAG4K/lyUG2o9UmOfmxzYlzQ7ZOkcFnRK0HFG/fdMVPHTI9PSMeKHepsLLmLV
-	 DM8twuZcqbhtHAEhWOF+6d+UgJ88HUjNt/00s4v47CZXMW6QYLTYRJEB8zcFnBw+aw
-	 fcnz6Lk0JO/QnKvEDUrLbxlC8We8jmBLcKVluIseOZIVRWL8iDBCH65qTqGyKPRbuM
-	 LSQ+PEeOdOtZKGTjgNOjmjcg3X8eTA6iOchxY+hUR6/z9mZexWDP1pJy9tXv4PDo7Z
-	 THT4msqE2adqjD2EIue3S6quKxY0cbskeB7A8dgBpHlALahfSVrr1Es27NRxklK8/S
-	 XGhiZ7qP2TRow==
-Date: Tue, 22 Apr 2025 09:00:17 +0200
-From: Alejandro Colomar <alx@kernel.org>
-To: Jiri Olsa <jolsa@kernel.org>
-Cc: Oleg Nesterov <oleg@redhat.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, x86@kernel.org, Song Liu <songliubraving@fb.com>, 
-	Yonghong Song <yhs@fb.com>, John Fastabend <john.fastabend@gmail.com>, 
-	Hao Luo <haoluo@google.com>, Steven Rostedt <rostedt@goodmis.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Alan Maguire <alan.maguire@oracle.com>, 
-	David Laight <David.Laight@aculab.com>, Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas@t-8ch.de>, 
-	Ingo Molnar <mingo@kernel.org>
-Subject: Re: [PATCH 22/22] man2: Add uprobe syscall page
-Message-ID: <42yzod7olktnj4meijj57j5peiojywo2d47d5gefnbmbwxfz4b@5ek6puondmck>
-References: <20250421214423.393661-1-jolsa@kernel.org>
- <20250421214423.393661-23-jolsa@kernel.org>
+	s=arc-20240116; t=1745308169; c=relaxed/simple;
+	bh=88lOgi3xu7hzqGNyHhhR9o/AIcemv5r5pdFBgOamQyI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=XW43XO/OtwEvJrEn+Pfv5BuFVVJChhnhCUgHj1ywNownZbg7Y9bIebu1EoWXG695XSH789yU7+ix550iiAvYYonzvqNYaHSJADAKynliu3X3hpD1o3WjFnznT8k7Rb5xWMqrK3jJn/Pml0xIE0aqr6oEHrcE2DuV5Uua2HT0jQk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [113.200.148.30])
+	by gateway (Coremail) with SMTP id _____8AxaeH+SQdoIeHDAA--.18636S3;
+	Tue, 22 Apr 2025 15:49:18 +0800 (CST)
+Received: from linux.localdomain (unknown [113.200.148.30])
+	by front1 (Coremail) with SMTP id qMiowMDx_MT9SQdoWaGPAA--.27089S2;
+	Tue, 22 Apr 2025 15:49:18 +0800 (CST)
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: loongarch@lists.linux.dev,
+	linux-trace-kernel@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] rtla: Define __NR_sched_setattr for LoongArch
+Date: Tue, 22 Apr 2025 15:49:17 +0800
+Message-ID: <20250422074917.25771-1-yangtiezhu@loongson.cn>
+X-Mailer: git-send-email 2.42.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="gecymmelcfbq645p"
-Content-Disposition: inline
-In-Reply-To: <20250421214423.393661-23-jolsa@kernel.org>
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowMDx_MT9SQdoWaGPAA--.27089S2
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj9xXoW7XFy3Xr1fWrWxZFW7JryUtwc_yoWfGwb_tr
+	yxAw17Xr95CrWUtwnrXFW5CF1fWay3ZF4v93Z7trZruF15KFy5XFs0kr98WF1Ykr4qyF9r
+	Gws3tr1ruw4YkosvyTuYvTs0mTUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUj1kv1TuYvT
+	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
+	cSsGvfJTRUUUb7xYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
+	vaj40_Wr0E3s1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
+	w2x7M28EF7xvwVC0I7IYx2IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
+	W8JVWxJwA2z4x0Y4vEx4A2jsIE14v26F4UJVW0owA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	Cr1j6rxdM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I
+	8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AK
+	xVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2Ij64
+	vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8G
+	jcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2I
+	x0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK
+	8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I
+	0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07j0FALUUUUU=
 
+When executing "make -C tools/tracing/rtla" on LoongArch, there exists
+the following error:
 
---gecymmelcfbq645p
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-From: Alejandro Colomar <alx@kernel.org>
-To: Jiri Olsa <jolsa@kernel.org>
-Cc: Oleg Nesterov <oleg@redhat.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, x86@kernel.org, Song Liu <songliubraving@fb.com>, 
-	Yonghong Song <yhs@fb.com>, John Fastabend <john.fastabend@gmail.com>, 
-	Hao Luo <haoluo@google.com>, Steven Rostedt <rostedt@goodmis.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Alan Maguire <alan.maguire@oracle.com>, 
-	David Laight <David.Laight@aculab.com>, Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas@t-8ch.de>, 
-	Ingo Molnar <mingo@kernel.org>
-Subject: Re: [PATCH 22/22] man2: Add uprobe syscall page
-References: <20250421214423.393661-1-jolsa@kernel.org>
- <20250421214423.393661-23-jolsa@kernel.org>
-MIME-Version: 1.0
-In-Reply-To: <20250421214423.393661-23-jolsa@kernel.org>
+  src/utils.c:237:24: error: '__NR_sched_setattr' undeclared
 
-Hi Jiri,
+Just define __NR_sched_setattr for LoongArch if not exist.
 
-On Mon, Apr 21, 2025 at 11:44:22PM +0200, Jiri Olsa wrote:
-> Adding man page for new uprobe syscall.
->=20
-> Cc: Alejandro Colomar <alx@kernel.org>
-> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-> ---
->  man/man2/uprobe.2    | 49 ++++++++++++++++++++++++++++++++++++++++++++
->  man/man2/uretprobe.2 |  2 ++
->  2 files changed, 51 insertions(+)
->  create mode 100644 man/man2/uprobe.2
->=20
-> diff --git a/man/man2/uprobe.2 b/man/man2/uprobe.2
-> new file mode 100644
-> index 000000000000..2b01a5ab5f3e
-> --- /dev/null
-> +++ b/man/man2/uprobe.2
-> @@ -0,0 +1,49 @@
-> +.\" Copyright (C) 2024, Jiri Olsa <jolsa@kernel.org>
-> +.\"
-> +.\" SPDX-License-Identifier: Linux-man-pages-copyleft
-> +.\"
-> +.TH uprobe 2 (date) "Linux man-pages (unreleased)"
-> +.SH NAME
-> +uprobe
-> +\-
-> +execute pending entry uprobes
-> +.SH SYNOPSIS
-> +.nf
-> +.B int uprobe(void);
-> +.fi
-> +.SH DESCRIPTION
-> +.BR uprobe ()
-> +is an alternative to breakpoint instructions
-> +for triggering entry uprobe consumers.
-
-What are breakpoint instructions?
-
-> +.P
-> +Calls to
-> +.BR uprobe ()
-> +are only made from the user-space trampoline provided by the kernel.
-> +Calls from any other place result in a
-> +.BR SIGILL .
-> +.SH RETURN VALUE
-> +The return value is architecture-specific.
-> +.SH ERRORS
-> +.TP
-> +.B SIGILL
-> +.BR uprobe ()
-> +was called by a user-space program.
-> +.SH VERSIONS
-> +The behavior varies across systems.
-> +.SH STANDARDS
-> +None.
-> +.SH HISTORY
-> +TBD
-> +.P
-> +.BR uprobe ()
-> +was initially introduced for the x86_64 architecture
-> +where it was shown to be faster than breakpoint traps.
-> +It might be extended to other architectures.
-> +.SH CAVEATS
-> +.BR uprobe ()
-> +exists only to allow the invocation of entry uprobe consumers.
-> +It should
-> +.B never
-> +be called directly.
-> +.SH SEE ALSO
-> +.BR uretprobe (2)
-
-The pages are almost identical.  Should we document both pages in the
-same page?
-
-> diff --git a/man/man2/uretprobe.2 b/man/man2/uretprobe.2
-> index bbbfb0c59335..bb8bf4e32e5d 100644
-> --- a/man/man2/uretprobe.2
-> +++ b/man/man2/uretprobe.2
-> @@ -45,3 +45,5 @@ exists only to allow the invocation of return uprobe co=
-nsumers.
->  It should
->  .B never
->  be called directly.
-> +.SH SEE ALSO
-> +.BR uprobe (2)
-> --=20
-> 2.49.0
-
-
-How about something like the diff below?
-
-
-Have a lovely day!
-Alex
-
+Reported-by: Haiyong Sun <sunhaiyong@loongson.cn>
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
 ---
-diff --git i/man/man2/uretprobe.2 w/man/man2/uretprobe.2
-index bbbfb0c59..df0e5d92e 100644
---- i/man/man2/uretprobe.2
-+++ w/man/man2/uretprobe.2
-@@ -2,22 +2,28 @@
- .\"
- .\" SPDX-License-Identifier: Linux-man-pages-copyleft
- .\"
--.TH uretprobe 2 (date) "Linux man-pages (unreleased)"
-+.TH uprobe 2 (date) "Linux man-pages (unreleased)"
- .SH NAME
-+uprobe,
- uretprobe
- \-
--execute pending return uprobes
-+execute pending entry or return uprobes
- .SH SYNOPSIS
- .nf
-+.B int uprobe(void);
- .B int uretprobe(void);
- .fi
- .SH DESCRIPTION
-+.BR uprobe ()
-+is an alternative to breakpoint instructions
-+for triggering entry uprobe consumers.
-+.P
- .BR uretprobe ()
- is an alternative to breakpoint instructions
- for triggering return uprobe consumers.
- .P
- Calls to
--.BR uretprobe ()
-+these system calls
- are only made from the user-space trampoline provided by the kernel.
- Calls from any other place result in a
- .BR SIGILL .
-@@ -26,22 +32,28 @@ .SH RETURN VALUE
- .SH ERRORS
- .TP
- .B SIGILL
--.BR uretprobe ()
--was called by a user-space program.
-+These system calls
-+were called by a user-space program.
- .SH VERSIONS
- The behavior varies across systems.
- .SH STANDARDS
- None.
- .SH HISTORY
-+.TP
-+.BR uprobe ()
-+TBD
-+.TP
-+.BR uretprobe ()
- Linux 6.11.
- .P
--.BR uretprobe ()
--was initially introduced for the x86_64 architecture
--where it was shown to be faster than breakpoint traps.
--It might be extended to other architectures.
-+These system calls
-+were initially introduced for the x86_64 architecture
-+where they were shown to be faster than breakpoint traps.
-+They might be extended to other architectures.
- .SH CAVEATS
--.BR uretprobe ()
--exists only to allow the invocation of return uprobe consumers.
--It should
-+These system calls
-+exist only to allow the invocation of
-+entry or return uprobe consumers.
-+They should
- .B never
- be called directly.
+ tools/tracing/rtla/src/utils.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
+diff --git a/tools/tracing/rtla/src/utils.c b/tools/tracing/rtla/src/utils.c
+index 4995d35cf3ec..d6ab15dcb490 100644
+--- a/tools/tracing/rtla/src/utils.c
++++ b/tools/tracing/rtla/src/utils.c
+@@ -227,6 +227,8 @@ long parse_ns_duration(char *val)
+ #  define __NR_sched_setattr	355
+ # elif __s390x__
+ #  define __NR_sched_setattr	345
++# elif __loongarch__
++#  define __NR_sched_setattr	274
+ # endif
+ #endif
+ 
+-- 
+2.42.0
 
-$ MANWIDTH=3D64 diffman-git
---- HEAD:man/man2/uretprobe.2
-+++ ./man/man2/uretprobe.2
-@@ -1,24 +1,30 @@
--uretprobe(2)          System Calls Manual          uretprobe(2)
-+uprobe(2)             System Calls Manual             uprobe(2)
-=20
- NAME
--       uretprobe - execute pending return uprobes
-+       uprobe,  uretprobe - execute pending entry or return up=E2=80=90
-+       robes
-=20
- SYNOPSIS
-+       int uprobe(void);
-        int uretprobe(void);
-=20
- DESCRIPTION
-+       uprobe() is an alternative  to  breakpoint  instructions
-+       for triggering entry uprobe consumers.
-+
-        uretprobe() is an alternative to breakpoint instructions
-        for triggering return uprobe consumers.
-=20
--       Calls  to  uretprobe() are only made from the user=E2=80=90space
--       trampoline provided by the kernel.  Calls from any other
--       place result in a SIGILL.
-+       Calls to these system calls are only made from the user=E2=80=90
-+       space trampoline provided by the kernel.  Calls from any
-+       other place result in a SIGILL.
-=20
- RETURN VALUE
-        The return value is architecture=E2=80=90specific.
-=20
- ERRORS
--       SIGILL uretprobe() was called by a user=E2=80=90space program.
-+       SIGILL These  system  calls  were called by a user=E2=80=90space
-+              program.
-=20
- VERSIONS
-        The behavior varies across systems.
-@@ -27,16 +33,20 @@
-        None.
-=20
- HISTORY
--       Linux 6.11.
-+       uprobe()
-+              TBD
-+
-+       uretprobe()
-+              Linux 6.11.
-=20
--       uretprobe() was initially introduced for the x86_64  ar=E2=80=90
--       chitecture  where  it was shown to be faster than break=E2=80=90
--       point traps.  It might be extended  to  other  architec=E2=80=90
--       tures.
-+       These system calls were  initially  introduced  for  the
-+       x86_64  architecture  where they were shown to be faster
-+       than breakpoint traps.  They might be extended to  other
-+       architectures.
-=20
- CAVEATS
--       uretprobe()  exists  only to allow the invocation of re=E2=80=90
--       turn uprobe consumers.  It should never  be  called  di=E2=80=90
--       rectly.
-+       These system calls exist only to allow the invocation of
-+       entry  or return uprobe consumers.  They should never be
-+       called directly.
-=20
--Linux man=E2=80=90pages (unreleased) (date)                uretprobe(2)
-+Linux man=E2=80=90pages (unreleased) (date)                   uprobe(2)
-
---=20
-<https://www.alejandro-colomar.es/>
-
---gecymmelcfbq645p
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEES7Jt9u9GbmlWADAi64mZXMKQwqkFAmgHPnoACgkQ64mZXMKQ
-wqlClQ//Y7kkJ5hcR1998Pwe4aa6Mhwv059UBO9KejAyrGyUMKN/QkSiSZBJWYmd
-S24z6ahnNCQiHfwld+4jtDr9ah4PuWyLzR5urQT/ciRCSgqtiS4+vmhqlejTBxfP
-pfN9vkjL2GhtWn1RDvKvhBeavf8o9x+eisUq3yxrIfwZyBmkBbGsfdVtys8wytAQ
-TB4YHpuiLpHnUYRjo7nzvY7eJoytWJxkyApJrNT81TW75kGdrOhmBDA4K0tOWZfx
-TGgnfVUV15dUFKnCchE4yvKUlfLWNBZ06ecB8iN6xTwQ13cryrimmujaTYBMQxuX
-p4lvPKoH5IIKI8fv4Cj7GghgPnX7BMZJvcsM4SJYE6pw5tSBe5M5P772Kg2tiDHI
-4fM7HsNv/nvqpOqaRSYEtXfA2V6ObvsX9+uHtUzbxhEWSZtJt8T5B4idobUip67q
-uMkymezMlHVC78nmaPQxgvG68iEcU7SuuJJnWm0FjIa5bru39sg9SMdSo7W/Y/7P
-bSO8is507dRkenY9MOB4/n3Hsf64eB5atbF91vqywT3ADT1duu/fHPq+QYJWgX7w
-0c1/Ix0gf4gNfuiiipq22+MHtkgSViv6O2p+hkdaaFjYbzKLnyQBFb2kZsgsUEDq
-A1oF23V/hM+plakIUTzztBj00JtAHYDRR5CyCU8u1C/om8AnY94=
-=VS/A
------END PGP SIGNATURE-----
-
---gecymmelcfbq645p--
