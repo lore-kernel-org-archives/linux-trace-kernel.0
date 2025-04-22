@@ -1,208 +1,183 @@
-Received: from mail-il1-f205.google.com (mail-il1-f205.google.com [209.85.166.205])
+Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7ED9120C490
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 22 Apr 2025 12:41:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.205
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 589C328134E;
+	Tue, 22 Apr 2025 14:02:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745325691; cv=none; b=U0NdqnMS51VcADxYrqLZAx13Xw530YEwWbHo0RK/b3DmmwsX004wwXbDadt0ap4xSuYeaFB1zFJRejcpKJGJEuTRGDF1zdmNvoMiIGc2AVrrZoFAjn+aFOScQf4WuNsH/04V0GGfVrgMISulHEs6OAtFJTQB9CDjz7nKAyzWYd4=
+	t=1745330523; cv=none; b=omj8ovSQs1CDwR8/mviWF3Sv4n/YsOirsK8L+Rj08pE3CMqkACD9XOi/sbnrMqj9G8HWKL4oodyzsT8ko9FMWEtctCmtfPW2Ah2oxywdDYGvZI/DjMQh6NBWdLTHGo5nDewxvYffnUymeI2f3Clzc8PAj7ay8YUsBWInnHj9MuQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745325691; c=relaxed/simple;
-	bh=yrR7LOXwJQk7YQ1++keSJbA50DlyDggdAVg3h1c50S4=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=PDOe5KaUWw80es6esMVVw65rb8O3b1dCHsQ7nSy2g2sq6KsKRZ0zlKmrRsgvysaU4jAi0JCTTJK8G+CcP9j5xIGagdNXIBDd2hkO9M5lKlyzS/sJK8v7n6ZrE3aVULT6JX3D72m68xSM9wUZZTnfiESMs22pCKe+s8yKIp0DMTg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.205
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f205.google.com with SMTP id e9e14a558f8ab-3d81820d5b3so98627495ab.3
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 22 Apr 2025 05:41:29 -0700 (PDT)
+	s=arc-20240116; t=1745330523; c=relaxed/simple;
+	bh=gpzfHIqtG4xrrnJa8j+492RroxTPtiKYMK20nKKT/k0=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WsCNu/jgYyAYIyYfL/wo6VzXr+1qDRy1/kSmaOqVyZ/6o6XPbTninxhFU9E5veywX4wdpw4sR3tIolS+9x3mI7KVpqiK1XUdEKFne9vms7dF6LSyolA6G1oIC1j2PU08jvhKIBCAQAYbBXfNefCuYKrjXoyJRuJYoruHcf3EyPw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=g6omGFmt; arc=none smtp.client-ip=209.85.167.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g6omGFmt"
+Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-548409cd2a8so6880696e87.3;
+        Tue, 22 Apr 2025 07:02:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745330519; x=1745935319; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=GM/5CVrygYQSvYokwNwQr+lHyyAIT7IEVO4DNtORKxA=;
+        b=g6omGFmtWmrAg8k52sMieh5nshJoVNuyp7rmXegg2KnAIrvS3hTa18YotMewvMeCcy
+         HVWZ0Q7vN88gET2Q6RmbEGduut3n3lO1BQ8oZtziD8nVuntpa+nMG3Gv+fzsipkGjddW
+         CARQROeGax19ZqVBI8emMs9GNpHJ+2AX/2cIEXbH3GUuFbfkRX6z0rZn9IdYzU4KUatS
+         Pc3Ewk89XBHIXXyn2fwMxEmHvUpLlArN/LKYrM2EQxIDg94+TDmckxt1X1bV46igZX4g
+         iH3a3DFLbo6KQlnfTS3tRe0gvXoYSOqGHp2wd9T/NatKfxyIqo3cr9+EfSyIeuPYy241
+         gPSg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745325688; x=1745930488;
-        h=content-transfer-encoding:to:from:subject:message-id:date
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=LHaMmz1KAcplF6Q361yXlo+F2t66/ZiHyob+lJweXSw=;
-        b=nmWSnoixU/Kr3bAvotVGgqNYEEpj5WILVlLpxnAHiEokx9fRE0KlYHwG6q/f4LKRBL
-         4sqUNKmUvtVC/gGOU7i0tlSL7MVpSJGM/dmTrwjv7UHh3NwMIXbXqMelHUkh1FwtyfeY
-         lSq3rNkcmQTKyakqqQYpz/V9GAL6Ovj9MJCCnQFEK6mL8VQomcAEskK7LrPQ1C6J8TP0
-         9TUGBH/Gg3eT998gdvAHJsCFmZxUJRn8lWb5SWPDckKrTN7zRYfWq5CvLsGll7zlxBwd
-         LnJ9JWQz3Kbb4IykFgbFqqtJxsEoaUgMEKflpqUj8lXqYSgdUlsYQNuWLHOjUll/+Lqz
-         eX5A==
-X-Forwarded-Encrypted: i=1; AJvYcCW98lGT9PhCcZU5OxbUEzBa494SxkVROyj1e3ecDehQ2ZfF47VJSl77qc+/ZEjeYpH609Z7Nw7jHrLNEii+A1zU8b0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzInqq72F2a8/Tr33h/lKWl6xc1bGLytl9wQFeIQlci3I3dbTon
-	rOZrWb2jSXiexMm4z9c+y+W8oc3bcFhLrQFi7gGRHZrRW9I0tZij+JGrJ8H8DgU/An2AFpS2cRE
-	bORvaw2LqC501joEReDiwBe4x93obw7NUP0f8fL/waVFBKwPEfRhWvlo=
-X-Google-Smtp-Source: AGHT+IHm7TwyyFiErPZqJRZMqdjsfoBD/EOXnH9bRtYg+WVOwKN8X6SvbPB8XXmyVLL4nzY9TDLeb5+2xonzOlFmX0x3O4/WCJ0n
+        d=1e100.net; s=20230601; t=1745330519; x=1745935319;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=GM/5CVrygYQSvYokwNwQr+lHyyAIT7IEVO4DNtORKxA=;
+        b=RB/D3E5BWxNN+XVBmMZCpKQ9yo2GJB4IwRNC8V8tXOVukwCkI3/tGzC+9lEI9/OoZ/
+         HS/f2/cgTGKFsk2ML6HwoGTzLnLT8BF0/7yYh1XrmWraTVuI62VcCPZ/2qDSWCTQIe4U
+         7yot4JloZF4napyYnGQ7h8A7cjk6SFuUvFOHb0hBC7FsFLBDLw22B6iNzcBCxseVw8R5
+         wY1LVoFU9n0mDhuVM0CCywcnYE/T1evzT2tkD7sJiVauYFguPuJYjLe0tPSLy8taJeqK
+         43tqA4NUs/TLMpvNCyx9jbaV++/95gYhTVPdS7I0nXnSGWx9B93gzx35dipSi2Uj5cRN
+         rUVw==
+X-Forwarded-Encrypted: i=1; AJvYcCWSMPWAd5s6beWr1NNxK2/Bf9iic3yenMwif6lLkh6S+bPO1RPSL46y/FLkeGczBC1X0/8=@vger.kernel.org, AJvYcCWg9gCZ/3tbeXHoORopKfvXvUjOpUDGOk76yuQfF3KwTi/l6cuftdyOf8D9E3kEQHkZJbzM37eF1ByUEz6n@vger.kernel.org, AJvYcCXt6fGufcfCC+B/pzjM3lY+HDdpXEWytJsFM8Sij7paF0jg/vG8PyXOhtVjwE01/IBHQ73pBSFKxE+LWWgKQKq2XpRt@vger.kernel.org
+X-Gm-Message-State: AOJu0YzG7P1PR3B+OwqF1DstrrCftU8H1L5uPqAylsX631ADN6SFc61/
+	/ZsY8vxev+SXY+vKsUZgLnnkycJe6nHTLs/t3J1f4MYH6N02ujDX
+X-Gm-Gg: ASbGncsFWDXtIuBSz9s+IZ/25OtLPE0uPYUhwmcnT6PiRlvbucIz50R2WHcTbgA7XUH
+	XS9ead1swgSqnJ/E4L4GinjAb2P2Sgl4s4/b7fU+aP1obs+uH053QD4u2/l1RDpPXPjMHMdO4yv
+	DAJWaA1Nb3NcY7exiTNyDls2O8vzEky0k0ey0fd6901SHz2xTOp7DLv1HrJN1/xfmJU9odtLD/5
+	KjB3Bx1XKScN5NyOI9EdLRAv4WeE1dBPxri1MsTMCbe4pMw20he1mTShg13PVtwO9juJ8Ru4CA4
+	zR73v3Y+eWX0FvkQZ5nmxV5rweY=
+X-Google-Smtp-Source: AGHT+IEq6YUeCvZOJCsZbBaS2JUjXTcHhttlXP8ATHkEhx7rqb2fksXRqeGL53z6MbJEEYxvzEtPBA==
+X-Received: by 2002:a05:6512:b0f:b0:549:91c6:96a8 with SMTP id 2adb3069b0e04-54d6e6169bamr4248610e87.7.1745330518268;
+        Tue, 22 Apr 2025 07:01:58 -0700 (PDT)
+Received: from krava ([83.148.32.128])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-acb6eefc72fsm667357366b.101.2025.04.22.07.01.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 22 Apr 2025 07:01:57 -0700 (PDT)
+From: Jiri Olsa <olsajiri@gmail.com>
+X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
+Date: Tue, 22 Apr 2025 16:01:56 +0200
+To: Alejandro Colomar <alx@kernel.org>
+Cc: Oleg Nesterov <oleg@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
+	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	x86@kernel.org, Song Liu <songliubraving@fb.com>,
+	Yonghong Song <yhs@fb.com>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Hao Luo <haoluo@google.com>, Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Alan Maguire <alan.maguire@oracle.com>,
+	David Laight <David.Laight@aculab.com>,
+	Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas@t-8ch.de>,
+	Ingo Molnar <mingo@kernel.org>
+Subject: Re: [PATCH 22/22] man2: Add uprobe syscall page
+Message-ID: <aAehVOlj-W5kVyW3@krava>
+References: <20250421214423.393661-1-jolsa@kernel.org>
+ <20250421214423.393661-23-jolsa@kernel.org>
+ <42yzod7olktnj4meijj57j5peiojywo2d47d5gefnbmbwxfz4b@5ek6puondmck>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1b01:b0:3d6:d147:81c9 with SMTP id
- e9e14a558f8ab-3d88ee0018fmr178968965ab.12.1745325688677; Tue, 22 Apr 2025
- 05:41:28 -0700 (PDT)
-Date: Tue, 22 Apr 2025 05:41:28 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <68078e78.050a0220.8500a.0014.GAE@google.com>
-Subject: [syzbot] [trace?] linux-next test error: WARNING in trace_event_raw_init
-From: syzbot <syzbot+52d4b07bbd2e3a104dc9@syzkaller.appspotmail.com>
-To: linux-kernel@vger.kernel.org, linux-next@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, mathieu.desnoyers@efficios.com, 
-	mhiramat@kernel.org, rostedt@goodmis.org, sfr@canb.auug.org.au, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <42yzod7olktnj4meijj57j5peiojywo2d47d5gefnbmbwxfz4b@5ek6puondmck>
 
-Hello,
+On Tue, Apr 22, 2025 at 09:00:17AM +0200, Alejandro Colomar wrote:
+> Hi Jiri,
+> 
+> On Mon, Apr 21, 2025 at 11:44:22PM +0200, Jiri Olsa wrote:
+> > Adding man page for new uprobe syscall.
+> > 
+> > Cc: Alejandro Colomar <alx@kernel.org>
+> > Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+> > ---
+> >  man/man2/uprobe.2    | 49 ++++++++++++++++++++++++++++++++++++++++++++
+> >  man/man2/uretprobe.2 |  2 ++
+> >  2 files changed, 51 insertions(+)
+> >  create mode 100644 man/man2/uprobe.2
+> > 
+> > diff --git a/man/man2/uprobe.2 b/man/man2/uprobe.2
+> > new file mode 100644
+> > index 000000000000..2b01a5ab5f3e
+> > --- /dev/null
+> > +++ b/man/man2/uprobe.2
+> > @@ -0,0 +1,49 @@
+> > +.\" Copyright (C) 2024, Jiri Olsa <jolsa@kernel.org>
+> > +.\"
+> > +.\" SPDX-License-Identifier: Linux-man-pages-copyleft
+> > +.\"
+> > +.TH uprobe 2 (date) "Linux man-pages (unreleased)"
+> > +.SH NAME
+> > +uprobe
+> > +\-
+> > +execute pending entry uprobes
+> > +.SH SYNOPSIS
+> > +.nf
+> > +.B int uprobe(void);
+> > +.fi
+> > +.SH DESCRIPTION
+> > +.BR uprobe ()
+> > +is an alternative to breakpoint instructions
+> > +for triggering entry uprobe consumers.
+> 
+> What are breakpoint instructions?
 
-syzbot found the following issue on:
+it's int3 instruction to trigger breakpoint (on x86_64)
 
-HEAD commit:    2c9c612abeb3 Add linux-next specific files for 20250422
-git tree:       linux-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=3D1624afac580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=3Dbba13bd7967a7c4=
-b
-dashboard link: https://syzkaller.appspot.com/bug?extid=3D52d4b07bbd2e3a104=
-dc9
-compiler:       Debian clang version 15.0.6, Debian LLD 15.0.6
+> 
+> > +.P
+> > +Calls to
+> > +.BR uprobe ()
+> > +are only made from the user-space trampoline provided by the kernel.
+> > +Calls from any other place result in a
+> > +.BR SIGILL .
+> > +.SH RETURN VALUE
+> > +The return value is architecture-specific.
+> > +.SH ERRORS
+> > +.TP
+> > +.B SIGILL
+> > +.BR uprobe ()
+> > +was called by a user-space program.
+> > +.SH VERSIONS
+> > +The behavior varies across systems.
+> > +.SH STANDARDS
+> > +None.
+> > +.SH HISTORY
+> > +TBD
+> > +.P
+> > +.BR uprobe ()
+> > +was initially introduced for the x86_64 architecture
+> > +where it was shown to be faster than breakpoint traps.
+> > +It might be extended to other architectures.
+> > +.SH CAVEATS
+> > +.BR uprobe ()
+> > +exists only to allow the invocation of entry uprobe consumers.
+> > +It should
+> > +.B never
+> > +be called directly.
+> > +.SH SEE ALSO
+> > +.BR uretprobe (2)
+> 
+> The pages are almost identical.  Should we document both pages in the
+> same page?
 
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/b491f42bb495/disk-=
-2c9c612a.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/6a3ea2226cf2/vmlinux-=
-2c9c612a.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/cf779772656e/bzI=
-mage-2c9c612a.xz
+great, I was wondering this was an option, looks much better
+should we also add uprobe link, like below?
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit=
-:
-Reported-by: syzbot+52d4b07bbd2e3a104dc9@syzkaller.appspotmail.com
-
-CPU topo: Max. threads per core:   2
-CPU topo: Num. cores per package:     1
-CPU topo: Num. threads per package:   2
-CPU topo: Allowing 2 present CPUs plus 0 hotplug CPUs
-PM: hibernation: Registered nosave memory: [mem 0x00000000-0x00000fff]
-PM: hibernation: Registered nosave memory: [mem 0x0009f000-0x000fffff]
-PM: hibernation: Registered nosave memory: [mem 0xbfffd000-0xffffffff]
-[mem 0xc0000000-0xfffbbfff] available for PCI devices
-Booting paravirtualized kernel on KVM
-clocksource: refined-jiffies: mask: 0xffffffff max_cycles: 0xffffffff, max_=
-idle_ns: 19112604462750000 ns
-setup_percpu: NR_CPUS:8 nr_cpumask_bits:2 nr_cpu_ids:2 nr_node_ids:2
-percpu: Embedded 70 pages/cpu s245960 r8192 d32568 u1048576
-kvm-guest: PV spinlocks enabled
-PV qspinlock hash table entries: 256 (order: 0, 4096 bytes, linear)
-Kernel command line: earlyprintk=3Dserial net.ifnames=3D0 sysctl.kernel.hun=
-g_task_all_cpu_backtrace=3D1 ima_policy=3Dtcb nf-conntrack-ftp.ports=3D2000=
-0 nf-conntrack-tftp.ports=3D20000 nf-conntrack-sip.ports=3D20000 nf-conntra=
-ck-irc.ports=3D20000 nf-conntrack-sane.ports=3D20000 binder.debug_mask=3D0 =
-rcupdate.rcu_expedited=3D1 rcupdate.rcu_cpu_stall_cputime=3D1 no_hash_point=
-ers page_owner=3Don sysctl.vm.nr_hugepages=3D4 sysctl.vm.nr_overcommit_huge=
-pages=3D4 secretmem.enable=3D1 sysctl.max_rcu_stall_to_panic=3D1 msr.allow_=
-writes=3Doff coredump_filter=3D0xffff root=3D/dev/sda console=3DttyS0 vsysc=
-all=3Dnative numa=3Dfake=3D2 kvm-intel.nested=3D1 spec_store_bypass_disable=
-=3Dprctl nopcid vivid.n_devs=3D64 vivid.multiplanar=3D1,2,1,2,1,2,1,2,1,2,1=
-,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,=
-1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2 netrom.nr_ndevs=3D32 rose.rose_ndevs=3D32 s=
-mp.csd_lock_timeout=3D100000 watchdog_thresh=3D55 workqueue.watchdog_thresh=
-=3D140 sysctl.net.core.netdev_unregister_timeout_secs=3D140 dummy_hcd.num=
-=3D32 max_loop=3D32 nbds_max=3D32 panic_on_warn
-Unknown kernel command line parameters "spec_store_bypass_disable=3Dprctl n=
-bds_max=3D32 BOOT_IMAGE=3D/boot/bzImage", will be passed to user space.
-random: crng init done
-printk: log buffer data + meta data: 262144 + 917504 =3D 1179648 bytes
-software IO TLB: area num 2.
-Fallback order for Node 0: 0 1=20
-Fallback order for Node 1: 1 0=20
-Built 2 zonelists, mobility grouping on.  Total pages: 2097051
-Policy zone: Normal
-mem auto-init: stack:all(zero), heap alloc:on, heap free:off
-stackdepot: allocating hash table via alloc_large_system_hash
-stackdepot hash table entries: 1048576 (order: 12, 16777216 bytes, linear)
-SLUB: HWalign=3D64, Order=3D0-3, MinObjects=3D0, CPUs=3D2, Nodes=3D2
-allocated 167772160 bytes of page_ext
-Node 0, zone      DMA: page owner found early allocated 0 pages
-Node 0, zone    DMA32: page owner found early allocated 21222 pages
-Node 0, zone   Normal: page owner found early allocated 0 pages
-Node 1, zone   Normal: page owner found early allocated 19843 pages
-Kernel/User page tables isolation: enabled
-Dynamic Preempt: full
-Running RCU self tests
-Running RCU synchronous self tests
-rcu: Preemptible hierarchical RCU implementation.
-rcu: 	RCU lockdep checking is enabled.
-rcu: 	RCU restricting CPUs from NR_CPUS=3D8 to nr_cpu_ids=3D2.
-rcu: 	RCU callback double-/use-after-free debug is enabled.
-rcu: 	RCU debug extended QS entry/exit.
-	All grace periods are expedited (rcu_expedited).
-	Trampoline variant of Tasks RCU enabled.
-	Tracing variant of Tasks RCU enabled.
-rcu: RCU calculated value of scheduler-enlistment delay is 10 jiffies.
-rcu: Adjusting geometry for rcu_fanout_leaf=3D16, nr_cpu_ids=3D2
-Running RCU synchronous self tests
-RCU Tasks: Setting shift to 1 and lim to 1 rcu_task_cb_adjust=3D1 rcu_task_=
-cpu_ids=3D2.
-RCU Tasks Trace: Setting shift to 1 and lim to 1 rcu_task_cb_adjust=3D1 rcu=
-_task_cpu_ids=3D2.
-------------[ cut here ]------------
-WARNING: CPU: 0 PID: 0 at kernel/trace/trace_events.c:596 test_event_printk=
- kernel/trace/trace_events.c:596 [inline]
-WARNING: CPU: 0 PID: 0 at kernel/trace/trace_events.c:596 trace_event_raw_i=
-nit+0xbda/0x1170 kernel/trace/trace_events.c:616
-Modules linked in:
-CPU: 0 UID: 0 PID: 0 Comm: swapper/0 Not tainted 6.15.0-rc3-next-20250422-s=
-yzkaller #0 PREEMPT(full)=20
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Goo=
-gle 02/12/2025
-RIP: 0010:test_event_printk kernel/trace/trace_events.c:596 [inline]
-RIP: 0010:trace_event_raw_init+0xbda/0x1170 kernel/trace/trace_events.c:616
-Code: 89 d8 48 83 c4 48 5b 41 5c 41 5d 41 5e 41 5f 5d e9 1b 1e 64 0a 80 3d =
-0e 26 7e 0e 01 0f 85 7e 03 00 00 e8 79 50 f7 ff eb d5 90 <0f> 0b 90 4c 89 f=
-6 48 83 e6 01 31 ff e8 45 55 f7 ff 4c 89 f3 49 83
-RSP: 0000:ffffffff8ea07e30 EFLAGS: 00010002
-RAX: 0000000000000000 RBX: 0000000000000000 RCX: ffffffff8ea965c0
-RDX: 0000000000000000 RSI: 0000000000000020 RDI: 0000000000000000
-RBP: 0000000000000020 R08: ffffffff81cbc889 R09: ffffffff8ebf6886
-R10: ffffffff8ebf6886 R11: ffffffff8ebf6886 R12: 0000000000000005
-R13: ffffffff8ebf67e0 R14: 0000000000000020 R15: 0000000000000028
-FS:  0000000000000000(0000) GS:ffff888124f9f000(0000) knlGS:000000000000000=
-0
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: ffff88823ffff000 CR3: 000000000eb38000 CR4: 00000000000000b0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- <TASK>
- event_init kernel/trace/trace_events.c:3111 [inline]
- event_trace_enable+0x1f3/0x3a0 kernel/trace/trace_events.c:4455
- trace_event_init+0x13/0x20 kernel/trace/trace_events.c:4548
- trace_init+0xf/0x40 kernel/trace/trace.c:11070
- start_kernel+0x206/0x510 init/main.c:994
- x86_64_start_reservations+0x2a/0x30 arch/x86/kernel/head64.c:304
- x86_64_start_kernel+0x66/0x70 arch/x86/kernel/head64.c:285
- common_startup_64+0x13e/0x147
- </TASK>
+thanks,
+jirka
 
 
 ---
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
+diff --git a/man/man2/uprobe.2 b/man/man2/uprobe.2
+new file mode 100644
+index 000000000000..ea5ccf901591
+--- /dev/null
++++ b/man/man2/uprobe.2
+@@ -0,0 +1 @@
++.so man2/uretprobe.2
