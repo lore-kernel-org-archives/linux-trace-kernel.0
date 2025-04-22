@@ -1,136 +1,208 @@
-Received: from mail-pg1-f173.google.com (mail-pg1-f173.google.com [209.85.215.173])
+Received: from mail-il1-f205.google.com (mail-il1-f205.google.com [209.85.166.205])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1778914286;
-	Tue, 22 Apr 2025 11:30:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7ED9120C490
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 22 Apr 2025 12:41:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.205
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745321436; cv=none; b=AVvA05IA5HMjhOD+cw2KkCTRHtDMXSfMq5bBLCFVyMn5PgJA6Tp0N3Xr+we0/nQ2Z0t+TwYUhqO4D35NV/40uvB9I87lHsqG/ItGgKmbXxSqMqvR7Wb3Oeht/TngR/crTBu1iFD2lh6tOi0AztUPEoFycvNWjkLr9YouUFQAdW0=
+	t=1745325691; cv=none; b=U0NdqnMS51VcADxYrqLZAx13Xw530YEwWbHo0RK/b3DmmwsX004wwXbDadt0ap4xSuYeaFB1zFJRejcpKJGJEuTRGDF1zdmNvoMiIGc2AVrrZoFAjn+aFOScQf4WuNsH/04V0GGfVrgMISulHEs6OAtFJTQB9CDjz7nKAyzWYd4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745321436; c=relaxed/simple;
-	bh=tHyGqFgFIRSmPIdYIXX9Tdm26dq4AIs524gvT44qx0Y=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Pu4xfbKR+ArDFf+X7sUPCKj8XLZi0VB4EwnVmqIAtHnrgtmne4jWKnRZS7XBEH5e8kGdwHzXC1DHv52hUbap2ELpoRdrOAHMVE+ZwfWhfZIVzv1VGcBFhFK1TC9sktXVdjENExpZ/r1yurxgAs3hN/i1k/gTw1nI/yKC3J0ZVQM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Qx+vgboN; arc=none smtp.client-ip=209.85.215.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Qx+vgboN"
-Received: by mail-pg1-f173.google.com with SMTP id 41be03b00d2f7-aee773df955so4781603a12.1;
-        Tue, 22 Apr 2025 04:30:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745321433; x=1745926233; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=+L2qPkaVtKmg+5Sr07ERpwO0sC7ZPDgfr98i4bh2UU8=;
-        b=Qx+vgboNAcPYOChoqttavAkxPur+lDuwv4j0iKFhMI//AFXY15H97gcFQgTqQFGX3E
-         aubZAyvei2N0DnIVLAjcFklrmUVPznojb8npWOhSgr9rwokqM1am/sTB3fpYrQYP/0n1
-         uJRiu0enwdfQgErM/Pri8sRv+iE2BJNFA4rlS4ogVG4V1JeTuERf+CyHp5xL9jsnVHvu
-         sRloNlla4jt85D/PT7QoMvmB1YDmnlCgP8YjtcsuKEMxRi61wwIL6CkrCaMLpkukxKa1
-         aUdFNIxDoAjSjLb9IWlo31azYluxKbTsYs9fxAvLFc2QJ3l2g7grzA9P+2xURb3lQzBA
-         9NWg==
+	s=arc-20240116; t=1745325691; c=relaxed/simple;
+	bh=yrR7LOXwJQk7YQ1++keSJbA50DlyDggdAVg3h1c50S4=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=PDOe5KaUWw80es6esMVVw65rb8O3b1dCHsQ7nSy2g2sq6KsKRZ0zlKmrRsgvysaU4jAi0JCTTJK8G+CcP9j5xIGagdNXIBDd2hkO9M5lKlyzS/sJK8v7n6ZrE3aVULT6JX3D72m68xSM9wUZZTnfiESMs22pCKe+s8yKIp0DMTg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.205
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f205.google.com with SMTP id e9e14a558f8ab-3d81820d5b3so98627495ab.3
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 22 Apr 2025 05:41:29 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745321433; x=1745926233;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=1e100.net; s=20230601; t=1745325688; x=1745930488;
+        h=content-transfer-encoding:to:from:subject:message-id:date
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=+L2qPkaVtKmg+5Sr07ERpwO0sC7ZPDgfr98i4bh2UU8=;
-        b=SkrMMseHX3DHnt2hAdxJqD4ejErFcXrt3LSSLYhs3VWMKPrP7L0/6Tqor6WJAQRfpS
-         015gyaXJOSDHpV69vrUhEnWjNlPCNfFwbz3+HcWy1CP5+/0F5AJSgs9fsHWlLnGOXZff
-         n4Ds0lqZOk7Y0ac794LGF6GF+uMtfXKMQjGIVTA7B4iEUEjLDiL4Zf3Folm2C/9eSKky
-         WgkXRe0cxVIfU9hnrdZuOdx0vPqVTRPZ0p7j1LrZXjUD7RhUSRfknjr1OeeP2klw6h5j
-         8F1ztLwkXZu3vwh+xeAECPwSS6yGa/4dUpcITDbZ+ke2JBnYmIj3AVLLIYVN0b8Vaxju
-         taBw==
-X-Forwarded-Encrypted: i=1; AJvYcCUF8CnVoMDXGAqLepoBwLR0kdawkL70Nz+zU/A99OGtuZvIjoR+vgtg/fE0X5KcQaWvmshRh2S08MwPfkuMP1H3U64=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw0BSptkbPg4qUFyWXYRTBW+XrwoSGvUeW0lBMTuSFnaQsSFF7R
-	hYGPsmpd3AeeECX2dHVLAbKqV8amEPKKSMod1fObPpUFx3GFgFk+5i4QHqHB
-X-Gm-Gg: ASbGncsKHf4KETkMKA30841Mhklej/2aFL3of+NS0KQGoCQVm4LOsVVXxsjz3FF2nT0
-	+f6oYRq5B6WrpyjNAiO9xQyWW4JvY0f0MCnbUvKxXsAO6HsXxqDuBqH6a7D7G4J4+5fq4DuRVwk
-	U+tpbNF2vURhPAZOfJ7M0NXOhgquryvcYFNMLd7nHWVR6XFu4k0ZK4Ktu9xPiAx6eOpv3C4rOTR
-	HUuIMS4lkV7XsYV+0ho/SQFF1/YbVkowgXF8b4l3MYQhbXQxOa6Tq1ikSE5kGDf+caJdnGvzDyT
-	WZJOwPmxktIfHR80VoBJ3kMX64YqdT0pUKgEM2XBAAqaS5cs98X+aNaDYFlf3BUkj1aZ8A==
-X-Google-Smtp-Source: AGHT+IGhW6YCQNNrILjH/FlTivBOfED1cUX+pwJTIME5x5vp4B6s23wwgnLKbICIDgnbOZxB3O2Xjw==
-X-Received: by 2002:a17:903:2a8f:b0:216:271d:e06c with SMTP id d9443c01a7336-22c53e19dcdmr192531395ad.4.1745321433177;
-        Tue, 22 Apr 2025 04:30:33 -0700 (PDT)
-Received: from localhost.localdomain ([121.185.186.233])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22c50bdd0a8sm82506825ad.50.2025.04.22.04.30.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 22 Apr 2025 04:30:32 -0700 (PDT)
-From: Jeongjun Park <aha310510@gmail.com>
-To: rostedt@goodmis.org,
-	mhiramat@kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	syzbot+c8cd2d2c412b868263fb@syzkaller.appspotmail.com,
-	Jeongjun Park <aha310510@gmail.com>
-Subject: [PATCH v3] tracing: fix oob write in trace_seq_to_buffer()
-Date: Tue, 22 Apr 2025 20:30:25 +0900
-Message-ID: <20250422113026.13308-1-aha310510@gmail.com>
-X-Mailer: git-send-email 2.43.0
+        bh=LHaMmz1KAcplF6Q361yXlo+F2t66/ZiHyob+lJweXSw=;
+        b=nmWSnoixU/Kr3bAvotVGgqNYEEpj5WILVlLpxnAHiEokx9fRE0KlYHwG6q/f4LKRBL
+         4sqUNKmUvtVC/gGOU7i0tlSL7MVpSJGM/dmTrwjv7UHh3NwMIXbXqMelHUkh1FwtyfeY
+         lSq3rNkcmQTKyakqqQYpz/V9GAL6Ovj9MJCCnQFEK6mL8VQomcAEskK7LrPQ1C6J8TP0
+         9TUGBH/Gg3eT998gdvAHJsCFmZxUJRn8lWb5SWPDckKrTN7zRYfWq5CvLsGll7zlxBwd
+         LnJ9JWQz3Kbb4IykFgbFqqtJxsEoaUgMEKflpqUj8lXqYSgdUlsYQNuWLHOjUll/+Lqz
+         eX5A==
+X-Forwarded-Encrypted: i=1; AJvYcCW98lGT9PhCcZU5OxbUEzBa494SxkVROyj1e3ecDehQ2ZfF47VJSl77qc+/ZEjeYpH609Z7Nw7jHrLNEii+A1zU8b0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzInqq72F2a8/Tr33h/lKWl6xc1bGLytl9wQFeIQlci3I3dbTon
+	rOZrWb2jSXiexMm4z9c+y+W8oc3bcFhLrQFi7gGRHZrRW9I0tZij+JGrJ8H8DgU/An2AFpS2cRE
+	bORvaw2LqC501joEReDiwBe4x93obw7NUP0f8fL/waVFBKwPEfRhWvlo=
+X-Google-Smtp-Source: AGHT+IHm7TwyyFiErPZqJRZMqdjsfoBD/EOXnH9bRtYg+WVOwKN8X6SvbPB8XXmyVLL4nzY9TDLeb5+2xonzOlFmX0x3O4/WCJ0n
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a05:6e02:1b01:b0:3d6:d147:81c9 with SMTP id
+ e9e14a558f8ab-3d88ee0018fmr178968965ab.12.1745325688677; Tue, 22 Apr 2025
+ 05:41:28 -0700 (PDT)
+Date: Tue, 22 Apr 2025 05:41:28 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <68078e78.050a0220.8500a.0014.GAE@google.com>
+Subject: [syzbot] [trace?] linux-next test error: WARNING in trace_event_raw_init
+From: syzbot <syzbot+52d4b07bbd2e3a104dc9@syzkaller.appspotmail.com>
+To: linux-kernel@vger.kernel.org, linux-next@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, mathieu.desnoyers@efficios.com, 
+	mhiramat@kernel.org, rostedt@goodmis.org, sfr@canb.auug.org.au, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-syzbot reported this bug:
-==================================================================
-BUG: KASAN: slab-out-of-bounds in trace_seq_to_buffer kernel/trace/trace.c:1830 [inline]
-BUG: KASAN: slab-out-of-bounds in tracing_splice_read_pipe+0x6be/0xdd0 kernel/trace/trace.c:6822
-Write of size 4507 at addr ffff888032b6b000 by task syz.2.320/7260
+Hello,
 
-CPU: 1 UID: 0 PID: 7260 Comm: syz.2.320 Not tainted 6.15.0-rc1-syzkaller-00301-g3bde70a2c827 #0 PREEMPT(full) 
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 02/12/2025
+syzbot found the following issue on:
+
+HEAD commit:    2c9c612abeb3 Add linux-next specific files for 20250422
+git tree:       linux-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=3D1624afac580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=3Dbba13bd7967a7c4=
+b
+dashboard link: https://syzkaller.appspot.com/bug?extid=3D52d4b07bbd2e3a104=
+dc9
+compiler:       Debian clang version 15.0.6, Debian LLD 15.0.6
+
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/b491f42bb495/disk-=
+2c9c612a.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/6a3ea2226cf2/vmlinux-=
+2c9c612a.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/cf779772656e/bzI=
+mage-2c9c612a.xz
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit=
+:
+Reported-by: syzbot+52d4b07bbd2e3a104dc9@syzkaller.appspotmail.com
+
+CPU topo: Max. threads per core:   2
+CPU topo: Num. cores per package:     1
+CPU topo: Num. threads per package:   2
+CPU topo: Allowing 2 present CPUs plus 0 hotplug CPUs
+PM: hibernation: Registered nosave memory: [mem 0x00000000-0x00000fff]
+PM: hibernation: Registered nosave memory: [mem 0x0009f000-0x000fffff]
+PM: hibernation: Registered nosave memory: [mem 0xbfffd000-0xffffffff]
+[mem 0xc0000000-0xfffbbfff] available for PCI devices
+Booting paravirtualized kernel on KVM
+clocksource: refined-jiffies: mask: 0xffffffff max_cycles: 0xffffffff, max_=
+idle_ns: 19112604462750000 ns
+setup_percpu: NR_CPUS:8 nr_cpumask_bits:2 nr_cpu_ids:2 nr_node_ids:2
+percpu: Embedded 70 pages/cpu s245960 r8192 d32568 u1048576
+kvm-guest: PV spinlocks enabled
+PV qspinlock hash table entries: 256 (order: 0, 4096 bytes, linear)
+Kernel command line: earlyprintk=3Dserial net.ifnames=3D0 sysctl.kernel.hun=
+g_task_all_cpu_backtrace=3D1 ima_policy=3Dtcb nf-conntrack-ftp.ports=3D2000=
+0 nf-conntrack-tftp.ports=3D20000 nf-conntrack-sip.ports=3D20000 nf-conntra=
+ck-irc.ports=3D20000 nf-conntrack-sane.ports=3D20000 binder.debug_mask=3D0 =
+rcupdate.rcu_expedited=3D1 rcupdate.rcu_cpu_stall_cputime=3D1 no_hash_point=
+ers page_owner=3Don sysctl.vm.nr_hugepages=3D4 sysctl.vm.nr_overcommit_huge=
+pages=3D4 secretmem.enable=3D1 sysctl.max_rcu_stall_to_panic=3D1 msr.allow_=
+writes=3Doff coredump_filter=3D0xffff root=3D/dev/sda console=3DttyS0 vsysc=
+all=3Dnative numa=3Dfake=3D2 kvm-intel.nested=3D1 spec_store_bypass_disable=
+=3Dprctl nopcid vivid.n_devs=3D64 vivid.multiplanar=3D1,2,1,2,1,2,1,2,1,2,1=
+,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2,=
+1,2,1,2,1,2,1,2,1,2,1,2,1,2,1,2 netrom.nr_ndevs=3D32 rose.rose_ndevs=3D32 s=
+mp.csd_lock_timeout=3D100000 watchdog_thresh=3D55 workqueue.watchdog_thresh=
+=3D140 sysctl.net.core.netdev_unregister_timeout_secs=3D140 dummy_hcd.num=
+=3D32 max_loop=3D32 nbds_max=3D32 panic_on_warn
+Unknown kernel command line parameters "spec_store_bypass_disable=3Dprctl n=
+bds_max=3D32 BOOT_IMAGE=3D/boot/bzImage", will be passed to user space.
+random: crng init done
+printk: log buffer data + meta data: 262144 + 917504 =3D 1179648 bytes
+software IO TLB: area num 2.
+Fallback order for Node 0: 0 1=20
+Fallback order for Node 1: 1 0=20
+Built 2 zonelists, mobility grouping on.  Total pages: 2097051
+Policy zone: Normal
+mem auto-init: stack:all(zero), heap alloc:on, heap free:off
+stackdepot: allocating hash table via alloc_large_system_hash
+stackdepot hash table entries: 1048576 (order: 12, 16777216 bytes, linear)
+SLUB: HWalign=3D64, Order=3D0-3, MinObjects=3D0, CPUs=3D2, Nodes=3D2
+allocated 167772160 bytes of page_ext
+Node 0, zone      DMA: page owner found early allocated 0 pages
+Node 0, zone    DMA32: page owner found early allocated 21222 pages
+Node 0, zone   Normal: page owner found early allocated 0 pages
+Node 1, zone   Normal: page owner found early allocated 19843 pages
+Kernel/User page tables isolation: enabled
+Dynamic Preempt: full
+Running RCU self tests
+Running RCU synchronous self tests
+rcu: Preemptible hierarchical RCU implementation.
+rcu: 	RCU lockdep checking is enabled.
+rcu: 	RCU restricting CPUs from NR_CPUS=3D8 to nr_cpu_ids=3D2.
+rcu: 	RCU callback double-/use-after-free debug is enabled.
+rcu: 	RCU debug extended QS entry/exit.
+	All grace periods are expedited (rcu_expedited).
+	Trampoline variant of Tasks RCU enabled.
+	Tracing variant of Tasks RCU enabled.
+rcu: RCU calculated value of scheduler-enlistment delay is 10 jiffies.
+rcu: Adjusting geometry for rcu_fanout_leaf=3D16, nr_cpu_ids=3D2
+Running RCU synchronous self tests
+RCU Tasks: Setting shift to 1 and lim to 1 rcu_task_cb_adjust=3D1 rcu_task_=
+cpu_ids=3D2.
+RCU Tasks Trace: Setting shift to 1 and lim to 1 rcu_task_cb_adjust=3D1 rcu=
+_task_cpu_ids=3D2.
+------------[ cut here ]------------
+WARNING: CPU: 0 PID: 0 at kernel/trace/trace_events.c:596 test_event_printk=
+ kernel/trace/trace_events.c:596 [inline]
+WARNING: CPU: 0 PID: 0 at kernel/trace/trace_events.c:596 trace_event_raw_i=
+nit+0xbda/0x1170 kernel/trace/trace_events.c:616
+Modules linked in:
+CPU: 0 UID: 0 PID: 0 Comm: swapper/0 Not tainted 6.15.0-rc3-next-20250422-s=
+yzkaller #0 PREEMPT(full)=20
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Goo=
+gle 02/12/2025
+RIP: 0010:test_event_printk kernel/trace/trace_events.c:596 [inline]
+RIP: 0010:trace_event_raw_init+0xbda/0x1170 kernel/trace/trace_events.c:616
+Code: 89 d8 48 83 c4 48 5b 41 5c 41 5d 41 5e 41 5f 5d e9 1b 1e 64 0a 80 3d =
+0e 26 7e 0e 01 0f 85 7e 03 00 00 e8 79 50 f7 ff eb d5 90 <0f> 0b 90 4c 89 f=
+6 48 83 e6 01 31 ff e8 45 55 f7 ff 4c 89 f3 49 83
+RSP: 0000:ffffffff8ea07e30 EFLAGS: 00010002
+RAX: 0000000000000000 RBX: 0000000000000000 RCX: ffffffff8ea965c0
+RDX: 0000000000000000 RSI: 0000000000000020 RDI: 0000000000000000
+RBP: 0000000000000020 R08: ffffffff81cbc889 R09: ffffffff8ebf6886
+R10: ffffffff8ebf6886 R11: ffffffff8ebf6886 R12: 0000000000000005
+R13: ffffffff8ebf67e0 R14: 0000000000000020 R15: 0000000000000028
+FS:  0000000000000000(0000) GS:ffff888124f9f000(0000) knlGS:000000000000000=
+0
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: ffff88823ffff000 CR3: 000000000eb38000 CR4: 00000000000000b0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
 Call Trace:
  <TASK>
- __dump_stack lib/dump_stack.c:94 [inline]
- dump_stack_lvl+0x116/0x1f0 lib/dump_stack.c:120
- print_address_description mm/kasan/report.c:408 [inline]
- print_report+0xc3/0x670 mm/kasan/report.c:521
- kasan_report+0xe0/0x110 mm/kasan/report.c:634
- check_region_inline mm/kasan/generic.c:183 [inline]
- kasan_check_range+0xef/0x1a0 mm/kasan/generic.c:189
- __asan_memcpy+0x3c/0x60 mm/kasan/shadow.c:106
- trace_seq_to_buffer kernel/trace/trace.c:1830 [inline]
- tracing_splice_read_pipe+0x6be/0xdd0 kernel/trace/trace.c:6822
- ....
-==================================================================
+ event_init kernel/trace/trace_events.c:3111 [inline]
+ event_trace_enable+0x1f3/0x3a0 kernel/trace/trace_events.c:4455
+ trace_event_init+0x13/0x20 kernel/trace/trace_events.c:4548
+ trace_init+0xf/0x40 kernel/trace/trace.c:11070
+ start_kernel+0x206/0x510 init/main.c:994
+ x86_64_start_reservations+0x2a/0x30 arch/x86/kernel/head64.c:304
+ x86_64_start_kernel+0x66/0x70 arch/x86/kernel/head64.c:285
+ common_startup_64+0x13e/0x147
+ </TASK>
 
-It has been reported that trace_seq_to_buffer() tries to copy more data
-than PAGE_SIZE to buf. Therefore, to prevent this, we should use the
-smaller of trace_seq_used(&iter->seq) and PAGE_SIZE as an argument.
 
-Reported-by: syzbot+c8cd2d2c412b868263fb@syzkaller.appspotmail.com
-Fixes: 3c56819b14b0 ("tracing: splice support for tracing_pipe")
-Suggested-by: Steven Rostedt <rostedt@goodmis.org>
-Signed-off-by: Jeongjun Park <aha310510@gmail.com>
 ---
-v2: Corrected the correct location as suggested by the maintainer
-v3: Change coding style
----
- kernel/trace/trace.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index 8ddf6b17215c..6d52dc108f00 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -6821,13 +6821,14 @@ static ssize_t tracing_splice_read_pipe(struct file *filp,
- 		/* Copy the data into the page, so we can start over. */
- 		ret = trace_seq_to_buffer(&iter->seq,
- 					  page_address(spd.pages[i]),
--					  trace_seq_used(&iter->seq));
-+					  min((size_t)trace_seq_used(&iter->seq),
-+						  PAGE_SIZE));
- 		if (ret < 0) {
- 			__free_page(spd.pages[i]);
- 			break;
- 		}
- 		spd.partial[i].offset = 0;
--		spd.partial[i].len = trace_seq_used(&iter->seq);
-+		spd.partial[i].len = ret;
- 
- 		trace_seq_init(&iter->seq);
- 	}
---
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
