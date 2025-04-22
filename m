@@ -1,26 +1,26 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 494F21A23BE;
-	Tue, 22 Apr 2025 18:35:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60FDB1DEFC8;
+	Tue, 22 Apr 2025 18:35:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745346931; cv=none; b=b51Td/WyMAxZ7jgqoTxzquzsbclXtEAUPKJEvOtUAluVUaIfq0FIifymaHQ++4wgMu8/S6MLbk6Qy/p2QOR1B0RN4JX1afCD6BLfZErkKmCHKaWwgoNaurM5zH9KAOslAWB1VliNWzlNpzmSt8Hwc0UzrjnPTgYgSSEINWkkHjw=
+	t=1745346931; cv=none; b=RH9onyYaBCOx/R65O5zE8RA3CKgvxjkKnb658srZ0MsEidiX8p9Hrm+dr8/vVEwDtPKwaZJz+Dy5eh7wEsqvE6yYAC4mYIE6ZfoUjwrEqRlFnEOyXqz4nyAnuYSVadK4Zs3VL0VHjMiKUZicN/MzGihl+qyIrhVQDEAzlCYxCAw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1745346931; c=relaxed/simple;
-	bh=QhCwiPnd0gPBrQvImDQRKzcjy0jlFgvpErnwXkD5KI4=;
+	bh=CayS5OAoG+jEWAfNo0q90M7R6fNDrO+CxAEV6GDanqw=;
 	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=O25xwVcTXNssLD57c4UooF3SyXUu27+cAegfIhLqTKjUUIKsdiRB3SC067QuJ8lItKJHdeNKyWQelMoWZm+1d4AGgK49enqN32HWeTzgU3z0jHEyb3n6VoS8jX89O4Suh2RTYS48U7g3vUIonOjUNq/kD/Ay5pEiOWhCFDIY2jk=
+	 Content-Type; b=UoJ1jAUdprJpjcopmKsNRWO0zgRkOLhejplgAeBfzCaX9XV9TcSlbysVVElsSDJLkRCsl9bHw3ymhjO8nmHOCDJUQsmK6DVYgHWMW4yaq5HNEHkQSW3di6PhRiWpcP+fA1VoJciM8oNBt0XvEtYuzZhwwelZ/OfL6u8nwyyqcOY=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BF154C4CEE9;
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E8A60C4CEED;
 	Tue, 22 Apr 2025 18:35:30 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.98)
 	(envelope-from <rostedt@goodmis.org>)
-	id 1u7IUk-0000000Fw7R-0tvf;
+	id 1u7IUk-0000000Fw7v-1brT;
 	Tue, 22 Apr 2025 14:37:22 -0400
-Message-ID: <20250422183722.068940486@goodmis.org>
+Message-ID: <20250422183722.237323078@goodmis.org>
 User-Agent: quilt/0.68
-Date: Tue, 22 Apr 2025 14:34:40 -0400
+Date: Tue, 22 Apr 2025 14:34:41 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org,
  linux-trace-kernel@vger.kernel.org
@@ -39,7 +39,7 @@ Cc: Masami Hiramatsu <mhiramat@kernel.org>,
  Borislav Petkov <bp@alien8.de>,
  Dave Hansen <dave.hansen@linux.intel.com>,
  "H. Peter Anvin" <hpa@zytor.com>
-Subject: [PATCH v5 1/6] x86/vdso: Fix DWARF generation for getrandom()
+Subject: [PATCH v5 2/6] x86/asm: Avoid emitting DWARF CFI for non-VDSO
 References: <20250422183439.895236512@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -51,44 +51,90 @@ Content-Type: text/plain; charset=UTF-8
 
 From: Josh Poimboeuf <jpoimboe@kernel.org>
 
-Add CFI annotations to the VDSO implementation of getrandom() so it will
-have valid DWARF unwinding metadata.
+It was decided years ago that .cfi_* annotations aren't maintainable in
+the kernel.  They were replaced by objtool unwind hints.  For the kernel
+proper, ensure the CFI_* macros don't do anything.
 
-Fixes: 33385150ac45 ("x86: vdso: Wire up getrandom() vDSO implementation")
+On the other hand the VDSO library *does* use them, so user space can
+unwind through it.
+
+Make sure these macros only work for VDSO.  They aren't actually being
+used outside of VDSO anyway, so there's no functional change.
+
 Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- arch/x86/entry/vdso/vgetrandom-chacha.S | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ arch/x86/include/asm/dwarf2.h | 51 ++++++++++++++++++++++++-----------
+ 1 file changed, 35 insertions(+), 16 deletions(-)
 
-diff --git a/arch/x86/entry/vdso/vgetrandom-chacha.S b/arch/x86/entry/vdso/vgetrandom-chacha.S
-index bcba5639b8ee..cc82da9216fb 100644
---- a/arch/x86/entry/vdso/vgetrandom-chacha.S
-+++ b/arch/x86/entry/vdso/vgetrandom-chacha.S
-@@ -4,7 +4,7 @@
-  */
+diff --git a/arch/x86/include/asm/dwarf2.h b/arch/x86/include/asm/dwarf2.h
+index 302e11b15da8..65d958ef1178 100644
+--- a/arch/x86/include/asm/dwarf2.h
++++ b/arch/x86/include/asm/dwarf2.h
+@@ -6,6 +6,15 @@
+ #warning "asm/dwarf2.h should be only included in pure assembly files"
+ #endif
  
- #include <linux/linkage.h>
--#include <asm/frame.h>
-+#include <asm/dwarf2.h>
++#ifdef BUILD_VDSO
++
++	/*
++	 * For the vDSO, emit both runtime unwind information and debug
++	 * symbols for the .dbg file.
++	 */
++
++	.cfi_sections .eh_frame, .debug_frame
++
+ #define CFI_STARTPROC		.cfi_startproc
+ #define CFI_ENDPROC		.cfi_endproc
+ #define CFI_DEF_CFA		.cfi_def_cfa
+@@ -21,21 +30,31 @@
+ #define CFI_UNDEFINED		.cfi_undefined
+ #define CFI_ESCAPE		.cfi_escape
  
- .section	.rodata, "a"
- .align 16
-@@ -22,7 +22,7 @@ CONSTANTS:	.octa 0x6b20657479622d323320646e61707865
-  *	rcx: number of 64-byte blocks to write to output
-  */
- SYM_FUNC_START(__arch_chacha20_blocks_nostack)
--
-+	CFI_STARTPROC
- .set	output,		%rdi
- .set	key,		%rsi
- .set	counter,	%rdx
-@@ -175,4 +175,5 @@ SYM_FUNC_START(__arch_chacha20_blocks_nostack)
- 	pxor		temp,temp
+-#ifndef BUILD_VDSO
+-	/*
+-	 * Emit CFI data in .debug_frame sections, not .eh_frame sections.
+-	 * The latter we currently just discard since we don't do DWARF
+-	 * unwinding at runtime.  So only the offline DWARF information is
+-	 * useful to anyone.  Note we should not use this directive if we
+-	 * ever decide to enable DWARF unwinding at runtime.
+-	 */
+-	.cfi_sections .debug_frame
+-#else
+-	 /*
+-	  * For the vDSO, emit both runtime unwind information and debug
+-	  * symbols for the .dbg file.
+-	  */
+-	.cfi_sections .eh_frame, .debug_frame
+-#endif
++#else /* !BUILD_VDSO */
++
++/*
++ * On x86, these macros aren't used outside VDSO.  As well they shouldn't be:
++ * they're fragile and very difficult to maintain.
++ */
++
++.macro nocfi args:vararg
++.endm
++
++#define CFI_STARTPROC		nocfi
++#define CFI_ENDPROC		nocfi
++#define CFI_DEF_CFA		nocfi
++#define CFI_DEF_CFA_REGISTER	nocfi
++#define CFI_DEF_CFA_OFFSET	nocfi
++#define CFI_ADJUST_CFA_OFFSET	nocfi
++#define CFI_OFFSET		nocfi
++#define CFI_REL_OFFSET		nocfi
++#define CFI_REGISTER		nocfi
++#define CFI_RESTORE		nocfi
++#define CFI_REMEMBER_STATE	nocfi
++#define CFI_RESTORE_STATE	nocfi
++#define CFI_UNDEFINED		nocfi
++#define CFI_ESCAPE		nocfi
++
++#endif /* !BUILD_VDSO */
  
- 	ret
-+	CFI_ENDPROC
- SYM_FUNC_END(__arch_chacha20_blocks_nostack)
+ #endif /* _ASM_X86_DWARF2_H */
 -- 
 2.47.2
 
