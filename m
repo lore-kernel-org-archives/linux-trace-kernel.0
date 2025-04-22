@@ -1,26 +1,26 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60FDB1DEFC8;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C6B622D793;
 	Tue, 22 Apr 2025 18:35:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745346931; cv=none; b=RH9onyYaBCOx/R65O5zE8RA3CKgvxjkKnb658srZ0MsEidiX8p9Hrm+dr8/vVEwDtPKwaZJz+Dy5eh7wEsqvE6yYAC4mYIE6ZfoUjwrEqRlFnEOyXqz4nyAnuYSVadK4Zs3VL0VHjMiKUZicN/MzGihl+qyIrhVQDEAzlCYxCAw=
+	t=1745346931; cv=none; b=KC5XwLNyrn9+f2Kmt6/K3EiYrDCeDarpJqykwKeaUR1k7LDPVWzLegy3ZDWdj0q8SvlItivsjli+m9Ky29+AyiqzSEwxxpTVxZOZRrwYmd0EYNJwoOpOKq9XNLnyKmOacemLXSF7IXY/3A+zC5MAiKPuEP1MaQlctdCgwxRQWn8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1745346931; c=relaxed/simple;
-	bh=CayS5OAoG+jEWAfNo0q90M7R6fNDrO+CxAEV6GDanqw=;
+	bh=UihD/TmxEBCrTh8U8AQInq1+Tc3Opzly13UDOmOBkLE=;
 	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=UoJ1jAUdprJpjcopmKsNRWO0zgRkOLhejplgAeBfzCaX9XV9TcSlbysVVElsSDJLkRCsl9bHw3ymhjO8nmHOCDJUQsmK6DVYgHWMW4yaq5HNEHkQSW3di6PhRiWpcP+fA1VoJciM8oNBt0XvEtYuzZhwwelZ/OfL6u8nwyyqcOY=
+	 Content-Type; b=sBLxByRtfk2pBAA/RG0COaxWtttT3+Prl4SnrMbJnCz4d9n8qt/nFLWUnBrgfyJLzunLs+AD7WILlW+uLzCwHNHNF+ovhBQapTHMAlECJxFwB5Ed40tl5ZubPSkG7CUyA6WUEbM/Hu4/AJy3ZYiY0OHHwYONBAZ/vdm9pJ/Wf4I=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E8A60C4CEED;
-	Tue, 22 Apr 2025 18:35:30 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 73F31C4CEE9;
+	Tue, 22 Apr 2025 18:35:31 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.98)
 	(envelope-from <rostedt@goodmis.org>)
-	id 1u7IUk-0000000Fw7v-1brT;
+	id 1u7IUk-0000000Fw9N-3lUc;
 	Tue, 22 Apr 2025 14:37:22 -0400
-Message-ID: <20250422183722.237323078@goodmis.org>
+Message-ID: <20250422183722.751258699@goodmis.org>
 User-Agent: quilt/0.68
-Date: Tue, 22 Apr 2025 14:34:41 -0400
+Date: Tue, 22 Apr 2025 14:34:44 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org,
  linux-trace-kernel@vger.kernel.org
@@ -39,7 +39,7 @@ Cc: Masami Hiramatsu <mhiramat@kernel.org>,
  Borislav Petkov <bp@alien8.de>,
  Dave Hansen <dave.hansen@linux.intel.com>,
  "H. Peter Anvin" <hpa@zytor.com>
-Subject: [PATCH v5 2/6] x86/asm: Avoid emitting DWARF CFI for non-VDSO
+Subject: [PATCH v5 5/6] x86/vdso: Use CFI macros in __vdso_sgx_enter_enclave()
 References: <20250422183439.895236512@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -51,90 +51,56 @@ Content-Type: text/plain; charset=UTF-8
 
 From: Josh Poimboeuf <jpoimboe@kernel.org>
 
-It was decided years ago that .cfi_* annotations aren't maintainable in
-the kernel.  They were replaced by objtool unwind hints.  For the kernel
-proper, ensure the CFI_* macros don't do anything.
+Use the CFI macros instead of the raw .cfi_* directives to be consistent
+with the rest of the VDSO asm.  It's also easier on the eyes.
 
-On the other hand the VDSO library *does* use them, so user space can
-unwind through it.
-
-Make sure these macros only work for VDSO.  They aren't actually being
-used outside of VDSO anyway, so there's no functional change.
+No functional changes.
 
 Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- arch/x86/include/asm/dwarf2.h | 51 ++++++++++++++++++++++++-----------
- 1 file changed, 35 insertions(+), 16 deletions(-)
+ arch/x86/entry/vdso/vsgx.S | 15 +++++++--------
+ 1 file changed, 7 insertions(+), 8 deletions(-)
 
-diff --git a/arch/x86/include/asm/dwarf2.h b/arch/x86/include/asm/dwarf2.h
-index 302e11b15da8..65d958ef1178 100644
---- a/arch/x86/include/asm/dwarf2.h
-+++ b/arch/x86/include/asm/dwarf2.h
-@@ -6,6 +6,15 @@
- #warning "asm/dwarf2.h should be only included in pure assembly files"
- #endif
+diff --git a/arch/x86/entry/vdso/vsgx.S b/arch/x86/entry/vdso/vsgx.S
+index c0342238c976..8d7b8eb45c50 100644
+--- a/arch/x86/entry/vdso/vsgx.S
++++ b/arch/x86/entry/vdso/vsgx.S
+@@ -24,13 +24,14 @@
+ .section .text, "ax"
  
-+#ifdef BUILD_VDSO
-+
-+	/*
-+	 * For the vDSO, emit both runtime unwind information and debug
-+	 * symbols for the .dbg file.
-+	 */
-+
-+	.cfi_sections .eh_frame, .debug_frame
-+
- #define CFI_STARTPROC		.cfi_startproc
- #define CFI_ENDPROC		.cfi_endproc
- #define CFI_DEF_CFA		.cfi_def_cfa
-@@ -21,21 +30,31 @@
- #define CFI_UNDEFINED		.cfi_undefined
- #define CFI_ESCAPE		.cfi_escape
+ SYM_FUNC_START(__vdso_sgx_enter_enclave)
++	SYM_F_ALIGN
+ 	push	%rbp
+-	.cfi_adjust_cfa_offset	8
+-	.cfi_rel_offset		%rbp, 0
++	CFI_ADJUST_CFA_OFFSET	8
++	CFI_REL_OFFSET		%rbp, 0
+ 	mov	%rsp, %rbp
+-	.cfi_def_cfa_register	%rbp
++	CFI_DEF_CFA_REGISTER	%rbp
+ 	push	%rbx
+-	.cfi_rel_offset		%rbx, -8
++	CFI_REL_OFFSET		%rbx, -8
  
--#ifndef BUILD_VDSO
--	/*
--	 * Emit CFI data in .debug_frame sections, not .eh_frame sections.
--	 * The latter we currently just discard since we don't do DWARF
--	 * unwinding at runtime.  So only the offline DWARF information is
--	 * useful to anyone.  Note we should not use this directive if we
--	 * ever decide to enable DWARF unwinding at runtime.
--	 */
--	.cfi_sections .debug_frame
--#else
--	 /*
--	  * For the vDSO, emit both runtime unwind information and debug
--	  * symbols for the .dbg file.
--	  */
--	.cfi_sections .eh_frame, .debug_frame
--#endif
-+#else /* !BUILD_VDSO */
-+
-+/*
-+ * On x86, these macros aren't used outside VDSO.  As well they shouldn't be:
-+ * they're fragile and very difficult to maintain.
-+ */
-+
-+.macro nocfi args:vararg
-+.endm
-+
-+#define CFI_STARTPROC		nocfi
-+#define CFI_ENDPROC		nocfi
-+#define CFI_DEF_CFA		nocfi
-+#define CFI_DEF_CFA_REGISTER	nocfi
-+#define CFI_DEF_CFA_OFFSET	nocfi
-+#define CFI_ADJUST_CFA_OFFSET	nocfi
-+#define CFI_OFFSET		nocfi
-+#define CFI_REL_OFFSET		nocfi
-+#define CFI_REGISTER		nocfi
-+#define CFI_RESTORE		nocfi
-+#define CFI_REMEMBER_STATE	nocfi
-+#define CFI_RESTORE_STATE	nocfi
-+#define CFI_UNDEFINED		nocfi
-+#define CFI_ESCAPE		nocfi
-+
-+#endif /* !BUILD_VDSO */
+ 	mov	%ecx, %eax
+ .Lenter_enclave:
+@@ -77,13 +78,11 @@ SYM_FUNC_START(__vdso_sgx_enter_enclave)
+ .Lout:
+ 	pop	%rbx
+ 	leave
+-	.cfi_def_cfa		%rsp, 8
++	CFI_DEF_CFA		%rsp, 8
+ 	RET
  
- #endif /* _ASM_X86_DWARF2_H */
+-	/* The out-of-line code runs with the pre-leave stack frame. */
+-	.cfi_def_cfa		%rbp, 16
+-
+ .Linvalid_input:
++	CFI_DEF_CFA		%rbp, 16
+ 	mov	$(-EINVAL), %eax
+ 	jmp	.Lout
+ 
 -- 
 2.47.2
 
