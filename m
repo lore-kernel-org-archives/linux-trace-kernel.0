@@ -1,248 +1,253 @@
-Received: from out30-113.freemail.mail.aliyun.com (out30-113.freemail.mail.aliyun.com [115.124.30.113])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8280426A0AB;
-	Wed, 23 Apr 2025 07:30:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.113
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.3])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id ED8CB215771;
+	Wed, 23 Apr 2025 07:33:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.3
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745393412; cv=none; b=ZeiAM0ZLNploGQupcki2heJkk3xr5m0gWYsacfIiznTZev88LEqpJSEc5qZ4QM+5h6dE5EDKrnMipEo03jHjQ2OaPyu5fwuBGmp5LXFgOjB7j2lguUvzeULmX1+TKnDOX9Z2S+6VW5K0dnK7NKasl0I3I5k2r5dERBlMXkKA6SA=
+	t=1745393614; cv=none; b=CiHxXXAi3kbHcLs8aJU729tB0GBovso5k7pI+UjdWsFmjMRVvT4NSuLgLyg2IBxcA0/OS+KXt7O6uvHpAg6PgjIwWk92HDcIymcOYKbDIP8xT9VaxvHFxB22cWHiK4K2kkTy/hB1Ha4hffG2572ucOXUKi46LnUIifsoSCaru3E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745393412; c=relaxed/simple;
-	bh=o+phP31kmrAYsA7kQQZnwNWQ6u/lBY83aHaSbMuUKkU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=SJCFhcBgL4VYef/Xw9sIVSYQJhR2LPlfhgOxuu/2+U4SW4/anTaa18f/tvPaYQOdeiEf/W25gt7LY6VCfp6cKNaVkBFY9wAe/tRTHycQvLk+l2hIrk6nFby31RkNdzV/eF9Iog0/fEOXvwhHfQP+fceQUZ98LpmtuE+VKL479go=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=s4yOJDK4; arc=none smtp.client-ip=115.124.30.113
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1745393614; c=relaxed/simple;
+	bh=Dvyz6DITaxkdGp0a835ONmkSb8MvYzExGjAgvoMRHRs=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Lj6AA9utY7TkSaDe4TIK8tIitdcXQYdd+53LZSSFLxvctnH/4I6abPfsgV2kyyjOBLNwRm9uZRvgME1oOxHMpD9eBxZbWnbun20dyaO9m1lrCcvHzMhvcrKdaAY0CO0gXljSjkiRqWJBvlFtTUhTACd/5owyjyzG0g5jpmXyxHg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=TtIE0T5T; arc=none smtp.client-ip=117.135.210.3
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="s4yOJDK4"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1745393406; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=lH4lDINRe2o7t1vSewfvz5VOPesF2wiTgnlvHI8Ti7Y=;
-	b=s4yOJDK4EVklcxUrVbpwCkhrArbBuH1BZn2dLeKsJAKBARNsh0UvndxnnijhwTAcpAjzzDaQDUQR8kMhbZPza0ymsN0EIBg3mmAgTP8z1jKsdGX9xjMS/52zHKr4YbEURQ1OTaFYMVtoKLqh4odcChasPsiuyLhFirFm6Bxacno=
-Received: from 30.74.144.121(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0WXtXXfj_1745393402 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Wed, 23 Apr 2025 15:30:03 +0800
-Message-ID: <e4e4aaae-92be-4cd2-9435-dccad99961bf@linux.alibaba.com>
-Date: Wed, 23 Apr 2025 15:30:02 +0800
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="TtIE0T5T"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=MSxQX
+	vQax8p9c+hmvlHTDibnsDBQVDBYA+HPPCGtZ74=; b=TtIE0T5TyFciWIB6aKQRs
+	8VMYjsvHplMURfiVMt12Kyvo24xUzp313aQVI6VQIOF/zj13jx+S2MmtNpMfm5aD
+	w6EbQdY4rXFRvL5IN9+ODR5TAuagWUcadQGcTZ/UAQLPVd5OxnVoCWOAHaIjppz1
+	rA6m0OVvdAOfv4ENuMixUQ=
+Received: from localhost.localdomain (unknown [])
+	by gzsmtp3 (Coremail) with SMTP id PigvCgDHqhNulwhohX4qAg--.21421S2;
+	Wed, 23 Apr 2025 15:32:00 +0800 (CST)
+From: Feng Yang <yangfeng59949@163.com>
+To: ast@kernel.org,
+	daniel@iogearbox.net,
+	andrii@kernel.org,
+	martin.lau@linux.dev,
+	eddyz87@gmail.com,
+	song@kernel.org,
+	yonghong.song@linux.dev,
+	john.fastabend@gmail.com,
+	kpsingh@kernel.org,
+	sdf@fomichev.me,
+	haoluo@google.com,
+	jolsa@kernel.org,
+	mattbobrowski@google.com,
+	rostedt@goodmis.org,
+	mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com
+Cc: bpf@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Subject: [PATCH bpf-next v4] bpf: streamline allowed helpers between tracing and base sets
+Date: Wed, 23 Apr 2025 15:31:51 +0800
+Message-Id: <20250423073151.297103-1-yangfeng59949@163.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 05/12] khugepaged: generalize __collapse_huge_page_*
- for mTHP support
-To: Nico Pache <npache@redhat.com>, linux-mm@kvack.org,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
-Cc: akpm@linux-foundation.org, corbet@lwn.net, rostedt@goodmis.org,
- mhiramat@kernel.org, mathieu.desnoyers@efficios.com, david@redhat.com,
- baohua@kernel.org, ryan.roberts@arm.com, willy@infradead.org,
- peterx@redhat.com, ziy@nvidia.com, wangkefeng.wang@huawei.com,
- usamaarif642@gmail.com, sunnanyong@huawei.com, vishal.moola@gmail.com,
- thomas.hellstrom@linux.intel.com, yang@os.amperecomputing.com,
- kirill.shutemov@linux.intel.com, aarcange@redhat.com, raquini@redhat.com,
- dev.jain@arm.com, anshuman.khandual@arm.com, catalin.marinas@arm.com,
- tiwai@suse.de, will@kernel.org, dave.hansen@linux.intel.com, jack@suse.cz,
- cl@gentwo.org, jglisse@google.com, surenb@google.com, zokeefe@google.com,
- hannes@cmpxchg.org, rientjes@google.com, mhocko@suse.com,
- rdunlap@infradead.org
-References: <20250417000238.74567-1-npache@redhat.com>
- <20250417000238.74567-6-npache@redhat.com>
-From: Baolin Wang <baolin.wang@linux.alibaba.com>
-In-Reply-To: <20250417000238.74567-6-npache@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:PigvCgDHqhNulwhohX4qAg--.21421S2
+X-Coremail-Antispam: 1Uf129KBjvJXoWxtF4fJry3WFyUtFyrAF17Awb_yoW3Xw1rpF
+	sxtrW3Crs7tw4aqFy7Jr1fZa4Fk3srX3yUWa95Gw18ur4jvr47tF129F42gF1rAr98W347
+	u3yvvFZ0kFy293JanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07ja4E_UUUUU=
+X-CM-SenderInfo: p1dqww5hqjkmqzuzqiywtou0bp/1tbiThQ4eGgIPm4qYQABsg
 
+From: Feng Yang <yangfeng@kylinos.cn>
 
+Many conditional checks in switch-case are redundant
+with bpf_base_func_proto and should be removed.
 
-On 2025/4/17 08:02, Nico Pache wrote:
-> generalize the order of the __collapse_huge_page_* functions
-> to support future mTHP collapse.
-> 
-> mTHP collapse can suffer from incosistant behavior, and memory waste
-> "creep". disable swapin and shared support for mTHP collapse.
-> 
-> No functional changes in this patch.
-> 
-> Co-developed-by: Dev Jain <dev.jain@arm.com>
-> Signed-off-by: Dev Jain <dev.jain@arm.com>
-> Signed-off-by: Nico Pache <npache@redhat.com>
-> ---
->   mm/khugepaged.c | 46 ++++++++++++++++++++++++++++------------------
->   1 file changed, 28 insertions(+), 18 deletions(-)
-> 
-> diff --git a/mm/khugepaged.c b/mm/khugepaged.c
-> index 883e9a46359f..5e9272ab82da 100644
-> --- a/mm/khugepaged.c
-> +++ b/mm/khugepaged.c
-> @@ -565,15 +565,17 @@ static int __collapse_huge_page_isolate(struct vm_area_struct *vma,
->   					unsigned long address,
->   					pte_t *pte,
->   					struct collapse_control *cc,
-> -					struct list_head *compound_pagelist)
-> +					struct list_head *compound_pagelist,
-> +					u8 order)
->   {
->   	struct page *page = NULL;
->   	struct folio *folio = NULL;
->   	pte_t *_pte;
->   	int none_or_zero = 0, shared = 0, result = SCAN_FAIL, referenced = 0;
->   	bool writable = false;
-> +	int scaled_none = khugepaged_max_ptes_none >> (HPAGE_PMD_ORDER - order);
->   
-> -	for (_pte = pte; _pte < pte + HPAGE_PMD_NR;
-> +	for (_pte = pte; _pte < pte + (1 << order);
->   	     _pte++, address += PAGE_SIZE) {
->   		pte_t pteval = ptep_get(_pte);
->   		if (pte_none(pteval) || (pte_present(pteval) &&
-> @@ -581,7 +583,7 @@ static int __collapse_huge_page_isolate(struct vm_area_struct *vma,
->   			++none_or_zero;
->   			if (!userfaultfd_armed(vma) &&
->   			    (!cc->is_khugepaged ||
-> -			     none_or_zero <= khugepaged_max_ptes_none)) {
-> +			     none_or_zero <= scaled_none)) {
->   				continue;
->   			} else {
->   				result = SCAN_EXCEED_NONE_PTE;
-> @@ -609,8 +611,8 @@ static int __collapse_huge_page_isolate(struct vm_area_struct *vma,
->   		/* See hpage_collapse_scan_pmd(). */
->   		if (folio_maybe_mapped_shared(folio)) {
->   			++shared;
-> -			if (cc->is_khugepaged &&
-> -			    shared > khugepaged_max_ptes_shared) {
-> +			if (order != HPAGE_PMD_ORDER || (cc->is_khugepaged &&
-> +			    shared > khugepaged_max_ptes_shared)) {
->   				result = SCAN_EXCEED_SHARED_PTE;
->   				count_vm_event(THP_SCAN_EXCEED_SHARED_PTE);
->   				goto out;
-> @@ -711,13 +713,14 @@ static void __collapse_huge_page_copy_succeeded(pte_t *pte,
->   						struct vm_area_struct *vma,
->   						unsigned long address,
->   						spinlock_t *ptl,
-> -						struct list_head *compound_pagelist)
-> +						struct list_head *compound_pagelist,
-> +						u8 order)
->   {
->   	struct folio *src, *tmp;
->   	pte_t *_pte;
->   	pte_t pteval;
->   
-> -	for (_pte = pte; _pte < pte + HPAGE_PMD_NR;
-> +	for (_pte = pte; _pte < pte + (1 << order);
->   	     _pte++, address += PAGE_SIZE) {
->   		pteval = ptep_get(_pte);
->   		if (pte_none(pteval) || is_zero_pfn(pte_pfn(pteval))) {
-> @@ -764,7 +767,8 @@ static void __collapse_huge_page_copy_failed(pte_t *pte,
->   					     pmd_t *pmd,
->   					     pmd_t orig_pmd,
->   					     struct vm_area_struct *vma,
-> -					     struct list_head *compound_pagelist)
-> +					     struct list_head *compound_pagelist,
-> +					     u8 order)
->   {
->   	spinlock_t *pmd_ptl;
->   
-> @@ -781,7 +785,7 @@ static void __collapse_huge_page_copy_failed(pte_t *pte,
->   	 * Release both raw and compound pages isolated
->   	 * in __collapse_huge_page_isolate.
->   	 */
-> -	release_pte_pages(pte, pte + HPAGE_PMD_NR, compound_pagelist);
-> +	release_pte_pages(pte, pte + (1 << order), compound_pagelist);
->   }
->   
->   /*
-> @@ -802,7 +806,7 @@ static void __collapse_huge_page_copy_failed(pte_t *pte,
->   static int __collapse_huge_page_copy(pte_t *pte, struct folio *folio,
->   		pmd_t *pmd, pmd_t orig_pmd, struct vm_area_struct *vma,
->   		unsigned long address, spinlock_t *ptl,
-> -		struct list_head *compound_pagelist)
-> +		struct list_head *compound_pagelist, u8 order)
->   {
->   	unsigned int i;
->   	int result = SCAN_SUCCEED;
-> @@ -810,7 +814,7 @@ static int __collapse_huge_page_copy(pte_t *pte, struct folio *folio,
->   	/*
->   	 * Copying pages' contents is subject to memory poison at any iteration.
->   	 */
-> -	for (i = 0; i < HPAGE_PMD_NR; i++) {
-> +	for (i = 0; i < (1 << order); i++) {
->   		pte_t pteval = ptep_get(pte + i);
->   		struct page *page = folio_page(folio, i);
->   		unsigned long src_addr = address + i * PAGE_SIZE;
-> @@ -829,10 +833,10 @@ static int __collapse_huge_page_copy(pte_t *pte, struct folio *folio,
->   
->   	if (likely(result == SCAN_SUCCEED))
->   		__collapse_huge_page_copy_succeeded(pte, vma, address, ptl,
-> -						    compound_pagelist);
-> +						    compound_pagelist, order);
->   	else
->   		__collapse_huge_page_copy_failed(pte, pmd, orig_pmd, vma,
-> -						 compound_pagelist);
-> +						 compound_pagelist, order);
->   
->   	return result;
->   }
-> @@ -1000,11 +1004,11 @@ static int check_pmd_still_valid(struct mm_struct *mm,
->   static int __collapse_huge_page_swapin(struct mm_struct *mm,
->   				       struct vm_area_struct *vma,
->   				       unsigned long haddr, pmd_t *pmd,
-> -				       int referenced)
-> +				       int referenced, u8 order)
->   {
->   	int swapped_in = 0;
->   	vm_fault_t ret = 0;
-> -	unsigned long address, end = haddr + (HPAGE_PMD_NR * PAGE_SIZE);
-> +	unsigned long address, end = haddr + (PAGE_SIZE << order);
->   	int result;
->   	pte_t *pte = NULL;
->   	spinlock_t *ptl;
-> @@ -1035,6 +1039,12 @@ static int __collapse_huge_page_swapin(struct mm_struct *mm,
->   		if (!is_swap_pte(vmf.orig_pte))
->   			continue;
->   
-> +		/* Dont swapin for mTHP collapse */
-> +		if (order != HPAGE_PMD_ORDER) {
-> +			result = SCAN_EXCEED_SWAP_PTE;
-> +			goto out;
-> +		}
+Regarding the permission checks bpf_base_func_proto:
+The permission checks in bpf_prog_load (as outlined below)
+ensure that the trace has both CAP_BPF and CAP_PERFMON capabilities,
+thus enabling the use of corresponding prototypes
+in bpf_base_func_proto without adverse effects.
+bpf_prog_load
+	......
+	bpf_cap = bpf_token_capable(token, CAP_BPF);
+	......
+	if (type != BPF_PROG_TYPE_SOCKET_FILTER &&
+	    type != BPF_PROG_TYPE_CGROUP_SKB &&
+	    !bpf_cap)
+		goto put_token;
+	......
+	if (is_perfmon_prog_type(type) && !bpf_token_capable(token, CAP_PERFMON))
+		goto put_token;
+	......
 
-IMO, this check should move into hpage_collapse_scan_pmd(), that means 
-if we scan the swap ptes for mTHP collapse, then we can return 
-'SCAN_EXCEED_SWAP_PTE' to abort the collapse earlier.
+Signed-off-by: Feng Yang <yangfeng@kylinos.cn>
+Acked-by: Song Liu <song@kernel.org>
+---
+Changes in v4:
+- Only modify patch description information.
+- At present, bpf_tracing_func_proto still has the following ID:
+- BPF_FUNC_get_current_uid_gid
+- BPF_FUNC_get_current_comm
+- BPF_FUNC_get_smp_processor_id
+- BPF_FUNC_perf_event_read
+- BPF_FUNC_probe_read
+- BPF_FUNC_probe_read_str
+- BPF_FUNC_current_task_under_cgroup
+- BPF_FUNC_send_signal
+- BPF_FUNC_send_signal_thread
+- BPF_FUNC_get_task_stack
+- BPF_FUNC_copy_from_user
+- BPF_FUNC_copy_from_user_task
+- BPF_FUNC_task_storage_get
+- BPF_FUNC_task_storage_delete
+- BPF_FUNC_get_func_ip
+- BPF_FUNC_get_branch_snapshot
+- BPF_FUNC_find_vma
+- BPF_FUNC_probe_write_user
+- I'm not sure which ones can be used by all programs, as Zvi Effron said(https://lore.kernel.org/all/CAC1LvL2SOKojrXPx92J46fFEi3T9TAWb3mC1XKtYzwU=pzTEbQ@mail.gmail.com/)
+- get_smp_processor_id also be retained(https://lore.kernel.org/all/CAADnVQ+WYLfoR1W6AsCJF6fNKEUgfxANXP01EQCJh1=99ZpoNw@mail.gmail.com/)
 
-The logic is the same as how you handle the shared ptes for mTHP.
+- Link to v3: https://lore.kernel.org/all/20250410070258.276759-1-yangfeng59949@163.com/
 
->   		vmf.pte = pte;
->   		vmf.ptl = ptl;
->   		ret = do_swap_page(&vmf);
-> @@ -1154,7 +1164,7 @@ static int collapse_huge_page(struct mm_struct *mm, unsigned long address,
->   		 * that case.  Continuing to collapse causes inconsistency.
->   		 */
->   		result = __collapse_huge_page_swapin(mm, vma, address, pmd,
-> -						     referenced);
-> +				referenced, HPAGE_PMD_ORDER);
->   		if (result != SCAN_SUCCEED)
->   			goto out_nolock;
->   	}
-> @@ -1201,7 +1211,7 @@ static int collapse_huge_page(struct mm_struct *mm, unsigned long address,
->   	pte = pte_offset_map_lock(mm, &_pmd, address, &pte_ptl);
->   	if (pte) {
->   		result = __collapse_huge_page_isolate(vma, address, pte, cc,
-> -						      &compound_pagelist);
-> +					&compound_pagelist, HPAGE_PMD_ORDER);
->   		spin_unlock(pte_ptl);
->   	} else {
->   		result = SCAN_PMD_NULL;
-> @@ -1231,7 +1241,7 @@ static int collapse_huge_page(struct mm_struct *mm, unsigned long address,
->   
->   	result = __collapse_huge_page_copy(pte, folio, pmd, _pmd,
->   					   vma, address, pte_ptl,
-> -					   &compound_pagelist);
-> +					   &compound_pagelist, HPAGE_PMD_ORDER);
->   	pte_unmap(pte);
->   	if (unlikely(result != SCAN_SUCCEED))
->   		goto out_up_write;
+Changes in v3:
+- Only modify patch description information.
+- Link to v2: https://lore.kernel.org/all/20250408071151.229329-1-yangfeng59949@163.com/
+
+Changes in v2:
+- Only modify patch description information.
+- Link to v1: https://lore.kernel.org/all/20250320032258.116156-1-yangfeng59949@163.com/
+---
+ kernel/trace/bpf_trace.c | 72 ----------------------------------------
+ 1 file changed, 72 deletions(-)
+
+diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
+index 0f5906f43d7c..52c432a44aeb 100644
+--- a/kernel/trace/bpf_trace.c
++++ b/kernel/trace/bpf_trace.c
+@@ -1430,56 +1430,14 @@ bpf_tracing_func_proto(enum bpf_func_id func_id, const struct bpf_prog *prog)
+ 	const struct bpf_func_proto *func_proto;
+ 
+ 	switch (func_id) {
+-	case BPF_FUNC_map_lookup_elem:
+-		return &bpf_map_lookup_elem_proto;
+-	case BPF_FUNC_map_update_elem:
+-		return &bpf_map_update_elem_proto;
+-	case BPF_FUNC_map_delete_elem:
+-		return &bpf_map_delete_elem_proto;
+-	case BPF_FUNC_map_push_elem:
+-		return &bpf_map_push_elem_proto;
+-	case BPF_FUNC_map_pop_elem:
+-		return &bpf_map_pop_elem_proto;
+-	case BPF_FUNC_map_peek_elem:
+-		return &bpf_map_peek_elem_proto;
+-	case BPF_FUNC_map_lookup_percpu_elem:
+-		return &bpf_map_lookup_percpu_elem_proto;
+-	case BPF_FUNC_ktime_get_ns:
+-		return &bpf_ktime_get_ns_proto;
+-	case BPF_FUNC_ktime_get_boot_ns:
+-		return &bpf_ktime_get_boot_ns_proto;
+-	case BPF_FUNC_tail_call:
+-		return &bpf_tail_call_proto;
+-	case BPF_FUNC_get_current_task:
+-		return &bpf_get_current_task_proto;
+-	case BPF_FUNC_get_current_task_btf:
+-		return &bpf_get_current_task_btf_proto;
+-	case BPF_FUNC_task_pt_regs:
+-		return &bpf_task_pt_regs_proto;
+ 	case BPF_FUNC_get_current_uid_gid:
+ 		return &bpf_get_current_uid_gid_proto;
+ 	case BPF_FUNC_get_current_comm:
+ 		return &bpf_get_current_comm_proto;
+-	case BPF_FUNC_trace_printk:
+-		return bpf_get_trace_printk_proto();
+ 	case BPF_FUNC_get_smp_processor_id:
+ 		return &bpf_get_smp_processor_id_proto;
+-	case BPF_FUNC_get_numa_node_id:
+-		return &bpf_get_numa_node_id_proto;
+ 	case BPF_FUNC_perf_event_read:
+ 		return &bpf_perf_event_read_proto;
+-	case BPF_FUNC_get_prandom_u32:
+-		return &bpf_get_prandom_u32_proto;
+-	case BPF_FUNC_probe_read_user:
+-		return &bpf_probe_read_user_proto;
+-	case BPF_FUNC_probe_read_kernel:
+-		return security_locked_down(LOCKDOWN_BPF_READ_KERNEL) < 0 ?
+-		       NULL : &bpf_probe_read_kernel_proto;
+-	case BPF_FUNC_probe_read_user_str:
+-		return &bpf_probe_read_user_str_proto;
+-	case BPF_FUNC_probe_read_kernel_str:
+-		return security_locked_down(LOCKDOWN_BPF_READ_KERNEL) < 0 ?
+-		       NULL : &bpf_probe_read_kernel_str_proto;
+ #ifdef CONFIG_ARCH_HAS_NON_OVERLAPPING_ADDRESS_SPACE
+ 	case BPF_FUNC_probe_read:
+ 		return security_locked_down(LOCKDOWN_BPF_READ_KERNEL) < 0 ?
+@@ -1489,10 +1447,6 @@ bpf_tracing_func_proto(enum bpf_func_id func_id, const struct bpf_prog *prog)
+ 		       NULL : &bpf_probe_read_compat_str_proto;
+ #endif
+ #ifdef CONFIG_CGROUPS
+-	case BPF_FUNC_cgrp_storage_get:
+-		return &bpf_cgrp_storage_get_proto;
+-	case BPF_FUNC_cgrp_storage_delete:
+-		return &bpf_cgrp_storage_delete_proto;
+ 	case BPF_FUNC_current_task_under_cgroup:
+ 		return &bpf_current_task_under_cgroup_proto;
+ #endif
+@@ -1500,20 +1454,6 @@ bpf_tracing_func_proto(enum bpf_func_id func_id, const struct bpf_prog *prog)
+ 		return &bpf_send_signal_proto;
+ 	case BPF_FUNC_send_signal_thread:
+ 		return &bpf_send_signal_thread_proto;
+-	case BPF_FUNC_perf_event_read_value:
+-		return &bpf_perf_event_read_value_proto;
+-	case BPF_FUNC_ringbuf_output:
+-		return &bpf_ringbuf_output_proto;
+-	case BPF_FUNC_ringbuf_reserve:
+-		return &bpf_ringbuf_reserve_proto;
+-	case BPF_FUNC_ringbuf_submit:
+-		return &bpf_ringbuf_submit_proto;
+-	case BPF_FUNC_ringbuf_discard:
+-		return &bpf_ringbuf_discard_proto;
+-	case BPF_FUNC_ringbuf_query:
+-		return &bpf_ringbuf_query_proto;
+-	case BPF_FUNC_jiffies64:
+-		return &bpf_jiffies64_proto;
+ 	case BPF_FUNC_get_task_stack:
+ 		return prog->sleepable ? &bpf_get_task_stack_sleepable_proto
+ 				       : &bpf_get_task_stack_proto;
+@@ -1521,12 +1461,6 @@ bpf_tracing_func_proto(enum bpf_func_id func_id, const struct bpf_prog *prog)
+ 		return &bpf_copy_from_user_proto;
+ 	case BPF_FUNC_copy_from_user_task:
+ 		return &bpf_copy_from_user_task_proto;
+-	case BPF_FUNC_snprintf_btf:
+-		return &bpf_snprintf_btf_proto;
+-	case BPF_FUNC_per_cpu_ptr:
+-		return &bpf_per_cpu_ptr_proto;
+-	case BPF_FUNC_this_cpu_ptr:
+-		return &bpf_this_cpu_ptr_proto;
+ 	case BPF_FUNC_task_storage_get:
+ 		if (bpf_prog_check_recur(prog))
+ 			return &bpf_task_storage_get_recur_proto;
+@@ -1535,18 +1469,12 @@ bpf_tracing_func_proto(enum bpf_func_id func_id, const struct bpf_prog *prog)
+ 		if (bpf_prog_check_recur(prog))
+ 			return &bpf_task_storage_delete_recur_proto;
+ 		return &bpf_task_storage_delete_proto;
+-	case BPF_FUNC_for_each_map_elem:
+-		return &bpf_for_each_map_elem_proto;
+-	case BPF_FUNC_snprintf:
+-		return &bpf_snprintf_proto;
+ 	case BPF_FUNC_get_func_ip:
+ 		return &bpf_get_func_ip_proto_tracing;
+ 	case BPF_FUNC_get_branch_snapshot:
+ 		return &bpf_get_branch_snapshot_proto;
+ 	case BPF_FUNC_find_vma:
+ 		return &bpf_find_vma_proto;
+-	case BPF_FUNC_trace_vprintk:
+-		return bpf_get_trace_vprintk_proto();
+ 	default:
+ 		break;
+ 	}
+-- 
+2.43.0
+
