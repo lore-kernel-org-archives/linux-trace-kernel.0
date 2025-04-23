@@ -1,178 +1,147 @@
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C586E1EFFBB;
-	Wed, 23 Apr 2025 17:05:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 631DE1F0988;
+	Wed, 23 Apr 2025 17:33:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745427915; cv=none; b=LxAZXipolWjaIxdk4zdWyy0w4o7/43OeoEOPAoj3ZcCAizVG7FZW41Dlz6wEnqW1qtqn2odPLQPLBNa88NFNjfQNfQxYYgwXhuf0NMM0/Hgut8/TN39nrC3supdGgrelkyhvT+9W+CYCnVrWObtWMrBpFmJKju7BPiipFm4h8cc=
+	t=1745429617; cv=none; b=dF2w9RZ9OLTRlZ7Gsl2bMvh8GFDcnzjUZMXQ+JZ9iqGG3OiGDYxocmzkWZi70mFz6jhQLoCisKav4FfKRxKQYz2tRn43Lw2GbOnOOFtKAzIwpZ6tM6HUH2DXm2EQgCpPYuFfiNnko8FFivMRe5PgTQJDnFzuH4MlNOCSa+DKOwY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745427915; c=relaxed/simple;
-	bh=6zKpPS9+zRAIYHWO5bW9Y1SGeFtJzszIk1IQ9wX2yuU=;
+	s=arc-20240116; t=1745429617; c=relaxed/simple;
+	bh=JPOBe9g6g94eTDQS9U7ZdFDK4HkeCt1AIzRSPtvN1YA=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=SwWSzEj0q2cZu9x64OltwDYVqTW2erUtycrAqI/B9EYSMEd0Tv0ZGOxb0q1iX5nSBjKnozivaTwtugfyNwqm1c3IZQFAmikJZ5MidbzNaYQ9Wefv7P3fxWF8uuryJY4Au0AkEJwvusN1Fis9FMK6xrQpJ95fdzmH/VhrDgpG2QE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IBl9SIb+; arc=none smtp.client-ip=209.85.214.171
+	 To:Cc:Content-Type; b=uPgLEqe0NJBq/LsP4Nbz3nVA9WFq+Mvp7pmk7Ram0qAXJQWno9Ic5FMLnfmoNSG1sUffg/xum+JSqpVdDBO3arMBezy7hEzsQgevRf1MTUxtlJgy3uYl8Zr5rb1St8S3l0ffpKvNNweNhNV6A+qYzDV2n5XbXfIgk3ZaZVup5qE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RJqmfLbA; arc=none smtp.client-ip=209.85.218.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IBl9SIb+"
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-22928d629faso690575ad.3;
-        Wed, 23 Apr 2025 10:05:13 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RJqmfLbA"
+Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-acbb85ce788so25740566b.3;
+        Wed, 23 Apr 2025 10:33:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745427913; x=1746032713; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1745429614; x=1746034414; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=6zKpPS9+zRAIYHWO5bW9Y1SGeFtJzszIk1IQ9wX2yuU=;
-        b=IBl9SIb+EIhbiykHnqaHS8wFZrzxK3u9PlE+0wI+wYskPPz6kw3z8DuzJSe253erdc
-         lXjpeFxIdhIIBBmLp+pZmFLF2DwbX7XYd07p6q6ZFXK/+Hc1J7VUJwD8eQDkaYh7E00x
-         /rVskkbhIoZFJnX0KO0SDj1NL5WIJJkODnrDr7J0v2+MwIN6SZNyaVAhIaghy1LeF6Kk
-         wVX981hEQxgGyfKUh13TVCcJWvRZew2ZN5sGc9xazN+wErwSapRtlMyuqHHKBdMish2S
-         ZQ4XFqWt5nWglIPEoG4d2ZmD6tyG7k9yKVKuK3y8gciCwtGxhSFahGizRD8uJs79KSnt
-         SOiA==
+        bh=nOxS1UQQ3c2fDDVHNEtps3Saq1mNzAZtSfAkoVw7BfU=;
+        b=RJqmfLbAECuz/kPRLVPI5dIO7YocQrdhVRU+q1hjS/8kYh0+NJda0RNfGB996IrHgR
+         yIJjWU7Kt5fvFM9wIkkm/hg44GbUj+x3bLrx/ibm+INhvgyAYRINoV8FZ5BQBOeXQjoL
+         cOvAYRHVuz6jhMeV19xZOWq7J2HEMdSdprAyLsSnc+4n9xte5IiNye73yMUXvyYaM7Qv
+         o+wg+Eorypdr9lYhFbLucF1EnLYIBhETO0fJCh220hLJiNj5MFAsTpyHlnze7I584uu6
+         G29IhBvONpuxkq1AbYMrfQinPPd7CW/t2IOWx1sn34HVjcVSQwfS+j49Y8d8zruaXxxD
+         u0qQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745427913; x=1746032713;
+        d=1e100.net; s=20230601; t=1745429614; x=1746034414;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=6zKpPS9+zRAIYHWO5bW9Y1SGeFtJzszIk1IQ9wX2yuU=;
-        b=Cp0FfCH/I0/lTiRFhJAy9NwkBhhd4ltUWETtrubvSKcwwFTLtACK3WFv2y3G/X8qpL
-         cNfyMxbvBgLay7nVVhp8hAS5TEFh3/7eD0SNaO+1Zblt3S3K2WL3r9b+kjQaCcA4LUXY
-         Noyd+N7z8+QFvnwfY5YaYA+q4zB9p1xiu1EO2sEWS1p7dIQ9cW9hi1sCCLgaqFeZDuxt
-         +NZnZv+1NGVReroouowgeBiBfbpawEoakHU5YAQ02v4vafIfkkORmw5/6yuMpaxQcxYY
-         LUTvCIyr4r2nZNP2/gBHUiEeMnPegp/nKXK1LfEdtDvjkYFtRPR53mK+UV82eJbrL0aS
-         lAwQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVliKPwMfRP8jR6j7bLjkyk+qWOiWgLppe/qeLwS0MYsU4RQZOFR6COAd/zTihkVdMjB69btDsLj0s2EuY+CU/18+Ey@vger.kernel.org, AJvYcCWbC9nKiEqXrMHG8egeixIZMQuBsd7Uu3raeOoqkGw/RQwkOww8r/LzGUEQ95sOxVGqcSM=@vger.kernel.org, AJvYcCWjiTa4k1NYU29sbGvgLq3MZZCamq0QTf+ErcFp2svJbbQsuOEBgyX/zesIQcy5Tf4qlsuW7TtTxx39N/kx@vger.kernel.org
-X-Gm-Message-State: AOJu0YzEFimf267bjrowWFHPcyxWrpxrbuypJgfCu60XeuaaZlUsbqp3
-	c4PU88O8Ulfr23gp34IvEbnKurRm+Zqhw/+eVgteqm9H6aWS41p6NkgKHKBf6wjeLDT6C9pjgZS
-	b4HVAQSHn+NnOOF3Kt349V4/wciy/hA==
-X-Gm-Gg: ASbGncvp9gJLfZK/vYblTJ+npVx9y2yNGXZ8wGageqgHrTPbkrMmhWpMdbOHJcjova1
-	SM6ueS2faoDZRjgUBXlni8rwoodrvasqk8GHAVE7/eEOrJN90MFqLSTNICnd3uiEWsTGsrFUh0S
-	71AHR6Zf1lLEOPjUimTlQ0W2n2NF4a0rCHzFyhgg==
-X-Google-Smtp-Source: AGHT+IGMZQKwDubGKkLCAEJvDU99u5TZOFapB+c2J61U8leklrLSHzo/pkQaNbIOUkY2y9M+FjfNNc4gRUsis+yKnzI=
-X-Received: by 2002:a17:90a:d010:b0:2fe:7f40:420a with SMTP id
- 98e67ed59e1d1-3087bb69218mr31482113a91.17.1745427912929; Wed, 23 Apr 2025
- 10:05:12 -0700 (PDT)
+        bh=nOxS1UQQ3c2fDDVHNEtps3Saq1mNzAZtSfAkoVw7BfU=;
+        b=gpZ1L+71j5CJvBCI4O0ayQmlsBW0kYJo7PA+Dg6xd90NEAGpHdUXThZZ7hj2y5/zJR
+         AiHoNJBIQRrY5uFrAgrbHii5MIyW7qcvBuOx3awf8AftKPz7R0CH+pIhyUOuG39vwWx3
+         RgKd5JSMiWvKqwB+4Dr3nh7TvETmEaZZ1VktIETVDVibocwKQS6W9NobvbsoI35cR3BS
+         L+gCxZd33GXOChfImqaGS8VlfyHa2ynlUgGjp6MlzygCJ4SsYrI0XRXFiGf+3K6RHR5P
+         if/pW1v98D0SmKD3igYYYa0HleOEIkOgn5qtlswSd1Y6XTIh1VZRq8OKoCpv1S7PEQg2
+         JK8A==
+X-Forwarded-Encrypted: i=1; AJvYcCUTw6DYlgUdKFY+LnHIioe9W1C3o0TfGweiX6Fefu0FJ42HwuHaQeiYRxr5n39uFFtUKJ1ylCsO7uS5DziZDg5jI8fP@vger.kernel.org, AJvYcCVJyKPLTGOCNKaldciobxtQYmQPVHk325Im2iPq+XedqTrfBJ0T6IWfzvc6x8geDwhfr0E5U/+5lCd4sif/@vger.kernel.org, AJvYcCW/0VJadNgIkYuItaZ8kgtjmm7XLMtYAngDB7iYpmqI6PzUIiqNcMQ3oMJ6sP3oCgyie6E=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyZTaV0jjyexkQpNZt462uEabQHb8GuJ7NUlwwEwZWX9bMxCDB6
+	/RJku6fyb8FZjKiXIyoQnnytS4bV6kZHo+bJzquJ8BagQZW0QaaxPFzCat8O2Y8yf6tv3wODcHK
+	N7PvVm+AIQP0hGMoq/065SMxYtps=
+X-Gm-Gg: ASbGncuueCbEEZ7qMrEnGluzoJrx6r4MG6G3M1JD3XpGo/RSPeEv51WD79y2aPPh/Dz
+	a/da0nZWEHwDhQAclpTbcPvY+Q/NPGw1lWl0BNy2pE/ZsO2Al6vUrlMKKNdQQU31BXSOZcMmGDM
+	pABtoOwppyaGcPH4muh0XxhM7dmWVZvLsdM24qNQ==
+X-Google-Smtp-Source: AGHT+IFYXcl6J+Mo4CdXHQUsaQdz3iB0dtTGgvwpmqh4GA7rcN3cSmqr9npM5wY3l/J3KUQGPBg4Sg0XkJT7uz/us4E=
+X-Received: by 2002:a17:907:d29:b0:aca:d4af:39ed with SMTP id
+ a640c23a62f3a-acb74af4362mr1901996266b.4.1745429613339; Wed, 23 Apr 2025
+ 10:33:33 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250410070258.276759-1-yangfeng59949@163.com>
- <CAEf4Bzai7NL-3=1SVi4-WWYWEY6Lzrb8GBfKnt6FG8sNm2OMRQ@mail.gmail.com> <CAC1LvL2SOKojrXPx92J46fFEi3T9TAWb3mC1XKtYzwU=pzTEbQ@mail.gmail.com>
-In-Reply-To: <CAC1LvL2SOKojrXPx92J46fFEi3T9TAWb3mC1XKtYzwU=pzTEbQ@mail.gmail.com>
+References: <20250421214423.393661-1-jolsa@kernel.org> <20250421214423.393661-12-jolsa@kernel.org>
+In-Reply-To: <20250421214423.393661-12-jolsa@kernel.org>
 From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Wed, 23 Apr 2025 10:05:00 -0700
-X-Gm-Features: ATxdqUGMzy3AYWGX5UwpIo9ghrB61M-1gmWsamJS27T0RdXOwdL9vKenW5sik14
-Message-ID: <CAEf4BzZtOUWyQego7Uj5GH48-bLM1stSyi-uZ=+JTtGzYojFAA@mail.gmail.com>
-Subject: Re: [PATCH bpf-next v3] bpf: Remove redundant checks
-To: Zvi Effron <zeffron@riotgames.com>
-Cc: Feng Yang <yangfeng59949@163.com>, ast@kernel.org, daniel@iogearbox.net, 
-	andrii@kernel.org, martin.lau@linux.dev, eddyz87@gmail.com, song@kernel.org, 
-	yonghong.song@linux.dev, john.fastabend@gmail.com, kpsingh@kernel.org, 
-	sdf@fomichev.me, haoluo@google.com, jolsa@kernel.org, 
-	mattbobrowski@google.com, rostedt@goodmis.org, mhiramat@kernel.org, 
-	mathieu.desnoyers@efficios.com, bpf@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Date: Wed, 23 Apr 2025 10:33:18 -0700
+X-Gm-Features: ATxdqUFqRXEcECOhlq4qXwN-uOpHfxEANQ5tes4UmS53WhUB_RLht1fRyGG4QoY
+Message-ID: <CAEf4BzbxCqgPErQVBV7Ojz23ZEqYKvxi0Y4j8hq6FgXVvdQo9A@mail.gmail.com>
+Subject: Re: [PATCH perf/core 11/22] selftests/bpf: Use 5-byte nop for x86
+ usdt probes
+To: Jiri Olsa <jolsa@kernel.org>
+Cc: Oleg Nesterov <oleg@redhat.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, x86@kernel.org, 
+	Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>, 
+	John Fastabend <john.fastabend@gmail.com>, Hao Luo <haoluo@google.com>, 
+	Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Alan Maguire <alan.maguire@oracle.com>, David Laight <David.Laight@aculab.com>, 
+	=?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas@t-8ch.de>, 
+	Ingo Molnar <mingo@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Apr 16, 2025 at 3:44=E2=80=AFPM Zvi Effron <zeffron@riotgames.com> =
-wrote:
+On Mon, Apr 21, 2025 at 2:46=E2=80=AFPM Jiri Olsa <jolsa@kernel.org> wrote:
 >
-> On Wed, Apr 16, 2025 at 2:56=E2=80=AFPM Andrii Nakryiko
-> <andrii.nakryiko@gmail.com> wrote:
-> >
-> > On Thu, Apr 10, 2025 at 12:03=E2=80=AFAM Feng Yang <yangfeng59949@163.c=
-om> wrote:
-> > >
-> > > From: Feng Yang <yangfeng@kylinos.cn>
-> > >
-> > > Many conditional checks in switch-case are redundant
-> > > with bpf_base_func_proto and should be removed.
-> > >
-> > > Signed-off-by: Feng Yang <yangfeng@kylinos.cn>
-> > > Acked-by: Song Liu <song@kernel.org>
-> > > ---
-> > > Changes in v3:
-> > > - Only modify patch description information.
-> > > - Link to v2: https://lore.kernel.org/all/20250408071151.229329-1-yan=
-gfeng59949@163.com/
-> > >
-> > > Changes in v2:
-> > > - Only modify patch description information.
-> > > - Link to v1: https://lore.kernel.org/all/20250320032258.116156-1-yan=
-gfeng59949@163.com/
-> > > ---
-> > > kernel/trace/bpf_trace.c | 72 ---------------------------------------=
--
-> > > 1 file changed, 72 deletions(-)
-> > >
-> >
-> > All this looks good, I checked that those functions indeed are allowed
-> > in bpf_base_func_proto. The only (minor) differences are capabilities,
-> > bpf_base_func_proto() correctly guards some of the helpers with
-> > CAP_BPF and/or CAP_PERFMON checks, while bpf_tracing_func_proto()
-> > doesn't seem to bother (which is either a bug or any tracing prog
-> > implies CAP_BPF and CAP_PERFMON, I'm not sure, didn't check).
-> >
-> > But I think we can take it further and remove even more stuff from
-> > bpf_tracing_func_proto and/or add more stuff into bpf_base_func_proto
-> > (perhaps as a few patches in a series, so it's easier to review and
-> > validate).
-> >
-> > Basically, except for a few custom implementations that depend on
-> > tracing program type (like get_stack and others like that), if
-> > something is OK to call from a tracing program it should be ok to call
-> > from any program type. And as such it can (should?) be added to
-> > bpf_base_func_proto, IMO.
+> Using 5-byte nop for x86 usdt probes so we can switch
+> to optimized uprobe them.
 >
-> Is this true? Does it make sense? (See below.)
+> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+> ---
+>  tools/testing/selftests/bpf/sdt.h | 9 ++++++++-
+>  1 file changed, 8 insertions(+), 1 deletion(-)
 >
-> > P.S. I'd name the patch/series as "bpf: streamline allowed helpers
-> > between tracing and base sets" or something like that to make the
-> > purpose clearer
-> >
-> > [...]
-> >
-> > > case BPF_FUNC_get_current_uid_gid:
-> > > return &bpf_get_current_uid_gid_proto;
-> > > case BPF_FUNC_get_current_comm:
-> > > return &bpf_get_current_comm_proto;
-> >
-> > I'm surprised these two are not part of bpf_base_func_proto, tbh...
-> > maybe let's move them there while we are cleaning all this up?
->
-> Do these make sense in all BPF program types such that they belong in
-> bpf_base_func_proto? For example, XDP programs don't have a current uid a=
-nd
-> gid, do they?
 
-everything in the kernel, whether NMI handler, hardirq, softirq, or
-whatnot runs with *some* current task. So in that sense there is
-always pid/tgid and uid/gid. It might not be very relevant for XDP
-programs, but it's there, and so if we allow to get current pid/tgid,
-why not allow the current comm and uid/gid?
+So sdt.h is an exact copy/paste from systemtap-sdt sources. I'd prefer
+to not modify it unnecessarily.
 
+How about we copy/paste usdt.h ([0]) and use *that* for your
+benchmarks? I've already anticipated the need to change nop
+instruction, so you won't even need to modify the usdt.h file itself,
+just
+
+#define USDT_NOP .byte 0x0f, 0x1f, 0x44, 0x00, 0x00
+
+before #include "usdt.h"
+
+
+  [0] https://github.com/libbpf/usdt/blob/main/usdt.h
+
+> diff --git a/tools/testing/selftests/bpf/sdt.h b/tools/testing/selftests/=
+bpf/sdt.h
+> index 1fcfa5160231..1d62c06f5ddc 100644
+> --- a/tools/testing/selftests/bpf/sdt.h
+> +++ b/tools/testing/selftests/bpf/sdt.h
+> @@ -236,6 +236,13 @@ __extension__ extern unsigned long long __sdt_unsp;
+>  #define _SDT_NOP       nop
+>  #endif
 >
-> > pw-bot: cr
-> >
-> > > - case BPF_FUNC_trace_printk:
-> > > - return bpf_get_trace_printk_proto();
-> > > case BPF_FUNC_get_smp_processor_id:
-> > > return &bpf_get_smp_processor_id_proto;
-> >
-> > this one should be cleaned up as well and
-> > bpf_get_smp_processor_id_proto removed. All BPF programs either
-> > disable CPU preemption or CPU migration, so bpf_base_func_proto's
-> > implementation should work just fine (but please do it as a separate
-> > patch)
-> >
-> > > - case BPF_FUNC_get_numa_node_id:
-> > > - return &bpf_get_numa_node_id_proto;
-> > > case BPF_FUNC_perf_event_read:
-> > > return &bpf_perf_event_read_proto;
-> >
-> > [...]
-> >
+> +/* Use 5 byte nop for x86_64 to allow optimizing uprobes. */
+> +#if defined(__x86_64__)
+> +# define _SDT_DEF_NOP _SDT_ASM_5(990:  .byte 0x0f, 0x1f, 0x44, 0x00, 0x0=
+0)
+> +#else
+> +# define _SDT_DEF_NOP _SDT_ASM_1(990:  _SDT_NOP)
+> +#endif
+> +
+>  #define _SDT_NOTE_NAME "stapsdt"
+>  #define _SDT_NOTE_TYPE 3
+>
+> @@ -288,7 +295,7 @@ __extension__ extern unsigned long long __sdt_unsp;
+>
+>  #define _SDT_ASM_BODY(provider, name, pack_args, args, ...)             =
+     \
+>    _SDT_DEF_MACROS                                                       =
+     \
+> -  _SDT_ASM_1(990:      _SDT_NOP)                                        =
+     \
+> +  _SDT_DEF_NOP                                                          =
+     \
+>    _SDT_ASM_3(          .pushsection .note.stapsdt,_SDT_ASM_AUTOGROUP,"no=
+te") \
+>    _SDT_ASM_1(          .balign 4)                                       =
+     \
+>    _SDT_ASM_3(          .4byte 992f-991f, 994f-993f, _SDT_NOTE_TYPE)     =
+     \
+> --
+> 2.49.0
+>
