@@ -1,302 +1,216 @@
-Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
+Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31453DF58;
-	Wed, 23 Apr 2025 17:46:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E19426A0D6;
+	Wed, 23 Apr 2025 18:08:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745430403; cv=none; b=mXIZepleFdPmwRZqBXJlQ7c+DNWAtQm9NngKuOcro+TUH7H9RHL+MKhymbei+1EkpfPj1x+uFY3dRI9ujYTxdEgxeJNDomjSKoxBBqhDUSy+xdu7pZKS5xq7JUXB7vaud7qy3F4qXwHoWZZzQ7ArYdDB9Gj0l4ThIMZS+uaXeVI=
+	t=1745431713; cv=none; b=aoTU8paE42uUo7psGbDNFf/vs4DOiMkSxyS0u6DgsOSXkOXptNsZatQM5uHjtXRe5TuhzmxX9wndjnF7lwTYHCaNZrN2Tqvo3n5QSwAY1nnY3ErO43txKXxL/kal8VFO5a/tKcC9ez6s4atfcL/02s1cbia+IQq7ObHpeBwW2JM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745430403; c=relaxed/simple;
-	bh=biO9qF+r2/A2MlZYQbH8x4xNl8bGQc1c6ERagk4XPzw=;
+	s=arc-20240116; t=1745431713; c=relaxed/simple;
+	bh=Qa109e2Yerw+mY7jqK/IU4w9d41jbcc6x0fyLkrDnas=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=kAKZ0DKt0Gn0kyfdbVlyw0g3nA4nJY9wc8XOa2kvp2DqZCF2oyL5E3otrVVXblPCQnHb3sPefUB3lMMpecWyyKg+HZqSzbjF2CE/ZWb9dt5qo/SKwwQdZZo5DKgBMIPd+RJa4G61xRo2A4HUChA1Y2R+BUr4H1x9wuvMBkZFPuU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fNo9Yx+V; arc=none smtp.client-ip=209.85.208.50
+	 To:Cc:Content-Type; b=asV5mXGPXS0uWsECkSBGoC5SScAgCUe8uKaLIvzSmxLiLpqYo5LRKICKSvlUDLSGUlqONcZNXHK9SaciI3Mgw9vU06MSaGuQlGtSIadTMXJYi8L2k/5UDku17rK0Zh5yIl8pf14uiSqPtrLAMHNFpo08CZx1jKrfQJ9iGJFZZRU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AY+apih7; arc=none smtp.client-ip=209.85.218.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fNo9Yx+V"
-Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-5edc07c777eso82671a12.3;
-        Wed, 23 Apr 2025 10:46:40 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AY+apih7"
+Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-ac29fd22163so25348266b.3;
+        Wed, 23 Apr 2025 11:08:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745430399; x=1746035199; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1745431709; x=1746036509; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=sXZQn8kvassAzt0nM7Nxq/3bf8QmpImuUiv4Do+uubk=;
-        b=fNo9Yx+VHn0nXuhyZWtSourePGMpALME2vKzyIfeRbDbx3Vydh4v+vSMZh4MRYMy1U
-         s8thpB9O9Pp70ODCr57z6jfjU9gb7yJDkDTp292I6U4+s7PWFZsnLK/ldly2icpvbR+8
-         jKqbg0/Z2T7OQvAK1OWGM4SiI230aVD0jVmm3KqAdMHlO9vcqWNbflKDHBGbPnIV5gS0
-         9MlgF/7ePEjtXQQzV4rZmOJHK2fC0Yk6HGTKUz8BGLTqEbdL9Sge0WytkD0oEBB6OisY
-         1ZgUE+izXWKMWjzEPL0I09XyzBzABgTPVnFmv5rHz2HMcSPIN8FtKHnV7S/ydnr2tCnU
-         iI6w==
+        bh=Xi60dEtyUhPZNtpwovqAvM845aWNbX2RRNkZ0SaNpQQ=;
+        b=AY+apih7D9iZQGY76nGRRVk2rpH2xMNfz+R7NK0pfMfwh6519MCAUyD1buBQNTRm0j
+         xV622T/bSW2YsjYWBFcoazHIvp2xU4Fec1hx43eVW5Rz2pXG68uU02sjV9bvM8zqWDoN
+         lX/gZoEWBQYSQx5MZ0JDRzW/bNm/PkGrtzmiFzXetJVKkpacVmxXLjCU4hAVaM7biQoG
+         LoIzWdnUWuTJFHI9PVJsLrmYfLZZXZLjceR00vp+JAT3itgHLZ9L4P4D5GL4p96z5oCZ
+         eK0Heks+cbDkws/Qh1/2rfUanZjvlWCtHdUPnlu7nyWft6ZMYrnGsQGsylVY9Hx4Ynmx
+         EmSA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745430399; x=1746035199;
+        d=1e100.net; s=20230601; t=1745431709; x=1746036509;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=sXZQn8kvassAzt0nM7Nxq/3bf8QmpImuUiv4Do+uubk=;
-        b=d+6oQdK/E1KhvUot0iPnRKTpFkDHVfaA4vQpeF02aJu8zvBMWiX/yKvwOH9nKw1+Uj
-         S2TkWdOZhVrYzT09/K7+ImIzyCPNhlXaxiJyM5RuUvJX/mwnxhU8WZfc5Te0gQprrDOQ
-         csQ4dh3nGpsFsbT76vBY6CIZFmg7VhWQEPxSUEVovilPXXOgBJm8+tCQy2kbS3TskYsr
-         OlbKSR6CZTGHf14iR7Yc/p0b6l9DyF9vbz5amRi42NLC9bwFwhrJ+reasGrZKucD8W7L
-         Jo52I3mrshRbf5s7kpZkUQY1TUYnD08ZNO04sJWHNM0dXwapi2Kht/LT0WIBSdy9V7i1
-         +kTg==
-X-Forwarded-Encrypted: i=1; AJvYcCVKBc0Q74sdpIqy04hQjJb6kgJuRibvem2eJfMiJraUnoYW04HwpYmg4IbWWDNXLHvNx7I=@vger.kernel.org, AJvYcCVY1HKx8g5MyOQQOWs18yAJ6ESdzDb6E3S9MI8VAMySlHAVu9lPbIuVvqlHfXiaDwK4K5UbykVwTAPSg4P/@vger.kernel.org, AJvYcCXCwovlxuYIOC14QF2JK7fTaWi1TuILrOitgjga8iYjMrVfSU3nIDr5ZiOgHq1igLRAjySB1CZHq0widVNXmJpzuK4E@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy8V32aHiK9DqO92WxXtgEWwGbVlYYfP551XFSwrQZV4lrUk2HN
-	qHDvxXNsnBEI7XLPIwkq5scXe3eL4Xg0rBi7MKzpPOT0kz6AT5aaed3OYTZVcCQTVZkIpI/vhQ2
-	AEj5t/Ea9z606VsUc9L6q1vudml8=
-X-Gm-Gg: ASbGncs2a7cw4JRiUAm/GX0Ls1y6rJhFl33RwJ5pFP9kkNIcIY+gXUXZALc49rI8asG
-	Fg7Aa0SYW4ZioEqejuhL/agqc2U01f4634aKgRB3Lfutn5g1fDjYnTaNQ8KJpMFtJ9nY+np0JxX
-	ADdGmAMciOAQ8RFpTBygO0qDXcyZp7+Y/NlzLlfg==
-X-Google-Smtp-Source: AGHT+IFlDdIotzZmdGUhuohyhf84/GoWd15MMTbUB7VohF0qWVhNtJbadVXCr5RNeA1/OjEhELyOiYrhVKgH5hVT6dM=
-X-Received: by 2002:a17:907:6e9e:b0:ace:3af9:4294 with SMTP id
- a640c23a62f3a-ace54e6c8cbmr2350066b.12.1745430399311; Wed, 23 Apr 2025
- 10:46:39 -0700 (PDT)
+        bh=Xi60dEtyUhPZNtpwovqAvM845aWNbX2RRNkZ0SaNpQQ=;
+        b=hV57HynVqGkK8VsxoJWTOlgWA1qH8HPV5PPJW8pOhriY1D8KzzRKtKl1C/GXOCGRsR
+         yQxaXTP/a1fvx8tkjimtaUG5GCnC+Xp3V9MIIbibEbj/9XmrnHL5TcmIwY42jMtopUcQ
+         eWAITgNE+aOdsE1JtQO24KqqyyZq0UumJuHL/KEz5Bd9kkBP/2VXCEfdl9z9Vk4GPn9E
+         EYShXAv3KALtoJpAcvHmxTz4LLgNxNyslaqO5MQrfVnpPd+6226jL7eOJhTo5cXQzgCh
+         MyEhnK38hNgHdRhTAGmRjpR8MM+mID9rWz9dq5qmPIHxYeN3OvoOXhRH4nMoruTqvbAH
+         zn0g==
+X-Forwarded-Encrypted: i=1; AJvYcCU/yGcqDtcUGEOEi4lV122gk+RY8s3gjhrn6ExhYQpzcEkC9E8XEtyBkVySy9JSvhkmZ9o=@vger.kernel.org, AJvYcCWT4GdxDzZtGr0hRddQ5vB6DTy9Kur3lkBk+Q2QS/7IZdzWC3BIM0lY/+kqoVes/TNtmbJGDjbOTtOehJl6@vger.kernel.org, AJvYcCWlD6ZrmqxQkjtWm6kITaKvobuzN/XgDBdeA5Vdsq29Zku7fmZn5SxrwbtAUy2WVD0YEUN5CQ65DRv18OKX91D55KvS@vger.kernel.org
+X-Gm-Message-State: AOJu0YwnktYOUSSf4ifPKm0MznkI4rJggIvySa6TlhzSFjmai+2I4026
+	UTdosRnhQFcW8XRM5KKisRwT96+IDG1NHwwFZC/xzjiqnFat+Us0RMP19/FS4JdXlcsmvG0cZ/V
+	ZgXWk1xmYEfIiCqo0tufDopbAZgncEWpF
+X-Gm-Gg: ASbGnct9/UcIz/kBs2S7fBWnF/yRoAdQaKFvKKTd8eKxJGyTChO74NX7je4/uzVDLbU
+	Mn84Ddu+YuQWPr5jJ3mpyyhTB7uBKHyLsoz8UBv9gIwag0iNfKJkVnL8HgiVc1/v+S0JHtpvQLy
+	/1ibf3WMHAJAPTugyGfrMQCTkU2ZzJ45CSYYL6tQ==
+X-Google-Smtp-Source: AGHT+IEUz+FjvBAD0SgTo5QNsN500GYb2FaOEiFZf2hUtW3G4MlRraoJZ25kw8TmyqSeLTC0Rt6SB03a01k9n1/8QzE=
+X-Received: by 2002:a17:907:1c10:b0:aca:cda9:3170 with SMTP id
+ a640c23a62f3a-acb74d65bacmr1910978866b.46.1745431709234; Wed, 23 Apr 2025
+ 11:08:29 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250421214423.393661-1-jolsa@kernel.org> <20250421214423.393661-19-jolsa@kernel.org>
-In-Reply-To: <20250421214423.393661-19-jolsa@kernel.org>
+References: <20250423073151.297103-1-yangfeng59949@163.com>
+In-Reply-To: <20250423073151.297103-1-yangfeng59949@163.com>
 From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Wed, 23 Apr 2025 10:46:24 -0700
-X-Gm-Features: ATxdqUEi4MHhQHNUnV8CW4TsFrqv9Z3ZPlsGZG8pOa83e1POIp2T2kHGr4gt2l8
-Message-ID: <CAEf4BzZu0T5DLROi6oisneB3PyGDKZrME9+5qvw4aHeyOyNiYQ@mail.gmail.com>
-Subject: Re: [PATCH perf/core 18/22] selftests/bpf: Add uprobe_regs_equal test
-To: Jiri Olsa <jolsa@kernel.org>
-Cc: Oleg Nesterov <oleg@redhat.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, x86@kernel.org, 
-	Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>, 
-	John Fastabend <john.fastabend@gmail.com>, Hao Luo <haoluo@google.com>, 
-	Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Alan Maguire <alan.maguire@oracle.com>, David Laight <David.Laight@aculab.com>, 
-	=?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas@t-8ch.de>, 
-	Ingo Molnar <mingo@kernel.org>
+Date: Wed, 23 Apr 2025 11:08:14 -0700
+X-Gm-Features: ATxdqUGYawM4t6dv3vcfJQGfxK9pbDXk54HpkHaSvGFwCeEH0FwcNdd-mxfiJA0
+Message-ID: <CAEf4Bza6gK3dsrTosk6k3oZgtHesNDSrDd8sdeQ-GiS6oJixQg@mail.gmail.com>
+Subject: Re: [PATCH bpf-next v4] bpf: streamline allowed helpers between
+ tracing and base sets
+To: Feng Yang <yangfeng59949@163.com>
+Cc: ast@kernel.org, daniel@iogearbox.net, andrii@kernel.org, 
+	martin.lau@linux.dev, eddyz87@gmail.com, song@kernel.org, 
+	yonghong.song@linux.dev, john.fastabend@gmail.com, kpsingh@kernel.org, 
+	sdf@fomichev.me, haoluo@google.com, jolsa@kernel.org, 
+	mattbobrowski@google.com, rostedt@goodmis.org, mhiramat@kernel.org, 
+	mathieu.desnoyers@efficios.com, bpf@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Apr 21, 2025 at 2:48=E2=80=AFPM Jiri Olsa <jolsa@kernel.org> wrote:
+On Wed, Apr 23, 2025 at 12:33=E2=80=AFAM Feng Yang <yangfeng59949@163.com> =
+wrote:
 >
-> Changing uretprobe_regs_trigger to allow the test for both
-> uprobe and uretprobe and renaming it to uprobe_regs_equal.
+> From: Feng Yang <yangfeng@kylinos.cn>
 >
-> We check that both uprobe and uretprobe probes (bpf programs)
-> see expected registers with few exceptions.
+> Many conditional checks in switch-case are redundant
+> with bpf_base_func_proto and should be removed.
 >
-> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+> Regarding the permission checks bpf_base_func_proto:
+> The permission checks in bpf_prog_load (as outlined below)
+> ensure that the trace has both CAP_BPF and CAP_PERFMON capabilities,
+> thus enabling the use of corresponding prototypes
+> in bpf_base_func_proto without adverse effects.
+> bpf_prog_load
+>         ......
+>         bpf_cap =3D bpf_token_capable(token, CAP_BPF);
+>         ......
+>         if (type !=3D BPF_PROG_TYPE_SOCKET_FILTER &&
+>             type !=3D BPF_PROG_TYPE_CGROUP_SKB &&
+>             !bpf_cap)
+>                 goto put_token;
+>         ......
+>         if (is_perfmon_prog_type(type) && !bpf_token_capable(token, CAP_P=
+ERFMON))
+>                 goto put_token;
+>         ......
+>
+> Signed-off-by: Feng Yang <yangfeng@kylinos.cn>
+> Acked-by: Song Liu <song@kernel.org>
 > ---
->  .../selftests/bpf/prog_tests/uprobe_syscall.c | 58 ++++++++++++++-----
->  .../selftests/bpf/progs/uprobe_syscall.c      |  4 +-
->  2 files changed, 45 insertions(+), 17 deletions(-)
->
-> diff --git a/tools/testing/selftests/bpf/prog_tests/uprobe_syscall.c b/to=
-ols/testing/selftests/bpf/prog_tests/uprobe_syscall.c
-> index f001986981ab..6d88c5b0f6aa 100644
-> --- a/tools/testing/selftests/bpf/prog_tests/uprobe_syscall.c
-> +++ b/tools/testing/selftests/bpf/prog_tests/uprobe_syscall.c
-> @@ -18,15 +18,17 @@
->
->  #pragma GCC diagnostic ignored "-Wattributes"
->
-> -__naked unsigned long uretprobe_regs_trigger(void)
-> +__attribute__((aligned(16)))
-> +__nocf_check __weak __naked unsigned long uprobe_regs_trigger(void)
->  {
->         asm volatile (
-> -               "movq $0xdeadbeef, %rax\n"
-> +               ".byte 0x0f, 0x1f, 0x44, 0x00, 0x00     \n"
 
-Is it me not being hardcore enough... But is anyone supposed to know
-that this is nop5? ;) maybe add /* nop5 */ comment on the side?
+LGTM, applied to bpf-next, thanks. See comments on remaining helpers below.
 
-> +               "movq $0xdeadbeef, %rax                 \n"
+> Changes in v4:
+> - Only modify patch description information.
+> - At present, bpf_tracing_func_proto still has the following ID:
+> - BPF_FUNC_get_current_uid_gid
+> - BPF_FUNC_get_current_comm
 
-ret\n doesn't align newline, and uprobe_regs below don't either. So
-maybe don't align them at all here?
+I don't see why these two cannot be used in any program, after all, we
+have bpf_get_current_task(), these are in the same family.
 
->                 "ret\n"
->         );
->  }
+> - BPF_FUNC_get_smp_processor_id
+
+Based on another thread, I think it's some filter programs that have
+to use raw variant of it, right? All other should use non-raw
+implementation. So I think the right next step would be to make sure
+that bpf_base_func_proto returns non-raw implementation, and only
+those few program types that are exceptions should use raw ones?
+
+> - BPF_FUNC_perf_event_read
+
+should be fine to use anywhere (and actually can be useful for
+networking programs to measure its own packet processing overhead or
+something like that). Checking implementation I don't see any
+limitations, it's just PERF_EVENT_ARRAY map access
+
+> - BPF_FUNC_probe_read
+> - BPF_FUNC_probe_read_str
+
+generic tracing helpers, should be OK to be used anywhere with
+CAP_PERFMON capabilities
+
+> - BPF_FUNC_current_task_under_cgroup
+
+same as above current_comm, if there is CGROUP_ARRAY, this should be
+fine (though I don't know, there might be cgroup-specific
+restrictions, not sure)
+
+> - BPF_FUNC_send_signal
+> - BPF_FUNC_send_signal_thread
+
+fine to do from NMI, so should be fine to do anywhere (with
+CAP_PERFMON, presumably)
+
+> - BPF_FUNC_get_task_stack
+
+seems fine (again, if it works under NMI and doesn't use any
+context-dependent things, should be fine for any program type)
+
+> - BPF_FUNC_copy_from_user
+> - BPF_FUNC_copy_from_user_task
+
+same as probe_read/probe_read_str (but only for sleepable)
+
+> - BPF_FUNC_task_storage_get
+> - BPF_FUNC_task_storage_delete
+
+this is designed to work anywhere, so yeah, why not?
+
+> - BPF_FUNC_get_func_ip
+
+nope, very context dependent, definitely not generic (and just doesn't
+make sense for most program types)
+
+> - BPF_FUNC_get_branch_snapshot
+
+NMI-enabled and not context-dependent, good to be used anywhere
+
+> - BPF_FUNC_find_vma
+
+non-sleepable, but other than that doesn't really make any assumptions
+about program type, should be fine everywhere (NMI-safe, I believe?)
+
+> - BPF_FUNC_probe_write_user
+
+it's just like probe_read_user, CAP_PERFMON, so we can enable it
+anywhere for completeness, but I'm not sure if that is a good idea...
+
+> - I'm not sure which ones can be used by all programs, as Zvi Effron said=
+(https://lore.kernel.org/all/CAC1LvL2SOKojrXPx92J46fFEi3T9TAWb3mC1XKtYzwU=
+=3DpzTEbQ@mail.gmail.com/)
+> - get_smp_processor_id also be retained(https://lore.kernel.org/all/CAADn=
+VQ+WYLfoR1W6AsCJF6fNKEUgfxANXP01EQCJh1=3D99ZpoNw@mail.gmail.com/)
+
+yep, I saw the discussion, that's fine
+
 >
-> -__naked void uretprobe_regs(struct pt_regs *before, struct pt_regs *afte=
-r)
-> +__naked void uprobe_regs(struct pt_regs *before, struct pt_regs *after)
->  {
->         asm volatile (
->                 "movq %r15,   0(%rdi)\n"
-> @@ -47,15 +49,17 @@ __naked void uretprobe_regs(struct pt_regs *before, s=
-truct pt_regs *after)
->                 "movq   $0, 120(%rdi)\n" /* orig_rax */
->                 "movq   $0, 128(%rdi)\n" /* rip      */
->                 "movq   $0, 136(%rdi)\n" /* cs       */
-> +               "pushq %rax\n"
->                 "pushf\n"
->                 "pop %rax\n"
->                 "movq %rax, 144(%rdi)\n" /* eflags   */
-> +               "pop %rax\n"
->                 "movq %rsp, 152(%rdi)\n" /* rsp      */
->                 "movq   $0, 160(%rdi)\n" /* ss       */
+> - Link to v3: https://lore.kernel.org/all/20250410070258.276759-1-yangfen=
+g59949@163.com/
 >
->                 /* save 2nd argument */
->                 "pushq %rsi\n"
-> -               "call uretprobe_regs_trigger\n"
-> +               "call uprobe_regs_trigger\n"
+> Changes in v3:
+> - Only modify patch description information.
+> - Link to v2: https://lore.kernel.org/all/20250408071151.229329-1-yangfen=
+g59949@163.com/
 >
->                 /* save  return value and load 2nd argument pointer to ra=
-x */
->                 "pushq %rax\n"
-> @@ -95,25 +99,37 @@ __naked void uretprobe_regs(struct pt_regs *before, s=
-truct pt_regs *after)
->  );
->  }
+> Changes in v2:
+> - Only modify patch description information.
+> - Link to v1: https://lore.kernel.org/all/20250320032258.116156-1-yangfen=
+g59949@163.com/
+> ---
+>  kernel/trace/bpf_trace.c | 72 ----------------------------------------
+>  1 file changed, 72 deletions(-)
 >
-> -static void test_uretprobe_regs_equal(void)
-> +static void test_uprobe_regs_equal(bool retprobe)
->  {
-> +       LIBBPF_OPTS(bpf_uprobe_opts, opts,
-> +               .retprobe =3D retprobe,
-> +       );
->         struct uprobe_syscall *skel =3D NULL;
->         struct pt_regs before =3D {}, after =3D {};
->         unsigned long *pb =3D (unsigned long *) &before;
->         unsigned long *pa =3D (unsigned long *) &after;
->         unsigned long *pp;
-> +       unsigned long offset;
->         unsigned int i, cnt;
-> -       int err;
-> +
-> +       offset =3D get_uprobe_offset(&uprobe_regs_trigger);
-> +       if (!ASSERT_GE(offset, 0, "get_uprobe_offset"))
-> +               return;
->
->         skel =3D uprobe_syscall__open_and_load();
->         if (!ASSERT_OK_PTR(skel, "uprobe_syscall__open_and_load"))
->                 goto cleanup;
->
-> -       err =3D uprobe_syscall__attach(skel);
-> -       if (!ASSERT_OK(err, "uprobe_syscall__attach"))
-> +       skel->links.probe =3D bpf_program__attach_uprobe_opts(skel->progs=
-.probe,
-> +                               0, "/proc/self/exe", offset, &opts);
-> +       if (!ASSERT_OK_PTR(skel->links.probe, "bpf_program__attach_uprobe=
-_opts"))
->                 goto cleanup;
->
-> -       uretprobe_regs(&before, &after);
-> +       /* make sure uprobe gets optimized */
-> +       if (!retprobe)
-> +               uprobe_regs_trigger();
-> +
-> +       uprobe_regs(&before, &after);
->
->         pp =3D (unsigned long *) &skel->bss->regs;
->         cnt =3D sizeof(before)/sizeof(*pb);
-> @@ -122,7 +138,7 @@ static void test_uretprobe_regs_equal(void)
->                 unsigned int offset =3D i * sizeof(unsigned long);
->
->                 /*
-> -                * Check register before and after uretprobe_regs_trigger=
- call
-> +                * Check register before and after uprobe_regs_trigger ca=
-ll
->                  * that triggers the uretprobe.
->                  */
->                 switch (offset) {
-> @@ -136,7 +152,7 @@ static void test_uretprobe_regs_equal(void)
->
->                 /*
->                  * Check register seen from bpf program and register afte=
-r
-> -                * uretprobe_regs_trigger call
-> +                * uprobe_regs_trigger call (with rax exception, check be=
-low).
->                  */
->                 switch (offset) {
->                 /*
-> @@ -149,6 +165,15 @@ static void test_uretprobe_regs_equal(void)
->                 case offsetof(struct pt_regs, rsp):
->                 case offsetof(struct pt_regs, ss):
->                         break;
-> +               /*
-> +                * uprobe does not see return value in rax, it needs to s=
-ee the
-> +                * original (before) rax value
-> +                */
-> +               case offsetof(struct pt_regs, rax):
-> +                       if (!retprobe) {
-> +                               ASSERT_EQ(pp[i], pb[i], "uprobe rax prog-=
-before value check");
-> +                               break;
-> +                       }
->                 default:
->                         if (!ASSERT_EQ(pp[i], pa[i], "register prog-after=
- value check"))
->                                 fprintf(stdout, "failed register offset %=
-u\n", offset);
-> @@ -186,13 +211,13 @@ static void test_uretprobe_regs_change(void)
->         unsigned long cnt =3D sizeof(before)/sizeof(*pb);
->         unsigned int i, err, offset;
->
-> -       offset =3D get_uprobe_offset(uretprobe_regs_trigger);
-> +       offset =3D get_uprobe_offset(uprobe_regs_trigger);
->
->         err =3D write_bpf_testmod_uprobe(offset);
->         if (!ASSERT_OK(err, "register_uprobe"))
->                 return;
->
-> -       uretprobe_regs(&before, &after);
-> +       uprobe_regs(&before, &after);
->
->         err =3D write_bpf_testmod_uprobe(0);
->         if (!ASSERT_OK(err, "unregister_uprobe"))
-> @@ -605,7 +630,8 @@ static void test_uretprobe_shadow_stack(void)
->         /* Run all the tests with shadow stack in place. */
->         shstk_is_enabled =3D true;
->
-> -       test_uretprobe_regs_equal();
-> +       test_uprobe_regs_equal(false);
-> +       test_uprobe_regs_equal(true);
->         test_uretprobe_regs_change();
->         test_uretprobe_syscall_call();
->
-> @@ -728,7 +754,7 @@ static void test_uprobe_sigill(void)
->  static void __test_uprobe_syscall(void)
->  {
->         if (test__start_subtest("uretprobe_regs_equal"))
-> -               test_uretprobe_regs_equal();
-> +               test_uprobe_regs_equal(true);
->         if (test__start_subtest("uretprobe_regs_change"))
->                 test_uretprobe_regs_change();
->         if (test__start_subtest("uretprobe_syscall_call"))
-> @@ -747,6 +773,8 @@ static void __test_uprobe_syscall(void)
->                 test_uprobe_race();
->         if (test__start_subtest("uprobe_sigill"))
->                 test_uprobe_sigill();
-> +       if (test__start_subtest("uprobe_regs_equal"))
-> +               test_uprobe_regs_equal(false);
->  }
->  #else
->  static void __test_uprobe_syscall(void)
-> diff --git a/tools/testing/selftests/bpf/progs/uprobe_syscall.c b/tools/t=
-esting/selftests/bpf/progs/uprobe_syscall.c
-> index 8a4fa6c7ef59..e08c31669e5a 100644
-> --- a/tools/testing/selftests/bpf/progs/uprobe_syscall.c
-> +++ b/tools/testing/selftests/bpf/progs/uprobe_syscall.c
-> @@ -7,8 +7,8 @@ struct pt_regs regs;
->
->  char _license[] SEC("license") =3D "GPL";
->
-> -SEC("uretprobe//proc/self/exe:uretprobe_regs_trigger")
-> -int uretprobe(struct pt_regs *ctx)
-> +SEC("uprobe")
-> +int probe(struct pt_regs *ctx)
->  {
->         __builtin_memcpy(&regs, ctx, sizeof(regs));
->         return 0;
-> --
-> 2.49.0
->
+
+[...]
