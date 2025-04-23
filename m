@@ -1,61 +1,53 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE3F826980D;
-	Wed, 23 Apr 2025 06:50:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83340269AF9;
+	Wed, 23 Apr 2025 06:50:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745391049; cv=none; b=BNMWvSuswhUE7yIXPfn91qGKwE0XQ8uLV8ewGvgSnMGZYfi0f0351laxGWH9Aw0tXF9AHgEtRn5SCX+fhexa+604gVcUMeJs/I00NuMkKwUbShxZQAD3R/ps/zcLO3PEIKk7NGZI8u4b4yeXjlmWA3ZYh3hgC3rH4SJYezmhu2s=
+	t=1745391050; cv=none; b=EuOAH8Ehj2YGjaqMWOxVd7k4bqXiANMINHo6c936paWosAu5Q+RBICPAXy5/Upa7DbH3vEgTq8TTZmEBCMKyDB8lMo+NMePpo042gJ4fACshtFGoMXE6GZ883urYj49rA9bcDYdT4SGiOI4OqE9INeS2gtP5Pq+RVM/49NvU48A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745391049; c=relaxed/simple;
-	bh=ERsSHF6cveMP56swmamcYhe2qaD2zoqTzJM+wQ07ysg=;
+	s=arc-20240116; t=1745391050; c=relaxed/simple;
+	bh=l0l5nu8kjh36e//5AZAMxsFhAqbiHcrhJ8w4MU7glLY=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=cFfzufy6uL6Coe9ojhXzyFrLb6ojiflZ7wuxb5yje7o80TSIxc/xYNn+h7TOMc4Oba6/bxsPFHu/8aiXVm8eyLUL8lD+jhpDJyCfsE22c/AoC+GCxfLNozFH84o4dk+Mo3bA0TBlAPRsIcPOWkE6ewd9qifcd4WEspU6ddcw++0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=xJkgIRFX; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=UHM9eaqs; arc=none smtp.client-ip=193.142.43.55
+	 MIME-Version; b=Is9K0VxK+fePv0kxvC/0FZnk7enjByqtafeJddp6jsamezFZYgARqvsi/dUAm+ppyywoFmIL4GeTXENeV8PZ1fUUHMBWeQ2lpdJnZtv5t0RUkT+hD7Sc+R23qGm/i7ZgB3qvj3wj4vaDN16AJXVGKEsWnul0hxCefuErvrTHsJw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Cjym+OdG; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Nzk/RtxS; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="xJkgIRFX";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="UHM9eaqs"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Cjym+OdG";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Nzk/RtxS"
 From: Nam Cao <namcao@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1745391039;
+	s=2020; t=1745391042;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=UPn4Z3qJtGRDNuo4zQemDZcbXpzyUcw6dR3h1cNGvUo=;
-	b=xJkgIRFXSbaReH861qqfDY+ztwZ0wZqsfV2V6ejvzXThQJDrdqWPjeSppnPmamZ2JQ6IEG
-	xg1EXtZFUbQHHAHuv14dle4AvWu5G+ZFqGQlvJKeLvaiRDBx9H6vQ97ZCbFfh/gHa8NImP
-	+2SfmN436Ghttauypo/k+0q7v+Qak/cJh16nBYu5n2B1RYDP0Nit1wJhuSfqLlf7HS8+jN
-	xB/B55pOzxRmbYMJLrvtzTJv9cDD55bXas0O2Au8Uc49+/FZFb0HJE20DRJN1FF/wtzZhN
-	9vNaJywxrS8lUMQCwI9dDUKAV36s5bLIsmlA5LvnKj8yNJ7pvZmvBhRoqPRmpg==
+	bh=nmxRsKAqM1+s9Ie1IxBxzQWx8Fn4Xqe0sRiBYYmgM5E=;
+	b=Cjym+OdGotGMrFn5+xOzq28wuizYOf4OUKSjNB4sXhoUL6kNM+rMAZKa2npuPzr+n5il+5
+	m6M/IDzVy6HHPBPASEX7xRtAS3H3u/RTj1C1C2EO/S9mG990Dxi2QtGeNDgNTTjD1xy2Ew
+	2gRO9+sCGXNATgkH+hfXTSvqOpDDdE3YKdEh9sI25vKEfjZjNsSVVzrgo+op/qarZaaedL
+	Iv6DC/ir0kfz4Uo7osva7UrHeMTZadlhQ5n1YW5FmdEFxxvw/jO2tR+7qLB0tN2/uH6At3
+	ZqErjbHBRHO/ZaKtTKSQQkje5E6GllPQo3HdXi/n5o/BEut1NMCn6DzNdCx8Rw==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1745391039;
+	s=2020e; t=1745391042;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=UPn4Z3qJtGRDNuo4zQemDZcbXpzyUcw6dR3h1cNGvUo=;
-	b=UHM9eaqsn67trtwY6W81AvNK1og/S+zzrNC2mjhdOVd9LtU/s1NAeqZC/17bn8dSmk+SBk
-	aTuAkvXFH7p6JBAw==
+	bh=nmxRsKAqM1+s9Ie1IxBxzQWx8Fn4Xqe0sRiBYYmgM5E=;
+	b=Nzk/RtxSn0TUJo+k1gY5Hms7Sox3vLoZFMTnKMN/rBNnOlJHelvC1/icnTscuAYrkHp6E+
+	HVitHDAFBfucJQDw==
 To: Steven Rostedt <rostedt@goodmis.org>,
 	Gabriele Monaco <gmonaco@redhat.com>,
 	linux-trace-kernel@vger.kernel.org,
 	linux-kernel@vger.kernel.org
 Cc: john.ogness@linutronix.de,
-	Nam Cao <namcao@linutronix.de>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	x86@kernel.org,
-	"H . Peter Anvin" <hpa@zytor.com>,
-	Andy Lutomirski <luto@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>
-Subject: [PATCH v4 15/22] x86/tracing: Remove redundant trace_pagefault_key
-Date: Wed, 23 Apr 2025 08:50:10 +0200
-Message-Id: <e4a6fec6cb8a619068b330b20186d65ff646f6a7.1745390829.git.namcao@linutronix.de>
+	Nam Cao <namcao@linutronix.de>
+Subject: [PATCH v4 22/22] rv: Allow to configure the number of per-task monitor
+Date: Wed, 23 Apr 2025 08:50:17 +0200
+Message-Id: <e7b15c18858bcdec02ebf579bc0db2ddd70ca8b8.1745390829.git.namcao@linutronix.de>
 In-Reply-To: <cover.1745390829.git.namcao@linutronix.de>
 References: <cover.1745390829.git.namcao@linutronix.de>
 Precedence: bulk
@@ -66,158 +58,131 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-trace_pagefault_key is used to optimize the pagefault tracepoints when it
-is disabled. However, tracepoints already have built-in static_key for this
-exact purpose.
+Now that there are 2 monitors for real-time applications, users may want to
+enable both of them simultaneously. Make the number of per-task monitor
+configurable. Default it to 2 for now.
 
-Remove this redundant key.
-
+Reviewed-by: Gabriele Monaco <gmonaco@redhat.com>
 Signed-off-by: Nam Cao <namcao@linutronix.de>
 ---
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: x86@kernel.org
-Cc: H. Peter Anvin <hpa@zytor.com>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
----
- arch/x86/include/asm/trace/common.h      | 12 ------------
- arch/x86/include/asm/trace/exceptions.h  | 18 ++++++------------
- arch/x86/include/asm/trace/irq_vectors.h |  1 -
- arch/x86/kernel/Makefile                 |  1 -
- arch/x86/kernel/tracepoint.c             | 21 ---------------------
- arch/x86/mm/fault.c                      |  3 ---
- 6 files changed, 6 insertions(+), 50 deletions(-)
- delete mode 100644 arch/x86/include/asm/trace/common.h
- delete mode 100644 arch/x86/kernel/tracepoint.c
+ include/linux/rv.h                     | 9 +--------
+ include/linux/sched.h                  | 8 +++-----
+ kernel/trace/rv/Kconfig                | 9 +++++++++
+ kernel/trace/rv/monitors/rtapp/Kconfig | 1 +
+ kernel/trace/rv/rv.c                   | 8 ++++----
+ 5 files changed, 18 insertions(+), 17 deletions(-)
 
-diff --git a/arch/x86/include/asm/trace/common.h b/arch/x86/include/asm/tra=
-ce/common.h
-deleted file mode 100644
-index f0f9bcdb74d9..000000000000
---- a/arch/x86/include/asm/trace/common.h
-+++ /dev/null
-@@ -1,12 +0,0 @@
--#ifndef _ASM_TRACE_COMMON_H
--#define _ASM_TRACE_COMMON_H
--
--#ifdef CONFIG_TRACING
--DECLARE_STATIC_KEY_FALSE(trace_pagefault_key);
--#define trace_pagefault_enabled()			\
--	static_branch_unlikely(&trace_pagefault_key)
--#else
--static inline bool trace_pagefault_enabled(void) { return false; }
--#endif
--
--#endif
-diff --git a/arch/x86/include/asm/trace/exceptions.h b/arch/x86/include/asm=
-/trace/exceptions.h
-index 6b1e87194809..34bc8214a2d7 100644
---- a/arch/x86/include/asm/trace/exceptions.h
-+++ b/arch/x86/include/asm/trace/exceptions.h
-@@ -6,10 +6,6 @@
- #define _TRACE_PAGE_FAULT_H
+diff --git a/include/linux/rv.h b/include/linux/rv.h
+index 2897aad16883..099b23c14e54 100644
+--- a/include/linux/rv.h
++++ b/include/linux/rv.h
+@@ -74,14 +74,7 @@ struct ltl_monitor {};
 =20
- #include <linux/tracepoint.h>
--#include <asm/trace/common.h>
--
--extern int trace_pagefault_reg(void);
--extern void trace_pagefault_unreg(void);
+ #endif /* CONFIG_RV_LTL_MONITOR */
 =20
- DECLARE_EVENT_CLASS(x86_exceptions,
-=20
-@@ -34,15 +30,13 @@ DECLARE_EVENT_CLASS(x86_exceptions,
- 		  (void *)__entry->address, (void *)__entry->ip,
- 		  __entry->error_code) );
-=20
--#define DEFINE_PAGE_FAULT_EVENT(name)				\
--DEFINE_EVENT_FN(x86_exceptions, name,				\
--	TP_PROTO(unsigned long address,	struct pt_regs *regs,	\
--		 unsigned long error_code),			\
--	TP_ARGS(address, regs, error_code),			\
--	trace_pagefault_reg, trace_pagefault_unreg);
-+DEFINE_EVENT(x86_exceptions, page_fault_user,
-+	TP_PROTO(unsigned long address,	struct pt_regs *regs, unsigned long error=
-_code),
-+	TP_ARGS(address, regs, error_code));
-=20
--DEFINE_PAGE_FAULT_EVENT(page_fault_user);
--DEFINE_PAGE_FAULT_EVENT(page_fault_kernel);
-+DEFINE_EVENT(x86_exceptions, page_fault_kernel,
-+	TP_PROTO(unsigned long address,	struct pt_regs *regs, unsigned long error=
-_code),
-+	TP_ARGS(address, regs, error_code));
-=20
- #undef TRACE_INCLUDE_PATH
- #undef TRACE_INCLUDE_FILE
-diff --git a/arch/x86/include/asm/trace/irq_vectors.h b/arch/x86/include/as=
-m/trace/irq_vectors.h
-index 88e7f0f3bf62..7408bebdfde0 100644
---- a/arch/x86/include/asm/trace/irq_vectors.h
-+++ b/arch/x86/include/asm/trace/irq_vectors.h
-@@ -6,7 +6,6 @@
- #define _TRACE_IRQ_VECTORS_H
-=20
- #include <linux/tracepoint.h>
--#include <asm/trace/common.h>
-=20
- #ifdef CONFIG_X86_LOCAL_APIC
-=20
-diff --git a/arch/x86/kernel/Makefile b/arch/x86/kernel/Makefile
-index b43eb7e384eb..e8e33ec684ba 100644
---- a/arch/x86/kernel/Makefile
-+++ b/arch/x86/kernel/Makefile
-@@ -139,7 +139,6 @@ obj-$(CONFIG_OF)			+=3D devicetree.o
- obj-$(CONFIG_UPROBES)			+=3D uprobes.o
-=20
- obj-$(CONFIG_PERF_EVENTS)		+=3D perf_regs.o
--obj-$(CONFIG_TRACING)			+=3D tracepoint.o
- obj-$(CONFIG_SCHED_MC_PRIO)		+=3D itmt.o
- obj-$(CONFIG_X86_UMIP)			+=3D umip.o
-=20
-diff --git a/arch/x86/kernel/tracepoint.c b/arch/x86/kernel/tracepoint.c
-deleted file mode 100644
-index 03ae1caaa878..000000000000
---- a/arch/x86/kernel/tracepoint.c
-+++ /dev/null
-@@ -1,21 +0,0 @@
--// SPDX-License-Identifier: GPL-2.0
 -/*
-- * Copyright (C) 2013 Seiji Aguchi <seiji.aguchi@hds.com>
+- * Per-task RV monitors count. Nowadays fixed in RV_PER_TASK_MONITORS.
+- * If we find justification for more monitors, we can think about
+- * adding more or developing a dynamic method. So far, none of
+- * these are justified.
 - */
--#include <linux/jump_label.h>
--#include <linux/atomic.h>
--
--#include <asm/trace/exceptions.h>
--
--DEFINE_STATIC_KEY_FALSE(trace_pagefault_key);
--
--int trace_pagefault_reg(void)
--{
--	static_branch_inc(&trace_pagefault_key);
--	return 0;
--}
--
--void trace_pagefault_unreg(void)
--{
--	static_branch_dec(&trace_pagefault_key);
--}
-diff --git a/arch/x86/mm/fault.c b/arch/x86/mm/fault.c
-index 296d294142c8..7e3e51fa1f95 100644
---- a/arch/x86/mm/fault.c
-+++ b/arch/x86/mm/fault.c
-@@ -1455,9 +1455,6 @@ static __always_inline void
- trace_page_fault_entries(struct pt_regs *regs, unsigned long error_code,
- 			 unsigned long address)
+-#define RV_PER_TASK_MONITORS		1
+-#define RV_PER_TASK_MONITOR_INIT	(RV_PER_TASK_MONITORS)
++#define RV_PER_TASK_MONITOR_INIT	(CONFIG_RV_PER_TASK_MONITORS)
+=20
+ union rv_task_monitor {
+ 	struct da_monitor	da_mon;
+diff --git a/include/linux/sched.h b/include/linux/sched.h
+index 45be0fa7a5cc..560782493292 100644
+--- a/include/linux/sched.h
++++ b/include/linux/sched.h
+@@ -1623,12 +1623,10 @@ struct task_struct {
+=20
+ #ifdef CONFIG_RV
+ 	/*
+-	 * Per-task RV monitor. Nowadays fixed in RV_PER_TASK_MONITORS.
+-	 * If we find justification for more monitors, we can think
+-	 * about adding more or developing a dynamic method. So far,
+-	 * none of these are justified.
++	 * Per-task RV monitor, fixed in CONFIG_RV_PER_TASK_MONITORS.
++	 * If memory becomes a concern, we can think about a dynamic method.
+ 	 */
+-	union rv_task_monitor		rv[RV_PER_TASK_MONITORS];
++	union rv_task_monitor		rv[CONFIG_RV_PER_TASK_MONITORS];
+ #endif
+=20
+ #ifdef CONFIG_USER_EVENTS
+diff --git a/kernel/trace/rv/Kconfig b/kernel/trace/rv/Kconfig
+index 942d57575e67..c11bf7e61ebf 100644
+--- a/kernel/trace/rv/Kconfig
++++ b/kernel/trace/rv/Kconfig
+@@ -32,6 +32,15 @@ menuconfig RV
+ 	  For further information, see:
+ 	    Documentation/trace/rv/runtime-verification.rst
+=20
++config RV_PER_TASK_MONITORS
++	int "Maximum number of per-task monitor"
++	depends on RV
++	range 1 8
++	default 2
++	help
++	  This option configures the maximum number of per-task RV monitors that =
+can run
++	  simultaneously.
++
+ source "kernel/trace/rv/monitors/wip/Kconfig"
+ source "kernel/trace/rv/monitors/wwnr/Kconfig"
+ source "kernel/trace/rv/monitors/sched/Kconfig"
+diff --git a/kernel/trace/rv/monitors/rtapp/Kconfig b/kernel/trace/rv/monit=
+ors/rtapp/Kconfig
+index 94689d66a79c..6a521c95a03f 100644
+--- a/kernel/trace/rv/monitors/rtapp/Kconfig
++++ b/kernel/trace/rv/monitors/rtapp/Kconfig
+@@ -1,5 +1,6 @@
+ config RV_MON_RTAPP
+ 	depends on RV
++	depends on RV_PER_TASK_MONITORS >=3D 2
+ 	bool "rtapp monitor"
+ 	help
+ 	  Collection of monitors to check for common problems with real-time appl=
+ication that cause
+diff --git a/kernel/trace/rv/rv.c b/kernel/trace/rv/rv.c
+index dae84deb327d..a1b6b3c39eff 100644
+--- a/kernel/trace/rv/rv.c
++++ b/kernel/trace/rv/rv.c
+@@ -165,7 +165,7 @@ struct dentry *get_monitors_root(void)
+ LIST_HEAD(rv_monitors_list);
+=20
+ static int task_monitor_count;
+-static bool task_monitor_slots[RV_PER_TASK_MONITORS];
++static bool task_monitor_slots[CONFIG_RV_PER_TASK_MONITORS];
+=20
+ int rv_get_task_monitor_slot(void)
  {
--	if (!trace_pagefault_enabled())
--		return;
--
- 	if (user_mode(regs))
- 		trace_page_fault_user(address, regs, error_code);
- 	else
+@@ -173,12 +173,12 @@ int rv_get_task_monitor_slot(void)
+=20
+ 	lockdep_assert_held(&rv_interface_lock);
+=20
+-	if (task_monitor_count =3D=3D RV_PER_TASK_MONITORS)
++	if (task_monitor_count =3D=3D CONFIG_RV_PER_TASK_MONITORS)
+ 		return -EBUSY;
+=20
+ 	task_monitor_count++;
+=20
+-	for (i =3D 0; i < RV_PER_TASK_MONITORS; i++) {
++	for (i =3D 0; i < CONFIG_RV_PER_TASK_MONITORS; i++) {
+ 		if (task_monitor_slots[i] =3D=3D false) {
+ 			task_monitor_slots[i] =3D true;
+ 			return i;
+@@ -194,7 +194,7 @@ void rv_put_task_monitor_slot(int slot)
+ {
+ 	lockdep_assert_held(&rv_interface_lock);
+=20
+-	if (slot < 0 || slot >=3D RV_PER_TASK_MONITORS) {
++	if (slot < 0 || slot >=3D CONFIG_RV_PER_TASK_MONITORS) {
+ 		WARN_ONCE(1, "RV releasing an invalid slot!: %d\n", slot);
+ 		return;
+ 	}
 --=20
 2.39.5
 
