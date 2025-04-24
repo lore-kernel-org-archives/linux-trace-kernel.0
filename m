@@ -1,99 +1,94 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from out30-101.freemail.mail.aliyun.com (out30-101.freemail.mail.aliyun.com [115.124.30.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D37A74502A;
-	Thu, 24 Apr 2025 03:40:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D1111F4CB5;
+	Thu, 24 Apr 2025 07:48:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745466017; cv=none; b=nNY+m4Zh8XZ8jUpNZH/q+6X78mPXLqGGtxCkDcBF0YJi+H66FVVy4ZHf7qR2eT4cQQAmdvLGDERWtQCbkhYbK6WomIkSLu+Emhm3moArPbVYJLbElz9+fkk/NNK1u3F6v4f12WJb035B28DK64E8igyBBGHZ9fFfGQUk0WLHB3o=
+	t=1745480937; cv=none; b=QkcHYywabVvHB4ZO+UIfkbwfTcRxvMsp/RAwDjEbrQ61VT88T5/QpjyM/IQ3gIo9sfmiKON+XejDrSqGIOKLXq/AF0I5dSgqvO80OwPF7Z6MZYv6ms+Evh9NwvcLaL6Xb330fC1bGhqP8XvL5WXdw9kI/uShhQsp9G/SAc7K/5E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745466017; c=relaxed/simple;
-	bh=6icgpZdGcWlboN2DJNnyWWX7QHAnCuuYddJOZ97/UT0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PaUpwzRX/cfZyfu6Rp3gdiaTCRc9tm/QqSo8EWLVRjtH3wqXD4ytvi61yQ0i7zk9QvASsiP/UoFjJpGWV7bB7h1XYPikr21szYS+mJulKaf4Blzu2MpQ1SKfdLvBCbHw5tV5/pIRbD8PREj/AW2DmQC2RO0BBkstuSjgTiRndWk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ENHorwOV; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=lALwUOpm; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1745480937; c=relaxed/simple;
+	bh=ar6PJxQCfp8ZAa3ugdAz/W3cAjD/5BbmeHHp3Asx3/c=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=S02QB0v4I9aI/KjfkNZKr2owsl6yKnPG0pl1+j4b7aAFdZjD8/EGga2nNQRmfGWM51SpMEiMNSq+wBXMa8693MDYAdoFTkvwkuzOqRzjkPhz57zr5xnEyE2RaT5YukydSA6HczzNsx+a24SK4EDw4EuoaZO3JSAaBV+mFHmB3Xo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=XwUKRY1q; arc=none smtp.client-ip=115.124.30.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ENHorwOV";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="lALwUOpm"
-Date: Thu, 24 Apr 2025 05:40:05 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1745466012;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=g7+JExGyxtXs6oqgZqsr3z5pcidzbXH+UNdAKPpxih0=;
-	b=ENHorwOVuFtzXolnqH0gz5Hz7j/PKYI19iSUuvCXy3cgWfbeXTjl0SmwwgL48jim0MWAW1
-	RrFsfb2AmGaNbdF3Ur46rE7wC4Nc4VUkdnwlck5KrJg6+Ab++lnDSBNEbqtl2a/HgVyFpS
-	OZvHED18afY0nvZSvO1XE2bqPXJ4YXZQ5QZRS/Eaxy2+HMrV+7foLcW4RljNcT37iHxgLt
-	3nq+FkXA2DqzCC+r1G4leXONRtpdXVsZQnwUfy47/m5aSbLh05dWYl7gS4D2mqpETqw3Pw
-	9yrZRU2tiOcCW0ufqxqEfDpjsF4YvUQ/mHeUJH21CeIX4notzlyP2/kWmYCkXg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1745466012;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=g7+JExGyxtXs6oqgZqsr3z5pcidzbXH+UNdAKPpxih0=;
-	b=lALwUOpmLRzG0tfkMzHA3n99cfXduD6H4WV/ZU8Or/Z0qj07tVHVX4EfbX9m13hag9l5Qj
-	CDpOpkoeX0BvQCBg==
-From: Nam Cao <namcao@linutronix.de>
-To: Gabriele Monaco <gmonaco@redhat.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>,
-	linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
-	john.ogness@linutronix.de
-Subject: Re: [PATCH v4 19/22] rv: Add rtapp_pagefault monitor
-Message-ID: <20250424034005.B71HTlCE@linutronix.de>
-References: <cover.1745390829.git.namcao@linutronix.de>
- <2eff7190ba245eb157f95ae461fef54183d07665.1745390829.git.namcao@linutronix.de>
- <02f047788f369cd0387d2934fa99fe3e8e1913c2.camel@redhat.com>
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="XwUKRY1q"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1745480930; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=vSzEDm0PVZR5+6nReRulGLUiGC7gv59rpmdxNdHwhFY=;
+	b=XwUKRY1qF66kQQUh211jyyvaIJWrdquSMSMJtet0GCw708tZzpAvYMaoa27YHa9aZIcjZO1Hdd4ty2EJeqP2ElE7FtdT18xCSBQfW82+B9Gt8CEtzWild1Qgkarnriv6DYhHuetJ4bCa9oIDiLfnybwTo6NvYjrX67klOPGPMMQ=
+Received: from 30.74.146.225(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0WXyG8sZ_1745480926 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Thu, 24 Apr 2025 15:48:47 +0800
+Message-ID: <fb932eac-86ce-4f7d-8eed-8dc44f5a40c1@linux.alibaba.com>
+Date: Thu, 24 Apr 2025 15:48:45 +0800
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <02f047788f369cd0387d2934fa99fe3e8e1913c2.camel@redhat.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 08/12] khugepaged: skip collapsing mTHP to smaller
+ orders
+To: Nico Pache <npache@redhat.com>, linux-mm@kvack.org,
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+Cc: akpm@linux-foundation.org, corbet@lwn.net, rostedt@goodmis.org,
+ mhiramat@kernel.org, mathieu.desnoyers@efficios.com, david@redhat.com,
+ baohua@kernel.org, ryan.roberts@arm.com, willy@infradead.org,
+ peterx@redhat.com, ziy@nvidia.com, wangkefeng.wang@huawei.com,
+ usamaarif642@gmail.com, sunnanyong@huawei.com, vishal.moola@gmail.com,
+ thomas.hellstrom@linux.intel.com, yang@os.amperecomputing.com,
+ kirill.shutemov@linux.intel.com, aarcange@redhat.com, raquini@redhat.com,
+ dev.jain@arm.com, anshuman.khandual@arm.com, catalin.marinas@arm.com,
+ tiwai@suse.de, will@kernel.org, dave.hansen@linux.intel.com, jack@suse.cz,
+ cl@gentwo.org, jglisse@google.com, surenb@google.com, zokeefe@google.com,
+ hannes@cmpxchg.org, rientjes@google.com, mhocko@suse.com,
+ rdunlap@infradead.org
+References: <20250417000238.74567-1-npache@redhat.com>
+ <20250417000238.74567-9-npache@redhat.com>
+From: Baolin Wang <baolin.wang@linux.alibaba.com>
+In-Reply-To: <20250417000238.74567-9-npache@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Wed, Apr 23, 2025 at 12:37:53PM +0200, Gabriele Monaco wrote:
-> On Wed, 2025-04-23 at 08:50 +0200, Nam Cao wrote:
-> > +static void ltl_atoms_fetch(struct task_struct *task, struct
-> > ltl_monitor *mon)
-> > +{
-> > +	ltl_atom_set(mon, LTL_RT, rt_or_dl_task(task));
-> > +}
+
+
+On 2025/4/17 08:02, Nico Pache wrote:
+> khugepaged may try to collapse a mTHP to a smaller mTHP, resulting in
+> some pages being unmapped. Skip these cases until we have a way to check
+> if its ok to collapse to a smaller mTHP size (like in the case of a
+> partially mapped folio).
 > 
-> Mmh, you probably already considered that, so ignore my comment in that case.
+> This patch is inspired by Dev Jain's work on khugepaged mTHP support [1].
 > 
-> I just realised this function would tell you a PI boosted task is an RT task,
-> is that acceptable in your model?
-
-Yes, that is intentional. A task being PI boosted means an "actual"
-real-time task is waiting for it. Therefore the PI boosted task shouldn't
-be delayed, otherwise the "actual" real-time task is delayed.
-
-> It's probably a configuration mistake on its own if an RT task following those
-> rules shares resources with non-RT tasks not following them,
-
-non-RT tasks do not have to follow the rules all the time. But while
-accessing resources shared with RT tasks, then yes the rules should be
-obeyed.
-
-> but if that's something allowed, you may see this atom change more often
-> than you'd like, not sure if that can be something worth noting.
->
-> Perhaps you could add a comment saying that this is not a problem and why (e.g.
-> instead of using rt_or_dl_task_policy for the job).
-
-Sure, a comment doesn't hurt.
-
-> What do you think?
+> [1] https://lore.kernel.org/lkml/20241216165105.56185-11-dev.jain@arm.com/
 > 
-> Besides this detail, the monitor looks good to me
-> Reviewed-by: Gabriele Monaco <gmonaco@redhat.com>
+> Co-developed-by: Dev Jain <dev.jain@arm.com>
+> Signed-off-by: Dev Jain <dev.jain@arm.com>
+> Signed-off-by: Nico Pache <npache@redhat.com>
+> ---
+>   mm/khugepaged.c | 7 ++++++-
+>   1 file changed, 6 insertions(+), 1 deletion(-)
+> 
+> diff --git a/mm/khugepaged.c b/mm/khugepaged.c
+> index ece39fd71fe6..383aff12cd43 100644
+> --- a/mm/khugepaged.c
+> +++ b/mm/khugepaged.c
+> @@ -625,7 +625,12 @@ static int __collapse_huge_page_isolate(struct vm_area_struct *vma,
+>   		folio = page_folio(page);
+>   		VM_BUG_ON_FOLIO(!folio_test_anon(folio), folio);
+>   
+> -		/* See hpage_collapse_scan_pmd(). */
+> +		if (order != HPAGE_PMD_ORDER && folio_order(folio) >= order) {
+> +			result = SCAN_PTE_MAPPED_HUGEPAGE;
+> +			goto out;
+> +		}
 
-Thanks so much for the review!
-
-Nam
+Should we also add this check in hpage_collapse_scan_pmd() to abort the 
+scan early?
