@@ -1,286 +1,179 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 861A128C5DB;
-	Thu, 24 Apr 2025 16:24:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07079284688;
+	Thu, 24 Apr 2025 16:29:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745511878; cv=none; b=eMk3Arer5NfOob0oSahStgF1/D/Il576bAYuJousVa8Zt/oIVPlz2JdF5zmvu+Nj1TmZmQP55elGYRN1ksAZi2KGH6kBM2LpZBX1BnB9eIdLnGHsvg323Wj6/cN6WzisIJuMAmDB+c5mJVOXpsiW6jTAKDPr/VUfGcu8AJJcQr8=
+	t=1745512191; cv=none; b=byhM1EtvfVaUGh7S8yfzjfksoadBzv4py80Xdcb7Yj/QIo37llA6Dh61Y3r6TJq73y72j+f6IOv+p3lkxHkXokpW9FDufy7eI0E8Ek+FX8rEB+tbjDObHf27HCMMEUrLoUVaPOAAcuudqvB+x/r1DgWiA3yKJXedQh+S1Gd6FwE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745511878; c=relaxed/simple;
-	bh=jzN6CV2MqgOb/d1oFesv9PXnCLgcPzPLY+/5mDw+2uY=;
-	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=mWgyRbvzObiGDESGI2ziq8bnGAdejbhpY9R/cYRpOqiK0TE/b8lJzBmIUGfKxfYzZQi1MGze1Kf72Vzsh0RX1njLELyGiQ/BwCLRm4yYJJ8op7ncI4sQYleC/SNoBrsRqLsr5eDGNSE76Tak2/wZw75kC6bow+bMauneqF3D7rk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D2EACC4CEEC;
-	Thu, 24 Apr 2025 16:24:37 +0000 (UTC)
-Received: from rostedt by gandalf with local (Exim 4.98)
-	(envelope-from <rostedt@goodmis.org>)
-	id 1u7zPF-0000000GycA-2z5O;
-	Thu, 24 Apr 2025 12:26:33 -0400
-Message-ID: <20250424162633.563543380@goodmis.org>
-User-Agent: quilt/0.68
-Date: Thu, 24 Apr 2025 12:25:43 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- Josh Poimboeuf <jpoimboe@kernel.org>,
- x86@kernel.org,
- Peter Zijlstra <peterz@infradead.org>,
- Ingo Molnar <mingo@kernel.org>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Indu Bhagat <indu.bhagat@oracle.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>,
- Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>,
- linux-perf-users@vger.kernel.org,
- Mark Brown <broonie@kernel.org>,
- linux-toolchains@vger.kernel.org,
- Jordan Rome <jordalgo@meta.com>,
- Sam James <sam@gentoo.org>,
- Andrii Nakryiko <andrii.nakryiko@gmail.com>,
- Jens Remus <jremus@linux.ibm.com>,
- Florian Weimer <fweimer@redhat.com>,
- Andy Lutomirski <luto@kernel.org>,
- Weinan Liu <wnliu@google.com>,
- Blake Jones <blakejones@google.com>,
- Beau Belgrave <beaub@linux.microsoft.com>,
- "Jose E. Marchesi" <jemarch@gnu.org>
-Subject: [PATCH v5 14/17] perf tools: Minimal CALLCHAIN_DEFERRED support
-References: <20250424162529.686762589@goodmis.org>
+	s=arc-20240116; t=1745512191; c=relaxed/simple;
+	bh=Olfas3kVvORqUXf9lbxFO0QxdMLUwOPQVx90iYtTBKg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=qzWeKukn1NLAzhjqtFdkTy9j3vHkqf3T8NvaIT1msmXHUAjW7A7O+G+LR6GKi6Sc/4ntJHi1X7AR+4Nc3KV6QLjj1M5RHuH3I5N1UHJOXKkDTTcSbEnA+sOCIwRk0DRkGXt7FP8GFrKeESgFiF7FzTpc/k7RRUIX2i1ofM9/tUQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Xbdaz0h6; arc=none smtp.client-ip=209.85.210.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Xbdaz0h6"
+Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-7399a2dc13fso1696640b3a.2;
+        Thu, 24 Apr 2025 09:29:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745512189; x=1746116989; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=svygRFPoJDCFSMtuDuDi9m6ihen4iFSM4c08PMaafg4=;
+        b=Xbdaz0h6XHXTQobCCbs0ReaFjreV4oMSt7DxYgWlXNEGzymC755oGyBuH4mVa4+Y67
+         itRyY1h96Q4z06EI9pVgrGbcwAYEu1Rzjl5ihHVcO6J6rmEABEdidoM88cGi9QZelQOw
+         LC2fNviGbL5eZYWypYLT7vBQXlhsevd1fxpI1rXZrV/4HeBzc4/jZXPnfAEgnyPDTAAn
+         tajxHwDSc/GrPQiG03fo8w2dRVK6/o8X9aNnXnIvpQBeSWi2RUyRRhLMFUHbEX6qIP2W
+         4JKRX1sZUxpd8aobAvLyDdXs34mxl4Hi3OiFijurys891QSkH6ckvBWkaEowVhUOMLLM
+         M6eA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745512189; x=1746116989;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=svygRFPoJDCFSMtuDuDi9m6ihen4iFSM4c08PMaafg4=;
+        b=fjewjKEqjsyDlRp1GOFDKceMbcT0uCEJqJ8wV/BUQ7knoKBMJLGdiwGk959scLKDSX
+         HDDz8fobl9hrPvqOVFnxR5tCLBw8VLSSehNNJCzAphzahGQEC2pQp+q9V3C+7n9Y5gn8
+         sDXPGbpvCmWQTelSO1zFjhZeZuZaeH4s46AhAlYPWi3vPH5DdzbUuaRpfZcQBFbmctRH
+         pq5JAv++QvzypTztAHe3WyeewxzwQWtRSpZziTM3PU+9F1G+V+QQu7rNYDTKCj95sAxX
+         BHExsvxf5x1JSivyjvm8QdNcXR4Qf6PLwFv6Wh385lFqC9f5IlZaYLBtaxtUdRe9QuF8
+         CKWw==
+X-Forwarded-Encrypted: i=1; AJvYcCV0ZOPxTFAD0YXxJfcjdy6Adk5RpQJ20gxyCmwjyqR97gjR2EuM2nUJy4ne9xiAU53y3TzgTDmLZvlj2Ax5@vger.kernel.org, AJvYcCVZPfEufOudDrXPsBU6+BS/Dskq1nLpt8BznChxm99+PB0yAyNNIe+uizF10fi6qgvG+BykaGWFl6WqSHdhMrUKmE4g@vger.kernel.org, AJvYcCXXMZCP6jZE5zYvfTPB3wzJRnJ1wUzVfTOPILLoQH4Ldun7ZHeM0e+ep0Cf+htJ4PT9U7o=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxzZ0ziZcyf7TWPfh/jcpB8ABpeEwrAy36SPjCs8vPt6WJD/Wmh
+	0sGOqMKC26OyFXfSyubp+Wb7xzR/AJQfcdSDnVtri+sSsatV6aSNns9wnWBTe90KxhytbNhV8rf
+	iS/R/7+RM+1lj7O26WhIJV28Qjvw=
+X-Gm-Gg: ASbGncvDCVCehniXjhh99B16nN6tTwNUSObQfkKJIBNW7vDALa4RKC75X+IRCXtnU/l
+	5/nxmTvtv6iq8/yqbacC2rfaT2aybCW8+UGBn4odC+ZKk52tN6uc2yWTbmvdT3ucmERkgRPhSbE
+	526t0rKOVWhHJjOlWwy0xA7G+y6X+yZ0U13qCMCg==
+X-Google-Smtp-Source: AGHT+IE/rQQIhva32pBfpB+BSOmHson59ZUUzc3H10bBwmswAMAfAbNO+QRDfnpZKYk1c21Ng7fQ9jcPeUWjEp8hMzs=
+X-Received: by 2002:a05:6a00:4ace:b0:736:34ff:be8 with SMTP id
+ d2e1a72fcca58-73e330d38d1mr373044b3a.19.1745512189272; Thu, 24 Apr 2025
+ 09:29:49 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+References: <20250421214423.393661-1-jolsa@kernel.org> <20250421214423.393661-12-jolsa@kernel.org>
+ <CAEf4BzbxCqgPErQVBV7Ojz23ZEqYKvxi0Y4j8hq6FgXVvdQo9A@mail.gmail.com> <aAozU3alQYU0vNkw@krava>
+In-Reply-To: <aAozU3alQYU0vNkw@krava>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Thu, 24 Apr 2025 09:29:37 -0700
+X-Gm-Features: ATxdqUHmgJW-YiXjtRDEVNgydudLQXdw9gxzB8tj7wA1c2MRTKEnTTrY4fDeiOQ
+Message-ID: <CAEf4BzagXsyr-iKB=ZpRZ3kS2FE69jpbWa8EVyFJknUOCGtEEQ@mail.gmail.com>
+Subject: Re: [PATCH perf/core 11/22] selftests/bpf: Use 5-byte nop for x86
+ usdt probes
+To: Jiri Olsa <olsajiri@gmail.com>
+Cc: Oleg Nesterov <oleg@redhat.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, x86@kernel.org, 
+	Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>, 
+	John Fastabend <john.fastabend@gmail.com>, Hao Luo <haoluo@google.com>, 
+	Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Alan Maguire <alan.maguire@oracle.com>, David Laight <David.Laight@aculab.com>, 
+	=?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas@t-8ch.de>, 
+	Ingo Molnar <mingo@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Namhyung Kim <namhyung@kernel.org>
+On Thu, Apr 24, 2025 at 5:49=E2=80=AFAM Jiri Olsa <olsajiri@gmail.com> wrot=
+e:
+>
+> On Wed, Apr 23, 2025 at 10:33:18AM -0700, Andrii Nakryiko wrote:
+> > On Mon, Apr 21, 2025 at 2:46=E2=80=AFPM Jiri Olsa <jolsa@kernel.org> wr=
+ote:
+> > >
+> > > Using 5-byte nop for x86 usdt probes so we can switch
+> > > to optimized uprobe them.
+> > >
+> > > Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+> > > ---
+> > >  tools/testing/selftests/bpf/sdt.h | 9 ++++++++-
+> > >  1 file changed, 8 insertions(+), 1 deletion(-)
+> > >
+> >
+> > So sdt.h is an exact copy/paste from systemtap-sdt sources. I'd prefer
+> > to not modify it unnecessarily.
+> >
+> > How about we copy/paste usdt.h ([0]) and use *that* for your
+> > benchmarks? I've already anticipated the need to change nop
+> > instruction, so you won't even need to modify the usdt.h file itself,
+> > just
+> >
+> > #define USDT_NOP .byte 0x0f, 0x1f, 0x44, 0x00, 0x00
+> >
+> > before #include "usdt.h"
+>
+>
+> sounds good, but it seems we need bit more changes for that,
+> so far I ended up with:
+>
+> -       __usdt_asm1(990:        USDT_NOP)                                =
+                       \
+> +       __usdt_asm5(990:        USDT_NOP)                                =
+                       \
+>
+> but it still won't compile, will need to spend more time on that,
+> unless you have better solution
+>
 
-Add a new event type for deferred callchains and a new callback for the
-struct perf_tool.  For now it doesn't actually handle the deferred
-callchains but it just marks the sample if it has the PERF_CONTEXT_
-USER_DEFFERED in the callchain array.
+Use
 
-At least, perf report can dump the raw data with this change.  Actually
-this requires the next commit to enable attr.defer_callchain, but if you
-already have a data file, it'll show the following result.
+#define USDT_NOP .ascii "\x0F\x1F\x44\x00\x00"
 
-  $ perf report -D
-  ...
-  0x5fe0@perf.data [0x40]: event: 22
-  .
-  . ... raw event: size 64 bytes
-  .  0000:  16 00 00 00 02 00 40 00 02 00 00 00 00 00 00 00  ......@.........
-  .  0010:  00 fe ff ff ff ff ff ff 4b d3 3f 25 45 7f 00 00  ........K.?%E...
-  .  0020:  21 03 00 00 21 03 00 00 43 02 12 ab 05 00 00 00  !...!...C.......
-  .  0030:  00 00 00 00 00 00 00 00 09 00 00 00 00 00 00 00  ................
+for now, I'll need to improve macro magic to handle instructions with
+commas in them...
 
-  0 24344920643 0x5fe0 [0x40]: PERF_RECORD_CALLCHAIN_DEFERRED(IP, 0x2): 801/801: 0
-  ... FP chain: nr:2
-  .....  0: fffffffffffffe00
-  .....  1: 00007f45253fd34b
-  : unhandled!
-
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
- tools/lib/perf/include/perf/event.h       |  7 +++++++
- tools/perf/util/event.c                   |  1 +
- tools/perf/util/evsel.c                   | 15 +++++++++++++++
- tools/perf/util/machine.c                 |  1 +
- tools/perf/util/perf_event_attr_fprintf.c |  1 +
- tools/perf/util/sample.h                  |  3 ++-
- tools/perf/util/session.c                 | 17 +++++++++++++++++
- tools/perf/util/tool.c                    |  1 +
- tools/perf/util/tool.h                    |  3 ++-
- 9 files changed, 47 insertions(+), 2 deletions(-)
-
-diff --git a/tools/lib/perf/include/perf/event.h b/tools/lib/perf/include/perf/event.h
-index 37bb7771d914..f643a6a2b9fc 100644
---- a/tools/lib/perf/include/perf/event.h
-+++ b/tools/lib/perf/include/perf/event.h
-@@ -151,6 +151,12 @@ struct perf_record_switch {
- 	__u32			 next_prev_tid;
- };
- 
-+struct perf_record_callchain_deferred {
-+	struct perf_event_header header;
-+	__u64			 nr;
-+	__u64			 ips[];
-+};
-+
- struct perf_record_header_attr {
- 	struct perf_event_header header;
- 	struct perf_event_attr	 attr;
-@@ -494,6 +500,7 @@ union perf_event {
- 	struct perf_record_read			read;
- 	struct perf_record_throttle		throttle;
- 	struct perf_record_sample		sample;
-+	struct perf_record_callchain_deferred	callchain_deferred;
- 	struct perf_record_bpf_event		bpf;
- 	struct perf_record_ksymbol		ksymbol;
- 	struct perf_record_text_poke_event	text_poke;
-diff --git a/tools/perf/util/event.c b/tools/perf/util/event.c
-index c23b77f8f854..fec86519b7d4 100644
---- a/tools/perf/util/event.c
-+++ b/tools/perf/util/event.c
-@@ -58,6 +58,7 @@ static const char *perf_event__names[] = {
- 	[PERF_RECORD_CGROUP]			= "CGROUP",
- 	[PERF_RECORD_TEXT_POKE]			= "TEXT_POKE",
- 	[PERF_RECORD_AUX_OUTPUT_HW_ID]		= "AUX_OUTPUT_HW_ID",
-+	[PERF_RECORD_CALLCHAIN_DEFERRED]	= "CALLCHAIN_DEFERRED",
- 	[PERF_RECORD_HEADER_ATTR]		= "ATTR",
- 	[PERF_RECORD_HEADER_EVENT_TYPE]		= "EVENT_TYPE",
- 	[PERF_RECORD_HEADER_TRACING_DATA]	= "TRACING_DATA",
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index 3c030da2e477..b872236a2413 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -2948,6 +2948,18 @@ int evsel__parse_sample(struct evsel *evsel, union perf_event *event,
- 	data->data_src = PERF_MEM_DATA_SRC_NONE;
- 	data->vcpu = -1;
- 
-+	if (event->header.type == PERF_RECORD_CALLCHAIN_DEFERRED) {
-+		const u64 max_callchain_nr = UINT64_MAX / sizeof(u64);
-+
-+		data->callchain = (struct ip_callchain *)&event->callchain_deferred.nr;
-+		if (data->callchain->nr > max_callchain_nr)
-+			return -EFAULT;
-+
-+		if (evsel->core.attr.sample_id_all)
-+			perf_evsel__parse_id_sample(evsel, event, data);
-+		return 0;
-+	}
-+
- 	if (event->header.type != PERF_RECORD_SAMPLE) {
- 		if (!evsel->core.attr.sample_id_all)
- 			return 0;
-@@ -3078,6 +3090,9 @@ int evsel__parse_sample(struct evsel *evsel, union perf_event *event,
- 		if (data->callchain->nr > max_callchain_nr)
- 			return -EFAULT;
- 		sz = data->callchain->nr * sizeof(u64);
-+		if (evsel->core.attr.defer_callchain && data->callchain->nr >= 1 &&
-+		    data->callchain->ips[data->callchain->nr - 1] == PERF_CONTEXT_USER_DEFERRED)
-+			data->deferred_callchain = true;
- 		OVERFLOW_CHECK(array, sz, max_size);
- 		array = (void *)array + sz;
- 	}
-diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
-index 2531b373f2cf..df76adce89ff 100644
---- a/tools/perf/util/machine.c
-+++ b/tools/perf/util/machine.c
-@@ -2089,6 +2089,7 @@ static int add_callchain_ip(struct thread *thread,
- 				*cpumode = PERF_RECORD_MISC_KERNEL;
- 				break;
- 			case PERF_CONTEXT_USER:
-+			case PERF_CONTEXT_USER_DEFERRED:
- 				*cpumode = PERF_RECORD_MISC_USER;
- 				break;
- 			default:
-diff --git a/tools/perf/util/perf_event_attr_fprintf.c b/tools/perf/util/perf_event_attr_fprintf.c
-index 66b666d9ce64..abfd9b9a718c 100644
---- a/tools/perf/util/perf_event_attr_fprintf.c
-+++ b/tools/perf/util/perf_event_attr_fprintf.c
-@@ -343,6 +343,7 @@ int perf_event_attr__fprintf(FILE *fp, struct perf_event_attr *attr,
- 	PRINT_ATTRf(inherit_thread, p_unsigned);
- 	PRINT_ATTRf(remove_on_exec, p_unsigned);
- 	PRINT_ATTRf(sigtrap, p_unsigned);
-+	PRINT_ATTRf(defer_callchain, p_unsigned);
- 
- 	PRINT_ATTRn("{ wakeup_events, wakeup_watermark }", wakeup_events, p_unsigned, false);
- 	PRINT_ATTRf(bp_type, p_unsigned);
-diff --git a/tools/perf/util/sample.h b/tools/perf/util/sample.h
-index 0e96240052e9..9d6e2f14551c 100644
---- a/tools/perf/util/sample.h
-+++ b/tools/perf/util/sample.h
-@@ -108,7 +108,8 @@ struct perf_sample {
- 		u16 p_stage_cyc;
- 		u16 retire_lat;
- 	};
--	bool no_hw_idx;		/* No hw_idx collected in branch_stack */
-+	bool no_hw_idx;			/* No hw_idx collected in branch_stack */
-+	bool deferred_callchain;	/* Has deferred user callchains */
- 	char insn[MAX_INSN];
- 	void *raw_data;
- 	struct ip_callchain *callchain;
-diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
-index 60fb9997ea0d..30fb1d281be8 100644
---- a/tools/perf/util/session.c
-+++ b/tools/perf/util/session.c
-@@ -715,6 +715,7 @@ static perf_event__swap_op perf_event__swap_ops[] = {
- 	[PERF_RECORD_CGROUP]		  = perf_event__cgroup_swap,
- 	[PERF_RECORD_TEXT_POKE]		  = perf_event__text_poke_swap,
- 	[PERF_RECORD_AUX_OUTPUT_HW_ID]	  = perf_event__all64_swap,
-+	[PERF_RECORD_CALLCHAIN_DEFERRED]  = perf_event__all64_swap,
- 	[PERF_RECORD_HEADER_ATTR]	  = perf_event__hdr_attr_swap,
- 	[PERF_RECORD_HEADER_EVENT_TYPE]	  = perf_event__event_type_swap,
- 	[PERF_RECORD_HEADER_TRACING_DATA] = perf_event__tracing_data_swap,
-@@ -1118,6 +1119,19 @@ static void dump_sample(struct evsel *evsel, union perf_event *event,
- 		sample_read__printf(sample, evsel->core.attr.read_format);
- }
- 
-+static void dump_deferred_callchain(struct evsel *evsel, union perf_event *event,
-+				    struct perf_sample *sample)
-+{
-+	if (!dump_trace)
-+		return;
-+
-+	printf("(IP, 0x%x): %d/%d: %#" PRIx64 "\n",
-+	       event->header.misc, sample->pid, sample->tid, sample->ip);
-+
-+	if (evsel__has_callchain(evsel))
-+		callchain__printf(evsel, sample);
-+}
-+
- static void dump_read(struct evsel *evsel, union perf_event *event)
- {
- 	struct perf_record_read *read_event = &event->read;
-@@ -1348,6 +1362,9 @@ static int machines__deliver_event(struct machines *machines,
- 		return tool->text_poke(tool, event, sample, machine);
- 	case PERF_RECORD_AUX_OUTPUT_HW_ID:
- 		return tool->aux_output_hw_id(tool, event, sample, machine);
-+	case PERF_RECORD_CALLCHAIN_DEFERRED:
-+		dump_deferred_callchain(evsel, event, sample);
-+		return tool->callchain_deferred(tool, event, sample, evsel, machine);
- 	default:
- 		++evlist->stats.nr_unknown_events;
- 		return -1;
-diff --git a/tools/perf/util/tool.c b/tools/perf/util/tool.c
-index 3b7f390f26eb..e78f16de912e 100644
---- a/tools/perf/util/tool.c
-+++ b/tools/perf/util/tool.c
-@@ -259,6 +259,7 @@ void perf_tool__init(struct perf_tool *tool, bool ordered_events)
- 	tool->read = process_event_sample_stub;
- 	tool->throttle = process_event_stub;
- 	tool->unthrottle = process_event_stub;
-+	tool->callchain_deferred = process_event_sample_stub;
- 	tool->attr = process_event_synth_attr_stub;
- 	tool->event_update = process_event_synth_event_update_stub;
- 	tool->tracing_data = process_event_synth_tracing_data_stub;
-diff --git a/tools/perf/util/tool.h b/tools/perf/util/tool.h
-index db1c7642b0d1..9987bbde6d5e 100644
---- a/tools/perf/util/tool.h
-+++ b/tools/perf/util/tool.h
-@@ -42,7 +42,8 @@ enum show_feature_header {
- 
- struct perf_tool {
- 	event_sample	sample,
--			read;
-+			read,
-+			callchain_deferred;
- 	event_op	mmap,
- 			mmap2,
- 			comm,
--- 
-2.47.2
-
-
+> thanks,
+> jirka
+>
+> >
+> >
+> >   [0] https://github.com/libbpf/usdt/blob/main/usdt.h
+> >
+> > > diff --git a/tools/testing/selftests/bpf/sdt.h b/tools/testing/selfte=
+sts/bpf/sdt.h
+> > > index 1fcfa5160231..1d62c06f5ddc 100644
+> > > --- a/tools/testing/selftests/bpf/sdt.h
+> > > +++ b/tools/testing/selftests/bpf/sdt.h
+> > > @@ -236,6 +236,13 @@ __extension__ extern unsigned long long __sdt_un=
+sp;
+> > >  #define _SDT_NOP       nop
+> > >  #endif
+> > >
+> > > +/* Use 5 byte nop for x86_64 to allow optimizing uprobes. */
+> > > +#if defined(__x86_64__)
+> > > +# define _SDT_DEF_NOP _SDT_ASM_5(990:  .byte 0x0f, 0x1f, 0x44, 0x00,=
+ 0x00)
+> > > +#else
+> > > +# define _SDT_DEF_NOP _SDT_ASM_1(990:  _SDT_NOP)
+> > > +#endif
+> > > +
+> > >  #define _SDT_NOTE_NAME "stapsdt"
+> > >  #define _SDT_NOTE_TYPE 3
+> > >
+> > > @@ -288,7 +295,7 @@ __extension__ extern unsigned long long __sdt_uns=
+p;
+> > >
+> > >  #define _SDT_ASM_BODY(provider, name, pack_args, args, ...)         =
+         \
+> > >    _SDT_DEF_MACROS                                                   =
+         \
+> > > -  _SDT_ASM_1(990:      _SDT_NOP)                                    =
+         \
+> > > +  _SDT_DEF_NOP                                                      =
+         \
+> > >    _SDT_ASM_3(          .pushsection .note.stapsdt,_SDT_ASM_AUTOGROUP=
+,"note") \
+> > >    _SDT_ASM_1(          .balign 4)                                   =
+         \
+> > >    _SDT_ASM_3(          .4byte 992f-991f, 994f-993f, _SDT_NOTE_TYPE) =
+         \
+> > > --
+> > > 2.49.0
+> > >
