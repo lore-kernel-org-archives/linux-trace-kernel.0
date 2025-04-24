@@ -1,146 +1,145 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52F9D146A72
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 24 Apr 2025 13:56:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D0362701C1;
+	Thu, 24 Apr 2025 15:03:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745502966; cv=none; b=o7j11upwYQWqBt+tLSeRlQyIfCjb33vyItyd2IIYP+cL0WGkXcbixTcJ83/v9aM0GkBw3b3x3VDcic+XNKKI11PbXs7ReoO4WobaxP56ltCaGZzOy3wfJNfMduW32kLUh8KOPk93V78whSxp/aXQ/Efo8XsVgmp2un6LYRVUdZE=
+	t=1745507037; cv=none; b=kNAx9pZzTMCFvPwZymW2BEGs/E9MXEVkJbqJCOv1lmtLi18AxeWWMtJ5gpc9HP0QCtc4GjFPb+JZBI+3jAZLvK3MM84osj3JkcoMYhpzwLbgJf0BVJtfiQg8kLYl0myOPe79gZNUXF7Dw2d2Z5+PLVuuGEjzcn9wcV/9BSj2K0A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745502966; c=relaxed/simple;
-	bh=cTgpeF7IjB4DHQdDMY8/5jo70TmDi6eMpdUuG8Cw7+g=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=hJH6pF+tNGKPFST+iZ0DpPDHQ3iA17m2VHyJmDd7kUq3FuLiA6MZ1yZd8WIslY/SwSGCeqs6waMVwch824lbEyMtEcw5E2Dvi+YxhCGi0EoP92Trlg1MOt6LcJj7hyKsvBdXEzQkZvRvPwVcV+rgNZ8n2cR6YVhAFUoXHigstYQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=iQztxAQV; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1745507037; c=relaxed/simple;
+	bh=kvI7kjUwXN7aMCUd/KqC+XSsxo1YD9LUHguUFe5g3nU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=L/P6o0ltqUrJNjKio02JdUG4NmE1TzrzJPSxZcp/dkWnGI7b5pcOEZjMbl5E8IENQzwacFiZ1UTVjgQiKVEIj0ga3qshrnOTIcUjzd9C5cPDVZHnRB4F8FKvxKVWpGbIPY2hKV4BRH9PXZbY9jQjG/bFGtsboldLBP4UHPr2gXw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Tn64V9hA; arc=none smtp.client-ip=209.85.218.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iQztxAQV"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1745502963;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=AYEUCC5q0yyU5Rah8MD36KICV7zJjIoMfBlRozZjVYs=;
-	b=iQztxAQV7xaKJavfi14uel7O+lgxS284VV1q6SpCclDuav8Ja85W7YPnNAjiZra1Z0pcn/
-	50sd1hM2B9qyD3DoSx1TqVtP9EG78oxiY3zgKK9MRoiaIv0sBnmVtvVSCWDeZXCcx/j3M5
-	T31gm1diRZ4/2IMkCA1xY/5jOTAAFHI=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-554-TwD3jr9FN2KYkMelMPACnw-1; Thu, 24 Apr 2025 09:56:01 -0400
-X-MC-Unique: TwD3jr9FN2KYkMelMPACnw-1
-X-Mimecast-MFC-AGG-ID: TwD3jr9FN2KYkMelMPACnw_1745502960
-Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-43eea5a5d80so4761075e9.1
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 24 Apr 2025 06:56:01 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Tn64V9hA"
+Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-ac34257295dso195140266b.2;
+        Thu, 24 Apr 2025 08:03:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745507034; x=1746111834; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=5chFS9OMORzLKORouVhOFOBJ5V69Jo/Whb7Bt9/v68A=;
+        b=Tn64V9hAt7oZpveFNmO1YXDvDMGpv722v4TZiu4f6iX8vKdJT0ARoWpTWxMSyZ+s3p
+         /qSv3RlYQedlTQXTawyD+1/gQQ8ICXnrE79W3P42Yeb+QRtLsvt+GVPhrkgrzGZOnxsD
+         6Dvu+TYmOBbV0888JEdwaWWUCLpgyk0Bmd3H8m+nOATl79FFqoqqYHuVwUuoTmMThGHS
+         K2XxXqDWCIj0xc4HYeYLWUTebv8rHWcy2+xnyfG9Zexva/NPCxw/NVGlgfiOCSAp3bMO
+         PPOS107sQ7iV2zAMYWSAuVAT7eUZY5eibZj9Oio4ddiI5NalxHFS4obHrY5cPhB00pC+
+         bOVA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745502960; x=1746107760;
-        h=mime-version:user-agent:content-transfer-encoding:autocrypt
-         :references:in-reply-to:date:cc:to:from:subject:message-id
+        d=1e100.net; s=20230601; t=1745507034; x=1746111834;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Y1RyaFKtxAMrB5HauvPOnP185eorkVDz+74Vg8LMXDQ=;
-        b=L9ld8QJIkkr/PdbWtJhb8FbaYOaip9XawhMuTEmyGoi2Dln8f/QxqsECrcVt7rk0Lr
-         GPpnKteLooMS/WRZPMaYdSEhXRPnbLL0V73mMjtgxmIrFI27TErNEhL83gqc3Da7qM1z
-         Yf+9iCSSy3MAKFyRR4X8hzqdSGhdVgirgI/wvAHyu5j08eOCdwc7D4Tg8/681g26eGLz
-         ghL8ntu7MVjcTsLH9Zk6VMgFRHGcdCSlj/ai2m/s5Ucyp+hkYvlNOIKVPzNV8PJGzcev
-         gHQzX+uFjvEYLHI3zyBcwstXddQaOcKGPE+j0XLTEcBrrGCB52XWYmBDM2BYN2nCteXH
-         W2ag==
-X-Forwarded-Encrypted: i=1; AJvYcCVZxlXgTT+cSl3mFd29+brNHPyNRr6YpusKwITVch0OMpVbqRel9F7zj1/FcOxHnJEw9lyetf/DEC5COyVkWVtReaI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy9sxsjSQN0jvjFmnLdJbg0NqzfPYZxDjG3KBBLdmjS1BkCWH8J
-	LqwSWOwhBFE7gxWnzic//Yw0X5FYrK7V67RdExKbrigiaQPKyZKUJ3HAQ+8PQGnm7ITDTA6AmXU
-	b2gN8WL3vvIvx+ZVqYo3BbhUTnq1M6zk/CB5wXuNmgAGR0ufgBz7i5rS7vPWBVwRZAlGalQ==
-X-Gm-Gg: ASbGncso12uMp8nixeXG36clBJ1/DfHCqD3hTmNRzpTuHft2QcDKacjuRdaC+BicVki
-	UyQT8jKddkt6TlSRA8UaEnHIdHCdAETXrFsycbEPEGUWbdvgMU0cV38WDb+oLjWx2BEFhu9DM+2
-	zgF2lC73/pcGU5XHgnNa4BHpbDRPysGRpvX3eKl8m4IRBoRcgZkAxlNlbpN87p4zc858r+vmYxJ
-	ffvFNqUXnuMRS3UpH6x85FwsBXP+bEnhj3/t+NgyqRAxQYUuVgt/vwQ4VFSN9mobrOwPvIARbv3
-	vRdwhZJISJLQd1Qu3MXkrScfd06YDTRGpWD6pg==
-X-Received: by 2002:a05:600c:a363:b0:43d:47e:3205 with SMTP id 5b1f17b1804b1-4409bd0e377mr24787805e9.11.1745502960179;
-        Thu, 24 Apr 2025 06:56:00 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEaulAtCMwz/QY4Wsmd7+YPlHQCjODqYQKkCyZqkzc8UCUby+uEZhSuylFsVw/BS4GiRlE9lQ==
-X-Received: by 2002:a05:600c:a363:b0:43d:47e:3205 with SMTP id 5b1f17b1804b1-4409bd0e377mr24787585e9.11.1745502959824;
-        Thu, 24 Apr 2025 06:55:59 -0700 (PDT)
-Received: from gmonaco-thinkpadt14gen3.rmtit.csb ([185.107.56.40])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4409d2a2eabsm22120895e9.12.2025.04.24.06.55.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 24 Apr 2025 06:55:59 -0700 (PDT)
-Message-ID: <c321c7350ec10f9f358695acd765d2dbd067eeb2.camel@redhat.com>
-Subject: Re: [PATCH v4 20/22] rv: Add rtapp_sleep monitor
-From: Gabriele Monaco <gmonaco@redhat.com>
-To: Nam Cao <namcao@linutronix.de>, Steven Rostedt <rostedt@goodmis.org>, 
-	linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: john.ogness@linutronix.de
-Date: Thu, 24 Apr 2025 15:55:34 +0200
-In-Reply-To: <c23cb5ef10310f978c3f90f07c2dbb9b042e8b01.1745390829.git.namcao@linutronix.de>
-References: <cover.1745390829.git.namcao@linutronix.de>
-	 <c23cb5ef10310f978c3f90f07c2dbb9b042e8b01.1745390829.git.namcao@linutronix.de>
-Autocrypt: addr=gmonaco@redhat.com; prefer-encrypt=mutual;
- keydata=mDMEZuK5YxYJKwYBBAHaRw8BAQdAmJ3dM9Sz6/Hodu33Qrf8QH2bNeNbOikqYtxWFLVm0
- 1a0JEdhYnJpZWxlIE1vbmFjbyA8Z21vbmFjb0ByZWRoYXQuY29tPoiZBBMWCgBBFiEEysoR+AuB3R
- Zwp6j270psSVh4TfIFAmbiuWMCGwMFCQWjmoAFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgk
- Q70psSVh4TfJzZgD/TXjnqCyqaZH/Y2w+YVbvm93WX2eqBqiVZ6VEjTuGNs8A/iPrKbzdWC7AicnK
- xyhmqeUWOzFx5P43S1E1dhsrLWgP
-User-Agent: Evolution 3.56.1 (3.56.1-1.fc42)
+        bh=5chFS9OMORzLKORouVhOFOBJ5V69Jo/Whb7Bt9/v68A=;
+        b=TGVWLUbtq58AixEo/onDSF8qVrxBXipI19r90osXyei9ldPhKfRLo0JkeYr4UMxtfm
+         EAVdQvsM34L6l1Rp6zEkxi6ZPgui5uJgloGMERnjbUcU5M+Tvun4vjppT3rXwi3+3qPH
+         X7tLbUYBCF8A5YvX2ymtEuANum5r5GulB1Tymyxpp/tlkBX923WLbOavU4gR3XQT3oez
+         AyiLg0HuhZpvJDAZeQRiyQwwRyTktIp7tJEv12OkMSlcO2ufr8mNNXFQgh6FAlpP4mcF
+         loeog7DIZQmyzH18wmBkoSAk6JC0ZyG9hiqkzi8Ma9N65zeDiJvqH0R89+LDhl/ydol7
+         yPxA==
+X-Forwarded-Encrypted: i=1; AJvYcCUa6e13co8nxuk8FFHqrXORdd+uwfkqwoub/5J2z3b78qTzIAr4TLwiPgP56sJznPTdbxDztCZtb5Rw0Q+B@vger.kernel.org, AJvYcCV86v7X1z6vr3QWTVoJ9OMIFtYKV7T2N+s+rGHQJM5dZVcvEMdvsx1goOhPvGAeqdKvCcGxCWHL3b0nuY/Pkmm9PM+N@vger.kernel.org, AJvYcCXchajTP83ra7eeXxy33oBQ3Fg1tFoJxv2BrlaZPk5M90mLvyWsM/cJiDx0gSEoAKqT/hpLj9UYuxM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxrCx97ZxEhO1yUS1c6EIK5K2KwhWHdP/iC8XNhlQU7d8mBHMIx
+	n5MYbJvolwcmKFQxwvo1l3N7xBg55+SaMUjckHGS2dEkyHldlafr
+X-Gm-Gg: ASbGnctiAGxOn3i5K3o/DpUrwCuPK+SKaFJUNVpvErGaQX1lr/lSjzeB9ErYl5CAlbE
+	Sz8IXzCVmxe7P+irse0wjT3wmsNzg/fZ2S6n8udrK3NlFN8VE94Izxc1VS5jAuW4ijaXE2rQ+MZ
+	GGwMf3BRhKjCBPgPbyAGTeIW406N/+d5tS0wbn2Ifc1WJ6ItruYHEHKCsLRix3Fw0pgvLIj9ath
+	1u926+yz3VhTvYFovwKNa7rUhIoUqWslGqjWthce4YG1VGKjrzcSx3YYDwk7v7l6tfYM0UhUTn0
+	aXDGIrggmCE/v860dgHlldYYkRjfjEdKjO9rMRLFn8UTDyWumkifINGbVAarvwWO4aRIIlPwMlc
+	2vu3N15/UiOfu
+X-Google-Smtp-Source: AGHT+IEco8mssxoawhcAhtRNlPLqlID5zUq0vN72hKI33kZSrx4fa3BkNkpoQ0Lld1zoeiMfeTtTrw==
+X-Received: by 2002:a17:907:3c93:b0:ac2:9093:6856 with SMTP id a640c23a62f3a-ace573a6e8cmr320455066b.54.1745507033210;
+        Thu, 24 Apr 2025 08:03:53 -0700 (PDT)
+Received: from ?IPV6:2a03:83e0:1126:4:1cca:202:d408:3819? ([2620:10d:c092:500::5:5042])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ace59c260d2sm120633666b.145.2025.04.24.08.03.50
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 24 Apr 2025 08:03:51 -0700 (PDT)
+Message-ID: <b22e222f-1d6a-4685-871c-1aaee319b744@gmail.com>
+Date: Thu, 24 Apr 2025 16:03:49 +0100
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: IvBitFcVlnXqF4ilMxYxY3idzHevl3VO3GC239DSWI0_1745502960
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 12/12] Documentation: mm: update the admin guide for
+ mTHP collapse
+To: Nico Pache <npache@redhat.com>, linux-mm@kvack.org,
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+Cc: akpm@linux-foundation.org, corbet@lwn.net, rostedt@goodmis.org,
+ mhiramat@kernel.org, mathieu.desnoyers@efficios.com, david@redhat.com,
+ baohua@kernel.org, baolin.wang@linux.alibaba.com, ryan.roberts@arm.com,
+ willy@infradead.org, peterx@redhat.com, ziy@nvidia.com,
+ wangkefeng.wang@huawei.com, sunnanyong@huawei.com, vishal.moola@gmail.com,
+ thomas.hellstrom@linux.intel.com, yang@os.amperecomputing.com,
+ kirill.shutemov@linux.intel.com, aarcange@redhat.com, raquini@redhat.com,
+ dev.jain@arm.com, anshuman.khandual@arm.com, catalin.marinas@arm.com,
+ tiwai@suse.de, will@kernel.org, dave.hansen@linux.intel.com, jack@suse.cz,
+ cl@gentwo.org, jglisse@google.com, surenb@google.com, zokeefe@google.com,
+ hannes@cmpxchg.org, rientjes@google.com, mhocko@suse.com,
+ rdunlap@infradead.org
+References: <20250417000238.74567-1-npache@redhat.com>
+ <20250417000238.74567-13-npache@redhat.com>
+Content-Language: en-US
+From: Usama Arif <usamaarif642@gmail.com>
+In-Reply-To: <20250417000238.74567-13-npache@redhat.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, 2025-04-23 at 08:50 +0200, Nam Cao wrote:
-> Add a monitor for checking that real-time tasks do not go to sleep in
-> a
-> manner that may cause undesirable latency.
->=20
-> Also change
-> =09RV depends on TRACING
-> to
-> =09RV select TRACING
-> to avoid the following recursive dependency:
->=20
-> =C2=A0error: recursive dependency detected!
-> =09symbol TRACING is selected by PREEMPTIRQ_TRACEPOINTS
-> =09symbol PREEMPTIRQ_TRACEPOINTS depends on TRACE_IRQFLAGS
-> =09symbol TRACE_IRQFLAGS is selected by RV_MON_SLEEP
-> =09symbol RV_MON_SLEEP depends on RV
-> =09symbol RV depends on TRACING
->=20
-> Signed-off-by: Nam Cao <namcao@linutronix.de>
+
+
+On 17/04/2025 01:02, Nico Pache wrote:
+> Now that we can collapse to mTHPs lets update the admin guide to
+> reflect these changes and provide proper guidence on how to utilize it.
+> 
+> Signed-off-by: Nico Pache <npache@redhat.com>
 > ---
->=20
+>  Documentation/admin-guide/mm/transhuge.rst | 10 +++++++++-
+>  1 file changed, 9 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/admin-guide/mm/transhuge.rst b/Documentation/admin-guide/mm/transhuge.rst
+> index dff8d5985f0f..06814e05e1d5 100644
+> --- a/Documentation/admin-guide/mm/transhuge.rst
+> +++ b/Documentation/admin-guide/mm/transhuge.rst
+> @@ -63,7 +63,7 @@ often.
+>  THP can be enabled system wide or restricted to certain tasks or even
+>  memory ranges inside task's address space. Unless THP is completely
+>  disabled, there is ``khugepaged`` daemon that scans memory and
+> -collapses sequences of basic pages into PMD-sized huge pages.
+> +collapses sequences of basic pages into huge pages.
+>  
+>  The THP behaviour is controlled via :ref:`sysfs <thp_sysfs>`
+>  interface and using madvise(2) and prctl(2) system calls.
+> @@ -144,6 +144,14 @@ hugepage sizes have enabled="never". If enabling multiple hugepage
+>  sizes, the kernel will select the most appropriate enabled size for a
+>  given allocation.
+>  
+> +khugepaged uses max_ptes_none scaled to the order of the enabled mTHP size to
+> +determine collapses. When using mTHPs it's recommended to set max_ptes_none
+> +low-- ideally less than HPAGE_PMD_NR / 2 (255 on 4k page size). This will
+> +prevent undesired "creep" behavior that leads to continuously collapsing to a
+> +larger mTHP size. max_ptes_shared and max_ptes_swap have no effect when
+> +collapsing to a mTHP, and mTHP collapse will fail on shared or swapped out
+> +pages.
+> +
 
-I've been playing with these monitors, code-wise they look good.
-I tested a bit and they seem to work without many surprises by doing
-something as simple as:
+Hi Nico,
 
-perf stat -e rv:error_sleep stress-ng --cpu-sched 1 -t 10s
-  -- shows several errors --
+Could you add a bit more explanation of the creep behaviour here in documentation.
+I remember you explained in one of the earlier versions that if more than half of the
+collapsed mTHP is zero-filled, it for some reason becomes eligible for collapsing to
+larger order, but if less than half is zero-filled its not eligible? I cant exactly
+remember what the reason was :) Would be good to have it documented more if possible.
 
-perf stat -e rv:error_sleep stress-ng --prio-inv 1 --prio-inv-policy rr
-  -- shows only 1 error (normal while starting the program?) --
+Thanks
 
-Not quite sound, but does it look a reasonable test to you?
-
-I quickly tried the same with the other monitor comparing the number of
-errors with the page_faults generated by perf, but that didn't make too
-much sense. Perhaps I'm doing something wrong here though (the number
-reported by perf for page faults feels a bit too high).
-
-perf stat -e page-faults -e rv:error_pagefault stress-ng --cyclic 1
-
-Anyway, the monitor looks good to me
-
-  Reviewed-by: Gabriele Monaco <gmonaco@redhat.com>
-
-but it'd be nice if you have tips to share how to quickly test it (e.g.
-without writing a custom workload).
-
-Thanks,
-Gabriele
+>  It's also possible to limit defrag efforts in the VM to generate
+>  anonymous hugepages in case they're not immediately free to madvise
+>  regions or to never try to defrag memory and simply fallback to regular
 
