@@ -1,137 +1,69 @@
-Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DD9427A908;
-	Thu, 24 Apr 2025 12:51:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7679118E34A;
+	Thu, 24 Apr 2025 13:39:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745499100; cv=none; b=lyZsUJJ6er6IriyiicfohL60Ef7r888jKkL7hYfas0j4OL0KYJZE+25rH7T75IledkRbVCzgdoSlBusrCpUib/jU6sXv3IE0ExrlgtXOnbCEG9RA+KtHO8zgC8yMELAODI0qFcoTpDrdcYvzsw2Z5nhdXh69TcWIWOUK7eEGVBo=
+	t=1745501951; cv=none; b=i685Cr8jotv6snFVWE7RRq1UM95kjG/C6YCLdof4CXlbp7rAJ9+0RPfxxSIvXcBcA0rY6CX1gOP9EgfG1qsbUu7rznAU1vgl6cXoP5OpyK70R5KO51bq53K8+LC8Loh9XxqnQBg8pexAiko+gxPW7Rh883Yi5mkdZBTwVhZQqXA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745499100; c=relaxed/simple;
-	bh=MHKn+EdWhAhoB/tNSI0aX59JflxZSZo+kWrmGYyIxlA=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=l/H+lUejkUnZQEaBzftG+DS0X44eim3AC7npPtdu0foBX0IQkojdiUSBtzw/MF9ST8tp8aPeNFkNP9M1HLJwzhXNVDt6lHnIl8dy+XsHzetVh8f8RAujIz21lMry0Gqy9su83M5b759A1oYUXsQsqt1nMW9DYtUrXjnh5npbNcQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QLnTmRLC; arc=none smtp.client-ip=209.85.218.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QLnTmRLC"
-Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-aaecf50578eso152556466b.2;
-        Thu, 24 Apr 2025 05:51:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745499096; x=1746103896; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:date:from:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=WoCqvs1DJYai/uMoUc+wigTMUqKQl+TiJoeJOKS4hLA=;
-        b=QLnTmRLCuiRGqTwilaJFV5VQcGo/vm63fYKjmPUtOoZamZU8+m6sXQDq1K2sQTr/1a
-         nZ08hGeNDPjPKG5ESi5v1Tez2ncP+aiXJRVENrn6ashwQEjjmqGIbBeJpOepmmMfgy0r
-         PCOk0ZXbHYsVLgset81WqTyRlzJU7uymh3gPzSQ+2fNn54aVmywV1kDn4bGA/luCdWYV
-         hZt3Ur45VwUzaaS+6yBOPLAcDupHKZLw/srqPSOaoNy1qvcGBKNPG1rHFY3xRwD13TyP
-         y7glBemejnlCrZ6jwrZ8Z24jUMlIXuCSfXRR8IYIsYJgkBAvSXknMDo+nd02jR3NyBhY
-         iGig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745499096; x=1746103896;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:date:from
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=WoCqvs1DJYai/uMoUc+wigTMUqKQl+TiJoeJOKS4hLA=;
-        b=ZTfplFDTfnfJcA/xtPVlKm+hc5UshAkgoaDX2RcTS5L5YsfRoH9E08FGeT6HQfTSSi
-         Gb4OkFMypnguD07SgxDyFqoNRIW0s09PUaArWwhOBeJvFXoJa5qg0pfE4QZkb8D6prfP
-         LAog/dPUAZ2k/mm8IuXOSNhb5ZtZmom0Hbcgajtg6Bi8jDJdvChG89lkUVxYKLHIydYR
-         PcISh8MUkLtRzNQYKED9GzB9iPZf6SAZnsghlWNCpGdS3txdaOua09kxHu378wYA2f+5
-         CT4DgQptOGlAyj/PPU/RLNxhBDoZozq2IzTvzKp5X1LNL/XOdbYz6Mo0ntRgqu9hJTNQ
-         7qPQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUF29BMOMxuBupGx/IOyAymV4j5bGKsHHdJ4gKYx/QLSvyvEIKhKPobwtnDEru36nia7zAMhwVeDG50j2+6@vger.kernel.org, AJvYcCWxSbe5cLAQUZrQzWU5T0/Fpx9vZCgjafC8PV1NjBpkQfFCpnXIgVELmj+QstOznZZxENWwXUSC7rAxEwzRXLU7WLIu@vger.kernel.org, AJvYcCXVMNrdIDxGSdDk4bBsnSucoElyQfXEQqWPAE7tCwolMVN0kTAyNHlGGQVXKlKLLOyYvwY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx9drhqxUmqdbAkKNB49St9ORSrIKXzH9u7nDXkVNZY0YRlqM6o
-	v5k9OYCK1udGCie1tBg5teAQz4cL11CZXtlBqukMcHdZHPj2hjwV
-X-Gm-Gg: ASbGncuQm1JuaAyha3p9289FclSHxGVYmNtGWCfhJXX0nIxGc0boMt+1BH48nHksmzJ
-	3ve97FqPB5GeRgy6SScKPKHxLpozLK2VueW61THf7le7JO+datCi+9B4l3UI0+ex+yGfgfvmKjv
-	X5+aBCAJLnd5koR69tT34cYU4dWthfXlA1LDlTUQHUoX1NphTUXloOxQHm9HBuZWVv9eT7K/Jfs
-	zj/TlbQ09r4n6bZi/pK8f2DckWQfGjVPIR9E+cgQeZivl1ayJmHvE1VFpotmj/DOmerxZLngS2u
-	A6zK2waoy0Io40khX0yZjFF4lmH/0KVzzdPUPw==
-X-Google-Smtp-Source: AGHT+IEWuZYGNBXx1lEdhEESLbtbRgcdGI6jeUaJBjEsoBL/886QU1Pi4aziijH3FrEv7xXHvq9Tww==
-X-Received: by 2002:a17:907:2689:b0:abf:6ec7:65e9 with SMTP id a640c23a62f3a-ace573a7236mr256549266b.43.1745499096131;
-        Thu, 24 Apr 2025 05:51:36 -0700 (PDT)
-Received: from krava ([173.38.220.55])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ace598205f4sm104200066b.8.2025.04.24.05.51.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 24 Apr 2025 05:51:35 -0700 (PDT)
-From: Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date: Thu, 24 Apr 2025 14:51:33 +0200
-To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc: Oleg Nesterov <oleg@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
-	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	x86@kernel.org, Song Liu <songliubraving@fb.com>,
-	Yonghong Song <yhs@fb.com>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Hao Luo <haoluo@google.com>, Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Alan Maguire <alan.maguire@oracle.com>,
-	David Laight <David.Laight@aculab.com>,
-	Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas@t-8ch.de>,
-	Ingo Molnar <mingo@kernel.org>
-Subject: Re: [PATCH perf/core 18/22] selftests/bpf: Add uprobe_regs_equal test
-Message-ID: <aAoz1ZBL2WahMa4m@krava>
-References: <20250421214423.393661-1-jolsa@kernel.org>
- <20250421214423.393661-19-jolsa@kernel.org>
- <CAEf4BzZu0T5DLROi6oisneB3PyGDKZrME9+5qvw4aHeyOyNiYQ@mail.gmail.com>
+	s=arc-20240116; t=1745501951; c=relaxed/simple;
+	bh=qgnyhI7G1sbn3+oID5OpHpCLMNHcLsKjgs4//IEb2I8=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=pP+rqfyoyc6kwIFHs1kGQwGVq9upHMrW9Hekj0fnr+drup9OXVdGU/tdmb0ODkE5SsE5E+ZgubOF9bY02q47DHFiQvhzoTC3RvkGcRlpE126x1GY+3OnaUuQB7JEc6Ct/iFjdzbfld0yTyvG7AUYsPoo/jCLgDgusK4YNfb4bew=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D063CC4CEE3;
+	Thu, 24 Apr 2025 13:39:07 +0000 (UTC)
+Date: Thu, 24 Apr 2025 09:41:02 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Josh Poimboeuf <jpoimboe@kernel.org>
+Cc: Andrii Nakryiko <andrii.nakryiko@gmail.com>, x86@kernel.org, Peter
+ Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, Arnaldo
+ Carvalho de Melo <acme@kernel.org>, linux-kernel@vger.kernel.org, Indu
+ Bhagat <indu.bhagat@oracle.com>, Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa
+ <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Ian Rogers
+ <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>,
+ linux-perf-users@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+ linux-toolchains@vger.kernel.org, Jordan Rome <jordalgo@meta.com>, Sam
+ James <sam@gentoo.org>, linux-trace-kernel@vger.kernel.org, Jens Remus
+ <jremus@linux.ibm.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Florian Weimer <fweimer@redhat.com>, Andy Lutomirski <luto@kernel.org>,
+ Masami Hiramatsu <mhiramat@kernel.org>, Weinan Liu <wnliu@google.com>
+Subject: Re: [PATCH v4 12/39] unwind_user: Add frame pointer support
+Message-ID: <20250424094102.0004f8f8@gandalf.local.home>
+In-Reply-To: <20250124181610.zdqvdaeqrp7kyzis@jpoimboe>
+References: <cover.1737511963.git.jpoimboe@kernel.org>
+	<10b92f2fd065b67e6e3fd473ca145c34ea74b73a.1737511963.git.jpoimboe@kernel.org>
+	<CAEf4BzaQr1ruCh1beyhJ_i+aGuw4rGSftF_Zr5ZB=8Jim1jyyQ@mail.gmail.com>
+	<20250124181610.zdqvdaeqrp7kyzis@jpoimboe>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAEf4BzZu0T5DLROi6oisneB3PyGDKZrME9+5qvw4aHeyOyNiYQ@mail.gmail.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Wed, Apr 23, 2025 at 10:46:24AM -0700, Andrii Nakryiko wrote:
-> On Mon, Apr 21, 2025 at 2:48 PM Jiri Olsa <jolsa@kernel.org> wrote:
-> >
-> > Changing uretprobe_regs_trigger to allow the test for both
-> > uprobe and uretprobe and renaming it to uprobe_regs_equal.
-> >
-> > We check that both uprobe and uretprobe probes (bpf programs)
-> > see expected registers with few exceptions.
-> >
-> > Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-> > ---
-> >  .../selftests/bpf/prog_tests/uprobe_syscall.c | 58 ++++++++++++++-----
-> >  .../selftests/bpf/progs/uprobe_syscall.c      |  4 +-
-> >  2 files changed, 45 insertions(+), 17 deletions(-)
-> >
-> > diff --git a/tools/testing/selftests/bpf/prog_tests/uprobe_syscall.c b/tools/testing/selftests/bpf/prog_tests/uprobe_syscall.c
-> > index f001986981ab..6d88c5b0f6aa 100644
-> > --- a/tools/testing/selftests/bpf/prog_tests/uprobe_syscall.c
-> > +++ b/tools/testing/selftests/bpf/prog_tests/uprobe_syscall.c
-> > @@ -18,15 +18,17 @@
-> >
-> >  #pragma GCC diagnostic ignored "-Wattributes"
-> >
-> > -__naked unsigned long uretprobe_regs_trigger(void)
-> > +__attribute__((aligned(16)))
-> > +__nocf_check __weak __naked unsigned long uprobe_regs_trigger(void)
-> >  {
-> >         asm volatile (
-> > -               "movq $0xdeadbeef, %rax\n"
-> > +               ".byte 0x0f, 0x1f, 0x44, 0x00, 0x00     \n"
+On Fri, 24 Jan 2025 10:16:10 -0800
+Josh Poimboeuf <jpoimboe@kernel.org> wrote:
+
+> > Do you plan to reuse this logic for stack unwinding done by perf
+> > subsystem in perf_callchain_user()? See is_uprobe_at_func_entry()
+> > parts and also fixup_uretprobe_trampoline_entries() for some of the
+> > quirks that have to be taken into account when doing frame
+> > pointer-based unwinding. It would be great not to lose those in this
+> > new reimplementation.
+> > 
+> > Not sure what's the best way to avoid duplicating the logic, but I
+> > thought I'd bring that up.  
 > 
-> Is it me not being hardcore enough... But is anyone supposed to know
-> that this is nop5? ;) maybe add /* nop5 */ comment on the side?
+> Indeed!  That was on the todo list and somehow evaporated.
 
-ok, will add the comment :)
+I'm getting ready to post an update of these patches, but I want to mention
+that this has not been addressed, and I'm replying here to make sure it
+stays on the radar.
 
-> 
-> > +               "movq $0xdeadbeef, %rax                 \n"
-> 
-> ret\n doesn't align newline, and uprobe_regs below don't either. So
-> maybe don't align them at all here?
-
-ok
-
-thanks,
-jirka
+-- Steve
