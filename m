@@ -1,219 +1,201 @@
-Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CFC427A926;
-	Thu, 24 Apr 2025 16:06:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A520280CCE;
+	Thu, 24 Apr 2025 16:24:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745510789; cv=none; b=R+7vNNtdIiaRVIVdWGmfn4oYfenHzO4hPgZT5NENgUNb6as3FxrWNHnjer5afHLtXFQqHfmxt+YbURB0ZEWNS9RgG0jV/bQ0mnklNdBDO9LEV6TPGuuYWNlfqOW3vHdtnBaionIcLmljYHPKJ5ber6m5pQUQSPqxx/L1uWn77J8=
+	t=1745511876; cv=none; b=iXBMZI7ExWGk8A2OVuLc571l+1e3tZscvXCvKGThJrjH2ojzayqI9+95iJZhkIRCIitnI3FCZLID1ZThpwTU0JwK6fPNLWMO2fq26udPSPmIWqheZDqPQTe8pPWWJQ/kG/iCp5+DbUe2mqgovF+GG5/47/ZRZsNiqGEsOEcdUfI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745510789; c=relaxed/simple;
-	bh=axC1Drsdf6J/ulltERHu0PyDLxHJYOxdK7BsvDX195A=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=u2YYXUgFEScxgUENCIhBGvhxZP6iTKUjopsyX+db8QOs1jWMfgXb7Ccm+zVJerYaNNHySvRTkXFMqiaANt2Gzw88Go9ClvQ/YwPovHQ4TSkClY2AXprYcfmPN0Hzo9b2SzhX8upYS0GrGqruq/IHhb5aU8+qHS+ib+HT4JnhV0E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HDZwJHF/; arc=none smtp.client-ip=209.85.210.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HDZwJHF/"
-Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-7398d65476eso1021657b3a.1;
-        Thu, 24 Apr 2025 09:06:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745510787; x=1746115587; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=iOia9kBWQgn3uL8bpE/5viJ+HAfruuVuzNZxkiZ9nvY=;
-        b=HDZwJHF/mtetSsxChQ3i5lUaC5XfXatVx7vUpTjELwvM+wn6B5aqx06WSQNlp8bt4t
-         +ysxftBkJIlzHUWWyf0F703PJ6M++L5gNCHCQAWUYsPpmmGsDeV0JnIEBKBSDbs7mfGs
-         a6xh65rSF2UlthecoFHrK1McwxO5Pz5dHyO5Zw5hnrPFZ8RY2jFoGsgJxJJ+a5gSH/4C
-         tyYGUMYiAVdYcTeWy1NFallcG1j6kPJkGaQtY+RAJsVoWFxS3QClsrb69yS01rtfOEId
-         2Cz4aoyYKPin+uqNFxTitEZEop5TMRlux7PNflcBd65hccXjsnp7sJZyJLYWtQSsXSEX
-         1GcA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745510787; x=1746115587;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=iOia9kBWQgn3uL8bpE/5viJ+HAfruuVuzNZxkiZ9nvY=;
-        b=lRko7eEXJNWpXzgVmhQERyMoEdsSfKAI9MUjWn95B/JtjeSTMLAagrO+a8HrFDBD8O
-         4GhnkNa2JhbJC4rkZcZgw9Kqaun9EoGr1dMI6UYE9BF5T4YOEMl/V3B3fBcA7Z9Ix0Qa
-         IBR4JdDzzv02ww6Ag8EF/EqwTUWc4kaWJt81JuAdlXScIXTacI9hu0AdpTrZuOwqdnMT
-         MHniKxXjJbUCA2OpAwzmhlvij3ESJiH/jMY+imIXRSIGoqjx6Tdbp/8OgvUrxsKQ9IeO
-         YrN5HxkDFE991fsb337XRspOAEPrY7kRS0wd1m2RUi1trNmlgr5Ym/mK102bMEBpJqGz
-         zo2g==
-X-Forwarded-Encrypted: i=1; AJvYcCX8YP9EigIpMR41jpa5F1pjta/8s6oVOZeHbsrngo/fgAdMbxETizScNpZnU5ZiZrDOwTwK/0mjlgqlV+NI@vger.kernel.org, AJvYcCXgZHpfcNwD3oL9xJS2AQn+l+Zl075AOlw7+O0FqFgv/gtoCrfom85kKsUt4UGWIx+J7ukWc4ymBE62ZZFp/F15xR+t@vger.kernel.org, AJvYcCXyg10x4kTOtcCvafrkboOkd9aNQcshsCaBmqN43uKBGCMLYRt/QsxGaI/R9hrJ5W8HyvI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx28AOalVUPCPFHOd/gUuW+LY/URmSQVgGD5zpnL/oUwkbesvwS
-	L3X6GoTNbO9por20Lis5hX/SJTlhbA5XNzDRmKgp2DuPHFHClSYLZs3nyyuqU/h3DKUxF2O8nho
-	UszJBL84czAfUltwD7JUZ+vmTVIM=
-X-Gm-Gg: ASbGnctv6fvXAhOUSPqa5DpZUNnNPgA/lIf4J9NR1J3OTcmhZ6D0Q9FADYT4FtzPWdy
-	0vBYHT7f0BC3DDzhVoT6AitFfzO+V+9/eGP1PIE87RF377RFeaoOc4I43p+FI0aEzn+ZUYQxBQI
-	o27H8OLYYRr+ipDb+ovn8zK98JikAYyD9jyH4bNw==
-X-Google-Smtp-Source: AGHT+IHGR37EkkIQxFfsBPhwH7utQC1kdcjQdTTcQP1nKCAJZROgLM1/WKVjGNjYPqtRd2aD6oXvNQQkZPEV3ifFvy8=
-X-Received: by 2002:a05:6a00:6f26:b0:736:bced:f4cf with SMTP id
- d2e1a72fcca58-73e2661a103mr4376993b3a.0.1745510786669; Thu, 24 Apr 2025
- 09:06:26 -0700 (PDT)
+	s=arc-20240116; t=1745511876; c=relaxed/simple;
+	bh=ZfOgRcymcHrXOx9DYdiARib8d6EhLJ0cnWfEsNrQqSI=;
+	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
+	 Content-Type; b=bMkq1i9nHLRWOzi3mq6bxWsCug+QK+CKkgurEvRuyZnX8jvxZmw6fUJ4Wy3DuUFK2riK5yqNbnL951eBUxwOodVUyTNrzI7kJUfBfP3297YZOhLAb//im7ey+BKTaEeqSJOcLw46QNvb/VLtmZTsPffyJPu6i2Y21bmwuJAeU9c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B35E0C4CEE3;
+	Thu, 24 Apr 2025 16:24:35 +0000 (UTC)
+Received: from rostedt by gandalf with local (Exim 4.98)
+	(envelope-from <rostedt@goodmis.org>)
+	id 1u7zPD-0000000GyWD-2jWR;
+	Thu, 24 Apr 2025 12:26:31 -0400
+Message-ID: <20250424162631.496223149@goodmis.org>
+User-Agent: quilt/0.68
+Date: Thu, 24 Apr 2025 12:25:31 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Josh Poimboeuf <jpoimboe@kernel.org>,
+ x86@kernel.org,
+ Peter Zijlstra <peterz@infradead.org>,
+ Ingo Molnar <mingo@kernel.org>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Indu Bhagat <indu.bhagat@oracle.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>,
+ Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>,
+ linux-perf-users@vger.kernel.org,
+ Mark Brown <broonie@kernel.org>,
+ linux-toolchains@vger.kernel.org,
+ Jordan Rome <jordalgo@meta.com>,
+ Sam James <sam@gentoo.org>,
+ Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+ Jens Remus <jremus@linux.ibm.com>,
+ Florian Weimer <fweimer@redhat.com>,
+ Andy Lutomirski <luto@kernel.org>,
+ Weinan Liu <wnliu@google.com>,
+ Blake Jones <blakejones@google.com>,
+ Beau Belgrave <beaub@linux.microsoft.com>,
+ "Jose E. Marchesi" <jemarch@gnu.org>
+Subject: [PATCH v5 02/17] unwind_user: Add frame pointer support
+References: <20250424162529.686762589@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250421214423.393661-1-jolsa@kernel.org> <20250421214423.393661-11-jolsa@kernel.org>
- <CAEf4BzbJJuKY+eTaDvwhgmp9jBqYXoLWinBY8vK0oYh0irC07Q@mail.gmail.com> <aAozSky7pIIGIB4s@krava>
-In-Reply-To: <aAozSky7pIIGIB4s@krava>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Thu, 24 Apr 2025 09:06:14 -0700
-X-Gm-Features: ATxdqUF_G37AKhAjZlbvpmyy_G5E0q7k3jFMDWPUt73VVWEZQQyUXYRq3uUihX0
-Message-ID: <CAEf4Bzak2rmSXQyTynRu3XPBemqbEmaxdUAFOQ-F5XRfZ7yOLg@mail.gmail.com>
-Subject: Re: [PATCH perf/core 10/22] uprobes/x86: Add support to optimize uprobes
-To: Jiri Olsa <olsajiri@gmail.com>
-Cc: Oleg Nesterov <oleg@redhat.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, x86@kernel.org, 
-	Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>, 
-	John Fastabend <john.fastabend@gmail.com>, Hao Luo <haoluo@google.com>, 
-	Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Alan Maguire <alan.maguire@oracle.com>, David Laight <David.Laight@aculab.com>, 
-	=?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas@t-8ch.de>, 
-	Ingo Molnar <mingo@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
 
-On Thu, Apr 24, 2025 at 5:49=E2=80=AFAM Jiri Olsa <olsajiri@gmail.com> wrot=
-e:
->
-> On Tue, Apr 22, 2025 at 05:04:03PM -0700, Andrii Nakryiko wrote:
->
-> SNIP
->
-> > >  arch/x86/include/asm/uprobes.h |   7 +
-> > >  arch/x86/kernel/uprobes.c      | 281 +++++++++++++++++++++++++++++++=
-+-
-> > >  include/linux/uprobes.h        |   6 +-
-> > >  kernel/events/uprobes.c        |  15 +-
-> > >  4 files changed, 301 insertions(+), 8 deletions(-)
-> > >
-> >
-> > just minor nits, LGTM
-> >
-> > Acked-by: Andrii Nakryiko <andrii@kernel.org>
-> >
-> > > +int set_swbp(struct arch_uprobe *auprobe, struct vm_area_struct *vma=
-,
-> > > +            unsigned long vaddr)
-> > > +{
-> > > +       if (should_optimize(auprobe)) {
-> > > +               bool optimized =3D false;
-> > > +               int err;
-> > > +
-> > > +               /*
-> > > +                * We could race with another thread that already opt=
-imized the probe,
-> > > +                * so let's not overwrite it with int3 again in this =
-case.
-> > > +                */
-> > > +               err =3D is_optimized(vma->vm_mm, vaddr, &optimized);
-> > > +               if (err || optimized)
-> > > +                       return err;
-> >
-> > IMO, this is a bit too clever, I'd go with plain
-> >
-> > if (err)
-> >     return err;
-> > if (optimized)
-> >     return 0; /* we are done */
-> >
->
-> ok
->
-> > (and mirror set_orig_insn() structure, consistently)
->
-> set_orig_insn does that already, right?
->
+From: Josh Poimboeuf <jpoimboe@kernel.org>
 
-right, and that was my point
+Add optional support for user space frame pointer unwinding.  If
+supported, the arch needs to enable CONFIG_HAVE_UNWIND_USER_FP and
+define ARCH_INIT_USER_FP_FRAME.
 
-> >
-> >
-> > > +       }
-> > > +       return uprobe_write_opcode(vma, vaddr, UPROBE_SWBP_INSN, true=
-);
-> > > +}
-> > > +
-> > > +int set_orig_insn(struct arch_uprobe *auprobe, struct vm_area_struct=
- *vma,
-> > > +                 unsigned long vaddr)
-> > > +{
-> > > +       if (test_bit(ARCH_UPROBE_FLAG_CAN_OPTIMIZE, &auprobe->flags))=
+By encoding the frame offsets in struct unwind_user_frame, much of this
+code can also be reused for future unwinder implementations like sframe.
+
+Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+ arch/Kconfig                      |  4 +++
+ include/asm-generic/unwind_user.h |  9 ++++++
+ include/linux/unwind_user_types.h |  1 +
+ kernel/unwind/user.c              | 51 +++++++++++++++++++++++++++++--
+ 4 files changed, 63 insertions(+), 2 deletions(-)
+ create mode 100644 include/asm-generic/unwind_user.h
+
+diff --git a/arch/Kconfig b/arch/Kconfig
+index ccbcead9fac0..0e3844c0e200 100644
+--- a/arch/Kconfig
++++ b/arch/Kconfig
+@@ -438,6 +438,10 @@ config HAVE_HARDLOCKUP_DETECTOR_ARCH
+ config UNWIND_USER
+ 	bool
+ 
++config HAVE_UNWIND_USER_FP
++	bool
++	select UNWIND_USER
++
+ config HAVE_PERF_REGS
+ 	bool
+ 	help
+diff --git a/include/asm-generic/unwind_user.h b/include/asm-generic/unwind_user.h
+new file mode 100644
+index 000000000000..832425502fb3
+--- /dev/null
++++ b/include/asm-generic/unwind_user.h
+@@ -0,0 +1,9 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef _ASM_GENERIC_UNWIND_USER_H
++#define _ASM_GENERIC_UNWIND_USER_H
++
++#ifndef ARCH_INIT_USER_FP_FRAME
++ #define ARCH_INIT_USER_FP_FRAME
++#endif
++
++#endif /* _ASM_GENERIC_UNWIND_USER_H */
+diff --git a/include/linux/unwind_user_types.h b/include/linux/unwind_user_types.h
+index 6ed1b4ae74e1..65bd070eb6b0 100644
+--- a/include/linux/unwind_user_types.h
++++ b/include/linux/unwind_user_types.h
+@@ -6,6 +6,7 @@
+ 
+ enum unwind_user_type {
+ 	UNWIND_USER_TYPE_NONE,
++	UNWIND_USER_TYPE_FP,
+ };
+ 
+ struct unwind_stacktrace {
+diff --git a/kernel/unwind/user.c b/kernel/unwind/user.c
+index ddf68750b3cb..73fd4e150dfd 100644
+--- a/kernel/unwind/user.c
++++ b/kernel/unwind/user.c
+@@ -6,10 +6,54 @@
+ #include <linux/sched.h>
+ #include <linux/sched/task_stack.h>
+ #include <linux/unwind_user.h>
++#include <linux/uaccess.h>
++#include <asm/unwind_user.h>
++
++static struct unwind_user_frame fp_frame = {
++	ARCH_INIT_USER_FP_FRAME
++};
++
++static inline bool fp_state(struct unwind_user_state *state)
++{
++	return IS_ENABLED(CONFIG_HAVE_UNWIND_USER_FP) &&
++	       state->type == UNWIND_USER_TYPE_FP;
++}
+ 
+ int unwind_user_next(struct unwind_user_state *state)
  {
-> > > +               struct mm_struct *mm =3D vma->vm_mm;
-> > > +               bool optimized =3D false;
-> > > +               int err;
-> > > +
-> > > +               err =3D is_optimized(mm, vaddr, &optimized);
-> > > +               if (err)
-> > > +                       return err;
-> > > +               if (optimized)
-> > > +                       WARN_ON_ONCE(swbp_unoptimize(auprobe, vma, va=
-ddr));
-> > > +       }
-> > > +       return uprobe_write_opcode(vma, vaddr, *(uprobe_opcode_t *)&a=
-uprobe->insn, false);
-> > > +}
-> > > +
-> > > +static int __arch_uprobe_optimize(struct mm_struct *mm, unsigned lon=
-g vaddr)
-> > > +{
-> > > +       struct uprobe_trampoline *tramp;
-> > > +       struct vm_area_struct *vma;
-> > > +       int err =3D 0;
-> > > +
-> > > +       vma =3D find_vma(mm, vaddr);
-> > > +       if (!vma)
-> > > +               return -1;
-> >
-> > this is EPERM, will be confusing to debug... why not -EINVAL?
-> >
-> > > +       tramp =3D uprobe_trampoline_get(vaddr);
-> > > +       if (!tramp)
-> > > +               return -1;
-> >
-> > ditto
->
-> so the error value is not exposed to user space in this case,
-> we try to optimize in the first hit with:
->
->         handle_swbp()
->         {
->                 arch_uprobe_optimize()
->                 {
->
->                         if (__arch_uprobe_optimize(mm, vaddr))
->                                 set_bit(ARCH_UPROBE_FLAG_OPTIMIZE_FAIL, &=
-auprobe->flags);
->
->                 }
->         }
->
-> and set ARCH_UPROBE_FLAG_OPTIMIZE_FAIL flags bit in case of error,
-> plus there's WARN for swbp_optimize which should pass in case we
-> get that far
+-	/* no implementation yet */
++	struct unwind_user_frame _frame;
++	struct unwind_user_frame *frame = &_frame;
++	unsigned long cfa = 0, fp, ra = 0;
++
++	if (state->done)
++		return -EINVAL;
++
++	if (fp_state(state))
++		frame = &fp_frame;
++	else
++		goto the_end;
++
++	cfa = (frame->use_fp ? state->fp : state->sp) + frame->cfa_off;
++
++	/* stack going in wrong direction? */
++	if (cfa <= state->sp)
++		goto the_end;
++
++	if (get_user(ra, (unsigned long *)(cfa + frame->ra_off)))
++		goto the_end;
++
++	if (frame->fp_off && get_user(fp, (unsigned long __user *)(cfa + frame->fp_off)))
++		goto the_end;
++
++	state->ip = ra;
++	state->sp = cfa;
++	if (frame->fp_off)
++		state->fp = fp;
++
++	return 0;
++
++the_end:
++	state->done = true;
+ 	return -EINVAL;
+ }
+ 
+@@ -24,7 +68,10 @@ int unwind_user_start(struct unwind_user_state *state)
+ 		return -EINVAL;
+ 	}
+ 
+-	state->type = UNWIND_USER_TYPE_NONE;
++	if (IS_ENABLED(CONFIG_HAVE_UNWIND_USER_FP))
++		state->type = UNWIND_USER_TYPE_FP;
++	else
++		state->type = UNWIND_USER_TYPE_NONE;
+ 
+ 	state->ip = instruction_pointer(regs);
+ 	state->sp = user_stack_pointer(regs);
+-- 
+2.47.2
 
-yeah, I know, but I don't think we should deviate from kernel-wide
--Exxx convention for returning errors from functions just because this
-error doesn't make it all the way to user space
 
->
-> thanks,
-> jirka
->
-> >
-> > > +       err =3D swbp_optimize(vma, vaddr, tramp->vaddr);
-> > > +       if (WARN_ON_ONCE(err))
-> > > +               uprobe_trampoline_put(tramp);
-> > > +       return err;
-> > > +}
-> > > +
-> >
-> > [...]
