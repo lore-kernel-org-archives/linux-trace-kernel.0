@@ -1,359 +1,71 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D321C25CC74;
-	Fri, 25 Apr 2025 14:56:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D1F926981E;
+	Fri, 25 Apr 2025 15:09:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745592976; cv=none; b=V9RYl1Rd9nC0H7EKYBh9wRhOThiYfq4Bk+CcNGLpdLXhzm06B+cat0ACGAavL8aUHzi6m/TApe1nRVUjWxLzKrxKGvpL3yH8ODmnzIBuOccvyAZlC9lilctHHebjl3Fw6b5277jTUb4Nxe8u6aV6wNClYkLeZX+zh/Adk0OxdQU=
+	t=1745593798; cv=none; b=fWkLRnOtU4byc9aDyPSx254yJ6b8JHrjYPfMx2xipqcSU7q6zONGYDVbmG1Lw1LT7S926xysWOu9vsbxEBEZQ3luDADkpC0Y02ad4ZM3f1rTWydZ/Wyj/lKj8rwOPvBxboPFX/CKeVTBchS/lFUERACSH+nXQR/lA2HpTxP42t4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745592976; c=relaxed/simple;
-	bh=/zRizgZFZlI5K0XKGv1I5paDFnaMYmUlybJB51qAZDg=;
-	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=MBQ+chV81vjWUJaObeXpCdE0dASY7JXnL5q8wgWsRtNLatpZfPtiXtx+R8ETJMfwV2mDfaw+RfWOnAcVfohnHi5e/PW31Wms7iMtqjE3ioyb91ZcpU9Fz0cby8zGW6uuRgztmyHd5HLxQK2VG7nckw0bQOAQbVbO2uZRPw4Pps4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ABBB9C4CEE8;
-	Fri, 25 Apr 2025 14:56:16 +0000 (UTC)
-Received: from rostedt by gandalf with local (Exim 4.98)
-	(envelope-from <rostedt@goodmis.org>)
-	id 1u8KVK-0000000HSow-3eRT;
-	Fri, 25 Apr 2025 10:58:14 -0400
-Message-ID: <20250425145814.721859690@goodmis.org>
-User-Agent: quilt/0.68
-Date: Fri, 25 Apr 2025 10:54:40 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- Josh Poimboeuf <jpoimboe@kernel.org>,
- x86@kernel.org,
- Peter Zijlstra <peterz@infradead.org>,
- Ingo Molnar <mingo@kernel.org>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Indu Bhagat <indu.bhagat@oracle.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>,
- Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>,
- linux-perf-users@vger.kernel.org,
- Mark Brown <broonie@kernel.org>,
- linux-toolchains@vger.kernel.org,
- Jordan Rome <jordalgo@meta.com>,
- Sam James <sam@gentoo.org>,
- Andrii Nakryiko <andrii.nakryiko@gmail.com>,
- Jens Remus <jremus@linux.ibm.com>,
- Florian Weimer <fweimer@redhat.com>,
- Andy Lutomirski <luto@kernel.org>,
- Weinan Liu <wnliu@google.com>,
- Blake Jones <blakejones@google.com>,
- Beau Belgrave <beaub@linux.microsoft.com>,
- "Jose E. Marchesi" <jemarch@gnu.org>,
- Alexander Aring <aahringo@redhat.com>
-Subject: [PATCH v6 18/18] perf tools: Merge deferred user callchains
+	s=arc-20240116; t=1745593798; c=relaxed/simple;
+	bh=EIBrRW6pSpT48bOHI0PJpzhoy9SNKaPDbB33zZhg9zM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=J188aStFCa5ux6PeYaiD+ld//sgjXpT8d3qw3PfSYSMo+d1tPWETpJj6i10I6Wt9TjqM+R8abSKBo6co/wiyhlXC7CL97gKAyULeUrukNXEJjJKoZuH2FOE2QgN+Sk2i6VVr1KmkJpey+8fzzquAFN2OnAuzLi3H+b1NXmfT6c0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ppB35Oe/; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ppB35Oe/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 20ABCC4CEE4;
+	Fri, 25 Apr 2025 15:09:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745593798;
+	bh=EIBrRW6pSpT48bOHI0PJpzhoy9SNKaPDbB33zZhg9zM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ppB35Oe/DmhNr2hEVw/NY+7HiZtvS/xyR2bqhIizqs4G9DxLEmqa9a99XaTPKNKi1
+	 zGQFCrU4DXoGOnanl9SzoJt5U3yaKrcS2lygDpaIIOAahn4EX/amkLBsF3BKeGQpey
+	 R4QZrf68zhVdYsWL+K2gIsVRj9Bjp5NTJe/RS56QEzeUNDU/LAy2b+N9i7ROC8+7v3
+	 egcuaW7eYCutf67+ask/AHtTjUYHKYPR3m0K2gnN29T0TL6/x+z0ewJ10EHEMmAvvz
+	 2hGMytBcCZM7ApZB1cGV9QDNi2uO2SpKuu3iALuK+501kxyzikkeSs+NfNkliqC4WQ
+	 9JhlSBvoXAZxA==
+Date: Fri, 25 Apr 2025 08:09:55 -0700
+From: Josh Poimboeuf <jpoimboe@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Andrew Morton <akpm@linux-foundation.org>, x86@kernel.org, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Indu Bhagat <indu.bhagat@oracle.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	linux-perf-users@vger.kernel.org, Mark Brown <broonie@kernel.org>, 
+	linux-toolchains@vger.kernel.org, Jordan Rome <jordalgo@meta.com>, Sam James <sam@gentoo.org>, 
+	Andrii Nakryiko <andrii.nakryiko@gmail.com>, Jens Remus <jremus@linux.ibm.com>, 
+	Florian Weimer <fweimer@redhat.com>, Andy Lutomirski <luto@kernel.org>, Weinan Liu <wnliu@google.com>, 
+	Blake Jones <blakejones@google.com>, Beau Belgrave <beaub@linux.microsoft.com>, 
+	"Jose E. Marchesi" <jemarch@gnu.org>, Alexander Aring <aahringo@redhat.com>
+Subject: Re: [PATCH v6 11/18] perf: Use current->flags & PF_KTHREAD instead
+ of current->mm == NULL
+Message-ID: <2fjdalrdgadbt6kmv7wgbc2vs42ojkwh2vj6yfwlttmoo2rijs@5gtrvow66g7m>
 References: <20250425145422.132820147@goodmis.org>
+ <20250425145813.518795213@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250425145813.518795213@goodmis.org>
 
-From: Namhyung Kim <namhyung@kernel.org>
+On Fri, Apr 25, 2025 at 10:54:33AM -0400, Steven Rostedt wrote:
+> From: Steven Rostedt <rostedt@goodmis.org>
+> 
+> To determine if a task is a kernel thread or not, it is more reliable to
+> use (current->flags & PF_KTHREAD) than to rely on current->mm being NULL.
+> That is because some kernel tasks (io_uring helpers) may have a mm field.
 
-Save samples with deferred callchains in a separate list and deliver
-them after merging the user callchains.  If users don't want to merge
-they can set tool->merge_deferred_callchains to false to prevent the
-behavior.
+There's a current->mm check in the user space unwinder (patch 1) which
+should probably also be converted.
 
-With previous result, now perf script will show the merged callchains.
-
-  $ perf script
-  perf     801 [000]    18.031793:          1 cycles:P:
-          ffffffff91a14c36 __intel_pmu_enable_all.isra.0+0x56 ([kernel.kallsyms])
-          ffffffff91d373e9 perf_ctx_enable+0x39 ([kernel.kallsyms])
-          ffffffff91d36af7 event_function+0xd7 ([kernel.kallsyms])
-          ffffffff91d34222 remote_function+0x42 ([kernel.kallsyms])
-          ffffffff91c1ebe1 generic_exec_single+0x61 ([kernel.kallsyms])
-          ffffffff91c1edac smp_call_function_single+0xec ([kernel.kallsyms])
-          ffffffff91d37a9d event_function_call+0x10d ([kernel.kallsyms])
-          ffffffff91d33557 perf_event_for_each_child+0x37 ([kernel.kallsyms])
-          ffffffff91d47324 _perf_ioctl+0x204 ([kernel.kallsyms])
-          ffffffff91d47c43 perf_ioctl+0x33 ([kernel.kallsyms])
-          ffffffff91e2f216 __x64_sys_ioctl+0x96 ([kernel.kallsyms])
-          ffffffff9265f1ae do_syscall_64+0x9e ([kernel.kallsyms])
-          ffffffff92800130 entry_SYSCALL_64+0xb0 ([kernel.kallsyms])
-              7fb5fc22034b __GI___ioctl+0x3b (/usr/lib/x86_64-linux-gnu/libc.so.6)
-  ...
-
-The old output can be get using --no-merge-callchain option.
-Also perf report can get the user callchain entry at the end.
-
-  $ perf report --no-children --percent-limit=0 --stdio -q -S __intel_pmu_enable_all.isra.0
-  # symbol: __intel_pmu_enable_all.isra.0
-       0.00%  perf     [kernel.kallsyms]
-              |
-              ---__intel_pmu_enable_all.isra.0
-                 perf_ctx_enable
-                 event_function
-                 remote_function
-                 generic_exec_single
-                 smp_call_function_single
-                 event_function_call
-                 perf_event_for_each_child
-                 _perf_ioctl
-                 perf_ioctl
-                 __x64_sys_ioctl
-                 do_syscall_64
-                 entry_SYSCALL_64
-                 __GI___ioctl
-
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
- tools/perf/Documentation/perf-script.txt |  5 ++
- tools/perf/builtin-script.c              |  5 +-
- tools/perf/util/callchain.c              | 24 +++++++++
- tools/perf/util/callchain.h              |  3 ++
- tools/perf/util/evlist.c                 |  1 +
- tools/perf/util/evlist.h                 |  1 +
- tools/perf/util/session.c                | 63 +++++++++++++++++++++++-
- tools/perf/util/tool.c                   |  1 +
- tools/perf/util/tool.h                   |  1 +
- 9 files changed, 102 insertions(+), 2 deletions(-)
-
-diff --git a/tools/perf/Documentation/perf-script.txt b/tools/perf/Documentation/perf-script.txt
-index 28bec7e78bc8..03d112960632 100644
---- a/tools/perf/Documentation/perf-script.txt
-+++ b/tools/perf/Documentation/perf-script.txt
-@@ -527,6 +527,11 @@ include::itrace.txt[]
- 	The known limitations include exception handing such as
- 	setjmp/longjmp will have calls/returns not match.
- 
-+--merge-callchains::
-+	Enable merging deferred user callchains if available.  This is the
-+	default behavior.  If you want to see separate CALLCHAIN_DEFERRED
-+	records for some reason, use --no-merge-callchains explicitly.
-+
- :GMEXAMPLECMD: script
- :GMEXAMPLESUBCMD:
- include::guest-files.txt[]
-diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-index 176b8f299afc..dd17c11af0c8 100644
---- a/tools/perf/builtin-script.c
-+++ b/tools/perf/builtin-script.c
-@@ -3775,6 +3775,7 @@ int cmd_script(int argc, const char **argv)
- 	bool header_only = false;
- 	bool script_started = false;
- 	bool unsorted_dump = false;
-+	bool merge_deferred_callchains = true;
- 	char *rec_script_path = NULL;
- 	char *rep_script_path = NULL;
- 	struct perf_session *session;
-@@ -3928,6 +3929,8 @@ int cmd_script(int argc, const char **argv)
- 		    "Guest code can be found in hypervisor process"),
- 	OPT_BOOLEAN('\0', "stitch-lbr", &script.stitch_lbr,
- 		    "Enable LBR callgraph stitching approach"),
-+	OPT_BOOLEAN('\0', "merge-callchains", &merge_deferred_callchains,
-+		    "Enable merge deferred user callchains"),
- 	OPTS_EVSWITCH(&script.evswitch),
- 	OPT_END()
- 	};
-@@ -4183,7 +4186,7 @@ int cmd_script(int argc, const char **argv)
- 	script.tool.throttle		 = process_throttle_event;
- 	script.tool.unthrottle		 = process_throttle_event;
- 	script.tool.ordering_requires_timestamps = true;
--	script.tool.merge_deferred_callchains = false;
-+	script.tool.merge_deferred_callchains = merge_deferred_callchains;
- 	session = perf_session__new(&data, &script.tool);
- 	if (IS_ERR(session))
- 		return PTR_ERR(session);
-diff --git a/tools/perf/util/callchain.c b/tools/perf/util/callchain.c
-index d7b7eef740b9..6d423d92861b 100644
---- a/tools/perf/util/callchain.c
-+++ b/tools/perf/util/callchain.c
-@@ -1828,3 +1828,27 @@ int sample__for_each_callchain_node(struct thread *thread, struct evsel *evsel,
- 	}
- 	return 0;
- }
-+
-+int sample__merge_deferred_callchain(struct perf_sample *sample_orig,
-+				     struct perf_sample *sample_callchain)
-+{
-+	u64 nr_orig = sample_orig->callchain->nr - 1;
-+	u64 nr_deferred = sample_callchain->callchain->nr;
-+	struct ip_callchain *callchain;
-+
-+	callchain = calloc(1 + nr_orig + nr_deferred, sizeof(u64));
-+	if (callchain == NULL) {
-+		sample_orig->deferred_callchain = false;
-+		return -ENOMEM;
-+	}
-+
-+	callchain->nr = nr_orig + nr_deferred;
-+	/* copy except for the last PERF_CONTEXT_USER_DEFERRED */
-+	memcpy(callchain->ips, sample_orig->callchain->ips, nr_orig * sizeof(u64));
-+	/* copy deferred use callchains */
-+	memcpy(&callchain->ips[nr_orig], sample_callchain->callchain->ips,
-+	       nr_deferred * sizeof(u64));
-+
-+	sample_orig->callchain = callchain;
-+	return 0;
-+}
-diff --git a/tools/perf/util/callchain.h b/tools/perf/util/callchain.h
-index 86ed9e4d04f9..89785125ed25 100644
---- a/tools/perf/util/callchain.h
-+++ b/tools/perf/util/callchain.h
-@@ -317,4 +317,7 @@ int sample__for_each_callchain_node(struct thread *thread, struct evsel *evsel,
- 				    struct perf_sample *sample, int max_stack,
- 				    bool symbols, callchain_iter_fn cb, void *data);
- 
-+int sample__merge_deferred_callchain(struct perf_sample *sample_orig,
-+				     struct perf_sample *sample_callchain);
-+
- #endif	/* __PERF_CALLCHAIN_H */
-diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
-index c1a04141aed0..d23a3f8e8649 100644
---- a/tools/perf/util/evlist.c
-+++ b/tools/perf/util/evlist.c
-@@ -82,6 +82,7 @@ void evlist__init(struct evlist *evlist, struct perf_cpu_map *cpus,
- 	evlist->ctl_fd.ack = -1;
- 	evlist->ctl_fd.pos = -1;
- 	evlist->nr_br_cntr = -1;
-+	INIT_LIST_HEAD(&evlist->deferred_samples);
- }
- 
- struct evlist *evlist__new(void)
-diff --git a/tools/perf/util/evlist.h b/tools/perf/util/evlist.h
-index edcbf1c10e92..a8cb5a29d55e 100644
---- a/tools/perf/util/evlist.h
-+++ b/tools/perf/util/evlist.h
-@@ -84,6 +84,7 @@ struct evlist {
- 		int	pos;	/* index at evlist core object to check signals */
- 	} ctl_fd;
- 	struct event_enable_timer *eet;
-+	struct list_head deferred_samples;
- };
- 
- struct evsel_str_handler {
-diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
-index 30fb1d281be8..51f17bf42dd9 100644
---- a/tools/perf/util/session.c
-+++ b/tools/perf/util/session.c
-@@ -1277,6 +1277,56 @@ static int evlist__deliver_sample(struct evlist *evlist, const struct perf_tool
- 					    per_thread);
- }
- 
-+struct deferred_event {
-+	struct list_head list;
-+	union perf_event *event;
-+};
-+
-+static int evlist__deliver_deferred_samples(struct evlist *evlist,
-+					    const struct perf_tool *tool,
-+					    union  perf_event *event,
-+					    struct perf_sample *sample,
-+					    struct machine *machine)
-+{
-+	struct deferred_event *de, *tmp;
-+	struct evsel *evsel;
-+	int ret = 0;
-+
-+	if (!tool->merge_deferred_callchains) {
-+		evsel = evlist__id2evsel(evlist, sample->id);
-+		return tool->callchain_deferred(tool, event, sample,
-+						evsel, machine);
-+	}
-+
-+	list_for_each_entry_safe(de, tmp, &evlist->deferred_samples, list) {
-+		struct perf_sample orig_sample;
-+
-+		ret = evlist__parse_sample(evlist, de->event, &orig_sample);
-+		if (ret < 0) {
-+			pr_err("failed to parse original sample\n");
-+			break;
-+		}
-+
-+		if (sample->tid != orig_sample.tid)
-+			continue;
-+
-+		evsel = evlist__id2evsel(evlist, orig_sample.id);
-+		sample__merge_deferred_callchain(&orig_sample, sample);
-+		ret = evlist__deliver_sample(evlist, tool, de->event,
-+					     &orig_sample, evsel, machine);
-+
-+		if (orig_sample.deferred_callchain)
-+			free(orig_sample.callchain);
-+
-+		list_del(&de->list);
-+		free(de);
-+
-+		if (ret)
-+			break;
-+	}
-+	return ret;
-+}
-+
- static int machines__deliver_event(struct machines *machines,
- 				   struct evlist *evlist,
- 				   union perf_event *event,
-@@ -1305,6 +1355,16 @@ static int machines__deliver_event(struct machines *machines,
- 			return 0;
- 		}
- 		dump_sample(evsel, event, sample, perf_env__arch(machine->env));
-+		if (sample->deferred_callchain && tool->merge_deferred_callchains) {
-+			struct deferred_event *de = malloc(sizeof(*de));
-+
-+			if (de == NULL)
-+				return -ENOMEM;
-+
-+			de->event = event;
-+			list_add_tail(&de->list, &evlist->deferred_samples);
-+			return 0;
-+		}
- 		return evlist__deliver_sample(evlist, tool, event, sample, evsel, machine);
- 	case PERF_RECORD_MMAP:
- 		return tool->mmap(tool, event, sample, machine);
-@@ -1364,7 +1424,8 @@ static int machines__deliver_event(struct machines *machines,
- 		return tool->aux_output_hw_id(tool, event, sample, machine);
- 	case PERF_RECORD_CALLCHAIN_DEFERRED:
- 		dump_deferred_callchain(evsel, event, sample);
--		return tool->callchain_deferred(tool, event, sample, evsel, machine);
-+		return evlist__deliver_deferred_samples(evlist, tool, event,
-+							sample, machine);
- 	default:
- 		++evlist->stats.nr_unknown_events;
- 		return -1;
-diff --git a/tools/perf/util/tool.c b/tools/perf/util/tool.c
-index e78f16de912e..385043e06627 100644
---- a/tools/perf/util/tool.c
-+++ b/tools/perf/util/tool.c
-@@ -238,6 +238,7 @@ void perf_tool__init(struct perf_tool *tool, bool ordered_events)
- 	tool->cgroup_events = false;
- 	tool->no_warn = false;
- 	tool->show_feat_hdr = SHOW_FEAT_NO_HEADER;
-+	tool->merge_deferred_callchains = true;
- 
- 	tool->sample = process_event_sample_stub;
- 	tool->mmap = process_event_stub;
-diff --git a/tools/perf/util/tool.h b/tools/perf/util/tool.h
-index 9987bbde6d5e..d06580478ab1 100644
---- a/tools/perf/util/tool.h
-+++ b/tools/perf/util/tool.h
-@@ -87,6 +87,7 @@ struct perf_tool {
- 	bool		cgroup_events;
- 	bool		no_warn;
- 	bool		dont_split_sample_group;
-+	bool		merge_deferred_callchains;
- 	enum show_feature_header show_feat_hdr;
- };
- 
 -- 
-2.47.2
-
-
+Josh
