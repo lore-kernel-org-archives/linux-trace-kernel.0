@@ -1,92 +1,328 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56979231A24;
-	Fri, 25 Apr 2025 07:48:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.5])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AD94D26AEC;
+	Fri, 25 Apr 2025 08:02:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745567311; cv=none; b=WHc7GjRsyAbt2OT41hNEMkI6au/GWeKUCRtAUo0XQWydN09dLywVhtkIZk5T92dfFyi4aO8aHvS24bKVa7GxGEZzJsfmd54S6sG/N9S19ETf/5/eIfKrZ/SWdathayS9/cDt3em5L98n7i8cKtP/xqwmLSKnjBvipoEx7P5O6P0=
+	t=1745568139; cv=none; b=UHZvwDUhcjtM209bj+DW1buPge9+JBAq8GgzbDT5bZ6CH1NC2T3Zz5HB7DHSTsV0cUC/O7ZdOEj2NCAE/wCWcnww5I6KogL2MLH+SfNVBTzIqpSlIpyZTKFhlOWOwtCy6o+E5/pw+BdAT+NpUpquIC6V3LEoMd6ARXjyfgHHy2M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745567311; c=relaxed/simple;
-	bh=YnEpPztQNr6UuVmesYTUsH7gLnmph2csh6CrR/0qMrg=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=G20ABElhKkNU+CrHb1G8B7yxAZN86g8GnNBN+Tc6B+zA/VGR++tJH5LVOIezgN5E/E2LDN89RoB9hwidWQofYqyf0BaRNhH+LnMp6d0Et+2zt89Bxtyp/cht7MR1j/Ncr+fN1K6hUwpWRXHr699Y3eFoOxCbMleTw6FawHUNhFI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=F8VbZHlp; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=n9I5gL7g; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1745568139; c=relaxed/simple;
+	bh=oCUcG3o8xYWiupP/5NaC/9IlwbrbnMsu4Ag3g9Bf/SI=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Afrfs5Nk/O89G5a89U16RH40AF1pViCT2ZrwY3f7d6hJnzdHAW53z/m2kkJo08lcelzP1VTxa4wSqPRJZFd2uMqF/tuZLHKxPtXk/Qcmcc4+Lc8kKtsaQoVkDxaS0yN+I9m7oAq5wX0KE7laiHAqJmUFsiMNNFaAZwPbM82G5TE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=Tq0BWbZR; arc=none smtp.client-ip=117.135.210.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="F8VbZHlp";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="n9I5gL7g"
-From: John Ogness <john.ogness@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1745567308;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=4P0Aw3eZoa0FulHYWqMBdxsMo9p8Z3uWhaSpWyOSyT4=;
-	b=F8VbZHlp271cEXfeXxekFb49gl/ui3AHtALLYRd8KhLigGlsRErPEA4cDPbwboWvWmjgTx
-	cMDlteZ7JKnZeH58+N3NRFzhDRfeff5SLqnOjXDKIaLsh4FsL7H38uiH4xwGmX9mEoJcc0
-	Aa1S3Hhznx2R9O29ivw/n7nGR8JXOYSjFG+0xnhUAbIZVlGjNJznQGJLB3L3wL1ULkKQ7x
-	+2V77Js5EvY/DY7uxnCl4G//CCKJfHCz8AX+7ixAun/34/tBBbvyZMM64ZN2Gw6rO29lAb
-	ZXockAY9gSRU5PjBnnflpwCewvSjDHs4XUOoyZbMw+XPvvEPRsuuvIfoZWXwTg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1745567308;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=4P0Aw3eZoa0FulHYWqMBdxsMo9p8Z3uWhaSpWyOSyT4=;
-	b=n9I5gL7gc2B5B8L/6ARiy4BT6/2luDLxjXbxkD2aSGG8FVIpdp88+GGQh0Qw97/BuZfJjn
-	5rMHFHhr74IIoRDg==
-To: Nam Cao <namcao@linutronix.de>, Gabriele Monaco <gmonaco@redhat.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>,
- linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 20/22] rv: Add rtapp_sleep monitor
-In-Reply-To: <84ecxgit04.fsf@jogness.linutronix.de>
-References: <cover.1745390829.git.namcao@linutronix.de>
- <c23cb5ef10310f978c3f90f07c2dbb9b042e8b01.1745390829.git.namcao@linutronix.de>
- <c321c7350ec10f9f358695acd765d2dbd067eeb2.camel@redhat.com>
- <20250425063456.NBE35YHR@linutronix.de>
- <84ecxgit04.fsf@jogness.linutronix.de>
-Date: Fri, 25 Apr 2025 09:54:27 +0206
-Message-ID: <84a584isvo.fsf@jogness.linutronix.de>
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="Tq0BWbZR"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=snh06
+	xH5rGaut6A5VJ9ZVezCog4RyQuNY5yFbN6JYWk=; b=Tq0BWbZRSr6W6ezmB/e4s
+	rO19nCY75j3gcbc6py1hQYCk/wc2gXQSnlWKnrUnmvCPFDmsAHZ3Vg+1igb6ucg4
+	QT/+vyv7FfYfRIxiDhx8ryNJXdGEfmEesZqmHW4qekqTg0ToaG3eP2Cm6mTkmVDG
+	1ucqVtj2nclAcOD2flLkcM=
+Received: from localhost.localdomain (unknown [])
+	by gzga-smtp-mtada-g1-2 (Coremail) with SMTP id _____wBn8FQ8QQtopkvkCA--.25S2;
+	Fri, 25 Apr 2025 16:01:01 +0800 (CST)
+From: Feng Yang <yangfeng59949@163.com>
+To: martin.lau@linux.dev,
+	ast@kernel.org,
+	daniel@iogearbox.net,
+	andrii@kernel.org,
+	eddyz87@gmail.com,
+	song@kernel.org,
+	yonghong.song@linux.dev,
+	john.fastabend@gmail.com,
+	kpsingh@kernel.org,
+	sdf@fomichev.me,
+	haoluo@google.com,
+	jolsa@kernel.org,
+	mattbobrowski@google.com,
+	rostedt@goodmis.org,
+	mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com,
+	davem@davemloft.net
+Cc: bpf@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	netdev@vger.kernel.org
+Subject: [PATCH bpf-next] bpf: Allow some trace helpers for all prog types
+Date: Fri, 25 Apr 2025 16:00:32 +0800
+Message-Id: <20250425080032.327477-1-yangfeng59949@163.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wBn8FQ8QQtopkvkCA--.25S2
+X-Coremail-Antispam: 1Uf129KBjvJXoW3trW3tr1DKFWrKr47ArykAFb_yoWkJFyxpF
+	nrAry3Ar4ktw4aqr17Jwn7ZryFk34UX3y8GaykGw1xur42qr9rtF1UKF429F1rZr9rW343
+	Z3yqvFZ0kr1xKa7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jaHq7UUUUU=
+X-CM-SenderInfo: p1dqww5hqjkmqzuzqiywtou0bp/1tbiTg46eGgLQPwKkQAAsG
 
-On 2025-04-25, John Ogness <john.ogness@linutronix.de> wrote:
->>> perf stat -e rv:error_sleep stress-ng --cpu-sched 1 -t 10s
->>>   -- shows several errors --
->>
->> This one is a monitor's bug.
->>
->> The monitor mistakenly sees the task getting woken up, *then* sees it going
->> to sleep.
->>
->> This is due to trace_sched_switch() being called with a stale 'prev_state'.
->> 'prev_state' is read at the beginning of __schedule(), but
->> trace_sched_switch() is invoked a bit later. Therefore if task->__state is
->> changed inbetween, 'prev_state' is not the value of task->__state.
->>
->> The monitor checks (prev_state & TASK_INTERRUPTIBLE) to determine if the
->> task is going to sleep. This can be incorrect due to the race above. The
->> monitor sees the task going to sleep, but actually it is just preempted.
->
-> If I understand this correctly, trace_sched_switch() is reporting
-> accurate state transition information, but by the time it is reported
-> that state may have already changed (in which case another
-> trace_sched_switch() occurs later).
->
-> So in this example, the task did go to sleep. Why do you think it was
-> preempted instead?
+From: Feng Yang <yangfeng@kylinos.cn>
 
-On 2025-04-25, Gabriele Monaco <gmonaco@redhat.com> wrote:
-> Peter's fix [1] landed on next recently, I guess in a couple of days
-> you'll get it on the upstream tree and you may not see the problem.
+if it works under NMI and doesn't use any context-dependent things,
+should be fine for any program type. The detailed discussion is in [1].
 
-Ah, thanks for pointing that out!
+[1] https://lore.kernel.org/all/CAEf4Bza6gK3dsrTosk6k3oZgtHesNDSrDd8sdeQ-GiS6oJixQg@mail.gmail.com/
 
-> [1] - https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?id=8feb053d53194382fcfb68231296fdc220497ea6
+Suggested-by: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Signed-off-by: Feng Yang <yangfeng@kylinos.cn>
+---
+ kernel/bpf/cgroup.c      |  6 -----
+ kernel/bpf/helpers.c     | 50 +++++++++++++++++++++++++++++++++++++
+ kernel/trace/bpf_trace.c | 53 +++++-----------------------------------
+ net/core/filter.c        |  2 --
+ 4 files changed, 56 insertions(+), 55 deletions(-)
+
+diff --git a/kernel/bpf/cgroup.c b/kernel/bpf/cgroup.c
+index 84f58f3d028a..dbdad5f42761 100644
+--- a/kernel/bpf/cgroup.c
++++ b/kernel/bpf/cgroup.c
+@@ -2607,16 +2607,10 @@ const struct bpf_func_proto *
+ cgroup_current_func_proto(enum bpf_func_id func_id, const struct bpf_prog *prog)
+ {
+ 	switch (func_id) {
+-	case BPF_FUNC_get_current_uid_gid:
+-		return &bpf_get_current_uid_gid_proto;
+-	case BPF_FUNC_get_current_comm:
+-		return &bpf_get_current_comm_proto;
+ #ifdef CONFIG_CGROUP_NET_CLASSID
+ 	case BPF_FUNC_get_cgroup_classid:
+ 		return &bpf_get_cgroup_classid_curr_proto;
+ #endif
+-	case BPF_FUNC_current_task_under_cgroup:
+-		return &bpf_current_task_under_cgroup_proto;
+ 	default:
+ 		return NULL;
+ 	}
+diff --git a/kernel/bpf/helpers.c b/kernel/bpf/helpers.c
+index e3a2662f4e33..3b089020c18b 100644
+--- a/kernel/bpf/helpers.c
++++ b/kernel/bpf/helpers.c
+@@ -23,6 +23,7 @@
+ #include <linux/btf_ids.h>
+ #include <linux/bpf_mem_alloc.h>
+ #include <linux/kasan.h>
++#include <linux/bpf_verifier.h>
+ 
+ #include "../../lib/kstrtox.h"
+ 
+@@ -1907,11 +1908,21 @@ static const struct bpf_func_proto bpf_dynptr_data_proto = {
+ 
+ const struct bpf_func_proto bpf_get_current_task_proto __weak;
+ const struct bpf_func_proto bpf_get_current_task_btf_proto __weak;
++#ifdef CONFIG_ARCH_HAS_NON_OVERLAPPING_ADDRESS_SPACE
++const struct bpf_func_proto bpf_probe_read_compat_proto __weak;
++const struct bpf_func_proto bpf_probe_read_compat_str_proto __weak;
++#endif
+ const struct bpf_func_proto bpf_probe_read_user_proto __weak;
+ const struct bpf_func_proto bpf_probe_read_user_str_proto __weak;
+ const struct bpf_func_proto bpf_probe_read_kernel_proto __weak;
+ const struct bpf_func_proto bpf_probe_read_kernel_str_proto __weak;
+ const struct bpf_func_proto bpf_task_pt_regs_proto __weak;
++const struct bpf_func_proto bpf_perf_event_read_proto __weak;
++const struct bpf_func_proto bpf_send_signal_proto __weak;
++const struct bpf_func_proto bpf_send_signal_thread_proto __weak;
++const struct bpf_func_proto bpf_get_task_stack_sleepable_proto __weak;
++const struct bpf_func_proto bpf_get_task_stack_proto __weak;
++const struct bpf_func_proto bpf_get_branch_snapshot_proto __weak;
+ 
+ const struct bpf_func_proto *
+ bpf_base_func_proto(enum bpf_func_id func_id, const struct bpf_prog *prog)
+@@ -1965,6 +1976,8 @@ bpf_base_func_proto(enum bpf_func_id func_id, const struct bpf_prog *prog)
+ 		return &bpf_get_current_pid_tgid_proto;
+ 	case BPF_FUNC_get_ns_current_pid_tgid:
+ 		return &bpf_get_ns_current_pid_tgid_proto;
++	case BPF_FUNC_get_current_uid_gid:
++		return &bpf_get_current_uid_gid_proto;
+ 	default:
+ 		break;
+ 	}
+@@ -2022,6 +2035,8 @@ bpf_base_func_proto(enum bpf_func_id func_id, const struct bpf_prog *prog)
+ 		return &bpf_get_current_cgroup_id_proto;
+ 	case BPF_FUNC_get_current_ancestor_cgroup_id:
+ 		return &bpf_get_current_ancestor_cgroup_id_proto;
++	case BPF_FUNC_current_task_under_cgroup:
++		return &bpf_current_task_under_cgroup_proto;
+ #endif
+ 	default:
+ 		break;
+@@ -2037,6 +2052,16 @@ bpf_base_func_proto(enum bpf_func_id func_id, const struct bpf_prog *prog)
+ 		return &bpf_get_current_task_proto;
+ 	case BPF_FUNC_get_current_task_btf:
+ 		return &bpf_get_current_task_btf_proto;
++	case BPF_FUNC_get_current_comm:
++		return &bpf_get_current_comm_proto;
++#ifdef CONFIG_ARCH_HAS_NON_OVERLAPPING_ADDRESS_SPACE
++	case BPF_FUNC_probe_read:
++		return security_locked_down(LOCKDOWN_BPF_READ_KERNEL) < 0 ?
++		       NULL : &bpf_probe_read_compat_proto;
++	case BPF_FUNC_probe_read_str:
++		return security_locked_down(LOCKDOWN_BPF_READ_KERNEL) < 0 ?
++		       NULL : &bpf_probe_read_compat_str_proto;
++#endif
+ 	case BPF_FUNC_probe_read_user:
+ 		return &bpf_probe_read_user_proto;
+ 	case BPF_FUNC_probe_read_kernel:
+@@ -2057,6 +2082,31 @@ bpf_base_func_proto(enum bpf_func_id func_id, const struct bpf_prog *prog)
+ 		return bpf_get_trace_vprintk_proto();
+ 	case BPF_FUNC_perf_event_read_value:
+ 		return bpf_get_perf_event_read_value_proto();
++	case BPF_FUNC_perf_event_read:
++		return &bpf_perf_event_read_proto;
++	case BPF_FUNC_send_signal:
++		return &bpf_send_signal_proto;
++	case BPF_FUNC_send_signal_thread:
++		return &bpf_send_signal_thread_proto;
++	case BPF_FUNC_get_task_stack:
++		return prog->sleepable ? &bpf_get_task_stack_sleepable_proto
++				       : &bpf_get_task_stack_proto;
++	case BPF_FUNC_copy_from_user:
++		return prog->sleepable ? &bpf_copy_from_user_proto : NULL;
++	case BPF_FUNC_copy_from_user_task:
++		return prog->sleepable ? &bpf_copy_from_user_task_proto : NULL;
++	case BPF_FUNC_task_storage_get:
++		if (bpf_prog_check_recur(prog))
++			return &bpf_task_storage_get_recur_proto;
++		return &bpf_task_storage_get_proto;
++	case BPF_FUNC_task_storage_delete:
++		if (bpf_prog_check_recur(prog))
++			return &bpf_task_storage_delete_recur_proto;
++		return &bpf_task_storage_delete_proto;
++	case BPF_FUNC_get_branch_snapshot:
++		return &bpf_get_branch_snapshot_proto;
++	case BPF_FUNC_find_vma:
++		return &bpf_find_vma_proto;
+ 	default:
+ 		return NULL;
+ 	}
+diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
+index 52c432a44aeb..224f02660e28 100644
+--- a/kernel/trace/bpf_trace.c
++++ b/kernel/trace/bpf_trace.c
+@@ -294,7 +294,7 @@ BPF_CALL_3(bpf_probe_read_compat, void *, dst, u32, size,
+ 	return bpf_probe_read_kernel_common(dst, size, unsafe_ptr);
+ }
+ 
+-static const struct bpf_func_proto bpf_probe_read_compat_proto = {
++const struct bpf_func_proto bpf_probe_read_compat_proto = {
+ 	.func		= bpf_probe_read_compat,
+ 	.gpl_only	= true,
+ 	.ret_type	= RET_INTEGER,
+@@ -313,7 +313,7 @@ BPF_CALL_3(bpf_probe_read_compat_str, void *, dst, u32, size,
+ 	return bpf_probe_read_kernel_str_common(dst, size, unsafe_ptr);
+ }
+ 
+-static const struct bpf_func_proto bpf_probe_read_compat_str_proto = {
++const struct bpf_func_proto bpf_probe_read_compat_str_proto = {
+ 	.func		= bpf_probe_read_compat_str,
+ 	.gpl_only	= true,
+ 	.ret_type	= RET_INTEGER,
+@@ -572,7 +572,7 @@ BPF_CALL_2(bpf_perf_event_read, struct bpf_map *, map, u64, flags)
+ 	return value;
+ }
+ 
+-static const struct bpf_func_proto bpf_perf_event_read_proto = {
++const struct bpf_func_proto bpf_perf_event_read_proto = {
+ 	.func		= bpf_perf_event_read,
+ 	.gpl_only	= true,
+ 	.ret_type	= RET_INTEGER,
+@@ -882,7 +882,7 @@ BPF_CALL_1(bpf_send_signal, u32, sig)
+ 	return bpf_send_signal_common(sig, PIDTYPE_TGID, NULL, 0);
+ }
+ 
+-static const struct bpf_func_proto bpf_send_signal_proto = {
++const struct bpf_func_proto bpf_send_signal_proto = {
+ 	.func		= bpf_send_signal,
+ 	.gpl_only	= false,
+ 	.ret_type	= RET_INTEGER,
+@@ -894,7 +894,7 @@ BPF_CALL_1(bpf_send_signal_thread, u32, sig)
+ 	return bpf_send_signal_common(sig, PIDTYPE_PID, NULL, 0);
+ }
+ 
+-static const struct bpf_func_proto bpf_send_signal_thread_proto = {
++const struct bpf_func_proto bpf_send_signal_thread_proto = {
+ 	.func		= bpf_send_signal_thread,
+ 	.gpl_only	= false,
+ 	.ret_type	= RET_INTEGER,
+@@ -1185,7 +1185,7 @@ BPF_CALL_3(bpf_get_branch_snapshot, void *, buf, u32, size, u64, flags)
+ 	return entry_cnt * br_entry_size;
+ }
+ 
+-static const struct bpf_func_proto bpf_get_branch_snapshot_proto = {
++const struct bpf_func_proto bpf_get_branch_snapshot_proto = {
+ 	.func		= bpf_get_branch_snapshot,
+ 	.gpl_only	= true,
+ 	.ret_type	= RET_INTEGER,
+@@ -1430,51 +1430,10 @@ bpf_tracing_func_proto(enum bpf_func_id func_id, const struct bpf_prog *prog)
+ 	const struct bpf_func_proto *func_proto;
+ 
+ 	switch (func_id) {
+-	case BPF_FUNC_get_current_uid_gid:
+-		return &bpf_get_current_uid_gid_proto;
+-	case BPF_FUNC_get_current_comm:
+-		return &bpf_get_current_comm_proto;
+ 	case BPF_FUNC_get_smp_processor_id:
+ 		return &bpf_get_smp_processor_id_proto;
+-	case BPF_FUNC_perf_event_read:
+-		return &bpf_perf_event_read_proto;
+-#ifdef CONFIG_ARCH_HAS_NON_OVERLAPPING_ADDRESS_SPACE
+-	case BPF_FUNC_probe_read:
+-		return security_locked_down(LOCKDOWN_BPF_READ_KERNEL) < 0 ?
+-		       NULL : &bpf_probe_read_compat_proto;
+-	case BPF_FUNC_probe_read_str:
+-		return security_locked_down(LOCKDOWN_BPF_READ_KERNEL) < 0 ?
+-		       NULL : &bpf_probe_read_compat_str_proto;
+-#endif
+-#ifdef CONFIG_CGROUPS
+-	case BPF_FUNC_current_task_under_cgroup:
+-		return &bpf_current_task_under_cgroup_proto;
+-#endif
+-	case BPF_FUNC_send_signal:
+-		return &bpf_send_signal_proto;
+-	case BPF_FUNC_send_signal_thread:
+-		return &bpf_send_signal_thread_proto;
+-	case BPF_FUNC_get_task_stack:
+-		return prog->sleepable ? &bpf_get_task_stack_sleepable_proto
+-				       : &bpf_get_task_stack_proto;
+-	case BPF_FUNC_copy_from_user:
+-		return &bpf_copy_from_user_proto;
+-	case BPF_FUNC_copy_from_user_task:
+-		return &bpf_copy_from_user_task_proto;
+-	case BPF_FUNC_task_storage_get:
+-		if (bpf_prog_check_recur(prog))
+-			return &bpf_task_storage_get_recur_proto;
+-		return &bpf_task_storage_get_proto;
+-	case BPF_FUNC_task_storage_delete:
+-		if (bpf_prog_check_recur(prog))
+-			return &bpf_task_storage_delete_recur_proto;
+-		return &bpf_task_storage_delete_proto;
+ 	case BPF_FUNC_get_func_ip:
+ 		return &bpf_get_func_ip_proto_tracing;
+-	case BPF_FUNC_get_branch_snapshot:
+-		return &bpf_get_branch_snapshot_proto;
+-	case BPF_FUNC_find_vma:
+-		return &bpf_find_vma_proto;
+ 	default:
+ 		break;
+ 	}
+diff --git a/net/core/filter.c b/net/core/filter.c
+index 79cab4d78dc3..53bf560354f7 100644
+--- a/net/core/filter.c
++++ b/net/core/filter.c
+@@ -8488,8 +8488,6 @@ sk_msg_func_proto(enum bpf_func_id func_id, const struct bpf_prog *prog)
+ 		return &bpf_msg_pop_data_proto;
+ 	case BPF_FUNC_perf_event_output:
+ 		return &bpf_event_output_data_proto;
+-	case BPF_FUNC_get_current_uid_gid:
+-		return &bpf_get_current_uid_gid_proto;
+ 	case BPF_FUNC_sk_storage_get:
+ 		return &bpf_sk_storage_get_proto;
+ 	case BPF_FUNC_sk_storage_delete:
+-- 
+2.43.0
+
