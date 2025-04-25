@@ -1,177 +1,100 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF82E235C14
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 25 Apr 2025 09:27:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3FD92356B8;
+	Fri, 25 Apr 2025 09:33:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745573228; cv=none; b=TlLwpDAHmmmcy3XVBsypv47kKYP/d6R8qsXQapjLGWH9Zn6lAB/Vd0vXCfDUrkz1aAFMRnEiYBM0NJ+8xiZuK3XE/ZDv7ZBcbl3p3aKGBB3EaWWQkd2KvYCP0B1f+V6dK5TrSALRscZlavb5WI81ZH2pYg3uwqprxMn/skC+BSM=
+	t=1745573594; cv=none; b=NArM32PV+MdmS/LkdiWQE3XhyYfX8riefiMLwys3vF66q1J2dT8Y/cKI1Ey/4d0HmZiZDkow90Cy0dtVn7iVySvK74lBqDqzqIE5pImXMe/pduHOcdJmlthd1pEx3qJDTChU1kRspqEfKBE3IQv2o85Y30W+FKwK7JWxkt25glc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745573228; c=relaxed/simple;
-	bh=wIdBjLUz4OSq7cgx0l4vpv2XD2JXu/WXR3GCO08HM4M=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Qur1vRVz5OfzikvWLBEP/Sa5OSu5caCfaf1zaDdpoWpt4ySTsROcfmEszb1zeE+yviqzIoDv24U026nWedFxoNaWtAPNsKL811EMj6/FB/xkMwzlaWm04xz+f5WTqrpjnJUUYqGSOg87Gqw7t6h0sJQ1AIFEzDOSGlREVKKvXss=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=O2tgU9sJ; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1745573594; c=relaxed/simple;
+	bh=WNBCzVUdr2nMr5n1g8TkgRuxVBJ3OvFR4kRECxsx0dk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=k7KGFIR8sWGRNRWUa3vPvvb4hZ17UsewXLW86IXo95m6tPeQ2tNl0R4S37/Drxnwreqe+ymqddy7JQXMfkTtoX5rNMTKqGyj4LVtJDodBn8Gp7FujxrP2tHPgR3AgGbPauAnNEdnU6QXb0NSFLlW9XPYR/kcwoW6G10pnwyQyuw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ipRQI3we; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=alm4dm3r; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="O2tgU9sJ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1745573225;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ipRQI3we";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="alm4dm3r"
+Date: Fri, 25 Apr 2025 11:33:09 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1745573590;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=8eqLytJIQY/pnCK/wv0GRjy/uV2gVRfHwFR8LZ6llRk=;
-	b=O2tgU9sJJMmRZ/OVQu/dRQCeNcEfyxXcTn4cnIj/D5GymwUM23O6OXINdXljLNMdzsIONW
-	2QVCiOFT/cqOhAt/tIeLP871+YTwrtuqlWvlCax/zc2E7frOAmVan1tD8wceJVP67VdoFq
-	NYCADOFDViFCAMmnsAvsv4CZksGh1NM=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-258-womU-mTbN2Cj1aEV44DjGQ-1; Fri, 25 Apr 2025 05:27:04 -0400
-X-MC-Unique: womU-mTbN2Cj1aEV44DjGQ-1
-X-Mimecast-MFC-AGG-ID: womU-mTbN2Cj1aEV44DjGQ_1745573223
-Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-43d01024089so14019615e9.1
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 25 Apr 2025 02:27:03 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745573223; x=1746178023;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=8eqLytJIQY/pnCK/wv0GRjy/uV2gVRfHwFR8LZ6llRk=;
-        b=aUdNVq3Z+mUbTCS3ZOSKkt7x/Q5cd5YY8MOyVTiO/EZr5FfmuFT+UgYSoiRMu/nPmJ
-         y/8iWjh0ZxU+gZ8q0q40hCVgSk8B9Npqyr50puk8YAV0k4FYSymbLyjy7cPVM6AeLnHS
-         9qJam2ndh7AManNjZ7eWjat3aTq2hYYRCn25e1Li3XaU2ocRFLETxjFbu95C/IfJPPGt
-         jgGQ5eldr2OB7JCPQfA7ol7qAac1lltFwCUUYj9sXj8Ot9//hX7PyBVDgQ/2w9tkNnbx
-         gdHOhSAUTDClEYEdFkK9QkHxqfPLN4r+mSW9H15L5XOhjqyzxZRwUap2BaiggP/UihBH
-         eRqQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVlmoEnF3f68cq629dqmvZJoj36HHd8d67rMv/AH5mu/M0LWiwMP5JxvACAO+t3NIsfOOA4iPY4nCn8QSI1IFif5vk=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw8jUVBFz3NEPQ71j5lXxlV7dnIu+BWfatn+oZ/ReHp3MwS39wK
-	oB28pJOAJx2xFqIHtookuWqB44XsFXNBbvS+yhQwV6PO6Ha43WeaXMOT02eCfVLyDldYo5u5dk1
-	sN2oLZQKbmGwq85yBDcs672zG8dvykDDjlG9Lp55ieTSvo5Sp0IPPkHFW4YPfmJTxBEvvQA==
-X-Gm-Gg: ASbGncu5u6BLF1Je7TGWqcS15CGOOZzcpunJdXBM1eEwqKUXqeh/o+jEe6GpVGXM0Kb
-	3f4PGuvCkV9mIZtkbOfyiFPHXcJanZEutjrgq/noKkbbvStlsdf18qUk7EUs7KuvGH7Ou5eb11I
-	E4XaUxaDfq8LeGnqvyKOjadyC1ifFoqhDosl8kg8IacIAwqMIFF/PwUJPNnUYpIpp7z+Q/g0S6o
-	9s6ja6ecgc3hYjkOjUT/FVrj45hNapkXUncF0yMf5/sYxF0G/V5QVH0VwdK+56sgNfWEYb9w2Ch
-	ddtGYw5mRsXG1/4FjknoVa3wRlk08iyoifmM2RfoUg==
-X-Received: by 2002:a05:600c:1f82:b0:43d:b85:1831 with SMTP id 5b1f17b1804b1-440a6347ff9mr13026485e9.0.1745573222956;
-        Fri, 25 Apr 2025 02:27:02 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFY7LbS9YRQ5wCXB84Jy7eT6u2rOjZc7kKIwIhV5LjW+hBQBfoI1k6U1ecprzUpbxRl2y0xrg==
-X-Received: by 2002:a05:600c:1f82:b0:43d:b85:1831 with SMTP id 5b1f17b1804b1-440a6347ff9mr13026355e9.0.1745573222548;
-        Fri, 25 Apr 2025 02:27:02 -0700 (PDT)
-Received: from [192.168.3.141] (p4ff23df8.dip0.t-ipconnect.de. [79.242.61.248])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-440a52f8915sm18804175e9.7.2025.04.25.02.27.01
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 25 Apr 2025 02:27:02 -0700 (PDT)
-Message-ID: <c69f782b-798d-459d-b7fb-c2d7c7e30372@redhat.com>
-Date: Fri, 25 Apr 2025 11:27:00 +0200
+	 in-reply-to:in-reply-to:references:references;
+	bh=ttWMI3IxwHR18qgiavYlZ7Wrde1QtcOjDwO9mA75nyw=;
+	b=ipRQI3weeZvi54Pj/z6HcZh1yPAgKNFKQqK2uWbTP9LrftmBQwUREE/oSZm7ZblPbYb4Oj
+	GdXSeYy0BJWEjqn3WQ1MnPDUrrbWEoe1U5rp55kAZecRI4C/aCqPJdTgle5Ig6Xjc7ey+S
+	8I+zBS8poyVvxWB2pwsqxb8Sg+aYnHqx0uQgJXvi5533F6oANT1p/aKHVcB/Rgw2NBxbW2
+	/P2lspWZqQ49JL/uy7AWPuPnh2Uujao/IjcR7c7D+H81KgE6Y2Z0yVZj9a1vXjt+BC6v6y
+	nWRdVosrfkI0/JeljEugAyMn7b9762C/4f5LD3rgL2ssCDV1JdKY5F/s52UtQw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1745573590;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ttWMI3IxwHR18qgiavYlZ7Wrde1QtcOjDwO9mA75nyw=;
+	b=alm4dm3rSKXMYLXTb6ZshjlB0OGQ7Un5JbIALvYLgiN7mv3thBSkmwd+Oq7JF6FjGH5ML1
+	WOcvexXwgKTCfmAA==
+From: Nam Cao <namcao@linutronix.de>
+To: Gabriele Monaco <gmonaco@redhat.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>,
+	linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
+	john.ogness@linutronix.de
+Subject: Re: [PATCH v4 20/22] rv: Add rtapp_sleep monitor
+Message-ID: <20250425093309.RkeoCUBC@linutronix.de>
+References: <cover.1745390829.git.namcao@linutronix.de>
+ <c23cb5ef10310f978c3f90f07c2dbb9b042e8b01.1745390829.git.namcao@linutronix.de>
+ <c321c7350ec10f9f358695acd765d2dbd067eeb2.camel@redhat.com>
+ <20250425063456.NBE35YHR@linutronix.de>
+ <169b8478-1eff-46b1-a782-f0cb529330bb@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 00/11] mm: rewrite pfnmap tracking and remove VM_PAT
-To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org, x86@kernel.org,
- intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
- linux-trace-kernel@vger.kernel.org, Dave Hansen
- <dave.hansen@linux.intel.com>, Andy Lutomirski <luto@kernel.org>,
- Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner <tglx@linutronix.de>,
- Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
- "H. Peter Anvin" <hpa@zytor.com>, Jani Nikula <jani.nikula@linux.intel.com>,
- Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
- Rodrigo Vivi <rodrigo.vivi@intel.com>, Tvrtko Ursulin
- <tursulin@ursulin.net>, David Airlie <airlied@gmail.com>,
- Simona Vetter <simona@ffwll.ch>, Andrew Morton <akpm@linux-foundation.org>,
- Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- "Liam R. Howlett" <Liam.Howlett@oracle.com>,
- Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
- Vlastimil Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>,
- Pedro Falcato <pfalcato@suse.de>, Peter Xu <peterx@redhat.com>
-References: <20250425081715.1341199-1-david@redhat.com>
- <aAtNy6VjUvOrOC7r@gmail.com>
-From: David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <aAtNy6VjUvOrOC7r@gmail.com>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: gy0Z7NBIDPs-mYvAlwGDUIR7h_qW0mIBjQMvsxcCtpI_1745573223
-X-Mimecast-Originator: redhat.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <169b8478-1eff-46b1-a782-f0cb529330bb@redhat.com>
 
->> There will be some clash with [1], but nothing that cannot be sorted out
->> easily by moving the functions added to kernel/fork.c to wherever the vma
->> bits will live.
->>
->> Briefly tested with some basic /dev/mem test I crafted. I want to convert
->> them to selftests, but that might or might not require a bit of
->> more work (e.g., /dev/mem accessibility).
+On Fri, Apr 25, 2025 at 07:35:36AM +0000, Gabriele Monaco wrote:
+> 2025-04-25T06:35:09Z Nam Cao <namcao@linutronix.de>:
+> > On Thu, Apr 24, 2025 at 03:55:34PM +0200, Gabriele Monaco wrote:
+> >> I quickly tried the same with the other monitor comparing the number of
+> >> errors with the page_faults generated by perf, but that didn't make too
+> >> much sense. Perhaps I'm doing something wrong here though (the number
+> >> reported by perf for page faults feels a bit too high).
+> >>
+> >> perf stat -e page-faults -e rv:error_pagefault stress-ng --cyclic 1
+> >
+> > This command run a non-real-time thread to do setup, and a cyclic real-time
+> > thread. The number of pagefaults of each thread would be roughly
+> > proportional to the code size executed by each thread. As the non-real-time
+> > thread's code size is bigger, it sounds reasonable that the number of
+> > pagefaults is greater than the number of monitor's warnings.
 > 
-> So for the x86 bits, once it passes review by the fine MM folks:
+> Mmh I guessed something like that, although numbers were a bit out of
+> proportion (e.g. 500 page-faults and 8 errors), but again, I didn't check
+> too carefully what happens under the hood.
+
+Keep in mind that the non-real-time thread is calling into glibc. While
+the real-time thread is a small loop doing nanosleep.
+
+> > I tested the monitor on a real system. My system has some real-time audio
+> > processing processes (pipewire, firefox running youtube), yours also
+> > should.
 > 
->    Acked-by: Ingo Molnar <mingo@kernel.org>
-> 
+> That's a good point, also I didn't mention I was running these tests in a
+> VM (virtme-ng), so the system stress is minimal and perhaps the setup
+> triggers some different oddities (filesystems are overlays and some other
+> things are set up differently from a real system).
 
-Thanks!
+Oddities are good, they make some corner cases appear.
 
-> And I suppose this rewrite will be carried in -mm?
+Evidently I need to torture the monitors much more, let's see what else
+shows up..
 
-Yes, will make conflicts with Lorenzo's work easier to resolve (in 
-whatever order this ends up going in). I suspect there are not many PAT 
-related things on the horizon.
-
--- 
-Cheers,
-
-David / dhildenb
-
+Best regards,
+Nam
