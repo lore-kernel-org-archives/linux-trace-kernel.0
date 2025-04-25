@@ -1,26 +1,26 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73CD12580EA;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF800259CB5;
 	Fri, 25 Apr 2025 14:56:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745592974; cv=none; b=aqWVWzFLYYzqT94N8on680NifhEK+YFaNdlgXi8zMPvJv0JMbKezUi/BF9LqmiVUDI/yKxve7bHBb71ks5aGBdDZwAEwqzvvWuZ4Lqc1UFnAf/lMZ/QlyI2iCQGHNn31pD+TZdvHB5flXo2SPBAIAmjPFTteDMTvxt1IkZyhYUs=
+	t=1745592974; cv=none; b=NQQuqOq45HVGXYavZsb7QX6XiMeGcZiMP2N7P3VQdK8tyzUi5x0T9NeZB6B1Dopv41ncw/sixuj0BXEm3XuCBe5eQYkX95e9AMY7GMvqX7pJWQ7obgDrAx99i+FU/7QzITHnhyJrZLGayTH2hB9OUe8RM95nwfrQO/NXAawGzmc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1745592974; c=relaxed/simple;
-	bh=f3PnCNhjUZYOXhOAf8jnnjFoeC2Ul8J2zflBUMTYVYI=;
+	bh=7I11mP3w18vX4htds3yiDDbcRgMIVKdNKXayRuKw4cg=;
 	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=AurGzDBVR8acB5mdDEU5vFpxDOEhxQyHemXiS9WHQvDZGwswJsLNS+fi79AlgvueYyPTFnF1GvBQvj5KJuIdfp36Xu5zuUwMb9/h42r6U58c3O0Tk4uhDxP879ZdrYxaATWYfBaYSod7Ti3XghxCXeF2ybmVyMVhEkxtozt/22E=
+	 Content-Type; b=vAgPW7CjUWmlTpGRKOI0vdbrNSZCaky9DvHRuO+hefT6h6d+2uoC4OIMyB4vg8JnH08K/j/iVtOTCJxL53DMbJXbfmGvy3cM97kifMp/+ygSwpGxtOOc9h+DB3Oq4EmGY4E+eMt0chbZjkp1FnNiBSj4nragOT+WqfAPWixwlfo=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 043D6C4CEE4;
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5B0E5C4CEEC;
 	Fri, 25 Apr 2025 14:56:14 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.98)
 	(envelope-from <rostedt@goodmis.org>)
-	id 1u8KVH-0000000HSgK-43HH;
-	Fri, 25 Apr 2025 10:58:11 -0400
-Message-ID: <20250425145811.822676841@goodmis.org>
+	id 1u8KVI-0000000HShs-1yT4;
+	Fri, 25 Apr 2025 10:58:12 -0400
+Message-ID: <20250425145812.324131816@goodmis.org>
 User-Agent: quilt/0.68
-Date: Fri, 25 Apr 2025 10:54:23 -0400
+Date: Fri, 25 Apr 2025 10:54:26 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org,
  linux-trace-kernel@vger.kernel.org
@@ -53,7 +53,7 @@ Cc: Masami Hiramatsu <mhiramat@kernel.org>,
  Beau Belgrave <beaub@linux.microsoft.com>,
  "Jose E. Marchesi" <jemarch@gnu.org>,
  Alexander Aring <aahringo@redhat.com>
-Subject: [PATCH v6 01/18] unwind_user: Add user space unwinding API
+Subject: [PATCH v6 04/18] perf/x86: Rename and move get_segment_base() and make it global
 References: <20250425145422.132820147@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -65,205 +65,169 @@ Content-Type: text/plain; charset=UTF-8
 
 From: Josh Poimboeuf <jpoimboe@kernel.org>
 
-Introduce a generic API for unwinding user stacks.
+get_segment_base() will be used by the unwind_user code, so make it
+global and rename it so it doesn't conflict with a KVM function of the
+same name.
 
-In order to expand user space unwinding to be able to handle more complex
-scenarios, such as deferred unwinding and reading user space information,
-create a generic interface that all architectures can use that support the
-various unwinding methods.
-
-This is an alternative method for handling user space stack traces from
-the simple stack_trace_save_user() API. This does not replace that
-interface, but this interface will be used to expand the functionality of
-user space stack walking.
+As the function is no longer specific to perf, move it to ptrace.c as that
+seems to be a better location for a generic function like this.
 
 Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- MAINTAINERS                       |  8 +++++
- arch/Kconfig                      |  3 ++
- include/linux/unwind_user.h       | 15 +++++++++
- include/linux/unwind_user_types.h | 31 +++++++++++++++++
- kernel/Makefile                   |  1 +
- kernel/unwind/Makefile            |  1 +
- kernel/unwind/user.c              | 55 +++++++++++++++++++++++++++++++
- 7 files changed, 114 insertions(+)
- create mode 100644 include/linux/unwind_user.h
- create mode 100644 include/linux/unwind_user_types.h
- create mode 100644 kernel/unwind/Makefile
- create mode 100644 kernel/unwind/user.c
+ arch/x86/events/core.c        | 44 ++++-------------------------------
+ arch/x86/include/asm/ptrace.h |  2 ++
+ arch/x86/kernel/ptrace.c      | 38 ++++++++++++++++++++++++++++++
+ 3 files changed, 45 insertions(+), 39 deletions(-)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 74667f36b013..237e642df25a 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -25278,6 +25278,14 @@ F:	Documentation/driver-api/uio-howto.rst
- F:	drivers/uio/
- F:	include/linux/uio_driver.h
+diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
+index 85eb0eb1b284..524a59d9c2c4 100644
+--- a/arch/x86/events/core.c
++++ b/arch/x86/events/core.c
+@@ -42,6 +42,7 @@
+ #include <asm/ldt.h>
+ #include <asm/unwind.h>
+ #include <asm/uprobes.h>
++#include <asm/ptrace.h>
+ #include <asm/ibt.h>
  
-+USERSPACE STACK UNWINDING
-+M:	Josh Poimboeuf <jpoimboe@kernel.org>
-+M:	Steven Rostedt <rostedt@goodmis.org>
-+S:	Maintained
-+F:	include/linux/unwind*.h
-+F:	kernel/unwind/
-+
-+
- UTIL-LINUX PACKAGE
- M:	Karel Zak <kzak@redhat.com>
- L:	util-linux@vger.kernel.org
-diff --git a/arch/Kconfig b/arch/Kconfig
-index b0adb665041f..ccbcead9fac0 100644
---- a/arch/Kconfig
-+++ b/arch/Kconfig
-@@ -435,6 +435,9 @@ config HAVE_HARDLOCKUP_DETECTOR_ARCH
- 	  It uses the same command line parameters, and sysctl interface,
- 	  as the generic hardlockup detectors.
+ #include "perf_event.h"
+@@ -2807,41 +2808,6 @@ valid_user_frame(const void __user *fp, unsigned long size)
+ 	return __access_ok(fp, size);
+ }
  
-+config UNWIND_USER
-+	bool
-+
- config HAVE_PERF_REGS
- 	bool
- 	help
-diff --git a/include/linux/unwind_user.h b/include/linux/unwind_user.h
-new file mode 100644
-index 000000000000..aa7923c1384f
---- /dev/null
-+++ b/include/linux/unwind_user.h
-@@ -0,0 +1,15 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef _LINUX_UNWIND_USER_H
-+#define _LINUX_UNWIND_USER_H
-+
-+#include <linux/unwind_user_types.h>
-+
-+int unwind_user_start(struct unwind_user_state *state);
-+int unwind_user_next(struct unwind_user_state *state);
-+
-+int unwind_user(struct unwind_stacktrace *trace, unsigned int max_entries);
-+
-+#define for_each_user_frame(state) \
-+	for (unwind_user_start((state)); !(state)->done; unwind_user_next((state)))
-+
-+#endif /* _LINUX_UNWIND_USER_H */
-diff --git a/include/linux/unwind_user_types.h b/include/linux/unwind_user_types.h
-new file mode 100644
-index 000000000000..6ed1b4ae74e1
---- /dev/null
-+++ b/include/linux/unwind_user_types.h
-@@ -0,0 +1,31 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef _LINUX_UNWIND_USER_TYPES_H
-+#define _LINUX_UNWIND_USER_TYPES_H
-+
-+#include <linux/types.h>
-+
-+enum unwind_user_type {
-+	UNWIND_USER_TYPE_NONE,
-+};
-+
-+struct unwind_stacktrace {
-+	unsigned int	nr;
-+	unsigned long	*entries;
-+};
-+
-+struct unwind_user_frame {
-+	s32 cfa_off;
-+	s32 ra_off;
-+	s32 fp_off;
-+	bool use_fp;
-+};
-+
-+struct unwind_user_state {
-+	unsigned long ip;
-+	unsigned long sp;
-+	unsigned long fp;
-+	enum unwind_user_type type;
-+	bool done;
-+};
-+
-+#endif /* _LINUX_UNWIND_USER_TYPES_H */
-diff --git a/kernel/Makefile b/kernel/Makefile
-index 434929de17ef..5a2b2be2a32d 100644
---- a/kernel/Makefile
-+++ b/kernel/Makefile
-@@ -55,6 +55,7 @@ obj-y += rcu/
- obj-y += livepatch/
- obj-y += dma/
- obj-y += entry/
-+obj-y += unwind/
- obj-$(CONFIG_MODULES) += module/
+-static unsigned long get_segment_base(unsigned int segment)
+-{
+-	struct desc_struct *desc;
+-	unsigned int idx = segment >> 3;
+-
+-	if ((segment & SEGMENT_TI_MASK) == SEGMENT_LDT) {
+-#ifdef CONFIG_MODIFY_LDT_SYSCALL
+-		struct ldt_struct *ldt;
+-
+-		/*
+-		 * If we're not in a valid context with a real (not just lazy)
+-		 * user mm, then don't even try.
+-		 */
+-		if (!nmi_uaccess_okay())
+-			return 0;
+-
+-		/* IRQs are off, so this synchronizes with smp_store_release */
+-		ldt = smp_load_acquire(&current->mm->context.ldt);
+-		if (!ldt || idx >= ldt->nr_entries)
+-			return 0;
+-
+-		desc = &ldt->entries[idx];
+-#else
+-		return 0;
+-#endif
+-	} else {
+-		if (idx >= GDT_ENTRIES)
+-			return 0;
+-
+-		desc = raw_cpu_ptr(gdt_page.gdt) + idx;
+-	}
+-
+-	return get_desc_base(desc);
+-}
+-
+ #ifdef CONFIG_UPROBES
+ /*
+  * Heuristic-based check if uprobe is installed at the function entry.
+@@ -2898,8 +2864,8 @@ perf_callchain_user32(struct pt_regs *regs, struct perf_callchain_entry_ctx *ent
+ 	if (user_64bit_mode(regs))
+ 		return 0;
  
- obj-$(CONFIG_KCMP) += kcmp.o
-diff --git a/kernel/unwind/Makefile b/kernel/unwind/Makefile
-new file mode 100644
-index 000000000000..349ce3677526
---- /dev/null
-+++ b/kernel/unwind/Makefile
-@@ -0,0 +1 @@
-+ obj-$(CONFIG_UNWIND_USER) += user.o
-diff --git a/kernel/unwind/user.c b/kernel/unwind/user.c
-new file mode 100644
-index 000000000000..ddf68750b3cb
---- /dev/null
-+++ b/kernel/unwind/user.c
-@@ -0,0 +1,55 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+* Generic interfaces for unwinding user space
-+*/
-+#include <linux/kernel.h>
-+#include <linux/sched.h>
-+#include <linux/sched/task_stack.h>
-+#include <linux/unwind_user.h>
+-	cs_base = get_segment_base(regs->cs);
+-	ss_base = get_segment_base(regs->ss);
++	cs_base = segment_base_address(regs->cs);
++	ss_base = segment_base_address(regs->ss);
+ 
+ 	fp = compat_ptr(ss_base + regs->bp);
+ 	pagefault_disable();
+@@ -3018,11 +2984,11 @@ static unsigned long code_segment_base(struct pt_regs *regs)
+ 		return 0x10 * regs->cs;
+ 
+ 	if (user_mode(regs) && regs->cs != __USER_CS)
+-		return get_segment_base(regs->cs);
++		return segment_base_address(regs->cs);
+ #else
+ 	if (user_mode(regs) && !user_64bit_mode(regs) &&
+ 	    regs->cs != __USER32_CS)
+-		return get_segment_base(regs->cs);
++		return segment_base_address(regs->cs);
+ #endif
+ 	return 0;
+ }
+diff --git a/arch/x86/include/asm/ptrace.h b/arch/x86/include/asm/ptrace.h
+index 50f75467f73d..59357ec98e52 100644
+--- a/arch/x86/include/asm/ptrace.h
++++ b/arch/x86/include/asm/ptrace.h
+@@ -314,6 +314,8 @@ static __always_inline bool regs_irqs_disabled(struct pt_regs *regs)
+ 	return !(regs->flags & X86_EFLAGS_IF);
+ }
+ 
++unsigned long segment_base_address(unsigned int segment);
 +
-+int unwind_user_next(struct unwind_user_state *state)
+ /* Query offset/name of register from its name/offset */
+ extern int regs_query_register_offset(const char *name);
+ extern const char *regs_query_register_name(unsigned int offset);
+diff --git a/arch/x86/kernel/ptrace.c b/arch/x86/kernel/ptrace.c
+index 095f04bdabdc..81353a09701b 100644
+--- a/arch/x86/kernel/ptrace.c
++++ b/arch/x86/kernel/ptrace.c
+@@ -41,6 +41,7 @@
+ #include <asm/syscall.h>
+ #include <asm/fsgsbase.h>
+ #include <asm/io_bitmap.h>
++#include <asm/mmu_context.h>
+ 
+ #include "tls.h"
+ 
+@@ -339,6 +340,43 @@ static int set_segment_reg(struct task_struct *task,
+ 
+ #endif	/* CONFIG_X86_32 */
+ 
++unsigned long segment_base_address(unsigned int segment)
 +{
-+	/* no implementation yet */
-+	return -EINVAL;
-+}
++	struct desc_struct *desc;
++	unsigned int idx = segment >> 3;
 +
-+int unwind_user_start(struct unwind_user_state *state)
-+{
-+	struct pt_regs *regs = task_pt_regs(current);
++	lockdep_assert_irqs_disabled();
 +
-+	memset(state, 0, sizeof(*state));
++	if ((segment & SEGMENT_TI_MASK) == SEGMENT_LDT) {
++#ifdef CONFIG_MODIFY_LDT_SYSCALL
++		struct ldt_struct *ldt;
 +
-+	if (!current->mm || !user_mode(regs)) {
-+		state->done = true;
-+		return -EINVAL;
-+	}
++		/*
++		 * If we're not in a valid context with a real (not just lazy)
++		 * user mm, then don't even try.
++		 */
++		if (!nmi_uaccess_okay())
++			return 0;
 +
-+	state->type = UNWIND_USER_TYPE_NONE;
++		/* IRQs are off, so this synchronizes with smp_store_release */
++		ldt = smp_load_acquire(&current->mm->context.ldt);
++		if (!ldt || idx >= ldt->nr_entries)
++			return 0;
 +
-+	state->ip = instruction_pointer(regs);
-+	state->sp = user_stack_pointer(regs);
-+	state->fp = frame_pointer(regs);
-+
-+	return 0;
-+}
-+
-+int unwind_user(struct unwind_stacktrace *trace, unsigned int max_entries)
-+{
-+	struct unwind_user_state state;
-+
-+	trace->nr = 0;
-+
-+	if (!max_entries)
-+		return -EINVAL;
-+
-+	if (!current->mm)
++		desc = &ldt->entries[idx];
++#else
 +		return 0;
++#endif
++	} else {
++		if (idx >= GDT_ENTRIES)
++			return 0;
 +
-+	for_each_user_frame(&state) {
-+		trace->entries[trace->nr++] = state.ip;
-+		if (trace->nr >= max_entries)
-+			break;
++		desc = raw_cpu_ptr(gdt_page.gdt) + idx;
 +	}
 +
-+	return 0;
++	return get_desc_base(desc);
 +}
++
+ static unsigned long get_flags(struct task_struct *task)
+ {
+ 	unsigned long retval = task_pt_regs(task)->flags;
 -- 
 2.47.2
 
