@@ -1,44 +1,45 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 905381A9B48;
-	Fri, 25 Apr 2025 16:56:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87AB21B4F15;
+	Fri, 25 Apr 2025 17:32:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745600181; cv=none; b=Pfn7JBR4eitASKAzyXMgMe1E+XLrVuLm1uQ6ahRFBtJ+JFKuBe3s7kc8G9DUxrQLxCzRds0fsVe+Yu7zDTXF6u+nUoSXFT/rSoUmXa7QAQ+lbIdbAuQW31sNOFO4aRC/2/rIaI/UlXmNwqav1OTdmY2YVoV6m2OpNa+afVRVQms=
+	t=1745602342; cv=none; b=ts8PMw9LArDqR3eazGoFL+SKLrlc+q3MPrcvnX+gIYTAf8C4G3m8G7NZxplKIgGdH6Uiew4bstYD873aU3Xh7Zilq6FC706gQZS3ezWsIVp0aWgk9EbQhL9IPraSg142RdFB44m3HHwQYgtuMN5eW8s9E+0aLt3eb1rh+h6ywWw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745600181; c=relaxed/simple;
-	bh=7bLymEJM7zPsKDvgdEe/EvNJwvGyKZa6h6ULmTf9nGY=;
+	s=arc-20240116; t=1745602342; c=relaxed/simple;
+	bh=G4VOoYDvhLfIc54xRT4vzjjA9iFFlvqP5ptNnnlBd/Q=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=FptHstD3esiEM7G3ulZuOrOzwnGDQrJ+hvJtfL8ix9jsFMU3KpjsbGdvSPCCfuybhUZyHKK9MSrnVt879erR/2kw2iqgoqrAbb1GMenrLbNDfvheQqU15yT7RkjN5DuwybeYhnsHOOHsGmeIcI68YXU0Wc/S6xOK9Teop4G4cp8=
+	 MIME-Version:Content-Type; b=k6m4+BUK41Hi8fSgbhupEjW17H3Yps2KW6N6geE9OQUK2M1xADBEkVsTrLnkVx296veF+ftO0coNlFKx/D4GdAAZvmxBlpvExGKHf+dMlekrPsdg/2I0v+gt2LN4p6D32oHdJwgSpjZju4v/udYUJpHVoBlCl+FFgcTD3y2cePY=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 052ACC4CEE4;
-	Fri, 25 Apr 2025 16:56:17 +0000 (UTC)
-Date: Fri, 25 Apr 2025 12:58:15 -0400
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E0708C4CEE4;
+	Fri, 25 Apr 2025 17:32:18 +0000 (UTC)
+Date: Fri, 25 Apr 2025 13:34:16 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
-To: Namhyung Kim <namhyung@kernel.org>
+To: Josh Poimboeuf <jpoimboe@kernel.org>
 Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Masami
  Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
  Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Andrew Morton
- <akpm@linux-foundation.org>, Josh Poimboeuf <jpoimboe@kernel.org>,
- x86@kernel.org, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar
- <mingo@kernel.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, Indu Bhagat
- <indu.bhagat@oracle.com>, Alexander Shishkin
- <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, Ian
- Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>,
+ <akpm@linux-foundation.org>, x86@kernel.org, Peter Zijlstra
+ <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, Arnaldo Carvalho de
+ Melo <acme@kernel.org>, Indu Bhagat <indu.bhagat@oracle.com>, Alexander
+ Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa
+ <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Ian Rogers
+ <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>,
  linux-perf-users@vger.kernel.org, Mark Brown <broonie@kernel.org>,
  linux-toolchains@vger.kernel.org, Jordan Rome <jordalgo@meta.com>, Sam
  James <sam@gentoo.org>, Andrii Nakryiko <andrii.nakryiko@gmail.com>, Jens
  Remus <jremus@linux.ibm.com>, Florian Weimer <fweimer@redhat.com>, Andy
  Lutomirski <luto@kernel.org>, Weinan Liu <wnliu@google.com>, Blake Jones
  <blakejones@google.com>, Beau Belgrave <beaub@linux.microsoft.com>, "Jose
- E. Marchesi" <jemarch@gnu.org>
-Subject: Re: [PATCH v5 13/17] perf: Support deferred user callchains
-Message-ID: <20250425125815.5c5b33be@gandalf.local.home>
-In-Reply-To: <aAupP56jOM_wul_8@google.com>
-References: <20250424162529.686762589@goodmis.org>
-	<20250424162633.390748816@goodmis.org>
-	<aAupP56jOM_wul_8@google.com>
+ E. Marchesi" <jemarch@gnu.org>, Alexander Aring <aahringo@redhat.com>
+Subject: Re: [PATCH v6 11/18] perf: Use current->flags & PF_KTHREAD instead
+ of current->mm == NULL
+Message-ID: <20250425133416.63d3e3b8@gandalf.local.home>
+In-Reply-To: <2fjdalrdgadbt6kmv7wgbc2vs42ojkwh2vj6yfwlttmoo2rijs@5gtrvow66g7m>
+References: <20250425145422.132820147@goodmis.org>
+	<20250425145813.518795213@goodmis.org>
+	<2fjdalrdgadbt6kmv7wgbc2vs42ojkwh2vj6yfwlttmoo2rijs@5gtrvow66g7m>
 X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -49,60 +50,31 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Fri, 25 Apr 2025 08:24:47 -0700
-Namhyung Kim <namhyung@kernel.org> wrote:
-> > +/*
-> > + * Returns:
-> > +*     > 0 : if already queued.
-> > + *      0 : if it performed the queuing
-> > + *    < 0 : if it did not get queued.
-> > + */
-> > +static int deferred_request(struct perf_event *event)
-> > +{
-> > +	struct callback_head *work = &event->pending_unwind_work;
-> > +	int pending;
-> > +	int ret;  
+On Fri, 25 Apr 2025 08:09:55 -0700
+Josh Poimboeuf <jpoimboe@kernel.org> wrote:
+
+> On Fri, Apr 25, 2025 at 10:54:33AM -0400, Steven Rostedt wrote:
+> > From: Steven Rostedt <rostedt@goodmis.org>
+> > 
+> > To determine if a task is a kernel thread or not, it is more reliable to
+> > use (current->flags & PF_KTHREAD) than to rely on current->mm being NULL.
+> > That is because some kernel tasks (io_uring helpers) may have a mm field.  
 > 
-> I'm not sure if it works for per-CPU events.  The event is shared so any
-> task can request the deferred callchains.  Does it handle if task A
-> requests one and scheduled out before going to the user mode, and task B
-> on the CPU also requests another after that?  I'm afraid not..
+> There's a current->mm check in the user space unwinder (patch 1) which
+> should probably also be converted.
 
-I was afraid of that.
+Bah! OK.
 
-This is no different that what Josh did in his last set in v4. I'm guessing
-the issue is running with "-a", correct?
+I also plan on creating a couple of macros and running a coccinelle script
+to replace all instances in the kernel of:
 
-Could we just not use deferred when running with "-a" for now? Or could we
-possibly just make the deferred stacktrace its own event? Have it be
-possible that perf just registers a signal instance with the deferred
-unwinding logic, and then perf can handle where to write the information. I
-don't know perf well enough to implement that.
+  !(task->flags & PF_KTHREAD) into is_user_thread(task)
 
-Josh's code had it call the unwind_deferred_init() and just used its own
-event to callback to and that was called on hundreds of events when I ran:
+and
 
-  perf record -g <whatever>
+  (task->flags & PF_KTHREAD) into is_kernel_thread(task)
 
-Same if I added the "-a" option.
-
-The above function return values came from Josh's code:
-
-  https://git.kernel.org/pub/scm/linux/kernel/git/jpoimboe/linux.git/tree/kernel/unwind/deferred.c?h=sframe#n173
-
-I just moved it out of deferred.c and into perf itself, and removed the
-cookie logic.
-
-> 
-> > +
-> > +	if (!current->mm || !user_mode(task_pt_regs(current)))
-> > +		return -EINVAL;  
-> 
-> Does it mean it cannot use deferred callstack when it's in the kernel
-> mode like during a syscall?
-
-task_pt_regs(current) will return the regs from when the task entered the
-kernel. So the answer is no, it will still trace if an interrupt happened
-while a task is in a system call.
+As I've already screwed up missing the '!' (or adding it) a couple of
+times. But caught it before posting the patches.
 
 -- Steve
