@@ -1,72 +1,73 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85AB81F3BA9
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 25 Apr 2025 19:48:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C49811A5B92
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 25 Apr 2025 19:56:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745610540; cv=none; b=TCv7tXmXNotsNrym94vus+RTxAfBw++RhzujvAJfm1/jSypoPU2Fsk6++dUc7vXGBfuFn7GMYBr3GDuw1XZoQEY2CukZw+v9YVVoGnTuD+R2P0iuocBMXbq6dGxcOSqORGqVbA9i89IJQV7VcaJmO9VfbPnczDInvB90031+i7Y=
+	t=1745611001; cv=none; b=p5r02SjCEH5E2LOFKC+xkW4PngrmzKj6yazYgloXhzbUeXrXB0NHi1pGOpsoxhJoB09ksx69w9RvhSR1gcfqHxG++IzMg3F2JAuVU46cI5lE80f21lkwBZEiAxyqTFIFD4PGHcQs21XMKX/o1YuZDo5c33xhq2gPKG5CRFr4OJ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745610540; c=relaxed/simple;
-	bh=aqtGkRqBbu1U2b+axzTR7k2vGKCBOVbewJQT47q4o40=;
+	s=arc-20240116; t=1745611001; c=relaxed/simple;
+	bh=jqhNbWJZJQKm3jDFrgR1Oy94a2yWCHf95UZOSaEQwxE=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Q/h+zfFWOR7SwcmV+Yccrz8if1QFOPpQHCypODRkc7Q7s9Ve/ffnsBoF0bu8+QB6VWN0G2uBjg5ZTHyYZQO6ZadVgYURjWFalFHoPYnmOX5mgBs0z+N2KzbMmo6w8fdyl23KYeeqLNtKtzkIj2AE+FmBPgKXaLh8oQ7NOB/gf+c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=aS40h6WG; arc=none smtp.client-ip=170.10.129.124
+	 In-Reply-To:Content-Type; b=C/Xl9Lh/dsEMe8Hw2j5Tl9Y7dgSzDGmD27DiI27IU43YHWKISlgmf3r2MHcN8LtymXefQaJt+TAFIwvFFDXcXbFNJmDgkMtcquCLxsDS8V0J3waWUZY8P+UMSEFLT5969AYU91O0U17TVy97evV0YVQXLqDB2naz8Z/u/EDFED0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=UAULLfte; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aS40h6WG"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UAULLfte"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1745610537;
+	s=mimecast20190719; t=1745610998;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=Iyio0+rdGGHZ3rJEpArzIbX1q77xWWWNHXXnWo3MTWI=;
-	b=aS40h6WGRJE+LWzAoYyMhfWRp9RbJ4VnBlPMs83+/f0hEuZd9eDYb7pgrvXLP3SWjjmMTz
-	+z7udbl5e71j+lAxv0C06hWGFHAhh7B4DZFRDPwtshBiDv2/NiIu8bo9hdU+hLB0wy0PWh
-	PzfB93tBG2L4qXcDplnNnGMSH1mfxnk=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=bE2Dp5Yo0pObZA0Gc62tH8dA81bjnFJ9ScY4Xen6Glg=;
+	b=UAULLfteh0HWaVIQ9RhjgnIveRioHIiJVDk5zWR80Wr72A4b1nnJFLG9y9npYNJM4QYFiO
+	dAbdwUrVmhAoGlxIYau1sLTWQe0i/8evUuGiEZ+mznmEWD3fiMWZxSuyOodo4nPcKlt3wO
+	wBpmHD/WTvMLp0E0jfMCOnzVS9bSXUc=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-611-qpxpNnZCOR2G6uOg_j1AyQ-1; Fri, 25 Apr 2025 15:48:54 -0400
-X-MC-Unique: qpxpNnZCOR2G6uOg_j1AyQ-1
-X-Mimecast-MFC-AGG-ID: qpxpNnZCOR2G6uOg_j1AyQ_1745610533
-Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-440a4e2bad7so5161645e9.0
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 25 Apr 2025 12:48:54 -0700 (PDT)
+ us-mta-624-GUt9rrI6P_SLIJhPT0wpYg-1; Fri, 25 Apr 2025 15:56:37 -0400
+X-MC-Unique: GUt9rrI6P_SLIJhPT0wpYg-1
+X-Mimecast-MFC-AGG-ID: GUt9rrI6P_SLIJhPT0wpYg_1745610996
+Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-43ce8f82e66so12880965e9.3
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 25 Apr 2025 12:56:37 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745610533; x=1746215333;
+        d=1e100.net; s=20230601; t=1745610996; x=1746215796;
         h=content-transfer-encoding:in-reply-to:organization:autocrypt
          :content-language:from:references:cc:to:subject:user-agent
          :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=Iyio0+rdGGHZ3rJEpArzIbX1q77xWWWNHXXnWo3MTWI=;
-        b=DW1jHFsi4IzxyVE0Toz3YtDajYrBPSQ/VdjqD2B8dHj26fjefd1fg+wT+5lZz83T8M
-         Qjp8m/JLsjyFap4aEaucvlkMS08YxJzdURSSCYFhp7BfJAASyrIhVHNWpvZTFvmVLnm5
-         Ggr9RPKKRhTy+zrS4SNH6YZAjP7WmE64Rqo7HzfPbPFHjtNhfabtEKiLea/Y2TWdN9GM
-         hxW+mZWN8w0rcLGI5Yjf3Qn0yWt+TMz49poTe0tK1qvCKW8uYWxvu5K9fuoE6BDrr06A
-         CEC4d9qvIyHc08+3Zqgo6F3MDxaCbWfJ/UCn2sOlJbs/6JEhFXmxP0Yal1RJHQQuchYs
-         SOLQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVfeZ29yEaKz88WCyuzPXR40bT6dETvAEZW1CjU8lPkTS6A6rZlEnTiiFnEZl6K4y65o+/80F/L1NDc+fgarAjmX9U=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwioRLj1PusKctM3+V6zR4rLcPw5FCuJy1KQ3EaRG3plLgWl1Od
-	FDOQqxkvtYx7i58NJP+1dnhTpw596Oy1qQLPGCJuxEyNrnCTHLqhtp+BcBcj38sugM6kYjZfHtK
-	LVDA5iBMaSjluJujqV7Y08sKQar1WKpoOA+5eqV5stLmLxAx6KnzUj4TEc8gtlIxFjwfJtQ==
-X-Gm-Gg: ASbGncuEWE8a3ldYE11/T9c2pe9bpbsV7rvmg2x0G0DKPR7pAMU8UE6rGH5cFMqGCwC
-	RdSYTDDPHRGuByWCOsYos6Wz6dEdrvyRCOLBa8weYwfuHBImbSCT0cFzGBA/TJbBY5cMYALfwvD
-	nFW7Azm1B4DeRsxGbsdkYAXTzvKA4n/C1DarR6FKUFWjcWPDnWWp0F2JigNLpRg41vVtb4k8dGk
-	D3W/F9cpw0qP9pQL/RHoO6HMpvyiuPatn+EXbfWMV+DdgX1OhzLt4N3Xhs6fWjMmCvo4NtwqUV8
-	Y38glLgEtz0qseiQFp4WyIs20HcUaRypR3sNevbt3Q==
-X-Received: by 2002:a05:600c:45d0:b0:43d:5264:3cf0 with SMTP id 5b1f17b1804b1-4409c4de02dmr67828755e9.11.1745610533012;
-        Fri, 25 Apr 2025 12:48:53 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHCFfrtzSc+UtPRGo0BIvDxCf3n2hnwRdIbAoPATpGWLsnc5w/p+CDOEbj1RMEvVgHKgNRMBw==
-X-Received: by 2002:a05:600c:45d0:b0:43d:5264:3cf0 with SMTP id 5b1f17b1804b1-4409c4de02dmr67828555e9.11.1745610532645;
-        Fri, 25 Apr 2025 12:48:52 -0700 (PDT)
-Received: from [192.168.3.141] (p4ff23df8.dip0.t-ipconnect.de. [79.242.61.248])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-440a5310ad2sm34335985e9.21.2025.04.25.12.48.51
+        bh=bE2Dp5Yo0pObZA0Gc62tH8dA81bjnFJ9ScY4Xen6Glg=;
+        b=GLyTPq0SkAbUf2KOiGYkAstecyqHw4kvtFGHkoZu5TDmJwxDWDqBL9/cP/LYefxxOW
+         VeCSjj9/XnMvtM/IIt8gQtKNjmowYmvcHnd79wouPUzMjC+bb+O3zKJdyIz30CiitifQ
+         2Vp4Lo85EB0Rn/9tycil2k7KdEMAe7PmFUw32LqLAAymlKxhLHpozF/0Un9/VhDD4hp0
+         ECFHjHqZatEnmTokvtLEh0+L4vTXM9KSx0HixleDupL4j2fc3TYdO7+An8kETtsHcHBs
+         6nOtZyAjS++dFthW53WDRiSZ14nrqiUrP2T5Jw/cEhXXU3xgtt27fgJt2qutupLbckcR
+         HfEA==
+X-Forwarded-Encrypted: i=1; AJvYcCULju2bCCbhtzi8L2fUUfFESF0g3A1KW78HDi9vosEA8QpZK/tZWQdWu3ouontH2EvjdeU+sEmMpXyYUNslEoIq/ME=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyFov/8SljJkZ2Ht5Ju2zehM57weu7KTSrTfN5a8KSDTGqpFm7h
+	ZKNV1oCdgOiTj7VDVQGEEziZB5L5kxklb7sV8xoMWdbfAnBXwmrU2q6imORwL6w2Y8ZfmE5JQgt
+	S56cUY4BcsirS8bg44H17TJTwTELTBpG4B8ZAHr3DjMSEW/pn3a8DUjTMnUC0q/O2IuzrGQ==
+X-Gm-Gg: ASbGncvDosNIgp0IWJJ8raOaksF+rR2fp1eHOAzn8fEGVXhbE2wOfs5KkXYL8gd6qNz
+	SzvPUFT7n+q9eGrA/65pfqGNAa3px0H7vB6UbnuxD2UsfjtvFUaJ5ZVaoBqhRH/0Q0/zi4FMmNP
+	yA+Rs6xpNeM+bqm6ID2xhCzJGARVN6JWi7vRwP40nyrBweg2UO+awpkkeXr6DarHqlIKuQoFTE3
+	vRNTt5yHxwS9Hq0U5iElhjeC016Csa0kVI0qMAl3PMhdfPNotu/yyoonsMTpuGEHjKY8O/4lQWk
+	6tQhb7chrM6nxlxtrkZ77rq19EJQnoctivDdE20iPSCgoNZidI6eXBr6mmLgKVNX5xLh2NvlQH9
+	0du0AMuSMHlnVzDF625RiTmMaJB5yBP3vq3Jm
+X-Received: by 2002:a05:600c:a4d:b0:440:68db:9fef with SMTP id 5b1f17b1804b1-440a669b52cmr29619575e9.20.1745610996268;
+        Fri, 25 Apr 2025 12:56:36 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHDTvNhYItxE+4Y0RI+qao1NGVdbXY23J5yiDp5FychjNVZxG0vly/CBGVBOu3qdA9XOIO6hw==
+X-Received: by 2002:a05:600c:a4d:b0:440:68db:9fef with SMTP id 5b1f17b1804b1-440a669b52cmr29619355e9.20.1745610995912;
+        Fri, 25 Apr 2025 12:56:35 -0700 (PDT)
+Received: from ?IPV6:2003:cb:c70f:6900:6c56:80f8:c14:6d2a? (p200300cbc70f69006c5680f80c146d2a.dip0.t-ipconnect.de. [2003:cb:c70f:6900:6c56:80f8:c14:6d2a])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4409d2d86f7sm66114125e9.32.2025.04.25.12.56.33
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 25 Apr 2025 12:48:52 -0700 (PDT)
-Message-ID: <78f88303-6b00-42cf-8977-bf7541fa45a9@redhat.com>
-Date: Fri, 25 Apr 2025 21:48:50 +0200
+        Fri, 25 Apr 2025 12:56:34 -0700 (PDT)
+Message-ID: <519e3bbf-b198-4e55-81e8-0a77d8ab03d3@redhat.com>
+Date: Fri, 25 Apr 2025 21:56:33 +0200
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -144,81 +145,12 @@ Autocrypt: addr=david@redhat.com; keydata=
 Organization: Red Hat
 In-Reply-To: <aAvjJOmvm5GsZ-JN@x1.local>
 X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: z48Kah73YxbL6MzX_Y5LoOg6bocjzc2ox_FVH4xl-88_1745610533
+X-Mimecast-MFC-PROC-ID: g2EOFzXLy5jiR-ohWGpNu2XS2UXqpWzK3dEVLvwaN0Q_1745610996
 X-Mimecast-Originator: redhat.com
 Content-Language: en-US
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On 25.04.25 21:31, Peter Xu wrote:
-> On Fri, Apr 25, 2025 at 10:17:06AM +0200, David Hildenbrand wrote:
->> ... by factoring it out from track_pfn_remap().
->>
->> For PMDs/PUDs, actually check the full range, and trigger a fallback
->> if we run into this "different memory types / cachemodes" scenario.
-> 
-> The current patch looks like to still pass PAGE_SIZE into the new helper at
-> all track_pfn_insert() call sites, so it seems this comment does not 100%
-> match with the code?  Or I may have misread somewhere.
-
-No, you're right, while reshuffling the patches I forgot to add the 
-actual PMD/PUD size.
-
-> 
-> Maybe it's still easier to keep the single-pfn lookup to never fail..  more
-> below.
-> 
-
-[...]
-
->>   /*
->> @@ -1556,8 +1553,23 @@ static inline void untrack_pfn_clear(struct vm_area_struct *vma)
->>   extern int track_pfn_remap(struct vm_area_struct *vma, pgprot_t *prot,
->>   			   unsigned long pfn, unsigned long addr,
->>   			   unsigned long size);
->> -extern void track_pfn_insert(struct vm_area_struct *vma, pgprot_t *prot,
->> -			     pfn_t pfn);
->> +
->> +/**
->> + * pfnmap_sanitize_pgprot - sanitize the pgprot for a pfn range
-> 
-> Nit: s/sanitize/update|setup|.../?
-> 
-> But maybe you have good reason to use sanitize.  No strong opinions.
-
-What it does on PAT (only implementation so far ...) is looking up the 
-memory type to select the caching mode that can be use.
-
-"sanitize" was IMHO a good fit, because we must make sure that we don't 
-use the wrong caching mode.
-
-update/setup/... don't make that quite clear. Any other suggestions?
-
-> 
->> + * @pfn: the start of the pfn range
->> + * @size: the size of the pfn range
->> + * @prot: the pgprot to sanitize
->> + *
->> + * Sanitize the given pgprot for a pfn range, for example, adjusting the
->> + * cachemode.
->> + *
->> + * This function cannot fail for a single page, but can fail for multiple
->> + * pages.
->> + *
->> + * Returns 0 on success and -EINVAL on error.
->> + */
->> +int pfnmap_sanitize_pgprot(unsigned long pfn, unsigned long size,
->> +		pgprot_t *prot);
->>   extern int track_pfn_copy(struct vm_area_struct *dst_vma,
->>   		struct vm_area_struct *src_vma, unsigned long *pfn);
->>   extern void untrack_pfn_copy(struct vm_area_struct *dst_vma,
->> diff --git a/mm/huge_memory.c b/mm/huge_memory.c
->> index fdcf0a6049b9f..b8ae5e1493315 100644
->> --- a/mm/huge_memory.c
->> +++ b/mm/huge_memory.c
->> @@ -1455,7 +1455,9 @@ vm_fault_t vmf_insert_pfn_pmd(struct vm_fault *vmf, pfn_t pfn, bool write)
->>   			return VM_FAULT_OOM;
->>   	}
 >>   
 >> -	track_pfn_insert(vma, &pgprot, pfn);
 >> +	if (pfnmap_sanitize_pgprot(pfn_t_to_pfn(pfn), PAGE_SIZE, &pgprot))
@@ -226,20 +158,10 @@ update/setup/... don't make that quite clear. Any other suggestions?
 > 
 > Would "pgtable" leak if it fails?  If it's PAGE_SIZE, IIUC it won't ever
 > trigger, though.
-> 
-> Maybe we could have a "void pfnmap_sanitize_pgprot_pfn(&pgprot, pfn)" to
-> replace track_pfn_insert() and never fail?  Dropping vma ref is definitely
-> a win already in all cases.
 
-It could be a simple wrapper around pfnmap_sanitize_pgprot(), yes. 
-That's certainly helpful for the single-page case.
+Missed that comment. I can document that pgprot will only be touched if 
+the function succeeds.
 
-Regarding never failing here: we should check the whole range. We have 
-to make sure that none of the pages has a memory type / caching mode 
-that is incompatible with what we setup.
-
-
-Thanks a bunch for the review!
 -- 
 Cheers,
 
