@@ -1,26 +1,26 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 463EE1598F4;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4643915A85A;
 	Fri, 25 Apr 2025 02:38:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745548706; cv=none; b=HAX5Z8MWiKenSS/mDAQRh5rhPBXT+zs7KUvGssbFT4q0BYy7BFIntqHyzgnqyV1HKeaZAYYfw/9wR4H9XnpB7KPA6VKcuozZmrYsBIg3CjD1IpNOeop0k21MCVNJWODMUJmTnn56WwMpqLT68PO54bR1OHzIxOS7Y447sp+anDc=
+	t=1745548706; cv=none; b=g+V02FpiiIcnDOeKZogEmctTbMaGJSk74tmCddfmHGUbFPIHmDVM2f2mUE1TZtNPDMAj2M6EtOEfMLlUyCM46OPR8a6cEuxB9bvXnspiObqLYxGFfFya1Cp3M5NSzn5wuPc388nKH92w7ERnB+Pm+ygUSeQFf31eP9Ji4uRpti4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1745548706; c=relaxed/simple;
-	bh=2H1XIll2hXk3j2VZNCqrfaT6WOwO5sLlbruYPDQMmOg=;
+	bh=CayS5OAoG+jEWAfNo0q90M7R6fNDrO+CxAEV6GDanqw=;
 	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=Fgn91ftULkSxkzDTR0zx0TRWVR33piEoFlOTjHJwwoHau/AMUUCYjoBEveVFB+5W2jxqJlRo109eiSnJBLBZ8IG0zOTj29rKS/Mhqkmea7w46/K4W5xeEwvGVwRmp1cpvb1VcO2EEWoE/q4VWSbfm/v27s3D/vDLmuc7KHECsU4=
+	 Content-Type; b=QJsmus7FXUQqH0J+yfQUv3aMM8bamLjiK2XgNMb1w5IQSWwSmwslL6Y0o3BigX1SVmW4bFTR81DL6ueyJ5P7pCBPFEmaZD9oLaDtpY75W59w9Se6ZJnb8WZCjcuooyIHMPOLNzIekzMtbp+RzaspTmq7K9oO7xZmZujQ5UKicAU=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D15BDC4CEEF;
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C6EC3C4CEEC;
 	Fri, 25 Apr 2025 02:38:25 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.98)
 	(envelope-from <rostedt@goodmis.org>)
-	id 1u88zG-0000000HC7v-3MfY;
+	id 1u88zG-0000000HC7R-2eDi;
 	Thu, 24 Apr 2025 22:40:22 -0400
-Message-ID: <20250425024022.652143069@goodmis.org>
+Message-ID: <20250425024022.477374378@goodmis.org>
 User-Agent: quilt/0.68
-Date: Thu, 24 Apr 2025 22:37:53 -0400
+Date: Thu, 24 Apr 2025 22:37:52 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org,
  linux-trace-kernel@vger.kernel.org
@@ -39,8 +39,7 @@ Cc: Masami Hiramatsu <mhiramat@kernel.org>,
  Borislav Petkov <bp@alien8.de>,
  Dave Hansen <dave.hansen@linux.intel.com>,
  "H. Peter Anvin" <hpa@zytor.com>
-Subject: [PATCH 3/6] x86/asm: Use CFI_* macros in SYM_FUNC_* macros so they can be added
- to VDSO
+Subject: [PATCH 2/6] x86/asm: Avoid emitting DWARF CFI for non-VDSO
 References: <20250425023750.669174660@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -52,157 +51,90 @@ Content-Type: text/plain; charset=UTF-8
 
 From: Josh Poimboeuf <jpoimboe@kernel.org>
 
-Add CFI_STARTPROC and CFI_ENDPROC annotations to the SYM_FUNC_* macros
-so the VDSO asm functions don't need to add them manually.  Note this
-only affects VDSO, the CFI_* macros are empty for the kernel proper.
+It was decided years ago that .cfi_* annotations aren't maintainable in
+the kernel.  They were replaced by objtool unwind hints.  For the kernel
+proper, ensure the CFI_* macros don't do anything.
+
+On the other hand the VDSO library *does* use them, so user space can
+unwind through it.
+
+Make sure these macros only work for VDSO.  They aren't actually being
+used outside of VDSO anyway, so there's no functional change.
 
 Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
-[ Fixed rebased issues. ]
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- arch/x86/entry/vdso/vdso-layout.lds.S   |  2 +-
- arch/x86/entry/vdso/vgetrandom-chacha.S |  2 --
- arch/x86/entry/vdso/vsgx.S              |  4 ---
- arch/x86/include/asm/linkage.h          | 33 ++++++++++++++++++++-----
- arch/x86/include/asm/vdso.h             |  1 -
- 5 files changed, 28 insertions(+), 14 deletions(-)
+ arch/x86/include/asm/dwarf2.h | 51 ++++++++++++++++++++++++-----------
+ 1 file changed, 35 insertions(+), 16 deletions(-)
 
-diff --git a/arch/x86/entry/vdso/vdso-layout.lds.S b/arch/x86/entry/vdso/vdso-layout.lds.S
-index ec1ac191a057..60747905de2b 100644
---- a/arch/x86/entry/vdso/vdso-layout.lds.S
-+++ b/arch/x86/entry/vdso/vdso-layout.lds.S
-@@ -1,5 +1,5 @@
- /* SPDX-License-Identifier: GPL-2.0 */
--#include <asm/vdso.h>
-+#include <asm/page_types.h>
- #include <asm/vdso/vsyscall.h>
- #include <vdso/datapage.h>
- 
-diff --git a/arch/x86/entry/vdso/vgetrandom-chacha.S b/arch/x86/entry/vdso/vgetrandom-chacha.S
-index cc82da9216fb..a33212594731 100644
---- a/arch/x86/entry/vdso/vgetrandom-chacha.S
-+++ b/arch/x86/entry/vdso/vgetrandom-chacha.S
-@@ -22,7 +22,6 @@ CONSTANTS:	.octa 0x6b20657479622d323320646e61707865
-  *	rcx: number of 64-byte blocks to write to output
-  */
- SYM_FUNC_START(__arch_chacha20_blocks_nostack)
--	CFI_STARTPROC
- .set	output,		%rdi
- .set	key,		%rsi
- .set	counter,	%rdx
-@@ -175,5 +174,4 @@ SYM_FUNC_START(__arch_chacha20_blocks_nostack)
- 	pxor		temp,temp
- 
- 	ret
--	CFI_ENDPROC
- SYM_FUNC_END(__arch_chacha20_blocks_nostack)
-diff --git a/arch/x86/entry/vdso/vsgx.S b/arch/x86/entry/vdso/vsgx.S
-index 37a3d4c02366..c0342238c976 100644
---- a/arch/x86/entry/vdso/vsgx.S
-+++ b/arch/x86/entry/vdso/vsgx.S
-@@ -24,8 +24,6 @@
- .section .text, "ax"
- 
- SYM_FUNC_START(__vdso_sgx_enter_enclave)
--	/* Prolog */
--	.cfi_startproc
- 	push	%rbp
- 	.cfi_adjust_cfa_offset	8
- 	.cfi_rel_offset		%rbp, 0
-@@ -143,8 +141,6 @@ SYM_FUNC_START(__vdso_sgx_enter_enclave)
- 	jle	.Lout
- 	jmp	.Lenter_enclave
- 
--	.cfi_endproc
--
- _ASM_VDSO_EXTABLE_HANDLE(.Lenclu_eenter_eresume, .Lhandle_exception)
- 
- SYM_FUNC_END(__vdso_sgx_enter_enclave)
-diff --git a/arch/x86/include/asm/linkage.h b/arch/x86/include/asm/linkage.h
-index b51d8a4673f5..1ba1f208414f 100644
---- a/arch/x86/include/asm/linkage.h
-+++ b/arch/x86/include/asm/linkage.h
-@@ -40,6 +40,10 @@
- 
- #ifdef __ASSEMBLER__
- 
-+#ifndef LINKER_SCRIPT
-+#include <asm/dwarf2.h>
-+#endif
-+
- #if defined(CONFIG_MITIGATION_RETHUNK) && !defined(__DISABLE_EXPORTS) && !defined(BUILD_VDSO)
- #define RET	jmp __x86_return_thunk
- #else /* CONFIG_MITIGATION_RETPOLINE */
-@@ -112,34 +116,51 @@
- # define SYM_FUNC_ALIAS_MEMFUNC	SYM_FUNC_ALIAS
+diff --git a/arch/x86/include/asm/dwarf2.h b/arch/x86/include/asm/dwarf2.h
+index 302e11b15da8..65d958ef1178 100644
+--- a/arch/x86/include/asm/dwarf2.h
++++ b/arch/x86/include/asm/dwarf2.h
+@@ -6,6 +6,15 @@
+ #warning "asm/dwarf2.h should be only included in pure assembly files"
  #endif
  
-+#define __SYM_FUNC_START				\
-+	CFI_STARTPROC ASM_NL
++#ifdef BUILD_VDSO
 +
-+#define __SYM_FUNC_END					\
-+	CFI_ENDPROC ASM_NL
++	/*
++	 * For the vDSO, emit both runtime unwind information and debug
++	 * symbols for the .dbg file.
++	 */
 +
- /* SYM_TYPED_FUNC_START -- use for indirectly called globals, w/ CFI type */
- #define SYM_TYPED_FUNC_START(name)				\
- 	SYM_TYPED_START(name, SYM_L_GLOBAL, SYM_F_ALIGN)	\
-+	__SYM_FUNC_START					\
- 	ENDBR
- 
- /* SYM_FUNC_START -- use for global functions */
- #define SYM_FUNC_START(name)				\
--	SYM_START(name, SYM_L_GLOBAL, SYM_F_ALIGN)
-+	SYM_START(name, SYM_L_GLOBAL, SYM_F_ALIGN)	\
-+	__SYM_FUNC_START
- 
- /* SYM_FUNC_START_NOALIGN -- use for global functions, w/o alignment */
- #define SYM_FUNC_START_NOALIGN(name)			\
--	SYM_START(name, SYM_L_GLOBAL, SYM_A_NONE)
-+	SYM_START(name, SYM_L_GLOBAL, SYM_A_NONE)	\
-+	__SYM_FUNC_START
- 
- /* SYM_FUNC_START_LOCAL -- use for local functions */
- #define SYM_FUNC_START_LOCAL(name)			\
--	SYM_START(name, SYM_L_LOCAL, SYM_F_ALIGN)
-+	SYM_START(name, SYM_L_LOCAL, SYM_F_ALIGN)	\
-+	__SYM_FUNC_START
- 
- /* SYM_FUNC_START_LOCAL_NOALIGN -- use for local functions, w/o alignment */
- #define SYM_FUNC_START_LOCAL_NOALIGN(name)		\
--	SYM_START(name, SYM_L_LOCAL, SYM_A_NONE)
-+	SYM_START(name, SYM_L_LOCAL, SYM_A_NONE)	\
-+	__SYM_FUNC_START
- 
- /* SYM_FUNC_START_WEAK -- use for weak functions */
- #define SYM_FUNC_START_WEAK(name)			\
--	SYM_START(name, SYM_L_WEAK, SYM_F_ALIGN)
-+	SYM_START(name, SYM_L_WEAK, SYM_F_ALIGN)	\
-+	__SYM_FUNC_START
- 
- /* SYM_FUNC_START_WEAK_NOALIGN -- use for weak functions, w/o alignment */
- #define SYM_FUNC_START_WEAK_NOALIGN(name)		\
--	SYM_START(name, SYM_L_WEAK, SYM_A_NONE)
-+	SYM_START(name, SYM_L_WEAK, SYM_A_NONE)		\
-+	__SYM_FUNC_START
++	.cfi_sections .eh_frame, .debug_frame
 +
-+#define SYM_FUNC_END(name)				\
-+	__SYM_FUNC_END					\
-+	SYM_END(name, SYM_T_FUNC)
+ #define CFI_STARTPROC		.cfi_startproc
+ #define CFI_ENDPROC		.cfi_endproc
+ #define CFI_DEF_CFA		.cfi_def_cfa
+@@ -21,21 +30,31 @@
+ #define CFI_UNDEFINED		.cfi_undefined
+ #define CFI_ESCAPE		.cfi_escape
  
- #endif /* _ASM_X86_LINKAGE_H */
+-#ifndef BUILD_VDSO
+-	/*
+-	 * Emit CFI data in .debug_frame sections, not .eh_frame sections.
+-	 * The latter we currently just discard since we don't do DWARF
+-	 * unwinding at runtime.  So only the offline DWARF information is
+-	 * useful to anyone.  Note we should not use this directive if we
+-	 * ever decide to enable DWARF unwinding at runtime.
+-	 */
+-	.cfi_sections .debug_frame
+-#else
+-	 /*
+-	  * For the vDSO, emit both runtime unwind information and debug
+-	  * symbols for the .dbg file.
+-	  */
+-	.cfi_sections .eh_frame, .debug_frame
+-#endif
++#else /* !BUILD_VDSO */
++
++/*
++ * On x86, these macros aren't used outside VDSO.  As well they shouldn't be:
++ * they're fragile and very difficult to maintain.
++ */
++
++.macro nocfi args:vararg
++.endm
++
++#define CFI_STARTPROC		nocfi
++#define CFI_ENDPROC		nocfi
++#define CFI_DEF_CFA		nocfi
++#define CFI_DEF_CFA_REGISTER	nocfi
++#define CFI_DEF_CFA_OFFSET	nocfi
++#define CFI_ADJUST_CFA_OFFSET	nocfi
++#define CFI_OFFSET		nocfi
++#define CFI_REL_OFFSET		nocfi
++#define CFI_REGISTER		nocfi
++#define CFI_RESTORE		nocfi
++#define CFI_REMEMBER_STATE	nocfi
++#define CFI_RESTORE_STATE	nocfi
++#define CFI_UNDEFINED		nocfi
++#define CFI_ESCAPE		nocfi
++
++#endif /* !BUILD_VDSO */
  
-diff --git a/arch/x86/include/asm/vdso.h b/arch/x86/include/asm/vdso.h
-index b7253ef3205a..c4290dadba66 100644
---- a/arch/x86/include/asm/vdso.h
-+++ b/arch/x86/include/asm/vdso.h
-@@ -2,7 +2,6 @@
- #ifndef _ASM_X86_VDSO_H
- #define _ASM_X86_VDSO_H
- 
--#include <asm/page_types.h>
- #include <linux/linkage.h>
- #include <linux/init.h>
- 
+ #endif /* _ASM_X86_DWARF2_H */
 -- 
 2.47.2
 
