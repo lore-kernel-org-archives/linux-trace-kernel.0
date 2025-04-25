@@ -1,47 +1,52 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6B621C84AE;
-	Fri, 25 Apr 2025 03:54:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB29A197A76;
+	Fri, 25 Apr 2025 06:35:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745553252; cv=none; b=N4ZwonGWG2SgxZQPMfPEqC8B1F35AgFss/SXfpi3T6sQyOqXAZNGjw5PAUC7LWfa+giVO0qKRxvDLa98lkMJAwDaWRHbhk0pvGo09sbT3cb9F+DkJqMsNxET8Mf2c9HhRRZadRtjaQ7ubD4WujDPNKn05YXWw4jLsTNdGEHQTf8=
+	t=1745562906; cv=none; b=cQ1K6uXZXg98D3In86od7+z8lQM5U38BB2kLSEMlMGV7iQ4O39xNopKa2iSPhL+G4LGxaPDY4fWrFUN6XE/umaXfqRhFFM7//ZPH9mjhJESv9v8l7Z+34bab9s+rKwmmk3JJifo/yLcn6phZgyxQIL9K6358N8/88fQkSLrNhfI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745553252; c=relaxed/simple;
-	bh=hHafEMC1zjbqTr4UVvkBxEJaf9x57Yo6yCgXAZHDcq8=;
+	s=arc-20240116; t=1745562906; c=relaxed/simple;
+	bh=Aqx/cGOnrFZrNXciPbrn78v2PMFDC23F0QG2WsnTUAs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TkRPJ0Qg9SCmhxbuxR2Xd/R0f1M5TBeOa9V6sFDLKHYbYSxdu/7T1gV9uuF8wXQ29A7Jg1fyfx1/ntfsSrKdWF+kG093SBGigZivAWaAkjz8+tccIdtV8NCsc1Q/UMyXD802u8xUmFNnUF3w9hpEBQESMHjkbSJ5QHS3i463Hco=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=ox4Xt8WW; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=KBVc48hBAFSb4lFkHVtOXEBDojUSJ4hhMHqD3eghinYk1qkxI8xebFpz21i1/bcIY1QKD5gbTDCfT0FAWcGwXrX1JUHq2wiZFox4pvdRJfkeu0eARHg1zmluQpnBqZKHkEg+mwvXyfOKvTGTL4TIrjW/NoXdnGivLI+5o45aB/M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=QP+MzwIH; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ylRA9HdN; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ox4Xt8WW"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=7shqdOiVhHCcIAIT4yzufh3XKM7CeHmj+fqBHY1a078=; b=ox4Xt8WWCDLVunCladJZnp2dyB
-	OCHJx3MavjMVWkclCPptvOeryfBsZz4DQgHRXGU4Iq26m88tvgbl0eA03YCG3SceH2J7HvQ5pdRnO
-	oo6rZyqCuo5xj/1liWKPFWWd0tXERxK4ULvxIu2aaami+jeGPPeAM4+H4ykzENbAr8uSJp2jBXi+t
-	BhD0uwmqcs/jtX0esHPRSadX1/BEhASMyqKVJNlhmyFckbwkPz7DY1fxoCBgCRrs+FpzamUYzrBJL
-	rTuLRqhtZAhtjjQ0tzL3jgZw0MXrPJs+WnRS8Cb38lg1oRWC8+1RHbWfPM55wRyNMCjhTNQ3Vtd18
-	anqXgWrQ==;
-Received: from willy by casper.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1u8A8P-0000000Dhqw-4BxZ;
-	Fri, 25 Apr 2025 03:53:54 +0000
-Date: Fri, 25 Apr 2025 04:53:53 +0100
-From: Matthew Wilcox <willy@infradead.org>
-To: nifan.cxl@gmail.com
-Cc: rostedt@goodmis.org, mhiramat@kernel.org, akpm@linux-foundation.org,
-	david@redhat.com, fan.ni@samsung.com, yang@os.amperecomputing.com,
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	linux-mm@kvack.org, npache@redhat.com, mcgrof@kernel.org,
-	a.manzanares@samsung.com, dave@stgolabs.net,
-	Baolin Wang <baolin.wang@linux.alibaba.com>
-Subject: Re: [PATCH v3] khugepaged: Pass folio instead of head page to trace
- events
-Message-ID: <aAsHUZ6HTGFBRyXO@casper.infradead.org>
-References: <20250425002425.533698-1-nifan.cxl@gmail.com>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="QP+MzwIH";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ylRA9HdN"
+Date: Fri, 25 Apr 2025 08:34:56 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1745562902;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=gN1TQUuXLsT2GFpQe5TlMWweD4/kCA/3ex6aTZSUynk=;
+	b=QP+MzwIHrh3yixUpvyxhXttXLqSsRO67GyQEnS+Jfgv3+4B3KZLaAZtvAXSa1OVZgjEpo2
+	tXouI1+GGKPI9UkbGXj7Je9aYTMLjRJEUHCWhapAV8RKwOAMzqMPBLW2MiTpM/qbTKuDPd
+	wZjqd462yiTY4zBIiwGfWJs8vgdLcvI2rRd8QOkClX0iIuiCwcSG8XAIOuMn8qyc4JqgRQ
+	pfNa+uGHNVcfCA9wSMDPy1c8xlXNk6FJaGfGet5xIdvL0ol0WPtTZyBsBUDxhY7zPdFDk3
+	LkI/HCfwq9T7UTMhdhN4bV8q/weGirzjbSHZcwRRDqXdYghPZ4H8WLdTzNSQ+Q==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1745562902;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=gN1TQUuXLsT2GFpQe5TlMWweD4/kCA/3ex6aTZSUynk=;
+	b=ylRA9HdNcA4lGr446Fp7K5Sc9rG4TOiJbQhHtCK10Wa360QNdEZdtI1NXoUXIdT6OXqOuN
+	soSqi48tUvoDn9Dg==
+From: Nam Cao <namcao@linutronix.de>
+To: Gabriele Monaco <gmonaco@redhat.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>,
+	linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
+	john.ogness@linutronix.de
+Subject: Re: [PATCH v4 20/22] rv: Add rtapp_sleep monitor
+Message-ID: <20250425063456.NBE35YHR@linutronix.de>
+References: <cover.1745390829.git.namcao@linutronix.de>
+ <c23cb5ef10310f978c3f90f07c2dbb9b042e8b01.1745390829.git.namcao@linutronix.de>
+ <c321c7350ec10f9f358695acd765d2dbd067eeb2.camel@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -50,21 +55,71 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250425002425.533698-1-nifan.cxl@gmail.com>
+In-Reply-To: <c321c7350ec10f9f358695acd765d2dbd067eeb2.camel@redhat.com>
 
-On Thu, Apr 24, 2025 at 05:16:51PM -0700, nifan.cxl@gmail.com wrote:
-> From: Fan Ni <fan.ni@samsung.com>
+On Thu, Apr 24, 2025 at 03:55:34PM +0200, Gabriele Monaco wrote:
+> I've been playing with these monitors, code-wise they look good.
+> I tested a bit and they seem to work without many surprises by doing
+> something as simple as:
 > 
-> The trace functions trace_mm_collapse_huge_page_isolate() and
-> trace_mm_khugepaged_scan_pmd() each have a single user, which
-> always passes in the head page of a folio.
-> Refactor both functions to take a folio directly.
-> 
-> Signed-off-by: Fan Ni <fan.ni@samsung.com>
-> Reviewed-by: Nico Pache <npache@redhat.com>
-> Reviewed-by: Davidlohr Bueso <dave@stgolabs.net>
-> Reviewed-by: Baolin Wang <baolin.wang@linux.alibaba.com>
-> Reviewed-by: Yang Shi <yang@os.amperecomputing.com>
-> Acked-by: David Hildenbrand <david@redhat.com>
+> perf stat -e rv:error_sleep stress-ng --cpu-sched 1 -t 10s
+>   -- shows several errors --
 
-Reviewed-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+This one is a monitor's bug.
+
+The monitor mistakenly sees the task getting woken up, *then* sees it going
+to sleep.
+
+This is due to trace_sched_switch() being called with a stale 'prev_state'.
+'prev_state' is read at the beginning of __schedule(), but
+trace_sched_switch() is invoked a bit later. Therefore if task->__state is
+changed inbetween, 'prev_state' is not the value of task->__state.
+
+The monitor checks (prev_state & TASK_INTERRUPTIBLE) to determine if the
+task is going to sleep. This can be incorrect due to the race above. The
+monitor sees the task going to sleep, but actually it is just preempted.
+
+I think this also answers the race you observed with the srs monitor?
+
+> perf stat -e rv:error_sleep stress-ng --prio-inv 1 --prio-inv-policy rr
+>   -- shows only 1 error (normal while starting the program?) --
+> 
+> Not quite sound, but does it look a reasonable test to you?
+
+The above command use mutexes with priority inheritance. That is good for
+real-time. The errors are due to real-time tasks being delayed by
+waitpid().
+
+Priority inheritance can be disabled with "--prio-inv-type none". Then you
+will see lots of errors with mutexes.
+
+> I quickly tried the same with the other monitor comparing the number of
+> errors with the page_faults generated by perf, but that didn't make too
+> much sense. Perhaps I'm doing something wrong here though (the number
+> reported by perf for page faults feels a bit too high).
+> 
+> perf stat -e page-faults -e rv:error_pagefault stress-ng --cyclic 1
+
+This command run a non-real-time thread to do setup, and a cyclic real-time
+thread. The number of pagefaults of each thread would be roughly
+proportional to the code size executed by each thread. As the non-real-time
+thread's code size is bigger, it sounds reasonable that the number of
+pagefaults is greater than the number of monitor's warnings.
+> 
+> Anyway, the monitor looks good to me
+> 
+>   Reviewed-by: Gabriele Monaco <gmonaco@redhat.com>
+> 
+> but it'd be nice if you have tips to share how to quickly test it (e.g.
+> without writing a custom workload).
+
+I tested the monitor on a real system. My system has some real-time audio
+processing processes (pipewire, firefox running youtube), yours also
+should.
+
+But thanks so much for testing with stress-ng. My testing didn't stress the
+system enough for the above race to happen. I will give stress-ng a few
+runs before the next version.
+
+Best regards,
+Nam
