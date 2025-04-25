@@ -1,69 +1,69 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E78223535E
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38D712356A4
 	for <linux-trace-kernel@vger.kernel.org>; Fri, 25 Apr 2025 08:17:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745569051; cv=none; b=Qtygk1skLJjFlwB1NOMuaV2tcqQlT3i7vMOfEDunZfxMHaY/SY9cW5ztxx6mpKkBvaWHdhkbUGCYwwKuLfi7XFnetmSAWa8n71dZk0Ndh6bh4lkqkqwDAuba/hHcedYnZi+DHLZ9kiFCPbSFEo3gwIb+fcwBtdP3Gf2g+TR/EYc=
+	t=1745569052; cv=none; b=m/1sX3qnzb+omUd8SfgrBe++L5xCZtyDkswZusbC5etkZkcNBjPuwX1hpBtRDzscwDJ5Uq/2kQZYBOccgumT0mQxEY7wa1ld2cu5txh3L6RpvM7AuW9iNKJV8bxTCW13G0Rnz7EYjEtGAaCIxRx4KSjj/Jj54ESFoAsdpcy9ysY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745569051; c=relaxed/simple;
-	bh=rUDJGg2xixsJ9geC17OnQRzeOPjqu3DYWFdT6W++xX0=;
+	s=arc-20240116; t=1745569052; c=relaxed/simple;
+	bh=eykL+iUZBmhrQjrl63IlsUE+hE0bFmZCe3pannV5u/w=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:content-type; b=Gm6JLnLCLsKCPVAdauaps4Y67fFBq0SfKdtJhBp/qigFaP/qOR+BS4Rgs0x5zpGJ7jcTIQVONZ9bhRLMpMJRZimlto4wlFLyA46iwm3VpBY59pMGGsVw6loShYXlRCCF84O9oGVAUePNh2cnXQ7mosZz6MNaS3KE9ovItkDdCok=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ZxyOIZjZ; arc=none smtp.client-ip=170.10.133.124
+	 MIME-Version:content-type; b=Hs4lnm2p4AJ+6UxwOSMbHaBDT7CFmJxdN6NCo7BDyoFkn/sfazqakCRNFhsJ90ROgMPswGZnN2B1eoOIvxauqMGs92IAeKfgrjKlux9+fEmjI5VqdLryLTgyjxBofDkFSoz98Z4gz3HdELzaakZT04BaxxKBo4a09LXuc3sIu5Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=gaTPr6u9; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZxyOIZjZ"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gaTPr6u9"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1745569048;
+	s=mimecast20190719; t=1745569049;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Va9GMEIBRGZSICWJDrjnUC4vZ0n+XJyTsP+h0wQhX1w=;
-	b=ZxyOIZjZImjx1rJD/pg88Ba6YvG4R0Ggd4n8omqhtxXBYB7L8EkC+FiS687hziXHUBRsLk
-	QY62btTO+RYb5KitAlzFpRu9M+4lVbtZ9waabrbqYCdH8CLFoI+jPJcJjY0IFtcm3VNhIa
-	O+yaj5rhNNj11BfDdKU4+Qxp1DOxHmY=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=KCYBdpwfjCOhXvT2DzVINMJSRWNfDi2B6w/Q4Y3NEy8=;
+	b=gaTPr6u93hTPOdilhUwA8IRG+rBHnk2WkHpg9FIUNk1KqK2eUClCrTzx8Lw+ugK0imrKbp
+	qeeLQkkTKxL4lXPWlzwM9MpXbOED34GSEevSbbLZ9TNmowwII8pMl6clCPLAsXjRwc3j6K
+	gLNKR3YwoJSaiKamPpfpgCJod78jXnA=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-682-3DRxEu7UNdirVQDQUK_F8Q-1; Fri, 25 Apr 2025 04:17:24 -0400
-X-MC-Unique: 3DRxEu7UNdirVQDQUK_F8Q-1
-X-Mimecast-MFC-AGG-ID: 3DRxEu7UNdirVQDQUK_F8Q_1745569044
-Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-43d5ca7c86aso10774145e9.0
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 25 Apr 2025 01:17:24 -0700 (PDT)
+ us-mta-374-9nw9-ezSPWCKBSwYpaFGgQ-1; Fri, 25 Apr 2025 04:17:27 -0400
+X-MC-Unique: 9nw9-ezSPWCKBSwYpaFGgQ-1
+X-Mimecast-MFC-AGG-ID: 9nw9-ezSPWCKBSwYpaFGgQ_1745569046
+Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-39c2da64df9so989375f8f.0
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 25 Apr 2025 01:17:26 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745569043; x=1746173843;
+        d=1e100.net; s=20230601; t=1745569046; x=1746173846;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Va9GMEIBRGZSICWJDrjnUC4vZ0n+XJyTsP+h0wQhX1w=;
-        b=Pqpa66UI/mHscHtGsBE0X91TD8AQ0wWIrs4xZLnluRtr4cLf+eeLRZsFYUlCglZhf9
-         2vu73ohLDsZqjqBgEfTV2O1nkMilP+/1Px/Plsk2Jx9PxvYmGGCVdP9mPDcq3bkaWtUo
-         tniGQt2A/wDHVGUP9SkgL81ORhk1v9kDWPfkspVrwIeHVKt83Bi0wcy1874s+RZyn30x
-         5U4n1CpAOnkAoRRGKvu7dzIFikt0qnl89YKaPIY3HBGx1ZwqSQo0xOeeAwv3rdx73Z0d
-         iYjUs0q75pf7tf7+8uWoq4D1cNm5xqJg7pphUC1S1SBfMMnIEBTOTi9ASO9mZShgHOk/
-         vzUg==
-X-Forwarded-Encrypted: i=1; AJvYcCV/0JKWpI/BzD8aR+XNLmQG+mP8fifd47Fix69JB6HFAIvvNfY1YoO3o1aQLvLC02a4cDGETA6h3O7RYPhHZK1S01U=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzTcPd8wL49XH5sIw5R+9X5rcwqGVfza6me5SlOIni4lia2l1jY
-	uTkfqbPhKQq9O8H2/1g7t1zyPt5j3JYSUikzknKMyTy1dscm+Km1GVb0uTE/JqPVWvEC6ANZdPP
-	MYlZqpi83z3JthsN6XdFwc2PfQdkNt5/OIBYzol+kcFCQ0Z01uavvYB7HjBygtqC8FdGyIA==
-X-Gm-Gg: ASbGnct77SvxNKoFLheoEZBRRFqDarwuIYJteoSPMJGKvv9rT4lN+BTP0+xnIXTRuKW
-	xZUqyrQA0vrF2dTTxrZx+uEEjwhZ/7PkyNkAP2OEeRqT29RDFR5FRoRtcSszywLkzCR13sNoIOh
-	6isHEAsQo5PxWNF5Jq2kNIQJqb4OpB1ruj8NHTklQrh3cO5Z2T6lUN/4djbE4HxAy5LGbcQ8222
-	dfR+oazbpIyOThb3ANAWcurcLUcTYK1UIbxG+votRfZS6v4pFYl0YFgo+yDo2PUgkqOOp5m7M4T
-	bJIxqDynpu5BGURyCg5ZEXlkg1s9+MLVoG2CcsUKH8+A1/WnO+YFzeS32T/pdsI8OsaNmgI=
-X-Received: by 2002:a05:600c:468c:b0:43c:f616:f08 with SMTP id 5b1f17b1804b1-440a65dedaemr9657335e9.8.1745569043625;
-        Fri, 25 Apr 2025 01:17:23 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEI2/wK7u3Fl0eXpHmAGhyuo+dEfVtSzaDltjMj3X9fGs+yaHAUGB9HAX3epv5bPb/ULJhkQA==
-X-Received: by 2002:a05:600c:468c:b0:43c:f616:f08 with SMTP id 5b1f17b1804b1-440a65dedaemr9657095e9.8.1745569043248;
-        Fri, 25 Apr 2025 01:17:23 -0700 (PDT)
+        bh=KCYBdpwfjCOhXvT2DzVINMJSRWNfDi2B6w/Q4Y3NEy8=;
+        b=Gd5PxO01P7yIRQAkdwM9RtXR0K3TC4DJFgpQVBUMgtHWQ/Qz0MAmmYntw5VokUS2Pk
+         VrNjU7s+RuALt5NG+obZ47C32Z3r8LEZ0bxmKFkxPUXdn3MPpr2E7KcDuDkaAjyD+vO9
+         +JxqK30kZ8Qc/BeEJSz5Q4Iz/furXrVOYpQA7Xqh2AGo9KP5ry9oyEXqmMQ14VhMlhYe
+         BLW3jF7HfweVmfWKMMQ9fNk7YjzbfpJeaKFrdIpmBOhckVyk+FQzS5ChJHdgTFDTKWpe
+         JEKe7sBpmhayrMnSFIortmaN4b57eaU/0dKR5xC99pqlEPZYR0Gm70+N8AbbD4ScMrxG
+         y6rQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVsZ1/UFb0G07kf21RdiojuUWQoFCItE+ckpXCtdDaxofI3oQ7FYOW3WSPvSclgr6fAoavWG4nibRYVj1ZnGRxJDr0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwDCmF371tmsHM73YL6e5/Csnf9C17OUYuLhQJeEMgZ8Jh3nlVL
+	4ih7BUtB3ucScaaSu/y+lLcqzYp/869H3m+x2bDEeMwUBhqw2pf36AL9WasehTvPd2Kmb3DXd4n
+	GW82debpx++selz/kVNfWRoSJHZa2iTd7KxocWk5kDYNRYMkLq8PubRkqQtcsTwu7gcIwag==
+X-Gm-Gg: ASbGncv+9QLHOWSv4JVSQ8i2BOFxEEL5usGhFXkMoZK+8PK+o4PWS/0iue7NVw6T+6u
+	Wy9uqEPub2JOPQr+i9Ecu9+k0kOvaTrke8Rc+sAtMr5d17WGwKD+Ehj2vD5MG6Si94qjb3J9RW+
+	IpEJyoCC6AaY82UNKjcmyruYOybyqkkcytGz1cBpSp+lvPSyfhLpCI9PspcJYEyJ/48a1wHs3wh
+	dv8vNR8mo1hG7x2kEp5Q6b7nPEFvmJq6fCm8Nyoh8azIu06Llf1ewCWXWXfpbhcssEKbG47KVtk
+	rUcEZPP4T1JA0FFiR9jqJit73mg9MW0cgs5rvtXDrvqMMpjRxB2W1nnPBj6m2OcXRr0EWlE=
+X-Received: by 2002:a05:6000:2903:b0:39e:cbc7:ad33 with SMTP id ffacd0b85a97d-3a074e1eb67mr881016f8f.21.1745569045875;
+        Fri, 25 Apr 2025 01:17:25 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFrgRXf9wKgkj7MYbnIuzIHmMlVWh7AZlbAu3PZR/ooKrImfXiUSMtbZSGOay0ZI4PJDGOvtg==
+X-Received: by 2002:a05:6000:2903:b0:39e:cbc7:ad33 with SMTP id ffacd0b85a97d-3a074e1eb67mr880983f8f.21.1745569045483;
+        Fri, 25 Apr 2025 01:17:25 -0700 (PDT)
 Received: from localhost (p200300cbc70f69006c5680f80c146d2a.dip0.t-ipconnect.de. [2003:cb:c70f:6900:6c56:80f8:c14:6d2a])
-        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-4409d2e0241sm48926175e9.37.2025.04.25.01.17.21
+        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-3a073c8ca72sm1597057f8f.4.2025.04.25.01.17.23
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 25 Apr 2025 01:17:22 -0700 (PDT)
+        Fri, 25 Apr 2025 01:17:25 -0700 (PDT)
 From: David Hildenbrand <david@redhat.com>
 To: linux-kernel@vger.kernel.org
 Cc: linux-mm@kvack.org,
@@ -95,9 +95,9 @@ Cc: linux-mm@kvack.org,
 	Jann Horn <jannh@google.com>,
 	Pedro Falcato <pfalcato@suse.de>,
 	Peter Xu <peterx@redhat.com>
-Subject: [PATCH v1 02/11] mm: convert track_pfn_insert() to pfnmap_sanitize_pgprot()
-Date: Fri, 25 Apr 2025 10:17:06 +0200
-Message-ID: <20250425081715.1341199-3-david@redhat.com>
+Subject: [PATCH v1 03/11] x86/mm/pat: introduce pfnmap_track() and pfnmap_untrack()
+Date: Fri, 25 Apr 2025 10:17:07 +0200
+Message-ID: <20250425081715.1341199-4-david@redhat.com>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250425081715.1341199-1-david@redhat.com>
 References: <20250425081715.1341199-1-david@redhat.com>
@@ -108,176 +108,98 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: 3xHId7TJAgJZItu1YyPC9DDI_t5iz7t9enO8ULm4gng_1745569044
+X-Mimecast-MFC-PROC-ID: JtOceqf_K0UK1VSdh5PeXwuF707hRAPy7VnwOxQuGro_1745569046
 X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
 content-type: text/plain; charset="US-ASCII"; x-default=true
 
-... by factoring it out from track_pfn_remap().
-
-For PMDs/PUDs, actually check the full range, and trigger a fallback
-if we run into this "different memory types / cachemodes" scenario.
+Let's provide variants of track_pfn_remap() and untrack_pfn() that won't
+mess with VMAs, to replace the existing interface step-by-step.
 
 Add some documentation.
 
-Will checking each page result in undesired overhead? We'll have to
-learn. Not checking each page looks wrong, though. Maybe we could
-optimize the lookup internally.
-
 Signed-off-by: David Hildenbrand <david@redhat.com>
 ---
- arch/x86/mm/pat/memtype.c | 24 ++++++++----------------
- include/linux/pgtable.h   | 28 ++++++++++++++++++++--------
- mm/huge_memory.c          |  7 +++++--
- mm/memory.c               |  4 ++--
- 4 files changed, 35 insertions(+), 28 deletions(-)
+ arch/x86/mm/pat/memtype.c | 14 ++++++++++++++
+ include/linux/pgtable.h   | 33 +++++++++++++++++++++++++++++++++
+ 2 files changed, 47 insertions(+)
 
 diff --git a/arch/x86/mm/pat/memtype.c b/arch/x86/mm/pat/memtype.c
-index edec5859651d6..193e33251b18f 100644
+index 193e33251b18f..c011d8dd8f441 100644
 --- a/arch/x86/mm/pat/memtype.c
 +++ b/arch/x86/mm/pat/memtype.c
-@@ -1031,7 +1031,6 @@ int track_pfn_remap(struct vm_area_struct *vma, pgprot_t *prot,
- 		    unsigned long pfn, unsigned long addr, unsigned long size)
- {
- 	resource_size_t paddr = (resource_size_t)pfn << PAGE_SHIFT;
--	enum page_cache_mode pcm;
- 
- 	/* reserve the whole chunk starting from paddr */
- 	if (!vma || (addr == vma->vm_start
-@@ -1044,13 +1043,17 @@ int track_pfn_remap(struct vm_area_struct *vma, pgprot_t *prot,
- 		return ret;
- 	}
- 
-+	return pfnmap_sanitize_pgprot(pfn, size, prot);
-+}
-+
-+int pfnmap_sanitize_pgprot(unsigned long pfn, unsigned long size, pgprot_t *prot)
-+{
-+	resource_size_t paddr = (resource_size_t)pfn << PAGE_SHIFT;
-+	enum page_cache_mode pcm;
-+
- 	if (!pat_enabled())
- 		return 0;
- 
--	/*
--	 * For anything smaller than the vma size we set prot based on the
--	 * lookup.
--	 */
- 	pcm = lookup_memtype(paddr);
- 
- 	/* Check memtype for the remaining pages */
-@@ -1065,17 +1068,6 @@ int track_pfn_remap(struct vm_area_struct *vma, pgprot_t *prot,
+@@ -1068,6 +1068,20 @@ int pfnmap_sanitize_pgprot(unsigned long pfn, unsigned long size, pgprot_t *prot
  	return 0;
  }
  
--void track_pfn_insert(struct vm_area_struct *vma, pgprot_t *prot, pfn_t pfn)
--{
--	enum page_cache_mode pcm;
--
--	if (!pat_enabled())
--		return;
--
--	pcm = lookup_memtype(pfn_t_to_phys(pfn));
--	pgprot_set_cachemode(prot, pcm);
--}
--
++int pfnmap_track(unsigned long pfn, unsigned long size, pgprot_t *prot)
++{
++	const resource_size_t paddr = (resource_size_t)pfn << PAGE_SHIFT;
++
++	return reserve_pfn_range(paddr, size, prot, 0);
++}
++
++void pfnmap_untrack(unsigned long pfn, unsigned long size)
++{
++	const resource_size_t paddr = (resource_size_t)pfn << PAGE_SHIFT;
++
++	free_pfn_range(paddr, size);
++}
++
  /*
   * untrack_pfn is called while unmapping a pfnmap for a region.
   * untrack can be called for a specific region indicated by pfn and size or
 diff --git a/include/linux/pgtable.h b/include/linux/pgtable.h
-index b50447ef1c921..91aadfe2515a5 100644
+index 91aadfe2515a5..898a3ab195578 100644
 --- a/include/linux/pgtable.h
 +++ b/include/linux/pgtable.h
-@@ -1500,13 +1500,10 @@ static inline int track_pfn_remap(struct vm_area_struct *vma, pgprot_t *prot,
+@@ -1506,6 +1506,16 @@ static inline int pfnmap_sanitize_pgprot(unsigned long pfn, unsigned long size,
  	return 0;
  }
  
--/*
-- * track_pfn_insert is called when a _new_ single pfn is established
-- * by vmf_insert_pfn().
-- */
--static inline void track_pfn_insert(struct vm_area_struct *vma, pgprot_t *prot,
--				    pfn_t pfn)
-+static inline int pfnmap_sanitize_pgprot(unsigned long pfn, unsigned long size,
++static inline int pfnmap_track(unsigned long pfn, unsigned long size,
 +		pgprot_t *prot)
- {
++{
 +	return 0;
- }
- 
++}
++
++static inline void pfnmap_untrack(unsigned long pfn, unsigned long size)
++{
++}
++
  /*
-@@ -1556,8 +1553,23 @@ static inline void untrack_pfn_clear(struct vm_area_struct *vma)
- extern int track_pfn_remap(struct vm_area_struct *vma, pgprot_t *prot,
- 			   unsigned long pfn, unsigned long addr,
- 			   unsigned long size);
--extern void track_pfn_insert(struct vm_area_struct *vma, pgprot_t *prot,
--			     pfn_t pfn);
+  * track_pfn_copy is called when a VM_PFNMAP VMA is about to get the page
+  * tables copied during copy_page_range(). Will store the pfn to be
+@@ -1570,6 +1580,29 @@ extern int track_pfn_remap(struct vm_area_struct *vma, pgprot_t *prot,
+  */
+ int pfnmap_sanitize_pgprot(unsigned long pfn, unsigned long size,
+ 		pgprot_t *prot);
 +
 +/**
-+ * pfnmap_sanitize_pgprot - sanitize the pgprot for a pfn range
++ * pfnmap_track - track a pfn range
 + * @pfn: the start of the pfn range
 + * @size: the size of the pfn range
-+ * @prot: the pgprot to sanitize
++ * @prot: the pgprot to track
 + *
-+ * Sanitize the given pgprot for a pfn range, for example, adjusting the
-+ * cachemode.
-+ *
-+ * This function cannot fail for a single page, but can fail for multiple
-+ * pages.
++ * Tracking a pfnmap range involves conditionally reserving a pfn range and
++ * sanitizing the pgprot -- see pfnmap_sanitize_pgprot().
 + *
 + * Returns 0 on success and -EINVAL on error.
 + */
-+int pfnmap_sanitize_pgprot(unsigned long pfn, unsigned long size,
-+		pgprot_t *prot);
++int pfnmap_track(unsigned long pfn, unsigned long size, pgprot_t *prot);
++
++/**
++ * pfnmap_untrack - untrack a pfn range
++ * @pfn: the start of the pfn range
++ * @size: the size of the pfn range
++ *
++ * Untrack a pfn range previously tracked through pfnmap_track(), for example,
++ * un-doing any reservation.
++ */
++void pfnmap_untrack(unsigned long pfn, unsigned long size);
  extern int track_pfn_copy(struct vm_area_struct *dst_vma,
  		struct vm_area_struct *src_vma, unsigned long *pfn);
  extern void untrack_pfn_copy(struct vm_area_struct *dst_vma,
-diff --git a/mm/huge_memory.c b/mm/huge_memory.c
-index fdcf0a6049b9f..b8ae5e1493315 100644
---- a/mm/huge_memory.c
-+++ b/mm/huge_memory.c
-@@ -1455,7 +1455,9 @@ vm_fault_t vmf_insert_pfn_pmd(struct vm_fault *vmf, pfn_t pfn, bool write)
- 			return VM_FAULT_OOM;
- 	}
- 
--	track_pfn_insert(vma, &pgprot, pfn);
-+	if (pfnmap_sanitize_pgprot(pfn_t_to_pfn(pfn), PAGE_SIZE, &pgprot))
-+		return VM_FAULT_FALLBACK;
-+
- 	ptl = pmd_lock(vma->vm_mm, vmf->pmd);
- 	error = insert_pfn_pmd(vma, addr, vmf->pmd, pfn, pgprot, write,
- 			pgtable);
-@@ -1577,7 +1579,8 @@ vm_fault_t vmf_insert_pfn_pud(struct vm_fault *vmf, pfn_t pfn, bool write)
- 	if (addr < vma->vm_start || addr >= vma->vm_end)
- 		return VM_FAULT_SIGBUS;
- 
--	track_pfn_insert(vma, &pgprot, pfn);
-+	if (pfnmap_sanitize_pgprot(pfn_t_to_pfn(pfn), PAGE_SIZE, &pgprot))
-+		return VM_FAULT_FALLBACK;
- 
- 	ptl = pud_lock(vma->vm_mm, vmf->pud);
- 	insert_pfn_pud(vma, addr, vmf->pud, pfn, write);
-diff --git a/mm/memory.c b/mm/memory.c
-index 424420349bd3c..c737a8625866a 100644
---- a/mm/memory.c
-+++ b/mm/memory.c
-@@ -2563,7 +2563,7 @@ vm_fault_t vmf_insert_pfn_prot(struct vm_area_struct *vma, unsigned long addr,
- 	if (!pfn_modify_allowed(pfn, pgprot))
- 		return VM_FAULT_SIGBUS;
- 
--	track_pfn_insert(vma, &pgprot, __pfn_to_pfn_t(pfn, PFN_DEV));
-+	pfnmap_sanitize_pgprot(pfn, PAGE_SIZE, &pgprot);
- 
- 	return insert_pfn(vma, addr, __pfn_to_pfn_t(pfn, PFN_DEV), pgprot,
- 			false);
-@@ -2626,7 +2626,7 @@ static vm_fault_t __vm_insert_mixed(struct vm_area_struct *vma,
- 	if (addr < vma->vm_start || addr >= vma->vm_end)
- 		return VM_FAULT_SIGBUS;
- 
--	track_pfn_insert(vma, &pgprot, pfn);
-+	pfnmap_sanitize_pgprot(pfn_t_to_pfn(pfn), PAGE_SIZE, &pgprot);
- 
- 	if (!pfn_modify_allowed(pfn_t_to_pfn(pfn), pgprot))
- 		return VM_FAULT_SIGBUS;
 -- 
 2.49.0
 
