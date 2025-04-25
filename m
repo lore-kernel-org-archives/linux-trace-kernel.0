@@ -1,210 +1,372 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B37FC35963
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 25 Apr 2025 20:23:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55975221D9E
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 25 Apr 2025 20:37:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745612621; cv=none; b=OzYNYmZ2XgcgJRvYxDVqAxaT2QugXXydw2LsYgLQrOepe5yQ9S6SIxJMv84Urp58d7/cDIuZoYJ8El4ULCs6lWe1Psgniq9qWfSrc3Gxq91/YRv/j1DUVvxjojm3PyFb4NDjvqPTkE1SRaopXHNlwN/21a4CNb3r8UkSGN+Xf9o=
+	t=1745613424; cv=none; b=NkHYYgRJNwZ8q3hXE/DH8Pmk2ha6igQjB1Dgf0sF7172BbBMfsMDuVYgJeaekepef9V8AOgM4LjqsW7dkkDPggdzX1WE7qzGCcIWHTlAw96puyUotKrt4vQmUGSIDOaVnlrNMRUkjh+/wVf0RpdZsntxpmD8sF5Ci4OfqFD31o0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745612621; c=relaxed/simple;
-	bh=TzBSGSj6jGOetYQyWr//XfuEnO/nibgpaRK8a5Y7DVw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 In-Reply-To:Content-Type:Content-Disposition; b=OZEL69iIf5gIdZkQf6Jb9uUcr39gPjMbYa5g/NmGJP05DgOhwfg8QO2de9T3S99FRmqNIS6pqIOWOd+1OQ6Zd6AwQchoCsMwGkzWRtSqhvnqSFQiAl4jpmHkpmbXwRTs+nY6qUgRO7bGcvIMreWTBuxSW3R+kQgutGMsmXZO9+I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=SqwGWUdH; arc=none smtp.client-ip=170.10.133.124
+	s=arc-20240116; t=1745613424; c=relaxed/simple;
+	bh=UZhjq3i+1osth2Oui17rhnAYa2F39QUc2TVPhnVtDf4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=KrDpON8WkVrDG8oT6uvY2z6LS9l2UXwEWSOHspTVZUxmr/jjTQpgsIHH9pxZ2TpOr6/LXz/G2Nn6AYBKIxTnWKdXOqrejDgtSh1hQwYOt3Rn1iMsyf2nxo/TggnGwNtPZemqkgtohwBkNagnUJankVFYRiUK1k8BW8GuL1k35RE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=McbFkg1D; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SqwGWUdH"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="McbFkg1D"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1745612618;
+	s=mimecast20190719; t=1745613421;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Lnuw5o7CPzgYgSg30nFZeV0xqdVhh4HEfg3UbcumuG4=;
-	b=SqwGWUdH6LPEIKz4sShX6NCXAxf5PW2M/kD1rTkUTpzf3/L5h9336WexrL0t4ZPSxPtqF/
-	6mkpQ+snZHKP649zeU6GECVv4ArReXF7z9uFQdeYUkMWN+oGTb5+k4AlSc1zb5/KQ+Dkyk
-	b2CUeYPBYR6bp8A9YkvLJS+v04JJgvc=
-Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com
- [209.85.219.69]) by relay.mimecast.com with ESMTP with STARTTLS
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=CpUFuT49QYK3fR0dsNMkxP3fgvhL7PUWCGb2oz6iPXc=;
+	b=McbFkg1DRY6wCeKKRGwRMB2hO6suJp4d9GCXku60AEXKSAJkBnT7NKlA6YIuASvM8RXuvw
+	glG4avrTBd8siVCrS7TfK+Mn4ZQz/HHVa2RbTinnv14jUWbJ1hsOBTQKVJkLdRYsBj/XZR
+	LS6a9mhFNh9PUiLx1H1uLlaCyns2yhA=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-76-gr5hECLOOTmwyXTekk1M0g-1; Fri, 25 Apr 2025 16:23:37 -0400
-X-MC-Unique: gr5hECLOOTmwyXTekk1M0g-1
-X-Mimecast-MFC-AGG-ID: gr5hECLOOTmwyXTekk1M0g_1745612617
-Received: by mail-qv1-f69.google.com with SMTP id 6a1803df08f44-6e90788e2a7so37951966d6.0
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 25 Apr 2025 13:23:37 -0700 (PDT)
+ us-mta-198-5KWvg5eAMgiBZlLZxqhsDQ-1; Fri, 25 Apr 2025 16:36:59 -0400
+X-MC-Unique: 5KWvg5eAMgiBZlLZxqhsDQ-1
+X-Mimecast-MFC-AGG-ID: 5KWvg5eAMgiBZlLZxqhsDQ_1745613418
+Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-43ceeaf1524so11536705e9.1
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 25 Apr 2025 13:36:59 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745612617; x=1746217417;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Lnuw5o7CPzgYgSg30nFZeV0xqdVhh4HEfg3UbcumuG4=;
-        b=F9kQQtc45u8zqzZkL5c5EN7eR5y9ghTqUA8Pj9t+w95CPTYDJuMyzePzVd4Qg/bnVQ
-         p4RHIuVYeBV3DBTNMQfhh2EEW8emCmgpTmG+/aZhuGjWGephDlTEqg30OQ3ck6VUncL/
-         pMTvPNH0EJrtIlzskmuQJE17MYXvI6N1p7pgBVcQnR9vAp9MNvNnW8Rn6DuNoJiOt284
-         IsJWdNKlIOezC7QdkL/c35Dof6ul87IsDRmCsKK19tm2holux7CPhVfakD57pT1B31sc
-         C9kTNp2HWf9aOkcBcw4NDEcTCx6y38haDUP74eLqzkgjvWk5jX6oFnewBW6dmoH2PTHk
-         aolw==
-X-Forwarded-Encrypted: i=1; AJvYcCWwqNvhR6d/IhvOysobJ4/wbOC836yON//Hti2D0VpQea3JMgJTBXFIUiwnaetWmYFCz9iHXjF94DM2bwmI2OMtJLM=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yye8zvKE8mmQ7ryHb7xYMxVkqKW8RGS337PPMTtIPOEOwQK+gJF
-	HuIFMM2Mh1C18c/4O1EcQB9YMaOj1I02CsqEk7JcApsO6im7B2yVca6V6xwYbHqUoCrdd/VUSy+
-	s1Of3N6HiAbtLSwdjoYINYJmizR+eghvK6wLKYqo3sMW+hDFW7j2NgwgHhtNNS8kC9Y6ZHg==
-X-Gm-Gg: ASbGncshuyzvi/oRs0u3EUKRNdCbPHRSheWXJafye6hGHsOh8MzmjIRBkqPFKo0AkSb
-	AXSlwTm3T5DNlzr/xISV7W7ARysl6jQ7t2SJTxFAHUAY5gu9/AdkjQ9UejdLPwj5MJjXhRoIZgt
-	lTFdiTRwkl1aBU7FG8r3wF77HWbHBF7rSQvzLmTaSrZ1VMyCQnKPaUqQN6h+6fn5reVca9GQWMY
-	Uv/0RHWMGs862jzTmE2Uh/6uu5U8GrydCf2+LP230R2Z+fZZ4qaBpZeA0AAyJDNqhhPC+6fhAkp
-	4rY=
-X-Received: by 2002:a05:6214:ca2:b0:6f4:c939:a3f5 with SMTP id 6a1803df08f44-6f4cc38cae8mr50223956d6.17.1745612616905;
-        Fri, 25 Apr 2025 13:23:36 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHAbB9VBhNfVFkn16GQ1jhi8yEPGvnD0kLIi/1k7vzQQf+ePUU4ZzjJOht8FgMwVJBxtCN+iQ==
-X-Received: by 2002:a05:6214:ca2:b0:6f4:c939:a3f5 with SMTP id 6a1803df08f44-6f4cc38cae8mr50223586d6.17.1745612616494;
-        Fri, 25 Apr 2025 13:23:36 -0700 (PDT)
-Received: from x1.local ([85.131.185.92])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6f4c0aaf9a3sm25917506d6.98.2025.04.25.13.23.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 25 Apr 2025 13:23:35 -0700 (PDT)
-Date: Fri, 25 Apr 2025 16:23:31 -0400
-From: Peter Xu <peterx@redhat.com>
-To: David Hildenbrand <david@redhat.com>
-Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org, x86@kernel.org,
-	intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-	linux-trace-kernel@vger.kernel.org,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Andy Lutomirski <luto@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Jani Nikula <jani.nikula@linux.intel.com>,
-	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-	Rodrigo Vivi <rodrigo.vivi@intel.com>,
-	Tvrtko Ursulin <tursulin@ursulin.net>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	Vlastimil Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>,
-	Pedro Falcato <pfalcato@suse.de>
-Subject: Re: [PATCH v1 05/11] mm: convert VM_PFNMAP tracking to
- pfnmap_track() + pfnmap_untrack()
-Message-ID: <aAvvQ1h9bg11hiqI@x1.local>
-References: <20250425081715.1341199-1-david@redhat.com>
- <20250425081715.1341199-6-david@redhat.com>
+        d=1e100.net; s=20230601; t=1745613418; x=1746218218;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=CpUFuT49QYK3fR0dsNMkxP3fgvhL7PUWCGb2oz6iPXc=;
+        b=WAlee74onioZp25Zzrw3QzW5Z/4bjGD0sufDmcc4mffLkzMTays0l1Sm8eZ97T52eF
+         rrWTCvx0qy0Itdq++aSPM/2M8xaUqBCkfgTFWutaXHxjyQYtQJrN5NzrWkHfdj4qCxKz
+         TA9+uoCim43rHGBoYonIoF+AolTOkI/xgv1bvPBt3LUeudVQlizS+1uwQT49R34MIIlc
+         5WQLLx5mhEiVjVlSCH8848BFkfWHYBueUTRuIUrzwprGpR/xgteII8l8ZRoQq+GDcL6Z
+         OyATSod7Ct6HrO8i8nAkhrYqiUTjDvh2crMFU9+L1w2dRZdfxCaT3ILQSjZj6g3LuNpK
+         ubyA==
+X-Forwarded-Encrypted: i=1; AJvYcCVyoUMpJ1AL5IurMoMyi/wToLGS51+Vvcjc2A4+95nzpasmM02+gbv74cemhhgiQRPuJdKlj9UAsrFffj9Di1/gybg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyqLK9LYmmVJrAEhVMY7Pv0XNNoeWEblZWaKupobPztqBuSwG8Y
+	UUBFbn+AL9lHGJGo4S0alPQ74C5N8c8Ro4lCqZPpINPcVRA5zJCSZ+ZtEJyTK395AdYq3glyiKC
+	D9Nlwu2L82FDJD5fxfn546Ske3M6ljPVVRn0ETT24QlM5+TAy9GPkdDweYKjdBq3sAmUVVg==
+X-Gm-Gg: ASbGncvWVHCQ+lUXifYpFr6qtrdx+oB3Z04VR9/FoDJ5JcBe9eP7MV4qTLCCWeAJipX
+	QKV3fdnTAv5oGQ87bcFsUHHuQAZwEKFNmRxSBnyWa2pmrvGSzcjGhKnQWhaZoRVpb1rSRr1ukOw
+	ycepSGBldPfF5aK5K9GmEiCpkE1O6SMPZnUcROzC8qqWYJbDrKn0X4tO3MrpzUw3N4hDOQ+PHG2
+	XBQve9D1K1b/8DPuK4BYH+a13f1wDa07ziY7ZqnnT5ILTl/1r+f/7zRbWcjVhVp1PBH+n3dwkYB
+	YL7WP+546llYQugwF8o8KRB9WV7Qyrg1noSjAziQ8xctFglNmM4R9txzsDnjMcxB8x79Jac1dzc
+	dP6VNoOI+tT01Gt+Rx6RIvUjcwRoh9xw28R6x
+X-Received: by 2002:a05:600c:c88:b0:439:5f04:4f8d with SMTP id 5b1f17b1804b1-440a6693e9fmr30390585e9.12.1745613418382;
+        Fri, 25 Apr 2025 13:36:58 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEdS9ZymIYN4ZA6xIbkv21zMROrnjORxXDTOvJmAPXiktbH2fpnT6UD8wE/LlrXVF31B+MV2w==
+X-Received: by 2002:a05:600c:c88:b0:439:5f04:4f8d with SMTP id 5b1f17b1804b1-440a6693e9fmr30390315e9.12.1745613417913;
+        Fri, 25 Apr 2025 13:36:57 -0700 (PDT)
+Received: from ?IPV6:2003:cb:c70f:6900:6c56:80f8:c14:6d2a? (p200300cbc70f69006c5680f80c146d2a.dip0.t-ipconnect.de. [2003:cb:c70f:6900:6c56:80f8:c14:6d2a])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4409d2ac5a9sm68318335e9.23.2025.04.25.13.36.56
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 25 Apr 2025 13:36:57 -0700 (PDT)
+Message-ID: <bbadf008-9ffc-4628-9809-2d8cf104a424@redhat.com>
+Date: Fri, 25 Apr 2025 22:36:55 +0200
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20250425081715.1341199-6-david@redhat.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 05/11] mm: convert VM_PFNMAP tracking to pfnmap_track()
+ + pfnmap_untrack()
+To: Peter Xu <peterx@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org, x86@kernel.org,
+ intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+ linux-trace-kernel@vger.kernel.org, Dave Hansen
+ <dave.hansen@linux.intel.com>, Andy Lutomirski <luto@kernel.org>,
+ Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner <tglx@linutronix.de>,
+ Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+ "H. Peter Anvin" <hpa@zytor.com>, Jani Nikula <jani.nikula@linux.intel.com>,
+ Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+ Rodrigo Vivi <rodrigo.vivi@intel.com>, Tvrtko Ursulin
+ <tursulin@ursulin.net>, David Airlie <airlied@gmail.com>,
+ Simona Vetter <simona@ffwll.ch>, Andrew Morton <akpm@linux-foundation.org>,
+ Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ "Liam R. Howlett" <Liam.Howlett@oracle.com>,
+ Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+ Vlastimil Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>,
+ Pedro Falcato <pfalcato@suse.de>
+References: <20250425081715.1341199-1-david@redhat.com>
+ <20250425081715.1341199-6-david@redhat.com> <aAvvQ1h9bg11hiqI@x1.local>
+From: David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <aAvvQ1h9bg11hiqI@x1.local>
 X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: -Pss5hboVYFfaDdqybN6XP5paqBFK7jEQr2Q_GHSnUk_1745612617
+X-Mimecast-MFC-PROC-ID: Hf80yOD-TRyFsAWCFxvQJEESKhpFjgdzZNPBvKMl5vQ_1745613418
 X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Fri, Apr 25, 2025 at 10:17:09AM +0200, David Hildenbrand wrote:
-> Let's use our new interface. In remap_pfn_range(), we'll now decide
-> whether we have to track (full VMA covered) or only sanitize the pgprot
-> (partial VMA covered).
+On 25.04.25 22:23, Peter Xu wrote:
+> On Fri, Apr 25, 2025 at 10:17:09AM +0200, David Hildenbrand wrote:
+>> Let's use our new interface. In remap_pfn_range(), we'll now decide
+>> whether we have to track (full VMA covered) or only sanitize the pgprot
+>> (partial VMA covered).
+>>
+>> Remember what we have to untrack by linking it from the VMA. When
+>> duplicating VMAs (e.g., splitting, mremap, fork), we'll handle it similar
+>> to anon VMA names, and use a kref to share the tracking.
+>>
+>> Once the last VMA un-refs our tracking data, we'll do the untracking,
+>> which simplifies things a lot and should sort our various issues we saw
+>> recently, for example, when partially unmapping/zapping a tracked VMA.
+>>
+>> This change implies that we'll keep tracking the original PFN range even
+>> after splitting + partially unmapping it: not too bad, because it was
+>> not working reliably before. The only thing that kind-of worked before
+>> was shrinking such a mapping using mremap(): we managed to adjust the
+>> reservation in a hacky way, now we won't adjust the reservation but
+>> leave it around until all involved VMAs are gone.
+>>
+>> Signed-off-by: David Hildenbrand <david@redhat.com>
+>> ---
+>>   include/linux/mm_inline.h |  2 +
+>>   include/linux/mm_types.h  | 11 ++++++
+>>   kernel/fork.c             | 54 ++++++++++++++++++++++++--
+>>   mm/memory.c               | 81 +++++++++++++++++++++++++++++++--------
+>>   mm/mremap.c               |  4 --
+>>   5 files changed, 128 insertions(+), 24 deletions(-)
+>>
+>> diff --git a/include/linux/mm_inline.h b/include/linux/mm_inline.h
+>> index f9157a0c42a5c..89b518ff097e6 100644
+>> --- a/include/linux/mm_inline.h
+>> +++ b/include/linux/mm_inline.h
+>> @@ -447,6 +447,8 @@ static inline bool anon_vma_name_eq(struct anon_vma_name *anon_name1,
+>>   
+>>   #endif  /* CONFIG_ANON_VMA_NAME */
+>>   
+>> +void pfnmap_track_ctx_release(struct kref *ref);
+>> +
+>>   static inline void init_tlb_flush_pending(struct mm_struct *mm)
+>>   {
+>>   	atomic_set(&mm->tlb_flush_pending, 0);
+>> diff --git a/include/linux/mm_types.h b/include/linux/mm_types.h
+>> index 56d07edd01f91..91124761cfda8 100644
+>> --- a/include/linux/mm_types.h
+>> +++ b/include/linux/mm_types.h
+>> @@ -764,6 +764,14 @@ struct vma_numab_state {
+>>   	int prev_scan_seq;
+>>   };
+>>   
+>> +#ifdef __HAVE_PFNMAP_TRACKING
+>> +struct pfnmap_track_ctx {
+>> +	struct kref kref;
+>> +	unsigned long pfn;
+>> +	unsigned long size;
+>> +};
+>> +#endif
+>> +
+>>   /*
+>>    * This struct describes a virtual memory area. There is one of these
+>>    * per VM-area/task. A VM area is any part of the process virtual memory
+>> @@ -877,6 +885,9 @@ struct vm_area_struct {
+>>   	struct anon_vma_name *anon_name;
+>>   #endif
+>>   	struct vm_userfaultfd_ctx vm_userfaultfd_ctx;
+>> +#ifdef __HAVE_PFNMAP_TRACKING
+>> +	struct pfnmap_track_ctx *pfnmap_track_ctx;
+>> +#endif
 > 
-> Remember what we have to untrack by linking it from the VMA. When
-> duplicating VMAs (e.g., splitting, mremap, fork), we'll handle it similar
-> to anon VMA names, and use a kref to share the tracking.
+> So this was originally the small concern (or is it small?) that this will
+> grow every vma on x86, am I right?
+
+Yeah, and last time I looked into this, it would have grown it such that it would
+require a bigger slab. Right now:
+
+Before this change:
+
+struct vm_area_struct {
+	union {
+		struct {
+			long unsigned int vm_start;      /*     0     8 */
+			long unsigned int vm_end;        /*     8     8 */
+		};                                       /*     0    16 */
+		freeptr_t          vm_freeptr;           /*     0     8 */
+	};                                               /*     0    16 */
+	struct mm_struct *         vm_mm;                /*    16     8 */
+	pgprot_t                   vm_page_prot;         /*    24     8 */
+	union {
+		const vm_flags_t   vm_flags;             /*    32     8 */
+		vm_flags_t         __vm_flags;           /*    32     8 */
+	};                                               /*    32     8 */
+	unsigned int               vm_lock_seq;          /*    40     4 */
+
+	/* XXX 4 bytes hole, try to pack */
+
+	struct list_head           anon_vma_chain;       /*    48    16 */
+	/* --- cacheline 1 boundary (64 bytes) --- */
+	struct anon_vma *          anon_vma;             /*    64     8 */
+	const struct vm_operations_struct  * vm_ops;     /*    72     8 */
+	long unsigned int          vm_pgoff;             /*    80     8 */
+	struct file *              vm_file;              /*    88     8 */
+	void *                     vm_private_data;      /*    96     8 */
+	atomic_long_t              swap_readahead_info;  /*   104     8 */
+	struct mempolicy *         vm_policy;            /*   112     8 */
+	struct vma_numab_state *   numab_state;          /*   120     8 */
+	/* --- cacheline 2 boundary (128 bytes) --- */
+	refcount_t                 vm_refcnt __attribute__((__aligned__(64))); /*   128     4 */
+
+	/* XXX 4 bytes hole, try to pack */
+
+	struct {
+		struct rb_node     rb __attribute__((__aligned__(8))); /*   136    24 */
+		long unsigned int  rb_subtree_last;      /*   160     8 */
+	} __attribute__((__aligned__(8))) shared __attribute__((__aligned__(8)));        /*   136    32 */
+	struct anon_vma_name *     anon_name;            /*   168     8 */
+	struct vm_userfaultfd_ctx  vm_userfaultfd_ctx;   /*   176     0 */
+
+	/* size: 192, cachelines: 3, members: 18 */
+	/* sum members: 168, holes: 2, sum holes: 8 */
+	/* padding: 16 */
+	/* forced alignments: 2, forced holes: 1, sum forced holes: 4 */
+} __attribute__((__aligned__(64)));
+
+After this change:
+
+struct vm_area_struct {
+	union {
+		struct {
+			long unsigned int vm_start;      /*     0     8 */
+			long unsigned int vm_end;        /*     8     8 */
+		};                                       /*     0    16 */
+		freeptr_t          vm_freeptr;           /*     0     8 */
+	};                                               /*     0    16 */
+	struct mm_struct *         vm_mm;                /*    16     8 */
+	pgprot_t                   vm_page_prot;         /*    24     8 */
+	union {
+		const vm_flags_t   vm_flags;             /*    32     8 */
+		vm_flags_t         __vm_flags;           /*    32     8 */
+	};                                               /*    32     8 */
+	unsigned int               vm_lock_seq;          /*    40     4 */
+
+	/* XXX 4 bytes hole, try to pack */
+
+	struct list_head           anon_vma_chain;       /*    48    16 */
+	/* --- cacheline 1 boundary (64 bytes) --- */
+	struct anon_vma *          anon_vma;             /*    64     8 */
+	const struct vm_operations_struct  * vm_ops;     /*    72     8 */
+	long unsigned int          vm_pgoff;             /*    80     8 */
+	struct file *              vm_file;              /*    88     8 */
+	void *                     vm_private_data;      /*    96     8 */
+	atomic_long_t              swap_readahead_info;  /*   104     8 */
+	struct mempolicy *         vm_policy;            /*   112     8 */
+	struct vma_numab_state *   numab_state;          /*   120     8 */
+	/* --- cacheline 2 boundary (128 bytes) --- */
+	refcount_t                 vm_refcnt __attribute__((__aligned__(64))); /*   128     4 */
+
+	/* XXX 4 bytes hole, try to pack */
+
+	struct {
+		struct rb_node     rb __attribute__((__aligned__(8))); /*   136    24 */
+		long unsigned int  rb_subtree_last;      /*   160     8 */
+	} __attribute__((__aligned__(8))) shared __attribute__((__aligned__(8)));        /*   136    32 */
+	struct anon_vma_name *     anon_name;            /*   168     8 */
+	struct vm_userfaultfd_ctx  vm_userfaultfd_ctx;   /*   176     0 */
+	struct pfnmap_track_ctx *  pfnmap_track_ctx;     /*   176     8 */
+
+	/* size: 192, cachelines: 3, members: 19 */
+	/* sum members: 176, holes: 2, sum holes: 8 */
+	/* padding: 8 */
+	/* forced alignments: 2, forced holes: 1, sum forced holes: 4 */
+} __attribute__((__aligned__(64)));
+
+Observe that we allocate 192 bytes with or without pfnmap_track_ctx. (IIRC,
+slab sizes are ... 128, 192, 256, 512, ...)
+
 > 
-> Once the last VMA un-refs our tracking data, we'll do the untracking,
-> which simplifies things a lot and should sort our various issues we saw
-> recently, for example, when partially unmapping/zapping a tracked VMA.
+> After all pfnmap vmas are the minority, I was thinking whether we could
+> work it out without extending vma struct.
+
+Heh, similar to userfaultfd on most systems, or ones with a mempolicy, or
+anon vma names, ... :)
+
+But yeah, pfnmap is certainly a minority as well.
+
 > 
-> This change implies that we'll keep tracking the original PFN range even
-> after splitting + partially unmapping it: not too bad, because it was
-> not working reliably before. The only thing that kind-of worked before
-> was shrinking such a mapping using mremap(): we managed to adjust the
-> reservation in a hacky way, now we won't adjust the reservation but
-> leave it around until all involved VMAs are gone.
+> I had a quick thought quite a while ago, but never tried out (it was almost
+> off-track since vfio switched away from remap_pfn_range..), which is to
+> have x86 maintain its own mapping of vma <-> pfn tracking using a global
+> stucture.  After all, the memtype code did it already with the
+> memtype_rbroot, so I was thinking if vma info can be memorized as well, so
+> as to get rid of get_pat_info() too.
 > 
-> Signed-off-by: David Hildenbrand <david@redhat.com>
-> ---
->  include/linux/mm_inline.h |  2 +
->  include/linux/mm_types.h  | 11 ++++++
->  kernel/fork.c             | 54 ++++++++++++++++++++++++--
->  mm/memory.c               | 81 +++++++++++++++++++++++++++++++--------
->  mm/mremap.c               |  4 --
->  5 files changed, 128 insertions(+), 24 deletions(-)
+> Maybe it also needs the 2nd layer like what you did with the track ctx, but
+> the tree maintains the mapping instead of adding the ctx pointer into vma.
 > 
-> diff --git a/include/linux/mm_inline.h b/include/linux/mm_inline.h
-> index f9157a0c42a5c..89b518ff097e6 100644
-> --- a/include/linux/mm_inline.h
-> +++ b/include/linux/mm_inline.h
-> @@ -447,6 +447,8 @@ static inline bool anon_vma_name_eq(struct anon_vma_name *anon_name1,
->  
->  #endif  /* CONFIG_ANON_VMA_NAME */
->  
-> +void pfnmap_track_ctx_release(struct kref *ref);
-> +
->  static inline void init_tlb_flush_pending(struct mm_struct *mm)
->  {
->  	atomic_set(&mm->tlb_flush_pending, 0);
-> diff --git a/include/linux/mm_types.h b/include/linux/mm_types.h
-> index 56d07edd01f91..91124761cfda8 100644
-> --- a/include/linux/mm_types.h
-> +++ b/include/linux/mm_types.h
-> @@ -764,6 +764,14 @@ struct vma_numab_state {
->  	int prev_scan_seq;
->  };
->  
-> +#ifdef __HAVE_PFNMAP_TRACKING
-> +struct pfnmap_track_ctx {
-> +	struct kref kref;
-> +	unsigned long pfn;
-> +	unsigned long size;
-> +};
-> +#endif
-> +
->  /*
->   * This struct describes a virtual memory area. There is one of these
->   * per VM-area/task. A VM area is any part of the process virtual memory
-> @@ -877,6 +885,9 @@ struct vm_area_struct {
->  	struct anon_vma_name *anon_name;
->  #endif
->  	struct vm_userfaultfd_ctx vm_userfaultfd_ctx;
-> +#ifdef __HAVE_PFNMAP_TRACKING
-> +	struct pfnmap_track_ctx *pfnmap_track_ctx;
-> +#endif
+> Maybe it could work with squashing the two layers (or say, extending
+> memtype rbtree), but maybe not..
+> 
+> It could make it slightly slower than vma->pfnmap_track_ctx ref when
+> looking up pfn when holding a vma ref, but I assume it's ok considering
+> that track/untrack should be slow path for pfnmaps, and pfnmaps shouldn't
+> be a huge lot.
+> 
+> I didn't think further, but if that'll work it'll definitely avoids the
+> additional fields on x86 vmas.  I'm curious whether you explored that
+> direction, or maybe it's a known decision that the 8 bytes isn't a concern.
 
-So this was originally the small concern (or is it small?) that this will
-grow every vma on x86, am I right?
+When discussing this approach with Lorenzo, I raised that we could simply
+map using an xarray the VMA to that structure.
 
-After all pfnmap vmas are the minority, I was thinking whether we could
-work it out without extending vma struct.
-
-I had a quick thought quite a while ago, but never tried out (it was almost
-off-track since vfio switched away from remap_pfn_range..), which is to
-have x86 maintain its own mapping of vma <-> pfn tracking using a global
-stucture.  After all, the memtype code did it already with the
-memtype_rbroot, so I was thinking if vma info can be memorized as well, so
-as to get rid of get_pat_info() too.
-
-Maybe it also needs the 2nd layer like what you did with the track ctx, but
-the tree maintains the mapping instead of adding the ctx pointer into vma.
-
-Maybe it could work with squashing the two layers (or say, extending
-memtype rbtree), but maybe not..
-
-It could make it slightly slower than vma->pfnmap_track_ctx ref when
-looking up pfn when holding a vma ref, but I assume it's ok considering
-that track/untrack should be slow path for pfnmaps, and pfnmaps shouldn't
-be a huge lot.
-
-I didn't think further, but if that'll work it'll definitely avoids the
-additional fields on x86 vmas.  I'm curious whether you explored that
-direction, or maybe it's a known decision that the 8 bytes isn't a concern.
-
-Thanks,
+But then, if we're not effectively allocating any more space, then probably
+not worth adding more complexity right now.
 
 -- 
-Peter Xu
+Cheers,
+
+David / dhildenb
 
