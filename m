@@ -1,35 +1,81 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C99F1DFD96;
-	Thu, 24 Apr 2025 20:31:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7304281E;
+	Fri, 25 Apr 2025 00:24:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745526710; cv=none; b=mVpQsqf8zLPZxEf4sx9lJ88pU64QWOgJfLC7ZW06aeihN4ryAU0p4D7+zHGh17uJxDlXdBWGEpgN+44CVGsuZRMAQfvJzK+kB291bW5VzI7btqVavQiFT6mfM4DnUNUd8pIY565k6JyoOeYkJLGLBg8PvgG4Puf81+A/V+xwdyw=
+	t=1745540688; cv=none; b=P5PMaVAqR4PEXCpWe5/tuxeEAcN0Ly8I+10QiZT9Z6VCWa0fFQrEUa6tOMYhqtpUmlKbmYjC7gw3DxwR6KVJ0+u5w32SvT56g/V3KnzJmaWiVyf1+GsIDlT7W1puUvVkdQE4Mrd2JzsQpvvSKH6pZof479YDBS5f3QAXzrvRwms=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745526710; c=relaxed/simple;
-	bh=GXdHlncMv9ouLPoqZADiAiq08DWlsnhc23MqsSVZFRI=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=Qsf6hWIZVvDimBSnRBspSc8ffv7AFAHr53wTefgNBls+/CF6mAO/vYNMenP574y4s+0waB15cwaSNR6f6+mlhgP5mkvEb/wUwmDviBtV6XRuOPDc7/rFrXJaiGZ9WA6fBv09+Rd6jeDAngdPZk+WpRlq07Qv1o9r+8WUM2wHsxc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=n2SRC5+c; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745540688; c=relaxed/simple;
+	bh=SxWFahHw+Vbx44SM7gqevX+c0LZFs/cA/XXQd0SyOvk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=HDC78Ki15+43EAxZdpBuliu8Llwi1dQPWPdbsDGdlDdfm/pUHo/us+KZFCRdfw4daXnQPoL45Vqf0quv9wGw/CDpC8CI2HUPPIY/03utO3494ZWBRc1tnNxKYaZho+LbDrtq5EQdcgLbQvb6lbazjsNnaedkgJwA8+7bSM0g0sQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YZ+j9dTj; arc=none smtp.client-ip=209.85.214.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="n2SRC5+c"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8D533C4CEE3;
-	Thu, 24 Apr 2025 20:31:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745526709;
-	bh=GXdHlncMv9ouLPoqZADiAiq08DWlsnhc23MqsSVZFRI=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=n2SRC5+cvy7e4ZPJlFpABzK8SzX2aAEI90mF5TgRUE2Nud989eLk8M4QBgjq8IsXQ
-	 YDQYlRbr7tTmdc5GQqhfXut+EYlLUkOGlQTvJLN/sgKSeQe8cuMMVh1CNHI/jpc47S
-	 mTscIsPNF+4s85AqSm3nIVmV7qkSlDkVweINy1bqUsffH6FxxVHJ75EnBSD5UtNyaw
-	 geFWrH9tQRLf/LAoKr4m7c80dEaeUTC0R9x1143ofRgl4lcW/T4ruFvgmn8luJ/5VJ
-	 Y8NEI96BLd8vFPOCrQs5I3TpoQcxT6DKNsjJn7mgLfWlvJM7m4fdXwIASBzLRMKKJ7
-	 1C3ZE2HcfGNpA==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 70E40380CFD9;
-	Thu, 24 Apr 2025 20:32:29 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YZ+j9dTj"
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-224191d92e4so18493615ad.3;
+        Thu, 24 Apr 2025 17:24:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745540687; x=1746145487; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=zdDgie04YT94hofK4Se8gOgrrxDraTQTaQsWIulcSTc=;
+        b=YZ+j9dTjaJLLSTSDskeW+L8FccnKGqXsT7HW3H+MZjmcMEYVVm1NA18h09DyFRENfX
+         YqA8UBPR4g6YhJe8qCH4l+larRn1YAxSNpI616yG6N+ZRyoGN6xOUqdYQ9pqbuL73gm3
+         EzgTbDuIcaw2epNWBJjtlbtNfL96yCRzTIFHUeVVMQovjjvOtONypuM95cOFM6yzzqav
+         8tLE3ElUOD/zYRvzrTmQ+x6St7kRjbTm7ldCJNgXJyzwaHS7NETTE3n8k+x3xrV71Ueh
+         JV8oKNxjfyxVMWL2Wndqme/4ChmurbfJuZ1s91TiUYkVF6KUXfdTX8yz0+prNEDZEu6b
+         gLEA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745540687; x=1746145487;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=zdDgie04YT94hofK4Se8gOgrrxDraTQTaQsWIulcSTc=;
+        b=WiI0gwbCgcqDuMdrc3j11w8V+DF63YUtcjMX1dvhnyP3aow3f9OB8NYjyAMrQOz1lA
+         YPMnn4g5VJwMJjr6NgDzh66ivf3ImlfrIJBitpPId5SBrJxC+rH6advZ2tgYFQv2sMYg
+         +u5gM8q49juAJnqqPtD5eWNDTIWfdVdb8J9rETwKhmXhcckAldjCvJ9G7TbXY6TYDjNu
+         W/yw7W8gdIDxzf9n7FVH3wIis3z4QIxidiB8sfSLz5GV3pMCN4vbQm4d36nZVeqPQkX9
+         MUQ5TbMdTIEZ1BesfptvXE3MvYfjZp7D3C07gVVFLf1qHiVdtRbScGDQwG6iF5oZbafw
+         WfFA==
+X-Forwarded-Encrypted: i=1; AJvYcCVObr38kHWFL8/iuqs/l8nIxJlJB+iH45YaspGlb4h3+fIzxk3JeH4P2nsk2vN4LS+ZLVQnp9zr2bZKqi7sjLnDY3m+@vger.kernel.org, AJvYcCXDdERTty6KBqgyaSMfXfEL7fKNj6Wb+771D6dC82DXtHj9TkX3XebqKue4/Wi+VdWA4ia+/DA/CAJ3COQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw50QFVoNVxYdGJoqPccO+3v3aUD1XENakud6ttRbstSvDNPW+O
+	0KgotxyBuL9ZQLESg0yg215t/8ZkLZ29eo+h/UDkBqmeuQzOPJOR
+X-Gm-Gg: ASbGncvUcJYwSalPJqvbH67H6m2kjL+HNAknsMyRP+Ou1Ya1x/cK5C2qXK7wrW7Rbbw
+	ksDU7kmRrX3SFqOlKij3KWtIeLCyQeB09ELRAJa8bTGAYNTl4F2gAvh259P0zV2A29fiw0WlDAc
+	BDf5K/XZ4uK2JxXQp5L6qGadfj32OcJYaMClLFiK3kdtmU3cyenBMhTxtElcBoFYbVrYCFuvPee
+	ona/uoGoub4KYY2EedP+Su2c6hzfB+A4tgmkgv7P6/A6reEYGd0NuvI6N2T/M4NmoV+vd/h4wFD
+	FYRDLMGyjvMWbklfrI+/sQnoWC1vRdTZDTP6T6J/zXlwYZJ3CG9bIaiktA==
+X-Google-Smtp-Source: AGHT+IEJkK+Pw3d14MEGnhCGVT09btAOCFjpnGjogjrrHSUjdVqw+z2nGhNMyX4vmlQgZ4kb+bl9Qw==
+X-Received: by 2002:a17:902:e542:b0:21f:2a2:3c8b with SMTP id d9443c01a7336-22dbf4d1a47mr4718935ad.11.1745540686617;
+        Thu, 24 Apr 2025 17:24:46 -0700 (PDT)
+Received: from localhost.localdomain ([2601:646:8f03:9fee:5e33:e006:dcd5:852d])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22db51022f8sm19956165ad.174.2025.04.24.17.24.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 24 Apr 2025 17:24:46 -0700 (PDT)
+From: nifan.cxl@gmail.com
+To: rostedt@goodmis.org,
+	mhiramat@kernel.org,
+	willy@infradead.org
+Cc: akpm@linux-foundation.org,
+	david@redhat.com,
+	fan.ni@samsung.com,
+	yang@os.amperecomputing.com,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-mm@kvack.org,
+	npache@redhat.com,
+	mcgrof@kernel.org,
+	a.manzanares@samsung.com,
+	dave@stgolabs.net,
+	nifan.cxl@gmail.com,
+	Baolin Wang <baolin.wang@linux.alibaba.com>
+Subject: [PATCH v3] khugepaged: Pass folio instead of head page to trace events
+Date: Thu, 24 Apr 2025 17:16:51 -0700
+Message-ID: <20250425002425.533698-1-nifan.cxl@gmail.com>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -37,47 +83,112 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH fixes v2 1/2] riscv: Replace function-like macro by static
- inline function
-From: patchwork-bot+linux-riscv@kernel.org
-Message-Id: 
- <174552674825.3483225.10896050334929236993.git-patchwork-notify@kernel.org>
-Date: Thu, 24 Apr 2025 20:32:28 +0000
-References: <20250419111402.1660267-1-bjorn@kernel.org>
-In-Reply-To: <20250419111402.1660267-1-bjorn@kernel.org>
-To: =?utf-8?b?QmrDtnJuIFTDtnBlbCA8Ympvcm5Aa2VybmVsLm9yZz4=?=@aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org
-Cc: linux-riscv@lists.infradead.org, paul.walmsley@sifive.com,
- palmer@dabbelt.com, alex@ghiti.fr, guoren@kernel.org,
- samuel.holland@sifive.com, bjorn@rivosinc.com, mhiramat@kernel.org,
- oleg@redhat.com, peterz@infradead.org, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
 
-Hello:
+From: Fan Ni <fan.ni@samsung.com>
 
-This series was applied to riscv/linux.git (fixes)
-by Palmer Dabbelt <palmer@rivosinc.com>:
+The trace functions trace_mm_collapse_huge_page_isolate() and
+trace_mm_khugepaged_scan_pmd() each have a single user, which
+always passes in the head page of a folio.
+Refactor both functions to take a folio directly.
 
-On Sat, 19 Apr 2025 13:13:59 +0200 you wrote:
-> From: Björn Töpel <bjorn@rivosinc.com>
-> 
-> The flush_icache_range() function is implemented as a "function-like
-> macro with unused parameters", which can result in "unused variables"
-> warnings.
-> 
-> Replace the macro with a static inline function, as advised by
-> Documentation/process/coding-style.rst.
-> 
-> [...]
+Signed-off-by: Fan Ni <fan.ni@samsung.com>
+Reviewed-by: Nico Pache <npache@redhat.com>
+Reviewed-by: Davidlohr Bueso <dave@stgolabs.net>
+Reviewed-by: Baolin Wang <baolin.wang@linux.alibaba.com>
+Reviewed-by: Yang Shi <yang@os.amperecomputing.com>
+Acked-by: David Hildenbrand <david@redhat.com>
+---
+v3:
+1) No functional change compared to v2;
+2) Picked up tags;
+3) Squashed the two patches in v2 into one based on Yang Shi and
+David Hildenbrand's feedback;
+4) Reword the commit log to reflect the squash.
 
-Here is the summary with links:
-  - [fixes,v2,1/2] riscv: Replace function-like macro by static inline function
-    https://git.kernel.org/riscv/c/121f34341d39
-  - [fixes,v2,2/2] riscv: uprobes: Add missing fence.i after building the XOL buffer
-    https://git.kernel.org/riscv/c/7d1d19a11cfb
+v2:
+https://lore.kernel.org/linux-mm/20250418183920.273154-1-nifan.cxl@gmail.com/
+---
+ include/trace/events/huge_memory.h | 12 ++++++------
+ mm/khugepaged.c                    |  6 +++---
+ 2 files changed, 9 insertions(+), 9 deletions(-)
 
-You are awesome, thank you!
+diff --git a/include/trace/events/huge_memory.h b/include/trace/events/huge_memory.h
+index 9d5c00b0285c..2305df6cb485 100644
+--- a/include/trace/events/huge_memory.h
++++ b/include/trace/events/huge_memory.h
+@@ -55,10 +55,10 @@ SCAN_STATUS
+ 
+ TRACE_EVENT(mm_khugepaged_scan_pmd,
+ 
+-	TP_PROTO(struct mm_struct *mm, struct page *page, bool writable,
++	TP_PROTO(struct mm_struct *mm, struct folio *folio, bool writable,
+ 		 int referenced, int none_or_zero, int status, int unmapped),
+ 
+-	TP_ARGS(mm, page, writable, referenced, none_or_zero, status, unmapped),
++	TP_ARGS(mm, folio, writable, referenced, none_or_zero, status, unmapped),
+ 
+ 	TP_STRUCT__entry(
+ 		__field(struct mm_struct *, mm)
+@@ -72,7 +72,7 @@ TRACE_EVENT(mm_khugepaged_scan_pmd,
+ 
+ 	TP_fast_assign(
+ 		__entry->mm = mm;
+-		__entry->pfn = page ? page_to_pfn(page) : -1;
++		__entry->pfn = folio ? folio_pfn(folio) : -1;
+ 		__entry->writable = writable;
+ 		__entry->referenced = referenced;
+ 		__entry->none_or_zero = none_or_zero;
+@@ -116,10 +116,10 @@ TRACE_EVENT(mm_collapse_huge_page,
+ 
+ TRACE_EVENT(mm_collapse_huge_page_isolate,
+ 
+-	TP_PROTO(struct page *page, int none_or_zero,
++	TP_PROTO(struct folio *folio, int none_or_zero,
+ 		 int referenced, bool  writable, int status),
+ 
+-	TP_ARGS(page, none_or_zero, referenced, writable, status),
++	TP_ARGS(folio, none_or_zero, referenced, writable, status),
+ 
+ 	TP_STRUCT__entry(
+ 		__field(unsigned long, pfn)
+@@ -130,7 +130,7 @@ TRACE_EVENT(mm_collapse_huge_page_isolate,
+ 	),
+ 
+ 	TP_fast_assign(
+-		__entry->pfn = page ? page_to_pfn(page) : -1;
++		__entry->pfn = folio ? folio_pfn(folio) : -1;
+ 		__entry->none_or_zero = none_or_zero;
+ 		__entry->referenced = referenced;
+ 		__entry->writable = writable;
+diff --git a/mm/khugepaged.c b/mm/khugepaged.c
+index 5cf204ab6af0..b04b6a770afe 100644
+--- a/mm/khugepaged.c
++++ b/mm/khugepaged.c
+@@ -696,13 +696,13 @@ static int __collapse_huge_page_isolate(struct vm_area_struct *vma,
+ 		result = SCAN_LACK_REFERENCED_PAGE;
+ 	} else {
+ 		result = SCAN_SUCCEED;
+-		trace_mm_collapse_huge_page_isolate(&folio->page, none_or_zero,
++		trace_mm_collapse_huge_page_isolate(folio, none_or_zero,
+ 						    referenced, writable, result);
+ 		return result;
+ 	}
+ out:
+ 	release_pte_pages(pte, _pte, compound_pagelist);
+-	trace_mm_collapse_huge_page_isolate(&folio->page, none_or_zero,
++	trace_mm_collapse_huge_page_isolate(folio, none_or_zero,
+ 					    referenced, writable, result);
+ 	return result;
+ }
+@@ -1435,7 +1435,7 @@ static int hpage_collapse_scan_pmd(struct mm_struct *mm,
+ 		*mmap_locked = false;
+ 	}
+ out:
+-	trace_mm_khugepaged_scan_pmd(mm, &folio->page, writable, referenced,
++	trace_mm_khugepaged_scan_pmd(mm, folio, writable, referenced,
+ 				     none_or_zero, result, unmapped);
+ 	return result;
+ }
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
+2.47.2
 
