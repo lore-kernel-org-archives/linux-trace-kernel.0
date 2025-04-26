@@ -1,155 +1,122 @@
-Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail2-relais-roc.national.inria.fr (mail2-relais-roc.national.inria.fr [192.134.164.83])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16DBE1401B;
-	Sat, 26 Apr 2025 03:23:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 977454A11;
+	Sat, 26 Apr 2025 10:42:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.134.164.83
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745637794; cv=none; b=eBRxpEURw2a+kEJphX6UTIxx0zK01c7s9QSfP8a+VtyTW/lZXpVe5bn0ngggrgW8z9CuQPJsXuvUuCBFLMJsnAeGDRjIgtZfoj0kEEh62Li/9nMVtzytKK2Mg+Kzs+11F1+8FzbtDKOjfaHZ3cQY894ZT0n6VAoOSzcWEC7Nq8w=
+	t=1745664158; cv=none; b=jkrEgYtmaNdaL4wx5jQuQAYANyKXlrRliBcZ1Va7ODWBx8bVHQWMpJhC68cyLLjPJbnlFthhle7qw8hjP40aX2p9PTz7KxiY2Bw5xQHWWP/S84yOjqxwAiieM4LS/K8WN6bnXWX4uIqQG2loULH66HZMBz6CkRwt5vjNCJGRvIE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745637794; c=relaxed/simple;
-	bh=OorEA4yKuv/EjmOfpY+5Jkej5ZMDx4tSaJq+Ih54/fI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=MnZoWw2hJt2QId5P9ioU1155m8hCF0m/oEmGP6TQRgF+/SFFWc6SXSz+irfBZGlD/jO9r2lVkpiXLrw+F4kcfktsWyATbk42v6BwCOliIciKa5UXSzcNxEhNSyCQ8Q+Rw0RtLmGgocnM5E4EFPEeWmr+yRKFUi/9/zQBqgeZgmc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RrwJWZor; arc=none smtp.client-ip=209.85.221.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745664158; c=relaxed/simple;
+	bh=syAC0nIhx/IzZ9cs+2fbRHm/RrvyLvqr234Zh1733+Y=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=cMJGG8d5WEDQqsYYr/qGqJ+PtY+qCdJaRP5bJCSJa+YZzBKdILg+bJ9jEU3MmFD3Davu+Q5lM5dPDxuUsWk7CIOYr/EIMtSTXsQ0GouQnhu1ya4kS1/Z89b5RZN21AYfGn+RjLpcEyBRyucnlKJGjZeQeyLz9vZEktFARbCop1g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=inria.fr; spf=pass smtp.mailfrom=inria.fr; dkim=pass (1024-bit key) header.d=inria.fr header.i=@inria.fr header.b=BsxY6/GI; arc=none smtp.client-ip=192.134.164.83
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=inria.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=inria.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RrwJWZor"
-Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-39ac9aea656so3299921f8f.3;
-        Fri, 25 Apr 2025 20:23:12 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=inria.fr header.i=@inria.fr header.b="BsxY6/GI"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745637791; x=1746242591; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=bZ1xXxsW4NeRP98ef78rJYFaU6MaDAYecnV4YcmJ8Kk=;
-        b=RrwJWZorpJu3NRtAetWvJVOUPwLfi9AtPf9MgyhMOyJvV00JZYLQpapIA0j9DNn7Tj
-         UboG1FzJC0julG/rHM/daQyvNjqyHl19rTl28q2+9PySqgIJKayXD2aXVAkaQ8Cuicmj
-         j0LgtW7uSOL+TKtCRqLnQ4S4i4KcXCawdYt7Y670M0yUe0JowISSZTiuX246TsfEMJzo
-         aUMiZVHjsM489rnUQ0nIakgAFbRRneYuWqYUl52xnNe/KqA681NV9WrmZzG78QBN3s7d
-         yx7QBz/lAVDWY1TeXDtYIV72yH9VhmVK3y2MAYCdjeivv4I9t3krJrWykDtDhwYSdmzq
-         jaWw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745637791; x=1746242591;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=bZ1xXxsW4NeRP98ef78rJYFaU6MaDAYecnV4YcmJ8Kk=;
-        b=tpTVDR2xbOhGy8yiZ0QzzRBcFQvboIao8HOl+6WGMdivXQ0Gr/wquaHrpjCAjvjvoB
-         vL4XawcSPggwDbO604bV34w+KBlw6tLvVp6xg/k6f14Qc50koHSMSKo/IOzGBuO/9u+Z
-         7mb5kqyG1sZAh+Igucz2CJRBjxdHIHxw19suzTSsCLfPJprJWKVwUGT1BJCbZ4qYFhGo
-         B7qmqyI7Dge39MY5LrZNXkJoVbZKYGXFdarCXwYWdYfaOl1N+hW2gOLkCLV/V8ZsOH10
-         83awlk1Fd75No3sac1tlaXdTUgAvFROnN+uUNK8SXKRNZbpu0il7kzX+7LyOGKEO8xNu
-         F4CA==
-X-Forwarded-Encrypted: i=1; AJvYcCW1uo0+HTZkGjc/uMs9dcGjcq7SjYAQXGbwElKamqRSeTR/LXDY3DQcG9pVtXzL3uk6WWV7ipV0UY3myMq9BPry69/6@vger.kernel.org, AJvYcCWna5xgHw3izBMnaPyN4evQVhhvWFGa+02fybhg3Y606dbYdxY+FkgiCi5w0VCmUSF1k5OLRxgf59G5zUze@vger.kernel.org, AJvYcCXesNECBz4dPO7UGyuoPvCFxhMvA/x8K06heN6SOTIogVHOlrFJdVu3L3XD3JxJKlPadSE=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw2uzW0jy3jCwP5pnm/E/aJHOfCXi6a0YQRHItZid/2u67aFPkA
-	eVzPmtAi09F5OSlXrH/43WrwTS9Y90a21keXD7CbZUcyppipz4UMDrBZxc7+4T0VNMNO5tHIWMl
-	VYkWPOgmvy3kXyhXRWuf8nKTx/a2l7BBf
-X-Gm-Gg: ASbGnctQ+112yoUwlz89husszQndFCT70AmyqgwY0LH6ORABCUIkntIUu8jJl40cM42
-	DH+zSFg4jjrXEHr/3x55da8YPu9K8iecSMmzL2TxMg6RkDuFH3ouf7DvNp0wN2cJKUUG6f1Z8ac
-	cIOKHhE31xYVVlUNl3QZYYywFqRoky5MsA2QbHhQ==
-X-Google-Smtp-Source: AGHT+IE3PHs6T3Jl0OrQH8KbLUj7MwKUzcPm7sefhDzp+dbq+GIago6Zs/rMPPxt/P4f8JZzpV/Z6+OX9kU2Fam6YaQ=
-X-Received: by 2002:a05:6000:178a:b0:390:f4f9:8396 with SMTP id
- ffacd0b85a97d-3a074e4217dmr2985232f8f.28.1745637791026; Fri, 25 Apr 2025
- 20:23:11 -0700 (PDT)
+  d=inria.fr; s=dc;
+  h=date:from:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=Tta21mMLGTn3K2tn7y/mZmOLIBCqpI/zDg0q/+0iZrY=;
+  b=BsxY6/GIz4yYQnPeJ4rraSi74jJFmOXgRQ8FBe86HvDPPB6vsN02m5e1
+   tm8WoafQPSrgoQtF4FVmIWrpJIFS7IWaPEgAHQ+Ey0tpQCzaDNhoKTbvO
+   oqMz/3NLoFM5mf0TL+f7gIfxzN+r5KGhZ8Zh+qReTtC5gIXzG9NDu/BC/
+   E=;
+Authentication-Results: mail2-relais-roc.national.inria.fr; dkim=none (message not signed) header.i=none; spf=SoftFail smtp.mailfrom=julia.lawall@inria.fr; dmarc=fail (p=none dis=none) d=inria.fr
+X-IronPort-AV: E=Sophos;i="6.15,241,1739833200"; 
+   d="scan'208";a="219554437"
+Received: from 231.85.89.92.rev.sfr.net (HELO hadrien) ([92.89.85.231])
+  by mail2-relais-roc.national.inria.fr with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Apr 2025 12:41:23 +0200
+Date: Sat, 26 Apr 2025 12:41:23 +0200 (CEST)
+From: Julia Lawall <julia.lawall@inria.fr>
+X-X-Sender: jll@hadrien
+To: Andrew Morton <akpm@linux-foundation.org>
+cc: Steven Rostedt <rostedt@goodmis.org>, linux-kernel@vger.kernel.org, 
+    linux-trace-kernel@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>, 
+    Mark Rutland <mark.rutland@arm.com>, 
+    Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+    Peter Zijlstra <peterz@infradead.org>, 
+    Linus Torvalds <torvalds@linux-foundation.org>, 
+    Ingo Molnar <mingo@redhat.com>, x86@kernel.org, 
+    Kees Cook <kees@kernel.org>, bpf@vger.kernel.org, 
+    Tejun Heo <tj@kernel.org>, Julia Lawall <Julia.Lawall@inria.fr>, 
+    Nicolas Palix <nicolas.palix@imag.fr>, cocci@inria.fr
+Subject: Re: [RFC][PATCH 0/2] Add is_user_thread() and is_kernel_thread()
+ helper functions
+In-Reply-To: <20250425161449.7a2516b3fe0d5de3e2d2b677@linux-foundation.org>
+Message-ID: <alpine.DEB.2.22.394.2504261157210.3375@hadrien>
+References: <20250425204120.639530125@goodmis.org> <20250425161449.7a2516b3fe0d5de3e2d2b677@linux-foundation.org>
+User-Agent: Alpine 2.22 (DEB 394 2020-01-19)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250425204120.639530125@goodmis.org> <20250425204313.784243618@goodmis.org>
- <202504251558.AA50716@keescook>
-In-Reply-To: <202504251558.AA50716@keescook>
-From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date: Fri, 25 Apr 2025 20:22:59 -0700
-X-Gm-Features: ATxdqUFNS03Ls-N5iHekEa4uNfOcUuKuOiG1gTLIFRDPQEpj5XX7j71ddsDqBts
-Message-ID: <CAADnVQKdWSuDm52GmNor75rFZGNBLcoCto3oecA3D3QHD_MyCQ@mail.gmail.com>
-Subject: Re: [RFC][PATCH 2/2] treewide: Have the task->flags & PF_KTHREAD
- check use the helper functions
-To: Kees Cook <kees@kernel.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>, LKML <linux-kernel@vger.kernel.org>, 
-	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, Peter Zijlstra <peterz@infradead.org>, 
-	Linus Torvalds <torvalds@linux-foundation.org>, Ingo Molnar <mingo@redhat.com>, 
-	X86 ML <x86@kernel.org>, bpf <bpf@vger.kernel.org>, Tejun Heo <tj@kernel.org>, 
-	Julia Lawall <Julia.Lawall@inria.fr>, Nicolas Palix <nicolas.palix@imag.fr>, cocci@inria.fr
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
 
-On Fri, Apr 25, 2025 at 4:10=E2=80=AFPM Kees Cook <kees@kernel.org> wrote:
->
-> On Fri, Apr 25, 2025 at 04:41:22PM -0400, Steven Rostedt wrote:
-> > From: Steven Rostedt <rostedt@goodmis.org>
-> >
-> > Getting the check if a task is a kernel thread or a user thread can be
-> > error prone as it's not easy to see the difference.
-> >
-> >       if (!(task->flags & PF_KTHREAD))
-> >
-> > Is not immediately obvious that it's checking for a user thread.
-> >
-> >       if (is_user_thread(task))
-> >
-> > Is much easier to review, as it is obvious that it is checking if the t=
-ask
-> > is a user thread.
-> >
-> > Using a coccinelle script, convert these checks over to using either
-> > is_user_thread() or is_kernel_thread().
-> >
-> >   $ cat kthread.cocci
-> >   @@
-> >   identifier task;
-> >   @@
-> >   -   !(task->flags & PF_KTHREAD)
-> >   +   is_user_thread(task)
-> >   @@
-> >   identifier task;
-> >   @@
-> >   -   (task->flags & PF_KTHREAD) =3D=3D 0
-> >   +   is_user_thread(task)
-> >   @@
-> >   identifier task;
-> >   @@
-> >   -   (task->flags & PF_KTHREAD) !=3D 0
-> >   +   is_kernel_thread(task)
-> >   @@
-> >   identifier task;
-> >   @@
-> >   -   task->flags & PF_KTHREAD
-> >   +   is_kernel_thread(task)
-> >
-> >   $ spatch --dir --include-headers kthread.cocci . > /tmp/t.patch
-> >   $ patch -p1 < /tmp/t.patch
-> >
-> > Make sure to undo the conversion of the helper functions themselves!
-> >
-> >   $ git show include/linux/sched.h | patch -p1 -R
->
-> FYI, the "file in" test can be helpful. I use it to exclude tools and
-> samples regularly, and *I think* it would work for excluding individual
-> files too:
->
-> @name_of_rule depends !(file in "tools") && !(file in "samples")@
->
-> I've been collecting random notes like this here:
->
-> https://github.com/kees/kernel-tools/tree/trunk/coccinelle
->
-> >  tools/sched_ext/scx_central.bpf.c          |  2 +-
-> >  tools/sched_ext/scx_flatcg.bpf.c           |  2 +-
-> >  tools/sched_ext/scx_qmap.bpf.c             |  2 +-
->
-> I think these are fine. The Makefile is pulling in standard kbuild
-> Makefiles, so I think the correct include directories (outside of
-> tools/) are being used.
 
-I suspect they are not fine.
-I don't think they #include linux/sched.h
-I would drop them for now.
 
-Tejun,
-please double check.
+On Fri, 25 Apr 2025, Andrew Morton wrote:
+
+> On Fri, 25 Apr 2025 16:41:20 -0400 Steven Rostedt <rostedt@goodmis.org> wrote:
+>
+> > While working on the deferred stacktrace code, Peter Zijlstra told
+> > me to use task->flags & PF_KTHREAD instead of checking task->mm for NULL.
+> > This seemed reasonable, but while working on it, as there were several
+> > places that check if the task is a kernel thread and other places that
+> > check if the task is a user space thread I found it a bit confusing
+> > when looking at both:
+> >
+> > 	if (task->flags & PF_KTHREAD)
+> > and
+> > 	if (!(task->flags & PF_KTHREAD))
+> >
+> > Where I mixed them up sometimes, and checked for a user space thread when I
+> > really wanted to check for a kernel thread. I found these mistakes before
+> > sending out my patches, but going back and reviewing the code, I always had
+> > to stop and spend a few unnecessary seconds making sure the check was
+> > testing that flag correctly.
+> >
+> > To make this a bit more obvious, I introduced two helper functions:
+> >
+> > 	is_user_thread(task)
+> > 	is_kernel_thread(task)
+> >
+> > which simply test the flag for you. Thus, seeing:
+> >
+> > 	if (is_user_thread(task))
+> > or
+> > 	if (is_kernel_thread(task))
+> >
+> > it was very obvious to which test you wanted to make.
+>
+> Seems sensible.  Please consider renaming PF_KTHREAD in order to break
+> missed conversion sites.
+
+Maybe:
+
+@r depends on !(file in "include/linux/sched.h")@ // Kees's suggestion
+position p;
+expression e;
+@@
+
+(
+e = (PF_KTHREAD | ...)
+|
+e |= (PF_KTHREAD | ...)
+|
+PF_KTHREAD@p
+)
+
+@script:ocaml@ // change to python if desired
+p << r.p;
+@@
+
+Printf.printf "%s:%d: Warning: remaining use of PF_KTHREAD\n" (List.hd p).file (List.hd p).line
+
+julia
+
