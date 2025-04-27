@@ -1,305 +1,133 @@
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.5])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5773719F43A;
-	Sun, 27 Apr 2025 06:39:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.5
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B16026AF5
+	for <linux-trace-kernel@vger.kernel.org>; Sun, 27 Apr 2025 14:14:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745735973; cv=none; b=tLGXSfdMAMzbszQETOJfARs+gwI/T2N8uRA1hj2a3GDgiBM7VZIwZNoRi1R5p7MZI/EM1L+JndESBVjfuYrMzR2MKZGbetY9nCN9uWFxtGuYB2vN8hUDuwgI+5nUdobJ9lfFsZtbcHOMmlVBVkXcgaRomZr6KgxAYg+nSIVdy/k=
+	t=1745763270; cv=none; b=afoOOXvCdfN6w+rGw0ir/FgM34M5LjpSAq3XUJc+cGeLVZVjAY4dw21vEZStaGkjcunKFIH3RaX7qN+ZePykQAThzV2NPlF4dbHvS/SQ2iz0oIi4fc1iUzcwLjJidI+8XTgll7gS1bVemEkUbFvSfTb4/Up52D0TUWK3qScMSug=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745735973; c=relaxed/simple;
-	bh=1KUTe4VJP1xNF2VNHwy4i7kAovjH09ZQfopHkdFD8bI=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=P9AM7YOI9pIU1DLuvcT3jU5FxuSfTG/p8dD6o+KAaHwk/GiZmkgSvdvthwYGFgNb4HRUqGTPAvD7Gb1qRuDw9TYA9fz0AoSV3/Ggp4zYVzdQ0FxTf0fqj5C/piSxk+0WIBBnYozPffqCQJ8M5bmPZvBn1zqaqP+2Bi+bD63WpKE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=WYyjQOhZ; arc=none smtp.client-ip=220.197.31.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1745763270; c=relaxed/simple;
+	bh=49DuRZhOVTYQFxHgGdK6okYEXh4PRTvvhmby35xZFuQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GT5cffYCaMk5QcKXHTMNgk54jzvMmFny4f61A1UQVIhRzq+ZRQgNREeVgeoblQ+VM3ULezwGq7mW27qqLEssfDMCnBGO8Wam4n4ITDU5PlpVRJ4JQi4znEBJpnPo0/mMZzAXZfINJoqkhgd/+vIdTg9PM8zk7PaCr3i5Qka4P+k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=bXcPI9+9; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="WYyjQOhZ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=LnP2a
-	VLj/uA1xUaM2LTPsV7mUmvBriC6e38+xa5mYGA=; b=WYyjQOhZ+M41ksbyED8XK
-	zBHsJ6UFKT52oHrUtCCDjmAJIhL1qa54to/PPVkMMRYrIRniq9FM1Ni+Jjke0hi3
-	AP86h0IvDl4kt0B194RttAiikeBnLCDf7ScLdSkwjx5/99kZi7UsJsO3Zd3RCUTt
-	SNy+XZ77wyPfnDhypUNI1g=
-Received: from localhost.localdomain (unknown [])
-	by gzga-smtp-mtada-g0-0 (Coremail) with SMTP id _____wAnH_Ld0A1oUVz9Cw--.8800S2;
-	Sun, 27 Apr 2025 14:38:23 +0800 (CST)
-From: Feng Yang <yangfeng59949@163.com>
-To: martin.lau@linux.dev,
-	ast@kernel.org,
-	daniel@iogearbox.net,
-	andrii@kernel.org,
-	eddyz87@gmail.com,
-	song@kernel.org,
-	yonghong.song@linux.dev,
-	john.fastabend@gmail.com,
-	kpsingh@kernel.org,
-	sdf@fomichev.me,
-	haoluo@google.com,
-	jolsa@kernel.org,
-	mattbobrowski@google.com,
-	rostedt@goodmis.org,
-	mhiramat@kernel.org,
-	mathieu.desnoyers@efficios.com,
-	davem@davemloft.net
-Cc: bpf@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	netdev@vger.kernel.org
-Subject: [PATCH v2 bpf-next] bpf: Allow some trace helpers for all prog types
-Date: Sun, 27 Apr 2025 14:38:21 +0800
-Message-Id: <20250427063821.207263-1-yangfeng59949@163.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bXcPI9+9"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1745763267;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=BNjVVte3p3EsUaESR/jga3ypvTF1DEPySfxUJUdW+ts=;
+	b=bXcPI9+9lonLqs5R/8OBokOBXDQVc34+voE2UVdaU9Jk8T/KJGTAOYclSd4YYkhElnLkP6
+	u/YZ+wOKss/1QEpAr2IvNow1zwkTwCnNjv0AXrmdEdY5OQQMgOTX9kemii4PcOqbjxLFdt
+	aVaOlB3ezvNXjhxoOYTPjB+3rEMFVCg=
+Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-669-NkxcXgFHPNizLPHKlO-eyQ-1; Sun,
+ 27 Apr 2025 10:14:25 -0400
+X-MC-Unique: NkxcXgFHPNizLPHKlO-eyQ-1
+X-Mimecast-MFC-AGG-ID: NkxcXgFHPNizLPHKlO-eyQ_1745763263
+Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id A589C19560AA;
+	Sun, 27 Apr 2025 14:14:21 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.18])
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 645D1180045C;
+	Sun, 27 Apr 2025 14:14:15 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Sun, 27 Apr 2025 16:13:43 +0200 (CEST)
+Date: Sun, 27 Apr 2025 16:13:35 +0200
+From: Oleg Nesterov <oleg@redhat.com>
+To: Jiri Olsa <jolsa@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>,
+	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	x86@kernel.org, Song Liu <songliubraving@fb.com>,
+	Yonghong Song <yhs@fb.com>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Hao Luo <haoluo@google.com>, Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Alan Maguire <alan.maguire@oracle.com>,
+	David Laight <David.Laight@ACULAB.COM>,
+	Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas@t-8ch.de>,
+	Ingo Molnar <mingo@kernel.org>
+Subject: Re: [PATCH perf/core 03/22] uprobes: Move ref_ctr_offset update out
+ of uprobe_write_opcode
+Message-ID: <20250427141335.GA9350@redhat.com>
+References: <20250421214423.393661-1-jolsa@kernel.org>
+ <20250421214423.393661-4-jolsa@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wAnH_Ld0A1oUVz9Cw--.8800S2
-X-Coremail-Antispam: 1Uf129KBjvJXoW3trW7tF1UtFy5tF1rGF43Awb_yoWDWry5pF
-	nrAr9xCr4kt3yaqr17Jwn7Z34Fy34DX3yUGayDGw1xur42vry7tF1UKF42gF1rAr9rW347
-	Z3yqvFZ0kw1Iga7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07ja4E_UUUUU=
-X-CM-SenderInfo: p1dqww5hqjkmqzuzqiywtou0bp/1tbiTgA6eGgLtSPFxQABs4
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250421214423.393661-4-jolsa@kernel.org>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
 
-From: Feng Yang <yangfeng@kylinos.cn>
+On 04/21, Jiri Olsa wrote:
+>
+> +static int set_swbp_refctr(struct uprobe *uprobe, struct vm_area_struct *vma, unsigned long vaddr)
+> +{
+> +	struct mm_struct *mm = vma->vm_mm;
+> +	int err;
+> +
+> +	/* We are going to replace instruction, update ref_ctr. */
+> +	if (uprobe->ref_ctr_offset) {
+> +		err = update_ref_ctr(uprobe, mm, 1);
+> +		if (err)
+> +			return err;
+> +	}
+> +
+> +	err = set_swbp(&uprobe->arch, vma, vaddr);
+> +
+> +	/* Revert back reference counter if instruction update failed. */
+> +	if (err && uprobe->ref_ctr_offset)
+> +		update_ref_ctr(uprobe, mm, -1);
+> +	return err;
+>  }
+...
+> +static int set_orig_refctr(struct uprobe *uprobe, struct vm_area_struct *vma, unsigned long vaddr)
+> +{
+> +	int err = set_orig_insn(&uprobe->arch, vma, vaddr);
+> +
+> +	/* Revert back reference counter even if instruction update failed. */
+> +	if (uprobe->ref_ctr_offset)
+> +		update_ref_ctr(uprobe, vma->vm_mm, -1);
+> +	return err;
+>  }
 
-if it works under NMI and doesn't use any context-dependent things,
-should be fine for any program type. The detailed discussion is in [1].
+This doesn't look right even in the simplest case...
 
-[1] https://lore.kernel.org/all/CAEf4Bza6gK3dsrTosk6k3oZgtHesNDSrDd8sdeQ-GiS6oJixQg@mail.gmail.com/
+To simplify, suppose that uprobe_register() needs to change a single mm/vma
+and set_swbp() fails. In this case uprobe_register() calls uprobe_unregister()
+which will find the same vma and call set_orig_refctr(). set_orig_insn() will
+do nothing. But update_ref_ctr(uprobe, vma->vm_mm, -1) is wrong/unbalanced.
 
-Suggested-by: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Signed-off-by: Feng Yang <yangfeng@kylinos.cn>
----
-Changes in v2:
-- not expose compat probe read APIs to more program types.
-- Remove the prog->sleepable check added for copy_from_user,
-- or the summarization_freplace/might_sleep_with_might_sleep test will fail with the error "program of this type cannot use helper bpf_copy_from_user"
-- Link to v1: https://lore.kernel.org/all/20250425080032.327477-1-yangfeng59949@163.com/
----
- kernel/bpf/cgroup.c      |  6 ------
- kernel/bpf/helpers.c     | 38 +++++++++++++++++++++++++++++++++++++
- kernel/trace/bpf_trace.c | 41 ++++------------------------------------
- net/core/filter.c        |  2 --
- 4 files changed, 42 insertions(+), 45 deletions(-)
+The current code updates ref_ctr after the verify_opcode() check, so it doesn't
+have this problem.
 
-diff --git a/kernel/bpf/cgroup.c b/kernel/bpf/cgroup.c
-index 84f58f3d028a..dbdad5f42761 100644
---- a/kernel/bpf/cgroup.c
-+++ b/kernel/bpf/cgroup.c
-@@ -2607,16 +2607,10 @@ const struct bpf_func_proto *
- cgroup_current_func_proto(enum bpf_func_id func_id, const struct bpf_prog *prog)
- {
- 	switch (func_id) {
--	case BPF_FUNC_get_current_uid_gid:
--		return &bpf_get_current_uid_gid_proto;
--	case BPF_FUNC_get_current_comm:
--		return &bpf_get_current_comm_proto;
- #ifdef CONFIG_CGROUP_NET_CLASSID
- 	case BPF_FUNC_get_cgroup_classid:
- 		return &bpf_get_cgroup_classid_curr_proto;
- #endif
--	case BPF_FUNC_current_task_under_cgroup:
--		return &bpf_current_task_under_cgroup_proto;
- 	default:
- 		return NULL;
- 	}
-diff --git a/kernel/bpf/helpers.c b/kernel/bpf/helpers.c
-index e3a2662f4e33..a01a2e55e17d 100644
---- a/kernel/bpf/helpers.c
-+++ b/kernel/bpf/helpers.c
-@@ -23,6 +23,7 @@
- #include <linux/btf_ids.h>
- #include <linux/bpf_mem_alloc.h>
- #include <linux/kasan.h>
-+#include <linux/bpf_verifier.h>
- 
- #include "../../lib/kstrtox.h"
- 
-@@ -1912,6 +1913,12 @@ const struct bpf_func_proto bpf_probe_read_user_str_proto __weak;
- const struct bpf_func_proto bpf_probe_read_kernel_proto __weak;
- const struct bpf_func_proto bpf_probe_read_kernel_str_proto __weak;
- const struct bpf_func_proto bpf_task_pt_regs_proto __weak;
-+const struct bpf_func_proto bpf_perf_event_read_proto __weak;
-+const struct bpf_func_proto bpf_send_signal_proto __weak;
-+const struct bpf_func_proto bpf_send_signal_thread_proto __weak;
-+const struct bpf_func_proto bpf_get_task_stack_sleepable_proto __weak;
-+const struct bpf_func_proto bpf_get_task_stack_proto __weak;
-+const struct bpf_func_proto bpf_get_branch_snapshot_proto __weak;
- 
- const struct bpf_func_proto *
- bpf_base_func_proto(enum bpf_func_id func_id, const struct bpf_prog *prog)
-@@ -1965,6 +1972,8 @@ bpf_base_func_proto(enum bpf_func_id func_id, const struct bpf_prog *prog)
- 		return &bpf_get_current_pid_tgid_proto;
- 	case BPF_FUNC_get_ns_current_pid_tgid:
- 		return &bpf_get_ns_current_pid_tgid_proto;
-+	case BPF_FUNC_get_current_uid_gid:
-+		return &bpf_get_current_uid_gid_proto;
- 	default:
- 		break;
- 	}
-@@ -2022,6 +2031,8 @@ bpf_base_func_proto(enum bpf_func_id func_id, const struct bpf_prog *prog)
- 		return &bpf_get_current_cgroup_id_proto;
- 	case BPF_FUNC_get_current_ancestor_cgroup_id:
- 		return &bpf_get_current_ancestor_cgroup_id_proto;
-+	case BPF_FUNC_current_task_under_cgroup:
-+		return &bpf_current_task_under_cgroup_proto;
- #endif
- 	default:
- 		break;
-@@ -2037,6 +2048,8 @@ bpf_base_func_proto(enum bpf_func_id func_id, const struct bpf_prog *prog)
- 		return &bpf_get_current_task_proto;
- 	case BPF_FUNC_get_current_task_btf:
- 		return &bpf_get_current_task_btf_proto;
-+	case BPF_FUNC_get_current_comm:
-+		return &bpf_get_current_comm_proto;
- 	case BPF_FUNC_probe_read_user:
- 		return &bpf_probe_read_user_proto;
- 	case BPF_FUNC_probe_read_kernel:
-@@ -2047,6 +2060,10 @@ bpf_base_func_proto(enum bpf_func_id func_id, const struct bpf_prog *prog)
- 	case BPF_FUNC_probe_read_kernel_str:
- 		return security_locked_down(LOCKDOWN_BPF_READ_KERNEL) < 0 ?
- 		       NULL : &bpf_probe_read_kernel_str_proto;
-+	case BPF_FUNC_copy_from_user:
-+		return &bpf_copy_from_user_proto;
-+	case BPF_FUNC_copy_from_user_task:
-+		return &bpf_copy_from_user_task_proto;
- 	case BPF_FUNC_snprintf_btf:
- 		return &bpf_snprintf_btf_proto;
- 	case BPF_FUNC_snprintf:
-@@ -2057,6 +2074,27 @@ bpf_base_func_proto(enum bpf_func_id func_id, const struct bpf_prog *prog)
- 		return bpf_get_trace_vprintk_proto();
- 	case BPF_FUNC_perf_event_read_value:
- 		return bpf_get_perf_event_read_value_proto();
-+	case BPF_FUNC_perf_event_read:
-+		return &bpf_perf_event_read_proto;
-+	case BPF_FUNC_send_signal:
-+		return &bpf_send_signal_proto;
-+	case BPF_FUNC_send_signal_thread:
-+		return &bpf_send_signal_thread_proto;
-+	case BPF_FUNC_get_task_stack:
-+		return prog->sleepable ? &bpf_get_task_stack_sleepable_proto
-+				       : &bpf_get_task_stack_proto;
-+	case BPF_FUNC_task_storage_get:
-+		if (bpf_prog_check_recur(prog))
-+			return &bpf_task_storage_get_recur_proto;
-+		return &bpf_task_storage_get_proto;
-+	case BPF_FUNC_task_storage_delete:
-+		if (bpf_prog_check_recur(prog))
-+			return &bpf_task_storage_delete_recur_proto;
-+		return &bpf_task_storage_delete_proto;
-+	case BPF_FUNC_get_branch_snapshot:
-+		return &bpf_get_branch_snapshot_proto;
-+	case BPF_FUNC_find_vma:
-+		return &bpf_find_vma_proto;
- 	default:
- 		return NULL;
- 	}
-diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
-index 52c432a44aeb..868920994517 100644
---- a/kernel/trace/bpf_trace.c
-+++ b/kernel/trace/bpf_trace.c
-@@ -572,7 +572,7 @@ BPF_CALL_2(bpf_perf_event_read, struct bpf_map *, map, u64, flags)
- 	return value;
- }
- 
--static const struct bpf_func_proto bpf_perf_event_read_proto = {
-+const struct bpf_func_proto bpf_perf_event_read_proto = {
- 	.func		= bpf_perf_event_read,
- 	.gpl_only	= true,
- 	.ret_type	= RET_INTEGER,
-@@ -882,7 +882,7 @@ BPF_CALL_1(bpf_send_signal, u32, sig)
- 	return bpf_send_signal_common(sig, PIDTYPE_TGID, NULL, 0);
- }
- 
--static const struct bpf_func_proto bpf_send_signal_proto = {
-+const struct bpf_func_proto bpf_send_signal_proto = {
- 	.func		= bpf_send_signal,
- 	.gpl_only	= false,
- 	.ret_type	= RET_INTEGER,
-@@ -894,7 +894,7 @@ BPF_CALL_1(bpf_send_signal_thread, u32, sig)
- 	return bpf_send_signal_common(sig, PIDTYPE_PID, NULL, 0);
- }
- 
--static const struct bpf_func_proto bpf_send_signal_thread_proto = {
-+const struct bpf_func_proto bpf_send_signal_thread_proto = {
- 	.func		= bpf_send_signal_thread,
- 	.gpl_only	= false,
- 	.ret_type	= RET_INTEGER,
-@@ -1185,7 +1185,7 @@ BPF_CALL_3(bpf_get_branch_snapshot, void *, buf, u32, size, u64, flags)
- 	return entry_cnt * br_entry_size;
- }
- 
--static const struct bpf_func_proto bpf_get_branch_snapshot_proto = {
-+const struct bpf_func_proto bpf_get_branch_snapshot_proto = {
- 	.func		= bpf_get_branch_snapshot,
- 	.gpl_only	= true,
- 	.ret_type	= RET_INTEGER,
-@@ -1430,14 +1430,8 @@ bpf_tracing_func_proto(enum bpf_func_id func_id, const struct bpf_prog *prog)
- 	const struct bpf_func_proto *func_proto;
- 
- 	switch (func_id) {
--	case BPF_FUNC_get_current_uid_gid:
--		return &bpf_get_current_uid_gid_proto;
--	case BPF_FUNC_get_current_comm:
--		return &bpf_get_current_comm_proto;
- 	case BPF_FUNC_get_smp_processor_id:
- 		return &bpf_get_smp_processor_id_proto;
--	case BPF_FUNC_perf_event_read:
--		return &bpf_perf_event_read_proto;
- #ifdef CONFIG_ARCH_HAS_NON_OVERLAPPING_ADDRESS_SPACE
- 	case BPF_FUNC_probe_read:
- 		return security_locked_down(LOCKDOWN_BPF_READ_KERNEL) < 0 ?
-@@ -1446,35 +1440,8 @@ bpf_tracing_func_proto(enum bpf_func_id func_id, const struct bpf_prog *prog)
- 		return security_locked_down(LOCKDOWN_BPF_READ_KERNEL) < 0 ?
- 		       NULL : &bpf_probe_read_compat_str_proto;
- #endif
--#ifdef CONFIG_CGROUPS
--	case BPF_FUNC_current_task_under_cgroup:
--		return &bpf_current_task_under_cgroup_proto;
--#endif
--	case BPF_FUNC_send_signal:
--		return &bpf_send_signal_proto;
--	case BPF_FUNC_send_signal_thread:
--		return &bpf_send_signal_thread_proto;
--	case BPF_FUNC_get_task_stack:
--		return prog->sleepable ? &bpf_get_task_stack_sleepable_proto
--				       : &bpf_get_task_stack_proto;
--	case BPF_FUNC_copy_from_user:
--		return &bpf_copy_from_user_proto;
--	case BPF_FUNC_copy_from_user_task:
--		return &bpf_copy_from_user_task_proto;
--	case BPF_FUNC_task_storage_get:
--		if (bpf_prog_check_recur(prog))
--			return &bpf_task_storage_get_recur_proto;
--		return &bpf_task_storage_get_proto;
--	case BPF_FUNC_task_storage_delete:
--		if (bpf_prog_check_recur(prog))
--			return &bpf_task_storage_delete_recur_proto;
--		return &bpf_task_storage_delete_proto;
- 	case BPF_FUNC_get_func_ip:
- 		return &bpf_get_func_ip_proto_tracing;
--	case BPF_FUNC_get_branch_snapshot:
--		return &bpf_get_branch_snapshot_proto;
--	case BPF_FUNC_find_vma:
--		return &bpf_find_vma_proto;
- 	default:
- 		break;
- 	}
-diff --git a/net/core/filter.c b/net/core/filter.c
-index 79cab4d78dc3..53bf560354f7 100644
---- a/net/core/filter.c
-+++ b/net/core/filter.c
-@@ -8488,8 +8488,6 @@ sk_msg_func_proto(enum bpf_func_id func_id, const struct bpf_prog *prog)
- 		return &bpf_msg_pop_data_proto;
- 	case BPF_FUNC_perf_event_output:
- 		return &bpf_event_output_data_proto;
--	case BPF_FUNC_get_current_uid_gid:
--		return &bpf_get_current_uid_gid_proto;
- 	case BPF_FUNC_sk_storage_get:
- 		return &bpf_sk_storage_get_proto;
- 	case BPF_FUNC_sk_storage_delete:
--- 
-2.43.0
+-------------------------------------------------------------------------------
+OTOH, I think that the current logic is not really correct too,
+
+	/* Revert back reference counter if instruction update failed. */
+	if (ret < 0 && is_register && ref_ctr_updated)
+		update_ref_ctr(uprobe, mm, -1);
+
+I think that "Revert back reference counter" logic should not depend on
+is_register. Otherwise we can have the unbalanced update_ref_ctr(-1) if
+uprobe_unregister() fails, then another uprobe_register() comes at the
+same address, and after that uprobe_unregister() succeeds.
+
+Oleg.
 
