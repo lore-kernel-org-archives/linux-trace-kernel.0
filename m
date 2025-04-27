@@ -1,261 +1,305 @@
-Received: from out199-6.us.a.mail.aliyun.com (out199-6.us.a.mail.aliyun.com [47.90.199.6])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CE7F1BF58;
-	Sun, 27 Apr 2025 02:52:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=47.90.199.6
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.5])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5773719F43A;
+	Sun, 27 Apr 2025 06:39:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745722330; cv=none; b=sL8z2FNrECTbxeZ8snJdCSsy5pse9ZNR2xydG6mDG6SFktYu5opVU2UEAiZFgucSzu8f6KGBhCqDt5AVHnY/iSP/+ZWW/y3xRqVpfmCyLrfmSmpimbH6M+xAYGtCwYEMe7Gt7cBe5WRZNe42G6V3VPX8aLadF/lmNAPeUjnvvyc=
+	t=1745735973; cv=none; b=tLGXSfdMAMzbszQETOJfARs+gwI/T2N8uRA1hj2a3GDgiBM7VZIwZNoRi1R5p7MZI/EM1L+JndESBVjfuYrMzR2MKZGbetY9nCN9uWFxtGuYB2vN8hUDuwgI+5nUdobJ9lfFsZtbcHOMmlVBVkXcgaRomZr6KgxAYg+nSIVdy/k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745722330; c=relaxed/simple;
-	bh=VRzYfPOqmTOEx8IP2DEXI8W+F2Y3OcwWJjkhRpfFHCQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=YshxZrkVQSKc5KGzW3zQ3jZ2ms2FodRyaK8Fh70MGo5fdvLjh7/fdQ07OcfTHT5QtrVSlRpq+XxmcSOb35vDwpJAPgf3kfTEsMWanazmr29oBmvjaQ0rhsgt1pc1oWuhHi8QivFMHmttJ/amI9kQdAJ2TZS/1XWFjshJkI7qDNU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=hU8ZYD1H; arc=none smtp.client-ip=47.90.199.6
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1745735973; c=relaxed/simple;
+	bh=1KUTe4VJP1xNF2VNHwy4i7kAovjH09ZQfopHkdFD8bI=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=P9AM7YOI9pIU1DLuvcT3jU5FxuSfTG/p8dD6o+KAaHwk/GiZmkgSvdvthwYGFgNb4HRUqGTPAvD7Gb1qRuDw9TYA9fz0AoSV3/Ggp4zYVzdQ0FxTf0fqj5C/piSxk+0WIBBnYozPffqCQJ8M5bmPZvBn1zqaqP+2Bi+bD63WpKE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=WYyjQOhZ; arc=none smtp.client-ip=220.197.31.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="hU8ZYD1H"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1745722307; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=iEt3uhcsxnbov9JPbGYyEFMzZDrl62NJAHFLHUNnAIs=;
-	b=hU8ZYD1HWaQj2QU3EhcPPuWe5F3jh7f2VBIpek1ZRPeyjTogj6B8yEdxDUDGp6nCBhxnvNh5vozu4wKPDDLKnfK/x6WWmN09qcJRpeSzbYIiUQTEcO7Brvza6kU8NbjDYAoh0Bx2LxVlhIZTR6hPG1aCv0JkAlWch8UToSy5600=
-Received: from 30.74.144.120(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0WY7FM4o_1745722302 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Sun, 27 Apr 2025 10:51:43 +0800
-Message-ID: <5de38fe3-4a73-443b-87d1-0c836ffdbe30@linux.alibaba.com>
-Date: Sun, 27 Apr 2025 10:51:42 +0800
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="WYyjQOhZ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=LnP2a
+	VLj/uA1xUaM2LTPsV7mUmvBriC6e38+xa5mYGA=; b=WYyjQOhZ+M41ksbyED8XK
+	zBHsJ6UFKT52oHrUtCCDjmAJIhL1qa54to/PPVkMMRYrIRniq9FM1Ni+Jjke0hi3
+	AP86h0IvDl4kt0B194RttAiikeBnLCDf7ScLdSkwjx5/99kZi7UsJsO3Zd3RCUTt
+	SNy+XZ77wyPfnDhypUNI1g=
+Received: from localhost.localdomain (unknown [])
+	by gzga-smtp-mtada-g0-0 (Coremail) with SMTP id _____wAnH_Ld0A1oUVz9Cw--.8800S2;
+	Sun, 27 Apr 2025 14:38:23 +0800 (CST)
+From: Feng Yang <yangfeng59949@163.com>
+To: martin.lau@linux.dev,
+	ast@kernel.org,
+	daniel@iogearbox.net,
+	andrii@kernel.org,
+	eddyz87@gmail.com,
+	song@kernel.org,
+	yonghong.song@linux.dev,
+	john.fastabend@gmail.com,
+	kpsingh@kernel.org,
+	sdf@fomichev.me,
+	haoluo@google.com,
+	jolsa@kernel.org,
+	mattbobrowski@google.com,
+	rostedt@goodmis.org,
+	mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com,
+	davem@davemloft.net
+Cc: bpf@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	netdev@vger.kernel.org
+Subject: [PATCH v2 bpf-next] bpf: Allow some trace helpers for all prog types
+Date: Sun, 27 Apr 2025 14:38:21 +0800
+Message-Id: <20250427063821.207263-1-yangfeng59949@163.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 06/12] khugepaged: introduce khugepaged_scan_bitmap for
- mTHP support
-To: Nico Pache <npache@redhat.com>, linux-mm@kvack.org,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
-Cc: akpm@linux-foundation.org, corbet@lwn.net, rostedt@goodmis.org,
- mhiramat@kernel.org, mathieu.desnoyers@efficios.com, david@redhat.com,
- baohua@kernel.org, ryan.roberts@arm.com, willy@infradead.org,
- peterx@redhat.com, ziy@nvidia.com, wangkefeng.wang@huawei.com,
- usamaarif642@gmail.com, sunnanyong@huawei.com, vishal.moola@gmail.com,
- thomas.hellstrom@linux.intel.com, yang@os.amperecomputing.com,
- kirill.shutemov@linux.intel.com, aarcange@redhat.com, raquini@redhat.com,
- dev.jain@arm.com, anshuman.khandual@arm.com, catalin.marinas@arm.com,
- tiwai@suse.de, will@kernel.org, dave.hansen@linux.intel.com, jack@suse.cz,
- cl@gentwo.org, jglisse@google.com, surenb@google.com, zokeefe@google.com,
- hannes@cmpxchg.org, rientjes@google.com, mhocko@suse.com,
- rdunlap@infradead.org
-References: <20250417000238.74567-1-npache@redhat.com>
- <20250417000238.74567-7-npache@redhat.com>
-From: Baolin Wang <baolin.wang@linux.alibaba.com>
-In-Reply-To: <20250417000238.74567-7-npache@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wAnH_Ld0A1oUVz9Cw--.8800S2
+X-Coremail-Antispam: 1Uf129KBjvJXoW3trW7tF1UtFy5tF1rGF43Awb_yoWDWry5pF
+	nrAr9xCr4kt3yaqr17Jwn7Z34Fy34DX3yUGayDGw1xur42vry7tF1UKF42gF1rAr9rW347
+	Z3yqvFZ0kw1Iga7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07ja4E_UUUUU=
+X-CM-SenderInfo: p1dqww5hqjkmqzuzqiywtou0bp/1tbiTgA6eGgLtSPFxQABs4
 
+From: Feng Yang <yangfeng@kylinos.cn>
 
+if it works under NMI and doesn't use any context-dependent things,
+should be fine for any program type. The detailed discussion is in [1].
 
-On 2025/4/17 08:02, Nico Pache wrote:
-> khugepaged scans PMD ranges for potential collapse to a hugepage. To add
-> mTHP support we use this scan to instead record chunks of utilized
-> sections of the PMD.
-> 
-> khugepaged_scan_bitmap uses a stack struct to recursively scan a bitmap
-> that represents chunks of utilized regions. We can then determine what
-> mTHP size fits best and in the following patch, we set this bitmap while
-> scanning the PMD.
-> 
-> max_ptes_none is used as a scale to determine how "full" an order must
-> be before being considered for collapse.
-> 
-> When attempting to collapse an order that has its order set to "always"
-> lets always collapse to that order in a greedy manner without
-> considering the number of bits set.
-> 
-> Signed-off-by: Nico Pache <npache@redhat.com>
-> ---
->   include/linux/khugepaged.h |  4 ++
->   mm/khugepaged.c            | 94 ++++++++++++++++++++++++++++++++++----
->   2 files changed, 89 insertions(+), 9 deletions(-)
-> 
-> diff --git a/include/linux/khugepaged.h b/include/linux/khugepaged.h
-> index 1f46046080f5..18fe6eb5051d 100644
-> --- a/include/linux/khugepaged.h
-> +++ b/include/linux/khugepaged.h
-> @@ -1,6 +1,10 @@
->   /* SPDX-License-Identifier: GPL-2.0 */
->   #ifndef _LINUX_KHUGEPAGED_H
->   #define _LINUX_KHUGEPAGED_H
-> +#define KHUGEPAGED_MIN_MTHP_ORDER	2
+[1] https://lore.kernel.org/all/CAEf4Bza6gK3dsrTosk6k3oZgtHesNDSrDd8sdeQ-GiS6oJixQg@mail.gmail.com/
 
-Why is the minimum mTHP order set to 2? IMO, the file large folios can 
-support order 1, so we don't expect to collapse exec file small folios 
-to order 1 if possible?
+Suggested-by: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Signed-off-by: Feng Yang <yangfeng@kylinos.cn>
+---
+Changes in v2:
+- not expose compat probe read APIs to more program types.
+- Remove the prog->sleepable check added for copy_from_user,
+- or the summarization_freplace/might_sleep_with_might_sleep test will fail with the error "program of this type cannot use helper bpf_copy_from_user"
+- Link to v1: https://lore.kernel.org/all/20250425080032.327477-1-yangfeng59949@163.com/
+---
+ kernel/bpf/cgroup.c      |  6 ------
+ kernel/bpf/helpers.c     | 38 +++++++++++++++++++++++++++++++++++++
+ kernel/trace/bpf_trace.c | 41 ++++------------------------------------
+ net/core/filter.c        |  2 --
+ 4 files changed, 42 insertions(+), 45 deletions(-)
 
-(PS: I need more time to understand your logic in this patch, and any 
-additional explanation would be helpful:) )
+diff --git a/kernel/bpf/cgroup.c b/kernel/bpf/cgroup.c
+index 84f58f3d028a..dbdad5f42761 100644
+--- a/kernel/bpf/cgroup.c
++++ b/kernel/bpf/cgroup.c
+@@ -2607,16 +2607,10 @@ const struct bpf_func_proto *
+ cgroup_current_func_proto(enum bpf_func_id func_id, const struct bpf_prog *prog)
+ {
+ 	switch (func_id) {
+-	case BPF_FUNC_get_current_uid_gid:
+-		return &bpf_get_current_uid_gid_proto;
+-	case BPF_FUNC_get_current_comm:
+-		return &bpf_get_current_comm_proto;
+ #ifdef CONFIG_CGROUP_NET_CLASSID
+ 	case BPF_FUNC_get_cgroup_classid:
+ 		return &bpf_get_cgroup_classid_curr_proto;
+ #endif
+-	case BPF_FUNC_current_task_under_cgroup:
+-		return &bpf_current_task_under_cgroup_proto;
+ 	default:
+ 		return NULL;
+ 	}
+diff --git a/kernel/bpf/helpers.c b/kernel/bpf/helpers.c
+index e3a2662f4e33..a01a2e55e17d 100644
+--- a/kernel/bpf/helpers.c
++++ b/kernel/bpf/helpers.c
+@@ -23,6 +23,7 @@
+ #include <linux/btf_ids.h>
+ #include <linux/bpf_mem_alloc.h>
+ #include <linux/kasan.h>
++#include <linux/bpf_verifier.h>
+ 
+ #include "../../lib/kstrtox.h"
+ 
+@@ -1912,6 +1913,12 @@ const struct bpf_func_proto bpf_probe_read_user_str_proto __weak;
+ const struct bpf_func_proto bpf_probe_read_kernel_proto __weak;
+ const struct bpf_func_proto bpf_probe_read_kernel_str_proto __weak;
+ const struct bpf_func_proto bpf_task_pt_regs_proto __weak;
++const struct bpf_func_proto bpf_perf_event_read_proto __weak;
++const struct bpf_func_proto bpf_send_signal_proto __weak;
++const struct bpf_func_proto bpf_send_signal_thread_proto __weak;
++const struct bpf_func_proto bpf_get_task_stack_sleepable_proto __weak;
++const struct bpf_func_proto bpf_get_task_stack_proto __weak;
++const struct bpf_func_proto bpf_get_branch_snapshot_proto __weak;
+ 
+ const struct bpf_func_proto *
+ bpf_base_func_proto(enum bpf_func_id func_id, const struct bpf_prog *prog)
+@@ -1965,6 +1972,8 @@ bpf_base_func_proto(enum bpf_func_id func_id, const struct bpf_prog *prog)
+ 		return &bpf_get_current_pid_tgid_proto;
+ 	case BPF_FUNC_get_ns_current_pid_tgid:
+ 		return &bpf_get_ns_current_pid_tgid_proto;
++	case BPF_FUNC_get_current_uid_gid:
++		return &bpf_get_current_uid_gid_proto;
+ 	default:
+ 		break;
+ 	}
+@@ -2022,6 +2031,8 @@ bpf_base_func_proto(enum bpf_func_id func_id, const struct bpf_prog *prog)
+ 		return &bpf_get_current_cgroup_id_proto;
+ 	case BPF_FUNC_get_current_ancestor_cgroup_id:
+ 		return &bpf_get_current_ancestor_cgroup_id_proto;
++	case BPF_FUNC_current_task_under_cgroup:
++		return &bpf_current_task_under_cgroup_proto;
+ #endif
+ 	default:
+ 		break;
+@@ -2037,6 +2048,8 @@ bpf_base_func_proto(enum bpf_func_id func_id, const struct bpf_prog *prog)
+ 		return &bpf_get_current_task_proto;
+ 	case BPF_FUNC_get_current_task_btf:
+ 		return &bpf_get_current_task_btf_proto;
++	case BPF_FUNC_get_current_comm:
++		return &bpf_get_current_comm_proto;
+ 	case BPF_FUNC_probe_read_user:
+ 		return &bpf_probe_read_user_proto;
+ 	case BPF_FUNC_probe_read_kernel:
+@@ -2047,6 +2060,10 @@ bpf_base_func_proto(enum bpf_func_id func_id, const struct bpf_prog *prog)
+ 	case BPF_FUNC_probe_read_kernel_str:
+ 		return security_locked_down(LOCKDOWN_BPF_READ_KERNEL) < 0 ?
+ 		       NULL : &bpf_probe_read_kernel_str_proto;
++	case BPF_FUNC_copy_from_user:
++		return &bpf_copy_from_user_proto;
++	case BPF_FUNC_copy_from_user_task:
++		return &bpf_copy_from_user_task_proto;
+ 	case BPF_FUNC_snprintf_btf:
+ 		return &bpf_snprintf_btf_proto;
+ 	case BPF_FUNC_snprintf:
+@@ -2057,6 +2074,27 @@ bpf_base_func_proto(enum bpf_func_id func_id, const struct bpf_prog *prog)
+ 		return bpf_get_trace_vprintk_proto();
+ 	case BPF_FUNC_perf_event_read_value:
+ 		return bpf_get_perf_event_read_value_proto();
++	case BPF_FUNC_perf_event_read:
++		return &bpf_perf_event_read_proto;
++	case BPF_FUNC_send_signal:
++		return &bpf_send_signal_proto;
++	case BPF_FUNC_send_signal_thread:
++		return &bpf_send_signal_thread_proto;
++	case BPF_FUNC_get_task_stack:
++		return prog->sleepable ? &bpf_get_task_stack_sleepable_proto
++				       : &bpf_get_task_stack_proto;
++	case BPF_FUNC_task_storage_get:
++		if (bpf_prog_check_recur(prog))
++			return &bpf_task_storage_get_recur_proto;
++		return &bpf_task_storage_get_proto;
++	case BPF_FUNC_task_storage_delete:
++		if (bpf_prog_check_recur(prog))
++			return &bpf_task_storage_delete_recur_proto;
++		return &bpf_task_storage_delete_proto;
++	case BPF_FUNC_get_branch_snapshot:
++		return &bpf_get_branch_snapshot_proto;
++	case BPF_FUNC_find_vma:
++		return &bpf_find_vma_proto;
+ 	default:
+ 		return NULL;
+ 	}
+diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
+index 52c432a44aeb..868920994517 100644
+--- a/kernel/trace/bpf_trace.c
++++ b/kernel/trace/bpf_trace.c
+@@ -572,7 +572,7 @@ BPF_CALL_2(bpf_perf_event_read, struct bpf_map *, map, u64, flags)
+ 	return value;
+ }
+ 
+-static const struct bpf_func_proto bpf_perf_event_read_proto = {
++const struct bpf_func_proto bpf_perf_event_read_proto = {
+ 	.func		= bpf_perf_event_read,
+ 	.gpl_only	= true,
+ 	.ret_type	= RET_INTEGER,
+@@ -882,7 +882,7 @@ BPF_CALL_1(bpf_send_signal, u32, sig)
+ 	return bpf_send_signal_common(sig, PIDTYPE_TGID, NULL, 0);
+ }
+ 
+-static const struct bpf_func_proto bpf_send_signal_proto = {
++const struct bpf_func_proto bpf_send_signal_proto = {
+ 	.func		= bpf_send_signal,
+ 	.gpl_only	= false,
+ 	.ret_type	= RET_INTEGER,
+@@ -894,7 +894,7 @@ BPF_CALL_1(bpf_send_signal_thread, u32, sig)
+ 	return bpf_send_signal_common(sig, PIDTYPE_PID, NULL, 0);
+ }
+ 
+-static const struct bpf_func_proto bpf_send_signal_thread_proto = {
++const struct bpf_func_proto bpf_send_signal_thread_proto = {
+ 	.func		= bpf_send_signal_thread,
+ 	.gpl_only	= false,
+ 	.ret_type	= RET_INTEGER,
+@@ -1185,7 +1185,7 @@ BPF_CALL_3(bpf_get_branch_snapshot, void *, buf, u32, size, u64, flags)
+ 	return entry_cnt * br_entry_size;
+ }
+ 
+-static const struct bpf_func_proto bpf_get_branch_snapshot_proto = {
++const struct bpf_func_proto bpf_get_branch_snapshot_proto = {
+ 	.func		= bpf_get_branch_snapshot,
+ 	.gpl_only	= true,
+ 	.ret_type	= RET_INTEGER,
+@@ -1430,14 +1430,8 @@ bpf_tracing_func_proto(enum bpf_func_id func_id, const struct bpf_prog *prog)
+ 	const struct bpf_func_proto *func_proto;
+ 
+ 	switch (func_id) {
+-	case BPF_FUNC_get_current_uid_gid:
+-		return &bpf_get_current_uid_gid_proto;
+-	case BPF_FUNC_get_current_comm:
+-		return &bpf_get_current_comm_proto;
+ 	case BPF_FUNC_get_smp_processor_id:
+ 		return &bpf_get_smp_processor_id_proto;
+-	case BPF_FUNC_perf_event_read:
+-		return &bpf_perf_event_read_proto;
+ #ifdef CONFIG_ARCH_HAS_NON_OVERLAPPING_ADDRESS_SPACE
+ 	case BPF_FUNC_probe_read:
+ 		return security_locked_down(LOCKDOWN_BPF_READ_KERNEL) < 0 ?
+@@ -1446,35 +1440,8 @@ bpf_tracing_func_proto(enum bpf_func_id func_id, const struct bpf_prog *prog)
+ 		return security_locked_down(LOCKDOWN_BPF_READ_KERNEL) < 0 ?
+ 		       NULL : &bpf_probe_read_compat_str_proto;
+ #endif
+-#ifdef CONFIG_CGROUPS
+-	case BPF_FUNC_current_task_under_cgroup:
+-		return &bpf_current_task_under_cgroup_proto;
+-#endif
+-	case BPF_FUNC_send_signal:
+-		return &bpf_send_signal_proto;
+-	case BPF_FUNC_send_signal_thread:
+-		return &bpf_send_signal_thread_proto;
+-	case BPF_FUNC_get_task_stack:
+-		return prog->sleepable ? &bpf_get_task_stack_sleepable_proto
+-				       : &bpf_get_task_stack_proto;
+-	case BPF_FUNC_copy_from_user:
+-		return &bpf_copy_from_user_proto;
+-	case BPF_FUNC_copy_from_user_task:
+-		return &bpf_copy_from_user_task_proto;
+-	case BPF_FUNC_task_storage_get:
+-		if (bpf_prog_check_recur(prog))
+-			return &bpf_task_storage_get_recur_proto;
+-		return &bpf_task_storage_get_proto;
+-	case BPF_FUNC_task_storage_delete:
+-		if (bpf_prog_check_recur(prog))
+-			return &bpf_task_storage_delete_recur_proto;
+-		return &bpf_task_storage_delete_proto;
+ 	case BPF_FUNC_get_func_ip:
+ 		return &bpf_get_func_ip_proto_tracing;
+-	case BPF_FUNC_get_branch_snapshot:
+-		return &bpf_get_branch_snapshot_proto;
+-	case BPF_FUNC_find_vma:
+-		return &bpf_find_vma_proto;
+ 	default:
+ 		break;
+ 	}
+diff --git a/net/core/filter.c b/net/core/filter.c
+index 79cab4d78dc3..53bf560354f7 100644
+--- a/net/core/filter.c
++++ b/net/core/filter.c
+@@ -8488,8 +8488,6 @@ sk_msg_func_proto(enum bpf_func_id func_id, const struct bpf_prog *prog)
+ 		return &bpf_msg_pop_data_proto;
+ 	case BPF_FUNC_perf_event_output:
+ 		return &bpf_event_output_data_proto;
+-	case BPF_FUNC_get_current_uid_gid:
+-		return &bpf_get_current_uid_gid_proto;
+ 	case BPF_FUNC_sk_storage_get:
+ 		return &bpf_sk_storage_get_proto;
+ 	case BPF_FUNC_sk_storage_delete:
+-- 
+2.43.0
 
-> +#define KHUGEPAGED_MIN_MTHP_NR	(1<<KHUGEPAGED_MIN_MTHP_ORDER)
-> +#define MAX_MTHP_BITMAP_SIZE  (1 << (ilog2(MAX_PTRS_PER_PTE) - KHUGEPAGED_MIN_MTHP_ORDER))
-> +#define MTHP_BITMAP_SIZE  (1 << (HPAGE_PMD_ORDER - KHUGEPAGED_MIN_MTHP_ORDER))
->   
->   extern unsigned int khugepaged_max_ptes_none __read_mostly;
->   #ifdef CONFIG_TRANSPARENT_HUGEPAGE
-> diff --git a/mm/khugepaged.c b/mm/khugepaged.c
-> index 5e9272ab82da..83230e9cdf3a 100644
-> --- a/mm/khugepaged.c
-> +++ b/mm/khugepaged.c
-> @@ -94,6 +94,11 @@ static DEFINE_READ_MOSTLY_HASHTABLE(mm_slots_hash, MM_SLOTS_HASH_BITS);
->   
->   static struct kmem_cache *mm_slot_cache __ro_after_init;
->   
-> +struct scan_bit_state {
-> +	u8 order;
-> +	u16 offset;
-> +};
-> +
->   struct collapse_control {
->   	bool is_khugepaged;
->   
-> @@ -102,6 +107,18 @@ struct collapse_control {
->   
->   	/* nodemask for allocation fallback */
->   	nodemask_t alloc_nmask;
-> +
-> +	/*
-> +	 * bitmap used to collapse mTHP sizes.
-> +	 * 1bit = order KHUGEPAGED_MIN_MTHP_ORDER mTHP
-> +	 */
-> +	DECLARE_BITMAP(mthp_bitmap, MAX_MTHP_BITMAP_SIZE);
-> +	DECLARE_BITMAP(mthp_bitmap_temp, MAX_MTHP_BITMAP_SIZE);
-> +	struct scan_bit_state mthp_bitmap_stack[MAX_MTHP_BITMAP_SIZE];
-> +};
-> +
-> +struct collapse_control khugepaged_collapse_control = {
-> +	.is_khugepaged = true,
->   };
->   
->   /**
-> @@ -851,10 +868,6 @@ static void khugepaged_alloc_sleep(void)
->   	remove_wait_queue(&khugepaged_wait, &wait);
->   }
->   
-> -struct collapse_control khugepaged_collapse_control = {
-> -	.is_khugepaged = true,
-> -};
-> -
->   static bool khugepaged_scan_abort(int nid, struct collapse_control *cc)
->   {
->   	int i;
-> @@ -1118,7 +1131,8 @@ static int alloc_charge_folio(struct folio **foliop, struct mm_struct *mm,
->   
->   static int collapse_huge_page(struct mm_struct *mm, unsigned long address,
->   			      int referenced, int unmapped,
-> -			      struct collapse_control *cc)
-> +			      struct collapse_control *cc, bool *mmap_locked,
-> +				  u8 order, u16 offset)
->   {
->   	LIST_HEAD(compound_pagelist);
->   	pmd_t *pmd, _pmd;
-> @@ -1137,8 +1151,12 @@ static int collapse_huge_page(struct mm_struct *mm, unsigned long address,
->   	 * The allocation can take potentially a long time if it involves
->   	 * sync compaction, and we do not need to hold the mmap_lock during
->   	 * that. We will recheck the vma after taking it again in write mode.
-> +	 * If collapsing mTHPs we may have already released the read_lock.
->   	 */
-> -	mmap_read_unlock(mm);
-> +	if (*mmap_locked) {
-> +		mmap_read_unlock(mm);
-> +		*mmap_locked = false;
-> +	}
->   
->   	result = alloc_charge_folio(&folio, mm, cc, HPAGE_PMD_ORDER);
->   	if (result != SCAN_SUCCEED)
-> @@ -1273,12 +1291,72 @@ static int collapse_huge_page(struct mm_struct *mm, unsigned long address,
->   out_up_write:
->   	mmap_write_unlock(mm);
->   out_nolock:
-> +	*mmap_locked = false;
->   	if (folio)
->   		folio_put(folio);
->   	trace_mm_collapse_huge_page(mm, result == SCAN_SUCCEED, result);
->   	return result;
->   }
->   
-> +// Recursive function to consume the bitmap
-> +static int khugepaged_scan_bitmap(struct mm_struct *mm, unsigned long address,
-> +			int referenced, int unmapped, struct collapse_control *cc,
-> +			bool *mmap_locked, unsigned long enabled_orders)
-> +{
-> +	u8 order, next_order;
-> +	u16 offset, mid_offset;
-> +	int num_chunks;
-> +	int bits_set, threshold_bits;
-> +	int top = -1;
-> +	int collapsed = 0;
-> +	int ret;
-> +	struct scan_bit_state state;
-> +	bool is_pmd_only = (enabled_orders == (1 << HPAGE_PMD_ORDER));
-> +
-> +	cc->mthp_bitmap_stack[++top] = (struct scan_bit_state)
-> +		{ HPAGE_PMD_ORDER - KHUGEPAGED_MIN_MTHP_ORDER, 0 };
-> +
-> +	while (top >= 0) {
-> +		state = cc->mthp_bitmap_stack[top--];
-> +		order = state.order + KHUGEPAGED_MIN_MTHP_ORDER;
-> +		offset = state.offset;
-> +		num_chunks = 1 << (state.order);
-> +		// Skip mTHP orders that are not enabled
-> +		if (!test_bit(order, &enabled_orders))
-> +			goto next;
-> +
-> +		// copy the relavant section to a new bitmap
-> +		bitmap_shift_right(cc->mthp_bitmap_temp, cc->mthp_bitmap, offset,
-> +				  MTHP_BITMAP_SIZE);
-> +
-> +		bits_set = bitmap_weight(cc->mthp_bitmap_temp, num_chunks);
-> +		threshold_bits = (HPAGE_PMD_NR - khugepaged_max_ptes_none - 1)
-> +				>> (HPAGE_PMD_ORDER - state.order);
-> +
-> +		//Check if the region is "almost full" based on the threshold
-> +		if (bits_set > threshold_bits || is_pmd_only
-> +			|| test_bit(order, &huge_anon_orders_always)) {
-> +			ret = collapse_huge_page(mm, address, referenced, unmapped, cc,
-> +					mmap_locked, order, offset * KHUGEPAGED_MIN_MTHP_NR);
-> +			if (ret == SCAN_SUCCEED) {
-> +				collapsed += (1 << order);
-> +				continue;
-> +			}
-> +		}
-> +
-> +next:
-> +		if (state.order > 0) {
-> +			next_order = state.order - 1;
-> +			mid_offset = offset + (num_chunks / 2);
-> +			cc->mthp_bitmap_stack[++top] = (struct scan_bit_state)
-> +				{ next_order, mid_offset };
-> +			cc->mthp_bitmap_stack[++top] = (struct scan_bit_state)
-> +				{ next_order, offset };
-> +			}
-> +	}
-> +	return collapsed;
-> +}
-> +
->   static int khugepaged_scan_pmd(struct mm_struct *mm,
->   				   struct vm_area_struct *vma,
->   				   unsigned long address, bool *mmap_locked,
-> @@ -1445,9 +1523,7 @@ static int khugepaged_scan_pmd(struct mm_struct *mm,
->   	pte_unmap_unlock(pte, ptl);
->   	if (result == SCAN_SUCCEED) {
->   		result = collapse_huge_page(mm, address, referenced,
-> -					    unmapped, cc);
-> -		/* collapse_huge_page will return with the mmap_lock released */
-> -		*mmap_locked = false;
-> +					    unmapped, cc, mmap_locked, HPAGE_PMD_ORDER, 0);
->   	}
->   out:
->   	trace_mm_khugepaged_scan_pmd(mm, &folio->page, writable, referenced,
