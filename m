@@ -1,73 +1,73 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF23F27978F
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 28 Apr 2025 17:12:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C83C6184E
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 28 Apr 2025 17:23:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745860338; cv=none; b=useDVXMjwS4+yIHgCIWbh0dc7d0RHjWsVLsRC18cAsvhEYkpEbwgVg875dX3lxec027FdGhlWyJo5AuyrIlkFsiRgHlUKOlv5atvr9gimX+WEhNPqlwP8kwwYIsD3WAsYvWH4HCtm6B0bs1Lsf1YZ+LTP6DF7jWu+Qi0tIDXZV8=
+	t=1745861007; cv=none; b=BtDB1TakziGZyeq8i/g4FiqtJbEKst1sexCmzGVsobLmSenIv8vaBVWgEE5mZnRlXtdomunhczz7vX3CCcxnxAA/SywOsX9Eec7EApApDowlyuGC35lpobm1juveaDcuzlqQxvYzRHxjNllVmkGwZYEqk3XL40esQznHsmVOinU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745860338; c=relaxed/simple;
-	bh=jULmZlWn/2/Vo/wWa1N1sU9KO7XMrfNbc0iy0j8QOUw=;
+	s=arc-20240116; t=1745861007; c=relaxed/simple;
+	bh=UnQslq6Nx8NALIhTnrfcxpjimXFinlYSvQAjOQuu+QM=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=sT2/BrDh2+gteJDsHXYvtIzz8qCFTo9FqbqLi3O6+U38W8quRcq3THqH8fWzqlfAw22+mkbEGBjMbJj07qvtgPmNWziNBQU0DdX+mpiCcIlfabQ1hWpDtQoz020G7DBTNoSBa0jqqR428uWSFbdq9USH17Bd2svqd+IXYr4q6T0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=h4B2qOue; arc=none smtp.client-ip=170.10.129.124
+	 In-Reply-To:Content-Type; b=IWVKCWua9+8dagFyDp0VW4Pl4yG2sZh6VSH45t0wBK0LXtXTNfyDnV7lcuMkthA14Q/sPVqO1x5TJAxiL0py/6yD4IQC2WSiIdQN/SObexF2rpnYRdB5KW46ozgH8k42iAzfUUelDr8k3nUIxwR/xiWlDWQkIVq6CMsrL+KHzS4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=HVyg9HAy; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="h4B2qOue"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HVyg9HAy"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1745860335;
+	s=mimecast20190719; t=1745861004;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=YlBurcqbe64ISpcElqVnUgzueWYOv8LWsAS36SHmzGE=;
-	b=h4B2qOueyF/hwmmGTVyIFRkyfIF/vZ5AK3ke90qCeoKO+KSufp62P/MLsd8sS4R7rrpMsj
-	vzey3+We8HfoUQ389MD0/j6ZotxSSeqLugip9Og2QC+aq1BFmCz/HlpEBWsPg6PfbcDqJo
-	vaccYm3Q9Ev9N9rooUY3NgYBoC6b+90=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=wY4CVzX+uN3IX3vcq1iWMePW9o5nKkePYfy/0EKsFFQ=;
+	b=HVyg9HAyVUuVBmGvQdxvtQ5+JFVp0Nsj0ZAthEVY/B+K2vQXm33fqkUXIwjdP7iTOT/VuJ
+	pqrWZ2fPUl1qaGF9ClhPhsrC3b2m6TPGglJJW2Vy4lSGdZV1+dDoYtDYsFsbOjDpHLm/j4
+	XQkubRpTALTS+/ow43S5/3MT6J/vlDg=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-183-pJiHXp6IN3Cf4PCm-NyXMA-1; Mon, 28 Apr 2025 13:12:14 -0400
-X-MC-Unique: pJiHXp6IN3Cf4PCm-NyXMA-1
-X-Mimecast-MFC-AGG-ID: pJiHXp6IN3Cf4PCm-NyXMA_1745860333
-Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-43cf172ff63so20251105e9.3
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 28 Apr 2025 10:12:14 -0700 (PDT)
+ us-mta-694-mGnwqYQhNnSxx2_WpeBctA-1; Mon, 28 Apr 2025 13:23:22 -0400
+X-MC-Unique: mGnwqYQhNnSxx2_WpeBctA-1
+X-Mimecast-MFC-AGG-ID: mGnwqYQhNnSxx2_WpeBctA_1745861002
+Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-3913b2d355fso1385232f8f.1
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 28 Apr 2025 10:23:22 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745860333; x=1746465133;
+        d=1e100.net; s=20230601; t=1745861001; x=1746465801;
         h=content-transfer-encoding:in-reply-to:organization:autocrypt
          :content-language:from:references:cc:to:subject:user-agent
          :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=YlBurcqbe64ISpcElqVnUgzueWYOv8LWsAS36SHmzGE=;
-        b=xUYvpUxj5IDZirW8QlFbdckPeDx/R4fYb9Xz9IOX9Aio14AfHpOjS/rB1lehHMsgXh
-         CJvBCebei5XavY3A6iMJPxwOXw5XqdhZfCa99eXn5cOumJ+ti4g9wVUGNokYdHPAkQnj
-         EzjHZlyvejYSL1/pFCDxBN8bleGVdJWa4lmCblwp3w7yWGrQBuQ9BN51t0WtGZsIYBeI
-         C5KdTTIidJ0Hi17ZAmPceAVxYySrfZyLyvxdSilT7F+z0bb8jU5nulBg3j+/mDtMBUpW
-         kY5bCOZt2NdSPHMBQzOD8ytOSlZYGvlS1Or+HfGxGdm/Zu674msuueKymey0m2tvcxUI
-         9AlQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVVkRNpdxsJRH5vryMQ6qtp/cVODcpdjGySFGzV+N0ccRPZtfiwH1x3UF7VL73qPRXSANQA7NU05WQISKG2p6oLJss=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyFsodYqCe4Tva64leRftYdmTWtN5EGfpFEVOGgLgfxcufKAD/h
-	g6GZXCxFQIuCktw8KBumjHD1U0Gpv6IRczqgtkEUoJOnMuP8KdD0TKHDv7UMAe0q0EYKvTnuVcK
-	k/RMSJcfs9ipqL5i+KzYrbKhuFuCwia93OJa8vEHjwaQDzi5bSjYmkLkrenx7GYULiy/9fQ==
-X-Gm-Gg: ASbGncuyICKVXnIhKbcriochcunG1THGVErAw2qWlBDL3ilwbYfR0ZvPUgxrBjg8sgW
-	AtxPMSY2ruMZUBr84d9iL2dqLy9zi7CNoL0mldK5lrMQtKYkjQEtIL/h/rZ8l24+fqX+ypZorxk
-	QrpaE1ZooZ8aBp6l4WN6pzLwg38KSKEul0YTUxiAtBnZiOBjZFJMPP9GTptwkE3flwN+Zo5wnjO
-	sB2PT43GYOReZxyNEnP8JfX7Ovx132YKI5eQCJT6J3YAj5nwFK1D36DHiLlU+5kvlo+sd1GnXws
-	WoJ5tkbR8Aq2XPnyBPN4VyeuZpqZHyO5M8Yc7RdtWbmgb7ZxHekwnygOHEYkGw44f73Os0tJnRw
-	GYK0jP1/yuDKPBS81NrZCauLFXfbWcs77Op/Hhw==
-X-Received: by 2002:a05:600c:4e4b:b0:43b:b756:f0a9 with SMTP id 5b1f17b1804b1-441ac8eb213mr763615e9.11.1745860333367;
-        Mon, 28 Apr 2025 10:12:13 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGI3eEGBKgI0g/a7m3l8hddD1u69DnS0ugwSS0KDQtTLhljvtnZJ97Ojpq6J+GchDMn+0V3FA==
-X-Received: by 2002:a05:600c:4e4b:b0:43b:b756:f0a9 with SMTP id 5b1f17b1804b1-441ac8eb213mr763265e9.11.1745860332996;
-        Mon, 28 Apr 2025 10:12:12 -0700 (PDT)
+        bh=wY4CVzX+uN3IX3vcq1iWMePW9o5nKkePYfy/0EKsFFQ=;
+        b=I7Avt5namlaur+8t2UlaTqxJnYNr7AWw8fhT5wP1gK75zyD4B/VPbsS9HFwlCougiu
+         gbfzR2cOTAPvS1aYaH5em0qakKigmAWy2VceCiN0F8f8aJLnVmN8cmoyYHmmxNEs/uJ0
+         jzvP1URqmJMLrD58PTRwRThm3Wg7+T9089v32KtptFghOD+O4lDBagahdPi4CLWmcxJ2
+         i+MRbMsFBAXb9a8sHF2ZxiLsx2F+kWLSfoI91W+GRu985no7IE9NLWskIqnRnN+G1Wis
+         wbD9sf1s7XXwfwt5sFQjTWSUQDdtLwjFc6B7B9EX0oDTHm0ZNOxwwBjUsGZNEhgUMMfH
+         hngw==
+X-Forwarded-Encrypted: i=1; AJvYcCW5VIL0APL+cGmA6YDaZAb0TjKAAGi3caBM6H6Y4Bfsu0lnfs9uHYoiENiQdcDRbhfSCbXXhYmsgRxO0K3T+7wouQI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy9Hwt4M8IqoaxKI8IQAmfD23P8mfrgvEKalxh2hscXmKbsSctD
+	S9hDRezCwG8BUenXHy65JHLY1UVImTEB/t1OTuHff5E7eF1WaUazjxms4ewiouhb8msBkjrzp4m
+	oqev5C8BtwD+T/DKSpkaUBMdhQZreGLLUq4xgUBEzOnRpbOOY03oOHSRPTk/VHVGyKDN5rA==
+X-Gm-Gg: ASbGncvrOq9D5qOvhTsphSFEyUDhdvsfnEZTTf/AhLb49yXqaty6DKO5zU2jPjaYQpW
+	jPqeWDc2ojDv1eqD3A6V4/WKaJoVYzkKybDRMWYWrIm74nQtCTnEheIry4GF6cVvlfiVDbRGjTc
+	IOpiAwQpbrYDTIhYhgWgbNoL8soef/8eI6wLNZM+AYF11jZ1ozyp4g+li85HdPb9isO7wE/HE4h
+	tvFXWVCkqGUkUzF2zTwbfpke9e9XwAn+EdCgCSvgFqKe1rqsHhj/I72II70kZhKu2+SZADODh1x
+	izSguFiyxf1y4t9p5+amz0i3SwYwyiXBBWiQP7rWxIfQthQpttrzFLTCT8kc7DvH7I0f7EOCGfV
+	250nigs92PMIRMeBMjK27HHJhsEla9F5Xr/uMEg==
+X-Received: by 2002:a05:6000:40cb:b0:390:f394:6271 with SMTP id ffacd0b85a97d-3a07ab85dc3mr7533527f8f.43.1745861001681;
+        Mon, 28 Apr 2025 10:23:21 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGIb09GQKvUWlrzMymYxayYtDPK47jESgQU5kjQqNoI7xzmODDrJ7lADPOND7gNymtIw+O2CQ==
+X-Received: by 2002:a05:6000:40cb:b0:390:f394:6271 with SMTP id ffacd0b85a97d-3a07ab85dc3mr7533500f8f.43.1745861001273;
+        Mon, 28 Apr 2025 10:23:21 -0700 (PDT)
 Received: from ?IPV6:2003:d8:2f32:c200:9add:4a7a:46aa:f740? (p200300d82f32c2009add4a7a46aaf740.dip0.t-ipconnect.de. [2003:d8:2f32:c200:9add:4a7a:46aa:f740])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4408d0a7802sm127236275e9.1.2025.04.28.10.12.11
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4408c80174dsm135486465e9.0.2025.04.28.10.23.19
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 28 Apr 2025 10:12:12 -0700 (PDT)
-Message-ID: <fc8117d9-57f8-4c28-9c46-328e4a3c4613@redhat.com>
-Date: Mon, 28 Apr 2025 19:12:11 +0200
+        Mon, 28 Apr 2025 10:23:20 -0700 (PDT)
+Message-ID: <884fab29-e16a-4663-8e33-885bc70ca2f7@redhat.com>
+Date: Mon, 28 Apr 2025 19:23:18 +0200
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -75,9 +75,9 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 03/11] x86/mm/pat: introduce pfnmap_track() and
- pfnmap_untrack()
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Subject: Re: [PATCH v1 05/11] mm: convert VM_PFNMAP tracking to pfnmap_track()
+ + pfnmap_untrack()
+To: Peter Xu <peterx@redhat.com>
 Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org, x86@kernel.org,
  intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
  linux-trace-kernel@vger.kernel.org, Dave Hansen
@@ -91,12 +91,14 @@ Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org, x86@kernel.org,
  Simona Vetter <simona@ffwll.ch>, Andrew Morton <akpm@linux-foundation.org>,
  Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
  <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- "Liam R. Howlett" <Liam.Howlett@oracle.com>, Vlastimil Babka
- <vbabka@suse.cz>, Jann Horn <jannh@google.com>,
- Pedro Falcato <pfalcato@suse.de>, Peter Xu <peterx@redhat.com>
+ "Liam R. Howlett" <Liam.Howlett@oracle.com>,
+ Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+ Vlastimil Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>,
+ Pedro Falcato <pfalcato@suse.de>
 References: <20250425081715.1341199-1-david@redhat.com>
- <20250425081715.1341199-4-david@redhat.com>
- <554a6063-268c-49a7-883b-c39cf541c146@lucifer.local>
+ <20250425081715.1341199-6-david@redhat.com> <aAvvQ1h9bg11hiqI@x1.local>
+ <bbadf008-9ffc-4628-9809-2d8cf104a424@redhat.com> <aA-n9hvSX9JLsRM-@x1.local>
+ <7a26e29c-d889-450a-a5e1-ce671f09e4c8@redhat.com> <aA-rtji7ujQgckbM@x1.local>
 From: David Hildenbrand <david@redhat.com>
 Autocrypt: addr=david@redhat.com; keydata=
  xsFNBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
@@ -143,61 +145,37 @@ Autocrypt: addr=david@redhat.com; keydata=
  jPrnvUsUUsjRoRNJjKKA/REq+sAnhkNPPZ/NNMjaZ5b8Tovi8C0tmxiCHaQYqj7G2rgnT0kt
  WNyWQQ==
 Organization: Red Hat
-In-Reply-To: <554a6063-268c-49a7-883b-c39cf541c146@lucifer.local>
+In-Reply-To: <aA-rtji7ujQgckbM@x1.local>
 X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: FYNUNwEPDMiYTr9JO0CW2lV3teSRHzawtL1Q4BOLsF0_1745860333
+X-Mimecast-MFC-PROC-ID: b0P9BLOptaFLNbUPgs8UTIFwu-BRFDrkvaGdq-P1AlU_1745861002
 X-Mimecast-Originator: redhat.com
 Content-Language: en-US
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-
+On 28.04.25 18:24, Peter Xu wrote:
+> On Mon, Apr 28, 2025 at 06:16:21PM +0200, David Hildenbrand wrote:
+>>> Probably due to what config you have.  E.g., when I'm looking mine it's
+>>> much bigger and already consuming 256B, but it's because I enabled more
+>>> things (userfaultfd, lockdep, etc.).
 >>
->> +int pfnmap_track(unsigned long pfn, unsigned long size, pgprot_t *prot)
->> +{
->> +	const resource_size_t paddr = (resource_size_t)pfn << PAGE_SHIFT;
->> +
->> +	return reserve_pfn_range(paddr, size, prot, 0);
+>> Note that I enabled everything that you would expect on a production system
+>> (incld. userfaultfd, mempolicy, per-vma locks), so I didn't enable lockep.
 > 
-> Nitty, but a pattern established by Liam which we've followed consistently
-> in VMA code is to prefix parameters that might be less than obvious,
-> especially boolean parameters, with a comment naming the parameter, e.g.:
- > > 	return reserve_pfn_range(paddr, size, prot, /*strict_prot=*/0);
-
-Not sure I like that. But as this parameter goes away patch #8, I'll 
-leave it as is in this patch and not start a bigger discussion on better 
-alternatives (don't use these stupid boolean variables ...) ;)
-
-[...]
-
->> +
->> +/**
->> + * pfnmap_track - track a pfn range
+> I still doubt whether you at least enabled userfaultfd, e.g., your previous
+> paste has:
 > 
-> To risk sounding annoyingly pedantic and giving the kind of review that is
-> annoying, this really needs to be expanded, I think perhaps this
-> description is stating the obvious :)
+>    struct vm_userfaultfd_ctx  vm_userfaultfd_ctx;   /*   176     0 */
 > 
-> To me the confusing thing is that the 'generic' sounding pfnmap_track() is
-> actually PAT-specific, so surely the description should give a brief
-> overview of PAT here, saying it's applicable on x86-64 etc. etc.
-> 
-> I'm not sure there's much use in keeping this generic when it clearly is
-> not at this point?
+> Not something that matters.. but just in case you didn't use the expected
+> config file you wanted to use..
 
-Sorry, is your suggestion to document more PAT stuff or what exactly?
+You're absolutely right. I only briefly rechecked for this purpose here 
+on my notebook, and only looked for the existence of members, not 
+expecting that we have confusing stuff like vm_userfaultfd_ctx.
 
-As you know, I'm a busy man ... so instructions/suggestions please :)
-
-> 
->> + * @pfn: the start of the pfn range
->> + * @size: the size of the pfn range
-> 
-> In what units? Given it's a pfn range it's a bit ambiguous as to whether it
-> should be expressed in pages/bytes.
-
-Agreed. It's bytes. (not my favorite here, but good enough)
-
+I checked again and the size stays at 192 with allyesconfig and then 
+disabling debug options.
 
 -- 
 Cheers,
