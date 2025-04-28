@@ -1,219 +1,83 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0689827935F
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 28 Apr 2025 16:21:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A3B727A108;
+	Mon, 28 Apr 2025 16:23:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745857286; cv=none; b=CtauPUUr+ELV87+0qNfHDA8rQmj7kaIXL1M9E9wZKmPXHFwPawivvdqIP2escdsc9DawQObCmigqJ5XHiXETvGXh5PFrpEUTJvA68qgimFKYCN/K3xxRoEAec0YD1/8gBXAEPohtGNt2BdT10Nbh+BbihrTCqrqojGPPH6ASoE4=
+	t=1745857438; cv=none; b=u18cFdjF9AFw7ulM9Q8PqijX6XCxHlvj7A9e1rYG5Dxb9fr4cj/y1tElIBF60WOoHiSnaJyCvtOJx4UlzIEPMxnwpmESfCjsOB+bk35m8U7bZ86IwsmvUeYcfQDDuJTFSs19dEGYRb5IJQjlpJVMsXjoOthYGIc2lhX/q+Cnb5s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745857286; c=relaxed/simple;
-	bh=KdmgYbVEvHpNB4umKfKlNnEfIJ8Wkfdg3a7ozzCxHn4=;
+	s=arc-20240116; t=1745857438; c=relaxed/simple;
+	bh=xDf5umZkFPSJgMJ7wl3HM6HVboLDn8yih9xn6sjKnYA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 In-Reply-To:Content-Type:Content-Disposition; b=rmZFguezYd67BdqZPX81gzcgW52bIdRsBCh2C89BHrJw5JUmgUNyQLY+B5virowOYi96+S7Kv3lGLOoC6EwK7TSn2HWlYuJPDLr7GJA2pZgLAdLchAiWmZ1RySl7KhBc9FNfdVuDYUwcyUGAMA0/BGnCSrzcyN6WXqW22sK7usU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=RP11Cptf; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=mN8yhNwWJTD5DXG7RTaORDDPmQKGKbc2CxN0cSWXwqG/NuI9fhXf2uC4WGVjAaU05ldJmVjgTuHfO780OAMRGtEFBNBrRnmhHmbB5RPcpx7gonsFWsuV4zeJ/N+2wuit0vXOsAbKbb3OGMnhezgCKDTGqfd8SX4DuCqecNXQFJw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fW4UjjZy; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RP11Cptf"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1745857284;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ICKzzB8taBJD0eGbxcxv8f4DsFK3m+kwUBskNGBQM7I=;
-	b=RP11Cptf6B2oHHbDG8zp9ipsIcmI0sOuu+wB7F1ZY5+EObDRdVAYbJ2vKTOFfsNcS5TtUw
-	3lEnPW2aeI0UPi2WCt2WODN5ZhwlibjfOKpc9+fci5eUaf3wvZ1/g/wvCbag0QUUEmU0sP
-	4OY6XeoRppztbG/11vOUkNIWxxJ6TXk=
-Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com
- [209.85.222.199]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-587-lTPvZ6nmOA6GWxv8EjQNwA-1; Mon, 28 Apr 2025 12:21:22 -0400
-X-MC-Unique: lTPvZ6nmOA6GWxv8EjQNwA-1
-X-Mimecast-MFC-AGG-ID: lTPvZ6nmOA6GWxv8EjQNwA_1745857281
-Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-7c54e7922a1so1049493485a.2
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 28 Apr 2025 09:21:21 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745857281; x=1746462081;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ICKzzB8taBJD0eGbxcxv8f4DsFK3m+kwUBskNGBQM7I=;
-        b=QZdZaB98MbEI7CzgifsKTtNJECQDul4UoIWweS5+KkF/y6+Q2PavwG4moKk2Pg01tS
-         BXDVf48XjeAQZAYvmFP4srzhZeRJZSiZCQ5/rJD0dxtM3S2rxg2VDefa1/b0M0a6CXpN
-         JhyodTnE5ZPwmZzq0oSFzXeec3Xuny6b5whjDhchQrjp4e1XYUQo7BCyqqEgtlAOdg5k
-         IPvbIAyTn+uiVE3lae/tAUmaofC8Yc4SvWlqyZ53XgI6kA9JZyUOydPTAvgzYag7kH3X
-         3OGUjnR6ryZC8SFIFSB7E5SxJZR7n/TCq1WBhxZMWx1uZxuRViGNAYRr7AxwnrBpfLg4
-         3P2w==
-X-Forwarded-Encrypted: i=1; AJvYcCVCUjJgchvDVEcSE+vrTM1zxOyviKnsF2QvjNYC5m6tpvVSvwQ0sr2qDOkPLBsNHgp0XIEq+ri4Xy2s4ogebxMejGs=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxon1O+239hKonopvN1c2yTYKGF047JlTN0n2UU6eIhn0ZMv3XZ
-	7N1Io5MZrUKxUJK2wGjpYdH8r77DloBKMxRNVTX6nOikL9F4LVlzDx8Vcrpk201oq00BwOG5BO+
-	fem05sx0ta9bW6wMJGS6PEI1avskF5EZvq5j5DdCToSbMslA4CVnw5whKVrmLzEUZRrBoZw==
-X-Gm-Gg: ASbGnctRibWmnD4mOPFMOV898ccFos99ZPpvSs4mfsCyqpErhlhiqM/DFSZhcG68+1Z
-	cmE2rl0ma1av/B4/ZTmqV1cGsNMIE/wuLF1XoT+7QVbKNzzRcnHxARP6nF1U9qg/rcjcqirKQcE
-	RoEnpxdo6jdLrhQE0aOQWheFVDdJFoylfQQxawdPJMDqyZGIa9QNl/kJqWuoII+m9LbcsrUpeKg
-	tvT96kDHbjNEU+T+7mcDiN+sYuxQ8LYxHMnA/X+l1uKDwG+rqYH/ON5OofglMbnBEDtL5RwSWXP
-	jcI=
-X-Received: by 2002:a05:620a:19a3:b0:7c5:7a03:8467 with SMTP id af79cd13be357-7c9668d1d61mr1640815785a.55.1745857281505;
-        Mon, 28 Apr 2025 09:21:21 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHQz1zkMFXlMEPUAS7D8yAHGiL/XnLPod9B0w30kVOxZ+K3YH+CRaciRSMW1T3Yxr1P4D1AmQ==
-X-Received: by 2002:a05:620a:19a3:b0:7c5:7a03:8467 with SMTP id af79cd13be357-7c9668d1d61mr1640808385a.55.1745857280905;
-        Mon, 28 Apr 2025 09:21:20 -0700 (PDT)
-Received: from x1.local ([85.131.185.92])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c958e9fdaesm639851585a.95.2025.04.28.09.21.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 28 Apr 2025 09:21:20 -0700 (PDT)
-Date: Mon, 28 Apr 2025 12:21:16 -0400
-From: Peter Xu <peterx@redhat.com>
-To: David Hildenbrand <david@redhat.com>
-Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org, x86@kernel.org,
-	intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-	linux-trace-kernel@vger.kernel.org,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Andy Lutomirski <luto@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Jani Nikula <jani.nikula@linux.intel.com>,
-	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-	Rodrigo Vivi <rodrigo.vivi@intel.com>,
-	Tvrtko Ursulin <tursulin@ursulin.net>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	Vlastimil Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>,
-	Pedro Falcato <pfalcato@suse.de>
-Subject: Re: [PATCH v1 02/11] mm: convert track_pfn_insert() to
- pfnmap_sanitize_pgprot()
-Message-ID: <aA-q_PrThAw5v1PF@x1.local>
-References: <20250425081715.1341199-1-david@redhat.com>
- <20250425081715.1341199-3-david@redhat.com>
- <aAvjJOmvm5GsZ-JN@x1.local>
- <78f88303-6b00-42cf-8977-bf7541fa45a9@redhat.com>
- <aAwh6n058Hh490io@x1.local>
- <75998f7c-93d2-4b98-bb53-8d858b2c108e@redhat.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fW4UjjZy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 98E5FC4CEE4;
+	Mon, 28 Apr 2025 16:23:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745857437;
+	bh=xDf5umZkFPSJgMJ7wl3HM6HVboLDn8yih9xn6sjKnYA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=fW4UjjZy/lkiKX0ONaVWzbry9V57fcUyY+mKqc2hBAe69TX4r/tkOvfCF8lAdzozf
+	 sEKKXM3EEaSZ8/dUrLnA89mfL75+QjIU0/Dfi0Et9heXti0mZPiYhL5Ux9bt1kGCzw
+	 swWEP6XNrngX2+TsuKdasep7CaJRjbqYwtKbdL3Hu/OpTHKFXRUwU/yQJZ5yW0E0ze
+	 pCtwHIP7YqfrJ3cl+qbkSh5xP8z6E1Ka9P3fRdz+RKiCVow8m3hEB5IkIUuUDxkRaf
+	 Sp8JplhYxQZmH3Sq3SIXkT45Nt+/+HaXR2ueOEooAzjaNTHzT7PNT2zTDW798CN0JW
+	 QMLQcv/C7+eiw==
+Date: Mon, 28 Apr 2025 09:23:55 -0700
+From: Josh Poimboeuf <jpoimboe@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Andrew Morton <akpm@linux-foundation.org>, 
+	Jens Remus <jremus@linux.ibm.com>, x86@kernel.org, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@kernel.org>, Indu Bhagat <indu.bhagat@oracle.com>, 
+	Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, 
+	Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, 
+	"H. Peter Anvin" <hpa@zytor.com>
+Subject: Re: [PATCH 5/6] x86/vdso: Use CFI macros in
+ __vdso_sgx_enter_enclave()
+Message-ID: <amh7fzsjx4p5nowy3b3j6blkty5ojqf7jawtlslexwzdbxrhc3@zersgacmcnai>
+References: <20250425023750.669174660@goodmis.org>
+ <20250425024023.000117829@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <75998f7c-93d2-4b98-bb53-8d858b2c108e@redhat.com>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: bTynyzzWZ9bblSIin3gwLIwNpbLPVdvy1Zoo--2CKnU_1745857281
-X-Mimecast-Originator: redhat.com
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
+In-Reply-To: <20250425024023.000117829@goodmis.org>
 
-On Mon, Apr 28, 2025 at 04:58:46PM +0200, David Hildenbrand wrote:
+On Thu, Apr 24, 2025 at 10:37:55PM -0400, Steven Rostedt wrote:
+> From: Josh Poimboeuf <jpoimboe@kernel.org>
 > 
-> > > What it does on PAT (only implementation so far ...) is looking up the
-> > > memory type to select the caching mode that can be use.
-> > > 
-> > > "sanitize" was IMHO a good fit, because we must make sure that we don't use
-> > > the wrong caching mode.
-> > > 
-> > > update/setup/... don't make that quite clear. Any other suggestions?
-> > 
-> > I'm very poor on naming.. :( So far anything seems slightly better than
-> > sanitize to me, as the word "sanitize" is actually also used in memtype.c
-> > for other purpose.. see sanitize_phys().
+> Use the CFI macros instead of the raw .cfi_* directives to be consistent
+> with the rest of the VDSO asm.  It's also easier on the eyes.
 > 
-> Sure, one can sanitize a lot of things. Here it's the cachemode/pgrpot, in
-> the other functions it's an address.
+> No functional changes.
 > 
-> Likely we should just call it pfnmap_X_cachemode()/
+> Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
+> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+> ---
+>  arch/x86/entry/vdso/vsgx.S | 15 +++++++--------
+>  1 file changed, 7 insertions(+), 8 deletions(-)
 > 
-> Set/update don't really fit for X in case pfnmap_X_cachemode() is a NOP.
-> 
-> pfnmap_setup_cachemode() ? Hm.
+> diff --git a/arch/x86/entry/vdso/vsgx.S b/arch/x86/entry/vdso/vsgx.S
+> index c0342238c976..8d7b8eb45c50 100644
+> --- a/arch/x86/entry/vdso/vsgx.S
+> +++ b/arch/x86/entry/vdso/vsgx.S
+> @@ -24,13 +24,14 @@
+>  .section .text, "ax"
+>  
+>  SYM_FUNC_START(__vdso_sgx_enter_enclave)
+> +	SYM_F_ALIGN
 
-Sounds good here.
-
-> 
-> > 
-> > > 
-> > > > 
-> > > > > + * @pfn: the start of the pfn range
-> > > > > + * @size: the size of the pfn range
-> > > > > + * @prot: the pgprot to sanitize
-> > > > > + *
-> > > > > + * Sanitize the given pgprot for a pfn range, for example, adjusting the
-> > > > > + * cachemode.
-> > > > > + *
-> > > > > + * This function cannot fail for a single page, but can fail for multiple
-> > > > > + * pages.
-> > > > > + *
-> > > > > + * Returns 0 on success and -EINVAL on error.
-> > > > > + */
-> > > > > +int pfnmap_sanitize_pgprot(unsigned long pfn, unsigned long size,
-> > > > > +		pgprot_t *prot);
-> > > > >    extern int track_pfn_copy(struct vm_area_struct *dst_vma,
-> > > > >    		struct vm_area_struct *src_vma, unsigned long *pfn);
-> > > > >    extern void untrack_pfn_copy(struct vm_area_struct *dst_vma,
-> > > > > diff --git a/mm/huge_memory.c b/mm/huge_memory.c
-> > > > > index fdcf0a6049b9f..b8ae5e1493315 100644
-> > > > > --- a/mm/huge_memory.c
-> > > > > +++ b/mm/huge_memory.c
-> > > > > @@ -1455,7 +1455,9 @@ vm_fault_t vmf_insert_pfn_pmd(struct vm_fault *vmf, pfn_t pfn, bool write)
-> > > > >    			return VM_FAULT_OOM;
-> > > > >    	}
-> > > > > -	track_pfn_insert(vma, &pgprot, pfn);
-> > > > > +	if (pfnmap_sanitize_pgprot(pfn_t_to_pfn(pfn), PAGE_SIZE, &pgprot))
-> > > > > +		return VM_FAULT_FALLBACK;
-> > > > 
-> > > > Would "pgtable" leak if it fails?  If it's PAGE_SIZE, IIUC it won't ever
-> > > > trigger, though.
-> > > > 
-> > > > Maybe we could have a "void pfnmap_sanitize_pgprot_pfn(&pgprot, pfn)" to
-> > > > replace track_pfn_insert() and never fail?  Dropping vma ref is definitely
-> > > > a win already in all cases.
-> > > 
-> > > It could be a simple wrapper around pfnmap_sanitize_pgprot(), yes. That's
-> > > certainly helpful for the single-page case.
-> > > 
-> > > Regarding never failing here: we should check the whole range. We have to
-> > > make sure that none of the pages has a memory type / caching mode that is
-> > > incompatible with what we setup.
-> > 
-> > Would it happen in real world?
-> > > IIUC per-vma registration needs to happen first, which checks for
-> memtype
-> > conflicts in the first place, or reserve_pfn_range() could already have
-> > failed.
-> > > Here it's the fault path looking up the memtype, so I would expect it is
-> > guaranteed all pfns under the same vma is following the verified (and same)
-> > memtype?
-> 
-> The whole point of track_pfn_insert() is that it is used when we *don't* use
-> reserve_pfn_range()->track_pfn_remap(), no?
-> 
-> track_pfn_remap() would check the whole range that gets mapped, so
-> track_pfn_insert() user must similarly check the whole range that gets
-> mapped.
-> 
-> Note that even track_pfn_insert() is already pretty clear on the intended
-> usage: "called when a _new_ single pfn is established"
-
-We need to define "new" then..  But I agree it's not crystal clear at
-least.  I think I just wasn't the first to assume it was reserved, see this
-(especially, the "Expectation" part..):
-
-commit 5180da410db6369d1f95c9014da1c9bc33fb043e
-Author: Suresh Siddha <suresh.b.siddha@intel.com>
-Date:   Mon Oct 8 16:28:29 2012 -0700
-
-    x86, pat: separate the pfn attribute tracking for remap_pfn_range and vm_insert_pfn
-    
-    With PAT enabled, vm_insert_pfn() looks up the existing pfn memory
-    attribute and uses it.  Expectation is that the driver reserves the
-    memory attributes for the pfn before calling vm_insert_pfn().
+I'm not sure why I had this SYM_F_ALIGN here, but it doesn't belong here
+and can be removed.
 
 -- 
-Peter Xu
-
+Josh
