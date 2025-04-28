@@ -1,259 +1,251 @@
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9E82266EE8;
-	Mon, 28 Apr 2025 16:55:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745859333; cv=fail; b=Xz5ngXeUqTf0v0BynfGpt4yC0wc0E0Sf2jTZkPZnDTbBF2qLRAv/Shtl0g3VfRK13WnOvPokg8X3mg/xoiygNH1Mxp/2JgC8Cz4MNIilROSxOPT/6cZHdQejWm3qf7HXeIAmh5Dpi5xWMBPu1gCakny1NeiWiCO/AFXOdQ6w3Nc=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745859333; c=relaxed/simple;
-	bh=t4EuwAV/pWUevcUlEkKoldjwlfHS/Nw0eSbVuWMyYok=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=IccqljxcVKKFqZJEnpMEEtMW29QOVOAZNgGHqLSglY19vZrAtgU8rySxGyFrZQMlQRrvNbaDyFuyxSiTG4e664fFWo8ST3vaQQM1LgtdUU8rdIY2RAilX0/Co9xyuFzZbZEerEQrjE6yJ9rb0kWJMo12VqHwVMTbC9LAyq3KW/4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=naBwmVhD; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=c6asRttn; arc=fail smtp.client-ip=205.220.177.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="naBwmVhD";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="c6asRttn"
-Received: from pps.filterd (m0333520.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53SGfvPQ020178;
-	Mon, 28 Apr 2025 16:54:56 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=corp-2023-11-20; bh=dBBvzYsUzMJqNukQCN
-	sicaBd/ALZja0fSyFJllfCmfc=; b=naBwmVhDxrML6FYNq0xpPGFYSL471TEuoX
-	bJZlnAMJPo00V2terhMcJpd5TbRNg14NX4Epi9aQpZjfsBCbk1xGiXQKGqu4xEIZ
-	uilg/LiaJv+jKQjCYL78UMGmj8Dg/np1PG8PRQKsvJjci0axncOtTs1IQXE6LBTb
-	UYE8j76yNbdf7XdoqYPqYbGEDkofb294rpxMob51qMT8CnWsa/ElOtuFzTLNxb7q
-	M5P23IGf8nIDeXn8ozfpk5m75hZoWicapRTZYiECJpOeF5SAaxUr/646OYps6Q6T
-	QEEPW7utlB1cjjoOETs2fw9HRaGHTt7oRhTNLxIG9zaC2EZl4PYw==
-Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.appoci.oracle.com [138.1.114.2])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 46adbkg2eq-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 28 Apr 2025 16:54:56 +0000 (GMT)
-Received: from pps.filterd (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 53SGqGm0011290;
-	Mon, 28 Apr 2025 16:54:55 GMT
-Received: from nam11-co1-obe.outbound.protection.outlook.com (mail-co1nam11lp2171.outbound.protection.outlook.com [104.47.56.171])
-	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 468nx96vkb-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 28 Apr 2025 16:54:55 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=nFB/Cmib3l1FTVm9bG4nsSOByoSf1aWSucGSerYhX/zs94rCMDcyUHWMV4/BjDRC1iqQkWaeP6JSgMe34WbIEWn6+rKXiZztbwQFscXQ5bPTwTiR69jFyVl0sVPkAmONZkuRderjQjcXeK7M0F64v61UrDXgcTXzdSdh9wDSQawT9VyyfD24Uzv+8oVYkba3VqrefjWw6nuHdoPViRlfHJuYTPjsDpeUFEe3PusuLE9SdUzJVVWilV+31lQuPBA3IRHF3jFqjVnuencBJGFuA+FQoy8CkIAmtoE+OgCtDGGkjQ3dBnmR/9C4vs9GwBWmVZ5m9qrVgpDtkQTCjj+FZw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=dBBvzYsUzMJqNukQCNsicaBd/ALZja0fSyFJllfCmfc=;
- b=JQ+EzUQif0H+02nIM85SgXtN1bIt0WGCN0ZzvpNyNz97WfOIYUYJjZeop8yrnKdeHAhlY+D/0pPTL270znFzKQ95RXLfPaS3b/1JiOHKNjTuls4vsE3CT3yc5ZUpNyemBujH6ZLe//b9AORdUJpqKfQmEH0qszEUzkvVv96AikNt/Vo8StUGiocCkViHORzocVN5D96anhaM9jxpWaGbYA0mrXISOWAWqNF0Ad6OdIBKF65QrmE+gUGNEKu1xkrYC8oEsnOXwSUV1T3szeP/dZ1HEPTwe5cwErXZ9WscHs2roAkQVs/xFzrxRFdvXih1oleFv4p3f4hz8Vb1p/gMrQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=dBBvzYsUzMJqNukQCNsicaBd/ALZja0fSyFJllfCmfc=;
- b=c6asRttnGbeoZ/n2AAqId2wO4j9LbAgvHZOyUlXjBunbpxayhlcZ+YAK18/HnaoLaE5Gd7tlOQYJ+fxY3itmw7qlMSvXRovMibGp1QqABIZNHR8F0DVz0f82y3X+2HMZMUfWSA91dIhj9wDy23fEQb/T+ld74MsHv0G4q+0dSc0=
-Received: from DM4PR10MB8218.namprd10.prod.outlook.com (2603:10b6:8:1cc::16)
- by DS7PR10MB7156.namprd10.prod.outlook.com (2603:10b6:8:e0::9) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8678.30; Mon, 28 Apr 2025 16:54:52 +0000
-Received: from DM4PR10MB8218.namprd10.prod.outlook.com
- ([fe80::2650:55cf:2816:5f2]) by DM4PR10MB8218.namprd10.prod.outlook.com
- ([fe80::2650:55cf:2816:5f2%5]) with mapi id 15.20.8678.028; Mon, 28 Apr 2025
- 16:54:52 +0000
-Date: Mon, 28 Apr 2025 17:54:49 +0100
-From: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-To: Peter Xu <peterx@redhat.com>
-Cc: David Hildenbrand <david@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, x86@kernel.org, intel-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org, linux-trace-kernel@vger.kernel.org,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-        Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        Tvrtko Ursulin <tursulin@ursulin.net>,
-        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        "Liam R. Howlett" <Liam.Howlett@oracle.com>,
-        Vlastimil Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>,
-        Pedro Falcato <pfalcato@suse.de>
-Subject: Re: [PATCH v1 04/11] mm/memremap: convert to pfnmap_track() +
- pfnmap_untrack()
-Message-ID: <173b5150-fb34-4216-92d4-01fedbc76d21@lucifer.local>
-References: <20250425081715.1341199-1-david@redhat.com>
- <20250425081715.1341199-5-david@redhat.com>
- <aAvp6umyw1AF2DbN@x1.local>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aAvp6umyw1AF2DbN@x1.local>
-X-ClientProxiedBy: LO4P265CA0172.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:312::15) To DM4PR10MB8218.namprd10.prod.outlook.com
- (2603:10b6:8:1cc::16)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A637625179E;
+	Mon, 28 Apr 2025 16:56:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745859365; cv=none; b=D4WHXdNfkK+d6pfIuaPS/tW79bgYVjuanK1yMZkPypHROCjz6RCVDrAyxqJE5kSkPvQcF82sof4/rqXjems1cSTk1qhGaH3uCzy18cQirYHfWjOtZCwT2j01Rj1Ko7q0O751GFjBAhYBiDksKXs4utl5VRe5+o5sXZKFedby5es=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745859365; c=relaxed/simple;
+	bh=NdWqAH7iECnUuZvOmycgvYr6C9+P10Bi0ApVGVoU+Sw=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=D18GuA9OV7MJk+x++dOwLfksV3bgWk9dRnaSjtrnhskQnkTm07k1FdkNSeG8XNNEJRg8LY6AzxojruCBtNfxVV57+UEMX2ejHkngUSslRHaXixvleNMJS4Qc+geWj6Hs9wpwPpWQ+epT7wkMPCAcHD/qLw1sgXMoGWZLMZWyfP8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 087A4C4CEE4;
+	Mon, 28 Apr 2025 16:56:01 +0000 (UTC)
+Date: Mon, 28 Apr 2025 12:56:00 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Masami
+ Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Andrew Morton <akpm@linux-foundation.org>, Josh Poimboeuf
+ <jpoimboe@kernel.org>, x86@kernel.org, Peter Zijlstra
+ <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, Arnaldo Carvalho de
+ Melo <acme@kernel.org>, Indu Bhagat <indu.bhagat@oracle.com>, Alexander
+ Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa
+ <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Ian Rogers
+ <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>,
+ linux-perf-users@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+ linux-toolchains@vger.kernel.org, Jordan Rome <jordalgo@meta.com>, Sam
+ James <sam@gentoo.org>, Andrii Nakryiko <andrii.nakryiko@gmail.com>, Jens
+ Remus <jremus@linux.ibm.com>, Florian Weimer <fweimer@redhat.com>, Andy
+ Lutomirski <luto@kernel.org>, Weinan Liu <wnliu@google.com>, Blake Jones
+ <blakejones@google.com>, Beau Belgrave <beaub@linux.microsoft.com>, "Jose
+ E. Marchesi" <jemarch@gnu.org>, Alexander Aring <aahringo@redhat.com>
+Subject: Re: [PATCH v5 3/9] unwind deferred: Use bitmask to determine which
+ callbacks to call
+Message-ID: <20250428125600.1f50f476@gandalf.local.home>
+In-Reply-To: <02339b93-de9a-49e4-8dbb-137d02fc6ea8@efficios.com>
+References: <20250424192456.851953422@goodmis.org>
+	<20250424192612.844558089@goodmis.org>
+	<02339b93-de9a-49e4-8dbb-137d02fc6ea8@efficios.com>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM4PR10MB8218:EE_|DS7PR10MB7156:EE_
-X-MS-Office365-Filtering-Correlation-Id: 3ef4e22b-fde4-4c9f-7cb6-08dd8675653b
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|366016|376014|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?yJ9nrb68sSopDhtielkDAj4y671rpeKrb+/hIrdU//Um/Vg69cmhipQABQFi?=
- =?us-ascii?Q?Xn7uXgxJrmEYAz7dr8bzgz7tYiL/6F4Pi5oZd9ZGnL0wxmr2x6R3sSAGKHY4?=
- =?us-ascii?Q?YvKpwIUEHNVdqpVAavM4NDmyVoBQf7LQuRdk5IgnLU0eIWdULUsIn5TH8Koc?=
- =?us-ascii?Q?kawoQKN9aURTesCsbrcTmmz+or+pdH/axSjo0lzTjNnaMjYlQ0I1tuaBnnfp?=
- =?us-ascii?Q?dfQ+mD4FQgKJjEmaeRZvxsDhDL8NNrGMNXdnM/n+w+QX+Ztmfswx0zUZUxCP?=
- =?us-ascii?Q?KDwRMuAKsVWXjPnqGRBUID5N10+AAkiKhzUGkGnbpXSKEoLA9EAezHCyeljj?=
- =?us-ascii?Q?Ak1ouPPgf8kcNny4MYWnwEpZ41fWBt6aIuc9fHVZPjftGsGzrhN+3XzuFJ7E?=
- =?us-ascii?Q?wbuhuTD4h4o+uSmdxj+ojFNF/KPDMicy4MZqQKm92tQlTwh5dRYMp+d3ZL4p?=
- =?us-ascii?Q?8Jc8VThsZKOek485zPNtRSKackQvCMOd4K6IiVaW0RSy8WBQj3QQ0GTjweRm?=
- =?us-ascii?Q?avgCFCobs7jVIy8WX9RfHU405S8PdW+PDlfZuIzYzgkqrlaCEk5+Bkpn9eVH?=
- =?us-ascii?Q?IwFy59aHy2wuka/5822gNKiNvyDAAqrHcKqJ0B+3M5k/J3xuUGiGT8NMOquz?=
- =?us-ascii?Q?/eN3NtPCVfGJ6ckGzvUuKh4cV46OmdJtM+a9M5h41QfZuQPMwSC+wnTfE9Oc?=
- =?us-ascii?Q?9ZCi7/i7hgmDh4LeKyuug7Ih4DnyAODv69KFR44AvCMofTOpel0m7o0TcTUu?=
- =?us-ascii?Q?n7kOAXBPmOSru2FMte8nOltSGOorOix0caGcBAEoZ2rb9/SflDzHme69qeb5?=
- =?us-ascii?Q?K2BArik1QwqaJogp/ia8f+8XhVZnv+qKWAerrXL57Wm5EzFZvjqpmpvf32vf?=
- =?us-ascii?Q?259Y77fIZVxCEyqsLCQ+xtY+2n2mkYKor0VxVKvSNr8pW8K6frM/3STmoaAm?=
- =?us-ascii?Q?EkBuuGXLSNIW3BBtE1HrzRK7lIpbfwoIN4ft73Ypfuz4JG3WFQLFpNiobPF7?=
- =?us-ascii?Q?zr3g+g2EbU9BFqiv7+fZ8GIdFZdyLsxHnECCKOvdP2ObrUNe0URDte+c5f39?=
- =?us-ascii?Q?zBRGXbB0R8Q6otQJ25U+XquTEwkbGI+/L+7QyIFArMHp5XJ7CcR5JANLAxLq?=
- =?us-ascii?Q?MHpnQUBvrVygD9psRVZn3SXYf80jOl+uhBouid3ztQMy1OlDxVyU7YABc/oX?=
- =?us-ascii?Q?3cjZP2BGQG135zhKNUSDK+LlXyceFu6OqNRuIA+KSz0YR92TxcJJVSQvz9nb?=
- =?us-ascii?Q?TJK64HGhtg15O4qNgGZIS9g3JLFvKpRV2vQLPBHxV22bijmhsTWyFhswxNjx?=
- =?us-ascii?Q?eBpC3LNlLQZojluGiyRI7VrYBhbe+KlmDJKm8bUXCsQU8PVh1IHLXtDf0ERl?=
- =?us-ascii?Q?5uzY+qP2rDV2E9USQH/VWnE52QDup2YTZKJPU0Geh+z5abk91giFnrNLy9zC?=
- =?us-ascii?Q?6Hh3rGp46Rs=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR10MB8218.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(366016)(376014)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?q5C7ZzkgbkdXbyXcL7KmfV9ibjP2gMqA1BwHFUf0a9yeXcx/U2OcvmRwrl+r?=
- =?us-ascii?Q?zDvaHQa9FhoooAZIs0ZhZ9wvN83s5SqmUEwB6u1w+2MA9Jzgg78AgR8udZd+?=
- =?us-ascii?Q?b8J+FM4xrKwGFnLHKYkqH6GOMHTeh0WUK6Iw/ji+ew6f7y/oSTZnNc7PwD22?=
- =?us-ascii?Q?RCFftXVqcm1yxYOSVb8fJ/jyVPMTJBsWG8bE3mXYADqJgfpD/mmRSmXpdnW1?=
- =?us-ascii?Q?PWr3IR/CJshx2Ol6NwBnswwgFbPYaiHTilfHJYpkzNNzcrlxu9tcAW0zQgAL?=
- =?us-ascii?Q?UOZYvQkU9ymsEWb5HxH+l1ImA28xyc3aUswtjPnfiCBWmn9gooKbWzyOuVfn?=
- =?us-ascii?Q?F3MQ+7LHYHRU7COaRIE24Ee3sE15TbtgybzZIzP0ZfPF6nG3Jz5sHMrM7VRS?=
- =?us-ascii?Q?i2XTsA1glLEHL12Pgju+y9T1NurNQsEQkOn6wL0hzAnSE7L8OoTTuZto1JGH?=
- =?us-ascii?Q?x1UtjbOc0HMsq12xvxcy/kIYoHGw33dPyfqLhvNj35DaYZP1PON6l4bg5wnY?=
- =?us-ascii?Q?IbZuma7Bf+P1W+c59ao1J9AJwGpBRCIJHopXvnATm1MbHRrIyUxTHYPTnT3/?=
- =?us-ascii?Q?Ip8hOoxOUYCClUHgMaE5HZKO1qv8nNcz5QRvIG7TTpHFKY6cVS+eIYikTSNS?=
- =?us-ascii?Q?hS7uy89CBxdWt39zwME7WEO+VIsfOQYLy5qsUIqG33dFCKPo4JT9qFuXkUPs?=
- =?us-ascii?Q?EnfM4OBfL6t1fbm2P8eiACqTP7g0w+o1XQGns06fNh9FwkC3MAspTqW7UQde?=
- =?us-ascii?Q?y45OzCiES9wB7EHnXzP/tFvq7hfAQdtaLdSLK8mZnBnnR39vI2zv42Gt1c1m?=
- =?us-ascii?Q?sgxMv89J4zDnGzrPIbw3VTWo6uJ09Binv0Q0wJhmHHC+bXsg94hS7PzwNQIj?=
- =?us-ascii?Q?VGoEWp08ZqDKaboQ8PdYcRTXGxP1kR1LncFuFy1W2eBZezrGru8jdpT6yQ4x?=
- =?us-ascii?Q?hsXVOlqwN5+Uxw3DajD+iYpwxHqm7v5xYTxTDJJwHhyOlGgxkdhm2lxmKECP?=
- =?us-ascii?Q?sOVeF5ufoT5GKsY2Of29NU89Y/bVOB08wIHBn7wQhRHy+My3S0ErncPi45Fn?=
- =?us-ascii?Q?KRPBzD7slPyz6q6rTEdyMjJbLhgnWR2YXbLDzRCg1hvQiZUK66UX/cTPfqYa?=
- =?us-ascii?Q?I2981fGWIJeG4X+U1F16+bKtKkqw31LSHm4ssOLjfwIAvKUlMED4TmwdOPlq?=
- =?us-ascii?Q?1JVEoCglsJqBhaQaHTx0zxvB2LbAeEhosgCnXJvE6b+iiMJ71sGVkuNe/FsW?=
- =?us-ascii?Q?V7uAYbkrknDoSrxQ6kpWm2pkCR+rzjMc8YOb5D+j4hh+94bVLAQhnz/W2OSx?=
- =?us-ascii?Q?2S4NsJvwZjNjOzYSDdDux/QhoMJ42ZCvvvhPnRC+11c3CZHbEv2HNAkaOcB5?=
- =?us-ascii?Q?6H5eqO3VOPH7Y9CUhct0EiwGpFjMy1aawquAqlEgb2c2OckK/vm5W3JiCNar?=
- =?us-ascii?Q?8FXvy68edYAi0AFPRrDHOqASeYiXxa6AQQ2i9F88Haga+sfaqVBI5tDc5Gqc?=
- =?us-ascii?Q?XQ9FCkWZEr5hkw12i7P6JF/w23kMq9UyVr/UzjH0sM7YFvahD+itRSDvgyxN?=
- =?us-ascii?Q?Eq9waOuLNZhr0+1zaNnRehf9SIcg5XchaRbbU28i52UlKpG1r8K/I7xEq0US?=
- =?us-ascii?Q?pg=3D=3D?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	dKEdKp1qdkdYbnqKejVruBAS1IW9VGSNgEWWFbNPwhXWjo2jhRywKRC6np+CuxEHSrlo36JO9uKseJk8Pm1fYWX4cIiwaaBCDJTJYsgJEaycB0J5zs4TcEN851n/2F8HvQL8Oq/RPiLnobdoNLp7LifXHscAW90b3nVLXJNhsfVFOvJ6GiCzVHx+M14keI3buplAFthXq5Hj3ZZdX8AmhzN6UNw5PIw8L8Mp1XRNBZ15kMPwmoDIujRSf8KqsE/gedWaJ6mcdmU2yVlC9rnyHJErRD4swU0oCzD8ANqSXhnp00x3nBJQEkGt4hM3Zp/1HxWMmOENXJ1b2v+4wwYyO/iVvce3EtOW63HJdAFrvwannRuiN/qn7wvVGzfNYV8+X5wMwjauE53kkQEH5r0lquDAmvl8hgG7F39GCmsZKUE1VEl8ERYrjkVRb0xr7oT0Z1APIP/aWiOqrcImCmjJ3BvYRino4R4HhYzi49Gy0ZIjfUFeqZ5aKlcFC6iBx18XkmwT9qCw3ymh8VrWRHltoceKQ/TEQHfUea6McxGclj55Mgg9jbX3ByfNZdX+lMKWz1cWOZnENEBvc4VRmqEIArYX611fGj5BgdT3heBQRo0=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3ef4e22b-fde4-4c9f-7cb6-08dd8675653b
-X-MS-Exchange-CrossTenant-AuthSource: DM4PR10MB8218.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Apr 2025 16:54:52.4907
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: WViBZ3Nr2uDNcrDGYzB10jddqMLXsS2qzsZQAl/o63KTZwCVl1iESmNGhDOkFqOaL7JdhRxBkSyT3QuaWFq/07O5Mbq5xvonm8SE301aO/g=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR10MB7156
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-04-28_06,2025-04-24_02,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=899 malwarescore=0
- suspectscore=0 adultscore=0 phishscore=0 mlxscore=0 bulkscore=0
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2504070000 definitions=main-2504280137
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDI4MDEzNyBTYWx0ZWRfX6t6n/NisXvdK S6xmONghgv2hv4SgM2px0jiU5RKHuBlPB046ZJ2oOYXZNsfqWOZNzM+MVGk0+RDhU9yvIl1KrGi pGbcJe1gcDPX66cFdZJUoAsyPxbGJwCEqfFzWsls8uzqh1O8dQLuqJZa+uIpSMG/Pf7xHg44bZ5
- IFD+Cs4I1j/A0CJqFZKDFiEbsM+IWVpYFvnWNZUo7alIDNhaPNr9MFwyjPz3QFpaxURq8kJHvIx XmOYR25DLhH40hJtWVirBQGUQjTONpbbjWukmyJbZDDvzJGBxet3uuGOEizwKiAt/KfIMfkRl8G dHOq1Bqtvl8lM7hFfxzETLVaC/xdFlwXliwskV1xqK1/T1OUeR3s0SZNBTeTBRnnFteYWsVVNyb DE82Ckn5
-X-Proofpoint-GUID: hYHS45eP4ogmrR9yR895yxL0pJAqsbBm
-X-Proofpoint-ORIG-GUID: hYHS45eP4ogmrR9yR895yxL0pJAqsbBm
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Fri, Apr 25, 2025 at 04:00:42PM -0400, Peter Xu wrote:
-> On Fri, Apr 25, 2025 at 10:17:08AM +0200, David Hildenbrand wrote:
-> > Let's use the new, cleaner interface.
-> >
-> > Signed-off-by: David Hildenbrand <david@redhat.com>
-> > ---
-> >  mm/memremap.c | 8 ++++----
-> >  1 file changed, 4 insertions(+), 4 deletions(-)
-> >
-> > diff --git a/mm/memremap.c b/mm/memremap.c
-> > index 2aebc1b192da9..c417c843e9b1f 100644
-> > --- a/mm/memremap.c
-> > +++ b/mm/memremap.c
-> > @@ -130,7 +130,7 @@ static void pageunmap_range(struct dev_pagemap *pgmap, int range_id)
-> >  	}
-> >  	mem_hotplug_done();
-> >
-> > -	untrack_pfn(NULL, PHYS_PFN(range->start), range_len(range), true);
-> > +	pfnmap_untrack(PHYS_PFN(range->start), range_len(range));
-> >  	pgmap_array_delete(range);
-> >  }
-> >
-> > @@ -211,8 +211,8 @@ static int pagemap_range(struct dev_pagemap *pgmap, struct mhp_params *params,
-> >  	if (nid < 0)
-> >  		nid = numa_mem_id();
-> >
-> > -	error = track_pfn_remap(NULL, &params->pgprot, PHYS_PFN(range->start), 0,
-> > -			range_len(range));
-> > +	error = pfnmap_track(PHYS_PFN(range->start), range_len(range),
-> > +			     &params->pgprot);
-> >  	if (error)
-> >  		goto err_pfn_remap;
-> >
-> > @@ -277,7 +277,7 @@ static int pagemap_range(struct dev_pagemap *pgmap, struct mhp_params *params,
-> >  	if (!is_private)
-> >  		kasan_remove_zero_shadow(__va(range->start), range_len(range));
-> >  err_kasan:
-> > -	untrack_pfn(NULL, PHYS_PFN(range->start), range_len(range), true);
-> > +	pfnmap_untrack(PHYS_PFN(range->start), range_len(range));
->
-> Not a huge deal, but maybe we could merge this and previous patch?  It
-> might be easier to reference the impl when reading the call site changes.
+On Mon, 28 Apr 2025 12:33:50 -0400
+Mathieu Desnoyers <mathieu.desnoyers@efficios.com> wrote:
 
-Agreed, it would add a sort of built-in justification for the prior patch
-as in 'here is where we use it, this is why I'm doing this' kind of thing
-also.
+> On 2025-04-24 15:24, Steven Rostedt wrote:
+> > From: Steven Rostedt <rostedt@goodmis.org>
+> > 
+> > In order to know which registered callback requested a stacktrace for when
+> > the task goes back to user space, add a bitmask for all registered
+> > tracers. The bitmask is the size of log, which means that on a 32 bit  
+> 
+> size of long
+> 
 
-And I think this is small enough combined with the previous to not be a big
-deal to have both together.
+Sure
 
-Thanks!
 
->
-> >  err_pfn_remap:
-> >  	pgmap_array_delete(range);
-> >  	return error;
-> > --
-> > 2.49.0
-> >
->
-> --
-> Peter Xu
->
+> > --- a/include/linux/unwind_deferred.h
+> > +++ b/include/linux/unwind_deferred.h
+> > @@ -13,6 +13,7 @@ typedef void (*unwind_callback_t)(struct unwind_work *work, struct unwind_stackt
+> >   struct unwind_work {
+> >   	struct list_head		list;
+> >   	unwind_callback_t		func;
+> > +	int				bit;  
+> 
+> int or unsigned int ?
+> 
+> Rename "bit" to "requester_id" ?
+
+Perhaps just "id", as this is only internal and shouldn't be touched.
+
+> 
+> >   };
+> >   
+> >   #ifdef CONFIG_UNWIND_USER
+> > diff --git a/kernel/unwind/deferred.c b/kernel/unwind/deferred.c
+> > index 2afd197da2ef..f505cb1766de 100644
+> > --- a/kernel/unwind/deferred.c
+> > +++ b/kernel/unwind/deferred.c
+> > @@ -26,6 +26,7 @@ static DEFINE_PER_CPU(u64, unwind_ctx_ctr);
+> >   /* Guards adding to and reading the list of callbacks */
+> >   static DEFINE_MUTEX(callback_mutex);
+> >   static LIST_HEAD(callbacks);
+> > +static unsigned long unwind_mask;  
+> 
+> Perhaps "reserved_unwind_mask" ?
+
+Sure.
+
+> 
+> >   
+> >   /*
+> >    * The context cookie is a unique identifier that is assigned to a user
+> > @@ -135,6 +136,7 @@ static void unwind_deferred_task_work(struct callback_head *head)
+> >   	struct unwind_task_info *info = container_of(head, struct unwind_task_info, work);
+> >   	struct unwind_stacktrace trace;
+> >   	struct unwind_work *work;
+> > +	struct task_struct *task = current;
+> >   	u64 cookie;
+> >   
+> >   	if (WARN_ON_ONCE(!info->pending))
+> > @@ -156,7 +158,10 @@ static void unwind_deferred_task_work(struct callback_head *head)
+> >   
+> >   	guard(mutex)(&callback_mutex);
+> >   	list_for_each_entry(work, &callbacks, list) {
+> > -		work->func(work, &trace, cookie);
+> > +		if (task->unwind_mask & (1UL << work->bit)) {
+> > +			work->func(work, &trace, cookie);
+> > +			clear_bit(work->bit, &current->unwind_mask);
+> > +		}  
+> 
+> You could change this list of callbacks for an array of pointers,
+> indexed by "requester_id".
+> 
+> Then you can do a for each bit on task->unwind_mask, and all bits
+> that match end up calling the callback for the matching array index.
+
+Yeah, I thought of this, but that's just an optimization, and something I
+probably will add as a separate patch.
+
+> > @@ -244,14 +254,18 @@ int unwind_deferred_request(struct unwind_work *work, u64 *cookie)
+> >   
+> >   	*cookie = get_cookie(info);
+> >   
+> > +	/* This is already queued */
+> > +	if (current->unwind_mask & (1UL << work->bit))
+> > +		return 0;
+> > +
+> >   	/* callback already pending? */
+> >   	pending = READ_ONCE(info->pending);
+> >   	if (pending)
+> > -		return 0;
+> > +		goto out;
+> >   
+> >   	/* Claim the work unless an NMI just now swooped in to do so. */
+> >   	if (!try_cmpxchg(&info->pending, &pending, 1))  
+> 
+> Not that it necessarily matters performance wise here, but can this be a
+> try_cmpxchg_local if we're working on the task struct and only expecting
+> interruption from NMIs ?
+
+Hmm, sure.
+
+> 
+> > -		return 0;
+> > +		goto out;
+> >   
+> >   	/* The work has been claimed, now schedule it. */
+> >   	ret = task_work_add(current, &info->work, TWA_RESUME);
+> > @@ -260,16 +274,29 @@ int unwind_deferred_request(struct unwind_work *work, u64 *cookie)
+> >   		return ret;
+> >   	}
+> >   
+> > + out:
+> > +	set_bit(work->bit, &current->unwind_mask);
+> > +
+> >   	return 0;
+> >   }
+> >   
+> >   void unwind_deferred_cancel(struct unwind_work *work)
+> >   {
+> > +	struct task_struct *g, *t;
+> > +
+> >   	if (!work)
+> >   		return;
+> >   
+> >   	guard(mutex)(&callback_mutex);
+> >   	list_del(&work->list);
+> > +
+> > +	clear_bit(work->bit, &unwind_mask);
+> > +
+> > +	guard(rcu)();
+> > +	/* Clear this bit from all threads */
+> > +	for_each_process_thread(g, t) {
+> > +		clear_bit(work->bit, &t->unwind_mask);
+> > +	}  
+> 
+> It is enough to guard with RCU ? See syscall_regfunc() from
+> tracepoint.c where we do:
+> 
+>                  read_lock(&tasklist_lock);
+>                  for_each_process_thread(p, t) {
+>                          set_task_syscall_work(t, SYSCALL_TRACEPOINT);
+>                  }
+>                  read_unlock(&tasklist_lock);
+> 
+> To prevent concurrent fork from adding threads while we
+> iterate, thus opening the possibility of missing a clear
+> due to a concurrent fork + set bit.
+
+A set_bit only would happen if the callback was live and accepting new
+callback requests. It's a bug for a tracer to call unwind_deferred_cancel()
+and then call unwind_deferred_request() (which would set the bit). We could
+possibly set the tracer's unwind descriptor id to -1, and do an
+WARN_ON_ONCE() in unwind_deferred_request() if the tracer's id is negative.
+
+The loop is called under the callback_mutex, where no new tracer could
+register and be assigned that bit.
+
+The RCU lock is just to make sure the current tasks that existed when the
+loop started doesn't disappear before the loop ends.
+
+-- Steve
+
+
+
+> 
+> Thanks,
+> 
+> Mathieu
+> 
+> >   }
+> >   
+> >   int unwind_deferred_init(struct unwind_work *work, unwind_callback_t func)
+> > @@ -277,6 +304,14 @@ int unwind_deferred_init(struct unwind_work *work, unwind_callback_t func)
+> >   	memset(work, 0, sizeof(*work));
+> >   
+> >   	guard(mutex)(&callback_mutex);
+> > +
+> > +	/* See if there's a bit in the mask available */
+> > +	if (unwind_mask == ~0UL)
+> > +		return -EBUSY;
+> > +
+> > +	work->bit = ffz(unwind_mask);
+> > +	unwind_mask |= 1UL << work->bit;
+> > +
+> >   	list_add(&work->list, &callbacks);
+> >   	work->func = func;
+> >   	return 0;
+> > @@ -288,6 +323,7 @@ void unwind_task_init(struct task_struct *task)
+> >   
+> >   	memset(info, 0, sizeof(*info));
+> >   	init_task_work(&info->work, unwind_deferred_task_work);
+> > +	task->unwind_mask = 0;
+> >   }
+> >   
+> >   void unwind_task_free(struct task_struct *task)  
+> 
+> 
+
