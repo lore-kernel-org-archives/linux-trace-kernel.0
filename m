@@ -1,184 +1,402 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from YT3PR01CU008.outbound.protection.outlook.com (mail-canadacentralazon11020102.outbound.protection.outlook.com [52.101.189.102])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C83C6184E
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 28 Apr 2025 17:23:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745861007; cv=none; b=BtDB1TakziGZyeq8i/g4FiqtJbEKst1sexCmzGVsobLmSenIv8vaBVWgEE5mZnRlXtdomunhczz7vX3CCcxnxAA/SywOsX9Eec7EApApDowlyuGC35lpobm1juveaDcuzlqQxvYzRHxjNllVmkGwZYEqk3XL40esQznHsmVOinU=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745861007; c=relaxed/simple;
-	bh=UnQslq6Nx8NALIhTnrfcxpjimXFinlYSvQAjOQuu+QM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=IWVKCWua9+8dagFyDp0VW4Pl4yG2sZh6VSH45t0wBK0LXtXTNfyDnV7lcuMkthA14Q/sPVqO1x5TJAxiL0py/6yD4IQC2WSiIdQN/SObexF2rpnYRdB5KW46ozgH8k42iAzfUUelDr8k3nUIxwR/xiWlDWQkIVq6CMsrL+KHzS4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=HVyg9HAy; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AA351A5BA3;
+	Mon, 28 Apr 2025 18:00:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.189.102
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745863218; cv=fail; b=dcQZd/IygoTWWkyydseQdoiR2CzJ/ECWsS29MKFKL+Ly9N2e2OfMIObafTMxUFm7WRaZXak+yRVRpla2KNANSSfpJbtYZeCMeoSYKl4Ws01OYDp4uck67r4XHXlaYUqOiZCfJdRltHIhz6YZnPxfXvHloQSdewcEKTpYHTgMenc=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745863218; c=relaxed/simple;
+	bh=Jmg8LssqZdeUwGuHAx1rFvL8dqHX7JeveMw0hnLbYN8=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=cgPSGggrEFvVrgSvfgYdnTmEC+GLY+M+PeYimwkflX1XR75UAhsw7z54dtWoL81k4k9h38Zu+XeKKhYr90xhr0mNN0GpRbIWblTPo83gGdacjHmKHBWDh0PCMNcXUFj56MB9UBb6iTSkm4s/IlpR7eUQ+GiYItVP0rsXV9Uk6Mk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com; spf=pass smtp.mailfrom=efficios.com; dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b=rhnwcmRu; arc=fail smtp.client-ip=52.101.189.102
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=efficios.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HVyg9HAy"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1745861004;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=wY4CVzX+uN3IX3vcq1iWMePW9o5nKkePYfy/0EKsFFQ=;
-	b=HVyg9HAyVUuVBmGvQdxvtQ5+JFVp0Nsj0ZAthEVY/B+K2vQXm33fqkUXIwjdP7iTOT/VuJ
-	pqrWZ2fPUl1qaGF9ClhPhsrC3b2m6TPGglJJW2Vy4lSGdZV1+dDoYtDYsFsbOjDpHLm/j4
-	XQkubRpTALTS+/ow43S5/3MT6J/vlDg=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-694-mGnwqYQhNnSxx2_WpeBctA-1; Mon, 28 Apr 2025 13:23:22 -0400
-X-MC-Unique: mGnwqYQhNnSxx2_WpeBctA-1
-X-Mimecast-MFC-AGG-ID: mGnwqYQhNnSxx2_WpeBctA_1745861002
-Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-3913b2d355fso1385232f8f.1
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 28 Apr 2025 10:23:22 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745861001; x=1746465801;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=wY4CVzX+uN3IX3vcq1iWMePW9o5nKkePYfy/0EKsFFQ=;
-        b=I7Avt5namlaur+8t2UlaTqxJnYNr7AWw8fhT5wP1gK75zyD4B/VPbsS9HFwlCougiu
-         gbfzR2cOTAPvS1aYaH5em0qakKigmAWy2VceCiN0F8f8aJLnVmN8cmoyYHmmxNEs/uJ0
-         jzvP1URqmJMLrD58PTRwRThm3Wg7+T9089v32KtptFghOD+O4lDBagahdPi4CLWmcxJ2
-         i+MRbMsFBAXb9a8sHF2ZxiLsx2F+kWLSfoI91W+GRu985no7IE9NLWskIqnRnN+G1Wis
-         wbD9sf1s7XXwfwt5sFQjTWSUQDdtLwjFc6B7B9EX0oDTHm0ZNOxwwBjUsGZNEhgUMMfH
-         hngw==
-X-Forwarded-Encrypted: i=1; AJvYcCW5VIL0APL+cGmA6YDaZAb0TjKAAGi3caBM6H6Y4Bfsu0lnfs9uHYoiENiQdcDRbhfSCbXXhYmsgRxO0K3T+7wouQI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy9Hwt4M8IqoaxKI8IQAmfD23P8mfrgvEKalxh2hscXmKbsSctD
-	S9hDRezCwG8BUenXHy65JHLY1UVImTEB/t1OTuHff5E7eF1WaUazjxms4ewiouhb8msBkjrzp4m
-	oqev5C8BtwD+T/DKSpkaUBMdhQZreGLLUq4xgUBEzOnRpbOOY03oOHSRPTk/VHVGyKDN5rA==
-X-Gm-Gg: ASbGncvrOq9D5qOvhTsphSFEyUDhdvsfnEZTTf/AhLb49yXqaty6DKO5zU2jPjaYQpW
-	jPqeWDc2ojDv1eqD3A6V4/WKaJoVYzkKybDRMWYWrIm74nQtCTnEheIry4GF6cVvlfiVDbRGjTc
-	IOpiAwQpbrYDTIhYhgWgbNoL8soef/8eI6wLNZM+AYF11jZ1ozyp4g+li85HdPb9isO7wE/HE4h
-	tvFXWVCkqGUkUzF2zTwbfpke9e9XwAn+EdCgCSvgFqKe1rqsHhj/I72II70kZhKu2+SZADODh1x
-	izSguFiyxf1y4t9p5+amz0i3SwYwyiXBBWiQP7rWxIfQthQpttrzFLTCT8kc7DvH7I0f7EOCGfV
-	250nigs92PMIRMeBMjK27HHJhsEla9F5Xr/uMEg==
-X-Received: by 2002:a05:6000:40cb:b0:390:f394:6271 with SMTP id ffacd0b85a97d-3a07ab85dc3mr7533527f8f.43.1745861001681;
-        Mon, 28 Apr 2025 10:23:21 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGIb09GQKvUWlrzMymYxayYtDPK47jESgQU5kjQqNoI7xzmODDrJ7lADPOND7gNymtIw+O2CQ==
-X-Received: by 2002:a05:6000:40cb:b0:390:f394:6271 with SMTP id ffacd0b85a97d-3a07ab85dc3mr7533500f8f.43.1745861001273;
-        Mon, 28 Apr 2025 10:23:21 -0700 (PDT)
-Received: from ?IPV6:2003:d8:2f32:c200:9add:4a7a:46aa:f740? (p200300d82f32c2009add4a7a46aaf740.dip0.t-ipconnect.de. [2003:d8:2f32:c200:9add:4a7a:46aa:f740])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4408c80174dsm135486465e9.0.2025.04.28.10.23.19
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 28 Apr 2025 10:23:20 -0700 (PDT)
-Message-ID: <884fab29-e16a-4663-8e33-885bc70ca2f7@redhat.com>
-Date: Mon, 28 Apr 2025 19:23:18 +0200
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="rhnwcmRu"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=L+cHysvUh3fLasqlNkPcr9p0XrFg74nh7JrU4P/SUf6X4vSsrGuX1vuHBWj10X3cSwMnN/4Q7ADJ31ANRk0vydIUO/qnwbWURNPtm++c82841dVYGGvSxjyaJaNlcTLXKG7mLVS+6mB6UseY3A5/z/92Z25YjEoFiHEqSwCI4qHPttTjDhh72Sf1PnnwTHisSMayJe4qXbfBO04Zk9R1SxcAJ9t0IO1Shp0accvVJKvnX4MwuJ2bsn4xY4A6Nf+1/W/25WDUkEuI4gey/2B1QujbIkU84E8MDHpK2EHPphaZtMY7wf27iILW0eEqSbnMV4o7VvoCskQ2BeZQqkm4sA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=KxK6u4k0cV9Ef/i/y5nr+UpBpJQFCg0KCgZrlCWjzu8=;
+ b=D48XICQH4KktWoPE5rWbgheOSdwDQzpXysvlBtJpsY1XZWjCr2jacgkrRQKlEmVZHNjmxw220Fqa5pqx1CxnPaLteqSdw5tLEu8VBqRfbWvc0+3G/Pnd7opYokZ+44WQWYTGa/FSYm6FpFj10upxG2czQAGAzATWKvF1j6g1boLriRzztbMjmDTSfUpxruPxNWgjMKW+KT512GbRpw+m1Uk3FIC7fTXs0+HjLyZk/W+880MeVhtE6FNzHa8J4FDbLABqjqKsjSY9sv3TI7z/a+hoJwPFguFWRVvwscROAI/ztwr7MhivPF1qW5WQhcXJeIsXsnhaCNo6PVhjqXu++w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=efficios.com; dmarc=pass action=none header.from=efficios.com;
+ dkim=pass header.d=efficios.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=KxK6u4k0cV9Ef/i/y5nr+UpBpJQFCg0KCgZrlCWjzu8=;
+ b=rhnwcmRuV2QmiFL9hnK/xg5s4YAYTOEHD66swH0hl2PAy9LYIrs/Ujb4h8bNLte6VDODPnMnYTp7Jbe9dBsr9/R3JQiiCKkBtIbCXeh69XKwJNFSd6aS6869EkXObYB6pZiPjUiqlVJHuZAio5mJQK/FeTMmNhAqUpSEAmQXOcQ82ZOM+648UMqbmjg245sxCcbhQk072EjgK0khcdbfx2sCCkVXkEWNI3t+EGKAtWwaEsZo5ZIUsW2JDfLfv5gd4ScB/0Pn6WC84l9CT5d/XcdpdPYBv+yo2Td0EG0PQ3mOZEJsdJgAhSi7hLHJicPNyiCkRYRatLqNg+YiIvO/Jg==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=efficios.com;
+Received: from YT2PR01MB9175.CANPRD01.PROD.OUTLOOK.COM (2603:10b6:b01:be::5)
+ by YT1PPF1572B6ADA.CANPRD01.PROD.OUTLOOK.COM (2603:10b6:b08::50a) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8678.33; Mon, 28 Apr
+ 2025 18:00:10 +0000
+Received: from YT2PR01MB9175.CANPRD01.PROD.OUTLOOK.COM
+ ([fe80::50f1:2e3f:a5dd:5b4]) by YT2PR01MB9175.CANPRD01.PROD.OUTLOOK.COM
+ ([fe80::50f1:2e3f:a5dd:5b4%7]) with mapi id 15.20.8678.025; Mon, 28 Apr 2025
+ 18:00:10 +0000
+Message-ID: <ca9bd83a-6c80-4ee0-a83c-224b9d60b755@efficios.com>
+Date: Mon, 28 Apr 2025 14:00:07 -0400
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 3/9] unwind deferred: Use bitmask to determine which
+ callbacks to call
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Josh Poimboeuf <jpoimboe@kernel.org>, x86@kernel.org,
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Indu Bhagat <indu.bhagat@oracle.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+ Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>,
+ linux-perf-users@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+ linux-toolchains@vger.kernel.org, Jordan Rome <jordalgo@meta.com>,
+ Sam James <sam@gentoo.org>, Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+ Jens Remus <jremus@linux.ibm.com>, Florian Weimer <fweimer@redhat.com>,
+ Andy Lutomirski <luto@kernel.org>, Weinan Liu <wnliu@google.com>,
+ Blake Jones <blakejones@google.com>,
+ Beau Belgrave <beaub@linux.microsoft.com>, "Jose E. Marchesi"
+ <jemarch@gnu.org>, Alexander Aring <aahringo@redhat.com>
+References: <20250424192456.851953422@goodmis.org>
+ <20250424192612.844558089@goodmis.org>
+ <02339b93-de9a-49e4-8dbb-137d02fc6ea8@efficios.com>
+ <20250428125600.1f50f476@gandalf.local.home>
+From: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Content-Language: en-US
+In-Reply-To: <20250428125600.1f50f476@gandalf.local.home>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: YQBPR01CA0015.CANPRD01.PROD.OUTLOOK.COM (2603:10b6:c01::23)
+ To YT2PR01MB9175.CANPRD01.PROD.OUTLOOK.COM (2603:10b6:b01:be::5)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 05/11] mm: convert VM_PFNMAP tracking to pfnmap_track()
- + pfnmap_untrack()
-To: Peter Xu <peterx@redhat.com>
-Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org, x86@kernel.org,
- intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
- linux-trace-kernel@vger.kernel.org, Dave Hansen
- <dave.hansen@linux.intel.com>, Andy Lutomirski <luto@kernel.org>,
- Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner <tglx@linutronix.de>,
- Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
- "H. Peter Anvin" <hpa@zytor.com>, Jani Nikula <jani.nikula@linux.intel.com>,
- Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
- Rodrigo Vivi <rodrigo.vivi@intel.com>, Tvrtko Ursulin
- <tursulin@ursulin.net>, David Airlie <airlied@gmail.com>,
- Simona Vetter <simona@ffwll.ch>, Andrew Morton <akpm@linux-foundation.org>,
- Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- "Liam R. Howlett" <Liam.Howlett@oracle.com>,
- Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
- Vlastimil Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>,
- Pedro Falcato <pfalcato@suse.de>
-References: <20250425081715.1341199-1-david@redhat.com>
- <20250425081715.1341199-6-david@redhat.com> <aAvvQ1h9bg11hiqI@x1.local>
- <bbadf008-9ffc-4628-9809-2d8cf104a424@redhat.com> <aA-n9hvSX9JLsRM-@x1.local>
- <7a26e29c-d889-450a-a5e1-ce671f09e4c8@redhat.com> <aA-rtji7ujQgckbM@x1.local>
-From: David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <aA-rtji7ujQgckbM@x1.local>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: b0P9BLOptaFLNbUPgs8UTIFwu-BRFDrkvaGdq-P1AlU_1745861002
-X-Mimecast-Originator: redhat.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: YT2PR01MB9175:EE_|YT1PPF1572B6ADA:EE_
+X-MS-Office365-Filtering-Correlation-Id: cefc0f86-9fc3-45c7-bba7-08dd867e8423
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|366016|376014|7416014|1800799024|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?eHh5NWhBMS85bE5PdHY3UElhVTI1dEx6NkhCeWtpS2NIOUd5MDJOZTlmODM4?=
+ =?utf-8?B?d3FhRzdwQlU3SlpPRmpRVFIwNDRFQUdNcEVIRU5oNTNKaWJxM2sxdi90MDFI?=
+ =?utf-8?B?QWg0eVRiN041MWlDcWd4cDY2UnlXeEc3akNSWHlGWVMyUzdNNW9hUndsZTJW?=
+ =?utf-8?B?bVFNUExxSXFWNlRGNHN3Q0JmOXZoRzE3a0xzV1RCTGI1MlFvN3lLcU44TTZU?=
+ =?utf-8?B?QWxGTGZoSmdEMjQzVTZwQW1RenlTRTFjVlpVb2VnUlRtMkVGSzZvbXNBMWpE?=
+ =?utf-8?B?WExIUkxpcVFEU2xFSVBqVGJMTXFaMTF3WVRBZjQxK0NqYXhDTVhzU1JOanRl?=
+ =?utf-8?B?OFBWaHU3c1lmQkQrVENlbDBqbzRERGdhQ0hRSWZBSGFITW1hUGNKK2xUcW1G?=
+ =?utf-8?B?R0I3Vm0zc1greXA1V3Y4TUxveUFOZm00eXJZMTBGSkhlMk53bFdkQTJUaEpC?=
+ =?utf-8?B?bUl4NXdiZDJwVlJxSG5JblUzTzdGU1pvUnEreTAwNnhFWGVyYVhwL05nWnlM?=
+ =?utf-8?B?ZDB3VzVLRFRvMll2RS9Gck0zZUV3RTh0bnh4bC9kbHBCdVV6NXk5S20wbFJm?=
+ =?utf-8?B?aS9IRjJXNDNpeGdwd21XaEl6NHdQa3VydHN2b2E0dXFuSHNUM3gweDVPTVd0?=
+ =?utf-8?B?bjBSWjVCSE5tOFlEYjNvbTR0QjZUaDRjemNhTFBUNjFJdGdZdFlScDFRNENF?=
+ =?utf-8?B?UlpSTUpwZnVrMDJJa0Zhb3ZwWGtCd0h1TFh2emNyT0pBdHRObXJBSXV2T05I?=
+ =?utf-8?B?SkFFSTI0MHRtQkk1RzFWUzUrY3Z3bDN2b1krSVV5bHRYejZwZTNBcXdaQUF2?=
+ =?utf-8?B?bFh1Z0RKOEhEYzVpb043Z0c5MjdCSkpOQURyVmZNKzJMaVlhOElFNk8zNXo1?=
+ =?utf-8?B?dnhKQ3FpUHVidjU2b1M4YkRZUTRsZG95Y0NFRFRwUWg2eWw3SFUySGx2blNj?=
+ =?utf-8?B?RzEzaTM3R2Zld3p0V3JnQStURnpiWG5hUnlLdFJVb3FLUFNkckdmOFdjaWJD?=
+ =?utf-8?B?aWtpZHVjekovNnFZYTd6RitMN0lmcU8rVmt3ZmgzSHM5K05DT2NLeVlua1M3?=
+ =?utf-8?B?dmt3Y2NaZGhCNTU5ZVhQZUk5OER2YVRGam4yQXd0c21kcThWQUdDdXhMUUJ6?=
+ =?utf-8?B?YUtHNCttTmxvQk5SZ2dFcTQvb3NpYzg1cGRpNlp1OW1JUGJDcTFxRE9WdGhv?=
+ =?utf-8?B?Q080NkQreS9DYnMyMng4ZWp3bWNhZlcrbEp0ZDZxSmtTRVQzZnYwdVlWSnFS?=
+ =?utf-8?B?Vnpmd0hpNWZIV2hUM01WeDlKa2h1SEpDVVhRdVlsVjQ5MThQZE0rUVhqZHUy?=
+ =?utf-8?B?YytnTExQdFpuUVF6WEFLL09BSE1ETFQrUER5eTlSdXM5bnJpNTlPbjBGeVhn?=
+ =?utf-8?B?VHk4WVp2ajV3TURDTGRkNE8waHl6andnVTJvaGljRGN5M0V1YmUzRnkrOEV1?=
+ =?utf-8?B?T09lVXVJY0JhTWR0dUlzelYyNllFdEpoVGw1QTNiYWVmUjFneVFlOFJjT2Ni?=
+ =?utf-8?B?cDBHR0xmSGNLK3k4QTNwNnlhZ0pIa012ckZ0am5rRjdFRU5PU2JMTHcrMXNZ?=
+ =?utf-8?B?bnlMbjkwSnJPOG5rRFhXSUFidzlLYmx0ampaTTJhdnlidFFkdXNGaVgwV2F6?=
+ =?utf-8?B?cm1yVlJXcjU2YVI5Y3JGSnU3eWRtbFcrc3ZjaXRrS0lwOGFPSTZydGsvd2N4?=
+ =?utf-8?B?RzhsU2gyVkpmVnhPMk92Y1lScXo0ckE2RGR3OVFMYm5tNHRVKzNuUHpTbWJV?=
+ =?utf-8?B?WkdZNk1wenVheC81MzNqRFpsNEorUVFram5jNHpUVW9WcmRWUWRBUzJTNHdu?=
+ =?utf-8?Q?0s4jaCSHNsg/rUFlHZ17Sqzguk1vjslMYZXKI=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:YT2PR01MB9175.CANPRD01.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(7416014)(1800799024)(7053199007);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?bE9pWHZQUlp3eFcyY2kxVGNNSmlZbFhjRGIvU0hWTjhBdnVvUW5RTHJqb01S?=
+ =?utf-8?B?NmRvdVBrSFYwUlVxN2Zlb2V6RkhyNXB2a0FHakxtUlhCVzRQM0wzWXBNSytZ?=
+ =?utf-8?B?TEd5dndhSFJ4T3hIMlh4QUFERFc2aDJFVGtxZ0J4SmYveTF6RnJGR1BBWW9W?=
+ =?utf-8?B?VEY1eUJEMDZsdU5Zc2phOGZsMFRsR2kvbWxqUWIxczRlWm01bVJFNHZBUUx5?=
+ =?utf-8?B?U1QzU2o5TUZWTFhURExPZDlLcTNYWGlsR0M5dDdBdVFnaWt2U3d0ZWdOY1NE?=
+ =?utf-8?B?YkZGc2hRM0tQQ0hUbGc5YlBQZzNiUHFCeUs0VWJHOGJ3OFlqT0RPcXpSbFJT?=
+ =?utf-8?B?T2JxQTBSVnRvazU4TWxtQlRvMHZudFRKYzZYMnNCL3hycmVoSmE0RlJrTWI5?=
+ =?utf-8?B?bVg3K1dMQVZWaGk2WXBEcldZK2hjWUNOaW5iamRjNVBvZWNHa1BuVS90aUtj?=
+ =?utf-8?B?REJ0WVQxVmFrZzlKUzNpdE52K3FydDJpUWhKU1N1MDRLazBiTEJXQU15MWNy?=
+ =?utf-8?B?UzZhVHFGVmRoQ0ZoNDlSRFhwTjlQZ0FsaWk2QjNyemJNVU1HelJsVUtXYmk1?=
+ =?utf-8?B?NjJjZGRSbTFZVDhURDhrOExjZWt6c0VZVnBoaDNMZUthUUxMUkJMT2w1WHN1?=
+ =?utf-8?B?SkxlMjJ1U1VwV3NVQVl4ZkZoMEJiOGpEcWlTb0pLQ2RndmpPQ2tIdEZYdGdo?=
+ =?utf-8?B?RjZQYWNGamFzamJYbmwvRi82L3hBSENQRmE2ckxic1FoaUthWXJ2VVFyZVBH?=
+ =?utf-8?B?VEN2cklrZ09Bdm1vQ3J5eTdzc2NKVDN3ME5xYWtvQVRMUlo3UHRqNndCMlk3?=
+ =?utf-8?B?QkV4UFZ0MmUwUUh1Vmw4OXVEbFoyeGh1QWxxTzJ2SmJQcEt3c1Zlci9LQVA2?=
+ =?utf-8?B?NHhWaW4wL2xId3FZVjlTVjdYRlRGS2w0YUlEOGhlMDZWNFZyRHRyMXBac0dk?=
+ =?utf-8?B?aFNKb09nUXNxVE1BRkxmYWx3b1lzT0JyV2orRURPRkRJVHBzZUhnSEYyQlFL?=
+ =?utf-8?B?M1FtVTJWUXZ3TWZVbFZtNXhNd09QNXd5ZDhLRTZubk4yWCtUVWZFekRDWHN3?=
+ =?utf-8?B?S0hlUzBDcklVMzA1bTZVTmVDSnFEOUxzSkZVclF4R3VtUFpuVXMrcGNuN2ZB?=
+ =?utf-8?B?OFNXbkM3TG55TGUrclZSaytLb1dpdUZ6WGowN3gwY3Q2U1R0bHNhMHlHc0Fn?=
+ =?utf-8?B?VU9vWUt3TFNxRUNNODM3cnhWNW1YMCs2VW4yNlQ3UUJic0xoQVBHckdTVDcr?=
+ =?utf-8?B?a0JZVklOTnJEMlI0VjlvWit1YkV0eE1xMmUyb1RXQVdOcFJwUi9tVjVNaVJN?=
+ =?utf-8?B?dDV0dGxsTXAyc0FTdXdtR3JmTVp1VXV2M2d0bTFmdVZ3NG5qSFFYUTdGMjZv?=
+ =?utf-8?B?QlZiZkRFbFBYN3dQbFBSQlord0pYQlg5OFVzK08vYXRGeXZJQXVkbngxYXAw?=
+ =?utf-8?B?WjBnaFc0MWlYZnRDakRWZnV0Q2dvbFJodFdtOTA5aW8yRUlCZGVjTXBGT2dC?=
+ =?utf-8?B?VFV6VFhsZTJRUzNKRU04TFU4VFBpOFY3VGhKa0ZXdnFES3UvbmowU0sxVGd3?=
+ =?utf-8?B?VTY1ckRDKzhpa3kvSGcwcmVFUkg3SmZCTldlSkJLeVpjZ2lWQmhqdEdUVktG?=
+ =?utf-8?B?VldyUUorUlRraWdCNHVuY1Jqb2ZORkZVbThtS0d0bmRnelZ3RklzdXJaV09q?=
+ =?utf-8?B?U3FISktxQ3d1a0ZCSnBIUy9RaGV1ajEra1kzT0NST0JRY08ybUNicHpGdjQw?=
+ =?utf-8?B?TG5xbUNubEZ2Y3hHTEM4dnI2Zm1uejd5enZBRmlZcE40RXM1c01ualhsZjg0?=
+ =?utf-8?B?NXlaVU5oSDI5N3hDL3pCQW5nQlNoaFBKS0p0SWs4dTFncDdsMDhvNTNENWN0?=
+ =?utf-8?B?YS9NM2FRK3o0UXJGam4xQ3V1ODJWSzVoVktCbzQ1V0wzR1hTNnRSdmw0L05p?=
+ =?utf-8?B?d3Y2dDVZSU1oVTFPbk1FRG1DVWxXSjhDeFhZeFFyS0tlOGlLRDlTaHBDVEFD?=
+ =?utf-8?B?ODFiRFhSY1NteCtHYmE0czZuaTdlbHNaSjhuZ09uZUcrcUlaM2NDVmVoc1BU?=
+ =?utf-8?B?NGs2SU15Ky9kbTlEUnd2MVVhSCtWYkY5d0ZIUGFnRy8zYUFUZFRUKzBXb2kv?=
+ =?utf-8?B?NXBjbkM5QWMySDRJb2p6SUI2b0RWQ0paYjNoM2pPTkJXcktVVlM0TUtVeVhD?=
+ =?utf-8?Q?6S1BT42SFaWPVagvY6TG924=3D?=
+X-OriginatorOrg: efficios.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: cefc0f86-9fc3-45c7-bba7-08dd867e8423
+X-MS-Exchange-CrossTenant-AuthSource: YT2PR01MB9175.CANPRD01.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Apr 2025 18:00:10.0579
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4f278736-4ab6-415c-957e-1f55336bd31e
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: x+tRIJnI4hDxyg6TM8DZsOM6fmI0GC9Sq1i3ecm0AnODlN7oem74HVw87adN0d+Im9yl1pZokBig3vzmF+UHDjJGAABtRImW5AY2YzHe8fo=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: YT1PPF1572B6ADA
 
-On 28.04.25 18:24, Peter Xu wrote:
-> On Mon, Apr 28, 2025 at 06:16:21PM +0200, David Hildenbrand wrote:
->>> Probably due to what config you have.  E.g., when I'm looking mine it's
->>> much bigger and already consuming 256B, but it's because I enabled more
->>> things (userfaultfd, lockdep, etc.).
+On 2025-04-28 12:56, Steven Rostedt wrote:
+> On Mon, 28 Apr 2025 12:33:50 -0400
+> Mathieu Desnoyers <mathieu.desnoyers@efficios.com> wrote:
+> 
+>> On 2025-04-24 15:24, Steven Rostedt wrote:
+>>> From: Steven Rostedt <rostedt@goodmis.org>
+>>>
+>>> In order to know which registered callback requested a stacktrace for when
+>>> the task goes back to user space, add a bitmask for all registered
+>>> tracers. The bitmask is the size of log, which means that on a 32 bit
 >>
->> Note that I enabled everything that you would expect on a production system
->> (incld. userfaultfd, mempolicy, per-vma locks), so I didn't enable lockep.
+>> size of long
+>>
 > 
-> I still doubt whether you at least enabled userfaultfd, e.g., your previous
-> paste has:
+> Sure
 > 
->    struct vm_userfaultfd_ctx  vm_userfaultfd_ctx;   /*   176     0 */
 > 
-> Not something that matters.. but just in case you didn't use the expected
-> config file you wanted to use..
+>>> --- a/include/linux/unwind_deferred.h
+>>> +++ b/include/linux/unwind_deferred.h
+>>> @@ -13,6 +13,7 @@ typedef void (*unwind_callback_t)(struct unwind_work *work, struct unwind_stackt
+>>>    struct unwind_work {
+>>>    	struct list_head		list;
+>>>    	unwind_callback_t		func;
+>>> +	int				bit;
+>>
+>> int or unsigned int ?
+>>
+>> Rename "bit" to "requester_id" ?
+> 
+> Perhaps just "id", as this is only internal and shouldn't be touched.
+> 
+>>
+>>>    };
+>>>    
+>>>    #ifdef CONFIG_UNWIND_USER
+>>> diff --git a/kernel/unwind/deferred.c b/kernel/unwind/deferred.c
+>>> index 2afd197da2ef..f505cb1766de 100644
+>>> --- a/kernel/unwind/deferred.c
+>>> +++ b/kernel/unwind/deferred.c
+>>> @@ -26,6 +26,7 @@ static DEFINE_PER_CPU(u64, unwind_ctx_ctr);
+>>>    /* Guards adding to and reading the list of callbacks */
+>>>    static DEFINE_MUTEX(callback_mutex);
+>>>    static LIST_HEAD(callbacks);
+>>> +static unsigned long unwind_mask;
+>>
+>> Perhaps "reserved_unwind_mask" ?
+> 
+> Sure.
+> 
+>>
+>>>    
+>>>    /*
+>>>     * The context cookie is a unique identifier that is assigned to a user
+>>> @@ -135,6 +136,7 @@ static void unwind_deferred_task_work(struct callback_head *head)
+>>>    	struct unwind_task_info *info = container_of(head, struct unwind_task_info, work);
+>>>    	struct unwind_stacktrace trace;
+>>>    	struct unwind_work *work;
+>>> +	struct task_struct *task = current;
+>>>    	u64 cookie;
+>>>    
+>>>    	if (WARN_ON_ONCE(!info->pending))
+>>> @@ -156,7 +158,10 @@ static void unwind_deferred_task_work(struct callback_head *head)
+>>>    
+>>>    	guard(mutex)(&callback_mutex);
+>>>    	list_for_each_entry(work, &callbacks, list) {
+>>> -		work->func(work, &trace, cookie);
+>>> +		if (task->unwind_mask & (1UL << work->bit)) {
+>>> +			work->func(work, &trace, cookie);
+>>> +			clear_bit(work->bit, &current->unwind_mask);
+>>> +		}
+>>
+>> You could change this list of callbacks for an array of pointers,
+>> indexed by "requester_id".
+>>
+>> Then you can do a for each bit on task->unwind_mask, and all bits
+>> that match end up calling the callback for the matching array index.
+> 
+> Yeah, I thought of this, but that's just an optimization, and something I
+> probably will add as a separate patch.
+> 
+>>> @@ -244,14 +254,18 @@ int unwind_deferred_request(struct unwind_work *work, u64 *cookie)
+>>>    
+>>>    	*cookie = get_cookie(info);
+>>>    
+>>> +	/* This is already queued */
+>>> +	if (current->unwind_mask & (1UL << work->bit))
+>>> +		return 0;
+>>> +
+>>>    	/* callback already pending? */
+>>>    	pending = READ_ONCE(info->pending);
+>>>    	if (pending)
+>>> -		return 0;
+>>> +		goto out;
+>>>    
+>>>    	/* Claim the work unless an NMI just now swooped in to do so. */
+>>>    	if (!try_cmpxchg(&info->pending, &pending, 1))
+>>
+>> Not that it necessarily matters performance wise here, but can this be a
+>> try_cmpxchg_local if we're working on the task struct and only expecting
+>> interruption from NMIs ?
+> 
+> Hmm, sure.
+> 
+>>
+>>> -		return 0;
+>>> +		goto out;
+>>>    
+>>>    	/* The work has been claimed, now schedule it. */
+>>>    	ret = task_work_add(current, &info->work, TWA_RESUME);
+>>> @@ -260,16 +274,29 @@ int unwind_deferred_request(struct unwind_work *work, u64 *cookie)
+>>>    		return ret;
+>>>    	}
+>>>    
+>>> + out:
+>>> +	set_bit(work->bit, &current->unwind_mask);
+>>> +
+>>>    	return 0;
+>>>    }
+>>>    
+>>>    void unwind_deferred_cancel(struct unwind_work *work)
+>>>    {
+>>> +	struct task_struct *g, *t;
+>>> +
+>>>    	if (!work)
+>>>    		return;
+>>>    
+>>>    	guard(mutex)(&callback_mutex);
+>>>    	list_del(&work->list);
+>>> +
+>>> +	clear_bit(work->bit, &unwind_mask);
+>>> +
+>>> +	guard(rcu)();
+>>> +	/* Clear this bit from all threads */
+>>> +	for_each_process_thread(g, t) {
+>>> +		clear_bit(work->bit, &t->unwind_mask);
+>>> +	}
+>>
+>> It is enough to guard with RCU ? See syscall_regfunc() from
+>> tracepoint.c where we do:
+>>
+>>                   read_lock(&tasklist_lock);
+>>                   for_each_process_thread(p, t) {
+>>                           set_task_syscall_work(t, SYSCALL_TRACEPOINT);
+>>                   }
+>>                   read_unlock(&tasklist_lock);
+>>
+>> To prevent concurrent fork from adding threads while we
+>> iterate, thus opening the possibility of missing a clear
+>> due to a concurrent fork + set bit.
+> 
+> A set_bit only would happen if the callback was live and accepting new
+> callback requests. It's a bug for a tracer to call unwind_deferred_cancel()
+> and then call unwind_deferred_request() (which would set the bit). We could
+> possibly set the tracer's unwind descriptor id to -1, and do an
+> WARN_ON_ONCE() in unwind_deferred_request() if the tracer's id is negative.
+> 
+> The loop is called under the callback_mutex, where no new tracer could
+> register and be assigned that bit.
 
-You're absolutely right. I only briefly rechecked for this purpose here 
-on my notebook, and only looked for the existence of members, not 
-expecting that we have confusing stuff like vm_userfaultfd_ctx.
+Ah, that's the piece I missed. The callback_mutex prevents reallocation
+of the ID by unwind_deferred_init while iterating on the tasks.
 
-I checked again and the size stays at 192 with allyesconfig and then 
-disabling debug options.
+One more comment: if we change the linked list for an array (or make the 
+linked list an RCU list), can we remove the callback_mutex from
+unwind_deferred_task_work by turning it into an RCU read-side ?
+
+Then we just need to wait for a grace period before returning from
+unwind_deferred_cancel, which then allows the caller to reclaim "work".
+
+Taking the callback_mutex in unwind_deferred_task_work will end up being
+the single thing that does a lot of cache line bouncing across CPUs when
+hit heavily by tracers.
+
+Thanks,
+
+Mathieu
+
+> 
+> The RCU lock is just to make sure the current tasks that existed when the
+> loop started doesn't disappear before the loop ends.
+> 
+> -- Steve
+> 
+> 
+> 
+>>
+>> Thanks,
+>>
+>> Mathieu
+>>
+>>>    }
+>>>    
+>>>    int unwind_deferred_init(struct unwind_work *work, unwind_callback_t func)
+>>> @@ -277,6 +304,14 @@ int unwind_deferred_init(struct unwind_work *work, unwind_callback_t func)
+>>>    	memset(work, 0, sizeof(*work));
+>>>    
+>>>    	guard(mutex)(&callback_mutex);
+>>> +
+>>> +	/* See if there's a bit in the mask available */
+>>> +	if (unwind_mask == ~0UL)
+>>> +		return -EBUSY;
+>>> +
+>>> +	work->bit = ffz(unwind_mask);
+>>> +	unwind_mask |= 1UL << work->bit;
+>>> +
+>>>    	list_add(&work->list, &callbacks);
+>>>    	work->func = func;
+>>>    	return 0;
+>>> @@ -288,6 +323,7 @@ void unwind_task_init(struct task_struct *task)
+>>>    
+>>>    	memset(info, 0, sizeof(*info));
+>>>    	init_task_work(&info->work, unwind_deferred_task_work);
+>>> +	task->unwind_mask = 0;
+>>>    }
+>>>    
+>>>    void unwind_task_free(struct task_struct *task)
+>>
+>>
+> 
+
 
 -- 
-Cheers,
-
-David / dhildenb
-
+Mathieu Desnoyers
+EfficiOS Inc.
+https://www.efficios.com
