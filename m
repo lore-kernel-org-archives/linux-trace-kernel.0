@@ -1,213 +1,233 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D24F155333
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 28 Apr 2025 15:45:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745855148; cv=none; b=Xw75xcWtrW7lCgWZ5JcZKk+kl7qHwbV1Xkq7P8s78zz5D+gBMXi9Dj/8sfkvqIthYscIZhISFl4j+Zkwg3rdpApGgH/NCmZVTcQkvV7RcBJPOyFQpb6g+qFI3yRuTQiUrgynQb8JAxSY21NiBrfW9NoD9d0DSWet26HHSxTHAXM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745855148; c=relaxed/simple;
-	bh=UOhzb10991S9XN+3taEGso7/UZgUlO2UjrD9ZO6lDo0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=MJYBIAc4cRUyz3I9dhTN/NaubrsTJzTRi1WfiryfdI5kaLbqQwkCsGnOUmvQAVcpcizMayyOw+6gbnFTAS9AGX88/vUeQKD7I6sfMfBF8pPnSmCcT+mvZhdgv9GOUew9lLsYNOzXSUxsZNndlP3QWWzD2ToBFw+CrDvNIDVXmkU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=egn/Ijrn; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F8D327A13C;
+	Mon, 28 Apr 2025 16:07:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745856474; cv=fail; b=mpqQN4LO19TdSDu3hzj/muuQtfZRMdqzqWyKn5xeOBl1UqA38b4K0EKM/5fdgt5dNgKeLxR3J4ehv38CUQKM0+mi2/1SmmTOct53aOypcE7NZMg2Kv8fszKFZ66mMHrNsU7dW+0tvqA9x6WqJfY2kmaxUUlXPbxoEuZZ+Oi4V6U=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745856474; c=relaxed/simple;
+	bh=JtVaDEzzxF4x8CRIfITIfwdWf+bwxPjWk/H3jEt6kBE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=gddpDa/ZxOaUjeF8bSdFtjo+DGOKZjkzUXewh0HXbEsqYZwgBAEMZBe/a26KZ/aVfOIqhOEEyHzRajfh6hys1tVcEfiGS+6rIoUidLLWJ+GKGrpx9MAuejksqrL/CuFTpia3VOr1uSBJVAjfK17pXRFC2qCiq5GzR1qKY4Xy2ks=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=MAYDRn3i; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=RiyBbf4s; arc=fail smtp.client-ip=205.220.165.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="egn/Ijrn"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1745855145;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=rYC5lCzUJr828076fhqqA1lyRrr2Ujsiu+eNA9UjptU=;
-	b=egn/IjrnAeRCVstVWK5mtLCFQadoxilFa9KqsmVjrL88upbohuLfsY8eomtrI1hsvRA1xh
-	D4Qvqzc1eD1o+Rs09/GMR22DLPomc6Dn7zh9u1Pri7D/PaIpOi+wRsfNo3+e5obVP5+Bfu
-	WUbm+F8BWzdrpnLJESaE6h9ENf2GL+s=
-Received: from mail-yw1-f198.google.com (mail-yw1-f198.google.com
- [209.85.128.198]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-592-mWKrrpkMO--M95Jtw8CnjA-1; Mon, 28 Apr 2025 11:45:43 -0400
-X-MC-Unique: mWKrrpkMO--M95Jtw8CnjA-1
-X-Mimecast-MFC-AGG-ID: mWKrrpkMO--M95Jtw8CnjA_1745855142
-Received: by mail-yw1-f198.google.com with SMTP id 00721157ae682-6fda1dcbdf1so56269667b3.1
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 28 Apr 2025 08:45:43 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745855142; x=1746459942;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=rYC5lCzUJr828076fhqqA1lyRrr2Ujsiu+eNA9UjptU=;
-        b=fgLh2K24acwx7vXredp5Ah+25NoA/OIhm4TaTuuvilwBJl8u2hPRWewB6Tfsb5ea3n
-         ba3fENobNXCW3eZsS1zgjAZARAoBcjloQ+xbifdMvM/FLx1+ZYWMjeCMcSE1OzZpl8zE
-         GYgiB6FKIoxfRdTjhKgrACcpEzx9zxK8YNSTuL5RtNuSW8zH7qgjhr4lia2z3bxnHQgj
-         PhUwU8LTnVvbQdNrZc+MhaF5R+jKeOxOjAC5G0OQDzV98SVPzZDScQ3DuRJDZUy7p1LM
-         kIwqC31Lj1bBd8KRI0AeF/I/6xsjVabJwtumbYWNzEQzs/5mVLAPsXnrksuPIB07+EcD
-         sDQQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWzueRg2R4i4arBpzkjPAbzWxjxXMX6GmbUTOn4t0lXXFWcUBh9EYkeVv0V+ML+QTJ5HygLD90Ua1Q4AP42i4hwztA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzP8cYi/3l7dFOib9n9w8pYCcSVObBcGGXWXYR6tRyaQxTjf8LD
-	9XAXdJ1VHukoOV4aN+KOf1TCwm0ysS9CNOpqHtWiuCK6BuiLbNJWA+b18p0XK+u2GGm1xcz8mrM
-	lqIt/pdaSaGK3dGccDtoFUhmh4CnSWOn5r09lNeKdsKgN3FcAwW+peLPyWXK+v8W02HGfKPgb5x
-	9nOD9/P2Ve+cgIhsPymyZ/HQF1wP+G84//HM/21AWkk0tz
-X-Gm-Gg: ASbGncu9PkLDsNqFy8S/5vNJRKbL77WPWyKJAM3PMShDgDKkdhN5a87CPOL/uwKz+n9
-	q/pYjanNPA+/W65iT5lNOBxj800Ig3p9sHXj4SSIYvVXA/rqXtu3Wf7/D67BlNf3/pPrbOFOgVd
-	3gYflm+uw=
-X-Received: by 2002:a05:690c:67c3:b0:700:a61d:a2f1 with SMTP id 00721157ae682-708540d9052mr161522247b3.7.1745855142322;
-        Mon, 28 Apr 2025 08:45:42 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHFGFih3ozZEKsj4xm/6JhtLUCRC/M6E+ETCg/hOWn66Licdp+qRA1ykpxrKLnhfUjlB4pAeRTiinQgQqPRcl0=
-X-Received: by 2002:a05:690c:67c3:b0:700:a61d:a2f1 with SMTP id
- 00721157ae682-708540d9052mr161521327b3.7.1745855141849; Mon, 28 Apr 2025
- 08:45:41 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="MAYDRn3i";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="RiyBbf4s"
+Received: from pps.filterd (m0246627.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53SG2adP007826;
+	Mon, 28 Apr 2025 16:07:00 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=corp-2023-11-20; bh=uaLyvKMTZHYsVDygiZ
+	hwb/o4ShaZ2+BscxsC44CBqGQ=; b=MAYDRn3ifiWC/gti57CApcRLs/5sCMfyNm
+	cQU54uPvoYwjsUxXsCF0nts6UH4b0cHxoqW2rzvbnk0vGK37p38CN9lDPNeWXoal
+	UG3dyrH+6EAyIyx0ptXnJWpsc/FXbuOshZp/9NWG6whdJuUHCpU6eYoebvA2wCgW
+	ZHn3SBCs9CrfvpgzfR+2ogOPr48f5srWRzJpSOkcm67S0a8OyIA1OF/cYJ6vvLKO
+	bcH28gQULNevytK3ilhxUybQ3nI/pjhMKWFpI2B8Tjb2BEZO0VC6QD/TS/HbnGBb
+	5sgB9z5yjqbD749QeO+JvGHCpRz7au1Kd9vVqashwfKvGPwtbxcg==
+Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.appoci.oracle.com [130.35.100.223])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 46acu980bd-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 28 Apr 2025 16:06:59 +0000 (GMT)
+Received: from pps.filterd (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 53SG2BGX028457;
+	Mon, 28 Apr 2025 16:06:52 GMT
+Received: from cy3pr05cu001.outbound.protection.outlook.com (mail-westcentralusazlp17013075.outbound.protection.outlook.com [40.93.6.75])
+	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 468nx8mc26-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 28 Apr 2025 16:06:52 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=GSAuEjfeUNBCOnVpkUhUTkfCUuHRv2Wi6XEr0Oi7PmgzdtziWri+OJ7HofmVPIJSEXY6sgRuiTpl8rqEiiRb6hR1gcTiMpdLNKYG0c/f12Kn7t7XN0AJMsQrmPvFvuiAyrUF5Lwsnyy2sFLRjVEEEO7Om/FNPmXpOCsh7ERYm6bAGAkDJ5rnM2n9LJcawzfMHZWeqlc/UzpTehgXj84SpltUXrImUCJJRkbGC1bX89JlRIEUhhrUCbI/Qo3cMBNte2zB2e34Xd8wR3lzruP2QvffqqDKnm+fEn9yeKjTtbA1oboq4bWpomwu0xUcAFdU50Guvqj55BJhRRhBtK0nAA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=uaLyvKMTZHYsVDygiZhwb/o4ShaZ2+BscxsC44CBqGQ=;
+ b=O0BUQODGqclktxq4745FwnM2KywxUQ79Hwn8bsUr/PvrewRvBuL4+3ldo2eFvnAPXPh9Nhttn7rO1ueXNPGyz9knhe4tuCv8m1xifutdLaPRqf2GyUxl5Xz8EhE6lkNfVdZW5TV6mr4yH4hkj64XHX49fCzdMEly4/avSH9IOg8Zqxf/Y4R7nWwXUJrnjwg2uGP6vROs+okfJ8LA4dZLB9UwWEW1RuXvH5vSzxPHapp8g01dBNrLFYTmgBuLGMyAlJqFLvuUM8hcsGsOFPfaFzwrE+l3oQvX5sd/XFeVvOnVb6q2ES1NVdIyVfgoerfeXCBVWuLBNCLr5/FP8s935A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=uaLyvKMTZHYsVDygiZhwb/o4ShaZ2+BscxsC44CBqGQ=;
+ b=RiyBbf4sP1LkDh2UnqXCy9kcI8huffGL4V7IFhMVdSKHYkrxEFSDF4OC+S9OwvBJEoWk7e47+f4i1uzeAgQdzcR8k7D2VlApTwK56ImnAVQTtssDX5OemXs6Ri4KLk5eltMdha9yotJq8JtSEqhtYCAzK8Q1cnydf6UmJozBdIw=
+Received: from DM4PR10MB8218.namprd10.prod.outlook.com (2603:10b6:8:1cc::16)
+ by DM4PR10MB7425.namprd10.prod.outlook.com (2603:10b6:8:180::6) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8678.29; Mon, 28 Apr
+ 2025 16:06:44 +0000
+Received: from DM4PR10MB8218.namprd10.prod.outlook.com
+ ([fe80::2650:55cf:2816:5f2]) by DM4PR10MB8218.namprd10.prod.outlook.com
+ ([fe80::2650:55cf:2816:5f2%5]) with mapi id 15.20.8678.028; Mon, 28 Apr 2025
+ 16:06:44 +0000
+Date: Mon, 28 Apr 2025 17:06:40 +0100
+From: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+To: David Hildenbrand <david@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org, x86@kernel.org,
+        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-trace-kernel@vger.kernel.org,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+        Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        Tvrtko Ursulin <tursulin@ursulin.net>,
+        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        "Liam R. Howlett" <Liam.Howlett@oracle.com>,
+        Vlastimil Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>,
+        Pedro Falcato <pfalcato@suse.de>, Peter Xu <peterx@redhat.com>
+Subject: Re: [PATCH v1 11/11] mm/io-mapping: track_pfn() -> "pfnmap tracking"
+Message-ID: <07a780ee-b2fa-4eb3-a340-175d7c18a0fe@lucifer.local>
+References: <20250425081715.1341199-1-david@redhat.com>
+ <20250425081715.1341199-12-david@redhat.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250425081715.1341199-12-david@redhat.com>
+X-ClientProxiedBy: LO4P265CA0142.GBRP265.PROD.OUTLOOK.COM
+ (2603:10a6:600:2c4::16) To DM4PR10MB8218.namprd10.prod.outlook.com
+ (2603:10b6:8:1cc::16)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250417000238.74567-1-npache@redhat.com> <20250417000238.74567-12-npache@redhat.com>
- <30180bde-d813-40dd-83f4-0cc04daf6df6@linux.alibaba.com>
-In-Reply-To: <30180bde-d813-40dd-83f4-0cc04daf6df6@linux.alibaba.com>
-From: Nico Pache <npache@redhat.com>
-Date: Mon, 28 Apr 2025 09:45:14 -0600
-X-Gm-Features: ATxdqUFKz94UIef8hpmrNssfBw-E2fCsLaNro0qnCT1DayYdhi5zln_WMT_m0JA
-Message-ID: <CAA1CXcAJfMimBBa+2TrhvBoubsLiCsmZWRLjWt1KK69Tu1BLTw@mail.gmail.com>
-Subject: Re: [PATCH v4 11/12] khugepaged: add per-order mTHP khugepaged stats
-To: Baolin Wang <baolin.wang@linux.alibaba.com>
-Cc: linux-mm@kvack.org, linux-doc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	akpm@linux-foundation.org, corbet@lwn.net, rostedt@goodmis.org, 
-	mhiramat@kernel.org, mathieu.desnoyers@efficios.com, david@redhat.com, 
-	baohua@kernel.org, ryan.roberts@arm.com, willy@infradead.org, 
-	peterx@redhat.com, ziy@nvidia.com, wangkefeng.wang@huawei.com, 
-	usamaarif642@gmail.com, sunnanyong@huawei.com, vishal.moola@gmail.com, 
-	thomas.hellstrom@linux.intel.com, yang@os.amperecomputing.com, 
-	kirill.shutemov@linux.intel.com, aarcange@redhat.com, raquini@redhat.com, 
-	dev.jain@arm.com, anshuman.khandual@arm.com, catalin.marinas@arm.com, 
-	tiwai@suse.de, will@kernel.org, dave.hansen@linux.intel.com, jack@suse.cz, 
-	cl@gentwo.org, jglisse@google.com, surenb@google.com, zokeefe@google.com, 
-	hannes@cmpxchg.org, rientjes@google.com, mhocko@suse.com, 
-	rdunlap@infradead.org
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: RTD77r9Agjpcw1sZzSAbtVLeTYy1yLT_NLhEzPQzLWA_1745855142
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM4PR10MB8218:EE_|DM4PR10MB7425:EE_
+X-MS-Office365-Filtering-Correlation-Id: db4af0ac-ffec-4c0c-d798-08dd866eab91
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|7416014|366016|376014|1800799024|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?BhGqyicJNR0HS7KCyRj8lV4bxjVUxXJhnI0s9ErPrhIw+q1gCyrOA3GI10Hf?=
+ =?us-ascii?Q?Hh2TPoYxEptnOv1ZHfrgkrE1XQQKXfxnr9iecQrBhKhkmgR6+pwlQCahOjF/?=
+ =?us-ascii?Q?eaeWIvWXKi9b1fue0960ciafYfjHX29xly7CzcohaW8bfAb8vMqT3/kCgoFM?=
+ =?us-ascii?Q?PGyZXt78UYr6L3ySBfncS+M1WrcujQkfATUzBbdVDRb0+jECpEgyJ6gERFjw?=
+ =?us-ascii?Q?Q4Hf2zZcML5EeOzqUphTzuAm1gZDOQLubbyrPNY2A4f+qn/u999VGE+4QsBQ?=
+ =?us-ascii?Q?fPSMfzPe9PpmwFSRb9AwpVVdlhnnHx9HRTj5IxnLkRa3V0I49gE4T5Lp5MeP?=
+ =?us-ascii?Q?szNf9NxvdlWxyK9Ylplg3exDbB6OlH3AkBi0ChspmXJ7XzSl/D+uN7b7JbFs?=
+ =?us-ascii?Q?Nh26si3+53sWr65+54VAC7ExAuR1ss46AgNus20ogOsAF45xF2ZIOr5TzrAU?=
+ =?us-ascii?Q?YfMJTdcEpCFgCrAUmnIydYoWPORcB/uz4+57fi2UCO+y0qm0qxDlUnlujtIo?=
+ =?us-ascii?Q?cBoX0E0ULH2W6R7A5ynFzSZgn7ySbuwO96RhX3XxxOrGC2ZW0ob7Et8qwvNJ?=
+ =?us-ascii?Q?jnzD8ObwjagUvhJP+AUDsUY1x1yq/HpsfMZ2fheuSUdLA2Q+l6mxYWUPQdcX?=
+ =?us-ascii?Q?DeYBgkHqvbki6FP47HoMIxipB/M2F3tSL/9n7IojIb4kVDJEq197WVc/Wl3E?=
+ =?us-ascii?Q?QsoaiHHIB55YnU5TbZjh5kDHhUol1U6Z49TBgSgkF4Jl1BCbaR89614tknp8?=
+ =?us-ascii?Q?INw4owxMuhPU3Wu1fagF9zVo6DmkT3+OBDmJJwGdiTVhoMscB9xL1peKixi5?=
+ =?us-ascii?Q?zEVgeIBdzUwZN7udyW5GLm1LnIc7gR4YDUkhAgdoSXG7QtVFV+abQjDP7Ke+?=
+ =?us-ascii?Q?Gd21MXA3hTwlUgJQsb1u/HhmegUP//Y7t4+ALaVfRnvCIC+76Cgz9Hri3X9R?=
+ =?us-ascii?Q?OBbl2vu3RJCueL1TPGC+KNp9zuHmh1wSZMdQ5VFkjsXi1eGbB7XSazG+eyNb?=
+ =?us-ascii?Q?6a/yDqXAO9NtTFJaqZee7jezqmvihXQC0d8yFl9iV7xiA67hGgEBU0QuCnBF?=
+ =?us-ascii?Q?vCTOPxUacQXGmrAwYuniGvVVAonoqyU2nlq43LRlSWpqlUfrslvwlBL/lHxb?=
+ =?us-ascii?Q?LEfaPjE0pHmwtW/s09mL/F7dX4TqYK65zDE4vu+++qN+z9zV9JQlChiuONbm?=
+ =?us-ascii?Q?cf63qXoSgwnHeyrJ2Tu8dUrCHpAyxMQUN4wZZZmmd1Ifs6W0bbXhx6xXyhZA?=
+ =?us-ascii?Q?P3Ne67OB7YQBrwwZQ1IJ0l8gTj8RDGZ4vp1t2faPrppd3eWYTfOZz2PeZHIg?=
+ =?us-ascii?Q?A0VFSAJngJLoHWqx/Dn5q95552E+uX61lXs0Y2TQMOhloNiArgAOae5P2oFO?=
+ =?us-ascii?Q?lMXV8B2UsTnWnoH+E+4W1SJVFjhLnXwhyn/qYAmTFjSLYLIp4ZlFZyMQSyA4?=
+ =?us-ascii?Q?Fl/ZSO7C7ZM=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR10MB8218.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(366016)(376014)(1800799024)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?rTn4dhhwRQmGTKFN9l7Jl2B8CzI+bdD03NS4qSESqrGFO0Ifso9BaqwH0q7f?=
+ =?us-ascii?Q?i83WFlHOqDb6SBj4KCiEZJZ/xeEVECVkI3MYw3jlecTLLloFFeFq1RwQ8x8v?=
+ =?us-ascii?Q?LEkY+vEX5+i1nRPws4cKYDln4ywa/rjM8Oii3ckv6gPTwsO/NV4HqgoZQ5t2?=
+ =?us-ascii?Q?oU2mvZppJMlEuF9Z2cy5BDvx0hJkuubOz3qIan3yJPOm/uSUplDsqPMsibYJ?=
+ =?us-ascii?Q?G6u5QppU7UWpQJ/GmGBfT6bJ+ufGSWnRPhaSS86Bs8oW1n7UnnPBmKBSOh7m?=
+ =?us-ascii?Q?be5LQWf0gWYsrwbjgdheb+AZE/s83p91SEmL6X1uxCBIvwZhMi/GwNtjdXjU?=
+ =?us-ascii?Q?ToWNtbfR0wysCVd9xlOROtgx34j7UM8iAQx9R7+sHzxRHWOD8B3aDmWxvA75?=
+ =?us-ascii?Q?2gGXEC/vv5ve8PtI1yMTHpGOJc6mgZNaTOOiorRpinqKFSZ7SQgdh7+ADod3?=
+ =?us-ascii?Q?+fzijbHl+/xgCmwaSX2oKV61a9XVAzV3hq9kYepRZUkqnOyuibEDzaopd2yE?=
+ =?us-ascii?Q?vFC/Ntu9MG9okEYqXaRCKlUXMtn6wwEf+nSBJ2zCW9jlqIjZdUeLSYWOhdLh?=
+ =?us-ascii?Q?zqwryBOdcszIebP+u28RQVyeMVtWVZx4+obtIMDRa7ZQfAw0BijVRENDwLcU?=
+ =?us-ascii?Q?Z071W+HaZcI3eO54yE7l8QNz51j3MWSuyU9fBY2fTBhojHjE6fzQ8kRrf2pQ?=
+ =?us-ascii?Q?1yuVJqX6bjpNb8/Gj6kNLbMR2xXioB4jayZLZJGGK0rIeDGh558nsbYcWWAz?=
+ =?us-ascii?Q?aBxFVkc9bqsnoopq5bpckBpMEvhxq/LBee9CZ76NuWg8dG0Ymnzk0jxHNCtr?=
+ =?us-ascii?Q?KZQ4xg1MdjvenUcxqYpomDa/Smt4+4UdzLWa1DU21j2XkcXV03jhUTDHrDon?=
+ =?us-ascii?Q?27tQPiijZNG8k7kVgs3MeL1CCHFS3piG1pqQaNKbTu690N04M35zm70e1CUz?=
+ =?us-ascii?Q?JQBiv4tnS0/OtWgky5X0MEA3kpZKMdLNCtYzdcl2DFrVVgQ2TAwkxgQrGlcB?=
+ =?us-ascii?Q?tYaaOblSbeWTt5K/tPhksw6i4qV/HyWD6Kyn3+kU8uICrS++vR2Ss7tIzLyG?=
+ =?us-ascii?Q?WVxq4VmnKRMmeaUHpV+7p+ehKiCIuOF/RIvhpsuNReZtAsiu+nBpqPWfMirL?=
+ =?us-ascii?Q?3s8Uy+Cqvj/yrPZdnNLFNbMHq+SpboQTW6C/Y4G2uPeMLNVkzVP6CZsvF47b?=
+ =?us-ascii?Q?Wv8nG3qZnS/kdid6Tfc+RhHJn+OkoY0wAKQwTmjsm04+0jx5aGgHf5qkYp6h?=
+ =?us-ascii?Q?8GvlN6HRyAfFvC/hqqTKl3++D/+3mGv90AuQpP3GHNaUceNY5c4TBT3yz1TX?=
+ =?us-ascii?Q?lwnFwxX3q3uJM0pkrHarmPVzFKpT/rfZN+i5HJqvyRdNbJNOKpMYVhFCBGZR?=
+ =?us-ascii?Q?FuVapS+n0Ge8q98g/xNRH7XJM3VbUPrYiikfUACK6rT3hH+bEUC1thPi/Lf6?=
+ =?us-ascii?Q?bCvXkv0qQ38C2u0z49bMIQA5T3TsODV4I+KGm+PqTde+ByU9DXpwhzqksolJ?=
+ =?us-ascii?Q?ezBF67wb25YdLYWvpSLTP9l9fiTgwTJ4zizrh0T/ACukuPDWWtXAYwNPnCTo?=
+ =?us-ascii?Q?ugdB20obuX8Trd9uc3RIEFVsMHdysqGJtrZmPSa3iR6IAWTDA98RmZlz/+K1?=
+ =?us-ascii?Q?bA=3D=3D?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	eMq4Ar/0VFsmjUcfLZCmQyaxoaphh4MCR5ARBaDNY0vLuzVdLUBraf7PGOEv3DJQalIJz/9fzBtaMn3Gt7G0PefaenwTuA/y/zMP537i9KF8BLXNxzB94op5HxovnKK5dF38WHTeYzmBnWI1FidrN0yLgwjkDuEK1mijVn7ij9wUI6FFPEUKmt93oeRL/jNgeomQ76Z5zdNzknI6JqbbLNpfxnJUOW+/4QSx+7QhyDu8UqV45DfpDVsWkEF9xcQtzO5S9zABFhjpTNkN3T+fp27G9YJsyjb6Ilgvie4cvh3A3B2mAzald7c7u9DghoznC8FfhK6RgMR8VY/0uGvwg2+z/De6z336hEdhBVjVD4UjC7PlHOO9zIAOjehkHL+OCFu9jZRKrJ7jo6RLtFLA3YNyTOOqxgvG1N0CchZlbEzu2N8hHu5GAmpPM4dJpXs9wVKiyIg5/tObDIm8XGfJvz5ugotic8H7Na5HuSKF+UTR6cS1vHEHwxiCCEIWEyHpQ16swsEcFpUGQBOVZuuPvE2qamLBbumvAs80SMKJtlBzzfssNrZ41pebkGXigNb92phe586y0tECy3WpPr1VwlOQKjH88ksbH60jt7nN4Sc=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: db4af0ac-ffec-4c0c-d798-08dd866eab91
+X-MS-Exchange-CrossTenant-AuthSource: DM4PR10MB8218.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Apr 2025 16:06:44.0742
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: JgkvgZJOcdtKsJU/rdGGeykTr9iQFGdAqKC0vL86bqrocAQwTRH9QfXLTmPSZo9+yDmWGxpVaMOb+086v+zUsw4xKkhFGR8y7GiltXx6vqo=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR10MB7425
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-04-28_06,2025-04-24_02,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 spamscore=0 bulkscore=0
+ mlxlogscore=999 adultscore=0 suspectscore=0 malwarescore=0 phishscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2504070000
+ definitions=main-2504280131
+X-Proofpoint-GUID: ePIjj2D9_D3i-dHOAftPEbnPBb8p-1NG
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDI4MDEzMiBTYWx0ZWRfX+pW5Pnkn5ero QeyKvHy+A3+obbYZ0fwA87IKF40z+biB/XU81Bxr2xxj8PkzZ3AxWPkqEIjLuxVUXPgR0FGqleU bidkmpwDVEbGFZvrsGJO7Bxfes+Cbip5RdsCnAvBYSSeYOC/lmr6aWpAMPD5K+c4FQBlNFaa2jM
+ T0thAf1nRstg6m+lc2RhtLV/iO1EmICXWclwFlVKCGF4Zj73GgPdYmXKffn2gq1XEwjscWFf2zv rR2f29DMtKQnTUBci9F5ZsmACBwgQpRd5xQ6RrSKDquVF0oI9/QWMyHPqmAWba5BXPOEMVMbDtM fvmI3f01UhMU/FW0BiMD/Hl3F4vCInj1KVds7JgoRaxB6wbZ/IU/7+Nb6MLG6HIjpfdoLXn6rBv IW0jR7Cm
+X-Proofpoint-ORIG-GUID: ePIjj2D9_D3i-dHOAftPEbnPBb8p-1NG
 
-On Thu, Apr 24, 2025 at 1:58=E2=80=AFAM Baolin Wang
-<baolin.wang@linux.alibaba.com> wrote:
+On Fri, Apr 25, 2025 at 10:17:15AM +0200, David Hildenbrand wrote:
+> track_pfn() does not exist, let's simply refer to it as "pfnmap
+> tracking".
 >
+> Signed-off-by: David Hildenbrand <david@redhat.com>
+
+LGTM, so:
+
+Reviewed-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+
+> ---
+>  mm/io-mapping.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 >
+> diff --git a/mm/io-mapping.c b/mm/io-mapping.c
+> index 01b3627999304..7266441ad0834 100644
+> --- a/mm/io-mapping.c
+> +++ b/mm/io-mapping.c
+> @@ -21,7 +21,7 @@ int io_mapping_map_user(struct io_mapping *iomap, struct vm_area_struct *vma,
+>  	if (WARN_ON_ONCE((vma->vm_flags & expected_flags) != expected_flags))
+>  		return -EINVAL;
 >
-> On 2025/4/17 08:02, Nico Pache wrote:
-> > With mTHP support inplace, let add the per-order mTHP stats for
-> > exceeding NONE, SWAP, and SHARED.
-> >
-> > Signed-off-by: Nico Pache <npache@redhat.com>
-> > ---
-> >   include/linux/huge_mm.h |  3 +++
-> >   mm/huge_memory.c        |  7 +++++++
-> >   mm/khugepaged.c         | 16 +++++++++++++---
-> >   3 files changed, 23 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/include/linux/huge_mm.h b/include/linux/huge_mm.h
-> > index 55b242335420..782d3a7854b4 100644
-> > --- a/include/linux/huge_mm.h
-> > +++ b/include/linux/huge_mm.h
-> > @@ -139,6 +139,9 @@ enum mthp_stat_item {
-> >       MTHP_STAT_SPLIT_DEFERRED,
-> >       MTHP_STAT_NR_ANON,
-> >       MTHP_STAT_NR_ANON_PARTIALLY_MAPPED,
-> > +     MTHP_STAT_COLLAPSE_EXCEED_SWAP,
-> > +     MTHP_STAT_COLLAPSE_EXCEED_NONE,
-> > +     MTHP_STAT_COLLAPSE_EXCEED_SHARED,
-> >       __MTHP_STAT_COUNT
-> >   };
-> >
-> > diff --git a/mm/huge_memory.c b/mm/huge_memory.c
-> > index 7798c9284533..de4704af0022 100644
-> > --- a/mm/huge_memory.c
-> > +++ b/mm/huge_memory.c
-> > @@ -633,6 +633,10 @@ DEFINE_MTHP_STAT_ATTR(split_failed, MTHP_STAT_SPLI=
-T_FAILED);
-> >   DEFINE_MTHP_STAT_ATTR(split_deferred, MTHP_STAT_SPLIT_DEFERRED);
-> >   DEFINE_MTHP_STAT_ATTR(nr_anon, MTHP_STAT_NR_ANON);
-> >   DEFINE_MTHP_STAT_ATTR(nr_anon_partially_mapped, MTHP_STAT_NR_ANON_PAR=
-TIALLY_MAPPED);
-> > +DEFINE_MTHP_STAT_ATTR(collapse_exceed_swap_pte, MTHP_STAT_COLLAPSE_EXC=
-EED_SWAP);
-> > +DEFINE_MTHP_STAT_ATTR(collapse_exceed_none_pte, MTHP_STAT_COLLAPSE_EXC=
-EED_NONE);
-> > +DEFINE_MTHP_STAT_ATTR(collapse_exceed_shared_pte, MTHP_STAT_COLLAPSE_E=
-XCEED_SHARED);
-> > +
-> >
-> >   static struct attribute *anon_stats_attrs[] =3D {
-> >       &anon_fault_alloc_attr.attr,
-> > @@ -649,6 +653,9 @@ static struct attribute *anon_stats_attrs[] =3D {
-> >       &split_deferred_attr.attr,
-> >       &nr_anon_attr.attr,
-> >       &nr_anon_partially_mapped_attr.attr,
-> > +     &collapse_exceed_swap_pte_attr.attr,
-> > +     &collapse_exceed_none_pte_attr.attr,
-> > +     &collapse_exceed_shared_pte_attr.attr,
-> >       NULL,
-> >   };
-> >
-> > diff --git a/mm/khugepaged.c b/mm/khugepaged.c
-> > index 67da0950b833..38643a681ba5 100644
-> > --- a/mm/khugepaged.c
-> > +++ b/mm/khugepaged.c
-> > @@ -604,7 +604,10 @@ static int __collapse_huge_page_isolate(struct vm_=
-area_struct *vma,
-> >                               continue;
-> >                       } else {
-> >                               result =3D SCAN_EXCEED_NONE_PTE;
-> > -                             count_vm_event(THP_SCAN_EXCEED_NONE_PTE);
-> > +                             if (order =3D=3D HPAGE_PMD_ORDER)
-> > +                                     count_vm_event(THP_SCAN_EXCEED_NO=
-NE_PTE);
-> > +                             else
-> > +                                     count_mthp_stat(order, MTHP_STAT_=
-COLLAPSE_EXCEED_NONE);
-> >                               goto out;
-> >                       }
-> >               }
-> > @@ -633,8 +636,14 @@ static int __collapse_huge_page_isolate(struct vm_=
-area_struct *vma,
-> >               /* See khugepaged_scan_pmd(). */
-> >               if (folio_maybe_mapped_shared(folio)) {
-> >                       ++shared;
-> > -                     if (order !=3D HPAGE_PMD_ORDER || (cc->is_khugepa=
-ged &&
-> > -                         shared > khugepaged_max_ptes_shared)) {
-> > +                     if (order !=3D HPAGE_PMD_ORDER) {
-> > +                             result =3D SCAN_EXCEED_SHARED_PTE;
-> > +                             count_mthp_stat(order, MTHP_STAT_COLLAPSE=
-_EXCEED_SHARED);
-> > +                             goto out;
-> > +                     }
-> > +
-> > +                     if (cc->is_khugepaged &&
-> > +                             shared > khugepaged_max_ptes_shared) {
-> >                               result =3D SCAN_EXCEED_SHARED_PTE;
-> >                               count_vm_event(THP_SCAN_EXCEED_SHARED_PTE=
-);
-> >                               goto out;
-> > @@ -1060,6 +1069,7 @@ static int __collapse_huge_page_swapin(struct mm_=
-struct *mm,
-> >
-> >               /* Dont swapin for mTHP collapse */
-> >               if (order !=3D HPAGE_PMD_ORDER) {
-> > +                     count_mthp_stat(order, MTHP_STAT_COLLAPSE_EXCEED_=
-SHARED);
->
-> Should be MTHP_STAT_COLLAPSE_EXCEED_SWAP?
-Yes! Thank you, I will fix this :)
->
-> >                       result =3D SCAN_EXCEED_SWAP_PTE;
-> >                       goto out;
-> >               }
+> -	/* We rely on prevalidation of the io-mapping to skip track_pfn(). */
+> +	/* We rely on prevalidation of the io-mapping to skip pfnmap tracking. */
+>  	return remap_pfn_range_notrack(vma, addr, pfn, size,
+>  		__pgprot((pgprot_val(iomap->prot) & _PAGE_CACHE_MASK) |
+>  			 (pgprot_val(vma->vm_page_prot) & ~_PAGE_CACHE_MASK)));
+> --
+> 2.49.0
 >
 
+However this doesn't apply after commit b8d8f1830bab ("mm/io-mapping:
+precompute remap protection flags for clarity"), so will need a rebase :)
+seems this was cleaned up to separate the __pgprot() bit from the
+remap_pfn_range_notrack().
+
+Note of course this commit hash is from mm-new so quite changeable... :)
