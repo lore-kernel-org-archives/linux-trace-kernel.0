@@ -1,65 +1,89 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03620155333;
-	Tue, 29 Apr 2025 00:29:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0B5714D2A0;
+	Tue, 29 Apr 2025 05:10:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745886596; cv=none; b=CXRTQJO/FulWTuTnguxinunH6O94pDi/gS3buSL6fBXGZnT7c1cuaaakrvhJg47FyFqtuYKrQ9Xiz9SkkWLokaNe4NnPv1Atp+Towdk+rVEBeayeGQA+1tkei4fxdCh8tYRkiPzQw7p9AnyL2ynSGE3/Mvg6KTicjxMjEfd+QLs=
+	t=1745903448; cv=none; b=kvmgyPGPjeu0CTnOZuTkTx/FJL8f7NJl1OewVgwjmzHUe2lItnu+0PI8rjsEAHAvcI8RwcCwWYd9p0spI8aYveULKzN59bFyuDyyXPxDSwNLmFEPxyjM05Jkug+yIDepOdPOUc+WRWrELOJNnJyVXQff1EBeNcjKvOd1Cl7t/m4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745886596; c=relaxed/simple;
-	bh=tLYrPYZW/X/t1bozTpHr9P83ZuJCHn0ll7fGYXewILk=;
+	s=arc-20240116; t=1745903448; c=relaxed/simple;
+	bh=ZTeeFPzDCLqNrHogmQxRQpu/PV1VB3LkgPkxl3PnIcg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PjH0/KZty4qC11rvI8jqinqZjvNWCXaS0KBeI2uP8gd2zvFPw3m9f9pt6m1zuVYs6hjOL9WSHGY+Q5xXhpI1nW8TPEEsGOlZEeVku3dHDUUHfC4L34YMBZB3As4s/NV9VnxLyBRnnfn2aponzONKYZRCUDh4F/zByjzgl6813ck=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pRhnJ53k; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=JISuzNJsoscIy/+bce4W5I8bbiqGuSaYftflbGqHhuxFBbLoQ85OSFvQJKWyBCjI+FycGmmPGqco+T24Xw65rc/odFP6Kk1gmKi0ccJrzajnJVno7oIXo0Fjrw8oYpYzQclp7J1nWqD5JKYUdyoc+fZ8nWeBhzzof1RSYYiV6HY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=D1a9AMhd; arc=none smtp.client-ip=209.85.214.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pRhnJ53k"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 75CDAC4CEF0;
-	Tue, 29 Apr 2025 00:29:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745886595;
-	bh=tLYrPYZW/X/t1bozTpHr9P83ZuJCHn0ll7fGYXewILk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=pRhnJ53kJ3lxPhW//wTC2sjlYIHaM3FV2DbU+UQFW44a9kSVid7dpDFV9JRoIEUT7
-	 /+SyZcQSKI2PMp7e59tDWeHLY/9sJR01A40tkRYfne9mlX43zFAtS6A7jO5SLjj47R
-	 /7IpzEFeVytdPCvFPrtKEKV2HJEHsp8rDDc4SiM2GXwfilmGG4ZUC1rOPgFKV7ugJN
-	 zQCgcoTcWGLyhHY2nl7MOMTScHgn7UoFyGeCZMUQTfaV/Wa9O5KZKKnXNEfpD3LHY2
-	 kykK2HoLeADOftf0wyPF/r8sJUB2gg3fc0/148NxW++B8pAAKQYMEI6/O/nA0k6tvs
-	 XdQaMqV2gNCZw==
-Date: Mon, 28 Apr 2025 17:29:53 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Josh Poimboeuf <jpoimboe@kernel.org>, x86@kernel.org,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Indu Bhagat <indu.bhagat@oracle.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	linux-perf-users@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-	linux-toolchains@vger.kernel.org, Jordan Rome <jordalgo@meta.com>,
-	Sam James <sam@gentoo.org>,
-	Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-	Jens Remus <jremus@linux.ibm.com>,
-	Florian Weimer <fweimer@redhat.com>,
-	Andy Lutomirski <luto@kernel.org>, Weinan Liu <wnliu@google.com>,
-	Blake Jones <blakejones@google.com>,
-	Beau Belgrave <beaub@linux.microsoft.com>,
-	"Jose E. Marchesi" <jemarch@gnu.org>
-Subject: Re: [PATCH v5 13/17] perf: Support deferred user callchains
-Message-ID: <aBAdgUpi9fxsQ_t4@google.com>
-References: <20250424162529.686762589@goodmis.org>
- <20250424162633.390748816@goodmis.org>
- <aAupP56jOM_wul_8@google.com>
- <20250425125815.5c5b33be@gandalf.local.home>
- <aA_oJ7tgGv-H4ocX@google.com>
- <20250428180253.1b1517a8@gandalf.local.home>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D1a9AMhd"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-2255003f4c6so60826695ad.0;
+        Mon, 28 Apr 2025 22:10:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745903446; x=1746508246; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=zX3Pd6vkQQ/3XX+ppdLcQfDQhkoHTDjgJ2yW/+pucr0=;
+        b=D1a9AMhdBuLGbBHu+uLD1bp54CB5znTRNMwYi4PiRa7z+++pGxi+qvuhqgVob+yGjU
+         /n0ODlPv9+B3R+YrZTEDUkny83GpefXwGT3pdREEYw3LjsE/zQOAYwGa8KXSqyamAHGt
+         AOOUT8GC05xXYS8vymYqeiesXLChjaut47L2TUXdg9ZSDvuH4l2BRaEUCWlToDW4v+pY
+         n7kuvEZ2wRlx0eIX0SWGp8KJuOv/i3UKsS8zuiEt4QDUaSyZoo2Ly85epydAayIOnpgY
+         KekKSL3MJE/tCkJcLtoWWYviaNPzj9jBgsZ8z1reSQWQlM0/2AYb20AS19Z3glQSsgOQ
+         FPnw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745903446; x=1746508246;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=zX3Pd6vkQQ/3XX+ppdLcQfDQhkoHTDjgJ2yW/+pucr0=;
+        b=vTLxjpDccS+oTUEN2JPFMbxlhXEpgiUJbWJF/hLFgd9943Hr7gswezpfFjZH4HPZUh
+         6iaA1oGg6msXIGh5go7+ns0V2k2Ql3CeonjKHdnbxNiMewAOBRrzzZwHI0Jweozg2X0T
+         K9DWPw/MddDBXYC0jSS0SF9box4YKh6ELicmqbURatmWp7j40VQUIwQhEztOzy35E4vs
+         xynupjfI3DMeAFQrSSqFDJ4rBIoC2Q7v5q4IYlyUsqKxxmCvhMGNPIG2uWnkELIv4sOa
+         qNKrggdFCLFDhS9fOWpGDYKHLK/uMB2xhcBFHCHxfFgfJ9OK5IlxRvD6GtZz+Tp+TdEA
+         li6g==
+X-Forwarded-Encrypted: i=1; AJvYcCU2Ds+xzfkt0STMuAY4NECc0oM9nWD3SMhwnmFZONdpksYBLxHTHNiC+FjQ2YLP9/Trl6EP6kwcK7186EO7g7+R494d@vger.kernel.org, AJvYcCVTS7L4JGiA7JcEfNPhXsM4+qJsnZpNp28khDBsTcih+dIoNpfHAiameM2O3dGg4ebA14mSMi4g6n3A4lL6@vger.kernel.org, AJvYcCWr/aGgihBbfumRz6/IcTOKo6tpz1bqLX3BwoyLFGKjRkjjM213BewTFsTwgj1JkKQkSfs15MeeS/Q=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzsO25O7g337kFvyLKNkt64y5RjFMORcZ16/BTVID2HSZ8URluR
+	tNlu6eSEwVUvcYXCjLF8UjIkUSjGqmEbs8T07czocoEzYWl/WkVB
+X-Gm-Gg: ASbGnctJxDzApGsCr2Awzw4VSVZ36zl/xTOvsKJjBxn6mnMOS2IMU3gANDd6WzdpAel
+	u8R1dTfIQRNdKtQ/M4SqoblLhINWFq+sc2O0AdBVOdOlq/oNHcA02dcab03hhzMfcdfrFqsUd81
+	rQq53rXgQDtLAWRPJOClXWkE3IHdQ4d2iqS9aX7LHZrgLhYLCXJYEBT1x15QwptTBC9Fu+uj7ur
+	yPVT8jiU+sHa+SHRf/P3A8QOzRfEloOkhlIz/06D7N0Jl7HzWr+JJEMlkDSzi2v0+2u3xEFJCW0
+	eCj5JJ1LAOaqyID1p2DaKIo39Qco5CJZ6P8wy4Cp
+X-Google-Smtp-Source: AGHT+IFkA7SJBp9SgRZ6+ivRwUkAsuFLNkKqWS5lYr05a34CF2VlAv/KjTjzxI9PfiK0PctIfZICsA==
+X-Received: by 2002:a17:902:ecc5:b0:221:331:1d46 with SMTP id d9443c01a7336-22de6e939e2mr24815235ad.2.1745903445803;
+        Mon, 28 Apr 2025 22:10:45 -0700 (PDT)
+Received: from archie.me ([103.124.138.155])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22db4dbb204sm92921295ad.57.2025.04.28.22.10.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 28 Apr 2025 22:10:45 -0700 (PDT)
+Received: by archie.me (Postfix, from userid 1000)
+	id 28FB74050AE5; Tue, 29 Apr 2025 12:10:43 +0700 (WIB)
+Date: Tue, 29 Apr 2025 12:10:43 +0700
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+To: Nico Pache <npache@redhat.com>, linux-mm@kvack.org,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Cc: akpm@linux-foundation.org, corbet@lwn.net, rostedt@goodmis.org,
+	mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
+	david@redhat.com, baohua@kernel.org, baolin.wang@linux.alibaba.com,
+	ryan.roberts@arm.com, willy@infradead.org, peterx@redhat.com,
+	ziy@nvidia.com, wangkefeng.wang@huawei.com, usamaarif642@gmail.com,
+	sunnanyong@huawei.com, vishal.moola@gmail.com,
+	thomas.hellstrom@linux.intel.com, yang@os.amperecomputing.com,
+	kirill.shutemov@linux.intel.com, aarcange@redhat.com,
+	raquini@redhat.com, dev.jain@arm.com, anshuman.khandual@arm.com,
+	catalin.marinas@arm.com, tiwai@suse.de, will@kernel.org,
+	dave.hansen@linux.intel.com, jack@suse.cz, cl@gentwo.org,
+	jglisse@google.com, surenb@google.com, zokeefe@google.com,
+	hannes@cmpxchg.org, rientjes@google.com, mhocko@suse.com,
+	rdunlap@infradead.org, lorenzo.stoakes@oracle.com,
+	Liam.Howlett@oracle.com
+Subject: Re: [PATCH v5 12/12] Documentation: mm: update the admin guide for
+ mTHP collapse
+Message-ID: <aBBfU09ujXgw61LH@archie.me>
+References: <20250428181218.85925-1-npache@redhat.com>
+ <20250428181218.85925-13-npache@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -68,70 +92,51 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250428180253.1b1517a8@gandalf.local.home>
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20250428181218.85925-13-npache@redhat.com>
 
-On Mon, Apr 28, 2025 at 06:02:53PM -0400, Steven Rostedt wrote:
-> On Mon, 28 Apr 2025 13:42:15 -0700
-> Namhyung Kim <namhyung@kernel.org> wrote:
-> 
-> 
-> > > 
-> > > Could we just not use deferred when running with "-a" for now? Or could we
-> > > possibly just make the deferred stacktrace its own event? Have it be
-> > > possible that perf just registers a signal instance with the deferred
-> > > unwinding logic, and then perf can handle where to write the information. I
-> > > don't know perf well enough to implement that.  
-> > 
-> > Even if it excludes per-CPU events, per-task events also can attach to a
-> > CPU and that's the default behavior of the perf record IIRC.  In that
-> > case, it needs to be careful when it accesses the event since the task
-> > can migrate to another CPU.  So I'm not sure if it's a good idea to
-> > track event that requested the deferred callchains.
-> 
-> Wait? Even for per task, it uses per cpu?
+On Mon, Apr 28, 2025 at 12:12:18PM -0600, Nico Pache wrote:
+> diff --git a/Documentation/admin-guide/mm/transhuge.rst b/Documentation/a=
+dmin-guide/mm/transhuge.rst
+> index dff8d5985f0f..5c63fe51b3ad 100644
+> --- a/Documentation/admin-guide/mm/transhuge.rst
+> +++ b/Documentation/admin-guide/mm/transhuge.rst
+> @@ -63,7 +63,7 @@ often.
+>  THP can be enabled system wide or restricted to certain tasks or even
+>  memory ranges inside task's address space. Unless THP is completely
+>  disabled, there is ``khugepaged`` daemon that scans memory and
+> -collapses sequences of basic pages into PMD-sized huge pages.
+> +collapses sequences of basic pages into huge pages.
+> =20
+>  The THP behaviour is controlled via :ref:`sysfs <thp_sysfs>`
+>  interface and using madvise(2) and prctl(2) system calls.
+> @@ -144,6 +144,18 @@ hugepage sizes have enabled=3D"never". If enabling m=
+ultiple hugepage
+>  sizes, the kernel will select the most appropriate enabled size for a
+>  given allocation.
+> =20
+> +khugepaged uses max_ptes_none scaled to the order of the enabled mTHP si=
+ze
+> +to determine collapses. When using mTHPs it's recommended to set
+> +max_ptes_none low-- ideally less than HPAGE_PMD_NR / 2 (255 on 4k page
+> +size). This will prevent undesired "creep" behavior that leads to
+> +continuously collapsing to a larger mTHP size; When we collapse, we are
+> +bringing in new non-zero pages that will, on a subsequent scan, cause the
+> +max_ptes_none check of the +1 order to always be satisfied. By limiting
+> +this to less than half the current order, we make sure we don't cause th=
+is
+> +feedback loop. max_ptes_shared and max_ptes_swap have no effect when
+> +collapsing to a mTHP, and mTHP collapse will fail on shared or swapped o=
+ut
+> +pages.
+> +
+>  It's also possible to limit defrag efforts in the VM to generate
+>  anonymous hugepages in case they're not immediately free to madvise
+>  regions or to never try to defrag memory and simply fallback to regular
 
-Yep, it has per-task + per-CPU events.
+Looks good, thanks!
 
-> 
-> > 
-> > Also it doesn't need to emit duplicate deferred callchains if a task
-> > has multiple events and they are requesting callchains.  Unfortunately,
-> > the kernel cannot know which events are related or profiled together.
-> > 
-> > Hmm.. maybe we can add a cookie to the event itself (by ioctl or
-> > something) in order to group events in a profiling session and then use
-> > that for deferred callchains?  Task should maintain a list of active
-> > cookies (or sessions) somehow but then perf can check if the current CPU
-> > has events with matching cookies and emit a deferred callchain.
-> 
-> Could we add a callchain event? It gets woken at any request but not
-> triggered until the task returns. A way that there would be only a single
-> event for every perf instance, but it can trace any task.
+Reviewed-by: Bagas Sanjaya <bagasdotme@gmail.com>
 
-Thing is that the kernel doesn't know the relationship between events.
-For example, if I run this command on a machine with 100 CPUs:
-
-  $ perf record -e cycles,instructions -- $MYPROG
-
-it would open 200 events and they don't know each other.  Later other
-process can start a new perf profiling for the same task.  IIUC there's
-no way to identify which one is related in the kernel.
-
-So I think we need a way to share some informaiton for those 200 events
-and then emits deferred callchain records with the shared info.
-
-> 
-> It could use the cookie method that ftrace uses, where the request gets a
-> cookie, and can be recorded to the perf event in the interrupt. Then the
-> callchain would record the cookie along with the stack trace, and then perf
-> tool could just match up the kernel stacks with their cookies to the user
-> stack with its cookie.
-
-Yep, but the kernel should know which events (or ring buffer) it should
-emit the deferred callchains.  I don't think it needs to include the
-cookie in the perf data, but it can be used to find which event or ring
-buffer for the session is related to this request.
-
-Thanks,
-Namhyung
-
+--=20
+An old man doll... just what I always wanted! - Clara
