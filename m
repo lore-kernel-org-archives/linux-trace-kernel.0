@@ -1,145 +1,99 @@
-Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 727802D1F66;
-	Tue, 29 Apr 2025 13:44:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 685B337160;
+	Tue, 29 Apr 2025 14:00:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745934269; cv=none; b=JVxykTOlHN6ql+63AwVreSIForFUAw3rBpTfuQLClGyzU35hY6im+Q2wgr8z2jyV9mvrHE51jX2u/eV0JgAqQr2JPanCGZl2fmDZghPzp5mmaCzH2Fp9/tmaH1znCyi4IZcCZxU7gpg8y5Wv9nkqzlc+54bBbRbFZi7bVin5CZc=
+	t=1745935211; cv=none; b=RKFeVgEJwgrLmtBWbuvsXu10DMITk2o2zcLtWXDbS6rO7cXXSry/m/GNOcvZG0blg0u9/1VcicGTMPLu7xVEjgSj8nQhHhhZCteA93LhBhNAxH4bFmSxAsSXNMRGqhc6EYdMYmYuiIqP0OJoZDLFfuddpaIDreGReBCmltLgISs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745934269; c=relaxed/simple;
-	bh=sn4Zc2a08/jxnc89UrIbN0v4ePVwTaDL4DKWjOTGZug=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pBY26wwpilFhV0rrJCMUMlTFJTaGolguiLp5y7vOqEFUGAzyGGcV4dVAzIDb/erHq8EXFZ8bo/ejNtZoEGZMoiO1d/zmfEr5YrXggZJwaIXyfVSLvafBw3JFakjFJnzqEKIub8EavhDxVoYD8fXNc/K+VkHOO2uyatp8AhfCxDk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Fmz51O31; arc=none smtp.client-ip=209.85.218.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Fmz51O31"
-Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-acacb8743a7so1028039266b.1;
-        Tue, 29 Apr 2025 06:44:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745934266; x=1746539066; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=py/+tRtKpxAVkjpFhtFIv9ZCspznEw0Yc/TuPK6v0P0=;
-        b=Fmz51O31RdOQQ2cS3D2jxadzYnEkL+Dj7fq4ciVBMYhY68A8aw7FU9i5aDERixx7kS
-         kdAE8acSUtqz01uiLa/LC3t6CwM45T5dRZixpTUJaWxasXIG3mVrpwdcmoVpjFcMAa7m
-         3WzNL9kzTVtEeDAAcXHBJqn22qSgJEO5fwhHI5WCB9aYD1s4EW8hi79TU4UZ04oLkj60
-         oGm8E0tZoXBdVFtBthGt4teKSehaMXEm29tDDl5Y4jSc5FfNLIE/GZhktFWBLGqbYM+M
-         fn9Jc88y4XgKGllFxnydoagoIyMiNQ9aVi/hfJVvKMjHWvaPQCZyEXeVNpwdSC6/Xjfm
-         HjaA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745934266; x=1746539066;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=py/+tRtKpxAVkjpFhtFIv9ZCspznEw0Yc/TuPK6v0P0=;
-        b=a8B/LaOiESIFIyaK1MJb6+sH+5RunpPvQYDkPogeOmaztZQj68pMAyzY9+ZF7Rxvd/
-         7buOKXfLA8ndsg89UtcqzPXy6vEj3JEUS00WMwTjEr81U/Rqu9Wby41LVxbFQOOMtxR8
-         NksK0q1Sw2asdmcOJ3b5mxxC99qA96mNHOEIadw/RgXmDQ/BiTKIt06gm/zkoBtAWwdm
-         NVCxIiQR/ywTGnl/ooj2qF8aujbtlHVfFbpK9qF40IY+9AMp9yLLES3H4kZvfZgbeSCd
-         nyZ91CQQf4/gwZUqmAthRjSVFfOwMjRxZva3Bg2uQ6c1Y+aHq78oiMh6eeNsqbltXmr4
-         mCWw==
-X-Forwarded-Encrypted: i=1; AJvYcCVsTGZKcYVfje6E8owy86svL5t9pnH2IpxOIvo5+J9BrPq9r32glzbxAIHoeN594R6HMh4=@vger.kernel.org, AJvYcCVt6AnCD06Ps6d86+2jshIicHgDJUwBNNnotOsFEDqKK7aLU/qji1U/w/eZO5NM6e4RvXWnj1c0mrD3B54F@vger.kernel.org, AJvYcCWVtJiAH1A/OtWnyN+MXYncLq9fTAcApMinxiAxAoMGUzNohVJ4iBjScreIK1w/zas8QsZYBXYDKPlImdkv9Nb3SvsM@vger.kernel.org
-X-Gm-Message-State: AOJu0YzT5VbTfsGNURjK6fsR/VLHcFHbbxQDxa16o9KvKy8Y7xDRb+A0
-	RMLoviiqj+ea98wSNBma74ZHqFcHkDjGWIzfQw4RoxMIG7geyY9Kc5VnIr2i
-X-Gm-Gg: ASbGncsvYkuG7hsVHomkX/bYyXDebBPDinAsak+PMmb2pDq0NDCC1UZAAaakDJdlG8v
-	FzbrOs0TM1aynwn9x6kTzaqZB8ypPObxX2EKKTHJG4ZdJIfzyufopBq0RE6kZe7Js4hJCY8d6HV
-	1gF5JLpbDrcQLjUtvvSwJeT38qT6YGoQluGxNkiDrNJsKnE2sz/lyBxcQSB4p7YG7lraXJMjpxo
-	JUs+rqbKsOX5SWAf1QkZy2PV+ENmU3zgj3wXlItRVhyfccoawvJAIglbUewHOQJ6ewFpAL3yWAB
-	vgSTR/QGTo1aADvJxybYRhP86+k=
-X-Google-Smtp-Source: AGHT+IEzjLmNdgBn1573NpnF+vIUcUzCNRAWLZ34NioL/R0iZ1SWG/YJ7G9Zy3Ei0M24E48pW9t5iQ==
-X-Received: by 2002:a17:907:94c5:b0:aca:c67d:eac0 with SMTP id a640c23a62f3a-acec66aaab9mr340369566b.0.1745934265396;
-        Tue, 29 Apr 2025 06:44:25 -0700 (PDT)
-Received: from krava ([173.38.220.55])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ace6e5963fesm776592166b.81.2025.04.29.06.44.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 29 Apr 2025 06:44:24 -0700 (PDT)
-From: Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date: Tue, 29 Apr 2025 15:44:21 +0200
-To: Jiri Olsa <olsajiri@gmail.com>
-Cc: Oleg Nesterov <oleg@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
-	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	x86@kernel.org, Song Liu <songliubraving@fb.com>,
-	Yonghong Song <yhs@fb.com>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Hao Luo <haoluo@google.com>, Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Alan Maguire <alan.maguire@oracle.com>,
-	David Laight <David.Laight@aculab.com>,
-	Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas@t-8ch.de>,
-	Ingo Molnar <mingo@kernel.org>
-Subject: Re: [PATCH perf/core 03/22] uprobes: Move ref_ctr_offset update out
- of uprobe_write_opcode
-Message-ID: <aBDXtYOZelStjAe_@krava>
-References: <20250421214423.393661-1-jolsa@kernel.org>
- <20250421214423.393661-4-jolsa@kernel.org>
- <20250427141335.GA9350@redhat.com>
- <aA9dzY-2V3dCpMDq@krava>
+	s=arc-20240116; t=1745935211; c=relaxed/simple;
+	bh=2i/8tVY56b3DVucwE4I0Opa9mcCFm5PbnmBsbO63Vi4=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=GGAgpfA/rpUrMW6aDdc59Frnkm5/K2hQsdWcr1KKPIF/oVgCmqHpY+IoZf5fzThj4bghA4wTydcVWt6UJtKvrocik0Cc6l8fFEqqymZUrPPmNq83TT60z/Luw4DbpiBlTe0VKvny6VHt4ahC8E07r+fZ03RajY76BamBtUvudZo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CEEF5C4CEE9;
+	Tue, 29 Apr 2025 14:00:06 +0000 (UTC)
+Date: Tue, 29 Apr 2025 10:00:07 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Masami
+ Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Andrew Morton
+ <akpm@linux-foundation.org>, Josh Poimboeuf <jpoimboe@kernel.org>,
+ x86@kernel.org, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar
+ <mingo@kernel.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, Indu Bhagat
+ <indu.bhagat@oracle.com>, Alexander Shishkin
+ <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, Ian
+ Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>,
+ linux-perf-users@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+ linux-toolchains@vger.kernel.org, Jordan Rome <jordalgo@meta.com>, Sam
+ James <sam@gentoo.org>, Andrii Nakryiko <andrii.nakryiko@gmail.com>, Jens
+ Remus <jremus@linux.ibm.com>, Florian Weimer <fweimer@redhat.com>, Andy
+ Lutomirski <luto@kernel.org>, Weinan Liu <wnliu@google.com>, Blake Jones
+ <blakejones@google.com>, Beau Belgrave <beaub@linux.microsoft.com>, "Jose
+ E. Marchesi" <jemarch@gnu.org>
+Subject: Re: [PATCH v5 13/17] perf: Support deferred user callchains
+Message-ID: <20250429100007.3225e7eb@gandalf.local.home>
+In-Reply-To: <aBAdgUpi9fxsQ_t4@google.com>
+References: <20250424162529.686762589@goodmis.org>
+	<20250424162633.390748816@goodmis.org>
+	<aAupP56jOM_wul_8@google.com>
+	<20250425125815.5c5b33be@gandalf.local.home>
+	<aA_oJ7tgGv-H4ocX@google.com>
+	<20250428180253.1b1517a8@gandalf.local.home>
+	<aBAdgUpi9fxsQ_t4@google.com>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aA9dzY-2V3dCpMDq@krava>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Mon, Apr 28, 2025 at 12:51:57PM +0200, Jiri Olsa wrote:
-> On Sun, Apr 27, 2025 at 04:13:35PM +0200, Oleg Nesterov wrote:
-> > On 04/21, Jiri Olsa wrote:
-> > >
-> > > +static int set_swbp_refctr(struct uprobe *uprobe, struct vm_area_struct *vma, unsigned long vaddr)
-> > > +{
-> > > +	struct mm_struct *mm = vma->vm_mm;
-> > > +	int err;
-> > > +
-> > > +	/* We are going to replace instruction, update ref_ctr. */
-> > > +	if (uprobe->ref_ctr_offset) {
-> > > +		err = update_ref_ctr(uprobe, mm, 1);
-> > > +		if (err)
-> > > +			return err;
-> > > +	}
-> > > +
-> > > +	err = set_swbp(&uprobe->arch, vma, vaddr);
-> > > +
-> > > +	/* Revert back reference counter if instruction update failed. */
-> > > +	if (err && uprobe->ref_ctr_offset)
-> > > +		update_ref_ctr(uprobe, mm, -1);
-> > > +	return err;
-> > >  }
-> > ...
-> > > +static int set_orig_refctr(struct uprobe *uprobe, struct vm_area_struct *vma, unsigned long vaddr)
-> > > +{
-> > > +	int err = set_orig_insn(&uprobe->arch, vma, vaddr);
-> > > +
-> > > +	/* Revert back reference counter even if instruction update failed. */
-> > > +	if (uprobe->ref_ctr_offset)
-> > > +		update_ref_ctr(uprobe, vma->vm_mm, -1);
-> > > +	return err;
-> > >  }
-> > 
-> > This doesn't look right even in the simplest case...
-> > 
-> > To simplify, suppose that uprobe_register() needs to change a single mm/vma
-> > and set_swbp() fails. In this case uprobe_register() calls uprobe_unregister()
-> > which will find the same vma and call set_orig_refctr(). set_orig_insn() will
-> > do nothing. But update_ref_ctr(uprobe, vma->vm_mm, -1) is wrong/unbalanced.
-> > 
-> > The current code updates ref_ctr after the verify_opcode() check, so it doesn't
-> > have this problem.
+On Mon, 28 Apr 2025 17:29:53 -0700
+Namhyung Kim <namhyung@kernel.org> wrote:
+
+> Thing is that the kernel doesn't know the relationship between events.
+> For example, if I run this command on a machine with 100 CPUs:
 > 
-> ah right :-\
+>   $ perf record -e cycles,instructions -- $MYPROG
 > 
-> could set_swbp/set_orig_insn return > 0 in case the memory was actually updated?
-> and we would update the refctr based on that, like:
+> it would open 200 events and they don't know each other.  Later other
+> process can start a new perf profiling for the same task.  IIUC there's
+> no way to identify which one is related in the kernel.
+> 
+> So I think we need a way to share some informaiton for those 200 events
+> and then emits deferred callchain records with the shared info.
 
-ok, I think we need to keep the refcnt update inside write_insn and enable it
-through argument, so I can use write_insn from swbp_optimize/swbp_unoptimize
-and tell it not to do refcnt update
+Hmm, I'm thinking of creating an internal perf descriptor that would join
+events by who created them. That is, the first event created will take the
+thread leader (pid of the task) and check if an entity exists for it. If
+one doesn't exist it will create it and add itself to that event if it has
+a deferred trace attribute set. If it already exists, it will just add
+itself to it. This deferred descriptor will register itself with the
+deferred unwinder like ftrace does (one per process), and then use it to
+defer callbacks. When the callback happens, it will look for the thread
+event or CPU event that matches the current thread or current CPU and
+record the backtrace there.
 
-jirka
+
+> 
+> > 
+> > It could use the cookie method that ftrace uses, where the request gets a
+> > cookie, and can be recorded to the perf event in the interrupt. Then the
+> > callchain would record the cookie along with the stack trace, and then perf
+> > tool could just match up the kernel stacks with their cookies to the user
+> > stack with its cookie.  
+> 
+> Yep, but the kernel should know which events (or ring buffer) it should
+> emit the deferred callchains.  I don't think it needs to include the
+> cookie in the perf data, but it can be used to find which event or ring
+> buffer for the session is related to this request.
+
+Let me see if my suggestion would work or not. I'll try it out and see what
+happens. And post patches later.
+
+-- Steve
