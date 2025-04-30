@@ -1,109 +1,185 @@
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B26A253B71;
-	Tue, 29 Apr 2025 19:51:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE9222111;
+	Wed, 30 Apr 2025 02:46:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745956285; cv=none; b=JJneZEMpdsrBYvpe1/O2icbBCAC763jV+lEoI/R77eQVfPknzitpB9pb/Eiohs4/Ev0ISosiY06oLBxVRYo+gqUOTygK7WlJLswCblzKP/7Bu2lPuM7fHRVI3ail1f8RO84iKcy6KUGNxr6L3zD3K2m8rtg7z8ELjl0RJvPSP9I=
+	t=1745981181; cv=none; b=sjnDZX8icW86Tw4+Cv9v2/9QTVmeCKndGf4URaGBtUWJwdoC6Y33EXY1ow/uy+Dcm1GNqNgULNKhCVX5xv170J2nysD29TX19m1JAGjQyJYitn2ZAUUImMJjrKTJWvapDMzqLqXzxhn5KcytqjIooKYIptfNYbLaKXxIrXuOiek=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745956285; c=relaxed/simple;
-	bh=MQZ6hbGt//4FbhLB0Xm1vDwPqGiHpColuVWx2Z50Eqo=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=HjB5KcreOf6kXvIAxz6NY7wYEhOr+hqUixgvEP7H5T8DDwI2MEZlFgNKGFJcuDMWtb1IFcDgeVrLphUzJebzut2XW2xXz+gMka2L0pX6t9oaygctItrYyaW5jIS/Ch2haEz+IDfGJCkz0Ar61k95X2Qeg+D17daj1QWbdpnMWOk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Rbg4QEmn; arc=none smtp.client-ip=209.85.214.180
+	s=arc-20240116; t=1745981181; c=relaxed/simple;
+	bh=tZj+fajqPvkq+73cH8tXJlYZvR+o5VeoP5VRKaX/kYA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=MB+512tmcvm1Sx1W+CWuE5GUFMU/LwbY3TbX6nOPz0eO3GBQA6ml6JIVeSn6jameT+FQSRL6F2tg1Edh7kAzJdQRa8/uOb2LPcfz8P9krYe2l9VxkakdPbuu0KhPVBoI4YyBWxpWyroMLTSL+fjXgG7SLNQVarTcYfkDGXPyUWs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mEePr3LU; arc=none smtp.client-ip=209.85.221.47
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Rbg4QEmn"
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-2240b4de12bso94640835ad.2;
-        Tue, 29 Apr 2025 12:51:23 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mEePr3LU"
+Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-39ee682e0ddso4613188f8f.1;
+        Tue, 29 Apr 2025 19:46:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745956283; x=1746561083; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=RIDQIy8tP+iQrp+SJ899KKPpAiNauHHt2daVbB0nYIo=;
-        b=Rbg4QEmniMKJFfPCkfUgV7GycGBv9qbWR27qMkvQXYJhoeim+IXVio1/8yKux6/7Mq
-         G7prUH46xvsI9n2iUt7SiDSGPZevr4KQMWRRVhOosfidQiTtopc+UqvyYH42NG+kRxiU
-         qHXmH0lnOv6uYZ6yc5QqrnGid4EIv7OKaifULXrEoWAyUmIAEXB3TWhXun5bFOwBMOHq
-         CTlr9uyg/8i2KZtfgGDXxZ0y+ToHLllDtGV8F2xxTCpAQk936hc+EwTI2RACDDeU7EsM
-         ZY/RjAnq9QJVcTSLXoG9LoMFG6RTkwrL/uZ9doxgif9cwV1NiHhX/KoQ9CDc91TqXnWL
-         XOiw==
+        d=gmail.com; s=20230601; t=1745981178; x=1746585978; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=IRoA1hn+ILrnaL3QGiypq6EmGKcTVkU7YdYU9NCLYKU=;
+        b=mEePr3LU84EtC9YaEi9hNKvUJIOZmFmn/Eo0/UTHWk0urD0ylMheKy1GZ/sStSeRil
+         Wr/Ze2udmPdC2hkMCXgDzIhMbmbaAXYZZsMNy7w8wy+OBBeaxWt1Cr84DBR8ezusVBuU
+         ZLFCNo/1oc/1in46B0jp7vAJILjNTltmXIUu+GCq0ra2fBNb2V/uqddrpZlskeMhuGaL
+         v4FF/dJat/j3W5V3/kYT+cqBZrYyQGZA9tMAWKZmX3BNEBhfS6+kC87bcGLlPDGoemNB
+         AymalL4OzLyFD7OUnLHESJWQpxgcUW1+uP5wJY1uVGRIibjmj8AOFGr5rXJdZtHmx6NX
+         m7PA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745956283; x=1746561083;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=RIDQIy8tP+iQrp+SJ899KKPpAiNauHHt2daVbB0nYIo=;
-        b=F3mBHxggmqTJnx76r7MLLq8r/GT6LjZJ9NbrE9o/xwztLSUKzJ73OOSSuKHm2Zawep
-         vXALLgygOl5SZleZoMYNMa2MsEUSEu/zSlx6knq9rpDBAXdAnt908Y9XxFuHLaK+D00O
-         dNVVxw36PXEhMaOEy++s84dadpnXKc+tgM1o/ix7fEShpz+UL7f1CWB+ou2nSoKDV9WH
-         slEs0GSwJuTn7OIW48i6iTlYiBblhFuLv2WsZ0OK4WuuHsGFCNxlI+4ns4zSQA73UAUN
-         lsB1UK38kuK9HGDhbJdGMULQv5zoZRrB/HnvNDsB2VloWXg/WjERaLkrMP1X0wEffEUF
-         7eSw==
-X-Forwarded-Encrypted: i=1; AJvYcCWEL6kQ5L7Cr8ac1p7OK/24mpCIL5CH9WAYw+7fc+K2C4wa8M/hPC5VQfDstdYX+CpdaidSGOyy+kR+Qk8=@vger.kernel.org, AJvYcCXnhxf76fgFC4+D3MhwGnNeTi+dZZWgDUaU48YJZtp5NCRHWIYJccJRvdFQYH3gWKYUM8UpUyfwg5CPC2y3o8tKvYTH@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywi81a/1s+TYC0OVGflkPHPGDucUswzfe73KrZgSnu7+//VJfzA
-	UJl3TS2G+DH8Djy1emWHstoIuLXbO2WHBgbnEKo/C+RGgiSH7jgJ
-X-Gm-Gg: ASbGncs2vw8LCEHYN6VahWXriCFLcNA9AlJNm2sQ4KMS/ba8SJGYORzz2gtNAvoAw7f
-	QxewFYQM+Xoe3flQyIX4dahouYAdMHy6NuIJUyX7LhRP0cV4TB7EdN3StQ7v8hi+WdRx+p3Mekx
-	jIQlJIHVozrbk7JLZyytQ40KeEINAJaA71c0y5cQtiOmUWM4lsJdu0afswarbF6XRAQsndVgz9o
-	nVYs7RFYkuEgiBWn6F5doyLz4SIHDAV/nvbSPhY9Go4ufNPGlgfcV7j2I7j/yoyWq7qzrrfllPn
-	hW/9EmNjWsxz1z9TvbIKGrhHDTiI0Bi4wATV4o4c
-X-Google-Smtp-Source: AGHT+IHZjdqY7yZCz2uVIQvXAPfIe8Qulbzil3UiILhzk55Gk4SXFd+yDlV+kTzT8Qp05gkX7FKc4g==
-X-Received: by 2002:a17:902:f785:b0:224:de2:7fd6 with SMTP id d9443c01a7336-22df34fc944mr8926045ad.25.1745956283367;
-        Tue, 29 Apr 2025 12:51:23 -0700 (PDT)
-Received: from localhost ([216.228.127.130])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22db50e7c1bsm107270045ad.107.2025.04.29.12.51.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 29 Apr 2025 12:51:22 -0700 (PDT)
-From: Yury Norov <yury.norov@gmail.com>
-To: Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Cc: Yury Norov <yury.norov@gmail.com>
-Subject: [PATCH] tracing: cleanup upper_empty()
-Date: Tue, 29 Apr 2025 15:51:18 -0400
-Message-ID: <20250429195119.620204-1-yury.norov@gmail.com>
-X-Mailer: git-send-email 2.43.0
+        d=1e100.net; s=20230601; t=1745981178; x=1746585978;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=IRoA1hn+ILrnaL3QGiypq6EmGKcTVkU7YdYU9NCLYKU=;
+        b=QIC0HTmi6Oek2SC8mdBKTZhgNvxHTX+myGHy1SAQyukzCYyJktwiFFKdSAyHzsDkac
+         NrnhrMJ5U17KybTaDzN/LQYQd4an2UPEhWnIuB7oeywWlVSfyI+K7AI/eEzKPtV4gi0s
+         yhplMj/HNIAxJYMijcgCVa9KXljez4W5CZ4zve4DY0ZAQgPRUjzG0Fwn06wQaR17C96M
+         KG7DBZAG6EGF4HtbjHaSMZg1REEpG/6L65BY2TQ16CEBepGlL84JHFi0DsxQchN94qR6
+         XTJ0SogE/KxDDdOQ9eAOrvLQ0ULNhvxaKKlcfYaqJ5PNjlH84qA/JLY6NQdoMhTWGcyo
+         HgBQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU9A7LrTxqmLjDqG6bV6iYt/uj3ILLdRLDnsPO50ICpmHUxY3LFPauW+vuQiaTbHxFh+9zjeKNeRSdOZG79@vger.kernel.org, AJvYcCUAMHfQJuGEZB7mxYOdu6Vadi0XK/B1eo+OjDOrf0V8ESkeBjLWSiZoMZbDwALLa3lpCXAk1JEMUnkvNgbbDzEt@vger.kernel.org, AJvYcCUZlK77ziAXzRrY+i/GbiNLWfsIpuagwpFO7xLLhz6Oy2ZGUvaiRHK+Bqghj6LpskFWE6A=@vger.kernel.org, AJvYcCXF5oPIrrV+N3qT/HwrL9y5mnLWFggv+1jh3YhQqllsaSSklTHfkt9M7mZvnU+pgALsaQ4lpKNvz29q+555ueDmK5lq@vger.kernel.org, AJvYcCXTJWr0BEnSX28DlijCVyDsy2dib4Xoen3+inZX5Vclb8NhjNHlAx7o7M/Txk9C7+0M2PvNSC9x@vger.kernel.org
+X-Gm-Message-State: AOJu0YyuIYUPW2sOZtRPKmGs3eB/L0EIVbQrEp6mDK/+4UGIatlqk+cm
+	of36ArkLnoQ/Ly8evwfjrcGBu8qyGE7Ns1oxSjo7Em57Wavq4QNmWM7De2v5D5RPDSruJMIkB4q
+	tLHizz1pDorQ3993cvB5Fx14f83E=
+X-Gm-Gg: ASbGnctKC3FZYpKCl81deylRNJQp/JcqBivd8fVsawLBmGqUGdEEAe9CxJPnBOnHgFG
+	skQBBStPbEkPCZLHEuuEpTbzs2rONk7QTS2WxGlj1291TD3z3lJ2w6n/r5aLbJYvAgd2fFD6vh1
+	PwofZyxQMsEBq0MYyTZESJWCfT14NjOVPt0DlNUw==
+X-Google-Smtp-Source: AGHT+IEseH2I0pUjM+B8W45c5JTdHLZ05e9zXlXFhwq6KjuhDIGYFugjVOnMpqk2DxAdfmZQOfc3MHYNAs8vZ5GnN6A=
+X-Received: by 2002:a5d:64e5:0:b0:391:4bfd:6d5 with SMTP id
+ ffacd0b85a97d-3a08ff5558emr512089f8f.52.1745981177742; Tue, 29 Apr 2025
+ 19:46:17 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250426160027.177173-1-mannkafai@gmail.com> <20250426160027.177173-2-mannkafai@gmail.com>
+In-Reply-To: <20250426160027.177173-2-mannkafai@gmail.com>
+From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date: Tue, 29 Apr 2025 19:46:05 -0700
+X-Gm-Features: ATxdqUFMquDKYdhGCyZiHIRKlu07tHBastoNqC0uT60dUlJw9_rSYO-AjZ2fBT4
+Message-ID: <CAADnVQ+DF18nKEf9i1RKEQN+ybH+duu7U-91YZDaa_PiqUx17g@mail.gmail.com>
+Subject: Re: [PATCH bpf-next 1/4] bpf: Allow get_func_[arg|arg_cnt] helpers in
+ raw tracepoint programs
+To: KaFai Wan <mannkafai@gmail.com>
+Cc: Song Liu <song@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
+	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, Eduard <eddyz87@gmail.com>, 
+	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
+	Matt Bobrowski <mattbobrowski@google.com>, Steven Rostedt <rostedt@goodmis.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
+	Mykola Lysenko <mykolal@fb.com>, Shuah Khan <shuah@kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
+	bpf <bpf@vger.kernel.org>, 
+	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>, 
+	Network Development <netdev@vger.kernel.org>, 
+	"open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>, Leon Hwang <leon.hwang@linux.dev>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Instead of find_first_bit() use the dedicated bitmap_empty(),
-and make upper_empty() a nice one-liner.
+On Sat, Apr 26, 2025 at 9:00=E2=80=AFAM KaFai Wan <mannkafai@gmail.com> wro=
+te:
+>
+> Adding support to use get_func_[arg|arg_cnt] helpers in raw_tp/tp_btf
+> programs.
+>
+> We can use get_func_[arg|ret|arg_cnt] helpers in fentry/fexit/fmod_ret
+> programs currently. If we try to use get_func_[arg|arg_cnt] helpers in
+> raw_tp/tp_btf programs, verifier will fail to load the program with:
+>
+> ; __u64 cnt =3D bpf_get_func_arg_cnt(ctx);
+> 3: (85) call bpf_get_func_arg_cnt#185
+> unknown func bpf_get_func_arg_cnt#185
+>
+> Adding get_func_[arg|arg_cnt] helpers in raw_tp_prog_func_proto and
+> tracing_prog_func_proto for raw tracepoint.
+>
+> Adding 1 arg on ctx of raw tracepoint program and make it stores number o=
+f
+> arguments on ctx-8, so it's easy to verify argument index and find
+> argument's position.
+>
+> Signed-off-by: KaFai Wan <mannkafai@gmail.com>
+> ---
+>  kernel/trace/bpf_trace.c | 17 ++++++++++++++---
+>  net/bpf/test_run.c       | 13 +++++--------
+>  2 files changed, 19 insertions(+), 11 deletions(-)
+>
+> diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
+> index 52c432a44aeb..eb4c56013493 100644
+> --- a/kernel/trace/bpf_trace.c
+> +++ b/kernel/trace/bpf_trace.c
+> @@ -1892,6 +1892,10 @@ raw_tp_prog_func_proto(enum bpf_func_id func_id, c=
+onst struct bpf_prog *prog)
+>                 return &bpf_get_stackid_proto_raw_tp;
+>         case BPF_FUNC_get_stack:
+>                 return &bpf_get_stack_proto_raw_tp;
+> +       case BPF_FUNC_get_func_arg:
+> +               return &bpf_get_func_arg_proto;
+> +       case BPF_FUNC_get_func_arg_cnt:
+> +               return &bpf_get_func_arg_cnt_proto;
+>         case BPF_FUNC_get_attach_cookie:
+>                 return &bpf_get_attach_cookie_proto_tracing;
+>         default:
+> @@ -1950,10 +1954,16 @@ tracing_prog_func_proto(enum bpf_func_id func_id,=
+ const struct bpf_prog *prog)
+>         case BPF_FUNC_d_path:
+>                 return &bpf_d_path_proto;
+>         case BPF_FUNC_get_func_arg:
+> +               if (prog->type =3D=3D BPF_PROG_TYPE_TRACING &&
+> +                   prog->expected_attach_type =3D=3D BPF_TRACE_RAW_TP)
+> +                       return &bpf_get_func_arg_proto;
+>                 return bpf_prog_has_trampoline(prog) ? &bpf_get_func_arg_=
+proto : NULL;
+>         case BPF_FUNC_get_func_ret:
+>                 return bpf_prog_has_trampoline(prog) ? &bpf_get_func_ret_=
+proto : NULL;
+>         case BPF_FUNC_get_func_arg_cnt:
+> +               if (prog->type =3D=3D BPF_PROG_TYPE_TRACING &&
+> +                   prog->expected_attach_type =3D=3D BPF_TRACE_RAW_TP)
+> +                       return &bpf_get_func_arg_cnt_proto;
+>                 return bpf_prog_has_trampoline(prog) ? &bpf_get_func_arg_=
+cnt_proto : NULL;
+>         case BPF_FUNC_get_attach_cookie:
+>                 if (prog->type =3D=3D BPF_PROG_TYPE_TRACING &&
+> @@ -2312,7 +2322,7 @@ void __bpf_trace_run(struct bpf_raw_tp_link *link, =
+u64 *args)
+>  #define REPEAT(X, FN, DL, ...)         REPEAT_##X(FN, DL, __VA_ARGS__)
+>
+>  #define SARG(X)                u64 arg##X
+> -#define COPY(X)                args[X] =3D arg##X
+> +#define COPY(X)                args[X + 1] =3D arg##X
+>
+>  #define __DL_COM       (,)
+>  #define __DL_SEM       (;)
+> @@ -2323,9 +2333,10 @@ void __bpf_trace_run(struct bpf_raw_tp_link *link,=
+ u64 *args)
+>         void bpf_trace_run##x(struct bpf_raw_tp_link *link,             \
+>                               REPEAT(x, SARG, __DL_COM, __SEQ_0_11))    \
+>         {                                                               \
+> -               u64 args[x];                                            \
+> +               u64 args[x + 1];                                        \
+> +               args[0] =3D x;                                           =
+ \
+>                 REPEAT(x, COPY, __DL_SEM, __SEQ_0_11);                  \
+> -               __bpf_trace_run(link, args);                            \
+> +               __bpf_trace_run(link, args + 1);                        \
 
-While there, fix opencoded BITS_PER_TYPE().
+This is neat, but what is this for?
+The program that attaches to a particular raw_tp knows what it is
+attaching to and how many arguments are there,
+so bpf_get_func_arg_cnt() is a 5th wheel.
 
-Signed-off-by: Yury Norov <yury.norov@gmail.com>
----
- kernel/trace/pid_list.c | 8 ++------
- 1 file changed, 2 insertions(+), 6 deletions(-)
+If the reason is "for completeness" then it's not a good reason
+to penalize performance. Though it's just an extra 8 byte of stack
+and a single store of a constant.
 
-diff --git a/kernel/trace/pid_list.c b/kernel/trace/pid_list.c
-index c62b9b3cfb3d..549c299530a4 100644
---- a/kernel/trace/pid_list.c
-+++ b/kernel/trace/pid_list.c
-@@ -81,13 +81,9 @@ static inline bool upper_empty(union upper_chunk *chunk)
- {
- 	/*
- 	 * If chunk->data has no lower chunks, it will be the same
--	 * as a zeroed bitmask. Use find_first_bit() to test it
--	 * and if it doesn't find any bits set, then the array
--	 * is empty.
-+	 * as a zeroed bitmask.
- 	 */
--	int bit = find_first_bit((unsigned long *)chunk->data,
--				 sizeof(chunk->data) * 8);
--	return bit >= sizeof(chunk->data) * 8;
-+	return bitmap_empty((unsigned long *)chunk->data, BITS_PER_TYPE(chunk->data));
- }
- 
- static inline int pid_split(unsigned int pid, unsigned int *upper1,
--- 
-2.43.0
-
+pw-bot: cr
