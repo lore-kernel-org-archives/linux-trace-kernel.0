@@ -1,53 +1,53 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7EB92580F8;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03A13258CC2;
 	Wed, 30 Apr 2025 11:02:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746010970; cv=none; b=cVIm/R9RVD4epdi6D5DAQ8eQbaTIzhTO52nI4Ub2xXhd6mtLbr974Ok4tIZ9EOM5H9EaIXBndyFnP2SryLEGGb6vpAtdYnLXBpdd1mVRNiUyWCPHi+l9bThLTqI4XGtksSvhlHgpbQng1pot9gURvZkNSEr+SQz2ACu8Q5eSscc=
+	t=1746010970; cv=none; b=TG6DQp/Bi6JQ7Q5rnRMQJ4zDrdRyNiIoWyb2Y9UjhjnxPTeVLvOSyvnrCSCp0sICTKc9kSsjm87OWQDZ1zb9wcR7vWiygx/EQkto4+/VcsScvaLLh9A/3/pqbin7Ab8tMG5SM9GQh6ORtdDd5fR7N5qZA+V4msl2JIiIRnWdStE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1746010970; c=relaxed/simple;
-	bh=RhYLrFheIiWCYjYK/KDGA0mZDhuFPEYIvPeR4F7AEr0=;
+	bh=1tyueKVzM1VJ1WDma6WPKB1nQNEG95uHkefHtTlXLuY=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=bPiidG1esCB14WHUafjRARytywu8iVW7KIomMPvsJsRH2GKQiyz94PxP3LTKycIbeWB9bml39gWZINdjVGS/Bw6KBYk/xDpXsyc1JUvz4TlHAnfbju4iS0hMxbL7lJxQkUGECefieAsCgfUPSyULa5OK3EJrjr/WCpj+QGLQNI4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=BDh3Uw4T; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=N2dRMs0z; arc=none smtp.client-ip=193.142.43.55
+	 MIME-Version; b=dW3Q6nKp4/XBv2tmzKDqEI0lIcE53a9z8erP0nWDSIGSb9xh7SSXPoXCjA4d13eoJ1rP3GQmSVMsENQpK4piKPPnkvCUx4KG+Pys0hAJ3blybtCvyEfbzRizE3alMy2u3Uwhu1qCu0VuQ6OGOPp+g0ba0DlZor92owAzhfwrSFo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=CI42LgfU; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=gZHHrw6y; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="BDh3Uw4T";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="N2dRMs0z"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="CI42LgfU";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="gZHHrw6y"
 From: Nam Cao <namcao@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1746010966;
+	s=2020; t=1746010965;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=pOuOkT1PrCTA1Z+IBTxOQ+T/0+ics4dUK08aZbw8Kkg=;
-	b=BDh3Uw4TSkVcWtQoUr5Vd7+xnpa/RyJhQp/MJUqMQgOZ5yAZG/4FSGfz7VUsZYJIGPcUVJ
-	2uv8T+Dvvc8n30ICuHDv/xw680d1lMqdOOcIlfYCbFVf8J06d1KbeCpGfAXSG8lZD2C8nm
-	MraAKPBHbwZ2qIpMU2M9mwFgDC9hXUS3hQs7sPZCZ+TrMdCesEW5bzb41HwcHkQ3ZCZk7g
-	JzKiGrSJL0hmMBbJ3EOR8JhNVYEpOKKy1LdmWTrAlH0Lty5EvJSdV0KngTPT0ldI+O5rsl
-	y8QEjMMcCCefw6TYTuR+uDmmDoRO9u9NIHKabMSGxxodYlzBONG6XAtBO20+/Q==
+	bh=quxmvFOpWEdlDXGAnbEr+RnyianRn/nmBROLE3F3T+I=;
+	b=CI42LgfUj3amqnVsyo9DpbtnSuq1dNX/N53QmtVzloW3wmvX7yPbhhSmhGny8Bne4QQeyY
+	gLzhcj2py9qqw1Ixe0y7B+FULlpnoDjSi14Mj4ew1vfOJVYFMR+nPVnZSM0psi4gViU6Nx
+	W0Xkui9TS75S2TjnAbPndJCHX5qESotJxR/vNV0CurygUPMAsvLZ63owFmyqCZLt+9flMg
+	0bhfUgzXyFSUkTYy+zStdQlH4HWiLesa57rKZnBW0nFehhtd4XWOMNyB/xE9FzztdMspCz
+	VLxmYJ9WYhXdHCy5RD4bTSWWGH+cvFzMBoF8NL++tghzc6eScu8MvYDVxxiNoQ==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1746010966;
+	s=2020e; t=1746010965;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=pOuOkT1PrCTA1Z+IBTxOQ+T/0+ics4dUK08aZbw8Kkg=;
-	b=N2dRMs0zX9srK9f6/LyvSxLsZ8PLAxzNlRYCSpbioaeyCX7x6TytNjsyTf7C06a78wUA/k
-	qFtw4qoRBP4t98AQ==
+	bh=quxmvFOpWEdlDXGAnbEr+RnyianRn/nmBROLE3F3T+I=;
+	b=gZHHrw6yVDiCm6RtaAj0DvAm8MwpsSUd+g2hF6s6AbICtOqHuVY/MzJ2rTKE5hvtBQoik9
+	453x10fbJ84ABpDg==
 To: Steven Rostedt <rostedt@goodmis.org>,
 	Gabriele Monaco <gmonaco@redhat.com>,
 	linux-trace-kernel@vger.kernel.org,
 	linux-kernel@vger.kernel.org
 Cc: john.ogness@linutronix.de,
 	Nam Cao <namcao@linutronix.de>
-Subject: [PATCH v6 08/22] rv: rename CONFIG_DA_MON_EVENTS to CONFIG_RV_MON_EVENTS
-Date: Wed, 30 Apr 2025 13:02:23 +0200
-Message-Id: <a08796e92a0b3bca0eb18f164fcb5a5971a782fc.1745999587.git.namcao@linutronix.de>
+Subject: [PATCH v6 05/22] verification/dot2k: Make a separate dot2k_templates/Kconfig_container
+Date: Wed, 30 Apr 2025 13:02:20 +0200
+Message-Id: <47f58c62c004f9c63bcf0e35267c1ecabe064568.1745999587.git.namcao@linutronix.de>
 In-Reply-To: <cover.1745999587.git.namcao@linutronix.de>
 References: <cover.1745999587.git.namcao@linutronix.de>
 Precedence: bulk
@@ -58,54 +58,70 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-CONFIG_DA_MON_EVENTS is not specific to deterministic automaton. It could
-be used for other monitor types. Therefore rename it to
-CONFIG_RV_MON_EVENTS.
+A generated container's Kconfig has an incorrect line:
 
-This prepares for the introduction of linear temporal logic monitor.
+    select DA_MON_EVENTS_IMPLICIT
+
+This is due to container generation uses the same template Kconfig file as
+deterministic automaton monitor.
+
+Therefore, make a separate Kconfig template for container which has only
+the necessaries for container.
 
 Reviewed-by: Gabriele Monaco <gmonaco@redhat.com>
 Signed-off-by: Nam Cao <namcao@linutronix.de>
 ---
- kernel/trace/rv/Kconfig | 6 +++---
- kernel/trace/rv/rv.c    | 2 +-
- 2 files changed, 4 insertions(+), 4 deletions(-)
+Alternatively, we could also modify the Python scripts. I tried both and
+this solution seems cleaner.
+---
+ tools/verification/dot2/dot2k.py                          | 3 ++-
+ tools/verification/dot2/dot2k_templates/Kconfig_container | 5 +++++
+ 2 files changed, 7 insertions(+), 1 deletion(-)
+ create mode 100644 tools/verification/dot2/dot2k_templates/Kconfig_contain=
+er
 
-diff --git a/kernel/trace/rv/Kconfig b/kernel/trace/rv/Kconfig
-index b39f36013ef2..6cdffc04b73c 100644
---- a/kernel/trace/rv/Kconfig
-+++ b/kernel/trace/rv/Kconfig
-@@ -1,14 +1,14 @@
- # SPDX-License-Identifier: GPL-2.0-only
- #
--config DA_MON_EVENTS
-+config RV_MON_EVENTS
- 	bool
+diff --git a/tools/verification/dot2/dot2k.py b/tools/verification/dot2/dot=
+2k.py
+index 745d35a4a379..dd4b5528a4f2 100644
+--- a/tools/verification/dot2/dot2k.py
++++ b/tools/verification/dot2/dot2k.py
+@@ -35,6 +35,7 @@ class dot2k(Dot2c):
+             self.states =3D []
+             self.main_c =3D self.__read_file(self.monitor_templates_dir + =
+"main_container.c")
+             self.main_h =3D self.__read_file(self.monitor_templates_dir + =
+"main_container.h")
++            self.kconfig =3D self.__read_file(self.monitor_templates_dir +=
+ "Kconfig_container")
+         else:
+             super().__init__(file_path, extra_params.get("model_name"))
 =20
- config DA_MON_EVENTS_IMPLICIT
--	select DA_MON_EVENTS
-+	select RV_MON_EVENTS
- 	bool
-=20
- config DA_MON_EVENTS_ID
--	select DA_MON_EVENTS
-+	select RV_MON_EVENTS
- 	bool
-=20
- menuconfig RV
-diff --git a/kernel/trace/rv/rv.c b/kernel/trace/rv/rv.c
-index 544acb1f6a33..d493fddf411f 100644
---- a/kernel/trace/rv/rv.c
-+++ b/kernel/trace/rv/rv.c
-@@ -143,7 +143,7 @@
- #include <linux/init.h>
- #include <linux/slab.h>
-=20
--#ifdef CONFIG_DA_MON_EVENTS
-+#ifdef CONFIG_RV_MON_EVENTS
- #define CREATE_TRACE_POINTS
- #include <rv_trace.h>
- #endif
+@@ -44,7 +45,7 @@ class dot2k(Dot2c):
+             self.monitor_type =3D MonitorType
+             self.main_c =3D self.__read_file(self.monitor_templates_dir + =
+"main.c")
+             self.trace_h =3D self.__read_file(self.monitor_templates_dir +=
+ "trace.h")
+-        self.kconfig =3D self.__read_file(self.monitor_templates_dir + "Kc=
+onfig")
++            self.kconfig =3D self.__read_file(self.monitor_templates_dir +=
+ "Kconfig")
+         self.enum_suffix =3D "_%s" % self.name
+         self.description =3D extra_params.get("description", self.name) or=
+ "auto-generated"
+         self.auto_patch =3D extra_params.get("auto_patch")
+diff --git a/tools/verification/dot2/dot2k_templates/Kconfig_container b/to=
+ols/verification/dot2/dot2k_templates/Kconfig_container
+new file mode 100644
+index 000000000000..a606111949c2
+--- /dev/null
++++ b/tools/verification/dot2/dot2k_templates/Kconfig_container
+@@ -0,0 +1,5 @@
++config RV_MON_%%MODEL_NAME_UP%%
++	depends on RV
++	bool "%%MODEL_NAME%% monitor"
++	help
++	  %%DESCRIPTION%%
 --=20
 2.39.5
 
