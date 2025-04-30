@@ -1,237 +1,214 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f172.google.com (mail-yw1-f172.google.com [209.85.128.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0326E25B1E8
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 30 Apr 2025 12:17:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A34225B1D2;
+	Wed, 30 Apr 2025 12:44:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746015461; cv=none; b=BnT+nKnSfushGHjPHA/yA+NLOEqUfByzPexeUX/ljeSJ5UamjI9ZJIZpgZIEdDGJRrKVZ5Y/vb6tKNUlPwYEb/hat91J8LsL1OaxXX36KIUyvoJ8f//ZNwsaiW4dlWw+YmagALeC1zCmfkHqJpHPHBBoCRsAVbBVBa79vvr1RcY=
+	t=1746017053; cv=none; b=PeGxR+B0ugwLOyID+uLtLvRRFbxI+/U4NUIR/e6SIVSPUeI6bEyloAey+Gwr7tUUA/h+GaIoHzQm8NK1QvC5afx6wSd40iCiFhFED53cAHUxTrL+9UhF9MbhDztiq+DJF+kTy86TLskqFOB5RyhBu+wg/Qncq3CDRphMIpN1858=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746015461; c=relaxed/simple;
-	bh=lN3XXhvZkEzmXtYd28YKRe70tCct3jaUfGTuQGGD+g0=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=evJwF4/U0JfdI5PVK3uIQVR73nQG8e9o5PR9zmDkMaR33EApdroDNHWucN5GIuChLE6qjwXxQ9j6Tjao31SRAq+5pXTkccMgfl1AqxO6XHSE+9H//+RUyGCcSGnMJVX0m7G6EPknUPjd3WkRcVDMB8KAt84FMkMXy2nvxOE2By4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=T2CQVZ2m; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1746017053; c=relaxed/simple;
+	bh=0nE7QD8R9X0d9WOt6Py/ZQqnSBYaJ14Cq8HdaHinac8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=aGkVSV2Tsawckq3VVwurPriuqb/9WfkQ2AuZS+ek1BjjLbXfe7o74SGjM9maDKb92EKpkkR011RNVMXAHfcMvKmR4hBlp6tGZmnc9sW2cyuaoIqe78K6jHHjcoB2gBtDdaY9ppY7QIZlckN0GiMdwgCcOPLiD5HF3I1GEczZxz0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=azgEBJsU; arc=none smtp.client-ip=209.85.128.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="T2CQVZ2m"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1746015458;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=lN3XXhvZkEzmXtYd28YKRe70tCct3jaUfGTuQGGD+g0=;
-	b=T2CQVZ2mL83JOSTcM2T77Emu6LfwR4F6fFN43OjjNXl5c/hfGg1DW1m8n1zqUMXszlQhiB
-	x6d5cNHseyi0ySegpwj6Os9hsoSCSyBGmp+iuu8UEzRcQ3+wVt0qOhazyBN0TjfvqWfbek
-	0wEFILA3ebPnuoAFlaLeGtq0x//IaIs=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-470-p3-9ZubsNW6P_hQ0fO3lRg-1; Wed, 30 Apr 2025 08:17:35 -0400
-X-MC-Unique: p3-9ZubsNW6P_hQ0fO3lRg-1
-X-Mimecast-MFC-AGG-ID: p3-9ZubsNW6P_hQ0fO3lRg_1746015454
-Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-43f251dc364so39189065e9.2
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 30 Apr 2025 05:17:35 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="azgEBJsU"
+Received: by mail-yw1-f172.google.com with SMTP id 00721157ae682-70427fb838cso60375657b3.2;
+        Wed, 30 Apr 2025 05:44:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746017050; x=1746621850; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=kYD/e9HMz+OJe2iFW7OVgI9MMmAx8NXfVM7dg8rgiXU=;
+        b=azgEBJsUXM19BEjM5fQJ9Dm6z0s1ah6T9A5ioE0ALkhlAvcur66DLpNqUh3ccbxO4L
+         ow/2a6o8vhPz0ANIyX9ytjXZRfCTPS9nFFyJgoJHqruV4fJbKlo2tlk9gFIPbh2XvTr2
+         HFyrH+EhewF7ypz/bfiKOg1zVm7twcXVDC+M+WPi/Q20I93mIeH+LVJTg+xJkiy2JlH9
+         pP+eBl0HkdXvVJpku8IYXIE0n1OcqP9GWTBQyYGnrWpzgK/xGdDjgAayi0iTKp79NomY
+         gPvJ5iYHrhazlVDnCA0dmroJfQ9ATWq4sxT94K5UBq2XSQ7RTQEAHnttcg8NVG45VYJF
+         e7rQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746015454; x=1746620254;
-        h=mime-version:user-agent:content-transfer-encoding:autocrypt
-         :references:in-reply-to:date:cc:to:from:subject:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=lN3XXhvZkEzmXtYd28YKRe70tCct3jaUfGTuQGGD+g0=;
-        b=rCxc15HZEEsyj8bhPPzI8+EwbUn8bNgd+dFwKDfpGk7iH/SnsfSKXpvyv8kIa+3B8c
-         RtLiP4jZ4ykbX4npmAiRZfYJ8ig2YDT6pxqzWRuIejA/SuavnAufTONnVhfwpPURGFtl
-         T5eyDtzDCuEd//l0P8Etlbtm+5Ks5yUXhvmFKOHu0GXDAt2J6X2Ytn8D3mO02p7km7kD
-         CrYurX8Oh5CT0OPSpYgUbkO2SBNOVbgAyfbJo+so1VxAD/aNn+GqxZlnmgdY5cCzmi8w
-         Xzatb0BTpFp3HPwi8JFj51l4d1KAw2+hQralqfpS8pdI6yI2X59rs/T2Y0jtm2t5yYGR
-         IK2g==
-X-Forwarded-Encrypted: i=1; AJvYcCUitx34zbSpozMgZ3rRjyKp/uORDY5Y2Vtet9Ry4zXTSBsLO/c6KFYGchiEhKEmHCYMI5X6nV1ympDjvc9vFDtBd78=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw4me0zKs5O07bogZ1wHnfWMqmJgFndALsjd2jibd8+iNlcnDm8
-	Gpxnix6a+1eYqpCy3XUKAtYvtk5Yxpx0dEtgqgtoowiII8p29ZjWqFPiP8Ud0uYHQCun1aR9IXn
-	xSc3u56UIplSD9GGdYP+O9xYupCf3Du7gt++d0GCy/yiADNJHqEd2eS2bdQGBsoKdK9fivg==
-X-Gm-Gg: ASbGncuWaVVwnkF+0rXWk8HodBz7wrbe5XZNXZGLPNbHVdgMq6vwgVYkREfJkIp8oQy
-	NEom2nfKd/6HagqbLoWSUeg9+SHAKOd8ZUXwF09UV8aITRkgVgBrz5nN5wzv13KiHKMnvpA/HOZ
-	SJOTEk+qYPVARqlBfNvl1X7DKV5mgA+YKq3HakIkgmCGxH5wuVyLNA3LRKXoym+eKUw1nvFAG0O
-	EEH/UDDTiond7WPTBZfU9xrblqfMyeGqAHwql0dnhfu0jY3dGK9e52puO16eMYSEoN8Own70+NY
-	+5opnmf28uq/xBzHyfvG4SyOAotF3nG3+Ojo2A==
-X-Received: by 2002:a05:600c:3b08:b0:43c:fda5:41e9 with SMTP id 5b1f17b1804b1-441b43a6849mr12659175e9.31.1746015454191;
-        Wed, 30 Apr 2025 05:17:34 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEeDRQpH85Tjf5lCeTC38YV5zFGOEEWEJ15Q43zpvFHsUBUREIV9t8rFVVspwP+av3krGaKQA==
-X-Received: by 2002:a05:600c:3b08:b0:43c:fda5:41e9 with SMTP id 5b1f17b1804b1-441b43a6849mr12658865e9.31.1746015453815;
-        Wed, 30 Apr 2025 05:17:33 -0700 (PDT)
-Received: from gmonaco-thinkpadt14gen3.rmtit.csb ([185.107.56.30])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-441b2af2a9dsm23611265e9.19.2025.04.30.05.17.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 30 Apr 2025 05:17:33 -0700 (PDT)
-Message-ID: <cbcefdb80d5e10b8fed80de17bb97bf61df81386.camel@redhat.com>
-Subject: Re: [PATCH v6 00/22] RV: Linear temporal logic monitors for RT
- application
-From: Gabriele Monaco <gmonaco@redhat.com>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Nam Cao <namcao@linutronix.de>, john.ogness@linutronix.de, Petr Mladek	
- <pmladek@suse.com>, Sergey Senozhatsky <senozhatsky@chromium.org>, Ingo
- Molnar	 <mingo@redhat.com>, Thomas Gleixner <tglx@linutronix.de>, Borislav
- Petkov	 <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- x86@kernel.org, "H . Peter Anvin"	 <hpa@zytor.com>, Andy Lutomirski
- <luto@kernel.org>, Peter Zijlstra	 <peterz@infradead.org>, Catalin Marinas
- <catalin.marinas@arm.com>, 	linux-arm-kernel@lists.infradead.org, Paul
- Walmsley <paul.walmsley@sifive.com>,  Palmer Dabbelt <palmer@dabbelt.com>,
- Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, 
-	linux-riscv@lists.infradead.org, linux-trace-kernel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Date: Wed, 30 Apr 2025 14:17:30 +0200
-In-Reply-To: <cover.1745999587.git.namcao@linutronix.de>
-References: <cover.1745999587.git.namcao@linutronix.de>
-Autocrypt: addr=gmonaco@redhat.com; prefer-encrypt=mutual;
- keydata=mDMEZuK5YxYJKwYBBAHaRw8BAQdAmJ3dM9Sz6/Hodu33Qrf8QH2bNeNbOikqYtxWFLVm0
- 1a0JEdhYnJpZWxlIE1vbmFjbyA8Z21vbmFjb0ByZWRoYXQuY29tPoiZBBMWCgBBFiEEysoR+AuB3R
- Zwp6j270psSVh4TfIFAmbiuWMCGwMFCQWjmoAFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgk
- Q70psSVh4TfJzZgD/TXjnqCyqaZH/Y2w+YVbvm93WX2eqBqiVZ6VEjTuGNs8A/iPrKbzdWC7AicnK
- xyhmqeUWOzFx5P43S1E1dhsrLWgP
-User-Agent: Evolution 3.56.1 (3.56.1-1.fc42)
+        d=1e100.net; s=20230601; t=1746017050; x=1746621850;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=kYD/e9HMz+OJe2iFW7OVgI9MMmAx8NXfVM7dg8rgiXU=;
+        b=HKex3CpK7S7TBIEyepvWx8qgeYsyBojlsafZBujLa+YGnUn+Ov6cjw58B6eZv2wSPJ
+         HOYA+mkcrvy9/i1773afNU4wF65d4lgsuNFch7DGak0MFcU2nPxMD2GP9a1qwvVPFBsT
+         mwavXIcMDrDjRLNnpBztfwkae3DSSrODEgNUTNlmBqIdj3GTlncjXeFVyzDNuX+Bilrt
+         mYKhU1hCgaWXX2Wufe0P7uujCV/+bF1mU2dU5K2JQQJv7CEZz7Vha4smShPF7fX96vCy
+         LX6QdZRRgviGrz+mJ9T2HH+PPLfmGv+A6ki/o0fjVvs5CiKFI6+3EL/B7U+OBNzC1mgR
+         THqw==
+X-Forwarded-Encrypted: i=1; AJvYcCV6cwz2fxlN088dXYu7crgIISS2TEPyPif9PU2sAV0IN3FqQmgrsckJwTMPdk8iPh0QTZEY9toay2/HuigmokVIL5gX@vger.kernel.org, AJvYcCVNUgzlrBsbHYK0kf5Iu2idpjxJvjDBKqUgYjaa9iDgNDJXkAGFYaAR/++jveqCR0+kBNkoY/nv@vger.kernel.org, AJvYcCVsIJr5LFCA309CuRCw1HBMXylSkwBkyrxnz3Kcq84lD1h4RdvyAkQpwFlW1GOZjABqqmG7AzF6ZmE+iGDK1L4O@vger.kernel.org, AJvYcCWBvzKmhvwGGISeNOZdQRWWAIcdh9H+7pQ4R+YWXmEThOJWgcaMrE5toMf5hIxEXP0C+6vSIhUMs4Zx6lhQ@vger.kernel.org, AJvYcCWmnGq0ps/YvkWWTxtK4shUYXYbr9VYHngJldnezkfKP3Q002xM43b5i5h5YwYMwzQthTk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxn4GZdWQkfurxEs60mYJG+OYjczzYskCZDY4zd5b87jsuTL+oO
+	eSWnWfUycUc8A0rMMudsC8nTivwRxJ/IXcPPbCZHWAthcbnzWL0VIeRsCOv4g+5PFUGPigsWg5E
+	infSqrW2SbzIEJwkRJKRIBVmqjxk=
+X-Gm-Gg: ASbGncupsydVj6ON9WI3srLk3EBl0uC3dFlPZSzIxSWa1BzALyLLyD7O0088LW8JmNN
+	L0UiSslNmJWZao3e4R3mFyE9ge1RLNJ01X95POZh/msSXO3rfJgg9jVRB3XpCyj2JFCQjWctQTp
+	i7OG7i2oEm+dX7Go51KiqKd9kaOwU4dHaC
+X-Google-Smtp-Source: AGHT+IFVSMx6r+9xvLAlfO62j5IU/jBOv4h47dZ+HB9stjJy87/P6nY2mF6tVSFzpXL0p93chsv1SMcI66Wv81nUArY=
+X-Received: by 2002:a05:690c:7009:b0:6fe:b88e:4d94 with SMTP id
+ 00721157ae682-708abd8f399mr45436957b3.19.1746017049961; Wed, 30 Apr 2025
+ 05:44:09 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: HGgdOnDOo60vyKB14_W5zfburpfm_WfoH_lvkOz7b60_1746015454
-X-Mimecast-Originator: redhat.com
+References: <20250426160027.177173-1-mannkafai@gmail.com> <20250426160027.177173-2-mannkafai@gmail.com>
+ <CAADnVQ+DF18nKEf9i1RKEQN+ybH+duu7U-91YZDaa_PiqUx17g@mail.gmail.com>
+In-Reply-To: <CAADnVQ+DF18nKEf9i1RKEQN+ybH+duu7U-91YZDaa_PiqUx17g@mail.gmail.com>
+From: Kafai Wan <mannkafai@gmail.com>
+Date: Wed, 30 Apr 2025 20:43:58 +0800
+X-Gm-Features: ATxdqUH4VhW7N1bQc1Q9VVv6LfEr-XG7U9j0iRwNg1M8Kh8644-dVZBS560qWHY
+Message-ID: <CALqUS-6XtJ0Bb9jiykdC3jAY_OHjGuirj06Kzssjvo7eW_so2A@mail.gmail.com>
+Subject: Re: [PATCH bpf-next 1/4] bpf: Allow get_func_[arg|arg_cnt] helpers in
+ raw tracepoint programs
+To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc: Song Liu <song@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
+	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, Eduard <eddyz87@gmail.com>, 
+	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
+	Matt Bobrowski <mattbobrowski@google.com>, Steven Rostedt <rostedt@goodmis.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
+	Mykola Lysenko <mykolal@fb.com>, Shuah Khan <shuah@kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
+	bpf <bpf@vger.kernel.org>, 
+	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>, 
+	Network Development <netdev@vger.kernel.org>, 
+	"open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>, Leon Hwang <leon.hwang@linux.dev>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, 2025-04-30 at 13:02 +0200, Nam Cao wrote:
-> Real-time applications may have design flaws causing them to have
-> unexpected latency. For example, the applications may raise page
-> faults, or
-> may be blocked trying to take a mutex without priority inheritance.
->=20
-> However, while attempting to implement DA monitors for these real-
-> time
-> rules, deterministic automaton is found to be inappropriate as the
-> specification language. The automaton is complicated, hard to
-> understand,
-> and error-prone.
->=20
-> For these cases, linear temporal logic is found to be more suitable.
-> The
-> LTL is more concise and intuitive.
->=20
-> This series adds support for LTL RV monitor, and use it to implement
-> two
-> monitors for reporting problems with real-time tasks.
->=20
+On Wed, Apr 30, 2025 at 10:46=E2=80=AFAM Alexei Starovoitov
+<alexei.starovoitov@gmail.com> wrote:
+>
+> On Sat, Apr 26, 2025 at 9:00=E2=80=AFAM KaFai Wan <mannkafai@gmail.com> w=
+rote:
+> >
+> > Adding support to use get_func_[arg|arg_cnt] helpers in raw_tp/tp_btf
+> > programs.
+> >
+> > We can use get_func_[arg|ret|arg_cnt] helpers in fentry/fexit/fmod_ret
+> > programs currently. If we try to use get_func_[arg|arg_cnt] helpers in
+> > raw_tp/tp_btf programs, verifier will fail to load the program with:
+> >
+> > ; __u64 cnt =3D bpf_get_func_arg_cnt(ctx);
+> > 3: (85) call bpf_get_func_arg_cnt#185
+> > unknown func bpf_get_func_arg_cnt#185
+> >
+> > Adding get_func_[arg|arg_cnt] helpers in raw_tp_prog_func_proto and
+> > tracing_prog_func_proto for raw tracepoint.
+> >
+> > Adding 1 arg on ctx of raw tracepoint program and make it stores number=
+ of
+> > arguments on ctx-8, so it's easy to verify argument index and find
+> > argument's position.
+> >
+> > Signed-off-by: KaFai Wan <mannkafai@gmail.com>
+> > ---
+> >  kernel/trace/bpf_trace.c | 17 ++++++++++++++---
+> >  net/bpf/test_run.c       | 13 +++++--------
+> >  2 files changed, 19 insertions(+), 11 deletions(-)
+> >
+> > diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
+> > index 52c432a44aeb..eb4c56013493 100644
+> > --- a/kernel/trace/bpf_trace.c
+> > +++ b/kernel/trace/bpf_trace.c
+> > @@ -1892,6 +1892,10 @@ raw_tp_prog_func_proto(enum bpf_func_id func_id,=
+ const struct bpf_prog *prog)
+> >                 return &bpf_get_stackid_proto_raw_tp;
+> >         case BPF_FUNC_get_stack:
+> >                 return &bpf_get_stack_proto_raw_tp;
+> > +       case BPF_FUNC_get_func_arg:
+> > +               return &bpf_get_func_arg_proto;
+> > +       case BPF_FUNC_get_func_arg_cnt:
+> > +               return &bpf_get_func_arg_cnt_proto;
+> >         case BPF_FUNC_get_attach_cookie:
+> >                 return &bpf_get_attach_cookie_proto_tracing;
+> >         default:
+> > @@ -1950,10 +1954,16 @@ tracing_prog_func_proto(enum bpf_func_id func_i=
+d, const struct bpf_prog *prog)
+> >         case BPF_FUNC_d_path:
+> >                 return &bpf_d_path_proto;
+> >         case BPF_FUNC_get_func_arg:
+> > +               if (prog->type =3D=3D BPF_PROG_TYPE_TRACING &&
+> > +                   prog->expected_attach_type =3D=3D BPF_TRACE_RAW_TP)
+> > +                       return &bpf_get_func_arg_proto;
+> >                 return bpf_prog_has_trampoline(prog) ? &bpf_get_func_ar=
+g_proto : NULL;
+> >         case BPF_FUNC_get_func_ret:
+> >                 return bpf_prog_has_trampoline(prog) ? &bpf_get_func_re=
+t_proto : NULL;
+> >         case BPF_FUNC_get_func_arg_cnt:
+> > +               if (prog->type =3D=3D BPF_PROG_TYPE_TRACING &&
+> > +                   prog->expected_attach_type =3D=3D BPF_TRACE_RAW_TP)
+> > +                       return &bpf_get_func_arg_cnt_proto;
+> >                 return bpf_prog_has_trampoline(prog) ? &bpf_get_func_ar=
+g_cnt_proto : NULL;
+> >         case BPF_FUNC_get_attach_cookie:
+> >                 if (prog->type =3D=3D BPF_PROG_TYPE_TRACING &&
+> > @@ -2312,7 +2322,7 @@ void __bpf_trace_run(struct bpf_raw_tp_link *link=
+, u64 *args)
+> >  #define REPEAT(X, FN, DL, ...)         REPEAT_##X(FN, DL, __VA_ARGS__)
+> >
+> >  #define SARG(X)                u64 arg##X
+> > -#define COPY(X)                args[X] =3D arg##X
+> > +#define COPY(X)                args[X + 1] =3D arg##X
+> >
+> >  #define __DL_COM       (,)
+> >  #define __DL_SEM       (;)
+> > @@ -2323,9 +2333,10 @@ void __bpf_trace_run(struct bpf_raw_tp_link *lin=
+k, u64 *args)
+> >         void bpf_trace_run##x(struct bpf_raw_tp_link *link,            =
+ \
+> >                               REPEAT(x, SARG, __DL_COM, __SEQ_0_11))   =
+ \
+> >         {                                                              =
+ \
+> > -               u64 args[x];                                           =
+ \
+> > +               u64 args[x + 1];                                       =
+ \
+> > +               args[0] =3D x;                                         =
+   \
+> >                 REPEAT(x, COPY, __DL_SEM, __SEQ_0_11);                 =
+ \
+> > -               __bpf_trace_run(link, args);                           =
+ \
+> > +               __bpf_trace_run(link, args + 1);                       =
+ \
+>
+> This is neat, but what is this for?
+> The program that attaches to a particular raw_tp knows what it is
+> attaching to and how many arguments are there,
+> so bpf_get_func_arg_cnt() is a 5th wheel.
+>
+> If the reason is "for completeness" then it's not a good reason
+> to penalize performance. Though it's just an extra 8 byte of stack
+> and a single store of a constant.
+>
+If we try to capture all arguments of a specific raw_tp in tracing programs=
+,
+We first obtain the arguments count from the format file in debugfs or BTF
+and pass this count to the BPF program via .bss section or cookie (if
+available).
 
-Steve,
-
-From my point of view this series is ready for inclusion, what do you
-think?
-
-We may still need Acks from the x86 and arm64 maintainers regarding the
-tracepoints changes, though.
+If we store the count in ctx and get it via get_func_arg_cnt helper in
+the BPF program=EF=BC=8C
+a) It's easier and more efficient to get the arguments count in the BPF pro=
+gram.
+b) It could use a single BPF program to capture arguments for multiple raw_=
+tps,
+reduce the number of BPF programs when massive tracing.
 
 Thanks,
-Gabriele
+KaFai
 
-> Patch 1-12 cleanup and prepare the RV code for the integration of LTL
-> monitors.
->=20
-> Patch 13 adds support for LTL monitors.
->=20
-> Patch 14 adds the container monitor "rtapp". This encapsulates the
-> sub-monitors for real-time.
->=20
-> Patch 15-18 prepares the pagefault tracepoints, so that patch 19 can
-> add
-> the monitor which watches real-time tasks doing page faults.
->=20
-> Patch 20 adds the "sleep" monitor: it detects potential undesirable
-> latency
-> with real-time threads.
->=20
-> Patch 21 adds documentation on the new monitors.
->=20
-> Patch 22 allows the number of per-task monitors to be configurable,
-> so that
-> the two new monitors can be enabled simultaneously.
->=20
-> v5->v6
-> https://lore.kernel.org/lkml/cover.1745926331.git.namcao@linutronix.de
-> =C2=A0 - sleep monitor: Drop the block_on_rt_mutex tracepoints. The
-> contention
-> =C2=A0=C2=A0=C2=A0 tracepoints are sufficient.
->=20
-> v4->v5
-> https://lore.kernel.org/lkml/cover.1745390829.git.namcao@linutronix.de
-> =C2=A0 - sleep monitor: Fix a false positive due to a race with waking an=
-d
-> =C2=A0=C2=A0=C2=A0 scheduling.
-> =C2=A0 - sleep monitor: Add block_on_rt_mutex tracepoints and use them fo=
-r
-> =C2=A0=C2=A0=C2=A0 BLOCK_ON_RT_MUTEX, instead of trace_sched_pi_setprio
-> =C2=A0 - sleep monitor: tighten the rule on nanosleep: only
-> clock_nanosleep()
-> =C2=A0=C2=A0=C2=A0 with TIMER_ABSTIME and CLOCK_MONOTONIC is allowed
-> =C2=A0 - add comments explaining why it is correct to treat PI-boosted
-> tasks as
-> =C2=A0=C2=A0=C2=A0 real-time tasks.
->=20
-> =C2=A0=C2=A0=C2=A0 It should be noted that due to the changes in v5, 'per=
-f' does not
-> work
-> =C2=A0=C2=A0=C2=A0 as well as before, because sometimes the errors happen=
- out of the
-> =C2=A0=C2=A0=C2=A0 real-time tasks' contexts. Fixing this is left for fut=
-ure work.
->=20
-> =C2=A0=C2=A0=C2=A0 stress-ng is also far noisier in v5, because the rule =
-on
-> nanosleep is
-> =C2=A0=C2=A0=C2=A0 tightened.
->=20
-> v3->v4
-> https://lore.kernel.org/lkml/cover.1744785335.git.namcao@linutronix.de
-> =C2=A0 - support deadline tasks
-> =C2=A0 - rtapp_sleep: use sched_pi_setprio tracepoint instead of
-> contention
-> =C2=A0=C2=A0=C2=A0 tracepoints for BLOCK_ON_RT_MUTEX, so that proxy lock =
-is covered.
-> =C2=A0 - fix the scripts generating an "slightly" incorrect verification
-> automaton
-> =C2=A0 - makes rtapp monitor depends on RV_PER_TASK_MONITORS >=3D 2
-> =C2=A0 - make the event tracepoint output a bit more readable
-> =C2=A0 - some documentation's format fixes
->=20
-> v2->v3
-> https://lore.kernel.org/lkml/cover.1744355018.git.namcao@linutronix.de/
-> =C2=A0 - fix a problem with sleep monitor's specification (around
-> =C2=A0=C2=A0=C2=A0 KTHREAD_SHOULD_STOP)
-> =C2=A0 - merge the patches that move the dot2k/rvgen scripts around
-> =C2=A0 - pull panic/printk changes into separate patches
-> =C2=A0 - fixup some build errors
-> =C2=A0 - fixup monitor's init function return code
-> =C2=A0 - fix some flake8 warnings with the scripts
-> =C2=A0 - add some references to LTL documentation
-> =C2=A0 - fixup some mistakes with rtapp documentation
-> =C2=A0 - fixup capitalization mistake with monitor_synthesis.rst
-> =C2=A0 - remove the now-redundant macro RV_PER_TASK_MONITORS
->=20
-> v1->v2
-> https://lore.kernel.org/lkml/cover.1741708239.git.namcao@linutronix.de/
-> =C2=A0 - Integrate the LTL scripts into the existing dot2k tool, taking
-> =C2=A0=C2=A0=C2=A0 advantage of the existing monitor generation scripts.
-> =C2=A0 - Switch the struct ltl_monitor to use bitmap instead of an array,
-> to
-> =C2=A0=C2=A0=C2=A0 optimize memory usage.
-> =C2=A0 - Correct the generated code to be non-deterministic state machine=
-,
-> =C2=A0=C2=A0=C2=A0 instead of deterministic state machine
-> =C2=A0 - Put common code for all LTL monitors into a single file
-> =C2=A0=C2=A0=C2=A0 (include/rv/ltl_monitor.h), reducing code duplication
-> =C2=A0 - Change the LTL monitors to make user of container. Add a bug fix
-> to
-> =C2=A0=C2=A0=C2=A0 container while at it.
-> =C2=A0 - Make the number of per-task monitor configurable
-
+> pw-bot: cr
