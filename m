@@ -1,115 +1,171 @@
-Received: from mail-pj1-f46.google.com (mail-pj1-f46.google.com [209.85.216.46])
+Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88BDB7083A;
-	Thu,  1 May 2025 20:55:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1204D253B4C;
+	Thu,  1 May 2025 20:56:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746132944; cv=none; b=SKNYjEG0A4TdBRRX1JAdt2V0O6TpTjdxjc3M2n+0JJJiBdQSLA8FQLmsmyJmpOqDDUqYhg9lN1sm10n75Ca2+lMbAuO1Ki4sbk+yVYoVJxwtiOEDzsK2vzppu04+npV6RyQmLAFvYubnKj3PVOxqdzeoyhFP1VsEZ/rroXO33eQ=
+	t=1746133008; cv=none; b=ZKCYheDG5nv9aUUVM16BupBZUQVJmxcyKICVQxBGHJFl7hGFgHdBekTO2GPnL73cArtn3djT1qjYPTBU4vkygmwy6pPv0Is8Y8v5JmYe6+Chd1+r99R50QDVOMBdsv7aWiym32CllP6y1RDx7tfW/agwpx+wmDiQn+X8NEkGjAY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746132944; c=relaxed/simple;
-	bh=I+dEedf1pTJyAwoEmIwbwG0wBXM+8Q+YWSy8/oH3exQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=PfH3juIrRI8H92q9286l3l4JMo1qqNEErlzivpbBxksGsRmrXssyHRE/m/TkCX41vlnWz6S5rOXrxdswM+bFBNBNqR9BHCkLGibImNdXmPuvoOaCqppsJ3fA8v90NS1GjYznDGsE1HfU0imCjhtzi8PJ7ItN/YDwWF0wsuSvhEo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RKhXoJPk; arc=none smtp.client-ip=209.85.216.46
+	s=arc-20240116; t=1746133008; c=relaxed/simple;
+	bh=yZp03o1Z50G9fI3eUVXLknB0P6oL+Hc/7Tqr5oUMmC8=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=u/QYYOmNvtcox7GfDrmGgfNI1GZrv+42jQo8B9h1jMSRPGH/KqrekRx9OaRfyubDoEprVCE480WSA774VvrTKwMOnvBIaSW9qidr3e3CQHkW/4vS7IMgxQng05rYsyYthhr6HEbi8RZtjyJ3TqgeLQMFP2kU444afvdcx5niluM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=flQ0vCFo; arc=none smtp.client-ip=209.85.221.47
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RKhXoJPk"
-Received: by mail-pj1-f46.google.com with SMTP id 98e67ed59e1d1-301918a4e3bso1599667a91.3;
-        Thu, 01 May 2025 13:55:43 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="flQ0vCFo"
+Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-3a064a3e143so560334f8f.3;
+        Thu, 01 May 2025 13:56:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746132943; x=1746737743; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=DpiuHUeq5me2qFWhjdsz2hFxFCDha2ue8NZc3ijvfAY=;
-        b=RKhXoJPk2TMB4+b295fSUerabPW4ZT2nMP3GZcRRQfmlG3iiBX7jJjU0gA748y5PQz
-         EXhWq7SYGPvcv75HLE+sFMojxP5wPTihZQsF5YkOGKIssLnBtK+yproa63Am6ptrA4v2
-         2fx0XxKG3W2E9YVSWLfMwJW8/KL2NQFfLGca8AWVAeuWVPoZ1QCsoROq5uN5STXlkqZT
-         YwJvJSYp08dfKdShbI32u1DnNgwfhgqFYdhf++omusVGFAY5GPiGWWJiS2BJ6q48yrG+
-         8apvLXre8RnjTmu9JdFNoIZR8v73fz1/n4xeIZVVqzD+6lcH/aN1q0ImK/7Ema601EQi
-         ug7A==
+        d=gmail.com; s=20230601; t=1746133005; x=1746737805; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=yZp03o1Z50G9fI3eUVXLknB0P6oL+Hc/7Tqr5oUMmC8=;
+        b=flQ0vCFoauInbVrHzOpnoAOYG2AClNbolSYDDcsXLhcJkJWlcCFLckeYgMRBsIsr/z
+         sjOHg6i+Pufmuw7LDffylRBM+mvbeDPdNWOa0n0AnOWHRZ0IUMAN2UEdodCLrGiBOU2p
+         QN6NmucILHBXYgjzXgGciVZfrPJH3am352dZzsIhe6wk6dJaVm4FQMK7Mmdrhh9xGGyt
+         b6wi63a0ciiZXOxw/wnkkJMdd60rxu9eLaH7uxsXuTD01Gd9t5rJoNiTk90qKZsMEBM3
+         5UjmVrg9GkKU0S451MKvIgGl9KveuqZNnvBpcwjLX7leQN9ie8SMInVijjNp+Dq43IbE
+         PpZw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746132943; x=1746737743;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=DpiuHUeq5me2qFWhjdsz2hFxFCDha2ue8NZc3ijvfAY=;
-        b=CTjebm9+gUHAUbLHMYuTDuJpPKaSUf2JGG3YOq5F9E4I/b8WbrxAoEyeWiWHnMtI08
-         slcg5srcj4TTnvARZkLypZtbFmuzKUpWuAP1mzPP2WqzpV+tKx9prEdnqDjPos5Wm9e9
-         tR4BI4xzPmRKxNJS9q5oG7+L7lA+gWsA4J78plcaseGEr5M0l37hKLV065HiNnAPtwNg
-         8rExIBIDR4edy7mb913CkLuy6rePOqtvWdhK4jtSmpL6dsZQuHF9SwhBELG7zFWzo5BT
-         VBTMqJQ+DEZk7QVwNqkrFkd51AW/rka3tLWYxGS7fBgavolH+RgexCwAtZjf2g7WGP3c
-         Y4zA==
-X-Forwarded-Encrypted: i=1; AJvYcCUNQJQskmmjRLrxHfguRrWBPR9W6yeJovn/yyggEDylgVfKrEb+amF7lxOYlUDJiQLKeQEBGlbL8W8LREkAHFM/@vger.kernel.org, AJvYcCVL1J5tcx8ai2ly420lRXAoOpYnfUdQE5hH902jSz5qUr1iU4t5hzIgZ92K8J6nXESiIUSKzeacoNIfMGpPXCIqapsf@vger.kernel.org, AJvYcCVsjWQBzxSMID+rCBil9Xq6nPXfCtR2p4ZIHnSJ7/aDxlT9rFtzkYdu8FaMqzFTEcTg8sc=@vger.kernel.org, AJvYcCWfZc2vyd+HYAQ6HYfLmdQgCCmikLob54sWnQJi3b9JJW9Js+cS3liCAGg6h6R0JgsWBAOmRtu5iNdbjDPA@vger.kernel.org, AJvYcCWiWWEc4Ft2tLUI7ZgJi2/lTNCJt7ndkb7+nV8qw6ZNcKLROKKMuhUwa2xxdN9KeAz0Hyei9Mqj@vger.kernel.org
-X-Gm-Message-State: AOJu0YwnURbIPrW4rFByusZ5MwKKEt2js2ve8gZZPtpnMBvgv+Gx3PHx
-	PLwZ8IOqazXPl6YS2SD4TPglzKhcyZ129y5hmBj/o/7UlLcjSzr3A+Kj75FPoP4Zhrvpiwqj21S
-	HHVe5FeFtEZZxQKQv1HkkZB3X6dc=
-X-Gm-Gg: ASbGncsI6LUkHgmRAz7jW7KLYKRqZakgbLCCQaplwcCAQACy6ZNKF4yslwdOk7gbCnW
-	3r3DOXQINn41EdV8KcXR9n0aFuBYKcMFp/gHZAk+31jbAGK3YCe8orGwKHf0mCPSv090Aq3+LY1
-	YPv2jjCkQKG/l8y84/c6ZsiWx2N2JT/uPvZZJIKA==
-X-Google-Smtp-Source: AGHT+IGh50s+zJtysu2S6f9XjTktMRBtIt9lP5pMNu2Xa/D/taBoYtZM0t3nGA+Oq3ZGw2IWtnMnbRD+96VEn4T3D6k=
-X-Received: by 2002:a17:90b:5252:b0:309:f407:5ad1 with SMTP id
- 98e67ed59e1d1-30a4e5aa540mr917882a91.14.1746132942788; Thu, 01 May 2025
- 13:55:42 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1746133005; x=1746737805;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=yZp03o1Z50G9fI3eUVXLknB0P6oL+Hc/7Tqr5oUMmC8=;
+        b=MWknGesm4poFvZPzCl6up2kg0ldsr4n6/9n+kOYvx5HEOh+Bf6NbebXVnTgA7XDIEm
+         FUUUrtl4Qlh/oqv4qamRla003RzXik04ijIGS2gm8iMGv6jyGeuuKa6t7DBaLE+z3jHa
+         Y2JRaPcDe5tU45QCAwbmT+x5eKeTiScJbJZUUKlnPUdrZ3MK5ZxK9RZDs8L7QmbaOvvM
+         iI6R2IBaAWsOsP3b7O/U0XmkQSk9HLgWzqarvkTGe7jldaEg2UFMhcUn7iyrXg7rVaZF
+         Dkf5u5UN9J0iG6XxIjy3cf3wjs21ZegEW8cOnjuoq4nyc2WXqiRnDoZDTwpaM9nZRdeI
+         od+g==
+X-Forwarded-Encrypted: i=1; AJvYcCU4Xg0a/kehO50/OgsdGrGFbF8TtD0GAPymlxO8JVb0lPTGa7VIMOmP5qMBTfGK5SvVfcSTTUqwzI3Yp8g=@vger.kernel.org, AJvYcCW1ANJnZxUV5aGXCYk2bg9/+P26FaQk9WS8UQevCGMg/O/XVvT618uQJuGPKm8CSqw62w3t6B2I0Rce0CKCX+Afm4uB@vger.kernel.org
+X-Gm-Message-State: AOJu0YwtZQpsyAC91KLCA9ZQI1akcb9dDmf/d/21j6ZlHAoz3DHvjBLA
+	6sgY3B9HDkRJlEskNvAg1dVntm3gf4b5HtG0kb12mJIOWsnWCzm+vCF4hTM07D4=
+X-Gm-Gg: ASbGnctMI+o9617aVYrqwtZmEv5/SaVqPzIfdlT7dIFlng9WW+tCEr9shWtKvzhfU/V
+	AUfr2GmPetjmbCHYQU1yLXbPt/wZASFLQMuacKuS5yiv3hcdFlc8zPk6gVmg8HGBJ1MszhOlct6
+	mZldSnibSM353hWZ4gjfbXZhJn2nGAPHwytjF9Ot0LsVEj+VRDzMbq68o3/OVBnhlnA8zgFpsH8
+	Y/MwGojHpbwHiueCgv2cKHpwDxKrDHeZvMYObeo8n6QAFeqhOL1Q95M7LmhWYRMjMAWd+9iwNaF
+	BhgIN/5W6Zy2/7vReab0YYsBGSnKU0kXVyLHXIpZZJdbZZPLiwtBTfD11ENApA67INx8GCXyeXJ
+	DKLIP5BTddyXJC9M3suImH5vFlXQAUSPB8KZNCiiOR4Lf0sUXhhmqxDnkCW1tqpHp9chSnvK9Hz
+	j/Q7BC4RBv
+X-Google-Smtp-Source: AGHT+IGqcd2sO4GysuHBNsbwMWiR3CqRlK0MMF5r1Nv9nH36qkof0Fl39WTgp7YzDqIZlgZ8Xsm6xA==
+X-Received: by 2002:a5d:5985:0:b0:3a0:831c:dff6 with SMTP id ffacd0b85a97d-3a099ad6208mr165723f8f.18.1746133005319;
+        Thu, 01 May 2025 13:56:45 -0700 (PDT)
+Received: from ?IPv6:2a01:cb08:fd:9b00:540e:212e:2ac4:9aae? (2a01cb0800fd9b00540e212e2ac49aae.ipv6.abo.wanadoo.fr. [2a01:cb08:fd:9b00:540e:212e:2ac4:9aae])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a099b170e7sm189287f8f.86.2025.05.01.13.56.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 01 May 2025 13:56:44 -0700 (PDT)
+Message-ID: <0b13bbd0001c41ca1866ccf58f6e9de6ca2c24d9.camel@gmail.com>
+Subject: Re: [PATCH] tracing: fix race when creating trace probe log error
+ message
+From: Paul Cacheux <paulcacheux@gmail.com>
+To: Steven Rostedt <rostedt@goodmis.org>, Paul Cacheux via B4 Relay
+	 <devnull+paulcacheux.gmail.com@kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+	 <mathieu.desnoyers@efficios.com>, linux-kernel@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org
+Date: Thu, 01 May 2025 22:56:44 +0200
+In-Reply-To: <20250501154503.2308f177@gandalf.local.home>
+References: <20250422-fix-trace-probe-log-race-v1-1-d2728d42cacb@gmail.com>
+	 <20250501154503.2308f177@gandalf.local.home>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.1 (3.56.1-1.fc42app2) 
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250426160027.177173-1-mannkafai@gmail.com> <20250426160027.177173-3-mannkafai@gmail.com>
-In-Reply-To: <20250426160027.177173-3-mannkafai@gmail.com>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Thu, 1 May 2025 13:55:30 -0700
-X-Gm-Features: ATxdqUG7m5lxLrm2WirOZ_o4hAMDhe7XKZ74AQNZzGPIJbnzyR-uo9LZrBb5eSk
-Message-ID: <CAEf4BzZM_SrdpjnVr9ytAm_hpAW-WEvZ2EptAqwut_1jeAmyzA@mail.gmail.com>
-Subject: Re: [PATCH bpf-next 2/4] bpf: Enable BPF_PROG_TEST_RUN for tp_btf
-To: KaFai Wan <mannkafai@gmail.com>
-Cc: song@kernel.org, jolsa@kernel.org, ast@kernel.org, daniel@iogearbox.net, 
-	andrii@kernel.org, martin.lau@linux.dev, eddyz87@gmail.com, 
-	yonghong.song@linux.dev, john.fastabend@gmail.com, kpsingh@kernel.org, 
-	sdf@fomichev.me, haoluo@google.com, mattbobrowski@google.com, 
-	rostedt@goodmis.org, mhiramat@kernel.org, mathieu.desnoyers@efficios.com, 
-	davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, 
-	horms@kernel.org, mykolal@fb.com, shuah@kernel.org, 
-	linux-kernel@vger.kernel.org, bpf@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, netdev@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, leon.hwang@linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Sat, Apr 26, 2025 at 9:01=E2=80=AFAM KaFai Wan <mannkafai@gmail.com> wro=
-te:
->
-> Add .test_run for tp_btf. Use the .test_run for raw_tp.
+On Thu, 2025-05-01 at 15:45 -0400, Steven Rostedt wrote:
+> On Tue, 22 Apr 2025 20:33:13 +0200
+> Paul Cacheux via B4 Relay <devnull+paulcacheux.gmail.com@kernel.org>
+> wrote:
+>=20
+> > From: Paul Cacheux <paulcacheux@gmail.com>
+>=20
+> Sorry for the late reply, I just noticed this patch.
 
-Hm... so now you'll be able to pass arbitrary values as pointers to
-kernel structs (e.g., arbitrary u64 as struct task_struct * pointer),
-not sure this is a good idea...
+No problem at all, thanks for looking at my patch.
 
->
-> Signed-off-by: KaFai Wan <mannkafai@gmail.com>
-> ---
->  net/bpf/test_run.c | 3 +++
->  1 file changed, 3 insertions(+)
->
-> diff --git a/net/bpf/test_run.c b/net/bpf/test_run.c
-> index 8cb285187270..8c901ec92341 100644
-> --- a/net/bpf/test_run.c
-> +++ b/net/bpf/test_run.c
-> @@ -690,6 +690,9 @@ int bpf_prog_test_run_tracing(struct bpf_prog *prog,
->         int b =3D 2, err =3D -EFAULT;
->         u32 retval =3D 0;
->
-> +       if (prog->expected_attach_type =3D=3D BPF_TRACE_RAW_TP)
-> +               return bpf_prog_test_run_raw_tp(prog, kattr, uattr);
-> +
->         if (kattr->test.flags || kattr->test.cpu || kattr->test.batch_siz=
-e)
->                 return -EINVAL;
->
-> --
-> 2.43.0
->
+>=20
+> >=20
+> > When creating a trace probe a global variable is modified and this
+> > data used when an error is raised and the error message generated.
+> >=20
+> > Modification of this global variable is done without any lock and
+> > multiple trace operations will race, causing some potential issues
+> > when generating the error.
+> >=20
+> > This commit moves away from the global variable and passes the
+> > error context as a regular function argument.
+> >=20
+> > Fixes: ab105a4fb894 ("tracing: Use tracing error_log with probe
+> > events")
+> >=20
+> > Signed-off-by: Paul Cacheux <paulcacheux@gmail.com>
+> > ---
+> > As reported in [1] a race exists in the shared trace probe log
+> > used to build error messages. This can cause kernel crashes
+> > when building the actual error message, but the race happens
+> > even for non-error tracefs uses, it's just not visible.
+> >=20
+> > Reproducer first reported that is still crashing:
+> >=20
+> > =C2=A0 # 'p4' is invalid command which make kernel run into
+> > trace_probe_log_err()
+> > =C2=A0 cd /sys/kernel/debug/tracing
+> > =C2=A0 while true; do
+> > =C2=A0=C2=A0=C2=A0 echo 'p4:myprobe1 do_sys_openat2 dfd=3D%ax filename=
+=3D%dx flags=3D%cx
+> > mode=3D+4($stack)' >> kprobe_events &
+> > =C2=A0=C2=A0=C2=A0 echo 'p4:myprobe2 do_sys_openat2' >> kprobe_events &
+> > =C2=A0=C2=A0=C2=A0 echo 'p4:myprobe3 do_sys_openat2 dfd=3D%ax filename=
+=3D%dx' >>
+> > kprobe_events &
+> > =C2=A0 done;
+> >=20
+> > The original email suggested to use a mutex or to allocate the
+> > trace_probe_log on the stack. The mutex can cause performance
+> > issues, and require high confidence in the correctness of the
+> > current trace_probe_log_clear calls. This patch implements
+> > the stack solution instead and passes a pointer to using
+> > functions.
+> >=20
+> > [1]
+> > https://lore.kernel.org/all/20221121081103.3070449-1-zhengyejian1@huawe=
+i.com/T/
+>=20
+> Honestly, I don't like either approach.
+>=20
+> What could be done is wrap the internals of the function in a mutex
+> so they
+> are not re-entrant (using guard(mutex)). If two error codes are
+> happening
+> together, just let it get corrupted. There should never be two
+> additions at
+> the same time, and if the admin is doing that then they deserve what
+> they
+> get.
+
+Just to double check, what you are suggesting here is to include a
+mutex in the shared trace_probe_log entry, and to lock it in all
+accessors functions (trace_probe_log_{init,set_index,clear,err})?
+
+>=20
+> I don't care if the error log gets garbage if there's multiple
+> accesses at
+> the same time. The fix should only prevent it from crashing.
+>=20
+> -- Steve
+>=20
+>=20
+> -- Steve
+
+Thanks for the feedback,
+Paul Cacheux
