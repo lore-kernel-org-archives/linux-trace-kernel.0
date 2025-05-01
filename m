@@ -1,133 +1,154 @@
-Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D42EE2980AE
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 30 Apr 2025 20:52:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7B6B1F1527;
+	Thu,  1 May 2025 01:35:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746046346; cv=none; b=UvruBvl8xcZE+p/CjnvfqlgpWqGcQwZuB0CJYrU6JjiHbAcNC9eo5q6nFhYYTo3WGZ+EXyVYHV9O1qop9f+oeU/s4etqsZ62oXtq2ktO5YX8yDP7mGazOnk0H4XNlHm4PMVZl4zqlQgfcr6hgRNiO53f/fP3onGL3CO+6MkKvIU=
+	t=1746063301; cv=none; b=g77NBzv+kzBado0rNtYuE8lX38nhGyfhfv2xc0DjHCLpffodDdhaHGzON5Zl5GYK0kfiWqzqt0xdaurIqr8VhqQNPEz8nmJUzKq4/RiPC4vrJ8CPPko69pX997ycZBhL77eaQnxxim43OuPZmFVE0c7hggr+k3OvRB5eDocV/JY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746046346; c=relaxed/simple;
-	bh=wvJwBMeNEG6L7qXV18iRAqNdKebQ0TFLRjuHZzWsT1U=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=vFapJsG8eCtyuSQDQLJIywbyeN+azTHTUD0BUhhNA032ec7WYznJ/3nSKpzOwR3XCJN7BBwsv6+tN9H0+XZndiqzFxw77cls0nRz6NbMl37W/ISwbL8N7guP9OQwVmK1sinPzp4jBzj/bas0cqOHEGnU1pYKHRXqHM+ALouChv8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=aBv5s+cw; arc=none smtp.client-ip=209.85.208.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="aBv5s+cw"
-Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-5dbfc122b82so702a12.0
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 30 Apr 2025 13:52:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1746046343; x=1746651143; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=23hiVYsmBQF9yQXvvKwFVuWz0LAimBGXKxbs767cKCA=;
-        b=aBv5s+cw/XctSCZu6pwYFKwdU6d7P6yf6nVNz5g5QczjdtX69wvQHtF9mqbzFcyJtS
-         sAJionMGrxXuGiZYhgLgqHF5dG8ueogcAz7LNbtLItJwLLUXAiwXpNEn0ZzL+rQqDgmm
-         5ozMMKfuCGFxMeQxXOiLEEfdk/UvutTognVUiajVNO4khkskmuAN25svgnj/Zak6RXfx
-         zOAHOJKdauZuDpUiS6XMaRux5HYUJ4xSsPJ58RzqNKJvonCadBg+xVXIimF51ptBqFYJ
-         I+Xswz6xgLbfUZWHjBHBwcvwGaozX/Ncvw91qgm/4kY6PcwPlQiG6TmQJhZDk3A2Yq9U
-         VOSQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746046343; x=1746651143;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=23hiVYsmBQF9yQXvvKwFVuWz0LAimBGXKxbs767cKCA=;
-        b=IjaXwkoNaY4JKMGl1SJqMunjWfHJUIqc9A8STf+Wy+MmB0q7gLuCgpPeeRRbkcoWQp
-         l/AejuceMPw1O8UaPzmOJWnXtYM22bd0Lvkcygf82nyEUy35D6Q86E765/OhLx4FMa68
-         GDMycAc4elORr9lsPNy+qT3jpfh4U82omJL4Vb6prthpC8Ju4q2z3vtMv8XodfSP9lXO
-         7g2uz0CIr7Ku6kxAkTh0etrgETp7Vfk9i2vxFAX2A6xU14LVcmoYSxCjRebQWRaP6DF/
-         qxNRmbc6N+ufTriNQ2Hrxy3DPbQz6Vfgxl8DQQxeboHDzVsLdr2doMMn+Tg5JHQ1LUoy
-         9nIg==
-X-Forwarded-Encrypted: i=1; AJvYcCVwWm2qVAgeV+V6sC67pknAwlxqS/qKv/RJc8NeXu7cg295lX44Z/oedVesnLEEsdJnyDg8iIy8sh2hVzsh8r13E58=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxynFY61+xG6cIED66vx5BumEpPB2LHc07GrW30VMMndRGPbN0t
-	RRpVEW44DQUjumS/oB+Jzz3MEDKcBF2ZVWzZSn3NHTK1BxvGg8gE+TTAkqVCEGs33PVu+LWHI0s
-	kDLzijfFrPB8OtpMWW7vDS89PAXRd9KvTery+
-X-Gm-Gg: ASbGnctqEDIt+p6qHtSRlXXGfuQVBe30x9sQXgOXmgNHkTR8gOmnr3wQfOjibEOfNIP
-	qhMNqO9U63pQOVXVUeZEeevzTv0XbN/dzpohc0pTaSoKIXRPaYDCk7hqd5ZmBViHHUbNKst1Rec
-	3srVyUyHl1gnEn8vaSzx+uJam5ANs2jdH7k6icPfF8nbOCRcboUdg=
-X-Google-Smtp-Source: AGHT+IE2B3xe/+DPD2M7lWdvwY8uHQG2L+pnPzy2O9bW24VKqvrt3dxQEMF9lvotWS4qoTaaP5jcihl9aeV++lrP6Is=
-X-Received: by 2002:a50:d783:0:b0:5e0:eaa6:a2b0 with SMTP id
- 4fb4d7f45d1cf-5f918c2b650mr1378a12.5.1746046342783; Wed, 30 Apr 2025 13:52:22
- -0700 (PDT)
+	s=arc-20240116; t=1746063301; c=relaxed/simple;
+	bh=Agkv3OGBG77qIC3WcKk7FTT3q4BDqxYanUlFlICbwOg=;
+	h=Message-ID:Date:From:To:Cc:Subject; b=ZfuzK1ok7uW5PFfgp6k73BARPe4+qZkSNn7ETH+8Sq1l44o1pgcu6wNGdYukES9TtVd2N8oT74IRRPl+htpmPTlvKi2Y5NWgr3hn4HtYgqB1EH1nF4aBp2s9pXh1tzbXY3naVnw/qyXI57deiwvmwqjCAE4ApxaN2OVTMfyl5KU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5731DC4CEEB;
+	Thu,  1 May 2025 01:35:01 +0000 (UTC)
+Received: from rostedt by gandalf with local (Exim 4.98.2)
+	(envelope-from <rostedt@goodmis.org>)
+	id 1uAIpO-00000001okg-0Cca;
+	Wed, 30 Apr 2025 21:35:06 -0400
+Message-ID: <20250501013202.997535180@goodmis.org>
+User-Agent: quilt/0.68
+Date: Wed, 30 Apr 2025 21:32:02 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Josh Poimboeuf <jpoimboe@kernel.org>,
+ x86@kernel.org,
+ Peter Zijlstra <peterz@infradead.org>,
+ Ingo Molnar <mingo@kernel.org>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Indu Bhagat <indu.bhagat@oracle.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>,
+ Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>,
+ linux-perf-users@vger.kernel.org,
+ Mark Brown <broonie@kernel.org>,
+ linux-toolchains@vger.kernel.org,
+ Jordan Rome <jordalgo@meta.com>,
+ Sam James <sam@gentoo.org>,
+ Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+ Jens Remus <jremus@linux.ibm.com>,
+ Florian Weimer <fweimer@redhat.com>,
+ Andy Lutomirski <luto@kernel.org>,
+ Weinan Liu <wnliu@google.com>,
+ Blake Jones <blakejones@google.com>,
+ Beau Belgrave <beaub@linux.microsoft.com>,
+ "Jose E. Marchesi" <jemarch@gnu.org>,
+ Alexander Aring <aahringo@redhat.com>
+Subject: [PATCH v6 0/5] perf: Deferred unwinding of user space stack traces for per CPU events
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20250428181218.85925-1-npache@redhat.com> <20250428181218.85925-8-npache@redhat.com>
-In-Reply-To: <20250428181218.85925-8-npache@redhat.com>
-From: Jann Horn <jannh@google.com>
-Date: Wed, 30 Apr 2025 22:51:46 +0200
-X-Gm-Features: ATxdqUHTpwiuUHFPjjOCSAtuFNVfWyscjbmOvS8EHiScAhewMiIQNRRDtNrYr8E
-Message-ID: <CAG48ez2oge4xs1pSz_T9L46g=wQnFyC63kQKsXwbHGRWAxQ+aw@mail.gmail.com>
-Subject: Re: [PATCH v5 07/12] khugepaged: add mTHP support
-To: Nico Pache <npache@redhat.com>
-Cc: linux-mm@kvack.org, linux-doc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	akpm@linux-foundation.org, corbet@lwn.net, rostedt@goodmis.org, 
-	mhiramat@kernel.org, mathieu.desnoyers@efficios.com, david@redhat.com, 
-	baohua@kernel.org, baolin.wang@linux.alibaba.com, ryan.roberts@arm.com, 
-	willy@infradead.org, peterx@redhat.com, ziy@nvidia.com, 
-	wangkefeng.wang@huawei.com, usamaarif642@gmail.com, sunnanyong@huawei.com, 
-	vishal.moola@gmail.com, thomas.hellstrom@linux.intel.com, 
-	yang@os.amperecomputing.com, kirill.shutemov@linux.intel.com, 
-	aarcange@redhat.com, raquini@redhat.com, dev.jain@arm.com, 
-	anshuman.khandual@arm.com, catalin.marinas@arm.com, tiwai@suse.de, 
-	will@kernel.org, dave.hansen@linux.intel.com, jack@suse.cz, cl@gentwo.org, 
-	jglisse@google.com, surenb@google.com, zokeefe@google.com, hannes@cmpxchg.org, 
-	rientjes@google.com, mhocko@suse.com, rdunlap@infradead.org, 
-	lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Mon, Apr 28, 2025 at 8:12=E2=80=AFPM Nico Pache <npache@redhat.com> wrot=
-e:
-> Introduce the ability for khugepaged to collapse to different mTHP sizes.
-> While scanning PMD ranges for potential collapse candidates, keep track
-> of pages in KHUGEPAGED_MIN_MTHP_ORDER chunks via a bitmap. Each bit
-> represents a utilized region of order KHUGEPAGED_MIN_MTHP_ORDER ptes. If
-> mTHPs are enabled we remove the restriction of max_ptes_none during the
-> scan phase so we dont bailout early and miss potential mTHP candidates.
->
-> After the scan is complete we will perform binary recursion on the
-> bitmap to determine which mTHP size would be most efficient to collapse
-> to. max_ptes_none will be scaled by the attempted collapse order to
-> determine how full a THP must be to be eligible.
->
-> If a mTHP collapse is attempted, but contains swapped out, or shared
-> pages, we dont perform the collapse.
-[...]
-> @@ -1208,11 +1211,12 @@ static int collapse_huge_page(struct mm_struct *m=
-m, unsigned long address,
->         vma_start_write(vma);
->         anon_vma_lock_write(vma->anon_vma);
->
-> -       mmu_notifier_range_init(&range, MMU_NOTIFY_CLEAR, 0, mm, address,
-> -                               address + HPAGE_PMD_SIZE);
-> +       mmu_notifier_range_init(&range, MMU_NOTIFY_CLEAR, 0, mm, _address=
-,
-> +                               _address + (PAGE_SIZE << order));
->         mmu_notifier_invalidate_range_start(&range);
->
->         pmd_ptl =3D pmd_lock(mm, pmd); /* probably unnecessary */
-> +
->         /*
->          * This removes any huge TLB entry from the CPU so we won't allow
->          * huge and small TLB entries for the same virtual address to
+This is v6 of:
 
-It's not visible in this diff, but we're about to do a
-pmdp_collapse_flush() here. pmdp_collapse_flush() tears down the
-entire page table, meaning it tears down 2MiB of address space; and it
-assumes that the entire page table exclusively corresponds to the
-current VMA.
+  https://lore.kernel.org/linux-trace-kernel/20250424192456.851953422@goodmis.org/
 
-I think you'll need to ensure that the pmdp_collapse_flush() only
-happens for full-size THP, and that mTHP only tears down individual
-PTEs in the relevant range. (That code might get a bit messy, since
-the existing THP code tears down PTEs in a detached page table, while
-mTHP would have to do it in a still-attached page table.)
+But this only adds the unwind deferred interface and not the ftrace code
+so that perf can use it.
+
+This series is based on top of:
+
+ https://lore.kernel.org/linux-trace-kernel/20250430195746.827125963@goodmis.org/
+
+The above patch series adds deferred unwinding for task events, but not
+for per CPU events. This is because the event is only tracing a single task
+and can use a task_work to trigger its own callbacks. But per CPU events do
+not have that luxury. A single per CPU event can request a deferred user
+space stacktrace for several tasks before receiving any of the deferred
+stacktraces.
+
+To solve this, per CPU events will use the extended interface of the
+deferred unwinder that ftrace will use. This includes the new API of:
+
+  unwind_deferred_init()
+  unwind_deferred_request()
+  unwind_deferred_cancel()
+
+
+What perf now does is:
+
+When a new per CPU event is created, it searches a global list of
+descriptors that map to the group_leader of tasks that create these events.
+The PID of group_leader of current is used to find this descriptor.
+If one is found, the event is simply added to it. If one is not found, then
+it will create the descriptor.
+
+This descriptor has an array the size of possible CPUs and holds per CPU
+descriptors. Each of these CPU descriptors has a linked list that would
+holds the CPU events that were created and want deferred unwinding.
+
+The group_leader descriptor has a unwind_work descriptor that it registers
+with the unwind deferred infrastructure with unwind_deferred_init().
+Each event within this descriptor has a pointer to this descriptor.
+When a request is made from interrupt context to have a deferred unwind
+happen, it calls unwind_deferred_request() passing it the group_leader
+descriptor.
+
+When the task returns back to user space, it will call the callback
+associated with the group_leader descriptor, and that callback will pass the
+user space stacktrace to the event attached to the CPU from its CPU array.
+
+When these events are freed, they are removed from this descriptor, and
+when the last event is removed, the descriptor is freed.
+
+I've tested this, and this appears to work fine. All the associated events
+that the perf tool creates are associated via this descriptor. At least it
+doesn't overflow the max number of unwind works that can be attached to the
+unwind deferred infrastructure.
+
+This is based on v5 of the unwind code mentioned above. Changes since
+then include:
+
+- Have unwind_deferred_request() return positive if already queued
+
+- Check (current->flags & PF_KTHREAD | PF_EXITING) in
+  unwind_deferred_request(), as the task_work will fail to be added in the
+  exit code.
+
+- Have unwind_deferred_request() return positive if already queued.
+
+- Use SRCU to protect the list of callbacks when a task returns instead of
+  using a global mutex. (Mathieu Desnoyers)
+
+- Does not include ftrace update
+
+- Includes perf per CPU events using this infrastructure
+
+
+Josh Poimboeuf (2):
+      unwind_user/deferred: Add deferred unwinding interface
+      unwind_user/deferred: Make unwind deferral requests NMI-safe
+
+Steven Rostedt (3):
+      unwind deferred: Use bitmask to determine which callbacks to call
+      unwind deferred: Use SRCU unwind_deferred_task_work()
+      perf: Support deferred user callchains for per CPU events
+
+----
+ include/linux/perf_event.h            |   5 +
+ include/linux/sched.h                 |   1 +
+ include/linux/unwind_deferred.h       |  19 +++
+ include/linux/unwind_deferred_types.h |   4 +
+ kernel/events/core.c                  | 226 +++++++++++++++++++++++---
+ kernel/unwind/deferred.c              | 290 +++++++++++++++++++++++++++++++++-
+ 6 files changed, 519 insertions(+), 26 deletions(-)
