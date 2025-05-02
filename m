@@ -1,26 +1,26 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7601269D15;
-	Fri,  2 May 2025 16:50:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A78926A09E;
+	Fri,  2 May 2025 16:50:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746204611; cv=none; b=gM30ni/nacltVtPKb23PzSUuB6IQ0in5O3ZBDdOZahETiSZeFke6FTAg6qJWv/nhbrKLqqLPmevMUcwTujyBuOfsjJKGnT+9lDYlsBJXDTLO7ZMmWXN4ib0461cMPNNZtU2MV9Or4oFdyUbL/z6I3rvd+jchHYVS6xAZu3Qsf7A=
+	t=1746204611; cv=none; b=TSQxTLL604r2zC9TTqrnO5pUurPrM433x/0pR1bMX4Uq91huqOvbNTJ1ag8Q8c7oHvDe+Z4ZusJaD3axjPw5M9yP54xHppQuDqry3SjGK5LJZdriEuYFV493u9/OqoHHisKab+rdZeCmUegrAATEjG3c8fwV7lOLoXpC2mjNNA8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1746204611; c=relaxed/simple;
-	bh=mggx5smXanCvg7n8gnR/FploZ9NPITBU1NWvDKMpMos=;
+	bh=kJ1lRlKcjudXfNQvt0hTUNRiwuzXdk/8XeV3RVZQ1LI=;
 	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=Wk9vOMwZZadNoYystV5iJ3jYFyPqpAT7ywTcHVEEQYYS393LPkZMRZGXL47YoDPB/YJC/zk+NiYqQnYc7FLmY6gYwzd5cYtB9yx+mBQaT030s23jg2XCiUNIoF57rUvTYou2Dk/E1MOmilnVAnGAl/pN+COqu+EiLbiboah9QPo=
+	 Content-Type; b=C2Wl6O1QZOpg5rpY52tRUirYE8KD/3gI64W5yPGCmfTf+/xnzNI3SyBE/4lSFNE9W/PIRb0/kJFuhaIjnEptMT9CIX7fGcVbW4695qb0C+OPQgIfTk6tXWzSVd3GxLKsu+rvhZb+nxeD4UYXln3rSt5G3BEbf5+v+WDsJRFKp3c=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D3971C4CEF7;
-	Fri,  2 May 2025 16:50:10 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 06329C4CEE9;
+	Fri,  2 May 2025 16:50:11 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.98.2)
 	(envelope-from <rostedt@goodmis.org>)
-	id 1uAtaU-0000000037H-0xSk;
+	id 1uAtaU-0000000037m-1gOA;
 	Fri, 02 May 2025 12:50:10 -0400
-Message-ID: <20250502165010.082067388@goodmis.org>
+Message-ID: <20250502165010.249866358@goodmis.org>
 User-Agent: quilt/0.68
-Date: Fri, 02 May 2025 12:48:02 -0400
+Date: Fri, 02 May 2025 12:48:03 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org,
  linux-trace-kernel@vger.kernel.org
@@ -31,7 +31,7 @@ Cc: Masami Hiramatsu <mhiramat@kernel.org>,
  x86@kernel.org,
  Jiri Olsa <jolsa@kernel.org>,
  Namhyung Kim <namhyung@kernel.org>
-Subject: [PATCH v7 16/17] perf: Simplify get_perf_callchain() user logic
+Subject: [PATCH v7 17/17] perf: Skip user unwind if the task is a kernel thread.
 References: <20250502164746.178864972@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -43,50 +43,28 @@ Content-Type: text/plain; charset=UTF-8
 
 From: Josh Poimboeuf <jpoimboe@kernel.org>
 
-Simplify the get_perf_callchain() user logic a bit.  task_pt_regs()
-should never be NULL.
+If the task is not a user thread, there's no user stack to unwind.
 
-Acked-by: Namhyung Kim <namhyung@kernel.org>
 Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- kernel/events/callchain.c | 18 ++++++++----------
- 1 file changed, 8 insertions(+), 10 deletions(-)
+ kernel/events/core.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/kernel/events/callchain.c b/kernel/events/callchain.c
-index cda145dc11bd..2798c0c9f782 100644
---- a/kernel/events/callchain.c
-+++ b/kernel/events/callchain.c
-@@ -247,21 +247,19 @@ get_perf_callchain(struct pt_regs *regs, bool kernel, bool user,
- 	if (user) {
- 		if (!user_mode(regs)) {
- 			if (current->flags & PF_KTHREAD)
--				regs = NULL;
--			else
--				regs = task_pt_regs(current);
-+				goto exit_put;
-+			regs = task_pt_regs(current);
- 		}
- 
--		if (regs) {
--			if (add_mark)
--				perf_callchain_store_context(&ctx, PERF_CONTEXT_USER);
-+		if (add_mark)
-+			perf_callchain_store_context(&ctx, PERF_CONTEXT_USER);
- 
--			start_entry_idx = entry->nr;
--			perf_callchain_user(&ctx, regs);
--			fixup_uretprobe_trampoline_entries(entry, start_entry_idx);
--		}
-+		start_entry_idx = entry->nr;
-+		perf_callchain_user(&ctx, regs);
-+		fixup_uretprobe_trampoline_entries(entry, start_entry_idx);
- 	}
- 
-+exit_put:
- 	put_callchain_entry(rctx);
- 
- 	return entry;
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index 7c7d5a27c568..02e52df7a02e 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -8101,7 +8101,8 @@ struct perf_callchain_entry *
+ perf_callchain(struct perf_event *event, struct pt_regs *regs)
+ {
+ 	bool kernel = !event->attr.exclude_callchain_kernel;
+-	bool user   = !event->attr.exclude_callchain_user;
++	bool user   = !event->attr.exclude_callchain_user &&
++		!(current->flags & PF_KTHREAD);
+ 	/* Disallow cross-task user callchains. */
+ 	bool crosstask = event->ctx->task && event->ctx->task != current;
+ 	const u32 max_stack = event->attr.sample_max_stack;
 -- 
 2.47.2
 
