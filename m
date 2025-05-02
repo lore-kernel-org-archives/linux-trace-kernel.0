@@ -1,255 +1,180 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4353E23B0
-	for <linux-trace-kernel@vger.kernel.org>; Fri,  2 May 2025 15:42:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A78325E456
+	for <linux-trace-kernel@vger.kernel.org>; Fri,  2 May 2025 16:38:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746200554; cv=none; b=g/xELnnJ0wxBo9+UsO3axTEvWLKUu5XemV4xxe3WU2X4+7KgaOyopeGlgfE2Y/kpMJgMh8sNRoTmtIDwJ3tFZanFMQgUQ6Zo32O6WPNOKloCgA7oyzGsrYJg9s7kp7kOjMEpVEbme93KqGdK9R1j9qCdQWSgg+P4SdtKSZttMN0=
+	t=1746203902; cv=none; b=UdCUt6VvOwpSiJ/YGuJTWzAlSgPLZ2ITndDhZJhT2OfpbirOTfJrhp9BrsX87eBfsrspfFFRplwgx+ioldMkzri4HO1KnoAy7Relgp9Gk1kii5s2z47BbHt96mQRF9B03wrW0OvaKqsu4CPqDcWpo09Xw7iOOiDHtelKKt6NX3s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746200554; c=relaxed/simple;
-	bh=Lgo3oPvJN4TmDwml+hlw26Vb+KFGfqwA06+QuXWnm/c=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=jG/nN6/vebhG22197B31ypYUheLtMUYdx/4sYeSRxhgOSPbLiwh4+lAPyGQlmxACLd4LjOQZMhXZz2An5ECAyIGa9Lcv5i0Sub6sYEFvsiWTvd31PjR5BzRh5ADaKhi2lc2NNpCFWC32kZo8FO8ojlgxs6qr+GUEgwddpOMhqlM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=CgGT/SJw; arc=none smtp.client-ip=170.10.133.124
+	s=arc-20240116; t=1746203902; c=relaxed/simple;
+	bh=XsE7SiV+aikMHOLaaXZ7a8kPrkm9AwB5yoxuMKmx1sQ=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=Gbc4ILc5kf5+d5IbDgMhb0kO41YYLQj9z0cXeNh9nxYOH/NyCWyZ1VSFg401vQsq6VGx25HC4CvjQmKzN5cR1DxUD7NooZ9q9ejwmvupDoa0dxgcECq1s6+qH5v4sdJXJvslgPco4/dREE/iYMtJJMjHVnbXEsOXhR/Zc7USVB8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=LGx84i8k; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CgGT/SJw"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LGx84i8k"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1746200551;
+	s=mimecast20190719; t=1746203899;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=T7cqDJLWyNwhnnHN+5VqQ5VJiv3rSNdDAibInwFuRIg=;
-	b=CgGT/SJwhCF4gPobCwIIC//xY1LVu+v5ceGXy4hKPQ68XGgUIxCLs9F0if2jYkUJub864d
-	ZMMzvh5juN1tEGzzgM9n8LaHcgfniBilgwub3gMjZ5/omcioyQB7qLJFrh4njEyjE7a8Si
-	HvkVeIJoM57wX3x9hoPHii1WBa2NLGY=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
+	 in-reply-to:in-reply-to:references:references;
+	bh=14Itu0wJcqKS8hAd7pT4xJxMeQ8wSKPFd/cQcnRkK64=;
+	b=LGx84i8kY2T9BL6D2VoQo0QYzwa8M4yyYSExh5iRfV1rsE9uHChD1roDYYFdHGuht9riKZ
+	FJki0wdvR/faRBACcD4WqchHsYNYUdBGWw4kBA0OsOyX6cp/Q+nkC2V7b+WTbYh56R4nx6
+	Sn/M2Z4wR1fVH9HhG206Wl/DlMtHpXY=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-458-CFoUtKAYPgWADp_2-CICCA-1; Fri, 02 May 2025 11:42:30 -0400
-X-MC-Unique: CFoUtKAYPgWADp_2-CICCA-1
-X-Mimecast-MFC-AGG-ID: CFoUtKAYPgWADp_2-CICCA_1746200549
-Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-39143311936so659016f8f.0
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 02 May 2025 08:42:29 -0700 (PDT)
+ us-mta-110-NbtRmBIRM_ioOcTyvDC3DA-1; Fri, 02 May 2025 12:38:18 -0400
+X-MC-Unique: NbtRmBIRM_ioOcTyvDC3DA-1
+X-Mimecast-MFC-AGG-ID: NbtRmBIRM_ioOcTyvDC3DA_1746203897
+Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-43ceeaf1524so9537145e9.1
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 02 May 2025 09:38:17 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746200549; x=1746805349;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=T7cqDJLWyNwhnnHN+5VqQ5VJiv3rSNdDAibInwFuRIg=;
-        b=QLU0XkPyjraLIdk7zd1WQhB8bmujJ2dF+k2uv6/G8iyHxZ6ScMcv2RdRY6yVE/XkYm
-         NUEPIZ75oPYxrny+DfqwlxM8VWrSneCm7sYNa9jJt+4ejsKlOptzkJxum8V7Uc0bSFC4
-         sr5x+1SQZ97CQhNSIkHQmJtfZsBrT2+tNLJgflR1qsuMB84+lGS73RVtrc1EFaKizzvu
-         nk9zFwpzlAjbqTu5y+63QAWc1lB0Ntv+7FcXbGmTKFuZiejeR6OFnzsOTbnMoRK0jcuD
-         NZo6d42PuLUDStG15q6kkrGR1n5TzraTGP7rSaCkWy/40yFCH5biIatji5zTXLE9Fo5x
-         mSmQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUG7pcG/OVyvaGzoAbWFqq15eCdR/Je2TT656JQpfE7ktr1hvSK6Ea02wczDACh3Daxzn1e2vJ3kBPNSG6FWFn5u7w=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyYMNjEHB4t6Z0wTfJ7QxcNX8tQGKFL12/a7l4YckGKN/LhA7lO
-	XwBHP72Ba7MAzoieAgcfLUks7L5Gye/ZN8WGLPcY2ifBUR9tjz1Fu+AK/UuQKL2uAqltBqcACZN
-	AwHppzF15WNMQxGjTJ25noG8WrGeoJfPyiDqxMPQ8+I4zdd0utR20cZ834Tl2zq6vccae8A==
-X-Gm-Gg: ASbGncuGFrs/nXa78p7QACQ1r70FgxNgF2rPHDqu7qvgWfXixCzyR3KqeXIEKZ+2qDw
-	KsbuC112CsqsHV4CBXHNIg/cbmVF8DbvruUkLXSWoUgzrVLPf7pUDCsWc5j4qirHllAf4joOvza
-	5tTR/8uCVnAAACVbh2iZmCCDXjajbQIn4iSuErJ6RL28eMh/A6Qw2ztytwiQK7KLZt6OidbNsDB
-	i+EipbehvylqWuTx0+i/9EU//kvSITTjvk4tloGngVhi0iebBkgdR9MdcGHH2ZW02BlYpdsHWFI
-	ZhgoIqd2LyrjdKor5cV5jkQ5+NecP8+xZwMYTDxIZRCmQqlvUWwzqKyfzwySVBZErRjsmO8GUAf
-	kCLbUH6OHJbEgGYX5eqr6DNQFEMLNHSWvQ2nxlzc=
-X-Received: by 2002:a05:6000:2c8:b0:3a0:7f90:2e2e with SMTP id ffacd0b85a97d-3a099ad6379mr2543664f8f.24.1746200548767;
-        Fri, 02 May 2025 08:42:28 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHksxJt4q2NvAKXafUh3Noz69LskLRP5kl9AuC6VrOlPInFhsJt/6w4PnefBiSeeay/3Kr9EQ==
-X-Received: by 2002:a05:6000:2c8:b0:3a0:7f90:2e2e with SMTP id ffacd0b85a97d-3a099ad6379mr2543613f8f.24.1746200548288;
-        Fri, 02 May 2025 08:42:28 -0700 (PDT)
-Received: from ?IPV6:2003:cb:c713:d600:afc5:4312:176f:3fb0? (p200300cbc713d600afc54312176f3fb0.dip0.t-ipconnect.de. [2003:cb:c713:d600:afc5:4312:176f:3fb0])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a099ae0c48sm2457341f8f.8.2025.05.02.08.42.26
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 02 May 2025 08:42:27 -0700 (PDT)
-Message-ID: <cc8e253f-5dd1-488d-b5a4-a9e0c0466ed3@redhat.com>
-Date: Fri, 2 May 2025 17:42:25 +0200
+        d=1e100.net; s=20230601; t=1746203897; x=1746808697;
+        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=14Itu0wJcqKS8hAd7pT4xJxMeQ8wSKPFd/cQcnRkK64=;
+        b=VEKxapx9POHha7n8UahO1fgKjBEaZ78me+zpt/4mxPdqjhQN2k3Kye/se/uicSeW/R
+         B1iAL9OaICR4uDPO53lQ3vrHYaN8qKKAppay7ld4Hhr8WbqtFz+q2q+Uyu3EN4/B+uD3
+         5S7qGloCzxRY5VeKsxB3SD5XShAPD397Nu4Nd4MkUjyqSCyO7d3b90kOrzoB7FwYEX7s
+         UThoknlKp3QnJasUzWCKbcAhIIlAPxZyfpBvNvA+xxWWca1/U4D1NVQHoukhDI9w2cVU
+         wwFSPejoa2MuPswuaNoMx+72bQd6AZZWDa/vTL+l7ANywd2KS2a/ODbtVzku6kNRmJ4/
+         R7gQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXaSJIpELm9yN8XD5omaDjadNrEmYVMa2NaEYXhuUYu9taf4a135dCMTUZopwHF8rmVXYoBAH82Dw+8PJyVAOmDJoM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxCtNNFdMCTYc2n+egVjOGILDlUbNYoBBeZlC5iMx9g4qElXNVg
+	OKcBwS8ZNh+BhblVKkrheQ7VV/bqvJB3APYJMmF5cCq+xpF+5g8pDBv7RDkGRSemHOBajgawGsf
+	++/W3bmjzjX9bWMie0aSCJROl4L8t3E4g00ViPqj246sSbuq3JfqX21jvRqZDFqyK8gfqZg==
+X-Gm-Gg: ASbGncuGRTDd2r4ssOxp8tecCGuiXR/0AdYFL5ooiBk5bXSu7XmBBdz+vszh0frtk3A
+	XDt88XZT3NlVQuvYyxFNHJSG4Di3RjRSC+2cs+oav6Z/J9DGARJh8BOLOHfci2QlF8Y6iAPsfwk
+	7Y7d0l4tM7OdTN9xQmWknTbQARRt4xtKNV15nlnTGJ1/Hwe3t0IgNtXmsnNOweocYf+Mj5L1oKV
+	Dj/P3YP/rCCfR6DbLbvpFEjZ3G8LtwoYb36JZAMwe/Guz+y3JWF1PaA1cQVYQZJFLApDhOBQooY
+	ZdRc5u0deuTEj7mJLESTaIp9W3xkYH7biPgYrbNALGS2Z4JR
+X-Received: by 2002:a05:600c:528f:b0:43b:c857:e9d7 with SMTP id 5b1f17b1804b1-441bb852744mr33829295e9.5.1746203896743;
+        Fri, 02 May 2025 09:38:16 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEMHXR/p+bYllCeFUiu3mvj1rpI7ZOiyLrHoitDd00Nmz4qAV27N+1EVZD+X61FQi8x3pEBZA==
+X-Received: by 2002:a05:600c:528f:b0:43b:c857:e9d7 with SMTP id 5b1f17b1804b1-441bb852744mr33828185e9.5.1746203896267;
+        Fri, 02 May 2025 09:38:16 -0700 (PDT)
+Received: from vschneid-thinkpadt14sgen2i.remote.csb ([2001:861:43c1:5950:3e51:b684:9982:d4a2])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-441b2b28732sm94362125e9.37.2025.05.02.09.38.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 02 May 2025 09:38:15 -0700 (PDT)
+From: Valentin Schneider <vschneid@redhat.com>
+To: Dave Hansen <dave.hansen@intel.com>, Steven Rostedt <rostedt@goodmis.org>
+Cc: linux-kernel@vger.kernel.org, virtualization@lists.linux.dev,
+ linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
+ linux-riscv@lists.infradead.org, linux-perf-users@vger.kernel.org,
+ kvm@vger.kernel.org, linux-arch@vger.kernel.org,
+ linux-modules@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ rcu@vger.kernel.org, linux-hardening@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, bpf@vger.kernel.org, Juri Lelli
+ <juri.lelli@redhat.com>, Marcelo Tosatti <mtosatti@redhat.com>, Yair
+ Podemsky <ypodemsk@redhat.com>, Josh Poimboeuf <jpoimboe@kernel.org>,
+ Daniel Wagner <dwagner@suse.de>, Petr Tesarik <ptesarik@suse.com>, Nicolas
+ Saenz Julienne <nsaenz@amazon.com>, Frederic Weisbecker
+ <frederic@kernel.org>, "Paul E. McKenney" <paulmck@kernel.org>, Dave
+ Hansen <dave.hansen@linux.intel.com>, Sean Christopherson
+ <seanjc@google.com>, Juergen Gross <jgross@suse.com>, Ajay Kaher
+ <ajay.kaher@broadcom.com>, Alexey Makhalov
+ <alexey.amakhalov@broadcom.com>, Broadcom internal kernel review list
+ <bcm-kernel-feedback-list@broadcom.com>, Russell King
+ <linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Will
+ Deacon <will@kernel.org>, Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui
+ <kernel@xen0n.name>, Paul Walmsley <paul.walmsley@sifive.com>, Palmer
+ Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, Alexandre
+ Ghiti <alex@ghiti.fr>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar
+ <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, x86@kernel.org, "H.
+ Peter Anvin" <hpa@zytor.com>, Peter Zijlstra <peterz@infradead.org>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim
+ <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexander
+ Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa
+ <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, Adrian Hunter
+ <adrian.hunter@intel.com>, "Liang, Kan" <kan.liang@linux.intel.com>, Pawan
+ Gupta <pawan.kumar.gupta@linux.intel.com>, Paolo Bonzini
+ <pbonzini@redhat.com>, Arnd Bergmann <arnd@arndb.de>, Jason Baron
+ <jbaron@akamai.com>, Ard Biesheuvel <ardb@kernel.org>, Luis Chamberlain
+ <mcgrof@kernel.org>, Petr Pavlu <petr.pavlu@suse.com>, Sami Tolvanen
+ <samitolvanen@google.com>, Daniel Gomez <da.gomez@samsung.com>, Naveen N
+ Rao <naveen@kernel.org>, Anil S Keshavamurthy
+ <anil.s.keshavamurthy@intel.com>, "David S. Miller" <davem@davemloft.net>,
+ Masami Hiramatsu <mhiramat@kernel.org>, Neeraj Upadhyay
+ <neeraj.upadhyay@kernel.org>, Joel Fernandes <joel@joelfernandes.org>,
+ Josh Triplett <josh@joshtriplett.org>, Boqun Feng <boqun.feng@gmail.com>,
+ Uladzislau Rezki <urezki@gmail.com>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Lai Jiangshan <jiangshanlai@gmail.com>,
+ Zqiang <qiang.zhang1211@gmail.com>, Vincent Guittot
+ <vincent.guittot@linaro.org>, Dietmar Eggemann <dietmar.eggemann@arm.com>,
+ Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>, Kees Cook
+ <kees@kernel.org>, Shuah Khan <shuah@kernel.org>, Masahiro Yamada
+ <masahiroy@kernel.org>, Alice Ryhl <aliceryhl@google.com>, Miguel Ojeda
+ <ojeda@kernel.org>, "Mike Rapoport (Microsoft)" <rppt@kernel.org>, Rong Xu
+ <xur@google.com>, Rafael Aquini <aquini@redhat.com>, Song Liu
+ <song@kernel.org>, Andrii Nakryiko <andrii@kernel.org>, Dan Carpenter
+ <dan.carpenter@linaro.org>, Brian Gerst <brgerst@gmail.com>, "Kirill A.
+ Shutemov" <kirill.shutemov@linux.intel.com>, Benjamin Berg
+ <benjamin.berg@intel.com>, Vishal Annapurve <vannapurve@google.com>, Randy
+ Dunlap <rdunlap@infradead.org>, John Stultz <jstultz@google.com>, Tiezhu
+ Yang <yangtiezhu@loongson.cn>
+Subject: Re: [PATCH v5 00/25] context_tracking,x86: Defer some IPIs until a
+ user->kernel transition
+In-Reply-To: <34535b8c-35c8-4a7f-8363-f5a9c5a69023@intel.com>
+References: <20250429113242.998312-1-vschneid@redhat.com>
+ <fefcd1a6-f146-4f3c-b28b-f907e7346ddd@intel.com>
+ <20250430132047.01d48647@gandalf.local.home>
+ <019f6713-cfbd-466b-8fb5-dcd982cf8644@intel.com>
+ <20250430154228.1d6306b4@gandalf.local.home>
+ <a6b3a331-1ff3-4490-b300-a62b3c21578d@intel.com>
+ <xhsmhr0179w1i.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
+ <34535b8c-35c8-4a7f-8363-f5a9c5a69023@intel.com>
+Date: Fri, 02 May 2025 18:38:12 +0200
+Message-ID: <xhsmho6wb9de3.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 07/12] khugepaged: add mTHP support
-To: Nico Pache <npache@redhat.com>, Jann Horn <jannh@google.com>
-Cc: linux-mm@kvack.org, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- akpm@linux-foundation.org, corbet@lwn.net, rostedt@goodmis.org,
- mhiramat@kernel.org, mathieu.desnoyers@efficios.com, baohua@kernel.org,
- baolin.wang@linux.alibaba.com, ryan.roberts@arm.com, willy@infradead.org,
- peterx@redhat.com, ziy@nvidia.com, wangkefeng.wang@huawei.com,
- usamaarif642@gmail.com, sunnanyong@huawei.com, vishal.moola@gmail.com,
- thomas.hellstrom@linux.intel.com, yang@os.amperecomputing.com,
- kirill.shutemov@linux.intel.com, aarcange@redhat.com, raquini@redhat.com,
- dev.jain@arm.com, anshuman.khandual@arm.com, catalin.marinas@arm.com,
- tiwai@suse.de, will@kernel.org, dave.hansen@linux.intel.com, jack@suse.cz,
- cl@gentwo.org, jglisse@google.com, surenb@google.com, zokeefe@google.com,
- hannes@cmpxchg.org, rientjes@google.com, mhocko@suse.com,
- rdunlap@infradead.org, lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com
-References: <20250428181218.85925-1-npache@redhat.com>
- <20250428181218.85925-8-npache@redhat.com>
- <CAG48ez2oge4xs1pSz_T9L46g=wQnFyC63kQKsXwbHGRWAxQ+aw@mail.gmail.com>
- <CAA1CXcBHJbs7_DGVR929NOD5G4nkJ3LguDrL9itV8-QS+BNUpg@mail.gmail.com>
- <b6093db0-9b18-4b70-81bd-6c02e80ac9fa@redhat.com>
- <CAG48ez0oe6oZ0QTDWr1rtUJFFTLO69sVpdoCmo+CxZUb6L1seg@mail.gmail.com>
- <b91af3df-643e-4131-96e7-2680f322194d@redhat.com>
- <CAG48ez25Wo7BSt4dn3v+xO0mojvjtBpd02kaAu7kn_+AfgSrNQ@mail.gmail.com>
- <CAA1CXcBn3eZpcdzsG5DRNBa+rFBg1dQjssC=SYyXW5_7fDmwXg@mail.gmail.com>
-From: David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <CAA1CXcBn3eZpcdzsG5DRNBa+rFBg1dQjssC=SYyXW5_7fDmwXg@mail.gmail.com>
 X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: C1fCex9FpCKatbcYNaEmVuKBSQug3OxvSp1v3Yn97uQ_1746200549
+X-Mimecast-MFC-PROC-ID: fjBHE313R8ReBmsyjH7cp62H_yezWRAdSN-9xP7fTuw_1746203897
 X-Mimecast-Originator: redhat.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-On 02.05.25 17:30, Nico Pache wrote:
-> On Fri, May 2, 2025 at 9:27 AM Jann Horn <jannh@google.com> wrote:
->>
->> On Fri, May 2, 2025 at 5:19 PM David Hildenbrand <david@redhat.com> wrote:
->>>
->>> On 02.05.25 14:50, Jann Horn wrote:
->>>> On Fri, May 2, 2025 at 8:29 AM David Hildenbrand <david@redhat.com> wrote:
->>>>> On 02.05.25 00:29, Nico Pache wrote:
->>>>>> On Wed, Apr 30, 2025 at 2:53 PM Jann Horn <jannh@google.com> wrote:
->>>>>>>
->>>>>>> On Mon, Apr 28, 2025 at 8:12 PM Nico Pache <npache@redhat.com> wrote:
->>>>>>>> Introduce the ability for khugepaged to collapse to different mTHP sizes.
->>>>>>>> While scanning PMD ranges for potential collapse candidates, keep track
->>>>>>>> of pages in KHUGEPAGED_MIN_MTHP_ORDER chunks via a bitmap. Each bit
->>>>>>>> represents a utilized region of order KHUGEPAGED_MIN_MTHP_ORDER ptes. If
->>>>>>>> mTHPs are enabled we remove the restriction of max_ptes_none during the
->>>>>>>> scan phase so we dont bailout early and miss potential mTHP candidates.
->>>>>>>>
->>>>>>>> After the scan is complete we will perform binary recursion on the
->>>>>>>> bitmap to determine which mTHP size would be most efficient to collapse
->>>>>>>> to. max_ptes_none will be scaled by the attempted collapse order to
->>>>>>>> determine how full a THP must be to be eligible.
->>>>>>>>
->>>>>>>> If a mTHP collapse is attempted, but contains swapped out, or shared
->>>>>>>> pages, we dont perform the collapse.
->>>>>>> [...]
->>>>>>>> @@ -1208,11 +1211,12 @@ static int collapse_huge_page(struct mm_struct *mm, unsigned long address,
->>>>>>>>            vma_start_write(vma);
->>>>>>>>            anon_vma_lock_write(vma->anon_vma);
->>>>>>>>
->>>>>>>> -       mmu_notifier_range_init(&range, MMU_NOTIFY_CLEAR, 0, mm, address,
->>>>>>>> -                               address + HPAGE_PMD_SIZE);
->>>>>>>> +       mmu_notifier_range_init(&range, MMU_NOTIFY_CLEAR, 0, mm, _address,
->>>>>>>> +                               _address + (PAGE_SIZE << order));
->>>>>>>>            mmu_notifier_invalidate_range_start(&range);
->>>>>>>>
->>>>>>>>            pmd_ptl = pmd_lock(mm, pmd); /* probably unnecessary */
->>>>>>>> +
->>>>>>>>            /*
->>>>>>>>             * This removes any huge TLB entry from the CPU so we won't allow
->>>>>>>>             * huge and small TLB entries for the same virtual address to
->>>>>>>
->>>>>>> It's not visible in this diff, but we're about to do a
->>>>>>> pmdp_collapse_flush() here. pmdp_collapse_flush() tears down the
->>>>>>> entire page table, meaning it tears down 2MiB of address space; and it
->>>>>>> assumes that the entire page table exclusively corresponds to the
->>>>>>> current VMA.
->>>>>>>
->>>>>>> I think you'll need to ensure that the pmdp_collapse_flush() only
->>>>>>> happens for full-size THP, and that mTHP only tears down individual
->>>>>>> PTEs in the relevant range. (That code might get a bit messy, since
->>>>>>> the existing THP code tears down PTEs in a detached page table, while
->>>>>>> mTHP would have to do it in a still-attached page table.)
->>>>>> Hi Jann!
->>>>>>
->>>>>> I was under the impression that this is needed to prevent GUP-fast
->>>>>> races (and potentially others).
->>>>
->>>> Why would you need to touch the PMD entry to prevent GUP-fast races for mTHP?
->>>>
->>>>>> As you state here, conceptually the PMD case is, detach the PMD, do
->>>>>> the collapse, then reinstall the PMD (similarly to how the system
->>>>>> recovers from a failed PMD collapse). I tried to keep the current
->>>>>> locking behavior as it seemed the easiest way to get it right (and not
->>>>>> break anything). So I keep the PMD detaching and reinstalling for the
->>>>>> mTHP case too. As Hugh points out I am releasing the anon lock too
->>>>>> early. I will comment further on his response.
->>>>
->>>> As I see it, you're not "keeping" the current locking behavior; you're
->>>> making a big implicit locking change by reusing a codepath designed
->>>> for PMD THP for mTHP, where the page table may not be exclusively
->>>> owned by one VMA.
->>>
->>> That is not the intention. The intention in this series (at least as we
->>> discussed) was to not do it across VMAs; that is considered the next
->>> logical step (which will be especially relevant on arm64 IMHO).
->>
->> Ah, so for now this is supposed to only work for PTEs which are in a
->> PMD which is fully covered by the VMA? So if I make a 16KiB VMA and
->> then try to collapse its contents to an order-2 mTHP page, that should
->> just not work?
-> Correct! As I started in reply to Hugh, the locking conditions explode
-> if we drop that requirement.
+On 02/05/25 06:53, Dave Hansen wrote:
+> On 5/2/25 02:55, Valentin Schneider wrote:
+>> My gripe with that was having two separate mechanisms
+>> - super early entry around SWITCH_TO_KERNEL_CR3)
+>> - later entry at context tracking
+>
+> What do you mean by "later entry"?
+>
 
-Right. Adding to that, one could evaluate how much we would gain by 
-trying to lock, say, up to $MAGIC_NUMBER related VMAs.
+I meant the point at which the deferred operation is run in the current
+patches, i.e. ct_kernel_enter() - kernel entry from the PoV of context
+tracking.
 
-Of course, if no other VMA spans the PMD, and the VMA only covers it 
-partially, it is likely still fine as long as we hold the mmap lock in 
-write mode.
+> All of the paths to enter the kernel from userspace have some
+> SWITCH_TO_KERNEL_CR3 variant. If they didn't, the userspace that they
+> entered from could have attacked the kernel with Meltdown.
+>
+> I'm theorizing that if this is _just_ about avoiding TLB flush IPIs that
+> you can get away with a single mechanism.
 
-But probably, looking into a different locking scheme would be 
-beneficial at this point.
+So right now there would indeed be the TLB flush IPIs, but also the
+text_poke() ones (sync_core() after patching text).
 
--- 
-Cheers,
+These are the two NOHZ-breaking IPIs that show up on my HP box, and that I
+also got reports for from folks using NOHZ_FULL + CPU isolation in
+production, mostly on SPR "edge enhanced" type of systems.
 
-David / dhildenb
+There's been some other sources of IPIs that have been fixed with an ad-hoc
+solution - disable the mechanism for NOHZ_FULL CPUs or do it differently
+such that an IPI isn't required, e.g.
+
+  https://lore.kernel.org/lkml/ZJtBrybavtb1x45V@tpad/
+
+While I don't expect the list to grow much, it's unfortunately not just the
+TLB flush IPIs.
 
