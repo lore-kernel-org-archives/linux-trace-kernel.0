@@ -1,144 +1,221 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19C881E5B62;
-	Fri,  2 May 2025 11:23:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 413E4211A1E
+	for <linux-trace-kernel@vger.kernel.org>; Fri,  2 May 2025 12:50:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746185014; cv=none; b=osDXjMz7z3TvR5RrTV/Pr9VN+i+4UsqNkekmmHrcX8UD7kONHuXPO59sxibhAp05FwEE9AkRCpGa3Oz1MqB7oMnm9SIYUUKehsyyOi6aFqsZLNuzxKIfnatunEPPGzT8pxsbi4w9Opvd/JQGZEPx0lIN3hmjD7f9NK9FWnFEKno=
+	t=1746190245; cv=none; b=ViLXjDFuGkq5myN/cPP/zgkcpdieXP/sHWeLtmz9q+ecpIy2qWZhoKirqwEYZyTsm0EwHSIAxPSlW6mA1CdEsTZ/Ej2CURSKLbt8v2NShvdaNnd2LadDdjvcRDIiWto3NugV1n3zMLhqPiLJtNwHWACVh/ykb3J5imWDjznWKPs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746185014; c=relaxed/simple;
-	bh=PRPW/uDt3qcKT5KOPbhmERJnNbucXaeqN2L1IjyyPX4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aUCWQpoSrcP0KEtS9ljATKEOt7WiXA5RQ2z+e0iHBPRJeKQCPi3tt0EeYalYNgp2ATSgIPh+L2QvHQlqOv9R+GpI/hsa+uZofrQvEZLA+bgRvMLfVVWYFA+fIWQ5+1a1mWqy87yKc5dwVNsHTfdkX6Kp7houkXPsPp4kxzVElJo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=lmV94JNE; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1746190245; c=relaxed/simple;
+	bh=yJ2br5vO6A0anKaplCB0lpB6gJg7j9WiiLocIpMSJFE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=s9n0BDbRnSrqcvzjv9kEopODUsQ1ykeBU4BOjvWBq/LxibGeQLi/pn/Tx6jyWlAWqQZuXIY2mdXm8v/l7ES0M+oWcUGVtX7L15iN3fS9nqSwF1wcsBD1nLJpqIauM3tEojMWzDmnICPPlE73sPbw5SI6nb5xSabTTmsGo5r5a8g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=J0DPn0sc; arc=none smtp.client-ip=209.85.208.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="lmV94JNE"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=PRPW/uDt3qcKT5KOPbhmERJnNbucXaeqN2L1IjyyPX4=; b=lmV94JNEzV4MsUJuxpPUrg3Bax
-	VPmVO1/zySgMAd5F2IJnFvPiwZNPECAQ1noECVKMioFjFmA+n5SOAzV+kGbk/f9S1iWtVP9rLg6cZ
-	hHF7SAR0m7IaJh5tCHy2qA/R/vkevPz7ZR3+xa+Zh5GSLdg0ezbI6iHsuifF9HE00+OjyODMdnQyb
-	JkPl44vhH6EmamOKaWacZeeUgT5U6RxA5F79Ex/83F13pJOquOWPbK7ely8gHy1uVeRQNWbA0aBQP
-	f+nYHty39Jk6K+NlHv/lPYoCn7B5BgUPqoEMb82IHPQShd8FJim54uJ17ucrfOJGKm432KMXzRw1R
-	RwhYSB9w==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uAoTJ-0000000FKnO-0XWf;
-	Fri, 02 May 2025 11:22:27 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 6C1A530057C; Fri,  2 May 2025 13:22:16 +0200 (CEST)
-Date: Fri, 2 May 2025 13:22:16 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Dave Hansen <dave.hansen@intel.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>,
-	Valentin Schneider <vschneid@redhat.com>,
-	linux-kernel@vger.kernel.org, virtualization@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
-	linux-riscv@lists.infradead.org, linux-perf-users@vger.kernel.org,
-	kvm@vger.kernel.org, linux-arch@vger.kernel.org,
-	linux-modules@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	rcu@vger.kernel.org, linux-hardening@vger.kernel.org,
-	linux-kselftest@vger.kernel.org, bpf@vger.kernel.org,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Marcelo Tosatti <mtosatti@redhat.com>,
-	Yair Podemsky <ypodemsk@redhat.com>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Daniel Wagner <dwagner@suse.de>, Petr Tesarik <ptesarik@suse.com>,
-	Nicolas Saenz Julienne <nsaenz@amazon.com>,
-	Frederic Weisbecker <frederic@kernel.org>,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Sean Christopherson <seanjc@google.com>,
-	Juergen Gross <jgross@suse.com>,
-	Ajay Kaher <ajay.kaher@broadcom.com>,
-	Alexey Makhalov <alexey.amakhalov@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Russell King <linux@armlinux.org.uk>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	"Liang, Kan" <kan.liang@linux.intel.com>,
-	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-	Paolo Bonzini <pbonzini@redhat.com>, Arnd Bergmann <arnd@arndb.de>,
-	Jason Baron <jbaron@akamai.com>, Ard Biesheuvel <ardb@kernel.org>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Petr Pavlu <petr.pavlu@suse.com>,
-	Sami Tolvanen <samitolvanen@google.com>,
-	Daniel Gomez <da.gomez@samsung.com>,
-	Naveen N Rao <naveen@kernel.org>,
-	Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
-	Joel Fernandes <joel@joelfernandes.org>,
-	Josh Triplett <josh@joshtriplett.org>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Uladzislau Rezki <urezki@gmail.com>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Lai Jiangshan <jiangshanlai@gmail.com>,
-	Zqiang <qiang.zhang1211@gmail.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-	Kees Cook <kees@kernel.org>, Shuah Khan <shuah@kernel.org>,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Miguel Ojeda <ojeda@kernel.org>,
-	"Mike Rapoport (Microsoft)" <rppt@kernel.org>,
-	Rong Xu <xur@google.com>, Rafael Aquini <aquini@redhat.com>,
-	Song Liu <song@kernel.org>, Andrii Nakryiko <andrii@kernel.org>,
-	Dan Carpenter <dan.carpenter@linaro.org>,
-	Brian Gerst <brgerst@gmail.com>,
-	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-	Benjamin Berg <benjamin.berg@intel.com>,
-	Vishal Annapurve <vannapurve@google.com>,
-	Randy Dunlap <rdunlap@infradead.org>,
-	John Stultz <jstultz@google.com>,
-	Tiezhu Yang <yangtiezhu@loongson.cn>
-Subject: Re: [PATCH v5 00/25] context_tracking,x86: Defer some IPIs until a
- user->kernel transition
-Message-ID: <20250502112216.GZ4198@noisy.programming.kicks-ass.net>
-References: <20250429113242.998312-1-vschneid@redhat.com>
- <fefcd1a6-f146-4f3c-b28b-f907e7346ddd@intel.com>
- <20250430132047.01d48647@gandalf.local.home>
- <019f6713-cfbd-466b-8fb5-dcd982cf8644@intel.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="J0DPn0sc"
+Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-5f438523d6fso6966a12.1
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 02 May 2025 05:50:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1746190241; x=1746795041; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Ld8hRinh9GbkBEMDrzL6i5e2SIxAQjM/p85QdAMHIYE=;
+        b=J0DPn0scdHyczIHPToxyODRtPobzWzxlQgBSb8nfrxPmCWXoXaKrOUm/U3yjHc2xIb
+         KUTVH+o/Lc6STJRJlEOixQuOkgVxBE/irVpnnNgzoZv2VjmXp1xK64OHHRzu8i+QIEsY
+         b23rKINdQJ+d2tUqYPDfn00dQ9mqRjWKsEfSo3+eAq1GY2sON9vpa5Axlx5Zy6/j+mE8
+         KDoB/fP+or8fh1ZrpC8VackeN5EuusR9FAcxGoUqMY5CwhySxzq98Znc57qhArPfrtCb
+         EnN4isZO7Oy0OqhkIttGTAj0xmI2vIR3w2dlQX+TL15al6Y7eNO3GBxr2OtITguetm5/
+         2tmQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746190241; x=1746795041;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Ld8hRinh9GbkBEMDrzL6i5e2SIxAQjM/p85QdAMHIYE=;
+        b=d60rWLI3EoLdKqYtk4qKY2znLYvoVZvG3HClauF2CWGyih5PSwPoxpcApecuZ/yQy+
+         AOl7OPGBSLabX8HM8tLbH++jecTKG7zqk29h+RsxSgjpQUMUqArVAX+LGhEUzHHSifQ1
+         ubws1nxVCBSYOrNmz1notfbxgNHieitMG0A0WH1f2SERnjAAMX+XIy42oigcWGOrCkYI
+         azXEcUb7FSd8MeLxWJcrvC0MTkkomtm3QtRbFZzi4g+EtoQBrWx11yaV+OpEhBn42n35
+         oJXvzqpVjDnT2dsXH1bJWhToq0RV+CyukAdU4cf6ACAllsNeHb1KZDzbmvhTr8RnxpN+
+         IstA==
+X-Forwarded-Encrypted: i=1; AJvYcCWBkMDrWlPKUuXObSltKEeKaGEKEqsBIQ8J8QNmsTsJxLMs3OgafBZGfPTTRtjkHy+WX971CZW7sT8nJwOuWEIRabs=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw9fZuTKtDweq2GqA2X/5T3hz1ZLOLh/21N1YpVyXnCofKoC1mk
+	389RCoqJw6YG/lTh/1JSvclhYgsUliFXKl9VXMoMvuvUvL9tmu+D8VQmzmanvh0HHocGwUV5ksm
+	Lpxd6nuM+VjZzq2yuv6TDPp16gHJY0P/Pd9y5
+X-Gm-Gg: ASbGncsCgtucz2TdZMFORtnkn8DQEfQVn0ea61/UZUlStNVU7ubk0v16PeDse1PkXr5
+	WCJL4Hj30yDX8uLjCbcrUp9G/9MQxeSB+XQVivf7wL+kvAhSz/5EjsSjYcEhe5GdxJriaded5Td
+	xpDG4lUgH1jFGB4J8yxDbxUjHA/aSnvIZsJ8m6bWgSF1ShlP/B9A==
+X-Google-Smtp-Source: AGHT+IG3MxGSNZIU/DLDRhXYOvvIy6yvhn86oGlso7zA/bv5//6dzg5601r9+ubOpvul9MK0F9INy9LM5qMNZeJUT5g=
+X-Received: by 2002:aa7:c599:0:b0:5de:bcd9:4aa with SMTP id
+ 4fb4d7f45d1cf-5f918c09629mr179021a12.3.1746190241144; Fri, 02 May 2025
+ 05:50:41 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <019f6713-cfbd-466b-8fb5-dcd982cf8644@intel.com>
+References: <20250428181218.85925-1-npache@redhat.com> <20250428181218.85925-8-npache@redhat.com>
+ <CAG48ez2oge4xs1pSz_T9L46g=wQnFyC63kQKsXwbHGRWAxQ+aw@mail.gmail.com>
+ <CAA1CXcBHJbs7_DGVR929NOD5G4nkJ3LguDrL9itV8-QS+BNUpg@mail.gmail.com> <b6093db0-9b18-4b70-81bd-6c02e80ac9fa@redhat.com>
+In-Reply-To: <b6093db0-9b18-4b70-81bd-6c02e80ac9fa@redhat.com>
+From: Jann Horn <jannh@google.com>
+Date: Fri, 2 May 2025 14:50:05 +0200
+X-Gm-Features: ATxdqUHoBHrob4F884q8RfFXZYe_rdAyjR_yWnJbdQTKUjzn_Qy_PjvRzckdGXk
+Message-ID: <CAG48ez0oe6oZ0QTDWr1rtUJFFTLO69sVpdoCmo+CxZUb6L1seg@mail.gmail.com>
+Subject: Re: [PATCH v5 07/12] khugepaged: add mTHP support
+To: David Hildenbrand <david@redhat.com>, Nico Pache <npache@redhat.com>
+Cc: linux-mm@kvack.org, linux-doc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	akpm@linux-foundation.org, corbet@lwn.net, rostedt@goodmis.org, 
+	mhiramat@kernel.org, mathieu.desnoyers@efficios.com, baohua@kernel.org, 
+	baolin.wang@linux.alibaba.com, ryan.roberts@arm.com, willy@infradead.org, 
+	peterx@redhat.com, ziy@nvidia.com, wangkefeng.wang@huawei.com, 
+	usamaarif642@gmail.com, sunnanyong@huawei.com, vishal.moola@gmail.com, 
+	thomas.hellstrom@linux.intel.com, yang@os.amperecomputing.com, 
+	kirill.shutemov@linux.intel.com, aarcange@redhat.com, raquini@redhat.com, 
+	dev.jain@arm.com, anshuman.khandual@arm.com, catalin.marinas@arm.com, 
+	tiwai@suse.de, will@kernel.org, dave.hansen@linux.intel.com, jack@suse.cz, 
+	cl@gentwo.org, jglisse@google.com, surenb@google.com, zokeefe@google.com, 
+	hannes@cmpxchg.org, rientjes@google.com, mhocko@suse.com, 
+	rdunlap@infradead.org, lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Apr 30, 2025 at 11:07:35AM -0700, Dave Hansen wrote:
+On Fri, May 2, 2025 at 8:29=E2=80=AFAM David Hildenbrand <david@redhat.com>=
+ wrote:
+> On 02.05.25 00:29, Nico Pache wrote:
+> > On Wed, Apr 30, 2025 at 2:53=E2=80=AFPM Jann Horn <jannh@google.com> wr=
+ote:
+> >>
+> >> On Mon, Apr 28, 2025 at 8:12=E2=80=AFPM Nico Pache <npache@redhat.com>=
+ wrote:
+> >>> Introduce the ability for khugepaged to collapse to different mTHP si=
+zes.
+> >>> While scanning PMD ranges for potential collapse candidates, keep tra=
+ck
+> >>> of pages in KHUGEPAGED_MIN_MTHP_ORDER chunks via a bitmap. Each bit
+> >>> represents a utilized region of order KHUGEPAGED_MIN_MTHP_ORDER ptes.=
+ If
+> >>> mTHPs are enabled we remove the restriction of max_ptes_none during t=
+he
+> >>> scan phase so we dont bailout early and miss potential mTHP candidate=
+s.
+> >>>
+> >>> After the scan is complete we will perform binary recursion on the
+> >>> bitmap to determine which mTHP size would be most efficient to collap=
+se
+> >>> to. max_ptes_none will be scaled by the attempted collapse order to
+> >>> determine how full a THP must be to be eligible.
+> >>>
+> >>> If a mTHP collapse is attempted, but contains swapped out, or shared
+> >>> pages, we dont perform the collapse.
+> >> [...]
+> >>> @@ -1208,11 +1211,12 @@ static int collapse_huge_page(struct mm_struc=
+t *mm, unsigned long address,
+> >>>          vma_start_write(vma);
+> >>>          anon_vma_lock_write(vma->anon_vma);
+> >>>
+> >>> -       mmu_notifier_range_init(&range, MMU_NOTIFY_CLEAR, 0, mm, addr=
+ess,
+> >>> -                               address + HPAGE_PMD_SIZE);
+> >>> +       mmu_notifier_range_init(&range, MMU_NOTIFY_CLEAR, 0, mm, _add=
+ress,
+> >>> +                               _address + (PAGE_SIZE << order));
+> >>>          mmu_notifier_invalidate_range_start(&range);
+> >>>
+> >>>          pmd_ptl =3D pmd_lock(mm, pmd); /* probably unnecessary */
+> >>> +
+> >>>          /*
+> >>>           * This removes any huge TLB entry from the CPU so we won't =
+allow
+> >>>           * huge and small TLB entries for the same virtual address t=
+o
+> >>
+> >> It's not visible in this diff, but we're about to do a
+> >> pmdp_collapse_flush() here. pmdp_collapse_flush() tears down the
+> >> entire page table, meaning it tears down 2MiB of address space; and it
+> >> assumes that the entire page table exclusively corresponds to the
+> >> current VMA.
+> >>
+> >> I think you'll need to ensure that the pmdp_collapse_flush() only
+> >> happens for full-size THP, and that mTHP only tears down individual
+> >> PTEs in the relevant range. (That code might get a bit messy, since
+> >> the existing THP code tears down PTEs in a detached page table, while
+> >> mTHP would have to do it in a still-attached page table.)
+> > Hi Jann!
+> >
+> > I was under the impression that this is needed to prevent GUP-fast
+> > races (and potentially others).
 
-> Both AMD and Intel have hardware to do it. ARM CPUs do it too, I think.
-> You can go buy the Intel hardware off the shelf today.
+Why would you need to touch the PMD entry to prevent GUP-fast races for mTH=
+P?
 
-To be fair, the Intel RAR thing is pretty horrific :-( Definitely
-sub-par compared to the AMD and ARM things.
+> > As you state here, conceptually the PMD case is, detach the PMD, do
+> > the collapse, then reinstall the PMD (similarly to how the system
+> > recovers from a failed PMD collapse). I tried to keep the current
+> > locking behavior as it seemed the easiest way to get it right (and not
+> > break anything). So I keep the PMD detaching and reinstalling for the
+> > mTHP case too. As Hugh points out I am releasing the anon lock too
+> > early. I will comment further on his response.
 
-Furthermore, the paper states it is a uarch feature for SPR with no
-guarantee future uarchs will get it (and to be fair, I'd prefer it if
-they didn't).
+As I see it, you're not "keeping" the current locking behavior; you're
+making a big implicit locking change by reusing a codepath designed
+for PMD THP for mTHP, where the page table may not be exclusively
+owned by one VMA.
 
-Furthermore, I suspect it will actually be slower than IPIs for anything
-with more than 64 logical CPUs due to reduced parallelism.
+> > As I familiarize myself with the code more, I do see potential code
+> > improvements/cleanups and locking improvements, but I was going to
+> > leave those to a later series.
+>
+> Right, the simplest approach on top of the current PMD collapse is to do
+> exactly what we do in the PMD case, including the locking: which
+> apparently is no completely the same yet :).
+>
+> Instead of installing a PMD THP, we modify the page table and remap that.
+>
+> Moving from the PMD lock to the PTE lock will not make a big change in
+> practice for most cases: we already must disable essentially all page
+> table walkers (vma lock, mmap lock in write, rmap lock in write).
+>
+> The PMDP clear+flush is primarily to disable the last possible set of
+> page table walkers: (1) HW modifications and (2) GUP-fast.
+>
+> So after the PMDP clear+flush we know that (A) HW can not modify the
+> pages concurrently and (B) GUP-fast cannot succeed anymore.
+>
+> The issue with PTEP clear+flush is that we will have to remember all PTE
+> values, to reset them if anything goes wrong. Using a single PMD value
+> is arguably simpler. And then, the benefit vs. complexity is unclear.
+>
+> Certainly something to look into later, but not a requirement for the
+> first support,
+
+As I understand, one rule we currently have in MM is that an operation
+that logically operates on one VMA (VMA 1) does not touch the page
+tables of other VMAs (VMA 2) in any way, except that it may walk page
+tables that cover address space that intersects with both VMA 1 and
+VMA 2, and create such page tables if they are missing.
+
+This proposed patch changes that, without explicitly discussing this
+locking change.
+
+Just as one example: I think this patch retracts a page table without
+VMA-locking the relevant address space (we hold a VMA lock on VMA 1,
+but not on VMA 2), and we then drop the PMD lock after (temporarily)
+retracting the page table. At that point, I think a racing fault that
+uses the VMA-locked fastpath can observe the empty PMD, and can
+install a new page table? Then when collapse_huge_page() tries to
+re-add the retracted page table, I think we'll get a BUG_ON(). Similar
+thing with concurrent ftruncate() or such trying to zap PTEs, we can
+probably end up not zapping PTEs that should have been zapped?
+
+> The real challenge/benefit will be looking into avoiding taking all the
+> heavy weight locks. Dev has already been thinking about that. For mTHP
+> it might be easier than for THPs. Probably it will involve setting PTE
+> migration entries whenever we drop the PTL, and dealing with the
+> possibility of concurrent zapping of these migration entries.
