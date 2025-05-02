@@ -1,26 +1,26 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC21E20C48C;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9EA220D4F8;
 	Fri,  2 May 2025 20:53:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746219229; cv=none; b=PfyqwYt4LSOYss8u4KN13di35uvdmWIa0jNQuX1UCGr2PFzaH1wTM6mK2U1KRF/Xibh0Uw4QugrAPlWvyI0qJ6VxD7Hlk/Wt390Gg+fi/rmDmZw6W1I5lF+W+lu3A2NWgPd+h/Jm0780yUSHZsAj62XWSdDRCg6zenxfXI2fZRg=
+	t=1746219230; cv=none; b=ql4mbb7gKSaGDzj7yl7j6Mla+5dMXe+Oov+r3x4Iohcd2eX0d1TVXPnk8W8iNYxH3TyVqSrhOpRZAI9cMkrd5rdy6l3f6buHXxdyR6zWiE07+bSwpj3y0QruHLFgYY+gK1AWvht1EYF+hvE2DFTm6oM9WvX0jKVH1/aXzLtmiNQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746219229; c=relaxed/simple;
-	bh=cETHAQ1zqWANjfr1MjlhdGt4/vZ0FNpoIBmdpt8H8+w=;
+	s=arc-20240116; t=1746219230; c=relaxed/simple;
+	bh=KBSu9SzGK7jFP/cW6FtoJKxk4mpVMjFrcGbCGflAdck=;
 	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=MRSltqHYdKeceObxq14kQDbOPI3/OJ4frSYYKTfXtO0PuzXiJYH5emN37bqTXTI+wdyumVFQeL+VkOOBfiOXO7l5a8pHJBayPlVPDZYQCydsab9lLTx3BUzgD7eHGX8F2XEsmQqaCMrH7UnkyMqB1jAjK8mLb6jmr0PFeEXkNc4=
+	 Content-Type; b=CWtYh/90Twytbr5J2yEkmTcvY/0VWu2keyKAYwiEE1RT3/SVCWcgq1R9DJMEzrbGfttQEHG6EuJuOLHFivsQUlgopUcuweEP90ym9rgtLZYCtpa1CcAzMxAo57QZx3nRoJ6dwSIupdknneD8/ynDzVDuZyN9ntBHxB6/ZideEm4=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B7B5FC4CEEF;
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 617B9C4CEE4;
 	Fri,  2 May 2025 20:53:49 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.98.2)
 	(envelope-from <rostedt@goodmis.org>)
-	id 1uAxOH-000000006DZ-1sYm;
+	id 1uAxOH-000000006Ca-0Tst;
 	Fri, 02 May 2025 16:53:49 -0400
-Message-ID: <20250502205349.299144667@goodmis.org>
+Message-ID: <20250502205348.972501388@goodmis.org>
 User-Agent: quilt/0.68
-Date: Fri, 02 May 2025 16:51:56 -0400
+Date: Fri, 02 May 2025 16:51:54 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org,
  linux-trace-kernel@vger.kernel.org
@@ -28,8 +28,7 @@ Cc: Masami Hiramatsu <mhiramat@kernel.org>,
  Mark Rutland <mark.rutland@arm.com>,
  Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
  Andrew Morton <akpm@linux-foundation.org>
-Subject: [PATCH 09/12] tracing: branch: Use trace_tracing_is_on_cpu() instead of "disabled"
- field
+Subject: [PATCH 07/12] tracing: Do not use per CPU array_buffer.data->disabled for cpumask
 References: <20250502205147.283272733@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -41,38 +40,40 @@ Content-Type: text/plain; charset=UTF-8
 
 From: Steven Rostedt <rostedt@goodmis.org>
 
-The branch tracer currently checks the per CPU "disabled" field to know if
-tracing is enabled or not for the CPU. As the "disabled" value is not used
-anymore to turn of tracing generically, use tracing_tracer_is_on_cpu()
-instead.
+The per CPU "disabled" value was the original way to disable tracing when
+the tracing subsystem was first created. Today, the ring buffer
+infrastructure has its own way to disable tracing. In fact, things have
+changed so much since 2008 that many things ignore the disable flag.
+
+Do not bother setting the per CPU disabled flag of the array_buffer data
+to use to determine what CPUs can write to the buffer and only rely on the
+ring buffer code itself to disabled it.
 
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- kernel/trace/trace_branch.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ kernel/trace/trace.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-diff --git a/kernel/trace/trace_branch.c b/kernel/trace/trace_branch.c
-index 6d08a5523ce0..2a1a06eb7939 100644
---- a/kernel/trace/trace_branch.c
-+++ b/kernel/trace/trace_branch.c
-@@ -32,7 +32,6 @@ probe_likely_condition(struct ftrace_likely_data *f, int val, int expect)
- {
- 	struct trace_array *tr = branch_tracer;
- 	struct trace_buffer *buffer;
--	struct trace_array_cpu *data;
- 	struct ring_buffer_event *event;
- 	struct trace_branch *entry;
- 	unsigned long flags;
-@@ -54,8 +53,7 @@ probe_likely_condition(struct ftrace_likely_data *f, int val, int expect)
- 
- 	raw_local_irq_save(flags);
- 	current->trace_recursion |= TRACE_BRANCH_BIT;
--	data = this_cpu_ptr(tr->array_buffer.data);
--	if (atomic_read(&data->disabled))
-+	if (!tracer_tracing_is_on_cpu(tr, raw_smp_process_id()))
- 		goto out;
- 
- 	trace_ctx = tracing_gen_ctx_flags(flags);
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index bae32778b292..8cee71683fe3 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -5048,7 +5048,6 @@ int tracing_set_cpumask(struct trace_array *tr,
+ 		 */
+ 		if (cpumask_test_cpu(cpu, tr->tracing_cpumask) &&
+ 				!cpumask_test_cpu(cpu, tracing_cpumask_new)) {
+-			atomic_inc(&per_cpu_ptr(tr->array_buffer.data, cpu)->disabled);
+ 			ring_buffer_record_disable_cpu(tr->array_buffer.buffer, cpu);
+ #ifdef CONFIG_TRACER_MAX_TRACE
+ 			ring_buffer_record_disable_cpu(tr->max_buffer.buffer, cpu);
+@@ -5056,7 +5055,6 @@ int tracing_set_cpumask(struct trace_array *tr,
+ 		}
+ 		if (!cpumask_test_cpu(cpu, tr->tracing_cpumask) &&
+ 				cpumask_test_cpu(cpu, tracing_cpumask_new)) {
+-			atomic_dec(&per_cpu_ptr(tr->array_buffer.data, cpu)->disabled);
+ 			ring_buffer_record_enable_cpu(tr->array_buffer.buffer, cpu);
+ #ifdef CONFIG_TRACER_MAX_TRACE
+ 			ring_buffer_record_enable_cpu(tr->max_buffer.buffer, cpu);
 -- 
 2.47.2
 
