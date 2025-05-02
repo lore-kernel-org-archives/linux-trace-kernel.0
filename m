@@ -1,143 +1,208 @@
-Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD50E22A819;
-	Fri,  2 May 2025 08:47:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08B661EE00D
+	for <linux-trace-kernel@vger.kernel.org>; Fri,  2 May 2025 09:55:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746175680; cv=none; b=uB9y/7d47/SF/o3MNEoErOWe/qjnpAdQnFKtuL9cL2sa4pfQlaygkkR7k0yf+PKLdMIFDAIDvp721WPiUEG5PsNfjMjTAgzCLzRVnq9wnSgQSFojRx+Am03/QZ2LP0Sdgt9lCLix0vU8yCb2i0shux16lc9h+NHE42N+rdFTCTU=
+	t=1746179734; cv=none; b=uWPeKDL0w9RZNrtwzsFObItF6qzmpmZcGdaC8z3k8nffEvgkcn4RKKN2k0z/3D18+L3oOICZi7b3BylMMdW89x0fP+W+qJ6y2KmuLZu3Z8FpfjRq0nB4a2ssjqyPduDx/bH1/rV1uJojYMdcJCA20f7N+HOPJsccQgEnZfH96p4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746175680; c=relaxed/simple;
-	bh=fpk/kMJFJOYpZ6RZKJXvQwwCwcQhzbrqgWEEwEcexaE=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PPEURs7XGuDwx87Kx8j53zTt+LhvWFlxnQH+zW1yHedSMbYXdciXmM51VGgT0DV1kjOuTB1d1mICY+KZsOn0poOgHFNCyD58bbyCSdsku68qWJG9NX9N57tliqNSFBYbCbTzZTmQco/41vpGUvqQgPq3B0ORAQU2aCFZpTy3FDw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OSF7K3Gf; arc=none smtp.client-ip=209.85.208.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746179734; c=relaxed/simple;
+	bh=DbOmruiDXqyCFuxtwBSQJBYz2MVx6spaIxjAgcz+Oj8=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=BqRnn3Hvw58kIDPEf8JN3NVXlAq7T646IiX08rJIRAXyMzYakQf+an+n4+0x1Q5kEvC79jChHXb458uHXWPBxX/3Hz16jB18/oSVpl21ReAwxQqpymQN8YFjkbLvSyh1nglFQS17FfauL2ZwG2QN/MsfdlvcKKRFineb8CQDyqA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=c/2SNfyP; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OSF7K3Gf"
-Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-5f728aeedacso2659361a12.2;
-        Fri, 02 May 2025 01:47:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746175677; x=1746780477; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=bh0Rl1k2uOksfrDAOIuz8rd+aIGZh9M8Pf/lIkHtO8I=;
-        b=OSF7K3Gfqc/YTeKBtrGVHpngZd23AosjYjNA2WLDk4MZ9ia4ho8f+ASfbVwHWaN1YB
-         gEcOwLZ+USo6YWuKuB9xq7CRQZQzySl9ViMfTMpsWDYMYIM70jwmSJOSFj+Puc7GzTnx
-         dYKYk14j9L0rfkPGq99aOssVUHz67X2UFHQsmOkvOdtSDUKyZvJ+me8ijkglH4C0ItuP
-         GFfAVS6Lp5xwZdjLxj6PsZC2CC+MBppjxGbAVAICx70sFW51pEs7yG4O/MiAAudhrjQV
-         TIc778xpaYSSSkJ2mtujks1LV3HAJSOk1AqnSzHmLL3MVzwjEfNmw3d1kuRbDMO2zu48
-         zN2Q==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="c/2SNfyP"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1746179728;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Lg/z+bj6Vp6Uwot26MZjMyBdidDV8u4Eq/gx3z2pwHw=;
+	b=c/2SNfyPnj7Q9740GNXSjSEGfyVQvNzu1kfdfMKK8wnyBIbvhRbHp3RRvGxNKhur9XdPjf
+	NDwyDWSpxQFULU3QRWu9NWeR+N9O9AzjSw5ovLXlF7ih/C0yxFkdnAFJo+C44m7WQjSUzY
+	0rKen5oRNhg+LimqnoXiLxENKrWjTpg=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-421-jOqARLM4NfuWIXUnSNlagw-1; Fri, 02 May 2025 05:55:27 -0400
+X-MC-Unique: jOqARLM4NfuWIXUnSNlagw-1
+X-Mimecast-MFC-AGG-ID: jOqARLM4NfuWIXUnSNlagw_1746179726
+Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-39126c3469fso484450f8f.3
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 02 May 2025 02:55:26 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746175677; x=1746780477;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=bh0Rl1k2uOksfrDAOIuz8rd+aIGZh9M8Pf/lIkHtO8I=;
-        b=mNOvWV5TNoe7Z/J4XnzbJgMKidRG1tQdPfNMrcc9aICFpNLxiKHAPp8n5v78E8dnci
-         slhoibEKv2Bx3vFin2UHHs3nRQpnD8EvqSZyW6T4JjucmqSunD3I4B+Hb98+HPDDGsN2
-         tmab869ojwEmNZoSr3gdDXY7oIxlbgyxRUQsPFB7PyQkIUaRjj4F8DMbCO+NNvLb8vBr
-         2rIP9J2kpRsdOMxpxPuY0EQ4aA1+rXrNSWMtrrb6FgM2WtCIIunIfmHYNDYT6MiQPShc
-         zfpBQhJ2NbLbhnrB+IXqO4731F3uF93PpPVJb6OXvp1N/S7h+Sru0/FB7hh0/951izMC
-         TgdA==
-X-Forwarded-Encrypted: i=1; AJvYcCUn6Kn1sWK2I/5kMsewAD7YaXi08F/kDxmZfG7IFHA8DGvWmWgtq4l8bmmhcCbl9yKFWIo=@vger.kernel.org, AJvYcCW7MNO9CRRiEqKBD63hJYHSoeThl5TYW1X02tTnDBJpS3A911uQiBNlok4bPaRVptT8sqQblwlmJizTEj14@vger.kernel.org, AJvYcCWqUJyh27FN/Cyi5lOuhAPNnbsocbWfEiKojqwwYhCCG2KIsTm1JRCarupwh1m8MHivwhPxN4Oyahk/2UK21zW2/wB9@vger.kernel.org
-X-Gm-Message-State: AOJu0YyWJbUOHW6PYtcHV+c8sFtrVeG6IjPHeZftecAU5M6B3SPWA6y9
-	dtDiwWh5WODsmJjPME8wEy6bMmKSxhMm6IlLPmua0vxejS9ebSFW
-X-Gm-Gg: ASbGnctt/dliQwLvG+I+av1QnH0MWLNuhvcqVM7dhpLlxI07rB5+tjse/oVCpw57GbS
-	eLl69UYqh10WO4Gaq+K8YIj9IwWAFZjLDy7P7PGh81pnmX8pQCQsbdwJFbtLA3/HdeSWv80sren
-	cl8Tm0jOsB3kbqroMkbTnCp5buDdQTC72C2OJDeXxRlCSgQMoJpEFk5m7gxvuZDqUHshygIiyaw
-	xCtncn6iGH2xjOrC3Hd0vlB5Er7OARXrYU0oETI1fGxspHCMVe7IJUX8eUqqCgwryqXzkLyTTUE
-	y5ZVkZmxs5ZKa70CJRlzt+4P6s0=
-X-Google-Smtp-Source: AGHT+IGLo5LwCnRs/f36Ec6GHgEp3262fW7h0ITzF1LNYmVO5/4odC3rPODA7HJ2f7d15r/5GhhTrQ==
-X-Received: by 2002:a05:6402:1e89:b0:5f4:d5d2:dd47 with SMTP id 4fb4d7f45d1cf-5fa789182c1mr1445887a12.25.1746175676569;
-        Fri, 02 May 2025 01:47:56 -0700 (PDT)
-Received: from krava ([173.38.220.54])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5fa77b8ffcfsm894913a12.64.2025.05.02.01.47.55
+        d=1e100.net; s=20230601; t=1746179726; x=1746784526;
+        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Lg/z+bj6Vp6Uwot26MZjMyBdidDV8u4Eq/gx3z2pwHw=;
+        b=OP6HLb+OjJNwTpoM8o/vTHLue3DnHL81ZRDVCxgUkQ7yQgmQH6yqxLITaNtXj8/4fw
+         hWjxI6jQnIvxNsg9HXDQeoIYXkEzAVcKxd8DkB+WTYTsiN8Au1fzBCwMj5t3n2V3uE2Z
+         88FXJiWuk5F4liaGRgDA0yWgOO13tReoZx891G3ubbjDaHsXeQZl4pILdSdWVNo2eeNE
+         iNWtVfWBP33aYKGZNh/5ylqaJ44ISa/oWW7Vv4OwxPQO3tb3jrOUiLPhwO6muNa0vMAz
+         up+d6yjljoPPRtaZCtRlLXGaGzpszCLeYgafBDvNUPG187X9M0H02ixiQ5N/Zp4wbdtg
+         MNbw==
+X-Forwarded-Encrypted: i=1; AJvYcCWn72HDsm4Jaekk8jL0Seh2TxlInmtVpEJxpZtgcVnDS0xxl9R0OvMBIf201fTHn/WTJbMeS6gJH13KS5K4Dg1gbwI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwWFPLN+dtSX201Lerc3koHA+Wv+I1Oyvqn091aohFdJN9lE2ov
+	BFR4pY/ZE9MhbIwH3NWx3R6/7F4ziOdgsxSlhIkvcS8BWsIpRLwwzMkglRTn1zeFGKMwWfv/Ji4
+	Djs7CGW/ufzMyBbVEP/i1JRZ15G37+YH50Yw4nurU+zDWs4yicSlEFLvSwMKGAWLpCkcjAg==
+X-Gm-Gg: ASbGnctbdb1hSNe8g+wBHjh/HSSX9VAz5HM3GJBG3mSSFImD607fkKRWc1fWS0KNv5e
+	xWGNFIMLoDwEfs3Aj+iKVgBg6rXEF2Hr1J3TFkpMm3//Lq3+dv8NRAXyGl2YETASvZAuK8IeWII
+	5g39hDmpRedLScKdnclmnawWvwDGhcsL2nGtfskBaVrROqx7KWLa3gnnpJ2KaZ5JAjPqtFP1BGK
+	6UYqtvpq82TSK/Txj3aD90ICCI6M8vTWyZk2FsmV1Z71MjX2fp6VGXKYtQ5fjP+VlW09AHNutah
+	4TXz3407YOfX6jqljI/bWDMehxCks/8hE9/EgKq2CT2GGWgS
+X-Received: by 2002:a05:6000:40cd:b0:391:4873:7940 with SMTP id ffacd0b85a97d-3a099aef847mr1613234f8f.54.1746179725737;
+        Fri, 02 May 2025 02:55:25 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGpWssSttWyCeyGY3CsU2VpUSZWAU4rNhFXcV+QIILeKOWgOhhc72G0KBYplClE77XLY5f7yg==
+X-Received: by 2002:a05:6000:40cd:b0:391:4873:7940 with SMTP id ffacd0b85a97d-3a099aef847mr1613170f8f.54.1746179725069;
+        Fri, 02 May 2025 02:55:25 -0700 (PDT)
+Received: from vschneid-thinkpadt14sgen2i.remote.csb ([2001:861:43c1:5950:3e51:b684:9982:d4a2])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a099ae3ccdsm1693329f8f.38.2025.05.02.02.55.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 02 May 2025 01:47:56 -0700 (PDT)
-From: Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date: Fri, 2 May 2025 10:47:53 +0200
-To: Alejandro Colomar <alx@kernel.org>
-Cc: Jiri Olsa <olsajiri@gmail.com>, Oleg Nesterov <oleg@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	x86@kernel.org, Song Liu <songliubraving@fb.com>,
-	Yonghong Song <yhs@fb.com>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Hao Luo <haoluo@google.com>, Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Alan Maguire <alan.maguire@oracle.com>,
-	David Laight <David.Laight@aculab.com>,
-	Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas@t-8ch.de>,
-	Ingo Molnar <mingo@kernel.org>
-Subject: Re: [PATCH 22/22] man2: Add uprobe syscall page
-Message-ID: <aBSGuZUzSZAzG8O-@krava>
-References: <20250421214423.393661-1-jolsa@kernel.org>
- <20250421214423.393661-23-jolsa@kernel.org>
- <42yzod7olktnj4meijj57j5peiojywo2d47d5gefnbmbwxfz4b@5ek6puondmck>
- <aAehVOlj-W5kVyW3@krava>
- <6rauz4mwgjpcmdbpny3pnh632t3wbequxni2iqdvs3bmjbzqzt@7cykilsvoggn>
- <cqih4qscx5jslfaq46bjcldt3dqoiyqg2dgbnif5eqa7ioygem@lorictjx3jrb>
+        Fri, 02 May 2025 02:55:24 -0700 (PDT)
+From: Valentin Schneider <vschneid@redhat.com>
+To: Dave Hansen <dave.hansen@intel.com>, Steven Rostedt <rostedt@goodmis.org>
+Cc: linux-kernel@vger.kernel.org, virtualization@lists.linux.dev,
+ linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
+ linux-riscv@lists.infradead.org, linux-perf-users@vger.kernel.org,
+ kvm@vger.kernel.org, linux-arch@vger.kernel.org,
+ linux-modules@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ rcu@vger.kernel.org, linux-hardening@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, bpf@vger.kernel.org, Juri Lelli
+ <juri.lelli@redhat.com>, Marcelo Tosatti <mtosatti@redhat.com>, Yair
+ Podemsky <ypodemsk@redhat.com>, Josh Poimboeuf <jpoimboe@kernel.org>,
+ Daniel Wagner <dwagner@suse.de>, Petr Tesarik <ptesarik@suse.com>, Nicolas
+ Saenz Julienne <nsaenz@amazon.com>, Frederic Weisbecker
+ <frederic@kernel.org>, "Paul E. McKenney" <paulmck@kernel.org>, Dave
+ Hansen <dave.hansen@linux.intel.com>, Sean Christopherson
+ <seanjc@google.com>, Juergen Gross <jgross@suse.com>, Ajay Kaher
+ <ajay.kaher@broadcom.com>, Alexey Makhalov
+ <alexey.amakhalov@broadcom.com>, Broadcom internal kernel review list
+ <bcm-kernel-feedback-list@broadcom.com>, Russell King
+ <linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Will
+ Deacon <will@kernel.org>, Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui
+ <kernel@xen0n.name>, Paul Walmsley <paul.walmsley@sifive.com>, Palmer
+ Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, Alexandre
+ Ghiti <alex@ghiti.fr>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar
+ <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, x86@kernel.org, "H.
+ Peter Anvin" <hpa@zytor.com>, Peter Zijlstra <peterz@infradead.org>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim
+ <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexander
+ Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa
+ <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, Adrian Hunter
+ <adrian.hunter@intel.com>, "Liang, Kan" <kan.liang@linux.intel.com>, Pawan
+ Gupta <pawan.kumar.gupta@linux.intel.com>, Paolo Bonzini
+ <pbonzini@redhat.com>, Arnd Bergmann <arnd@arndb.de>, Jason Baron
+ <jbaron@akamai.com>, Ard Biesheuvel <ardb@kernel.org>, Luis Chamberlain
+ <mcgrof@kernel.org>, Petr Pavlu <petr.pavlu@suse.com>, Sami Tolvanen
+ <samitolvanen@google.com>, Daniel Gomez <da.gomez@samsung.com>, Naveen N
+ Rao <naveen@kernel.org>, Anil S Keshavamurthy
+ <anil.s.keshavamurthy@intel.com>, "David S. Miller" <davem@davemloft.net>,
+ Masami Hiramatsu <mhiramat@kernel.org>, Neeraj Upadhyay
+ <neeraj.upadhyay@kernel.org>, Joel Fernandes <joel@joelfernandes.org>,
+ Josh Triplett <josh@joshtriplett.org>, Boqun Feng <boqun.feng@gmail.com>,
+ Uladzislau Rezki <urezki@gmail.com>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Lai Jiangshan <jiangshanlai@gmail.com>,
+ Zqiang <qiang.zhang1211@gmail.com>, Vincent Guittot
+ <vincent.guittot@linaro.org>, Dietmar Eggemann <dietmar.eggemann@arm.com>,
+ Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>, Kees Cook
+ <kees@kernel.org>, Shuah Khan <shuah@kernel.org>, Masahiro Yamada
+ <masahiroy@kernel.org>, Alice Ryhl <aliceryhl@google.com>, Miguel Ojeda
+ <ojeda@kernel.org>, "Mike Rapoport (Microsoft)" <rppt@kernel.org>, Rong Xu
+ <xur@google.com>, Rafael Aquini <aquini@redhat.com>, Song Liu
+ <song@kernel.org>, Andrii Nakryiko <andrii@kernel.org>, Dan Carpenter
+ <dan.carpenter@linaro.org>, Brian Gerst <brgerst@gmail.com>, "Kirill A.
+ Shutemov" <kirill.shutemov@linux.intel.com>, Benjamin Berg
+ <benjamin.berg@intel.com>, Vishal Annapurve <vannapurve@google.com>, Randy
+ Dunlap <rdunlap@infradead.org>, John Stultz <jstultz@google.com>, Tiezhu
+ Yang <yangtiezhu@loongson.cn>
+Subject: Re: [PATCH v5 00/25] context_tracking,x86: Defer some IPIs until a
+ user->kernel transition
+In-Reply-To: <a6b3a331-1ff3-4490-b300-a62b3c21578d@intel.com>
+References: <20250429113242.998312-1-vschneid@redhat.com>
+ <fefcd1a6-f146-4f3c-b28b-f907e7346ddd@intel.com>
+ <20250430132047.01d48647@gandalf.local.home>
+ <019f6713-cfbd-466b-8fb5-dcd982cf8644@intel.com>
+ <20250430154228.1d6306b4@gandalf.local.home>
+ <a6b3a331-1ff3-4490-b300-a62b3c21578d@intel.com>
+Date: Fri, 02 May 2025 11:55:21 +0200
+Message-ID: <xhsmhr0179w1i.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cqih4qscx5jslfaq46bjcldt3dqoiyqg2dgbnif5eqa7ioygem@lorictjx3jrb>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: A61iWsw1bWsl-KkGreduvodAazlSu2AHRV8-gJdd0IQ_1746179726
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain
 
-On Thu, May 01, 2025 at 11:26:46PM +0200, Alejandro Colomar wrote:
-> Hi Jiri,
-> 
-> On Tue, Apr 22, 2025 at 10:45:41PM +0200, Alejandro Colomar wrote:
-> > On Tue, Apr 22, 2025 at 04:01:56PM +0200, Jiri Olsa wrote:
-> > > > > +is an alternative to breakpoint instructions
-> > > > > +for triggering entry uprobe consumers.
-> > > > 
-> > > > What are breakpoint instructions?
-> > > 
-> > > it's int3 instruction to trigger breakpoint (on x86_64)
-> > 
-> > I guess it's something that people who do that stuff understand.
-> > I don't, but I guess your intended audience will be okay with it.  :)
-> > 
-> > > > The pages are almost identical.  Should we document both pages in the
-> > > > same page?
-> > > 
-> > > great, I was wondering this was an option, looks much better
-> > > should we also add uprobe link, like below?
-> > 
-> > Yep, sure.  Thanks for the reminder!
-> 
-> From what I see, I should not yet merge the patch, right?  The kernel
-> code is under review, right?
+On 30/04/25 13:00, Dave Hansen wrote:
+> On 4/30/25 12:42, Steven Rostedt wrote:
+>>> Look at the syscall code for instance:
+>>>
+>>>> SYM_CODE_START(entry_SYSCALL_64)
+>>>>         swapgs
+>>>>         movq    %rsp, PER_CPU_VAR(cpu_tss_rw + TSS_sp2)
+>>>>         SWITCH_TO_KERNEL_CR3 scratch_reg=%rsp
+>>> You can _trivially_ audit this and know that swapgs doesn't touch memory
+>>> and that as long as PER_CPU_VAR()s and the process stack don't have
+>>> their mappings munged and flushes deferred that this would be correct.
+>> Hmm, so there is still a path for this?
+>>
+>> At least if it added more ways to debug it, and some other changes to make
+>> the locations where vmalloc is dangerous smaller?
+>
+> Being able to debug it would be a good start. But, more generally, what
+> we need is for more people to be able to run the code in the first
+> place. Would a _normal_ system (without setups that are trying to do
+> NOHZ_FULL) ever be able to defer TLB flush IPIs?
+>
+> If the answer is no, then, yeah, I'll settle for some debugging options.
+>
+> But if you shrink the window as small as I'm talking about, it would
+> look very different from this series.
+>
+> For instance, imagine when a CPU goes into the NOHZ mode. Could it just
+> unconditionally flush the TLB on the way back into the kernel (in the
+> same SWITCH_TO_KERNEL_CR3 spot)? Yeah, it'll make entry into the kernel
+> expensive for NOHZ tasks, but it's not *THAT* bad. And if the entire
+> point of a NOHZ_FULL task is to minimize the number of kernel entries
+> then a little extra overhead there doesn't sound too bad.
+>
 
-right, we need to figure out other stuff first
+Right, so my thought per your previous comments was to special case the
+TLB flush, depend on kPTI and do it uncondtionally in SWITCH_TO_KERNEL_CR3
+just like you've described - but keep the context tracking mechanism for
+other deferrable operations.
 
-thanks,
-jirka
+My gripe with that was having two separate mechanisms
+- super early entry around SWITCH_TO_KERNEL_CR3)
+- later entry at context tracking
 
-> 
-> 
-> Have a lovely night!
-> Alex
-> 
-> > 
-> > 
-> > Have a lovely night!
-> > Alex
-> > 
-> > -- 
-> > <https://www.alejandro-colomar.es/>
-> 
-> 
-> 
-> -- 
-> <https://www.alejandro-colomar.es/>
+Shifting everything to SWITCH_TO_KERNEL_CR3 means we lose the
+context_tracking infra to dynamically defer operations (atomically reading
+and writing to context_tracking.state), which means we unconditionally run
+all possible deferrable operations. This doesn't scream scalable, even
+though as you say NOHZ_FULL kernel entry is already a "you lose" situation.
 
+Yet another option is to duplicate the context tracking state specifically
+for IPI deferral and have it driven in/by SWITCH_TO_KERNEL_CR3, which is
+also not super savoury.
+
+I suppose I can start poking around running deferred ops in that
+SWITCH_TO_KERNEL_CR3 region, and add state/infra on top. Let's see where
+this gets me :-)
+
+Again, thanks for the insight and the suggestions Dave!
+
+> Also, about the new hardware, I suspect there's some mystery customer
+> lurking in the shadows asking folks for this functionality. Could you at
+> least go _talk_ to the mystery customer(s) and see which hardware they
+> care about? They might already even have the magic CPUs they need for
+> this, or have them on the roadmap. If they've got Intel CPUs, I'd be
+> happy to help figure it out.
 
