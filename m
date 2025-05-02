@@ -1,37 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4891D254AF6;
-	Fri,  2 May 2025 13:16:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4897B2550B6;
+	Fri,  2 May 2025 13:16:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746191769; cv=none; b=JYR2UugXTAqUtsMPOsoM6uujPqshoycnH+lWEX5gnc9wLNALYHxTANcxiLpMbgJ/vEIHNtXe/NBo3IXm52HjQcYwJEFfENgfus2fbpntEJk7flrBwfYgKJmjgfR6+TgwEE133tJ2VeDmbyHCKbrUlQ+SKTqtq2W0Qk5Sb5TIUmQ=
+	t=1746191769; cv=none; b=gfYeK4EIsO2gIC9IyXiRqZzSXdPg61lIJ1ris7LmqCRgjDK2cbM01B0vO7DTEwB5QOdD33JM5QPUFmxGD9lwgVfO0O4fBgccC83cQKsh4akZmEtZQgwc3UBDv9YwUp6czb0c/FPApIixDRXMglT3TOv6UcDbAnU1rJ+oJbOBvoM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1746191769; c=relaxed/simple;
-	bh=TNGKJsHFD9W/hweRfsyrGNZ62fbkiaEiQ9aAoscBr08=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=b8oDh74LFFeeGa6RXO7UW6ZS6/BaqsTdw6ZHXdZ9gTVJ9dRltZNqInXbmu/nRX2+9SFZ79baxCTX1/hbaNJ8iMHyx/b/d35hGGpl7Kya5Sgs5y55fuIcxyiKFF9Vq5Qz/PcV93U8lq6g6/E9VPyWQerpIzPRxuQBwqSz+vjUu5E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JUb1uSA4; arc=none smtp.client-ip=10.30.226.201
+	bh=KpVvY39bTMtM8+XE+uRP1OauAipaWPrZAaSpJuBqdO0=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=p4WYT/EMt2AOX1Q4oVodgW5x8YlFtCz69Vc29S4PYEbL2E5HXVPNkHelv3JKfhLxCWLvAFvUM63Zc4lTx7d+fy2GPoyA0XWbqGlMgFAntJB1lGI7+M7pgFJzONlz5VAT3/q7ow4LR7/L7hncKBq0XPMZTccQYADdtvpm3tMa4y4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VGfut9Fv; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JUb1uSA4"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id D2021C4CEEB;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VGfut9Fv"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id BFB8EC4CEE4;
 	Fri,  2 May 2025 13:16:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1746191768;
-	bh=TNGKJsHFD9W/hweRfsyrGNZ62fbkiaEiQ9aAoscBr08=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=JUb1uSA4Xftxk0q+8kdYpdMf/nINyybwvVRTvy8qexEEgDRpTi1S3Gw2tgLhzQbeL
-	 GztTkyacQn7AdQHYfSjMr2GKqWv3IO7N+mT+kE3RLfmbnM9tjv0BnuZEbKrPveugy5
-	 kVdpnOhYN+ExEOwdrM1cYbelTmBguSzkijEEwNvEdxXdfu+vHuDtoRLMXF/GNdKnme
-	 7v4W3KuLbmGx1Knz1HFE7pfdKx4J7aNjCfHBmg9JPVh5K6CoPWtIZ2GKtsboLrhA6t
-	 CuJpJoayuAbqT5ryB3tTASG+UZB5UP3cs8bJPFv6l6C9NyYEMcPzSPlnS+r9M6u5TN
-	 ut8Ez0zE0YIzg==
+	bh=KpVvY39bTMtM8+XE+uRP1OauAipaWPrZAaSpJuBqdO0=;
+	h=From:Subject:Date:To:Cc:Reply-To:From;
+	b=VGfut9FvN7+HSTUfoq3xexsLavO1mYBGgb8LMl8//dVIbErdfxtSs9hEQetQaBie3
+	 Uo0LL83IagFEDpJMPh0b+vnaGFdqUPNKCuQ6/TMT3I5g9FRzZlwKINxzj5HnvqglPn
+	 4VxzKi82eth7HqQLfZVGFF3Cp3phKjx6Xw4UP8XTbrY+BLvW0PP3sshRYBL71J/4yU
+	 1QgCumaEwbo0uzCXoJEjF6g47N7DzrTRmSaZ54AxjFw9ajL/Po0dwjUtUHeflv1ije
+	 y4tKmLP1i9sDgBhtoAh1GN1eKuq/53ciQUCZaxz3uHyseIB+ioIkFgJgFRfKUqZECw
+	 62mftS9hCrDUg==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C621BC3ABAA;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AED8CC3ABAC;
 	Fri,  2 May 2025 13:16:08 +0000 (UTC)
 From: Paul Cacheux via B4 Relay <devnull+paulcacheux.gmail.com@kernel.org>
-Date: Fri, 02 May 2025 15:15:53 +0200
-Subject: [PATCH v2 2/2] tracing: protect trace_probe_log with mutex
+Subject: [PATCH v2 0/2] tracing: fix race when creating trace probe log
+ error message
+Date: Fri, 02 May 2025 15:15:51 +0200
+Message-Id: <20250502-fix-trace-probe-log-race-v2-0-511ecc1521ec@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -40,9 +41,11 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250502-fix-trace-probe-log-race-v2-2-511ecc1521ec@gmail.com>
-References: <20250502-fix-trace-probe-log-race-v2-0-511ecc1521ec@gmail.com>
-In-Reply-To: <20250502-fix-trace-probe-log-race-v2-0-511ecc1521ec@gmail.com>
+X-B4-Tracking: v=1; b=H4sIAIfFFGgC/3WNwQqDMBBEf0X23C1mUWp76n+Ih7hZdUGNJCIt4
+ r83FXrs8Q0zb3aIElQiPLIdgmwa1c8J6JIBD3buBdUlBsqpzAvKsdMXrsGy4BJ8Kzj6Hk9kru6
+ ukrJrTQlpvgRJ3VNdN4kHjasP7/NpM9/0J6X/0s2gQUc3qlxBbLl99pPV8cp+guY4jg+FG8taw
+ AAAAA==
+X-Change-ID: 20250420-fix-trace-probe-log-race-cc89d8e5fb15
 To: Steven Rostedt <rostedt@goodmis.org>, 
  Masami Hiramatsu <mhiramat@kernel.org>, 
  Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
@@ -50,11 +53,11 @@ To: Steven Rostedt <rostedt@goodmis.org>,
 Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
  Paul Cacheux <paulcacheux@gmail.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1746191767; l=1822;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1746191767; l=1762;
  i=paulcacheux@gmail.com; s=20250422; h=from:subject:message-id;
- bh=JoafqU4uAGl3ydwos4FNrWPAGaAC2MqNPKDgQHWMZCs=;
- b=KcHSfL163DKlJ1NliuUUMQWzwqr+MsVP+H2ve6fE7oWXWJIIhlwtWCk5QHPT/9rTaAJKOXtz9
- bdzZoYkn6hnDJpyf2/hgWq0lNlOdrSgxB9BIXHG4TaBqtYSIu27wspw
+ bh=KpVvY39bTMtM8+XE+uRP1OauAipaWPrZAaSpJuBqdO0=;
+ b=s8QdfrlRuuLv1kCYAOYbz7sqfW+OGlxZHlYqubZkhTMzCambp3fmi+4UXmyPonECg6Tmq5sz6
+ uBRkEVWeSKwAS9oLzA5Dy20Rx4Dh6VcEST8GzIp3WzBUADunE+GSC3D
 X-Developer-Key: i=paulcacheux@gmail.com; a=ed25519;
  pk=8UguSecyECHKHp0YLS7hTEDob0ctFMr3ygBTeAmrFHs=
 X-Endpoint-Received: by B4 Relay for paulcacheux@gmail.com/20250422 with
@@ -62,64 +65,52 @@ X-Endpoint-Received: by B4 Relay for paulcacheux@gmail.com/20250422 with
 X-Original-From: Paul Cacheux <paulcacheux@gmail.com>
 Reply-To: paulcacheux@gmail.com
 
-From: Paul Cacheux <paulcacheux@gmail.com>
+Hello,
 
-The shared trace_probe_log variable can be accessed and modified
-by multiple processes using tracefs at the same time, this new
-mutex will guarantee it's always in a coherent state.
+As reported in [1] a race exists in the shared trace probe log
+used to build error messages. This can cause kernel crashes
+when building the actual error message, but the race happens
+even for non-error tracefs uses, it's just not visible.
 
-There is no guarantee that multiple errors happening at the same
-time will each have the correct error message, but at least this
-won't crash.
+Reproducer first reported that is still crashing:
 
-Fixes: ab105a4fb894 ("tracing: Use tracing error_log with probe events")
+  # 'p4' is invalid command which make kernel run into trace_probe_log_err()
+  cd /sys/kernel/debug/tracing
+  while true; do
+    echo 'p4:myprobe1 do_sys_openat2 dfd=%ax filename=%dx flags=%cx mode=+4($stack)' >> kprobe_events &
+    echo 'p4:myprobe2 do_sys_openat2' >> kprobe_events &
+    echo 'p4:myprobe3 do_sys_openat2 dfd=%ax filename=%dx' >> kprobe_events &
+  done;
+
+The original email suggested to use a mutex or to allocate the
+trace_probe_log on the stack. This patch implements a simpler
+solution suggest during the review of the v1 where we only protect
+access to the shared trace_probe_log with a mutex. This will prevent
+any crash from happening.
+
+[1] https://lore.kernel.org/all/20221121081103.3070449-1-zhengyejian1@huawei.com/T/
 
 Signed-off-by: Paul Cacheux <paulcacheux@gmail.com>
 ---
- kernel/trace/trace_probe.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+Changes in v2:
+- change approach, and use the mutex based solution suggested during
+  review
+- Link to v1: https://lore.kernel.org/r/20250422-fix-trace-probe-log-race-v1-1-d2728d42cacb@gmail.com
 
-diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
-index 2eeecb6c95eea55502b83af6775b7b6f0cc5ab94..14a7a0b59cd20a8bc43e3e7c653e986081f924c8 100644
---- a/kernel/trace/trace_probe.c
-+++ b/kernel/trace/trace_probe.c
-@@ -154,9 +154,11 @@ static const struct fetch_type *find_fetch_type(const char *type, unsigned long
- }
- 
- static struct trace_probe_log trace_probe_log;
-+static DEFINE_MUTEX(trace_probe_log_lock);
- 
- void trace_probe_log_init(const char *subsystem, int argc, const char **argv)
- {
-+	guard(mutex)(&trace_probe_log_lock);
- 	trace_probe_log.subsystem = subsystem;
- 	trace_probe_log.argc = argc;
- 	trace_probe_log.argv = argv;
-@@ -165,11 +167,13 @@ void trace_probe_log_init(const char *subsystem, int argc, const char **argv)
- 
- void trace_probe_log_clear(void)
- {
-+	guard(mutex)(&trace_probe_log_lock);
- 	memset(&trace_probe_log, 0, sizeof(trace_probe_log));
- }
- 
- void trace_probe_log_set_index(int index)
- {
-+	guard(mutex)(&trace_probe_log_lock);
- 	trace_probe_log.index = index;
- }
- 
-@@ -178,6 +182,8 @@ void __trace_probe_log_err(int offset, int err_type)
- 	char *command, *p;
- 	int i, len = 0, pos = 0;
- 
-+	guard(mutex)(&trace_probe_log_lock);
-+
- 	if (!trace_probe_log.argv)
- 		return;
- 
+---
+Paul Cacheux (2):
+      tracing: add missing trace_probe_log_clear for eprobes
+      tracing: protect trace_probe_log with mutex
 
+ kernel/trace/trace_eprobe.c | 3 +++
+ kernel/trace/trace_probe.c  | 6 ++++++
+ 2 files changed, 9 insertions(+)
+---
+base-commit: ebd297a2affadb6f6f4d2e5d975c1eda18ac762d
+change-id: 20250420-fix-trace-probe-log-race-cc89d8e5fb15
+
+Best regards,
 -- 
-2.49.0
+Paul Cacheux <paulcacheux@gmail.com>
 
 
