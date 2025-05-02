@@ -1,26 +1,26 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AB7E20296A;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39D2F20297D;
 	Fri,  2 May 2025 20:53:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746219229; cv=none; b=ixUuGTT+n14DzQ7g34yD65+EbLc8Sp1xQE7hoHCVVxqCiMGMfUmKjCm9m50cGtFeDMJJoFV/zB+1rxXqTGsAxRMO1VX5i662JlVFnY99opDqTz07S/5Y3qCV1pqQpme2IUgrhFsjmvlNYRMUMUQenGkgxF0kED1j3iimA0aJ+gQ=
+	t=1746219229; cv=none; b=I4+S9fx+LTzacBEXOMnuGWg4KNhURICvD8l4LXKYrqv0tFHmap8OhuCCIozJWJEPOHHCAMNFj2oTDXqGU0Iah4AyVSlYktFDl9yIqOAYo23F235bRY60upYwWybM+ZD9wVcQS6xmRqMNRyYdhP3wk5TX/yR68+wIRGmmaMR3qx8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1746219229; c=relaxed/simple;
-	bh=XN5M+G+GG6rlRQyIqM1WZQZvm+6qsb8A6OZxP+hWE8s=;
+	bh=TqkD8LxtVBklZh0dnSpjx7PjTTWwl2OLh6qRcV+8HgA=;
 	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=VJ7jmUc13RVl41XWcmepKDK6h2VE2OhPMmsNDD/rE1DWXJxBHoy3xAQ025UCXybS5GAO9y7asVU6Bt6iYC0SJER33q+0Mbo3aQoGkv8Fl1b0l85OFOjNEPQurMGRANgYnw/wkbOEhB2CKd4RXIwPBc/B6jKPn3/5w0BopevNhCE=
+	 Content-Type; b=bCnydG+tREpgIwXvoVKgF7OppdeFcSaWkledkJMyK1/I9CPSLnEIQo5YUruXxT2xaAPLRI94DtjS49Wkm2cB+u01ftVC0dVmJCtZCmNsjF+cZo7+sbllfHd6Pb0ugIc0yo4SDbgtKxHnZ2NdGbBiSFj9yWnsXZJIT0Shjpa1Yb8=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 903EEC4CEF1;
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D19FCC4CEF2;
 	Fri,  2 May 2025 20:53:48 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.98.2)
 	(envelope-from <rostedt@goodmis.org>)
-	id 1uAxOG-000000006A8-1BE0;
+	id 1uAxOG-000000006Ac-1tfM;
 	Fri, 02 May 2025 16:53:48 -0400
-Message-ID: <20250502205348.131916206@goodmis.org>
+Message-ID: <20250502205348.303564071@goodmis.org>
 User-Agent: quilt/0.68
-Date: Fri, 02 May 2025 16:51:49 -0400
+Date: Fri, 02 May 2025 16:51:50 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org,
  linux-trace-kernel@vger.kernel.org
@@ -28,7 +28,7 @@ Cc: Masami Hiramatsu <mhiramat@kernel.org>,
  Mark Rutland <mark.rutland@arm.com>,
  Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
  Andrew Morton <akpm@linux-foundation.org>
-Subject: [PATCH 02/12] tracing: Do not bother setting "disabled" field for ftrace_dump_one()
+Subject: [PATCH 03/12] ftrace: Do not bother checking per CPU "disabled" flag
 References: <20250502205147.283272733@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -45,53 +45,78 @@ the tracing subsystem was first created. Today, the ring buffer
 infrastructure has its own way to disable tracing. In fact, things have
 changed so much since 2008 that many things ignore the disable flag.
 
-The ftrace_dump_one() function iterates over all the current tracing CPUs and
-increments the "disabled" counter before doing the dump, and decrements it
-afterward.
-
-As the disabled flag can be ignored, doing this today is not reliable.
-The code already calls tracer_tracing_off() which disables the ring
-buffer, there's no reason to use the "disabled" flags.
+There's no reason for the function tracer to check it, if tracing is
+disabled, the ring buffer will not record the event anyway.
 
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- kernel/trace/trace.c | 9 +--------
- 1 file changed, 1 insertion(+), 8 deletions(-)
+ kernel/trace/trace_functions.c | 16 +++-------------
+ 1 file changed, 3 insertions(+), 13 deletions(-)
 
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index 8ddf6b17215c..bae32778b292 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -10445,7 +10445,7 @@ static void ftrace_dump_one(struct trace_array *tr, enum ftrace_dump_mode dump_m
- 	static struct trace_iterator iter;
- 	unsigned int old_userobj;
- 	unsigned long flags;
--	int cnt = 0, cpu;
-+	int cnt = 0;
+diff --git a/kernel/trace/trace_functions.c b/kernel/trace/trace_functions.c
+index 98ccf3f00c51..bd153219a712 100644
+--- a/kernel/trace/trace_functions.c
++++ b/kernel/trace/trace_functions.c
+@@ -209,7 +209,6 @@ function_trace_call(unsigned long ip, unsigned long parent_ip,
+ 		    struct ftrace_ops *op, struct ftrace_regs *fregs)
+ {
+ 	struct trace_array *tr = op->private;
+-	struct trace_array_cpu *data;
+ 	unsigned int trace_ctx;
+ 	int bit;
+ 
+@@ -224,9 +223,7 @@ function_trace_call(unsigned long ip, unsigned long parent_ip,
+ 
+ 	trace_ctx = tracing_gen_ctx_dec();
+ 
+-	data = this_cpu_ptr(tr->array_buffer.data);
+-	if (!atomic_read(&data->disabled))
+-		trace_function(tr, ip, parent_ip, trace_ctx, NULL);
++	trace_function(tr, ip, parent_ip, trace_ctx, NULL);
+ 
+ 	ftrace_test_recursion_unlock(bit);
+ }
+@@ -236,10 +233,8 @@ function_args_trace_call(unsigned long ip, unsigned long parent_ip,
+ 			 struct ftrace_ops *op, struct ftrace_regs *fregs)
+ {
+ 	struct trace_array *tr = op->private;
+-	struct trace_array_cpu *data;
+ 	unsigned int trace_ctx;
+ 	int bit;
+-	int cpu;
+ 
+ 	if (unlikely(!tr->function_enabled))
+ 		return;
+@@ -250,10 +245,7 @@ function_args_trace_call(unsigned long ip, unsigned long parent_ip,
+ 
+ 	trace_ctx = tracing_gen_ctx();
+ 
+-	cpu = smp_processor_id();
+-	data = per_cpu_ptr(tr->array_buffer.data, cpu);
+-	if (!atomic_read(&data->disabled))
+-		trace_function(tr, ip, parent_ip, trace_ctx, fregs);
++	trace_function(tr, ip, parent_ip, trace_ctx, fregs);
+ 
+ 	ftrace_test_recursion_unlock(bit);
+ }
+@@ -352,7 +344,6 @@ function_no_repeats_trace_call(unsigned long ip, unsigned long parent_ip,
+ {
+ 	struct trace_func_repeats *last_info;
+ 	struct trace_array *tr = op->private;
+-	struct trace_array_cpu *data;
+ 	unsigned int trace_ctx;
+ 	int bit;
+ 
+@@ -364,8 +355,7 @@ function_no_repeats_trace_call(unsigned long ip, unsigned long parent_ip,
+ 		return;
+ 
+ 	parent_ip = function_get_true_parent_ip(parent_ip, fregs);
+-	data = this_cpu_ptr(tr->array_buffer.data);
+-	if (atomic_read(&data->disabled))
++	if (!tracer_tracing_is_on(tr))
+ 		goto out;
  
  	/*
- 	 * Always turn off tracing when we dump.
-@@ -10462,10 +10462,6 @@ static void ftrace_dump_one(struct trace_array *tr, enum ftrace_dump_mode dump_m
- 	/* Simulate the iterator */
- 	trace_init_iter(&iter, tr);
- 
--	for_each_tracing_cpu(cpu) {
--		atomic_inc(&per_cpu_ptr(iter.array_buffer->data, cpu)->disabled);
--	}
--
- 	old_userobj = tr->trace_flags & TRACE_ITER_SYM_USEROBJ;
- 
- 	/* don't look at user memory in panic mode */
-@@ -10523,9 +10519,6 @@ static void ftrace_dump_one(struct trace_array *tr, enum ftrace_dump_mode dump_m
- 
- 	tr->trace_flags |= old_userobj;
- 
--	for_each_tracing_cpu(cpu) {
--		atomic_dec(&per_cpu_ptr(iter.array_buffer->data, cpu)->disabled);
--	}
- 	local_irq_restore(flags);
- }
- 
 -- 
 2.47.2
 
