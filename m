@@ -1,168 +1,83 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 110C71DDC18;
-	Sat,  3 May 2025 10:10:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BA89199FB0
+	for <linux-trace-kernel@vger.kernel.org>; Sat,  3 May 2025 10:24:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746267050; cv=none; b=HIV4Z3tOscpPjDtgPV0l8F7GU8fqpPIw11u/d1htVmm5DCK98ERrwnFtbQBTXRkbykUTryVIt8IrNpNFu3HyzJQ9pTpM9RiOzJ6vpkkWVY1RL3z/GTn5gZ0zuF04BF21tx2hN5kNcUPTg1W1fV/m8ujzwLYl9js4dmr1PxZEkv0=
+	t=1746267884; cv=none; b=qO23WCwZYk6wrVigQy8JiGMQzlK6rttoWCSzc6F1MCT+1wvgQjsSkCDhX0CgliU6BByLA1gvOcPMA/l2fp1qtokd6d1EpOkMlpneGw5v30amQB1PAVgWnN32wLirK3IYxfCwzih8IFjWNc1+M9OYkP67ItOsU6boRBEjCMjcRAQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746267050; c=relaxed/simple;
-	bh=xk/wEgqqIO2by4Z2qvxQ7ilU/SdwMkhsAd06Cg0FC4E=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TdevJW3Cp8UO6bmNZ2yzCOzkAuTFj5aSPPueBwAOG6D2Ujl9skK+rsnS+/aWmrlKeoV9LtyRtbdQjTJBisEtmnOEySUAKlvEsr7ovoPfGiHxixUU6gCWONlBc27u4TPSl8VbIY1eaVobK7iXGVEecRr4A3fLAQ0CTyjKT7/NcKU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YfpvM7H/; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1746267884; c=relaxed/simple;
+	bh=0qCQqJmGg8nHWn43651G41ZQZWqTiD0gQV2dJT64BtU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=dM38amr9h5j2q1b0/JJjjg5C/6mzPqidS9ljKcvcbGdP/zcQ03Bxwc79sF7aNFOzVzF6kA65cmoryP9cnzMs+Mb11HqF0VI+1jHciOX7b3k9MQ3TU8DMcpfOUMERbDMdZwBuvAy11P/SQ5V6JpDBLPKa1wqkY7db8BVn5TOE6c8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=arista.com; spf=pass smtp.mailfrom=arista.com; dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b=Zw62AhbW; arc=none smtp.client-ip=209.85.167.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=arista.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arista.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YfpvM7H/"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1746267048; x=1777803048;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=xk/wEgqqIO2by4Z2qvxQ7ilU/SdwMkhsAd06Cg0FC4E=;
-  b=YfpvM7H/3qN4l2C1Bfnnms9DXbxHUndcxWNIfITVwVXT2/PjVIWZr1UM
-   n3lLpKTYaXYo0hdBTKmNeHDDV5YVzKMkOIf0999IMDJNLrZIR4YgeQ7Le
-   927dZJJhLxDJI4DxgnMEVb8oaDYpu6kNu3ZyzPN1CdOtx7udvL+b0P3FU
-   j81MSkbq07mWKks1svvSGu7kTZJmwil7vvLMmYIYVLVJWWvTVFDsjgH2c
-   nJqDXarICUzjnEsZ227bBXiI7j3z4fbJ80NNtkdERMdfGuPFmKK6Kpoao
-   NDSxyljgKNPakQ0OJi3in9O/R/t22MCRaOcOEaBiqVwDnMknr4KinRqbK
-   g==;
-X-CSE-ConnectionGUID: MXiKWX7aRYi3FHo/2bCaQA==
-X-CSE-MsgGUID: Q1AyCUmUTmagDo9cMZ+Z+Q==
-X-IronPort-AV: E=McAfee;i="6700,10204,11421"; a="47821848"
-X-IronPort-AV: E=Sophos;i="6.15,258,1739865600"; 
-   d="scan'208";a="47821848"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 May 2025 03:10:47 -0700
-X-CSE-ConnectionGUID: BNpdvW4RT16cYCbbG1zdoQ==
-X-CSE-MsgGUID: Np7Cl7wiQS6yWBIt/JW9VA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,258,1739865600"; 
-   d="scan'208";a="139986440"
-Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
-  by fmviesa004.fm.intel.com with ESMTP; 03 May 2025 03:10:45 -0700
-Received: from kbuild by 1992f890471c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uB9pS-0005I9-1Q;
-	Sat, 03 May 2025 10:10:42 +0000
-Date: Sat, 3 May 2025 18:10:14 +0800
-From: kernel test robot <lkp@intel.com>
-To: Steven Rostedt <rostedt@goodmis.org>, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Cc: oe-kbuild-all@lists.linux.dev, Masami Hiramatsu <mhiramat@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Linux Memory Management List <linux-mm@kvack.org>
-Subject: Re: [PATCH 09/12] tracing: branch: Use trace_tracing_is_on_cpu()
- instead of "disabled" field
-Message-ID: <202505031738.buFg2SBt-lkp@intel.com>
-References: <20250502205349.299144667@goodmis.org>
+	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="Zw62AhbW"
+Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-54b10956398so3181577e87.0
+        for <linux-trace-kernel@vger.kernel.org>; Sat, 03 May 2025 03:24:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=arista.com; s=google; t=1746267881; x=1746872681; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=0qCQqJmGg8nHWn43651G41ZQZWqTiD0gQV2dJT64BtU=;
+        b=Zw62AhbWcIIpboxR+cLFIIEHMQ+SC755mqWxOUPHfYqHIowCO2fLUhCOilnQ2KLOhL
+         pFcdx+1E1nXdD5oT9OJhpYYPxF2KgqXad7bKm8x+Gk7txWALOmsn2U67h1JlsYP4xBND
+         u4XjzCAvQr7kn8TpXmetcTgOAUxEUPv8PwLEd6pwyKpRPj2f7a8yVVbjVr7sP+zc/4wD
+         ng+kQcQnuF0T99QqnXQZzEvYOGYbRuTZ2PtRiaZXkCyk/cVMRwlZPuQan9k9npzUGgSR
+         2wBrtidpqgfcLHnVbdrLQi6oFxINId/1oyr4MITBIPefexm8O1Drk/cZoLgZcUkk0IoL
+         y9uQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746267881; x=1746872681;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=0qCQqJmGg8nHWn43651G41ZQZWqTiD0gQV2dJT64BtU=;
+        b=OPOSK6Yy5l3dieucKQm5hPGxzIggKVWKvfDTTzf46CfhCiD0wrn+FR7jPX0jw/Txi8
+         hBXkKO7zj6OIL3NKXe8rpYgdlih79ljDPb505SoSeJKGEZvdPHYhAO0989LpyMWeduQJ
+         f14DLMKvROfTkSra7d/F5M735WSeevKYWZbVF6FhsLR67fXAzXy7NE7I0I1B3+6OR7Bt
+         Y16OWVlMy6SJZYLLYNQrUKarEIc0gHclqL4mSzTvws7yXOsfyMW+/ZCQDlGtbFjTusXn
+         T6CR9T9wYwqs/j+2HD8qlsBDoKeU8OXIHvPjuWVHyvm33ADZYShWmXpgUv3W1fwsDbqH
+         rB0g==
+X-Forwarded-Encrypted: i=1; AJvYcCW1xOFNGFz7ocE65dS1RAKW11PCHNZEE5i/AAR2+pDk2GDVTVxAXCqS3/GFnXjVezvCeH3Jksfk6Fh0pGBo/3b27z0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwIskBo0Qoba00KY/v9Jpd/HxLqKX56GjdPiM3/SFCr/TfounYt
+	UApFeHJ3nNtxzlfKKurMHS0ln+ZxE97feW98SFyVBHWRSP5ztJknECFYqmFMGSVfdVZtoOqGxlH
+	VgLQeFrFSjLjDOsKv5Zx7UmJvI7bZ4dwk8iSeM/IdYP+htRx95Q==
+X-Gm-Gg: ASbGnctjV3p6TB7Wn+TFz2ZcJFPC4wfQp8FF+c5+hUEqVrigspuS1+Wtxcuy81lA7EU
+	J8rtfkmXafkmQ/TQ/aSyee36Q4LqdmoHeqcJKZY4knwemwxTFQlJV73dHt2mqOiXhIDHMxWZa4t
+	hmy2OtLFLT7GCtuhU11oQ/JJlLZSV9GN6ukLKzzAAMoqSCg/AOj7YjQs9o
+X-Google-Smtp-Source: AGHT+IG5XLjqIeeIPwFlKAkJ3dRCAbqrk9r6ZoG99ElKCSQBWM4Y8aLZBVuXKoVEWRVAq7zXzUH1hRJ/eiftMHR/LTI=
+X-Received: by 2002:a05:6512:3b94:b0:549:8c0c:ea15 with SMTP id
+ 2adb3069b0e04-54ea79f9549mr3087948e87.0.1746267881065; Sat, 03 May 2025
+ 03:24:41 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250502205349.299144667@goodmis.org>
+References: <CABEuK17=Y8LsLhiHXgcr7jOp2UF3YCGkQoAyQu8gTVJ5DHPN0w@mail.gmail.com>
+ <20250326001122.421996-2-s.gupta@arista.com> <2025032553-celibacy-underpaid-faeb@gregkh>
+ <20250325203236.3c6a19f4@batman.local.home> <20250325203723.53d3afde@batman.local.home>
+ <2025032554-compile-unlivable-0fb4@gregkh> <20250325204731.24f26003@batman.local.home>
+ <CABEuK16RdmvpbK5CpcuYrzdo_1GK-8eUkmb5x1BKk9bPcw3weA@mail.gmail.com>
+In-Reply-To: <CABEuK16RdmvpbK5CpcuYrzdo_1GK-8eUkmb5x1BKk9bPcw3weA@mail.gmail.com>
+From: Sahil Gupta <s.gupta@arista.com>
+Date: Sat, 3 May 2025 05:24:30 -0500
+X-Gm-Features: ATxdqUGwOKdIo-Q4V5eiLmHPD-F7dzkF0pGs7QY1PB2DuRqDOrWoKS6Y9LdDxOA
+Message-ID: <CABEuK14WgiKDLW-Zdz+RPsgpHXA-VK+Cp1u_Qd5EBo2eRb3npg@mail.gmail.com>
+Subject: Re: [PATCH 6.1 6.6 6.12 6.13] scripts/sorttable: fix ELF64 mcount_loc
+ address parsing when compiling on 32-bit
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Greg KH <gregkh@linuxfoundation.org>, stable@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, Dmitry Safonov <dima@arista.com>, 
+	Kevin Mitchell <kevmitch@arista.com>
+Content-Type: text/plain; charset="UTF-8"
 
-Hi Steven,
+Just wondering if this backport is still going to happen. I know this
+is fairly bottom of the barrel so I wouldn't be surprised if it
+doesn't.
 
-kernel test robot noticed the following build errors:
-
-[auto build test ERROR on trace/for-next]
-[also build test ERROR on linus/master v6.15-rc4 next-20250502]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Steven-Rostedt/tracing-mmiotrace-Remove-reference-to-unused-per-CPU-data-pointer/20250503-050317
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace for-next
-patch link:    https://lore.kernel.org/r/20250502205349.299144667%40goodmis.org
-patch subject: [PATCH 09/12] tracing: branch: Use trace_tracing_is_on_cpu() instead of "disabled" field
-config: arc-randconfig-001-20250503 (https://download.01.org/0day-ci/archive/20250503/202505031738.buFg2SBt-lkp@intel.com/config)
-compiler: arc-linux-gcc (GCC) 14.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250503/202505031738.buFg2SBt-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202505031738.buFg2SBt-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
-   kernel/trace/trace_branch.c: In function 'probe_likely_condition':
->> kernel/trace/trace_branch.c:56:43: error: implicit declaration of function 'raw_smp_process_id'; did you mean 'raw_smp_processor_id'? [-Wimplicit-function-declaration]
-      56 |         if (!tracer_tracing_is_on_cpu(tr, raw_smp_process_id()))
-         |                                           ^~~~~~~~~~~~~~~~~~
-         |                                           raw_smp_processor_id
-
-
-vim +56 kernel/trace/trace_branch.c
-
-    29	
-    30	static void
-    31	probe_likely_condition(struct ftrace_likely_data *f, int val, int expect)
-    32	{
-    33		struct trace_array *tr = branch_tracer;
-    34		struct trace_buffer *buffer;
-    35		struct ring_buffer_event *event;
-    36		struct trace_branch *entry;
-    37		unsigned long flags;
-    38		unsigned int trace_ctx;
-    39		const char *p;
-    40	
-    41		if (current->trace_recursion & TRACE_BRANCH_BIT)
-    42			return;
-    43	
-    44		/*
-    45		 * I would love to save just the ftrace_likely_data pointer, but
-    46		 * this code can also be used by modules. Ugly things can happen
-    47		 * if the module is unloaded, and then we go and read the
-    48		 * pointer.  This is slower, but much safer.
-    49		 */
-    50	
-    51		if (unlikely(!tr))
-    52			return;
-    53	
-    54		raw_local_irq_save(flags);
-    55		current->trace_recursion |= TRACE_BRANCH_BIT;
-  > 56		if (!tracer_tracing_is_on_cpu(tr, raw_smp_process_id()))
-    57			goto out;
-    58	
-    59		trace_ctx = tracing_gen_ctx_flags(flags);
-    60		buffer = tr->array_buffer.buffer;
-    61		event = trace_buffer_lock_reserve(buffer, TRACE_BRANCH,
-    62						  sizeof(*entry), trace_ctx);
-    63		if (!event)
-    64			goto out;
-    65	
-    66		entry	= ring_buffer_event_data(event);
-    67	
-    68		/* Strip off the path, only save the file */
-    69		p = f->data.file + strlen(f->data.file);
-    70		while (p >= f->data.file && *p != '/')
-    71			p--;
-    72		p++;
-    73	
-    74		strscpy(entry->func, f->data.func);
-    75		strscpy(entry->file, p);
-    76		entry->constant = f->constant;
-    77		entry->line = f->data.line;
-    78		entry->correct = val == expect;
-    79	
-    80		trace_buffer_unlock_commit_nostack(buffer, event);
-    81	
-    82	 out:
-    83		current->trace_recursion &= ~TRACE_BRANCH_BIT;
-    84		raw_local_irq_restore(flags);
-    85	}
-    86	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Sahil
