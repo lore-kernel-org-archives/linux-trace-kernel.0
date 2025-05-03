@@ -1,83 +1,170 @@
-Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [62.89.141.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BA89199FB0
-	for <linux-trace-kernel@vger.kernel.org>; Sat,  3 May 2025 10:24:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC04A2EAE5;
+	Sat,  3 May 2025 21:29:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.89.141.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746267884; cv=none; b=qO23WCwZYk6wrVigQy8JiGMQzlK6rttoWCSzc6F1MCT+1wvgQjsSkCDhX0CgliU6BByLA1gvOcPMA/l2fp1qtokd6d1EpOkMlpneGw5v30amQB1PAVgWnN32wLirK3IYxfCwzih8IFjWNc1+M9OYkP67ItOsU6boRBEjCMjcRAQ=
+	t=1746307772; cv=none; b=nMz4AT+bGk5qACpzSzWJ8XBw/G1jrwOhplASZis2IBll69KqFeTO7R1W20gxRrAf91UN/OwzLg21CKDWD9dm1O8RIvgZ2GMmNt1wm4fCtNSSfQ2YFC1WbygTZ83bn1e8nwd31RCwgXpn/DskS9ZgBw+rCuEF4XlFStb5zY9nN/c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746267884; c=relaxed/simple;
-	bh=0qCQqJmGg8nHWn43651G41ZQZWqTiD0gQV2dJT64BtU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=dM38amr9h5j2q1b0/JJjjg5C/6mzPqidS9ljKcvcbGdP/zcQ03Bxwc79sF7aNFOzVzF6kA65cmoryP9cnzMs+Mb11HqF0VI+1jHciOX7b3k9MQ3TU8DMcpfOUMERbDMdZwBuvAy11P/SQ5V6JpDBLPKa1wqkY7db8BVn5TOE6c8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=arista.com; spf=pass smtp.mailfrom=arista.com; dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b=Zw62AhbW; arc=none smtp.client-ip=209.85.167.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=arista.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arista.com
+	s=arc-20240116; t=1746307772; c=relaxed/simple;
+	bh=TaQvfmHQxwrRvVqDAjeeuCyW45oBEKJERXy9wLq2nxQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=e8UoalLfn9vXCs+WzijOyp87Qd3aGvWqsoXevXrembtwXF+lDXvkXntuhynUcRrkcW8Uzo8eRB60T1PBacs3kUMHCejic7Y8IT6MOCB17fXOHZO4gZ+nxcBdqz5xcCTv0HI7FgsNgpBCDipR6sHdQxNngrXAXUoca/g0pDwhVdA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk; spf=none smtp.mailfrom=ftp.linux.org.uk; dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b=kOKJAfNn; arc=none smtp.client-ip=62.89.141.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ftp.linux.org.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="Zw62AhbW"
-Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-54b10956398so3181577e87.0
-        for <linux-trace-kernel@vger.kernel.org>; Sat, 03 May 2025 03:24:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=arista.com; s=google; t=1746267881; x=1746872681; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=0qCQqJmGg8nHWn43651G41ZQZWqTiD0gQV2dJT64BtU=;
-        b=Zw62AhbWcIIpboxR+cLFIIEHMQ+SC755mqWxOUPHfYqHIowCO2fLUhCOilnQ2KLOhL
-         pFcdx+1E1nXdD5oT9OJhpYYPxF2KgqXad7bKm8x+Gk7txWALOmsn2U67h1JlsYP4xBND
-         u4XjzCAvQr7kn8TpXmetcTgOAUxEUPv8PwLEd6pwyKpRPj2f7a8yVVbjVr7sP+zc/4wD
-         ng+kQcQnuF0T99QqnXQZzEvYOGYbRuTZ2PtRiaZXkCyk/cVMRwlZPuQan9k9npzUGgSR
-         2wBrtidpqgfcLHnVbdrLQi6oFxINId/1oyr4MITBIPefexm8O1Drk/cZoLgZcUkk0IoL
-         y9uQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746267881; x=1746872681;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=0qCQqJmGg8nHWn43651G41ZQZWqTiD0gQV2dJT64BtU=;
-        b=OPOSK6Yy5l3dieucKQm5hPGxzIggKVWKvfDTTzf46CfhCiD0wrn+FR7jPX0jw/Txi8
-         hBXkKO7zj6OIL3NKXe8rpYgdlih79ljDPb505SoSeJKGEZvdPHYhAO0989LpyMWeduQJ
-         f14DLMKvROfTkSra7d/F5M735WSeevKYWZbVF6FhsLR67fXAzXy7NE7I0I1B3+6OR7Bt
-         Y16OWVlMy6SJZYLLYNQrUKarEIc0gHclqL4mSzTvws7yXOsfyMW+/ZCQDlGtbFjTusXn
-         T6CR9T9wYwqs/j+2HD8qlsBDoKeU8OXIHvPjuWVHyvm33ADZYShWmXpgUv3W1fwsDbqH
-         rB0g==
-X-Forwarded-Encrypted: i=1; AJvYcCW1xOFNGFz7ocE65dS1RAKW11PCHNZEE5i/AAR2+pDk2GDVTVxAXCqS3/GFnXjVezvCeH3Jksfk6Fh0pGBo/3b27z0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwIskBo0Qoba00KY/v9Jpd/HxLqKX56GjdPiM3/SFCr/TfounYt
-	UApFeHJ3nNtxzlfKKurMHS0ln+ZxE97feW98SFyVBHWRSP5ztJknECFYqmFMGSVfdVZtoOqGxlH
-	VgLQeFrFSjLjDOsKv5Zx7UmJvI7bZ4dwk8iSeM/IdYP+htRx95Q==
-X-Gm-Gg: ASbGnctjV3p6TB7Wn+TFz2ZcJFPC4wfQp8FF+c5+hUEqVrigspuS1+Wtxcuy81lA7EU
-	J8rtfkmXafkmQ/TQ/aSyee36Q4LqdmoHeqcJKZY4knwemwxTFQlJV73dHt2mqOiXhIDHMxWZa4t
-	hmy2OtLFLT7GCtuhU11oQ/JJlLZSV9GN6ukLKzzAAMoqSCg/AOj7YjQs9o
-X-Google-Smtp-Source: AGHT+IG5XLjqIeeIPwFlKAkJ3dRCAbqrk9r6ZoG99ElKCSQBWM4Y8aLZBVuXKoVEWRVAq7zXzUH1hRJ/eiftMHR/LTI=
-X-Received: by 2002:a05:6512:3b94:b0:549:8c0c:ea15 with SMTP id
- 2adb3069b0e04-54ea79f9549mr3087948e87.0.1746267881065; Sat, 03 May 2025
- 03:24:41 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b="kOKJAfNn"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=linux.org.uk; s=zeniv-20220401; h=Sender:Content-Type:MIME-Version:
+	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-Transfer-Encoding:
+	Content-ID:Content-Description:In-Reply-To:References;
+	bh=VQQwrXtjpf9TPDvI+hA5QXL2oknjqrYftWujqXQXEL4=; b=kOKJAfNnva/e2rtboiHAQv0bUs
+	Do63TsOwYnJFjsyJ7+UzE5SMSDUHb3O89J5/c5nWl+kdpsQ6s7KTw7dAk3kB4yPYg2gKQ/pIMxYqh
+	nMQkQXqHDdPl0u36nZhgkmtoC9NAPXU2OpxtSgNNC+lTJL1mI6MNfDCOv863At/jjsXhoFaFDxiso
+	J8Bff+7bsi0+Ztl3Hlth1gpuGM+jrusTmevr60UxAqHZi2zRtROkV3JHGPgOCAAqcEJX7zb2EwtLN
+	MIHrttAjs7wRf7Y0M91EFlbFBh5UlEVfiVaxYPi2unLgLF1GeIMTp+tgFYN50v9zODkU/fAdRaRHc
+	qLu1zkuA==;
+Received: from viro by zeniv.linux.org.uk with local (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uBKQH-0000000A4I9-3dJ8;
+	Sat, 03 May 2025 21:29:25 +0000
+Date: Sat, 3 May 2025 22:29:25 +0100
+From: Al Viro <viro@zeniv.linux.org.uk>
+To: linux-fsdevel@vger.kernel.org
+Cc: Steven Rostedt <rostedt@goodmis.org>,
+	linux-trace-kernel@vger.kernel.org,
+	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>
+Subject: [PATCH][RFC][CFT] kill vfs_submount(), already
+Message-ID: <20250503212925.GZ2023217@ZenIV>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CABEuK17=Y8LsLhiHXgcr7jOp2UF3YCGkQoAyQu8gTVJ5DHPN0w@mail.gmail.com>
- <20250326001122.421996-2-s.gupta@arista.com> <2025032553-celibacy-underpaid-faeb@gregkh>
- <20250325203236.3c6a19f4@batman.local.home> <20250325203723.53d3afde@batman.local.home>
- <2025032554-compile-unlivable-0fb4@gregkh> <20250325204731.24f26003@batman.local.home>
- <CABEuK16RdmvpbK5CpcuYrzdo_1GK-8eUkmb5x1BKk9bPcw3weA@mail.gmail.com>
-In-Reply-To: <CABEuK16RdmvpbK5CpcuYrzdo_1GK-8eUkmb5x1BKk9bPcw3weA@mail.gmail.com>
-From: Sahil Gupta <s.gupta@arista.com>
-Date: Sat, 3 May 2025 05:24:30 -0500
-X-Gm-Features: ATxdqUGwOKdIo-Q4V5eiLmHPD-F7dzkF0pGs7QY1PB2DuRqDOrWoKS6Y9LdDxOA
-Message-ID: <CABEuK14WgiKDLW-Zdz+RPsgpHXA-VK+Cp1u_Qd5EBo2eRb3npg@mail.gmail.com>
-Subject: Re: [PATCH 6.1 6.6 6.12 6.13] scripts/sorttable: fix ELF64 mcount_loc
- address parsing when compiling on 32-bit
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Greg KH <gregkh@linuxfoundation.org>, stable@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, Dmitry Safonov <dima@arista.com>, 
-	Kevin Mitchell <kevmitch@arista.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Sender: Al Viro <viro@ftp.linux.org.uk>
 
-Just wondering if this backport is still going to happen. I know this
-is fairly bottom of the barrel so I wouldn't be surprised if it
-doesn't.
+The last remaining user of vfs_submount() (tracefs) is easy to convert
+to fs_context_for_submount(); do that and bury that thing, along with
+SB_SUBMOUNT
 
-Sahil
+If nobody objects, I'm going to throw that into the mount-related pile;
+alternatively, that could be split into kernel/trace.c part (in invariant
+branch, to be pulled by tracefs folks and into the mount pile before
+the rest of the patch).  Preferences?
+
+Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
+---
+diff --git a/fs/namespace.c b/fs/namespace.c
+index 07f636036b86..293e6f925eff 100644
+--- a/fs/namespace.c
++++ b/fs/namespace.c
+@@ -1297,21 +1297,6 @@ struct vfsmount *vfs_kern_mount(struct file_system_type *type,
+ }
+ EXPORT_SYMBOL_GPL(vfs_kern_mount);
+ 
+-struct vfsmount *
+-vfs_submount(const struct dentry *mountpoint, struct file_system_type *type,
+-	     const char *name, void *data)
+-{
+-	/* Until it is worked out how to pass the user namespace
+-	 * through from the parent mount to the submount don't support
+-	 * unprivileged mounts with submounts.
+-	 */
+-	if (mountpoint->d_sb->s_user_ns != &init_user_ns)
+-		return ERR_PTR(-EPERM);
+-
+-	return vfs_kern_mount(type, SB_SUBMOUNT, name, data);
+-}
+-EXPORT_SYMBOL_GPL(vfs_submount);
+-
+ static struct mount *clone_mnt(struct mount *old, struct dentry *root,
+ 					int flag)
+ {
+diff --git a/fs/super.c b/fs/super.c
+index 97a17f9d9023..1886e4c930e0 100644
+--- a/fs/super.c
++++ b/fs/super.c
+@@ -823,13 +823,6 @@ struct super_block *sget(struct file_system_type *type,
+ 	struct super_block *old;
+ 	int err;
+ 
+-	/* We don't yet pass the user namespace of the parent
+-	 * mount through to here so always use &init_user_ns
+-	 * until that changes.
+-	 */
+-	if (flags & SB_SUBMOUNT)
+-		user_ns = &init_user_ns;
+-
+ retry:
+ 	spin_lock(&sb_lock);
+ 	if (test) {
+@@ -849,7 +842,7 @@ struct super_block *sget(struct file_system_type *type,
+ 	}
+ 	if (!s) {
+ 		spin_unlock(&sb_lock);
+-		s = alloc_super(type, (flags & ~SB_SUBMOUNT), user_ns);
++		s = alloc_super(type, flags, user_ns);
+ 		if (!s)
+ 			return ERR_PTR(-ENOMEM);
+ 		goto retry;
+diff --git a/include/linux/fs.h b/include/linux/fs.h
+index 016b0fe1536e..515e702d98ae 100644
+--- a/include/linux/fs.h
++++ b/include/linux/fs.h
+@@ -1240,7 +1240,6 @@ extern int send_sigurg(struct file *file);
+ /* These sb flags are internal to the kernel */
+ #define SB_DEAD         BIT(21)
+ #define SB_DYING        BIT(24)
+-#define SB_SUBMOUNT     BIT(26)
+ #define SB_FORCE        BIT(27)
+ #define SB_NOSEC        BIT(28)
+ #define SB_BORN         BIT(29)
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index fa488721019f..7b6248ba4428 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -51,6 +51,7 @@
+ #include <linux/workqueue.h>
+ #include <linux/sort.h>
+ #include <linux/io.h> /* vmap_page_range() */
++#include <linux/fs_context.h>
+ 
+ #include <asm/setup.h> /* COMMAND_LINE_SIZE */
+ 
+@@ -10072,6 +10073,8 @@ static struct vfsmount *trace_automount(struct dentry *mntpt, void *ingore)
+ {
+ 	struct vfsmount *mnt;
+ 	struct file_system_type *type;
++	struct fs_context *fc;
++	int ret;
+ 
+ 	/*
+ 	 * To maintain backward compatibility for tools that mount
+@@ -10081,10 +10084,20 @@ static struct vfsmount *trace_automount(struct dentry *mntpt, void *ingore)
+ 	type = get_fs_type("tracefs");
+ 	if (!type)
+ 		return NULL;
+-	mnt = vfs_submount(mntpt, type, "tracefs", NULL);
++
++	fc = fs_context_for_submount(type, mntpt);
++	if (IS_ERR(fc))
++		return ERR_CAST(fc);
++
++	ret = vfs_parse_fs_string(fc, "source",
++				  "tracefs", strlen("tracefs"));
++	if (!ret)
++		mnt = fc_mount(fc);
++	else
++		mnt = ERR_PTR(ret);
++
++	put_fs_context(fc);
+ 	put_filesystem(type);
+-	if (IS_ERR(mnt))
+-		return NULL;
+ 	return mnt;
+ }
+ 
