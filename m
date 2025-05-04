@@ -1,170 +1,144 @@
-Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [62.89.141.173])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC04A2EAE5;
-	Sat,  3 May 2025 21:29:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.89.141.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56C3071747;
+	Sun,  4 May 2025 03:22:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746307772; cv=none; b=nMz4AT+bGk5qACpzSzWJ8XBw/G1jrwOhplASZis2IBll69KqFeTO7R1W20gxRrAf91UN/OwzLg21CKDWD9dm1O8RIvgZ2GMmNt1wm4fCtNSSfQ2YFC1WbygTZ83bn1e8nwd31RCwgXpn/DskS9ZgBw+rCuEF4XlFStb5zY9nN/c=
+	t=1746328928; cv=none; b=rjcTsZKrjipdoWNxhvNp/FHxKwKGpz0uuPsOweDKInODyzY8mI7jjr4r5L8IUWUwGjpDeXOvJerO2ZhtS11G/5NFe748eFZP+1cKkRHd6eIo0O2EFKI9RE7/O/DGTSXH2FIGQSpIDvSludg9ulllf4h7Pvj0AKLtWzK0ytW+yf0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746307772; c=relaxed/simple;
-	bh=TaQvfmHQxwrRvVqDAjeeuCyW45oBEKJERXy9wLq2nxQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=e8UoalLfn9vXCs+WzijOyp87Qd3aGvWqsoXevXrembtwXF+lDXvkXntuhynUcRrkcW8Uzo8eRB60T1PBacs3kUMHCejic7Y8IT6MOCB17fXOHZO4gZ+nxcBdqz5xcCTv0HI7FgsNgpBCDipR6sHdQxNngrXAXUoca/g0pDwhVdA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk; spf=none smtp.mailfrom=ftp.linux.org.uk; dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b=kOKJAfNn; arc=none smtp.client-ip=62.89.141.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ftp.linux.org.uk
+	s=arc-20240116; t=1746328928; c=relaxed/simple;
+	bh=yw1tXpB5kFh3Ma4fVMLp+TYWdnZaRNqXkmUVoCyOeOg=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Or6KXhWn4lVgYlETBqxMDLFhzEf9mbAYngZw9M2Rgpllve6K5cWVBxKbhD69ea6MIHW85bbZTRYwh0PYvhTW6IwtCv2Jp2Ba/8N4bKQhNsVAStNFB04CltckGD7X5ToN4LfcWjeM/UdcPjAECyNpw6+IVUXLwTXoTnceY+zi+vE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=hJre+UKO; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b="kOKJAfNn"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=linux.org.uk; s=zeniv-20220401; h=Sender:Content-Type:MIME-Version:
-	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-Transfer-Encoding:
-	Content-ID:Content-Description:In-Reply-To:References;
-	bh=VQQwrXtjpf9TPDvI+hA5QXL2oknjqrYftWujqXQXEL4=; b=kOKJAfNnva/e2rtboiHAQv0bUs
-	Do63TsOwYnJFjsyJ7+UzE5SMSDUHb3O89J5/c5nWl+kdpsQ6s7KTw7dAk3kB4yPYg2gKQ/pIMxYqh
-	nMQkQXqHDdPl0u36nZhgkmtoC9NAPXU2OpxtSgNNC+lTJL1mI6MNfDCOv863At/jjsXhoFaFDxiso
-	J8Bff+7bsi0+Ztl3Hlth1gpuGM+jrusTmevr60UxAqHZi2zRtROkV3JHGPgOCAAqcEJX7zb2EwtLN
-	MIHrttAjs7wRf7Y0M91EFlbFBh5UlEVfiVaxYPi2unLgLF1GeIMTp+tgFYN50v9zODkU/fAdRaRHc
-	qLu1zkuA==;
-Received: from viro by zeniv.linux.org.uk with local (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uBKQH-0000000A4I9-3dJ8;
-	Sat, 03 May 2025 21:29:25 +0000
-Date: Sat, 3 May 2025 22:29:25 +0100
-From: Al Viro <viro@zeniv.linux.org.uk>
-To: linux-fsdevel@vger.kernel.org
-Cc: Steven Rostedt <rostedt@goodmis.org>,
-	linux-trace-kernel@vger.kernel.org,
-	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>
-Subject: [PATCH][RFC][CFT] kill vfs_submount(), already
-Message-ID: <20250503212925.GZ2023217@ZenIV>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="hJre+UKO"
+Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5442xe4A031625;
+	Sun, 4 May 2025 03:21:48 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=+HfweO
+	BbkgvqFntRb8rDHzQ7txkSSueZh8ubgyu2t5g=; b=hJre+UKOp84bYbvHWgIHxf
+	zA3uQdU5adNrp5Oxv7DkSPcurvPZJkU4mkDOsRXgMn0XSalUJoErr4EOulnnTsxn
+	7vzQr6Eapegp8Ddi3Te4fyDUvh0Yamu/6UgcBwFvC+axkDZ9dexLec/TRs746RTA
+	CA9DN47Ilkd4GKOJ11KJHs9c2c6Q9MCRPl6gfXPCQpQP2ASNmvCwROqjWQAh/j/t
+	Z00WCBfLhYVYSaKF5DkNvaqZ99S+xOLCFI15oFixw6PSfYn3etDqQbXRySISRvd1
+	8sDGkcgRd+8EQXWb9EJi5D9AklpmAeNDJjsbvIdI0llI1v67Ab689tJHX0/QJu4w
+	==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46du888nmm-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sun, 04 May 2025 03:21:47 +0000 (GMT)
+Received: from m0356517.ppops.net (m0356517.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 5443LlCf008226;
+	Sun, 4 May 2025 03:21:47 GMT
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46du888nmh-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sun, 04 May 2025 03:21:47 +0000 (GMT)
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 5443FUv6013880;
+	Sun, 4 May 2025 03:21:46 GMT
+Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
+	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 46e06200gq-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sun, 04 May 2025 03:21:46 +0000
+Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
+	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 5443Li8N41550140
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Sun, 4 May 2025 03:21:44 GMT
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 8C47320043;
+	Sun,  4 May 2025 03:21:44 +0000 (GMT)
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 8068420040;
+	Sun,  4 May 2025 03:21:38 +0000 (GMT)
+Received: from li-c439904c-24ed-11b2-a85c-b284a6847472.ibm.com.com (unknown [9.43.99.78])
+	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Sun,  4 May 2025 03:21:38 +0000 (GMT)
+From: Madhavan Srinivasan <maddy@linux.ibm.com>
+To: linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        Hari Bathini <hbathini@linux.ibm.com>
+Cc: linux-trace-kernel@vger.kernel.org, Nicholas Piggin <npiggin@gmail.com>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        "Naveen N. Rao" <naveen@kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>, Viktor Malik <vmalik@redhat.com>,
+        stable@vger.kernel.org
+Subject: Re: [PATCH] powerpc64/ftrace: fix clobbered r15 during livepatching
+Date: Sun,  4 May 2025 08:51:36 +0530
+Message-ID: <174632869186.233894.4009537486958760221.b4-ty@linux.ibm.com>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250416191227.201146-1-hbathini@linux.ibm.com>
+References: <20250416191227.201146-1-hbathini@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Sender: Al Viro <viro@ftp.linux.org.uk>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTA0MDAyNyBTYWx0ZWRfX4MqmmYiUiAD1 YQ/QDwH186KoM3gcU5IPTflw60TQwBG2wi2uhttYPAaNAYG/yek9QaGB60KC/7C6NFjctgDst1H PCdPy5ozYEHty3dvcqQO19LzCCEwDuasWxYlWghxy37CqV12IvbrvZsv1pgrx4fNpRNctuubhZU
+ bvQ6IEs1pEccZ0QPESKUhHDoMdk4RkQXBLaP2GZhaHqIGNNbaP0Uf5P2yzAGQMayFjyQdwI3Dj0 q7CBEqssuZM2Q9JDdp/GpAFOhvyNX9IbLIY0DY6R34VjMoSR7j9XjeltnKvSMC+/NT06BNDZZ2t 56lwvVcSJ8m4Ia0RdeZGQ9BChzxNIAEfvXBsHF80xEMunhwPoJ6pZjnZvl0VTTOjYaw78DTcnhL
+ uDRcIHT5WHvT/l7iOqO8Sb7kovkH6pv+Tm+0Xu8QZ5tZeJIXkuhwDH3UO25a3/p2FBz2dg3w
+X-Proofpoint-ORIG-GUID: D7VNrTAyrh7Ix-M5LjKcmxbdAfxR3upH
+X-Authority-Analysis: v=2.4 cv=c7mrQQ9l c=1 sm=1 tr=0 ts=6816dd4b cx=c_pps a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=VwQbUJbxAAAA:8 a=j9ENY3UkbgF66zyUuo4A:9 a=QEXdDO2ut3YA:10
+X-Proofpoint-GUID: tpEtm0Ah2R4auKXeVRcaWAvedqRwFzUt
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-04_01,2025-04-30_01,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 suspectscore=0
+ phishscore=0 clxscore=1011 malwarescore=0 mlxlogscore=312 adultscore=0
+ impostorscore=0 bulkscore=0 spamscore=0 priorityscore=1501
+ lowpriorityscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2505040027
 
-The last remaining user of vfs_submount() (tracefs) is easy to convert
-to fs_context_for_submount(); do that and bury that thing, along with
-SB_SUBMOUNT
+On Thu, 17 Apr 2025 00:42:27 +0530, Hari Bathini wrote:
+> While r15 is clobbered always with PPC_FTRACE_OUT_OF_LINE, it is
+> not restored in livepatch sequence leading to not so obvious fails
+> like below:
+> 
+>   BUG: Unable to handle kernel data access on write at 0xc0000000000f9078
+>   Faulting instruction address: 0xc0000000018ff958
+>   Oops: Kernel access of bad area, sig: 11 [#1]
+>   ...
+>   NIP:  c0000000018ff958 LR: c0000000018ff930 CTR: c0000000009c0790
+>   REGS: c00000005f2e7790 TRAP: 0300   Tainted: G              K      (6.14.0+)
+>   MSR:  8000000000009033 <SF,EE,ME,IR,DR,RI,LE>  CR: 2822880b  XER: 20040000
+>   CFAR: c0000000008addc0 DAR: c0000000000f9078 DSISR: 0a000000 IRQMASK: 1
+>   GPR00: c0000000018f2584 c00000005f2e7a30 c00000000280a900 c000000017ffa488
+>   GPR04: 0000000000000008 0000000000000000 c0000000018f24fc 000000000000000d
+>   GPR08: fffffffffffe0000 000000000000000d 0000000000000000 0000000000008000
+>   GPR12: c0000000009c0790 c000000017ffa480 c00000005f2e7c78 c0000000000f9070
+>   GPR16: c00000005f2e7c90 0000000000000000 0000000000000000 0000000000000000
+>   GPR20: 0000000000000000 c00000005f3efa80 c00000005f2e7c60 c00000005f2e7c88
+>   GPR24: c00000005f2e7c60 0000000000000001 c0000000000f9078 0000000000000000
+>   GPR28: 00007fff97960000 c000000017ffa480 0000000000000000 c0000000000f9078
+>   ...
+>   Call Trace:
+>     check_heap_object+0x34/0x390 (unreliable)
+>   __mutex_unlock_slowpath.isra.0+0xe4/0x230
+>   seq_read_iter+0x430/0xa90
+>   proc_reg_read_iter+0xa4/0x200
+>   vfs_read+0x41c/0x510
+>   ksys_read+0xa4/0x190
+>   system_call_exception+0x1d0/0x440
+>   system_call_vectored_common+0x15c/0x2ec
+> 
+> [...]
 
-If nobody objects, I'm going to throw that into the mount-related pile;
-alternatively, that could be split into kernel/trace.c part (in invariant
-branch, to be pulled by tracefs folks and into the mount pile before
-the rest of the patch).  Preferences?
+Applied to powerpc/next.
 
-Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
----
-diff --git a/fs/namespace.c b/fs/namespace.c
-index 07f636036b86..293e6f925eff 100644
---- a/fs/namespace.c
-+++ b/fs/namespace.c
-@@ -1297,21 +1297,6 @@ struct vfsmount *vfs_kern_mount(struct file_system_type *type,
- }
- EXPORT_SYMBOL_GPL(vfs_kern_mount);
- 
--struct vfsmount *
--vfs_submount(const struct dentry *mountpoint, struct file_system_type *type,
--	     const char *name, void *data)
--{
--	/* Until it is worked out how to pass the user namespace
--	 * through from the parent mount to the submount don't support
--	 * unprivileged mounts with submounts.
--	 */
--	if (mountpoint->d_sb->s_user_ns != &init_user_ns)
--		return ERR_PTR(-EPERM);
--
--	return vfs_kern_mount(type, SB_SUBMOUNT, name, data);
--}
--EXPORT_SYMBOL_GPL(vfs_submount);
--
- static struct mount *clone_mnt(struct mount *old, struct dentry *root,
- 					int flag)
- {
-diff --git a/fs/super.c b/fs/super.c
-index 97a17f9d9023..1886e4c930e0 100644
---- a/fs/super.c
-+++ b/fs/super.c
-@@ -823,13 +823,6 @@ struct super_block *sget(struct file_system_type *type,
- 	struct super_block *old;
- 	int err;
- 
--	/* We don't yet pass the user namespace of the parent
--	 * mount through to here so always use &init_user_ns
--	 * until that changes.
--	 */
--	if (flags & SB_SUBMOUNT)
--		user_ns = &init_user_ns;
--
- retry:
- 	spin_lock(&sb_lock);
- 	if (test) {
-@@ -849,7 +842,7 @@ struct super_block *sget(struct file_system_type *type,
- 	}
- 	if (!s) {
- 		spin_unlock(&sb_lock);
--		s = alloc_super(type, (flags & ~SB_SUBMOUNT), user_ns);
-+		s = alloc_super(type, flags, user_ns);
- 		if (!s)
- 			return ERR_PTR(-ENOMEM);
- 		goto retry;
-diff --git a/include/linux/fs.h b/include/linux/fs.h
-index 016b0fe1536e..515e702d98ae 100644
---- a/include/linux/fs.h
-+++ b/include/linux/fs.h
-@@ -1240,7 +1240,6 @@ extern int send_sigurg(struct file *file);
- /* These sb flags are internal to the kernel */
- #define SB_DEAD         BIT(21)
- #define SB_DYING        BIT(24)
--#define SB_SUBMOUNT     BIT(26)
- #define SB_FORCE        BIT(27)
- #define SB_NOSEC        BIT(28)
- #define SB_BORN         BIT(29)
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index fa488721019f..7b6248ba4428 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -51,6 +51,7 @@
- #include <linux/workqueue.h>
- #include <linux/sort.h>
- #include <linux/io.h> /* vmap_page_range() */
-+#include <linux/fs_context.h>
- 
- #include <asm/setup.h> /* COMMAND_LINE_SIZE */
- 
-@@ -10072,6 +10073,8 @@ static struct vfsmount *trace_automount(struct dentry *mntpt, void *ingore)
- {
- 	struct vfsmount *mnt;
- 	struct file_system_type *type;
-+	struct fs_context *fc;
-+	int ret;
- 
- 	/*
- 	 * To maintain backward compatibility for tools that mount
-@@ -10081,10 +10084,20 @@ static struct vfsmount *trace_automount(struct dentry *mntpt, void *ingore)
- 	type = get_fs_type("tracefs");
- 	if (!type)
- 		return NULL;
--	mnt = vfs_submount(mntpt, type, "tracefs", NULL);
-+
-+	fc = fs_context_for_submount(type, mntpt);
-+	if (IS_ERR(fc))
-+		return ERR_CAST(fc);
-+
-+	ret = vfs_parse_fs_string(fc, "source",
-+				  "tracefs", strlen("tracefs"));
-+	if (!ret)
-+		mnt = fc_mount(fc);
-+	else
-+		mnt = ERR_PTR(ret);
-+
-+	put_fs_context(fc);
- 	put_filesystem(type);
--	if (IS_ERR(mnt))
--		return NULL;
- 	return mnt;
- }
- 
+[1/1] powerpc64/ftrace: fix clobbered r15 during livepatching
+      https://git.kernel.org/powerpc/c/cb5b691f8273432297611863ac142e17119279e0
+
+Thanks
