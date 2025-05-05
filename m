@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F18932F54AF;
-	Mon,  5 May 2025 23:16:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0661A3B11C2;
+	Mon,  5 May 2025 23:20:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746486993; cv=none; b=jlI+rGkMOOuAAq57TzCxQOPFTFrc77lyA6NgZDEgc+QjloWuCphTLA1vpRZHGtKqoFb4CvO8fYPIZwHtNE6bH5W0USOWigWqbVahsDL+O8Ke3sKQWvkS5RHMGSa/U0hD3i1VWqn3B9ntdRGEXcPeQi3YYmyn4uXabHb6wDi+wRc=
+	t=1746487232; cv=none; b=hIGRmoDibC9X6XBGNqlzQzxZ0i+4GWyZ4zPYIiLqcMMD+OnxzYM1MXCFRquh3wGXnVm0HT5kKhYKhL3cfxeNsoWig8d98BFX4vpePIiA0Qw7NHlE85cNl/QexgC1s3QVHNfVNITSjn4RFmShI2zxT0S+gvgcmiUvkjBFgR8M5ms=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746486993; c=relaxed/simple;
-	bh=4Rhj+XqsDVjOooL4g5+oDRfe5elpg/W4PBMdyfzXDGY=;
+	s=arc-20240116; t=1746487232; c=relaxed/simple;
+	bh=aaoHzeX9kNdyJ+UGNMNnz6IM+kfANJ9lmqLQLCXrsqw=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=t5UN6cO+DkfWXujvIa9zcPvP/vAoO1OQrmynxk80GyBJEfNyQ5e98vQSMkRscrfIXiVYtoJ6cCuvSaaeVE1eqZyzhd1LDQKNIPauYF2ssHCytj9R6WGCksDfjFIrJJGn0CGe514YFiWiImze5OCYZYLAjlI2cvUJhCGzWhpX1eI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AEnjdhbc; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=Qjx9nL7xZtw7HksDooaGRB85P92pDrXho7zFFhmbI8c9HVmJK/tX+swGBwsCKmyw/f0aG0kN45ZslI2PIeQ+UNdLQhE/3937oeaVTpPb3xNV9LFe1+qiENA/mE2pXfbwVusJwC/LIbdgzvQ0V1LmY7Mhhafj+HZ16vRRb5eTy+Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X86ujxmZ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AEnjdhbc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DAC96C4AF09;
-	Mon,  5 May 2025 23:16:30 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X86ujxmZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 84378C4CEED;
+	Mon,  5 May 2025 23:20:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746486991;
-	bh=4Rhj+XqsDVjOooL4g5+oDRfe5elpg/W4PBMdyfzXDGY=;
+	s=k20201202; t=1746487230;
+	bh=aaoHzeX9kNdyJ+UGNMNnz6IM+kfANJ9lmqLQLCXrsqw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=AEnjdhbcNWzdC8UCLBskd8csIlPM9zDUYOcPggpZburAzqSsstvRCD2oCetGRMTV1
-	 cofweO6GAZ5zei13MnmuTbvTFAidz1Vshj7icU3aUhRCwKCE9ilZgOLHuT54YUS+bo
-	 HGEP/HM5d5yPxGRGjsY0a3SCN/a+ZQ7qIWH9+Tz1oNHyN0LV8DgXes8FpQaFC/IpED
-	 dOoYcJq/vRemJv/QKENN/KtteNq1ybAG1FeulxjbXpfpPnBlFGksQnps76FOYsK85e
-	 +9/u7e34UhW2+7ZwwLAeQM2pmJ2pT23AZt3G0nNukBeU9hXozgzTU6FdlXWIiwpDxA
-	 B1OPVlOsq0sRA==
+	b=X86ujxmZ1kQZsFVmIpIXFoGs3p4Nh3ISZ7GiGCjabc9Qj2kgY+FdV1vxzSx0aLJvH
+	 ZO12SNRCzJgpDD02LxDursqSj7XiFkZ7gv1Nx0+Fre18UvscVAKp+qCzdbfLMgyBuB
+	 wV8ikxeAOajk/NYjtjdQe0p14VsrQ76kIOmIIi4vYkpK1NpSzZIn1GBQ1NvfJ03Qjf
+	 v47C10zXzcFhYCN18QrZBEdW+SI6WuB0dgn3/eF6ULp6KrK+Lzlygw43oaJfaPR/r2
+	 7taYP9juaLTmJHgiJfExaEsgYOhS+Vw3ZDW6E3gfD04veLEDJftkf+3QAb1/ykoszO
+	 gdiyGb7YR4eSA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
@@ -36,12 +36,12 @@ Cc: Bibo Mao <maobibo@loongson.cn>,
 	mhiramat@kernel.org,
 	linux-trace-kernel@vger.kernel.org,
 	linux-mips@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.15 095/153] MIPS: Use arch specific syscall name match function
-Date: Mon,  5 May 2025 19:12:22 -0400
-Message-Id: <20250505231320.2695319-95-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.10 068/114] MIPS: Use arch specific syscall name match function
+Date: Mon,  5 May 2025 19:17:31 -0400
+Message-Id: <20250505231817.2697367-68-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250505231320.2695319-1-sashal@kernel.org>
-References: <20250505231320.2695319-1-sashal@kernel.org>
+In-Reply-To: <20250505231817.2697367-1-sashal@kernel.org>
+References: <20250505231817.2697367-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -50,7 +50,7 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 5.15.181
+X-stable-base: Linux 5.10.237
 Content-Transfer-Encoding: 8bit
 
 From: Bibo Mao <maobibo@loongson.cn>
@@ -76,7 +76,7 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 16 insertions(+)
 
 diff --git a/arch/mips/include/asm/ftrace.h b/arch/mips/include/asm/ftrace.h
-index db497a8167da2..e3212f44446fa 100644
+index b463f2aa5a613..7acbe701afd69 100644
 --- a/arch/mips/include/asm/ftrace.h
 +++ b/arch/mips/include/asm/ftrace.h
 @@ -87,4 +87,20 @@ struct dyn_arch_ftrace {
