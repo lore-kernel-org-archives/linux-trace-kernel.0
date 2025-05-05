@@ -1,285 +1,199 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [62.89.141.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 430AE277026;
-	Mon,  5 May 2025 21:22:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AAE816D9C2;
+	Mon,  5 May 2025 21:38:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.89.141.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746480150; cv=none; b=rxGicBq7D+wVCvUEOd2tkcB24g/0Vc7A6TClbb9OM/bNEDSErDCFTTnnIcH/3pVjTiM+DMEXSYs6I0bFULl8L3wvTeFUFepsW/n7tRhfQ/wt7gnUY7cxPy9H0riKlQ3lWj1JPkMLnNRIXBfHrHQ4zsybYDTpLB0/7eNTP3qlbF8=
+	t=1746481114; cv=none; b=QfK0l4atABJ0oiikdjc/HxUX7gqX96V02+zs5YyKzcSJAedHIzwWXNzEGVZH/b/Zbu1k0cQg0BkAZ33H488dXlTl7ic0jG5ISGN8z6XANw+3Lx3DHvmd/1Jfwd7L07lIlUxxXKjbr4ogH7efoPIvT3A/QRcDPMtxcBtbsM2d47Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746480150; c=relaxed/simple;
-	bh=oUrVdDvwvG6+mSyGGQx/AYyGQ5s9g9qRhH4UvipaHpo=;
-	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=lC8flxdMpkSn+6N24Inuq3ji1FNlI1/htdx8SYBmgaspNd9TWrzQLz86zI+qXqU81zNTcIH7k7MccXGu/WEni78FhbPmcPF4el1CKWc8opbTAFIyapnKkEZ9Xi6BjnLORlJTSlK6XWQS0phrf4cyQ+I11gu8WSQkGx3nl6iiFps=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B3157C4CEF8;
-	Mon,  5 May 2025 21:22:29 +0000 (UTC)
-Received: from rostedt by gandalf with local (Exim 4.98.2)
-	(envelope-from <rostedt@goodmis.org>)
-	id 1uC3Gm-00000000yGE-2I73;
-	Mon, 05 May 2025 17:22:36 -0400
-Message-ID: <20250505212236.394925376@goodmis.org>
-User-Agent: quilt/0.68
-Date: Mon, 05 May 2025 17:21:15 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Andrew Morton <akpm@linux-foundation.org>
-Subject: [PATCH v2 11/13] tracing: Convert the per CPU "disabled" counter to local from atomic
-References: <20250505212104.986494754@goodmis.org>
+	s=arc-20240116; t=1746481114; c=relaxed/simple;
+	bh=CzrcoT0LxNGl0mFzCjqyGjQWe/eLknJLoU/y9dVRFBI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GPmzeRbigp26S0PfLBdGGQCLWZnObdlJnnE9qUfnP0i9SroICuc9GBmhTXMf8LdifpyCApceuorzYgknjGcXX8WBVhX6DjSaOKvumolZoW+jSAlIYuAYj1596gdvt8RAHdq/cgWoKxI75DNtkaIoLk+/yRc3D7NesrfLWha2Mow=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk; spf=none smtp.mailfrom=ftp.linux.org.uk; dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b=SxxMvqRq; arc=none smtp.client-ip=62.89.141.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ftp.linux.org.uk
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b="SxxMvqRq"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=Ia3+UmbmCn3a/XxQF41qW8DIGKkmVOq4Hrgy62+iyHo=; b=SxxMvqRqmQ2CJk/LQPFMpeTfxJ
+	7AMe/oLzXA6MY5iIgmxank0mG3ZAzGs55YxwUnKgwTgjo2e3WrJzExZyd7NgwdXfF/6ickC0f5Dc/
+	lyvFXpK9X2Z7hm38o8wH3rBQzTdQDy3W75CisGxTJA963zbwug6tIcuUvsKq/5SSyNRm+MzN+0aAU
+	LX9/TUdS2GDQe0kK6xdL7DTz27n3p8AGV8SXvSnpgJp8sXI2IHpGV25yI3vJj3/wlkPc6HXwqX5ES
+	A4oTYyJW/9KalOFvzKrmoZlRkoj2+0tPxtUatbQfh0w4dRS7Mh2GuPB2j/t5MuSfa6TkaEezk8pD3
+	3jXbPRIg==;
+Received: from viro by zeniv.linux.org.uk with local (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uC3W9-00000006lt0-1knh;
+	Mon, 05 May 2025 21:38:29 +0000
+Date: Mon, 5 May 2025 22:38:29 +0100
+From: Al Viro <viro@zeniv.linux.org.uk>
+To: Jan Kara <jack@suse.cz>
+Cc: linux-fsdevel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
+	linux-trace-kernel@vger.kernel.org,
+	Christian Brauner <brauner@kernel.org>
+Subject: [PATCH v2] kill vfs_submount()
+Message-ID: <20250505213829.GI2023217@ZenIV>
+References: <20250503212925.GZ2023217@ZenIV>
+ <utebik76wcdgaspk7sjzb3aedmlcwbmwj3olur45zuycbpapjc@pd5rhnudxb35>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <utebik76wcdgaspk7sjzb3aedmlcwbmwj3olur45zuycbpapjc@pd5rhnudxb35>
+Sender: Al Viro <viro@ftp.linux.org.uk>
 
-From: Steven Rostedt <rostedt@goodmis.org>
+On Mon, May 05, 2025 at 12:55:34PM +0200, Jan Kara wrote:
+> >  	if (!type)
+> >  		return NULL;
+> > -	mnt = vfs_submount(mntpt, type, "tracefs", NULL);
+> > +
+> > +	fc = fs_context_for_submount(type, mntpt);
+> > +	if (IS_ERR(fc))
+> > +		return ERR_CAST(fc);
+> 
+> Missing put_filesystem() here?
 
-The per CPU "disabled" counter is used for the latency tracers and stack
-tracers to make sure that their accounting isn't messed up by an NMI or
-interrupt coming in and affecting the same CPU data. But the counter is an
-atomic_t type. As it only needs to synchronize against the current CPU,
-switch it over to local_t type.
+Actually, I'd rather have it done unconditionally right after
+fc_context_for_submount() - fs_context allocation grabs
+a reference and it's held until put_fs_context, so...
 
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+[PATCH] kill vfs_submount()
+    
+The last remaining user of vfs_submount() (tracefs) is easy to convert
+to fs_context_for_submount(); do that and bury that thing, along with
+SB_SUBMOUNT
+
+Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
 ---
- kernel/trace/trace.h              |  2 +-
- kernel/trace/trace_functions.c    |  8 ++++----
- kernel/trace/trace_irqsoff.c      | 22 +++++++++++-----------
- kernel/trace/trace_sched_wakeup.c | 18 +++++++++---------
- 4 files changed, 25 insertions(+), 25 deletions(-)
-
-diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
-index 69c1ecfb2290..188032d4ab69 100644
---- a/kernel/trace/trace.h
-+++ b/kernel/trace/trace.h
-@@ -183,7 +183,7 @@ struct trace_array;
-  * the trace, etc.)
-  */
- struct trace_array_cpu {
--	atomic_t		disabled;
-+	local_t			disabled;
- 	void			*buffer_page;	/* ring buffer spare */
+diff --git a/fs/namespace.c b/fs/namespace.c
+index 018e95fe5459..0577a9fb6050 100644
+--- a/fs/namespace.c
++++ b/fs/namespace.c
+@@ -1329,21 +1329,6 @@ struct vfsmount *vfs_kern_mount(struct file_system_type *type,
+ }
+ EXPORT_SYMBOL_GPL(vfs_kern_mount);
  
- 	unsigned long		entries;
-diff --git a/kernel/trace/trace_functions.c b/kernel/trace/trace_functions.c
-index bd153219a712..99a90f182485 100644
---- a/kernel/trace/trace_functions.c
-+++ b/kernel/trace/trace_functions.c
-@@ -291,7 +291,7 @@ function_stack_trace_call(unsigned long ip, unsigned long parent_ip,
- 	parent_ip = function_get_true_parent_ip(parent_ip, fregs);
- 	cpu = raw_smp_processor_id();
- 	data = per_cpu_ptr(tr->array_buffer.data, cpu);
--	disabled = atomic_inc_return(&data->disabled);
-+	disabled = local_inc_return(&data->disabled);
+-struct vfsmount *
+-vfs_submount(const struct dentry *mountpoint, struct file_system_type *type,
+-	     const char *name, void *data)
+-{
+-	/* Until it is worked out how to pass the user namespace
+-	 * through from the parent mount to the submount don't support
+-	 * unprivileged mounts with submounts.
+-	 */
+-	if (mountpoint->d_sb->s_user_ns != &init_user_ns)
+-		return ERR_PTR(-EPERM);
+-
+-	return vfs_kern_mount(type, SB_SUBMOUNT, name, data);
+-}
+-EXPORT_SYMBOL_GPL(vfs_submount);
+-
+ static struct mount *clone_mnt(struct mount *old, struct dentry *root,
+ 					int flag)
+ {
+diff --git a/fs/super.c b/fs/super.c
+index 97a17f9d9023..1886e4c930e0 100644
+--- a/fs/super.c
++++ b/fs/super.c
+@@ -823,13 +823,6 @@ struct super_block *sget(struct file_system_type *type,
+ 	struct super_block *old;
+ 	int err;
  
- 	if (likely(disabled == 1)) {
- 		trace_ctx = tracing_gen_ctx_flags(flags);
-@@ -303,7 +303,7 @@ function_stack_trace_call(unsigned long ip, unsigned long parent_ip,
- 		__trace_stack(tr, trace_ctx, skip);
+-	/* We don't yet pass the user namespace of the parent
+-	 * mount through to here so always use &init_user_ns
+-	 * until that changes.
+-	 */
+-	if (flags & SB_SUBMOUNT)
+-		user_ns = &init_user_ns;
+-
+ retry:
+ 	spin_lock(&sb_lock);
+ 	if (test) {
+@@ -849,7 +842,7 @@ struct super_block *sget(struct file_system_type *type,
  	}
+ 	if (!s) {
+ 		spin_unlock(&sb_lock);
+-		s = alloc_super(type, (flags & ~SB_SUBMOUNT), user_ns);
++		s = alloc_super(type, flags, user_ns);
+ 		if (!s)
+ 			return ERR_PTR(-ENOMEM);
+ 		goto retry;
+diff --git a/include/linux/fs.h b/include/linux/fs.h
+index 016b0fe1536e..515e702d98ae 100644
+--- a/include/linux/fs.h
++++ b/include/linux/fs.h
+@@ -1240,7 +1240,6 @@ extern int send_sigurg(struct file *file);
+ /* These sb flags are internal to the kernel */
+ #define SB_DEAD         BIT(21)
+ #define SB_DYING        BIT(24)
+-#define SB_SUBMOUNT     BIT(26)
+ #define SB_FORCE        BIT(27)
+ #define SB_NOSEC        BIT(28)
+ #define SB_BORN         BIT(29)
+diff --git a/include/linux/mount.h b/include/linux/mount.h
+index dcc17ce8a959..d4eb90a367af 100644
+--- a/include/linux/mount.h
++++ b/include/linux/mount.h
+@@ -98,9 +98,6 @@ extern struct vfsmount *vfs_create_mount(struct fs_context *fc);
+ extern struct vfsmount *vfs_kern_mount(struct file_system_type *type,
+ 				      int flags, const char *name,
+ 				      void *data);
+-extern struct vfsmount *vfs_submount(const struct dentry *mountpoint,
+-				     struct file_system_type *type,
+-				     const char *name, void *data);
  
--	atomic_dec(&data->disabled);
-+	local_dec(&data->disabled);
- 	local_irq_restore(flags);
+ extern void mnt_set_expiry(struct vfsmount *mnt, struct list_head *expiry_list);
+ extern void mark_mounts_for_expiry(struct list_head *mounts);
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index e22aacb0028a..936a615e8c56 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -51,6 +51,7 @@
+ #include <linux/workqueue.h>
+ #include <linux/sort.h>
+ #include <linux/io.h> /* vmap_page_range() */
++#include <linux/fs_context.h>
+ 
+ #include <asm/setup.h> /* COMMAND_LINE_SIZE */
+ 
+@@ -10075,6 +10076,8 @@ static struct vfsmount *trace_automount(struct dentry *mntpt, void *ingore)
+ {
+ 	struct vfsmount *mnt;
+ 	struct file_system_type *type;
++	struct fs_context *fc;
++	int ret;
+ 
+ 	/*
+ 	 * To maintain backward compatibility for tools that mount
+@@ -10084,10 +10087,20 @@ static struct vfsmount *trace_automount(struct dentry *mntpt, void *ingore)
+ 	type = get_fs_type("tracefs");
+ 	if (!type)
+ 		return NULL;
+-	mnt = vfs_submount(mntpt, type, "tracefs", NULL);
++
++	fc = fs_context_for_submount(type, mntpt);
+ 	put_filesystem(type);
+-	if (IS_ERR(mnt))
+-		return NULL;
++	if (IS_ERR(fc))
++		return ERR_CAST(fc);
++
++	ret = vfs_parse_fs_string(fc, "source",
++				  "tracefs", strlen("tracefs"));
++	if (!ret)
++		mnt = fc_mount(fc);
++	else
++		mnt = ERR_PTR(ret);
++
++	put_fs_context(fc);
+ 	return mnt;
  }
  
-@@ -402,7 +402,7 @@ function_stack_no_repeats_trace_call(unsigned long ip, unsigned long parent_ip,
- 	parent_ip = function_get_true_parent_ip(parent_ip, fregs);
- 	cpu = raw_smp_processor_id();
- 	data = per_cpu_ptr(tr->array_buffer.data, cpu);
--	disabled = atomic_inc_return(&data->disabled);
-+	disabled = local_inc_return(&data->disabled);
- 
- 	if (likely(disabled == 1)) {
- 		last_info = per_cpu_ptr(tr->last_func_repeats, cpu);
-@@ -417,7 +417,7 @@ function_stack_no_repeats_trace_call(unsigned long ip, unsigned long parent_ip,
- 	}
- 
-  out:
--	atomic_dec(&data->disabled);
-+	local_dec(&data->disabled);
- 	local_irq_restore(flags);
- }
- 
-diff --git a/kernel/trace/trace_irqsoff.c b/kernel/trace/trace_irqsoff.c
-index 40c39e946940..0b6d932a931e 100644
---- a/kernel/trace/trace_irqsoff.c
-+++ b/kernel/trace/trace_irqsoff.c
-@@ -123,12 +123,12 @@ static int func_prolog_dec(struct trace_array *tr,
- 		return 0;
- 
- 	*data = per_cpu_ptr(tr->array_buffer.data, cpu);
--	disabled = atomic_inc_return(&(*data)->disabled);
-+	disabled = local_inc_return(&(*data)->disabled);
- 
- 	if (likely(disabled == 1))
- 		return 1;
- 
--	atomic_dec(&(*data)->disabled);
-+	local_dec(&(*data)->disabled);
- 
- 	return 0;
- }
-@@ -152,7 +152,7 @@ irqsoff_tracer_call(unsigned long ip, unsigned long parent_ip,
- 
- 	trace_function(tr, ip, parent_ip, trace_ctx, fregs);
- 
--	atomic_dec(&data->disabled);
-+	local_dec(&data->disabled);
- }
- #endif /* CONFIG_FUNCTION_TRACER */
- 
-@@ -209,7 +209,7 @@ static int irqsoff_graph_entry(struct ftrace_graph_ent *trace,
- 
- 	trace_ctx = tracing_gen_ctx_flags(flags);
- 	ret = __trace_graph_entry(tr, trace, trace_ctx);
--	atomic_dec(&data->disabled);
-+	local_dec(&data->disabled);
- 
- 	return ret;
- }
-@@ -238,7 +238,7 @@ static void irqsoff_graph_return(struct ftrace_graph_ret *trace,
- 
- 	trace_ctx = tracing_gen_ctx_flags(flags);
- 	__trace_graph_return(tr, trace, trace_ctx, *calltime, rettime);
--	atomic_dec(&data->disabled);
-+	local_dec(&data->disabled);
- }
- 
- static struct fgraph_ops fgraph_ops = {
-@@ -408,10 +408,10 @@ start_critical_timing(unsigned long ip, unsigned long parent_ip)
- 
- 	data = per_cpu_ptr(tr->array_buffer.data, cpu);
- 
--	if (unlikely(!data) || atomic_read(&data->disabled))
-+	if (unlikely(!data) || local_read(&data->disabled))
- 		return;
- 
--	atomic_inc(&data->disabled);
-+	local_inc(&data->disabled);
- 
- 	data->critical_sequence = max_sequence;
- 	data->preempt_timestamp = ftrace_now(cpu);
-@@ -421,7 +421,7 @@ start_critical_timing(unsigned long ip, unsigned long parent_ip)
- 
- 	per_cpu(tracing_cpu, cpu) = 1;
- 
--	atomic_dec(&data->disabled);
-+	local_dec(&data->disabled);
- }
- 
- static nokprobe_inline void
-@@ -445,16 +445,16 @@ stop_critical_timing(unsigned long ip, unsigned long parent_ip)
- 	data = per_cpu_ptr(tr->array_buffer.data, cpu);
- 
- 	if (unlikely(!data) ||
--	    !data->critical_start || atomic_read(&data->disabled))
-+	    !data->critical_start || local_read(&data->disabled))
- 		return;
- 
--	atomic_inc(&data->disabled);
-+	local_inc(&data->disabled);
- 
- 	trace_ctx = tracing_gen_ctx();
- 	__trace_function(tr, ip, parent_ip, trace_ctx);
- 	check_critical_timing(tr, data, parent_ip ? : ip, cpu);
- 	data->critical_start = 0;
--	atomic_dec(&data->disabled);
-+	local_dec(&data->disabled);
- }
- 
- /* start and stop critical timings used to for stoppage (in idle) */
-diff --git a/kernel/trace/trace_sched_wakeup.c b/kernel/trace/trace_sched_wakeup.c
-index a0db3404f7f7..bf1cb80742ae 100644
---- a/kernel/trace/trace_sched_wakeup.c
-+++ b/kernel/trace/trace_sched_wakeup.c
-@@ -83,14 +83,14 @@ func_prolog_preempt_disable(struct trace_array *tr,
- 		goto out_enable;
- 
- 	*data = per_cpu_ptr(tr->array_buffer.data, cpu);
--	disabled = atomic_inc_return(&(*data)->disabled);
-+	disabled = local_inc_return(&(*data)->disabled);
- 	if (unlikely(disabled != 1))
- 		goto out;
- 
- 	return 1;
- 
- out:
--	atomic_dec(&(*data)->disabled);
-+	local_dec(&(*data)->disabled);
- 
- out_enable:
- 	preempt_enable_notrace();
-@@ -144,7 +144,7 @@ static int wakeup_graph_entry(struct ftrace_graph_ent *trace,
- 	*calltime = trace_clock_local();
- 
- 	ret = __trace_graph_entry(tr, trace, trace_ctx);
--	atomic_dec(&data->disabled);
-+	local_dec(&data->disabled);
- 	preempt_enable_notrace();
- 
- 	return ret;
-@@ -173,7 +173,7 @@ static void wakeup_graph_return(struct ftrace_graph_ret *trace,
- 		return;
- 
- 	__trace_graph_return(tr, trace, trace_ctx, *calltime, rettime);
--	atomic_dec(&data->disabled);
-+	local_dec(&data->disabled);
- 
- 	preempt_enable_notrace();
- 	return;
-@@ -243,7 +243,7 @@ wakeup_tracer_call(unsigned long ip, unsigned long parent_ip,
- 	trace_function(tr, ip, parent_ip, trace_ctx, fregs);
- 	local_irq_restore(flags);
- 
--	atomic_dec(&data->disabled);
-+	local_dec(&data->disabled);
- 	preempt_enable_notrace();
- }
- 
-@@ -471,7 +471,7 @@ probe_wakeup_sched_switch(void *ignore, bool preempt,
- 
- 	/* disable local data, not wakeup_cpu data */
- 	cpu = raw_smp_processor_id();
--	disabled = atomic_inc_return(&per_cpu_ptr(wakeup_trace->array_buffer.data, cpu)->disabled);
-+	disabled = local_inc_return(&per_cpu_ptr(wakeup_trace->array_buffer.data, cpu)->disabled);
- 	if (likely(disabled != 1))
- 		goto out;
- 
-@@ -508,7 +508,7 @@ probe_wakeup_sched_switch(void *ignore, bool preempt,
- 	arch_spin_unlock(&wakeup_lock);
- 	local_irq_restore(flags);
- out:
--	atomic_dec(&per_cpu_ptr(wakeup_trace->array_buffer.data, cpu)->disabled);
-+	local_dec(&per_cpu_ptr(wakeup_trace->array_buffer.data, cpu)->disabled);
- }
- 
- static void __wakeup_reset(struct trace_array *tr)
-@@ -563,7 +563,7 @@ probe_wakeup(void *ignore, struct task_struct *p)
- 	    (!dl_task(p) && (p->prio >= wakeup_prio || p->prio >= current->prio)))
- 		return;
- 
--	disabled = atomic_inc_return(&per_cpu_ptr(wakeup_trace->array_buffer.data, cpu)->disabled);
-+	disabled = local_inc_return(&per_cpu_ptr(wakeup_trace->array_buffer.data, cpu)->disabled);
- 	if (unlikely(disabled != 1))
- 		goto out;
- 
-@@ -610,7 +610,7 @@ probe_wakeup(void *ignore, struct task_struct *p)
- out_locked:
- 	arch_spin_unlock(&wakeup_lock);
- out:
--	atomic_dec(&per_cpu_ptr(wakeup_trace->array_buffer.data, cpu)->disabled);
-+	local_dec(&per_cpu_ptr(wakeup_trace->array_buffer.data, cpu)->disabled);
- }
- 
- static void start_wakeup_tracer(struct trace_array *tr)
--- 
-2.47.2
-
-
