@@ -1,136 +1,164 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2AB6D250C0E;
-	Sun,  4 May 2025 23:32:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8778D2566;
+	Mon,  5 May 2025 05:06:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746401546; cv=none; b=Y+iX0uLZeN9eC5vEDEmRFEKt0d1JjAAVYZSBM6634BeR24iwgTpptpwzphUek/cp0cuWJk8M0MWvLZjn1F+Px/Y/1726WF0tbrmMAGHBSam8y0iaEfCm72ZLEmPmjpWy/seZqjC2ahowV6oTrWX23xVt2Uqf1xHr+/PTmmASMO4=
+	t=1746421584; cv=none; b=K2QNWte7y4CbR24MUrfhCgPmoGVZVNoL9Zouc7ufX2zKVQkEr8mT3RMSwMyqbtkxjEhQq3bE+L0eJBucry68v3e63jJmrgUW5UVuu+ne9srcPy/dZdms7rBXXrS75gpDayF6OkiKr+0pTKQ459b/g4KiLZyjX/Oyt330lRFwR+8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746401546; c=relaxed/simple;
-	bh=74l8WQJx+JHUOxctsCLtwn1uQDcdHtUHH9jZWyzig0g=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=X+ZVVa+FunPljAh0n7ipa+ky5y5kQd9t6zU27ZpJjP1mZc+dDYe3g70U9LcZXrqpBLturhk178aSMRApv+KcQMpgMMsJ3XwuKQfi+VyPFc3DRINAbihWFDCRDEXEe30QEoTHWKPNc3+Rc7xyOREe7nmvRaF8hv6O6O8ZNWBqBw8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9DF2E1BC0;
-	Sun,  4 May 2025 16:32:09 -0700 (PDT)
-Received: from u200865.usa.arm.com (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 51E533F58B;
-	Sun,  4 May 2025 16:32:18 -0700 (PDT)
-From: Jeremy Linton <jeremy.linton@arm.com>
-To: linux-trace-kernel@vger.kernel.org
-Cc: linux-perf-users@vger.kernel.org,
-	mhiramat@kernel.org,
-	oleg@redhat.com,
-	peterz@infradead.org,
-	acme@kernel.org,
-	namhyung@kernel.org,
-	mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org,
-	irogers@google.com,
-	adrian.hunter@intel.com,
-	kan.liang@linux.intel.com,
-	thiago.bauermann@linaro.org,
-	broonie@kernel.org,
-	yury.khrustalev@arm.com,
-	kristina.martsenko@arm.com,
-	liaochang1@huawei.com,
-	catalin.marinas@arm.com,
-	will@kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Jeremy Linton <jeremy.linton@arm.com>
-Subject: [PATCH v3 3/7] arm64: uaccess: Add additional userspace GCS accessors
-Date: Sun,  4 May 2025 18:31:59 -0500
-Message-ID: <20250504233203.616587-4-jeremy.linton@arm.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250504233203.616587-1-jeremy.linton@arm.com>
-References: <20250504233203.616587-1-jeremy.linton@arm.com>
+	s=arc-20240116; t=1746421584; c=relaxed/simple;
+	bh=KpE9wjXlGQWl4XdN1XdPw8AuQidvNZejWAaHnQ1kP4E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=i8OXVIz9bDtY65079MLQqEii1MAaFGmxrz3u8A9dkOCxUzHcGum7Nhgx51GwbuP8IQS42bBiXjqhyy0Ja75a0RKmskvfgLHhu0mCD5/FPqSZ6++QYHUddaNX6lATWs+u9nR0DlshmURt2/+M6S6+MjcvVTQXUkWl9gJ/7zsKhpI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LRcw6R/Y; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LRcw6R/Y"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1746421582; x=1777957582;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=KpE9wjXlGQWl4XdN1XdPw8AuQidvNZejWAaHnQ1kP4E=;
+  b=LRcw6R/YvA5CoPm7b4b/2wdTU1Gi1fctaUurZLcEEKls6487oqW9Ss/M
+   UQcOPfieLyHjaAVZE1voqb8X16Hc3NDGFBNkG9YuXXHOe4G56oWCnEZmg
+   0LyY5H3EAxKD8d505ivLKNwvXFySlu2A2iS2+0+hkBt2Yrd6M9ACVMRU8
+   1VBVAHLtZeA05O8oISCTr3gLJi+5gaXGlN1u8SSyvFwG9gRqAd6G6bKCt
+   0UPUkzXY9hEuV5ZV1sp7lGY05Yu4OmAcEwG50hOpUjLUnST7UbvEVKVxd
+   GpVa3ehXIPxq8vkHz3OGWSE5Mk1DF/yKly3c4HXHszGTumj8lA8y7tGLo
+   g==;
+X-CSE-ConnectionGUID: NUozlbiWQxqNwTZ6Hlg4JA==
+X-CSE-MsgGUID: /RsP/XnIQJe+EG/Ey+b6dw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11423"; a="50667780"
+X-IronPort-AV: E=Sophos;i="6.15,262,1739865600"; 
+   d="scan'208";a="50667780"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 May 2025 22:06:21 -0700
+X-CSE-ConnectionGUID: NFbsm+nURZuK2hYFbJXcNw==
+X-CSE-MsgGUID: cexH5n/4TGyvFPvJrkVySQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,262,1739865600"; 
+   d="scan'208";a="135655373"
+Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
+  by orviesa007.jf.intel.com with ESMTP; 04 May 2025 22:06:19 -0700
+Received: from kbuild by 1992f890471c with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uBo1v-0005ar-2S;
+	Mon, 05 May 2025 05:06:15 +0000
+Date: Mon, 5 May 2025 13:05:47 +0800
+From: kernel test robot <lkp@intel.com>
+To: Steven Rostedt <rostedt@goodmis.org>, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Cc: oe-kbuild-all@lists.linux.dev, Masami Hiramatsu <mhiramat@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Linux Memory Management List <linux-mm@kvack.org>,
+	Jason Wessel <jason.wessel@windriver.com>,
+	Daniel Thompson <danielt@kernel.org>,
+	Douglas Anderson <dianders@chromium.org>
+Subject: Re: [PATCH 05/12] tracing: kdb: Use tracer_tracing_on/off() instead
+ of setting per CPU disabled
+Message-ID: <202505051213.exaXF8qp-lkp@intel.com>
+References: <20250502205348.643055437@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250502205348.643055437@goodmis.org>
 
-Uprobes need more advanced read, push, and pop userspace GCS
-functionality. Implement those features using the existing gcsstr()
-and copy_from_user().
+Hi Steven,
 
-Its important to note that GCS pages can be read by normal
-instructions, but the hardware validates that pages used by GCS
-specific operations, have a GCS privilege set. We aren't validating this
-in load_user_gcs because it requires stabilizing the VMA over the read
-which may fault.
+kernel test robot noticed the following build warnings:
 
-Signed-off-by: Jeremy Linton <jeremy.linton@arm.com>
----
- arch/arm64/include/asm/uaccess.h | 42 ++++++++++++++++++++++++++++++++
- 1 file changed, 42 insertions(+)
+[auto build test WARNING on trace/for-next]
+[also build test WARNING on linus/master v6.15-rc4 next-20250502]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-diff --git a/arch/arm64/include/asm/uaccess.h b/arch/arm64/include/asm/uaccess.h
-index 5b91803201ef..34a8b2cc8935 100644
---- a/arch/arm64/include/asm/uaccess.h
-+++ b/arch/arm64/include/asm/uaccess.h
-@@ -20,6 +20,7 @@
- 
- #include <asm/asm-extable.h>
- #include <asm/cpufeature.h>
-+#include <asm/gcs.h>
- #include <asm/mmu.h>
- #include <asm/mte.h>
- #include <asm/ptrace.h>
-@@ -539,6 +540,47 @@ static inline void put_user_gcs(unsigned long val, unsigned long __user *addr,
- 	uaccess_ttbr0_disable();
- }
- 
-+static __always_inline unsigned long __must_check
-+copy_from_user(void *to, const void __user *from, unsigned long n);
-+
-+/*
-+ * Unlike put_user_gcs() above, the use of copy_from_user() may provide
-+ * an opening for non GCS pages to be used to source data. Therefore this
-+ * should only be used in contexts where that is acceptable.
-+ */
-+static inline u64 load_user_gcs(unsigned long __user *addr, int *err)
-+{
-+	unsigned long ret;
-+	u64 load = 0;
-+
-+	gcsb_dsync();
-+	ret = copy_from_user(&load, addr, sizeof(load));
-+	if (ret != 0)
-+		*err = ret;
-+	return load;
-+}
-+
-+static inline void push_user_gcs(unsigned long val, int *err)
-+{
-+	u64 gcspr = read_sysreg_s(SYS_GCSPR_EL0);
-+
-+	gcspr -= sizeof(u64);
-+	put_user_gcs(val, (unsigned long __user *)gcspr, err);
-+	if (!*err)
-+		write_sysreg_s(gcspr, SYS_GCSPR_EL0);
-+}
-+
-+static inline u64 pop_user_gcs(int *err)
-+{
-+	u64 gcspr = read_sysreg_s(SYS_GCSPR_EL0);
-+	u64 read_val;
-+
-+	read_val = load_user_gcs((unsigned long __user *)gcspr, err);
-+	if (!*err)
-+		write_sysreg_s(gcspr + sizeof(u64), SYS_GCSPR_EL0);
-+
-+	return read_val;
-+}
- 
- #endif /* CONFIG_ARM64_GCS */
- 
+url:    https://github.com/intel-lab-lkp/linux/commits/Steven-Rostedt/tracing-mmiotrace-Remove-reference-to-unused-per-CPU-data-pointer/20250503-050317
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace for-next
+patch link:    https://lore.kernel.org/r/20250502205348.643055437%40goodmis.org
+patch subject: [PATCH 05/12] tracing: kdb: Use tracer_tracing_on/off() instead of setting per CPU disabled
+config: arc-randconfig-002-20250503 (https://download.01.org/0day-ci/archive/20250505/202505051213.exaXF8qp-lkp@intel.com/config)
+compiler: arc-linux-gcc (GCC) 11.5.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250505/202505051213.exaXF8qp-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202505051213.exaXF8qp-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+   kernel/trace/trace_kdb.c: In function 'kdb_ftdump':
+>> kernel/trace/trace_kdb.c:101:13: warning: unused variable 'cpu' [-Wunused-variable]
+     101 |         int cpu;
+         |             ^~~
+
+
+vim +/cpu +101 kernel/trace/trace_kdb.c
+
+955b61e5979847 Jason Wessel     2010-08-05   91  
+955b61e5979847 Jason Wessel     2010-08-05   92  /*
+955b61e5979847 Jason Wessel     2010-08-05   93   * kdb_ftdump - Dump the ftrace log buffer
+955b61e5979847 Jason Wessel     2010-08-05   94   */
+955b61e5979847 Jason Wessel     2010-08-05   95  static int kdb_ftdump(int argc, const char **argv)
+955b61e5979847 Jason Wessel     2010-08-05   96  {
+dbfe67334a1767 Douglas Anderson 2019-03-19   97  	int skip_entries = 0;
+19063c776fe745 Jason Wessel     2010-08-05   98  	long cpu_file;
+0c10cc2435115c Yuran Pereira    2024-10-28   99  	int err;
+03197fc02b3566 Douglas Anderson 2019-03-19  100  	int cnt;
+03197fc02b3566 Douglas Anderson 2019-03-19 @101  	int cpu;
+955b61e5979847 Jason Wessel     2010-08-05  102  
+19063c776fe745 Jason Wessel     2010-08-05  103  	if (argc > 2)
+955b61e5979847 Jason Wessel     2010-08-05  104  		return KDB_ARGCOUNT;
+955b61e5979847 Jason Wessel     2010-08-05  105  
+0c10cc2435115c Yuran Pereira    2024-10-28  106  	if (argc && kstrtoint(argv[1], 0, &skip_entries))
+0c10cc2435115c Yuran Pereira    2024-10-28  107  		return KDB_BADINT;
+955b61e5979847 Jason Wessel     2010-08-05  108  
+19063c776fe745 Jason Wessel     2010-08-05  109  	if (argc == 2) {
+0c10cc2435115c Yuran Pereira    2024-10-28  110  		err = kstrtol(argv[2], 0, &cpu_file);
+0c10cc2435115c Yuran Pereira    2024-10-28  111  		if (err || cpu_file >= NR_CPUS || cpu_file < 0 ||
+19063c776fe745 Jason Wessel     2010-08-05  112  		    !cpu_online(cpu_file))
+19063c776fe745 Jason Wessel     2010-08-05  113  			return KDB_BADINT;
+19063c776fe745 Jason Wessel     2010-08-05  114  	} else {
+ae3b5093ad6004 Steven Rostedt   2013-01-23  115  		cpu_file = RING_BUFFER_ALL_CPUS;
+19063c776fe745 Jason Wessel     2010-08-05  116  	}
+19063c776fe745 Jason Wessel     2010-08-05  117  
+955b61e5979847 Jason Wessel     2010-08-05  118  	kdb_trap_printk++;
+03197fc02b3566 Douglas Anderson 2019-03-19  119  
+03197fc02b3566 Douglas Anderson 2019-03-19  120  	trace_init_global_iter(&iter);
+03197fc02b3566 Douglas Anderson 2019-03-19  121  	iter.buffer_iter = buffer_iter;
+03197fc02b3566 Douglas Anderson 2019-03-19  122  
+6a4611f6bb763d Steven Rostedt   2025-05-02  123  	tracer_tracing_off(iter.tr);
+03197fc02b3566 Douglas Anderson 2019-03-19  124  
+03197fc02b3566 Douglas Anderson 2019-03-19  125  	/* A negative skip_entries means skip all but the last entries */
+03197fc02b3566 Douglas Anderson 2019-03-19  126  	if (skip_entries < 0) {
+03197fc02b3566 Douglas Anderson 2019-03-19  127  		if (cpu_file == RING_BUFFER_ALL_CPUS)
+03197fc02b3566 Douglas Anderson 2019-03-19  128  			cnt = trace_total_entries(NULL);
+03197fc02b3566 Douglas Anderson 2019-03-19  129  		else
+03197fc02b3566 Douglas Anderson 2019-03-19  130  			cnt = trace_total_entries_cpu(NULL, cpu_file);
+03197fc02b3566 Douglas Anderson 2019-03-19  131  		skip_entries = max(cnt + skip_entries, 0);
+03197fc02b3566 Douglas Anderson 2019-03-19  132  	}
+03197fc02b3566 Douglas Anderson 2019-03-19  133  
+dbfe67334a1767 Douglas Anderson 2019-03-19  134  	ftrace_dump_buf(skip_entries, cpu_file);
+03197fc02b3566 Douglas Anderson 2019-03-19  135  
+6a4611f6bb763d Steven Rostedt   2025-05-02  136  	tracer_tracing_on(iter.tr);
+03197fc02b3566 Douglas Anderson 2019-03-19  137  
+955b61e5979847 Jason Wessel     2010-08-05  138  	kdb_trap_printk--;
+955b61e5979847 Jason Wessel     2010-08-05  139  
+955b61e5979847 Jason Wessel     2010-08-05  140  	return 0;
+955b61e5979847 Jason Wessel     2010-08-05  141  }
+955b61e5979847 Jason Wessel     2010-08-05  142  
+
 -- 
-2.49.0
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
