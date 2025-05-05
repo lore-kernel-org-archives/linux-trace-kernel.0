@@ -1,151 +1,179 @@
-Received: from mail-pj1-f44.google.com (mail-pj1-f44.google.com [209.85.216.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3349025CC62
-	for <linux-trace-kernel@vger.kernel.org>; Mon,  5 May 2025 15:43:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D21A1F4261
+	for <linux-trace-kernel@vger.kernel.org>; Mon,  5 May 2025 15:45:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746459793; cv=none; b=DzgOOJYeMUnhlHmYvl45uEHDdrx8QqeyAce91ywKoSIU2EJAZqmEHpA0EUBXlnHbeAgeQZDqVTTmy13aHCRC2LmkC1emWwntxrTGGM8SCvOpjjHYcEgOgymnOWMgLd9AsfRdLPR+NvD9Vk5H19NGCEvSfMCXy9/hTH9++HXcuo8=
+	t=1746459930; cv=none; b=WFZe+AX929aECXFbrMnqe4/yUsh63pZ2PJ/lwJLxveCCo9gJTRKtGmyV2onAY2diF/h69oQZSTFEwb5NLdFmHxbs4W0aT9KqiyJ0XbzMUIq7fUhuvSS0Xf95pBW97Ii0UOvzQYMkKgkkztQwjdFCDh3yqhI7ph7LOy2lS3w56oI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746459793; c=relaxed/simple;
-	bh=1hZxccIbWniJZ+0x/jSm8xcr1oxitOmB1wV1lj698qk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=WoUa68k/pMYht7ScsgbTpLIvCjrybgbvaNwO0svRWwg70tTZrsviMIl8tWwJxsnxRngNTbbm2Ld3OZhZpoQeUypcXFW7DIAOaUjYXSkgxSEl9p9K+Aw7q0ZyjCh1c3VcvlqrUKZmpLvPlm/1vc8YRMRwqEqRIbWZU5K0zXI6cv4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=d82VufKh; arc=none smtp.client-ip=209.85.216.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1746459930; c=relaxed/simple;
+	bh=fT63Qjgxn2mmOj4nEoT8zNbpR7UCW8tfN5uQH3dFpw4=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=G+JxTCTA9h1AWFNbYqx/N+yIrxE3nVwl4ycAvGi0ZHAwIxYaAd5GONsFO0KtnC1UphtXGOsNCoJsyv/d5XENHTvdcsdGSIEikRCvxV7r3IRiOTGZeA4dPUJE/ovxYK9Dw7a1Y2dxhpbay9w3N87aoHD7AnAsdvfD4NsdCsc75kU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=A0BUGXAC; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="d82VufKh"
-Received: by mail-pj1-f44.google.com with SMTP id 98e67ed59e1d1-30155bbbed9so3683929a91.1
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 05 May 2025 08:43:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1746459788; x=1747064588; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=HXTYmNfnp3L8OKmlj5S0ckFXV6E7LYKVxcLkR0qYEOA=;
-        b=d82VufKhzjMsGqOtJbk3fahPsBlmuC/yC8+kqfYTim6p8la7FuYydZUgfWp0/O6AKG
-         vL7v2wrjFO5upfFulHIabTa5su15pclaYGS/EBtLp8j0TaUgW1K2+SYvKZOCqbn7RfqE
-         /kdnwBMsj8uTZyM2uY15LfrnQGC0v4uPsI8jE=
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="A0BUGXAC"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1746459927;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=fT63Qjgxn2mmOj4nEoT8zNbpR7UCW8tfN5uQH3dFpw4=;
+	b=A0BUGXACFv0m+cDMmFQwyFjW/ZK/NhBvbhEWwJPeEMGxAeQBnqA5m6KImPtn9gK305aVcd
+	8YJhL0D45kyLu8Rxa+1t9dt4xuNJKLk5tmyjkwk08sNp5P1voQSpTLVfpoVjrghstCT6Mi
+	+FR9y4NZVxPrx/r5wXLKTSL8XeYRvEk=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-657-aFZZSQQFPQKtOBlkP75uPQ-1; Mon, 05 May 2025 11:45:26 -0400
+X-MC-Unique: aFZZSQQFPQKtOBlkP75uPQ-1
+X-Mimecast-MFC-AGG-ID: aFZZSQQFPQKtOBlkP75uPQ_1746459925
+Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-43efa869b0aso30501745e9.3
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 05 May 2025 08:45:25 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746459788; x=1747064588;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=HXTYmNfnp3L8OKmlj5S0ckFXV6E7LYKVxcLkR0qYEOA=;
-        b=ARTzWK4NLZXWwHY4wcEyI4pac0WYBQdYi8e12xko79U+q1AUzVGRJVePdFDzePhHtx
-         +Lwv3otWPfaJf+n5qyMciHAyOvahiZP04EZOkXx/Lc0gKJAyt/KGk7vdLRtiIFNy6MI6
-         +aBnaYPQqg1M3uoA3NW4xSPJTCgYyi/ToVHcvfKwW30AVfxd6osPzwghgiTDakX0B8qu
-         obrLZKZrlOYaWPrVnHME2G14Wvo7dWL76qOWwZKwS9dOms6xqsqi8MnfBAZaYbF5nK77
-         Vw1kShNEI/RnYIsJg2xHrAZ1d3GNzScVBclkQguRsgiJlsGtCwz2mx2qEne4j1+lIBl0
-         JSFQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVvZOBbyuwSzYwT/JNjGu9qWLiXHZLT0vEweRM+z1sSdvC/gkNok0TkKx/V7VbaGfVUbKGteJIPAsCE9HPcaq3yldo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyYWdcqPlcyfy4UmPj9L4e3+GbZkpYSQgwrs0rP1adjwGR9Rh6G
-	SINX8HG7MobI2C6LYRDUXeZq+Nh7ZvgkC48EKi0Sq1csXMrGG6dXU1jsoHCHPAVWNtRDJ69zIkk
-	=
-X-Gm-Gg: ASbGncsc3D6rjgPMlCsW4li7v2igJZeLapuz9j971FnmG+yb7NI21xtSlZ+B5IhbneH
-	X+u0UYOuhzLWB8ocXGGxB/bJpcDfndQzhO8wJiaQ4CZQcvBJzxOQEAB7X9UwjgksmNPsnPLQflR
-	e8bSH86S2U6rYXp5EiFikoXpyBPWeiDOoZ0plKP/5YxUb+2lUVAAjs4a8nNLQiskt7YcRd8A/dB
-	7vVhiRS7kia/ed1MDgsNtZYgitTiOVIVdeZXCgfERtPsQYyZjxBghNJBT13Q+ukGolbteQMPiGo
-	9+Sg+xaUx5kKWOgbCOfmUocck1ElcHKqNWzjxSdH5/8WleTXVk5MOijS4IY9hsxenlexMLt6UTJ
-	cMhPFCy5W
-X-Google-Smtp-Source: AGHT+IEzUjB+FpOG7en5ENRP1JUhGXwhkiplYABU4cIiIWW6Ie2DfW44+3tJNsSL30PKwCr8YxJuPA==
-X-Received: by 2002:a17:90b:5785:b0:30a:3dde:6af4 with SMTP id 98e67ed59e1d1-30a4e6925dbmr18268344a91.31.1746459787982;
-        Mon, 05 May 2025 08:43:07 -0700 (PDT)
-Received: from mail-pg1-f178.google.com (mail-pg1-f178.google.com. [209.85.215.178])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30a47625eb3sm9104633a91.38.2025.05.05.08.43.04
-        for <linux-trace-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 05 May 2025 08:43:04 -0700 (PDT)
-Received: by mail-pg1-f178.google.com with SMTP id 41be03b00d2f7-ae727e87c26so2815366a12.0
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 05 May 2025 08:43:04 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVtgyg00RWVMiGSJhbpdmkB6MEBPeH0oNjcIVwIl8qG9HMlIM40aj2DGlnHar6Kbn9B42CEsdBlcWuhlF1t3xPjhQs=@vger.kernel.org
-X-Received: by 2002:a17:90b:520f:b0:2fe:9e6c:add9 with SMTP id
- 98e67ed59e1d1-30a4e5c5d2dmr22184245a91.18.1746459784032; Mon, 05 May 2025
- 08:43:04 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1746459925; x=1747064725;
+        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=fT63Qjgxn2mmOj4nEoT8zNbpR7UCW8tfN5uQH3dFpw4=;
+        b=IS4XMe/qqeFiXI6Jp1uIL3FzCWiOMaNJCm/nWwPyNYF+B+KvwLxn/aE6O4ytFTR5I8
+         1juKnQaMbtfgrPM0tcM4z0v4X1TA/bOVjQcTRtg8DGYUot1Va6G18qzS/JGF732E7+Sa
+         36QKoWejw4+kbvT3QzRORYE2nOzYb2ltjdqzd5Czn850TxWNLV+Rz5gqyU53IMZPkUss
+         rxl9uoXgni/JcgBUhkZe8/yZ+LQNaG4qehinyJD1XViEGUnyKgUyX7PdUFMqvH8+CW4T
+         u2HgmOmN11QWFYsYv6J8CiYRpJYObZvCcHC0pEpeLjhemHsquVSgdcNW6cv7oADqeMW+
+         cUXA==
+X-Forwarded-Encrypted: i=1; AJvYcCX+6E3Ym9hx2XkpGcjJEKXpd2W4MiRbG5x+4a0ayMEFa72Ua2qiuIGA7E/ZUvMKpc49/amRueIUSTS2K4Ocbl6NIxs=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxs2goGfkj9IiSz+K7R00DyxpSdGOi4GlWBmyBRuc8Bn3NhG5mZ
+	wge4gz417XnAcEqa9HOb8RGRJ2wYAoAX35rOwpAurZx0BOM+alOSH37NPoIAeHgMHQ/yYPPZJRy
+	0E20q2uZZMVHt1c3J4w9NmXNyRLWY7h5wbkN8+NX4CtwJj7U6pdVvJrC2LIJOdkf+jO6XWQ==
+X-Gm-Gg: ASbGncsd94WFDayYbkANwNnvO/KHwb9pvdN3o1hyXTttihkb7QiR7p7m/+mftw8CBW9
+	meHba4XmkmDtjg1z485e06ExraatyKW0a3YJ++E77P7RukadNxkVyGHD8+TZYZMVug4lmO30wC2
+	8jHWc8rP7+wzqZugbkjrQRXbDe1aFKKCj5GCT6Ccandkeuw/55MtF4nq755HvsHNKLtw6nWQR5k
+	m6waXyLV0HxypBICwzyjjBiTT0Gzd/ApjqE8TTUI+Rv1qboCEjYrUhv5v4YFtw879iWhGiSzQ5d
+	5roOUYiMjf4v/5pcnR8nIVIX3ERL8S1gjZwqhOU+J1NDpUSg
+X-Received: by 2002:a05:600c:5290:b0:43d:fa59:bcee with SMTP id 5b1f17b1804b1-441c49340e5mr60613855e9.33.1746459924619;
+        Mon, 05 May 2025 08:45:24 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHbfW0Iv3UrCtUauOGIpvVxzFiIHYGFD4OyH1evLHyjz0zJwfLTvcXbPZ3pmzRKAXfEnCx79Q==
+X-Received: by 2002:a05:600c:5290:b0:43d:fa59:bcee with SMTP id 5b1f17b1804b1-441c49340e5mr60612745e9.33.1746459924071;
+        Mon, 05 May 2025 08:45:24 -0700 (PDT)
+Received: from vschneid-thinkpadt14sgen2i.remote.csb ([2001:861:43c1:5950:3e51:b684:9982:d4a2])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-441b89d1358sm138001675e9.10.2025.05.05.08.45.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 05 May 2025 08:45:22 -0700 (PDT)
+From: Valentin Schneider <vschneid@redhat.com>
+To: Dave Hansen <dave.hansen@intel.com>, Steven Rostedt <rostedt@goodmis.org>
+Cc: linux-kernel@vger.kernel.org, virtualization@lists.linux.dev,
+ linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
+ linux-riscv@lists.infradead.org, linux-perf-users@vger.kernel.org,
+ kvm@vger.kernel.org, linux-arch@vger.kernel.org,
+ linux-modules@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ rcu@vger.kernel.org, linux-hardening@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, bpf@vger.kernel.org, Juri Lelli
+ <juri.lelli@redhat.com>, Marcelo Tosatti <mtosatti@redhat.com>, Yair
+ Podemsky <ypodemsk@redhat.com>, Josh Poimboeuf <jpoimboe@kernel.org>,
+ Daniel Wagner <dwagner@suse.de>, Petr Tesarik <ptesarik@suse.com>, Nicolas
+ Saenz Julienne <nsaenz@amazon.com>, Frederic Weisbecker
+ <frederic@kernel.org>, "Paul E. McKenney" <paulmck@kernel.org>, Dave
+ Hansen <dave.hansen@linux.intel.com>, Sean Christopherson
+ <seanjc@google.com>, Juergen Gross <jgross@suse.com>, Ajay Kaher
+ <ajay.kaher@broadcom.com>, Broadcom internal kernel review list
+ <bcm-kernel-feedback-list@broadcom.com>, Russell King
+ <linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Will
+ Deacon <will@kernel.org>, Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui
+ <kernel@xen0n.name>, Paul Walmsley <paul.walmsley@sifive.com>, Palmer
+ Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, Alexandre
+ Ghiti <alex@ghiti.fr>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar
+ <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, x86@kernel.org, "H.
+ Peter Anvin" <hpa@zytor.com>, Peter Zijlstra <peterz@infradead.org>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim
+ <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexander
+ Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa
+ <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, Adrian Hunter
+ <adrian.hunter@intel.com>, "Liang, Kan" <kan.liang@linux.intel.com>, Pawan
+ Gupta <pawan.kumar.gupta@linux.intel.com>, Paolo Bonzini
+ <pbonzini@redhat.com>, Arnd Bergmann <arnd@arndb.de>, Jason Baron
+ <jbaron@akamai.com>, Ard Biesheuvel <ardb@kernel.org>, Luis Chamberlain
+ <mcgrof@kernel.org>, Petr Pavlu <petr.pavlu@suse.com>, Sami Tolvanen
+ <samitolvanen@google.com>, Daniel Gomez <da.gomez@samsung.com>, Naveen N
+ Rao <naveen@kernel.org>, Anil S Keshavamurthy
+ <anil.s.keshavamurthy@intel.com>, "David S. Miller" <davem@davemloft.net>,
+ Masami Hiramatsu <mhiramat@kernel.org>, Neeraj Upadhyay
+ <neeraj.upadhyay@kernel.org>, Joel Fernandes <joel@joelfernandes.org>,
+ Josh Triplett <josh@joshtriplett.org>, Boqun Feng <boqun.feng@gmail.com>,
+ Uladzislau Rezki <urezki@gmail.com>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Lai Jiangshan <jiangshanlai@gmail.com>,
+ Zqiang <qiang.zhang1211@gmail.com>, Vincent Guittot
+ <vincent.guittot@linaro.org>, Dietmar Eggemann <dietmar.eggemann@arm.com>,
+ Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>, Kees Cook
+ <kees@kernel.org>, Shuah Khan <shuah@kernel.org>, Masahiro Yamada
+ <masahiroy@kernel.org>, Alice Ryhl <aliceryhl@google.com>, Miguel Ojeda
+ <ojeda@kernel.org>, "Mike Rapoport (Microsoft)" <rppt@kernel.org>, Rong Xu
+ <xur@google.com>, Rafael Aquini <aquini@redhat.com>, Song Liu
+ <song@kernel.org>, Andrii Nakryiko <andrii@kernel.org>, Dan Carpenter
+ <dan.carpenter@linaro.org>, Brian Gerst <brgerst@gmail.com>, "Kirill A.
+ Shutemov" <kirill.shutemov@linux.intel.com>, Benjamin Berg
+ <benjamin.berg@intel.com>, Vishal Annapurve <vannapurve@google.com>, Randy
+ Dunlap <rdunlap@infradead.org>, John Stultz <jstultz@google.com>, Tiezhu
+ Yang <yangtiezhu@loongson.cn>
+Subject: Re: [PATCH v5 00/25] context_tracking,x86: Defer some IPIs until a
+ user->kernel transition
+In-Reply-To: <2c5d11cf-ad06-444c-b84a-42de7a10159d@intel.com>
+References: <20250429113242.998312-1-vschneid@redhat.com>
+ <fefcd1a6-f146-4f3c-b28b-f907e7346ddd@intel.com>
+ <20250430132047.01d48647@gandalf.local.home>
+ <019f6713-cfbd-466b-8fb5-dcd982cf8644@intel.com>
+ <20250430154228.1d6306b4@gandalf.local.home>
+ <a6b3a331-1ff3-4490-b300-a62b3c21578d@intel.com>
+ <xhsmhr0179w1i.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
+ <34535b8c-35c8-4a7f-8363-f5a9c5a69023@intel.com>
+ <xhsmho6wb9de3.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
+ <2c5d11cf-ad06-444c-b84a-42de7a10159d@intel.com>
+Date: Mon, 05 May 2025 17:45:20 +0200
+Message-ID: <xhsmhldrb9i3z.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250502205147.283272733@goodmis.org> <20250502205348.643055437@goodmis.org>
-In-Reply-To: <20250502205348.643055437@goodmis.org>
-From: Doug Anderson <dianders@chromium.org>
-Date: Mon, 5 May 2025 08:42:52 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=UEnL7ztSfqAHS1Y=VwwYSyT=rfE7ZiUPLnDnMQNTcPjw@mail.gmail.com>
-X-Gm-Features: ATxdqUEbLIdnfk4KhX4VeDp15dHAX0mPiplezQT4DJTJ5-tAGVeLSoklxA5bYvU
-Message-ID: <CAD=FV=UEnL7ztSfqAHS1Y=VwwYSyT=rfE7ZiUPLnDnMQNTcPjw@mail.gmail.com>
-Subject: Re: [PATCH 05/12] tracing: kdb: Use tracer_tracing_on/off() instead
- of setting per CPU disabled
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Andrew Morton <akpm@linux-foundation.org>, 
-	Jason Wessel <jason.wessel@windriver.com>, Daniel Thompson <danielt@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: nGRuFohobNIoIGGAICuZUo_QN6kh-JfVZprB6MQKAGg_1746459925
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain
 
-Hi,
+On 02/05/25 10:57, Dave Hansen wrote:
+> gah, the cc list here is rotund...
+>
+> On 5/2/25 09:38, Valentin Schneider wrote:
+> ...
+>>> All of the paths to enter the kernel from userspace have some
+>>> SWITCH_TO_KERNEL_CR3 variant. If they didn't, the userspace that they
+>>> entered from could have attacked the kernel with Meltdown.
+>>>
+>>> I'm theorizing that if this is _just_ about avoiding TLB flush IPIs that
+>>> you can get away with a single mechanism.
+>>
+>> So right now there would indeed be the TLB flush IPIs, but also the
+>> text_poke() ones (sync_core() after patching text).
+>>
+>> These are the two NOHZ-breaking IPIs that show up on my HP box, and that I
+>> also got reports for from folks using NOHZ_FULL + CPU isolation in
+>> production, mostly on SPR "edge enhanced" type of systems.
+> ...
+>> While I don't expect the list to grow much, it's unfortunately not just the
+>> TLB flush IPIs.
+>
+> Isn't text patching way easier than TLB flushes? You just need *some*
+> serialization. Heck, since TLB flushes are architecturally serializing,
+> you could probably even reuse the exact same mechanism: implement
+> deferred text patch serialization operations as a deferred TLB flush.
+>
+> The hardest part is figuring out which CPUs are in the state where they
+> can be deferred or not. But you have to solve that in any case, and you
+> already have an algorithm to do it.
 
-On Fri, May 2, 2025 at 1:53=E2=80=AFPM Steven Rostedt <rostedt@goodmis.org>=
- wrote:
->
-> From: Steven Rostedt <rostedt@goodmis.org>
->
-> The per CPU "disabled" value was the original way to disable tracing when
-> the tracing subsystem was first created. Today, the ring buffer
-> infrastructure has its own way to disable tracing. In fact, things have
-> changed so much since 2008 that many things ignore the disable flag.
->
-> The kdb_ftdump() function iterates over all the current tracing CPUs and
-> increments the "disabled" counter before doing the dump, and decrements i=
-t
-> afterward.
->
-> As the disabled flag can be ignored, doing this today is not reliable.
-> Instead, simply call tracer_tracing_off() and then tracer_tracing_on() to
-> disable and then enabled the entire ring buffer in one go!
->
-> Cc: Jason Wessel <jason.wessel@windriver.com>
-> Cc: Daniel Thompson <danielt@kernel.org>
-> Cc: Douglas Anderson <dianders@chromium.org>
-> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-> ---
->  kernel/trace/trace_kdb.c | 8 ++------
->  1 file changed, 2 insertions(+), 6 deletions(-)
->
-> diff --git a/kernel/trace/trace_kdb.c b/kernel/trace/trace_kdb.c
-> index 1e72d20b3c2f..b5cf3fdde8cb 100644
-> --- a/kernel/trace/trace_kdb.c
-> +++ b/kernel/trace/trace_kdb.c
-> @@ -120,9 +120,7 @@ static int kdb_ftdump(int argc, const char **argv)
->         trace_init_global_iter(&iter);
->         iter.buffer_iter =3D buffer_iter;
->
-> -       for_each_tracing_cpu(cpu) {
-> -               atomic_inc(&per_cpu_ptr(iter.array_buffer->data, cpu)->di=
-sabled);
-> -       }
-> +       tracer_tracing_off(iter.tr);
->
->         /* A negative skip_entries means skip all but the last entries */
->         if (skip_entries < 0) {
-> @@ -135,9 +133,7 @@ static int kdb_ftdump(int argc, const char **argv)
->
->         ftrace_dump_buf(skip_entries, cpu_file);
->
-> -       for_each_tracing_cpu(cpu) {
-> -               atomic_dec(&per_cpu_ptr(iter.array_buffer->data, cpu)->di=
-sabled);
-> -       }
-> +       tracer_tracing_on(iter.tr);
+Alright, off to mess around SWITCH_TO_KERNEL_CR3 to see how shoving
+deferred operations there would look then.
 
-This new change seems less safe than the old one. Previously you'd
-always increment by one at the start of the function and decrement by
-one at the end. Now at the start of the function you'll set
-"buffer_disabled" to 1 and at the end you'll set it to 0. If
-"buffer_disabled" was already 1 at the start of the function your new
-sequence will end up having the side effect of changing it to 0.
-
--Doug
