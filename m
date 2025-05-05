@@ -1,26 +1,26 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9B6A27510B;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7283275868;
 	Mon,  5 May 2025 21:22:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746480149; cv=none; b=lKOSHQbpBmF9BSzr+BdwDqN281WGl8szNhWqzDEnPnCeCNI364xMqioJZxVq6O8pl750QPXZj1AO8K6EYpuyb2xgreQLriqQNvBDgg9r3jhsmQU9NAOqL6yd9+xdQfSP8CPEC8pAAbFNczxoC36MjFKQyUALScO2lpI+RM741wc=
+	t=1746480150; cv=none; b=Rbj7xJ4Cm5rJDYiMcqtwix8tbDZvyj9IFxaAWrlsnIax9Zfq/KS4jF+Z2Wk5CQquTGZ6RxoG1aABJsyxfdtRSvNG1qXC9Ll7/qMLt7Bg/3LbyiT01XGjS6OzGo1vXY3eFKdTcXOCZcYbiL19TYyDOsJMH/JA6ThQncNIjcNTnoM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746480149; c=relaxed/simple;
-	bh=3SGqRucYvzm4r1ZRppD5xh4448hzq4HUOiq6525cB54=;
+	s=arc-20240116; t=1746480150; c=relaxed/simple;
+	bh=LfbYZrkrwSHhr03nwF7TAzWMZMSOM7lGFrPKQJo3J/Y=;
 	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=B3YYkLUNy9aRxMpTlDZUNjEJt9bsadMRXrxRaMloYkxaRXvAoS8Bg+WLDrmjrfQ4Sm1YMhLtqGvgfxCpV3kFflMhcjUPfyhdu4Z47YKdYLyS/Ucp5YGPLBSA+ZRiHfCje0CLRlSFtJfmW/w5rj4yAp7ei3pSgRqR6++ws1rP25w=
+	 Content-Type; b=VNykoLMHSCmuvjPHvsE+7cQ6KbeKEHVPD3lb0+yKKkT3Mk6ohsPQ7urP0hpxt6CHq3qxhiANq9ivQyCarJbtaO4kMsp4dC+B8pzufohw8ni8kNr2VIzxgGLmMMTHNK6qYje9mtGNFfqCY1QNxdmbw2Iyy/7cYVz40FdLeIjA8s4=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4FFD8C4CEF1;
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D1C3AC4CEEE;
 	Mon,  5 May 2025 21:22:29 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.98.2)
 	(envelope-from <rostedt@goodmis.org>)
-	id 1uC3Gm-00000000yFE-0r8E;
+	id 1uC3Gm-00000000yGk-2zaX;
 	Mon, 05 May 2025 17:22:36 -0400
-Message-ID: <20250505212236.059853898@goodmis.org>
+Message-ID: <20250505212236.567884756@goodmis.org>
 User-Agent: quilt/0.68
-Date: Mon, 05 May 2025 17:21:13 -0400
+Date: Mon, 05 May 2025 17:21:16 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org,
  linux-trace-kernel@vger.kernel.org
@@ -28,7 +28,8 @@ Cc: Masami Hiramatsu <mhiramat@kernel.org>,
  Mark Rutland <mark.rutland@arm.com>,
  Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
  Andrew Morton <akpm@linux-foundation.org>
-Subject: [PATCH v2 09/13] ring-buffer: Add ring_buffer_record_is_on_cpu()
+Subject: [PATCH v2 12/13] tracing: Use atomic_inc_return() for updating "disabled" counter in
+ irqsoff tracer
 References: <20250505212104.986494754@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -40,86 +41,81 @@ Content-Type: text/plain; charset=UTF-8
 
 From: Steven Rostedt <rostedt@goodmis.org>
 
-Add the function ring_buffer_record_is_on_cpu() that returns true if the
-ring buffer for a give CPU is writable and false otherwise.
-
-Also add tracer_tracing_is_on_cpu() to return if the ring buffer for a
-given CPU is writeable for a given trace_array.
+The irqsoff tracer uses the per CPU "disabled" field to prevent corruption
+of the accounting when it starts to trace interrupts disabled, but there's
+a slight race that could happen if for some reason it was called twice.
+Use atomic_inc_return() instead.
 
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- include/linux/ring_buffer.h |  1 +
- kernel/trace/ring_buffer.c  | 18 ++++++++++++++++++
- kernel/trace/trace.h        | 15 +++++++++++++++
- 3 files changed, 34 insertions(+)
+ kernel/trace/trace_irqsoff.c | 29 ++++++++++++++++++-----------
+ 1 file changed, 18 insertions(+), 11 deletions(-)
 
-diff --git a/include/linux/ring_buffer.h b/include/linux/ring_buffer.h
-index 56e27263acf8..cd7f0ae26615 100644
---- a/include/linux/ring_buffer.h
-+++ b/include/linux/ring_buffer.h
-@@ -192,6 +192,7 @@ void ring_buffer_record_off(struct trace_buffer *buffer);
- void ring_buffer_record_on(struct trace_buffer *buffer);
- bool ring_buffer_record_is_on(struct trace_buffer *buffer);
- bool ring_buffer_record_is_set_on(struct trace_buffer *buffer);
-+bool ring_buffer_record_is_on_cpu(struct trace_buffer *buffer, int cpu);
- void ring_buffer_record_disable_cpu(struct trace_buffer *buffer, int cpu);
- void ring_buffer_record_enable_cpu(struct trace_buffer *buffer, int cpu);
+diff --git a/kernel/trace/trace_irqsoff.c b/kernel/trace/trace_irqsoff.c
+index 0b6d932a931e..5496758b6c76 100644
+--- a/kernel/trace/trace_irqsoff.c
++++ b/kernel/trace/trace_irqsoff.c
+@@ -397,6 +397,7 @@ start_critical_timing(unsigned long ip, unsigned long parent_ip)
+ 	int cpu;
+ 	struct trace_array *tr = irqsoff_trace;
+ 	struct trace_array_cpu *data;
++	long disabled;
  
-diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-index c0f877d39a24..1ca482955dae 100644
---- a/kernel/trace/ring_buffer.c
-+++ b/kernel/trace/ring_buffer.c
-@@ -4882,6 +4882,24 @@ bool ring_buffer_record_is_set_on(struct trace_buffer *buffer)
- 	return !(atomic_read(&buffer->record_disabled) & RB_BUFFER_OFF);
+ 	if (!tracer_enabled || !tracing_is_enabled())
+ 		return;
+@@ -411,15 +412,17 @@ start_critical_timing(unsigned long ip, unsigned long parent_ip)
+ 	if (unlikely(!data) || local_read(&data->disabled))
+ 		return;
+ 
+-	local_inc(&data->disabled);
++	disabled = local_inc_return(&data->disabled);
+ 
+-	data->critical_sequence = max_sequence;
+-	data->preempt_timestamp = ftrace_now(cpu);
+-	data->critical_start = parent_ip ? : ip;
++	if (disabled == 1) {
++		data->critical_sequence = max_sequence;
++		data->preempt_timestamp = ftrace_now(cpu);
++		data->critical_start = parent_ip ? : ip;
+ 
+-	__trace_function(tr, ip, parent_ip, tracing_gen_ctx());
++		__trace_function(tr, ip, parent_ip, tracing_gen_ctx());
+ 
+-	per_cpu(tracing_cpu, cpu) = 1;
++		per_cpu(tracing_cpu, cpu) = 1;
++	}
+ 
+ 	local_dec(&data->disabled);
+ }
+@@ -431,6 +434,7 @@ stop_critical_timing(unsigned long ip, unsigned long parent_ip)
+ 	struct trace_array *tr = irqsoff_trace;
+ 	struct trace_array_cpu *data;
+ 	unsigned int trace_ctx;
++	long disabled;
+ 
+ 	cpu = raw_smp_processor_id();
+ 	/* Always clear the tracing cpu on stopping the trace */
+@@ -448,12 +452,15 @@ stop_critical_timing(unsigned long ip, unsigned long parent_ip)
+ 	    !data->critical_start || local_read(&data->disabled))
+ 		return;
+ 
+-	local_inc(&data->disabled);
++	disabled = local_inc_return(&data->disabled);
++
++	if (disabled == 1) {
++		trace_ctx = tracing_gen_ctx();
++		__trace_function(tr, ip, parent_ip, trace_ctx);
++		check_critical_timing(tr, data, parent_ip ? : ip, cpu);
++		data->critical_start = 0;
++	}
+ 
+-	trace_ctx = tracing_gen_ctx();
+-	__trace_function(tr, ip, parent_ip, trace_ctx);
+-	check_critical_timing(tr, data, parent_ip ? : ip, cpu);
+-	data->critical_start = 0;
+ 	local_dec(&data->disabled);
  }
  
-+/**
-+ * ring_buffer_record_is_on_cpu - return true if the ring buffer can write
-+ * @buffer: The ring buffer to see if write is enabled
-+ * @cpu: The CPU to test if the ring buffer can write too
-+ *
-+ * Returns true if the ring buffer is in a state that it accepts writes
-+ *   for a particular CPU.
-+ */
-+bool ring_buffer_record_is_on_cpu(struct trace_buffer *buffer, int cpu)
-+{
-+	struct ring_buffer_per_cpu *cpu_buffer;
-+
-+	cpu_buffer = buffer->buffers[cpu];
-+
-+	return ring_buffer_record_is_set_on(buffer) &&
-+		!atomic_read(&cpu_buffer->record_disabled);
-+}
-+
- /**
-  * ring_buffer_record_disable_cpu - stop all writes into the cpu_buffer
-  * @buffer: The ring buffer to stop writes to.
-diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
-index 74f1fe5788d4..69c1ecfb2290 100644
---- a/kernel/trace/trace.h
-+++ b/kernel/trace/trace.h
-@@ -673,6 +673,21 @@ struct dentry *trace_create_file(const char *name,
- 				 void *data,
- 				 const struct file_operations *fops);
- 
-+
-+/**
-+ * tracer_tracing_is_on_cpu - show real state of ring buffer enabled on for a cpu
-+ * @tr : the trace array to know if ring buffer is enabled
-+ * @cpu: The cpu buffer to check if enabled
-+ *
-+ * Shows real state of the per CPU buffer if it is enabled or not.
-+ */
-+static inline bool tracer_tracing_is_on_cpu(struct trace_array *tr, int cpu)
-+{
-+	if (tr->array_buffer.buffer)
-+		return ring_buffer_record_is_on_cpu(tr->array_buffer.buffer, cpu);
-+	return false;
-+}
-+
- int tracing_init_dentry(void);
- 
- struct ring_buffer_event;
 -- 
 2.47.2
 
