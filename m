@@ -1,34 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14C6C191F74;
-	Mon,  5 May 2025 15:59:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6241817B425;
+	Mon,  5 May 2025 16:12:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746460764; cv=none; b=LJ+vszihqnAqNY4y93B+wLneSEWj6FXq7w4V1nWW/dT3E4QrBA3x1CSLXZAW9PxNpAs1WLJ0dOIONO4vxOKUtGCYMLmGeUHoeIKMR4UoypNRNhZeeKjKRIc3BeruaIxsSnKEbYonaHmb8f2fbPWELP2tmXZnbAsbk9fRvaXKCrM=
+	t=1746461545; cv=none; b=JwM9fbS5EZwVDe5Vk3R+nRLSbSEgcaIqL3QfcqBRDzRKQGyrP49LdDsCkGketZ3aRyY32gsJi5/Yq2r7MkhOQQQ5FdGvEf5Q0I0YouWg4DDl6VS8ckSWnPODHeK98acx8DEosplXorQUdnXnpGpYSgaFu6LfeSYQIj50nthvjpA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746460764; c=relaxed/simple;
-	bh=RrD7x6fU3Iy2GJmHhBB/95FzxOioR68AN8IEskQgsMg=;
+	s=arc-20240116; t=1746461545; c=relaxed/simple;
+	bh=oFaC13gOuDM6KBgAYrQRD/CZapZ/j1SPusKyFwJ/0us=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=b5gw9eX0gOgz2/H4bYsOZhUuA7TC/1s/HRsU0F9eetezRcjWau1q0zkpUFjweUfiBuurUNue6A0kggjyv1bZYOCXE7Rl24FnEPACKWLln1KMXy8DfgwHtAlfgGyaOi+3VHSOgxKI6kRtYcP5axZVPDRUthGPQX8PJIF7R+dh364=
+	 MIME-Version:Content-Type; b=LdckcMKM7Hb0ObU0jN138w/i/S7i1W6teXA+yDrXDk62z6KLnsUrB/6UNGQyRsAVQ+5hHd5aZALofrnT3efjLx3cdaw2K/wauc6hmoTF/TH5n5z2g/kT60Wb6N6MLwB7xjf76NWzNIEOEffROZHOjYDRilSZY8YBOB5gF4yO5Oc=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 74690C4CEE4;
-	Mon,  5 May 2025 15:59:22 +0000 (UTC)
-Date: Mon, 5 May 2025 11:59:28 -0400
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 05CCDC4CEE4;
+	Mon,  5 May 2025 16:12:23 +0000 (UTC)
+Date: Mon, 5 May 2025 12:12:29 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
-To: Doug Anderson <dianders@chromium.org>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Masami
- Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Andrew Morton
- <akpm@linux-foundation.org>, Jason Wessel <jason.wessel@windriver.com>,
- Daniel Thompson <danielt@kernel.org>
-Subject: Re: [PATCH 05/12] tracing: kdb: Use tracer_tracing_on/off() instead
- of setting per CPU disabled
-Message-ID: <20250505115928.2fb446b6@gandalf.local.home>
-In-Reply-To: <CAD=FV=UEnL7ztSfqAHS1Y=VwwYSyT=rfE7ZiUPLnDnMQNTcPjw@mail.gmail.com>
-References: <20250502205147.283272733@goodmis.org>
-	<20250502205348.643055437@goodmis.org>
-	<CAD=FV=UEnL7ztSfqAHS1Y=VwwYSyT=rfE7ZiUPLnDnMQNTcPjw@mail.gmail.com>
+To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Jason Wessel
+ <jason.wessel@windriver.com>, Daniel Thompson <danielt@kernel.org>, Douglas
+ Anderson <dianders@chromium.org>
+Subject: Re: [PATCH v2] tracing: kdb: Use tracer_tracing_on/off() instead of
+ setting per CPU disabled
+Message-ID: <20250505121229.644df42b@gandalf.local.home>
+In-Reply-To: <20250505114849.1a9237d5@gandalf.local.home>
+References: <20250505114849.1a9237d5@gandalf.local.home>
 X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -39,27 +37,34 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Mon, 5 May 2025 08:42:52 -0700
-Doug Anderson <dianders@chromium.org> wrote:
+On Mon, 5 May 2025 11:48:49 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-> This new change seems less safe than the old one. Previously you'd
+> From: Steven Rostedt <rostedt@goodmis.org>
+> 
+> The per CPU "disabled" value was the original way to disable tracing when
+> the tracing subsystem was first created. Today, the ring buffer
+> infrastructure has its own way to disable tracing. In fact, things have
+> changed so much since 2008 that many things ignore the disable flag.
+> 
+> The kdb_ftdump() function iterates over all the current tracing CPUs and
+> increments the "disabled" counter before doing the dump, and decrements it
+> afterward.
+> 
+> As the disabled flag can be ignored, doing this today is not reliable.
+> Instead, simply call tracer_tracing_off() and then tracer_tracing_on() to
+> disable and then enabled the entire ring buffer in one go!
+> 
+> Cc: Jason Wessel <jason.wessel@windriver.com>
+> Cc: Daniel Thompson <danielt@kernel.org>
+> Cc: Douglas Anderson <dianders@chromium.org>
+> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+> ---
+> Changes since v1: https://lore.kernel.org/20250502205348.643055437@goodmis.org
+> 
+> - Remove unused "int cpu;" (kernel test robot)
 
-Well, it matters what you your definition of "safe" is ;-)
+Ignore this patch, I'll send out a full series of v2 again, but this time
+adding a tracer_tracing_disable/enable() functions.
 
-The new change prevents the ring buffer from having anything written to it,
-where as the old change didn't disable everything.
-
-> always increment by one at the start of the function and decrement by
-> one at the end. Now at the start of the function you'll set
-> "buffer_disabled" to 1 and at the end you'll set it to 0. If
-> "buffer_disabled" was already 1 at the start of the function your new
-> sequence will end up having the side effect of changing it to 0.
-
-Good point. How about I add a tracer_tracing_disable() and
-tracer_tracing_enable() that is not an on off switch and uses:
-ring_buffer_disable/enable() that decrements/increments disabling of the
-ring buffer?
-
-That way it keeps the same semantics.
-
--- STeve
+-- Steve
