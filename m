@@ -1,55 +1,55 @@
-Received: from mail-wm1-f73.google.com (mail-wm1-f73.google.com [209.85.128.73])
+Received: from mail-wm1-f74.google.com (mail-wm1-f74.google.com [209.85.128.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58DED28A1E0
-	for <linux-trace-kernel@vger.kernel.org>; Tue,  6 May 2025 16:49:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 348D628A3F1
+	for <linux-trace-kernel@vger.kernel.org>; Tue,  6 May 2025 16:49:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746550146; cv=none; b=lE+iH6qkncXeOAjSv88toCzUIQ4pnkMJyuxOlCB99+9gNn0vCQ9p5GHMYme99yFPLMPdmhchWNrnOxa/e9lnCCmomPHPmSkUJscre6uNu101pmTnAsiyDTTDEXkhdsSjS+65XYX3fNWBslYwxSyYRrrxZwPt8IJwP+uqdb9qjTs=
+	t=1746550147; cv=none; b=tItuUjTNDZLFX+jTKsk72Uj64ybFV0oa76lgk4MbgZF7kkvaY+zqR9klN49yxVpR6q1AZMBEsSs1Rp+h1jzWHsKXuoYxCRRD/hMCb8bdGZ7VNDV8fqevgK/aJZJ00NIHL2GoLbY/+mZ5Qv7dWGTb6KM8mja8E/H8GPB/eTX8UqI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746550146; c=relaxed/simple;
-	bh=PgCe5Ig4Hz5VA3Et4j2ZYh+G8htR5m2rXa4V0St1e+k=;
+	s=arc-20240116; t=1746550147; c=relaxed/simple;
+	bh=6nhV7XpN3WZyy+/QohB9tJlpXsrab2K78OgulSH7QaM=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=caC3X62rXiHNodZUVmhDQ/E2CBeKOGpOJSZjeqI6JWQjeS0hPAE7zwfRZx7mqOQS40M9+tfKYu8oLR9UH/6yTmxTok1cuDgQhj4t5PyJgfvKT8uYPs6+PZDYhka9xoQM+unIbH08W4O1PTW6ph4zwkp5aaxHoTX3Z4d1Vw1YtBU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=LM8Hb4uU; arc=none smtp.client-ip=209.85.128.73
+	 To:Cc:Content-Type; b=UbIl7+jH6yspstmpQepQtDD8rUqT+WG+K6w0Ddz3UAjYqFC+IZ1waR+ug3ANEbWwtUT3StWmOVWNQ/RKrmdIzzfZoRlbNhDVcM8qwrAPOkqMrK9D8xSDx5qZtaAGqmYs1Zo7eNpP2mYLoc8pg8932Q/IrwYUP248OMSI6+7juVE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=z/vXQ5SG; arc=none smtp.client-ip=209.85.128.74
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LM8Hb4uU"
-Received: by mail-wm1-f73.google.com with SMTP id 5b1f17b1804b1-441c122fa56so13740225e9.2
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 06 May 2025 09:49:04 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="z/vXQ5SG"
+Received: by mail-wm1-f74.google.com with SMTP id 5b1f17b1804b1-43efa869b19so35216275e9.2
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 06 May 2025 09:49:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1746550143; x=1747154943; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1746550145; x=1747154945; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=njQ3TmZpiHbN0W0T2NSyLt6EnFI9+R+BtiPGKvCoesw=;
-        b=LM8Hb4uURESSM4OGvSD+GBhMfl1CIrdzpU3rNWSN6xMzj583v+pGf1udRFmVOsDBTr
-         RAWpdWvCYamC20pUSfAXtwcrba81ZLnsoM0Z47w0BUOtbngOC15UapWHaheVfIQxGZRc
-         nqG0Z6dJBC94sB8U99SQtrnriqOgArYTHjH9eOOoSAzYM6ee08tj0qj/TYMKjtEDStr6
-         OVeHdwRSALxbJTxWPRHExz3ivBoVdFCfmdam/0LNIAQtlBfh1/mAXVbSG6eFEVNVk/sh
-         nspP86MKyvxA8tDQSqbQ7n8gUZ5FCNm1/Yd1wJkqHHHiTYbQHPxViXquhb69qy/qIGo3
-         CIyA==
+        bh=Uwe9TWcp7UhmX4oZw7S8iXQCB83ssWQWzCZsAER4ojM=;
+        b=z/vXQ5SG2Lb5FFKKn4S6VlCJcTBsktJpLTo4sveARv1pIA8GS9+Ql075PF4DWp+lrF
+         Hq7d4NcdYz9nfCZh0X0OZduTofy9NbG0czHwbaBEixnGxP6zjc7hpBYPQQ11UhXQnktl
+         og/d/+1I+242Vooh3ZYJy2IpmR7ajfHT2pkIegNi/PKMp9hB0eF5vIHdRLvPcFLxrBaz
+         oSeP/VYvNVp4K/6OV8K5d592mW5iCtowOF2khMEvS96vty50J5mgO3NhF3R2XJ2DCbMz
+         DX77G0zwAk+vyBUGPUVCWDqwDO+zVcuIJ4447Xv9Hszr5T9bFtQPeXr65eVNF+ALi6k0
+         U9sg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746550143; x=1747154943;
+        d=1e100.net; s=20230601; t=1746550145; x=1747154945;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=njQ3TmZpiHbN0W0T2NSyLt6EnFI9+R+BtiPGKvCoesw=;
-        b=rYN3S2K7gLu165rBG6nDW3U2W/OzvnWsHgIJFZFbGZrbcZ5gbdLFntQFaxlir6Orv1
-         AmNCjAqfBho0tbjbP4A40nUXPY0KMuca+G+PF72Ot5zZ2lMapd81I4PU6k0HBjGg6Nl2
-         hc/A6bqBzzOZvBU/eNKHj3WI+boCknesXXTzeZjPC7sHvMTShXDUSzRnUer1R/JySSs8
-         2fVeeIEaO1uRUtMPSB+oCVYnj/ERVILnuFh88RMo5p0uaw3El1toNQvi+wbCtY8WxP/0
-         WfDI9oPcXwDCeS068lC3gP/08snlb4DB2Afz7JpJ18S3/VhANdCDSvI3JkFNW0jJ/GQm
-         RAFA==
-X-Forwarded-Encrypted: i=1; AJvYcCWP9xw+ZiiPWSKMNAxmqL4VzZr6mxv1neaXquvrTOySj94NVpCX+7QAGXfqn49JaNwyDY/+2fXg+H74s0rblvXYPQg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzzJuqQXe8p+Bbi/7ASpN45dmH9X3vgq5zxH2CbutmRWpy8D8fs
-	7Dd6alK6Hwc0g58PMKGu7QIAfq7SKuyjhY3J08zvLlCDhWvYLM5UT9CE+bLTLAVbon3d61i1IQc
-	WpdmIwOGP75mFCeg6eQ==
-X-Google-Smtp-Source: AGHT+IHF02PKPiIhJbOE1ndD3uShLpPGP1nAp1HVPAQRz98xV5Rm4WeCONHAOCoe603i2rkE7H3ckkLeK9deDeKS
-X-Received: from wmbay12.prod.google.com ([2002:a05:600c:1e0c:b0:43d:1dd4:37f2])
+        bh=Uwe9TWcp7UhmX4oZw7S8iXQCB83ssWQWzCZsAER4ojM=;
+        b=uI2RdsVZ7O8DWmlvj+Hf6hzCAzOQdh72iHCWZzfAuqcgevIzSu7SN+jZ0sjK7aO/Po
+         M9qwnnuyi0WmIjFWFOsMZzDq55ialDlOY36OFJsIckXumH7sxNFNzH3Z0OnrTh425pLX
+         jEHcTsH1d/XMZRsHTeaaxqM5qFTC8wHjWdDcZbQ4WmxpqhcHrh7U6C/znOmhN8spAZua
+         RUHzUUwDNm3SsKx6YrwYOJbLZi8BdIDzlNOs0DNQAUxYPeRukJ1PpEdRQ54BdwMkkko2
+         J+EM1KHUsV1pUOh2WyfcWbdol9GrPm3Yy4MElFruqgkz1PgxymfUIA/Ovs0u3KFyBNna
+         4s5A==
+X-Forwarded-Encrypted: i=1; AJvYcCVkyCwopYwGN876FfHckNAAIxDRa+unVtU0Fsmk/RhfebsfCB6Zjs2/wZeGnK8vYPtOt4WHHYkH17ERL/jCeaa49rg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwvyLoZPS2soTfIjG0oZMQxsxBOxHTG0R4ILPxmCrIIFz3ILM+J
+	RePFH5vI9DsiX3MQEECgoPCIsDf5If3KDTzhTFXvDs6+3mAd29u7EnvYo5a0hm7LFBP/99B+Fdr
+	9UxvljDobn2gK4B7xpw==
+X-Google-Smtp-Source: AGHT+IFD0lWDGk03I/L52reS0E96znl56Cu/MfnVewrpbgBLyMFf/ajBPFdbrDJBI3q4GHyXoNdIe4tdhRJb9WFi
+X-Received: from wmbz22.prod.google.com ([2002:a05:600c:c096:b0:43c:f6b3:fa10])
  (user=vdonnefort job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:600c:154a:b0:43d:42b:e186 with SMTP id 5b1f17b1804b1-441d0fcc750mr28382805e9.8.1746550143106;
- Tue, 06 May 2025 09:49:03 -0700 (PDT)
-Date: Tue,  6 May 2025 17:48:09 +0100
+ 2002:a05:600c:a03:b0:439:9424:1b70 with SMTP id 5b1f17b1804b1-441d054c884mr38006405e9.30.1746550144942;
+ Tue, 06 May 2025 09:49:04 -0700 (PDT)
+Date: Tue,  6 May 2025 17:48:10 +0100
 In-Reply-To: <20250506164820.515876-1-vdonnefort@google.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -59,8 +59,8 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250506164820.515876-1-vdonnefort@google.com>
 X-Mailer: git-send-email 2.49.0.967.g6a0df3ecc3-goog
-Message-ID: <20250506164820.515876-14-vdonnefort@google.com>
-Subject: [PATCH v4 13/24] tracing: Check for undefined symbols in simple_ring_buffer
+Message-ID: <20250506164820.515876-15-vdonnefort@google.com>
+Subject: [PATCH v4 14/24] KVM: arm64: Support unaligned fixmap in the nVHE hyp
 From: Vincent Donnefort <vdonnefort@google.com>
 To: rostedt@goodmis.org, mhiramat@kernel.org, mathieu.desnoyers@efficios.com, 
 	linux-trace-kernel@vger.kernel.org, maz@kernel.org, oliver.upton@linux.dev, 
@@ -71,36 +71,25 @@ Cc: kvmarm@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
 	Vincent Donnefort <vdonnefort@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-The simple_ring_buffer implementation must remain simple enough to be
-used by the pKVM hypervisor. Prevent the object build if unresolved
-symbols are found.
+Return the fixmap VA with the page offset, instead of the page base
+address. This allows to use hyp_fixmap_map() seamlessly regardless of
+the address alignment.
 
 Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
 
-diff --git a/kernel/trace/Makefile b/kernel/trace/Makefile
-index 8f5e194eba71..a2f1489e11af 100644
---- a/kernel/trace/Makefile
-+++ b/kernel/trace/Makefile
-@@ -114,4 +114,19 @@ obj-$(CONFIG_TRACE_REMOTE) += trace_remote.o
- obj-$(CONFIG_SIMPLE_RING_BUFFER) += simple_ring_buffer.o
- obj-$(CONFIG_TRACE_REMOTE_TEST) += remote_test.o
+diff --git a/arch/arm64/kvm/hyp/nvhe/mm.c b/arch/arm64/kvm/hyp/nvhe/mm.c
+index f41c7440b34b..720cc3b36596 100644
+--- a/arch/arm64/kvm/hyp/nvhe/mm.c
++++ b/arch/arm64/kvm/hyp/nvhe/mm.c
+@@ -240,7 +240,7 @@ void *hyp_fixmap_map(phys_addr_t phys)
+ 	WRITE_ONCE(*ptep, pte);
+ 	dsb(ishst);
  
-+#
-+# simple_ring_buffer is used by the pKVM hypervisor which does not have access
-+# to all kernel symbols. Fail the build if forbidden symbols are found.
-+#
-+UNDEFINED_ALLOWLIST := alt_cb_patch_nops
-+UNDEFINED_ALLOWLIST := $(addprefix -e , $(UNDEFINED_ALLOWLIST))
-+
-+quiet_cmd_check_undefined = NM      $<
-+      cmd_check_undefined = test -z "`$(NM) -u $< | grep -v $(UNDEFINED_ALLOWLIST)`"
-+
-+$(obj)/%.o.checked: $(obj)/%.o FORCE
-+	$(call if_changed,check_undefined)
-+
-+always-$(CONFIG_SIMPLE_RING_BUFFER) +=  simple_ring_buffer.o.checked
-+
- libftrace-y := ftrace.o
+-	return (void *)slot->addr;
++	return (void *)slot->addr + offset_in_page(phys);
+ }
+ 
+ static void fixmap_clear_slot(struct hyp_fixmap_slot *slot)
 -- 
 2.49.0.967.g6a0df3ecc3-goog
 
