@@ -1,66 +1,52 @@
-Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AC8327FD6F;
-	Tue,  6 May 2025 13:12:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17127182D2
+	for <linux-trace-kernel@vger.kernel.org>; Tue,  6 May 2025 14:02:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746537122; cv=none; b=UpPXxk6T/qV/Wr9mnhEaHuIVrpFovJsfXk+3QKMDwAM4Z9zYIRjqnjzBKI7ta87+0zGkO29Sck3bJg/7BwkIjvSSvcrszbeLtrwdtyS926USoUBhCCQy6yBvdHBqTBIiwP6z3sUCSsPRY0y+xVVPH57yAp8cB+tMDvUQ/oQhSYg=
+	t=1746540127; cv=none; b=i3uBsTOtJmQyyerfjFUaaNDtc7Q7iP+w8OV/2H5ZcKq5CSd7IxwtlnZOSljp/rhtD9RE7KYU1KfnjjtTRTwt5dOi378LFpz0a7candM0F19jtq19agluONDGjD+wUUP9NUo4Z9+vMq3CluXo2Mp+1cyid/5A7+BiQr9RQsxMunA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746537122; c=relaxed/simple;
-	bh=90HQUUKUTzriwfUVeJS5Q2klum4Y6G1J3o9H497VWHg=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eduldDM+hkwyK4w1W8WbNfYJsZiSh12DALA6DrNi10PsrDPvBADdjElhW++QE57SLSmfgmNo8+Wh6z9v4Zdv9uB0Plm7QDKkSaHCDtb6gDtUxPM5+D4zI8nXzcv9HKvs1PMO1zPOFbIAdm5JsNLWictXs4I0eFYIrX6xwkhfyxM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=b1DrvTwm; arc=none smtp.client-ip=209.85.221.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746540127; c=relaxed/simple;
+	bh=elWDGJ+LtHAh+h9iroKMz3JrCxWSflZYm2pNtHBZfMQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JhO5CRgWo77dkjpOqRR0XLjXntZy50h/tMNsG1nLPq8VLOOWe7oheY5gedtAzjG4fyxWQ5ZTuEgVIED7gHBemTYnErtYpSegwY1jEFRc71mS32GhE6CYrn0Z24mgr4fJT12pHLpiO8eMHdNmeHkdSBCLV9jfLbVCRQEI0MuML5I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Zk4qYI+u; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b1DrvTwm"
-Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-3a0b308856fso135519f8f.2;
-        Tue, 06 May 2025 06:12:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746537119; x=1747141919; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=6z4DI8j6oTUcEftx6nE5ha5TjZEr3u0qLC5LhSNxy5Q=;
-        b=b1DrvTwm3dCxVnFURH3wvtit4ly7uEjfnrf0K0V8Gn2GPFsmK4RU1zg0jTDU/dffb1
-         pQC1D1rmYfHic0xQq7D6X5oEADJZZPie0hEmj1KTMuiW+3R+gput+zcs4rJi6daj0QfQ
-         rhZd+BF5M3NjXjGKzIA880SVu3JfABK0TL5eBLGy4qlilDfeRnBxYxY+Fn6J1ptRxG9L
-         782nddpiuhxA0DK2g3MjeFknTB6kMOdVcB64PrjEeCci2p+xfw8wfQZETE4LoyLhb2Do
-         cgbiTo+eUeP/g8dNWENfoznLr6QQonQich+GUj4BUL6KunVJNOPCr//Y88a/NF+PfQfv
-         Wuvw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746537119; x=1747141919;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=6z4DI8j6oTUcEftx6nE5ha5TjZEr3u0qLC5LhSNxy5Q=;
-        b=TYN5QTVLkyC/RfRn8jo7Kgbbn3iHfnGQ1II6ZE57xqiL1z/6yepS+N3CRaqek3zSeA
-         2oLLD6muYyp/NTxa4wJbDRe8oQPCN88l73dRMxU2QPBmQ8Q9pM7UbCuQCCAlZDmJj08I
-         TwiKO8PzJ/UDuaOGkIh6fDu0Dza32T7jbgvzQwgNOI/3q6fEGZY5u2yP4Nclpx3c6xFn
-         P+jZhxaB4d6WRbUBNTUzwVGUdpOKJ/ukh+jVWoDLSjsAhxN2rmvp5S6VVRs2nIYGGMkf
-         Hl3SkOW4QzlZS8/UM9MPB3hxsZD1XbyuXDSB/ycfj+NdblnLA5mWglAGP8AvugStWm+i
-         /gPQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVSw0dHKgAb7jIxnq551GrI0CyXAMqGsc8dNJ2qsUOFkiISnXJ4eTfXynB1+nAKkuzLpzY=@vger.kernel.org, AJvYcCWa8OI1znN/Z3lcaVYSt6oTVbv4FgOPV62QLz7sjKcg+oqM88tBa9gmG6Q2UYNpnEbwN0sZE0t1Pi7AxhpvPDfqgP65@vger.kernel.org, AJvYcCXRWx620wdTg80oIcNJSa/EuZoJahyNnHSzLYuUmJbHX4jGu+4x6kdADO/E9vuOQsikLzdXy8Gh77euIpmt@vger.kernel.org
-X-Gm-Message-State: AOJu0YxZi6R1BTI6kI42f2mPPvufF62dEnAccRm9IyXz5wbFnm4+L5vl
-	IEQFZmtSUysvP+5BngG0VuqMRjBXF8Oq7gLDCux92LdleRtE27pX
-X-Gm-Gg: ASbGncsPIIwhMcOWuxCLP1rPGnyHsnzGIPhkFPqL6h5ejva0gW4/50YwCpfWUXCt60G
-	Qt3lRqSU1qGX3HQ/7swssyJq0sBk+73ewSP3jtigdd7QeFoFwKpyaPSedcC+VJGi6+23tMD4Kjw
-	tOLTTGYeauC5MUofYaPWAIwwln45a3D7BlN+v1UODKMd3ruNuQluO391R3F3T0adjxFVfugHglB
-	g6KR/WZoidvEPTfETEuY6xjJiVJE2fyMJOeegdaor4WJaMszYYYdx5Q5DkBOWys3o29gr4Ndrrx
-	0LPmvndhuj6i/KkMuds1u5SSVh0=
-X-Google-Smtp-Source: AGHT+IGUVC98ca0kalRXo5g5+zRzXsabvq9+qwfWCr4C94Y1I8eFtg0sW4MbTI+/mJsXiDl+Ifym2g==
-X-Received: by 2002:a05:6000:18a7:b0:3a0:9de8:88ef with SMTP id ffacd0b85a97d-3a09fdfc05bmr8621556f8f.49.1746537118919;
-        Tue, 06 May 2025 06:11:58 -0700 (PDT)
-Received: from krava ([173.38.220.58])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5fa7781d0aasm7642970a12.45.2025.05.06.06.11.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 06 May 2025 06:11:58 -0700 (PDT)
-From: Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date: Tue, 6 May 2025 15:11:56 +0200
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Zk4qYI+u"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1746540124;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=+ye8i/UsqJKvQlKKIVYrfpekN4xF7RuPErJdU2N3amU=;
+	b=Zk4qYI+uJmmTP5NOzzE5+Ghzp9YlptO/F5rdoT/53WhkrTAJw40aiMkxngnUaejFv/VUP2
+	Y5Z1LKpaG0WLWSGdMnlCwUqjXDWm+lt+H7uUTaMiMoWf7deZF5PBHC6aBITXKETztyKfz9
+	XKgmDnQyaioVwCVJwBAqw156oNnOW2A=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-341-gyyi02GDNNa0H7zDO120Cg-1; Tue,
+ 06 May 2025 10:01:57 -0400
+X-MC-Unique: gyyi02GDNNa0H7zDO120Cg-1
+X-Mimecast-MFC-AGG-ID: gyyi02GDNNa0H7zDO120Cg_1746540114
+Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 1640A1801A3E;
+	Tue,  6 May 2025 14:01:54 +0000 (UTC)
+Received: from fedora (unknown [10.44.33.234])
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 8BE141800360;
+	Tue,  6 May 2025 14:01:47 +0000 (UTC)
+Received: by fedora (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Tue,  6 May 2025 16:01:53 +0200 (CEST)
+Date: Tue, 6 May 2025 16:01:45 +0200
+From: Oleg Nesterov <oleg@redhat.com>
 To: Jiri Olsa <olsajiri@gmail.com>
-Cc: Oleg Nesterov <oleg@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
+Cc: Peter Zijlstra <peterz@infradead.org>,
 	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org,
 	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
 	x86@kernel.org, Song Liu <songliubraving@fb.com>,
@@ -74,11 +60,12 @@ Cc: Oleg Nesterov <oleg@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
 	Ingo Molnar <mingo@kernel.org>
 Subject: Re: [PATCH perf/core 03/22] uprobes: Move ref_ctr_offset update out
  of uprobe_write_opcode
-Message-ID: <aBoKnP4L-k8CweMy@krava>
+Message-ID: <aBoWEydkftHO_q1N@redhat.com>
 References: <20250421214423.393661-1-jolsa@kernel.org>
  <20250421214423.393661-4-jolsa@kernel.org>
  <20250427141335.GA9350@redhat.com>
  <aA9dzY-2V3dCpMDq@krava>
+ <aBoKnP4L-k8CweMy@krava>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -87,36 +74,68 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <aA9dzY-2V3dCpMDq@krava>
+In-Reply-To: <aBoKnP4L-k8CweMy@krava>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
 
-On Mon, Apr 28, 2025 at 12:51:57PM +0200, Jiri Olsa wrote:
-> On Sun, Apr 27, 2025 at 04:13:35PM +0200, Oleg Nesterov wrote:
+I'm on PTO and traveling until May 15 without my working laptop, can't read
+the code.
 
-SNIP
+Quite possibly I am wrong, but let me try to recall what this code does...
 
-> > 
-> > -------------------------------------------------------------------------------
-> > OTOH, I think that the current logic is not really correct too,
-> > 
-> > 	/* Revert back reference counter if instruction update failed. */
-> > 	if (ret < 0 && is_register && ref_ctr_updated)
-> > 		update_ref_ctr(uprobe, mm, -1);
-> > 
-> > I think that "Revert back reference counter" logic should not depend on
-> > is_register. Otherwise we can have the unbalanced update_ref_ctr(-1) if
-> > uprobe_unregister() fails, then another uprobe_register() comes at the
-> > same address, and after that uprobe_unregister() succeeds.
-> 
-> sounds good to me
+- So. uprobe_register() succeeds and changes ref_ctr from 0 to 1.
 
-actualy after closer look, I don't see how this code could be triggered
-in the first place.. any hint on how to hit such case? like:
+- uprobe_unregister() fails but decrements ref_ctr back to zero. Because the
+  "Revert back reference counter if instruction update failed" logic doesn't
+  apply if is_register is true.
 
-  - ref_ctr_offset is updated
+  Since uprobe_unregister() fails, this uprobe won't be removed. IIRC, we even
+  have the warning about that.
 
-  - we fail somehow
+- another uprobe_register() comes and re-uses the same uprobe. In this case
+  install_breakpoint() will do nothing, ref_ctr won't be updated (right ?)
 
-  - "if (ret < 0 && ref_ctr_updated)" is true on the way out
+- uprobe_unregister() is called again and this time it succeeds. In this case
+  ref_ctr is changed from 0 to -1. IIRC, we even have some warning for this
+  case.
 
-thanks,
-jirka
+No?
+
+Sorry, I can't check my thinking until I return.
+
+Oleg.
+
+On 05/06, Jiri Olsa wrote:
+>
+> On Mon, Apr 28, 2025 at 12:51:57PM +0200, Jiri Olsa wrote:
+> > On Sun, Apr 27, 2025 at 04:13:35PM +0200, Oleg Nesterov wrote:
+>
+> SNIP
+>
+> > >
+> > > -------------------------------------------------------------------------------
+> > > OTOH, I think that the current logic is not really correct too,
+> > >
+> > > 	/* Revert back reference counter if instruction update failed. */
+> > > 	if (ret < 0 && is_register && ref_ctr_updated)
+> > > 		update_ref_ctr(uprobe, mm, -1);
+> > >
+> > > I think that "Revert back reference counter" logic should not depend on
+> > > is_register. Otherwise we can have the unbalanced update_ref_ctr(-1) if
+> > > uprobe_unregister() fails, then another uprobe_register() comes at the
+> > > same address, and after that uprobe_unregister() succeeds.
+> >
+> > sounds good to me
+>
+> actualy after closer look, I don't see how this code could be triggered
+> in the first place.. any hint on how to hit such case? like:
+>
+>   - ref_ctr_offset is updated
+>
+>   - we fail somehow
+>
+>   - "if (ret < 0 && ref_ctr_updated)" is true on the way out
+>
+> thanks,
+> jirka
+>
+
