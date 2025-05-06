@@ -1,275 +1,275 @@
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A6F8212B04;
-	Tue,  6 May 2025 09:31:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746523914; cv=fail; b=VKoah00/Stm3McvKH4R6z+hEmbjCgvNphjZOw627r2wG/Ig5RYiLNZc1KjuYgO1n4GWHH5wRDavyudKIknFO2IkJeLHYhhjTEf7xrgzWAS1nVHjVul2Gl9obyw2MWuOJUhtdSqlBrQXhZ6Pdloj4Frsa+mYsfBs/k7wD2wEAYfw=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746523914; c=relaxed/simple;
-	bh=UKoIReqMUi76bwJgNZsFj8DE2SW0LlE8E2x2wY1Xsts=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=DdmtSK7HpD0DaCD1sJJzZ+6X7OGXzfh2pRsz2CkN7Nmw9nh5RCF3jPlr5/cC2ZLch7CEt1ebFfqXrVe+mHp7PgLJdcqsPT+QInxKeoFXx/vhNx4ZvZangrh8d86cRwufyhNw5HK3007yPc+ozQsVWfI3yAbnYz5QQxHUDvq3RHQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=IBFBRIWK; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=pIMe1hKR; arc=fail smtp.client-ip=205.220.177.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D39926B97E
+	for <linux-trace-kernel@vger.kernel.org>; Tue,  6 May 2025 10:57:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746529059; cv=none; b=h7OQL2x83fAw3RJ5jsLyjC+UO54VxbynhGew12hBqPkXaSHPKiqPOKUnnhk0Sl5xj76IBheU638l2Etr8csQ/sgjnG7UJcRQCvfQ8BuIE1SQ7tTMsRmUc3pzqGIxNXAp3Lw7l3qzEHP6w2sc1ZF5lTzxbW8Qnwir8fFWe9Y5hlM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746529059; c=relaxed/simple;
+	bh=KqiV6QkyfLhB2kxSzwViFrXIaJ8BtZKPBiE3Q0qGO7k=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=V+sbS91s+UABovDoAXa7fgPt29mnrBdWBo8ncDLscRtY8sZvjZuEtDV8kZr8MiIehU+3k1BtNk/oOZiGpgx/hWCNOfEmxuN/TIU/xcVLoAuh9z10XldcaXWxqsiyUu/riJ9FWErOtcTOXlmvnZgGHQ44D0XAt/V8xmUs+dao7x4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=r32AZo6z; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=npHbnoms; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=r32AZo6z; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=npHbnoms; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="IBFBRIWK";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="pIMe1hKR"
-Received: from pps.filterd (m0246632.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5468d1pD000611;
-	Tue, 6 May 2025 09:30:50 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=corp-2025-04-25; bh=9DGQK2udbxllRIbr8+
-	E4zbyCexlspPVNXVfj5rIYXqM=; b=IBFBRIWK9mROzebiaPIcY0SYydW8Hl8smJ
-	v6HCob5MQ9Y82hj0ac42vMRgv1SLkbPZiIPDP82Qwj0soXLlkR6/reMTAmglyQrH
-	dPCpqXiw6hVhryZ6yUNYRPD43VimZFsZZffbioYh215obBrd4g+NGNDB7BOX+Irl
-	FbjviizHL/YbYQTeN6Jr4PmUiTb1j5B7uaAGJf+++mtjfsWlFchk2bCk5mZA6ukp
-	WATTck2Sp6nlaIa0uhbz4InWsYjpn8NiY6s0d3zDAqYBIz2PWMRhCyM6ZTC/wFnO
-	Lv6D6GWKSfHJ0m8BgVobWwl9KIior8JsLIWztMR7UzNu/I9h3LLA==
-Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.appoci.oracle.com [130.35.103.27])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 46ff3mg3t7-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 06 May 2025 09:30:49 +0000 (GMT)
-Received: from pps.filterd (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 5467x5Ur036235;
-	Tue, 6 May 2025 09:30:49 GMT
-Received: from cy3pr05cu001.outbound.protection.outlook.com (mail-westcentralusazlp17013074.outbound.protection.outlook.com [40.93.6.74])
-	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 46d9kf0x24-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 06 May 2025 09:30:49 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=l4X93u6rLx4XkuY3ejEe9VNeyGjKxjb7q9HwPAkeORrn0ru1igXiQlEPPdMXa2HyY0Et9JIKkAn+Ri6Wv1jequ++70vZ037P42hKWAAyY1VPbAFaD2H8RkMtzJrZMwhPMa7nBjQAHmsdOsiG5j95NPH0bmLzz1rr1vjsYlKg4/7yKjBSIYtG6vaH6UW+rM1wnSWH7o2W5qvKihO6PR2zCQZ8U6hXjcBqDacjNd/R6yykwvwzL3v153MJeV50BRflr7EsNvp6T6943dNORpv6U5x4Ta0eroGG8I5unVa83dOeYaPbqXv3IL7fpEyeVHqc1K3aOBoaWRxdazdo/u656Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=9DGQK2udbxllRIbr8+E4zbyCexlspPVNXVfj5rIYXqM=;
- b=qbT8Rj73F6NktUlgfhiP/7FwFdTNPWXAF4zzWfkEXNR9sPd797LzL9OYzGAx6BkPQSf66FblwrBCnE8XNJj6y+YksqwoAlM2YfS4Ma8PvtCmn66GaHlHi0uEjPHrwdji7CkDrEXTuhWxJxmSx/MhsUFNpvXZTixLNL6EpwFvZZI/wdTNQ/Zy88dix0LpYyoWvFCTPdERomT3jUdNfZX93qFfjBEdS4fnZ3/R1RW35Rwpxe8uUWnMRhdcteqO205Cfx+PCJNhW/mveUA+W4SbqcmLm60RwwYSYIPSVgLV4hXlANpAgtADxP42K6m9V5NpnnxoEiHud1ZjWvTMwLCrrw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=9DGQK2udbxllRIbr8+E4zbyCexlspPVNXVfj5rIYXqM=;
- b=pIMe1hKRTsIeI1o0YTH6/qjNfUklfwVJrjM/Ga2F92BBT9ubuDN12bK1lgiYzrrqWeycbtTLkG7EQYmaFOIPYi01gpVOEWgIbfTFRDqKZc7IwquAAOMmPEvA9lxvwJpQzkcVNJWwmj+1kvUiIiPg5l1HoRfRSQDidPSytaH29Dw=
-Received: from DM4PR10MB8218.namprd10.prod.outlook.com (2603:10b6:8:1cc::16)
- by DM3PPF5F5663669.namprd10.prod.outlook.com (2603:10b6:f:fc00::c2b) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.26; Tue, 6 May
- 2025 09:30:42 +0000
-Received: from DM4PR10MB8218.namprd10.prod.outlook.com
- ([fe80::2650:55cf:2816:5f2]) by DM4PR10MB8218.namprd10.prod.outlook.com
- ([fe80::2650:55cf:2816:5f2%5]) with mapi id 15.20.8699.022; Tue, 6 May 2025
- 09:30:42 +0000
-Date: Tue, 6 May 2025 10:30:40 +0100
-From: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-To: David Hildenbrand <david@redhat.com>
-Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org, x86@kernel.org,
-        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-trace-kernel@vger.kernel.org,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-        Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        Tvrtko Ursulin <tursulin@ursulin.net>,
-        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        "Liam R. Howlett" <Liam.Howlett@oracle.com>,
-        Vlastimil Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>,
-        Pedro Falcato <pfalcato@suse.de>, Peter Xu <peterx@redhat.com>
-Subject: Re: [PATCH v1 09/11] x86/mm/pat: remove MEMTYPE_*_MATCH
-Message-ID: <93c44cac-d4b0-4bf7-b2f4-ac957f53a485@lucifer.local>
-References: <20250425081715.1341199-1-david@redhat.com>
- <20250425081715.1341199-10-david@redhat.com>
- <fe80481f-6fa9-4148-90b2-65734ef259ed@lucifer.local>
- <4dfabfce-8fe4-4b54-860c-e873fac12b8d@redhat.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <4dfabfce-8fe4-4b54-860c-e873fac12b8d@redhat.com>
-X-ClientProxiedBy: LO4P123CA0187.GBRP123.PROD.OUTLOOK.COM
- (2603:10a6:600:1a4::12) To DM4PR10MB8218.namprd10.prod.outlook.com
- (2603:10b6:8:1cc::16)
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="r32AZo6z";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="npHbnoms";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="r32AZo6z";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="npHbnoms"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 504F7211F4;
+	Tue,  6 May 2025 10:57:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1746529056; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=qAaO3bOM6nlbRoiQwQi9a+Pz4/M38rK9aYVsxd4Rpbo=;
+	b=r32AZo6z1oSsmJQVWqlliShVGolzBAG2d1i2If7TdB368way5nEzKPbUQMFVet0YBXACKA
+	fjZ6GNIp2mUvYOxKt8kaHz+3GnWJdhXFddrXiAprxdYibxOuQO757Aug1R3jJORitQq8kR
+	zmuzI0A75sf3hSV0Cn/+GaPvXiXEAeA=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1746529056;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=qAaO3bOM6nlbRoiQwQi9a+Pz4/M38rK9aYVsxd4Rpbo=;
+	b=npHbnomsj3MCQgI+lbayh6tV2hB34GwGecrJuEuhPPH6lM9puyat9vQGerKQkvFvKuhyf2
+	h2KVQQ3Xx1Nh9jCw==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1746529056; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=qAaO3bOM6nlbRoiQwQi9a+Pz4/M38rK9aYVsxd4Rpbo=;
+	b=r32AZo6z1oSsmJQVWqlliShVGolzBAG2d1i2If7TdB368way5nEzKPbUQMFVet0YBXACKA
+	fjZ6GNIp2mUvYOxKt8kaHz+3GnWJdhXFddrXiAprxdYibxOuQO757Aug1R3jJORitQq8kR
+	zmuzI0A75sf3hSV0Cn/+GaPvXiXEAeA=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1746529056;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=qAaO3bOM6nlbRoiQwQi9a+Pz4/M38rK9aYVsxd4Rpbo=;
+	b=npHbnomsj3MCQgI+lbayh6tV2hB34GwGecrJuEuhPPH6lM9puyat9vQGerKQkvFvKuhyf2
+	h2KVQQ3Xx1Nh9jCw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 40D2613687;
+	Tue,  6 May 2025 10:57:36 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id 1G3ODyDrGWgVDQAAD6G6ig
+	(envelope-from <jack@suse.cz>); Tue, 06 May 2025 10:57:36 +0000
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+	id E034CA09BE; Tue,  6 May 2025 12:57:35 +0200 (CEST)
+Date: Tue, 6 May 2025 12:57:35 +0200
+From: Jan Kara <jack@suse.cz>
+To: Al Viro <viro@zeniv.linux.org.uk>
+Cc: Jan Kara <jack@suse.cz>, linux-fsdevel@vger.kernel.org, 
+	Steven Rostedt <rostedt@goodmis.org>, linux-trace-kernel@vger.kernel.org, 
+	Christian Brauner <brauner@kernel.org>
+Subject: Re: [PATCH v2] kill vfs_submount()
+Message-ID: <raihngvxu7ffs44sgnswzjkqohthx64o6oybshba6v6amqtg65@2zm27vcp3qfr>
+References: <20250503212925.GZ2023217@ZenIV>
+ <utebik76wcdgaspk7sjzb3aedmlcwbmwj3olur45zuycbpapjc@pd5rhnudxb35>
+ <20250505213829.GI2023217@ZenIV>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM4PR10MB8218:EE_|DM3PPF5F5663669:EE_
-X-MS-Office365-Filtering-Correlation-Id: 88e13f48-e1b8-4c36-4bc4-08dd8c80abd9
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014|7416014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?EN+bayATR6jRCgTjUjxP5VLew+ie1Ap2oXsfYIsu30g+onBSqxCop16rjQxn?=
- =?us-ascii?Q?iJPpm+rLHFhTLQYdU43htQxIxO8ScFGC3/Clb2aGpXyx4JVpIMxDtUgcH2lp?=
- =?us-ascii?Q?A9EvAlNsSXTZsFpzbCEAZC3j69Vx4KFai/65JA4/jeIVhDMKgBGjY/Uk6+RV?=
- =?us-ascii?Q?Zu5h2rdEvv0P5B4qhlNJM9p4/59WTQpDbT/NQpWmgUcWTMCu546s/ogt7Vnp?=
- =?us-ascii?Q?zXPDFQ5QKx1xBQYevDnz5wcNa+CdiHvNEWIlhrYyiNcXu5xlwcYRVmK76cVY?=
- =?us-ascii?Q?6pUbYU2E8Lh5gRbXAkAIPtQN3txnNv35D5rYoYHvaztA3ZYlkiTlik7Xw1oz?=
- =?us-ascii?Q?U5m0aNFJwkZ1e9tnKOjz8BiWGJpINTv7M5w89dc99Lhfj8kzc4FLhlim/BJP?=
- =?us-ascii?Q?4m433AJ8srlyZUKWKopLsBYRixvBbSxqJs0E4VxUGtjQPO3agzbJkIeh0j6v?=
- =?us-ascii?Q?JxFVEq2EWnTwNlxj1Imr629g07uyApUDBZM88tSBB2uK/wYl4W6BMNwn1VtV?=
- =?us-ascii?Q?Utejey1IP6vXF3q7v4Xq/gEMTVZnfWcqcRERFeh67oJlnuxetdqJHP5wPl57?=
- =?us-ascii?Q?h0f1BkWzWQUAF7Mt88Dg5iciHo8J1VoFtIzsnUt65+c58Sz5tAvz1TCUBoOl?=
- =?us-ascii?Q?9hkdXG0VGRC9+S6BcYOObV7d+kuHnRjaHtxjYgy3UJ4slY4SDFFmhsJKRjlj?=
- =?us-ascii?Q?NWa25+UlKwrzvWPkNcZ0mm7OMhVICjJFW+Mixh5ZoId/L/8QMXcKat/D3rBD?=
- =?us-ascii?Q?FDtl9T6wqlqxgtdqIJb8mCSNn7HrFGGdxb0DlkJoNm21K85nyG0huo7U+01E?=
- =?us-ascii?Q?KN6RpphjA5YgPwaDt9jKl6IgHmccqL0TbO6XS3JprzuJV7FzF647BdOSrDtr?=
- =?us-ascii?Q?55faQ5n/oD1uVRpGPct/sHz2+wEUudNPJj7GuddfXvCGdhoHzUcbIQ6/rcrZ?=
- =?us-ascii?Q?7MaBOpEBz9Jp4qGRMAFIv6A1OYuQurUTjfW4PIaxdGNIEHbm5mqlcE0ISu3F?=
- =?us-ascii?Q?UxXS/Ee1Q9TRRNw1PZew9apJiT7Xb/kQ9oJrxVNp90VuyNbJjo2IuHwzu3zR?=
- =?us-ascii?Q?Jncp9Rj+HEEkvanHFaOsdg+fYm4vAdaekzp/magFvQHX52gGlkiej911uCNi?=
- =?us-ascii?Q?Io4k9vIxQwMXl4+6RsRrHkg7eg6/x3LKTORWKZO9IbgBj5TeVXFhfkWip+Xe?=
- =?us-ascii?Q?8OVoM8Vei5MgUH0fAY9+BgJbjRCIl379dRl+RmJYWNPKwQS56LfpBhRi7maN?=
- =?us-ascii?Q?iev9ddNKoSuuWFuM6wIeaOzM8NPdEelir7Zrj4/5q+WJdfspv+zOpB6H3xQc?=
- =?us-ascii?Q?icMdLwkA2drtsHVTYVn4O9HgU2v2apT0U43nlRdrovm+EuICIc+9Mhc1Vzrx?=
- =?us-ascii?Q?poo8hgwILVDzya5pB2d/ZVnOwcv3hJS9/5qTvO93NxxRQ520W3GdXgiVT2GE?=
- =?us-ascii?Q?QQmhGaHo2lA=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR10MB8218.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(7416014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?Y4Ohjhv8iDWuuJFih2lzDGNBbkEIl8m9GvR6j82ybo8NWXx9VxjqD9poPNWW?=
- =?us-ascii?Q?D443m9u+lN3ZBiLVHKBENgMBFGuiG3djiNOoiIcHyBNxUWYaQl++myo33g3e?=
- =?us-ascii?Q?shu1aOrBmVbHL7ut7kYgOom/emleG8nBPJlZwpz/fR20ATDi4duqGNLeWKg9?=
- =?us-ascii?Q?5ObSNnnJptSd9H6wAqNdXZmwLe27uPAX4W/Yr2956m6DZTBZx3eVNeoruNB/?=
- =?us-ascii?Q?AZ82a/EsXR3KpWtR8DDdtMBJhaPvNdE0ibP2jSEiYFii3CtNeOBq6pMoh+T/?=
- =?us-ascii?Q?hKTZpblCRD0Ts0JSa2b4/59rbr1BPxfi2jExpTplqtiLued0jJUtr8LcAgVc?=
- =?us-ascii?Q?ug449/6NjvYpwtMdPddooEySbmCWSdvt2KPU+Yghw4MhCFF2oyHuQIPJcP0O?=
- =?us-ascii?Q?99we1X4vQU8kfo+kVqSmxynWrTUnjnI1FHdskaY3Sk9TAe38mZl6dmsaKziz?=
- =?us-ascii?Q?B2MPFOr0dJvLjMRX6hvenXVahRm3j/MBzsq6MIDfmTexqoY9Bo4iF9OsEkca?=
- =?us-ascii?Q?cGBaiU4mK5hmq7ke2SxAlOlZuymNjmYWYDdQJMyL6b6tImG7o3TjUZub7AhA?=
- =?us-ascii?Q?N+R4wYl3dkAGgrHm8mtOlUr3czryRuIEY63YDplG4ds6iQamS3E37UnWKlax?=
- =?us-ascii?Q?zCnpZdJ33cDz6cZE9MD79yjVAQwwsS/8xBocFegt+O4WxpGlKcUKm/zjelxQ?=
- =?us-ascii?Q?6TJkhwYbe74WBjtYPP1Cwg/q6yzFKwGCKphYUb3DY95TCjsmVfhDgWOMA8Ze?=
- =?us-ascii?Q?IPfSevUTFJm0VkslyVT9m9UoB5axykMeg+Udu8Fp0FNMnRDrQRg3o+RwFjYv?=
- =?us-ascii?Q?7wzaV0g3BytSuJ2szeijcqoz9WfZbKe3FeT1LmjgoOMsS/Guwd841rH5DHsE?=
- =?us-ascii?Q?46UKOjPnqrZjtgvBM0Ig/bWwOlH8eH5aq3B2hyIb2bo04xjykf4jber31RQv?=
- =?us-ascii?Q?6vF3JC0T65W0n8DH//ZZzLfwMLPxbKXBsPEi+92E7JDuM8JoNj0K068unV5Q?=
- =?us-ascii?Q?j1JA0TGJjFlFv0BKI7WKs7spxRmxp5Sm0sNzJyBWICW2dWbB4Ao0MfW5Zgfb?=
- =?us-ascii?Q?zslrzTN+AIbRwlxghhtNID0rXBXEZ/J2EfeSlNnnbDR+gVqgeAUf06Q9R/Vz?=
- =?us-ascii?Q?qOOWUsjWwDxrIp42b8Nk6xzkXP/Ln5tfI3aEIxlkGypYWMu+vlmJALhyuxZ1?=
- =?us-ascii?Q?S864tThg/C0VCZl2Y3VxZT5VWC7asOegjXe/hGjBrDzbQJvEjSGTxBJM7yl3?=
- =?us-ascii?Q?2lQXBkkkiSEUYpL9FAasPCgsLiyOj5jEnEwQ0E+nH8Zg6dVlaeU9qN9OOE3g?=
- =?us-ascii?Q?M+rizZZ3El8s9zrUNHG6UsoPIEQ79T7QK+npcyKjacvQLe0ACrSsY7DHUimh?=
- =?us-ascii?Q?LWrMg4OckBpU32Al7Uw6QPR172MoYaVkBWe8AP3vLzsD6IOheZ3NHT6iYare?=
- =?us-ascii?Q?98wgRhj3mfaa3w4D/iQH6pd41UTGQzDB4uX746gYqBBrX8NBi+J57JWbke07?=
- =?us-ascii?Q?Zyn+i5dJ/Kq7K7qraWLStXBnLVLC9XWJyat/oBchafjmUfyxVXz9cZBoSIrg?=
- =?us-ascii?Q?sY2s7sPNPJehCGj1flCarWuJewHylVWgx6VrUebvGAd0z3RPjRmTVYG20nzi?=
- =?us-ascii?Q?1w=3D=3D?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	hqOxaOKOSGPJ7RbTMViAXs1eNb8VtOJtoOSQDuGpu7cmRCDgEGOlP9JZQ8C37pAHXCzvjHh68Q9D9u7EidUm7B+KLit152ZCSi1+je9CRGh8gStrVgLCFyWZ/1rqBGeL4FPEDS99NrjmurO4MtlffjShC3GNBhWx4ixu7omx40/5/Mrek8NwbPTA/HnFw50as+fKjs8jSjs11pLj6fokqnfa7iAXRw8K8fpQMs23mmz5zkJ+kr+XmXz74xko2W1S3S7KQ/UkuBn4yaYlUl8mrwaW4BUg708slpzutrTZo84f8BbW10GVknLQM/ky0PhezXQwFJAVoh3uNqFZuuIriE4vDDG04JL2O58+bt6EkNU0tiKV1SPpR1gzB8yKYSOg+xe6QVNfR0YVEDiyuRD6lV+3HKslL00FSn8ZMc8uJVjJrEXbAjOOdFluHR4rNAipeVjpDTCpvH47ftaTYZrSLUoaCqd7pkZaZAVvvOEkskQ59aUN43cmfx8QvWv/JQuATHDEZogzJl0Wp1SwbXGY2Sbi3Oc1CPg8wTGyYCih+zU+K5ezEGl3ENISMqRelCnoaz9PWB1KNpeVDnabVsBDK3mB6/HBmT7EcQMoVL6Jkao=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 88e13f48-e1b8-4c36-4bc4-08dd8c80abd9
-X-MS-Exchange-CrossTenant-AuthSource: DM4PR10MB8218.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 May 2025 09:30:42.4096
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: f73Orn4iSOKoFQjBWDGEz3pe3kEMjxoc8HPuDxcIzCYtzAb/cvCStO8amYek3CeIyNHCK1SyzNq5AYq28PP8Jf0cbSCsklu6DZAcVNoTcG0=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM3PPF5F5663669
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-06_04,2025-05-05_01,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 bulkscore=0 suspectscore=0
- malwarescore=0 mlxscore=0 spamscore=0 mlxlogscore=777 phishscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2504070000
- definitions=main-2505060090
-X-Authority-Analysis: v=2.4 cv=e84GSbp/ c=1 sm=1 tr=0 ts=6819d6c9 b=1 cx=c_pps a=qoll8+KPOyaMroiJ2sR5sw==:117 a=qoll8+KPOyaMroiJ2sR5sw==:17 a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19 a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19
- a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10 a=dt9VzEwgFbYA:10 a=GoEa3M9JfhUA:10 a=H18HwA91MA7Kf7uUeYIA:9 a=CjuIK1q_8ugA:10 cc=ntf awl=host:13130
-X-Proofpoint-ORIG-GUID: MBEzosvvjuFhWjeNKsZwVgtZQnTFUUHS
-X-Proofpoint-GUID: MBEzosvvjuFhWjeNKsZwVgtZQnTFUUHS
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTA2MDA5MCBTYWx0ZWRfXx396FePBaSWo ESb8xtLhdn7iIrqb9EZpMPZH+hYnf5Oq2Lykzw/MdEfyaW9UQtbUOXtqJAvVZLSR1cPGpH3m0dL 02p4ugMRMbPm5hJAVIO9Jv8aLqLFIOKtgLKcqFtz/m4Hrfu+dSSIsbLws4igyJo/Rk0j3Ba1iAA
- +kLJZsy369y7LoRQ1/u+kDI/3MoMgpfNzZJKF/RClX0ZUX5pCGJPUbboFE82VTRgXfiVnK4Nyjk 38KbYvrIYoV8GlOXzPTocFE3D0grG49phHc+NoBqqyOiITYfo6sBZPf8PEnI/WA4Ov0Sdf6T6Ny fuPqtOajZGcSMPQgVIFnxGiruSvRch+1ji5Dkheee2KPORlqOo0w+kEBEwqX4851vIHUbpvhjIR
- HJ4fe+iYDGb8wQ63V6aJXOeYObuFpxksSKbpxvMMk3LbBXx5LuJ4pT9Ve72M8v4ezPfjWZqY
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250505213829.GI2023217@ZenIV>
+X-Spam-Score: -3.80
+X-Spamd-Result: default: False [-3.80 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_RHS_NOT_FQDN(0.50)[];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ARC_NA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	MISSING_XM_UA(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_THREE(0.00)[3];
+	FROM_HAS_DN(0.00)[];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	FROM_EQ_ENVFROM(0.00)[];
+	RCPT_COUNT_FIVE(0.00)[6];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	RCVD_TLS_LAST(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email,suse.cz:email]
+X-Spam-Flag: NO
+X-Spam-Level: 
 
-On Mon, May 05, 2025 at 02:10:53PM +0200, David Hildenbrand wrote:
-> On 28.04.25 22:23, Lorenzo Stoakes wrote:
-> > On Fri, Apr 25, 2025 at 10:17:13AM +0200, David Hildenbrand wrote:
-> > > The "memramp() shrinking" scenario no longer applies, so let's remove
-> > > that now-unnecessary handling.
-> >
-> > I wonder if we could remove even more of the code here given the
-> > simplifications here? But not a big deal.
->
-> It might make sense to inline memtype_match().
->
-> diff --git a/arch/x86/mm/pat/memtype_interval.c b/arch/x86/mm/pat/memtype_interval.c
-> index 9d03f0dbc4715..e5844ed1311ed 100644
-> --- a/arch/x86/mm/pat/memtype_interval.c
-> +++ b/arch/x86/mm/pat/memtype_interval.c
-> @@ -49,21 +49,6 @@ INTERVAL_TREE_DEFINE(struct memtype, rb, u64, subtree_max_end,
->  static struct rb_root_cached memtype_rbroot = RB_ROOT_CACHED;
-> -static struct memtype *memtype_match(u64 start, u64 end)
-> -{
-> -       struct memtype *entry_match;
-> -
-> -       entry_match = interval_iter_first(&memtype_rbroot, start, end-1);
-> -
-> -       while (entry_match != NULL && entry_match->start < end) {
-> -               if (entry_match->start == start && entry_match->end == end)
-> -                       return entry_match;
-> -               entry_match = interval_iter_next(entry_match, start, end-1);
-> -       }
-> -
-> -       return NULL; /* Returns NULL if there is no match */
-> -}
-> -
->  static int memtype_check_conflict(u64 start, u64 end,
->                                   enum page_cache_mode reqtype,
->                                   enum page_cache_mode *newtype)
-> @@ -119,14 +104,16 @@ int memtype_check_insert(struct memtype *entry_new, enum page_cache_mode *ret_ty
->  struct memtype *memtype_erase(u64 start, u64 end)
->  {
-> -       struct memtype *entry_old;
-> -
-> -       entry_old = memtype_match(start, end);
-> -       if (!entry_old)
-> -               return ERR_PTR(-EINVAL);
-> -
-> -       interval_remove(entry_old, &memtype_rbroot);
-> -       return entry_old;
-> +       struct memtype *entry = interval_iter_first(&memtype_rbroot, start, end - 1);
-> +
-> +       while (entry && entry->start < end) {
-> +               if (entry->start == start && entry->end == end) {
-> +                       interval_remove(entry, &memtype_rbroot);
-> +                       return entry;
-> +               }
-> +               entry = interval_iter_next(entry, start, end - 1);
-> +       }
-> +       return ERR_PTR(-EINVAL);
+On Mon 05-05-25 22:38:29, Al Viro wrote:
+> On Mon, May 05, 2025 at 12:55:34PM +0200, Jan Kara wrote:
+> > >  	if (!type)
+> > >  		return NULL;
+> > > -	mnt = vfs_submount(mntpt, type, "tracefs", NULL);
+> > > +
+> > > +	fc = fs_context_for_submount(type, mntpt);
+> > > +	if (IS_ERR(fc))
+> > > +		return ERR_CAST(fc);
+> > 
+> > Missing put_filesystem() here?
+> 
+> Actually, I'd rather have it done unconditionally right after
+> fc_context_for_submount() - fs_context allocation grabs
+> a reference and it's held until put_fs_context, so...
+> 
+> [PATCH] kill vfs_submount()
+>     
+> The last remaining user of vfs_submount() (tracefs) is easy to convert
+> to fs_context_for_submount(); do that and bury that thing, along with
+> SB_SUBMOUNT
+> 
+> Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
+
+Indeed this works as well. Feel free to add:
+
+Reviewed-by: Jan Kara <jack@suse.cz>
+
+								Honza
+
+> ---
+> diff --git a/fs/namespace.c b/fs/namespace.c
+> index 018e95fe5459..0577a9fb6050 100644
+> --- a/fs/namespace.c
+> +++ b/fs/namespace.c
+> @@ -1329,21 +1329,6 @@ struct vfsmount *vfs_kern_mount(struct file_system_type *type,
 >  }
->  struct memtype *memtype_lookup(u64 addr)
->
->
-> Thanks for all the review!
-
-You're welcome :)
-
-I _think_ I'm all caught up on my side of this review, ping me if there's
-anything more you need from me.
-
->
-> --
-> Cheers,
->
-> David / dhildenb
->
-
-Cheers, Lorenzo
+>  EXPORT_SYMBOL_GPL(vfs_kern_mount);
+>  
+> -struct vfsmount *
+> -vfs_submount(const struct dentry *mountpoint, struct file_system_type *type,
+> -	     const char *name, void *data)
+> -{
+> -	/* Until it is worked out how to pass the user namespace
+> -	 * through from the parent mount to the submount don't support
+> -	 * unprivileged mounts with submounts.
+> -	 */
+> -	if (mountpoint->d_sb->s_user_ns != &init_user_ns)
+> -		return ERR_PTR(-EPERM);
+> -
+> -	return vfs_kern_mount(type, SB_SUBMOUNT, name, data);
+> -}
+> -EXPORT_SYMBOL_GPL(vfs_submount);
+> -
+>  static struct mount *clone_mnt(struct mount *old, struct dentry *root,
+>  					int flag)
+>  {
+> diff --git a/fs/super.c b/fs/super.c
+> index 97a17f9d9023..1886e4c930e0 100644
+> --- a/fs/super.c
+> +++ b/fs/super.c
+> @@ -823,13 +823,6 @@ struct super_block *sget(struct file_system_type *type,
+>  	struct super_block *old;
+>  	int err;
+>  
+> -	/* We don't yet pass the user namespace of the parent
+> -	 * mount through to here so always use &init_user_ns
+> -	 * until that changes.
+> -	 */
+> -	if (flags & SB_SUBMOUNT)
+> -		user_ns = &init_user_ns;
+> -
+>  retry:
+>  	spin_lock(&sb_lock);
+>  	if (test) {
+> @@ -849,7 +842,7 @@ struct super_block *sget(struct file_system_type *type,
+>  	}
+>  	if (!s) {
+>  		spin_unlock(&sb_lock);
+> -		s = alloc_super(type, (flags & ~SB_SUBMOUNT), user_ns);
+> +		s = alloc_super(type, flags, user_ns);
+>  		if (!s)
+>  			return ERR_PTR(-ENOMEM);
+>  		goto retry;
+> diff --git a/include/linux/fs.h b/include/linux/fs.h
+> index 016b0fe1536e..515e702d98ae 100644
+> --- a/include/linux/fs.h
+> +++ b/include/linux/fs.h
+> @@ -1240,7 +1240,6 @@ extern int send_sigurg(struct file *file);
+>  /* These sb flags are internal to the kernel */
+>  #define SB_DEAD         BIT(21)
+>  #define SB_DYING        BIT(24)
+> -#define SB_SUBMOUNT     BIT(26)
+>  #define SB_FORCE        BIT(27)
+>  #define SB_NOSEC        BIT(28)
+>  #define SB_BORN         BIT(29)
+> diff --git a/include/linux/mount.h b/include/linux/mount.h
+> index dcc17ce8a959..d4eb90a367af 100644
+> --- a/include/linux/mount.h
+> +++ b/include/linux/mount.h
+> @@ -98,9 +98,6 @@ extern struct vfsmount *vfs_create_mount(struct fs_context *fc);
+>  extern struct vfsmount *vfs_kern_mount(struct file_system_type *type,
+>  				      int flags, const char *name,
+>  				      void *data);
+> -extern struct vfsmount *vfs_submount(const struct dentry *mountpoint,
+> -				     struct file_system_type *type,
+> -				     const char *name, void *data);
+>  
+>  extern void mnt_set_expiry(struct vfsmount *mnt, struct list_head *expiry_list);
+>  extern void mark_mounts_for_expiry(struct list_head *mounts);
+> diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+> index e22aacb0028a..936a615e8c56 100644
+> --- a/kernel/trace/trace.c
+> +++ b/kernel/trace/trace.c
+> @@ -51,6 +51,7 @@
+>  #include <linux/workqueue.h>
+>  #include <linux/sort.h>
+>  #include <linux/io.h> /* vmap_page_range() */
+> +#include <linux/fs_context.h>
+>  
+>  #include <asm/setup.h> /* COMMAND_LINE_SIZE */
+>  
+> @@ -10075,6 +10076,8 @@ static struct vfsmount *trace_automount(struct dentry *mntpt, void *ingore)
+>  {
+>  	struct vfsmount *mnt;
+>  	struct file_system_type *type;
+> +	struct fs_context *fc;
+> +	int ret;
+>  
+>  	/*
+>  	 * To maintain backward compatibility for tools that mount
+> @@ -10084,10 +10087,20 @@ static struct vfsmount *trace_automount(struct dentry *mntpt, void *ingore)
+>  	type = get_fs_type("tracefs");
+>  	if (!type)
+>  		return NULL;
+> -	mnt = vfs_submount(mntpt, type, "tracefs", NULL);
+> +
+> +	fc = fs_context_for_submount(type, mntpt);
+>  	put_filesystem(type);
+> -	if (IS_ERR(mnt))
+> -		return NULL;
+> +	if (IS_ERR(fc))
+> +		return ERR_CAST(fc);
+> +
+> +	ret = vfs_parse_fs_string(fc, "source",
+> +				  "tracefs", strlen("tracefs"));
+> +	if (!ret)
+> +		mnt = fc_mount(fc);
+> +	else
+> +		mnt = ERR_PTR(ret);
+> +
+> +	put_fs_context(fc);
+>  	return mnt;
+>  }
+>  
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
