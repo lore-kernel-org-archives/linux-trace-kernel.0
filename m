@@ -1,87 +1,84 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D39926B97E
-	for <linux-trace-kernel@vger.kernel.org>; Tue,  6 May 2025 10:57:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AC8327FD6F;
+	Tue,  6 May 2025 13:12:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746529059; cv=none; b=h7OQL2x83fAw3RJ5jsLyjC+UO54VxbynhGew12hBqPkXaSHPKiqPOKUnnhk0Sl5xj76IBheU638l2Etr8csQ/sgjnG7UJcRQCvfQ8BuIE1SQ7tTMsRmUc3pzqGIxNXAp3Lw7l3qzEHP6w2sc1ZF5lTzxbW8Qnwir8fFWe9Y5hlM=
+	t=1746537122; cv=none; b=UpPXxk6T/qV/Wr9mnhEaHuIVrpFovJsfXk+3QKMDwAM4Z9zYIRjqnjzBKI7ta87+0zGkO29Sck3bJg/7BwkIjvSSvcrszbeLtrwdtyS926USoUBhCCQy6yBvdHBqTBIiwP6z3sUCSsPRY0y+xVVPH57yAp8cB+tMDvUQ/oQhSYg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746529059; c=relaxed/simple;
-	bh=KqiV6QkyfLhB2kxSzwViFrXIaJ8BtZKPBiE3Q0qGO7k=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=V+sbS91s+UABovDoAXa7fgPt29mnrBdWBo8ncDLscRtY8sZvjZuEtDV8kZr8MiIehU+3k1BtNk/oOZiGpgx/hWCNOfEmxuN/TIU/xcVLoAuh9z10XldcaXWxqsiyUu/riJ9FWErOtcTOXlmvnZgGHQ44D0XAt/V8xmUs+dao7x4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=r32AZo6z; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=npHbnoms; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=r32AZo6z; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=npHbnoms; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1746537122; c=relaxed/simple;
+	bh=90HQUUKUTzriwfUVeJS5Q2klum4Y6G1J3o9H497VWHg=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=eduldDM+hkwyK4w1W8WbNfYJsZiSh12DALA6DrNi10PsrDPvBADdjElhW++QE57SLSmfgmNo8+Wh6z9v4Zdv9uB0Plm7QDKkSaHCDtb6gDtUxPM5+D4zI8nXzcv9HKvs1PMO1zPOFbIAdm5JsNLWictXs4I0eFYIrX6xwkhfyxM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=b1DrvTwm; arc=none smtp.client-ip=209.85.221.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="r32AZo6z";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="npHbnoms";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="r32AZo6z";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="npHbnoms"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 504F7211F4;
-	Tue,  6 May 2025 10:57:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1746529056; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=qAaO3bOM6nlbRoiQwQi9a+Pz4/M38rK9aYVsxd4Rpbo=;
-	b=r32AZo6z1oSsmJQVWqlliShVGolzBAG2d1i2If7TdB368way5nEzKPbUQMFVet0YBXACKA
-	fjZ6GNIp2mUvYOxKt8kaHz+3GnWJdhXFddrXiAprxdYibxOuQO757Aug1R3jJORitQq8kR
-	zmuzI0A75sf3hSV0Cn/+GaPvXiXEAeA=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1746529056;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=qAaO3bOM6nlbRoiQwQi9a+Pz4/M38rK9aYVsxd4Rpbo=;
-	b=npHbnomsj3MCQgI+lbayh6tV2hB34GwGecrJuEuhPPH6lM9puyat9vQGerKQkvFvKuhyf2
-	h2KVQQ3Xx1Nh9jCw==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1746529056; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=qAaO3bOM6nlbRoiQwQi9a+Pz4/M38rK9aYVsxd4Rpbo=;
-	b=r32AZo6z1oSsmJQVWqlliShVGolzBAG2d1i2If7TdB368way5nEzKPbUQMFVet0YBXACKA
-	fjZ6GNIp2mUvYOxKt8kaHz+3GnWJdhXFddrXiAprxdYibxOuQO757Aug1R3jJORitQq8kR
-	zmuzI0A75sf3hSV0Cn/+GaPvXiXEAeA=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1746529056;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=qAaO3bOM6nlbRoiQwQi9a+Pz4/M38rK9aYVsxd4Rpbo=;
-	b=npHbnomsj3MCQgI+lbayh6tV2hB34GwGecrJuEuhPPH6lM9puyat9vQGerKQkvFvKuhyf2
-	h2KVQQ3Xx1Nh9jCw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 40D2613687;
-	Tue,  6 May 2025 10:57:36 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id 1G3ODyDrGWgVDQAAD6G6ig
-	(envelope-from <jack@suse.cz>); Tue, 06 May 2025 10:57:36 +0000
-Received: by quack3.suse.cz (Postfix, from userid 1000)
-	id E034CA09BE; Tue,  6 May 2025 12:57:35 +0200 (CEST)
-Date: Tue, 6 May 2025 12:57:35 +0200
-From: Jan Kara <jack@suse.cz>
-To: Al Viro <viro@zeniv.linux.org.uk>
-Cc: Jan Kara <jack@suse.cz>, linux-fsdevel@vger.kernel.org, 
-	Steven Rostedt <rostedt@goodmis.org>, linux-trace-kernel@vger.kernel.org, 
-	Christian Brauner <brauner@kernel.org>
-Subject: Re: [PATCH v2] kill vfs_submount()
-Message-ID: <raihngvxu7ffs44sgnswzjkqohthx64o6oybshba6v6amqtg65@2zm27vcp3qfr>
-References: <20250503212925.GZ2023217@ZenIV>
- <utebik76wcdgaspk7sjzb3aedmlcwbmwj3olur45zuycbpapjc@pd5rhnudxb35>
- <20250505213829.GI2023217@ZenIV>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b1DrvTwm"
+Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-3a0b308856fso135519f8f.2;
+        Tue, 06 May 2025 06:12:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746537119; x=1747141919; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=6z4DI8j6oTUcEftx6nE5ha5TjZEr3u0qLC5LhSNxy5Q=;
+        b=b1DrvTwm3dCxVnFURH3wvtit4ly7uEjfnrf0K0V8Gn2GPFsmK4RU1zg0jTDU/dffb1
+         pQC1D1rmYfHic0xQq7D6X5oEADJZZPie0hEmj1KTMuiW+3R+gput+zcs4rJi6daj0QfQ
+         rhZd+BF5M3NjXjGKzIA880SVu3JfABK0TL5eBLGy4qlilDfeRnBxYxY+Fn6J1ptRxG9L
+         782nddpiuhxA0DK2g3MjeFknTB6kMOdVcB64PrjEeCci2p+xfw8wfQZETE4LoyLhb2Do
+         cgbiTo+eUeP/g8dNWENfoznLr6QQonQich+GUj4BUL6KunVJNOPCr//Y88a/NF+PfQfv
+         Wuvw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746537119; x=1747141919;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=6z4DI8j6oTUcEftx6nE5ha5TjZEr3u0qLC5LhSNxy5Q=;
+        b=TYN5QTVLkyC/RfRn8jo7Kgbbn3iHfnGQ1II6ZE57xqiL1z/6yepS+N3CRaqek3zSeA
+         2oLLD6muYyp/NTxa4wJbDRe8oQPCN88l73dRMxU2QPBmQ8Q9pM7UbCuQCCAlZDmJj08I
+         TwiKO8PzJ/UDuaOGkIh6fDu0Dza32T7jbgvzQwgNOI/3q6fEGZY5u2yP4Nclpx3c6xFn
+         P+jZhxaB4d6WRbUBNTUzwVGUdpOKJ/ukh+jVWoDLSjsAhxN2rmvp5S6VVRs2nIYGGMkf
+         Hl3SkOW4QzlZS8/UM9MPB3hxsZD1XbyuXDSB/ycfj+NdblnLA5mWglAGP8AvugStWm+i
+         /gPQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVSw0dHKgAb7jIxnq551GrI0CyXAMqGsc8dNJ2qsUOFkiISnXJ4eTfXynB1+nAKkuzLpzY=@vger.kernel.org, AJvYcCWa8OI1znN/Z3lcaVYSt6oTVbv4FgOPV62QLz7sjKcg+oqM88tBa9gmG6Q2UYNpnEbwN0sZE0t1Pi7AxhpvPDfqgP65@vger.kernel.org, AJvYcCXRWx620wdTg80oIcNJSa/EuZoJahyNnHSzLYuUmJbHX4jGu+4x6kdADO/E9vuOQsikLzdXy8Gh77euIpmt@vger.kernel.org
+X-Gm-Message-State: AOJu0YxZi6R1BTI6kI42f2mPPvufF62dEnAccRm9IyXz5wbFnm4+L5vl
+	IEQFZmtSUysvP+5BngG0VuqMRjBXF8Oq7gLDCux92LdleRtE27pX
+X-Gm-Gg: ASbGncsPIIwhMcOWuxCLP1rPGnyHsnzGIPhkFPqL6h5ejva0gW4/50YwCpfWUXCt60G
+	Qt3lRqSU1qGX3HQ/7swssyJq0sBk+73ewSP3jtigdd7QeFoFwKpyaPSedcC+VJGi6+23tMD4Kjw
+	tOLTTGYeauC5MUofYaPWAIwwln45a3D7BlN+v1UODKMd3ruNuQluO391R3F3T0adjxFVfugHglB
+	g6KR/WZoidvEPTfETEuY6xjJiVJE2fyMJOeegdaor4WJaMszYYYdx5Q5DkBOWys3o29gr4Ndrrx
+	0LPmvndhuj6i/KkMuds1u5SSVh0=
+X-Google-Smtp-Source: AGHT+IGUVC98ca0kalRXo5g5+zRzXsabvq9+qwfWCr4C94Y1I8eFtg0sW4MbTI+/mJsXiDl+Ifym2g==
+X-Received: by 2002:a05:6000:18a7:b0:3a0:9de8:88ef with SMTP id ffacd0b85a97d-3a09fdfc05bmr8621556f8f.49.1746537118919;
+        Tue, 06 May 2025 06:11:58 -0700 (PDT)
+Received: from krava ([173.38.220.58])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5fa7781d0aasm7642970a12.45.2025.05.06.06.11.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 06 May 2025 06:11:58 -0700 (PDT)
+From: Jiri Olsa <olsajiri@gmail.com>
+X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
+Date: Tue, 6 May 2025 15:11:56 +0200
+To: Jiri Olsa <olsajiri@gmail.com>
+Cc: Oleg Nesterov <oleg@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
+	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	x86@kernel.org, Song Liu <songliubraving@fb.com>,
+	Yonghong Song <yhs@fb.com>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Hao Luo <haoluo@google.com>, Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Alan Maguire <alan.maguire@oracle.com>,
+	David Laight <David.Laight@aculab.com>,
+	Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas@t-8ch.de>,
+	Ingo Molnar <mingo@kernel.org>
+Subject: Re: [PATCH perf/core 03/22] uprobes: Move ref_ctr_offset update out
+ of uprobe_write_opcode
+Message-ID: <aBoKnP4L-k8CweMy@krava>
+References: <20250421214423.393661-1-jolsa@kernel.org>
+ <20250421214423.393661-4-jolsa@kernel.org>
+ <20250427141335.GA9350@redhat.com>
+ <aA9dzY-2V3dCpMDq@krava>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -90,186 +87,36 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250505213829.GI2023217@ZenIV>
-X-Spam-Score: -3.80
-X-Spamd-Result: default: False [-3.80 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_RHS_NOT_FQDN(0.50)[];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ARC_NA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	MISSING_XM_UA(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_THREE(0.00)[3];
-	FROM_HAS_DN(0.00)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	FROM_EQ_ENVFROM(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[6];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	RCVD_TLS_LAST(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email,suse.cz:email]
-X-Spam-Flag: NO
-X-Spam-Level: 
+In-Reply-To: <aA9dzY-2V3dCpMDq@krava>
 
-On Mon 05-05-25 22:38:29, Al Viro wrote:
-> On Mon, May 05, 2025 at 12:55:34PM +0200, Jan Kara wrote:
-> > >  	if (!type)
-> > >  		return NULL;
-> > > -	mnt = vfs_submount(mntpt, type, "tracefs", NULL);
-> > > +
-> > > +	fc = fs_context_for_submount(type, mntpt);
-> > > +	if (IS_ERR(fc))
-> > > +		return ERR_CAST(fc);
+On Mon, Apr 28, 2025 at 12:51:57PM +0200, Jiri Olsa wrote:
+> On Sun, Apr 27, 2025 at 04:13:35PM +0200, Oleg Nesterov wrote:
+
+SNIP
+
 > > 
-> > Missing put_filesystem() here?
+> > -------------------------------------------------------------------------------
+> > OTOH, I think that the current logic is not really correct too,
+> > 
+> > 	/* Revert back reference counter if instruction update failed. */
+> > 	if (ret < 0 && is_register && ref_ctr_updated)
+> > 		update_ref_ctr(uprobe, mm, -1);
+> > 
+> > I think that "Revert back reference counter" logic should not depend on
+> > is_register. Otherwise we can have the unbalanced update_ref_ctr(-1) if
+> > uprobe_unregister() fails, then another uprobe_register() comes at the
+> > same address, and after that uprobe_unregister() succeeds.
 > 
-> Actually, I'd rather have it done unconditionally right after
-> fc_context_for_submount() - fs_context allocation grabs
-> a reference and it's held until put_fs_context, so...
-> 
-> [PATCH] kill vfs_submount()
->     
-> The last remaining user of vfs_submount() (tracefs) is easy to convert
-> to fs_context_for_submount(); do that and bury that thing, along with
-> SB_SUBMOUNT
-> 
-> Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
+> sounds good to me
 
-Indeed this works as well. Feel free to add:
+actualy after closer look, I don't see how this code could be triggered
+in the first place.. any hint on how to hit such case? like:
 
-Reviewed-by: Jan Kara <jack@suse.cz>
+  - ref_ctr_offset is updated
 
-								Honza
+  - we fail somehow
 
-> ---
-> diff --git a/fs/namespace.c b/fs/namespace.c
-> index 018e95fe5459..0577a9fb6050 100644
-> --- a/fs/namespace.c
-> +++ b/fs/namespace.c
-> @@ -1329,21 +1329,6 @@ struct vfsmount *vfs_kern_mount(struct file_system_type *type,
->  }
->  EXPORT_SYMBOL_GPL(vfs_kern_mount);
->  
-> -struct vfsmount *
-> -vfs_submount(const struct dentry *mountpoint, struct file_system_type *type,
-> -	     const char *name, void *data)
-> -{
-> -	/* Until it is worked out how to pass the user namespace
-> -	 * through from the parent mount to the submount don't support
-> -	 * unprivileged mounts with submounts.
-> -	 */
-> -	if (mountpoint->d_sb->s_user_ns != &init_user_ns)
-> -		return ERR_PTR(-EPERM);
-> -
-> -	return vfs_kern_mount(type, SB_SUBMOUNT, name, data);
-> -}
-> -EXPORT_SYMBOL_GPL(vfs_submount);
-> -
->  static struct mount *clone_mnt(struct mount *old, struct dentry *root,
->  					int flag)
->  {
-> diff --git a/fs/super.c b/fs/super.c
-> index 97a17f9d9023..1886e4c930e0 100644
-> --- a/fs/super.c
-> +++ b/fs/super.c
-> @@ -823,13 +823,6 @@ struct super_block *sget(struct file_system_type *type,
->  	struct super_block *old;
->  	int err;
->  
-> -	/* We don't yet pass the user namespace of the parent
-> -	 * mount through to here so always use &init_user_ns
-> -	 * until that changes.
-> -	 */
-> -	if (flags & SB_SUBMOUNT)
-> -		user_ns = &init_user_ns;
-> -
->  retry:
->  	spin_lock(&sb_lock);
->  	if (test) {
-> @@ -849,7 +842,7 @@ struct super_block *sget(struct file_system_type *type,
->  	}
->  	if (!s) {
->  		spin_unlock(&sb_lock);
-> -		s = alloc_super(type, (flags & ~SB_SUBMOUNT), user_ns);
-> +		s = alloc_super(type, flags, user_ns);
->  		if (!s)
->  			return ERR_PTR(-ENOMEM);
->  		goto retry;
-> diff --git a/include/linux/fs.h b/include/linux/fs.h
-> index 016b0fe1536e..515e702d98ae 100644
-> --- a/include/linux/fs.h
-> +++ b/include/linux/fs.h
-> @@ -1240,7 +1240,6 @@ extern int send_sigurg(struct file *file);
->  /* These sb flags are internal to the kernel */
->  #define SB_DEAD         BIT(21)
->  #define SB_DYING        BIT(24)
-> -#define SB_SUBMOUNT     BIT(26)
->  #define SB_FORCE        BIT(27)
->  #define SB_NOSEC        BIT(28)
->  #define SB_BORN         BIT(29)
-> diff --git a/include/linux/mount.h b/include/linux/mount.h
-> index dcc17ce8a959..d4eb90a367af 100644
-> --- a/include/linux/mount.h
-> +++ b/include/linux/mount.h
-> @@ -98,9 +98,6 @@ extern struct vfsmount *vfs_create_mount(struct fs_context *fc);
->  extern struct vfsmount *vfs_kern_mount(struct file_system_type *type,
->  				      int flags, const char *name,
->  				      void *data);
-> -extern struct vfsmount *vfs_submount(const struct dentry *mountpoint,
-> -				     struct file_system_type *type,
-> -				     const char *name, void *data);
->  
->  extern void mnt_set_expiry(struct vfsmount *mnt, struct list_head *expiry_list);
->  extern void mark_mounts_for_expiry(struct list_head *mounts);
-> diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-> index e22aacb0028a..936a615e8c56 100644
-> --- a/kernel/trace/trace.c
-> +++ b/kernel/trace/trace.c
-> @@ -51,6 +51,7 @@
->  #include <linux/workqueue.h>
->  #include <linux/sort.h>
->  #include <linux/io.h> /* vmap_page_range() */
-> +#include <linux/fs_context.h>
->  
->  #include <asm/setup.h> /* COMMAND_LINE_SIZE */
->  
-> @@ -10075,6 +10076,8 @@ static struct vfsmount *trace_automount(struct dentry *mntpt, void *ingore)
->  {
->  	struct vfsmount *mnt;
->  	struct file_system_type *type;
-> +	struct fs_context *fc;
-> +	int ret;
->  
->  	/*
->  	 * To maintain backward compatibility for tools that mount
-> @@ -10084,10 +10087,20 @@ static struct vfsmount *trace_automount(struct dentry *mntpt, void *ingore)
->  	type = get_fs_type("tracefs");
->  	if (!type)
->  		return NULL;
-> -	mnt = vfs_submount(mntpt, type, "tracefs", NULL);
-> +
-> +	fc = fs_context_for_submount(type, mntpt);
->  	put_filesystem(type);
-> -	if (IS_ERR(mnt))
-> -		return NULL;
-> +	if (IS_ERR(fc))
-> +		return ERR_CAST(fc);
-> +
-> +	ret = vfs_parse_fs_string(fc, "source",
-> +				  "tracefs", strlen("tracefs"));
-> +	if (!ret)
-> +		mnt = fc_mount(fc);
-> +	else
-> +		mnt = ERR_PTR(ret);
-> +
-> +	put_fs_context(fc);
->  	return mnt;
->  }
->  
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+  - "if (ret < 0 && ref_ctr_updated)" is true on the way out
+
+thanks,
+jirka
