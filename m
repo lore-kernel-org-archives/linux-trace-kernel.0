@@ -1,144 +1,118 @@
-Received: from mail-wr1-f73.google.com (mail-wr1-f73.google.com [209.85.221.73])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-177.mta1.migadu.com (out-177.mta1.migadu.com [95.215.58.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2D4E28B51D
-	for <linux-trace-kernel@vger.kernel.org>; Tue,  6 May 2025 16:49:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8816C72613
+	for <linux-trace-kernel@vger.kernel.org>; Tue,  6 May 2025 20:24:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746550168; cv=none; b=Yv0kM2XSQWhryQ6lRHn8VrJGvYQXwXOF6Y1M8F7bhYjqijwyrhCu0P0AuV9m+h6vKhtUNnM8rcIuGb9MYOdsbb+FN0On6hgdbyVkvZ3TntTumfdvFoC8QupDMJ45kYXvPc9NojN0UBxJIZLgs7FbR8+bKfnUdMV48n5LP1avhsc=
+	t=1746563091; cv=none; b=STpGwwvhyvNt7B24Hgyarg1MT5Xu0C7JvbPGDKT9mjVpwQvHVgK6P6APRgal0JrV8paUPA+prGDdorBH8Plg4rgI2hJUw2Iq+DUIrFvUukEfZtbC7c79+zHyqmW40YfxtwA/gEtciUmXiWDuFQmviDQ22X9b80xxCS2Fy3GxDHc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746550168; c=relaxed/simple;
-	bh=RUCw8tASqS+xDOl6+m21B7MoC2GnYKahCqfxjmK6wVI=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=DIy2s0ok/4CcCzV7/udE0xQ1rO6dfWpri6+6mpncLUOlpg24Yeb0HwV4PyfcPMo8wc4nC/Uzo65JC3Xcp8FkQLyQRm6Y28puZle2/3E62NLuXkGUWI/0TXiMle38NHUu+Zrzx2oHcWkTyR+Z3BE+gN0uZMaeERoCgqjeKMD1O50=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=2Nk/NPQB; arc=none smtp.client-ip=209.85.221.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com
+	s=arc-20240116; t=1746563091; c=relaxed/simple;
+	bh=T6Wn0W3bK/1o7arEYvDyYgs/pRvSEyZXJEsHapHRN2Q=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=oNlaDJR5zk3HdM7gQqS1PjrVAKYtJa0+N5IikvIqcvtZvxR9vj5WHhkZ0ddKNPVWKa40t1E+pppvqWXyogIKjJI7O35WyZ2oduqREh7LLxNOq1kP4ULkDfdBsYhk9n+rqrvLpfz1qvIGktP1tw9TTrirVD96dSy2ahlawaj1cEo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=gxTfRViS; arc=none smtp.client-ip=95.215.58.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="2Nk/NPQB"
-Received: by mail-wr1-f73.google.com with SMTP id ffacd0b85a97d-39c2da64df9so2643185f8f.0
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 06 May 2025 09:49:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1746550164; x=1747154964; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Zaqt2aF+R21ZLRZCmibO0BCKtkQEu5NrJjYtBghM3iU=;
-        b=2Nk/NPQBZLGiLd+j1OMus+upc3opOayALg7QgdSZ0AURVrUJusoh0AfyhY9/mi+PCy
-         9Gj1uKpudgiFLHmxjn7RQcaYz9JPnZPKg7qSyEsH8vwrPYKuPMCh9VXFUvKgI0EQ8n2l
-         tYBzbjCHyIWChS9yJRyi4wWpJ2za/8KJSNP1VsZUjoUA10ifyx48vEeGJdM1PiXAnPLK
-         w2fvuWVwF/pgK5VpQsw1bJMplUS3cIv3/Ph1QSt+3b75uBnxTlfVQRnQpknL+k6t/LvI
-         xqeBW9keiJpHcliuC/TmvrGTdLYlht1e8f9KV/BH2t9uGvLvAa4G2F2MY66IqEoMOqnf
-         h7QQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746550164; x=1747154964;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Zaqt2aF+R21ZLRZCmibO0BCKtkQEu5NrJjYtBghM3iU=;
-        b=ZGjKgEkpRtIjOevgR/ZvwT8Vu6KZy/sAK/R0W6b/58DVUjZnIHrgOtlIggUiv+rS1X
-         dB6hcJsPjqlag30R+ob1/KKsQUUN/goLIb6zJEQ4hDmLPf5qPmHbh0kGTjFigCTihYkX
-         S7eZ2MiOpWJwAP4yeztTZzwW4lVUaBDLaTKL9EIirrhWYVzDbjwO5jStuLHACqLKt5HK
-         CYpOd9lKf+yEfANy7jpEPQT6U2wTw9YUxe43JO3GZ27qeFKoiiJ1VS6gaRcIvv1wAlSb
-         9tWVywfiOP86dHofHFb8rR1Tt9nRVbKoCGxjnw9/YeSFO8t0TxprZH+a/qZU2vM1d5TP
-         3Kbg==
-X-Forwarded-Encrypted: i=1; AJvYcCVocLxa/iVs+oJjFKerm0IzSnaBDtMXB1AJwdDA30ZD/yuC1S1VxwLOXuQzeth/XekR+G7+nN8goUfWY+oY843UGrM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxUfbq6NF4ah+2zgDjkmByBaNjXxxwSMyajbE6r42zY4QrV6zM7
-	juLf8m+koEPmFiVTRxdxBYUmoWA4bishnNs39rFATt+LBZYWOToBrPGSdNPysxOHvQz4xk8k71A
-	TEY9L3tAThUac9N0Tvg==
-X-Google-Smtp-Source: AGHT+IFrqd+H2SeGnXjM2S5QS5+AEOUz3d6c3+Xi+kOr44Ta+o3bbgik0UkwmDoNUTqqJhmyWDUfjboZeaZZM1Ft
-X-Received: from wmrm12.prod.google.com ([2002:a05:600c:37cc:b0:440:68cb:bd4])
- (user=vdonnefort job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:6000:22c2:b0:3a0:8098:b6c with SMTP id ffacd0b85a97d-3a0b4a186c4mr138331f8f.14.1746550164127;
- Tue, 06 May 2025 09:49:24 -0700 (PDT)
-Date: Tue,  6 May 2025 17:48:20 +0100
-In-Reply-To: <20250506164820.515876-1-vdonnefort@google.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="gxTfRViS"
+Message-ID: <b776fa07-de4b-44be-ae68-8bc8c362ea81@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1746563077;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=7Hk5IHJL/i2F/azVD9h3zUcZRECd4/4rkqvBQlEnV/Y=;
+	b=gxTfRViStprrOmcu7JJz5WEsS2Dghtsju8+yo4jRYyZ+TQeG6SwHKeWl7jL22tksOIzZKw
+	3vOGN3bHFte2d6c6a5Yx70UJ7+FORIygOCEOX7ohwG8D5J8/PY8NjWTszBY7db4bz1AiJt
+	oaGx4pwDPvYQOw/RGr0UGotKfdGgdRM=
+Date: Tue, 6 May 2025 13:24:26 -0700
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250506164820.515876-1-vdonnefort@google.com>
-X-Mailer: git-send-email 2.49.0.967.g6a0df3ecc3-goog
-Message-ID: <20250506164820.515876-25-vdonnefort@google.com>
-Subject: [PATCH v4 24/24] tracing: selftests: Add pKVM trace remote tests
-From: Vincent Donnefort <vdonnefort@google.com>
-To: rostedt@goodmis.org, mhiramat@kernel.org, mathieu.desnoyers@efficios.com, 
-	linux-trace-kernel@vger.kernel.org, maz@kernel.org, oliver.upton@linux.dev, 
-	joey.gouly@arm.com, suzuki.poulose@arm.com, yuzenghui@huawei.com
-Cc: kvmarm@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
-	jstultz@google.com, qperret@google.com, will@kernel.org, 
-	kernel-team@android.com, linux-kernel@vger.kernel.org, 
-	Vincent Donnefort <vdonnefort@google.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Subject: Re: [RESEND PATCH bpf-next v4 1/2] bpf, sockmap: Introduce tracing
+ capability for sockmap
+To: Jiayuan Chen <jiayuan.chen@linux.dev>,
+ Jakub Sitnicki <jakub@cloudflare.com>,
+ John Fastabend <john.fastabend@gmail.com>
+Cc: Cong Wang <xiyou.wangcong@gmail.com>, Steven Rostedt
+ <rostedt@goodmis.org>, Alexei Starovoitov <ast@kernel.org>,
+ Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>,
+ Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
+ Yonghong Song <yonghong.song@linux.dev>, KP Singh <kpsingh@kernel.org>,
+ Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>,
+ Jiri Olsa <jolsa@kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Simon Horman <horms@kernel.org>, Jesper Dangaard Brouer <hawk@kernel.org>,
+ linux-kernel@vger.kernel.org, bpf@vger.kernel.org, netdev@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+References: <20250506025131.136929-1-jiayuan.chen@linux.dev>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Martin KaFai Lau <martin.lau@linux.dev>
+In-Reply-To: <20250506025131.136929-1-jiayuan.chen@linux.dev>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
 
-Run the trace remote selftests with the pKVM trace remote "hypervisor".
+On 5/5/25 7:51 PM, Jiayuan Chen wrote:
+> Sockmap has the same high-performance forwarding capability as XDP, but
+> operates at Layer 7.
+> 
+> Introduce tracing capability for sockmap, to trace the execution results
+> of BPF programs without modifying the programs themselves, similar to
+> the existing trace_xdp_redirect{_map}.
 
-Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
+There were advancements in bpf tracing since the trace_xdp_xxx additions.
 
-diff --git a/tools/testing/selftests/ftrace/test.d/remotes/pkvm/buffer_size.tc b/tools/testing/selftests/ftrace/test.d/remotes/pkvm/buffer_size.tc
-new file mode 100644
-index 000000000000..383ef7a84274
---- /dev/null
-+++ b/tools/testing/selftests/ftrace/test.d/remotes/pkvm/buffer_size.tc
-@@ -0,0 +1,10 @@
-+#!/bin/sh
-+# SPDX-License-Identifier: GPL-2.0
-+# description: Test pkvm hypervisor tracing buffer size
-+
-+SOURCE_REMOTE_TEST=1
-+. $TEST_DIR/remotes/buffer_size.tc
-+
-+set -e
-+setup_remote "hypervisor"
-+test_buffer_size
-diff --git a/tools/testing/selftests/ftrace/test.d/remotes/pkvm/reset.tc b/tools/testing/selftests/ftrace/test.d/remotes/pkvm/reset.tc
-new file mode 100644
-index 000000000000..679e31257d0b
---- /dev/null
-+++ b/tools/testing/selftests/ftrace/test.d/remotes/pkvm/reset.tc
-@@ -0,0 +1,10 @@
-+#!/bin/sh
-+# SPDX-License-Identifier: GPL-2.0
-+# description: Test pkvm hypervisor tracing reset
-+
-+SOURCE_REMOTE_TEST=1
-+. $TEST_DIR/remotes/reset.tc
-+
-+set -e
-+setup_remote "hypervisor"
-+test_reset
-diff --git a/tools/testing/selftests/ftrace/test.d/remotes/pkvm/trace_pipe.tc b/tools/testing/selftests/ftrace/test.d/remotes/pkvm/trace_pipe.tc
-new file mode 100644
-index 000000000000..4c77431e884f
---- /dev/null
-+++ b/tools/testing/selftests/ftrace/test.d/remotes/pkvm/trace_pipe.tc
-@@ -0,0 +1,10 @@
-+#!/bin/sh
-+# SPDX-License-Identifier: GPL-2.0
-+# description: Test pkvm hypervisor tracing pipe
-+
-+SOURCE_REMOTE_TEST=1
-+. $TEST_DIR/remotes/trace_pipe.tc
-+
-+set -e
-+setup_remote "hypervisor"
-+test_trace_pipe
-diff --git a/tools/testing/selftests/ftrace/test.d/remotes/pkvm/unloading.tc b/tools/testing/selftests/ftrace/test.d/remotes/pkvm/unloading.tc
-new file mode 100644
-index 000000000000..059c7ad1c008
---- /dev/null
-+++ b/tools/testing/selftests/ftrace/test.d/remotes/pkvm/unloading.tc
-@@ -0,0 +1,10 @@
-+#!/bin/sh
-+# SPDX-License-Identifier: GPL-2.0
-+# description: Test pkvm hypervisor tracing buffer unloading
-+
-+SOURCE_REMOTE_TEST=1
-+. $TEST_DIR/remotes/unloading.tc
-+
-+set -e
-+setup_remote "hypervisor"
-+test_unloading
--- 
-2.49.0.967.g6a0df3ecc3-goog
+Have you considered the fexit bpf prog and why it is not sufficient ?
+
+> 
+> It is crucial for debugging sockmap programs, especially in production
+> environments.
+> 
+> Additionally, the new header file has to be added to bpf_trace.h to
+> automatically generate tracepoints.
+> 
+> Test results:
+> $ echo "1" > /sys/kernel/tracing/events/sockmap/enable
+> 
+> msg/skb:
+> '''
+> sockmap_redirect: sk=000000000ec02a93, netns=4026531840, inode=318, \
+> family=2, protocol=6, prog_id=59, len=8192, type=msg, action=REDIRECT, \
+> redirect_type=ingress
+> 
+> sockmap_redirect: sk=00000000d5d9c931, netns=4026531840, inode=64731, \
+> family=2, protocol=6, prog_id=91, len=8221, type=skb, action=REDIRECT, \
+> redirect_type=egress
+> 
+> sockmap_redirect: sk=00000000106fc281, netns=4026531840, inode=64729, \
+> family=2, protocol=6, prog_id=94, len=8192, type=msg, action=PASS, \
+> redirect_type=none
+> '''
+> 
+> strparser:
+> '''
+> sockmap_strparser: sk=00000000f15fc1c8, netns=4026531840, inode=52396, \
+> family=2, protocol=6, prog_id=143, in_len=1000, full_len=10
+> '''
+> 
+> Reviewed-by: Cong Wang <xiyou.wangcong@gmail.com>
+> Suggested-by: Jakub Sitnicki <jakub@cloudflare.com>
+> Suggested-by: Cong Wang <xiyou.wangcong@gmail.com>
+> Suggested-by: Steven Rostedt <rostedt@goodmis.org>
+> Signed-off-by: Jiayuan Chen <jiayuan.chen@linux.dev>
+> 
+> ---
+> v3 -> v4: Resending this patch as v3 was incorrectly closed by Patchwork.
+>            Additionally, carrying the Reviewed-by tag.
+
+John and JakubS, please take a look.
 
