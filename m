@@ -1,141 +1,84 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17127182D2
-	for <linux-trace-kernel@vger.kernel.org>; Tue,  6 May 2025 14:02:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F413728137C;
+	Tue,  6 May 2025 14:22:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746540127; cv=none; b=i3uBsTOtJmQyyerfjFUaaNDtc7Q7iP+w8OV/2H5ZcKq5CSd7IxwtlnZOSljp/rhtD9RE7KYU1KfnjjtTRTwt5dOi378LFpz0a7candM0F19jtq19agluONDGjD+wUUP9NUo4Z9+vMq3CluXo2Mp+1cyid/5A7+BiQr9RQsxMunA=
+	t=1746541374; cv=none; b=n7I5u/P77gMBmRpj+eFdpQ6TvyqWL8wuV99VFx0uRfRpo+kKPlHWAtCsXXVbwheezdujYDfOZzu3L3/A0MBIkKnBZWTzeZH22xMrhECVD2fgOE3kB3GXgflitD2mGnzw7MNQqO1KIfQun2SrrrQyiTpeKIixsCoAXPndDrVg/8o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746540127; c=relaxed/simple;
-	bh=elWDGJ+LtHAh+h9iroKMz3JrCxWSflZYm2pNtHBZfMQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JhO5CRgWo77dkjpOqRR0XLjXntZy50h/tMNsG1nLPq8VLOOWe7oheY5gedtAzjG4fyxWQ5ZTuEgVIED7gHBemTYnErtYpSegwY1jEFRc71mS32GhE6CYrn0Z24mgr4fJT12pHLpiO8eMHdNmeHkdSBCLV9jfLbVCRQEI0MuML5I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Zk4qYI+u; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Zk4qYI+u"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1746540124;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=+ye8i/UsqJKvQlKKIVYrfpekN4xF7RuPErJdU2N3amU=;
-	b=Zk4qYI+uJmmTP5NOzzE5+Ghzp9YlptO/F5rdoT/53WhkrTAJw40aiMkxngnUaejFv/VUP2
-	Y5Z1LKpaG0WLWSGdMnlCwUqjXDWm+lt+H7uUTaMiMoWf7deZF5PBHC6aBITXKETztyKfz9
-	XKgmDnQyaioVwCVJwBAqw156oNnOW2A=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-341-gyyi02GDNNa0H7zDO120Cg-1; Tue,
- 06 May 2025 10:01:57 -0400
-X-MC-Unique: gyyi02GDNNa0H7zDO120Cg-1
-X-Mimecast-MFC-AGG-ID: gyyi02GDNNa0H7zDO120Cg_1746540114
-Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 1640A1801A3E;
-	Tue,  6 May 2025 14:01:54 +0000 (UTC)
-Received: from fedora (unknown [10.44.33.234])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 8BE141800360;
-	Tue,  6 May 2025 14:01:47 +0000 (UTC)
-Received: by fedora (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Tue,  6 May 2025 16:01:53 +0200 (CEST)
-Date: Tue, 6 May 2025 16:01:45 +0200
-From: Oleg Nesterov <oleg@redhat.com>
-To: Jiri Olsa <olsajiri@gmail.com>
-Cc: Peter Zijlstra <peterz@infradead.org>,
-	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	x86@kernel.org, Song Liu <songliubraving@fb.com>,
-	Yonghong Song <yhs@fb.com>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Hao Luo <haoluo@google.com>, Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Alan Maguire <alan.maguire@oracle.com>,
-	David Laight <David.Laight@aculab.com>,
-	Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas@t-8ch.de>,
-	Ingo Molnar <mingo@kernel.org>
-Subject: Re: [PATCH perf/core 03/22] uprobes: Move ref_ctr_offset update out
- of uprobe_write_opcode
-Message-ID: <aBoWEydkftHO_q1N@redhat.com>
-References: <20250421214423.393661-1-jolsa@kernel.org>
- <20250421214423.393661-4-jolsa@kernel.org>
- <20250427141335.GA9350@redhat.com>
- <aA9dzY-2V3dCpMDq@krava>
- <aBoKnP4L-k8CweMy@krava>
+	s=arc-20240116; t=1746541374; c=relaxed/simple;
+	bh=XTWQPPP1CqAWGI/Fw2ZeFClLz5hjmv6Fdz70OB9eQdg=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=oV+DfMw2SnqIGPhrZltugCp5frm/tgsZDWk5a//TobtBz8nriFtv3L3EP2zpd+qLZU30SFEY4WnHXBsFiAXfXfWTCuJziFEzg9iu3w1I0CFWmOPelj7DkTbMVPRgqwAQ0XZjDkvTR07vu1qs+vk2QEr1GDPtFKJhICN4Jfd3k3Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E8831C4CEE4;
+	Tue,  6 May 2025 14:22:52 +0000 (UTC)
+Date: Tue, 6 May 2025 10:23:00 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>
+Subject: [PATCH v3] tracing: Only return an adjusted address if it matches
+ the kernel address
+Message-ID: <20250506102300.0ba2f9e0@gandalf.local.home>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aBoKnP4L-k8CweMy@krava>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-I'm on PTO and traveling until May 15 without my working laptop, can't read
-the code.
+From: Steven Rostedt <rostedt@goodmis.org>
 
-Quite possibly I am wrong, but let me try to recall what this code does...
+The trace_adjust_address() will take a given address and examine the
+persistent ring buffer to see if the address matches a module that is
+listed there. If it does not, it will just adjust the value to the core
+kernel delta. But if the address was for something that was not part of
+the core kernel text or data it should not be adjusted.
 
-- So. uprobe_register() succeeds and changes ref_ctr from 0 to 1.
+Check the result of the adjustment and only return the adjustment if it
+lands in the current kernel text or data. If not, return the original
+address.
 
-- uprobe_unregister() fails but decrements ref_ctr back to zero. Because the
-  "Revert back reference counter if instruction update failed" logic doesn't
-  apply if is_register is true.
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+Changes since v2: https://lore.kernel.org/20250325213919.790882670@goodmis.org
 
-  Since uprobe_unregister() fails, this uprobe won't be removed. IIRC, we even
-  have the warning about that.
+- Rebased on top of v6.15-rc5
 
-- another uprobe_register() comes and re-uses the same uprobe. In this case
-  install_breakpoint() will do nothing, ref_ctr won't be updated (right ?)
+- Check __is_kernel() first over data, as pointers to functions are more
+  common via "%pS".
 
-- uprobe_unregister() is called again and this time it succeeds. In this case
-  ref_ctr is changed from 0 to -1. IIRC, we even have some warning for this
-  case.
+ kernel/trace/trace.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-No?
-
-Sorry, I can't check my thinking until I return.
-
-Oleg.
-
-On 05/06, Jiri Olsa wrote:
->
-> On Mon, Apr 28, 2025 at 12:51:57PM +0200, Jiri Olsa wrote:
-> > On Sun, Apr 27, 2025 at 04:13:35PM +0200, Oleg Nesterov wrote:
->
-> SNIP
->
-> > >
-> > > -------------------------------------------------------------------------------
-> > > OTOH, I think that the current logic is not really correct too,
-> > >
-> > > 	/* Revert back reference counter if instruction update failed. */
-> > > 	if (ret < 0 && is_register && ref_ctr_updated)
-> > > 		update_ref_ctr(uprobe, mm, -1);
-> > >
-> > > I think that "Revert back reference counter" logic should not depend on
-> > > is_register. Otherwise we can have the unbalanced update_ref_ctr(-1) if
-> > > uprobe_unregister() fails, then another uprobe_register() comes at the
-> > > same address, and after that uprobe_unregister() succeeds.
-> >
-> > sounds good to me
->
-> actualy after closer look, I don't see how this code could be triggered
-> in the first place.. any hint on how to hit such case? like:
->
->   - ref_ctr_offset is updated
->
->   - we fail somehow
->
->   - "if (ret < 0 && ref_ctr_updated)" is true on the way out
->
-> thanks,
-> jirka
->
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index 5b8db27fb6ef..01572ef79802 100644	
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -6032,6 +6032,7 @@ unsigned long trace_adjust_address(struct trace_array *tr, unsigned long addr)
+ 	struct trace_module_delta *module_delta;
+ 	struct trace_scratch *tscratch;
+ 	struct trace_mod_entry *entry;
++	unsigned long raddr;
+ 	int idx = 0, nr_entries;
+ 
+ 	/* If we don't have last boot delta, return the address */
+@@ -6045,7 +6046,9 @@ unsigned long trace_adjust_address(struct trace_array *tr, unsigned long addr)
+ 	module_delta = READ_ONCE(tr->module_delta);
+ 	if (!module_delta || !tscratch->nr_entries ||
+ 	    tscratch->entries[0].mod_addr > addr) {
+-		return addr + tr->text_delta;
++		raddr = addr + tr->text_delta;
++		return __is_kernel(raddr) || is_kernel_core_data(raddr) ||
++			is_kernel_rodata(raddr) ? raddr : addr;
+ 	}
+ 
+ 	/* Note that entries must be sorted. */
+-- 
+2.47.2
 
