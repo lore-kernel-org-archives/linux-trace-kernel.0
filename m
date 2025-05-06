@@ -1,75 +1,368 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-171.mta1.migadu.com (out-171.mta1.migadu.com [95.215.58.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B90830B28F;
-	Tue,  6 May 2025 00:18:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C1EF2DA52A
+	for <linux-trace-kernel@vger.kernel.org>; Tue,  6 May 2025 02:52:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746490739; cv=none; b=SrtMu5NnuVMjHUZ/1fgT/SPDZREOxDjKt1BE2htJP3y+8XUyFCOLBbOGPb4uJAwD9sqctjl7IDcMHDhP9AOK7u6TY80hTEzd9nb2p2ea+slVDec3Lwv73J8ll0aScHFtQ8hgc/vwIcXlUs3X1PPuS0Pm0G2f4dVL6BId3/g1rls=
+	t=1746499964; cv=none; b=bHHG++oeh1XnsdarRb2zEb92PQ8FfjDfA+b8dH30buSVJG80iYH7lPO8rJRrZAI0AVXmBb+OYEI30BT8orOBeccGEIVVBDxfFe6CZVF9ed6pqoxajj2hPb7qeCg/av1EB8211SO5qcchtMtrybFrBD2dCEioDO5Uw7sHwozAOYc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746490739; c=relaxed/simple;
-	bh=UWQ6ERmGL6IZkWLxGd0o3ECXAkhD3bUzYsXfgnKEYHY=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=npChp9E6Bw+u3+Gwa5GYv5pFB8RM1PHzh90V4Ye7rgJtooDTuhrLb9rhApAGzTvSFrWgb66WZdSof5sQGNMJrvQLfFi36WV+iaNqi2zEzp9QOo7Or4r3WlAPiw7RiQMCMDb5z0OtLSp+Hl8PCCOtu9ZQgf71Z8fTMp8v17XA7mU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1E541C4CEE4;
-	Tue,  6 May 2025 00:18:58 +0000 (UTC)
-Date: Mon, 5 May 2025 20:19:04 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Al Viro <viro@zeniv.linux.org.uk>
-Cc: Jan Kara <jack@suse.cz>, linux-fsdevel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, Christian Brauner <brauner@kernel.org>
-Subject: Re: [PATCH v2] kill vfs_submount()
-Message-ID: <20250505201904.59cd46d0@gandalf.local.home>
-In-Reply-To: <20250505213829.GI2023217@ZenIV>
-References: <20250503212925.GZ2023217@ZenIV>
-	<utebik76wcdgaspk7sjzb3aedmlcwbmwj3olur45zuycbpapjc@pd5rhnudxb35>
-	<20250505213829.GI2023217@ZenIV>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1746499964; c=relaxed/simple;
+	bh=N83Kro7Y2XtsKpOONGV1KN6BYEqm6Jl1PZg1n14gdU4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=szluutzQMJXPZ9P7adUurL2Gk5nWnvIpvGKadrlbO+Ki2T8D3ROxaZJ0cpjSRpJH5k00KhORFt5Nhx6fmRiBcur8lQQgetQNbpY7THlM+siPLJm1VJYnndvRaMZgiMRKZ8X24c9+73IZP6Rg8YXo3Ztl6oP0F0Vi8B5L03/Q3BU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=wS5wZpD8; arc=none smtp.client-ip=95.215.58.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="wS5wZpD8"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1746499950;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=Bo3lIpRR00+ll9v2+aoNEhfA1Cz5vfi98qdkLpEWVVs=;
+	b=wS5wZpD8EktTtX8dwjpiSexQ44rV0fO47MZHFmcFikQRgV/wboV7lp2MMqRoSy6myQzvRz
+	WaEXRceB8tFDP9HH+eYr8sl//Vtk7OFysjm0jQd/CKFRS7x5qxqTrgZxUvJ56QggE6o9kq
+	hj9Ziaog5NC8DL/Ztoq6XgwBlvtrfd8=
+From: Jiayuan Chen <jiayuan.chen@linux.dev>
+To: vger.kernel.org
+Cc: Jiayuan Chen <jiayuan.chen@linux.dev>,
+	Cong Wang <xiyou.wangcong@gmail.com>,
+	Jakub Sitnicki <jakub@cloudflare.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	Eduard Zingerman <eddyz87@gmail.com>,
+	Song Liu <song@kernel.org>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	KP Singh <kpsingh@kernel.org>,
+	Stanislav Fomichev <sdf@fomichev.me>,
+	Hao Luo <haoluo@google.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>,
+	Jesper Dangaard Brouer <hawk@kernel.org>,
+	linux-kernel@vger.kernel.org,
+	bpf@vger.kernel.org,
+	netdev@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Subject: [RESEND PATCH bpf-next v4 1/2] bpf, sockmap: Introduce tracing capability for sockmap
+Date: Tue,  6 May 2025 10:51:24 +0800
+Message-ID: <20250506025131.136929-1-jiayuan.chen@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On Mon, 5 May 2025 22:38:29 +0100
-Al Viro <viro@zeniv.linux.org.uk> wrote:
+Sockmap has the same high-performance forwarding capability as XDP, but
+operates at Layer 7.
 
-> @@ -10084,10 +10087,20 @@ static struct vfsmount *trace_automount(struct dentry *mntpt, void *ingore)
->  	type = get_fs_type("tracefs");
->  	if (!type)
->  		return NULL;
-> -	mnt = vfs_submount(mntpt, type, "tracefs", NULL);
-> +
-> +	fc = fs_context_for_submount(type, mntpt);
->  	put_filesystem(type);
-> -	if (IS_ERR(mnt))
-> -		return NULL;
-> +	if (IS_ERR(fc))
-> +		return ERR_CAST(fc);
-> +
-> +	ret = vfs_parse_fs_string(fc, "source",
-> +				  "tracefs", strlen("tracefs"));
-> +	if (!ret)
-> +		mnt = fc_mount(fc);
-> +	else
-> +		mnt = ERR_PTR(ret);
-> +
-> +	put_fs_context(fc);
->  	return mnt;
->  }
->  
+Introduce tracing capability for sockmap, to trace the execution results
+of BPF programs without modifying the programs themselves, similar to
+the existing trace_xdp_redirect{_map}.
 
-In case others try to apply this on Linus or linux-next, this is based on top of:
+It is crucial for debugging sockmap programs, especially in production
+environments.
 
-  https://lore.kernel.org/all/20250424060845.GG2023217@ZenIV/
+Additionally, the new header file has to be added to bpf_trace.h to
+automatically generate tracepoints.
 
-Otherwise it doesn't apply cleanly.
+Test results:
+$ echo "1" > /sys/kernel/tracing/events/sockmap/enable
 
-Acked-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-Tested-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+msg/skb:
+'''
+sockmap_redirect: sk=000000000ec02a93, netns=4026531840, inode=318, \
+family=2, protocol=6, prog_id=59, len=8192, type=msg, action=REDIRECT, \
+redirect_type=ingress
 
--- Steve
+sockmap_redirect: sk=00000000d5d9c931, netns=4026531840, inode=64731, \
+family=2, protocol=6, prog_id=91, len=8221, type=skb, action=REDIRECT, \
+redirect_type=egress
+
+sockmap_redirect: sk=00000000106fc281, netns=4026531840, inode=64729, \
+family=2, protocol=6, prog_id=94, len=8192, type=msg, action=PASS, \
+redirect_type=none
+'''
+
+strparser:
+'''
+sockmap_strparser: sk=00000000f15fc1c8, netns=4026531840, inode=52396, \
+family=2, protocol=6, prog_id=143, in_len=1000, full_len=10
+'''
+
+Reviewed-by: Cong Wang <xiyou.wangcong@gmail.com>
+Suggested-by: Jakub Sitnicki <jakub@cloudflare.com>
+Suggested-by: Cong Wang <xiyou.wangcong@gmail.com>
+Suggested-by: Steven Rostedt <rostedt@goodmis.org>
+Signed-off-by: Jiayuan Chen <jiayuan.chen@linux.dev>
+
+---
+v3 -> v4: Resending this patch as v3 was incorrectly closed by Patchwork.
+          Additionally, carrying the Reviewed-by tag.
+v3: https://lore.kernel.org/all/20250414161153.14990-1-jiayuan.chen@linux.dev
+
+v1 -> v2: Print more valuable information as suggested by the maintainer.
+---
+ MAINTAINERS                    |   1 +
+ include/linux/bpf_trace.h      |   1 +
+ include/trace/events/sockmap.h | 158 +++++++++++++++++++++++++++++++++
+ net/core/skmsg.c               |   6 ++
+ 4 files changed, 166 insertions(+)
+ create mode 100644 include/trace/events/sockmap.h
+
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 3cbf9ac0d83f..76d742b7fbd6 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -4429,6 +4429,7 @@ L:	netdev@vger.kernel.org
+ L:	bpf@vger.kernel.org
+ S:	Maintained
+ F:	include/linux/skmsg.h
++F:	include/trace/events/sockmap.h
+ F:	net/core/skmsg.c
+ F:	net/core/sock_map.c
+ F:	net/ipv4/tcp_bpf.c
+diff --git a/include/linux/bpf_trace.h b/include/linux/bpf_trace.h
+index ddf896abcfb6..d559be0a79c5 100644
+--- a/include/linux/bpf_trace.h
++++ b/include/linux/bpf_trace.h
+@@ -3,5 +3,6 @@
+ #define __LINUX_BPF_TRACE_H__
+ 
+ #include <trace/events/xdp.h>
++#include <trace/events/sockmap.h>
+ 
+ #endif /* __LINUX_BPF_TRACE_H__ */
+diff --git a/include/trace/events/sockmap.h b/include/trace/events/sockmap.h
+new file mode 100644
+index 000000000000..79784e8d5866
+--- /dev/null
++++ b/include/trace/events/sockmap.h
+@@ -0,0 +1,158 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#undef TRACE_SYSTEM
++#define TRACE_SYSTEM sockmap
++
++#if !defined(_TRACE_SOCKMAP_H) || defined(TRACE_HEADER_MULTI_READ)
++#define _TRACE_SOCKMAP_H
++
++#include <linux/tracepoint.h>
++#include <linux/bpf.h>
++#include <linux/skmsg.h>
++
++#ifndef __TRACE_SOCKMAP_HELPER_ONCE_ONLY
++#define __TRACE_SOCKMAP_HELPER_ONCE_ONLY
++
++enum sockmap_direct_type {
++	SOCKMAP_REDIR_NONE	= 0,
++	SOCKMAP_REDIR_INGRESS,
++	SOCKMAP_REDIR_EGRESS,
++};
++
++enum sockmap_data_type {
++	SOCKMAP_MSG		= 0,
++	SOCKMAP_SKB,
++};
++
++#endif /* end __TRACE_SOCKMAP_HELPER_ONCE_ONLY */
++
++TRACE_DEFINE_ENUM(SOCKMAP_MSG);
++TRACE_DEFINE_ENUM(SOCKMAP_SKB);
++TRACE_DEFINE_ENUM(SOCKMAP_REDIR_NONE);
++TRACE_DEFINE_ENUM(SOCKMAP_REDIR_INGRESS);
++TRACE_DEFINE_ENUM(SOCKMAP_REDIR_EGRESS);
++
++TRACE_DEFINE_ENUM(__SK_DROP);
++TRACE_DEFINE_ENUM(__SK_PASS);
++TRACE_DEFINE_ENUM(__SK_REDIRECT);
++TRACE_DEFINE_ENUM(__SK_NONE);
++
++#define show_redirect_type(x)					\
++	__print_symbolic(x,					\
++		{ SOCKMAP_REDIR_NONE,		"none" },	\
++		{ SOCKMAP_REDIR_INGRESS,	"ingress" },	\
++		{ SOCKMAP_REDIR_EGRESS,		"egress" })
++
++#define show_act(x)						\
++	__print_symbolic(x,					\
++		{ __SK_DROP,			"DROP" },	\
++		{ __SK_PASS,			"PASS" },	\
++		{ __SK_REDIRECT,		"REDIRECT" },	\
++		{ __SK_NONE,			"NONE" })
++
++#define show_data_type(x)					\
++	__print_symbolic(x,					\
++		{ SOCKMAP_MSG,			"msg" },	\
++		{ SOCKMAP_SKB,			"skb" })
++
++#define trace_sockmap_skmsg_redirect(sk, prog, msg, act)	\
++	trace_sockmap_redirect((sk), SOCKMAP_MSG, (prog),	\
++			       (msg)->sg.size, (act),		\
++			       sk_msg_to_ingress(msg))
++
++#define trace_sockmap_skb_redirect(sk, prog, skb, act)		\
++	trace_sockmap_redirect((sk), SOCKMAP_SKB, (prog),	\
++			       (skb)->len, (act),		\
++			       skb_bpf_ingress(skb))
++
++#define trace_sockmap_skb_strp_parse(sk, prog, skb, ret)	\
++	trace_sockmap_strparser((sk), (prog), (skb)->len, (ret))
++
++TRACE_EVENT(sockmap_redirect,
++
++	TP_PROTO(const struct sock *sk, enum sockmap_data_type type,
++		 const struct bpf_prog *prog, int len, int act,
++		 bool ingress),
++
++	TP_ARGS(sk, type, prog, len, act, ingress),
++
++	TP_STRUCT__entry(
++		__field(const void *, sk)
++		__field(unsigned long, ino)
++		__field(unsigned int, netns_ino)
++		__field(__u16, family)
++		__field(__u16, protocol)
++		__field(int, prog_id)
++		__field(int, len)
++		__field(int, act)
++		__field(enum sockmap_data_type, type)
++		__field(enum sockmap_direct_type, redir)
++	),
++
++	TP_fast_assign(
++		/* 'redir' is undefined if action is not REDIRECT */
++		enum sockmap_direct_type redir = SOCKMAP_REDIR_NONE;
++
++		if (act == __SK_REDIRECT) {
++			if (ingress)
++				redir = SOCKMAP_REDIR_INGRESS;
++			else
++				redir = SOCKMAP_REDIR_EGRESS;
++		}
++		__entry->sk		= sk;
++		__entry->ino		= sock_i_ino((struct sock *)sk);
++		__entry->netns_ino	= sock_net(sk)->ns.inum;
++		__entry->type		= type;
++		__entry->family		= sk->sk_family;
++		__entry->protocol	= sk->sk_protocol;
++		__entry->prog_id	= prog->aux->id;
++		__entry->len		= len;
++		__entry->act		= act;
++		__entry->redir		= redir;
++	),
++
++	TP_printk("sk=%p, netns=%u, inode=%lu, family=%u, protocol=%u,"
++		  " prog_id=%d, len=%d, type=%s, action=%s, redirect_type=%s",
++		  __entry->sk, __entry->netns_ino, __entry->ino,
++		  __entry->family, __entry->protocol, __entry->prog_id,
++		  __entry->len, show_data_type(__entry->type),
++		  show_act(__entry->act), show_redirect_type(__entry->redir))
++);
++
++TRACE_EVENT(sockmap_strparser,
++
++	TP_PROTO(const struct sock *sk, const struct bpf_prog *prog,
++		 int in_len, int full_len),
++
++	TP_ARGS(sk, prog, in_len, full_len),
++
++	TP_STRUCT__entry(
++		__field(const void *, sk)
++		__field(unsigned long, ino)
++		__field(unsigned int, netns_ino)
++		__field(__u16, family)
++		__field(__u16, protocol)
++		__field(int, prog_id)
++		__field(int, in_len)
++		__field(int, full_len)
++	),
++
++	TP_fast_assign(
++		__entry->sk		= sk;
++		__entry->ino		= sock_i_ino((struct sock *)sk);
++		__entry->netns_ino	= sock_net(sk)->ns.inum;
++		__entry->family		= sk->sk_family;
++		__entry->protocol	= sk->sk_protocol;
++		__entry->prog_id	= prog->aux->id;
++		__entry->in_len		= in_len;
++		__entry->full_len	= full_len;
++	),
++
++	TP_printk("sk=%p, netns=%u, inode=%lu, family=%u, protocol=%u,"
++		  " prog_id=%d, in_len=%d, full_len=%d",
++		  __entry->sk, __entry->netns_ino, __entry->ino,
++		  __entry->family, __entry->protocol, __entry->prog_id,
++		  __entry->in_len, __entry->full_len)
++);
++#endif /* _TRACE_SOCKMAP_H */
++
++#include <trace/define_trace.h>
+diff --git a/net/core/skmsg.c b/net/core/skmsg.c
+index 276934673066..517596efafa8 100644
+--- a/net/core/skmsg.c
++++ b/net/core/skmsg.c
+@@ -9,6 +9,7 @@
+ #include <net/tcp.h>
+ #include <net/tls.h>
+ #include <trace/events/sock.h>
++#include <trace/events/sockmap.h>
+ 
+ static bool sk_msg_try_coalesce_ok(struct sk_msg *msg, int elem_first_coalesce)
+ {
+@@ -910,6 +911,7 @@ int sk_psock_msg_verdict(struct sock *sk, struct sk_psock *psock,
+ 		sock_hold(psock->sk_redir);
+ 	}
+ out:
++	trace_sockmap_skmsg_redirect(sk, prog, msg, ret);
+ 	rcu_read_unlock();
+ 	return ret;
+ }
+@@ -981,6 +983,7 @@ int sk_psock_tls_strp_read(struct sk_psock *psock, struct sk_buff *skb)
+ 		ret = bpf_prog_run_pin_on_cpu(prog, skb);
+ 		ret = sk_psock_map_verd(ret, skb_bpf_redirect_fetch(skb));
+ 		skb->sk = NULL;
++		trace_sockmap_skb_redirect(psock->sk, prog, skb, ret);
+ 	}
+ 	sk_psock_tls_verdict_apply(skb, psock, ret);
+ 	rcu_read_unlock();
+@@ -1090,6 +1093,7 @@ static void sk_psock_strp_read(struct strparser *strp, struct sk_buff *skb)
+ 		skb_bpf_set_strparser(skb);
+ 		ret = sk_psock_map_verd(ret, skb_bpf_redirect_fetch(skb));
+ 		skb->sk = NULL;
++		trace_sockmap_skb_redirect(sk, prog, skb, ret);
+ 	}
+ 	sk_psock_verdict_apply(psock, skb, ret);
+ out:
+@@ -1113,6 +1117,7 @@ static int sk_psock_strp_parse(struct strparser *strp, struct sk_buff *skb)
+ 		skb->sk = psock->sk;
+ 		ret = bpf_prog_run_pin_on_cpu(prog, skb);
+ 		skb->sk = NULL;
++		trace_sockmap_skb_strp_parse(psock->sk, prog, skb, ret);
+ 	}
+ 	rcu_read_unlock();
+ 	return ret;
+@@ -1217,6 +1222,7 @@ static int sk_psock_verdict_recv(struct sock *sk, struct sk_buff *skb)
+ 		skb_bpf_redirect_clear(skb);
+ 		ret = bpf_prog_run_pin_on_cpu(prog, skb);
+ 		ret = sk_psock_map_verd(ret, skb_bpf_redirect_fetch(skb));
++		trace_sockmap_skb_redirect(psock->sk, prog, skb, ret);
+ 	}
+ 	ret = sk_psock_verdict_apply(psock, skb, ret);
+ 	if (ret < 0)
+-- 
+2.47.1
+
