@@ -1,118 +1,83 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D2C2148832;
-	Wed,  7 May 2025 09:17:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0FF21A840A;
+	Wed,  7 May 2025 11:09:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746609459; cv=none; b=aSkfDnjInBLTY4qwoSEa6dpvtC6PkfBLPbph1ehydaOzj/ROt4ziyNyxNMc+4kxjGMPmb/HPX2fNJoxdD2ypRUZXx3cb3OBGpPvKfd4Tcqr7YV2GpmcuMLxYgQ+in5i6Blo6Tk4fx76lya3CMwqL8xQa4bqoZleujPdnt8QIXhE=
+	t=1746616167; cv=none; b=C+hW+qtnCDGOH4V3zu3ME+5PSh3hc/hgtVylNj71JClLitpAUZZhpxtH1cKRM/4twFqlDf4cQWAetA1zb2gt9m4OMzpKWJhLIRNDerryUgyTzuBP/tIigZqt0oh8UEi0kD0hCOlcG0BswPAQlJoiWLihTz31h3gK/WKQgHx8C3Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746609459; c=relaxed/simple;
-	bh=ykltQ9huLE0r8rln1hz74oZpmC0expnXFTghDd8zakY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=A/xHKujZx+wXq3Xv3xcDOzj21iNgc8FNstTwrLxp4//Li7bKLrxS00HtHFSlicW/u4+4mr43yIK/Q/dEpK+FO3vuZfKPV5I411bB5W3Ngs9rLYnYvpAFwWekJNTWIsDA8ilYmYtX2JRDmUmgX4i5cDTIzszvG3qytSs+CA5L8ns=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=ZaQwk9zx; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ZaQwk9zx"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=HqrE5RjgXWImFxmKS250rNaTgk4WttiwOVrF0xe9MXw=; b=ZaQwk9zxEbTKBGtOWN53DLzGRq
-	xHT9z066aC/eoSE/s7yqlD6A/Ga4KA0rmybAx9Upg5QY3eQ+hz83cgqxibsE4AlDV/V4b87BjC58L
-	xUSpU5riVmhqqjuaWjP4o8dM8SZSCQEqNCjm9x+oMgzPhld32iKX18F0/YnkMGWYGsHXS/1QLJM+p
-	aNSEjBYRdJHjjFaxuJDX72UQkVjpK2nvMbfe92HFXCr3ICDQxETns9h3PQ75f8VDP9tMeHtQG7UD8
-	rGH2k7mJcBJWbtAnxOiiKQdypI65Mg5MMJzS1L3fIubxLv0AzsZW4z3YbsaRgsl4prOYDIy5Yxxkq
-	0H+YCyVg==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98.1 #2 (Red Hat Linux))
-	id 1uCau3-0000000Foi8-1z5i;
-	Wed, 07 May 2025 09:17:24 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 0BC04300780; Wed,  7 May 2025 11:17:23 +0200 (CEST)
-Date: Wed, 7 May 2025 11:17:22 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Sohil Mehta <sohil.mehta@intel.com>
-Cc: x86@kernel.org, linux-kernel@vger.kernel.org, Xin Li <xin@zytor.com>,
-	"H . Peter Anvin" <hpa@zytor.com>,
-	Andy Lutomirski <luto@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Sean Christopherson <seanjc@google.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Tony Luck <tony.luck@intel.com>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Vitaly Kuznetsov <vkuznets@redhat.com>,
-	"Rafael J . Wysocki" <rafael@kernel.org>,
-	Daniel Lezcano <daniel.lezcano@linaro.org>,
-	Zhang Rui <rui.zhang@intel.com>, Lukasz Luba <lukasz.luba@arm.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Brian Gerst <brgerst@gmail.com>,
-	Andrew Cooper <andrew.cooper3@citrix.com>,
-	"Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
-	Jacob Pan <jacob.pan@linux.microsoft.com>,
-	Andi Kleen <ak@linux.intel.com>, Kai Huang <kai.huang@intel.com>,
-	Nikolay Borisov <nik.borisov@suse.com>,
-	linux-perf-users@vger.kernel.org, linux-edac@vger.kernel.org,
-	kvm@vger.kernel.org, linux-pm@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 6/9] x86/nmi: Prepare for the new NMI-source vector
- encoding
-Message-ID: <20250507091722.GC4439@noisy.programming.kicks-ass.net>
-References: <20250507012145.2998143-1-sohil.mehta@intel.com>
- <20250507012145.2998143-7-sohil.mehta@intel.com>
+	s=arc-20240116; t=1746616167; c=relaxed/simple;
+	bh=KTrpOrlvbgFFznzPI9VvP10OovXWihDkhZQhy98mDvA=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=cACsw4uc5yIvH1GVcA0EdXzUgVWPDnWGm86B0XNMtr6qF5HCXLo/Wcc+1FmL72bboTmGXmWCQ/EkI+X61y/5AfGP2nN8LUFDwGGT7kC1mNgfzgC7TLseaZdU9rqkjGTM7pFY8xl3XmFvQ8/gpu/ROsfR9w/jM2TyKknvQaEUsAI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Zssq21nc5z6M512;
+	Wed,  7 May 2025 19:04:46 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id 2773514081B;
+	Wed,  7 May 2025 19:09:17 +0800 (CST)
+Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Wed, 7 May
+ 2025 13:09:16 +0200
+Date: Wed, 7 May 2025 12:09:14 +0100
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Shuai Xue <xueshuai@linux.alibaba.com>
+CC: <rostedt@goodmis.org>, <lukas@wunner.de>, <linux-pci@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-edac@vger.kernel.org>,
+	<linux-trace-kernel@vger.kernel.org>, <helgaas@kernel.org>,
+	<bhelgaas@google.com>, <tony.luck@intel.com>, <bp@alien8.de>,
+	<mhiramat@kernel.org>, <mathieu.desnoyers@efficios.com>, <oleg@redhat.com>,
+	<naveen@kernel.org>, <davem@davemloft.net>, <anil.s.keshavamurthy@intel.com>,
+	<mark.rutland@arm.com>, <peterz@infradead.org>,
+	<tianruidong@linux.alibaba.com>
+Subject: Re: [PATCH v7] PCI: hotplug: Add a generic RAS tracepoint for
+ hotplug event
+Message-ID: <20250507120914.000001c8@huawei.com>
+In-Reply-To: <20250507011535.43800-1-xueshuai@linux.alibaba.com>
+References: <20250507011535.43800-1-xueshuai@linux.alibaba.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250507012145.2998143-7-sohil.mehta@intel.com>
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml500003.china.huawei.com (7.191.162.67) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
-On Tue, May 06, 2025 at 06:21:42PM -0700, Sohil Mehta wrote:
+On Wed,  7 May 2025 09:15:35 +0800
+Shuai Xue <xueshuai@linux.alibaba.com> wrote:
 
-> +/*
-> + * Prepare the delivery mode and vector for the ICR.
-> + *
-> + * NMI-source vectors have the NMI delivery mode encoded within them to
-> + * differentiate them from the IDT vectors. IDT vector 0x2 (NMI_VECTOR)
-> + * is treated as an NMI request but without any NMI-source information.
-> + */
-> +static inline u16 __prepare_ICR_DM_vector(u16 dm_vector)
-> +{
-> +	u16 vector = dm_vector & APIC_VECTOR_MASK;
-> +	u16 dm = dm_vector & APIC_DM_MASK;
-> +
-> +	if (dm == APIC_DM_NMI) {
-> +		/*
-> +		 * Pre-FRED, the actual vector is ignored for NMIs, but
-> +		 * zero it if NMI-source reporting is not supported to
-> +		 * avoid breakage on misbehaving hardware or hypervisors.
-> +		 */
-> +		if (!cpu_feature_enabled(X86_FEATURE_NMI_SOURCE))
-> +			vector = 0;
-> +
-> +		return dm | vector;
-> +	}
-> +
-> +	if (vector == NMI_VECTOR)
-> +		return APIC_DM_NMI;
-> +	else
+> Hotplug events are critical indicators for analyzing hardware health,
+> particularly in AI supercomputers where surprise link downs can
+> significantly impact system performance and reliability.
+> 
+> To this end, define a new TRACING_SYSTEM named pci, add a generic RAS
+> tracepoint for hotplug event to help healthy check, and generate
+> tracepoints for pcie hotplug event. Add enum pci_hotplug_event in
+> include/uapi/linux/pci.h so applications like rasdaemon can register
+> tracepoint event handlers for it.
+> 
+> The output like below:
+> 
+> $ echo 1 > /sys/kernel/debug/tracing/events/pci/pci_hp_event/enable
+> $ cat /sys/kernel/debug/tracing/trace_pipe
+>     <...>-206     [001] .....    40.373870: pci_hp_event: 0000:00:02.0 slot:10, event:Link Down
+> 
+>     <...>-206     [001] .....    40.374871: pci_hp_event: 0000:00:02.0 slot:10, event:Card not present
+> 
+> Suggested-by: Lukas Wunner <lukas@wunner.de>
+> Suggested-by: Steven Rostedt <rostedt@goodmis.org>
+> Reviewed-by: Lukas Wunner <lukas@wunner.de>
+> Signed-off-by: Shuai Xue <xueshuai@linux.alibaba.com>
+FWIW looks good to me.
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
-Please drop that else, that's pointless.
-
-> +		return APIC_DM_FIXED | vector;
-> +}
+Any userspace tooling planned for this? 
