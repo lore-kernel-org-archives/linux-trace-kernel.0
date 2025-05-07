@@ -1,132 +1,84 @@
-Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E443A4B1E7D;
-	Tue,  6 May 2025 22:30:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1ECCA23DE;
+	Wed,  7 May 2025 00:21:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746570655; cv=none; b=leWWxq7v3FoKUOIg94O1y0wFi7ZUEjgoVDVgzgIlBd3aBcCn3/U0k1A+390mVuKRmReIZB7e324XAmVFVElLq6eL3j4sv/DysjwSk7DSdmL6UDna+vYRa3MDaTlEQOZHWsSE0VK9ijH307pPZ3LavaqU3U9gAs2/zjcdjF+9hos=
+	t=1746577302; cv=none; b=KuOnpBs2z5sbq9pzdanIieOzli/kxvkrgZMcet9uBpTaboaYVvEemoGVnxprM/RfjNaovdl3O8AxAvcF7dqC8KuCyi64gdyq04yGyxazZeF1gpd5aRCRxfeDaYRU9K0dA1A3aYhjCi22V4xoDJK4/G9qTe7cGzmTbUa/wAsMuF0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746570655; c=relaxed/simple;
-	bh=M6LPnQq+WZYUyd/hIR9a4L+W+SEAzNA+KptcRWHRs2w=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=kRvebPRNrX5eK8zruHm+oyvJIrWgSo2LrmkDiZuFjS4wC73R4ipT31gBnNDp2wBqip1jNECYGmyNUVcmHveROKM+G79c/gOTJIo3DmMLoVrkNVMZzNwTi4kn9pWAsy7HEzBRdShbdteelYt2NBI9CtxCot+yoJXRtRDF9JPVGlc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jelULrxF; arc=none smtp.client-ip=209.85.210.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746577302; c=relaxed/simple;
+	bh=imNfF9iMlp377Q67WylkmovEDghyzTyehxE1g7lwRfE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZvSKVK86BA6h3+Kt41kGRE1Czb/U1PkEZUw1DHBKLnkkhsQga1K/S1nu5ojR65fyE4R84dypBnz+4QJKh25H0SOWbfwc+rBd3Uy6+6CUACK6PSC0tssStDaDUFLXzk02YgcggX7ahhbU/3oal5Bba/S04YDrw1ZtdJU0F9PNi7w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VXbX07mM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jelULrxF"
-Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-736b350a22cso5192137b3a.1;
-        Tue, 06 May 2025 15:30:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746570652; x=1747175452; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=RGwmKF5kjz2CGDdNgVyzlfucliVOYpgZZQ98I4N81Zs=;
-        b=jelULrxFiOwsgHIvuMbYc4HwMJMbjQVbDkURwqCYfSL6lsgEb7B8JXxZzT+SDgIskM
-         POzmUR+WyFC88WBQ9M3xK1+Rn2eq9LbPKtbVnTozk2Dbtr/8HHEf6UZjhAeyaT9n76XM
-         Hsp0S6sgEZjFTf/jUSEfTX9Ni95WTEPEfb/gFzk0d//ezJJrpQvUzz99I57CUSHaU85o
-         V/Z7fz3C7TToX0pMiT2vNS46XKOzktj+BVrgxgMeG6k0Yzds2njCX+ZxnWlxPrBYd1bV
-         QDKL714X8sp89ec3sQ4bPAqpeZ7mubYNwKHlrVHtpsuMtemC/friNXLJw/dUxMK1kfbg
-         3QrA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746570652; x=1747175452;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=RGwmKF5kjz2CGDdNgVyzlfucliVOYpgZZQ98I4N81Zs=;
-        b=uqwB0jACQatIoj1V7O4UtytMQ9tk4K5m/I2bmmoKZWgAomwfc8mZcFDp9pZ5Pia+GU
-         5LXt5w2xnCLAF2ZrzBWP/K/j5d24hCk9ZHWQ/i/MP9XgglhSJ5rlbN+kLguaGRNrmrgo
-         JJP5jos/hljkRayaxRgQ5X4n47ylKU4Qqt7kb5nvmCqHrYpdhzjxhuUfUpS2RM23OZfD
-         xHc2DbVeTUwyXIT2YrjzDYWPV3M5drTdweIgFIteS2dQEwLyPbQWdPpm6QqCgerxyvzx
-         p1v+R004+7sjO4jNDRDWxJ5ovVBYxSHmtlf8ScRCI+yqhQPLC/kDUuJ0Cd87L/Ls0MCr
-         uZew==
-X-Forwarded-Encrypted: i=1; AJvYcCUIwLYuhm7wCSjuIlnmNUCARWvpL7RUlWn/x2xSCLA2Nmg2xBpINI/jhu8Fm+oFLPApBgn8jZDUKpLh2+SkOzBoPaFT@vger.kernel.org, AJvYcCVlwXGeWtCB6pDuvSGGFvXdt1smin3GcvctCc4ulFJP7iL8RXetsRHf6wojawQ0t3lTZ2VXuwGYKcmZu3rn@vger.kernel.org, AJvYcCW7Zy22mL/d3BhEoPAKq8QgBkt6HuzhD2zqnEACgX/lCYVYpmmgprMWkz/X+2+T6zgWyMQ3Tf/i@vger.kernel.org, AJvYcCXUoz0Q4JbMrOJHTRFY5THFhKw4KA9IcZ7J1LebRI76WaRFXJlYlk43Mn59AOPrZ738slY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx9ihxq7NkGNWufX6OxEM+oIvZjjz9jjd9G1/q/MrdN+QBVLUv5
-	a6OIy3F18K9UYf+eGbYWBe4KqBllgJmTxjcGtJxl27Z5KwY/Y96fHEgNfOICtvyFowgLex7LVJ9
-	PQncs78MfzRKSD1T+D4JEO4JGP8U=
-X-Gm-Gg: ASbGncsIzE4Elqr3GUKXtt0BRVX+YRwQnkrk0UyktH2aAVR52s/7OEo3DlsLIoNwTuC
-	iOHp32fgi6cpfHPOTbIAb/uZ0O+n2MUSYaM5YNmFdlyTVOQUG1pauHNvAToAdC3FINL8nxCpZuW
-	8lVvyf0mbGxAqq7E8ECVD/z35AU6OkqUChUJ8PBQ==
-X-Google-Smtp-Source: AGHT+IFRT4bPAgK8JDFFq+i2BzaYK8yMh7nBwFrls+mABRH23bU5PRPSRFhkLVlyskG4/ta/vyXqg25SsaMHZwnf+KI=
-X-Received: by 2002:a05:6a20:6f87:b0:203:c461:dd36 with SMTP id
- adf61e73a8af0-2148b113868mr1327166637.6.1746570652156; Tue, 06 May 2025
- 15:30:52 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VXbX07mM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 65CC0C4CEE4;
+	Wed,  7 May 2025 00:21:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746577301;
+	bh=imNfF9iMlp377Q67WylkmovEDghyzTyehxE1g7lwRfE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=VXbX07mMuCpkNiBHJN4rmrgcdmUORSQLm6IgjNzunCN5sfoWgzFLvNkuYZdUE7ECO
+	 eOd+g/+mj+keiM5IvV7mpm0XfueHPLgr25+sOUJqoO6oKMnLZUC6Nm4lp1PKtolQ49
+	 HfiJDRYaMAQMhNHwFUeLsw93Zg8aVjpvL5uR8Sm6dUBIzHwcwjotgbn5g73tUKFB+Y
+	 VC28aACt3MYqgq/a7LtAi4F7wtRy/sHlP+XVECundMVQ4A2YXMhICtkchUkYJXrDVD
+	 eGvWGmmb2QKOtCW2Ond1HhS+zzzt/kH/NlHmP7n/SNawCMas6xSNyll2nXIO6ks2N2
+	 EAGrveoT5N1CA==
+Date: Tue, 6 May 2025 14:21:40 -1000
+From: Tejun Heo <tj@kernel.org>
+To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc: Feng Yang <yangfeng59949@163.com>, martin.lau@linux.dev, ast@kernel.org,
+	daniel@iogearbox.net, andrii@kernel.org, eddyz87@gmail.com,
+	song@kernel.org, yonghong.song@linux.dev, john.fastabend@gmail.com,
+	kpsingh@kernel.org, sdf@fomichev.me, haoluo@google.com,
+	jolsa@kernel.org, mattbobrowski@google.com, rostedt@goodmis.org,
+	mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
+	davem@davemloft.net, bpf@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	netdev@vger.kernel.org
+Subject: Re: [PATCH v3 sched_ext 2/2] sched_ext: Remove bpf_scx_get_func_proto
+Message-ID: <aBqnlHvfMdYu3JH8@slm.duckdns.org>
+References: <20250506061434.94277-1-yangfeng59949@163.com>
+ <20250506061434.94277-3-yangfeng59949@163.com>
+ <CAEf4BzbqrvgD11M5nTwP=oJeNph6n63qAZfW8Qu=MB9k3h_-ow@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250506061434.94277-1-yangfeng59949@163.com> <20250506061434.94277-3-yangfeng59949@163.com>
-In-Reply-To: <20250506061434.94277-3-yangfeng59949@163.com>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Tue, 6 May 2025 15:30:39 -0700
-X-Gm-Features: ATxdqUETSD4zY0Brjmdir8LRxVrgW6L6sBojvZaIC7oDoprK2jltvmYBmRuBIeI
-Message-ID: <CAEf4BzbqrvgD11M5nTwP=oJeNph6n63qAZfW8Qu=MB9k3h_-ow@mail.gmail.com>
-Subject: Re: [PATCH v3 sched_ext 2/2] sched_ext: Remove bpf_scx_get_func_proto
-To: Feng Yang <yangfeng59949@163.com>, tj@kernel.org
-Cc: martin.lau@linux.dev, ast@kernel.org, daniel@iogearbox.net, 
-	andrii@kernel.org, eddyz87@gmail.com, song@kernel.org, 
-	yonghong.song@linux.dev, john.fastabend@gmail.com, kpsingh@kernel.org, 
-	sdf@fomichev.me, haoluo@google.com, jolsa@kernel.org, 
-	mattbobrowski@google.com, rostedt@goodmis.org, mhiramat@kernel.org, 
-	mathieu.desnoyers@efficios.com, davem@davemloft.net, bpf@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	netdev@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAEf4BzbqrvgD11M5nTwP=oJeNph6n63qAZfW8Qu=MB9k3h_-ow@mail.gmail.com>
 
-On Mon, May 5, 2025 at 11:15=E2=80=AFPM Feng Yang <yangfeng59949@163.com> w=
-rote:
->
-> From: Feng Yang <yangfeng@kylinos.cn>
->
-> task_storage_{get,delete} has been moved to bpf_base_func_proto.
->
-> Suggested-by: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-> Signed-off-by: Feng Yang <yangfeng@kylinos.cn>
-> ---
->  kernel/sched/ext.c | 15 +--------------
->  1 file changed, 1 insertion(+), 14 deletions(-)
->
+On Tue, May 06, 2025 at 03:30:39PM -0700, Andrii Nakryiko wrote:
+> On Mon, May 5, 2025 at 11:15 PM Feng Yang <yangfeng59949@163.com> wrote:
+> >
+> > From: Feng Yang <yangfeng@kylinos.cn>
+> >
+> > task_storage_{get,delete} has been moved to bpf_base_func_proto.
+> >
+> > Suggested-by: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+> > Signed-off-by: Feng Yang <yangfeng@kylinos.cn>
+> > ---
+> >  kernel/sched/ext.c | 15 +--------------
+> >  1 file changed, 1 insertion(+), 14 deletions(-)
+> >
+> 
+> Given this has dependency on patch #1, we should either route this
+> patch through bpf-next, or we'll have to delay and resend it after
+> merge window.
+> 
+> Tejun, any preferences?
 
-Given this has dependency on patch #1, we should either route this
-patch through bpf-next, or we'll have to delay and resend it after
-merge window.
+Yeah, bpf-next sounds good to me and please feel free to add:
 
-Tejun, any preferences?
+ Acked-by: Tejun Heo <tj@kernel.org>
 
-> diff --git a/kernel/sched/ext.c b/kernel/sched/ext.c
-> index fdbf249d1c68..cc628b009e11 100644
-> --- a/kernel/sched/ext.c
-> +++ b/kernel/sched/ext.c
-> @@ -5586,21 +5586,8 @@ static int bpf_scx_btf_struct_access(struct bpf_ve=
-rifier_log *log,
->         return -EACCES;
->  }
->
-> -static const struct bpf_func_proto *
-> -bpf_scx_get_func_proto(enum bpf_func_id func_id, const struct bpf_prog *=
-prog)
-> -{
-> -       switch (func_id) {
-> -       case BPF_FUNC_task_storage_get:
-> -               return &bpf_task_storage_get_proto;
-> -       case BPF_FUNC_task_storage_delete:
-> -               return &bpf_task_storage_delete_proto;
-> -       default:
-> -               return bpf_base_func_proto(func_id, prog);
-> -       }
-> -}
-> -
->  static const struct bpf_verifier_ops bpf_scx_verifier_ops =3D {
-> -       .get_func_proto =3D bpf_scx_get_func_proto,
-> +       .get_func_proto =3D bpf_base_func_proto,
->         .is_valid_access =3D bpf_scx_is_valid_access,
->         .btf_struct_access =3D bpf_scx_btf_struct_access,
->  };
-> --
-> 2.43.0
->
+Thanks.
+
+-- 
+tejun
