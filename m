@@ -1,87 +1,70 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F44A280CE7;
-	Wed,  7 May 2025 14:54:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56005748D;
+	Wed,  7 May 2025 15:36:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746629685; cv=none; b=fTyMa1/NRBf/ZStIpbWn5/BhGHY9MMH/JZOb9+zwvFsjGLdZNOSArgsyP4rprTNatZfQDEUzAjicyzLyxgiFfbI84DhCHixU4DxmKecJWV9gw1DWlOniLYUAG04SSXcrFn8y5WLzTg2TaP3/2YXgwZCU/hd/dplXE4p1YrlxTdU=
+	t=1746632193; cv=none; b=rY19VgLP1z7neelijMziTvMVlD0TJNt92EWu3UWwv7YhgciIcI8sbzs2mbFvJgzcoKc3WTGupY1Pt6x6mQPtylzBbgvqAT3xTaYdYqwhVXYNcP4K/cqXAgS1mTdeUzw1+HqqHFQ3td1L61Non9j83D/t3gQPxdISNlvxUrPeXPo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746629685; c=relaxed/simple;
-	bh=Zb/lfoSuBbKPbSZ/G/4eL07FT372hBGNiyY++BYN92g=;
-	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=G0ImFHTTAdLu1m+LmT6DH+3K3XYKkU8Dm4s1CnhNyuFGzkmgnTin5poM/fwwNZpF6FqgqiZv+4xhrNaLxhScfu3GXKKEWkJc1rGoTDWsHYX4jdNywtShc0zXmvyj0e63O6iaXx0bA+8R4H/QlDN5TJ2yrZd4+DEtOnWwFJW5vLQ=
+	s=arc-20240116; t=1746632193; c=relaxed/simple;
+	bh=AqeGKYZmJoJGYyMkrFh3sxPaKMjEoYRtVwnLWT9e0dk=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ZAAnid/JQImvcp+n24avP2Hz0QdYvJe9l4zDLFIiWCC9iHh8C9tsHqkK0oadn5w++Uloi6pgqCyhWFoh8q42sw+NaRCkHU4ErRgemXZPwGFXKjQlX5DVcBOTdP3gRzHE64TypdZGwYiNPlvPwOXSW7azPq+523v6vL0IsD4z3gA=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3C740C4CEEE;
-	Wed,  7 May 2025 14:54:45 +0000 (UTC)
-Received: from rostedt by gandalf with local (Exim 4.98.2)
-	(envelope-from <rostedt@goodmis.org>)
-	id 1uCgAi-00000001qAT-0Ply;
-	Wed, 07 May 2025 10:54:56 -0400
-Message-ID: <20250507145455.944453325@goodmis.org>
-User-Agent: quilt/0.68
-Date: Wed, 07 May 2025 10:53:07 -0400
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D3D32C4CEE2;
+	Wed,  7 May 2025 15:36:29 +0000 (UTC)
+Date: Wed, 7 May 2025 11:36:40 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
-To: linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- Tom Zanussi <zanussi@kernel.org>,
- Miaoqian Lin <linmq006@gmail.com>
-Subject: [PATCH 2/3] tracing: Fix error handling in event_trigger_parse()
-References: <20250507145305.730136036@goodmis.org>
+To: Shuai Xue <xueshuai@linux.alibaba.com>
+Cc: lukas@wunner.de, linux-pci@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, helgaas@kernel.org,
+ bhelgaas@google.com, tony.luck@intel.com, bp@alien8.de,
+ mhiramat@kernel.org, mathieu.desnoyers@efficios.com, oleg@redhat.com,
+ naveen@kernel.org, davem@davemloft.net, anil.s.keshavamurthy@intel.com,
+ mark.rutland@arm.com, peterz@infradead.org, tianruidong@linux.alibaba.com
+Subject: Re: [PATCH v7] PCI: hotplug: Add a generic RAS tracepoint for
+ hotplug event
+Message-ID: <20250507113640.0b27d95f@gandalf.local.home>
+In-Reply-To: <20250507011535.43800-1-xueshuai@linux.alibaba.com>
+References: <20250507011535.43800-1-xueshuai@linux.alibaba.com>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-From: Miaoqian Lin <linmq006@gmail.com>
+On Wed,  7 May 2025 09:15:35 +0800
+Shuai Xue <xueshuai@linux.alibaba.com> wrote:
 
-According to trigger_data_alloc() doc, trigger_data_free() should be
-used to free an event_trigger_data object. This fixes a mismatch introduced
-when kzalloc was replaced with trigger_data_alloc without updating
-the corresponding deallocation calls.
+> +#endif /* _TRACE_HW_EVENT_PCI_HP_H */
+> +
+> +#undef TRACE_INCLUDE_PATH
+> +#define TRACE_INCLUDE_PATH  ../../drivers/pci/hotplug
 
-Cc: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: Tom Zanussi <zanussi@kernel.org>
-Link: https://lore.kernel.org/20250318112737.4174-1-linmq006@gmail.com
-Fixes: e1f187d09e11 ("tracing: Have existing event_command.parse() implementations use helpers")
-Signed-off-by: Miaoqian Lin <linmq006@gmail.com>
-[ SDR: Changed event_trigger_alloc/free() to trigger_data_alloc/free() ]
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
- kernel/trace/trace_events_trigger.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Note, this is not always safe to do. If "drivers", "pci" or "hotplug" ever
+become a macro, the path will also be updated, and this will fail to build.
 
-diff --git a/kernel/trace/trace_events_trigger.c b/kernel/trace/trace_events_trigger.c
-index dac3344ee345..c316badc608b 100644
---- a/kernel/trace/trace_events_trigger.c
-+++ b/kernel/trace/trace_events_trigger.c
-@@ -995,7 +995,7 @@ event_trigger_parse(struct event_command *cmd_ops,
- 
- 	if (remove) {
- 		event_trigger_unregister(cmd_ops, file, glob+1, trigger_data);
--		kfree(trigger_data);
-+		trigger_data_free(trigger_data);
- 		ret = 0;
- 		goto out;
- 	}
-@@ -1022,7 +1022,7 @@ event_trigger_parse(struct event_command *cmd_ops,
- 
-  out_free:
- 	event_trigger_reset_filter(cmd_ops, trigger_data);
--	kfree(trigger_data);
-+	trigger_data_free(trigger_data);
- 	goto out;
- }
- 
--- 
-2.47.2
+> +#undef TRACE_INCLUDE_FILE
+> +#define TRACE_INCLUDE_FILE trace
+> +
+> +/* This part must be outside protection */
+> +#include <trace/define_trace.h>
+> diff --git a/include/uapi/linux/pci.h b/include/uapi/linux/pci.h
 
+The safer way to do this is to have:
 
+In drivers/pci/hotplug/Makefile:
+
+CFLAGS_pciehp_ctrl.o := -I$(src)
+
+And replace the TRACE_INCLUDE_PATH to:
+
+#define TRACE_INCLUDE_PATH .
+
+-- Steve
