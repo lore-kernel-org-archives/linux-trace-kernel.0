@@ -1,450 +1,266 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3331128373;
-	Wed,  7 May 2025 20:20:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746649241; cv=none; b=jtUvifq8gG9AfN6eTz98p/B/QZESNKa5hq8nXpH8LXlzNT/53QYOYk1LZjcG+LG+iFq8myJG3YwYtIg9XolzEEHbFYSe56itbFHDlgTY9dUW1t7pZ/pQcN5JM7DxdTZMVVIqYS6kpoQIQyT0p5G4tLW/SMEQ/uOF1pm1xmfInVI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746649241; c=relaxed/simple;
-	bh=QopbHEzyQh4cWftzFxgVomcAnHIuaMoC1M3MOsL6J0o=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=MddSXyt9CMZb3mzoK/eSssI445VziIGMF+g/oHB6VyZhxEjPbNavsSMg6dpHyx5Ru+Q44z1jEIk5r1+alw/WqgXOw3APHoX0JIUjktPa0IriOWOAIiopubRrUG++MhKhcE8DFLmR1zP5qVhn6Awat8YaYcBnHoHgda7HQL/Zk2U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0AEDAC4CEE2;
-	Wed,  7 May 2025 20:20:38 +0000 (UTC)
-Date: Wed, 7 May 2025 16:20:49 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>, bpf@vger.kernel.org, netdev
- <netdev@vger.kernel.org>
-Cc: Jiri Olsa <olsajiri@gmail.com>, Peter Zijlstra <peterz@infradead.org>,
- David Ahern <dsahern@kernel.org>, Juri Lelli <juri.lelli@gmail.com>, Breno
- Leitao <leitao@debian.org>, Alexei Starovoitov
- <alexei.starovoitov@gmail.com>, Andrii Nakryiko
- <andrii.nakryiko@gmail.com>, Gabriele Monaco <gmonaco@redhat.com>, Masami
- Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>
-Subject: [PATCH v2] tracepoint: Have tracepoints created with
- DECLARE_TRACE() have _tp suffix
-Message-ID: <20250507162049.30a3ccae@gandalf.local.home>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C89AC28FA9F;
+	Wed,  7 May 2025 20:44:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.13
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746650645; cv=fail; b=i3ZSfLNzuldBhcca3RnIBLinsIbiq+BsWpVy2xTClv5Pc12mrLq5MYO1T4bUWjnsXnXelrrcHqM1YJLtEpNGcz7fo01aqxgwuP/PePX3Pl7//ME+Oimbdb5w+vyeDBQuhJIrhTKbF6jeEy0K3u66EK3cNLmFStLtE0fXXeCMbnU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746650645; c=relaxed/simple;
+	bh=74Ff8pE1NaU7rkhVOEOs7GJ7sR3xV76dxePCwokXXnM=;
+	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=UjQA2BlrUkY0yw0iIVBLv8etIRqU6EOBn4NzM3+TCdDax0QRTLNIsxBU/NEpkSCXRHos5cgiW2d3DF8Y/trVbMb58c0/TEZWKTE0F+iIHANNo9iiPOnBffLOpZ1IaZZZTKZdZ1fnPUpa+VPRwSjZ0ZVOI24CjCIAYH7cepYA01w=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PKxF0BSq; arc=fail smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PKxF0BSq"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1746650644; x=1778186644;
+  h=message-id:date:subject:to:cc:references:from:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=74Ff8pE1NaU7rkhVOEOs7GJ7sR3xV76dxePCwokXXnM=;
+  b=PKxF0BSqaKo7Vn8ux969mWWMlqbDbzyOvCJuLjy9drO4JIDyjXw2rGTq
+   /xw78h/qbcdlid/peFEDNM5okQjOOFcbOsYTG4WaFdvHuOrz+nojE5Aea
+   X7o5Oai7NAdcE8vKXzo4jXd9jyprVrzt5/2suFa5Eu65v/w+HJgZTn1Dn
+   oS4MhdB8N1EkUvU/BSbUcWT82rGxs3n40c+hQPiJOTuoR0A0gABp8Tz9s
+   koJBu/llexzGWxJFSxjqMn1UDsUzdcc37pRpdk3agSzK4BBeKrXSNzvst
+   js1Dib20bJYV3PaaOhjApZ4GnFY0jbLeJ6gSLsowgw+NleUvOIxk79abW
+   g==;
+X-CSE-ConnectionGUID: 2oMHzEXTR+Sqxh+izpLyEg==
+X-CSE-MsgGUID: TbvKb3BVT/yXbrYA6SHeCg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11426"; a="51064340"
+X-IronPort-AV: E=Sophos;i="6.15,270,1739865600"; 
+   d="scan'208";a="51064340"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2025 13:44:03 -0700
+X-CSE-ConnectionGUID: nQH0dYWJTdSk/+Qgtiscjg==
+X-CSE-MsgGUID: DUh8xz6KQV2dqQ0CfdHNKA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,270,1739865600"; 
+   d="scan'208";a="137069901"
+Received: from orsmsx902.amr.corp.intel.com ([10.22.229.24])
+  by fmviesa009.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2025 13:44:01 -0700
+Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14; Wed, 7 May 2025 13:44:01 -0700
+Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14 via Frontend Transport; Wed, 7 May 2025 13:44:01 -0700
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (104.47.58.170)
+ by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.44; Wed, 7 May 2025 13:44:00 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=NdI8n2EHbsbpVeghoKiWuSI3E96pX8BQEpWagBR4VoCfx2kZi/Phr0rgq0ppydSfHizxTQ9rw2cm2YPtLz/2bokwe+QMmalIKdylELL3/c/6f+LgbPVpqtzrUZ8yFIWbuv1epgCeHmI5ClyMx3SKq4GM+JKBDG7/xQcbTGW2Qpz0qqJhrvgvOlHsseXkLEiFblAvRr9+/rub0qCVxZId6kj3f52+ERKD0iSCMMUIVuRoECYUagN2FU7SnOTHrccdFUJ/snHKN5rgHGxC5oAhzcrRYhzhCeKBfqrDZW5fo+MVmbXi8hgJY28ZTq7qEaWPeJhKywJvFJ7VcAMWXc95+w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=a0eoNp6XRiBO7c1DuNIcDRw4hL5q8ofpaXJKr0yqBJA=;
+ b=NgukI/5gW1cDHL2L/L7priIsTNTaO1Mhrb959sg9cOvn9sTzwuMCvnN95MpWXORwpu7M+yoZOHv2cnsV+vuyKilOMfUniS1QisccLZ37q/3jE4GfL6kdSV4MtoeHqFyotIh4sczReNTz07XefUOcgF+xgv+RtvGCLWXR5vHFuJldeKG4+6WH54hzcc6q3eKpSJDHJ5SMseakgxdAmbIDgg3O+cPpl9rdKASQZxMj00ULxEh3SEIYVDm9qSO+LlalDpiSWUpFRmnT6UK+SZgMSi+GCIAyTFY0WG+xkSEU+wFMIXbYvxcxdQ+aJuThfH2cR2hm0H9fI3pL2vo1p0n7GQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from BYAPR11MB3320.namprd11.prod.outlook.com (2603:10b6:a03:18::25)
+ by BY1PR11MB7982.namprd11.prod.outlook.com (2603:10b6:a03:530::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.19; Wed, 7 May
+ 2025 20:43:26 +0000
+Received: from BYAPR11MB3320.namprd11.prod.outlook.com
+ ([fe80::e8c4:59e3:f1d5:af3b]) by BYAPR11MB3320.namprd11.prod.outlook.com
+ ([fe80::e8c4:59e3:f1d5:af3b%7]) with mapi id 15.20.8699.019; Wed, 7 May 2025
+ 20:43:26 +0000
+Message-ID: <3a9ebdf4-1a52-4659-84ad-2ee015b453f8@intel.com>
+Date: Wed, 7 May 2025 13:43:24 -0700
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 4/9] x86/nmi: Assign and register NMI-source vectors
+Content-Language: en-US
+To: Peter Zijlstra <peterz@infradead.org>
+CC: <x86@kernel.org>, <linux-kernel@vger.kernel.org>, Xin Li <xin@zytor.com>,
+	"H . Peter Anvin" <hpa@zytor.com>, Andy Lutomirski <luto@kernel.org>, "Thomas
+ Gleixner" <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, "Borislav
+ Petkov" <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, "Sean
+ Christopherson" <seanjc@google.com>, Arnaldo Carvalho de Melo
+	<acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Mark Rutland
+	<mark.rutland@arm.com>, Alexander Shishkin
+	<alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, "Ian
+ Rogers" <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, "Kan
+ Liang" <kan.liang@linux.intel.com>, Tony Luck <tony.luck@intel.com>, "Paolo
+ Bonzini" <pbonzini@redhat.com>, Vitaly Kuznetsov <vkuznets@redhat.com>,
+	"Rafael J . Wysocki" <rafael@kernel.org>, Daniel Lezcano
+	<daniel.lezcano@linaro.org>, Zhang Rui <rui.zhang@intel.com>, Lukasz Luba
+	<lukasz.luba@arm.com>, Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
+	<mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Brian Gerst <brgerst@gmail.com>, Andrew Cooper <andrew.cooper3@citrix.com>,
+	"Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>, Jacob Pan
+	<jacob.pan@linux.microsoft.com>, Andi Kleen <ak@linux.intel.com>, Kai Huang
+	<kai.huang@intel.com>, Nikolay Borisov <nik.borisov@suse.com>,
+	<linux-perf-users@vger.kernel.org>, <linux-edac@vger.kernel.org>,
+	<kvm@vger.kernel.org>, <linux-pm@vger.kernel.org>,
+	<linux-trace-kernel@vger.kernel.org>
+References: <20250507012145.2998143-1-sohil.mehta@intel.com>
+ <20250507012145.2998143-5-sohil.mehta@intel.com>
+ <20250507082216.GA4439@noisy.programming.kicks-ass.net>
+From: Sohil Mehta <sohil.mehta@intel.com>
+In-Reply-To: <20250507082216.GA4439@noisy.programming.kicks-ass.net>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: BYAPR02CA0048.namprd02.prod.outlook.com
+ (2603:10b6:a03:54::25) To BYAPR11MB3320.namprd11.prod.outlook.com
+ (2603:10b6:a03:18::25)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BYAPR11MB3320:EE_|BY1PR11MB7982:EE_
+X-MS-Office365-Filtering-Correlation-Id: e06427bf-db51-49b3-fb43-08dd8da7d100
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|376014|1800799024|366016;
+X-Microsoft-Antispam-Message-Info: =?utf-8?B?cW9Tc1RmNUw2R2I1R2l1Ny90WUkwVHA0T2RKUEgra2xaVm40eEUxZCtLUzc1?=
+ =?utf-8?B?WmFGaEhheCtJMmJ4MC95YVFvVU9udFpZb2lVRzI2amZUWUZSd0lxYlhRWFIr?=
+ =?utf-8?B?RFVGYkdQZWQ5TUx4L1BaUzc2Sm9EU3JRazNVQTd4cUtRYVpjeGUxYnhGYjY0?=
+ =?utf-8?B?UTFBWGhLVXpiRkR5R0YxS2dlSHNaR09lYm4ydWdMNmxjUkprRnc0VWx6M3dU?=
+ =?utf-8?B?bVp3b3ltRFdyc2pKb3Jya3N6Y3BZOWdrUFlyRzg3NHhoMldEVFIzcUlNTkxL?=
+ =?utf-8?B?WXBpTDd2Y1FMMTlxMlhNTzVocHNPNStOQmYzUUpBZU0zTHkvdk8xT3l2amtt?=
+ =?utf-8?B?OEV2SDlBY241ZkREbitsTS9tUUxQeC9pZGkzN1ZtZ1Q1eVZRUjJWSDFuTitp?=
+ =?utf-8?B?czZCZFcyVUdTZnJMRFplSWx6dGZCTzlDMXhLZHY5N0p4RHJzenZ5dzNNUHU4?=
+ =?utf-8?B?bm9lK0I5emphb1RaektueXRWN1hZUGRTcXRjZmg4cEZmVjFpMFQvZ3ZmWkZG?=
+ =?utf-8?B?Sk9TRE9teHIyVlIwOEhoL0xPY2txU2hMK2lGRmhscGE2MllVTUF3Yms4VGJj?=
+ =?utf-8?B?ZFM0MVlUNUlqbjA5NUJ6TG15TmtMeUlWYVNVQUxUMkdZcUF1Wk1IcFROSTFk?=
+ =?utf-8?B?c3VvVm1kY0hRby9ENTFaZjRrQWgxa211RGdTYXlSZjdwUEFXRE5UTkdnSmdi?=
+ =?utf-8?B?WHptdmxXRVFXVVJGVDRKRWd5ZmVkQ2QvZHU5M3MyazBzYUpndXUwWHViVGpH?=
+ =?utf-8?B?RURnZXVaVGxDVEhvYm5EejdzRUM0RTk1MzZFNkVqME9yK292dnNQOGJmU01n?=
+ =?utf-8?B?UlNNdGJJRlNzKzZsMTZWUTQwZllCL09nNHdlQlJZZVlBRmhCY0wyd3JCM3Ry?=
+ =?utf-8?B?NnVrTk9HNHBpcUlBWGJDSXVoTTlJTGIrbTV6d3EwSFRZTDZrRjRnSElLU2tQ?=
+ =?utf-8?B?TzkxYVZFTHFnUXRYL28wcVF2SFdqNmdyT3ROMVkwaWR0WkpmV09pSzc2MVJN?=
+ =?utf-8?B?cDl3amxGVWwvMFE4TzFiaFEvV0hqWHJUcWVINzk2eE1LbUFiUXJVbVRuNjhs?=
+ =?utf-8?B?ZlJXRnVubjJOUlFXZThYSkRRdHpON05odUlnYi9mQmlnVUNsUk91eGljMFd3?=
+ =?utf-8?B?Zy9la3AySHV5RTZaK0YrMEE4dmdjc2NhbmlVVU1QdnZvM3Z1NjFrQmd3WG1v?=
+ =?utf-8?B?anlkaC9NVG9QV2c1bmtidmlLMzZURkk0M2sweUtEQkw0UXo4UWFyT0M0emRE?=
+ =?utf-8?B?Wis3eDlYSTZIMkc5ZDJycndrOHZnakNZNHJ4TWxOWXJVcnJoRk54SzdXVVlq?=
+ =?utf-8?B?Z1JjaCtFS3hvYUY0UVhsQ05nNjJGWTFtSGx2US8vZWRZS1dhOXdQYkJraERD?=
+ =?utf-8?B?YzMweHprUUc1dFE4YlZmcjlSRVloUWY4Z0sxR0dtRzVRK25BeGJIeG1LUnpG?=
+ =?utf-8?B?Ky85Z1kvK1Ywakh3Yitwcm1KYkxZZ0wzQm54VW9hTFF4M3g3TUVWTnNvR1B4?=
+ =?utf-8?B?MlVCMlhlelhSS2k1bXJid3JNaWo3K1g2QjBTVVFrMkwxd1RBS2FJbW9haURv?=
+ =?utf-8?B?ay9ET0JOVm1kMWZ6MmpXa05ZT3BOWndDZVFVMkZDbnZlNmhnczJFampCN1Rh?=
+ =?utf-8?B?QWZXMkx0bGhsUDhJQWU1YTBpbzI3bEFFWk1sMDdCeVNrb1JUMWI0RE1vSHd0?=
+ =?utf-8?B?bkY2WUdoSGpZbW1IS3gxVlV1VlRpSWhxbzJqajlmMzIzbXl2QkdJRkZTRGlx?=
+ =?utf-8?B?UTM3ckhMbEZSMEc2YWorSU91akRja3NSNmdManZZSnBqZ3l1bkJDOG9nVTgx?=
+ =?utf-8?B?aDFXcUxvMUZuV3V4ampwa2QrVk4xZ1MxZ0phT3NYSkxXREJsVUxSRHZBUXFs?=
+ =?utf-8?B?RDhHNlBLdnFQWlR1ZUdPdjJqWkpVTkNBUjdrZkVMdXN1MU5FWVZWWG55V2tV?=
+ =?utf-8?Q?QdkK/hM58h0=3D?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR11MB3320.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(1800799024)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?THU4MUVvWnFJY3FKc0hvUEJlemJHajU2K3g2VWVWTEhzcWJVT3ZMWTAzMjNI?=
+ =?utf-8?B?b1RReExWL3M3MzNrSmxrUTNtUG1tR0F6K3Zxc01mTzl1dUNCS1A5YjhhOFhr?=
+ =?utf-8?B?Y0lSQ1RCYWthSXhPY0RQN21aY09zdTZlano3RUo4Q3FaR1FVTldmakZoaFpD?=
+ =?utf-8?B?anJObjA5d2t0TE1FOXpNclZlN0xOeUdWSjVvYWkrbTVST0ZkeTNOVFo5Ym9z?=
+ =?utf-8?B?YldWZkxGeE9rUjQ1MS9zNXhwR2ZOcnJ4dU82a0l0ckFObXRPZDRadWU0dTlK?=
+ =?utf-8?B?Wk4yQURmMUhoZE9vcXFpNlczQ3I1a05iZk5ZMi9kMzIyS2s1Z2lTaW1CWXhq?=
+ =?utf-8?B?QldWR0h6b054dEpHYU9ENzc3SHF1bkc3YTJGa0taZzdWaXZISzNlOVBTSkow?=
+ =?utf-8?B?elBTRnNqQUYzQmlNZ1JiQUo3cE91aklsZWJCaCsvU0VvMkVVK2dBK0c3Mm04?=
+ =?utf-8?B?dDVTb2hoNnBPa3N0Z0RCUFg2bS9FK1lqbE9SVmZUQUpiTGRxTVlvSmVETWJj?=
+ =?utf-8?B?aXMrMmRYdlhsaW1rMVU1aUVqNktMWjlBQmFjd1FIakIvZWRaZlA2U3Y4by9s?=
+ =?utf-8?B?K0FZbGRNSmNzTFVuQjNWRGkyWG4zWEZDYkRSSFVWT2ZKUVNQcm1UZkYxTko0?=
+ =?utf-8?B?bzJQQmtaeE8vQzl5U3ppN0o5Rk9HMm0vbUlETmp6YjBHbnUxaWlSSGdIclFV?=
+ =?utf-8?B?N2hNalBzMkhFMDNvWHYwZU9OOUUxWlk5WHFKR3ZIWXRjN25OaFZ6QWxqWUg3?=
+ =?utf-8?B?THdzcXpMUVJLZWEzMnA3UFp2empTTG5pWFZURUNyaFgrU2Y2NnVJV2ZtTjZK?=
+ =?utf-8?B?Q25TdzBONno0dzlrYUFhM0pSTFFHbG01bXcxZmtkSHNDTHV3d1BvNDNkeEV1?=
+ =?utf-8?B?NDN2V1FxYTBXbEp5NkJXSDBLT054MHUrczRHYjQ3UVUvSjluQzdYZnEyeHdW?=
+ =?utf-8?B?ZlZCYTlRQ2xtUWpSVEQxaEdKVUxEVzNrY2dpbHd2cGRWMHczcUJINTZSemJz?=
+ =?utf-8?B?eHRxZnNRRUJPSGdwSVNvRnQ5Q3dhSG5sSzBoekF2TDh1S0tXVzFBa3J2QktX?=
+ =?utf-8?B?Z3hPK1U4ZGgwL2Z1SjUxaG9tYU9UNmVET3RhVmJrQllIVHM4TWxTblpEeVRa?=
+ =?utf-8?B?c2lSdmVFVkZDaDhKUUpFUmtUQkxhaEZCamdHM2JrV1R6RVNJNlpvbUJBcGV2?=
+ =?utf-8?B?d3B6bm8zelFQQUVNQzY5SDh0Nzl4ZXBIZDdGZ25FOEsvUU44eDF5dHdncC9Z?=
+ =?utf-8?B?Q3liZUZoQS83OGxxaEN3MnpZckZrWlpES0ZYNG9SNnp2czFkaklFVlFzK1A1?=
+ =?utf-8?B?REJ6WVZ0VEphOWNUMytOd3k4VGxKY1Q5MEdlYUpERisvYkp2UjdkbnhoTFZ2?=
+ =?utf-8?B?MXlsWHo1ODBoZUVuNGFucXFtc09wUlpBVmpIcUNaKy91VGxyZHduVEZESFMy?=
+ =?utf-8?B?N21rVUF4U3BQaG1KcUtmSlZiSW5oOGhSODlwazB5WThydG5Pa1oyVU1TSHZE?=
+ =?utf-8?B?dkd3R21pWlFkeEFpdFpNaFlmTmZ1R05nVVlsYzFWMFZ0SXhmRy81aEIrKzJQ?=
+ =?utf-8?B?SFZRSnczUzFpNXhFNDJ1NTd4QUF5QzN5WG5Wb3hVZzliNVB1U29wUWhpSGV1?=
+ =?utf-8?B?ZWhjMkx3NkVNRHZab3NGRHlDQ2h0ZTBLUk9Uam03MkxvVWQvMUFtUlVXOW9I?=
+ =?utf-8?B?cFRrLzZ0cS9nYUJ6L0MrMzg3UVFGSkpCdUtHUUdOQWgzT2VDYllEdGxTeHFa?=
+ =?utf-8?B?cnBnSEFSR0hxbCs0RTZyNHgrVVlZenprSW11dnZVbGRta0Y4UkJTVzFVcW1Z?=
+ =?utf-8?B?ckpZQnFyS2RUSGtQL21ZeFdURHE1cWlycXBGdnpKSDBzT05yd0RVVnlBeXpw?=
+ =?utf-8?B?MHBFTW56d09KZlpwRnBrQXZsdVhxbUxPd3l0d3BSRUJQSkwxQSt5Vk8zVFJv?=
+ =?utf-8?B?VEZVTkZ2VzBSc2VMOTVSNy9ONjcyU3JYSmVFRGNPLzJydmh6K1djVVpLOXJI?=
+ =?utf-8?B?WUE0OWdldjJiWVRocnlQNFlSNGtKMmEyNW5hQzRqRFdwdUNZTlZ4TE1qUStI?=
+ =?utf-8?B?MmFKVGs1S0pDQitpR2xGZzFRQXVtZVZ4YUxkOWR0OHhPazFVMmZtT1JGTkV3?=
+ =?utf-8?Q?IoAuizvGo1+vpkMOcvI5tToBj?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: e06427bf-db51-49b3-fb43-08dd8da7d100
+X-MS-Exchange-CrossTenant-AuthSource: BYAPR11MB3320.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 May 2025 20:43:26.3687
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: agyQDREo7UjQJehmrDvz61w+1gET98oDqnYG3L9CXnb7+/voDX6rv4g7iMrs+AkdxoIhPCHiJQu/erpuSA8a3g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY1PR11MB7982
+X-OriginatorOrg: intel.com
 
-From: Steven Rostedt <rostedt@goodmis.org>
+On 5/7/2025 1:22 AM, Peter Zijlstra wrote:
+> On Tue, May 06, 2025 at 06:21:40PM -0700, Sohil Mehta wrote:
 
-Most tracepoints in the kernel are created with TRACE_EVENT(). The
-TRACE_EVENT() macro (and DECLARE_EVENT_CLASS() and DEFINE_EVENT() where in
-reality, TRACE_EVENT() is just a helper macro that calls those other two
-macros), will create not only a tracepoint (the function trace_<event>()
-used in the kernel), it also exposes the tracepoint to user space along
-with defining what fields will be saved by that tracepoint.
+>> + */
+>> +#define NMIS_VECTOR_NONE	0	/* Reserved - Set for all unidentified sources */
+>> +#define NMIS_VECTOR_TEST	1	/* NMI selftest */
+>> +#define NMIS_VECTOR_EXTERNAL	2	/* Reserved - Match External NMI vector 2 */
+>> +#define NMIS_VECTOR_SMP_STOP	3	/* Panic stop CPU */
+>> +#define NMIS_VECTOR_BT		4	/* CPU backtrace */
+>> +#define NMIS_VECTOR_KGDB	5	/* Kernel debugger */
+>> +#define NMIS_VECTOR_MCE		6	/* MCE injection */
+>> +#define NMIS_VECTOR_PMI		7	/* PerfMon counters */
+>> +
+>> +#define NMIS_VECTORS_MAX	16	/* Maximum number of NMI-source vectors */
+> 
+> Are these really independent NMI vectors, or simply NMI source reporting bits?
+> 
+> Because if they are not NMI vectors, naming them such is confusing.
+> 
+> Specifically, is there a latch per source?
+> 
 
-There are a few places that tracepoints are created in the kernel that are
-not exposed to userspace via tracefs. They can only be accessed from code
-within the kernel. These tracepoints are created with DEFINE_TRACE()
+Yes, they are truly vectors, confirmed with HPA that there is one latch
+per source. Also, while generating the NMIs these values are used in the
+APIC code to program the ICR vector field as shown.
 
-Most of these tracepoints end with "_tp". This is useful as when the
-developer sees that, they know that the tracepoint is for in-kernel only
-(meaning it can only be accessed inside the kernel, either directly by the
-kernel or indirectly via modules and BPF programs) and is not exposed to
-user space.
+ICR[7:0]  — Vector         -> NMIS_VECTOR_BT (4)
+ICR[10:8] — Delivery Mode  -> APIC_DM_NMI    (100)
 
-Instead of making this only a process to add "_tp", enforce it by making
-the DECLARE_TRACE() append the "_tp" suffix to the tracepoint. This
-requires adding DECLARE_TRACE_EVENT() macros for the TRACE_EVENT() macro
-to use that keeps the original name.
+>> diff --git a/arch/x86/kernel/nmi.c b/arch/x86/kernel/nmi.c
+>> index be93ec7255bf..a1d672dcb6f0 100644
+>> --- a/arch/x86/kernel/nmi.c
+>> +++ b/arch/x86/kernel/nmi.c
+>> @@ -184,6 +184,11 @@ int __register_nmi_handler(unsigned int type, struct nmiaction *action)
+>>  
+>>  	raw_spin_lock_irqsave(&desc->lock, flags);
+>>  
+>> +	WARN_ON_ONCE(action->source_vector >= NMIS_VECTORS_MAX);
+>> +
+>> +	if (!cpu_feature_enabled(X86_FEATURE_NMI_SOURCE) || type != NMI_LOCAL)
+>> +		action->source_vector = 0;
+> 
+> How about:
+> 
+> 	WARN_ON_ONCE(type != NMI_LOCAL && action->source_vector);
+> 
 
-Link: https://lore.kernel.org/all/20250418083351.20a60e64@gandalf.local.home/
+This should work fine as well.
 
-Cc: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: David Ahern <dsahern@kernel.org>
-Cc: Juri Lelli <juri.lelli@gmail.com>
-Cc: Breno Leitao <leitao@debian.org>
-Cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc: Gabriele Monaco <gmonaco@redhat.com>
-Acked-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Acked-by: Andrii Nakryiko <andrii@kernel.org>
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
-Changes since RFC/v1: https://lore.kernel.org/20250418110104.12af6883@gandalf.local.home
+I don't see any harm in storing the source_vector unconditionally even
+if X86_FEATURE_NMI_SOURCE is disabled.
 
-- Folded in Jiri Olsa's update to DECLARE_TRACE_WRITABLE()
-  https://lore.kernel.org/linux-trace-kernel/aAY9pcvYHkYKFwZ5@krava/
 
-- Updated change log to be more specific about "kernel only"
-  (Andrii Nakryiko)
-
-- Updated Documentation to ref
-
- Documentation/trace/tracepoints.rst           | 17 ++++++---
- include/linux/tracepoint.h                    | 38 +++++++++++++------
- include/trace/bpf_probe.h                     |  8 ++--
- include/trace/define_trace.h                  | 17 ++++++++-
- include/trace/events/sched.h                  | 30 +++++++--------
- include/trace/events/tcp.h                    |  2 +-
- .../bpf/test_kmods/bpf_testmod-events.h       |  2 +-
- .../selftests/bpf/test_kmods/bpf_testmod.c    |  8 ++--
- 8 files changed, 78 insertions(+), 44 deletions(-)
-
-diff --git a/Documentation/trace/tracepoints.rst b/Documentation/trace/tracepoints.rst
-index decabcc77b56..b35c40e3abbe 100644
---- a/Documentation/trace/tracepoints.rst
-+++ b/Documentation/trace/tracepoints.rst
-@@ -71,7 +71,7 @@ In subsys/file.c (where the tracing statement must be added)::
- 	void somefct(void)
- 	{
- 		...
--		trace_subsys_eventname(arg, task);
-+		trace_subsys_eventname_tp(arg, task);
- 		...
- 	}
- 
-@@ -129,12 +129,12 @@ within an if statement with the following::
- 		for (i = 0; i < count; i++)
- 			tot += calculate_nuggets();
- 
--		trace_foo_bar(tot);
-+		trace_foo_bar_tp(tot);
- 	}
- 
--All trace_<tracepoint>() calls have a matching trace_<tracepoint>_enabled()
-+All trace_<tracepoint>_tp() calls have a matching trace_<tracepoint>_enabled()
- function defined that returns true if the tracepoint is enabled and
--false otherwise. The trace_<tracepoint>() should always be within the
-+false otherwise. The trace_<tracepoint>_tp() should always be within the
- block of the if (trace_<tracepoint>_enabled()) to prevent races between
- the tracepoint being enabled and the check being seen.
- 
-@@ -143,7 +143,10 @@ the static_key of the tracepoint to allow the if statement to be implemented
- with jump labels and avoid conditional branches.
- 
- .. note:: The convenience macro TRACE_EVENT provides an alternative way to
--      define tracepoints. Check http://lwn.net/Articles/379903,
-+      define tracepoints. Note, DECLARE_TRACE(foo) creates a function
-+      "trace_foo_tp()" whereas TRACE_EVENT(foo) creates a function
-+      "trace_foo()", and also exposes the tracepoint as a trace event in
-+      /sys/kernel/tracing/events directory.  Check http://lwn.net/Articles/379903,
-       http://lwn.net/Articles/381064 and http://lwn.net/Articles/383362
-       for a series of articles with more details.
- 
-@@ -159,7 +162,9 @@ In a C file::
- 
- 	void do_trace_foo_bar_wrapper(args)
- 	{
--		trace_foo_bar(args);
-+		trace_foo_bar_tp(args); // for tracepoints created via DECLARE_TRACE
-+					//   or
-+		trace_foo_bar(args);    // for tracepoints created via TRACE_EVENT
- 	}
- 
- In the header file::
-diff --git a/include/linux/tracepoint.h b/include/linux/tracepoint.h
-index a351763e6965..826ce3f8e1f8 100644
---- a/include/linux/tracepoint.h
-+++ b/include/linux/tracepoint.h
-@@ -464,16 +464,30 @@ static inline struct tracepoint *tracepoint_ptr_deref(tracepoint_ptr_t *p)
- #endif
- 
- #define DECLARE_TRACE(name, proto, args)				\
--	__DECLARE_TRACE(name, PARAMS(proto), PARAMS(args),		\
-+	__DECLARE_TRACE(name##_tp, PARAMS(proto), PARAMS(args),		\
- 			cpu_online(raw_smp_processor_id()),		\
- 			PARAMS(void *__data, proto))
- 
- #define DECLARE_TRACE_CONDITION(name, proto, args, cond)		\
--	__DECLARE_TRACE(name, PARAMS(proto), PARAMS(args),		\
-+	__DECLARE_TRACE(name##_tp, PARAMS(proto), PARAMS(args),		\
- 			cpu_online(raw_smp_processor_id()) && (PARAMS(cond)), \
- 			PARAMS(void *__data, proto))
- 
- #define DECLARE_TRACE_SYSCALL(name, proto, args)			\
-+	__DECLARE_TRACE_SYSCALL(name##_tp, PARAMS(proto), PARAMS(args),	\
-+				PARAMS(void *__data, proto))
-+
-+#define DECLARE_TRACE_EVENT(name, proto, args)				\
-+	__DECLARE_TRACE(name, PARAMS(proto), PARAMS(args),		\
-+			cpu_online(raw_smp_processor_id()),		\
-+			PARAMS(void *__data, proto))
-+
-+#define DECLARE_TRACE_EVENT_CONDITION(name, proto, args, cond)		\
-+	__DECLARE_TRACE(name, PARAMS(proto), PARAMS(args),		\
-+			cpu_online(raw_smp_processor_id()) && (PARAMS(cond)), \
-+			PARAMS(void *__data, proto))
-+
-+#define DECLARE_TRACE_EVENT_SYSCALL(name, proto, args)			\
- 	__DECLARE_TRACE_SYSCALL(name, PARAMS(proto), PARAMS(args),	\
- 				PARAMS(void *__data, proto))
- 
-@@ -591,32 +605,32 @@ static inline struct tracepoint *tracepoint_ptr_deref(tracepoint_ptr_t *p)
- 
- #define DECLARE_EVENT_CLASS(name, proto, args, tstruct, assign, print)
- #define DEFINE_EVENT(template, name, proto, args)		\
--	DECLARE_TRACE(name, PARAMS(proto), PARAMS(args))
-+	DECLARE_TRACE_EVENT(name, PARAMS(proto), PARAMS(args))
- #define DEFINE_EVENT_FN(template, name, proto, args, reg, unreg)\
--	DECLARE_TRACE(name, PARAMS(proto), PARAMS(args))
-+	DECLARE_TRACE_EVENT(name, PARAMS(proto), PARAMS(args))
- #define DEFINE_EVENT_PRINT(template, name, proto, args, print)	\
--	DECLARE_TRACE(name, PARAMS(proto), PARAMS(args))
-+	DECLARE_TRACE_EVENT(name, PARAMS(proto), PARAMS(args))
- #define DEFINE_EVENT_CONDITION(template, name, proto,		\
- 			       args, cond)			\
--	DECLARE_TRACE_CONDITION(name, PARAMS(proto),		\
-+	DECLARE_TRACE_EVENT_CONDITION(name, PARAMS(proto),	\
- 				PARAMS(args), PARAMS(cond))
- 
- #define TRACE_EVENT(name, proto, args, struct, assign, print)	\
--	DECLARE_TRACE(name, PARAMS(proto), PARAMS(args))
-+	DECLARE_TRACE_EVENT(name, PARAMS(proto), PARAMS(args))
- #define TRACE_EVENT_FN(name, proto, args, struct,		\
- 		assign, print, reg, unreg)			\
--	DECLARE_TRACE(name, PARAMS(proto), PARAMS(args))
--#define TRACE_EVENT_FN_COND(name, proto, args, cond, struct,		\
-+	DECLARE_TRACE_EVENT(name, PARAMS(proto), PARAMS(args))
-+#define TRACE_EVENT_FN_COND(name, proto, args, cond, struct,	\
- 		assign, print, reg, unreg)			\
--	DECLARE_TRACE_CONDITION(name, PARAMS(proto),	\
-+	DECLARE_TRACE_EVENT_CONDITION(name, PARAMS(proto),	\
- 			PARAMS(args), PARAMS(cond))
- #define TRACE_EVENT_CONDITION(name, proto, args, cond,		\
- 			      struct, assign, print)		\
--	DECLARE_TRACE_CONDITION(name, PARAMS(proto),		\
-+	DECLARE_TRACE_EVENT_CONDITION(name, PARAMS(proto),	\
- 				PARAMS(args), PARAMS(cond))
- #define TRACE_EVENT_SYSCALL(name, proto, args, struct, assign,	\
- 			    print, reg, unreg)			\
--	DECLARE_TRACE_SYSCALL(name, PARAMS(proto), PARAMS(args))
-+	DECLARE_TRACE_EVENT_SYSCALL(name, PARAMS(proto), PARAMS(args))
- 
- #define TRACE_EVENT_FLAGS(event, flag)
- 
-diff --git a/include/trace/bpf_probe.h b/include/trace/bpf_probe.h
-index 183fa2aa2935..9391d54d3f12 100644
---- a/include/trace/bpf_probe.h
-+++ b/include/trace/bpf_probe.h
-@@ -119,14 +119,14 @@ static inline void bpf_test_buffer_##call(void)				\
- 
- #undef DECLARE_TRACE
- #define DECLARE_TRACE(call, proto, args)				\
--	__BPF_DECLARE_TRACE(call, PARAMS(proto), PARAMS(args))		\
--	__DEFINE_EVENT(call, call, PARAMS(proto), PARAMS(args), 0)
-+	__BPF_DECLARE_TRACE(call##_tp, PARAMS(proto), PARAMS(args))		\
-+	__DEFINE_EVENT(call##_tp, call##_tp, PARAMS(proto), PARAMS(args), 0)
- 
- #undef DECLARE_TRACE_WRITABLE
- #define DECLARE_TRACE_WRITABLE(call, proto, args, size) \
- 	__CHECK_WRITABLE_BUF_SIZE(call, PARAMS(proto), PARAMS(args), size) \
--	__BPF_DECLARE_TRACE(call, PARAMS(proto), PARAMS(args)) \
--	__DEFINE_EVENT(call, call, PARAMS(proto), PARAMS(args), size)
-+	__BPF_DECLARE_TRACE(call##_tp, PARAMS(proto), PARAMS(args)) \
-+	__DEFINE_EVENT(call##_tp, call##_tp, PARAMS(proto), PARAMS(args), size)
- 
- #include TRACE_INCLUDE(TRACE_INCLUDE_FILE)
- 
-diff --git a/include/trace/define_trace.h b/include/trace/define_trace.h
-index ed52d0506c69..b2ba5a80583f 100644
---- a/include/trace/define_trace.h
-+++ b/include/trace/define_trace.h
-@@ -74,10 +74,18 @@
- 
- #undef DECLARE_TRACE
- #define DECLARE_TRACE(name, proto, args)	\
--	DEFINE_TRACE(name, PARAMS(proto), PARAMS(args))
-+	DEFINE_TRACE(name##_tp, PARAMS(proto), PARAMS(args))
- 
- #undef DECLARE_TRACE_CONDITION
- #define DECLARE_TRACE_CONDITION(name, proto, args, cond)	\
-+	DEFINE_TRACE(name##_tp, PARAMS(proto), PARAMS(args))
-+
-+#undef DECLARE_TRACE_EVENT
-+#define DECLARE_TRACE_EVENT(name, proto, args)	\
-+	DEFINE_TRACE(name, PARAMS(proto), PARAMS(args))
-+
-+#undef DECLARE_TRACE_EVENT_CONDITION
-+#define DECLARE_TRACE_EVENT_CONDITION(name, proto, args, cond)	\
- 	DEFINE_TRACE(name, PARAMS(proto), PARAMS(args))
- 
- /* If requested, create helpers for calling these tracepoints from Rust. */
-@@ -115,6 +123,11 @@
- #undef DECLARE_TRACE_CONDITION
- #define DECLARE_TRACE_CONDITION(name, proto, args, cond)
- 
-+#undef DECLARE_TRACE_EVENT
-+#define DECLARE_TRACE_EVENT(name, proto, args)
-+#undef DECLARE_TRACE_EVENT_CONDITION
-+#define DECLARE_TRACE_EVENT_CONDITION(name, proto, args, cond)
-+
- #ifdef TRACEPOINTS_ENABLED
- #include <trace/trace_events.h>
- #include <trace/perf.h>
-@@ -136,6 +149,8 @@
- #undef TRACE_HEADER_MULTI_READ
- #undef DECLARE_TRACE
- #undef DECLARE_TRACE_CONDITION
-+#undef DECLARE_TRACE_EVENT
-+#undef DECLARE_TRACE_EVENT_CONDITION
- 
- /* Only undef what we defined in this file */
- #ifdef UNDEF_TRACE_INCLUDE_FILE
-diff --git a/include/trace/events/sched.h b/include/trace/events/sched.h
-index 8994e97d86c1..152fc8b37aa5 100644
---- a/include/trace/events/sched.h
-+++ b/include/trace/events/sched.h
-@@ -773,64 +773,64 @@ TRACE_EVENT(sched_wake_idle_without_ipi,
-  *
-  * Postfixed with _tp to make them easily identifiable in the code.
-  */
--DECLARE_TRACE(pelt_cfs_tp,
-+DECLARE_TRACE(pelt_cfs,
- 	TP_PROTO(struct cfs_rq *cfs_rq),
- 	TP_ARGS(cfs_rq));
- 
--DECLARE_TRACE(pelt_rt_tp,
-+DECLARE_TRACE(pelt_rt,
- 	TP_PROTO(struct rq *rq),
- 	TP_ARGS(rq));
- 
--DECLARE_TRACE(pelt_dl_tp,
-+DECLARE_TRACE(pelt_dl,
- 	TP_PROTO(struct rq *rq),
- 	TP_ARGS(rq));
- 
--DECLARE_TRACE(pelt_hw_tp,
-+DECLARE_TRACE(pelt_hw,
- 	TP_PROTO(struct rq *rq),
- 	TP_ARGS(rq));
- 
--DECLARE_TRACE(pelt_irq_tp,
-+DECLARE_TRACE(pelt_irq,
- 	TP_PROTO(struct rq *rq),
- 	TP_ARGS(rq));
- 
--DECLARE_TRACE(pelt_se_tp,
-+DECLARE_TRACE(pelt_se,
- 	TP_PROTO(struct sched_entity *se),
- 	TP_ARGS(se));
- 
--DECLARE_TRACE(sched_cpu_capacity_tp,
-+DECLARE_TRACE(sched_cpu_capacity,
- 	TP_PROTO(struct rq *rq),
- 	TP_ARGS(rq));
- 
--DECLARE_TRACE(sched_overutilized_tp,
-+DECLARE_TRACE(sched_overutilized,
- 	TP_PROTO(struct root_domain *rd, bool overutilized),
- 	TP_ARGS(rd, overutilized));
- 
--DECLARE_TRACE(sched_util_est_cfs_tp,
-+DECLARE_TRACE(sched_util_est_cfs,
- 	TP_PROTO(struct cfs_rq *cfs_rq),
- 	TP_ARGS(cfs_rq));
- 
--DECLARE_TRACE(sched_util_est_se_tp,
-+DECLARE_TRACE(sched_util_est_se,
- 	TP_PROTO(struct sched_entity *se),
- 	TP_ARGS(se));
- 
--DECLARE_TRACE(sched_update_nr_running_tp,
-+DECLARE_TRACE(sched_update_nr_running,
- 	TP_PROTO(struct rq *rq, int change),
- 	TP_ARGS(rq, change));
- 
--DECLARE_TRACE(sched_compute_energy_tp,
-+DECLARE_TRACE(sched_compute_energy,
- 	TP_PROTO(struct task_struct *p, int dst_cpu, unsigned long energy,
- 		 unsigned long max_util, unsigned long busy_time),
- 	TP_ARGS(p, dst_cpu, energy, max_util, busy_time));
- 
--DECLARE_TRACE(sched_entry_tp,
-+DECLARE_TRACE(sched_entry,
- 	TP_PROTO(bool preempt, unsigned long ip),
- 	TP_ARGS(preempt, ip));
- 
--DECLARE_TRACE(sched_exit_tp,
-+DECLARE_TRACE(sched_exit,
- 	TP_PROTO(bool is_switch, unsigned long ip),
- 	TP_ARGS(is_switch, ip));
- 
--DECLARE_TRACE_CONDITION(sched_set_state_tp,
-+DECLARE_TRACE_CONDITION(sched_set_state,
- 	TP_PROTO(struct task_struct *tsk, int state),
- 	TP_ARGS(tsk, state),
- 	TP_CONDITION(!!(tsk->__state) != !!state));
-diff --git a/include/trace/events/tcp.h b/include/trace/events/tcp.h
-index 1a40c41ff8c3..4f9fa1b5b89b 100644
---- a/include/trace/events/tcp.h
-+++ b/include/trace/events/tcp.h
-@@ -259,7 +259,7 @@ TRACE_EVENT(tcp_retransmit_synack,
- 		  __entry->saddr_v6, __entry->daddr_v6)
- );
- 
--DECLARE_TRACE(tcp_cwnd_reduction_tp,
-+DECLARE_TRACE(tcp_cwnd_reduction,
- 	TP_PROTO(const struct sock *sk, int newly_acked_sacked,
- 		 int newly_lost, int flag),
- 	TP_ARGS(sk, newly_acked_sacked, newly_lost, flag)
-diff --git a/tools/testing/selftests/bpf/test_kmods/bpf_testmod-events.h b/tools/testing/selftests/bpf/test_kmods/bpf_testmod-events.h
-index aeef86b3da74..2bac14ef507f 100644
---- a/tools/testing/selftests/bpf/test_kmods/bpf_testmod-events.h
-+++ b/tools/testing/selftests/bpf/test_kmods/bpf_testmod-events.h
-@@ -42,7 +42,7 @@ DECLARE_TRACE(bpf_testmod_test_nullable_bare,
- 
- struct sk_buff;
- 
--DECLARE_TRACE(bpf_testmod_test_raw_tp_null,
-+DECLARE_TRACE(bpf_testmod_test_raw_null,
- 	TP_PROTO(struct sk_buff *skb),
- 	TP_ARGS(skb)
- );
-diff --git a/tools/testing/selftests/bpf/test_kmods/bpf_testmod.c b/tools/testing/selftests/bpf/test_kmods/bpf_testmod.c
-index 3220f1d28697..fd40c1180b09 100644
---- a/tools/testing/selftests/bpf/test_kmods/bpf_testmod.c
-+++ b/tools/testing/selftests/bpf/test_kmods/bpf_testmod.c
-@@ -413,7 +413,7 @@ bpf_testmod_test_read(struct file *file, struct kobject *kobj,
- 
- 	(void)bpf_testmod_test_arg_ptr_to_struct(&struct_arg1_2);
- 
--	(void)trace_bpf_testmod_test_raw_tp_null(NULL);
-+	(void)trace_bpf_testmod_test_raw_null_tp(NULL);
- 
- 	bpf_testmod_test_struct_ops3();
- 
-@@ -431,14 +431,14 @@ bpf_testmod_test_read(struct file *file, struct kobject *kobj,
- 	if (bpf_testmod_loop_test(101) > 100)
- 		trace_bpf_testmod_test_read(current, &ctx);
- 
--	trace_bpf_testmod_test_nullable_bare(NULL);
-+	trace_bpf_testmod_test_nullable_bare_tp(NULL);
- 
- 	/* Magic number to enable writable tp */
- 	if (len == 64) {
- 		struct bpf_testmod_test_writable_ctx writable = {
- 			.val = 1024,
- 		};
--		trace_bpf_testmod_test_writable_bare(&writable);
-+		trace_bpf_testmod_test_writable_bare_tp(&writable);
- 		if (writable.early_ret)
- 			return snprintf(buf, len, "%d\n", writable.val);
- 	}
-@@ -470,7 +470,7 @@ bpf_testmod_test_write(struct file *file, struct kobject *kobj,
- 		.len = len,
- 	};
- 
--	trace_bpf_testmod_test_write_bare(current, &ctx);
-+	trace_bpf_testmod_test_write_bare_tp(current, &ctx);
- 
- 	return -EIO; /* always fail */
- }
--- 
-2.47.2
 
