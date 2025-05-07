@@ -1,121 +1,149 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D150212FBE;
-	Wed,  7 May 2025 07:08:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED053273F9;
+	Wed,  7 May 2025 08:22:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746601706; cv=none; b=NFfiH0QvmgFPNkcNXqPExrMiJ2ScTsDgeDFVgAW3GnVAeRg7B8Kld+64kC7EmULoTnBsCZ77JcI45I50g35zMywqdFot6yLa3bYSXYYVogIJjmCB+LG+nv38f2m28L36IKv27Jwxo+gaMOh5Q2H2EQX3nbNms5g+JjcSdxqGJfg=
+	t=1746606163; cv=none; b=QluZ4P1QKVQ5FYGDkABnEYTI2qe+NBgWSLmyKS6VlgsVPSnCjUYjM3dKD7YVAWbRvrXIkMw1/L70pZACk5TfzySvIJSD6XhyNJTpXK2oSZXV7XultoahwFpVmBvrQZKpL4dKnlk4kN8vNhJuv+iTOJcOjDN1y6TymF+krYuN0m4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746601706; c=relaxed/simple;
-	bh=FfcO1bmJ9TwVyGmwWvdOKtV4qaOdRW/kxoyTI2FoTcM=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=E+Fm8BQv6G/OUKTGTT/DL0KIuDF62t55cKQ+qKL67rgrn6Tf83Jqil7AhKTdEgX+gDgC3M9Eh52oQguRyD+MR6VBa7JxWzvqR/fCOmEqgYGpO4Y4V+TyR5XY5gPgMyZYPoD0j+aZRT0rwHWlMkWuqA5dRKSwLkxQyUFsmOlaZgc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=PgWa8GUl; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1746606163; c=relaxed/simple;
+	bh=pm/x4yL4ynHqji5f94ZWEII9oNZb9GpYQx4Qg6pHT/0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=M42wWx6SmkQyl35tJ2nAaJjq7nhB7IF1ra6yjPxDMOMABetY7DZd/GJ5g+QELh4FQT7SXhKFtjB20QtwzAhxKqzEnOK5U3jkVo2mX+8nbh98229f+dgTdvYuaw+LjBEoZb80RAaQ7+mJ+gLdS3V2mGW8EZsstqRWGoTvmtQFxig=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=WvRWxpmd; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="PgWa8GUl"
-Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5471HAQ1021674;
-	Wed, 7 May 2025 07:08:19 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=qcppdkim1; bh=rE1RR5SpAq6CGFJwO2E2zk
-	Hp8UtvOPLpNZiWJ8e/wvE=; b=PgWa8GUlHTOq+xPAsJBz6vF2YfkyFgp0l871k3
-	Xh7gPmmpsm9v9DhRgVoATMc1HO3Xvk0/RZZsefpzHlmuv78yeNnEjeQX4atDloWK
-	4o7tYMEBO4q0kIe2ENSO1dvnbHGCS7mXPmpudO9bocdLbf9/LMBKQGTE4FX1AqWY
-	aARDd2NFMFiZsOmyoAAJLHXzk8Uy0MayNVnnadBO280v2f1qkcUBIkxYJekEjRQE
-	lDS+x4ecRLPGlHDg0TDWsg3M/2W4HsOiTUWmm+KPH2If95FCHIfEbiWijOprzz58
-	aky/L1qJi7ZzuwpQkSifzppEkhRPwctSzCss59b6dMLPix+w==
-Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46fdwtuhnh-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 07 May 2025 07:08:19 +0000 (GMT)
-Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
-	by NALASPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 54778Ili009518
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 7 May 2025 07:08:18 GMT
-Received: from maow2-gv.qualcomm.com (10.80.80.8) by
- nalasex01b.na.qualcomm.com (10.47.209.197) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Wed, 7 May 2025 00:07:56 -0700
-From: Kassey Li <quic_yingangl@quicinc.com>
-To: <rostedt@goodmis.org>, <mhiramat@kernel.org>,
-        <mathieu.desnoyers@efficios.com>, <linux-kernel@vger.kernel.org>,
-        <linux-trace-kernel@vger.kernel.org>
-CC: <quic_yingangl@quicinc.com>
-Subject: [PATCH] scsi: trace: change the rtn log in hex format
-Date: Wed, 7 May 2025 15:07:14 +0800
-Message-ID: <20250507070714.2387602-1-quic_yingangl@quicinc.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="WvRWxpmd"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=dZYqAlHezITuF/Jo/pYWYXAIRG3sFn0xWBaAQsF1gug=; b=WvRWxpmdFQwb7Y8W2h0NSxfsEL
+	UWuCjylwSxWE4S3uF5d6bftzRw9LMfYxyHMpa193wXJzmLv11yd5cu3T9W3gWFU36XJCXsL0kJnmM
+	NKBCnHY2NZcfgRStd2Zk7dw/1FTdNnJIficcCFz7ESA7R5+XkXBd62b8sxRW2LLOMBpeZDpa2s5aQ
+	2TRD+MGG+Kpu2RE5jFIUVqIHWkYlSbq3jID2qJLRrLB2ELd53QFo0T9wnAHMM94n+4vFSR4UTQBo3
+	D5viJw6wGtHnBXYwer75H2S+OiOSrmVT74MogNJ309Kt60Cq3FtWwxTVPo3ELXFaZ4b9D4ilPw+kU
+	LZupus0Q==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.98.1 #2 (Red Hat Linux))
+	id 1uCa2i-0000000FoF4-3Rza;
+	Wed, 07 May 2025 08:22:17 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 66035300780; Wed,  7 May 2025 10:22:16 +0200 (CEST)
+Date: Wed, 7 May 2025 10:22:16 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Sohil Mehta <sohil.mehta@intel.com>
+Cc: x86@kernel.org, linux-kernel@vger.kernel.org, Xin Li <xin@zytor.com>,
+	"H . Peter Anvin" <hpa@zytor.com>,
+	Andy Lutomirski <luto@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Sean Christopherson <seanjc@google.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	Tony Luck <tony.luck@intel.com>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Vitaly Kuznetsov <vkuznets@redhat.com>,
+	"Rafael J . Wysocki" <rafael@kernel.org>,
+	Daniel Lezcano <daniel.lezcano@linaro.org>,
+	Zhang Rui <rui.zhang@intel.com>, Lukasz Luba <lukasz.luba@arm.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Brian Gerst <brgerst@gmail.com>,
+	Andrew Cooper <andrew.cooper3@citrix.com>,
+	"Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+	Jacob Pan <jacob.pan@linux.microsoft.com>,
+	Andi Kleen <ak@linux.intel.com>, Kai Huang <kai.huang@intel.com>,
+	Nikolay Borisov <nik.borisov@suse.com>,
+	linux-perf-users@vger.kernel.org, linux-edac@vger.kernel.org,
+	kvm@vger.kernel.org, linux-pm@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 4/9] x86/nmi: Assign and register NMI-source vectors
+Message-ID: <20250507082216.GA4439@noisy.programming.kicks-ass.net>
+References: <20250507012145.2998143-1-sohil.mehta@intel.com>
+ <20250507012145.2998143-5-sohil.mehta@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01b.na.qualcomm.com (10.47.209.197)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Authority-Analysis: v=2.4 cv=VPPdn8PX c=1 sm=1 tr=0 ts=681b06e3 cx=c_pps
- a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
- a=GEpy-HfZoHoA:10 a=dt9VzEwgFbYA:10 a=COk6AnOGAAAA:8 a=BHyZBowvuSOj8lr59awA:9
- a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-GUID: DNku1E5f6o6xlmQLYLVuw0UBWXxl-rQX
-X-Proofpoint-ORIG-GUID: DNku1E5f6o6xlmQLYLVuw0UBWXxl-rQX
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTA3MDA2NSBTYWx0ZWRfX5aaex1hIECWg
- SKxNtxhz6wReChrG//xir3VItYZzuyawsnj/7cqby8O8DDko3Hqg8O+ARv0SBOUhH2ml0YdzSOs
- J664je4LJepbWtJq1gCRHnKxbZpH2EJmiB54LFeFvKnhopoOFOoiRjCjalZtBvS5ASKA7vUyWUS
- U3zyWrIy2oAmqyt7oxRB5CjEyBdSldqk+OyEdgKhpK+EcyeQlfNOgTSPo2JsqO9e3AzrdrD4F3C
- VruygE58+ecy29HMSD1xgF6fFvLMTEMwcuc493K1MaVxKQHCDUOX5eZ62F3o6Mvnyi0LdFoTNZQ
- DnnNUvlEcHTyxj+4pSXmMnMQalFS6gVHsC1crGc44HIrClyq5iWwnKV/jdnM4YkOBRpbZbThebz
- TpseqwYujiobjNkDwiqktkY57TSfsoc0uDs9XlxiP6RKkJWJtTZZ+kv5ecRsxK8buXshcvT7
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-07_02,2025-05-06_01,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- priorityscore=1501 spamscore=0 suspectscore=0 adultscore=0 mlxscore=0
- bulkscore=0 clxscore=1011 lowpriorityscore=0 impostorscore=0 malwarescore=0
- mlxlogscore=999 phishscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
- definitions=main-2505070065
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250507012145.2998143-5-sohil.mehta@intel.com>
 
-In default it showed rtn in decimal.
+On Tue, May 06, 2025 at 06:21:40PM -0700, Sohil Mehta wrote:
 
-kworker/3:1H-183 [003] ....  51.035474: scsi_dispatch_cmd_error: host_no=0 channel=0 id=0 lun=4 data_sgl=1  prot_sgl=0 prot_op=SCSI_PROT_NORMAL cmnd=(READ_10 lba=3907214  txlen=1 protect=0 raw=28 00 00 3b 9e 8e 00 00 01 00) rtn=4181
+> diff --git a/arch/x86/include/asm/nmi.h b/arch/x86/include/asm/nmi.h
+> index f0a577bf7bba..b9beb216f2d0 100644
+> --- a/arch/x86/include/asm/nmi.h
+> +++ b/arch/x86/include/asm/nmi.h
+> @@ -57,6 +57,38 @@ struct nmiaction {
+>  	u8			source_vector;
+>  };
+>  
+> +/**
+> + * NMI-source vectors are used to identify the origin of an NMI and to
+> + * route the NMI directly to the appropriate handler.
+> + *
+> + * On CPUs that support NMI-source reporting with FRED, receiving an NMI
+> + * with a valid vector sets the corresponding bit in the NMI-source
+> + * bitmap. The bitmap is delivered as FRED event data on the stack.
+> + * Multiple NMIs are coalesced in the NMI-source bitmap until the next
+> + * NMI delivery.
+> + *
+> + * If an NMI is received without a vector or beyond the defined range,
+> + * the CPU sets bit 0 of the NMI-source bitmap.
+> + *
+> + * Vector 2 is reserved for external NMIs related to the Local APIC -
+> + * LINT1. Some third-party chipsets may send NMI messages with a
+> + * hardcoded vector of 2, which would result in bit 2 being set in the
+> + * NMI-source bitmap.
+> + *
+> + * The vectors are in no particular priority order. Add new vector
+> + * assignments sequentially in the list below.
+> + */
+> +#define NMIS_VECTOR_NONE	0	/* Reserved - Set for all unidentified sources */
+> +#define NMIS_VECTOR_TEST	1	/* NMI selftest */
+> +#define NMIS_VECTOR_EXTERNAL	2	/* Reserved - Match External NMI vector 2 */
+> +#define NMIS_VECTOR_SMP_STOP	3	/* Panic stop CPU */
+> +#define NMIS_VECTOR_BT		4	/* CPU backtrace */
+> +#define NMIS_VECTOR_KGDB	5	/* Kernel debugger */
+> +#define NMIS_VECTOR_MCE		6	/* MCE injection */
+> +#define NMIS_VECTOR_PMI		7	/* PerfMon counters */
+> +
+> +#define NMIS_VECTORS_MAX	16	/* Maximum number of NMI-source vectors */
 
-In source code we define these possible value as hexadecimal:
+Are these really independent NMI vectors, or simply NMI source reporting bits?
 
-include/scsi/scsi.h
+Because if they are not NMI vectors, naming them such is confusing.
 
-SCSI_MLQUEUE_HOST_BUSY   0x1055
-SCSI_MLQUEUE_DEVICE_BUSY 0x1056
-SCSI_MLQUEUE_EH_RETRY    0x1057
-SCSI_MLQUEUE_TARGET_BUSY 0x1058
+Specifically, is there a latch per source?
 
-This change converts the rtn in hexadecimal.
+> diff --git a/arch/x86/kernel/nmi.c b/arch/x86/kernel/nmi.c
+> index be93ec7255bf..a1d672dcb6f0 100644
+> --- a/arch/x86/kernel/nmi.c
+> +++ b/arch/x86/kernel/nmi.c
+> @@ -184,6 +184,11 @@ int __register_nmi_handler(unsigned int type, struct nmiaction *action)
+>  
+>  	raw_spin_lock_irqsave(&desc->lock, flags);
+>  
+> +	WARN_ON_ONCE(action->source_vector >= NMIS_VECTORS_MAX);
+> +
+> +	if (!cpu_feature_enabled(X86_FEATURE_NMI_SOURCE) || type != NMI_LOCAL)
+> +		action->source_vector = 0;
 
-Signed-off-by: Kassey Li <quic_yingangl@quicinc.com>
----
- include/trace/events/scsi.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+How about:
 
-diff --git a/include/trace/events/scsi.h b/include/trace/events/scsi.h
-index bf6cc98d9122..a4c089ac834c 100644
---- a/include/trace/events/scsi.h
-+++ b/include/trace/events/scsi.h
-@@ -240,7 +240,7 @@ TRACE_EVENT(scsi_dispatch_cmd_error,
- 
- 	TP_printk("host_no=%u channel=%u id=%u lun=%u data_sgl=%u prot_sgl=%u" \
- 		  " prot_op=%s driver_tag=%d scheduler_tag=%d cmnd=(%s %s raw=%s)" \
--		  " rtn=%d",
-+		  " rtn=0x%x",
- 		  __entry->host_no, __entry->channel, __entry->id,
- 		  __entry->lun, __entry->data_sglen, __entry->prot_sglen,
- 		  show_prot_op_name(__entry->prot_op), __entry->driver_tag,
--- 
-2.34.1
+	WARN_ON_ONCE(type != NMI_LOCAL && action->source_vector);
 
+instead?
