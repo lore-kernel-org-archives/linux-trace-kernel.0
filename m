@@ -1,34 +1,28 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56005748D;
-	Wed,  7 May 2025 15:36:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FF3B4B1E7D;
+	Wed,  7 May 2025 15:54:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746632193; cv=none; b=rY19VgLP1z7neelijMziTvMVlD0TJNt92EWu3UWwv7YhgciIcI8sbzs2mbFvJgzcoKc3WTGupY1Pt6x6mQPtylzBbgvqAT3xTaYdYqwhVXYNcP4K/cqXAgS1mTdeUzw1+HqqHFQ3td1L61Non9j83D/t3gQPxdISNlvxUrPeXPo=
+	t=1746633277; cv=none; b=Z2aFEWl7lX6E1YGfBig/10gyAMTn54KMGjdjiVFVjOnyJ/s3SdoLc/ObZJjOhUVh2NLKu+MruH2eG1EX9sxGVJmrRrOuYOKs+DmV3RniW3b1iHIAonrR9umwkT71e4EL8m/DrURMmU3FwxNlYsSOhNYrUXdlqRi++iXV6cG19KE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746632193; c=relaxed/simple;
-	bh=AqeGKYZmJoJGYyMkrFh3sxPaKMjEoYRtVwnLWT9e0dk=;
+	s=arc-20240116; t=1746633277; c=relaxed/simple;
+	bh=9lwfyyEGkoBX6ds3JiV79GSpr/yBVbLN0v8+3hr7bkw=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ZAAnid/JQImvcp+n24avP2Hz0QdYvJe9l4zDLFIiWCC9iHh8C9tsHqkK0oadn5w++Uloi6pgqCyhWFoh8q42sw+NaRCkHU4ErRgemXZPwGFXKjQlX5DVcBOTdP3gRzHE64TypdZGwYiNPlvPwOXSW7azPq+523v6vL0IsD4z3gA=
+	 MIME-Version:Content-Type; b=QrsD9Q5dHtRAQIh5M8Oh0pWpLlcpq9OzZhlO09Y/fB6IepeMoGcR7cb7XSioeqT3VF0Nz7XdFEA8tHjfz8qY0z8KvyFNz/p4fEmMvkTW1SmyvHKy1VR58cbIxbpfhThDm7kbRnRljL1uO2Xp1/e8satvOtDK5wrqb+woHU+ynvY=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D3D32C4CEE2;
-	Wed,  7 May 2025 15:36:29 +0000 (UTC)
-Date: Wed, 7 May 2025 11:36:40 -0400
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C7A5C4CEE2;
+	Wed,  7 May 2025 15:54:36 +0000 (UTC)
+Date: Wed, 7 May 2025 11:54:46 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
-To: Shuai Xue <xueshuai@linux.alibaba.com>
-Cc: lukas@wunner.de, linux-pci@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, helgaas@kernel.org,
- bhelgaas@google.com, tony.luck@intel.com, bp@alien8.de,
- mhiramat@kernel.org, mathieu.desnoyers@efficios.com, oleg@redhat.com,
- naveen@kernel.org, davem@davemloft.net, anil.s.keshavamurthy@intel.com,
- mark.rutland@arm.com, peterz@infradead.org, tianruidong@linux.alibaba.com
-Subject: Re: [PATCH v7] PCI: hotplug: Add a generic RAS tracepoint for
- hotplug event
-Message-ID: <20250507113640.0b27d95f@gandalf.local.home>
-In-Reply-To: <20250507011535.43800-1-xueshuai@linux.alibaba.com>
-References: <20250507011535.43800-1-xueshuai@linux.alibaba.com>
+To: Kassey Li <quic_yingangl@quicinc.com>
+Cc: <mhiramat@kernel.org>, <mathieu.desnoyers@efficios.com>,
+ <linux-kernel@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>
+Subject: Re: [PATCH] scsi: trace: change the rtn log in hex format
+Message-ID: <20250507115446.55e09c7f@gandalf.local.home>
+In-Reply-To: <20250507070714.2387602-1-quic_yingangl@quicinc.com>
+References: <20250507070714.2387602-1-quic_yingangl@quicinc.com>
 X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -39,32 +33,48 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Wed,  7 May 2025 09:15:35 +0800
-Shuai Xue <xueshuai@linux.alibaba.com> wrote:
+On Wed, 7 May 2025 15:07:14 +0800
+Kassey Li <quic_yingangl@quicinc.com> wrote:
 
-> +#endif /* _TRACE_HW_EVENT_PCI_HP_H */
-> +
-> +#undef TRACE_INCLUDE_PATH
-> +#define TRACE_INCLUDE_PATH  ../../drivers/pci/hotplug
 
-Note, this is not always safe to do. If "drivers", "pci" or "hotplug" ever
-become a macro, the path will also be updated, and this will fail to build.
+This patch is fine with me, but it needs to go through the scsi maintainers.
 
-> +#undef TRACE_INCLUDE_FILE
-> +#define TRACE_INCLUDE_FILE trace
-> +
-> +/* This part must be outside protection */
-> +#include <trace/define_trace.h>
-> diff --git a/include/uapi/linux/pci.h b/include/uapi/linux/pci.h
-
-The safer way to do this is to have:
-
-In drivers/pci/hotplug/Makefile:
-
-CFLAGS_pciehp_ctrl.o := -I$(src)
-
-And replace the TRACE_INCLUDE_PATH to:
-
-#define TRACE_INCLUDE_PATH .
+I don't see them Cc'd.
 
 -- Steve
+
+
+> In default it showed rtn in decimal.
+> 
+> kworker/3:1H-183 [003] ....  51.035474: scsi_dispatch_cmd_error: host_no=0 channel=0 id=0 lun=4 data_sgl=1  prot_sgl=0 prot_op=SCSI_PROT_NORMAL cmnd=(READ_10 lba=3907214  txlen=1 protect=0 raw=28 00 00 3b 9e 8e 00 00 01 00) rtn=4181
+> 
+> In source code we define these possible value as hexadecimal:
+> 
+> include/scsi/scsi.h
+> 
+> SCSI_MLQUEUE_HOST_BUSY   0x1055
+> SCSI_MLQUEUE_DEVICE_BUSY 0x1056
+> SCSI_MLQUEUE_EH_RETRY    0x1057
+> SCSI_MLQUEUE_TARGET_BUSY 0x1058
+> 
+> This change converts the rtn in hexadecimal.
+> 
+> Signed-off-by: Kassey Li <quic_yingangl@quicinc.com>
+> ---
+>  include/trace/events/scsi.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/include/trace/events/scsi.h b/include/trace/events/scsi.h
+> index bf6cc98d9122..a4c089ac834c 100644
+> --- a/include/trace/events/scsi.h
+> +++ b/include/trace/events/scsi.h
+> @@ -240,7 +240,7 @@ TRACE_EVENT(scsi_dispatch_cmd_error,
+>  
+>  	TP_printk("host_no=%u channel=%u id=%u lun=%u data_sgl=%u prot_sgl=%u" \
+>  		  " prot_op=%s driver_tag=%d scheduler_tag=%d cmnd=(%s %s raw=%s)" \
+> -		  " rtn=%d",
+> +		  " rtn=0x%x",
+>  		  __entry->host_no, __entry->channel, __entry->id,
+>  		  __entry->lun, __entry->data_sglen, __entry->prot_sglen,
+>  		  show_prot_op_name(__entry->prot_op), __entry->driver_tag,
+
