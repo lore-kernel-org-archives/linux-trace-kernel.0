@@ -1,166 +1,152 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00F2E3C26;
-	Thu,  8 May 2025 00:24:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C490E3FD1;
+	Thu,  8 May 2025 01:22:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746663876; cv=none; b=ZOPHAEuerkX29UaxXz6w4nraFLYc/L0H1yCf5yX4ExVQB2wEN77VlpYE0JAJfHYFg4b0jm5v3IyuXnrE6bSpTCQXHUW4uDeHxm6YZbzbfEe3SNl78e1s3S+3pe4GG8iDExJdTENWFAg57auXp0ZTl2vQUB2Gf+WBVHl9p6D63wg=
+	t=1746667366; cv=none; b=Z1bV0IUYbSmTI45cgNe2L8qE55jAtL/rIAhfN3iXP+4HESDfdudzuN/nS83n7NlAkQc85zIliQU/XsgsKGIFJPETxSFIIT4X6vbLPDdiHxT03HpqzI13U74x6vnwsNdwl/WDnjCQx5md/+Twttq9YgiVepGMn8gAeWvPjl5gL3o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746663876; c=relaxed/simple;
-	bh=mDH+ZL79YTMq+Jv0bVy+9Pty09ZB23vy1luG3tCeplI=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=YDAMg+fBwkeSPfQNIh0Q8SzaoNTOZkbgx2SqTGAGYtTFCsIQyhgWsHi1U7nO9YhAdbcIfna+SaKGk0+NkhAlFVCxbvf9A+EvQOB4s2GjYuuyop1w+Ntbw1nxt+8BYvykb65wU4bviuKpxuizpUmWoAMQOzzPIoBz2IFxyM/2afU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 96F3CC4CEE2;
-	Thu,  8 May 2025 00:24:33 +0000 (UTC)
-Date: Wed, 7 May 2025 20:24:44 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Vincent Donnefort <vdonnefort@google.com>
-Cc: mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
- linux-trace-kernel@vger.kernel.org, maz@kernel.org, oliver.upton@linux.dev,
- joey.gouly@arm.com, suzuki.poulose@arm.com, yuzenghui@huawei.com,
- kvmarm@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
- jstultz@google.com, qperret@google.com, will@kernel.org,
- kernel-team@android.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 02/24] tracing: Introduce trace remotes
-Message-ID: <20250507202444.43963c84@gandalf.local.home>
-In-Reply-To: <20250506164820.515876-3-vdonnefort@google.com>
-References: <20250506164820.515876-1-vdonnefort@google.com>
-	<20250506164820.515876-3-vdonnefort@google.com>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1746667366; c=relaxed/simple;
+	bh=BFotK2hjqv5sB60AUCz0NkefXRMRrYfM43cHj5AOOgQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=r9XNtM5jPAsbKB81ChtOOgH5gowufycs8VOSM7cOBXLYX/uv9YRmTvzNTRTVmbEG8WCYiJE3X/R77cIRtln1TdKucug8gsZuR/oB31aVy1R9wL57dspY+CR/Nkg72vAPaZS1M9ftnzSJK9An5gkMm5/Sb+arhJDsd0Am9VSOt0E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Opth/8cR; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Opth/8cR"
+Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5481CLGl023439;
+	Thu, 8 May 2025 01:22:36 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	Ri5ZUbH/qp/cL+n5jfKy+SjdZB0yzMK82cVlq0maQX8=; b=Opth/8cRA2rkMlIv
+	IVVqZH4/y9eFlv0C07E9twdnMp+aqVFm7BU+12yxJV62oPogIvtXi2tOSCdwxdNh
+	0SOc9db9k05knSXP0rDcE9aqxvmM0SJwO2E1NfFA+Lx2HDjPYk9Us+kBRSruGbyX
+	GbQ63CteXl+I8UpaGOQJNmi2FqR+Dcu4/T0rum9NNN5OQs5r64eYYVuw4B6qJ6jI
+	tOY7LutcZ0H5/pcvXV2gtw3bK2wDx4e/5LTSuJr/yBQnFIaoeDLXld4NF24aDZGo
+	JzDz89txHGfsnxAhavcNv1xM0GwhOAzoFzUflvUFWjqBZdScYliKxm2cI57LHhxA
+	nzefyg==
+Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46g5gha6ax-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 08 May 2025 01:22:35 +0000 (GMT)
+Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
+	by NALASPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 5481MZwn025278
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 8 May 2025 01:22:35 GMT
+Received: from [10.232.65.248] (10.80.80.8) by nalasex01b.na.qualcomm.com
+ (10.47.209.197) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 7 May 2025
+ 18:22:33 -0700
+Message-ID: <05ed82f7-7a13-4f2a-aee2-cc21e509d41f@quicinc.com>
+Date: Thu, 8 May 2025 09:21:55 +0800
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] scsi: trace: change the rtn log in hex format
+To: Steven Rostedt <rostedt@goodmis.org>
+CC: <mhiramat@kernel.org>, <mathieu.desnoyers@efficios.com>,
+        <linux-kernel@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
+        <linux-scsi@vger.kernel.org>
+References: <20250507070714.2387602-1-quic_yingangl@quicinc.com>
+ <20250507115446.55e09c7f@gandalf.local.home>
+Content-Language: en-US
+From: Kassey Li quic <quic_yingangl@quicinc.com>
+In-Reply-To: <20250507115446.55e09c7f@gandalf.local.home>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
-
-On Tue,  6 May 2025 17:47:58 +0100
-Vincent Donnefort <vdonnefort@google.com> wrote:
-
-> +
-> +static bool trace_remote_loaded(struct trace_remote *remote)
-> +{
-> +	return remote->trace_buffer;
-> +}
-> +
-> +static bool trace_remote_busy(struct trace_remote *remote)
-
-Can you add comments to what these functions are doing?
-
-Doesn't need to be kerneldoc (it actually shouldn't be), but describe why
-they would return true and why they would return false.
-
-> +{
-> +	return trace_remote_loaded(remote) &&
-> +		(remote->nr_readers || remote->tracing_on ||
-> +		 !ring_buffer_empty(remote->trace_buffer));
-> +}
-> +
-> +static int trace_remote_load(struct trace_remote *remote)
-> +{
-> +	struct ring_buffer_remote *rb_remote = &remote->rb_remote;
-> +
-> +	lockdep_assert_held(&remote->lock);
-> +
-> +	if (trace_remote_loaded(remote))
-> +		return 0;
-> +
-> +	remote->trace_buffer_desc = remote->cbs->load_trace_buffer(remote->trace_buffer_size,
-> +								   remote->priv);
-> +	if (!remote->trace_buffer_desc)
-> +		return -ENOMEM;
-
-The error may not be -ENOMEM, have the load_trace_buffer return an ERR_PTR
-and then you can return:
-
-	if (IS_ERR(remote->trace_buffer_desc)
-		return PTR_ERR(remote->trace_buffer_desc);
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01b.na.qualcomm.com (10.47.209.197)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: iRDKZoemFL5rtt9YGvNg5b2bWxlsOxYt
+X-Authority-Analysis: v=2.4 cv=TqPmhCXh c=1 sm=1 tr=0 ts=681c075b cx=c_pps
+ a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
+ a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=COk6AnOGAAAA:8
+ a=VwQbUJbxAAAA:8 a=nTcoZT0DL3nY3nl5-M0A:9 a=QEXdDO2ut3YA:10
+ a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTA4MDAxMCBTYWx0ZWRfX4Ieb+RzsWBYN
+ GwhHXCnbu1FNT0ttXJgXbc0bfjcB0lsY7Q2GhQkOmELg/H7iT6rK7Ye58Z+VzY0ytoA0bFCgkAh
+ 0k9BQxd0Zhdmn2Q01ML5J8XG0v4mH3YqiESjf4orzEn64MiXba53yfc/PGsQCzWTGr38HBvYb5Z
+ ezRo4LLvZJcJtAkdEanUgsAfkt1MoN49+KTPsKsGS551f1RVwVPLsPpcaSVWclRburrZZ9f3BH3
+ FcbdjUgoWaIn4coA4OpdUocgGdG9+p6ZZkau43HsUvQFNjOw/e444ln0HmZwg/0wle5GvMTDOF9
+ xV2g1tzbCl3BMa1BxbCXH5D/p2CkxzT/FAa4vjAUA20FB/ME524ks/SrV3BBpkkoOXsCPRcJzx6
+ SAEYYH29nXw/dnYClv/gl1q+F/YaeVIOsT5BS9THMg/ES5FVSxqF6OovGjm6fPIm3bYCAi7O
+X-Proofpoint-ORIG-GUID: iRDKZoemFL5rtt9YGvNg5b2bWxlsOxYt
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-08_01,2025-05-07_02,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ malwarescore=0 adultscore=0 mlxscore=0 mlxlogscore=999 spamscore=0
+ priorityscore=1501 phishscore=0 suspectscore=0 impostorscore=0 clxscore=1011
+ lowpriorityscore=0 bulkscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2505080010
 
 
-> +
-> +	rb_remote->desc = remote->trace_buffer_desc;
-> +	rb_remote->swap_reader_page = remote->cbs->swap_reader_page;
-> +	rb_remote->priv = remote->priv;
-> +	remote->trace_buffer = ring_buffer_remote(rb_remote);
-> +	if (!remote->trace_buffer) {
 
-Same here.
+On 2025/5/7 23:54, Steven Rostedt wrote:
+> On Wed, 7 May 2025 15:07:14 +0800
+> Kassey Li <quic_yingangl@quicinc.com> wrote:
+> 
+> 
+> This patch is fine with me, but it needs to go through the scsi maintainers.
+> 
+> I don't see them Cc'd.
+hi, Steve:
+     Thanks for the comment.
+     add linux-scsi@vger.kernel.org to cc with the review history info.
 
-> +		remote->cbs->unload_trace_buffer(remote->trace_buffer_desc, remote->priv);
-> +		return -ENOMEM;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static void trace_remote_unload(struct trace_remote *remote)
-> +{
-> +	lockdep_assert_held(&remote->lock);
-> +
-> +	if (!trace_remote_loaded(remote) || trace_remote_busy(remote))
-> +		return;
+     if you want to me to re-send again with more cc (scsi) , please let 
+me know.
 
-Can this cause leaks? Should trace_remote_unload() return an error value to
-let the caller know it wasn't unloaded?
+BR
+Kassey 	
 
-> +
-> +	ring_buffer_free(remote->trace_buffer);
-> +	remote->trace_buffer = NULL;
-> +	remote->cbs->unload_trace_buffer(remote->trace_buffer_desc, remote->priv);
-> +}
-> +
 
-Short description of what trace_remote_start does.
+> 
+> -- Steve
+> 
+> 
+>> In default it showed rtn in decimal.
+>>
+>> kworker/3:1H-183 [003] ....  51.035474: scsi_dispatch_cmd_error: host_no=0 channel=0 id=0 lun=4 data_sgl=1  prot_sgl=0 prot_op=SCSI_PROT_NORMAL cmnd=(READ_10 lba=3907214  txlen=1 protect=0 raw=28 00 00 3b 9e 8e 00 00 01 00) rtn=4181
+>>
+>> In source code we define these possible value as hexadecimal:
+>>
+>> include/scsi/scsi.h
+>>
+>> SCSI_MLQUEUE_HOST_BUSY   0x1055
+>> SCSI_MLQUEUE_DEVICE_BUSY 0x1056
+>> SCSI_MLQUEUE_EH_RETRY    0x1057
+>> SCSI_MLQUEUE_TARGET_BUSY 0x1058
+>>
+>> This change converts the rtn in hexadecimal.
+>>
+>> Signed-off-by: Kassey Li <quic_yingangl@quicinc.com>
+>> ---
+>>   include/trace/events/scsi.h | 2 +-
+>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/include/trace/events/scsi.h b/include/trace/events/scsi.h
+>> index bf6cc98d9122..a4c089ac834c 100644
+>> --- a/include/trace/events/scsi.h
+>> +++ b/include/trace/events/scsi.h
+>> @@ -240,7 +240,7 @@ TRACE_EVENT(scsi_dispatch_cmd_error,
+>>   
+>>   	TP_printk("host_no=%u channel=%u id=%u lun=%u data_sgl=%u prot_sgl=%u" \
+>>   		  " prot_op=%s driver_tag=%d scheduler_tag=%d cmnd=(%s %s raw=%s)" \
+>> -		  " rtn=%d",
+>> +		  " rtn=0x%x",
+>>   		  __entry->host_no, __entry->channel, __entry->id,
+>>   		  __entry->lun, __entry->data_sglen, __entry->prot_sglen,
+>>   		  show_prot_op_name(__entry->prot_op), __entry->driver_tag,
+> 
 
-> +static int trace_remote_start(struct trace_remote *remote)
-> +{
-> +	int ret;
-> +
-> +	lockdep_assert_held(&remote->lock);
-> +
-> +	if (remote->tracing_on)
-> +		return 0;
-> +
-> +	ret = trace_remote_load(remote);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = remote->cbs->enable_tracing(true, remote->priv);
-> +	if (ret) {
-> +		trace_remote_unload(remote);
-> +		return ret;
-> +	}
-> +
-> +	remote->tracing_on = true;
-> +
-> +	return 0;
-> +}
-> +
-
-Same for stop.
-
--- Steve
-
-> +static int trace_remote_stop(struct trace_remote *remote)
-> +{
-> +	int ret;
-> +
-> +	lockdep_assert_held(&remote->lock);
-> +
-> +	if (!remote->tracing_on)
-> +		return 0;
-> +
-> +	ret = remote->cbs->enable_tracing(false, remote->priv);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ring_buffer_poll_remote(remote->trace_buffer, RING_BUFFER_ALL_CPUS);
-> +	remote->tracing_on = false;
-> +	trace_remote_unload(remote);
-> +
-> +	return 0;
-> +}
