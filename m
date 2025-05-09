@@ -1,26 +1,26 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F331B238C2C;
-	Fri,  9 May 2025 16:51:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71014239E9C;
+	Fri,  9 May 2025 16:51:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746809499; cv=none; b=QOqxvpwrofoB+doGYefwH5C5qxBouuwifdpX1eUF+vcoQ8cdCKRnNByFYUVg3ubaZglK8Fe5n+0AkEGjgMlgfSSPt3snkv3TP6oYtnJWvJDBkAheg+HWFJj0ya4zaD9ge5N7jeuj2ft7NJKVgPfu5eE402DpMinW8ARvJ5neerI=
+	t=1746809499; cv=none; b=f+4irKaevO3f/4QWzYtMf0MuOAdvOUEu4+0GC1ImyieW0YTOKUCcj2rWKW4kxGUN5cZOcbKQn5pQEewM5BDz78v0VPwdA+UfqzO8ucaqsgs8aOgUaTcVtZ1oOAdpTvAsVJtB7LNUF2Lmuoy5Y6boxH6C6kiUX2N5CpC3qPLyZFo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1746809499; c=relaxed/simple;
-	bh=JTFH4J/aPfmXUm6zG2FJR1h1yEhf4M7031l6ypEpMj0=;
+	bh=ufMG0Oyzm5psynbpq4hu4JKQIoDt2Fur92v2iDYLSVI=;
 	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=psf4qDXPKpSwKnNGJ1Sz5cBmPDU/PFsXLzLaXcUeaMzAKRuXYYoJFbIBm/NcUsPt6mKTC++kfVR3WLGkmbm6wTatmDwiIf8qifKXZ3fmrP/i7kpUQSx0JRwPgPN39BGiS/rPIHHntK7EZ4zv2i7DwHJu5F9jPfQ8iEtQioeNqWM=
+	 Content-Type; b=pdHB1iloRPV2zgzo1BqFW6CxXnLy8Fr5f6Zf022qrjXOsLEl0E6jsjC+KBOG/90L8kCCW2FAVmBEOW7cKtCTxMNMI037d2Wc41RFZZSC5m2PqKXx9DOBEwVOn+BSX4UIi1CizOu1pYa5HS6RVCpyIjTS1rA4r8VBMHV+bmt52qI=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A34D5C4CEE9;
-	Fri,  9 May 2025 16:51:38 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 473F0C4CEF3;
+	Fri,  9 May 2025 16:51:39 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.98.2)
 	(envelope-from <rostedt@goodmis.org>)
-	id 1uDQx0-00000002gFC-1plN;
-	Fri, 09 May 2025 12:51:54 -0400
-Message-ID: <20250509165154.287839165@goodmis.org>
+	id 1uDQx1-00000002gHD-0RKe;
+	Fri, 09 May 2025 12:51:55 -0400
+Message-ID: <20250509165154.958107663@goodmis.org>
 User-Agent: quilt/0.68
-Date: Fri, 09 May 2025 12:45:28 -0400
+Date: Fri, 09 May 2025 12:45:32 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org,
  linux-trace-kernel@vger.kernel.org,
@@ -33,7 +33,7 @@ Cc: Masami Hiramatsu <mhiramat@kernel.org>,
  Ingo Molnar <mingo@kernel.org>,
  Jiri Olsa <jolsa@kernel.org>,
  Namhyung Kim <namhyung@kernel.org>
-Subject: [PATCH v8 04/18] perf/x86: Rename and move get_segment_base() and make it global
+Subject: [PATCH v8 08/18] unwind_user/deferred: Add unwind cache
 References: <20250509164524.448387100@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -45,169 +45,154 @@ Content-Type: text/plain; charset=UTF-8
 
 From: Josh Poimboeuf <jpoimboe@kernel.org>
 
-get_segment_base() will be used by the unwind_user code, so make it
-global and rename it so it doesn't conflict with a KVM function of the
-same name.
+Cache the results of the unwind to ensure the unwind is only performed
+once, even when called by multiple tracers.
 
-As the function is no longer specific to perf, move it to ptrace.c as that
-seems to be a better location for a generic function like this.
+The cache nr_entries gets cleared every time the task exits the kernel.
+When a stacktrace is requested, nr_entries gets set to the number of
+entries in the stacktrace. If another stacktrace is requested, if
+nr_entries is not zero, then it contains the same stacktrace that would be
+retrieved so it is not processed again and the entries is given to the
+caller.
 
+Co-developed-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- arch/x86/events/core.c        | 44 ++++-------------------------------
- arch/x86/include/asm/ptrace.h |  2 ++
- arch/x86/kernel/ptrace.c      | 38 ++++++++++++++++++++++++++++++
- 3 files changed, 45 insertions(+), 39 deletions(-)
+Changes since v7: https://lore.kernel.org/20250502165008.734340489@goodmis.org
 
-diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
-index 2e10dcf897c5..cc6329235b68 100644
---- a/arch/x86/events/core.c
-+++ b/arch/x86/events/core.c
-@@ -43,6 +43,7 @@
- #include <asm/ldt.h>
- #include <asm/unwind.h>
- #include <asm/uprobes.h>
-+#include <asm/ptrace.h>
- #include <asm/ibt.h>
+- Allocate unwind_cache as a structure and not just its entries
+  (Ingo Molnar)
+
+- Fixed white space issues
+  (Ingo Molnar)
+
+ include/linux/entry-common.h          |  2 ++
+ include/linux/unwind_deferred.h       |  8 ++++++++
+ include/linux/unwind_deferred_types.h |  7 ++++++-
+ kernel/unwind/deferred.c              | 26 ++++++++++++++++++++------
+ 4 files changed, 36 insertions(+), 7 deletions(-)
+
+diff --git a/include/linux/entry-common.h b/include/linux/entry-common.h
+index f94f3fdf15fc..6e850c9d3f0c 100644
+--- a/include/linux/entry-common.h
++++ b/include/linux/entry-common.h
+@@ -12,6 +12,7 @@
+ #include <linux/resume_user_mode.h>
+ #include <linux/tick.h>
+ #include <linux/kmsan.h>
++#include <linux/unwind_deferred.h>
  
- #include "perf_event.h"
-@@ -2809,41 +2810,6 @@ valid_user_frame(const void __user *fp, unsigned long size)
- 	return __access_ok(fp, size);
- }
- 
--static unsigned long get_segment_base(unsigned int segment)
--{
--	struct desc_struct *desc;
--	unsigned int idx = segment >> 3;
--
--	if ((segment & SEGMENT_TI_MASK) == SEGMENT_LDT) {
--#ifdef CONFIG_MODIFY_LDT_SYSCALL
--		struct ldt_struct *ldt;
--
--		/*
--		 * If we're not in a valid context with a real (not just lazy)
--		 * user mm, then don't even try.
--		 */
--		if (!nmi_uaccess_okay())
--			return 0;
--
--		/* IRQs are off, so this synchronizes with smp_store_release */
--		ldt = smp_load_acquire(&current->mm->context.ldt);
--		if (!ldt || idx >= ldt->nr_entries)
--			return 0;
--
--		desc = &ldt->entries[idx];
--#else
--		return 0;
--#endif
--	} else {
--		if (idx >= GDT_ENTRIES)
--			return 0;
--
--		desc = raw_cpu_ptr(gdt_page.gdt) + idx;
--	}
--
--	return get_desc_base(desc);
--}
--
- #ifdef CONFIG_UPROBES
- /*
-  * Heuristic-based check if uprobe is installed at the function entry.
-@@ -2900,8 +2866,8 @@ perf_callchain_user32(struct pt_regs *regs, struct perf_callchain_entry_ctx *ent
- 	if (user_64bit_mode(regs))
- 		return 0;
- 
--	cs_base = get_segment_base(regs->cs);
--	ss_base = get_segment_base(regs->ss);
-+	cs_base = segment_base_address(regs->cs);
-+	ss_base = segment_base_address(regs->ss);
- 
- 	fp = compat_ptr(ss_base + regs->bp);
- 	pagefault_disable();
-@@ -3020,11 +2986,11 @@ static unsigned long code_segment_base(struct pt_regs *regs)
- 		return 0x10 * regs->cs;
- 
- 	if (user_mode(regs) && regs->cs != __USER_CS)
--		return get_segment_base(regs->cs);
-+		return segment_base_address(regs->cs);
- #else
- 	if (user_mode(regs) && !user_64bit_mode(regs) &&
- 	    regs->cs != __USER32_CS)
--		return get_segment_base(regs->cs);
-+		return segment_base_address(regs->cs);
- #endif
- 	return 0;
- }
-diff --git a/arch/x86/include/asm/ptrace.h b/arch/x86/include/asm/ptrace.h
-index 50f75467f73d..59357ec98e52 100644
---- a/arch/x86/include/asm/ptrace.h
-+++ b/arch/x86/include/asm/ptrace.h
-@@ -314,6 +314,8 @@ static __always_inline bool regs_irqs_disabled(struct pt_regs *regs)
- 	return !(regs->flags & X86_EFLAGS_IF);
- }
- 
-+unsigned long segment_base_address(unsigned int segment);
-+
- /* Query offset/name of register from its name/offset */
- extern int regs_query_register_offset(const char *name);
- extern const char *regs_query_register_name(unsigned int offset);
-diff --git a/arch/x86/kernel/ptrace.c b/arch/x86/kernel/ptrace.c
-index 095f04bdabdc..81353a09701b 100644
---- a/arch/x86/kernel/ptrace.c
-+++ b/arch/x86/kernel/ptrace.c
-@@ -41,6 +41,7 @@
+ #include <asm/entry-common.h>
  #include <asm/syscall.h>
- #include <asm/fsgsbase.h>
- #include <asm/io_bitmap.h>
-+#include <asm/mmu_context.h>
+@@ -362,6 +363,7 @@ static __always_inline void exit_to_user_mode(void)
+ 	lockdep_hardirqs_on_prepare();
+ 	instrumentation_end();
  
- #include "tls.h"
++	unwind_exit_to_user_mode();
+ 	user_enter_irqoff();
+ 	arch_exit_to_user_mode();
+ 	lockdep_hardirqs_on(CALLER_ADDR0);
+diff --git a/include/linux/unwind_deferred.h b/include/linux/unwind_deferred.h
+index 5064ebe38c4f..7d6cb2ffd084 100644
+--- a/include/linux/unwind_deferred.h
++++ b/include/linux/unwind_deferred.h
+@@ -12,6 +12,12 @@ void unwind_task_free(struct task_struct *task);
  
-@@ -339,6 +340,43 @@ static int set_segment_reg(struct task_struct *task,
+ int unwind_deferred_trace(struct unwind_stacktrace *trace);
  
- #endif	/* CONFIG_X86_32 */
- 
-+unsigned long segment_base_address(unsigned int segment)
++static __always_inline void unwind_exit_to_user_mode(void)
 +{
-+	struct desc_struct *desc;
-+	unsigned int idx = segment >> 3;
-+
-+	lockdep_assert_irqs_disabled();
-+
-+	if ((segment & SEGMENT_TI_MASK) == SEGMENT_LDT) {
-+#ifdef CONFIG_MODIFY_LDT_SYSCALL
-+		struct ldt_struct *ldt;
-+
-+		/*
-+		 * If we're not in a valid context with a real (not just lazy)
-+		 * user mm, then don't even try.
-+		 */
-+		if (!nmi_uaccess_okay())
-+			return 0;
-+
-+		/* IRQs are off, so this synchronizes with smp_store_release */
-+		ldt = smp_load_acquire(&current->mm->context.ldt);
-+		if (!ldt || idx >= ldt->nr_entries)
-+			return 0;
-+
-+		desc = &ldt->entries[idx];
-+#else
-+		return 0;
-+#endif
-+	} else {
-+		if (idx >= GDT_ENTRIES)
-+			return 0;
-+
-+		desc = raw_cpu_ptr(gdt_page.gdt) + idx;
-+	}
-+
-+	return get_desc_base(desc);
++	if (unlikely(current->unwind_info.cache))
++		current->unwind_info.cache->nr_entries = 0;
 +}
 +
- static unsigned long get_flags(struct task_struct *task)
+ #else /* !CONFIG_UNWIND_USER */
+ 
+ static inline void unwind_task_init(struct task_struct *task) {}
+@@ -19,6 +25,8 @@ static inline void unwind_task_free(struct task_struct *task) {}
+ 
+ static inline int unwind_deferred_trace(struct unwind_stacktrace *trace) { return -ENOSYS; }
+ 
++static inline void unwind_exit_to_user_mode(void) {}
++
+ #endif /* !CONFIG_UNWIND_USER */
+ 
+ #endif /* _LINUX_UNWIND_USER_DEFERRED_H */
+diff --git a/include/linux/unwind_deferred_types.h b/include/linux/unwind_deferred_types.h
+index aa32db574e43..db5b54b18828 100644
+--- a/include/linux/unwind_deferred_types.h
++++ b/include/linux/unwind_deferred_types.h
+@@ -2,8 +2,13 @@
+ #ifndef _LINUX_UNWIND_USER_DEFERRED_TYPES_H
+ #define _LINUX_UNWIND_USER_DEFERRED_TYPES_H
+ 
++struct unwind_cache {
++	unsigned int		nr_entries;
++	unsigned long		entries[];
++};
++
+ struct unwind_task_info {
+-	unsigned long		*entries;
++	struct unwind_cache	*cache;
+ };
+ 
+ #endif /* _LINUX_UNWIND_USER_DEFERRED_TYPES_H */
+diff --git a/kernel/unwind/deferred.c b/kernel/unwind/deferred.c
+index 0bafb95e6336..e3913781c8c6 100644
+--- a/kernel/unwind/deferred.c
++++ b/kernel/unwind/deferred.c
+@@ -24,6 +24,7 @@
+ int unwind_deferred_trace(struct unwind_stacktrace *trace)
  {
- 	unsigned long retval = task_pt_regs(task)->flags;
+ 	struct unwind_task_info *info = &current->unwind_info;
++	struct unwind_cache *cache;
+ 
+ 	/* Should always be called from faultable context */
+ 	might_fault();
+@@ -31,17 +32,30 @@ int unwind_deferred_trace(struct unwind_stacktrace *trace)
+ 	if (current->flags & PF_EXITING)
+ 		return -EINVAL;
+ 
+-	if (!info->entries) {
+-		info->entries = kmalloc_array(UNWIND_MAX_ENTRIES, sizeof(long),
+-					      GFP_KERNEL);
+-		if (!info->entries)
++	if (!info->cache) {
++		info->cache = kzalloc(struct_size(cache, entries, UNWIND_MAX_ENTRIES),
++				      GFP_KERNEL);
++		if (!info->cache)
+ 			return -ENOMEM;
+ 	}
+ 
++	cache = info->cache;
++	trace->entries = cache->entries;
++
++	if (cache->nr_entries) {
++		/*
++		 * The user stack has already been previously unwound in this
++		 * entry context.  Skip the unwind and use the cache.
++		 */
++		trace->nr = cache->nr_entries;
++		return 0;
++	}
++
+ 	trace->nr = 0;
+-	trace->entries = info->entries;
+ 	unwind_user(trace, UNWIND_MAX_ENTRIES);
+ 
++	cache->nr_entries = trace->nr;
++
+ 	return 0;
+ }
+ 
+@@ -56,5 +70,5 @@ void unwind_task_free(struct task_struct *task)
+ {
+ 	struct unwind_task_info *info = &task->unwind_info;
+ 
+-	kfree(info->entries);
++	kfree(info->cache);
+ }
 -- 
 2.47.2
 
