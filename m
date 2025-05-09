@@ -1,142 +1,106 @@
-Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com [209.85.216.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C59425D1FC;
-	Fri,  9 May 2025 21:53:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD1C225D1FC;
+	Fri,  9 May 2025 21:55:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746827632; cv=none; b=a3fwbLK+XOX+wx+KZqL4ostwltCCLotqraey5ibIQJUxuIsMzfguAMJzZIk/zzAZCFM/JFPgqyFQPaJ0zhGtNWAv9G3jMPRpYm4Pi0tD+Io9vGhmXkUlVZPcDQfeeSxTFqJn44tz9Y8iyAcGyIZa3xzp+tf6hG1iZ9aZT7KTVkQ=
+	t=1746827732; cv=none; b=m1zk3ROn6a/xVKA1YsQ0FSe84/ka9MqQtEvxB1C/ptdbxbt1a6vQjAJ5ezk0XKE/9R0aQ+BUHjjlmpvK/9M+9ffROMuqRuwLYESdSw6hnaWLJYuMrfD+FVQRPCRioPkmOXMJIx2RHEH1tFpvwRmVBWStCqRif69h1cBKLdCitNo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746827632; c=relaxed/simple;
-	bh=NiH+k6IfoKNrv7kJjvq02SqgFB+0uIsB7zsh4/p7lUs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=udPRXC7X1Ghenr3Puig3sDoHBIq6voeJHPJ8idBymSoLGGErnuSRogG9Ircu6rni+Y6CfDC6SsrW6GHl2vhJYHoAX3wh5Ef04ZvyU8k3gV3VP35z2nRrbHufVrHtaDN2CgWya2mOXwLlMajtbjazy8vO3IV+/E/rdFSH5GR+Wf0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Nb40qvkT; arc=none smtp.client-ip=209.85.216.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746827732; c=relaxed/simple;
+	bh=6bUOYnfeM9YGBmORFUWmmhMKscODaW6xHbQzUzzRfsA=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=j/Ze95DP/XAvfPW9yUnnBIldyjV+kHRbputps4g+TqxGX/JiMlqJ3/fQq5UqrpUNM4qcp4vuDY7St1gnrPydN29PR7uhDSJ7YEq0bo4MY6q9fH92u3vuXqRsoUiTRNj+g1bZJ5VqpjwjqetrFuV8e88+06bZia8aKsR3264812A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=L0caTzXf; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Nb40qvkT"
-Received: by mail-pj1-f52.google.com with SMTP id 98e67ed59e1d1-30c35ac35dfso1763033a91.1;
-        Fri, 09 May 2025 14:53:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746827630; x=1747432430; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=yHkbQJC2vfZe+igN8ZKegJaL309MbUilfmbTINeRmN0=;
-        b=Nb40qvkT96ockENj/wdkrX39vXT3XOeTwxNnYKGpQLUtm0haWz3iV3RUf3mos9W3t6
-         DZNyqW4eAhb4GSanA6F3beQiofcY3uVPOPIrvSW+n3Hct71jKmpwFZUklRHJ1HSl+5aw
-         HAbM+F2iy/jTQtBI3WQh6haYJY2rR8+1/YwIPbOuOfdMXf8bSyfI4rtvlIN+uPz+ggPt
-         X7wDMckMedYHDU7D9i7u2lhOm3gJNbDyd4xG8Rd6Wdqz7avabEsFcLeLhpKPKMh4hz3T
-         d85EC1S8lvNZujndGQFHlXkUQP3rOG8dTDnqxhNa5ZxN0SBMbxTe3F9qnJ9Yz0LlRkuz
-         DjCQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746827630; x=1747432430;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=yHkbQJC2vfZe+igN8ZKegJaL309MbUilfmbTINeRmN0=;
-        b=U+FMNe+hKyeEZ1M5wLzyz1QP2OK4gHF2GjIUi8h855wF/i7SxHfjxAK++Ji7wcv6Bx
-         Sxz1/JQhgLEtTOzaf2lw/IyyPn50hKh0S5W3SYbF/GNiJCp2e/3njmcvUOomCfX3mcBQ
-         2Alpax9jLJAGoHnGecYC/2hdtjRYPWDGRQxFcwVEsgWKI63KFVENmgq4qnA70xIasIRk
-         5yrYtk58cMzE3Jo9C+COsiIKJH8SNYyQUaCgoKhr0R7ll4sCctLyUkfTtRCWz9tjbzyZ
-         CYK0EJv/IECNXl5cdB2izESyWKR7QWyR7VeSm/thAUIHi7itv/YMHxNanZgw6FU0o6A3
-         jeHw==
-X-Forwarded-Encrypted: i=1; AJvYcCWTfNhr57gmXxqdEy1jC3WxKordTvdGvlM69ddTDGBTEEsdA1eIszUs0XdWFLwxXqE6rn8TJGTQDFLvLd7YdzlWKHZf@vger.kernel.org, AJvYcCWjv9RjItfB6f7ml+KRbhg8xirldeEvnkz4PN8tc9jcJxwq9Pv1pvSQ/4zi4vMh0CGZVCY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy91Il2HT+T6GsNY5gEPeTrI28GYfeS9P5HDl2fLhYMjQJ8NfbX
-	G6F9gm/jtmlbm6omm7efZZb8++7nKJNHK04udQYWZdutPzsCh5czR+P8crEbC1eamEVbc8N//qS
-	cdTPqs+JFxbtFTU1YYm6LsUKVeEA=
-X-Gm-Gg: ASbGncsY9yTIrUG4ONIiNVrqiPqMq07gXJRhmo8ogUHSSzhUAwHf+NSfls+ZyskVnCE
-	bWOJ9I15TA/lpcMyJhcxEdPnSGjM7Ihw47YApLhjW3bUhE+Ldx9PjCHLEdLu/Zt3Ms3j5GWT9dO
-	ywHH6AZsugUdPT0SS2dij04KVbtBfyC0WZQdGxl3cUPzCRyJ8k
-X-Google-Smtp-Source: AGHT+IHOtgUxXnIkOjOIbpTNdvhRDUXpWuB9CdApfqdlPxp6khEaQW6lLupeh/DHx2cTjBU6h2YZAVwr8RxMvgysjME=
-X-Received: by 2002:a17:90a:e7ce:b0:30a:fe:140f with SMTP id
- 98e67ed59e1d1-30c3d62c6dcmr7476368a91.28.1746827630268; Fri, 09 May 2025
- 14:53:50 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="L0caTzXf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E439AC4CEE4;
+	Fri,  9 May 2025 21:55:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746827732;
+	bh=6bUOYnfeM9YGBmORFUWmmhMKscODaW6xHbQzUzzRfsA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=L0caTzXfaYVDYsmlDbAMInMQJd0DrUBqCxzWuz7ARC5KzVumm7tQHq2yERiR6wJNx
+	 bD5RepcINa/ChKivgDP5ZH+r2dveevcpXiXTjEoKLzOGycI0YIElrzd1WwmC+8Hw40
+	 UiFCJblbBpPxoqTU4VihLGJYm3dXnP97RoTgYPMnrh2GPExFyMTD1ii4uJ8psSKWTB
+	 pBHx4HEhTlVn2YeX9iHewZmDXoH0ormRn/u8/7nWTkYjXMplQq6qlAnD2SN+J2Cu7B
+	 2A4JBRUsOKZ6Nm1c1LW1vJaaOfmjqOmVwBnzgnfnrSwQMZLLA8NclhYFOJ9uNnPX9M
+	 GpMSXxjVXn6Yg==
+Date: Sat, 10 May 2025 06:55:28 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Matthieu Baerts <matttbe@kernel.org>
+Cc: Breno Leitao <leitao@debian.org>, Steven Rostedt <rostedt@goodmis.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ kernel-team@meta.com
+Subject: Re: [PATCH] tracing: fprobe: Fix RCU warning message in list
+ traversal
+Message-Id: <20250510065528.d726869719f27145cc69f179@kernel.org>
+In-Reply-To: <bdc3a680-d915-4b84-9d87-bfbe68372243@kernel.org>
+References: <20250410-fprobe-v1-1-068ef5f41436@debian.org>
+	<bdc3a680-d915-4b84-9d87-bfbe68372243@kernel.org>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20250509164524.448387100@goodmis.org> <20250509165156.135430576@goodmis.org>
-In-Reply-To: <20250509165156.135430576@goodmis.org>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Fri, 9 May 2025 14:53:38 -0700
-X-Gm-Features: ATxdqUG7vyKh6ckuiVc80QVrYGdO5Dyfg62nDuY0zs4zFQaHfF1xoIZCrXuqiWQ
-Message-ID: <CAEf4BzaKfvCu2T+jJ2e-CCt0N50urfx+p6kQfV899_jkmT_XKQ@mail.gmail.com>
-Subject: Re: [PATCH v8 15/18] perf: Have get_perf_callchain() return NULL if
- crosstask and user are set
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	bpf@vger.kernel.org, x86@kernel.org, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Josh Poimboeuf <jpoimboe@kernel.org>, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
-	Namhyung Kim <namhyung@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Fri, May 9, 2025 at 9:52=E2=80=AFAM Steven Rostedt <rostedt@goodmis.org>=
- wrote:
->
-> From: Josh Poimboeuf <jpoimboe@kernel.org>
->
-> get_perf_callchain() doesn't support cross-task unwinding for user space
-> stacks, have it return NULL if both the crosstask and user arguments are
-> set.
->
-> Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
-> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-> ---
->  kernel/events/callchain.c | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
->
-> diff --git a/kernel/events/callchain.c b/kernel/events/callchain.c
-> index b0f5bd228cd8..abf258913ab6 100644
-> --- a/kernel/events/callchain.c
-> +++ b/kernel/events/callchain.c
-> @@ -224,6 +224,10 @@ get_perf_callchain(struct pt_regs *regs, bool kernel=
-, bool user,
->         struct perf_callchain_entry_ctx ctx;
->         int rctx, start_entry_idx;
->
-> +       /* crosstask is not supported for user stacks */
-> +       if (crosstask && user)
-> +               return NULL;
+On Fri, 9 May 2025 16:30:08 +0200
+Matthieu Baerts <matttbe@kernel.org> wrote:
 
-I think get_perf_callchain() supports requesting both user and kernel
-stack traces, and if it's crosstask, you can still get kernel (but not
-user) stack, if I'm reading the code correctly.
+> Hi Breno,
+> 
+> On 10/04/2025 14:22, Breno Leitao wrote:
+> > When CONFIG_PROVE_RCU_LIST is enabled, fprobe triggers the following
+> > warning:
+> > 
+> >     WARNING: suspicious RCU usage
+> >     kernel/trace/fprobe.c:457 RCU-list traversed in non-reader section!!
+> > 
+> >     other info that might help us debug this:
+> > 	#1: ffffffff863c4e08 (fprobe_mutex){+.+.}-{4:4}, at: fprobe_module_callback+0x7b/0x8c0
+> > 
+> >     Call Trace:
+> > 	fprobe_module_callback
+> > 	notifier_call_chain
+> > 	blocking_notifier_call_chain
+> > 
+> > This warning occurs because fprobe_remove_node_in_module() traverses an
+> > RCU list using RCU primitives without holding an RCU read lock. However,
+> > the function is only called from fprobe_module_callback(), which holds
+> > the fprobe_mutex lock that provides sufficient protection for safely
+> > traversing the list.
+> > 
+> > Fix the warning by specifying the locking design to the
+> > CONFIG_PROVE_RCU_LIST mechanism. Add the lockdep_is_held() argument to
+> > hlist_for_each_entry_rcu() to inform the RCU checker that fprobe_mutex
+> > provides the required protection.
+> 
+> @Breno: thank you for the patch, I have it applied for a while on a
+> branch dedicated to our CI to avoid false positive reports.
+> 
+> Tested-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
-So by just returning NULL early you will change this behavior, no?
+Oops, I missed this patch.
 
-> +
->         entry =3D get_callchain_entry(&rctx);
->         if (!entry)
->                 return NULL;
-> @@ -249,9 +253,6 @@ get_perf_callchain(struct pt_regs *regs, bool kernel,=
- bool user,
->                 }
->
->                 if (regs) {
-> -                       if (crosstask)
-> -                               goto exit_put;
-> -
->                         if (add_mark)
->                                 perf_callchain_store_context(&ctx, PERF_C=
-ONTEXT_USER);
->
-> @@ -261,7 +262,6 @@ get_perf_callchain(struct pt_regs *regs, bool kernel,=
- bool user,
->                 }
->         }
->
-> -exit_put:
->         put_callchain_entry(rctx);
->
->         return entry;
-> --
-> 2.47.2
->
->
->
+Let me pick it up and send it urgently.
+
+Thank you,
+
+> 
+> 
+> Hopefully this fix can be sent to Linus before the v6.15 release :)
+> 
+> Cheers,
+> Matt
+> -- 
+> Sponsored by the NGI0 Core fund.
+> 
+
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
