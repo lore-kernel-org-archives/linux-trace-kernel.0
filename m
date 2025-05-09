@@ -1,44 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD1C225D1FC;
-	Fri,  9 May 2025 21:55:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75B4C262FC9;
+	Fri,  9 May 2025 22:18:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746827732; cv=none; b=m1zk3ROn6a/xVKA1YsQ0FSe84/ka9MqQtEvxB1C/ptdbxbt1a6vQjAJ5ezk0XKE/9R0aQ+BUHjjlmpvK/9M+9ffROMuqRuwLYESdSw6hnaWLJYuMrfD+FVQRPCRioPkmOXMJIx2RHEH1tFpvwRmVBWStCqRif69h1cBKLdCitNo=
+	t=1746829109; cv=none; b=l+D4TgtDVRpt+/1RR0wcr12bU14Wt5O7tmwiBNYwXpPcuNxRnMtHOmQ2VS9BoayobUUlBFb6Kc6XlR4ItwRffQ6eCN9quXonH4qjBtYWeBsNEHOTuFcLMRg+GmdKIlktoPX1RL2+Jr5+rrAWfnNpXBFWlOWeY4yb5prBJGfFzHE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746827732; c=relaxed/simple;
-	bh=6bUOYnfeM9YGBmORFUWmmhMKscODaW6xHbQzUzzRfsA=;
+	s=arc-20240116; t=1746829109; c=relaxed/simple;
+	bh=dWjmlNsJglpptDDu7d3f3DTdCJ1+813rPDpe4IWz4q0=;
 	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=j/Ze95DP/XAvfPW9yUnnBIldyjV+kHRbputps4g+TqxGX/JiMlqJ3/fQq5UqrpUNM4qcp4vuDY7St1gnrPydN29PR7uhDSJ7YEq0bo4MY6q9fH92u3vuXqRsoUiTRNj+g1bZJ5VqpjwjqetrFuV8e88+06bZia8aKsR3264812A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=L0caTzXf; arc=none smtp.client-ip=10.30.226.201
+	 Mime-Version:Content-Type; b=bR420TeTsrFYpxhU9vzzvrivw3P+9hu/eEDLNWt3Gz5R9tb4gcXYo1TTJV8KLazUVxVIRtXKFM58l7gRo85SZAbQkRqhgHHbGOpP7sT0lBY7TdT79tHBNBnnYCz100sVQw/IkA8311vSqxvwrWEDgALq0Yd5sBYd6fr/6aV9qOY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MItuExzS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="L0caTzXf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E439AC4CEE4;
-	Fri,  9 May 2025 21:55:30 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MItuExzS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AFC38C4CEE4;
+	Fri,  9 May 2025 22:18:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746827732;
-	bh=6bUOYnfeM9YGBmORFUWmmhMKscODaW6xHbQzUzzRfsA=;
+	s=k20201202; t=1746829109;
+	bh=dWjmlNsJglpptDDu7d3f3DTdCJ1+813rPDpe4IWz4q0=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=L0caTzXfaYVDYsmlDbAMInMQJd0DrUBqCxzWuz7ARC5KzVumm7tQHq2yERiR6wJNx
-	 bD5RepcINa/ChKivgDP5ZH+r2dveevcpXiXTjEoKLzOGycI0YIElrzd1WwmC+8Hw40
-	 UiFCJblbBpPxoqTU4VihLGJYm3dXnP97RoTgYPMnrh2GPExFyMTD1ii4uJ8psSKWTB
-	 pBHx4HEhTlVn2YeX9iHewZmDXoH0ormRn/u8/7nWTkYjXMplQq6qlAnD2SN+J2Cu7B
-	 2A4JBRUsOKZ6Nm1c1LW1vJaaOfmjqOmVwBnzgnfnrSwQMZLLA8NclhYFOJ9uNnPX9M
-	 GpMSXxjVXn6Yg==
-Date: Sat, 10 May 2025 06:55:28 +0900
+	b=MItuExzSdwpOvwq80OgT/IJnnMHpfUI3pEdMsJP/vQr4CmeGy+ZyBpHtpazoK00EM
+	 j58XPipTX9PccxAcBpDoUjHGAbO48uvfmaRW7LADOz85VjGC5zsTHdvGUyRkxk+KVC
+	 Nj/WTuRsTLpwqinQRtrUvks1LQHcEGXYfLjkU1Ge2VOTYNKAUMEta6yaBCj8KT21ck
+	 KIh/7gmjBFom/75DjKt/h1bFlNL2XNeinlubFs2RHd1I62ofzgRb1S+JyqAtet7Ydt
+	 2PrJqIeFagQI1HA0Pxs/hjnjSX4gPx5xJYjBXpDiQAEAQAkfeLaY58h8NqWGilF45Y
+	 0bYgaEKEA0/Nw==
+Date: Sat, 10 May 2025 07:18:25 +0900
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Matthieu Baerts <matttbe@kernel.org>
-Cc: Breno Leitao <leitao@debian.org>, Steven Rostedt <rostedt@goodmis.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- kernel-team@meta.com
-Subject: Re: [PATCH] tracing: fprobe: Fix RCU warning message in list
- traversal
-Message-Id: <20250510065528.d726869719f27145cc69f179@kernel.org>
-In-Reply-To: <bdc3a680-d915-4b84-9d87-bfbe68372243@kernel.org>
-References: <20250410-fprobe-v1-1-068ef5f41436@debian.org>
-	<bdc3a680-d915-4b84-9d87-bfbe68372243@kernel.org>
+To: paulcacheux@gmail.com
+Cc: Paul Cacheux via B4 Relay <devnull+paulcacheux.gmail.com@kernel.org>,
+ Steven Rostedt <rostedt@goodmis.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Namhyung Kim <namhyung@kernel.org>,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] tracing: add missing trace_probe_log_clear for
+ eprobes
+Message-Id: <20250510071825.7311dd26183478e9e2c7855d@kernel.org>
+In-Reply-To: <20250502-fix-trace-probe-log-race-v2-1-511ecc1521ec@gmail.com>
+References: <20250502-fix-trace-probe-log-race-v2-0-511ecc1521ec@gmail.com>
+	<20250502-fix-trace-probe-log-race-v2-1-511ecc1521ec@gmail.com>
 X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -49,56 +49,49 @@ Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Fri, 9 May 2025 16:30:08 +0200
-Matthieu Baerts <matttbe@kernel.org> wrote:
+On Fri, 02 May 2025 15:15:52 +0200
+Paul Cacheux via B4 Relay <devnull+paulcacheux.gmail.com@kernel.org> wrote:
 
-> Hi Breno,
+> From: Paul Cacheux <paulcacheux@gmail.com>
 > 
-> On 10/04/2025 14:22, Breno Leitao wrote:
-> > When CONFIG_PROVE_RCU_LIST is enabled, fprobe triggers the following
-> > warning:
-> > 
-> >     WARNING: suspicious RCU usage
-> >     kernel/trace/fprobe.c:457 RCU-list traversed in non-reader section!!
-> > 
-> >     other info that might help us debug this:
-> > 	#1: ffffffff863c4e08 (fprobe_mutex){+.+.}-{4:4}, at: fprobe_module_callback+0x7b/0x8c0
-> > 
-> >     Call Trace:
-> > 	fprobe_module_callback
-> > 	notifier_call_chain
-> > 	blocking_notifier_call_chain
-> > 
-> > This warning occurs because fprobe_remove_node_in_module() traverses an
-> > RCU list using RCU primitives without holding an RCU read lock. However,
-> > the function is only called from fprobe_module_callback(), which holds
-> > the fprobe_mutex lock that provides sufficient protection for safely
-> > traversing the list.
-> > 
-> > Fix the warning by specifying the locking design to the
-> > CONFIG_PROVE_RCU_LIST mechanism. Add the lockdep_is_held() argument to
-> > hlist_for_each_entry_rcu() to inform the RCU checker that fprobe_mutex
-> > provides the required protection.
+> Make sure trace_probe_log_clear is called in the tracing
+> eprobe code path, matching the trace_probe_log_init call.
 > 
-> @Breno: thank you for the patch, I have it applied for a while on a
-> branch dedicated to our CI to avoid false positive reports.
-> 
-> Tested-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+> Signed-off-by: Paul Cacheux <paulcacheux@gmail.com>
 
-Oops, I missed this patch.
+Looks good to me.
 
-Let me pick it up and send it urgently.
+Fixes: 7491e2c44278 ("tracing: Add a probe that attaches to trace events")
+Cc: stable@vger.kernel.org
 
 Thank you,
 
+> ---
+>  kernel/trace/trace_eprobe.c | 3 +++
+>  1 file changed, 3 insertions(+)
 > 
+> diff --git a/kernel/trace/trace_eprobe.c b/kernel/trace/trace_eprobe.c
+> index c08355c3ef32b4124ac944d7e3a03efb66492269..916555f0de811f03feed9d923c63078b0e4c993b 100644
+> --- a/kernel/trace/trace_eprobe.c
+> +++ b/kernel/trace/trace_eprobe.c
+> @@ -969,10 +969,13 @@ static int __trace_eprobe_create(int argc, const char *argv[])
+>  			goto error;
+>  		}
+>  	}
+> +	trace_probe_log_clear();
+>  	return ret;
+> +
+>  parse_error:
+>  	ret = -EINVAL;
+>  error:
+> +	trace_probe_log_clear();
+>  	trace_event_probe_cleanup(ep);
+>  	return ret;
+>  }
 > 
-> Hopefully this fix can be sent to Linus before the v6.15 release :)
-> 
-> Cheers,
-> Matt
 > -- 
-> Sponsored by the NGI0 Core fund.
+> 2.49.0
+> 
 > 
 
 
