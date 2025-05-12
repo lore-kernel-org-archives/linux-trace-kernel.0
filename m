@@ -1,268 +1,136 @@
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0765B86352;
-	Mon, 12 May 2025 16:50:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747068632; cv=fail; b=tEJSQ7U02Gr4iFOKmCdOyxk6CblgtRMHDmfAcBcG7Ww7yZ7kirZJnF2QbBWySXRO2cdb2eQ0l3CJCyU7Nga4H8HqUebGT77C/UmHIXTMVb953NTwIu/p7VGFNYcPLX+7prnNZOcRxOQ/+LRyITX1jPlHTVhmjG4fBff9woXJBcM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747068632; c=relaxed/simple;
-	bh=hUpxp11Oel7thcTJeP96TJTFcYtNmLwiE4pmlZrqv1s=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=Of1l0AJQEoAG2tIqiE0VkR582vIwNtPZZFCHtlEmQbin2OzMTGTeBYkpvm1oCPrgJb03UtTE8L3uGe/4dcA3+aCLruTQ4hJNfQp3wMi+I+KC36mZx0tpQalkGQvg03AhmGovZqxg+5KyWxO1DrYAZ71N9ft9OHc15sBVlkpZ6xM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=R5w/yMSd; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=IcueM12m; arc=fail smtp.client-ip=205.220.177.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4086029713E;
+	Mon, 12 May 2025 18:04:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747073045; cv=none; b=dIWSr+8Ep34Ud9byIsc3WO5WSypo8eWOHpwj309tsv1NIlbVMcwrFSmAaxikrbBwA+MPPQmWspIK7MqWw7khFmU9Svg0Ow8ePq0N2sp92ubNo1ARkUevhiK6Sq9b60tCuNGUlv7Mq68e30CynXhOxnFgfpGubmaHs7VxiXHSgOc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747073045; c=relaxed/simple;
+	bh=5j+xYQscMqWUuWCzArI78hMBRpb0hdhBpNzwbIMTg7I=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=CXyssTJVk+mj2jCgOR8AF6+NRXB4GL6nGLeUhVzs2oh6cf8Yug4hsC3OS0mOtHaaFq7EVmBry1f2nU0rFe6JgPHcd+QIahHnb6ya2dJX6JH3A6vobKl7V1AkH/wEYDnW7nJsVL7C+EvjlbmUz9zQ0P4+IfZ1Inv2gmHzjRaNRzI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GEew3f4E; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="R5w/yMSd";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="IcueM12m"
-Received: from pps.filterd (m0246631.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54CGXxtM021678;
-	Mon, 12 May 2025 16:49:56 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=corp-2025-04-25; bh=sg06d0sTlys1uinGKd
-	ObbwSTvOdQef6rARna20e9TFM=; b=R5w/yMSdX8jSusT5uTR7fffVIqbIDTFqON
-	LDJxLYFBMkQq1/NjYezOGFU8VELwm6tIEM+SJo6StTrnNwPVA8JRZ64NXj7kLalC
-	tGk/mxM8+HkZlV9mO2jLv1mCcOfEIOwGXFzo02RIiWDJNa0ccFH7MI/97m32uEZI
-	M/rbbWFP7YAZDMFb7/nf8qQzTGulaQQhQwyVoreS5EZL6NGz55KFMv7OGri3oCIS
-	48dw9FbeMUsvHx3SUT+7lUUor/7y40LlGCUwXLsRU9gPSH5NSZkRCJjkZN9lDcDk
-	/NZYVwMYL8QZzN1IfmUOf5YViJSSYNNH3UMfGgjnNp5T4lvPYQZw==
-Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.appoci.oracle.com [138.1.114.2])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 46j0gwk16k-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 12 May 2025 16:49:56 +0000 (GMT)
-Received: from pps.filterd (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 54CFGUw3022376;
-	Mon, 12 May 2025 16:49:55 GMT
-Received: from cy4pr02cu008.outbound.protection.outlook.com (mail-westcentralusazlp17011028.outbound.protection.outlook.com [40.93.6.28])
-	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 46hw88mf2q-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 12 May 2025 16:49:55 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=P8BymJ9OyrDOJFw+NThVQKJPVQfHwEFIRc7IStlrN+u1bre8tanrjNWrtrr/E/19m/zqYQ2PnPjzOxzLHVWS64pnQ4GSjcdHbIyTuXpvEMLNM2rrmA3KVc9cw9LrqTCMO8/BsYoHUfflEEdnga5iTB3p2RLIt+UY8D/nQ2f45H15NX6w41eMcOIy/7XlUCAyCsUfcaBsbepFVhpKp2LSzepa/O04Nz5/+HIF7LQmhS5gE+23lZ7Ceo275+tiT3PChDBj3Z244tnrFBJEiYSMdJgI5gb8GDbZyWOWv1Y8VWbC8hWU3vLJhnQMBaijI1QcYDB5XF9e2WpTO4D71HZuPQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=sg06d0sTlys1uinGKdObbwSTvOdQef6rARna20e9TFM=;
- b=sl2HVQeHpsgnHTqC69jYlT1vJiEGSbh/N/TiuR+ThEolqdPK2LUrHGeVX14+MmuxguPbbJ/u9FuLsnHGgXDa9d2C8HpK8oq2dyR3mIaEVT+QCprcefVXJ9u2WcGSFrbf5N6v0Fpk1xzvnrMeyttsw5EUtIn2+zBvb5Pl5BUnkR3P05sibRpVSBB5CAlFPA+LHFn2tW7oRb4pvj5g3jQPS0L2FcFaQ5/cr1/o8u8lHOHfDXkjJDVvqU/jPptwzIgvq0RanVgWvlAchSVZDU1fWrYGiNiQN3ba9BaDwqpHkwSBUryjgRVBl/3he5O2hpvFMR76m6i2zRoa5TiLN78Nzw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=sg06d0sTlys1uinGKdObbwSTvOdQef6rARna20e9TFM=;
- b=IcueM12mBib0TNXMNcXM+QX8P6SKXbDhUCz/+CJZlBanCd6ZR6OOqSj7wOWQzlxvHLUnKJlxY49klCg6pLJUIHZ/faup8AQTguVhmDAqxhkjjVn6HxP21pPkieeh/MrBGXqViC20FsN5NhnBYD+Jsh5Fyxadd6KnP5vIcTemmEE=
-Received: from CH3PR10MB8215.namprd10.prod.outlook.com (2603:10b6:610:1f5::7)
- by PH8PR10MB6316.namprd10.prod.outlook.com (2603:10b6:510:1cf::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8722.28; Mon, 12 May
- 2025 16:49:52 +0000
-Received: from CH3PR10MB8215.namprd10.prod.outlook.com
- ([fe80::e4f5:cb34:9b58:be90]) by CH3PR10MB8215.namprd10.prod.outlook.com
- ([fe80::e4f5:cb34:9b58:be90%4]) with mapi id 15.20.8722.027; Mon, 12 May 2025
- 16:49:52 +0000
-Date: Mon, 12 May 2025 17:49:49 +0100
-From: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-To: David Hildenbrand <david@redhat.com>
-Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org, x86@kernel.org,
-        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-trace-kernel@vger.kernel.org,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-        Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        Tvrtko Ursulin <tursulin@ursulin.net>,
-        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        "Liam R. Howlett" <Liam.Howlett@oracle.com>,
-        Vlastimil Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>,
-        Pedro Falcato <pfalcato@suse.de>, Peter Xu <peterx@redhat.com>
-Subject: Re: [PATCH v2 09/11] x86/mm/pat: inline memtype_match() into
- memtype_erase()
-Message-ID: <81aa38a0-ae35-41b1-900a-cc60f5367d06@lucifer.local>
-References: <20250512123424.637989-1-david@redhat.com>
- <20250512123424.637989-10-david@redhat.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250512123424.637989-10-david@redhat.com>
-X-ClientProxiedBy: LO4P123CA0532.GBRP123.PROD.OUTLOOK.COM
- (2603:10a6:600:2c5::14) To CH3PR10MB8215.namprd10.prod.outlook.com
- (2603:10b6:610:1f5::7)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GEew3f4E"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8ED5DC4CEE7;
+	Mon, 12 May 2025 18:04:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747073045;
+	bh=5j+xYQscMqWUuWCzArI78hMBRpb0hdhBpNzwbIMTg7I=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=GEew3f4EAk0fXu5BsYPfepZrEFcQMrginylyA6TgBhD/WmpZVlqp0pREf2TMMpf2U
+	 OmmcdGkr4tQ1amWvOj+1Ff30/Lbd/NojKpmBJKYCJH/SKJvfkHdEdeDSgTn+/pHdcu
+	 mTFvDcWGkkjeMgNcq25ox8JRC2lW3Z5wX7IXhA67q7LwceyqHr2up43MD8SBCXz0ua
+	 N7nLS2kHOsJYGI+4PbjZzokOBVBgiaoTxQ2EwKiP5CdqyMeo8BMbSI1Wg4xLUTr5Iz
+	 49cutx+R0jdbK900X2kLQfz5XW4SAthMvByZf7fu8V1o1RQdtkVT9CNP+WFl3jMN4V
+	 pJrIpd2VnOjIg==
+From: Sasha Levin <sashal@kernel.org>
+To: patches@lists.linux.dev,
+	stable@vger.kernel.org
+Cc: Goldwyn Rodrigues <rgoldwyn@suse.de>,
+	Goldwyn Rodrigues <rgoldwyn@suse.com>,
+	David Sterba <dsterba@suse.com>,
+	Sasha Levin <sashal@kernel.org>,
+	clm@fb.com,
+	josef@toxicpanda.com,
+	rostedt@goodmis.org,
+	mhiramat@kernel.org,
+	linux-btrfs@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.14 05/15] btrfs: correct the order of prelim_ref arguments in btrfs__prelim_ref
+Date: Mon, 12 May 2025 14:03:40 -0400
+Message-Id: <20250512180352.437356-5-sashal@kernel.org>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250512180352.437356-1-sashal@kernel.org>
+References: <20250512180352.437356-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH3PR10MB8215:EE_|PH8PR10MB6316:EE_
-X-MS-Office365-Filtering-Correlation-Id: 9adb7177-63b3-4e92-2c34-08dd917503de
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|7416014|376014|366016|1800799024|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?FsYo/eixUh1eUl9cW23ZDM1dA3dwOUSQxMV06Ky7YQqrOVOBNsTKBvYIlaND?=
- =?us-ascii?Q?KBXpMJpk/7PUQbV5D/LrmUrslPP5WYUlxdcsceiiJJ3aDcCDE9MgliTXlQmv?=
- =?us-ascii?Q?fNHB8NySlx3PGVLHJx2DVDlChgiwyLK7biUMCSfB37tVm1LJvf9UxWfPfpA8?=
- =?us-ascii?Q?FUMsROdgOSC80dFTCPDw7YMHo25yd2xmHsgMdo87rgJYbMgNUjFiYG9jXXKN?=
- =?us-ascii?Q?UGvlI4zGD5TPAGQ4Juvg5yF2aGlWCMEEpHx0zuCPG6pVr1QT2gNSojIU4Eu7?=
- =?us-ascii?Q?uky/FOnkWGQcllzsoeUMmxZxSdBLiSTcl8efE/CwX0B3CH9yHPY5/2pvcz9q?=
- =?us-ascii?Q?qqW5cgJjBqYpEQI8tbPdp9gwKrao2sMBM8c0K9j8D/L8VOu960q2bvGJM602?=
- =?us-ascii?Q?ww/8t6Oga6XX++0G2gEthVFfuln5vnoUUdKK8vpYSvYeai0jI3SteYqOsExS?=
- =?us-ascii?Q?C5XoopeAWKDOFrFvOp8A172rW62P7GWHws2u/jcDIbZTcAaNq0VpllBWQEe8?=
- =?us-ascii?Q?5iulZgPG6Xn7FJF7S2isb6zA+zjxTT8lsG0FwXA+1lfb30X9YiP58RDQkKZc?=
- =?us-ascii?Q?gnQAeRolJorj3CmuXg4cqB4eMAEVC2nLIzIRbxVv4fyGrN25z5UsUsJUnHro?=
- =?us-ascii?Q?TtCFCwCSy3VisS6WDTrHS6BhdWY4VfaNKJWgjs0hdSpA3KrtdoSEWFr+sj+e?=
- =?us-ascii?Q?x879EsNczIEdz9Qc9nR6jgqv3T377r2Z7+zb7H9/6awOxSJu1MYBXdsR9o9I?=
- =?us-ascii?Q?mLGVb5VVNWzPkMv1JC5Exl94gqm1g/0XYvdpsEbvYHnXEFmNRU0SswecafCI?=
- =?us-ascii?Q?po0GqIqrl6ct6mb9NtY8kSFkA9ggnTM7CL65y6v3SFKCvw6DQJjoorp4dE8y?=
- =?us-ascii?Q?+9gvqpPhjgXYcOsGxi5CFbEgAN1aKlM8JYOFFqfRws5Ir6xyDGTblwQhkSGQ?=
- =?us-ascii?Q?l/kTZqq0H4W8fVNNPlUikcuY1jAz67ticvSg9hahpmDC90zMALxp0TyN5YVC?=
- =?us-ascii?Q?vsl5HV2+WW1AzSx36PFH8kASxRqZTCrtsSQhe+GRXTj6ZsKfF8ILMXkV1vm2?=
- =?us-ascii?Q?fKqzJGg+pyT89ubnfHE5qm9C1DPJBm+xKSCOsRreiG0URNZBrdpo3ztpJd5D?=
- =?us-ascii?Q?Rp7hlV6M0Fp3i0mkIK/H1JM6yn3mwhWTDUx5VFS9rJ4czRPBsAvwQFc5fVKI?=
- =?us-ascii?Q?sdLnjPk3tPxUXa/+GxZZIUGIFBQ/0S4LlIW5nGVxsF/C9BWF/7Lrg93ksR/v?=
- =?us-ascii?Q?wWOyrORRRrpO77hDK0h/s5efcf+YVnJGUX+/lM5mGhVwL7PNLAGoewxwIQRv?=
- =?us-ascii?Q?kGUpQjzyr0d/5beqokGpbCIWsKSJfy7g9CgZL1lX6X+ZnQZWxoOlc4DCdI3m?=
- =?us-ascii?Q?UUnPuIcPHqUe7tCHT1fCkBjWFbCUN0gu+8iUwqYNArp0fuBPMzexwvxRaBvm?=
- =?us-ascii?Q?MAlfMo6Y0PM=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR10MB8215.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(366016)(1800799024)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?0vA3R5YjZ+WQS4P8qP8eqnsb/CRoznfb8Ty5ygGTpyK+Nvh0mLKEFQfKPu9Y?=
- =?us-ascii?Q?wXY/vykOVVGoDt9soNje5SSb/qD+r/QTk6kBt3A1Pdx9H6sPtB3gSNNBWfJL?=
- =?us-ascii?Q?E8PMdBUO2M7crDvzvNW4TP3HThawE714il3Av97B69fptfo65XvL80y2sFFM?=
- =?us-ascii?Q?j37XyALLQMKwb/u2YmtwkQGw9pZPdUH0xkwBFOg0TIl59obHvDu/nR6iPsY8?=
- =?us-ascii?Q?KYm7d6VEtrSZb9axik/tIkBzbgrPjdu1Fvyq1DqNc0K2R6KbAxYg3LysYQoh?=
- =?us-ascii?Q?trn5pcRKSDq11YBMZuZp2tPCEimBAh87hoDWpaJMHRi/4NxMkCEx2sYMgmN2?=
- =?us-ascii?Q?dcaAimMHpeXZFhwILSpjEykYmsJXlgZLV46Gx6qZcs9GKCuSp5DrMMjJplTG?=
- =?us-ascii?Q?CjrZbT27nFTZI4MsVDe6uiZnoGQbPl3lCNoXm/GJamAUuZ2nrYi3lCKXaT4f?=
- =?us-ascii?Q?HRG9fumcB4xqL7/4RIfZB8RGsw5PvtZgOrA5cHpoXedajFZX28oleF7JxJgZ?=
- =?us-ascii?Q?SHSGF6MSa8AbA4x0ScbkJbWd57lEHEP/R4ou2rtwH/7oIjWumAJReog+mIjZ?=
- =?us-ascii?Q?03dJRyg4hc9zX0N57MJ1KqEX62ufWAga+7rbAfH0baVRD7rcTW3P5IERw0Mk?=
- =?us-ascii?Q?RlRnyjyBiEBDpmnF4EkyACzT5kht1S/LsKDjPNHhsIaF09eyHNT2EnREsZ+C?=
- =?us-ascii?Q?oDqwyUqHYSj9XvVXRnjQ2Mo6Xh7uGUCHUZjBkEo1futu2DG5dlGBZy6Xz1xW?=
- =?us-ascii?Q?EpmIxOwlqhC1+XWnQis9nF/i4ogGHak8r59Lw1v3vB6BBI2ZhjQieYBg4rWb?=
- =?us-ascii?Q?6J2rI5e6mBicv00v2+v/u6J6WsvPXDHi48zQgc2ilEYYoJTNnlvuJWsaIwlq?=
- =?us-ascii?Q?IS31/iwpAwasQMDHagWpWwCbMvLLN/To1GlmPt+VvBBFgrZlDaGBARBt4qzM?=
- =?us-ascii?Q?lHplcvsE3lpAazxIkCE8xRF90zx+FELMY7XhiEnLnYZ2fx4xpa7QDFncioTk?=
- =?us-ascii?Q?FIrioR4Nx27PvQmls/byB5v6Lu+mbkWOXS01+SexH9R9kfUxU+M3sc38kPeT?=
- =?us-ascii?Q?MyRfasC+rDFZhYnrfHvfZM4VnzxOvHsFRrbZZwoZaPwmZMPABlWtjMpWzO0j?=
- =?us-ascii?Q?Z8afIXMnobgYEHBuTpza0z7XjDfIORgSOnzZnXaO8wMULwvUrV0HCblt7nXN?=
- =?us-ascii?Q?xnjEsLGRLGFW6+oBZ8WniJV0J5yeLEeNdgbSPNs1blW1tra+bbj3fGt7YbU0?=
- =?us-ascii?Q?Nxu9d/fwedx2nx2CNk74IVINANPVWGnpDHjq2v3LwAKVUngLZEhicv9GOH8i?=
- =?us-ascii?Q?/5TOx2BQn3DvygLI2EjvwWHJ2CFFS2K/D/U/xhRAO/Nh0KOHnzkBh6ZRBZwt?=
- =?us-ascii?Q?9MXvy2bQwFZXJV3zf20DAgWH9CgPgRnUUlTNudjrJBAVBU00ScOyaqRhumjy?=
- =?us-ascii?Q?V6vOAB9lD82q4w0iuJEsbmQYkw/SMvR6iaD9wNKy0nLE9kvdKLIgACS0g4D5?=
- =?us-ascii?Q?5v19NKmnUk+sa0B5vSvy0IJVAGdeZZNWrRyXpxughnF5g4t9wpW4oQJJybMf?=
- =?us-ascii?Q?k6posYqjtPixh+lk3ony7EkfRm+2hisc4hbhbXbQbKHTXMm8i53foTFVH+CV?=
- =?us-ascii?Q?kg=3D=3D?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	XtPKiztstNXrCCrXPxTMBvSC84gwRA7xmEabCO/wDHsWrTI3TB6d/JWtnUQ65rdRco3ieRs/pgeWZO2aO9o9ZBEcIKuHnh/tkrULxb1kv8Y2aSPDD7s873WYF5s3dzCthLhrC0zfIC1Q/X/ZdNPaxVf0mvN2pDjcf9UuBnVIbBitktBh26ogNRavMWhGxgUxPNGcIrF/P5PPXmAkRVn56UkOQkphlzKHOdXxcnPpHfSqV8jOXssb1fNrtGQ+4ZNHtzjoZ5hlQ2yqHg2TB51THf/U7oZhRiTFVqOm0/IUEqK4XNdf0X/AAYZleZlfTN2246pCLW4G6nn0TphgpmvxRwERLP8q+kzz/FZt/+fhm1CwFC0WVwy44BlB1WiUjywKAFXo88ZpHfwgK2p/Df+utFYBqtiJ0FVVDIX9MSim9LB1ADWQmnvQcJex11I14y1guW58pImwfmlXI1LiGZ/L5LJnp3/47blt3a9P8Tc/Q3CPUphGyoVg/y05JrDLVj26CfoirYscJLvqCJ3fW3xCWhclMrMAyToJx3yN9js3AH9Q6JlW4akMLQpsO+BoqweKI1CY+x5Q345mX+ibV6S6zXvkVqD9OVEsjwwyoDBRurc=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9adb7177-63b3-4e92-2c34-08dd917503de
-X-MS-Exchange-CrossTenant-AuthSource: CH3PR10MB8215.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 May 2025 16:49:51.9472
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: BwJRK78g9GwX+JPoBeJllxXiCY97VMIrKv6cq3xCY059NRk4sXvR0iz9hNMFST9FGuhbdcV+AzAM9+h5mLtDVP5s8F1ltWYjgkqRYHeA3X8=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH8PR10MB6316
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-12_05,2025-05-09_01,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 adultscore=0
- spamscore=0 malwarescore=0 mlxscore=0 phishscore=0 suspectscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2504070000 definitions=main-2505120173
-X-Authority-Analysis: v=2.4 cv=M8hNKzws c=1 sm=1 tr=0 ts=682226b4 cx=c_pps a=XiAAW1AwiKB2Y8Wsi+sD2Q==:117 a=XiAAW1AwiKB2Y8Wsi+sD2Q==:17 a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19 a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19 a=xqWC_Br6kY4A:10
- a=kj9zAlcOel0A:10 a=dt9VzEwgFbYA:10 a=GoEa3M9JfhUA:10 a=20KFwNOVAAAA:8 a=yPCof4ZbAAAA:8 a=xsQxrDdK8mqNjbTR4KcA:9 a=CjuIK1q_8ugA:10
-X-Proofpoint-GUID: m0vLTn5urEhmYLcp7c1WxPPx6vApvx5u
-X-Proofpoint-ORIG-GUID: m0vLTn5urEhmYLcp7c1WxPPx6vApvx5u
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTEyMDE3MiBTYWx0ZWRfXyuC84BIRXNVr DjoIUF2tkyic3D+CII4F77qlxbvOcGy0USGPqMmzr+owPXO6xAb6I2ojwUKPjKVDbK2Fo332EfW 38ANbZLvg4ZW1m5QKVLG/KSTFwDBCQ48F0IM47p060Y6hbiVNUFZaL5UuSL+4YnrR+XtZsE1b1A
- i4yvvc11Vazeofbe/oal+0XqBHmHD0aoWcY7LgDG7PZM60+G85Mb7gBkdbqEQyxTevLsVrGUOlL hU/boDMb/qqiWaoWmzHzuY+IloBuPVf6CzwbfQeyO/LE6nG2cMZ6VlFlh2CDK2wooQs7VvXbLmc U7d4dRgPRs7xXc8NlbwTLzDsUqrQV4NRhu+XzdQ+LKMegOrLCHW/arehAhi/h9nugB5jwNSi9Dn
- XvQvAJHo9ymizYP05whGGGbr+koqTgqAZunREEWmGfqndZE/dWGCH3P0JunnBGD157ORxwhl
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.14.6
+Content-Transfer-Encoding: 8bit
 
-On Mon, May 12, 2025 at 02:34:22PM +0200, David Hildenbrand wrote:
-> Let's just have it in a single function. The resulting function is
-> certainly small enough and readable.
->
-> Signed-off-by: David Hildenbrand <david@redhat.com>
+From: Goldwyn Rodrigues <rgoldwyn@suse.de>
 
-Nice, great bit of refactoring :) the new version is considerably clearer.
+[ Upstream commit bc7e0975093567f51be8e1bdf4aa5900a3cf0b1e ]
 
-Reviewed-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+btrfs_prelim_ref() calls the old and new reference variables in the
+incorrect order. This causes a NULL pointer dereference because oldref
+is passed as NULL to trace_btrfs_prelim_ref_insert().
 
-> ---
->  arch/x86/mm/pat/memtype_interval.c | 33 +++++++++---------------------
->  1 file changed, 10 insertions(+), 23 deletions(-)
->
-> diff --git a/arch/x86/mm/pat/memtype_interval.c b/arch/x86/mm/pat/memtype_interval.c
-> index 9d03f0dbc4715..e5844ed1311ed 100644
-> --- a/arch/x86/mm/pat/memtype_interval.c
-> +++ b/arch/x86/mm/pat/memtype_interval.c
-> @@ -49,21 +49,6 @@ INTERVAL_TREE_DEFINE(struct memtype, rb, u64, subtree_max_end,
->
->  static struct rb_root_cached memtype_rbroot = RB_ROOT_CACHED;
->
-> -static struct memtype *memtype_match(u64 start, u64 end)
-> -{
-> -	struct memtype *entry_match;
-> -
-> -	entry_match = interval_iter_first(&memtype_rbroot, start, end-1);
-> -
-> -	while (entry_match != NULL && entry_match->start < end) {
-> -		if (entry_match->start == start && entry_match->end == end)
-> -			return entry_match;
-> -		entry_match = interval_iter_next(entry_match, start, end-1);
-> -	}
-> -
-> -	return NULL; /* Returns NULL if there is no match */
-> -}
-> -
->  static int memtype_check_conflict(u64 start, u64 end,
->  				  enum page_cache_mode reqtype,
->  				  enum page_cache_mode *newtype)
-> @@ -119,14 +104,16 @@ int memtype_check_insert(struct memtype *entry_new, enum page_cache_mode *ret_ty
->
->  struct memtype *memtype_erase(u64 start, u64 end)
->  {
-> -	struct memtype *entry_old;
-> -
-> -	entry_old = memtype_match(start, end);
-> -	if (!entry_old)
-> -		return ERR_PTR(-EINVAL);
-> -
-> -	interval_remove(entry_old, &memtype_rbroot);
-> -	return entry_old;
-> +	struct memtype *entry = interval_iter_first(&memtype_rbroot, start, end - 1);
-> +
-> +	while (entry && entry->start < end) {
-> +		if (entry->start == start && entry->end == end) {
-> +			interval_remove(entry, &memtype_rbroot);
-> +			return entry;
-> +		}
-> +		entry = interval_iter_next(entry, start, end - 1);
-> +	}
-> +	return ERR_PTR(-EINVAL);
->  }
->
->  struct memtype *memtype_lookup(u64 addr)
-> --
-> 2.49.0
->
+Note, trace_btrfs_prelim_ref_insert() is being called with newref as
+oldref (and oldref as NULL) on purpose in order to print out
+the values of newref.
+
+To reproduce:
+echo 1 > /sys/kernel/debug/tracing/events/btrfs/btrfs_prelim_ref_insert/enable
+
+Perform some writeback operations.
+
+Backtrace:
+BUG: kernel NULL pointer dereference, address: 0000000000000018
+ #PF: supervisor read access in kernel mode
+ #PF: error_code(0x0000) - not-present page
+ PGD 115949067 P4D 115949067 PUD 11594a067 PMD 0
+ Oops: Oops: 0000 [#1] SMP NOPTI
+ CPU: 1 UID: 0 PID: 1188 Comm: fsstress Not tainted 6.15.0-rc2-tester+ #47 PREEMPT(voluntary)  7ca2cef72d5e9c600f0c7718adb6462de8149622
+ Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS rel-1.16.3-2-gc13ff2cd-prebuilt.qemu.org 04/01/2014
+ RIP: 0010:trace_event_raw_event_btrfs__prelim_ref+0x72/0x130
+ Code: e8 43 81 9f ff 48 85 c0 74 78 4d 85 e4 0f 84 8f 00 00 00 49 8b 94 24 c0 06 00 00 48 8b 0a 48 89 48 08 48 8b 52 08 48 89 50 10 <49> 8b 55 18 48 89 50 18 49 8b 55 20 48 89 50 20 41 0f b6 55 28 88
+ RSP: 0018:ffffce44820077a0 EFLAGS: 00010286
+ RAX: ffff8c6b403f9014 RBX: ffff8c6b55825730 RCX: 304994edf9cf506b
+ RDX: d8b11eb7f0fdb699 RSI: ffff8c6b403f9010 RDI: ffff8c6b403f9010
+ RBP: 0000000000000001 R08: 0000000000000001 R09: 0000000000000010
+ R10: 00000000ffffffff R11: 0000000000000000 R12: ffff8c6b4e8fb000
+ R13: 0000000000000000 R14: ffffce44820077a8 R15: ffff8c6b4abd1540
+ FS:  00007f4dc6813740(0000) GS:ffff8c6c1d378000(0000) knlGS:0000000000000000
+ CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+ CR2: 0000000000000018 CR3: 000000010eb42000 CR4: 0000000000750ef0
+ PKRU: 55555554
+ Call Trace:
+  <TASK>
+  prelim_ref_insert+0x1c1/0x270
+  find_parent_nodes+0x12a6/0x1ee0
+  ? __entry_text_end+0x101f06/0x101f09
+  ? srso_alias_return_thunk+0x5/0xfbef5
+  ? srso_alias_return_thunk+0x5/0xfbef5
+  ? srso_alias_return_thunk+0x5/0xfbef5
+  ? srso_alias_return_thunk+0x5/0xfbef5
+  btrfs_is_data_extent_shared+0x167/0x640
+  ? fiemap_process_hole+0xd0/0x2c0
+  extent_fiemap+0xa5c/0xbc0
+  ? __entry_text_end+0x101f05/0x101f09
+  btrfs_fiemap+0x7e/0xd0
+  do_vfs_ioctl+0x425/0x9d0
+  __x64_sys_ioctl+0x75/0xc0
+
+Signed-off-by: Goldwyn Rodrigues <rgoldwyn@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ include/trace/events/btrfs.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/include/trace/events/btrfs.h b/include/trace/events/btrfs.h
+index 549ab3b419618..3efc00cc1bcd2 100644
+--- a/include/trace/events/btrfs.h
++++ b/include/trace/events/btrfs.h
+@@ -1928,7 +1928,7 @@ DECLARE_EVENT_CLASS(btrfs__prelim_ref,
+ 	TP_PROTO(const struct btrfs_fs_info *fs_info,
+ 		 const struct prelim_ref *oldref,
+ 		 const struct prelim_ref *newref, u64 tree_size),
+-	TP_ARGS(fs_info, newref, oldref, tree_size),
++	TP_ARGS(fs_info, oldref, newref, tree_size),
+ 
+ 	TP_STRUCT__entry_btrfs(
+ 		__field(	u64,  root_id		)
+-- 
+2.39.5
+
