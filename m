@@ -1,216 +1,127 @@
-Received: from mail-il1-f208.google.com (mail-il1-f208.google.com [209.85.166.208])
+Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 060C1254878
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 12 May 2025 03:56:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.208
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B608255F48
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 12 May 2025 07:55:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747022192; cv=none; b=etZZeNfzeZJBn7lZQWorduGaOvcIhPrU4x+Zvcq51XhcFgK5NM3mbIAcDrblVRnldPWD5RoLIE9/FX3NohV6OfMRtAaQGVM+UXDpWDdOVO/lChwS+GPHGp6A7ni8IB7+t+k8385nhyCBFn8aVtHrtooAsjasUDwOsgxSvpz1KLM=
+	t=1747036537; cv=none; b=rdS3mCkSsHf/NovYEKVP0WMQ8P+F7wGxte+EAo4PJYpih/11+zwUonyoxufoLNudVWlAXYz4AHXPYUW1ZNOLOdl19uByCjdnSKiAj5SeQ1gVhAe70uFm5GNEA9XUfp51O4mN4hP5uy55AE/oLDehSAyHuLq6+y7E/RoM9wVqHow=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747022192; c=relaxed/simple;
-	bh=0RKem1urBY7NYFGEXH4inqXZR4bo+YozOaH1bEt3BsM=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=ggzb0TN7W/aBRezoMM/MxPCXEHeZd9I+ozrQoG9BgkbYmNlcMuxCNy3NobVbSDPwOLA1izw89ecGgI8szx4H1vmaNsViGSnSAl78SvQOG6L4B+CV0RsyBn63HEZR3YQbjFBoWL2owSzmm2TRxm5hrEvCfsduZqLyUiMyMoteXNY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.208
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f208.google.com with SMTP id e9e14a558f8ab-3da707dea42so97620835ab.3
-        for <linux-trace-kernel@vger.kernel.org>; Sun, 11 May 2025 20:56:30 -0700 (PDT)
+	s=arc-20240116; t=1747036537; c=relaxed/simple;
+	bh=7GONjaD7jFf6DraAUB8mWndfQEMMogoPdAMOxswMWYM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=me83gvN6c4YbOAxjOkasCh6Z6mrgl7Q9jfSqdIP4p3DjSTgLtHihMVy9gWIPofaDAKZZfzKi6pfyQxQCBwTRErNQS6BToRZ1d59xHKyOy/kOx2iR9W/xOJYKt4v7XEkYG31GoqFYIOGDUybt+W8nFkYv8aVs1AHWVDKahrSACsg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=eaUrtNBt; arc=none smtp.client-ip=209.85.221.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="eaUrtNBt"
+Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-3a1d8c0966fso2401599f8f.1
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 12 May 2025 00:55:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1747036534; x=1747641334; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=JVmeoRs8wht6ScX85zDxCRxMqcg4xq84fv5EF0eHPpo=;
+        b=eaUrtNBtAlkGznj3QUjgs82ayC9haBffhtS0lQhAfxWuDrzuOSOsqgDup6eTvmKNsf
+         pKE1L9++VvCAl7SjAaZaxPSZBJh7l9KvDdhGxm8fMcm4IVE58oXAExMfDYJeLxiTfpOv
+         PoaZB7g2KpAEy7+6xyFaGstD6+3QOnBTDJ7uCqZi27Yz5UnmLtWW8E9SfrXEyMrS8KVz
+         Eu3x/nqzzYMeI/0237a3pKIJHxeTrZyguff67cu3O3OmzT0GjxePTB8E5o1jb1teyi8L
+         h7bC+je84/PxyJQC2xbi5ZiJBc/qHXj66Nc9s4QcpR9iyJ8e8QIVaRaj3fApKn2cKEU2
+         v/4A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747022190; x=1747626990;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=NV860LwlNmWdIlSKFfzsJHQhslmNi+R9+Xj59lYo/oo=;
-        b=NoJFkDyi6sqTeYPHR6WV8WnlCzonNt9NRobwAEybmDUkOcisW16VWtDLOg2PVNguiv
-         qagWliPpEUq7A9eLoWZcufs0jM/DkA8DWIht0mlBfvw5sAZymavezFUSz29wYtHMJz24
-         j2dyh0BjJbL9mTJPCUtx9BkLPnnSOQccUn8uRI9kj+R3qeW7ipP8mR578lz5aRWV7Dui
-         D7uwg7IfzEovxX3oHAaSDwXZSe6qVP+vsgqWsYXisneI9l8Jl0ne5DfwnJ5w/IFEsVHy
-         /bUwYsJZKSfuxioEmNj2kcnZwxKKerW8GWNvIrtn6VX8pk7BFz/HUild8FxTLt1Qzw7T
-         J0QQ==
-X-Forwarded-Encrypted: i=1; AJvYcCX77VV9XkhV5+g5EVk5u+6LcNGy9b9V6eymNCBBuGCDbt7WyAvUDsspUwoBse5/UM5KRxLym2Vzwb2JALeq/AEeKEc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyYdku62q9eFylkmEE3/QmD5swQ4GZI60z4vyPoOc3FHWn58Bqy
-	/PAqtK+6ZhIHs3/t5tUfU0nGHs8DBpJnT3ZFpvsaEysZTYiutSdVq40Cdd3GNlOVQF5z+NOAWcM
-	rUXJvjt7xSgZQB9wvaUqvmslyugu5JZyN974ecris4fRxaC/LE0Epdno=
-X-Google-Smtp-Source: AGHT+IHYBXgZUSOZq/Efikl9lNORbCSYoF1xd9RUs0nDlMA0xakDHDYSg8JO5IFhCu0em0htlRfz70TF0vhBJFZ/h+6lbP7LUv8A
+        d=1e100.net; s=20230601; t=1747036534; x=1747641334;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=JVmeoRs8wht6ScX85zDxCRxMqcg4xq84fv5EF0eHPpo=;
+        b=H9Zpadv0ehJ84WO3s7hGxxaX4bayW0WVYiZNZPDIn6akYCgxvJ6oTybH6/d9D02Tui
+         Qn9V0KeQHCp5YRHdI+LSgEvAMIaCrefJnQWfmUJnQMeL6EZYqrKLpvCXZuFUUaqo9Z6s
+         rQx0Bo0upNKXMAcLcGVwZuThX3X+AD06FwJFGJsdVHVzP7fZlbOQg9O40dYP+E6ax4SM
+         fI31itwJhSZWMMTKDV7nzkFKj7dBErPI3sDcytUzrNIqVgzPE5JThQo9pGKBl/naEmwO
+         HbJ1r487jsAnaDdmKTnYE/908NbCyBNxIauIY6US8tjA87nQrA/HCFGZRrdb4wVvfs97
+         SKGA==
+X-Forwarded-Encrypted: i=1; AJvYcCXVy0SlChqAdP0n5KUp2r/k4HHcN0J998HAGXw7KkUpHsBQbyYWbdBHcrMQrmnJJW4rw9Vl/3QTYW/wKQcOWyR5duM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxRIouPmSoFOCXQU9X/IhJzZlbpdCUgNekYzh5EyPg+lQmRnPaw
+	uR+646VltPxiiMAlcZyT69GcWyWJ24UmBHq2S/y6G/1UsuH88PZj/YHqfzruZQ==
+X-Gm-Gg: ASbGnct+pdFOM/ji/aynjOc1c+FvgvizKnX+TZ5uVI6IN/2E+DRSmgLLREsc/aPtn94
+	GgPQ/CaeSXwNxaa3M1mW/0ClOYYfR8SUbUg+aONoJcSiZK6gNsM4PwcEigs63t81482lcEdR9oO
+	mIu8arBMeLnUQDLSlvQcEw9IMGrGFoLkDQ/B+18zSiSs9BB+lZ+NOkHFmUaub0l4wMlvJ+JjBxg
+	u1QNVePR2Im9jb5Y3dqtUJ7NDH/1a1ZjL6z7v6ageUk/jBpM9S+c2dQrNHhkSnCwysf4mrsXkUt
+	dF33YNP83cBBfa3MMxyX2hUdJ32BzVfgVBzdcHcRW6tOUvTJofCWPrjxPNMwQ3VKKvi/ohOpbJL
+	4EXMmXJdG3brhsioIt4ytWBw91sY=
+X-Google-Smtp-Source: AGHT+IHRngy7dyfSblPZg3kx1M0V69ixjtLKeGbM3AJ71FSYb+70+rHci10V2fws5C9DeqNnhr+dvQ==
+X-Received: by 2002:adf:e612:0:b0:3a1:f724:eb15 with SMTP id ffacd0b85a97d-3a1f724eb66mr7737749f8f.2.1747036534388;
+        Mon, 12 May 2025 00:55:34 -0700 (PDT)
+Received: from google.com (218.131.22.34.bc.googleusercontent.com. [34.22.131.218])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a1f58f2f65sm11745987f8f.55.2025.05.12.00.55.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 12 May 2025 00:55:34 -0700 (PDT)
+Date: Mon, 12 May 2025 08:55:30 +0100
+From: Vincent Donnefort <vdonnefort@google.com>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
+	linux-trace-kernel@vger.kernel.org, maz@kernel.org,
+	oliver.upton@linux.dev, joey.gouly@arm.com, suzuki.poulose@arm.com,
+	yuzenghui@huawei.com, kvmarm@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org, jstultz@google.com,
+	qperret@google.com, will@kernel.org, kernel-team@android.com,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 05/24] tracing: Add events to trace remotes
+Message-ID: <aCGpchGnvyFpWk2y@google.com>
+References: <20250506164820.515876-1-vdonnefort@google.com>
+ <20250506164820.515876-6-vdonnefort@google.com>
+ <20250509154735.530d4a37@gandalf.local.home>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1648:b0:3d0:10a6:99aa with SMTP id
- e9e14a558f8ab-3da7e1dcc61mr123319415ab.4.1747022190053; Sun, 11 May 2025
- 20:56:30 -0700 (PDT)
-Date: Sun, 11 May 2025 20:56:30 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <6821716e.050a0220.f2294.004a.GAE@google.com>
-Subject: [syzbot] [bpf?] [trace?] WARNING in get_bpf_raw_tp_regs
-From: syzbot <syzbot+45b0c89a0fc7ae8dbadc@syzkaller.appspotmail.com>
-To: andrii@kernel.org, ast@kernel.org, bpf@vger.kernel.org, 
-	daniel@iogearbox.net, eddyz87@gmail.com, haoluo@google.com, 
-	john.fastabend@gmail.com, jolsa@kernel.org, kpsingh@kernel.org, 
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	martin.lau@linux.dev, mathieu.desnoyers@efficios.com, 
-	mattbobrowski@google.com, mhiramat@kernel.org, rostedt@goodmis.org, 
-	sdf@fomichev.me, song@kernel.org, syzkaller-bugs@googlegroups.com, 
-	yonghong.song@linux.dev
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250509154735.530d4a37@gandalf.local.home>
 
-Hello,
+On Fri, May 09, 2025 at 03:47:35PM -0400, Steven Rostedt wrote:
+> On Tue,  6 May 2025 17:48:01 +0100
+> Vincent Donnefort <vdonnefort@google.com> wrote:
+> 
+> > diff --git a/include/linux/trace_remote_event.h b/include/linux/trace_remote_event.h
+> > new file mode 100644
+> > index 000000000000..621c5dff0664
+> > --- /dev/null
+> > +++ b/include/linux/trace_remote_event.h
+> > @@ -0,0 +1,23 @@
+> > +/* SPDX-License-Identifier: GPL-2.0 */
+> > +
+> > +#ifndef _LINUX_TRACE_REMOTE_EVENTS_H
+> > +#define _LINUX_TRACE_REMOTE_EVENTS_H
+> > +
+> > +struct trace_remote;
+> > +struct trace_event_fields;
+> > +
+> > +struct remote_event_hdr {
+> > +	unsigned short	id;
+> > +};
+> > +
+> > +#define REMOTE_EVENT_NAME_MAX 29
+> 
+> 29 is a particularly strange number. It's not even divisible by
+> sizeof(short). This will leave a hole in the remote_event structure.
+> 
+> Should it be "30" to plug up that one byte space between name and "id"?
 
-syzbot found the following issue on:
+Ha yes 30 is what it should be!
 
-HEAD commit:    707df3375124 Merge tag 'media/v6.15-2' of git://git.kernel..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=15010768580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=b39cb28b0a399ed3
-dashboard link: https://syzkaller.appspot.com/bug?extid=45b0c89a0fc7ae8dbadc
-compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=10b28670580000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=159698f4580000
-
-Downloadable assets:
-disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/d900f083ada3/non_bootable_disk-707df337.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/f71d162685b9/vmlinux-707df337.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/940cb473e515/bzImage-707df337.xz
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+45b0c89a0fc7ae8dbadc@syzkaller.appspotmail.com
-
-------------[ cut here ]------------
-WARNING: CPU: 3 PID: 5971 at kernel/trace/bpf_trace.c:1861 get_bpf_raw_tp_regs+0xa4/0x100 kernel/trace/bpf_trace.c:1861
-Modules linked in:
-CPU: 3 UID: 0 PID: 5971 Comm: syz-executor205 Not tainted 6.15.0-rc5-syzkaller-00038-g707df3375124 #0 PREEMPT(full) 
-Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
-RIP: 0010:get_bpf_raw_tp_regs+0xa4/0x100 kernel/trace/bpf_trace.c:1861
-Code: 48 83 fb 03 77 64 48 8d 04 9b 48 8d 04 83 48 8d 5c c5 00 e8 7e 76 f4 ff 48 89 d8 5b 5d 41 5c c3 cc cc cc cc e8 6d 76 f4 ff 90 <0f> 0b 90 65 ff 0d b2 5b de 11 e8 5d 76 f4 ff 48 c7 c3 f0 ff ff ff
-RSP: 0018:ffffc90003636fa8 EFLAGS: 00010293
-RAX: 0000000000000000 RBX: 0000000000000003 RCX: ffffffff81c6bc4c
-RDX: ffff888032efc880 RSI: ffffffff81c6bc83 RDI: 0000000000000005
-RBP: ffff88806a730860 R08: 0000000000000005 R09: 0000000000000003
-R10: 0000000000000004 R11: 0000000000000000 R12: 0000000000000004
-R13: 0000000000000001 R14: ffffc90003637008 R15: 0000000000000900
-FS:  0000000000000000(0000) GS:ffff8880d6cdf000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007f7baee09130 CR3: 0000000029f5a000 CR4: 0000000000352ef0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- <TASK>
- ____bpf_get_stack_raw_tp kernel/trace/bpf_trace.c:1934 [inline]
- bpf_get_stack_raw_tp+0x24/0x160 kernel/trace/bpf_trace.c:1931
- bpf_prog_ec3b2eefa702d8d3+0x43/0x47
- bpf_dispatcher_nop_func include/linux/bpf.h:1316 [inline]
- __bpf_prog_run include/linux/filter.h:718 [inline]
- bpf_prog_run include/linux/filter.h:725 [inline]
- __bpf_trace_run kernel/trace/bpf_trace.c:2363 [inline]
- bpf_trace_run3+0x23f/0x5a0 kernel/trace/bpf_trace.c:2405
- __bpf_trace_mmap_lock_acquire_returned+0xfc/0x140 include/trace/events/mmap_lock.h:47
- __traceiter_mmap_lock_acquire_returned+0x79/0xc0 include/trace/events/mmap_lock.h:47
- __do_trace_mmap_lock_acquire_returned include/trace/events/mmap_lock.h:47 [inline]
- trace_mmap_lock_acquire_returned include/trace/events/mmap_lock.h:47 [inline]
- __mmap_lock_do_trace_acquire_returned+0x138/0x1f0 mm/mmap_lock.c:35
- __mmap_lock_trace_acquire_returned include/linux/mmap_lock.h:36 [inline]
- mmap_read_trylock include/linux/mmap_lock.h:204 [inline]
- stack_map_get_build_id_offset+0x535/0x6f0 kernel/bpf/stackmap.c:157
- __bpf_get_stack+0x307/0xa10 kernel/bpf/stackmap.c:483
- ____bpf_get_stack kernel/bpf/stackmap.c:499 [inline]
- bpf_get_stack+0x32/0x40 kernel/bpf/stackmap.c:496
- ____bpf_get_stack_raw_tp kernel/trace/bpf_trace.c:1941 [inline]
- bpf_get_stack_raw_tp+0x124/0x160 kernel/trace/bpf_trace.c:1931
- bpf_prog_ec3b2eefa702d8d3+0x43/0x47
- bpf_dispatcher_nop_func include/linux/bpf.h:1316 [inline]
- __bpf_prog_run include/linux/filter.h:718 [inline]
- bpf_prog_run include/linux/filter.h:725 [inline]
- __bpf_trace_run kernel/trace/bpf_trace.c:2363 [inline]
- bpf_trace_run3+0x23f/0x5a0 kernel/trace/bpf_trace.c:2405
- __bpf_trace_mmap_lock_acquire_returned+0xfc/0x140 include/trace/events/mmap_lock.h:47
- __traceiter_mmap_lock_acquire_returned+0x79/0xc0 include/trace/events/mmap_lock.h:47
- __do_trace_mmap_lock_acquire_returned include/trace/events/mmap_lock.h:47 [inline]
- trace_mmap_lock_acquire_returned include/trace/events/mmap_lock.h:47 [inline]
- __mmap_lock_do_trace_acquire_returned+0x138/0x1f0 mm/mmap_lock.c:35
- __mmap_lock_trace_acquire_returned include/linux/mmap_lock.h:36 [inline]
- mmap_read_trylock include/linux/mmap_lock.h:204 [inline]
- stack_map_get_build_id_offset+0x535/0x6f0 kernel/bpf/stackmap.c:157
- __bpf_get_stack+0x307/0xa10 kernel/bpf/stackmap.c:483
- ____bpf_get_stack kernel/bpf/stackmap.c:499 [inline]
- bpf_get_stack+0x32/0x40 kernel/bpf/stackmap.c:496
- ____bpf_get_stack_raw_tp kernel/trace/bpf_trace.c:1941 [inline]
- bpf_get_stack_raw_tp+0x124/0x160 kernel/trace/bpf_trace.c:1931
- bpf_prog_ec3b2eefa702d8d3+0x43/0x47
- bpf_dispatcher_nop_func include/linux/bpf.h:1316 [inline]
- __bpf_prog_run include/linux/filter.h:718 [inline]
- bpf_prog_run include/linux/filter.h:725 [inline]
- __bpf_trace_run kernel/trace/bpf_trace.c:2363 [inline]
- bpf_trace_run3+0x23f/0x5a0 kernel/trace/bpf_trace.c:2405
- __bpf_trace_mmap_lock_acquire_returned+0xfc/0x140 include/trace/events/mmap_lock.h:47
- __traceiter_mmap_lock_acquire_returned+0x79/0xc0 include/trace/events/mmap_lock.h:47
- __do_trace_mmap_lock_acquire_returned include/trace/events/mmap_lock.h:47 [inline]
- trace_mmap_lock_acquire_returned include/trace/events/mmap_lock.h:47 [inline]
- __mmap_lock_do_trace_acquire_returned+0x138/0x1f0 mm/mmap_lock.c:35
- __mmap_lock_trace_acquire_returned include/linux/mmap_lock.h:36 [inline]
- mmap_read_trylock include/linux/mmap_lock.h:204 [inline]
- stack_map_get_build_id_offset+0x535/0x6f0 kernel/bpf/stackmap.c:157
- __bpf_get_stack+0x307/0xa10 kernel/bpf/stackmap.c:483
- ____bpf_get_stack kernel/bpf/stackmap.c:499 [inline]
- bpf_get_stack+0x32/0x40 kernel/bpf/stackmap.c:496
- ____bpf_get_stack_raw_tp kernel/trace/bpf_trace.c:1941 [inline]
- bpf_get_stack_raw_tp+0x124/0x160 kernel/trace/bpf_trace.c:1931
- bpf_prog_ec3b2eefa702d8d3+0x43/0x47
- bpf_dispatcher_nop_func include/linux/bpf.h:1316 [inline]
- __bpf_prog_run include/linux/filter.h:718 [inline]
- bpf_prog_run include/linux/filter.h:725 [inline]
- __bpf_trace_run kernel/trace/bpf_trace.c:2363 [inline]
- bpf_trace_run3+0x23f/0x5a0 kernel/trace/bpf_trace.c:2405
- __bpf_trace_mmap_lock_acquire_returned+0xfc/0x140 include/trace/events/mmap_lock.h:47
- __traceiter_mmap_lock_acquire_returned+0x79/0xc0 include/trace/events/mmap_lock.h:47
- __do_trace_mmap_lock_acquire_returned include/trace/events/mmap_lock.h:47 [inline]
- trace_mmap_lock_acquire_returned include/trace/events/mmap_lock.h:47 [inline]
- __mmap_lock_do_trace_acquire_returned+0x138/0x1f0 mm/mmap_lock.c:35
- __mmap_lock_trace_acquire_returned include/linux/mmap_lock.h:36 [inline]
- mmap_read_lock include/linux/mmap_lock.h:185 [inline]
- exit_mm kernel/exit.c:565 [inline]
- do_exit+0xf72/0x2c30 kernel/exit.c:940
- do_group_exit+0xd3/0x2a0 kernel/exit.c:1102
- __do_sys_exit_group kernel/exit.c:1113 [inline]
- __se_sys_exit_group kernel/exit.c:1111 [inline]
- __x64_sys_exit_group+0x3e/0x50 kernel/exit.c:1111
- x64_sys_call+0x1530/0x1730 arch/x86/include/generated/asm/syscalls_64.h:232
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xcd/0x260 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7f7baed8cfb9
-Code: 90 49 c7 c0 b8 ff ff ff be e7 00 00 00 ba 3c 00 00 00 eb 12 0f 1f 44 00 00 89 d0 0f 05 48 3d 00 f0 ff ff 77 1c f4 89 f0 0f 05 <48> 3d 00 f0 ff ff 76 e7 f7 d8 64 41 89 00 eb df 0f 1f 80 00 00 00
-RSP: 002b:00007ffd9d933998 EFLAGS: 00000246 ORIG_RAX: 00000000000000e7
-RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 00007f7baed8cfb9
-RDX: 000000000000003c RSI: 00000000000000e7 RDI: 0000000000000000
-RBP: 00007f7baee082b0 R08: ffffffffffffffb8 R09: 0000000000000000
-R10: 0000000000000012 R11: 0000000000000246 R12: 00007f7baee082b0
-R13: 0000000000000000 R14: 00007f7baee08d20 R15: 00007f7baed5e160
- </TASK>
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
+> 
+> -- Steve
+> 
+> > +struct remote_event {
+> > +	char				name[REMOTE_EVENT_NAME_MAX];
+> > +	unsigned short			id;
+> > +	bool				enabled;
+> > +	struct trace_remote		*remote;
+> > +	struct trace_event_fields	*fields;
+> > +	char				*print_fmt;
+> > +	void				(*print)(void *evt, struct trace_seq *seq);
+> > +};
