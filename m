@@ -1,742 +1,307 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from out-186.mta0.migadu.com (out-186.mta0.migadu.com [91.218.175.186])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 403D826A0BE;
-	Mon, 12 May 2025 10:51:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1883A274FEE
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 12 May 2025 11:12:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.186
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747047086; cv=none; b=nshJtO04JqraJIoU9vatQ7lYm3Qb0H+/Pj1zN8PsDOWjyH5xNLcArzv6VpCnpA2ff9o7Hh37bWFBcQJRPV4qt8jEF2GG6dAXRMNQZ3euRgs/Cv7NOHP40EpMvBStTNLtlznKJqC9dWcBrD5ksbv/COojOUywaR4W1/c7fhXlPhM=
+	t=1747048344; cv=none; b=m0toqODeUEHkyveXCnWmXbcYc5/+Li/PosKQy5amli42jn25Bup3mjZtJdIqd/uJEdMlw5DZIAH07mbgHgR33Pc4yK1b5kNhuS7R+ITTycrIcqXepPCMB1GWJMAlf8hQJa7FFEM9m8ud8ntvxcdUOERsqMrxG2QMI3tYGdSRUGc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747047086; c=relaxed/simple;
-	bh=bdxKB73YbwkmMKaWGPqzWUoNRWFtEOJ5WFaLqaz5z3s=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=V6kZWJCwgyD9qocXr/6pg/dDzGHGexTVeQwkxGVvPxiEs0MEnMlrKrGHKft8mVF9xsxSTPLUDTPlqEdkntnoLstR4cAOXsZw6LFr9Hezipjzy/GCFHUxgKSZ6vveK4LWa1mh9lkIrLkHpD2cNzCAtVjIM7GTPoxfFvIi5WHMr/s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=tydgRKNj; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=9uzzgayU; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1747048344; c=relaxed/simple;
+	bh=ko7Q9qbhYNYPvYA7LVk3TXue899YIv1qyRy0EJufnh8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=QUv29C1Ub0Q1OlfKkzoNVRb1EJFUGmQ3Fb26ZZoefaNgZxPSFQtl98R43tQlfBbKZnfIawUCxJ2NN0ZzYMFFwvsMzoyjA9jDyJ92m1vdgO7JZhJRWfpK7gfR6wwfgFMrTXIyQbuzIuLV5ShjMQQOrvlLKyhVifHUn5qWFeepMG0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Mf7H3Ufq; arc=none smtp.client-ip=91.218.175.186
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="tydgRKNj";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="9uzzgayU"
-From: Nam Cao <namcao@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1747047080;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Mf7H3Ufq"
+Message-ID: <16eafae1-5014-42a9-b6c4-8be40b26cf31@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1747048339;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=qhGqdfKGbPufsVKTcWaO/3wWw42NieK+TOOt0vJGg4Y=;
-	b=tydgRKNjAA0/ttTeSDrZptKfPhnPJ6hHWp5Ze7T5B2JTF0bv4nTt2deUrLO/bZBaFu0nrm
-	ISNcHVvCnNxXP7oFycR4Qdsr0vdLJqzUMPiSuA+qBsLqbVCrlaFaqfDZ4w0rPL/MGKWrfl
-	cUol0FZTFAjUXql1d091VJElexWL17imLAC70FHzQ4RX3bzyRr4ELy2wXpeZWeuClMi3U8
-	1Hw/0sfoNnIcVbN8kKPthv5s4etbGPi0XESnFpWCdbv6o/NYJ8Qp2FVOTbO2NyPtaEGIuG
-	HGkVT3OQJWXqn88ULK2aIyio7I4N3FW9GAoCk+M1jy8oPYPeR+A/xfWTaPCEFg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1747047080;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=qhGqdfKGbPufsVKTcWaO/3wWw42NieK+TOOt0vJGg4Y=;
-	b=9uzzgayU4+yPCFeSkDSrQK4UDbv/5lPoRCMpqO2aHTsc10DVbY9TbNejHDuvRdWJ5mrxCd
-	OSGQLuGOVc+JspAg==
-To: Steven Rostedt <rostedt@goodmis.org>,
-	Gabriele Monaco <gmonaco@redhat.com>,
-	linux-trace-kernel@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: john.ogness@linutronix.de,
-	Nam Cao <namcao@linutronix.de>
-Subject: [PATCH v8 20/22] rv: Add rtapp_sleep monitor
-Date: Mon, 12 May 2025 12:51:03 +0200
-Message-Id: <3199656a35cc8a7acc2e30d320defa778acf8532.1747046848.git.namcao@linutronix.de>
-In-Reply-To: <cover.1747046848.git.namcao@linutronix.de>
-References: <cover.1747046848.git.namcao@linutronix.de>
+	bh=77hYgmLIC7yLFMAWuJ8WWRqfKmeQfFFtha5TvnJkXHE=;
+	b=Mf7H3UfqXNL+8ByS9N/IjYMBcjOfeZyyG2JVX60LIiCuwnp0SKaZwgs0WFbVaiSvprVNXS
+	EnotFEhb+U5mp/CjW+iGtzDGzsZE3NtKj6IxG8BgSRxTgwbJAsGusplrUbY1cWf6FAVpcf
+	QmoKyw604efUa0L7qFeuHzNoDZjV/IQ=
+Date: Mon, 12 May 2025 19:12:07 +0800
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH bpf-next 1/4] bpf: Allow get_func_[arg|arg_cnt] helpers in
+ raw tracepoint programs
+To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+ Kafai Wan <mannkafai@gmail.com>, Song Liu <song@kernel.org>,
+ Jiri Olsa <jolsa@kernel.org>, Alexei Starovoitov <ast@kernel.org>,
+ Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>,
+ Martin KaFai Lau <martin.lau@linux.dev>, Eduard <eddyz87@gmail.com>,
+ Yonghong Song <yonghong.song@linux.dev>,
+ John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>,
+ Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>,
+ Matt Bobrowski <mattbobrowski@google.com>,
+ Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Simon Horman <horms@kernel.org>, Mykola Lysenko <mykolal@fb.com>,
+ Shuah Khan <shuah@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+ bpf <bpf@vger.kernel.org>,
+ linux-trace-kernel <linux-trace-kernel@vger.kernel.org>,
+ Network Development <netdev@vger.kernel.org>,
+ "open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>
+References: <20250426160027.177173-1-mannkafai@gmail.com>
+ <20250426160027.177173-2-mannkafai@gmail.com>
+ <CAADnVQ+DF18nKEf9i1RKEQN+ybH+duu7U-91YZDaa_PiqUx17g@mail.gmail.com>
+ <CALqUS-6XtJ0Bb9jiykdC3jAY_OHjGuirj06Kzssjvo7eW_so2A@mail.gmail.com>
+ <f951b81f-1b46-4219-82fd-0839e27ab3f3@linux.dev>
+ <CAADnVQ+FANha0fO_BF+iHJ4iZSCPtDfoUkzR8mMFwOakw8+eCg@mail.gmail.com>
+ <f1f23c1a-f4a8-4807-8028-87e247775ec8@linux.dev>
+ <CAEf4BzZcuCrK4UVv2qpp7LAL=uXg+YqFopNW3EzCCpUBNPq-ag@mail.gmail.com>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Leon Hwang <leon.hwang@linux.dev>
+In-Reply-To: <CAEf4BzZcuCrK4UVv2qpp7LAL=uXg+YqFopNW3EzCCpUBNPq-ag@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-Add a monitor for checking that real-time tasks do not go to sleep in a
-manner that may cause undesirable latency.
 
-Also change
-	RV depends on TRACING
-to
-	RV select TRACING
-to avoid the following recursive dependency:
 
- error: recursive dependency detected!
-	symbol TRACING is selected by PREEMPTIRQ_TRACEPOINTS
-	symbol PREEMPTIRQ_TRACEPOINTS depends on TRACE_IRQFLAGS
-	symbol TRACE_IRQFLAGS is selected by RV_MON_SLEEP
-	symbol RV_MON_SLEEP depends on RV
-	symbol RV depends on TRACING
+On 2025/5/7 05:01, Andrii Nakryiko wrote:
+> On Fri, May 2, 2025 at 7:26 AM Leon Hwang <leon.hwang@linux.dev> wrote:
+>>
+>>
+>>
+>> On 2025/5/1 00:53, Alexei Starovoitov wrote:
+>>> On Wed, Apr 30, 2025 at 8:55 AM Leon Hwang <leon.hwang@linux.dev> wrote:
+>>>>
+>>>>
+>>>>
+>>>> On 2025/4/30 20:43, Kafai Wan wrote:
+>>>>> On Wed, Apr 30, 2025 at 10:46 AM Alexei Starovoitov
+>>>>> <alexei.starovoitov@gmail.com> wrote:
+>>>>>>
+>>>>>> On Sat, Apr 26, 2025 at 9:00 AM KaFai Wan <mannkafai@gmail.com> wrote:
+>>>>>>>
+>>>>
+>>
+>> [...]
+>>
+>>>>
+>>>>
+>>>> bpf_get_func_arg() will be very helpful for bpfsnoop[1] when tracing tp_btf.
+>>>>
+>>>> In bpfsnoop, it can generate a small snippet of bpf instructions to use
+>>>> bpf_get_func_arg() for retrieving and filtering arguments. For example,
+>>>> with the netif_receive_skb tracepoint, bpfsnoop can use
+>>>> bpf_get_func_arg() to filter the skb argument using pcap-filter(7)[2] or
+>>>> a custom attribute-based filter. This will allow bpfsnoop to trace
+>>>> multiple tracepoints using a single bpf program code.
+>>>
+>>> I doubt you thought it through end to end.
+>>> When tracepoint prog attaches we have this check:
+>>>         /*
+>>>          * check that program doesn't access arguments beyond what's
+>>>          * available in this tracepoint
+>>>          */
+>>>         if (prog->aux->max_ctx_offset > btp->num_args * sizeof(u64))
+>>>                 return -EINVAL;
+>>>
+>>> So you cannot have a single bpf prog attached to many tracepoints
+>>> to read many arguments as-is.
+>>> You can hack around that limit with probe_read,
+>>> but the values won't be trusted and you won't be able to pass
+>>> such untrusted pointers into skb and other helpers/kfuncs.
+>>
+>> I understand that a single bpf program cannot be attached to multiple
+>> tracepoints using tp_btf. However, the same bpf code can be reused to
+>> create multiple bpf programs, each attached to a different tracepoint.
+>>
+>> For example:
+>>
+>> SEC("fentry")
+>> int BPF_PROG(fentry_fn)
+>> {
+>>         /* ... */
+>>         return BPF_OK;
+>> }
+>>
+>> The above fentry code can be compiled into multiple bpf programs to
+>> trace different kernel functions. Each program can then use the
+>> bpf_get_func_arg() helper to access the arguments of the traced function.
+>>
+>> With this patch, tp_btf will gain similar flexibility. For example:
+>>
+>> SEC("tp_btf")
+>> int BPF_PROG(tp_btf_fn)
+>> {
+>>         /* ... */
+>>         return BPF_OK;
+>> }
+>>
+>> Here, bpf_get_func_arg() can be used to access tracepoint arguments.
+>>
+>> Currently, due to the lack of bpf_get_func_arg() support in tp_btf,
+>> bpfsnoop[1] uses bpf_probe_read_kernel() to read tracepoint arguments.
+>> This is also used when filtering specific argument attributes.
+>>
+>> For instance, to filter the skb argument of the netif_receive_skb
+>> tracepoint by 'skb->dev->ifindex == 2', the translated bpf instructions
+>> with bpf_probe_read_kernel() would look like this:
+>>
+>> bool filter_arg(__u64 * args):
+>> ; filter_arg(__u64 *args)
+>>  209: (79) r1 = *(u64 *)(r1 +0) /* all tracepoint's argument has been
+>> read into args using bpf_probe_read_kernel() */
+>>  210: (bf) r3 = r1
+>>  211: (07) r3 += 16
+>>  212: (b7) r2 = 8
+>>  213: (bf) r1 = r10
+>>  214: (07) r1 += -8
+>>  215: (85) call bpf_probe_read_kernel#-125280
+>>  216: (79) r3 = *(u64 *)(r10 -8)
+>>  217: (15) if r3 == 0x0 goto pc+10
+>>  218: (07) r3 += 224
+>>  219: (b7) r2 = 8
+>>  220: (bf) r1 = r10
+>>  221: (07) r1 += -8
+>>  222: (85) call bpf_probe_read_kernel#-125280
+>>  223: (79) r3 = *(u64 *)(r10 -8)
+>>  224: (67) r3 <<= 32
+>>  225: (77) r3 >>= 32
+>>  226: (b7) r0 = 1
+>>  227: (15) if r3 == 0x2 goto pc+1
+>>  228: (af) r0 ^= r0
+>>  229: (95) exit
+>>
+>> If bpf_get_func_arg() is supported in tp_btf, the bpf program will
+>> instead look like:
+>>
+>> static __noinline bool
+>> filter_skb(void *ctx)
+>> {
+>>     struct sk_buff *skb;
+>>
+>>     (void) bpf_get_func_arg(ctx, 0, (__u64 *) &skb);
+>>     return skb->dev->ifindex == 2;
+>> }
+>>
+>> This will simplify the generated code and eliminate the need for
+>> bpf_probe_read_kernel() calls. However, in my tests (on kernel
+>> 6.8.0-35-generic, Ubuntu 24.04 LTS), the pointer returned by
+>> bpf_get_func_arg() is marked as a scalar rather than a trusted pointer:
+>>
+>>         0: R1=ctx() R10=fp0
+>>         ; if (!filter_skb(ctx))
+>>         0: (85) call pc+3
+>>         caller:
+>>          R10=fp0
+>>         callee:
+>>          frame1: R1=ctx() R10=fp0
+>>         4: frame1: R1=ctx() R10=fp0
+>>         ; filter_skb(void *ctx)
+>>         4: (bf) r3 = r10                      ; frame1: R3_w=fp0 R10=fp0
+>>         ;
+>>         5: (07) r3 += -8                      ; frame1: R3_w=fp-8
+>>         ; (void) bpf_get_func_arg(ctx, 0, (__u64 *) &skb);
+>>         6: (b7) r2 = 0                        ; frame1: R2_w=0
+>>         7: (85) call bpf_get_func_arg#183     ; frame1: R0_w=scalar()
+>>         ; return skb->dev->ifindex == 2;
+>>         8: (79) r1 = *(u64 *)(r10 -8)         ; frame1: R1_w=scalar() R10=fp0
+>> fp-8=mmmmmmmm
+>>         ; return skb->dev->ifindex == 2;
+>>         9: (79) r1 = *(u64 *)(r1 +16)
+>>         R1 invalid mem access 'scalar'
+>>         processed 7 insns (limit 1000000) max_states_per_insn 0 total_states 0
+>> peak_states 0 mark_read 0
+>>
+>> If the returned skb is a trusted pointer, the verifier will accept
+>> something like:
+>>
+>> static __noinline bool
+>> filter_skb(struct sk_buff *skb)
+>> {
+>>     return skb->dev->ifindex == 2;
+>> }
+>>
+>> Which will compile into much simpler and more efficient instructions:
+>>
+>> bool filter_skb(struct sk_buff * skb):
+>> ; return skb->dev->ifindex == 2;
+>>   92: (79) r1 = *(u64 *)(r1 +16)
+>> ; return skb->dev->ifindex == 2;
+>>   93: (61) r1 = *(u32 *)(r1 +224)
+>>   94: (b7) r0 = 1
+>> ; return skb->dev->ifindex == 2;
+>>   95: (15) if r1 == 0x2 goto pc+1
+>>   96: (b7) r0 = 0
+>> ; return skb->dev->ifindex == 2;
+>>   97: (95) exit
+>>
+>> In conclusion:
+>>
+>> 1. It will be better if the pointer returned by bpf_get_func_arg() is
+>> trusted, only when the argument index is a known constant.
+> 
+> bpf_get_func_arg() was never meant to return trusted arguments, so
+> this, IMO, is pushing it too far.
+> 
+>> 2. Adding bpf_get_func_arg() support to tp_btf will significantly
+>> simplify and improve tools like bpfsnoop.
+> 
+> "Significantly simplify and improve" is a bit of an exaggeration,
+> given BPF cookies can be used for getting number of arguments of
+> tp_btf, as for the getting rid of bpf_probe_read_kernel(), tbh, more
+> generally useful addition would be an untyped counterpart to
+> bpf_core_cast(), which wouldn't need BTF type information, but will
+> treat all accessed memory as raw bytes (but will still install
+> exception handler just like with bpf_core_cast()).
+> 
 
-Reviewed-by: Gabriele Monaco <gmonaco@redhat.com>
-Signed-off-by: Nam Cao <namcao@linutronix.de>
----
- kernel/trace/rv/Kconfig                      |   3 +-
- kernel/trace/rv/Makefile                     |   1 +
- kernel/trace/rv/monitors/sleep/Kconfig       |  13 +
- kernel/trace/rv/monitors/sleep/sleep.c       | 236 +++++++++++++++++
- kernel/trace/rv/monitors/sleep/sleep.h       | 250 +++++++++++++++++++
- kernel/trace/rv/monitors/sleep/sleep_trace.h |  14 ++
- kernel/trace/rv/rv_trace.h                   |   1 +
- tools/verification/models/rtapp/sleep.ltl    |  22 ++
- 8 files changed, 539 insertions(+), 1 deletion(-)
- create mode 100644 kernel/trace/rv/monitors/sleep/Kconfig
- create mode 100644 kernel/trace/rv/monitors/sleep/sleep.c
- create mode 100644 kernel/trace/rv/monitors/sleep/sleep.h
- create mode 100644 kernel/trace/rv/monitors/sleep/sleep_trace.h
- create mode 100644 tools/verification/models/rtapp/sleep.ltl
+Cool! The bpf_rdonly_cast() kfunc used by the bpf_core_cast() macro
+works well in bpfsnoop.
 
-diff --git a/kernel/trace/rv/Kconfig b/kernel/trace/rv/Kconfig
-index 6f86d8501e87..942d57575e67 100644
---- a/kernel/trace/rv/Kconfig
-+++ b/kernel/trace/rv/Kconfig
-@@ -20,7 +20,7 @@ config RV_LTL_MONITOR
-=20
- menuconfig RV
- 	bool "Runtime Verification"
--	depends on TRACING
-+	select TRACING
- 	help
- 	  Enable the kernel runtime verification infrastructure. RV is a
- 	  lightweight (yet rigorous) method that complements classical
-@@ -43,6 +43,7 @@ source "kernel/trace/rv/monitors/snep/Kconfig"
- source "kernel/trace/rv/monitors/sncid/Kconfig"
- source "kernel/trace/rv/monitors/rtapp/Kconfig"
- source "kernel/trace/rv/monitors/pagefault/Kconfig"
-+source "kernel/trace/rv/monitors/sleep/Kconfig"
- # Add new monitors here
-=20
- config RV_REACTORS
-diff --git a/kernel/trace/rv/Makefile b/kernel/trace/rv/Makefile
-index 353ecf939d0e..13ec2944c665 100644
---- a/kernel/trace/rv/Makefile
-+++ b/kernel/trace/rv/Makefile
-@@ -14,6 +14,7 @@ obj-$(CONFIG_RV_MON_SNEP) +=3D monitors/snep/snep.o
- obj-$(CONFIG_RV_MON_SNCID) +=3D monitors/sncid/sncid.o
- obj-$(CONFIG_RV_MON_RTAPP) +=3D monitors/rtapp/rtapp.o
- obj-$(CONFIG_RV_MON_PAGEFAULT) +=3D monitors/pagefault/pagefault.o
-+obj-$(CONFIG_RV_MON_SLEEP) +=3D monitors/sleep/sleep.o
- # Add new monitors here
- obj-$(CONFIG_RV_REACTORS) +=3D rv_reactors.o
- obj-$(CONFIG_RV_REACT_PRINTK) +=3D reactor_printk.o
-diff --git a/kernel/trace/rv/monitors/sleep/Kconfig b/kernel/trace/rv/monit=
-ors/sleep/Kconfig
-new file mode 100644
-index 000000000000..d00aa1aae069
---- /dev/null
-+++ b/kernel/trace/rv/monitors/sleep/Kconfig
-@@ -0,0 +1,13 @@
-+# SPDX-License-Identifier: GPL-2.0-only
-+#
-+config RV_MON_SLEEP
-+	depends on RV
-+	select RV_LTL_MONITOR
-+	depends on HAVE_SYSCALL_TRACEPOINTS
-+	depends on RV_MON_RTAPP
-+	select TRACE_IRQFLAGS
-+	default y
-+	select LTL_MON_EVENTS_ID
-+	bool "sleep monitor"
-+	help
-+	  Monitor that real-time tasks do not sleep in a manner that may cause un=
-desirable latency.
-diff --git a/kernel/trace/rv/monitors/sleep/sleep.c b/kernel/trace/rv/monit=
-ors/sleep/sleep.c
-new file mode 100644
-index 000000000000..1841875e1cef
---- /dev/null
-+++ b/kernel/trace/rv/monitors/sleep/sleep.c
-@@ -0,0 +1,236 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#include <linux/ftrace.h>
-+#include <linux/tracepoint.h>
-+#include <linux/init.h>
-+#include <linux/irqflags.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/rv.h>
-+#include <linux/sched/deadline.h>
-+#include <linux/sched/rt.h>
-+#include <rv/instrumentation.h>
-+
-+#define MODULE_NAME "sleep"
-+
-+#include <trace/events/syscalls.h>
-+#include <trace/events/sched.h>
-+#include <trace/events/lock.h>
-+#include <uapi/linux/futex.h>
-+#include <rv_trace.h>
-+#include <monitors/rtapp/rtapp.h>
-+
-+#include "sleep.h"
-+#include <rv/ltl_monitor.h>
-+
-+static void ltl_atoms_fetch(struct task_struct *task, struct ltl_monitor *=
-mon)
-+{
-+	/*
-+	 * This includes "actual" real-time tasks and also PI-boosted tasks. A ta=
-sk being PI-boosted
-+	 * means it is blocking an "actual" real-task, therefore it should also o=
-bey the monitor's
-+	 * rule, otherwise the "actual" real-task may be delayed.
-+	 */
-+	ltl_atom_set(mon, LTL_RT, rt_or_dl_task(task));
-+}
-+
-+static void ltl_atoms_init(struct task_struct *task, struct ltl_monitor *m=
-on, bool task_creation)
-+{
-+	ltl_atom_set(mon, LTL_SLEEP, false);
-+	ltl_atom_set(mon, LTL_WAKE, false);
-+	ltl_atom_set(mon, LTL_ABORT_SLEEP, false);
-+	ltl_atom_set(mon, LTL_WOKEN_BY_HARDIRQ, false);
-+	ltl_atom_set(mon, LTL_WOKEN_BY_NMI, false);
-+	ltl_atom_set(mon, LTL_WOKEN_BY_EQUAL_OR_HIGHER_PRIO, false);
-+
-+	if (task_creation) {
-+		ltl_atom_set(mon, LTL_KTHREAD_SHOULD_STOP, false);
-+		ltl_atom_set(mon, LTL_NANOSLEEP_CLOCK_MONOTONIC, false);
-+		ltl_atom_set(mon, LTL_NANOSLEEP_CLOCK_TAI, false);
-+		ltl_atom_set(mon, LTL_NANOSLEEP_TIMER_ABSTIME, false);
-+		ltl_atom_set(mon, LTL_CLOCK_NANOSLEEP, false);
-+		ltl_atom_set(mon, LTL_FUTEX_WAIT, false);
-+		ltl_atom_set(mon, LTL_FUTEX_LOCK_PI, false);
-+		ltl_atom_set(mon, LTL_BLOCK_ON_RT_MUTEX, false);
-+	}
-+
-+	if (task->flags & PF_KTHREAD) {
-+		ltl_atom_set(mon, LTL_KERNEL_THREAD, true);
-+
-+		/* kernel tasks do not do syscall */
-+		ltl_atom_set(mon, LTL_FUTEX_WAIT, false);
-+		ltl_atom_set(mon, LTL_FUTEX_LOCK_PI, false);
-+		ltl_atom_set(mon, LTL_NANOSLEEP_CLOCK_MONOTONIC, false);
-+		ltl_atom_set(mon, LTL_NANOSLEEP_CLOCK_TAI, false);
-+		ltl_atom_set(mon, LTL_NANOSLEEP_TIMER_ABSTIME, false);
-+		ltl_atom_set(mon, LTL_CLOCK_NANOSLEEP, false);
-+
-+		if (strstarts(task->comm, "migration/"))
-+			ltl_atom_set(mon, LTL_TASK_IS_MIGRATION, true);
-+		else
-+			ltl_atom_set(mon, LTL_TASK_IS_MIGRATION, false);
-+
-+		if (strstarts(task->comm, "rcu"))
-+			ltl_atom_set(mon, LTL_TASK_IS_RCU, true);
-+		else
-+			ltl_atom_set(mon, LTL_TASK_IS_RCU, false);
-+	} else {
-+		ltl_atom_set(mon, LTL_KTHREAD_SHOULD_STOP, false);
-+		ltl_atom_set(mon, LTL_KERNEL_THREAD, false);
-+		ltl_atom_set(mon, LTL_TASK_IS_RCU, false);
-+		ltl_atom_set(mon, LTL_TASK_IS_MIGRATION, false);
-+	}
-+
-+}
-+
-+static void handle_sched_set_state(void *data, struct task_struct *task, i=
-nt state)
-+{
-+	if (state & TASK_INTERRUPTIBLE)
-+		ltl_atom_pulse(task, LTL_SLEEP, true);
-+	else if (state =3D=3D TASK_RUNNING)
-+		ltl_atom_pulse(task, LTL_ABORT_SLEEP, true);
-+}
-+
-+static void handle_sched_wakeup(void *data, struct task_struct *task)
-+{
-+	ltl_atom_pulse(task, LTL_WAKE, true);
-+}
-+
-+static void handle_sched_waking(void *data, struct task_struct *task)
-+{
-+	if (this_cpu_read(hardirq_context)) {
-+		ltl_atom_pulse(task, LTL_WOKEN_BY_HARDIRQ, true);
-+	} else if (in_task()) {
-+		if (current->prio <=3D task->prio)
-+			ltl_atom_pulse(task, LTL_WOKEN_BY_EQUAL_OR_HIGHER_PRIO, true);
-+	} else if (in_nmi()) {
-+		ltl_atom_pulse(task, LTL_WOKEN_BY_NMI, true);
-+	}
-+}
-+
-+static void handle_contention_begin(void *data, void *lock, unsigned int f=
-lags)
-+{
-+	if (flags & LCB_F_RT)
-+		ltl_atom_update(current, LTL_BLOCK_ON_RT_MUTEX, true);
-+}
-+
-+static void handle_contention_end(void *data, void *lock, int ret)
-+{
-+	ltl_atom_update(current, LTL_BLOCK_ON_RT_MUTEX, false);
-+}
-+
-+static void handle_sys_enter(void *data, struct pt_regs *regs, long id)
-+{
-+	struct ltl_monitor *mon;
-+	unsigned long args[6];
-+	int op, cmd;
-+
-+	mon =3D ltl_get_monitor(current);
-+
-+	switch (id) {
-+	case __NR_clock_nanosleep:
-+#ifdef __NR_clock_nanosleep_time64
-+	case __NR_clock_nanosleep_time64:
-+#endif
-+		syscall_get_arguments(current, regs, args);
-+		ltl_atom_set(mon, LTL_NANOSLEEP_CLOCK_MONOTONIC, args[0] =3D=3D CLOCK_MO=
-NOTONIC);
-+		ltl_atom_set(mon, LTL_NANOSLEEP_CLOCK_TAI, args[0] =3D=3D CLOCK_TAI);
-+		ltl_atom_set(mon, LTL_NANOSLEEP_TIMER_ABSTIME, args[1] =3D=3D TIMER_ABST=
-IME);
-+		ltl_atom_update(current, LTL_CLOCK_NANOSLEEP, true);
-+		break;
-+
-+	case __NR_futex:
-+#ifdef __NR_futex_time64
-+	case __NR_futex_time64:
-+#endif
-+		syscall_get_arguments(current, regs, args);
-+		op =3D args[1];
-+		cmd =3D op & FUTEX_CMD_MASK;
-+
-+		switch (cmd) {
-+		case FUTEX_LOCK_PI:
-+		case FUTEX_LOCK_PI2:
-+			ltl_atom_update(current, LTL_FUTEX_LOCK_PI, true);
-+			break;
-+		case FUTEX_WAIT:
-+		case FUTEX_WAIT_BITSET:
-+		case FUTEX_WAIT_REQUEUE_PI:
-+			ltl_atom_update(current, LTL_FUTEX_WAIT, true);
-+			break;
-+		}
-+		break;
-+	}
-+}
-+
-+static void handle_sys_exit(void *data, struct pt_regs *regs, long ret)
-+{
-+	struct ltl_monitor *mon =3D ltl_get_monitor(current);
-+
-+	ltl_atom_set(mon, LTL_FUTEX_LOCK_PI, false);
-+	ltl_atom_set(mon, LTL_FUTEX_WAIT, false);
-+	ltl_atom_set(mon, LTL_NANOSLEEP_CLOCK_MONOTONIC, false);
-+	ltl_atom_set(mon, LTL_NANOSLEEP_CLOCK_TAI, false);
-+	ltl_atom_set(mon, LTL_NANOSLEEP_TIMER_ABSTIME, false);
-+	ltl_atom_update(current, LTL_CLOCK_NANOSLEEP, false);
-+}
-+
-+static void handle_kthread_stop(void *data, struct task_struct *task)
-+{
-+	/* FIXME: this could race with other tracepoint handlers */
-+	ltl_atom_update(task, LTL_KTHREAD_SHOULD_STOP, true);
-+}
-+
-+static int enable_sleep(void)
-+{
-+	int retval;
-+
-+	retval =3D ltl_monitor_init();
-+	if (retval)
-+		return retval;
-+
-+	rv_attach_trace_probe("rtapp_sleep", sched_waking, handle_sched_waking);
-+	rv_attach_trace_probe("rtapp_sleep", sched_wakeup, handle_sched_wakeup);
-+	rv_attach_trace_probe("rtapp_sleep", sched_set_state_tp, handle_sched_set=
-_state);
-+	rv_attach_trace_probe("rtapp_sleep", contention_begin, handle_contention_=
-begin);
-+	rv_attach_trace_probe("rtapp_sleep", contention_end, handle_contention_en=
-d);
-+	rv_attach_trace_probe("rtapp_sleep", sched_kthread_stop, handle_kthread_s=
-top);
-+	rv_attach_trace_probe("rtapp_sleep", sys_enter, handle_sys_enter);
-+	rv_attach_trace_probe("rtapp_sleep", sys_exit, handle_sys_exit);
-+	return 0;
-+}
-+
-+static void disable_sleep(void)
-+{
-+	rv_detach_trace_probe("rtapp_sleep", sched_waking, handle_sched_waking);
-+	rv_detach_trace_probe("rtapp_sleep", sched_wakeup, handle_sched_wakeup);
-+	rv_detach_trace_probe("rtapp_sleep", sched_set_state_tp, handle_sched_set=
-_state);
-+	rv_detach_trace_probe("rtapp_sleep", contention_begin, handle_contention_=
-begin);
-+	rv_detach_trace_probe("rtapp_sleep", contention_end, handle_contention_en=
-d);
-+	rv_detach_trace_probe("rtapp_sleep", sched_kthread_stop, handle_kthread_s=
-top);
-+	rv_detach_trace_probe("rtapp_sleep", sys_enter, handle_sys_enter);
-+	rv_detach_trace_probe("rtapp_sleep", sys_exit, handle_sys_exit);
-+
-+	ltl_monitor_destroy();
-+}
-+
-+static struct rv_monitor rv_sleep =3D {
-+	.name =3D "sleep",
-+	.description =3D "Monitor that RT tasks do not undesirably sleep",
-+	.enable =3D enable_sleep,
-+	.disable =3D disable_sleep,
-+};
-+
-+static int __init register_sleep(void)
-+{
-+	return rv_register_monitor(&rv_sleep, &rv_rtapp);
-+}
-+
-+static void __exit unregister_sleep(void)
-+{
-+	rv_unregister_monitor(&rv_sleep);
-+}
-+
-+module_init(register_sleep);
-+module_exit(unregister_sleep);
-+
-+MODULE_LICENSE("GPL");
-+MODULE_AUTHOR("Nam Cao <namcao@linutronix.de>");
-+MODULE_DESCRIPTION("sleep: Monitor that RT tasks do not undesirably sleep"=
-);
-diff --git a/kernel/trace/rv/monitors/sleep/sleep.h b/kernel/trace/rv/monit=
-ors/sleep/sleep.h
-new file mode 100644
-index 000000000000..d1f990195a20
---- /dev/null
-+++ b/kernel/trace/rv/monitors/sleep/sleep.h
-@@ -0,0 +1,250 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+
-+#include <linux/rv.h>
-+
-+#define MONITOR_NAME sleep
-+
-+enum ltl_atom {
-+	LTL_ABORT_SLEEP,
-+	LTL_BLOCK_ON_RT_MUTEX,
-+	LTL_CLOCK_NANOSLEEP,
-+	LTL_FUTEX_LOCK_PI,
-+	LTL_FUTEX_WAIT,
-+	LTL_KERNEL_THREAD,
-+	LTL_KTHREAD_SHOULD_STOP,
-+	LTL_NANOSLEEP_CLOCK_MONOTONIC,
-+	LTL_NANOSLEEP_CLOCK_TAI,
-+	LTL_NANOSLEEP_TIMER_ABSTIME,
-+	LTL_RT,
-+	LTL_SLEEP,
-+	LTL_TASK_IS_MIGRATION,
-+	LTL_TASK_IS_RCU,
-+	LTL_WAKE,
-+	LTL_WOKEN_BY_EQUAL_OR_HIGHER_PRIO,
-+	LTL_WOKEN_BY_HARDIRQ,
-+	LTL_WOKEN_BY_NMI,
-+	LTL_NUM_ATOM
-+};
-+static_assert(LTL_NUM_ATOM <=3D RV_MAX_LTL_ATOM);
-+
-+static const char *ltl_atom_str(enum ltl_atom atom)
-+{
-+	static const char *const names[] =3D {
-+		"ab_sl",
-+		"bl_on_rt_mu",
-+		"cl_na",
-+		"fu_lo_pi",
-+		"fu_wa",
-+		"ker_th",
-+		"kth_sh_st",
-+		"na_cl_mo",
-+		"na_cl_ta",
-+		"na_ti_ab",
-+		"rt",
-+		"sl",
-+		"ta_mi",
-+		"ta_rc",
-+		"wak",
-+		"wo_eq_hi_pr",
-+		"wo_ha",
-+		"wo_nm",
-+	};
-+
-+	return names[atom];
-+}
-+
-+enum ltl_buchi_state {
-+	S0,
-+	S1,
-+	S2,
-+	S3,
-+	S4,
-+	S5,
-+	S6,
-+	S7,
-+	RV_NUM_BA_STATES
-+};
-+static_assert(RV_NUM_BA_STATES <=3D RV_MAX_BA_STATES);
-+
-+static void ltl_start(struct task_struct *task, struct ltl_monitor *mon)
-+{
-+	bool task_is_migration =3D test_bit(LTL_TASK_IS_MIGRATION, mon->atoms);
-+	bool task_is_rcu =3D test_bit(LTL_TASK_IS_RCU, mon->atoms);
-+	bool val40 =3D task_is_rcu || task_is_migration;
-+	bool futex_lock_pi =3D test_bit(LTL_FUTEX_LOCK_PI, mon->atoms);
-+	bool val41 =3D futex_lock_pi || val40;
-+	bool block_on_rt_mutex =3D test_bit(LTL_BLOCK_ON_RT_MUTEX, mon->atoms);
-+	bool val5 =3D block_on_rt_mutex || val41;
-+	bool kthread_should_stop =3D test_bit(LTL_KTHREAD_SHOULD_STOP, mon->atoms=
-);
-+	bool abort_sleep =3D test_bit(LTL_ABORT_SLEEP, mon->atoms);
-+	bool val32 =3D abort_sleep || kthread_should_stop;
-+	bool woken_by_nmi =3D test_bit(LTL_WOKEN_BY_NMI, mon->atoms);
-+	bool val33 =3D woken_by_nmi || val32;
-+	bool woken_by_hardirq =3D test_bit(LTL_WOKEN_BY_HARDIRQ, mon->atoms);
-+	bool val34 =3D woken_by_hardirq || val33;
-+	bool woken_by_equal_or_higher_prio =3D test_bit(LTL_WOKEN_BY_EQUAL_OR_HIG=
-HER_PRIO,
-+	     mon->atoms);
-+	bool val14 =3D woken_by_equal_or_higher_prio || val34;
-+	bool wake =3D test_bit(LTL_WAKE, mon->atoms);
-+	bool val13 =3D !wake;
-+	bool kernel_thread =3D test_bit(LTL_KERNEL_THREAD, mon->atoms);
-+	bool nanosleep_clock_tai =3D test_bit(LTL_NANOSLEEP_CLOCK_TAI, mon->atoms=
-);
-+	bool nanosleep_clock_monotonic =3D test_bit(LTL_NANOSLEEP_CLOCK_MONOTONIC=
-, mon->atoms);
-+	bool val24 =3D nanosleep_clock_monotonic || nanosleep_clock_tai;
-+	bool nanosleep_timer_abstime =3D test_bit(LTL_NANOSLEEP_TIMER_ABSTIME, mo=
-n->atoms);
-+	bool val25 =3D nanosleep_timer_abstime && val24;
-+	bool clock_nanosleep =3D test_bit(LTL_CLOCK_NANOSLEEP, mon->atoms);
-+	bool val18 =3D clock_nanosleep && val25;
-+	bool futex_wait =3D test_bit(LTL_FUTEX_WAIT, mon->atoms);
-+	bool val9 =3D futex_wait || val18;
-+	bool val11 =3D val9 || kernel_thread;
-+	bool sleep =3D test_bit(LTL_SLEEP, mon->atoms);
-+	bool val2 =3D !sleep;
-+	bool rt =3D test_bit(LTL_RT, mon->atoms);
-+	bool val1 =3D !rt;
-+	bool val3 =3D val1 || val2;
-+
-+	if (val3)
-+		__set_bit(S0, mon->states);
-+	if (val11 && val13)
-+		__set_bit(S1, mon->states);
-+	if (val11 && val14)
-+		__set_bit(S4, mon->states);
-+	if (val5)
-+		__set_bit(S5, mon->states);
-+}
-+
-+static void
-+ltl_possible_next_states(struct ltl_monitor *mon, unsigned int state, unsi=
-gned long *next)
-+{
-+	bool task_is_migration =3D test_bit(LTL_TASK_IS_MIGRATION, mon->atoms);
-+	bool task_is_rcu =3D test_bit(LTL_TASK_IS_RCU, mon->atoms);
-+	bool val40 =3D task_is_rcu || task_is_migration;
-+	bool futex_lock_pi =3D test_bit(LTL_FUTEX_LOCK_PI, mon->atoms);
-+	bool val41 =3D futex_lock_pi || val40;
-+	bool block_on_rt_mutex =3D test_bit(LTL_BLOCK_ON_RT_MUTEX, mon->atoms);
-+	bool val5 =3D block_on_rt_mutex || val41;
-+	bool kthread_should_stop =3D test_bit(LTL_KTHREAD_SHOULD_STOP, mon->atoms=
-);
-+	bool abort_sleep =3D test_bit(LTL_ABORT_SLEEP, mon->atoms);
-+	bool val32 =3D abort_sleep || kthread_should_stop;
-+	bool woken_by_nmi =3D test_bit(LTL_WOKEN_BY_NMI, mon->atoms);
-+	bool val33 =3D woken_by_nmi || val32;
-+	bool woken_by_hardirq =3D test_bit(LTL_WOKEN_BY_HARDIRQ, mon->atoms);
-+	bool val34 =3D woken_by_hardirq || val33;
-+	bool woken_by_equal_or_higher_prio =3D test_bit(LTL_WOKEN_BY_EQUAL_OR_HIG=
-HER_PRIO,
-+	     mon->atoms);
-+	bool val14 =3D woken_by_equal_or_higher_prio || val34;
-+	bool wake =3D test_bit(LTL_WAKE, mon->atoms);
-+	bool val13 =3D !wake;
-+	bool kernel_thread =3D test_bit(LTL_KERNEL_THREAD, mon->atoms);
-+	bool nanosleep_clock_tai =3D test_bit(LTL_NANOSLEEP_CLOCK_TAI, mon->atoms=
-);
-+	bool nanosleep_clock_monotonic =3D test_bit(LTL_NANOSLEEP_CLOCK_MONOTONIC=
-, mon->atoms);
-+	bool val24 =3D nanosleep_clock_monotonic || nanosleep_clock_tai;
-+	bool nanosleep_timer_abstime =3D test_bit(LTL_NANOSLEEP_TIMER_ABSTIME, mo=
-n->atoms);
-+	bool val25 =3D nanosleep_timer_abstime && val24;
-+	bool clock_nanosleep =3D test_bit(LTL_CLOCK_NANOSLEEP, mon->atoms);
-+	bool val18 =3D clock_nanosleep && val25;
-+	bool futex_wait =3D test_bit(LTL_FUTEX_WAIT, mon->atoms);
-+	bool val9 =3D futex_wait || val18;
-+	bool val11 =3D val9 || kernel_thread;
-+	bool sleep =3D test_bit(LTL_SLEEP, mon->atoms);
-+	bool val2 =3D !sleep;
-+	bool rt =3D test_bit(LTL_RT, mon->atoms);
-+	bool val1 =3D !rt;
-+	bool val3 =3D val1 || val2;
-+
-+	switch (state) {
-+	case S0:
-+		if (val3)
-+			__set_bit(S0, next);
-+		if (val11 && val13)
-+			__set_bit(S1, next);
-+		if (val11 && val14)
-+			__set_bit(S4, next);
-+		if (val5)
-+			__set_bit(S5, next);
-+		break;
-+	case S1:
-+		if (val11 && val13)
-+			__set_bit(S1, next);
-+		if (val13 && val3)
-+			__set_bit(S2, next);
-+		if (val14 && val3)
-+			__set_bit(S3, next);
-+		if (val11 && val14)
-+			__set_bit(S4, next);
-+		if (val13 && val5)
-+			__set_bit(S6, next);
-+		if (val14 && val5)
-+			__set_bit(S7, next);
-+		break;
-+	case S2:
-+		if (val11 && val13)
-+			__set_bit(S1, next);
-+		if (val13 && val3)
-+			__set_bit(S2, next);
-+		if (val14 && val3)
-+			__set_bit(S3, next);
-+		if (val11 && val14)
-+			__set_bit(S4, next);
-+		if (val13 && val5)
-+			__set_bit(S6, next);
-+		if (val14 && val5)
-+			__set_bit(S7, next);
-+		break;
-+	case S3:
-+		if (val3)
-+			__set_bit(S0, next);
-+		if (val11 && val13)
-+			__set_bit(S1, next);
-+		if (val11 && val14)
-+			__set_bit(S4, next);
-+		if (val5)
-+			__set_bit(S5, next);
-+		break;
-+	case S4:
-+		if (val3)
-+			__set_bit(S0, next);
-+		if (val11 && val13)
-+			__set_bit(S1, next);
-+		if (val11 && val14)
-+			__set_bit(S4, next);
-+		if (val5)
-+			__set_bit(S5, next);
-+		break;
-+	case S5:
-+		if (val3)
-+			__set_bit(S0, next);
-+		if (val11 && val13)
-+			__set_bit(S1, next);
-+		if (val11 && val14)
-+			__set_bit(S4, next);
-+		if (val5)
-+			__set_bit(S5, next);
-+		break;
-+	case S6:
-+		if (val11 && val13)
-+			__set_bit(S1, next);
-+		if (val13 && val3)
-+			__set_bit(S2, next);
-+		if (val14 && val3)
-+			__set_bit(S3, next);
-+		if (val11 && val14)
-+			__set_bit(S4, next);
-+		if (val13 && val5)
-+			__set_bit(S6, next);
-+		if (val14 && val5)
-+			__set_bit(S7, next);
-+		break;
-+	case S7:
-+		if (val3)
-+			__set_bit(S0, next);
-+		if (val11 && val13)
-+			__set_bit(S1, next);
-+		if (val11 && val14)
-+			__set_bit(S4, next);
-+		if (val5)
-+			__set_bit(S5, next);
-+		break;
-+	}
-+}
-diff --git a/kernel/trace/rv/monitors/sleep/sleep_trace.h b/kernel/trace/rv=
-/monitors/sleep/sleep_trace.h
-new file mode 100644
-index 000000000000..22eaf31da987
---- /dev/null
-+++ b/kernel/trace/rv/monitors/sleep/sleep_trace.h
-@@ -0,0 +1,14 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+
-+/*
-+ * Snippet to be included in rv_trace.h
-+ */
-+
-+#ifdef CONFIG_RV_MON_SLEEP
-+DEFINE_EVENT(event_ltl_monitor_id, event_sleep,
-+	     TP_PROTO(struct task_struct *task, char *states, char *atoms, char *=
-next),
-+	     TP_ARGS(task, states, atoms, next));
-+DEFINE_EVENT(error_ltl_monitor_id, error_sleep,
-+	     TP_PROTO(struct task_struct *task),
-+	     TP_ARGS(task));
-+#endif /* CONFIG_RV_MON_SLEEP */
-diff --git a/kernel/trace/rv/rv_trace.h b/kernel/trace/rv/rv_trace.h
-index cfa34af5551b..36ed96868dc4 100644
---- a/kernel/trace/rv/rv_trace.h
-+++ b/kernel/trace/rv/rv_trace.h
-@@ -173,6 +173,7 @@ TRACE_EVENT(error_ltl_monitor_id,
- 	TP_printk("%s[%d]: violation detected", __get_str(comm), __entry->pid)
- );
- #include <monitors/pagefault/pagefault_trace.h>
-+#include <monitors/sleep/sleep_trace.h>
- // Add new monitors based on CONFIG_LTL_MON_EVENTS_ID here
- #endif /* CONFIG_LTL_MON_EVENTS_ID */
- #endif /* _TRACE_RV_H */
-diff --git a/tools/verification/models/rtapp/sleep.ltl b/tools/verification=
-/models/rtapp/sleep.ltl
-new file mode 100644
-index 000000000000..6379bbeb6212
---- /dev/null
-+++ b/tools/verification/models/rtapp/sleep.ltl
-@@ -0,0 +1,22 @@
-+RULE =3D always ((RT and SLEEP) imply (RT_FRIENDLY_SLEEP or ALLOWLIST))
-+
-+RT_FRIENDLY_SLEEP =3D (RT_VALID_SLEEP_REASON or KERNEL_THREAD)
-+                and ((not WAKE) until RT_FRIENDLY_WAKE)
-+
-+RT_VALID_SLEEP_REASON =3D FUTEX_WAIT
-+                     or RT_FRIENDLY_NANOSLEEP
-+
-+RT_FRIENDLY_NANOSLEEP =3D CLOCK_NANOSLEEP
-+                    and NANOSLEEP_TIMER_ABSTIME
-+                    and (NANOSLEEP_CLOCK_MONOTONIC or NANOSLEEP_CLOCK_TAI)
-+
-+RT_FRIENDLY_WAKE =3D WOKEN_BY_EQUAL_OR_HIGHER_PRIO
-+                or WOKEN_BY_HARDIRQ
-+                or WOKEN_BY_NMI
-+                or ABORT_SLEEP
-+                or KTHREAD_SHOULD_STOP
-+
-+ALLOWLIST =3D BLOCK_ON_RT_MUTEX
-+         or FUTEX_LOCK_PI
-+         or TASK_IS_RCU
-+         or TASK_IS_MIGRATION
---=20
-2.39.5
+The expression 'skb->dev->ifindex == 2' is translated into:
+
+bool filter_arg(__u64 * args):
+; filter_arg(__u64 *args)
+ 209: (bf) r9 = r1
+ 210: (79) r8 = *(u64 *)(r9 +0)
+ 211: (bf) r1 = r8
+ 212: (b7) r2 = 6973
+ 213: (bf) r0 = r1
+ 214: (79) r1 = *(u64 *)(r0 +16)
+ 215: (15) if r1 == 0x0 goto pc+12
+ 216: (07) r1 += 224
+ 217: (bf) r3 = r1
+ 218: (b7) r2 = 8
+ 219: (bf) r1 = r10
+ 220: (07) r1 += -8
+ 221: (85) call bpf_probe_read_kernel#-125280
+ 222: (79) r8 = *(u64 *)(r10 -8)
+ 223: (67) r8 <<= 32
+ 224: (77) r8 >>= 32
+ 225: (55) if r8 != 0x2 goto pc+2
+ 226: (b7) r8 = 1
+ 227: (05) goto pc+1
+ 228: (af) r8 ^= r8
+ 229: (bf) r0 = r8
+ 230: (95) exit
+
+However, since bpf_rdonly_cast() is a kfunc, it causes registers r1–r5
+to be considered volatile.
+
+If the verifier could trust the pointer fetched by bpf_get_func_arg(),
+this extra cost from bpf_rdonly_cast() could be avoided.
+
+Thanks,
+Leon
+
 
