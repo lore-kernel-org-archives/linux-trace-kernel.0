@@ -1,69 +1,69 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F44D2951D8
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 12 May 2025 12:34:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88D7A29551B
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 12 May 2025 12:34:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747053292; cv=none; b=hiycFSdh4NB5MymLuD/EZDBQTaIR8XSNgZ9g4ESVQD6P3SzclXg2/ZliNC3EjwSDViDtj3sDkzYY58zR8mIAKft5J6hiEZykjO9n39trguuqKk0ThDr5X4ll7Ro4UpMraIOBuEkYPMrgCfMru5jonz5ONmx1Sn1rDI4USbbw3l8=
+	t=1747053294; cv=none; b=BQULZMoufizuD5EpX8YNx0VOQ1k94e5YlzLaBEKjsYu9hbOuBu67IqZSUIRkkAxLx0p3QNPV4NVBARk/LujWH26ADChxalA6OSeSI1EE6QqeAEYnU9wzwC8L1CSBkIuCd9LxJo732BrnnZQFVKCOVFweCTstt3XLNLH9/Q6xW98=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747053292; c=relaxed/simple;
-	bh=plUyq9xd8ySzP2AAXo2oJ8d2YD2N8nsTkRb0LYdC5Ec=;
+	s=arc-20240116; t=1747053294; c=relaxed/simple;
+	bh=SqVDOXGgAvnPE5z9oU92cnmrU7MjwVFUodqWnzatDc4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:content-type; b=QexP043CbGrbtVli6MYsM81qcptDABJmOHjNon0Hml9gEEotPp3q+EMPCTvS4/wGBo+IbL/ESkL7uwcB0fezsQlzIzfZeKjSoj0wySt3CVC432HixpaycqznsacHntyeu8p5zWKtn+V28eCY3X6yOxwzgxmP0NaBwk2BmXTddJc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=AvIaIYRr; arc=none smtp.client-ip=170.10.133.124
+	 MIME-Version:content-type; b=DrPUDBX7N+H7h2jOjqAt2BEqbRo3/k67GaO/4PVuehAKNI5lOGLxJaaycDQl6A9ZzA01rlhipSA6zlA/LBruEol+JDPt92X6ygXUjB3Z9oFm0xyoyDrEsYxzpEnSG24BZI1pfG3sRvPZO3VnS3xwUgTrLzDEoGv0YMWYxF/SwHA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=djUkDbye; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AvIaIYRr"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="djUkDbye"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1747053289;
+	s=mimecast20190719; t=1747053291;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=damHjxLzdKBqIDkI5LPVSGeFU6dth6KBhucvp/6hc2Y=;
-	b=AvIaIYRrbYdrmc6pPx84yLGvXjJoZjSCN2aJac7AVu/e6NZmf8Me7yeNZKJrUE0QhAz7kX
-	20Iy8ooDER4T1bBAnJ/o3X8BLD+QhbMHb8VbLE++ThDBQslk/0y8NgqTSw5Xv5zoTsxo/1
-	tCxnws6Q94gkQbm6SOIlrnA9dZ0bD+E=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=2DrqxmiOL3McpG/dCHwH1I+FCiwsh4PlvLiMszfDdMo=;
+	b=djUkDbyeDBBo9lu9zGXyjmFhhdvkytJChR+kZAG+dopSGwWeSEvt6Qu6lGmX8m7IQR67g3
+	OEdAMF46zMfXJkyGfD2r6WePSQbC+8UHS0RcG1XfXSfKKMSx1XATtf9B4R0smVsLN+aSIy
+	R077AtUrZIrekL5u/XQLluN26NLsPfE=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-14-Wl3AHldZP3adEfs2CS2epw-1; Mon, 12 May 2025 08:34:46 -0400
-X-MC-Unique: Wl3AHldZP3adEfs2CS2epw-1
-X-Mimecast-MFC-AGG-ID: Wl3AHldZP3adEfs2CS2epw_1747053285
-Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-3a0b5d18cb7so1579019f8f.2
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 12 May 2025 05:34:46 -0700 (PDT)
+ us-mta-446-8v53SjhxNEC_gO4k9XpzIQ-1; Mon, 12 May 2025 08:34:50 -0400
+X-MC-Unique: 8v53SjhxNEC_gO4k9XpzIQ-1
+X-Mimecast-MFC-AGG-ID: 8v53SjhxNEC_gO4k9XpzIQ_1747053289
+Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-3a0b7124b5fso2810945f8f.2
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 12 May 2025 05:34:50 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747053285; x=1747658085;
+        d=1e100.net; s=20230601; t=1747053289; x=1747658089;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=damHjxLzdKBqIDkI5LPVSGeFU6dth6KBhucvp/6hc2Y=;
-        b=JWWB15jQS3BoTaX9S+3+gL8y/WR9U5qO1qhYjTvKEG9rSjMa+w6AeJNe9z76zZS7ye
-         IIgXvAI2wSBD69oqka7uqBSLva9wqdr2wDUFSiXu17ShCH4sAWqmd5G5FZvq+SmPmqYc
-         C5ulkW0FF0h6oKmFyB9/fex4xhsQjSiVe7l+dxh8UJSahe8URu9UEhr8iEr/QQBawxaE
-         NYA66hWL7n1p0xYJUNpzEHM+ecDX9hfJ7W/vgDAt7ty/fkTaMH5L5uUDcKUTEmbZv34+
-         G6I9MZzYaxdWHV4KVoMH5vEVyj4cSpi97BYa8WmfUP6LHFW7L+YLWxUdHHHFw87y0eEi
-         sQFw==
-X-Forwarded-Encrypted: i=1; AJvYcCVDWp1hDzhn5Fhfcwjw4hlBPFc2CEhzFE+4vRWLZxRBYd4wWJn/L0OCzKOLMrj2BLXJU1p7nbbBBNoi27P6tCHxB4c=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwFtYstfzbFdSYmntoVBRnFn2GhHKrtf51On9W8XQwh6gP/GcJc
-	iIZJGinlJKz/kdm0qvjTWU7gCUAwYVRUdfg2HFyWLr/Y+KrsgPV23IRzoLY5yZBZ/nKb0AiRKmb
-	C0+xRhjZfNUdSsO4WN/zm1nzo4Q/DpZv/FUTkqkDbdOh6CSuqMZZdttEsiEpd2L5Bzg22FA==
-X-Gm-Gg: ASbGnct3/u7J3gpLPNpFr2DK3z5YW2kpy3BJ4DOLalP5nnynPnIiYHwZdS835o1UVDG
-	SeWyGn9aOOpih3/zZhhkd2diR1wpHRyzOhyE7Rpd5wCtDXQnnqt6G3WVrkCgdlagx/LdFYB5LCJ
-	BWI5AFWe5jbprzrC4J6lvAktcVj3urFl1gi4lb76Das8JKWOtwPlUM10oimGDoMZgShLbWVCvk6
-	vHa05hFyvZ7DcBzKpPVhWNKjz/LK7w8nTJJJhov9niwW/jFTyIKWZjoUMziUfRLPlwkgcmraCGY
-	gHb/hZY/GqJ37DsIr3tn0rJEzONpdqYfwU704iT1BRjioKeZeA57CJnmPOkMQ/De+vqhUQ8m
-X-Received: by 2002:a05:6000:2011:b0:3a0:b455:a1fd with SMTP id ffacd0b85a97d-3a1f643d7f2mr9690543f8f.32.1747053285135;
-        Mon, 12 May 2025 05:34:45 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGnmU3EtVrQ/jxHU8AUaqqw41jpYBGCmzwmgCEh+gCBZD+u2TEH9U2eBlpYNMTeAuFBo11Jgg==
-X-Received: by 2002:a05:6000:2011:b0:3a0:b455:a1fd with SMTP id ffacd0b85a97d-3a1f643d7f2mr9690506f8f.32.1747053284744;
-        Mon, 12 May 2025 05:34:44 -0700 (PDT)
+        bh=2DrqxmiOL3McpG/dCHwH1I+FCiwsh4PlvLiMszfDdMo=;
+        b=mu/l9JXAhyl8YDiClei2b0tcholvMGBLmk6FZwMH/u8/4qTx6+jRnMV0cE/bg1UiBg
+         cW/Jm1097RJ685/26FpzavAXYBykFQoosmSf3sKoZxS7nx0j27mpZ3pNo5p4MDT2kcZ3
+         VGPJdXTXBWYVary3xXmWbeljd4LTOVQmOr/mC/7PVIw91Ac2A9IXUjmQX0tzxcJv0uUH
+         4FyU4aOHXV7jABJS7fvzxuSDZWeK9OwAOHd0B9gc+6onoH9BKQTqwGONxv4MS/F6xC07
+         LXkiX9Fn4ux7UwiDLhjnnCFx00oGRJD5DGf43pYes8DUsJ3LPQ/jRLm1P5phPbNb3xUJ
+         pbvQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVlrfPZ7bYcIcd7hikjuQdqZRvCvPolqrgZtFcQ6C4CePendpt14iVoWdToR9FjPQMRcTpuUjTR2/Cv2fDI8p4EbYQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzhWDFOO47qmqS8tJHNPaWgegEaqdfRJySmEvEty6H3WxaSPa0m
+	yh94ZDXnqUpAokjCRg9NC9DpN8HutZaS4axJd7sO7AaAhVnYcNAiYoMQsCCuLqi3xit6AMEDt0r
+	8lMk0yBoDqXmbO6i8jLrEzZZaWffkPNL/SGFh1yMYasvKhD23kwPWbwSlljUfRyl9dexutA==
+X-Gm-Gg: ASbGncvHqzLRuQwbaCoEG6+bFRLAYF5BtuKPF/LqM+hkiKoYxDHvphVWiWylfNCjgxG
+	L9FW4AodaWxXLioxP/jj1FTeOL0BbXXyzvE/5Hvi2kOyjlWTxtV2l8QftBLjmOOb4BCSg5UmJ3M
+	AmnawApO/zjDRr1NOSMkuCgfHFnizJ1EvuhKnRb7AxjtrWgwMyWZHt9Mf+r7aBn4WmYkhvJGin6
+	oz5gYQl/kTD6FkNq8e1OYQs5ufk4EgkZ9waZlNyMoxkibcATSzjBucfjkfBJEfzO6TvqDS84XXI
+	VLKFuZ2N+JYipk1bKGzCWhGvwZBFfZYi6gu9AOXiZe5VbkfqhHkYesSn9/45sgueZb/6KoKk
+X-Received: by 2002:a05:6000:186e:b0:3a0:830d:ec58 with SMTP id ffacd0b85a97d-3a1f6446e78mr9882924f8f.28.1747053289260;
+        Mon, 12 May 2025 05:34:49 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IH0s3h7inHrYSooQ8NhTVln7D4g+9j4TOqzMH9jwIQneuWGNhcfmrI3NwJv0snFOVP2u3wuBw==
+X-Received: by 2002:a05:6000:186e:b0:3a0:830d:ec58 with SMTP id ffacd0b85a97d-3a1f6446e78mr9882884f8f.28.1747053288844;
+        Mon, 12 May 2025 05:34:48 -0700 (PDT)
 Received: from localhost (p200300d82f4a5800f1ae8e20d7f451b0.dip0.t-ipconnect.de. [2003:d8:2f4a:5800:f1ae:8e20:d7f4:51b0])
-        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-442cd32f238sm164887305e9.11.2025.05.12.05.34.42
+        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-3a1f5a4c583sm12120673f8f.84.2025.05.12.05.34.47
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 12 May 2025 05:34:44 -0700 (PDT)
+        Mon, 12 May 2025 05:34:48 -0700 (PDT)
 From: David Hildenbrand <david@redhat.com>
 To: linux-kernel@vger.kernel.org
 Cc: linux-mm@kvack.org,
@@ -94,11 +94,10 @@ Cc: linux-mm@kvack.org,
 	Vlastimil Babka <vbabka@suse.cz>,
 	Jann Horn <jannh@google.com>,
 	Pedro Falcato <pfalcato@suse.de>,
-	Peter Xu <peterx@redhat.com>,
-	Ingo Molnar <mingo@kernel.org>
-Subject: [PATCH v2 07/11] x86/mm/pat: remove strict_prot parameter from reserve_pfn_range()
-Date: Mon, 12 May 2025 14:34:20 +0200
-Message-ID: <20250512123424.637989-8-david@redhat.com>
+	Peter Xu <peterx@redhat.com>
+Subject: [PATCH v2 09/11] x86/mm/pat: inline memtype_match() into memtype_erase()
+Date: Mon, 12 May 2025 14:34:22 +0200
+Message-ID: <20250512123424.637989-10-david@redhat.com>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250512123424.637989-1-david@redhat.com>
 References: <20250512123424.637989-1-david@redhat.com>
@@ -109,64 +108,70 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: 1yXo0tnNcD8XFFM_XWSFOqZmmdxNVUQ99h2WYyNVqKE_1747053285
+X-Mimecast-MFC-PROC-ID: 6soBDq8cTFk3nGz--2s1NRkG6XWLXr8xTaiAn2GHABI_1747053289
 X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
 content-type: text/plain; charset="US-ASCII"; x-default=true
 
-Always set to 0, so let's remove it.
+Let's just have it in a single function. The resulting function is
+certainly small enough and readable.
 
-Reviewed-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Acked-by: Ingo Molnar <mingo@kernel.org> # x86 bits
 Signed-off-by: David Hildenbrand <david@redhat.com>
 ---
- arch/x86/mm/pat/memtype.c | 12 +++---------
- 1 file changed, 3 insertions(+), 9 deletions(-)
+ arch/x86/mm/pat/memtype_interval.c | 33 +++++++++---------------------
+ 1 file changed, 10 insertions(+), 23 deletions(-)
 
-diff --git a/arch/x86/mm/pat/memtype.c b/arch/x86/mm/pat/memtype.c
-index c88d1cbdc1de1..ccc55c00b4c8b 100644
---- a/arch/x86/mm/pat/memtype.c
-+++ b/arch/x86/mm/pat/memtype.c
-@@ -858,8 +858,7 @@ int memtype_kernel_map_sync(u64 base, unsigned long size,
-  * Reserved non RAM regions only and after successful memtype_reserve,
-  * this func also keeps identity mapping (if any) in sync with this new prot.
-  */
--static int reserve_pfn_range(u64 paddr, unsigned long size, pgprot_t *vma_prot,
--				int strict_prot)
-+static int reserve_pfn_range(u64 paddr, unsigned long size, pgprot_t *vma_prot)
+diff --git a/arch/x86/mm/pat/memtype_interval.c b/arch/x86/mm/pat/memtype_interval.c
+index 9d03f0dbc4715..e5844ed1311ed 100644
+--- a/arch/x86/mm/pat/memtype_interval.c
++++ b/arch/x86/mm/pat/memtype_interval.c
+@@ -49,21 +49,6 @@ INTERVAL_TREE_DEFINE(struct memtype, rb, u64, subtree_max_end,
+ 
+ static struct rb_root_cached memtype_rbroot = RB_ROOT_CACHED;
+ 
+-static struct memtype *memtype_match(u64 start, u64 end)
+-{
+-	struct memtype *entry_match;
+-
+-	entry_match = interval_iter_first(&memtype_rbroot, start, end-1);
+-
+-	while (entry_match != NULL && entry_match->start < end) {
+-		if (entry_match->start == start && entry_match->end == end)
+-			return entry_match;
+-		entry_match = interval_iter_next(entry_match, start, end-1);
+-	}
+-
+-	return NULL; /* Returns NULL if there is no match */
+-}
+-
+ static int memtype_check_conflict(u64 start, u64 end,
+ 				  enum page_cache_mode reqtype,
+ 				  enum page_cache_mode *newtype)
+@@ -119,14 +104,16 @@ int memtype_check_insert(struct memtype *entry_new, enum page_cache_mode *ret_ty
+ 
+ struct memtype *memtype_erase(u64 start, u64 end)
  {
- 	int is_ram = 0;
- 	int ret;
-@@ -895,8 +894,7 @@ static int reserve_pfn_range(u64 paddr, unsigned long size, pgprot_t *vma_prot,
- 		return ret;
- 
- 	if (pcm != want_pcm) {
--		if (strict_prot ||
--		    !is_new_memtype_allowed(paddr, size, want_pcm, pcm)) {
-+		if (!is_new_memtype_allowed(paddr, size, want_pcm, pcm)) {
- 			memtype_free(paddr, paddr + size);
- 			pr_err("x86/PAT: %s:%d map pfn expected mapping type %s for [mem %#010Lx-%#010Lx], got %s\n",
- 			       current->comm, current->pid,
-@@ -906,10 +904,6 @@ static int reserve_pfn_range(u64 paddr, unsigned long size, pgprot_t *vma_prot,
- 			       cattr_name(pcm));
- 			return -EINVAL;
- 		}
--		/*
--		 * We allow returning different type than the one requested in
--		 * non strict case.
--		 */
- 		pgprot_set_cachemode(vma_prot, pcm);
- 	}
- 
-@@ -959,7 +953,7 @@ int pfnmap_track(unsigned long pfn, unsigned long size, pgprot_t *prot)
- {
- 	const resource_size_t paddr = (resource_size_t)pfn << PAGE_SHIFT;
- 
--	return reserve_pfn_range(paddr, size, prot, 0);
-+	return reserve_pfn_range(paddr, size, prot);
+-	struct memtype *entry_old;
+-
+-	entry_old = memtype_match(start, end);
+-	if (!entry_old)
+-		return ERR_PTR(-EINVAL);
+-
+-	interval_remove(entry_old, &memtype_rbroot);
+-	return entry_old;
++	struct memtype *entry = interval_iter_first(&memtype_rbroot, start, end - 1);
++
++	while (entry && entry->start < end) {
++		if (entry->start == start && entry->end == end) {
++			interval_remove(entry, &memtype_rbroot);
++			return entry;
++		}
++		entry = interval_iter_next(entry, start, end - 1);
++	}
++	return ERR_PTR(-EINVAL);
  }
  
- void pfnmap_untrack(unsigned long pfn, unsigned long size)
+ struct memtype *memtype_lookup(u64 addr)
 -- 
 2.49.0
 
