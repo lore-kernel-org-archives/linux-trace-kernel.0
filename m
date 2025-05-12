@@ -1,307 +1,213 @@
-Received: from out-186.mta0.migadu.com (out-186.mta0.migadu.com [91.218.175.186])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1883A274FEE
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 12 May 2025 11:12:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.186
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C45913635E
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 12 May 2025 12:34:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747048344; cv=none; b=m0toqODeUEHkyveXCnWmXbcYc5/+Li/PosKQy5amli42jn25Bup3mjZtJdIqd/uJEdMlw5DZIAH07mbgHgR33Pc4yK1b5kNhuS7R+ITTycrIcqXepPCMB1GWJMAlf8hQJa7FFEM9m8ud8ntvxcdUOERsqMrxG2QMI3tYGdSRUGc=
+	t=1747053272; cv=none; b=Ubvbnrv5X9eDW+S1tdzwyW8BqfniftUuNIh3XeMngaVNCiwzWxHSojzDK7GRsTaedDq26QPaGgH6j7w7ex064bnY9ix9ivA9rQoFx9e4a4iGRSNrC3OR6sDJe8vju8q8+3IkvksqB+vgzrTo3CUdA+r8Qse3FZP3qCrnBJaw2yI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747048344; c=relaxed/simple;
-	bh=ko7Q9qbhYNYPvYA7LVk3TXue899YIv1qyRy0EJufnh8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=QUv29C1Ub0Q1OlfKkzoNVRb1EJFUGmQ3Fb26ZZoefaNgZxPSFQtl98R43tQlfBbKZnfIawUCxJ2NN0ZzYMFFwvsMzoyjA9jDyJ92m1vdgO7JZhJRWfpK7gfR6wwfgFMrTXIyQbuzIuLV5ShjMQQOrvlLKyhVifHUn5qWFeepMG0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Mf7H3Ufq; arc=none smtp.client-ip=91.218.175.186
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1747053272; c=relaxed/simple;
+	bh=NX/Y/HVo0p4VYeB1ou1uSmIImGtgXg7WsYvl1qcXgCc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:content-type; b=TkSRc/HMGap373PbkoCK5gEnJ0/qgZaaeXh7qPzjYzoe7ZUHQvNK9eF9Xcvhgx5ka74vNVzGoAiYgkcu//WYyGAMW6d5xoPL6Yrn8EkE06Nt05jpPY9fz8zvzlycscvOo09PHsSXb8z2yqkmKdrYRp6zfKR/EUZV15X2/RdAjkc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=T+dKKU9G; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Mf7H3Ufq"
-Message-ID: <16eafae1-5014-42a9-b6c4-8be40b26cf31@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1747048339;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="T+dKKU9G"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1747053269;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=77hYgmLIC7yLFMAWuJ8WWRqfKmeQfFFtha5TvnJkXHE=;
-	b=Mf7H3UfqXNL+8ByS9N/IjYMBcjOfeZyyG2JVX60LIiCuwnp0SKaZwgs0WFbVaiSvprVNXS
-	EnotFEhb+U5mp/CjW+iGtzDGzsZE3NtKj6IxG8BgSRxTgwbJAsGusplrUbY1cWf6FAVpcf
-	QmoKyw604efUa0L7qFeuHzNoDZjV/IQ=
-Date: Mon, 12 May 2025 19:12:07 +0800
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=AsNfuXk++hQsXcSMH0/ZpoD/Dq28xwSeg936k+p2z/0=;
+	b=T+dKKU9GvuPvNRfRCpSrNJrcmdhXnlof071VH1WTVIb3AKXj14g+PIACg0U0/guE+ahV3u
+	aRDAoli13N4Mx+o/LSJeZiNygy8tqUXOkMO7T6jeiQB7d73cAKayDtoFsuq/4AFiGMDk1/
+	08sRLuClrc0BpjEZqgHP0kDHAh+UErU=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-361-bP7HMVCgO1yZDPfKjGHRHQ-1; Mon, 12 May 2025 08:34:28 -0400
+X-MC-Unique: bP7HMVCgO1yZDPfKjGHRHQ-1
+X-Mimecast-MFC-AGG-ID: bP7HMVCgO1yZDPfKjGHRHQ_1747053267
+Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-3a0b5d18cb7so1578885f8f.2
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 12 May 2025 05:34:28 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747053267; x=1747658067;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=AsNfuXk++hQsXcSMH0/ZpoD/Dq28xwSeg936k+p2z/0=;
+        b=S890vdWLTJJ2pxeJ+0ALdzzy3cO7NMXQA3sSwezL9xPo8XxwHmmy5Qx1rn5LfrETZv
+         48cFY+O1sSBt7PzVlX8jfUCSPyn7l6qsxxSnyoNait6RdN65BlyoEx+ujKXGu3x6RPTw
+         pNsS8o76PyJAJp3RbugTo+pb45NYseqmmRp1cBQOWE1ALgYbp2SAxvghFm+egrYlVqxu
+         Qg1udUzkMv+it6M7mekswHXOGz74sNpueEfeoJxX9XmPqXHELHgsfadXYSqp8bndIAzL
+         7lsQYyWbiEfeAicHePZXknx+UC6Kgl5+sg8F0M1uXY7WTuQ95DVUunfOtMCUu3wqBCR/
+         rmpg==
+X-Forwarded-Encrypted: i=1; AJvYcCWSifAiY9xU4Lg/Y1iFSai85e6ETZx+czd1qcjszrFwxiwHWUcyzK4G6JSA/z5PFxLSGF9HvXYN9oQcck4yklMYCVM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxrXdJDQl50ck14c+LW1FwPDHcAR0ZRBmjEkow6AvaDO90oZEMe
+	RynE7MN/2wvTRTDsGjlcTe7XKU2lnmMCn6Eh/bbgnMkjEEAbPNeBqiWjzQejZSPFYx6TiRogxqJ
+	iCexEn3QqzTmDr+/Mf+1CRb02TRE5wglpK0RospkKiRaLoWsVDgWZU7F/7pop+R7Rle25HA==
+X-Gm-Gg: ASbGncvLw7xCgsqYvOScIUeYS48pJf+ILu4oY+d21QpmMY7sRE2Dvo4bCwBQik68AEt
+	QzNtT4CxODyrSLgSzcZdjduSLK4MRifRQVyzUOD06U1SCPWtAfXviyR4rYSzrtNE0LZNeaW9/x8
+	zC769fLbJDmAgrmpo9rsfL/R6osW2N2ovzUImx3lVjU5jP7PCqnybcZP+fDIgC7d00c4BQFbN6G
+	VD5EStYk4wwgG9I7cJACwRexep8j41isVY9MzN77rJHvRewHVXHmtIOE9pAyvDOkoYkNYKOLvkg
+	n0N0DZaBjDbo7s/z4uw1bbgDEh9aR+Xtb/OFlm93tcxMRjt8LgsVYNQA95oBpjvcNKdYKCbu
+X-Received: by 2002:a05:6000:1a8a:b0:3a2:6bc:3f25 with SMTP id ffacd0b85a97d-3a206bc6568mr3282298f8f.36.1747053267149;
+        Mon, 12 May 2025 05:34:27 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEbVOvWh8aR7BY5sT0iHvCaoLmEQsNhObrlGdsawBm2VmjmvFE+wMDlxjPW6z9Q2DtavCs6CQ==
+X-Received: by 2002:a05:6000:1a8a:b0:3a2:6bc:3f25 with SMTP id ffacd0b85a97d-3a206bc6568mr3282274f8f.36.1747053266780;
+        Mon, 12 May 2025 05:34:26 -0700 (PDT)
+Received: from localhost (p200300d82f4a5800f1ae8e20d7f451b0.dip0.t-ipconnect.de. [2003:d8:2f4a:5800:f1ae:8e20:d7f4:51b0])
+        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-3a1f5a4c583sm12119696f8f.84.2025.05.12.05.34.25
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 12 May 2025 05:34:26 -0700 (PDT)
+From: David Hildenbrand <david@redhat.com>
+To: linux-kernel@vger.kernel.org
+Cc: linux-mm@kvack.org,
+	x86@kernel.org,
+	intel-gfx@lists.freedesktop.org,
+	dri-devel@lists.freedesktop.org,
+	linux-trace-kernel@vger.kernel.org,
+	David Hildenbrand <david@redhat.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Andy Lutomirski <luto@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Jani Nikula <jani.nikula@linux.intel.com>,
+	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+	Rodrigo Vivi <rodrigo.vivi@intel.com>,
+	Tvrtko Ursulin <tursulin@ursulin.net>,
+	David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Jann Horn <jannh@google.com>,
+	Pedro Falcato <pfalcato@suse.de>,
+	Peter Xu <peterx@redhat.com>
+Subject: [PATCH v2 00/11] mm: rewrite pfnmap tracking and remove VM_PAT
+Date: Mon, 12 May 2025 14:34:13 +0200
+Message-ID: <20250512123424.637989-1-david@redhat.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH bpf-next 1/4] bpf: Allow get_func_[arg|arg_cnt] helpers in
- raw tracepoint programs
-To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>,
- Kafai Wan <mannkafai@gmail.com>, Song Liu <song@kernel.org>,
- Jiri Olsa <jolsa@kernel.org>, Alexei Starovoitov <ast@kernel.org>,
- Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>,
- Martin KaFai Lau <martin.lau@linux.dev>, Eduard <eddyz87@gmail.com>,
- Yonghong Song <yonghong.song@linux.dev>,
- John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>,
- Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>,
- Matt Bobrowski <mattbobrowski@google.com>,
- Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Simon Horman <horms@kernel.org>, Mykola Lysenko <mykolal@fb.com>,
- Shuah Khan <shuah@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
- bpf <bpf@vger.kernel.org>,
- linux-trace-kernel <linux-trace-kernel@vger.kernel.org>,
- Network Development <netdev@vger.kernel.org>,
- "open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>
-References: <20250426160027.177173-1-mannkafai@gmail.com>
- <20250426160027.177173-2-mannkafai@gmail.com>
- <CAADnVQ+DF18nKEf9i1RKEQN+ybH+duu7U-91YZDaa_PiqUx17g@mail.gmail.com>
- <CALqUS-6XtJ0Bb9jiykdC3jAY_OHjGuirj06Kzssjvo7eW_so2A@mail.gmail.com>
- <f951b81f-1b46-4219-82fd-0839e27ab3f3@linux.dev>
- <CAADnVQ+FANha0fO_BF+iHJ4iZSCPtDfoUkzR8mMFwOakw8+eCg@mail.gmail.com>
- <f1f23c1a-f4a8-4807-8028-87e247775ec8@linux.dev>
- <CAEf4BzZcuCrK4UVv2qpp7LAL=uXg+YqFopNW3EzCCpUBNPq-ag@mail.gmail.com>
-Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Leon Hwang <leon.hwang@linux.dev>
-In-Reply-To: <CAEf4BzZcuCrK4UVv2qpp7LAL=uXg+YqFopNW3EzCCpUBNPq-ag@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: HdEiRhXwJ0q3gJr_mFXDzjT1er4y4RKVWm3nV_1MvEU_1747053267
+X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+content-type: text/plain; charset="US-ASCII"; x-default=true
+
+On top of mm-unstable.
+
+VM_PAT annoyed me too much and wasted too much of my time, let's clean
+PAT handling up and remove VM_PAT.
+
+This should sort out various issues with VM_PAT we discovered recently,
+and will hopefully make the whole code more stable and easier to maintain.
+
+In essence: we stop letting PAT mode mess with VMAs and instead lift
+what to track/untrack to the MM core. We remember per VMA which pfn range
+we tracked in a new struct we attach to a VMA (we have space without
+exceeding 192 bytes), use a kref to share it among VMAs during
+split/mremap/fork, and automatically untrack once the kref drops to 0.
+
+This implies that we'll keep tracking a full pfn range even after partially
+unmapping it, until fully unmapping it; but as that case was mostly broken
+before, this at least makes it work in a way that is least intrusive to
+VMA handling.
+
+Shrinking with mremap() used to work in a hacky way, now we'll similarly
+keep the original pfn range tacked even after this form of partial unmap.
+Does anybody care about that? Unlikely. If we run into issues, we could
+likely handled that (adjust the tracking) when our kref drops to 1 while
+freeing a VMA. But it adds more complexity, so avoid that for now.
+
+Briefly tested with the new pfnmap selftests [1].
+
+[1] https://lkml.kernel.org/r/20250509153033.952746-1-david@redhat.com
+
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Jani Nikula <jani.nikula@linux.intel.com>
+Cc: Joonas Lahtinen <joonas.lahtinen@linux.intel.com>
+Cc: Rodrigo Vivi <rodrigo.vivi@intel.com>
+Cc: Tvrtko Ursulin <tursulin@ursulin.net>
+Cc: David Airlie <airlied@gmail.com>
+Cc: Simona Vetter <simona@ffwll.ch>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: "Liam R. Howlett" <Liam.Howlett@oracle.com>
+Cc: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Cc: Vlastimil Babka <vbabka@suse.cz>
+Cc: Jann Horn <jannh@google.com>
+Cc: Pedro Falcato <pfalcato@suse.de>
+Cc: Peter Xu <peterx@redhat.com>
+
+v1 -> v2:
+* "mm: convert track_pfn_insert() to pfnmap_setup_cachemode*()"
+ -> Call it "pfnmap_setup_cachemode()" and improve the documentation
+ -> Add pfnmap_setup_cachemode_pfn()
+ -> Keep checking a single PFN for PMD/PUD case and document why it's ok
+* Merged memremap conversion patch with pfnmap_track() introduction patch
+ -> Improve documentation
+* "mm: convert VM_PFNMAP tracking to pfnmap_track() + pfnmap_untrack()"
+ -> Adjust to code changes in mm-unstable
+* Added "x86/mm/pat: inline memtype_match() into memtype_erase()"
+* "mm/io-mapping: track_pfn() -> "pfnmap tracking""
+ -> Adjust to code changes in mm-unstable
+
+David Hildenbrand (11):
+  x86/mm/pat: factor out setting cachemode into pgprot_set_cachemode()
+  mm: convert track_pfn_insert() to pfnmap_setup_cachemode*()
+  mm: introduce pfnmap_track() and pfnmap_untrack() and use them for
+    memremap
+  mm: convert VM_PFNMAP tracking to pfnmap_track() + pfnmap_untrack()
+  x86/mm/pat: remove old pfnmap tracking interface
+  mm: remove VM_PAT
+  x86/mm/pat: remove strict_prot parameter from reserve_pfn_range()
+  x86/mm/pat: remove MEMTYPE_*_MATCH
+  x86/mm/pat: inline memtype_match() into memtype_erase()
+  drm/i915: track_pfn() -> "pfnmap tracking"
+  mm/io-mapping: track_pfn() -> "pfnmap tracking"
+
+ arch/x86/mm/pat/memtype.c          | 194 ++++-------------------------
+ arch/x86/mm/pat/memtype_interval.c |  63 ++--------
+ drivers/gpu/drm/i915/i915_mm.c     |   4 +-
+ include/linux/mm.h                 |   4 +-
+ include/linux/mm_inline.h          |   2 +
+ include/linux/mm_types.h           |  11 ++
+ include/linux/pgtable.h            | 127 ++++++++++---------
+ include/trace/events/mmflags.h     |   4 +-
+ mm/huge_memory.c                   |   5 +-
+ mm/io-mapping.c                    |   2 +-
+ mm/memory.c                        |  86 ++++++++++---
+ mm/memremap.c                      |   8 +-
+ mm/mmap.c                          |   5 -
+ mm/mremap.c                        |   4 -
+ mm/vma_init.c                      |  50 ++++++++
+ 15 files changed, 242 insertions(+), 327 deletions(-)
 
 
-
-On 2025/5/7 05:01, Andrii Nakryiko wrote:
-> On Fri, May 2, 2025 at 7:26 AM Leon Hwang <leon.hwang@linux.dev> wrote:
->>
->>
->>
->> On 2025/5/1 00:53, Alexei Starovoitov wrote:
->>> On Wed, Apr 30, 2025 at 8:55 AM Leon Hwang <leon.hwang@linux.dev> wrote:
->>>>
->>>>
->>>>
->>>> On 2025/4/30 20:43, Kafai Wan wrote:
->>>>> On Wed, Apr 30, 2025 at 10:46 AM Alexei Starovoitov
->>>>> <alexei.starovoitov@gmail.com> wrote:
->>>>>>
->>>>>> On Sat, Apr 26, 2025 at 9:00 AM KaFai Wan <mannkafai@gmail.com> wrote:
->>>>>>>
->>>>
->>
->> [...]
->>
->>>>
->>>>
->>>> bpf_get_func_arg() will be very helpful for bpfsnoop[1] when tracing tp_btf.
->>>>
->>>> In bpfsnoop, it can generate a small snippet of bpf instructions to use
->>>> bpf_get_func_arg() for retrieving and filtering arguments. For example,
->>>> with the netif_receive_skb tracepoint, bpfsnoop can use
->>>> bpf_get_func_arg() to filter the skb argument using pcap-filter(7)[2] or
->>>> a custom attribute-based filter. This will allow bpfsnoop to trace
->>>> multiple tracepoints using a single bpf program code.
->>>
->>> I doubt you thought it through end to end.
->>> When tracepoint prog attaches we have this check:
->>>         /*
->>>          * check that program doesn't access arguments beyond what's
->>>          * available in this tracepoint
->>>          */
->>>         if (prog->aux->max_ctx_offset > btp->num_args * sizeof(u64))
->>>                 return -EINVAL;
->>>
->>> So you cannot have a single bpf prog attached to many tracepoints
->>> to read many arguments as-is.
->>> You can hack around that limit with probe_read,
->>> but the values won't be trusted and you won't be able to pass
->>> such untrusted pointers into skb and other helpers/kfuncs.
->>
->> I understand that a single bpf program cannot be attached to multiple
->> tracepoints using tp_btf. However, the same bpf code can be reused to
->> create multiple bpf programs, each attached to a different tracepoint.
->>
->> For example:
->>
->> SEC("fentry")
->> int BPF_PROG(fentry_fn)
->> {
->>         /* ... */
->>         return BPF_OK;
->> }
->>
->> The above fentry code can be compiled into multiple bpf programs to
->> trace different kernel functions. Each program can then use the
->> bpf_get_func_arg() helper to access the arguments of the traced function.
->>
->> With this patch, tp_btf will gain similar flexibility. For example:
->>
->> SEC("tp_btf")
->> int BPF_PROG(tp_btf_fn)
->> {
->>         /* ... */
->>         return BPF_OK;
->> }
->>
->> Here, bpf_get_func_arg() can be used to access tracepoint arguments.
->>
->> Currently, due to the lack of bpf_get_func_arg() support in tp_btf,
->> bpfsnoop[1] uses bpf_probe_read_kernel() to read tracepoint arguments.
->> This is also used when filtering specific argument attributes.
->>
->> For instance, to filter the skb argument of the netif_receive_skb
->> tracepoint by 'skb->dev->ifindex == 2', the translated bpf instructions
->> with bpf_probe_read_kernel() would look like this:
->>
->> bool filter_arg(__u64 * args):
->> ; filter_arg(__u64 *args)
->>  209: (79) r1 = *(u64 *)(r1 +0) /* all tracepoint's argument has been
->> read into args using bpf_probe_read_kernel() */
->>  210: (bf) r3 = r1
->>  211: (07) r3 += 16
->>  212: (b7) r2 = 8
->>  213: (bf) r1 = r10
->>  214: (07) r1 += -8
->>  215: (85) call bpf_probe_read_kernel#-125280
->>  216: (79) r3 = *(u64 *)(r10 -8)
->>  217: (15) if r3 == 0x0 goto pc+10
->>  218: (07) r3 += 224
->>  219: (b7) r2 = 8
->>  220: (bf) r1 = r10
->>  221: (07) r1 += -8
->>  222: (85) call bpf_probe_read_kernel#-125280
->>  223: (79) r3 = *(u64 *)(r10 -8)
->>  224: (67) r3 <<= 32
->>  225: (77) r3 >>= 32
->>  226: (b7) r0 = 1
->>  227: (15) if r3 == 0x2 goto pc+1
->>  228: (af) r0 ^= r0
->>  229: (95) exit
->>
->> If bpf_get_func_arg() is supported in tp_btf, the bpf program will
->> instead look like:
->>
->> static __noinline bool
->> filter_skb(void *ctx)
->> {
->>     struct sk_buff *skb;
->>
->>     (void) bpf_get_func_arg(ctx, 0, (__u64 *) &skb);
->>     return skb->dev->ifindex == 2;
->> }
->>
->> This will simplify the generated code and eliminate the need for
->> bpf_probe_read_kernel() calls. However, in my tests (on kernel
->> 6.8.0-35-generic, Ubuntu 24.04 LTS), the pointer returned by
->> bpf_get_func_arg() is marked as a scalar rather than a trusted pointer:
->>
->>         0: R1=ctx() R10=fp0
->>         ; if (!filter_skb(ctx))
->>         0: (85) call pc+3
->>         caller:
->>          R10=fp0
->>         callee:
->>          frame1: R1=ctx() R10=fp0
->>         4: frame1: R1=ctx() R10=fp0
->>         ; filter_skb(void *ctx)
->>         4: (bf) r3 = r10                      ; frame1: R3_w=fp0 R10=fp0
->>         ;
->>         5: (07) r3 += -8                      ; frame1: R3_w=fp-8
->>         ; (void) bpf_get_func_arg(ctx, 0, (__u64 *) &skb);
->>         6: (b7) r2 = 0                        ; frame1: R2_w=0
->>         7: (85) call bpf_get_func_arg#183     ; frame1: R0_w=scalar()
->>         ; return skb->dev->ifindex == 2;
->>         8: (79) r1 = *(u64 *)(r10 -8)         ; frame1: R1_w=scalar() R10=fp0
->> fp-8=mmmmmmmm
->>         ; return skb->dev->ifindex == 2;
->>         9: (79) r1 = *(u64 *)(r1 +16)
->>         R1 invalid mem access 'scalar'
->>         processed 7 insns (limit 1000000) max_states_per_insn 0 total_states 0
->> peak_states 0 mark_read 0
->>
->> If the returned skb is a trusted pointer, the verifier will accept
->> something like:
->>
->> static __noinline bool
->> filter_skb(struct sk_buff *skb)
->> {
->>     return skb->dev->ifindex == 2;
->> }
->>
->> Which will compile into much simpler and more efficient instructions:
->>
->> bool filter_skb(struct sk_buff * skb):
->> ; return skb->dev->ifindex == 2;
->>   92: (79) r1 = *(u64 *)(r1 +16)
->> ; return skb->dev->ifindex == 2;
->>   93: (61) r1 = *(u32 *)(r1 +224)
->>   94: (b7) r0 = 1
->> ; return skb->dev->ifindex == 2;
->>   95: (15) if r1 == 0x2 goto pc+1
->>   96: (b7) r0 = 0
->> ; return skb->dev->ifindex == 2;
->>   97: (95) exit
->>
->> In conclusion:
->>
->> 1. It will be better if the pointer returned by bpf_get_func_arg() is
->> trusted, only when the argument index is a known constant.
-> 
-> bpf_get_func_arg() was never meant to return trusted arguments, so
-> this, IMO, is pushing it too far.
-> 
->> 2. Adding bpf_get_func_arg() support to tp_btf will significantly
->> simplify and improve tools like bpfsnoop.
-> 
-> "Significantly simplify and improve" is a bit of an exaggeration,
-> given BPF cookies can be used for getting number of arguments of
-> tp_btf, as for the getting rid of bpf_probe_read_kernel(), tbh, more
-> generally useful addition would be an untyped counterpart to
-> bpf_core_cast(), which wouldn't need BTF type information, but will
-> treat all accessed memory as raw bytes (but will still install
-> exception handler just like with bpf_core_cast()).
-> 
-
-Cool! The bpf_rdonly_cast() kfunc used by the bpf_core_cast() macro
-works well in bpfsnoop.
-
-The expression 'skb->dev->ifindex == 2' is translated into:
-
-bool filter_arg(__u64 * args):
-; filter_arg(__u64 *args)
- 209: (bf) r9 = r1
- 210: (79) r8 = *(u64 *)(r9 +0)
- 211: (bf) r1 = r8
- 212: (b7) r2 = 6973
- 213: (bf) r0 = r1
- 214: (79) r1 = *(u64 *)(r0 +16)
- 215: (15) if r1 == 0x0 goto pc+12
- 216: (07) r1 += 224
- 217: (bf) r3 = r1
- 218: (b7) r2 = 8
- 219: (bf) r1 = r10
- 220: (07) r1 += -8
- 221: (85) call bpf_probe_read_kernel#-125280
- 222: (79) r8 = *(u64 *)(r10 -8)
- 223: (67) r8 <<= 32
- 224: (77) r8 >>= 32
- 225: (55) if r8 != 0x2 goto pc+2
- 226: (b7) r8 = 1
- 227: (05) goto pc+1
- 228: (af) r8 ^= r8
- 229: (bf) r0 = r8
- 230: (95) exit
-
-However, since bpf_rdonly_cast() is a kfunc, it causes registers r1–r5
-to be considered volatile.
-
-If the verifier could trust the pointer fetched by bpf_get_func_arg(),
-this extra cost from bpf_rdonly_cast() could be avoided.
-
-Thanks,
-Leon
-
+base-commit: c68cfbc5048ede4b10a1d3fe16f7f6192fc2c9c8
+-- 
+2.49.0
 
