@@ -1,53 +1,53 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E4FF2686AA;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E4112686A1;
 	Mon, 12 May 2025 10:51:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747047081; cv=none; b=HIvgVZWULLcsC8lsA5Y/Ro35m5od9l/KrEC5Jrr7+nehYODH8TDhIlnfk8Q4OLzDHgFybGgsKmH/T/qTgsx6RgTr42e80NUZKGnM3v6vHqdyFESa0TKhW0wHRgXIsfx9L3vqDCvGiINQGp3OfE9SkxiM9tqqrk/9GT+pXukPQhc=
+	t=1747047082; cv=none; b=pJh7xJAWDMVpCQQlFV0YteBEAGKpS1GnaI5R9mot7gu1AN4/yxFdL13GRgtaxq5qnnkZJPL+/h6gO3uGQI6CZD7i2FXmwCcu/ALkayjkpFtLJznB+lxTGZ+jlR3pXQPRn2x89BctNZ5coBY+NGF7SuQ3ubbnaX0qW9JMIgaKTf8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747047081; c=relaxed/simple;
-	bh=H9V8DEOULiOnbQER9jdq86jI9UV0AVKo/mqnQ8wukQU=;
+	s=arc-20240116; t=1747047082; c=relaxed/simple;
+	bh=x17mpZ7sX8jAXa8NPlj8BPti3RdNXLLznHqcgpSPNLE=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=hpWnz3Ag2QirgqZ8l0Vu2Axdd8atX5BDJr4n81oPexKEK6Map2mUi48qcKrRha8gffeHcFwg8gaNNEyfMa8ZsaRjSUM3X3BIg19RGUXhqc28JXURxr2m9xQ2SokkUKLq9V3adrV6elsV2uYx8EFJphYe/tJ0h6Xa2MZagPzsBNg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=NRn9fAMh; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=j8jU7kOI; arc=none smtp.client-ip=193.142.43.55
+	 MIME-Version; b=JqlUhefOTlIJZfrIajIv1hj7rXVRCnyiZcrdeVMUrwwsPNLD/wotiNijQcCDLULWaI8vyK2KpNM/fX5WQ+8bCtIqWBbLtkvcynpgNO+0NHXPNrmj5Ti512wV9wRwVGecndlpJpV16tQM2Ykb1BktobufjtmAlHKcUU3oSsuzq8w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ihCPbdkJ; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=bZPB6O8I; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="NRn9fAMh";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="j8jU7kOI"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ihCPbdkJ";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="bZPB6O8I"
 From: Nam Cao <namcao@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1747047075;
+	s=2020; t=1747047076;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=CbJkEpwB3OdGpjoifJXvu2A5D6lki3gos/XOzAV2UjA=;
-	b=NRn9fAMhZmDY6t/7ajocg2jPjXvnVdkak4SeYj7aEqPzJQmJdLaGiViMmKoiDJcxh8jQCv
-	M6oAmApaUbzookf2mnLap7YUyIIf90zW0Cz63Z18O2GJiVcDEkLGJMR3mOF3UnIIauW6lC
-	JcijwxRSuVuFUpha7hZhtrWihS1Frz8N9VGgJVAlTc1YgolN9SgjLr/cZDIpoSJqhFzEYg
-	6YzIjzBjN6NlzAOM2RDCtL+ilQns0ywcSS0+/U+jQs91s7vgpRZ8AM5TRYvBtHE5Q4xwUa
-	S3w+8xY/7fwcGuIgGSv6x0F4DQ58jIpjq6+sSFhXV8R4DTvXPlrClniamR9NMA==
+	bh=HqpK2ecQogzE/riTbJrIMj4alR3/q81koVHuN2ddxBw=;
+	b=ihCPbdkJzu4MoQ23BSQif6fuuauwnBhk2MwAqv0y7s8GDITvHuKkPem8dc5zvKsEBH53iV
+	q6dIQK53rV9St7ik0jzUatnBgs8avZwFGx+zlJPH/gPoQwC4FUOMx3CoRUiOPZYCKsEiQL
+	E6HLWujxdGxoR+23RHFZpTRJiseslmw+EE72dO+ynL5SqTQbt8dvEnbo/o0BYFqAN+jsKt
+	icDZEJ9Rm6qQj1vrwfpx63ny9jKINSEWNLw9F5AatHT/clNe0WFOoSOxyBm9XHzPK9UZU9
+	9KbOKGohrZRE6i30mFCVwKwaMahzuVqpmzkFMpKX1J+ho7X1bs7mBxrmiBd1pw==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1747047075;
+	s=2020e; t=1747047076;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=CbJkEpwB3OdGpjoifJXvu2A5D6lki3gos/XOzAV2UjA=;
-	b=j8jU7kOISiRm9NYqoGqA2fCWe9pSMfey/MrXV/76UqfiK7nfiWeMhUM1fx+8/SAfgvhKCY
-	NlP9KK8MT3bRyrBg==
+	bh=HqpK2ecQogzE/riTbJrIMj4alR3/q81koVHuN2ddxBw=;
+	b=bZPB6O8IeNlt3p1alBzdndcoPE18VVJ+QM8V6p5WFz4hYcVh9VmGS54ufFPfvUN7KqnKi1
+	tIzNEYz54FK26zAw==
 To: Steven Rostedt <rostedt@goodmis.org>,
 	Gabriele Monaco <gmonaco@redhat.com>,
 	linux-trace-kernel@vger.kernel.org,
 	linux-kernel@vger.kernel.org
 Cc: john.ogness@linutronix.de,
 	Nam Cao <namcao@linutronix.de>
-Subject: [PATCH v8 07/22] verification/dot2k: Replace is_container() hack with subparsers
-Date: Mon, 12 May 2025 12:50:50 +0200
-Message-Id: <230631cb90b73f2a5e5a6108f15e22330913abd8.1747046848.git.namcao@linutronix.de>
+Subject: [PATCH v8 09/22] verification/dot2k: Prepare the frontend for LTL inclusion
+Date: Mon, 12 May 2025 12:50:52 +0200
+Message-Id: <380663aa6c5abd4c93ab0382648004e2d8b8bf10.1747046848.git.namcao@linutronix.de>
 In-Reply-To: <cover.1747046848.git.namcao@linutronix.de>
 References: <cover.1747046848.git.namcao@linutronix.de>
 Precedence: bulk
@@ -58,126 +58,267 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-dot2k is used for both generating deterministic automaton (DA) monitor and
-generating container monitor.
+The dot2k tool has some code that can be reused for linear temporal logic
+monitor. Prepare its frontend for LTL inclusion:
 
-Generating DA monitor and generating container requires different
-parameters. This is implemented by peeking at sys.argv and check whether
-"--container" is specified, and use that information to make some
-parameters optional or required.
+  1. Rename to be generic: rvgen
 
-This works, but is quite hacky and ugly.
+  2. Replace the parameter --dot with 2 parameters:
+     --class: to specific the monitor class, can be 'da' or 'ltl'
+     --spec: the monitor specification file, .dot file for DA, and .ltl
+             file for LTL
 
-Replace this hack with Python's built-in subparsers.
-
-The old commands:
-
-  python3 dot2/dot2k -d wip.dot -t per_cpu
-  python3 dot2/dot2k -n sched --container
-
-are equivalent to the new commands:
+The old command:
 
   python3 dot2/dot2k monitor -d wip.dot -t per_cpu
-  python3 dot2/dot2k container -n sched
+
+is equivalent to the new commands:
+
+  python3 rvgen monitor -c da -s wip.dot -t per_cpu
 
 Reviewed-by: Gabriele Monaco <gmonaco@redhat.com>
 Signed-off-by: Nam Cao <namcao@linutronix.de>
 ---
- tools/verification/dot2/dot2k    | 37 +++++++++++++++++---------------
- tools/verification/dot2/dot2k.py |  2 +-
- 2 files changed, 21 insertions(+), 18 deletions(-)
+ tools/verification/{dot2 =3D> rvgen}/Makefile    | 10 +++++-----
+ .../{dot2/dot2k =3D> rvgen/__main__.py}          | 18 +++++++++++++-----
+ tools/verification/{dot2 =3D> rvgen}/dot2c       |  2 +-
+ .../{dot2 =3D> rvgen}/dot2k_templates/Kconfig    |  0
+ .../dot2k_templates/Kconfig_container          |  0
+ .../{dot2 =3D> rvgen}/dot2k_templates/main.c     |  0
+ .../dot2k_templates/main_container.c           |  0
+ .../dot2k_templates/main_container.h           |  0
+ .../{dot2 =3D> rvgen}/dot2k_templates/trace.h    |  0
+ .../{dot2 =3D> rvgen/rvgen}/automata.py          |  0
+ .../{dot2 =3D> rvgen/rvgen}/dot2c.py             |  2 +-
+ .../{dot2 =3D> rvgen/rvgen}/dot2k.py             | 10 +++++-----
+ 12 files changed, 25 insertions(+), 17 deletions(-)
+ rename tools/verification/{dot2 =3D> rvgen}/Makefile (55%)
+ rename tools/verification/{dot2/dot2k =3D> rvgen/__main__.py} (72%)
+ rename tools/verification/{dot2 =3D> rvgen}/dot2c (97%)
+ rename tools/verification/{dot2 =3D> rvgen}/dot2k_templates/Kconfig (100%)
+ rename tools/verification/{dot2 =3D> rvgen}/dot2k_templates/Kconfig_contai=
+ner (100%)
+ rename tools/verification/{dot2 =3D> rvgen}/dot2k_templates/main.c (100%)
+ rename tools/verification/{dot2 =3D> rvgen}/dot2k_templates/main_container=
+.c (100%)
+ rename tools/verification/{dot2 =3D> rvgen}/dot2k_templates/main_container=
+.h (100%)
+ rename tools/verification/{dot2 =3D> rvgen}/dot2k_templates/trace.h (100%)
+ rename tools/verification/{dot2 =3D> rvgen/rvgen}/automata.py (100%)
+ rename tools/verification/{dot2 =3D> rvgen/rvgen}/dot2c.py (99%)
+ rename tools/verification/{dot2 =3D> rvgen/rvgen}/dot2k.py (98%)
 
-diff --git a/tools/verification/dot2/dot2k b/tools/verification/dot2/dot2k
-index 767064f415e7..133fb17d9d47 100644
+diff --git a/tools/verification/dot2/Makefile b/tools/verification/rvgen/Ma=
+kefile
+similarity index 55%
+rename from tools/verification/dot2/Makefile
+rename to tools/verification/rvgen/Makefile
+index 021beb07a521..cea9c21c3bce 100644
+--- a/tools/verification/dot2/Makefile
++++ b/tools/verification/rvgen/Makefile
+@@ -3,7 +3,7 @@ INSTALL=3Dinstall
+ prefix  ?=3D /usr
+ bindir  ?=3D $(prefix)/bin
+ mandir  ?=3D $(prefix)/share/man
+-miscdir ?=3D $(prefix)/share/dot2
++miscdir ?=3D $(prefix)/share/rvgen
+ srcdir  ?=3D $(prefix)/src
+=20
+ PYLIB  ?=3D $(shell python3 -c 'import sysconfig;  print (sysconfig.get_pa=
+th("purelib"))')
+@@ -16,11 +16,11 @@ clean:
+=20
+ .PHONY: install
+ install:
+-	$(INSTALL) automata.py -D -m 644 $(DESTDIR)$(PYLIB)/dot2/automata.py
+-	$(INSTALL) dot2c.py -D -m 644 $(DESTDIR)$(PYLIB)/dot2/dot2c.py
++	$(INSTALL) rvgen/automata.py -D -m 644 $(DESTDIR)$(PYLIB)/rvgen/automata.=
+py
++	$(INSTALL) rvgen/dot2c.py -D -m 644 $(DESTDIR)$(PYLIB)/rvgen/dot2c.py
+ 	$(INSTALL) dot2c -D -m 755 $(DESTDIR)$(bindir)/
+-	$(INSTALL) dot2k.py -D -m 644 $(DESTDIR)$(PYLIB)/dot2/dot2k.py
+-	$(INSTALL) dot2k -D -m 755 $(DESTDIR)$(bindir)/
++	$(INSTALL) rvgen/dot2k.py -D -m 644 $(DESTDIR)$(PYLIB)/rvgen/dot2k.py
++	$(INSTALL) __main__.py -D -m 755 $(DESTDIR)$(bindir)/rvgen
+=20
+ 	mkdir -p ${miscdir}/
+ 	cp -rp dot2k_templates $(DESTDIR)$(miscdir)/
+diff --git a/tools/verification/dot2/dot2k b/tools/verification/rvgen/__mai=
+n__.py
+similarity index 72%
+rename from tools/verification/dot2/dot2k
+rename to tools/verification/rvgen/__main__.py
+index 133fb17d9d47..994d320ad2d1 100644
 --- a/tools/verification/dot2/dot2k
-+++ b/tools/verification/dot2/dot2k
-@@ -13,30 +13,33 @@ if __name__ =3D=3D '__main__':
++++ b/tools/verification/rvgen/__main__.py
+@@ -9,11 +9,11 @@
+ #   Documentation/trace/rv/da_monitor_synthesis.rst
+=20
+ if __name__ =3D=3D '__main__':
+-    from dot2.dot2k import dot2k
++    from rvgen.dot2k import dot2k
      import argparse
      import sys
 =20
--    def is_container():
--        """Should work even before parsing the arguments"""
--        return "-c" in sys.argv or "--container" in sys.argv
--
-     parser =3D argparse.ArgumentParser(description=3D'transform .dot file =
+-    parser =3D argparse.ArgumentParser(description=3D'transform .dot file =
 into kernel rv monitor')
--    parser.add_argument('-d', "--dot", dest=3D"dot_file", required=3Dnot i=
-s_container())
--    parser.add_argument('-t', "--monitor_type", dest=3D"monitor_type", req=
-uired=3Dnot is_container(),
--                        help=3Df"Available options: {', '.join(dot2k.monit=
-or_types.keys())}")
--    parser.add_argument('-n', "--model_name", dest=3D"model_name", require=
-d=3Dis_container())
++    parser =3D argparse.ArgumentParser(description=3D'Generate kernel rv m=
+onitor')
      parser.add_argument("-D", "--description", dest=3D"description", requi=
 red=3DFalse)
      parser.add_argument("-a", "--auto_patch", dest=3D"auto_patch",
                          action=3D"store_true", required=3DFalse,
-                         help=3D"Patch the kernel in place")
--    parser.add_argument("-p", "--parent", dest=3D"parent",
--                        required=3DFalse, help=3D"Create a monitor nested =
-to parent")
--    parser.add_argument("-c", "--container", dest=3D"container",
--                        action=3D"store_true", required=3DFalse,
--                        help=3D"Create an empty monitor to be used as a co=
-ntainer")
-+
-+    subparsers =3D parser.add_subparsers(dest=3D"subcmd", required=3DTrue)
-+
-+    monitor_parser =3D subparsers.add_parser("monitor")
-+    monitor_parser.add_argument('-n', "--model_name", dest=3D"model_name")
-+    monitor_parser.add_argument("-p", "--parent", dest=3D"parent",
-+                                required=3DFalse, help=3D"Create a monitor=
+@@ -25,7 +25,9 @@ if __name__ =3D=3D '__main__':
+     monitor_parser.add_argument('-n', "--model_name", dest=3D"model_name")
+     monitor_parser.add_argument("-p", "--parent", dest=3D"parent",
+                                 required=3DFalse, help=3D"Create a monitor=
  nested to parent")
-+    monitor_parser.add_argument('-d', "--dot", dest=3D"dot_file")
-+    monitor_parser.add_argument('-t', "--monitor_type", dest=3D"monitor_ty=
+-    monitor_parser.add_argument('-d', "--dot", dest=3D"dot_file")
++    monitor_parser.add_argument('-c', "--class", dest=3D"monitor_class",
++                                help=3D"Monitor class, either \"da\" or \"=
+ltl\"")
++    monitor_parser.add_argument('-s', "--spec", dest=3D"spec", help=3D"Mon=
+itor specification file")
+     monitor_parser.add_argument('-t', "--monitor_type", dest=3D"monitor_ty=
 pe",
-+                                help=3Df"Available options: {', '.join(dot=
+                                 help=3Df"Available options: {', '.join(dot=
 2k.monitor_types.keys())}")
-+
-+    container_parser =3D subparsers.add_parser("container")
-+    container_parser.add_argument('-n', "--model_name", dest=3D"model_name=
-", required=3DTrue)
-+
-     params =3D parser.parse_args()
 =20
--    if not is_container():
--        print("Opening and parsing the dot file %s" % params.dot_file)
+@@ -36,8 +38,14 @@ if __name__ =3D=3D '__main__':
+=20
      try:
--        monitor=3Ddot2k(params.dot_file, params.monitor_type, vars(params))
-+        if params.subcmd =3D=3D "monitor":
-+            print("Opening and parsing the dot file %s" % params.dot_file)
-+            monitor =3D dot2k(params.dot_file, params.monitor_type, vars(p=
+         if params.subcmd =3D=3D "monitor":
+-            print("Opening and parsing the dot file %s" % params.dot_file)
+-            monitor =3D dot2k(params.dot_file, params.monitor_type, vars(p=
 arams))
-+        else:
-+            monitor =3D dot2k(None, None, vars(params))
++            print("Opening and parsing the specification file %s" % params=
+.spec)
++            if params.monitor_class =3D=3D "da":
++                monitor =3D dot2k(params.spec, params.monitor_type, vars(p=
+arams))
++            elif params.monitor_class =3D=3D "ltl":
++                raise NotImplementedError
++            else:
++                print("Unknown monitor class:", params.monitor_class)
++                sys.exit(1)
+         else:
+             monitor =3D dot2k(None, None, vars(params))
      except Exception as e:
-         print('Error: '+ str(e))
-         print("Sorry : :-(")
-@@ -45,7 +48,7 @@ if __name__ =3D=3D '__main__':
-     print("Writing the monitor into the directory %s" % monitor.name)
-     monitor.print_files()
-     print("Almost done, checklist")
--    if not is_container():
-+    if params.subcmd =3D=3D "monitor":
-         print("  - Edit the %s/%s.c to add the instrumentation" % (monitor=
-.name, monitor.name))
-         print(monitor.fill_tracepoint_tooltip())
-     print(monitor.fill_makefile_tooltip())
-diff --git a/tools/verification/dot2/dot2k.py b/tools/verification/dot2/dot=
-2k.py
-index 0922754454b9..9ec99e297012 100644
+diff --git a/tools/verification/dot2/dot2c b/tools/verification/rvgen/dot2c
+similarity index 97%
+rename from tools/verification/dot2/dot2c
+rename to tools/verification/rvgen/dot2c
+index 3fe89ab88b65..bf0c67c5b66c 100644
+--- a/tools/verification/dot2/dot2c
++++ b/tools/verification/rvgen/dot2c
+@@ -14,7 +14,7 @@
+ #   Documentation/trace/rv/deterministic_automata.rst
+=20
+ if __name__ =3D=3D '__main__':
+-    from dot2 import dot2c
++    from rvgen import dot2c
+     import argparse
+     import sys
+=20
+diff --git a/tools/verification/dot2/dot2k_templates/Kconfig b/tools/verifi=
+cation/rvgen/dot2k_templates/Kconfig
+similarity index 100%
+rename from tools/verification/dot2/dot2k_templates/Kconfig
+rename to tools/verification/rvgen/dot2k_templates/Kconfig
+diff --git a/tools/verification/dot2/dot2k_templates/Kconfig_container b/to=
+ols/verification/rvgen/dot2k_templates/Kconfig_container
+similarity index 100%
+rename from tools/verification/dot2/dot2k_templates/Kconfig_container
+rename to tools/verification/rvgen/dot2k_templates/Kconfig_container
+diff --git a/tools/verification/dot2/dot2k_templates/main.c b/tools/verific=
+ation/rvgen/dot2k_templates/main.c
+similarity index 100%
+rename from tools/verification/dot2/dot2k_templates/main.c
+rename to tools/verification/rvgen/dot2k_templates/main.c
+diff --git a/tools/verification/dot2/dot2k_templates/main_container.c b/too=
+ls/verification/rvgen/dot2k_templates/main_container.c
+similarity index 100%
+rename from tools/verification/dot2/dot2k_templates/main_container.c
+rename to tools/verification/rvgen/dot2k_templates/main_container.c
+diff --git a/tools/verification/dot2/dot2k_templates/main_container.h b/too=
+ls/verification/rvgen/dot2k_templates/main_container.h
+similarity index 100%
+rename from tools/verification/dot2/dot2k_templates/main_container.h
+rename to tools/verification/rvgen/dot2k_templates/main_container.h
+diff --git a/tools/verification/dot2/dot2k_templates/trace.h b/tools/verifi=
+cation/rvgen/dot2k_templates/trace.h
+similarity index 100%
+rename from tools/verification/dot2/dot2k_templates/trace.h
+rename to tools/verification/rvgen/dot2k_templates/trace.h
+diff --git a/tools/verification/dot2/automata.py b/tools/verification/rvgen=
+/rvgen/automata.py
+similarity index 100%
+rename from tools/verification/dot2/automata.py
+rename to tools/verification/rvgen/rvgen/automata.py
+diff --git a/tools/verification/dot2/dot2c.py b/tools/verification/rvgen/rv=
+gen/dot2c.py
+similarity index 99%
+rename from tools/verification/dot2/dot2c.py
+rename to tools/verification/rvgen/rvgen/dot2c.py
+index fa2816ac7b61..6009caf568d9 100644
+--- a/tools/verification/dot2/dot2c.py
++++ b/tools/verification/rvgen/rvgen/dot2c.py
+@@ -13,7 +13,7 @@
+ # For further information, see:
+ #   Documentation/trace/rv/deterministic_automata.rst
+=20
+-from dot2.automata import Automata
++from .automata import Automata
+=20
+ class Dot2c(Automata):
+     enum_suffix =3D ""
+diff --git a/tools/verification/dot2/dot2k.py b/tools/verification/rvgen/rv=
+gen/dot2k.py
+similarity index 98%
+rename from tools/verification/dot2/dot2k.py
+rename to tools/verification/rvgen/rvgen/dot2k.py
+index 9ec99e297012..e29462413194 100644
 --- a/tools/verification/dot2/dot2k.py
-+++ b/tools/verification/dot2/dot2k.py
-@@ -19,7 +19,7 @@ class dot2k(Dot2c):
++++ b/tools/verification/rvgen/rvgen/dot2k.py
+@@ -8,13 +8,13 @@
+ # For further information, see:
+ #   Documentation/trace/rv/da_monitor_synthesis.rst
+=20
+-from dot2.dot2c import Dot2c
++from .dot2c import Dot2c
+ import platform
+ import os
+=20
+ class dot2k(Dot2c):
+     monitor_types =3D { "global" : 1, "per_cpu" : 2, "per_task" : 3 }
+-    monitor_templates_dir =3D "dot2/dot2k_templates/"
++    monitor_templates_dir =3D "rvgen/dot2k_templates/"
+     rv_dir =3D "kernel/trace/rv"
      monitor_type =3D "per_cpu"
 =20
-     def __init__(self, file_path, MonitorType, extra_params=3D{}):
--        self.container =3D extra_params.get("container")
-+        self.container =3D extra_params.get("subcmd") =3D=3D "container"
-         self.parent =3D extra_params.get("parent")
-         self.__fill_rv_templates_dir()
+@@ -60,14 +60,14 @@ class dot2k(Dot2c):
+         if platform.system() !=3D "Linux":
+             raise OSError("I can only run on Linux.")
 =20
+-        kernel_path =3D "/lib/modules/%s/build/tools/verification/dot2/dot=
+2k_templates/" % (platform.release())
++        kernel_path =3D "/lib/modules/%s/build/tools/verification/rvgen/do=
+t2k_templates/" % (platform.release())
+=20
+         if os.path.exists(kernel_path):
+             self.monitor_templates_dir =3D kernel_path
+             return
+=20
+-        if os.path.exists("/usr/share/dot2/dot2k_templates/"):
+-            self.monitor_templates_dir =3D "/usr/share/dot2/dot2k_template=
+s/"
++        if os.path.exists("/usr/share/rvgen/dot2k_templates/"):
++            self.monitor_templates_dir =3D "/usr/share/rvgen/dot2k_templat=
+es/"
+             return
+=20
+         raise FileNotFoundError("Could not find the template directory, do=
+ you have the kernel source installed?")
 --=20
 2.39.5
 
