@@ -1,69 +1,69 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 570EB2951D7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F44D2951D8
 	for <linux-trace-kernel@vger.kernel.org>; Mon, 12 May 2025 12:34:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747053291; cv=none; b=Uoq+7hOZLoK8oDqnGCvRaNaaqwQYBnQ7gCv0q5aK2At96KrYXRbdxar4e/BMHyksat2PRrt6s6CM4qWH3e2HQn/IXS34P7J1rxrd3CHbLwrOoX0Sr5TZLjAhiiJ/gp2ywjSFoH8x5evL00ler9LH2Ilc0RnpywXIMVUvOsj2gD0=
+	t=1747053292; cv=none; b=hiycFSdh4NB5MymLuD/EZDBQTaIR8XSNgZ9g4ESVQD6P3SzclXg2/ZliNC3EjwSDViDtj3sDkzYY58zR8mIAKft5J6hiEZykjO9n39trguuqKk0ThDr5X4ll7Ro4UpMraIOBuEkYPMrgCfMru5jonz5ONmx1Sn1rDI4USbbw3l8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747053291; c=relaxed/simple;
-	bh=3khWjqFjWFC9CiGQiESB8aVTX3LwH0n7i9MwUmwd6T4=;
+	s=arc-20240116; t=1747053292; c=relaxed/simple;
+	bh=plUyq9xd8ySzP2AAXo2oJ8d2YD2N8nsTkRb0LYdC5Ec=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:content-type; b=NjgzV/zPWOyGIHdHQeLC+LKclEspyT6oMuEcv+lAGmwtx4XLEjzbg9h4Dk62jDPRBF9uwbD7cvghnLGMkvhSvg8lkUtmjkNi7sJGFCfmpeGQn3EI5HbuPZfPUNgEiI5DP/SJCh1f9YU6/0c+Xj8MBmRBDnIT4z2iW2PM3eT/qcs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=DHO+2sU/; arc=none smtp.client-ip=170.10.129.124
+	 MIME-Version:content-type; b=QexP043CbGrbtVli6MYsM81qcptDABJmOHjNon0Hml9gEEotPp3q+EMPCTvS4/wGBo+IbL/ESkL7uwcB0fezsQlzIzfZeKjSoj0wySt3CVC432HixpaycqznsacHntyeu8p5zWKtn+V28eCY3X6yOxwzgxmP0NaBwk2BmXTddJc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=AvIaIYRr; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DHO+2sU/"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AvIaIYRr"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
 	s=mimecast20190719; t=1747053289;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=WLXTuxdzeoCOS7HE06BqHxnwP6g0cDhZW8Z+d4gkxmw=;
-	b=DHO+2sU/t7SO7brZHEemrXNlXAL4g6R9b6gipgl5xMCiFZBWbYfYKSocFnQlNWuYiJ6/FO
-	dG63K7ZakAmrfblWCHyyaqU/vFq0LCCwhe+22rCd3oAarcROsObnHWzRZKOZ0jdv0wdEO/
-	6NyF4eH5vNKCznec9V9LhsSU94Q/PLc=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=damHjxLzdKBqIDkI5LPVSGeFU6dth6KBhucvp/6hc2Y=;
+	b=AvIaIYRrbYdrmc6pPx84yLGvXjJoZjSCN2aJac7AVu/e6NZmf8Me7yeNZKJrUE0QhAz7kX
+	20Iy8ooDER4T1bBAnJ/o3X8BLD+QhbMHb8VbLE++ThDBQslk/0y8NgqTSw5Xv5zoTsxo/1
+	tCxnws6Q94gkQbm6SOIlrnA9dZ0bD+E=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-495-NPaAociNMsigzzvCyhbFYw-1; Mon, 12 May 2025 08:34:48 -0400
-X-MC-Unique: NPaAociNMsigzzvCyhbFYw-1
-X-Mimecast-MFC-AGG-ID: NPaAociNMsigzzvCyhbFYw_1747053287
-Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-43cf3168b87so18443385e9.2
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 12 May 2025 05:34:48 -0700 (PDT)
+ us-mta-14-Wl3AHldZP3adEfs2CS2epw-1; Mon, 12 May 2025 08:34:46 -0400
+X-MC-Unique: Wl3AHldZP3adEfs2CS2epw-1
+X-Mimecast-MFC-AGG-ID: Wl3AHldZP3adEfs2CS2epw_1747053285
+Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-3a0b5d18cb7so1579019f8f.2
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 12 May 2025 05:34:46 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747053287; x=1747658087;
+        d=1e100.net; s=20230601; t=1747053285; x=1747658085;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=WLXTuxdzeoCOS7HE06BqHxnwP6g0cDhZW8Z+d4gkxmw=;
-        b=ieQhAptAEGSxmTVIurmvM3jZSz3f2nkYDofsuFKg7+u+ixwq/xKRjmA2m45wOU82ss
-         5YSB5IgM91zgq0nLVALqxQQIVj1pNWg563Vo0WP7xj+dA4HXjJOwP3YuHsy1lYKpaV+w
-         tf3l6sIzXVnnRu8lDLFeBkfVB3tB+8gRUgu0R2zGA1vvkPZyelruPa/Um2NESgxE6ziP
-         ZVIv/oSiOj5UoixSsz/N7vWeh40ZhEAjNx8dFg/8YWiY25Q327gy91Wo7IiYRKl8S1kQ
-         kP4kQCQ1gZbLY8TrmtZmsecNxAKcWbSl6/T6Np+9zVr0L8k6Ug9GGETDir6+Q8VT8XDz
-         hrag==
-X-Forwarded-Encrypted: i=1; AJvYcCVoaioJEfB43rmcBzGcknyR6pqUDlbJqAQJuOdE+pNg6WkC/5Ya0H6Kbp5Kj0hiSA8vvmiWqidXvjak7Df+ijNcpU0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy1IwWQ1SlhjUXhOjb/9ElPeAjgBlcHzTiieswIIMVWd1TPdMXC
-	ZOwwM79cnvAOzp9wrauUPHvqT7nDRrYWdvsGedxBtxPI91Ex0SGdyBpMSGM3YQn0o0vCxbpcIzl
-	O8vBo6wjFgzbvEvZaOHU0sqP3yFuWTkRSihPDnnh3Ue8XO88KxORt7DSh7Ll2708K9/iqVg==
-X-Gm-Gg: ASbGncutN9mHIw0T8kXljTQvWqPuxsobJr6Cd9jA5rMf11YxL7Z7+7k9mvoVroamp7P
-	TvG5r8m89XWJaxcwD9IqTnyX+R7ruckbVY57JDX1fRjSPtp1LRLIEx3w5CRgmxfulQXX1JEHf8K
-	CkIqvXJt/0g3sjTbWiuXDiyrvwBxR52g/uithq6zTX0ZqKSSCz4oaJFDob13cfwE+0e1sywSpOW
-	7IRS2MYA6VvBLDn/36OJKCS4Gia8LtFMWp518KR3+KV0mN/8a5kXTVXjYrgW/tP3yIQNA8XJ4hW
-	jimhYxWn7T2mjPrqmdxD8beaeL+KEfmuQAdTWsaT62nyW3731dXarANDXSymjxVyrOKJeaaP
-X-Received: by 2002:a5d:5f56:0:b0:39e:dce8:1c07 with SMTP id ffacd0b85a97d-3a1f64a43a5mr11025584f8f.46.1747053287233;
-        Mon, 12 May 2025 05:34:47 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGXC2JTlHqMNEkDQGwHpsMemWHOSr9CrtHgYnjEcClwN7Gy0FNgR8cW6E5jpqWqORj+so6DMQ==
-X-Received: by 2002:a5d:5f56:0:b0:39e:dce8:1c07 with SMTP id ffacd0b85a97d-3a1f64a43a5mr11025549f8f.46.1747053286815;
-        Mon, 12 May 2025 05:34:46 -0700 (PDT)
+        bh=damHjxLzdKBqIDkI5LPVSGeFU6dth6KBhucvp/6hc2Y=;
+        b=JWWB15jQS3BoTaX9S+3+gL8y/WR9U5qO1qhYjTvKEG9rSjMa+w6AeJNe9z76zZS7ye
+         IIgXvAI2wSBD69oqka7uqBSLva9wqdr2wDUFSiXu17ShCH4sAWqmd5G5FZvq+SmPmqYc
+         C5ulkW0FF0h6oKmFyB9/fex4xhsQjSiVe7l+dxh8UJSahe8URu9UEhr8iEr/QQBawxaE
+         NYA66hWL7n1p0xYJUNpzEHM+ecDX9hfJ7W/vgDAt7ty/fkTaMH5L5uUDcKUTEmbZv34+
+         G6I9MZzYaxdWHV4KVoMH5vEVyj4cSpi97BYa8WmfUP6LHFW7L+YLWxUdHHHFw87y0eEi
+         sQFw==
+X-Forwarded-Encrypted: i=1; AJvYcCVDWp1hDzhn5Fhfcwjw4hlBPFc2CEhzFE+4vRWLZxRBYd4wWJn/L0OCzKOLMrj2BLXJU1p7nbbBBNoi27P6tCHxB4c=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwFtYstfzbFdSYmntoVBRnFn2GhHKrtf51On9W8XQwh6gP/GcJc
+	iIZJGinlJKz/kdm0qvjTWU7gCUAwYVRUdfg2HFyWLr/Y+KrsgPV23IRzoLY5yZBZ/nKb0AiRKmb
+	C0+xRhjZfNUdSsO4WN/zm1nzo4Q/DpZv/FUTkqkDbdOh6CSuqMZZdttEsiEpd2L5Bzg22FA==
+X-Gm-Gg: ASbGnct3/u7J3gpLPNpFr2DK3z5YW2kpy3BJ4DOLalP5nnynPnIiYHwZdS835o1UVDG
+	SeWyGn9aOOpih3/zZhhkd2diR1wpHRyzOhyE7Rpd5wCtDXQnnqt6G3WVrkCgdlagx/LdFYB5LCJ
+	BWI5AFWe5jbprzrC4J6lvAktcVj3urFl1gi4lb76Das8JKWOtwPlUM10oimGDoMZgShLbWVCvk6
+	vHa05hFyvZ7DcBzKpPVhWNKjz/LK7w8nTJJJhov9niwW/jFTyIKWZjoUMziUfRLPlwkgcmraCGY
+	gHb/hZY/GqJ37DsIr3tn0rJEzONpdqYfwU704iT1BRjioKeZeA57CJnmPOkMQ/De+vqhUQ8m
+X-Received: by 2002:a05:6000:2011:b0:3a0:b455:a1fd with SMTP id ffacd0b85a97d-3a1f643d7f2mr9690543f8f.32.1747053285135;
+        Mon, 12 May 2025 05:34:45 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGnmU3EtVrQ/jxHU8AUaqqw41jpYBGCmzwmgCEh+gCBZD+u2TEH9U2eBlpYNMTeAuFBo11Jgg==
+X-Received: by 2002:a05:6000:2011:b0:3a0:b455:a1fd with SMTP id ffacd0b85a97d-3a1f643d7f2mr9690506f8f.32.1747053284744;
+        Mon, 12 May 2025 05:34:44 -0700 (PDT)
 Received: from localhost (p200300d82f4a5800f1ae8e20d7f451b0.dip0.t-ipconnect.de. [2003:d8:2f4a:5800:f1ae:8e20:d7f4:51b0])
-        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-3a1f58ebd43sm12647639f8f.37.2025.05.12.05.34.45
+        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-442cd32f238sm164887305e9.11.2025.05.12.05.34.42
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 12 May 2025 05:34:46 -0700 (PDT)
+        Mon, 12 May 2025 05:34:44 -0700 (PDT)
 From: David Hildenbrand <david@redhat.com>
 To: linux-kernel@vger.kernel.org
 Cc: linux-mm@kvack.org,
@@ -96,9 +96,9 @@ Cc: linux-mm@kvack.org,
 	Pedro Falcato <pfalcato@suse.de>,
 	Peter Xu <peterx@redhat.com>,
 	Ingo Molnar <mingo@kernel.org>
-Subject: [PATCH v2 08/11] x86/mm/pat: remove MEMTYPE_*_MATCH
-Date: Mon, 12 May 2025 14:34:21 +0200
-Message-ID: <20250512123424.637989-9-david@redhat.com>
+Subject: [PATCH v2 07/11] x86/mm/pat: remove strict_prot parameter from reserve_pfn_range()
+Date: Mon, 12 May 2025 14:34:20 +0200
+Message-ID: <20250512123424.637989-8-david@redhat.com>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250512123424.637989-1-david@redhat.com>
 References: <20250512123424.637989-1-david@redhat.com>
@@ -109,91 +109,64 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: 55Gq4zURIlBlETGqhalkF4iXbxsmJhPYJpDOnSFltAA_1747053287
+X-Mimecast-MFC-PROC-ID: 1yXo0tnNcD8XFFM_XWSFOqZmmdxNVUQ99h2WYyNVqKE_1747053285
 X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
 content-type: text/plain; charset="US-ASCII"; x-default=true
 
-The "memramp() shrinking" scenario no longer applies, so let's remove
-that now-unnecessary handling.
+Always set to 0, so let's remove it.
 
 Reviewed-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
 Acked-by: Ingo Molnar <mingo@kernel.org> # x86 bits
 Signed-off-by: David Hildenbrand <david@redhat.com>
 ---
- arch/x86/mm/pat/memtype_interval.c | 44 ++++--------------------------
- 1 file changed, 6 insertions(+), 38 deletions(-)
+ arch/x86/mm/pat/memtype.c | 12 +++---------
+ 1 file changed, 3 insertions(+), 9 deletions(-)
 
-diff --git a/arch/x86/mm/pat/memtype_interval.c b/arch/x86/mm/pat/memtype_interval.c
-index 645613d59942a..9d03f0dbc4715 100644
---- a/arch/x86/mm/pat/memtype_interval.c
-+++ b/arch/x86/mm/pat/memtype_interval.c
-@@ -49,26 +49,15 @@ INTERVAL_TREE_DEFINE(struct memtype, rb, u64, subtree_max_end,
- 
- static struct rb_root_cached memtype_rbroot = RB_ROOT_CACHED;
- 
--enum {
--	MEMTYPE_EXACT_MATCH	= 0,
--	MEMTYPE_END_MATCH	= 1
--};
--
--static struct memtype *memtype_match(u64 start, u64 end, int match_type)
-+static struct memtype *memtype_match(u64 start, u64 end)
+diff --git a/arch/x86/mm/pat/memtype.c b/arch/x86/mm/pat/memtype.c
+index c88d1cbdc1de1..ccc55c00b4c8b 100644
+--- a/arch/x86/mm/pat/memtype.c
++++ b/arch/x86/mm/pat/memtype.c
+@@ -858,8 +858,7 @@ int memtype_kernel_map_sync(u64 base, unsigned long size,
+  * Reserved non RAM regions only and after successful memtype_reserve,
+  * this func also keeps identity mapping (if any) in sync with this new prot.
+  */
+-static int reserve_pfn_range(u64 paddr, unsigned long size, pgprot_t *vma_prot,
+-				int strict_prot)
++static int reserve_pfn_range(u64 paddr, unsigned long size, pgprot_t *vma_prot)
  {
- 	struct memtype *entry_match;
+ 	int is_ram = 0;
+ 	int ret;
+@@ -895,8 +894,7 @@ static int reserve_pfn_range(u64 paddr, unsigned long size, pgprot_t *vma_prot,
+ 		return ret;
  
- 	entry_match = interval_iter_first(&memtype_rbroot, start, end-1);
- 
- 	while (entry_match != NULL && entry_match->start < end) {
--		if ((match_type == MEMTYPE_EXACT_MATCH) &&
--		    (entry_match->start == start) && (entry_match->end == end))
--			return entry_match;
--
--		if ((match_type == MEMTYPE_END_MATCH) &&
--		    (entry_match->start < start) && (entry_match->end == end))
-+		if (entry_match->start == start && entry_match->end == end)
- 			return entry_match;
--
- 		entry_match = interval_iter_next(entry_match, start, end-1);
+ 	if (pcm != want_pcm) {
+-		if (strict_prot ||
+-		    !is_new_memtype_allowed(paddr, size, want_pcm, pcm)) {
++		if (!is_new_memtype_allowed(paddr, size, want_pcm, pcm)) {
+ 			memtype_free(paddr, paddr + size);
+ 			pr_err("x86/PAT: %s:%d map pfn expected mapping type %s for [mem %#010Lx-%#010Lx], got %s\n",
+ 			       current->comm, current->pid,
+@@ -906,10 +904,6 @@ static int reserve_pfn_range(u64 paddr, unsigned long size, pgprot_t *vma_prot,
+ 			       cattr_name(pcm));
+ 			return -EINVAL;
+ 		}
+-		/*
+-		 * We allow returning different type than the one requested in
+-		 * non strict case.
+-		 */
+ 		pgprot_set_cachemode(vma_prot, pcm);
  	}
  
-@@ -132,32 +121,11 @@ struct memtype *memtype_erase(u64 start, u64 end)
+@@ -959,7 +953,7 @@ int pfnmap_track(unsigned long pfn, unsigned long size, pgprot_t *prot)
  {
- 	struct memtype *entry_old;
+ 	const resource_size_t paddr = (resource_size_t)pfn << PAGE_SHIFT;
  
--	/*
--	 * Since the memtype_rbroot tree allows overlapping ranges,
--	 * memtype_erase() checks with EXACT_MATCH first, i.e. free
--	 * a whole node for the munmap case.  If no such entry is found,
--	 * it then checks with END_MATCH, i.e. shrink the size of a node
--	 * from the end for the mremap case.
--	 */
--	entry_old = memtype_match(start, end, MEMTYPE_EXACT_MATCH);
--	if (!entry_old) {
--		entry_old = memtype_match(start, end, MEMTYPE_END_MATCH);
--		if (!entry_old)
--			return ERR_PTR(-EINVAL);
--	}
--
--	if (entry_old->start == start) {
--		/* munmap: erase this node */
--		interval_remove(entry_old, &memtype_rbroot);
--	} else {
--		/* mremap: update the end value of this node */
--		interval_remove(entry_old, &memtype_rbroot);
--		entry_old->end = start;
--		interval_insert(entry_old, &memtype_rbroot);
--
--		return NULL;
--	}
-+	entry_old = memtype_match(start, end);
-+	if (!entry_old)
-+		return ERR_PTR(-EINVAL);
- 
-+	interval_remove(entry_old, &memtype_rbroot);
- 	return entry_old;
+-	return reserve_pfn_range(paddr, size, prot, 0);
++	return reserve_pfn_range(paddr, size, prot);
  }
  
+ void pfnmap_untrack(unsigned long pfn, unsigned long size)
 -- 
 2.49.0
 
