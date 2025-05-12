@@ -1,31 +1,30 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D7D8298CA2;
-	Mon, 12 May 2025 18:04:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7236329B8D0;
+	Mon, 12 May 2025 18:04:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747073073; cv=none; b=DszWDZxPwa5aleup5mHHhBvoVnmOlnnTwreXHzr0sACk2axEqU8PgxURLGghCtW0WHUz4tVJGF+GW7s3asAKOWrISw01nP0hSi2YvJTBBCKvVwsSQAerVq5amP6MEHQzoBkWvLvGDjZ3omBMV0gDx7MqelNntsXuZ/6ISyu8TUU=
+	t=1747073097; cv=none; b=TZI14UeMwrUVNeqCb38zjAjwcCRzA9N97E8ToO69J9C5Xuo0ughcrU+9YIht6wgDzW6tZEo12a80guu8dwJGZZfh4/NVO275KrLHbKNDFdvSjqTCRVUCKCz3M/5VgNkUCAyxJxNntFunEBKo+w4vDT9I2aOQp+ydVCnhftb+3wo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747073073; c=relaxed/simple;
-	bh=xStKnA6U9lcfKhZ6B+oTjTHUZ7Bca6fjfZlrc3KxMfk=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=ezB2cmFKoUgcJMh4uFxH3x3j14D8WIA26LciBWF68L+AbeHNTz/cp0Yll9sv7FiXmHYACiwm4owAbZF0IdA4fSO8EPS48dgr0lrGLnm+yYVto0K4gQsb5vB92uAR4+CpyPMgU3aFk7wAmxK0+eNgZEZDAcNUMhheSqpEbVQLv4M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tUEo4rib; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747073097; c=relaxed/simple;
+	bh=7mDPZUktq6Nd9HT2mM48jlNdx8YT1qRVgsR70+8BShQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=tYBepwoKmR0Lzo+YN5+/dtn5j1Grd/VvjDmAWlTNpt+JWRAU24Ds7YvVefIkbN2LJQobyUtaJ/XtmSl6PsbtfPuaSM8dvB6JTnWnWv4IXslEGckhx4GSzRv4FZCy08DckZ58nSGukVJFkw8lj9I8i91+PB3U4nFKT2+c/8Xwil4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LhoKODdH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tUEo4rib"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E9013C4CEF0;
-	Mon, 12 May 2025 18:04:31 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LhoKODdH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E4277C4CEE7;
+	Mon, 12 May 2025 18:04:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747073073;
-	bh=xStKnA6U9lcfKhZ6B+oTjTHUZ7Bca6fjfZlrc3KxMfk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=tUEo4rib7EQg/oMjHZ67Xs6epRAgH5nR56umEtHd8v/yU7ceLfo1UAPYNTA5rqVbg
-	 ouAnWILBX5K1P92KJz3quD4UtpxT2fR/U5XnxJRLMkKiYx3JdoORfgbAsPf79sjroE
-	 I/GpXe33HO1KgN9cUBlPbrpspmVmBL8I5qf0kdbl+v5Rko21E4iC+NvMwtyhLcrKol
-	 QOLiDaMcZM+IbtN7fVsTUsXYbCk1csytkoN9NzEe2cqcSoMBw8+yN8/v2h1tBOEe1s
-	 UffmQvAMnIUEZyClbTBnA1km5hzgaBrqUOyUIq/LJYPv8uWnuEaVMLJJlw7MK69KXg
-	 Qhmqn7j0clgtg==
+	s=k20201202; t=1747073097;
+	bh=7mDPZUktq6Nd9HT2mM48jlNdx8YT1qRVgsR70+8BShQ=;
+	h=From:To:Cc:Subject:Date:From;
+	b=LhoKODdH3ujv1zMBu+EoIwT1qxeKsSBrEokD/QBqSelLoFrfGRJoNUQ5VVXlH+kYR
+	 a3v/yDMcjwlmW2qiynDOb5q1vvwqTlKZs4HrD4sNJBsXLW64cgj+Dy6bzjlzJcCGtQ
+	 Ue9olwSdZbxNRANmf0F9phMfZbM22UopPRCosM+9q1rDLI6A1S0uH8YtXPRh80GTyO
+	 eburh2GBQaIbsWdzILZp8SWIca7iY0FXic/b8sHtsK1wqT1jz4kLRSeAYOzMOVQk2S
+	 zmfb3vQLluTuew9IvPCDK17/3xC5heU5W2SccQ7HFDn4QQ1LLk28LRXMrl6bwcmKah
+	 /xyGz+vqpfNfA==
 From: Sasha Levin <sashal@kernel.org>
 To: patches@lists.linux.dev,
 	stable@vger.kernel.org
@@ -40,12 +39,10 @@ Cc: Goldwyn Rodrigues <rgoldwyn@suse.de>,
 	linux-btrfs@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.12 02/11] btrfs: correct the order of prelim_ref arguments in btrfs__prelim_ref
-Date: Mon, 12 May 2025 14:04:17 -0400
-Message-Id: <20250512180426.437627-2-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.6 1/6] btrfs: correct the order of prelim_ref arguments in btrfs__prelim_ref
+Date: Mon, 12 May 2025 14:04:47 -0400
+Message-Id: <20250512180452.437844-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250512180426.437627-1-sashal@kernel.org>
-References: <20250512180426.437627-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -54,7 +51,7 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.12.28
+X-stable-base: Linux 6.6.90
 Content-Transfer-Encoding: 8bit
 
 From: Goldwyn Rodrigues <rgoldwyn@suse.de>
@@ -119,10 +116,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/include/trace/events/btrfs.h b/include/trace/events/btrfs.h
-index af6b3827fb1d0..3b16b0cc1b7a6 100644
+index 3c4d5ef6d4463..8ea1674069fe8 100644
 --- a/include/trace/events/btrfs.h
 +++ b/include/trace/events/btrfs.h
-@@ -1924,7 +1924,7 @@ DECLARE_EVENT_CLASS(btrfs__prelim_ref,
+@@ -1956,7 +1956,7 @@ DECLARE_EVENT_CLASS(btrfs__prelim_ref,
  	TP_PROTO(const struct btrfs_fs_info *fs_info,
  		 const struct prelim_ref *oldref,
  		 const struct prelim_ref *newref, u64 tree_size),
