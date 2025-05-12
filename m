@@ -1,206 +1,113 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C7E71E2607
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 12 May 2025 14:08:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A83671EB9E1;
+	Mon, 12 May 2025 14:15:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747058939; cv=none; b=MpA9injpILBDP7c7w2/+S9622QUeoIXjt49d3PkQ/79PqrUIDK5sgzB+/DK1/E+8x4UzBlmGeq83T1nwKWiFhqf8nyN4a8ioVn+HlQxW+cjXFIUFyeQOWKgrOZeukWog2kku9k4VCeghCwgRfbYftwNUmr/eQbvngS0tcC50tmE=
+	t=1747059347; cv=none; b=fwa/Zh+Q4GbpJFy7i6IOOX71cz8jIr2nDv7qfNTF+Yj4uVVzUO+jcKgvwVwSzLg6PHEJBCtmTWZaQMawChereAqP2vXlzSkKx2VrIVRCDSCbANcVkfYBITaXWP+EnyNS5uA3siBzF1jb8uZLzs0Th11kDb4Aj6m9NWgqaDRqB48=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747058939; c=relaxed/simple;
-	bh=+iywdlur6nphe1FJAlLFjto1jX5dtMomAgjsxCtm6Gc=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=XRTjx17GkDUx/7y3YBg9BgqViSCZ7sKER46G58ih6FpGvh5Kht9wvWILMVl8Oj2OGljr/uNe7zkyazxHpQDenrj4Ecg8mbSABlAYKXAnmCi2GQ1JGS/UaADLpDe8YqmTcwpEBbvcjesoS1iliBYDouxVUF2XKrG3T0FQniKv8gs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=YKK3y6cG; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YKK3y6cG"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1747058937;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type;
-	bh=t6F/HXttFGEwh7CM5xDejgWccoHrgvvuQDWCPPftjIw=;
-	b=YKK3y6cG0PcmCm4+eAtAVvRptkIDkgwBk4NeuE72kjdt4ltFP1LNNU5qAmQiqmgRFxCIIO
-	1wdUc7H9t1xGGGCpIhy15KTWHp2h6XGjoGGI1ZORZgnQBHJ1iy+w41ePzBFjYjH+MFk9Et
-	g8AxE5MfTC2KjaKH/xQZbIlWa59yA2s=
-Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
- [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-624-39myNVrCOjq3pD-bRUA5jA-1; Mon, 12 May 2025 10:08:55 -0400
-X-MC-Unique: 39myNVrCOjq3pD-bRUA5jA-1
-X-Mimecast-MFC-AGG-ID: 39myNVrCOjq3pD-bRUA5jA_1747058934
-Received: by mail-ej1-f71.google.com with SMTP id a640c23a62f3a-ad224fe3745so302699566b.3
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 12 May 2025 07:08:55 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747058934; x=1747663734;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=t6F/HXttFGEwh7CM5xDejgWccoHrgvvuQDWCPPftjIw=;
-        b=AFLwfeZj66DvSFBn/Su47+tkYQio/aVggER7ahj1aOOO52SGyDTmPNvSXGREhARo4b
-         QAJbkYo3Ipuo3c138z1tjXmJXtKqiRflj3illPcBd7HUOSKRNQheROHq0F96t0/YfABT
-         LIIcfmJwpNJtbrED3pA5mDmMvRGscvf9LZvwnpm4HVr6IokVmyHKWieUPXp+s/KYVjmz
-         Og1spshrLis0DV7i0ZVfaL0WOchGwbyxphLe2/R6e8KP886QvfvRk1SkG51RPQeamNoB
-         3SxwGVe9ysyygLxy1ek5x6sUIu0W2Bj4osAu9LeTghs9AFoTDR5uU2TOOH86XlUtdEC9
-         xYAg==
-X-Gm-Message-State: AOJu0YwyOFjTzz52SExmNQVQ21tI8bDE/2LBZ4RtYD9HCpjgUyyxSDdi
-	1QFylKd0VJleQ21fgI/C9eaQjTLSRHqoTUn+8oiXydLKg+0uvngaLgh1y2M2xk+TIv6FrGkXGKv
-	5ErPLtKH5Q18MfMzpVZSbHwr/J7MbuBXMyfuamBbDJIdtelwSa20jWePbsP3WTeDNKB6hFp/Wal
-	WkeqVgcc7i7+mqDnBq6h/zImlEFBXSLXVxly45Lr3bGTP6
-X-Gm-Gg: ASbGncuZP1saiaL8mPgXQtIZX87amPv4N3B9ujYsZouUKy/Jbwoqyre725N74SZ7kby
-	xAv/fCUCm8cMMLqYYZvd5rfGXgy6S/vvDVOMxMpaRwMK5QS0urD2j4NKwfpj6oKtougVk+hESAX
-	O72K5NVwnwtr68lvaMkI2fVYI=
-X-Received: by 2002:a17:907:968c:b0:ad2:49cc:b460 with SMTP id a640c23a62f3a-ad249ccb8admr547320166b.3.1747058934181;
-        Mon, 12 May 2025 07:08:54 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEcevVH/6lfbagTqi3aUM91UYOgKGprVmNOb7KEb7kx03tC64DbltJnK+NyYmxZkUg533PKLhSRjs6BhSQjRa8=
-X-Received: by 2002:a17:907:968c:b0:ad2:49cc:b460 with SMTP id
- a640c23a62f3a-ad249ccb8admr547316466b.3.1747058933669; Mon, 12 May 2025
- 07:08:53 -0700 (PDT)
+	s=arc-20240116; t=1747059347; c=relaxed/simple;
+	bh=R38AWIXebXqKOhTy3eQkXfwvvwPbJusndnvJjnJjaCk=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=BP+YOc1aKo84D5DJP+TmUtKKEwMqNw/3TqGqb35xOMzL6dlAEEASEoGbHXXLb4PvHlgCeIx7rI9riUSm/Fuc9iPOhtORthO1x5LtouDGpxQZfe7GE2OsPC26eW7oTV9G5aSmsnWigFyGVuJtbMvUC3QfUxj0fcOoHNtNF24La7o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 69F7EC4CEE7;
+	Mon, 12 May 2025 14:15:46 +0000 (UTC)
+Date: Mon, 12 May 2025 10:16:08 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: pengdonglin <dolinux.peng@gmail.com>
+Cc: mhiramat@kernel.org, dolinux.peng@gmai.com,
+ linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] ftrace: Fix preemption acounting for stacktrace
+ trigger command
+Message-ID: <20250512101608.3eb16e43@gandalf.local.home>
+In-Reply-To: <20250512094246.1167956-1-dolinux.peng@gmail.com>
+References: <20250512094246.1167956-1-dolinux.peng@gmail.com>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Tomas Glozar <tglozar@redhat.com>
-Date: Mon, 12 May 2025 16:08:42 +0200
-X-Gm-Features: AX0GCFuzKy6TASLqPCYoKUqmLQ_eFSaYPnjVvRbm7JyBu8Rsq5dtBEaauvM2WF4
-Message-ID: <CAP4=nvS2r=-1GgnmsEA9s7JPs1EVg9R63FLLNboN=f1cq0WEqQ@mail.gmail.com>
-Subject: [BUG?] perf_event_open fails on synthetic event created through dynamic_events
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org, 
-	LKML <linux-kernel@vger.kernel.org>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: Efv0fRplLYbhyAJOe0BV6Th8G1DoQx-oQztzmHrimtk_1747058934
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Dear perf and tracing maintainers,
+On Mon, 12 May 2025 17:42:45 +0800
+pengdonglin <dolinux.peng@gmail.com> wrote:
 
-I would like to report a bug in perf/tracing (not sure where the bug
-actually is) with synthetic events and perf, on the latest 6.15-rc6
-kernel.
+> From: pengdonglin <pengdonglin@xiaomi.com>
+> 
+> While using the stacktrace trigger command to trace syscalls/sys_enter_read,
+> I noticed that the preemption count was consistently reported as 1, which seemed
+> incorrect:
 
-Tracefs allows creating synthetic events through the
-/sys/kernel/tracing/dynamic_events file, which show up in perf as
-synthetic:test_event:
+FYI, the change log should always be in "imperative mood". The above is
+fine for cover letters, but for the change log that will live forever in
+the git history, it should not reference "I" nor "This patch". That is, it
+should state:
 
-$ echo 's:test_event u64 arg;' > /sys/kernel/tracing/dynamic_events
-$  cat /sys/kernel/tracing/dynamic_events
-s:synthetic/test_event  u64 arg
-$  perf list | grep test_event
- synthetic:test_event                               [Tracepoint event]
+   When using the stacktrace trigger command to trace syscalls, the
+   preemption count was consistently reported as 1 when the system call
+   event itself had 0 (".").
 
-However, perf_event_open is failing on those events:
+   For example:
 
-$ perf record -e synthetic:test_event
-Error:
-The sys_perf_event_open() syscall returned with 22 (Invalid argument)
-for event (synthetic:test_event).
-/bin/dmesg | grep -i perf may provide additional information.
+> 
+> root@ubuntu22-vm:/sys/kernel/tracing/events/syscalls/sys_enter_read
+> $ echo stacktrace > trigger
+> $ echo 1 > enable
+> 
+>     sshd-416     [002] .....   232.864910: sys_read(fd: a, buf: 556b1f3221d0, count: 8000)
+>     sshd-416     [002] ...1.   232.864913: <stack trace>
+>  => ftrace_syscall_enter
+>  => syscall_trace_enter
+>  => do_syscall_64
+>  => entry_SYSCALL_64_after_hwframe  
+> 
+> The root cause is that the trace framework disables preemption in __DO_TRACE before
+> invoking the trigger callback.
+> 
+> This patch uses tracing_gen_ctx_dec() to obtain the correct preemption
+> count within the callback, resulting in accurate reporting:
 
-dmesg shows this:
+Instead of "This patch ..."
 
-[   81.136609] ------------[ cut here ]------------
-[   81.136614] WARNING: CPU: 12 PID: 5384 at kernel/tracepoint.c:142
-tracepoint_add_func+0x351/0x3a0
-[   81.136621] Modules linked in: rpcrdma rdma_cm iw_cm ib_cm ib_core
-nft_fib_inet nft_fib_ipv4 nft_fib_ipv6 nft_fib nft_reject_inet nf_reje
-ct_ipv4 nf_reject_ipv6 nft_reject nft_ct nft_chain_nat nf_nat
-nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4 rfkill ip_set nf_tables
-nfnetlink b
-infmt_misc intel_rapl_msr intel_rapl_common
-intel_uncore_frequency_common intel_pmc_core pmt_telemetry pmt_class
-intel_vsec kvm_intel kvm sn
-d_hda_codec_generic snd_hda_intel snd_intel_dspcfg snd_intel_sdw_acpi
-snd_hda_codec snd_hda_core irqbypass rapl snd_hwdep snd_seq snd_seq_de
-vice snd_pcm iTCO_wdt snd_timer intel_pmc_bxt joydev snd
-iTCO_vendor_support i2c_i801 soundcore pcspkr virtio_balloon lpc_ich
-i2c_smbus nfsd
-auth_rpcgss nfs_acl lockd grace nfs_localio sunrpc xfs polyval_clmulni
-polyval_generic ghash_clmulni_intel sha512_ssse3 sha256_ssse3 virtio
-_gpu virtio_net sha1_ssse3 net_failover failover virtio_dma_buf
-serio_raw fuse qemu_fw_cfg
-[   81.136653] CPU: 12 UID: 0 PID: 5384 Comm: perf Kdump: loaded Not
-tainted 6.15.0-rc6 #24 PREEMPT(lazy)
-[   81.136657] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009),
-BIOS 1.16.3-3.fc41 04/01/2014
-[   81.136658] RIP: 0010:tracepoint_add_func+0x351/0x3a0
-[   81.136660] Code: fe ff ff 49 8b 7e 18 48 85 ff 0f 84 8c fe ff ff
-49 8b 56 28 49 8b 76 20 4c 89 04 24 e8 e8 d6 10 00 4c 8b 04 24 e9 72
-fe
-ff ff <0f> 0b b8 ea ff ff ff 45 84 e4 0f 85 4a fd ff ff e9 9f fe ff ff 49
-[   81.136661] RSP: 0018:ffffcfd2408779c0 EFLAGS: 00010246
-[   81.136663] RAX: 0000000000000000 RBX: 0000000000000000 RCX: 0000000000000001
-[   81.136666] RDX: 000000000000000a RSI: ffffcfd240877a00 RDI: 0000000000000000
-[   81.136667] RBP: 000000000000000a R08: ffff8881d901e090 R09: ffffefd23fcaf600
-[   81.136667] R10: ffffffffb7f07720 R11: 0000000000000080 R12: 0000000000000001
-[   81.136668] R13: ffffcfd240877a00 R14: ffff8881d8302120 R15: 0000000000000000
-[   81.136669] FS:  00007f5bd4b3e2c0(0000) GS:ffff8883ed610000(0000)
-knlGS:0000000000000000
-[   81.136670] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[   81.136671] CR2: 000055a33b2c5248 CR3: 0000000127ed9001 CR4: 0000000000772ef0
-[   81.136674] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-[   81.136674] DR3: 0000000000000000 DR6: 00000000ffff07f0 DR7: 0000000000000400
-[   81.136675] PKRU: 55555554
-[   81.136676] Call Trace:
-[   81.136677]  <TASK>
-[   81.136679]  tracepoint_probe_register+0x5b/0x90
-[   81.136680]  perf_trace_event_reg+0xfd/0x1f0
-[   81.136685]  perf_trace_event_init+0x33/0x160
-[   81.136688]  ? trace_event_dyn_try_get_ref+0x61/0x80
-[   81.136691]  perf_trace_init+0x73/0xc0
-[   81.136692]  perf_tp_event_init+0x24/0x50
-[   81.136695]  perf_try_init_event+0x4a/0x2c0
-[   81.136701]  perf_init_event+0xd7/0x190
-[   81.136703]  ? __pfx_perf_event_output_forward+0x10/0x10
-[   81.136705]  perf_event_alloc+0x3cf/0x840
-[   81.136709]  ? __pfx_perf_event_output_forward+0x10/0x10
-[   81.136711]  __do_sys_perf_event_open+0x268/0xb90
-[   81.136716]  do_syscall_64+0x82/0x170
-[   81.136720]  ? __mod_memcg_state+0xad/0x1d0
-[   81.136723]  ? refill_stock+0x79/0xc0
-[   81.136724]  ? __memcg_slab_free_hook+0x114/0x170
-[   81.136726]  ? event_function_call+0x1a5/0x1b0
-[   81.136729]  ? __memcg_slab_free_hook+0x114/0x170
-[   81.136731]  ? __x64_sys_close+0x3d/0x80
-[   81.136733]  ? kmem_cache_free+0x340/0x450
-[   81.136735]  ? syscall_exit_to_user_mode_prepare+0x154/0x190
-[   81.136738]  ? syscall_exit_to_user_mode+0x10/0x210
-[   81.136740]  ? do_syscall_64+0x8e/0x170
-[   81.136741]  ? count_memcg_events.constprop.0+0x1a/0x30
-[   81.136743]  ? handle_mm_fault+0x233/0x350
-[   81.136745]  ? do_user_addr_fault+0x2d0/0x8b0
-[   81.136748]  ? syscall_exit_to_user_mode+0x10/0x210
-[   81.136749]  ? clear_bhb_loop+0x35/0x90
-[   81.136751]  ? clear_bhb_loop+0x35/0x90
-[   81.136752]  ? clear_bhb_loop+0x35/0x90
-[   81.136753]  entry_SYSCALL_64_after_hwframe+0x76/0x7e
-[   81.136754] RIP: 0033:0x7f5bd41076cd
-[   81.136756] Code: 5b 41 5c c3 66 0f 1f 84 00 00 00 00 00 f3 0f 1e
-fa 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24
-08
-0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d 1b 17 0f 00 f7 d8 64 89 01 48
-[   81.136757] RSP: 002b:00007ffcfd937af8 EFLAGS: 00000246 ORIG_RAX:
-000000000000012a
-[   81.136760] RAX: ffffffffffffffda RBX: 00000000ffffffff RCX: 00007f5bd41076cd
-[   81.136761] RDX: 0000000000000000 RSI: 00000000ffffffff RDI: 000055a33b2a57b0
-[   81.136761] RBP: 00007ffcfd937bf0 R08: 0000000000000008 R09: 0000000000000000
-[   81.136762] R10: 00000000ffffffff R11: 0000000000000246 R12: 0000000000000008
-[   81.136763] R13: 0000000000000000 R14: 0000000000000000 R15: 000055a33b2a57a0
-[   81.136764]  </TASK>
-[   81.136765] ---[ end trace 0000000000000000 ]---
+   Use the tracing_gen_ctx_dec() that will accommodate for the increase of
+   the preemption count in __DO_TRACE when calling the callback. The result
+   is the accurate reporting of:
 
-(repeated multiple times)
+This is FYI for when you send new patches. You don't need to resend. I'll
+update the change logs and take these patches (unless of course I find
+something else wrong with them).
 
-It seems that it is trying to access a struct tracepoint object whose
-func field is NULL. I have not tried attaching to dynamic events
-through perf before, so I don't know whether this is just
-unimplemented and poorly handled or a regression. For what it's worth,
-it also happens on CentOS Stream 9 kernel (5.14.0-578.el9).
+-- Steve
 
-Thanks,
-Tomas
+> 
+>     sshd-410     [004] .....   210.117660: sys_read(fd: 4, buf: 559b725ba130, count: 40000)
+>     sshd-410     [004] .....   210.117662: <stack trace>
+>  => ftrace_syscall_enter
+>  => syscall_trace_enter
+>  => do_syscall_64
+>  => entry_SYSCALL_64_after_hwframe  
+> 
+> Signed-off-by: pengdonglin <dolinux.peng@gmail.com>
+> ---
+>  kernel/trace/trace_events_trigger.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/kernel/trace/trace_events_trigger.c b/kernel/trace/trace_events_trigger.c
+> index b66b6d235d91..6e87ae2a1a66 100644
+> --- a/kernel/trace/trace_events_trigger.c
+> +++ b/kernel/trace/trace_events_trigger.c
+> @@ -1560,7 +1560,7 @@ stacktrace_trigger(struct event_trigger_data *data,
+>  	struct trace_event_file *file = data->private_data;
+>  
+>  	if (file)
+> -		__trace_stack(file->tr, tracing_gen_ctx(), STACK_SKIP);
+> +		__trace_stack(file->tr, tracing_gen_ctx_dec(), STACK_SKIP);
+>  	else
+>  		trace_dump_stack(STACK_SKIP);
+>  }
 
