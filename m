@@ -1,22 +1,22 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97620267F5D;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06D71268685;
 	Mon, 12 May 2025 10:51:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747047080; cv=none; b=Pq4byoxzIZBlHADtCWw3cHKzpsYQJA4X819OcdyZBg+Or8Y490JIA/v2g4QiuSznvwFMO4D29uxkMtRLpa7QimDU1WXnJpNCeQRldJjcSxj4th7K567nbq4L10+2PZClt8iwh3sX2T58kPtRkKU4h0v3G/VkraAV0VHnq4I2nK4=
+	t=1747047080; cv=none; b=PbQ1C/cjkjMK/F5k+W8AOzZZVHipsvEipjUCHpO0oscLfqIK23Cd4z2P6RPTvpYW50QLOVJPvDhS56bo6CMvOsLkOcPlZFSGn0VzTgn9LH3dp2Xqlkhbj4BjQB5cdFXrGaTWIRCe2/gbggmurkq5PYxJD1S2X63PhybxvzMQUYE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1747047080; c=relaxed/simple;
-	bh=1tyueKVzM1VJ1WDma6WPKB1nQNEG95uHkefHtTlXLuY=;
+	bh=2mK6sinmKtyV1wCugMEgB2iIJSIT6o63JPL6+Fwhw2w=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=uXinZj5Oo27rCThWt48m1zaV4r3aDGSSl61MmTbbb1iOl4oZr1TBKJ7NQnPHOzeU4/bK/fq6PKzp7H3OjAK6auYiYkMZWUEIDDwY7SWTY2O3Oc+j9jOzd1Nt+0A5xHD4uLtObx11U0gIoEp04o0HPSrOE9JFTPqMuP/5/pIDHVU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=yPQzcBat; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=dn0MNf5b; arc=none smtp.client-ip=193.142.43.55
+	 MIME-Version; b=C+2BfD/sY4u0ze+YfPsQdecZYn2Xf1dPhdqpAPqjdCLau+Vr21H0k8N0orBXW9Sso1YHt1FvHoiApmtLRzw5rqMFTagj5AD088g1j98WGcX9+MeDzbe3zoHF0IMctt0NaUWhA8tDCko7paJgcqtnrDTLSWifZ956/w6MPtjLCns=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ZnGz2q/W; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=viFfOlIM; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="yPQzcBat";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="dn0MNf5b"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ZnGz2q/W";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="viFfOlIM"
 From: Nam Cao <namcao@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
 	s=2020; t=1747047075;
@@ -24,30 +24,30 @@ DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=quxmvFOpWEdlDXGAnbEr+RnyianRn/nmBROLE3F3T+I=;
-	b=yPQzcBat+VPHUdjaIEBWgK4veGelpIcsYY8ejamLEoQTozCb5zv+EneNe8iGDkE36odlqQ
-	jNFpsoa3Pzlyipo7tdTEFKnT+CKBPf2YOygQQabq1pR3szPcteYFQsK6pKUf5IHWGlF79i
-	2+HgjWcO9gRPpjczMchHNRCebYJNVtSxJOcYR/MGda+YgJOZa6vffIprgKLmiloD7rG9Sd
-	yopDbCkgZ1e8d7M8eoCzTZCE8DWC503eB6yeZFYuaG8sDF2/lhMKn0TPE38XXWtecPs86x
-	oN0xUjIP6xDHvd/LQzw/+qgi1g5vPcE2CgAQlcL/cBUEJ3iItwaO9azfPPnHew==
+	bh=+WCyvCXKRf/F4qW3dfDg+7ZIfppz2CYPNGxpMfZcwg0=;
+	b=ZnGz2q/W9IiBiinljDoOH5n7EVN0HgSXWxNT8EtIwDIGQVHBdgiZeJPnl2jzr8Di542w+C
+	UQw7Un3noLhsUPXXvUKs54+hWP3J9GmPvU7ROQFVFa1CP7Egeg9u61UqmL/OLZn4RjhzYg
+	6RpztH6IFpc9mUoxjeRWUJBn+kvS1lSwGZp+oAYjc1Io3IVODDNLhJXmrpbdy+p/CpeEN6
+	vL+5jqxtfnrjOhiY5S3Bc05Wftmsf4cWz9I7wcYyZRovCl8qwkuip5tIgEtxwQO1C4xAuB
+	vrjuu7V553X1vtJXz0u+sXRL1Nalsj8wwmPBK8BWOEw/FYJHb2iq8LEipn4uoA==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
 	s=2020e; t=1747047075;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=quxmvFOpWEdlDXGAnbEr+RnyianRn/nmBROLE3F3T+I=;
-	b=dn0MNf5bBh9A4KmqF9I2xFqKe6a+CJ2PTEcPpogAl2WX/TfhWUVo4qw5K5lk3j69IeooKQ
-	XSGxUlOKMMSHQSAw==
+	bh=+WCyvCXKRf/F4qW3dfDg+7ZIfppz2CYPNGxpMfZcwg0=;
+	b=viFfOlIMndAJT4x6tjWVDwVNYyxJL7n2HVLyVXKT77dozPbGvOkZE6bHr+rv2yhXTTL/8O
+	iTgkNVnMBNewfaBw==
 To: Steven Rostedt <rostedt@goodmis.org>,
 	Gabriele Monaco <gmonaco@redhat.com>,
 	linux-trace-kernel@vger.kernel.org,
 	linux-kernel@vger.kernel.org
 Cc: john.ogness@linutronix.de,
 	Nam Cao <namcao@linutronix.de>
-Subject: [PATCH v8 05/22] verification/dot2k: Make a separate dot2k_templates/Kconfig_container
-Date: Mon, 12 May 2025 12:50:48 +0200
-Message-Id: <ad8c0a233c0dfd167530231f2f828d0d5a6af5c9.1747046848.git.namcao@linutronix.de>
+Subject: [PATCH v8 06/22] verification/dot2k: Remove __buff_to_string()
+Date: Mon, 12 May 2025 12:50:49 +0200
+Message-Id: <d7d7d04a29e3b51aeef60eadad531585e724975f.1747046848.git.namcao@linutronix.de>
 In-Reply-To: <cover.1747046848.git.namcao@linutronix.de>
 References: <cover.1747046848.git.namcao@linutronix.de>
 Precedence: bulk
@@ -58,70 +58,89 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-A generated container's Kconfig has an incorrect line:
-
-    select DA_MON_EVENTS_IMPLICIT
-
-This is due to container generation uses the same template Kconfig file as
-deterministic automaton monitor.
-
-Therefore, make a separate Kconfig template for container which has only
-the necessaries for container.
+str.join() can do what __buff_to_string() does. Therefore replace
+__buff_to_string() to make the scripts more pythonic.
 
 Reviewed-by: Gabriele Monaco <gmonaco@redhat.com>
 Signed-off-by: Nam Cao <namcao@linutronix.de>
 ---
-Alternatively, we could also modify the Python scripts. I tried both and
-this solution seems cleaner.
----
- tools/verification/dot2/dot2k.py                          | 3 ++-
- tools/verification/dot2/dot2k_templates/Kconfig_container | 5 +++++
- 2 files changed, 7 insertions(+), 1 deletion(-)
- create mode 100644 tools/verification/dot2/dot2k_templates/Kconfig_contain=
-er
+ tools/verification/dot2/dot2k.py | 21 ++++++---------------
+ 1 file changed, 6 insertions(+), 15 deletions(-)
 
 diff --git a/tools/verification/dot2/dot2k.py b/tools/verification/dot2/dot=
 2k.py
-index 745d35a4a379..dd4b5528a4f2 100644
+index dd4b5528a4f2..0922754454b9 100644
 --- a/tools/verification/dot2/dot2k.py
 +++ b/tools/verification/dot2/dot2k.py
-@@ -35,6 +35,7 @@ class dot2k(Dot2c):
-             self.states =3D []
-             self.main_c =3D self.__read_file(self.monitor_templates_dir + =
-"main_container.c")
-             self.main_h =3D self.__read_file(self.monitor_templates_dir + =
-"main_container.h")
-+            self.kconfig =3D self.__read_file(self.monitor_templates_dir +=
- "Kconfig_container")
-         else:
-             super().__init__(file_path, extra_params.get("model_name"))
+@@ -109,15 +109,6 @@ class dot2k(Dot2c):
+         fd.close()
+         return content
 =20
-@@ -44,7 +45,7 @@ class dot2k(Dot2c):
-             self.monitor_type =3D MonitorType
-             self.main_c =3D self.__read_file(self.monitor_templates_dir + =
-"main.c")
-             self.trace_h =3D self.__read_file(self.monitor_templates_dir +=
- "trace.h")
--        self.kconfig =3D self.__read_file(self.monitor_templates_dir + "Kc=
-onfig")
-+            self.kconfig =3D self.__read_file(self.monitor_templates_dir +=
- "Kconfig")
-         self.enum_suffix =3D "_%s" % self.name
-         self.description =3D extra_params.get("description", self.name) or=
- "auto-generated"
-         self.auto_patch =3D extra_params.get("auto_patch")
-diff --git a/tools/verification/dot2/dot2k_templates/Kconfig_container b/to=
-ols/verification/dot2/dot2k_templates/Kconfig_container
-new file mode 100644
-index 000000000000..a606111949c2
---- /dev/null
-+++ b/tools/verification/dot2/dot2k_templates/Kconfig_container
-@@ -0,0 +1,5 @@
-+config RV_MON_%%MODEL_NAME_UP%%
-+	depends on RV
-+	bool "%%MODEL_NAME%% monitor"
-+	help
-+	  %%DESCRIPTION%%
+-    def __buff_to_string(self, buff):
+-        string =3D ""
+-
+-        for line in buff:
+-            string =3D string + line + "\n"
+-
+-        # cut off the last \n
+-        return string[:-1]
+-
+     def fill_monitor_type(self):
+         return self.monitor_type.upper()
+=20
+@@ -148,19 +139,19 @@ class dot2k(Dot2c):
+                 buff.append("\tda_%s_%s(%s%s);" % (handle, self.name, even=
+t, self.enum_suffix));
+             buff.append("}")
+             buff.append("")
+-        return self.__buff_to_string(buff)
++        return '\n'.join(buff)
+=20
+     def fill_tracepoint_attach_probe(self):
+         buff =3D []
+         for event in self.events:
+             buff.append("\trv_attach_trace_probe(\"%s\", /* XXX: tracepoin=
+t */, handle_%s);" % (self.name, event))
+-        return self.__buff_to_string(buff)
++        return '\n'.join(buff)
+=20
+     def fill_tracepoint_detach_helper(self):
+         buff =3D []
+         for event in self.events:
+             buff.append("\trv_detach_trace_probe(\"%s\", /* XXX: tracepoin=
+t */, handle_%s);" % (self.name, event))
+-        return self.__buff_to_string(buff)
++        return '\n'.join(buff)
+=20
+     def fill_main_c(self):
+         main_c =3D self.main_c
+@@ -210,7 +201,7 @@ class dot2k(Dot2c):
+         buff =3D self.fill_model_h_header()
+         buff +=3D self.format_model()
+=20
+-        return self.__buff_to_string(buff)
++        return '\n'.join(buff)
+=20
+     def fill_monitor_class_type(self):
+         if self.monitor_type =3D=3D "per_task":
+@@ -242,7 +233,7 @@ class dot2k(Dot2c):
+         tp_args_c =3D ", ".join([b for a,b in tp_args])
+         buff.append("	     TP_PROTO(%s)," % tp_proto_c)
+         buff.append("	     TP_ARGS(%s)" % tp_args_c)
+-        return self.__buff_to_string(buff)
++        return '\n'.join(buff)
+=20
+     def fill_monitor_deps(self):
+         buff =3D []
+@@ -250,7 +241,7 @@ class dot2k(Dot2c):
+         if self.parent:
+             buff.append("	depends on RV_MON_%s" % self.parent.upper())
+             buff.append("	default y")
+-        return self.__buff_to_string(buff)
++        return '\n'.join(buff)
+=20
+     def fill_trace_h(self):
+         trace_h =3D self.trace_h
 --=20
 2.39.5
 
