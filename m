@@ -1,87 +1,125 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f50.google.com (mail-pj1-f50.google.com [209.85.216.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B046724BD02;
-	Mon, 12 May 2025 16:10:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0880324678D;
+	Mon, 12 May 2025 16:17:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747066240; cv=none; b=dHKvOQ/8na92SHRea80PrdlDIhhyLcru8gT99uZYN5bHZqQH1Y7pHmbtaBaOa/w+NWvIEgCYJXIhw68pZqf1PHpzyryv70yHhPcSuQRQ/E6fpELydEnXds8UNVLFQQoylzVp8QcP/FUgMGHZHpptChvapirF8XMCCZehSJISEnQ=
+	t=1747066654; cv=none; b=T/M0zt4hY0s3m4sOReotQOz5agS1T8tF9/ZwfAziEAkAs7z6W3KcSBJM87D2uZdlYoEZXsVjuo9+4KdyP/QT5AQGHVfoHDEbUub6gjFJPwhCCf6kvdrAx5TNpZkVvIg6TmGiRRyjUJUP0BlSooh9lZ+BRcrzNdtd9iRjQ8pG1u0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747066240; c=relaxed/simple;
-	bh=x5dkzsUmSGXFdAIE2vpjG06+LOXWs2VUeJtC+t8/c3Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ItE1NR6lt8y9L1FMg4DY2RwH9x2LX1QlnaKA5kV9k0lg5/GJxtuotWSKJBS1zKbTLruy8XPuAekWcmtfBd92glEJ+fercX9bp1Kmly2ojzOuSsluUu/nrU2r9/Ql+L7HqL1bsoK8d4CKGezSRZ7B1lC6fBqsj4t+MRPuW/3iEGU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1FA81C4CEF2;
-	Mon, 12 May 2025 16:10:39 +0000 (UTC)
-Date: Mon, 12 May 2025 12:11:00 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Kassey Li <quic_yingangl@quicinc.com>
-Cc: <James.Bottomley@HansenPartnership.com>, <martin.petersen@oracle.com>,
- <mathieu.desnoyers@efficios.com>, <linux-kernel@vger.kernel.org>,
- <linux-trace-kernel@vger.kernel.org>, <linux-scsi@vger.kernel.org>
-Subject: Re: [PATCH] scsi: trace: change the rtn log in hex format
-Message-ID: <20250512121100.1b3a77b0@gandalf.local.home>
-In-Reply-To: <20250509053840.2990227-1-quic_yingangl@quicinc.com>
-References: <20250509053840.2990227-1-quic_yingangl@quicinc.com>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1747066654; c=relaxed/simple;
+	bh=bgp4i9EUIQbKNiJUfwhdvJH5H7aeG1dF49FUZ6vXukQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=pwfqi0z33hzqYF3NBAmOeys8OIT5G08xjFq4TzWe7AiDD8WLDKcGtfan7QtO7j/CGNA9f+kBlulbob3xQDWZJY+egFMMdGZPJUQSDviHoYm/YaJhwFG3StpQdIJU1+mRK7FJpecMH9589/PFy6H8dt2F4dfdpiCIWoJ7k2ozUGM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HC4BzF2A; arc=none smtp.client-ip=209.85.216.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HC4BzF2A"
+Received: by mail-pj1-f50.google.com with SMTP id 98e67ed59e1d1-30a8cfa713fso4438022a91.1;
+        Mon, 12 May 2025 09:17:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747066652; x=1747671452; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=9uvHjXCxcVfNXCFQY8QeQ7tL8pdwghSrCmXwREw/SuQ=;
+        b=HC4BzF2ARz6EHSEkiG2HQFYYeCKsW1DsHe6G/daon0LXrqHvdghi7mWPOzRkezFcqo
+         xZVwkC1jmjKLYuh1q0f2BQvu6LVSQkIo1NxqBG1yTJv20Jp/J3Q2Y7hTOrUJirFyXuum
+         d3otWC7c+/S8Xzmva3f+BwwNmadQAUYs/dYTEX18IgECWMYyFwS1mhJ6WVKfoAr54z8k
+         NSYERULa7HyhFrHPKcPdL7UGBmTahQnhN+MMdHzoa7D6kDhpXtBpX8P4W1zmNnlA2f2i
+         L9tZQRP/O8ssz1m29O2FHyRdDazYfJbcUVqQmk6l6zYG7J1enFBs110R/9yhgJa/46fB
+         RrQw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747066652; x=1747671452;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=9uvHjXCxcVfNXCFQY8QeQ7tL8pdwghSrCmXwREw/SuQ=;
+        b=N1hCmSfS8qwSIA7lHgUCIZI6ITC/BHiOQf2FEvqfqVft/TPAo3pBaO0dWHfd3qnRGJ
+         5HavAMjFuYlea09kG3khE3hAdUGlfiSct8dM6M0Fs89PnEMSppTwMLYMLMCUNM3KcS6B
+         u7uetERYI+oIR0rmd6pKbr7EX/dGsm/iYpUnMPJ9Jpq+qnz2hHfSrrWBk1Vt5ctigrPb
+         UwpDkrwtJNGNnBmELlz35URlXlGUET+LReR3GxMw6z3vO3eIskOs8ULn2QSbqr2+6lCa
+         J7HfQ3OAwBo04aWK7I1P6Sp3aKsLnOzrD3pZYtpzQ4IkTYNX38ESvkkzOFhbpApQWhvk
+         QAFQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV1FerOGgeWipFJSTXFIuxQkAS0rd+FIGjYMrE1eLlRArd7lKhNRDSugv3ZWfrDEvjX2GA8WenbIpLtbP8sptReAdoV@vger.kernel.org, AJvYcCXzhghijdqjHIDNhZAFwLuEEPsp2FXW64et+I0VzZbj77EryzxZ+h5dm+LwVIIJK5xB96I=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw50V4I4FFBwic1sfbs8thgOhvtuoxxOmMKFRZ+5npJQXdhogVr
+	zXWfh6tqrxbtyY5wUg6vopxTKdM/49fvrDm+CwwLr/jRP/W95fXi2NHmoh7eT57a888X2GEyWvW
+	Z6ernKXZR8voD6OqmmJV2oneH3J0ZUG3W
+X-Gm-Gg: ASbGncsgNO2OXPMSSgGWrYLWaHQ6Lu/yssgG1yNTZLpb6T7GNktwyPBwe6tTKZpzUXo
+	FygYAjnScP7P1g7CXYx7GJXY/GyV0vDepL9iObR3eV2YDALFVg4HBb65O6JbQ9Cl9wPg+qAwOsx
+	Cs0ezEmIJET3XjcOla2IBXSg0W2yIXcJ8lW6v10VKiZtXpj5aZHFxSVjvS0Ww=
+X-Google-Smtp-Source: AGHT+IHeVbbq75QFEsdBwLdk0G775rWp2KMcd7S50ydlk0AYFnSK87YAytaVJ4OEH2EAwBERrs4xBteqdST6Ut18BBo=
+X-Received: by 2002:a17:90b:1a89:b0:2f9:c139:b61f with SMTP id
+ 98e67ed59e1d1-30c3cff4192mr24639689a91.14.1747066652101; Mon, 12 May 2025
+ 09:17:32 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20250509164524.448387100@goodmis.org> <20250509165155.628873521@goodmis.org>
+ <CAEf4Bzb7MCv87ZEPXvH7APk9yvmtCWvuUO5ShEaLvz_DLfNqpw@mail.gmail.com> <20250510094149.7e91736d@gandalf.local.home>
+In-Reply-To: <20250510094149.7e91736d@gandalf.local.home>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Mon, 12 May 2025 09:17:19 -0700
+X-Gm-Features: AX0GCFvGFzGHwTHTkppy2G0wRc8r3BTb9Wt9Jz0r138tBIO0LakJqFig68Nag50
+Message-ID: <CAEf4BzYrz8-aBW0q7wwMOyO3v0ByLuFBRLtBQhSe1fesXwrPWw@mail.gmail.com>
+Subject: Re: [PATCH v8 12/18] unwind deferred: Use SRCU unwind_deferred_task_work()
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	bpf@vger.kernel.org, x86@kernel.org, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Josh Poimboeuf <jpoimboe@kernel.org>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
+	Namhyung Kim <namhyung@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, 9 May 2025 13:38:40 +0800
-Kassey Li <quic_yingangl@quicinc.com> wrote:
+On Sat, May 10, 2025 at 6:41=E2=80=AFAM Steven Rostedt <rostedt@goodmis.org=
+> wrote:
+>
+> On Fri, 9 May 2025 14:49:37 -0700
+> Andrii Nakryiko <andrii.nakryiko@gmail.com> wrote:
+>
+> > > @@ -133,13 +135,15 @@ static void unwind_deferred_task_work(struct ca=
+llback_head *head)
+> > >
+> > >         timestamp =3D info->timestamp;
+> > >
+> > > -       guard(mutex)(&callback_mutex);
+> > > -       list_for_each_entry(work, &callbacks, list) {
+> > > +       idx =3D srcu_read_lock(&unwind_srcu);
+> >
+> > nit: you could have used guard(srcu)(&unwind_srcu) ?
+>
+> Then it would be a scope_guard() as it is only needed for the list. I
+> prefer using guard() when it is most of the function that is being
+> protected. Here it's just the list and nothing else.
+>
+> One issue I have with guard() is that it tends to "leak". That is, if you
+> use it to protect only one thing and then add more after what you are
+> protecting, then the guard ends up protecting more than it needs to.
+>
 
-> In default it showed rtn in decimal.
-> 
-> kworker/3:1H-183 [003] ....  51.035474: scsi_dispatch_cmd_error: host_no=0 channel=0 id=0 lun=4 data_sgl=1  prot_sgl=0 prot_op=SCSI_PROT_NORMAL cmnd=(READ_10 lba=3907214  txlen=1 protect=0 raw=28 00 00 3b 9e 8e 00 00 01 00) rtn=4181
-> 
-> In source code we define these possible value as hexadecimal:
-> 
-> include/scsi/scsi.h
-> 
-> SCSI_MLQUEUE_HOST_BUSY   0x1055
-> SCSI_MLQUEUE_DEVICE_BUSY 0x1056
-> SCSI_MLQUEUE_EH_RETRY    0x1057
-> SCSI_MLQUEUE_TARGET_BUSY 0x1058
+Yep, makes sense. I just noticed the use of guard() for mutex before,
+so assumes the same could be done for SRCU, but what you are saying
+makes sense, no problem.
 
-Hmm, would you want to make this show text?
-
-> 
-> This change converts the rtn in hexadecimal.
-> 
-> Signed-off-by: Kassey Li <quic_yingangl@quicinc.com>
-> ---
->  include/trace/events/scsi.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/include/trace/events/scsi.h b/include/trace/events/scsi.h
-> index bf6cc98d9122..a4c089ac834c 100644
-> --- a/include/trace/events/scsi.h
-> +++ b/include/trace/events/scsi.h
-> @@ -240,7 +240,7 @@ TRACE_EVENT(scsi_dispatch_cmd_error,
->  
->  	TP_printk("host_no=%u channel=%u id=%u lun=%u data_sgl=%u prot_sgl=%u" \
->  		  " prot_op=%s driver_tag=%d scheduler_tag=%d cmnd=(%s %s raw=%s)" \
-> -		  " rtn=%d",
-> +		  " rtn=0x%x",
-
-		  " rtn=%s",
-
->  		  __entry->host_no, __entry->channel, __entry->id,
->  		  __entry->lun, __entry->data_sglen, __entry->prot_sglen,
->  		  show_prot_op_name(__entry->prot_op), __entry->driver_tag,
-
-		__print_symbolic(rtn, { SCSI_MLQUEUE_HOST_BUSY, "HOST_BUSY" },
-				      { SCSI_MLQUEUE_DEVICE_BUSY, "DEVICE_BUSY" },
-				      { SCSI_MLQUEUE_EH_RETRY, "EH_RETRY" },
-				      { SCSI_MLQUEUE_TARGET_BUSY, "TARGET_BUSY" })
-
-?
-
--- Steve
+> If anything, I would make the loop into its own function with the guard()
+> then it is more obvious. But for now, I think it's fine as is, unless
+> others prefer the switch.
+>
+> -- Steve
+>
+> >
+> > > +       list_for_each_entry_srcu(work, &callbacks, list,
+> > > +                                srcu_read_lock_held(&unwind_srcu)) {
+> > >                 if (task->unwind_mask & (1UL << work->bit)) {
+> > >                         work->func(work, &trace, timestamp);
+> > >                         clear_bit(work->bit, &current->unwind_mask);
+> > >                 }
+> > >         }
+> > > +       srcu_read_unlock(&unwind_srcu, idx);
+> > >  }
+> > >
