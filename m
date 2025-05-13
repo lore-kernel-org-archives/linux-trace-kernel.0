@@ -1,160 +1,145 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D316E54640;
-	Tue, 13 May 2025 00:50:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F50D35963;
+	Tue, 13 May 2025 00:51:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747097431; cv=none; b=sgJX0JA8OImvfcs5PKDz4jJNGR1bQE8ghIQbPRxmzVGisEDqjhN5gEtMengfm0XhA0hhCCHmWeNodt7fPmP9iFAm1pDTtNCFfjjqBSgNfEHV+ul53cdgb2zLBQq8uTx7jTkwdTFqyDbvVcsQWcQ8txCMRWFfnCE69o7S7rd42A4=
+	t=1747097509; cv=none; b=OUG6baajAyiooVWd7WbERNk0Yeb6RKd/lMKSzQEeGccKvU7ak4VXG5yPu8LhWfVaqxMWAsIRHVrTC17HQGqJWIJEZ/uqVTddg5Bk4V3KYlmnNwxNOdqhJM9rUwClRtjkQanhsGj8LcUdz0iZvra5iQlJ/pX+FbBwwtnr1JNCl3I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747097431; c=relaxed/simple;
-	bh=Fd+P8BGD5ZHFi/NqDbXbGvpzJAUzu/oA65q/isK42lA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=HhqPO9YvOq3Fb745MlNxjJMQxZej31zBEWVdtbi3aWSTRXtXPubc3AvVycvG2Z/4v4Tj27n4fUY4MDqIKcn/67WoLejr7LsKpW7+EtwJ2ne203cc7zh8Wblrd8onBo0germu4kR5zoNvh8CxTOgqMl7MUm9JCTw/kduUatwbjlg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cFOc4aB9; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747097509; c=relaxed/simple;
+	bh=dykArHGaxyt4Kxg8tkLURPYvkMUtVE3+EydPHwxxRFA=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=iSwTY2tZu7NnEk3yIg9+UZbi6ypBdcyPghqagKynnfQCNuffjpJlp4p90SQbFfaMuhUUtOyMXMCIjMJtszUbmPzxCNJyUP/HF1gqd1MFgPX9h9t0n9/U4sZu1Cnc5NMJJFGnqYGfLhFliU96Ynvrh4FbEM4I0Gz+IBI9gID0Xus=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=cyf0HtwH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cFOc4aB9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8357BC4CEE7;
-	Tue, 13 May 2025 00:50:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747097431;
-	bh=Fd+P8BGD5ZHFi/NqDbXbGvpzJAUzu/oA65q/isK42lA=;
-	h=From:To:Cc:Subject:Date:From;
-	b=cFOc4aB9x+fPhg6DS2WHJaomYFCGxETDw8mFo4d66m+F56GW8oa16ZcfVDlBuq5Se
-	 QuiHoZL7gfjRfdCtMUxcCUHhYcKNuX3cvVgZZMrNEyGHWLdpCNW+KZ6G3CAYgRKG00
-	 MWyf/ZTN4LGw6OD3C3Bd1y6WPAKzo/2MPLNs+IAcTbmKOqnvkAjAVM3WAkKQrqNOKy
-	 xUnhFAHW7h2FcSSsh3CeM79lKds7LMalwSRtcowDWOjW6WPpXDGkffDamVgVXZeXd7
-	 BIPsqREv/1fhzBUhqAPrn5mVPwp7xc173NjIvQwo7FdBSytzaO09MtD/sLmixKCnMj
-	 y7mn5KdPbwV6g==
-From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Subject: [RFC PATCH] tracing: ring_buffer: Rewind persistent ring buffer when reboot
-Date: Tue, 13 May 2025 09:50:27 +0900
-Message-ID:  <174709742769.1964496.18203163435305117893.stgit@mhiramat.tok.corp.google.com>
-X-Mailer: git-send-email 2.49.0.1045.g170613ef41-goog
-User-Agent: StGit/0.19
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="cyf0HtwH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7548CC4CEE7;
+	Tue, 13 May 2025 00:51:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+	s=korg; t=1747097508;
+	bh=dykArHGaxyt4Kxg8tkLURPYvkMUtVE3+EydPHwxxRFA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=cyf0HtwHystq8hcaqSIMC2f5usGGtKTyF7Vch/ZSM6x+fIcxyZ8OzdoHpZVxLGkZo
+	 tr0P5ywCN2vHhW6V3BUt0H3JJtKOCA3udcBJ6Z3ffrur4mgJiGOE/NPr6mr1gRUdao
+	 iSEN3YxngfNxkJ7vomun2M9tocuYpdoBRz3TcUsA=
+Date: Mon, 12 May 2025 17:51:47 -0700
+From: Andrew Morton <akpm@linux-foundation.org>
+To: Jason Xing <kerneljasonxing@gmail.com>
+Cc: axboe@kernel.dk, rostedt@goodmis.org, mhiramat@kernel.org,
+ mathieu.desnoyers@efficios.com, linux-kernel@vger.kernel.org,
+ linux-block@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Jason Xing
+ <kernelxing@tencent.com>, Yushan Zhou <katrinzhou@tencent.com>
+Subject: Re: [PATCH v1 1/5] relayfs: support a counter tracking if per-cpu
+ buffers is full
+Message-Id: <20250512175147.925bcdcd5f6cfa71def08bb0@linux-foundation.org>
+In-Reply-To: <20250512024935.64704-2-kerneljasonxing@gmail.com>
+References: <20250512024935.64704-1-kerneljasonxing@gmail.com>
+	<20250512024935.64704-2-kerneljasonxing@gmail.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+On Mon, 12 May 2025 10:49:31 +0800 Jason Xing <kerneljasonxing@gmail.com> wrote:
 
-Rewind persistent ring buffer pages which have been read in the
-previous boot. Those pages are highly possible to be lost before
-writing it to the disk if the previous kernel crashed. In this
-case, the trace data is kept on the persistent ring buffer, but
-it can not be read because its commit size has been reset after
-read.
-This skips clearing the commit size of each sub-buffer and
-recover it after reboot.
+> From: Jason Xing <kernelxing@tencent.com>
+> 
+> Add 'full' field in per-cpu buffer structure to detect if the buffer is
+> full, which means: 1) relayfs doesn't intend to accept new data in
+> non-overwrite mode that is also by default, or 2) relayfs is going to
+> start over again and overwrite old unread data when kernel module has
+> its own subbuf_start callback to support overwrite mode. This counter
+> works for both overwrite and non-overwrite modes.
+> 
+> This counter doesn't have any explicit lock to protect from being
+> modified by different threads at the same time for the better
+> performance consideration. In terms of the atomic operation, it's not
+> introduced for incrementing the counter like blktrace because side
+> effect may arise when multiple threads access the counter simultaneously
+> on the machine equipped with many cpus, say, more than 200. As we can
+> see in relay_write() and __relay_write(), the writer at the beginning
+> should consider how to use the lock for the whole write process, thus
+> it's not necessary to add another lock to make sure the counter is
+> accurate.
+> 
+> Using 'pahole --hex -C rchan_buf vmlinux' so you can see this field just
+> fits into one 4-byte hole in the cacheline 2.
 
-Note: If you read the previous boot data via trace_pipe, that
-is not accessible in that time. But reboot without clearing (or
-reusing) the read data, the read data is recovered again in the
-next boot.
-Thus, when you read the previous boot data, clear it by
-`echo > trace`.
+Does this alter blktrace output?  If so is that backward-compatible
+(and do we care).  Is there any blktrace documentation which should be
+updated?
 
-Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
----
- kernel/trace/ring_buffer.c |   55 ++++++++++++++++++++++++++++++++++++++++++--
- 1 file changed, 52 insertions(+), 3 deletions(-)
+Also, please check Documentation/filesystems/relay.rst and see if any
+updates should be made to reflect the changes in this patchset.
 
-diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-index 1ca482955dae..a1014c8b8772 100644
---- a/kernel/trace/ring_buffer.c
-+++ b/kernel/trace/ring_buffer.c
-@@ -1358,6 +1358,13 @@ static inline void rb_inc_page(struct buffer_page **bpage)
- 	*bpage = list_entry(p, struct buffer_page, list);
- }
- 
-+static inline void rb_dec_page(struct buffer_page **bpage)
-+{
-+	struct list_head *p = rb_list_head((*bpage)->list.prev);
-+
-+	*bpage = list_entry(p, struct buffer_page, list);
-+}
-+
- static struct buffer_page *
- rb_set_head_page(struct ring_buffer_per_cpu *cpu_buffer)
- {
-@@ -1866,9 +1873,10 @@ static int rb_validate_buffer(struct buffer_data_page *dpage, int cpu)
- static void rb_meta_validate_events(struct ring_buffer_per_cpu *cpu_buffer)
- {
- 	struct ring_buffer_cpu_meta *meta = cpu_buffer->ring_meta;
--	struct buffer_page *head_page;
-+	struct buffer_page *head_page, *orig_head;
- 	unsigned long entry_bytes = 0;
- 	unsigned long entries = 0;
-+	bool zero_commit;
- 	int ret;
- 	int i;
- 
-@@ -1885,7 +1893,49 @@ static void rb_meta_validate_events(struct ring_buffer_per_cpu *cpu_buffer)
- 	entry_bytes += local_read(&cpu_buffer->reader_page->page->commit);
- 	local_set(&cpu_buffer->reader_page->entries, ret);
- 
--	head_page = cpu_buffer->head_page;
-+	orig_head = head_page = cpu_buffer->head_page;
-+
-+	/*
-+	 * Try to rewind the head so that we can read the pages which already
-+	 * read in the previous boot.
-+	 */
-+	zero_commit = false;
-+	rb_dec_page(&head_page);
-+	for (i = 0; i < meta->nr_subbufs + 1; i++, rb_dec_page(&head_page)) {
-+
-+		/* Rewind until tail (writer) page. */
-+		if (head_page == cpu_buffer->tail_page ||
-+		    local_read(&head_page->write) /* under writing */)
-+			break;
-+
-+		/* Stop rewind if the page is invalid. */
-+		ret = rb_validate_buffer(head_page->page, cpu_buffer->cpu);
-+		if (ret < 0)
-+			break;
-+
-+		/* Recover the number of entries. */
-+		local_set(&head_page->entries, ret);
-+		if (ret)
-+			local_inc(&cpu_buffer->pages_touched);
-+		entries += ret;
-+		entry_bytes += rb_page_commit(head_page);
-+		/* If there are 2 zero commit pages, stop rewind. */
-+		if (rb_page_commit(head_page) == 0) {
-+			if (zero_commit)
-+				break;
-+			zero_commit = true;
-+		} else
-+			zero_commit = false;
-+	}
-+	/* The last rewind page must be skipped. */
-+	rb_inc_page(&head_page);
-+
-+	if (head_page != orig_head) {
-+		cpu_buffer->head_page = head_page;
-+		head_page = orig_head;
-+		if (zero_commit && rb_page_commit(head_page) == 0)
-+			rb_inc_page(&head_page);
-+	}
- 
- 	/* If both the head and commit are on the reader_page then we are done. */
- 	if (head_page == cpu_buffer->reader_page &&
-@@ -5346,7 +5396,6 @@ rb_get_reader_page(struct ring_buffer_per_cpu *cpu_buffer)
- 	 */
- 	local_set(&cpu_buffer->reader_page->write, 0);
- 	local_set(&cpu_buffer->reader_page->entries, 0);
--	local_set(&cpu_buffer->reader_page->page->commit, 0);
- 	cpu_buffer->reader_page->real_end = 0;
- 
-  spin:
+I'm not really clear on the use cases of this counter - perhaps you can
+be more verbose about this in the changelog.
+
+> diff --git a/include/linux/relay.h b/include/linux/relay.h
+> index f80b0eb1e905..022cf11e5a92 100644
+> --- a/include/linux/relay.h
+> +++ b/include/linux/relay.h
+> @@ -28,6 +28,14 @@
+>   */
+>  #define RELAYFS_CHANNEL_VERSION		7
+>  
+> +/*
+> + * Relay buffer error statistics dump
+> + */
+> +struct rchan_buf_error_stats
+> +{
+> +	unsigned int full;		/* counter for buffer full */
+> +};
+
+Why a struct?
+
+>  /*
+>   * Per-cpu relay channel buffer
+>   */
+> @@ -43,6 +51,7 @@ struct rchan_buf
+>  	struct irq_work wakeup_work;	/* reader wakeup */
+>  	struct dentry *dentry;		/* channel file dentry */
+>  	struct kref kref;		/* channel buffer refcount */
+> +	struct rchan_buf_error_stats stats; /* error stats */
+
+Could simply use
+
+	unsigned int full;
+
+here?
+
+Also, the name "full" implies to me "it is full".  Perhaps "full_count"
+would be better.
+
+>  	struct page **page_array;	/* array of current buffer pages */
+>  	unsigned int page_count;	/* number of current buffer pages */
+>  	unsigned int finalized;		/* buffer has been finalized */
+> diff --git a/kernel/relay.c b/kernel/relay.c
+> index 5aeb9226e238..b5db4aa60da1 100644
+> --- a/kernel/relay.c
+> +++ b/kernel/relay.c
+> @@ -252,8 +252,13 @@ EXPORT_SYMBOL_GPL(relay_buf_full);
+>  static int relay_subbuf_start(struct rchan_buf *buf, void *subbuf,
+>  			      void *prev_subbuf)
+>  {
+> +	int buf_full = relay_buf_full(buf);
+> +
+> +	if (buf_full)
+> +		buf->stats.full++;
+
+I don't understand the changelog's description of this, sorry.
+
+Is it saying "this operation is protected by a lock"?  If so, please
+specifically state which lock this is.
+
+Or is it saying "we don't care if this races because the counter will
+be close enough".  If so then maybe so, but things like KCSAN will
+probably detect and warn and then people will want to address this.
+
 
