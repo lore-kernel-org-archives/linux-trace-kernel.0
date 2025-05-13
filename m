@@ -1,39 +1,39 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FA9917BD3;
-	Tue, 13 May 2025 00:31:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D316E54640;
+	Tue, 13 May 2025 00:50:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747096291; cv=none; b=HY40r4GlpHsKrOHS+tDltwql9g6d6UbGd7ntaIolXlSiyu+drk365rTLxNva3xO2w7MzhMKeZG86EUguozrOL2RXAj4iAun8CMQMrIAN60vu28dfwlJjJvR2ljs60f5t6TJyIgEbUhYqqzlHATXGeBMESobTBS6qxd8tZzftAkY=
+	t=1747097431; cv=none; b=sgJX0JA8OImvfcs5PKDz4jJNGR1bQE8ghIQbPRxmzVGisEDqjhN5gEtMengfm0XhA0hhCCHmWeNodt7fPmP9iFAm1pDTtNCFfjjqBSgNfEHV+ul53cdgb2zLBQq8uTx7jTkwdTFqyDbvVcsQWcQ8txCMRWFfnCE69o7S7rd42A4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747096291; c=relaxed/simple;
-	bh=+Hq+ketVyMdmLh+sSRo9Ay4BPKRDvQymZuzWWELLjv0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=GoRqHyPfTcT09SAf7zgPy+KYraTVpyEZV6JaWw4NJ3UMNEnIeecShsHWnH2qf1vITeedAhQMCJ5NGHoAgakYCLNZBe/mLhTE2TJMqQizGICqQHUNmhwO7QuT0Nr5GolSRxVUsQm8/jawhddexZM9AL1cqR8M3HVGN7HfBfn/RCw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cHTao9v/; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747097431; c=relaxed/simple;
+	bh=Fd+P8BGD5ZHFi/NqDbXbGvpzJAUzu/oA65q/isK42lA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=HhqPO9YvOq3Fb745MlNxjJMQxZej31zBEWVdtbi3aWSTRXtXPubc3AvVycvG2Z/4v4Tj27n4fUY4MDqIKcn/67WoLejr7LsKpW7+EtwJ2ne203cc7zh8Wblrd8onBo0germu4kR5zoNvh8CxTOgqMl7MUm9JCTw/kduUatwbjlg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cFOc4aB9; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cHTao9v/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 50FABC4CEE7;
-	Tue, 13 May 2025 00:31:30 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cFOc4aB9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8357BC4CEE7;
+	Tue, 13 May 2025 00:50:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747096291;
-	bh=+Hq+ketVyMdmLh+sSRo9Ay4BPKRDvQymZuzWWELLjv0=;
+	s=k20201202; t=1747097431;
+	bh=Fd+P8BGD5ZHFi/NqDbXbGvpzJAUzu/oA65q/isK42lA=;
 	h=From:To:Cc:Subject:Date:From;
-	b=cHTao9v/sBA4EfKApS85CQfK0e4Hd98OtZmXUpQqZUfDwV6d8Fvzjho5XJ6JjJKC4
-	 k9jLHgF3Ob92w9Z5l654vWp6PpyurovA4uERrNGsiapRVS5ka2v3PW7qaAYfF6HOgY
-	 Do3ruPe2HdnTIYYiXVZ9Lbcs/6vNgd4sGW0sWf2cMlKgwIG2t2nyUvGQqFKTtYFKPA
-	 UzqZEfujgF4GAeOKIaT+A/kR8NNXgr8297iIOe/oeJQn/9E+OaJ23kscWOkp7uJR17
-	 /VgtKBxLgWKUq3d/pcpI9UhyLyn8Lw/UUEvv5xWZHJQQvllqjcEw2WF+ErokPRQSaJ
-	 kxPWuDGtkWTdQ==
+	b=cFOc4aB9x+fPhg6DS2WHJaomYFCGxETDw8mFo4d66m+F56GW8oa16ZcfVDlBuq5Se
+	 QuiHoZL7gfjRfdCtMUxcCUHhYcKNuX3cvVgZZMrNEyGHWLdpCNW+KZ6G3CAYgRKG00
+	 MWyf/ZTN4LGw6OD3C3Bd1y6WPAKzo/2MPLNs+IAcTbmKOqnvkAjAVM3WAkKQrqNOKy
+	 xUnhFAHW7h2FcSSsh3CeM79lKds7LMalwSRtcowDWOjW6WPpXDGkffDamVgVXZeXd7
+	 BIPsqREv/1fhzBUhqAPrn5mVPwp7xc173NjIvQwo7FdBSytzaO09MtD/sLmixKCnMj
+	 y7mn5KdPbwV6g==
 From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
 To: Steven Rostedt <rostedt@goodmis.org>
 Cc: Masami Hiramatsu <mhiramat@kernel.org>,
 	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
 	linux-kernel@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH v3] tracing: Record trace_clock and recover when reboot
-Date: Tue, 13 May 2025 09:31:27 +0900
-Message-ID:  <174709628747.1945884.11884057542151507891.stgit@mhiramat.tok.corp.google.com>
+Subject: [RFC PATCH] tracing: ring_buffer: Rewind persistent ring buffer when reboot
+Date: Tue, 13 May 2025 09:50:27 +0900
+Message-ID:  <174709742769.1964496.18203163435305117893.stgit@mhiramat.tok.corp.google.com>
 X-Mailer: git-send-email 2.49.0.1045.g170613ef41-goog
 User-Agent: StGit/0.19
 Precedence: bulk
@@ -47,71 +47,114 @@ Content-Transfer-Encoding: 8bit
 
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-Record trace_clock information in the trace_scratch area and recover
-the trace_clock when boot, so that reader can docode the timestamp
-correctly.
-Note that since most trace_clocks records the timestamp in nano-
-seconds, this is not a bug. But some trace_clock, like counter and
-tsc will record the counter value. Only for those trace_clock user
-needs this information.
+Rewind persistent ring buffer pages which have been read in the
+previous boot. Those pages are highly possible to be lost before
+writing it to the disk if the previous kernel crashed. In this
+case, the trace data is kept on the persistent ring buffer, but
+it can not be read because its commit size has been reset after
+read.
+This skips clearing the commit size of each sub-buffer and
+recover it after reboot.
+
+Note: If you read the previous boot data via trace_pipe, that
+is not accessible in that time. But reboot without clearing (or
+reusing) the read data, the read data is recovered again in the
+next boot.
+Thus, when you read the previous boot data, clear it by
+`echo > trace`.
 
 Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 ---
- Changes in v3:
-   - Save clock_id instead of its name.
- Changes in v2:
-   - instead of exposing it via last_boot_info, set the current
-     trace_clock as the same clock we used in the last boot.
----
- kernel/trace/trace.c |   16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+ kernel/trace/ring_buffer.c |   55 ++++++++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 52 insertions(+), 3 deletions(-)
 
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index cf51c30b137f..2a060c62d686 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -6066,6 +6066,7 @@ struct trace_mod_entry {
- };
+diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+index 1ca482955dae..a1014c8b8772 100644
+--- a/kernel/trace/ring_buffer.c
++++ b/kernel/trace/ring_buffer.c
+@@ -1358,6 +1358,13 @@ static inline void rb_inc_page(struct buffer_page **bpage)
+ 	*bpage = list_entry(p, struct buffer_page, list);
+ }
  
- struct trace_scratch {
-+	int			clock_id;
- 	unsigned long		text_addr;
- 	unsigned long		nr_entries;
- 	struct trace_mod_entry	entries[];
-@@ -6181,6 +6182,7 @@ static void update_last_data(struct trace_array *tr)
- 	if (tr->scratch) {
- 		struct trace_scratch *tscratch = tr->scratch;
- 
-+		tscratch->clock_id = tr->clock_id;
- 		memset(tscratch->entries, 0,
- 		       flex_array_size(tscratch, entries, tscratch->nr_entries));
- 		tscratch->nr_entries = 0;
-@@ -7403,6 +7405,12 @@ int tracing_set_clock(struct trace_array *tr, const char *clockstr)
- 	tracing_reset_online_cpus(&tr->max_buffer);
- #endif
- 
-+	if (tr->scratch && !(tr->flags & TRACE_ARRAY_FL_LAST_BOOT)) {
-+		struct trace_scratch *tscratch = tr->scratch;
++static inline void rb_dec_page(struct buffer_page **bpage)
++{
++	struct list_head *p = rb_list_head((*bpage)->list.prev);
 +
-+		tscratch->clock_id = i;
++	*bpage = list_entry(p, struct buffer_page, list);
++}
++
+ static struct buffer_page *
+ rb_set_head_page(struct ring_buffer_per_cpu *cpu_buffer)
+ {
+@@ -1866,9 +1873,10 @@ static int rb_validate_buffer(struct buffer_data_page *dpage, int cpu)
+ static void rb_meta_validate_events(struct ring_buffer_per_cpu *cpu_buffer)
+ {
+ 	struct ring_buffer_cpu_meta *meta = cpu_buffer->ring_meta;
+-	struct buffer_page *head_page;
++	struct buffer_page *head_page, *orig_head;
+ 	unsigned long entry_bytes = 0;
+ 	unsigned long entries = 0;
++	bool zero_commit;
+ 	int ret;
+ 	int i;
+ 
+@@ -1885,7 +1893,49 @@ static void rb_meta_validate_events(struct ring_buffer_per_cpu *cpu_buffer)
+ 	entry_bytes += local_read(&cpu_buffer->reader_page->page->commit);
+ 	local_set(&cpu_buffer->reader_page->entries, ret);
+ 
+-	head_page = cpu_buffer->head_page;
++	orig_head = head_page = cpu_buffer->head_page;
++
++	/*
++	 * Try to rewind the head so that we can read the pages which already
++	 * read in the previous boot.
++	 */
++	zero_commit = false;
++	rb_dec_page(&head_page);
++	for (i = 0; i < meta->nr_subbufs + 1; i++, rb_dec_page(&head_page)) {
++
++		/* Rewind until tail (writer) page. */
++		if (head_page == cpu_buffer->tail_page ||
++		    local_read(&head_page->write) /* under writing */)
++			break;
++
++		/* Stop rewind if the page is invalid. */
++		ret = rb_validate_buffer(head_page->page, cpu_buffer->cpu);
++		if (ret < 0)
++			break;
++
++		/* Recover the number of entries. */
++		local_set(&head_page->entries, ret);
++		if (ret)
++			local_inc(&cpu_buffer->pages_touched);
++		entries += ret;
++		entry_bytes += rb_page_commit(head_page);
++		/* If there are 2 zero commit pages, stop rewind. */
++		if (rb_page_commit(head_page) == 0) {
++			if (zero_commit)
++				break;
++			zero_commit = true;
++		} else
++			zero_commit = false;
 +	}
++	/* The last rewind page must be skipped. */
++	rb_inc_page(&head_page);
 +
- 	mutex_unlock(&trace_types_lock);
- 
- 	return 0;
-@@ -9628,6 +9636,14 @@ static void setup_trace_scratch(struct trace_array *tr,
- 
- 	/* Scan modules to make text delta for modules. */
- 	module_for_each_mod(make_mod_delta, tr);
-+
-+	/* Set trace_clock as the same of the previous boot. */
-+	if (tscratch->clock_id != tr->clock_id) {
-+		if (tracing_set_clock(tr, trace_clocks[tscratch->clock_id].name) < 0) {
-+			pr_info("the previous trace_clock info is not valid.");
-+			goto reset;
-+		}
++	if (head_page != orig_head) {
++		cpu_buffer->head_page = head_page;
++		head_page = orig_head;
++		if (zero_commit && rb_page_commit(head_page) == 0)
++			rb_inc_page(&head_page);
 +	}
- 	return;
-  reset:
- 	/* Invalid trace modules */
+ 
+ 	/* If both the head and commit are on the reader_page then we are done. */
+ 	if (head_page == cpu_buffer->reader_page &&
+@@ -5346,7 +5396,6 @@ rb_get_reader_page(struct ring_buffer_per_cpu *cpu_buffer)
+ 	 */
+ 	local_set(&cpu_buffer->reader_page->write, 0);
+ 	local_set(&cpu_buffer->reader_page->entries, 0);
+-	local_set(&cpu_buffer->reader_page->page->commit, 0);
+ 	cpu_buffer->reader_page->real_end = 0;
+ 
+  spin:
 
