@@ -1,41 +1,48 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8ABBF2F42;
-	Wed, 14 May 2025 01:14:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A18A3C00;
+	Wed, 14 May 2025 01:29:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747185275; cv=none; b=shh9OwTMdYQYzejmTHIwB+SE3pqSfBsINWsQJ2JWfOEUnhnSIVfGI5QEB/MFs6UO6dh0mW1+D5FPK1UZSXd/1asWM8kxhbagfRiuR4nLto5WEywdzUzgPYPsKUdUsVysgankB6aztuozKiT8RTe29eAe1lnBOL5dty8rkxZ3Vgc=
+	t=1747186155; cv=none; b=ZEu1elu9OyxwpHpSmcHEbrYmtEC6bAFKSOaxh27c+hw7lv1Qr9MwLIyqRVRSBRhLnEIP93UyyU+falaa7fsMw0fsCj5XW+X3IlosmcakWUK1xtVTh4AIj2o6Jct/aEyJYtfJrSKbMWNi5nShQEO5ki84ikMD5VKNmxL80E7q0Kw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747185275; c=relaxed/simple;
-	bh=CzeDfW6P7QbovukrEwnJdSGdw85sjKnjpjgPD0DzpxM=;
+	s=arc-20240116; t=1747186155; c=relaxed/simple;
+	bh=tIxAuEYnljGjkk9cCz3K7jL4A7gXJkGqZfQOtkiSMU0=;
 	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=jNVkOOnVmnjhYBYkXJxD+VKz0F+rS+gTXZA94ZUiyQh/s8NFgGaOWDNPGs868+ecYUQXiH2KxG1hNS3SHoplbaJLvuVcDo4R9nRBc/suLRBtc9pmfNvQ+kUqFiZ7ecBhQ5Hy5Lb8ZZRybVC/c3l23h91NDdSQMXIr2l1bsxrtlg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ayf+nUsr; arc=none smtp.client-ip=10.30.226.201
+	 Mime-Version:Content-Type; b=H0TNxig8MT+qZViR3rGDB59D27UMzqsSayFrD+sppn475o7F7HXtBLLU584fDD3KlK9a32U2F1DejNZMePzjQR6nnp0ODdQ0TDrsObX1EzLNXJ4XkQrjXRO6o5XYhS9jnWO+nuJHgdMdw+vk29/dRHOmbeau5C5ECh7KEPv/whI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QX5wsP0E; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ayf+nUsr"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C1B27C4CEED;
-	Wed, 14 May 2025 01:14:33 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QX5wsP0E"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D9229C4CEE4;
+	Wed, 14 May 2025 01:29:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747185275;
-	bh=CzeDfW6P7QbovukrEwnJdSGdw85sjKnjpjgPD0DzpxM=;
+	s=k20201202; t=1747186154;
+	bh=tIxAuEYnljGjkk9cCz3K7jL4A7gXJkGqZfQOtkiSMU0=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=ayf+nUsrqtO2rN9/PTKGFg8PvTmjpXsBhMjdP0KspbY5OYGK4+wEAklQvQuvMUGLO
-	 nGN3rHI4b4BrzAqKcvX8J8Z5ftw7w/TgJAwrhsnb1y0tbgPOQnpnPnhn+MFxFa/1QT
-	 BklgL/T3p/1FBhoA8vF4Mw8NW5klGQ1DOLtHZ0WVVMPvHMc+IDRvYBftrOzptTVwD6
-	 ocGCidol/AzaGM1ALVZIClp5+yuPyX8l8NJKCiMyvSYR6Js9LXJBiGAwXjQFCwKct3
-	 S1NsXjXYFwtvPw8IZVO32mgp3zjpjiVLqzAw/6ZpqyZ/Uv33+ubOzEx7u/3H9tyqNt
-	 Garsk6Qyn0bjA==
-Date: Wed, 14 May 2025 10:14:31 +0900
+	b=QX5wsP0EU+Bv1NtlmbwOfFo5kkJSBrZwYnw8x3v7I1qXjA9BjORuMJQvo9qF6zgbY
+	 rG2LJLibSlBN4VRSUJz9FF8b1Ne6NApwn2q3gCGsci3ryMBWGXOkOp8pmYvjW076dD
+	 JfimgpS17foisa6rIVoMbdr6X20BRKc1EygcYtqYPXyVE0F7enAKbh5KDxdfc5M8CL
+	 ek46l97RUI0XArPBd21mFeagOuWwJnczGcMr8clRrdAZSKdaV76NYyOKTiYEv6BhWW
+	 FB0kGQLBXukLJlFjw6J2ygoH+/24hROdZ5Ct/H08haNoplKRyY8L8nMHaQptfsj6+y
+	 tr4JrRpd0kIqg==
+Date: Wed, 14 May 2025 10:29:08 +0900
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] tracing: Record trace_clock and recover when reboot
-Message-Id: <20250514101431.e1363d1a60ed2548feb4cef0@kernel.org>
-In-Reply-To: <20250513135652.7cb970cf@gandalf.local.home>
-References: <174709628747.1945884.11884057542151507891.stgit@mhiramat.tok.corp.google.com>
-	<20250513135652.7cb970cf@gandalf.local.home>
+To: Jason Xing <kerneljasonxing@gmail.com>
+Cc: axboe@kernel.dk, rostedt@goodmis.org, mathieu.desnoyers@efficios.com,
+ akpm@linux-foundation.org, linux-kernel@vger.kernel.org,
+ linux-block@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Jason Xing
+ <kernelxing@tencent.com>, Yushan Zhou <katrinzhou@tencent.com>
+Subject: Re: [PATCH v1 2/5] relayfs: introduce dump of relayfs statistics
+ function
+Message-Id: <20250514102908.6a431966ef5b0f5f197bdb48@kernel.org>
+In-Reply-To: <CAL+tcoAGCdowY14QL7HEqbW3ewAJi0OXpWNVkbqq9cM6xRmLkg@mail.gmail.com>
+References: <20250512024935.64704-1-kerneljasonxing@gmail.com>
+	<20250512024935.64704-3-kerneljasonxing@gmail.com>
+	<20250513185810.3d57dfe2a0c05784ddf8f0a9@kernel.org>
+	<CAL+tcoCThLOL1AKPamh2fpeDjYEqvEber0Eddc2ZVxi6VAYJkQ@mail.gmail.com>
+	<20250513222235.33fd1817970cd601b18e92cf@kernel.org>
+	<CAL+tcoAGCdowY14QL7HEqbW3ewAJi0OXpWNVkbqq9cM6xRmLkg@mail.gmail.com>
 X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -46,105 +53,125 @@ Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Tue, 13 May 2025 13:56:51 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
+On Tue, 13 May 2025 21:46:25 +0800
+Jason Xing <kerneljasonxing@gmail.com> wrote:
 
-> On Tue, 13 May 2025 09:31:27 +0900
-> "Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
+> > > > > +
+> > > > > +     if (flags & RELAY_DUMP_BUF_FULL)
+> > > > > +             offset += snprintf(buf, sizeof(unsigned int), "%u", full_counter);
+> > > > > +
+> > > > > +     snprintf(buf + offset, 1, "\n");
+> > > >
+> > > > Is there any reason to return the value as string?
+> > > > If it returns a digit value and the caller makes it a string,
+> > > > it could be more flexible for other use cases.
+> > >
+> > > Thanks for the feedback.
+> > >
+> > > I will remove the above one as you pointed out in the next revision.
+> > > And it seems unnecessary to add '\0' at the end of the buffer like
+> > > "*buf = '\0';"?
+> >
+> > Sorry, I think you missed my point. I meant it should be
+> >
+> > /* Return the number of fullfilled buffer in the channel */
+> > size_t relay_full(struct rchan *chan);
+> >
+> > And keep the snprintf() in the blk_dropped_read() because that function
+> > is responsible for formatting the output.
 > 
-> > From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> > 
-> > Record trace_clock information in the trace_scratch area and recover
-> > the trace_clock when boot, so that reader can docode the timestamp
-> > correctly.
-> > Note that since most trace_clocks records the timestamp in nano-
-> > seconds, this is not a bug. But some trace_clock, like counter and
-> > tsc will record the counter value. Only for those trace_clock user
-> > needs this information.
-> > 
-> > Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> > ---
-> >  Changes in v3:
-> >    - Save clock_id instead of its name.
-> >  Changes in v2:
-> >    - instead of exposing it via last_boot_info, set the current
-> >      trace_clock as the same clock we used in the last boot.
-> > ---
-> >  kernel/trace/trace.c |   16 ++++++++++++++++
-> >  1 file changed, 16 insertions(+)
-> > 
-> > diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-> > index cf51c30b137f..2a060c62d686 100644
-> > --- a/kernel/trace/trace.c
-> > +++ b/kernel/trace/trace.c
-> > @@ -6066,6 +6066,7 @@ struct trace_mod_entry {
-> >  };
-> >  
-> >  struct trace_scratch {
-> > +	int			clock_id;
+> Oh, sorry, it's not what I want because (please see patch [4/5] [1])
+> relay_dump() works to print various statistics of the buffer. In this
+> patch, 'full' counter is the first one.
 > 
-> Should be "unsigned int"
+> [1]: https://lore.kernel.org/all/20250512024935.64704-5-kerneljasonxing@gmail.com/
 
-OK.
+Yes, that's why I asked you to make it just returning raw value.
+The string formatting of those values is blk_dropped_read()s business
+(because it is a 'read' callback), not for relayfs.
+
+For example, other relayfs user wants to summarize the values or
+calculate the percentage form that value. Also, we don't need to
+bother to check the buffer size etc, because blk_dropped_read()
+knows that.
 
 > 
-> >  	unsigned long		text_addr;
-> >  	unsigned long		nr_entries;
-> >  	struct trace_mod_entry	entries[];
-> > @@ -6181,6 +6182,7 @@ static void update_last_data(struct trace_array *tr)
-> >  	if (tr->scratch) {
-> >  		struct trace_scratch *tscratch = tr->scratch;
-> >  
-> > +		tscratch->clock_id = tr->clock_id;
-> >  		memset(tscratch->entries, 0,
-> >  		       flex_array_size(tscratch, entries, tscratch->nr_entries));
-> >  		tscratch->nr_entries = 0;
-> > @@ -7403,6 +7405,12 @@ int tracing_set_clock(struct trace_array *tr, const char *clockstr)
-> >  	tracing_reset_online_cpus(&tr->max_buffer);
-> >  #endif
-> >  
-> > +	if (tr->scratch && !(tr->flags & TRACE_ARRAY_FL_LAST_BOOT)) {
-> > +		struct trace_scratch *tscratch = tr->scratch;
-> > +
-> > +		tscratch->clock_id = i;
-> > +	}
-> > +
-> >  	mutex_unlock(&trace_types_lock);
-> >  
-> >  	return 0;
-> > @@ -9628,6 +9636,14 @@ static void setup_trace_scratch(struct trace_array *tr,
-> >  
-> >  	/* Scan modules to make text delta for modules. */
-> >  	module_for_each_mod(make_mod_delta, tr);
-> > +
-> > +	/* Set trace_clock as the same of the previous boot. */
-> > +	if (tscratch->clock_id != tr->clock_id) {
-> > +		if (tracing_set_clock(tr, trace_clocks[tscratch->clock_id].name) < 0) {
+> >
+> > static ssize_t blk_dropped_read(struct file *filp, char __user *buffer,
+> >                                 size_t count, loff_t *ppos)
+> > {
+> >         struct blk_trace *bt = filp->private_data;
+> >         char buf[16];
+> >
+> >         snprintf(buf, sizeof(buf), "%zu\n", relay_full(bt->rchan));
+> >
+> >         return simple_read_from_buffer(buffer, count, ppos, buf, strlen(buf));
+> > }
+> >
+> > But the question is that what blk_subbuf_start_callback() counts
+> > is really equal to what the relay_full() counts, because it seems
+> > relay_full() just returns the current status of the channel, but
+> > bt->dropped is the accumlated number of dropping events.
+> >
+> > This means that if the client (reader) reads the subbufs the
+> > number of full subbufs will be decreased, but the number of
+> > dropped event does not change.
 > 
-> In case the tscratch->clock_id gets corrupted, we better make sure it
-> doesn't overflow:
-> 
-> 		if (tscratch->clock_id >= ARRAY_SIZE(trace_clocks) ||
-> 		    tracing_set_clock(tr, trace_clocks[tscratch->clock_id].name) < 0) {
+> At least in this series, I didn't give the 'full' counter any chance
+> to decrement, which means it's compatible with blktrace, unless
+> __relay_reset() is triggered :)
 
-Good catch! BTW, don't we have any check about scratch area?
-(e.g. adding a checksum)
+Ah, OK. I missed what [1/5] does. I agree that this does the
+same thing.
+
+> 
+> While discussing with you on this point, I suddenly recalled that in
+> some network drivers, they implemented 'wake' and 'stop' as a pair to
+> know what the current status of a certain queue is. I think I can add
+> a similar thing to the buffer about 1) how many times are the buffer
+> full, 2) how many times does the buffer get rid of being full.
+
+Sounds nice.
 
 Thank you,
 
 > 
-> -- Steve
+> Thanks,
+> Jason
 > 
-> 
-> > +			pr_info("the previous trace_clock info is not valid.");
-> > +			goto reset;
-> > +		}
-> > +	}
-> >  	return;
-> >   reset:
-> >  	/* Invalid trace modules */
-> 
-> 
+> >
+> > Can you recheck it?
+> >
+> > Thank you,
+> >
+> > >
+> > > While at it, I'm thinking if I can change the return value of
+> > > relay_dump() to "how many bytes do we actually write into the buffer"?
+> > > Does it sound better?
+> > >
+> > > Thanks,
+> > > Jason
+> > >
+> > > >
+> > > > Thank you,
+> > > >
+> > > > > +}
+> > > > > +EXPORT_SYMBOL_GPL(relay_dump);
+> > > > > +
+> > > > >  /**
+> > > > >   *   relay_file_open - open file op for relay files
+> > > > >   *   @inode: the inode
+> > > > > --
+> > > > > 2.43.5
+> > > > >
+> > > >
+> > > >
+> > > > --
+> > > > Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> >
+> >
+> > --
+> > Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
 
 -- 
