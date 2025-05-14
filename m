@@ -1,129 +1,210 @@
-Received: from lamorak.hansenpartnership.com (lamorak.hansenpartnership.com [198.37.111.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51B0427AC34;
-	Wed, 14 May 2025 13:39:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.37.111.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBCAE9478
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 14 May 2025 14:15:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747229972; cv=none; b=I2iLFcDqwFe54d9xoQiCYpVh21/UgidGVukVx2CU+MqjsOX5SjQvy301/+Q1aJmc97Yk4GfRJtotvR7ntCN2iNfzRxMHBCDBtohc1y7eRDOkOcVHaKhxiH9rV6jDoDCNYxW+6/uCSsEYIgT5x68eL/L6LaFRbEhxbpBbbPAgDDo=
+	t=1747232152; cv=none; b=gcLOXAz0DB4LBPzyrSB/q5lbY5LT+bhjqKqjBDCSoVWNoCcvwE3IuP6zm2hFUMD/7Z+JSPugI7KTsMiG658o9gyPVPXmUydVxW7epiP4TWaJ9DsV7u6zkE5kGAXut4b4Oz+fd8FIahThopXTy3zj3+5bgoxzSbPTTdMa3DVJg3A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747229972; c=relaxed/simple;
-	bh=yTa+N824sHdTw8ABWsNAofYTHDrbcJRgJ6eWb6Pa4Eg=;
-	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=b12EXnIFQHuZYjPgMRpxJDW6jjqMXIwGYOlJ8eD9kKvebtHRpMkEHQpWiKsl6yzWRr3waBtseabWw3r6d+gOp86rSC2gd4OfwXqp+sif/+q+Ba9uOAnySX18q9oaelkZNMmMo8lVNQe8y+7Qgt8HomsETkf1qobMN3dTIR4+lLM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=HansenPartnership.com; spf=pass smtp.mailfrom=HansenPartnership.com; dkim=pass (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b=q0aMeDRj; arc=none smtp.client-ip=198.37.111.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=HansenPartnership.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=HansenPartnership.com
+	s=arc-20240116; t=1747232152; c=relaxed/simple;
+	bh=Vni+4rSFtgKkhj4M9hes19xnkZVVVh6560vIbrsuwcs=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=LOnyGhWASqBWk6kN27nHH8T9nOaY37PBmh/nPUZ1XuY7nusD3uHx+nXTwmHsk75RoUn7TNxujni4N+aniFu4dFwFjRrep1I+4gx2B3uiSj/SrOU/V2FOz1J7yE9K9y6f/UIgZPN8QrWP0cHvIe67TDfpAyUMveEwXDreg77BKao=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=b9dQZtUd; arc=none smtp.client-ip=209.85.214.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="q0aMeDRj"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-	d=hansenpartnership.com; s=20151216; t=1747229968;
-	bh=yTa+N824sHdTw8ABWsNAofYTHDrbcJRgJ6eWb6Pa4Eg=;
-	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:From;
-	b=q0aMeDRjnCIC1efmG3ZUz4hMJaQnVujM/u4Q8SS9pzqShHzSO5NA6cTna5gAP5WLj
-	 zXhCuVu/GTXIqVjR1Xklk9ZMSjxQ/2O7e7G5NeYvHH3jJvM2Yoo5c9P2vWWdF2Aq2C
-	 MpIdtuGUhMgPIGZuD5ftiDPMJq+CiwDuxu79BeK0=
-Received: from [IPv6:2601:5c4:4302:c21::a774] (unknown [IPv6:2601:5c4:4302:c21::a774])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by lamorak.hansenpartnership.com (Postfix) with ESMTPSA id BEBB91C00DC;
-	Wed, 14 May 2025 09:39:27 -0400 (EDT)
-Message-ID: <78209d1c512a39b4ebbabda6181110b3c23e6f6b.camel@HansenPartnership.com>
-Subject: Re: [PATCH v2] scsi: trace: change the rtn log in string
-From: James Bottomley <James.Bottomley@HansenPartnership.com>
-To: Kassey Li <quic_yingangl@quicinc.com>, rostedt@goodmis.org, 
-	martin.petersen@oracle.com, mathieu.desnoyers@efficios.com, 
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	linux-scsi@vger.kernel.org
-Date: Wed, 14 May 2025 09:39:26 -0400
-In-Reply-To: <20250514074456.450006-1-quic_yingangl@quicinc.com>
-References: <20250514074456.450006-1-quic_yingangl@quicinc.com>
-Autocrypt: addr=James.Bottomley@HansenPartnership.com;
- prefer-encrypt=mutual;
- keydata=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
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.50.3 
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="b9dQZtUd"
+Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-22e544a4c83so8101245ad.1
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 14 May 2025 07:15:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1747232149; x=1747836949; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=t7ibtTN1MnsJc6E1eBxUxx8I+Mw5Swe/fTJWwFyUmjo=;
+        b=b9dQZtUdVp761zGXUN1GOvgKa6cUUwdVurdewUUUiRSa2084aZ8YRXSnFRhlEZEAYs
+         e3Y/B3kHN2Z9CUhtxiDCYY7TQENsrAgzWB2UsixUjkwtvrxSa9kOxEA/kxm17FzTF3Kd
+         MnIBqJnd2AuRHOQ3VCYIVOzkgjT/ueiquMoM9iQGrXhUMYRb35veN5k8smQyApM0kL4Q
+         66UUIuCOzuFIBcf/RhIBY56JehE6RArmn8nHwTPxcR4out09W/p78FNgpK6pKsWtatl7
+         qjZp9iH/6ffDh72kjOLGO/bERGnuha1nLlSv5pykERnb3AXSUIEMh2FSUAEbwutkUKSw
+         786Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747232149; x=1747836949;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=t7ibtTN1MnsJc6E1eBxUxx8I+Mw5Swe/fTJWwFyUmjo=;
+        b=cnGIupFmF+CLWANMIT5l9Ru6lP2j1/7cnPY92ZGWussBGpQ9wm33NdPdShGN7gR+Kl
+         XNmbEngD8itz/453aYTUzjvED7RlhLRobu1V6dUMvG9iL2EpsCegQ1YXIxc8ilsSrnJU
+         8ShqcvB9lULlGqQhuu9ofCXnnDl8wEx2w593cDJIOwN74JvZwVTBGpfAKOiFso6RXFUt
+         r+UCiLIj+Q6azhuF1+bmDz69dqCXJDXRTs1sVBt+oKfJpWjkQuAwQUY2HTBen7x0OFpW
+         Vn2J2pq7AZqZa9HZuPH1TC7O3QSf5gj7VSWPzzlFWSRnivBlKxsJjZnblPQupgs4LBo1
+         YblA==
+X-Forwarded-Encrypted: i=1; AJvYcCXIXHeeke8h4gMCTNxMjMJYpaZY2ApiNEp9OCjI0fcqLD23NUD/imC2UNcMEqJ4U9fokFuSluPkG3OQgBBGLo3ClZQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YypgtpjKEwVEWixBb4rRHXvqBEr3FDiVW2aK1SgKyWElVANuPyH
+	Ps38UNfuWySlCAJnG5T314w/FNe+SuwgMgF8C/gdWjsb541LDotBJ7qxXHSoHCQ+nTOJgHUCRyg
+	cVA==
+X-Google-Smtp-Source: AGHT+IF9L3gdmcUnBmViiAIB+CbEBP/3GNzYJ74W69/RQCJXO9WEtDuMKsjbGgOXh1LtWeoxFLt4egw1KwI=
+X-Received: from plbmb16.prod.google.com ([2002:a17:903:990:b0:223:4788:2e83])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:1a4e:b0:22e:50f2:1450
+ with SMTP id d9443c01a7336-23197fc77f2mr53990535ad.22.1747232149047; Wed, 14
+ May 2025 07:15:49 -0700 (PDT)
+Date: Wed, 14 May 2025 07:15:42 -0700
+In-Reply-To: <20250513203803.2636561-2-sohil.mehta@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
+Mime-Version: 1.0
+References: <20250513203803.2636561-1-sohil.mehta@intel.com> <20250513203803.2636561-2-sohil.mehta@intel.com>
+Message-ID: <aCSljsvI0A-HC_DT@google.com>
+Subject: Re: [PATCH v6 1/9] x86/fred, KVM: VMX: Pass event data to the FRED
+ entry point from KVM
+From: Sean Christopherson <seanjc@google.com>
+To: Sohil Mehta <sohil.mehta@intel.com>
+Cc: x86@kernel.org, linux-kernel@vger.kernel.org, Xin Li <xin@zytor.com>, 
+	"H . Peter Anvin" <hpa@zytor.com>, Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, 
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	Tony Luck <tony.luck@intel.com>, Zhang Rui <rui.zhang@intel.com>, 
+	Steven Rostedt <rostedt@goodmis.org>, Andrew Cooper <andrew.cooper3@citrix.com>, 
+	"Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>, Jacob Pan <jacob.pan@linux.microsoft.com>, 
+	Andi Kleen <ak@linux.intel.com>, Kai Huang <kai.huang@intel.com>, 
+	Sandipan Das <sandipan.das@amd.com>, linux-perf-users@vger.kernel.org, 
+	linux-edac@vger.kernel.org, kvm@vger.kernel.org, linux-pm@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
 
-On Wed, 2025-05-14 at 15:44 +0800, Kassey Li wrote:
-> In default it showed rtn in decimal.
->=20
-> kworker/3:1H-183 [003] ....=C2=A0 51.035474: scsi_dispatch_cmd_error:
-> host_no=3D0 channel=3D0 id=3D0 lun=3D4 data_sgl=3D1=C2=A0 prot_sgl=3D0
-> prot_op=3DSCSI_PROT_NORMAL cmnd=3D(READ_10 lba=3D3907214=C2=A0 txlen=3D1 =
-protect=3D0
-> raw=3D28 00 00 3b 9e 8e 00 00 01 00) rtn=3D4181
->=20
-> In source code we define these possible value as hexadecimal:
->=20
-> include/scsi/scsi.h
->=20
-> SCSI_MLQUEUE_HOST_BUSY=C2=A0=C2=A0 0x1055
-> SCSI_MLQUEUE_DEVICE_BUSY 0x1056
-> SCSI_MLQUEUE_EH_RETRY=C2=A0=C2=A0=C2=A0 0x1057
-> SCSI_MLQUEUE_TARGET_BUSY 0x1058
->=20
-> This change shows the string type.
->=20
-> Signed-off-by: Kassey Li <quic_yingangl@quicinc.com>
-> ---
-> =C2=A0include/trace/events/scsi.h | 8 ++++++--
-> =C2=A01 file changed, 6 insertions(+), 2 deletions(-)
->=20
-> diff --git a/include/trace/events/scsi.h
-> b/include/trace/events/scsi.h
-> index bf6cc98d9122..56987f98ba4a 100644
-> --- a/include/trace/events/scsi.h
-> +++ b/include/trace/events/scsi.h
-> @@ -240,14 +240,18 @@ TRACE_EVENT(scsi_dispatch_cmd_error,
-> =C2=A0
-> =C2=A0	TP_printk("host_no=3D%u channel=3D%u id=3D%u lun=3D%u data_sgl=3D%=
-u
-> prot_sgl=3D%u" \
-> =C2=A0		=C2=A0 " prot_op=3D%s driver_tag=3D%d scheduler_tag=3D%d
-> cmnd=3D(%s %s raw=3D%s)" \
-> -		=C2=A0 " rtn=3D%d",
-> +		=C2=A0 " rtn=3D%s",
-> =C2=A0		=C2=A0 __entry->host_no, __entry->channel, __entry->id,
-> =C2=A0		=C2=A0 __entry->lun, __entry->data_sglen, __entry-
-> >prot_sglen,
-> =C2=A0		=C2=A0 show_prot_op_name(__entry->prot_op), __entry-
-> >driver_tag,
-> =C2=A0		=C2=A0 __entry->scheduler_tag, show_opcode_name(__entry-
-> >opcode),
-> =C2=A0		=C2=A0 __parse_cdb(__get_dynamic_array(cmnd), __entry-
-> >cmd_len),
-> =C2=A0		=C2=A0 __print_hex(__get_dynamic_array(cmnd), __entry-
-> >cmd_len),
-> -		=C2=A0 __entry->rtn)
-> +		=C2=A0 __print_symbolic(rtn, { SCSI_MLQUEUE_HOST_BUSY,
-> "HOST_BUSY" },
-> +			=C2=A0 { SCSI_MLQUEUE_DEVICE_BUSY, "DEVICE_BUSY"
-> },
-> +			=C2=A0 { SCSI_MLQUEUE_EH_RETRY, "EH_RETRY" },
-> +			=C2=A0 { SCSI_MLQUEUE_TARGET_BUSY, "TARGET_BUSY"
-> })
-> +		=C2=A0 )
+On Tue, May 13, 2025, Sohil Mehta wrote:
+> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+> index 5c5766467a61..1d43d4a2f6b6 100644
+> --- a/arch/x86/kvm/vmx/vmx.c
+> +++ b/arch/x86/kvm/vmx/vmx.c
+> @@ -7079,7 +7079,7 @@ static void handle_external_interrupt_irqoff(struct kvm_vcpu *vcpu,
+>  
+>  	kvm_before_interrupt(vcpu, KVM_HANDLING_IRQ);
+>  	if (cpu_feature_enabled(X86_FEATURE_FRED))
+> -		fred_entry_from_kvm(EVENT_TYPE_EXTINT, vector);
+> +		fred_entry_from_kvm(EVENT_TYPE_EXTINT, vector, 0);
+>  	else
+>  		vmx_do_interrupt_irqoff(gate_offset((gate_desc *)host_idt_base + vector));
+>  	kvm_after_interrupt(vcpu);
+> @@ -7393,7 +7393,8 @@ static noinstr void vmx_vcpu_enter_exit(struct kvm_vcpu *vcpu,
+>  	    is_nmi(vmx_get_intr_info(vcpu))) {
+>  		kvm_before_interrupt(vcpu, KVM_HANDLING_NMI);
+>  		if (cpu_feature_enabled(X86_FEATURE_FRED))
+> -			fred_entry_from_kvm(EVENT_TYPE_NMI, NMI_VECTOR);
+> +			fred_entry_from_kvm(EVENT_TYPE_NMI, NMI_VECTOR,
+> +					    vmx_get_exit_qual(vcpu));
+>  		else
+>  			vmx_do_nmi_irqoff();
+>  		kvm_after_interrupt(vcpu);
 
-We tend to do global print_symbolics as show_XXX_name definitions at
-the top of the file even if they only occur once, just in case some
-other trace point wants to use them.
+As a prep patch, what if we provide separate wrappers for IRQ vs. NMI?  That way
+KVM doesn't need to shove a '0' literal for the IRQ case.  There isn't that much
+code that's actually shared between the two, once you account for KVM having to
+hardcode the NMI information.
 
-Regards,
+Compile tested only...
 
-James
+--
+From: Sean Christopherson <seanjc@google.com>
+Date: Wed, 14 May 2025 07:07:55 -0700
+Subject: [PATCH] x86/fred: Provide separate IRQ vs. NMI wrappers for "entry"
+ from KVM
 
+Provide separate wrappers for forwarding IRQs vs NMIs from KVM in
+anticipation of adding support for NMI source reporting, which will add
+an NMI-only parameter, i.e. will further pollute the current API with a
+param that is a hardcoded for one of the two call sites.
+
+Opportunistically tag the non-FRED NMI wrapper __always_inline, as the
+compiler could theoretically generate a function call and trigger and a
+(completely benign) "leaving noinstr" warning.
+
+Signed-off-by: Sean Christopherson <seanjc@google.com>
+---
+ arch/x86/include/asm/fred.h | 24 +++++++++++++++++++-----
+ arch/x86/kvm/vmx/vmx.c      |  4 ++--
+ 2 files changed, 21 insertions(+), 7 deletions(-)
+
+diff --git a/arch/x86/include/asm/fred.h b/arch/x86/include/asm/fred.h
+index 2a29e5216881..dfb4f5e6a37a 100644
+--- a/arch/x86/include/asm/fred.h
++++ b/arch/x86/include/asm/fred.h
+@@ -10,6 +10,7 @@
+ 
+ #include <asm/asm.h>
+ #include <asm/trapnr.h>
++#include <asm/irq_vectors.h>
+ 
+ /*
+  * FRED event return instruction opcodes for ERET{S,U}; supported in
+@@ -70,14 +71,26 @@ __visible void fred_entry_from_user(struct pt_regs *regs);
+ __visible void fred_entry_from_kernel(struct pt_regs *regs);
+ __visible void __fred_entry_from_kvm(struct pt_regs *regs);
+ 
+-/* Can be called from noinstr code, thus __always_inline */
+-static __always_inline void fred_entry_from_kvm(unsigned int type, unsigned int vector)
++/* Must be called from noinstr code, thus __always_inline */
++static __always_inline void fred_nmi_from_kvm(void)
+ {
+ 	struct fred_ss ss = {
+ 		.ss     =__KERNEL_DS,
+-		.type   = type,
++		.type   = EVENT_TYPE_NMI,
++		.vector = NMI_VECTOR,
++		.nmi    = true,
++		.lm     = 1,
++	};
++
++	asm_fred_entry_from_kvm(ss);
++}
++
++static inline void fred_irq_from_kvm(unsigned int vector)
++{
++	struct fred_ss ss = {
++		.ss     =__KERNEL_DS,
++		.type   = EVENT_TYPE_EXTINT,
+ 		.vector = vector,
+-		.nmi    = type == EVENT_TYPE_NMI,
+ 		.lm     = 1,
+ 	};
+ 
+@@ -109,7 +122,8 @@ static __always_inline unsigned long fred_event_data(struct pt_regs *regs) { ret
+ static inline void cpu_init_fred_exceptions(void) { }
+ static inline void cpu_init_fred_rsps(void) { }
+ static inline void fred_complete_exception_setup(void) { }
+-static inline void fred_entry_from_kvm(unsigned int type, unsigned int vector) { }
++static __always_inline void fred_nmi_from_kvm(void) { }
++static inline void fred_irq_from_kvm(unsigned int vector) { }
+ static inline void fred_sync_rsp0(unsigned long rsp0) { }
+ static inline void fred_update_rsp0(void) { }
+ #endif /* CONFIG_X86_FRED */
+diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+index 5c5766467a61..271f92fee76b 100644
+--- a/arch/x86/kvm/vmx/vmx.c
++++ b/arch/x86/kvm/vmx/vmx.c
+@@ -7079,7 +7079,7 @@ static void handle_external_interrupt_irqoff(struct kvm_vcpu *vcpu,
+ 
+ 	kvm_before_interrupt(vcpu, KVM_HANDLING_IRQ);
+ 	if (cpu_feature_enabled(X86_FEATURE_FRED))
+-		fred_entry_from_kvm(EVENT_TYPE_EXTINT, vector);
++		fred_irq_from_kvm(vector);
+ 	else
+ 		vmx_do_interrupt_irqoff(gate_offset((gate_desc *)host_idt_base + vector));
+ 	kvm_after_interrupt(vcpu);
+@@ -7393,7 +7393,7 @@ static noinstr void vmx_vcpu_enter_exit(struct kvm_vcpu *vcpu,
+ 	    is_nmi(vmx_get_intr_info(vcpu))) {
+ 		kvm_before_interrupt(vcpu, KVM_HANDLING_NMI);
+ 		if (cpu_feature_enabled(X86_FEATURE_FRED))
+-			fred_entry_from_kvm(EVENT_TYPE_NMI, NMI_VECTOR);
++			fred_nmi_from_kvm();
+ 		else
+ 			vmx_do_nmi_irqoff();
+ 		kvm_after_interrupt(vcpu);
+
+base-commit: 9f35e33144ae5377d6a8de86dd3bd4d995c6ac65
+--
