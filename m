@@ -1,304 +1,134 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from devloop.tasossah.com (devloop.tasossah.com [145.239.141.69])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7C7A7483;
-	Wed, 14 May 2025 06:01:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A7951E834B;
+	Wed, 14 May 2025 06:21:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=145.239.141.69
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747202462; cv=none; b=JZHFzjKt27gF3UsxcbFsP4Vw6jTHDtm//7BOt4Mo76jimFmyRa8uravwIwzoR61m+vFNNnhTVsEUFpRRgikqut9iN/GGzREHYR+FhlUZzECMxR/YhNqgsh5sgAKIR+PdEEblfPYFXcFYzjDXtSB2xD+DDBJYtDS0sJlat6Vhj6U=
+	t=1747203711; cv=none; b=M820wim5mCKBhD+Z988uoVq50Gb9ydEF7qM4BtVN2KP6Xon++lHEsiwEDeZjhwGg3+GUaBv2nHliPHvj8mQe+VxlTDHRjP49HKT5QoxBhVzlWRPb9lColwKG+ouZ7O83aG6haLkoqgPnPBFXahRTPq32mgHH79LmfPjO5TCFFxQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747202462; c=relaxed/simple;
-	bh=yHv6rS6gL2MYW4viSWoozaWiw4C45EcPGXefNcUyB3Y=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=Hs6EMPw8zgz1uemyQTKndbbhJtr5cgRG2Hdi7iPjLxYzKlSWdui38IYz6wHEs09P/YgTR7jZhe2zQGgZRa5K/vAdP+qaGIKsh1zC21O1Kh5vkoXzEoqTfKbw1/9quNt4+7oMK7gklYqFqBVQH0o4rSkrw/ZfyBf4Uplh/D2aTDA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ENEM804n; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747203711; c=relaxed/simple;
+	bh=6R+aFLxKCuGmzdVPIPrWabzSBgtGuu6elUKbkXjgdI8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=u0lshg3iLsE9IzHqFTVtGMKcITcxu0pDT4T8Qspw7i4MBJgI4MihAgqh6D/5mEUE9euedJA5+XLyQDtJkbWqu9wS4we0yvo5Xsq0wfx5UrF+JcgnvTQB/qTOMUXwUgi15JnotxqTkZhMC8WEKOTY/IA4+QiTBK7jtCWfMxOEfwQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=tasossah.com; spf=pass smtp.mailfrom=tasossah.com; dkim=pass (4096-bit key) header.d=tasossah.com header.i=@tasossah.com header.b=gebdCoMg; arc=none smtp.client-ip=145.239.141.69
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=tasossah.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tasossah.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ENEM804n"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 99D30C4CEE9;
-	Wed, 14 May 2025 06:01:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747202461;
-	bh=yHv6rS6gL2MYW4viSWoozaWiw4C45EcPGXefNcUyB3Y=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=ENEM804nXPIFDAlpSbciAAbRpAHV3+7bZgfb0vkvqvX1L8Jsc1SoO3mFwzPAQpuFT
-	 v7/ejTqX0Ua/tOAD71JXOlMRaw/Cs24VUZkWQ6qiFL5UEEchXDSxErdynXsW8WOu5S
-	 FfxMXRXaqo3LkXYOVNARtWRfKBkpgkw/dWgud+ENX8OWTNkTyyez4qbVolOxhCwHH6
-	 QHcvdM80Fn0S6Ca30g3DI3f+946HRXltfabxMNfmNGedcm6z5tyjzsde/AdTTWccvJ
-	 ak2+wLgkEf5uZ98cEFxkg9RYZruAjkHRlQf3XttVWxXAGJjT1BiMqPKSEVQ97Fw5+c
-	 EScYe8JtNOfKA==
-Date: Wed, 14 May 2025 15:00:59 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH] tracing: ring_buffer: Rewind persistent ring buffer
- when reboot
-Message-Id: <20250514150059.6edf09bd72862ca175b64c98@kernel.org>
-In-Reply-To: <20250513203237.0e7ff662@gandalf.local.home>
-References: <174709742769.1964496.18203163435305117893.stgit@mhiramat.tok.corp.google.com>
-	<20250513203237.0e7ff662@gandalf.local.home>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (4096-bit key) header.d=tasossah.com header.i=@tasossah.com header.b="gebdCoMg"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=tasossah.com; s=devloop; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=Cv34EH2pRDvR6ZJfwsliN7WzAGOefpJsTr53OQo+E8U=; b=gebdCoMgsayxkICI8x99mgtDo+
+	93yXr6shp6jXzT0Yd9Lh7IUfkhV2qdIQ/AkVLjk+tHVe0Q0OZDPULZACWXyBPORurC7+opwOu5Np4
+	syIz0vF3yb7ZDCVy0GJn4vgeLbnHXx/9rgSndAHUXGlE1dwLyi0Dr8HClesOI0TZ1uV1rcl+S4qFB
+	UZy5QuyAcRfJ3iSg0UopptPVVe7qFVoSXV55/kYoj4Cxwj+pYoTWCBiq9Gijj9cxgi45UimtVUEIL
+	+UUriKjfzf1N15bm455/8BLj7+nS1DKSc9EpOq0RpI54zUXQ1JBPxhp0gjofAZctQGgITldzJQRsN
+	ANA2fXJHkGklV00KXPJdXBFK6unefgKyRZgukNivmhIfXnGK0EPq284t0gMrX2dGt4H7BRYdC+BHl
+	3uxY5QNutsjYfKBykuPrVgVxVK6TeeGdv8tvOFOXk/quhLA5sw0o1whB+qg8tC5iCTpEuWgoHHSgz
+	CqdCPZSL7zfg/A+Qwr+AiobTejJ9Kty60GWuZ4oxwf62FGk4OVN6rCzTd69gjRXvh3KMNmaSRekhC
+	36wjzdNPsZTUBQNJluSldfoeQlT/dK08lpynmACtsgKQYIQWftn9nDi7C5L5cKLTEosy5TBPBInby
+	RYHuVZ4+nLaiE6yWiLJsNY8toIghDAYXmJ5qIRqwo=;
+Received: from [2a02:587:6a09:4a00:587e:ac7c:113b:c2ed]
+	by devloop.tasossah.com with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.97)
+	(envelope-from <tasos@tasossah.com>)
+	id 1uF5TV-0000000BGk7-36ar;
+	Wed, 14 May 2025 09:20:17 +0300
+Message-ID: <d60729c2-9fb4-4fa7-9e4b-070127d8943e@tasossah.com>
+Date: Wed, 14 May 2025 09:20:12 +0300
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] ring-buffer: Fix persistent buffer when commit page is
+ the reader page
+To: Steven Rostedt <rostedt@goodmis.org>, LKML
+ <linux-kernel@vger.kernel.org>,
+ Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+References: <20250513115032.3e0b97f7@gandalf.local.home>
+Content-Language: el-GR, en-GB
+From: Tasos Sahanidis <tasos@tasossah.com>
+Autocrypt: addr=tasos@tasossah.com; keydata=
+ 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
+In-Reply-To: <20250513115032.3e0b97f7@gandalf.local.home>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On Tue, 13 May 2025 20:32:37 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
-
-> On Tue, 13 May 2025 09:50:27 +0900
-> "Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
+On 2025-05-13 18:50, Steven Rostedt wrote:
+> To trigger this bug:
 > 
-> > From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> > 
-> > Rewind persistent ring buffer pages which have been read in the
-> > previous boot. Those pages are highly possible to be lost before
-> > writing it to the disk if the previous kernel crashed. In this
-> > case, the trace data is kept on the persistent ring buffer, but
-> > it can not be read because its commit size has been reset after
-> > read.
-> > This skips clearing the commit size of each sub-buffer and
-> > recover it after reboot.
-> > 
-> > Note: If you read the previous boot data via trace_pipe, that
-> > is not accessible in that time. But reboot without clearing (or
-> > reusing) the read data, the read data is recovered again in the
-> > next boot.
-> > Thus, when you read the previous boot data, clear it by
-> > `echo > trace`.
+>   # echo 1 > /sys/kernel/tracing/instances/boot_mapped/events/syscalls/sys_enter_fchownat/enable
+>   # touch /tmp/x
+>   # chown sshd /tmp/x
+>   # reboot
 > 
-> Is that a problem? I'm thinking that the data in the buffer should not be
-> used.
-
-Yes, even if we read (dump) the previous boot data, the data is
-in the buffer. Thus the kernel rebooted before reusing the buffer
-the dumped pages are recovered again. Unless comparing with the
-previous dump data, we can not know this data is older boot or not.
-Anyway, user can avoid this issue by clearing the trace buffer
-explicitly.
-
-
-> Anyway, I had to fix a bug with trace_pipe:
+> On boot up, the dmesg will have:
+>  Ring buffer meta [0] is from previous boot!
+>  Ring buffer meta [1] is from previous boot!
+>  Ring buffer meta [2] is from previous boot!
+>  Ring buffer meta [3] is from previous boot!
+>  Ring buffer meta [4] commit page not found
+>  Ring buffer meta [5] is from previous boot!
+>  Ring buffer meta [6] is from previous boot!
+>  Ring buffer meta [7] is from previous boot!
 > 
->   https://lore.kernel.org/linux-trace-kernel/20250513115032.3e0b97f7@gandalf.local.home/
+> Where the buffer on CPU 4 had a "commit page not found" error and that
+> buffer is cleared and reset causing the output to be empty and the data lost.
 > 
-> And with that applied, it doesn't rewind all the way, but still gives you
-> what's left on the reader page. I think that is the case without this patch
-> too.
-
-OK.
-
+> When it works correctly, it has:
 > 
-> > 
-> > Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> > ---
-> >  kernel/trace/ring_buffer.c |   55
-> > ++++++++++++++++++++++++++++++++++++++++++-- 1 file changed, 52
-> > insertions(+), 3 deletions(-)
+>   # cat /sys/kernel/tracing/instances/boot_mapped/trace_pipe
+>         <...>-1137    [004] .....   998.205323: sys_enter_fchownat: __syscall_nr=0x104 (260) dfd=0xffffff9c (4294967196) filename=(0xffffc90000a0002c) user=0x3e8 (1000) group=0xffffffff (4294967295) flag=0x0 (0
 > 
-> Anyway, I found that this is a lot more complex than what you have here. As
-> the commit size is set to zero when added back into the ring buffer, I
-> needed to remove that. But things get much more trickier than that!
-> 
-> First, we need to make the new head page found (the one that was read
-> already) the new "reader page". And we need to insert the old reader page
-> back into the ring buffer. And reset everything to handle all of this.
+Tested-by: Tasos Sahanidis <tasos@tasossah.com>
 
-Yeah, I noticed the timestamps were messed up with my patch. That will
-be sorted if we use external tools like perfetto, but still not good
-for tracefs users.
-
-> 
-> I played a little with it, and came up with this. It's still a bit buggy,
-> but it does give you an idea of what needs to be done.
-
-Thanks! I will work on this version.
-
-> 
-> -- Steve
-> 
-> This is on top of the trace_pipe fix in the link above.
-> 
-> diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-> index 6859008ca34d..f5dd96ca25c9 100644
-> --- a/kernel/trace/ring_buffer.c
-> +++ b/kernel/trace/ring_buffer.c
-> @@ -1358,6 +1358,13 @@ static inline void rb_inc_page(struct buffer_page **bpage)
->  	*bpage = list_entry(p, struct buffer_page, list);
->  }
->  
-> +static inline void rb_dec_page(struct buffer_page **bpage)
-> +{
-> +	struct list_head *p = rb_list_head((*bpage)->list.prev);
-> +
-> +	*bpage = list_entry(p, struct buffer_page, list);
-> +}
-> +
->  static struct buffer_page *
->  rb_set_head_page(struct ring_buffer_per_cpu *cpu_buffer)
->  {
-> @@ -1862,13 +1869,17 @@ static int rb_validate_buffer(struct buffer_data_page *dpage, int cpu)
->  	return rb_read_data_buffer(dpage, tail, cpu, &ts, &delta);
->  }
->  
-> +static void rb_update_meta_reader(struct ring_buffer_per_cpu *cpu_buffer,
-> +				  struct buffer_page *reader);
-> +
->  /* If the meta data has been validated, now validate the events */
->  static void rb_meta_validate_events(struct ring_buffer_per_cpu *cpu_buffer)
->  {
->  	struct ring_buffer_cpu_meta *meta = cpu_buffer->ring_meta;
-> -	struct buffer_page *head_page;
-> +	struct buffer_page *head_page, *orig_head;
->  	unsigned long entry_bytes = 0;
->  	unsigned long entries = 0;
-> +	u64 ts;
->  	int ret;
->  	int i;
->  
-> @@ -1885,8 +1896,6 @@ static void rb_meta_validate_events(struct ring_buffer_per_cpu *cpu_buffer)
->  	entry_bytes += local_read(&cpu_buffer->reader_page->page->commit);
->  	local_set(&cpu_buffer->reader_page->entries, ret);
->  
-> -	head_page = cpu_buffer->head_page;
-> -
->  	/* If the commit_buffer is the reader page, update the commit page */
->  	if (meta->commit_buffer == (unsigned long)cpu_buffer->reader_page->page) {
->  		cpu_buffer->commit_page = cpu_buffer->reader_page;
-> @@ -1894,6 +1903,88 @@ static void rb_meta_validate_events(struct ring_buffer_per_cpu *cpu_buffer)
->  		goto done;
->  	}
->  
-> +	orig_head = head_page = cpu_buffer->head_page;
-> +	ts = cpu_buffer->reader_page->page->time_stamp;
-
-Nice catch! ts should be better here.
-
-> +
-> +	/*
-> +	 * Try to rewind the head so that we can read the pages which already
-> +	 * read in the previous boot.
-> +	 */
-> +	if (head_page != cpu_buffer->tail_page)
-> +		rb_dec_page(&head_page);
-> +
-> +	for (i = 0; i < meta->nr_subbufs + 1; i++, rb_dec_page(&head_page)) {
-> +
-> +		/* Rewind until tail (writer) page. */
-> +		if (head_page == cpu_buffer->tail_page)
-> +			break;
-> +
-> +		if (ts < head_page->page->time_stamp)
-> +			break;
-> +
-> +		ts = head_page->page->time_stamp;
-> +		if (!ts)
-> +			break;
-> +
-> +		if (rb_page_commit(head_page) == 0)
-> +			break;
-
-Ah, OK. the single 0 size page can be the end.
-
-> +
-> +		/* Stop rewind if the page is invalid. */
-> +		ret = rb_validate_buffer(head_page->page, cpu_buffer->cpu);
-> +		if (ret < 0)
-> +			break;
-> +
-> +		/* Recover the number of entries. */
-> +		local_set(&head_page->entries, ret);
-> +		if (ret)
-> +			local_inc(&cpu_buffer->pages_touched);
-> +		entries += ret;
-> +		entry_bytes += rb_page_commit(head_page);
-
-If we validate the pages again later (because fixing head_page),
-we can skip this part.
-
-> +	}
-> +
-> +	/* The last rewind page must be skipped. */
-> +	if (head_page != orig_head)
-> +		rb_inc_page(&head_page);
-> +
-> +	if (head_page != orig_head) {
-
-Ah, I forgot this part (setup new reader_page)
-
-> +		struct buffer_page *bpage = orig_head;
-> +
-> +		rb_dec_page(&bpage);
-> +		/*
-> +		 * Move the reader page between the orig_head and the page
-> +		 * before it.
-> +		 */
------
-> +		cpu_buffer->reader_page->list.next = &orig_head->list;
-> +		cpu_buffer->reader_page->list.prev = orig_head->list.prev;
-> +		orig_head->list.prev = &cpu_buffer->reader_page->list;
-> +
-> +		bpage->list.next = &cpu_buffer->reader_page->list;
------
-These seems the same as (because head_page->list.prev->next encodes
-flags, but we don't read that pointer.);
-
-		list_insert(&orig_head->list, &cpu_buffer->reader_page->list);
-
-> +
-> +		/* Make the head_page the new reader page */
-> +		cpu_buffer->reader_page = head_page;
-> +		bpage = head_page;
-> +		rb_inc_page(&head_page);
-> +		head_page->list.prev = bpage->list.prev;
-> +		rb_dec_page(&bpage);
-> +		bpage->list.next = &head_page->list;
-> +		rb_set_list_to_head(&bpage->list);
-> +
-> +		cpu_buffer->head_page = head_page;
-> +		meta->head_buffer = (unsigned long)head_page->page;
-> +
-> +		/* Reset all the indexes */
-> +		bpage = cpu_buffer->reader_page;
-> +		meta->buffers[0] = rb_meta_subbuf_idx(meta, bpage->page);
-> +		bpage->id = 0;
-> +
-> +		for (i = 0, bpage = head_page; i < meta->nr_subbufs;
-> +		     i++, rb_inc_page(&bpage)) {
-> +			meta->buffers[i + 1] = rb_meta_subbuf_idx(meta, bpage->page);
-> +			bpage->id = i + 1;
-> +		}
-> +		head_page = orig_head;
-> +	}
-> +
->  	/* Iterate until finding the commit page */
->  	for (i = 0; i < meta->nr_subbufs + 1; i++, rb_inc_page(&head_page)) {
->  
-> @@ -5348,7 +5439,6 @@ rb_get_reader_page(struct ring_buffer_per_cpu *cpu_buffer)
->  	 */
->  	local_set(&cpu_buffer->reader_page->write, 0);
->  	local_set(&cpu_buffer->reader_page->entries, 0);
-> -	local_set(&cpu_buffer->reader_page->page->commit, 0);
->  	cpu_buffer->reader_page->real_end = 0;
->  
->   spin:
-> @@ -6642,7 +6732,7 @@ int ring_buffer_read_page(struct trace_buffer *buffer,
->  		cpu_buffer->read_bytes += rb_page_size(reader);
->  
->  		/* swap the pages */
-> -		rb_init_page(bpage);
-> +//		rb_init_page(bpage);
->  		bpage = reader->page;
->  		reader->page = data_page->data;
->  		local_set(&reader->write, 0);
-
-Thank you,
-
-
-
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Patch resolves the issue on my end. Cheers!
