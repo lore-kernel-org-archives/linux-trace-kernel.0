@@ -1,54 +1,62 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48A81482FF;
-	Wed, 14 May 2025 07:45:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16DD322129B
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 14 May 2025 08:43:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747208722; cv=none; b=jlShfJKAeWJDZFmlNmSpr5T1kWBWk2tTP7plAOTE8GaMLoio9iQNYzBaVNK8rUdb20DDc8FPu5+Tl3ZbjXLp63GWI0lKQkEGdj2nzFIwfLGxtjSIcx4Fkl4WFGyZqg/AMZjZ+d3MnKMT+If1GBLVXEEisQDFdMss1e/AFuIDd/I=
+	t=1747212218; cv=none; b=H2cuZdQYHckcaKnvboCbK4yjVGe7+FxAZvgYPImCRO3RVt7ix0hKm7XLy7MQQ6e+ct5xyCL1SfkEV4CqzXyK+RySO5gOUniy8qzj3umZd2feiAiYb3TuQLrqaiyGyr7wPkJnU0RrvzwLQ19DW1UqmYnwmX2oqXWztGExsMQKwa4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747208722; c=relaxed/simple;
-	bh=+BKoEaHej4c6uoezAbL/2f6kRIpP7JX3LII8sswKkmg=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=gyOpirTN9Kynh8Dn5K6REzn3P1wSEo/G/E9MHsP/jiB5g2GGAnN0fNV0D9sbJ2wRRFDeC4bzyyxu6gdy9giFgyLG/vPnLg4uB8Mpx/rJDFjwju1qFavC1IIMf3ToZQJjv02iEtiK8m7f8sC82kDsSk7nBphoyL3bQCKW8by2gQ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=IwEB5H6/; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1747212218; c=relaxed/simple;
+	bh=xbba+HPd8MJ7D54Gm2+hTQ1NpiuwAK3ud94lCs8HFpw=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=erHhazPsAth9gUJ8tYqkO3VVJbKX0xfNBOsSF7IHf1vUCxTZMy6XQp1Pz6S1ZLtUexMUjVGAZ/PocM8kbR92jvfF3A6Gu4Jesrt3juzYkMvGRK2cXDa52vuu3+YhcfuewQvtbMLYubhB3z9KN7wW04hpMa31n+ThHvVnvy+kYyI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=PDomdlja; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="IwEB5H6/"
-Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54E3AKJM012811;
-	Wed, 14 May 2025 07:45:14 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=qcppdkim1; bh=YfwFrlu5srY1lu+uHZEV7M
-	RBETyqo3wY+V0Rp/d/8ec=; b=IwEB5H6/Fg2KwxkD6tbSwqcY7HUJ+dNItwJi2t
-	o4foNEyruaaBio5kuCTiXDSdrwuKRi+uiYQDZtB6UvMhZ7RnXAZUUvxpnXTwyPzv
-	16cmU0Az0lvHqZrRMS2clvvwqecRxRg4AgSxfAJ7s+cXk/UeCRfOO4XXdH2ydLTe
-	x833dtOzC8sK22xSeNaEOWfvNwPZvr2aoJd8z6Gp+5YorXcX/Haevxx2Uazn+iMo
-	YP54nL7Y3KaNurbMBB6m4IQdfnjQEIWcDIfncBJkblOJdZ2C6d4mn62Mky0VVwjr
-	O5vuQRYIAoJQ5QbAfQ+tpFGTmDKK+H8ZTIR88D3zvIzwtLPg==
-Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46mbcp9tp3-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 14 May 2025 07:45:14 +0000 (GMT)
-Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
-	by NALASPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 54E7jDNU017632
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 14 May 2025 07:45:13 GMT
-Received: from maow2-gv.qualcomm.com (10.80.80.8) by
- nalasex01b.na.qualcomm.com (10.47.209.197) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Wed, 14 May 2025 00:45:10 -0700
-From: Kassey Li <quic_yingangl@quicinc.com>
-To: <rostedt@goodmis.org>, <James.Bottomley@HansenPartnership.com>,
-        <martin.petersen@oracle.com>, <mathieu.desnoyers@efficios.com>,
-        <linux-kernel@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
-        <linux-scsi@vger.kernel.org>
-CC: <quic_yingangl@quicinc.com>
-Subject: [PATCH v2] scsi: trace: change the rtn log in string
-Date: Wed, 14 May 2025 15:44:56 +0800
-Message-ID: <20250514074456.450006-1-quic_yingangl@quicinc.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PDomdlja"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1747212213;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=6P2sRzfZTL4Az26XMlLruEd1Y1bAoWFiw+u4PxoZUpc=;
+	b=PDomdljaa7A6DxSBX+gbNhl93uBGapU4Sbf8O8JQZGJqc//ubXgBppLdqjXLNGF8m1znZb
+	hhL74/1J4smr9i2cxFGFglZL5tpXSs2S7eoKrNH759YStYhP3WZISJ8gB05V1DUfOVnSXq
+	xbYiYPMwunWMgGaGb5QPHBWFQoKXl30=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-602-qovYGxfTOr2KeWauFONYew-1; Wed,
+ 14 May 2025 04:43:32 -0400
+X-MC-Unique: qovYGxfTOr2KeWauFONYew-1
+X-Mimecast-MFC-AGG-ID: qovYGxfTOr2KeWauFONYew_1747212211
+Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id CD3541800446;
+	Wed, 14 May 2025 08:43:30 +0000 (UTC)
+Received: from gmonaco-thinkpadt14gen3.rmtit.com (unknown [10.44.32.189])
+	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 0A3BD1945CB4;
+	Wed, 14 May 2025 08:43:25 +0000 (UTC)
+From: Gabriele Monaco <gmonaco@redhat.com>
+To: linux-kernel@vger.kernel.org,
+	Steven Rostedt <rostedt@goodmis.org>,
+	linux-trace-kernel@vger.kernel.org
+Cc: Gabriele Monaco <gmonaco@redhat.com>,
+	Ingo Molnar <mingo@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Nam Cao <namcao@linutronix.de>,
+	Tomas Glozar <tglozar@redhat.com>,
+	Juri Lelli <jlelli@redhat.com>
+Subject: [RFC PATCH v2 01/12] tools/rv: Do not skip idle in trace
+Date: Wed, 14 May 2025 10:43:03 +0200
+Message-ID: <20250514084314.57976-2-gmonaco@redhat.com>
+In-Reply-To: <20250514084314.57976-1-gmonaco@redhat.com>
+References: <20250514084314.57976-1-gmonaco@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -56,79 +64,36 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01b.na.qualcomm.com (10.47.209.197)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: OcqBC6ia3V5twApc2YNHKPFqiit3mJig
-X-Proofpoint-ORIG-GUID: OcqBC6ia3V5twApc2YNHKPFqiit3mJig
-X-Authority-Analysis: v=2.4 cv=cO7gskeN c=1 sm=1 tr=0 ts=68244a0a cx=c_pps
- a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
- a=GEpy-HfZoHoA:10 a=dt9VzEwgFbYA:10 a=COk6AnOGAAAA:8 a=V0V25F8n1wzCnFKlgSkA:9
- a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTE0MDA2NiBTYWx0ZWRfX4o9AImrEs86h
- ydZ2/ApO3UShDsivR5QayJCs4fq5dMskVyVrP4TB9mxIkHVST+TQH10oV/bPb9uyVraib9VFvZU
- rm2d5Nbj/YozOcVOibm3cgvtcbv087ldnNkF4LBBNm+Np7L8AGb0CQpATejWTgQdqi8HVkccjA6
- JP/Goz/Z0ojUFF+EOhc4l7+rMTMDjoSOJNTEefIJg2uIdrnNeVjGblX1z4H1MgXCVJDAWmCoiMl
- 7ud1O+QHC6RYV0yPo6QFZbaR9llrmsZ6xF+4hkbE2R0oHfE5CC7Nn1+ybB7C9lyHCsHc8wsj57w
- lk6epMnTvGvmHVblu3//8mxbyV5ea7YrBTL3fhHBKzmNTYqlQAYgbtZcerRPgQcIcHQByktYfM3
- 2+E9Lny6UF0pC31kNt4kP/HavfSgv0pelaIxxT1GP/JLshUq54RhbOgQsiUAV/cjX9e/f97/
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-14_02,2025-05-14_02,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- mlxlogscore=999 spamscore=0 suspectscore=0 phishscore=0 lowpriorityscore=0
- adultscore=0 bulkscore=0 malwarescore=0 impostorscore=0 clxscore=1015
- priorityscore=1501 mlxscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505070000
- definitions=main-2505140066
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
 
-In default it showed rtn in decimal.
+Currently, the userspace RV tool skips trace events triggered by the RV
+tool itself, this can be changed by passing the parameter -s, which sets
+the variable config_my_pid to 0 (instead of the tool's PID).
+The current condition for per-task monitors (config_has_id) does not
+check that config_my_pid isn't 0 to skip. In case we pass -s, we show
+events triggered by RV but don't show those triggered by idle (PID 0).
 
-kworker/3:1H-183 [003] ....  51.035474: scsi_dispatch_cmd_error: host_no=0 channel=0 id=0 lun=4 data_sgl=1  prot_sgl=0 prot_op=SCSI_PROT_NORMAL cmnd=(READ_10 lba=3907214  txlen=1 protect=0 raw=28 00 00 3b 9e 8e 00 00 01 00) rtn=4181
+Fix the condition to account this scenario.
 
-In source code we define these possible value as hexadecimal:
-
-include/scsi/scsi.h
-
-SCSI_MLQUEUE_HOST_BUSY   0x1055
-SCSI_MLQUEUE_DEVICE_BUSY 0x1056
-SCSI_MLQUEUE_EH_RETRY    0x1057
-SCSI_MLQUEUE_TARGET_BUSY 0x1058
-
-This change shows the string type.
-
-Signed-off-by: Kassey Li <quic_yingangl@quicinc.com>
+Fixes: 6d60f89691fc ("tools/rv: Add in-kernel monitor interface")
+Signed-off-by: Gabriele Monaco <gmonaco@redhat.com>
 ---
- include/trace/events/scsi.h | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ tools/verification/rv/src/in_kernel.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/include/trace/events/scsi.h b/include/trace/events/scsi.h
-index bf6cc98d9122..56987f98ba4a 100644
---- a/include/trace/events/scsi.h
-+++ b/include/trace/events/scsi.h
-@@ -240,14 +240,18 @@ TRACE_EVENT(scsi_dispatch_cmd_error,
+diff --git a/tools/verification/rv/src/in_kernel.c b/tools/verification/rv/src/in_kernel.c
+index c0dcee795c0d..72b03bae021c 100644
+--- a/tools/verification/rv/src/in_kernel.c
++++ b/tools/verification/rv/src/in_kernel.c
+@@ -429,7 +429,7 @@ ikm_event_handler(struct trace_seq *s, struct tep_record *record,
  
- 	TP_printk("host_no=%u channel=%u id=%u lun=%u data_sgl=%u prot_sgl=%u" \
- 		  " prot_op=%s driver_tag=%d scheduler_tag=%d cmnd=(%s %s raw=%s)" \
--		  " rtn=%d",
-+		  " rtn=%s",
- 		  __entry->host_no, __entry->channel, __entry->id,
- 		  __entry->lun, __entry->data_sglen, __entry->prot_sglen,
- 		  show_prot_op_name(__entry->prot_op), __entry->driver_tag,
- 		  __entry->scheduler_tag, show_opcode_name(__entry->opcode),
- 		  __parse_cdb(__get_dynamic_array(cmnd), __entry->cmd_len),
- 		  __print_hex(__get_dynamic_array(cmnd), __entry->cmd_len),
--		  __entry->rtn)
-+		  __print_symbolic(rtn, { SCSI_MLQUEUE_HOST_BUSY, "HOST_BUSY" },
-+			  { SCSI_MLQUEUE_DEVICE_BUSY, "DEVICE_BUSY" },
-+			  { SCSI_MLQUEUE_EH_RETRY, "EH_RETRY" },
-+			  { SCSI_MLQUEUE_TARGET_BUSY, "TARGET_BUSY" })
-+		  )
- );
+ 	tep_get_common_field_val(s, trace_event, "common_pid", record, &pid, 1);
  
- DECLARE_EVENT_CLASS(scsi_cmd_done_timeout_template,
+-	if (config_has_id && (config_my_pid == id))
++	if (config_my_pid && config_has_id && (config_my_pid == id))
+ 		return 0;
+ 	else if (config_my_pid && (config_my_pid == pid))
+ 		return 0;
 -- 
-2.34.1
+2.49.0
 
