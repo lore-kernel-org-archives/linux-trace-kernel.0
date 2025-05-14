@@ -1,61 +1,61 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A20CC2222D1
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 14 May 2025 08:43:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC6C1221DA8
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 14 May 2025 08:44:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747212238; cv=none; b=qVdU4D22/BhKva4PZOd6ekRkB9utQXaYn/DZvb6s/Xj44WceYUUZKAmHO1xpRoSpJt65CUSnYTzF1BQstIYn9l2qDqrcCd6TrhpeCXzpd8NviVp65m9Mds5p0pl5Q/VG03E54aIaoxIOWxwhpCpYVn/NufeFHRm2MkXHWM70PFc=
+	t=1747212248; cv=none; b=A58v9kfIAfyysMIeGgGcimgKXrIWHb3/YTE1zKcmC6AIfebnqPMuRR1CmcKlRquY8ezZSvnNA+MrpnkJoisj4DIAIuK2I/B+Pcjt+YNGJcvYws4dcsNrAwzaOqM+rXhFihSFMVma9bfIqUDA4X6bF+ndmsLRoHxyTepLQcHBgxM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747212238; c=relaxed/simple;
-	bh=Q/gmaZitNUy7PGKIGZr56MbVLDyPJQIGg3ovMHnqkSA=;
+	s=arc-20240116; t=1747212248; c=relaxed/simple;
+	bh=VM5OiJN9Z257mj4pGFbU/IOKgo2qTzJwDQ+V5BjrtOY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ugguOsIB85+wizkH1GtOiQDj+/yc8OpVSxqW+152EGY/D4pRORh4b8YZxbMvpGOnxhZBjfw5VaSLp6PK6tXJD/DI/n3XXe9x3zMFuaYL45D+Hao2LoozMdg5iHwjak7QplzDD3PIdqzTYKp/sUv+ssbn4NY+A/KiBWB/69Vdtgo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=giGATNbh; arc=none smtp.client-ip=170.10.129.124
+	 MIME-Version; b=ayWQJfo023+8RMyApiSPsLw9oZrNpRrPI3CS52FGWM9o/NNEPLdKXcABvFJlG3KlgdWBqP68ODWFIwA1C4k4Boijp0JCeAy8/ih2QKFb4v2NCP0N2p8SfMKFfEOgSxVcYOaoErpcYGKyvrKtO30Y+u5B/lumuQhZ3IK/hMgAw5Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ihUjKg9I; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="giGATNbh"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ihUjKg9I"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1747212235;
+	s=mimecast20190719; t=1747212242;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=cjnDKvTuWk25Od1hNCNKL2cK4eQ0a+O0r9zXXkmS0OU=;
-	b=giGATNbhwBbMTA67gkY4qjQGZPqIrvmxuP/+DUbu2uz047tBq1ihWOSH49oUMuHieRJYA0
-	W0L/PcllcYjRzdYBj/WIsx7wXvjbWpIG6xswcv3+di+rwoVzWZ4rXp6BgYkVLHS3oRbYNH
-	7fBtN507RK5ORBy/p8fbAnATb0Q97Ao=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+	bh=pxZyRZLrSNioQyNp9VBnZGfaP6hgfH1QQWD0nXaN4JQ=;
+	b=ihUjKg9IXYLfUwQVQYkS5JCl2sv6eRKPRHDaKisst5O0XqWbioKfDovCSGIgIEOjM5WuFv
+	aHaZmHxwfNfMMmCGdjTmMsIK4Z0tYE76gf/WEok5DL00wUN9OIxHhd5SFGbrLshicKAL8y
+	noTcFq4tPkkGh3nIeXOVUWokfZOjuiA=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-115-5QifaTuZPKWLrTAWafHBNQ-1; Wed,
- 14 May 2025 04:43:54 -0400
-X-MC-Unique: 5QifaTuZPKWLrTAWafHBNQ-1
-X-Mimecast-MFC-AGG-ID: 5QifaTuZPKWLrTAWafHBNQ_1747212233
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-331-TN7pw6I4NNeXJW1yfMlhFg-1; Wed,
+ 14 May 2025 04:43:59 -0400
+X-MC-Unique: TN7pw6I4NNeXJW1yfMlhFg-1
+X-Mimecast-MFC-AGG-ID: TN7pw6I4NNeXJW1yfMlhFg_1747212238
 Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 4D6F11800361;
-	Wed, 14 May 2025 08:43:53 +0000 (UTC)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 862D6180048E;
+	Wed, 14 May 2025 08:43:58 +0000 (UTC)
 Received: from gmonaco-thinkpadt14gen3.rmtit.com (unknown [10.44.32.189])
-	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 2178A1953B80;
-	Wed, 14 May 2025 08:43:48 +0000 (UTC)
+	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 8B03C1953B82;
+	Wed, 14 May 2025 08:43:54 +0000 (UTC)
 From: Gabriele Monaco <gmonaco@redhat.com>
 To: linux-kernel@vger.kernel.org,
+	Ingo Molnar <mingo@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
 	Steven Rostedt <rostedt@goodmis.org>,
 	Masami Hiramatsu <mhiramat@kernel.org>,
 	linux-trace-kernel@vger.kernel.org
 Cc: Gabriele Monaco <gmonaco@redhat.com>,
-	Ingo Molnar <mingo@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
 	Nam Cao <namcao@linutronix.de>,
 	Tomas Glozar <tglozar@redhat.com>,
 	Juri Lelli <jlelli@redhat.com>
-Subject: [RFC PATCH v2 05/12] rv: Return init error when registering monitors
-Date: Wed, 14 May 2025 10:43:07 +0200
-Message-ID: <20250514084314.57976-6-gmonaco@redhat.com>
+Subject: [RFC PATCH v2 06/12] sched: Adapt sched tracepoints for RV task model
+Date: Wed, 14 May 2025 10:43:08 +0200
+Message-ID: <20250514084314.57976-7-gmonaco@redhat.com>
 In-Reply-To: <20250514084314.57976-1-gmonaco@redhat.com>
 References: <20250514084314.57976-1-gmonaco@redhat.com>
 Precedence: bulk
@@ -67,152 +67,136 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
 
-Monitors generated with dot2k have their registration function (the one
-called during monitor initialisation) return always 0, even if the
-registration failed on RV side.
-This can hide potential errors.
+Add the following tracepoints:
+* sched_set_need_resched(tsk, cpu, tif)
+    Called when a task is set the need resched [lazy] flag
+* sched_switch_vain(preempt, tsk, tsk_state)
+    Called when a task is selected again during __schedule
+    i.e. prev == next == tsk : no real context switch
 
-Return the value returned by the RV register function.
+Add new parameter to sched_set_state to identify whether the state
+change was due to an explicit call or a signal pending while scheduling.
+We now also trace from try_to_block_task in case a signal was pending
+and the task is set to runnable.
+
+These tracepoints are useful to describe the Linux task model and are
+adapted from the patches by Daniel Bristot de Oliveira
+(https://bristot.me/linux-task-model/).
 
 Signed-off-by: Gabriele Monaco <gmonaco@redhat.com>
 ---
- kernel/trace/rv/monitors/sched/sched.c | 3 +--
- kernel/trace/rv/monitors/sco/sco.c     | 3 +--
- kernel/trace/rv/monitors/scpd/scpd.c   | 3 +--
- kernel/trace/rv/monitors/sncid/sncid.c | 3 +--
- kernel/trace/rv/monitors/snep/snep.c   | 3 +--
- kernel/trace/rv/monitors/snroc/snroc.c | 3 +--
- kernel/trace/rv/monitors/tss/tss.c     | 3 +--
- kernel/trace/rv/monitors/wip/wip.c     | 3 +--
- kernel/trace/rv/monitors/wwnr/wwnr.c   | 3 +--
- 9 files changed, 9 insertions(+), 18 deletions(-)
+ include/linux/sched.h        |  7 ++++++-
+ include/trace/events/sched.h | 17 +++++++++++++++--
+ kernel/sched/core.c          | 10 +++++++++-
+ 3 files changed, 30 insertions(+), 4 deletions(-)
 
-diff --git a/kernel/trace/rv/monitors/sched/sched.c b/kernel/trace/rv/monitors/sched/sched.c
-index 905e03c3c934..d04db4b543f9 100644
---- a/kernel/trace/rv/monitors/sched/sched.c
-+++ b/kernel/trace/rv/monitors/sched/sched.c
-@@ -21,8 +21,7 @@ struct rv_monitor rv_sched = {
+diff --git a/include/linux/sched.h b/include/linux/sched.h
+index 04f808ab8888..4d9da32330bc 100644
+--- a/include/linux/sched.h
++++ b/include/linux/sched.h
+@@ -340,9 +340,11 @@ extern void io_schedule_finish(int token);
+ extern long io_schedule_timeout(long timeout);
+ extern void io_schedule(void);
  
- static int __init register_sched(void)
+-/* wrapper function to trace from this header file */
++/* wrapper functions to trace from this header file */
+ DECLARE_TRACEPOINT(sched_set_state_tp);
+ extern void __trace_set_current_state(int state_value);
++DECLARE_TRACEPOINT(sched_set_need_resched_tp);
++extern void __trace_set_need_resched(struct task_struct *curr, int tif);
+ 
+ /**
+  * struct prev_cputime - snapshot of system and user cputime
+@@ -2065,6 +2067,9 @@ static inline int test_tsk_thread_flag(struct task_struct *tsk, int flag)
+ 
+ static inline void set_tsk_need_resched(struct task_struct *tsk)
  {
--	rv_register_monitor(&rv_sched, NULL);
--	return 0;
-+	return rv_register_monitor(&rv_sched, NULL);
++	if (tracepoint_enabled(sched_set_need_resched_tp) &&
++	    !test_tsk_thread_flag(tsk, TIF_NEED_RESCHED))
++		__trace_set_need_resched(tsk, TIF_NEED_RESCHED);
+ 	set_tsk_thread_flag(tsk,TIF_NEED_RESCHED);
  }
  
- static void __exit unregister_sched(void)
-diff --git a/kernel/trace/rv/monitors/sco/sco.c b/kernel/trace/rv/monitors/sco/sco.c
-index 4cff59220bfc..66f4639d46ac 100644
---- a/kernel/trace/rv/monitors/sco/sco.c
-+++ b/kernel/trace/rv/monitors/sco/sco.c
-@@ -71,8 +71,7 @@ static struct rv_monitor rv_sco = {
+diff --git a/include/trace/events/sched.h b/include/trace/events/sched.h
+index 2390818b139b..158b9c504fab 100644
+--- a/include/trace/events/sched.h
++++ b/include/trace/events/sched.h
+@@ -889,11 +889,24 @@ DECLARE_TRACE(sched_exit_tp,
+ 	TP_PROTO(bool is_switch, unsigned long ip),
+ 	TP_ARGS(is_switch, ip));
  
- static int __init register_sco(void)
++/*
++ * Tracepoint called when setting the state of a task;
++ * this tracepoint is guaranteed to be called from the waking context of the
++ * task setting the state.
++ */
+ DECLARE_TRACE_CONDITION(sched_set_state_tp,
+-	TP_PROTO(struct task_struct *tsk, int state),
+-	TP_ARGS(tsk, state),
++	TP_PROTO(struct task_struct *tsk, int state, bool from_signal),
++	TP_ARGS(tsk, state, from_signal),
+ 	TP_CONDITION(!!(tsk->__state) != !!state));
+ 
++DECLARE_TRACE(sched_set_need_resched_tp,
++	TP_PROTO(struct task_struct *tsk, int cpu, int tif),
++	TP_ARGS(tsk, cpu, tif));
++
++DECLARE_TRACE(sched_switch_vain_tp,
++	TP_PROTO(bool preempt, struct task_struct *tsk, unsigned int prev_state),
++	TP_ARGS(preempt, tsk, prev_state));
++
+ #endif /* _TRACE_SCHED_H */
+ 
+ /* This part must be outside protection */
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index 5f844bae1a14..89e81fc7f393 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -494,7 +494,7 @@ EXPORT_TRACEPOINT_SYMBOL(sched_set_state_tp);
+ /* Call via the helper macro trace_set_current_state. */
+ void __trace_set_current_state(int state_value)
  {
--	rv_register_monitor(&rv_sco, &rv_sched);
--	return 0;
-+	return rv_register_monitor(&rv_sco, &rv_sched);
+-	trace_sched_set_state_tp(current, state_value);
++	trace_sched_set_state_tp(current, state_value, false);
+ }
+ EXPORT_SYMBOL(__trace_set_current_state);
+ 
+@@ -1109,6 +1109,7 @@ static void __resched_curr(struct rq *rq, int tif)
+ 
+ 	cpu = cpu_of(rq);
+ 
++	trace_sched_set_need_resched_tp(curr, cpu, tif);
+ 	if (cpu == smp_processor_id()) {
+ 		set_ti_thread_flag(cti, tif);
+ 		if (tif == TIF_NEED_RESCHED)
+@@ -1124,6 +1125,11 @@ static void __resched_curr(struct rq *rq, int tif)
+ 	}
  }
  
- static void __exit unregister_sco(void)
-diff --git a/kernel/trace/rv/monitors/scpd/scpd.c b/kernel/trace/rv/monitors/scpd/scpd.c
-index cbdd6a5f8d7f..299703cd72b0 100644
---- a/kernel/trace/rv/monitors/scpd/scpd.c
-+++ b/kernel/trace/rv/monitors/scpd/scpd.c
-@@ -79,8 +79,7 @@ static struct rv_monitor rv_scpd = {
- 
- static int __init register_scpd(void)
++void __trace_set_need_resched(struct task_struct *curr, int tif)
++{
++	trace_sched_set_need_resched_tp(curr, smp_processor_id(), tif);
++}
++
+ void resched_curr(struct rq *rq)
  {
--	rv_register_monitor(&rv_scpd, &rv_sched);
--	return 0;
-+	return rv_register_monitor(&rv_scpd, &rv_sched);
- }
+ 	__resched_curr(rq, TIF_NEED_RESCHED);
+@@ -6587,6 +6593,7 @@ static bool try_to_block_task(struct rq *rq, struct task_struct *p,
+ 	int flags = DEQUEUE_NOCLOCK;
  
- static void __exit unregister_scpd(void)
-diff --git a/kernel/trace/rv/monitors/sncid/sncid.c b/kernel/trace/rv/monitors/sncid/sncid.c
-index f5037cd6214c..3e1ee715a0fb 100644
---- a/kernel/trace/rv/monitors/sncid/sncid.c
-+++ b/kernel/trace/rv/monitors/sncid/sncid.c
-@@ -79,8 +79,7 @@ static struct rv_monitor rv_sncid = {
- 
- static int __init register_sncid(void)
- {
--	rv_register_monitor(&rv_sncid, &rv_sched);
--	return 0;
-+	return rv_register_monitor(&rv_sncid, &rv_sched);
- }
- 
- static void __exit unregister_sncid(void)
-diff --git a/kernel/trace/rv/monitors/snep/snep.c b/kernel/trace/rv/monitors/snep/snep.c
-index 0076ba6d7ea4..2adc3108d60c 100644
---- a/kernel/trace/rv/monitors/snep/snep.c
-+++ b/kernel/trace/rv/monitors/snep/snep.c
-@@ -79,8 +79,7 @@ static struct rv_monitor rv_snep = {
- 
- static int __init register_snep(void)
- {
--	rv_register_monitor(&rv_snep, &rv_sched);
--	return 0;
-+	return rv_register_monitor(&rv_snep, &rv_sched);
- }
- 
- static void __exit unregister_snep(void)
-diff --git a/kernel/trace/rv/monitors/snroc/snroc.c b/kernel/trace/rv/monitors/snroc/snroc.c
-index bb1f60d55296..540e686e699f 100644
---- a/kernel/trace/rv/monitors/snroc/snroc.c
-+++ b/kernel/trace/rv/monitors/snroc/snroc.c
-@@ -68,8 +68,7 @@ static struct rv_monitor rv_snroc = {
- 
- static int __init register_snroc(void)
- {
--	rv_register_monitor(&rv_snroc, &rv_sched);
--	return 0;
-+	return rv_register_monitor(&rv_snroc, &rv_sched);
- }
- 
- static void __exit unregister_snroc(void)
-diff --git a/kernel/trace/rv/monitors/tss/tss.c b/kernel/trace/rv/monitors/tss/tss.c
-index 542787e6524f..0452fcd9edcf 100644
---- a/kernel/trace/rv/monitors/tss/tss.c
-+++ b/kernel/trace/rv/monitors/tss/tss.c
-@@ -74,8 +74,7 @@ static struct rv_monitor rv_tss = {
- 
- static int __init register_tss(void)
- {
--	rv_register_monitor(&rv_tss, &rv_sched);
--	return 0;
-+	return rv_register_monitor(&rv_tss, &rv_sched);
- }
- 
- static void __exit unregister_tss(void)
-diff --git a/kernel/trace/rv/monitors/wip/wip.c b/kernel/trace/rv/monitors/wip/wip.c
-index ed758fec8608..4b4e99615a11 100644
---- a/kernel/trace/rv/monitors/wip/wip.c
-+++ b/kernel/trace/rv/monitors/wip/wip.c
-@@ -71,8 +71,7 @@ static struct rv_monitor rv_wip = {
- 
- static int __init register_wip(void)
- {
--	rv_register_monitor(&rv_wip, NULL);
--	return 0;
-+	return rv_register_monitor(&rv_wip, NULL);
- }
- 
- static void __exit unregister_wip(void)
-diff --git a/kernel/trace/rv/monitors/wwnr/wwnr.c b/kernel/trace/rv/monitors/wwnr/wwnr.c
-index 172f31c4b0f3..4145bea2729e 100644
---- a/kernel/trace/rv/monitors/wwnr/wwnr.c
-+++ b/kernel/trace/rv/monitors/wwnr/wwnr.c
-@@ -70,8 +70,7 @@ static struct rv_monitor rv_wwnr = {
- 
- static int __init register_wwnr(void)
- {
--	rv_register_monitor(&rv_wwnr, NULL);
--	return 0;
-+	return rv_register_monitor(&rv_wwnr, NULL);
- }
- 
- static void __exit unregister_wwnr(void)
+ 	if (signal_pending_state(task_state, p)) {
++		trace_sched_set_state_tp(p, TASK_RUNNING, true);
+ 		WRITE_ONCE(p->__state, TASK_RUNNING);
+ 		*task_state_p = TASK_RUNNING;
+ 		return false;
+@@ -6779,6 +6786,7 @@ static void __sched notrace __schedule(int sched_mode)
+ 		rq = context_switch(rq, prev, next, &rf);
+ 	} else {
+ 		rq_unpin_lock(rq, &rf);
++		trace_sched_switch_vain_tp(preempt, prev, prev_state);
+ 		__balance_callbacks(rq);
+ 		raw_spin_rq_unlock_irq(rq);
+ 	}
 -- 
 2.49.0
 
