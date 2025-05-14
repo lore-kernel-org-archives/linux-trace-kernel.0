@@ -1,200 +1,271 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED020298250
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 14 May 2025 17:57:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD52C1EB5C2
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 14 May 2025 18:13:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747245457; cv=none; b=dR3IT+c274sHWbUxErmd5KW6rsAWI03t6WFNozQA/l4QEpGxw3nI4A9Q0V93zXcKeJ0tf1x+r5Hfqn1WFCUwcEyijDoMp5kGnQgitaKnijBc49O7gIWf0L/uDKhvfvtfNxJCiBrwWHXOY5ZvVQMCoQgvePaYqAs6deUWY7rtZr0=
+	t=1747246425; cv=none; b=CpaXFyGBESuX9fKx5X5J4V7UWv3DXg3gw/mGHZZXMftNopMdHaQPMhISZsHHwjsTF4G+nlSYVoP6rCpjB2cARN+0dZLS7Mf1SqpY1Omy4T71GRXukqn6lbCEao4W/rBJRYd0zyKgmj9J+M+2k1mKVUY5B8kSB0kmlH1ZxHt+kco=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747245457; c=relaxed/simple;
-	bh=X6c/QaHezuYgWRvmYLC83Uyd1iuskmuqUwpmbAVKF08=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=ddzagc6eUDrNAIVb2jBXh4g1S39YyU2IhSPnFOrJMGfR1hUWhCImsScFCw4wangT4+Y1dDcf15bRjXTNANark6CWVn/5gUolBYP+vdQ2DHLW2+K6TvUj25Yn6cNuJHZ3G5sBRQCW9dGgOLBULboNKKR6DCwg1NPWZIDeGMc6WZM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=AEDv9zhg; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1747246425; c=relaxed/simple;
+	bh=JvcXPcQhniFr1R5lY6+Xgsb6urQp3RJfetMTTolaShM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ikUrf7yJxmzMhB/EbdPGhYaW3hRIemYpKQZyBKcB31Clv3GCZ0ytESWQ/KmQqt8Kkdx2uRuoVTWr3u+I2WImeFZXvM30CG7P6iDHuWhXyM9nmnOx4/bOcTq9538MROfvMq/6cInpDvPyvRVUkxhs8W4d/KkHOC53LYwawwhRvz0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=n1e9WSNG; arc=none smtp.client-ip=209.85.128.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AEDv9zhg"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1747245454;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=0bWZ4WIW6USGmd3fCtPku9lyZiPCoKVx7jpPxXIn3KU=;
-	b=AEDv9zhgtwq26Bv5BDb21y56Ziv/St4gZFTVXFKO9pCwlSwXX+aT6F+dH3O/kskpVnsaAN
-	jX+GTCIEfQyGnIm9a2zJ+WlFJ++fMDNV9/K9mO/36m8EMVhbp2nyFDPloRO4eVrHhGxMeC
-	3/VL29DKkVVywYtXAenUKAV53/e7Zqg=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-468-3u6jdIdgOBOrikKotviPKg-1; Wed, 14 May 2025 13:57:33 -0400
-X-MC-Unique: 3u6jdIdgOBOrikKotviPKg-1
-X-Mimecast-MFC-AGG-ID: 3u6jdIdgOBOrikKotviPKg_1747245452
-Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-3a1f6c5f4f2so15038f8f.2
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 14 May 2025 10:57:33 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="n1e9WSNG"
+Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-43cf628cb14so9884215e9.1
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 14 May 2025 11:13:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1747246422; x=1747851222; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=+B8s8wOZcQIedBiHD/XZ4OoWoxkT58SsoJWO7KKQ5g0=;
+        b=n1e9WSNGzf3nDiVYKMZYLofP6zibPVURFWrCD1GOS3QVAzStY+i9/7z0f3Q/qbgbFT
+         PAmYUyrDmlZOZjkiYQ6+l4hEhnvFJ3qrgacn2sy1ystAZ4ab6WrTDSpUsILv7i7eeQ4V
+         T/zeuINlLaqxiGoqFB2O8ccT1IwuN9px2xsEBAMfCRiPJqsGIM5Km6T7DvjwK43UtljT
+         bUVPrep68wY9obWRgSNt3YAE/jPL0IE3YeqPWqFSKvkgYGy61d7AILaTq5Zv/3f0rI64
+         KRxNxJ0MQ5ibKPSLm++9QVKF/NcMOh8rCd5qM3w0m5eTwu9IWiBYxi7Wv+mrVDPvcyhj
+         z0CQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747245452; x=1747850252;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=0bWZ4WIW6USGmd3fCtPku9lyZiPCoKVx7jpPxXIn3KU=;
-        b=I+/n1NlB1UZ1Z8DCIdvAsJ2T8s50mGM1ZyUfboxAnH2TJmkAV4810h1k1pvDyV0QLQ
-         NWCkSrBtFVN/fOGAHzTbj6z3iKJ44uc8HoS6XvEC82K85zV5t1qqrxaymr1vL4RiatAF
-         vQA2CIi7PtanVCV+1bHHSUvkfbSrzFm0LYVWdfcnoEooJc0OJAo+Nxjzv81sBiRrdqLi
-         6FnMy96GXOU8YgCh5hGSe8AACWmdfsbOHvqL2sSwSMfNEwNGxkL29UDKnzawij5LD0GR
-         AqX7rwqzv5xjXWAH42+mnadJtvq8RQRjf+lLV+33lKWrEVdYq+E/T2NVoB5QsCuCfO9g
-         syug==
-X-Forwarded-Encrypted: i=1; AJvYcCW1ScX/Q89wlfbgugx5ESM9zjiVyak9IATktTPSDXz6eCgOL++i6hYxKS0r1A6Hl5CmkLMw7qY+wTUwCyzcACO7J8A=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxmFmkuE4dZ3YX2JWjSbRNfZkDk9vZELOmlGQvsm1VjhzRmsGwh
-	yWtHNi/g5vzaBL/EqjYguZyIX6J/oewpdVcNnHvJCDJUhCi6bpdiN56QCE1qRl0u1YW5DWQTrFy
-	HZe7ZzEUMZF9mMHt6ke6K/N534nSXJiHXMF3g+QeRL+l9SyFI539DAdzWXgCQFYC/xSgZyA==
-X-Gm-Gg: ASbGncs/Kuf8Ku+DJSbUClX4vJ5zAUzrpNJHLXnLqFFS8nKLPmi5VLIsB8s7JzueEQA
-	B3CSFCFWV1Y75hrSyfcQUXVwsaGaqu1XHqL9or33cUz+dzBAkKczZlggplkxcyoLmf1pnmJ3jS/
-	uJnJaaOJ4mIi/l2ChCtPCZnx+tPIGxrT9IGRa2m8sGvbBk+DTgrzPg6iGfAosyoBHz4KpxMmLd9
-	gI+U36CzQCVAaXRmfNbGVpSFoHoKiCt8NksZyw55J5by3udMOsszIoLYGYT1vPMZc+DkFTFPNZF
-	NcoUsY53wbmkN9TU4juVV2UJl0+9UeXyCvzkgTempoWqV66fjFkjwRVSldxOqlaz42+1BXNHNwN
-	y3P6D4owsksHaQHSAuqhnj+sLXLgS4EP422FAOe4=
-X-Received: by 2002:a05:6000:430d:b0:3a0:b5db:559a with SMTP id ffacd0b85a97d-3a349954e89mr3786757f8f.59.1747245452386;
-        Wed, 14 May 2025 10:57:32 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFp4OKdBffaHI+7gilOZzshfSllV9gdjyqy9+7eDS0fOGPhf7CpV4/kX9mFGXIv7GQk11jdug==
-X-Received: by 2002:a05:6000:430d:b0:3a0:b5db:559a with SMTP id ffacd0b85a97d-3a349954e89mr3786725f8f.59.1747245451911;
-        Wed, 14 May 2025 10:57:31 -0700 (PDT)
-Received: from ?IPV6:2003:d8:2f15:6200:d485:1bcd:d708:f5df? (p200300d82f156200d4851bcdd708f5df.dip0.t-ipconnect.de. [2003:d8:2f15:6200:d485:1bcd:d708:f5df])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a1f58ecadfsm20235782f8f.22.2025.05.14.10.57.30
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 14 May 2025 10:57:31 -0700 (PDT)
-Message-ID: <31998178-7f18-4c5c-9207-180998768cfe@redhat.com>
-Date: Wed, 14 May 2025 19:57:29 +0200
+        d=1e100.net; s=20230601; t=1747246422; x=1747851222;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=+B8s8wOZcQIedBiHD/XZ4OoWoxkT58SsoJWO7KKQ5g0=;
+        b=ZOrmFZdyN3+c9ucbUDAb6QsJlGWi+I3XdYVkRLGahXZctPSBBGxpUl2GdT9eFLmNwU
+         24od5Ayui7DIBb+iYoy59eZk3B08QRRFJy20q3WvbhY6zUfStRlQDGBNWfNZVAp5iqTo
+         viMpoMqo3nxESlpTM1As9ya1JFTQd5ccqwanU9L5jsTJyW5wENuGk69vhiT4efkbR0sk
+         CLS6oZYrsUnU3u2LWFBQsFpGd37EUCkBLvKCYTnGdp7iXawG5+x+/fm5W+Xx8lzBBm06
+         bugbJaHNX+G9ShU18Bk+eFIdKsjKeriLMPzv8eA7itUlWxdDqpLL0eg8PsnrZWxd9Wa7
+         iUog==
+X-Forwarded-Encrypted: i=1; AJvYcCWvNKKQu9DPFi4QgkEPDj6+ECuBkqt2PEJw8ZgmsYnFCP+Wl3mm53cahzkMNMx7/dyTt1/K8wVxMP6rvXr9l4uDWVQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx1pp+SfAkC0zgtnwqe1hk9i9iLg0eplklFDkrWxSai+eKZ39ra
+	m+A4Z5VpsCwKmuEwlwokTw5ykOdMRvoEF7ttGSKw7DCxjKrRx81T49noCtOlaQ==
+X-Gm-Gg: ASbGnctKKuNxotWJtjCBX6Ar51cfY3VkJVWJwOurNg3D5t2e/NKbuVmgNMos0VEcY4a
+	GiqE3BkPpSZYItoMiJiBCaRmgNws6y8uvny8bwWdV8MzAhG57J85RLLaL3imJp39KDGNmA/bnTB
+	yEBUBcKe1zpInz13pmM97D6p82QNeGQLpdwmwpGNIaByxiKDnHNqGFgHKFiDdyOoNGDqFh9BZUj
+	kv5iBOFABrZjrF5l03Ag2ukm5HBJjIlIC1TsHzO1LBojEX04k1Z36A9BgOrond/oGMQOiOhPCNV
+	Sw5emL/6ZTTb5DWkda9QdqChv+z+jWO+TchliEKy8OLK3i4MkDGwWHpuBoIiY4LAShgRNgoLRvE
+	V7z4gdgnStiG3gBVu
+X-Google-Smtp-Source: AGHT+IFvClXcCFxtSP5/BJ1lEGzPWMtAqCzL3KhR0NmFK8QG8YRN7XnOJzzYM6av7qHYsTG1Y8cp+Q==
+X-Received: by 2002:adf:fcc6:0:b0:3a0:9f24:774c with SMTP id ffacd0b85a97d-3a3511e0b62mr327856f8f.13.1747246421736;
+        Wed, 14 May 2025 11:13:41 -0700 (PDT)
+Received: from google.com (218.131.22.34.bc.googleusercontent.com. [34.22.131.218])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a1f5a2cf38sm20323930f8f.77.2025.05.14.11.13.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 14 May 2025 11:13:41 -0700 (PDT)
+Date: Wed, 14 May 2025 19:13:37 +0100
+From: Vincent Donnefort <vdonnefort@google.com>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
+	linux-trace-kernel@vger.kernel.org, maz@kernel.org,
+	oliver.upton@linux.dev, joey.gouly@arm.com, suzuki.poulose@arm.com,
+	yuzenghui@huawei.com, kvmarm@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org, jstultz@google.com,
+	qperret@google.com, will@kernel.org, kernel-team@android.com,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 00/24] Tracefs support for pKVM
+Message-ID: <aCTdUQRPjyhpYnmh@google.com>
+References: <20250506164820.515876-1-vdonnefort@google.com>
+ <20250514133815.78bc2599@gandalf.local.home>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 03/11] mm: introduce pfnmap_track() and
- pfnmap_untrack() and use them for memremap
-To: "Liam R. Howlett" <Liam.Howlett@oracle.com>,
- linux-kernel@vger.kernel.org, linux-mm@kvack.org, x86@kernel.org,
- intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
- linux-trace-kernel@vger.kernel.org, Dave Hansen
- <dave.hansen@linux.intel.com>, Andy Lutomirski <luto@kernel.org>,
- Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner <tglx@linutronix.de>,
- Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
- "H. Peter Anvin" <hpa@zytor.com>, Jani Nikula <jani.nikula@linux.intel.com>,
- Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
- Rodrigo Vivi <rodrigo.vivi@intel.com>, Tvrtko Ursulin
- <tursulin@ursulin.net>, David Airlie <airlied@gmail.com>,
- Simona Vetter <simona@ffwll.ch>, Andrew Morton <akpm@linux-foundation.org>,
- Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
- Vlastimil Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>,
- Pedro Falcato <pfalcato@suse.de>, Peter Xu <peterx@redhat.com>,
- Ingo Molnar <mingo@kernel.org>
-References: <20250512123424.637989-1-david@redhat.com>
- <20250512123424.637989-4-david@redhat.com>
- <beqj5nkucukfi7nq7cptzqwksugo5dkljzjg2opzlize7ixfvc@q27zsivgbcow>
-From: David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <beqj5nkucukfi7nq7cptzqwksugo5dkljzjg2opzlize7ixfvc@q27zsivgbcow>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: N7k2oSH56Xeq5TXukTB3uc5DbROuvcHcY3EhqPnORcs_1747245452
-X-Mimecast-Originator: redhat.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250514133815.78bc2599@gandalf.local.home>
 
-On 13.05.25 19:40, Liam R. Howlett wrote:
-> * David Hildenbrand <david@redhat.com> [250512 08:34]:
->> Let's provide variants of track_pfn_remap() and untrack_pfn() that won't
->> mess with VMAs, and replace the usage in mm/memremap.c.
->>
->> Add some documentation.
->>
->> Reviewed-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
->> Acked-by: Ingo Molnar <mingo@kernel.org> # x86 bits
->> Signed-off-by: David Hildenbrand <david@redhat.com>
+On Wed, May 14, 2025 at 01:38:15PM -0400, Steven Rostedt wrote:
+> On Tue,  6 May 2025 17:47:56 +0100
+> Vincent Donnefort <vdonnefort@google.com> wrote:
 > 
-> Small nit with this one, but either way:
+> > The growing set of features supported by the hypervisor in protected
+> > mode necessitates debugging and profiling tools. Tracefs is the
+> > ideal candidate for this task:
+> > 
+> >   * It is simple to use and to script.
+> > 
+> >   * It is supported by various tools, from the trace-cmd CLI to the
+> >     Android web-based perfetto.
+> > 
+> >   * The ring-buffer, where are stored trace events consists of linked
+> >     pages, making it an ideal structure for sharing between kernel and
+> >     hypervisor.
+> > 
+> > This series first introduces a new generic way of creating remote events and
+> > remote buffers. Then it adds support to the pKVM hypervisor.
+> > 
+> > 1. ring-buffer
+> > --------------
+> > 
+> > To setup the per-cpu ring-buffers, a new interface is created:
+> > 
+> >   ring_buffer_remote:	Describes what the kernel needs to know about the
+> > 			remote writer, that is, the set of pages forming the
+> > 			ring-buffer and a callback for the reader/head
+> > 			swapping (enables consuming read)
+> > 
+> >   ring_buffer_remote():	Creates a read-only ring-buffer from a
+> > 			ring_buffer_remote.
+> > 
+> > To keep the internals of `struct ring_buffer` in sync with the remote,
+> > the meta-page is used. It was originally introduced to enable user-space
+> > mapping of the ring-buffer [1]. In this case, the kernel is not the
+> > producer anymore but the reader. The function to read that meta-page is:
+> > 
+> >   ring_buffer_poll_remote():
+> > 			Update `struct ring_buffer` based on the remote
+> > 			meta-page. Wake-up readers if necessary.
+> > 
+> > The kernel has to poll the meta-page to be notified of newly written
+> > events.
+> > 
+> > 2. Tracefs
+> > ----------
+> > 
+> > This series introduce a new trace_remote that does the link between
+> > tracefs and the remote ring-buffer.
+> > 
+> > The interface is found in the remotes/ directory at the root of the
+> > tracefs mount point. Each remote is like an instance and you'll find
+> > there a subset of the regular Tracefs user-space interface:
+> > 
+> >   remotes/test/
+> >      buffer_size_kb
+> >      trace_clock
+> >      trace_pipe
+> >      trace
+> >      per_cpu/
+> >              cpuX/
+> >                  trace
+> >                  trace_pipe
+> >      events/
+> > 
+> >             test/
+> >                 selftest/
+> >                           enable
+> >                           id
+> > 
+> > Behind the scenes, kernel/trace/trace_remote.c creates this tracefs
+> > hierarchy without relying on kernel/trace/trace.c. This is due to
+> > fundamental differences:
+> > 
+> >   * Remote tracing doesn't support trace_array's system-specific
+> >     features (snapshots, tracers, etc.).
+> > 
+> >   * Logged event formats differ (e.g., no PID for remote events).
+> > 
+> >   * Buffer operations require specific remote interactions.
+> > 
+> > 3. Simple Ring-Buffer
+> > ---------------------
+> > 
+> > As the current ring-buffer.c implementation has too many dependencies to
+> > be used directly by the pKVM hypervisor. A new simple implementation is
+> > created and can be found in kernel/trace/simple-ring-buffer.c.
+> > 
+> > This implementation is write-only and is used by both the pKVM
+> > hypervisor and a trace_remote test module.
+> > 
+> > 4. Events
+> > ---------
+> > 
+> > A new REMOTE_EVENT() macro is added to simplify the creation of events
+> > on the kernel side. As remote tracing buffer are read only, only the
+> > event structure and a way of printing must be declared. The prototype of
+> > the macro is very similar to the well-known TRACE_EVENT()
+> > 
+> >  REMOTE_EVENT(my_event, id,
+> >      RE_STRUCT(
+> >          re_field(u64, foobar)
+> >      ),
+> >      RE_PRINTK("foobar=%lld", __entry->foobar)
+> >      )
+> >   )
+> > 
+> > 5. pKVM
+> > -------
+> > 
+> > The pKVM support simply creates a "hypervisor" trace_remote on the
+> > kernel side and inherits from simple-ring-buffer.c on the hypervisor
+> > side.
+> > 
+> > A new event macro is created HYP_EVENT() that is under the hood re-using
+> > REMOTE_EVENT() (defined in the previous paragaph) as well as generate
+> > hypervisor specific struct and trace_<event>() functions.
+> > 
+> > 5. Limitations:
+> > ---------------
+> > 
+> > Non-consuming reading of the buffer isn't supported (i.e. cat trace ->
+> > -EPERM) due to current the lack of support in the ring-buffer meta-page.
+> > 
+> > [1] https://tracingsummit.org/ts/2022/hypervisortracing/
+> > [2] https://lore.kernel.org/all/20240510140435.3550353-1-vdonnefort@google.com/
+> > 
 > 
-> Reviewed-by: Liam R. Howlett <Liam.Howlett@oracle.com>
+> BTW,  I tried to build this series and it fails.
 
-Thanks!
 
-[...]
+Yes, appologies, I've started applying your comments today and I've figured out
+I haven't tried building for x86.
+
+I already have fixes locally for what's below.
+
+I probably can send a v5 this week if you wish, unless you prefer to wait a bit
+more for more comments?
 
 > 
-> The other user is pfnmap_track_ctx_alloc() in mm/memory.c which is
-> called from remap_pfn_range(), which also has addr.
+>   CALL    /work/git/test-linux.git/scripts/checksyscalls.sh
+>   CC      kernel/trace/simple_ring_buffer.o
+> In file included from ./arch/x86/include/generated/asm/rwonce.h:1,
+>                  from /work/git/test-linux.git/include/linux/compiler.h:390,
+>                  from /work/git/test-linux.git/arch/x86/include/asm/atomic.h:5,
+>                  from /work/git/test-linux.git/include/linux/atomic.h:7,
+>                  from /work/git/test-linux.git/kernel/trace/simple_ring_buffer.c:7:
+> /work/git/test-linux.git/kernel/trace/simple_ring_buffer.c: In function ‘simple_rb_move_tail’:
+> /work/git/test-linux.git/include/asm-generic/rwonce.h:55:37: error: assignment to ‘struct list_head *’ from ‘long unsigned int’ makes pointer from integer without a cast [-Wint-conversion]
+>    55 |         *(volatile typeof(x) *)&(x) = (val);                            \
+>       |                                     ^
+> /work/git/test-linux.git/include/asm-generic/rwonce.h:61:9: note: in expansion of macro ‘__WRITE_ONCE’
+>    61 |         __WRITE_ONCE(x, val);                                           \
+>       |         ^~~~~~~~~~~~
+> /work/git/test-linux.git/arch/x86/include/asm/barrier.h:63:9: note: in expansion of macro ‘WRITE_ONCE’
+>    63 |         WRITE_ONCE(*p, v);                                              \
+>       |         ^~~~~~~~~~
+> /work/git/test-linux.git/include/asm-generic/barrier.h:172:55: note: in expansion of macro ‘__smp_store_release’
+>   172 | #define smp_store_release(p, v) do { kcsan_release(); __smp_store_release(p, v); } while (0)
+>       |                                                       ^~~~~~~~~~~~~~~~~~~
+> /work/git/test-linux.git/kernel/trace/simple_ring_buffer.c:129:17: note: in expansion of macro ‘smp_store_release’
+>   129 |                 smp_store_release(&new_tail->list.next,
+>       |                 ^~~~~~~~~~~~~~~~~
+> make[5]: *** [/work/git/test-linux.git/scripts/Makefile.build:203: kernel/trace/simple_ring_buffer.o] Error 1
+> make[4]: *** [/work/git/test-linux.git/scripts/Makefile.build:461: kernel/trace] Error 2
+> make[3]: *** [/work/git/test-linux.git/scripts/Makefile.build:461: kernel] Error 2
+> make[2]: *** [/work/git/test-linux.git/Makefile:2004: .] Error 2
+> make[1]: *** [/work/git/test-linux.git/Makefile:248: __sub-make] Error 2
+> make[1]: Leaving directory '/work/build/trace/nobackup/debiantesting-x86-64'
 > 
-> Couldn't we just use the address directly?
+> Even when I fixed this, it then failed with the building of the sample module.
 > 
-> I think the same holds for untrack as well.
-
-Hm, conceptually, I want the "pfntrack" interface to consume ... PFNs :)
-
-Actually, I was thinking about converting the "size" parameter to 
-nr_pages as well, but decided to leave that for another day.
-
-... because I really should be working on (... checking todo list ...) 
-anything else but PAT at this point.
-
-So unless there are strong feelings, I'll leave it that way (the way the 
-old interface also used it), and add it to my todo list (either make it 
-an address or make size -> nr_pages).
-
-Thanks for all the review Liam!
-
--- 
-Cheers,
-
-David / dhildenb
-
+> I think you need something like:
+> 
+> obj-$(CONFIG_TRACE_REMOTE_TEST) += remote_test_mod.o
+> 
+> remote_test_mod-y := simple_ring_buffer.o remote_test.o trace_remote.o
+> 
+> If the module needs more than one object file. Then the module should be
+> called something that doesn't have a .c file and use that name with ".o" to
+> add all the objects.
+> 
+> I think this could work, but this still had issues with functions not exported.
+> 
+> -- Steve
