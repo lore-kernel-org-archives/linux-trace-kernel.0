@@ -1,330 +1,288 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C0C821CC6C;
-	Tue, 13 May 2025 22:35:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7887D19A;
+	Wed, 14 May 2025 00:32:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747175727; cv=none; b=Z/qz3AxULFDOXOv7m5+Qfxy2WRC7QTioBnqqslrAcEr0hTASmg4hyLkBE5CZYR710qprYpL3Z+UTv2e5cwxocrMjq3kXxyPV2n8+kunx29WS+CCN14kDHmWtSlAGDPGYNkvS/tcWi1fFsDapzHx7FMpcVEmY2EXzJrgYBYOLrqw=
+	t=1747182733; cv=none; b=F75mAZADyMKr4MtiQ1AK5AQy8K8BUTEcRU6M/JdbysuHu4S3AtpqKFTkALl2v85G8pLGFenVhHJVx1SgMqidZ7kw+XVNkK8Rgt842Xda/Cyw/eNwJxmE6tt9NoX/wBbkX12Iec/4b4zy0WnO3aFgo0SNuMbxXlsSg2k+iJ1DBb0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747175727; c=relaxed/simple;
-	bh=LPJdAvV3vgiW3CunL+1Ufqd5avv0X4srOOM4scFLZac=;
-	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=W4HR9bH2cofhdQwQWXHg787Z7wTJUJIYxiFgvvfwEmChWqoYg4CqnX2dKrpVwHvuAwbAQIqHXHmjWav8WtI+xZrXyLPHsvBYPElh9xQTa1nYRpwTOQzEP93Q1Nh97dxMo+uhgYgLoGfrPdM4knROAA29SaIZezBLJCb+ywlgmc0=
+	s=arc-20240116; t=1747182733; c=relaxed/simple;
+	bh=TYA6y6LVyjRM6RpZjryDyLGn4K8/QVPIoOYa5BUTDzM=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=BZlnuDwmq6wt80r42nMX2vIBJ8Z4EsUyWmKowHd0y0LmWsmRT4RgGzu6XrOwffltywDLVaW+sFb/rldjOn/KbMay2EYTwRg/yCUgd2tGLpCQyAJy8lxol6bKjY37Pc57oxJw30K7ERqF5Xc5AfwO4DUyutEuhZxM5yUjfnrJUEA=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6407FC4CEEB;
-	Tue, 13 May 2025 22:35:27 +0000 (UTC)
-Received: from rostedt by gandalf with local (Exim 4.98.2)
-	(envelope-from <rostedt@goodmis.org>)
-	id 1uEyE5-00000004sfZ-1EJW;
-	Tue, 13 May 2025 18:35:53 -0400
-Message-ID: <20250513223553.143567998@goodmis.org>
-User-Agent: quilt/0.68
-Date: Tue, 13 May 2025 18:34:48 -0400
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6FE30C4CEE4;
+	Wed, 14 May 2025 00:32:12 +0000 (UTC)
+Date: Tue, 13 May 2025 20:32:37 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
-To: linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org,
- bpf@vger.kernel.org,
- x86@kernel.org
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Josh Poimboeuf <jpoimboe@kernel.org>,
- Peter Zijlstra <peterz@infradead.org>,
- Ingo Molnar <mingo@kernel.org>,
- Jiri Olsa <jolsa@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>,
- Thomas Gleixner <tglx@linutronix.de>,
- Borislav Petkov <bp@alien8.de>,
- Dave Hansen <dave.hansen@linux.intel.com>,
- "H. Peter Anvin" <hpa@zytor.com>,
- Andrii Nakryiko <andrii@kernel.org>
-Subject: [PATCH v9 13/13] unwind: Clear unwind_mask on exit back to user space
-References: <20250513223435.636200356@goodmis.org>
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH] tracing: ring_buffer: Rewind persistent ring buffer
+ when reboot
+Message-ID: <20250513203237.0e7ff662@gandalf.local.home>
+In-Reply-To: <174709742769.1964496.18203163435305117893.stgit@mhiramat.tok.corp.google.com>
+References: <174709742769.1964496.18203163435305117893.stgit@mhiramat.tok.corp.google.com>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-From: Steven Rostedt <rostedt@goodmis.org>
+On Tue, 13 May 2025 09:50:27 +0900
+"Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
 
-When testing the deferred unwinder by attaching deferred user space
-stacktraces to events, a live lock happened. This was when the deferred
-unwinding was added to the irqs_disabled event, which happens after the
-task_work callbacks are called and before the task goes back to user
-space.
+> From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> 
+> Rewind persistent ring buffer pages which have been read in the
+> previous boot. Those pages are highly possible to be lost before
+> writing it to the disk if the previous kernel crashed. In this
+> case, the trace data is kept on the persistent ring buffer, but
+> it can not be read because its commit size has been reset after
+> read.
+> This skips clearing the commit size of each sub-buffer and
+> recover it after reboot.
+> 
+> Note: If you read the previous boot data via trace_pipe, that
+> is not accessible in that time. But reboot without clearing (or
+> reusing) the read data, the read data is recovered again in the
+> next boot.
+> Thus, when you read the previous boot data, clear it by
+> `echo > trace`.
 
-The event callback would be registered when irqs were disabled, the
-task_work would trigger, call the callback for this work and clear the
-work's bit. Then before getting back to user space, irqs would be disabled
-again, the event triggered again, and a new task_work registered. This
-caused an infinite loop and the system hung.
+Is that a problem? I'm thinking that the data in the buffer should not be
+used. Anyway, I had to fix a bug with trace_pipe:
 
-To prevent this, clear the bits at the very last moment before going back
-to user space and when instrumentation is disabled. That is in
-unwind_exit_to_user_mode().
+  https://lore.kernel.org/linux-trace-kernel/20250513115032.3e0b97f7@gandalf.local.home/
 
-Move the pending bit from a value on the task_struct to the most
-significant bit of the unwind_mask (saves space on the task_struct). This
-will allow modifying the pending bit along with the work bits atomically.
+And with that applied, it doesn't rewind all the way, but still gives you
+what's left on the reader page. I think that is the case without this patch
+too.
 
-Instead of clearing a work's bit after its callback is called, it is
-delayed until exit. If the work is requested again, the task_work is not
-queued again and the work will be notified that the task has already been
-called (via UNWIND_ALREADY_EXECUTED return value).
+> 
+> Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> ---
+>  kernel/trace/ring_buffer.c |   55
+> ++++++++++++++++++++++++++++++++++++++++++-- 1 file changed, 52
+> insertions(+), 3 deletions(-)
 
-The pending bit is cleared before calling the callback functions but the
-current work bits remain. If one of the called works registers again, it
-will not trigger a task_work if its bit is still present in the task's
-unwind_mask.
+Anyway, I found that this is a lot more complex than what you have here. As
+the commit size is set to zero when added back into the ring buffer, I
+needed to remove that. But things get much more trickier than that!
 
-If a new work registers, then it will set both the pending bit and its own
-bit but clear the other work bits so that their callbacks do not get
-called again.
+First, we need to make the new head page found (the one that was read
+already) the new "reader page". And we need to insert the old reader page
+back into the ring buffer. And reset everything to handle all of this.
 
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
- include/linux/unwind_deferred.h       | 23 ++++++-
- include/linux/unwind_deferred_types.h |  1 -
- kernel/unwind/deferred.c              | 96 +++++++++++++++++++--------
- 3 files changed, 90 insertions(+), 30 deletions(-)
+I played a little with it, and came up with this. It's still a bit buggy,
+but it does give you an idea of what needs to be done.
 
-diff --git a/include/linux/unwind_deferred.h b/include/linux/unwind_deferred.h
-index 1789c3624723..b3c8703fcc22 100644
---- a/include/linux/unwind_deferred.h
-+++ b/include/linux/unwind_deferred.h
-@@ -18,6 +18,14 @@ struct unwind_work {
- 
- #ifdef CONFIG_UNWIND_USER
- 
-+#define UNWIND_PENDING_BIT	(BITS_PER_LONG - 1)
-+#define UNWIND_PENDING		(1UL << UNWIND_PENDING_BIT)
-+
-+enum {
-+	UNWIND_ALREADY_PENDING	= 1,
-+	UNWIND_ALREADY_EXECUTED	= 2,
-+};
-+
- void unwind_task_init(struct task_struct *task);
- void unwind_task_free(struct task_struct *task);
- 
-@@ -29,7 +37,20 @@ void unwind_deferred_cancel(struct unwind_work *work);
- 
- static __always_inline void unwind_exit_to_user_mode(void)
- {
--	if (unlikely(current->unwind_info.cache))
-+	unsigned long bits;
-+
-+	/* Was there any unwinding? */
-+	if (likely(!current->unwind_mask))
-+		return;
-+
-+	bits = current->unwind_mask;
-+	do {
-+		/* Is a task_work going to run again before going back */
-+		if (bits & UNWIND_PENDING)
-+			return;
-+	} while (!try_cmpxchg(&current->unwind_mask, &bits, 0UL));
-+
-+	if (likely(current->unwind_info.cache))
- 		current->unwind_info.cache->nr_entries = 0;
- 	current->unwind_info.timestamp = 0;
+-- Steve
+
+This is on top of the trace_pipe fix in the link above.
+
+diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+index 6859008ca34d..f5dd96ca25c9 100644
+--- a/kernel/trace/ring_buffer.c
++++ b/kernel/trace/ring_buffer.c
+@@ -1358,6 +1358,13 @@ static inline void rb_inc_page(struct buffer_page **bpage)
+ 	*bpage = list_entry(p, struct buffer_page, list);
  }
-diff --git a/include/linux/unwind_deferred_types.h b/include/linux/unwind_deferred_types.h
-index ae27a02234b8..28811a9d4262 100644
---- a/include/linux/unwind_deferred_types.h
-+++ b/include/linux/unwind_deferred_types.h
-@@ -12,7 +12,6 @@ struct unwind_task_info {
- 	struct callback_head	work;
- 	u64			timestamp;
- 	u64			nmi_timestamp;
--	int			pending;
- };
  
- #endif /* _LINUX_UNWIND_USER_DEFERRED_TYPES_H */
-diff --git a/kernel/unwind/deferred.c b/kernel/unwind/deferred.c
-index 5d6976ee648f..b0289a695b92 100644
---- a/kernel/unwind/deferred.c
-+++ b/kernel/unwind/deferred.c
-@@ -19,6 +19,11 @@ static LIST_HEAD(callbacks);
- static unsigned long unwind_mask;
- DEFINE_STATIC_SRCU(unwind_srcu);
- 
-+static inline bool unwind_pending(struct task_struct *task)
++static inline void rb_dec_page(struct buffer_page **bpage)
 +{
-+	return test_bit(UNWIND_PENDING_BIT, &task->unwind_mask);
++	struct list_head *p = rb_list_head((*bpage)->list.prev);
++
++	*bpage = list_entry(p, struct buffer_page, list);
 +}
 +
- /*
-  * Read the task context timestamp, if this is the first caller then
-  * it will set the timestamp.
-@@ -107,15 +112,18 @@ static void unwind_deferred_task_work(struct callback_head *head)
- 	struct unwind_task_info *info = container_of(head, struct unwind_task_info, work);
- 	struct unwind_stacktrace trace;
- 	struct unwind_work *work;
-+	unsigned long bits;
- 	u64 timestamp;
- 	struct task_struct *task = current;
- 	int idx;
- 
--	if (WARN_ON_ONCE(!info->pending))
-+	if (WARN_ON_ONCE(!unwind_pending(task)))
- 		return;
- 
--	/* Allow work to come in again */
--	WRITE_ONCE(info->pending, 0);
-+	/* Clear pending bit but make sure to have the current bits */
-+	bits = READ_ONCE(task->unwind_mask);
-+	while (!try_cmpxchg(&task->unwind_mask, &bits, bits & ~UNWIND_PENDING_BIT))
-+		;
- 
- 	/*
- 	 * From here on out, the callback must always be called, even if it's
-@@ -138,10 +146,8 @@ static void unwind_deferred_task_work(struct callback_head *head)
- 	idx = srcu_read_lock(&unwind_srcu);
- 	list_for_each_entry_srcu(work, &callbacks, list,
- 				 srcu_read_lock_held(&unwind_srcu)) {
--		if (task->unwind_mask & (1UL << work->bit)) {
-+		if (bits & (1UL << work->bit))
- 			work->func(work, &trace, timestamp);
--			clear_bit(work->bit, &current->unwind_mask);
--		}
- 	}
- 	srcu_read_unlock(&unwind_srcu, idx);
- }
-@@ -168,10 +174,13 @@ static int unwind_deferred_request_nmi(struct unwind_work *work, u64 *timestamp)
- 		inited_timestamp = true;
- 	}
- 
--	if (current->unwind_mask & (1UL << work->bit))
--		return 1;
-+	/* Is this already queued */
-+	if (current->unwind_mask & (1UL << work->bit)) {
-+		return unwind_pending(current) ? UNWIND_ALREADY_PENDING :
-+			UNWIND_ALREADY_EXECUTED;
-+	}
- 
--	if (info->pending)
-+	if (unwind_pending(current))
- 		goto out;
- 
- 	ret = task_work_add(current, &info->work, TWA_NMI_CURRENT);
-@@ -186,9 +195,17 @@ static int unwind_deferred_request_nmi(struct unwind_work *work, u64 *timestamp)
- 		return ret;
- 	}
- 
--	info->pending = 1;
-+	/*
-+	 * This is the first to set the PENDING_BIT, clear all others
-+	 * as any other bit has already had their callback called, and
-+	 * those callbacks should not be called again because of this
-+	 * new callback. If they request another callback, then they
-+	 * will get a new one.
-+	 */
-+	current->unwind_mask = UNWIND_PENDING;
- out:
--	return test_and_set_bit(work->bit, &current->unwind_mask);
-+	return test_and_set_bit(work->bit, &current->unwind_mask) ?
-+		UNWIND_ALREADY_PENDING : 0;
- }
- 
- /**
-@@ -211,15 +228,17 @@ static int unwind_deferred_request_nmi(struct unwind_work *work, u64 *timestamp)
-  * it has already been previously called for the same entry context, it will be
-  * called again with the same stack trace and timestamp.
-  *
-- * Return: 1 if the the callback was already queued.
-- *         0 if the callback successfully was queued.
-+ * Return: 0 if the callback successfully was queued.
-+ *         UNWIND_ALREADY_PENDING if the the callback was already queued.
-+ *         UNWIND_ALREADY_EXECUTED if the callback was already called
-+ *                (and will not be called again)
-  *         Negative if there's an error.
-  *         @timestamp holds the timestamp of the first request by any user
-  */
- int unwind_deferred_request(struct unwind_work *work, u64 *timestamp)
+ static struct buffer_page *
+ rb_set_head_page(struct ring_buffer_per_cpu *cpu_buffer)
  {
- 	struct unwind_task_info *info = &current->unwind_info;
--	int pending;
-+	unsigned long old, bits;
- 	int bit;
- 	int ret;
- 
-@@ -241,28 +260,49 @@ int unwind_deferred_request(struct unwind_work *work, u64 *timestamp)
- 
- 	*timestamp = get_timestamp(info);
- 
--	/* This is already queued */
--	if (current->unwind_mask & (1UL << bit))
--		return 1;
-+	old = READ_ONCE(current->unwind_mask);
-+
-+	/* Is this already queued */
-+	if (old & (1UL << bit)) {
-+		/*
-+		 * If pending is not set, it means this work's callback
-+		 * was already called.
-+		 */
-+		return old & UNWIND_PENDING ? UNWIND_ALREADY_PENDING :
-+			UNWIND_ALREADY_EXECUTED;
-+	}
- 
--	/* callback already pending? */
--	pending = READ_ONCE(info->pending);
--	if (pending)
-+	if (unwind_pending(current))
- 		goto out;
- 
--	/* Claim the work unless an NMI just now swooped in to do so. */
--	if (!try_cmpxchg(&info->pending, &pending, 1))
-+	/*
-+	 * This is the first to enable another task_work for this task since
-+	 * the task entered the kernel, or had already called the callbacks.
-+	 * Set only the bit for this work and clear all others as they have
-+	 * already had their callbacks called, and do not need to call them
-+	 * again because of this work.
-+	 */
-+	bits = UNWIND_PENDING | (1 << bit);
-+
-+	/*
-+	 * If the cmpxchg() fails, it means that an NMI came in and set
-+	 * the pending bit as well as cleared the other bits. Just
-+	 * jump to setting the bit for this work.
-+	 */
-+	if (!try_cmpxchg(&current->unwind_mask, &old, bits))
- 		goto out;
- 
- 	/* The work has been claimed, now schedule it. */
- 	ret = task_work_add(current, &info->work, TWA_RESUME);
--	if (WARN_ON_ONCE(ret)) {
--		WRITE_ONCE(info->pending, 0);
--		return ret;
--	}
-+
-+	if (WARN_ON_ONCE(ret))
-+		WRITE_ONCE(current->unwind_mask, 0);
-+
-+	return ret;
- 
-  out:
--	return test_and_set_bit(work->bit, &current->unwind_mask);
-+	return test_and_set_bit(work->bit, &current->unwind_mask) ?
-+		UNWIND_ALREADY_PENDING : 0;
+@@ -1862,13 +1869,17 @@ static int rb_validate_buffer(struct buffer_data_page *dpage, int cpu)
+ 	return rb_read_data_buffer(dpage, tail, cpu, &ts, &delta);
  }
  
- void unwind_deferred_cancel(struct unwind_work *work)
-@@ -298,7 +338,7 @@ int unwind_deferred_init(struct unwind_work *work, unwind_callback_t func)
- 	guard(mutex)(&callback_mutex);
++static void rb_update_meta_reader(struct ring_buffer_per_cpu *cpu_buffer,
++				  struct buffer_page *reader);
++
+ /* If the meta data has been validated, now validate the events */
+ static void rb_meta_validate_events(struct ring_buffer_per_cpu *cpu_buffer)
+ {
+ 	struct ring_buffer_cpu_meta *meta = cpu_buffer->ring_meta;
+-	struct buffer_page *head_page;
++	struct buffer_page *head_page, *orig_head;
+ 	unsigned long entry_bytes = 0;
+ 	unsigned long entries = 0;
++	u64 ts;
+ 	int ret;
+ 	int i;
  
- 	/* See if there's a bit in the mask available */
--	if (unwind_mask == ~0UL)
-+	if (unwind_mask == ~(UNWIND_PENDING))
- 		return -EBUSY;
+@@ -1885,8 +1896,6 @@ static void rb_meta_validate_events(struct ring_buffer_per_cpu *cpu_buffer)
+ 	entry_bytes += local_read(&cpu_buffer->reader_page->page->commit);
+ 	local_set(&cpu_buffer->reader_page->entries, ret);
  
- 	work->bit = ffz(unwind_mask);
--- 
-2.47.2
-
-
+-	head_page = cpu_buffer->head_page;
+-
+ 	/* If the commit_buffer is the reader page, update the commit page */
+ 	if (meta->commit_buffer == (unsigned long)cpu_buffer->reader_page->page) {
+ 		cpu_buffer->commit_page = cpu_buffer->reader_page;
+@@ -1894,6 +1903,88 @@ static void rb_meta_validate_events(struct ring_buffer_per_cpu *cpu_buffer)
+ 		goto done;
+ 	}
+ 
++	orig_head = head_page = cpu_buffer->head_page;
++	ts = cpu_buffer->reader_page->page->time_stamp;
++
++	/*
++	 * Try to rewind the head so that we can read the pages which already
++	 * read in the previous boot.
++	 */
++	if (head_page != cpu_buffer->tail_page)
++		rb_dec_page(&head_page);
++
++	for (i = 0; i < meta->nr_subbufs + 1; i++, rb_dec_page(&head_page)) {
++
++		/* Rewind until tail (writer) page. */
++		if (head_page == cpu_buffer->tail_page)
++			break;
++
++		if (ts < head_page->page->time_stamp)
++			break;
++
++		ts = head_page->page->time_stamp;
++		if (!ts)
++			break;
++
++		if (rb_page_commit(head_page) == 0)
++			break;
++
++		/* Stop rewind if the page is invalid. */
++		ret = rb_validate_buffer(head_page->page, cpu_buffer->cpu);
++		if (ret < 0)
++			break;
++
++		/* Recover the number of entries. */
++		local_set(&head_page->entries, ret);
++		if (ret)
++			local_inc(&cpu_buffer->pages_touched);
++		entries += ret;
++		entry_bytes += rb_page_commit(head_page);
++	}
++
++	/* The last rewind page must be skipped. */
++	if (head_page != orig_head)
++		rb_inc_page(&head_page);
++
++	if (head_page != orig_head) {
++		struct buffer_page *bpage = orig_head;
++
++		rb_dec_page(&bpage);
++		/*
++		 * Move the reader page between the orig_head and the page
++		 * before it.
++		 */
++		cpu_buffer->reader_page->list.next = &orig_head->list;
++		cpu_buffer->reader_page->list.prev = orig_head->list.prev;
++		orig_head->list.prev = &cpu_buffer->reader_page->list;
++
++		bpage->list.next = &cpu_buffer->reader_page->list;
++
++		/* Make the head_page the new reader page */
++		cpu_buffer->reader_page = head_page;
++		bpage = head_page;
++		rb_inc_page(&head_page);
++		head_page->list.prev = bpage->list.prev;
++		rb_dec_page(&bpage);
++		bpage->list.next = &head_page->list;
++		rb_set_list_to_head(&bpage->list);
++
++		cpu_buffer->head_page = head_page;
++		meta->head_buffer = (unsigned long)head_page->page;
++
++		/* Reset all the indexes */
++		bpage = cpu_buffer->reader_page;
++		meta->buffers[0] = rb_meta_subbuf_idx(meta, bpage->page);
++		bpage->id = 0;
++
++		for (i = 0, bpage = head_page; i < meta->nr_subbufs;
++		     i++, rb_inc_page(&bpage)) {
++			meta->buffers[i + 1] = rb_meta_subbuf_idx(meta, bpage->page);
++			bpage->id = i + 1;
++		}
++		head_page = orig_head;
++	}
++
+ 	/* Iterate until finding the commit page */
+ 	for (i = 0; i < meta->nr_subbufs + 1; i++, rb_inc_page(&head_page)) {
+ 
+@@ -5348,7 +5439,6 @@ rb_get_reader_page(struct ring_buffer_per_cpu *cpu_buffer)
+ 	 */
+ 	local_set(&cpu_buffer->reader_page->write, 0);
+ 	local_set(&cpu_buffer->reader_page->entries, 0);
+-	local_set(&cpu_buffer->reader_page->page->commit, 0);
+ 	cpu_buffer->reader_page->real_end = 0;
+ 
+  spin:
+@@ -6642,7 +6732,7 @@ int ring_buffer_read_page(struct trace_buffer *buffer,
+ 		cpu_buffer->read_bytes += rb_page_size(reader);
+ 
+ 		/* swap the pages */
+-		rb_init_page(bpage);
++//		rb_init_page(bpage);
+ 		bpage = reader->page;
+ 		reader->page = data_page->data;
+ 		local_set(&reader->write, 0);
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index cf51c30b137f..2a060c62d686 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -6066,6 +6066,7 @@ struct trace_mod_entry {
+ };
+ 
+ struct trace_scratch {
++	int			clock_id;
+ 	unsigned long		text_addr;
+ 	unsigned long		nr_entries;
+ 	struct trace_mod_entry	entries[];
+@@ -6181,6 +6182,7 @@ static void update_last_data(struct trace_array *tr)
+ 	if (tr->scratch) {
+ 		struct trace_scratch *tscratch = tr->scratch;
+ 
++		tscratch->clock_id = tr->clock_id;
+ 		memset(tscratch->entries, 0,
+ 		       flex_array_size(tscratch, entries, tscratch->nr_entries));
+ 		tscratch->nr_entries = 0;
+@@ -7403,6 +7405,12 @@ int tracing_set_clock(struct trace_array *tr, const char *clockstr)
+ 	tracing_reset_online_cpus(&tr->max_buffer);
+ #endif
+ 
++	if (tr->scratch && !(tr->flags & TRACE_ARRAY_FL_LAST_BOOT)) {
++		struct trace_scratch *tscratch = tr->scratch;
++
++		tscratch->clock_id = i;
++	}
++
+ 	mutex_unlock(&trace_types_lock);
+ 
+ 	return 0;
+@@ -9628,6 +9636,14 @@ static void setup_trace_scratch(struct trace_array *tr,
+ 
+ 	/* Scan modules to make text delta for modules. */
+ 	module_for_each_mod(make_mod_delta, tr);
++
++	/* Set trace_clock as the same of the previous boot. */
++	if (tscratch->clock_id != tr->clock_id) {
++		if (tracing_set_clock(tr, trace_clocks[tscratch->clock_id].name) < 0) {
++			pr_info("the previous trace_clock info is not valid.");
++			goto reset;
++		}
++	}
+ 	return;
+  reset:
+ 	/* Invalid trace modules */
