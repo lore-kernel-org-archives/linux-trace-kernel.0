@@ -1,205 +1,177 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f180.google.com (mail-il1-f180.google.com [209.85.166.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96721111BF;
-	Thu, 15 May 2025 22:09:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF41B19FA93;
+	Thu, 15 May 2025 23:25:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747346945; cv=none; b=iFEIm7+4oz1XyiEmX9NV8uaLJTwny7JQdjoE0W9o8vteHCGnwRjTitYSbNnb+BHMf6emJ7X+L9aOu001acl7D43HdZV9DKVOwGFRM8VWqdgoLRrrxLFRS26ouvR99lnWSzshN/xpnAlFKDxURK5kGkJpMS4wJAen56e+G80G5r8=
+	t=1747351526; cv=none; b=vFcRqLhlZ1BmY3B6IvfOieyZYBRlhXutqfOVejd72lWDsgP3KHQN8p2iPPRGVIR6ji15UYw6UVm2N/GiCK1zsP9kCkU2lkaHsvO9Shi1b2AFHN+2x1eS1HFNvfOJhnP2mvHWZBoxHqPfgcCqGRq3k5P7UClSoxvOSvB9s2xnS5g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747346945; c=relaxed/simple;
-	bh=vTlG7bW65Ok7ET5LGiyJDLIbRa5aW61JZ/tK5bBDdSg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oSVPh7YE867JLnZmvE2V7URpgqbw1nk/B9QXqs5yCBGjiOURsvej3J2Pra6Czyc6epjKrBSuVHAprI/+L+laDMnUiEhcpiCWLkoPHBJe9llNfkyadID98D2uu66ad3mpO1RK0nNIYOoRQeh1+p0dbnLF2xNXXWP/E2gpaqTVX/s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LooUBX7d; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747351526; c=relaxed/simple;
+	bh=13OywW5tBz989Be8chJbDrLamFlsWj9fCikfU9SnJf8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=L3A1XaL0YsJmDGpx9PoLy0J/v6FiR+KPxkFKPVeJhdC240U+ZRrrxz2v8T1u5JqRyTGd82WC95RcGZmonv3TzItj3uXLuaI5vt8lavM5pVbhlZwCs0hqBmQMD04SFIhxGbN0KJU3jcoLYm9tEW3D6vuw6EwqmNfi/Te9h29aK9c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IiBVV6WX; arc=none smtp.client-ip=209.85.166.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LooUBX7d"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2556DC4CEE7;
-	Thu, 15 May 2025 22:08:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747346945;
-	bh=vTlG7bW65Ok7ET5LGiyJDLIbRa5aW61JZ/tK5bBDdSg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=LooUBX7dxfOwukJ8lPQw36DZUDAEOByaA7bTebM8sVgFtb/7kfH0H+4aHKsMD0VbL
-	 Z/M4glKWvaTjZF1pzVrzAywXUKh0anbklwF3zwLd3nlZbHLFH5TXA+8cC4q5j6PJSZ
-	 ecq9Nb1+03ekYnHfPJXZqVvTzzN6GnnVVsz21Tl/UaMEbFrx758XKuWh9sz/QW1nxF
-	 G7MN06x7jo0Y5TcLJfMH2nfrWMH7UUWjteAOKd8Dygil0y4to9XKnYBPlriQytMuSf
-	 zT0B6T/KnhMTq5i+0begaYcHwYDyLrHJhOycCYjZrSZ509d2fhLbEFECe4Ub4tpWa2
-	 VMYDsUHFYV+kA==
-Date: Fri, 16 May 2025 00:08:56 +0200
-From: Alejandro Colomar <alx@kernel.org>
-To: Jiri Olsa <jolsa@kernel.org>
-Cc: Oleg Nesterov <oleg@redhat.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, x86@kernel.org, Song Liu <songliubraving@fb.com>, 
-	Yonghong Song <yhs@fb.com>, John Fastabend <john.fastabend@gmail.com>, 
-	Hao Luo <haoluo@google.com>, Steven Rostedt <rostedt@goodmis.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Alan Maguire <alan.maguire@oracle.com>, 
-	David Laight <David.Laight@aculab.com>, Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas@t-8ch.de>, 
-	Ingo Molnar <mingo@kernel.org>
-Subject: Re: [PATCHv2 22/22] man2: Add uprobe syscall page
-Message-ID: <6elp7g4ne2pk3kai6f72ggkpi2eje7haptdisoraopkpf54n26@4sr54ptnwpex>
-References: <20250515121121.2332905-1-jolsa@kernel.org>
- <20250515121121.2332905-23-jolsa@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IiBVV6WX"
+Received: by mail-il1-f180.google.com with SMTP id e9e14a558f8ab-3d91db4f0c3so7140205ab.3;
+        Thu, 15 May 2025 16:25:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747351524; x=1747956324; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=5iSRSWHA0wZxEBcTIAV8gBudfItIUV9PGZbzhKEKHfc=;
+        b=IiBVV6WXx5Ky3bEEkSGt32oTxbz8sZTYWEjJx6KDRiZI/dV8k7biijLUAjsiBc8I6t
+         KbPNuh/wpOcnik7shBx7+GvdStJteGAtlSWnlkf7copxQk8oiQBo0Eis9Wl7OKKi2ekX
+         7eW+KpDCZz7v63XiXbZCaukc7mvPsfWAuMhey3z2UBjte8sU/g/qYqf118K9D/Uj1BiF
+         IPhi3/hDdewVUiljRUW7R/C28aT4YgFkfEp3Ku8ydtwszaTrgvpFAA6ecxQEAZC9q4jY
+         VdIkwOlx4AJK3lAQ1iSxjiOpjooSzeCkPtLgxdkDzLNuOg3yIb6G0aJE8I4mL7iTF5Tn
+         E+kw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747351524; x=1747956324;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=5iSRSWHA0wZxEBcTIAV8gBudfItIUV9PGZbzhKEKHfc=;
+        b=GURN3GP7MqNUJg0smKGkUMs0Cry8EDB59TOC92xdCrS8hQ3UcGlXFcTHEWjXKFV7Xq
+         YgRHvyh3Mz2VQd4KvoTmGwjhJFjumNk4i5TX/oBUk1b/XODUcNJnd5yC5IJ1JHZmMNcC
+         v6RNt97B80CO/s6t0QUEXMyhu5ADy6CPIBn0txOTU4i8dfq2FPfQdYQI8vIqgwOtppxX
+         sAu/BiQSFCfopeZ8gROyOxTFDvy3FGrKrYR3Wgm0kEq0A65PMPKAyvwlDiqKkzcOJnd+
+         6G+JJyumr6Jy38JLP4mreTXfOvMjmCIZrnsdRIWAwv0LWd7oJgHVj5Gx5E8tdxWKuvcr
+         mHYQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUg4WlU/JVdwhJbHrf1yk9c6NQzjy+9egTy4qFnAsErpdrGvXXMUkEJOrgt1rf8ItZpFr4lafAu9JUDoQ==@vger.kernel.org, AJvYcCV72MsOHt/JNzC7/ux/DZLBRR1qOa36CC7d1cMbcToMMOzOr40og/rsQdMeOSAalv6CBwP/Ahf1+eQE/Uyw@vger.kernel.org, AJvYcCWQRCzOZe6D6AaTm7xxWEC7DRYY5jGUjuH7gITYEO7Yw4WwKmj+TwpqLKruiGBUQjSBbjhuewwMGdzmv23Zq+gk8XEq@vger.kernel.org
+X-Gm-Message-State: AOJu0YwqyFT/C2avCKiGkIwNJq2sIxCyG4YIC1f77jRBF0DwrUrUZGRx
+	LqKSWlSDpeX7PZXfv/xX8TLHse0tFjqErafkGPOUuRQk8K2PcAy0Nq2wq4hpa3Eq2v57ij0irRV
+	fYfEilMBXzucltdFd7/I+TXXZlKmQpCqpnQ==
+X-Gm-Gg: ASbGncsH7/DXwO08han45ckczYBo00HslNI0fJw1QOoFWUldqJPien5DcNHEYlcAXN3
+	9Naj4rw8vuy3lCFGLCQeEkxnBm3lNXCx5+vjAiqFDFkaKpl00EV1HLCSCajglJUVu95BjDuBJfT
+	Q6k/9eCLINxKyR87JmBF6zdEqEKKw3Jfwkgln0F7Jiyg==
+X-Google-Smtp-Source: AGHT+IFcHv71Iztr4DFKwenfbjo2fh4qPjqGj+8jiRWhWN/UQ2/eu8xmCcRzmSdIacT5CrKxNXlj4pROnUOzrQ+V0Kk=
+X-Received: by 2002:a05:6e02:330c:b0:3d9:24d8:8d41 with SMTP id
+ e9e14a558f8ab-3db85792a88mr6073275ab.16.1747351523837; Thu, 15 May 2025
+ 16:25:23 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="pifqnw6ycu3nbclf"
-Content-Disposition: inline
-In-Reply-To: <20250515121121.2332905-23-jolsa@kernel.org>
-
-
---pifqnw6ycu3nbclf
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
-Content-Disposition: inline
+References: <20250515061643.31472-1-kerneljasonxing@gmail.com>
+ <20250515061643.31472-3-kerneljasonxing@gmail.com> <d5032331-7fbc-4c7b-9d1e-845121664872@kernel.dk>
+In-Reply-To: <d5032331-7fbc-4c7b-9d1e-845121664872@kernel.dk>
+From: Jason Xing <kerneljasonxing@gmail.com>
+Date: Fri, 16 May 2025 07:24:47 +0800
+X-Gm-Features: AX0GCFthg23UHmVlvFzvJ2zFURtaq3l3-87z22y-7dR8DEl3EN9kUEkiv5vYfPc
+Message-ID: <CAL+tcoB7NBWLQgQqYX8QjJcvpJmDB39iZMrZWZA07PF6ELYfZA@mail.gmail.com>
+Subject: Re: [PATCH v2 2/4] relayfs: introduce dump of relayfs statistics function
+To: Jens Axboe <axboe@kernel.dk>
+Cc: rostedt@goodmis.org, mhiramat@kernel.org, mathieu.desnoyers@efficios.com, 
+	akpm@linux-foundation.org, linux-kernel@vger.kernel.org, 
+	linux-block@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	Jason Xing <kernelxing@tencent.com>, Yushan Zhou <katrinzhou@tencent.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-From: Alejandro Colomar <alx@kernel.org>
-To: Jiri Olsa <jolsa@kernel.org>
-Cc: Oleg Nesterov <oleg@redhat.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, x86@kernel.org, Song Liu <songliubraving@fb.com>, 
-	Yonghong Song <yhs@fb.com>, John Fastabend <john.fastabend@gmail.com>, 
-	Hao Luo <haoluo@google.com>, Steven Rostedt <rostedt@goodmis.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Alan Maguire <alan.maguire@oracle.com>, 
-	David Laight <David.Laight@aculab.com>, Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas@t-8ch.de>, 
-	Ingo Molnar <mingo@kernel.org>
-Subject: Re: [PATCHv2 22/22] man2: Add uprobe syscall page
-References: <20250515121121.2332905-1-jolsa@kernel.org>
- <20250515121121.2332905-23-jolsa@kernel.org>
-MIME-Version: 1.0
-In-Reply-To: <20250515121121.2332905-23-jolsa@kernel.org>
 
-Hi Jiri,
+On Fri, May 16, 2025 at 2:19=E2=80=AFAM Jens Axboe <axboe@kernel.dk> wrote:
+>
+> On 5/15/25 12:16 AM, Jason Xing wrote:
+> > From: Jason Xing <kernelxing@tencent.com>
+> >
+> > In this version, only support dumping the counter for buffer full and
+> > implement the framework of how it works.
+> >
+> > Users can pass certain flag to fetch what field/statistics they expect
+> > to know. Each time it only returns one result. So do not pass multiple
+> > flags.
+> >
+> > Reviewed-by: Yushan Zhou <katrinzhou@tencent.com>
+> > Signed-off-by: Jason Xing <kernelxing@tencent.com>
+> > ---
+> > v2
+> > 1. refactor relay_dump() and make it only return a pure size_t result
+> > of the value that users specifies.
+> > 2. revise the commit log.
+> > ---
+> >  include/linux/relay.h |  7 +++++++
+> >  kernel/relay.c        | 31 +++++++++++++++++++++++++++++++
+> >  2 files changed, 38 insertions(+)
+> >
+> > diff --git a/include/linux/relay.h b/include/linux/relay.h
+> > index ce7a1b396872..3fb285716e34 100644
+> > --- a/include/linux/relay.h
+> > +++ b/include/linux/relay.h
+> > @@ -31,6 +31,12 @@
+> >  /*
+> >   * Relay buffer statistics dump
+> >   */
+> > +enum {
+> > +     RELAY_DUMP_BUF_FULL =3D (1 << 0),
+> > +
+> > +     RELAY_DUMP_LAST =3D RELAY_DUMP_BUF_FULL,
+> > +};
+> > +
+> >  struct rchan_buf_stats
+> >  {
+> >       unsigned int full_count;        /* counter for buffer full */
+> > @@ -167,6 +173,7 @@ struct rchan *relay_open(const char *base_filename,
+> >                        void *private_data);
+> >  extern void relay_close(struct rchan *chan);
+> >  extern void relay_flush(struct rchan *chan);
+> > +extern size_t relay_dump(struct rchan *chan, int flags);
+> >  extern void relay_subbufs_consumed(struct rchan *chan,
+> >                                  unsigned int cpu,
+> >                                  size_t consumed);
+> > diff --git a/kernel/relay.c b/kernel/relay.c
+> > index eb3f630f3896..f47fc750e559 100644
+> > --- a/kernel/relay.c
+> > +++ b/kernel/relay.c
+> > @@ -701,6 +701,37 @@ void relay_flush(struct rchan *chan)
+> >  }
+> >  EXPORT_SYMBOL_GPL(relay_flush);
+> >
+> > +/**
+> > + *   relay_dump - dump channel buffer statistics
+> > + *   @chan: the channel
+> > + *   @flags: select particular information to dump
+> > + *
+> > + *   Returns the count of certain field that caller specifies.
+> > + */
+> > +size_t relay_dump(struct rchan *chan, int flags)
+> > +{
+> > +     unsigned int i, count =3D 0;
+> > +     struct rchan_buf *rbuf;
+> > +
+> > +     if (!chan || flags > RELAY_DUMP_LAST)
+> > +             return 0;
+> > +
+> > +     if (chan->is_global) {
+> > +             rbuf =3D *per_cpu_ptr(chan->buf, 0);
+> > +             if (flags & RELAY_DUMP_BUF_FULL)
+> > +                     count =3D rbuf->stats.full_count;
+> > +     } else {
+> > +             for_each_online_cpu(i) {
+> > +                     if ((rbuf =3D *per_cpu_ptr(chan->buf, i)))
+> > +                             if (flags & RELAY_DUMP_BUF_FULL)
+> > +                                     count +=3D rbuf->stats.full_count=
+;
+>
+> Kernel tends to avoid the rolled-into-one assignment and check, it's
+> easy to misread. This:
+>
+>         rbuf =3D *per_cpu_ptr(chan->buf, i);
+>         if (rbuf && flags & RELAY_DUMP_BUF_FULL)
+>                 count +=3D rbuf->stats.full_count;
+>
+> reads much easier. IMHO.
 
-On Thu, May 15, 2025 at 02:11:19PM +0200, Jiri Olsa wrote:
-> Changing uretprobe syscall man page to be shared with new
-> uprobe syscall man page.
->=20
-> Cc: Alejandro Colomar <alx@kernel.org>
-> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+Agreed. Thanks. I will rewrite this part in V3 :)
 
-LGTM.
+Thanks,
+Jason
 
-
-Have a lovely night!
-Alex
-
-> ---
->  man/man2/uprobe.2    |  1 +
->  man/man2/uretprobe.2 | 36 ++++++++++++++++++++++++------------
->  2 files changed, 25 insertions(+), 12 deletions(-)
->  create mode 100644 man/man2/uprobe.2
->=20
-> diff --git a/man/man2/uprobe.2 b/man/man2/uprobe.2
-> new file mode 100644
-> index 000000000000..ea5ccf901591
-> --- /dev/null
-> +++ b/man/man2/uprobe.2
-> @@ -0,0 +1 @@
-> +.so man2/uretprobe.2
-> diff --git a/man/man2/uretprobe.2 b/man/man2/uretprobe.2
-> index bbbfb0c59335..df0e5d92e5ed 100644
-> --- a/man/man2/uretprobe.2
-> +++ b/man/man2/uretprobe.2
-> @@ -2,22 +2,28 @@
->  .\"
->  .\" SPDX-License-Identifier: Linux-man-pages-copyleft
->  .\"
-> -.TH uretprobe 2 (date) "Linux man-pages (unreleased)"
-> +.TH uprobe 2 (date) "Linux man-pages (unreleased)"
->  .SH NAME
-> +uprobe,
->  uretprobe
->  \-
-> -execute pending return uprobes
-> +execute pending entry or return uprobes
->  .SH SYNOPSIS
->  .nf
-> +.B int uprobe(void);
->  .B int uretprobe(void);
->  .fi
->  .SH DESCRIPTION
-> +.BR uprobe ()
-> +is an alternative to breakpoint instructions
-> +for triggering entry uprobe consumers.
-> +.P
->  .BR uretprobe ()
->  is an alternative to breakpoint instructions
->  for triggering return uprobe consumers.
->  .P
->  Calls to
-> -.BR uretprobe ()
-> +these system calls
->  are only made from the user-space trampoline provided by the kernel.
->  Calls from any other place result in a
->  .BR SIGILL .
-> @@ -26,22 +32,28 @@ The return value is architecture-specific.
->  .SH ERRORS
->  .TP
->  .B SIGILL
-> -.BR uretprobe ()
-> -was called by a user-space program.
-> +These system calls
-> +were called by a user-space program.
->  .SH VERSIONS
->  The behavior varies across systems.
->  .SH STANDARDS
->  None.
->  .SH HISTORY
-> +.TP
-> +.BR uprobe ()
-> +TBD
-> +.TP
-> +.BR uretprobe ()
->  Linux 6.11.
->  .P
-> -.BR uretprobe ()
-> -was initially introduced for the x86_64 architecture
-> -where it was shown to be faster than breakpoint traps.
-> -It might be extended to other architectures.
-> +These system calls
-> +were initially introduced for the x86_64 architecture
-> +where they were shown to be faster than breakpoint traps.
-> +They might be extended to other architectures.
->  .SH CAVEATS
-> -.BR uretprobe ()
-> -exists only to allow the invocation of return uprobe consumers.
-> -It should
-> +These system calls
-> +exist only to allow the invocation of
-> +entry or return uprobe consumers.
-> +They should
->  .B never
->  be called directly.
-> --=20
-> 2.49.0
->=20
-
---=20
-<https://www.alejandro-colomar.es/>
-
---pifqnw6ycu3nbclf
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEES7Jt9u9GbmlWADAi64mZXMKQwqkFAmgmZfcACgkQ64mZXMKQ
-wqkceQ/7Bb+KzoKdDAaf09Xgn3v/CKQZp6/++6O5NCi/XU9zW0gRKIAgqyuXjLdB
-ZxkIAJ8b8+6SQePuEJIHasZs5LRlKPIQyW/rf36IRIuOCSWE9k4RzKpm4ODxHOig
-Mss/Z288qN52D5j+3FYuoH+nRjv/Qq2Bc+DgYOwRN2FN2VzODIiDAxyh8rRSAqnB
-ySQrcPTOv1uTjcQ4dNQO82zd3TswFtspzGj+h4hd8h7IFOYv+smNckgZLHVcr9bT
-mVAjC5g3faAep/7i/jVMs6ZI0754sJrfWOdrXt7TrhnQPBots6vaYLjlpNnHbUn2
-4ymhTPEcKdhxGMl6RG0d5JSpFmmiLlX1d5PYSOrr9948ON0WFmIoblmaNFwKkrSP
-bQjLonBQUxGey5x0JxMFBiY4rvcuMJe5W5POaPT0Qfqb5yjjMSOvjFQAqv1TVY73
-CpO0xgiERzEA9qUwHYiOU3OswEIhn/TZerpQQFG6cUbVihFPkiCJtIgndzZ9t+Me
-pN1Q+a+S2kpYtR2bDrH21m+/1Ak9YGZaoEjHRB87Pz57Npk0SvLpqTUx0K/f0F9b
-0wd7IXbwXfbY9KWkAVKNxWnrfLRfWfFcB+JIrmIP5dULNWiRJap5mLOMQjn16huE
-Iapyp1diQhmx4O3KrqiNnc5rJs/p4mHPtkjXiRRjuh73x4/G7Q0=
-=5zr5
------END PGP SIGNATURE-----
-
---pifqnw6ycu3nbclf--
+>
+> --
+> Jens Axboe
