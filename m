@@ -1,221 +1,405 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D149519D08F
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 15 May 2025 14:10:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68BA621FF3E;
+	Thu, 15 May 2025 16:35:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747318243; cv=none; b=KySDLhjxFbHeKG/t6To7oIo+/WW5H5rUjOOR8FrnBe4tC7VyudR0Q2aQH0cAjGPECHO0fu7N2Qs87bcstChvL0peMKFgk9ZeOO0HqkVukNckyw9OUHkW1QpZKT528VQ6PJFFy6h7SyeovQ0lzW501PapaKfpWfwHL3X7UUyEQiY=
+	t=1747326904; cv=none; b=frnhaUbujUSBItwtSVs4eokk4pBjXSOzrTVAFUoOzfCkZsQgkJvXsFkpfKl2dd2EIK+1cCp39Ds1D3CK/dB3iWeXYQnFBSVNfuJs62waK37LusOO/Ysll7/+TqXX0eAwEA6mJ8Awlj2fsaSvSDMRq7FNErgJLymNBE/pxxrZZT0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747318243; c=relaxed/simple;
-	bh=YcCSvt/pONiW6TTscpWY0T3LRgxgCdrzCwLfiodKQaY=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
-	 In-Reply-To:Content-Type; b=f23vdC2vIx6HhdkvG25aArL+mG3w3cbEWEUAJ6tPJbmDEbpuzJyx477bZC87QkCEgOX7Poa6T7lsjOH8Gg2Z9gvt2otoydmlOzOrVeQyH+SEfckuvtpXL/WddRHhwGZynjiQwpCXINeyUe9ljJqFBBMWztbdalj8YrNvcvfbiGE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Y7BnI1GB; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Y7BnI1GB"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1747318240;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=+lcYxqOygs7CrsNUkbbofsVji7C7nAqeA5usDI/rqf4=;
-	b=Y7BnI1GB3Ezn2p707Drz1zuoncyB3+mReoNvL9BSJ+YXGcFQIw0ejXgICRP+jTt/mHu1e3
-	A3yyRCeR/T9xyeuuLaHtXaZqyMRvBoj1V2VYlEStCbbx12tl1kaSS8zHxpCmBHio74cGiP
-	N6ID2/WLtJoP60z06Jv0yLxspyEGNLE=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-612-hzOS47vZOyClkN5vnifTUg-1; Thu, 15 May 2025 10:10:38 -0400
-X-MC-Unique: hzOS47vZOyClkN5vnifTUg-1
-X-Mimecast-MFC-AGG-ID: hzOS47vZOyClkN5vnifTUg_1747318237
-Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-43cf5196c25so5822785e9.0
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 15 May 2025 07:10:38 -0700 (PDT)
+	s=arc-20240116; t=1747326904; c=relaxed/simple;
+	bh=/wYBKwb1OUxzZsfClXqfSuJhz7Sq52vo6cckxtTJkHU=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version; b=auHPmvEYpFfFlh8mHDvPNHOnxBXPWKuBQrATKFI5vsUmCP20/FxzH0l3wRU+zqH7nl94y+ZY3Gyk1sbr+IardtlpvcSPCwIKslDeDJD+x3oP27gc2K15TyhnLIZtYR406M6ANOyMnGg19Cm07fwNperqrqJs5DyA/0dB5gSibiw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-3a108684f90so766271f8f.1;
+        Thu, 15 May 2025 09:35:02 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747318237; x=1747923037;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:to:from:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=+lcYxqOygs7CrsNUkbbofsVji7C7nAqeA5usDI/rqf4=;
-        b=ew5U1cB9WSQnFbH7i66hVjn/35zmJefAihf3g1ZDGyGOz3nshlBJyHz9sxOqdppJjI
-         lLXhMSe5Wes/2W8cq9/emtBaHyEpkaQliyrr48wdz/TD32WQNdVIXHtP2Njab/uNUzAU
-         XxDxbrykbFPYdWr052ASkkAPtoVuFQHh0BklCkJCY8UN9ZNA76A9MU2ShU7B5RcbdsB2
-         DIfAw78wtKkzhFsdH20vLRoZsJ0NO7pkmYNSFTR+q0YwKzMobc/JC/li5Ag9TPVvdsVA
-         Lw7cAdnzJQ/5KsPssU1wMkzRScYm2Y+/scQB7Q/ojeP9JWUy8QIgaSmgkS6GNZ14HY+P
-         a43g==
-X-Forwarded-Encrypted: i=1; AJvYcCVplRBso7byl1m5cWT49D2zfOmaKyDmI3gAfjYabv1BNCwbccuHg8V9GJWMbZb35iqW4jHutxToHeHxziIiQsfC8HE=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx5pHwXAP3pOcc++ZCwIeyLWs/8IUSb1JHouBvfyvZQOcs9NWhh
-	aV6BtfDGvG7uWvNoXG2DuUPnD2gasjd3P+K9QBzw52abj3KSRqylidpakH49dwrKSanpEbL+cGS
-	bxT/Mxois6J8KaIctj3SS7R3wjVOIximsh2EC1vDHex+KkXFkODaDXo5UyHAVZmyXR60Sug==
-X-Gm-Gg: ASbGncscb+bDETdnqbLMwQ5LRQHuhe6Vat8TnEJqdw/YiZueFS6F1qrFFG6Im0w4Yuw
-	SroiI5xoCqu5fOaA+CT9rw4UXac2sUXOfJXsk1lVJ2kk2S0NwhZH4g5/wK7sffyL0lT4vRVqPgB
-	NePLur5dI4jtm4b70NEkB/xne75z332ZDDJwePI7UjeQ4o4IhDujNNbEu7F1JlQS1b2HLp/zE95
-	eK9cFSrgqkTR/hcRylm7SM7CC2Wwzhcssc+aqL6nqAglv626jDV1Vz454Fxttx9iIaKaPRs5BKF
-	gDI/fecYeGDDGpNaizE8cAhGVUE+FjKMvwLdj76KhJlpOqhHg7UG07YgSMb4LEMJl6gwuQpMOv/
-	c9cAIdSXYdTDNWSLdl0+T34RIQQ3uen1lVMz2nvU=
-X-Received: by 2002:a05:600c:a378:b0:43c:f050:fed3 with SMTP id 5b1f17b1804b1-442f20d9d37mr71948155e9.11.1747318237184;
-        Thu, 15 May 2025 07:10:37 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFAAk6HBarDrhds/XnLscSfSUgJMlH8mkC/3Viy6Za4wwJO/FV/AHxO4WRJqQ2pQFZ1DlGaMw==
-X-Received: by 2002:a05:600c:a378:b0:43c:f050:fed3 with SMTP id 5b1f17b1804b1-442f20d9d37mr71947325e9.11.1747318236560;
-        Thu, 15 May 2025 07:10:36 -0700 (PDT)
-Received: from ?IPV6:2003:d8:2f4a:8900:884a:b3af:e3c9:ec88? (p200300d82f4a8900884ab3afe3c9ec88.dip0.t-ipconnect.de. [2003:d8:2f4a:8900:884a:b3af:e3c9:ec88])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442f33691bbsm74868695e9.7.2025.05.15.07.10.34
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 15 May 2025 07:10:35 -0700 (PDT)
-Message-ID: <4ff30707-99ea-472a-9f16-517f52d7729a@redhat.com>
-Date: Thu, 15 May 2025 16:10:34 +0200
+        d=1e100.net; s=20230601; t=1747326901; x=1747931701;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=syyAJcOs6Ta0VHvxjwld6+DDJxWneemMl4TKeTCSxUI=;
+        b=bEF2inFD719T3EKMgxaayoxoGEr1XLWHY3p8znh9gHXvQ72rA8/I2PXv1kjtS4nUdN
+         k8453y9wcHhbX/p9MVVqjmVIS2yoyfT605g8z6vOL1en7u5ryzncTwCwP1vveDSu2p91
+         Z3Vc2uCYtEfUSQRX8WIth3xBTOYucWCBh50Acos1YM3eglTTjkK5L4UT9HG5iAq1Wwp5
+         pkYZvpVsjsD7mrRRKowQoQijO4RWZdPJ5O8+ZYMxypr1fFP9omSlUj7OmubuAffK+TaG
+         ecL3FWwqtuyDZEArdELBaOJjcLoJ6u5AC/9FMRyq6QNXl2N/qE9Ll5H92pLlnBfB+yFW
+         Br/Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUffHNT5vqSVnnDcwyTh0Pk8zlzAk+32Q+oa10H5yDxqxGSd0YcOgJYrIjt1GWCPD1tcACe9DLKNX2MDjHDPUpdLvgg@vger.kernel.org, AJvYcCUvSkuQ+R/H5uRPmlmdKHNX/L/pC67JMnbS3l6ZIhS7fQDmk1JuEtO3eY+hXYwvw2z/Q3ecy4AdA7hqcw82@vger.kernel.org, AJvYcCWhIXcgJu47eGbW6uHzdI9i6Y/LctQbA1RcdGSLcJ1vB/7NXjzAydivjZoctO+ISd6kOFMduNUA3G8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw8PAA3tzb0M5gW5x7ThAwQlZWAzCAX/PqC3quIO3GX6e77dHMi
+	A+3CeuxEjo07TS/tNvvsdncgTamW/kAzRTrJ32vsbx0F3YSLgaoH6KuX
+X-Gm-Gg: ASbGnctE/s1Zf8Bj8WHKsZRh05UxRglHa2xAGahKd8fFU2HNczJvPErxATip/i8Uo+D
+	FrfBRQHmwGk8dQiLKVwecap3TEWsDuxYDCYvhhaPrxqChx0jeuAobgMdYIcanGq/1jywqnod3VV
+	7KWSzW7dt9EV4eJgggZoXh2FhGx/DghUM5n32C9CyOqx+vWQf4F6CqQQ9A7dqBRoW15lfIfbyGT
+	9ZWAhtvbu4dSZOr7t7kXlDMLfWy5NzJqsVYjXNKwvAqURdfGFfebhrIEYh2oIqYCXPj8dxXPZAn
+	Z/LkF+n8cinjVEIG8br1taFAdIJMWaQql26sM15RnRBrDJdwZnd7WOe3hTZLce6Qyg==
+X-Google-Smtp-Source: AGHT+IGZW7mB608zuIBsXjfOJOOnzPlTRp/POpeXOjwDDDHLSfRMyw4ONIM21jGHoK7Via7ZU/Re+A==
+X-Received: by 2002:a05:6000:2012:b0:3a0:ad33:c1b3 with SMTP id ffacd0b85a97d-3a35c834d5amr469597f8f.3.1747326900430;
+        Thu, 15 May 2025 09:35:00 -0700 (PDT)
+Received: from costa-tp.bos2.lab ([2a00:a041:e280:5300:9068:704e:a31a:c135])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a35ca5a87fsm10016f8f.29.2025.05.15.09.34.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 15 May 2025 09:35:00 -0700 (PDT)
+From: Costa Shulyupin <costa.shul@redhat.com>
+To: Steven Rostedt <rostedt@goodmis.org>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Tomas Glozar <tglozar@redhat.com>,
+	John Kacur <jkacur@redhat.com>,
+	Daniel Bristot de Oliveira <bristot@kernel.org>,
+	Costa Shulyupin <costa.shul@redhat.com>,
+	"Luis Claudio R. Goncalves" <lgoncalv@redhat.com>,
+	Eder Zulian <ezulian@redhat.com>,
+	Dan Carpenter <dan.carpenter@linaro.org>,
+	Gabriele Monaco <gmonaco@redhat.com>,
+	Jan Stancek <jstancek@redhat.com>,
+	linux-trace-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v3] rtla: Set distinctive exit value for failed tests
+Date: Thu, 15 May 2025 19:20:05 +0300
+Message-ID: <20250515162133.29507-1-costa.shul@redhat.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 08/11] x86/mm/pat: remove MEMTYPE_*_MATCH
-From: David Hildenbrand <david@redhat.com>
-To: "Liam R. Howlett" <Liam.Howlett@oracle.com>,
- linux-kernel@vger.kernel.org, linux-mm@kvack.org, x86@kernel.org,
- intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
- linux-trace-kernel@vger.kernel.org, Dave Hansen
- <dave.hansen@linux.intel.com>, Andy Lutomirski <luto@kernel.org>,
- Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner <tglx@linutronix.de>,
- Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
- "H. Peter Anvin" <hpa@zytor.com>, Jani Nikula <jani.nikula@linux.intel.com>,
- Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
- Rodrigo Vivi <rodrigo.vivi@intel.com>, Tvrtko Ursulin
- <tursulin@ursulin.net>, David Airlie <airlied@gmail.com>,
- Simona Vetter <simona@ffwll.ch>, Andrew Morton <akpm@linux-foundation.org>,
- Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
- Vlastimil Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>,
- Pedro Falcato <pfalcato@suse.de>, Peter Xu <peterx@redhat.com>,
- Ingo Molnar <mingo@kernel.org>
-References: <20250512123424.637989-1-david@redhat.com>
- <20250512123424.637989-9-david@redhat.com>
- <f2bxgy5tmb3cpk457lay3hl4wejj5dvttswnvzi2uudxtkkbsm@ktcytlgv64nn>
- <18d502c8-7bbe-470e-863c-7c2f42ea2487@redhat.com>
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <18d502c8-7bbe-470e-863c-7c2f42ea2487@redhat.com>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: O7DWw81OzdzokS5yU2XMaUBrqWgjZXjtf2zLYBPxaJw_1747318237
-X-Mimecast-Originator: redhat.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 14.05.25 19:53, David Hildenbrand wrote:
-> On 13.05.25 19:48, Liam R. Howlett wrote:
->> * David Hildenbrand <david@redhat.com> [250512 08:34]:
->>> The "memramp() shrinking" scenario no longer applies, so let's remove
->>> that now-unnecessary handling.
->>>
->>> Reviewed-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
->>> Acked-by: Ingo Molnar <mingo@kernel.org> # x86 bits
->>> Signed-off-by: David Hildenbrand <david@redhat.com>
->>
->> small comment, but this looks good.
->>
->> Reviewed-by: Liam R. Howlett <Liam.Howlett@oracle.com>
-> 
-> Thanks!
-> 
->>
->>> ---
->>>    arch/x86/mm/pat/memtype_interval.c | 44 ++++--------------------------
->>>    1 file changed, 6 insertions(+), 38 deletions(-)
->>>
->>> diff --git a/arch/x86/mm/pat/memtype_interval.c b/arch/x86/mm/pat/memtype_interval.c
->>> index 645613d59942a..9d03f0dbc4715 100644
->>> --- a/arch/x86/mm/pat/memtype_interval.c
->>> +++ b/arch/x86/mm/pat/memtype_interval.c
->>> @@ -49,26 +49,15 @@ INTERVAL_TREE_DEFINE(struct memtype, rb, u64, subtree_max_end,
->>>    
->>>    static struct rb_root_cached memtype_rbroot = RB_ROOT_CACHED;
->>>    
->>> -enum {
->>> -	MEMTYPE_EXACT_MATCH	= 0,
->>> -	MEMTYPE_END_MATCH	= 1
->>> -};
->>> -
->>> -static struct memtype *memtype_match(u64 start, u64 end, int match_type)
->>> +static struct memtype *memtype_match(u64 start, u64 end)
->>>    {
->>>    	struct memtype *entry_match;
->>>    
->>>    	entry_match = interval_iter_first(&memtype_rbroot, start, end-1);
->>>    
->>>    	while (entry_match != NULL && entry_match->start < end) {
->>
->> I think this could use interval_tree_for_each_span() instead.
-> 
-> Fancy, let me look at this. Probably I'll send another patch on top of
-> this series to do that conversion. (as you found, patch #9 moves that code)
+A test is considered failed when a sample trace exceeds the threshold.
+Failed tests return the same exit code as passed tests, requiring test
+frameworks to determine the result by searching for "hit stop tracing"
+in the output.
 
-Hmmm, I think interval_tree_for_each_span() does not apply here.
+Assign a distinct exit code for failed tests to enable the use of shell
+expressions and seamless integration with testing frameworks without the
+need to parse the output.
 
-Unless I am missing something important, interval_tree_for_each_span() 
-does not work in combination with INTERVAL_TREE_DEFINE where we want to 
-use a custom type as tree nodes (-> struct memtype).
+Add enum type for return value.
 
-interval_tree_for_each_span() only works with the basic "struct 
-interval_tree_node" implementation ... which is probably also why there 
-are only a handful (3) of interval_tree_for_each_span() users, all in 
-iommufd context?
+Update `make check`.
 
-But staring at interval_tree.h vs. interval_tree_generic.h, I am a bit 
-confused ...
+Add documentation
+- update Documentation/tools/rtla/common_appendix.rst.
+  add SPDX-License-Identifier
+  add section 'EXIT STATUS'
+- include common_appendix.rst into
+  Documentation/tools/rtla/rtla-timerlat-hist.rst - the only file of
+  rtla-*.rst still without common_appendix.rst.
 
+Signed-off-by: Costa Shulyupin <costa.shul@redhat.com>
+
+---
+Changes since v2:
+- No changes in patch
+- Add documentation
+Changes since v1:
+- Expanded the patch description as requested by Tomas
+
+---
+ Documentation/tools/rtla/common_appendix.rst    | 10 ++++++++++
+ Documentation/tools/rtla/rtla-timerlat-hist.rst |  2 ++
+ tools/tracing/rtla/src/osnoise_hist.c           |  5 +++--
+ tools/tracing/rtla/src/osnoise_top.c            |  5 +++--
+ tools/tracing/rtla/src/timerlat_hist.c          |  5 +++--
+ tools/tracing/rtla/src/timerlat_top.c           |  5 +++--
+ tools/tracing/rtla/src/utils.h                  |  6 ++++++
+ tools/tracing/rtla/tests/engine.sh              |  7 +++++--
+ tools/tracing/rtla/tests/hwnoise.t              |  4 ++--
+ tools/tracing/rtla/tests/osnoise.t              |  6 +++---
+ tools/tracing/rtla/tests/timerlat.t             | 12 ++++++------
+ 11 files changed, 46 insertions(+), 21 deletions(-)
+
+diff --git a/Documentation/tools/rtla/common_appendix.rst b/Documentation/tools/rtla/common_appendix.rst
+index b5cf2dc223df..a6233ca8e6d6 100644
+--- a/Documentation/tools/rtla/common_appendix.rst
++++ b/Documentation/tools/rtla/common_appendix.rst
+@@ -1,3 +1,13 @@
++.. SPDX-License-Identifier: GPL-2.0
++EXIT STATUS
++===========
++
++::
++
++ 0  Passed: the test did not hit the stop tracing condition
++ 1  Error: invalid argument
++ 2  Failed: the test hit the stop tracing condition
++
+ REPORTING BUGS
+ ==============
+ Report bugs to <linux-kernel@vger.kernel.org>
+diff --git a/Documentation/tools/rtla/rtla-timerlat-hist.rst b/Documentation/tools/rtla/rtla-timerlat-hist.rst
+index 03b7f3deb069..b2d8726271b3 100644
+--- a/Documentation/tools/rtla/rtla-timerlat-hist.rst
++++ b/Documentation/tools/rtla/rtla-timerlat-hist.rst
+@@ -107,3 +107,5 @@ SEE ALSO
+ AUTHOR
+ ======
+ Written by Daniel Bristot de Oliveira <bristot@kernel.org>
++
++.. include:: common_appendix.rst
+diff --git a/tools/tracing/rtla/src/osnoise_hist.c b/tools/tracing/rtla/src/osnoise_hist.c
+index d9d15c8f27c7..8d579bcee709 100644
+--- a/tools/tracing/rtla/src/osnoise_hist.c
++++ b/tools/tracing/rtla/src/osnoise_hist.c
+@@ -766,8 +766,8 @@ int osnoise_hist_main(int argc, char *argv[])
+ 	struct osnoise_params *params;
+ 	struct osnoise_tool *record = NULL;
+ 	struct osnoise_tool *tool = NULL;
++	enum result return_value = ERROR;
+ 	struct trace_instance *trace;
+-	int return_value = 1;
+ 	int retval;
+ 
+ 	params = osnoise_hist_parse_args(argc, argv);
+@@ -889,12 +889,13 @@ int osnoise_hist_main(int argc, char *argv[])
+ 
+ 	osnoise_print_stats(params, tool);
+ 
+-	return_value = 0;
++	return_value = PASSED;
+ 
+ 	if (osnoise_trace_is_off(tool, record)) {
+ 		printf("rtla osnoise hit stop tracing\n");
+ 		save_trace_to_file(record ? record->trace.inst : NULL,
+ 				   params->trace_output);
++		return_value = FAILED;
+ 	}
+ 
+ out_hist:
+diff --git a/tools/tracing/rtla/src/osnoise_top.c b/tools/tracing/rtla/src/osnoise_top.c
+index 3455ee73e2e6..2c12780c8aa9 100644
+--- a/tools/tracing/rtla/src/osnoise_top.c
++++ b/tools/tracing/rtla/src/osnoise_top.c
+@@ -594,8 +594,8 @@ int osnoise_top_main(int argc, char **argv)
+ 	struct osnoise_params *params;
+ 	struct osnoise_tool *record = NULL;
+ 	struct osnoise_tool *tool = NULL;
++	enum result return_value = ERROR;
+ 	struct trace_instance *trace;
+-	int return_value = 1;
+ 	int retval;
+ 
+ 	params = osnoise_top_parse_args(argc, argv);
+@@ -715,12 +715,13 @@ int osnoise_top_main(int argc, char **argv)
+ 
+ 	osnoise_print_stats(params, tool);
+ 
+-	return_value = 0;
++	return_value = PASSED;
+ 
+ 	if (osnoise_trace_is_off(tool, record)) {
+ 		printf("osnoise hit stop tracing\n");
+ 		save_trace_to_file(record ? record->trace.inst : NULL,
+ 				   params->trace_output);
++		return_value = FAILED;
+ 	}
+ 
+ out_top:
+diff --git a/tools/tracing/rtla/src/timerlat_hist.c b/tools/tracing/rtla/src/timerlat_hist.c
+index 9d9efeedc4c2..36d2294c963d 100644
+--- a/tools/tracing/rtla/src/timerlat_hist.c
++++ b/tools/tracing/rtla/src/timerlat_hist.c
+@@ -1141,11 +1141,11 @@ int timerlat_hist_main(int argc, char *argv[])
+ 	struct timerlat_params *params;
+ 	struct osnoise_tool *record = NULL;
+ 	struct timerlat_u_params params_u;
++	enum result return_value = ERROR;
+ 	struct osnoise_tool *tool = NULL;
+ 	struct osnoise_tool *aa = NULL;
+ 	struct trace_instance *trace;
+ 	int dma_latency_fd = -1;
+-	int return_value = 1;
+ 	pthread_t timerlat_u;
+ 	int retval;
+ 	int nr_cpus, i;
+@@ -1378,7 +1378,7 @@ int timerlat_hist_main(int argc, char *argv[])
+ 
+ 	timerlat_print_stats(params, tool);
+ 
+-	return_value = 0;
++	return_value = PASSED;
+ 
+ 	if (osnoise_trace_is_off(tool, record) && !stop_tracing) {
+ 		printf("rtla timerlat hit stop tracing\n");
+@@ -1388,6 +1388,7 @@ int timerlat_hist_main(int argc, char *argv[])
+ 
+ 		save_trace_to_file(record ? record->trace.inst : NULL,
+ 				   params->trace_output);
++		return_value = FAILED;
+ 	}
+ 
+ out_hist:
+diff --git a/tools/tracing/rtla/src/timerlat_top.c b/tools/tracing/rtla/src/timerlat_top.c
+index 79cb6f28967f..7365e08fe986 100644
+--- a/tools/tracing/rtla/src/timerlat_top.c
++++ b/tools/tracing/rtla/src/timerlat_top.c
+@@ -985,12 +985,12 @@ int timerlat_top_main(int argc, char *argv[])
+ 	struct timerlat_params *params;
+ 	struct osnoise_tool *record = NULL;
+ 	struct timerlat_u_params params_u;
++	enum result return_value = ERROR;
+ 	struct osnoise_tool *top = NULL;
+ 	struct osnoise_tool *aa = NULL;
+ 	struct trace_instance *trace;
+ 	int dma_latency_fd = -1;
+ 	pthread_t timerlat_u;
+-	int return_value = 1;
+ 	char *max_lat;
+ 	int retval;
+ 	int nr_cpus, i;
+@@ -1197,7 +1197,7 @@ int timerlat_top_main(int argc, char *argv[])
+ 
+ 	timerlat_print_stats(params, top);
+ 
+-	return_value = 0;
++	return_value = PASSED;
+ 
+ 	if (osnoise_trace_is_off(top, record) && !stop_tracing) {
+ 		printf("rtla timerlat hit stop tracing\n");
+@@ -1207,6 +1207,7 @@ int timerlat_top_main(int argc, char *argv[])
+ 
+ 		save_trace_to_file(record ? record->trace.inst : NULL,
+ 				   params->trace_output);
++		return_value = FAILED;
+ 	} else if (params->aa_only) {
+ 		/*
+ 		 * If the trace did not stop with --aa-only, at least print the
+diff --git a/tools/tracing/rtla/src/utils.h b/tools/tracing/rtla/src/utils.h
+index 101d4799a009..a2a6f89f342d 100644
+--- a/tools/tracing/rtla/src/utils.h
++++ b/tools/tracing/rtla/src/utils.h
+@@ -83,3 +83,9 @@ int auto_house_keeping(cpu_set_t *monitored_cpus);
+ 
+ #define ns_to_usf(x) (((double)x/1000))
+ #define ns_to_per(total, part) ((part * 100) / (double)total)
++
++enum result {
++	PASSED = 0, /* same as EXIT_SUCCESS */
++	ERROR = 1,  /* same as EXIT_FAILURE, an error in arguments */
++	FAILED = 2, /* test hit the stop tracing condition */
++};
+diff --git a/tools/tracing/rtla/tests/engine.sh b/tools/tracing/rtla/tests/engine.sh
+index b1697b3e3f52..f2616a8e4179 100644
+--- a/tools/tracing/rtla/tests/engine.sh
++++ b/tools/tracing/rtla/tests/engine.sh
+@@ -39,6 +39,7 @@ reset_osnoise() {
+ }
+ 
+ check() {
++	expected_exitcode=${3:-0}
+ 	# Simple check: run rtla with given arguments and test exit code.
+ 	# If TEST_COUNT is set, run the test. Otherwise, just count.
+ 	ctr=$(($ctr + 1))
+@@ -49,7 +50,7 @@ check() {
+ 		# Run rtla; in case of failure, include its output as comment
+ 		# in the test results.
+ 		result=$(stdbuf -oL $TIMEOUT "$RTLA" $2 2>&1); exitcode=$?
+-		if [ $exitcode -eq 0 ]
++		if [ $exitcode -eq $expected_exitcode ]
+ 		then
+ 			echo "ok $ctr - $1"
+ 		else
+@@ -68,12 +69,14 @@ check_with_osnoise_options() {
+ 	# Save original arguments
+ 	arg1=$1
+ 	arg2=$2
++	arg3=$3
+ 
+ 	# Apply osnoise options (if not dry run)
+ 	if [ -n "$TEST_COUNT" ]
+ 	then
+ 		[ "$NO_RESET_OSNOISE" == 1 ] || reset_osnoise
+ 		shift
++		shift
+ 		while shift
+ 		do
+ 			[ "$1" == "" ] && continue
+@@ -84,7 +87,7 @@ check_with_osnoise_options() {
+ 		done
+ 	fi
+ 
+-	NO_RESET_OSNOISE=1 check "$arg1" "$arg2"
++	NO_RESET_OSNOISE=1 check "$arg1" "$arg2" "$arg3"
+ }
+ 
+ set_timeout() {
+diff --git a/tools/tracing/rtla/tests/hwnoise.t b/tools/tracing/rtla/tests/hwnoise.t
+index bbed17580537..5f71401a139e 100644
+--- a/tools/tracing/rtla/tests/hwnoise.t
++++ b/tools/tracing/rtla/tests/hwnoise.t
+@@ -10,11 +10,11 @@ check "verify help page" \
+ check "detect noise higher than one microsecond" \
+ 	"hwnoise -c 0 -T 1 -d 5s -q"
+ check "set the automatic trace mode" \
+-	"hwnoise -a 5 -d 30s"
++	"hwnoise -a 5 -d 30s" 2
+ check "set scheduling param to the osnoise tracer threads" \
+ 	"hwnoise -P F:1 -c 0 -r 900000 -d 1M -q"
+ check "stop the trace if a single sample is higher than 1 us" \
+-	"hwnoise -s 1 -T 1 -t -d 30s"
++	"hwnoise -s 1 -T 1 -t -d 30s" 2
+ check "enable a trace event trigger" \
+ 	"hwnoise -t -e osnoise:irq_noise trigger=\"hist:key=desc,duration:sort=desc,duration:vals=hitcount\" -d 1m"
+ 
+diff --git a/tools/tracing/rtla/tests/osnoise.t b/tools/tracing/rtla/tests/osnoise.t
+index e5995c03c790..44908fc01abf 100644
+--- a/tools/tracing/rtla/tests/osnoise.t
++++ b/tools/tracing/rtla/tests/osnoise.t
+@@ -10,9 +10,9 @@ check "verify help page" \
+ check "verify the --priority/-P param" \
+ 	"osnoise top -P F:1 -c 0 -r 900000 -d 1M -q"
+ check "verify the --stop/-s param" \
+-	"osnoise top -s 30 -T 1 -t"
++	"osnoise top -s 30 -T 1 -t" 2
+ check "verify the  --trace param" \
+-	"osnoise hist -s 30 -T 1 -t"
++	"osnoise hist -s 30 -T 1 -t" 2
+ check "verify the --entries/-E param" \
+ 	"osnoise hist -P F:1 -c 0 -r 900000 -d 1M -b 10 -E 25"
+ 
+@@ -20,6 +20,6 @@ check "verify the --entries/-E param" \
+ # and stopping on threshold.
+ # If default period is not set, this will time out.
+ check_with_osnoise_options "apply default period" \
+-	"osnoise hist -s 1" period_us=600000000
++	"osnoise hist -s 1" 2 period_us=600000000
+ 
+ test_end
+diff --git a/tools/tracing/rtla/tests/timerlat.t b/tools/tracing/rtla/tests/timerlat.t
+index e939ff71d6be..579c12a85e8f 100644
+--- a/tools/tracing/rtla/tests/timerlat.t
++++ b/tools/tracing/rtla/tests/timerlat.t
+@@ -21,21 +21,21 @@ export RTLA_NO_BPF=$option
+ check "verify help page" \
+ 	"timerlat --help"
+ check "verify -s/--stack" \
+-	"timerlat top -s 3 -T 10 -t"
++	"timerlat top -s 3 -T 10 -t" 2
+ check "verify -P/--priority" \
+ 	"timerlat top -P F:1 -c 0 -d 1M -q"
+ check "test in nanoseconds" \
+-	"timerlat top -i 2 -c 0 -n -d 30s"
++	"timerlat top -i 2 -c 0 -n -d 30s" 2
+ check "set the automatic trace mode" \
+-	"timerlat top -a 5 --dump-tasks"
++	"timerlat top -a 5 --dump-tasks" 2
+ check "print the auto-analysis if hits the stop tracing condition" \
+-	"timerlat top --aa-only 5"
++	"timerlat top --aa-only 5" 2
+ check "disable auto-analysis" \
+-	"timerlat top -s 3 -T 10 -t --no-aa"
++	"timerlat top -s 3 -T 10 -t --no-aa" 2
+ check "verify -c/--cpus" \
+ 	"timerlat hist -c 0 -d 30s"
+ check "hist test in nanoseconds" \
+-	"timerlat hist -i 2 -c 0 -n -d 30s"
++	"timerlat hist -i 2 -c 0 -n -d 30s" 2
+ done
+ 
+ test_end
 -- 
-Cheers,
-
-David / dhildenb
+2.48.1
 
