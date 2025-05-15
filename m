@@ -1,232 +1,91 @@
-Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
+Received: from mail-il1-f179.google.com (mail-il1-f179.google.com [209.85.166.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C3698F6E;
-	Thu, 15 May 2025 17:31:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D81EE21ADBA
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 15 May 2025 18:17:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747330302; cv=none; b=QjV1I0GY0Sw+JpJ1i/j0LEUTxIg2BcVcrDsCS6AtqCmQ19QMZ/CBXURs0aTf6d4KP7DjFR2Ix7lyoTpgzB7DyyxNqM82l0NjZGgArWfeyX8DQdxPBc7SW/Ne8OZrcpMHtl/P2H2hTQAXFejNEhOt1Z/PunYdIYYEMJQfAu1R8Vg=
+	t=1747333049; cv=none; b=F8NULLqqQqGXgDS/Cx0szayLeqCuqaK8A1pB/tCxU5QKatM8vr8ivim4VquLclRcFjSm7XzFkT7Rxdi5YgDQf9cLliNJX3ceqitlBLvr0ParSkpACgLCm5+FYenM73Jfxw+5yHXdC/N/wH4ZH4aibpcrnnzqM58lAnHf21cMJ1o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747330302; c=relaxed/simple;
-	bh=578yBCCF9YgD1A2zHQsbxBb6nOWkxV7xhBGHlUk1Zc4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=NXCHBqexB/9snrpoA13Y7hRI2lkhGBAQ83p9G/cmHjG0/bgg/WQOxY3+cZZQG8LTEFWR+TkCLFkLorOEfQ+ub8lIbQ6GaPRTq/1t4g7c3+zCS5yoisJJ5pGa85JuBjh1XS6jDHIbr0GvcwodFvIH746z4ArTltco+Pyf1MtECWg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kDJFcJM1; arc=none smtp.client-ip=209.85.216.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747333049; c=relaxed/simple;
+	bh=s/QjyZzY/EnfUUvNKb7Q7l8bqIG7rG8gTYAL2oTY5W4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=KeMDGb9HflcR69k+Q8wJfAcI3kGyXUQCgQLNnWNSixvhv8hmIdeu7DUZTZlcm/DWfheVrwT/cs1F+ve76brYNdC6FxJ9u1J/6Cbxe6vz9LtymTPDkG7aIf/qM8udqg1eX6OSMJWzr90AzgF4AGXIy3ZbzGcPZMLNrXwe5mdY3aE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=Aj6gsl2a; arc=none smtp.client-ip=209.85.166.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kDJFcJM1"
-Received: by mail-pj1-f53.google.com with SMTP id 98e67ed59e1d1-30c47918d84so1220437a91.3;
-        Thu, 15 May 2025 10:31:41 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="Aj6gsl2a"
+Received: by mail-il1-f179.google.com with SMTP id e9e14a558f8ab-3db7b3de375so5961525ab.1
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 15 May 2025 11:17:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747330300; x=1747935100; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=prxVvoM1ErB3/Q5EAy9SY19xCRr1qk2RFrDCUh/b+3k=;
-        b=kDJFcJM1AyG5SSO8+bT2+5MYNbpdO7Mbx09E/xP6iyRk4kChuGV3flWltaR0KJF6Ih
-         tcoPMb2IEeo+ASqwhMUzHgy9YuZwHsnIavKpJ146LxRW8wjZ9LIUIEUutDhvkOGut30I
-         eYfpfQoauFnNh+UXCJhy/caF0uEfVQWWq7bmSQPFr+neRoXtIyhDm12AJ+W1/1Uk/xqy
-         JBBSS8IJGsE9i1DY8nbHXTZtMMv8OeKcBativto/OFOgX1j+W6i2W3omvQT+TuLgEoo+
-         JFObxU+Uic+2LTKiYPUlIFhiECAa8osa71zTn0JBON+2k05FD5MBWV+tr28i5EO1CGqI
-         bf0w==
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1747333047; x=1747937847; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=96xY6/n/0fhqAkgNUIqk6HeWQCuRjQ3BV7nB9J6drQA=;
+        b=Aj6gsl2aoiPVZ3ukygcyl5oN1kPU/CgVxCQo9MsXm46SK4pgfrHpRchelmqUUJS2Zz
+         kSzZGDZq8jQBJ5Cx10wUWKqLU7LxxnR+pntOCs+gBNxKxgY19gRD66XpLG0BKKelZ2sN
+         E4iuKrtB1YvtRYD2AoOPHoqEOq1ck0i0Zp9Tm6Lzszmd5NvuB5uERxcRxQ98+sxeGl+G
+         byKH4QUUihJ6eDeuTpM38fFd/Kv+ti0IAGotbsMbRei0vk2N+TOPnzfPkjbX/nZd+2mK
+         KjqCQRoVp5y6aLTDdUMkMP45ETiznVBNcgjRZrx488gfTKpP6GimDhEp0mzVqnCdbu5V
+         NPpA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747330300; x=1747935100;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=prxVvoM1ErB3/Q5EAy9SY19xCRr1qk2RFrDCUh/b+3k=;
-        b=pnwFqjuR8kojT+bzjAeLr3r5og4mBiE2MDAxTSST/wMoXKAf6ZVLzDy70jSoGJUh7g
-         8ndaJenAl5whXNGKojY7txQaiY4+mTHtW7su4LudNwBZwA5gqQ6Ls3b4ouILsaJGhYl1
-         isOHq29tkuxwZZXOYDcyzn7T1U4wnUX+ShnEGWBicpj7s+vgKf4C9Sa0OMksr3CqoKFD
-         7zqzgc7JpqFOQ9qCOKvS2k/LBbi0AVU6Bgt1LrINfooe1uC3r9x2IQtx7t9I6xljbhdv
-         Pr/uowf/wO5FKrrKMZsnF/WxAYMJXb9bR6+gQU6eaGmmvpdr9Gd5SQV8CSipkP392dJu
-         poXA==
-X-Forwarded-Encrypted: i=1; AJvYcCUIqSY9PdmRbX7M/qJ4/PJ3MR8R4RUf5HyxoIJCIE28FoP+8p2bDijLXRC0PNrzkt+ocds=@vger.kernel.org, AJvYcCVHMRPr4WRiKz2No4g4ILckcGx1rm6ODkojVSCOD7gMWUFQ1r512tg7+GoJgQXhuS/K+2opwTfqLNWKP7GQumoz8x9j@vger.kernel.org, AJvYcCXoLoFDhMA2NZGEjYqYL7/FK7pLiMFCDVIUyEUW1dsX6qTurUaAnoctxR4pxx63nAxwdamNOub5DO0ClK/l@vger.kernel.org
-X-Gm-Message-State: AOJu0YwNzNgf4ghSkZvp78BjYlrth25623o5G9HvdUsIBNTb27FtvOeW
-	MLmtkkUUGtFunKpukKxh4cwfSnQIArMz1cmZYWiStPFanY4l81dPyTHv79aCHShXLRqbwMXl6/s
-	02AM9NhkoZc6mVV7jLoUqpRT/hYSpkSI=
-X-Gm-Gg: ASbGnctnvoimSEUECWDwglJ4SMbTcc4yLW0tZBtld2X84rHp+KC1oGBdNxOAcKYVCRn
-	oLfi4EGvq0bD2VFbmT0pg0M48F8VCwNBl/bJVQDO4cDX+fXeyVmxx/EFSHQHAJC1bKXKOr0XJBh
-	UMlBuP4G4Lt0KjFPI407cGOnGkwW016UfqpliY6UY+eVogdFuD
-X-Google-Smtp-Source: AGHT+IEWJEP4JHBPYv3pIhsvQT0yFk8+vd0BQ6h8BcUdT6+/B+8a0NIRqXbe5Kc4av7UTEAWeTX24BqqBVmsR9UY+K0=
-X-Received: by 2002:a17:90b:48ce:b0:30a:a50e:349c with SMTP id
- 98e67ed59e1d1-30e7d5b77f2mr300399a91.30.1747330300315; Thu, 15 May 2025
- 10:31:40 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1747333047; x=1747937847;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=96xY6/n/0fhqAkgNUIqk6HeWQCuRjQ3BV7nB9J6drQA=;
+        b=UfAPKnGArldhIYi/pSVBKRb9eovK0oZRSHZqcKrHlOuNU5/IJbQDm507++DQIdrKGF
+         Ot60CDMrSUTAnld9LFh5qvAdpS4y8MRS6VtxuhjwsM4ujAQrmAohx3WAFQAdqDclF9RC
+         9JUPfKT6m9NT1IQBXbK9S5EyM/YLebg0EX0t8iqnWZX6JMr6Oa7dzmV0KdJBymxRY0o/
+         VhepH9/MYXU/VPVoM4mzohRBXtl+ecHZgc22ORDk/w8/hrMM+93UYRgXkLOiiNAwlNJ2
+         CNbmoCoRFF/KmeNtyaaiy81d/R81Om+CWFwrWBpYezdUnGWCiOjNPd6TSQNyt/m4YRbd
+         iwYg==
+X-Forwarded-Encrypted: i=1; AJvYcCV72eKRo9Z8wqWxezJT590+By8uj7amMEt1orM/lM88QZmtDAB1GNbQIDD2l9WurGPc7+taYLUN1OOqiZBPGKudVq0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzwf6qohH/NPVqIz9L6M/c1dMxOWKobBriGb2YF/CfNNVJoWji0
+	l8Q2htQ/4BjKvFWqnsEBPUId4JkIDF2QjY2CfIOe7izbPPabDqOHV5BeRgslSBVTOec=
+X-Gm-Gg: ASbGncs7m33MrEfVq/vZb91Fk9J7qgE8Jks+eZS5TV37I2f0WD8fPkeu5pxheTK61gG
+	Q4B10dI2+sfqRHb6UFM8ylWD33kW0HYFk+nidKAifPYgPLHMMHxeQR1qwcWA7oy6g551QhnZkOs
+	ubMMCcgvxzz0h4YFcoPbe9KeGovcPX69HK0MzVTDCdqmFQ8R0eiWgMX4H1IrbiJ/oSL+afaMpq/
+	dZh3fL1HH2GSComPyIBGlKEuBqxMvTdjyPFvYNe4KgUJYsjjmAVT/tYJ37lRppK06AWudgfHUSB
+	K3jjjhtaHR0xNFOnYbWWSRu+BwVC+SifsU9fy6Ua87/Up34=
+X-Google-Smtp-Source: AGHT+IE/ytiwQTQqDjKBKn/luh+g5/cfEL1pQKdZeeJtRvFqy5JaffvCEnw/tVJaBrXBsyOabJJlEQ==
+X-Received: by 2002:a05:6e02:17cc:b0:3d8:1f87:9431 with SMTP id e9e14a558f8ab-3db842e3820mr11103815ab.12.1747333046867;
+        Thu, 15 May 2025 11:17:26 -0700 (PDT)
+Received: from [192.168.1.116] ([96.43.243.2])
+        by smtp.gmail.com with ESMTPSA id e9e14a558f8ab-3db843cfa4asm722965ab.8.2025.05.15.11.17.25
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 15 May 2025 11:17:25 -0700 (PDT)
+Message-ID: <d5372cf5-ed0b-4db2-8b31-5fd4c7967377@kernel.dk>
+Date: Thu, 15 May 2025 12:17:24 -0600
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250515121121.2332905-1-jolsa@kernel.org> <20250515121121.2332905-16-jolsa@kernel.org>
-In-Reply-To: <20250515121121.2332905-16-jolsa@kernel.org>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Thu, 15 May 2025 10:31:28 -0700
-X-Gm-Features: AX0GCFsYXtZK-ThNHMZx5N7UZfuuIZHTCObzi1QJtMdvlRR1bBbVItHq81V6p8c
-Message-ID: <CAEf4Bza3cd5cMRvouUiVNrt5MRU4Nhpo7i0KEy1Gm5DTgOFszw@mail.gmail.com>
-Subject: Re: [PATCHv2 perf/core 15/22] selftests/bpf: Add hit/attach/detach
- race optimized uprobe test
-To: Jiri Olsa <jolsa@kernel.org>
-Cc: Oleg Nesterov <oleg@redhat.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, x86@kernel.org, 
-	Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>, 
-	John Fastabend <john.fastabend@gmail.com>, Hao Luo <haoluo@google.com>, 
-	Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Alan Maguire <alan.maguire@oracle.com>, David Laight <David.Laight@aculab.com>, 
-	=?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas@t-8ch.de>, 
-	Ingo Molnar <mingo@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/4] relayfs: support a counter tracking if per-cpu
+ buffers is full
+To: Jason Xing <kerneljasonxing@gmail.com>, rostedt@goodmis.org,
+ mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
+ akpm@linux-foundation.org
+Cc: linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, Jason Xing <kernelxing@tencent.com>,
+ Yushan Zhou <katrinzhou@tencent.com>
+References: <20250515061643.31472-1-kerneljasonxing@gmail.com>
+ <20250515061643.31472-2-kerneljasonxing@gmail.com>
+Content-Language: en-US
+From: Jens Axboe <axboe@kernel.dk>
+In-Reply-To: <20250515061643.31472-2-kerneljasonxing@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, May 15, 2025 at 5:15=E2=80=AFAM Jiri Olsa <jolsa@kernel.org> wrote:
->
-> Adding test that makes sure parallel execution of the uprobe and
-> attach/detach of optimized uprobe on it works properly.
->
-> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-> ---
->  .../selftests/bpf/prog_tests/uprobe_syscall.c | 94 +++++++++++++++++++
->  1 file changed, 94 insertions(+)
->
-> diff --git a/tools/testing/selftests/bpf/prog_tests/uprobe_syscall.c b/to=
-ols/testing/selftests/bpf/prog_tests/uprobe_syscall.c
-> index b9152ca8cdf5..a83abbe91b01 100644
-> --- a/tools/testing/selftests/bpf/prog_tests/uprobe_syscall.c
-> +++ b/tools/testing/selftests/bpf/prog_tests/uprobe_syscall.c
-> @@ -15,6 +15,7 @@
->  #include <asm/prctl.h>
->  #include "uprobe_syscall.skel.h"
->  #include "uprobe_syscall_executed.skel.h"
-> +#include "bpf/libbpf_internal.h"
->
->  #define USDT_NOP .byte 0x0f, 0x1f, 0x44, 0x00, 0x00
->  #include "usdt.h"
-> @@ -634,6 +635,97 @@ static void test_uretprobe_shadow_stack(void)
->         ARCH_PRCTL(ARCH_SHSTK_DISABLE, ARCH_SHSTK_SHSTK);
->  }
->
-> +static volatile bool race_stop;
-> +
-> +static USDT_DEFINE_SEMA(race);
-> +
-> +static void *worker_trigger(void *arg)
-> +{
-> +       unsigned long rounds =3D 0;
-> +
-> +       while (!race_stop) {
-> +               uprobe_test();
-> +               rounds++;
-> +       }
-> +
-> +       printf("tid %d trigger rounds: %lu\n", gettid(), rounds);
-> +       return NULL;
-> +}
-> +
-> +static void *worker_attach(void *arg)
-> +{
-> +       LIBBPF_OPTS(bpf_uprobe_opts, opts);
-> +       struct uprobe_syscall_executed *skel;
-> +       unsigned long rounds =3D 0, offset;
-> +       const char *sema[2] =3D {
-> +               __stringify(USDT_SEMA(race)),
-> +               NULL,
-> +       };
-> +       unsigned long *ref;
-> +       int err;
-> +
-> +       offset =3D get_uprobe_offset(&uprobe_test);
-> +       if (!ASSERT_GE(offset, 0, "get_uprobe_offset"))
-> +               return NULL;
-> +
-> +       err =3D elf_resolve_syms_offsets("/proc/self/exe", 1, (const char=
- **) &sema, &ref, STT_OBJECT);
-> +       if (!ASSERT_OK(err, "elf_resolve_syms_offsets_sema"))
-> +               return NULL;
-> +
-> +       opts.ref_ctr_offset =3D *ref;
-> +
-> +       skel =3D uprobe_syscall_executed__open_and_load();
-> +       if (!ASSERT_OK_PTR(skel, "uprobe_syscall_executed__open_and_load"=
-))
-> +               return NULL;
-> +
-> +       while (!race_stop) {
-> +               skel->links.test_uprobe =3D bpf_program__attach_uprobe_op=
-ts(skel->progs.test_uprobe,
-> +                                       0, "/proc/self/exe", offset, &opt=
-s);
-> +               if (!ASSERT_OK_PTR(skel->links.test_uprobe, "bpf_program_=
-_attach_uprobe_opts"))
-> +                       break;
-> +
-> +               bpf_link__destroy(skel->links.test_uprobe);
-> +               skel->links.test_uprobe =3D NULL;
-> +               rounds++;
-> +       }
-> +
-> +       printf("tid %d attach rounds: %lu hits: %d\n", gettid(), rounds, =
-skel->bss->executed);
-> +       uprobe_syscall_executed__destroy(skel);
-> +       free(ref);
-> +       return NULL;
-> +}
-> +
-> +static void test_uprobe_race(void)
-> +{
-> +       int err, i, nr_threads;
-> +       pthread_t *threads;
-> +
-> +       nr_threads =3D libbpf_num_possible_cpus();
-> +       if (!ASSERT_GT(nr_threads, 0, "libbpf_num_possible_cpus"))
-> +               return;
-> +       nr_threads =3D max(2, nr_threads);
-> +
-> +       threads =3D malloc(sizeof(*threads) * nr_threads);
+Looks fine:
 
-leaking this? maybe just use `pthread_t thread[nr_threads];`? or alloca()?
+Reviewed-by: Jens Axboe <axboe@kernel.dk>
 
-> +       if (!ASSERT_OK_PTR(threads, "malloc"))
-> +               return;
-> +
-> +       for (i =3D 0; i < nr_threads; i++) {
-> +               err =3D pthread_create(&threads[i], NULL, i % 2 ? worker_=
-trigger : worker_attach,
-> +                                    NULL);
-> +               if (!ASSERT_OK(err, "pthread_create"))
-> +                       goto cleanup;
-> +       }
-> +
-> +       sleep(4);
+-- 
+Jens Axboe
 
-4 seconds... can we make it much shorter and allow to define the
-actual runtime with envvar? So for thorough testing you'll define
-something multi-second, but once things land and settle we can run it
-for 100ms at most and not slow down CI significantly? All these slow
-tests do add up :(
-
-> +
-> +cleanup:
-> +       race_stop =3D true;
-> +       for (nr_threads =3D i, i =3D 0; i < nr_threads; i++)
-> +               pthread_join(threads[i], NULL);
-> +
-> +       ASSERT_FALSE(USDT_SEMA_IS_ACTIVE(race), "race_semaphore");
-> +}
-> +
->  static void __test_uprobe_syscall(void)
->  {
->         if (test__start_subtest("uretprobe_regs_equal"))
-> @@ -652,6 +744,8 @@ static void __test_uprobe_syscall(void)
->                 test_uprobe_session();
->         if (test__start_subtest("uprobe_usdt"))
->                 test_uprobe_usdt();
-> +       if (test__start_subtest("uprobe_race"))
-> +               test_uprobe_race();
->  }
->  #else
->  static void __test_uprobe_syscall(void)
-> --
-> 2.49.0
->
