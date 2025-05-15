@@ -1,104 +1,107 @@
-Received: from out30-98.freemail.mail.aliyun.com (out30-98.freemail.mail.aliyun.com [115.124.30.98])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f179.google.com (mail-pg1-f179.google.com [209.85.215.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8B1610E5;
-	Thu, 15 May 2025 05:56:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.98
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D20D718C02E;
+	Thu, 15 May 2025 06:17:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747288565; cv=none; b=c+ZTgHRELHxYoVsYh1L1fyh/68jIcwoEmFgW/ap+n25Qj8a2Qsbo40MDrgw07ZsqXVWMnSplZAK9tVqAXRtjJLyc98oKKATHcXdPmOVcNhTO4HKYIcPW0fsUeGKq4kOIBs2TKmTC4mMRkSBqWHFmr4R/fDau7GepMGRUiUdSgo8=
+	t=1747289865; cv=none; b=MrhvGepRlvai7vGuagdWmR4TBCBZO8zdTYTXZVpN1sxMD50H4sp+gOZJFZRd1rgvlyNB9aKGJLCm9c50AQ6HS8telqVUP8KG8j72dT6MfCsSKMqVeYFk2dIfAp8WBlPTYF3pTD0Po4nd2rxR65i0SV3d7aVPBY7ryepsng4l9Gg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747288565; c=relaxed/simple;
-	bh=uO/Yx379nUrryskwAKLlWmoga7rlHW/DXohFs+M4Tz0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=h6b/xo1gwI4lsR0o9kLhSShZIQxUpfISm4FS2V8BDXVOSoHQxdIWGiNS/V1yGFulheVWSrTR6/o0PsUQ3FBb9iF8HZ5xKuGCbNHT0F0jlpCVuICLJvxcnNVJGqa98VG7lHFaI4AONhJNGo5S2ybMMfl7xkeFasm5vub4uKXJOYs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=e09ETwba; arc=none smtp.client-ip=115.124.30.98
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1747289865; c=relaxed/simple;
+	bh=oru/zjh4HWQQQVjgjm5hZII0Yl/eTwNGeswMe2zOaG0=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=QCfJtQlA9ihXi6ceuhActQesdviAJPXB4JQQEBsobBENFG7hfibaqu2ey/XWWe/p0QR9a9uQhLunKHZKjgGLeSDk0VjKbfK5/pX/mP2Dfh+ElatQsttWs0frix/20Pt+Z+kkKvPu2l6zrM7gO9F/TjRKWg2WLUaTWKUaVy8t8D4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bx6YLr8G; arc=none smtp.client-ip=209.85.215.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="e09ETwba"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1747288559; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=HILIMbJqqtRZliu8YocTP5oOqJzv4jTqKfUw91ehmtU=;
-	b=e09ETwbaOWeFDwQGydbdKZl++Gw0ZWECNk7f4POiea/AA37wt7MWOLxL/Jscln4n7Y9W6TnVcSjEfjUWW44Cnek8PLB+8PrQpxPZ6xiqTyKWpQBvzz6QNBH28oPeeS+ChGY9gOdFVo/PWnsQNkvcAxJd39FS0GeQWlPAreqrxSg=
-Received: from 30.74.144.114(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0WapcxTY_1747288232 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Thu, 15 May 2025 13:50:34 +0800
-Message-ID: <4e00b5df-e9ce-40fa-8da0-9c66fe18bfd7@linux.alibaba.com>
-Date: Thu, 15 May 2025 13:50:32 +0800
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bx6YLr8G"
+Received: by mail-pg1-f179.google.com with SMTP id 41be03b00d2f7-b13e0471a2dso285682a12.2;
+        Wed, 14 May 2025 23:17:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747289863; x=1747894663; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=hubB3bq5hrgLVSF8PoDBX4VrowZwZMhu6qQo8MKJuAA=;
+        b=bx6YLr8GbrKYX8N+26a/RctPWo5g6LFsVEEVgjhenNHK9kf5kwFlZWxKimXV5Aku9X
+         JcwW+tyYW5rwrbr2eyKf1+Xtp/6OL9stj0fO1R7cmIMgUMkXSjgPnh9jdn6m5PClXVZi
+         +igRxbr7cJDLKYuz19nKKqzT3SLKIPHf2QzqZ+IOgkXfb4z1X6iKul1KugnuRyZcv+zz
+         e7zTvp6DuOJd7ngDVSq2/hgNe+NBB7kCi995Pig1KvOa2v5eV4X8cbH1MxTK3Fuul0b+
+         xdiSKfbL3c9WkBMfSNZQhK7Kuo/8yfcV5WhHp1EAKA2FX3DX9xCksMK//cdLzofkRUPr
+         0p2Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747289863; x=1747894663;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=hubB3bq5hrgLVSF8PoDBX4VrowZwZMhu6qQo8MKJuAA=;
+        b=Korh+bvt8lJQRAw/o7GD3OpGtpMLdpz+3dfIttXMdV/2UC/KuxUi9b6XHddrwVZjeY
+         ChuFVhxns3a7kPmZ2iQz8dT5TDP69nHkpY6ekTb/j+Gsyl0mskpW0osyH46s9hFSdMrJ
+         nhs28XFtAOiT+q44hl6Nc1CYdNpZ4tx8RKk0Knlhr83xsEweAJhUJQHcwSNq1LeSqkLR
+         sHw9JZoQjCeBHTfMwZBR1U8rHSnmICg+BCicsA73PC9qdqgx0BZaOfFnsTffY+nzGCa7
+         4ocfBSNOScPqTBamcLIeQrofJ+G8VEzjvKvd60vYGeHOnmQg62YMT2Vfu1YfpkrOuqSK
+         wYuw==
+X-Forwarded-Encrypted: i=1; AJvYcCX0G06Yn9SUp3QPIGIQiHkC0OnldPMb8kiZbxVkKV/R1fWE+aGP/DYsZJK+UbPdr1GMn5Hc4HB0nX+LcQ==@vger.kernel.org, AJvYcCXo7qMmeoIiFYpVYT8C+KpRsmPqhnnQ/c7rTQGSOkoTsOqQts2+yL/262YpXo8prULglR5fNCB8GD0UCOoDghD52xRi@vger.kernel.org
+X-Gm-Message-State: AOJu0YxjwiOiKeprAkgr2Up5n+iaZfpAlzhEI8htsk+d/AAjCoMpmrAW
+	zHJBUrhwnTRWCDdLJZrffK4EQzYlbDkgd8TJOiULp4BWG9AbCT7e
+X-Gm-Gg: ASbGnctmqet+STCXihzV6J1xxDeomm/dBdnTk2nmlgDbgA7coiH1w6wWlKRL3nEN7/b
+	kAz3PEzPuEpsrtp8Kpxr6ZXBcKwmbNDRGVCLtaaXDAgUsfdIKZDDELK1zqoikKytIWn6CT/yAwr
+	inchVkLLS9pIKPXGbx4IVIGva1TtkvylS8cl5Znt0u1Se+YILVlYyLxDJeGqyNsm2ihGaHnVcHT
+	umr11Wj198c8ZiKrPRCTSvfd5yxK9tp4mNcBPgChLVgONoKuQn/OPUdfF9JgvhIGNXy29AvmLwa
+	G7Dj+bVrDV5IArx+92TEp9XNIsbH3QNP+0JwIyr0+0V4uwAZ8SukCqbTF5mczD1qZhEl61Gjtwg
+	tkqhmoUhSME10UOBtfueMcAWEBG6MiKdKNQ==
+X-Google-Smtp-Source: AGHT+IGlYnQb7Enm3HGEax4wj7K5Yq5K1lhUoJJzjXGCVjDzOtMUonq2TACY0cPT/bA97WY+fMSi6A==
+X-Received: by 2002:a17:903:228f:b0:21f:85d0:828 with SMTP id d9443c01a7336-231b5eba1e0mr21553355ad.41.1747289862974;
+        Wed, 14 May 2025 23:17:42 -0700 (PDT)
+Received: from KERNELXING-MB0.tencent.com ([43.132.141.25])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22fc8273d93sm109242375ad.150.2025.05.14.23.17.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 14 May 2025 23:17:42 -0700 (PDT)
+From: Jason Xing <kerneljasonxing@gmail.com>
+To: axboe@kernel.dk,
+	rostedt@goodmis.org,
+	mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com,
+	akpm@linux-foundation.org
+Cc: linux-kernel@vger.kernel.org,
+	linux-block@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	Jason Xing <kernelxing@tencent.com>
+Subject: [PATCH v2 0/4] relayfs: misc changes
+Date: Thu, 15 May 2025 14:16:39 +0800
+Message-Id: <20250515061643.31472-1-kerneljasonxing@gmail.com>
+X-Mailer: git-send-email 2.33.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 02/12] introduce khugepaged_collapse_single_pmd to
- unify khugepaged and madvise_collapse
-To: Nico Pache <npache@redhat.com>, linux-mm@kvack.org,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
-Cc: david@redhat.com, ziy@nvidia.com, lorenzo.stoakes@oracle.com,
- Liam.Howlett@oracle.com, ryan.roberts@arm.com, dev.jain@arm.com,
- corbet@lwn.net, rostedt@goodmis.org, mhiramat@kernel.org,
- mathieu.desnoyers@efficios.com, akpm@linux-foundation.org,
- baohua@kernel.org, willy@infradead.org, peterx@redhat.com,
- wangkefeng.wang@huawei.com, usamaarif642@gmail.com, sunnanyong@huawei.com,
- vishal.moola@gmail.com, thomas.hellstrom@linux.intel.com,
- yang@os.amperecomputing.com, kirill.shutemov@linux.intel.com,
- aarcange@redhat.com, raquini@redhat.com, anshuman.khandual@arm.com,
- catalin.marinas@arm.com, tiwai@suse.de, will@kernel.org,
- dave.hansen@linux.intel.com, jack@suse.cz, cl@gentwo.org,
- jglisse@google.com, surenb@google.com, zokeefe@google.com,
- hannes@cmpxchg.org, rientjes@google.com, mhocko@suse.com,
- rdunlap@infradead.org
-References: <20250515032226.128900-1-npache@redhat.com>
- <20250515032226.128900-3-npache@redhat.com>
-From: Baolin Wang <baolin.wang@linux.alibaba.com>
-In-Reply-To: <20250515032226.128900-3-npache@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
+From: Jason Xing <kernelxing@tencent.com>
 
+The series mostly focuss on the error counters which helps every user
+debug their own kernel module. More patches making the relayfs more
+robust and functional are around the corner :)
 
-On 2025/5/15 11:22, Nico Pache wrote:
-> The khugepaged daemon and madvise_collapse have two different
-> implementations that do almost the same thing.
-> 
-> Create khugepaged_collapse_single_pmd to increase code
-> reuse and create an entry point for future khugepaged changes.
-> 
-> Refactor madvise_collapse and khugepaged_scan_mm_slot to use
-> the new khugepaged_collapse_single_pmd function.
-> 
-> Reviewed-by: Baolin Wang <baolin.wang@linux.alibaba.com>
-> Signed-off-by: Nico Pache <npache@redhat.com>
-> ---
->   mm/khugepaged.c | 96 +++++++++++++++++++++++++------------------------
->   1 file changed, 49 insertions(+), 47 deletions(-)
-> 
-> diff --git a/mm/khugepaged.c b/mm/khugepaged.c
-> index 806bcd8c5185..5457571d505a 100644
-> --- a/mm/khugepaged.c
-> +++ b/mm/khugepaged.c
-> @@ -2353,6 +2353,48 @@ static int khugepaged_scan_file(struct mm_struct *mm, unsigned long addr,
->   	return result;
->   }
->   
-> +/*
-> + * Try to collapse a single PMD starting at a PMD aligned addr, and return
-> + * the results.
-> + */
-> +static int khugepaged_collapse_single_pmd(unsigned long addr,
-> +				   struct vm_area_struct *vma, bool *mmap_locked,
-> +				   struct collapse_control *cc)
-> +{
-> +	int result = SCAN_FAIL;
-> +	struct mm_struct *mm = vma->vm_mm;
-> +
-> +	if (IS_ENABLED(CONFIG_SHMEM) && !vma_is_anonymous(vma)) {
+---
+Note: this series is made on top of this cleanup[1] and unmerged commit[1]
+[1]: https://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm.git/log/?h=mm-nonmm-unstable
+[2]: https://lore.kernel.org/all/20250507134225.63248-1-kerneljasonxing@gmail.com/
 
-I've removed the CONFIG_SHMEM dependency[1], please do not add it again.
+*** BLURB HERE ***
 
-[1] 
-https://lore.kernel.org/all/ce5c2314e0368cf34bda26f9bacf01c982d4da17.1747119309.git.baolin.wang@linux.alibaba.com/
+Jason Xing (4):
+  relayfs: support a counter tracking if per-cpu buffers is full
+  relayfs: introduce dump of relayfs statistics function
+  blktrace: use rbuf->stats.full as a drop indicator in relayfs
+  relayfs: support a counter tracking if data is too big to write
+
+ include/linux/relay.h   | 19 ++++++++++++++-
+ kernel/relay.c          | 51 +++++++++++++++++++++++++++++++++++------
+ kernel/trace/blktrace.c | 22 ++----------------
+ 3 files changed, 64 insertions(+), 28 deletions(-)
+
+-- 
+2.43.5
+
