@@ -1,195 +1,223 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7DC521C16D;
-	Wed, 14 May 2025 23:06:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C9908F66;
+	Thu, 15 May 2025 00:42:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747263991; cv=none; b=GCOhmnGC79AI5wZWmj1qCjrdiCyA8P6G4g7olUzLCkdDmLSpLmajpEA+G7Z0yTrue7A525o9ZfYXhyr0qZRRN1qJP7LXntPkjvzWh9A+Ogtsz4Prmhj7azeO+Ss+DGYC6fj5h68MBEh+itgdf3oTNYrDdVuEb4zp8tr7kZOPEJY=
+	t=1747269754; cv=none; b=csRAkAZ+iCX6h57LM468nnGQfn1Ao2EKlwa6ukb8COldktrGmmMTbtIWtMQfe6rNIT0IqoWH6M2gYYWwvoEc2ToN23BXRVvuwuMui/55rq2rU5/b+p1nwwL1gLztVKCdbY92oQllcjh7Qf1NDUdKu+rNs45F85DI5Kprz/BrhYk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747263991; c=relaxed/simple;
-	bh=A01VC/XGBvtR4zSIg/lwMcnJ/66ILpRzcCVrLYWZ/+o=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DYynQ5hoxxuywPQuHk+le3avjL9CfN+ZbdzKQqJ0zl+nvC5LFihLXb+xFWPwyLXPPfREJP7QKLP7sCy+9DYA9vjMkprY4YbH7dyeDoFA7CemC2LJYMXKhXuwe48DWfoE6Bva5Ygw2P3YpLNcwaFg8pWUKOc+z3964VjccwBOd/w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SE10z1FC; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1747269754; c=relaxed/simple;
+	bh=Jj9rZa3izoGXcM992ohp3v3M45235wdqTvdJRYPXBm8=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=YjTrlPwK940WueCBuOznWOvE8fQQEdjtCCAAJ31ZoMcDvVTsp30xG0zlasQ7BaTEBmoIF68eIAxZx4D44I1ENcZHF6BnKSva71dxN8PhPcy0rgtW7dwy2sryFY8Ajl7wq1Qdx5EOFq5FNMHRTcZrezbbspsf4J4cYsDHlIeQzu8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Srbfwyos; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SE10z1FC"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747263989; x=1778799989;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=A01VC/XGBvtR4zSIg/lwMcnJ/66ILpRzcCVrLYWZ/+o=;
-  b=SE10z1FCJMgWeBjBLaeVNUFIB8ANdzlm5we0uvLxhGT2glq6JtXD0Pje
-   r8rFrD54x7g7wc/YNLN8Jx+aAzANtmVjy6qPPd5wtkGZf8Bv3mLEC04UY
-   +EREnFeqHjZ63a3soFyqydP+W5CQDvX3S2zZZg0/73FG1/gprTsz12v6W
-   xg+tsSolvPwNG5bcm35O6dAdxVpyX5/juGceaBBqgAkXRmxvPxQe+fUrT
-   +EdXJ0CGD2R1L7OAKqIgNBUo+Ym2ADD1g4cEbVZOVdJS2FznS0lxXfU33
-   bIdDriqr9+tqP12Yv+cummwxVr6lxL0r2zKV7vjMnrGfUTVWmtF66qHuw
-   g==;
-X-CSE-ConnectionGUID: Dj2mYHk3SfeLNXzp9pQMXQ==
-X-CSE-MsgGUID: muyK4KjtTT2eidN7VY9dQg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11433"; a="66589842"
-X-IronPort-AV: E=Sophos;i="6.15,289,1739865600"; 
-   d="scan'208";a="66589842"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 May 2025 16:06:28 -0700
-X-CSE-ConnectionGUID: zCjpNI4pQ3iF8fFmUIWZOw==
-X-CSE-MsgGUID: vN+1BPM1SdeXQi1vBu2dCg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,289,1739865600"; 
-   d="scan'208";a="137907482"
-Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
-  by orviesa009.jf.intel.com with ESMTP; 14 May 2025 16:06:26 -0700
-Received: from kbuild by 1992f890471c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uFLB9-000Hfb-2Z;
-	Wed, 14 May 2025 23:06:23 +0000
-Date: Thu, 15 May 2025 07:05:35 +0800
-From: kernel test robot <lkp@intel.com>
-To: Kassey Li <quic_yingangl@quicinc.com>, rostedt@goodmis.org,
-	James.Bottomley@hansenpartnership.com, martin.petersen@oracle.com,
-	mathieu.desnoyers@efficios.com, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, linux-scsi@vger.kernel.org
-Cc: oe-kbuild-all@lists.linux.dev, quic_yingangl@quicinc.com
-Subject: Re: [PATCH v2] scsi: trace: change the rtn log in string
-Message-ID: <202505150658.uk9oRnKr-lkp@intel.com>
-References: <20250514074456.450006-1-quic_yingangl@quicinc.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Srbfwyos"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 628DAC4CEE3;
+	Thu, 15 May 2025 00:42:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747269754;
+	bh=Jj9rZa3izoGXcM992ohp3v3M45235wdqTvdJRYPXBm8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=Srbfwyos5e2kIDRWuI3DZ/j4W49UbwYtkFzssehg+9B8+Mu3CYSiXwPhGmddd65HU
+	 zLXCaXCkP/hpy0ItDRgYyP81COjgeYSaUo6IeeQzTNnccIZsQFl5PD9xRnP/5roHVs
+	 3ebgLaWqpRtg3uFsqm3Xe5VFchXmMLMwb13VSmHZ1bKc6Mz11RZOxOTCmvBs83Xm1L
+	 0zAmlsVFudy1FiKo+V3rU5ew57rTkLvc8nIL1ZmDDkxmsje2CiYrhK5Bv+a9OHVWiS
+	 O047PGlVUcWXZkZ+UA5WpT6oBIj0ypnFV8Fkzun3uQM7qqPxK4n78HWXPf2aCr7I7E
+	 GX7UQHgs4O5EA==
+Date: Thu, 15 May 2025 09:42:30 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH] tracing: ring_buffer: Rewind persistent ring buffer
+ when reboot
+Message-Id: <20250515094230.5c84ca613bd3ebdc9063e13e@kernel.org>
+In-Reply-To: <20250514090050.52db97ed@batman.local.home>
+References: <174709742769.1964496.18203163435305117893.stgit@mhiramat.tok.corp.google.com>
+	<20250513203237.0e7ff662@gandalf.local.home>
+	<20250514150059.6edf09bd72862ca175b64c98@kernel.org>
+	<20250514090050.52db97ed@batman.local.home>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250514074456.450006-1-quic_yingangl@quicinc.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Hi Kassey,
+On Wed, 14 May 2025 09:00:50 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-kernel test robot noticed the following build errors:
+> On Wed, 14 May 2025 15:00:59 +0900
+> Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
+> > > 
+> > > Is that a problem? I'm thinking that the data in the buffer should not be
+> > > used.  
+> > 
+> > Yes, even if we read (dump) the previous boot data, the data is
+> > in the buffer. Thus the kernel rebooted before reusing the buffer
+> > the dumped pages are recovered again. Unless comparing with the
+> > previous dump data, we can not know this data is older boot or not.
+> > Anyway, user can avoid this issue by clearing the trace buffer
+> > explicitly.
+> 
+> What we could do, and I don't think this would be too hard, is once the
+> buffer is empty and it's still LAST_BOOT buffer, we simply clear it in
+> the kernel.
 
-[auto build test ERROR on trace/for-next]
-[also build test ERROR on jejb-scsi/for-next mkp-scsi/for-next linus/master v6.15-rc6 next-20250514]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+Ah, that sounds good :-D
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Kassey-Li/scsi-trace-change-the-rtn-log-in-string/20250514-155034
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace for-next
-patch link:    https://lore.kernel.org/r/20250514074456.450006-1-quic_yingangl%40quicinc.com
-patch subject: [PATCH v2] scsi: trace: change the rtn log in string
-config: i386-buildonly-randconfig-001-20250515 (https://download.01.org/0day-ci/archive/20250515/202505150658.uk9oRnKr-lkp@intel.com/config)
-compiler: gcc-11 (Debian 11.3.0-12) 11.3.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250515/202505150658.uk9oRnKr-lkp@intel.com/reproduce)
+> 
+> That way after a reboot, a read of trace_pipe that reads the entire
+> buffer will end up resetting the buffer, and I think that will solve
+> this problem.
+> 
+> 
+> 
+> > > +
+> > > +		/* Stop rewind if the page is invalid. */
+> > > +		ret = rb_validate_buffer(head_page->page, cpu_buffer->cpu);
+> > > +		if (ret < 0)
+> > > +			break;
+> > > +
+> > > +		/* Recover the number of entries. */
+> > > +		local_set(&head_page->entries, ret);
+> > > +		if (ret)
+> > > +			local_inc(&cpu_buffer->pages_touched);
+> > > +		entries += ret;
+> > > +		entry_bytes += rb_page_commit(head_page);  
+> > 
+> > If we validate the pages again later (because fixing head_page),
+> > we can skip this part.
+> 
+> The validator takes a bit of time. I would rather not do another loop
+> if we don't have to. If this is duplicate code, lets just make a static
+> inline helper function that does it and use that in both places.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202505150658.uk9oRnKr-lkp@intel.com/
+OK, I think we can just restart validating unread part from
+orig_head.
 
-All errors (new ones prefixed by >>):
+> 
+> > 
+> > > +	}
+> > > +
+> > > +	/* The last rewind page must be skipped. */
+> > > +	if (head_page != orig_head)
+> > > +		rb_inc_page(&head_page);
+> > > +
+> > > +	if (head_page != orig_head) {  
+> > 
+> > Ah, I forgot this part (setup new reader_page)
+> > 
+> > > +		struct buffer_page *bpage = orig_head;
+> > > +
+> > > +		rb_dec_page(&bpage);
+> > > +		/*
+> > > +		 * Move the reader page between the orig_head and the page
+> > > +		 * before it.
+> > > +		 */  
+> > -----
+> > > +		cpu_buffer->reader_page->list.next = &orig_head->list;
+> > > +		cpu_buffer->reader_page->list.prev = orig_head->list.prev;
+> > > +		orig_head->list.prev = &cpu_buffer->reader_page->list;
+> > > +
+> > > +		bpage->list.next = &cpu_buffer->reader_page->list;  
+> > -----
+> > These seems the same as (because head_page->list.prev->next encodes
+> > flags, but we don't read that pointer.);
+> > 
+> > 		list_insert(&orig_head->list, &cpu_buffer->reader_page->list);
+> 
+> I thought about this, but because the pointers are used to encode
+> flags, I try to avoid using the list_*() functions all together on
+> these. Just to remind everyone that these are "special" lists.
+> 
+> I prefer it open coded because that way I can see exactly what it is
+> doing. Note, this is not just assigning pointers, it is also clearing
+> flags in the process.
 
-   In file included from include/trace/define_trace.h:119,
-                    from include/trace/events/scsi.h:355,
-                    from drivers/scsi/scsi.c:73:
-   include/trace/events/scsi.h: In function 'trace_raw_output_scsi_dispatch_cmd_error':
->> include/trace/events/scsi.h:250:36: error: 'rtn' undeclared (first use in this function)
-     250 |                   __print_symbolic(rtn, { SCSI_MLQUEUE_HOST_BUSY, "HOST_BUSY" },
-         |                                    ^~~
-   include/trace/trace_events.h:219:34: note: in definition of macro 'DECLARE_EVENT_CLASS'
-     219 |         trace_event_printf(iter, print);                                \
-         |                                  ^~~~~
-   include/trace/trace_events.h:45:30: note: in expansion of macro 'PARAMS'
-      45 |                              PARAMS(print));                   \
-         |                              ^~~~~~
-   include/trace/events/scsi.h:203:1: note: in expansion of macro 'TRACE_EVENT'
-     203 | TRACE_EVENT(scsi_dispatch_cmd_error,
-         | ^~~~~~~~~~~
-   include/trace/events/scsi.h:241:9: note: in expansion of macro 'TP_printk'
-     241 |         TP_printk("host_no=%u channel=%u id=%u lun=%u data_sgl=%u prot_sgl=%u" \
-         |         ^~~~~~~~~
-   include/trace/events/scsi.h:250:19: note: in expansion of macro '__print_symbolic'
-     250 |                   __print_symbolic(rtn, { SCSI_MLQUEUE_HOST_BUSY, "HOST_BUSY" },
-         |                   ^~~~~~~~~~~~~~~~
-   include/trace/events/scsi.h:250:36: note: each undeclared identifier is reported only once for each function it appears in
-     250 |                   __print_symbolic(rtn, { SCSI_MLQUEUE_HOST_BUSY, "HOST_BUSY" },
-         |                                    ^~~
-   include/trace/trace_events.h:219:34: note: in definition of macro 'DECLARE_EVENT_CLASS'
-     219 |         trace_event_printf(iter, print);                                \
-         |                                  ^~~~~
-   include/trace/trace_events.h:45:30: note: in expansion of macro 'PARAMS'
-      45 |                              PARAMS(print));                   \
-         |                              ^~~~~~
-   include/trace/events/scsi.h:203:1: note: in expansion of macro 'TRACE_EVENT'
-     203 | TRACE_EVENT(scsi_dispatch_cmd_error,
-         | ^~~~~~~~~~~
-   include/trace/events/scsi.h:241:9: note: in expansion of macro 'TP_printk'
-     241 |         TP_printk("host_no=%u channel=%u id=%u lun=%u data_sgl=%u prot_sgl=%u" \
-         |         ^~~~~~~~~
-   include/trace/events/scsi.h:250:19: note: in expansion of macro '__print_symbolic'
-     250 |                   __print_symbolic(rtn, { SCSI_MLQUEUE_HOST_BUSY, "HOST_BUSY" },
-         |                   ^~~~~~~~~~~~~~~~
+OK. And I found list_insert() is not in the kernel.
+(tools/firmware/list.h has that)
 
+> 
+> We could add a comment that states something like:
+> 
+> 	/*
+> 	 * This is the same as:
+> 	 *   list_insert(&orig_head->list, &cpu_buffer->read_page->list);
+> 	 * but as it is also clearing flags, its open coded so that
+> 	 * there's no chance that list_insert() gets optimized where
+> 	 * it doesn't do the extra work that this is doing.
+> 	 */
+> 
+> ?
 
-vim +/rtn +250 include/trace/events/scsi.h
+Yeah, anyway I will leave a comment.
 
-   204	
-   205		TP_PROTO(struct scsi_cmnd *cmd, int rtn),
-   206	
-   207		TP_ARGS(cmd, rtn),
-   208	
-   209		TP_STRUCT__entry(
-   210			__field( unsigned int,	host_no	)
-   211			__field( unsigned int,	channel	)
-   212			__field( unsigned int,	id	)
-   213			__field( unsigned int,	lun	)
-   214			__field( int,		rtn	)
-   215			__field( unsigned int,	opcode	)
-   216			__field( unsigned int,	cmd_len )
-   217			__field( int,	driver_tag)
-   218			__field( int,	scheduler_tag)
-   219			__field( unsigned int,	data_sglen )
-   220			__field( unsigned int,	prot_sglen )
-   221			__field( unsigned char,	prot_op )
-   222			__dynamic_array(unsigned char,	cmnd, cmd->cmd_len)
-   223		),
-   224	
-   225		TP_fast_assign(
-   226			__entry->host_no	= cmd->device->host->host_no;
-   227			__entry->channel	= cmd->device->channel;
-   228			__entry->id		= cmd->device->id;
-   229			__entry->lun		= cmd->device->lun;
-   230			__entry->rtn		= rtn;
-   231			__entry->opcode		= cmd->cmnd[0];
-   232			__entry->cmd_len	= cmd->cmd_len;
-   233			__entry->driver_tag	= scsi_cmd_to_rq(cmd)->tag;
-   234			__entry->scheduler_tag	= scsi_cmd_to_rq(cmd)->internal_tag;
-   235			__entry->data_sglen	= scsi_sg_count(cmd);
-   236			__entry->prot_sglen	= scsi_prot_sg_count(cmd);
-   237			__entry->prot_op	= scsi_get_prot_op(cmd);
-   238			memcpy(__get_dynamic_array(cmnd), cmd->cmnd, cmd->cmd_len);
-   239		),
-   240	
-   241		TP_printk("host_no=%u channel=%u id=%u lun=%u data_sgl=%u prot_sgl=%u" \
-   242			  " prot_op=%s driver_tag=%d scheduler_tag=%d cmnd=(%s %s raw=%s)" \
-   243			  " rtn=%s",
-   244			  __entry->host_no, __entry->channel, __entry->id,
-   245			  __entry->lun, __entry->data_sglen, __entry->prot_sglen,
-   246			  show_prot_op_name(__entry->prot_op), __entry->driver_tag,
-   247			  __entry->scheduler_tag, show_opcode_name(__entry->opcode),
-   248			  __parse_cdb(__get_dynamic_array(cmnd), __entry->cmd_len),
-   249			  __print_hex(__get_dynamic_array(cmnd), __entry->cmd_len),
- > 250			  __print_symbolic(rtn, { SCSI_MLQUEUE_HOST_BUSY, "HOST_BUSY" },
-   251				  { SCSI_MLQUEUE_DEVICE_BUSY, "DEVICE_BUSY" },
-   252				  { SCSI_MLQUEUE_EH_RETRY, "EH_RETRY" },
-   253				  { SCSI_MLQUEUE_TARGET_BUSY, "TARGET_BUSY" })
-   254			  )
-   255	);
-   256	
+Thank you,
+
+> 
+> -- Steve
+> 
+> 
+> > 
+> > > +
+> > > +		/* Make the head_page the new reader page */
+> > > +		cpu_buffer->reader_page = head_page;
+> > > +		bpage = head_page;
+> > > +		rb_inc_page(&head_page);
+> > > +		head_page->list.prev = bpage->list.prev;
+> > > +		rb_dec_page(&bpage);
+> > > +		bpage->list.next = &head_page->list;
+> > > +		rb_set_list_to_head(&bpage->list);
+> > > +
+> > > +		cpu_buffer->head_page = head_page;
+> > > +		meta->head_buffer = (unsigned long)head_page->page;
+> > > +
+> > > +		/* Reset all the indexes */
+> > > +		bpage = cpu_buffer->reader_page;
+> > > +		meta->buffers[0] = rb_meta_subbuf_idx(meta, bpage->page);
+> > > +		bpage->id = 0;
+> > > +
+> > > +		for (i = 0, bpage = head_page; i < meta->nr_subbufs;
+> > > +		     i++, rb_inc_page(&bpage)) {
+> > > +			meta->buffers[i + 1] = rb_meta_subbuf_idx(meta, bpage->page);
+> > > +			bpage->id = i + 1;
+> > > +		}
+> > > +		head_page = orig_head;
+> > > +	}
+> > > +
+> > >  	/* Iterate until finding the commit page */
+> > >  	for (i = 0; i < meta->nr_subbufs + 1; i++, rb_inc_page(&head_page)) {
+> > >  
+> > > @@ -5348,7 +5439,6 @@ rb_get_reader_page(struct ring_buffer_per_cpu *cpu_buffer)
+> > >  	 */
+> > >  	local_set(&cpu_buffer->reader_page->write, 0);
+> > >  	local_set(&cpu_buffer->reader_page->entries, 0);
+> > > -	local_set(&cpu_buffer->reader_page->page->commit, 0);
+> > >  	cpu_buffer->reader_page->real_end = 0;
+> > >  
+> > >   spin:
+> > > @@ -6642,7 +6732,7 @@ int ring_buffer_read_page(struct trace_buffer *buffer,
+> > >  		cpu_buffer->read_bytes += rb_page_size(reader);
+> > >  
+> > >  		/* swap the pages */
+> > > -		rb_init_page(bpage);
+> > > +//		rb_init_page(bpage);
+> > >  		bpage = reader->page;
+> > >  		reader->page = data_page->data;
+> > >  		local_set(&reader->write, 0);  
+> > 
+> > Thank you,
+> > 
+> > 
+> > 
+> 
+
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
