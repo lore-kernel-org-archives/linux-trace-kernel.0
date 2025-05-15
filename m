@@ -1,219 +1,243 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC72B202C5D;
-	Thu, 15 May 2025 11:16:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96057298CCA;
+	Thu, 15 May 2025 12:11:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747307761; cv=none; b=DbrJhtcgRsKgn2MySjn7u8WHXNdqDhXP4MwFt5f4QUZ1Uvpg91Viot6fF6y45l7+Gnzc60dXgEjb9lStYo59trePWpyFZqh4ovXZUfz2IcjCZAh7ek2e8ANC1fRH9CInanW+OqnPZ4SdRdI8UtL6I0vNP7xsIE/dupnV4ojtCWM=
+	t=1747311092; cv=none; b=lH2dTZNcstAfikYc6LNJyiNkDz0mNrRkcMkXnah4HrQ1fvK3rHYDyL/HbXDmEbqFJknPikfyiXYk+X2+fl+FO1ogH6DzDvHwENVZf7UnuwO0mfKbT6Zb6LSHMNHqUquRGokSO/BhTFBhwO5wwglOl61DT+4TWEbcvtcZctjwa/A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747307761; c=relaxed/simple;
-	bh=15KP2pl6dWb1y5/Go7dvJ7kbiOO+tNWUThlBC2YivmE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=SX4vDmQDlzbr/NLFWHK7PabekUeMOgHbc0tZaNigiM9eaeJPZw2dvQt/u4IeI784m2lII7vbZHS8Be8cc9ulNKZ98YqbPOqYASylpeBvqMKWQXD4TE1nTeFyvGXATdNbb7vb7F60D7rh+W8FzMgLzjQNPB5+kuKEk82bPE9BjiA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZyBnSX10; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747311092; c=relaxed/simple;
+	bh=E0HUY4FDne8Z+esO87t2NcbCp36R0DEPWwniB8EtWtk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=CpCAga39z49NJoc0YpRQKC8ZN/PsaJNdPTkJrtDaOzMkbl3maE4nFcwVH37Bx9/lngU3V5OxUw9dIKfcucT9d50yPscm8fCkSUzBm1v3cUpQGasOPlKYtGMKTC0z1S8aXlXnTfLdg0BBCj7I4szCu6tzSEgcjHXHhncegpivmmY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jfqMeAjb; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZyBnSX10"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 99F96C4CEE7;
-	Thu, 15 May 2025 11:15:59 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jfqMeAjb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 03197C4CEE9;
+	Thu, 15 May 2025 12:11:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747307760;
-	bh=15KP2pl6dWb1y5/Go7dvJ7kbiOO+tNWUThlBC2YivmE=;
+	s=k20201202; t=1747311091;
+	bh=E0HUY4FDne8Z+esO87t2NcbCp36R0DEPWwniB8EtWtk=;
 	h=From:To:Cc:Subject:Date:From;
-	b=ZyBnSX10tyblkRxhmOiwlDFQulDd2bDibTSzQPGXi6i3yyH1BYCxHSfHK56elpRJq
-	 GcYJ8YF5ORkfHwgyBccI6P0EJXcg7ADzjGILpz6MTn5k04D6pmAabAMIYfmykukkOB
-	 jZd+tnvB0M6mjcGZ5LKYGAyznOakpmbpE/oIHCWmxK+j0270J619f7aO3hmIogCfIu
-	 QR7Fm29pVfvHGmSn+XTh4jsEoyF2cFfJ2H+F/l+q0DN6a6xCKqa6XRZ5dJu2nDoDGq
-	 mkTDSxQJlIOUzkbBm2jrspv7G0wS1BpCRljPlV5c/KGTfRboNuxR4gSWcDFMxqWYF1
-	 bHovMBag8j1Kw==
-From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	b=jfqMeAjbttWHJSJTloJS3UmgGEbV+alxaFoR6eK9lMKoHre7t2Qod1jBXrHCwiaFB
+	 ngpzpUd+J4Shto9Mocr7JDpFtgQ4FJPjkL+RmnNH85p8qeLE21kozqnh/tY2fZfbR8
+	 tB68q9ZBLYYywwZwR2XAJOYs1D4ob6KcFFzks6BRLu4OFKqNttYrebSfC1k+powMzK
+	 JCyxfgApAjUHMeO7Aw8tDqWZfyuLlHXbXJ0sBjgKnKovpMl3vjtpBIpIG/J0riJbOk
+	 tx5f/17Udvjz+nmii+T31XLwKIjojpf37X5I+vUDpqWyA7YSqq15o1R6wHhn85URZR
+	 4/tV4AfA85FiQ==
+From: Jiri Olsa <jolsa@kernel.org>
+To: Oleg Nesterov <oleg@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Andrii Nakryiko <andrii@kernel.org>
+Cc: Alejandro Colomar <alx@kernel.org>,
+	Eyal Birger <eyal.birger@gmail.com>,
+	kees@kernel.org,
+	bpf@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH v2] tracing: ring_buffer: Rewind persistent ring buffer when reboot
-Date: Thu, 15 May 2025 20:15:56 +0900
-Message-ID:  <174730775661.3893490.10420015749079085314.stgit@mhiramat.tok.corp.google.com>
-X-Mailer: git-send-email 2.49.0.1101.gccaa498523-goog
-User-Agent: StGit/0.19
+	linux-trace-kernel@vger.kernel.org,
+	x86@kernel.org,
+	Song Liu <songliubraving@fb.com>,
+	Yonghong Song <yhs@fb.com>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Hao Luo <haoluo@google.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Alan Maguire <alan.maguire@oracle.com>,
+	David Laight <David.Laight@ACULAB.COM>,
+	=?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <thomas@t-8ch.de>,
+	Ingo Molnar <mingo@kernel.org>
+Subject: [PATCHv2 perf/core 00/22] uprobes: Add support to optimize usdt probes on x86_64
+Date: Thu, 15 May 2025 14:10:57 +0200
+Message-ID: <20250515121121.2332905-1-jolsa@kernel.org>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+hi,
+this patchset adds support to optimize usdt probes on top of 5-byte
+nop instruction.
 
-Rewind persistent ring buffer pages which have been read in the
-previous boot. Those pages are highly possible to be lost before
-writing it to the disk if the previous kernel crashed. In this
-case, the trace data is kept on the persistent ring buffer, but
-it can not be read because its commit size has been reset after
-read.
-This skips clearing the commit size of each sub-buffer and
-recover it after reboot.
+The generic approach (optimize all uprobes) is hard due to emulating
+possible multiple original instructions and its related issues. The
+usdt case, which stores 5-byte nop seems much easier, so starting
+with that.
 
-Note: If you read the previous boot data via trace_pipe, that
-is not accessible in that time. But reboot without clearing (or
-reusing) the read data, the read data is recovered again in the
-next boot.
-Thus, when you read the previous boot data, clear it by
-`echo > trace`.
+The basic idea is to replace breakpoint exception with syscall which
+is faster on x86_64. For more details please see changelog of patch 8.
 
-Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+The run_bench_uprobes.sh benchmark triggers uprobe (on top of different
+original instructions) in a loop and counts how many of those happened
+per second (the unit below is million loops).
+
+There's big speed up if you consider current usdt implementation
+(uprobe-nop) compared to proposed usdt (uprobe-nop5):
+
+current:
+        usermode-count :  152.501 ± 0.012M/s
+        syscall-count  :   14.463 ± 0.062M/s
+-->     uprobe-nop     :    3.160 ± 0.005M/s
+        uprobe-push    :    3.003 ± 0.003M/s
+        uprobe-ret     :    1.100 ± 0.003M/s
+        uprobe-nop5    :    3.132 ± 0.012M/s
+        uretprobe-nop  :    2.103 ± 0.002M/s
+        uretprobe-push :    2.027 ± 0.004M/s
+        uretprobe-ret  :    0.914 ± 0.002M/s
+        uretprobe-nop5 :    2.115 ± 0.002M/s
+
+after the change:
+        usermode-count :  152.343 ± 0.400M/s
+        syscall-count  :   14.851 ± 0.033M/s
+        uprobe-nop     :    3.204 ± 0.005M/s
+        uprobe-push    :    3.040 ± 0.005M/s
+        uprobe-ret     :    1.098 ± 0.003M/s
+-->     uprobe-nop5    :    7.286 ± 0.017M/s
+        uretprobe-nop  :    2.144 ± 0.001M/s
+        uretprobe-push :    2.069 ± 0.002M/s
+        uretprobe-ret  :    0.922 ± 0.000M/s
+        uretprobe-nop5 :    3.487 ± 0.001M/s
+
+I see bit more speed up on Intel (above) compared to AMD. The big nop5
+speed up is partly due to emulating nop5 and partly due to optimization.
+
+The key speed up we do this for is the USDT switch from nop to nop5:
+	uprobe-nop     :    3.160 ± 0.005M/s
+	uprobe-nop5    :    7.286 ± 0.017M/s
+
+
+Changes from v1:
+- rebased on top of tip/master + mm/mm-stable + 1 extra change [1]
+- keep the refcrf offset update inside write_insn and enabling it
+  via function argument
+- fixed locking comment for uprobe_write_opcode, but skiped suggested
+  comment on register_for_each_vma, need more thinking on that [Oleg]
+- added acks
+- removed refctr from uprobe_trampoline object [Oleg]
+- change find_nearest_page to use vm_unmapped_area [Oleg]
+- re-structured x86 set_swbp [Andrii]
+- use -EINVAL in __arch_uprobe_optimize [Andrii]
+- added usdt.h from libbpf/usdt project [Andrii]
+- several minor test code changes [Andrii]
+- man page updates [Alejandro]
+
+
+This patchset is adding new syscall, here are notes to check list items
+in Documentation/process/adding-syscalls.rst:
+
+- System Call Alternatives
+  New syscall seems like the best way in here, because we need
+  just to quickly enter kernel with no extra arguments processing,
+  which we'd need to do if we decided to use another syscall.
+
+- Designing the API: Planning for Extension
+  The uprobe syscall is very specific and most likely won't be
+  extended in the future.
+
+- Designing the API: Other Considerations
+  N/A because uprobe syscall does not return reference to kernel
+  object.
+
+- Proposing the API
+  Wiring up of the uprobe system call is in separate change,
+  selftests and man page changes are part of the patchset.
+
+- Generic System Call Implementation
+  There's no CONFIG option for the new functionality because it
+  keeps the same behaviour from the user POV.
+
+- x86 System Call Implementation
+  It's 64-bit syscall only.
+
+- Compatibility System Calls (Generic)
+  N/A uprobe syscall has no arguments and is not supported
+  for compat processes.
+
+- Compatibility System Calls (x86)
+  N/A uprobe syscall is not supported for compat processes.
+
+- System Calls Returning Elsewhere
+  N/A.
+
+- Other Details
+  N/A.
+
+- Testing
+  Adding new bpf selftests.
+
+- Man Page
+  Attached.
+
+- Do not call System Calls in the Kernel
+  N/A
+
+pending todo (or follow ups):
+- use PROCMAP_QUERY in tests
+- alloc 'struct uprobes_state' for mm_struct only when needed [Andrii]
+- use mm_cpumask(vma->vm_mm) in text_poke_sync
+
+thanks,
+jirka
+
+
+Cc: Alejandro Colomar <alx@kernel.org>
+Cc: Eyal Birger <eyal.birger@gmail.com>
+Cc: kees@kernel.org
+
+[1] https://lore.kernel.org/linux-trace-kernel/20250514101809.2010193-1-jolsa@kernel.org/T/#u
 ---
- Changes in v2:
-  - Stop rewind if timestamp is not older.
-  - Rewind reader page and reset all indexes.
-  - Make ring_buffer_read_page() not clear the commit size.
----
- kernel/trace/ring_buffer.c |   99 ++++++++++++++++++++++++++++++++++++++++++--
- 1 file changed, 95 insertions(+), 4 deletions(-)
+Jiri Olsa (21):
+      uprobes: Remove breakpoint in unapply_uprobe under mmap_write_lock
+      uprobes: Rename arch_uretprobe_trampoline function
+      uprobes: Make copy_from_page global
+      uprobes: Add uprobe_write function
+      uprobes: Add nbytes argument to uprobe_write
+      uprobes: Add is_register argument to uprobe_write and uprobe_write_opcode
+      uprobes: Add do_ref_ctr argument to uprobe_write function
+      uprobes/x86: Add mapping for optimized uprobe trampolines
+      uprobes/x86: Add uprobe syscall to speed up uprobe
+      uprobes/x86: Add support to optimize uprobes
+      selftests/bpf: Import usdt.h from libbpf/usdt project
+      selftests/bpf: Reorg the uprobe_syscall test function
+      selftests/bpf: Rename uprobe_syscall_executed prog to test_uretprobe_multi
+      selftests/bpf: Add uprobe/usdt syscall tests
+      selftests/bpf: Add hit/attach/detach race optimized uprobe test
+      selftests/bpf: Add uprobe syscall sigill signal test
+      selftests/bpf: Add optimized usdt variant for basic usdt test
+      selftests/bpf: Add uprobe_regs_equal test
+      selftests/bpf: Change test_uretprobe_regs_change for uprobe and uretprobe
+      seccomp: passthrough uprobe systemcall without filtering
+      selftests/seccomp: validate uprobe syscall passes through seccomp
 
-diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-index 6859008ca34d..48f5f248eb4c 100644
---- a/kernel/trace/ring_buffer.c
-+++ b/kernel/trace/ring_buffer.c
-@@ -1358,6 +1358,13 @@ static inline void rb_inc_page(struct buffer_page **bpage)
- 	*bpage = list_entry(p, struct buffer_page, list);
- }
- 
-+static inline void rb_dec_page(struct buffer_page **bpage)
-+{
-+	struct list_head *p = rb_list_head((*bpage)->list.prev);
-+
-+	*bpage = list_entry(p, struct buffer_page, list);
-+}
-+
- static struct buffer_page *
- rb_set_head_page(struct ring_buffer_per_cpu *cpu_buffer)
- {
-@@ -1866,10 +1873,11 @@ static int rb_validate_buffer(struct buffer_data_page *dpage, int cpu)
- static void rb_meta_validate_events(struct ring_buffer_per_cpu *cpu_buffer)
- {
- 	struct ring_buffer_cpu_meta *meta = cpu_buffer->ring_meta;
--	struct buffer_page *head_page;
-+	struct buffer_page *head_page, *orig_head;
- 	unsigned long entry_bytes = 0;
- 	unsigned long entries = 0;
- 	int ret;
-+	u64 ts;
- 	int i;
- 
- 	if (!meta || !meta->head_buffer)
-@@ -1885,8 +1893,93 @@ static void rb_meta_validate_events(struct ring_buffer_per_cpu *cpu_buffer)
- 	entry_bytes += local_read(&cpu_buffer->reader_page->page->commit);
- 	local_set(&cpu_buffer->reader_page->entries, ret);
- 
--	head_page = cpu_buffer->head_page;
-+	orig_head = head_page = cpu_buffer->head_page;
-+	ts = head_page->page->time_stamp;
-+
-+	/*
-+	 * Try to rewind the head so that we can read the pages which already
-+	 * read in the previous boot.
-+	 */
-+	if (head_page == cpu_buffer->tail_page)
-+		goto rewound;
-+
-+	rb_dec_page(&head_page);
-+	for (i = 0; i < meta->nr_subbufs + 1; i++, rb_dec_page(&head_page)) {
-+
-+		/* Rewind until tail (writer) page. */
-+		if (head_page == cpu_buffer->tail_page)
-+			break;
-+
-+		/* Ensure the page has older data than head. */
-+		if (ts < head_page->page->time_stamp)
-+			break;
-+
-+		ts = head_page->page->time_stamp;
-+		/* Ensure the page has correct timestamp and some data. */
-+		if (!ts || rb_page_commit(head_page) == 0)
-+			break;
-+
-+		/* Stop rewind if the page is invalid. */
-+		ret = rb_validate_buffer(head_page->page, cpu_buffer->cpu);
-+		if (ret < 0)
-+			break;
-+
-+		/* Recover the number of entries and update stats. */
-+		local_set(&head_page->entries, ret);
-+		if (ret)
-+			local_inc(&cpu_buffer->pages_touched);
-+		entries += ret;
-+		entry_bytes += rb_page_commit(head_page);
-+	}
-+	pr_info("Rewound %d pages on cpu%d\n", i, cpu_buffer->cpu);
-+
-+	/* The last rewound page must be skipped. */
-+	if (head_page != orig_head)
-+		rb_inc_page(&head_page);
- 
-+	/* If there are rewound pages, rewind the reader page too. */
-+	if (head_page != orig_head) {
-+		struct buffer_page *bpage = orig_head;
-+
-+		rb_dec_page(&bpage);
-+		/*
-+		 * Insert the reader_page before the original head page.
-+		 * Since the list encode RB_PAGE flags, general list
-+		 * operations should be avoided.
-+		 */
-+		cpu_buffer->reader_page->list.next = &orig_head->list;
-+		cpu_buffer->reader_page->list.prev = orig_head->list.prev;
-+		orig_head->list.prev = &cpu_buffer->reader_page->list;
-+		bpage->list.next = &cpu_buffer->reader_page->list;
-+
-+		/* Make the head_page tthe new read page */
-+		cpu_buffer->reader_page = head_page;
-+		bpage = head_page;
-+		rb_inc_page(&head_page);
-+		head_page->list.prev = bpage->list.prev;
-+		rb_dec_page(&bpage);
-+		bpage->list.next = &head_page->list;
-+		rb_set_list_to_head(&bpage->list);
-+
-+		cpu_buffer->head_page = head_page;
-+		meta->head_buffer = (unsigned long)head_page->page;
-+
-+		/* Reset all the indexes */
-+		bpage = cpu_buffer->reader_page;
-+		meta->buffers[0] = rb_meta_subbuf_idx(meta, bpage->page);
-+		bpage->id = 0;
-+
-+		for (i = 0, bpage = head_page; i < meta->nr_subbufs;
-+		     i++, rb_inc_page(&bpage)) {
-+			meta->buffers[i + 1] = rb_meta_subbuf_idx(meta, bpage->page);
-+			bpage->id = i + 1;
-+		}
-+
-+		/* We'll restart verifying from orig_head */
-+		head_page = orig_head;
-+	}
-+
-+ rewound:
- 	/* If the commit_buffer is the reader page, update the commit page */
- 	if (meta->commit_buffer == (unsigned long)cpu_buffer->reader_page->page) {
- 		cpu_buffer->commit_page = cpu_buffer->reader_page;
-@@ -5348,7 +5441,6 @@ rb_get_reader_page(struct ring_buffer_per_cpu *cpu_buffer)
- 	 */
- 	local_set(&cpu_buffer->reader_page->write, 0);
- 	local_set(&cpu_buffer->reader_page->entries, 0);
--	local_set(&cpu_buffer->reader_page->page->commit, 0);
- 	cpu_buffer->reader_page->real_end = 0;
- 
-  spin:
-@@ -6642,7 +6734,6 @@ int ring_buffer_read_page(struct trace_buffer *buffer,
- 		cpu_buffer->read_bytes += rb_page_size(reader);
- 
- 		/* swap the pages */
--		rb_init_page(bpage);
- 		bpage = reader->page;
- 		reader->page = data_page->data;
- 		local_set(&reader->write, 0);
+ arch/arm/probes/uprobes/core.c                              |   2 +-
+ arch/x86/entry/syscalls/syscall_64.tbl                      |   1 +
+ arch/x86/include/asm/uprobes.h                              |   7 ++
+ arch/x86/kernel/uprobes.c                                   | 525 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-
+ include/linux/syscalls.h                                    |   2 +
+ include/linux/uprobes.h                                     |  20 +++-
+ kernel/events/uprobes.c                                     | 100 ++++++++++++-----
+ kernel/fork.c                                               |   1 +
+ kernel/seccomp.c                                            |  32 ++++--
+ kernel/sys_ni.c                                             |   1 +
+ tools/testing/selftests/bpf/prog_tests/uprobe_syscall.c     | 511 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++------
+ tools/testing/selftests/bpf/prog_tests/usdt.c               |  38 ++++---
+ tools/testing/selftests/bpf/progs/uprobe_syscall.c          |   4 +-
+ tools/testing/selftests/bpf/progs/uprobe_syscall_executed.c |  45 +++++++-
+ tools/testing/selftests/bpf/test_kmods/bpf_testmod.c        |  11 +-
+ tools/testing/selftests/bpf/usdt.h                          | 545 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ tools/testing/selftests/seccomp/seccomp_bpf.c               | 107 ++++++++++++++----
+ 17 files changed, 1838 insertions(+), 114 deletions(-)
+ create mode 100644 tools/testing/selftests/bpf/usdt.h
 
+
+Jiri Olsa (1):
+      man2: Add uprobe syscall page
+
+ man/man2/uprobe.2    |  1 +
+ man/man2/uretprobe.2 | 36 ++++++++++++++++++++++++------------
+ 2 files changed, 25 insertions(+), 12 deletions(-)
+ create mode 100644 man/man2/uprobe.2
