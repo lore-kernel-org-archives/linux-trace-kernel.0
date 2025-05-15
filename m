@@ -1,223 +1,218 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C9908F66;
-	Thu, 15 May 2025 00:42:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCA1A27A476
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 15 May 2025 03:03:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747269754; cv=none; b=csRAkAZ+iCX6h57LM468nnGQfn1Ao2EKlwa6ukb8COldktrGmmMTbtIWtMQfe6rNIT0IqoWH6M2gYYWwvoEc2ToN23BXRVvuwuMui/55rq2rU5/b+p1nwwL1gLztVKCdbY92oQllcjh7Qf1NDUdKu+rNs45F85DI5Kprz/BrhYk=
+	t=1747278228; cv=none; b=cf1VdbrAqKjoISFLHJzuwui+0eKp1nYIHp6dCHz3omeLgXsWerbotI4gBeO6F4KCYg001FWT6q9NX12SXSmsZ6Q/Abj2hp3aqQh9HwDYFb4Yf9ZSyitEMFAnIgJZhFNtFgbBsxIRYFikxGuXhcw2Kf/PPMSuVnXPa1xYD8YISYk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747269754; c=relaxed/simple;
-	bh=Jj9rZa3izoGXcM992ohp3v3M45235wdqTvdJRYPXBm8=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=YjTrlPwK940WueCBuOznWOvE8fQQEdjtCCAAJ31ZoMcDvVTsp30xG0zlasQ7BaTEBmoIF68eIAxZx4D44I1ENcZHF6BnKSva71dxN8PhPcy0rgtW7dwy2sryFY8Ajl7wq1Qdx5EOFq5FNMHRTcZrezbbspsf4J4cYsDHlIeQzu8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Srbfwyos; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747278228; c=relaxed/simple;
+	bh=CcvM8TPahvrvDY29hyXvR11tNSUKj/pJlZmeV5QgToM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=lrppthShxsTmA2WgChEE6M+tzSQDtLJ20Kzbw3O1uhEaHFIiddOyQ8wD6EMGuA57t/kFs8XV+zOlOIi+FN4b+RisO2BFiXhbT0R8uKvsBIb6E340r0sh4weJr5yrOxbTibWPMxX3loZwONalRSR+UQz2ynGRfr/3NXxpDgeJJ1Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=MAG/3cfD; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Srbfwyos"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 628DAC4CEE3;
-	Thu, 15 May 2025 00:42:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747269754;
-	bh=Jj9rZa3izoGXcM992ohp3v3M45235wdqTvdJRYPXBm8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=Srbfwyos5e2kIDRWuI3DZ/j4W49UbwYtkFzssehg+9B8+Mu3CYSiXwPhGmddd65HU
-	 zLXCaXCkP/hpy0ItDRgYyP81COjgeYSaUo6IeeQzTNnccIZsQFl5PD9xRnP/5roHVs
-	 3ebgLaWqpRtg3uFsqm3Xe5VFchXmMLMwb13VSmHZ1bKc6Mz11RZOxOTCmvBs83Xm1L
-	 0zAmlsVFudy1FiKo+V3rU5ew57rTkLvc8nIL1ZmDDkxmsje2CiYrhK5Bv+a9OHVWiS
-	 O047PGlVUcWXZkZ+UA5WpT6oBIj0ypnFV8Fkzun3uQM7qqPxK4n78HWXPf2aCr7I7E
-	 GX7UQHgs4O5EA==
-Date: Thu, 15 May 2025 09:42:30 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH] tracing: ring_buffer: Rewind persistent ring buffer
- when reboot
-Message-Id: <20250515094230.5c84ca613bd3ebdc9063e13e@kernel.org>
-In-Reply-To: <20250514090050.52db97ed@batman.local.home>
-References: <174709742769.1964496.18203163435305117893.stgit@mhiramat.tok.corp.google.com>
-	<20250513203237.0e7ff662@gandalf.local.home>
-	<20250514150059.6edf09bd72862ca175b64c98@kernel.org>
-	<20250514090050.52db97ed@batman.local.home>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MAG/3cfD"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1747278224;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=JpaebEPPZJMesPD/jagQR+EUUomMl0IAlT5nBhfQTL8=;
+	b=MAG/3cfDXY1NDXsWDaoh0NGStJXlhNIHdfqr2s1KxkeCEnIyaDZGDwZZKVUcl8WvsUlLIl
+	wv0G213u+qCwZKaiLckHXM1+vCoKySY5bI5W3Wf7bjSU7YI5ZI/sYWhGl1WPHwAcCcRm7A
+	C2sOk9syWEAlxQ/iyZG6TCkegQ+gZoY=
+Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-19-_CBLfwOLPLyWmVJ2YxO-8A-1; Wed,
+ 14 May 2025 23:03:41 -0400
+X-MC-Unique: _CBLfwOLPLyWmVJ2YxO-8A-1
+X-Mimecast-MFC-AGG-ID: _CBLfwOLPLyWmVJ2YxO-8A_1747278216
+Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 3D04D195608F;
+	Thu, 15 May 2025 03:03:34 +0000 (UTC)
+Received: from h1.redhat.com (unknown [10.22.88.116])
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id E1BF118008F4;
+	Thu, 15 May 2025 03:03:16 +0000 (UTC)
+From: Nico Pache <npache@redhat.com>
+To: linux-mm@kvack.org,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Cc: david@redhat.com,
+	ziy@nvidia.com,
+	baolin.wang@linux.alibaba.com,
+	lorenzo.stoakes@oracle.com,
+	Liam.Howlett@oracle.com,
+	ryan.roberts@arm.com,
+	dev.jain@arm.com,
+	corbet@lwn.net,
+	rostedt@goodmis.org,
+	mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com,
+	akpm@linux-foundation.org,
+	baohua@kernel.org,
+	willy@infradead.org,
+	peterx@redhat.com,
+	wangkefeng.wang@huawei.com,
+	usamaarif642@gmail.com,
+	sunnanyong@huawei.com,
+	vishal.moola@gmail.com,
+	thomas.hellstrom@linux.intel.com,
+	yang@os.amperecomputing.com,
+	kirill.shutemov@linux.intel.com,
+	aarcange@redhat.com,
+	raquini@redhat.com,
+	anshuman.khandual@arm.com,
+	catalin.marinas@arm.com,
+	tiwai@suse.de,
+	will@kernel.org,
+	dave.hansen@linux.intel.com,
+	jack@suse.cz,
+	cl@gentwo.org,
+	jglisse@google.com,
+	surenb@google.com,
+	zokeefe@google.com,
+	hannes@cmpxchg.org,
+	rientjes@google.com,
+	mhocko@suse.com,
+	rdunlap@infradead.org
+Subject: [PATCH v6 00/12] khugepaged: mTHP support
+Date: Wed, 14 May 2025 21:03:00 -0600
+Message-ID: <20250515030312.125567-1-npache@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
 
-On Wed, 14 May 2025 09:00:50 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
+The following series provides khugepaged and madvise collapse with the
+capability to collapse anonymous memory regions to mTHPs.
 
-> On Wed, 14 May 2025 15:00:59 +0900
-> Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
-> > > 
-> > > Is that a problem? I'm thinking that the data in the buffer should not be
-> > > used.  
-> > 
-> > Yes, even if we read (dump) the previous boot data, the data is
-> > in the buffer. Thus the kernel rebooted before reusing the buffer
-> > the dumped pages are recovered again. Unless comparing with the
-> > previous dump data, we can not know this data is older boot or not.
-> > Anyway, user can avoid this issue by clearing the trace buffer
-> > explicitly.
-> 
-> What we could do, and I don't think this would be too hard, is once the
-> buffer is empty and it's still LAST_BOOT buffer, we simply clear it in
-> the kernel.
+To achieve this we generalize the khugepaged functions to no longer depend
+on PMD_ORDER. Then during the PMD scan, we keep track of chunks of pages
+(defined by KHUGEPAGED_MTHP_MIN_ORDER) that are utilized. This info is
+tracked using a bitmap. After the PMD scan is done, we do binary recursion
+on the bitmap to find the optimal mTHP sizes for the PMD range. The
+restriction on max_ptes_none is removed during the scan, to make sure we
+account for the whole PMD range. When no mTHP size is enabled, the legacy
+behavior of khugepaged is maintained. max_ptes_none will be scaled by the
+attempted collapse order to determine how full a THP must be to be
+eligible. If a mTHP collapse is attempted, but contains swapped out, or
+shared pages, we dont perform the collapse.
 
-Ah, that sounds good :-D
+With the default max_ptes_none=511, the code should keep its most of its
+original behavior. To exercise mTHP collapse we need to set
+max_ptes_none<=255. With max_ptes_none > HPAGE_PMD_NR/2 you will
+experience collapse "creep" and constantly promote mTHPs to the next
+available size. This is due the fact that it will introduce at least 2x
+the number of pages, and on a future scan will satisfy that condition once
+again.
 
-> 
-> That way after a reboot, a read of trace_pipe that reads the entire
-> buffer will end up resetting the buffer, and I think that will solve
-> this problem.
-> 
-> 
-> 
-> > > +
-> > > +		/* Stop rewind if the page is invalid. */
-> > > +		ret = rb_validate_buffer(head_page->page, cpu_buffer->cpu);
-> > > +		if (ret < 0)
-> > > +			break;
-> > > +
-> > > +		/* Recover the number of entries. */
-> > > +		local_set(&head_page->entries, ret);
-> > > +		if (ret)
-> > > +			local_inc(&cpu_buffer->pages_touched);
-> > > +		entries += ret;
-> > > +		entry_bytes += rb_page_commit(head_page);  
-> > 
-> > If we validate the pages again later (because fixing head_page),
-> > we can skip this part.
-> 
-> The validator takes a bit of time. I would rather not do another loop
-> if we don't have to. If this is duplicate code, lets just make a static
-> inline helper function that does it and use that in both places.
+Patch 1:     Refactor/rename hpage_collapse
+Patch 2:     Some refactoring to combine madvise_collapse and khugepaged
+Patch 3-5:   Generalize khugepaged functions for arbitrary orders
+Patch 6-9:   The mTHP patches
+Patch 10-11: Tracing/stats
+Patch 12:    Documentation
 
-OK, I think we can just restart validating unread part from
-orig_head.
+---------
+ Testing
+---------
+- Built for x86_64, aarch64, ppc64le, and s390x
+- selftests mm
+- I created a test script that I used to push khugepaged to its limits
+   while monitoring a number of stats and tracepoints. The code is
+   available here[1] (Run in legacy mode for these changes and set mthp
+   sizes to inherit)
+   The summary from my testings was that there was no significant
+   regression noticed through this test. In some cases my changes had
+   better collapse latencies, and was able to scan more pages in the same
+   amount of time/work, but for the most part the results were consistent.
+- redis testing. I tested these changes along with my defer changes
+  (see followup post for more details).
+- some basic testing on 64k page size.
+- lots of general use.
 
-> 
-> > 
-> > > +	}
-> > > +
-> > > +	/* The last rewind page must be skipped. */
-> > > +	if (head_page != orig_head)
-> > > +		rb_inc_page(&head_page);
-> > > +
-> > > +	if (head_page != orig_head) {  
-> > 
-> > Ah, I forgot this part (setup new reader_page)
-> > 
-> > > +		struct buffer_page *bpage = orig_head;
-> > > +
-> > > +		rb_dec_page(&bpage);
-> > > +		/*
-> > > +		 * Move the reader page between the orig_head and the page
-> > > +		 * before it.
-> > > +		 */  
-> > -----
-> > > +		cpu_buffer->reader_page->list.next = &orig_head->list;
-> > > +		cpu_buffer->reader_page->list.prev = orig_head->list.prev;
-> > > +		orig_head->list.prev = &cpu_buffer->reader_page->list;
-> > > +
-> > > +		bpage->list.next = &cpu_buffer->reader_page->list;  
-> > -----
-> > These seems the same as (because head_page->list.prev->next encodes
-> > flags, but we don't read that pointer.);
-> > 
-> > 		list_insert(&orig_head->list, &cpu_buffer->reader_page->list);
-> 
-> I thought about this, but because the pointers are used to encode
-> flags, I try to avoid using the list_*() functions all together on
-> these. Just to remind everyone that these are "special" lists.
-> 
-> I prefer it open coded because that way I can see exactly what it is
-> doing. Note, this is not just assigning pointers, it is also clearing
-> flags in the process.
+V6 Changes:
+- Dont release the anon_vma_lock early (like in the PMD case), as not all
+  pages are isolated.
+- Define the PTE as null to avoid a uninitilized condition
+- minor nits and newline cleanup
+- make sure to unmap and unlock the pte for the swapin case
+- change the revalidation to always check the PMD order (as this will make
+  sure that no other VMA spans it)
 
-OK. And I found list_insert() is not in the kernel.
-(tools/firmware/list.h has that)
+V5 Changes [2]:
+- switched the order of patches 1 and 2
+- fixed some edge cases on the unified madvise_collapse and khugepaged
+- Explained the "creep" some more in the docs
+- fix EXCEED_SHARED vs EXCEED_SWAP accounting issue
+- fix potential highmem issue caused by a early unmap of the PTE
 
-> 
-> We could add a comment that states something like:
-> 
-> 	/*
-> 	 * This is the same as:
-> 	 *   list_insert(&orig_head->list, &cpu_buffer->read_page->list);
-> 	 * but as it is also clearing flags, its open coded so that
-> 	 * there's no chance that list_insert() gets optimized where
-> 	 * it doesn't do the extra work that this is doing.
-> 	 */
-> 
-> ?
+V4 Changes:
+- Rebased onto mm-unstable
+- small changes to Documentation
 
-Yeah, anyway I will leave a comment.
+V3 Changes:
+- corrected legacy behavior for khugepaged and madvise_collapse
+- added proper mTHP stat tracking
+- Minor changes to prevent a nested lock on non-split-lock arches
+- Took Devs version of alloc_charge_folio as it has the proper stats
+- Skip cases were trying to collapse to a lower order would still fail
+- Fixed cases were the bitmap was not being updated properly
+- Moved Documentation update to this series instead of the defer set
+- Minor bugs discovered during testing and review
+- Minor "nit" cleanup
 
-Thank you,
+V2 Changes:
+- Minor bug fixes discovered during review and testing
+- removed dynamic allocations for bitmaps, and made them stack based
+- Adjusted bitmap offset from u8 to u16 to support 64k pagesize.
+- Updated trace events to include collapsing order info.
+- Scaled max_ptes_none by order rather than scaling to a 0-100 scale.
+- No longer require a chunk to be fully utilized before setting the bit.
+   Use the same max_ptes_none scaling principle to achieve this.
+- Skip mTHP collapse that requires swapin or shared handling. This helps
+   prevent some of the "creep" that was discovered in v1.
 
-> 
-> -- Steve
-> 
-> 
-> > 
-> > > +
-> > > +		/* Make the head_page the new reader page */
-> > > +		cpu_buffer->reader_page = head_page;
-> > > +		bpage = head_page;
-> > > +		rb_inc_page(&head_page);
-> > > +		head_page->list.prev = bpage->list.prev;
-> > > +		rb_dec_page(&bpage);
-> > > +		bpage->list.next = &head_page->list;
-> > > +		rb_set_list_to_head(&bpage->list);
-> > > +
-> > > +		cpu_buffer->head_page = head_page;
-> > > +		meta->head_buffer = (unsigned long)head_page->page;
-> > > +
-> > > +		/* Reset all the indexes */
-> > > +		bpage = cpu_buffer->reader_page;
-> > > +		meta->buffers[0] = rb_meta_subbuf_idx(meta, bpage->page);
-> > > +		bpage->id = 0;
-> > > +
-> > > +		for (i = 0, bpage = head_page; i < meta->nr_subbufs;
-> > > +		     i++, rb_inc_page(&bpage)) {
-> > > +			meta->buffers[i + 1] = rb_meta_subbuf_idx(meta, bpage->page);
-> > > +			bpage->id = i + 1;
-> > > +		}
-> > > +		head_page = orig_head;
-> > > +	}
-> > > +
-> > >  	/* Iterate until finding the commit page */
-> > >  	for (i = 0; i < meta->nr_subbufs + 1; i++, rb_inc_page(&head_page)) {
-> > >  
-> > > @@ -5348,7 +5439,6 @@ rb_get_reader_page(struct ring_buffer_per_cpu *cpu_buffer)
-> > >  	 */
-> > >  	local_set(&cpu_buffer->reader_page->write, 0);
-> > >  	local_set(&cpu_buffer->reader_page->entries, 0);
-> > > -	local_set(&cpu_buffer->reader_page->page->commit, 0);
-> > >  	cpu_buffer->reader_page->real_end = 0;
-> > >  
-> > >   spin:
-> > > @@ -6642,7 +6732,7 @@ int ring_buffer_read_page(struct trace_buffer *buffer,
-> > >  		cpu_buffer->read_bytes += rb_page_size(reader);
-> > >  
-> > >  		/* swap the pages */
-> > > -		rb_init_page(bpage);
-> > > +//		rb_init_page(bpage);
-> > >  		bpage = reader->page;
-> > >  		reader->page = data_page->data;
-> > >  		local_set(&reader->write, 0);  
-> > 
-> > Thank you,
-> > 
-> > 
-> > 
-> 
+[1] - https://gitlab.com/npache/khugepaged_mthp_test
+[2] - https://lore.kernel.org/all/20250428181218.85925-1-npache@redhat.com/
 
+Dev Jain (1):
+  khugepaged: generalize alloc_charge_folio()
+
+Nico Pache (11):
+  khugepaged: rename hpage_collapse_* to khugepaged_*
+  introduce khugepaged_collapse_single_pmd to unify khugepaged and
+    madvise_collapse
+  khugepaged: generalize hugepage_vma_revalidate for mTHP support
+  khugepaged: generalize __collapse_huge_page_* for mTHP support
+  khugepaged: introduce khugepaged_scan_bitmap for mTHP support
+  khugepaged: add mTHP support
+  khugepaged: skip collapsing mTHP to smaller orders
+  khugepaged: avoid unnecessary mTHP collapse attempts
+  khugepaged: improve tracepoints for mTHP orders
+  khugepaged: add per-order mTHP khugepaged stats
+  Documentation: mm: update the admin guide for mTHP collapse
+
+ Documentation/admin-guide/mm/transhuge.rst |  14 +-
+ include/linux/huge_mm.h                    |   5 +
+ include/linux/khugepaged.h                 |   4 +
+ include/trace/events/huge_memory.h         |  34 +-
+ mm/huge_memory.c                           |  11 +
+ mm/khugepaged.c                            | 472 ++++++++++++++-------
+ 6 files changed, 382 insertions(+), 158 deletions(-)
 
 -- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+2.49.0
+
