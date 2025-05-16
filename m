@@ -1,88 +1,65 @@
-Received: from out30-98.freemail.mail.aliyun.com (out30-98.freemail.mail.aliyun.com [115.124.30.98])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63CAE3D69;
-	Fri, 16 May 2025 03:20:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.98
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28309206F23;
+	Fri, 16 May 2025 04:37:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747365660; cv=none; b=WofnVF2r2Er7ubX+TGKxafnmeRP048w388KNkalEKj/4nqdgSRU9QeqjY0qhIAXB5BvYXg61JqvbTWxRYzgR/JEoj3ejhGfuwrOw0X2V69L2XSeRmAfi39AZCIwwLjitH1fJI6MYG8IOeVUpRr1YcuR1ufzVhHmSED/GT1q2X6o=
+	t=1747370265; cv=none; b=jrkuPrZnKZvZ+V4JZLtGebJf58lP553urj/F4eqD3PVvRF/FwphxbXvmBt+8oaJUcQ+bXg6k9XjQtZdTlQi/Avf7qcF3KXkWrKrwyC8Kl4r2qv/MkXt2UX3MZtN75BcwA9tb+ZpmXgpkF98cASdX1777HW1g+wFrloS43mMnL68=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747365660; c=relaxed/simple;
-	bh=hO+rR+dWcD6f6Hge8HMHr7Cb8QAg8f4oCX2KJ+iFwGg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ThYBdsP6hx/dFQoSi5G7HUkYLbGRsGFAJWJiJ/JAQDeoGjHA+G1N/dpvlG0riiLGbzy6n/JSHiX1Teek4gatIb11DwM8C2ow3S/IBdQuC8K4jMp3Ihc9gVZBEf6Gt0B4YyCfWQGKq9yzW/VnFclJZPOzTiQwBn6BJSx5ZX8PoJM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=Qe2vQ5ES; arc=none smtp.client-ip=115.124.30.98
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1747370265; c=relaxed/simple;
+	bh=WaKI9gNXth+mQA/2U4+nsTBmttlOm2HrhL0YToOrOkI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mONitQtpsoo5VSyErl+fEVexpaEkILx9al8O48c4a4jAwuy/CDNXdA9t9FM/fXQoGi46GjVirVFztnijk5VsZxCbBqn82kIfVILmZK47yQK3doMWsGcM8Rrm+6IOPKLZbo/GDGNZWEtjezRYrY+r42BTjoMukBa0mAbi/qkzS1k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=RfW1QzMK; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="Qe2vQ5ES"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1747365649; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=GExNtFmUWMDmQxbl32tS+x8auE8iVSf/kkBrvwmxa6I=;
-	b=Qe2vQ5EScnbO8JSIBIePdAgK5F+iwDwlWl4bdEp+3E8ZhAvyGiZWaPpNeFweKwaA47898Zp+6bEWBnG3dJzSHeqU9toaqcH4ZkIRu6WDU1KY6NNykvf05JhEu8cdGtExjm1413XDlB0o+ABqA7EsEcKGnXWpLXF9nuxHV1pkib0=
-Received: from 30.74.144.109(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0WatldDB_1747365643 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Fri, 16 May 2025 11:20:45 +0800
-Message-ID: <9c54397f-3cbf-4fa2-bf69-ba89613d355f@linux.alibaba.com>
-Date: Fri, 16 May 2025 11:20:42 +0800
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="RfW1QzMK"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
+	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=WaKI9gNXth+mQA/2U4+nsTBmttlOm2HrhL0YToOrOkI=; b=RfW1QzMKc75AW7TEflla3wEgfl
+	m0x+kMNPyZO1ExmhXAV12X4wt6xym4lpyr4TTTsuRcYA+svQfX/rYB/LjQMtXtJxf4TCv7hoXK9+o
+	ilsKNNc2RsYlm1H/1rcPIhhA956INYNfv2cKVDH2KAXDTks5Apztw+gPCD1zcajrOONqJlluUrB6c
+	d2BDa12XC0VEcFwgmNeL9/lq2DXYRl6iw17OGBQNpndJSySup2qWfxevW07k1hO9VzVdaUC412bBD
+	tdCVWyB8nw59VZ6bofhBn8MKt6UmI2c45VJYdKp8h55R+3Ara9e9lud1RgD/nCo/v+QYyYAi0ydpa
+	ktF1qfNQ==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uFmpG-00000002T2z-1yhX;
+	Fri, 16 May 2025 04:37:38 +0000
+Date: Thu, 15 May 2025 21:37:38 -0700
+From: Christoph Hellwig <hch@infradead.org>
+To: Jason Xing <kerneljasonxing@gmail.com>
+Cc: axboe@kernel.dk, rostedt@goodmis.org, mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com, akpm@linux-foundation.org,
+	linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	Jason Xing <kernelxing@tencent.com>,
+	Yushan Zhou <katrinzhou@tencent.com>
+Subject: Re: [PATCH v2 2/4] relayfs: introduce dump of relayfs statistics
+ function
+Message-ID: <aCbBEg-DFYvx0Dpa@infradead.org>
+References: <20250515061643.31472-1-kerneljasonxing@gmail.com>
+ <20250515061643.31472-3-kerneljasonxing@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 06/12] khugepaged: introduce khugepaged_scan_bitmap for
- mTHP support
-To: Nico Pache <npache@redhat.com>, linux-mm@kvack.org,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
-Cc: david@redhat.com, ziy@nvidia.com, lorenzo.stoakes@oracle.com,
- Liam.Howlett@oracle.com, ryan.roberts@arm.com, dev.jain@arm.com,
- corbet@lwn.net, rostedt@goodmis.org, mhiramat@kernel.org,
- mathieu.desnoyers@efficios.com, akpm@linux-foundation.org,
- baohua@kernel.org, willy@infradead.org, peterx@redhat.com,
- wangkefeng.wang@huawei.com, usamaarif642@gmail.com, sunnanyong@huawei.com,
- vishal.moola@gmail.com, thomas.hellstrom@linux.intel.com,
- yang@os.amperecomputing.com, kirill.shutemov@linux.intel.com,
- aarcange@redhat.com, raquini@redhat.com, anshuman.khandual@arm.com,
- catalin.marinas@arm.com, tiwai@suse.de, will@kernel.org,
- dave.hansen@linux.intel.com, jack@suse.cz, cl@gentwo.org,
- jglisse@google.com, surenb@google.com, zokeefe@google.com,
- hannes@cmpxchg.org, rientjes@google.com, mhocko@suse.com,
- rdunlap@infradead.org
-References: <20250515032226.128900-1-npache@redhat.com>
- <20250515032226.128900-7-npache@redhat.com>
-From: Baolin Wang <baolin.wang@linux.alibaba.com>
-In-Reply-To: <20250515032226.128900-7-npache@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250515061643.31472-3-kerneljasonxing@gmail.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
+On Thu, May 15, 2025 at 02:16:41PM +0800, Jason Xing wrote:
+> +extern size_t relay_dump(struct rchan *chan, int flags);
 
+Please don't add pointless externs for function prototypes.
 
-On 2025/5/15 11:22, Nico Pache wrote:
-> khugepaged scans anons PMD ranges for potential collapse to a hugepage.
-> To add mTHP support we use this scan to instead record chunks of utilized
-> sections of the PMD.
-> 
-> khugepaged_scan_bitmap uses a stack struct to recursively scan a bitmap
-> that represents chunks of utilized regions. We can then determine what
-> mTHP size fits best and in the following patch, we set this bitmap while
-> scanning the anon PMD. A minimum collapse order of 2 is used as this is
-> the lowest order supported by anon memory.
-> 
-> max_ptes_none is used as a scale to determine how "full" an order must
-> be before being considered for collapse.
-> 
-> When attempting to collapse an order that has its order set to "always"
-> lets always collapse to that order in a greedy manner without
-> considering the number of bits set.
-> 
-> Signed-off-by: Nico Pache <npache@redhat.com>
+> +EXPORT_SYMBOL_GPL(relay_dump);
 
-Sigh. You still haven't addressed or explained the issues I previously 
-raised [1], so I don't know how to review this patch again...
+This export seems unused even with the entire series applied.
 
-[1] 
-https://lore.kernel.org/all/83a66442-b7c7-42e7-af4e-fd211d8ed6f8@linux.alibaba.com/
