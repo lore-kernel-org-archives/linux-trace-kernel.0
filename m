@@ -1,107 +1,141 @@
-Received: from mail-il1-f169.google.com (mail-il1-f169.google.com [209.85.166.169])
+Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34EC41F6679;
-	Thu, 15 May 2025 23:27:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D018F20E6E6
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 16 May 2025 01:15:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747351638; cv=none; b=rIO53PkDiDzgs9+HNGX0zD0MXM1IMBQp9f4rcUmvGCLq8GH+OV8ox/m9cNNc6ClQKNxMg7DstUVo/xOV3Mc58+ETGCiUQL6lm6r/FXBO5wjxIRY2IWAv79Czi7dYJP9NhpIiXXNxLagA04MQDKiOGxVb94V8NdtLcsb8VWvDFnk=
+	t=1747358147; cv=none; b=XXfHLn+DsRAus/Q2bepeqa16eDi1RV5l4uBPHrghcjB8fItFT106b54Z9ksiIrjiHahTp2ognCxXKAetS7wohiEBCS0uGOI7B4Zg+RZruHlY0Kb1cInZaJXrICIMQd1DCiUyRz7d8v1n2RlI8RbbVgItPYJIrdj2jHM/Po99vZs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747351638; c=relaxed/simple;
-	bh=Pgu2Y6SESaYpP1jqivqgblNQ4Ifsz5v7aJ3n6jeq+Bw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=tkSrQSzmgr0mV+c91CF9bTJvNCJd8X3c2kdsIchNa468DOhC0NLCljLirJmxDnLFsGH9VD9idDYjL7i/+l6UK9vJTQMO7XKho4m+1NuDrOLglJApHiE/KwxNl8BfwZ/AcJoORYzwctDdPhhM7Kc+lHQFt52FZjJB3MpC6+kHrnA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ICkzPb5N; arc=none smtp.client-ip=209.85.166.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747358147; c=relaxed/simple;
+	bh=NIzlTsdcB+N3toFqpEFnhBW4WHNKbcmfhgrOkvMx7bE=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=SHtpW/uM/cazeSBviXmQQNRtNdm0MriY08C6Y2nK6/QsOuNstj8u6Z9eekwY3JDCoraWxRil0PSusL0JQJjSHzQmwec86slp1opR5EBtIwWoV4rdX0oumAT3W5iYT5/UPbV8Yt3II7RL7jErio2/E+biGipDArJ4toLZwaAjTF0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=yasT5pOt; arc=none smtp.client-ip=209.85.216.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ICkzPb5N"
-Received: by mail-il1-f169.google.com with SMTP id e9e14a558f8ab-3da785e3f90so7218945ab.2;
-        Thu, 15 May 2025 16:27:16 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="yasT5pOt"
+Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-30adbe9b568so1506315a91.1
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 15 May 2025 18:15:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747351636; x=1747956436; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Pgu2Y6SESaYpP1jqivqgblNQ4Ifsz5v7aJ3n6jeq+Bw=;
-        b=ICkzPb5NDvFpyhIq/PxhMY0osvHGOb85tbLlUg6ZZgkBkYSNZ4mhBZ7fT8Vl90UUkW
-         VVIaDqFrhxTP2y38Me7CJ9CokDKdD/PebJ2VzUNG/xBYiIUas0fUSH0RvKIaTDMBixQj
-         0uEy8trUrq/Ezk9FzGQjUJ/32jjgueP1RdIFVJ00Lel3YsdR+Cbd+lULo+A0ZX92jNei
-         c1IgHu6A3Hw7lZOatfJVfdu+i7gatMyZkuo8Oe5xg9cDBtuVYLTSqjC6ZOTK5XNXdeRH
-         OLzChsjUXSGdnBPmDXGUje2t1I7jnV+6qrjgv66U/Bj8SVv7m4X5G3Wt6rLoKUuldPWy
-         opLg==
+        d=google.com; s=20230601; t=1747358145; x=1747962945; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=XVMuD/PalT/pmzH7BG3QdDQAVO8SDVrpqfTHUU96orc=;
+        b=yasT5pOtkKZ2HIA+K53Sqk6H4Ev8CXGSUQ58YSHc821Ly+j4DoAPt9SguA4b+QGp7p
+         3kXm3LYhtjpsz+pRT6dskwUlHoo1nU+BtBUHdivyiBqYR7IeWMld0yiWyG63qXqOkZim
+         PpwHdxjrSeV8Se24vrlRbQl/1p1HvizesDBX++ds8cl2eg+nE3NQ7WiutdmQSHRq2hY0
+         2obLDB+RR2cz4uNHhrVhhkLrbEqcVkJA8sRydxDA7reF+FlstnY4L89fNTYBN5JyZAC6
+         UqRO7Q2G0L1M8bHS91dmzw7fnyphVs0p5QNOIg3d2kM7AqpoFLvxsBEjWlJETHO+BgaB
+         iAvQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747351636; x=1747956436;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Pgu2Y6SESaYpP1jqivqgblNQ4Ifsz5v7aJ3n6jeq+Bw=;
-        b=u5b7VqxJzZQKS+jlVxXaUYKmxYmoi7fMxGqWR0QYjhiWc0CNNKYtNNfnJz48ocXVL/
-         fKVDhKGK3UEy1fbyobnMR5ylIRyQJZjpU/mOhk0Rfmimm53acUNuLTVrCYfb2IPvcVk6
-         4vKm7NQAWDNHoSsgU+gnSvfp4LSFkT/QyNuo05b6Tv2526AZ6NjNeHeCR7JwOtimrylY
-         PJJVNdICoLEAXeCjHZ78u3ib+pEeU1E0piLW+pIaWmNaBSKhAFGvA2kRMg9FcU+AtBml
-         IN3zgda5DVyROsvOj3y6pWBObaWi4xO87XN4DDGe/M1Ut9xOlJZKM4dDc7S6jlUvxe9Z
-         yRIw==
-X-Forwarded-Encrypted: i=1; AJvYcCV7WSmig292LZJwSowruE7Jdk3pjBu+sFkRPtFzvNti6JbZA+wNO/xkEJjsMKRNP/AIGWOr3bGN3R/gBQ==@vger.kernel.org, AJvYcCVNlmC6OQE4nFY5SSCWRHs5t0LsHSrV3s49nToriIhEXimwDp3ZSgHBlapOlfF4Sp/4s8d036/jcfMAytQV@vger.kernel.org, AJvYcCVzx6TIO2u0jeRpAbo8gBC85P2xlzCrP7P6ECmNduXuA1gMvgS+09SLOZfhWC4ZwkfVMYYD5vC6QdC56SPh6GlHzKIv@vger.kernel.org
-X-Gm-Message-State: AOJu0YwhGx54UNU3Cjn2K/Rf/e+0whV5ft2JiQrfUEpqbEF/Fq584TZJ
-	ssqyFbHEgj1pZNr7XITucV+kERnKNPGMKzWziv6z3IZpxf8Oaa6SUUAuToGaK7bCAisFR9laNLr
-	WXUN38iJKT64V1fDEuciYqHlcd72sbTQ=
-X-Gm-Gg: ASbGnctL1HW/ptybqtIxPyHag4hNuN7Q65z1+yFRRhnVEn0RI8ExaNrXxpSwHW2Eac1
-	Q0s2QyUcLB7VYf2cVbqLGzI8gczaW/DTD38MMw53Z1kaJ3phPsJVsFqquettzPoj7WqyAJMAxbf
-	hiRTrRjiF/mnydc/lPKYIY8Hf3wFlwtu4=
-X-Google-Smtp-Source: AGHT+IGMfInsdd4M86V2Nizwia98eN9Cphdu9Ifp0c4g8ILD/M5kt5/nqFyr5+vgxMpx7sYVOFj4slUTcZjlKV1jb40=
-X-Received: by 2002:a05:6e02:1a02:b0:3d4:2306:a875 with SMTP id
- e9e14a558f8ab-3db8573b7f2mr6272255ab.8.1747351636199; Thu, 15 May 2025
- 16:27:16 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1747358145; x=1747962945;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=XVMuD/PalT/pmzH7BG3QdDQAVO8SDVrpqfTHUU96orc=;
+        b=gNx34iFQPZfWCHldcyYq3DWcXV4nH8qRvW5e4gevwRm7BGj012+z1HIHxMBOQ0Hvvu
+         +tA8AwPD5gfoJ7T88l+VLQV1Zp+SLFkfRkIaNXFDmSQKn5H3ZYf+DOZW/zQINT7CW5U9
+         YxXyQyITJKcmGcZo9OGNPu/ccTF7WCX/raYo4vgy5qiVn1mS8EEQUOoIODRKvFoEbotH
+         U/KAuQf0yS1YB6PZGiPzmVghg02NmasQSe3JmlctZO/zcCfCCugN1Yre7/GIHIvjoQJv
+         KSNk4rVYuGaOB7yX1EljnfF7DYMCLCP/tXAFPlFMOniGQtRODIpoODoaqy6z61vbe1fJ
+         FcsA==
+X-Forwarded-Encrypted: i=1; AJvYcCV5mDe+leMaOLKoN5tjP486h2GL3aSIEH2rRoxgCGGIzNBzqQKs7BYPXjguO3eHqooiqD+qfec8Tqf1fYSF2KmUi5M=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy+lY0+T3uJmEADep7/LvF3NsrKeHJgS8uCuzK3Iy4fGeavj16I
+	BHsaMuwL97oRges9bq/59rAXWXyEwSSUJoF3Da96QKBv18MXXhknqJ/9mPs8YR52py+vFfDM8Ta
+	8008yQQ==
+X-Google-Smtp-Source: AGHT+IG5J9s2NMDhY7/8A4O+MyMGUN6e8x3str2oF1VXVAVtOy4jEWK/Fd7BwjZNXFkmEs5DGaZLrHwGgt0=
+X-Received: from pjyp5.prod.google.com ([2002:a17:90a:e705:b0:30e:7783:edb6])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:3905:b0:30e:6a25:e4e6
+ with SMTP id 98e67ed59e1d1-30e7d5acafcmr1469988a91.22.1747358145046; Thu, 15
+ May 2025 18:15:45 -0700 (PDT)
+Date: Thu, 15 May 2025 18:15:43 -0700
+In-Reply-To: <e12abcca-b7b4-404d-b379-8636e5b68813@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20250515061643.31472-1-kerneljasonxing@gmail.com>
- <20250515061643.31472-4-kerneljasonxing@gmail.com> <543ef493-a478-4e92-b384-f6ff299b11fb@kernel.dk>
-In-Reply-To: <543ef493-a478-4e92-b384-f6ff299b11fb@kernel.dk>
-From: Jason Xing <kerneljasonxing@gmail.com>
-Date: Fri, 16 May 2025 07:26:40 +0800
-X-Gm-Features: AX0GCFsN5GIaAdgN6g5NVxIIwO__es_7OFWs3t7NcNFhfUkgfO8Q1iiiqvjpgUg
-Message-ID: <CAL+tcoCLu5PNvfs=_HDfy8NdNj5N1_h5dt4GjVCvB9qSt0EYyg@mail.gmail.com>
-Subject: Re: [PATCH v2 3/4] blktrace: use rbuf->stats.full as a drop indicator
- in relayfs
-To: Jens Axboe <axboe@kernel.dk>
-Cc: rostedt@goodmis.org, mhiramat@kernel.org, mathieu.desnoyers@efficios.com, 
-	akpm@linux-foundation.org, linux-kernel@vger.kernel.org, 
-	linux-block@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	Jason Xing <kernelxing@tencent.com>, Yushan Zhou <katrinzhou@tencent.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0
+References: <20250513203803.2636561-1-sohil.mehta@intel.com>
+ <20250513203803.2636561-2-sohil.mehta@intel.com> <aCSljsvI0A-HC_DT@google.com>
+ <e12abcca-b7b4-404d-b379-8636e5b68813@intel.com>
+Message-ID: <aCaRvwnkXf07Mtue@google.com>
+Subject: Re: [PATCH v6 1/9] x86/fred, KVM: VMX: Pass event data to the FRED
+ entry point from KVM
+From: Sean Christopherson <seanjc@google.com>
+To: Sohil Mehta <sohil.mehta@intel.com>
+Cc: x86@kernel.org, linux-kernel@vger.kernel.org, Xin Li <xin@zytor.com>, 
+	"H . Peter Anvin" <hpa@zytor.com>, Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, 
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	Tony Luck <tony.luck@intel.com>, Zhang Rui <rui.zhang@intel.com>, 
+	Steven Rostedt <rostedt@goodmis.org>, Andrew Cooper <andrew.cooper3@citrix.com>, 
+	"Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>, Jacob Pan <jacob.pan@linux.microsoft.com>, 
+	Andi Kleen <ak@linux.intel.com>, Kai Huang <kai.huang@intel.com>, 
+	Sandipan Das <sandipan.das@amd.com>, linux-perf-users@vger.kernel.org, 
+	linux-edac@vger.kernel.org, kvm@vger.kernel.org, linux-pm@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
 
-On Fri, May 16, 2025 at 2:21=E2=80=AFAM Jens Axboe <axboe@kernel.dk> wrote:
->
-> On 5/15/25 12:16 AM, Jason Xing wrote:
-> > From: Jason Xing <kernelxing@tencent.com>
-> >
-> > Replace internal subbuf_start in blktrace with the default policy
-> > in relayfs.
-> >
-> > Remove dropped field from struct blktrace. Correspondingly, call the
-> > common helper in relay. Through incrementing full_count to keep track
-> > of how many times we encountered a full buffer issue, it aids the user
-> > space app in telling how many lost events appear.
->
-> Forgot, I'd rewrite this, "telling how many lost events appear" doesn't
-> make any sense at all, as these events obviously don't appears in the
-> first place.
->
-> By incrementing full_count to keep track of how many times we
-> encountered a full buffer issue, user space will know how many events
-> were lost.
+On Wed, May 14, 2025, Sohil Mehta wrote:
+> On 5/14/2025 7:15 AM, Sean Christopherson wrote:
+> > Compile tested only...
+> > 
+> 
+> No worries. I'll test it out. I am assuming you want this patch to go as
+> part of this series.
 
-Oh right, I will adjust it!
+Yes please.  I can also post it separately, but that seems unnecessary.
 
-Thanks,
-Jason
+> > --
+> > From: Sean Christopherson <seanjc@google.com>
+> > Date: Wed, 14 May 2025 07:07:55 -0700
+> > Subject: [PATCH] x86/fred: Provide separate IRQ vs. NMI wrappers for "entry"
+> >  from KVM
+> > 
+> > Provide separate wrappers for forwarding IRQs vs NMIs from KVM in
+> > anticipation of adding support for NMI source reporting, which will add
+> > an NMI-only parameter, i.e. will further pollute the current API with a
+> > param that is a hardcoded for one of the two call sites.
+> > 
+> > Opportunistically tag the non-FRED NMI wrapper __always_inline, as the
+> > compiler could theoretically generate a function call and trigger and a
+> > (completely benign) "leaving noinstr" warning.
+> > 
+> 
+> If this is really a concern, wouldn't there be similar semantics in
+> other places as well?
 
->
-> --
-> Jens Axboe
+There are, e.g. the stubs in include/linux/context_tracking_state.h and many
+other places.  It looks ridiculous, but the compiler will generate RET+CALL for
+literal nops if the right sanitizers are enabled.  E.g. see commit
+432727f1cb6e ("KVM: VMX: Always inline to_vmx() and to_kvm_vmx()").
+
+> > @@ -70,14 +71,26 @@ __visible void fred_entry_from_user(struct pt_regs *regs);
+> >  __visible void fred_entry_from_kernel(struct pt_regs *regs);
+> >  __visible void __fred_entry_from_kvm(struct pt_regs *regs);
+> >  
+> > -/* Can be called from noinstr code, thus __always_inline */
+> > -static __always_inline void fred_entry_from_kvm(unsigned int type, unsigned int vector)
+> > +/* Must be called from noinstr code, thus __always_inline */
+> > +static __always_inline void fred_nmi_from_kvm(void)
+> >  {
+> >  	struct fred_ss ss = {
+> >  		.ss     =__KERNEL_DS,
+> > -		.type   = type,
+> > +		.type   = EVENT_TYPE_NMI,
+> > +		.vector = NMI_VECTOR,
+> > +		.nmi    = true,
+> > +		.lm     = 1,
+> > +	};
+> > +
+> > +	asm_fred_entry_from_kvm(ss);
+> > +}
+> > +
+> 
+> The original code uses spaces for alignment. Since we are modifying it,
+> I am thinking of changing it to tabs.
+
+Oof, yeah, definitely do that.
