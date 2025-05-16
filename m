@@ -1,141 +1,155 @@
-Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D018F20E6E6
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 16 May 2025 01:15:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C114423AD;
+	Fri, 16 May 2025 02:08:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747358147; cv=none; b=XXfHLn+DsRAus/Q2bepeqa16eDi1RV5l4uBPHrghcjB8fItFT106b54Z9ksiIrjiHahTp2ognCxXKAetS7wohiEBCS0uGOI7B4Zg+RZruHlY0Kb1cInZaJXrICIMQd1DCiUyRz7d8v1n2RlI8RbbVgItPYJIrdj2jHM/Po99vZs=
+	t=1747361320; cv=none; b=lhejPIJZunqfY6iTvFENa4nZ6W14FPi0Ddn2xzlaw9c0Gpmeq052AZ3YR4/Jl9yZ28A0Qe4rU5+9GMgLdDSMXVWl4h3/8m6LJOa9KRrqfnzt9XSA5bsyU9466NTH3i912XWTv6HTQoezjdbRYZQabpxTUXs+h312bEXRo3qEXeQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747358147; c=relaxed/simple;
-	bh=NIzlTsdcB+N3toFqpEFnhBW4WHNKbcmfhgrOkvMx7bE=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=SHtpW/uM/cazeSBviXmQQNRtNdm0MriY08C6Y2nK6/QsOuNstj8u6Z9eekwY3JDCoraWxRil0PSusL0JQJjSHzQmwec86slp1opR5EBtIwWoV4rdX0oumAT3W5iYT5/UPbV8Yt3II7RL7jErio2/E+biGipDArJ4toLZwaAjTF0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=yasT5pOt; arc=none smtp.client-ip=209.85.216.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1747361320; c=relaxed/simple;
+	bh=irBezzit9VaurM2oY6CR9RnmhuZ2ej9ZOUEf0wkyeis=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=LDYYgBwSDCxeN7V8gEPalVI5adVioJ5IlmnqCJ05bKj0J1L2S3Z/0f7UTsF4oQ9fw0HlUkPmmNI7x3KS/+xzVy30+mROxp3x1Gc3ANa2jMPPC6lcp/opODwaic+c5/OSNGAe3k5t+gdwvxaLahcFaErVrZiFKSuCxaam+3iU1g4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ma+NaXL+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="yasT5pOt"
-Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-30adbe9b568so1506315a91.1
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 15 May 2025 18:15:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747358145; x=1747962945; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=XVMuD/PalT/pmzH7BG3QdDQAVO8SDVrpqfTHUU96orc=;
-        b=yasT5pOtkKZ2HIA+K53Sqk6H4Ev8CXGSUQ58YSHc821Ly+j4DoAPt9SguA4b+QGp7p
-         3kXm3LYhtjpsz+pRT6dskwUlHoo1nU+BtBUHdivyiBqYR7IeWMld0yiWyG63qXqOkZim
-         PpwHdxjrSeV8Se24vrlRbQl/1p1HvizesDBX++ds8cl2eg+nE3NQ7WiutdmQSHRq2hY0
-         2obLDB+RR2cz4uNHhrVhhkLrbEqcVkJA8sRydxDA7reF+FlstnY4L89fNTYBN5JyZAC6
-         UqRO7Q2G0L1M8bHS91dmzw7fnyphVs0p5QNOIg3d2kM7AqpoFLvxsBEjWlJETHO+BgaB
-         iAvQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747358145; x=1747962945;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=XVMuD/PalT/pmzH7BG3QdDQAVO8SDVrpqfTHUU96orc=;
-        b=gNx34iFQPZfWCHldcyYq3DWcXV4nH8qRvW5e4gevwRm7BGj012+z1HIHxMBOQ0Hvvu
-         +tA8AwPD5gfoJ7T88l+VLQV1Zp+SLFkfRkIaNXFDmSQKn5H3ZYf+DOZW/zQINT7CW5U9
-         YxXyQyITJKcmGcZo9OGNPu/ccTF7WCX/raYo4vgy5qiVn1mS8EEQUOoIODRKvFoEbotH
-         U/KAuQf0yS1YB6PZGiPzmVghg02NmasQSe3JmlctZO/zcCfCCugN1Yre7/GIHIvjoQJv
-         KSNk4rVYuGaOB7yX1EljnfF7DYMCLCP/tXAFPlFMOniGQtRODIpoODoaqy6z61vbe1fJ
-         FcsA==
-X-Forwarded-Encrypted: i=1; AJvYcCV5mDe+leMaOLKoN5tjP486h2GL3aSIEH2rRoxgCGGIzNBzqQKs7BYPXjguO3eHqooiqD+qfec8Tqf1fYSF2KmUi5M=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy+lY0+T3uJmEADep7/LvF3NsrKeHJgS8uCuzK3Iy4fGeavj16I
-	BHsaMuwL97oRges9bq/59rAXWXyEwSSUJoF3Da96QKBv18MXXhknqJ/9mPs8YR52py+vFfDM8Ta
-	8008yQQ==
-X-Google-Smtp-Source: AGHT+IG5J9s2NMDhY7/8A4O+MyMGUN6e8x3str2oF1VXVAVtOy4jEWK/Fd7BwjZNXFkmEs5DGaZLrHwGgt0=
-X-Received: from pjyp5.prod.google.com ([2002:a17:90a:e705:b0:30e:7783:edb6])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:3905:b0:30e:6a25:e4e6
- with SMTP id 98e67ed59e1d1-30e7d5acafcmr1469988a91.22.1747358145046; Thu, 15
- May 2025 18:15:45 -0700 (PDT)
-Date: Thu, 15 May 2025 18:15:43 -0700
-In-Reply-To: <e12abcca-b7b4-404d-b379-8636e5b68813@intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ma+NaXL+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D046FC4CEE7;
+	Fri, 16 May 2025 02:08:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747361320;
+	bh=irBezzit9VaurM2oY6CR9RnmhuZ2ej9ZOUEf0wkyeis=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=ma+NaXL+4Mtot2QdyJisGok4fSar6B6ZHbnuRUQgLIStXRoYxycb93Pc16grhxEMN
+	 gBlNSoNCS0OXXuA8kzkf5ZZyWw8L8F18kCx6eKes1jLL08BYgsgPFD7PNZLC/pn5Yw
+	 weYCHYAl9MRC34fOSQR19GxowfdGHPjjL524nHVV9zZUxNPFoVIg4dRKP/sUYdv1Pu
+	 hr8f4DvLXbhd63/CNusfWOvI84n/o6/NKkda13/ceMDqcCOv+e3WkJ1JwgZnsTiwLW
+	 Vs19poIhuKyeMpkex3no/IG0+3lCZL2eNX0kejIIXjXddXFwcJcE2YLAWWVR9WKR7k
+	 F1sA9qaw78JRg==
+Date: Fri, 16 May 2025 11:08:37 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Jason Xing <kerneljasonxing@gmail.com>
+Cc: axboe@kernel.dk, rostedt@goodmis.org, mathieu.desnoyers@efficios.com,
+ akpm@linux-foundation.org, linux-kernel@vger.kernel.org,
+ linux-block@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Jason Xing
+ <kernelxing@tencent.com>, Yushan Zhou <katrinzhou@tencent.com>
+Subject: Re: [PATCH v2 2/4] relayfs: introduce dump of relayfs statistics
+ function
+Message-Id: <20250516110837.355d963224cf74ea2b020d9d@kernel.org>
+In-Reply-To: <20250515061643.31472-3-kerneljasonxing@gmail.com>
+References: <20250515061643.31472-1-kerneljasonxing@gmail.com>
+	<20250515061643.31472-3-kerneljasonxing@gmail.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-References: <20250513203803.2636561-1-sohil.mehta@intel.com>
- <20250513203803.2636561-2-sohil.mehta@intel.com> <aCSljsvI0A-HC_DT@google.com>
- <e12abcca-b7b4-404d-b379-8636e5b68813@intel.com>
-Message-ID: <aCaRvwnkXf07Mtue@google.com>
-Subject: Re: [PATCH v6 1/9] x86/fred, KVM: VMX: Pass event data to the FRED
- entry point from KVM
-From: Sean Christopherson <seanjc@google.com>
-To: Sohil Mehta <sohil.mehta@intel.com>
-Cc: x86@kernel.org, linux-kernel@vger.kernel.org, Xin Li <xin@zytor.com>, 
-	"H . Peter Anvin" <hpa@zytor.com>, Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, 
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	Tony Luck <tony.luck@intel.com>, Zhang Rui <rui.zhang@intel.com>, 
-	Steven Rostedt <rostedt@goodmis.org>, Andrew Cooper <andrew.cooper3@citrix.com>, 
-	"Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>, Jacob Pan <jacob.pan@linux.microsoft.com>, 
-	Andi Kleen <ak@linux.intel.com>, Kai Huang <kai.huang@intel.com>, 
-	Sandipan Das <sandipan.das@amd.com>, linux-perf-users@vger.kernel.org, 
-	linux-edac@vger.kernel.org, kvm@vger.kernel.org, linux-pm@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Wed, May 14, 2025, Sohil Mehta wrote:
-> On 5/14/2025 7:15 AM, Sean Christopherson wrote:
-> > Compile tested only...
-> > 
+On Thu, 15 May 2025 14:16:41 +0800
+Jason Xing <kerneljasonxing@gmail.com> wrote:
+
+> From: Jason Xing <kernelxing@tencent.com>
 > 
-> No worries. I'll test it out. I am assuming you want this patch to go as
-> part of this series.
-
-Yes please.  I can also post it separately, but that seems unnecessary.
-
-> > --
-> > From: Sean Christopherson <seanjc@google.com>
-> > Date: Wed, 14 May 2025 07:07:55 -0700
-> > Subject: [PATCH] x86/fred: Provide separate IRQ vs. NMI wrappers for "entry"
-> >  from KVM
-> > 
-> > Provide separate wrappers for forwarding IRQs vs NMIs from KVM in
-> > anticipation of adding support for NMI source reporting, which will add
-> > an NMI-only parameter, i.e. will further pollute the current API with a
-> > param that is a hardcoded for one of the two call sites.
-> > 
-> > Opportunistically tag the non-FRED NMI wrapper __always_inline, as the
-> > compiler could theoretically generate a function call and trigger and a
-> > (completely benign) "leaving noinstr" warning.
-> > 
+> In this version, only support dumping the counter for buffer full and
+> implement the framework of how it works.
 > 
-> If this is really a concern, wouldn't there be similar semantics in
-> other places as well?
-
-There are, e.g. the stubs in include/linux/context_tracking_state.h and many
-other places.  It looks ridiculous, but the compiler will generate RET+CALL for
-literal nops if the right sanitizers are enabled.  E.g. see commit
-432727f1cb6e ("KVM: VMX: Always inline to_vmx() and to_kvm_vmx()").
-
-> > @@ -70,14 +71,26 @@ __visible void fred_entry_from_user(struct pt_regs *regs);
-> >  __visible void fred_entry_from_kernel(struct pt_regs *regs);
-> >  __visible void __fred_entry_from_kvm(struct pt_regs *regs);
-> >  
-> > -/* Can be called from noinstr code, thus __always_inline */
-> > -static __always_inline void fred_entry_from_kvm(unsigned int type, unsigned int vector)
-> > +/* Must be called from noinstr code, thus __always_inline */
-> > +static __always_inline void fred_nmi_from_kvm(void)
-> >  {
-> >  	struct fred_ss ss = {
-> >  		.ss     =__KERNEL_DS,
-> > -		.type   = type,
-> > +		.type   = EVENT_TYPE_NMI,
-> > +		.vector = NMI_VECTOR,
-> > +		.nmi    = true,
-> > +		.lm     = 1,
-> > +	};
-> > +
-> > +	asm_fred_entry_from_kvm(ss);
-> > +}
-> > +
+> Users can pass certain flag to fetch what field/statistics they expect
+> to know. Each time it only returns one result. So do not pass multiple
+> flags.
 > 
-> The original code uses spaces for alignment. Since we are modifying it,
-> I am thinking of changing it to tabs.
+> Reviewed-by: Yushan Zhou <katrinzhou@tencent.com>
+> Signed-off-by: Jason Xing <kernelxing@tencent.com>
+> ---
+> v2
+> 1. refactor relay_dump() and make it only return a pure size_t result
+> of the value that users specifies.
+> 2. revise the commit log.
+> ---
+>  include/linux/relay.h |  7 +++++++
+>  kernel/relay.c        | 31 +++++++++++++++++++++++++++++++
+>  2 files changed, 38 insertions(+)
+> 
+> diff --git a/include/linux/relay.h b/include/linux/relay.h
+> index ce7a1b396872..3fb285716e34 100644
+> --- a/include/linux/relay.h
+> +++ b/include/linux/relay.h
+> @@ -31,6 +31,12 @@
+>  /*
+>   * Relay buffer statistics dump
+>   */
+> +enum {
+> +	RELAY_DUMP_BUF_FULL = (1 << 0),
+> +
+> +	RELAY_DUMP_LAST = RELAY_DUMP_BUF_FULL,
+> +};
+> +
+>  struct rchan_buf_stats
+>  {
+>  	unsigned int full_count;	/* counter for buffer full */
+> @@ -167,6 +173,7 @@ struct rchan *relay_open(const char *base_filename,
+>  			 void *private_data);
+>  extern void relay_close(struct rchan *chan);
+>  extern void relay_flush(struct rchan *chan);
+> +extern size_t relay_dump(struct rchan *chan, int flags);
+>  extern void relay_subbufs_consumed(struct rchan *chan,
+>  				   unsigned int cpu,
+>  				   size_t consumed);
+> diff --git a/kernel/relay.c b/kernel/relay.c
+> index eb3f630f3896..f47fc750e559 100644
+> --- a/kernel/relay.c
+> +++ b/kernel/relay.c
+> @@ -701,6 +701,37 @@ void relay_flush(struct rchan *chan)
+>  }
+>  EXPORT_SYMBOL_GPL(relay_flush);
+>  
+> +/**
+> + *	relay_dump - dump channel buffer statistics
 
-Oof, yeah, definitely do that.
+nit: relay_dump() can mislead to dump relay channel contents.
+Can you rename it to relay_stats() or relay_get_stats()?
+
+Thanks,
+
+> + *	@chan: the channel
+> + *	@flags: select particular information to dump
+> + *
+> + *	Returns the count of certain field that caller specifies.
+> + */
+> +size_t relay_dump(struct rchan *chan, int flags)
+> +{
+> +	unsigned int i, count = 0;
+> +	struct rchan_buf *rbuf;
+> +
+> +	if (!chan || flags > RELAY_DUMP_LAST)
+> +		return 0;
+> +
+> +	if (chan->is_global) {
+> +		rbuf = *per_cpu_ptr(chan->buf, 0);
+> +		if (flags & RELAY_DUMP_BUF_FULL)
+> +			count = rbuf->stats.full_count;
+> +	} else {
+> +		for_each_online_cpu(i) {
+> +			if ((rbuf = *per_cpu_ptr(chan->buf, i)))
+> +				if (flags & RELAY_DUMP_BUF_FULL)
+> +					count += rbuf->stats.full_count;
+> +		}
+> +	}
+> +
+> +	return count;
+> +}
+> +EXPORT_SYMBOL_GPL(relay_dump);
+> +
+>  /**
+>   *	relay_file_open - open file op for relay files
+>   *	@inode: the inode
+> -- 
+> 2.43.5
+> 
+
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
