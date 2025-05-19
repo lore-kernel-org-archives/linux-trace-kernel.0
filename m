@@ -1,22 +1,22 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5958B26B2DD;
-	Mon, 19 May 2025 10:27:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACC17272E57;
+	Mon, 19 May 2025 10:27:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747650478; cv=none; b=EQ9Rls7XV3Oif1MfICGaXezwRoFaBz1YWUwIwIs6963ELAtJBT3rN4ZT2a6vYRh7KQVtivf5hyiSFE4gOAwf/DNMuLh9QTbIG5wUEQ+PxmurzUvJkNNjxIIePkjnDPU8axhsj2M1dR3CM+7rrAZz0TrCkCVdlx3UxZRcuMoKi7Q=
+	t=1747650479; cv=none; b=cEdmv7aMWT48AnTc8AkuA8T3ok0IIZ7zN2T0ayYlcq2ubAGhxBO1cK99CmQ4/t1ydgB9TKQBWNuvsuIv8WTEN43Y4h4qA4gvBRy3BkFm+H1o2VvSVsowAZUG8UVGxklFTx4IgElFQQliuYBJMM6LDqcd1FCrlrh8y8QIaQ+UVaE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747650478; c=relaxed/simple;
-	bh=qJDv1BXN5yWZ5K4l43v0Q0Y/hBlA52rY2AeOAgH0sp4=;
+	s=arc-20240116; t=1747650479; c=relaxed/simple;
+	bh=wn2eJuS+zEx8XuEUjHUhCIJA/y0N3h9PIoDYfiC14KY=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=BkFw0A0LAAHtUNHceHYjgXBM4s3xOGWY8PNSzF6CjeOASOAoxk78J8+kTL7qLv1wS9BxafRsqwm+esKx+cb06+WlrH6RxiQbWuk9X8vaRo/+mowBft0ZyYDQjc30UizYKR50vNFoTXymBMBtIJWo8fRM4w6gD31OH06JoE1+NN0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=gGe0iye/; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=O70+IAR4; arc=none smtp.client-ip=193.142.43.55
+	 MIME-Version; b=Zx+z0ET5L1R2zSv1Z/4VWg6nUXnxQhPnFXoA7nX6jGMkzAJ0olrqzmE1Ra3tu3GJYjNLw26pPFTuNEaS1qTg42LxtFuT3El6q2p2B5wDN6XVlJa5vRZTzlT9Ewv0a3wy1wluVEHQX4r/9j/6g/UaV4WG4Kc23sGGBwOuZG7VvBo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=YpVN7oyM; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=LW2MJUj1; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="gGe0iye/";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="O70+IAR4"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="YpVN7oyM";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="LW2MJUj1"
 From: Nam Cao <namcao@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
 	s=2020; t=1747650475;
@@ -24,21 +24,21 @@ DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Z6cG4CYhJME6IWrbowQEwUqJrs4mnBUYPJ+5/yQExiE=;
-	b=gGe0iye/U9sYWsGpHRtfdK/C1/NHaxuIK2P7EpLTBk1oYQLcegX8MVXztuEoPKuJoKo3Ow
-	bkJ38Yh73xXxkpDRm/kHCUcabvGhE/tUZQonGAhCzArb24DaESyfVTQV+qhSxUpvkPHwnK
-	P4mOUeXVkjViay0HuaV0l6igZGJ84TUivoYFxBYLYHm3v2JTqa4qCbDK6bFrhEfdJtKPF0
-	v8AHZMov+zpYgol0pt6SnyAMkeDhUkCZJjxbD4hQITdScSlgiF7YrsPRGxFabeEM/qFkQt
-	d4bGresOLRB85lV/Z7VjwwLa3MP8xFX0PSQMz4PgmcbvDv4Dwd0DfO/pmE3GQg==
+	bh=X6K97kNqS9iVwLaZLV56vbzJZXc6QFuHBHlvLvdFEbg=;
+	b=YpVN7oyMBLJQtmr7JR3Y6e5ju1Uyi3OTqmR5HrJLePXbBx6ciUjlIxNg7tx35pJozoh8cv
+	5s3MZ5J1CdeZaNiUyXoq1v5rGC+qlDM+FaEdPAb3B8PiDF6JLzbZkKl0IvKX6IlJXmDPzV
+	ik38g2Bvo3sSVmQOYbevvwmEpXqtrOwAcVQfrKcUX+wxiFmEJvC7mjYsCuAukERzlgIY85
+	Hz8+1j+b9kUlupge5HCua3E4n0VdmnTSNelpr3CLKy6UUWTJUfEcIrM9Bjt5jBEzdQ8f73
+	MHKKWd9IxN1/WbNSi42Kg/D5ec76usPqxlsS2SYIuVo0qEvsnv7PIKhmvBzaXQ==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
 	s=2020e; t=1747650475;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Z6cG4CYhJME6IWrbowQEwUqJrs4mnBUYPJ+5/yQExiE=;
-	b=O70+IAR4cUUN1HtDH2Mztvp1ZH5EvxCYTOngCaQhrd5dDW5oKHVUSMmZfYJadIbIdPMTlc
-	98aE3zxQOaEYlEDg==
+	bh=X6K97kNqS9iVwLaZLV56vbzJZXc6QFuHBHlvLvdFEbg=;
+	b=LW2MJUj1IYBUxnpUfQbV0B37n94oiMidMp/4ZKI1Z2o9xR7YbhQlQt2JGS0BJt0R24dIle
+	tIoRL2mZrstMsACg==
 To: Steven Rostedt <rostedt@goodmis.org>,
 	Gabriele Monaco <gmonaco@redhat.com>,
 	linux-trace-kernel@vger.kernel.org,
@@ -47,9 +47,9 @@ Cc: john.ogness@linutronix.de,
 	Nam Cao <namcao@linutronix.de>,
 	Petr Mladek <pmladek@suse.com>,
 	Sergey Senozhatsky <senozhatsky@chromium.org>
-Subject: [PATCH v9 03/22] panic: Add vpanic()
-Date: Mon, 19 May 2025 12:27:21 +0200
-Message-Id: <9c150ab4d847f6ed9c2cdf17c78f8075a4cc32f9.1747649899.git.namcao@linutronix.de>
+Subject: [PATCH v9 04/22] rv: Let the reactors take care of buffers
+Date: Mon, 19 May 2025 12:27:22 +0200
+Message-Id: <e1591e780ba7e6e2598fa5333195496fb29f2c6c.1747649899.git.namcao@linutronix.de>
 In-Reply-To: <cover.1747649899.git.namcao@linutronix.de>
 References: <cover.1747649899.git.namcao@linutronix.de>
 Precedence: bulk
@@ -60,94 +60,198 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-vpanic() is useful for implementing runtime verification reactors. Add it.
+Each RV monitor has one static buffer to send to the reactors. If multiple
+errors are detected simultaneously, the one buffer could be overwritten.
 
+Instead, leave it to the reactors to handle buffering.
+
+Reviewed-by: Gabriele Monaco <gmonaco@redhat.com>
 Signed-off-by: Nam Cao <namcao@linutronix.de>
-Reviewed-by: Petr Mladek <pmladek@suse.com>
 ---
+Cc: Petr Mladek <pmladek@suse.com>
 Cc: John Ogness <john.ogness@linutronix.de>
 Cc: Sergey Senozhatsky <senozhatsky@chromium.org>
 ---
- include/linux/panic.h |  3 +++
- kernel/panic.c        | 18 +++++++++++++-----
- 2 files changed, 16 insertions(+), 5 deletions(-)
+ include/linux/rv.h               |  9 +++++--
+ include/rv/da_monitor.h          | 45 +++++++-------------------------
+ kernel/trace/rv/reactor_panic.c  |  8 ++++--
+ kernel/trace/rv/reactor_printk.c |  8 ++++--
+ kernel/trace/rv/rv_reactors.c    |  2 +-
+ 5 files changed, 30 insertions(+), 42 deletions(-)
 
-diff --git a/include/linux/panic.h b/include/linux/panic.h
-index 2494d51707ef..bcca63a02aef 100644
---- a/include/linux/panic.h
-+++ b/include/linux/panic.h
-@@ -3,6 +3,7 @@
- #define _LINUX_PANIC_H
+diff --git a/include/linux/rv.h b/include/linux/rv.h
+index 3452b5e4b29e..9428e62eb8e9 100644
+--- a/include/linux/rv.h
++++ b/include/linux/rv.h
+@@ -38,7 +38,7 @@ union rv_task_monitor {
+ struct rv_reactor {
+ 	const char		*name;
+ 	const char		*description;
+-	void			(*react)(char *msg);
++	__printf(1, 2) void	(*react)(const char *msg, ...);
+ };
+ #endif
 =20
- #include <linux/compiler_attributes.h>
-+#include <linux/stdarg.h>
- #include <linux/types.h>
+@@ -50,7 +50,7 @@ struct rv_monitor {
+ 	void			(*disable)(void);
+ 	void			(*reset)(void);
+ #ifdef CONFIG_RV_REACTORS
+-	void			(*react)(char *msg);
++	__printf(1, 2) void	(*react)(const char *msg, ...);
+ #endif
+ };
 =20
- struct pt_regs;
-@@ -10,6 +11,8 @@ struct pt_regs;
- extern long (*panic_blink)(int state);
- __printf(1, 2)
- void panic(const char *fmt, ...) __noreturn __cold;
-+__printf(1, 0)
-+void vpanic(const char *fmt, va_list args) __noreturn __cold;
- void nmi_panic(struct pt_regs *regs, const char *msg);
- void check_panic_on_warn(const char *origin);
- extern void oops_enter(void);
-diff --git a/kernel/panic.c b/kernel/panic.c
-index a3889f38153d..278eae74bf17 100644
---- a/kernel/panic.c
-+++ b/kernel/panic.c
-@@ -277,17 +277,17 @@ static void panic_other_cpus_shutdown(bool crash_kexe=
-c)
- }
-=20
- /**
-- *	panic - halt the system
-+ *	vpanic - halt the system
-  *	@fmt: The text string to print
-+ *	@args: Arguments for the format string
-  *
-  *	Display a message, then perform cleanups.
-  *
-  *	This function never returns.
-  */
--void panic(const char *fmt, ...)
-+void vpanic(const char *fmt, va_list args)
- {
- 	static char buf[1024];
--	va_list args;
- 	long i, i_next =3D 0, len;
- 	int state =3D 0;
- 	int old_cpu, this_cpu;
-@@ -338,9 +338,7 @@ void panic(const char *fmt, ...)
-=20
- 	console_verbose();
- 	bust_spinlocks(1);
--	va_start(args, fmt);
- 	len =3D vscnprintf(buf, sizeof(buf), fmt, args);
--	va_end(args);
-=20
- 	if (len && buf[len - 1] =3D=3D '\n')
- 		buf[len - 1] =3D '\0';
-@@ -477,7 +475,17 @@ void panic(const char *fmt, ...)
- 		mdelay(PANIC_TIMER_STEP);
- 	}
- }
-+EXPORT_SYMBOL(vpanic);
-=20
-+/* Identical to vpanic(), except it takes variadic arguments instead of va=
-_list */
-+void panic(const char *fmt, ...)
+@@ -64,6 +64,11 @@ void rv_put_task_monitor_slot(int slot);
+ bool rv_reacting_on(void);
+ int rv_unregister_reactor(struct rv_reactor *reactor);
+ int rv_register_reactor(struct rv_reactor *reactor);
++#else
++static inline bool rv_reacting_on(void)
 +{
++	return false;
++}
+ #endif /* CONFIG_RV_REACTORS */
+=20
+ #endif /* CONFIG_RV */
+diff --git a/include/rv/da_monitor.h b/include/rv/da_monitor.h
+index 510c88bfabd4..15f9ed4e4bb6 100644
+--- a/include/rv/da_monitor.h
++++ b/include/rv/da_monitor.h
+@@ -19,45 +19,22 @@
+ #ifdef CONFIG_RV_REACTORS
+=20
+ #define DECLARE_RV_REACTING_HELPERS(name, type)							\
+-static char REACT_MSG_##name[1024];								\
+-												\
+-static inline char *format_react_msg_##name(type curr_state, type event)		=
+	\
+-{												\
+-	snprintf(REACT_MSG_##name, 1024,							\
+-		 "rv: monitor %s does not allow event %s on state %s\n",			\
+-		 #name,										\
+-		 model_get_event_name_##name(event),						\
+-		 model_get_state_name_##name(curr_state));					\
+-	return REACT_MSG_##name;								\
+-}												\
+-												\
+-static void cond_react_##name(char *msg)							\
++static void cond_react_##name(type curr_state, type event)					\
+ {												\
+-	if (rv_##name.react)									\
+-		rv_##name.react(msg);								\
+-}												\
+-												\
+-static bool rv_reacting_on_##name(void)								\
+-{												\
+-	return rv_reacting_on();								\
++	if (!rv_reacting_on() || !rv_##name.react)						\
++		return;										\
++	rv_##name.react("rv: monitor %s does not allow event %s on state %s\n",		=
+	\
++			#name,									\
++			model_get_event_name_##name(event),					\
++			model_get_state_name_##name(curr_state));				\
+ }
+=20
+ #else /* CONFIG_RV_REACTOR */
+=20
+ #define DECLARE_RV_REACTING_HELPERS(name, type)							\
+-static inline char *format_react_msg_##name(type curr_state, type event)		=
+	\
+-{												\
+-	return NULL;										\
+-}												\
+-												\
+-static void cond_react_##name(char *msg)							\
++static void cond_react_##name(type curr_state, type event)					\
+ {												\
+ 	return;											\
+-}												\
+-												\
+-static bool rv_reacting_on_##name(void)								\
+-{												\
+-	return 0;										\
+ }
+ #endif
+=20
+@@ -170,8 +147,7 @@ da_event_##name(struct da_monitor *da_mon, enum events_=
+##name event)				\
+ 		return true;									\
+ 	}											\
+ 												\
+-	if (rv_reacting_on_##name())								\
+-		cond_react_##name(format_react_msg_##name(curr_state, event));			\
++	cond_react_##name(curr_state, event);							\
+ 												\
+ 	trace_error_##name(model_get_state_name_##name(curr_state),				\
+ 			   model_get_event_name_##name(event));					\
+@@ -202,8 +178,7 @@ static inline bool da_event_##name(struct da_monitor *d=
+a_mon, struct task_struct
+ 		return true;									\
+ 	}											\
+ 												\
+-	if (rv_reacting_on_##name())								\
+-		cond_react_##name(format_react_msg_##name(curr_state, event));			\
++	cond_react_##name(curr_state, event);							\
+ 												\
+ 	trace_error_##name(tsk->pid,								\
+ 			   model_get_state_name_##name(curr_state),				\
+diff --git a/kernel/trace/rv/reactor_panic.c b/kernel/trace/rv/reactor_pani=
+c.c
+index 0186ff4cbd0b..74c6bcc2c749 100644
+--- a/kernel/trace/rv/reactor_panic.c
++++ b/kernel/trace/rv/reactor_panic.c
+@@ -13,9 +13,13 @@
+ #include <linux/init.h>
+ #include <linux/rv.h>
+=20
+-static void rv_panic_reaction(char *msg)
++__printf(1, 2) static void rv_panic_reaction(const char *msg, ...)
+ {
+-	panic(msg);
 +	va_list args;
 +
-+	va_start(args, fmt);
-+	vpanic(fmt, args);
++	va_start(args, msg);
++	vpanic(msg, args);
 +	va_end(args);
-+}
- EXPORT_SYMBOL(panic);
+ }
 =20
- #define TAINT_FLAG(taint, _c_true, _c_false, _module)			\
+ static struct rv_reactor rv_panic =3D {
+diff --git a/kernel/trace/rv/reactor_printk.c b/kernel/trace/rv/reactor_pri=
+ntk.c
+index 178759dbf89f..2dae2916c05f 100644
+--- a/kernel/trace/rv/reactor_printk.c
++++ b/kernel/trace/rv/reactor_printk.c
+@@ -12,9 +12,13 @@
+ #include <linux/init.h>
+ #include <linux/rv.h>
+=20
+-static void rv_printk_reaction(char *msg)
++__printf(1, 2) static void rv_printk_reaction(const char *msg, ...)
+ {
+-	printk_deferred(msg);
++	va_list args;
++
++	va_start(args, msg);
++	vprintk_deferred(msg, args);
++	va_end(args);
+ }
+=20
+ static struct rv_reactor rv_printk =3D {
+diff --git a/kernel/trace/rv/rv_reactors.c b/kernel/trace/rv/rv_reactors.c
+index 9501ca886d83..740603670dd1 100644
+--- a/kernel/trace/rv/rv_reactors.c
++++ b/kernel/trace/rv/rv_reactors.c
+@@ -490,7 +490,7 @@ void reactor_cleanup_monitor(struct rv_monitor_def *mde=
+f)
+ /*
+  * Nop reactor register
+  */
+-static void rv_nop_reaction(char *msg)
++__printf(1, 2) static void rv_nop_reaction(const char *msg, ...)
+ {
+ }
+=20
 --=20
 2.39.5
 
