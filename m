@@ -1,119 +1,112 @@
-Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40D922D023;
-	Mon, 19 May 2025 07:03:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6284C1F0994;
+	Mon, 19 May 2025 07:04:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747638189; cv=none; b=tSdU1RS0Gn+pFMkXfJ7tvne6mrWkh7hLcv9BwOR7O0CFmerydHNeAoGf6CWBs7lCAAGUYz8HBtyCWR+HkL73bfFqKvIOEmM1h8PwXq4k4JD+O2+yGcXrxMwERmWQcvS0S5vF4io+24BUzQtslQljRGL8IJq0CvWeCowNIkZsRkg=
+	t=1747638277; cv=none; b=NR3COktftyEh1mYllcoIW+FDX7dGETbWFWJcWgFLgBtHoZWFkcT87mDgr2DLgHK3AaTPO6qkq2QiLX1Boc+PRwE5WkBzV7zkZLCIjs5ypREdIof5qa2InnkP1sjH2MhjRU7/ieFx2PDSAReFVVqlArenZF9U17g95cmt8dCWFd4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747638189; c=relaxed/simple;
-	bh=+QQIyZeptuE1kjagxs/WlRzY0nIq8xahaCDnJ9NuxCQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=lW1qBPRvCo6OgCNH013L2mZRkcadanRHcpCkCMUUd4pjoZWUFZQ7oP1fFZK7sRwAwLOCbOOJsTIntaEKj7BKGY3ZoxjszLjXKmseFwno8rHee9+2TvSvu3nftmJw6OaIWNLDIYeDY+/rPxIrzZ48NMowxJkvB2U3hE58eD+WuHs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iiOp+wsw; arc=none smtp.client-ip=209.85.218.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747638277; c=relaxed/simple;
+	bh=5E3h4RaQgBVntlceQfylPWnfv/0GBMosi93LwWHwrU0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=d1eAhIClNsJ1ibJNmCMNBoy30/lBBwTsQapJQ+Y2nQJfS4uzUJUOyetzzw9gOvDF0hq2sHgEcsKXXD4S8z4Bg/ELPY5PxydY5bBVr7GUvQrWVXxRKO4Ve8CDB9RlnN3Ap5s5Ky2iYrnvcsuDaRAB4sCQTQRQfIQprShf+NQIYAY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=lhbW2i0o; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ZMJ812Pw; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iiOp+wsw"
-Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-ace94273f0dso697204166b.3;
-        Mon, 19 May 2025 00:03:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747638186; x=1748242986; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=OLWLfExUQbf5HOnVzoeVJtfvCzuwwopKWrDaQj0e3/A=;
-        b=iiOp+wswHf50VTbivoi6KWimSRMd66cT3qGnhSQ+aeYEvf9pbxmjbrKkSE0lclaqjz
-         7v2RpiPsVdyAtvZ8n+ABWjUJqt+7JQ/avbbwIt82OxLVETnwqSHXR3y2XdQMFBygDPyr
-         VZXuix7F9s3TKKXsctxuDvy5F7gqMjfPJWH3+r+aABZFoZp9NgAtCt11yAp/+qlu8U0s
-         1K9N9+fdLKw9uF7weJacsWfmwwOVeDWya7mmofy3m5PIjFTCsNEibLVGcjj6T8eZE9IF
-         fkyeRWkSU5mz+A9WR2aLxD6hsNa5a87lO1Y2hOsomTed6QBeV2aoNxkT87YuwdE9yIvo
-         s5pA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747638186; x=1748242986;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=OLWLfExUQbf5HOnVzoeVJtfvCzuwwopKWrDaQj0e3/A=;
-        b=jjQCxKjLRuYCo4Lg4OsuvE5JDpBtheWcIvG9vhXcNlQ6IKJqEW21dND8hLvwmhNXu1
-         fUZLxiiQCfyX+80ULeQs26kZUWGeM4LqzmdSbad9z5hSFlsSSWDT40oY5CCtH7VHAxxG
-         PnSld3KGeQo9zH2Ylr+Q8o681OBrqyocVIOe/LG6ycjYW/B3rjGNRFPnxqpOaUwXvhJ1
-         oFVTszf3xgK38DKEMT+BYUbC4+8dIw1YNq9Z0YCCMX8EXhvIer2od6ALsx/XukI2A+8+
-         ZNbCVgme+3sXeVogMHSEX9cbisKNxYC9/folpyRJDH/V+3TacQKm3Zr5nWI1J5C0e1We
-         pwYA==
-X-Forwarded-Encrypted: i=1; AJvYcCUQlsCBk/fYEx2AExZZFCr6V3g/ghWeN7L8nqFjqdsA7ESrvFFuj6ISH6PCPiYKeMrV/uXpq2v16rNcrQwngP/bWe8c@vger.kernel.org, AJvYcCUwXU9ZNScGYxjjAnVAUwGFo2Wmxe26n4fgxkJvGzeT12oBZWmkgtUQmLf6xghBNMTpPfnYKtQlPrak4V8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyphcxW+Vx3gbfMo/8Cb+fneEkWoETBVtdU+YkrBb8mGeCl4GHX
-	H2EMWpqVpzG3YOO7EvW01WusxCuXPIRKybKyKw5QaS7Tx7mgJ53OliHa
-X-Gm-Gg: ASbGncsgecjIDiekHOW5H40IhxgawG7QTPNtsa1O/A5eD28ZZvEixnUPNlN1VZgx7tS
-	aSHZ1BNasQIEuU/Bgbj+lcBlTCehu8KzVQv4wqxOc54pK2h7dIFeBMC15F4eaJYam1vsk053K+D
-	dQVfw2qtEekQBo9+SY/GWBfO8HejQrI4LxS8f32vLV2ATvM/D0xrTvC6QUb5DGZsgEPVlE/50bE
-	rX2fTx3E16/QbCpjQgKrkr0dJcLcrJIg/c5FoEg+FUzeHi7XqOuDRWcBIFJryWR+4KvKbgSD/nO
-	MTo1OsnI6shrEC0SHvJy6khsB1qxdCxAPmZDga0wT6aV9YifB0QpRw4Qmaw12Wd/ajhxaNsYP2u
-	b7hOPetwfWERZgBmeVEuEq+Zk23M51gYJk/MA4jl0yA==
-X-Google-Smtp-Source: AGHT+IFxEaxVZWJ++4Aj8pJPSQPmUS3xe7T18VyMANUL9xOorj1BIjynIQKF94bNWVBPWojKoEJBkw==
-X-Received: by 2002:a17:906:f74f:b0:ad5:557b:c369 with SMTP id a640c23a62f3a-ad5557be832mr484511966b.33.1747638186468;
-        Mon, 19 May 2025 00:03:06 -0700 (PDT)
-Received: from rafal-Predator-PHN16-71.NAT.wroclaw_krzyki_2.vectranet.pl ([89.151.25.111])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad52d277a1fsm543268866b.85.2025.05.19.00.03.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 19 May 2025 00:03:06 -0700 (PDT)
-From: Rafal Bilkowski <rafalbilkowski@gmail.com>
-To: rostedt@goodmis.org,
-	mhiramat@kernel.org
-Cc: mathieu.desnoyers@efficios.com,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	Rafal Bilkowski <rafalbilkowski@gmail.com>
-Subject: [PATCH] trace: Protect trace_iter_expand_format against overflow and ZERO_SIZE_PTR
-Date: Mon, 19 May 2025 09:02:40 +0200
-Message-ID: <20250519070240.256200-1-rafalbilkowski@gmail.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="lhbW2i0o";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ZMJ812Pw"
+Date: Mon, 19 May 2025 09:04:25 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1747638272;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=tYDHwH7urvXioKWTExMFnaxkBNGWVvHftZf4gJ0+Nc0=;
+	b=lhbW2i0oDxsGsW+6jQNHPrWi5UetZItpV6wk5ooRjk4TEWuHZY/vI4wqtjXZZj4qFBHTsg
+	iWFLg/3GqlYmsyIsSmuKinzW35DS8pCYPb8JC/4HerU0jrxkb5LGJhFeHCofbz4GSt83Sp
+	9IPjZZzCtnV98CjrPKWyf+FifX+q2Dbf0B1XUSLCAYv8zGSPw6TZC7+TFTka/C6czPErF7
+	1f6SN5hqGD5zDumY957Dx+86K1yWOF77ZPmABrgQ/G0KBwB8fZcDR+4ptxHfNAmHH0ZjyD
+	me3nVCy4dkxAe8EayQI3Z0FKuSa6R6MWRX8fCG5r/qtqr8IDdeGJepxq18j7Ug==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1747638272;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=tYDHwH7urvXioKWTExMFnaxkBNGWVvHftZf4gJ0+Nc0=;
+	b=ZMJ812PwLwFxtiKGd0/XDy/AneQHL1xBjVS+ujKg905mEnw2n7G/UyRvcad/DT4WE3udp+
+	POqE53VJttJlIKBw==
+From: Nam Cao <namcao@linutronix.de>
+To: Gabriele Monaco <gmonaco@redhat.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>,
+	linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
+	john.ogness@linutronix.de
+Subject: Re: [PATCH v8 20/22] rv: Add rtapp_sleep monitor
+Message-ID: <20250519070425.xDEPNyBe@linutronix.de>
+References: <cover.1747046848.git.namcao@linutronix.de>
+ <3199656a35cc8a7acc2e30d320defa778acf8532.1747046848.git.namcao@linutronix.de>
+ <06d48208-686a-4d33-95ca-4e4d5991a42f@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <06d48208-686a-4d33-95ca-4e4d5991a42f@redhat.com>
 
-Add a check in trace_iter_expand_format to prevent integer overflow when
-calculating the new format buffer size, and to handle the case where krealloc
-returns ZERO_SIZE_PTR. This improves robustness and prevents potential
-memory corruption or kernel crashes.
+On Fri, May 16, 2025 at 04:31:03PM +0000, Gabriele Monaco wrote:
+> 2025-05-12T10:56:30Z Nam Cao <namcao@linutronix.de>:
+> > diff --git a/kernel/trace/rv/monitors/sleep/Kconfig b/kernel/trace/rv/monitors/sleep/Kconfig
+> > new file mode 100644
+> > index 000000000000..d00aa1aae069
+> > --- /dev/null
+> > +++ b/kernel/trace/rv/monitors/sleep/Kconfig
+> > @@ -0,0 +1,13 @@
+> > +# SPDX-License-Identifier: GPL-2.0-only
+> > +#
+> > +config RV_MON_SLEEP
+> > +   depends on RV
+> > +   select RV_LTL_MONITOR
+> > +   depends on HAVE_SYSCALL_TRACEPOINTS
+> > +   depends on RV_MON_RTAPP
+> > +   select TRACE_IRQFLAGS
+> 
+> I had a different approach towards those (the preemptirq tracepoints)
+> under the assumption adding them introduces latency. Besides me picking
+> the wrong config (I used IRQSOFF, I'll fix that) I considered the monitor
+> should /depend/ on the tracepoint instead of select it.
+>
+> This way it looks easier to me to avoid making a change that introduces
+> latency slip in when distribution maintainers enable the monitor (e.g.
+> TRACE_IRQFLAGS may be enabled on debug kernels and using depends would
+> automatically prevent the monitor on non-debug kernels).
+> 
+> Now is this concern justified? Is it only a performance issue for the
+> preempt tracepoint or not even there?  I'd like to keep consistency but I
+> really can't decide on which approach is better.
 
-Signed-off-by: Rafal Bilkowski <rafalbilkowski@gmail.com>
----
- kernel/trace/trace.c        | 4 ++++
- kernel/trace/trace_output.c | 2 ++
- 2 files changed, 6 insertions(+)
+Both approach is fine, I don't have a strong preference.
 
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index 5b8db27fb6ef..637bd1ff9325 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -3596,6 +3596,10 @@ char *trace_iter_expand_format(struct trace_iterator *iter)
- 	if (!iter->tr || iter->fmt == static_fmt_buf)
- 		return NULL;
- 
-+	/* Protection against overflow and ZERO_SIZE_PTR returned from krealloc */
-+	if (check_add_overflow(iter->fmt_size, STATIC_FMT_BUF_SIZE, &iter->fmt_size))
-+		return NULL;
-+
- 	tmp = krealloc(iter->fmt, iter->fmt_size + STATIC_FMT_BUF_SIZE,
- 		       GFP_KERNEL);
- 	if (tmp) {
-diff --git a/kernel/trace/trace_output.c b/kernel/trace/trace_output.c
-index b9ab06c99543..42560027001a 100644
---- a/kernel/trace/trace_output.c
-+++ b/kernel/trace/trace_output.c
-@@ -979,6 +979,8 @@ static void print_fields(struct trace_iterator *iter, struct trace_event_call *c
- 							  iter->fmt_size);
- 			if (ret < 0)
- 				trace_seq_printf(&iter->seq, "(0x%px)", pos);
-+			else if (ret == 0)
-+				trace_seq_printf(&iter->seq, "(0x%px:<NULL>)", pos);
- 			else
- 				trace_seq_printf(&iter->seq, "(0x%px:%s)",
- 						 pos, iter->fmt);
--- 
-2.43.0
+I doubt that the distribution people would carelessly enable anything new,
+and these monitors are disabled by default. So I wouldn't worry too much.
 
+I will do some measurements on the runtime impact of having these monitors
+built, so that there will be a recommendation whether to enable them in
+distribution kernel. But for now, just like any other debug configs, people
+should expect some performance hit.
+
+> Also curiosity on my side (I didn't try), you require TRACE_IRQFLAGS to
+> use hardirq_context but how different is it from in_hardirq() in your
+> case?
+
+There is a wake_timersd() in __irq_exit_rcu(). This is a wakeup performed
+within interrupt handling, but in_hardirq() doesn't say that.
+
+Best regards,
+Nam
