@@ -1,81 +1,76 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8324927511A;
-	Mon, 19 May 2025 15:12:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 127C372639;
+	Mon, 19 May 2025 15:33:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747667564; cv=none; b=Qjw7SxfOlbCCecujJHOPsNT0VU51f98m7mVc1ZKNtlqQTgWxl0Gnei3FG00yJnVQr3lRBCbKLTzpjgyeLnGndo2C2wj/cYIsmIFKSlc4m6Prb3yvyePmTP/N87yrBjLeq/tYkpOHjtxpaPLSB2Y0KPo7JHNt1QIVdAbSSVwHNXw=
+	t=1747668822; cv=none; b=IRzkvsCnCHULjKr0ZtWMuvw8FCIOExWgu2ZH1PTHZIOmRZrLYLuSWyn3jOT7JPnhJQAAnytEcJmY3Z3pJD+RlBatfKBXI3TGgPhF3ls1iCyqwKeNFRIqQlPDljU2AgVBvj/KLEKi1GEwTJYQMisGpBvvP/zicLkbn8EESzdQyZQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747667564; c=relaxed/simple;
-	bh=F2x2lSFiD7EPnjwMTLKRMzcQO67IFR8BeGPkqvkIEFQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CwRJ0P6WkCS9ByNpNOGI32Pl5XtsbAzEz6RaaSgyUomhMSIGpjxLGqzGp00a3DLVHQ4vEKuP9SyfquX9T7J6ponLm20pQu0NdKP6RfmiS5wwzF6JLAFI88D34GA7P+KEIbzgf11hL0zSjur7nQpi/Xo+uItcJrtXz8a5TYdkqUQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PoJIt/or; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PoJIt/or"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CBA3BC4CEE4;
-	Mon, 19 May 2025 15:12:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747667564;
-	bh=F2x2lSFiD7EPnjwMTLKRMzcQO67IFR8BeGPkqvkIEFQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=PoJIt/orUOH+KTd5pUCa8DjVEdBtRwJiAbeEYP+SYuKvB5QUwqE09HTGMS+D5PRak
-	 ZodHEfGzeibKjdRlL4M3L5cva2CrFCnJMrfLa/tCLeLAdTQXQVShhGFZpi6Myzpj9F
-	 CzXoQgoyRgeHZAENLp3zF96fT95/B7S8JZIsSKO5HriWkO3Aqz/wB8Z89uDUkKi/aD
-	 HiBiatMPnDleE/w5FuRCn6fHqomPVt1dJl5RBeQFRRdFll5ojsp4yIAhXHrcXHI09z
-	 D8dS91qLMmceVX07SyxP6uw+5cDTIYk0U2n+TEU3rs8KPhgkZotMmbL4duuJVA6vKb
-	 XfMtVJ394+Iug==
-Date: Mon, 19 May 2025 16:12:39 +0100
-From: Will Deacon <will@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Nam Cao <namcao@linutronix.de>, Gabriele Monaco <gmonaco@redhat.com>,
-	linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
-	john.ogness@linutronix.de,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v6 17/22] arm64: mm: Add page fault trace points
-Message-ID: <20250519151238.GB17177@willie-the-truck>
-References: <cover.1745999587.git.namcao@linutronix.de>
- <554038c996662282df8a9d0482ef06f8d44fccc5.1745999587.git.namcao@linutronix.de>
- <20250516140449.GB13612@willie-the-truck>
- <3E29A42D-8A6A-4342-8C60-2BEF1EDCD640@goodmis.org>
+	s=arc-20240116; t=1747668822; c=relaxed/simple;
+	bh=lrLr7Kc5pMqOCD87GeQi49MHcJwGpnQAiHPxBcWrvpQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=YH1rbicVUaAbLFnyQhoxs92TMCuIlCzo7VcZzBX0z/JUGAHv0746NoCRmYjVI/xt325h7hoGf2dSd5vdWHhDmoYGoqyAwRJjfW06wRQP9oyK77N2hhA4m97qdTMPvja4xeNuQxS7q0OsMb04H7H9qQUDsdWQO2yloBqvjfv6Quc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 44E39C4CEE4;
+	Mon, 19 May 2025 15:33:40 +0000 (UTC)
+Date: Mon, 19 May 2025 11:33:39 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ bpf@vger.kernel.org, x86@kernel.org, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Josh Poimboeuf <jpoimboe@kernel.org>, Peter Zijlstra
+ <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, Jiri Olsa
+ <jolsa@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov
+ <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin"
+ <hpa@zytor.com>, Andrii Nakryiko <andrii@kernel.org>
+Subject: Re: [PATCH v9 00/13] unwind_user: x86: Deferred unwinding
+ infrastructure
+Message-ID: <20250519113339.027c2a68@batman.local.home>
+In-Reply-To: <aCfMzJ-zN0JKKTjO@google.com>
+References: <20250513223435.636200356@goodmis.org>
+	<20250514132720.6b16880c@gandalf.local.home>
+	<aCfMzJ-zN0JKKTjO@google.com>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <3E29A42D-8A6A-4342-8C60-2BEF1EDCD640@goodmis.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Fri, May 16, 2025 at 10:42:48AM -0400, Steven Rostedt wrote:
+On Fri, 16 May 2025 16:39:56 -0700
+Namhyung Kim <namhyung@kernel.org> wrote:
+
+> Hi Steve,
 > 
+> On Wed, May 14, 2025 at 01:27:20PM -0400, Steven Rostedt wrote:
+> > On Tue, 13 May 2025 18:34:35 -0400
+> > Steven Rostedt <rostedt@goodmis.org> wrote:
+> >   
+> > > This has modifications in x86 and I would like it to go through the x86
+> > > tree. Preferably it can go into this merge window so we can focus on getting
+> > > perf and ftrace to work on top of this.  
+> > 
+> > I think it may be best for me to remove the two x86 specific patches, and
+> > rebuild the ftrace work on top of it. For testing, I'll just keep those two
+> > patches in my tree locally, but then I can get this moving for this merge
+> > window.  
 > 
-> On May 16, 2025 10:04:50 AM EDT, Will Deacon <will@kernel.org> wrote:
-> >
-> >> +	if (user_mode(regs))
-> >> +		trace_page_fault_user(addr, regs, esr);
-> >> +	else
-> >> +		trace_page_fault_kernel(addr, regs, esr);
-> >
-> >Why is this after kprobe_page_fault()?
-> >
-> >It's also a shame that the RV monitor can't hook into perf, as we
-> >already have a sw event for page faults that you could use instead of
-> >adding something new.
-> >
+> Maybe I asked this before but I don't remember if I got the answer. :)
+> How does it handle task exits as it won't go to userspace?  I guess it'll
+> lose user callstacks for exit syscalls and other termination paths.
 > 
-> Perf events work for perf only. My question is why isn't this a tracepoint
-> that perf could hook into?
+> Similarly, it will miss user callstacks in the samples at the end of
+> profiling if the target tasks remain in the kernel (or they sleep).
+> It looks like a fundamental limitation of the deferred callchains.
+> 
 
-Well, the perf event came first in this case, so we're stuck with it :/
+Ah, I think I forgot about that. I believe the exit path can also be a
+faultable path. All it needs is a hook to do the exit. Is there any
+"task work" clean up on exit? I need to take a look.
 
-I was hoping we could settle for a generic helper that could emit both
-the trace event and the perf event (so that the ordering of the two is
-portable across architectures) but, judging by Nam's reply, the trace
-event is needed before kprobes gets a look in.
-
-Will
+-- Steve
