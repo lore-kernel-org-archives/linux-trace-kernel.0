@@ -1,123 +1,302 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E60A9288C21;
-	Mon, 19 May 2025 16:17:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AEE01E9B21;
+	Mon, 19 May 2025 17:10:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747671431; cv=none; b=JeogPziBlrAZqfK4FaFO/rC9Qt6N/YCbBn7LJRiBYPw/UBVFWyWcAmyPb4EsFPkAy7n+Me3uaHh7SWXTUCCtJ+LuhmfwZQ2kg2+aDJKMDVVvK9NQZYlDjiv0X1i8MMzCMywkND0bhaG7d3a8/htNv3yppQM1eLBmMgeI5FptJ9g=
+	t=1747674648; cv=none; b=LGZcg9Yjl8YJo/t6dQdhP/m/XztuQtvB1Q0D2u/J1iLUKkZMoVEX4DVX9Etf5KT5ohLG6PnCzBRLm/9yrsTGbacrpzpe6W0B1ccYJlZqmyD03M05Mlzxgr7SJV0+rxLXy82+DCNEpl95NQfNhlnAIctk5jbLEz8JAwCTDqklSNI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747671431; c=relaxed/simple;
-	bh=UNbvV6wmNjcbacGds8xFAjj2VpWeSkjDPtLp3906aSk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SdVss8Zc0M7eaRVVtAoZT5S2EBjICTtLM9EStnCGgcGfvX4KpGR9mKPnDbxLTLHrmOala85/x4ShF3CmVCBA4NGxjSgW5v0NS2xBc6vn4RPT3BlfTJW4qqnmaAWtWJ99i1gX8qBPe2uJHJkF5HwuaQB23zU0zGhiNioqzC0flO8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 09C361655;
-	Mon, 19 May 2025 09:16:56 -0700 (PDT)
-Received: from J2N7QTR9R3 (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8161B3F5A1;
-	Mon, 19 May 2025 09:17:07 -0700 (PDT)
-Date: Mon, 19 May 2025 17:17:02 +0100
-From: Mark Rutland <mark.rutland@arm.com>
-To: Will Deacon <will@kernel.org>
-Cc: Nam Cao <namcao@linutronix.de>, Steven Rostedt <rostedt@goodmis.org>,
-	Gabriele Monaco <gmonaco@redhat.com>,
-	linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
-	john.ogness@linutronix.de,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v6 17/22] arm64: mm: Add page fault trace points
-Message-ID: <aCtZfiU8bgkSAgLh@J2N7QTR9R3>
-References: <cover.1745999587.git.namcao@linutronix.de>
- <554038c996662282df8a9d0482ef06f8d44fccc5.1745999587.git.namcao@linutronix.de>
- <20250516140449.GB13612@willie-the-truck>
+	s=arc-20240116; t=1747674648; c=relaxed/simple;
+	bh=jBJnRwW6I+AEyq4e/HnFfARoLiRBaG6k41aGuf3ZfsA=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=kKiyEvtFtLbUadlesLWmTLVhC30+loAkRR1y3+wldTN/SA4T1T0GRFYlH0ELo9CvGRsIT/iTKuPxoaIZdI9wKQIFp2arvqlJZk8/0e/sGUDK/tkMPtWP0xNwFI2zEIuvRAate7rUIO6lcSBm4nk+qoQLSKwrP3C0tJkoEwm8FBc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=grTTUBit; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="grTTUBit"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747674647; x=1779210647;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=jBJnRwW6I+AEyq4e/HnFfARoLiRBaG6k41aGuf3ZfsA=;
+  b=grTTUBitXHsklyZTIzA3wSU4HpYhwQMA4pjFTdZFzC9wMd+7d6NlZ2NV
+   eBsvkKbSLzUwPMCRiC9RMMaaE/wiigHuBfd9qH0gaQ+owRVeQ41c88yrl
+   ZgzsXNtAZG2COlgx3oPPo0Ku6LM85MjcQvMdDLJOw2hAxf0A7mLbf7Jjm
+   U9OdFhjs0qjMt9ERVYqpVCHgn1x1Sy+TL8s5sZ3R15tskod0ckCeYm/nr
+   ldxRKcOVkTMj7wkX6tc+gdQj/hpRA7PhIqCEZFJ3V9t/msMGxvIN5ShZV
+   C9iK4XHaJPnmBu+mfClIbmlY4wRoVqO/mcQjS1c7vuSjw/uuh6jFHPa0H
+   w==;
+X-CSE-ConnectionGUID: EbUjfgEFQvaQdKhLMWY1ww==
+X-CSE-MsgGUID: fN675RE8RBq6XqCAD3C6UA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11438"; a="66997930"
+X-IronPort-AV: E=Sophos;i="6.15,301,1739865600"; 
+   d="scan'208";a="66997930"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2025 10:10:46 -0700
+X-CSE-ConnectionGUID: dSAdntPZT7O3jx7uAhBjhA==
+X-CSE-MsgGUID: Qy6G2AgZRPKFB0xBse1OrQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,301,1739865600"; 
+   d="scan'208";a="139315745"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.35])
+  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2025 10:10:40 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Mon, 19 May 2025 20:10:37 +0300 (EEST)
+To: Shuai Xue <xueshuai@linux.alibaba.com>
+cc: rostedt@goodmis.org, Lukas Wunner <lukas@wunner.de>, 
+    linux-pci@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
+    linux-edac@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+    helgaas@kernel.org, bhelgaas@google.com, tony.luck@intel.com, bp@alien8.de, 
+    mhiramat@kernel.org, mathieu.desnoyers@efficios.com, oleg@redhat.com, 
+    naveen@kernel.org, davem@davemloft.net, anil.s.keshavamurthy@intel.com, 
+    mark.rutland@arm.com, peterz@infradead.org, tianruidong@linux.alibaba.com
+Subject: Re: [PATCH v8] PCI: hotplug: Add a generic RAS tracepoint for hotplug
+ event
+In-Reply-To: <20250512013839.45960-1-xueshuai@linux.alibaba.com>
+Message-ID: <87b1f8c6-bd72-b1a8-40a6-bbf552552806@linux.intel.com>
+References: <20250512013839.45960-1-xueshuai@linux.alibaba.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250516140449.GB13612@willie-the-truck>
+Content-Type: text/plain; charset=US-ASCII
 
-On Fri, May 16, 2025 at 03:04:50PM +0100, Will Deacon wrote:
-> On Wed, Apr 30, 2025 at 01:02:32PM +0200, Nam Cao wrote:
-> > Add page fault trace points, which are useful to implement RV monitor which
-> > watches page faults.
-> > 
-> > Signed-off-by: Nam Cao <namcao@linutronix.de>
-> > ---
-> > Cc: Catalin Marinas <catalin.marinas@arm.com>
-> > Cc: Will Deacon <will@kernel.org>
-> > Cc: linux-arm-kernel@lists.infradead.org
-> > ---
-> >  arch/arm64/mm/fault.c | 8 ++++++++
-> >  1 file changed, 8 insertions(+)
-> > 
-> > diff --git a/arch/arm64/mm/fault.c b/arch/arm64/mm/fault.c
-> > index ef63651099a9..e3f096b0dffd 100644
-> > --- a/arch/arm64/mm/fault.c
-> > +++ b/arch/arm64/mm/fault.c
-> > @@ -44,6 +44,9 @@
-> >  #include <asm/tlbflush.h>
-> >  #include <asm/traps.h>
-> >  
-> > +#define CREATE_TRACE_POINTS
-> > +#include <trace/events/exceptions.h>
-> > +
-> >  struct fault_info {
-> >  	int	(*fn)(unsigned long far, unsigned long esr,
-> >  		      struct pt_regs *regs);
-> > @@ -559,6 +562,11 @@ static int __kprobes do_page_fault(unsigned long far, unsigned long esr,
-> >  	if (kprobe_page_fault(regs, esr))
-> >  		return 0;
-> >  
-> > +	if (user_mode(regs))
-> > +		trace_page_fault_user(addr, regs, esr);
-> > +	else
-> > +		trace_page_fault_kernel(addr, regs, esr);
+On Mon, 12 May 2025, Shuai Xue wrote:
+
+> Hotplug events are critical indicators for analyzing hardware health,
+> particularly in AI supercomputers where surprise link downs can
+> significantly impact system performance and reliability.
 > 
-> Why is this after kprobe_page_fault()?
+> To this end, define a new TRACING_SYSTEM named pci, add a generic RAS
+> tracepoint for hotplug event to help healthy check, and generate
+> tracepoints for pcie hotplug event. Add enum pci_hotplug_event in
+> include/uapi/linux/pci.h so applications like rasdaemon can register
+> tracepoint event handlers for it.
+> 
+> The output like below:
+> 
+> $ echo 1 > /sys/kernel/debug/tracing/events/pci/pci_hp_event/enable
+> $ cat /sys/kernel/debug/tracing/trace_pipe
+>     <...>-206     [001] .....    40.373870: pci_hp_event: 0000:00:02.0 slot:10, event:Link Down
+> 
+>     <...>-206     [001] .....    40.374871: pci_hp_event: 0000:00:02.0 slot:10, event:Card not present
+> 
+> Suggested-by: Lukas Wunner <lukas@wunner.de>
+> Suggested-by: Steven Rostedt <rostedt@goodmis.org>
+> Signed-off-by: Shuai Xue <xueshuai@linux.alibaba.com>
+> Reviewed-by: Lukas Wunner <lukas@wunner.de>
+> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> ---
+> changes since v7:
+> - replace the TRACE_INCLUDE_PATH to avoid macro conflict per Steven
+> - pick up Reviewed-by from Lukas Wunner
+> ---
+>  drivers/pci/hotplug/Makefile      |  3 ++
+>  drivers/pci/hotplug/pciehp_ctrl.c | 33 ++++++++++++---
+>  drivers/pci/hotplug/trace.h       | 68 +++++++++++++++++++++++++++++++
+>  include/uapi/linux/pci.h          |  7 ++++
+>  4 files changed, 105 insertions(+), 6 deletions(-)
+>  create mode 100644 drivers/pci/hotplug/trace.h
+> 
+> diff --git a/drivers/pci/hotplug/Makefile b/drivers/pci/hotplug/Makefile
+> index 40aaf31fe338..a1a9d1e98962 100644
+> --- a/drivers/pci/hotplug/Makefile
+> +++ b/drivers/pci/hotplug/Makefile
+> @@ -3,6 +3,9 @@
+>  # Makefile for the Linux kernel pci hotplug controller drivers.
+>  #
+>  
+> +# define_trace.h needs to know how to find our header
+> +CFLAGS_pciehp_ctrl.o				:= -I$(src)
+> +
+>  obj-$(CONFIG_HOTPLUG_PCI)		+= pci_hotplug.o
+>  obj-$(CONFIG_HOTPLUG_PCI_COMPAQ)	+= cpqphp.o
+>  obj-$(CONFIG_HOTPLUG_PCI_IBM)		+= ibmphp.o
+> diff --git a/drivers/pci/hotplug/pciehp_ctrl.c b/drivers/pci/hotplug/pciehp_ctrl.c
+> index d603a7aa7483..f9beb4d3a9b8 100644
+> --- a/drivers/pci/hotplug/pciehp_ctrl.c
+> +++ b/drivers/pci/hotplug/pciehp_ctrl.c
+> @@ -23,6 +23,9 @@
+>  #include "../pci.h"
+>  #include "pciehp.h"
+>  
+> +#define CREATE_TRACE_POINTS
+> +#include "trace.h"
+> +
+>  /* The following routines constitute the bulk of the
+>     hotplug controller logic
+>   */
+> @@ -244,12 +247,20 @@ void pciehp_handle_presence_or_link_change(struct controller *ctrl, u32 events)
+>  	case ON_STATE:
+>  		ctrl->state = POWEROFF_STATE;
+>  		mutex_unlock(&ctrl->state_lock);
+> -		if (events & PCI_EXP_SLTSTA_DLLSC)
+> +		if (events & PCI_EXP_SLTSTA_DLLSC) {
+>  			ctrl_info(ctrl, "Slot(%s): Link Down\n",
+>  				  slot_name(ctrl));
+> -		if (events & PCI_EXP_SLTSTA_PDC)
+> +			trace_pci_hp_event(pci_name(ctrl->pcie->port),
+> +					   slot_name(ctrl),
+> +					   PCI_HOTPLUG_LINK_DOWN);
+> +		}
+> +		if (events & PCI_EXP_SLTSTA_PDC) {
+>  			ctrl_info(ctrl, "Slot(%s): Card not present\n",
+>  				  slot_name(ctrl));
+> +			trace_pci_hp_event(pci_name(ctrl->pcie->port),
+> +					   slot_name(ctrl),
+> +					   PCI_HOTPLUG_CARD_NOT_PRESENT);
+> +		}
+>  		pciehp_disable_slot(ctrl, SURPRISE_REMOVAL);
+>  		break;
+>  	default:
+> @@ -269,6 +280,9 @@ void pciehp_handle_presence_or_link_change(struct controller *ctrl, u32 events)
+>  					      INDICATOR_NOOP);
+>  			ctrl_info(ctrl, "Slot(%s): Card not present\n",
+>  				  slot_name(ctrl));
+> +			trace_pci_hp_event(pci_name(ctrl->pcie->port),
+> +					   slot_name(ctrl),
+> +					   PCI_HOTPLUG_CARD_NOT_PRESENT);
+>  		}
+>  		mutex_unlock(&ctrl->state_lock);
+>  		return;
+> @@ -281,12 +295,19 @@ void pciehp_handle_presence_or_link_change(struct controller *ctrl, u32 events)
+>  	case OFF_STATE:
+>  		ctrl->state = POWERON_STATE;
+>  		mutex_unlock(&ctrl->state_lock);
+> -		if (present)
+> +		if (present) {
+>  			ctrl_info(ctrl, "Slot(%s): Card present\n",
+>  				  slot_name(ctrl));
+> -		if (link_active)
+> -			ctrl_info(ctrl, "Slot(%s): Link Up\n",
+> -				  slot_name(ctrl));
+> +			trace_pci_hp_event(pci_name(ctrl->pcie->port),
+> +					   slot_name(ctrl),
+> +					   PCI_HOTPLUG_CARD_PRESENT);
+> +		}
+> +		if (link_active) {
+> +			ctrl_info(ctrl, "Slot(%s): Link Up\n", slot_name(ctrl));
+> +			trace_pci_hp_event(pci_name(ctrl->pcie->port),
+> +					   slot_name(ctrl),
+> +					   PCI_HOTPLUG_LINK_UP);
+> +		}
+>  		ctrl->request_result = pciehp_enable_slot(ctrl);
+>  		break;
+>  	default:
+> diff --git a/drivers/pci/hotplug/trace.h b/drivers/pci/hotplug/trace.h
+> new file mode 100644
+> index 000000000000..21329c198019
+> --- /dev/null
+> +++ b/drivers/pci/hotplug/trace.h
+> @@ -0,0 +1,68 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +#if !defined(_TRACE_HW_EVENT_PCI_HP_H) || defined(TRACE_HEADER_MULTI_READ)
+> +#define _TRACE_HW_EVENT_PCI_HP_H
+> +
+> +#include <linux/tracepoint.h>
+> +
+> +#undef TRACE_SYSTEM
+> +#define TRACE_SYSTEM pci
+> +
+> +#define PCI_HOTPLUG_EVENT					\
+> +	EM(PCI_HOTPLUG_LINK_UP,			"Link Up")	\
+> +	EM(PCI_HOTPLUG_LINK_DOWN,		"Link Down")	\
+> +	EM(PCI_HOTPLUG_CARD_PRESENT,		"Card present")	\
+> +	EMe(PCI_HOTPLUG_CARD_NOT_PRESENT,	"Card not present")
 
-The kprobe_page_fault() gunk is doing something quite different, and is
-poorly named. That's trying to fixup the PC (and some other state) to
-hide kprobe details from the fault handling logic when an out-of-line
-copy of an instruction somehow triggers a fault.
+Hi,
 
-Logically, that *should* happen before the tracepoints, and shouldn't be
-moved later. For other reasons it needs to be even earlier in the fault
-handling flow, and is currently far too late, but that only ends up
-mattering int he presence of other kernel bugs. For now I think it
-should stay where it is.
+While I was thinking of adding tracing into PCIe BW controller (bwctrl), 
+I ended up thinking that perhaps it would make more sense to have PCIe 
+Link related tracepoints which would cover both hotplug and bwctrl so that 
+also Link Speed changes would be reported through the same trace event.
 
-More details below, for the curious and/or deranged.
+Downgraded speed may indicate there's something wrong with the card and 
+the Link Speed does have performance impact too for those who are pushing 
+BW boundaries such as AI systems.
 
-The kprobe_page_fault() gunk is trying to fix up the case where an
-instruction has been kprobed, an out-of-line copy of that instruction is
-being stepped, and the out-of-line instruction has triggered a fault.
-When that happens, kprobe_page_fault() tries to reset the faulting PC
-and DAIF such that it looks like the fault was taken from the original
-PC of the probed instruction.
+So my suggestion is:
 
-The real logic for that happens in kprobe_fault_handler(), which adjusts
-the values in pt_regs, but does not handle the live DAIF value. It also
-doesn't handle the PMR when pNMI is in use. Due to this, the fault
-handler can run with DAIF bits masked unexpectedly, and a subsequent
-exception return *could* go wrong.
+- Add "Link Speed changed" to the event types.
+- Add Link Speed and Width into the event format (and probably also Flit 
+  mode as PCIe gen6 is coming).
 
-Luckily all code with an extable entry has been blacklisted for kprobes
-since commit:
+> +/* Enums require being exported to userspace, for user tool parsing */
+> +#undef EM
+> +#undef EMe
+> +#define EM(a, b)	TRACE_DEFINE_ENUM(a);
+> +#define EMe(a, b)	TRACE_DEFINE_ENUM(a);
+> +
+> +PCI_HOTPLUG_EVENT
+> +
+> +/*
+> + * Now redefine the EM() and EMe() macros to map the enums to the strings
+> + * that will be printed in the output.
+> + */
+> +#undef EM
+> +#undef EMe
+> +#define EM(a, b)	{a, b},
+> +#define EMe(a, b)	{a, b}
+> +
+> +TRACE_EVENT(pci_hp_event,
+> +
+> +	TP_PROTO(const char *port_name,
+> +		 const char *slot,
+> +		 const int event),
+> +
+> +	TP_ARGS(port_name, slot, event),
+> +
+> +	TP_STRUCT__entry(
+> +		__string(	port_name,	port_name	)
+> +		__string(	slot,		slot		)
+> +		__field(	int,		event	)
+> +	),
+> +
+> +	TP_fast_assign(
+> +		__assign_str(port_name);
+> +		__assign_str(slot);
+> +		__entry->event = event;
+> +	),
+> +
+> +	TP_printk("%s slot:%s, event:%s\n",
+> +		__get_str(port_name),
+> +		__get_str(slot),
+> +		__print_symbolic(__entry->event, PCI_HOTPLUG_EVENT)
+> +	)
+> +);
+> +
+> +#endif /* _TRACE_HW_EVENT_PCI_HP_H */
+> +
+> +#undef TRACE_INCLUDE_PATH
+> +#define TRACE_INCLUDE_PATH .
+> +#undef TRACE_INCLUDE_FILE
+> +#define TRACE_INCLUDE_FILE trace
+> +
+> +/* This part must be outside protection */
+> +#include <trace/define_trace.h>
+> diff --git a/include/uapi/linux/pci.h b/include/uapi/linux/pci.h
+> index a769eefc5139..4f150028965d 100644
+> --- a/include/uapi/linux/pci.h
+> +++ b/include/uapi/linux/pci.h
+> @@ -39,4 +39,11 @@
+>  #define PCIIOC_MMAP_IS_MEM	(PCIIOC_BASE | 0x02)	/* Set mmap state to MEM space. */
+>  #define PCIIOC_WRITE_COMBINE	(PCIIOC_BASE | 0x03)	/* Enable/disable write-combining. */
+>  
+> +enum pci_hotplug_event {
+> +	PCI_HOTPLUG_LINK_UP,
+> +	PCI_HOTPLUG_LINK_DOWN,
+> +	PCI_HOTPLUG_CARD_PRESENT,
+> +	PCI_HOTPLUG_CARD_NOT_PRESENT,
+> +};
+> +
+>  #endif /* _UAPILINUX_PCI_H */
+> 
 
-  888b3c8720e0a403 ("arm64: Treat all entry code as non-kprobe-able")
+-- 
+ i.
 
-... so we should only get here if there's another kernel bug that causes
-an unmarked dereference of a faulting address, in which case we're
-likely to BUG() anyway.
-
-The real fix would be to hoist this out to the arm64 entry code (and
-handle similar for other EL1 exceptions), and get rid of all the
-__kprobes annotations inthe fault code.
-
-Mark.
