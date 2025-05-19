@@ -1,44 +1,44 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E612277000;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E494B277038;
 	Mon, 19 May 2025 10:28:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747650484; cv=none; b=Tm8mO7k3x5assu4kzYs9MpCON+swZNRWdrGhfBaQwoQedycYvzvL9eUBLMvfhDH1AZ/rltCfsLzYs8I5ynnzWsWZfaFZK33rgFeah2O07w62WIKjotTLEQP9MrJS09FGYHgA66cSx2UsIphsfUmzRRUiADHLmYmnRHBf+OFsGRo=
+	t=1747650485; cv=none; b=P2GD7qhSycoM/so7q6IG+K172puMD4ur5H6hmdcfMxrtRtOMOX+0YHs0N+EAEpzXgj8wni49WM5KaTL9FKd/tvCOZ000UlB1KjaskrkCvlL1t5afLNViO2WY5vHZ04gAo5LHnio8t1aBjcYdS8GEZ0ajuMQtyW3iPCnbDm/TeYI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747650484; c=relaxed/simple;
-	bh=A4EJCMnwn1nvmjlAmIL8RCldwVes+eDt/ZK/Lm5Mnow=;
+	s=arc-20240116; t=1747650485; c=relaxed/simple;
+	bh=X9c4o1srAPJS4jJpzIEanJMP/2JsQCKDEEYxWOor5n0=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=VqH8tHrr/5aLjBQaa5GVcnSinXdpOIdjkE4yVP/u77lq9JZFETCNBHMx0MhEsnfvp+y+AWZHsfN9Nx1Cm5ij0o7rUqKsdU3StedlTolwx0Zr4+6U7cACPwvVCwuoq/+ggWnIVzZkrUs9a2nQSz2OWQqAQ1vZIEuJW0vuVAxL7rQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=zDQg9nOP; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=sGy0XyOL; arc=none smtp.client-ip=193.142.43.55
+	 MIME-Version; b=Lbnu+XfSZ/59Ypgx1vaR6hZIJh3FULnGzylp0z0r4hqdSvadtEUfXva5LM4L9uuFs0zcvkwODFpQO4HamoBxVHk4HYBOBu63he8JGLnBL0a+bn/BxjNuB3pT9Rp9fNJ5ujY8Yq4PCxmUGE+BANXAZhbNWRalLibBNk5Lpt6B6Bs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=OEEILpGc; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=t4572h2u; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="zDQg9nOP";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="sGy0XyOL"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="OEEILpGc";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="t4572h2u"
 From: Nam Cao <namcao@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1747650480;
+	s=2020; t=1747650479;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=gwFkxej4QZC7RTlNI207kU5RD71foXihmtUnBoEIdew=;
-	b=zDQg9nOPYH4TwsxtZOLIUpOB9ObB0xKrCfYR94kRZDjR8R06nmWIRx1Yq+KQbd+HpTp0xZ
-	DMil9hP9PH6Dxktu+PpZYF7BoAAcMJf1N3Dd8JymUtoUE/Po8WAA2tkVOH323yhjv593sC
-	W3vwzs/X7Y4wa7W5g4xyt29CnTQboP650Z6saZ/4PO6lNv4G882DJAAJ/tLyuKfzl+NcbL
-	K+hh6hddg8qnDxNtU9luZYL/GAQZ4UgX/qzcSirLkNf52ThCIn99Y41IYU//fIpB2BBJA5
-	QQu6v5CqlNN2T4IMt4/Z3tsKmOqfzmjBY10F1WU7Ze3Ax+JAvSDDcLFWzuoCdg==
+	bh=8Rsz08m+bw3GeEZ+Ch8OHtu4e+JTcBt4qFbYPKBHdss=;
+	b=OEEILpGcniRhkWsb7x65nndryqppDUn5lom53LFaxkuJ++vQCzsudZ40EdqdzNLhbzx/ei
+	amF0wDckZbPc8sLkk7xbqbmt5n1I5NcKIsD4MxJSOkXnAh9mL/FCxW9VqmrleFcQNkbnGL
+	z/O99oM5ltPz0f4JsFIg7q7E8TFYOG/WBGe5Lu6x0C2brqvpp8cuh9yG7LeGqP7pTFtaTb
+	4G4s3M8q7OsoJ3gamvjyKG4y3piqNEYfH4Ux0P3HUBV0LRYTuo9y4JPNYUSHVfoFqzhYgT
+	icudbp2fFCYnqzBN9cGtxnTeSySHSLxnNU9gi51JcCkjRLfjzUtzqiZXy9WhjQ==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1747650480;
+	s=2020e; t=1747650479;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=gwFkxej4QZC7RTlNI207kU5RD71foXihmtUnBoEIdew=;
-	b=sGy0XyOLyIJmG1TnAiqd8jYX3xU4zazf5KPq63/vgR3gVGvfxmxPJjKF/1Az9/IeSRGX3f
-	uilY69snl0/fAlCg==
+	bh=8Rsz08m+bw3GeEZ+Ch8OHtu4e+JTcBt4qFbYPKBHdss=;
+	b=t4572h2uLJd1aG8IXhrWYIRJ/qAjwL9xjvITWS2cf/hCatJLn8ogZmfJ+u1DgS45GozKuG
+	7oTFL+zq1flw9YDg==
 To: Steven Rostedt <rostedt@goodmis.org>,
 	Gabriele Monaco <gmonaco@redhat.com>,
 	linux-trace-kernel@vger.kernel.org,
@@ -50,12 +50,12 @@ Cc: john.ogness@linutronix.de,
 	Borislav Petkov <bp@alien8.de>,
 	Dave Hansen <dave.hansen@linux.intel.com>,
 	x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>,
+	"H . Peter Anvin" <hpa@zytor.com>,
 	Andy Lutomirski <luto@kernel.org>,
 	Peter Zijlstra <peterz@infradead.org>
-Subject: [PATCH v9 16/22] x86/tracing, x86/mm: Move page fault tracepoints to generic
-Date: Mon, 19 May 2025 12:27:34 +0200
-Message-Id: <b631a2818c9761c2e8c873f1c6898d7ad673599d.1747649899.git.namcao@linutronix.de>
+Subject: [PATCH v9 15/22] x86/tracing, x86/mm: Remove redundant trace_pagefault_key
+Date: Mon, 19 May 2025 12:27:33 +0200
+Message-Id: <81985c244f49fba5328078fdfb29198442af0f67.1747649899.git.namcao@linutronix.de>
 In-Reply-To: <cover.1747649899.git.namcao@linutronix.de>
 References: <cover.1747649899.git.namcao@linutronix.de>
 Precedence: bulk
@@ -66,8 +66,11 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Page fault trace points are interesting for other architectures as well.
-Move them to be generic.
+trace_pagefault_key is used to optimize the pagefault tracepoints when it
+is disabled. However, tracepoints already have built-in static_key for this
+exact purpose.
+
+Remove this redundant key.
 
 Signed-off-by: Nam Cao <namcao@linutronix.de>
 ---
@@ -76,92 +79,145 @@ Cc: Ingo Molnar <mingo@redhat.com>
 Cc: Borislav Petkov <bp@alien8.de>
 Cc: Dave Hansen <dave.hansen@linux.intel.com>
 Cc: x86@kernel.org
-Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: H. Peter Anvin <hpa@zytor.com>
 Cc: Andy Lutomirski <luto@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
 ---
- arch/x86/mm/Makefile                                |  2 --
- arch/x86/mm/fault.c                                 |  2 +-
- .../asm/trace =3D> include/trace/events}/exceptions.h | 13 ++++---------
- 3 files changed, 5 insertions(+), 12 deletions(-)
- rename {arch/x86/include/asm/trace =3D> include/trace/events}/exceptions.h=
- (79%)
+ arch/x86/include/asm/trace/common.h      | 12 ------------
+ arch/x86/include/asm/trace/exceptions.h  | 18 ++++++------------
+ arch/x86/include/asm/trace/irq_vectors.h |  1 -
+ arch/x86/kernel/Makefile                 |  1 -
+ arch/x86/kernel/tracepoint.c             | 21 ---------------------
+ arch/x86/mm/fault.c                      |  3 ---
+ 6 files changed, 6 insertions(+), 50 deletions(-)
+ delete mode 100644 arch/x86/include/asm/trace/common.h
+ delete mode 100644 arch/x86/kernel/tracepoint.c
 
-diff --git a/arch/x86/mm/Makefile b/arch/x86/mm/Makefile
-index 32035d5be5a0..629a8bf12219 100644
---- a/arch/x86/mm/Makefile
-+++ b/arch/x86/mm/Makefile
-@@ -34,8 +34,6 @@ obj-y				+=3D pat/
- CFLAGS_physaddr.o		:=3D -fno-stack-protector
- CFLAGS_mem_encrypt_identity.o	:=3D -fno-stack-protector
-=20
--CFLAGS_fault.o :=3D -I $(src)/../include/asm/trace
+diff --git a/arch/x86/include/asm/trace/common.h b/arch/x86/include/asm/tra=
+ce/common.h
+deleted file mode 100644
+index f0f9bcdb74d9..000000000000
+--- a/arch/x86/include/asm/trace/common.h
++++ /dev/null
+@@ -1,12 +0,0 @@
+-#ifndef _ASM_TRACE_COMMON_H
+-#define _ASM_TRACE_COMMON_H
 -
- obj-$(CONFIG_X86_32)		+=3D pgtable_32.o iomap_32.o
-=20
- obj-$(CONFIG_HUGETLB_PAGE)	+=3D hugetlbpage.o
-diff --git a/arch/x86/mm/fault.c b/arch/x86/mm/fault.c
-index 7e3e51fa1f95..ad4cb1502316 100644
---- a/arch/x86/mm/fault.c
-+++ b/arch/x86/mm/fault.c
-@@ -38,7 +38,7 @@
- #include <asm/sev.h>			/* snp_dump_hva_rmpentry()	*/
-=20
- #define CREATE_TRACE_POINTS
--#include <asm/trace/exceptions.h>
-+#include <trace/events/exceptions.h>
-=20
- /*
-  * Returns 0 if mmiotrace is disabled, or if the fault is not
-diff --git a/arch/x86/include/asm/trace/exceptions.h b/include/trace/events=
-/exceptions.h
-similarity index 79%
-rename from arch/x86/include/asm/trace/exceptions.h
-rename to include/trace/events/exceptions.h
-index 34bc8214a2d7..a631f8de8917 100644
+-#ifdef CONFIG_TRACING
+-DECLARE_STATIC_KEY_FALSE(trace_pagefault_key);
+-#define trace_pagefault_enabled()			\
+-	static_branch_unlikely(&trace_pagefault_key)
+-#else
+-static inline bool trace_pagefault_enabled(void) { return false; }
+-#endif
+-
+-#endif
+diff --git a/arch/x86/include/asm/trace/exceptions.h b/arch/x86/include/asm=
+/trace/exceptions.h
+index 6b1e87194809..34bc8214a2d7 100644
 --- a/arch/x86/include/asm/trace/exceptions.h
-+++ b/include/trace/events/exceptions.h
-@@ -7,7 +7,7 @@
++++ b/arch/x86/include/asm/trace/exceptions.h
+@@ -6,10 +6,6 @@
+ #define _TRACE_PAGE_FAULT_H
 =20
  #include <linux/tracepoint.h>
+-#include <asm/trace/common.h>
+-
+-extern int trace_pagefault_reg(void);
+-extern void trace_pagefault_unreg(void);
 =20
--DECLARE_EVENT_CLASS(x86_exceptions,
-+DECLARE_EVENT_CLASS(exceptions,
+ DECLARE_EVENT_CLASS(x86_exceptions,
 =20
- 	TP_PROTO(unsigned long address, struct pt_regs *regs,
- 		 unsigned long error_code),
-@@ -22,7 +22,7 @@ DECLARE_EVENT_CLASS(x86_exceptions,
-=20
- 	TP_fast_assign(
- 		__entry->address =3D address;
--		__entry->ip =3D regs->ip;
-+		__entry->ip =3D instruction_pointer(regs);
- 		__entry->error_code =3D error_code;
- 	),
-=20
-@@ -30,18 +30,13 @@ DECLARE_EVENT_CLASS(x86_exceptions,
+@@ -34,15 +30,13 @@ DECLARE_EVENT_CLASS(x86_exceptions,
  		  (void *)__entry->address, (void *)__entry->ip,
  		  __entry->error_code) );
 =20
--DEFINE_EVENT(x86_exceptions, page_fault_user,
-+DEFINE_EVENT(exceptions, page_fault_user,
- 	TP_PROTO(unsigned long address,	struct pt_regs *regs, unsigned long error=
+-#define DEFINE_PAGE_FAULT_EVENT(name)				\
+-DEFINE_EVENT_FN(x86_exceptions, name,				\
+-	TP_PROTO(unsigned long address,	struct pt_regs *regs,	\
+-		 unsigned long error_code),			\
+-	TP_ARGS(address, regs, error_code),			\
+-	trace_pagefault_reg, trace_pagefault_unreg);
++DEFINE_EVENT(x86_exceptions, page_fault_user,
++	TP_PROTO(unsigned long address,	struct pt_regs *regs, unsigned long error=
 _code),
- 	TP_ARGS(address, regs, error_code));
++	TP_ARGS(address, regs, error_code));
+=20
+-DEFINE_PAGE_FAULT_EVENT(page_fault_user);
+-DEFINE_PAGE_FAULT_EVENT(page_fault_kernel);
++DEFINE_EVENT(x86_exceptions, page_fault_kernel,
++	TP_PROTO(unsigned long address,	struct pt_regs *regs, unsigned long error=
+_code),
++	TP_ARGS(address, regs, error_code));
+=20
+ #undef TRACE_INCLUDE_PATH
+ #undef TRACE_INCLUDE_FILE
+diff --git a/arch/x86/include/asm/trace/irq_vectors.h b/arch/x86/include/as=
+m/trace/irq_vectors.h
+index 88e7f0f3bf62..7408bebdfde0 100644
+--- a/arch/x86/include/asm/trace/irq_vectors.h
++++ b/arch/x86/include/asm/trace/irq_vectors.h
+@@ -6,7 +6,6 @@
+ #define _TRACE_IRQ_VECTORS_H
+=20
+ #include <linux/tracepoint.h>
+-#include <asm/trace/common.h>
+=20
+ #ifdef CONFIG_X86_LOCAL_APIC
+=20
+diff --git a/arch/x86/kernel/Makefile b/arch/x86/kernel/Makefile
+index 84cfa179802c..99a783fd4691 100644
+--- a/arch/x86/kernel/Makefile
++++ b/arch/x86/kernel/Makefile
+@@ -141,7 +141,6 @@ obj-$(CONFIG_OF)			+=3D devicetree.o
+ obj-$(CONFIG_UPROBES)			+=3D uprobes.o
+=20
+ obj-$(CONFIG_PERF_EVENTS)		+=3D perf_regs.o
+-obj-$(CONFIG_TRACING)			+=3D tracepoint.o
+ obj-$(CONFIG_SCHED_MC_PRIO)		+=3D itmt.o
+ obj-$(CONFIG_X86_UMIP)			+=3D umip.o
+=20
+diff --git a/arch/x86/kernel/tracepoint.c b/arch/x86/kernel/tracepoint.c
+deleted file mode 100644
+index 03ae1caaa878..000000000000
+--- a/arch/x86/kernel/tracepoint.c
++++ /dev/null
+@@ -1,21 +0,0 @@
+-// SPDX-License-Identifier: GPL-2.0
+-/*
+- * Copyright (C) 2013 Seiji Aguchi <seiji.aguchi@hds.com>
+- */
+-#include <linux/jump_label.h>
+-#include <linux/atomic.h>
 -
--DEFINE_EVENT(x86_exceptions, page_fault_kernel,
-+DEFINE_EVENT(exceptions, page_fault_kernel,
- 	TP_PROTO(unsigned long address,	struct pt_regs *regs, unsigned long error=
-_code),
- 	TP_ARGS(address, regs, error_code));
-=20
--#undef TRACE_INCLUDE_PATH
--#undef TRACE_INCLUDE_FILE
--#define TRACE_INCLUDE_PATH .
--#define TRACE_INCLUDE_FILE exceptions
- #endif /*  _TRACE_PAGE_FAULT_H */
-=20
- /* This part must be outside protection */
+-#include <asm/trace/exceptions.h>
+-
+-DEFINE_STATIC_KEY_FALSE(trace_pagefault_key);
+-
+-int trace_pagefault_reg(void)
+-{
+-	static_branch_inc(&trace_pagefault_key);
+-	return 0;
+-}
+-
+-void trace_pagefault_unreg(void)
+-{
+-	static_branch_dec(&trace_pagefault_key);
+-}
+diff --git a/arch/x86/mm/fault.c b/arch/x86/mm/fault.c
+index 296d294142c8..7e3e51fa1f95 100644
+--- a/arch/x86/mm/fault.c
++++ b/arch/x86/mm/fault.c
+@@ -1455,9 +1455,6 @@ static __always_inline void
+ trace_page_fault_entries(struct pt_regs *regs, unsigned long error_code,
+ 			 unsigned long address)
+ {
+-	if (!trace_pagefault_enabled())
+-		return;
+-
+ 	if (user_mode(regs))
+ 		trace_page_fault_user(address, regs, error_code);
+ 	else
 --=20
 2.39.5
 
