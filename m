@@ -1,111 +1,119 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E228243364
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 19 May 2025 06:21:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40D922D023;
+	Mon, 19 May 2025 07:03:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747635668; cv=none; b=gttaVJy3RCiQifIcjZv2AOlueJTDz7RyX0nw23XPHL5AexPUR8U+Jn4rChlK8cOI40cvvAijIlKFwjC1P8C7SMF+MlHvAgl3yUwsVwKeYmaNXaS5T7QqcrW0ga2b1vaHL7eUw5BUBaiIYeTBTQgOVq/TvBxyAeYDP4C4RhoLQiY=
+	t=1747638189; cv=none; b=tSdU1RS0Gn+pFMkXfJ7tvne6mrWkh7hLcv9BwOR7O0CFmerydHNeAoGf6CWBs7lCAAGUYz8HBtyCWR+HkL73bfFqKvIOEmM1h8PwXq4k4JD+O2+yGcXrxMwERmWQcvS0S5vF4io+24BUzQtslQljRGL8IJq0CvWeCowNIkZsRkg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747635668; c=relaxed/simple;
-	bh=fH4ypnsI/MfhhHZ+DxWHo23PH+rJEDeMHxcWT6aZwo0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Kr1rDH2qyN5PgaGDN0tzlhqHDIC0OZ3C6HHjjcrOwJ3JYcA2LTmStX/nzM0UQb04oWEYveNTBF9gdC7fgTa+izWwtwr3W85m4sB40M6kVDbadEHxnqCUtLhg0n5e5CBn8XVZpRGXLkDGd3eavMBU9rwV19s2VXPRbSo60+Q1z74=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=SFuTk/I7; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1747638189; c=relaxed/simple;
+	bh=+QQIyZeptuE1kjagxs/WlRzY0nIq8xahaCDnJ9NuxCQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=lW1qBPRvCo6OgCNH013L2mZRkcadanRHcpCkCMUUd4pjoZWUFZQ7oP1fFZK7sRwAwLOCbOOJsTIntaEKj7BKGY3ZoxjszLjXKmseFwno8rHee9+2TvSvu3nftmJw6OaIWNLDIYeDY+/rPxIrzZ48NMowxJkvB2U3hE58eD+WuHs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iiOp+wsw; arc=none smtp.client-ip=209.85.218.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SFuTk/I7"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1747635666;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=DxY7EgT/RNd0tv3+QSKlLScSTvHaTBPFXOYePAlhj1I=;
-	b=SFuTk/I7L0Pv8wZqWw0E6qDrUVs9gyj7dSf5U3Z87t8qn1SFd3LrImtr65Zc/DS6n22/HX
-	XZhwoLLgyTpfCnkWMzrMKPIH6Ch0bVZnWLQeAqR3ZKuOpktew+gWTKyJl16em3mscuMIgT
-	rXzg9fcKJr4Pmpy1/kN7RC7QlLKYGK0=
-Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
- [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-538-QhTuNKGANeiqhzg1tF5uZQ-1; Mon, 19 May 2025 02:21:04 -0400
-X-MC-Unique: QhTuNKGANeiqhzg1tF5uZQ-1
-X-Mimecast-MFC-AGG-ID: QhTuNKGANeiqhzg1tF5uZQ_1747635663
-Received: by mail-ej1-f70.google.com with SMTP id a640c23a62f3a-ad5669ab33bso75684066b.3
-        for <linux-trace-kernel@vger.kernel.org>; Sun, 18 May 2025 23:21:03 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iiOp+wsw"
+Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-ace94273f0dso697204166b.3;
+        Mon, 19 May 2025 00:03:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747638186; x=1748242986; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=OLWLfExUQbf5HOnVzoeVJtfvCzuwwopKWrDaQj0e3/A=;
+        b=iiOp+wswHf50VTbivoi6KWimSRMd66cT3qGnhSQ+aeYEvf9pbxmjbrKkSE0lclaqjz
+         7v2RpiPsVdyAtvZ8n+ABWjUJqt+7JQ/avbbwIt82OxLVETnwqSHXR3y2XdQMFBygDPyr
+         VZXuix7F9s3TKKXsctxuDvy5F7gqMjfPJWH3+r+aABZFoZp9NgAtCt11yAp/+qlu8U0s
+         1K9N9+fdLKw9uF7weJacsWfmwwOVeDWya7mmofy3m5PIjFTCsNEibLVGcjj6T8eZE9IF
+         fkyeRWkSU5mz+A9WR2aLxD6hsNa5a87lO1Y2hOsomTed6QBeV2aoNxkT87YuwdE9yIvo
+         s5pA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747635663; x=1748240463;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=DxY7EgT/RNd0tv3+QSKlLScSTvHaTBPFXOYePAlhj1I=;
-        b=bW+/56I7lm+MS2VKEcTxgOmWNSiak3lkpBcuWm5arc2qxTt8CGEAgDGcuadYTt9hFd
-         HwnLYtypkf52cCP19UkvHVIt61mfseD4V/unEqJgMWWd+gt933wfG4dbhqpYUvzSbc1Q
-         3SpvWn+xRf41ZUNXFNwpZH4KeyxKHaFVU0xOfKP7EiVx1ytK/NioOcrQcpng12jF6qrx
-         RQeeyy4zAt6XxRRUXxVdG6YgNFGros8zsrauWfP9X5IaMzj5otlc8jathzQXJy1sgkd0
-         C2Z6L0XwNMFiYXvMQ04pfgzizLKey6wWzpfOJrWXXWhmTSn4jk9ytCnPUlLgwjyQdzf4
-         JsjQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV/Oz+3dxvNCRhtlGy6jY1A0SN820lrGB+ofXdu6SI6q5Cqb8HEP7csMNbZYV3dsBFW0v4m+hbkpsD5tdDZcEgB8AA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy4uZpfDCmW3BkqiqaXuQI5yiJ/QAHCQ73bqBrJSJGMQdYofq0n
-	NZRyWrAyT2xorigVvkYkzqRjCUAPCSBGywIZs7I/uparTiMqxro022q2w4clzikSSm/Q4vjkpqv
-	PkQXApKvGpt9gBpe2C9EnScEoBE9GXW4pPKDcReMg1YQnSIvw64+KHRTGltqgdsDX0ikAZn4Lc+
-	i8dMt9V9E/ekoy2X2iUbwIyIxVsirM9Fzk9/LwlXdfYRnHIBaV
-X-Gm-Gg: ASbGncsl92xypFay8Pbbe6e9TJHmhrvtFHzQFW5yjP588LOfPY8HA9oIbgul5cvJqnU
-	jHXMpC8ga755TxAdB2Bre7ITm8h8g8mE3DTngkBzrZNZYhrCwsnLcV4ccQnGSw5P8ub3xyoZ3ea
-	E/4zGk+8+G/45Rgafe0v7tuwM=
-X-Received: by 2002:a17:907:97ca:b0:ace:f2c2:5a4 with SMTP id a640c23a62f3a-ad52d49e2c7mr1055602066b.13.1747635662890;
-        Sun, 18 May 2025 23:21:02 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEAmjmvIL3o1iKm123C/5o27j1Q6dvBrOmlO7D05cMeFXjqCGVtdtOGto6dJkIIUfbXvpluId+XTMClkgAgqEQ=
-X-Received: by 2002:a17:907:97ca:b0:ace:f2c2:5a4 with SMTP id
- a640c23a62f3a-ad52d49e2c7mr1055600666b.13.1747635662518; Sun, 18 May 2025
- 23:21:02 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1747638186; x=1748242986;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=OLWLfExUQbf5HOnVzoeVJtfvCzuwwopKWrDaQj0e3/A=;
+        b=jjQCxKjLRuYCo4Lg4OsuvE5JDpBtheWcIvG9vhXcNlQ6IKJqEW21dND8hLvwmhNXu1
+         fUZLxiiQCfyX+80ULeQs26kZUWGeM4LqzmdSbad9z5hSFlsSSWDT40oY5CCtH7VHAxxG
+         PnSld3KGeQo9zH2Ylr+Q8o681OBrqyocVIOe/LG6ycjYW/B3rjGNRFPnxqpOaUwXvhJ1
+         oFVTszf3xgK38DKEMT+BYUbC4+8dIw1YNq9Z0YCCMX8EXhvIer2od6ALsx/XukI2A+8+
+         ZNbCVgme+3sXeVogMHSEX9cbisKNxYC9/folpyRJDH/V+3TacQKm3Zr5nWI1J5C0e1We
+         pwYA==
+X-Forwarded-Encrypted: i=1; AJvYcCUQlsCBk/fYEx2AExZZFCr6V3g/ghWeN7L8nqFjqdsA7ESrvFFuj6ISH6PCPiYKeMrV/uXpq2v16rNcrQwngP/bWe8c@vger.kernel.org, AJvYcCUwXU9ZNScGYxjjAnVAUwGFo2Wmxe26n4fgxkJvGzeT12oBZWmkgtUQmLf6xghBNMTpPfnYKtQlPrak4V8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyphcxW+Vx3gbfMo/8Cb+fneEkWoETBVtdU+YkrBb8mGeCl4GHX
+	H2EMWpqVpzG3YOO7EvW01WusxCuXPIRKybKyKw5QaS7Tx7mgJ53OliHa
+X-Gm-Gg: ASbGncsgecjIDiekHOW5H40IhxgawG7QTPNtsa1O/A5eD28ZZvEixnUPNlN1VZgx7tS
+	aSHZ1BNasQIEuU/Bgbj+lcBlTCehu8KzVQv4wqxOc54pK2h7dIFeBMC15F4eaJYam1vsk053K+D
+	dQVfw2qtEekQBo9+SY/GWBfO8HejQrI4LxS8f32vLV2ATvM/D0xrTvC6QUb5DGZsgEPVlE/50bE
+	rX2fTx3E16/QbCpjQgKrkr0dJcLcrJIg/c5FoEg+FUzeHi7XqOuDRWcBIFJryWR+4KvKbgSD/nO
+	MTo1OsnI6shrEC0SHvJy6khsB1qxdCxAPmZDga0wT6aV9YifB0QpRw4Qmaw12Wd/ajhxaNsYP2u
+	b7hOPetwfWERZgBmeVEuEq+Zk23M51gYJk/MA4jl0yA==
+X-Google-Smtp-Source: AGHT+IFxEaxVZWJ++4Aj8pJPSQPmUS3xe7T18VyMANUL9xOorj1BIjynIQKF94bNWVBPWojKoEJBkw==
+X-Received: by 2002:a17:906:f74f:b0:ad5:557b:c369 with SMTP id a640c23a62f3a-ad5557be832mr484511966b.33.1747638186468;
+        Mon, 19 May 2025 00:03:06 -0700 (PDT)
+Received: from rafal-Predator-PHN16-71.NAT.wroclaw_krzyki_2.vectranet.pl ([89.151.25.111])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad52d277a1fsm543268866b.85.2025.05.19.00.03.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 19 May 2025 00:03:06 -0700 (PDT)
+From: Rafal Bilkowski <rafalbilkowski@gmail.com>
+To: rostedt@goodmis.org,
+	mhiramat@kernel.org
+Cc: mathieu.desnoyers@efficios.com,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	Rafal Bilkowski <rafalbilkowski@gmail.com>
+Subject: [PATCH] trace: Protect trace_iter_expand_format against overflow and ZERO_SIZE_PTR
+Date: Mon, 19 May 2025 09:02:40 +0200
+Message-ID: <20250519070240.256200-1-rafalbilkowski@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250430144651.621766-1-tglozar@redhat.com> <5c64d78a-1650-5404-c2cb-8190627d10fc@redhat.com>
-In-Reply-To: <5c64d78a-1650-5404-c2cb-8190627d10fc@redhat.com>
-From: Tomas Glozar <tglozar@redhat.com>
-Date: Mon, 19 May 2025 08:20:50 +0200
-X-Gm-Features: AX0GCFsSVtCoIj9QVehT1OHITqlahuu0UR84rYeizFCjucynqTCzS0iI1MSeYnQ
-Message-ID: <CAP4=nvThhq_0vF_xGCEnT6oNhpt_JHoEuOPmy3uT7jR_0r-YbQ@mail.gmail.com>
-Subject: Re: [PATCH] rtla: Define _GNU_SOURCE in timerlat_bpf.c
-To: John Kacur <jkacur@redhat.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>, linux-trace-kernel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Luis Goncalves <lgoncalv@redhat.com>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: mYp_q0YLNpBYVOgjXi5pZn-oeamikQ30KeYBeUGIwJ0_1747635663
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-so 17. 5. 2025 v 0:22 odes=C3=ADlatel John Kacur <jkacur@redhat.com> napsal=
-:
-> Question for Tomas, should we spend sometime to make this work for older
-> versions of glibc without a definition of struct sched_attr?
+Add a check in trace_iter_expand_format to prevent integer overflow when
+calculating the new format buffer size, and to handle the case where krealloc
+returns ZERO_SIZE_PTR. This improves robustness and prevents potential
+memory corruption or kernel crashes.
 
-Older versions of glibc without a definition for struct sched_attr use
-the one in utils.h:
+Signed-off-by: Rafal Bilkowski <rafalbilkowski@gmail.com>
+---
+ kernel/trace/trace.c        | 4 ++++
+ kernel/trace/trace_output.c | 2 ++
+ 2 files changed, 6 insertions(+)
 
-#ifndef SCHED_ATTR_SIZE_VER0
-struct sched_attr {
-    uint32_t size;
-    uint32_t sched_policy;
-    uint64_t sched_flags;
-    int32_t sched_nice;
-    uint32_t sched_priority;
-    uint64_t sched_runtime;
-    uint64_t sched_deadline;
-    uint64_t sched_period;
-};
-#endif /* SCHED_ATTR_SIZE_VER0 */
-
-In fact, this one works fine in timerlat_bpf.c, if you build rtla on
-older glibc, it will work even without this patch. It's the glibc one
-which is not defined without _GNU_SOURCE.
-
-Tomas
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index 5b8db27fb6ef..637bd1ff9325 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -3596,6 +3596,10 @@ char *trace_iter_expand_format(struct trace_iterator *iter)
+ 	if (!iter->tr || iter->fmt == static_fmt_buf)
+ 		return NULL;
+ 
++	/* Protection against overflow and ZERO_SIZE_PTR returned from krealloc */
++	if (check_add_overflow(iter->fmt_size, STATIC_FMT_BUF_SIZE, &iter->fmt_size))
++		return NULL;
++
+ 	tmp = krealloc(iter->fmt, iter->fmt_size + STATIC_FMT_BUF_SIZE,
+ 		       GFP_KERNEL);
+ 	if (tmp) {
+diff --git a/kernel/trace/trace_output.c b/kernel/trace/trace_output.c
+index b9ab06c99543..42560027001a 100644
+--- a/kernel/trace/trace_output.c
++++ b/kernel/trace/trace_output.c
+@@ -979,6 +979,8 @@ static void print_fields(struct trace_iterator *iter, struct trace_event_call *c
+ 							  iter->fmt_size);
+ 			if (ret < 0)
+ 				trace_seq_printf(&iter->seq, "(0x%px)", pos);
++			else if (ret == 0)
++				trace_seq_printf(&iter->seq, "(0x%px:<NULL>)", pos);
+ 			else
+ 				trace_seq_printf(&iter->seq, "(0x%px:%s)",
+ 						 pos, iter->fmt);
+-- 
+2.43.0
 
