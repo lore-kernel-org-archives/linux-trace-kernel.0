@@ -1,84 +1,116 @@
-Received: from SHSQR01.spreadtrum.com (mx1.unisoc.com [222.66.158.135])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C62029A0;
-	Tue, 20 May 2025 05:51:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=222.66.158.135
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EFD11C6BE;
+	Tue, 20 May 2025 06:13:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747720312; cv=none; b=Ij/YqT3HFfwBYZclr7AO51mo0/+TM964YyI6m0erX+8wH49Sdrg8AXHRDtwi1xeRZO9OUmiMHACMtPZb110gXnQj4xJ+d8YE+5hHHxBWNb6SRJwk1mx0tJ6a3E1c8EIXEPGvJaDQDEq9AShiJ/M0fEFAf2vv7c8I60jemiiPT8E=
+	t=1747721622; cv=none; b=Hd+FQd7P4Fr7k8g0wnIpeJFKjsUP+J/E2m3dstBNUSCHpyAbCwNhBNnLxygq3VtWIVW6jXt9t9vqQxow8veZ/O7G22UV8ohiQrBGT6fBUKOjki88+Hpdq6ZSw/x5YxwnmJbGHqDnHz4Nm21vzJ2MQD9HD8K6LmZFo9rxYSyQUys=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747720312; c=relaxed/simple;
-	bh=RrxvwzauZcMA3zTGwuom96Mb5M5Z5xzApTxLGUx2cZ0=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=GqXkLgsRrMtkipwZJv7VhuVfGP8YLFHt2QmQP5BT2/iVTaSz0oT+rFqxD8gA49pKerNL6Tn+9u2bmbOIMTuaxv6VsQA4SgBzeXlGRPbvfEYcFvhYxGifaDUh5pC3AdRzGbRgSus3zZm3ZsBdbzs1cCiGpvkjDXtVTYJ/OuKGpr8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=unisoc.com; spf=pass smtp.mailfrom=unisoc.com; arc=none smtp.client-ip=222.66.158.135
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=unisoc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=unisoc.com
-Received: from dlp.unisoc.com ([10.29.3.86])
-	by SHSQR01.spreadtrum.com with ESMTP id 54K5ohV8078797;
-	Tue, 20 May 2025 13:50:43 +0800 (+08)
-	(envelope-from Xuewen.Yan@unisoc.com)
-Received: from SHDLP.spreadtrum.com (bjmbx01.spreadtrum.com [10.0.64.7])
-	by dlp.unisoc.com (SkyGuard) with ESMTPS id 4b1k9w0Bh2z2PBF7F;
-	Tue, 20 May 2025 13:48:20 +0800 (CST)
-Received: from BJ10918NBW01.spreadtrum.com (10.0.73.73) by
- BJMBX01.spreadtrum.com (10.0.64.7) with Microsoft SMTP Server (TLS) id
- 15.0.1497.48; Tue, 20 May 2025 13:50:40 +0800
-From: Xuewen Yan <xuewen.yan@unisoc.com>
-To: <song@kernel.org>, <jolsa@kernel.org>, <andrii@kernel.org>,
-        <daniel@iogearbox.net>, <rostedt@goodmis.org>, <ast@kernel.org>,
-        <mhiramat@kernel.org>
-CC: <bpf@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-trace-kernel@vger.kernel.org>, <xuewen.yan94@gmail.com>,
-        <di.shen@unisoc.com>
-Subject: [PATCH] Revert "bpf: remove unnecessary rcu_read_{lock,unlock}() in multi-uprobe attach logic"
-Date: Tue, 20 May 2025 13:49:43 +0800
-Message-ID: <20250520054943.5002-1-xuewen.yan@unisoc.com>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1747721622; c=relaxed/simple;
+	bh=qv24cgaIowjqbztnCwTh6HyqJ2LT0oEfi9MxLUaIjUA=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=tbrk9lpp6lf1qLuGFJDNbXFz64OO76WhYD9yXINSkiZ6RVi/G4P1gfTBfSsYehNCRlTvAxDNZwxKeMphiQW9MbY+BikSQfREQqJjYfIHhnoVNLYp94d2U4D8n+H5vSLbJ8DIahrx4OK+ALBjZ5aqHB2l2fqO1PaGS6pLD5t4mJA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iKF/m41X; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iKF/m41X"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 12781C4CEE9;
+	Tue, 20 May 2025 06:13:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747721621;
+	bh=qv24cgaIowjqbztnCwTh6HyqJ2LT0oEfi9MxLUaIjUA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=iKF/m41XkYWF6WjZcP3accTMgSHgfJaIOf79+sw65RQDHU4Oi04a62Z6UzaBkksaa
+	 BueBeSZICIWvvVfEGVFAA939xchaWIc7QWcNJTLv1f6S86a6rb0dt5VAax2S71spZQ
+	 B3WNE8S/+RMbJXIE3TQAahfXkeo/R5nOkf99jFTcUaCJTUdguphKMTkj5pnpp+KM9X
+	 JvPpOgJ6dBNZ1DeXYScbLsUO+uVKFHrJSeSGIcwJAVSevOpGgvkYy/6nuwxVTrgA35
+	 Z+LROySr56xZTaZkL5UgAUtyxeScx4VgyuOFHpgxXj42ienZi6owLiTFlXnooyoxdP
+	 YHSaAXK/ztUIA==
+From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Subject: [PATCH] tracing: Reset last-boot buffers when reading out all cpu buffers
+Date: Tue, 20 May 2025 15:13:38 +0900
+Message-ID:  <174772161786.1341812.8912662133740822008.stgit@mhiramat.tok.corp.google.com>
+X-Mailer: git-send-email 2.49.0.1143.g0be31eac6b-goog
+In-Reply-To:  <174730775661.3893490.10420015749079085314.stgit@mhiramat.tok.corp.google.com>
+References:  <174730775661.3893490.10420015749079085314.stgit@mhiramat.tok.corp.google.com>
+User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SHCAS01.spreadtrum.com (10.0.1.201) To
- BJMBX01.spreadtrum.com (10.0.64.7)
-X-MAIL:SHSQR01.spreadtrum.com 54K5ohV8078797
 
-From: Di Shen <di.shen@unisoc.com>
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-This reverts commit 4a8f635a60540888dab3804992e86410360339c8.
+Reset the last-boot ring buffers when read() reads out all cpu
+buffers through trace_pipe/trace_pipe_raw. This prevents ftrace to
+unwind ring buffer read pointer next boot.
 
-Althought get_pid_task() internally already calls rcu_read_lock() and
-rcu_read_unlock(), the find_vpid() was not.
+Note that this resets only when all per-cpu buffers are empty, and
+read via read(2) syscall. For example, if you read only one of the
+per-cpu trace_pipe, it does not reset it. Also, reading buffer by
+splice(2) syscall, it does not reset because there will be the
+data in reader page.
 
-The documentation for find_vpid() clearly states:
-
-  "Must be called with the tasklist_lock or rcu_read_lock() held."
-
-Add proper rcu_read_lock/unlock() to protect the find_vpid().
-
-Reported-by: Xuewen Yan <xuewen.yan@unisoc.com>
-Signed-off-by: Di Shen <di.shen@unisoc.com>
+Suggested-by: Steven Rostedt <rostedt@goodmis.org>
+Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 ---
- kernel/trace/bpf_trace.c | 2 ++
- 1 file changed, 2 insertions(+)
+ kernel/trace/trace.c |   22 ++++++++++++++++++++++
+ 1 file changed, 22 insertions(+)
 
-diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
-index 187dc37d61d4..0c4b6af10601 100644
---- a/kernel/trace/bpf_trace.c
-+++ b/kernel/trace/bpf_trace.c
-@@ -3417,7 +3417,9 @@ int bpf_uprobe_multi_link_attach(const union bpf_attr *attr, struct bpf_prog *pr
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index 2c1764ed87b0..433671d3aa43 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -6677,6 +6677,22 @@ static int tracing_wait_pipe(struct file *filp)
+ 	return 1;
+ }
+ 
++static bool update_last_data_if_empty(struct trace_array *tr)
++{
++	if (!(tr->flags & TRACE_ARRAY_FL_LAST_BOOT))
++		return false;
++
++	if (!ring_buffer_empty(tr->array_buffer.buffer))
++		return false;
++
++	/*
++	 * If the buffer contains the last boot data and all per-cpu
++	 * buffers are empty, reset it from the kernel side.
++	 */
++	update_last_data(tr);
++	return true;
++}
++
+ /*
+  * Consumer reader.
+  */
+@@ -6708,6 +6724,9 @@ tracing_read_pipe(struct file *filp, char __user *ubuf,
  	}
  
- 	if (pid) {
-+		rcu_read_lock();
- 		task = get_pid_task(find_vpid(pid), PIDTYPE_TGID);
-+		rcu_read_unlock();
- 		if (!task) {
- 			err = -ESRCH;
- 			goto error_path_put;
--- 
-2.25.1
+ waitagain:
++	if (update_last_data_if_empty(iter->tr))
++		return 0;
++
+ 	sret = tracing_wait_pipe(filp);
+ 	if (sret <= 0)
+ 		return sret;
+@@ -8286,6 +8305,9 @@ tracing_buffers_read(struct file *filp, char __user *ubuf,
+ 
+ 	if (ret < 0) {
+ 		if (trace_empty(iter) && !iter->closed) {
++			if (update_last_data_if_empty(iter->tr))
++				return 0;
++
+ 			if ((filp->f_flags & O_NONBLOCK))
+ 				return -EAGAIN;
+ 
 
