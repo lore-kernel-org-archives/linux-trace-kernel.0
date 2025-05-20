@@ -1,191 +1,175 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f171.google.com (mail-qk1-f171.google.com [209.85.222.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8550526D4C3;
-	Tue, 20 May 2025 15:56:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C8DE25FA3B
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 20 May 2025 16:05:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747756603; cv=none; b=NLrFkQR3AZoJL2MTttMbGR6NNQXWvMLa/8yUi/IQlTJAmgQPxy8urn6LAb6/Lbi3+sUE6JHG/wqq5VM5mxCsdolKY8itEUcrGZvDeZJ5aAbwCldnp2kLRREdES2d5G5xe7acGZvROT1a5M8P/nenVC8Cl1JxZCNQ/yPtkytlFhA=
+	t=1747757107; cv=none; b=lDTUfttKcW77Inh3uqV04tJ21Y+x4NWjDtqTG4HYrzCKA09VUX1osgpJNp6JFvqEmkxtaQqTyrzvcdmhLJ+OsQCetH3z5qIR3liRZY9PIge25HYjSILlsyU3wRY1HpRi68dgI3zS7yFl6BOVE5ejQFfs2dnRM+AkeprrmyfWpvo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747756603; c=relaxed/simple;
-	bh=9t27kuG+nmeuoyFeo+Lr3zYDfVp+3AnIEpw2qvtpWCE=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=N0f3QdsvsJK5KTXPw4ymHyLBrPo6WOB2zyiKNtCXm76mKR8R4e9Se6p1dWFVdU24n77al6HplG17y2AcpymydwXn8wOfvugr49lN5C9EuVQHv7OYPVQahVaMllTa1hj3jlbQhnzIrc2QheEJGla33vkH/ICsr/O8MJfW58YvLPM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2593CC4CEEA;
-	Tue, 20 May 2025 15:56:41 +0000 (UTC)
-Date: Tue, 20 May 2025 11:57:21 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Ingo Molnar <mingo@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org, x86@kernel.org,
- Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Josh Poimboeuf <jpoimboe@kernel.org>,
- Peter Zijlstra <peterz@infradead.org>, Jiri Olsa <jolsa@kernel.org>, Thomas
- Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>, Dave Hansen
- <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>, Andrii
- Nakryiko <andrii@kernel.org>, "Jose E. Marchesi" <jemarch@gnu.org>, Indu
- Bhagat <indu.bhagat@oracle.com>
-Subject: Re: [PATCH v9 00/13] unwind_user: x86: Deferred unwinding
- infrastructure
-Message-ID: <20250520115721.7a4307a2@gandalf.local.home>
-In-Reply-To: <aCxM_BizulyIVcdb@gmail.com>
-References: <20250513223435.636200356@goodmis.org>
-	<20250514132720.6b16880c@gandalf.local.home>
-	<aCfMzJ-zN0JKKTjO@google.com>
-	<20250519113339.027c2a68@batman.local.home>
-	<aCxM_BizulyIVcdb@gmail.com>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1747757107; c=relaxed/simple;
+	bh=cg5t4eGdtgZu3cXZP54MB4IR+ZBOuN5oWKa4yPo3uQw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=VhrR9Juuzkl3LR2RW55W/xn1PaL4BQBjh38YQDceVc2joU3wORGe0zUycWdVLKHxpfllmKc01SA+Rw2CqXMhhHmzczcEVsgyAHpisnQCt2BkVd09JWQrm++WP6+q757OxjoJPnul9+pCZXIVa04L1e7YHEshNtD4cFxOs7gI1rs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=TG+uhMcA; arc=none smtp.client-ip=209.85.222.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="TG+uhMcA"
+Received: by mail-qk1-f171.google.com with SMTP id af79cd13be357-7cd0a7b672bso389674685a.2
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 20 May 2025 09:05:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1747757105; x=1748361905; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=HO/nLRYCjfKcpLfeuNbV08YkbzqqQcf229Ms7HqssNo=;
+        b=TG+uhMcAWKjMq/CYX37WIMDeEcvgzGMcUnseZP+rihgSIDyS+AktyygGOrjCH/OplT
+         GY1TRRFXhuuEeeANzEQmzFlgxJJXlzCN704hehv9uCzZKSPvfOKSCW12OnDLH1bWAMBs
+         HeCR8Hn90jgQDONG5Dqe4+oWI/k6/YD3KUE2nu05i++0AtHdLDrTEv/h7rBk4LohT5Zt
+         QIl7N2h+e0ULOBAGUAfwyAEa2RQEhZDDJITYTXOm+iDx66xqd9k0h726l4Pa+PeD/NNk
+         lStWQgWyIYs3Z/IhSb+/ec1DxbSSgKX1uQQSCDKIAkWB3TZZIRYnTHcp0PY7qh1yFGM7
+         UDlw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747757105; x=1748361905;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=HO/nLRYCjfKcpLfeuNbV08YkbzqqQcf229Ms7HqssNo=;
+        b=dQc6thJfp0gulBQ6OSdmySZHBiYPjMUdOBc+hbBmMoSo/di8F5XD3i9CxGR3r5vuyy
+         QRvizcsCsPLyIblbqnfVkjgmZ87TdJOQAPt58++XQGuvTh7GSiYnN1+oLQLCofBT5aEB
+         YKdHhYvASOblqT8OfInX0M8DqgFzXGZbHLf0pHGcsYf/pLesH7DBUIYk3tdkTsV2oWiI
+         WczsK2aCZN26UNjrOXMxG57jvXapBI2+a3BhzeKOKKIjFA4lA6JgcXPKX3cgBg31ckVO
+         9cgWHUPRsBX9TEXWPlhYE6cp7hYlTm/ipDbvxOW2M+PHRwcJHWvV33zIwCHnnTGu4Bye
+         AxwQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUgABe4OAHWMnDs8f3ZVlGvxkVNHdKsxXic5upiWZKh7lScSrRt5gOaK1J+c6H1PpP3fxRLXTnoMIAItOrLTjMTI1A=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyE3DpE+Z45GsrjHQHYqvOFwANoNGjdUh3nKEEj42QYHOCaSj2Y
+	Syu2XRbtoGcTdXGE0/farCwRsTO8KjD+f5RNkMC3bPHTS7h7qvvBPZq3p7xP68Wnpy/SrRHV4Kf
+	9De3XcQuZe199kVQPEwYshRQuKgPxiaTbxWAlNqH3
+X-Gm-Gg: ASbGncsBxjpRGUMRYYqfuN7RGQ5565C0Dcow/ZUI1W6lg8NDnkVMKFPp8kP9LcOee+B
+	zwcY0b30S5gGMhRe3Tnymf2AGCsyfy59M//ZfACW3TRK6GdFOMJhE74UjFmo7Ph0t30Y7yQLpoY
+	4iw5gAs4alwj6NTxOlZglrxvmjwuboWSYZwaWYzEMqggeVWuQAG8bpmmV7fBwQpXwdOjTUNcbBK
+	5w=
+X-Google-Smtp-Source: AGHT+IEctazZU95TAdOM2Py70rzLbXXswnML189iWNcKKej+1E4sE5RLKNbUjCL/eh0PGvC9pd8HdYPKfxppky5e+CI=
+X-Received: by 2002:a05:620a:394e:b0:7c5:4088:e48c with SMTP id
+ af79cd13be357-7cd46731a86mr2518057385a.29.1747757104799; Tue, 20 May 2025
+ 09:05:04 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20250520082435.2255639-1-tzungbi@kernel.org>
+In-Reply-To: <20250520082435.2255639-1-tzungbi@kernel.org>
+From: Daniel Latypov <dlatypov@google.com>
+Date: Tue, 20 May 2025 09:04:53 -0700
+X-Gm-Features: AX0GCFs4NJkMHkJZuPMpivpKDaXRV49LM_WCCI_dDOeQOPacWqE-V5WduNyzJJk
+Message-ID: <CAGS_qxrcH0+mJTO4nJqXnk2Bh7oO_PEur=ytcxL8wxJNCu20Tw@mail.gmail.com>
+Subject: Re: [RFC PATCH 0/7] platform/chrome: Add Kunit tests for protocol
+ device drivers
+To: Tzung-Bi Shih <tzungbi@kernel.org>
+Cc: bleung@chromium.org, brendan.higgins@linux.dev, davidgow@google.com, 
+	rmoar@google.com, rostedt@goodmis.org, mhiramat@kernel.org, naveen@kernel.org, 
+	anil.s.keshavamurthy@intel.com, davem@davemloft.net, 
+	chrome-platform@lists.linux.dev, linux-kselftest@vger.kernel.org, 
+	kunit-dev@googlegroups.com, linux-trace-kernel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, 20 May 2025 11:35:56 +0200
-Ingo Molnar <mingo@kernel.org> wrote:
+On Tue, May 20, 2025 at 1:25=E2=80=AFAM 'Tzung-Bi Shih' via KUnit Developme=
+nt
+<kunit-dev@googlegroups.com> wrote:
+>
+> The protocol device drivers under drivers/platform/chrome/ are responsibl=
+e
+> to communicate to the ChromeOS EC (Embedded Controller).  They need to pa=
+ck
+> the data in a pre-defined format and check if the EC responds accordingly=
+.
+>
+> The series adds some fundamental unit tests for the protocol.  It calls t=
+he
+> .cmd_xfer() and .pkt_xfer() callbacks (which are the most crucial parts f=
+or
+> the protocol), mocks the rest of the system, and checks if the interactio=
+ns
+> are all correct.
+>
+> The series isn't ready for landing.  It's more like a PoC for the
+> binary-level function redirection and its use cases.
+>
+> The 1st patch adds ftrace stub which is originally from [1][2].  There is=
+ no
+> follow-up discussion about the ftrace stub.  As a result, the patch is st=
+ill
+> on the mailing list.
+>
+> The 2nd patch adds Kunit tests for cros_ec_i2c.  It relies on the ftrace =
+stub
+> for redirecting cros_ec_{un,}register().
+>
+> The 3rd patch uses static stub instead (if ftrace stub isn't really an op=
+tion).
+> However, I'm not a big fan to change the production code (i.e. adding the
+> prologue in cros_ec_{un,}register()) for testing.
+>
+> The 4th patch adds Kunit tests for cros_ec_spi.  It relies on the ftrace =
+stub
+> for redirecting cros_ec_{un,}register() again.
+>
+> The 5th patch calls .probe() directly instead of forcing the driver probe
+> needs to be synchronous.  In comparison with the 4th patch, I don't think
+> this is simpler.  I'd prefer to the way in the 4th patch.
+>
+> After talked to Masami about the work, he suggested to use Kprobes for
+> function redirection.  The 6th patch adds kprobes stub.
+>
+> The 7th patch uses kprobes stub instead for cros_ec_spi.
+>
+> Questions:
+> - Are we going to support ftrace stub so that tests can use it?
+>
+> - If ftrace stub isn't on the plate (e.g. due to too many dependencies), =
+how
+>   about the kprobes stub?  Is it something we could pursue?
 
-> > Ah, I think I forgot about that. I believe the exit path can also be a
-> > faultable path. All it needs is a hook to do the exit. Is there any
-> > "task work" clean up on exit? I need to take a look.  
-> 
-> Could you please not rush this facility into v6.16? It barely had any 
-> design review so far, and I'm still not entirely sure about the 
-> approach.
+Quick comment,
+If I recall, the thought process was that we could consider it in the
+future if there was enough demand for it.
 
-Hi Ingo,
+We have these drawbacks with the current ftrace stubs:
+* doesn't compile on all arches
+* silently doesn't work on inlined functions <=3D=3D scariest one to me
+* is more complicated and has more dependencies
 
-Note, there has been a lot of discussion on this approach, although it's
-been mostly at conferences and in meetings. At GNU Cauldron in September
-2024 (before Plumbers) Josh, Mathieu and myself discussed it in quite
-detail. I've then been hosting a monthly meeting with engineers from
-Google, Red Hat, EffiOS, Oracle, Microsoft and others (I can invite you to
-it if you would like). There's actually two meetings (one that is in a Asia
-friendly timezone and another in a European friendly timezone). The first
-patches from this went out in October, 2024:
+So it felt like the better move to go with static stubs which has none
+of those drawbacks (works on all arches, all functions, and is dead
+simple) as opposed to simultaneously introducing two ways to do the
+same thing.
 
-  https://lore.kernel.org/all/cover.1730150953.git.jpoimboe@kernel.org/
+You mention you don't like how static stubs requires modifying the
+code-under-test.
+Since it gets eliminated by the preprocessor unless you're compiling
+for KUnit, is the concern more so about how it conceptually feels
+wrong to do so?
+For the Android GKI kernel, they have (or had) KUnit enabled so there
+is potentially concern about real runtime cost there, not sure if you
+have something similar in mind.
 
-There wasn't much discussion on it, although Peter did reply, and I believe
-that we did address all of his concerns.
+But stepping back, ftrace_stubs technically require modifying the code
+to make sure funcs are marked as `noinline`, which this patch series
+does not do.
+I've not looked at cros_ec_{un,}register() to check if they're at risk
+of inlining, but wanted to call that out, that ftrace stubs
+technically don't handle your usage pattern 100% properly.
 
-Josh then changed the approach from what we originally discussed, which was
-to just have each tracer attach a task_work to the task it wants a trace
-thinking that would be good enough, but Mathieu and I found that it doesn't
-work because even a perf event can not handle this because it would need to
-keep track of several tasks that may migrate.
+>
+> - (minor) I'm unsure if people would prefer 'kprobes stub' vs. 'kprobe st=
+ub'.
+>
 
-Let me state the goal of this work, as it started from a session at the
-2022 Tracing Summit in London. We needed a way to get reliable user space
-stack traces without using frame pointers. We discussed various methods,
-including using eh_frame but they all had issues. We concluded that it
-would be nice to have an ORC unwinder (technically it's called a stack
-walker), for user space.
+I'd personally vote for kprobe_stub.
 
-Then in Nov 2022, I read about "sframes" which was exactly what we were
-looking for:
-
-   https://www.phoronix.com/news/GNU-Binutils-SFrame
-
-At FOSDEM 2023, I asked Jose Marchesi (a GCC maintainer) about sframes, and
-it just happened to be one of his employees that created it (Indu Bhagat).
-At Kernel Recipes 2023, Brendan Gregg, during his talk, asked if it would
-be great to have user space stack walking without needing to run everything
-with frame pointers. I raised my hand and asked if he had heard about
-"sframes", which he did not. I explained what it was and he was very
-interested. After that talk, Josh Poimboeuf came up to me and asked if he
-could implement this, which I agreed.
-
-One thing that is needed for sframes is that it has to be done in a
-faultable context. The sframe sections are like ORC, where it has lookup
-tables, but they live in the user space address, and because they can be
-large, they can't be locked into memory. This brings up the deferred
-unwinding aspect.
-
-At the LSFMMBPF 2023 conference, Indu and myself ran a session on sframes
-to get a better idea on how to implement this. The perf user space stack
-tracing was mentioned, where if frame pointers are not there, perf may copy
-thousands of bytes of the user space stack into the perf buffer. If there's
-a long system call, it may do this several times, and because the user
-space stack does not change while the task is in the kernel, this is
-thousands of bytes of duplicate data. I asked Jiri Olsa "why not just defer
-the stack trace and only make a single entry", and I believe he replied "we
-are thinking about it", but nothing further came about it.
-
-Now, there's a serious push to get sframes upstream, and that will take a
-few steps. These are:
-
-1) Create a new user unwind stack call that is expected to be called in
-   faultable context. If a tracer (perf, ftrace, BPF or whatever) knows
-   it's in a faultable context and wants a trace, it can simply ask for it.
-
-   It was also asked to have a user space system call that can get this
-   trace so that a function in a user space applications can see what is
-   calling it.
-
-2) Create a deferred stack unwinding infrastructure that can be used by
-   many clients (perf, ftrace, BPF or whatever) and called in any context
-   (interrupt or NMI).
-
-   As the unwind stack call needs to be in a faultable context, and it is
-   very common to want both a kernel stack trace along with a user space
-   stack trace and this can happen in an NMI, allow the kernel stack trace
-   to be executed and delay the user stack trace.
-
-   The accounting for this is not easy, as it has a many to many
-   relationship. You could have perf, ftrace and BPF all asking for a
-   delayed stack trace and they all need to be called. But each could be
-   wanting a stack trace from a different set of tasks. Keeping track of
-   which tracer gets a callback for which task is where this patch set
-   comes in. Or at least just the infrastructure part.
-
-3) Add sframes.
-
-   The final part is to get this working with sframes. Where a distro
-   builds all its applications with sframes enabled and then perf, ftrace,
-   BPF or whatever gets access to it through this interface.
-
-There's quite a momentum of work happening today that is being built
-expecting us to get to step 3. There's no use to adding sframes to
-applications if the kernel can't read them. The only way to read them is to
-have this deferred infrastructure.
-
-We've discussed the current design quiet a bit, but until there's actual
-users starting to build on top of it, all the corner cases may not come
-out. That's why I'm suggesting if we can just get the basic infrastructure
-in this merge window, where it's not fully enabled (there are no users of
-it), we can then have several users build on top of it in the next merge
-window to see if it finds anything that breaks.
-
-As perf has the biggest user space ABI, where the delayed stack trace may
-be in a different event buffer than where the kernel stack trace occurred
-(due to migration), it's the one I'm most concern about getting this right.
-As once it is exposed to user space, it can never change. That's the one I
-do want to focus on the most. But it shouldn't delay getting the non user
-space visible aspect of the kernel side moving forward. If we find an
-issue, it can always be changed because it doesn't affect user space.
-
-I've been testing this on the ftrace side and so far, everything works
-fine. But the ftrace side has the deferred trace always in the same
-instance buffer as where it was triggered, as it doesn't depend on user
-space API for that.
-
-I've also been running this on perf and it too is working well. But I don't
-know the perf interface well enough to make sure there isn't other corner
-cases that I may be missing.
-
-For 6.16, I would just like to get the common infrastructure in the kernel
-so there's no dependency on different tracers. This patch set adds the
-changes but does not enable it yet. This way, perf, ftrace and BPF can all
-work to build on top of the changes without needing to share code.
-
-There's only two patches that touch x86 here. I have another patch series
-that removes them and implements this for ftrace, but because no
-architecture has it enabled, it's just dead code. But it would also allow
-to build on top of the infrastructure where any architecture could enable
-it. Kind of like what PREEMPT_RT did.
-
--- Steve
+Daniel
