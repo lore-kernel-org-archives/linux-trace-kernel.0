@@ -1,62 +1,121 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FA71258CC0;
-	Tue, 20 May 2025 16:28:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 596011EE7B9;
+	Tue, 20 May 2025 20:08:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747758502; cv=none; b=OSBlyobcJ1JTrHwxRPs/ZxEaImYa0iWsgUMOSMqJ2t4Vo2m+rNOKmC+xKedOVDl/U1Sq/umddHon9Pz7zh3P3fdhFAEUwRuBnkvtvyr4svTtYbAipnJNFJIdNOqvzpGl8W3miQslmTiXqIdQqzjFQdPMRaqmx15cTsXQtWDhync=
+	t=1747771694; cv=none; b=PhCjxl4mlGfzARD7wi4uWsG/6P/ZkeZlTL4fVZQq2vzDcJwo93tmgf000IFXbifJ591Evz5Vvog/tRKNWExZhKrzg2zL1oWSdkow53pxUBVpOJKkJFuRj4yoeI85xYI+3orxSDf/OcXXCo/dsyDY3kVborw/Qe5pb4bjEsn2Hg8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747758502; c=relaxed/simple;
-	bh=3h7pzFFp1arnliL6WNRF7D9w/8BVZFQJvxDtegXhXXc=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Bl76TdSmiA866CDQDwFGPbIUDfWH7AwHgpObgTEuNvmUrKPgsiyBR2aG8CNQW4GsbUmBd6HU080p+9u3FajGpzimMOOiR65iKcg4OOpF5bXNQQ8HauFUZY/cAqzRmnpDV8KGf0sBiAhfngydZbdZ3Vwg3N/8n8qfST6enJj7VtU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D3E82C4CEE9;
-	Tue, 20 May 2025 16:28:19 +0000 (UTC)
-Date: Tue, 20 May 2025 12:29:00 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Ingo Molnar <mingo@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org, x86@kernel.org,
- Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Josh Poimboeuf <jpoimboe@kernel.org>,
- Peter Zijlstra <peterz@infradead.org>, Jiri Olsa <jolsa@kernel.org>, Thomas
- Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>, Dave Hansen
- <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>, Andrii
- Nakryiko <andrii@kernel.org>, "Jose E. Marchesi" <jemarch@gnu.org>, Indu
- Bhagat <indu.bhagat@oracle.com>
-Subject: Re: [PATCH v9 00/13] unwind_user: x86: Deferred unwinding
- infrastructure
-Message-ID: <20250520122900.42fc5b92@gandalf.local.home>
-In-Reply-To: <20250520115721.7a4307a2@gandalf.local.home>
-References: <20250513223435.636200356@goodmis.org>
-	<20250514132720.6b16880c@gandalf.local.home>
-	<aCfMzJ-zN0JKKTjO@google.com>
-	<20250519113339.027c2a68@batman.local.home>
-	<aCxM_BizulyIVcdb@gmail.com>
-	<20250520115721.7a4307a2@gandalf.local.home>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1747771694; c=relaxed/simple;
+	bh=8Er8OhibuPRtXGUsiYNrQztXPWzDdhAQ89FUTn+HcLI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=MbwQiAFdc1lxoM9tO7OpyjPg7rrLy9c1UkBU2Z2gsCujdTqXzoLNfrgfN/DU8fl0uI8adEeE12JaJhSHMx/OA2XzVKBCIg/H35w08TE9+F6WCHa4kZ1Dy5LMx95FSxv3v8cK0ZbSMIuLYQ3slSidytBAq1GYkrhJKg7VrqNDWd0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SGBbPy5e; arc=none smtp.client-ip=209.85.221.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SGBbPy5e"
+Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-3a361b8a664so4419997f8f.3;
+        Tue, 20 May 2025 13:08:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747771690; x=1748376490; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=A3IPTweDtnrYm7kj/ndhlz8BOXodo3QwD16xiasY3w4=;
+        b=SGBbPy5eISIamHyMln7V6YjnIL1lGSHJ/FwvGoh9mu6G3MxhHpry6Y4UP12LT796w0
+         Hh9ZqwKM0isce9tpCUHoMKOsmZDvqdRy7CvHWa+XJJgSYa3og77y3hI0hZPga8BK4HHx
+         AgpBM6LaefOr76s3geHcnApD7/5mZnzLJyudV7gpRuZ3vMciI3Zt3SInjDkqWrjQDfp/
+         0FUemGHg63vjRbohkj91xPcNhs4isVVCyPE7NnwtoMJs/3tQcr05TBBRobEwuvvZZyil
+         ApDL+6qs4caSD38gHu5sU/EmyWdyIY6b9iaVLWESm/3wxx8FbHmve+NkD0AdkoKeQpc5
+         Jvkw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747771690; x=1748376490;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=A3IPTweDtnrYm7kj/ndhlz8BOXodo3QwD16xiasY3w4=;
+        b=vijc2kcBxJyXPTw4dxkt4CH+7L842971eZDghIAVgu2mJXWBT6oVM4o2PHyMgaaV0L
+         VY/ngTdeggc6Wed7KJeRwEt0YJOvU2KmlCTYFWDdZ2LUP6q00aG74RODokKSDqmUb4tj
+         X25jXUIjoHz6qbZnOfas9sWTaBlVB2lrRZp6z773tGjNMm9d6tIhMVWpSqt964SPxuQd
+         y5W1hf2G9J5RKvrugnzUYqnzZ9NsA6pKmpuqNqb+2I4uLyxI7P3gp1ixxKgv47SDzUGB
+         E9cJm2qAcbeQ3sBw7AOQIn2076P9xWWGbVLcYAAJvEf77uk22mSBCJfcto80eaKMpc2q
+         /bBg==
+X-Forwarded-Encrypted: i=1; AJvYcCVIxpqxzLz6HWZhQpErUzGMt4AVShgcR/ME/KZcdSuGOb71FNUrh1RKKZkNEZt51FQog4gVx09CvLv1FiuK@vger.kernel.org, AJvYcCVSkFZFLFlnmEg7uZ+xyQSTg+lsbw9jOr/P+5IMw1PvlLwY+yQIUkejkQ8CNdNnGRdU55kzpK/HTk/Ctj7TzUYHR14B@vger.kernel.org, AJvYcCXy+A2gRrKHpjONDB0qqbUOKNc76ZVxMOHjpJkvj02FNEIMxG03wcsfN2v0d9BfftaR4+A=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxu1I6LLX8vD6u7ILQXCIdFpnZd0D7Qnn3No+rLotJfWIQL8d7T
+	u0vq3AFLAtzgC3WnrLPp4XxF3pfgVDoVYIph54amoeNXEMpzdKDnWtFEtlCv+G0OIEOjrK7v1fH
+	+1PsqJSidkwTHKvKkMtSGY5UJBH2QU3Y=
+X-Gm-Gg: ASbGncsetdUMoDQcabsNJpZ36KvWlq/Ho43cD8EzGsLwQ0hDlXlKBXUtA9u55qgHffE
+	+54vF4DRY7lJAobChigJW9/RmtzfDHQxwCy+IbnJlfwcArGHp4XgXicJRemvpFoqxjbq+2jkk6b
+	i8tMv5uXUI+Y2eBZGUukgMHJCCpqSbSgmdgCFfc4TmZ+a4OkDg
+X-Google-Smtp-Source: AGHT+IE1Nhc3de9UWe3Uxv90peDfXcg1RuNvCCTJNxAJCrPuuxtt0XQoISjWo9GfCVadN4ymgJNiD6mSYc+5zATWoSA=
+X-Received: by 2002:a05:6000:2502:b0:3a3:712e:c4c9 with SMTP id
+ ffacd0b85a97d-3a3712ec624mr6806601f8f.52.1747771690406; Tue, 20 May 2025
+ 13:08:10 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20250520054943.5002-1-xuewen.yan@unisoc.com>
+In-Reply-To: <20250520054943.5002-1-xuewen.yan@unisoc.com>
+From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date: Tue, 20 May 2025 13:07:59 -0700
+X-Gm-Features: AX0GCFsnSVJV_z_TzSzEMH1vd6p0Zn_P57_mmxCuj59sGtD1WNdRI0jcFppQQ7A
+Message-ID: <CAADnVQKZti=SXM=4owtk9jEqGMcD0mUqb46PNYwhquYfyORUuw@mail.gmail.com>
+Subject: Re: [PATCH] Revert "bpf: remove unnecessary rcu_read_{lock,unlock}()
+ in multi-uprobe attach logic"
+To: Xuewen Yan <xuewen.yan@unisoc.com>
+Cc: Song Liu <song@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
+	Andrii Nakryiko <andrii@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Steven Rostedt <rostedt@goodmis.org>, Alexei Starovoitov <ast@kernel.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, bpf <bpf@vger.kernel.org>, 
+	LKML <linux-kernel@vger.kernel.org>, 
+	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>, xuewen.yan94@gmail.com, 
+	di.shen@unisoc.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, 20 May 2025 11:57:21 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
+On Mon, May 19, 2025 at 10:51=E2=80=AFPM Xuewen Yan <xuewen.yan@unisoc.com>=
+ wrote:
+>
+> From: Di Shen <di.shen@unisoc.com>
+>
+> This reverts commit 4a8f635a60540888dab3804992e86410360339c8.
+>
+> Althought get_pid_task() internally already calls rcu_read_lock() and
+> rcu_read_unlock(), the find_vpid() was not.
+>
+> The documentation for find_vpid() clearly states:
+>
+>   "Must be called with the tasklist_lock or rcu_read_lock() held."
+>
+> Add proper rcu_read_lock/unlock() to protect the find_vpid().
+>
+> Reported-by: Xuewen Yan <xuewen.yan@unisoc.com>
+> Signed-off-by: Di Shen <di.shen@unisoc.com>
+> ---
+>  kernel/trace/bpf_trace.c | 2 ++
+>  1 file changed, 2 insertions(+)
+>
+> diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
+> index 187dc37d61d4..0c4b6af10601 100644
+> --- a/kernel/trace/bpf_trace.c
+> +++ b/kernel/trace/bpf_trace.c
+> @@ -3417,7 +3417,9 @@ int bpf_uprobe_multi_link_attach(const union bpf_at=
+tr *attr, struct bpf_prog *pr
+>         }
+>
+>         if (pid) {
+> +               rcu_read_lock();
+>                 task =3D get_pid_task(find_vpid(pid), PIDTYPE_TGID);
+> +               rcu_read_unlock();
+>                 if (!task) {
+>                         err =3D -ESRCH;
+>                         goto error_path_put;
 
-> For 6.16, I would just like to get the common infrastructure in the kernel
-> so there's no dependency on different tracers. This patch set adds the
-> changes but does not enable it yet. This way, perf, ftrace and BPF can all
-> work to build on top of the changes without needing to share code.
+hmm. indeed.
 
-Another thing that would work for me is not to push it this merge window,
-but if you could make a separate branch based on top of v6.15 when it is
-released, that has this code, where other subsystems could work on top of
-that, would be great!
-
--- Steve
+Jiri ?
