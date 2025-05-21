@@ -1,57 +1,57 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 236A41DC1AB;
-	Wed, 21 May 2025 06:58:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4BEF230268;
+	Wed, 21 May 2025 09:03:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747810688; cv=none; b=OweYaojzfVySZaKLeCqTsmeC3/6pVYqPmRnKVx+noxcndF9L9T5l2xB96ehCm7c6EuKL3YKhPnizMVX3y/OwACzKQWh9GZ0QxLKG/ID78d9xcewTHbr9KC23ZtQNzKFqQsu10XpV0uwt+XG/Lv8aG0aN5NW1rwwXzcGcXbSVxqU=
+	t=1747818228; cv=none; b=Nnxj6BK+rrBBhOgKmoI9y4mAAdCtmk3Ubf9DiL4aouKfbVJ2fqIWDvhEtT2JLBuCcAHjloppXglry2g6Tm6E2mz1vDuqhtAhcwOaE72NRv84fKNqkOqLNTx30Nez44LTMaWHBHDqCifCiCMc3DoueDD+4rE/PHa0hNNGo7Q9U/4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747810688; c=relaxed/simple;
-	bh=IWz6Yy/BcLz6PFo1jEHDIlrywfsNwNmZ069v+JGYxUY=;
+	s=arc-20240116; t=1747818228; c=relaxed/simple;
+	bh=PCE6LSVt1T9swMpEpefnmPyR908xT/dzCXHH6xdDWVc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IJlvCpLZK9Kaw/EsckaRNr5kCCxC4tic2mLZ1dXGe/qMJmwTOqFyXxHZVtvwJkX6BAk8m+qTlnksX2E0A6lnW4Ad1oHmGmgbVTrxtDRayl+ErUSKSSjEo6VHRfzDsRtpqelHpBNeJRYhgpH71ZAKaxPY7jg6qUS8E5QonVD1w10=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Edpjpf68; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=7IOWTLCV; arc=none smtp.client-ip=193.142.43.55
+	 Content-Type:Content-Disposition:In-Reply-To; b=hA7eWHCzGTIizceL8D3tIgAMs14KiKgkrDPIpfFff3uBI56QwOj2VieDa77CU95FqAvXm7Q7MgCD6EC1Fh8fD33LaRMGH66KsGRWMpYUfiKHKfn5Q3yoDo70syWo0DW7zNY85xSoINzh/4G3N9DRTn5E38nJ7xeA/MefsVyduIM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=W9Sb2eKA; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=uUy0QVaz; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Edpjpf68";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="7IOWTLCV"
-Date: Wed, 21 May 2025 08:58:00 +0200
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="W9Sb2eKA";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="uUy0QVaz"
+Date: Wed, 21 May 2025 11:03:43 +0200
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1747810685;
+	s=2020; t=1747818224;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=gdBcXY08SFR0xzfgVF5rY3+1lWSMx/XtZ80Wkh6Zt5Q=;
-	b=Edpjpf68A1uKzaP0QrwzhV1XWzGzmtCqSbPMr84wq8Z4mxdOcdWoAfU3ugeZbqHPag4wAo
-	CsBDDfsDq7rMLSxIZLcjvPVZoSHcgfaplwBo1ObxGGb+WFkVUt4I71qKCDsTmXyRimPxaj
-	QpPKj3cCzDNi7y7hKtoBIki51hbNsgxI36KFUYzKpiOeNBIdWZ2j3lsF8C/v6GdkfILxGh
-	n3OIx4qf3N27eAkXMi42uO40CljN32kg5rOhhlVwxu48v72FGqqv6ICIU7bIh5Zv6w3z1d
-	6AziKRVZitnc+snBXA9QbD/QXZKG6kfDT5AeIxvfCG7l5v0aAAuGLctDAz+AIQ==
+	bh=E7WKk454nZ5z7mTMr0u//RgRu0zeGFgAgehInroqNVQ=;
+	b=W9Sb2eKAX9r4Z9mVFdvQbOc/uyRHh5TATQuw+oJkimDjXi77IQO67txtyOxV5Z1mb0xNkK
+	tl0KAI7a27OFNb78JT2QUzs/DUAbBIUdpV2LqfZFOTkx3MJM2vacRlpFl7t0xtd4/Ph/Q2
+	Z5XCmMBHLYhpZupS5NXKincovE0ucYQYNXPzD4Ho6VbcdeoEaSJZEvLeXfNrxwfnow4foR
+	tyg+tSXIXvvlmKGYUMO01Uky9d8Unz0Z3ZbQ6G0Pq74Fopof23ZiE9/1p0+7eT3XR4SCj/
+	ScAxPPNJiCHlBOWmPzDqQ6yPgWWrtyZEKTwc6Nc+xAjE9tlwJzIsRX5l7Hznqg==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1747810685;
+	s=2020e; t=1747818224;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=gdBcXY08SFR0xzfgVF5rY3+1lWSMx/XtZ80Wkh6Zt5Q=;
-	b=7IOWTLCV94pErTphukCDvEfRUUt+2wfK7tjAEX3KdEcL7Ln508RjKfuP+sHHSecZHIk7bX
-	eRHBHnqpczRasHDA==
+	bh=E7WKk454nZ5z7mTMr0u//RgRu0zeGFgAgehInroqNVQ=;
+	b=uUy0QVaz9/+cz0oViaHoaQ8XiptZDPfm2VwHMg5MQ9S3pbr8+LNpPxiXyV3SVee3Fn3Too
+	Hde/GQ/TmCT91EAQ==
 From: Nam Cao <namcao@linutronix.de>
-To: Gabriele Monaco <gmonaco@redhat.com>
-Cc: linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
-	linux-trace-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Tomas Glozar <tglozar@redhat.com>, Juri Lelli <jlelli@redhat.com>
-Subject: Re: [RFC PATCH v2 10/12] rv: Retry when da monitor detects race
- conditions
-Message-ID: <20250521065800.jgtPyWd7@linutronix.de>
-References: <20250514084314.57976-1-gmonaco@redhat.com>
- <20250514084314.57976-11-gmonaco@redhat.com>
- <20250519090626.zjiYgUGW@linutronix.de>
- <5f1365f2cd84597fd3547544fcceab5c79682624.camel@redhat.com>
- <20250519103809.nuEUQbVl@linutronix.de>
- <cdcab46480cbfe2c3320e060ea9603adbd04956c.camel@redhat.com>
+To: Catalin Marinas <catalin.marinas@arm.com>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>,
+	Gabriele Monaco <gmonaco@redhat.com>,
+	linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
+	john.ogness@linutronix.de, Will Deacon <will@kernel.org>,
+	linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v8 17/22] arm64: mm: Add page fault trace points
+Message-ID: <20250521090343.TKXXN2x0@linutronix.de>
+References: <cover.1747046848.git.namcao@linutronix.de>
+ <f5fccde2326a896e5c568ef06a4dbd9aa7465f6a.1747046848.git.namcao@linutronix.de>
+ <aCtE-RvyN6XJQjTo@arm.com>
+ <20250520122548.lkvaylSB@linutronix.de>
+ <aCyOZVVioijWpEPY@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -60,69 +60,64 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <cdcab46480cbfe2c3320e060ea9603adbd04956c.camel@redhat.com>
+In-Reply-To: <aCyOZVVioijWpEPY@arm.com>
 
-On Mon, May 19, 2025 at 01:13:01PM +0200, Gabriele Monaco wrote:
-> 
-> 
-> On Mon, 2025-05-19 at 12:38 +0200, Nam Cao wrote:
-> > On Mon, May 19, 2025 at 12:28:12PM +0200, Gabriele Monaco wrote:
-> > > Mmh, although definitely unlikely, I'm thinking of a case in which
-> > > the
-> > > event starts on one CPU and at the same time we see events in IRQ
-> > > and 
-> > > on another CPU, let's say continuously. Nothing forbids that
-> > > between
-> > > any two consecutive try_cmpxchg another CPU/context changes the
-> > > next
-> > > state (making the local try_cmpxchg fail).
-> > > In practice I've never seen it going on the second iteration, as
-> > > the
-> > > critical section is really tiny, but I'm not sure we can guarantee
-> > > this
-> > > never happens.
-> > > Or am I missing something?
+On Tue, May 20, 2025 at 03:15:01PM +0100, Catalin Marinas wrote:
+> On Tue, May 20, 2025 at 02:25:48PM +0200, Nam Cao wrote:
+> > On Mon, May 19, 2025 at 03:49:29PM +0100, Catalin Marinas wrote:
+> > > On Mon, May 12, 2025 at 12:51:00PM +0200, Nam Cao wrote:
+> > > > diff --git a/arch/arm64/mm/fault.c b/arch/arm64/mm/fault.c
+> > > > index ec0a337891dd..55094030e377 100644
+> > > > --- a/arch/arm64/mm/fault.c
+> > > > +++ b/arch/arm64/mm/fault.c
+> > > > @@ -44,6 +44,9 @@
+> > > >  #include <asm/tlbflush.h>
+> > > >  #include <asm/traps.h>
+> > > >  
+> > > > +#define CREATE_TRACE_POINTS
+> > > > +#include <trace/events/exceptions.h>
+> > > > +
+> > > >  struct fault_info {
+> > > >  	int	(*fn)(unsigned long far, unsigned long esr,
+> > > >  		      struct pt_regs *regs);
+> > > > @@ -559,6 +562,11 @@ static int __kprobes do_page_fault(unsigned long far, unsigned long esr,
+> > > >  	if (kprobe_page_fault(regs, esr))
+> > > >  		return 0;
+> > > >  
+> > > > +	if (user_mode(regs))
+> > > > +		trace_page_fault_user(addr, regs, esr);
+> > > > +	else
+> > > > +		trace_page_fault_kernel(addr, regs, esr);
+> > > 
+> > > What are the semantics for these tracepoints? When are they supposed to
+> > > be called? In the RV context context I guess you only care about the
+> > > benign, recoverable faults that would affect timing. These tracepoints
+> > > were generalised from the x86 code but I don't know enough about it to
+> > > tell when they would be invoked.
+> > > 
+> > > For arm64, we also have the do_translation_fault() path for example that
+> > > may or may not need to log such trace events.
 > > 
-> > I have a feeling that you missed my point. I agree that the retrying
-> > is
-> > needed, because we may race with another.
-> > 
-> > What I am proposing is that we drop the MAX_DA_RETRY_RACING_EVENTS,
-> > and
-> > just keep retrying until we succeed.
-> > 
-> > And that's safe to do, because the maximum number of retries is the
-> > number
-> > of tasks contending with us to set the monitor's state. So we know we
-> > won't
-> > be retrying for long.
+> > These tracepoints are invoked for x86 page fault exceptions. Are arm64's
+> > translation faults considered equivalent to x86 page faults?
 > 
-> I get this point, what I mean is: can we really guarantee the number of
-> contending tasks (or contexts) is finite?
-> In other words, the try_cmpxchg guarantees 1 and only 1 actor wins
-> every time, but cannot guarantee all actors will eventually win, an
-> actor /could/ be hanging there forever.
+> Probably. We route permission or access flag faults via do_page_fault()
+> directly while missing page table entries via do_translation_fault().
+> The latter end up in do_page_fault() only if the faulting address is in
+> the user address range.
 > 
-> This handler is running for each event in the monitor and tracepoint
-> handlers can be interrupted as well as run in interrupt context (where
-> of course they cannot be interrupted). I don't think the number of
-> actors is bounded by the number of CPUs.
-> I see this situation is extremely unlikely, but in an exotic scenario
-> where a CPU is sufficiently slower than others (e.g. in a VM) I believe
-> we can see this critical section large enough for this to potentially
-> happen.
-> 
-> I'm not quite afraid of infinite loops, but rather RV introducing
-> unbounded latency very hard to track and without any reporting.
-> Chances are, since tracepoints and actual traced events are not atomic,
-> that by the time this delayed context /wins/ the RV event is no longer
-> current, so we may see an error already.
-> 
-> Does it make sense to you or am I making it more complex than it should
-> be?
+> My point was that we may not always invoke the trace callbacks if, for
+> example, the user tries to access the kernel space (and results in a
+> SIGSEGV). While that's fine for RV, I wanted to know what is expected of
+> these trace points in general. Do we need to log such SIGSEGV-generating
+> events? We do log them if there's a permission fault.
 
-Right, I can see that being a problem. But I don't know enough about it to
-comment further, so do as you think best, maybe someone else can help.
+I'm not sure. Digging into history, these tracepoints were added for LTTng.
+So maybe LTTng's developer could answer this.
+
+Added to the conversation: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Can you please give some insight to the above question?
 
 Best regards,
 Nam
+
