@@ -1,54 +1,76 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from fanzine2.igalia.com (fanzine2.igalia.com [213.97.179.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5659E184E;
-	Wed, 21 May 2025 01:17:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB16F230BC5;
+	Wed, 21 May 2025 06:23:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.97.179.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747790253; cv=none; b=O8c7BmGbZtNw4+bfG/qMK8+M7e2CwyS3z5nGl7AQUQWQQFJxO0tpvy6D92F8137uAY+HFY4Jholn+KJ5YdB2X2AxPR8DF6t5iXWoxX1X7+gJA785oc914CDmimaYbahx36Ss6OLq6Ns64UP2AcWqSOAoWoDEOi4ITri7F2jsy2o=
+	t=1747808642; cv=none; b=Qz7xCdPqtn1fajz2VmP1QyXdEKE012n5Hm6luwgmw7qHaDqrFl6oBsLSlSdsy3QQxTdNnjQunYiInltanyBWX/K1TblFOs9A5aKxb8tK9zzc/Wkl4dUAridQvULLG3EPT2iNF2y/+LlJ+0xi7Ko1FaDXlnC9yKSGzFtF5+DxV0A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747790253; c=relaxed/simple;
-	bh=/DGBChWqkoyrehLrPFhludhKS9BW6V3CZw214BTIWyo=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=aGUKAewMnfyg9y2ekgGr5v0OTA7wCR4x2JjjyR61/T+KQ+PyUsBzuQGPSPbxNSWuVS2IbK/xjcpGBhgQERXGT98ECGEhES2v6ks0trzHLjvaE30AZmCC0avySe24rz6jMLlVqeheS3j+bbkfgDktNKSu9FghOXf1roRIQv/mpo4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=I0/44lyS; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1747808642; c=relaxed/simple;
+	bh=I8faleen+YlYRwQJOEFwvKHjEj3VGyqU4/5IQ3Xn7Zg=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=A0uGrIcyid0aPITaXf0krC3OfcoubTJvO8psb4d/jLDxmSTJszUu4Z9VgOBqKr2BZS245jbvi1DJn4CXa69di3lEHqjuuDTy86qg51Uk3JyTxWLsT0byNpIT2Rv76zRsw6KfPVCybYwQOmspJj8pVfB1Z+rgIirioys/cVBN3zY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=lPzMBE1P; arc=none smtp.client-ip=213.97.179.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="I0/44lyS"
-Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54KGeOGP020632;
-	Wed, 21 May 2025 01:17:24 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=qcppdkim1; bh=22MIIhZcOt+ZHm3CEkVEmk
-	yNNX4uM2tIUsVvcMh9bQQ=; b=I0/44lySGeQNB8LcKwox+yBsSmmQy8vPV+yaAB
-	QLnk4G/5EBubXIu7qiNqTWxWct+ukarTpwuH4XNmCkiVEqMOElPsNQOZOgTO7/BQ
-	GTWDXUKnFOI39WESS4+1LAav5aa1+9TBoNwe6wSNZ3kaRvyZCRhT9K70JdgtqBBx
-	wmUVTJJjRG2d0Ize58JsCiKGehqPgOy+i3q3NNh7/5jmzI2lTLcBC8oZelMvmI0v
-	RXhxXqDZZpdJW18YXNYI/jkFGeETqv3obYOTWUtyndc1xXFJf6lyYHN/zLxDhLji
-	nRSuwQbU9+YAE/r0ugaDJDJP5LkNBxn5z0ykZJ0SjNKRDiwA==
-Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46rwf9s215-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 21 May 2025 01:17:24 +0000 (GMT)
-Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
-	by NALASPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 54L1HNM3012083
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 21 May 2025 01:17:23 GMT
-Received: from hlos-sh01-lnx.qualcomm.com (10.80.80.8) by
- nalasex01b.na.qualcomm.com (10.47.209.197) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Tue, 20 May 2025 18:17:21 -0700
-From: Kassey Li <quic_yingangl@quicinc.com>
-To: <rostedt@goodmis.org>, <James.Bottomley@HansenPartnership.com>,
-        <martin.petersen@oracle.com>, <mathieu.desnoyers@efficios.com>,
-        <linux-kernel@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
-        <linux-scsi@vger.kernel.org>
-CC: <quic_yingangl@quicinc.com>
-Subject: [PATCH v5] scsi: trace: show rtn in string for scsi_dispatch_cmd_error
-Date: Wed, 21 May 2025 09:17:11 +0800
-Message-ID: <20250521011711.1983625-1-quic_yingangl@quicinc.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="lPzMBE1P"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
+	s=20170329; h=Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:
+	Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=Mj1L8UT5keBFToIFmCVn4vf03lSCBcagktZ7oeGryzY=; b=lPzMBE1PrVethON7w5jSglZ0xH
+	doMttCtEHa3eE5f+fCV168lQsBT2/z+SSX6WM6u1qcTFFAQZbVT4KEKYq3P/aZcfSvHFoFAGM2tE7
+	luHTWLJ1z3bG/Q0B4+YnNDNufb24FcogBUnxL1gTq6DggcJOuoQZT35uA61x8TkmUrU1i42nIC43N
+	eLDbKGfDDQQIVEhr4Dnk3EtISFTwWezSPLTCZ59CvgIzNp9b6cQny6eTNcsQ82ixKM9jeguTVvcBg
+	TmIaHE19jBMUvyhf6ezdOBl8N1czNhiqPIDMErkVMbNDquDobWCOfzAb2TfR7cMJMX4qzES5jePmV
+	STdRxYgw==;
+Received: from [223.233.70.209] (helo=localhost.localdomain)
+	by fanzine2.igalia.com with esmtpsa 
+	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256) (Exim)
+	id 1uHcrs-00B3oN-DJ; Wed, 21 May 2025 08:23:56 +0200
+From: Bhupesh <bhupesh@igalia.com>
+To: akpm@linux-foundation.org
+Cc: bhupesh@igalia.com,
+	kernel-dev@igalia.com,
+	linux-kernel@vger.kernel.org,
+	bpf@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org,
+	linux-mm@kvack.org,
+	oliver.sang@intel.com,
+	lkp@intel.com,
+	laoar.shao@gmail.com,
+	pmladek@suse.com,
+	rostedt@goodmis.org,
+	mathieu.desnoyers@efficios.com,
+	arnaldo.melo@gmail.com,
+	alexei.starovoitov@gmail.com,
+	andrii.nakryiko@gmail.com,
+	mirq-linux@rere.qmqm.pl,
+	peterz@infradead.org,
+	willy@infradead.org,
+	david@redhat.com,
+	viro@zeniv.linux.org.uk,
+	keescook@chromium.org,
+	ebiederm@xmission.com,
+	brauner@kernel.org,
+	jack@suse.cz,
+	mingo@redhat.com,
+	juri.lelli@redhat.com,
+	bsegall@google.com,
+	mgorman@suse.de,
+	vschneid@redhat.com,
+	linux-trace-kernel@vger.kernel.org
+Subject: [PATCH v4 1/3] exec: Remove obsolete comments
+Date: Wed, 21 May 2025 11:53:35 +0530
+Message-Id: <20250521062337.53262-2-bhupesh@igalia.com>
+X-Mailer: git-send-email 2.38.1
+In-Reply-To: <20250521062337.53262-1-bhupesh@igalia.com>
+References: <20250521062337.53262-1-bhupesh@igalia.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -56,97 +78,49 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01b.na.qualcomm.com (10.47.209.197)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Authority-Analysis: v=2.4 cv=V9990fni c=1 sm=1 tr=0 ts=682d29a4 cx=c_pps
- a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
- a=GEpy-HfZoHoA:10 a=dt9VzEwgFbYA:10 a=COk6AnOGAAAA:8 a=HDVQ9ilCK7Bs7oLMxKUA:9
- a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-ORIG-GUID: g-H7kPjUAHiROBR8CfZoPl2kAU2mehUV
-X-Proofpoint-GUID: g-H7kPjUAHiROBR8CfZoPl2kAU2mehUV
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTIxMDAxMCBTYWx0ZWRfX53i3AVIcRQZf
- HeXpEIiU62iNdR+8RPNpPu5dYaTMCnPMvZa1TQfiEzoezPNdA40+MJWWRwY1FBvkSvwsiLgUVjV
- ff3HlNymYtoBnUOuw/NKy/0T+KFxsoKRyEJFXck+e7K4wFM95BYreH4UbG07R0W3GPa1Ogvua3a
- F8oQVEqthxdZj1wLJr9WwlKX7P3hqB3GCpH/fsYCD+m+XcogsLJTtSBUnY0Xg6ptQ5LxoL9X008
- zpTcpOURUzNZ8n2dJoQ+tc+/xRQgnW86E1d3qOUDl7/OFRbfcKzcZO7Hb5coIiM1gSqk+pxP6WR
- cIu5WXlCgoStcZsxu2RZHAazkj18pAyv6onAXZ5hXzZkARws7ZVaM4I3H2z00kHB75mncAV98ZI
- WQoxL/yMr6NDQRREVNsaB+xsc84kIiJF+axCLaKpH1bKzH42LhDdix8Rp4FfyIIHqPtsWbgl
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-20_10,2025-05-20_03,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- mlxlogscore=999 bulkscore=0 impostorscore=0 clxscore=1015 priorityscore=1501
- lowpriorityscore=0 mlxscore=0 spamscore=0 phishscore=0 suspectscore=0
- adultscore=0 malwarescore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505160000
- definitions=main-2505210010
 
-By default it showed rtn in decimal:
+Patch 3a3f61ce5e0b ("exec: Make sure task->comm is always NUL-terminated"),
+replaced 'strscpy_pad()' with 'memcpy()' implementations inside
+'__set_task_comm()'.
 
-kworker/3:1H-183 [003] ....  51.035474: scsi_dispatch_cmd_error: host_no=0 channel=0 id=0 lun=4 data_sgl=1  prot_sgl=0 prot_op=SCSI_PROT
-_NORMAL cmnd=(READ_10 lba=3907214  txlen=1 protect=0 raw=28 00 00 3b 9e 8e 00 00 01 00) rtn=4181
+However a few left-over comments are still there, which mention
+the usage of 'strscpy_pad()' inside '__set_task_comm()'.
 
-In source code we define these possible values as hexadecimal:
+Remove those obsolete comments.
 
-include/scsi/scsi.h
+While at it, also remove an obsolete comment regarding 'task_lock()'
+usage while handing 'task->comm'.
 
-SCSI_MLQUEUE_HOST_BUSY   0x1055
-SCSI_MLQUEUE_DEVICE_BUSY 0x1056
-SCSI_MLQUEUE_EH_RETRY    0x1057
-SCSI_MLQUEUE_TARGET_BUSY 0x1058
-
-This change shows the rtn in strings:
-
-dd-1059    [007] .....    31.689529: scsi_dispatch_cmd_error: host_no=0 channel=0 id=0 lun=4 data_sgl=65 prot_sgl=0 prot_op=SCSI_PROT_NORMAL driver_tag=23 scheduler_tag=117 cmnd=(READ_10 lba=0 txlen=128 protect=0 raw=28 00 00 00 00 00 00 00 80 00) rtn=SCSI_MLQUEUE_DEVICE_BUSY
-
-Changes in v5:
-- last backslash aligns.
-
-Signed-off-by: Kassey Li <quic_yingangl@quicinc.com>
+Signed-off-by: Bhupesh <bhupesh@igalia.com>
 ---
- include/trace/events/scsi.h | 13 +++++++++++--
- 1 file changed, 11 insertions(+), 2 deletions(-)
+ include/linux/sched.h | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/include/trace/events/scsi.h b/include/trace/events/scsi.h
-index 8e2d9b1b0e77..1decb51fbf6e 100644
---- a/include/trace/events/scsi.h
-+++ b/include/trace/events/scsi.h
-@@ -199,6 +199,14 @@ TRACE_EVENT(scsi_dispatch_cmd_start,
- 		  __print_hex(__get_dynamic_array(cmnd), __entry->cmd_len))
- );
+diff --git a/include/linux/sched.h b/include/linux/sched.h
+index 8c60a42f9d00..704222114dcc 100644
+--- a/include/linux/sched.h
++++ b/include/linux/sched.h
+@@ -1162,10 +1162,8 @@ struct task_struct {
+ 	 *
+ 	 * - normally initialized begin_new_exec()
+ 	 * - set it with set_task_comm()
+-	 *   - strscpy_pad() to ensure it is always NUL-terminated and
++	 *   - logic inside set_task_comm() will ensure it is always NUL-terminated and
+ 	 *     zero-padded
+-	 *   - task_lock() to ensure the operation is atomic and the name is
+-	 *     fully updated.
+ 	 */
+ 	char				comm[TASK_COMM_LEN];
  
-+#define scsi_rtn_name(result)	{ result, #result }
-+#define show_rtn_name(val)					\
-+	__print_symbolic(val,					\
-+		scsi_rtn_name(SCSI_MLQUEUE_HOST_BUSY),		\
-+		scsi_rtn_name(SCSI_MLQUEUE_DEVICE_BUSY),	\
-+		scsi_rtn_name(SCSI_MLQUEUE_EH_RETRY),		\
-+		scsi_rtn_name(SCSI_MLQUEUE_TARGET_BUSY))
-+
- TRACE_EVENT(scsi_dispatch_cmd_error,
- 
- 	TP_PROTO(struct scsi_cmnd *cmd, int rtn),
-@@ -239,14 +247,15 @@ TRACE_EVENT(scsi_dispatch_cmd_error,
- 
- 	TP_printk("host_no=%u channel=%u id=%u lun=%u data_sgl=%u prot_sgl=%u" \
- 		  " prot_op=%s driver_tag=%d scheduler_tag=%d cmnd=(%s %s raw=%s)" \
--		  " rtn=%d",
-+		  " rtn=%s",
- 		  __entry->host_no, __entry->channel, __entry->id,
- 		  __entry->lun, __entry->data_sglen, __entry->prot_sglen,
- 		  show_prot_op_name(__entry->prot_op), __entry->driver_tag,
- 		  __entry->scheduler_tag, show_opcode_name(__entry->opcode),
- 		  __parse_cdb(__get_dynamic_array(cmnd), __entry->cmd_len),
- 		  __print_hex(__get_dynamic_array(cmnd), __entry->cmd_len),
--		  __entry->rtn)
-+		  show_rtn_name(__entry->rtn)
-+	  )
- );
- 
- DECLARE_EVENT_CLASS(scsi_cmd_done_timeout_template,
+@@ -1997,7 +1995,7 @@ extern void __set_task_comm(struct task_struct *tsk, const char *from, bool exec
+  *   User space can randomly change their names anyway, so locking for readers
+  *   doesn't make sense. For writers, locking is probably necessary, as a race
+  *   condition could lead to long-term mixed results.
+- *   The strscpy_pad() in __set_task_comm() can ensure that the task comm is
++ *   The logic inside __set_task_comm() should ensure that the task comm is
+  *   always NUL-terminated and zero-padded. Therefore the race condition between
+  *   reader and writer is not an issue.
+  *
 -- 
-2.34.1
+2.38.1
 
