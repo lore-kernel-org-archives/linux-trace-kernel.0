@@ -1,123 +1,113 @@
-Received: from fanzine2.igalia.com (fanzine2.igalia.com [213.97.179.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f177.google.com (mail-il1-f177.google.com [209.85.166.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 067FD1519B8;
-	Thu, 22 May 2025 19:45:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.97.179.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3CC12673AC;
+	Thu, 22 May 2025 23:17:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747943112; cv=none; b=T0XWX8Rns7pcgopxj0rdkrIIwjhWZm26yoWK2MRVFZVDFbTkZcVt0KafABJgU4tJ2Ze23F7tL1Wlhg6wf2oHffX8hYSd7tBaQRT8EXgjJzmT+ub+ftyCZV8Ug56dBw64dDVQSAX2TsUWz9D5q40ueGyyniOXIHGAsFD9XCghSh8=
+	t=1747955834; cv=none; b=CJA4ZKvnOsJm2Aiyg+gDQj7dNrfFHZiHi8nLMDe6N7un/5ECwOfyf5oTE5ud3MdkLX1fu8BQpGLLNieLZjlBW6jkVsdAD3ZewzDmunKZvNJ77G8xdB2KVtlVPblsDq21Q8X/YzZQMUrt+iwnm4srD8LmIBAPHYwR5YtzmjqDOJA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747943112; c=relaxed/simple;
-	bh=yh0R90YapmvdDEQUM4WgEM8LTT2tIlKucgQTnOOO3dA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bnILHXA4e/CFQWs08uEZ16Ltv5weaSnhWVpMcQPUIwaV7vUONnXSXRzI8KPBokRybSYLALZyu+VPo05WO+SZ25eqQ8zn8qOX//dT+ke5urdu5+w3rGN4hStMGfrweOesAWKaEnHV30JX0rU2xI1V5akYfYHa6uEOiw5n9D7bXi0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=rPeK2Anl; arc=none smtp.client-ip=213.97.179.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
+	s=arc-20240116; t=1747955834; c=relaxed/simple;
+	bh=3f3Fo7Dm23hD8Vzd8mA64sJj0jRQ2dQkVVlple2PRnQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=KtufuFfflcwFJ+zHxFgvLawc5XdIkhMbEkJ5BYFQmkYBhEZ89p+JefCSf3v4suWk4DEpWO5YG3z1igEO/YcVuR0nDmfKY0XxO1i0+ttUqojYBA/6SUBRpWd12UW/JDztjB0USN1/v8Ls7BqhoZr6d9+XZyK45wFszjoOdLjo/3Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jlRoxdE1; arc=none smtp.client-ip=209.85.166.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="rPeK2Anl"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
-	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=b4Gq7lrRnu32phU15nLFZ+zTgkQ+RFVbw49dZ/Yes3Q=; b=rPeK2Anl5+yLqAmwH2j1YJTwdu
-	nE8CLl7xTplJk3RKL83afh7JUR2UnPhCPEwBk1Zj94FguLMhsl9Y/SagBXghVU+3Tfjgi+SKbliA1
-	LEA+6MiA9tJBO64lX+oBgP+c8JUwOewP6vKC2XkL075S8Eg2GTFo0+FAmH3cw5cIn6NGWeUAXOdEC
-	lVB8TsvW4eYKOJ7QAp5CMzWUZSdZYawijkZM4h22RumI/l81Jm7Re+DX+9m5iuMmlk0Hr4ambP4z9
-	2ObLFSaO6pdJQj7lNsFWBK20GWtcDZksYHtDExpllRuEPohRfJIa8TITV2/VPsmbeTTfFH3pMy5k6
-	r4P8hH5A==;
-Received: from [223.233.76.245] (helo=[192.168.1.12])
-	by fanzine2.igalia.com with esmtpsa 
-	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
-	id 1uIBqe-00BrwM-2I; Thu, 22 May 2025 21:45:00 +0200
-Message-ID: <1ff57d4d-6e57-20f1-c3e3-b0f7dfeccaaf@igalia.com>
-Date: Fri, 23 May 2025 01:14:05 +0530
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jlRoxdE1"
+Received: by mail-il1-f177.google.com with SMTP id e9e14a558f8ab-3dc8265b9b5so18026075ab.1;
+        Thu, 22 May 2025 16:17:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747955832; x=1748560632; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=GaM354tZx5U+vN6gfAJSlMDQcTM2SFE45F9vbnngQiw=;
+        b=jlRoxdE1LwDm+mLQHMuhiA+6tQirer1KWYsfNpsQIgYxcvwF3B7354a/+w0qid0OCq
+         jw1OzRuLRKgjbOG7xdxbe9OQ2Gsi+eF2gtUbLTOjmKq5AwTOQW4zRZQJUq/bgZGjbV6L
+         pQgTK70zyWv6HtN4HJndB1RQ9izCnWpZTXPw3PXnhr2WWUq43aHIfPz2cMUXRm/f2Gyq
+         KbfY/4XPYYbk2V8XJnthIvePtbrZ2+Fwo0RmurHuYL/hIPAOc2LyFiQJ43ul9mld94rE
+         1PCYbWH+hCuVRgPK9FMFek+JdOtuJ5TVd3rSaao2gyiGhH1l7IqhO0ySI7cDrAaVTzkA
+         WSUQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747955832; x=1748560632;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=GaM354tZx5U+vN6gfAJSlMDQcTM2SFE45F9vbnngQiw=;
+        b=Qt80QVxcR67BTaqWRQvE7gDik/fg6TBKwO1d+99RO8zlVsYvNqYCdJdgb7psjQLnJK
+         JK8elIRt/eWAsMOtOETcAjHV7I27G78RqA8NOgkd2iMb5pd33MT+L2rVEAfxhKGu9kAq
+         tD5jFR77htwULCp/X57UkUQVE3AeYAk34ya0Eq0rNULJ5V1LA1mQoZO9KChFLzRdA5q4
+         3/BvFm4+6O75Mz3siNmPuPfOAQpXh5nAj+MlaDdAkY6KBEkLOqXplDDFfbDS8o34W7QL
+         z0xglv+LHkQESBmc/8ZlVrRywS4FYeRnXEuTh9TWmQUhUd9VhkhgzfuqPn+u5aLD8jIq
+         aLrg==
+X-Forwarded-Encrypted: i=1; AJvYcCVrwQIH46QC4jH19CH3MSEoKbG6fIfeKLEAaDwOC0inLE2eJzjkAWlfYzYrpHd5YZ6bWhS6O420v+BJK8aLuaFN56nt@vger.kernel.org, AJvYcCX1dpSweyanYw+bJTxyTq7GWisJ/bvwZ5WA9qFCd2nTnijyR1z8gbIjcnmPpdE4pqj/JQAwlHRyZrP6wQ==@vger.kernel.org
+X-Gm-Message-State: AOJu0YxPZUGDrbCr9bgLzL0Kq5UJ1k7hLOgLz00mKnTG/T0uN2CsSZYI
+	ptoW3dkS5SOql1lZc6nkvmIdKFVgIkCFvyrmcu4mYUjo2c4RlFCeKBgBXd087mHIWrDMQVfNvN9
+	Zo1mRkU3VbEgzyw49O6ovjSvB9MvtT88=
+X-Gm-Gg: ASbGncvqGjIFd5qxiUjMUkBShvME+VAzWEFq0jv60qAGzE0jX64+eURHxKLaI0sC8qk
+	QkllMorWbOLwkcvvkAGmkaAgaNSitC3QWEVtkYVNkONYrTA9/vUOAf/zFpfFU3P4Gm8z9Vp30Ti
+	KSUzlHXixsnCi1rGAgr49SHDrZA4iOrEc=
+X-Google-Smtp-Source: AGHT+IHL7FrgTlGS+bXYyQa4ezkcG+a0z9X9zvWhqeGXgBAvxvtnrcJPNRFmVqTXDacSReyBfg0T5giZYyZPcdUJgfE=
+X-Received: by 2002:a05:6e02:3c02:b0:3d8:1dc7:ca7a with SMTP id
+ e9e14a558f8ab-3db84296d9amr302457135ab.5.1747955831811; Thu, 22 May 2025
+ 16:17:11 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.5.0
-Subject: Re: [PATCH v4 2/3] treewide: Switch memcpy() users of 'task->comm' to
- a more safer implementation
-Content-Language: en-US
-To: Yafang Shao <laoar.shao@gmail.com>, Bhupesh <bhupesh@igalia.com>
-Cc: akpm@linux-foundation.org, kernel-dev@igalia.com,
- linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
- linux-perf-users@vger.kernel.org, linux-fsdevel@vger.kernel.org,
- linux-mm@kvack.org, oliver.sang@intel.com, lkp@intel.com, pmladek@suse.com,
- rostedt@goodmis.org, mathieu.desnoyers@efficios.com, arnaldo.melo@gmail.com,
- alexei.starovoitov@gmail.com, andrii.nakryiko@gmail.com,
- mirq-linux@rere.qmqm.pl, peterz@infradead.org, willy@infradead.org,
- david@redhat.com, viro@zeniv.linux.org.uk, keescook@chromium.org,
- ebiederm@xmission.com, brauner@kernel.org, jack@suse.cz, mingo@redhat.com,
- juri.lelli@redhat.com, bsegall@google.com, mgorman@suse.de,
- vschneid@redhat.com, linux-trace-kernel@vger.kernel.org
-References: <20250521062337.53262-1-bhupesh@igalia.com>
- <20250521062337.53262-3-bhupesh@igalia.com>
- <CALOAHbCm_ggnxAtHMx07MUgnW01RiymD6MpR7coJOiokR4v52A@mail.gmail.com>
- <CALOAHbDNBQN6m9SzK6MegwapUQ9vm4NgcZgyp=aepG8RA8J7UA@mail.gmail.com>
-From: Bhupesh Sharma <bhsharma@igalia.com>
-In-Reply-To: <CALOAHbDNBQN6m9SzK6MegwapUQ9vm4NgcZgyp=aepG8RA8J7UA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+References: <20250518025734.61479-1-kerneljasonxing@gmail.com>
+In-Reply-To: <20250518025734.61479-1-kerneljasonxing@gmail.com>
+From: Jason Xing <kerneljasonxing@gmail.com>
+Date: Fri, 23 May 2025 07:16:35 +0800
+X-Gm-Features: AX0GCFt7enlOC2dQS-dK7V0yyxkE3qzeKRNR56_u9wVWI7Gr7wIMNtBCnBTB4wo
+Message-ID: <CAL+tcoCD5ORW=JqvZg7=uJXkLi-WTG-Szj1k8ya9sX6LcR41jQ@mail.gmail.com>
+Subject: Re: [PATCH v3 0/4] relayfs: misc changes
+To: axboe@kernel.dk, rostedt@goodmis.org, mhiramat@kernel.org, 
+	mathieu.desnoyers@efficios.com, akpm@linux-foundation.org
+Cc: linux-kernel@vger.kernel.org, linux-block@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, Jason Xing <kernelxing@tencent.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Yafang,
-
-Many thanks for the review.
-
-On 5/22/25 11:57 AM, Yafang Shao wrote:
-> On Thu, May 22, 2025 at 2:15 PM Yafang Shao <laoar.shao@gmail.com> wrote:
->> On Wed, May 21, 2025 at 2:24 PM Bhupesh <bhupesh@igalia.com> wrote:
->>> As Linus mentioned in [1], currently we have several memcpy() use-cases
->>> which use 'current->comm' to copy the task name over to local copies.
->>> For an example:
->>>
->>>   ...
->>>   char comm[TASK_COMM_LEN];
->>>   memcpy(comm, current->comm, TASK_COMM_LEN);
->>>   ...
->>>
->>> These should be modified so that we can later implement approaches
->>> to handle the task->comm's 16-byte length limitation (TASK_COMM_LEN)
->>> is a more modular way (follow-up patches do the same):
->>>
->>>   ...
->>>   char comm[TASK_COMM_LEN];
->>>   memcpy(comm, current->comm, TASK_COMM_LEN);
->>>   comm[TASK_COMM_LEN - 1] = '\0';
->>>   ...
->>>
->>> The relevant 'memcpy()' users were identified using the following search
->>> pattern:
->>>   $ git grep 'memcpy.*->comm\>'
->> Hello Bhupesh,
->>
->> Several BPF programs currently read task->comm directly, as seen in:
->>
->> // tools/testing/selftests/bpf/progs/test_skb_helpers.c [0]
->> bpf_probe_read_kernel_str(&comm, sizeof(comm), &task->comm);
->>
->> This approach may cause issues after the follow-up patch.
->> I believe we should replace it with the safer bpf_get_current_comm()
->> or explicitly null-terminate it with "comm[sizeof(comm) - 1] = '\0'".
->> Out-of-tree BPF programs like BCC[1] or bpftrace[2] relying on direct
->> task->comm access may also break and require updates.
->>
->> [0]. https://git.kernel.org/pub/scm/linux/kernel/git/bpf/bpf-next.git/tree/tools/testing/selftests/bpf/progs/test_skb_helpers.c#n26
->> [1]. https://github.com/iovisor/bcc
->> [2]. https://github.com/bpftrace/bpftrace
-> Hmm, upon checking, I confirmed that bpf_probe_read_kernel_str()
-> already ensures the destination string is null-terminated. Therefore,
-> this change is unnecessary. Please disregard my previous comment.
+On Sun, May 18, 2025 at 10:57=E2=80=AFAM Jason Xing <kerneljasonxing@gmail.=
+com> wrote:
 >
+> From: Jason Xing <kernelxing@tencent.com>
+>
+> The series mostly focuses on the error counters which helps every user
+> debug their own kernel module.
+>
+> ---
+> Note: this series is made on top of this cleanup[1] and unmerged commit[2=
+]
+> [1]: https://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm.git/log/?h=
+=3Dmm-nonmm-unstable
+> [2]: https://lore.kernel.org/all/20250507134225.63248-1-kerneljasonxing@g=
+mail.com/
+>
+> Jason Xing (4):
+>   relayfs: support a counter tracking if per-cpu buffers is full
+>   relayfs: introduce getting relayfs statistics function
+>   blktrace: use rbuf->stats.full as a drop indicator in relayfs
+>   relayfs: support a counter tracking if data is too big to write
+>
+>  include/linux/relay.h   | 19 ++++++++++++++-
+>  kernel/relay.c          | 52 +++++++++++++++++++++++++++++++++++------
+>  kernel/trace/blktrace.c | 22 ++---------------
+>  3 files changed, 65 insertions(+), 28 deletions(-)
 
-Sure. Yes, bpf_probe_read_kernel_str() handles these cases.
+Hi Andrew,
+
+Any comments on the series?
 
 Thanks,
-Bhupesh
+Jason
 
+>
+> --
+> 2.43.5
+>
