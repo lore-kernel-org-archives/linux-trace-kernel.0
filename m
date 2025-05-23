@@ -1,285 +1,131 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out30-99.freemail.mail.aliyun.com (out30-99.freemail.mail.aliyun.com [115.124.30.99])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF76324E4C6;
-	Fri, 23 May 2025 04:39:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4A7E2F41;
+	Fri, 23 May 2025 06:55:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.99
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747975181; cv=none; b=OfOfZmfJXazlLwWWO05oWMJCS3jRW1QyVGAF/P/Oco9HcD8GXZumlYGzTGx4thv8BE8OtzjPlshYLZ+oC1XzvGkJ5AR5Q6pJwLWLw32Ovij9cetRkWNdepitLQBWjQ9CgQHFgO4WNe48Xj5rQKK9kGSvEFBg6y6QABSJbZL5LOA=
+	t=1747983346; cv=none; b=iOxbbZwVEGwOBY+uS/MgcdEz1TckT0UDx7gbe1VJQFRXsmDzc7gA8hOiPc4k0swVQLQjPldvhJ8FopU4MbkmMLBBKqjN2kj0sw/7vPX7zmFlfkngRnGUc3nGj6FBPi5ky9ekaMOOHKPr9TVuxAAvjEEaduA3UHQREaFBL/Qh6ws=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747975181; c=relaxed/simple;
-	bh=NLp+yNLHFbt0GV+WqSgZP5Jpw7SgnlmemsBZjPqNKQ0=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=NqJJ+zrUyRiEmYRLkkQBqTTSwHJ+1+p6epCc0In4xElz/ElQNFFhkZXw3zB9AeLPxLC1GipZLbcf8Mz/U7pTpOA1uc2Q0pZjS16YLScM8pHLtHI9Y5mGoCeQ6Elu2L8G9CUiaz3XM4PKBBrMEkCwgMGj5Z2TOvcQHfEuci9/+AM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Rj3s+e3m; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747983346; c=relaxed/simple;
+	bh=pVHutlHjk19bDsR5XHyrVEKz0M1o9YrQaWRutQHH+7g=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=gyrExshWC0WrKDVHLh3GeQSqqHR1KE7sBVD74jRW5sz9mi1uA8esTjPsQc5Gkkl/qapETKaf01DYs1tnpW2IKa/WNtNn8+KkDC+UXq2h/P34uZbpCW6zU6827u/XRfXQwWVoqOa5ws2ybQx0i5g5LxVa27g+w6zCvL/0hjXxRsI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=O4AMrPff; arc=none smtp.client-ip=115.124.30.99
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Rj3s+e3m"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3635CC4CEE9;
-	Fri, 23 May 2025 04:39:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747975181;
-	bh=NLp+yNLHFbt0GV+WqSgZP5Jpw7SgnlmemsBZjPqNKQ0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Rj3s+e3mE3W4aIysRoKZFNxm9vD2ek1huWH4Vn0crUEGAbKJwFulKN6m0+LDN4Aln
-	 XTkNK1mH9zOlLXf7FFTGL9Hc+gsp/JQpJfgx+hC9w/yyjXWfEJNgzqLEzNQyzv+LTn
-	 oxehudMtjyuOgnOccQomiSSYSAM9uLxKgYHBMJU1Q7fkn2wwOX0bCFGYNM0HOdfsYr
-	 cl0BaSwZwFwDWjrVNBwZrOcsmN8ydAPwT5gU9Sl36aB8F4iIIh+L32zFmkZiZNG8WE
-	 /xdL3qIg2hbWBC7ZuHTze9Sty41eTTtKnbIn8L1FWsb+X57lFIMyIVNqg/L9Oi12EV
-	 CBe9AnINRA1vA==
-From: Kees Cook <kees@kernel.org>
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Kees Cook <kees@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Vitaly Kuznetsov <vkuznets@redhat.com>,
-	Henrique de Moraes Holschuh <hmh@hmh.eng.br>,
-	Hans de Goede <hdegoede@redhat.com>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Len Brown <lenb@kernel.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Mike Rapoport <rppt@kernel.org>,
-	Michal Wilczynski <michal.wilczynski@intel.com>,
-	Juergen Gross <jgross@suse.com>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-	Roger Pau Monne <roger.pau@citrix.com>,
-	David Woodhouse <dwmw@amazon.co.uk>,
-	Usama Arif <usama.arif@bytedance.com>,
-	"Guilherme G. Piccoli" <gpiccoli@igalia.com>,
-	Thomas Huth <thuth@redhat.com>,
-	Brian Gerst <brgerst@gmail.com>,
-	kvm@vger.kernel.org,
-	ibm-acpi-devel@lists.sourceforge.net,
-	platform-driver-x86@vger.kernel.org,
-	linux-acpi@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	linux-efi@vger.kernel.org,
-	linux-mm@kvack.org,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Christoph Hellwig <hch@lst.de>,
-	Marco Elver <elver@google.com>,
-	Andrey Konovalov <andreyknvl@gmail.com>,
-	Andrey Ryabinin <ryabinin.a.a@gmail.com>,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nicolas Schier <nicolas.schier@linux.dev>,
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>,
-	linux-kernel@vger.kernel.org,
-	kasan-dev@googlegroups.com,
-	linux-doc@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	kvmarm@lists.linux.dev,
-	linux-riscv@lists.infradead.org,
-	linux-s390@vger.kernel.org,
-	linux-hardening@vger.kernel.org,
-	linux-kbuild@vger.kernel.org,
-	linux-security-module@vger.kernel.org,
-	linux-kselftest@vger.kernel.org,
-	sparclinux@vger.kernel.org,
-	llvm@lists.linux.dev
-Subject: [PATCH v2 04/14] x86: Handle KCOV __init vs inline mismatches
-Date: Thu, 22 May 2025 21:39:14 -0700
-Message-Id: <20250523043935.2009972-4-kees@kernel.org>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250523043251.it.550-kees@kernel.org>
-References: <20250523043251.it.550-kees@kernel.org>
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="O4AMrPff"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1747983339; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=kEIfINKZejvJZsMGvS6UgezRdxkkGcgt66QsjivJra8=;
+	b=O4AMrPffGEWRuSIQeLSJqdnJxh2sjB1i+nk8zjVX7OVQ5mua7SQUFPudGG8EP3PVWq4FwL78CMEFToTOU7FsuYmMFcIHvneYymAUI+5zQboAOJjN10Gn6+PZFHlNeKn8t43pDTqCi3c4k3ZLwNLhX4yv4lb4lX3f7Z2scRou0UU=
+Received: from 30.74.144.180(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0WbZKq8c_1747983335 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Fri, 23 May 2025 14:55:36 +0800
+Message-ID: <469db7d1-ba99-4dc7-af13-b5fe850d4031@linux.alibaba.com>
+Date: Fri, 23 May 2025 14:55:34 +0800
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=6526; i=kees@kernel.org; h=from:subject; bh=NLp+yNLHFbt0GV+WqSgZP5Jpw7SgnlmemsBZjPqNKQ0=; b=owGbwMvMwCVmps19z/KJym7G02pJDBn6v3/M6Lj0TL3UZvEPryO2U1XiwmeUWRnm7Ltu8Tv7T fejWHWxjhIWBjEuBlkxRZYgO/c4F4+37eHucxVh5rAygQxh4OIUgIncPMDIMF2RL/S7vLKpfM2M t8x3m+UdDqwvS9xyTbb4p4asf8qChQw/nnGmzL67VZLb8E8Q7+r/36asCDud1Su0ufrUxFOvRAJ YAA==
-X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v7 03/12] khugepaged: generalize hugepage_vma_revalidate
+ for mTHP support
+To: Nico Pache <npache@redhat.com>, linux-mm@kvack.org,
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+Cc: david@redhat.com, ziy@nvidia.com, lorenzo.stoakes@oracle.com,
+ Liam.Howlett@oracle.com, ryan.roberts@arm.com, dev.jain@arm.com,
+ corbet@lwn.net, rostedt@goodmis.org, mhiramat@kernel.org,
+ mathieu.desnoyers@efficios.com, akpm@linux-foundation.org,
+ baohua@kernel.org, willy@infradead.org, peterx@redhat.com,
+ wangkefeng.wang@huawei.com, usamaarif642@gmail.com, sunnanyong@huawei.com,
+ vishal.moola@gmail.com, thomas.hellstrom@linux.intel.com,
+ yang@os.amperecomputing.com, kirill.shutemov@linux.intel.com,
+ aarcange@redhat.com, raquini@redhat.com, anshuman.khandual@arm.com,
+ catalin.marinas@arm.com, tiwai@suse.de, will@kernel.org,
+ dave.hansen@linux.intel.com, jack@suse.cz, cl@gentwo.org,
+ jglisse@google.com, surenb@google.com, zokeefe@google.com,
+ hannes@cmpxchg.org, rientjes@google.com, mhocko@suse.com,
+ rdunlap@infradead.org
+References: <20250515032226.128900-1-npache@redhat.com>
+ <20250515032226.128900-4-npache@redhat.com>
+From: Baolin Wang <baolin.wang@linux.alibaba.com>
+In-Reply-To: <20250515032226.128900-4-npache@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-When KCOV is enabled all functions get instrumented, unless the
-__no_sanitize_coverage attribute is used. To prepare for
-__no_sanitize_coverage being applied to __init functions, we have to
-handle differences in how GCC's inline optimizations get resolved. For
-x86 this means forcing several functions to be inline with
-__always_inline.
 
-Signed-off-by: Kees Cook <kees@kernel.org>
----
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: <x86@kernel.org>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Paolo Bonzini <pbonzini@redhat.com>
-Cc: Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
-Cc: Hans de Goede <hdegoede@redhat.com>
-Cc: "Ilpo Järvinen" <ilpo.jarvinen@linux.intel.com>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: Len Brown <lenb@kernel.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Ard Biesheuvel <ardb@kernel.org>
-Cc: Mike Rapoport <rppt@kernel.org>
-Cc: Michal Wilczynski <michal.wilczynski@intel.com>
-Cc: Juergen Gross <jgross@suse.com>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Cc: Roger Pau Monne <roger.pau@citrix.com>
-Cc: David Woodhouse <dwmw@amazon.co.uk>
-Cc: Usama Arif <usama.arif@bytedance.com>
-Cc: "Guilherme G. Piccoli" <gpiccoli@igalia.com>
-Cc: Thomas Huth <thuth@redhat.com>
-Cc: Brian Gerst <brgerst@gmail.com>
-Cc: <kvm@vger.kernel.org>
-Cc: <ibm-acpi-devel@lists.sourceforge.net>
-Cc: <platform-driver-x86@vger.kernel.org>
-Cc: <linux-acpi@vger.kernel.org>
-Cc: <linux-trace-kernel@vger.kernel.org>
-Cc: <linux-efi@vger.kernel.org>
-Cc: <linux-mm@kvack.org>
----
- arch/x86/include/asm/acpi.h          | 4 ++--
- arch/x86/include/asm/realmode.h      | 2 +-
- include/linux/acpi.h                 | 4 ++--
- include/linux/bootconfig.h           | 2 +-
- include/linux/efi.h                  | 2 +-
- include/linux/memblock.h             | 2 +-
- arch/x86/kernel/kvm.c                | 2 +-
- drivers/platform/x86/thinkpad_acpi.c | 4 ++--
- 8 files changed, 11 insertions(+), 11 deletions(-)
 
-diff --git a/arch/x86/include/asm/acpi.h b/arch/x86/include/asm/acpi.h
-index 5ab1a4598d00..a03aa6f999d1 100644
---- a/arch/x86/include/asm/acpi.h
-+++ b/arch/x86/include/asm/acpi.h
-@@ -158,13 +158,13 @@ static inline bool acpi_has_cpu_in_madt(void)
- }
- 
- #define ACPI_HAVE_ARCH_SET_ROOT_POINTER
--static inline void acpi_arch_set_root_pointer(u64 addr)
-+static __always_inline void acpi_arch_set_root_pointer(u64 addr)
- {
- 	x86_init.acpi.set_root_pointer(addr);
- }
- 
- #define ACPI_HAVE_ARCH_GET_ROOT_POINTER
--static inline u64 acpi_arch_get_root_pointer(void)
-+static __always_inline u64 acpi_arch_get_root_pointer(void)
- {
- 	return x86_init.acpi.get_root_pointer();
- }
-diff --git a/arch/x86/include/asm/realmode.h b/arch/x86/include/asm/realmode.h
-index f607081a022a..e406a1e92c63 100644
---- a/arch/x86/include/asm/realmode.h
-+++ b/arch/x86/include/asm/realmode.h
-@@ -78,7 +78,7 @@ extern unsigned char secondary_startup_64[];
- extern unsigned char secondary_startup_64_no_verify[];
- #endif
- 
--static inline size_t real_mode_size_needed(void)
-+static __always_inline size_t real_mode_size_needed(void)
- {
- 	if (real_mode_header)
- 		return 0;	/* already allocated. */
-diff --git a/include/linux/acpi.h b/include/linux/acpi.h
-index e72100c0684f..ae76c8915000 100644
---- a/include/linux/acpi.h
-+++ b/include/linux/acpi.h
-@@ -759,13 +759,13 @@ int acpi_arch_timer_mem_init(struct arch_timer_mem *timer_mem, int *timer_count)
- #endif
- 
- #ifndef ACPI_HAVE_ARCH_SET_ROOT_POINTER
--static inline void acpi_arch_set_root_pointer(u64 addr)
-+static __always_inline void acpi_arch_set_root_pointer(u64 addr)
- {
- }
- #endif
- 
- #ifndef ACPI_HAVE_ARCH_GET_ROOT_POINTER
--static inline u64 acpi_arch_get_root_pointer(void)
-+static __always_inline u64 acpi_arch_get_root_pointer(void)
- {
- 	return 0;
- }
-diff --git a/include/linux/bootconfig.h b/include/linux/bootconfig.h
-index 3f4b4ac527ca..25df9260d206 100644
---- a/include/linux/bootconfig.h
-+++ b/include/linux/bootconfig.h
-@@ -290,7 +290,7 @@ int __init xbc_get_info(int *node_size, size_t *data_size);
- /* XBC cleanup data structures */
- void __init _xbc_exit(bool early);
- 
--static inline void xbc_exit(void)
-+static __always_inline void xbc_exit(void)
- {
- 	_xbc_exit(false);
- }
-diff --git a/include/linux/efi.h b/include/linux/efi.h
-index 7d63d1d75f22..e3776d9cad07 100644
---- a/include/linux/efi.h
-+++ b/include/linux/efi.h
-@@ -1334,7 +1334,7 @@ struct linux_efi_initrd {
- 
- bool xen_efi_config_table_is_usable(const efi_guid_t *guid, unsigned long table);
- 
--static inline
-+static __always_inline
- bool efi_config_table_is_usable(const efi_guid_t *guid, unsigned long table)
- {
- 	if (!IS_ENABLED(CONFIG_XEN_EFI))
-diff --git a/include/linux/memblock.h b/include/linux/memblock.h
-index bb19a2534224..b96746376e17 100644
---- a/include/linux/memblock.h
-+++ b/include/linux/memblock.h
-@@ -463,7 +463,7 @@ static inline void *memblock_alloc_raw(phys_addr_t size,
- 					  NUMA_NO_NODE);
- }
- 
--static inline void *memblock_alloc_from(phys_addr_t size,
-+static __always_inline void *memblock_alloc_from(phys_addr_t size,
- 						phys_addr_t align,
- 						phys_addr_t min_addr)
- {
-diff --git a/arch/x86/kernel/kvm.c b/arch/x86/kernel/kvm.c
-index 921c1c783bc1..72f13d643fca 100644
---- a/arch/x86/kernel/kvm.c
-+++ b/arch/x86/kernel/kvm.c
-@@ -420,7 +420,7 @@ static u64 kvm_steal_clock(int cpu)
- 	return steal;
- }
- 
--static inline void __set_percpu_decrypted(void *ptr, unsigned long size)
-+static __always_inline void __set_percpu_decrypted(void *ptr, unsigned long size)
- {
- 	early_set_memory_decrypted((unsigned long) ptr, size);
- }
-diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
-index e7350c9fa3aa..0518d5b1f4ec 100644
---- a/drivers/platform/x86/thinkpad_acpi.c
-+++ b/drivers/platform/x86/thinkpad_acpi.c
-@@ -559,12 +559,12 @@ static unsigned long __init tpacpi_check_quirks(
- 	return 0;
- }
- 
--static inline bool __pure __init tpacpi_is_lenovo(void)
-+static __always_inline bool __pure tpacpi_is_lenovo(void)
- {
- 	return thinkpad_id.vendor == PCI_VENDOR_ID_LENOVO;
- }
- 
--static inline bool __pure __init tpacpi_is_ibm(void)
-+static __always_inline bool __pure tpacpi_is_ibm(void)
- {
- 	return thinkpad_id.vendor == PCI_VENDOR_ID_IBM;
- }
--- 
-2.34.1
+On 2025/5/15 11:22, Nico Pache wrote:
+> For khugepaged to support different mTHP orders, we must generalize this
+> to check if the PMD is not shared by another VMA and the order is
+> enabled.
+> 
+> No functional change in this patch.
+> 
+> Reviewed-by: Baolin Wang <baolin.wang@linux.alibaba.com>
+> Co-developed-by: Dev Jain <dev.jain@arm.com>
+> Signed-off-by: Dev Jain <dev.jain@arm.com>
+> Signed-off-by: Nico Pache <npache@redhat.com>
+> ---
+>   mm/khugepaged.c | 10 +++++-----
+>   1 file changed, 5 insertions(+), 5 deletions(-)
+> 
+> diff --git a/mm/khugepaged.c b/mm/khugepaged.c
+> index 5457571d505a..0c4d6a02d59c 100644
+> --- a/mm/khugepaged.c
+> +++ b/mm/khugepaged.c
+> @@ -920,7 +920,7 @@ static int khugepaged_find_target_node(struct collapse_control *cc)
+>   static int hugepage_vma_revalidate(struct mm_struct *mm, unsigned long address,
+>   				   bool expect_anon,
+>   				   struct vm_area_struct **vmap,
+> -				   struct collapse_control *cc)
+> +				   struct collapse_control *cc, int order)
+>   {
+>   	struct vm_area_struct *vma;
+>   	unsigned long tva_flags = cc->is_khugepaged ? TVA_ENFORCE_SYSFS : 0;
+> @@ -934,7 +934,7 @@ static int hugepage_vma_revalidate(struct mm_struct *mm, unsigned long address,
+>   
+>   	if (!thp_vma_suitable_order(vma, address, PMD_ORDER))
 
+Sorry, I missed this before. Should we also change 'PMD_ORDER' to 
+'order' for the thp_vma_suitable_order()?
+
+>   		return SCAN_ADDRESS_RANGE;
+> -	if (!thp_vma_allowable_order(vma, vma->vm_flags, tva_flags, PMD_ORDER))
+> +	if (!thp_vma_allowable_order(vma, vma->vm_flags, tva_flags, order))
+>   		return SCAN_VMA_CHECK;
+>   	/*
+>   	 * Anon VMA expected, the address may be unmapped then
+> @@ -1130,7 +1130,7 @@ static int collapse_huge_page(struct mm_struct *mm, unsigned long address,
+>   		goto out_nolock;
+>   
+>   	mmap_read_lock(mm);
+> -	result = hugepage_vma_revalidate(mm, address, true, &vma, cc);
+> +	result = hugepage_vma_revalidate(mm, address, true, &vma, cc, HPAGE_PMD_ORDER);
+>   	if (result != SCAN_SUCCEED) {
+>   		mmap_read_unlock(mm);
+>   		goto out_nolock;
+> @@ -1164,7 +1164,7 @@ static int collapse_huge_page(struct mm_struct *mm, unsigned long address,
+>   	 * mmap_lock.
+>   	 */
+>   	mmap_write_lock(mm);
+> -	result = hugepage_vma_revalidate(mm, address, true, &vma, cc);
+> +	result = hugepage_vma_revalidate(mm, address, true, &vma, cc, HPAGE_PMD_ORDER);
+>   	if (result != SCAN_SUCCEED)
+>   		goto out_up_write;
+>   	/* check if the pmd is still valid */
+> @@ -2782,7 +2782,7 @@ int madvise_collapse(struct vm_area_struct *vma, struct vm_area_struct **prev,
+>   			mmap_read_lock(mm);
+>   			mmap_locked = true;
+>   			result = hugepage_vma_revalidate(mm, addr, false, &vma,
+> -							 cc);
+> +							 cc, HPAGE_PMD_ORDER);
+>   			if (result  != SCAN_SUCCEED) {
+>   				last_fail = result;
+>   				goto out_nolock;
