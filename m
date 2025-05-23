@@ -1,131 +1,95 @@
-Received: from out30-99.freemail.mail.aliyun.com (out30-99.freemail.mail.aliyun.com [115.124.30.99])
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4A7E2F41;
-	Fri, 23 May 2025 06:55:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.99
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AC5022258C;
+	Fri, 23 May 2025 08:39:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747983346; cv=none; b=iOxbbZwVEGwOBY+uS/MgcdEz1TckT0UDx7gbe1VJQFRXsmDzc7gA8hOiPc4k0swVQLQjPldvhJ8FopU4MbkmMLBBKqjN2kj0sw/7vPX7zmFlfkngRnGUc3nGj6FBPi5ky9ekaMOOHKPr9TVuxAAvjEEaduA3UHQREaFBL/Qh6ws=
+	t=1747989598; cv=none; b=u4ufNv0PO24WFpBCLXZ5FH0nXr+Uhq35lu34eaz35DB5ZDEwqczZh/FZkZnPcbT28KRS0oGbpYYowD0Eu90hmURB2Q4NIyzA0FRxCLdO2nzwJBFoQ/nacJ6HFx6JL6AvWPtVopUaf98nv4tAvBCpaXPFdS3zdlQJsCJCbBXYq5g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747983346; c=relaxed/simple;
-	bh=pVHutlHjk19bDsR5XHyrVEKz0M1o9YrQaWRutQHH+7g=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=gyrExshWC0WrKDVHLh3GeQSqqHR1KE7sBVD74jRW5sz9mi1uA8esTjPsQc5Gkkl/qapETKaf01DYs1tnpW2IKa/WNtNn8+KkDC+UXq2h/P34uZbpCW6zU6827u/XRfXQwWVoqOa5ws2ybQx0i5g5LxVa27g+w6zCvL/0hjXxRsI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=O4AMrPff; arc=none smtp.client-ip=115.124.30.99
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="O4AMrPff"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1747983339; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=kEIfINKZejvJZsMGvS6UgezRdxkkGcgt66QsjivJra8=;
-	b=O4AMrPffGEWRuSIQeLSJqdnJxh2sjB1i+nk8zjVX7OVQ5mua7SQUFPudGG8EP3PVWq4FwL78CMEFToTOU7FsuYmMFcIHvneYymAUI+5zQboAOJjN10Gn6+PZFHlNeKn8t43pDTqCi3c4k3ZLwNLhX4yv4lb4lX3f7Z2scRou0UU=
-Received: from 30.74.144.180(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0WbZKq8c_1747983335 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Fri, 23 May 2025 14:55:36 +0800
-Message-ID: <469db7d1-ba99-4dc7-af13-b5fe850d4031@linux.alibaba.com>
-Date: Fri, 23 May 2025 14:55:34 +0800
+	s=arc-20240116; t=1747989598; c=relaxed/simple;
+	bh=XrxlGZ2vZWMG1BomZUUYV+LNs6CaeKQykd9TeLO2bP0=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=CPIRQFGD8hUMzJSuTEduuv0DISXiOghZScQDPqdhF0TnUDzGDG7NiFq43b7QpW8thp6Ngoef9fYUMxTjPF4d8tXmIEHRL28SEPS5WyurpZ35rjvbVnhZxUGseD9YOZ5S24VHoDIy2oSP6E5enBzhYa0Sb0FcwjbuQZbgbFE0huo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.235])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4b3dqs3Cqpz4f3lDG;
+	Fri, 23 May 2025 16:39:21 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.128])
+	by mail.maildlp.com (Postfix) with ESMTP id 121FC1A0FEE;
+	Fri, 23 May 2025 16:39:48 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.175.101.107])
+	by APP4 (Coremail) with SMTP id gCh0CgAXe19RNDBohGAJNQ--.35755S6;
+	Fri, 23 May 2025 16:39:47 +0800 (CST)
+From: Ye Bin <yebin@huaweicloud.com>
+To: rostedt@goodmis.org,
+	mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com,
+	mark.rutland@arm.com,
+	linux-trace-kernel@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	yebin10@huawei.com
+Subject: [PATCH 2/2] ftrace: don't allocate  ftrace module map
+Date: Fri, 23 May 2025 16:39:45 +0800
+Message-Id: <20250523083945.3390587-3-yebin@huaweicloud.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250523083945.3390587-1-yebin@huaweicloud.com>
+References: <20250523083945.3390587-1-yebin@huaweicloud.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 03/12] khugepaged: generalize hugepage_vma_revalidate
- for mTHP support
-To: Nico Pache <npache@redhat.com>, linux-mm@kvack.org,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
-Cc: david@redhat.com, ziy@nvidia.com, lorenzo.stoakes@oracle.com,
- Liam.Howlett@oracle.com, ryan.roberts@arm.com, dev.jain@arm.com,
- corbet@lwn.net, rostedt@goodmis.org, mhiramat@kernel.org,
- mathieu.desnoyers@efficios.com, akpm@linux-foundation.org,
- baohua@kernel.org, willy@infradead.org, peterx@redhat.com,
- wangkefeng.wang@huawei.com, usamaarif642@gmail.com, sunnanyong@huawei.com,
- vishal.moola@gmail.com, thomas.hellstrom@linux.intel.com,
- yang@os.amperecomputing.com, kirill.shutemov@linux.intel.com,
- aarcange@redhat.com, raquini@redhat.com, anshuman.khandual@arm.com,
- catalin.marinas@arm.com, tiwai@suse.de, will@kernel.org,
- dave.hansen@linux.intel.com, jack@suse.cz, cl@gentwo.org,
- jglisse@google.com, surenb@google.com, zokeefe@google.com,
- hannes@cmpxchg.org, rientjes@google.com, mhocko@suse.com,
- rdunlap@infradead.org
-References: <20250515032226.128900-1-npache@redhat.com>
- <20250515032226.128900-4-npache@redhat.com>
-From: Baolin Wang <baolin.wang@linux.alibaba.com>
-In-Reply-To: <20250515032226.128900-4-npache@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:gCh0CgAXe19RNDBohGAJNQ--.35755S6
+X-Coremail-Antispam: 1UD129KBjvdXoWruFykXr13Cw4UGr47GF45KFg_yoW3Zrc_X3
+	WkXwn5Gr1xCwnayrs3AFZ3Za4vg3ykWF10y3W2yFW5Aa4UZrn5Ja4fJ3sxGrs8ZFW8Was3
+	Xr13WFy0gF13GjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUIcSsGvfJTRUUUbqkYFVCjjxCrM7AC8VAFwI0_Wr0E3s1l1xkIjI8I6I8E6xAIw20E
+	Y4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l82xGYIkIc2x26280x7IE14v26r15M2
+	8IrcIa0xkI8VCY1x0267AKxVW8JVW5JwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK
+	021l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r
+	4UJVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx
+	0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWU
+	JVW8JwACjcxG0xvY0x0EwIxGrwCY1x0262kKe7AKxVWUAVWUtwCF04k20xvY0x0EwIxGrw
+	CF54CYxVCY1x0262kKe7AKxVWUAVWUtwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02
+	F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw
+	1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7Cj
+	xVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r
+	1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07jY
+	LvtUUUUU=
+X-CM-SenderInfo: p1hex046kxt4xhlfz01xgou0bp/
 
+From: Ye Bin <yebin10@huawei.com>
 
+If the ftrace is disabled, it is meaningless to allocate  module map.
+So add check in ftrace_free_mem().
 
-On 2025/5/15 11:22, Nico Pache wrote:
-> For khugepaged to support different mTHP orders, we must generalize this
-> to check if the PMD is not shared by another VMA and the order is
-> enabled.
-> 
-> No functional change in this patch.
-> 
-> Reviewed-by: Baolin Wang <baolin.wang@linux.alibaba.com>
-> Co-developed-by: Dev Jain <dev.jain@arm.com>
-> Signed-off-by: Dev Jain <dev.jain@arm.com>
-> Signed-off-by: Nico Pache <npache@redhat.com>
-> ---
->   mm/khugepaged.c | 10 +++++-----
->   1 file changed, 5 insertions(+), 5 deletions(-)
-> 
-> diff --git a/mm/khugepaged.c b/mm/khugepaged.c
-> index 5457571d505a..0c4d6a02d59c 100644
-> --- a/mm/khugepaged.c
-> +++ b/mm/khugepaged.c
-> @@ -920,7 +920,7 @@ static int khugepaged_find_target_node(struct collapse_control *cc)
->   static int hugepage_vma_revalidate(struct mm_struct *mm, unsigned long address,
->   				   bool expect_anon,
->   				   struct vm_area_struct **vmap,
-> -				   struct collapse_control *cc)
-> +				   struct collapse_control *cc, int order)
->   {
->   	struct vm_area_struct *vma;
->   	unsigned long tva_flags = cc->is_khugepaged ? TVA_ENFORCE_SYSFS : 0;
-> @@ -934,7 +934,7 @@ static int hugepage_vma_revalidate(struct mm_struct *mm, unsigned long address,
->   
->   	if (!thp_vma_suitable_order(vma, address, PMD_ORDER))
+Signed-off-by: Ye Bin <yebin10@huawei.com>
+---
+ kernel/trace/ftrace.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-Sorry, I missed this before. Should we also change 'PMD_ORDER' to 
-'order' for the thp_vma_suitable_order()?
+diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+index ff5d9d73a4a7..56adf45de92e 100644
+--- a/kernel/trace/ftrace.c
++++ b/kernel/trace/ftrace.c
+@@ -7824,6 +7824,11 @@ void ftrace_free_mem(struct module *mod, void *start_ptr, void *end_ptr)
+ 
+ 	mutex_lock(&ftrace_lock);
+ 
++	if (ftrace_disabled || (mod && !mod->num_ftrace_callsites)) {
++		mutex_unlock(&ftrace_lock);
++		return;
++	}
++
+ 	/*
+ 	 * If we are freeing module init memory, then check if
+ 	 * any tracer is active. If so, we need to save a mapping of
+-- 
+2.34.1
 
->   		return SCAN_ADDRESS_RANGE;
-> -	if (!thp_vma_allowable_order(vma, vma->vm_flags, tva_flags, PMD_ORDER))
-> +	if (!thp_vma_allowable_order(vma, vma->vm_flags, tva_flags, order))
->   		return SCAN_VMA_CHECK;
->   	/*
->   	 * Anon VMA expected, the address may be unmapped then
-> @@ -1130,7 +1130,7 @@ static int collapse_huge_page(struct mm_struct *mm, unsigned long address,
->   		goto out_nolock;
->   
->   	mmap_read_lock(mm);
-> -	result = hugepage_vma_revalidate(mm, address, true, &vma, cc);
-> +	result = hugepage_vma_revalidate(mm, address, true, &vma, cc, HPAGE_PMD_ORDER);
->   	if (result != SCAN_SUCCEED) {
->   		mmap_read_unlock(mm);
->   		goto out_nolock;
-> @@ -1164,7 +1164,7 @@ static int collapse_huge_page(struct mm_struct *mm, unsigned long address,
->   	 * mmap_lock.
->   	 */
->   	mmap_write_lock(mm);
-> -	result = hugepage_vma_revalidate(mm, address, true, &vma, cc);
-> +	result = hugepage_vma_revalidate(mm, address, true, &vma, cc, HPAGE_PMD_ORDER);
->   	if (result != SCAN_SUCCEED)
->   		goto out_up_write;
->   	/* check if the pmd is still valid */
-> @@ -2782,7 +2782,7 @@ int madvise_collapse(struct vm_area_struct *vma, struct vm_area_struct **prev,
->   			mmap_read_lock(mm);
->   			mmap_locked = true;
->   			result = hugepage_vma_revalidate(mm, addr, false, &vma,
-> -							 cc);
-> +							 cc, HPAGE_PMD_ORDER);
->   			if (result  != SCAN_SUCCEED) {
->   				last_fail = result;
->   				goto out_nolock;
