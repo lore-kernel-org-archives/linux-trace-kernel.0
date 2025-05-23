@@ -1,112 +1,185 @@
-Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp-bc0a.mail.infomaniak.ch (smtp-bc0a.mail.infomaniak.ch [45.157.188.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71E12202995
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 23 May 2025 14:35:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2995D2957B6
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 23 May 2025 16:57:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.157.188.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748010911; cv=none; b=Wmf3F0JbLj6DAOL+BQ2EmA435VjBo3dknV/rGCUBRaMXHcIBdct+ZFvJby3pR74vJjmSC7D5/eRsavJ0+f7N+NkA0P/k+G5clLqVvSuP3Tzi1jNUfjhIgEwW3suNjKZRDI0nnC7jjcJF1il97H5p2siEuFTiLOdyV4sjQkvll5s=
+	t=1748019479; cv=none; b=WI9W4lx7XztIed4Hl83vDZTJL4B7QQmKCtVuxAFZDKDnZiAjcK6jLRxw9tnY1BrRi9KAHZrCbvA8lx8jfbrKoI+uC3hslh2HYDZHMvWyFBKJHKVYGipI8Dpx2FlK6mR//EMrT3GenwYsPc77eBxeJ3RFY2zcV8wpAVrIr+ppKd4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748010911; c=relaxed/simple;
-	bh=rpziN1/05Zj11wUE9u4BbCxVKKTZOSPJiBdxOoe4oCQ=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=uJmQ3TZitDTPbj9dNz5mFrysnJ1kC3VsdoHINnoXHWnZuvi2pKDk0T0DOx/G2cOdlaFfciJKUueJ3KhmGMq2kmWi1qCxeksMEUr96Zf9rWKLelLOnELzbKKKORKW6uJjJAk3UNSlQAjd09Pk7h+K3OU5pTGly3lj7jqbCkwbw/8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=b84De/zP; arc=none smtp.client-ip=209.85.214.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1748019479; c=relaxed/simple;
+	bh=yHaHFkCpYbsn/CndJsNQzchXiary+ahZx6/ZLpUMwOk=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=I0ypxHQDch2gJ4A63zp8JW6UoZ+ZJ05nGFxkXwh0n0yJLmKqPkpIhJhO6w/YH6B6tP4Wn5+RwI14PMlNyuKSwafsh+IjvFNSsZgAyeOXNBYVPBxRoG72JzmuU62k5JVTBdwdgrWZguCVE4dUdhCsk3qJ4pxTUl2qtMu151tBCCo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=CB9oQllR; arc=none smtp.client-ip=45.157.188.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=digikod.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="b84De/zP"
-Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-231e76f6eafso66656355ad.0
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 23 May 2025 07:35:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1748010909; x=1748615709; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=OHIXFovAEYPRF7pj3DkvXM+Wh6ry7OAZQdb2dc5cgKo=;
-        b=b84De/zPy6OG7FPMct1S/l0RArSEw077OwRFF8QI1wCXcsIr22NtiTb84AWT63UXbP
-         RfM3rq17cVcnzqgWKhmBoF+fXJTWsZbY4F/p8C/xjl0ettvBg6kn/kgB9W5QVh2Yvi2Y
-         4Mf+ZzIJd2th0q3njefRUC3Dj3tZTzrFD0do/0h28Lgx9fGfwnW5b8SZ6IMBZurC3HOM
-         p9dzZj/9SpMFYBFzYmh/PlOz/oMQz0ZLLY3NlRWunqFyPr8lpy6o1b4lIbxcOhb2xIKd
-         BdsWUWUpRel+re7QfPTc+rW7RtdZgHK2xYATjZ0VzkEICtxIe8tLX8GxMjEOKKkXoQ6O
-         +4jg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748010909; x=1748615709;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=OHIXFovAEYPRF7pj3DkvXM+Wh6ry7OAZQdb2dc5cgKo=;
-        b=otrXT2rGiznhd2F1vxF8hBJlMpoCcu27DZPmeb3m6GRdYwP3NzW8IvrIH9xs27H0Po
-         NqiptMgvI1uAqufDBj0GSc/lDraQZ29B2npEygwWt+qFkGg7wlFjeURtoS7XTTRP1EQt
-         7m2uUpWh3vjmdhVlxgTvYNVwwZYvdldA5QUQgwUTrCIQosXPR4adOYgYvfiL+hvTJXb1
-         lIbiEB5Czu2wfAj9O15mY7WW87Qgoye1+u2LVMqQcPY/NcuAgqAx0ElI+oMotu3lY6Bg
-         US/X5JTCaLQ+2Rc20/82PbjHX3jPhYTtHCWCxoBHJUfZv74c2w2Z3I3m+MgkVEqVlzvx
-         4yyw==
-X-Forwarded-Encrypted: i=1; AJvYcCXAV8neXWt3dsaZof5oNgTvDDkYp0zzLVQXsDzYeWQR65gq16oltjgLA7KgEX8dU+Hw33syKNv+Rb1xF3TCEC1JeOE=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxn7WoxT+4XJc3oKn4iVH4FAnIFfMMN+HJgnjAmIS6e2Njg6PiT
-	z3rO4YcbKdbHHJbiQGlcapBVb73rv6yTmLhbtZDOiiDWezOx60bN3Baql5aO1+csGUcwraKlup5
-	CBP6Hpw==
-X-Google-Smtp-Source: AGHT+IFz7sb0nLy8RLNRfKCeKqRGA0z4OYWQ9Q5+lv5cIKJ3DXiQQbAp7L//6YajGR6GltgQpVeH/+sDQGY=
-X-Received: from plka13.prod.google.com ([2002:a17:903:f8d:b0:231:def0:d268])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:41c7:b0:224:1221:1ab4
- with SMTP id d9443c01a7336-231de317b43mr439457305ad.22.1748010908457; Fri, 23
- May 2025 07:35:08 -0700 (PDT)
-Date: Fri, 23 May 2025 07:35:03 -0700
-In-Reply-To: <20250523043935.2009972-4-kees@kernel.org>
+	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="CB9oQllR"
+Received: from smtp-3-0001.mail.infomaniak.ch (unknown [IPv6:2001:1600:4:17::246c])
+	by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4b3rv61GCWzfWf;
+	Fri, 23 May 2025 18:57:54 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=digikod.net;
+	s=20191114; t=1748019474;
+	bh=2HWfAP81p7RLsGfr2RvkhJ4ZCCT0ch+jn0J9ewgvV3k=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=CB9oQllRK3VOLOmNLlRIqGu64eUSW7yxEd0P1fDYKbdehY9BZGP9W/KBICTTIb0l7
+	 W5aoNZMy4g+xqOLJ9nWWZ/K1Tk2q4B6bJE8dDOW56leAoC1Xcm48RxZ1QC5H7P+vq6
+	 NyBVFpho940QqiK4T+2p+1cHDQo2M2SypLB+vIDs=
+Received: from unknown by smtp-3-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4b3rv5443mzg6w;
+	Fri, 23 May 2025 18:57:53 +0200 (CEST)
+From: =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>
+To: =?UTF-8?q?G=C3=BCnther=20Noack?= <gnoack@google.com>,
+	Tingmao Wang <m@maowtm.org>
+Cc: =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>,
+	Daniel Burgener <dburgener@linux.microsoft.com>,
+	Jann Horn <jannh@google.com>,
+	Jeff Xu <jeffxu@google.com>,
+	Kees Cook <kees@kernel.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Matthieu Buffet <matthieu@buffet.re>,
+	Mikhail Ivanov <ivanov.mikhail1@huawei-partners.com>,
+	Ryan Sullivan <rysulliv@redhat.com>,
+	Shervin Oloumi <enlightened@google.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	linux-security-module@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Subject: [RFC PATCH v1 3/5] tracing: Add __print_untrusted_str()
+Date: Fri, 23 May 2025 18:57:39 +0200
+Message-ID: <20250523165741.693976-4-mic@digikod.net>
+In-Reply-To: <20250523165741.693976-1-mic@digikod.net>
+References: <20250523165741.693976-1-mic@digikod.net>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250523043251.it.550-kees@kernel.org> <20250523043935.2009972-4-kees@kernel.org>
-Message-ID: <aDCHl0RBMgNzGu6j@google.com>
-Subject: Re: [PATCH v2 04/14] x86: Handle KCOV __init vs inline mismatches
-From: Sean Christopherson <seanjc@google.com>
-To: Kees Cook <kees@kernel.org>
-Cc: Arnd Bergmann <arnd@arndb.de>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
-	Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	"H. Peter Anvin" <hpa@zytor.com>, Paolo Bonzini <pbonzini@redhat.com>, 
-	Vitaly Kuznetsov <vkuznets@redhat.com>, Henrique de Moraes Holschuh <hmh@hmh.eng.br>, 
-	Hans de Goede <hdegoede@redhat.com>, 
-	"Ilpo =?utf-8?B?SsOkcnZpbmVu?=" <ilpo.jarvinen@linux.intel.com>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Len Brown <lenb@kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>, Ard Biesheuvel <ardb@kernel.org>, 
-	Mike Rapoport <rppt@kernel.org>, Michal Wilczynski <michal.wilczynski@intel.com>, 
-	Juergen Gross <jgross@suse.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
-	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>, Roger Pau Monne <roger.pau@citrix.com>, 
-	David Woodhouse <dwmw@amazon.co.uk>, Usama Arif <usama.arif@bytedance.com>, 
-	"Guilherme G. Piccoli" <gpiccoli@igalia.com>, Thomas Huth <thuth@redhat.com>, Brian Gerst <brgerst@gmail.com>, 
-	kvm@vger.kernel.org, ibm-acpi-devel@lists.sourceforge.net, 
-	platform-driver-x86@vger.kernel.org, linux-acpi@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, linux-efi@vger.kernel.org, 
-	linux-mm@kvack.org, "Gustavo A. R. Silva" <gustavoars@kernel.org>, Christoph Hellwig <hch@lst.de>, 
-	Marco Elver <elver@google.com>, Andrey Konovalov <andreyknvl@gmail.com>, 
-	Andrey Ryabinin <ryabinin.a.a@gmail.com>, Masahiro Yamada <masahiroy@kernel.org>, 
-	Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas.schier@linux.dev>, 
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, Bill Wendling <morbo@google.com>, 
-	Justin Stitt <justinstitt@google.com>, linux-kernel@vger.kernel.org, 
-	kasan-dev@googlegroups.com, linux-doc@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, 
-	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org, 
-	linux-hardening@vger.kernel.org, linux-kbuild@vger.kernel.org, 
-	linux-security-module@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	sparclinux@vger.kernel.org, llvm@lists.linux.dev
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Infomaniak-Routing: alpha
 
-On Thu, May 22, 2025, Kees Cook wrote:
-> diff --git a/arch/x86/kernel/kvm.c b/arch/x86/kernel/kvm.c
-> index 921c1c783bc1..72f13d643fca 100644
-> --- a/arch/x86/kernel/kvm.c
-> +++ b/arch/x86/kernel/kvm.c
-> @@ -420,7 +420,7 @@ static u64 kvm_steal_clock(int cpu)
->  	return steal;
->  }
->  
-> -static inline void __set_percpu_decrypted(void *ptr, unsigned long size)
-> +static __always_inline void __set_percpu_decrypted(void *ptr, unsigned long size)
+Add a new __print_untrusted_str() helper to safely print strings after escaping
+all special characters, including common separators (space, equal sign),
+quotes, and backslashes.  This transforms a string from an untrusted source
+(e.g. user space) to make it:
+- safe to parse,
+- easy to read (for simple strings),
+- easy to get back the original.
 
-I'd rather drop the "inline" and explicitly mark this "__init".  There's value
-in documenting and enforcing that memory is marked decrypted/shared only during
-boot.
+Cc: Günther Noack <gnoack@google.com>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>
+Cc: Tingmao Wang <m@maowtm.org>
+Signed-off-by: Mickaël Salaün <mic@digikod.net>
+---
+ include/linux/trace_events.h               |  3 ++
+ include/trace/stages/stage3_trace_output.h |  4 +++
+ include/trace/stages/stage7_class_define.h |  1 +
+ kernel/trace/trace_output.c                | 40 ++++++++++++++++++++++
+ 4 files changed, 48 insertions(+)
 
->  {
->  	early_set_memory_decrypted((unsigned long) ptr, size);
->  }
+diff --git a/include/linux/trace_events.h b/include/linux/trace_events.h
+index fa9cf4292dff..78f543bb7558 100644
+--- a/include/linux/trace_events.h
++++ b/include/linux/trace_events.h
+@@ -54,6 +54,9 @@ trace_print_hex_dump_seq(struct trace_seq *p, const char *prefix_str,
+ 			 int prefix_type, int rowsize, int groupsize,
+ 			 const void *buf, size_t len, bool ascii);
+ 
++const char *trace_print_untrusted_str_seq(struct trace_seq *s, const char *str);
++
++
+ struct trace_iterator;
+ struct trace_event;
+ 
+diff --git a/include/trace/stages/stage3_trace_output.h b/include/trace/stages/stage3_trace_output.h
+index 1e7b0bef95f5..36947ca2abcb 100644
+--- a/include/trace/stages/stage3_trace_output.h
++++ b/include/trace/stages/stage3_trace_output.h
+@@ -133,6 +133,10 @@
+ 	trace_print_hex_dump_seq(p, prefix_str, prefix_type,		\
+ 				 rowsize, groupsize, buf, len, ascii)
+ 
++#undef __print_untrusted_str
++#define __print_untrusted_str(str)							\
++		trace_print_untrusted_str_seq(p, __get_str(str))
++
+ #undef __print_ns_to_secs
+ #define __print_ns_to_secs(value)			\
+ 	({						\
+diff --git a/include/trace/stages/stage7_class_define.h b/include/trace/stages/stage7_class_define.h
+index fcd564a590f4..bc10b69b755d 100644
+--- a/include/trace/stages/stage7_class_define.h
++++ b/include/trace/stages/stage7_class_define.h
+@@ -24,6 +24,7 @@
+ #undef __print_array
+ #undef __print_dynamic_array
+ #undef __print_hex_dump
++#undef __print_untrusted_string
+ #undef __get_buf
+ 
+ /*
+diff --git a/kernel/trace/trace_output.c b/kernel/trace/trace_output.c
+index b9ab06c99543..17d576941147 100644
+--- a/kernel/trace/trace_output.c
++++ b/kernel/trace/trace_output.c
+@@ -16,6 +16,7 @@
+ #include <linux/btf.h>
+ #include <linux/bpf.h>
+ #include <linux/hashtable.h>
++#include <linux/string_helpers.h>
+ 
+ #include "trace_output.h"
+ #include "trace_btf.h"
+@@ -297,6 +298,45 @@ trace_print_hex_dump_seq(struct trace_seq *p, const char *prefix_str,
+ }
+ EXPORT_SYMBOL(trace_print_hex_dump_seq);
+ 
++/**
++ * trace_print_untrusted_str_seq - print a string after escaping characters
++ * @s: trace seq struct to write to
++ * @src: The string to print
++ *
++ * Prints a string to a trace seq after escaping all special characters,
++ * including common separators (space, equal sign), quotes, and backslashes.
++ * This transforms a string from an untrusted source (e.g. user space) to make
++ * it:
++ * - safe to parse,
++ * - easy to read (for simple strings),
++ * - easy to get back the original.
++ */
++const char *trace_print_untrusted_str_seq(struct trace_seq *s,
++                                          const char *src)
++{
++	int escaped_size;
++	char *buf;
++	size_t buf_size = seq_buf_get_buf(&s->seq, &buf);
++	const char *ret = trace_seq_buffer_ptr(s);
++
++	if (!src || WARN_ON(buf_size == 0))
++		return NULL;
++
++	escaped_size = string_escape_mem(src, strlen(src), buf, buf_size,
++		ESCAPE_SPACE | ESCAPE_SPECIAL | ESCAPE_NAP | ESCAPE_APPEND |
++		ESCAPE_OCTAL, " ='\"\\");
++	if (unlikely(escaped_size >= buf_size)) {
++		/* We need some room for the final '\0'. */
++		seq_buf_set_overflow(&s->seq);
++		s->full = 1;
++		return NULL;
++	}
++	seq_buf_commit(&s->seq, escaped_size);
++	trace_seq_putc(s, 0);
++	return ret;
++}
++EXPORT_SYMBOL(trace_print_untrusted_str_seq);
++
+ int trace_raw_output_prep(struct trace_iterator *iter,
+ 			  struct trace_event *trace_event)
+ {
+-- 
+2.49.0
+
