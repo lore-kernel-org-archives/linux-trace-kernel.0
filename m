@@ -1,33 +1,33 @@
-Received: from smtp-42a9.mail.infomaniak.ch (smtp-42a9.mail.infomaniak.ch [84.16.66.169])
+Received: from smtp-42a8.mail.infomaniak.ch (smtp-42a8.mail.infomaniak.ch [84.16.66.168])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDF31297126
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 23 May 2025 16:58:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=84.16.66.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60BEF21D5BC
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 23 May 2025 17:04:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=84.16.66.168
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748019489; cv=none; b=moNvwnpN/UEM3ST+TsDPvDXcDLSA2fW/Foh6/MjHL3K4KVTeJ0ePfEZsx5ZS2A+a4SFj6kzoujZyWTsBCrCRFknEJkXHUH476abL7xRirO8TkwdXNCy3t0SWJ2Tuhz5l5DIm4mIGmnm5XCP+Ab5Yhzl6DG7euuvd3Mnu5t2Ygv8=
+	t=1748019875; cv=none; b=IFNT4SH6wKyY2yr3wNCqSKsiaJAB4GatDsvm+qX+7j6HSq6JUW/N8au4EbAg2kNrMoJioYx1cAzKyBxFXOuoqF2pXjMSALRowc3llgh9wC+QvfVLWvhoSrupA3w91P66+LV8J/ZL7MmGeXulIUjIBrCC4/lIb/pqxUamS96k2UQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748019489; c=relaxed/simple;
-	bh=qoT4E9GhBZuvYKLo8fK5UUgcK2Flcfg1QzMdbP1/jfA=;
+	s=arc-20240116; t=1748019875; c=relaxed/simple;
+	bh=+7159beUhhZbpPIl0BMBq0uCyehbAf5AlDTwixhUo7Y=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=iUXomSWfn/TdXkWCp9qkK7qfuFgFZQETKGEwk/gG1TkqrF08KIk8RFwQQTQThetZRxc2xyHH4Vgla5vJhqE/4/uEOGaI8Q0242fKgfNFaTRSyJERGNxEB7Z0m7MnYcfXAMbwFyX2VwTfLZrGYDnJLQESOphjhLq4hPfWNq077NY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=U00W9avv; arc=none smtp.client-ip=84.16.66.169
+	 MIME-Version:Content-Type; b=Xfn9NJcFSDyA2WepB7ZsE1S5Iv2z2gfDW3HwsNvVgq8RQzrO2ABB5dtA+UMoHMYljCRVWP9WRXJnSBY39inj/fZTQGpv0BQ0TMmJ1+sr2qw1HXu4leSgZmHFoD37W5+h/P1vbEZVZz1B45xibl0Vz3Zo1f3yhzhjz+VCOKvLxRg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=AC3K3OZP; arc=none smtp.client-ip=84.16.66.168
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=digikod.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="U00W9avv"
-Received: from smtp-4-0001.mail.infomaniak.ch (smtp-4-0001.mail.infomaniak.ch [10.7.10.108])
-	by smtp-4-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4b3rv946vNzSp0;
-	Fri, 23 May 2025 18:57:57 +0200 (CEST)
+	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="AC3K3OZP"
+Received: from smtp-3-0000.mail.infomaniak.ch (smtp-3-0000.mail.infomaniak.ch [10.4.36.107])
+	by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4b3rv22tb1zjHh;
+	Fri, 23 May 2025 18:57:50 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=digikod.net;
-	s=20191114; t=1748019477;
-	bh=bOTcKXU+PDpiWDHdJRBRF5Z4uUKEW6uWVNwHUlqc3s0=;
+	s=20191114; t=1748019470;
+	bh=jHpCJddH6N4r5AUTEYYRxYAdaOVLLofBA07V/5TXuGY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=U00W9avvgb1hOW3vvTA/78kZbESS8P31RQ+pFqmgBmHk9TgjGzXDUhMYzRo5XkivN
-	 pea7D2cSICG9mmQl8DaKAZEs/wzk+QX9wutbzoVItFMPqhrb7KsYGENmzhet2HgA9k
-	 SGyAL20cFr3AuhiPTN7UiR2t3EJoZo3w8rFL8XOI=
-Received: from unknown by smtp-4-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4b3rv86MlTzM3C;
-	Fri, 23 May 2025 18:57:56 +0200 (CEST)
+	b=AC3K3OZPvAMOEcoqMDNSfM3Eae5b77NPF4ugUbmie/5KoHaCiO2gE4O4Y6jhTjDAN
+	 t6W+SBNfWcqglyLETpEcYd2qf+tMp0fcoFdoy73HXaBsLjh94RbrHrzILZHpOdU/jf
+	 IWSzStGWKxFHNID24jFkgWz82bmI2u87tmTNneVk=
+Received: from unknown by smtp-3-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 4b3rv15qNyzD33;
+	Fri, 23 May 2025 18:57:49 +0200 (CEST)
 From: =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>
 To: =?UTF-8?q?G=C3=BCnther=20Noack?= <gnoack@google.com>,
 	Tingmao Wang <m@maowtm.org>
@@ -45,9 +45,9 @@ Cc: =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>,
 	Steven Rostedt <rostedt@goodmis.org>,
 	linux-security-module@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org
-Subject: [RFC PATCH v1 5/5] landlock: Add landlock_check_rule tracepoint
-Date: Fri, 23 May 2025 18:57:41 +0200
-Message-ID: <20250523165741.693976-6-mic@digikod.net>
+Subject: [RFC PATCH v1 1/5] landlock: Rename landlock_id to landlock_rule_ref
+Date: Fri, 23 May 2025 18:57:37 +0200
+Message-ID: <20250523165741.693976-2-mic@digikod.net>
 In-Reply-To: <20250523165741.693976-1-mic@digikod.net>
 References: <20250523165741.693976-1-mic@digikod.net>
 Precedence: bulk
@@ -60,170 +60,339 @@ Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 X-Infomaniak-Routing: alpha
 
-Add a tracepoint called by landlock_unmask_layers() when a rule matches
-the current Landlock domain.  This enables us to observe each matching
-rule for a specific access request.
+This avoids confusion with the new Landlock IDs.
 
-The main difference with audit events is that traces are disabled by
-default, can be very verbose, and can be filtered according to Landlock
-properties (e.g. domain ID).  This event show all steps leading to an
-access decision.  We can also attach eBPF programs to this tracepoint
-and the landlock_add_rule_fs one to get a more standalone view of
-Landlock.
-
-In the followning example, we create a directory with special
-characters, then create a initial sandbox allowing reading the parent
-directory, and then a nested sandbox not allowing reading of the parent
-directory:
-  mkdir "$(printf 'a\\\n\047\042 \a\e')"
-  cd "$_"
-  LL_FS_RO=/usr LL_FS_RW=.. ../sandboxer sh -c \
-          "LL_FS_RO=/usr LL_FS_RW=. ../sandboxer ls .."
-
-The landlock_add_rule_fs traces show the initial sandbox's rules:
-  ruleset=0x000000007e3b1c4a key=inode:0xffff888004f59260 allowed=0xd dev=0:16 ino=306 path=/usr
-  ruleset=0x000000007e3b1c4a key=inode:0xffff888004f59240 allowed=0xffff dev=0:16 ino=346 path=/root
-
-0xd maps to FS_EXECUTE | FS_READ_FILE | FS_READ_DIR, and 0xffff maps to
-all supported access rights.
-
-We can then see some access requests with the landlock_check_rule
-traces. The first 0x4005 maps to a read-execute (with optional truncate)
-request, and the second 0x4004 maps to a read (with optional truncate)
-request:
-  domain=1362e78a1 key=inode:0xffff888004f59240 request=0x4005 allowed={0xffff}
-  domain=1362e78a1 key=inode:0xffff888004f59260 request=0x4004 allowed={0xd}
-
-The landlock_add_rule_fs traces show the nested sandbox's rules:
-  ruleset=0x000000007e3b1c4a key=inode:0xffff888004f59260 allowed=0xd dev=0:16 ino=306 path=/usr
-  ruleset=0x000000007e3b1c4a key=inode:0xffff888004f59280 allowed=0xffff dev=0:16 ino=210608 path=/root/a\\\n\047\"\040\a\e
-
-We can finally see some access requests with the landlock_check_rule
-traces, listing access rights per layers.  Because the second layer does
-not allow access (0x0) to /root (inode:0xffff888004f59240), this request
-is denied:
-  domain=1362e78a7 key=inode:0xffff888004f59240 request=0x4008 allowed={0xffff,0x0}
-  domain=1362e78a7 key=inode:0xffff888004f59260 request=0x4004 allowed={0xd,0xd}
+TODO: Split in several commits to ease potential backports according to
+stable branches
 
 Cc: Günther Noack <gnoack@google.com>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>
-Cc: Tingmao Wang <m@maowtm.org>
 Signed-off-by: Mickaël Salaün <mic@digikod.net>
 ---
- include/trace/events/landlock.h | 56 +++++++++++++++++++++++++++++++++
- security/landlock/ruleset.c     |  3 ++
- security/landlock/trace.c       |  1 +
- 3 files changed, 60 insertions(+)
+ security/landlock/fs.c      | 18 ++++++-------
+ security/landlock/net.c     | 14 +++++-----
+ security/landlock/ruleset.c | 52 ++++++++++++++++++-------------------
+ security/landlock/ruleset.h |  8 +++---
+ 4 files changed, 46 insertions(+), 46 deletions(-)
 
-diff --git a/include/trace/events/landlock.h b/include/trace/events/landlock.h
-index 41e10965ba7b..c88c51aaf22b 100644
---- a/include/trace/events/landlock.h
-+++ b/include/trace/events/landlock.h
-@@ -11,6 +11,7 @@
+diff --git a/security/landlock/fs.c b/security/landlock/fs.c
+index 6fee7c20f64d..f5087688190a 100644
+--- a/security/landlock/fs.c
++++ b/security/landlock/fs.c
+@@ -325,7 +325,7 @@ int landlock_append_fs_rule(struct landlock_ruleset *const ruleset,
+ 			    access_mask_t access_rights)
+ {
+ 	int err;
+-	struct landlock_id id = {
++	struct landlock_rule_ref ref = {
+ 		.type = LANDLOCK_KEY_INODE,
+ 	};
  
- #include <linux/tracepoint.h>
+@@ -339,17 +339,17 @@ int landlock_append_fs_rule(struct landlock_ruleset *const ruleset,
+ 	/* Transforms relative access rights to absolute ones. */
+ 	access_rights |= LANDLOCK_MASK_ACCESS_FS &
+ 			 ~landlock_get_fs_access_mask(ruleset, 0);
+-	id.key.object = get_inode_object(d_backing_inode(path->dentry));
+-	if (IS_ERR(id.key.object))
+-		return PTR_ERR(id.key.object);
++	ref.key.object = get_inode_object(d_backing_inode(path->dentry));
++	if (IS_ERR(ref.key.object))
++		return PTR_ERR(ref.key.object);
+ 	mutex_lock(&ruleset->lock);
+-	err = landlock_insert_rule(ruleset, id, access_rights);
++	err = landlock_insert_rule(ruleset, ref, access_rights);
+ 	mutex_unlock(&ruleset->lock);
+ 	/*
+ 	 * No need to check for an error because landlock_insert_rule()
+ 	 * increments the refcount for the new object if needed.
+ 	 */
+-	landlock_put_object(id.key.object);
++	landlock_put_object(ref.key.object);
+ 	return err;
+ }
  
-+struct landlock_rule;
- struct landlock_rule_ref;
- struct landlock_ruleset;
- struct path;
-@@ -62,6 +63,61 @@ TRACE_EVENT(landlock_add_rule_fs,
- 	)
- );
+@@ -366,7 +366,7 @@ find_rule(const struct landlock_ruleset *const domain,
+ {
+ 	const struct landlock_rule *rule;
+ 	const struct inode *inode;
+-	struct landlock_id id = {
++	struct landlock_rule_ref ref = {
+ 		.type = LANDLOCK_KEY_INODE,
+ 	};
  
-+TRACE_EVENT(landlock_check_rule,
-+
-+	TP_PROTO(
-+		const struct landlock_ruleset *domain,
-+		const struct landlock_rule_ref *ref,
-+		access_mask_t access_request,
-+		const struct landlock_rule *rule
-+	),
-+
-+	TP_ARGS(domain, ref, access_request, rule),
-+
-+	TP_STRUCT__entry(
-+		__field(__u64, domain_id)
-+		__field(access_mask_t, access_request)
-+		__field(int, ref_type)
-+		__field(uintptr_t, ref_key)
-+		__dynamic_array(access_mask_t, layers, domain->num_layers)
-+	),
-+
-+	TP_fast_assign(
-+		__entry->domain_id = domain->hierarchy->id;
-+		__entry->access_request = access_request;
-+		__entry->ref_type = ref->type;
-+		/* TODO: Use an object's Landlock ID instead of a kernel address. */
-+		__entry->ref_key = ref->key.data;
-+
-+		for (size_t level = 1, i = 0;
-+			level <= __get_dynamic_array_len(layers) / sizeof(access_mask_t);
-+			level++) {
-+			access_mask_t allowed;
-+
-+			if (i < rule->num_layers &&
-+			    level == rule->layers[i].level) {
-+				allowed = rule->layers[i].access;
-+				i++;
-+			} else {
-+				allowed = 0;
-+			}
-+			((access_mask_t *)__get_dynamic_array( layers))[level - 1] = allowed;
-+		}
-+	),
-+
-+	/* TODO: Do not print network ports as big endian. */
-+	TP_printk("domain=%llx key=%s:0x%lx request=0x%x allowed=%s",
-+		__entry->domain_id,
-+		__print_symbolic(__entry->ref_type,
-+			{ LANDLOCK_KEY_INODE, "inode" },
-+			{ LANDLOCK_KEY_NET_PORT, "net_port" }
-+		),
-+		__entry->ref_key,
-+		__entry->access_request,
-+		__print_dynamic_array(layers, sizeof(access_mask_t))
-+	)
-+);
-+
- #endif /* _TRACE_LANDLOCK_H */
+@@ -376,8 +376,8 @@ find_rule(const struct landlock_ruleset *const domain,
  
- /* This part must be outside protection */
+ 	inode = d_backing_inode(dentry);
+ 	rcu_read_lock();
+-	id.key.object = rcu_dereference(landlock_inode(inode)->object);
+-	rule = landlock_find_rule(domain, id);
++	ref.key.object = rcu_dereference(landlock_inode(inode)->object);
++	rule = landlock_find_rule(domain, ref);
+ 	rcu_read_unlock();
+ 	return rule;
+ }
+diff --git a/security/landlock/net.c b/security/landlock/net.c
+index 1f3915a90a80..cd7327b5f43e 100644
+--- a/security/landlock/net.c
++++ b/security/landlock/net.c
+@@ -23,19 +23,19 @@ int landlock_append_net_rule(struct landlock_ruleset *const ruleset,
+ 			     const u16 port, access_mask_t access_rights)
+ {
+ 	int err;
+-	const struct landlock_id id = {
++	const struct landlock_rule_ref ref = {
+ 		.key.data = (__force uintptr_t)htons(port),
+ 		.type = LANDLOCK_KEY_NET_PORT,
+ 	};
+ 
+-	BUILD_BUG_ON(sizeof(port) > sizeof(id.key.data));
++	BUILD_BUG_ON(sizeof(port) > sizeof(ref.key.data));
+ 
+ 	/* Transforms relative access rights to absolute ones. */
+ 	access_rights |= LANDLOCK_MASK_ACCESS_NET &
+ 			 ~landlock_get_net_access_mask(ruleset, 0);
+ 
+ 	mutex_lock(&ruleset->lock);
+-	err = landlock_insert_rule(ruleset, id, access_rights);
++	err = landlock_insert_rule(ruleset, ref, access_rights);
+ 	mutex_unlock(&ruleset->lock);
+ 
+ 	return err;
+@@ -49,7 +49,7 @@ static int current_check_access_socket(struct socket *const sock,
+ 	__be16 port;
+ 	layer_mask_t layer_masks[LANDLOCK_NUM_ACCESS_NET] = {};
+ 	const struct landlock_rule *rule;
+-	struct landlock_id id = {
++	struct landlock_rule_ref ref = {
+ 		.type = LANDLOCK_KEY_NET_PORT,
+ 	};
+ 	const struct access_masks masks = {
+@@ -171,10 +171,10 @@ static int current_check_access_socket(struct socket *const sock,
+ 			return -EINVAL;
+ 	}
+ 
+-	id.key.data = (__force uintptr_t)port;
+-	BUILD_BUG_ON(sizeof(port) > sizeof(id.key.data));
++	ref.key.data = (__force uintptr_t)port;
++	BUILD_BUG_ON(sizeof(port) > sizeof(ref.key.data));
+ 
+-	rule = landlock_find_rule(subject->domain, id);
++	rule = landlock_find_rule(subject->domain, ref);
+ 	access_request = landlock_init_layer_masks(subject->domain,
+ 						   access_request, &layer_masks,
+ 						   LANDLOCK_KEY_NET_PORT);
 diff --git a/security/landlock/ruleset.c b/security/landlock/ruleset.c
-index 20a4bbb2526f..f9e407e4038c 100644
+index ce7940efea51..647ee570475b 100644
 --- a/security/landlock/ruleset.c
 +++ b/security/landlock/ruleset.c
-@@ -21,6 +21,7 @@
- #include <linux/slab.h>
- #include <linux/spinlock.h>
- #include <linux/workqueue.h>
-+#include <trace/events/landlock.h>
+@@ -104,7 +104,7 @@ static bool is_object_pointer(const enum landlock_key_type key_type)
+ }
  
- #include "access.h"
- #include "audit.h"
-@@ -629,6 +630,8 @@ bool landlock_unmask_layers(const struct landlock_ruleset *const domain,
- 	if (!rule)
- 		return false;
+ static struct landlock_rule *
+-create_rule(const struct landlock_id id,
++create_rule(const struct landlock_rule_ref ref,
+ 	    const struct landlock_layer (*const layers)[], const u32 num_layers,
+ 	    const struct landlock_layer *const new_layer)
+ {
+@@ -125,13 +125,13 @@ create_rule(const struct landlock_id id,
+ 	if (!new_rule)
+ 		return ERR_PTR(-ENOMEM);
+ 	RB_CLEAR_NODE(&new_rule->node);
+-	if (is_object_pointer(id.type)) {
++	if (is_object_pointer(ref.type)) {
+ 		/* This should have been caught by insert_rule(). */
+-		WARN_ON_ONCE(!id.key.object);
+-		landlock_get_object(id.key.object);
++		WARN_ON_ONCE(!ref.key.object);
++		landlock_get_object(ref.key.object);
+ 	}
  
-+	trace_landlock_check_rule(domain, &ref, access_request, rule);
-+
- 	/*
- 	 * An access is granted if, for each policy layer, at least one rule
- 	 * encountered on the pathwalk grants the requested access,
-diff --git a/security/landlock/trace.c b/security/landlock/trace.c
-index 98874cda473b..c0c450536be9 100644
---- a/security/landlock/trace.c
-+++ b/security/landlock/trace.c
-@@ -8,6 +8,7 @@
- #include <linux/path.h>
+-	new_rule->key = id.key;
++	new_rule->key = ref.key;
+ 	new_rule->num_layers = new_num_layers;
+ 	/* Copies the original layer stack. */
+ 	memcpy(new_rule->layers, layers,
+@@ -186,8 +186,8 @@ static void build_check_ruleset(void)
+  * insert_rule - Create and insert a rule in a ruleset
+  *
+  * @ruleset: The ruleset to be updated.
+- * @id: The ID to build the new rule with.  The underlying kernel object, if
+- *      any, must be held by the caller.
++ * @ref: The reference to build the new rule with.  The underlying kernel
++ *       object, if any, must be held by the caller.
+  * @layers: One or multiple layers to be copied into the new rule.
+  * @num_layers: The number of @layers entries.
+  *
+@@ -201,7 +201,7 @@ static void build_check_ruleset(void)
+  * access rights.
+  */
+ static int insert_rule(struct landlock_ruleset *const ruleset,
+-		       const struct landlock_id id,
++		       const struct landlock_rule_ref ref,
+ 		       const struct landlock_layer (*const layers)[],
+ 		       const size_t num_layers)
+ {
+@@ -215,10 +215,10 @@ static int insert_rule(struct landlock_ruleset *const ruleset,
+ 	if (WARN_ON_ONCE(!layers))
+ 		return -ENOENT;
  
- #include "access.h"
-+#include "domain.h"
- #include "ruleset.h"
+-	if (is_object_pointer(id.type) && WARN_ON_ONCE(!id.key.object))
++	if (is_object_pointer(ref.type) && WARN_ON_ONCE(!ref.key.object))
+ 		return -ENOENT;
  
- #define CREATE_TRACE_POINTS
+-	root = get_root(ruleset, id.type);
++	root = get_root(ruleset, ref.type);
+ 	if (IS_ERR(root))
+ 		return PTR_ERR(root);
+ 
+@@ -227,9 +227,9 @@ static int insert_rule(struct landlock_ruleset *const ruleset,
+ 		struct landlock_rule *const this =
+ 			rb_entry(*walker_node, struct landlock_rule, node);
+ 
+-		if (this->key.data != id.key.data) {
++		if (this->key.data != ref.key.data) {
+ 			parent_node = *walker_node;
+-			if (this->key.data < id.key.data)
++			if (this->key.data < ref.key.data)
+ 				walker_node = &((*walker_node)->rb_right);
+ 			else
+ 				walker_node = &((*walker_node)->rb_left);
+@@ -261,20 +261,20 @@ static int insert_rule(struct landlock_ruleset *const ruleset,
+ 		 * Intersects access rights when it is a merge between a
+ 		 * ruleset and a domain.
+ 		 */
+-		new_rule = create_rule(id, &this->layers, this->num_layers,
++		new_rule = create_rule(ref, &this->layers, this->num_layers,
+ 				       &(*layers)[0]);
+ 		if (IS_ERR(new_rule))
+ 			return PTR_ERR(new_rule);
+ 		rb_replace_node(&this->node, &new_rule->node, root);
+-		free_rule(this, id.type);
++		free_rule(this, ref.type);
+ 		return 0;
+ 	}
+ 
+-	/* There is no match for @id. */
++	/* There is no match for @ref. */
+ 	build_check_ruleset();
+ 	if (ruleset->num_rules >= LANDLOCK_MAX_NUM_RULES)
+ 		return -E2BIG;
+-	new_rule = create_rule(id, layers, num_layers, NULL);
++	new_rule = create_rule(ref, layers, num_layers, NULL);
+ 	if (IS_ERR(new_rule))
+ 		return PTR_ERR(new_rule);
+ 	rb_link_node(&new_rule->node, parent_node, walker_node);
+@@ -296,7 +296,7 @@ static void build_check_layer(void)
+ 
+ /* @ruleset must be locked by the caller. */
+ int landlock_insert_rule(struct landlock_ruleset *const ruleset,
+-			 const struct landlock_id id,
++			 const struct landlock_rule_ref ref,
+ 			 const access_mask_t access)
+ {
+ 	struct landlock_layer layers[] = { {
+@@ -306,7 +306,7 @@ int landlock_insert_rule(struct landlock_ruleset *const ruleset,
+ 	} };
+ 
+ 	build_check_layer();
+-	return insert_rule(ruleset, id, &layers, ARRAY_SIZE(layers));
++	return insert_rule(ruleset, ref, &layers, ARRAY_SIZE(layers));
+ }
+ 
+ static int merge_tree(struct landlock_ruleset *const dst,
+@@ -331,7 +331,7 @@ static int merge_tree(struct landlock_ruleset *const dst,
+ 		struct landlock_layer layers[] = { {
+ 			.level = dst->num_layers,
+ 		} };
+-		const struct landlock_id id = {
++		const struct landlock_rule_ref ref = {
+ 			.key = walker_rule->key,
+ 			.type = key_type,
+ 		};
+@@ -344,7 +344,7 @@ static int merge_tree(struct landlock_ruleset *const dst,
+ 
+ 		layers[0].access = walker_rule->layers[0].access;
+ 
+-		err = insert_rule(dst, id, &layers, ARRAY_SIZE(layers));
++		err = insert_rule(dst, ref, &layers, ARRAY_SIZE(layers));
+ 		if (err)
+ 			return err;
+ 	}
+@@ -413,12 +413,12 @@ static int inherit_tree(struct landlock_ruleset *const parent,
+ 	/* Copies the @parent inode or network tree. */
+ 	rbtree_postorder_for_each_entry_safe(walker_rule, next_rule,
+ 					     parent_root, node) {
+-		const struct landlock_id id = {
++		const struct landlock_rule_ref ref = {
+ 			.key = walker_rule->key,
+ 			.type = key_type,
+ 		};
+ 
+-		err = insert_rule(child, id, &walker_rule->layers,
++		err = insert_rule(child, ref, &walker_rule->layers,
+ 				  walker_rule->num_layers);
+ 		if (err)
+ 			return err;
+@@ -581,12 +581,12 @@ landlock_merge_ruleset(struct landlock_ruleset *const parent,
+  */
+ const struct landlock_rule *
+ landlock_find_rule(const struct landlock_ruleset *const ruleset,
+-		   const struct landlock_id id)
++		   const struct landlock_rule_ref ref)
+ {
+ 	const struct rb_root *root;
+ 	const struct rb_node *node;
+ 
+-	root = get_root((struct landlock_ruleset *)ruleset, id.type);
++	root = get_root((struct landlock_ruleset *)ruleset, ref.type);
+ 	if (IS_ERR(root))
+ 		return NULL;
+ 	node = root->rb_node;
+@@ -595,9 +595,9 @@ landlock_find_rule(const struct landlock_ruleset *const ruleset,
+ 		struct landlock_rule *this =
+ 			rb_entry(node, struct landlock_rule, node);
+ 
+-		if (this->key.data == id.key.data)
++		if (this->key.data == ref.key.data)
+ 			return this;
+-		if (this->key.data < id.key.data)
++		if (this->key.data < ref.key.data)
+ 			node = node->rb_right;
+ 		else
+ 			node = node->rb_left;
+diff --git a/security/landlock/ruleset.h b/security/landlock/ruleset.h
+index 5da9a64f5af7..967d0123cb73 100644
+--- a/security/landlock/ruleset.h
++++ b/security/landlock/ruleset.h
+@@ -69,9 +69,9 @@ enum landlock_key_type {
+ };
+ 
+ /**
+- * struct landlock_id - Unique rule identifier for a ruleset
++ * struct landlock_rule_ref - Rule reference for a ruleset
+  */
+-struct landlock_id {
++struct landlock_rule_ref {
+ 	/**
+ 	 * @key: Identifies either a kernel object (e.g. an inode) or
+ 	 * a raw value (e.g. a TCP port).
+@@ -201,7 +201,7 @@ DEFINE_FREE(landlock_put_ruleset, struct landlock_ruleset *,
+ 	    if (!IS_ERR_OR_NULL(_T)) landlock_put_ruleset(_T))
+ 
+ int landlock_insert_rule(struct landlock_ruleset *const ruleset,
+-			 const struct landlock_id id,
++			 const struct landlock_rule_ref ref,
+ 			 const access_mask_t access);
+ 
+ struct landlock_ruleset *
+@@ -210,7 +210,7 @@ landlock_merge_ruleset(struct landlock_ruleset *const parent,
+ 
+ const struct landlock_rule *
+ landlock_find_rule(const struct landlock_ruleset *const ruleset,
+-		   const struct landlock_id id);
++		   const struct landlock_rule_ref ref);
+ 
+ static inline void landlock_get_ruleset(struct landlock_ruleset *const ruleset)
+ {
 -- 
 2.49.0
 
