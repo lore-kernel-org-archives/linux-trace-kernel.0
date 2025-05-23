@@ -1,33 +1,33 @@
-Received: from smtp-bc0a.mail.infomaniak.ch (smtp-bc0a.mail.infomaniak.ch [45.157.188.10])
+Received: from smtp-190b.mail.infomaniak.ch (smtp-190b.mail.infomaniak.ch [185.125.25.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2995D2957B6
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 23 May 2025 16:57:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.157.188.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0739297119
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 23 May 2025 16:58:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.25.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748019479; cv=none; b=WI9W4lx7XztIed4Hl83vDZTJL4B7QQmKCtVuxAFZDKDnZiAjcK6jLRxw9tnY1BrRi9KAHZrCbvA8lx8jfbrKoI+uC3hslh2HYDZHMvWyFBKJHKVYGipI8Dpx2FlK6mR//EMrT3GenwYsPc77eBxeJ3RFY2zcV8wpAVrIr+ppKd4=
+	t=1748019486; cv=none; b=hEY+AfMBMkn0RhddPHiM5dEtyS9KlAAJ22NJ9eu52gtS0RGJIm9OFMrMz3gPJMKwWZQcj76CfQLVjlwbKyFV0eYrFCLfJAAEmPoohArOxlRlDg0+Cbdc3j71DnKOONgX0VDk922OmppBniDoz0k+RD2VPepNnaVJiC+gq7lVyhk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748019479; c=relaxed/simple;
-	bh=yHaHFkCpYbsn/CndJsNQzchXiary+ahZx6/ZLpUMwOk=;
+	s=arc-20240116; t=1748019486; c=relaxed/simple;
+	bh=uPbKmpl5ZK2xe9dKiLUKjn4HUAgklrfPsCQRW9H23lU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=I0ypxHQDch2gJ4A63zp8JW6UoZ+ZJ05nGFxkXwh0n0yJLmKqPkpIhJhO6w/YH6B6tP4Wn5+RwI14PMlNyuKSwafsh+IjvFNSsZgAyeOXNBYVPBxRoG72JzmuU62k5JVTBdwdgrWZguCVE4dUdhCsk3qJ4pxTUl2qtMu151tBCCo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=CB9oQllR; arc=none smtp.client-ip=45.157.188.10
+	 MIME-Version:Content-Type; b=iGeGlKWcWjxJYjLzTSUsk+Ab/JEKAoAujHCKkM07MP8Z5B5gEzEnTVb76DBWLkf5hOaf2e4PSRIT0/xudwutnSHojaLjj8cqbJacNOALPVCisIKMRTeao26oywggEI/qRgGnMTIp/uRd6R+jfeK6tMWBMp2sxZzJo6AF8mh+iHc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=0KF0a+Wo; arc=none smtp.client-ip=185.125.25.11
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=digikod.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="CB9oQllR"
-Received: from smtp-3-0001.mail.infomaniak.ch (unknown [IPv6:2001:1600:4:17::246c])
-	by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4b3rv61GCWzfWf;
-	Fri, 23 May 2025 18:57:54 +0200 (CEST)
+	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="0KF0a+Wo"
+Received: from smtp-4-0001.mail.infomaniak.ch (unknown [IPv6:2001:1600:7:10::a6c])
+	by smtp-4-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4b3rv76HXtzRdN;
+	Fri, 23 May 2025 18:57:55 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=digikod.net;
-	s=20191114; t=1748019474;
-	bh=2HWfAP81p7RLsGfr2RvkhJ4ZCCT0ch+jn0J9ewgvV3k=;
+	s=20191114; t=1748019475;
+	bh=eTAQWYmg1rYKTJFffa5hFncYpXU+syRK3SKIlDA3kHg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=CB9oQllRK3VOLOmNLlRIqGu64eUSW7yxEd0P1fDYKbdehY9BZGP9W/KBICTTIb0l7
-	 W5aoNZMy4g+xqOLJ9nWWZ/K1Tk2q4B6bJE8dDOW56leAoC1Xcm48RxZ1QC5H7P+vq6
-	 NyBVFpho940QqiK4T+2p+1cHDQo2M2SypLB+vIDs=
-Received: from unknown by smtp-3-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4b3rv5443mzg6w;
-	Fri, 23 May 2025 18:57:53 +0200 (CEST)
+	b=0KF0a+WoiV8uRH0xDcgqVT9Ne3FYdRAMEBFzsiUOtDINToX9cmDNYpmhoBXQvikDY
+	 r4hCvd9CirwZAhnAr6xfo9BS5kHaKxFHgXNJt3Q90JIB2sov5Av3YcK44OMTYE33kH
+	 HjP+wuj3Pch+MncHdZ8y+1CEHL68JlcRkWvxRCc0=
+Received: from unknown by smtp-4-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4b3rv71VjfzLhQ;
+	Fri, 23 May 2025 18:57:55 +0200 (CEST)
 From: =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>
 To: =?UTF-8?q?G=C3=BCnther=20Noack?= <gnoack@google.com>,
 	Tingmao Wang <m@maowtm.org>
@@ -45,9 +45,9 @@ Cc: =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>,
 	Steven Rostedt <rostedt@goodmis.org>,
 	linux-security-module@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org
-Subject: [RFC PATCH v1 3/5] tracing: Add __print_untrusted_str()
-Date: Fri, 23 May 2025 18:57:39 +0200
-Message-ID: <20250523165741.693976-4-mic@digikod.net>
+Subject: [RFC PATCH v1 4/5] landlock: Add landlock_add_rule_fs tracepoint
+Date: Fri, 23 May 2025 18:57:40 +0200
+Message-ID: <20250523165741.693976-5-mic@digikod.net>
 In-Reply-To: <20250523165741.693976-1-mic@digikod.net>
 References: <20250523165741.693976-1-mic@digikod.net>
 Precedence: bulk
@@ -60,13 +60,18 @@ Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 X-Infomaniak-Routing: alpha
 
-Add a new __print_untrusted_str() helper to safely print strings after escaping
-all special characters, including common separators (space, equal sign),
-quotes, and backslashes.  This transforms a string from an untrusted source
-(e.g. user space) to make it:
-- safe to parse,
-- easy to read (for simple strings),
-- easy to get back the original.
+Add a tracepoint for Landlock path_beneath rule addition.  This is
+useful to tie a Landlock object with a file for debug purpose.
+
+Allocate the absolute path names when adding new rules.  This is OK
+because landlock_add_rule(2) is not a performance critical code.
+
+Here is an example of landlock_add_rule_fs traces:
+  ruleset=0x000000007e3b1c4a key=inode:0xffff888004f59260 allowed=0xd dev=0:16 ino=306 path=/usr
+  ruleset=0x000000007e3b1c4a key=inode:0xffff888004f59240 allowed=0xffff dev=0:16 ino=346 path=/root
+
+TODO: Use Landlock IDs instead of kernel addresses to identify Landlock
+objects (e.g. inode).
 
 Cc: Günther Noack <gnoack@google.com>
 Cc: Masami Hiramatsu <mhiramat@kernel.org>
@@ -75,111 +80,202 @@ Cc: Steven Rostedt <rostedt@goodmis.org>
 Cc: Tingmao Wang <m@maowtm.org>
 Signed-off-by: Mickaël Salaün <mic@digikod.net>
 ---
- include/linux/trace_events.h               |  3 ++
- include/trace/stages/stage3_trace_output.h |  4 +++
- include/trace/stages/stage7_class_define.h |  1 +
- kernel/trace/trace_output.c                | 40 ++++++++++++++++++++++
- 4 files changed, 48 insertions(+)
+ MAINTAINERS                     |  1 +
+ include/trace/events/landlock.h | 68 +++++++++++++++++++++++++++++++++
+ security/landlock/Makefile      | 11 +++++-
+ security/landlock/fs.c          | 22 +++++++++++
+ security/landlock/fs.h          |  3 ++
+ security/landlock/trace.c       | 14 +++++++
+ 6 files changed, 117 insertions(+), 2 deletions(-)
+ create mode 100644 include/trace/events/landlock.h
+ create mode 100644 security/landlock/trace.c
 
-diff --git a/include/linux/trace_events.h b/include/linux/trace_events.h
-index fa9cf4292dff..78f543bb7558 100644
---- a/include/linux/trace_events.h
-+++ b/include/linux/trace_events.h
-@@ -54,6 +54,9 @@ trace_print_hex_dump_seq(struct trace_seq *p, const char *prefix_str,
- 			 int prefix_type, int rowsize, int groupsize,
- 			 const void *buf, size_t len, bool ascii);
- 
-+const char *trace_print_untrusted_str_seq(struct trace_seq *s, const char *str);
-+
-+
- struct trace_iterator;
- struct trace_event;
- 
-diff --git a/include/trace/stages/stage3_trace_output.h b/include/trace/stages/stage3_trace_output.h
-index 1e7b0bef95f5..36947ca2abcb 100644
---- a/include/trace/stages/stage3_trace_output.h
-+++ b/include/trace/stages/stage3_trace_output.h
-@@ -133,6 +133,10 @@
- 	trace_print_hex_dump_seq(p, prefix_str, prefix_type,		\
- 				 rowsize, groupsize, buf, len, ascii)
- 
-+#undef __print_untrusted_str
-+#define __print_untrusted_str(str)							\
-+		trace_print_untrusted_str_seq(p, __get_str(str))
-+
- #undef __print_ns_to_secs
- #define __print_ns_to_secs(value)			\
- 	({						\
-diff --git a/include/trace/stages/stage7_class_define.h b/include/trace/stages/stage7_class_define.h
-index fcd564a590f4..bc10b69b755d 100644
---- a/include/trace/stages/stage7_class_define.h
-+++ b/include/trace/stages/stage7_class_define.h
-@@ -24,6 +24,7 @@
- #undef __print_array
- #undef __print_dynamic_array
- #undef __print_hex_dump
-+#undef __print_untrusted_string
- #undef __get_buf
- 
- /*
-diff --git a/kernel/trace/trace_output.c b/kernel/trace/trace_output.c
-index b9ab06c99543..17d576941147 100644
---- a/kernel/trace/trace_output.c
-+++ b/kernel/trace/trace_output.c
-@@ -16,6 +16,7 @@
- #include <linux/btf.h>
- #include <linux/bpf.h>
- #include <linux/hashtable.h>
-+#include <linux/string_helpers.h>
- 
- #include "trace_output.h"
- #include "trace_btf.h"
-@@ -297,6 +298,45 @@ trace_print_hex_dump_seq(struct trace_seq *p, const char *prefix_str,
- }
- EXPORT_SYMBOL(trace_print_hex_dump_seq);
- 
-+/**
-+ * trace_print_untrusted_str_seq - print a string after escaping characters
-+ * @s: trace seq struct to write to
-+ * @src: The string to print
-+ *
-+ * Prints a string to a trace seq after escaping all special characters,
-+ * including common separators (space, equal sign), quotes, and backslashes.
-+ * This transforms a string from an untrusted source (e.g. user space) to make
-+ * it:
-+ * - safe to parse,
-+ * - easy to read (for simple strings),
-+ * - easy to get back the original.
+diff --git a/MAINTAINERS b/MAINTAINERS
+index d48dd6726fe6..f75c21a935c1 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -13393,6 +13393,7 @@ F:	Documentation/admin-guide/LSM/landlock.rst
+ F:	Documentation/security/landlock.rst
+ F:	Documentation/userspace-api/landlock.rst
+ F:	fs/ioctl.c
++F:	include/trace/events/landlock.h
+ F:	include/uapi/linux/landlock.h
+ F:	samples/landlock/
+ F:	security/landlock/
+diff --git a/include/trace/events/landlock.h b/include/trace/events/landlock.h
+new file mode 100644
+index 000000000000..41e10965ba7b
+--- /dev/null
++++ b/include/trace/events/landlock.h
+@@ -0,0 +1,68 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * Copyright © 2025 Microsoft Corporation
 + */
-+const char *trace_print_untrusted_str_seq(struct trace_seq *s,
-+                                          const char *src)
-+{
-+	int escaped_size;
-+	char *buf;
-+	size_t buf_size = seq_buf_get_buf(&s->seq, &buf);
-+	const char *ret = trace_seq_buffer_ptr(s);
 +
-+	if (!src || WARN_ON(buf_size == 0))
-+		return NULL;
++#undef TRACE_SYSTEM
++#define TRACE_SYSTEM landlock
 +
-+	escaped_size = string_escape_mem(src, strlen(src), buf, buf_size,
-+		ESCAPE_SPACE | ESCAPE_SPECIAL | ESCAPE_NAP | ESCAPE_APPEND |
-+		ESCAPE_OCTAL, " ='\"\\");
-+	if (unlikely(escaped_size >= buf_size)) {
-+		/* We need some room for the final '\0'. */
-+		seq_buf_set_overflow(&s->seq);
-+		s->full = 1;
-+		return NULL;
++#if !defined(_TRACE_LANDLOCK_H) || defined(TRACE_HEADER_MULTI_READ)
++#define _TRACE_LANDLOCK_H
++
++#include <linux/tracepoint.h>
++
++struct landlock_rule_ref;
++struct landlock_ruleset;
++struct path;
++typedef u16 access_mask_t;
++
++TRACE_EVENT(landlock_add_rule_fs,
++
++	TP_PROTO(
++		const struct landlock_ruleset *ruleset,
++		const struct landlock_rule_ref *ref,
++		access_mask_t access_rights,
++		const struct path *path,
++		const char *pathname
++	),
++
++	TP_ARGS(ruleset, ref, access_rights, path, pathname),
++
++	TP_STRUCT__entry(
++		__field(const struct landlock_ruleset *, ruleset)
++		__field(uintptr_t, ref_key)
++		__field(access_mask_t, allowed)
++		__field(dev_t, dev)
++		__field(ino_t, ino)
++		__string(pathname, pathname)
++	),
++
++	TP_fast_assign(
++		__entry->ruleset = ruleset;
++		__entry->ref_key = ref->key.data;
++		__entry->allowed = access_rights;
++		__entry->dev = path->dentry->d_sb->s_dev;
++		__entry->ino = path->dentry->d_inode->i_ino;
++		__assign_str(pathname);
++	),
++
++	/*
++	 * The inode number may not be the user-visible one, but it will be the same
++	 * used by audit.
++	 */
++	TP_printk(
++		"ruleset=0x%p key=inode:0x%lx allowed=0x%x dev=%u:%u ino=%lu path=%s",
++		__entry->ruleset,
++		__entry->ref_key,
++		__entry->allowed,
++		MAJOR(__entry->dev),
++		MINOR(__entry->dev),
++		__entry->ino,
++		__print_untrusted_str(pathname)
++	)
++);
++
++#endif /* _TRACE_LANDLOCK_H */
++
++/* This part must be outside protection */
++#include <trace/define_trace.h>
+diff --git a/security/landlock/Makefile b/security/landlock/Makefile
+index 3160c2bdac1d..c19b406a6c67 100644
+--- a/security/landlock/Makefile
++++ b/security/landlock/Makefile
+@@ -1,7 +1,14 @@
+ obj-$(CONFIG_SECURITY_LANDLOCK) := landlock.o
+ 
+-landlock-y := setup.o syscalls.o object.o ruleset.o \
+-	cred.o task.o fs.o
++landlock-y := \
++	setup.o \
++	syscalls.o \
++	object.o \
++	ruleset.o \
++	cred.o \
++	task.o \
++	fs.o \
++	trace.o
+ 
+ landlock-$(CONFIG_INET) += net.o
+ 
+diff --git a/security/landlock/fs.c b/security/landlock/fs.c
+index 73a20a501c3c..e5d673240882 100644
+--- a/security/landlock/fs.c
++++ b/security/landlock/fs.c
+@@ -36,6 +36,7 @@
+ #include <linux/types.h>
+ #include <linux/wait_bit.h>
+ #include <linux/workqueue.h>
++#include <trace/events/landlock.h>
+ #include <uapi/linux/fiemap.h>
+ #include <uapi/linux/landlock.h>
+ 
+@@ -345,6 +346,27 @@ int landlock_append_fs_rule(struct landlock_ruleset *const ruleset,
+ 	mutex_lock(&ruleset->lock);
+ 	err = landlock_insert_rule(ruleset, ref, access_rights);
+ 	mutex_unlock(&ruleset->lock);
++
++	if (!err && trace_landlock_add_rule_fs_enabled()) {
++		const char *pathname;
++		/* Does not handle deleted files. */
++		char *buffer __free(__putname) = __getname();
++
++		if (buffer) {
++			const char *absolute_path =
++				d_absolute_path(path, buffer, PATH_MAX);
++			if (!IS_ERR_OR_NULL(absolute_path))
++				pathname = absolute_path;
++			else
++				pathname = "<too_long>";
++		} else {
++			/* Same format as audit_log_d_path(). */
++			pathname = "<no_memory>";
++		}
++		trace_landlock_add_rule_fs(ruleset, &ref, access_rights, path,
++					   pathname);
 +	}
-+	seq_buf_commit(&s->seq, escaped_size);
-+	trace_seq_putc(s, 0);
-+	return ret;
-+}
-+EXPORT_SYMBOL(trace_print_untrusted_str_seq);
 +
- int trace_raw_output_prep(struct trace_iterator *iter,
- 			  struct trace_event *trace_event)
- {
+ 	/*
+ 	 * No need to check for an error because landlock_insert_rule()
+ 	 * increments the refcount for the new object if needed.
+diff --git a/security/landlock/fs.h b/security/landlock/fs.h
+index bf9948941f2f..60be95ebfb0b 100644
+--- a/security/landlock/fs.h
++++ b/security/landlock/fs.h
+@@ -11,6 +11,7 @@
+ #define _SECURITY_LANDLOCK_FS_H
+ 
+ #include <linux/build_bug.h>
++#include <linux/cleanup.h>
+ #include <linux/fs.h>
+ #include <linux/init.h>
+ #include <linux/rcupdate.h>
+@@ -128,4 +129,6 @@ int landlock_append_fs_rule(struct landlock_ruleset *const ruleset,
+ 			    const struct path *const path,
+ 			    access_mask_t access_hierarchy);
+ 
++DEFINE_FREE(__putname, char *, if (_T) __putname(_T))
++
+ #endif /* _SECURITY_LANDLOCK_FS_H */
+diff --git a/security/landlock/trace.c b/security/landlock/trace.c
+new file mode 100644
+index 000000000000..98874cda473b
+--- /dev/null
++++ b/security/landlock/trace.c
+@@ -0,0 +1,14 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * Landlock - Tracepoints
++ *
++ * Copyright © 2025 Microsoft Corporation
++ */
++
++#include <linux/path.h>
++
++#include "access.h"
++#include "ruleset.h"
++
++#define CREATE_TRACE_POINTS
++#include <trace/events/landlock.h>
 -- 
 2.49.0
 
