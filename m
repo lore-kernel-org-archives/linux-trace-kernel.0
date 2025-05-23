@@ -1,27 +1,27 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3B1F1F3B87;
-	Fri, 23 May 2025 21:28:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B34F8137E;
+	Fri, 23 May 2025 23:20:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748035690; cv=none; b=IcutdnHMBduvepHJLL65KoGctjCSHDOKnoslacLI/YtN3VLfByv1umvaN1AFBKHCK+3DoF8ky48GNH1cNbGasRDxFOM6SuLNcEWZNCeW65KfzHKXhIKPEK/mBF2PSa1IRpLVS/v3ZrHyxafe9/utoFvydCMSZ243t0y/HKQBNIA=
+	t=1748042405; cv=none; b=WDo5iXuSVGie1YUuPTfDfu9zEuRD4t0xZfpg5OJYJGPwa9FEW3251FjHhSmIappHeDz+jGWRkVUwoa9/K6VyF55+823DB82sWO70NOMof2kP+6Bzm9Aym+PQrx2XhELmp/1CEyi9JBFYfPRXVArvtA5dEGWDDiJrf8WpdYQqTdo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748035690; c=relaxed/simple;
-	bh=USlj8qHFdcuihLb7PKYsyoiTFuu/IQ7ZLoTDyKwO35E=;
+	s=arc-20240116; t=1748042405; c=relaxed/simple;
+	bh=xIgX4iuyQ8hFBF1VrVvI5Le9dEwaDc9IXuMrS7KIC6M=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=bRxE1+lB5EvFUK/dNBi8owu/pH+XKH9nIlh5BYt2CI/zZyuXQXeTptXMokDfms0LmhJXaJufGjXr+I0FmGE0SzLlncqOA7auurh3kDH2KjPhX6IJp77X6Jj8zBjECY5z5y5oLtOI2STP5dTxOBt34Twk3Zf6XmfMXEaKoZoWnC0=
+	 MIME-Version:Content-Type; b=UcsOznhbzET2kQTJuCcLty5zSOnFDWLyfaM4v1b6FAX6EvZA3fzReqw4P5sQGM/IEn8aoGsnbZ+fWdoVJHa3qjZxAsshlDpeqO8nJLDIfxyB7lHULoBbXO1ypySVlCjlEptXXAiFgpUWWTQRhl/QNrKHF+fHD91XnDwhApzjgVw=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EA480C4CEE9;
-	Fri, 23 May 2025 21:28:08 +0000 (UTC)
-Date: Fri, 23 May 2025 17:28:57 -0400
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 95B50C4CEE9;
+	Fri, 23 May 2025 23:20:04 +0000 (UTC)
+Date: Fri, 23 May 2025 19:20:53 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
 To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
 Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
  linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
 Subject: Re: [PATCH v3 1/2] tracing: ring_buffer: Rewind persistent ring
  buffer when reboot
-Message-ID: <20250523172857.02ab4a75@gandalf.local.home>
+Message-ID: <20250523192053.47054e6e@gandalf.local.home>
 In-Reply-To: <20250523165425.0275c9a1@gandalf.local.home>
 References: <174792927500.496143.10668210464102033012.stgit@mhiramat.tok.corp.google.com>
 	<174792928413.496143.17979267710069360561.stgit@mhiramat.tok.corp.google.com>
@@ -39,34 +39,54 @@ Content-Transfer-Encoding: 7bit
 On Fri, 23 May 2025 16:54:25 -0400
 Steven Rostedt <rostedt@goodmis.org> wrote:
 
-> I think we also need this:
+> >   spin:
+> > @@ -6642,7 +6739,6 @@ int ring_buffer_read_page(struct trace_buffer *buffer,
+> >  		cpu_buffer->read_bytes += rb_page_size(reader);
+> >  
+> >  		/* swap the pages */
+> > -		rb_init_page(bpage);  
 > 
-> diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-> index 7d837963dd1e..456efebc396a 100644
-> --- a/kernel/trace/ring_buffer.c
-> +++ b/kernel/trace/ring_buffer.c
-> @@ -3638,6 +3638,9 @@ rb_move_tail(struct ring_buffer_per_cpu *cpu_buffer,
->  
->  	rb_reset_tail(cpu_buffer, tail, info);
->  
-> +	/* The new page should have zero committed */
-> +	rb_init_page(next_page->page);
-> +
->  	/* Commit what we have for now. */
->  	rb_end_commit(cpu_buffer);
->  	/* rb_end_commit() decs committing */
+> This isn't needed, because the persistent ring buffer is never swapped. And
+> this is what caused my test to fail. For some reason (and I'm still trying
+> to figure out exactly why), it causes my stress test that runs:
+> 
+>   perf record -o perf-test.dat -a -- trace-cmd record -e all -p function /work/c/hackbench 10 || exit -1
+> 
+> To never end after tracing is stopped, and it fills up all the disk space.
+> 
+> But again, this part isn't needed because the persistent ring buffer
+> doesn't do the swapping. This replaces what the user passed in with the
+> current page.
+> 
+> >  		bpage = reader->page;
+> >  		reader->page = data_page->data;
+> >  		local_set(&reader->write, 0);  
 
-No we don't need it ;-)
+So I analyzed why this fails and we need to reset the commit here.
 
-I'm looking deeper into the code and we have this:
+Adding a bunch of trace_printk() (and using the new trace_printk_dest
+option where I can have trace_printk go into an instance) I was able to see
+why this was an issue.
 
-		/*
-		 * No need to worry about races with clearing out the commit.
-		 * it only can increment when a commit takes place. But that
-		 * only happens in the outer most nested commit.
-		 */
-		local_set(&next_page->page->commit, 0);
+This part of the code swaps the reader page with what was passed in by the
+caller. The page doesn't go back into the write part of the ring buffer.
+The "commit" field is used to know if there's more data or not.
 
-When the tail page gets moved.
+By not resetting the "commit" field, we have:
+
+	reader = rb_get_reader_page(cpu_buffer)
+		if (cpu_buffer->reader_page->read < rb_page_size(reader))
+			return reader;
+	// swap passed in page with reader
+
+Without resetting "commit", the caller consumes the page and then uses that
+same page to pass back to this function. Since the "commit" field is never
+zero'd, it the above if statement always returns true! And this function
+just keeps swapping the reader each time and goes into an infinite loop
+(this loop requires user space to do a read or splice on this page so it's
+not a kernel infinite loop).
+
+Now the question is, can this affect the persistent ring buffer too? I'll
+memory map the buffer and see if it causes the same issue.
 
 -- Steve
