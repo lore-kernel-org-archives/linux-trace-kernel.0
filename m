@@ -1,187 +1,183 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 455211C862D;
-	Sat, 24 May 2025 01:13:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FA4C19CC3D;
+	Sun, 25 May 2025 21:53:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748049235; cv=none; b=MXI9gpEAkVpdgKfTV3SFfiNHYI7/w97t9doG3jsRgqYWDfNuBvR5x5as3qQ/9hgs8epzhCzYC1k1cDKcbXKzeRjyQXDqdd4Wtkee3Ns2e62dRQWk01f1DqmeOCBcYIQ7sVGPX63lpHsO3mGKX5P44SefqBgN6QPBDJVrCSMBG8E=
+	t=1748210015; cv=none; b=mSEPmm4Jjlnlo1Tqrphlq8aCTHWadcFVyjaKeQu+hV7EtLJS4KkUMQi/+DGphSacqnVcOPEuYWuMGnTXsuOs2qreM/JRz8eFq0GIisjqLq/Sw9OkJJ/ybdUzs5SQjEXC/LbkDo32/KBji46736+ERETKDqby/qE4F73LwsmWsSs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748049235; c=relaxed/simple;
-	bh=DcRHlwSA2+s3xYX3BAXgtlItCgPVhGyTrbfO54P/d5I=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=azMaW7O2ghVFz6trdP2P881QWc2Qaz1xQKSOMRt1fP6g97B/AJZruI/1vQ9s/U8TLkhwphGfEsJ76lxqdsgBQfUa3KILrlwwnMS1HJ9Z6As+I60ibEEwbN7HdzZpFEu/Cw/bIaaSioHVWjaEb7cy4egO2TONXmVuiddDxiWthTc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BDgOZqm9; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1748210015; c=relaxed/simple;
+	bh=y5rT2ewj429hL1YZNClBKAuoapp2CjjiHYqsoHYBDa8=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=ivfXgqeQQawE+Act3qu6cJPHXlg2C9Rr1WGWgN2cmDTcH+gUfTWq62Qp8eMh/+ZnjW7AXEjyT46xzM9pNAuFWqcxakVkLnSozkfH4KzYT5OBLjeHBpSkk+9kYid/0nB+RzdPGzEQq3Gr4+SkcwfTCUC29R/FajMtoLLjIhKMqyQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ceT//yHx; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BDgOZqm9"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ceT//yHx"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1748049235; x=1779585235;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=DcRHlwSA2+s3xYX3BAXgtlItCgPVhGyTrbfO54P/d5I=;
-  b=BDgOZqm9a5i2I0WIjUOW+zazIWe/u/GaXqK0FFuLgsWs8fBI8Y5hbdBX
-   F2hGR0ry1PWxgQzVDquAhy249LwL0vvPd8hIL20qS9mt1u+akHRLEDpd5
-   VXvF7+vZ2hxVjPy/r6GOUa0t0sWveY6Zs041dnXgcPiIqZ3Fkw9tpwcxA
-   vIJ8SRXZ1/XB9GakjswiPNk4j7u4qgDyCrHp3veuvabOx9PuN775zfgcI
-   KAr6W81DkNsL+QrHTbZjyBSytKqhImNgP6Qz78SGwMEqVIn/fSzKqfePy
-   4MWtWLSS6mzJGKdOInXuc1KrGpn6nR4EbZ3z5505X61bF3J6ElbDDirDJ
-   Q==;
-X-CSE-ConnectionGUID: ZmJWGFo+TTqJxEOs3aVykg==
-X-CSE-MsgGUID: JpArZTQUSrK7ktw49CzkNA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11441"; a="61517176"
-X-IronPort-AV: E=Sophos;i="6.15,310,1739865600"; 
-   d="scan'208";a="61517176"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 May 2025 18:13:54 -0700
-X-CSE-ConnectionGUID: Ay/9QGA9QCG27gyR0MUNtw==
-X-CSE-MsgGUID: cYxAC2IPQlu3YCG6GvZrsg==
+  t=1748210014; x=1779746014;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version:content-id;
+  bh=y5rT2ewj429hL1YZNClBKAuoapp2CjjiHYqsoHYBDa8=;
+  b=ceT//yHx7F0JqM4+bzORHTA3Hi0DK9vzfTD1ChrJRaNLXIhJqaQrPXuV
+   jeTpNhnEGDPaw8H78PwGHktNfpPl6dAdZnMrVh6xm1h0OeNOrtjXYgAQP
+   HYJvVZ8LewX/ce74CBC3V2xjHqrvNUpVDNL6sJy8F3rmaul/SA3qqMHai
+   2894vABY/4tUZ5uOvuNyUXGwk9+lY+VakC1LK4rQ/xwTjuuYThHsIEazu
+   MYeuZPolTV3eA+ejC3fihWhKEDYqtSrkTEPhz6SgE0HplDA2/xcMU0C6H
+   ve00bhfgJ3wnSFXHsbgX+rFdoGEUqCKzyEaz8CigT+qrPQKOHfw4ry55i
+   A==;
+X-CSE-ConnectionGUID: HQGD0TEPSUq8fOLusNMwCQ==
+X-CSE-MsgGUID: NdAAS2XBR6u4/DLqkNH5Dg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11444"; a="60435792"
+X-IronPort-AV: E=Sophos;i="6.15,314,1739865600"; 
+   d="scan'208";a="60435792"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 May 2025 14:53:32 -0700
+X-CSE-ConnectionGUID: srkUUk2LSiS9AVRoLfAP+A==
+X-CSE-MsgGUID: abYToWTKQVe6L6ZrKUUaNQ==
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,310,1739865600"; 
-   d="scan'208";a="142391928"
-Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
-  by fmviesa009.fm.intel.com with ESMTP; 23 May 2025 18:13:50 -0700
-Received: from kbuild by 1992f890471c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uIdSO-000Qqi-1o;
-	Sat, 24 May 2025 01:13:48 +0000
-Date: Sat, 24 May 2025 09:13:27 +0800
-From: kernel test robot <lkp@intel.com>
-To: Ye Bin <yebin@huaweicloud.com>, rostedt@goodmis.org,
-	mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
-	mark.rutland@arm.com, linux-trace-kernel@vger.kernel.org
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	linux-kernel@vger.kernel.org, yebin10@huawei.com
-Subject: Re: [PATCH 2/2] ftrace: don't allocate  ftrace module map
-Message-ID: <202505240845.ACz1UFaT-lkp@intel.com>
-References: <20250523083945.3390587-3-yebin@huaweicloud.com>
+X-IronPort-AV: E=Sophos;i="6.15,314,1739865600"; 
+   d="scan'208";a="141991367"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.99])
+  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 May 2025 14:53:16 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Mon, 26 May 2025 00:53:13 +0300 (EEST)
+To: Kees Cook <kees@kernel.org>
+cc: Arnd Bergmann <arnd@arndb.de>, Thomas Gleixner <tglx@linutronix.de>, 
+    Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+    Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
+    "H. Peter Anvin" <hpa@zytor.com>, Paolo Bonzini <pbonzini@redhat.com>, 
+    Vitaly Kuznetsov <vkuznets@redhat.com>, 
+    Henrique de Moraes Holschuh <hmh@hmh.eng.br>, 
+    Hans de Goede <hdegoede@redhat.com>, 
+    "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>, 
+    Masami Hiramatsu <mhiramat@kernel.org>, Ard Biesheuvel <ardb@kernel.org>, 
+    Mike Rapoport <rppt@kernel.org>, 
+    Michal Wilczynski <michal.wilczynski@intel.com>, 
+    Juergen Gross <jgross@suse.com>, 
+    Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+    "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>, 
+    Roger Pau Monne <roger.pau@citrix.com>, 
+    David Woodhouse <dwmw@amazon.co.uk>, Usama Arif <usama.arif@bytedance.com>, 
+    "Guilherme G. Piccoli" <gpiccoli@igalia.com>, 
+    Thomas Huth <thuth@redhat.com>, Brian Gerst <brgerst@gmail.com>, 
+    kvm@vger.kernel.org, ibm-acpi-devel@lists.sourceforge.net, 
+    platform-driver-x86@vger.kernel.org, linux-acpi@vger.kernel.org, 
+    linux-trace-kernel@vger.kernel.org, linux-efi@vger.kernel.org, 
+    linux-mm@kvack.org, "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
+    Christoph Hellwig <hch@lst.de>, Marco Elver <elver@google.com>, 
+    Andrey Konovalov <andreyknvl@gmail.com>, 
+    Andrey Ryabinin <ryabinin.a.a@gmail.com>, 
+    Masahiro Yamada <masahiroy@kernel.org>, 
+    Nathan Chancellor <nathan@kernel.org>, 
+    Nicolas Schier <nicolas.schier@linux.dev>, 
+    Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, 
+    Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, 
+    LKML <linux-kernel@vger.kernel.org>, kasan-dev@googlegroups.com, 
+    linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+    kvmarm@lists.linux.dev, linux-riscv@lists.infradead.org, 
+    linux-s390@vger.kernel.org, linux-hardening@vger.kernel.org, 
+    linux-kbuild@vger.kernel.org, linux-security-module@vger.kernel.org, 
+    linux-kselftest@vger.kernel.org, sparclinux@vger.kernel.org, 
+    llvm@lists.linux.dev
+Subject: Re: [PATCH v2 04/14] x86: Handle KCOV __init vs inline mismatches
+In-Reply-To: <20250523043935.2009972-4-kees@kernel.org>
+Message-ID: <ba4f4fd0-1bcf-3d84-c08e-ba0dd040af16@linux.intel.com>
+References: <20250523043251.it.550-kees@kernel.org> <20250523043935.2009972-4-kees@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250523083945.3390587-3-yebin@huaweicloud.com>
+Content-Type: multipart/mixed; BOUNDARY="8323328-965883235-1748206555=:933"
+Content-ID: <8656ab6c-8f8d-81d1-5dfa-740e7f21544c@linux.intel.com>
 
-Hi Ye,
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-kernel test robot noticed the following build errors:
+--8323328-965883235-1748206555=:933
+Content-Type: text/plain; CHARSET=ISO-8859-15
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-ID: <fa62886f-fdfb-f2a5-84db-475ce3a46169@linux.intel.com>
 
-[auto build test ERROR on trace/for-next]
-[also build test ERROR on linus/master v6.15-rc7 next-20250523]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+On Thu, 22 May 2025, Kees Cook wrote:
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Ye-Bin/ftrace-fix-UAF-when-lookup-kallsym-after-ftrace-disabled/20250523-164234
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace for-next
-patch link:    https://lore.kernel.org/r/20250523083945.3390587-3-yebin%40huaweicloud.com
-patch subject: [PATCH 2/2] ftrace: don't allocate  ftrace module map
-config: s390-randconfig-001-20250524 (https://download.01.org/0day-ci/archive/20250524/202505240845.ACz1UFaT-lkp@intel.com/config)
-compiler: clang version 17.0.6 (https://github.com/llvm/llvm-project 6009708b4367171ccdbf4b5905cb6a803753fe18)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250524/202505240845.ACz1UFaT-lkp@intel.com/reproduce)
+> When KCOV is enabled all functions get instrumented, unless the
+> __no_sanitize_coverage attribute is used. To prepare for
+> __no_sanitize_coverage being applied to __init functions, we have to
+> handle differences in how GCC's inline optimizations get resolved. For
+> x86 this means forcing several functions to be inline with
+> __always_inline.
+>=20
+> Signed-off-by: Kees Cook <kees@kernel.org>
+> ---
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: Borislav Petkov <bp@alien8.de>
+> Cc: Dave Hansen <dave.hansen@linux.intel.com>
+> Cc: <x86@kernel.org>
+> Cc: "H. Peter Anvin" <hpa@zytor.com>
+> Cc: Paolo Bonzini <pbonzini@redhat.com>
+> Cc: Vitaly Kuznetsov <vkuznets@redhat.com>
+> Cc: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
+> Cc: Hans de Goede <hdegoede@redhat.com>
+> Cc: "Ilpo J=E4rvinen" <ilpo.jarvinen@linux.intel.com>
+> Cc: "Rafael J. Wysocki" <rafael@kernel.org>
+> Cc: Len Brown <lenb@kernel.org>
+> Cc: Masami Hiramatsu <mhiramat@kernel.org>
+> Cc: Ard Biesheuvel <ardb@kernel.org>
+> Cc: Mike Rapoport <rppt@kernel.org>
+> Cc: Michal Wilczynski <michal.wilczynski@intel.com>
+> Cc: Juergen Gross <jgross@suse.com>
+> Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Cc: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+> Cc: Roger Pau Monne <roger.pau@citrix.com>
+> Cc: David Woodhouse <dwmw@amazon.co.uk>
+> Cc: Usama Arif <usama.arif@bytedance.com>
+> Cc: "Guilherme G. Piccoli" <gpiccoli@igalia.com>
+> Cc: Thomas Huth <thuth@redhat.com>
+> Cc: Brian Gerst <brgerst@gmail.com>
+> Cc: <kvm@vger.kernel.org>
+> Cc: <ibm-acpi-devel@lists.sourceforge.net>
+> Cc: <platform-driver-x86@vger.kernel.org>
+> Cc: <linux-acpi@vger.kernel.org>
+> Cc: <linux-trace-kernel@vger.kernel.org>
+> Cc: <linux-efi@vger.kernel.org>
+> Cc: <linux-mm@kvack.org>
+> ---
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202505240845.ACz1UFaT-lkp@intel.com/
+> diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/=
+thinkpad_acpi.c
+> index e7350c9fa3aa..0518d5b1f4ec 100644
+> --- a/drivers/platform/x86/thinkpad_acpi.c
+> +++ b/drivers/platform/x86/thinkpad_acpi.c
+> @@ -559,12 +559,12 @@ static unsigned long __init tpacpi_check_quirks(
+>  =09return 0;
+>  }
+> =20
+> -static inline bool __pure __init tpacpi_is_lenovo(void)
+> +static __always_inline bool __pure tpacpi_is_lenovo(void)
+>  {
+>  =09return thinkpad_id.vendor =3D=3D PCI_VENDOR_ID_LENOVO;
+>  }
+> =20
+> -static inline bool __pure __init tpacpi_is_ibm(void)
+> +static __always_inline bool __pure tpacpi_is_ibm(void)
+>  {
+>  =09return thinkpad_id.vendor =3D=3D PCI_VENDOR_ID_IBM;
+>  }
 
-All errors (new ones prefixed by >>):
+Hi Kees,
 
->> kernel/trace/ftrace.c:7825:37: error: incomplete definition of type 'struct module'
-    7825 |         if (ftrace_disabled || (mod && !mod->num_ftrace_callsites)) {
-         |                                         ~~~^
-   include/linux/printk.h:400:8: note: forward declaration of 'struct module'
-     400 | struct module;
-         |        ^
-   1 error generated.
+What's your plan on upstreaming route/timeline for this? I'd prefer to=20
+retain full control over this file as we were planning on some=20
+reorganization of files into lenovo/ subdir.
 
 
-vim +7825 kernel/trace/ftrace.c
-
-  7806	
-  7807	void ftrace_free_mem(struct module *mod, void *start_ptr, void *end_ptr)
-  7808	{
-  7809		unsigned long start = (unsigned long)(start_ptr);
-  7810		unsigned long end = (unsigned long)(end_ptr);
-  7811		struct ftrace_page **last_pg = &ftrace_pages_start;
-  7812		struct ftrace_page *tmp_page = NULL;
-  7813		struct ftrace_page *pg;
-  7814		struct dyn_ftrace *rec;
-  7815		struct dyn_ftrace key;
-  7816		struct ftrace_mod_map *mod_map = NULL;
-  7817		struct ftrace_init_func *func, *func_next;
-  7818		LIST_HEAD(clear_hash);
-  7819	
-  7820		key.ip = start;
-  7821		key.flags = end;	/* overload flags, as it is unsigned long */
-  7822	
-  7823		mutex_lock(&ftrace_lock);
-  7824	
-> 7825		if (ftrace_disabled || (mod && !mod->num_ftrace_callsites)) {
-  7826			mutex_unlock(&ftrace_lock);
-  7827			return;
-  7828		}
-  7829	
-  7830		/*
-  7831		 * If we are freeing module init memory, then check if
-  7832		 * any tracer is active. If so, we need to save a mapping of
-  7833		 * the module functions being freed with the address.
-  7834		 */
-  7835		if (mod && ftrace_ops_list != &ftrace_list_end)
-  7836			mod_map = allocate_ftrace_mod_map(mod, start, end);
-  7837	
-  7838		for (pg = ftrace_pages_start; pg; last_pg = &pg->next, pg = *last_pg) {
-  7839			if (end < pg->records[0].ip ||
-  7840			    start >= (pg->records[pg->index - 1].ip + MCOUNT_INSN_SIZE))
-  7841				continue;
-  7842	 again:
-  7843			rec = bsearch(&key, pg->records, pg->index,
-  7844				      sizeof(struct dyn_ftrace),
-  7845				      ftrace_cmp_recs);
-  7846			if (!rec)
-  7847				continue;
-  7848	
-  7849			/* rec will be cleared from hashes after ftrace_lock unlock */
-  7850			add_to_clear_hash_list(&clear_hash, rec);
-  7851	
-  7852			if (mod_map)
-  7853				save_ftrace_mod_rec(mod_map, rec);
-  7854	
-  7855			pg->index--;
-  7856			ftrace_update_tot_cnt--;
-  7857			if (!pg->index) {
-  7858				*last_pg = pg->next;
-  7859				pg->next = tmp_page;
-  7860				tmp_page = pg;
-  7861				pg = container_of(last_pg, struct ftrace_page, next);
-  7862				if (!(*last_pg))
-  7863					ftrace_pages = pg;
-  7864				continue;
-  7865			}
-  7866			memmove(rec, rec + 1,
-  7867				(pg->index - (rec - pg->records)) * sizeof(*rec));
-  7868			/* More than one function may be in this block */
-  7869			goto again;
-  7870		}
-  7871		mutex_unlock(&ftrace_lock);
-  7872	
-  7873		list_for_each_entry_safe(func, func_next, &clear_hash, list) {
-  7874			clear_func_from_hashes(func);
-  7875			kfree(func);
-  7876		}
-  7877		/* Need to synchronize with ftrace_location_range() */
-  7878		if (tmp_page) {
-  7879			synchronize_rcu();
-  7880			ftrace_free_pages(tmp_page);
-  7881		}
-  7882	}
-  7883	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+--=20
+ i.
+--8323328-965883235-1748206555=:933--
