@@ -1,153 +1,134 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fanzine2.igalia.com (fanzine2.igalia.com [213.97.179.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67339FC0E;
-	Mon, 26 May 2025 03:44:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8333327454;
+	Mon, 26 May 2025 11:14:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.97.179.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748231046; cv=none; b=h+kcZINMPvnJBpJXtYZOpeS6HNusq8Nq6POhU8ecNd6UIh9+3idtU8bFjqxvibYnX9FKvvVqJr91vXfMWuFX7ucAgLqqDVOXBnqZztqTlkPUElcZ4DrxbFaDRSkSAt99Ngoqr8qe+giI5xy1WXEaKulKz9Cr+bRRZTNF3BrQ4Gs=
+	t=1748258054; cv=none; b=KtJEebJo7U5LmGe0ioPq9grMxeJjFfrgbi8b5RYqpvqyD9i4NG3LmAn/xAcOt2FBs9tq6J+uaxvMfQFb9/CfMXyjxDVOHrMTOLiaUUWIm6BarDMHHb/vGXyUqfOGDW7bKWBMF+84KXWcYwXlNS1rddfQ56k0wle3d4NosrN2+bw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748231046; c=relaxed/simple;
-	bh=2pPImFlewxGzk5QWdrC4f2XBLGZkKF1SdzJVsmk2aXI=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=cFAhIuPjEF5+W081ISqNGOMhS453kNNjrg4eVCCLt9qCMBSnojFDgQn6VZ7w/duyn2vxJYxcTsaFo8qZpZicYrJGPuCokzFo8zB8YU5l3gHCCbpfjchmeV4YrrKi0ujUeLUZYdhW5RPqMVv6Hu7S8AtS1wRTA1EbTSbx4a6YI0E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AQ7YDSn5; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748258054; c=relaxed/simple;
+	bh=hVGhZucvzX5ojlygkfesTT5oBv5VBt6Jo24Z6T3XFmI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=GUhqbOMVN6Ia0uLYWqdAbkF2yDtR1wm0BoUDAoweigvw6oeF/TlcqPYwVAK1abtaixLuQx7u5Oglv+v0IxTF+iHUYCg17REJxwXJlcdIob8Jb8JZTe8e5iYwOea3SouNixi8LK33tzy/2SU1XmxAiA835acCCKZG0Uqw3XMnvK8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=dOgOkcgW; arc=none smtp.client-ip=213.97.179.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AQ7YDSn5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 14B60C4CEE7;
-	Mon, 26 May 2025 03:44:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748231045;
-	bh=2pPImFlewxGzk5QWdrC4f2XBLGZkKF1SdzJVsmk2aXI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=AQ7YDSn5QSyW4Gk6hpbtTYaxDx9OrMWEAbvxX0A/ygNkwGYQqELsijB4+teUqddWF
-	 uPuzdQZxcSf3L8ns251secLN3+RDtFaaiuYRw2N579RJhR9KDYwUhbntvvYH6eh9Kg
-	 IyosiH5CJxrSJR/QrJS89DQpWCvZgOGqMQXMT33IdHNnYtGshptiw3Eh7gAhajKrxB
-	 fB3ijSEAYvhpOv6Yh8x0LK0JzCIgfrxSagHzWlLrFkGN665hYSysWyO1LsZxFwhgES
-	 ES47kYbwFjeFR+5RrYbLA2akTCNJAmK3B1zNd3EhmbO1H5cDiYaTgFrbERPh380Xt/
-	 hjqcRT4lDogcA==
-Date: Mon, 26 May 2025 12:44:03 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 1/2] tracing: ring_buffer: Rewind persistent ring
- buffer when reboot
-Message-Id: <20250526124403.3bf41a0634733b640620ad8a@kernel.org>
-In-Reply-To: <20250523192053.47054e6e@gandalf.local.home>
-References: <174792927500.496143.10668210464102033012.stgit@mhiramat.tok.corp.google.com>
-	<174792928413.496143.17979267710069360561.stgit@mhiramat.tok.corp.google.com>
-	<20250523165425.0275c9a1@gandalf.local.home>
-	<20250523192053.47054e6e@gandalf.local.home>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="dOgOkcgW"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
+	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
+	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=sRNyPwXExErBy/8kJGAzUEFc8FCKqjhWu+hUzGskcX8=; b=dOgOkcgW3891K46lC3h/P8Giqy
+	j5wpFWLFbNsIvtu/CSMhuFpyXc2GMmf/qW7htsdUuVeQHy4WDIcUcklGJ/ViGPPunnUieV9Q4IDtY
+	70vmdgOjsG/48WsDWWmRsgX30TeD25TnjOsUCjtkWJ8k3jGqeGKxRcEtaaR8bnvQ6O//TGBBuqxEm
+	T9eJVseaQnlwEULmm3DUUsYFcCO4JUm3QzyGMhJ7MbX7DRjfIxy6Nuz+t721q3JL8uYv2FRdti1TE
+	iXAOOvdxAotvmC56UVFnZM0j6AKJPYx3gSPt4AVRPNX7xCbTzeO3zT+lJmLdb3I0e/ttaelmWVQne
+	f2AjMJBg==;
+Received: from [223.233.79.88] (helo=[192.168.1.12])
+	by fanzine2.igalia.com with esmtpsa 
+	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
+	id 1uJVmL-00DHZz-KJ; Mon, 26 May 2025 13:14:01 +0200
+Message-ID: <1bc43d6c-2650-0670-8c2a-25e8d36cfb7c@igalia.com>
+Date: Mon, 26 May 2025 16:43:52 +0530
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.5.0
+Subject: Re: [PATCH v4 3/3] exec: Add support for 64 byte 'tsk->comm_ext'
+Content-Language: en-US
+To: Kees Cook <kees@kernel.org>
+Cc: Bhupesh <bhupesh@igalia.com>, akpm@linux-foundation.org,
+ kernel-dev@igalia.com, linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+ linux-mm@kvack.org, oliver.sang@intel.com, lkp@intel.com,
+ laoar.shao@gmail.com, pmladek@suse.com, rostedt@goodmis.org,
+ mathieu.desnoyers@efficios.com, arnaldo.melo@gmail.com,
+ alexei.starovoitov@gmail.com, andrii.nakryiko@gmail.com,
+ mirq-linux@rere.qmqm.pl, peterz@infradead.org, willy@infradead.org,
+ david@redhat.com, viro@zeniv.linux.org.uk, ebiederm@xmission.com,
+ brauner@kernel.org, jack@suse.cz, mingo@redhat.com, juri.lelli@redhat.com,
+ bsegall@google.com, mgorman@suse.de, vschneid@redhat.com,
+ linux-trace-kernel@vger.kernel.org
+References: <20250521062337.53262-1-bhupesh@igalia.com>
+ <20250521062337.53262-4-bhupesh@igalia.com>
+ <202505222041.B639D482FB@keescook>
+ <a7c323fe-6d11-4a21-a203-bd60acbfd831@igalia.com>
+ <202505231346.52F291C54@keescook>
+From: Bhupesh Sharma <bhsharma@igalia.com>
+In-Reply-To: <202505231346.52F291C54@keescook>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Fri, 23 May 2025 19:20:53 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
+Hi Kees,
 
-> On Fri, 23 May 2025 16:54:25 -0400
-> Steven Rostedt <rostedt@goodmis.org> wrote:
-> 
-> > >   spin:
-> > > @@ -6642,7 +6739,6 @@ int ring_buffer_read_page(struct trace_buffer *buffer,
-> > >  		cpu_buffer->read_bytes += rb_page_size(reader);
-> > >  
-> > >  		/* swap the pages */
-> > > -		rb_init_page(bpage);  
-> > 
-> > This isn't needed, because the persistent ring buffer is never swapped. And
-> > this is what caused my test to fail. For some reason (and I'm still trying
-> > to figure out exactly why), it causes my stress test that runs:
-> > 
-> >   perf record -o perf-test.dat -a -- trace-cmd record -e all -p function /work/c/hackbench 10 || exit -1
-> > 
-> > To never end after tracing is stopped, and it fills up all the disk space.
+On 5/24/25 2:25 AM, Kees Cook wrote:
+> On Fri, May 23, 2025 at 06:01:41PM +0530, Bhupesh Sharma wrote:
+>> 2. %s usage: I checked this at multiple places and can confirm that %s usage
+>> to print out 'tsk->comm' (as a string), get the longer
+>>      new "extended comm".
+> As an example of why I don't like this union is that this is now lying
+> to the compiler. e.g. a %s of an object with a known size (sizeof(comm))
+> may now run off the end of comm without finding a %NUL character... this
+> is "safe" in the sense that the "extended comm" is %NUL terminated, but
+> it makes the string length ambiguous for the compiler (and any
+> associated security hardening).
 
-Thanks for sharing the test code. So it means perf reads the ring buffer
-endlessly?
+Right.
 
-[reader commit=X1, ts=1]
+>
+>> 3. users who do 'sizeof(->comm)' will continue to get the old value because
+>> of the union.
+> Right -- this is exactly where I think it can get very very wrong,
+> leaving things unterminated.
+>
+>> The problem with having two separate comms: tsk->comm and tsk->ext_comm,
+>> instead of a union is two fold:
+>> (a). If we keep two separate statically allocated comms: tsk->comm and
+>> tsk->ext_comm in struct task_struct, we need to basically keep supporting
+>> backward compatibility / ABI via tsk->comm and ask new user-land users to
+>> move to tsk->ext_comm.
+>>
+>> (b). If we keep one statically allocated comm: tsk->comm and one dynamically allocated tsk->ext_comm in struct task_struct, then we have the problem of allocating the tsk->ext_comm which _may_ be in the exec()  hot path.
+>>
+>> I think the discussion between Linus and Yafang (see [1]), was more towards avoiding the approach in 3(a).
+>>
+>> Also we discussed the 3(b) approach, during the review of v2 of this series, where there was a apprehensions around: adding another field to store the task name and allocating tsk->ext_comm dynamically in the exec() hot path (see [2]).
+> Right -- I agree we need them statically allocated. But I think a union
+> is going to be really error-prone.
+>
+> How about this: rename task->comm to something else (task->comm_str?),
+> increase its size and then add ABI-keeping wrappers for everything that
+> _must_ have the old length.
+>
+> Doing this guarantees we won't miss anything (since "comm" got renamed),
+> and during the refactoring all the places where the old length is required
+> will be glaringly obvious. (i.e. it will be harder to make mistakes
+> about leaving things unterminated.)
+>
 
-[head commit=X2, ts=2]...[tail commit=Xn, ts=n]
-  |                           |
-  |---------------------------|
+Ok, I got your point. Let me explore then how best a ABI-keeping wrapper 
+can be introduced.
+I am thinking of something like:
 
-I thought that the read will end when it hits tail or ts < ts_current.
+abi_wrapper_get_task_comm {
 
+     if (requested_comm_length <= 16)
+         return 16byte comm with NUL terminator; // old comm (16-bytes)
+     else
+         return 64byte comm with NUL terminator; // extended comm (64-bytes)
+     ....
+}
 
-> > 
-> > But again, this part isn't needed because the persistent ring buffer
-> > doesn't do the swapping. This replaces what the user passed in with the
-> > current page.
-> > 
-> > >  		bpage = reader->page;
-> > >  		reader->page = data_page->data;
-> > >  		local_set(&reader->write, 0);  
-> 
-> So I analyzed why this fails and we need to reset the commit here.
-> 
-> Adding a bunch of trace_printk() (and using the new trace_printk_dest
-> option where I can have trace_printk go into an instance) I was able to see
-> why this was an issue.
-> 
-> This part of the code swaps the reader page with what was passed in by the
-> caller. The page doesn't go back into the write part of the ring buffer.
-> The "commit" field is used to know if there's more data or not.
-> 
-> By not resetting the "commit" field, we have:
-> 
-> 	reader = rb_get_reader_page(cpu_buffer)
-> 		if (cpu_buffer->reader_page->read < rb_page_size(reader))
-> 			return reader;
-> 	// swap passed in page with reader
-> 
-> Without resetting "commit", the caller consumes the page and then uses that
-> same page to pass back to this function. Since the "commit" field is never
-> zero'd, it the above if statement always returns true! And this function
-> just keeps swapping the reader each time and goes into an infinite loop
-> (this loop requires user space to do a read or splice on this page so it's
-> not a kernel infinite loop).
+Please let me know if this looks better. Accordingly I will start with 
+v5 changes.
 
-
-Ah, in rb_get_reader_page(cpu_buffer),
-
-	/* If there's more to read, return this page */
-	if (cpu_buffer->reader_page->read < rb_page_size(reader))
-		goto out;
-
-	/* Never should we have an index greater than the size */
-	if (RB_WARN_ON(cpu_buffer,
-		       cpu_buffer->reader_page->read > rb_page_size(reader)))
-		goto out;
-
-	/* check if we caught up to the tail */
-	reader = NULL;
-	if (cpu_buffer->commit_page == cpu_buffer->reader_page)
-		goto out;
-
-It checks remaining (unread) data first, and move to the next.
-
-> 
-> Now the question is, can this affect the persistent ring buffer too? I'll
-> memory map the buffer and see if it causes the same issue.
-
-Yeah, it can happen, but I didn't hit that.
-Let me test it too.
-
-Hmm, BTW, is there any possible solution? records the consumed
-bytes in meta data?
-
-
-> 
-> -- Steve
-
-
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Thanks,
+Bhupesh
