@@ -1,123 +1,105 @@
-Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
+Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBD971F9F70;
-	Mon, 26 May 2025 11:53:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B9271B87D9;
+	Mon, 26 May 2025 13:42:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748260406; cv=none; b=mmX3CTpjwm9Wr9YzfOC0DeTWjyFQb/Oj0dQfh1AeuXDEdSetw4WFV8oKRjqCb0YpoEKmvp/1yuQ/IrfBxMFczHYU9OQdGCdiHtD2baVdeunei68sMNiI5WL01QmsJj+9IQ8xd79qJ6zWRJmCjPAxlAcNSESLe35psxAsJDq4RKU=
+	t=1748266930; cv=none; b=OnRygGG8Hz7RiqRhfE935YsFbGJJR3Dk/QhUTsjrZNx4Pe7WYlgdGY/Nd2YaMLRxLY/Wv1EAWKQScl1v3gY4AtSZog5ZrResORPmpX984cz+BvdgBiABeWRuIWmrnlUNV1wreFu2vswVUC9PmX0vP3e73SMUlZGI9zSa5zA4g38=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748260406; c=relaxed/simple;
-	bh=tKe39hpMYxZ66TPljkbq2DpeIkR0YpIH8Yyuw2QRc/0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=QcWgQ6aMKyru2IntWGPOsJ1YA2CZtfY1RfpCKY6j6mJXi1MVvzttiHI8NmPhbideovemqyHoDHbGQWMpGsKAHjky+TE7IHnJQGasp4sicngnaUSQAphXqJfuh3xbYYvbYhSKTs0qjn5/TsXRESk+CixoO8IYtDU8BaTSaeSJDC4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Pg37fU62; arc=none smtp.client-ip=209.85.216.51
+	s=arc-20240116; t=1748266930; c=relaxed/simple;
+	bh=N3jCi3khROE9TVxPRzpAHw/qGx3uAUp6MOKY3QNCs4M=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=JVTC6gmCYN1PDkwaYWdNh0IDXHOx6MZr+nwmcHkC0+P7dI0RHllXFpOQW85/XOphMxNmI/FfNhXPepyVi/W/nY8hzn2oWIXNV0ZrYT+/i8vC+oHvJGI0InpTggC/lisMmQzZkbSVEeHiW3pyeWb9iw4zzxS3A7POhGkn9RFd/v4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mN2HstQS; arc=none smtp.client-ip=209.85.210.181
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Pg37fU62"
-Received: by mail-pj1-f51.google.com with SMTP id 98e67ed59e1d1-31149f0393dso812355a91.1;
-        Mon, 26 May 2025 04:53:24 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mN2HstQS"
+Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-742c9563fafso1463295b3a.0;
+        Mon, 26 May 2025 06:42:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748260404; x=1748865204; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=371RwblsY76gtSLbLWcDDtjllCtSvyNzkqLXY8Z9aBs=;
-        b=Pg37fU62aopn7BF6LCADsdigReqjdXm01IEOD33JNlRoacS1O0N17Y1nd36KBMGnKl
-         QPcbxarv3cioWxfRooPozMLOwulzLL4HRr52tHDTdHId/9pz/29jHpQ5+4Y97jqLuj6B
-         9MwkKgVUGMKMnwFCePEm9sD/8UsiUoh5i9qiVxdQrMP/OevwnzbFzxgHrjw+F2ef30FW
-         aOjaRZVw3DVY/9S8FPKRByEWiVs6k8y0b6bsGCZWXcHqC3Q/jheqPQ0GZs368TznuPCd
-         9iQOzgF/dNUogFIjrK74MM7s1iAHwwgE8OFmIz8nO+8K3N1Z0a6V2x/rElH9s4tozcOc
-         7eSQ==
+        d=gmail.com; s=20230601; t=1748266929; x=1748871729; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=frQ0f0BJwDjiH9T/6GPovLUqHWLGL0+6wkcrVa4bH0k=;
+        b=mN2HstQSR2AhpcSfn4fg3YSHDDSLzbQJJAK29f/IWKhQg2DrctltXPsNeJe+y6qZ6A
+         y3O0lUaJzdes87oK+x7apoA3vHjaRGTjJhswsmCXO74Dtjsu8jGQCZ+iIfKCvoZPHzia
+         IeFbTSzGwkuCgRA2qX8awdzJ+m/7FXL/GdGXGChi0GdwKId+lZr6lVrVD7q7NUvTmVmJ
+         P953UWiE02L4Rk6+nmNBn6BbejpJpD14fRdVw0okOrr46ecsbioO2y3D13+EHIcXSLc7
+         9E/VBwczEXrPQPXrKa5c2UWF0xC/mz6tDB+NUtM+8eSnjjZHGccgauV7ZPxEkf4Oev5i
+         +l8A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748260404; x=1748865204;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=1e100.net; s=20230601; t=1748266929; x=1748871729;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=371RwblsY76gtSLbLWcDDtjllCtSvyNzkqLXY8Z9aBs=;
-        b=d37M4S7eIHE7L/gCj/HL36freu6nBzqOk53/+/7+mVYmeWCvcz732IjcMZrsatkeRu
-         NnLcEWkmN4mtzz0nRa4pGk5iKdAPiHBVsB+BAykzHWdeyvgQ/XXbO57dHsqGtLdUEzuO
-         5HIRFhnADnHD5+s3dfPQISMJBUPehOHhQ2RyLb1AbB47bJQ+ZVKIW3D1GAgwKdI1uvi5
-         uoqLFAiZH6iF8FqqhHNVW/lsaGyxSCkSl1OoUWrusWeOCcQclU7yadCsvhwV+uvbakkm
-         lDwheHjpxrJz0mH7AH6rKB7OVDalj4zTgGqV5IlutYlygSTwqC+d96m/XtAQNj4osuFG
-         PD0A==
-X-Forwarded-Encrypted: i=1; AJvYcCV09KJSzF9VFoNNSKgIYKomHitmqEchH3q2lFE+17TtjSIRdaoBUPinOV8HJ9kVmJRyggJVfAfYjPvJzYqEny1YSbSm@vger.kernel.org, AJvYcCW9n/PazB5SFwFMUTkh4/yPramYJpJsNChYnN8BydCBTVmSIc8zLGM4V36Pg82guSmwy+O3EGmLK/Ooyps=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxsRZh5+Oc7gwoMUHzOhifdsVuOogjDw4vDAkv2682O79M8JnzP
-	9MNhCMiaIBAdWxae1VdbI4XL0CgPWkP379qzpM0jcbuZV8xcCbVIAgJhqx5ObWfW6G4QlJ+V/mS
-	RXESxrxmgOYPqUcmxv/QFzFlWbuThPUM=
-X-Gm-Gg: ASbGncs7/5X0EK1x9KheFMsO15SjDSgbBDK5Trkz9IshjBYD38rRw9bDEQ3fkX5HSjF
-	z47zTd6w/z+WAV3Ib2zHHiHg+ggTRCAZhIJNd0t+49OpCcmC9evlEfPMfWRh55Y2iM9/NoZquPb
-	f3iz16nitGFXChwGIPbU9jU5vFjrFtllSEko33voCZnR32xg==
-X-Google-Smtp-Source: AGHT+IGES8hD189zVYyWtpyydz601Uwzv0yWfSFjcgHFrJnEFiVlWr4awbyARjVyC0Qmes99zkOgUoalvxOueKUs8vs=
-X-Received: by 2002:a17:90a:d606:b0:310:8d4a:a246 with SMTP id
- 98e67ed59e1d1-3110f333de1mr14062468a91.1.1748260403786; Mon, 26 May 2025
- 04:53:23 -0700 (PDT)
+        bh=frQ0f0BJwDjiH9T/6GPovLUqHWLGL0+6wkcrVa4bH0k=;
+        b=gHIM1JqHj07HBZioHPGTUDJqsvcy/uj158Lce1t/inDnpzEs5Ecgw6kBDEHng57JV+
+         TNyo8YO/XFfApO7q5sTu/+6JMh9Ez6Ri9QVPqyG6SNhPvzzRMJiZG4ffxRejapIr02ch
+         EaeQiJRR1xM/X2vf2abx3SKqbSsbnuwyE/Fngp/oBGK9oLBJDhPQyGyaRceu3IoeQIN2
+         cc0S8er6IjEKBdljjzf1Nuc+lG3fGCIp5FcnPgyXAXXgsj5M1ruBIdXsQXVCDdlK4nch
+         7z2aoknXqeHJRF/w5YTvE2Yz/vtgStK+vinTQ/zdXOAjABDvWozMtAz/TyjzJNlAYNvj
+         DRLg==
+X-Forwarded-Encrypted: i=1; AJvYcCVnGBNj0beZGCs5Eh8J+Y0Z0HMKF3eZprCat2JDwAK3cyL3X9o9AYSNH6Hzp2PPm0FGa2dqMt/ZtCaN4OThN7nvXji9@vger.kernel.org, AJvYcCXzjW8EtSvbdIqGmwHo04XuAQIGl3XypqOtP0+MhsyrNDClXmj8UKL4uE+pn0Lam1pthIZkp5LX5Hc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwTECNIXHAqhBFRcUWbrKJeVfw61dqz28kxUSEIFO9WxkF/ImE7
+	fwgLhfLxeODW/KAsW1VpKxoCKY2ghUjnjOLIcK5L7opEWdxB5qeGHj/c
+X-Gm-Gg: ASbGncu7sTalR1P3pxI+zMzACo30x1Ji5zT+cQ7xx2ditVQ6kc0VnXVnwVlhLC7NEDO
+	KFGF5YBuw9kpTaM4/AkSZ0RHAHkH0uHdz1yyWjZygKcDYB/PJY3UyemmzkWKwmnn170fg304qBi
+	vqvAeReZGXqf1AC+FVP56cPHoASNlHTTKFSo5JhCJ5lVqvMyrPGjpvITThx07C/Eid0I49BDIg/
+	WWfs1cI0anItFIxp59mBCSXpJMKcUiwp7FMugxgJD/vjHoKv2jRChxuMvz6WtTk2N54F4quXcTA
+	JwQEWbY2mA50QhfrZBQm+JyMDYz2TNIkBax5qLSof6lBCdWMWj+dndLl5oe73BCDmj8MQoKUfvh
+	Qf4JA5/9AHCZZxclh3Fs=
+X-Google-Smtp-Source: AGHT+IEQyBevUUoLQg/Z4I8nbFN8HgNhcgvl1vZj+oKXKoJFa4vLR50xWZEaVrPbo0btIVShWkj6yw==
+X-Received: by 2002:a05:6a21:38d:b0:209:ca8b:91f2 with SMTP id adf61e73a8af0-2188c2992cdmr13559656637.19.1748266928668;
+        Mon, 26 May 2025 06:42:08 -0700 (PDT)
+Received: from localhost.localdomain (183178125027.ctinets.com. [183.178.125.27])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b26eb084936sm16872453a12.56.2025.05.26.06.42.02
+        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
+        Mon, 26 May 2025 06:42:08 -0700 (PDT)
+From: Runji Liu <runjiliu.tech@gmail.com>
+To: rostedt@goodmis.org,
+	mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com,
+	corbet@lwn.net
+Cc: linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	Runji Liu <runjiliu.tech@gmail.com>
+Subject: [PATCH] docs: trace: boottime-trace.rst: fix typo
+Date: Mon, 26 May 2025 21:40:46 +0800
+Message-ID: <20250526134046.1042-1-runjiliu.tech@gmail.com>
+X-Mailer: git-send-email 2.47.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250526013731.1198030-1-pantaixi@huaweicloud.com>
-In-Reply-To: <20250526013731.1198030-1-pantaixi@huaweicloud.com>
-From: Jeongjun Park <aha310510@gmail.com>
-Date: Mon, 26 May 2025 20:53:14 +0900
-X-Gm-Features: AX0GCFue50ON86AAW6mPPHdQEVwUBXnvQzLEZz33D0IhBo98NIUPFkuG7CTaGbA
-Message-ID: <CAO9qdTHt2vSRhajEYEsaTJRB8yi_5sjLUq12W=8uKf=DnX6PSA@mail.gmail.com>
-Subject: Re: [PATCH] tracing: Fix compilation warning on arm32
-To: Pan Taixi <pantaixi@huaweicloud.com>
-Cc: pantaixi1@huawei.com, rostedt@goodmis.org, mhiramat@kernel.org, 
-	mathieu.desnoyers@efficios.com, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, yeweihua4@huawei.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-Pan Taixi <pantaixi@huaweicloud.com> wrote:
->
-> On arm32, size_t is defined to be unsigned int, while PAGE_SIZE is
-> unsigned long. This hence triggers a compilation warning as min()
-> asserts the type of two operands to be equal. Casting PAGE_SIZE to size_t
-> solves this issue and works on other target architectures as well.
->
+Replace misspelled "eariler" with "earlier" and drop the stray period
+after "example".
 
-Thanks! I forgot to cast PAGE_SIZE to size_t
+Signed-off-by: Runji Liu <runjiliu.tech@gmail.com>
+---
+ Documentation/trace/boottime-trace.rst | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Reviewed-by: Jeongjun Park <aha310510@gmail.com>
+diff --git a/Documentation/trace/boottime-trace.rst b/Documentation/trace/boottime-trace.rst
+index d594597201fd..3efac10adb36 100644
+--- a/Documentation/trace/boottime-trace.rst
++++ b/Documentation/trace/boottime-trace.rst
+@@ -198,8 +198,8 @@ Most of the subsystems and architecture dependent drivers will be initialized
+ after that (arch_initcall or subsys_initcall). Thus, you can trace those with
+ boot-time tracing.
+ If you want to trace events before core_initcall, you can use the options
+-starting with ``kernel``. Some of them will be enabled eariler than the initcall
+-processing (for example,. ``kernel.ftrace=function`` and ``kernel.trace_event``
++starting with ``kernel``. Some of them will be enabled earlier than the initcall
++processing (for example, ``kernel.ftrace=function`` and ``kernel.trace_event``
+ will start before the initcall.)
+ 
+ 
+-- 
+2.43.0
 
-> Compilation warning details:
->
-> kernel/trace/trace.c: In function 'tracing_splice_read_pipe':
-> ./include/linux/minmax.h:20:28: warning: comparison of distinct pointer types lacks a cast
->   (!!(sizeof((typeof(x) *)1 == (typeof(y) *)1)))
->                             ^
-> ./include/linux/minmax.h:26:4: note: in expansion of macro '__typecheck'
->    (__typecheck(x, y) && __no_side_effects(x, y))
->     ^~~~~~~~~~~
->
-> ...
->
-> kernel/trace/trace.c:6771:8: note: in expansion of macro 'min'
->         min((size_t)trace_seq_used(&iter->seq),
->         ^~~
->
-> Fixes: f5178c41bb43 ("tracing: Fix oob write in trace_seq_to_buffer()")
-> Signed-off-by: Pan Taixi <pantaixi@huaweicloud.com>
-> ---
->  kernel/trace/trace.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-> index 5b8db27fb6ef..766cb3cd254e 100644
-> --- a/kernel/trace/trace.c
-> +++ b/kernel/trace/trace.c
-> @@ -6824,7 +6824,7 @@ static ssize_t tracing_splice_read_pipe(struct file *filp,
->                 ret = trace_seq_to_buffer(&iter->seq,
->                                           page_address(spd.pages[i]),
->                                           min((size_t)trace_seq_used(&iter->seq),
-> -                                                 PAGE_SIZE));
-> +                                                 (size_t)PAGE_SIZE));
->                 if (ret < 0) {
->                         __free_page(spd.pages[i]);
->                         break;
-> --
-> 2.34.1
->
