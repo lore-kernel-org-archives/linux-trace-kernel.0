@@ -1,134 +1,123 @@
-Received: from fanzine2.igalia.com (fanzine2.igalia.com [213.97.179.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8333327454;
-	Mon, 26 May 2025 11:14:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.97.179.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBD971F9F70;
+	Mon, 26 May 2025 11:53:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748258054; cv=none; b=KtJEebJo7U5LmGe0ioPq9grMxeJjFfrgbi8b5RYqpvqyD9i4NG3LmAn/xAcOt2FBs9tq6J+uaxvMfQFb9/CfMXyjxDVOHrMTOLiaUUWIm6BarDMHHb/vGXyUqfOGDW7bKWBMF+84KXWcYwXlNS1rddfQ56k0wle3d4NosrN2+bw=
+	t=1748260406; cv=none; b=mmX3CTpjwm9Wr9YzfOC0DeTWjyFQb/Oj0dQfh1AeuXDEdSetw4WFV8oKRjqCb0YpoEKmvp/1yuQ/IrfBxMFczHYU9OQdGCdiHtD2baVdeunei68sMNiI5WL01QmsJj+9IQ8xd79qJ6zWRJmCjPAxlAcNSESLe35psxAsJDq4RKU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748258054; c=relaxed/simple;
-	bh=hVGhZucvzX5ojlygkfesTT5oBv5VBt6Jo24Z6T3XFmI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=GUhqbOMVN6Ia0uLYWqdAbkF2yDtR1wm0BoUDAoweigvw6oeF/TlcqPYwVAK1abtaixLuQx7u5Oglv+v0IxTF+iHUYCg17REJxwXJlcdIob8Jb8JZTe8e5iYwOea3SouNixi8LK33tzy/2SU1XmxAiA835acCCKZG0Uqw3XMnvK8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=dOgOkcgW; arc=none smtp.client-ip=213.97.179.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
+	s=arc-20240116; t=1748260406; c=relaxed/simple;
+	bh=tKe39hpMYxZ66TPljkbq2DpeIkR0YpIH8Yyuw2QRc/0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=QcWgQ6aMKyru2IntWGPOsJ1YA2CZtfY1RfpCKY6j6mJXi1MVvzttiHI8NmPhbideovemqyHoDHbGQWMpGsKAHjky+TE7IHnJQGasp4sicngnaUSQAphXqJfuh3xbYYvbYhSKTs0qjn5/TsXRESk+CixoO8IYtDU8BaTSaeSJDC4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Pg37fU62; arc=none smtp.client-ip=209.85.216.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="dOgOkcgW"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
-	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=sRNyPwXExErBy/8kJGAzUEFc8FCKqjhWu+hUzGskcX8=; b=dOgOkcgW3891K46lC3h/P8Giqy
-	j5wpFWLFbNsIvtu/CSMhuFpyXc2GMmf/qW7htsdUuVeQHy4WDIcUcklGJ/ViGPPunnUieV9Q4IDtY
-	70vmdgOjsG/48WsDWWmRsgX30TeD25TnjOsUCjtkWJ8k3jGqeGKxRcEtaaR8bnvQ6O//TGBBuqxEm
-	T9eJVseaQnlwEULmm3DUUsYFcCO4JUm3QzyGMhJ7MbX7DRjfIxy6Nuz+t721q3JL8uYv2FRdti1TE
-	iXAOOvdxAotvmC56UVFnZM0j6AKJPYx3gSPt4AVRPNX7xCbTzeO3zT+lJmLdb3I0e/ttaelmWVQne
-	f2AjMJBg==;
-Received: from [223.233.79.88] (helo=[192.168.1.12])
-	by fanzine2.igalia.com with esmtpsa 
-	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
-	id 1uJVmL-00DHZz-KJ; Mon, 26 May 2025 13:14:01 +0200
-Message-ID: <1bc43d6c-2650-0670-8c2a-25e8d36cfb7c@igalia.com>
-Date: Mon, 26 May 2025 16:43:52 +0530
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Pg37fU62"
+Received: by mail-pj1-f51.google.com with SMTP id 98e67ed59e1d1-31149f0393dso812355a91.1;
+        Mon, 26 May 2025 04:53:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748260404; x=1748865204; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=371RwblsY76gtSLbLWcDDtjllCtSvyNzkqLXY8Z9aBs=;
+        b=Pg37fU62aopn7BF6LCADsdigReqjdXm01IEOD33JNlRoacS1O0N17Y1nd36KBMGnKl
+         QPcbxarv3cioWxfRooPozMLOwulzLL4HRr52tHDTdHId/9pz/29jHpQ5+4Y97jqLuj6B
+         9MwkKgVUGMKMnwFCePEm9sD/8UsiUoh5i9qiVxdQrMP/OevwnzbFzxgHrjw+F2ef30FW
+         aOjaRZVw3DVY/9S8FPKRByEWiVs6k8y0b6bsGCZWXcHqC3Q/jheqPQ0GZs368TznuPCd
+         9iQOzgF/dNUogFIjrK74MM7s1iAHwwgE8OFmIz8nO+8K3N1Z0a6V2x/rElH9s4tozcOc
+         7eSQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748260404; x=1748865204;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=371RwblsY76gtSLbLWcDDtjllCtSvyNzkqLXY8Z9aBs=;
+        b=d37M4S7eIHE7L/gCj/HL36freu6nBzqOk53/+/7+mVYmeWCvcz732IjcMZrsatkeRu
+         NnLcEWkmN4mtzz0nRa4pGk5iKdAPiHBVsB+BAykzHWdeyvgQ/XXbO57dHsqGtLdUEzuO
+         5HIRFhnADnHD5+s3dfPQISMJBUPehOHhQ2RyLb1AbB47bJQ+ZVKIW3D1GAgwKdI1uvi5
+         uoqLFAiZH6iF8FqqhHNVW/lsaGyxSCkSl1OoUWrusWeOCcQclU7yadCsvhwV+uvbakkm
+         lDwheHjpxrJz0mH7AH6rKB7OVDalj4zTgGqV5IlutYlygSTwqC+d96m/XtAQNj4osuFG
+         PD0A==
+X-Forwarded-Encrypted: i=1; AJvYcCV09KJSzF9VFoNNSKgIYKomHitmqEchH3q2lFE+17TtjSIRdaoBUPinOV8HJ9kVmJRyggJVfAfYjPvJzYqEny1YSbSm@vger.kernel.org, AJvYcCW9n/PazB5SFwFMUTkh4/yPramYJpJsNChYnN8BydCBTVmSIc8zLGM4V36Pg82guSmwy+O3EGmLK/Ooyps=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxsRZh5+Oc7gwoMUHzOhifdsVuOogjDw4vDAkv2682O79M8JnzP
+	9MNhCMiaIBAdWxae1VdbI4XL0CgPWkP379qzpM0jcbuZV8xcCbVIAgJhqx5ObWfW6G4QlJ+V/mS
+	RXESxrxmgOYPqUcmxv/QFzFlWbuThPUM=
+X-Gm-Gg: ASbGncs7/5X0EK1x9KheFMsO15SjDSgbBDK5Trkz9IshjBYD38rRw9bDEQ3fkX5HSjF
+	z47zTd6w/z+WAV3Ib2zHHiHg+ggTRCAZhIJNd0t+49OpCcmC9evlEfPMfWRh55Y2iM9/NoZquPb
+	f3iz16nitGFXChwGIPbU9jU5vFjrFtllSEko33voCZnR32xg==
+X-Google-Smtp-Source: AGHT+IGES8hD189zVYyWtpyydz601Uwzv0yWfSFjcgHFrJnEFiVlWr4awbyARjVyC0Qmes99zkOgUoalvxOueKUs8vs=
+X-Received: by 2002:a17:90a:d606:b0:310:8d4a:a246 with SMTP id
+ 98e67ed59e1d1-3110f333de1mr14062468a91.1.1748260403786; Mon, 26 May 2025
+ 04:53:23 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.5.0
-Subject: Re: [PATCH v4 3/3] exec: Add support for 64 byte 'tsk->comm_ext'
-Content-Language: en-US
-To: Kees Cook <kees@kernel.org>
-Cc: Bhupesh <bhupesh@igalia.com>, akpm@linux-foundation.org,
- kernel-dev@igalia.com, linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
- linux-perf-users@vger.kernel.org, linux-fsdevel@vger.kernel.org,
- linux-mm@kvack.org, oliver.sang@intel.com, lkp@intel.com,
- laoar.shao@gmail.com, pmladek@suse.com, rostedt@goodmis.org,
- mathieu.desnoyers@efficios.com, arnaldo.melo@gmail.com,
- alexei.starovoitov@gmail.com, andrii.nakryiko@gmail.com,
- mirq-linux@rere.qmqm.pl, peterz@infradead.org, willy@infradead.org,
- david@redhat.com, viro@zeniv.linux.org.uk, ebiederm@xmission.com,
- brauner@kernel.org, jack@suse.cz, mingo@redhat.com, juri.lelli@redhat.com,
- bsegall@google.com, mgorman@suse.de, vschneid@redhat.com,
- linux-trace-kernel@vger.kernel.org
-References: <20250521062337.53262-1-bhupesh@igalia.com>
- <20250521062337.53262-4-bhupesh@igalia.com>
- <202505222041.B639D482FB@keescook>
- <a7c323fe-6d11-4a21-a203-bd60acbfd831@igalia.com>
- <202505231346.52F291C54@keescook>
-From: Bhupesh Sharma <bhsharma@igalia.com>
-In-Reply-To: <202505231346.52F291C54@keescook>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+References: <20250526013731.1198030-1-pantaixi@huaweicloud.com>
+In-Reply-To: <20250526013731.1198030-1-pantaixi@huaweicloud.com>
+From: Jeongjun Park <aha310510@gmail.com>
+Date: Mon, 26 May 2025 20:53:14 +0900
+X-Gm-Features: AX0GCFue50ON86AAW6mPPHdQEVwUBXnvQzLEZz33D0IhBo98NIUPFkuG7CTaGbA
+Message-ID: <CAO9qdTHt2vSRhajEYEsaTJRB8yi_5sjLUq12W=8uKf=DnX6PSA@mail.gmail.com>
+Subject: Re: [PATCH] tracing: Fix compilation warning on arm32
+To: Pan Taixi <pantaixi@huaweicloud.com>
+Cc: pantaixi1@huawei.com, rostedt@goodmis.org, mhiramat@kernel.org, 
+	mathieu.desnoyers@efficios.com, linux-kernel@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, yeweihua4@huawei.com
+Content-Type: text/plain; charset="UTF-8"
 
-Hi Kees,
-
-On 5/24/25 2:25 AM, Kees Cook wrote:
-> On Fri, May 23, 2025 at 06:01:41PM +0530, Bhupesh Sharma wrote:
->> 2. %s usage: I checked this at multiple places and can confirm that %s usage
->> to print out 'tsk->comm' (as a string), get the longer
->>      new "extended comm".
-> As an example of why I don't like this union is that this is now lying
-> to the compiler. e.g. a %s of an object with a known size (sizeof(comm))
-> may now run off the end of comm without finding a %NUL character... this
-> is "safe" in the sense that the "extended comm" is %NUL terminated, but
-> it makes the string length ambiguous for the compiler (and any
-> associated security hardening).
-
-Right.
-
+Pan Taixi <pantaixi@huaweicloud.com> wrote:
 >
->> 3. users who do 'sizeof(->comm)' will continue to get the old value because
->> of the union.
-> Right -- this is exactly where I think it can get very very wrong,
-> leaving things unterminated.
->
->> The problem with having two separate comms: tsk->comm and tsk->ext_comm,
->> instead of a union is two fold:
->> (a). If we keep two separate statically allocated comms: tsk->comm and
->> tsk->ext_comm in struct task_struct, we need to basically keep supporting
->> backward compatibility / ABI via tsk->comm and ask new user-land users to
->> move to tsk->ext_comm.
->>
->> (b). If we keep one statically allocated comm: tsk->comm and one dynamically allocated tsk->ext_comm in struct task_struct, then we have the problem of allocating the tsk->ext_comm which _may_ be in the exec()  hot path.
->>
->> I think the discussion between Linus and Yafang (see [1]), was more towards avoiding the approach in 3(a).
->>
->> Also we discussed the 3(b) approach, during the review of v2 of this series, where there was a apprehensions around: adding another field to store the task name and allocating tsk->ext_comm dynamically in the exec() hot path (see [2]).
-> Right -- I agree we need them statically allocated. But I think a union
-> is going to be really error-prone.
->
-> How about this: rename task->comm to something else (task->comm_str?),
-> increase its size and then add ABI-keeping wrappers for everything that
-> _must_ have the old length.
->
-> Doing this guarantees we won't miss anything (since "comm" got renamed),
-> and during the refactoring all the places where the old length is required
-> will be glaringly obvious. (i.e. it will be harder to make mistakes
-> about leaving things unterminated.)
+> On arm32, size_t is defined to be unsigned int, while PAGE_SIZE is
+> unsigned long. This hence triggers a compilation warning as min()
+> asserts the type of two operands to be equal. Casting PAGE_SIZE to size_t
+> solves this issue and works on other target architectures as well.
 >
 
-Ok, I got your point. Let me explore then how best a ABI-keeping wrapper 
-can be introduced.
-I am thinking of something like:
+Thanks! I forgot to cast PAGE_SIZE to size_t
 
-abi_wrapper_get_task_comm {
+Reviewed-by: Jeongjun Park <aha310510@gmail.com>
 
-     if (requested_comm_length <= 16)
-         return 16byte comm with NUL terminator; // old comm (16-bytes)
-     else
-         return 64byte comm with NUL terminator; // extended comm (64-bytes)
-     ....
-}
-
-Please let me know if this looks better. Accordingly I will start with 
-v5 changes.
-
-Thanks,
-Bhupesh
+> Compilation warning details:
+>
+> kernel/trace/trace.c: In function 'tracing_splice_read_pipe':
+> ./include/linux/minmax.h:20:28: warning: comparison of distinct pointer types lacks a cast
+>   (!!(sizeof((typeof(x) *)1 == (typeof(y) *)1)))
+>                             ^
+> ./include/linux/minmax.h:26:4: note: in expansion of macro '__typecheck'
+>    (__typecheck(x, y) && __no_side_effects(x, y))
+>     ^~~~~~~~~~~
+>
+> ...
+>
+> kernel/trace/trace.c:6771:8: note: in expansion of macro 'min'
+>         min((size_t)trace_seq_used(&iter->seq),
+>         ^~~
+>
+> Fixes: f5178c41bb43 ("tracing: Fix oob write in trace_seq_to_buffer()")
+> Signed-off-by: Pan Taixi <pantaixi@huaweicloud.com>
+> ---
+>  kernel/trace/trace.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+> index 5b8db27fb6ef..766cb3cd254e 100644
+> --- a/kernel/trace/trace.c
+> +++ b/kernel/trace/trace.c
+> @@ -6824,7 +6824,7 @@ static ssize_t tracing_splice_read_pipe(struct file *filp,
+>                 ret = trace_seq_to_buffer(&iter->seq,
+>                                           page_address(spd.pages[i]),
+>                                           min((size_t)trace_seq_used(&iter->seq),
+> -                                                 PAGE_SIZE));
+> +                                                 (size_t)PAGE_SIZE));
+>                 if (ret < 0) {
+>                         __free_page(spd.pages[i]);
+>                         break;
+> --
+> 2.34.1
+>
