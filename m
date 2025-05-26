@@ -1,183 +1,182 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FA4C19CC3D;
-	Sun, 25 May 2025 21:53:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAA86249EB;
+	Mon, 26 May 2025 01:33:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748210015; cv=none; b=mSEPmm4Jjlnlo1Tqrphlq8aCTHWadcFVyjaKeQu+hV7EtLJS4KkUMQi/+DGphSacqnVcOPEuYWuMGnTXsuOs2qreM/JRz8eFq0GIisjqLq/Sw9OkJJ/ybdUzs5SQjEXC/LbkDo32/KBji46736+ERETKDqby/qE4F73LwsmWsSs=
+	t=1748223225; cv=none; b=ALBxxEK6VxZwdsdA0h8rmbebWOrOdHWivnCYd9OtbS/eSi7HjyjHChPZwvjqVNq26Sq15GlKTZhmfpDIHz6QxgkrE47/TMyEbxplGgFjNZEifGLfiTJ2kGb40Tz9I+342qs7KR6CU9CwJ9ur6m4tkuAKl71Ejh0eHLjiK7L9HR0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748210015; c=relaxed/simple;
-	bh=y5rT2ewj429hL1YZNClBKAuoapp2CjjiHYqsoHYBDa8=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=ivfXgqeQQawE+Act3qu6cJPHXlg2C9Rr1WGWgN2cmDTcH+gUfTWq62Qp8eMh/+ZnjW7AXEjyT46xzM9pNAuFWqcxakVkLnSozkfH4KzYT5OBLjeHBpSkk+9kYid/0nB+RzdPGzEQq3Gr4+SkcwfTCUC29R/FajMtoLLjIhKMqyQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ceT//yHx; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ceT//yHx"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1748210014; x=1779746014;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version:content-id;
-  bh=y5rT2ewj429hL1YZNClBKAuoapp2CjjiHYqsoHYBDa8=;
-  b=ceT//yHx7F0JqM4+bzORHTA3Hi0DK9vzfTD1ChrJRaNLXIhJqaQrPXuV
-   jeTpNhnEGDPaw8H78PwGHktNfpPl6dAdZnMrVh6xm1h0OeNOrtjXYgAQP
-   HYJvVZ8LewX/ce74CBC3V2xjHqrvNUpVDNL6sJy8F3rmaul/SA3qqMHai
-   2894vABY/4tUZ5uOvuNyUXGwk9+lY+VakC1LK4rQ/xwTjuuYThHsIEazu
-   MYeuZPolTV3eA+ejC3fihWhKEDYqtSrkTEPhz6SgE0HplDA2/xcMU0C6H
-   ve00bhfgJ3wnSFXHsbgX+rFdoGEUqCKzyEaz8CigT+qrPQKOHfw4ry55i
-   A==;
-X-CSE-ConnectionGUID: HQGD0TEPSUq8fOLusNMwCQ==
-X-CSE-MsgGUID: NdAAS2XBR6u4/DLqkNH5Dg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11444"; a="60435792"
-X-IronPort-AV: E=Sophos;i="6.15,314,1739865600"; 
-   d="scan'208";a="60435792"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 May 2025 14:53:32 -0700
-X-CSE-ConnectionGUID: srkUUk2LSiS9AVRoLfAP+A==
-X-CSE-MsgGUID: abYToWTKQVe6L6ZrKUUaNQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,314,1739865600"; 
-   d="scan'208";a="141991367"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.99])
-  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 May 2025 14:53:16 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Mon, 26 May 2025 00:53:13 +0300 (EEST)
-To: Kees Cook <kees@kernel.org>
-cc: Arnd Bergmann <arnd@arndb.de>, Thomas Gleixner <tglx@linutronix.de>, 
-    Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-    Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-    "H. Peter Anvin" <hpa@zytor.com>, Paolo Bonzini <pbonzini@redhat.com>, 
-    Vitaly Kuznetsov <vkuznets@redhat.com>, 
-    Henrique de Moraes Holschuh <hmh@hmh.eng.br>, 
-    Hans de Goede <hdegoede@redhat.com>, 
-    "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>, 
-    Masami Hiramatsu <mhiramat@kernel.org>, Ard Biesheuvel <ardb@kernel.org>, 
-    Mike Rapoport <rppt@kernel.org>, 
-    Michal Wilczynski <michal.wilczynski@intel.com>, 
-    Juergen Gross <jgross@suse.com>, 
-    Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
-    "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>, 
-    Roger Pau Monne <roger.pau@citrix.com>, 
-    David Woodhouse <dwmw@amazon.co.uk>, Usama Arif <usama.arif@bytedance.com>, 
-    "Guilherme G. Piccoli" <gpiccoli@igalia.com>, 
-    Thomas Huth <thuth@redhat.com>, Brian Gerst <brgerst@gmail.com>, 
-    kvm@vger.kernel.org, ibm-acpi-devel@lists.sourceforge.net, 
-    platform-driver-x86@vger.kernel.org, linux-acpi@vger.kernel.org, 
-    linux-trace-kernel@vger.kernel.org, linux-efi@vger.kernel.org, 
-    linux-mm@kvack.org, "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
-    Christoph Hellwig <hch@lst.de>, Marco Elver <elver@google.com>, 
-    Andrey Konovalov <andreyknvl@gmail.com>, 
-    Andrey Ryabinin <ryabinin.a.a@gmail.com>, 
-    Masahiro Yamada <masahiroy@kernel.org>, 
-    Nathan Chancellor <nathan@kernel.org>, 
-    Nicolas Schier <nicolas.schier@linux.dev>, 
-    Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, 
-    Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, 
-    LKML <linux-kernel@vger.kernel.org>, kasan-dev@googlegroups.com, 
-    linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-    kvmarm@lists.linux.dev, linux-riscv@lists.infradead.org, 
-    linux-s390@vger.kernel.org, linux-hardening@vger.kernel.org, 
-    linux-kbuild@vger.kernel.org, linux-security-module@vger.kernel.org, 
-    linux-kselftest@vger.kernel.org, sparclinux@vger.kernel.org, 
-    llvm@lists.linux.dev
-Subject: Re: [PATCH v2 04/14] x86: Handle KCOV __init vs inline mismatches
-In-Reply-To: <20250523043935.2009972-4-kees@kernel.org>
-Message-ID: <ba4f4fd0-1bcf-3d84-c08e-ba0dd040af16@linux.intel.com>
-References: <20250523043251.it.550-kees@kernel.org> <20250523043935.2009972-4-kees@kernel.org>
+	s=arc-20240116; t=1748223225; c=relaxed/simple;
+	bh=mLOejERJ3exTBvss/m5cpLwsxlTyx6iIqA2MxkKkNEM=;
+	h=Subject:To:References:Cc:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=Y+2hYm49QlxXZxMC7pMEgftcfcPQUoknA3h48XmvS/fAumT8/w3matiM9bozVWGzpRvWEeGPie1gyZOQSpMpd+3V4uAJylyHV0uZ8rNU3ra9/as31l0qrnPqvZcDLnNrwczXMduZ1SuuyaFb8P4KQDXaEPQIOYiMNIVQTwcjxCM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.216])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4b5JDt6Ky1z4f3jq5;
+	Mon, 26 May 2025 09:33:18 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.128])
+	by mail.maildlp.com (Postfix) with ESMTP id E67AA1A196B;
+	Mon, 26 May 2025 09:33:38 +0800 (CST)
+Received: from [10.174.178.185] (unknown [10.174.178.185])
+	by APP4 (Coremail) with SMTP id gCh0CgBXu1_xxDNofXQbNg--.18534S3;
+	Mon, 26 May 2025 09:33:38 +0800 (CST)
+Subject: Re: [PATCH 1/2] ftrace: fix UAF when lookup kallsym after ftrace
+ disabled
+To: Steven Rostedt <rostedt@goodmis.org>
+References: <20250523083945.3390587-1-yebin@huaweicloud.com>
+ <20250523083945.3390587-2-yebin@huaweicloud.com>
+ <20250523135452.626d8dcd@gandalf.local.home>
+Cc: mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
+ mark.rutland@arm.com, linux-trace-kernel@vger.kernel.org,
+ linux-kernel@vger.kernel.org, yebin10@huawei.com
+From: yebin <yebin@huaweicloud.com>
+Message-ID: <6833C4F1.3030300@huaweicloud.com>
+Date: Mon, 26 May 2025 09:33:37 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:38.0) Gecko/20100101
+ Thunderbird/38.1.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; BOUNDARY="8323328-965883235-1748206555=:933"
-Content-ID: <8656ab6c-8f8d-81d1-5dfa-740e7f21544c@linux.intel.com>
-
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
-
---8323328-965883235-1748206555=:933
-Content-Type: text/plain; CHARSET=ISO-8859-15
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Content-ID: <fa62886f-fdfb-f2a5-84db-475ce3a46169@linux.intel.com>
-
-On Thu, 22 May 2025, Kees Cook wrote:
-
-> When KCOV is enabled all functions get instrumented, unless the
-> __no_sanitize_coverage attribute is used. To prepare for
-> __no_sanitize_coverage being applied to __init functions, we have to
-> handle differences in how GCC's inline optimizations get resolved. For
-> x86 this means forcing several functions to be inline with
-> __always_inline.
->=20
-> Signed-off-by: Kees Cook <kees@kernel.org>
-> ---
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Cc: Borislav Petkov <bp@alien8.de>
-> Cc: Dave Hansen <dave.hansen@linux.intel.com>
-> Cc: <x86@kernel.org>
-> Cc: "H. Peter Anvin" <hpa@zytor.com>
-> Cc: Paolo Bonzini <pbonzini@redhat.com>
-> Cc: Vitaly Kuznetsov <vkuznets@redhat.com>
-> Cc: Henrique de Moraes Holschuh <hmh@hmh.eng.br>
-> Cc: Hans de Goede <hdegoede@redhat.com>
-> Cc: "Ilpo J=E4rvinen" <ilpo.jarvinen@linux.intel.com>
-> Cc: "Rafael J. Wysocki" <rafael@kernel.org>
-> Cc: Len Brown <lenb@kernel.org>
-> Cc: Masami Hiramatsu <mhiramat@kernel.org>
-> Cc: Ard Biesheuvel <ardb@kernel.org>
-> Cc: Mike Rapoport <rppt@kernel.org>
-> Cc: Michal Wilczynski <michal.wilczynski@intel.com>
-> Cc: Juergen Gross <jgross@suse.com>
-> Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> Cc: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-> Cc: Roger Pau Monne <roger.pau@citrix.com>
-> Cc: David Woodhouse <dwmw@amazon.co.uk>
-> Cc: Usama Arif <usama.arif@bytedance.com>
-> Cc: "Guilherme G. Piccoli" <gpiccoli@igalia.com>
-> Cc: Thomas Huth <thuth@redhat.com>
-> Cc: Brian Gerst <brgerst@gmail.com>
-> Cc: <kvm@vger.kernel.org>
-> Cc: <ibm-acpi-devel@lists.sourceforge.net>
-> Cc: <platform-driver-x86@vger.kernel.org>
-> Cc: <linux-acpi@vger.kernel.org>
-> Cc: <linux-trace-kernel@vger.kernel.org>
-> Cc: <linux-efi@vger.kernel.org>
-> Cc: <linux-mm@kvack.org>
-> ---
-
-> diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/=
-thinkpad_acpi.c
-> index e7350c9fa3aa..0518d5b1f4ec 100644
-> --- a/drivers/platform/x86/thinkpad_acpi.c
-> +++ b/drivers/platform/x86/thinkpad_acpi.c
-> @@ -559,12 +559,12 @@ static unsigned long __init tpacpi_check_quirks(
->  =09return 0;
->  }
-> =20
-> -static inline bool __pure __init tpacpi_is_lenovo(void)
-> +static __always_inline bool __pure tpacpi_is_lenovo(void)
->  {
->  =09return thinkpad_id.vendor =3D=3D PCI_VENDOR_ID_LENOVO;
->  }
-> =20
-> -static inline bool __pure __init tpacpi_is_ibm(void)
-> +static __always_inline bool __pure tpacpi_is_ibm(void)
->  {
->  =09return thinkpad_id.vendor =3D=3D PCI_VENDOR_ID_IBM;
->  }
-
-Hi Kees,
-
-What's your plan on upstreaming route/timeline for this? I'd prefer to=20
-retain full control over this file as we were planning on some=20
-reorganization of files into lenovo/ subdir.
+In-Reply-To: <20250523135452.626d8dcd@gandalf.local.home>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:gCh0CgBXu1_xxDNofXQbNg--.18534S3
+X-Coremail-Antispam: 1UD129KBjvJXoWxWFW3Xw43Ar43AF4DuFWxJFb_yoWrGw45pF
+	WftFWqya18ZF4qk3Zruw48ury7J3yUJrW8GFs5GrWSyws8Ary0grs2va1DZFy8Jw13GrWS
+	vF4jvrnxWrWDZFJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUkEb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7Cj
+	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
+	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
+	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
+	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxk0xIA0c2IEe2xFo4CEbIxvr21lc7CjxVAaw2AF
+	wI0_JF0_Jw1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4
+	xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1D
+	MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I
+	0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWU
+	JVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07UK2N
+	tUUUUU=
+X-CM-SenderInfo: p1hex046kxt4xhlfz01xgou0bp/
 
 
---=20
- i.
---8323328-965883235-1748206555=:933--
+
+On 2025/5/24 1:54, Steven Rostedt wrote:
+> On Fri, 23 May 2025 16:39:44 +0800
+> Ye Bin <yebin@huaweicloud.com> wrote:
+>
+>> Above issue may happens as follow:
+>> (1) Add kprobe trace point;
+>> (2) insmod test.ko;
+>> (3) Trigger ftrace disabled;
+>
+> This is the bug. How was ftrace_disabled triggered? That should never
+> happen. Was test.ko buggy?
+>
+Yes. The following warning is reported during concurrent registration 
+between register_kprobe() and live patch, causing ftrace_disabled.
+
+WARNING: CPU: 56 PID: 2769 at kernel/trace/ftrace.c:2612 
+ftrace_modify_all_code+0x116/0x140
+>> (4) rmmod test.ko;
+>> (5) cat /proc/kallsyms; --> Will trigger UAF as test.ko already removed;
+>> ftrace_mod_get_kallsym()
+>> ...
+>> strscpy(module_name, mod_map->mod->name, MODULE_NAME_LEN);
+>> ...
+>>
+>> As ftrace_release_mod() judge 'ftrace_disabled' is true will return, and
+>> 'mod_map' will remaining in ftrace_mod_maps. 'mod_map' has no chance to
+>> release. Therefore, this also causes residual resources to accumulate.
+>> To solve above issue, unconditionally clean up'mod_map'.
+>>
+>> Fixes: aba4b5c22cba ("ftrace: Save module init functions kallsyms symbols for tracing")
+>
+> This is *not* a fix. ftrace_disabled gets set when a bug is triggered. If
+> this prevents ftrace_disabled from getting set, then it would be a fix. But
+> if something else happens when ftrace_disabled is set, it just fixes a
+> symptom and not the bug itself.
+>
+There are multiple causes for triggering ftrace_disabled. I agree that 
+aba4b5c22cba is not faulty. However, the incorporation of this patch 
+will cause problems due to triggering ftrace_disabled. The generation of 
+ftrace_disabled is beyond our control. This is related to the user. What 
+we can do is even if there are no additional derivative problems.
+>
+>> Signed-off-by: Ye Bin <yebin10@huawei.com>
+>> ---
+>>   kernel/trace/ftrace.c | 3 ---
+>>   1 file changed, 3 deletions(-)
+>>
+>> diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+>> index a3d4dfad0cbc..ff5d9d73a4a7 100644
+>> --- a/kernel/trace/ftrace.c
+>> +++ b/kernel/trace/ftrace.c
+>> @@ -7438,9 +7438,6 @@ void ftrace_release_mod(struct module *mod)
+>>
+>>   	mutex_lock(&ftrace_lock);
+>>
+>> -	if (ftrace_disabled)
+>> -		goto out_unlock;
+>> -
+>
+> Here you delete the check, and the next patch you have:
+>
+> +	if (ftrace_disabled || (mod && !mod->num_ftrace_callsites)) {
+> +		mutex_unlock(&ftrace_lock);
+> +		return;
+> +	}
+> +
+>
+The second patch I added judgment when initializing 'mod_map' in 
+ftrace_free_mem(). The first patch removes the judgment when 
+ftrace_release_mod() releases'mod_map'. The logic modified by the two 
+patches is isolated.
+> Why the two patches where the second patch just adds back the check and
+> then adds some more stuff around it. This should be a single patch.
+>
+> Also, why not just keep the goto unlock, that has:
+>
+The ftrace_free_mem() function itself looks a little strange. It is easy 
+to misunderstand that it is a release function, but it is actually an 
+initialization function. My two patches did not modify the same function.
+>   out_unlock:
+> 	mutex_unlock(&ftrace_lock);
+>
+> 	/* Need to synchronize with ftrace_location_range() */
+> 	if (tmp_page)
+> 		synchronize_rcu();
+> 	for (pg = tmp_page; pg; pg = tmp_page) {
+>
+> 		/* Needs to be called outside of ftrace_lock */
+> 		clear_mod_from_hashes(pg);
+>
+> 		if (pg->records) {
+> 			free_pages((unsigned long)pg->records, pg->order);
+> 			ftrace_number_of_pages -= 1 << pg->order;
+> 		}
+> 		tmp_page = pg->next;
+> 		kfree(pg);
+> 		ftrace_number_of_groups--;
+> 	}
+> }
+>
+> And tmp_page is set to NULL before that jump, so the if and for loop will
+> both be nops.
+>
+> Why all this extra churn?
+>
+> -- Steve
+>
+>
+>>   	list_for_each_entry_safe(mod_map, n, &ftrace_mod_maps, list) {
+>>   		if (mod_map->mod == mod) {
+>>   			list_del_rcu(&mod_map->list);
+>
+
