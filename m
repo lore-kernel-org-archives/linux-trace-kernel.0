@@ -1,100 +1,95 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FAABD531;
-	Tue, 27 May 2025 23:14:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4A4F4A04;
+	Tue, 27 May 2025 23:40:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748387666; cv=none; b=Fin9G4+ftwZKg+wTTH2HDK0ZlgyjKejeBsZa8ML4p7w3DqsnZ7Dpw9XX/KWyN5QImz0OrphEyubHKfB1kAvILvhZ5iBTE5gmnXCt4U1nU1ClfEDa5zNwJXUjV5l2zBzbua8HF1C+4HI7bVZtCxB5vDgM5djHzJpuZqWVSLraZx0=
+	t=1748389242; cv=none; b=hJ0gbm8afY8IEJpTyeop6wRyflPzMzwfyd5WcSzXPJ2YahoXEt2icTW6+L65+6hHPm9NBz4VAbo7Nj1xWzJutebGPL2KzcmOB/wCqkWdc9lfPibp5W9ZL/ZA+9g3xPJdCMmelMKuo1phsr0qiHZ6RPSnmToHADxGg1i0m1Kacp0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748387666; c=relaxed/simple;
-	bh=MsKGKfos+sWS/J61Jv507wPdYXiHp7tgmGBKaw82dqw=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=WAX34sGmU1BkjSxwRALmG2u28z1WVHQuqGR/Xp6W2lgcuo4HYzvO/pbMMvhsRxtE36pnp1s4QgzznbwobvauTs15wt2U/0PpmlxajajNIISgoa3LAD041bPWTcZ1Gg0XMf7V73c+NNt4i9KmoDmOCWA6as0p3Www9uyYf/UMh0A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 37188C4CEE9;
-	Tue, 27 May 2025 23:14:25 +0000 (UTC)
-Date: Tue, 27 May 2025 19:15:23 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Rafal Bilkowski <rafalbilkowski@gmail.com>
-Cc: mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH] trace: Protect trace_iter_expand_format against
- overflow and ZERO_SIZE_PTR
-Message-ID: <20250527191523.15453dae@gandalf.local.home>
-In-Reply-To: <20250519070240.256200-1-rafalbilkowski@gmail.com>
-References: <20250519070240.256200-1-rafalbilkowski@gmail.com>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1748389242; c=relaxed/simple;
+	bh=nk1C4i86GH8zQGfebFsOhrIjArGpj9Hi9dwiXgsZumo=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=O8qqyOvL5P1qwIkjlBCEQ1p10P6cKG+4y7HE8WfpQ0u+dvE/BSx73Hm8HTsh0sMcGe0yK5OwftfF5pfA3ZTLSQbU/QzKiowWju/FyKBNRHtP5GJ3wN0F82PlPQMwdJxtaUdyrV7DvW1OmDGaqwP8RkLabtFW1GRqGvExdin30U0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KPQ0Z5xo; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KPQ0Z5xo"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 18609C4CEE9;
+	Tue, 27 May 2025 23:40:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748389241;
+	bh=nk1C4i86GH8zQGfebFsOhrIjArGpj9Hi9dwiXgsZumo=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=KPQ0Z5xowyWWNDyDJJCRqDi9EquNvbl6yxO5OsWcwzJa2bdzDs127B7mZcXcBYUyq
+	 OnBAbtgaTnvnjw5iOzOPgLTzXxm9d0rM8uDau6GTYtvzUqUUpjLb14AZXKLGGkMJ20
+	 p0+FA6hvVL/ExhuoNWLrhGd0FBu7GWwl6AUf4h5FhytOwJ4NYkjArsACCOEziQ0stG
+	 AvglWd+PgK30vlt1Kg9exFUkHZVNr09mmshcC6xbxWGUkbXJKtRdqZBLGLe5SWNUXS
+	 9ZZziqEWVNBuhY2XO3A1AnI5yL9uYEF4mGYTKQ1tIqthBQ5N925tWZM5iGQzqHxPnn
+	 amtkNjugx5kzA==
+Date: Wed, 28 May 2025 08:40:38 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Runji Liu <runjiliu.tech@gmail.com>, mhiramat@kernel.org,
+ mathieu.desnoyers@efficios.com, corbet@lwn.net,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ linux-doc@vger.kernel.org
+Subject: Re: [PATCH] docs: trace: boottime-trace.rst: fix typo
+Message-Id: <20250528084038.e9d91c6717af6163ccf46849@kernel.org>
+In-Reply-To: <20250527100145.1e974c21@gandalf.local.home>
+References: <20250526134046.1042-1-runjiliu.tech@gmail.com>
+	<20250527100145.1e974c21@gandalf.local.home>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
+Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Mon, 19 May 2025 09:02:40 +0200
-Rafal Bilkowski <rafalbilkowski@gmail.com> wrote:
+On Tue, 27 May 2025 10:01:45 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-> Add a check in trace_iter_expand_format to prevent integer overflow when
-> calculating the new format buffer size, and to handle the case where krealloc
-> returns ZERO_SIZE_PTR. This improves robustness and prevents potential
-> memory corruption or kernel crashes.
+> On Mon, 26 May 2025 21:40:46 +0800
+> Runji Liu <runjiliu.tech@gmail.com> wrote:
+> 
+> > Replace misspelled "eariler" with "earlier" and drop the stray period
+> > after "example".
+> > 
+> > Signed-off-by: Runji Liu <runjiliu.tech@gmail.com>
+> 
+> Acked-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 
-What exactly is this trying to protect?
+This looks good to me. Thanks!
+
+Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+
 
 > 
-> Signed-off-by: Rafal Bilkowski <rafalbilkowski@gmail.com>
-> ---
->  kernel/trace/trace.c        | 4 ++++
->  kernel/trace/trace_output.c | 2 ++
->  2 files changed, 6 insertions(+)
+> -- Steve
 > 
-> diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-> index 5b8db27fb6ef..637bd1ff9325 100644
-> --- a/kernel/trace/trace.c
-> +++ b/kernel/trace/trace.c
-> @@ -3596,6 +3596,10 @@ char *trace_iter_expand_format(struct trace_iterator *iter)
->  	if (!iter->tr || iter->fmt == static_fmt_buf)
->  		return NULL;
->  
-> +	/* Protection against overflow and ZERO_SIZE_PTR returned from krealloc */
-> +	if (check_add_overflow(iter->fmt_size, STATIC_FMT_BUF_SIZE, &iter->fmt_size))
-> +		return NULL;
+> > ---
+> >  Documentation/trace/boottime-trace.rst | 4 ++--
+> >  1 file changed, 2 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/Documentation/trace/boottime-trace.rst b/Documentation/trace/boottime-trace.rst
+> > index d594597201fd..3efac10adb36 100644
+> > --- a/Documentation/trace/boottime-trace.rst
+> > +++ b/Documentation/trace/boottime-trace.rst
+> > @@ -198,8 +198,8 @@ Most of the subsystems and architecture dependent drivers will be initialized
+> >  after that (arch_initcall or subsys_initcall). Thus, you can trace those with
+> >  boot-time tracing.
+> >  If you want to trace events before core_initcall, you can use the options
+> > -starting with ``kernel``. Some of them will be enabled eariler than the initcall
+> > -processing (for example,. ``kernel.ftrace=function`` and ``kernel.trace_event``
+> > +starting with ``kernel``. Some of them will be enabled earlier than the initcall
+> > +processing (for example, ``kernel.ftrace=function`` and ``kernel.trace_event``
+> >  will start before the initcall.)
+> >  
+> >  
+> 
 
-This will *NEVER* happen!
 
-The fmt_size is initialized as STATIC_FMT_BUF_SIZE, and this is the only
-function that increases it, and that happens *only* if the krealloc() succeeds.
-
-For this to happen, then the krealloc must have allocated something that
-would allow the format size to be INT_MAX, which krealloc would fail much
-earlier than that.
-
-Not to mention, the formats can't be more that the sub-buffer size, which
-is by default 4K and can be at most 64K. Way smaller than INT_MAX.
-
-> +
->  	tmp = krealloc(iter->fmt, iter->fmt_size + STATIC_FMT_BUF_SIZE,
->  		       GFP_KERNEL);
->  	if (tmp) {
-> diff --git a/kernel/trace/trace_output.c b/kernel/trace/trace_output.c
-> index b9ab06c99543..42560027001a 100644
-> --- a/kernel/trace/trace_output.c
-> +++ b/kernel/trace/trace_output.c
-> @@ -979,6 +979,8 @@ static void print_fields(struct trace_iterator *iter, struct trace_event_call *c
->  							  iter->fmt_size);
->  			if (ret < 0)
->  				trace_seq_printf(&iter->seq, "(0x%px)", pos);
-> +			else if (ret == 0)
-> +				trace_seq_printf(&iter->seq, "(0x%px:<NULL>)", pos);
-
-This part I'm OK with adding.
-
--- Steve
-
->  			else
->  				trace_seq_printf(&iter->seq, "(0x%px:%s)",
->  						 pos, iter->fmt);
-
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
