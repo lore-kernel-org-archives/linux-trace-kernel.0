@@ -1,102 +1,95 @@
-Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E30E248F4B;
-	Tue, 27 May 2025 13:45:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93D761DFCE;
+	Tue, 27 May 2025 13:47:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748353537; cv=none; b=aMcx2tJ77eV9i2sVpwLLGje5j/bfQZGyeCttk+Jwc/nu4CqbuuhEqACBTd3HG48DkB+uuXygUh4LazHTbuzozHxmxDHt36btLwa3r2coV1JmcO4DbrhAkWR55pOU4pR5SwbR++9SZzVbjARnYHouY2IM38SkMgCJQDB3wZ5GrRw=
+	t=1748353621; cv=none; b=HPiqX8Mvwdm4rA2i9jDSw5JRNe8FUejBd+b5E5Cddt3b/XISvAGJaVatMP0ZK1XoR6FZA4Rojzbwv5sUVfABmvzMgCbq0wD2ulaggArH7LBOhaJK7LFTcC7RMacIctKHQ20Jtx8AwysKD/bIw3W3a9e5s099aZNKRRh+9f9wIkQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748353537; c=relaxed/simple;
-	bh=Qfbm2sNLA0vn8DCioBPKrEQvyUb4mLsh3zo14odwXcI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FeFSTbt+rOZQwdFRZybSwDnoW5czjCEYC08iubpDTI2MkAtGUiXnqHqGeuG8WkQrqBv9DPcfK/DJmqx/XP6daYEzgGEIjXqkSxMSbkGuTb14AJ46XRg2DQIbQFocYISBT7p3w07Fl8+/jf3v20BGsbv+4KZzr2s8qBQ8qnqFfiM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.218.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-ace94273f0dso660221066b.3;
-        Tue, 27 May 2025 06:45:34 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748353533; x=1748958333;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=jAZ7tO9uQ2iBPuBw8kzZnx9pJG/ibWbywo2r/XgEUb4=;
-        b=X7HHkntkWtY0XuAbqLvuzaY/tWQXULgg+83c49w51irqhfeM3APfbMIxc/oQIMGX5+
-         EIWBtsfZtmJbOiFenI0bdA1dk8TP/Oo3ZDxMQDASUxbGOQphiOvDABZU1EVSLvbqdPZK
-         iOnPqr3KqggoQ5hACrTXBev8PjgUtrlUtQivCqr4DiNs06HePI5Ilh8buDiDHvrDEUiy
-         /rBcoPK1YBMXY0j5QbOfvDPRu4NL6W66QbyvNGRLl3qC5UKvUtG7Hwi4JRDV/Dw/wOo6
-         /sRWjBgCYLae4dERLhTL5qdazNGU4ZpyFCmlgJKmFfpLNF9ivr9Rzg7pFoixeWXohHCi
-         UwcQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUQa5zLzl9lYeP+1ghCWy32CpOlpQD02BReEGWqb2CgXHN51dOh+345Pg0jPcQ2UV6//wQhm9R1O3A12Yyz5HCt2aMx@vger.kernel.org, AJvYcCVEq/DhBgc6JVjBZJdzWClnRVgI6/OSbaiOpsfyoUfB3RJ1S7oyL5c0nvz68dYaH7cFcrBRrR+j@vger.kernel.org, AJvYcCXBHbLlxduO6UBmC0rF0WadIL5sF4zpelst/SsCwTq7YoKQqCUEMARVs4MrJMylJadX0omnKnGWcdUP34c=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwvgmFvdbuMlRr8cLLd726V8pwbe4xh7SGzpXeeZKpZzb0n9hXm
-	VKqUORqU5umfAXptlQnfwAXPVu2rGEQ30fgzLJK8qGqnQnr1gelWP2dL
-X-Gm-Gg: ASbGncv0d36u8ZvyO5YiHiiN8ilFfE9slV5Axp/ULC4yGgFBLc2cRmTkPJ8Mt+cDVZ3
-	Upi2Fv5ZLCAMgq6RUVTN6Bgium1c4MVeIXCpaxkXMyV0im3GfCUtbf0Qn62AUS70fGJwyM+djFi
-	YoO4iOgZ92duvoq+9LfwJyarjgwBODDA6TOUfNMSAp9a5TOtVbCCl/8W7kOu5Y5xUq9XrV8vfgz
-	dkn8Ims7T+pAzjmFvlgxmWT4i7wh209lnk08VGTUHEDWpzwlGU+I6tSwIbAUhAuM9RM18yLraos
-	+U9DqplkEi2K7bFC3LiIqBH9ysXsIjUHzgjghGxENQ==
-X-Google-Smtp-Source: AGHT+IH6j/BghWYjYKpMeSsKyBBh+LmICoGS6swWWHK7btRyaIUSVFGpwNJybOBUK3x7YvyreV/gCw==
-X-Received: by 2002:a17:907:3e95:b0:ad2:3f1f:7974 with SMTP id a640c23a62f3a-ad85b12061bmr1022077166b.10.1748353532576;
-        Tue, 27 May 2025 06:45:32 -0700 (PDT)
-Received: from gmail.com ([2a03:2880:30ff:6::])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad892483ba9sm83515466b.147.2025.05.27.06.45.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 27 May 2025 06:45:31 -0700 (PDT)
-Date: Tue, 27 May 2025 06:45:29 -0700
-From: Breno Leitao <leitao@debian.org>
-To: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-Cc: Song Liu <songliubraving@meta.com>, Paolo Abeni <pabeni@redhat.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	David Ahern <dsahern@kernel.org>,
-	Eric Dumazet <edumazet@google.com>,
-	"kuba@kernel.org" <kuba@kernel.org>,
-	Simon Horman <horms@kernel.org>,
-	"kuniyu@amazon.com" <kuniyu@amazon.com>,
-	"netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-trace-kernel@vger.kernel.org" <linux-trace-kernel@vger.kernel.org>,
-	"yonghong.song@linux.dev" <yonghong.song@linux.dev>,
-	"song@kernel.org" <song@kernel.org>,
-	Kernel Team <kernel-team@meta.com>
-Subject: Re: [PATCH net-next] udp: Add tracepoint for udp_sendmsg()
-Message-ID: <aDXB+ZqQZyQkEREM@gmail.com>
-References: <20250416-udp_sendmsg-v1-1-1a886b8733c2@debian.org>
- <67a977bc-a4b9-4c8b-bf2f-9e9e6bb0811e@redhat.com>
- <aADnW6G4X2GScQIF@gmail.com>
- <0f67e414-d39a-4b71-9c9e-7dc027cc4ac3@redhat.com>
- <4D934267-EE73-49DB-BEAF-7550945A38C9@fb.com>
- <680122de92908_166f4f2942a@willemb.c.googlers.com.notmuch>
- <B5B46BE2-C4D8-4AB8-BEBC-E0887C9B175D@fb.com>
- <68026672df030_1d380329421@willemb.c.googlers.com.notmuch>
+	s=arc-20240116; t=1748353621; c=relaxed/simple;
+	bh=druQO90/3aoZGZpAmzbmlfxa785/GK+2GPpQUanFOok=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=mZNFAaqUk9HTq0apwZIwnRnbXwpZsU49bfG8frCggTN/qiVF6X0Ext8qY36Kv4P1fqxRCIjd98js0E5fIxMVsZT986dEYNvZ6BTN5zKvs51OW6wTTc3Ny+JHV3c4slRJY4atsHvMBsSXbHXRsr3hbo5CDdQWTvXh07G6iYSn2OA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7CCFCC4CEE9;
+	Tue, 27 May 2025 13:47:00 +0000 (UTC)
+Date: Tue, 27 May 2025 09:47:57 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 1/2] tracing: ring_buffer: Rewind persistent ring
+ buffer when reboot
+Message-ID: <20250527094757.791e8f10@gandalf.local.home>
+In-Reply-To: <20250527125444.80e59e659a7f087fed3c6fc9@kernel.org>
+References: <174792927500.496143.10668210464102033012.stgit@mhiramat.tok.corp.google.com>
+	<174792928413.496143.17979267710069360561.stgit@mhiramat.tok.corp.google.com>
+	<20250523165425.0275c9a1@gandalf.local.home>
+	<20250523172857.02ab4a75@gandalf.local.home>
+	<20250526120342.cdcfca9ac3c2161d48c03af5@kernel.org>
+	<20250527091743.d036018195b7668aea0753c0@kernel.org>
+	<20250527121549.2d40608e9463199d85bf9ba4@kernel.org>
+	<20250527125444.80e59e659a7f087fed3c6fc9@kernel.org>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <68026672df030_1d380329421@willemb.c.googlers.com.notmuch>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Hello,
+On Tue, 27 May 2025 12:54:44 +0900
+Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
 
-On Fri, Apr 18, 2025 at 10:49:22AM -0400, Willem de Bruijn wrote:
-> Song Liu wrote:
-> > Do you mean we need to also add tracepoints for udpv6_sendmsg?
+> Here is what I meant. As far as I ran my test, it looks good (it prevents
+> over-read by `cat per_cpu/cpu0/trace_pipe_raw`)
 > 
-> If there is consensus that a tracepoint at this point is valuable,
-> then it should be supported equally for IPv4 and IPv6.
+> diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+> index 5034bae02f08..de1831eb3446 100644
+> --- a/kernel/trace/ring_buffer.c
+> +++ b/kernel/trace/ring_buffer.c
+> @@ -5405,6 +5405,7 @@ rb_get_reader_page(struct ring_buffer_per_cpu *cpu_buffer)
+>         unsigned long flags;
+>         int nr_loops = 0;
+>         bool ret;
+> +       u64 ts;
+>  
+>         local_irq_save(flags);
+>         arch_spin_lock(&cpu_buffer->lock);
+> @@ -5423,6 +5424,18 @@ rb_get_reader_page(struct ring_buffer_per_cpu *cpu_buffer)
+>  
+>         reader = cpu_buffer->reader_page;
+>  
+> +       /*
+> +        * Now the page->commit is not cleared when it read.
+> +        * Check whether timestamp is newer instead. We also don't
+> +        * care the head_page is overwritten. In that case, timestamp
+> +        * should be newer than reader timestamp too.
+> +        */
+> +       ts = cpu_buffer->head_page->page->time_stamp;
+> +       if (ts < reader->page->time_stamp) {
+
+Hmm, I think this test may be too fragile. The head_page can be moved
+by the writer, and this would need to handle races.
+
+I found an issue with commit overflow and have a couple of bugs to fix that
+touches some of this code. Let's revisit after I get those fixed.
+
+Thanks,
+
+-- Steve
+
+
+
+> +               reader = NULL;
+> +               goto out;
+> +       }
+> +
+>         /* If there's more to read, return this page */
+>         if (cpu_buffer->reader_page->read < rb_page_size(reader))
+>                 goto out;
 > 
-> That holds true for all such hooks. No IPv4 only.
 
-Revamping this thread to make sure we have a conclusion.
-
-Any objection for not having the tracepoint in UDP sendmsg, both IPv4
-and IPv6?
-
-Thanks
---breno
