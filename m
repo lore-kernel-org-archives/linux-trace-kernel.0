@@ -1,149 +1,202 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 530B3258CF5;
-	Tue, 27 May 2025 14:17:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AA0E1EF1D
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 27 May 2025 14:35:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748355457; cv=none; b=R2qBCTAW8XjlllVsZKEkWYAWIfSdqYuVSBcbS+r4tJ8GODfXCr+atplE/BVvUzhfTIxlZvEhjP+SjIVLih7XnCOT9RGslaUM0trdKssQcoadmV2wtFNk1aTJgFE3hzEPc1RmNkgBuSXA52WsFc9YZmDWn3bxnWKpJeWn5OZGf+U=
+	t=1748356512; cv=none; b=ROuoTbokc1Dxq7J+DtbFMpmJLuOF2pxC5YGzSkh1wd8Gn46w/pQXPTn5KCR4DH/tuYQIkS+mrOkt7GbFnzerFPmjiKObI3RZ5a7NBQgNZa22xg1UQReEbzX3gXxqTibKjoCAwAfdceRTq1MrfYJRFgOs5Q15KT2ez7W00Ri+lyQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748355457; c=relaxed/simple;
-	bh=ahFl9aCQqEQb7ktYvVw2ExzugFahjZxmir57oh1c2Lc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=mDYMNKYG4buX7/PYV2EZyRJASq0DCLVxjK4btwTlshTEKnX8Rlr4OVjrlb5OPQanqJYn7lpFOZ+YX6Rg7qLJZ+gzai97h46Lhwtaa8aj01rqTP63+GR8f5N+VOlhzD/rp3XU4AxthUnyevdMno0gvJhQalRg8N3jCwA6ZmK2g40=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=gWmeq+dR; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1748356512; c=relaxed/simple;
+	bh=uLlDS7ehu5ldtiIWabFbrHv7rhtaxbfIJBQZqnhbKrk=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=mpZz5nknp3ChsBZpFKKNgUF9whe0JkxzMvP2qZ+pCFI7ERXyKtvEzkL87d8WXEHeA/YpaJdJw7aczNnSQYu1xub/O6OdMU39491rGeQwe6q/H0yTN8fOstrLJPz2+h+4zG8qweXcJ0cA/RDfsSqQ4EPUenUH/doz6skE0vP7/JU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=DEdz3oo+; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="gWmeq+dR"
-Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54R3ZVhm025612;
-	Tue, 27 May 2025 14:17:02 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=/gzvDF
-	7B6Gpe874ER1+xVQsIaOStUNi32ktHp53rVmA=; b=gWmeq+dRJWBX0BS5VbHuEX
-	g7i9HlXi1e79dSGX9PFLF3ir9TD0kCBWoEViA8DxF8zSSUk6BstkRPSoEJpInI5U
-	GKaM38yQ2qSegGYcAsbNs3ViZyMCCpYq3jEd2XpZPf9VX5Xm3tyAgeux9zuGyoJs
-	efB6CZLjSAu9F0f7ww9TxN8OKh1u7MQVSb8KiQtz1IT+HwnwQSpgGDmaMaNpHvN1
-	ozX2FADbWWoEcZwpD7MXXgDmGLXwhTTadfSC8kDG0i5x3YF6vq7GwB6SN8veBP6Z
-	WI8Y8EYlrnJ28t0ItqIfJD+QXlgpV+RDl/94UQs3R66PHT8qDNUR3mRy2H9RCxIg
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DEdz3oo+"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1748356510;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=uLlDS7ehu5ldtiIWabFbrHv7rhtaxbfIJBQZqnhbKrk=;
+	b=DEdz3oo+xIoue1SDfMxwRG9o3oB28AYLJX46NJ1IMiRPIRT0JjEUsyOlj7MApO3hJKITlZ
+	XRfR/l7as3eitN3k/1b+j0wAPZiE+cEnyuJumpy5hesxE58l2wek0Gg3JAkitrPkroZCKy
+	1Ncm8Jni2Njoi1HelXT4gKHmYuBFZqc=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-663-sdAVJCYuNF6CyAhXxTOaTA-1; Tue, 27 May 2025 10:35:08 -0400
+X-MC-Unique: sdAVJCYuNF6CyAhXxTOaTA-1
+X-Mimecast-MFC-AGG-ID: sdAVJCYuNF6CyAhXxTOaTA_1748356507
+Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-3a36bbfbd96so1233096f8f.0
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 27 May 2025 07:35:08 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748356507; x=1748961307;
+        h=mime-version:user-agent:content-transfer-encoding:autocrypt
+         :references:in-reply-to:date:cc:to:from:subject:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=L3GI2gbUmIa7mOJoCzehrNV7F2gboefZH5wJFgdPvXA=;
+        b=Z0EpSfk71ealAvvOpGMglw4xXutB5qAsSCP/ZKBC8bpMwR4eBZXLWtJuKGuHUEU6N2
+         lHdg0wsmeijs3ma6O1itPVcr2cMyUZHVR+rpOeBi2F8AXMUDzfCtV8STbZGK73wByhQC
+         4attymLb4lVKHl/lJkCmmqnXcFhPNDcyKnAA9tZ83ym7eYuc28re0D/Q9YXc1Vh9WMTi
+         L733P0npZ0XfQg+VRi1hQXytRdorU+1iBMBbR13+07TnypNYsOx1MGDNlI9egfugKuME
+         lHUIkH0WaF5DELnpcnTcxuurNukW3/Tw4MDu51Kua9s0ss8xRbLbAVPo3EMP5iO61uDf
+         LZfw==
+X-Forwarded-Encrypted: i=1; AJvYcCUsH5vBXK0ZMzWTlQ3vwMp1zjhWmslVYhZepKVHDS6zOcTaHthjO2UmBLqbTCZCeAUBkvczxDEhv1FFIDkakMlgB4g=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzB59VT/xaM0YEWcxIvIy1khndak/25X/dANdPz30FzPYygrmLo
+	QuCuGt7xhgxpuRlqdfmVHhOH2UhBZwcTqoGF/j7dA2y1aMlj1z92oa2RYwa4JmDGkwI2ByObU5K
+	rphBYkpKkWttajB+DzAi3/T3xjC09GsOENcCIUKY3O1Shi32o73PQiEs5isaPa14o5qqOb+3mTA
 	==
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46u5ucpsfm-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 27 May 2025 14:17:02 +0000 (GMT)
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 54RD4rwR016174;
-	Tue, 27 May 2025 14:17:01 GMT
-Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 46uru0k2ru-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 27 May 2025 14:17:01 +0000
-Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
-	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 54REGwO559703688
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 27 May 2025 14:16:58 GMT
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id E670A2004B;
-	Tue, 27 May 2025 14:16:57 +0000 (GMT)
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 6CB7120043;
-	Tue, 27 May 2025 14:16:57 +0000 (GMT)
-Received: from [9.152.222.246] (unknown [9.152.222.246])
-	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Tue, 27 May 2025 14:16:57 +0000 (GMT)
-Message-ID: <0219c58d-6375-4f98-84bc-9c65c1570aa0@linux.ibm.com>
-Date: Tue, 27 May 2025 16:16:57 +0200
+X-Gm-Gg: ASbGncvMXmaECQuOuxTwRgZUi5oJIJgrwQQLPGx1+uT/dZD/09yFXN5P4zhjTGg6oXZ
+	8dxii8H0BE+x26N0LqchWbu3VfTlx1rcw7XNz77grMuHdGPQWWWrn5cuwOl72rBylmIEm3v41C1
+	poTTEIJnf1MU8ztYLT0C4+9BOKE5H3XYoJOBrrwH8Bdf8xUuxj0BSlQ//sNwREC97AzT86xflso
+	cYkD8rfeJDSt0QFsBTahexoew759QJL33sFVhQ0vGQ36HdHTHV5ws+fdH3Ir0tN0WWYDqLYeoBs
+	O3Nf9aTIz/jRoZECfcZqzR/j9ueclu9OF2uebQ==
+X-Received: by 2002:a05:6000:178b:b0:3a4:d6ed:8df7 with SMTP id ffacd0b85a97d-3a4d6eda61amr8126388f8f.59.1748356507402;
+        Tue, 27 May 2025 07:35:07 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHRv/OfRRiDQA7X9BzrxYr9prABUS7Bh2GUtwtYTwY+TNdKzDqXiTPEpURBylbaeVKLg3wH2A==
+X-Received: by 2002:a05:6000:178b:b0:3a4:d6ed:8df7 with SMTP id ffacd0b85a97d-3a4d6eda61amr8126364f8f.59.1748356507047;
+        Tue, 27 May 2025 07:35:07 -0700 (PDT)
+Received: from gmonaco-thinkpadt14gen3.rmtit.csb ([185.107.56.42])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a4d67795eesm7198027f8f.86.2025.05.27.07.35.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 27 May 2025 07:35:06 -0700 (PDT)
+Message-ID: <6f33e6b7ad296f4fd0e9c089ac92e53c08cfd850.camel@redhat.com>
+Subject: Re: [RFC PATCH v2 12/12] rv: Add opid per-cpu monitor
+From: Gabriele Monaco <gmonaco@redhat.com>
+To: Nam Cao <namcao@linutronix.de>
+Cc: linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>, 
+	linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org, Ingo Molnar
+	 <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>, Tomas Glozar
+	 <tglozar@redhat.com>, Juri Lelli <jlelli@redhat.com>
+Date: Tue, 27 May 2025 16:35:04 +0200
+In-Reply-To: <20250527133712.CFW5AcNE@linutronix.de>
+References: <20250514084314.57976-1-gmonaco@redhat.com>
+	 <20250514084314.57976-13-gmonaco@redhat.com>
+	 <20250527133712.CFW5AcNE@linutronix.de>
+Autocrypt: addr=gmonaco@redhat.com; prefer-encrypt=mutual;
+ keydata=mDMEZuK5YxYJKwYBBAHaRw8BAQdAmJ3dM9Sz6/Hodu33Qrf8QH2bNeNbOikqYtxWFLVm0
+ 1a0JEdhYnJpZWxlIE1vbmFjbyA8Z21vbmFjb0ByZWRoYXQuY29tPoiZBBMWCgBBFiEEysoR+AuB3R
+ Zwp6j270psSVh4TfIFAmbiuWMCGwMFCQWjmoAFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgk
+ Q70psSVh4TfJzZgD/TXjnqCyqaZH/Y2w+YVbvm93WX2eqBqiVZ6VEjTuGNs8A/iPrKbzdWC7AicnK
+ xyhmqeUWOzFx5P43S1E1dhsrLWgP
+User-Agent: Evolution 3.56.2 (3.56.2-1.fc42)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 6/6] x86/vdso: Enable sframe generation in VDSO
-To: Steven Rostedt <rostedt@goodmis.org>,
-        Josh Poimboeuf
- <jpoimboe@kernel.org>,
-        Indu Bhagat <indu.bhagat@oracle.com>, linux-kernel@vger.kernel.org,
-        linux-trace-kernel@vger.kernel.org
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Andrew Morton <akpm@linux-foundation.org>, x86@kernel.org,
-        Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>
-References: <20250425023750.669174660@goodmis.org>
- <20250425024023.173709192@goodmis.org>
-Content-Language: en-US
-From: Jens Remus <jremus@linux.ibm.com>
-Organization: IBM Deutschland Research & Development GmbH
-In-Reply-To: <20250425024023.173709192@goodmis.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: 7oosbzVA6NumzN8mRLM6lgUJM9bg-qYL
-X-Proofpoint-GUID: 7oosbzVA6NumzN8mRLM6lgUJM9bg-qYL
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTI3MDExNSBTYWx0ZWRfX8PfJfOKfRNYv /xwu3Lc58d9K5KexAtv+cxtyW+Ex/AuVKG5X8TLWnGcl/AmPc5Yf9Y1dR11pIHYE2J6QcxSvRHk GqZzt63+u3Lj8HXub2EN1CUMnwgz3bDyeaOiYtTPU2vpmbQotv7XPF8Uf30JIF4doix67XcwQ6P
- HKxt1gSG7GZ9s+C6Te8pMwvwTntCHFpdkhoNHXJRORuJk1mrpKTc63jP9yWCv5Y7hGb8G38mSXg KqEmXBkKz5UnsJu/DY0IGeKcseYhxW52eiHco2J0MDozvGOqW/ONN+B+mn7xFMM/POCyIpya+O4 gK0gMSj6BcyXF5acxvVoIlcdZ+iMo6g12gyr2MQqEcYKAIVYw24LqL52QusONZhLY8IBKX97phT
- WKa7JKwfiE5biT0HUB73IujEVxnNfwlweGwSbA9P+LO2tCnMS9OavPg34+rN3KHxS8fD8AD+
-X-Authority-Analysis: v=2.4 cv=fJM53Yae c=1 sm=1 tr=0 ts=6835c95e cx=c_pps a=5BHTudwdYE3Te8bg5FgnPg==:117 a=5BHTudwdYE3Te8bg5FgnPg==:17 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=VwQbUJbxAAAA:8 a=meVymXHHAAAA:8 a=VnNF1IyMAAAA:8 a=0MvmVg10__VCTnNSAJcA:9
- a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10 a=2JgSa4NbpEOStq-L5dxp:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-27_07,2025-05-27_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 spamscore=0
- priorityscore=1501 bulkscore=0 adultscore=0 mlxlogscore=999 suspectscore=0
- phishscore=0 clxscore=1011 lowpriorityscore=0 malwarescore=0
- impostorscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505160000
- definitions=main-2505270115
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: 0KI4H-47EDsYkYUpa4tcpUORn52Y9JHRtwppf1qvMeA_1748356507
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 25.04.2025 04:37, Steven Rostedt wrote:
-> From: Josh Poimboeuf <jpoimboe@kernel.org>
-> 
-> Enable sframe generation in the VDSO library so kernel and user space
-> can unwind through it.
-> 
-> Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
-> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-> ---
-> Changes since v5: https://lore.kernel.org/20250422183722.919601983@goodmis.org
-> 
-> - Replace $(comma) with a comma in the Makefile
->   (Jens Remus)
 
-> diff --git a/arch/x86/entry/vdso/Makefile b/arch/x86/entry/vdso/Makefile
 
-> @@ -47,13 +47,17 @@ quiet_cmd_vdso2c = VDSO2C  $@
->  $(obj)/vdso-image-%.c: $(obj)/vdso%.so.dbg $(obj)/vdso%.so $(obj)/vdso2c FORCE
->  	$(call if_changed,vdso2c)
->  
-> +ifeq ($(CONFIG_AS_SFRAME),y)
-> +  SFRAME_CFLAGS := -Wa,-gsframe
+On Tue, 2025-05-27 at 15:37 +0200, Nam Cao wrote:
+> On Wed, May 14, 2025 at 10:43:14AM +0200, Gabriele Monaco wrote:
+> > Add a per-cpu monitor as part of the sched model:
+> > * opid: operations with preemption and irq disabled
+> > =C2=A0=C2=A0=C2=A0 Monitor to ensure wakeup and need_resched occur with=
+ irq and
+> > =C2=A0=C2=A0=C2=A0 preemption disabled or in irq handlers.
+>=20
+> This monitor reports some warnings:
+>=20
+> $ perf record -e rv:error_opid --call-graph dwarf -a -- ./stress-
+> epoll
+> (stress-epoll program from
+> https://github.com/rouming/test-tools/blob/master/stress-epoll.c)
+>=20
 
-Nit: The GNU assembler (GAS) option as of "as --help" and "man as" is
-"--gsframe" (with two dashes).  But as GAS uses getopt_long_only() it
-accepts long options prefixed with "--" as well as "-".  I don't have
-any preference.
+Thanks for trying it out, and good to know about this stressor.
+Unfortunately it's a bit hard to understand from this stack trace, but
+that's very likely a problem in the model.
+I have a few ideas where that could be but I believe it's something
+visible only on a physical machine (haven't tested much on x86 bare
+metal, only VM).
+You're running on bare metal right?
 
-> +endif
-> +
+> $ perf script
+> stress-epoll=C2=A0=C2=A0 315 [003]=C2=A0=C2=A0 527.674724: rv:error_opid:=
+ event
+> preempt_disable not expected in the state preempt_disabled
+> =09ffffffff9fdfb34f da_event_opid+0x10f ([kernel.kallsyms])
+> =09ffffffff9fdfb34f da_event_opid+0x10f ([kernel.kallsyms])
+> =09ffffffff9fdfba0d handle_preempt_disable+0x3d
+> ([kernel.kallsyms])
+> =09ffffffff9fdd32d0 __traceiter_preempt_disable+0x30
+> ([kernel.kallsyms])
+> =09ffffffff9fdd38fe trace_preempt_off+0x4e ([kernel.kallsyms])
+> =09ffffffff9fee6c1c vfs_write+0x12c ([kernel.kallsyms])
+> =09ffffffff9fee7128 ksys_write+0x68 ([kernel.kallsyms])
+> =09ffffffffa0bdbd92 do_syscall_64+0xb2 ([kernel.kallsyms])
+> =09ffffffff9fa00130 entry_SYSCALL_64_after_hwframe+0x77
+> ([kernel.kallsyms])
+> =09=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 f833f __G=
+I___libc_write+0x4f (/usr/lib/x86_64-
+> linux-gnu/libc.so.6)
+> =09=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 f833f __G=
+I___libc_write+0x4f (/usr/lib/x86_64-
+> linux-gnu/libc.so.6)
+> =09=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 193=
+7 thread_work+0x47 (/root/test-tools/stress-
+> epoll)
+> =09=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 891f4 sta=
+rt_thread+0x304 (/usr/lib/x86_64-linux-
+> gnu/libc.so.6)
+> =09=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 10989b clone3+0=
+x2b (/usr/lib/x86_64-linux-
+> gnu/libc.so.6)
+>=20
+> stress-epoll=C2=A0=C2=A0 318 [002]=C2=A0=C2=A0 527.674759: rv:error_opid:=
+ event
+> preempt_disable not expected in the state disabled
+> =09ffffffff9fdfb34f da_event_opid+0x10f ([kernel.kallsyms])
+> =09ffffffff9fdfb34f da_event_opid+0x10f ([kernel.kallsyms])
+> =09ffffffff9fdfba0d handle_preempt_disable+0x3d
+> ([kernel.kallsyms])
+> =09ffffffff9fdd32d0 __traceiter_preempt_disable+0x30
+> ([kernel.kallsyms])
+> =09ffffffff9fdd38fe trace_preempt_off+0x4e ([kernel.kallsyms])
+> =09ffffffffa0bec1aa _raw_spin_lock_irq+0x1a ([kernel.kallsyms])
+> =09ffffffff9ff4fe73 eventfd_write+0x63 ([kernel.kallsyms])
+> =09ffffffff9fee6be5 vfs_write+0xf5 ([kernel.kallsyms])
+> =09ffffffff9fee7128 ksys_write+0x68 ([kernel.kallsyms])
+> =09ffffffffa0bdbd92 do_syscall_64+0xb2 ([kernel.kallsyms])
+> =09ffffffff9fa00130 entry_SYSCALL_64_after_hwframe+0x77
+> ([kernel.kallsyms])
+> =09=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 f833f __G=
+I___libc_write+0x4f (/usr/lib/x86_64-
+> linux-gnu/libc.so.6)
+> =09=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 f833f __G=
+I___libc_write+0x4f (/usr/lib/x86_64-
+> linux-gnu/libc.so.6)
+> =09=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 193=
+7 thread_work+0x47 (/root/test-tools/stress-
+> epoll)
+> =09=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 891f4 sta=
+rt_thread+0x304 (/usr/lib/x86_64-linux-
+> gnu/libc.so.6)
+> =09=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 10989b clone3+0=
+x2b (/usr/lib/x86_64-linux-
+> gnu/libc.so.6)
+>=20
+> I'm not sure what I'm looking at here. Do you think these are kernel
+> bugs,
+> or the monitor is missing some corner cases?
+>=20
 
-Regards,
-Jens
--- 
-Jens Remus
-Linux on Z Development (D3303)
-+49-7031-16-1128 Office
-jremus@de.ibm.com
+As said, likely a missing corner case, I believe it has to do with IRQs
+(which is what makes this monitor more complex than it could be).
 
-IBM
+Thanks for the pointers, I'll try reproduce it this way.
 
-IBM Deutschland Research & Development GmbH; Vorsitzender des Aufsichtsrats: Wolfgang Wendt; Geschäftsführung: David Faller; Sitz der Gesellschaft: Böblingen; Registergericht: Amtsgericht Stuttgart, HRB 243294
-IBM Data Privacy Statement: https://www.ibm.com/privacy/
+Gabriele
 
