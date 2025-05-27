@@ -1,143 +1,102 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 260A8274FE9;
-	Tue, 27 May 2025 13:40:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E30E248F4B;
+	Tue, 27 May 2025 13:45:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748353236; cv=none; b=d41fq9xz4WF97CJRKL79OSyMKe7U5sbmdoLf2K0LzeEuKdCWryEnOn4/GRLNlypI33kob3D8QgGbKjD7oYEE0GF1DX6z4mkNt6pzutIrojPJN5Kyu7FI4NyqsS4f5Ev76+WeGf1mQ1fWAeSWLZTaOdMT9yt7I1TzNMHJBtAkKyY=
+	t=1748353537; cv=none; b=aMcx2tJ77eV9i2sVpwLLGje5j/bfQZGyeCttk+Jwc/nu4CqbuuhEqACBTd3HG48DkB+uuXygUh4LazHTbuzozHxmxDHt36btLwa3r2coV1JmcO4DbrhAkWR55pOU4pR5SwbR++9SZzVbjARnYHouY2IM38SkMgCJQDB3wZ5GrRw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748353236; c=relaxed/simple;
-	bh=jwje34nB6gKyQoKpfDGgc2ECy7vWfnVq2EpNyYhTPuc=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=CDnhHKMAvlWhMPBevZgu1kmYNnQ4Vo0j7MxoNmwcjytm1DbQsqLa6DApKMhUOlk2FouhBsXTTy46IhEKMIqjtgWa00aMaw8XHVqzrXbEL9SfC2IWK+Me09897B9a6oPWFPX11t7L5LVrpu7ALwhbIhk4H/FbFfigk+8CVqm63TY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BF84DC4CEE9;
-	Tue, 27 May 2025 13:40:33 +0000 (UTC)
-Date: Tue, 27 May 2025 09:41:31 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: yebin <yebin@huaweicloud.com>
-Cc: mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
- mark.rutland@arm.com, linux-trace-kernel@vger.kernel.org,
- linux-kernel@vger.kernel.org, yebin10@huawei.com
-Subject: Re: [PATCH 1/2] ftrace: fix UAF when lookup kallsym after ftrace
- disabled
-Message-ID: <20250527094131.1f4a92ab@gandalf.local.home>
-In-Reply-To: <6833C4F1.3030300@huaweicloud.com>
-References: <20250523083945.3390587-1-yebin@huaweicloud.com>
-	<20250523083945.3390587-2-yebin@huaweicloud.com>
-	<20250523135452.626d8dcd@gandalf.local.home>
-	<6833C4F1.3030300@huaweicloud.com>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1748353537; c=relaxed/simple;
+	bh=Qfbm2sNLA0vn8DCioBPKrEQvyUb4mLsh3zo14odwXcI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FeFSTbt+rOZQwdFRZybSwDnoW5czjCEYC08iubpDTI2MkAtGUiXnqHqGeuG8WkQrqBv9DPcfK/DJmqx/XP6daYEzgGEIjXqkSxMSbkGuTb14AJ46XRg2DQIbQFocYISBT7p3w07Fl8+/jf3v20BGsbv+4KZzr2s8qBQ8qnqFfiM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.218.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-ace94273f0dso660221066b.3;
+        Tue, 27 May 2025 06:45:34 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748353533; x=1748958333;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=jAZ7tO9uQ2iBPuBw8kzZnx9pJG/ibWbywo2r/XgEUb4=;
+        b=X7HHkntkWtY0XuAbqLvuzaY/tWQXULgg+83c49w51irqhfeM3APfbMIxc/oQIMGX5+
+         EIWBtsfZtmJbOiFenI0bdA1dk8TP/Oo3ZDxMQDASUxbGOQphiOvDABZU1EVSLvbqdPZK
+         iOnPqr3KqggoQ5hACrTXBev8PjgUtrlUtQivCqr4DiNs06HePI5Ilh8buDiDHvrDEUiy
+         /rBcoPK1YBMXY0j5QbOfvDPRu4NL6W66QbyvNGRLl3qC5UKvUtG7Hwi4JRDV/Dw/wOo6
+         /sRWjBgCYLae4dERLhTL5qdazNGU4ZpyFCmlgJKmFfpLNF9ivr9Rzg7pFoixeWXohHCi
+         UwcQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUQa5zLzl9lYeP+1ghCWy32CpOlpQD02BReEGWqb2CgXHN51dOh+345Pg0jPcQ2UV6//wQhm9R1O3A12Yyz5HCt2aMx@vger.kernel.org, AJvYcCVEq/DhBgc6JVjBZJdzWClnRVgI6/OSbaiOpsfyoUfB3RJ1S7oyL5c0nvz68dYaH7cFcrBRrR+j@vger.kernel.org, AJvYcCXBHbLlxduO6UBmC0rF0WadIL5sF4zpelst/SsCwTq7YoKQqCUEMARVs4MrJMylJadX0omnKnGWcdUP34c=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwvgmFvdbuMlRr8cLLd726V8pwbe4xh7SGzpXeeZKpZzb0n9hXm
+	VKqUORqU5umfAXptlQnfwAXPVu2rGEQ30fgzLJK8qGqnQnr1gelWP2dL
+X-Gm-Gg: ASbGncv0d36u8ZvyO5YiHiiN8ilFfE9slV5Axp/ULC4yGgFBLc2cRmTkPJ8Mt+cDVZ3
+	Upi2Fv5ZLCAMgq6RUVTN6Bgium1c4MVeIXCpaxkXMyV0im3GfCUtbf0Qn62AUS70fGJwyM+djFi
+	YoO4iOgZ92duvoq+9LfwJyarjgwBODDA6TOUfNMSAp9a5TOtVbCCl/8W7kOu5Y5xUq9XrV8vfgz
+	dkn8Ims7T+pAzjmFvlgxmWT4i7wh209lnk08VGTUHEDWpzwlGU+I6tSwIbAUhAuM9RM18yLraos
+	+U9DqplkEi2K7bFC3LiIqBH9ysXsIjUHzgjghGxENQ==
+X-Google-Smtp-Source: AGHT+IH6j/BghWYjYKpMeSsKyBBh+LmICoGS6swWWHK7btRyaIUSVFGpwNJybOBUK3x7YvyreV/gCw==
+X-Received: by 2002:a17:907:3e95:b0:ad2:3f1f:7974 with SMTP id a640c23a62f3a-ad85b12061bmr1022077166b.10.1748353532576;
+        Tue, 27 May 2025 06:45:32 -0700 (PDT)
+Received: from gmail.com ([2a03:2880:30ff:6::])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad892483ba9sm83515466b.147.2025.05.27.06.45.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 27 May 2025 06:45:31 -0700 (PDT)
+Date: Tue, 27 May 2025 06:45:29 -0700
+From: Breno Leitao <leitao@debian.org>
+To: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
+Cc: Song Liu <songliubraving@meta.com>, Paolo Abeni <pabeni@redhat.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	David Ahern <dsahern@kernel.org>,
+	Eric Dumazet <edumazet@google.com>,
+	"kuba@kernel.org" <kuba@kernel.org>,
+	Simon Horman <horms@kernel.org>,
+	"kuniyu@amazon.com" <kuniyu@amazon.com>,
+	"netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-trace-kernel@vger.kernel.org" <linux-trace-kernel@vger.kernel.org>,
+	"yonghong.song@linux.dev" <yonghong.song@linux.dev>,
+	"song@kernel.org" <song@kernel.org>,
+	Kernel Team <kernel-team@meta.com>
+Subject: Re: [PATCH net-next] udp: Add tracepoint for udp_sendmsg()
+Message-ID: <aDXB+ZqQZyQkEREM@gmail.com>
+References: <20250416-udp_sendmsg-v1-1-1a886b8733c2@debian.org>
+ <67a977bc-a4b9-4c8b-bf2f-9e9e6bb0811e@redhat.com>
+ <aADnW6G4X2GScQIF@gmail.com>
+ <0f67e414-d39a-4b71-9c9e-7dc027cc4ac3@redhat.com>
+ <4D934267-EE73-49DB-BEAF-7550945A38C9@fb.com>
+ <680122de92908_166f4f2942a@willemb.c.googlers.com.notmuch>
+ <B5B46BE2-C4D8-4AB8-BEBC-E0887C9B175D@fb.com>
+ <68026672df030_1d380329421@willemb.c.googlers.com.notmuch>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <68026672df030_1d380329421@willemb.c.googlers.com.notmuch>
 
-On Mon, 26 May 2025 09:33:37 +0800
-yebin <yebin@huaweicloud.com> wrote:
+Hello,
 
-> On 2025/5/24 1:54, Steven Rostedt wrote:
-> > On Fri, 23 May 2025 16:39:44 +0800
-> > Ye Bin <yebin@huaweicloud.com> wrote:
-> >  
-> >> Above issue may happens as follow:
-> >> (1) Add kprobe trace point;
-> >> (2) insmod test.ko;
-> >> (3) Trigger ftrace disabled;  
-> >
-> > This is the bug. How was ftrace_disabled triggered? That should never
-> > happen. Was test.ko buggy?
-> >  
-> Yes. The following warning is reported during concurrent registration 
-> between register_kprobe() and live patch, causing ftrace_disabled.
+On Fri, Apr 18, 2025 at 10:49:22AM -0400, Willem de Bruijn wrote:
+> Song Liu wrote:
+> > Do you mean we need to also add tracepoints for udpv6_sendmsg?
 > 
-> WARNING: CPU: 56 PID: 2769 at kernel/trace/ftrace.c:2612 
-> ftrace_modify_all_code+0x116/0x140
+> If there is consensus that a tracepoint at this point is valuable,
+> then it should be supported equally for IPv4 and IPv6.
+> 
+> That holds true for all such hooks. No IPv4 only.
 
-OK, so it is a buggy module.
+Revamping this thread to make sure we have a conclusion.
 
-> >> (4) rmmod test.ko;
-> >> (5) cat /proc/kallsyms; --> Will trigger UAF as test.ko already removed;
-> >> ftrace_mod_get_kallsym()
-> >> ...
-> >> strscpy(module_name, mod_map->mod->name, MODULE_NAME_LEN);
-> >> ...
-> >>
-> >> As ftrace_release_mod() judge 'ftrace_disabled' is true will return, and
-> >> 'mod_map' will remaining in ftrace_mod_maps. 'mod_map' has no chance to
-> >> release. Therefore, this also causes residual resources to accumulate.
-> >> To solve above issue, unconditionally clean up'mod_map'.
-> >>
-> >> Fixes: aba4b5c22cba ("ftrace: Save module init functions kallsyms symbols for tracing")  
-> >
-> > This is *not* a fix. ftrace_disabled gets set when a bug is triggered. If
-> > this prevents ftrace_disabled from getting set, then it would be a fix. But
-> > if something else happens when ftrace_disabled is set, it just fixes a
-> > symptom and not the bug itself.
-> >  
-> There are multiple causes for triggering ftrace_disabled. I agree that 
+Any objection for not having the tracepoint in UDP sendmsg, both IPv4
+and IPv6?
 
-Yes, just like there's multiple causes for BUG_ON() ;-)
-
-The ftrace_disable is used to help keep the system from being totally
-corrupted. When it triggers, the best thing to do is a reboot.
-
-> aba4b5c22cba is not faulty. However, the incorporation of this patch 
-> will cause problems due to triggering ftrace_disabled. The generation of 
-> ftrace_disabled is beyond our control. This is related to the user. What 
-> we can do is even if there are no additional derivative problems.
-
-Well, when a user inserts a module, then they become a kernel developer too ;-)
-
-> >  
-> >> Signed-off-by: Ye Bin <yebin10@huawei.com>
-> >> ---
-> >>   kernel/trace/ftrace.c | 3 ---
-> >>   1 file changed, 3 deletions(-)
-> >>
-> >> diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-> >> index a3d4dfad0cbc..ff5d9d73a4a7 100644
-> >> --- a/kernel/trace/ftrace.c
-> >> +++ b/kernel/trace/ftrace.c
-> >> @@ -7438,9 +7438,6 @@ void ftrace_release_mod(struct module *mod)
-> >>
-> >>   	mutex_lock(&ftrace_lock);
-> >>
-> >> -	if (ftrace_disabled)
-> >> -		goto out_unlock;
-> >> -  
-> >
-> > Here you delete the check, and the next patch you have:
-> >
-> > +	if (ftrace_disabled || (mod && !mod->num_ftrace_callsites)) {
-> > +		mutex_unlock(&ftrace_lock);
-> > +		return;
-> > +	}
-> > +
-> >  
-> The second patch I added judgment when initializing 'mod_map' in 
-> ftrace_free_mem(). The first patch removes the judgment when 
-> ftrace_release_mod() releases'mod_map'. The logic modified by the two 
-> patches is isolated.
-
-Actually I think both patches are buggy.
-
-When ftrace_disabled is set, we don't know the state of the code and we do
-not want to do *any* more text modification. That's what ftrace_disable
-means. Something went wrong with text modification and any more changes can
-cause a bigger problem.
-
-We don't add "exceptions".
-
-If you are worried about unloading modules when ftrace_disable is set, what
-is a much safer solution is to up the module count of all modules that have
-any ftrace callsites active, and prevent those modules from being removed.
-
-Again, the only solution to a ftrace_disable being set is a full reboot.
-
--- Steve
+Thanks
+--breno
