@@ -1,26 +1,27 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BB611E261F;
-	Tue, 27 May 2025 18:51:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26F1C280A35;
+	Tue, 27 May 2025 18:56:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748371880; cv=none; b=gFKC+Uj5Tnc8ZQ7/PRpyVIfsEUgbh5BjkUTqyolafeWBv9pg+sIzPndaWTxIqnlSz2cO9cCbSCtwAp2mMFn9yBQ2tyrFLmvGSn9b+CdDVpXkwu7Jgc16PiwSzyB/c3QCFuLIBh2fd8pRUHjUMV5ZfNwdIQZpI5C6i58vmEGDWe4=
+	t=1748372217; cv=none; b=LDVUFwEyfjaT+gQwxApKi4914P5wE0IrpVZFA/YsiYzciWGN4XbNN77irXux7936f9K6cKOyiWzAKk40yMPi2Wh+TmjvqGlr/tr4abJqVbVu1+iTPFByyH8+ne+fixkf7BP5LyQJ+n+usKMn4u5Cf3Sb+CBE6/9We4SqjNE8FOE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748371880; c=relaxed/simple;
-	bh=8VZ7/Xn+9sR8KFVasT/gNOAEm+NveTB+cVvhv3Bcz4E=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=fI3N3+wKQBZMnGjlnsiAtjv9cNEd8zHA0ugu7AFQRfnzibTpz0NPk55qhIK3J/Zb+uSlqQ/5Y+hTFHhp+cuiJ6+dDQkSA44co78PqVLwCtxygPuOUjjJCKXVvMEnlRoPpAJfpDt6bjwUMIi+5kZbI5OC8KVfLJS4eEfH4MDr3Tw=
+	s=arc-20240116; t=1748372217; c=relaxed/simple;
+	bh=UzBD2LFNDaxTf0HiFaUy6eYRVbl/5f/e2WlI2942kQo=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=uXiclFTnngGxysmOj+0IOwP3Y5hqrrHO8McadPkTVqonN+wtJYFwErHpfuBqX3158F6+3ClnVOYyBpAmCq4FLxPVWExpVa8D7V1ePgcNQr4OvAbcOw8rrBa6rOawydxzBPVirjGELnWB9b4cGUEQxGjh8B1cLksN0CoEiCU9Hsc=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7D9B4C4CEE9;
-	Tue, 27 May 2025 18:51:18 +0000 (UTC)
-Date: Tue, 27 May 2025 14:52:16 -0400
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 12585C4CEEB;
+	Tue, 27 May 2025 18:56:55 +0000 (UTC)
+Date: Tue, 27 May 2025 14:57:53 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
 To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
  <linux-trace-kernel@vger.kernel.org>
 Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
  <mathieu.desnoyers@efficios.com>
-Subject: [PATCH] ring-buffer: Simplify ring_buffer_read_page() with guard()
-Message-ID: <20250527145216.0187cf36@gandalf.local.home>
+Subject: [PATCH] ring-buffer: Remove jump to out label in
+ ring_buffer_swap_cpu()
+Message-ID: <20250527145753.6b45d840@gandalf.local.home>
 X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -33,114 +34,80 @@ Content-Transfer-Encoding: 7bit
 
 From: Steven Rostedt <rostedt@goodmis.org>
 
-The function ring_buffer_read_page() had two gotos. One was simply
-returning "ret" and the other was unlocking the reader_lock.
+The function ring_buffer_swap_cpu() has a bunch of jumps to the label out
+that simply returns "ret". There's no reason to jump to a label that
+simply returns a value. Just return directly from there.
 
-There's no reason to use goto to simply return the "ret" variable. Instead
-just return the value.
-
-The jump to the unlocking of the reader_lock can be replaced by
-guard(raw_spinlock_irqsave)(&cpu_buffer->reader_lock).
-
-With these two changes the "ret" variable is no longer used and can be
-removed. The return value on non-error is what was read and is stored in
-the "read" variable.
+This goes back to almost the beginning when commit 8aabee573dff
+("ring-buffer: remove unneeded get_online_cpus") was introduced. That
+commit removed a put_online_cpus() from that label, but never updated all
+the jumps to it that now no longer needed to do anything but return a
+value.
 
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- kernel/trace/ring_buffer.c | 28 +++++++++++-----------------
- 1 file changed, 11 insertions(+), 17 deletions(-)
+ kernel/trace/ring_buffer.c | 23 +++++++++--------------
+ 1 file changed, 9 insertions(+), 14 deletions(-)
 
 diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-index 0b21d64e90c8..897ce51d3bbf 100644
+index 897ce51d3bbf..e2aa90dc8d9e 100644
 --- a/kernel/trace/ring_buffer.c
 +++ b/kernel/trace/ring_buffer.c
-@@ -6535,38 +6535,37 @@ int ring_buffer_read_page(struct trace_buffer *buffer,
- 	struct buffer_data_page *bpage;
- 	struct buffer_page *reader;
- 	unsigned long missed_events;
--	unsigned long flags;
- 	unsigned int commit;
- 	unsigned int read;
- 	u64 save_timestamp;
--	int ret = -1;
+@@ -6309,37 +6309,33 @@ int ring_buffer_swap_cpu(struct trace_buffer *buffer_a,
  
- 	if (!cpumask_test_cpu(cpu, buffer->cpumask))
+ 	if (!cpumask_test_cpu(cpu, buffer_a->cpumask) ||
+ 	    !cpumask_test_cpu(cpu, buffer_b->cpumask))
 -		goto out;
-+		return -1;
++		return -EINVAL;
+ 
+ 	cpu_buffer_a = buffer_a->buffers[cpu];
+ 	cpu_buffer_b = buffer_b->buffers[cpu];
+ 
+ 	/* It's up to the callers to not try to swap mapped buffers */
+-	if (WARN_ON_ONCE(cpu_buffer_a->mapped || cpu_buffer_b->mapped)) {
+-		ret = -EBUSY;
+-		goto out;
+-	}
++	if (WARN_ON_ONCE(cpu_buffer_a->mapped || cpu_buffer_b->mapped))
++		return -EBUSY;
+ 
+ 	/* At least make sure the two buffers are somewhat the same */
+ 	if (cpu_buffer_a->nr_pages != cpu_buffer_b->nr_pages)
+-		goto out;
++		return -EINVAL;
+ 
+ 	if (buffer_a->subbuf_order != buffer_b->subbuf_order)
+-		goto out;
+-
+-	ret = -EAGAIN;
++		return -EINVAL;
+ 
+ 	if (atomic_read(&buffer_a->record_disabled))
+-		goto out;
++		return -EAGAIN;
+ 
+ 	if (atomic_read(&buffer_b->record_disabled))
+-		goto out;
++		return -EAGAIN;
+ 
+ 	if (atomic_read(&cpu_buffer_a->record_disabled))
+-		goto out;
++		return -EAGAIN;
+ 
+ 	if (atomic_read(&cpu_buffer_b->record_disabled))
+-		goto out;
++		return -EAGAIN;
  
  	/*
- 	 * If len is not big enough to hold the page header, then
- 	 * we can not copy anything.
- 	 */
- 	if (len <= BUF_PAGE_HDR_SIZE)
--		goto out;
-+		return -1;
- 
- 	len -= BUF_PAGE_HDR_SIZE;
- 
- 	if (!data_page || !data_page->data)
--		goto out;
-+		return -1;
-+
- 	if (data_page->order != buffer->subbuf_order)
--		goto out;
-+		return -1;
- 
- 	bpage = data_page->data;
- 	if (!bpage)
--		goto out;
-+		return -1;
- 
--	raw_spin_lock_irqsave(&cpu_buffer->reader_lock, flags);
-+	guard(raw_spinlock_irqsave)(&cpu_buffer->reader_lock);
- 
- 	reader = rb_get_reader_page(cpu_buffer);
- 	if (!reader)
--		goto out_unlock;
-+		return -1;
- 
- 	event = rb_reader_event(cpu_buffer);
- 
-@@ -6600,7 +6599,7 @@ int ring_buffer_read_page(struct trace_buffer *buffer,
- 		if (full &&
- 		    (!read || (len < (commit - read)) ||
- 		     cpu_buffer->reader_page == cpu_buffer->commit_page))
--			goto out_unlock;
-+			return -1;
- 
- 		if (len > (commit - read))
- 			len = (commit - read);
-@@ -6609,7 +6608,7 @@ int ring_buffer_read_page(struct trace_buffer *buffer,
- 		size = rb_event_ts_length(event);
- 
- 		if (len < size)
--			goto out_unlock;
-+			return -1;
- 
- 		/* save the current timestamp, since the user will need it */
- 		save_timestamp = cpu_buffer->read_stamp;
-@@ -6667,7 +6666,6 @@ int ring_buffer_read_page(struct trace_buffer *buffer,
- 		if (reader->real_end)
- 			local_set(&bpage->commit, reader->real_end);
- 	}
--	ret = read;
- 
- 	cpu_buffer->lost_events = 0;
- 
-@@ -6694,11 +6692,7 @@ int ring_buffer_read_page(struct trace_buffer *buffer,
- 	if (commit < buffer->subbuf_size)
- 		memset(&bpage->data[commit], 0, buffer->subbuf_size - commit);
- 
-- out_unlock:
--	raw_spin_unlock_irqrestore(&cpu_buffer->reader_lock, flags);
--
-- out:
--	return ret;
-+	return read;
+ 	 * We can't do a synchronize_rcu here because this
+@@ -6376,7 +6372,6 @@ int ring_buffer_swap_cpu(struct trace_buffer *buffer_a,
+ out_dec:
+ 	atomic_dec(&cpu_buffer_a->record_disabled);
+ 	atomic_dec(&cpu_buffer_b->record_disabled);
+-out:
+ 	return ret;
  }
- EXPORT_SYMBOL_GPL(ring_buffer_read_page);
- 
+ EXPORT_SYMBOL_GPL(ring_buffer_swap_cpu);
 -- 
 2.47.2
 
