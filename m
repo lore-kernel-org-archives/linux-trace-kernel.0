@@ -1,146 +1,121 @@
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B21F14830A;
-	Mon, 26 May 2025 21:36:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5D09A927;
+	Tue, 27 May 2025 00:17:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748295378; cv=none; b=rrYqwIMCHhLEWR8jMQcYGsnok3WbooUswo57qHYy1Q+9ZCdAt6BnnNMHBNWaokTkB8sKUG8/sULEtrloxxfvtZiV108e3xs5ivxBm6GSRNxTnatPxrIDXn1HAs+kBNq7pmdm7yKZc750sicuW8CH7fJLN9XJE8TvM3gKTr4ee+k=
+	t=1748305067; cv=none; b=h4kzAQOYXz4nBm17DhBZa1zydSGROm8w9dNWlgArhiqYXVD77qMMcmVIZisd8bSFEeDor0cHIQJfxvZjb04KhpKwi5UUQtqIS+nwC9OlKWh1TJ+GNouuGBKFwE+qF2t5zHnljbVoLgeU/kpTcNFGU6VIjIlgJ72lbWXk6nvyfww=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748295378; c=relaxed/simple;
-	bh=A1O2aaqb1msQ3ciMI88tVBNeU3i1ThpwfS74QsymqGA=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RzgNybWIy7vCX3cnYfgUnjVAAwKY6l4WDDLntSaSZvy2gyi5qwtJ8tXUUigADA61S3rxE+TGEJ6eRlN920b/rghlwHIG4iSBpK8ltbNaCmZAZyPI1kZur4W9VsYrYQ7oTIw/RxaPOqwgzbfgTtHswr7EQdDCoqYyy46IFFSXa0A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=L1PkB8Wy; arc=none smtp.client-ip=209.85.128.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1748305067; c=relaxed/simple;
+	bh=wMr1HOcueB5Am6KF/Ss7kwFnpRQwGEkr9hpd5ICRctU=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=qHjVV7goBTRCDjUQ/JNaNgEJOkh6P6PO+MylprFteGNHgxcxajPBFHSZp07PBFgD/ssKwqrz/xnLHQ/r9ZAmCp9ntg19Ez6Otwk4HMoeyXL6Smq5UcXx2UG50rtfMfVoWEwyTuvz0/U0XViycnHLJcpa1tl182mwMKtiM1MResk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bJtR09PK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L1PkB8Wy"
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-43edb40f357so22406505e9.0;
-        Mon, 26 May 2025 14:36:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748295375; x=1748900175; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=s3lnNb9yn9lATjxO6VHxHH72Z14fcdJiMP9it5w7LLU=;
-        b=L1PkB8WyEvXlIckD8BhssUb7jk2uDsj3QrtI+hmgHVT4mq+jBxf9g84h7kQwMiD1DU
-         NPosAfNtX4qW2fCrcGrSbiK+BF8JBXBSyxYPuwXCtHvOavXC0vnVVpqJNpDjq/61zy9V
-         qCSzttUIZPly1gURauE7Kb7lpBzwM7ZF+JSa0XynO5pqci4JJ5gVMDFWFzLNzlyRzOHv
-         cdtCPjt7df5HUhhgbR1nwuNJqcF+rVH+mwEwFQL7QZTepZAgBz1wVYLWDhOelPQR5pz6
-         inrVm/tkrBdHxy+sTnZMGQy/K4nSscc1RWQZbmeSjDBIJGAkZ64W+0gHj2AjWTS6Jezp
-         Wsrg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748295375; x=1748900175;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=s3lnNb9yn9lATjxO6VHxHH72Z14fcdJiMP9it5w7LLU=;
-        b=iqsCVSb3ms2BTud8m3YgoYZWPoRwWhi/+l6XB6jP9j+9gp5gKhh+ZjwMMnTMA22JgH
-         hs10z2K6WcUfS/s5WC9EJ0xAqe2xYa+tgpE5TUwaRZpy//PqwAc0r8SD6wcA+Wpu04ci
-         Y37dUqOZTHxzwOcvdiTB9erIXPMn9uYZ5Z6bWS5Fp9y9pXGO1hRKPXYtOn7AT1DBZ47v
-         FNpk/M+RvN8EZBT5lK5UL1G4LRePXMsaYqBGaabT0MuytpHHvp3H7UCt4K980Sj7gLWZ
-         9do3amBK0TtQ9nVwGb5dLfG35MR5jrUA/EsjQyOv4PildM5GsCum8Mvgf7da1JdIT5Io
-         uCEQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVEjJZW2mePX84WfR3NPhFmLsrCu0Lf+6QFfw6GC+ilGV8n9zBZiLF+b7RNntF7WhSxTK9O4VNOwBMuY3iQhXwwSuON@vger.kernel.org, AJvYcCWfWp+FOqfW3kj34T6aqr+xqczYZYLJMkfRyJPaZ6vH3JzOZBAcdE3xFx6cnCeqpYXPJAL5tjbrci794Ian@vger.kernel.org, AJvYcCXLvEI+8j+OUGeQfhiKXjImSr4eN/U5Tu+t9vLlRlu4fo3LY7RO19UY2dHedsE8nCZSQrc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzDGOxRA7QofmsCDWeUZ/9twODpPcEJ5/gRv9OdPpV6vReFUGp7
-	bl3TsWHtAVB2TDF8H7bCHzB48mqpXwLyMYV47Xntlbq0oaRLXyMGxLn/
-X-Gm-Gg: ASbGncuzZx5ntjDLLGzTH4b+6JWrFgzIVpyHapzTr3G9yE1KwqNyoRvR4zsp+lwOIN2
-	jMI2ixuAgwCfQniu4FzVWpBr2uIQxVLRmJq2xB/GLTl2Hg+HXKw6JrBszLAK0QxfQexqN6uU7z+
-	KXpHdn75nefkHOtL3jYbplJNJ+UIkUDxmd3uXn2C5qy4UvQ+jGW8sdBugZRRd/yBOOQwYqJMRWy
-	m2Fssb+itcHxzNQAi7qjUY1pWBNezjnKSHLe+JfL1A8LuHpJ/JNGrrz3vMidtlXHZGqxGRYNpUj
-	ekBwHQlTGtR6gL0jolvdVnl1LOZmVhoeNerWrmYLMdwkED+HZfIWUnNtdCCZdSXXpzES
-X-Google-Smtp-Source: AGHT+IHxqRVP+JNqfYwSCLXotoldvLJsltqFGQqa9blxvha54IDkfupAVNQtPor/kQw/8VqmUD2m7Q==
-X-Received: by 2002:a05:600c:3e14:b0:43c:ec4c:25b1 with SMTP id 5b1f17b1804b1-44c92a54b22mr86319865e9.23.1748295375146;
-        Mon, 26 May 2025 14:36:15 -0700 (PDT)
-Received: from krava (85-193-35-57.rib.o2.cz. [85.193.35.57])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a4ce458830sm8315991f8f.14.2025.05.26.14.36.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 26 May 2025 14:36:14 -0700 (PDT)
-From: Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date: Mon, 26 May 2025 23:36:13 +0200
-To: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Oleg Nesterov <oleg@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
-	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	x86@kernel.org, Song Liu <songliubraving@fb.com>,
-	Yonghong Song <yhs@fb.com>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Hao Luo <haoluo@google.com>, Steven Rostedt <rostedt@goodmis.org>,
-	Alan Maguire <alan.maguire@oracle.com>,
-	David Laight <David.Laight@aculab.com>,
-	Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas@t-8ch.de>,
-	Ingo Molnar <mingo@kernel.org>
-Subject: Re: [PATCHv2 perf/core 01/22] uprobes: Remove breakpoint in
- unapply_uprobe under mmap_write_lock
-Message-ID: <aDTezSUdW6QvQ733@krava>
-References: <20250515121121.2332905-1-jolsa@kernel.org>
- <20250515121121.2332905-2-jolsa@kernel.org>
- <20250520084845.6388479dd18658d2c2598953@kernel.org>
- <20250520141925.GA14203@redhat.com>
- <20250522234822.0410cabbbbfb58ef327805a9@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bJtR09PK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 78129C4CEE7;
+	Tue, 27 May 2025 00:17:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748305066;
+	bh=wMr1HOcueB5Am6KF/Ss7kwFnpRQwGEkr9hpd5ICRctU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=bJtR09PKSIGXNwtceQGOGnEOWVPbiYxFDrm6KgKis0CwtB6sQeCOjAENolVvYP3P2
+	 +lnrLu6N0zBd4MxIrhS1ZbZSFWnDjqWFAY+5vGstfcOHjtjCOi6bgVz7AGfkEN/n6Q
+	 i/Q8zzuTiQNArcWc7Pqs7bEDhyJ4Y0s/GYtV7tdh60Fr9DBTAaeEu2+UOK6Z/JDxT+
+	 HTK015xBK4ZluGjMFsRh6tG025HGC6p+rBn0nOs9EDbGYo27U8OeD3pjuLnF2gaeog
+	 tJt51ub3hCVwJjynlRw4+uGX6OGk1/0jRsUPs36GTHytRXJaQeUFfVBNG1gjvrjrq6
+	 BK2tsBI/jK8gA==
+Date: Tue, 27 May 2025 09:17:43 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 1/2] tracing: ring_buffer: Rewind persistent ring
+ buffer when reboot
+Message-Id: <20250527091743.d036018195b7668aea0753c0@kernel.org>
+In-Reply-To: <20250526120342.cdcfca9ac3c2161d48c03af5@kernel.org>
+References: <174792927500.496143.10668210464102033012.stgit@mhiramat.tok.corp.google.com>
+	<174792928413.496143.17979267710069360561.stgit@mhiramat.tok.corp.google.com>
+	<20250523165425.0275c9a1@gandalf.local.home>
+	<20250523172857.02ab4a75@gandalf.local.home>
+	<20250526120342.cdcfca9ac3c2161d48c03af5@kernel.org>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250522234822.0410cabbbbfb58ef327805a9@kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Thu, May 22, 2025 at 11:48:22PM +0900, Masami Hiramatsu wrote:
-> On Tue, 20 May 2025 16:19:26 +0200
-> Oleg Nesterov <oleg@redhat.com> wrote:
-> 
-> > On 05/20, Masami Hiramatsu wrote:
-> > >
-> > > On Thu, 15 May 2025 14:10:58 +0200
-> > > Jiri Olsa <jolsa@kernel.org> wrote:
-> > >
-> > > > Currently unapply_uprobe takes mmap_read_lock, but it might call
-> > > > remove_breakpoint which eventually changes user pages.
-> > > >
-> > > > Current code writes either breakpoint or original instruction, so
-> > > > it can probably go away with that, but with the upcoming change that
-> > > > writes multiple instructions on the probed address we need to ensure
-> > > > that any update to mm's pages is exclusive.
-> > > >
-> > >
-> > > So, this is a bugfix, right?
-> > 
-> > No, mmap_read_lock() is fine.
-> > 
-> > To remind, this was already discussed with you, see
-> > [PATCH 02/12] uprobes: grab write mmap lock in unapply_uprobe()
-> > https://lore.kernel.org/all/20240625002144.3485799-3-andrii@kernel.org/
-> > 
-> > And you even reviewed this patch
-> > [PATCH 1/2] uprobes: document the usage of mm->mmap_lock
-> > https://lore.kernel.org/all/20240710140045.GA1084@redhat.com/
-> > 
-> > But, as the changelog explains, this patch is needed for the upcoming changes.
-> 
-> Oops, OK. So current code is good with either mmap_read_lock() or mmap_write_lock().
-> But the patch description is a bit confusing. If the point is an atomic (byte?)
-> update or not, it should describe it.
+On Mon, 26 May 2025 12:03:42 +0900
+Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
 
-ok, I'll try to make the changelog more detailed
+> On Fri, 23 May 2025 17:28:57 -0400
+> Steven Rostedt <rostedt@goodmis.org> wrote:
+> 
+> > On Fri, 23 May 2025 16:54:25 -0400
+> > Steven Rostedt <rostedt@goodmis.org> wrote:
+> > 
+> > > I think we also need this:
+> > > 
+> > > diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+> > > index 7d837963dd1e..456efebc396a 100644
+> > > --- a/kernel/trace/ring_buffer.c
+> > > +++ b/kernel/trace/ring_buffer.c
+> > > @@ -3638,6 +3638,9 @@ rb_move_tail(struct ring_buffer_per_cpu *cpu_buffer,
+> > >  
+> > >  	rb_reset_tail(cpu_buffer, tail, info);
+> > >  
+> > > +	/* The new page should have zero committed */
+> > > +	rb_init_page(next_page->page);
+> > > +
+> > >  	/* Commit what we have for now. */
+> > >  	rb_end_commit(cpu_buffer);
+> > >  	/* rb_end_commit() decs committing */
+> > 
+> > No we don't need it ;-)
+> > 
+> > I'm looking deeper into the code and we have this:
+> > 
+> > 		/*
+> > 		 * No need to worry about races with clearing out the commit.
+> > 		 * it only can increment when a commit takes place. But that
+> > 		 * only happens in the outer most nested commit.
+> > 		 */
+> > 		local_set(&next_page->page->commit, 0);
+> > 
+> > When the tail page gets moved.
+> 
+> Yeah, when the page gets written, it is cleared.
 
-thanks,
-jirka
+What about this? It seems if we keep the reader->page->commit, when we
+catch up the tail page, rb_get_reader_page() returns new reader (== tail)
+because reader->read(==0) < reader->page->commit. But we should not return
+new reader.
 
-> 
-> Thank you,
-> 
-> > 
-> > --------------------------------------------------------------------------
-> > Just in case... I'll try to read this series tomorrow, but at first glance
-> > this version addresses all my concerns.
-> > 
-> > Oleg.
-> > 
-> 
-> 
-> -- 
-> Masami Hiramatsu (Google) <mhiramat@kernel.org>
+
+diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+index 5034bae02f08..179142db9586 100644
+--- a/kernel/trace/ring_buffer.c
++++ b/kernel/trace/ring_buffer.c
+@@ -5522,6 +5522,12 @@ rb_get_reader_page(struct ring_buffer_per_cpu *cpu_buffer)
+                cpu_buffer->last_overrun = overwrite;
+        }
+ 
++       /* But if we catch up to the tail, do not return reader page. */
++       if (cpu_buffer->commit_page == cpu_buffer->reader_page) {
++               reader = NULL;
++               goto out;
++       }
++
+        goto again;
+ 
+  out:
+
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
