@@ -1,120 +1,76 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B1DF323D;
-	Tue, 27 May 2025 03:54:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D312119CC37
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 27 May 2025 06:19:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748318087; cv=none; b=eyh9JV6W+oV30TPvnOkU5p+7jVoePPWgFllER/0AmHkKefQRuseeUpOWyClhffE6BQ13LD/lSZt4Yl4u85/xT/1q9Zz1Zbt1VLXh6YOX6QejtwzmfGzkS3K3s/3svaNoG/EV7qX9duw/DCwKrZbkYWPJjToA4QSsTe0OZ8ruCyQ=
+	t=1748326747; cv=none; b=X+Szslqf1AV06DO+Py82vpQjXCf67SF8glQ8Xr03ksAFQkIVljaKSVYyP0WdPLULhAZAaXKrR/Zp9b1DNqQyoWuMTYpn8CzA3A3ASAIy+uSgkKaDxWYZeorJYUNIr0VJFD0ob/jouGipneKlwiqanir1ZEYYSOCixOSS54pP8M0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748318087; c=relaxed/simple;
-	bh=Ng61/aB84nxCgAq7cyaS69ZYzC+Riw+xgfzDZXLPnlo=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=pniusO7iE5+OGKlyL/0GbF+sji6mYhSGaWHYoQQa4S32MdRf+tavmnqa9moruIyHyA5lwb1Fw15HUvIzzHAAdqkXTYDxjCD/aUEguQbYOUxXko+dLpAgutfJBOq6ePW9dSFU588iKP94cInmErEehFjdpNtlD3c8pemRzenxHsU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eKwc+h+S; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eKwc+h+S"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CF545C4CEEA;
-	Tue, 27 May 2025 03:54:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748318086;
-	bh=Ng61/aB84nxCgAq7cyaS69ZYzC+Riw+xgfzDZXLPnlo=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=eKwc+h+SFGHxjkq7bmD9++4GGcSQ075Ow5aRDjeYMPN7o+G7Q/OX1d29Wu0+ZtlpT
-	 5OZeTYvMdO3oFHEDd4o6dyQSSaSyLzcRfjsBO8LsWannbxvLU32/som5SMI7ejIBKk
-	 IgmsOKs1woRkcH89ueNHMsSoNCYb5lP9pqSjveJY1ZXiCbGmQ1+YwRZAguQTbgm6cL
-	 CwJMft8wYK2npIG41Y0uYf/5JdQPAi9ff+0s29Ettsd3zVlG9fz17ikF6O/U8XYKwP
-	 p2TplWx7Z4oWJisH8ZA1xSIfbOCSwVJB45AajXA5uOWIdgcmXG0LMyPAgHekZ+PqOL
-	 cRXAscjm6aV1Q==
-Date: Tue, 27 May 2025 12:54:44 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 1/2] tracing: ring_buffer: Rewind persistent ring
- buffer when reboot
-Message-Id: <20250527125444.80e59e659a7f087fed3c6fc9@kernel.org>
-In-Reply-To: <20250527121549.2d40608e9463199d85bf9ba4@kernel.org>
-References: <174792927500.496143.10668210464102033012.stgit@mhiramat.tok.corp.google.com>
-	<174792928413.496143.17979267710069360561.stgit@mhiramat.tok.corp.google.com>
-	<20250523165425.0275c9a1@gandalf.local.home>
-	<20250523172857.02ab4a75@gandalf.local.home>
-	<20250526120342.cdcfca9ac3c2161d48c03af5@kernel.org>
-	<20250527091743.d036018195b7668aea0753c0@kernel.org>
-	<20250527121549.2d40608e9463199d85bf9ba4@kernel.org>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1748326747; c=relaxed/simple;
+	bh=wHa8RIR1T5MCA0tXtO7MKyUF2oPQzBNCztzgQ5LpaiI=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ibhdk3ets4VFAZ/4TJRYebfjMiaQWyyhFeKzv2OenqFUe8PwzxyhJ3dT/PWb/v2aeh3uQwzG49EisCgq36P4S64hX0bcEBiL9Pz2KW9SRTqLOhhiW9aZIDo5Gi4hYC22X8T/SnGKcHh9rkRS8UH2ebPMKArK8Aotyqr/P/2kYsY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.93.142])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4b62X66HkZzYQtpC
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 27 May 2025 14:19:02 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.128])
+	by mail.maildlp.com (Postfix) with ESMTP id 070A61A0359
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 27 May 2025 14:19:02 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.175.101.107])
+	by APP4 (Coremail) with SMTP id gCh0CgBXul5UWTVo93uWNg--.23840S4;
+	Tue, 27 May 2025 14:19:01 +0800 (CST)
+From: Ye Bin <yebin@huaweicloud.com>
+To: rostedt@goodmis.org,
+	mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com,
+	mark.rutland@arm.com,
+	linux-trace-kernel@vger.kernel.org
+Cc: yebin@huaweicloud.com,
+	yebin10@huawei.com
+Subject: [PATCH v2 0/2] fix UAF when lookup kallsym after ftrace disabled
+Date: Tue, 27 May 2025 14:18:58 +0800
+Message-Id: <20250527061900.1533462-1-yebin@huaweicloud.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:gCh0CgBXul5UWTVo93uWNg--.23840S4
+X-Coremail-Antispam: 1UD129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
+	VFW2AGmfu7bjvjm3AaLaJ3UjIYCTnIWjp_UUUY27AC8VAFwI0_Gr0_Xr1l1xkIjI8I6I8E
+	6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28Cjx
+	kF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0cI8I
+	cVCY1x0267AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2js
+	IEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE
+	5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeV
+	CFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1l
+	42xK82IYc2Ij64vIr41l4c8EcI0Ec7CjxVAaw2AFwI0_JF0_Jw1l4I8I3I0E4IkC6x0Yz7
+	v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF
+	1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIx
+	AIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI
+	42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxh
+	VjvjDU0xZFpf9x0JUdHUDUUUUU=
+X-CM-SenderInfo: p1hex046kxt4xhlfz01xgou0bp/
 
-On Tue, 27 May 2025 12:15:49 +0900
-Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
+From: Ye Bin <yebin10@huawei.com>
 
+Diff v2 vs v1:
+(1) Add description for PATCH[1/2];
+(2) Move judgement from ftrace_free_mem() to allocate_ftrace_mod_map()
 
-> > What about this? It seems if we keep the reader->page->commit, when we
-> > catch up the tail page, rb_get_reader_page() returns new reader (== tail)
-> > because reader->read(==0) < reader->page->commit. But we should not return
-> > new reader.
-> > 
-> > 
-> > diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-> > index 5034bae02f08..179142db9586 100644
-> > --- a/kernel/trace/ring_buffer.c
-> > +++ b/kernel/trace/ring_buffer.c
-> > @@ -5522,6 +5522,12 @@ rb_get_reader_page(struct ring_buffer_per_cpu *cpu_buffer)
-> >                 cpu_buffer->last_overrun = overwrite;
-> >         }
-> >  
-> > +       /* But if we catch up to the tail, do not return reader page. */
-> > +       if (cpu_buffer->commit_page == cpu_buffer->reader_page) {
-> 
-> 
-> Hmm, I found this might not work if it is called twice.
-> Maybe rb_get_reader_page() can check the reader_page->ts > head_page->ts
-> and return NULL (or reader_page if read < commit) at first.
+Ye Bin (2):
+  ftrace: fix UAF when lookup kallsym after ftrace disabled
+  ftrace: don't allocate ftrace module map if ftrace is disabled
 
-Here is what I meant. As far as I ran my test, it looks good (it prevents
-over-read by `cat per_cpu/cpu0/trace_pipe_raw`)
-
-diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-index 5034bae02f08..de1831eb3446 100644
---- a/kernel/trace/ring_buffer.c
-+++ b/kernel/trace/ring_buffer.c
-@@ -5405,6 +5405,7 @@ rb_get_reader_page(struct ring_buffer_per_cpu *cpu_buffer)
-        unsigned long flags;
-        int nr_loops = 0;
-        bool ret;
-+       u64 ts;
- 
-        local_irq_save(flags);
-        arch_spin_lock(&cpu_buffer->lock);
-@@ -5423,6 +5424,18 @@ rb_get_reader_page(struct ring_buffer_per_cpu *cpu_buffer)
- 
-        reader = cpu_buffer->reader_page;
- 
-+       /*
-+        * Now the page->commit is not cleared when it read.
-+        * Check whether timestamp is newer instead. We also don't
-+        * care the head_page is overwritten. In that case, timestamp
-+        * should be newer than reader timestamp too.
-+        */
-+       ts = cpu_buffer->head_page->page->time_stamp;
-+       if (ts < reader->page->time_stamp) {
-+               reader = NULL;
-+               goto out;
-+       }
-+
-        /* If there's more to read, return this page */
-        if (cpu_buffer->reader_page->read < rb_page_size(reader))
-                goto out;
-
-
+ kernel/trace/ftrace.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
 -- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+2.34.1
+
