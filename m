@@ -1,27 +1,30 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA70D2DCBF0;
-	Tue, 27 May 2025 19:50:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6322C20013A;
+	Tue, 27 May 2025 20:10:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748375419; cv=none; b=kw0Hp2vF4K5TdUGGZ3+TnWsqQXo07QrIOollGE3suoxX11bcFOB1QTMuzfU6ex7EJTDgrMmUUqSfS92Wg9WTgWwdF7y4gCqr1/XVIKMO5JYd10USlW49hHMZREZGvq9zlvrF+52vHTcbPlsjjSMoYMCKPPeEDVcMr0Vovttyd1k=
+	t=1748376633; cv=none; b=TRtooR1W0IVCeNWVeGdCLK1ACo+Q+0dicJRTio0Q78EdXVgiTNpha22PywvwH9Jav2cK3kEN21bH/ZCdhCUSKfjiOgzmIQmZJmGPEoSAOLuYLO7soxAOgYGzlM5ZMbvD+6HWGdCl8AcSX5R3ty8dvXMej3a4yQnHC9WMQdSb8Q0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748375419; c=relaxed/simple;
-	bh=dV8TaxUw9B/U7sVtHJzAMm/STGMFsc5fuVvoZ7Dxg9o=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=kOAevrvXmTdHPJ8cPYq+izm/p4nHJ3MjLHY9vWkVfklBi4F6wJXmKELuS+3vQ2ly8S0sFBo5AiXpZdD8ds6qrM0GqTbYvp1ort2cTyekg3oZ00Li6iUsBbqfn0Jkf/VnRDs8EL3vzjxRA3AD1YNExe1/h53We6k1YtcU0VqzgZI=
+	s=arc-20240116; t=1748376633; c=relaxed/simple;
+	bh=AATuyonrmvgT5T9PKRZ3HpXkLiEavfYuc5PwEVk76Ww=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=rSIhH/PGtIPFVjMNvo4Yzeq1x0A+7+n7Z7K7ZN7SZg7i8xUg9gqqHXyknkydC+m8R8PFsD9iE8LcDXlWomeO8F8wmzcIvB5CZx+Q+SNbVlD5gaqhAFq44mucUxpsam72rKi25dxcnBsIs8r8ECj00XCLcrTwEUR8eXEwqdM5d8I=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 89235C4CEE9;
-	Tue, 27 May 2025 19:50:18 +0000 (UTC)
-Date: Tue, 27 May 2025 15:51:16 -0400
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9865FC4CEE9;
+	Tue, 27 May 2025 20:10:32 +0000 (UTC)
+Date: Tue, 27 May 2025 16:11:30 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
 To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
  <linux-trace-kernel@vger.kernel.org>
 Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>
-Subject: [PATCH] ring-buffer: Removed unnecessary if() goto out where out is
- the next line
-Message-ID: <20250527155116.227f35be@gandalf.local.home>
+ <mathieu.desnoyers@efficios.com>, Vincent Donnefort <vdonnefort@google.com>
+Subject: Re: [PATCH] ring-buffer: Do not trigger WARN_ON() due to a
+ commit_overrun
+Message-ID: <20250527161130.26276a41@gandalf.local.home>
+In-Reply-To: <20250527121140.0e7f0565@gandalf.local.home>
+References: <20250527121140.0e7f0565@gandalf.local.home>
 X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -32,41 +35,27 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-From: Steven Rostedt <rostedt@goodmis.org>
+On Tue, 27 May 2025 12:11:40 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-In the function ring_buffer_discard_commit() there's an if statement that
-jumps to the next line:
+> But there just happens to be one scenario where this can legitimately
+> happen. That is on a commit_overrun. A commit overrun is when an interrupt
+> preempts an event being written to the buffer and then the interrupt adds
+> so many new events that it fills and wraps the buffer back to the commit.
+> Any new events would then be dropped and be reported as "missed_events".
 
-	if (rb_try_to_discard(cpu_buffer, event))
-		goto out;
- out:
+I'll probably update the commit log, but the way I triggered this was to run:
 
-This was caused by the change that modified the way timestamps were taken
-in interrupt context, and removed the code between the if statement and
-the goto, but failed to update the conditional logic.
+ # perf record -o perf-test.dat -a -- trace-cmd record --nosplice  -e all -p function hackbench 50
 
-Fixes: a389d86f7fd0 ("ring-buffer: Have nested events still record running time stamp")
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
- kernel/trace/ring_buffer.c | 5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
+Which causes perf to trigger a bunch of interrupts while trace-cmd enables
+function tracing and all events. This is on a debug kernel that has
+lockdep, KASAN and interrupt and preemption disabling events enabled.
 
-diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-index e2aa90dc8d9e..0a3be3a01d14 100644
---- a/kernel/trace/ring_buffer.c
-+++ b/kernel/trace/ring_buffer.c
-@@ -4681,10 +4681,7 @@ void ring_buffer_discard_commit(struct trace_buffer *buffer,
- 	RB_WARN_ON(buffer, !local_read(&cpu_buffer->committing));
- 
- 	rb_decrement_entry(cpu_buffer, event);
--	if (rb_try_to_discard(cpu_buffer, event))
--		goto out;
--
-- out:
-+	rb_try_to_discard(cpu_buffer, event);
- 	rb_end_commit(cpu_buffer);
- 
- 	trace_recursive_unlock(cpu_buffer);
--- 
-2.47.2
+Basically, this causes a lot to be traced in an interrupt. Enough to fill
+1.4 megs of the tracing buffer with events in interrupts before a single
+event could be recorded.
 
+I've never triggered this when those extreme conditions were not there.
+
+-- Steve
