@@ -1,33 +1,29 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB890262FF5;
-	Tue, 27 May 2025 13:47:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40D2A126C02;
+	Tue, 27 May 2025 14:00:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748353672; cv=none; b=C4qT2lfo6PbgaA9IGtVLcgM7ajA8DbtoFa5LWpszKnMiY/nAOr8TEOUH5ZgPCVyc5YfnhbtoAj9NV2NTPNw51LHwHek+Jblq6jpAJ+njKbP3BalnkMGEcVX+LR6kQlNdEsVjc8XvQn831TOyx/eHrhQVJ/wjfyt5pDJGrnGpm/A=
+	t=1748354449; cv=none; b=Xu6XVa326qRwtEx18/bg9YyIlCItfnb+yS4L1Ku2Bzqlf5lDPtOOGaWl774W+l+PVPwjnsD5VBSb7YRKgBn4U+QCbL3c3TqStKfo7MbbemWqO0JKqxIshvSlAmhUcFRReun8M1Ny6zp5zPLZcALLI0Q2AovarNu7zr7pNLfeUR4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748353672; c=relaxed/simple;
-	bh=Sjm8Kp0xGaQd/X+6jC8orqiUg+fXnCLx1tvsGr8dkxk=;
+	s=arc-20240116; t=1748354449; c=relaxed/simple;
+	bh=4oU+gJtv7JS0pDGXHWNzGUoOkFjODoRsk1FV5X827V4=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=YGjBsFMJvjehIZ1E2MibmBH//jD+x2X6uaTL6zZ9inEEB3iT5zqNaP7kl8vFhYf5X+7Nilr1uSDZF4lAHB31oBNFiEO0qWQ7Jdlq6se2tQa4azNCLhkPNbUIkp9pOFoHPL3gBIa50W7JPxNB0holSWgImkJSixdanlud44y1nak=
+	 MIME-Version:Content-Type; b=YH2hnQiJ8R9jSi+zQliuXqHum340FiEddnNNTNdpZMyzfjo56hz1MwyvRnMEFzpW5pwBScf2G1lHkHPsz0QwZ7JWKDohm3p9HA2E26qvd0AzHxg/aBh4Eh9aqwvKC8p83ekp4drRKtZZFCpRmh2BKTrJJTobxMPE3ZBqbeRUeAk=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 99509C4CEE9;
-	Tue, 27 May 2025 13:47:51 +0000 (UTC)
-Date: Tue, 27 May 2025 09:48:49 -0400
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DB38AC4CEE9;
+	Tue, 27 May 2025 14:00:47 +0000 (UTC)
+Date: Tue, 27 May 2025 10:01:45 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 1/2] tracing: ring_buffer: Rewind persistent ring
- buffer when reboot
-Message-ID: <20250527094849.49e56eaa@gandalf.local.home>
-In-Reply-To: <20250526124403.3bf41a0634733b640620ad8a@kernel.org>
-References: <174792927500.496143.10668210464102033012.stgit@mhiramat.tok.corp.google.com>
-	<174792928413.496143.17979267710069360561.stgit@mhiramat.tok.corp.google.com>
-	<20250523165425.0275c9a1@gandalf.local.home>
-	<20250523192053.47054e6e@gandalf.local.home>
-	<20250526124403.3bf41a0634733b640620ad8a@kernel.org>
+To: Runji Liu <runjiliu.tech@gmail.com>
+Cc: mhiramat@kernel.org, mathieu.desnoyers@efficios.com, corbet@lwn.net,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ linux-doc@vger.kernel.org
+Subject: Re: [PATCH] docs: trace: boottime-trace.rst: fix typo
+Message-ID: <20250527100145.1e974c21@gandalf.local.home>
+In-Reply-To: <20250526134046.1042-1-runjiliu.tech@gmail.com>
+References: <20250526134046.1042-1-runjiliu.tech@gmail.com>
 X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -38,20 +34,35 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Mon, 26 May 2025 12:44:03 +0900
-Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
+On Mon, 26 May 2025 21:40:46 +0800
+Runji Liu <runjiliu.tech@gmail.com> wrote:
 
-> > 
-> > Now the question is, can this affect the persistent ring buffer too? I'll
-> > memory map the buffer and see if it causes the same issue.  
+> Replace misspelled "eariler" with "earlier" and drop the stray period
+> after "example".
 > 
-> Yeah, it can happen, but I didn't hit that.
-> Let me test it too.
-> 
-> Hmm, BTW, is there any possible solution? records the consumed
-> bytes in meta data?
+> Signed-off-by: Runji Liu <runjiliu.tech@gmail.com>
 
-After memory mapping the main buffer, I found a couple of bugs. I'll have
-the fixes out shortly.
+Acked-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 
 -- Steve
+
+> ---
+>  Documentation/trace/boottime-trace.rst | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/Documentation/trace/boottime-trace.rst b/Documentation/trace/boottime-trace.rst
+> index d594597201fd..3efac10adb36 100644
+> --- a/Documentation/trace/boottime-trace.rst
+> +++ b/Documentation/trace/boottime-trace.rst
+> @@ -198,8 +198,8 @@ Most of the subsystems and architecture dependent drivers will be initialized
+>  after that (arch_initcall or subsys_initcall). Thus, you can trace those with
+>  boot-time tracing.
+>  If you want to trace events before core_initcall, you can use the options
+> -starting with ``kernel``. Some of them will be enabled eariler than the initcall
+> -processing (for example,. ``kernel.ftrace=function`` and ``kernel.trace_event``
+> +starting with ``kernel``. Some of them will be enabled earlier than the initcall
+> +processing (for example, ``kernel.ftrace=function`` and ``kernel.trace_event``
+>  will start before the initcall.)
+>  
+>  
+
