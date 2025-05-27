@@ -1,114 +1,143 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68647271459;
-	Tue, 27 May 2025 13:37:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 260A8274FE9;
+	Tue, 27 May 2025 13:40:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748353043; cv=none; b=h/Pg7oZnCR4lo5rwz2jAxygQRFAA+gYjBK4iExIhJr9TDJDmaI9pv3t4DfPQiDiODiP5XtUwqFWuYek3FG7fCq8VX1b80I0sA37YZtUXjMNUKVQGYURpgtieuidq5s/wsioJoj13+Vl2OsOnNi/VyfQsF7R8OHgSxOm7vTIJPe4=
+	t=1748353236; cv=none; b=d41fq9xz4WF97CJRKL79OSyMKe7U5sbmdoLf2K0LzeEuKdCWryEnOn4/GRLNlypI33kob3D8QgGbKjD7oYEE0GF1DX6z4mkNt6pzutIrojPJN5Kyu7FI4NyqsS4f5Ev76+WeGf1mQ1fWAeSWLZTaOdMT9yt7I1TzNMHJBtAkKyY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748353043; c=relaxed/simple;
-	bh=YPFs7o1pRRdS96m8/sYCeukS83lHaWXXuwQF3hlGcx8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GP3wyddRMQRXUx3Rh+VaHt+8EIcbXpinTyPSiHqU7zM7FrJorV5DEXn5BrUQnY99MPjusFlGL0stiKKtHlLE4EkEypxW3L31Js9EfX8ukW122wZUNum6ag/A7lLIv7pf59XIMAgIhi/TJjZQJMyyHb1B+kH3Dhhp5qlGG27yQhE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=lM93n7el; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=6b5rbTN1; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="lM93n7el";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="6b5rbTN1"
-Date: Tue, 27 May 2025 15:37:12 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1748353037;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=JO6gI2ty1BBSgBwH8ImLfjoNHgWaxGFBPO8/nnHGiak=;
-	b=lM93n7elEmx3f8AfKLDFsZ8IxgItqachQCS2yeUo0CRiVbN1WAK5EOtu/4DnvduuYSZJGF
-	kZ7MKQwwQ+gHPZSUzH5lgIxHSBWC6caNHuCY/65McqFU0jXUG5eJnaD9VlAglozYj/XLyp
-	QwI0oAUGeYAtVTWy7h+hzd9SdRKHiGR2IxZHnp80QU+Xw5CovYF4Ew8629nhzLVuq0AXmN
-	CGGIcJ89AI5Z0CHM7aphY4aJ8Kk15FPsLHpjxO1L9vdXju72DC/Me3yvPuKUaRmhmPLAxb
-	AGHQD2G1xeBXytmAxDU0YkI02FjgiynQlceDu0oM3PEQhtdOoTAKORswv7Fgbg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1748353037;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=JO6gI2ty1BBSgBwH8ImLfjoNHgWaxGFBPO8/nnHGiak=;
-	b=6b5rbTN1sN6/DeexP7ywcdO3CQ8f0ftxhgPlJMuCbZR8/6Qz/A4Kfo7juDef4JmBh/DRnW
-	4Mk0pZogCUHLeBAg==
-From: Nam Cao <namcao@linutronix.de>
-To: Gabriele Monaco <gmonaco@redhat.com>
-Cc: linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-	Ingo Molnar <mingo@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Tomas Glozar <tglozar@redhat.com>, Juri Lelli <jlelli@redhat.com>
-Subject: Re: [RFC PATCH v2 12/12] rv: Add opid per-cpu monitor
-Message-ID: <20250527133712.CFW5AcNE@linutronix.de>
-References: <20250514084314.57976-1-gmonaco@redhat.com>
- <20250514084314.57976-13-gmonaco@redhat.com>
+	s=arc-20240116; t=1748353236; c=relaxed/simple;
+	bh=jwje34nB6gKyQoKpfDGgc2ECy7vWfnVq2EpNyYhTPuc=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=CDnhHKMAvlWhMPBevZgu1kmYNnQ4Vo0j7MxoNmwcjytm1DbQsqLa6DApKMhUOlk2FouhBsXTTy46IhEKMIqjtgWa00aMaw8XHVqzrXbEL9SfC2IWK+Me09897B9a6oPWFPX11t7L5LVrpu7ALwhbIhk4H/FbFfigk+8CVqm63TY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BF84DC4CEE9;
+	Tue, 27 May 2025 13:40:33 +0000 (UTC)
+Date: Tue, 27 May 2025 09:41:31 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: yebin <yebin@huaweicloud.com>
+Cc: mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
+ mark.rutland@arm.com, linux-trace-kernel@vger.kernel.org,
+ linux-kernel@vger.kernel.org, yebin10@huawei.com
+Subject: Re: [PATCH 1/2] ftrace: fix UAF when lookup kallsym after ftrace
+ disabled
+Message-ID: <20250527094131.1f4a92ab@gandalf.local.home>
+In-Reply-To: <6833C4F1.3030300@huaweicloud.com>
+References: <20250523083945.3390587-1-yebin@huaweicloud.com>
+	<20250523083945.3390587-2-yebin@huaweicloud.com>
+	<20250523135452.626d8dcd@gandalf.local.home>
+	<6833C4F1.3030300@huaweicloud.com>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250514084314.57976-13-gmonaco@redhat.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Wed, May 14, 2025 at 10:43:14AM +0200, Gabriele Monaco wrote:
-> Add a per-cpu monitor as part of the sched model:
-> * opid: operations with preemption and irq disabled
->     Monitor to ensure wakeup and need_resched occur with irq and
->     preemption disabled or in irq handlers.
+On Mon, 26 May 2025 09:33:37 +0800
+yebin <yebin@huaweicloud.com> wrote:
 
-This monitor reports some warnings:
+> On 2025/5/24 1:54, Steven Rostedt wrote:
+> > On Fri, 23 May 2025 16:39:44 +0800
+> > Ye Bin <yebin@huaweicloud.com> wrote:
+> >  
+> >> Above issue may happens as follow:
+> >> (1) Add kprobe trace point;
+> >> (2) insmod test.ko;
+> >> (3) Trigger ftrace disabled;  
+> >
+> > This is the bug. How was ftrace_disabled triggered? That should never
+> > happen. Was test.ko buggy?
+> >  
+> Yes. The following warning is reported during concurrent registration 
+> between register_kprobe() and live patch, causing ftrace_disabled.
+> 
+> WARNING: CPU: 56 PID: 2769 at kernel/trace/ftrace.c:2612 
+> ftrace_modify_all_code+0x116/0x140
 
-$ perf record -e rv:error_opid --call-graph dwarf -a -- ./stress-epoll
-(stress-epoll program from
-https://github.com/rouming/test-tools/blob/master/stress-epoll.c)
+OK, so it is a buggy module.
 
-$ perf script
-stress-epoll   315 [003]   527.674724: rv:error_opid: event preempt_disable not expected in the state preempt_disabled
-	ffffffff9fdfb34f da_event_opid+0x10f ([kernel.kallsyms])
-	ffffffff9fdfb34f da_event_opid+0x10f ([kernel.kallsyms])
-	ffffffff9fdfba0d handle_preempt_disable+0x3d ([kernel.kallsyms])
-	ffffffff9fdd32d0 __traceiter_preempt_disable+0x30 ([kernel.kallsyms])
-	ffffffff9fdd38fe trace_preempt_off+0x4e ([kernel.kallsyms])
-	ffffffff9fee6c1c vfs_write+0x12c ([kernel.kallsyms])
-	ffffffff9fee7128 ksys_write+0x68 ([kernel.kallsyms])
-	ffffffffa0bdbd92 do_syscall_64+0xb2 ([kernel.kallsyms])
-	ffffffff9fa00130 entry_SYSCALL_64_after_hwframe+0x77 ([kernel.kallsyms])
-	           f833f __GI___libc_write+0x4f (/usr/lib/x86_64-linux-gnu/libc.so.6)
-	           f833f __GI___libc_write+0x4f (/usr/lib/x86_64-linux-gnu/libc.so.6)
-	            1937 thread_work+0x47 (/root/test-tools/stress-epoll)
-	           891f4 start_thread+0x304 (/usr/lib/x86_64-linux-gnu/libc.so.6)
-	          10989b clone3+0x2b (/usr/lib/x86_64-linux-gnu/libc.so.6)
+> >> (4) rmmod test.ko;
+> >> (5) cat /proc/kallsyms; --> Will trigger UAF as test.ko already removed;
+> >> ftrace_mod_get_kallsym()
+> >> ...
+> >> strscpy(module_name, mod_map->mod->name, MODULE_NAME_LEN);
+> >> ...
+> >>
+> >> As ftrace_release_mod() judge 'ftrace_disabled' is true will return, and
+> >> 'mod_map' will remaining in ftrace_mod_maps. 'mod_map' has no chance to
+> >> release. Therefore, this also causes residual resources to accumulate.
+> >> To solve above issue, unconditionally clean up'mod_map'.
+> >>
+> >> Fixes: aba4b5c22cba ("ftrace: Save module init functions kallsyms symbols for tracing")  
+> >
+> > This is *not* a fix. ftrace_disabled gets set when a bug is triggered. If
+> > this prevents ftrace_disabled from getting set, then it would be a fix. But
+> > if something else happens when ftrace_disabled is set, it just fixes a
+> > symptom and not the bug itself.
+> >  
+> There are multiple causes for triggering ftrace_disabled. I agree that 
 
-stress-epoll   318 [002]   527.674759: rv:error_opid: event preempt_disable not expected in the state disabled
-	ffffffff9fdfb34f da_event_opid+0x10f ([kernel.kallsyms])
-	ffffffff9fdfb34f da_event_opid+0x10f ([kernel.kallsyms])
-	ffffffff9fdfba0d handle_preempt_disable+0x3d ([kernel.kallsyms])
-	ffffffff9fdd32d0 __traceiter_preempt_disable+0x30 ([kernel.kallsyms])
-	ffffffff9fdd38fe trace_preempt_off+0x4e ([kernel.kallsyms])
-	ffffffffa0bec1aa _raw_spin_lock_irq+0x1a ([kernel.kallsyms])
-	ffffffff9ff4fe73 eventfd_write+0x63 ([kernel.kallsyms])
-	ffffffff9fee6be5 vfs_write+0xf5 ([kernel.kallsyms])
-	ffffffff9fee7128 ksys_write+0x68 ([kernel.kallsyms])
-	ffffffffa0bdbd92 do_syscall_64+0xb2 ([kernel.kallsyms])
-	ffffffff9fa00130 entry_SYSCALL_64_after_hwframe+0x77 ([kernel.kallsyms])
-	           f833f __GI___libc_write+0x4f (/usr/lib/x86_64-linux-gnu/libc.so.6)
-	           f833f __GI___libc_write+0x4f (/usr/lib/x86_64-linux-gnu/libc.so.6)
-	            1937 thread_work+0x47 (/root/test-tools/stress-epoll)
-	           891f4 start_thread+0x304 (/usr/lib/x86_64-linux-gnu/libc.so.6)
-	          10989b clone3+0x2b (/usr/lib/x86_64-linux-gnu/libc.so.6)
+Yes, just like there's multiple causes for BUG_ON() ;-)
 
-I'm not sure what I'm looking at here. Do you think these are kernel bugs,
-or the monitor is missing some corner cases?
+The ftrace_disable is used to help keep the system from being totally
+corrupted. When it triggers, the best thing to do is a reboot.
 
-Best regards,
-Nam
+> aba4b5c22cba is not faulty. However, the incorporation of this patch 
+> will cause problems due to triggering ftrace_disabled. The generation of 
+> ftrace_disabled is beyond our control. This is related to the user. What 
+> we can do is even if there are no additional derivative problems.
+
+Well, when a user inserts a module, then they become a kernel developer too ;-)
+
+> >  
+> >> Signed-off-by: Ye Bin <yebin10@huawei.com>
+> >> ---
+> >>   kernel/trace/ftrace.c | 3 ---
+> >>   1 file changed, 3 deletions(-)
+> >>
+> >> diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+> >> index a3d4dfad0cbc..ff5d9d73a4a7 100644
+> >> --- a/kernel/trace/ftrace.c
+> >> +++ b/kernel/trace/ftrace.c
+> >> @@ -7438,9 +7438,6 @@ void ftrace_release_mod(struct module *mod)
+> >>
+> >>   	mutex_lock(&ftrace_lock);
+> >>
+> >> -	if (ftrace_disabled)
+> >> -		goto out_unlock;
+> >> -  
+> >
+> > Here you delete the check, and the next patch you have:
+> >
+> > +	if (ftrace_disabled || (mod && !mod->num_ftrace_callsites)) {
+> > +		mutex_unlock(&ftrace_lock);
+> > +		return;
+> > +	}
+> > +
+> >  
+> The second patch I added judgment when initializing 'mod_map' in 
+> ftrace_free_mem(). The first patch removes the judgment when 
+> ftrace_release_mod() releases'mod_map'. The logic modified by the two 
+> patches is isolated.
+
+Actually I think both patches are buggy.
+
+When ftrace_disabled is set, we don't know the state of the code and we do
+not want to do *any* more text modification. That's what ftrace_disable
+means. Something went wrong with text modification and any more changes can
+cause a bigger problem.
+
+We don't add "exceptions".
+
+If you are worried about unloading modules when ftrace_disable is set, what
+is a much safer solution is to up the module count of all modules that have
+any ftrace callsites active, and prevent those modules from being removed.
+
+Again, the only solution to a ftrace_disable being set is a full reboot.
+
+-- Steve
