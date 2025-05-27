@@ -1,27 +1,27 @@
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B72961AC44D
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 27 May 2025 06:19:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A5FD1AC44D
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 27 May 2025 06:19:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748326749; cv=none; b=JnEAv45o3HF2Fit8eJKtGQZq+q53W8vyWu7ir1mYV1yqtxSY1qLIbs3LXHI1lf2o1vJ5i7j1WPrxCipgIUWhtZhbmqc63xYmd5FIMVYemC8hpZFjPbz1apaAqedEI+ZKjTcn6LDWp4kc2Qjkm65ZEmtKO3TSvhHgT6OWpKTXdf4=
+	t=1748326753; cv=none; b=uGrjvrDSzN+E3UAqTM+nXzRvRKOkzzogEGAMxwi8KWrs2dNSCJoxngxw23NdGWPMrH4Y8RVjj+xGYiZtbtpKirSJKQIM8WAl5v4wu5kKdIg+CVtI7wv0dK83Oj+ySpCUfr8PaFzsTDRp37Musw6/cSC7M3ISnuW6fpt7kDEwb2Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748326749; c=relaxed/simple;
-	bh=2mvWO3yzJGbL6tU1FoE690BHFR6qYiad0H3laoSea0E=;
+	s=arc-20240116; t=1748326753; c=relaxed/simple;
+	bh=9YjYL/D5WD659JrEORf3GTCYoRum7YgcIs+QPawpLHU=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=SRP8htwtC5FJisB1MBlaXpMTqkBQO0SL5hA8TA/tiEsjcAt+GSxetUVVxX8df2/c+q7YyBFP7Ae+X2bANc2PMoWccf0WXPTDgum+DopGOBxgK35R5jrFPevA2agEOSoS3p1fnVMUQTbyYht9nwAZIosRVlxVItFcHelcHJ9m7Sc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+	 MIME-Version; b=YZubQvf03rlDrliPK/rOKALcd+YCjAxesI6zBIj27oFQjOkxVZ5gxem0Ik0cIYjHDQabh+k20kB1/RHUMbt69w/hsc3OnobRW/wiOgmtnD5RYa0dC8R+v0ixUBP9eGPwGTMJwzCJxnlzmQ1CFIC9XOSTDMsY9an9htnamZbF4us=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
 Received: from mail.maildlp.com (unknown [172.19.163.216])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4b62X93dShzYQtwp
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 27 May 2025 14:19:05 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id A0EFD1A19C6
+	by dggsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4b62X8219wzKHMjt
 	for <linux-trace-kernel@vger.kernel.org>; Tue, 27 May 2025 14:19:04 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.128])
+	by mail.maildlp.com (Postfix) with ESMTP id B51C01A19CD
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 27 May 2025 14:19:02 +0800 (CST)
 Received: from huaweicloud.com (unknown [10.175.101.107])
-	by APP4 (Coremail) with SMTP id gCh0CgBXul5UWTVo93uWNg--.23840S5;
+	by APP4 (Coremail) with SMTP id gCh0CgBXul5UWTVo93uWNg--.23840S6;
 	Tue, 27 May 2025 14:19:02 +0800 (CST)
 From: Ye Bin <yebin@huaweicloud.com>
 To: rostedt@goodmis.org,
@@ -31,9 +31,9 @@ To: rostedt@goodmis.org,
 	linux-trace-kernel@vger.kernel.org
 Cc: yebin@huaweicloud.com,
 	yebin10@huawei.com
-Subject: [PATCH v2 1/2] ftrace: fix UAF when lookup kallsym after ftrace disabled
-Date: Tue, 27 May 2025 14:18:59 +0800
-Message-Id: <20250527061900.1533462-2-yebin@huaweicloud.com>
+Subject: [PATCH v2 2/2] ftrace: don't allocate ftrace module map if ftrace is disabled
+Date: Tue, 27 May 2025 14:19:00 +0800
+Message-Id: <20250527061900.1533462-3-yebin@huaweicloud.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20250527061900.1533462-1-yebin@huaweicloud.com>
 References: <20250527061900.1533462-1-yebin@huaweicloud.com>
@@ -44,100 +44,50 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgBXul5UWTVo93uWNg--.23840S5
-X-Coremail-Antispam: 1UD129KBjvJXoWxWF43Cw4fGFWkJF1DtrWkZwb_yoW5Cr1Dpr
-	yfJrWDCr48KF4qyF48uw15Ary7t3yjyayUJFs7Gr1Fv3WDGr1UXr1xAF4UZF9rJr1UX3sx
-	tFnrZw18trW7XaUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUm214x267AKxVW5JVWrJwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_Jr4l82xGYIkIc2
-	x26xkF7I0E14v26r1I6r4UM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0
-	Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F4UJw
-	A2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAS
-	0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2
-	IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0
-	Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCY1x0262kKe7AKxVWUAVWUtw
-	CF04k20xvY0x0EwIxGrwCF54CYxVCY1x0262kKe7AKxVWUAVWUtwCFx2IqxVCFs4IE7xkE
-	bVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67
-	AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI
-	42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMI
-	IF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVF
-	xhVjvjDU0xZFpf9x0JUfDGrUUUUU=
+X-CM-TRANSID:gCh0CgBXul5UWTVo93uWNg--.23840S6
+X-Coremail-Antispam: 1UD129KBjvdXoWruFykXr1rAFW3Cw47KF18AFb_yoWxZrg_ZF
+	yUX3W8KryxCwn2vr4SvrZ7XF1UKw1UuF10kwn3tFW5J3WDXrn5G3W7C3sxCF42gFy8Wa9x
+	ZFnFqa40gF13GjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUIcSsGvfJTRUUUbv8FF20E14v26rWj6s0DM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28IrcIa0xkI8VA2jI8067AKxVWUXwA2048vs2IY02
+	0Ec7CjxVAFwI0_Gr0_Xr1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
+	wVC0I7IYx2IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8Jr0_Cr1UM2
+	8EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2AI
+	xVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20x
+	vE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xv
+	r2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7MxkF7I0En4kS14v26r126r1DMx
+	AIw28IcxkI7VAKI48JMxAqzxv26xkF7I0En4kS14v26r126r1DMxC20s026xCaFVCjc4AY
+	6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17
+	CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF
+	0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIx
+	AIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2
+	KfnxnUUI43ZEXa7VUUApnJUUUUU==
 X-CM-SenderInfo: p1hex046kxt4xhlfz01xgou0bp/
 
 From: Ye Bin <yebin10@huawei.com>
 
-There's issue as follows:
-BUG: unable to handle page fault for address: ffffffffc05d0218
-PGD 1bd66f067 P4D 1bd66f067 PUD 1bd671067 PMD 101808067 PTE 0
-Oops: Oops: 0000 [#1] SMP KASAN PTI
-Tainted: [O]=OOT_MODULE, [E]=UNSIGNED_MODULE
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS
-RIP: 0010:sized_strscpy+0x81/0x2f0
-RSP: 0018:ffff88812d76fa08 EFLAGS: 00010246
-RAX: 0000000000000000 RBX: ffffffffc0601010 RCX: dffffc0000000000
-RDX: 0000000000000038 RSI: dffffc0000000000 RDI: ffff88812608da2d
-RBP: 8080808080808080 R08: ffff88812608da2d R09: ffff88812608da68
-R10: ffff88812608d82d R11: ffff88812608d810 R12: 0000000000000038
-R13: ffff88812608da2d R14: ffffffffc05d0218 R15: fefefefefefefeff
-FS:  00007fef552de740(0000) GS:ffff8884251c7000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: ffffffffc05d0218 CR3: 00000001146f0000 CR4: 00000000000006f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- <TASK>
- ftrace_mod_get_kallsym+0x1ac/0x590
- update_iter_mod+0x239/0x5b0
- s_next+0x5b/0xa0
- seq_read_iter+0x8c9/0x1070
- seq_read+0x249/0x3b0
- proc_reg_read+0x1b0/0x280
- vfs_read+0x17f/0x920
- ksys_read+0xf3/0x1c0
- do_syscall_64+0x5f/0x2e0
- entry_SYSCALL_64_after_hwframe+0x76/0x7e
+If the ftrace is disabled, it is meaningless to allocate module map.
+So add check in allocate_ftrace_mod_map().
 
-Above issue may happens as follow:
-(1) Add kprobe trace point;
-(2) insmod test.ko;
-(3) Trigger ftrace disabled;
-(4) rmmod test.ko;
-(5) cat /proc/kallsyms; --> Will trigger UAF as test.ko already removed;
-ftrace_mod_get_kallsym()
-...
-strscpy(module_name, mod_map->mod->name, MODULE_NAME_LEN);
-...
-
-As ftrace_release_mod() judge 'ftrace_disabled' is true will return,
-and 'mod_map' will remaining in ftrace_mod_maps. 'mod_map' has no
-chance to release. Therefore, this also causes residual resources to
-accumulate. To solve above issue, unconditionally clean up'mod_map'.
-Of course, the root cause of this problem is the presence of
-ftrace_disabled. The fixes tags patch introduces the possibility of
-residual resources in the case of ftrace_disabled. The root cause of
-the problem is ftrace_disabled. This patch only adds protection when
-ftrace_disabled occurs.
-
-Fixes: aba4b5c22cba ("ftrace: Save module init functions kallsyms symbols for tracing")
 Signed-off-by: Ye Bin <yebin10@huawei.com>
 ---
- kernel/trace/ftrace.c | 3 ---
- 1 file changed, 3 deletions(-)
+ kernel/trace/ftrace.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
 diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-index a3d4dfad0cbc..ff5d9d73a4a7 100644
+index ff5d9d73a4a7..1cac568a031c 100644
 --- a/kernel/trace/ftrace.c
 +++ b/kernel/trace/ftrace.c
-@@ -7438,9 +7438,6 @@ void ftrace_release_mod(struct module *mod)
+@@ -7626,6 +7626,9 @@ allocate_ftrace_mod_map(struct module *mod,
+ {
+ 	struct ftrace_mod_map *mod_map;
  
- 	mutex_lock(&ftrace_lock);
- 
--	if (ftrace_disabled)
--		goto out_unlock;
--
- 	list_for_each_entry_safe(mod_map, n, &ftrace_mod_maps, list) {
- 		if (mod_map->mod == mod) {
- 			list_del_rcu(&mod_map->list);
++	if (ftrace_disabled)
++		return NULL;
++
+ 	mod_map = kmalloc(sizeof(*mod_map), GFP_KERNEL);
+ 	if (!mod_map)
+ 		return NULL;
 -- 
 2.34.1
 
