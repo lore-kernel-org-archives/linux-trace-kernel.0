@@ -1,27 +1,28 @@
 Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D312119CC37
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 27 May 2025 06:19:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B72961AC44D
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 27 May 2025 06:19:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748326747; cv=none; b=X+Szslqf1AV06DO+Py82vpQjXCf67SF8glQ8Xr03ksAFQkIVljaKSVYyP0WdPLULhAZAaXKrR/Zp9b1DNqQyoWuMTYpn8CzA3A3ASAIy+uSgkKaDxWYZeorJYUNIr0VJFD0ob/jouGipneKlwiqanir1ZEYYSOCixOSS54pP8M0=
+	t=1748326749; cv=none; b=JnEAv45o3HF2Fit8eJKtGQZq+q53W8vyWu7ir1mYV1yqtxSY1qLIbs3LXHI1lf2o1vJ5i7j1WPrxCipgIUWhtZhbmqc63xYmd5FIMVYemC8hpZFjPbz1apaAqedEI+ZKjTcn6LDWp4kc2Qjkm65ZEmtKO3TSvhHgT6OWpKTXdf4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748326747; c=relaxed/simple;
-	bh=wHa8RIR1T5MCA0tXtO7MKyUF2oPQzBNCztzgQ5LpaiI=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ibhdk3ets4VFAZ/4TJRYebfjMiaQWyyhFeKzv2OenqFUe8PwzxyhJ3dT/PWb/v2aeh3uQwzG49EisCgq36P4S64hX0bcEBiL9Pz2KW9SRTqLOhhiW9aZIDo5Gi4hYC22X8T/SnGKcHh9rkRS8UH2ebPMKArK8Aotyqr/P/2kYsY=
+	s=arc-20240116; t=1748326749; c=relaxed/simple;
+	bh=2mvWO3yzJGbL6tU1FoE690BHFR6qYiad0H3laoSea0E=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=SRP8htwtC5FJisB1MBlaXpMTqkBQO0SL5hA8TA/tiEsjcAt+GSxetUVVxX8df2/c+q7YyBFP7Ae+X2bANc2PMoWccf0WXPTDgum+DopGOBxgK35R5jrFPevA2agEOSoS3p1fnVMUQTbyYht9nwAZIosRVlxVItFcHelcHJ9m7Sc=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.93.142])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4b62X66HkZzYQtpC
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 27 May 2025 14:19:02 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.19.163.216])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4b62X93dShzYQtwp
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 27 May 2025 14:19:05 +0800 (CST)
 Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id 070A61A0359
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 27 May 2025 14:19:02 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTP id A0EFD1A19C6
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 27 May 2025 14:19:04 +0800 (CST)
 Received: from huaweicloud.com (unknown [10.175.101.107])
-	by APP4 (Coremail) with SMTP id gCh0CgBXul5UWTVo93uWNg--.23840S4;
-	Tue, 27 May 2025 14:19:01 +0800 (CST)
+	by APP4 (Coremail) with SMTP id gCh0CgBXul5UWTVo93uWNg--.23840S5;
+	Tue, 27 May 2025 14:19:02 +0800 (CST)
 From: Ye Bin <yebin@huaweicloud.com>
 To: rostedt@goodmis.org,
 	mhiramat@kernel.org,
@@ -30,10 +31,12 @@ To: rostedt@goodmis.org,
 	linux-trace-kernel@vger.kernel.org
 Cc: yebin@huaweicloud.com,
 	yebin10@huawei.com
-Subject: [PATCH v2 0/2] fix UAF when lookup kallsym after ftrace disabled
-Date: Tue, 27 May 2025 14:18:58 +0800
-Message-Id: <20250527061900.1533462-1-yebin@huaweicloud.com>
+Subject: [PATCH v2 1/2] ftrace: fix UAF when lookup kallsym after ftrace disabled
+Date: Tue, 27 May 2025 14:18:59 +0800
+Message-Id: <20250527061900.1533462-2-yebin@huaweicloud.com>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250527061900.1533462-1-yebin@huaweicloud.com>
+References: <20250527061900.1533462-1-yebin@huaweicloud.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -41,36 +44,100 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgBXul5UWTVo93uWNg--.23840S4
-X-Coremail-Antispam: 1UD129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
-	VFW2AGmfu7bjvjm3AaLaJ3UjIYCTnIWjp_UUUY27AC8VAFwI0_Gr0_Xr1l1xkIjI8I6I8E
-	6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28Cjx
-	kF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0cI8I
-	cVCY1x0267AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2js
-	IEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE
-	5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeV
-	CFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1l
-	42xK82IYc2Ij64vIr41l4c8EcI0Ec7CjxVAaw2AFwI0_JF0_Jw1l4I8I3I0E4IkC6x0Yz7
-	v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF
-	1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIx
-	AIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI
-	42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxh
-	VjvjDU0xZFpf9x0JUdHUDUUUUU=
+X-CM-TRANSID:gCh0CgBXul5UWTVo93uWNg--.23840S5
+X-Coremail-Antispam: 1UD129KBjvJXoWxWF43Cw4fGFWkJF1DtrWkZwb_yoW5Cr1Dpr
+	yfJrWDCr48KF4qyF48uw15Ary7t3yjyayUJFs7Gr1Fv3WDGr1UXr1xAF4UZF9rJr1UX3sx
+	tFnrZw18trW7XaUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUm214x267AKxVW5JVWrJwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_Jr4l82xGYIkIc2
+	x26xkF7I0E14v26r1I6r4UM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0
+	Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F4UJw
+	A2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAS
+	0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2
+	IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0
+	Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCY1x0262kKe7AKxVWUAVWUtw
+	CF04k20xvY0x0EwIxGrwCF54CYxVCY1x0262kKe7AKxVWUAVWUtwCFx2IqxVCFs4IE7xkE
+	bVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67
+	AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI
+	42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMI
+	IF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVF
+	xhVjvjDU0xZFpf9x0JUfDGrUUUUU=
 X-CM-SenderInfo: p1hex046kxt4xhlfz01xgou0bp/
 
 From: Ye Bin <yebin10@huawei.com>
 
-Diff v2 vs v1:
-(1) Add description for PATCH[1/2];
-(2) Move judgement from ftrace_free_mem() to allocate_ftrace_mod_map()
+There's issue as follows:
+BUG: unable to handle page fault for address: ffffffffc05d0218
+PGD 1bd66f067 P4D 1bd66f067 PUD 1bd671067 PMD 101808067 PTE 0
+Oops: Oops: 0000 [#1] SMP KASAN PTI
+Tainted: [O]=OOT_MODULE, [E]=UNSIGNED_MODULE
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS
+RIP: 0010:sized_strscpy+0x81/0x2f0
+RSP: 0018:ffff88812d76fa08 EFLAGS: 00010246
+RAX: 0000000000000000 RBX: ffffffffc0601010 RCX: dffffc0000000000
+RDX: 0000000000000038 RSI: dffffc0000000000 RDI: ffff88812608da2d
+RBP: 8080808080808080 R08: ffff88812608da2d R09: ffff88812608da68
+R10: ffff88812608d82d R11: ffff88812608d810 R12: 0000000000000038
+R13: ffff88812608da2d R14: ffffffffc05d0218 R15: fefefefefefefeff
+FS:  00007fef552de740(0000) GS:ffff8884251c7000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: ffffffffc05d0218 CR3: 00000001146f0000 CR4: 00000000000006f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ <TASK>
+ ftrace_mod_get_kallsym+0x1ac/0x590
+ update_iter_mod+0x239/0x5b0
+ s_next+0x5b/0xa0
+ seq_read_iter+0x8c9/0x1070
+ seq_read+0x249/0x3b0
+ proc_reg_read+0x1b0/0x280
+ vfs_read+0x17f/0x920
+ ksys_read+0xf3/0x1c0
+ do_syscall_64+0x5f/0x2e0
+ entry_SYSCALL_64_after_hwframe+0x76/0x7e
 
-Ye Bin (2):
-  ftrace: fix UAF when lookup kallsym after ftrace disabled
-  ftrace: don't allocate ftrace module map if ftrace is disabled
+Above issue may happens as follow:
+(1) Add kprobe trace point;
+(2) insmod test.ko;
+(3) Trigger ftrace disabled;
+(4) rmmod test.ko;
+(5) cat /proc/kallsyms; --> Will trigger UAF as test.ko already removed;
+ftrace_mod_get_kallsym()
+...
+strscpy(module_name, mod_map->mod->name, MODULE_NAME_LEN);
+...
 
- kernel/trace/ftrace.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+As ftrace_release_mod() judge 'ftrace_disabled' is true will return,
+and 'mod_map' will remaining in ftrace_mod_maps. 'mod_map' has no
+chance to release. Therefore, this also causes residual resources to
+accumulate. To solve above issue, unconditionally clean up'mod_map'.
+Of course, the root cause of this problem is the presence of
+ftrace_disabled. The fixes tags patch introduces the possibility of
+residual resources in the case of ftrace_disabled. The root cause of
+the problem is ftrace_disabled. This patch only adds protection when
+ftrace_disabled occurs.
 
+Fixes: aba4b5c22cba ("ftrace: Save module init functions kallsyms symbols for tracing")
+Signed-off-by: Ye Bin <yebin10@huawei.com>
+---
+ kernel/trace/ftrace.c | 3 ---
+ 1 file changed, 3 deletions(-)
+
+diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+index a3d4dfad0cbc..ff5d9d73a4a7 100644
+--- a/kernel/trace/ftrace.c
++++ b/kernel/trace/ftrace.c
+@@ -7438,9 +7438,6 @@ void ftrace_release_mod(struct module *mod)
+ 
+ 	mutex_lock(&ftrace_lock);
+ 
+-	if (ftrace_disabled)
+-		goto out_unlock;
+-
+ 	list_for_each_entry_safe(mod_map, n, &ftrace_mod_maps, list) {
+ 		if (mod_map->mod == mod) {
+ 			list_del_rcu(&mod_map->list);
 -- 
 2.34.1
 
