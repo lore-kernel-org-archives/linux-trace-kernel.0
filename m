@@ -1,181 +1,138 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-00364e01.pphosted.com (mx0b-00364e01.pphosted.com [148.163.139.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E67121311AC;
-	Wed, 28 May 2025 02:17:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C4F7382
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 28 May 2025 06:06:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.139.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748398658; cv=none; b=Ur8P6HcPb/OhfPntQwsK3XuaHE6Fjz7W7poACS5oQG+ETdxQr2Jp2iYq7EkZKAzqsVypr0G4zHcAFbTtlDTPGQVDg0sNh8AGFZMwMuWDk5TZOO5S0+wrPI4QOZEbc9S5JCJCPufdok4nMt/JorVj3Uxt3hJE0H3G7znW7x8ejZk=
+	t=1748412367; cv=none; b=BcdUg7mtJSKjqwfxLYZc8CM0H9IUmtGb96HX2enedHRPwCnZl/UaNIXes8yF8OvwJV+HI4Sfg4xxWJJg8x+QtXrVv63uREvk2xOcAxdxR+5mUNxUjaTcqkjLhxps8fsROw/mWcBrBFhvjYQ04rU7GxUGoYkilPArc4DxLDozcR0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748398658; c=relaxed/simple;
-	bh=prPjqRAFhuR4gJ9/6ommLH7BOpW3yKKwK4wg/sYYt1o=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=cxapWh9gAKZn+N1/wnQOSX/+4LWVLG3vPI69gi+VeTZsiuq0DgHJGW06bsq1BbuJwAva9yfu3JAObdS5424oLd3NE0X3h6IebpxZEh3HfdDuLhR8T5dcUwNgpFIzsSvYl489Ye3rWxlz7PkLEie+wwGmEAFNBStV4X++zjswp+w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B12E5C4CEE9;
-	Wed, 28 May 2025 02:17:36 +0000 (UTC)
-Date: Tue, 27 May 2025 22:17:35 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Vincent Donnefort <vdonnefort@google.com>
-Subject: Re: [PATCH] ring-buffer: Do not trigger WARN_ON() due to a
- commit_overrun
-Message-ID: <20250527221735.04c62a3c@batman.local.home>
-In-Reply-To: <20250528104203.d6f509c5d9c30dec1e024587@kernel.org>
-References: <20250527121140.0e7f0565@gandalf.local.home>
-	<20250528104203.d6f509c5d9c30dec1e024587@kernel.org>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1748412367; c=relaxed/simple;
+	bh=u4GnJWVjLuTGqbXgtkf1x2zfHjnxuyVndV+7heCn/5s=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=exyaVlTRcSiYpNdLqv4hzO3rPBhe8LDYMwh8vU8hNvXSMjWHkj5oTmV3Mw1w7CtQ5bEYUuWNUr1kimtBr2cVKtVtMWtxptoZTsxKMT7+paR8tKg8JAHZrf12qC4fg5SaIvcONr74/ZnMStL3FBRavdw+MK90/MFjK8GRIdXhXHI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=columbia.edu; spf=pass smtp.mailfrom=columbia.edu; dkim=pass (2048-bit key) header.d=columbia.edu header.i=@columbia.edu header.b=NIAVSOt1; arc=none smtp.client-ip=148.163.139.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=columbia.edu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=columbia.edu
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=columbia.edu header.i=@columbia.edu header.b="NIAVSOt1"
+Received: from pps.filterd (m0167077.ppops.net [127.0.0.1])
+	by mx0b-00364e01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54S4kTLk018575
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 28 May 2025 01:35:56 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=columbia.edu; h=cc :
+ content-transfer-encoding : content-type : date : from : in-reply-to :
+ message-id : mime-version : references : subject : to; s=pps01;
+ bh=fe1SF0gP7B1T3vG5mU/w/LphwhnjbUzeEhTplFhLHQw=;
+ b=NIAVSOt1US8wy8tVfB4d//T4g+Ngd4zgAlyOn7Bjl86GRNzVyy/cdz0jn7PPTJONGCCv
+ 77EGAOXrbfes+dwvKUH05kGB0jONEvPKEQ2f3ZFF2s8pwqQyXu4ndGrfB38cUJ2O/Sjm
+ 3azPDmNcdC07qkbcLBW4FE85BiLJu1xSzUgc47E3fk0Nk4Z9k70AA1K73JEDAvlWv+tK
+ ZQKVPbnf/v90Je0bCFqyjqlJKJipJQSAZscfvU0lXK+Bgthmo6rsgSK7qUxgTn9lQIqJ
+ mqKJFdcJSAnpW2aeZHeK7SOUiml/SpF0Jqb2WOC5gfeXZ097aVPamAFXya/6unPdsSi4 mQ== 
+Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com [209.85.222.197])
+	by mx0b-00364e01.pphosted.com (PPS) with ESMTPS id 46wmuqa7a5-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 28 May 2025 01:35:56 -0400
+Received: by mail-qk1-f197.google.com with SMTP id af79cd13be357-7c92425a8b1so91045485a.1
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 27 May 2025 22:35:56 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748410555; x=1749015355;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=fe1SF0gP7B1T3vG5mU/w/LphwhnjbUzeEhTplFhLHQw=;
+        b=puhXDrTgo7BV/Wbem5cUYRYkHcdIBz5LnyNd3RaH776h0Q5ggHmFHRXk8cWS5oZDh6
+         aD9hrxMnxcQJxtajSprbTD4dBClwHwbQ6MAQSZEsmQFMEQb8+oJRkzYI55NfvXdr5nT7
+         XlRyLo1zcq6iJfcXJrmHxU7eauQzyaWKXpUmJt/RVdcU7nlBkHDjbYhD4I/bWfztJ4li
+         c5KQ4/B2wtSaUmOufLlUeNzeut+4Q79TC2hzTOERr5gwITED+HuTD+0oVDCnrJ/ZNvGO
+         EH18yEa/FLEUSVU74Rgmdrp10BPri9IjGUvBpbylw/C5FaKYS44a+qpoUqmdH0bV1M3S
+         X1mA==
+X-Forwarded-Encrypted: i=1; AJvYcCUTfXfoSkIj1Ehzme/CufrwM7hpJihAMivpWc9lceSamgyp7tmYv/7S2omKifCS/wh9fRlrwBmeKtfDxrCgm29R8oA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxNpWh9ncO7AtC0alw5ZiyHVkaNf6yWdLuwpG7t4HTJP9Zn0YtV
+	gaRwt2Ysmi+1rHD5faXheQQafQQpq1VWPjpPJJI/numJ0ZC50Zb1xB7W8wKJsraGcdSgQZxVLxr
+	/b+5GFbxXtG+Cx0Uff9zwtSyapKDX0AgWwfRTqCBlEjWxFZK0OWXoSc8LluiRYPUyQnbv8w==
+X-Gm-Gg: ASbGncvv9utMUbs20eFnq059nURj0auUXIDBlSS1WjojUJY7eGxhvIXh/xPI+LCEVZQ
+	n5EsP97PSiDGr9uw+/pmf83L1SkCbYHDpfbUlrL9YWH5BEyjjxGO6/Rc1IFVNMHWwsgoROqTzWu
+	mdyTHAPvyMDyxH+psuQvv2xLLLlbAtlYioW+yvaUenbRJDUmhikx3noNsE7nuPuz2L5xru0UY9F
+	zMk9dmQ7cvyrc2Py/6700YyP9OGaA+zxVhwtg9DdqNyTC6S0cU6UC8Sk7xGvlIMTIimIAEIEbwt
+	HvkoyhVoAExONswMr0RRWl4XqdAHBve/Vuojqpd8/6R7HKVaL3n//ayrjQ==
+X-Received: by 2002:a05:620a:2601:b0:7c9:65cb:6214 with SMTP id af79cd13be357-7cf06d5bd10mr469356685a.17.1748410555528;
+        Tue, 27 May 2025 22:35:55 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IF61pX8i34SIykQlgLDQcjKk6sMZRhh/Gcw6X2tklDh3wPlD4onZOxTChntHVEvJ2DiXPhjrw==
+X-Received: by 2002:a05:620a:2601:b0:7c9:65cb:6214 with SMTP id af79cd13be357-7cf06d5bd10mr469355185a.17.1748410555126;
+        Tue, 27 May 2025 22:35:55 -0700 (PDT)
+Received: from [127.0.1.1] (dyn-160-39-33-242.dyn.columbia.edu. [160.39.33.242])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7cfb82001f9sm32382585a.9.2025.05.27.22.35.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 27 May 2025 22:35:54 -0700 (PDT)
+From: Tal Zussman <tz2294@columbia.edu>
+Date: Wed, 28 May 2025 01:35:37 -0400
+Subject: [PATCH 2/2] mm: Remove tlb_flush_reason::NR_TLB_FLUSH_REASONS
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+Message-Id: <20250528-tlb-trace-fix-v1-2-2e94c58f450d@columbia.edu>
+References: <20250528-tlb-trace-fix-v1-0-2e94c58f450d@columbia.edu>
+In-Reply-To: <20250528-tlb-trace-fix-v1-0-2e94c58f450d@columbia.edu>
+To: Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Ingo Molnar <mingo@kernel.org>, Rik van Riel <riel@surriel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        David Hildenbrand <david@redhat.com>,
+        Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+        "Liam R. Howlett" <Liam.Howlett@oracle.com>,
+        Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
+        Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
+        x86@kernel.org
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        linux-mm@kvack.org, Tal Zussman <tz2294@columbia.edu>
+X-Mailer: b4 0.14.3-dev-d7477
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1748410551; l=595;
+ i=tz2294@columbia.edu; s=20250528; h=from:subject:message-id;
+ bh=u4GnJWVjLuTGqbXgtkf1x2zfHjnxuyVndV+7heCn/5s=;
+ b=/anNJxI6PBsPAb9nL8K3TkHBwTCNxPLHsxU3pP17HIP1qu0oXl7UIZoQn7VyX7NeJ/QtOr3oF
+ /8zzLs/hG/8CmZIF6I/PcKL0dy4c9Ybfey2WxI3CEETNVmDEjA0IC3A
+X-Developer-Key: i=tz2294@columbia.edu; a=ed25519;
+ pk=BIj5KdACscEOyAC0oIkeZqLB3L94fzBnDccEooxeM5Y=
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTI4MDA0OCBTYWx0ZWRfX8l66RauReM/u GCBhIjoVFXy3WEEVOzPKqeKM4icna4ds7SSfTMGhjPrMAF2263g/gfkpOKGW5lmL/+tTtCnjHry Z0c9Fz63cAewgevNtB7CLMLm/zeN7UEusPIqVsSEOPQ8ojXRBPf07m1n4HwoVFbLoXnwPW37+rR
+ Gf7WWSOLMWm1y6zU/8DtyIAp1jyS+OlpzNDCAIVQRAPUEgqlBUszcuRx2RXRHy3cnQ2D4pIG7Ba TeFe1XxQSh1mnL1vgT0ePGVeahMA1O+5NNh5X2S3uiQ24VzGhLgrsB5h+7YYOXspl8t5Xte5htD o1j43vQK2BxFNxolyuPBKafmcvnpTyhsbQg78yNzelVc3CaeTSGxwvleTP8TuE4MnFP6KbelJRg baYkUMkG
+X-Proofpoint-GUID: roahugDkza4DqPyIfw5uDI-yzUkpc4wj
+X-Proofpoint-ORIG-GUID: roahugDkza4DqPyIfw5uDI-yzUkpc4wj
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-28_03,2025-05-27_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=752 spamscore=0
+ mlxscore=0 bulkscore=10 lowpriorityscore=10 suspectscore=0 malwarescore=0
+ priorityscore=1501 clxscore=1011 adultscore=0 impostorscore=0 phishscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2505160000
+ definitions=main-2505280048
 
-On Wed, 28 May 2025 10:42:03 +0900
-Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
+This has been unused since it was added 11 years ago in commit
+d17d8f9dedb9 ("x86/mm: Add tracepoints for TLB flushes").
 
-> > The way to differentiate this case from the normal case of there
-> > only being one page written to where the swap of the reader page
-> > received that one page (which is the commit page), check if the
-> > tail page is on the reader page. The difference between the commit
-> > page and the tail page is that the tail page is where new writes go
-> > to, and the commit page holds the first write that hasn't been
-> > committed yet. In the case of an interrupt preempting the write of
-> > an event and filling the buffer, it would move the tail page but
-> > not the commit page.  
-> 
-> (BTW, what happen if the interrupted process commits the event? That
->  event will be lost, or commit and just move commit_page?)
+Signed-off-by: Tal Zussman <tz2294@columbia.edu>
+---
+ include/linux/mm_types.h | 1 -
+ 1 file changed, 1 deletion(-)
 
-No, the first event to be created is the "commit" event. If it gets
-interrupted and the interrupt adds a bunch of events that wraps the
-ring buffer, it can't touch the commit event, it will just start
-dropping events. Then when the commit event finishes, it can either be
-read by the reader, or overwritten by the next events coming in.
+diff --git a/include/linux/mm_types.h b/include/linux/mm_types.h
+index 3e934dc6057c..8b91362fcf8e 100644
+--- a/include/linux/mm_types.h
++++ b/include/linux/mm_types.h
+@@ -1539,7 +1539,6 @@ enum tlb_flush_reason {
+ 	TLB_LOCAL_MM_SHOOTDOWN,
+ 	TLB_REMOTE_SEND_IPI,
+ 	TLB_REMOTE_WRONG_CPU,
+-	NR_TLB_FLUSH_REASONS,
+ };
+ 
+ /**
 
-> 
-> 
-> Thus the reader_page == commit_page && reader_page == tail_page,
-> missed_events should be 0?
-> 
-> Possible cases if missed_events != 0:
-> 
->  - reader_page != commit_page
-> 	(writer's commit overtook the reader)
+-- 
+2.39.5
 
-The reader is never in the write buffer. Just the head page will move.
-When a new reader page is taken it will swap out the old reader page
-with the head page. If the head page is the commit page, then the
-commit page becomes the reader page too.
-
-> 
->  - reader_page == commit_page but reader_page != tail_page 
-> 	(writer overtook the reader, but commit is not completed yet.)
-
-No, "writer overtook the reader" doesn't make sense as the reader is
-not on the write buffer, so the writer can not catch up to it. What the
-write buffer has is the "head" page which is where the next reader will
-come to.
-
-The only way reader_page == commit_page and reader_page != tail_page is
-if the commit was interrupted and the interrupt added events and moved
-forward off the commit_page. The only way there would be missed events
-in that case is if the interrupt added so many events it wrapped the
-buffer and then started dropping events.
-
-> 
-> if 
->  - reader_page == commit_page == tail_page
-> in this case, missed_events should be 0.
-> 
-> Since the reader_page is out of the ring buffer, writer should not
-> use reader_page while reading the same reader_page, is that right?
-
-Correct. But the writer could end up on the reader page after the swap,
-if the head page happened to be the commit page.
-
-> 
-
-
-> > cpu_buffer->tail_page,
-> > +				       "Reader on commit with %ld
-> > missed events",
-> > +				       missed_events)) {
-> > +				/*
-> > +				 * If the tail page is not on the
-> > reader page but
-> > +				 * the commit_page is, that would
-> > mean that there's
-> > +				 * a commit_overrun (an interrupt
-> > preempted an
-> > +				 * addition of an event and then
-> > filled the buffer
-> > +				 * with new events). In this case
-> > it's not an
-> > +				 * error, but it should still be
-> > reported.
-> > +				 */
-> > +				pr_info("Ring buffer commit
-> > overrun lost %ld events at timestamp:%lld\n",
-> > +					missed_events,
-> > cpu_buffer->reader_page->page->time_stamp);  
-> 
-> Do we need this pr_info() for each commit overrun?
-
-Yes. When doing this stress test, it printed at most 4 times. It
-happens once per time the interrupt fills the buffer while interrupting
-the buffer.
-
-I seldom ever get commit overruns. It's one of the fields in the status
-file located in: /sys/kernel/tracing/per_cpu/cpu*/stats
-
-> 
-> > +			}
-> > +		}
-> >  	}  
-> 
-> Just for cleanup the code idea, with above change, this code is
-> something like;
-> 
-> ----------------
-> 
-> missed_events = cpu_buffer->lost_events;
-> 
-> if (cpu_buffer->reader_page != cpu_buffer->commit_page) {
-> 	if (missed_event) {
-> 
-> 	}
-> } else {
-> 	if (missed_event) {
-> 		if (!WARN_ONCE(cpu_buffer->reader_page ==
-> cpu_buffer->tail_page,"...")) { pr_info("...")
-> 		}
-> 	}
-> }
-> 
-> ----------------
-> 
-> Can we make it as below?
-> 
-> ----------------
-> missed_events = cpu_buffer->lost_events;
-> 
-> if (missed_event) {
-> 	if (cpu_buffer->reader_page != cpu_buffer->commit_page) {
-> 
-> 	} else if (!WARN_ONCE(cpu_buffer->reader_page ==
-> cpu_buffer->tail_page, "...") { /**/
-> 		pr_info("..."); 
-> 	}
-> }
-
-Hmm, OK, I'll look at that.
-
-Thanks,
-
--- Steve
