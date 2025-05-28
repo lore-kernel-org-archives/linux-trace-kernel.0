@@ -1,155 +1,175 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from out30-118.freemail.mail.aliyun.com (out30-118.freemail.mail.aliyun.com [115.124.30.118])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8E252853EB;
-	Wed, 28 May 2025 13:49:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CEC438FB0;
+	Wed, 28 May 2025 14:04:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.118
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748440153; cv=none; b=ZJoGdeIObOGZk+5IWJ+eNB30BaDvrVsinq1pOpAqJ4It7WvqzNz+W2JUCfuUAuVpQZwCq6V07zBw6EmLtC6y0K/8NnqKDIW7qjUtBuowZCvfTdOImm6GyMDumxoRdlCkPs6HTGzmAscVybRQghVJB1QAEkYQzku8jGtAPbFmoSk=
+	t=1748441076; cv=none; b=WQ6H1SoVvOZbXlCye1l8lxGoem+3oUe3Aeu5n+dQRAYw8KD/05m9OZ/gKuLh+0ZL4khSdT3EWZsb+zyCp54hkqK+LsahwKYsd1H/ep66BnMbWoHiNmn8YERhuLaSx8HZy3MGqwsGkxYv4J2cDBIW3BdL9D2HbWJM5bTVOpc8Iso=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748440153; c=relaxed/simple;
-	bh=5RYpfXsEJ7sevgRKClv5ZrckB2deWXjonbx9Z6UXLSM=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=l8GjfLxXHhG56is+Q1wcicod/gHQeuLzI5LlM/96OXGAfzsCq2aJHvmNSEdNhoT26Xc6s8dQuToOmF2xy47k9CaxTLJeFPKBANKJPaOEbk6gYjnccOJtmCu+AHc6DvueMWyWB5JYThoI6jjs/HCtEW8APgfAdsd0oR0Q47p/6qI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=pevBmcVQ; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1748441076; c=relaxed/simple;
+	bh=9xvdpUTqNvPH1sdA+4tjhROXXbncThrelIiLgy3shaM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=o5Urw72IcYx/GSJjGgzftrpGISMTFtaR34K2BgfQ9Ura+cvJR82g/ZWetNwRwEI8KP0AYmzDBsAO/Uvtg1bi4lkpL1+szEa6no9BR6IsBsy/25G1pZuDh7kK3JcnGwo+ln16q7YJlj/5kdwbGI/pBcFDaGfVHquIECnUMNoagOU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=XLSzmyY0; arc=none smtp.client-ip=115.124.30.118
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="pevBmcVQ"
-Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54S2M81H004256;
-	Wed, 28 May 2025 13:48:48 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=pp1; bh=rVFTIldYvXpd2qDOz
-	z3YuFbzbBJnslDYobwgibhjA+I=; b=pevBmcVQbxivXXJGWIXRgIkqExLU8xOs/
-	p6y8w/to8FrmoZRk/Lby35B0k+fo/Jte+QbNOSfGRisgHtl6BlqSCbHYlaC3RRV9
-	kxE1wdcnqdMVLUH3UOwRm1K4P13EE2MMLJaw6sYv2PjUCeKDOLK5jN4KvaP1k9Db
-	CJd7T8WX2isBsyszMsZFkFkY4i5MxGIsI8dMvi4IX2S//F9gXv+BzVoOfMBdVfyl
-	oo+Px2vKnV1qj4i3TpMPF1ooQjz3NLNe/WRsFuGSFz85vL8mujl50hIf7v06q2Bh
-	CmkA/xVpen/O8IBw6ZVyp4HxcUP+s/qnK5da9YYoodk5mSv0vXe4Q==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46wgsjd5bh-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 28 May 2025 13:48:48 +0000 (GMT)
-Received: from m0353725.ppops.net (m0353725.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 54SDlnwA024228;
-	Wed, 28 May 2025 13:48:47 GMT
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46wgsjd5be-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 28 May 2025 13:48:47 +0000 (GMT)
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 54SAlA5D015826;
-	Wed, 28 May 2025 13:48:47 GMT
-Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 46uu537d0n-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 28 May 2025 13:48:46 +0000
-Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
-	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 54SDmfrm52691336
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 28 May 2025 13:48:41 GMT
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 7EAB72004D;
-	Wed, 28 May 2025 13:48:41 +0000 (GMT)
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 3E9462004B;
-	Wed, 28 May 2025 13:48:37 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.43.74.199])
-	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Wed, 28 May 2025 13:48:37 +0000 (GMT)
-From: Aditya Bodkhe <adityab1@linux.ibm.com>
-To: linuxppc-dev@lists.ozlabs.org
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        maddy@linux.ibm.com, mpe@ellerman.id.au, npiggin@gmail.com,
-        christophe.leroy@csgroup.eu, rostedt@goodmis.org, mhiramat@kernel.org,
-        mark.rutland@arm.com, Hari Bathini <hbathini@linux.ibm.com>,
-        Aditya Bodkhe <aditya.b1@linux.ibm.com>
-Subject: [PATCH 2/2] powerpc/fprobe: fix updated fprobe for function-graph tracer
-Date: Wed, 28 May 2025 19:18:20 +0530
-Message-Id: <20250528134820.74121-2-adityab1@linux.ibm.com>
-X-Mailer: git-send-email 2.39.3 (Apple Git-146)
-In-Reply-To: <20250528134820.74121-1-adityab1@linux.ibm.com>
-References: <20250528134820.74121-1-adityab1@linux.ibm.com>
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="XLSzmyY0"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1748441069; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=VS4Pm+zKew2qwigMu2CJywp/34i9y6xWwalLXDrUznQ=;
+	b=XLSzmyY0jzpoGn037vaBy6kxc02OH2OcK0g6QCtmx9pyEP2sprwUY4+awoHhgllMqC/Y6+Klt7Lyb22zAEWd4JCzgSDSquYIOGEp9Z+4s7wrB3sMPpfKsxZJ4+m1PTKSVDQRYw73XcLk1jWrqNgA4c7RuXLP/N3v4Nd8PFsb4pc=
+Received: from 30.39.222.111(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0WcDdxLt_1748441065 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Wed, 28 May 2025 22:04:26 +0800
+Message-ID: <e800189d-ad3d-409d-bfba-2c32a6ac66c0@linux.alibaba.com>
+Date: Wed, 28 May 2025 22:04:24 +0800
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v7 06/12] khugepaged: introduce khugepaged_scan_bitmap for
+ mTHP support
+To: David Hildenbrand <david@redhat.com>, Nico Pache <npache@redhat.com>,
+ David Rientjes <rientjes@google.com>, zokeefe@google.com
+Cc: linux-mm@kvack.org, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ ziy@nvidia.com, lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com,
+ ryan.roberts@arm.com, dev.jain@arm.com, corbet@lwn.net, rostedt@goodmis.org,
+ mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
+ akpm@linux-foundation.org, baohua@kernel.org, willy@infradead.org,
+ peterx@redhat.com, wangkefeng.wang@huawei.com, usamaarif642@gmail.com,
+ sunnanyong@huawei.com, vishal.moola@gmail.com,
+ thomas.hellstrom@linux.intel.com, yang@os.amperecomputing.com,
+ kirill.shutemov@linux.intel.com, aarcange@redhat.com, raquini@redhat.com,
+ anshuman.khandual@arm.com, catalin.marinas@arm.com, tiwai@suse.de,
+ will@kernel.org, dave.hansen@linux.intel.com, jack@suse.cz, cl@gentwo.org,
+ jglisse@google.com, surenb@google.com, hannes@cmpxchg.org, mhocko@suse.com,
+ rdunlap@infradead.org
+References: <20250515032226.128900-1-npache@redhat.com>
+ <20250515032226.128900-7-npache@redhat.com>
+ <9c54397f-3cbf-4fa2-bf69-ba89613d355f@linux.alibaba.com>
+ <CAA1CXcC9MB2Nw4MmGajESfH8DhAsh4QvTj4ABG3+Rg2iPi087w@mail.gmail.com>
+ <ed1d1281-ece3-4d2c-8e58-aaeb436d3927@linux.alibaba.com>
+ <CAA1CXcAWcahkxzsvK_bcWei6or_gKBjt+97dqhuSem8N7cBAQw@mail.gmail.com>
+ <1f00fdc3-a3a3-464b-8565-4c1b23d34f8d@linux.alibaba.com>
+ <cf33ff99-ac97-4a33-9df0-01a59d5b8424@redhat.com>
+From: Baolin Wang <baolin.wang@linux.alibaba.com>
+In-Reply-To: <cf33ff99-ac97-4a33-9df0-01a59d5b8424@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Authority-Analysis: v=2.4 cv=Qspe3Uyd c=1 sm=1 tr=0 ts=68371440 cx=c_pps a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17 a=dt9VzEwgFbYA:10 a=VnNF1IyMAAAA:8 a=eJdZZeSqwtc_5qrUTOUA:9
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTI4MDExOSBTYWx0ZWRfXzXzQ0vDOwPa4 yQFR21u0084zLJKFl/+IfT4zTV43TjGLQUlD0Cu4yE9oAogrk9EYz2cEUXgCD0twqjgaPPj1kjb CR9chjHJxmW+iQhsE7Qx3MJZucatG5hjnxkSkHJ4R2rrwr7CoK7ENIFVhIvs16K09uS++cF1nWi
- +lRojuo+dZy2dz2Nkcek7BHx+2/KOeNV/ze9f96XDVRsYqGNgUkICljReqIsChFxzEgx0w/+Ncd nsxlh01aj/yivrp5vhYeBhKQl9GzAjlK3/4yFiJWvEZlbl7UaW+2gIKn53XSpVbpg9Xm40plys9 PkQcUX/OtfD6o7lYJePbXOtdZ8x8jLqaw/vn0Koy2ASutczt1h8ndjWuHhcLvOilYhD8mt4Q4QP
- nkQGBTCS2CBcloM1uaezeADeP3YkOPJ4YsHYrmfzBDr9cELsf+dQoEaS8m1iOtr10uSo8cnv
-X-Proofpoint-ORIG-GUID: uNhrfTvm3M97-lTnYrx3fGQD5Xa6dDlz
-X-Proofpoint-GUID: g2lbWCX53h9a0ziFEy7VuvzpaFsiejbs
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-28_06,2025-05-27_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 clxscore=1015
- lowpriorityscore=0 phishscore=0 malwarescore=0 suspectscore=0
- priorityscore=1501 bulkscore=0 mlxscore=0 impostorscore=0 spamscore=0
- mlxlogscore=604 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505160000
- definitions=main-2505280119
 
-From: Hari Bathini <hbathini@linux.ibm.com>
 
-Since commit 4346ba160409 ("fprobe: Rewrite fprobe on function-graph
-tracer"), FPROBE depends on HAVE_FUNCTION_GRAPH_FREGS. With previous
-patch adding HAVE_FUNCTION_GRAPH_FREGS for powerpc, FPROBE can be
-enabled on powerpc. But with the commit b5fa903b7f7c ("fprobe: Add
-fprobe_header encoding feature"), asm/fprobe.h header is needed to
-define arch dependent encode/decode macros. The fprobe header MSB
-pattern on powerpc is not 0xf. So, define FPROBE_HEADER_MSB_PATTERN
-expected on powerpc.
 
-Also, commit 762abbc0d09f ("fprobe: Use ftrace_regs in fprobe exit
-handler") introduced HAVE_FTRACE_REGS_HAVING_PT_REGS for archs that
-have pt_regs in ftrace_regs. Advertise that on powerpc to reuse
-common definitions like ftrace_partial_regs().
+On 2025/5/28 17:26, David Hildenbrand wrote:
+> On 22.05.25 11:39, Baolin Wang wrote:
+>>
+>>
+>> On 2025/5/21 18:23, Nico Pache wrote:
+>>> On Tue, May 20, 2025 at 4:09 AM Baolin Wang
+>>> <baolin.wang@linux.alibaba.com> wrote:
+>>>>
+>>>> Sorry for late reply.
+>>>>
+>>>> On 2025/5/17 14:47, Nico Pache wrote:
+>>>>> On Thu, May 15, 2025 at 9:20 PM Baolin Wang
+>>>>> <baolin.wang@linux.alibaba.com> wrote:
+>>>>>>
+>>>>>>
+>>>>>>
+>>>>>> On 2025/5/15 11:22, Nico Pache wrote:
+>>>>>>> khugepaged scans anons PMD ranges for potential collapse to a 
+>>>>>>> hugepage.
+>>>>>>> To add mTHP support we use this scan to instead record chunks of 
+>>>>>>> utilized
+>>>>>>> sections of the PMD.
+>>>>>>>
+>>>>>>> khugepaged_scan_bitmap uses a stack struct to recursively scan a 
+>>>>>>> bitmap
+>>>>>>> that represents chunks of utilized regions. We can then determine 
+>>>>>>> what
+>>>>>>> mTHP size fits best and in the following patch, we set this 
+>>>>>>> bitmap while
+>>>>>>> scanning the anon PMD. A minimum collapse order of 2 is used as 
+>>>>>>> this is
+>>>>>>> the lowest order supported by anon memory.
+>>>>>>>
+>>>>>>> max_ptes_none is used as a scale to determine how "full" an order 
+>>>>>>> must
+>>>>>>> be before being considered for collapse.
+>>>>>>>
+>>>>>>> When attempting to collapse an order that has its order set to 
+>>>>>>> "always"
+>>>>>>> lets always collapse to that order in a greedy manner without
+>>>>>>> considering the number of bits set.
+>>>>>>>
+>>>>>>> Signed-off-by: Nico Pache <npache@redhat.com>
+>>>>>>
+>>>>>> Sigh. You still haven't addressed or explained the issues I 
+>>>>>> previously
+>>>>>> raised [1], so I don't know how to review this patch again...
+>>>>> Can you still reproduce this issue?
+>>>>
+>>>> Yes, I can still reproduce this issue with today's (5/20) mm-new 
+>>>> branch.
+>>>>
+>>>> I've disabled PMD-sized THP in my system:
+>>>> [root]# cat /sys/kernel/mm/transparent_hugepage/enabled
+>>>> always madvise [never]
+>>>> [root]# cat 
+>>>> /sys/kernel/mm/transparent_hugepage/hugepages-2048kB/enabled
+>>>> always inherit madvise [never]
+>>>>
+>>>> And I tried calling madvise() with MADV_COLLAPSE for anonymous memory,
+>>>> and I can still see it collapsing to a PMD-sized THP.
+>>> Hi Baolin ! Thank you for your reply and willingness to test again :)
+>>>
+>>> I didn't realize we were talking about madvise collapse-- this makes
+>>> sense now. I also figured out why I could "reproduce" it before. My
+>>> script was always enabling the THP settings in two places, and I only
+>>> commented out one to test this. But this time I was doing more manual
+>>> testing.
+>>>
+>>> The original design of madvise_collapse ignores the sysfs and
+>>> collapses even if you have an order disabled. I believe this behavior
+>>> is wrong, but by design. I spent some time playing around with madvise
+>>> collapses with and w/o my changes. This is not a new thing, I
+>>> reproduced the issue in 6.11 (Fedora 41), and I think its been
+>>> possible since the inception of madvise collapse 3 years ago. I
+>>> noticed a similar behavior on one of my RFC since it was "breaking"
+>>> selftests, and the fix was to reincorporate this broken sysfs
+>>> behavior.
+>>
+>> OK. Thanks for the explanation.
+>>
+>>> 7d8faaf15545 ("mm/madvise: introduce MADV_COLLAPSE sync hugepage 
+>>> collapse")
+>>> "This call is independent of the system-wide THP sysfs settings, but
+>>> will fail for memory marked VM_NOHUGEPAGE."
+>>>
+>>> The second condition holds true (and fails for VM_NOHUGEPAGE), but I
+>>> dont know if we actually want madvise_collapse to be independent of
+>>> the system-wide.
+>>
+>> This design principle surprised me a bit, and I failed to find the
+>> reason in the commit log. I agree that "never should mean never," and we
+>> should respect the THP/mTHP sysfs setting. Additionally, for the
+>> 'shmem_enabled' sysfs interface controlled for shmem/tmpfs, THP collapse
+>> can still be prohibited through the 'deny' configuration. The rules here
+>> are somewhat confusing.
+> 
+> I recall that we decided to overwrite "VM_NOHUGEPAGE", because the 
+> assumption is that the same app that triggered MADV_NOHUGEPAGE triggers 
+> the collapse. So the app decides on its own behavior.
+> 
+> Similarly, allowing for collapsing in a VM without VM_HUGEPAGE in the 
+> "madvise" mode would be fine.
+> 
+> But in the "never" case, we should just "never" collapse.
 
-Signed-off-by: Hari Bathini <hbathini@linux.ibm.com>
-Signed-off-by: Aditya Bodkhe <aditya.b1@linux.ibm.com>
----
- arch/powerpc/Kconfig              |  1 +
- arch/powerpc/include/asm/fprobe.h | 12 ++++++++++++
- 2 files changed, 13 insertions(+)
- create mode 100644 arch/powerpc/include/asm/fprobe.h
-
-diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
-index 9163521bc4b9..2203e4fb64c1 100644
---- a/arch/powerpc/Kconfig
-+++ b/arch/powerpc/Kconfig
-@@ -246,6 +246,7 @@ config PPC
- 	select HAVE_EFFICIENT_UNALIGNED_ACCESS
- 	select HAVE_GUP_FAST
- 	select HAVE_FTRACE_GRAPH_FUNC
-+	select HAVE_FTRACE_REGS_HAVING_PT_REGS
- 	select HAVE_FTRACE_MCOUNT_RECORD
- 	select HAVE_FUNCTION_ARG_ACCESS_API
- 	select HAVE_FUNCTION_DESCRIPTORS	if PPC64_ELF_ABI_V1
-diff --git a/arch/powerpc/include/asm/fprobe.h b/arch/powerpc/include/asm/fprobe.h
-new file mode 100644
-index 000000000000..d64bc28fb3d3
---- /dev/null
-+++ b/arch/powerpc/include/asm/fprobe.h
-@@ -0,0 +1,12 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef _ASM_PPC_FPROBE_H
-+#define _ASM_PPC_FPROBE_H
-+
-+#include <asm-generic/fprobe.h>
-+
-+#ifdef CONFIG_64BIT
-+#undef FPROBE_HEADER_MSB_PATTERN
-+#define FPROBE_HEADER_MSB_PATTERN	(PAGE_OFFSET & ~FPROBE_HEADER_MSB_MASK)
-+#endif
-+
-+#endif /* _ASM_PPC_FPROBE_H */
--- 
-2.43.5
-
+OK. Let's fix the "never" case first. Thanks.
