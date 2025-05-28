@@ -1,35 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C85F2868BA;
-	Wed, 28 May 2025 15:44:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06E6E1C860C;
+	Wed, 28 May 2025 15:47:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748447091; cv=none; b=k5mzMtJanCSOi7g5osc0zjr/Xa0vc2jKzKDdCNgoEFhtJFOJL58U3XzezOlxeQ/mxyz68U+QGrWchVmJU3v/VHYl/0oJZMyzmykzAxXmhhpZT4Ri04cbI8PP1OF2lyGJvFUKPXS3HAUi0Jijk3iqWwO5La+ol5aJSotZ2Q++vw8=
+	t=1748447264; cv=none; b=pOhclGbcu6kNssxm4c/lyO8bk1Ta68DKJxzGd/TwLu1M6dfFzhuZVmV8BmCZJQJZ1D1yCXc0JAa5Zmgn0/nDK5duiH+Sq8G+nKcl/GIoXbCC1GXd1AP/4l8xwWNWPY79wpEisdMWt5ltF65XgvxIOckErM/UHX5Zh9zQV1XhwGQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748447091; c=relaxed/simple;
-	bh=/gVhh98q0CsWUj0Ko0dbsJEa0IhhuGCKf3Bzxp35yD8=;
+	s=arc-20240116; t=1748447264; c=relaxed/simple;
+	bh=wk31ZC40KMxXRWB3u+i5vzCJ1XRX25kSYlq/FWxj5C8=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=XROxVJgDDxAa+Wbj8ntKosPHAYoi9HDu5nzttbO7JiJaqaMI2p5+YCpcXKbgQxSBsmswGfnxoWNmezkzEJxcBlskgGqWayYQhOxZR/Yb4sFjcbEUpm+qv4gqK3tdLtZ1zfqkrwwW1oQ891mBcJ8lH7tQ0nWNVPm3U/s0+PRuWrg=
+	 MIME-Version:Content-Type; b=nxnAzHfGRn/nbx/Tmrm/RWxMau180zEgqXSOx9oda1oAAsEfNK9o3pFw1hnnOd0YoxMGu/VT5F1FY3E5ueRpQf/VScuBbSWTM/f0RI0S1rXmqUb9ZnzfZTMQe798NZDixh6mwpIxzr7NEeOiFC0PGZDZEm95+Dsr+oKt3Om4YAk=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7993CC4CEE3;
-	Wed, 28 May 2025 15:44:49 +0000 (UTC)
-Date: Wed, 28 May 2025 11:45:49 -0400
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D7C28C4CEE3;
+	Wed, 28 May 2025 15:47:42 +0000 (UTC)
+Date: Wed, 28 May 2025 11:48:42 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
-To: Caleb Sander Mateos <csander@purestorage.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, "Liam R . Howlett"
- <Liam.Howlett@oracle.com>, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
- Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Eric Mueller <emueller@purestorage.com>,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- linux-mm@kvack.org, Vlastimil Babka <vbabka@suse.cz>, Jann Horn
- <jannh@google.com>, Pedro Falcato <pfalcato@suse.de>
-Subject: Re: [PATCH] mm: remove unused mmap tracepoints
-Message-ID: <20250528114549.4d8a5e03@gandalf.local.home>
-In-Reply-To: <CADUfDZpPGQEY9u3p3MCU2S3qmDyKmE1JnSQ6G2jO4_J40rQeeQ@mail.gmail.com>
-References: <20250411161746.1043239-1-csander@purestorage.com>
-	<3ucksa6coiwco3wpmcjtfwezqjigzm2zwvdvkt2ryvefzojtqy@4lda47c236uz>
-	<CADUfDZpPGQEY9u3p3MCU2S3qmDyKmE1JnSQ6G2jO4_J40rQeeQ@mail.gmail.com>
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Vincent Donnefort <vdonnefort@google.com>
+Subject: Re: [PATCH] ring-buffer: Do not trigger WARN_ON() due to a
+ commit_overrun
+Message-ID: <20250528114842.7b9e696a@gandalf.local.home>
+In-Reply-To: <20250528113439.3fa4f245@gandalf.local.home>
+References: <20250527121140.0e7f0565@gandalf.local.home>
+	<20250528104203.d6f509c5d9c30dec1e024587@kernel.org>
+	<20250527221735.04c62a3c@batman.local.home>
+	<20250529000342.5218ac7b90c99f3636edd5ab@kernel.org>
+	<20250528113439.3fa4f245@gandalf.local.home>
 X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -40,14 +39,20 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Wed, 28 May 2025 08:16:24 -0700
-Caleb Sander Mateos <csander@purestorage.com> wrote:
+On Wed, 28 May 2025 11:34:39 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-> Would you mind picking up this patch to remove some old tracepoints?
-> Liam has already given it a review.
+> And even in that case, it triggers at most a couple of times a second:
 
-Someday I need to add code that lists the events that are never called. I
-can imagine that there's several tracepoints that are created and never
-used, and they still do waste memory :-(
+Forgot to cut and paste:
+
+[  367.010564] Ring buffer [1] commit overrun lost 1070 events at timestamp:367737571566
+[  371.328151] Ring buffer [3] commit overrun lost 21442 events at timestamp:372051356588
+
+This run had only two prints. I've had at most up to 8 prints for a test
+that runs over a minute.
+
+I updated the code to print the per CPU buffer it happened on as well as
+the timestamp.
 
 -- Steve
