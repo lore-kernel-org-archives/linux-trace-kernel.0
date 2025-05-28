@@ -1,153 +1,127 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF89F41C72;
-	Wed, 28 May 2025 00:13:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07D9E1805E;
+	Wed, 28 May 2025 00:22:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748391181; cv=none; b=PRHLRiZe4Ex7WY5ZA+WdmqbqJYsqPXj6izCZPw0pcKLJ7OAVGnhjAuHxecPov6V6g4nrBePhHN5ZqVvqKJpF56aXgtKQ6kajLEfK3nwNeZ0Mt/gvu4ZF0uSvPcXKS5sWHrj63KmNzBxRfunSSWOJCrTOrLpCEQinbjKMO5RqhTE=
+	t=1748391732; cv=none; b=L8AbjnWMQqmXlyTlxW5ce5E9u7u3lWmmdNr3ycUWdEIvBo8VoT2UeltDsJPGmPay82hbA3p2UzTCKXoGjCNEwStHKkQ7E2rxeTjZ7+dgYXWJmQ+Ay0vyJgFEcE4nc39BtmnnUI7PVz3LXuL+qn0MTsOu4KQ2FJlUePLf4qHQy48=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748391181; c=relaxed/simple;
-	bh=cxW4SaBd30d71b+XTGQnQOrd3RoXiIa9IXf9TAX8wcI=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=DbuXQeCXgO+BaF6eGfsvpP81VAAJxHjZGQfB6YDtexrtlAsg3VCKmSYjNw3uHlmufMVUlXE1xpNYZjTHkJ8lnsko2EFNm2QGDlceX1RwMplx5QxKk1DYqZjm9nAOPwoDATzPTtb6u5FNvgEej3KrDtCtKR/gUImSVCF9sbqz9W8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cBkz54W8; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748391732; c=relaxed/simple;
+	bh=6esPAlwDjRxvsHLe2vM+P3NusaJJVF93cTddiCo4aV8=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=C5I1y2GR+Sn08wVvBzaynWq5gBmMkb/kaBaZF7QYG1PicZJSXH2UbZnMxqweydR1Mfdxvd7Snp67HN7F0f2ZD9V9IOXntQN9B0YDgfeN+/bGkIFh1NWJRojuh8Rg4DKk8z7RDph7gHpoKhkRl/vmubN0vdS+m12Ebu/t8WqX/PM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TFUGp/wT; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cBkz54W8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9CBF2C4CEEF;
-	Wed, 28 May 2025 00:12:58 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TFUGp/wT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 99EB7C4CEE9;
+	Wed, 28 May 2025 00:22:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748391180;
-	bh=cxW4SaBd30d71b+XTGQnQOrd3RoXiIa9IXf9TAX8wcI=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=cBkz54W8rb4B9VA3IK0gsi5vhlq4TR9Nk6IYfIJ8ieIOB82bRTHHZwP/wzy3PutwT
-	 +aYkkOxxDPRC6NNy9FQWNIos68XuOhkSxHXInCwmbox7leypTgcdxAHS/Uq/OGh2WE
-	 Od/joQd8ZgHwypznwJDpQzzhzV9mfw9Gv1fQ9oy/E0u93TRWJFeVHSjy+DwBFjwdXY
-	 PMx8ANiem1VbCAyNswZmYW98QRp+857CqCWjwCjKxN5iBFEtXVAnArTCVmC1d4w1lD
-	 cios5kOGfl1CDxHnlwEdioTNDw/chS+uWSgCAIFo+50fTFIYyMuK+RuehsDE8eKU5a
-	 AOhbX6XrVv8WA==
-From: Jeff Layton <jlayton@kernel.org>
-Date: Tue, 27 May 2025 20:12:48 -0400
-Subject: [PATCH 2/2] sunrpc: new tracepoints around svc thread wakeups
+	s=k20201202; t=1748391731;
+	bh=6esPAlwDjRxvsHLe2vM+P3NusaJJVF93cTddiCo4aV8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=TFUGp/wTMMg6Di1mfGyt/JIdGrErm5Ae/6wh9ARXzE6OBTshTNelC608//6lyuI0X
+	 VJjXnO1qnCNwtZGRARmjyx3U3aZb1dm/5Ev9Nvwr8hhZqbR3tMtQyH8TZ6a6Dr4zOp
+	 4tRwVghmUdo1gr5WhV28GDh5vrekIE6V93QyhMWxikr8MMxRz0IfTmh/IaeSW6K2AI
+	 KNXTshw4SUj0WvMV6jnCGkbBGq1W/629dJ+HIOR0TD5Rz4BV5AQRZlfu3NZp9TbR5V
+	 4BM9lFTxe6QcKBrWzydVWMT0lkyTSHaS/RmkRoP9FKs/9DAlGZVY0Lowl199IjUgSk
+	 SPb7KM/wqBw/A==
+Date: Wed, 28 May 2025 09:22:09 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 1/2] tracing: ring_buffer: Rewind persistent ring
+ buffer when reboot
+Message-Id: <20250528092209.01fb26deee82e404d52a90c5@kernel.org>
+In-Reply-To: <20250527094757.791e8f10@gandalf.local.home>
+References: <174792927500.496143.10668210464102033012.stgit@mhiramat.tok.corp.google.com>
+	<174792928413.496143.17979267710069360561.stgit@mhiramat.tok.corp.google.com>
+	<20250523165425.0275c9a1@gandalf.local.home>
+	<20250523172857.02ab4a75@gandalf.local.home>
+	<20250526120342.cdcfca9ac3c2161d48c03af5@kernel.org>
+	<20250527091743.d036018195b7668aea0753c0@kernel.org>
+	<20250527121549.2d40608e9463199d85bf9ba4@kernel.org>
+	<20250527125444.80e59e659a7f087fed3c6fc9@kernel.org>
+	<20250527094757.791e8f10@gandalf.local.home>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250527-rpc-numa-v1-2-fa1d98e9a900@kernel.org>
-References: <20250527-rpc-numa-v1-0-fa1d98e9a900@kernel.org>
-In-Reply-To: <20250527-rpc-numa-v1-0-fa1d98e9a900@kernel.org>
-To: Chuck Lever <chuck.lever@oracle.com>, Neil Brown <neilb@suse.de>, 
- Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, 
- Tom Talpey <tom@talpey.com>, Steven Rostedt <rostedt@goodmis.org>, 
- Masami Hiramatsu <mhiramat@kernel.org>, 
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
- Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>, 
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
- Simon Horman <horms@kernel.org>
-Cc: Mike Snitzer <snitzer@kernel.org>, linux-nfs@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
- netdev@vger.kernel.org, Jeff Layton <jlayton@kernel.org>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2475; i=jlayton@kernel.org;
- h=from:subject:message-id; bh=cxW4SaBd30d71b+XTGQnQOrd3RoXiIa9IXf9TAX8wcI=;
- b=owEBbQKS/ZANAwAKAQAOaEEZVoIVAcsmYgBoNlUGnW4tgC8sVfVgHbdTgLn8V08NG8CkTE+ob
- BFqhAKcGoGJAjMEAAEKAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCaDZVBgAKCRAADmhBGVaC
- FUZUD/9BxN8EbQJyaMr+oPKZt5N1nr44RjHQy1scup+4Oq61Z07x8RkeHzVlc5cXFpS6u59licC
- VnbnpVSaR2MpagNnU18dcj6qjstz+RkQYcdKFSV35D2gGd/YX5S0PexNB4Hs9Kbp+1LHrBPfKAR
- pi26BBmC8OBL2ZH/eBeQlTcOC10VdwzMv4NWwuUU6nvbGcaW30/06z2fM30Pf7oQ6Pecm0Lyouw
- sET9h2mMdF4iSBeslSVqz0QpK4uz0x5oBaAjmId/8/7J7hH3nZSl4mN1MQcX2pXbKoXc3WlN0rI
- 8n2PerX+GAfLOag/sKdrzH1Q/d0ZouO0Tsopu/41kXMY9EAJRNig1NKzyn5604WfDcTMSJbncBO
- oQUPdcl5Dt5LgFUQdts0bVOHGnIHO/sf6XmHzR7l4SWBgBdDOV6iE6gaJjtmbweEraTV+8hAyAm
- KRMnQfT96DbZ7oIJvO44MjbDQZRZ4FUfr8l8NVerRgZk+05Z350/fcGYGssZctqGEw++5tVz9Z6
- 38M7SKEgPRxlKHSGWAaASwS78Kdf/6foihD0URiL6lB2GGfWvUEsfxtuLnOCfvAY1vbMxZQFx5p
- LGR14NTuEV/ubtIgqHbK510RC9k1okcxMstGyZAaUMZ/hS2zCH4bF+hi7q1n1WAm6PJwucE1kBn
- QWSM4+U8fPJW8Dg==
-X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
- fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
 
-Convert the svc_wake_up tracepoint into svc_pool_thread_event class.
-Have it also record the pool id, and add new tracepoints for when the
-thread is already running and for when there are no idle threads.
+On Tue, 27 May 2025 09:47:57 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-Signed-off-by: Jeff Layton <jlayton@kernel.org>
----
- include/trace/events/sunrpc.h | 23 ++++++++++++++++++-----
- net/sunrpc/svc.c              |  5 ++++-
- 2 files changed, 22 insertions(+), 6 deletions(-)
+> On Tue, 27 May 2025 12:54:44 +0900
+> Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
+> 
+> > Here is what I meant. As far as I ran my test, it looks good (it prevents
+> > over-read by `cat per_cpu/cpu0/trace_pipe_raw`)
+> > 
+> > diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+> > index 5034bae02f08..de1831eb3446 100644
+> > --- a/kernel/trace/ring_buffer.c
+> > +++ b/kernel/trace/ring_buffer.c
+> > @@ -5405,6 +5405,7 @@ rb_get_reader_page(struct ring_buffer_per_cpu *cpu_buffer)
+> >         unsigned long flags;
+> >         int nr_loops = 0;
+> >         bool ret;
+> > +       u64 ts;
+> >  
+> >         local_irq_save(flags);
+> >         arch_spin_lock(&cpu_buffer->lock);
+> > @@ -5423,6 +5424,18 @@ rb_get_reader_page(struct ring_buffer_per_cpu *cpu_buffer)
+> >  
+> >         reader = cpu_buffer->reader_page;
+> >  
+> > +       /*
+> > +        * Now the page->commit is not cleared when it read.
+> > +        * Check whether timestamp is newer instead. We also don't
+> > +        * care the head_page is overwritten. In that case, timestamp
+> > +        * should be newer than reader timestamp too.
+> > +        */
+> > +       ts = cpu_buffer->head_page->page->time_stamp;
+> > +       if (ts < reader->page->time_stamp) {
+> 
+> Hmm, I think this test may be too fragile. The head_page can be moved
+> by the writer, and this would need to handle races.
 
-diff --git a/include/trace/events/sunrpc.h b/include/trace/events/sunrpc.h
-index 5d331383047b79b9f6dcd699c87287453c1a5f49..d23009b4dc979fd7eebcfb6bc3164608f74ab23b 100644
---- a/include/trace/events/sunrpc.h
-+++ b/include/trace/events/sunrpc.h
-@@ -2124,22 +2124,35 @@ TRACE_EVENT(svc_xprt_accept,
- 	)
- );
- 
--TRACE_EVENT(svc_wake_up,
--	TP_PROTO(int pid),
-+DECLARE_EVENT_CLASS(svc_pool_thread_event,
-+	TP_PROTO(const struct svc_pool *pool, pid_t pid),
- 
--	TP_ARGS(pid),
-+	TP_ARGS(pool, pid),
- 
- 	TP_STRUCT__entry(
--		__field(int, pid)
-+		__field(unsigned int, pool_id)
-+		__field(pid_t, pid)
- 	),
- 
- 	TP_fast_assign(
-+		__entry->pool_id = pool->sp_id;
- 		__entry->pid = pid;
- 	),
- 
--	TP_printk("pid=%d", __entry->pid)
-+	TP_printk("pool=%u pid=%d", __entry->pool_id, __entry->pid)
- );
- 
-+#define DEFINE_SVC_POOL_THREAD_EVENT(name) \
-+	DEFINE_EVENT(svc_pool_thread_event, svc_pool_thread_##name, \
-+			TP_PROTO( \
-+				const struct svc_pool *pool, pid_t pid \
-+			), \
-+			TP_ARGS(pool, pid))
-+
-+DEFINE_SVC_POOL_THREAD_EVENT(wake);
-+DEFINE_SVC_POOL_THREAD_EVENT(running);
-+DEFINE_SVC_POOL_THREAD_EVENT(noidle);
-+
- TRACE_EVENT(svc_alloc_arg_err,
- 	TP_PROTO(
- 		unsigned int requested,
-diff --git a/net/sunrpc/svc.c b/net/sunrpc/svc.c
-index e7f9c295d13c03bf28a5eeec839fd85e24f5525f..de80d3683350dc86bee3413719797dcf7a4562e8 100644
---- a/net/sunrpc/svc.c
-+++ b/net/sunrpc/svc.c
-@@ -749,13 +749,16 @@ void svc_pool_wake_idle_thread(struct svc_pool *pool)
- 		WRITE_ONCE(rqstp->rq_qtime, ktime_get());
- 		if (!task_is_running(rqstp->rq_task)) {
- 			wake_up_process(rqstp->rq_task);
--			trace_svc_wake_up(rqstp->rq_task->pid);
-+			trace_svc_pool_thread_wake(pool, rqstp->rq_task->pid);
- 			percpu_counter_inc(&pool->sp_threads_woken);
-+		} else {
-+			trace_svc_pool_thread_running(pool, rqstp->rq_task->pid);
- 		}
- 		rcu_read_unlock();
- 		return;
- 	}
- 	rcu_read_unlock();
-+	trace_svc_pool_thread_noidle(pool, rqstp->rq_task->pid);
- 
- }
- EXPORT_SYMBOL_GPL(svc_pool_wake_idle_thread);
+Good point! Can we pick the page out from ring buffer as same
+as reader_page? If its timestamp is newer, we push the reader
+page (swap reader and head), or push back the header page.
+
+> 
+> I found an issue with commit overflow and have a couple of bugs to fix that
+> touches some of this code. Let's revisit after I get those fixed.
+
+OK, let's review it.
+
+BTW, we need a ring buffer test tool not depending on perf tool.
+
+Thank you,
+
+> 
+> Thanks,
+> 
+> -- Steve
+> 
+> 
+> 
+> > +               reader = NULL;
+> > +               goto out;
+> > +       }
+> > +
+> >         /* If there's more to read, return this page */
+> >         if (cpu_buffer->reader_page->read < rb_page_size(reader))
+> >                 goto out;
+> > 
+> 
+
 
 -- 
-2.49.0
-
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
