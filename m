@@ -1,245 +1,227 @@
-Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 931EE286D74;
-	Wed, 28 May 2025 13:22:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E97E3D561;
+	Wed, 28 May 2025 13:49:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748438564; cv=none; b=Pba4b1V9XHQTlOrardD3+xGxeI8vYHdlV/COvcnF3a++M3rLNc1G07SLpYqt502Il0MO3PgMubfuCxxiLOFaK6rOF17XaCHaZQ7QcI73tgv3qII+NA9WT4tTlbky9dJN4/wcDGrlt6AxHjyogAkgo0Cfs9xbXtybjPwLeBHZ468=
+	t=1748440143; cv=none; b=V6TWQUPF99EHGa1ty0+DjhxsHIvZqiO9F3kWzS9P9Hnobn27Yx3cE1Bhn1nSRlicEiQjdO9jAj6f/hhJuRYq1M5PPil04gjddCKCfmMyVttZ0UQMZsWQtNMdw/zVR2XPPf04khKY2j5nZYwQwSN1f5HsGoGLVrzcYT1zruHKBwc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748438564; c=relaxed/simple;
-	bh=9B09LdKjupc2KUC3Z122eNeKX4XjkQrIA4hbaw1bsnY=;
-	h=Subject:To:References:Cc:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=ubuZWzRT5SGuTqdJeAtMbBFAOH745xI4CfpJ2Muu6fVjNNlxU/drj4bwGCuoOlXF3SzIyuQyZLw939VwimeN4VCtqe5TqIVQYwP4Ev50roZrN3Z+I7YqaLzD7AIkpD2M3uyxamg08ZBYDzj81YGjPWT1E2T1Vl4/HrQiRPVQYuk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.216])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4b6qtS26YMzKHLyf;
-	Wed, 28 May 2025 21:22:40 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id B71401A1ABE;
-	Wed, 28 May 2025 21:22:38 +0800 (CST)
-Received: from [10.174.178.185] (unknown [10.174.178.185])
-	by APP4 (Coremail) with SMTP id gCh0CgCnC2AdDjdokjQdNw--.49955S3;
-	Wed, 28 May 2025 21:22:38 +0800 (CST)
-Subject: Re: [PATCH 1/2] ftrace: fix UAF when lookup kallsym after ftrace
- disabled
-To: Steven Rostedt <rostedt@goodmis.org>
-References: <20250523083945.3390587-1-yebin@huaweicloud.com>
- <20250523083945.3390587-2-yebin@huaweicloud.com>
- <20250523135452.626d8dcd@gandalf.local.home>
- <6833C4F1.3030300@huaweicloud.com>
- <20250527094131.1f4a92ab@gandalf.local.home>
-Cc: mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
- mark.rutland@arm.com, linux-trace-kernel@vger.kernel.org,
- linux-kernel@vger.kernel.org, yebin10@huawei.com
-From: yebin <yebin@huaweicloud.com>
-Message-ID: <68370E1D.3070802@huaweicloud.com>
-Date: Wed, 28 May 2025 21:22:37 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:38.0) Gecko/20100101
- Thunderbird/38.1.0
+	s=arc-20240116; t=1748440143; c=relaxed/simple;
+	bh=U3Zeg461BcQ45bSY3V6xOeWA6myBDPj8t0xHlLX5S68=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=MahCOx6GAZNuTCw25MvA6GLMwmbQ7xag2ZAq2h7jPsu+4J7wcfxxB0bVr7CnoH77Pq672W0AN4oXvsGuMKlePcX1RGIBDe7UBvfNXmO5q0ELUnq84K6j+QMYayVWIQOoFqR+HDM9C+7cNs5aoyTTNP3cLmh3NKvskMLQ1ybmhi8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=GLxs0TxI; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="GLxs0TxI"
+Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54S5ZFbb007498;
+	Wed, 28 May 2025 13:48:40 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=pp1; bh=d39gSKHNC284284u0Og7cE96FODSGufXxda6EnOsZ
+	O8=; b=GLxs0TxI4I7EX+bqm08L8v4oyGatExbpAlP7pKDWFxeavgqismlzzE2LP
+	/TwG0lN3i/n/c2QSMNhnz80BHmukaYrs+wjYqozL75mxdzE1wKvOmZQVOSMfzQ4W
+	RaO50Klngr3HXdtvw/WYLx33e0mbvOpio7hDJAuJEofkvFn0xyk1Wu5tzi4hpJWa
+	mCDEIq+GKD55etFGFnHmdVFHSKS34WwEBz3QkiFyz53S22uFSXBubezCNXAVXgEc
+	+4kEhIwHxOT4Hcn6XOw6GtzG5SaI8AhkrZWXuyKyDITclheGQTHbcNmjSI1qBrj3
+	0EKwEGxiM9YvN7vgNSX5oKLiVl8pQ==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46wvfb27sg-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 28 May 2025 13:48:40 +0000 (GMT)
+Received: from m0353729.ppops.net (m0353729.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 54SDdMRb003075;
+	Wed, 28 May 2025 13:48:40 GMT
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46wvfb27sb-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 28 May 2025 13:48:39 +0000 (GMT)
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 54SAl0Vf016202;
+	Wed, 28 May 2025 13:48:38 GMT
+Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 46uru0qu3e-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 28 May 2025 13:48:38 +0000
+Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
+	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 54SDmWaO36372936
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 28 May 2025 13:48:32 GMT
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 7764920040;
+	Wed, 28 May 2025 13:48:32 +0000 (GMT)
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 3C5F320063;
+	Wed, 28 May 2025 13:48:28 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.43.74.199])
+	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Wed, 28 May 2025 13:48:27 +0000 (GMT)
+From: Aditya Bodkhe <adityab1@linux.ibm.com>
+To: linuxppc-dev@lists.ozlabs.org
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        maddy@linux.ibm.com, mpe@ellerman.id.au, npiggin@gmail.com,
+        christophe.leroy@csgroup.eu, rostedt@goodmis.org, mhiramat@kernel.org,
+        mark.rutland@arm.com, Aditya Bodkhe <aditya.b1@linux.ibm.com>
+Subject: [PATCH 1/2] powerpc/ftrace: support CONFIG_FUNCTION_GRAPH_RETVAL
+Date: Wed, 28 May 2025 19:18:19 +0530
+Message-Id: <20250528134820.74121-1-adityab1@linux.ibm.com>
+X-Mailer: git-send-email 2.39.3 (Apple Git-146)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20250527094131.1f4a92ab@gandalf.local.home>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:gCh0CgCnC2AdDjdokjQdNw--.49955S3
-X-Coremail-Antispam: 1UD129KBjvJXoW3JryxJFWkKw43Kr1UZF4kXrb_yoWxWr4Upr
-	yftFWqkF4UZF4vk3Z29w18Wryjy3yUtrW3Was8Gr1fZw4Dtry0grs7tFs8uFyxJr15GrWS
-	vF4jvr9rWrWDZFJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUkEb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
-	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
-	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
-	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxk0xIA0c2IEe2xFo4CEbIxvr21lc7CjxVAaw2AF
-	wI0_JF0_Jw1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4
-	xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1D
-	MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I
-	0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWU
-	JVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07UK2N
-	tUUUUU=
-X-CM-SenderInfo: p1hex046kxt4xhlfz01xgou0bp/
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTI4MDExOSBTYWx0ZWRfX+pg/+IcbRaFj oXqbKnTslzKV8Q6pwrBpAR5KSCLy6q2zhvYupIc/UDOSiV9tVKqM9g/GqwuOySPWrLcy89AfaL8 eVneIkEV3Y5w/3pfRU4NnQE3zIqKA1lVhKcAs6PlYLp4Fyi8dlvG3/Zu4JIXYS+dRnZVOtzvlMX
+ +6jdZd/xGiWr+N9OjnUO3ccuQG0kNP8AaWlLTa+3grfNmYNKdAHxtnbWU6D28L6Ml9UQZbY0CAt onwUwrpSQuYrqRLsTITnX3w07t0M34M2kHxqiDIycdHW7Art1G0aRdSWNrghuM4wRyoROg1vn/8 JTg3ASbKR+XIsOm4PLjOOhLmRL2q/3BFhdhejx9ntjX3DkkdN2iWUAjTLfYVQPAEDpu2imkDyQx
+ RPE35R0pHKmstvSNhzk+VSTRoXaiW+Mat9zsOmj+aRHHKnU2ZJpifO4i6bRNVoj6adk1L4dT
+X-Proofpoint-ORIG-GUID: KKO0TYATbZexYmOzXBgc018ZPDY4dIDL
+X-Authority-Analysis: v=2.4 cv=bt5MBFai c=1 sm=1 tr=0 ts=68371438 cx=c_pps a=5BHTudwdYE3Te8bg5FgnPg==:117 a=5BHTudwdYE3Te8bg5FgnPg==:17 a=dt9VzEwgFbYA:10 a=VnNF1IyMAAAA:8 a=f-JPSP1mq3vSRxYuwIAA:9
+X-Proofpoint-GUID: uTXIcz3ei5cApGLwxDGX-hcXMplvJDKz
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-28_06,2025-05-27_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999
+ impostorscore=0 malwarescore=0 bulkscore=0 spamscore=0 lowpriorityscore=0
+ suspectscore=0 adultscore=0 priorityscore=1501 phishscore=0 mlxscore=0
+ clxscore=1011 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505160000
+ definitions=main-2505280119
 
+From: Aditya Bodkhe <aditya.b1@linux.ibm.com>
 
+commit a1be9ccc57f0 ("function_graph: Support recording and printing the
+return value of function") introduced support for function graph return
+value tracing.
 
-On 2025/5/27 21:41, Steven Rostedt wrote:
-> On Mon, 26 May 2025 09:33:37 +0800
-> yebin <yebin@huaweicloud.com> wrote:
->
->> On 2025/5/24 1:54, Steven Rostedt wrote:
->>> On Fri, 23 May 2025 16:39:44 +0800
->>> Ye Bin <yebin@huaweicloud.com> wrote:
->>>
->>>> Above issue may happens as follow:
->>>> (1) Add kprobe trace point;
->>>> (2) insmod test.ko;
->>>> (3) Trigger ftrace disabled;
->>>
->>> This is the bug. How was ftrace_disabled triggered? That should never
->>> happen. Was test.ko buggy?
->>>
->> Yes. The following warning is reported during concurrent registration
->> between register_kprobe() and live patch, causing ftrace_disabled.
->>
->> WARNING: CPU: 56 PID: 2769 at kernel/trace/ftrace.c:2612
->> ftrace_modify_all_code+0x116/0x140
->
-> OK, so it is a buggy module.
->
->>>> (4) rmmod test.ko;
->>>> (5) cat /proc/kallsyms; --> Will trigger UAF as test.ko already removed;
->>>> ftrace_mod_get_kallsym()
->>>> ...
->>>> strscpy(module_name, mod_map->mod->name, MODULE_NAME_LEN);
->>>> ...
->>>>
->>>> As ftrace_release_mod() judge 'ftrace_disabled' is true will return, and
->>>> 'mod_map' will remaining in ftrace_mod_maps. 'mod_map' has no chance to
->>>> release. Therefore, this also causes residual resources to accumulate.
->>>> To solve above issue, unconditionally clean up'mod_map'.
->>>>
->>>> Fixes: aba4b5c22cba ("ftrace: Save module init functions kallsyms symbols for tracing")
->>>
->>> This is *not* a fix. ftrace_disabled gets set when a bug is triggered. If
->>> this prevents ftrace_disabled from getting set, then it would be a fix. But
->>> if something else happens when ftrace_disabled is set, it just fixes a
->>> symptom and not the bug itself.
->>>
->> There are multiple causes for triggering ftrace_disabled. I agree that
->
-> Yes, just like there's multiple causes for BUG_ON() ;-)
->
-> The ftrace_disable is used to help keep the system from being totally
-> corrupted. When it triggers, the best thing to do is a reboot.
->
->> aba4b5c22cba is not faulty. However, the incorporation of this patch
->> will cause problems due to triggering ftrace_disabled. The generation of
->> ftrace_disabled is beyond our control. This is related to the user. What
->> we can do is even if there are no additional derivative problems.
->
-> Well, when a user inserts a module, then they become a kernel developer too ;-)
->
->>>
->>>> Signed-off-by: Ye Bin <yebin10@huawei.com>
->>>> ---
->>>>    kernel/trace/ftrace.c | 3 ---
->>>>    1 file changed, 3 deletions(-)
->>>>
->>>> diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
->>>> index a3d4dfad0cbc..ff5d9d73a4a7 100644
->>>> --- a/kernel/trace/ftrace.c
->>>> +++ b/kernel/trace/ftrace.c
->>>> @@ -7438,9 +7438,6 @@ void ftrace_release_mod(struct module *mod)
->>>>
->>>>    	mutex_lock(&ftrace_lock);
->>>>
->>>> -	if (ftrace_disabled)
->>>> -		goto out_unlock;
->>>> -
->>>
->>> Here you delete the check, and the next patch you have:
->>>
->>> +	if (ftrace_disabled || (mod && !mod->num_ftrace_callsites)) {
->>> +		mutex_unlock(&ftrace_lock);
->>> +		return;
->>> +	}
->>> +
->>>
->> The second patch I added judgment when initializing 'mod_map' in
->> ftrace_free_mem(). The first patch removes the judgment when
->> ftrace_release_mod() releases'mod_map'. The logic modified by the two
->> patches is isolated.
->
-> Actually I think both patches are buggy.
->
-> When ftrace_disabled is set, we don't know the state of the code and we do
-> not want to do *any* more text modification. That's what ftrace_disable
-> means. Something went wrong with text modification and any more changes can
-> cause a bigger problem.
->
-This problem can be solved by releasing the 'mod_map' resource when the 
-module is unloaded. Freeing up these resources is just an address that 
-cannot be translated into symbols, and there are no worse consequences.
+Additionally, commit a3ed4157b7d8 ("fgraph: Replace fgraph_ret_regs with
+ftrace_regs") further refactored and optimized the implementation,
+making `struct fgraph_ret_regs` unnecessary.
 
-> We don't add "exceptions".
->
-> If you are worried about unloading modules when ftrace_disable is set, what
-> is a much safer solution is to up the module count of all modules that have
-> any ftrace callsites active, and prevent those modules from being removed.
->
-I don't think it's necessary to introduce logic to restrict module 
-unloading here, which doesn't bring benefits but increases the cost of 
-interpretation for maintainers.
+This patch enables the above modifications for powerpc64, ensuring that
+function graph return value tracing is available on this architecture.
 
-> Again, the only solution to a ftrace_disable being set is a full reboot.
->
-We can't ask users to know such specialized details of the 
-implementation, which are unclear even to developers unfamiliar with the 
-ftrace module. Users can accept planned reboot system recovery, but 
-should not accept casual operations and the system crashes.All we can do 
-is do a good job of protection, give users more tolerance.Perhaps a 
-system that is dead but won't lie down is also a very undesirable 
-situation.However, ftrace is used to collect information and locate 
-faults. Even if it does not work, it does not affect services.In the 
-production environment, the most afraid of using ftrace suddenly crashes 
-the system.Therefore, the robustness of the tool itself is very important.
-> -- Steve
->
+After this patch, v6.14+ kernel can also be built with FPROBE on powerpc
+but there are a few other build and runtime dependencies for FPROBE to
+work properly. The next patch addresses them.
 
-I reworked the two patches, and the changes to the existing process 
-should be minimal. I don't know if I can get your approval. If you 
-agree, I'll post another V3 version.
+Signed-off-by: Aditya Bodkhe <aditya.b1@linux.ibm.com>
+---
+ arch/powerpc/Kconfig                     |  1 +
+ arch/powerpc/include/asm/ftrace.h        | 15 +++++++++
+ arch/powerpc/kernel/trace/ftrace_entry.S | 41 ++++++++++++++----------
+ 3 files changed, 40 insertions(+), 17 deletions(-)
 
-PATCH[1/2]:
-diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-index 51580e54677f..b3436d86e470 100644
---- a/kernel/trace/ftrace.c
-+++ b/kernel/trace/ftrace.c
-@@ -7438,9 +7438,10 @@ void ftrace_release_mod(struct module *mod)
-
-         mutex_lock(&ftrace_lock);
-
--       if (ftrace_disabled)
--               goto out_unlock;
+diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
+index c3e0cc83f120..9163521bc4b9 100644
+--- a/arch/powerpc/Kconfig
++++ b/arch/powerpc/Kconfig
+@@ -250,6 +250,7 @@ config PPC
+ 	select HAVE_FUNCTION_ARG_ACCESS_API
+ 	select HAVE_FUNCTION_DESCRIPTORS	if PPC64_ELF_ABI_V1
+ 	select HAVE_FUNCTION_ERROR_INJECTION
++	select HAVE_FUNCTION_GRAPH_FREGS
+ 	select HAVE_FUNCTION_GRAPH_TRACER
+ 	select HAVE_FUNCTION_TRACER		if !COMPILE_TEST && (PPC64 || (PPC32 && CC_IS_GCC))
+ 	select HAVE_GCC_PLUGINS			if GCC_VERSION >= 50200   # plugin support on gcc <= 5.1 is buggy on PPC
+diff --git a/arch/powerpc/include/asm/ftrace.h b/arch/powerpc/include/asm/ftrace.h
+index 82da7c7a1d12..6ffc9c9cf4e3 100644
+--- a/arch/powerpc/include/asm/ftrace.h
++++ b/arch/powerpc/include/asm/ftrace.h
+@@ -50,6 +50,21 @@ static __always_inline struct pt_regs *arch_ftrace_get_regs(struct ftrace_regs *
+ 		asm volatile("mfmsr %0" : "=r" ((_regs)->msr));	\
+ 	} while (0)
+ 
++#undef ftrace_regs_get_return_value
++static __always_inline unsigned long
++ftrace_regs_get_return_value(const struct ftrace_regs *fregs)
++{
++	return arch_ftrace_regs(fregs)->regs.gpr[3];
++}
++#define ftrace_regs_get_return_value ftrace_regs_get_return_value
++
++#undef ftrace_regs_get_frame_pointer
++static __always_inline unsigned long
++ftrace_regs_get_frame_pointer(const struct ftrace_regs *fregs)
++{
++	return arch_ftrace_regs(fregs)->regs.gpr[1];
++}
++
+ static __always_inline void
+ ftrace_regs_set_instruction_pointer(struct ftrace_regs *fregs,
+ 				    unsigned long ip)
+diff --git a/arch/powerpc/kernel/trace/ftrace_entry.S b/arch/powerpc/kernel/trace/ftrace_entry.S
+index 3565c67fc638..eafbfb7584ed 100644
+--- a/arch/powerpc/kernel/trace/ftrace_entry.S
++++ b/arch/powerpc/kernel/trace/ftrace_entry.S
+@@ -409,23 +409,30 @@ EXPORT_SYMBOL(_mcount)
+ _GLOBAL(return_to_handler)
+ 	/* need to save return values */
+ #ifdef CONFIG_PPC64
+-	std	r4,  -32(r1)
+-	std	r3,  -24(r1)
++	stdu	r1, -SWITCH_FRAME_SIZE(r1)
++	std	r4, GPR4(r1)
++	std	r3, GPR3(r1)
++  /* Save previous stack pointer (r1) */
++	addi	r3, r1, SWITCH_FRAME_SIZE
++	std	r3, GPR1(r1)
+ 	/* save TOC */
+-	std	r2,  -16(r1)
+-	std	r31, -8(r1)
++	std	r2,  24(r1)
++	std	r31, 32(r1)
+ 	mr	r31, r1
+-	stdu	r1, -112(r1)
 -
-+       /*
-+        * To avoid the UAF problem after the module is unloaded, the
-+        * 'mod_map' resource needs to be released unconditionally.
-+        */
-         list_for_each_entry_safe(mod_map, n, &ftrace_mod_maps, list) {
-                 if (mod_map->mod == mod) {
-                         list_del_rcu(&mod_map->list);
-@@ -7451,6 +7452,9 @@ void ftrace_release_mod(struct module *mod)
-                 }
-         }
-
-+       if (ftrace_disabled)
-+               goto out_unlock;
-+
-         /*
-          * Each module has its own ftrace_pages, remove
-          * them from the list.
-
-PATCH[2/2]:
-diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-index a3d4dfad0cbc..51580e54677f 100644
---- a/kernel/trace/ftrace.c
-+++ b/kernel/trace/ftrace.c
-@@ -7629,6 +7629,9 @@ allocate_ftrace_mod_map(struct module *mod,
-  {
-         struct ftrace_mod_map *mod_map;
-
-+       if (ftrace_disabled)
-+               return NULL;
-+
-         mod_map = kmalloc(sizeof(*mod_map), GFP_KERNEL);
-         if (!mod_map)
-                 return NULL;
++  /* pass ftrace_regs/pt_regs to ftrace_return_to_handler */
++	addi	r3,  r1, STACK_INT_FRAME_REGS
+ 	/*
+ 	 * We might be called from a module.
+ 	 * Switch to our TOC to run inside the core kernel.
+ 	 */
+ 	LOAD_PACA_TOC()
+ #else
+-	stwu	r1, -16(r1)
+-	stw	r3, 8(r1)
+-	stw	r4, 12(r1)
++	stwu	r1, -SWITCH_FRAME_SIZE(r1)
++	stw	r4, GPR4(r1)
++	stw	r3, GPR3(r1)
++	addi	r3, r1, SWITCH_FRAME_SIZE
++	stw	r3, GPR1(r1)
++	addi	r3, r1, STACK_INT_FRAME_REGS
+ #endif
+ 
+ 	bl	ftrace_return_to_handler
+@@ -435,15 +442,15 @@ _GLOBAL(return_to_handler)
+ 	mtlr	r3
+ 
+ #ifdef CONFIG_PPC64
+-	ld	r1, 0(r1)
+-	ld	r4,  -32(r1)
+-	ld	r3,  -24(r1)
+-	ld	r2,  -16(r1)
+-	ld	r31, -8(r1)
++	ld	r4,  GPR4(r1)
++	ld	r3,  GPR3(r1)
++	ld	r2,  24(r1)
++	ld	r31, 32(r1)
++	ld	r1,  0(r1)
+ #else
+-	lwz	r3, 8(r1)
+-	lwz	r4, 12(r1)
+-	addi	r1, r1, 16
++	lwz	r3, GPR3(r1)
++	lwz	r4, GPR4(r1)
++	addi	r1, r1, SWITCH_FRAME_SIZE
+ #endif
+ 
+ 	/* Jump back to real return address */
+-- 
+2.43.5
 
