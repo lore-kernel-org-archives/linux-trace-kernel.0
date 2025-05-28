@@ -1,225 +1,175 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f179.google.com (mail-pg1-f179.google.com [209.85.215.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5DF51A9B3D;
-	Wed, 28 May 2025 15:03:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF25321A440
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 28 May 2025 15:16:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748444625; cv=none; b=E1fyt2GK2fSSxcKXzrtOHW08AD5qVlvl/NDraP1kVaa/fUqrLKQT7VHMhGEI+MUEVs7xd/e7GurtVlhAwOfYkbJiLmmvmnt8l6pG8clU30A4mDsUJJTAsS7A0Lpb2/tk4TQim5VoZA1tiuUWmEtkS5wqeWHsX8HwnBoQAJWAfSI=
+	t=1748445398; cv=none; b=BAaZEL58dFZl+ejz8HhgaS4VfjQBJYxFtaO0O25H7vVHzekeGlu6osINf3OJFNL9R1bjCYV4uKiaFR7fHwQm/8JQ40qIzbZ59lnx+LwumZhRSTCuZeulwAXc5N6eT0AbinIY9H+sZnTz5PIVwb3agfcA80F2hBsnMMOTL5Vz+Fg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748444625; c=relaxed/simple;
-	bh=JKfKTF15DiZJaG9JqtsMV97jZAYF8+DiAH7XxkjNRBo=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=B5GD5jLcrIeMj92JsfYhL5c9A4/ECgSNcuGIM+ve20Sj31fcq4FbHLMZgyTSUkmGVP8cUVIP8fOiArFvzjVV/qODSj2j38/hlosPE1WXs78p7iGHSfT+X9y4VO39P2q3E/cxsJb5mEA7nQhUXaxmewe0c+QPzNpf9TTAcDtE8O8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=I2xKvA4+; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748445398; c=relaxed/simple;
+	bh=HKtMs1Z1xsEaiROa1YazGcStiDxVpMzzYhroj5kvTy8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=VqORs6R8F5Ws/r4fnS/rS6Xkbjy4Qoas1vm5WRqn5W53cyCdQf/A7SmekCcHF16QP+Rdth68584YJZrGmwXLRQfUpkWd+5OXXHfx7n/UsqdFdwvVW6wS1PkfPYH4VJetiCt0VUwDmSGLWMQtoj0yXWmMQHuIoHh7NtxIhXBvh9k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=U5qcrL7i; arc=none smtp.client-ip=209.85.215.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=purestorage.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="I2xKvA4+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 61B27C4CEE3;
-	Wed, 28 May 2025 15:03:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748444625;
-	bh=JKfKTF15DiZJaG9JqtsMV97jZAYF8+DiAH7XxkjNRBo=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=I2xKvA4+ZXDYTNOLD2BakxlQShpTHOEEjD3hxU+fum4FTWqFjae7+GB4O9jsL0qNF
-	 Mn6vbrEwTjy0VCtl8xOdyXRPKCdsrR7yzCFzT7nCZI68ojWVaRb/sYt40l+ntxBYHY
-	 zNk98BANAZFBJXiLv+FR11ZfK49Yb6VEy7ClWmeyMljs8M4YjAB7PjOzUPm1NFovtU
-	 vWzFyT+snOE19xPqQRdI+YXKeLguFs8khSpB16arfJxJkRB9FCtVKyCAqbhSeGA+jr
-	 97D6eIy8BlsgwsOJQIcUQXFq8l780Okf3mAQwHOyU+gxJqOU2fjfY85P/lL0T/1uEn
-	 36Kpnq0N2gYeA==
-Date: Thu, 29 May 2025 00:03:42 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Vincent Donnefort <vdonnefort@google.com>
-Subject: Re: [PATCH] ring-buffer: Do not trigger WARN_ON() due to a
- commit_overrun
-Message-Id: <20250529000342.5218ac7b90c99f3636edd5ab@kernel.org>
-In-Reply-To: <20250527221735.04c62a3c@batman.local.home>
-References: <20250527121140.0e7f0565@gandalf.local.home>
-	<20250528104203.d6f509c5d9c30dec1e024587@kernel.org>
-	<20250527221735.04c62a3c@batman.local.home>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="U5qcrL7i"
+Received: by mail-pg1-f179.google.com with SMTP id 41be03b00d2f7-af907e48e00so318393a12.1
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 28 May 2025 08:16:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=purestorage.com; s=google2022; t=1748445396; x=1749050196; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=9RzDNT2OTFzwrTpW2QhZAxDyX5hWvQosjJ6d0+XM2Bo=;
+        b=U5qcrL7ilLdxcqy7X0mEhyQavrsLee2GkQB7ndvERj4ynKgbc/vtpi3N9DkL0+FGax
+         r9Ikp/ya2iN4l2y4xDxU+iAkBwA3iVt61qV1oN0IfdDprMDFyiHP/Jew4aNVrSQDXsn7
+         3nvnN8r7I9RvJ2NoD1fbw0B8BUXmgkl/Ym7efdkO14J8ifc8Mv+xSs0xN0AZmnie26+k
+         HkoD5VkQSL/HQN1xhWpSRyTaRJQTROXw9sFhUhyxWgB4MWsLmfRnQf3+G6DRFtyiV+3a
+         UhLChLF9+vLplq35i4tdmPUTb/FS7SIXwwl/OCm+WBq7TBpDnIFLU5h8k4hC4+/obsra
+         n54w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748445396; x=1749050196;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=9RzDNT2OTFzwrTpW2QhZAxDyX5hWvQosjJ6d0+XM2Bo=;
+        b=rM2TlwqjiN8vvEkoKouZTmIk7+wXcrfg9BLMiNBJkbhg9OHqGbWRPPnzqeSMH/QZ8b
+         brOZsiq9lPlcKVl8a5s5AC8+iapvg5QE7LFjTMFwXFDN4/GzZEkQ4uYtdy44KuHithYU
+         qWL6WISjc+UUf0rWy2PUHgWb1raudWJOYXPrOzquWG8uY8E20wW10DmQCUUXnlbuCVAL
+         bka16omqDLwyVQu+vUjWURPzUnxUm2EFeKpan142EiM/z1GAEQEUhfNqe6FwC8RJvoUI
+         20klHkIgNTqtgLz4b5r0hfcGwyS4WbosmQh4Du2MPLV+VNMx8NAZJwa5SuqTqjqp2W4s
+         8gAw==
+X-Forwarded-Encrypted: i=1; AJvYcCXId0nczz7ruALyuTEy++flc9UGKrnWCRlRQZFfVfdDThgcL1ydgz0ewW/1Pxu5K8TxWEf4+S4JZHk41qQJHzT3HDA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwHkcYKFZ8ShsRj9S9qKG3+WTsapaVVtnSrJFI5uVqkknvZPQKa
+	Rwcekn3zebeRW+VSriKWWBBLHAI0mI2nM653ig9PmQleGMPnbwxgr1vtyTsPnLQmC4p7qP9qmMq
+	6MkcDokwPG/oaA4k9xt5f0Q7ueaMqw9LiuUCnh8LsBQ==
+X-Gm-Gg: ASbGncuQSvMMExypfu/u1RT7E4wEj/6FGzHLSOgfMPsBdsF1dk8lxv1mehXZG5fJFSX
+	TNMY7u9Tiy/RvM70CVrKcr2QERy/BarhLDWc5a+joJ+k2Wc76TkM+IX+2uhqo2vjc9WJUWi41rY
+	eZMldU79WgIq2hrXoC1dbriaejDdCv8kqR
+X-Google-Smtp-Source: AGHT+IHk/hFwszn+lGW4RY3KI45JUHzvCbI/GU7IlZ6KImluQy2hWku6LQLjd67CNr1rcUJjul/qPMYZDMndG3LG9Mc=
+X-Received: by 2002:a17:90a:e7cd:b0:311:c5d9:2c8b with SMTP id
+ 98e67ed59e1d1-311c5d93147mr3267754a91.5.1748445395685; Wed, 28 May 2025
+ 08:16:35 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+References: <20250411161746.1043239-1-csander@purestorage.com> <3ucksa6coiwco3wpmcjtfwezqjigzm2zwvdvkt2ryvefzojtqy@4lda47c236uz>
+In-Reply-To: <3ucksa6coiwco3wpmcjtfwezqjigzm2zwvdvkt2ryvefzojtqy@4lda47c236uz>
+From: Caleb Sander Mateos <csander@purestorage.com>
+Date: Wed, 28 May 2025 08:16:24 -0700
+X-Gm-Features: AX0GCFuDb9gBXu2ZIGF6ICRVSiBRQ0nrfOWmiTmw7s1LAbIKsh9w7lElDPYOc0M
+Message-ID: <CADUfDZpPGQEY9u3p3MCU2S3qmDyKmE1JnSQ6G2jO4_J40rQeeQ@mail.gmail.com>
+Subject: Re: [PATCH] mm: remove unused mmap tracepoints
+To: Andrew Morton <akpm@linux-foundation.org>, "Liam R . Howlett" <Liam.Howlett@oracle.com>, 
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Eric Mueller <emueller@purestorage.com>, 
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	linux-mm@kvack.org, Vlastimil Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>, 
+	Pedro Falcato <pfalcato@suse.de>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, 27 May 2025 22:17:35 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
+Hi MM folks,
+Would you mind picking up this patch to remove some old tracepoints?
+Liam has already given it a review.
 
-> On Wed, 28 May 2025 10:42:03 +0900
-> Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
-> 
-> > > The way to differentiate this case from the normal case of there
-> > > only being one page written to where the swap of the reader page
-> > > received that one page (which is the commit page), check if the
-> > > tail page is on the reader page. The difference between the commit
-> > > page and the tail page is that the tail page is where new writes go
-> > > to, and the commit page holds the first write that hasn't been
-> > > committed yet. In the case of an interrupt preempting the write of
-> > > an event and filling the buffer, it would move the tail page but
-> > > not the commit page.  
-> > 
-> > (BTW, what happen if the interrupted process commits the event? That
-> >  event will be lost, or commit and just move commit_page?)
-> 
-> No, the first event to be created is the "commit" event. If it gets
-> interrupted and the interrupt adds a bunch of events that wraps the
-> ring buffer, it can't touch the commit event, it will just start
-> dropping events. Then when the commit event finishes, it can either be
-> read by the reader, or overwritten by the next events coming in.
+Thanks,
+Caleb
 
-Hmm, rb_end_commit() seems to try commit all nested events (committing > 1)
-if committing == 1, and the rb_set_commit_to_write() pushes commit pointer
-to the latest write pointer. So when it "start dropping events"? (is that
-write side?)
-
-> > 
-> > Thus the reader_page == commit_page && reader_page == tail_page,
-> > missed_events should be 0?
-> > 
-> > Possible cases if missed_events != 0:
-> > 
-> >  - reader_page != commit_page
-> > 	(writer's commit overtook the reader)
-> 
-> The reader is never in the write buffer. Just the head page will move.
-> When a new reader page is taken it will swap out the old reader page
-> with the head page. If the head page is the commit page, then the
-> commit page becomes the reader page too.
-
-Hmm, so this is the case that the writer is too fast and it moves
-head page to the next page. Thus some events on old head page are
-lost.
-
-> 
-> > 
-> >  - reader_page == commit_page but reader_page != tail_page 
-> > 	(writer overtook the reader, but commit is not completed yet.)
-> 
-> No, "writer overtook the reader" doesn't make sense as the reader is
-> not on the write buffer, so the writer can not catch up to it. What the
-> write buffer has is the "head" page which is where the next reader will
-> come to.
-> 
-> The only way reader_page == commit_page and reader_page != tail_page is
-> if the commit was interrupted and the interrupt added events and moved
-> forward off the commit_page. The only way there would be missed events
-> in that case is if the interrupt added so many events it wrapped the
-> buffer and then started dropping events.
-
-OK, so "wrapped the buffer" means "tail (write) page caught up the commit"?
-
-> 
-> > 
-> > if 
-> >  - reader_page == commit_page == tail_page
-> > in this case, missed_events should be 0.
-> > 
-> > Since the reader_page is out of the ring buffer, writer should not
-> > use reader_page while reading the same reader_page, is that right?
-> 
-> Correct. But the writer could end up on the reader page after the swap,
-> if the head page happened to be the commit page.
-
-OK.
-
-> 
-> > 
-> 
-> 
-> > > cpu_buffer->tail_page,
-> > > +				       "Reader on commit with %ld
-> > > missed events",
-> > > +				       missed_events)) {
-> > > +				/*
-> > > +				 * If the tail page is not on the
-> > > reader page but
-> > > +				 * the commit_page is, that would
-> > > mean that there's
-> > > +				 * a commit_overrun (an interrupt
-> > > preempted an
-> > > +				 * addition of an event and then
-> > > filled the buffer
-> > > +				 * with new events). In this case
-> > > it's not an
-> > > +				 * error, but it should still be
-> > > reported.
-> > > +				 */
-> > > +				pr_info("Ring buffer commit
-> > > overrun lost %ld events at timestamp:%lld\n",
-> > > +					missed_events,
-> > > cpu_buffer->reader_page->page->time_stamp);  
-> > 
-> > Do we need this pr_info() for each commit overrun?
-> 
-> Yes. When doing this stress test, it printed at most 4 times. It
-> happens once per time the interrupt fills the buffer while interrupting
-> the buffer.
-
-Ah, I meant we should report it in printk buffer, since the event
-lost will happen in some case and reader can notice that.
-
-> 
-> I seldom ever get commit overruns. It's one of the fields in the status
-> file located in: /sys/kernel/tracing/per_cpu/cpu*/stats
-> 
-> > 
-> > > +			}
-> > > +		}
-> > >  	}  
-> > 
-> > Just for cleanup the code idea, with above change, this code is
-> > something like;
-> > 
-> > ----------------
-> > 
-> > missed_events = cpu_buffer->lost_events;
-> > 
-> > if (cpu_buffer->reader_page != cpu_buffer->commit_page) {
-> > 	if (missed_event) {
-> > 
-> > 	}
-> > } else {
-> > 	if (missed_event) {
-> > 		if (!WARN_ONCE(cpu_buffer->reader_page ==
-> > cpu_buffer->tail_page,"...")) { pr_info("...")
-> > 		}
-> > 	}
-> > }
-> > 
-> > ----------------
-> > 
-> > Can we make it as below?
-> > 
-> > ----------------
-> > missed_events = cpu_buffer->lost_events;
-> > 
-> > if (missed_event) {
-> > 	if (cpu_buffer->reader_page != cpu_buffer->commit_page) {
-> > 
-> > 	} else if (!WARN_ONCE(cpu_buffer->reader_page ==
-> > cpu_buffer->tail_page, "...") { /**/
-> > 		pr_info("..."); 
-> > 	}
-> > }
-> 
-> Hmm, OK, I'll look at that.
-
-
-Thanks! Anyway, the logic looks good to me.
-
-
-> 
-> Thanks,
-> 
-> -- Steve
-
-
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+On Fri, Apr 11, 2025 at 10:23=E2=80=AFAM Liam R. Howlett
+<Liam.Howlett@oracle.com> wrote:
+>
+> * Caleb Sander Mateos <csander@purestorage.com> [250411 12:18]:
+> > The vma_mas_szero and vma_store tracepoints are unused since commit
+> > fbcc3104b843 ("mmap: convert __vma_adjust() to use vma iterator").
+> > Remove them so they are no longer listed as available tracepoints.
+> >
+>
+> Thanks for doing this.
+>
+> Reviewed-by: Liam R. Howlett <Liam.Howlett@oracle.com>
+>
+> > Reported-by: Eric Mueller <emueller@purestorage.com>
+> > Signed-off-by: Caleb Sander Mateos <csander@purestorage.com>
+> > ---
+> >  include/trace/events/mmap.h | 52 -------------------------------------
+> >  1 file changed, 52 deletions(-)
+> >
+> > diff --git a/include/trace/events/mmap.h b/include/trace/events/mmap.h
+> > index f8d61485de16..ee2843a5daef 100644
+> > --- a/include/trace/events/mmap.h
+> > +++ b/include/trace/events/mmap.h
+> > @@ -41,62 +41,10 @@ TRACE_EVENT(vm_unmapped_area,
+> >               __entry->total_vm, __entry->flags, __entry->length,
+> >               __entry->low_limit, __entry->high_limit, __entry->align_m=
+ask,
+> >               __entry->align_offset)
+> >  );
+> >
+> > -TRACE_EVENT(vma_mas_szero,
+> > -     TP_PROTO(struct maple_tree *mt, unsigned long start,
+> > -              unsigned long end),
+> > -
+> > -     TP_ARGS(mt, start, end),
+> > -
+> > -     TP_STRUCT__entry(
+> > -                     __field(struct maple_tree *, mt)
+> > -                     __field(unsigned long, start)
+> > -                     __field(unsigned long, end)
+> > -     ),
+> > -
+> > -     TP_fast_assign(
+> > -                     __entry->mt             =3D mt;
+> > -                     __entry->start          =3D start;
+> > -                     __entry->end            =3D end;
+> > -     ),
+> > -
+> > -     TP_printk("mt_mod %p, (NULL), SNULL, %lu, %lu,",
+> > -               __entry->mt,
+> > -               (unsigned long) __entry->start,
+> > -               (unsigned long) __entry->end
+> > -     )
+> > -);
+> > -
+> > -TRACE_EVENT(vma_store,
+> > -     TP_PROTO(struct maple_tree *mt, struct vm_area_struct *vma),
+> > -
+> > -     TP_ARGS(mt, vma),
+> > -
+> > -     TP_STRUCT__entry(
+> > -                     __field(struct maple_tree *, mt)
+> > -                     __field(struct vm_area_struct *, vma)
+> > -                     __field(unsigned long, vm_start)
+> > -                     __field(unsigned long, vm_end)
+> > -     ),
+> > -
+> > -     TP_fast_assign(
+> > -                     __entry->mt             =3D mt;
+> > -                     __entry->vma            =3D vma;
+> > -                     __entry->vm_start       =3D vma->vm_start;
+> > -                     __entry->vm_end         =3D vma->vm_end - 1;
+> > -     ),
+> > -
+> > -     TP_printk("mt_mod %p, (%p), STORE, %lu, %lu,",
+> > -               __entry->mt, __entry->vma,
+> > -               (unsigned long) __entry->vm_start,
+> > -               (unsigned long) __entry->vm_end
+> > -     )
+> > -);
+> > -
+> > -
+> >  TRACE_EVENT(exit_mmap,
+> >       TP_PROTO(struct mm_struct *mm),
+> >
+> >       TP_ARGS(mm),
+> >
+> > --
+> > 2.45.2
+> >
