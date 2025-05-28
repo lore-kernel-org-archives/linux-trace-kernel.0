@@ -1,427 +1,225 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80323288C1F
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 28 May 2025 14:32:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5DF51A9B3D;
+	Wed, 28 May 2025 15:03:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748442769; cv=none; b=Rj18XYisBa0IbneevYHH7bAW6thITjNrwvGMqFA5CKW9wIIcLrYwg/tp7gsLO/WVLofOXmLCn8RKhHyZZvnOs0HuVRMwVApaAGTs2bmqANlZEg69gpPM962XQe2g4hqyUAXS6slsEBpbLCGFfiV4Bu8cWYPUym+k5ko+1d5iJqo=
+	t=1748444625; cv=none; b=E1fyt2GK2fSSxcKXzrtOHW08AD5qVlvl/NDraP1kVaa/fUqrLKQT7VHMhGEI+MUEVs7xd/e7GurtVlhAwOfYkbJiLmmvmnt8l6pG8clU30A4mDsUJJTAsS7A0Lpb2/tk4TQim5VoZA1tiuUWmEtkS5wqeWHsX8HwnBoQAJWAfSI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748442769; c=relaxed/simple;
-	bh=7pzEOFDkSk4OGTttMhg7+3fNiqnabN4HSGPccqE4KZs=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=aaCKoIDVG6xqJclFtEua4UyyVGtN19DcUFDi9m6OYLr68L78aJdLrRcHTDUe2LrHMDw+CqW7U9Lv3TSs/8NTiTYIbdWpGxTfX7iu5VvowpfK4c+1vreUOdeHACzZTxWs8MG0xCzzMJ68NdjEST5HqobdNdKDyuUc9fMRK23QS4g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=guX4MrFh; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1748444625; c=relaxed/simple;
+	bh=JKfKTF15DiZJaG9JqtsMV97jZAYF8+DiAH7XxkjNRBo=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=B5GD5jLcrIeMj92JsfYhL5c9A4/ECgSNcuGIM+ve20Sj31fcq4FbHLMZgyTSUkmGVP8cUVIP8fOiArFvzjVV/qODSj2j38/hlosPE1WXs78p7iGHSfT+X9y4VO39P2q3E/cxsJb5mEA7nQhUXaxmewe0c+QPzNpf9TTAcDtE8O8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=I2xKvA4+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="guX4MrFh"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1748442766;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=X9FghnowdvIfcJWFBcyPjWLjwFh8ZP/bVgyoxmiG59E=;
-	b=guX4MrFhZDh2i1Nd8WFd+/nrLwJAujLhSsOGRRViq+/xyVevpJrYD7Y6aiLYmtnumdeQ1N
-	PA8857KRO3hZLhR+xmhcWRlNwNPmDM+SYwnAIBHY4FnxwSu2ugnb6HMUkfv9zjvfK3vzJE
-	w0R2HxIrTQXUABiPqiwqXTM4n+Wgkqw=
-Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-387-V5p-lMsaMT68GLKarubc0Q-1; Wed,
- 28 May 2025 10:32:40 -0400
-X-MC-Unique: V5p-lMsaMT68GLKarubc0Q-1
-X-Mimecast-MFC-AGG-ID: V5p-lMsaMT68GLKarubc0Q_1748442759
-Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 9B8B6195608A;
-	Wed, 28 May 2025 14:32:39 +0000 (UTC)
-Received: from fedora.redhat.com (unknown [10.45.225.94])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 405A019560AA;
-	Wed, 28 May 2025 14:32:36 +0000 (UTC)
-From: Tomas Glozar <tglozar@redhat.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="I2xKvA4+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 61B27C4CEE3;
+	Wed, 28 May 2025 15:03:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1748444625;
+	bh=JKfKTF15DiZJaG9JqtsMV97jZAYF8+DiAH7XxkjNRBo=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=I2xKvA4+ZXDYTNOLD2BakxlQShpTHOEEjD3hxU+fum4FTWqFjae7+GB4O9jsL0qNF
+	 Mn6vbrEwTjy0VCtl8xOdyXRPKCdsrR7yzCFzT7nCZI68ojWVaRb/sYt40l+ntxBYHY
+	 zNk98BANAZFBJXiLv+FR11ZfK49Yb6VEy7ClWmeyMljs8M4YjAB7PjOzUPm1NFovtU
+	 vWzFyT+snOE19xPqQRdI+YXKeLguFs8khSpB16arfJxJkRB9FCtVKyCAqbhSeGA+jr
+	 97D6eIy8BlsgwsOJQIcUQXFq8l780Okf3mAQwHOyU+gxJqOU2fjfY85P/lL0T/1uEn
+	 36Kpnq0N2gYeA==
+Date: Thu, 29 May 2025 00:03:42 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 To: Steven Rostedt <rostedt@goodmis.org>
-Cc: linux-trace-kernel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	John Kacur <jkacur@redhat.com>,
-	Luis Goncalves <lgoncalv@redhat.com>,
-	Tomas Glozar <tglozar@redhat.com>
-Subject: [RFC PATCH 1/2] rtla/timerlat: Introduce enum timerlat_tracing_mode
-Date: Wed, 28 May 2025 16:28:57 +0200
-Message-ID: <20250528142858.185017-2-tglozar@redhat.com>
-In-Reply-To: <20250528142858.185017-1-tglozar@redhat.com>
-References: <20250528142858.185017-1-tglozar@redhat.com>
+Cc: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Vincent Donnefort <vdonnefort@google.com>
+Subject: Re: [PATCH] ring-buffer: Do not trigger WARN_ON() due to a
+ commit_overrun
+Message-Id: <20250529000342.5218ac7b90c99f3636edd5ab@kernel.org>
+In-Reply-To: <20250527221735.04c62a3c@batman.local.home>
+References: <20250527121140.0e7f0565@gandalf.local.home>
+	<20250528104203.d6f509c5d9c30dec1e024587@kernel.org>
+	<20250527221735.04c62a3c@batman.local.home>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-After the introduction of BPF-based sample collection, rtla-timerlat
-effectively runs in one of three modes:
+On Tue, 27 May 2025 22:17:35 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-- Pure BPF mode, with tracefs only being used to set up the timerlat
-tracer. Sample processing and stop on threshold are handled by BPF.
-- tracefs mode. BPF is unsupported or kernel is lacking the necessary
-trace event (osnoise:timerlat_sample). Stop on theshold is handled by
-timerlat tracer stopping tracing in all instances.
-- BPF/tracefs mixed mode - BPF is used for sample collection for top or
-histogram, tracefs is used for trace output and/or auto-analysis. Stop
-on threshold is handled both through BPF program, which stops sample
-collection for top/histogram and wakes up rtla, and by timerlat
-tracer, which stops tracing for trace output/auto-analysis instances.
+> On Wed, 28 May 2025 10:42:03 +0900
+> Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
+> 
+> > > The way to differentiate this case from the normal case of there
+> > > only being one page written to where the swap of the reader page
+> > > received that one page (which is the commit page), check if the
+> > > tail page is on the reader page. The difference between the commit
+> > > page and the tail page is that the tail page is where new writes go
+> > > to, and the commit page holds the first write that hasn't been
+> > > committed yet. In the case of an interrupt preempting the write of
+> > > an event and filling the buffer, it would move the tail page but
+> > > not the commit page.  
+> > 
+> > (BTW, what happen if the interrupted process commits the event? That
+> >  event will be lost, or commit and just move commit_page?)
+> 
+> No, the first event to be created is the "commit" event. If it gets
+> interrupted and the interrupt adds a bunch of events that wraps the
+> ring buffer, it can't touch the commit event, it will just start
+> dropping events. Then when the commit event finishes, it can either be
+> read by the reader, or overwritten by the next events coming in.
 
-Add enum timerlat_tracing_mode, with three values:
+Hmm, rb_end_commit() seems to try commit all nested events (committing > 1)
+if committing == 1, and the rb_set_commit_to_write() pushes commit pointer
+to the latest write pointer. So when it "start dropping events"? (is that
+write side?)
 
-- TRACING_MODE_BPF
-- TRACING_MODE_TRACEFS
-- TRACING_MODE_MIXED
+> > 
+> > Thus the reader_page == commit_page && reader_page == tail_page,
+> > missed_events should be 0?
+> > 
+> > Possible cases if missed_events != 0:
+> > 
+> >  - reader_page != commit_page
+> > 	(writer's commit overtook the reader)
+> 
+> The reader is never in the write buffer. Just the head page will move.
+> When a new reader page is taken it will swap out the old reader page
+> with the head page. If the head page is the commit page, then the
+> commit page becomes the reader page too.
 
-Those represent the modes described above. A field of this type is added
-to struct timerlat_params, named "mode", replacing the no_bpf variable.
-params->mode is set in timerlat_{top,hist}_parse_args to
-TRACING_MODE_BPF or TRACING_MODE_MIXED based on whether trace output
-and/or auto-analysis is requested. timerlat_{top,hist}_main then checks
-if BPF is not unavailable or disabled, in that case, it sets
-params->mode to TRACING_MODE_TRACEFS.
+Hmm, so this is the case that the writer is too fast and it moves
+head page to the next page. Thus some events on old head page are
+lost.
 
-A condition is added to timerlat_apply_config that skips setting
-timerlat tracer thresholds if params->mode is TRACING_MODE_BPF (those
-are unnecessary, since they only turn off tracing, which is already
-turned off in that case, since BPF is used to collect samples).
+> 
+> > 
+> >  - reader_page == commit_page but reader_page != tail_page 
+> > 	(writer overtook the reader, but commit is not completed yet.)
+> 
+> No, "writer overtook the reader" doesn't make sense as the reader is
+> not on the write buffer, so the writer can not catch up to it. What the
+> write buffer has is the "head" page which is where the next reader will
+> come to.
+> 
+> The only way reader_page == commit_page and reader_page != tail_page is
+> if the commit was interrupted and the interrupt added events and moved
+> forward off the commit_page. The only way there would be missed events
+> in that case is if the interrupt added so many events it wrapped the
+> buffer and then started dropping events.
 
-Signed-off-by: Tomas Glozar <tglozar@redhat.com>
----
- tools/tracing/rtla/src/timerlat.c      | 24 ++++++-----
- tools/tracing/rtla/src/timerlat.h      | 18 +++++++++
- tools/tracing/rtla/src/timerlat_hist.c | 49 +++++++++++++----------
- tools/tracing/rtla/src/timerlat_top.c  | 55 +++++++++++++++-----------
- 4 files changed, 94 insertions(+), 52 deletions(-)
+OK, so "wrapped the buffer" means "tail (write) page caught up the commit"?
 
-diff --git a/tools/tracing/rtla/src/timerlat.c b/tools/tracing/rtla/src/timerlat.c
-index c29e2ba2d7d8..63d6d43eafff 100644
---- a/tools/tracing/rtla/src/timerlat.c
-+++ b/tools/tracing/rtla/src/timerlat.c
-@@ -40,16 +40,22 @@ timerlat_apply_config(struct osnoise_tool *tool, struct timerlat_params *params)
- 			CPU_SET(i, &params->monitored_cpus);
- 	}
- 
--	retval = osnoise_set_stop_us(tool->context, params->stop_us);
--	if (retval) {
--		err_msg("Failed to set stop us\n");
--		goto out_err;
--	}
-+	if (params->mode != TRACING_MODE_BPF) {
-+		/*
-+		 * In tracefs and mixed mode, timerlat tracer handles stopping
-+		 * on threshold
-+		 */
-+		retval = osnoise_set_stop_us(tool->context, params->stop_us);
-+		if (retval) {
-+			err_msg("Failed to set stop us\n");
-+			goto out_err;
-+		}
- 
--	retval = osnoise_set_stop_total_us(tool->context, params->stop_total_us);
--	if (retval) {
--		err_msg("Failed to set stop total us\n");
--		goto out_err;
-+		retval = osnoise_set_stop_total_us(tool->context, params->stop_total_us);
-+		if (retval) {
-+			err_msg("Failed to set stop total us\n");
-+			goto out_err;
-+		}
- 	}
- 
- 
-diff --git a/tools/tracing/rtla/src/timerlat.h b/tools/tracing/rtla/src/timerlat.h
-index 73045aef23fa..e0a553545d03 100644
---- a/tools/tracing/rtla/src/timerlat.h
-+++ b/tools/tracing/rtla/src/timerlat.h
-@@ -1,6 +1,23 @@
- // SPDX-License-Identifier: GPL-2.0
- #include "osnoise.h"
- 
-+/*
-+ * Define timerlat tracing mode.
-+ *
-+ * There are three tracing modes:
-+ * - tracefs-only, used when BPF is unavailable.
-+ * - BPF-only, used when BPF is available and neither trace saving nor
-+ * auto-analysis are enabled.
-+ * - mixed mode, used when BPF is available and either trace saving or
-+ * auto-analysis is enabled (which rely on sample collection through
-+ * tracefs).
-+ */
-+enum timerlat_tracing_mode {
-+	TRACING_MODE_BPF,
-+	TRACING_MODE_TRACEFS,
-+	TRACING_MODE_MIXED,
-+};
-+
- struct timerlat_params {
- 	/* Common params */
- 	char			*cpus;
-@@ -30,6 +47,7 @@ struct timerlat_params {
- 	cpu_set_t		hk_cpu_set;
- 	struct sched_attr	sched_param;
- 	struct trace_events	*events;
-+	enum timerlat_tracing_mode mode;
- 	union {
- 		struct {
- 			/* top only */
-diff --git a/tools/tracing/rtla/src/timerlat_hist.c b/tools/tracing/rtla/src/timerlat_hist.c
-index 9d9efeedc4c2..70548beed812 100644
---- a/tools/tracing/rtla/src/timerlat_hist.c
-+++ b/tools/tracing/rtla/src/timerlat_hist.c
-@@ -802,6 +802,9 @@ static struct timerlat_params
- 	params->bucket_size = 1;
- 	params->entries = 256;
- 
-+	/* default to BPF mode */
-+	params->mode = TRACING_MODE_BPF;
-+
- 	while (1) {
- 		static struct option long_options[] = {
- 			{"auto",		required_argument,	0, 'a'},
-@@ -1054,6 +1057,13 @@ static struct timerlat_params
- 	if (params->kernel_workload && params->user_workload)
- 		timerlat_hist_usage("--kernel-threads and --user-threads are mutually exclusive!");
- 
-+	/*
-+	 * If auto-analysis or trace output is enabled, switch from BPF mode to
-+	 * mixed mode
-+	 */
-+	if (params->mode == TRACING_MODE_BPF && params->trace_output && !params->no_aa)
-+		params->mode = TRACING_MODE_MIXED;
-+
- 	return params;
- }
- 
-@@ -1149,7 +1159,6 @@ int timerlat_hist_main(int argc, char *argv[])
- 	pthread_t timerlat_u;
- 	int retval;
- 	int nr_cpus, i;
--	bool no_bpf = false;
- 
- 	params = timerlat_hist_parse_args(argc, argv);
- 	if (!params)
-@@ -1161,12 +1170,6 @@ int timerlat_hist_main(int argc, char *argv[])
- 		goto out_exit;
- 	}
- 
--	retval = timerlat_hist_apply_config(tool, params);
--	if (retval) {
--		err_msg("Could not apply config\n");
--		goto out_free;
--	}
--
- 	trace = &tool->trace;
- 	/*
- 	 * Save trace instance into global variable so that SIGINT can stop
-@@ -1175,24 +1178,30 @@ int timerlat_hist_main(int argc, char *argv[])
- 	 */
- 	hist_inst = trace;
- 
-+	/*
-+	 * Try to enable BPF, unless disabled explicitly.
-+	 * If BPF enablement fails, fall back to tracefs mode.
-+	 */
- 	if (getenv("RTLA_NO_BPF") && strncmp(getenv("RTLA_NO_BPF"), "1", 2) == 0) {
- 		debug_msg("RTLA_NO_BPF set, disabling BPF\n");
--		no_bpf = true;
--	}
--
--	if (!no_bpf && !tep_find_event_by_name(trace->tep, "osnoise", "timerlat_sample")) {
-+		params->mode = TRACING_MODE_TRACEFS;
-+	} else if (!tep_find_event_by_name(trace->tep, "osnoise", "timerlat_sample")) {
- 		debug_msg("osnoise:timerlat_sample missing, disabling BPF\n");
--		no_bpf = true;
--	}
--
--	if (!no_bpf) {
-+		params->mode = TRACING_MODE_TRACEFS;
-+	} else {
- 		retval = timerlat_bpf_init(params);
- 		if (retval) {
- 			debug_msg("Could not enable BPF\n");
--			no_bpf = true;
-+			params->mode = TRACING_MODE_TRACEFS;
- 		}
- 	}
- 
-+	retval = timerlat_hist_apply_config(tool, params);
-+	if (retval) {
-+		err_msg("Could not apply config\n");
-+		goto out_free;
-+	}
-+
- 	retval = enable_timerlat(trace);
- 	if (retval) {
- 		err_msg("Failed to enable timerlat tracer\n");
-@@ -1320,7 +1329,7 @@ int timerlat_hist_main(int argc, char *argv[])
- 		trace_instance_start(&record->trace);
- 	if (!params->no_aa)
- 		trace_instance_start(&aa->trace);
--	if (no_bpf) {
-+	if (params->mode == TRACING_MODE_TRACEFS) {
- 		trace_instance_start(trace);
- 	} else {
- 		retval = timerlat_bpf_attach();
-@@ -1333,7 +1342,7 @@ int timerlat_hist_main(int argc, char *argv[])
- 	tool->start_time = time(NULL);
- 	timerlat_hist_set_signals(params);
- 
--	if (no_bpf) {
-+	if (params->mode == TRACING_MODE_TRACEFS) {
- 		while (!stop_tracing) {
- 			sleep(params->sleep_time);
- 
-@@ -1362,7 +1371,7 @@ int timerlat_hist_main(int argc, char *argv[])
- 	} else
- 		timerlat_bpf_wait(-1);
- 
--	if (!no_bpf) {
-+	if (params->mode != TRACING_MODE_TRACEFS) {
- 		timerlat_bpf_detach();
- 		retval = timerlat_hist_bpf_pull_data(tool);
- 		if (retval) {
-@@ -1410,7 +1419,7 @@ int timerlat_hist_main(int argc, char *argv[])
- 	osnoise_destroy_tool(tool);
- 	free(params);
- 	free_cpu_idle_disable_states();
--	if (!no_bpf)
-+	if (params->mode != TRACING_MODE_TRACEFS)
- 		timerlat_bpf_destroy();
- out_exit:
- 	exit(return_value);
-diff --git a/tools/tracing/rtla/src/timerlat_top.c b/tools/tracing/rtla/src/timerlat_top.c
-index 79cb6f28967f..30f1d6cbcad1 100644
---- a/tools/tracing/rtla/src/timerlat_top.c
-+++ b/tools/tracing/rtla/src/timerlat_top.c
-@@ -559,6 +559,9 @@ static struct timerlat_params
- 	/* display data in microseconds */
- 	params->output_divisor = 1000;
- 
-+	/* default to BPF mode */
-+	params->mode = TRACING_MODE_BPF;
-+
- 	while (1) {
- 		static struct option long_options[] = {
- 			{"auto",		required_argument,	0, 'a'},
-@@ -790,6 +793,13 @@ static struct timerlat_params
- 	if (params->kernel_workload && params->user_workload)
- 		timerlat_top_usage("--kernel-threads and --user-threads are mutually exclusive!");
- 
-+	/*
-+	 * If auto-analysis or trace output is enabled, switch from BPF mode to
-+	 * mixed mode
-+	 */
-+	if (params->mode == TRACING_MODE_BPF && params->trace_output && !params->no_aa)
-+		params->mode = TRACING_MODE_MIXED;
-+
- 	return params;
- }
- 
-@@ -994,7 +1004,6 @@ int timerlat_top_main(int argc, char *argv[])
- 	char *max_lat;
- 	int retval;
- 	int nr_cpus, i;
--	bool no_bpf = false;
- 
- 	params = timerlat_top_parse_args(argc, argv);
- 	if (!params)
-@@ -1006,38 +1015,38 @@ int timerlat_top_main(int argc, char *argv[])
- 		goto out_exit;
- 	}
- 
--	retval = timerlat_top_apply_config(top, params);
--	if (retval) {
--		err_msg("Could not apply config\n");
--		goto out_free;
--	}
--
- 	trace = &top->trace;
- 	/*
--	* Save trace instance into global variable so that SIGINT can stop
--	* the timerlat tracer.
--	* Otherwise, rtla could loop indefinitely when overloaded.
--	*/
-+	 * Save trace instance into global variable so that SIGINT can stop
-+	 * the timerlat tracer.
-+	 * Otherwise, rtla could loop indefinitely when overloaded.
-+	 */
- 	top_inst = trace;
- 
-+	/*
-+	 * Try to enable BPF, unless disabled explicitly.
-+	 * If BPF enablement fails, fall back to tracefs mode.
-+	 */
- 	if (getenv("RTLA_NO_BPF") && strncmp(getenv("RTLA_NO_BPF"), "1", 2) == 0) {
- 		debug_msg("RTLA_NO_BPF set, disabling BPF\n");
--		no_bpf = true;
--	}
--
--	if (!no_bpf && !tep_find_event_by_name(trace->tep, "osnoise", "timerlat_sample")) {
-+		params->mode = TRACING_MODE_TRACEFS;
-+	} else if (!tep_find_event_by_name(trace->tep, "osnoise", "timerlat_sample")) {
- 		debug_msg("osnoise:timerlat_sample missing, disabling BPF\n");
--		no_bpf = true;
--	}
--
--	if (!no_bpf) {
-+		params->mode = TRACING_MODE_TRACEFS;
-+	} else {
- 		retval = timerlat_bpf_init(params);
- 		if (retval) {
- 			debug_msg("Could not enable BPF\n");
--			no_bpf = true;
-+			params->mode = TRACING_MODE_TRACEFS;
- 		}
- 	}
- 
-+	retval = timerlat_top_apply_config(top, params);
-+	if (retval) {
-+		err_msg("Could not apply config\n");
-+		goto out_free;
-+	}
-+
- 	retval = enable_timerlat(trace);
- 	if (retval) {
- 		err_msg("Failed to enable timerlat tracer\n");
-@@ -1166,7 +1175,7 @@ int timerlat_top_main(int argc, char *argv[])
- 		trace_instance_start(&record->trace);
- 	if (!params->no_aa)
- 		trace_instance_start(&aa->trace);
--	if (no_bpf) {
-+	if (params->mode == TRACING_MODE_TRACEFS) {
- 		trace_instance_start(trace);
- 	} else {
- 		retval = timerlat_bpf_attach();
-@@ -1179,7 +1188,7 @@ int timerlat_top_main(int argc, char *argv[])
- 	top->start_time = time(NULL);
- 	timerlat_top_set_signals(params);
- 
--	if (no_bpf)
-+	if (params->mode == TRACING_MODE_TRACEFS)
- 		retval = timerlat_top_main_loop(top, record, params, &params_u);
- 	else
- 		retval = timerlat_top_bpf_main_loop(top, record, params, &params_u);
-@@ -1187,7 +1196,7 @@ int timerlat_top_main(int argc, char *argv[])
- 	if (retval)
- 		goto out_top;
- 
--	if (!no_bpf)
-+	if (params->mode != TRACING_MODE_TRACEFS)
- 		timerlat_bpf_detach();
- 
- 	if (params->user_workload && !params_u.stopped_running) {
+> 
+> > 
+> > if 
+> >  - reader_page == commit_page == tail_page
+> > in this case, missed_events should be 0.
+> > 
+> > Since the reader_page is out of the ring buffer, writer should not
+> > use reader_page while reading the same reader_page, is that right?
+> 
+> Correct. But the writer could end up on the reader page after the swap,
+> if the head page happened to be the commit page.
+
+OK.
+
+> 
+> > 
+> 
+> 
+> > > cpu_buffer->tail_page,
+> > > +				       "Reader on commit with %ld
+> > > missed events",
+> > > +				       missed_events)) {
+> > > +				/*
+> > > +				 * If the tail page is not on the
+> > > reader page but
+> > > +				 * the commit_page is, that would
+> > > mean that there's
+> > > +				 * a commit_overrun (an interrupt
+> > > preempted an
+> > > +				 * addition of an event and then
+> > > filled the buffer
+> > > +				 * with new events). In this case
+> > > it's not an
+> > > +				 * error, but it should still be
+> > > reported.
+> > > +				 */
+> > > +				pr_info("Ring buffer commit
+> > > overrun lost %ld events at timestamp:%lld\n",
+> > > +					missed_events,
+> > > cpu_buffer->reader_page->page->time_stamp);  
+> > 
+> > Do we need this pr_info() for each commit overrun?
+> 
+> Yes. When doing this stress test, it printed at most 4 times. It
+> happens once per time the interrupt fills the buffer while interrupting
+> the buffer.
+
+Ah, I meant we should report it in printk buffer, since the event
+lost will happen in some case and reader can notice that.
+
+> 
+> I seldom ever get commit overruns. It's one of the fields in the status
+> file located in: /sys/kernel/tracing/per_cpu/cpu*/stats
+> 
+> > 
+> > > +			}
+> > > +		}
+> > >  	}  
+> > 
+> > Just for cleanup the code idea, with above change, this code is
+> > something like;
+> > 
+> > ----------------
+> > 
+> > missed_events = cpu_buffer->lost_events;
+> > 
+> > if (cpu_buffer->reader_page != cpu_buffer->commit_page) {
+> > 	if (missed_event) {
+> > 
+> > 	}
+> > } else {
+> > 	if (missed_event) {
+> > 		if (!WARN_ONCE(cpu_buffer->reader_page ==
+> > cpu_buffer->tail_page,"...")) { pr_info("...")
+> > 		}
+> > 	}
+> > }
+> > 
+> > ----------------
+> > 
+> > Can we make it as below?
+> > 
+> > ----------------
+> > missed_events = cpu_buffer->lost_events;
+> > 
+> > if (missed_event) {
+> > 	if (cpu_buffer->reader_page != cpu_buffer->commit_page) {
+> > 
+> > 	} else if (!WARN_ONCE(cpu_buffer->reader_page ==
+> > cpu_buffer->tail_page, "...") { /**/
+> > 		pr_info("..."); 
+> > 	}
+> > }
+> 
+> Hmm, OK, I'll look at that.
+
+
+Thanks! Anyway, the logic looks good to me.
+
+
+> 
+> Thanks,
+> 
+> -- Steve
+
+
 -- 
-2.49.0
-
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
