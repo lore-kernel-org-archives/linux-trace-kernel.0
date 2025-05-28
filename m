@@ -1,100 +1,245 @@
-Received: from out30-100.freemail.mail.aliyun.com (out30-100.freemail.mail.aliyun.com [115.124.30.100])
+Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95354268C5D;
-	Wed, 28 May 2025 12:39:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 931EE286D74;
+	Wed, 28 May 2025 13:22:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748435964; cv=none; b=OcdpfxFGNp8A5D/pKMxfq3+pKdTqRs0uxs23rTWc4bmLrJwg+MAEvzzqaGnavWQ07++2FW5g+5f+uLcPtRe7w8ar4q2c7FEWe17DghB+ELVlDZC+jHx+5et6WBf8t9akltN70M/jNclab+A1KFd3iGY9xEGoXUC9y1mUINozA7E=
+	t=1748438564; cv=none; b=Pba4b1V9XHQTlOrardD3+xGxeI8vYHdlV/COvcnF3a++M3rLNc1G07SLpYqt502Il0MO3PgMubfuCxxiLOFaK6rOF17XaCHaZQ7QcI73tgv3qII+NA9WT4tTlbky9dJN4/wcDGrlt6AxHjyogAkgo0Cfs9xbXtybjPwLeBHZ468=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748435964; c=relaxed/simple;
-	bh=SZRvMbdu3wATDJKn6o28yDXSyhutEhb2/FkYHiV/SkM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=C23yh0AxrlzFW8R7wPBE7GcEImEWHcq93ufALs1xmvEBoiR6d6k1IVnzs+5I7vWqkzi17UhUR9Ww2UgzL8ZYhkyn0Qvy01lWsICFo3wV165y75352DcHkvuaFDzagQMWUZVyjDA/w/4laAWWphkOadinYSZwIfwdHrdkfsUzC80=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=DAjFohPM; arc=none smtp.client-ip=115.124.30.100
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="DAjFohPM"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1748435956; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=aVWN/MKmTQqqGKE7GEueaj4Por9dh45wCyBCzff0Izg=;
-	b=DAjFohPMPfziz+CPqLGjrrMaCadeDulKisLUn2hGkCiK+tX2g24nL7e6xvrz4DrwWSS0tCmKCzTiRxEzAl/Uimuk7I0HBh+rPP+q4oXhoU5UO/Iazkl0eE0Q3odBaraym1+b7LKocr9qpUgFSC6sPVeiHasiu+aaq4/gLvcLXSc=
-Received: from 30.15.230.171(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0WcDSnsn_1748435951 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Wed, 28 May 2025 20:39:12 +0800
-Message-ID: <a956379a-7472-4972-bf3d-fe2b2b6715b5@linux.alibaba.com>
-Date: Wed, 28 May 2025 20:39:10 +0800
+	s=arc-20240116; t=1748438564; c=relaxed/simple;
+	bh=9B09LdKjupc2KUC3Z122eNeKX4XjkQrIA4hbaw1bsnY=;
+	h=Subject:To:References:Cc:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=ubuZWzRT5SGuTqdJeAtMbBFAOH745xI4CfpJ2Muu6fVjNNlxU/drj4bwGCuoOlXF3SzIyuQyZLw939VwimeN4VCtqe5TqIVQYwP4Ev50roZrN3Z+I7YqaLzD7AIkpD2M3uyxamg08ZBYDzj81YGjPWT1E2T1Vl4/HrQiRPVQYuk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.216])
+	by dggsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4b6qtS26YMzKHLyf;
+	Wed, 28 May 2025 21:22:40 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.128])
+	by mail.maildlp.com (Postfix) with ESMTP id B71401A1ABE;
+	Wed, 28 May 2025 21:22:38 +0800 (CST)
+Received: from [10.174.178.185] (unknown [10.174.178.185])
+	by APP4 (Coremail) with SMTP id gCh0CgCnC2AdDjdokjQdNw--.49955S3;
+	Wed, 28 May 2025 21:22:38 +0800 (CST)
+Subject: Re: [PATCH 1/2] ftrace: fix UAF when lookup kallsym after ftrace
+ disabled
+To: Steven Rostedt <rostedt@goodmis.org>
+References: <20250523083945.3390587-1-yebin@huaweicloud.com>
+ <20250523083945.3390587-2-yebin@huaweicloud.com>
+ <20250523135452.626d8dcd@gandalf.local.home>
+ <6833C4F1.3030300@huaweicloud.com>
+ <20250527094131.1f4a92ab@gandalf.local.home>
+Cc: mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
+ mark.rutland@arm.com, linux-trace-kernel@vger.kernel.org,
+ linux-kernel@vger.kernel.org, yebin10@huawei.com
+From: yebin <yebin@huaweicloud.com>
+Message-ID: <68370E1D.3070802@huaweicloud.com>
+Date: Wed, 28 May 2025 21:22:37 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:38.0) Gecko/20100101
+ Thunderbird/38.1.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 00/12] khugepaged: mTHP support
-To: Nico Pache <npache@redhat.com>, linux-mm@kvack.org,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
-Cc: david@redhat.com, ziy@nvidia.com, lorenzo.stoakes@oracle.com,
- Liam.Howlett@oracle.com, ryan.roberts@arm.com, dev.jain@arm.com,
- corbet@lwn.net, rostedt@goodmis.org, mhiramat@kernel.org,
- mathieu.desnoyers@efficios.com, akpm@linux-foundation.org,
- baohua@kernel.org, willy@infradead.org, peterx@redhat.com,
- wangkefeng.wang@huawei.com, usamaarif642@gmail.com, sunnanyong@huawei.com,
- vishal.moola@gmail.com, thomas.hellstrom@linux.intel.com,
- yang@os.amperecomputing.com, kirill.shutemov@linux.intel.com,
- aarcange@redhat.com, raquini@redhat.com, anshuman.khandual@arm.com,
- catalin.marinas@arm.com, tiwai@suse.de, will@kernel.org,
- dave.hansen@linux.intel.com, jack@suse.cz, cl@gentwo.org,
- jglisse@google.com, surenb@google.com, zokeefe@google.com,
- hannes@cmpxchg.org, rientjes@google.com, mhocko@suse.com,
- rdunlap@infradead.org
-References: <20250515032226.128900-1-npache@redhat.com>
-From: Baolin Wang <baolin.wang@linux.alibaba.com>
-In-Reply-To: <20250515032226.128900-1-npache@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+In-Reply-To: <20250527094131.1f4a92ab@gandalf.local.home>
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:gCh0CgCnC2AdDjdokjQdNw--.49955S3
+X-Coremail-Antispam: 1UD129KBjvJXoW3JryxJFWkKw43Kr1UZF4kXrb_yoWxWr4Upr
+	yftFWqkF4UZF4vk3Z29w18Wryjy3yUtrW3Was8Gr1fZw4Dtry0grs7tFs8uFyxJr15GrWS
+	vF4jvr9rWrWDZFJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUkEb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7Cj
+	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
+	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
+	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
+	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxk0xIA0c2IEe2xFo4CEbIxvr21lc7CjxVAaw2AF
+	wI0_JF0_Jw1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4
+	xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1D
+	MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I
+	0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWU
+	JVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07UK2N
+	tUUUUU=
+X-CM-SenderInfo: p1hex046kxt4xhlfz01xgou0bp/
 
 
 
-On 2025/5/15 11:22, Nico Pache wrote:
-> The following series provides khugepaged and madvise collapse with the
-> capability to collapse anonymous memory regions to mTHPs.
-> 
-> To achieve this we generalize the khugepaged functions to no longer depend
-> on PMD_ORDER. Then during the PMD scan, we keep track of chunks of pages
-> (defined by KHUGEPAGED_MTHP_MIN_ORDER) that are utilized. This info is
-> tracked using a bitmap. After the PMD scan is done, we do binary recursion
-> on the bitmap to find the optimal mTHP sizes for the PMD range. The
-> restriction on max_ptes_none is removed during the scan, to make sure we
-> account for the whole PMD range. When no mTHP size is enabled, the legacy
-> behavior of khugepaged is maintained. max_ptes_none will be scaled by the
-> attempted collapse order to determine how full a THP must be to be
-> eligible. If a mTHP collapse is attempted, but contains swapped out, or
-> shared pages, we dont perform the collapse.
-> 
-> With the default max_ptes_none=511, the code should keep its most of its
-> original behavior. To exercise mTHP collapse we need to set
-> max_ptes_none<=255. With max_ptes_none > HPAGE_PMD_NR/2 you will
-> experience collapse "creep" and constantly promote mTHPs to the next
-> available size. This is due the fact that it will introduce at least 2x
-> the number of pages, and on a future scan will satisfy that condition once
-> again.
-> 
-> Patch 1:     Refactor/rename hpage_collapse
-> Patch 2:     Some refactoring to combine madvise_collapse and khugepaged
-> Patch 3-5:   Generalize khugepaged functions for arbitrary orders
-> Patch 6-9:   The mTHP patches
-> Patch 10-11: Tracing/stats
-> Patch 12:    Documentation
+On 2025/5/27 21:41, Steven Rostedt wrote:
+> On Mon, 26 May 2025 09:33:37 +0800
+> yebin <yebin@huaweicloud.com> wrote:
+>
+>> On 2025/5/24 1:54, Steven Rostedt wrote:
+>>> On Fri, 23 May 2025 16:39:44 +0800
+>>> Ye Bin <yebin@huaweicloud.com> wrote:
+>>>
+>>>> Above issue may happens as follow:
+>>>> (1) Add kprobe trace point;
+>>>> (2) insmod test.ko;
+>>>> (3) Trigger ftrace disabled;
+>>>
+>>> This is the bug. How was ftrace_disabled triggered? That should never
+>>> happen. Was test.ko buggy?
+>>>
+>> Yes. The following warning is reported during concurrent registration
+>> between register_kprobe() and live patch, causing ftrace_disabled.
+>>
+>> WARNING: CPU: 56 PID: 2769 at kernel/trace/ftrace.c:2612
+>> ftrace_modify_all_code+0x116/0x140
+>
+> OK, so it is a buggy module.
+>
+>>>> (4) rmmod test.ko;
+>>>> (5) cat /proc/kallsyms; --> Will trigger UAF as test.ko already removed;
+>>>> ftrace_mod_get_kallsym()
+>>>> ...
+>>>> strscpy(module_name, mod_map->mod->name, MODULE_NAME_LEN);
+>>>> ...
+>>>>
+>>>> As ftrace_release_mod() judge 'ftrace_disabled' is true will return, and
+>>>> 'mod_map' will remaining in ftrace_mod_maps. 'mod_map' has no chance to
+>>>> release. Therefore, this also causes residual resources to accumulate.
+>>>> To solve above issue, unconditionally clean up'mod_map'.
+>>>>
+>>>> Fixes: aba4b5c22cba ("ftrace: Save module init functions kallsyms symbols for tracing")
+>>>
+>>> This is *not* a fix. ftrace_disabled gets set when a bug is triggered. If
+>>> this prevents ftrace_disabled from getting set, then it would be a fix. But
+>>> if something else happens when ftrace_disabled is set, it just fixes a
+>>> symptom and not the bug itself.
+>>>
+>> There are multiple causes for triggering ftrace_disabled. I agree that
+>
+> Yes, just like there's multiple causes for BUG_ON() ;-)
+>
+> The ftrace_disable is used to help keep the system from being totally
+> corrupted. When it triggers, the best thing to do is a reboot.
+>
+>> aba4b5c22cba is not faulty. However, the incorporation of this patch
+>> will cause problems due to triggering ftrace_disabled. The generation of
+>> ftrace_disabled is beyond our control. This is related to the user. What
+>> we can do is even if there are no additional derivative problems.
+>
+> Well, when a user inserts a module, then they become a kernel developer too ;-)
+>
+>>>
+>>>> Signed-off-by: Ye Bin <yebin10@huawei.com>
+>>>> ---
+>>>>    kernel/trace/ftrace.c | 3 ---
+>>>>    1 file changed, 3 deletions(-)
+>>>>
+>>>> diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+>>>> index a3d4dfad0cbc..ff5d9d73a4a7 100644
+>>>> --- a/kernel/trace/ftrace.c
+>>>> +++ b/kernel/trace/ftrace.c
+>>>> @@ -7438,9 +7438,6 @@ void ftrace_release_mod(struct module *mod)
+>>>>
+>>>>    	mutex_lock(&ftrace_lock);
+>>>>
+>>>> -	if (ftrace_disabled)
+>>>> -		goto out_unlock;
+>>>> -
+>>>
+>>> Here you delete the check, and the next patch you have:
+>>>
+>>> +	if (ftrace_disabled || (mod && !mod->num_ftrace_callsites)) {
+>>> +		mutex_unlock(&ftrace_lock);
+>>> +		return;
+>>> +	}
+>>> +
+>>>
+>> The second patch I added judgment when initializing 'mod_map' in
+>> ftrace_free_mem(). The first patch removes the judgment when
+>> ftrace_release_mod() releases'mod_map'. The logic modified by the two
+>> patches is isolated.
+>
+> Actually I think both patches are buggy.
+>
+> When ftrace_disabled is set, we don't know the state of the code and we do
+> not want to do *any* more text modification. That's what ftrace_disable
+> means. Something went wrong with text modification and any more changes can
+> cause a bigger problem.
+>
+This problem can be solved by releasing the 'mod_map' resource when the 
+module is unloaded. Freeing up these resources is just an address that 
+cannot be translated into symbols, and there are no worse consequences.
 
-When I tested 64K mTHP collapse and disabled PMD-sized THP, I found that 
-khugepaged couldn't scan and collapse 64K mTHP. I send out two fix 
-patches[1], and with these patches applied, 64K mTHP collapse works 
-well. I hope my two patches can be folded into your next version series 
-if you think there are no issues. Thanks.
+> We don't add "exceptions".
+>
+> If you are worried about unloading modules when ftrace_disable is set, what
+> is a much safer solution is to up the module count of all modules that have
+> any ftrace callsites active, and prevent those modules from being removed.
+>
+I don't think it's necessary to introduce logic to restrict module 
+unloading here, which doesn't bring benefits but increases the cost of 
+interpretation for maintainers.
 
-[1] 
-https://lore.kernel.org/all/ac9ed6d71b439611f9c94b3506a8ce975d4636e9.1748435162.git.baolin.wang@linux.alibaba.com/
+> Again, the only solution to a ftrace_disable being set is a full reboot.
+>
+We can't ask users to know such specialized details of the 
+implementation, which are unclear even to developers unfamiliar with the 
+ftrace module. Users can accept planned reboot system recovery, but 
+should not accept casual operations and the system crashes.All we can do 
+is do a good job of protection, give users more tolerance.Perhaps a 
+system that is dead but won't lie down is also a very undesirable 
+situation.However, ftrace is used to collect information and locate 
+faults. Even if it does not work, it does not affect services.In the 
+production environment, the most afraid of using ftrace suddenly crashes 
+the system.Therefore, the robustness of the tool itself is very important.
+> -- Steve
+>
+
+I reworked the two patches, and the changes to the existing process 
+should be minimal. I don't know if I can get your approval. If you 
+agree, I'll post another V3 version.
+
+PATCH[1/2]:
+diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+index 51580e54677f..b3436d86e470 100644
+--- a/kernel/trace/ftrace.c
++++ b/kernel/trace/ftrace.c
+@@ -7438,9 +7438,10 @@ void ftrace_release_mod(struct module *mod)
+
+         mutex_lock(&ftrace_lock);
+
+-       if (ftrace_disabled)
+-               goto out_unlock;
+-
++       /*
++        * To avoid the UAF problem after the module is unloaded, the
++        * 'mod_map' resource needs to be released unconditionally.
++        */
+         list_for_each_entry_safe(mod_map, n, &ftrace_mod_maps, list) {
+                 if (mod_map->mod == mod) {
+                         list_del_rcu(&mod_map->list);
+@@ -7451,6 +7452,9 @@ void ftrace_release_mod(struct module *mod)
+                 }
+         }
+
++       if (ftrace_disabled)
++               goto out_unlock;
++
+         /*
+          * Each module has its own ftrace_pages, remove
+          * them from the list.
+
+PATCH[2/2]:
+diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+index a3d4dfad0cbc..51580e54677f 100644
+--- a/kernel/trace/ftrace.c
++++ b/kernel/trace/ftrace.c
+@@ -7629,6 +7629,9 @@ allocate_ftrace_mod_map(struct module *mod,
+  {
+         struct ftrace_mod_map *mod_map;
+
++       if (ftrace_disabled)
++               return NULL;
++
+         mod_map = kmalloc(sizeof(*mod_map), GFP_KERNEL);
+         if (!mod_map)
+                 return NULL;
+
