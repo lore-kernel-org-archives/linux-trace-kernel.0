@@ -1,74 +1,74 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3F472CA8
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 28 May 2025 09:06:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DB4C274651
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 28 May 2025 09:06:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748423177; cv=none; b=IJyB8YwXttVLSObvF1cS4py47/7DzfYui8KpttKgYgOP5PLmJDqvS3c+kvZSvdOQ0zDixoixvlWm3tCKQ4Fi3GQuVnq6Umlka1aMv8ga3tT16F1kyKrQ4bosiv99DsyrF6aTc9BseAAOEQBFz4rvyMsmQhFJx4yFtr7FxuP1h98=
+	t=1748423198; cv=none; b=tIh6nQR36X05Od/b2H8QMZE8VMXVIIMvx0heOC3Jos4vTNFsLGmdN5pAuRPqQH+t8PHB5T8C3LjctDQ9iDx0SnmKndcxrbIle8jgya3NF/O7WYC5elPshIPGxVGFZS2gbGuERPXYlzJnrPH8D+sCprnHJVFzj+rk+0RgN/xrBUo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748423177; c=relaxed/simple;
-	bh=uMd7vvtHClvbK/XR9D4ur3jM2f+3IfWm3Bv1Ja3tbbg=;
+	s=arc-20240116; t=1748423198; c=relaxed/simple;
+	bh=4TvTmbiWXB5FhroHsvlg+K8JZ75ZnMsD85mUMetTHRU=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=T4tG8AqetdhEUliavle0f5pxw1kj02Gfox9vPfkuKcCz/Qhq9+29u4xXrPHefatHbQvVNCCpGT7uFcntZm8hjEYVVSo9D42oasK5aAtc1cLha9ZxIHiLEw9mkM4erKXm4ixD8KCUebxYsySjkr0TO/DPSLMI6x4bZs0DYiWL6iA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=TTe9S5/V; arc=none smtp.client-ip=170.10.133.124
+	 In-Reply-To:Content-Type; b=ZiX1ubgRGwqaNb9waQ3DEfL9GJQWK3iwHBADOMrQXzCZTopQku6FVLijR+hotZ3BerlksT84kqG3XTTdiH7TYro/v+iqRHNyaWDEZFrCSEqvFQEWR/qvoAdsA/RJJkk2uWTwLHz2VWZ7mntSv8yl22QFUhEhohP3m/TO0Y7+tX8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=gtpYYOC1; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TTe9S5/V"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gtpYYOC1"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1748423174;
+	s=mimecast20190719; t=1748423195;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=yPtp4BVlfZsRur8/3HKaTK/1oayZ+9mURRHo233+dpk=;
-	b=TTe9S5/Vy/yhNk69KThzptuou9GPQ6PHsBRpok7vFVMa7jOWaKfii7yACY5UdEag5yK73l
-	xBw8IBKx9Yh6BVNt0t2vSu+wiUDJ5GGwdZeqbQrM1SlTNg7lQX5H8iOQiKx+lbXNfN9DBo
-	FMC18TgB8pA9S/Nl/wslvZms5Vd4JUw=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=0jNfWBnNwI4vmCYyyWkZIC0z1gNt+R1x0CiFYOJERUE=;
+	b=gtpYYOC10+bH8TOE0RfnYrz+ucxSzh8VOokCfeGSHWwId8KlnF6qtJyxpRlI6fb4Px7ciq
+	35x12nDjCSktc6kvIvM7FmoBozdnXNc/VGmMQ7/cB97KwL35qQYv7dDGuxkDyEjj+cGyAx
+	SN8lTLWijfVns1dGOo94JpV4ORsaolA=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-342-tbIM62gXNlq-pP07_l6qyg-1; Wed, 28 May 2025 05:06:13 -0400
-X-MC-Unique: tbIM62gXNlq-pP07_l6qyg-1
-X-Mimecast-MFC-AGG-ID: tbIM62gXNlq-pP07_l6qyg_1748423172
-Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-3a367b3bb78so2470980f8f.1
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 28 May 2025 02:06:13 -0700 (PDT)
+ us-mta-608-qtLQaukyP8GXZfYTtBN2Zg-1; Wed, 28 May 2025 05:06:32 -0400
+X-MC-Unique: qtLQaukyP8GXZfYTtBN2Zg-1
+X-Mimecast-MFC-AGG-ID: qtLQaukyP8GXZfYTtBN2Zg_1748423191
+Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-43cf44b66f7so25371275e9.1
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 28 May 2025 02:06:32 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748423172; x=1749027972;
+        d=1e100.net; s=20230601; t=1748423191; x=1749027991;
         h=content-transfer-encoding:in-reply-to:organization:autocrypt
          :content-language:from:references:cc:to:subject:user-agent
          :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=yPtp4BVlfZsRur8/3HKaTK/1oayZ+9mURRHo233+dpk=;
-        b=LAnsUKfUnzyoICiWRvmi41l3jPw3IWS5CdcDyT02rb4l5YvGSOQw0s2c/ZFEWgFYVO
-         VwtHHina65dws9OhsqiUYB1X5BBhhHxZII9cGebrGqCsApzJK07Amk6LsCuGmeR/Iq02
-         aGi/J1KUy8D6OKSM9dYVsFdm7bED7O4+usgfd8jm9p9J6z2/3YlySk49FJ5vqGZCw0p/
-         sy95QLE6FV5BDqDMG6j1WrCCc1zM7+j2DhAABwV2sbDq9sZsdbUM3WKGxALhICT0RDtA
-         ehMLtqmWW7AD/2SvxVwFuCN5lHzQMqSlep9AgL3sdOY4uyvtGxdUfajz0qg/jpRvsxhh
-         z+Rw==
-X-Forwarded-Encrypted: i=1; AJvYcCWsNvIrUMpQIMZbQL4x/weMWQOxcYebSwejAt2+PXBjkpSOj/icSUJ+2hSLflDM2mBgLK9nbCGXTI+Yyss00utApas=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy6TjICNbNFfDi8KIYyefbD7cnnr7ZqUXLCxJiy7gbJRIVuoCzB
-	GRLVIA4e9srP3k9m/F9h+0oRe2CTXA1Nc0F/cpGVyH7+/ZSczGS3VGyV4S/Cpp1w9j9maBUw9I1
-	h6xUfL6BgDuyk4KF6quoDpPoki3vQD816CSpYwUfr0zUBjrEK5xGxMeiRwLgEw+bvqy6RlKr+mg
+        bh=0jNfWBnNwI4vmCYyyWkZIC0z1gNt+R1x0CiFYOJERUE=;
+        b=AvXaEXAr0PxizTdZ0QAOW+45sDRJUKgNmnHlfBTS01IEAoTB5bdkvbYDMamk3UEWuR
+         7IYzokgkxbKpT/w/BAO4XNtEjsEVqtFIquQL8a6RR0jsx0p05HYkxdBQu61QjVgQrIrn
+         hfGejMqCD3FBXQW9Ysm53t7swk86pnjScI+/NrdDWTkjZZmH17HbqIecp/CrwyixsWPL
+         gsht727Qr2dNOkQSxMnO9TYVOZ0DacSJ9+x91QIGooLFWQ7NRJTFyHX5sWnXLO4gzgj+
+         hRP5V34NF5Q/ZJ4VaQP84/qIrsZelbkSrhQJy9fLeCaJeUYVdfKbkUhj3TExchgq0dGs
+         J4Pw==
+X-Forwarded-Encrypted: i=1; AJvYcCVaNHF0tpNlAT4KKZOaf6HCEqzcoA59bguL60+4MjwwOhOP3IqRHLOuwU3nhWF+TL0FPvIshVKIreidLAFvsDlELz0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxyJHvvUhkZ4XlvOfuo7LxXKWF4l69XCzqvGch8linO04X1JpT1
+	KNq6SjH/USQfqJ4x7VCJHOOjaRM8eyL4EBcdgHEHl4k80TXmzuS2LarRPy1n4fvPuTpuINj7ec0
+	LV6Btb0lutFt2CBxep789amPHLX/LQMDscA6wDz3jPB4oFlNcqPt/g4CeaR+BtCx/PxmnLRd+CA
 	==
-X-Gm-Gg: ASbGncvJjGhjYT1foN7ZF18ePeT8w1FOTRvogrgJv5riZUjqiRO0T6FuAK5NLzlS5IP
-	vqJ/0JT5BnPhur9GISiarztHxDvZH69TsjlYkLcmNt2NZG1c6HwHLaUWxpi8wQSKNjOVrTb1FZv
-	B8tFdpZltufNWmoroqncZa3b3E6ACbDkJJAm8ldVgtXEuFLmMjR6HpSVRsjnplpWJAES/t1SR9q
-	LG/AG4JgpN3FCbJo2ENLfCA2jwWMNfM1T5tIJV7PureuaX2hwIATTSD7JoIfsVpx1Pp5AgVQw78
-	XJeoKrCSy/gQrR1Q7oBYi669iXC5aWoc3KFj4tCXFxBALPB2PVEifboP9wlaW6fjNBM1quZR4bs
-	6e9xPo2FlAASxPIwrZdliwUcT3Fr1F1fmCO5HZ0s=
-X-Received: by 2002:a05:6000:26d0:b0:3a4:e4bd:1b27 with SMTP id ffacd0b85a97d-3a4e4bd1c83mr3907318f8f.54.1748423172263;
-        Wed, 28 May 2025 02:06:12 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFNHqCOw0QGd8W0A6TOY7dtBnKuUBRtv0uNloTLnvRnPNgfBlftkrP2fUjm4+kQAzqv5GkdyQ==
-X-Received: by 2002:a05:6000:26d0:b0:3a4:e4bd:1b27 with SMTP id ffacd0b85a97d-3a4e4bd1c83mr3907286f8f.54.1748423171762;
-        Wed, 28 May 2025 02:06:11 -0700 (PDT)
+X-Gm-Gg: ASbGncvzm3Pr1THOzyYrowEo2+5r5gKzS+1+qKGXd7Ix137QxlXYXGZSaUj6eyyR/5q
+	q0sS8FT4cPuinBm1i7ZwYM463opAdS1SIKqh8iU3NhMwVz2E4yl5Unbv7az4Q4EQKAitKPiY+iH
+	uCNuopUAR3xAKUXqYZUaSPkuTVE8PrqmVgVsecEgT5bJyuwuxyGsFvXa4DMU2zDRFrdVyDE3GbN
+	NDBEhJE/hEwV6rmzaCZ8YATE0uYpXbaboesBoFP+A3k2u5UvlZJmc7ugnqx9ppGqWnQqz/bDzt+
+	Bzap3NmvkyYiwzglGmMclApoCyjCpsK7+I2H/WDQ3t8AD1Vrul89Zbk2bAzARQdx4DVy2uBPEZb
+	bWVoowGujo++1JT2JKP2P+zu/+ZlE2QfjOteH4NY=
+X-Received: by 2002:a05:6000:1785:b0:3a3:63d3:369a with SMTP id ffacd0b85a97d-3a4cb4602a6mr11987347f8f.25.1748423191187;
+        Wed, 28 May 2025 02:06:31 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFFS2yw6ICITHixIjXBzRYXeXOzAPyp23fKYDFoE4S3dOHqpW1SBJwXLDvJ8JMJEkqZ76misw==
+X-Received: by 2002:a05:6000:1785:b0:3a3:63d3:369a with SMTP id ffacd0b85a97d-3a4cb4602a6mr11987314f8f.25.1748423190772;
+        Wed, 28 May 2025 02:06:30 -0700 (PDT)
 Received: from ?IPV6:2003:d8:2f30:ec00:8f7e:58a4:ebf0:6a36? (p200300d82f30ec008f7e58a4ebf06a36.dip0.t-ipconnect.de. [2003:d8:2f30:ec00:8f7e:58a4:ebf0:6a36])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a4eacd7cc5sm905044f8f.73.2025.05.28.02.06.10
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a4eac7d7a7sm889461f8f.21.2025.05.28.02.06.29
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 28 May 2025 02:06:11 -0700 (PDT)
-Message-ID: <876f65d0-e873-4c08-b404-db89e542e7a3@redhat.com>
-Date: Wed, 28 May 2025 11:06:10 +0200
+        Wed, 28 May 2025 02:06:30 -0700 (PDT)
+Message-ID: <23fc6556-6578-44ba-8443-84adecc29d24@redhat.com>
+Date: Wed, 28 May 2025 11:06:29 +0200
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -76,7 +76,7 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] x86/tlb/trace: Export the TLB_REMOTE_WRONG_CPU enum
+Subject: Re: [PATCH 2/2] mm: Remove tlb_flush_reason::NR_TLB_FLUSH_REASONS
 To: Tal Zussman <tz2294@columbia.edu>, Steven Rostedt <rostedt@goodmis.org>,
  Masami Hiramatsu <mhiramat@kernel.org>,
  Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
@@ -90,7 +90,7 @@ To: Tal Zussman <tz2294@columbia.edu>, Steven Rostedt <rostedt@goodmis.org>,
 Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
  linux-mm@kvack.org
 References: <20250528-tlb-trace-fix-v1-0-2e94c58f450d@columbia.edu>
- <20250528-tlb-trace-fix-v1-1-2e94c58f450d@columbia.edu>
+ <20250528-tlb-trace-fix-v1-2-2e94c58f450d@columbia.edu>
 From: David Hildenbrand <david@redhat.com>
 Autocrypt: addr=david@redhat.com; keydata=
  xsFNBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
@@ -137,41 +137,39 @@ Autocrypt: addr=david@redhat.com; keydata=
  jPrnvUsUUsjRoRNJjKKA/REq+sAnhkNPPZ/NNMjaZ5b8Tovi8C0tmxiCHaQYqj7G2rgnT0kt
  WNyWQQ==
 Organization: Red Hat
-In-Reply-To: <20250528-tlb-trace-fix-v1-1-2e94c58f450d@columbia.edu>
+In-Reply-To: <20250528-tlb-trace-fix-v1-2-2e94c58f450d@columbia.edu>
 X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: gmpjFG1QKBpQYfud-9ZsEjlrCcxJOmNGyvMWDc3_mhQ_1748423172
+X-Mimecast-MFC-PROC-ID: pt4nCJjo9EiUM_OGJiPNiqXfnpEOgRjhg8nr8rBscsw_1748423191
 X-Mimecast-Originator: redhat.com
 Content-Language: en-US
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
 On 28.05.25 07:35, Tal Zussman wrote:
-> When the TLB_REMOTE_WRONG_CPU enum was introduced for the tlb_flush
-> tracepoint, the enum was not exported to userspace. Add it to the
-> appropriate macro definition to enable parsing by userspace tools, as
-> per [0].
+> This has been unused since it was added 11 years ago in commit
+> d17d8f9dedb9 ("x86/mm: Add tracepoints for TLB flushes").
 > 
-> [0] Link: https://lore.kernel.org/all/20150403013802.220157513@goodmis.org
-> 
-> Fixes: 2815a56e4b72 ("x86/mm/tlb: Add tracepoint for TLB flush IPI to stale CPU")
 > Signed-off-by: Tal Zussman <tz2294@columbia.edu>
 > ---
->   include/trace/events/tlb.h | 3 ++-
->   1 file changed, 2 insertions(+), 1 deletion(-)
+>   include/linux/mm_types.h | 1 -
+>   1 file changed, 1 deletion(-)
 > 
-> diff --git a/include/trace/events/tlb.h b/include/trace/events/tlb.h
-> index b4d8e7dc38f8..725a75720a23 100644
-> --- a/include/trace/events/tlb.h
-> +++ b/include/trace/events/tlb.h
-> @@ -13,7 +13,8 @@
->   	EM(  TLB_REMOTE_SHOOTDOWN,	"remote shootdown" )		\
->   	EM(  TLB_LOCAL_SHOOTDOWN,	"local shootdown" )		\
->   	EM(  TLB_LOCAL_MM_SHOOTDOWN,	"local mm shootdown" )		\
-> -	EMe( TLB_REMOTE_SEND_IPI,	"remote ipi send" )
-> +	EM(  TLB_REMOTE_SEND_IPI,	"remote ipi send" )		\
-> +	EMe( TLB_REMOTE_WRONG_CPU,	"remote wrong CPU" )
+> diff --git a/include/linux/mm_types.h b/include/linux/mm_types.h
+> index 3e934dc6057c..8b91362fcf8e 100644
+> --- a/include/linux/mm_types.h
+> +++ b/include/linux/mm_types.h
+> @@ -1539,7 +1539,6 @@ enum tlb_flush_reason {
+>   	TLB_LOCAL_MM_SHOOTDOWN,
+>   	TLB_REMOTE_SEND_IPI,
+>   	TLB_REMOTE_WRONG_CPU,
+> -	NR_TLB_FLUSH_REASONS,
+>   };
+>   
+>   /**
+> 
 
-Reviewed-by: David Hildenbrand <david@redhat.com>
+
+Acked-by: David Hildenbrand <david@redhat.com>
 
 -- 
 Cheers,
