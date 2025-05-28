@@ -1,74 +1,74 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62893275854
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 28 May 2025 09:09:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E68981F8AC5
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 28 May 2025 09:26:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748423360; cv=none; b=HFj1e/czLYUy9I50TQ691+drftnXaDdxc79yd+LETwQtFurh7m9pyNYPCO00NzZ8wDQnXjVDTVLNd+Wo1lZFDHGVg2ZF9mIMHe2RjfQhhPnJkSuo2dqP7do/YM8QRGIYaFeE9CvrLLgtqWLw1XUmvHGcEj35BWGnuuQmPUqbjR4=
+	t=1748424394; cv=none; b=ttWfxAGB3WLQ/blXpMvK9qe+BCVzNc7s14yWrYkRQufhQ5lh1unqR097NAfvyjfhGUV+Z8MT1FfxFK8HqoTNBRv60epo60nUQxwHYJ3p6tk6RvNfA2GI4JQ82lPeVc0HrHP2/5rpYbYCRASQZP+LTvFCIQvZ2XNNOWacI/KE0LE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748423360; c=relaxed/simple;
-	bh=sg20bLNUz/QFXRFaU70PwpcwAVbsKDYF5KqdTjgKZjs=;
+	s=arc-20240116; t=1748424394; c=relaxed/simple;
+	bh=vj1+j1lPmffXy+nhdyFU/7u5jP6qvFv0RIg0cfeRFbQ=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=YxWpy9eprvYCBaxVxEp4MunRgdbkr/lUOoAYK2cXj2EjEsJl86qGRjtsyQ2fMdYAtIOGXw+/UN3XptAVSJjCVHqzzb3Z9yPO3DzwwPn3JjzXb28Cw6OwVfGle12nEanKcHPc5/rCS5nPNaD7+2mDKYnCnwhFWwkuAybquRY6xd0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=XZjyDkP9; arc=none smtp.client-ip=170.10.133.124
+	 In-Reply-To:Content-Type; b=ZYP+QBLX2J2n7wkMfYg4CWQfiZqtv7QfNqzBoRQ2HV3SXUWX4Ga/AsbyAhzdj+wx/sr85uaNEAX9+vaMrOhRMLi2voaglUZOGwAbqR81WJBfM3doxMH36T+Lg8XLbLsvBeDDzu/kcaE+5WQQy1brz7/m2++7ERjBSF/O1YpI31k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=F6ehlvNr; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XZjyDkP9"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="F6ehlvNr"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1748423357;
+	s=mimecast20190719; t=1748424391;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=mEQXyKOYvt2g5cMesLCcww4mgZn3lojWLzf+f6VokPI=;
-	b=XZjyDkP9LHR5eyJ/57eovXWZ1fXppU68j/oG36RGja7UN2SNj+04gUS7pjwSnEv6ZxOulZ
-	0yT4hM/UxnNp12NSuZBhLEfAYjQHaSkIlMEC6oyj6j6syh8VJkQxpUOsfq2QLj1YTIvN+r
-	soXrnGtUk41LoZ3IFlhlbkPuW+qrEA8=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=/IPo0SrIcdmv1Mt6IhlShcwG0axbL9uVKe88/cZWdGg=;
+	b=F6ehlvNrVJRFZPn5Q9s6wBY4e0XHBJNfGA03J/QuevBn5lb8cGD2kD3GX+lfL8UXkESQjl
+	fa+b0Z5sqFP2kOyDL1owBJwiqtUXoxT56t3n3Y/kmdN2dxY/7WApJ+CGp29sJwXO+SL13x
+	0wiCgC4tS2wkKWYkjSk8nlf6xR4zICk=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-646-bdOxgzQTP_CZ81P92QoqTA-1; Wed, 28 May 2025 05:09:15 -0400
-X-MC-Unique: bdOxgzQTP_CZ81P92QoqTA-1
-X-Mimecast-MFC-AGG-ID: bdOxgzQTP_CZ81P92QoqTA_1748423355
-Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-3a4d95375c6so1366431f8f.0
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 28 May 2025 02:09:15 -0700 (PDT)
+ us-mta-171-SNjnFP0tMCaSINzgAoeROA-1; Wed, 28 May 2025 05:26:30 -0400
+X-MC-Unique: SNjnFP0tMCaSINzgAoeROA-1
+X-Mimecast-MFC-AGG-ID: SNjnFP0tMCaSINzgAoeROA_1748424389
+Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-450787c8626so2434425e9.1
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 28 May 2025 02:26:30 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748423355; x=1749028155;
+        d=1e100.net; s=20230601; t=1748424389; x=1749029189;
         h=content-transfer-encoding:in-reply-to:organization:autocrypt
          :content-language:from:references:cc:to:subject:user-agent
          :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=mEQXyKOYvt2g5cMesLCcww4mgZn3lojWLzf+f6VokPI=;
-        b=Y9SRjTJEdE2Fd+yIny70pZUyukjmA7xfr4nBdnR1h/lWrX6o+t7e0Kk1hSs2HE/Ni5
-         GruCTjiB8q8dn2pAYCIlDQdKT75A9jRBC5l7YrjqLeD09C2z1XrWXiqG7UV9lqLBCw6e
-         eG6XrVvHhLwfKhQeHcwHY9pEJVNVrqzbcVKVGJP3Bdswrp0kfrHSHwVg/vpNpLOtBhEW
-         JzNJ+ybb2GtR69J8ymLcUvro0o9c8DKiT1lxnzZdpMpmkaBKAsrdBe8PydU6J4RrTQcD
-         k6tKUvIA08qrkmU2xex9NT/nm5usczQccyULsBLwzHpvUrtSXWWdROzycD8Z57PMGDMl
-         rpdQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXsDdnrI1Mo6ijJwLAIYMTkLfx8eoWmIXTTzWcM8xnKzqbCmvRnwtaIoAbshx/AnAd/gduvcu6R9mCo3doCKXWRg6A=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyuqACdF2mgI8DmqmOjR+aL7YC1Hn4wf9EjbCY6TNh41am+56xA
-	6EbFCLlfElLxnRZytwy5dj9WGOUnOMgnj5r0Hb81NfiCjYBz7Hec2iXSR7YLC/vypps5A3fLtik
-	itF5U6UmfD3xlzRxxIjfsuo9R8xOphdipD4+QC37SpUOrJgYEDguulPrzgb5vGdMkeznoeDm5wA
-	==
-X-Gm-Gg: ASbGncuReT3ech3iz0LHnTPjsnXaCvHa9Y/5zrwJhQGt+RnOKw6l1CmEwOxB4GPipkR
-	CB5JbE+fHFmbrmUM+T2xshfWWdIWHjJWHGkL+XEdzQrhdPzKBRv09eAREzQcdAy9MV//YBVGM/L
-	69gKdVfEbzcTRvzdXcOxdFmT6cecTgy4BiCToQP9WuBk7hCt7VsvnY/oOgj0cD/OtTuMqNW8n6d
-	D6XeE7ZJauo6BugzRLEKGj9rVxOAliG3oXa5yFifg5zlfH4mo00hr/xTdkIVeSZhhAvzCl6EYtg
-	fyuNHx/KQShMMgGkEJcJtSc3P5qnLMk0esH1oz3oAzUi73GH0w3ymLsA0ZmqP6+DvhUTuJyWrSC
-	KnztsaRMT5WhIU7DxaIBbEESbfQhYAk87gXGbHkc=
-X-Received: by 2002:a05:6000:400f:b0:3a4:e284:1b87 with SMTP id ffacd0b85a97d-3a4e2841ccbmr3513198f8f.18.1748423354717;
-        Wed, 28 May 2025 02:09:14 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFkD2EIBglWCSiZn4xndJdgWSSjQNyuOFqWDMsi9lfpRG+9nxrnmD06llkP4qkcMkc2YAd7eQ==
-X-Received: by 2002:a05:6000:400f:b0:3a4:e284:1b87 with SMTP id ffacd0b85a97d-3a4e2841ccbmr3513164f8f.18.1748423354262;
-        Wed, 28 May 2025 02:09:14 -0700 (PDT)
+        bh=/IPo0SrIcdmv1Mt6IhlShcwG0axbL9uVKe88/cZWdGg=;
+        b=RcZ/79GHLpNgLFy8UbhQo07apNrYxfMlvxZiSpA/y5AUvWxWqOmVyya/vw0EvRfEQT
+         9JrGq9nilvODyYEm9CbYHhm64tWrudqzwnZz92uFtc3rgm2M/Ia8rkxE1qhDTMVpFtqU
+         QcD6K8kU+nIjyljk1T1+e+ZGk4i7kJScouRFg013gfBjxMLjgWzkZ9a/0r67wqZIt8LZ
+         LPoDkJD4Xz1Ato6ZGheEKZ3NFsRg2i2OwLVhWDyy9uhHNPBeBUMJveSLxZ2i/rhpMnTV
+         XLrODaAxDXEIDPYOlZv3eNHpr6jtuz5sHMuocccJrJsGiCCm8AnqYu9cQi4bHV+NqZ/B
+         I7yg==
+X-Forwarded-Encrypted: i=1; AJvYcCVPDtGlC1pUEPwcjNlOWM+/KG2Q/2MrWEYT4jFqPmCK2nC+Su06deeCylPwRsi+Cb70TEc30VxvQkRze8LRBlmEf00=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxcxoyd6oUlL4NglbGcLsjeHJXgNThR2HFE9L+4JW8VhJvfic3O
+	bX3yvQQu+qlAKWAyTjefu9BioQPJrRW6fD8F2/Jh+4IYvNpZ0/eJY37wO6JL/pexcAVDQLG4W2v
+	25DRY9yknk7CR/jhuzBlhDBcLI3hLjtgGwQ287fJvb6wUEhDFcYDJCUd7l6DdxgBgL2zzhJ71Rz
+	7c8s7v6MRm
+X-Gm-Gg: ASbGnct2XXkslAGnGkAuVqTxQCMqfxA/R2EemCjygfhkpcCRnIfFfcYJNUNIAzTMI3y
+	qMDwDSWsoFKOyG76wV7qlPNdwgWg+G5oUX5r+7mQ2WHrDpqicDE86lLbECWn8JEolWAthAi0+bF
+	uYRgu4Oa8MalKfziV7/2Q7dO1xU4K2SzTi3GSQ33OIxCnmPP0HbrZ13oFeyOoxppj3KRpRPDnSE
+	Q5W9XnBHYT7IDmGWJ8qKWdhjnnvFHfkNkqHM2uKy8fnSTBvygoGrsO6fGL/EnQxttQdBU0kPQHL
+	iY+Io97YvXy1HZJlt47F2r+omYTwCJIirXj6iZmTBpv6LcmC9EPL4fudchXTJzzLoiFUupboaSr
+	aPly8i7ockg7B1cHeVrrYMPpytKTYx/eIvV08DRU=
+X-Received: by 2002:a05:600c:1d28:b0:43d:abd:ad1c with SMTP id 5b1f17b1804b1-44c9141d817mr146189195e9.6.1748424389339;
+        Wed, 28 May 2025 02:26:29 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGalrtI0HwZaMrepFXd4F1+zcxY5naKOu8XqoCC1vfYgf8Dk2wh+4oAhih6mGXHyBbyAf6+hQ==
+X-Received: by 2002:a05:600c:1d28:b0:43d:abd:ad1c with SMTP id 5b1f17b1804b1-44c9141d817mr146188475e9.6.1748424388770;
+        Wed, 28 May 2025 02:26:28 -0700 (PDT)
 Received: from ?IPV6:2003:d8:2f30:ec00:8f7e:58a4:ebf0:6a36? (p200300d82f30ec008f7e58a4ebf06a36.dip0.t-ipconnect.de. [2003:d8:2f30:ec00:8f7e:58a4:ebf0:6a36])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a4eac6e5aasm928610f8f.13.2025.05.28.02.09.12
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-450064a1ba1sm15277355e9.16.2025.05.28.02.26.26
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 28 May 2025 02:09:13 -0700 (PDT)
-Message-ID: <ce048e11-f79d-44a6-bacc-46e1ebc34b24@redhat.com>
-Date: Wed, 28 May 2025 11:09:12 +0200
+        Wed, 28 May 2025 02:26:28 -0700 (PDT)
+Message-ID: <cf33ff99-ac97-4a33-9df0-01a59d5b8424@redhat.com>
+Date: Wed, 28 May 2025 11:26:25 +0200
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -76,22 +76,32 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/2] x86, mm: minor tlb_flush tracepoint adjustments
-To: Tal Zussman <tz2294@columbia.edu>, Steven Rostedt <rostedt@goodmis.org>,
- Masami Hiramatsu <mhiramat@kernel.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Ingo Molnar <mingo@kernel.org>, Rik van Riel <riel@surriel.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
- "Liam R. Howlett" <Liam.Howlett@oracle.com>, Vlastimil Babka
- <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
- Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
- x86@kernel.org, Will Deacon <will@kernel.org>,
- "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>, Nick Piggin
- <npiggin@gmail.com>, Peter Zijlstra <peterz@infradead.org>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- linux-mm@kvack.org
-References: <20250528-tlb-trace-fix-v1-0-2e94c58f450d@columbia.edu>
+Subject: Re: [PATCH v7 06/12] khugepaged: introduce khugepaged_scan_bitmap for
+ mTHP support
+To: Baolin Wang <baolin.wang@linux.alibaba.com>,
+ Nico Pache <npache@redhat.com>, David Rientjes <rientjes@google.com>,
+ zokeefe@google.com
+Cc: linux-mm@kvack.org, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ ziy@nvidia.com, lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com,
+ ryan.roberts@arm.com, dev.jain@arm.com, corbet@lwn.net, rostedt@goodmis.org,
+ mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
+ akpm@linux-foundation.org, baohua@kernel.org, willy@infradead.org,
+ peterx@redhat.com, wangkefeng.wang@huawei.com, usamaarif642@gmail.com,
+ sunnanyong@huawei.com, vishal.moola@gmail.com,
+ thomas.hellstrom@linux.intel.com, yang@os.amperecomputing.com,
+ kirill.shutemov@linux.intel.com, aarcange@redhat.com, raquini@redhat.com,
+ anshuman.khandual@arm.com, catalin.marinas@arm.com, tiwai@suse.de,
+ will@kernel.org, dave.hansen@linux.intel.com, jack@suse.cz, cl@gentwo.org,
+ jglisse@google.com, surenb@google.com, hannes@cmpxchg.org, mhocko@suse.com,
+ rdunlap@infradead.org
+References: <20250515032226.128900-1-npache@redhat.com>
+ <20250515032226.128900-7-npache@redhat.com>
+ <9c54397f-3cbf-4fa2-bf69-ba89613d355f@linux.alibaba.com>
+ <CAA1CXcC9MB2Nw4MmGajESfH8DhAsh4QvTj4ABG3+Rg2iPi087w@mail.gmail.com>
+ <ed1d1281-ece3-4d2c-8e58-aaeb436d3927@linux.alibaba.com>
+ <CAA1CXcAWcahkxzsvK_bcWei6or_gKBjt+97dqhuSem8N7cBAQw@mail.gmail.com>
+ <1f00fdc3-a3a3-464b-8565-4c1b23d34f8d@linux.alibaba.com>
 From: David Hildenbrand <david@redhat.com>
 Autocrypt: addr=david@redhat.com; keydata=
  xsFNBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
@@ -138,39 +148,106 @@ Autocrypt: addr=david@redhat.com; keydata=
  jPrnvUsUUsjRoRNJjKKA/REq+sAnhkNPPZ/NNMjaZ5b8Tovi8C0tmxiCHaQYqj7G2rgnT0kt
  WNyWQQ==
 Organization: Red Hat
-In-Reply-To: <20250528-tlb-trace-fix-v1-0-2e94c58f450d@columbia.edu>
+In-Reply-To: <1f00fdc3-a3a3-464b-8565-4c1b23d34f8d@linux.alibaba.com>
 X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: qg8ge351-6bCwFsZwiT23QkmAU7QPXpfG4J5PLhOrdg_1748423355
+X-Mimecast-MFC-PROC-ID: EIIwteTpfyT4cKLpEl6wRz7iNLqJKxV3WXMZLEPbmHE_1748424389
 X-Mimecast-Originator: redhat.com
 Content-Language: en-US
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 28.05.25 07:35, Tal Zussman wrote:
-> One minor fix and one minor cleanup related to the tlb_flush tracepoint.
+On 22.05.25 11:39, Baolin Wang wrote:
 > 
-> As an aside, include/trace/events/tlb.h isn't covered by MAINTAINERS,
-> along with other mm related files under include/trace/events/. Flagging
-> this since I see there's a recent effort to overhaul the mm MAINTAINERS
-> entries.
+> 
+> On 2025/5/21 18:23, Nico Pache wrote:
+>> On Tue, May 20, 2025 at 4:09 AM Baolin Wang
+>> <baolin.wang@linux.alibaba.com> wrote:
+>>>
+>>> Sorry for late reply.
+>>>
+>>> On 2025/5/17 14:47, Nico Pache wrote:
+>>>> On Thu, May 15, 2025 at 9:20 PM Baolin Wang
+>>>> <baolin.wang@linux.alibaba.com> wrote:
+>>>>>
+>>>>>
+>>>>>
+>>>>> On 2025/5/15 11:22, Nico Pache wrote:
+>>>>>> khugepaged scans anons PMD ranges for potential collapse to a hugepage.
+>>>>>> To add mTHP support we use this scan to instead record chunks of utilized
+>>>>>> sections of the PMD.
+>>>>>>
+>>>>>> khugepaged_scan_bitmap uses a stack struct to recursively scan a bitmap
+>>>>>> that represents chunks of utilized regions. We can then determine what
+>>>>>> mTHP size fits best and in the following patch, we set this bitmap while
+>>>>>> scanning the anon PMD. A minimum collapse order of 2 is used as this is
+>>>>>> the lowest order supported by anon memory.
+>>>>>>
+>>>>>> max_ptes_none is used as a scale to determine how "full" an order must
+>>>>>> be before being considered for collapse.
+>>>>>>
+>>>>>> When attempting to collapse an order that has its order set to "always"
+>>>>>> lets always collapse to that order in a greedy manner without
+>>>>>> considering the number of bits set.
+>>>>>>
+>>>>>> Signed-off-by: Nico Pache <npache@redhat.com>
+>>>>>
+>>>>> Sigh. You still haven't addressed or explained the issues I previously
+>>>>> raised [1], so I don't know how to review this patch again...
+>>>> Can you still reproduce this issue?
+>>>
+>>> Yes, I can still reproduce this issue with today's (5/20) mm-new branch.
+>>>
+>>> I've disabled PMD-sized THP in my system:
+>>> [root]# cat /sys/kernel/mm/transparent_hugepage/enabled
+>>> always madvise [never]
+>>> [root]# cat /sys/kernel/mm/transparent_hugepage/hugepages-2048kB/enabled
+>>> always inherit madvise [never]
+>>>
+>>> And I tried calling madvise() with MADV_COLLAPSE for anonymous memory,
+>>> and I can still see it collapsing to a PMD-sized THP.
+>> Hi Baolin ! Thank you for your reply and willingness to test again :)
+>>
+>> I didn't realize we were talking about madvise collapse-- this makes
+>> sense now. I also figured out why I could "reproduce" it before. My
+>> script was always enabling the THP settings in two places, and I only
+>> commented out one to test this. But this time I was doing more manual
+>> testing.
+>>
+>> The original design of madvise_collapse ignores the sysfs and
+>> collapses even if you have an order disabled. I believe this behavior
+>> is wrong, but by design. I spent some time playing around with madvise
+>> collapses with and w/o my changes. This is not a new thing, I
+>> reproduced the issue in 6.11 (Fedora 41), and I think its been
+>> possible since the inception of madvise collapse 3 years ago. I
+>> noticed a similar behavior on one of my RFC since it was "breaking"
+>> selftests, and the fix was to reincorporate this broken sysfs
+>> behavior.
+> 
+> OK. Thanks for the explanation.
+> 
+>> 7d8faaf15545 ("mm/madvise: introduce MADV_COLLAPSE sync hugepage collapse")
+>> "This call is independent of the system-wide THP sysfs settings, but
+>> will fail for memory marked VM_NOHUGEPAGE."
+>>
+>> The second condition holds true (and fails for VM_NOHUGEPAGE), but I
+>> dont know if we actually want madvise_collapse to be independent of
+>> the system-wide.
+> 
+> This design principle surprised me a bit, and I failed to find the
+> reason in the commit log. I agree that "never should mean never," and we
+> should respect the THP/mTHP sysfs setting. Additionally, for the
+> 'shmem_enabled' sysfs interface controlled for shmem/tmpfs, THP collapse
+> can still be prohibited through the 'deny' configuration. The rules here
+> are somewhat confusing.
 
-Thanks for pointing that out.
+I recall that we decided to overwrite "VM_NOHUGEPAGE", because the 
+assumption is that the same app that triggered MADV_NOHUGEPAGE triggers 
+the collapse. So the app decides on its own behavior.
 
-It should likely go under "MMU GATHER AND TLB INVALIDATION"
+Similarly, allowing for collapsing in a VM without VM_HUGEPAGE in the 
+"madvise" mode would be fine.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 0ecc6063b2b5e..0e88ea5de5b73 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -16509,6 +16509,7 @@ L:      linux-mm@kvack.org
-  S:     Maintained
-  F:     arch/*/include/asm/tlb.h
-  F:     include/asm-generic/tlb.h
-+F:     include/trace/events/tlb.h
-  F:     mm/mmu_gather.c
-
-  MN88472 MEDIA DRIVER
-
+But in the "never" case, we should just "never" collapse.
 
 -- 
 Cheers,
