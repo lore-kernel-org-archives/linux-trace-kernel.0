@@ -1,224 +1,142 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1CA73398A;
-	Wed, 28 May 2025 10:27:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FC1B242D98
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 28 May 2025 11:27:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748428065; cv=none; b=py8vQ3GuDj1yfOQCPLGYZLvyQh7bqhSC+2XsKlO8fIBIAqxbGuM0iVMQTxocWFSFIEwaOILnexwoi6kxsl0AYLmffjvPrd8dOTqXTJgxxigSuJfyoIcva4DBC2F+tFzvYe9qKSrWgZL79+D5EQP5yCVQl3m8tQ68Boxse9/ugAQ=
+	t=1748431657; cv=none; b=tiHFF7JQ2qPvdxj2sBfq+0ozHRIgF91C2zSbZOIkkTxz1pVcmCt0Sj+lJCSNi5ARWjyLXfNzF3d3F1GSfqQSkMfKUb0R39/bzTl346goLtrmNqfJxZnRlABIxzm3iigKArwg12wlzvlww1L7KKbrV9iq5G+K0lkNT6M5hioWsAU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748428065; c=relaxed/simple;
-	bh=C5cBFqMtxDyHOh5cYqHPUlKRQ4UDdHA8dzrRsVt0heI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ilwV5goDQzY/8lpY1Wrd0Y/TVIz/JhnkZ3y3mFHTe4QMJcTVWaiEBW5LgWLpG4Lx6JiGRmKXKUgwUYcXx4e++6asejlpVhOd0n5vr6C8xCoLxMlcIJu05Kc+wfhBXRQASqyS+kW99KB0UwpCmJOD4aG1dUMsb6LSOjRpunjg+u8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=koHvMo6l; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1748431657; c=relaxed/simple;
+	bh=nTIue3Mvzn20Dd3HzdKn9bucnWMFMJhc/jukety0TF8=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=T5MtIiZrMJ1C2RSFq70JU7uGcLxzokXGzm7QPntTgmRrPiggEUt04y/tigcMe2ZEHxmC/vfkwN5L5BTMEK+v4+Gj4ASjihkYi+GfX0/3bZsI+0krqan6j0jtbdnWj+fksfRjbj/wMNbWyV1Bq8rPx0pg/vwxKHzw8AGEKbkCUd8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=L3gkkl1Q; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="koHvMo6l"
-Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54S8eoLT003540;
-	Wed, 28 May 2025 10:27:05 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=pp1; bh=0KymHl1YrZju146WA
-	uwWhH5mwRc0fQXuXhbbB8no0nY=; b=koHvMo6l4fEPv/eEwE4dWKQveDzL6tC4F
-	vSXNGYQnnfyqgLWzdFp8stGHvWsClmuQelzedmsD2se9fymYlsti/YJm1l2Sg+G7
-	ZtIz39s84fRU8kbTQYyOcuMaAGtt6R30jMmArcFV8uqxSO2V9Q+GZ/V6fW9IxnjT
-	cbHOnKKhq0WfnEKAXQ7Ayk3aCMi0qtdlFTzUUNGORyRokcHovH6oOdK4zI2vUelf
-	49awOA/TQldD813tMnEETWFfMFlTGD93iZsxCI8QGTVjuO73jZMoOu57V2kQdB3d
-	CllzG4JZyhJSNGWSmf8hYqvVFwvJ9c+anR6ywOoQFh0XKQZmyWCAg==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46wy690ffu-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 28 May 2025 10:27:04 +0000 (GMT)
-Received: from m0360072.ppops.net (m0360072.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 54SAHLp7005637;
-	Wed, 28 May 2025 10:27:04 GMT
-Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46wy690ffn-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 28 May 2025 10:27:04 +0000 (GMT)
-Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 54S6Hlwi028915;
-	Wed, 28 May 2025 10:27:03 GMT
-Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
-	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 46usepy2k5-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 28 May 2025 10:27:03 +0000
-Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
-	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 54SAQxmb55443928
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 28 May 2025 10:26:59 GMT
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 5B47C20049;
-	Wed, 28 May 2025 10:26:59 +0000 (GMT)
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 878D120040;
-	Wed, 28 May 2025 10:26:58 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Wed, 28 May 2025 10:26:58 +0000 (GMT)
-From: Jens Remus <jremus@linux.ibm.com>
-To: rostedt@goodmis.org
-Cc: aahringo@redhat.com, acme@kernel.org, adrian.hunter@intel.com,
-        akpm@linux-foundation.org, alexander.shishkin@linux.intel.com,
-        andrii.nakryiko@gmail.com, beaub@linux.microsoft.com,
-        blakejones@google.com, broonie@kernel.org, fweimer@redhat.com,
-        indu.bhagat@oracle.com, irogers@google.com, jemarch@gnu.org,
-        jolsa@kernel.org, jordalgo@meta.com, jpoimboe@kernel.org,
-        jremus@linux.ibm.com, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, linux-toolchains@vger.kernel.org,
-        linux-trace-kernel@vger.kernel.org, luto@kernel.org,
-        mark.rutland@arm.com, mathieu.desnoyers@efficios.com,
-        mhiramat@kernel.org, mingo@kernel.org, namhyung@kernel.org,
-        peterz@infradead.org, sam@gentoo.org, wnliu@google.com, x86@kernel.org,
-        hca@linux.ibm.com
-Subject: [PATCH] fixup! unwind_user/sframe: Add support for reading .sframe contents
-Date: Wed, 28 May 2025 12:26:55 +0200
-Message-ID: <20250528102655.1455423-1-jremus@linux.ibm.com>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20250424201823.595811743@goodmis.org>
-References: <20250424201823.595811743@goodmis.org>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="L3gkkl1Q"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1748431655;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=nTIue3Mvzn20Dd3HzdKn9bucnWMFMJhc/jukety0TF8=;
+	b=L3gkkl1QpWzV7M7R1rIiIBBNrhoyrlbA2PIbIAI7hlujg/a41DDxPxPBn4Ge25tuXoMHwm
+	NFOfzEEC3/OLtrmV4pEJ/RsyYwu/sTyCVQ8yZALXCtLXFVIKTUmN9lZKevcJAhQoB7Ol9q
+	0lZAorrvAvebbVdBaLpoTqkh/m4Q5PA=
+Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
+ [209.85.208.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-260-Xo6z5pMwOTC_dvWM9wb2Uw-1; Wed, 28 May 2025 07:27:33 -0400
+X-MC-Unique: Xo6z5pMwOTC_dvWM9wb2Uw-1
+X-Mimecast-MFC-AGG-ID: Xo6z5pMwOTC_dvWM9wb2Uw_1748431652
+Received: by mail-ed1-f72.google.com with SMTP id 4fb4d7f45d1cf-5ffe81b2ec9so4430575a12.1
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 28 May 2025 04:27:33 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748431652; x=1749036452;
+        h=mime-version:user-agent:content-transfer-encoding:autocrypt
+         :references:in-reply-to:date:cc:to:from:subject:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=nTIue3Mvzn20Dd3HzdKn9bucnWMFMJhc/jukety0TF8=;
+        b=pQhrgB9yXrUkx5TG8YvgksP3spkEN7JNroXBl1F0KvhO3JX1xbVO/7/rFzGbPi7jXe
+         vhbo+MyQpKRjdGzqbXbYmT0inLrtRRW+DvvePKx9O9GpLtGfCwClJvDUPYQLrVYWpRwv
+         ST+JEBkEvDz9melcoUZJNvweSvawaNS4AZzQE+M5+fDCo7f63lwAAsyr0qFwJwrDygmR
+         IdgpR380suFZorCBM17+iyrQw8/p1YNV3tyraKFx91Gxx7uGraBSwoA4+2MJW2NeT74R
+         wc5b+7PPy2a/qlT/66iWbVNH6j4hiSrnsvAE3Jsmr957ZN1uWf+nahDcLjn/snVHe7La
+         Sknw==
+X-Forwarded-Encrypted: i=1; AJvYcCVJv0L4huruU5GJV4f/MA6Lil2goSbuVU3ZwVfUe0Csl7KNoLVGMIN1OOjb6+uvPegIucpiki7ocv5z5Kh5y7h6cNQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywe0lv3MKc40OCN14OCguYc6UpiuAQozJzJN1dKI8JpUgsCiEO8
+	piGfYb/YIHC6tDXYHjKAK5ZpeIqmyMNB86hwQEH8F6KZ+HBL5BYooAQqn8AVib1FjgVgYk7BSgX
+	B0cId2Lm5vgzbX3TJgRdh1AS/lgY++BAwF3EGeDKR1lN0TdQmispuIEyzJUYVcAy7js5lYOiDgg
+	==
+X-Gm-Gg: ASbGncvu9IVoGTxEJJ/Rr6bJYiAm9U5RPtvjL7Jx+ian9XE8vt7txji369YzDhN9811
+	NJqPj/czZ8+wDV7P7eXrzcAcZEwDM8jtIn6Xai7AxtMqGrGI1U0+eNFXwj1RgDuTSYlxIRJ82ou
+	8Xq6gRhEkTZrnZOV1xngCeDKe0enPoXcH/mZzYkUwD1skqyjI/FzuXQxC9PHrkG6fFay13o2KfG
+	T4f6VPd5OJpvemKIXPb9Ebg7Y+MYVt1qYHE2w8RO+E2akm3Pb7VHNgveB47Oy9WAsLViTYnRqxc
+	CqcfABLznneNq7AJAc7pGM/bWadR43rDR91LlGf5
+X-Received: by 2002:aa7:d644:0:b0:5fb:f4a5:7871 with SMTP id 4fb4d7f45d1cf-602da2f841emr10797124a12.16.1748431652415;
+        Wed, 28 May 2025 04:27:32 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFwQUWEH2pCZ5bxs+CgNRhJt6TOY/L9pdb25KbPomHATF7eVp8pLEQnjG8aLofLp7Gk157YcA==
+X-Received: by 2002:aa7:d644:0:b0:5fb:f4a5:7871 with SMTP id 4fb4d7f45d1cf-602da2f841emr10797098a12.16.1748431652041;
+        Wed, 28 May 2025 04:27:32 -0700 (PDT)
+Received: from gmonaco-thinkpadt14gen3.rmtit.csb ([195.174.135.144])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-6051d5d9936sm649141a12.7.2025.05.28.04.27.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 28 May 2025 04:27:31 -0700 (PDT)
+Message-ID: <5fa6744332000be5e914e32d205b634e22bc4f4f.camel@redhat.com>
+Subject: Re: [RFC PATCH v2 12/12] rv: Add opid per-cpu monitor
+From: Gabriele Monaco <gmonaco@redhat.com>
+To: Nam Cao <namcao@linutronix.de>
+Cc: linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>, 
+	linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org, Ingo Molnar
+	 <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>, Tomas Glozar
+	 <tglozar@redhat.com>, Juri Lelli <jlelli@redhat.com>
+Date: Wed, 28 May 2025 13:27:29 +0200
+In-Reply-To: <20250527145032.fIN-37M_@linutronix.de>
+References: <20250514084314.57976-1-gmonaco@redhat.com>
+	 <20250514084314.57976-13-gmonaco@redhat.com>
+	 <20250527133712.CFW5AcNE@linutronix.de>
+	 <6f33e6b7ad296f4fd0e9c089ac92e53c08cfd850.camel@redhat.com>
+	 <20250527145032.fIN-37M_@linutronix.de>
+Autocrypt: addr=gmonaco@redhat.com; prefer-encrypt=mutual;
+ keydata=mDMEZuK5YxYJKwYBBAHaRw8BAQdAmJ3dM9Sz6/Hodu33Qrf8QH2bNeNbOikqYtxWFLVm0
+ 1a0JEdhYnJpZWxlIE1vbmFjbyA8Z21vbmFjb0ByZWRoYXQuY29tPoiZBBMWCgBBFiEEysoR+AuB3R
+ Zwp6j270psSVh4TfIFAmbiuWMCGwMFCQWjmoAFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgk
+ Q70psSVh4TfJzZgD/TXjnqCyqaZH/Y2w+YVbvm93WX2eqBqiVZ6VEjTuGNs8A/iPrKbzdWC7AicnK
+ xyhmqeUWOzFx5P43S1E1dhsrLWgP
+User-Agent: Evolution 3.56.2 (3.56.2-1.fc42)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Authority-Analysis: v=2.4 cv=UP3dHDfy c=1 sm=1 tr=0 ts=6836e4f8 cx=c_pps a=GFwsV6G8L6GxiO2Y/PsHdQ==:117 a=GFwsV6G8L6GxiO2Y/PsHdQ==:17 a=dt9VzEwgFbYA:10 a=VwQbUJbxAAAA:8 a=VnNF1IyMAAAA:8 a=CCpqsmhAAAAA:8 a=u0hKKabxG1pr0n04s-QA:9 a=x3xD2gU-9FUA:10
- a=ul9cdbp4aOFLsgKbc677:22
-X-Proofpoint-GUID: AVHS09y03cNbPT7bymJ0m0UlsulVvs2F
-X-Proofpoint-ORIG-GUID: RzZ7FAImJogcA7vgndjTTNRu5cvmUmDK
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTI4MDA4NyBTYWx0ZWRfX0tBCRHsHk3YI d4jmrUFtOj9UGpGNwgVHwiY+i8TcUWvRr+cOEfeQIeW0BHyrS7hGpcfkewI8NJ74hgb57E4aOIk s4k+1I0/4om/rmX9oqITunsyszOz5n19NxFD+OCnDMqzxKowOxLrhzIPX60FNuQH6UK+5Z1pPY2
- 8LgRtMnMf2PK0eBkBjUgYPX4qzMsoPjj3PSn21XNdQ3jSSJ4+0HWYUCmAc9cK/F2pJSywILi+HK /bpvZxH0WylO5rzDrAFADD+7YCyAbI+dSOUk3WIDzZPEQzN1cJTCH913I6MpjaH4jipY54T9u8M 1yyw9imN7aAvh53Hlr0cq8RamO6zgZsyGmqiQR8Ts/oH1P9Kbd+KV3vfABAbYFZ7nno8WOtbWzp
- 3cO7Zbw7cR6dmi5/NHg609cZfMS0/R8HJfX0pNsENl3UJYEZFRRIo1aQidkgkUIZvlZwOWzY
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-28_05,2025-05-27_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0
- lowpriorityscore=0 suspectscore=0 malwarescore=0 impostorscore=0
- mlxlogscore=999 clxscore=1015 priorityscore=1501 bulkscore=0 phishscore=0
- spamscore=0 mlxscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505160000
- definitions=main-2505280087
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: TS2RGEh9aoK578e1mT_o22hIBKM_aasvpJwQbayh1fM_1748431652
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
----
+On Tue, 2025-05-27 at 16:50 +0200, Nam Cao wrote:
+> On Tue, May 27, 2025 at 04:35:04PM +0200, Gabriele Monaco wrote:
+> > Thanks for trying it out, and good to know about this stressor.
+> > Unfortunately it's a bit hard to understand from this stack trace,
+> > but
+> > that's very likely a problem in the model.=C2=A0 I have a few ideas
+> > where that
+> > could be but I believe it's something visible only on a physical
+> > machine
+> > (haven't tested much on x86 bare metal, only VM).
+> >=20
+> > You're running on bare metal right?
+>=20
+> No, it's QEMU:
+>=20
+> qemu-system-x86_64 -enable-kvm -m 2048 -smp 4 \
+> =C2=A0=C2=A0=C2=A0 -nographic \
+> =C2=A0=C2=A0=C2=A0 -drive if=3Dvirtio,format=3Draw,file=3Dbookworm.img \
+> =C2=A0=C2=A0=C2=A0 -kernel /srv/work/namcao/linux/arch/x86/boot/bzImage \
+> =C2=A0=C2=A0=C2=A0 -append "console=3DttyS0 root=3D/dev/vda rw" \
+>=20
+> The kernel is just x86 defconfig + the monitors.
+>=20
 
-Notes (jremus):
-    Link: https://lore.kernel.org/all/b35ca3a3-8de5-4d32-8d30-d4e562f6b0de@linux.ibm.com/
-    
-    The struct sframe_fre field ip_off must be u32, as the SFrame FRE start
-    address (sfre_start_address) is unsigned 8-bit, 16-bit, or 32-bit:
-    https://sourceware.org/binutils/docs/sframe-spec.html#SFrame-Frame-Row-Entries
-    
-    When searching for a FRE of a FDE for an IP, the IP offset from function
-    start address (ip_off = ip - (sec->sframe_start + fde->start_addr)) is
-    always positive, as the search for a FDE for the same IP returned a
-    FDE with:  sec->sframe_start + fde->start_addr <= ip
-    This enables comparison against the unsigned FDE ip_off.
-    
-    This fixup includes a proposed fix from Josh (with minor modification
-    due to duplicate macro names) to correctly perform sign extension when
-    reading (un-)signed SFrame FDE/FRE fields:
-    https://lore.kernel.org/all/20250207210614.nks6bxad4jhdulwg@jpoimboe/
+Apparently the error is visible on non-PREEMPT_RT only, the models are
+designed for preempt-rt and I didn't really test them elsewhere.
+Not sure if it's worth tailoring them for non RT kernels, but for now I
+can just mark those monitors as RT-only via Kconfig.
+Especially this type of monitors is describing very accurately the
+preemptiveness of some events, I wouldn't be too surprised if some
+rules don't hold in all preempt configurations.
+The idea is that, as long as the models stand true, some assumptions
+about latency can be made, on the long run this type of assumptions is
+likely different across preemption models.
 
- kernel/unwind/sframe.c | 38 +++++++++++++++++++++++++++-----------
- 1 file changed, 27 insertions(+), 11 deletions(-)
+That said, it might be a stupid mistake as well, so I'd look into that
+more closely ;)
 
-diff --git a/kernel/unwind/sframe.c b/kernel/unwind/sframe.c
-index 3f7cc9bc27eb..8804ac59edfa 100644
---- a/kernel/unwind/sframe.c
-+++ b/kernel/unwind/sframe.c
-@@ -19,7 +19,7 @@
- 
- struct sframe_fre {
- 	unsigned int	size;
--	s32		ip_off;
-+	u32		ip_off;
- 	s32		cfa_off;
- 	s32		ra_off;
- 	s32		fp_off;
-@@ -129,33 +129,48 @@ static __always_inline int __find_fde(struct sframe_section *sec,
- 	return -EFAULT;
- }
- 
--#define __UNSAFE_GET_USER_INC(to, from, type, label)			\
-+#define ____UNSAFE_GET_USER_INC(to, from, type, label)			\
- ({									\
- 	type __to;							\
- 	unsafe_get_user(__to, (type __user *)from, label);		\
- 	from += sizeof(__to);						\
--	to = (typeof(to))__to;							\
-+	to = __to;							\
- })
- 
--#define UNSAFE_GET_USER_INC(to, from, size, label)			\
-+#define __UNSAFE_GET_USER_INC(to, from, size, label, u_or_s)		\
- ({									\
- 	switch (size) {							\
- 	case 1:								\
--		__UNSAFE_GET_USER_INC(to, from, u8, label);		\
-+		____UNSAFE_GET_USER_INC(to, from, u_or_s##8, label);	\
- 		break;							\
- 	case 2:								\
--		__UNSAFE_GET_USER_INC(to, from, u16, label);		\
-+		____UNSAFE_GET_USER_INC(to, from, u_or_s##16, label);	\
- 		break;							\
- 	case 4:								\
--		__UNSAFE_GET_USER_INC(to, from, u32, label);		\
-+		____UNSAFE_GET_USER_INC(to, from, u_or_s##32, label);	\
- 		break;							\
- 	default:							\
--		dbg_sec_uaccess("%d: bad UNSAFE_GET_USER_INC size %u\n",\
-+		dbg_sec_uaccess("%d: bad unsafe_get_user() size %u\n",	\
- 				__LINE__, size);			\
- 		return -EFAULT;						\
- 	}								\
- })
- 
-+#define UNSAFE_GET_USER_UNSIGNED_INC(to, from, size, label)		\
-+	__UNSAFE_GET_USER_INC(to, from, size, label, u)
-+
-+#define UNSAFE_GET_USER_SIGNED_INC(to, from, size, label)		\
-+	__UNSAFE_GET_USER_INC(to, from, size, label, s)
-+
-+#define UNSAFE_GET_USER_INC(to, from, size, label)				\
-+	_Generic(to,								\
-+		 u8:	UNSAFE_GET_USER_UNSIGNED_INC(to, from, size, label),	\
-+		 u16:	UNSAFE_GET_USER_UNSIGNED_INC(to, from, size, label),	\
-+		 u32:	UNSAFE_GET_USER_UNSIGNED_INC(to, from, size, label),	\
-+		 s8:	UNSAFE_GET_USER_SIGNED_INC(to, from, size, label),	\
-+		 s16:	UNSAFE_GET_USER_SIGNED_INC(to, from, size, label),	\
-+		 s32:	UNSAFE_GET_USER_SIGNED_INC(to, from, size, label))
-+
- static __always_inline int __read_fre(struct sframe_section *sec,
- 				      struct sframe_fde *fde,
- 				      unsigned long fre_addr,
-@@ -164,7 +179,8 @@ static __always_inline int __read_fre(struct sframe_section *sec,
- 	unsigned char fde_type = SFRAME_FUNC_FDE_TYPE(fde->info);
- 	unsigned char fre_type = SFRAME_FUNC_FRE_TYPE(fde->info);
- 	unsigned char offset_count, offset_size;
--	s32 ip_off, cfa_off, ra_off, fp_off;
-+	u32 ip_off;
-+	s32 cfa_off, ra_off, fp_off;
- 	unsigned long cur = fre_addr;
- 	unsigned char addr_size;
- 	u8 info;
-@@ -248,9 +264,9 @@ static __always_inline int __find_fre(struct sframe_section *sec,
- 	unsigned long fre_addr;
- 	bool which = false;
- 	unsigned int i;
--	s32 ip_off;
-+	u32 ip_off;
- 
--	ip_off = (s32)(ip - sec->sframe_start) - fde->start_addr;
-+	ip_off = ip - (sec->sframe_start + fde->start_addr);
- 
- 	if (fde_type == SFRAME_FDE_TYPE_PCMASK)
- 		ip_off %= fde->rep_size;
--- 
-2.45.2
+Thanks again,
+Gabriele
 
