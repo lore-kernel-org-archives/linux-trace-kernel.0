@@ -1,134 +1,142 @@
-Received: from mail-pg1-f177.google.com (mail-pg1-f177.google.com [209.85.215.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DDCE28C2C6
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 28 May 2025 15:25:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E90062750E8;
+	Wed, 28 May 2025 15:33:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748445960; cv=none; b=m96XohGU6sgYGymov5NM+j16OqU6D7JUnloqRe5INA1dt8HX2hGq5kNFoaMB89CsOsIlvZc1AqxkSvv6swD9WpJPKy/D1MwR4tyYW/ogweI+Xd23mXn4kGt2Lp4B5WSx6hgrs+lTxibjaywBzNnussueWAAnRv2gx4TF72kZ/9g=
+	t=1748446439; cv=none; b=FPNkY1M7dBhMDx2sZ+JKU4WZwKfVOpGvRsH0y9VxsZEPS++D+0IrwJFMR1UseeByMWfiRnTqa9IlmTwa4WLnkRg+fjskjgnddsd5Erya6l81Sd00k7lCqTqEVuP9lU1tZJ3zg47fcENer2xMu82ieVQ3MsbSt2QbItCnWDzwjJs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748445960; c=relaxed/simple;
-	bh=PU9chQywfCMBgYD5NaCcwYrj6++fQTNDBXxxWSs6M44=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=UaSlwUZG8usH/dQhUQlVMXMkeGgnsGketCDznWiHFnqd0N9DwkQBRT9Dfc+lVinHtvx+wEcrp1UIZuzyhoWbHr3cnbm7L9stORiIIBxFGeVorDr8grvza2kumkCsicKJAHphTlbYe9uk/FoOMkN1jBN4IZtW0WPuY3QMYr4K9ts=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=EdZRhU2R; arc=none smtp.client-ip=209.85.215.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=purestorage.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="EdZRhU2R"
-Received: by mail-pg1-f177.google.com with SMTP id 41be03b00d2f7-b2705e3810cso623583a12.0
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 28 May 2025 08:25:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=purestorage.com; s=google2022; t=1748445958; x=1749050758; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=PU9chQywfCMBgYD5NaCcwYrj6++fQTNDBXxxWSs6M44=;
-        b=EdZRhU2RN+aEZvLx1snhnNI9BryOF+t3fe9Kd5RNLlIgt/tc2tJnbUss2NgZqONhIM
-         aPF4bxXmFSdOvkaNVAOYeb5O5M4XobCyqPRpcm9waZhAqebVIXlwyYGy7CmwVO7+M13C
-         9EaY8CWY+peUzzmIFaEJI4k4Siq0LPHa9+2gcEKx/0nx95RKtCA7yBvEXM4PAMAdmLA7
-         swtOhw/p/bFrIat+Idkv6iyayLrQtGMRt2IUoGaLGkF6dg0yFBAFPxYfOfBwz7veQEm+
-         zlrh51qDpQrYFYNCFrSXR5FpFKkY6N+AgSpAhVLhSNCUK17dl3YbKLYkf4i7esXMwfuK
-         L9iw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748445958; x=1749050758;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=PU9chQywfCMBgYD5NaCcwYrj6++fQTNDBXxxWSs6M44=;
-        b=I9zcsWizuxD+SzQPi9BDdncD5XaiigUJSg/DB42/5kbCUdNizfb6Q44g59eNhFy/3p
-         Ngfxu8xmYzUzJtlVdxMePcmw3IQUpa+ZdYrKudsHpFVSap183Ka+3lJ+EmmSwhLb+H0B
-         XFZ7MdkS2jAkHMi0mAid12ZI5t0dRalw5lGQ6eP3kYwYTwjEcrhcwFS+6DjkSG3p9I1p
-         2cWOZDOuShg5GGQO0e4e/vCcMVu1NxnrgtNEJdp920sqCE0h6Rg2dYWAC47Y9FuqI0o8
-         dQhfRaOKD0+ZK97zwoHq8OAHZzA8FTnGmmGaDINUTmlNvLQ7YRf0ds8g+CFglUIgfF2M
-         ZOUg==
-X-Forwarded-Encrypted: i=1; AJvYcCVBQHVKUTRwITTujph6w9ZEWJQ+1GUgtg0oB5VDPlcVMYl0Ull3aHzpv5l9PczOxz3wR9kDmXorgKqjjRwHnoD+RWc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwQ0Xm1wJuxaQtJYIHvx0REwaLVKwOrlKm2B/75w2G9aV2HDXbs
-	YgXyk8UoIc/s2K06LHHt62RC8aw2a6ZDwaJNIOFVUBHU+QyNmDMY2/xCrfrQBM/mST5TEeY8GQx
-	sfuEt5cK+yZVZ/RI0F+dW4L7P+l6ysmRTDkfzOI3RaQ==
-X-Gm-Gg: ASbGncsSJatXZmdnUxQIW1twqzb+wbebJ7Ki2EHJv3p9Fj/qiUfaRvAg6uW1YqShN1g
-	ZISKuqkbIpEQF1HMBo8I+UMRJ3Su/D9QkKIDKtYucMKzFV7pdWtIQJS3NW9xExPdDDUnTNL549W
-	Xs58LdHdJkwHsYuFEmpRF1igNbFiQWzlcv
-X-Google-Smtp-Source: AGHT+IFFLhz0tMuJ5OoJ7sq+5B4EgghyiZS3sT2o+wvwGnin2/XNjmW1voB64CyNLiLlOl9Lzv45F8CFBTLXOmtDGfQ=
-X-Received: by 2002:a17:90b:4d8f:b0:30a:80bc:ad4 with SMTP id
- 98e67ed59e1d1-311e03a7f6amr1843239a91.0.1748445958464; Wed, 28 May 2025
- 08:25:58 -0700 (PDT)
+	s=arc-20240116; t=1748446439; c=relaxed/simple;
+	bh=wWRlt5ac/IDUzhdtP1HOGjZn9n1erecPDNu8yCIMvzI=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=QgLYwCguXfaPfICpawkrroxCUO4aqCmmawHwi1Rc73XgXMZEWsS1r8UBhpy0gzzd+7Am8Mf5HBYW53dRNq0RWcxlSQvpXt7U0q+Mp6k96NbWM6QLWIkPveTyb8jK/GCH7Oun61l6AbgOPinUfgEDoHR4sLkDGL9QhP3LKG1rlo0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2E176C4CEEE;
+	Wed, 28 May 2025 15:33:58 +0000 (UTC)
+Date: Wed, 28 May 2025 11:34:39 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Vincent Donnefort <vdonnefort@google.com>
+Subject: Re: [PATCH] ring-buffer: Do not trigger WARN_ON() due to a
+ commit_overrun
+Message-ID: <20250528113439.3fa4f245@gandalf.local.home>
+In-Reply-To: <20250529000342.5218ac7b90c99f3636edd5ab@kernel.org>
+References: <20250527121140.0e7f0565@gandalf.local.home>
+	<20250528104203.d6f509c5d9c30dec1e024587@kernel.org>
+	<20250527221735.04c62a3c@batman.local.home>
+	<20250529000342.5218ac7b90c99f3636edd5ab@kernel.org>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250411161746.1043239-1-csander@purestorage.com>
- <3ucksa6coiwco3wpmcjtfwezqjigzm2zwvdvkt2ryvefzojtqy@4lda47c236uz>
- <CADUfDZpPGQEY9u3p3MCU2S3qmDyKmE1JnSQ6G2jO4_J40rQeeQ@mail.gmail.com> <92d947de-110e-4c17-a822-f626bac9b540@lucifer.local>
-In-Reply-To: <92d947de-110e-4c17-a822-f626bac9b540@lucifer.local>
-From: Caleb Sander Mateos <csander@purestorage.com>
-Date: Wed, 28 May 2025 08:25:47 -0700
-X-Gm-Features: AX0GCFv3sm9dKmwHw3WUhFClDZ3EiFDcrlchd9OQvH_FSdqpgWJC60zCCV5o0e8
-Message-ID: <CADUfDZqQDes94v17mWCk2FdXbyasybmPeLOeCCrikB7trOfDUg@mail.gmail.com>
-Subject: Re: [PATCH] mm: remove unused mmap tracepoints
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, "Liam R . Howlett" <Liam.Howlett@oracle.com>, 
-	Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Eric Mueller <emueller@purestorage.com>, 
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	linux-mm@kvack.org, Vlastimil Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>, 
-	Pedro Falcato <pfalcato@suse.de>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Wed, May 28, 2025 at 8:23=E2=80=AFAM Lorenzo Stoakes
-<lorenzo.stoakes@oracle.com> wrote:
->
-> Sorry this wasn't picked up.
+On Thu, 29 May 2025 00:03:42 +0900
+Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
 
-No worries, I think I didn't send it to the relevant people and
-mailing list originally since it wasn't in the MAINTAINERS file (which
-Liam has since fixed).
+> > > (BTW, what happen if the interrupted process commits the event? That
+> > >  event will be lost, or commit and just move commit_page?)  
+> > 
+> > No, the first event to be created is the "commit" event. If it gets
+> > interrupted and the interrupt adds a bunch of events that wraps the
+> > ring buffer, it can't touch the commit event, it will just start
+> > dropping events. Then when the commit event finishes, it can either be
+> > read by the reader, or overwritten by the next events coming in.  
+> 
+> Hmm, rb_end_commit() seems to try commit all nested events (committing > 1)
+> if committing == 1, and the rb_set_commit_to_write() pushes commit pointer
+> to the latest write pointer. So when it "start dropping events"? (is that
+> write side?)
 
->
-> Andrew - one to pick up after merge window? :)
->
-> Caleb - I'd ping again after the merge window is over if it's not picked =
-up
-> this week. This isn't a great time as people tend to be busy sending stuf=
-f
-> over to Linus.
+The "start dropping events" is when committing > 1. The commit overrun
+events dropping happens in rb_move_tail(), where a write falls off the end
+of the sub buffer and moves the tail to the next sub-buffer. If the next
+sub-buffer is the commit page, then it fails and just drops the event. This
+will never happen when committing == 1.
 
-Sure, no rush on this. Just spring cleaning my inbox :)
+> 
+> > > 
+> > > Thus the reader_page == commit_page && reader_page == tail_page,
+> > > missed_events should be 0?
+> > > 
+> > > Possible cases if missed_events != 0:
+> > > 
+> > >  - reader_page != commit_page
+> > > 	(writer's commit overtook the reader)  
+> > 
+> > The reader is never in the write buffer. Just the head page will move.
+> > When a new reader page is taken it will swap out the old reader page
+> > with the head page. If the head page is the commit page, then the
+> > commit page becomes the reader page too.  
+> 
+> Hmm, so this is the case that the writer is too fast and it moves
+> head page to the next page. Thus some events on old head page are
+> lost.
 
->
-> On Wed, May 28, 2025 at 08:16:24AM -0700, Caleb Sander Mateos wrote:
-> > Hi MM folks,
-> > Would you mind picking up this patch to remove some old tracepoints?
-> > Liam has already given it a review.
->
-> I am actually curious about reintroducing these at some point, but no har=
-m
-> removing them for now as they are as you say, unused. If I do work on
-> reintroducing them I can obviously... reintroduce them :)
->
-> >
-> > Thanks,
-> > Caleb
-> >
-> > On Fri, Apr 11, 2025 at 10:23=E2=80=AFAM Liam R. Howlett
-> > <Liam.Howlett@oracle.com> wrote:
-> > >
-> > > * Caleb Sander Mateos <csander@purestorage.com> [250411 12:18]:
-> > > > The vma_mas_szero and vma_store tracepoints are unused since commit
-> > > > fbcc3104b843 ("mmap: convert __vma_adjust() to use vma iterator").
-> > > > Remove them so they are no longer listed as available tracepoints.
-> > > >
-> > >
-> > > Thanks for doing this.
-> > >
-> > > Reviewed-by: Liam R. Howlett <Liam.Howlett@oracle.com>
->
-> LGTM so:
->
-> Reviewed-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+This has nothing to do with the speed of the reader. When a event is being
+written, and it gets interrupted and the interrupt starts writing events,
+the interrupted event stays put. The reader could be very fast, but it will
+stop when it gets to the commit page. Thus, the reader could be all caught
+up, but is now waiting for new events to be committed.
 
-Thanks,
-Caleb
+If an event is interrupted, no event is fully committed until that event is
+no longer interrupted and then can continue.
+
+  rb_reserve_next_event() {
+    rb_start_commit() <<-- here the reader can never go past the commit page
+
+    [ interrupt start ]
+	for (i = 0; i < 10000000000; i++)
+           rb_reserve_next_event();  <<-- This will eventually fill up the
+                                          buffer, but will stop when it
+                                          hits the commit page and that
+                                          will be when the commit overrun
+                                          events start dropping.
+
+[ On another CPU:
+  ring_buffer_map_get_reader() <<-- This now gets the commit page as the
+				    reader page, and there will be missed
+				    events.
+]
+    [ interrupt end ]
+
+    rb_end_commit() <<-- This will move the commit page forward.
+}
+
+This is a very unlikely scenario, but I can trigger it with the
+perf/trace-cmd test that enables all events and function tracing with KASAN
+and lockdep enabled running hackbench, as that pretty much creates the:
+	for (i = 0; i < 10000000000; i++)
+           rb_reserve_next_event();
+scenario.
+
+And even in that case, it triggers at most a couple of times a second:
+
+
+> OK, so "wrapped the buffer" means "tail (write) page caught up the commit"?
+
+Yes.
+
+> > > Do we need this pr_info() for each commit overrun?  
+> > 
+> > Yes. When doing this stress test, it printed at most 4 times. It
+> > happens once per time the interrupt fills the buffer while interrupting
+> > the buffer.  
+> 
+> Ah, I meant we should report it in printk buffer, since the event
+> lost will happen in some case and reader can notice that.
+
+I think we agree here?
+
+Thanks for the review, I'll have a new patch shortly.
+
+-- Steve
+
+
