@@ -1,41 +1,41 @@
 Received: from shelob.surriel.com (shelob.surriel.com [96.67.55.147])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1A9613AF2;
-	Wed, 28 May 2025 14:26:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F6D8286D48;
+	Wed, 28 May 2025 14:26:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=96.67.55.147
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748442398; cv=none; b=mpQFCnMe0rtMUN7e3Zkjh2w2wy4RrezvHWfg8dGtceQY+J8kgwmE6oGJT5u7UweFQtodu5JVAaCvK5QRxq4fbRRDoqxpdCocJxixRImZ7I51SrSAW10VPvQMyurCUUq7YlBgXKjutX8kpI8U9zZcoecVRh9mFGu9RWQ4zg9bbpA=
+	t=1748442411; cv=none; b=ui+p3AlqsNVFtGeiPlDWDbddEY3vRNibXvGHEOUZzcEas/rFnfn6tVJWRJq81PPqyAgqNo6jnhJkRzl5XyaNptA9Q1CHkllnMHM3dv+DqVb7af+q19IyCIymf0RqYJJ/ekAU3hLKbB0smMGDbTvC2QRgjgqGQe9EP++qByvW4f4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748442398; c=relaxed/simple;
-	bh=g8gTRASmmvSsfuZwzuPFcSFC+02zA9q+IRn3Y7AYods=;
+	s=arc-20240116; t=1748442411; c=relaxed/simple;
+	bh=cS79qCw02W352C4o5afUgwhUGwcsuYgeRjXGbXZOI8U=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=XigXvJERqZ4GbXB12thWcACM22nzM4kMVhYFxgnme9sdHhIo+vyiGMiaFLOHe77IWDApyjJrvX2T7i0s89lrcbfto/NBWzIGlM/3VG5Mnbb60SUN9xgWoxD82zeNoxFpBZ5eDmxZ9tekXz3vW8Fb7bXLdTnWgAlMoDSsjtn/ER8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=surriel.com; spf=pass smtp.mailfrom=surriel.com; dkim=pass (2048-bit key) header.d=surriel.com header.i=@surriel.com header.b=IDo7N+g2; arc=none smtp.client-ip=96.67.55.147
+	 Content-Type:MIME-Version; b=Vn/W5ZzvVs5ZkJXMTYcyekfWBCie9Pn9TQHzKZqVDTAGpRGcPxmEa6fpe08UcqvUsduLRCFZb+fGR1K5I7gqhz8MRWCDWQzTgM0X7tJMeAISC4QlUKw8QroofdKvFDRNIE6upVnhyaZpYLchZP50fDnrXske7rj+pV37Kvhp8ZQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=surriel.com; spf=pass smtp.mailfrom=surriel.com; dkim=pass (2048-bit key) header.d=surriel.com header.i=@surriel.com header.b=iiHSrwGb; arc=none smtp.client-ip=96.67.55.147
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=surriel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=surriel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=surriel.com header.i=@surriel.com header.b="IDo7N+g2"
+	dkim=pass (2048-bit key) header.d=surriel.com header.i=@surriel.com header.b="iiHSrwGb"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=surriel.com
 	; s=mail; h=MIME-Version:Content-Transfer-Encoding:Content-Type:References:
 	In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender:Reply-To:Content-ID:
 	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
 	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
 	List-Post:List-Owner:List-Archive;
-	bh=g8gTRASmmvSsfuZwzuPFcSFC+02zA9q+IRn3Y7AYods=; b=IDo7N+g2tDs+yPTInSf/SucK5j
-	qXu8UivasSaNrRDtcv6nLuxf4VEwNySE17EcHfu3nNBhkZ0AY6fOkrGBz31fThJXI7nUSy9GGtJ6e
-	DsT3LpdecwvvRjxt8RnV4D3QNmQliSDt+qg5t47i/i+PTEEo98YM/FWYdxHm3UtxEnkhNEb9o3zU9
-	t4OqiA6ARR37gu9RYwGWCEX5aTd2YSpr9xjAF3Pwkxospgs404TLxdY65KGAhsVPMa1SEXi020KR/
-	5wY86pEBCOY3ZFjmju3CnwKSAN7QZVnvMlZ01IyIFiJbkA8r42V+eqfPh0WEjmSCBv426xuXJ8GZo
-	T+BtA8eg==;
+	bh=cS79qCw02W352C4o5afUgwhUGwcsuYgeRjXGbXZOI8U=; b=iiHSrwGbrwswQJmrXNS4YYn773
+	kGLotIEZIyAPFV8+h+WqbAVM9Bl7VS9C6jzQMLjg0b/NaMXooV9/Hfu6ZHAo6k3V5K5yLGZOsa11/
+	SseSd9Q9Ej0iFITTMbX/T6xAQZw8L4m+yel7ystwEK0ly9rnzKOO77DHCxkgVOSpT0CT04p9nOwWi
+	YIbBTsQMz65FhF3aTl1bAnYIGaWo/vME4yph61afiuI2yeK50NqkLOHrB6kk2C/WvQftYkwJWu7+C
+	oPtuNEymkRDfACZXLRPUBJFG4J2O3kIzsg2qPB6y8Ml/EL8g9K1UlWZGfcjGkktRVnV2UIM9PhLjj
+	cGLZePeA==;
 Received: from fangorn.home.surriel.com ([10.0.13.7])
 	by shelob.surriel.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.97.1)
 	(envelope-from <riel@surriel.com>)
-	id 1uKHiz-000000000so-1SBT;
-	Wed, 28 May 2025 10:25:45 -0400
-Message-ID: <43ae7b3bf94b67611069572b7e3e909a922c964f.camel@surriel.com>
-Subject: Re: [PATCH 1/2] x86/tlb/trace: Export the TLB_REMOTE_WRONG_CPU enum
+	id 1uKHjh-000000000tN-0jg8;
+	Wed, 28 May 2025 10:26:29 -0400
+Message-ID: <05b6280b2550011623a433017baa8f17bc83fe9d.camel@surriel.com>
+Subject: Re: [PATCH 2/2] mm: Remove tlb_flush_reason::NR_TLB_FLUSH_REASONS
 From: Rik van Riel <riel@surriel.com>
 To: Tal Zussman <tz2294@columbia.edu>, Steven Rostedt <rostedt@goodmis.org>,
   Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
@@ -47,10 +47,10 @@ To: Tal Zussman <tz2294@columbia.edu>, Steven Rostedt <rostedt@goodmis.org>,
  <mhocko@suse.com>, x86@kernel.org
 Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
 	linux-mm@kvack.org
-Date: Wed, 28 May 2025 10:25:45 -0400
-In-Reply-To: <20250528-tlb-trace-fix-v1-1-2e94c58f450d@columbia.edu>
+Date: Wed, 28 May 2025 10:26:29 -0400
+In-Reply-To: <20250528-tlb-trace-fix-v1-2-2e94c58f450d@columbia.edu>
 References: <20250528-tlb-trace-fix-v1-0-2e94c58f450d@columbia.edu>
-	 <20250528-tlb-trace-fix-v1-1-2e94c58f450d@columbia.edu>
+	 <20250528-tlb-trace-fix-v1-2-2e94c58f450d@columbia.edu>
 Autocrypt: addr=riel@surriel.com; prefer-encrypt=mutual;
  keydata=mQENBFIt3aUBCADCK0LicyCYyMa0E1lodCDUBf6G+6C5UXKG1jEYwQu49cc/gUBTTk33A
  eo2hjn4JinVaPF3zfZprnKMEGGv4dHvEOCPWiNhlz5RtqH3SKJllq2dpeMS9RqbMvDA36rlJIIo47
@@ -86,21 +86,13 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
 On Wed, 2025-05-28 at 01:35 -0400, Tal Zussman wrote:
-> When the TLB_REMOTE_WRONG_CPU enum was introduced for the tlb_flush
-> tracepoint, the enum was not exported to userspace. Add it to the
-> appropriate macro definition to enable parsing by userspace tools, as
-> per [0].
+> This has been unused since it was added 11 years ago in commit
+> d17d8f9dedb9 ("x86/mm: Add tracepoints for TLB flushes").
 >=20
-> [0] Link:
-> https://lore.kernel.org/all/20150403013802.220157513@goodmis.org
->=20
-> Fixes: 2815a56e4b72 ("x86/mm/tlb: Add tracepoint for TLB flush IPI to
-> stale CPU")
 > Signed-off-by: Tal Zussman <tz2294@columbia.edu>
-
-Good catch. Thank you!
-
+>=20
 Reviewed-by: Rik van Riel <riel@surriel.com>
+
 
 --=20
 All Rights Reversed.
