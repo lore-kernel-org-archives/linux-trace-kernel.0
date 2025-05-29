@@ -1,28 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E85422D4F1;
-	Thu, 29 May 2025 17:56:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CD202AD31;
+	Thu, 29 May 2025 18:42:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748541399; cv=none; b=LhEqiYmG3/byfU8jwkzhRnE2s+pmu2tIS6Dz8Wj6jv4UOOAxjZSO4ZGA7UT28RdYpAlRAdGQan34CQi8vE9OTwaiYknxB/eIszEUXCowSDhld6LX9yzbpEO7HJ3JfOzc2x6DiPMVAR8EaX2UKv8f7IsGIG/B86HdPsmrB9EiXMU=
+	t=1748544146; cv=none; b=YSRx/FRnnIOjzKBSDbQg0PFYTiRm7f0ZPaTBnC/KqFNlBpeVAsTylNSBTviHBBT7UiyCdE51I1WXoB8NeNiIWZWLB7dNwqh/dSG7Twfrw8GnCM+Tp58i4RQDRFqkjAKJldXDehsa6yQnR7VhzNzWYPFRgg7+1sS90ZbuPATy5ZY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748541399; c=relaxed/simple;
-	bh=nBaPFnGZ8zAqrt7XWiu/CTvg3TapI+TMSoVy9JURpek=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=sme0LmHmxyj/9DxzHYZOOZCDRIn3aAIfXe1FYcWJnUl9z18iMT38pdpxT6o69Q/SwLTWljr+v+4qox5mRR2CC/eLugQ/0lxkmawbskhek1BK7iy4toZYSA3CjeUxE/oFGGEh7NomhliYowWcUCj6GpFeVyRUmIipUYo1iPohKNI=
+	s=arc-20240116; t=1748544146; c=relaxed/simple;
+	bh=Neoym1y/VIebh0hqAKRlqN9KeVpgBGL7Tb/AAqhQXn0=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=rAXk7GvfeQyMzYIBPOIL791WaIEbvneByfcOYSSBrEFDz9/CGV6MIOlu970bKCYtJ+yG1LahWAB4AIkpPZ1SYdqnpfovYz9u5S8j6IOtuoEQRhF4AU5Dmr+2BMwxJGSdMaipOb+cFQ/nRJzpX8SJaZiJuq8qKqEYjYv2H1y3mtE=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DEC59C4CEE7;
-	Thu, 29 May 2025 17:56:37 +0000 (UTC)
-Date: Thu, 29 May 2025 13:57:39 -0400
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9CAA5C4CEE7;
+	Thu, 29 May 2025 18:42:24 +0000 (UTC)
+Date: Thu, 29 May 2025 14:43:27 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
-To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Juergen Gross <jgross@suse.com>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Masami Hiramatsu
- <mhiramat@kernel.org>
-Subject: [PATCH] genirq/matrix: Remove unused irq_matrix_alloc_reserved
- tracepoint
-Message-ID: <20250529135739.26e5c075@gandalf.local.home>
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Cc: Caleb Sander Mateos <csander@purestorage.com>, Andrew Morton
+ <akpm@linux-foundation.org>, "Liam R . Howlett" <Liam.Howlett@oracle.com>,
+ Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Eric Mueller <emueller@purestorage.com>,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ linux-mm@kvack.org, Vlastimil Babka <vbabka@suse.cz>, Jann Horn
+ <jannh@google.com>, Pedro Falcato <pfalcato@suse.de>
+Subject: Re: [PATCH] mm: remove unused mmap tracepoints
+Message-ID: <20250529144327.1633825e@gandalf.local.home>
+In-Reply-To: <20250528122411.16a551b1@gandalf.local.home>
+References: <20250411161746.1043239-1-csander@purestorage.com>
+	<3ucksa6coiwco3wpmcjtfwezqjigzm2zwvdvkt2ryvefzojtqy@4lda47c236uz>
+	<CADUfDZpPGQEY9u3p3MCU2S3qmDyKmE1JnSQ6G2jO4_J40rQeeQ@mail.gmail.com>
+	<20250528114549.4d8a5e03@gandalf.local.home>
+	<b694c72b-0873-4123-869c-134709341e19@lucifer.local>
+	<20250528122411.16a551b1@gandalf.local.home>
 X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -33,38 +43,14 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-From: Steven Rostedt <rostedt@goodmis.org>
+On Wed, 28 May 2025 12:24:11 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-The tracepoint irq_matrix_alloc_reserved was added but never used.
-Remove it.
+> Yeah, I have a patch that shows how many static key instances exist and I
+> test that. But I probably could also add an option to the macro that
+> creates the trace function to also add something to a section when used,
+> and report when it isn't. Shouldn't be too hard.
 
-Link: https://lore.kernel.org/all/20250529130138.544ffec4@gandalf.local.home/
+Done:  https://lore.kernel.org/all/20250529130138.544ffec4@gandalf.local.home/
 
-Fixes: ec0f7cd273dc4 ("genirq/matrix: Add tracepoints")
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
- include/trace/events/irq_matrix.h | 8 --------
- 1 file changed, 8 deletions(-)
-
-diff --git a/include/trace/events/irq_matrix.h b/include/trace/events/irq_matrix.h
-index 267d4cbbf360..93244078b4e6 100644
---- a/include/trace/events/irq_matrix.h
-+++ b/include/trace/events/irq_matrix.h
-@@ -138,14 +138,6 @@ DEFINE_EVENT(irq_matrix_global_update, irq_matrix_assign_system,
- 	TP_ARGS(bit, matrix)
- );
- 
--DEFINE_EVENT(irq_matrix_cpu, irq_matrix_alloc_reserved,
--
--	TP_PROTO(int bit, unsigned int cpu,
--		 struct irq_matrix *matrix, struct cpumap *cmap),
--
--	TP_ARGS(bit, cpu, matrix, cmap)
--);
--
- DEFINE_EVENT(irq_matrix_cpu, irq_matrix_reserve_managed,
- 
- 	TP_PROTO(int bit, unsigned int cpu,
--- 
-2.47.2
-
+-- Steve
