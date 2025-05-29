@@ -1,212 +1,156 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8A0013AA2F;
-	Thu, 29 May 2025 02:03:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 866502222A8
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 29 May 2025 03:52:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748484238; cv=none; b=kaaQZzXoZVDmvo2l2biGFf62LB9Aav9AbfFIzazSWiItah0HIIGl7rpPFTUYBLEtJA96memltWbwZwGG+AV0AdBOzAeKxwfuVyxvK6qaqLl99mk7cRH1mq8+FHFimfZ8v1DhOv1h4wYyypxMjcLquCMLHsFStS3fdM7WSKm0XbU=
+	t=1748490771; cv=none; b=bNTMX34rLYPnk+jtHIukcqF0/bAblVoOx55KuGWed/G52Ac3l69ADM/icKyvI6/3AyiUjNw1Cbe2KFF9qtSfO3sU8p2pKhIQxmTXAM2Yg8ju/caV3OJInJjyGZq3gvnXWo5kuBJHKEtzbJ9zcrZyEPYFH99T9L2TKS4DgCs2+sA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748484238; c=relaxed/simple;
-	bh=HBc8Ud/IdDi0BkqcmQysCOW0ecbFWrLp1KmavCLxf2g=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=OUPrLEF+PXLuR2jscWz67fE86HuV6HZaN+d/ztlAYrspDJlwAk1T+QTsNw4H2zn8H+0/SRXHninwXy5+MtTRLWyfPlkpJHYV3nf3+MdiTt9rx6dUWuYjiJ8xerRvcep5yMvTmhB8jbdiWPalOSVa1aQX6Nu8gXQ+J86cS9IaVZ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=f5n/mzcw; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748490771; c=relaxed/simple;
+	bh=jjBdYG5dDlk4ROjsfQyxf8vSTtJMMJIcoc8Ttyljtjc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Nkxz4g5NOSNIomwMN9lJ2xBHveY7RXqDb2soQnJaImQGDJzuMT47+HsSMfpEbst7V1V8mnNWgCpY9cJXoTaXz5TkaugTK0rV5jarRaLD8KRXIBlp8IL6BnBESbL7U4vCdSXxCrR0bwyallsmlW9EYE/5xAwSR4D1JNT43V0Md0s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=PQxs0M8M; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="f5n/mzcw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0A2E5C4CEE3;
-	Thu, 29 May 2025 02:03:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748484238;
-	bh=HBc8Ud/IdDi0BkqcmQysCOW0ecbFWrLp1KmavCLxf2g=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=f5n/mzcw39PMaENhngze8uVqtI/yWNHnwiiflXWN73F/IMXETeNrS1jfsaQG220PZ
-	 HqlOYJCQ+kxL8qALTkE5bU2PZDE4wXAdFDwESB004bRNgETwojCGpA6ItsfeJQ6ox2
-	 Fc99ueQPEChPyTnP72+N+VTuhnC9gA/5ypiELmr1pkcQJu6ZB5I2HbxzlcQEGMpw/6
-	 nH+QLYgfaiSpLiR4Y04YMCz7KUKWNfKcbGKdpQd/Fm4fAEEzMmz6UYDK2yzTngLs10
-	 mac133z+JKMVNYxQgPpVU2A1r33ovL1gpF8Mt+gYByVL632sMt0LXF5aQA4PiOBnkJ
-	 RhEf5aIYNGHkw==
-Date: Thu, 29 May 2025 11:03:55 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Vincent Donnefort <vdonnefort@google.com>
-Subject: Re: [PATCH v2] ring-buffer: Do not trigger WARN_ON() due to a
- commit_overrun
-Message-Id: <20250529110355.98fecf6d98765e794e0ba345@kernel.org>
-In-Reply-To: <20250528121555.2066527e@gandalf.local.home>
-References: <20250528121555.2066527e@gandalf.local.home>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PQxs0M8M"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1748490768;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=4hhA7GC2WW/+lJ32k1Z0Il2RFszCwZCLWK9Duc96zI4=;
+	b=PQxs0M8Mr/58+3U/lORfJYDDaBetf+jKt2GTau1T1n5nH9WyeTcJR0YJ5dgOEC3gtbJy+3
+	Byz9CFkkUMk0+vvnXPAwj17uAnl2GlBSqAauDds7SCL2vm/mFCiYW69omolyL1y3QwsQBT
+	7phPyNtAnn+b6mN8fm/uE44Wdk5JM0I=
+Received: from mail-yw1-f199.google.com (mail-yw1-f199.google.com
+ [209.85.128.199]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-627-bglr94kCNy-O_IMi577PrA-1; Wed, 28 May 2025 23:52:47 -0400
+X-MC-Unique: bglr94kCNy-O_IMi577PrA-1
+X-Mimecast-MFC-AGG-ID: bglr94kCNy-O_IMi577PrA_1748490767
+Received: by mail-yw1-f199.google.com with SMTP id 00721157ae682-70e6a0c35b7so8719887b3.3
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 28 May 2025 20:52:47 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748490766; x=1749095566;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=4hhA7GC2WW/+lJ32k1Z0Il2RFszCwZCLWK9Duc96zI4=;
+        b=dD9gkUKzZzaJv7QAady02c7m+XwYU4N1XfqGFNC3RCXQwjAQ4ON7JgVZMavzwpz/Rk
+         Mk/CowF/jFGDCCjUU7kn+/awATfgYLJxB6MS3CPxBvB5p3y/OUIta7eKmuJwKjSe5pyG
+         cIpZ1yuxn92QReX4W1lBJj7yK64kQHlP3Fij3aK+JODlHA1Rdu/koOCk2dahxA/1vXBt
+         Rcr9C6u3qCnH5kutjaQ1CQg152bhZLlap40jwCE8xXlfqgGa3EteWs4vqgrItiEb7TTw
+         We/b+34P42909IIVHlHNh7/R2ezzpc7y1bA8unC7wzSIqxR/a4eX3+u6c6SotnizF00j
+         Yl5A==
+X-Forwarded-Encrypted: i=1; AJvYcCV3KpqgP47GMyX1BGRBR6IRJ8mb1DzbFkTpLp0IQ6v2lJPs3m40Lrdu7LzPCCVzjQZOCgacaoiI4bWW/2HP/6/iw7E=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx862eoTJyn7cywR0BcV3ddc6xHnZTkLbd6mDBdt+k3M66WLPLh
+	nJDhilEf5BJZk4XSma0O6X0d5fo16ZBRSniTHwGlmbZCEcZH7mqq7dkhfVWyMhdsDN2MpK+pWrO
+	g/AKBX6Xn8hA00ZIqIZoGbNpDz+S9kHPc/hNuOF3n31KOU/F3F1nf0ItbGnKrKxM0Km8hQocnwR
+	NJjcWp9qys2zV81IzmDtlJTkPWlrXNhCJSyOlAWSvhfp27Bqvp
+X-Gm-Gg: ASbGncsS2ShXPu3QVQKGoNeSLYgWG6R6t930NkKhuGU22LPQMv7bZhPDDXWEtibbUrI
+	MbVqO7ZEXbySRRDvcwZMJNVSTrR1TQ/MB5x5HSj0wIIfAgE7a6NK23TF2Io+YhX3s0W7A7Ag=
+X-Received: by 2002:a05:690c:6c84:b0:70c:9364:2c61 with SMTP id 00721157ae682-70e2d99acecmr259481107b3.9.1748490766706;
+        Wed, 28 May 2025 20:52:46 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHBHhgbNYXKNeLYZZxqGSVehk4q8NKnO868u4K0Pc9kRLFdHIZrfkpOjP7qA1+UiLAH4quPFQdOA6jB8tjDF2Q=
+X-Received: by 2002:a05:690c:6c84:b0:70c:9364:2c61 with SMTP id
+ 00721157ae682-70e2d99acecmr259480667b3.9.1748490766362; Wed, 28 May 2025
+ 20:52:46 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+References: <20250515032226.128900-1-npache@redhat.com> <a956379a-7472-4972-bf3d-fe2b2b6715b5@linux.alibaba.com>
+In-Reply-To: <a956379a-7472-4972-bf3d-fe2b2b6715b5@linux.alibaba.com>
+From: Nico Pache <npache@redhat.com>
+Date: Wed, 28 May 2025 21:52:20 -0600
+X-Gm-Features: AX0GCFsiYEJ1VuiCFlFESTf-xqRr1WAwbgRTyelRq-SxIdDhpm-aFp66aQ0MKqc
+Message-ID: <CAA1CXcDKOPk+7keQG43_0PzaAnVFLDrVNq=rnZK_m_QVFjk8og@mail.gmail.com>
+Subject: Re: [PATCH v7 00/12] khugepaged: mTHP support
+To: Baolin Wang <baolin.wang@linux.alibaba.com>
+Cc: linux-mm@kvack.org, linux-doc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	david@redhat.com, ziy@nvidia.com, lorenzo.stoakes@oracle.com, 
+	Liam.Howlett@oracle.com, ryan.roberts@arm.com, dev.jain@arm.com, 
+	corbet@lwn.net, rostedt@goodmis.org, mhiramat@kernel.org, 
+	mathieu.desnoyers@efficios.com, akpm@linux-foundation.org, baohua@kernel.org, 
+	willy@infradead.org, peterx@redhat.com, wangkefeng.wang@huawei.com, 
+	usamaarif642@gmail.com, sunnanyong@huawei.com, vishal.moola@gmail.com, 
+	thomas.hellstrom@linux.intel.com, yang@os.amperecomputing.com, 
+	kirill.shutemov@linux.intel.com, aarcange@redhat.com, raquini@redhat.com, 
+	anshuman.khandual@arm.com, catalin.marinas@arm.com, tiwai@suse.de, 
+	will@kernel.org, dave.hansen@linux.intel.com, jack@suse.cz, cl@gentwo.org, 
+	jglisse@google.com, surenb@google.com, zokeefe@google.com, hannes@cmpxchg.org, 
+	rientjes@google.com, mhocko@suse.com, rdunlap@infradead.org
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: liXLBerONC5kUXQR7FIBBrevI8pXXuHDFNJ_5fVBjyI_1748490767
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, 28 May 2025 12:15:55 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
+On Wed, May 28, 2025 at 6:39=E2=80=AFAM Baolin Wang
+<baolin.wang@linux.alibaba.com> wrote:
+>
+>
+>
+> On 2025/5/15 11:22, Nico Pache wrote:
+> > The following series provides khugepaged and madvise collapse with the
+> > capability to collapse anonymous memory regions to mTHPs.
+> >
+> > To achieve this we generalize the khugepaged functions to no longer dep=
+end
+> > on PMD_ORDER. Then during the PMD scan, we keep track of chunks of page=
+s
+> > (defined by KHUGEPAGED_MTHP_MIN_ORDER) that are utilized. This info is
+> > tracked using a bitmap. After the PMD scan is done, we do binary recurs=
+ion
+> > on the bitmap to find the optimal mTHP sizes for the PMD range. The
+> > restriction on max_ptes_none is removed during the scan, to make sure w=
+e
+> > account for the whole PMD range. When no mTHP size is enabled, the lega=
+cy
+> > behavior of khugepaged is maintained. max_ptes_none will be scaled by t=
+he
+> > attempted collapse order to determine how full a THP must be to be
+> > eligible. If a mTHP collapse is attempted, but contains swapped out, or
+> > shared pages, we dont perform the collapse.
+> >
+> > With the default max_ptes_none=3D511, the code should keep its most of =
+its
+> > original behavior. To exercise mTHP collapse we need to set
+> > max_ptes_none<=3D255. With max_ptes_none > HPAGE_PMD_NR/2 you will
+> > experience collapse "creep" and constantly promote mTHPs to the next
+> > available size. This is due the fact that it will introduce at least 2x
+> > the number of pages, and on a future scan will satisfy that condition o=
+nce
+> > again.
+> >
+> > Patch 1:     Refactor/rename hpage_collapse
+> > Patch 2:     Some refactoring to combine madvise_collapse and khugepage=
+d
+> > Patch 3-5:   Generalize khugepaged functions for arbitrary orders
+> > Patch 6-9:   The mTHP patches
+> > Patch 10-11: Tracing/stats
+> > Patch 12:    Documentation
+>
+> When I tested 64K mTHP collapse and disabled PMD-sized THP, I found that
+> khugepaged couldn't scan and collapse 64K mTHP. I send out two fix
+> patches[1], and with these patches applied, 64K mTHP collapse works
+> well. I hope my two patches can be folded into your next version series
+> if you think there are no issues. Thanks.
 
-> From: Steven Rostedt <rostedt@goodmis.org>
-> 
-> When reading a memory mapped buffer the reader page is just swapped out
-> with the last page written in the write buffer. If the reader page is the
-> same as the commit buffer (the buffer that is currently being written to)
-> it was assumed that it should never have missed events. If it does, it
-> triggers a WARN_ON_ONCE().
-> 
-> But there just happens to be one scenario where this can legitimately
-> happen. That is on a commit_overrun. A commit overrun is when an interrupt
-> preempts an event being written to the buffer and then the interrupt adds
-> so many new events that it fills and wraps the buffer back to the commit.
-> Any new events would then be dropped and be reported as "missed_events".
-> 
-> In this case, the next page to read is the commit buffer and after the
-> swap of the reader page, the reader page will be the commit buffer, but
-> this time there will be missed events and this triggers the following
-> warning:
-> 
->  ------------[ cut here ]------------
->  WARNING: CPU: 2 PID: 1127 at kernel/trace/ring_buffer.c:7357 ring_buffer_map_get_reader+0x49a/0x780
->  Modules linked in: kvm_intel kvm irqbypass
->  CPU: 2 UID: 0 PID: 1127 Comm: trace-cmd Not tainted 6.15.0-rc7-test-00004-g478bc2824b45-dirty #564 PREEMPT
->  Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
->  RIP: 0010:ring_buffer_map_get_reader+0x49a/0x780
->  Code: 00 00 00 48 89 fe 48 c1 ee 03 80 3c 2e 00 0f 85 ec 01 00 00 4d 3b a6 a8 00 00 00 0f 85 8a fd ff ff 48 85 c0 0f 84 55 fe ff ff <0f> 0b e9 4e fe ff ff be 08 00 00 00 4c 89 54 24 58 48 89 54 24 50
->  RSP: 0018:ffff888121787dc0 EFLAGS: 00010002
->  RAX: 00000000000006a2 RBX: ffff888100062800 RCX: ffffffff8190cb49
->  RDX: ffff888126934c00 RSI: 1ffff11020200a15 RDI: ffff8881010050a8
->  RBP: dffffc0000000000 R08: 0000000000000000 R09: ffffed1024d26982
->  R10: ffff888126934c17 R11: ffff8881010050a8 R12: ffff888126934c00
->  R13: ffff8881010050b8 R14: ffff888101005000 R15: ffff888126930008
->  FS:  00007f95c8cd7540(0000) GS:ffff8882b576e000(0000) knlGS:0000000000000000
->  CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
->  CR2: 00007f95c8de4dc0 CR3: 0000000128452002 CR4: 0000000000172ef0
->  Call Trace:
->   <TASK>
->   ? __pfx_ring_buffer_map_get_reader+0x10/0x10
->   tracing_buffers_ioctl+0x283/0x370
->   __x64_sys_ioctl+0x134/0x190
->   do_syscall_64+0x79/0x1c0
->   entry_SYSCALL_64_after_hwframe+0x76/0x7e
->  RIP: 0033:0x7f95c8de48db
->  Code: 00 48 89 44 24 18 31 c0 48 8d 44 24 60 c7 04 24 10 00 00 00 48 89 44 24 08 48 8d 44 24 20 48 89 44 24 10 b8 10 00 00 00 0f 05 <89> c2 3d 00 f0 ff ff 77 1c 48 8b 44 24 18 64 48 2b 04 25 28 00 00
->  RSP: 002b:00007ffe037ba110 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
->  RAX: ffffffffffffffda RBX: 00007ffe037bb2b0 RCX: 00007f95c8de48db
->  RDX: 0000000000000000 RSI: 0000000000005220 RDI: 0000000000000006
->  RBP: 00007ffe037ba180 R08: 0000000000000000 R09: 0000000000000000
->  R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
->  R13: 00007ffe037bb6f8 R14: 00007f95c9065000 R15: 00005575c7492c90
->   </TASK>
->  irq event stamp: 5080
->  hardirqs last  enabled at (5079): [<ffffffff83e0adb0>] _raw_spin_unlock_irqrestore+0x50/0x70
->  hardirqs last disabled at (5080): [<ffffffff83e0aa83>] _raw_spin_lock_irqsave+0x63/0x70
->  softirqs last  enabled at (4182): [<ffffffff81516122>] handle_softirqs+0x552/0x710
->  softirqs last disabled at (4159): [<ffffffff815163f7>] __irq_exit_rcu+0x107/0x210
->  ---[ end trace 0000000000000000 ]---
-> 
-> The above was triggered by running on a kernel with both lockdep and KASAN
-> as well as kmemleak enabled and executing the following command:
-> 
->  # perf record -o perf-test.dat -a -- trace-cmd record --nosplice  -e all -p function hackbench 50
-> 
-> With perf interjecting a lot of interrupts and trace-cmd enabling all
-> events as well as function tracing, with lockdep, KASAN and kmemleak
-> enabled, it could cause an interrupt preempting an event being written to
-> add enough events to wrap the buffer. trace-cmd was modified to have
-> --nosplice use mmap instead of reading the buffer.
-> 
-> The way to differentiate this case from the normal case of there only
-> being one page written to where the swap of the reader page received that
-> one page (which is the commit page), check if the tail page is on the
-> reader page. The difference between the commit page and the tail page is
-> that the tail page is where new writes go to, and the commit page holds
-> the first write that hasn't been committed yet. In the case of an
-> interrupt preempting the write of an event and filling the buffer, it
-> would move the tail page but not the commit page.
-> 
-> Have the warning only trigger if the tail page is also on the reader page,
-> and also print out the number of events dropped by a commit overrun as
-> that can not yet be safely added to the page so that the reader can see
-> there were events dropped.
-> 
-> Cc: stable@vger.kernel.org
-> Fixes: fe832be05a8ee ("ring-buffer: Have mmapped ring buffer keep track of missed events")
-> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+Thank you for looking into that and fixing it, I had originally
+decided to only allow khugepaged to collapse to mTHP if the PMD size
+was enabled as well. It was on my todo list :) I'll work on adding
+your patches to my set, and do some proper testing again!
+>
+> [1]
+> https://lore.kernel.org/all/ac9ed6d71b439611f9c94b3506a8ce975d4636e9.1748=
+435162.git.baolin.wang@linux.alibaba.com/
+>
 
-This looks good to me.
-
-Reviewed-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-
-Thanks!
-
-> ---
-> Changes since v1: https://lore.kernel.org/20250527121140.0e7f0565@gandalf.local.home
-> 
-> - Added to the pr_info() the CPU that overflowed and the timestamp of the
->   page that overflowed, to make it easier for user space to know where it
->   happened.
-> 
-> - Restructured to have if (missed_events) be the main condition, as the sub
->   conditions only did something when missed_events was non-zero.
->   (Masami Hiramatsu)
-> 
->  kernel/trace/ring_buffer.c | 26 ++++++++++++++++++--------
->  1 file changed, 18 insertions(+), 8 deletions(-)
-> 
-> diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-> index ca1a8e706004..683aa57870fe 100644
-> --- a/kernel/trace/ring_buffer.c
-> +++ b/kernel/trace/ring_buffer.c
-> @@ -7285,8 +7285,8 @@ int ring_buffer_map_get_reader(struct trace_buffer *buffer, int cpu)
->  	/* Check if any events were dropped */
->  	missed_events = cpu_buffer->lost_events;
->  
-> -	if (cpu_buffer->reader_page != cpu_buffer->commit_page) {
-> -		if (missed_events) {
-> +	if (missed_events) {
-> +		if (cpu_buffer->reader_page != cpu_buffer->commit_page) {
->  			struct buffer_data_page *bpage = reader->page;
->  			unsigned int commit;
->  			/*
-> @@ -7307,13 +7307,23 @@ int ring_buffer_map_get_reader(struct trace_buffer *buffer, int cpu)
->  				local_add(RB_MISSED_STORED, &bpage->commit);
->  			}
->  			local_add(RB_MISSED_EVENTS, &bpage->commit);
-> +		} else if (!WARN_ONCE(cpu_buffer->reader_page == cpu_buffer->tail_page,
-> +				      "Reader on commit with %ld missed events",
-> +				      missed_events)) {
-> +			/*
-> +			 * There shouldn't be any missed events if the tail_page
-> +			 * is on the reader page. But if the tail page is not on the
-> +			 * reader page and the commit_page is, that would mean that
-> +			 * there's a commit_overrun (an interrupt preempted an
-> +			 * addition of an event and then filled the buffer
-> +			 * with new events). In this case it's not an
-> +			 * error, but it should still be reported.
-> +			 *
-> +			 * TODO: Add missed events to the page for user space to know.
-> +			 */
-> +			pr_info("Ring buffer [%d] commit overrun lost %ld events at timestamp:%lld\n",
-> +				cpu, missed_events, cpu_buffer->reader_page->page->time_stamp);
->  		}
-> -	} else {
-> -		/*
-> -		 * There really shouldn't be any missed events if the commit
-> -		 * is on the reader page.
-> -		 */
-> -		WARN_ON_ONCE(missed_events);
->  	}
->  
->  	cpu_buffer->lost_events = 0;
-> -- 
-> 2.47.2
-> 
-
-
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
