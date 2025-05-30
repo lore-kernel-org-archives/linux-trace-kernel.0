@@ -1,87 +1,113 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out30-119.freemail.mail.aliyun.com (out30-119.freemail.mail.aliyun.com [115.124.30.119])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20AB922FE0D;
-	Thu, 29 May 2025 20:16:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97EA0155335;
+	Fri, 30 May 2025 03:02:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.119
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748549774; cv=none; b=DG+aE+Oep8O9Ha4Q6yK5e7Plb61Z0zWBvl0ZoFBe0syVlN2vUc/XVyj+ww98L4c5JH5/q92xrPDhiditVUUSOzJAdKIiphWn/1T74NrK0GgTbRoDPBegQ8JaYPBv6dewulwoRd438zoWqUv4Pbh1n5eorwhdZbtl6PfEDX8vLbE=
+	t=1748574171; cv=none; b=XoaRa6gh5/GixAheqiRNCEq5acGZkJFr+Fs+1DliGwRbflifuRt49RPVuotsNyJ7kTiH3ZLNoBQgHgdSXz9MvLgVAdgVlFPq4W+4WQNlYDyq4X9pzZtJUvUIC2FTzRYqlknq9FzQrjQ0MhuvYUEr5gjT9x9tucO+z77s3xOquFU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748549774; c=relaxed/simple;
-	bh=/qasvl+nVcRZ79yu/U8D2LnlWxObjlfQGc1xvyOkYKI=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=i2JyGmKtsIxk1SA64TSGAIg6R1Q9fivwtKDiX+Byw7adYu7KwloLEqP9GSc3bU7iG+fUsce/Vf/g2Vj1J2GNILnEKXmwnwHReGb+ejOzRHd+LaHJLvBd5JvSfaT40chRTD1SaWUf2wiuGZI/KwMSNac29sbQg6ukph2FCd7HS3c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 47A9CC4CEE7;
-	Thu, 29 May 2025 20:16:12 +0000 (UTC)
-Date: Thu, 29 May 2025 16:17:14 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Cc: Caleb Sander Mateos <csander@purestorage.com>, Andrew Morton
- <akpm@linux-foundation.org>, "Liam R . Howlett" <Liam.Howlett@oracle.com>,
- Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Eric Mueller <emueller@purestorage.com>,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- linux-mm@kvack.org, Vlastimil Babka <vbabka@suse.cz>, Jann Horn
- <jannh@google.com>, Pedro Falcato <pfalcato@suse.de>
-Subject: Re: [PATCH] mm: remove unused mmap tracepoints
-Message-ID: <20250529161714.1d172189@gandalf.local.home>
-In-Reply-To: <20250529144327.1633825e@gandalf.local.home>
-References: <20250411161746.1043239-1-csander@purestorage.com>
-	<3ucksa6coiwco3wpmcjtfwezqjigzm2zwvdvkt2ryvefzojtqy@4lda47c236uz>
-	<CADUfDZpPGQEY9u3p3MCU2S3qmDyKmE1JnSQ6G2jO4_J40rQeeQ@mail.gmail.com>
-	<20250528114549.4d8a5e03@gandalf.local.home>
-	<b694c72b-0873-4123-869c-134709341e19@lucifer.local>
-	<20250528122411.16a551b1@gandalf.local.home>
-	<20250529144327.1633825e@gandalf.local.home>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1748574171; c=relaxed/simple;
+	bh=H20DZxJJ1yGzZ/Nk6Ga7RSWoWgAA3WXWsCcc8u22kLQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=HCmrNOHsYegMhSv9pRvsjNDW5HlizYBQDUgWbGgCTnvKHp+iXjFwQ0bgTtUbIawU0HUJqmLzkqBpLQEYm11x+A+CO4OcpH0HfaHZMxGhjhswirn2/QuMlQqMCsm2WGT6+4txD1DOwtSXiIlTx+S2z04IDxa3BSZIgTrPqZtGWTI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=n0E5f/jQ; arc=none smtp.client-ip=115.124.30.119
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="n0E5f/jQ"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1748574166; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=DAgpEBG7lmS2E9GcUvqSz/E0dYP9VfRFSqUiZg8V0VE=;
+	b=n0E5f/jQ4KYapFdporPqlcAh6WAwP0lvvfJOYnGY7EvC4TUJHEQ45RNU0kCcgQ/7brU4WkvV3ORWWoGKMtcX1MR4Y8F+VBzNRoSEsUfR+JeuejeSnM7hYdU76gX/p6bzBespahVQhd9FF+ywnDxqvTOZl/MyqLDTEidUoQh20Ts=
+Received: from 30.74.144.115(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0WcJjWJe_1748574162 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Fri, 30 May 2025 11:02:43 +0800
+Message-ID: <07b4db81-095d-4f02-a34f-16f0743039ce@linux.alibaba.com>
+Date: Fri, 30 May 2025 11:02:42 +0800
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v7 03/12] khugepaged: generalize hugepage_vma_revalidate
+ for mTHP support
+To: Nico Pache <npache@redhat.com>
+Cc: linux-mm@kvack.org, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ david@redhat.com, ziy@nvidia.com, lorenzo.stoakes@oracle.com,
+ Liam.Howlett@oracle.com, ryan.roberts@arm.com, dev.jain@arm.com,
+ corbet@lwn.net, rostedt@goodmis.org, mhiramat@kernel.org,
+ mathieu.desnoyers@efficios.com, akpm@linux-foundation.org,
+ baohua@kernel.org, willy@infradead.org, peterx@redhat.com,
+ wangkefeng.wang@huawei.com, usamaarif642@gmail.com, sunnanyong@huawei.com,
+ vishal.moola@gmail.com, thomas.hellstrom@linux.intel.com,
+ yang@os.amperecomputing.com, kirill.shutemov@linux.intel.com,
+ aarcange@redhat.com, raquini@redhat.com, anshuman.khandual@arm.com,
+ catalin.marinas@arm.com, tiwai@suse.de, will@kernel.org,
+ dave.hansen@linux.intel.com, jack@suse.cz, cl@gentwo.org,
+ jglisse@google.com, surenb@google.com, zokeefe@google.com,
+ hannes@cmpxchg.org, rientjes@google.com, mhocko@suse.com,
+ rdunlap@infradead.org
+References: <20250515032226.128900-1-npache@redhat.com>
+ <20250515032226.128900-4-npache@redhat.com>
+ <469db7d1-ba99-4dc7-af13-b5fe850d4031@linux.alibaba.com>
+ <CAA1CXcA4a3pJ_dJ77TvRRimPiNYacyRe5GMY=iUEz-27NHCVxQ@mail.gmail.com>
+From: Baolin Wang <baolin.wang@linux.alibaba.com>
+In-Reply-To: <CAA1CXcA4a3pJ_dJ77TvRRimPiNYacyRe5GMY=iUEz-27NHCVxQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Thu, 29 May 2025 14:43:27 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
 
-> On Wed, 28 May 2025 12:24:11 -0400
-> Steven Rostedt <rostedt@goodmis.org> wrote:
+
+On 2025/5/29 12:00, Nico Pache wrote:
+> On Fri, May 23, 2025 at 12:55 AM Baolin Wang
+> <baolin.wang@linux.alibaba.com> wrote:
+>>
+>>
+>>
+>> On 2025/5/15 11:22, Nico Pache wrote:
+>>> For khugepaged to support different mTHP orders, we must generalize this
+>>> to check if the PMD is not shared by another VMA and the order is
+>>> enabled.
+>>>
+>>> No functional change in this patch.
+>>>
+>>> Reviewed-by: Baolin Wang <baolin.wang@linux.alibaba.com>
+>>> Co-developed-by: Dev Jain <dev.jain@arm.com>
+>>> Signed-off-by: Dev Jain <dev.jain@arm.com>
+>>> Signed-off-by: Nico Pache <npache@redhat.com>
+>>> ---
+>>>    mm/khugepaged.c | 10 +++++-----
+>>>    1 file changed, 5 insertions(+), 5 deletions(-)
+>>>
+>>> diff --git a/mm/khugepaged.c b/mm/khugepaged.c
+>>> index 5457571d505a..0c4d6a02d59c 100644
+>>> --- a/mm/khugepaged.c
+>>> +++ b/mm/khugepaged.c
+>>> @@ -920,7 +920,7 @@ static int khugepaged_find_target_node(struct collapse_control *cc)
+>>>    static int hugepage_vma_revalidate(struct mm_struct *mm, unsigned long address,
+>>>                                   bool expect_anon,
+>>>                                   struct vm_area_struct **vmap,
+>>> -                                struct collapse_control *cc)
+>>> +                                struct collapse_control *cc, int order)
+>>>    {
+>>>        struct vm_area_struct *vma;
+>>>        unsigned long tva_flags = cc->is_khugepaged ? TVA_ENFORCE_SYSFS : 0;
+>>> @@ -934,7 +934,7 @@ static int hugepage_vma_revalidate(struct mm_struct *mm, unsigned long address,
+>>>
+>>>        if (!thp_vma_suitable_order(vma, address, PMD_ORDER))
+>>
+>> Sorry, I missed this before. Should we also change 'PMD_ORDER' to
+>> 'order' for the thp_vma_suitable_order()?
+> This was changed since the last version (v5) due to an email from Hugh.
+> https://lore.kernel.org/lkml/7a81339c-f9e5-a718-fa7f-6e3fb134dca5@google.com/
 > 
-> > Yeah, I have a patch that shows how many static key instances exist and I
-> > test that. But I probably could also add an option to the macro that
-> > creates the trace function to also add something to a section when used,
-> > and report when it isn't. Shouldn't be too hard.  
-> 
-> Done:  https://lore.kernel.org/all/20250529130138.544ffec4@gandalf.local.home/
-> 
+> As I noted in my reply to him, although he was not able to reproduce
+> an issue due to this, we always need to revalidate the PMD order to
+> verify the PMD range is not shared by another VMA.
 
-And going through the list, I almost sent a patch that removed the two
-events that this patch removes!
-
-Luckily, when I ran "get_maintainers.pl" on the patch, I noticed you were
-one of the maintainers and then I thought "Hmm, is this the events that are
-removed that started all this?" And sure enough, it was!
-
-This was going to be my change log:
-
-Subject: [PATCH] mmap: Remove unused events vma_mas_szero and vma_store
-
-When the __vma_adjust() was converted to use the vma iterator it removed
-the functions vma_mas_store() and vma_mas_remove(). These functions called
-the tracepoints trace_vma_mas_store() and trace_vma_mas_szero()
-respectively. The calls to these tracepoints were removed but the trace
-events that created the tracepoints were not removed. Each trace event can
-take up to 5K of memory, and it is allocated regardless of if they are
-called or not.
-
-Remove the unused trace events.
-
-Link: https://lore.kernel.org/all/20250529130138.544ffec4@gandalf.local.home/
-
-Fixes: fbcc3104b843 ("mmap: convert __vma_adjust() to use vma iterator")
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-
--- Steve
+OK. I see. Better to add some comments like Hugh did to make it clear.
