@@ -1,138 +1,104 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from h8.fbrelay.privateemail.com (h8.fbrelay.privateemail.com [162.0.218.231])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1655122259C;
-	Sat, 31 May 2025 07:49:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A86807260A;
+	Sat, 31 May 2025 12:04:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.0.218.231
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748677789; cv=none; b=IJH1LmnM3yjiLmdKbhVTkL5eOnrFDlgZ6+C53q5WuPA2FceNDdCKoqndFV7zZh92GoF3tPdX74QQg2kfXzGnHCAu4QG24upU0Or9NKCX/AUZqogZAI1F3uDhA40jqtUCypXC9Of/pK6HGHmzk8xhx83BL7ZGWePSjSbT7CNRx+w=
+	t=1748693052; cv=none; b=Ghhyx/EhRWl+nOzbMfoLyo44932mjSMlAf4KgmmU4/edqmGBVvXXvGtT+4o/bZdsKYL1Wdxr9CkYOGDGAwzTH26xLf4bHqrk+QOUL9HA+feB4JFPw6xe7jo4rcmY/HIUzl7sQjnj7qc4XtTzSfjhtKfw3q171BUeUY06RdrC72U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748677789; c=relaxed/simple;
-	bh=C23frJRaDHSQk3U93KLhYqeyYDN3gwDTYfOh2Q08BMU=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=SPoPzG78EOx0kGaGsWA0K3MJtTUQyCQJ9c5YuPGgDSJXLEPDB9htLKh3EW2uvFjjEu4C8mfJcf4AWn4I57Qdl0vGyW7S9X1+LjIqDG1wFR3HSa78r2xxVxrkuDRmPEv+41rlN/gwJwNC+OFtbqdgTgKssb7xgOrU68vfdtSuB6A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=EPGZrbB9; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=qhpJQYvm; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1748693052; c=relaxed/simple;
+	bh=ZqEA3lY58sHUP6hm3TaLzmg215uhz+4IvCjcFgwxtJY=;
+	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
+	 MIME-Version:Content-Type; b=dfKu7okpqwkF8wRzm93ZIsQqVsO4+h4j9JmgCFD5Ve8P3E8MXVqw7rQDNXMXiX2Hq0XLzbBUtGtPXmy9lh7XHbJxtPLcaS7I4CeoXEgCT+rsEKg6Ef0sReAA1q8FiMgYg7rblb8LR8paq2bWeLS8myN3ymE69IQXCekiSoT68SY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mebeim.net; spf=pass smtp.mailfrom=mebeim.net; dkim=pass (2048-bit key) header.d=mebeim.net header.i=@mebeim.net header.b=eiCQzkLO; arc=none smtp.client-ip=162.0.218.231
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mebeim.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mebeim.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="EPGZrbB9";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="qhpJQYvm"
-Date: Sat, 31 May 2025 07:49:44 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1748677786;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=D2dQZGZiVXbPX6pz1wr8QMCfnqgrExGw5IHm7j/528o=;
-	b=EPGZrbB9WRIoJAoGQvQFvUpdp1H9UPL+tenrWldvjxu6E4MluSabhAnpQPpT0nXgaraxPs
-	opki3EucJPYiprVCrVMiOaleIm3hP/r53JMOwatn3XZ9Q7WnrC1sY6cvvjbuGKOYULnsGA
-	BExOb5OCsUSo1N4qOrrNaTERnOMsd5qhKzWITa99CyRNikjn4xctoEML6BUQt9ZdYg54bM
-	J2cXfF5Zc3a6yMWftmp6QfCtvy3Dq9+bkTDe0/NFvguMB/QbgLzyFbLkofxx+cNH71+B1E
-	GgziFh5lGS6B3JAYM76MVsBVthZuBr9F8xLJgD2pOxWlb06epQ/zKLoPHSOfqw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1748677786;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=D2dQZGZiVXbPX6pz1wr8QMCfnqgrExGw5IHm7j/528o=;
-	b=qhpJQYvmmQikMjGCrfSAr+fStSRmCX1gBaHWX+vPX4bi3tzkoBK6G+SVUKpB0douBSRz1J
-	Pt6KWcaUwn0b5NDw==
-From: "tip-bot2 for Steven Rostedt" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/urgent] x86/fpu: Remove unused trace events
-Cc: "Steven Rostedt (Google)" <rostedt@goodmis.org>,
- Ingo Molnar <mingo@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
- Dave Hansen <dave.hansen@linux.intel.com>,
- Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>,
- Masami Hiramatsu <mhiramat@kernel.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Oleg Nesterov <oleg@redhat.com>, x86@kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20250529131024.7c2ef96f@gandalf.local.home # x86 submission>
-References: <20250529131024.7c2ef96f@gandalf.local.home # x86 submission>
+	dkim=pass (2048-bit key) header.d=mebeim.net header.i=@mebeim.net header.b="eiCQzkLO"
+Received: from MTA-05-3.privateemail.com (mta-05.privateemail.com [198.54.127.60])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by h7.fbrelay.privateemail.com (Postfix) with ESMTPSA id 4b8dlm2pTQz2xj0;
+	Sat, 31 May 2025 07:53:08 -0400 (EDT)
+Received: from mta-05.privateemail.com (localhost [127.0.0.1])
+	by mta-05.privateemail.com (Postfix) with ESMTP id 4b8dlc38sqz3hhVV;
+	Sat, 31 May 2025 07:53:00 -0400 (EDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=mebeim.net; s=default;
+	t=1748692380; bh=ZqEA3lY58sHUP6hm3TaLzmg215uhz+4IvCjcFgwxtJY=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+	b=eiCQzkLOYvvS70DtlQVbO/wXbYTrj0ctl3ppfNKdpA+bEm4ZCwuvQe0h9YFWkKXit
+	 B7OQF+zim8XVzkUWUqKb3LJMjbN7U1P3OhqL/a0RrpaRwD0mg+XIl/8VrmBQu7MCxp
+	 oFY0wTYju1Ay7P7rTpM6BMsamF2GQ8xVFZX7UYHBI7vMsHus8s5Kw6lQRv6XEL868u
+	 oPuiKmtc3ecg0lTjEfnREV1XxYcIlXaJaFOJm6d/7btzKKeMas0aK7Ue5Bg0/w6H8l
+	 kSdguuoaGjr+xpAQ7wZQzpGvsYA1LLEuIxXUP+FovHDvV1TxZmLmPYGlHZtTsVDnWD
+	 QnyFKtx69CORA==
+Received: from APP-18 (unknown [10.50.14.242])
+	by mta-05.privateemail.com (Postfix) with ESMTPA;
+	Sat, 31 May 2025 07:52:51 -0400 (EDT)
+Date: Sat, 31 May 2025 13:52:51 +0200 (CEST)
+From: Marco Bonelli <marco@mebeim.net>
+To: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc: "terrelln@fb.com" <terrelln@fb.com>,
+	"rostedt@goodmis.org" <rostedt@goodmis.org>,
+	"mhiramat@kernel.org" <mhiramat@kernel.org>,
+	"mark.rutland@arm.com" <mark.rutland@arm.com>,
+	"linux-trace-kernel@vger.kernel.org" <linux-trace-kernel@vger.kernel.org>,
+	"paul.walmsley@sifive.com" <paul.walmsley@sifive.com>,
+	"palmer@dabbelt.com" <palmer@dabbelt.com>,
+	"aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>,
+	"linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>
+Message-ID: <1552795452.650306.1748692371190@privateemail.com>
+In-Reply-To: <960240908.630790.1748641210849@privateemail.com>
+References: <960240908.630790.1748641210849@privateemail.com>
+Subject: Re: Broken 32-bit riscv debug build with ZSTD and FTRACE
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174867778456.406.2535316646277526444.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
+X-Priority: 3
+Importance: Normal
+X-Mailer: Open-Xchange Mailer v7.10.6-Rev75
+X-Originating-Client: open-xchange-appsuite
+X-Virus-Scanned: ClamAV using ClamSMTP
 
-The following commit has been merged into the x86/urgent branch of tip:
+> Steps to reproduce:
+> 
+>     export ARCH=riscv CROSS_COMPILE=riscv32-linux-
+>     make distclean
+>     make defconfig
+>     make 32-bit.config
+>     ./scripts/config \
+>         -e DEBUG_KERNEL \
+>         -e DEBUG_INFO \
+>         -e DEBUG_INFO_DWARF_TOOLCHAIN_DEFAULT \
+>         -d DEBUG_INFO_NONE \
+>         -d DEBUG_INFO_REDUCED
+>     make olddefconfig
+>     make -j vmlinux
 
-Commit-ID:     99850a1c93fe7ca40ad9efddc00acec6e85c5e48
-Gitweb:        https://git.kernel.org/tip/99850a1c93fe7ca40ad9efddc00acec6e85c5e48
-Author:        Steven Rostedt <rostedt@goodmis.org>
-AuthorDate:    Thu, 29 May 2025 13:10:24 -04:00
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Sat, 31 May 2025 09:40:40 +02:00
+Sorry, forgot to add "-e FTRACE" to the steps above. Here it is:
 
-x86/fpu: Remove unused trace events
+	export ARCH=riscv CROSS_COMPILE=riscv32-linux-
+	make distclean
+	make defconfig
+	make 32-bit.config
+	./scripts/config \
+		-e DEBUG_KERNEL \
+		-e DEBUG_INFO \
+		-e DEBUG_INFO_DWARF_TOOLCHAIN_DEFAULT \
+		-d DEBUG_INFO_NONE \
+		-d DEBUG_INFO_REDUCED \
+		-e FTRACE
+	make olddefconfig
+	make -j vmlinux
 
-The following trace events are not used and defining them just wastes
-memory:
+Everything else still applies.
 
-  x86_fpu_before_restore
-  x86_fpu_after_restore
-  x86_fpu_init_state
-
-Simply remove them.
-
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Cc: H. Peter Anvin <hpa@zytor.com>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: Oleg Nesterov <oleg@redhat.com>
-Link: https://lore.kernel.org/all/20250529130138.544ffec4@gandalf.local.home  # background
-Link: https://lore.kernel.org/r/20250529131024.7c2ef96f@gandalf.local.home    # x86 submission
----
- arch/x86/include/asm/trace/fpu.h | 15 ---------------
- 1 file changed, 15 deletions(-)
-
-diff --git a/arch/x86/include/asm/trace/fpu.h b/arch/x86/include/asm/trace/fpu.h
-index 0454d5e..721b408 100644
---- a/arch/x86/include/asm/trace/fpu.h
-+++ b/arch/x86/include/asm/trace/fpu.h
-@@ -44,16 +44,6 @@ DEFINE_EVENT(x86_fpu, x86_fpu_after_save,
- 	TP_ARGS(fpu)
- );
- 
--DEFINE_EVENT(x86_fpu, x86_fpu_before_restore,
--	TP_PROTO(struct fpu *fpu),
--	TP_ARGS(fpu)
--);
--
--DEFINE_EVENT(x86_fpu, x86_fpu_after_restore,
--	TP_PROTO(struct fpu *fpu),
--	TP_ARGS(fpu)
--);
--
- DEFINE_EVENT(x86_fpu, x86_fpu_regs_activated,
- 	TP_PROTO(struct fpu *fpu),
- 	TP_ARGS(fpu)
-@@ -64,11 +54,6 @@ DEFINE_EVENT(x86_fpu, x86_fpu_regs_deactivated,
- 	TP_ARGS(fpu)
- );
- 
--DEFINE_EVENT(x86_fpu, x86_fpu_init_state,
--	TP_PROTO(struct fpu *fpu),
--	TP_ARGS(fpu)
--);
--
- DEFINE_EVENT(x86_fpu, x86_fpu_dropped,
- 	TP_PROTO(struct fpu *fpu),
- 	TP_ARGS(fpu)
+--
+Marco Bonelli
