@@ -1,104 +1,83 @@
-Received: from h8.fbrelay.privateemail.com (h8.fbrelay.privateemail.com [162.0.218.231])
+Received: from bmailout3.hostsharing.net (bmailout3.hostsharing.net [176.9.242.62])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A86807260A;
-	Sat, 31 May 2025 12:04:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.0.218.231
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B365F1758B;
+	Sat, 31 May 2025 14:15:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=176.9.242.62
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748693052; cv=none; b=Ghhyx/EhRWl+nOzbMfoLyo44932mjSMlAf4KgmmU4/edqmGBVvXXvGtT+4o/bZdsKYL1Wdxr9CkYOGDGAwzTH26xLf4bHqrk+QOUL9HA+feB4JFPw6xe7jo4rcmY/HIUzl7sQjnj7qc4XtTzSfjhtKfw3q171BUeUY06RdrC72U=
+	t=1748700946; cv=none; b=VBGNmfKoNlPGfqog5BLGdbSK3+5eToRFObNjy9UMFrvgScezi/KAAEOmLsf1rRVnhcK2nuzQfXkD0DmTLxbqtUuocLEi1HN9kA7MxFI98nbRirnmMW2hX29Y/86DMFWD1FonSG69fZ+XGSJo0ZDNteJ196wfLaIqcU1olrGj3Ac=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748693052; c=relaxed/simple;
-	bh=ZqEA3lY58sHUP6hm3TaLzmg215uhz+4IvCjcFgwxtJY=;
-	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
-	 MIME-Version:Content-Type; b=dfKu7okpqwkF8wRzm93ZIsQqVsO4+h4j9JmgCFD5Ve8P3E8MXVqw7rQDNXMXiX2Hq0XLzbBUtGtPXmy9lh7XHbJxtPLcaS7I4CeoXEgCT+rsEKg6Ef0sReAA1q8FiMgYg7rblb8LR8paq2bWeLS8myN3ymE69IQXCekiSoT68SY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mebeim.net; spf=pass smtp.mailfrom=mebeim.net; dkim=pass (2048-bit key) header.d=mebeim.net header.i=@mebeim.net header.b=eiCQzkLO; arc=none smtp.client-ip=162.0.218.231
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mebeim.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mebeim.net
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mebeim.net header.i=@mebeim.net header.b="eiCQzkLO"
-Received: from MTA-05-3.privateemail.com (mta-05.privateemail.com [198.54.127.60])
+	s=arc-20240116; t=1748700946; c=relaxed/simple;
+	bh=+AbBPIg8jujjvnsIiFys7cvXSxsuoXKAm1dwhoDtFuM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=N8/lA3T8wvZdMnEOqFPhHfKabgoFs0yo3cNI12n5i3PZOnNdvRO8GHwKX43oSW1SJTonWwpBN4U3y1e6n9AN+MW3duBH2rYWuoIJg14Bzx485FezyIblSfyq4hTwb1dDJyVrd1vodf/achVLxVp21lQr37ZT/L+mF1bu8ttRVBU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=176.9.242.62
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
+Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by h7.fbrelay.privateemail.com (Postfix) with ESMTPSA id 4b8dlm2pTQz2xj0;
-	Sat, 31 May 2025 07:53:08 -0400 (EDT)
-Received: from mta-05.privateemail.com (localhost [127.0.0.1])
-	by mta-05.privateemail.com (Postfix) with ESMTP id 4b8dlc38sqz3hhVV;
-	Sat, 31 May 2025 07:53:00 -0400 (EDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=mebeim.net; s=default;
-	t=1748692380; bh=ZqEA3lY58sHUP6hm3TaLzmg215uhz+4IvCjcFgwxtJY=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-	b=eiCQzkLOYvvS70DtlQVbO/wXbYTrj0ctl3ppfNKdpA+bEm4ZCwuvQe0h9YFWkKXit
-	 B7OQF+zim8XVzkUWUqKb3LJMjbN7U1P3OhqL/a0RrpaRwD0mg+XIl/8VrmBQu7MCxp
-	 oFY0wTYju1Ay7P7rTpM6BMsamF2GQ8xVFZX7UYHBI7vMsHus8s5Kw6lQRv6XEL868u
-	 oPuiKmtc3ecg0lTjEfnREV1XxYcIlXaJaFOJm6d/7btzKKeMas0aK7Ue5Bg0/w6H8l
-	 kSdguuoaGjr+xpAQ7wZQzpGvsYA1LLEuIxXUP+FovHDvV1TxZmLmPYGlHZtTsVDnWD
-	 QnyFKtx69CORA==
-Received: from APP-18 (unknown [10.50.14.242])
-	by mta-05.privateemail.com (Postfix) with ESMTPA;
-	Sat, 31 May 2025 07:52:51 -0400 (EDT)
-Date: Sat, 31 May 2025 13:52:51 +0200 (CEST)
-From: Marco Bonelli <marco@mebeim.net>
-To: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Cc: "terrelln@fb.com" <terrelln@fb.com>,
-	"rostedt@goodmis.org" <rostedt@goodmis.org>,
-	"mhiramat@kernel.org" <mhiramat@kernel.org>,
-	"mark.rutland@arm.com" <mark.rutland@arm.com>,
-	"linux-trace-kernel@vger.kernel.org" <linux-trace-kernel@vger.kernel.org>,
-	"paul.walmsley@sifive.com" <paul.walmsley@sifive.com>,
-	"palmer@dabbelt.com" <palmer@dabbelt.com>,
-	"aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>,
-	"linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>
-Message-ID: <1552795452.650306.1748692371190@privateemail.com>
-In-Reply-To: <960240908.630790.1748641210849@privateemail.com>
-References: <960240908.630790.1748641210849@privateemail.com>
-Subject: Re: Broken 32-bit riscv debug build with ZSTD and FTRACE
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
+	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
+	by bmailout3.hostsharing.net (Postfix) with ESMTPS id 4B5182C000A5;
+	Sat, 31 May 2025 16:15:41 +0200 (CEST)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+	id 2251CC9C53; Sat, 31 May 2025 16:15:41 +0200 (CEST)
+Date: Sat, 31 May 2025 16:15:41 +0200
+From: Lukas Wunner <lukas@wunner.de>
+To: Shuai Xue <xueshuai@linux.alibaba.com>
+Cc: Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Bjorn Helgaas <bhelgaas@google.com>, rostedt@goodmis.org,
+	linux-pci@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+	linux-edac@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	helgaas@kernel.org, tony.luck@intel.com, bp@alien8.de,
+	mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
+	oleg@redhat.com, naveen@kernel.org, davem@davemloft.net,
+	anil.s.keshavamurthy@intel.com, mark.rutland@arm.com,
+	peterz@infradead.org, tianruidong@linux.alibaba.com
+Subject: Re: [PATCH v8] PCI: hotplug: Add a generic RAS tracepoint for
+ hotplug event
+Message-ID: <aDsPDTVkH5kkc_Fk@wunner.de>
+References: <20250512013839.45960-1-xueshuai@linux.alibaba.com>
+ <87b1f8c6-bd72-b1a8-40a6-bbf552552806@linux.intel.com>
+ <650cd4e4-561b-4d50-9cf2-c601518c9b9f@linux.alibaba.com>
+ <31693574-e8bc-9a56-bad0-6a22280c4b6b@linux.intel.com>
+ <aCxdFm_BpgOTFFUv@wunner.de>
+ <aCxxA-4HEnZ-O2W0@wunner.de>
+ <9b46a12b-90e2-c1ba-9394-5caa23a5cad7@linux.intel.com>
+ <aCx_aXy9MEs6XKZE@wunner.de>
+ <6af283ea-bd36-44a7-949a-2ab8c80cf136@linux.alibaba.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Priority: 3
-Importance: Normal
-X-Mailer: Open-Xchange Mailer v7.10.6-Rev75
-X-Originating-Client: open-xchange-appsuite
-X-Virus-Scanned: ClamAV using ClamSMTP
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <6af283ea-bd36-44a7-949a-2ab8c80cf136@linux.alibaba.com>
 
-> Steps to reproduce:
+On Thu, May 22, 2025 at 05:50:05PM +0800, Shuai Xue wrote:
+> As @Lukas points out, link speed changes and device plug/unplug events are
+> orthogonal issues.
 > 
->     export ARCH=riscv CROSS_COMPILE=riscv32-linux-
->     make distclean
->     make defconfig
->     make 32-bit.config
->     ./scripts/config \
->         -e DEBUG_KERNEL \
->         -e DEBUG_INFO \
->         -e DEBUG_INFO_DWARF_TOOLCHAIN_DEFAULT \
->         -d DEBUG_INFO_NONE \
->         -d DEBUG_INFO_REDUCED
->     make olddefconfig
->     make -j vmlinux
+> Based on this thread discussion, I believe we need additional tweaking to
+> introduce a new tracepoint (perhaps named PCI_LINK_EVENT) to handle
+> link speed changes separately.
+> 
+> Regarding our next steps, would it be acceptable to merge the
+> PCI_HOTPLUG_EVENT to mainline first, and then work on implementing
+> the new link event tracepoint afterward?
 
-Sorry, forgot to add "-e FTRACE" to the steps above. Here it is:
+Yes I think so, I think this patch is ready to go in.
 
-	export ARCH=riscv CROSS_COMPILE=riscv32-linux-
-	make distclean
-	make defconfig
-	make 32-bit.config
-	./scripts/config \
-		-e DEBUG_KERNEL \
-		-e DEBUG_INFO \
-		-e DEBUG_INFO_DWARF_TOOLCHAIN_DEFAULT \
-		-d DEBUG_INFO_NONE \
-		-d DEBUG_INFO_REDUCED \
-		-e FTRACE
-	make olddefconfig
-	make -j vmlinux
+However I'm not part of the PCI maintainer team,
+it would have to be applied by them (barring any objections).
 
-Everything else still applies.
+We're now in the merge window and it may be too late to squeeze it
+into the v6.16 pull request, but maybe it can be applied after
+the merge window has closed (in 1 week).
 
---
-Marco Bonelli
+Thanks,
+
+Lukas
