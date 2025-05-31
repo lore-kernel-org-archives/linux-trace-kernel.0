@@ -1,83 +1,65 @@
-Received: from bmailout3.hostsharing.net (bmailout3.hostsharing.net [176.9.242.62])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B365F1758B;
-	Sat, 31 May 2025 14:15:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=176.9.242.62
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BCBC139D;
+	Sat, 31 May 2025 20:14:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748700946; cv=none; b=VBGNmfKoNlPGfqog5BLGdbSK3+5eToRFObNjy9UMFrvgScezi/KAAEOmLsf1rRVnhcK2nuzQfXkD0DmTLxbqtUuocLEi1HN9kA7MxFI98nbRirnmMW2hX29Y/86DMFWD1FonSG69fZ+XGSJo0ZDNteJ196wfLaIqcU1olrGj3Ac=
+	t=1748722484; cv=none; b=EvpXMCPDrhUe1PIwNOBzB1wcRPmjxzvpiropWZiLr4HjVrm+UmV1o+L6DJVL8OK9IfA85PWAVADBsEkgMU31vH7oXbQ74rQF4Dan1NVGTWoZDlNZcRIH/sYekE9sRz+1xAWjkrsKmM6J3Mf6bCRWcQ+iMxtw8wrMna+sGs4eHok=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748700946; c=relaxed/simple;
-	bh=+AbBPIg8jujjvnsIiFys7cvXSxsuoXKAm1dwhoDtFuM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=N8/lA3T8wvZdMnEOqFPhHfKabgoFs0yo3cNI12n5i3PZOnNdvRO8GHwKX43oSW1SJTonWwpBN4U3y1e6n9AN+MW3duBH2rYWuoIJg14Bzx485FezyIblSfyq4hTwb1dDJyVrd1vodf/achVLxVp21lQr37ZT/L+mF1bu8ttRVBU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=176.9.242.62
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
-Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
-	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
-	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
-	by bmailout3.hostsharing.net (Postfix) with ESMTPS id 4B5182C000A5;
-	Sat, 31 May 2025 16:15:41 +0200 (CEST)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-	id 2251CC9C53; Sat, 31 May 2025 16:15:41 +0200 (CEST)
-Date: Sat, 31 May 2025 16:15:41 +0200
-From: Lukas Wunner <lukas@wunner.de>
-To: Shuai Xue <xueshuai@linux.alibaba.com>
-Cc: Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Bjorn Helgaas <bhelgaas@google.com>, rostedt@goodmis.org,
-	linux-pci@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-	linux-edac@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	helgaas@kernel.org, tony.luck@intel.com, bp@alien8.de,
-	mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
-	oleg@redhat.com, naveen@kernel.org, davem@davemloft.net,
-	anil.s.keshavamurthy@intel.com, mark.rutland@arm.com,
-	peterz@infradead.org, tianruidong@linux.alibaba.com
-Subject: Re: [PATCH v8] PCI: hotplug: Add a generic RAS tracepoint for
- hotplug event
-Message-ID: <aDsPDTVkH5kkc_Fk@wunner.de>
-References: <20250512013839.45960-1-xueshuai@linux.alibaba.com>
- <87b1f8c6-bd72-b1a8-40a6-bbf552552806@linux.intel.com>
- <650cd4e4-561b-4d50-9cf2-c601518c9b9f@linux.alibaba.com>
- <31693574-e8bc-9a56-bad0-6a22280c4b6b@linux.intel.com>
- <aCxdFm_BpgOTFFUv@wunner.de>
- <aCxxA-4HEnZ-O2W0@wunner.de>
- <9b46a12b-90e2-c1ba-9394-5caa23a5cad7@linux.intel.com>
- <aCx_aXy9MEs6XKZE@wunner.de>
- <6af283ea-bd36-44a7-949a-2ab8c80cf136@linux.alibaba.com>
+	s=arc-20240116; t=1748722484; c=relaxed/simple;
+	bh=EWn7oCviz4cJo10FkBXaHDfYtLYegc5N4X7rrxnu7lU=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=pF7cBtD8Ogx2AjGZrgS5tF9nase0Tm+GaoXxdA6rDUMx5ZKpXJyTy2XOAmkq61vRp3QoSxYquy/3qOCvkk54Kn9AzCDpvCJfTAQWtEQo9tEn015/e3F4E/LIbyYA/FW9HXpnTkIQJAL6r0clu9gcG6GOiLhl8kXwQCO945Gv9wM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CCEA6C4CEE3;
+	Sat, 31 May 2025 20:14:42 +0000 (UTC)
+Date: Sat, 31 May 2025 16:15:49 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: Jesper Dangaard Brouer <hawk@kernel.org>, LKML
+ <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>, netdev <netdev@vger.kernel.org>,
+ bpf@vger.kernel.org, Jonathan Lemon <jonathan.lemon@gmail.com>, Mathieu
+ Desnoyers <mathieu.desnoyers@efficios.com>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Ilias Apalodimas <ilias.apalodimas@linaro.org>
+Subject: Re: [PATCH] xdp: Remove unused mem_return_failed event
+Message-ID: <20250531161549.6e1c69c7@gandalf.local.home>
+In-Reply-To: <20250530181813.1024eec5@kernel.org>
+References: <20250529160550.1f888b15@gandalf.local.home>
+	<696364e6-5eb1-4543-b9f4-60fba10623fc@kernel.org>
+	<20250530121638.35106c15@gandalf.local.home>
+	<20250530181813.1024eec5@kernel.org>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <6af283ea-bd36-44a7-949a-2ab8c80cf136@linux.alibaba.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Thu, May 22, 2025 at 05:50:05PM +0800, Shuai Xue wrote:
-> As @Lukas points out, link speed changes and device plug/unplug events are
-> orthogonal issues.
+On Fri, 30 May 2025 18:18:13 -0700
+Jakub Kicinski <kuba@kernel.org> wrote:
+
+> On Fri, 30 May 2025 12:16:38 -0400 Steven Rostedt wrote:
+> > > Acked-by: Jesper Dangaard Brouer <hawk@kernel.org>    
+> > 
+> > Thanks. Will this go through the networking tree or should I just take it?  
 > 
-> Based on this thread discussion, I believe we need additional tweaking to
-> introduce a new tracepoint (perhaps named PCI_LINK_EVENT) to handle
-> link speed changes separately.
+> If you're planning to send it to Linus in this MW, still, go for it:
+> Acked-by: Jakub Kicinski <kuba@kernel.org>
+> If you mean to keep it in your -next tree for next MW I think we should
+> take it to avoid conflict noise. But our -next tree is closed during MW
+> per linux-next preferences.
 > 
-> Regarding our next steps, would it be acceptable to merge the
-> PCI_HOTPLUG_EVENT to mainline first, and then work on implementing
-> the new link event tracepoint afterward?
+> IOW please take it if you wanna ship it now, otherwise please repost
+> after MW?
 
-Yes I think so, I think this patch is ready to go in.
-
-However I'm not part of the PCI maintainer team,
-it would have to be applied by them (barring any objections).
-
-We're now in the merge window and it may be too late to squeeze it
-into the v6.16 pull request, but maybe it can be applied after
-the merge window has closed (in 1 week).
+Yeah, I think I'll try to get it in now. I'll ping the maintainers of my
+other patches to see if I can get them all in in one go.
 
 Thanks,
 
-Lukas
+-- Steve
