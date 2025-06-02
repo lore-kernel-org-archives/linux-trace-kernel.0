@@ -1,70 +1,66 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80EC0221F11;
-	Mon,  2 Jun 2025 15:28:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C152542A8F;
+	Mon,  2 Jun 2025 16:51:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748878093; cv=none; b=kG29Txctmzy6y1Teq7Qtr57ZAfrHSK2bEr2Xfawbly2jv/wsHHMR8bNMv3tNHXWM2kEOw7eqgXY4F3GU6m8l3HRQdGJn/MaD/k8ln4EMwRNv7Otyuruga3oPMiz6En3TmiBWVVIxFU+vfFW1J16oKJR5z17plHUH9wM/OYVqUYI=
+	t=1748883086; cv=none; b=hXw8nQqBiTi0ken2NIYe/k7WNjdlMXs+uwLEl8EOx67XQ+vL6qnVxhfC7MnFz4RnTSysW3qSJspb1PgOjh64M7r3EQxjDGEPebBVmV/zPKjsZdS9Kfr1OqG7LO2uRVaXeV/gUFiYLfLAa8G5uJcRYM557LcfReLWDDX9h290wfI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748878093; c=relaxed/simple;
-	bh=lijPfkZN/tT8GZJxlXS+MPwdhJl0z6UmpfsGFQ+1Wfc=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=sebQqRE6MQtRxSksK1aO6y6EH/9CgpV9OfwPS4ytg12Vm7nT7KbBo9gid9laQ5SdiiQN3HQ27QKjXn4Mjukqg2H0Ywo8y5Ep9KJQTrppsSAzBS3oKk7i0gEZIwt7e5fIq/yTztNs6qR0HeSfN/nde329fNOA8wMf69WNRljee+c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=moPyvasU; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=uK+/hVcl; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="moPyvasU";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="uK+/hVcl"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1748878089;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=lijPfkZN/tT8GZJxlXS+MPwdhJl0z6UmpfsGFQ+1Wfc=;
-	b=moPyvasUelBOeiv7p3PFDmL2XZYPe2K4Qzp1H4t9pAkBDp/P5iXpwn53eeBpfXCK54vXCT
-	GBD1d93epBzX/i6k0vcNQ6rZRiRId16awsWj+RPxRI/zLhMjZKZsIbX2j/sdqss8Zj/Zms
-	CrHa7qZkrDYf+KTas8FSvjdoEdAPdjJ84KwBTa+RQoQwZrF1bx43NU4S555wbwmY8xlzVW
-	e8Xn6ow4qihB2EaazczleYbARiB289CXwReuV1qZ291TOHrD5zguwRX596sZrWNEAPPueq
-	CXUzGsoMfy7TFvbxow+SKHn6aPfemzjeAo3aTakajGKBfbReGDUGG4Za43D7Dw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1748878089;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=lijPfkZN/tT8GZJxlXS+MPwdhJl0z6UmpfsGFQ+1Wfc=;
-	b=uK+/hVcl6azTZfzEh2lasNceDq109HoSc9gbLHA8K3YF6LZXsnxacu5K5zAfEF0G5PjHXC
-	vIq+x79O8EJdROCg==
-To: Steven Rostedt <rostedt@goodmis.org>, LKML
- <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>
-Cc: Juergen Gross <jgross@suse.com>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Masami Hiramatsu <mhiramat@kernel.org>
-Subject: Re: [PATCH] genirq/matrix: Remove unused irq_matrix_alloc_reserved
- tracepoint
-In-Reply-To: <20250529135739.26e5c075@gandalf.local.home>
-References: <20250529135739.26e5c075@gandalf.local.home>
-Date: Mon, 02 Jun 2025 17:28:08 +0200
-Message-ID: <87zfeqp3hz.ffs@tglx>
+	s=arc-20240116; t=1748883086; c=relaxed/simple;
+	bh=QyIxyGdsJ2Ufa+VeRhRVwBrX8/HQAKmVI+M8UPFvMBk=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=b9i9AuEyVIiLwekoMkT0Uq8vGD2NRO+9JrFD1N1z5gov00U31jpzhoMDNRaoOVOiAkfE7o/P3v8d3bWY+FdP9z6D3xjq3hiW4prvR17rMLKsdSJbHg5Dp6QsjDh48e1PARjF064qxPi4AfvpXcI2KGcvtl93TMQUJcum4Fi6n0U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5FF59C4CEEB;
+	Mon,  2 Jun 2025 16:51:24 +0000 (UTC)
+Date: Mon, 2 Jun 2025 12:52:36 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: David Hildenbrand <david@redhat.com>
+Cc: Tal Zussman <tz2294@columbia.edu>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Ingo Molnar <mingo@kernel.org>, Rik van Riel <riel@surriel.com>, Andrew
+ Morton <akpm@linux-foundation.org>, Lorenzo Stoakes
+ <lorenzo.stoakes@oracle.com>, "Liam R. Howlett" <Liam.Howlett@oracle.com>,
+ Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>, Suren
+ Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
+ x86@kernel.org, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, linux-mm@kvack.org
+Subject: Re: [PATCH 1/2] x86/tlb/trace: Export the TLB_REMOTE_WRONG_CPU enum
+Message-ID: <20250602125236.21f4aeb3@gandalf.local.home>
+In-Reply-To: <876f65d0-e873-4c08-b404-db89e542e7a3@redhat.com>
+References: <20250528-tlb-trace-fix-v1-0-2e94c58f450d@columbia.edu>
+	<20250528-tlb-trace-fix-v1-1-2e94c58f450d@columbia.edu>
+	<876f65d0-e873-4c08-b404-db89e542e7a3@redhat.com>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Thu, May 29 2025 at 13:57, Steven Rostedt wrote:
-> From: Steven Rostedt <rostedt@goodmis.org>
->
-> The tracepoint irq_matrix_alloc_reserved was added but never used.
-> Remove it.
->
-> Link: https://lore.kernel.org/all/20250529130138.544ffec4@gandalf.local.home/
->
-> Fixes: ec0f7cd273dc4 ("genirq/matrix: Add tracepoints")
-> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+On Wed, 28 May 2025 11:06:10 +0200
+David Hildenbrand <david@redhat.com> wrote:
 
-Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
+> > diff --git a/include/trace/events/tlb.h b/include/trace/events/tlb.h
+> > index b4d8e7dc38f8..725a75720a23 100644
+> > --- a/include/trace/events/tlb.h
+> > +++ b/include/trace/events/tlb.h
+> > @@ -13,7 +13,8 @@
+> >   	EM(  TLB_REMOTE_SHOOTDOWN,	"remote shootdown" )		\
+> >   	EM(  TLB_LOCAL_SHOOTDOWN,	"local shootdown" )		\
+> >   	EM(  TLB_LOCAL_MM_SHOOTDOWN,	"local mm shootdown" )		\
+> > -	EMe( TLB_REMOTE_SEND_IPI,	"remote ipi send" )
+> > +	EM(  TLB_REMOTE_SEND_IPI,	"remote ipi send" )		\
+> > +	EMe( TLB_REMOTE_WRONG_CPU,	"remote wrong CPU" )  
+> 
+> Reviewed-by: David Hildenbrand <david@redhat.com>
+
+Reviewed-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+
+I'm guessing this will go through the mm tree?
+
+-- Steve
