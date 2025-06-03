@@ -1,217 +1,130 @@
-Received: from pegase1.c-s.fr (pegase1.c-s.fr [93.17.236.30])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 891A818DB29;
-	Tue,  3 Jun 2025 09:20:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.17.236.30
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B16E7146A66;
+	Tue,  3 Jun 2025 12:07:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748942439; cv=none; b=L6fqDWHBODVtvHFAiNBxphL9WxZZM5IWs/rSxdWGAPwxn47e1Gi+jb3K1Q64PqW4ECfc0cCWAVV9LoCDddt08dr3F1AQdZ7i5gQLuV3edU4J6WOoveTWLLs4Sv7YFtpWJiepigcsot0DoTicDroP6wP+iFanfWFtK3vyZtkIzPA=
+	t=1748952482; cv=none; b=oim4EXGbgcP4yTstpvRwrLg3lHlL0dpThcKfFwt7m3qI2/5W7V4CD/usMIVLCmzCHbtVFJ7/l5KGIUHy92h6+UFUsm+hzZpeiDqtgP7NMoUKDZxTDRjs/rOL0047wx/oanTPtIKvIyHxYjivzBUNvkiaVOUGhkC4JcD6A+udrog=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748942439; c=relaxed/simple;
-	bh=p9NjpU4OCCgM7bTR4DIZZaxlvncFkcQUC79/F9rivEk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ktMNihGruZIl+v801DfnzEGsvbnBcDg07lqpFfl+cTCGlfdDSlg+4pLnrqpTxRMqyMGdoq4Nz1lWAqHpp37gf3gvJtNNPKzjAMnvhN8EX1vDaocq4IwXinQKZAY9Q9XtDXF55JE1VWYy7atztnjnagryWesvhWPUezM05EpQ6Ys=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; arc=none smtp.client-ip=93.17.236.30
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
-Received: from localhost (mailhub3.si.c-s.fr [192.168.12.233])
-	by localhost (Postfix) with ESMTP id 4bBPbv4FNNz9s92;
-	Tue,  3 Jun 2025 10:52:27 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-	by localhost (pegase1.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id U7IUxrE3Y_nw; Tue,  3 Jun 2025 10:52:27 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-	by pegase1.c-s.fr (Postfix) with ESMTP id 4bBPbm3Y1Nz9vY6;
-	Tue,  3 Jun 2025 10:52:20 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id 742888B765;
-	Tue,  3 Jun 2025 10:52:20 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-	with ESMTP id IcNMaBpAWABq; Tue,  3 Jun 2025 10:52:20 +0200 (CEST)
-Received: from [192.168.235.99] (unknown [192.168.235.99])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id CD8958B763;
-	Tue,  3 Jun 2025 10:52:19 +0200 (CEST)
-Message-ID: <840249c5-2602-4178-a408-f7d502111f79@csgroup.eu>
-Date: Tue, 3 Jun 2025 10:52:19 +0200
+	s=arc-20240116; t=1748952482; c=relaxed/simple;
+	bh=cKHzIUgnW7PSnuX/LD1d2vlKQO6VXKzAPDVdGxCLw4g=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=u7hN0HddX814gT1WqRzSQJw0dY5MMgXMWt3Qnhe55ugB6u9m/g6svMBJ3uP1b4FS6OYloai0p9QQvReurSa7aL4G43xqj3/Zig0LjF9i66mUmQ+ySSr7I2Bo85ieblxI3i9T042tt0zZrSIh9UClxhxTNcZAkG6f160hXH1SYLM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2F77412FC;
+	Tue,  3 Jun 2025 05:07:42 -0700 (PDT)
+Received: from e129166.arm.com (unknown [10.57.27.15])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id E81923F673;
+	Tue,  3 Jun 2025 05:07:55 -0700 (PDT)
+From: Lukasz Luba <lukasz.luba@arm.com>
+To: linux-kernel@vger.kernel.org
+Cc: lukasz.luba@arm.com,
+	rostedt@goodmis.org,
+	mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com,
+	mingo@redhat.com,
+	peterz@infradead.org,
+	juri.lelli@redhat.com,
+	vincent.guittot@linaro.org,
+	dietmar.eggemann@arm.com,
+	bsegall@google.com,
+	mgorman@suse.de,
+	vschneid@redhat.com,
+	andrii@kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	rafael@kernel.org
+Subject: [PATCH] sched/tp: Add new tracepoint for tracking uclamp set from user-space
+Date: Tue,  3 Jun 2025 13:07:14 +0100
+Message-ID: <20250603120755.1028396-1-lukasz.luba@arm.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] powerpc/ftrace: support CONFIG_FUNCTION_GRAPH_RETVAL
-To: Aditya Bodkhe <adityab1@linux.ibm.com>, linuxppc-dev@lists.ozlabs.org
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- maddy@linux.ibm.com, mpe@ellerman.id.au, npiggin@gmail.com,
- rostedt@goodmis.org, mhiramat@kernel.org, mark.rutland@arm.com,
- Aditya Bodkhe <aditya.b1@linux.ibm.com>
-References: <20250528134820.74121-1-adityab1@linux.ibm.com>
-Content-Language: fr-FR
-From: Christophe Leroy <christophe.leroy@csgroup.eu>
-In-Reply-To: <20250528134820.74121-1-adityab1@linux.ibm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
+The user-space can set uclamp value for a given task. It impacts task
+placement decisions made by the task scheduler. The user-space services
+can dynamically change the uclamp values for tasks. Tracking the uclamp
+changes is a very useful information and helps to understand the system
+behavior. It allows to track improvements in the OS middleware and
+applications which start using uclamp mechanisms and report test results.
+
+This tracepoint is going to help in the further development of combined
+kernel and middleware solutions.
+
+Signed-off-by: Lukasz Luba <lukasz.luba@arm.com>
+---
+
+Hi all,
+
+This patch is an attempt to refresh a bit my previous attempt in this
+area, which can be found here [1]. It's a smaller version than the
+previous one.
+
+It's based on next-20250530.
+
+Regards,
+Lukasz Luba
+
+[1] https://lore.kernel.org/lkml/20230509122246.1702397-1-lukasz.luba@arm.com/
 
 
-Le 28/05/2025 à 15:48, Aditya Bodkhe a écrit :
-> [Vous ne recevez pas souvent de courriers de adityab1@linux.ibm.com. Découvrez pourquoi ceci est important à https://aka.ms/LearnAboutSenderIdentification ]
-> 
-> From: Aditya Bodkhe <aditya.b1@linux.ibm.com>
-> 
-> commit a1be9ccc57f0 ("function_graph: Support recording and printing the
-> return value of function") introduced support for function graph return
-> value tracing.
-> 
-> Additionally, commit a3ed4157b7d8 ("fgraph: Replace fgraph_ret_regs with
-> ftrace_regs") further refactored and optimized the implementation,
-> making `struct fgraph_ret_regs` unnecessary.
-> 
-> This patch enables the above modifications for powerpc64, ensuring that
-> function graph return value tracing is available on this architecture.
+ include/trace/events/sched.h | 3 +++
+ kernel/sched/core.c          | 1 +
+ kernel/sched/syscalls.c      | 4 ++++
+ 3 files changed, 8 insertions(+)
 
-Why only powerpc64 ?
-
-I see nothing specific to powerpc64 in your patch, will it work on 
-powerpc32 too ?
-
-> 
-> After this patch, v6.14+ kernel can also be built with FPROBE on powerpc
-> but there are a few other build and runtime dependencies for FPROBE to
-> work properly. The next patch addresses them.
-> 
-> Signed-off-by: Aditya Bodkhe <aditya.b1@linux.ibm.com>
-> ---
->   arch/powerpc/Kconfig                     |  1 +
->   arch/powerpc/include/asm/ftrace.h        | 15 +++++++++
->   arch/powerpc/kernel/trace/ftrace_entry.S | 41 ++++++++++++++----------
->   3 files changed, 40 insertions(+), 17 deletions(-)
-> 
-> diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
-> index c3e0cc83f120..9163521bc4b9 100644
-> --- a/arch/powerpc/Kconfig
-> +++ b/arch/powerpc/Kconfig
-> @@ -250,6 +250,7 @@ config PPC
->          select HAVE_FUNCTION_ARG_ACCESS_API
->          select HAVE_FUNCTION_DESCRIPTORS        if PPC64_ELF_ABI_V1
->          select HAVE_FUNCTION_ERROR_INJECTION
-> +       select HAVE_FUNCTION_GRAPH_FREGS
->          select HAVE_FUNCTION_GRAPH_TRACER
->          select HAVE_FUNCTION_TRACER             if !COMPILE_TEST && (PPC64 || (PPC32 && CC_IS_GCC))
->          select HAVE_GCC_PLUGINS                 if GCC_VERSION >= 50200   # plugin support on gcc <= 5.1 is buggy on PPC
-> diff --git a/arch/powerpc/include/asm/ftrace.h b/arch/powerpc/include/asm/ftrace.h
-> index 82da7c7a1d12..6ffc9c9cf4e3 100644
-> --- a/arch/powerpc/include/asm/ftrace.h
-> +++ b/arch/powerpc/include/asm/ftrace.h
-> @@ -50,6 +50,21 @@ static __always_inline struct pt_regs *arch_ftrace_get_regs(struct ftrace_regs *
->                  asm volatile("mfmsr %0" : "=r" ((_regs)->msr)); \
->          } while (0)
-> 
-> +#undef ftrace_regs_get_return_value
-> +static __always_inline unsigned long
-> +ftrace_regs_get_return_value(const struct ftrace_regs *fregs)
-> +{
-> +       return arch_ftrace_regs(fregs)->regs.gpr[3];
-> +}
-> +#define ftrace_regs_get_return_value ftrace_regs_get_return_value
-> +
-> +#undef ftrace_regs_get_frame_pointer
-> +static __always_inline unsigned long
-> +ftrace_regs_get_frame_pointer(const struct ftrace_regs *fregs)
-> +{
-> +       return arch_ftrace_regs(fregs)->regs.gpr[1];
-> +}
-> +
-
-Why unset and redefine ftrace_regs_get_return_value() and 
-ftrace_regs_get_frame_pointer() ? Please explain why the default ones 
-can't be used on powerpc.
-
->   static __always_inline void
->   ftrace_regs_set_instruction_pointer(struct ftrace_regs *fregs,
->                                      unsigned long ip)
-> diff --git a/arch/powerpc/kernel/trace/ftrace_entry.S b/arch/powerpc/kernel/trace/ftrace_entry.S
-> index 3565c67fc638..eafbfb7584ed 100644
-> --- a/arch/powerpc/kernel/trace/ftrace_entry.S
-> +++ b/arch/powerpc/kernel/trace/ftrace_entry.S
-> @@ -409,23 +409,30 @@ EXPORT_SYMBOL(_mcount)
->   _GLOBAL(return_to_handler)
->          /* need to save return values */
->   #ifdef CONFIG_PPC64
-> -       std     r4,  -32(r1)
-> -       std     r3,  -24(r1)
-> +       stdu    r1, -SWITCH_FRAME_SIZE(r1)
-> +       std     r4, GPR4(r1)
-> +       std     r3, GPR3(r1)
-> +  /* Save previous stack pointer (r1) */
-> +       addi    r3, r1, SWITCH_FRAME_SIZE
-> +       std     r3, GPR1(r1)
->          /* save TOC */
-> -       std     r2,  -16(r1)
-> -       std     r31, -8(r1)
-> +       std     r2,  24(r1)
-> +       std     r31, 32(r1)
->          mr      r31, r1
-> -       stdu    r1, -112(r1)
-> -
-> +  /* pass ftrace_regs/pt_regs to ftrace_return_to_handler */
-> +       addi    r3,  r1, STACK_INT_FRAME_REGS
-
-Some of the changes seems to only be renaming and should be done in a 
-cleanup/preparatory patch in order to only focus on real necessary 
-changes in this patch.
-
->          /*
->           * We might be called from a module.
->           * Switch to our TOC to run inside the core kernel.
->           */
->          LOAD_PACA_TOC()
->   #else
-> -       stwu    r1, -16(r1)
-> -       stw     r3, 8(r1)
-> -       stw     r4, 12(r1)
-> +       stwu    r1, -SWITCH_FRAME_SIZE(r1)
-
-Why do we need such a big frame size just to save two registers ?
-
-> +       stw     r4, GPR4(r1)
-> +       stw     r3, GPR3(r1)
-> +       addi    r3, r1, SWITCH_FRAME_SIZE
-> +       stw     r3, GPR1(r1)
- > +       addi    r3, r1, STACK_INT_FRAME_REGS
-
-Why is this needed ?
-
->   #endif
-> 
->          bl      ftrace_return_to_handler
-> @@ -435,15 +442,15 @@ _GLOBAL(return_to_handler)
->          mtlr    r3
-> 
->   #ifdef CONFIG_PPC64
-> -       ld      r1, 0(r1)
-> -       ld      r4,  -32(r1)
-> -       ld      r3,  -24(r1)
-> -       ld      r2,  -16(r1)
-> -       ld      r31, -8(r1)
-> +       ld      r4,  GPR4(r1)
-> +       ld      r3,  GPR3(r1)
-> +       ld      r2,  24(r1)
-> +       ld      r31, 32(r1)
-> +       ld      r1,  0(r1)
->   #else
-> -       lwz     r3, 8(r1)
-> -       lwz     r4, 12(r1)
-> -       addi    r1, r1, 16
-> +       lwz     r3, GPR3(r1)
-> +       lwz     r4, GPR4(r1)
-> +       addi    r1, r1, SWITCH_FRAME_SIZE
->   #endif
-> 
->          /* Jump back to real return address */
-> --
-> 2.43.5
-> 
+diff --git a/include/trace/events/sched.h b/include/trace/events/sched.h
+index 4e6b2910cec3f..1b14d5bbc9e2a 100644
+--- a/include/trace/events/sched.h
++++ b/include/trace/events/sched.h
+@@ -894,6 +894,9 @@ DECLARE_TRACE_CONDITION(sched_set_state,
+ 	TP_ARGS(tsk, state),
+ 	TP_CONDITION(!!(tsk->__state) != !!state));
+ 
++DECLARE_TRACE(uclamp_update_task,
++	TP_PROTO(struct task_struct *p, int uclamp_id,  unsigned int value),
++	TP_ARGS(p, uclamp_id, value));
+ #endif /* _TRACE_SCHED_H */
+ 
+ /* This part must be outside protection */
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index dce50fa57471d..2c3bf0b6830fa 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -116,6 +116,7 @@ EXPORT_TRACEPOINT_SYMBOL_GPL(sched_util_est_cfs_tp);
+ EXPORT_TRACEPOINT_SYMBOL_GPL(sched_util_est_se_tp);
+ EXPORT_TRACEPOINT_SYMBOL_GPL(sched_update_nr_running_tp);
+ EXPORT_TRACEPOINT_SYMBOL_GPL(sched_compute_energy_tp);
++EXPORT_TRACEPOINT_SYMBOL_GPL(uclamp_update_task_tp);
+ 
+ DEFINE_PER_CPU_SHARED_ALIGNED(struct rq, runqueues);
+ 
+diff --git a/kernel/sched/syscalls.c b/kernel/sched/syscalls.c
+index 547c1f05b667e..e8dbc7fbe99d5 100644
+--- a/kernel/sched/syscalls.c
++++ b/kernel/sched/syscalls.c
+@@ -430,12 +430,16 @@ static void __setscheduler_uclamp(struct task_struct *p,
+ 	    attr->sched_util_min != -1) {
+ 		uclamp_se_set(&p->uclamp_req[UCLAMP_MIN],
+ 			      attr->sched_util_min, true);
++		trace_uclamp_update_task_tp(p, UCLAMP_MIN,
++					    attr->sched_util_min);
+ 	}
+ 
+ 	if (attr->sched_flags & SCHED_FLAG_UTIL_CLAMP_MAX &&
+ 	    attr->sched_util_max != -1) {
+ 		uclamp_se_set(&p->uclamp_req[UCLAMP_MAX],
+ 			      attr->sched_util_max, true);
++		trace_uclamp_update_task_tp(p, UCLAMP_MAX,
++					    attr->sched_util_max);
+ 	}
+ }
+ 
+-- 
+2.48.1
 
