@@ -1,75 +1,268 @@
-Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
+Received: from relay.hostedemail.com (smtprelay0014.hostedemail.com [216.40.44.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DBE5146D6A;
-	Wed,  4 Jun 2025 15:41:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDA0F111BF;
+	Wed,  4 Jun 2025 19:54:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749051721; cv=none; b=K53DL7wL10StIAaUNLIBDP8nsx2I97xgdcRWwkuunuhmdWVuMtfpoyB4pIgv/K16IGXkKRew8sRDJUpCJdY7gNGhSQ9AdhQxdz7eOgspC0fRHWnKuf+8zN+6aN0oNkF11BZikOa/jtU8mhW0yQTd6Nzcd6yhQeKJfye8bb6H7T8=
+	t=1749066882; cv=none; b=LoyTU/9s6fOAdGytjGBaBHFWegTuN1xA6ieTPQcKgP1PfxaJeGByaFxR0IB4az8JQJI+EPaOpT04Of0a4uSaMfqEMuRo+jxisVaxWFnpeePKqKMx81i1vtJXB5Tv6Ki4HabiWLzeFcGoIK8JHwJW/y3CPW0Wf+E7nwFJIV7NGZQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749051721; c=relaxed/simple;
-	bh=rMc9LpBQ7NgcyLQMEUZqHc6toB/T5zpFVrloQqjog7U=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=fhl9/K6gSd9PKlp13x0v2eRagQc/JPjBSNI6WG1CVeqJgJo1SlVqtC0VHKJuZuSTCUcI+P8Vg4FMqaEoSCRBVpPpCd7s1gwp3x5u6SrGd5Qr+GAWZyi/I+9qtwMLJohZUW234gfFOMetjtvkQlGww4MA2GOvZcyr1hF8rZYXYJs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=MvpdE3Cp; arc=none smtp.client-ip=198.137.202.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="MvpdE3Cp"
-Received: from [127.0.0.1] (c-76-133-66-138.hsd1.ca.comcast.net [76.133.66.138])
-	(authenticated bits=0)
-	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 554FfQsf081940
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-	Wed, 4 Jun 2025 08:41:26 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 554FfQsf081940
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2025052101; t=1749051687;
-	bh=rMc9LpBQ7NgcyLQMEUZqHc6toB/T5zpFVrloQqjog7U=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
-	b=MvpdE3CpvzKYKJG3yH7XtkkMgROUTMYdw8rO3e4a+GYp38wzCHaQXsv+V65NwyTbg
-	 I1bkU7lonjMsEhnQ2FSKdRTeufL/h0+k+fVPA++oSUGRrVlbwjR2VCOEqIAi6igqPH
-	 90b9QcJGKNqwwS0n/L34JOLxR5V9PBfW2vzDTHUq5k/0nr1afIZslRcNOXRYp3uLw/
-	 lCK8Pt0FYC1WpVkosr+ROs3Bnzz1nJPpgi95PueEyDeZBWDmxHb2CQf1TfNbqSVntN
-	 e89wmhZPGzgDgK4shpHpImP78rUi5sKlgV578xuIv8irkIezm696S/zV6JhrI1DeWf
-	 iMpEqK+q+CNcg==
-Date: Wed, 04 Jun 2025 08:41:25 -0700
-From: "H. Peter Anvin" <hpa@zytor.com>
-To: Sohil Mehta <sohil.mehta@intel.com>, Xin Li <xin@zytor.com>,
-        x86@kernel.org, linux-kernel@vger.kernel.org
-CC: Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Sean Christopherson <seanjc@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>, Tony Luck <tony.luck@intel.com>,
-        Zhang Rui <rui.zhang@intel.com>, Steven Rostedt <rostedt@goodmis.org>,
-        Andrew Cooper <andrew.cooper3@citrix.com>,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
-        Jacob Pan <jacob.pan@linux.microsoft.com>,
-        Andi Kleen <ak@linux.intel.com>, Kai Huang <kai.huang@intel.com>,
-        Sandipan Das <sandipan.das@amd.com>, linux-perf-users@vger.kernel.org,
-        linux-edac@vger.kernel.org, kvm@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: =?US-ASCII?Q?Re=3A_=5BPATCH_v6_9/9=5D_x86/nmi=3A_Print_source_inf?=
- =?US-ASCII?Q?ormation_with_the_unknown_NMI_console_message?=
-User-Agent: K-9 Mail for Android
-In-Reply-To: <fa948d41-3f95-4385-86c1-5c115561b939@intel.com>
-References: <20250513203803.2636561-1-sohil.mehta@intel.com> <20250513203803.2636561-10-sohil.mehta@intel.com> <31507dc8-b1dc-4df3-bc0c-6958b4218746@zytor.com> <fa948d41-3f95-4385-86c1-5c115561b939@intel.com>
-Message-ID: <8035D788-0F60-48B8-8B98-DC352EC9AE62@zytor.com>
+	s=arc-20240116; t=1749066882; c=relaxed/simple;
+	bh=oKw90SyLsedrAFGhq66683nzBJAYf46emgOFII6AEx8=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=rXCNenvjAiajBx40lvED+PS8MiZNF+W23bOXXkqP9j/LsOfnYI7J8e3tMiC0wW5BhDKpm+uBNMDH8aVnftl2mtmIloqyoskQm+EReaOihv5V35RQyvBkR9CDnbXGKdhDiR9XDYiqMGY4dii/Sd1aS4ZOQFVkoscdWPquIvI719E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf18.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay04.hostedemail.com (Postfix) with ESMTP id 2138D1A05B1;
+	Wed,  4 Jun 2025 19:15:10 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf18.hostedemail.com (Postfix) with ESMTPA id 8E5F42F;
+	Wed,  4 Jun 2025 19:15:08 +0000 (UTC)
+Date: Wed, 4 Jun 2025 15:16:25 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>
+Subject: [PATCH] eventfs: Simplify code using guard()s
+Message-ID: <20250604151625.250d13e1@gandalf.local.home>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Queue-Id: 8E5F42F
+X-Stat-Signature: 53uycops735pk585ew3nrdg1t36e45qd
+X-Rspamd-Server: rspamout07
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX190ANwMAkLRQwGtYb8o1JhLLF/z4Ly/Yyc=
+X-HE-Tag: 1749064508-499009
+X-HE-Meta: U2FsdGVkX19K54TRwk+lP3533Vh+tzF9iJwSy5fWAOFZ3Ac72gvRDnmpKHEbBXwTvgMq0CE5f9wfIG4fOJqSJpE2RcnbUhCPYuGi222TNC9mwtqPMI0ZcrjgfKEH52WLNuVJA9vBTRjAWNT1PdgArnGoWGqr2Go5aDkWCdxvXu9/6Zsz9XnCzZNV5EecYp145E/jLGTclbQdJyOdWo8Cw8ssyOkkogE3x4MAfR2b4fru62xbCV13BrXqN40ebDzlAZah2kqWg7925uWGfiMjOI3Kf+g3vZhyRjEeEEkmZoAjZgGp5nASYu58xQwKEItTjKMgkx3EScEI9E+bPlg4rPeu+IYyfQ2DYiX+Tiii414vG4M3Z13aa3EVNQgMAmM1
 
-I think printing the bitmap is fine for unknown bits set=2E=2E=2E after all=
-, you might have surprise vectors=2E Maybe a list would be cleaner by some =
-definition, but we already print bitmaps all over the place=2E It is not cr=
-itical as long as the information necessary for debugging is there=2E In fa=
-ct, it is often better for the information to be compact so users don't get=
- tempted to abbreviate a bug report=2E
+From: Steven Rostedt <rostedt@goodmis.org>
+
+Use guard(mutex), scoped_guard(mutex) and guard(src) to simplify the code
+and remove a lot of the jumps to "out:" labels.
+
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+ fs/tracefs/event_inode.c | 96 +++++++++++++++-------------------------
+ 1 file changed, 36 insertions(+), 60 deletions(-)
+
+diff --git a/fs/tracefs/event_inode.c b/fs/tracefs/event_inode.c
+index 8705c77a9e75..117110fbabbf 100644
+--- a/fs/tracefs/event_inode.c
++++ b/fs/tracefs/event_inode.c
+@@ -180,29 +180,25 @@ static int eventfs_set_attr(struct mnt_idmap *idmap, struct dentry *dentry,
+ 	const char *name;
+ 	int ret;
+ 
+-	mutex_lock(&eventfs_mutex);
++	guard(mutex)(&eventfs_mutex);
+ 	ei = dentry->d_fsdata;
+-	if (ei->is_freed) {
+-		/* Do not allow changes if the event is about to be removed. */
+-		mutex_unlock(&eventfs_mutex);
++	/* Do not allow changes if the event is about to be removed. */
++	if (ei->is_freed)
+ 		return -ENODEV;
+-	}
+ 
+ 	/* Preallocate the children mode array if necessary */
+ 	if (!(dentry->d_inode->i_mode & S_IFDIR)) {
+ 		if (!ei->entry_attrs) {
+ 			ei->entry_attrs = kcalloc(ei->nr_entries, sizeof(*ei->entry_attrs),
+ 						  GFP_NOFS);
+-			if (!ei->entry_attrs) {
+-				ret = -ENOMEM;
+-				goto out;
+-			}
++			if (!ei->entry_attrs)
++				return -ENOMEM;
+ 		}
+ 	}
+ 
+ 	ret = simple_setattr(idmap, dentry, iattr);
+ 	if (ret < 0)
+-		goto out;
++		return ret;
+ 
+ 	/*
+ 	 * If this is a dir, then update the ei cache, only the file
+@@ -225,8 +221,6 @@ static int eventfs_set_attr(struct mnt_idmap *idmap, struct dentry *dentry,
+ 			}
+ 		}
+ 	}
+- out:
+-	mutex_unlock(&eventfs_mutex);
+ 	return ret;
+ }
+ 
+@@ -528,26 +522,24 @@ static struct dentry *eventfs_root_lookup(struct inode *dir,
+ 	struct tracefs_inode *ti;
+ 	struct eventfs_inode *ei;
+ 	const char *name = dentry->d_name.name;
+-	struct dentry *result = NULL;
+ 
+ 	ti = get_tracefs(dir);
+ 	if (WARN_ON_ONCE(!(ti->flags & TRACEFS_EVENT_INODE)))
+ 		return ERR_PTR(-EIO);
+ 
+-	mutex_lock(&eventfs_mutex);
++	guard(mutex)(&eventfs_mutex);
+ 
+ 	ei = ti->private;
+ 	if (!ei || ei->is_freed)
+-		goto out;
++		return NULL;
+ 
+ 	list_for_each_entry(ei_child, &ei->children, list) {
+ 		if (strcmp(ei_child->name, name) != 0)
+ 			continue;
+ 		/* A child is freed and removed from the list at the same time */
+ 		if (WARN_ON_ONCE(ei_child->is_freed))
+-			goto out;
+-		result = lookup_dir_entry(dentry, ei, ei_child);
+-		goto out;
++			return NULL;
++		return lookup_dir_entry(dentry, ei, ei_child);
+ 	}
+ 
+ 	for (int i = 0; i < ei->nr_entries; i++) {
+@@ -561,14 +553,12 @@ static struct dentry *eventfs_root_lookup(struct inode *dir,
+ 
+ 		data = ei->data;
+ 		if (entry->callback(name, &mode, &data, &fops) <= 0)
+-			goto out;
++			return NULL;
++
++		return lookup_file_dentry(dentry, ei, i, mode, data, fops);
+ 
+-		result = lookup_file_dentry(dentry, ei, i, mode, data, fops);
+-		goto out;
+ 	}
+- out:
+-	mutex_unlock(&eventfs_mutex);
+-	return result;
++	return NULL;
+ }
+ 
+ /*
+@@ -584,7 +574,6 @@ static int eventfs_iterate(struct file *file, struct dir_context *ctx)
+ 	struct eventfs_inode *ei;
+ 	const char *name;
+ 	umode_t mode;
+-	int idx;
+ 	int ret = -EINVAL;
+ 	int ino;
+ 	int i, r, c;
+@@ -598,16 +587,13 @@ static int eventfs_iterate(struct file *file, struct dir_context *ctx)
+ 
+ 	c = ctx->pos - 2;
+ 
+-	idx = srcu_read_lock(&eventfs_srcu);
++	guard(srcu)(&eventfs_srcu);
+ 
+-	mutex_lock(&eventfs_mutex);
+-	ei = READ_ONCE(ti->private);
+-	if (ei && ei->is_freed)
+-		ei = NULL;
+-	mutex_unlock(&eventfs_mutex);
+-
+-	if (!ei)
+-		goto out;
++	scoped_guard(mutex, &eventfs_mutex) {
++		ei = READ_ONCE(ti->private);
++		if (!ei || ei->is_freed)
++			return -EINVAL;
++	}
+ 
+ 	/*
+ 	 * Need to create the dentries and inodes to have a consistent
+@@ -622,21 +608,19 @@ static int eventfs_iterate(struct file *file, struct dir_context *ctx)
+ 		entry = &ei->entries[i];
+ 		name = entry->name;
+ 
+-		mutex_lock(&eventfs_mutex);
+ 		/* If ei->is_freed then just bail here, nothing more to do */
+-		if (ei->is_freed) {
+-			mutex_unlock(&eventfs_mutex);
+-			goto out;
++		scoped_guard(mutex, &eventfs_mutex) {
++			if (ei->is_freed)
++				return -EINVAL;
++			r = entry->callback(name, &mode, &cdata, &fops);
+ 		}
+-		r = entry->callback(name, &mode, &cdata, &fops);
+-		mutex_unlock(&eventfs_mutex);
+ 		if (r <= 0)
+ 			continue;
+ 
+ 		ino = EVENTFS_FILE_INODE_INO;
+ 
+ 		if (!dir_emit(ctx, name, strlen(name), ino, DT_REG))
+-			goto out;
++			return -EINVAL;
+ 	}
+ 
+ 	/* Subtract the skipped entries above */
+@@ -659,19 +643,13 @@ static int eventfs_iterate(struct file *file, struct dir_context *ctx)
+ 
+ 		ino = eventfs_dir_ino(ei_child);
+ 
+-		if (!dir_emit(ctx, name, strlen(name), ino, DT_DIR))
+-			goto out_dec;
++		if (!dir_emit(ctx, name, strlen(name), ino, DT_DIR)) {
++			/* Incremented ctx->pos without adding something, reset it */
++			ctx->pos--;
++			return -EINVAL;
++		}
+ 	}
+-	ret = 1;
+- out:
+-	srcu_read_unlock(&eventfs_srcu, idx);
+-
+-	return ret;
+-
+- out_dec:
+-	/* Incremented ctx->pos without adding something, reset it */
+-	ctx->pos--;
+-	goto out;
++	return 1;
+ }
+ 
+ /**
+@@ -728,11 +706,10 @@ struct eventfs_inode *eventfs_create_dir(const char *name, struct eventfs_inode
+ 	INIT_LIST_HEAD(&ei->children);
+ 	INIT_LIST_HEAD(&ei->list);
+ 
+-	mutex_lock(&eventfs_mutex);
+-	if (!parent->is_freed)
+-		list_add_tail(&ei->list, &parent->children);
+-	mutex_unlock(&eventfs_mutex);
+-
++	scoped_guard(mutex, &eventfs_mutex) {
++		if (!parent->is_freed)
++			list_add_tail(&ei->list, &parent->children);
++	}
+ 	/* Was the parent freed? */
+ 	if (list_empty(&ei->list)) {
+ 		cleanup_ei(ei);
+@@ -877,9 +854,8 @@ void eventfs_remove_dir(struct eventfs_inode *ei)
+ 	if (!ei)
+ 		return;
+ 
+-	mutex_lock(&eventfs_mutex);
++	guard(mutex)(&eventfs_mutex);
+ 	eventfs_remove_rec(ei, 0);
+-	mutex_unlock(&eventfs_mutex);
+ }
+ 
+ /**
+-- 
+2.47.2
+
