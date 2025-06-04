@@ -1,126 +1,141 @@
-Received: from h8.fbrelay.privateemail.com (h8.fbrelay.privateemail.com [162.0.218.231])
+Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E62142A87;
-	Wed,  4 Jun 2025 13:52:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.0.218.231
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFDE32F56;
+	Wed,  4 Jun 2025 15:23:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749045154; cv=none; b=hL8AoYrAjHit090uLNIgrvEUGh5NJywLe4BDPK/+WiqsbCEeSC00QiX4X8ZRCRaaBNHZrA6olHl9TKPo+AAv+JWJWzGRO/GldPHWpUbkEbgS54BLKxxu/ko6n/fPp/w15QUqm3cacwb4Fq/pZnBBSdzx1q546fezF7cF8sWc/OA=
+	t=1749050596; cv=none; b=m3xUZzLG/KKbuUk0A3a4NIIiQFEDDd4KKB4PXMd19xKb3s8V0rIIGy+ESEfU+PiIReSfrgGdZ6Su5rkC5gogY5Ou+UnE8NvWbJzMRl3guy49AAzZU6ccIXa+grsO8Qtq/1DKwbtIQFlAbUO4oNYnb2UQsCTH+eiDrHGsMJNaC8E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749045154; c=relaxed/simple;
-	bh=J79gwTBZarVe0RuxSdrktqBoJC5jYm4za3pkIZqUA8w=;
-	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
-	 MIME-Version:Content-Type; b=F/OsAOukoiq96E0PMTeRYfJ3yhXIvjKzWixgZQKrZ1vr93KXjeiUvsehHYXXFuC9+L6JBc6MVQYACbP70u6FF+2/QGuy+wjOHKFm6lxXD9MWOsVWhuTx/zgaWZYS8B8TH/bJZEQnA268nY+NO7O4DYM0caLYp5wV5mmNrgMOYIk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mebeim.net; spf=pass smtp.mailfrom=mebeim.net; dkim=pass (2048-bit key) header.d=mebeim.net header.i=@mebeim.net header.b=gAGNm8sf; arc=none smtp.client-ip=162.0.218.231
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mebeim.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mebeim.net
+	s=arc-20240116; t=1749050596; c=relaxed/simple;
+	bh=+lJcxQsjxseXi30qNXRxLB/y4R9OszpeMs9veRimWYg=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
+	 MIME-Version:Content-Type; b=S3EuJH0cFS3iFjGR8OuOEgU1Yva3OFQxtqD1qtiKSdwnDPWYCXuFKJ6JXuZKy82LRxvaAlYI6YckCIkndnOBRobAvYtkJgO1OpttS6MIjKD9yVFc3rQZ8RB6MsazK5GeWr4ie2kTklh1NV3HgHFNM7ikjax95iCc+lxWw51VPWY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=FrpnwNfA; arc=none smtp.client-ip=198.137.202.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mebeim.net header.i=@mebeim.net header.b="gAGNm8sf"
-Received: from MTA-07-3.privateemail.com (mta-07.privateemail.com [198.54.127.57])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
-	(No client certificate requested)
-	by h7.fbrelay.privateemail.com (Postfix) with ESMTPSA id 4bC8CW49Fzz2xk0;
-	Wed,  4 Jun 2025 09:52:23 -0400 (EDT)
-Received: from mta-07.privateemail.com (localhost [127.0.0.1])
-	by mta-07.privateemail.com (Postfix) with ESMTP id 4bC8CM4Y08z3hhTq;
-	Wed,  4 Jun 2025 09:52:15 -0400 (EDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=mebeim.net; s=default;
-	t=1749045135; bh=J79gwTBZarVe0RuxSdrktqBoJC5jYm4za3pkIZqUA8w=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-	b=gAGNm8sfyCZCVI3cvBf7RX5tqhyDmGogOAEXGIrCUSCP5SgSzND30lWdyj1ucoiAI
-	 VYV8MYuA6qUWmAet9oMgPLc3adBB4iQ6xCjHD8xwHIHK+rqlzlPw9yueg4J3mHB8Ut
-	 BFYyTqhQhJgBLTq72/Z1EP6L2Pqb9mV+fzew4SQAFQMf6B5GqJUKNwE+B2qaHNExFY
-	 vkHdwrdkGJCOLR84zy+RUZOecV89LFRsEgbVgUzuaa8SxuiXo1bfrMSCbPncYpxnMn
-	 xree7zyxKjXjX0jETNiYgnyYrLvv8J8M0fK6O3xvFDT418BkT2DUiKzoxYWrC72haZ
-	 sV8T7x+CG7MIA==
-Received: from APP-18 (unknown [10.50.14.242])
-	by mta-07.privateemail.com (Postfix) with ESMTPA;
-	Wed,  4 Jun 2025 09:52:05 -0400 (EDT)
-Date: Wed, 4 Jun 2025 15:52:05 +0200 (CEST)
-From: Marco Bonelli <marco@mebeim.net>
-To: Alexandre Ghiti <alex@ghiti.fr>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Cc: "terrelln@fb.com" <terrelln@fb.com>,
-	"rostedt@goodmis.org" <rostedt@goodmis.org>,
-	"mhiramat@kernel.org" <mhiramat@kernel.org>,
-	"mark.rutland@arm.com" <mark.rutland@arm.com>,
-	"linux-trace-kernel@vger.kernel.org" <linux-trace-kernel@vger.kernel.org>,
-	"paul.walmsley@sifive.com" <paul.walmsley@sifive.com>,
-	"palmer@dabbelt.com" <palmer@dabbelt.com>,
-	"aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>,
-	"linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>
-Message-ID: <1338988468.1011577.1749045125350@privateemail.com>
-In-Reply-To: <c239ee1b-f201-4e7b-80f8-03a7fb02b666@ghiti.fr>
-References: <960240908.630790.1748641210849@privateemail.com>
- <1552795452.650306.1748692371190@privateemail.com>
- <c239ee1b-f201-4e7b-80f8-03a7fb02b666@ghiti.fr>
-Subject: Re: Broken 32-bit riscv debug build with ZSTD and FTRACE
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="FrpnwNfA"
+Received: from [127.0.0.1] (c-76-133-66-138.hsd1.ca.comcast.net [76.133.66.138])
+	(authenticated bits=0)
+	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 554FMJIY076049
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
+	Wed, 4 Jun 2025 08:22:20 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 554FMJIY076049
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+	s=2025052101; t=1749050541;
+	bh=NH2ltXtujZBqPJip4ancgNjYxroWFHWZyGX2p6NKPXc=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
+	b=FrpnwNfA/rikkJwUqKavu+F3qP9DFDYIsBfs2A92z5aoMEvnWjkzfYojMhs98JXRn
+	 coeiXRhu75/wIJvdUSGvYY6BwK9I1KouJwNAN9odFoW5uUFHS1MptMWQREGT0rX2f8
+	 f6g6Q+cKIDEwQr8ORjzbF/t8oAIDaV9I+VMh75ax64t/EXUvl1y9/YnGNaWTT3lOUj
+	 2eXE0GUVgUxeIwkM/KBWkZkei92+bxbvFBLoD15xH8xydiCwjaggxg4UL8HaEoDOUz
+	 9ubB5Ku2C0uIWI1JSB4rzj+lfkQJeNqgS7twCkpv4PK+6euX/WeKwfNCvb4OXiSErp
+	 ZqMFdhLraiD6A==
+Date: Wed, 04 Jun 2025 08:22:19 -0700
+From: "H. Peter Anvin" <hpa@zytor.com>
+To: Dave Hansen <dave.hansen@intel.com>, Sohil Mehta <sohil.mehta@intel.com>,
+        x86@kernel.org, linux-kernel@vger.kernel.org
+CC: Xin Li <xin@zytor.com>, Andy Lutomirski <luto@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Sean Christopherson <seanjc@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>, Tony Luck <tony.luck@intel.com>,
+        Zhang Rui <rui.zhang@intel.com>, Steven Rostedt <rostedt@goodmis.org>,
+        Andrew Cooper <andrew.cooper3@citrix.com>,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+        Jacob Pan <jacob.pan@linux.microsoft.com>,
+        Andi Kleen <ak@linux.intel.com>, Kai Huang <kai.huang@intel.com>,
+        Sandipan Das <sandipan.das@amd.com>, linux-perf-users@vger.kernel.org,
+        linux-edac@vger.kernel.org, kvm@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH v6 4/9] x86/nmi: Assign and register NMI-source vectors
+User-Agent: K-9 Mail for Android
+In-Reply-To: <e978e1fb-d88e-4789-bd33-367281dfa0ad@intel.com>
+References: <20250513203803.2636561-1-sohil.mehta@intel.com> <20250513203803.2636561-5-sohil.mehta@intel.com> <e978e1fb-d88e-4789-bd33-367281dfa0ad@intel.com>
+Message-ID: <31DB6043-44B2-43C1-B312-9B0DEC23C500@zytor.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Priority: 3
-Importance: Normal
-X-Mailer: Open-Xchange Mailer v7.10.6-Rev75
-X-Originating-Client: open-xchange-appsuite
-X-Virus-Scanned: ClamAV using ClamSMTP
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-> Can you attach your full config?
+On June 3, 2025 10:23:42 AM PDT, Dave Hansen <dave=2Ehansen@intel=2Ecom> wr=
+ote:
+>On 5/13/25 13:37, Sohil Mehta wrote:
+>=2E=2E=2E
+>> + * Vector 2 is reserved for external NMIs related to the Local APIC -
+>> + * LINT1=2E Some third-party chipsets may send NMI messages with a
+>> + * hardcoded vector of 2, which would result in bit 2 being set in the
+>> + * NMI-source bitmap=2E
+>
+>This doesn't actually say what problem this causes=2E Is this better?
+>
+>	Third-party chipsets send NMI messages with a fixed vector of 2=2E
+>	Using vector 2 for some other purpose would cause confusion
+>	between those Local APIC messages and the other purpose=2E Avoid
+>	using it=2E
+>
+>> + * The vectors are in no particular priority order=2E Add new vector
+>> + * assignments sequentially in the list below=2E
+>> + */
+>> +#define NMIS_VECTOR_NONE	0	/* Reserved - Set for all unidentified sour=
+ces */
+>> +#define NMIS_VECTOR_TEST	1	/* NMI selftest */
+>> +#define NMIS_VECTOR_EXTERNAL	2	/* Reserved - Match External NMI vector=
+ 2 */
+>> +#define NMIS_VECTOR_SMP_STOP	3	/* Panic stop CPU */
+>> +#define NMIS_VECTOR_BT		4	/* CPU backtrace */
+>> +#define NMIS_VECTOR_KGDB	5	/* Kernel debugger */
+>> +#define NMIS_VECTOR_MCE		6	/* MCE injection */
+>> +#define NMIS_VECTOR_PMI		7	/* PerfMon counters */
+>> +
+>> +#define NMIS_VECTORS_MAX	16	/* Maximum number of NMI-source vectors */
+>
+>Would an enum fit here?
+>
+>You could also add a:
+>
+>	NMIS_VECTOR_COUNT
+>
+>as the last entry and then just:
+>
+>	BUILD_BUG_ON(NMIS_VECTOR_COUNT >=3D 16);
+>
+>somewhere=2E
+>
+>I guess it's a little annoying that you need NMIS_VECTOR_EXTERNAL to
+>have a fixed value of 2, but I do like way the enum makes the type explic=
+it=2E
+>
+>
+>>  static int __init register_nmi_cpu_backtrace_handler(void)
+>>  {
+>> -	register_nmi_handler(NMI_LOCAL, nmi_cpu_backtrace_handler, 0, "arch_b=
+t", 0);
+>> +	register_nmi_handler(NMI_LOCAL, nmi_cpu_backtrace_handler, 0, "arch_b=
+t", NMIS_VECTOR_BT);
+>>  	return 0;
+>>  }
+>
+>=2E=2E=2E Oh you replaced _most_ of the random 0's in this patch=2E That =
+helps
+>for sure=2E
 
-Here it is: https://pastebin.com/raw/wL2Q38g0 - uploaded to pastebin to
-avoid clogging everyone's inbox.
+The "may" here is important=2E *Most* sources are expected to send these a=
+s either a programmable MSI or as LINT1, which is programmable in the APIC,=
+ but since the vector hasn't mattered, we can't rule out that some hardware=
+ might have been built to send an MSI with a hard-coded vector, in which ca=
+se it is most likely they send either 0, 2 or 255=2E 0 and 255 will set the=
+ unknown source bit (0), but 2 is a legitimate source so it is defensive pr=
+ogramming to leave it fallow=2E
 
-> I unfortunately cannot reproduce this issue locally, I tried on both 
-> v6.15 and latest linus master, with gcc 13.1.0 and gcc 14.2.0 . I made 
-> sure that I have FTRACE, ZSTD_COMPRESS and DEBUG_INFO enabled.
-
-Are you building on a x86-64 host? Maybe something in my build environment
-is relevant (not sure what it could be). I am building on x86-64 Debian 12
-with host GCC 12.2.0, target cross GCC 14.2.0 [1]. 
-
-Here is a minimal Dockerfile that reproduces the issue (docker build should
-fail on the last command when it gets to MODPOST vmlinux.symvers):
-
-	# docker build --progress=plain .
-	FROM debian:12
-
-	ENV DEBIAN_FRONTEND=noninteractive
-	RUN apt-get update && \
-		apt-get install -y \
-			build-essential git make gcc-12 binutils util-linux bc gawk flex \
-			bison dwarves tar wget
-
-	WORKDIR /work
-	RUN git clone --depth 1 --single-branch --branch v6.15 https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
-	RUN wget 'https://mirrors.edge.kernel.org/pub/tools/crosstool/files/bin/x86_64/14.2.0/x86_64-gcc-14.2.0-nolibc-riscv32-linux.tar.xz'
-	RUN tar xf x86_64-gcc-14.2.0-nolibc-riscv32-linux.tar.xz
-
-	WORKDIR /work/linux
-	ENV PATH=/work/gcc-14.2.0-nolibc/riscv32-linux/bin:$PATH
-	ENV CROSS_COMPILE=riscv32-linux-
-	ENV ARCH=riscv
-	RUN make distclean && \
-		make defconfig && \
-		make 32-bit.config && \
-		./scripts/config \
-			-e DEBUG_KERNEL \
-			-e DEBUG_INFO \
-			-e DEBUG_INFO_DWARF_TOOLCHAIN_DEFAULT \
-			-d DEBUG_INFO_NONE \
-			-d DEBUG_INFO_REDUCED \
-			-e FTRACE && \
-		make olddefconfig
-
-	RUN make -j19 vmlinux
-
-Hope this helps. Let me know if you need any additional info or test.
-
-[1]: https://mirrors.edge.kernel.org/pub/tools/crosstool/files/bin/x86_64/14.2.0/x86_64-gcc-14.2.0-nolibc-riscv32-linux.tar.xz
-
---
-Marco Bonelli
+Note also that although the current implementation is limited to 15 source=
+s (+ the unknown/lost source bit), the architecture allows for up to 63=2E
