@@ -1,268 +1,148 @@
-Received: from relay.hostedemail.com (smtprelay0014.hostedemail.com [216.40.44.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDA0F111BF;
-	Wed,  4 Jun 2025 19:54:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7EAE1EFFB4;
+	Wed,  4 Jun 2025 20:28:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749066882; cv=none; b=LoyTU/9s6fOAdGytjGBaBHFWegTuN1xA6ieTPQcKgP1PfxaJeGByaFxR0IB4az8JQJI+EPaOpT04Of0a4uSaMfqEMuRo+jxisVaxWFnpeePKqKMx81i1vtJXB5Tv6Ki4HabiWLzeFcGoIK8JHwJW/y3CPW0Wf+E7nwFJIV7NGZQ=
+	t=1749068928; cv=none; b=VZsu3ws0Rd9wHPtfsTNQuUGbcIN94iKe2RJiailKf+rUxyhhu/oTTb2F8wpgzQMTx6SxjXcMTh++zzBV7c0cc6AMEenZt6A1jHtY5dueLRYOVwaH1BF24MRfy3jjmc6c/epeXU85enpNRRs9L8/csruDJ9Z05IQRRQCoXK18keg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749066882; c=relaxed/simple;
-	bh=oKw90SyLsedrAFGhq66683nzBJAYf46emgOFII6AEx8=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=rXCNenvjAiajBx40lvED+PS8MiZNF+W23bOXXkqP9j/LsOfnYI7J8e3tMiC0wW5BhDKpm+uBNMDH8aVnftl2mtmIloqyoskQm+EReaOihv5V35RQyvBkR9CDnbXGKdhDiR9XDYiqMGY4dii/Sd1aS4ZOQFVkoscdWPquIvI719E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf18.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay04.hostedemail.com (Postfix) with ESMTP id 2138D1A05B1;
-	Wed,  4 Jun 2025 19:15:10 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf18.hostedemail.com (Postfix) with ESMTPA id 8E5F42F;
-	Wed,  4 Jun 2025 19:15:08 +0000 (UTC)
-Date: Wed, 4 Jun 2025 15:16:25 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>
-Subject: [PATCH] eventfs: Simplify code using guard()s
-Message-ID: <20250604151625.250d13e1@gandalf.local.home>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1749068928; c=relaxed/simple;
+	bh=noyam5GWaPL2awf00IN/m5bJjrgDJ9mecS+8d1HpfEU=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mFHMivXKMQKrJfHRTR13L9E8+rBDKT83R/1mptCbFNEsR4PVJg/OQRSlB+/WK5BqHx7V88Qo2bPXCuDxyPH6KLQzNmKxKnU70Mip8ceVu2/4GoCKE3Dk95myqXbi7fNpDmB+pItSYwkAURU9p/ob1bjosIZzmgIqhwMF2Wdwl6k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=crxGOUIv; arc=none smtp.client-ip=209.85.128.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="crxGOUIv"
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-442eb5d143eso2050655e9.0;
+        Wed, 04 Jun 2025 13:28:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749068923; x=1749673723; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=QW72yX/segTSFEPF3mC1QtZj7iNoXgPG94wFfxNFQLE=;
+        b=crxGOUIvUxBkfjE7xCpO1rA0ahqfa+eyUBYpZkzMGkH2o0XpCn7+xE3SzY/PlkV0IJ
+         3b5eTCuBC8koxkFimJmK3BohKENWlOVqsYj5coKUcVPNlurbYaI8LFB19K9PmZxC9Utj
+         cOKCtYVLq1q4knkHij/AXOQPor/r+Wh8HDV81/XX67hB66bT/yUss4WSOEgHUVS9ZkX4
+         RmuaTI1YgIxElKtCwpRYZ9A/76Y7Z1KlyC33bOiMpheU6pwboQ8doDkTr/vd/48hAfzL
+         RZsG2q2nkvVOL8a0e2Oif2Bxfb5dn0atb2fl4chK1ILUOT9y2v7DDMRovjg489/w9xob
+         bfGg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749068923; x=1749673723;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=QW72yX/segTSFEPF3mC1QtZj7iNoXgPG94wFfxNFQLE=;
+        b=IJKe00I9hV6cOF48HTuFb2F/a0MyDZCyVTjCLAaSQbNR8XSI6SyTM4x6Nkq7/9A38u
+         LNVI5FCR/Ohj+5k9x/eb/grdUmT1SwlAmgFRfGN0PsHLMzIuq4IQU9LstdRsY04pJ7nw
+         J2V0rJ3Uu/UFTPaGQ51hKSyrTwapvUaRSPpi4Z2rh+ycqZpZzPDHPpsYiEL1whMSXVGc
+         KLfS7guAMABlgX6HpJT2D7XmlumgHMOkOG5gy5MNHAxe0AuB2L5vnAHWlGWWK8nQUN1m
+         WNlS32ufMMBZEACKG6pie6bFN73cNVQGIktMV77m5khXi56z8oFymdkMpsjQiJ1z5sQl
+         0y4w==
+X-Forwarded-Encrypted: i=1; AJvYcCU/kuJBgfKe2HarO91ygqdsoaZrzcwySkQdrmifgR+pbNNMIBFlkAgqDGda2En7xKEJW4FnJqDp8j8RiNrLtVHXlHZR@vger.kernel.org, AJvYcCV/Y8BAoHUpImFNNkVoK8tqZeC0UJZ7JL1uIONPj7Ryndk5XyHrWl9JlVev6gA67qUrHwX7nNYI8s7+LiM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzDb8cay/uUUazY/i0a21smZMPh9mnXfvOV3+I4tIFv+D1Xd1D/
+	xAJS22PHsZ54yvJWAnqk21XreB4uvg5e9TusS4GvapdofeH06y2ARd4i
+X-Gm-Gg: ASbGnctINnpQj3EKiWNNh9/OdDmhmUmXJ4oXdpHElWmk941PYXhA1uuTQo1YoeMHi5U
+	UKX6HgWPKdgmSV/VZlV+zBvdvnZGxRfDxzMUT5W0O/25WCE8RCnfHPFSGVsZJ8E7/FsvhXbCDXG
+	Rah9bADewCgD65dp4bJVAIP3y1fm7hGoZHJArE3UVtEqnpY5s2QeDZD/XfXGGaOf7pyN3F4SKMR
+	IUq5M825GFbKmnAjq94SceJfFpU9a11MeWCUPc5VHTiXMp9xhIc4FeqI2V3qfyeM9AzRjvLLYIx
+	dwImHajX7r1hSa5B37NXaHa3FsUGk5Dfmbcc/kg=
+X-Google-Smtp-Source: AGHT+IEElTJGssICYj7R0432JA0UzKCUEw6TsKcBq2S54rvmxU0XesAbC/jm6oKubwGU5uu6u33pIg==
+X-Received: by 2002:a05:600c:3b2a:b0:450:cf00:20f5 with SMTP id 5b1f17b1804b1-451f0a73c20mr41659365e9.9.1749068922631;
+        Wed, 04 Jun 2025 13:28:42 -0700 (PDT)
+Received: from krava ([176.74.159.170])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-451f999a3c1sm1629065e9.6.2025.06.04.13.28.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 04 Jun 2025 13:28:42 -0700 (PDT)
+From: Jiri Olsa <olsajiri@gmail.com>
+X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
+Date: Wed, 4 Jun 2025 22:28:40 +0200
+To: Masami Hiramatsu <mhiramat@kernel.org>, Oleg Nesterov <oleg@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Andrii Nakryiko <andrii@kernel.org>, g@krava
+Cc: David Hildenbrand <david@redhat.com>, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCHv2 mm-stable] uprobes: Revert ref_ctr_offset in
+ uprobe_unregister error path
+Message-ID: <aECseBOkQynCpnfK@krava>
+References: <20250514101809.2010193-1-jolsa@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: 8E5F42F
-X-Stat-Signature: 53uycops735pk585ew3nrdg1t36e45qd
-X-Rspamd-Server: rspamout07
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX190ANwMAkLRQwGtYb8o1JhLLF/z4Ly/Yyc=
-X-HE-Tag: 1749064508-499009
-X-HE-Meta: U2FsdGVkX19K54TRwk+lP3533Vh+tzF9iJwSy5fWAOFZ3Ac72gvRDnmpKHEbBXwTvgMq0CE5f9wfIG4fOJqSJpE2RcnbUhCPYuGi222TNC9mwtqPMI0ZcrjgfKEH52WLNuVJA9vBTRjAWNT1PdgArnGoWGqr2Go5aDkWCdxvXu9/6Zsz9XnCzZNV5EecYp145E/jLGTclbQdJyOdWo8Cw8ssyOkkogE3x4MAfR2b4fru62xbCV13BrXqN40ebDzlAZah2kqWg7925uWGfiMjOI3Kf+g3vZhyRjEeEEkmZoAjZgGp5nASYu58xQwKEItTjKMgkx3EScEI9E+bPlg4rPeu+IYyfQ2DYiX+Tiii414vG4M3Z13aa3EVNQgMAmM1
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250514101809.2010193-1-jolsa@kernel.org>
 
-From: Steven Rostedt <rostedt@goodmis.org>
+On Wed, May 14, 2025 at 12:18:09PM +0200, Jiri Olsa wrote:
+> From: Jiri Olsa <olsajiri@gmail.com>
+> 
+> There's error path that could lead to inactive uprobe:
+> 
+>   1) uprobe_register succeeds - updates instruction to int3 and
+>      changes ref_ctr from 0 to 1
+>   2) uprobe_unregister fails  - int3 stays in place, but ref_ctr
+>      is changed to 0 (it's not restored to 1 in the fail path)
+>      uprobe is leaked
+>   3) another uprobe_register comes and re-uses the leaked uprobe
+>      and succeds - but int3 is already in place, so ref_ctr update
+>      is skipped and it stays 0 - uprobe CAN NOT be triggered now
+>   4) uprobe_unregister fails because ref_ctr value is unexpected
+> 
+> Fixing this by reverting the updated ref_ctr value back to 1 in step 2),
+> which is the case when uprobe_unregister fails (int3 stays in place),
+> but we have already updated refctr.
+> 
+> The new scenario will go as follows:
+> 
+>   1) uprobe_register succeeds - updates instruction to int3 and
+>      changes ref_ctr from 0 to 1
+>   2) uprobe_unregister fails  - int3 stays in place and ref_ctr
+>      is reverted to 1..  uprobe is leaked
+>   3) another uprobe_register comes and re-uses the leaked uprobe
+>      and succeds - but int3 is already in place, so ref_ctr update
+>      is skipped and it stays 1 - uprobe CAN be triggered now
+>   4) uprobe_unregister succeeds
+> 
+> Fixes: 1cc33161a83d ("uprobes: Support SDT markers having reference count (semaphore)")
+> Acked-by: David Hildenbrand <david@redhat.com>
+> Acked-by: Oleg Nesterov <oleg@redhat.com>
+> Suggested-by: Oleg Nesterov <oleg@redhat.com>
+> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
 
-Use guard(mutex), scoped_guard(mutex) and guard(src) to simplify the code
-and remove a lot of the jumps to "out:" labels.
+hi,
+I can't find this in any related tree, was this pulled in?
 
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
- fs/tracefs/event_inode.c | 96 +++++++++++++++-------------------------
- 1 file changed, 36 insertions(+), 60 deletions(-)
+thanks,
+jirka
 
-diff --git a/fs/tracefs/event_inode.c b/fs/tracefs/event_inode.c
-index 8705c77a9e75..117110fbabbf 100644
---- a/fs/tracefs/event_inode.c
-+++ b/fs/tracefs/event_inode.c
-@@ -180,29 +180,25 @@ static int eventfs_set_attr(struct mnt_idmap *idmap, struct dentry *dentry,
- 	const char *name;
- 	int ret;
- 
--	mutex_lock(&eventfs_mutex);
-+	guard(mutex)(&eventfs_mutex);
- 	ei = dentry->d_fsdata;
--	if (ei->is_freed) {
--		/* Do not allow changes if the event is about to be removed. */
--		mutex_unlock(&eventfs_mutex);
-+	/* Do not allow changes if the event is about to be removed. */
-+	if (ei->is_freed)
- 		return -ENODEV;
--	}
- 
- 	/* Preallocate the children mode array if necessary */
- 	if (!(dentry->d_inode->i_mode & S_IFDIR)) {
- 		if (!ei->entry_attrs) {
- 			ei->entry_attrs = kcalloc(ei->nr_entries, sizeof(*ei->entry_attrs),
- 						  GFP_NOFS);
--			if (!ei->entry_attrs) {
--				ret = -ENOMEM;
--				goto out;
--			}
-+			if (!ei->entry_attrs)
-+				return -ENOMEM;
- 		}
- 	}
- 
- 	ret = simple_setattr(idmap, dentry, iattr);
- 	if (ret < 0)
--		goto out;
-+		return ret;
- 
- 	/*
- 	 * If this is a dir, then update the ei cache, only the file
-@@ -225,8 +221,6 @@ static int eventfs_set_attr(struct mnt_idmap *idmap, struct dentry *dentry,
- 			}
- 		}
- 	}
-- out:
--	mutex_unlock(&eventfs_mutex);
- 	return ret;
- }
- 
-@@ -528,26 +522,24 @@ static struct dentry *eventfs_root_lookup(struct inode *dir,
- 	struct tracefs_inode *ti;
- 	struct eventfs_inode *ei;
- 	const char *name = dentry->d_name.name;
--	struct dentry *result = NULL;
- 
- 	ti = get_tracefs(dir);
- 	if (WARN_ON_ONCE(!(ti->flags & TRACEFS_EVENT_INODE)))
- 		return ERR_PTR(-EIO);
- 
--	mutex_lock(&eventfs_mutex);
-+	guard(mutex)(&eventfs_mutex);
- 
- 	ei = ti->private;
- 	if (!ei || ei->is_freed)
--		goto out;
-+		return NULL;
- 
- 	list_for_each_entry(ei_child, &ei->children, list) {
- 		if (strcmp(ei_child->name, name) != 0)
- 			continue;
- 		/* A child is freed and removed from the list at the same time */
- 		if (WARN_ON_ONCE(ei_child->is_freed))
--			goto out;
--		result = lookup_dir_entry(dentry, ei, ei_child);
--		goto out;
-+			return NULL;
-+		return lookup_dir_entry(dentry, ei, ei_child);
- 	}
- 
- 	for (int i = 0; i < ei->nr_entries; i++) {
-@@ -561,14 +553,12 @@ static struct dentry *eventfs_root_lookup(struct inode *dir,
- 
- 		data = ei->data;
- 		if (entry->callback(name, &mode, &data, &fops) <= 0)
--			goto out;
-+			return NULL;
-+
-+		return lookup_file_dentry(dentry, ei, i, mode, data, fops);
- 
--		result = lookup_file_dentry(dentry, ei, i, mode, data, fops);
--		goto out;
- 	}
-- out:
--	mutex_unlock(&eventfs_mutex);
--	return result;
-+	return NULL;
- }
- 
- /*
-@@ -584,7 +574,6 @@ static int eventfs_iterate(struct file *file, struct dir_context *ctx)
- 	struct eventfs_inode *ei;
- 	const char *name;
- 	umode_t mode;
--	int idx;
- 	int ret = -EINVAL;
- 	int ino;
- 	int i, r, c;
-@@ -598,16 +587,13 @@ static int eventfs_iterate(struct file *file, struct dir_context *ctx)
- 
- 	c = ctx->pos - 2;
- 
--	idx = srcu_read_lock(&eventfs_srcu);
-+	guard(srcu)(&eventfs_srcu);
- 
--	mutex_lock(&eventfs_mutex);
--	ei = READ_ONCE(ti->private);
--	if (ei && ei->is_freed)
--		ei = NULL;
--	mutex_unlock(&eventfs_mutex);
--
--	if (!ei)
--		goto out;
-+	scoped_guard(mutex, &eventfs_mutex) {
-+		ei = READ_ONCE(ti->private);
-+		if (!ei || ei->is_freed)
-+			return -EINVAL;
-+	}
- 
- 	/*
- 	 * Need to create the dentries and inodes to have a consistent
-@@ -622,21 +608,19 @@ static int eventfs_iterate(struct file *file, struct dir_context *ctx)
- 		entry = &ei->entries[i];
- 		name = entry->name;
- 
--		mutex_lock(&eventfs_mutex);
- 		/* If ei->is_freed then just bail here, nothing more to do */
--		if (ei->is_freed) {
--			mutex_unlock(&eventfs_mutex);
--			goto out;
-+		scoped_guard(mutex, &eventfs_mutex) {
-+			if (ei->is_freed)
-+				return -EINVAL;
-+			r = entry->callback(name, &mode, &cdata, &fops);
- 		}
--		r = entry->callback(name, &mode, &cdata, &fops);
--		mutex_unlock(&eventfs_mutex);
- 		if (r <= 0)
- 			continue;
- 
- 		ino = EVENTFS_FILE_INODE_INO;
- 
- 		if (!dir_emit(ctx, name, strlen(name), ino, DT_REG))
--			goto out;
-+			return -EINVAL;
- 	}
- 
- 	/* Subtract the skipped entries above */
-@@ -659,19 +643,13 @@ static int eventfs_iterate(struct file *file, struct dir_context *ctx)
- 
- 		ino = eventfs_dir_ino(ei_child);
- 
--		if (!dir_emit(ctx, name, strlen(name), ino, DT_DIR))
--			goto out_dec;
-+		if (!dir_emit(ctx, name, strlen(name), ino, DT_DIR)) {
-+			/* Incremented ctx->pos without adding something, reset it */
-+			ctx->pos--;
-+			return -EINVAL;
-+		}
- 	}
--	ret = 1;
-- out:
--	srcu_read_unlock(&eventfs_srcu, idx);
--
--	return ret;
--
-- out_dec:
--	/* Incremented ctx->pos without adding something, reset it */
--	ctx->pos--;
--	goto out;
-+	return 1;
- }
- 
- /**
-@@ -728,11 +706,10 @@ struct eventfs_inode *eventfs_create_dir(const char *name, struct eventfs_inode
- 	INIT_LIST_HEAD(&ei->children);
- 	INIT_LIST_HEAD(&ei->list);
- 
--	mutex_lock(&eventfs_mutex);
--	if (!parent->is_freed)
--		list_add_tail(&ei->list, &parent->children);
--	mutex_unlock(&eventfs_mutex);
--
-+	scoped_guard(mutex, &eventfs_mutex) {
-+		if (!parent->is_freed)
-+			list_add_tail(&ei->list, &parent->children);
-+	}
- 	/* Was the parent freed? */
- 	if (list_empty(&ei->list)) {
- 		cleanup_ei(ei);
-@@ -877,9 +854,8 @@ void eventfs_remove_dir(struct eventfs_inode *ei)
- 	if (!ei)
- 		return;
- 
--	mutex_lock(&eventfs_mutex);
-+	guard(mutex)(&eventfs_mutex);
- 	eventfs_remove_rec(ei, 0);
--	mutex_unlock(&eventfs_mutex);
- }
- 
- /**
--- 
-2.47.2
 
+> ---
+> v2 changes:
+> - adding proper Fixes tag and acks
+> 
+>  kernel/events/uprobes.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
+> index 4c965ba77f9f..84ee7b590861 100644
+> --- a/kernel/events/uprobes.c
+> +++ b/kernel/events/uprobes.c
+> @@ -581,8 +581,8 @@ int uprobe_write_opcode(struct arch_uprobe *auprobe, struct vm_area_struct *vma,
+>  
+>  out:
+>  	/* Revert back reference counter if instruction update failed. */
+> -	if (ret < 0 && is_register && ref_ctr_updated)
+> -		update_ref_ctr(uprobe, mm, -1);
+> +	if (ret < 0 && ref_ctr_updated)
+> +		update_ref_ctr(uprobe, mm, is_register ? -1 : 1);
+>  
+>  	/* try collapse pmd for compound page */
+>  	if (ret > 0)
+> -- 
+> 2.49.0
+> 
