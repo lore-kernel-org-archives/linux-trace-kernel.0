@@ -1,41 +1,36 @@
-Received: from relay.hostedemail.com (smtprelay0011.hostedemail.com [216.40.44.11])
+Received: from relay.hostedemail.com (smtprelay0014.hostedemail.com [216.40.44.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9628727B51A;
-	Thu,  5 Jun 2025 19:40:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38BA214A4C7;
+	Thu,  5 Jun 2025 20:16:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749152454; cv=none; b=AhY3wL1sdDIfb6nFpFTP121XtzDnwY1W7ROgaZoZ0/QiloN5OdH1d9zQbtMWBqnisZlAYOa3drZPmU+JRAU3IAsoOKM3CCx+9cM/JUgt+nkGMPV86tRy4tEHqytlVXT+LQDDxPDcPwNpDCWgf8xx5mqLgkLpc2NLXz0EC7sHCb4=
+	t=1749154575; cv=none; b=toU0vUbANuhdRk5v7vkYbSiNdWbPYya7kvf+gv3drvR18BOVfpY9v/Y9SOrjzGfzwBKGzWuFTN5zFNCg/wUr3t/XlwTEtDwJH8hYexOf4g1HXE4i4VOcnCQQyBs1v4AWZZNsWB6s1A/ohoQUVY+3A9mwxC01ci/etZHJ7PZUtyw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749152454; c=relaxed/simple;
-	bh=2mvx1X71WrvMYxe/XtqyJo1Be/It7Ye//vfBMzBgXqw=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Q2knsqMxWHWErBd2dHlTkL2YPJU6RNIzucvPPbO5j0G7+VzokqFvCXh6ruKkvNDBMjPJ478LeHc3VyYxuuwLzzEsGgXfPPN3XhhxkkInzKR4rXNujG7obQDT3ASUP2gcgnV4bpeIzXy8w+fLUVdJ0vy8xCuffF6c5Ii0Mxp8Nm0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.11
+	s=arc-20240116; t=1749154575; c=relaxed/simple;
+	bh=Y3Dr4A0D92plBQ09ORVXBscMoIKBOBElQ6/7LsJMqqY=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=LQss8k9P05/pPBvrrlRCCJa0PZVvXM+cB+e9ikELcZqskGEvllSMCNFIt6aEkc+11YfHwlfk87Pj5RZvW6gtNBNhu02lfx7dznB0dToE9RoOPXN0SII9zX7+aHzsF6lhZuDln5nn32qUlbxYfnU/xEdkSZR6FHVfG2vEGeLmCsc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.14
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf16.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay06.hostedemail.com (Postfix) with ESMTP id B838B100999;
-	Thu,  5 Jun 2025 19:40:25 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf16.hostedemail.com (Postfix) with ESMTPA id 87DC52000E;
-	Thu,  5 Jun 2025 19:40:23 +0000 (UTC)
-Date: Thu, 5 Jun 2025 15:41:41 -0400
+Received: from omf20.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay10.hostedemail.com (Postfix) with ESMTP id 8BBF1C1698;
+	Thu,  5 Jun 2025 20:15:44 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf20.hostedemail.com (Postfix) with ESMTPA id 75B3820025;
+	Thu,  5 Jun 2025 20:15:42 +0000 (UTC)
+Date: Thu, 5 Jun 2025 16:17:01 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
-To: "Flot, Julien" <julien.flot@siemens.com>
-Cc: "Schmidt, Adriaan" <adriaan.schmidt@siemens.com>, "Ziegler, Andreas"
- <ziegler.andreas@siemens.com>, "Kiszka, Jan" <jan.kiszka@siemens.com>,
- "linux-trace-kernel@vger.kernel.org" <linux-trace-kernel@vger.kernel.org>,
- "mathieu.desnoyers@efficios.com" <mathieu.desnoyers@efficios.com>,
- "MOESSBAUER, Felix" <felix.moessbauer@siemens.com>,
- "linux-rt-users@vger.kernel.org" <linux-rt-users@vger.kernel.org>, "Paul E.
- McKenney" <paulmck@kernel.org>
-Subject: Re: ftrace regression with PREEMPT_RT kernels
-Message-ID: <20250605154141.5b496e2c@gandalf.local.home>
-In-Reply-To: <20250605105050.219a4a1c@gandalf.local.home>
-References: <240017f656631c7dd4017aa93d91f41f653788ea.camel@siemens.com>
- <20250605082846.179bca96@gandalf.local.home>
- <5f721932e0bbf880d2817498e35b54eabb167d98.camel@siemens.com>
- <20250605105050.219a4a1c@gandalf.local.home>
+To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, "Paul E. McKenney" <paulmck@kernel.org>,
+ "Flot, Julien" <julien.flot@siemens.com>, "Kiszka, Jan"
+ <jan.kiszka@siemens.com>, "Ziegler, Andreas" 
+ <ziegler.andreas@siemens.com>, "MOESSBAUER, Felix"
+ <felix.moessbauer@siemens.com>
+Subject: [PATCH] tracing: Fix regression of filter waiting a long time on
+ RCU synchronization
+Message-ID: <20250605161701.35f7989a@gandalf.local.home>
 X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -45,34 +40,44 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: 87DC52000E
-X-Stat-Signature: fwmznnr3kpgsix9yntzz9gqty89mcr98
-X-Rspamd-Server: rspamout05
+X-Rspamd-Queue-Id: 75B3820025
+X-Rspamd-Server: rspamout08
+X-Stat-Signature: xfb1t1u99coszrp6biqxe3r7kwmwpaq6
 X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX18XCSfPbdO6EAG6bi+7NFMe+E2dijRN0d0=
-X-HE-Tag: 1749152423-213065
-X-HE-Meta: U2FsdGVkX1/mWpnyohkAkvMJKqq8P/OiHbXDwXf12k+Ov2zoOtDdwxAHkUp3kAxSWFawuBVgB9qERd+FxdkRzprvE+3jtPdCtzgdsHVrr4q7/CaWSHp1qIKDdGHtSmMP8+O/dxkahsl16BccpJ2hKctNpMPO9A/rUeH+f995OCQiMb4mIUN1cpRTAYevduX3kk30dtKY/bY2ZniYJkeKfiXkOGkV8OnEYwCgC5dhXF+yOEJdulLkj/A0Gl/QFlXTodRgV6QLx4AdFAZC5XaICvubFWgyjL4RVWDMImTWXjtmSUG9vKpP+MN6SWcioR8UB0FsSUk8HWVdcs3lcUBCyYnB2rxol6E8vyHBLvZw9sGO4iEmqmACZ6hkAqdOre5WTmOFIFPFuKyMnb+4/FjuPQ==
+X-Session-ID: U2FsdGVkX1/hikdnKKvPqCv02k1FoHf5jN7vevUTBTw=
+X-HE-Tag: 1749154542-60661
+X-HE-Meta: U2FsdGVkX1/6UFJjCKxjjTXMtaKqWGVDKdEmWIvTC9DEohtRN5TN+518HIlSq7yDJw29mGOZB6iBi+I2lNQbs2ai26RE5It1BmwPFuL5i1e/7JhXORDVCO9i6q6rGJSuE/suti9BxrF+MM1YCXLoClMz9Y/0YkG+U8HbuO7L7LQg5x7lv8Lrxyl4eYWErzwhKby5tC1s0Uv+a6bZF/T/auZVA6tDFiIgixj5j9JD+DBEIL9HCcyPC5BZbVxx/Kdpr8VFOZsgTz0hHar0waKPaKhq8msoVfrsag9wvdP78V9UaWQWrRJnli2yRbs6EpipK+sWPSIHsPdDPlDPFkAEO2Gft+Ncy0GpANjGBtl+qLAFplFHnPPwMxvbGG7xBdmbqs8ByL7QGbdVukVrQQUhH967Mjk81PQCuP+8UTsZbx0=
 
-On Thu, 5 Jun 2025 10:50:50 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
+From: Steven Rostedt <rostedt@goodmis.org>
 
-> On Thu, 5 Jun 2025 14:41:43 +0000
-> "Flot, Julien" <julien.flot@siemens.com> wrote:
-> 
-> 
-> > I have tried the patch, I am afraid it does not help. I have roughly
-> > the same results as in previous versions.  
-> 
-> Bah, there's three more places that call
-> tracepoint_synchronize_unregister() :-p
-> 
-> Let me try to get rid of those too.
+When faultable trace events were added, a trace event may no longer use
+normal RCU to synchronize but instead used synchronize_rcu_tasks_trace().
+This synchronization takes a much longer time to synchronize.
 
-So I decided to enable PREEMPT_RT and yes, I can reproduce this too.
+The filter logic would free the filters by calling
+tracepoint_synchronize_unregister() after it unhooked the filter strings
+and before freeing them. With this function now calling
+synchronize_rcu_tasks_trace() this increased the time to free a filter
+tremendously. On a PREEMPT_RT system, it was even more noticeable.
 
-I ran the following:
+ # time trace-cmd record -p function sleep 1
+ [..]
+ real	2m29.052s
+ user	0m0.244s
+ sys	0m20.136s
 
-  # trace-cmd sqlhist -e -n sched_stack  select start.prev_state as state, end.next_comm as comm, TIMESTAMP_DELTA_USECS as delta,  start.STACKTRACE as stack from sched_switch as start join sched_switch as end on start.prev_pid = end.next_pid
+As trace-cmd would clear out all the filters before recording, it could
+take up to 2 minutes to do a recording of "sleep 1".
+
+To find out where the issues was:
+
+ ~# trace-cmd sqlhist -e -n sched_stack  select start.prev_state as state, end.next_comm as comm, TIMESTAMP_DELTA_USECS as delta,  start.STACKTRACE as stack from sched_switch as start join sched_switch as end on start.prev_pid = end.next_pid
+
+Which will produce the following commands (and -e will also execute them):
+
+ echo 's:sched_stack s64 state; char comm[16]; u64 delta; unsigned long stack[];' >> /sys/kernel/tracing/dynamic_events
+ echo 'hist:keys=prev_pid:__arg_18057_2=prev_state,__arg_18057_4=common_timestamp.usecs,__arg_18057_7=common_stacktrace' >> /sys/kernel/tracing/events/sched/sched_switch/trigger
+ echo 'hist:keys=next_pid:__state_18057_1=$__arg_18057_2,__comm_18057_3=next_comm,__delta_18057_5=common_timestamp.usecs-$__arg_18057_4,__stack_18057_6=$__arg_18057_7:onmatch(sched.sched_switch).trace(sched_stack,$__state_18057_1,$__comm_18057_3,$__delta_18057_5,$__stack_18057_6)' >> /sys/kernel/tracing/events/sched/sched_switch/trigger
 
 The above creates a synthetic event that creates a stack trace when a task
 schedules out and records it with the time it scheduled back in. Basically
@@ -80,48 +85,16 @@ the time a task is off the CPU. It also records the state of the task when
 it left the CPU (running, blocked, sleeping, etc). It also saves the comm
 of the task as "comm" (needed for the next command).
 
-  # echo 'hist:keys=state,stack.stacktrace:vals=delta:sort=state,delta if comm == "trace-cmd" &&  state & 3' > /sys/kernel/tracing/events/synthetic/sched_stack/trigger
+~# echo 'hist:keys=state,stack.stacktrace:vals=delta:sort=state,delta if comm == "trace-cmd" &&  state & 3' > /sys/kernel/tracing/events/synthetic/sched_stack/trigger
 
 The above creates a histogram with buckets per state, per stack, and the
 value of the total time it was off the CPU for that stack trace. It filters
 on tasks with "comm == trace-cmd" and only the sleeping and blocked states
 (1 - sleeping, 2 - blocked).
 
-  # trace-cmd record -p function sleep 1
+~# trace-cmd record -p function sleep 1
 
-  # cat /sys/kernel/tracing/events/synthetic/sched_stack/hist | tail -50
-         path_openat+0x1a36/0x2990
-         do_filp_open+0x1c5/0x420
-         do_sys_openat2+0xed/0x180
-         __x64_sys_openat+0x108/0x1d0
-         do_syscall_64+0x7b/0x420
-} hitcount:          2  delta:      74781
-{ state:          2, stack.stacktrace         __schedule+0x1545/0x3700
-         schedule+0xe2/0x390
-         schedule_timeout+0x175/0x200
-         wait_for_completion_state+0x294/0x440
-         __wait_rcu_gp+0x247/0x4f0
-         synchronize_rcu_tasks_generic+0x151/0x230
-         apply_subsystem_event_filter+0x77c/0x1300
-         subsystem_filter_write+0x67/0xc0
-         vfs_write+0x1e2/0xeb0
-         ksys_write+0xff/0x1d0
-         do_syscall_64+0x7b/0x420
-         entry_SYSCALL_64_after_hwframe+0x76/0x7e
-} hitcount:          1  delta:     210957
-{ state:          2, stack.stacktrace         __schedule+0x1545/0x3700
-         schedule+0xe2/0x390
-         schedule_timeout+0x175/0x200
-         wait_for_completion_state+0x294/0x440
-         __wait_rcu_gp+0x247/0x4f0
-         synchronize_rcu_normal+0x3db/0x5c0
-         apply_subsystem_event_filter+0xa30/0x1300
-         subsystem_filter_write+0x67/0xc0
-         vfs_write+0x1e2/0xeb0
-         ksys_write+0xff/0x1d0
-         do_syscall_64+0x7b/0x420
-         entry_SYSCALL_64_after_hwframe+0x76/0x7e
-} hitcount:        237  delta:    6316500
+~# cat /sys/kernel/tracing/events/synthetic/sched_stack/hist | tail -18
 { state:          2, stack.stacktrace         __schedule+0x1545/0x3700
          schedule+0xe2/0x390
          schedule_timeout+0x175/0x200
@@ -141,45 +114,25 @@ Totals:
     Entries: 21
     Dropped: 0
 
+This shows that this particular trace waited for 99 seconds on
+synchronize_rcu_tasks() in apply_subsystem_event_filter().
 
-This shows that it is definitely waiting on the synchronize_rcu_tasks() but
-I see that it's called by apply_subsystem_event_filter() which I didn't
-cover. But I looked at all the tracepoint_synchronize_unregister() in the
-trace_events_filter.c code and replaced them with a double call_rcu_task/rcu().
+In fact, there's a lot of places in the filter code that spends a lot of
+time waiting for synchronize_rcu_tasks_trace() in order to free the
+filters.
 
-This appears to fix the issue. With that, trace-cmd record is much faster
-and the histogram now looks like this:
+Add helper functions that will use call_rcu*() variants to asynchronously
+free the filters. This brings the timings back to normal:
 
-~# cat /sys/kernel/tracing/events/synthetic/sched_stack/hist | tail -50
-         schedule_timeout+0x175/0x200
-         wait_for_completion_state+0x294/0x440
-         __wait_rcu_gp+0x247/0x4f0
-         synchronize_rcu_normal+0x3db/0x5c0
-         ring_buffer_reset_online_cpus+0x142/0x350
-         tracing_reset_online_cpus+0x14b/0x1e0
-         tracing_open+0x335/0x440
-         do_dentry_open+0x4c6/0x17a0
-         vfs_open+0x82/0x360
-         path_openat+0x1a36/0x2990
-         do_filp_open+0x1c5/0x420
-         do_sys_openat2+0xed/0x180
-         __x64_sys_openat+0x108/0x1d0
-} hitcount:          2  delta:      61260
-{ state:          2, stack.stacktrace         __schedule+0x1545/0x3700
-         schedule+0xe2/0x390
-         schedule_timeout+0x175/0x200
-         wait_for_completion_state+0x294/0x440
-         __wait_rcu_gp+0x247/0x4f0
-         synchronize_rcu_normal+0x3db/0x5c0
-         ring_buffer_reset_online_cpus+0x142/0x350
-         tracing_reset_online_cpus+0x14b/0x1e0
-         tracing_set_tracer+0x4d5/0xa80
-         tracing_set_trace_write+0x138/0x1e0
-         vfs_write+0x1e2/0xeb0
-         ksys_write+0xff/0x1d0
-         do_syscall_64+0x7b/0x420
-         entry_SYSCALL_64_after_hwframe+0x76/0x7e
-} hitcount:          2  delta:      61699
+ # time trace-cmd record -p function sleep 1
+ [..]
+ real	0m14.681s
+ user	0m0.335s
+ sys	0m28.616s
+
+And the histogram also shows this:
+
+~# cat /sys/kernel/tracing/events/synthetic/sched_stack/hist | tail -21
 { state:          2, stack.stacktrace         __schedule+0x1545/0x3700
          schedule+0xe2/0x390
          schedule_timeout+0x175/0x200
@@ -202,10 +155,17 @@ Totals:
     Entries: 28
     Dropped: 0
 
+Where the total waiting time of synchronize_rcu_tasks_trace() is 77
+milliseconds.
 
-With the max delta wait time of just 77 milliseconds total.
-
--- Steve
+Cc: stable@vger.kernel.org
+Reported-by: "Flot, Julien" <julien.flot@siemens.com>
+Fixes: a363d27cdbc2 ("tracing: Allow system call tracepoints to handle page faults")
+Closes: https://lore.kernel.org/all/240017f656631c7dd4017aa93d91f41f653788ea.camel@siemens.com/
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+ kernel/trace/trace_events_filter.c | 164 ++++++++++++++++++++++-------
+ 1 file changed, 127 insertions(+), 37 deletions(-)
 
 diff --git a/kernel/trace/trace_events_filter.c b/kernel/trace/trace_events_filter.c
 index 2048560264bb..3ff782d6b522 100644
@@ -457,3 +417,6 @@ index 2048560264bb..3ff782d6b522 100644
  		return 0;
  	}
  
+-- 
+2.47.2
+
