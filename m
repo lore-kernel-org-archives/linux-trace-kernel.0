@@ -1,106 +1,285 @@
-Received: from mail-yb1-f175.google.com (mail-yb1-f175.google.com [209.85.219.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 534F3A32;
-	Thu,  5 Jun 2025 00:06:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A8CB8F64;
+	Thu,  5 Jun 2025 01:05:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749082015; cv=none; b=YShlpIBe4xRFN304Yg9DHRaZbTfyXlAfqrvLRngGix790vRGcw7qVsyC38Lv9NYlVwCtg/t5VCEQUPtWs8Rum//0xqn5FRWRDmRXhKSBM7sKX7XOHjM/vs9V8Vg2YawKPgA2wxBaSVj3Hp3GYa9PDn5jQPLIQrbNs0AxsLlK8Ao=
+	t=1749085501; cv=none; b=KknNm+mDqyWEagFEnYNX4JsqXjcbk9YYylv2W4ZhxFjnaoQGE07eR+HwJybgwGeaSWf1dduk1yxWMOykIQ0jgDB+FkL7VmgW3ah7w+8eOvimP1ixL7rWYVSS0ZUPwlaLeFaKrZqHqfU46fbmWkPDZfdRvp0MkwUZf3jwjPvcLSI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749082015; c=relaxed/simple;
-	bh=0CCPwPznTo8e1C80rD4v5dfasdzjtlizNqRqq4FZQd8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=hihBpT204b07u9nXWEaQcUjLOll8u0KInTx5dwg/5MtPbLEY+5DwRR/fW5NL3kS/FWZFPcKFLrZ/hCbrucY7hBAn5xC19Pc0C7uVQIeYzdprlgnjSg8jVx87BCgvC8Ns8Vq3iZX3QK+V9ILQMEaHYi4WBJZXr3ZJKY6uCtFClks=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=juQKESK9; arc=none smtp.client-ip=209.85.219.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749085501; c=relaxed/simple;
+	bh=1xWCYJUzcVE9fastKj+mLIk0SikYvKYRyzfd7zwHjqU=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=g4NzahqaeCr9F56gvIG2lSa0/8Y5NCyoBvvFdu9t4kxxfNdW2h9UcCMUWymygay5Wwk3ocWmyyfzAwUc1CVr1GMTA60nIBo14uqbro8etsGNnzaVYyV2kjNl7DjWSH8PjhD3Et63TgpQvbNXTkO3mtthrL9mNQ2bqUUZpUiKsfA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DymsQzvg; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="juQKESK9"
-Received: by mail-yb1-f175.google.com with SMTP id 3f1490d57ef6-e818a572828so146825276.1;
-        Wed, 04 Jun 2025 17:06:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749082013; x=1749686813; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=jYGDWZp7STe9epYxyRZPry6LWZ2IgWRwn6tFibdzSAI=;
-        b=juQKESK9laPJeM6KQ50bS6f974JD81a7LZBeQw+mUoFQiYbonlplJOyuH7FwU5VI/h
-         Pv/wOpolRDJml/bKEo1/sA/V2qlQ0KNoMwtlvXXZi0Lu7LNWlZP2zGx79Ylzi/e0BLvn
-         5V+ieCmhdW8p+0mUP0rIgwdpPycRQUE2BX2pUrArRA+jBMFHgV0JDUOjV0bw/uIH5WD7
-         c0G6Zx26xzdCvfQd+ikcea9Ip1ihkTarV9C2Bow0AcNMGal2Vcy0UKbABURRdZgDyLVv
-         pNfAcPvDNOdD06Gy0TVZe/O2Vk6Ti9WCpUllbB2PWO2wY4Cgo5Emot82vo9xdAD7Q7K8
-         9IXA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749082013; x=1749686813;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=jYGDWZp7STe9epYxyRZPry6LWZ2IgWRwn6tFibdzSAI=;
-        b=d8mNLqrN7N/I1w3NGNZ7YV0Cxw2qYeo/I+dYIFFZmoa+DvmzDKxpFVeDm+QkTPkvOm
-         9vUJ/CzhjHfFOiImCTeLZom/hWl9SthM0dwo0WSi4ZZQPcF3jDTvFWE/u5mN+TrpXrFn
-         1y5G3XFCmAo0zdV8fx3D/uujZ2PS5IxcteNYpzSRUEns/m0gKV4JplOtMkGIyp6FRQ1G
-         gzYmLP7O6yC+s8ahyycX3zkR6y7kzIPm7oWttnF7Llgrl8b0LtbhkWUV2tKff7iuITJd
-         jk2YpBua9j5MLeA9jTK/2UktoCztjcj24XGwV7dF9B0O70eyzoaEw9uOvYeKH/is4NPi
-         4QGw==
-X-Forwarded-Encrypted: i=1; AJvYcCWmAdR06aMIyJUvnDcks8vIHZ52lHhpAR66X8fNo/3HYnRs6jIsoFKuMoKq3a2HS78+LlftG73g2ich0Ps=@vger.kernel.org, AJvYcCXtJli/Z+srVtYGwwQjiCdQCA4LUXdJkubK/y4YQDGbk1SCb1iheT39vqfF95WXNUWZlnrqKM/PgG0Fe0VW/lbc7wsf@vger.kernel.org
-X-Gm-Message-State: AOJu0YyVK+d8auhWKYiaUNR+DyzxALn3IOPpwmv9C3XNyVF6dbvcj5gv
-	/HmOEpgKoB5byaCRV1a0ezg34X7+x2jPL6oV8luqOMnFlRelf2oD0Ubp
-X-Gm-Gg: ASbGncsPLRWThtvCldt0VN73969MUvKp0x6x3hyMrGzH2UjFt6qvmZgWHG+OXWMPSgY
-	Pd+T+H7BLMY4fQpvxjRtRfDAHWJc+28z7be+obS863H0lxmNWzCXnJiNQX8HWtcsw6zyMjSTZNE
-	TGwqvd7gUNahI7a4cQqyAxB6cckTaYwj39+ECyXT3DUQJJ2XZ68muwJWDyWbY5allaTPHa7v7S/
-	cx3PZ3u2Au5wJR1e3FRMqHjvS/NedwHp2mJMOvbB8fEZvrbuIlCNysdAGDUiO6BYKpewS9Mq8fr
-	1EpeJ+y5WHD6nC7+1KTTxGPCPkf9mwueBCRx89F3tJvOua+gaKxa8Y+Qbyd/Gxd0+ADUt9tNQ+T
-	TzlbuN3zcAyo=
-X-Google-Smtp-Source: AGHT+IEaTT2Odqt9s3aafh3eYQkQCU7ibTz4//UO8SfwKYgfxswGGtOn96hF2VfXOqO66zZ8OHpWnA==
-X-Received: by 2002:a05:690c:6705:b0:710:a35d:1de6 with SMTP id 00721157ae682-710d9f35e08mr63781647b3.17.1749082013152;
-        Wed, 04 Jun 2025 17:06:53 -0700 (PDT)
-Received: from localhost (c-73-224-175-84.hsd1.fl.comcast.net. [73.224.175.84])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-70f8abef114sm32531027b3.29.2025.06.04.17.06.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Jun 2025 17:06:52 -0700 (PDT)
-From: Yury Norov <yury.norov@gmail.com>
-To: Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Cc: Yury Norov <yury.norov@gmail.com>
-Subject: [PATCH] trace: fix opencoded cpumask_next_wrap() in move_to_next_cpu()
-Date: Wed,  4 Jun 2025 20:06:50 -0400
-Message-ID: <20250605000651.45281-1-yury.norov@gmail.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DymsQzvg"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E4DFAC4CEE4;
+	Thu,  5 Jun 2025 01:04:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749085500;
+	bh=1xWCYJUzcVE9fastKj+mLIk0SikYvKYRyzfd7zwHjqU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=DymsQzvgdtAO4Mnbi+bVuX8f3gI4Jt12psyC0q27OQfw7Wzna0aChA43jbQb4GGE1
+	 tsDNbD71qsgoAP3fsjd9/woO2Ze8AzI+khNIPmfUwrbgULIADMu7M15Jidg0UER2v2
+	 v3gKG3NQa2pD2QyZfPr4MWyPXEQ/XL73EGoslOqPpyGWUUnyQ/wC6QISmEBoUsA07b
+	 JOuSUvEroBOh4p9vzRtuRQemTMpC94QRGOXdO31R6XcAfnvqYz7KyaRxBzzpsEhD/4
+	 jYUm2H0tcRjgT28pmpcmgoMmFer7KzTATs7NBEDf7Ost4p6SyFvf5zVXt+NLIkDl7o
+	 DKjvgIUo98SMg==
+Date: Thu, 5 Jun 2025 10:04:58 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Subject: Re: [PATCH] eventfs: Simplify code using guard()s
+Message-Id: <20250605100458.dc8c85fec33d8f8ca54dbc44@kernel.org>
+In-Reply-To: <20250604151625.250d13e1@gandalf.local.home>
+References: <20250604151625.250d13e1@gandalf.local.home>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-The dedicated cpumask_next_wrap() is more verbose and effective than
-cpumask_next() followed by cpumask_first().
+On Wed, 4 Jun 2025 15:16:25 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-Signed-off-by: Yury Norov <yury.norov@gmail.com>
----
- kernel/trace/trace_hwlat.c | 5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
+> From: Steven Rostedt <rostedt@goodmis.org>
+> 
+> Use guard(mutex), scoped_guard(mutex) and guard(src) to simplify the code
+> and remove a lot of the jumps to "out:" labels.
+> 
 
-diff --git a/kernel/trace/trace_hwlat.c b/kernel/trace/trace_hwlat.c
-index b65353ec2837..2f7b94e98317 100644
---- a/kernel/trace/trace_hwlat.c
-+++ b/kernel/trace/trace_hwlat.c
-@@ -325,12 +325,9 @@ static void move_to_next_cpu(void)
- 
- 	cpus_read_lock();
- 	cpumask_and(current_mask, cpu_online_mask, tr->tracing_cpumask);
--	next_cpu = cpumask_next(raw_smp_processor_id(), current_mask);
-+	next_cpu = cpumask_next_wrap(raw_smp_processor_id(), current_mask);
- 	cpus_read_unlock();
- 
--	if (next_cpu >= nr_cpu_ids)
--		next_cpu = cpumask_first(current_mask);
--
- 	if (next_cpu >= nr_cpu_ids) /* Shouldn't happen! */
- 		goto change_mode;
- 
+Looks good to me.
+
+Reviewed-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+
+Thanks!
+
+> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+> ---
+>  fs/tracefs/event_inode.c | 96 +++++++++++++++-------------------------
+>  1 file changed, 36 insertions(+), 60 deletions(-)
+> 
+> diff --git a/fs/tracefs/event_inode.c b/fs/tracefs/event_inode.c
+> index 8705c77a9e75..117110fbabbf 100644
+> --- a/fs/tracefs/event_inode.c
+> +++ b/fs/tracefs/event_inode.c
+> @@ -180,29 +180,25 @@ static int eventfs_set_attr(struct mnt_idmap *idmap, struct dentry *dentry,
+>  	const char *name;
+>  	int ret;
+>  
+> -	mutex_lock(&eventfs_mutex);
+> +	guard(mutex)(&eventfs_mutex);
+>  	ei = dentry->d_fsdata;
+> -	if (ei->is_freed) {
+> -		/* Do not allow changes if the event is about to be removed. */
+> -		mutex_unlock(&eventfs_mutex);
+> +	/* Do not allow changes if the event is about to be removed. */
+> +	if (ei->is_freed)
+>  		return -ENODEV;
+> -	}
+>  
+>  	/* Preallocate the children mode array if necessary */
+>  	if (!(dentry->d_inode->i_mode & S_IFDIR)) {
+>  		if (!ei->entry_attrs) {
+>  			ei->entry_attrs = kcalloc(ei->nr_entries, sizeof(*ei->entry_attrs),
+>  						  GFP_NOFS);
+> -			if (!ei->entry_attrs) {
+> -				ret = -ENOMEM;
+> -				goto out;
+> -			}
+> +			if (!ei->entry_attrs)
+> +				return -ENOMEM;
+>  		}
+>  	}
+>  
+>  	ret = simple_setattr(idmap, dentry, iattr);
+>  	if (ret < 0)
+> -		goto out;
+> +		return ret;
+>  
+>  	/*
+>  	 * If this is a dir, then update the ei cache, only the file
+> @@ -225,8 +221,6 @@ static int eventfs_set_attr(struct mnt_idmap *idmap, struct dentry *dentry,
+>  			}
+>  		}
+>  	}
+> - out:
+> -	mutex_unlock(&eventfs_mutex);
+>  	return ret;
+>  }
+>  
+> @@ -528,26 +522,24 @@ static struct dentry *eventfs_root_lookup(struct inode *dir,
+>  	struct tracefs_inode *ti;
+>  	struct eventfs_inode *ei;
+>  	const char *name = dentry->d_name.name;
+> -	struct dentry *result = NULL;
+>  
+>  	ti = get_tracefs(dir);
+>  	if (WARN_ON_ONCE(!(ti->flags & TRACEFS_EVENT_INODE)))
+>  		return ERR_PTR(-EIO);
+>  
+> -	mutex_lock(&eventfs_mutex);
+> +	guard(mutex)(&eventfs_mutex);
+>  
+>  	ei = ti->private;
+>  	if (!ei || ei->is_freed)
+> -		goto out;
+> +		return NULL;
+>  
+>  	list_for_each_entry(ei_child, &ei->children, list) {
+>  		if (strcmp(ei_child->name, name) != 0)
+>  			continue;
+>  		/* A child is freed and removed from the list at the same time */
+>  		if (WARN_ON_ONCE(ei_child->is_freed))
+> -			goto out;
+> -		result = lookup_dir_entry(dentry, ei, ei_child);
+> -		goto out;
+> +			return NULL;
+> +		return lookup_dir_entry(dentry, ei, ei_child);
+>  	}
+>  
+>  	for (int i = 0; i < ei->nr_entries; i++) {
+> @@ -561,14 +553,12 @@ static struct dentry *eventfs_root_lookup(struct inode *dir,
+>  
+>  		data = ei->data;
+>  		if (entry->callback(name, &mode, &data, &fops) <= 0)
+> -			goto out;
+> +			return NULL;
+> +
+> +		return lookup_file_dentry(dentry, ei, i, mode, data, fops);
+>  
+> -		result = lookup_file_dentry(dentry, ei, i, mode, data, fops);
+> -		goto out;
+>  	}
+> - out:
+> -	mutex_unlock(&eventfs_mutex);
+> -	return result;
+> +	return NULL;
+>  }
+>  
+>  /*
+> @@ -584,7 +574,6 @@ static int eventfs_iterate(struct file *file, struct dir_context *ctx)
+>  	struct eventfs_inode *ei;
+>  	const char *name;
+>  	umode_t mode;
+> -	int idx;
+>  	int ret = -EINVAL;
+>  	int ino;
+>  	int i, r, c;
+> @@ -598,16 +587,13 @@ static int eventfs_iterate(struct file *file, struct dir_context *ctx)
+>  
+>  	c = ctx->pos - 2;
+>  
+> -	idx = srcu_read_lock(&eventfs_srcu);
+> +	guard(srcu)(&eventfs_srcu);
+>  
+> -	mutex_lock(&eventfs_mutex);
+> -	ei = READ_ONCE(ti->private);
+> -	if (ei && ei->is_freed)
+> -		ei = NULL;
+> -	mutex_unlock(&eventfs_mutex);
+> -
+> -	if (!ei)
+> -		goto out;
+> +	scoped_guard(mutex, &eventfs_mutex) {
+> +		ei = READ_ONCE(ti->private);
+> +		if (!ei || ei->is_freed)
+> +			return -EINVAL;
+> +	}
+>  
+>  	/*
+>  	 * Need to create the dentries and inodes to have a consistent
+> @@ -622,21 +608,19 @@ static int eventfs_iterate(struct file *file, struct dir_context *ctx)
+>  		entry = &ei->entries[i];
+>  		name = entry->name;
+>  
+> -		mutex_lock(&eventfs_mutex);
+>  		/* If ei->is_freed then just bail here, nothing more to do */
+> -		if (ei->is_freed) {
+> -			mutex_unlock(&eventfs_mutex);
+> -			goto out;
+> +		scoped_guard(mutex, &eventfs_mutex) {
+> +			if (ei->is_freed)
+> +				return -EINVAL;
+> +			r = entry->callback(name, &mode, &cdata, &fops);
+>  		}
+> -		r = entry->callback(name, &mode, &cdata, &fops);
+> -		mutex_unlock(&eventfs_mutex);
+>  		if (r <= 0)
+>  			continue;
+>  
+>  		ino = EVENTFS_FILE_INODE_INO;
+>  
+>  		if (!dir_emit(ctx, name, strlen(name), ino, DT_REG))
+> -			goto out;
+> +			return -EINVAL;
+>  	}
+>  
+>  	/* Subtract the skipped entries above */
+> @@ -659,19 +643,13 @@ static int eventfs_iterate(struct file *file, struct dir_context *ctx)
+>  
+>  		ino = eventfs_dir_ino(ei_child);
+>  
+> -		if (!dir_emit(ctx, name, strlen(name), ino, DT_DIR))
+> -			goto out_dec;
+> +		if (!dir_emit(ctx, name, strlen(name), ino, DT_DIR)) {
+> +			/* Incremented ctx->pos without adding something, reset it */
+> +			ctx->pos--;
+> +			return -EINVAL;
+> +		}
+>  	}
+> -	ret = 1;
+> - out:
+> -	srcu_read_unlock(&eventfs_srcu, idx);
+> -
+> -	return ret;
+> -
+> - out_dec:
+> -	/* Incremented ctx->pos without adding something, reset it */
+> -	ctx->pos--;
+> -	goto out;
+> +	return 1;
+>  }
+>  
+>  /**
+> @@ -728,11 +706,10 @@ struct eventfs_inode *eventfs_create_dir(const char *name, struct eventfs_inode
+>  	INIT_LIST_HEAD(&ei->children);
+>  	INIT_LIST_HEAD(&ei->list);
+>  
+> -	mutex_lock(&eventfs_mutex);
+> -	if (!parent->is_freed)
+> -		list_add_tail(&ei->list, &parent->children);
+> -	mutex_unlock(&eventfs_mutex);
+> -
+> +	scoped_guard(mutex, &eventfs_mutex) {
+> +		if (!parent->is_freed)
+> +			list_add_tail(&ei->list, &parent->children);
+> +	}
+>  	/* Was the parent freed? */
+>  	if (list_empty(&ei->list)) {
+>  		cleanup_ei(ei);
+> @@ -877,9 +854,8 @@ void eventfs_remove_dir(struct eventfs_inode *ei)
+>  	if (!ei)
+>  		return;
+>  
+> -	mutex_lock(&eventfs_mutex);
+> +	guard(mutex)(&eventfs_mutex);
+>  	eventfs_remove_rec(ei, 0);
+> -	mutex_unlock(&eventfs_mutex);
+>  }
+>  
+>  /**
+> -- 
+> 2.47.2
+> 
+
+
 -- 
-2.43.0
-
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
