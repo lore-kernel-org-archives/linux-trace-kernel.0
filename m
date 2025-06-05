@@ -1,148 +1,106 @@
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+Received: from mail-yb1-f175.google.com (mail-yb1-f175.google.com [209.85.219.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7EAE1EFFB4;
-	Wed,  4 Jun 2025 20:28:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 534F3A32;
+	Thu,  5 Jun 2025 00:06:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749068928; cv=none; b=VZsu3ws0Rd9wHPtfsTNQuUGbcIN94iKe2RJiailKf+rUxyhhu/oTTb2F8wpgzQMTx6SxjXcMTh++zzBV7c0cc6AMEenZt6A1jHtY5dueLRYOVwaH1BF24MRfy3jjmc6c/epeXU85enpNRRs9L8/csruDJ9Z05IQRRQCoXK18keg=
+	t=1749082015; cv=none; b=YShlpIBe4xRFN304Yg9DHRaZbTfyXlAfqrvLRngGix790vRGcw7qVsyC38Lv9NYlVwCtg/t5VCEQUPtWs8Rum//0xqn5FRWRDmRXhKSBM7sKX7XOHjM/vs9V8Vg2YawKPgA2wxBaSVj3Hp3GYa9PDn5jQPLIQrbNs0AxsLlK8Ao=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749068928; c=relaxed/simple;
-	bh=noyam5GWaPL2awf00IN/m5bJjrgDJ9mecS+8d1HpfEU=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mFHMivXKMQKrJfHRTR13L9E8+rBDKT83R/1mptCbFNEsR4PVJg/OQRSlB+/WK5BqHx7V88Qo2bPXCuDxyPH6KLQzNmKxKnU70Mip8ceVu2/4GoCKE3Dk95myqXbi7fNpDmB+pItSYwkAURU9p/ob1bjosIZzmgIqhwMF2Wdwl6k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=crxGOUIv; arc=none smtp.client-ip=209.85.128.51
+	s=arc-20240116; t=1749082015; c=relaxed/simple;
+	bh=0CCPwPznTo8e1C80rD4v5dfasdzjtlizNqRqq4FZQd8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=hihBpT204b07u9nXWEaQcUjLOll8u0KInTx5dwg/5MtPbLEY+5DwRR/fW5NL3kS/FWZFPcKFLrZ/hCbrucY7hBAn5xC19Pc0C7uVQIeYzdprlgnjSg8jVx87BCgvC8Ns8Vq3iZX3QK+V9ILQMEaHYi4WBJZXr3ZJKY6uCtFClks=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=juQKESK9; arc=none smtp.client-ip=209.85.219.175
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="crxGOUIv"
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-442eb5d143eso2050655e9.0;
-        Wed, 04 Jun 2025 13:28:44 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="juQKESK9"
+Received: by mail-yb1-f175.google.com with SMTP id 3f1490d57ef6-e818a572828so146825276.1;
+        Wed, 04 Jun 2025 17:06:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749068923; x=1749673723; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=QW72yX/segTSFEPF3mC1QtZj7iNoXgPG94wFfxNFQLE=;
-        b=crxGOUIvUxBkfjE7xCpO1rA0ahqfa+eyUBYpZkzMGkH2o0XpCn7+xE3SzY/PlkV0IJ
-         3b5eTCuBC8koxkFimJmK3BohKENWlOVqsYj5coKUcVPNlurbYaI8LFB19K9PmZxC9Utj
-         cOKCtYVLq1q4knkHij/AXOQPor/r+Wh8HDV81/XX67hB66bT/yUss4WSOEgHUVS9ZkX4
-         RmuaTI1YgIxElKtCwpRYZ9A/76Y7Z1KlyC33bOiMpheU6pwboQ8doDkTr/vd/48hAfzL
-         RZsG2q2nkvVOL8a0e2Oif2Bxfb5dn0atb2fl4chK1ILUOT9y2v7DDMRovjg489/w9xob
-         bfGg==
+        d=gmail.com; s=20230601; t=1749082013; x=1749686813; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=jYGDWZp7STe9epYxyRZPry6LWZ2IgWRwn6tFibdzSAI=;
+        b=juQKESK9laPJeM6KQ50bS6f974JD81a7LZBeQw+mUoFQiYbonlplJOyuH7FwU5VI/h
+         Pv/wOpolRDJml/bKEo1/sA/V2qlQ0KNoMwtlvXXZi0Lu7LNWlZP2zGx79Ylzi/e0BLvn
+         5V+ieCmhdW8p+0mUP0rIgwdpPycRQUE2BX2pUrArRA+jBMFHgV0JDUOjV0bw/uIH5WD7
+         c0G6Zx26xzdCvfQd+ikcea9Ip1ihkTarV9C2Bow0AcNMGal2Vcy0UKbABURRdZgDyLVv
+         pNfAcPvDNOdD06Gy0TVZe/O2Vk6Ti9WCpUllbB2PWO2wY4Cgo5Emot82vo9xdAD7Q7K8
+         9IXA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749068923; x=1749673723;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=QW72yX/segTSFEPF3mC1QtZj7iNoXgPG94wFfxNFQLE=;
-        b=IJKe00I9hV6cOF48HTuFb2F/a0MyDZCyVTjCLAaSQbNR8XSI6SyTM4x6Nkq7/9A38u
-         LNVI5FCR/Ohj+5k9x/eb/grdUmT1SwlAmgFRfGN0PsHLMzIuq4IQU9LstdRsY04pJ7nw
-         J2V0rJ3Uu/UFTPaGQ51hKSyrTwapvUaRSPpi4Z2rh+ycqZpZzPDHPpsYiEL1whMSXVGc
-         KLfS7guAMABlgX6HpJT2D7XmlumgHMOkOG5gy5MNHAxe0AuB2L5vnAHWlGWWK8nQUN1m
-         WNlS32ufMMBZEACKG6pie6bFN73cNVQGIktMV77m5khXi56z8oFymdkMpsjQiJ1z5sQl
-         0y4w==
-X-Forwarded-Encrypted: i=1; AJvYcCU/kuJBgfKe2HarO91ygqdsoaZrzcwySkQdrmifgR+pbNNMIBFlkAgqDGda2En7xKEJW4FnJqDp8j8RiNrLtVHXlHZR@vger.kernel.org, AJvYcCV/Y8BAoHUpImFNNkVoK8tqZeC0UJZ7JL1uIONPj7Ryndk5XyHrWl9JlVev6gA67qUrHwX7nNYI8s7+LiM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzDb8cay/uUUazY/i0a21smZMPh9mnXfvOV3+I4tIFv+D1Xd1D/
-	xAJS22PHsZ54yvJWAnqk21XreB4uvg5e9TusS4GvapdofeH06y2ARd4i
-X-Gm-Gg: ASbGnctINnpQj3EKiWNNh9/OdDmhmUmXJ4oXdpHElWmk941PYXhA1uuTQo1YoeMHi5U
-	UKX6HgWPKdgmSV/VZlV+zBvdvnZGxRfDxzMUT5W0O/25WCE8RCnfHPFSGVsZJ8E7/FsvhXbCDXG
-	Rah9bADewCgD65dp4bJVAIP3y1fm7hGoZHJArE3UVtEqnpY5s2QeDZD/XfXGGaOf7pyN3F4SKMR
-	IUq5M825GFbKmnAjq94SceJfFpU9a11MeWCUPc5VHTiXMp9xhIc4FeqI2V3qfyeM9AzRjvLLYIx
-	dwImHajX7r1hSa5B37NXaHa3FsUGk5Dfmbcc/kg=
-X-Google-Smtp-Source: AGHT+IEElTJGssICYj7R0432JA0UzKCUEw6TsKcBq2S54rvmxU0XesAbC/jm6oKubwGU5uu6u33pIg==
-X-Received: by 2002:a05:600c:3b2a:b0:450:cf00:20f5 with SMTP id 5b1f17b1804b1-451f0a73c20mr41659365e9.9.1749068922631;
-        Wed, 04 Jun 2025 13:28:42 -0700 (PDT)
-Received: from krava ([176.74.159.170])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-451f999a3c1sm1629065e9.6.2025.06.04.13.28.41
+        d=1e100.net; s=20230601; t=1749082013; x=1749686813;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=jYGDWZp7STe9epYxyRZPry6LWZ2IgWRwn6tFibdzSAI=;
+        b=d8mNLqrN7N/I1w3NGNZ7YV0Cxw2qYeo/I+dYIFFZmoa+DvmzDKxpFVeDm+QkTPkvOm
+         9vUJ/CzhjHfFOiImCTeLZom/hWl9SthM0dwo0WSi4ZZQPcF3jDTvFWE/u5mN+TrpXrFn
+         1y5G3XFCmAo0zdV8fx3D/uujZ2PS5IxcteNYpzSRUEns/m0gKV4JplOtMkGIyp6FRQ1G
+         gzYmLP7O6yC+s8ahyycX3zkR6y7kzIPm7oWttnF7Llgrl8b0LtbhkWUV2tKff7iuITJd
+         jk2YpBua9j5MLeA9jTK/2UktoCztjcj24XGwV7dF9B0O70eyzoaEw9uOvYeKH/is4NPi
+         4QGw==
+X-Forwarded-Encrypted: i=1; AJvYcCWmAdR06aMIyJUvnDcks8vIHZ52lHhpAR66X8fNo/3HYnRs6jIsoFKuMoKq3a2HS78+LlftG73g2ich0Ps=@vger.kernel.org, AJvYcCXtJli/Z+srVtYGwwQjiCdQCA4LUXdJkubK/y4YQDGbk1SCb1iheT39vqfF95WXNUWZlnrqKM/PgG0Fe0VW/lbc7wsf@vger.kernel.org
+X-Gm-Message-State: AOJu0YyVK+d8auhWKYiaUNR+DyzxALn3IOPpwmv9C3XNyVF6dbvcj5gv
+	/HmOEpgKoB5byaCRV1a0ezg34X7+x2jPL6oV8luqOMnFlRelf2oD0Ubp
+X-Gm-Gg: ASbGncsPLRWThtvCldt0VN73969MUvKp0x6x3hyMrGzH2UjFt6qvmZgWHG+OXWMPSgY
+	Pd+T+H7BLMY4fQpvxjRtRfDAHWJc+28z7be+obS863H0lxmNWzCXnJiNQX8HWtcsw6zyMjSTZNE
+	TGwqvd7gUNahI7a4cQqyAxB6cckTaYwj39+ECyXT3DUQJJ2XZ68muwJWDyWbY5allaTPHa7v7S/
+	cx3PZ3u2Au5wJR1e3FRMqHjvS/NedwHp2mJMOvbB8fEZvrbuIlCNysdAGDUiO6BYKpewS9Mq8fr
+	1EpeJ+y5WHD6nC7+1KTTxGPCPkf9mwueBCRx89F3tJvOua+gaKxa8Y+Qbyd/Gxd0+ADUt9tNQ+T
+	TzlbuN3zcAyo=
+X-Google-Smtp-Source: AGHT+IEaTT2Odqt9s3aafh3eYQkQCU7ibTz4//UO8SfwKYgfxswGGtOn96hF2VfXOqO66zZ8OHpWnA==
+X-Received: by 2002:a05:690c:6705:b0:710:a35d:1de6 with SMTP id 00721157ae682-710d9f35e08mr63781647b3.17.1749082013152;
+        Wed, 04 Jun 2025 17:06:53 -0700 (PDT)
+Received: from localhost (c-73-224-175-84.hsd1.fl.comcast.net. [73.224.175.84])
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-70f8abef114sm32531027b3.29.2025.06.04.17.06.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Jun 2025 13:28:42 -0700 (PDT)
-From: Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date: Wed, 4 Jun 2025 22:28:40 +0200
-To: Masami Hiramatsu <mhiramat@kernel.org>, Oleg Nesterov <oleg@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Andrii Nakryiko <andrii@kernel.org>, g@krava
-Cc: David Hildenbrand <david@redhat.com>, linux-kernel@vger.kernel.org,
+        Wed, 04 Jun 2025 17:06:52 -0700 (PDT)
+From: Yury Norov <yury.norov@gmail.com>
+To: Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	linux-kernel@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCHv2 mm-stable] uprobes: Revert ref_ctr_offset in
- uprobe_unregister error path
-Message-ID: <aECseBOkQynCpnfK@krava>
-References: <20250514101809.2010193-1-jolsa@kernel.org>
+Cc: Yury Norov <yury.norov@gmail.com>
+Subject: [PATCH] trace: fix opencoded cpumask_next_wrap() in move_to_next_cpu()
+Date: Wed,  4 Jun 2025 20:06:50 -0400
+Message-ID: <20250605000651.45281-1-yury.norov@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250514101809.2010193-1-jolsa@kernel.org>
+Content-Transfer-Encoding: 8bit
 
-On Wed, May 14, 2025 at 12:18:09PM +0200, Jiri Olsa wrote:
-> From: Jiri Olsa <olsajiri@gmail.com>
-> 
-> There's error path that could lead to inactive uprobe:
-> 
->   1) uprobe_register succeeds - updates instruction to int3 and
->      changes ref_ctr from 0 to 1
->   2) uprobe_unregister fails  - int3 stays in place, but ref_ctr
->      is changed to 0 (it's not restored to 1 in the fail path)
->      uprobe is leaked
->   3) another uprobe_register comes and re-uses the leaked uprobe
->      and succeds - but int3 is already in place, so ref_ctr update
->      is skipped and it stays 0 - uprobe CAN NOT be triggered now
->   4) uprobe_unregister fails because ref_ctr value is unexpected
-> 
-> Fixing this by reverting the updated ref_ctr value back to 1 in step 2),
-> which is the case when uprobe_unregister fails (int3 stays in place),
-> but we have already updated refctr.
-> 
-> The new scenario will go as follows:
-> 
->   1) uprobe_register succeeds - updates instruction to int3 and
->      changes ref_ctr from 0 to 1
->   2) uprobe_unregister fails  - int3 stays in place and ref_ctr
->      is reverted to 1..  uprobe is leaked
->   3) another uprobe_register comes and re-uses the leaked uprobe
->      and succeds - but int3 is already in place, so ref_ctr update
->      is skipped and it stays 1 - uprobe CAN be triggered now
->   4) uprobe_unregister succeeds
-> 
-> Fixes: 1cc33161a83d ("uprobes: Support SDT markers having reference count (semaphore)")
-> Acked-by: David Hildenbrand <david@redhat.com>
-> Acked-by: Oleg Nesterov <oleg@redhat.com>
-> Suggested-by: Oleg Nesterov <oleg@redhat.com>
-> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+The dedicated cpumask_next_wrap() is more verbose and effective than
+cpumask_next() followed by cpumask_first().
 
-hi,
-I can't find this in any related tree, was this pulled in?
+Signed-off-by: Yury Norov <yury.norov@gmail.com>
+---
+ kernel/trace/trace_hwlat.c | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
 
-thanks,
-jirka
+diff --git a/kernel/trace/trace_hwlat.c b/kernel/trace/trace_hwlat.c
+index b65353ec2837..2f7b94e98317 100644
+--- a/kernel/trace/trace_hwlat.c
++++ b/kernel/trace/trace_hwlat.c
+@@ -325,12 +325,9 @@ static void move_to_next_cpu(void)
+ 
+ 	cpus_read_lock();
+ 	cpumask_and(current_mask, cpu_online_mask, tr->tracing_cpumask);
+-	next_cpu = cpumask_next(raw_smp_processor_id(), current_mask);
++	next_cpu = cpumask_next_wrap(raw_smp_processor_id(), current_mask);
+ 	cpus_read_unlock();
+ 
+-	if (next_cpu >= nr_cpu_ids)
+-		next_cpu = cpumask_first(current_mask);
+-
+ 	if (next_cpu >= nr_cpu_ids) /* Shouldn't happen! */
+ 		goto change_mode;
+ 
+-- 
+2.43.0
 
-
-> ---
-> v2 changes:
-> - adding proper Fixes tag and acks
-> 
->  kernel/events/uprobes.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
-> index 4c965ba77f9f..84ee7b590861 100644
-> --- a/kernel/events/uprobes.c
-> +++ b/kernel/events/uprobes.c
-> @@ -581,8 +581,8 @@ int uprobe_write_opcode(struct arch_uprobe *auprobe, struct vm_area_struct *vma,
->  
->  out:
->  	/* Revert back reference counter if instruction update failed. */
-> -	if (ret < 0 && is_register && ref_ctr_updated)
-> -		update_ref_ctr(uprobe, mm, -1);
-> +	if (ret < 0 && ref_ctr_updated)
-> +		update_ref_ctr(uprobe, mm, is_register ? -1 : 1);
->  
->  	/* try collapse pmd for compound page */
->  	if (ret > 0)
-> -- 
-> 2.49.0
-> 
