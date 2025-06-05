@@ -1,154 +1,220 @@
-Received: from mail-vk1-f180.google.com (mail-vk1-f180.google.com [209.85.221.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay.hostedemail.com (smtprelay0017.hostedemail.com [216.40.44.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93F35202F83
-	for <linux-trace-kernel@vger.kernel.org>; Thu,  5 Jun 2025 12:54:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 772EF21B908;
+	Thu,  5 Jun 2025 13:04:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749128062; cv=none; b=Qx01xO3eZDv68MqqnUX16+MBI0d5gu+VIyFWblgEM3rX3FjHKf6oyWtmbrl1wObXb+38OtPEzt8Z/K16OGoAhg3EvKWlG6FDouG2++dPQsnh4Hndqnn4MdOMe4YIUWhAyAwzwsQKQ1EyWbHItSnTyzBO+fR0lynVc52MRphjZpU=
+	t=1749128692; cv=none; b=fQ7xx583i1Pbp3M3Q4uiFsErcP554vqM1BjjW1eKWAueoEuKP7jf4U3RqlHST8RRoLMj0tLZJdhu0u6VMy2A5JpJ4SY6LT3EUxOVKwaVTLqDoMvLrNAsD4ksUzN7GM8ps6VqMp5jB0UxXfvs2cZ82XPHfTu1955vDCgHDujs048=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749128062; c=relaxed/simple;
-	bh=QX0gMKK2fb9bk8Iy/QzzFbeOOw2rVcgJRZUiONaQk80=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=mwdEUO29JH1OMNomTjuh/I06/yIuTN2R2QeiaTYK9VLtP3kkgxA1WbetN+xZ6oO2QzINGrUnMdXtE5CJYea1dmkzwoarlSPEE4rdcBzjeM82/kKVFM2TgpUBKAz/nIbvXMtgqAyJBzGdQjoy/TXifCP/Zvvs9Mn3HbxmvRzvoeo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=gMsnOgcz; arc=none smtp.client-ip=209.85.221.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gMsnOgcz"
-Received: by mail-vk1-f180.google.com with SMTP id 71dfb90a1353d-530d764149eso241532e0c.1
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 05 Jun 2025 05:54:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1749128059; x=1749732859; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=a5KI/5DaUypnvVC78JIsjLazY3rLFhSBhgB60nYQ728=;
-        b=gMsnOgcziIJwrnja9EEyrEoNUJyWnfPy2Oho4+tuD1SP+TwDcxsII4hRZ7slAhbyF8
-         pNHkm0rVDVd9LdtcmgYLK2z/czYSDxHyUqSNwC5+x4RU4dphI+F2MKVhS9M8zKA0JXL4
-         Oeur+/aTx/TtQQ2FtvesQGcI56nW4VqO5ygDZ5y9u9GZ5NaHziTPKf6DzEq6d03dE1kI
-         yP/h6Y3vCovuBP00RWaowCBdGPY5KjCKqg4cOmrRJNICvbOLI6lRdn0kaG+08NcDfd72
-         qRJxPFHMNDGVy+Xa+S6Yy22+p2koO+DMH4csz+BJPquCK1tXmJlgyuqjLzkWaRvwm2V7
-         5Qiw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749128059; x=1749732859;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=a5KI/5DaUypnvVC78JIsjLazY3rLFhSBhgB60nYQ728=;
-        b=Z5nZo8T34uieDgkrit1w37biv7SG5gCMNn759U33hRNdDhB2AhBbwhRkR5+JO2PHrU
-         7PhlWsM7aJ90zPoP3p8clFloA5ognUMac5AKjGDpaX5qgxI/CfrJdLl5JBuoFgEc+uhJ
-         hT3wea5bL5mF6N834IwRafd7lVwxQBsq+Mbm8qoSb3Ije5iZDPPpKJRa7Bejh+SMOuDO
-         yAIP9z8uCxH5E7bKqt3OSWB8hHJqiT0A5dEiqJnv/w6Zu7mtLSLkTkAngudDWIILb/ky
-         YPL/hjfQbX2bvs4Ok6idNB4MWKYqrqf5l2EDmzFrDy0Y5cPRGvVQgcrO3LhyoMA4+kMx
-         wtmA==
-X-Forwarded-Encrypted: i=1; AJvYcCW82inhogopGMGoM5nAOjNH1+L9RTlv7z7rehccYVxlLvavdhDaJge7SeVZdeWxLDuvB0nAbQJbxmJeUur7X3OMlnc=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzib9P3cGgBNActlY2xAFdc6z1UVgU7cEg6fYXewK9XHq5ZX52B
-	pqaC6rIIrjl7gw/BJhs2aVNNDf74639q1VvzLsExw1blNp2sqq70nltMOsXZJ/uspWglYj4D26/
-	/AzwoEA0/Cu7L/JZg1GybSVMG4p49cVoaUkV3FS6EeA==
-X-Gm-Gg: ASbGnct2y9uQ0tTPwD3qt2A/pWWTVpCnGdFa6aM5rL5xkwqjzVCUQlt4KMRgvf2M4dk
-	r44RqAO7QJgiwT2zrtTaTGM22dmFIy3Y1T0SmTtvpUMT9plnBbe2OaAQ6Q1B3FJlmCbaZikrKQn
-	PHaVikfpNizIBNgCkNLZnZAF/WJwfRmBN9W8SiW4HAJkk3dT2+yQ/9onHDkQORRrpBWA==
-X-Google-Smtp-Source: AGHT+IFScV6XSj0OM4gUEtQIR1BY62vpL3tVsGuFOiFWLyyMM6Aw09PHdk/Hbo6hoDuG4Pgt4Rm7Fg3yADaVtlnEHgw=
-X-Received: by 2002:a05:6122:311a:b0:52d:bbab:2055 with SMTP id
- 71dfb90a1353d-530c895d2eemr4796732e0c.10.1749128059355; Thu, 05 Jun 2025
- 05:54:19 -0700 (PDT)
+	s=arc-20240116; t=1749128692; c=relaxed/simple;
+	bh=Vywb4OV7+GVPOKUqzBtNd9nYZ3QnmvpPSGbxjZAstmU=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=LJoFycfuXobY2HFFiL0ajZ1b0pWr6slTvyzOCv3u3GEbeYaOB8OI3WDbF4czpBd0SmWXht7KADyh2ido0erq6zylfX2647XeLiDRqh6zY2xOfZlYEz9qOQuZcWGfStTT2cpLuKLqPVVcjhpwOYpLmIIpiXncSvOh293hZg450ZA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf09.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay06.hostedemail.com (Postfix) with ESMTP id 7DC00EDC39;
+	Thu,  5 Jun 2025 12:27:30 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf09.hostedemail.com (Postfix) with ESMTPA id 7D8FD20024;
+	Thu,  5 Jun 2025 12:27:28 +0000 (UTC)
+Date: Thu, 5 Jun 2025 08:28:46 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: "Flot, Julien" <julien.flot@siemens.com>
+Cc: "mathieu.desnoyers@efficios.com" <mathieu.desnoyers@efficios.com>,
+ "Schmidt, Adriaan" <adriaan.schmidt@siemens.com>, "Ziegler, Andreas"
+ <ziegler.andreas@siemens.com>, "Kiszka, Jan" <jan.kiszka@siemens.com>,
+ "linux-trace-kernel@vger.kernel.org" <linux-trace-kernel@vger.kernel.org>,
+ "MOESSBAUER, Felix" <felix.moessbauer@siemens.com>,
+ "linux-rt-users@vger.kernel.org" <linux-rt-users@vger.kernel.org>
+Subject: Re: ftrace regression with PREEMPT_RT kernels
+Message-ID: <20250605082846.179bca96@gandalf.local.home>
+In-Reply-To: <240017f656631c7dd4017aa93d91f41f653788ea.camel@siemens.com>
+References: <240017f656631c7dd4017aa93d91f41f653788ea.camel@siemens.com>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Thu, 5 Jun 2025 18:24:08 +0530
-X-Gm-Features: AX0GCFvf2AhSfNDvaokQSmWFSQ1v0Gpj8_ag9kF1ImYBbbkf0sVxFmSuh0yaUoQ
-Message-ID: <CA+G9fYuXxxPG7YY4ffbJ=hrBvBU4171J_FykYC2xoPV6uUB2sg@mail.gmail.com>
-Subject: next-20250604: qemu-riscv64 ltp tracing warning kernel trace trace.c ignore_event
-To: open list <linux-kernel@vger.kernel.org>, 
-	Linux trace kernel <linux-trace-kernel@vger.kernel.org>, lkft-triage@lists.linaro.org, 
-	Linux Regressions <regressions@lists.linux.dev>
-Cc: Stephen Rothwell <sfr@canb.auug.org.au>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Arnd Bergmann <arnd@arndb.de>, Dan Carpenter <dan.carpenter@linaro.org>, 
-	Anders Roxell <anders.roxell@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Stat-Signature: iswsogkcqrej7xca85r9wo8i86zw3jo9
+X-Rspamd-Server: rspamout04
+X-Rspamd-Queue-Id: 7D8FD20024
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1+7gBsEBuAeFxoo9YWzEKdSnN6yM0MPk70=
+X-HE-Tag: 1749126448-266228
+X-HE-Meta: U2FsdGVkX182EKI9a7rWWpDD8J/6T4G3+7/NbtFIdjIdi60zL3cjdschd/1cNbhAlVXYYfcnJvH4y+3nlLnmo1HDmis/R1sZraBbweldN0zxaY/MI/ctBhXKsa2qur/E0kN5BbVZdUtHHzf0z8DxP8tjFHXpAtNZ+Y59D5Efd0Dzgw83vBCzp6D4ovYmyFPlA1KLDv3a72ggzHOHhKAOBHk3hP6QjgbkIJl2ieBoWyTjTRGaSlqAgwt/WXdIHOlfY8AHiiEDNWphIKQbqrC/3MODXeU8UIYOyT8LnLc0GPue/vOS3wZd/8dhLbuFdIsC/N0ooJulVjokB/gFDKxdFk0Q9V9IAd/lYX+OWvmd9tfR3g1U6TwQlPeVBXk0/ZzDgmbrg3VlOZnTjaT2eB6bmQ==
 
-Regression while running LTP tracing on the Linux next-20250604 and
-next-20250605
-the following kernel warnings found on the qemu-riscv64.
+On Thu, 5 Jun 2025 09:03:03 +0000
+"Flot, Julien" <julien.flot@siemens.com> wrote:
 
-Regressions found on qemu-riscv64
- - LTP tracing
+> Hi,
+> 
+> Sorry to create this duplicate message, the previous one was not
+> formatted as plain text ...
+> 
+> With recent versions of the kernel, ftrace seems to experience some
+> latencies when writing events filter files on a real time kernel.  
+> Latencies experienced add a extra minute of runtime with trace-cmd
+> compare to a regular execution and sometimes `trace-cmd` just hangs for
+> multiples minutes.
+> 
+> The bug has been tested and reproduced with these version of the kernel
+> (all with real time enable) : 6.12.19, 6.14-rc7, 6.15 and current
+> upstream.  
+> The bug has also been reproduced on two machines, both running Ubuntu
+> 24.04 with an upstream kernel, one running with an INTEL(R) XEON(R)
+> GOLD 5512U, the other a Intel(R) Xeon(R) E-2278GE. The bug also appears
+> is virtualised environments (KVM/QEMU).  
+> I have run `git-bisect` between v6.12 and v6.15, the faulty commit
+> seems to be this one : a363d27cdbc2bc2d1899b5a1520b64e3590fcd9a
+> 
 
-Regression Analysis:
- - New regression? Yes
- - Reproducibility? Yes
 
-First seen on the next-20250604
-Good: next-20250603
-Bad:  next-20250604
+> Faulty commit message :  
+> ```  
+> commit a363d27cdbc2bc2d1899b5a1520b64e3590fcd9a  
+> Author: Mathieu Desnoyers
+> <[mathieu.desnoyers@efficios.com](mailto:mathieu.desnoyers@efficios.com
+> )>    
+> Date:   Tue Oct 8 21:07:15 2024 -0400  
+> fix  
+> tracing: Allow system call tracepoints to handle page faults
+> 
+> Use Tasks Trace RCU to protect iteration of system call enter/exit  
+> tracepoint probes to allow those probes to handle page faults.
+> 
+> In preparation for this change, all tracers registering to system call
+> enter/exit tracepoints should expect those to be called with preemption
+> enabled.
+> 
+> This allows tracers to fault-in userspace system call arguments such as
+> path strings within their probe callbacks.
+> 
 
-Test regression: qemu-riscv64 ltp tracing warning kernel trace trace.c
-ignore_event
+I believe I know the issue. The filter logic calls:
 
-Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+	tracepoint_synchronize_unregister();
 
-## Test error
+And that patch added:
 
-------------[ cut here ]------------
-[   28.134981] event 'ma_read' has unsafe pointer field 'fn'
-[   28.135550] WARNING: CPU: 1 PID: 302 at kernel/trace/trace.c:3823
-ignore_event+0x1de/0x1fa
-[   28.135609] Modules linked in: drm drm_panel_orientation_quirks
-backlight configfs ip_tables x_tables
-[   28.135937] CPU: 1 UID: 0 PID: 302 Comm: cat Not tainted
-6.15.0-next-20250604 #1 NONE
-[   28.135973] Hardware name: riscv-virtio,qemu (DT)
-[   28.136072] epc : ignore_event+0x1de/0x1fa
-[   28.136115]  ra : ignore_event+0x1de/0x1fa
-[   28.136147] epc : ffffffff80151ca4 ra : ffffffff80151ca4 sp :
-ff200000006ebbe0
-[   28.136164]  gp : ffffffff81c61428 tp : ff60000084efd100 t0 :
-ff200000006eb9b8
-[   28.136181]  t1 : ffffffffffffe000 t2 : 205b2d2d2d2d2d2d s0 :
-ff200000006ebc50
-[   28.136197]  s1 : ff60000080066150 a0 : 000000000000002d a1 :
-ff6000008103e730
-[   28.136213]  a2 : ff600000fffcd980 a3 : ffffffff80104e22 a4 :
-0000000000000000
-[   28.136229]  a5 : 0000000000000000 a6 : 000000000000003a a7 :
-0000000000000a00
-[   28.136245]  s2 : ffffffff81801608 s3 : ff60000087cd8078 s4 :
-ffffffff81bebe70
-[   28.136262]  s5 : ff60000087cda090 s6 : ff60000087cda054 s7 :
-ff60000087f9ea40
-[   28.136278]  s8 : ffffffff81200000 s9 : ffffffff81800000 s10:
-ffffffff81bfa290
-[   28.136294]  s11: ff60000087cdc000 t3 : ffffffff81c615d8 t4 :
-ffffffff8001f8e0
-[   28.136321]  t5 : ffffffff8014156c t6 : ff200000006eb9b8
-[   28.136337] status: 0000000200000120 badaddr: ffffffff80151ca4
-cause: 0000000000000003
-[   28.136395] [<ffffffff80151ca4>] ignore_event+0x1de/0x1fa
-[   28.136456] [<ffffffff80157548>] trace_event_printf+0x46/0x88
-[   28.136471] [<ffffffff80d2d54c>] trace_raw_output_ma_read+0x5e/0x7a
-[   28.136489] [<ffffffff801530f6>] print_trace_line+0x1c2/0x438
-[   28.136506] [<ffffffff80153948>] tracing_read_pipe+0x1a2/0x2ee
-[   28.136522] [<ffffffff802f3eb8>] vfs_read+0xb0/0x294
-[   28.136538] [<ffffffff802f48ac>] ksys_read+0x78/0xde
-[   28.136554] [<ffffffff802f4934>] __riscv_sys_read+0x22/0x2c
-[   28.136569] [<ffffffff80d49cd8>] do_trap_ecall_u+0x1ba/0x392
-[   28.136584] [<ffffffff80d56b6e>] handle_exception+0x146/0x152
-[   28.136654] ---[ end trace 0000000000000000 ]---
+@@ -107,6 +108,7 @@ void for_each_tracepoint_in_module(struct module *mod,
+ #ifdef CONFIG_TRACEPOINTS
+ static inline void tracepoint_synchronize_unregister(void)
+ {
++       synchronize_rcu_tasks_trace();
+        synchronize_rcu();
+ }
 
-## Source
-* Kernel version: 6.15.0-next-20250605 and 6.15.0-next-20250604
-* Git tree: https://kernel.googlesource.com/pub/scm/linux/kernel/git/next/linux-next.git
-* Git sha: 4f27f06ec12190c7c62c722e99ab6243dea81a94
-* Toolchain: gcc-13
 
-## Build
-* Test log: https://qa-reports.linaro.org/api/testruns/28662756/log_file/
-* Build link: https://storage.tuxsuite.com/public/linaro/lkft/builds/2y1tW4N08hDuUrUZt7mmMMyQJag/
-* Kernel config:
-https://storage.tuxsuite.com/public/linaro/lkft/builds/2y1tW4N08hDuUrUZt7mmMMyQJag/config
+Where synchronize_rcu_tasks_trace() is much more heavy weight call than
+synchronize_rcu().
 
---
-Linaro LKFT
-https://lkft.linaro.org
+Can you try this patch to see if it helps?
+
+-- Steve
+
+diff --git a/kernel/trace/trace_events_filter.c b/kernel/trace/trace_events_filter.c
+index 10f714c80e4d..a3857c36684b 100644
+--- a/kernel/trace/trace_events_filter.c
++++ b/kernel/trace/trace_events_filter.c
+@@ -2158,6 +2158,29 @@ struct filter_list {
+ 	struct event_filter	*filter;
+ };
+ 
++struct filter_head {
++	struct list_head	list;
++	struct rcu_head		rcu;
++};
++
++static void free_filter_list(struct rcu_head *rhp)
++{
++	struct filter_head *filter_list = container_of(rhp, struct filter_head, rcu);
++	struct filter_list *filter_item, *tmp;
++
++	list_for_each_entry_safe(filter_item, tmp, &filter_list->list, list) {
++		__free_filter(filter_item->filter);
++		list_del(&filter_item->list);
++		kfree(filter_item);
++	}
++	kfree(filter_list);
++}
++
++static void free_filter_list_tasks(struct rcu_head *rhp)
++{
++	call_rcu(rhp, free_filter_list);
++}
++
+ static int process_system_preds(struct trace_subsystem_dir *dir,
+ 				struct trace_array *tr,
+ 				struct filter_parse_error *pe,
+@@ -2167,10 +2190,16 @@ static int process_system_preds(struct trace_subsystem_dir *dir,
+ 	struct filter_list *filter_item;
+ 	struct event_filter *filter = NULL;
+ 	struct filter_list *tmp;
+-	LIST_HEAD(filter_list);
++	struct filter_head *filter_list;
+ 	bool fail = true;
+ 	int err;
+ 
++	filter_list = kmalloc(sizeof(*filter_list), GFP_KERNEL);
++	if (!filter_list)
++		return -ENOMEM;
++
++	INIT_LIST_HEAD(&filter_list->list);
++
+ 	list_for_each_entry(file, &tr->events, list) {
+ 
+ 		if (file->system != dir)
+@@ -2197,7 +2226,7 @@ static int process_system_preds(struct trace_subsystem_dir *dir,
+ 		if (!filter_item)
+ 			goto fail_mem;
+ 
+-		list_add_tail(&filter_item->list, &filter_list);
++		list_add_tail(&filter_item->list, &filter_list->list);
+ 		/*
+ 		 * Regardless of if this returned an error, we still
+ 		 * replace the filter for the call.
+@@ -2217,31 +2246,22 @@ static int process_system_preds(struct trace_subsystem_dir *dir,
+ 	 * Do a synchronize_rcu() and to ensure all calls are
+ 	 * done with them before we free them.
+ 	 */
+-	tracepoint_synchronize_unregister();
+-	list_for_each_entry_safe(filter_item, tmp, &filter_list, list) {
+-		__free_filter(filter_item->filter);
+-		list_del(&filter_item->list);
+-		kfree(filter_item);
+-	}
++	call_rcu_tasks(&filter_list->rcu, free_filter_list_tasks);
+ 	return 0;
+  fail:
+ 	/* No call succeeded */
+-	list_for_each_entry_safe(filter_item, tmp, &filter_list, list) {
+-		list_del(&filter_item->list);
+-		kfree(filter_item);
+-	}
++	free_filter_list(&filter_list->rcu);
+ 	parse_error(pe, FILT_ERR_BAD_SUBSYS_FILTER, 0);
+ 	return -EINVAL;
+  fail_mem:
+ 	__free_filter(filter);
++
+ 	/* If any call succeeded, we still need to sync */
+ 	if (!fail)
+-		tracepoint_synchronize_unregister();
+-	list_for_each_entry_safe(filter_item, tmp, &filter_list, list) {
+-		__free_filter(filter_item->filter);
+-		list_del(&filter_item->list);
+-		kfree(filter_item);
+-	}
++		call_rcu_tasks(&filter_list->rcu, free_filter_list_tasks);
++	else
++		free_filter_list(&filter_list->rcu);
++
+ 	return -ENOMEM;
+ }
+ 
