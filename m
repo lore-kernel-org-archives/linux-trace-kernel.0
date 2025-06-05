@@ -1,84 +1,235 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BA2A22A4EB;
-	Thu,  5 Jun 2025 13:21:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3575A1EB5DB;
+	Thu,  5 Jun 2025 13:23:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749129680; cv=none; b=fTIsNI7LcQAphL4V1sXY1lUrf22p1frS72qCqfaxKmkExidhHClo2Hy25MKDjJPSy9UZGUekBRMvny3YZKLmvzd2eD1w+2x6VpB8K9FjToZWJK91Zbv838UM0O2far+O7FTGaL2ubEGfVkMLwJ9Nb/L3H2gRUuqOXG0vn1izmPc=
+	t=1749129838; cv=none; b=T7XZdo36IXhK0oTRAqFlYsUHb06xk5SSeo76CLKwDcyBw9JUVWupT1iWOnSkRw4x8Lf3aD/0KLeaOAHGZl6oqWDbmzFVXxE08M1NJysaevcKK2/xpmxbxy73PyN+g2UwjFsPnJ5x/nsWqT1fkErsJHvYrTATyUCHfI+PjnGhgjI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749129680; c=relaxed/simple;
-	bh=vx3AyTyMbsSiqF5B30zA1JnwgZnh2tHc2KRb85USan0=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=U5VCkocj7Yg7WZgiCvFHX/GELaC/TNgNn44c7UFo0a4sidysimYPe4alNDEcQldrKYa6nNXiIPgD+Eylx7h1eKS5yTg4ptwiCHEKzbsNNF83j8VvyPAhgK80/rLobeNJSP2oUOr+Ho/CntGsk0QBwYWYwyLlCaI6O2xZRLV/aiA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6E323C4CEE7;
-	Thu,  5 Jun 2025 13:21:18 +0000 (UTC)
-Date: Thu, 5 Jun 2025 09:21:17 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Naresh Kamboju <naresh.kamboju@linaro.org>
-Cc: open list <linux-kernel@vger.kernel.org>, Linux trace kernel
- <linux-trace-kernel@vger.kernel.org>, lkft-triage@lists.linaro.org, Linux
- Regressions <regressions@lists.linux.dev>, Stephen Rothwell
- <sfr@canb.auug.org.au>, Masami Hiramatsu <mhiramat@kernel.org>, Arnd
- Bergmann <arnd@arndb.de>, Dan Carpenter <dan.carpenter@linaro.org>, Anders
- Roxell <anders.roxell@linaro.org>
-Subject: Re: next-20250604: qemu-riscv64 ltp tracing warning kernel trace
- trace.c ignore_event
-Message-ID: <20250605092117.37a245dd@batman.local.home>
-In-Reply-To: <CA+G9fYuXxxPG7YY4ffbJ=hrBvBU4171J_FykYC2xoPV6uUB2sg@mail.gmail.com>
-References: <CA+G9fYuXxxPG7YY4ffbJ=hrBvBU4171J_FykYC2xoPV6uUB2sg@mail.gmail.com>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1749129838; c=relaxed/simple;
+	bh=5Ed+3SO1+uc7aMnJ5slsCdxvYGy8YBd6ffZjqZg2DeQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=tn+MG+jVV9br6tylzDTwbszc4P6/mB6G0ci0LKP75/lVSJfENLzFGGRDmMsvVzEX3PipLcI9KCr4cwngyhrpdw3/+APBsj99UTrlEU1zO/Zq2YyDR9uxDMfus571JPuTS5VRoXtJ7xiPiSXqSby77kKoMaj/5lkWwA8J2d9768c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rUZO36Ai; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rUZO36Ai"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D8DAAC4CEE7;
+	Thu,  5 Jun 2025 13:23:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749129837;
+	bh=5Ed+3SO1+uc7aMnJ5slsCdxvYGy8YBd6ffZjqZg2DeQ=;
+	h=From:To:Cc:Subject:Date:From;
+	b=rUZO36AiAXggQ3XWCRMit86mVgif9bQwAc7lu9n/642A/XjsPVcrGS8nkEq6ggtmr
+	 NKVHZGmEumYKwvx0wnLQrbARff+pLOIy0PE5pjf7Gdfw9NhyLoILejjTHhvYeGTEmP
+	 jpJvCUc2shr0kE9XkaqN31BMPPEURFuw9kvoOppXG1HHJFBTvnLRnxJ/bUGOvvqj5K
+	 LEfZjiPzOUyGI3J/cA4K/1tbeq1c1hnmJcvGdZxE0yQ9PFkuknmRJ62uTW8SJt2h6V
+	 blDk0Fl7vSBG3+9g69UI5GZIVSjfIOutOOX2VWynhmO1aX8MXYVtdV/AN13OaWr22L
+	 0wpEG8T4Kbxzw==
+From: Jiri Olsa <jolsa@kernel.org>
+To: Oleg Nesterov <oleg@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Andrii Nakryiko <andrii@kernel.org>
+Cc: Alejandro Colomar <alx@kernel.org>,
+	Eyal Birger <eyal.birger@gmail.com>,
+	kees@kernel.org,
+	bpf@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	x86@kernel.org,
+	Song Liu <songliubraving@fb.com>,
+	Yonghong Song <yhs@fb.com>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Hao Luo <haoluo@google.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Alan Maguire <alan.maguire@oracle.com>,
+	David Laight <David.Laight@ACULAB.COM>,
+	=?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <thomas@t-8ch.de>,
+	Ingo Molnar <mingo@kernel.org>
+Subject: [PATCHv3 perf/core 00/22] uprobes: Add support to optimize usdt probes on x86_64
+Date: Thu,  5 Jun 2025 15:23:27 +0200
+Message-ID: <20250605132350.1488129-1-jolsa@kernel.org>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Thu, 5 Jun 2025 18:24:08 +0530
-Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
+hi,
+this patchset adds support to optimize usdt probes on top of 5-byte
+nop instruction.
 
-> Regression while running LTP tracing on the Linux next-20250604 and
-> next-20250605
-> the following kernel warnings found on the qemu-riscv64.
-> 
-> Regressions found on qemu-riscv64
->  - LTP tracing
-> 
-> Regression Analysis:
->  - New regression? Yes
->  - Reproducibility? Yes
-> 
-> First seen on the next-20250604
-> Good: next-20250603
-> Bad:  next-20250604
-> 
-> Test regression: qemu-riscv64 ltp tracing warning kernel trace trace.c
+The generic approach (optimize all uprobes) is hard due to emulating
+possible multiple original instructions and its related issues. The
+usdt case, which stores 5-byte nop seems much easier, so starting
+with that.
 
-Does riscv64 place __func__ in rodata? If not, this may consider the
-string unsafe to use in an event. 
+The basic idea is to replace breakpoint exception with syscall which
+is faster on x86_64. For more details please see changelog of patch 8.
 
-> ignore_event
-> 
-> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
-> 
-> ## Test error
-> 
-> ------------[ cut here ]------------
-> [   28.134981] event 'ma_read' has unsafe pointer field 'fn'
+The run_bench_uprobes.sh benchmark triggers uprobe (on top of different
+original instructions) in a loop and counts how many of those happened
+per second (the unit below is million loops).
 
-In lib/maple_tree.c we have:
+There's big speed up if you consider current usdt implementation
+(uprobe-nop) compared to proposed usdt (uprobe-nop5):
 
-        trace_ma_read(__func__, &mas);
+current:
+        usermode-count :  152.501 ± 0.012M/s
+        syscall-count  :   14.463 ± 0.062M/s
+-->     uprobe-nop     :    3.160 ± 0.005M/s
+        uprobe-push    :    3.003 ± 0.003M/s
+        uprobe-ret     :    1.100 ± 0.003M/s
+        uprobe-nop5    :    3.132 ± 0.012M/s
+        uretprobe-nop  :    2.103 ± 0.002M/s
+        uretprobe-push :    2.027 ± 0.004M/s
+        uretprobe-ret  :    0.914 ± 0.002M/s
+        uretprobe-nop5 :    2.115 ± 0.002M/s
 
-Where it records the address of "__func__" into the ring buffer 'fn' field.
+after the change:
+        usermode-count :  152.343 ± 0.400M/s
+        syscall-count  :   14.851 ± 0.033M/s
+        uprobe-nop     :    3.204 ± 0.005M/s
+        uprobe-push    :    3.040 ± 0.005M/s
+        uprobe-ret     :    1.098 ± 0.003M/s
+-->     uprobe-nop5    :    7.286 ± 0.017M/s
+        uretprobe-nop  :    2.144 ± 0.001M/s
+        uretprobe-push :    2.069 ± 0.002M/s
+        uretprobe-ret  :    0.922 ± 0.000M/s
+        uretprobe-nop5 :    3.487 ± 0.001M/s
 
-At a much later time (when the ring buffer is read), that pointer is
-dereferenced. As rodata doesn't change for the life of the kernel, it
-is safe to dereference. But if riscv doesn't place __func__ into
-rodata, this will be considered unsafe to use.
+I see bit more speed up on Intel (above) compared to AMD. The big nop5
+speed up is partly due to emulating nop5 and partly due to optimization.
 
--- Steve
+The key speed up we do this for is the USDT switch from nop to nop5:
+	uprobe-nop     :    3.160 ± 0.005M/s
+	uprobe-nop5    :    7.286 ± 0.017M/s
+
+
+Changes from v2:
+- rebased on top of tip/master + mm/mm-stable + 1 extra change [1]
+- added acks [Oleg,Andrii]
+- more details changelog for patch 1 [Masami]
+- several tests changes [Andrii]
+- add explicit PAGE_SIZE low limit to vm_unmapped_area call [Andrii]
+
+
+This patchset is adding new syscall, here are notes to check list items
+in Documentation/process/adding-syscalls.rst:
+
+- System Call Alternatives
+  New syscall seems like the best way in here, because we need
+  just to quickly enter kernel with no extra arguments processing,
+  which we'd need to do if we decided to use another syscall.
+
+- Designing the API: Planning for Extension
+  The uprobe syscall is very specific and most likely won't be
+  extended in the future.
+
+- Designing the API: Other Considerations
+  N/A because uprobe syscall does not return reference to kernel
+  object.
+
+- Proposing the API
+  Wiring up of the uprobe system call is in separate change,
+  selftests and man page changes are part of the patchset.
+
+- Generic System Call Implementation
+  There's no CONFIG option for the new functionality because it
+  keeps the same behaviour from the user POV.
+
+- x86 System Call Implementation
+  It's 64-bit syscall only.
+
+- Compatibility System Calls (Generic)
+  N/A uprobe syscall has no arguments and is not supported
+  for compat processes.
+
+- Compatibility System Calls (x86)
+  N/A uprobe syscall is not supported for compat processes.
+
+- System Calls Returning Elsewhere
+  N/A.
+
+- Other Details
+  N/A.
+
+- Testing
+  Adding new bpf selftests.
+
+- Man Page
+  Attached.
+
+- Do not call System Calls in the Kernel
+  N/A
+
+pending todo (or follow ups):
+- use PROCMAP_QUERY in tests
+- alloc 'struct uprobes_state' for mm_struct only when needed [Andrii]
+- use mm_cpumask(vma->vm_mm) in text_poke_sync
+
+thanks,
+jirka
+
+
+Cc: Alejandro Colomar <alx@kernel.org>
+Cc: Eyal Birger <eyal.birger@gmail.com>
+Cc: kees@kernel.org
+
+[1] https://lore.kernel.org/linux-trace-kernel/20250514101809.2010193-1-jolsa@kernel.org/T/#u
+---
+Jiri Olsa (21):
+      uprobes: Remove breakpoint in unapply_uprobe under mmap_write_lock
+      uprobes: Rename arch_uretprobe_trampoline function
+      uprobes: Make copy_from_page global
+      uprobes: Add uprobe_write function
+      uprobes: Add nbytes argument to uprobe_write
+      uprobes: Add is_register argument to uprobe_write and uprobe_write_opcode
+      uprobes: Add do_ref_ctr argument to uprobe_write function
+      uprobes/x86: Add mapping for optimized uprobe trampolines
+      uprobes/x86: Add uprobe syscall to speed up uprobe
+      uprobes/x86: Add support to optimize uprobes
+      selftests/bpf: Import usdt.h from libbpf/usdt project
+      selftests/bpf: Reorg the uprobe_syscall test function
+      selftests/bpf: Rename uprobe_syscall_executed prog to test_uretprobe_multi
+      selftests/bpf: Add uprobe/usdt syscall tests
+      selftests/bpf: Add hit/attach/detach race optimized uprobe test
+      selftests/bpf: Add uprobe syscall sigill signal test
+      selftests/bpf: Add optimized usdt variant for basic usdt test
+      selftests/bpf: Add uprobe_regs_equal test
+      selftests/bpf: Change test_uretprobe_regs_change for uprobe and uretprobe
+      seccomp: passthrough uprobe systemcall without filtering
+      selftests/seccomp: validate uprobe syscall passes through seccomp
+
+ arch/arm/probes/uprobes/core.c                              |   2 +-
+ arch/x86/entry/syscalls/syscall_64.tbl                      |   1 +
+ arch/x86/include/asm/uprobes.h                              |   7 ++
+ arch/x86/kernel/uprobes.c                                   | 525 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-
+ include/linux/syscalls.h                                    |   2 +
+ include/linux/uprobes.h                                     |  20 +++-
+ kernel/events/uprobes.c                                     | 100 ++++++++++++-----
+ kernel/fork.c                                               |   1 +
+ kernel/seccomp.c                                            |  32 ++++--
+ kernel/sys_ni.c                                             |   1 +
+ tools/testing/selftests/bpf/prog_tests/uprobe_syscall.c     | 523 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++------
+ tools/testing/selftests/bpf/prog_tests/usdt.c               |  38 ++++---
+ tools/testing/selftests/bpf/progs/uprobe_syscall.c          |   4 +-
+ tools/testing/selftests/bpf/progs/uprobe_syscall_executed.c |  60 +++++++++-
+ tools/testing/selftests/bpf/test_kmods/bpf_testmod.c        |  11 +-
+ tools/testing/selftests/bpf/usdt.h                          | 545 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ tools/testing/selftests/seccomp/seccomp_bpf.c               | 107 ++++++++++++++----
+ 17 files changed, 1867 insertions(+), 112 deletions(-)
+ create mode 100644 tools/testing/selftests/bpf/usdt.h
+
+
+Jiri Olsa (1):
+      man2: Add uprobe syscall page
+
+ man/man2/uprobe.2    |  1 +
+ man/man2/uretprobe.2 | 36 ++++++++++++++++++++++++------------
+ 2 files changed, 25 insertions(+), 12 deletions(-)
+ create mode 100644 man/man2/uprobe.2
