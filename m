@@ -1,103 +1,156 @@
-Received: from forward201a.mail.yandex.net (forward201a.mail.yandex.net [178.154.239.92])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8500F286405
-	for <linux-trace-kernel@vger.kernel.org>; Fri,  6 Jun 2025 11:31:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.154.239.92
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40EB32A8D0;
+	Fri,  6 Jun 2025 15:53:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749209503; cv=none; b=tV4gnEnEde4R5HhxKuwBULruetEc9NPBpZ9BGKP0l6KZ2NOODyuBbmRegC9QhpP6Po9SfNc7PANoIi7ArviOWfo5cE9OfeBixGPwGS5bi+Et7fVcB7hj20smdqsWX51Em0Z3zM+HZ4qnaXYaE9dpNCIjRpY56qLW9Vxbo8Aufxs=
+	t=1749225205; cv=none; b=NUGwLPkTWsz4ehXvfRR09p7eDzwGIWf+jAYIMPhGruMbPaSHnINTqvbGAYeD0VJdIWWL7+sO2sBhMuZOnim65SRUcPwpqrMzTdvi++ZDsgBBzRgnnB/HOjKZDgW1dhGNMW7UqtCI80zYwWC09xykyLyFDffoyI6Hl8pUlE7/HxY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749209503; c=relaxed/simple;
-	bh=CK9ErZBiD4WbSjoP6dPPZiO+HSMuXXD+AAWXKTLTz/0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=KYHa4EIznXHyx/A1FKJerM8Zh+ofSKw+UrsqOdMPTbtFwZek8D8glwMCk9PwwpbfGpXE3kvE74vv/nKWavU+D4NAzZtjX+vAMBkZyms91/R+3g+iTq0NgMMOcF0KQPvueln6KxvbK4jH+BQ0Kv+aMGwnq66OselbrSChXVMh7zs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex.ru; spf=pass smtp.mailfrom=yandex.ru; dkim=pass (1024-bit key) header.d=yandex.ru header.i=@yandex.ru header.b=Rjq+PDlF; arc=none smtp.client-ip=178.154.239.92
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yandex.ru
+	s=arc-20240116; t=1749225205; c=relaxed/simple;
+	bh=ZffmP67iCxIRYWii/TFpM7JL7F9vyh8RFszEdPO/+Hs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=cpsM7csr1U7Gw5v+7RfMZG8OUsVZCFJwqRZrIXIU0TgqteGkzOGa3oifoSC3wbYcJUxh7lVwZqrwXMbTYjkUCU+dsnN483XBGW+2FomEjZSiyQbPLJ30ELFng1FJavJOZf7OBN9tqdOAIjX7no7CdQa3LRZOCJU1hp6JMQisELg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=b3OT9DNn; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=yandex.ru header.i=@yandex.ru header.b="Rjq+PDlF"
-Received: from forward100a.mail.yandex.net (forward100a.mail.yandex.net [IPv6:2a02:6b8:c0e:500:1:45:d181:d100])
-	by forward201a.mail.yandex.net (Yandex) with ESMTPS id 5C89E64C11
-	for <linux-trace-kernel@vger.kernel.org>; Fri,  6 Jun 2025 14:23:28 +0300 (MSK)
-Received: from mail-nwsmtp-smtp-production-main-74.vla.yp-c.yandex.net (mail-nwsmtp-smtp-production-main-74.vla.yp-c.yandex.net [IPv6:2a02:6b8:c1f:1a98:0:640:f7e1:0])
-	by forward100a.mail.yandex.net (Yandex) with ESMTPS id 4313342B22;
-	Fri,  6 Jun 2025 14:23:20 +0300 (MSK)
-Received: by mail-nwsmtp-smtp-production-main-74.vla.yp-c.yandex.net (smtp/Yandex) with ESMTPSA id INckSg8Lf8c0-Ip6tNkb7;
-	Fri, 06 Jun 2025 14:23:19 +0300
-X-Yandex-Fwd: 1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex.ru; s=mail;
-	t=1749208999; bh=ZHXXDinMriG9HGmHZ2+a97EYaRixwAl1loGpR0gF38E=;
-	h=Message-ID:Date:In-Reply-To:Cc:Subject:References:To:From;
-	b=Rjq+PDlFf0blwhBXvhkaY2BlwhZMofVmsGVg56eeF526pGRWhc3fJFwYYJykkHPNH
-	 D5NPOCYsfaUrbzB2xamf8qOp1tmoZroi12pOtJUVHlf/nCmpvCay/cszQpC6xby+2B
-	 x+q3QqhSoZ1L3R5wfpaVWRLL0UklKNDmHFXJ2wYA=
-Authentication-Results: mail-nwsmtp-smtp-production-main-74.vla.yp-c.yandex.net; dkim=pass header.i=@yandex.ru
-From: Dmitry Antipov <dmantipov@yandex.ru>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Tzvetomir Stoyanov <tz.stoyanov@gmail.com>,
-	linux-trace-kernel@vger.kernel.org,
-	Dmitry Antipov <dmantipov@yandex.ru>,
-	syzbot+05d673e83ec640f0ced9@syzkaller.appspotmail.com
-Subject: [PATCH v2] ring-buffer: fix buffer locking in ring_buffer_subbuf_order_set()
-Date: Fri,  6 Jun 2025 14:22:42 +0300
-Message-ID: <20250606112242.1510605-1-dmantipov@yandex.ru>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250606065124.07857968@gandalf.local.home>
-References: <20250606065124.07857968@gandalf.local.home>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="b3OT9DNn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C176BC4AF0B;
+	Fri,  6 Jun 2025 15:53:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749225204;
+	bh=ZffmP67iCxIRYWii/TFpM7JL7F9vyh8RFszEdPO/+Hs=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=b3OT9DNnXO5osD4dJlnoyI4sFZc6IAYmkIkPppRJN9y4+1OfB57nSX9FRApm7m62l
+	 PbAZJP4LoUmrIOQPtLxXgcm89KiaOLxuOqQx2qH/BP2wIolqCh9qWnT9spfg7D8BWj
+	 8/OxwCNljX3iAThB5iKR7pLM1YDA3aDcb9AHCl8Xqm/j6HTqzI09w+QEidilv7ewYN
+	 ai1pEREFmx5Q5EVXTMrdKaO66lSRdW2+ZAVZ8FA/x4h44RPsPM4LsKsxB7+Pljq8K4
+	 Xltt9jkNa42MAVJPxnHiwtSeXjR/ldwbgUW3H/H7LkLq4QLXWYdFavAwj9nRQudZke
+	 7PHl6AzrFgmTw==
+Received: by mail-oo1-f50.google.com with SMTP id 006d021491bc7-606440d92eeso1047646eaf.2;
+        Fri, 06 Jun 2025 08:53:24 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCU5sQH6skdmi5lE3tcQQLeM8iPtyf4sL27aEtharf0YYB6pZnn5YtBhB67EyYCxD8KjqRGDa8r3BQ==@vger.kernel.org, AJvYcCXt8miAJVs+yD/MTPfaU43cEyZCs9EU2Qq918Hw7YYIsfsIcIQTX8sxyRrI7OEpZOih2IP0yh3MYiL64M9J5afVcS1c@vger.kernel.org
+X-Gm-Message-State: AOJu0YypGi6HCtq2edY9wQB8YnTus/BZ5v8UxmniluQuyLG3sFyrlrVm
+	0Uuqy+f6i4umn0RcnYf+TwO6hMXetGSQnyzVECYzhw4nMqW9uxIf96ICGQXbMwZOZnRUiCh1Tb/
+	ekxvaC/cXKHl+5bEuo+NPCecsDaKTA3A=
+X-Google-Smtp-Source: AGHT+IHBSME4mlhGbIZWonHHrlJr7EgE5rjgS6F7nUJqSApeJe5WcvW3GCMdvtQHJSXOLL/eLJNs6DSTGvoI7zCAw8Y=
+X-Received: by 2002:a05:6820:1898:b0:60b:c6c6:f69e with SMTP id
+ 006d021491bc7-60f3cf1d259mr2209450eaf.6.1749225204064; Fri, 06 Jun 2025
+ 08:53:24 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250605162106.1a459dad@gandalf.local.home>
+In-Reply-To: <20250605162106.1a459dad@gandalf.local.home>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Fri, 6 Jun 2025 17:53:12 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0hd_vCvmX9+__0M=aB437P-dxhYYEFnF2EaMe=XLTQiUw@mail.gmail.com>
+X-Gm-Features: AX0GCFsDgwpPXDpz0mMHZAFjnJVZ7FG-ShjXzJgXHh-KI0TNkQ3yTdfKt6UL3sI
+Message-ID: <CAJZ5v0hd_vCvmX9+__0M=aB437P-dxhYYEFnF2EaMe=XLTQiUw@mail.gmail.com>
+Subject: Re: [PATCH] tracing: PM: Remove unused clock events
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, 
+	Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>, linux-pm@vger.kernel.org, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, 
+	Kajetan Puchalski <kajetan.puchalski@arm.com>, 
+	"Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-In 'ring_buffer_subbuf_order_set()', prefer mutex guard over explicit
-mutex operations to ensure that the buffer remains locked everywhere
-where its innards may be changed, thus preventing per-CPU sub-buffer
-lists corruptions and other concurrency-related issues.
+On Thu, Jun 5, 2025 at 10:19=E2=80=AFPM Steven Rostedt <rostedt@goodmis.org=
+> wrote:
+>
+> From: Steven Rostedt <rostedt@goodmis.org>
+>
+> The events clock_enable, clock_disable, and clock_set_rate were added bac=
+k
+> in 2010. In 2011 they were used by the arm architecture but removed in
+> 2013. These events add around 7K of memory which was wasted for the last =
+12
+> years.
+>
+> Remove them.
+>
+> Link: https://lore.kernel.org/all/20250529130138.544ffec4@gandalf.local.h=
+ome/
+>
+> Fixes: 74704ac6ea402 ("tracing, perf: Add more power related events")
+> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 
-Reported-by: syzbot+05d673e83ec640f0ced9@syzkaller.appspotmail.com
-Closes: https://syzkaller.appspot.com/bug?extid=05d673e83ec640f0ced9
-Fixes: f9b94daa542a8 ("ring-buffer: Set new size of the ring buffer sub page")
-Signed-off-by: Dmitry Antipov <dmantipov@yandex.ru>
----
-v2: use mutex guard as suggested by Steven
----
- kernel/trace/ring_buffer.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+Acked-by: Rafael J. Wysocki <rafael@kernel.org>
 
-diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-index e24509bd0af5..00fc38d70e86 100644
---- a/kernel/trace/ring_buffer.c
-+++ b/kernel/trace/ring_buffer.c
-@@ -6795,7 +6795,7 @@ int ring_buffer_subbuf_order_set(struct trace_buffer *buffer, int order)
- 	old_size = buffer->subbuf_size;
- 
- 	/* prevent another thread from changing buffer sizes */
--	mutex_lock(&buffer->mutex);
-+	guard(mutex)(&buffer->mutex);
- 	atomic_inc(&buffer->record_disabled);
- 
- 	/* Make sure all commits have finished */
-@@ -6900,7 +6900,6 @@ int ring_buffer_subbuf_order_set(struct trace_buffer *buffer, int order)
- 	}
- 
- 	atomic_dec(&buffer->record_disabled);
--	mutex_unlock(&buffer->mutex);
- 
- 	return 0;
- 
-@@ -6909,7 +6908,6 @@ int ring_buffer_subbuf_order_set(struct trace_buffer *buffer, int order)
- 	buffer->subbuf_size = old_size;
- 
- 	atomic_dec(&buffer->record_disabled);
--	mutex_unlock(&buffer->mutex);
- 
- 	for_each_buffer_cpu(buffer, cpu) {
- 		cpu_buffer = buffer->buffers[cpu];
--- 
-2.49.0
-
+> ---
+>  include/trace/events/power.h | 47 ------------------------------------
+>  1 file changed, 47 deletions(-)
+>
+> diff --git a/include/trace/events/power.h b/include/trace/events/power.h
+> index 9253e83b9bb4..6c631eec23e3 100644
+> --- a/include/trace/events/power.h
+> +++ b/include/trace/events/power.h
+> @@ -337,53 +337,6 @@ DEFINE_EVENT(wakeup_source, wakeup_source_deactivate=
+,
+>         TP_ARGS(name, state)
+>  );
+>
+> -/*
+> - * The clock events are used for clock enable/disable and for
+> - *  clock rate change
+> - */
+> -DECLARE_EVENT_CLASS(clock,
+> -
+> -       TP_PROTO(const char *name, unsigned int state, unsigned int cpu_i=
+d),
+> -
+> -       TP_ARGS(name, state, cpu_id),
+> -
+> -       TP_STRUCT__entry(
+> -               __string(       name,           name            )
+> -               __field(        u64,            state           )
+> -               __field(        u64,            cpu_id          )
+> -       ),
+> -
+> -       TP_fast_assign(
+> -               __assign_str(name);
+> -               __entry->state =3D state;
+> -               __entry->cpu_id =3D cpu_id;
+> -       ),
+> -
+> -       TP_printk("%s state=3D%lu cpu_id=3D%lu", __get_str(name),
+> -               (unsigned long)__entry->state, (unsigned long)__entry->cp=
+u_id)
+> -);
+> -
+> -DEFINE_EVENT(clock, clock_enable,
+> -
+> -       TP_PROTO(const char *name, unsigned int state, unsigned int cpu_i=
+d),
+> -
+> -       TP_ARGS(name, state, cpu_id)
+> -);
+> -
+> -DEFINE_EVENT(clock, clock_disable,
+> -
+> -       TP_PROTO(const char *name, unsigned int state, unsigned int cpu_i=
+d),
+> -
+> -       TP_ARGS(name, state, cpu_id)
+> -);
+> -
+> -DEFINE_EVENT(clock, clock_set_rate,
+> -
+> -       TP_PROTO(const char *name, unsigned int state, unsigned int cpu_i=
+d),
+> -
+> -       TP_ARGS(name, state, cpu_id)
+> -);
+> -
+>  /*
+>   * The power domain events are used for power domains transitions
+>   */
+> --
+> 2.47.2
+>
+>
