@@ -1,191 +1,102 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from relay.hostedemail.com (smtprelay0011.hostedemail.com [216.40.44.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E047CCA5A
-	for <linux-trace-kernel@vger.kernel.org>; Sat,  7 Jun 2025 13:03:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6B61EEDE;
+	Sat,  7 Jun 2025 14:27:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749301427; cv=none; b=Go7ItaeDbZeGU/P1vNY1AjPpzYKQtk/uOBInohIFnPuv1worLYEdEqSjV7XGBdSAEef2jgCHDABb5ul2wFm+dLTmWShkuZnPS1nO4kOhIbSsAIO5mKtI4GIHpvTFFoD7+RM9FGNXRjOr+HqjHmEzv82JAg8ed7riWWyhG+KnXfs=
+	t=1749306429; cv=none; b=gpJIpe1OYkNYkuwUoDApb0KZMXBGzr+o9B0tbilVIqxG9B5PppeohwcokcbcSHn3zwlw+8+nzEKaQv4a9a1rOCtLsXB7LGMzOizbNdkGUeEkwYzJWRrV9I7ar0cXJZYTQzvfVgqi/Yy1sCUUpXNcnVUX9BLd9gpjfyZKe0Ig9Ws=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749301427; c=relaxed/simple;
-	bh=Eqj6FJEHfq7+3qKDuYXg+g35tU6lnmHz5On8n9Rjhgc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=St4KAg/CWtHvNTcbBRCvGj0YGlm8v0JQCGQp+v3lm+vdZd+nP6ztDcC1PuekkOpc+EXPCBQe3WhBrwH8hU4Zz4+OWUMaFaMuqdFUyfb7VxV51n2dQajAgiMME+qQ6LsoMyKur5VJ4HUScd+AyEHvGb+vCkkz5mnYv19hGkULlFw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Zf/Euyby; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Zf/Euyby"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1749301424;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=SfnJpnOmsGPup1H/ERs2tNGx2bCdZsNE5EPGkXR7fYk=;
-	b=Zf/Euybyi0jGaJFaKKv6lvWbel9syJIDUCrdawwm4To8IW0AbgpEysEB8oAmhKLitVaXOO
-	6DVwimDoYZPNCSYNvF1WtcDhEnZz9f8Gx0ljlaCIF7P7yXNNHU7vdTB4mmu4xGwJI0w9f6
-	I9OTLSD3QS51QUhfF8bBqVg8gpKlC98=
-Received: from mail-yw1-f200.google.com (mail-yw1-f200.google.com
- [209.85.128.200]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-221-e2QY5tGaMu6e_dVXNoTZnQ-1; Sat, 07 Jun 2025 09:03:43 -0400
-X-MC-Unique: e2QY5tGaMu6e_dVXNoTZnQ-1
-X-Mimecast-MFC-AGG-ID: e2QY5tGaMu6e_dVXNoTZnQ_1749301423
-Received: by mail-yw1-f200.google.com with SMTP id 00721157ae682-7081121c3f7so34526777b3.1
-        for <linux-trace-kernel@vger.kernel.org>; Sat, 07 Jun 2025 06:03:43 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749301423; x=1749906223;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=SfnJpnOmsGPup1H/ERs2tNGx2bCdZsNE5EPGkXR7fYk=;
-        b=lNN9lRFhzdbG5v+eC7ABCthq+mZmSL5F2jpv/jROk2nBrM2ptfle/KM56oMWXUL+7u
-         k7ZvEiaOI1aLGyxMdk3yWBMf8llhmSNY0z/RSnZ79fnRBhXKHVHhq0MRa/wIZaWXu+wL
-         2zAebOF2bIm8fqb5cNjv0Ub3Se6tVQJbnB/1TY882xAR0HKKCvNaE0TTqMnVgXDWJRKX
-         6WyBwmPJ9bLEI88HzMNz+6AOtfKCCbopt2E+AlwZw4EBhtpm3iFlq0XUgx5aS2jUUe8o
-         XVxgzfUbSfM1ZDg1KNQIBhtMXAIaLXC9ib+LVt6snSwQ7M6neyuLb8x57hdAMs76iBDz
-         HJ8Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWBGkIY0x25Wwrs6E91yeL/Ycs3Qfv3/7uWD+mbTNo+xQjjw3KqG1kPA/uY+UvxhpbdD8aCec0zx8nKCi6y5lh+zN0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyhA0YRmy6DE1jTqBasWCaV34oy78720e8yWDMEQDWQkdEbM9da
-	rAV5i+wJut0uyPn/vI5aW/YdkrrvB9/49vacEHIjgRHOmfqEXvskQR//AnIIAlXZ41yTnA+mqj/
-	IgDz+vVIXLM/eHLIZ5zH1kYr6r4PzzI34xKlvZPOHcxuPRmyfBacqj1rb+O/L22ah6radDrdEZu
-	KtI0tu2/nRA9kUFbVsqoN9Oa7tVilTNKW12Us6Rd+ZO4PhHxPQ
-X-Gm-Gg: ASbGncuqxPc3FBGNmvvIi1xnT+hYXrRb+VBQQY74U9AqzNd9bJ7B96IRGWXxbDePSI/
-	/x4MmLHnEo/j8SOIdk0en2B1NUAWQp5FR6Xgm4RxPF2MVucsChyA8ritYLP/Q1yyj844a554T/k
-	DTg7gh6g==
-X-Received: by 2002:a05:690c:dcb:b0:710:e81e:1364 with SMTP id 00721157ae682-710f7afa722mr95726387b3.6.1749301423020;
-        Sat, 07 Jun 2025 06:03:43 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IE0D1oScsQFJkbV3leaGwsdhfTHQOUGGFXMT7UPU6qs5ZvaWLTmpU2PaV4/bjxQzeziLLSjyNubyd/h1pZsPnU=
-X-Received: by 2002:a05:690c:dcb:b0:710:e81e:1364 with SMTP id
- 00721157ae682-710f7afa722mr95725927b3.6.1749301422601; Sat, 07 Jun 2025
- 06:03:42 -0700 (PDT)
+	s=arc-20240116; t=1749306429; c=relaxed/simple;
+	bh=QMjxoZ8qXLwUD4CsAbquyp2sisBQwy7tspEYYmHf4hQ=;
+	h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type; b=teiQrU7fj2bVvE2ghUMEuQqBZcX2GUCBeoybDZr8ItHNx9yy01htUpLlJk3gdPTsJibHyOgjXfSkPZkoosXMVJ/hp1KF+6M4pbHPtiAokJl8ukwqCWPMOWQtjx+0QbXdAs7JK8rb8gUnF8sWrjDW24HgInfATGqqvzVvpt6v/1M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf13.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay03.hostedemail.com (Postfix) with ESMTP id 9C5FEBE14A;
+	Sat,  7 Jun 2025 14:26:59 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf13.hostedemail.com (Postfix) with ESMTPA id 1FEA02000E;
+	Sat,  7 Jun 2025 14:26:58 +0000 (UTC)
+Date: Sat, 7 Jun 2025 10:28:21 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Subject: [PATCH] tracing: Add rcu annotation around file->filter accesses
+Message-ID: <20250607102821.6c7effbf@gandalf.local.home>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250515032226.128900-1-npache@redhat.com> <20250515032226.128900-8-npache@redhat.com>
- <6f061c65-f3aa-42bb-ab70-b45afdcf2baf@arm.com>
-In-Reply-To: <6f061c65-f3aa-42bb-ab70-b45afdcf2baf@arm.com>
-From: Nico Pache <npache@redhat.com>
-Date: Sat, 7 Jun 2025 07:03:16 -0600
-X-Gm-Features: AX0GCFsXeVlQnNKWAGBb29ema6RNmgUDaEXB5xk1LDR3gUMKNf8Z3uuBnY7lWI8
-Message-ID: <CAA1CXcDVMdzNWS3maQPd3L2ZTOjnNyswH21H-BNfZpUPXk6UcQ@mail.gmail.com>
-Subject: Re: [PATCH v7 07/12] khugepaged: add mTHP support
-To: Dev Jain <dev.jain@arm.com>
-Cc: linux-mm@kvack.org, linux-doc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	david@redhat.com, ziy@nvidia.com, baolin.wang@linux.alibaba.com, 
-	lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com, ryan.roberts@arm.com, 
-	corbet@lwn.net, rostedt@goodmis.org, mhiramat@kernel.org, 
-	mathieu.desnoyers@efficios.com, akpm@linux-foundation.org, baohua@kernel.org, 
-	willy@infradead.org, peterx@redhat.com, wangkefeng.wang@huawei.com, 
-	usamaarif642@gmail.com, sunnanyong@huawei.com, vishal.moola@gmail.com, 
-	thomas.hellstrom@linux.intel.com, yang@os.amperecomputing.com, 
-	kirill.shutemov@linux.intel.com, aarcange@redhat.com, raquini@redhat.com, 
-	anshuman.khandual@arm.com, catalin.marinas@arm.com, tiwai@suse.de, 
-	will@kernel.org, dave.hansen@linux.intel.com, jack@suse.cz, cl@gentwo.org, 
-	jglisse@google.com, surenb@google.com, zokeefe@google.com, hannes@cmpxchg.org, 
-	rientjes@google.com, mhocko@suse.com, rdunlap@infradead.org
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: nDMhx1KhTqU1SRbzSHqNp00YkeITV4egEa4NCPG3Yjk_1749301423
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Server: rspamout01
+X-Rspamd-Queue-Id: 1FEA02000E
+X-Stat-Signature: tmkgfwqbzumb1kwskugydpwn5g49mps5
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX19XMeTW4TfddNXNDaC82KqTngsn6M0KlDg=
+X-HE-Tag: 1749306418-897492
+X-HE-Meta: U2FsdGVkX18iK57pU5RN/cMe+lJmV2uIWUa2B7uronNOg8wC+JYJ7kbXxcEJsEWKDShiRRdCjW8UqlSzQDd25GJu5gELRaTcmnlVLr4UbLWMzuPEiI6mN+/eGZ55Ps7UKy4NBgXm5BCmECvn/J8QRnNWyG0z1Edgc+dOjpLqAQCO1+asnmkeLWiPVSC2H7ot4OZ3esfz7E0lKmOqeRdU8pOAeEHXgLoN5PAUen0K1SQzDf9LokSORLQ3qbGBnwK0CAp0eMITXikx83nng5KLf0NsFjBna7cgHYjPDg2eoYYDdqf4UNfylZTh4OjPyaza2RTwzH5JvDcr52yicqY3HXTFC678g1hWsuN2YSdhKrZYh5O5EhRMAxukS0LFFy9+
 
-On Sat, Jun 7, 2025 at 12:24=E2=80=AFAM Dev Jain <dev.jain@arm.com> wrote:
->
->
-> On 15/05/25 8:52 am, Nico Pache wrote:
-> > Introduce the ability for khugepaged to collapse to different mTHP size=
-s.
-> > While scanning PMD ranges for potential collapse candidates, keep track
-> > of pages in KHUGEPAGED_MIN_MTHP_ORDER chunks via a bitmap. Each bit
-> > represents a utilized region of order KHUGEPAGED_MIN_MTHP_ORDER ptes. I=
-f
-> > mTHPs are enabled we remove the restriction of max_ptes_none during the
-> > scan phase so we dont bailout early and miss potential mTHP candidates.
-> >
-> > After the scan is complete we will perform binary recursion on the
-> > bitmap to determine which mTHP size would be most efficient to collapse
-> > to. max_ptes_none will be scaled by the attempted collapse order to
-> > determine how full a THP must be to be eligible.
-> >
-> > If a mTHP collapse is attempted, but contains swapped out, or shared
-> > pages, we dont perform the collapse.
-> >
-> > For non PMD collapse we much leave the anon VMA write locked until afte=
-r
-> > we collapse the mTHP
->
-> Why? I know that Hugh pointed out locking errors; I am yet to catch up
-> on that thread, but you need to explain in the description why you do
-> what you do.
->
-> [--snip---]
->
-> >
-> > -
-> > -     spin_lock(pmd_ptl);
-> > -     BUG_ON(!pmd_none(*pmd));
-> > -     folio_add_new_anon_rmap(folio, vma, address, RMAP_EXCLUSIVE);
-> > -     folio_add_lru_vma(folio, vma);
-> > -     pgtable_trans_huge_deposit(mm, pmd, pgtable);
-> > -     set_pmd_at(mm, address, pmd, _pmd);
-> > -     update_mmu_cache_pmd(vma, address, pmd);
-> > -     deferred_split_folio(folio, false);
-> > -     spin_unlock(pmd_ptl);
-> > +     if (order =3D=3D HPAGE_PMD_ORDER) {
-> > +             pgtable =3D pmd_pgtable(_pmd);
-> > +             _pmd =3D folio_mk_pmd(folio, vma->vm_page_prot);
-> > +             _pmd =3D maybe_pmd_mkwrite(pmd_mkdirty(_pmd), vma);
-> > +
-> > +             spin_lock(pmd_ptl);
-> > +             BUG_ON(!pmd_none(*pmd));
-> > +             folio_add_new_anon_rmap(folio, vma, _address, RMAP_EXCLUS=
-IVE);
-> > +             folio_add_lru_vma(folio, vma);
-> > +             pgtable_trans_huge_deposit(mm, pmd, pgtable);
-> > +             set_pmd_at(mm, address, pmd, _pmd);
-> > +             update_mmu_cache_pmd(vma, address, pmd);
-> > +             deferred_split_folio(folio, false);
-> > +             spin_unlock(pmd_ptl);
-> > +     } else { /* mTHP collapse */
-> > +             mthp_pte =3D mk_pte(&folio->page, vma->vm_page_prot);
-> > +             mthp_pte =3D maybe_mkwrite(pte_mkdirty(mthp_pte), vma);
-> > +
-> > +             spin_lock(pmd_ptl);
->
-> Nico,
->
-> I've noticed a few occasions where my review comments have not been ackno=
-wledged -
-> for example, [1]. It makes it difficult to follow up and contributes to s=
-ome
-> frustration on my end. I'd appreciate if you could make sure to respond t=
-o
-> feedback, even if you are disagreeing with my comments. Thanks!
+From: Steven Rostedt <rostedt@goodmis.org>
 
-I'm sorry you feel that way, are there any others? I feel like I've
-been pretty good at responding to all comments. I've also been out of
-the office for the last month, so keeping up with upstream has been
-more difficult, but i'm back now.
+Running sparse on trace_events_filter.c triggered several warnings about
+file->filter being accessed directly even though it's annotated with __rcu.
 
-Sorry I never got back to you on that one! I will add the BUG_ON, but
-I believe it's unnecessary. Your changeset was focused on different
-functionality and it seems that you had a bug in it if you were
-hitting that often.
+Add rcu_dereference() around it and shuffle the logic slightly so that
+it's always referenced via accessor functions.
 
-Cheers,
--- Nico
->
->
-> [1] https://lore.kernel.org/all/08d13445-5ed1-42ea-8aee-c1dbde24407e@arm.=
-com/
->
->
-> [---snip---]
->
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+ kernel/trace/trace_events_filter.c | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
+
+diff --git a/kernel/trace/trace_events_filter.c b/kernel/trace/trace_events_filter.c
+index 711520081741..ea8b364b6818 100644
+--- a/kernel/trace/trace_events_filter.c
++++ b/kernel/trace/trace_events_filter.c
+@@ -1250,7 +1250,9 @@ static void append_filter_err(struct trace_array *tr,
+ 
+ static inline struct event_filter *event_filter(struct trace_event_file *file)
+ {
+-	return file->filter;
++	return rcu_dereference_protected(file->filter,
++					 lockdep_is_held(&event_mutex));
++
+ }
+ 
+ /* caller must hold event_mutex */
+@@ -1320,7 +1322,7 @@ void free_event_filter(struct event_filter *filter)
+ static inline void __remove_filter(struct trace_event_file *file)
+ {
+ 	filter_disable(file);
+-	remove_filter_string(file->filter);
++	remove_filter_string(event_filter(file));
+ }
+ 
+ static void filter_free_subsystem_preds(struct trace_subsystem_dir *dir,
+@@ -1405,7 +1407,7 @@ static void try_delay_free_filter(struct event_filter *filter)
+ 
+ static inline void __free_subsystem_filter(struct trace_event_file *file)
+ {
+-	__free_filter(file->filter);
++	__free_filter(event_filter(file));
+ 	file->filter = NULL;
+ }
+ 
+@@ -1465,7 +1467,7 @@ static void filter_free_subsystem_filters(struct trace_subsystem_dir *dir,
+ 	list_for_each_entry(file, &tr->events, list) {
+ 		if (file->system != dir || !file->filter)
+ 			continue;
+-		__free_filter(file->filter);
++		__free_subsystem_filter(file);
+ 	}
+ 	__free_filter(filter);
+ }
+-- 
+2.47.2
 
