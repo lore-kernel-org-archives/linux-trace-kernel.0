@@ -1,77 +1,86 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from relay.hostedemail.com (smtprelay0011.hostedemail.com [216.40.44.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C76001DE2A7;
-	Mon,  9 Jun 2025 19:51:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D2701CF7AF;
+	Mon,  9 Jun 2025 20:13:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749498670; cv=none; b=MJwn6Csbc8k3D4Bz4gFZG/aahFOFWKdMG5GqmhhbwwrzmK1uwYGBDFtNsgYzBJF69eXY0osDUHRt0e1iR7FAsx2ltXNhoxTpHtTYlfTM9/Wmm8mKyoOGz0dSraf2yF8uRciblArmJEH9bWY9NjaT9f3jB/+5tVR+yMcq89XqZ6g=
+	t=1749500015; cv=none; b=JWZq3CIV31GPpvE+sjPdiYrWV1Xm7wc4mx0Qj/SkfjhjswHQh9L6/3RYTxLq1WbuB2xvSq1y59zCB5yJtQ/2ADMvm3tfSxGbhf/RnL0QduG63CyISuhu0sEsZTTC/ad7GvbO7jpRoB8nV11JqRuq9VUsOmGbyTE/+dhI24p5WK0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749498670; c=relaxed/simple;
-	bh=NSk9kTu7mQ9UesVjuqh1wiEjX5MHkMHssyrEe7F7CeA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KWOv9tmZRPlY3GNhsN2BfiAZVjfhhm+/Ja8QhT0RTNCXHfiNHRNcZYNoDm/Vuvx1h2xPLK/+fKKFcKs17psJ6WTL9uIct7iEPZLbZ86/g5r7GJti2adEjmYa8vYZiug6k1ee6MEZpwD4MtCTighGlld6px563wuVLkFBKm54N0c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=NPDd4RJx; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="NPDd4RJx"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=85TAzXXcGObkIpSOMC2VeDSg1VAoupbTgbj/ahVWIVM=; b=NPDd4RJxANb9b7Jo+/f8FU7asW
-	9KTgylLu9Lp2yPzwLdKaOgApaomKnGXLZ5XP5KdylzCGEAuug+Xt0F0Bnzu/Vur83Ta5P/SAU2tYY
-	2nt6jIIgb4s70PWKmxxfDOe9IniTTZJkOhEdsJMjAuxDKz8ki5e0xtxBIdNlGCaD4wZQ/pPI/IWEp
-	Zo6PQly2y6Id7o8ZUo/V3vBUIgGO5n3UeOqt6TsTMi9tVrNf2c6zS95p+2vGCnhkqsf3glNz0uaGQ
-	2pcbP1Y6c5b59lAPSRpjFuqMa2I4+d0Xdef1a0i9DKpj+1Kfj0CjC4jfvbJO2tXg1zKOGmSL+WhtM
-	yH7S3wwQ==;
-Received: from willy by casper.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uOiWK-00000008aqX-1C8K;
-	Mon, 09 Jun 2025 19:51:00 +0000
-Date: Mon, 9 Jun 2025 20:51:00 +0100
-From: Matthew Wilcox <willy@infradead.org>
-To: Steven Rostedt <rostedt@goodmis.org>
+	s=arc-20240116; t=1749500015; c=relaxed/simple;
+	bh=B+KKJw1mRV5eKyf8P3m5+SOLbQ1coDY0gwypLgQNMC8=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=XFfMLCB156Uih8NDayOIdXgYuiwXIW28xrBHkdd5FkS1GIuWZKfRFPuL6kLE/1JqsFmW+QAutXxhUcKAzrXpWdOIzkm96cUNZUsvvGq+vpVN9QpdV3aZVYrMLwMjWK+bhLNE6Qp2PtNNa30uKEUt3Twcd56rFT3kLaflxqqqk3A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf19.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay09.hostedemail.com (Postfix) with ESMTP id 0BB678022B;
+	Mon,  9 Jun 2025 20:13:29 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf19.hostedemail.com (Postfix) with ESMTPA id D6C1C20026;
+	Mon,  9 Jun 2025 20:13:25 +0000 (UTC)
+Date: Mon, 9 Jun 2025 16:14:54 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Matthew Wilcox <willy@infradead.org>
 Cc: Shivank Garg <shivankg@amd.com>, mhiramat@kernel.org, oleg@redhat.com,
-	peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-	namhyung@kernel.org, mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-	irogers@google.com, adrian.hunter@intel.com,
-	kan.liang@linux.intel.com, david@redhat.com,
-	akpm@linux-foundation.org, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, linux-mm@kvack.org
+ peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+ namhyung@kernel.org, mark.rutland@arm.com,
+ alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com,
+ adrian.hunter@intel.com, kan.liang@linux.intel.com, david@redhat.com,
+ akpm@linux-foundation.org, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+ linux-mm@kvack.org
 Subject: Re: [RFC] mm: use folio_expected_ref_count() helper for reference
  counting
-Message-ID: <aEc7JG-OL2fp075j@casper.infradead.org>
+Message-ID: <20250609161454.27122eb4@gandalf.local.home>
+In-Reply-To: <aEc7JG-OL2fp075j@casper.infradead.org>
 References: <20250609170806.447302-2-shivankg@amd.com>
- <aEc0MNj9JNXbLHmw@casper.infradead.org>
- <E40B36E2-1D0E-4769-B155-0175A06DE3AB@goodmis.org>
+	<aEc0MNj9JNXbLHmw@casper.infradead.org>
+	<E40B36E2-1D0E-4769-B155-0175A06DE3AB@goodmis.org>
+	<aEc7JG-OL2fp075j@casper.infradead.org>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <E40B36E2-1D0E-4769-B155-0175A06DE3AB@goodmis.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Queue-Id: D6C1C20026
+X-Stat-Signature: m8h6bcy535xytnunifrds675jimjbr3x
+X-Rspamd-Server: rspamout06
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1/kJ8UB1vD94YuNV8XjvktY0cPUQseZ4mw=
+X-HE-Tag: 1749500005-938963
+X-HE-Meta: U2FsdGVkX1/AbnxVbfcKCr7R6XcbF+NIATcgnSZMqeSoBZ8tgnjmm580xehAFo1U66DT7y1URDoJxSnyr8Qlf62mu6jBBImbCRwlr0MNscNf+Hj6CqxRMCN0GzwKttDu7pUlJJbLA7ZxWr+cix70+sg0E5OZQJ5ldrwLMducYMV4wYZ/lGCG/7ww17qqnxgB4h/HvU0WIAkKxsxnTNG67UynRvV8XJt3cdsNFB29lBpkqzdJZVLvHa5/TnK8N88Tz4XMIdnomHicXdG6pAwLWz+HMQxBuMC+jjpalt6eZjcc5orXSNT50Xy9/wLZZKKvq952wSzt65Y1rRZVwFxNoUAVyCsr7b5IMh8SsfcpbKIjAwUHwmNlXPhlMNO7hQ+c
 
-On Mon, Jun 09, 2025 at 03:31:40PM -0400, Steven Rostedt wrote:
-> 
-> 
-> On June 9, 2025 3:21:20 PM EDT, Matthew Wilcox <willy@infradead.org> wrote:
-> >On Mon, Jun 09, 2025 at 05:08:07PM +0000, Shivank Garg wrote:
-> >> Replace open-coded folio reference count calculations with the
-> >> folio_expected_ref_count() helper to improve code maintainability
-> >> and reduce duplication.
-> >
-> >If it needs this much additional commentary, perhaps it's not actually
-> >clearer?
-> 
-> I don't know. I tend to over explain as I rather make it totally obvious what is happening. I wouldn't say excessive commentary is necessarily a sign that it's not clearer.
+On Mon, 9 Jun 2025 20:51:00 +0100
+Matthew Wilcox <willy@infradead.org> wrote:
 
-That was a Socratic question, not for you to answer.
+> On Mon, Jun 09, 2025 at 03:31:40PM -0400, Steven Rostedt wrote:
+> > 
+> > 
+> > On June 9, 2025 3:21:20 PM EDT, Matthew Wilcox <willy@infradead.org> wrote:  
+> > >On Mon, Jun 09, 2025 at 05:08:07PM +0000, Shivank Garg wrote:  
+> > >> Replace open-coded folio reference count calculations with the
+> > >> folio_expected_ref_count() helper to improve code maintainability
+> > >> and reduce duplication.  
+> > >
+> > >If it needs this much additional commentary, perhaps it's not actually
+> > >clearer?  
+> > 
+> > I don't know. I tend to over explain as I rather make it totally
+> > obvious what is happening. I wouldn't say excessive commentary is
+> > necessarily a sign that it's not clearer.  
+> 
+> That was a Socratic question, not for you to answer.
+> 
+> My opinion is that the extra commentary is obfuscatory and should be
+> removed.
 
-My opinion is that the extra commentary is obfuscatory and should be
-removed.
+
+Ah, sorry, your response wasn't clear ;-)
+
+-- Steve
+
