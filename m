@@ -1,141 +1,138 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay.hostedemail.com (smtprelay0013.hostedemail.com [216.40.44.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27C22C148;
-	Mon,  9 Jun 2025 13:09:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C85D1FDE22;
+	Mon,  9 Jun 2025 15:38:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749474578; cv=none; b=qUWsGC7NVdBhrJqq1IK3Gtfn3z9GFK59HW4AHNfqFreC+oJVauLk0Vsiwq0XqA2bQUdmmFVhwtVPv85ggq0RpDG4hM6/Mx/n0WfkIUFwSJ0lKuOz3d0Xm+u2Pu9zAmZznFOCLQ1nmIiwNu6arc6GdCFZDIW/kC5w0sXOMXCSq+s=
+	t=1749483522; cv=none; b=kDJEfsGceGFnX0tCiygUskdnczStpiPDCUVTfHWjJwwkezpQ8TWBAG7UfwEkjalyohzt8FBczLnbKFVDSdrQoodyFn1+/cppYcjJ2KRVmMLAbomItCqEmVliAbpzfWjIAIh/EeKS5PN/u4O1IXlw0LFk9AFY5EfsTMi9V8ur0rA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749474578; c=relaxed/simple;
-	bh=4+Ui+usxTxJK18Xq3BV53Smdklq7y5SfpjQZgrYAuoU=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=ORyjaSBEUtLu1Ty31QAJtov/TtC1ZdS/cE0yv1rc0fE9YHV23pNIwKnKB8YBBCwF1YRJaf+EjrjS1IPMwpr6GG6XydnvnBUUkhH6nceJfT32yObCaQODXIOh6xbCbmY45KdAa3Rm6Kt2YbE/DzkFp+a9LNN9SLXAcs6cOTRiIkM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ts5evttV; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ts5evttV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5E2EDC4CEEB;
-	Mon,  9 Jun 2025 13:09:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749474577;
-	bh=4+Ui+usxTxJK18Xq3BV53Smdklq7y5SfpjQZgrYAuoU=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=Ts5evttVzrFEX7uzNIR7Z7nlPqZbIAUOHntxGulKHP/7cWs4nwmQMZlwPYpnaC5+y
-	 tgK0D1rghkP87vJopGbpUJ7yBwXiNdWUaq1jKE6FS3cPY2VmPzImWh9VvnS4TzAI3t
-	 6JamzwrRopy9LbVU2htJi+k1mmr5KRnhRFsgcslTOVGiS+dqT8l17MD4nlVaXHV/GR
-	 dO2zreX0Cr2sgrgls3kgMK+lTpsTYxL3hSv/UbQy33HO0xhVi9Ag5A8ZJn2ElYb2FO
-	 c0A/cv25DTlYt8UwTl/KS1INpHB1YE0Ch6LNThUewShpUpGcd2eYSyZ1aaalXadZVH
-	 dNI0bg0hH8jAw==
-Date: Mon, 9 Jun 2025 22:09:34 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Naresh Kamboju <naresh.kamboju@linaro.org>
-Cc: open list <linux-kernel@vger.kernel.org>, Linux trace kernel
- <linux-trace-kernel@vger.kernel.org>, lkft-triage@lists.linaro.org, Stephen
- Rothwell <sfr@canb.auug.org.au>, Masami Hiramatsu <mhiramat@kernel.org>,
- Arnd Bergmann <arnd@arndb.de>, Dan Carpenter <dan.carpenter@linaro.org>,
- Anders Roxell <anders.roxell@linaro.org>
-Subject: Re: next-20250605: Test regression: qemu-x86_64-compat mode ltp
- tracing Oops int3 kernel panic
-Message-Id: <20250609220934.2c3ed98ba8c624fc7cb45172@kernel.org>
-In-Reply-To: <CA+G9fYsLu0roY3DV=tKyqP7FEKbOEETRvTDhnpPxJGbA=Cg+4w@mail.gmail.com>
-References: <CA+G9fYsLu0roY3DV=tKyqP7FEKbOEETRvTDhnpPxJGbA=Cg+4w@mail.gmail.com>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1749483522; c=relaxed/simple;
+	bh=vjumWbI1nLmJofNVoMmsXIpj4QnYwD0P0T1Q8ZvROOw=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=YT9G0rMXR4ZoQL/7XMk/w69R1dinppkYQCEXeShRzFIk4UcO24A99r7x65H4aH5JmDfAx8JgTUY2zmOATT8NJBgLgnPg8Gqjesueed0pQWDH57Jg5Wz/7FMZkHHBQreD7UQjkzVwpE/jfDQ1ZddBYLKYRrwAe4D8Oyzgt97iJQc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf15.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay02.hostedemail.com (Postfix) with ESMTP id D7EF4120695;
+	Mon,  9 Jun 2025 15:38:29 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf15.hostedemail.com (Postfix) with ESMTPA id C0B8918;
+	Mon,  9 Jun 2025 15:38:27 +0000 (UTC)
+Date: Mon, 9 Jun 2025 11:39:55 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: "Paul E. McKenney" <paulmck@kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, Linux trace kernel
+ <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Jan Kiszka <jan.kiszka@siemens.com>, Andreas Ziegler
+ <ziegler.andreas@siemens.com>, Felix MOESSBAUER
+ <felix.moessbauer@siemens.com>, Julien Flot <julien.flot@siemens.com>
+Subject: Re: [PATCH v2] tracing: Fix regression of filter waiting a long
+ time on RCU synchronization
+Message-ID: <20250609113955.47a2f44c@gandalf.local.home>
+In-Reply-To: <9a2f0cd0-1561-4206-8966-f93ccd25927f@paulmck-laptop>
+References: <20250606201936.1e3d09a9@batman.local.home>
+	<9a2f0cd0-1561-4206-8966-f93ccd25927f@paulmck-laptop>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
+MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
+X-Rspamd-Server: rspamout03
+X-Rspamd-Queue-Id: C0B8918
+X-Stat-Signature: k77cudh6kkko738ufnaaa5w1gbb47hnq
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX19olcQrNIITw9reBrW2zFmvrSR4FMpmzqA=
+X-HE-Tag: 1749483507-534997
+X-HE-Meta: U2FsdGVkX18WltvNoZqDQyslFZ+ayUtqvpED8YUCRFGbu+nDsw5JPVdzsfCqzaF7wGi8JigYzLF5hlblisjz2TfNLGSOvDCq9C5SDtG37DXSPQuo0crEtWnLAIZhV4n4rqP7Q5BhpOz4K2T/jMMqmFARqAS1RpLY334H39hGuEHkFltKL8qmpQRvatdXEPG59hW9etCcpH9yImlWGwhNrM7tQDsM535YPzcSlkktDTUg3NF3nEXjEWnTmEFWEhnDpSXrlxdJ0UL6i1wOXGz89uaGxaNoUdjdjlExjSTEawbqbEosqDxudpK22WXlFaLxYd9HzaG2BR2wdXdP+eNgEVkFsR2FJL/v
 
-On Thu, 5 Jun 2025 17:12:10 +0530
-Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
+On Mon, 9 Jun 2025 05:21:19 -0700
+"Paul E. McKenney" <paulmck@kernel.org> wrote:
 
-> Regressions found on qemu-x86_64 with compat mode (64-bit kernel
-> running on 32-bit userspace) while running LTP tracing test suite
-> on Linux next-20250605 tag kernel.
+> > +static void free_filter_list(struct rcu_head *rhp)
+> > +{
+> > +	struct filter_head *filter_list = container_of(rhp, struct filter_head, rcu);
+> > +	struct filter_list *filter_item, *tmp;
+> > +
+> > +	list_for_each_entry_safe(filter_item, tmp, &filter_list->list, list) {
+> > +		__free_filter(filter_item->filter);
+> > +		list_del(&filter_item->list);
+> > +		kfree(filter_item);
+> > +	}  
 > 
-> Regressions found on
->  - LTP tracing
+> If the series of synchronize_rcu() calls was taking 99 seconds,
+> we might well be going through the above loop quite a few times, all
+> within a bh-disabled region of code.  For example, the calls from both
+> filter_free_subsystem_filters() and process_system_preds() look like
+> they can queue a very large number of entries.
+
+The iteration is for each event in a subsystem.
+
+Seeing what that is:
+
+~# for sys in /sys/kernel/tracing/events/* ; do cnt=`ls -F $sys |grep '/$' | wc -l`; echo $cnt $sys; done | sort -n | tail
+24 /sys/kernel/tracing/events/tcp
+26 /sys/kernel/tracing/events/xen
+28 /sys/kernel/tracing/events/sched
+32 /sys/kernel/tracing/events/writeback
+33 /sys/kernel/tracing/events/libata
+34 /sys/kernel/tracing/events/irq_vectors
+55 /sys/kernel/tracing/events/xhci-hcd
+92 /sys/kernel/tracing/events/kvm
+113 /sys/kernel/tracing/events/ext4
+724 /sys/kernel/tracing/events/syscalls
+
+So the most loops that can happen is 724 on the syscalls plus the system
+filter. And adding in printks to count the loops, I verified that:
+
+[..]
+[  100.019209] LOOPED 4 times
+[  100.020033] LOOPED 5 times
+[  100.020791] LOOPED 8 times
+[  100.021583] LOOPED 10 times
+[  100.022239] LOOPED 2 times
+[  100.110515] LOOPED 725 times
+[  100.111520] LOOPED 4 times
+[  100.112889] LOOPED 25 times
+[  100.114416] LOOPED 6 times
+[  100.115950] LOOPED 4 times
+[  100.117557] LOOPED 7 times
+[..]
+
+(724 event filters and one system event filter = 725 filters).
+
+If you feel that's too big, we could move it to a work queue.
+
+As more system calls get added, that number will grow. But it is limited to
+the number of system calls.
+
+All the event systems are way fewer than that.
+
 > 
-> Regression Analysis:
->  - New regression? Yes
->  - Reproducible? Intermittent
+> So...
 > 
-> Test regression: qemu-x86_64-compat mode ltp tracing Oops int3 kernel panic
+> > +	kfree(filter_list);
+> > +}
+> > +
+> > +static void free_filter_list_tasks(struct rcu_head *rhp)
+> > +{
+> > +	call_rcu(rhp, free_filter_list);  
 > 
-> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+> ...why not use queue_rcu_work() in place of call_rcu() here, thus avoiding
+> possible response-time issues?
 > 
-> ## Test log
-> ftrace-stress-test: <12>[   21.971153] /usr/local/bin/kirk[277]:
-> starting test ftrace-stress-test (ftrace_stress_test.sh 90)
-> <4>[   58.997439] Oops: int3: 0000 [#1] SMP PTI
-> <4>[   58.998089] CPU: 0 UID: 0 PID: 323 Comm: sh Not tainted
-> 6.15.0-next-20250605 #1 PREEMPT(voluntary)
-> <4>[   58.998152] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009),
-> BIOS 1.16.3-debian-1.16.3-2 04/01/2014
-> <4>[   58.998260] RIP: 0010:_raw_spin_lock+0x5/0x50
+> Or is there something that I am missing that limits the length of the
+> list passed to free_filter_list()?
 
-Interesting. This hits a stray int3 for ftrace on _raw_spin_lock.
+Just the number of events in a system.
 
-Here is the compiled code of _raw_spin_lock.
+I could switch to a work queue but I don't think it needs to go as a fix,
+do you? That is, it can wait till the next merge window. Or is this going
+to affect things now?
 
-ffffffff825daa00 <_raw_spin_lock>:
-ffffffff825daa00:       f3 0f 1e fa             endbr64
-ffffffff825daa04:       e8 47 a6 d5 fe          call   ffffffff81335050 <__fentry__>
-
-Since int3 exception happens after decoded int3 (1 byte), the RIP
-`_raw_spin_lock+0x05` is not an instruction boundary.
-
-> <4>[   58.998563] Code: 5d e9 ff 12 00 00 66 66 2e 0f 1f 84 00 00 00
-> 00 00 0f 1f 40 00 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 f3
-> 0f 1e fa 0f <1f> 44 00 00 55 48 89 e5 53 48 89 fb bf 01 00 00 00 e8 15
-> 12 e4 fe
-
-And the call is already modified back to a 5-bytes nop when we
-dump the code. Thus it may hit the intermediate int3 for transforming
-code.
-
-e8 47 a6 d5 fe
- (first step)
-cc 47 a6 d5 fe
- (second step)
-cc 1f 44 00 00 <- hit?
- (third step)
-0f 1f 44 00 00 <- handle int3
-
-It is very unlikely scenario (and I'm not sure qemu can correctly
-emulate it.) But if a CPU hits the int3 (cc) on _raw_spin_lock()+0x4
-before anoter CPU' runs third step in smp_text_poke_batch_finish(),
-and before the CPU runs smp_text_poke_int3_handler(), the CPU' runs
-the thrid step and sets text_poke_array_refs 0, 
-the smp_text_poke_int3_handler() returns 0 and causes the same
-problem. 
-
-<CPU0>					<CPU1>
-					Start smp_text_poke_batch_finish().
-					Finish second step.
-Hit int3 (*)
-					Finish third step.
-					Run smp_text_poke_sync_each_cpu().(**)
-					Clear text_poke_array_refs[cpu0]
-Start smp_text_poke_int3_handler()
-Failed to get text_poke_array_refs[cpu0]
-Oops: int3
-
-
-But as I said it is very unlikely, because as far as I know;
-
-(*) smp_text_poke_int3_handler() is called directly from exc_int3()
-   which is a kind of NMI, so other interrupt should not run.
-(**) In the third step, smp_text_poke_batch_finish() sends IPI for
-   sync core after removing int3. Thus any int3 exception handling
-   should be finished.
-
-Is this bug reproducible easier recently?
-
-Thanks,
-
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+-- Steve
