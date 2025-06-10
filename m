@@ -1,268 +1,173 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DBC07083C;
-	Tue, 10 Jun 2025 05:53:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B3EC21B8FE
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 10 Jun 2025 07:05:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749534789; cv=none; b=UvAh7KWav3BiGjLLufnkL61S9CCbqlRMM6heutyNUzPzQdzdEesjw+kxcAM+Bjx5hjFjGcjtKqzf8TXAAESsTvQiOKfPYJJAs28ADGLUNrnRHydzR235nVRgA3v2sR4CcQ3IkjfKXMY5vFmutaShXgmyr6kl0qoBbVXTjUAS8p4=
+	t=1749539134; cv=none; b=ZJWSUwX7Y1nLtVcbIwcfwGtadu2BcYvgYZGnJtVBckxSr3e0c6vz7iAqGc90OxcvMTWDL297EB1c+85a8jVkM333LpiYBI52PvwFClqrdbUod+xpfa5ZoDLkyGH26hIxTIfU/kW87e5WwfFq7K5PqODC7fGUUiVnRCrxlL6itjQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749534789; c=relaxed/simple;
-	bh=33Y0UGYbvh2zMrvnTTnRtLl/ElBvVlGu21fmhR2LOoQ=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=AqsLUOuXZcOKR1yZ+8bc4iFrygBafnQvF1y2AW02xLfTVdPqrpRpxoZv+EM8C508nxi+ku2tyujtgA7DMx2ttA2jnAbowbrH5ul7oTyzU5aXCknxQtOEuJTe9LYs3SIKDOc1xFHIuYl6/FSq6uwVwPRTFTrU5OxAreK46P3Ode8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=q+yXadYR; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749539134; c=relaxed/simple;
+	bh=+BVmPMYo6tXe5jLgYA9bBLt98rJDRk/RsCsffrkmwtY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=UxK/KcyPvnZ32I2EuJJ1LGvhhkfBN+m9JkT1xWdgjWQg2ALryLUN+EVnq6ZW4Q75L9VgBPTXeV+z+C9xDcTmYGOoJNy+XmagaUHd5DJMX6Tib9dTlNQZKpC/xeLA39CkvYEm4xp19Mj5PHT7Q9lNk/iRGzEbxXsvVAxB/ZFzw/0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=FV74yq95; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="q+yXadYR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 513DCC4CEEF;
-	Tue, 10 Jun 2025 05:53:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749534789;
-	bh=33Y0UGYbvh2zMrvnTTnRtLl/ElBvVlGu21fmhR2LOoQ=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=q+yXadYRl5O/LAR7dkWzypnsu7o3/UHLJd3PFStTq3r4uJTefQl21tG0C/ZqAVz61
-	 bLwTI/AhiMYtVdwxr+SDjax6mzPJ53L7yWGfwSRbLcLq7fBhaPK9fyxVwSSDMaFwE1
-	 tPJOWq7t9Rw3edmi2gg0AGvjaSy5Ars/TEsdVKSpiMPyNfRa1qbNSEEAqwm0/JnTTC
-	 Bd1HifpxKolNbqjFUQVFb8kxmY8R1kUrlWCfiN12QC4CQAvn7l/mqTiOL5ADt/JLco
-	 V69bhMA4MpZsp43x7XAYyBahnE4qB5kHc815aYTzkJOqz/rjj5feTdYA0fCbHdNoYZ
-	 glzdQ94ySkfmQ==
-Date: Tue, 10 Jun 2025 14:53:05 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Masami Hiramatsu <mhiramat@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>, Andrew Morton
- <akpm@linux-foundation.org>, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
- Caleb Sander Mateos <csander@purestorage.com>, Peter Zijlstra
- <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, Borislav Petkov
- <bp@alien8.de>, Thomas Gleixner <tglx@linutronix.de>, linux-mm@kvack.org
-Subject: Re: [RFC][PATCH] tracepoints: Add verifier that makes sure all
- defined tracepoints are used
-Message-Id: <20250610145305.c925856f0201fb748c08b331@kernel.org>
-In-Reply-To: <20250529130138.544ffec4@gandalf.local.home>
-References: <20250529130138.544ffec4@gandalf.local.home>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FV74yq95"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1749539132;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=4uGayi3wE9vU8k3pYd0gZMMeUhuTj20TdyE6+hjuf10=;
+	b=FV74yq952logpFARiEVVI3Zs1FHVVNA4irEJOiTICSKYG+iEaH14gUXpmIHBU7eyV3AjCT
+	5IMcCBSAZN0ctCstoP81DVEXm49pyZCVn56S3NsPsVx2DEG5QXl3JHuX2bNPh9Y1uvyVBe
+	tHp62ljPtkWBTgCoqTKc+/x5kyL3p64=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-255-J4_bjmQNPLW2gIOBZtmfdQ-1; Tue, 10 Jun 2025 03:05:29 -0400
+X-MC-Unique: J4_bjmQNPLW2gIOBZtmfdQ-1
+X-Mimecast-MFC-AGG-ID: J4_bjmQNPLW2gIOBZtmfdQ_1749539128
+Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-3a4f7ebfd00so1962093f8f.2
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 10 Jun 2025 00:05:29 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749539128; x=1750143928;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=4uGayi3wE9vU8k3pYd0gZMMeUhuTj20TdyE6+hjuf10=;
+        b=Sxcq5SPzFq99bSSZjo6/jT8LPbXCcRbk+FhxCAT1njmNgQ40n5iSa9Vn+2Ngg2q3yR
+         Owq9RdRfZfBa6RhVteFvv0H8Ow9FCSbOt38R7KNiLO8xX+McGHYEzURGfa/PBTpSaJsu
+         q6wEMa0qLHzyd7YfoKJFR4UaIWRcpKOhxsVPohGbDqbbjXTEz+WDBiEIM0ySqIJgZZdp
+         +JYMPRpBgEnHi0eQB2o9LK1Hw1mqiFqkSgy2KxUrUBTe8KVdFwDpVYhcIT2h19SdbJ2J
+         3Vma0E2ZGv4tCBtMFcEXAitYovbg6FreSESv4qjPz/N9lXGjXxRtmwp3d8vKWkf3drv4
+         dATg==
+X-Forwarded-Encrypted: i=1; AJvYcCW3R8JR2XWThxdbz6cg5Ek5VCLX5Hl1FTspwUkXpfeTRK3U/akhliiF0WrQBDnwdbDXK+toL3OQEMfqsymxfzLAJlk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzE+s/Z/0u8LR1ccKmuzefX76THiuEBHTNwsF7tmXYf/ZQIo5BV
+	Ku+Ze9NXAxkFxq5R9fl8jeG45XhL2P/bC5n55uPowf415hOyy7ApP6EQRCLDaRe6jI9khKCTZHO
+	Jg4TZQ946xweCfxH21bISpg+2FD+pBewD9k+Iy3Hr5pxZCQ1eKzG0AMFuuWFRZqBXCGZDYo6vug
+	==
+X-Gm-Gg: ASbGncus4NnVYEgpHNQWrvCDqhUtQa32qzlzbCZsy0IttzXNai3nEf8gtzDZZBsHt9K
+	tgXh35QqrBIU70PxhOK3xppz0rRWLWeVxbVKvTX0tSHKrMBXxXJUysxE5herzOpEzPRuFX9+Cfl
+	habCXRRPN2RpQqPwjOr5i+gTOEEKdp+o31YiQSmbSOzrPoYwwoVl+IAhZVyOi9+8EUONScjI9gl
+	J/7R7BgDmfeAOnGg2iV7n7l06AYcGhT+Cp50HzEjQrN0MVobuzogBnsLoJ0dVentmexCASkTIiO
+	vOBm+BEul+9R4PFP63sdy7f+4vYh4Q0d1Qw3YIadotXb9DA29Ge0pLM=
+X-Received: by 2002:a05:6000:1447:b0:3a4:e002:5f97 with SMTP id ffacd0b85a97d-3a5522674d1mr997603f8f.1.1749539128054;
+        Tue, 10 Jun 2025 00:05:28 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHChnADTfaieweRBHvUp3WTN9uAJLomdiqgSBhu5JtbJEpBVcl3obpq3MkMSLVwf70BjgKN+w==
+X-Received: by 2002:a05:6000:1447:b0:3a4:e002:5f97 with SMTP id ffacd0b85a97d-3a5522674d1mr997569f8f.1.1749539127681;
+        Tue, 10 Jun 2025 00:05:27 -0700 (PDT)
+Received: from ?IPV6:2a09:80c0:192:0:5dac:bf3d:c41:c3e7? ([2a09:80c0:192:0:5dac:bf3d:c41:c3e7])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4526e1595d4sm127883385e9.16.2025.06.10.00.05.26
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 10 Jun 2025 00:05:26 -0700 (PDT)
+Message-ID: <c2f52065-9758-4ce0-9c15-ef040bebd37e@redhat.com>
+Date: Tue, 10 Jun 2025 09:05:25 +0200
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC] mm: use folio_expected_ref_count() helper for reference
+ counting
+To: Matthew Wilcox <willy@infradead.org>, Steven Rostedt <rostedt@goodmis.org>
+Cc: Shivank Garg <shivankg@amd.com>, mhiramat@kernel.org, oleg@redhat.com,
+ peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+ namhyung@kernel.org, mark.rutland@arm.com,
+ alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com,
+ adrian.hunter@intel.com, kan.liang@linux.intel.com,
+ akpm@linux-foundation.org, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+ linux-mm@kvack.org
+References: <20250609170806.447302-2-shivankg@amd.com>
+ <aEc0MNj9JNXbLHmw@casper.infradead.org>
+ <E40B36E2-1D0E-4769-B155-0175A06DE3AB@goodmis.org>
+ <aEc7JG-OL2fp075j@casper.infradead.org>
+From: David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <aEc7JG-OL2fp075j@casper.infradead.org>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: fDnAoFCvB2Kc7ASHxZ6-pkVaMyQOak4y5Q_b54wI_zs_1749539128
+X-Mimecast-Originator: redhat.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On Thu, 29 May 2025 13:01:38 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
+On 09.06.25 21:51, Matthew Wilcox wrote:
+> On Mon, Jun 09, 2025 at 03:31:40PM -0400, Steven Rostedt wrote:
+>>
+>>
+>> On June 9, 2025 3:21:20 PM EDT, Matthew Wilcox <willy@infradead.org> wrote:
+>>> On Mon, Jun 09, 2025 at 05:08:07PM +0000, Shivank Garg wrote:
+>>>> Replace open-coded folio reference count calculations with the
+>>>> folio_expected_ref_count() helper to improve code maintainability
+>>>> and reduce duplication.
+>>>
+>>> If it needs this much additional commentary, perhaps it's not actually
+>>> clearer?
+>>
+>> I don't know. I tend to over explain as I rather make it totally obvious what is happening. I wouldn't say excessive commentary is necessarily a sign that it's not clearer.
+> 
+> That was a Socratic question, not for you to answer.
+> 
+> My opinion is that the extra commentary is obfuscatory and should be
+> removed.
 
-> From: Steven Rostedt <rostedt@goodmis.org>
-> 
-> If a tracepoint is defined via DECLARE_TRACE() or TRACE_EVENT() but never
-> called (via the trace_<tracepoint>() function), its meta data is still
-> around in memory and not discarded.
-> 
-> When created via TRACE_EVENT() the situation is worse because the
-> TRACE_EVENT() creates meta data that can be around 5k per trace event.
-> Having unused trace events causes several thousand of wasted bytes.
-> 
-> Add a verifier that injects a pointer to the tracepoint structure in the
-> functions that are used and added to a section called __tracepoint_check.
-> Then on boot up, iterate over this section and for every tracepoint
-> descriptor that is pointed to, update its ".funcs" field to (void *)1, as
-> the .funcs field is only set when a tracepoint is registered. At this
-> time, no tracepoints should be registered.
-> 
-> Then iterate all tracepoints and if any tracepoints doesn't have its
-> .funcs field set to (void*)1, trigger a warning, and list all tracepoints
-> that are not found.
-> 
-> Enabling this currently with a given config produces:
-> 
->  Tracepoint x86_fpu_before_restore unused
->  Tracepoint x86_fpu_after_restore unused
->  Tracepoint x86_fpu_init_state unused
->  Tracepoint pelt_hw_tp unused
->  Tracepoint pelt_irq_tp unused
->  Tracepoint ipi_raise unused
->  Tracepoint ipi_entry unused
->  Tracepoint ipi_exit unused
->  Tracepoint irq_matrix_alloc_reserved unused
->  Tracepoint psci_domain_idle_enter unused
->  Tracepoint psci_domain_idle_exit unused
->  Tracepoint powernv_throttle unused
->  Tracepoint clock_enable unused
->  Tracepoint clock_disable unused
->  Tracepoint clock_set_rate unused
->  Tracepoint power_domain_target unused
->  Tracepoint xdp_bulk_tx unused
->  Tracepoint xdp_redirect_map unused
->  Tracepoint xdp_redirect_map_err unused
->  Tracepoint mem_return_failed unused
->  Tracepoint vma_mas_szero unused
->  Tracepoint vma_store unused
->  Tracepoint hugepage_set_pmd unused
->  Tracepoint hugepage_set_pud unused
->  Tracepoint hugepage_update_pmd unused
->  Tracepoint hugepage_update_pud unused
->  Tracepoint dax_pmd_insert_mapping unused
->  Tracepoint dax_insert_mapping unused
->  Tracepoint block_rq_remap unused
->  Tracepoint xhci_dbc_handle_event unused
->  Tracepoint xhci_dbc_handle_transfer unused
->  Tracepoint xhci_dbc_gadget_ep_queue unused
->  Tracepoint xhci_dbc_alloc_request unused
->  Tracepoint xhci_dbc_free_request unused
->  Tracepoint xhci_dbc_queue_request unused
->  Tracepoint xhci_dbc_giveback_request unused
->  Tracepoint tcp_ao_wrong_maclen unused
->  Tracepoint tcp_ao_mismatch unused
->  Tracepoint tcp_ao_key_not_found unused
->  Tracepoint tcp_ao_rnext_request unused
->  Tracepoint tcp_ao_synack_no_key unused
->  Tracepoint tcp_ao_snd_sne_update unused
->  Tracepoint tcp_ao_rcv_sne_update unused
-> 
-> Some of the above is totally unused but others are not used due to their
-> "trace_" functions being inside configs, in which case, the defined
-> tracepoints should also be inside those same configs. Others are
-> architecture specific but defined in generic code, where they should
-> either be moved to the architecture or be surrounded by #ifdef for the
-> architectures they are for.
-> 
-> Note, currently this only handles tracepoints that are builtin. This can
-> easily be extended to verify tracepoints used by modules, but it requires a
-> slightly different approach as it needs updates to the module code.
-> 
-> Link: https://lore.kernel.org/all/20250528114549.4d8a5e03@gandalf.local.home/
-> 
-> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-> ---
->  include/asm-generic/vmlinux.lds.h |  1 +
->  include/linux/tracepoint.h        | 10 ++++++++++
->  kernel/trace/Kconfig              |  8 ++++++++
->  kernel/tracepoint.c               | 26 ++++++++++++++++++++++++++
->  4 files changed, 45 insertions(+)
-> 
-> diff --git a/include/asm-generic/vmlinux.lds.h b/include/asm-generic/vmlinux.lds.h
-> index fa5f19b8d53a..600d8b51e315 100644
-> --- a/include/asm-generic/vmlinux.lds.h
-> +++ b/include/asm-generic/vmlinux.lds.h
-> @@ -708,6 +708,7 @@ defined(CONFIG_AUTOFDO_CLANG) || defined(CONFIG_PROPELLER_CLANG)
->  	MCOUNT_REC()							\
->  	*(.init.rodata .init.rodata.*)					\
->  	FTRACE_EVENTS()							\
-> +	BOUNDED_SECTION_BY(__tracepoint_check, ___tracepoint_check)	\
-
-nit: Shouldn't we also make this as TRACEPOINT_CHECKS() ?
-
-Others looks good to me.
-
-Reviewed-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-
-Thank you,
-
->  	TRACE_SYSCALLS()						\
->  	KPROBE_BLACKLIST()						\
->  	ERROR_INJECT_WHITELIST()					\
-> diff --git a/include/linux/tracepoint.h b/include/linux/tracepoint.h
-> index a351763e6965..c9c03ec8e552 100644
-> --- a/include/linux/tracepoint.h
-> +++ b/include/linux/tracepoint.h
-> @@ -221,6 +221,14 @@ static inline struct tracepoint *tracepoint_ptr_deref(tracepoint_ptr_t *p)
->  		__do_trace_##name(args);				\
->  	}
->  
-> +#ifdef CONFIG_TRACEPOINT_VERIFY_USED
-> +# define TRACEPOINT_CHECK(name)						\
-> +	static void __used __section("__tracepoint_check") *__trace_check = \
-> +		&__tracepoint_##name;
-> +#else
-> +# define TRACEPOINT_CHECK(name)
-> +#endif
-> +
->  /*
->   * Make sure the alignment of the structure in the __tracepoints section will
->   * not add unwanted padding between the beginning of the section and the
-> @@ -270,6 +278,7 @@ static inline struct tracepoint *tracepoint_ptr_deref(tracepoint_ptr_t *p)
->  	__DECLARE_TRACE_COMMON(name, PARAMS(proto), PARAMS(args), PARAMS(data_proto)) \
->  	static inline void __do_trace_##name(proto)			\
->  	{								\
-> +		TRACEPOINT_CHECK(name)					\
->  		if (cond) {						\
->  			guard(preempt_notrace)();			\
->  			__DO_TRACE_CALL(name, TP_ARGS(args));		\
-> @@ -289,6 +298,7 @@ static inline struct tracepoint *tracepoint_ptr_deref(tracepoint_ptr_t *p)
->  	__DECLARE_TRACE_COMMON(name, PARAMS(proto), PARAMS(args), PARAMS(data_proto)) \
->  	static inline void __do_trace_##name(proto)			\
->  	{								\
-> +		TRACEPOINT_CHECK(name)					\
->  		guard(rcu_tasks_trace)();				\
->  		__DO_TRACE_CALL(name, TP_ARGS(args));			\
->  	}								\
-> diff --git a/kernel/trace/Kconfig b/kernel/trace/Kconfig
-> index a3f35c7d83b6..8867eee5b58f 100644
-> --- a/kernel/trace/Kconfig
-> +++ b/kernel/trace/Kconfig
-> @@ -1044,6 +1044,14 @@ config GCOV_PROFILE_FTRACE
->  	  Note that on a kernel compiled with this config, ftrace will
->  	  run significantly slower.
->  
-> +config TRACEPOINT_VERIFY_USED
-> +	bool "Verify that all defined tracepoints are used"
-> +	depends on TRACEPOINTS
-> +	help
-> +	  This option checks if every builtin defined tracepoint is
-> +	  used in the code. If a tracepoint is defined but not used,
-> +	  it will waste memory as its meta data is still created.
-> +
->  config FTRACE_SELFTEST
->  	bool
->  
-> diff --git a/kernel/tracepoint.c b/kernel/tracepoint.c
-> index 62719d2941c9..f354d3850a04 100644
-> --- a/kernel/tracepoint.c
-> +++ b/kernel/tracepoint.c
-> @@ -677,10 +677,36 @@ static struct notifier_block tracepoint_module_nb = {
->  	.priority = 0,
->  };
->  
-> +#ifdef CONFIG_TRACEPOINT_VERIFY_USED
-> +extern void * __start___tracepoint_check[];
-> +extern void * __stop___tracepoint_check[];
-> +
-> +#define VERIFIED_TRACEPOINT	((void *)1)
-> +
-> +static void check_tracepoint(struct tracepoint *tp, void *priv)
-> +{
-> +	if (WARN_ONCE(tp->funcs != VERIFIED_TRACEPOINT, "Unused tracepoints found"))
-> +		pr_warn("Tracepoint %s unused\n", tp->name);
-> +
-> +	tp->funcs = NULL;
-> +}
-> +#endif
-> +
->  static __init int init_tracepoints(void)
->  {
->  	int ret;
->  
-> +#ifdef CONFIG_TRACEPOINT_VERIFY_USED
-> +	for (void **ptr = __start___tracepoint_check;
-> +	     ptr < __stop___tracepoint_check; ptr++) {
-> +		struct tracepoint *tp = *ptr;
-> +
-> +		tp->funcs = VERIFIED_TRACEPOINT;
-> +	}
-> +
-> +	for_each_kernel_tracepoint(check_tracepoint, NULL);
-> +#endif
-> +
->  	ret = register_module_notifier(&tracepoint_module_nb);
->  	if (ret)
->  		pr_warn("Failed to register tracepoint module enter notifier\n");
-> -- 
-> 2.47.2
-> 
-
++1
 
 -- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Cheers,
+
+David / dhildenb
+
