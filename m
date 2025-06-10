@@ -1,53 +1,53 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D940428C013;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D74CD28C012;
 	Tue, 10 Jun 2025 09:44:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749548647; cv=none; b=fKZJCOU+wuzbIN1VUoXLKwvrfOquOGxMsfGXrN8rosjISoxUZ5epSDly2eU1gykMknJpBJTYFXlYfewxJLWLP3CLqL0PJUcaOwLSF6yNyco2yEwdZ5awAKDKByn0I4fWFiAX6kIiI9oIZa4f4WnYQ8gcBbb2rB8J1G0X0NL0Kt8=
+	t=1749548648; cv=none; b=jUNhpgMiQUtTqqUYaH/onYebfIXtHHe2+8Hk/DhSPIIswqGhxECEBxvJuJgS8oQSyzGMDa+RTRtL6WOy5A4gkGvdpE7084OL8vOPK+5oT8W9V2L3nvY3ESQoh8AzWxOvOwGqVG4W/Fy7P4R4VBYFsFTwxgcxqtGBkxUHDG8ipKg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749548647; c=relaxed/simple;
-	bh=CGxMKVB3DosX/LZwaA05A2XKMKvpQiJPI0RIsiu/UaE=;
+	s=arc-20240116; t=1749548648; c=relaxed/simple;
+	bh=dBhFX5LP+1DhN/RyhzVOgZ6I6blBB4/8LieTzplFxR0=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=kJ/L7uGNlyy2S9OC8ZlAFYqFISmV8cFTKq/QHXge4aRR0IsLHfQ51/eSypGLVQJNQGRlBdoXDmYduo0bUPPNXJfZy4Ot812dfGJorIwngeHR9hNAPc/9Sz1JSJ+GGHldezuruwp2hzpbJPmf3/7D3qirKzXC4qA17LX+a4s/VMU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=FMIounhn; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=7DGoxQXy; arc=none smtp.client-ip=193.142.43.55
+	 MIME-Version; b=b0p+qUlOH/mqIgq/CQ60Ili2o4xzBYYUC8C1OJpl7uBnYRdWzSz6k6160nmvXBoZyQvZkpbjUcSRyGgZM8K1TQYI4fg08rVF2meJ6DktWBtryIcSGJl5y3wzIaOTDkOrCUWC+CMvc+TgQHEk8fw1WjGynaLY3+ahVDDhNH796FE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=eFWbyeND; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=BnOt/kkc; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="FMIounhn";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="7DGoxQXy"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="eFWbyeND";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="BnOt/kkc"
 From: Nam Cao <namcao@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1749548644;
+	s=2020; t=1749548643;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=3uP77io5/TqrvCuSQNbHuIMPzPVc+uGmfqmVdbkI1nM=;
-	b=FMIounhnaNpKkDw0uU6lyB0e4h6Oa0KgNiJIEkJ6LfB3KeljECivstG7h3I4HJESS/32sw
-	tJ69yejVK48Es5lfcSWv+ZYKjY1UelvMxmZN8tZ0u9L0ZBAYf0I/ma2eYlqZCjhhQ34v6I
-	IHau/symaz50YWc+waxHgILbQ3T8rKgy0IAdAwcQhh3TBI5aM4U4NtT1w2bsPuCcJ8A1nD
-	2NZ2QEjMSFEQVehZvhy4HPtScNQC6lZIsOAnXjb2+pv0bJ9I7hAHM/0phzRX/XIK6qRZRm
-	MuGsfRg3fAP0BVJG0xt3IJBiqHZjjqbGlw6XQ8Dpaoy54nbB3udgKXiZMHmMzg==
+	bh=DHPOCi4ISkjjArIEAexgTMmc+gJfxVlUqx0t1gCSkcE=;
+	b=eFWbyeNDN+gfsohck49tvzWP0Zfn5W0oGhKczHlHBvJQj8sY1G1IL3GiFSE0A5oYNs64FN
+	lM+EkKPUZY3hc1/AbhY1f94efvOmSQG65DmYkMZj+N1lRHP7fcYeSsMHwO0crDpWsEwidf
+	fuipuybyhhVs6Q3VgyV1TLxD7BWFN0Tm9pZgDu0yQzuRAPEHtZL7zyLp6aJtPP8kyYB6sc
+	a8RJq3/5BWfpAdd91D3m5Cogxs7NuyjpZZMQrzAf3kRQHOOfaXYNdoebrpZXzW2tF4YAsn
+	0PI8RFgKcUpPrrvEHj9fvRdm7TZvRzxvgjtvorLfX5BsZnHXQRk4r4YMxvDZNg==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1749548644;
+	s=2020e; t=1749548643;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=3uP77io5/TqrvCuSQNbHuIMPzPVc+uGmfqmVdbkI1nM=;
-	b=7DGoxQXyUpFTApTUN/c9RInaatWgZPZYZ+oXGQFhn6JC3ycesAF574kzbD5Gww/MtnsLVg
-	IUoBIqf6QaVi9VDA==
+	bh=DHPOCi4ISkjjArIEAexgTMmc+gJfxVlUqx0t1gCSkcE=;
+	b=BnOt/kkcn75JlSSLDDQVZ+Huz+IvDuRph23wPkC9JhFngZ22CmYE9+11IiUmAmvbUy5Qlh
+	U6WvJid6CIgbPuAg==
 To: Steven Rostedt <rostedt@goodmis.org>,
 	Gabriele Monaco <gmonaco@redhat.com>,
 	linux-trace-kernel@vger.kernel.org,
 	linux-kernel@vger.kernel.org
 Cc: john.ogness@linutronix.de,
 	Nam Cao <namcao@linutronix.de>
-Subject: [PATCH v10 10/19] Documentation/rv: Prepare monitor synthesis document for LTL inclusion
-Date: Tue, 10 Jun 2025 11:43:35 +0200
-Message-Id: <f3805e6028389bf4710700449f7dddc7f48a6fb9.1749547399.git.namcao@linutronix.de>
+Subject: [PATCH v10 09/19] verification/dot2k: Prepare the frontend for LTL inclusion
+Date: Tue, 10 Jun 2025 11:43:34 +0200
+Message-Id: <bbe1a0a35118a7829c0d4f2ff5a3cac6e5740891.1749547399.git.namcao@linutronix.de>
 In-Reply-To: <cover.1749547399.git.namcao@linutronix.de>
 References: <cover.1749547399.git.namcao@linutronix.de>
 Precedence: bulk
@@ -58,119 +58,267 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Monitor synthesis from deterministic automaton and linear temporal logic
-have a lot in common. Therefore a single document should describe both.
+The dot2k tool has some code that can be reused for linear temporal logic
+monitor. Prepare its frontend for LTL inclusion:
 
-Change da_monitor_synthesis.rst to monitor_synthesis.rst. LTL monitor
-synthesis will be added to this file by a follow-up commit.
+  1. Rename to be generic: rvgen
 
-This makes the diff far easier to read. If renaming and adding LTL info is
-done in a single commit, git wouldn't recognize it as a rename, but a file
-removal and a file addition.
+  2. Replace the parameter --dot with 2 parameters:
+     --class: to specific the monitor class, can be 'da' or 'ltl'
+     --spec: the monitor specification file, .dot file for DA, and .ltl
+             file for LTL
 
-While at it, correct the old dot2k commands to the new rvgen commands.
+The old command:
+
+  python3 dot2/dot2k monitor -d wip.dot -t per_cpu
+
+is equivalent to the new commands:
+
+  python3 rvgen monitor -c da -s wip.dot -t per_cpu
 
 Reviewed-by: Gabriele Monaco <gmonaco@redhat.com>
 Signed-off-by: Nam Cao <namcao@linutronix.de>
 ---
- Documentation/trace/rv/index.rst              |  2 +-
- ...or_synthesis.rst =3D> monitor_synthesis.rst} | 20 +++++++++----------
- 2 files changed, 11 insertions(+), 11 deletions(-)
- rename Documentation/trace/rv/{da_monitor_synthesis.rst =3D> monitor_synth=
-esis.rst} (92%)
+ tools/verification/{dot2 =3D> rvgen}/Makefile    | 10 +++++-----
+ .../{dot2/dot2k =3D> rvgen/__main__.py}          | 18 +++++++++++++-----
+ tools/verification/{dot2 =3D> rvgen}/dot2c       |  2 +-
+ .../{dot2 =3D> rvgen}/dot2k_templates/Kconfig    |  0
+ .../dot2k_templates/Kconfig_container          |  0
+ .../{dot2 =3D> rvgen}/dot2k_templates/main.c     |  0
+ .../dot2k_templates/main_container.c           |  0
+ .../dot2k_templates/main_container.h           |  0
+ .../{dot2 =3D> rvgen}/dot2k_templates/trace.h    |  0
+ .../{dot2 =3D> rvgen/rvgen}/automata.py          |  0
+ .../{dot2 =3D> rvgen/rvgen}/dot2c.py             |  2 +-
+ .../{dot2 =3D> rvgen/rvgen}/dot2k.py             | 10 +++++-----
+ 12 files changed, 25 insertions(+), 17 deletions(-)
+ rename tools/verification/{dot2 =3D> rvgen}/Makefile (55%)
+ rename tools/verification/{dot2/dot2k =3D> rvgen/__main__.py} (72%)
+ rename tools/verification/{dot2 =3D> rvgen}/dot2c (97%)
+ rename tools/verification/{dot2 =3D> rvgen}/dot2k_templates/Kconfig (100%)
+ rename tools/verification/{dot2 =3D> rvgen}/dot2k_templates/Kconfig_contai=
+ner (100%)
+ rename tools/verification/{dot2 =3D> rvgen}/dot2k_templates/main.c (100%)
+ rename tools/verification/{dot2 =3D> rvgen}/dot2k_templates/main_container=
+.c (100%)
+ rename tools/verification/{dot2 =3D> rvgen}/dot2k_templates/main_container=
+.h (100%)
+ rename tools/verification/{dot2 =3D> rvgen}/dot2k_templates/trace.h (100%)
+ rename tools/verification/{dot2 =3D> rvgen/rvgen}/automata.py (100%)
+ rename tools/verification/{dot2 =3D> rvgen/rvgen}/dot2c.py (99%)
+ rename tools/verification/{dot2 =3D> rvgen/rvgen}/dot2k.py (98%)
 
-diff --git a/Documentation/trace/rv/index.rst b/Documentation/trace/rv/inde=
-x.rst
-index e80e0057feb41..8e411b76ec824 100644
---- a/Documentation/trace/rv/index.rst
-+++ b/Documentation/trace/rv/index.rst
-@@ -8,7 +8,7 @@ Runtime Verification
+diff --git a/tools/verification/dot2/Makefile b/tools/verification/rvgen/Ma=
+kefile
+similarity index 55%
+rename from tools/verification/dot2/Makefile
+rename to tools/verification/rvgen/Makefile
+index 021beb07a5213..cea9c21c3bced 100644
+--- a/tools/verification/dot2/Makefile
++++ b/tools/verification/rvgen/Makefile
+@@ -3,7 +3,7 @@ INSTALL=3Dinstall
+ prefix  ?=3D /usr
+ bindir  ?=3D $(prefix)/bin
+ mandir  ?=3D $(prefix)/share/man
+-miscdir ?=3D $(prefix)/share/dot2
++miscdir ?=3D $(prefix)/share/rvgen
+ srcdir  ?=3D $(prefix)/src
 =20
-    runtime-verification.rst
-    deterministic_automata.rst
--   da_monitor_synthesis.rst
-+   monitor_synthesis.rst
-    da_monitor_instrumentation.rst
-    monitor_wip.rst
-    monitor_wwnr.rst
-diff --git a/Documentation/trace/rv/da_monitor_synthesis.rst b/Documentatio=
-n/trace/rv/monitor_synthesis.rst
-similarity index 92%
-rename from Documentation/trace/rv/da_monitor_synthesis.rst
-rename to Documentation/trace/rv/monitor_synthesis.rst
-index 0a92729c8a9ba..85624062073b0 100644
---- a/Documentation/trace/rv/da_monitor_synthesis.rst
-+++ b/Documentation/trace/rv/monitor_synthesis.rst
-@@ -1,5 +1,5 @@
--Deterministic Automata Monitor Synthesis
--=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-+Runtime Verification Monitor Synthesis
-+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+ PYLIB  ?=3D $(shell python3 -c 'import sysconfig;  print (sysconfig.get_pa=
+th("purelib"))')
+@@ -16,11 +16,11 @@ clean:
 =20
- The starting point for the application of runtime verification (RV) techni=
-ques
- is the *specification* or *modeling* of the desired (or undesired) behavior
-@@ -36,24 +36,24 @@ below::
-                                   |  +----> panic ?
-                                   +-------> <user-specified>
+ .PHONY: install
+ install:
+-	$(INSTALL) automata.py -D -m 644 $(DESTDIR)$(PYLIB)/dot2/automata.py
+-	$(INSTALL) dot2c.py -D -m 644 $(DESTDIR)$(PYLIB)/dot2/dot2c.py
++	$(INSTALL) rvgen/automata.py -D -m 644 $(DESTDIR)$(PYLIB)/rvgen/automata.=
+py
++	$(INSTALL) rvgen/dot2c.py -D -m 644 $(DESTDIR)$(PYLIB)/rvgen/dot2c.py
+ 	$(INSTALL) dot2c -D -m 755 $(DESTDIR)$(bindir)/
+-	$(INSTALL) dot2k.py -D -m 644 $(DESTDIR)$(PYLIB)/dot2/dot2k.py
+-	$(INSTALL) dot2k -D -m 755 $(DESTDIR)$(bindir)/
++	$(INSTALL) rvgen/dot2k.py -D -m 644 $(DESTDIR)$(PYLIB)/rvgen/dot2k.py
++	$(INSTALL) __main__.py -D -m 755 $(DESTDIR)$(bindir)/rvgen
 =20
--DA monitor synthesis
-+RV monitor synthesis
- --------------------
+ 	mkdir -p ${miscdir}/
+ 	cp -rp dot2k_templates $(DESTDIR)$(miscdir)/
+diff --git a/tools/verification/dot2/dot2k b/tools/verification/rvgen/__mai=
+n__.py
+similarity index 72%
+rename from tools/verification/dot2/dot2k
+rename to tools/verification/rvgen/__main__.py
+index 133fb17d9d475..994d320ad2d1f 100644
+--- a/tools/verification/dot2/dot2k
++++ b/tools/verification/rvgen/__main__.py
+@@ -9,11 +9,11 @@
+ #   Documentation/trace/rv/da_monitor_synthesis.rst
 =20
- The synthesis of automata-based models into the Linux *RV monitor* abstrac=
-tion
--is automated by the dot2k tool and the rv/da_monitor.h header file that
-+is automated by the rvgen tool and the rv/da_monitor.h header file that
- contains a set of macros that automatically generate the monitor's code.
+ if __name__ =3D=3D '__main__':
+-    from dot2.dot2k import dot2k
++    from rvgen.dot2k import dot2k
+     import argparse
+     import sys
 =20
--dot2k
-+rvgen
- -----
+-    parser =3D argparse.ArgumentParser(description=3D'transform .dot file =
+into kernel rv monitor')
++    parser =3D argparse.ArgumentParser(description=3D'Generate kernel rv m=
+onitor')
+     parser.add_argument("-D", "--description", dest=3D"description", requi=
+red=3DFalse)
+     parser.add_argument("-a", "--auto_patch", dest=3D"auto_patch",
+                         action=3D"store_true", required=3DFalse,
+@@ -25,7 +25,9 @@ if __name__ =3D=3D '__main__':
+     monitor_parser.add_argument('-n', "--model_name", dest=3D"model_name")
+     monitor_parser.add_argument("-p", "--parent", dest=3D"parent",
+                                 required=3DFalse, help=3D"Create a monitor=
+ nested to parent")
+-    monitor_parser.add_argument('-d', "--dot", dest=3D"dot_file")
++    monitor_parser.add_argument('-c', "--class", dest=3D"monitor_class",
++                                help=3D"Monitor class, either \"da\" or \"=
+ltl\"")
++    monitor_parser.add_argument('-s', "--spec", dest=3D"spec", help=3D"Mon=
+itor specification file")
+     monitor_parser.add_argument('-t', "--monitor_type", dest=3D"monitor_ty=
+pe",
+                                 help=3Df"Available options: {', '.join(dot=
+2k.monitor_types.keys())}")
 =20
--The dot2k utility leverages dot2c by converting an automaton model in
-+The rvgen utility leverages dot2c by converting an automaton model in
- the DOT format into the C representation [1] and creating the skeleton of
- a kernel monitor in C.
+@@ -36,8 +38,14 @@ if __name__ =3D=3D '__main__':
 =20
- For example, it is possible to transform the wip.dot model present in
- [1] into a per-cpu monitor with the following command::
+     try:
+         if params.subcmd =3D=3D "monitor":
+-            print("Opening and parsing the dot file %s" % params.dot_file)
+-            monitor =3D dot2k(params.dot_file, params.monitor_type, vars(p=
+arams))
++            print("Opening and parsing the specification file %s" % params=
+.spec)
++            if params.monitor_class =3D=3D "da":
++                monitor =3D dot2k(params.spec, params.monitor_type, vars(p=
+arams))
++            elif params.monitor_class =3D=3D "ltl":
++                raise NotImplementedError
++            else:
++                print("Unknown monitor class:", params.monitor_class)
++                sys.exit(1)
+         else:
+             monitor =3D dot2k(None, None, vars(params))
+     except Exception as e:
+diff --git a/tools/verification/dot2/dot2c b/tools/verification/rvgen/dot2c
+similarity index 97%
+rename from tools/verification/dot2/dot2c
+rename to tools/verification/rvgen/dot2c
+index 3fe89ab88b65a..bf0c67c5b66c8 100644
+--- a/tools/verification/dot2/dot2c
++++ b/tools/verification/rvgen/dot2c
+@@ -14,7 +14,7 @@
+ #   Documentation/trace/rv/deterministic_automata.rst
 =20
--  $ dot2k -d wip.dot -t per_cpu
-+  $ rvgen monitor -c da -s wip.dot -t per_cpu
+ if __name__ =3D=3D '__main__':
+-    from dot2 import dot2c
++    from rvgen import dot2c
+     import argparse
+     import sys
 =20
- This will create a directory named wip/ with the following files:
+diff --git a/tools/verification/dot2/dot2k_templates/Kconfig b/tools/verifi=
+cation/rvgen/dot2k_templates/Kconfig
+similarity index 100%
+rename from tools/verification/dot2/dot2k_templates/Kconfig
+rename to tools/verification/rvgen/dot2k_templates/Kconfig
+diff --git a/tools/verification/dot2/dot2k_templates/Kconfig_container b/to=
+ols/verification/rvgen/dot2k_templates/Kconfig_container
+similarity index 100%
+rename from tools/verification/dot2/dot2k_templates/Kconfig_container
+rename to tools/verification/rvgen/dot2k_templates/Kconfig_container
+diff --git a/tools/verification/dot2/dot2k_templates/main.c b/tools/verific=
+ation/rvgen/dot2k_templates/main.c
+similarity index 100%
+rename from tools/verification/dot2/dot2k_templates/main.c
+rename to tools/verification/rvgen/dot2k_templates/main.c
+diff --git a/tools/verification/dot2/dot2k_templates/main_container.c b/too=
+ls/verification/rvgen/dot2k_templates/main_container.c
+similarity index 100%
+rename from tools/verification/dot2/dot2k_templates/main_container.c
+rename to tools/verification/rvgen/dot2k_templates/main_container.c
+diff --git a/tools/verification/dot2/dot2k_templates/main_container.h b/too=
+ls/verification/rvgen/dot2k_templates/main_container.h
+similarity index 100%
+rename from tools/verification/dot2/dot2k_templates/main_container.h
+rename to tools/verification/rvgen/dot2k_templates/main_container.h
+diff --git a/tools/verification/dot2/dot2k_templates/trace.h b/tools/verifi=
+cation/rvgen/dot2k_templates/trace.h
+similarity index 100%
+rename from tools/verification/dot2/dot2k_templates/trace.h
+rename to tools/verification/rvgen/dot2k_templates/trace.h
+diff --git a/tools/verification/dot2/automata.py b/tools/verification/rvgen=
+/rvgen/automata.py
+similarity index 100%
+rename from tools/verification/dot2/automata.py
+rename to tools/verification/rvgen/rvgen/automata.py
+diff --git a/tools/verification/dot2/dot2c.py b/tools/verification/rvgen/rv=
+gen/dot2c.py
+similarity index 99%
+rename from tools/verification/dot2/dot2c.py
+rename to tools/verification/rvgen/rvgen/dot2c.py
+index fa2816ac7b61a..6009caf568d92 100644
+--- a/tools/verification/dot2/dot2c.py
++++ b/tools/verification/rvgen/rvgen/dot2c.py
+@@ -13,7 +13,7 @@
+ # For further information, see:
+ #   Documentation/trace/rv/deterministic_automata.rst
 =20
-@@ -87,7 +87,7 @@ the second for monitors with per-cpu instances, and the t=
-hird with per-task
- instances.
+-from dot2.automata import Automata
++from .automata import Automata
 =20
- In all cases, the 'name' argument is a string that identifies the monitor,=
- and
--the 'type' argument is the data type used by dot2k on the representation of
-+the 'type' argument is the data type used by rvgen on the representation of
- the model in C.
+ class Dot2c(Automata):
+     enum_suffix =3D ""
+diff --git a/tools/verification/dot2/dot2k.py b/tools/verification/rvgen/rv=
+gen/dot2k.py
+similarity index 98%
+rename from tools/verification/dot2/dot2k.py
+rename to tools/verification/rvgen/rvgen/dot2k.py
+index 9ec99e297012a..e294624131943 100644
+--- a/tools/verification/dot2/dot2k.py
++++ b/tools/verification/rvgen/rvgen/dot2k.py
+@@ -8,13 +8,13 @@
+ # For further information, see:
+ #   Documentation/trace/rv/da_monitor_synthesis.rst
 =20
- For example, the wip model with two states and three events can be
-@@ -134,7 +134,7 @@ Final remarks
- -------------
+-from dot2.dot2c import Dot2c
++from .dot2c import Dot2c
+ import platform
+ import os
 =20
- With the monitor synthesis in place using the rv/da_monitor.h and
--dot2k, the developer's work should be limited to the instrumentation
-+rvgen, the developer's work should be limited to the instrumentation
- of the system, increasing the confidence in the overall approach.
+ class dot2k(Dot2c):
+     monitor_types =3D { "global" : 1, "per_cpu" : 2, "per_task" : 3 }
+-    monitor_templates_dir =3D "dot2/dot2k_templates/"
++    monitor_templates_dir =3D "rvgen/dot2k_templates/"
+     rv_dir =3D "kernel/trace/rv"
+     monitor_type =3D "per_cpu"
 =20
- [1] For details about deterministic automata format and the translation
-@@ -142,6 +142,6 @@ from one representation to another, see::
+@@ -60,14 +60,14 @@ class dot2k(Dot2c):
+         if platform.system() !=3D "Linux":
+             raise OSError("I can only run on Linux.")
 =20
-   Documentation/trace/rv/deterministic_automata.rst
+-        kernel_path =3D "/lib/modules/%s/build/tools/verification/dot2/dot=
+2k_templates/" % (platform.release())
++        kernel_path =3D "/lib/modules/%s/build/tools/verification/rvgen/do=
+t2k_templates/" % (platform.release())
 =20
--[2] dot2k appends the monitor's name suffix to the events enums to
-+[2] rvgen appends the monitor's name suffix to the events enums to
- avoid conflicting variables when exporting the global vmlinux.h
- use by BPF programs.
+         if os.path.exists(kernel_path):
+             self.monitor_templates_dir =3D kernel_path
+             return
+=20
+-        if os.path.exists("/usr/share/dot2/dot2k_templates/"):
+-            self.monitor_templates_dir =3D "/usr/share/dot2/dot2k_template=
+s/"
++        if os.path.exists("/usr/share/rvgen/dot2k_templates/"):
++            self.monitor_templates_dir =3D "/usr/share/rvgen/dot2k_templat=
+es/"
+             return
+=20
+         raise FileNotFoundError("Could not find the template directory, do=
+ you have the kernel source installed?")
 --=20
 2.39.5
 
