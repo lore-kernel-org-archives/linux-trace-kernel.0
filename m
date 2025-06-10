@@ -1,43 +1,32 @@
-Received: from relay.hostedemail.com (smtprelay0016.hostedemail.com [216.40.44.16])
+Received: from relay.hostedemail.com (smtprelay0014.hostedemail.com [216.40.44.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82D1C246BCA;
-	Tue, 10 Jun 2025 13:23:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1831B246BC0;
+	Tue, 10 Jun 2025 13:32:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749561840; cv=none; b=lHnk4GQzu8klqOCGbPZVxjaq4AmAwCYpcAiWU+7345GjgQe1rkPTldBuXujnBhWQTSd+QzuIqd/1PL+g19rua/S+hJbhs0BsPLlboMCQyVuJ9ryYY/SMSCvOOP4wsnbfsDBtupssxTb7smFuIpWd8xKSW7xBKySpnrRSV4Ajlk8=
+	t=1749562344; cv=none; b=GNN00NQTCv0dNyLJABnwMIvx9ni/GvG7JTH8kZQaC9cpbS9gEiXqVr9HpBqtfg9RF43P6KsDN2wcnt0TJFspd8XVR16sk6wvHhCp2kYKnefYmG72RxVlrNGA7sLd1fxhvDN0OItN9SebKtcTYFbmR3pavAc7Fk7tP1FuWHNOGJQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749561840; c=relaxed/simple;
-	bh=CaeYB2UPGRAWt9bGhDjrcL/C2j2B+8ir2cAE9BvW2Kk=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Y6XuWGqknmNUIdhcsRkpXYdh8RzYVNABDMPgyaVMx1lek2/LfGr5M7NgCfoGNyfI2X1cGL0dCEOv9ZTSRctAKuT41l87zkgEk4rF+Znx4sA8v9S4t2l1MJuwxvESXQAlGrOXuDLo59awOpBlNP3h51OYK2pYdyz2JtkyTaJibGk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.16
+	s=arc-20240116; t=1749562344; c=relaxed/simple;
+	bh=VeRRqAMQwsV9AjP9CYbvqZkSDgtiD6xuz7fHbLhSbnA=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=M3gmgIstj1BaccwQredb1zR25O/UM3QVBzr38WLNTtCDaodjm2bg/Jycsr9/1GoRf6rbcLNWdDoi9o38JqkHPyBagGIe8IaOmfgHf4ydFwhfmI/+JvEgQt6KTpj722lPE+EiSIIiuLEzx4jrUpx4zNXxh6AaTTF+fRl4PD3vyoA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.14
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf15.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay10.hostedemail.com (Postfix) with ESMTP id 3AB67C03AC;
-	Tue, 10 Jun 2025 13:23:56 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf15.hostedemail.com (Postfix) with ESMTPA id 40FEF1C;
-	Tue, 10 Jun 2025 13:23:53 +0000 (UTC)
-Date: Tue, 10 Jun 2025 09:25:23 -0400
+Received: from omf04.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay05.hostedemail.com (Postfix) with ESMTP id 771C158BC6;
+	Tue, 10 Jun 2025 13:32:20 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf04.hostedemail.com (Postfix) with ESMTPA id A032C2003B;
+	Tue, 10 Jun 2025 13:32:18 +0000 (UTC)
+Date: Tue, 10 Jun 2025 09:33:48 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc: Naresh Kamboju <naresh.kamboju@linaro.org>, open list
- <linux-kernel@vger.kernel.org>, Linux trace kernel
- <linux-trace-kernel@vger.kernel.org>, lkft-triage@lists.linaro.org, Stephen
- Rothwell <sfr@canb.auug.org.au>, Arnd Bergmann <arnd@arndb.de>, Dan
- Carpenter <dan.carpenter@linaro.org>, Anders Roxell
- <anders.roxell@linaro.org>, Peter Zijlstra <peterz@infradead.org>, Ingo
- Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Borislav
- Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- x86@kernel.org
-Subject: Re: next-20250605: Test regression: qemu-x86_64-compat mode ltp
- tracing Oops int3 kernel panic
-Message-ID: <20250610092523.7be86d1d@gandalf.local.home>
-In-Reply-To: <20250610174136.b88bd16959a4d7eff27cc3fa@kernel.org>
-References: <CA+G9fYsLu0roY3DV=tKyqP7FEKbOEETRvTDhnpPxJGbA=Cg+4w@mail.gmail.com>
-	<20250609220934.2c3ed98ba8c624fc7cb45172@kernel.org>
-	<20250610174136.b88bd16959a4d7eff27cc3fa@kernel.org>
+To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Dan Carpenter <dan.carpenter@linaro.org>
+Subject: [PATCH] tracing: Do not free "head" on error path of 
+ filter_free_subsystem_filters()
+Message-ID: <20250610093348.33c5643a@gandalf.local.home>
 X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -46,34 +35,50 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
 X-Rspamd-Server: rspamout03
-X-Rspamd-Queue-Id: 40FEF1C
-X-Stat-Signature: yy3yp473z18cpryn9xiadcf6fj58akb9
+X-Rspamd-Queue-Id: A032C2003B
+X-Stat-Signature: u5szw3tasguzey7x9yqnn1fm4cpsdkj8
 X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1+X+C9JHk029v5O3Xw4RrIrgjwHbZbuJEU=
-X-HE-Tag: 1749561833-452745
-X-HE-Meta: U2FsdGVkX1+39sM9EJN/3QIu2ylaLJsYJH2Wvg0/zUF39/f8LuhQx5F49m+JXkzDhELqzPXQ5BVcI6dDtJGLNQqClc/KsAKTCCgvjFiPrRUq53K5iS5p20eQYKO8dnNtjnMiqxothTanZ0j7l/K2vhw2y8UBhmH25lQ7ywmTeRAjv4QG2M2+PacRf3T8bc5Ms8pUrN627kXGGEdpQQK087WXRVHVSW+SNDHcdc+3xRVt50K52M2SVmlPu7BUVvQ89vo9IvI8+wTPzGlsS56N9WDXwzBRI9Yx9ZDaGGNGX2jeQTauus8iUmfQZR9G3ZTIhqWrN1SyiGZu5gR4NAJG6qWYN7zachpW
+X-Session-ID: U2FsdGVkX18teGOKpr+gusiYZViqrtt0SH+AHwK4pL4=
+X-HE-Tag: 1749562338-672093
+X-HE-Meta: U2FsdGVkX19o22b6/1AqabH+17ZgdEx9/+iJe8gTqjfMpZMTd1HAM2PlDfEbaosybXJ167UrtDeE9LwfI18yH4c6g/42OlR1oxLR+B0t5oDSG9XnwCWpdWN+1xCOXFCu/N5NolV6sfuz8ZHmwO7OOVn2wIeiM3oI+6tRQ6uPYAb6en8kIwbT6rMsqfINTk2Nj6DzIhXorlJSLzYU8jRhseS79CcEi6WeCDs+K7EHMdq+rUHVgU+WSA7ZWdnMD7b6piwhrRbSfYJUFDt9xTzmAfr12ma75Cus9AhhgWrXAmNJH48KZ7kJ7Ciye1tfnxrerikSJ2FNRPE5cK5SSCCo//ckmEhzgveGujSLheor0ZSj1ehZzlfBe0+iVj/7oVl3ZYGaNdoLlfzBKyAMlpl6yrXvERcuh86xvZA5WDAtMHWX2De7Xc3GP0PmtQqad69KXP1nWBdczkL0bHi1jJKk4gRbmqL65qCeQNmdKBxFRoqVhADsLYhjGZdEJI0zw+vxoKjCwUfjzUc=
 
-On Tue, 10 Jun 2025 17:41:36 +0900
-Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
+From: Steven Rostedt <rostedt@goodmis.org>
 
-> SERIALIZE instruction may flash pipeline, thus the processor needs
-> to reload the instruction. But it is not ensured to reload it from
-> memory because SERIALIZE does not invalidate the cache.
+The variable "head" is allocated and initialized as a list before
+allocating the first "item" for the list. If the allocation of "item"
+fails, it frees "head" and then jumps to the label "free_now" which will
+process head and free it.
 
-=46rom my understanding, an IPI on a CPU is equivalent to a smp_mb() on that
-CPU. There shouldn't be any need for flushing the cache.
+This will cause a UAF of "head", and it doesn't need to free it before
+jumping to the "free_now" label as that code will free it.
 
->=20
-> If that hypotheses is correct, we need to invalidate the cache
-> (flush TLB) in the third step, before the do_sync_core().
+Fixes: a9d0aab5eb33 ("tracing: Fix regression of filter waiting a long time on RCU synchronization")
+Reported-by: kernel test robot <lkp@intel.com>
+Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
+Closes: https://lore.kernel.org/r/202506070424.lCiNreTI-lkp@intel.com/
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+ kernel/trace/trace_events_filter.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-I'm not sure how the TLB would be affected.
-
--- Steve
-
->=20
-> Or, if it is unsure, we can just evacuate the kernel from die("int3")
-> by retrying the new instruction, when the INT3 is disappeared.
+diff --git a/kernel/trace/trace_events_filter.c b/kernel/trace/trace_events_filter.c
+index ea8b364b6818..08141f105c95 100644
+--- a/kernel/trace/trace_events_filter.c
++++ b/kernel/trace/trace_events_filter.c
+@@ -1437,10 +1437,8 @@ static void filter_free_subsystem_filters(struct trace_subsystem_dir *dir,
+ 	INIT_LIST_HEAD(&head->list);
+ 
+ 	item = kmalloc(sizeof(*item), GFP_KERNEL);
+-	if (!item) {
+-		kfree(head);
++	if (!item)
+ 		goto free_now;
+-	}
+ 
+ 	item->filter = filter;
+ 	list_add_tail(&item->list, &head->list);
+-- 
+2.47.2
 
