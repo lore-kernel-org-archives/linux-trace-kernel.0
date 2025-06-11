@@ -1,141 +1,155 @@
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+Received: from mail-il1-f169.google.com (mail-il1-f169.google.com [209.85.166.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B76E35968;
-	Wed, 11 Jun 2025 03:23:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C9B817BB6;
+	Wed, 11 Jun 2025 05:16:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749612199; cv=none; b=iJB69QJ2AVEQepuBVFRNnz6rpeyP1J10tTW8nVZ2OtvicQn8zC8OvOsMoPO7nnOoDFCMWC9+a3o7DuDGUXGdhZ+dsM0o4QAp7ZUKUtzlfHHse7wyJPfpTMHkAyybkPNUQrPLxcxabG98ydEhwlKgS5Hckf1eUgW21jspjCHLe2I=
+	t=1749618979; cv=none; b=iLZmsoIdOCH0s7/DlshIFWHYCEOFHY+7wMxUE6YCJeg/1WUfNAzV6IRHvy1TLPRW4qz+spFXo8bhrVMT32cJU/lQGn/mNEi8/QAIlP5Y8pVrreJ/jxydSmh6BCg869WGgMeLcx8iGX1/TMbWLVbre1GHYaDq/Xzi0Lr0U1LbSRQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749612199; c=relaxed/simple;
-	bh=DT3xhTrEpNyyEmwRD93HnFf0aQFO0HQD1DP7C+LzMbo=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=rf5Ww6XWdZHRyIihBihLolaFVmXFeZ7tqAZY3NIQfBTtb+IA627QEHC71I57ZqqmIDEJKBVzeJRmr3wE4ccuSNwCCecWaq1uHr3DZ5SQLjZUVG5V40nn/9V/RVPWh2NPnmRFgnFUb3XUw0iojj9JJFNpxjf3LuSk03kcYOvGstw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZbqNeZ3E; arc=none smtp.client-ip=209.85.214.177
+	s=arc-20240116; t=1749618979; c=relaxed/simple;
+	bh=wlCPxC6nysb+Pxhesmb97fuUGPr/QfECgPqmZ3FlWjs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=pwIQwDJWug/8SzqK871jTkH20Ep8nq7FgLpjOlot10/3W/+rp8Pn4x9xfDGKLp5NgysDxgVz+WPJpwgWu0MxNikID0faTWd/Ww6EL1Ygms3J26VUTBM+Ao7rHUMtKTFUx/HDKZDy4aY5P85JgRGpRcZAwpa+u5iYQZ3Lr+k/Nw8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WpUZ9M3/; arc=none smtp.client-ip=209.85.166.169
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZbqNeZ3E"
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-235f9e87f78so56642975ad.2;
-        Tue, 10 Jun 2025 20:23:16 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WpUZ9M3/"
+Received: by mail-il1-f169.google.com with SMTP id e9e14a558f8ab-3ddc5084952so25050545ab.2;
+        Tue, 10 Jun 2025 22:16:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749612196; x=1750216996; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=j8M59GVJK+m+6scfgTZEGFhkXYH4wMwQFS/55/hIcrM=;
-        b=ZbqNeZ3E4iPZKCCmgymR3t8ZG8e1Q9L5b7J8VIwe38DU2DmEaDUfyqwtqmUHodYyN9
-         JtTCjGCdcNTzdPo3YKtv7yIqPiCVVZM/gsr2d/KbU+lihpx624gk+QvAQ5VuBeNI1Ch9
-         6oKOXplzmMWOWiFdXEvmti5iCM2y22OUyFJCyiu2mlEG6IOxLd6LN3XXemuR3SePqv8r
-         gH9tXjgaMF9O269W6BYmC8CylvWtBFnzATapQA4qxCfKOeDqPpv/eqtlvY9m1lXZZDml
-         U0AaQUrOHgDK5NP6R8gs54X2Nk9jyTiARZ8EVLRbPb97FmL+UBFc7Z/ahV1/CbCQqhyw
-         i+nA==
+        d=gmail.com; s=20230601; t=1749618977; x=1750223777; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=NZesgBl46zE6tXS+j7KyjhCxsxKgNitfmh/eZ0BBEw4=;
+        b=WpUZ9M3/19VqiOhKB245R6IS8uqys4jDlXbIbRTHMwbRrIHQxNflRyE/sGquaFSaBY
+         g5ryNRRr7gyEXs9/f6AnNAWDgTEytjlHInSZomkIJTlrZCnMfPQ3dXTCLiYws6J9XcIH
+         4hndLa6z35hAXMxMO24s6wD3UDoEBXY8ZoINVcn7cIVoz4c/OBOSwzp7Z7bo0GW+c0bg
+         Le0/heEwRLJVlj4gV/6r/eUoIt2i/Qs7BbXIxazbHt23R/6xPViH4Gg5tyTllzTzCBS1
+         yGW1G+b/OwLo+/NU8pAA8Ngzvc/YQa43A6flOoWHzvkmwGShjtxhrwJpnDEkzhz9v58i
+         dDWw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749612196; x=1750216996;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=j8M59GVJK+m+6scfgTZEGFhkXYH4wMwQFS/55/hIcrM=;
-        b=Bfmt0YUs6xXeOu0Y3UGUQ3JcBbQB0aeeWO6C+LvnIBDAae8TrelKGGTSwBh/2ATLhg
-         K64I9lk8mMZnYLBF/aKzxclDsWgHOQ+oxHI022LsiPuf37KbOKTVKzzqImtr4E1ggwsY
-         A3toWBMl7l0P0U9fIwCDqxsXrECqSVOLdTEkTR9OZmwfVkJM0VtFL+bLLv0iQbG9seut
-         jK/TJ2D2VRrUX9i0qQxNYExNs2wnoA8yKR/WVU69R6jY84dUl8z6W0FVlwNe944l7YrK
-         bR3bMLZoDK/hZebZ9IKhCvdANtw4DIIdYJ84mXSQzOjMHmNwdCgxZBZQMpagQIeMU/dC
-         pq0g==
-X-Forwarded-Encrypted: i=1; AJvYcCVhClGukmZyY96Qrj4SUUVhheLEoywOpzPLz+KihiNRk+d7dpUnthJpA3r9W1czT44uEUbspfUimHkZDtPUyZs9gto=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz/Vlyf0nH75bQyVhJ9ck2wFN3raKIJUONcQ+ouuAFKYLIhXQ9o
-	GHpnOLOmU3F1CmpCwAqJxdtjy9BwfBMDG2giG3ZjsoY9GBOAfdQuILsm
-X-Gm-Gg: ASbGncsSgvDZXB2jAbMoEcSsSL5+xdkGZnENXpPHXCoell2LtCOb4aADwdhHRQjKqSt
-	ck/nheZKc3DfI1W5rZlWJk9j4T30Y6C05FQkiEJjvKuYN+3u7kiQi1XmLnDbkH7W2HXn0z9u8e0
-	s0EWq81fUFYyTmmZP0bzyJw64d1PhC3AvLOMC6aQ6sEg7+J+gvCW84qVsTqnXFR0JeQLviBvYll
-	5dAI4LH/Y5GJW1rGIy2YK2w3SUXC9TRCYI5V/KZX8bQmPAaS6ir17q7sJTQewRn97HjRgWl47QD
-	5KkNmTwCkF9dAMGPdFGsPLghHdflyK8S0BF2XO+AvQNcutIxfXzPZCEhNqVu2IOGtUY0owU=
-X-Google-Smtp-Source: AGHT+IEYvVxSEokXxXfUmmUN/xGq0Z4cxg3uLBeIHKJNoD4X5pLXSHSHTw50yYbQaikjFY1sapLuuw==
-X-Received: by 2002:a17:902:da86:b0:235:cbcb:48b7 with SMTP id d9443c01a7336-236426a012fmr17785455ad.34.1749612195703;
-        Tue, 10 Jun 2025 20:23:15 -0700 (PDT)
-Received: from localhost ([107.155.12.245])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-236034109cfsm78156015ad.200.2025.06.10.20.23.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Jun 2025 20:23:15 -0700 (PDT)
-From: "qiwu.chen" <qiwuchen55@gmail.com>
-X-Google-Original-From: "qiwu.chen" <qiwu.chen@transsion.com>
-To: rafael@kernel.org,
-	daniel.lezcano@linaro.org,
-	rostedt@goodmis.org,
-	mhiramat@kernel.org
-Cc: linux-pm@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	"qiwu.chen" <qiwu.chen@transsion.com>
-Subject: [RESEND PATCH] cpuidle: Add find_deepest_state trace event
-Date: Wed, 11 Jun 2025 11:23:10 +0800
-Message-Id: <20250611032310.10610-1-qiwu.chen@transsion.com>
-X-Mailer: git-send-email 2.25.1
+        d=1e100.net; s=20230601; t=1749618977; x=1750223777;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=NZesgBl46zE6tXS+j7KyjhCxsxKgNitfmh/eZ0BBEw4=;
+        b=Rn7Ab5XyElLKIBx/k4/Zyly9PzeuM10G3S8dwPqpBlbf+/CLG1RiEUhgN6LsGGjEG4
+         L9CFV+k8mBZ71WJrgR2HQmFY1t6B5BT1V4AzFXmhv9QX/QQmTtm6xjUm+IYmK08hPccr
+         vdZvAK3jO51ItL5dYuIHILK2Vqbn0Vv7uk/6BNrhtfKAro6B+T/6159FgJd+pH0ATE7Z
+         236H13LKUd/nfZVAHeX7CxDpT50iBVibGNQDh/BOODp0yOK0AWBAQZMphHyEEN2uzfh9
+         PUHmZxn+tOLDz8jXBhmeuEpb/iNUG70Y+OU8x44+8/olQBbwfeaHqGvzJCBFjzKwJsrB
+         kXvQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVbggO8V1hktwbw1PGOFLAD4pivr2lvKhSZYkCoBgZRxv/OCzmB4np7tIfQnDQwxk0HAwbiGinYZBWY8w==@vger.kernel.org, AJvYcCWdlrcnyxH+IkBn4PFQEOI0+FU6ZhWeTWKKCgSUsoUp9mNH4Mf5C1AUDNTGKUV6dCEKvvfe0cP4xvMD03nJL2Bq0U6A@vger.kernel.org, AJvYcCXFCt4imfUqgPV2YeN4p40/IHOhcsCUea+nW4s+ipmtTLfs5eNrIVdjxzjA07Pk+qTY9CcjYISxsmM7lYdH@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz4nPeVk22FPeVew283FGibTNMtenDpMGUF3lWbWWXCymJ20N0Q
+	qnElL3qABP/EuUob2D2RH+Q5DbNPgciV0kWmOabHUrBYNt0sA9b3idxmEqc7vWw5ILL/jb6RON7
+	xvZPM0nye7Z4goq/oNuwOBcZAfzf2xmc=
+X-Gm-Gg: ASbGncs6PzIlUU5Fivw+k1rgi9dvpoz8+8qxAUxXVzd2Rl/lm6ydJJ7PcWH2EKtSv0v
+	pcgJVZUTbZ44mtaIPd8Mj6PoRZdzD/GMJFBtFhWlfgeMI/ux8e7UMw6fBbEScXO+aRGgxgdDGui
+	i8e//nLmWznfRvpLwU7/vSwrDBcuSf/yra3BOmYvMl5Gk=
+X-Google-Smtp-Source: AGHT+IHQ182d3wwKSf9DtAyyoa6zoQyiigAylXfIEGJY0yChHhYFf6EZGcBQKjg3qJXH0CODyAvyDT8qQD7k3JAMoRA=
+X-Received: by 2002:a05:6e02:3b07:b0:3db:86fc:d328 with SMTP id
+ e9e14a558f8ab-3ddf4224b37mr23369385ab.5.1749618977137; Tue, 10 Jun 2025
+ 22:16:17 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250610004844.66688-5-kerneljasonxing@gmail.com> <202506102340.uo7QDaVk-lkp@intel.com>
+In-Reply-To: <202506102340.uo7QDaVk-lkp@intel.com>
+From: Jason Xing <kerneljasonxing@gmail.com>
+Date: Wed, 11 Jun 2025 13:15:40 +0800
+X-Gm-Features: AX0GCFvLGUUBleBgjthzU8tNmG3C8w7G2enscnE2vmODxHCKzCz7BeEkbxQED_o
+Message-ID: <CAL+tcoARvQVgd68HGoXXiK=+RSH12WQ_rc47B4rgtt2Eb05c0w@mail.gmail.com>
+Subject: Re: [PATCH v4 4/5] blktrace: use rbuf->stats.full as a drop indicator
+ in relayfs
+To: kernel test robot <lkp@intel.com>
+Cc: axboe@kernel.dk, rostedt@goodmis.org, mhiramat@kernel.org, 
+	mathieu.desnoyers@efficios.com, akpm@linux-foundation.org, 
+	oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	linux-block@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	Jason Xing <kernelxing@tencent.com>, Yushan Zhou <katrinzhou@tencent.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Add a new trace event namely cpuidle_find_deepest_state to trace
-the found deepest idle state during CPUidle flow.
+On Wed, Jun 11, 2025 at 9:42=E2=80=AFAM kernel test robot <lkp@intel.com> w=
+rote:
+>
+> Hi Jason,
+>
+> kernel test robot noticed the following build warnings:
+>
+> [auto build test WARNING on axboe-block/for-next]
+> [also build test WARNING on drm-i915/for-linux-next drm-i915/for-linux-ne=
+xt-fixes akpm-mm/mm-everything linus/master v6.16-rc1 next-20250610]
+> [If your patch is applied to the wrong git tree, kindly drop us a note.
+> And when submitting patch, we suggest to use '--base' as documented in
+> https://git-scm.com/docs/git-format-patch#_base_tree_information]
+>
+> url:    https://github.com/intel-lab-lkp/linux/commits/Jason-Xing/relayfs=
+-abolish-prev_padding/20250610-085150
+> base:   https://git.kernel.org/pub/scm/linux/kernel/git/axboe/linux-block=
+.git for-next
+> patch link:    https://lore.kernel.org/r/20250610004844.66688-5-kerneljas=
+onxing%40gmail.com
+> patch subject: [PATCH v4 4/5] blktrace: use rbuf->stats.full as a drop in=
+dicator in relayfs
+> config: arc-randconfig-001-20250610
+> compiler: arc-linux-gcc (GCC) 12.4.0
+> reproduce (this is a W=3D1 build):
+>
+> If you fix the issue in a separate patch/commit (i.e. not just a new vers=
+ion of
+> the same patch/commit), kindly add following tags
+> | Reported-by: kernel test robot <lkp@intel.com>
+> | Closes: https://lore.kernel.org/oe-kbuild-all/202506102340.uo7QDaVk-lkp=
+@intel.com/
+>
+> All warnings (new ones prefixed by >>):
+>
+>    kernel/trace/blktrace.c: In function 'blk_dropped_read':
+> >> kernel/trace/blktrace.c:421:39: warning: format '%lu' expects argument=
+ of type 'long unsigned int', but argument 4 has type 'size_t' {aka 'unsign=
+ed int'} [-Wformat=3D]
+>      421 |         snprintf(buf, sizeof(buf), "%lu\n", dropped);
+>          |                                     ~~^     ~~~~~~~
+>          |                                       |     |
+>          |                                       |     size_t {aka unsign=
+ed int}
+>          |                                       long unsigned int
+>          |                                     %u
 
-The new trace event will help developers debug CPUidle issues by
-providing more detailed information about the CPUidle states.
+Well, I suppose I will fix it in the re-spin after receiving more
+comments so that I don't need to quickly respond to this minor issue.
 
-Signed-off-by: qiwu.chen <qiwu.chen@transsion.com>
----
- drivers/cpuidle/cpuidle.c    |  2 ++
- include/trace/events/power.h | 24 ++++++++++++++++++++++++
- 2 files changed, 26 insertions(+)
+Thanks,
+Jason
 
-diff --git a/drivers/cpuidle/cpuidle.c b/drivers/cpuidle/cpuidle.c
-index 0835da449db8..9065aa396892 100644
---- a/drivers/cpuidle/cpuidle.c
-+++ b/drivers/cpuidle/cpuidle.c
-@@ -103,6 +103,8 @@ static int find_deepest_state(struct cpuidle_driver *drv,
- 		latency_req = s->exit_latency_ns;
- 		ret = i;
- 	}
-+	trace_cpuidle_find_deepest_state(dev->cpu, s2idle, ret);
-+
- 	return ret;
- }
- 
-diff --git a/include/trace/events/power.h b/include/trace/events/power.h
-index 9253e83b9bb4..82b5ac8c46e6 100644
---- a/include/trace/events/power.h
-+++ b/include/trace/events/power.h
-@@ -62,6 +62,30 @@ TRACE_EVENT(cpu_idle_miss,
- 		(unsigned long)__entry->state, (__entry->below)?"below":"above")
- );
- 
-+TRACE_EVENT(cpuidle_find_deepest_state,
-+
-+	TP_PROTO(unsigned int cpu_id, bool s2idle, unsigned int deepest_state),
-+
-+	TP_ARGS(cpu_id, s2idle, deepest_state),
-+
-+	TP_STRUCT__entry(
-+		__field(u32,            cpu_id)
-+		__field(bool,           s2idle)
-+		__field(u32,            deepest_state)
-+	),
-+
-+	TP_fast_assign(
-+		__entry->cpu_id = cpu_id;
-+		__entry->s2idle = s2idle;
-+		__entry->deepest_state = deepest_state;
-+	),
-+
-+	TP_printk("cpu_id=%lu is_s2idle=%s deepest_state=%lu",
-+		 (unsigned long)__entry->cpu_id,
-+		 (__entry->s2idle)?"yes":"no",
-+		 (unsigned long)__entry->deepest_state)
-+);
-+
- DECLARE_EVENT_CLASS(psci_domain_idle,
- 
- 	TP_PROTO(unsigned int cpu_id, unsigned int state, bool s2idle),
--- 
-2.25.1
-
+>
+>
+> vim +421 kernel/trace/blktrace.c
+>
+>    413
+>    414  static ssize_t blk_dropped_read(struct file *filp, char __user *b=
+uffer,
+>    415                                  size_t count, loff_t *ppos)
+>    416  {
+>    417          struct blk_trace *bt =3D filp->private_data;
+>    418          size_t dropped =3D relay_stats(bt->rchan, RELAY_STATS_BUF=
+_FULL);
+>    419          char buf[16];
+>    420
+>  > 421          snprintf(buf, sizeof(buf), "%lu\n", dropped);
+>    422
+>    423          return simple_read_from_buffer(buffer, count, ppos, buf, =
+strlen(buf));
+>    424  }
+>    425
+>
+> --
+> 0-DAY CI Kernel Test Service
+> https://github.com/intel/lkp-tests/wiki
