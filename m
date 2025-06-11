@@ -1,33 +1,46 @@
-Received: from relay.hostedemail.com (smtprelay0017.hostedemail.com [216.40.44.17])
+Received: from relay.hostedemail.com (smtprelay0016.hostedemail.com [216.40.44.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DBBA2E6138;
-	Wed, 11 Jun 2025 14:01:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBEAE296147;
+	Wed, 11 Jun 2025 14:20:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749650470; cv=none; b=hLjSO7K6Uii4UfDge8HHXeQvQtDrNRyihJjv3ZBDOh+5A7Kye6A4HZSRdd7eetqn4XTPgdUwu+qCDYrwI2YcmaYcjE/06iWrWgJ8JQ8TcA9h7YCnQHWcWw+uj37gzJP9CzF7QMwVrddUwSFa5x+YGjCybFG07xjzkKNfztW5cZM=
+	t=1749651622; cv=none; b=Uk0uM2GTP5dJuckIr1TlqAoWwCQEXgKnHmEEqf7UojmS8qqDBlQ15Glvp192ApzoQtfOaT8QKNKwTfAJ+j1g2nJhA3noYQ/uxUOB7kqyX2Awnon/XeDjSoVHyHyrTjLgVbYkiCa/w2DNpFnO1pQvmofnGOn2Mcq0RZenLVmTr+M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749650470; c=relaxed/simple;
-	bh=NhrX07/ZRSceAn54EclTOUnzutUk0530NLo3rTyHdVw=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=Rgd0bT6sVhnCAN1fFUkxAkm+6yhVrVRcC1dW47TeLK34g2dXPAJKU7v9GnxjEFtN1YlPzjE3GaRL2kx7wufWm+ZjMBf1XOYR3kpMepzCtP6PPlfRT5AhInuLlg786DBjoHMGNx92TXGtyhMnMTZ+tdkU/8nlOLJajYE9+JgvRkQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.17
+	s=arc-20240116; t=1749651622; c=relaxed/simple;
+	bh=AG0Bs9vpCQ4T8QEl8ZO9vLvDMYsYLyqpe1wrOEo4RWI=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=UpMlqxto+w0n2VpuA7E+ykiBsv1za8vKpg09NwgD2PB80NFom7ExV0LKDoGC7TjDxa2fmgkt9kVe4riCWAL8+oRPPwCbTBVbQzm+wyi8qmloLar614hijzsvylda9xA7N6bldiEel0LFF9YIBsyHRDvF42a5cHp4Fa1p/BTH/uI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.16
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf10.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay03.hostedemail.com (Postfix) with ESMTP id 6D4FABE498;
-	Wed, 11 Jun 2025 14:01:05 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf10.hostedemail.com (Postfix) with ESMTPA id 6FCE43E;
-	Wed, 11 Jun 2025 14:01:03 +0000 (UTC)
-Date: Wed, 11 Jun 2025 10:01:03 -0400
+Received: from omf04.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay09.hostedemail.com (Postfix) with ESMTP id 529F780E2D;
+	Wed, 11 Jun 2025 14:20:16 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf04.hostedemail.com (Postfix) with ESMTPA id 95CCA20027;
+	Wed, 11 Jun 2025 14:20:11 +0000 (UTC)
+Date: Wed, 11 Jun 2025 10:20:10 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
-To: LKML <linux-kernel@vger.kernel.org>, Linux trace kernel
- <linux-trace-kernel@vger.kernel.org>, iommu@lists.linux.dev
-Cc: Christoph Hellwig <hch@infradead.org>, Robin Murphy
- <robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>, Will Deacon
- <will@kernel.org>
-Subject: [PATCH] swiotlb: iommu/dma: Move trace_swiotlb_bounced() into
- swiotlb_tbl_map_single()
-Message-ID: <20250611100103.7b3c28c8@batman.local.home>
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>,
+ Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>, Dave
+ Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, Naresh Kamboju
+ <naresh.kamboju@linaro.org>, open list <linux-kernel@vger.kernel.org>,
+ Linux trace kernel <linux-trace-kernel@vger.kernel.org>,
+ lkft-triage@lists.linaro.org, Stephen Rothwell <sfr@canb.auug.org.au>, Arnd
+ Bergmann <arnd@arndb.de>, Dan Carpenter <dan.carpenter@linaro.org>, Anders
+ Roxell <anders.roxell@linaro.org>, Peter Zijlstra <peterz@infradead.org>,
+ Ingo  Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
+ Borislav  Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ x86@kernel.org
+Subject: Re: [RFC PATCH 2/2] x86: alternative: Invalidate the cache for
+ updated instructions
+Message-ID: <20250611102010.1bf7c264@batman.local.home>
+In-Reply-To: <20250611192610.6edf9713f6ee84c26f653ea5@kernel.org>
+References: <20250610234307.c675969e83ce53bb856e94d7@kernel.org>
+	<174956686826.1494782.11512582667456262594.stgit@mhiramat.tok.corp.google.com>
+	<20250610115030.0d60da65@gandalf.local.home>
+	<20250611192610.6edf9713f6ee84c26f653ea5@kernel.org>
 X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -37,73 +50,83 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: 6FCE43E
-X-Stat-Signature: zem11qtoa7ykw6s6gddeq3hq71qif9n9
-X-Rspamd-Server: rspamout07
+X-Rspamd-Queue-Id: 95CCA20027
+X-Stat-Signature: rhy6xig8f8wkqqnjpmmytqx9dmy49ou7
+X-Rspamd-Server: rspamout06
 X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX18PYlVOI4oQyNuuyaYyZm8y38u7vsKXNRc=
-X-HE-Tag: 1749650463-15101
-X-HE-Meta: U2FsdGVkX18M7A5fI6gPAjUd2fEJ01YjEmjh1dDQzNYPemSoCd1WtbC40yqMvEmrGa9hOqxcdlCQy4XFylpb8spwpcafpM51yiX9QdT0V4GYPdx+TWqjEdf9EZViGd45soNlCOp/dBaJ5dJsy/k6uQhQtAdmIkDCChkWUwkDYnh2LdF/biASjAlu3IpPUiRwWKxnpFiI8Ho9dNs2AS5EyhGCVospmhYOKGIuKWtTTi8qjH0qJL8Nvp7yyjTZhZMXDNaqnBtQei/HYi5RawNDlegOwJajSrYhyT4sjuJKGPUINEsZAY5vObj/3RLe/kkZXq0+xTpKnHkpDdM9Hc+3ETjmBmqRE2I1hIMpnlG03H8MuwQXVsiALyZapJtS7AHPUHAtnKnqsxq1buBNbrq16RZQ987gI+r1Pseq5jAWJYjyTFZjBQKaCkbNAz+XVVlHRrUzoWV5jGmZj6YOnLDcTK25rrt7tmEZ4bbIZSRK2Is=
+X-Session-ID: U2FsdGVkX19mYjjxbE8STn8J2hKAdlQENeelbUtZG70=
+X-HE-Tag: 1749651611-325749
+X-HE-Meta: U2FsdGVkX1/2aM+oDd68kNXfBzofjOaafPkaVS0pnksX1xew9r6cjHEwJ4izXAJYQbx8MTAV21VwjnOr1iZ69Pq7JftqNEf7NpShANf7/ykgE/TcSnX+UK00rN+ieIwcw9tGM7VkVKPD6QF/7nwAftGkk2wpD/lF6DTNOSS2udxOzMtbf6le4PPGlalfxyJBp24xMw3mtmYEL4me12gH7BoBVM50q7cFhI3cBbzfEqOY5l/dPUM8JMMk/0PSn4lNlrngkM4UnmOepWaeHbKiEYiyec8gIYPFtf+wtqDI8mfYq9MJ0UwxazkzaXGfMGu6PSYrkQSoNH8VHpq4mK7fBWwMQc3tRjxFTQ4e+Q5NoTl7gBHv8DAqHizWgdFeMRRR0jEhxrQ4Mbds7aCafjkDuw==
 
-From: Steven Rostedt <rostedt@goodmis.org>
 
-I'm working on code that will warn when a tracepoint is defined but not
-used. As the TRACE_EVENT() logic still creates all the code regardless if
-something calls the trace_<event>() function. It wastes around 5K per trace
-event (less for tracepoints).
+[ I just noticed that you continued on the thread without the x86 folks Cc ]
 
-But it seems that the code in drivers/iommu/dma-iommu.c does the opposite.
-It calls the trace_swiotlb_bounced() tracepoint without it being defined.
-The tracepoint is defined in kernel/dma/swiotlb.c when CONFIG_SWIOTLB is
-defined, but this code exists when that config is not defined.
+On Wed, 11 Jun 2025 19:26:10 +0900
+Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
 
-This now fails with my work because I have all the callers reference the
-tracepoint that they will call.
+> On Tue, 10 Jun 2025 11:50:30 -0400
+> Steven Rostedt <rostedt@goodmis.org> wrote:
+> 
+> > On Tue, 10 Jun 2025 23:47:48 +0900
+> > "Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
+> >   
+> > > Maybe one possible scenario is to hit the int3 after the third step
+> > > somehow (on I-cache).
+> > > 
+> > > ------
+> > > <CPU0>					<CPU1>
+> > > 					Start smp_text_poke_batch_finish().
+> > > 					Start the third step. (remove INT3)
+> > > 					on_each_cpu(do_sync_core)
+> > > do_sync_core(do SERIALIZE)
+> > > 					Finish the third step.
+> > > Hit INT3 (from I-cache)
+> > > 					Clear text_poke_array_refs[cpu0]
+> > > Start smp_text_poke_int3_handler()  
+> > 
+> > I believe your analysis is the issue here. The commit that changed the ref
+> > counter from a global to per cpu didn't cause the issue, it just made the
+> > race window bigger.
+> >   
+> 
+> Ah, OK. It seems more easier to explain. Since we use the
+> trap gate for #BP, it does not clear the IF automatically.
+> Thus there is a time window between executing INT3 on icache
+> (or already in the pipeline) and its handler disables
+> interrupts. If the IPI is received in the time window,
+> this bug happens.
+> 
+> <CPU0>					<CPU1>
+> 					Start smp_text_poke_batch_finish().
+> 					Start the third step. (remove INT3)
+> Hit INT3 (from icache/pipeline)
+> 					on_each_cpu(do_sync_core)
+> ----
+> do_sync_core(do SERIALIZE)
+> ----
+> 					Finish the third step.
+> Handle #BP including CLI
+> 					Clear text_poke_array_refs[cpu0]
+> preparing stack
+> Start smp_text_poke_int3_handler()
+> Failed to get text_poke_array_refs[cpu0]
+> 
+> In this case, per-cpu text_poke_array_refs will make a time
+> window bigger because clearing text_poke_array_refs is faster.
+> 
+> If this is correct, flushing cache does not matter (it
+> can make the window smaller.)
+> 
+> One possible solution is to send IPI again which ensures the
+> current #BP handler exits. It can make the window small enough.
+> 
+> Another solution is removing WARN_ONCE() from [1/2], which
+> means we accept this scenario, but avoid catastrophic result.
 
-Thanks to the kernel test robot, it found this:
+If interrupts are enabled when the break point hits and just enters the
+int3 handler, does that also mean it can schedule?
 
-  https://lore.kernel.org/all/202506091015.7zd87kI7-lkp@intel.com/
+If that's the case, then we either have to remove the WARN_ONCE() or we
+would have to do something like a synchronize_rcu_tasks().
 
-Instead of calling trace_swiotlb_bounced() from drivers/iommu/dma-iommu.c
-where it is useless when CONFIG_SWIOTLB is not defined, move the
-tracepoint into swiotlb_tbl_map_single(). This also makes it consistent
-with which memory is being traced (physical as supposed to dma address).
-
-Fixes: ed18a46262be4 ("iommu/dma: Factor out a iommu_dma_map_swiotlb helper")
-Closes: https://lore.kernel.org/all/20250610202457.5a599336@gandalf.local.home/
-Suggested-by: Christoph Hellwig <hch@infradead.org>
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
- drivers/iommu/dma-iommu.c | 2 --
- kernel/dma/swiotlb.c      | 2 ++
- 2 files changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/iommu/dma-iommu.c b/drivers/iommu/dma-iommu.c
-index ea2ef53bd4fe..1935b360cc94 100644
---- a/drivers/iommu/dma-iommu.c
-+++ b/drivers/iommu/dma-iommu.c
-@@ -1153,8 +1153,6 @@ static phys_addr_t iommu_dma_map_swiotlb(struct device *dev, phys_addr_t phys,
- 		return (phys_addr_t)DMA_MAPPING_ERROR;
- 	}
- 
--	trace_swiotlb_bounced(dev, phys, size);
--
- 	phys = swiotlb_tbl_map_single(dev, phys, size, iova_mask(iovad), dir,
- 			attrs);
- 
-diff --git a/kernel/dma/swiotlb.c b/kernel/dma/swiotlb.c
-index abcf3fa63a56..c112f1d98861 100644
---- a/kernel/dma/swiotlb.c
-+++ b/kernel/dma/swiotlb.c
-@@ -1379,6 +1379,8 @@ phys_addr_t swiotlb_tbl_map_single(struct device *dev, phys_addr_t orig_addr,
- 	phys_addr_t tlb_addr;
- 	unsigned short pad_slots;
- 
-+	trace_swiotlb_bounced(dev, orig_addr, mapping_size);
-+
- 	if (!mem || !mem->nslabs) {
- 		dev_warn_ratelimited(dev,
- 			"Can not allocate SWIOTLB buffer earlier and can't now provide you with the DMA bounce buffer");
--- 
-2.47.2
-
+-- Steve
