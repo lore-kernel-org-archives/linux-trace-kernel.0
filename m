@@ -1,151 +1,263 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay.hostedemail.com (smtprelay0012.hostedemail.com [216.40.44.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67575EBE;
-	Wed, 11 Jun 2025 00:21:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22B504C80;
+	Wed, 11 Jun 2025 01:03:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749601274; cv=none; b=MGvXXss9bO6ITo0HJtGAiP5vjP6cDcdLNfgNSkaQ6ehI0C4UASEZRmWBo5E9oAFh5Y8z8hk7cbg2TEYF2SKXBh3IDDxuZdUk4CxmwedUF1iBh9Ve1nBahTvZxLDoBz9yM3DxZzzZc9MpJkphJEhdfkMM9uMNFfTTAmA3dMEhPaY=
+	t=1749603784; cv=none; b=m8cJED9fTt157O+dlvtvqCoBco8HTL45rYJ+PI6USuOu7sJzqTyrV2LCTIAdX6AY5shVX9uHdlPG17uOj1uKnTra/5WXkpx2AwD1TydP4YDT8lgpwjK3FKd/cGCPNuaarpjOoJTSrj3ff2vFd/m6VcNTFkPvYyqD8HR2m/yH8uY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749601274; c=relaxed/simple;
-	bh=5M7maN+cSHCHwskgXnnjymfOkGGLppKSjzBoq/C0N5c=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=oLpTmPCeE+p61XJ64TKVYIiu1E2csnmv8ipXO7Uf2a77SurmVPNHgKr7f0qXJnL184hG2rVSBf4ijpE4nmfmQOlQ1PSlr9uK/Bn2ZKQAADstPHWejpxWRXcvLvOo5SAukyn5JYmp4M2UmUVJ95T/+YRe4oE3VSRfsSgEpdVocdc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZKrrE0aT; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZKrrE0aT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 036D1C4CEED;
-	Wed, 11 Jun 2025 00:21:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749601274;
-	bh=5M7maN+cSHCHwskgXnnjymfOkGGLppKSjzBoq/C0N5c=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=ZKrrE0aTEJiPmix6kRun20+sEoLWU244WzGiSNFGF/AjRTLqiPglpkdVmui/meK5U
-	 LmeG5BTN8pRclJghk7zc4jpbhLaDGelhs0C3PCYQXIcexT66y8BpGqmyJbbd7CgYJb
-	 DTprKSoQQhqx3LWl9L+uHzBXGLArSJ3kd6e7yU+q2x3MVasgOv+rA+8gDuuEiChpAc
-	 RHY2IaceKbzvNBS1Q9F83+OEphS6AHOMqNYdwtdXDNt6b74RB4XV16dq04Dyd1I0Xa
-	 ub/2gMCjqsFbh/89xEuhSudlSXf3irNqfuEjvv/x7vZ5ExmL5/n/+tCyt6S8d5eaf7
-	 QiMijxkbqHqJQ==
-Date: Wed, 11 Jun 2025 09:21:10 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>,
- Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>, Dave
- Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, Naresh Kamboju
- <naresh.kamboju@linaro.org>, open list <linux-kernel@vger.kernel.org>,
- Linux trace kernel <linux-trace-kernel@vger.kernel.org>,
- lkft-triage@lists.linaro.org, Stephen Rothwell <sfr@canb.auug.org.au>, Arnd
- Bergmann <arnd@arndb.de>, Dan Carpenter <dan.carpenter@linaro.org>, Anders
- Roxell <anders.roxell@linaro.org>
-Subject: Re: [RFC PATCH 2/2] x86: alternative: Invalidate the cache for
- updated instructions
-Message-Id: <20250611092110.f285e7943666941dfa3b29d3@kernel.org>
-In-Reply-To: <20250610115030.0d60da65@gandalf.local.home>
-References: <20250610234307.c675969e83ce53bb856e94d7@kernel.org>
-	<174956686826.1494782.11512582667456262594.stgit@mhiramat.tok.corp.google.com>
-	<20250610115030.0d60da65@gandalf.local.home>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1749603784; c=relaxed/simple;
+	bh=GkcfV+ZHCvd7P4aVWtjysL4L/glnQ1G8j6U3jNYg0yk=;
+	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
+	 Content-Type; b=teTpZwKjde7NNQWgCDW1JxX3jcTPRvTFSGEMEj6o1piyBZxLKEqL179XoxvcWP0OCT3qXzOGnNXRpW9ZTK/OSdwtz+aLmUjlRle/sPMo3t7wg6MVOyOXUKoHkNqI3iTQmqunziGdxkxXrbEMkoFXTB/zMBHQMRbrzI6sAKWBsaU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf05.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay09.hostedemail.com (Postfix) with ESMTP id A09F781473;
+	Wed, 11 Jun 2025 01:02:59 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: nevets@goodmis.org) by omf05.hostedemail.com (Postfix) with ESMTPA id 8A39120010;
+	Wed, 11 Jun 2025 01:02:56 +0000 (UTC)
+Received: from rostedt by gandalf with local (Exim 4.98.2)
+	(envelope-from <rostedt@goodmis.org>)
+	id 1uP9tE-00000000v9F-2Rhg;
+	Tue, 10 Jun 2025 21:04:28 -0400
+Message-ID: <20250611010428.433111891@goodmis.org>
+User-Agent: quilt/0.68
+Date: Tue, 10 Jun 2025 20:54:25 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org,
+ bpf@vger.kernel.org,
+ x86@kernel.org
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Josh Poimboeuf <jpoimboe@kernel.org>,
+ Peter Zijlstra <peterz@infradead.org>,
+ Ingo Molnar <mingo@kernel.org>,
+ Jiri Olsa <jolsa@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>,
+ Thomas Gleixner <tglx@linutronix.de>,
+ Andrii Nakryiko <andrii@kernel.org>,
+ Indu Bhagat <indu.bhagat@oracle.com>,
+ "Jose E. Marchesi" <jemarch@gnu.org>,
+ Beau Belgrave <beaub@linux.microsoft.com>,
+ Jens Remus <jremus@linux.ibm.com>,
+ Linus Torvalds <torvalds@linux-foundation.org>,
+ Andrew Morton <akpm@linux-foundation.org>
+Subject: [PATCH v10 04/14] unwind_user/deferred: Add unwind_deferred_trace()
+References: <20250611005421.144238328@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+X-Rspamd-Queue-Id: 8A39120010
+X-Stat-Signature: d1sd67rsay336rropajpju8x4iyaw1jq
+X-Rspamd-Server: rspamout06
+X-Session-Marker: 6E657665747340676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX18s4Fht9zOCaOpUtgl/qgh+t7hS1DhCsZM=
+X-HE-Tag: 1749603776-184028
+X-HE-Meta: U2FsdGVkX182XWrvivxISvy8k+rDzRpftjL+HLhibTBHBTuVTxbNndIytvyPK49g3IjrkC7X9QdetfNDCbDqC1GE3a2Octol2BvVX8AcvMiApR2UqKfAfbDNk4ihWxtK6KFIopQOjOL2xZXdPyIU1fciZuxhbiswW4mB5Vfcr0LiU/+wBz9M7ACHrH9wq6TUlOR/NsK7kegh+qKn4wYYjLiQFIZ5NGYOG7uX7xCFsSsP5o1MdzRN1XQPgH+a59BGEHYasXHhjWdeoD1rlug5JaQF5qQIWZAEbi2BQkWzHUWFmUcka5y0VdEbWQNsHVI11fm9GAbx0t2Ebfq8V1K4kq2Sz7b+PIJgtobZgEOCoPgM6oTs/omxFpqtiEGt3U8Jwsh2tDBUWezOZ6zN0FiI9WnAtWvnhF8WtnnTiqoGkmI=
 
-On Tue, 10 Jun 2025 11:50:30 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
+From: Steven Rostedt <rostedt@goodmis.org>
 
-> On Tue, 10 Jun 2025 23:47:48 +0900
-> "Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
-> 
-> > Maybe one possible scenario is to hit the int3 after the third step
-> > somehow (on I-cache).
-> > 
-> > ------
-> > <CPU0>					<CPU1>
-> > 					Start smp_text_poke_batch_finish().
-> > 					Start the third step. (remove INT3)
-> > 					on_each_cpu(do_sync_core)
-> > do_sync_core(do SERIALIZE)
-> > 					Finish the third step.
-> > Hit INT3 (from I-cache)
-> > 					Clear text_poke_array_refs[cpu0]
-> > Start smp_text_poke_int3_handler()
-> 
-> I believe your analysis is the issue here. The commit that changed the ref
-> counter from a global to per cpu didn't cause the issue, it just made the
-> race window bigger.
+Add a function that must be called inside a faultable context that will
+retrieve a user space stack trace. The function unwind_deferred_trace()
+can be called by a tracer when a task is about to enter user space, or has
+just come back from user space and has interrupts enabled.
 
-Agreed. That is a suspicious commit, but even though, as you said
-it might just cause the bug easier. Here I wrote refcount as a
-per-cpu array because of showing the current code.
+This code is based on work by Josh Poimboeuf's deferred unwinding code:
 
-> 
-> > Failed to get text_poke_array_refs[cpu0]
-> > Oops: int3
-> > ------
-> > 
-> > SERIALIZE instruction flashes pipeline, thus the processor needs
-> > to reload the instruction. But it is not ensured to reload it from
-> > memory because SERIALIZE does not invalidate the cache.
-> > 
-> > To prevent reloading replaced INT3, we need to invalidate the cache
-> > (flush TLB) in the third step, before the do_sync_core().
-> > 
-> > Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
-> > Closes: https://lore.kernel.org/all/CA+G9fYsLu0roY3DV=tKyqP7FEKbOEETRvTDhnpPxJGbA=Cg+4w@mail.gmail.com/
-> > Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> > ---
-> >  arch/x86/kernel/alternative.c |   10 +++++++++-
-> >  1 file changed, 9 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/arch/x86/kernel/alternative.c b/arch/x86/kernel/alternative.c
-> > index ecfe7b497cad..1b606db48017 100644
-> > --- a/arch/x86/kernel/alternative.c
-> > +++ b/arch/x86/kernel/alternative.c
-> > @@ -2949,8 +2949,16 @@ void smp_text_poke_batch_finish(void)
-> >  		do_sync++;
-> >  	}
-> >  
-> > -	if (do_sync)
-> > +	if (do_sync) {
-> > +		/*
-> > +		 * Flush the instructions on the cache, then serialize the
-> > +		 * pipeline of each CPU.
-> 
-> The IPI interrupt should flush the cache. And the TLB should not be an
-> issue here. If anything, this may work just because it will make the race
-> smaller. 
+Link: https://lore.kernel.org/all/6052e8487746603bdb29b65f4033e739092d9925.1737511963.git.jpoimboe@kernel.org/
 
-I'm not sure, I'm searching it in the Intel SDM.
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+ include/linux/sched.h                 |  5 +++
+ include/linux/unwind_deferred.h       | 24 +++++++++++
+ include/linux/unwind_deferred_types.h |  9 ++++
+ kernel/fork.c                         |  4 ++
+ kernel/unwind/Makefile                |  2 +-
+ kernel/unwind/deferred.c              | 60 +++++++++++++++++++++++++++
+ 6 files changed, 103 insertions(+), 1 deletion(-)
+ create mode 100644 include/linux/unwind_deferred.h
+ create mode 100644 include/linux/unwind_deferred_types.h
+ create mode 100644 kernel/unwind/deferred.c
 
-> 
-> I'm thinking this may be a QEMU bug. If QEMU doesn't flush the icache on an
-> IPI then this would indeed be an problem.
-
-Does the qemu manage its icache? (Is that possible to manage it?)
-And I guess it is using KVM to run VM, thus the actual cache or TLB
-operation has been done by KVM.
-
-Thanks,
-
-> 
-> -- Steve
-> 
-> 
-> > +		 */
-> > +		flush_tlb_kernel_range((unsigned long)text_poke_addr(&text_poke_array.vec[0]),
-> > +				       (unsigned long)text_poke_addr(text_poke_array.vec +
-> > +								text_poke_array.nr_entries - 1));
-> >  		smp_text_poke_sync_each_cpu();
-> > +	}
-> >  
-> >  	/*
-> >  	 * Remove and wait for refs to be zero.
-> 
-
-
+diff --git a/include/linux/sched.h b/include/linux/sched.h
+index 4f78a64beb52..59fdf7d9bb1e 100644
+--- a/include/linux/sched.h
++++ b/include/linux/sched.h
+@@ -46,6 +46,7 @@
+ #include <linux/rv.h>
+ #include <linux/uidgid_types.h>
+ #include <linux/tracepoint-defs.h>
++#include <linux/unwind_deferred_types.h>
+ #include <asm/kmap_size.h>
+ 
+ /* task_struct member predeclarations (sorted alphabetically): */
+@@ -1654,6 +1655,10 @@ struct task_struct {
+ 	struct user_event_mm		*user_event_mm;
+ #endif
+ 
++#ifdef CONFIG_UNWIND_USER
++	struct unwind_task_info		unwind_info;
++#endif
++
+ 	/* CPU-specific state of this task: */
+ 	struct thread_struct		thread;
+ 
+diff --git a/include/linux/unwind_deferred.h b/include/linux/unwind_deferred.h
+new file mode 100644
+index 000000000000..5064ebe38c4f
+--- /dev/null
++++ b/include/linux/unwind_deferred.h
+@@ -0,0 +1,24 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef _LINUX_UNWIND_USER_DEFERRED_H
++#define _LINUX_UNWIND_USER_DEFERRED_H
++
++#include <linux/unwind_user.h>
++#include <linux/unwind_deferred_types.h>
++
++#ifdef CONFIG_UNWIND_USER
++
++void unwind_task_init(struct task_struct *task);
++void unwind_task_free(struct task_struct *task);
++
++int unwind_deferred_trace(struct unwind_stacktrace *trace);
++
++#else /* !CONFIG_UNWIND_USER */
++
++static inline void unwind_task_init(struct task_struct *task) {}
++static inline void unwind_task_free(struct task_struct *task) {}
++
++static inline int unwind_deferred_trace(struct unwind_stacktrace *trace) { return -ENOSYS; }
++
++#endif /* !CONFIG_UNWIND_USER */
++
++#endif /* _LINUX_UNWIND_USER_DEFERRED_H */
+diff --git a/include/linux/unwind_deferred_types.h b/include/linux/unwind_deferred_types.h
+new file mode 100644
+index 000000000000..aa32db574e43
+--- /dev/null
++++ b/include/linux/unwind_deferred_types.h
+@@ -0,0 +1,9 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef _LINUX_UNWIND_USER_DEFERRED_TYPES_H
++#define _LINUX_UNWIND_USER_DEFERRED_TYPES_H
++
++struct unwind_task_info {
++	unsigned long		*entries;
++};
++
++#endif /* _LINUX_UNWIND_USER_DEFERRED_TYPES_H */
+diff --git a/kernel/fork.c b/kernel/fork.c
+index 1ee8eb11f38b..3341d50c61f2 100644
+--- a/kernel/fork.c
++++ b/kernel/fork.c
+@@ -105,6 +105,7 @@
+ #include <uapi/linux/pidfd.h>
+ #include <linux/pidfs.h>
+ #include <linux/tick.h>
++#include <linux/unwind_deferred.h>
+ 
+ #include <asm/pgalloc.h>
+ #include <linux/uaccess.h>
+@@ -732,6 +733,7 @@ void __put_task_struct(struct task_struct *tsk)
+ 	WARN_ON(refcount_read(&tsk->usage));
+ 	WARN_ON(tsk == current);
+ 
++	unwind_task_free(tsk);
+ 	sched_ext_free(tsk);
+ 	io_uring_free(tsk);
+ 	cgroup_free(tsk);
+@@ -2135,6 +2137,8 @@ __latent_entropy struct task_struct *copy_process(
+ 	p->bpf_ctx = NULL;
+ #endif
+ 
++	unwind_task_init(p);
++
+ 	/* Perform scheduler related setup. Assign this task to a CPU. */
+ 	retval = sched_fork(clone_flags, p);
+ 	if (retval)
+diff --git a/kernel/unwind/Makefile b/kernel/unwind/Makefile
+index 349ce3677526..6752ac96d7e2 100644
+--- a/kernel/unwind/Makefile
++++ b/kernel/unwind/Makefile
+@@ -1 +1 @@
+- obj-$(CONFIG_UNWIND_USER) += user.o
++ obj-$(CONFIG_UNWIND_USER)		+= user.o deferred.o
+diff --git a/kernel/unwind/deferred.c b/kernel/unwind/deferred.c
+new file mode 100644
+index 000000000000..0bafb95e6336
+--- /dev/null
++++ b/kernel/unwind/deferred.c
+@@ -0,0 +1,60 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Deferred user space unwinding
++ */
++#include <linux/kernel.h>
++#include <linux/sched.h>
++#include <linux/slab.h>
++#include <linux/unwind_deferred.h>
++
++#define UNWIND_MAX_ENTRIES 512
++
++/**
++ * unwind_deferred_trace - Produce a user stacktrace in faultable context
++ * @trace: The descriptor that will store the user stacktrace
++ *
++ * This must be called in a known faultable context (usually when entering
++ * or exiting user space). Depending on the available implementations
++ * the @trace will be loaded with the addresses of the user space stacktrace
++ * if it can be found.
++ *
++ * Return: 0 on success and negative on error
++ *         On success @trace will contain the user space stacktrace
++ */
++int unwind_deferred_trace(struct unwind_stacktrace *trace)
++{
++	struct unwind_task_info *info = &current->unwind_info;
++
++	/* Should always be called from faultable context */
++	might_fault();
++
++	if (current->flags & PF_EXITING)
++		return -EINVAL;
++
++	if (!info->entries) {
++		info->entries = kmalloc_array(UNWIND_MAX_ENTRIES, sizeof(long),
++					      GFP_KERNEL);
++		if (!info->entries)
++			return -ENOMEM;
++	}
++
++	trace->nr = 0;
++	trace->entries = info->entries;
++	unwind_user(trace, UNWIND_MAX_ENTRIES);
++
++	return 0;
++}
++
++void unwind_task_init(struct task_struct *task)
++{
++	struct unwind_task_info *info = &task->unwind_info;
++
++	memset(info, 0, sizeof(*info));
++}
++
++void unwind_task_free(struct task_struct *task)
++{
++	struct unwind_task_info *info = &task->unwind_info;
++
++	kfree(info->entries);
++}
 -- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+2.47.2
+
+
