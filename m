@@ -1,79 +1,103 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay.hostedemail.com (smtprelay0012.hostedemail.com [216.40.44.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA8042E6102;
-	Wed, 11 Jun 2025 19:40:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D027228853E;
+	Wed, 11 Jun 2025 19:56:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749670803; cv=none; b=UP76oP1XP9EqXbK1Xubgc1rZCi7xHGRyqnazTwq45LcsDC63FLCnIDyCKyR1xFhpwnrIDuEEFSMUMK1RK4+40Io4mvbn/Nq3it6iJmjSh88THQ1SSfvr82xrO1K0lSq1qDbcanDLgVNbtd5MquuPZ40VCuKKC9XVdJfZLh8l/x4=
+	t=1749671789; cv=none; b=HZdaUxlgsbAhHPzuq1IFN30fXDubVhivpDAPhyYEnkL425I5LP6HTGgNSRhT7Px2U8csjhh4vOhufqvrnGzjaSk0sYa0d0mDOdFb6XrxeIGxRK7SjZNUZKnbA/ht4S/BcvUg7CnKfJm72VAkgywMkdi43rRBvBaC8YawIIhsZF4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749670803; c=relaxed/simple;
-	bh=RdDgB5vv9s6QQrusbmhG137/cXeRQy452urku8EbNjk=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=G4sVYSqKouPMm1IMmM6RCi8NGuhaiNKvr47zIR1xC6qbpPcVaosI6wB3HIE26cKvAJusl3vTQPHyJjcX9ZAxlFyLfXLnycPJUKDchIPerWlqjHlxT01PzKZ9sV3IlZrZ4Ysb8fIb12VEtgEyzPUrAOPmDHD8NafjQ+Q7pSlXkmk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YF9OjLPf; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YF9OjLPf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5B31FC4CEE3;
-	Wed, 11 Jun 2025 19:40:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749670802;
-	bh=RdDgB5vv9s6QQrusbmhG137/cXeRQy452urku8EbNjk=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=YF9OjLPfQXVV6mc4HCBRKgX4g7WNlwAqZ+APCyFppptHyRYYk679onLas4UaCNF+W
-	 iU96jzuCFU/0y5ByYat6Re9t/DocGtAI7adNATnpXhtg95jVmqdeWvRo0lwsqqFL4q
-	 JBAB4PiyCQdeODNh6Wn6Eha+c+VvlaGHgJg4UbrCllVUxUrLeFCcsNskPmZo9iJMij
-	 MXP+E2zkhL1vRLZ2DI54hwPF2dhR7TqIlOuOoShPIEX7PR8KgNpaJov+1fmOilu4w8
-	 aLE/FJ1uYgbYg1X5LLvMkyXCvfQywgV4AH3zHgvblCmeTgxOfFqVbs6HzHlFu07KDA
-	 FxRrQEnWUH9zg==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id ADCDC380DBE9;
-	Wed, 11 Jun 2025 19:40:33 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	s=arc-20240116; t=1749671789; c=relaxed/simple;
+	bh=Cu3nmlEkWuwjxDNV/0+pvJpDjndzyTJCZaXYdMngeh4=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=ZrXULkYUwg47/3OM+UGzMHhbaCfhFfbz2p9JTVPHa18GtfvcsXkAsXW0nuhsvTUppVMZCMqvgvGovssOMBVdTAh2GWszAjU+MlnIfamblKxA82mXLk6XOJQjPzoSeHQuHtJom7mMtUoioPZbJR7R5Vsh3qGaM1tC3C0y2d1biSY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf05.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay10.hostedemail.com (Postfix) with ESMTP id 11AE0C153C;
+	Wed, 11 Jun 2025 19:56:25 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf05.hostedemail.com (Postfix) with ESMTPA id CABC320019;
+	Wed, 11 Jun 2025 19:56:22 +0000 (UTC)
+Date: Wed, 11 Jun 2025 15:56:15 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: LKML <linux-kernel@vger.kernel.org>, Linux trace kernel
+ <linux-trace-kernel@vger.kernel.org>, bpf@vger.kernel.org
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Alexei Starovoitov <ast@kernel.org>,
+ Daniel Borkmann <daniel@iogearbox.net>, "David S. Miller"
+ <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>, Jesper Dangaard
+ Brouer <hawk@kernel.org>, John Fastabend <john.fastabend@gmail.com>
+Subject: [PATCH] xdp: Remove unused events xdp_redirect_map and
+ xdp_redirect_map_err
+Message-ID: <20250611155615.0c2cf61c@batman.local.home>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH bpf-next] bpf: clear user buf when bpf_d_path failed
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <174967083249.3454768.8625737393952649664.git-patchwork-notify@kernel.org>
-Date: Wed, 11 Jun 2025 19:40:32 +0000
-References: <20250611154859.259682-1-chen.dylane@linux.dev>
-In-Reply-To: <20250611154859.259682-1-chen.dylane@linux.dev>
-To: Tao Chen <chen.dylane@linux.dev>
-Cc: kpsingh@kernel.org, mattbobrowski@google.com, ast@kernel.org,
- daniel@iogearbox.net, andrii@kernel.org, martin.lau@linux.dev,
- eddyz87@gmail.com, song@kernel.org, yonghong.song@linux.dev,
- john.fastabend@gmail.com, sdf@fomichev.me, haoluo@google.com,
- jolsa@kernel.org, rostedt@goodmis.org, mhiramat@kernel.org,
- mathieu.desnoyers@efficios.com, bpf@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Stat-Signature: pdykq43w8igi8jwatgzsxdq8xngwqecd
+X-Rspamd-Server: rspamout02
+X-Rspamd-Queue-Id: CABC320019
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1+idN4t/5BvaMxfbcOBfj6t8p+kzKNs5J8=
+X-HE-Tag: 1749671782-645701
+X-HE-Meta: U2FsdGVkX19UAxdIQXcHLtYE1Q9eBHt1EaP924LY6qY76d5BTDjx02G6DZrigR7mDjc0ng9bCuiDNdSMtowH8DN69rz3KxE1xQN+MXhHx+RNDSGwMqsPKAAXi9R3+M6rOotPxvTalbe9r/DOIWqnHmueKKqY113ottk4HG9LSxRqmlglnH9EG2xloQ5DjBD6dZPd1fz3nEHKQjx2fKOh5N8vp+30XAb9nHQTmE85V7OmRz1wT7lo74xXxgd3XMXGdXhcuz2aPmC+4nPWy5zHTaPQQLfI/Nu5mL67YT6KrACV/D3Nc0xzmxvcZWExr0Fi1Gy3370SIDYbwPuWLIGbQPWzxbIb3S67bxiDAmM1NOUUHc2SuDM6enMEP3NU2FvC
 
-Hello:
+From: Steven Rostedt <rostedt@goodmis.org>
 
-This patch was applied to bpf/bpf-next.git (master)
-by Alexei Starovoitov <ast@kernel.org>:
+Each TRACE_EVENT() defined can take up around 5K of text and meta data
+regardless if they are used or not. New code is being developed that will
+warn when a tracepoint is defined but not used.
 
-On Wed, 11 Jun 2025 23:48:58 +0800 you wrote:
-> The bpf_d_path() function may fail. If it does,
-> clear the user buf, like bpf_probe_read etc.
-> 
-> Signed-off-by: Tao Chen <chen.dylane@linux.dev>
-> ---
->  kernel/trace/bpf_trace.c | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
+The trace events xdp_redirect_map and xdp_redirect_map_err are defined but
+not used, but there's also a comment that states these are kept around for
+backward compatibility. Which is interesting because since they are not
+used, any old BPF program that expects them to exist will get incorrect
+data (no data) when they use them. It's worse than not working, it's
+silently failing.
 
-Here is the summary with links:
-  - [bpf-next] bpf: clear user buf when bpf_d_path failed
-    https://git.kernel.org/bpf/bpf-next/c/3b55a9e6738b
+Remove them as they will soon cause warnings, or if they really need to
+stick around, then code needs to be added to use them.
 
-You are awesome, thank you!
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+ include/trace/events/xdp.h | 19 -------------------
+ 1 file changed, 19 deletions(-)
+
+diff --git a/include/trace/events/xdp.h b/include/trace/events/xdp.h
+index d3ef86c97ae3..0fe0893c2567 100644
+--- a/include/trace/events/xdp.h
++++ b/include/trace/events/xdp.h
+@@ -168,25 +168,6 @@ DEFINE_EVENT(xdp_redirect_template, xdp_redirect_err,
+ #define _trace_xdp_redirect_map_err(dev, xdp, to, map_type, map_id, index, err) \
+ 	 trace_xdp_redirect_err(dev, xdp, to, err, map_type, map_id, index)
+ 
+-/* not used anymore, but kept around so as not to break old programs */
+-DEFINE_EVENT(xdp_redirect_template, xdp_redirect_map,
+-	TP_PROTO(const struct net_device *dev,
+-		 const struct bpf_prog *xdp,
+-		 const void *tgt, int err,
+-		 enum bpf_map_type map_type,
+-		 u32 map_id, u32 index),
+-	TP_ARGS(dev, xdp, tgt, err, map_type, map_id, index)
+-);
+-
+-DEFINE_EVENT(xdp_redirect_template, xdp_redirect_map_err,
+-	TP_PROTO(const struct net_device *dev,
+-		 const struct bpf_prog *xdp,
+-		 const void *tgt, int err,
+-		 enum bpf_map_type map_type,
+-		 u32 map_id, u32 index),
+-	TP_ARGS(dev, xdp, tgt, err, map_type, map_id, index)
+-);
+-
+ TRACE_EVENT(xdp_cpumap_kthread,
+ 
+ 	TP_PROTO(int map_id, unsigned int processed,  unsigned int drops,
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
+2.47.2
 
