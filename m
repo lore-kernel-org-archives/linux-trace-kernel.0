@@ -1,73 +1,71 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [62.89.141.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0B75213224;
-	Wed, 11 Jun 2025 17:20:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE901224882;
+	Wed, 11 Jun 2025 17:37:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.89.141.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749662437; cv=none; b=ivYIM0kG0aaQaxN3RuqeEB8cByHc+JJdpZesvFxZY+IFyHedx9FCNdzbkX0fHKiM4HC7r88q6PasxmkWZbR8gsrMSgdMH+rueVRt4rxuZ6KJI3m2gxaNHfQIm6Sg5kIvissn5PGrA+I8OSpXzGyJiWzFbfFwbDj9C+7UUjKzi20=
+	t=1749663428; cv=none; b=EXKXbXtJ6ZWLIIsh2aAiqFYHEJX0IYRR2Lv8Zb8+WHSLUo1zAYMrPJ4uCihfIKFePC5vbnDpAOg4NZPYMVU8cP2Jj4DsW9+l3llMy76DzmJgZQKimGigHwV83m1Kktem2CKmSROEQfBheiQv4iA7Ut1A9TRBK6ppyxIGlOURn0Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749662437; c=relaxed/simple;
-	bh=YZICx0KSzKcX7gcnTUFRwPR+ezOylYj6NCOpKgZqwYs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Q8cAAbFkrtQQHVzReLV/Ez2aJMOoZAoRfZutqxDZxo0bs3LhZI3KNT4TAzry+jvhrPhOt6xCTjUZ8B0WoU9LD1D8q+kdDi6bcvMjzbFJIuAGXDTzIENVa7UCBsq8/55S/yDrHSSvCt6sV/gkt/Cv6TZkZQaoymAWrY1U1zIXZvs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WTJtKseq; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749663428; c=relaxed/simple;
+	bh=VMUK+sl62s49iLfhRzSxD6TI8pQfklv8QpNaE41TV8Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=V47V1NR6WRQaSrNnLl1e/E2gX74oFud6WRLQbdTt9e5A4go/1Ect8uePgmsFNc49frdpVLUpNLk2onFlojKg0hdeOp2DeL5Nm5ofQy68BBlcmlv9tDAEGQdXtKHSaxeFRhYzPZsH3YzQr/uktbS5Z9c5gAn7PxTS/agU2UFLs2A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk; spf=none smtp.mailfrom=ftp.linux.org.uk; dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b=bwyDYSS9; arc=none smtp.client-ip=62.89.141.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ftp.linux.org.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WTJtKseq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3D4E9C4CEF3;
-	Wed, 11 Jun 2025 17:20:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749662437;
-	bh=YZICx0KSzKcX7gcnTUFRwPR+ezOylYj6NCOpKgZqwYs=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=WTJtKseqTuGizuHNR1aDk34b2x6xW25Zll2rcr9hzyo20E59IPzkyTBSFLQK0gLTe
-	 Ufj+U9TyE1vchEn51LB3OkhewC5lJngK0YdpIrdpXYXMXZG3kGrEdGZyrilggLSvvP
-	 x/8Rbzw1JF5VebVXUbQS5VZuS5UxtZh/BjC4khMtI3TI5mi6FR9sWEF2DevgwsqJYy
-	 LdllSNuSS8lpjL7MtCof+oVzWqD1DQsVo5MKfKqHOD/JMu2dqF01G6Gc0Wfsq26oS4
-	 Texp4oLexLhXTmu+GcU7SmnEHpv8n/37Jg/9g9lsZI9UNi/q4leDOQcr4Gaqp79sZL
-	 1DqLUIhU5FIdA==
-Received: by mail-qv1-f45.google.com with SMTP id 6a1803df08f44-6fb0a05b56cso2262456d6.3;
-        Wed, 11 Jun 2025 10:20:37 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUA6QV0MUIdFMf+lZdhSJnH6xwJ5ZcR3BhTGiQHmUWrZDMr88MmhZxQN2OLua+XpUWty8k=@vger.kernel.org, AJvYcCVg8TYGz7SE3gQDUFnOFbXVitGa+vWoRX+rIHBIlCXMEv0yZstWM1LlEwAIT+og0z8Udx+7ls2xebTfy7Ew@vger.kernel.org, AJvYcCWJVSKvy5Fg0pK5hOx1Wlu+X/I8K9bxckS8U1r15TN2Z2aFENqTxPEfYW1eeT+berwifsC3TmMwyGzcAmGWL6Hfw7rH@vger.kernel.org
-X-Gm-Message-State: AOJu0YwIiA7IDkdxzSkQ+Tc9xiSL/jvFmwpLfzPZj6Ine2xeDGCH+/ch
-	1Th67ZpVoCV48Oy6dTOhhdggOaFSxDOJmsQZJrtlOECboZfw75PEFCiL+GQX68DCZEKIv3r9s5F
-	En61scsW1Q0hMnqOQCHsS6jPt/SLlGBk=
-X-Google-Smtp-Source: AGHT+IEVXtL8oSFPZ4IKwlc45sx39EmMBPKX56xW/hjXfI79LlsTkEJ5SAx6+Cq/ZtYXcRFK7raxPOXw269Fy3iNVHE=
-X-Received: by 2002:ad4:5ba6:0:b0:6fa:bb44:fde5 with SMTP id
- 6a1803df08f44-6fb346190bfmr5884426d6.17.1749662436376; Wed, 11 Jun 2025
- 10:20:36 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b="bwyDYSS9"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=DepT5as+DqmaE8TroehmPFoCKfqX6foaMLzj8OpaDos=; b=bwyDYSS93gc++nsYCHxly65fnW
+	nDxDEFZNtZCKv1y0IAN2AOsCVMQmawKL6P8m79dXeAM1ZuDugxKqqbO3gmShFjQLlR7YCYQq3eGof
+	P5AO0Mx8aEXf01KgKn5vVTHFSx+C7EAZbITy94RWpISKuefAh78XJht/RuzD00QD5Vd+FKwpsgopJ
+	f/dFcK42+FI76TtMOfD3Wt0r77Y6PZRRoJJbgRxtZIRVo2Hr7bjPcr/HKI+F3PfuhdAJrEGOO2TNb
+	0M34u1JiDfIQmUUiq6zqoavLu31LacABnGvgxw6zaYJ+rr7fMXNXAZZV24MDWxmIk/GuThsuKucQz
+	alZMcnAg==;
+Received: from viro by zeniv.linux.org.uk with local (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uPPNm-00000004hS9-2CLe;
+	Wed, 11 Jun 2025 17:37:02 +0000
+Date: Wed, 11 Jun 2025 18:37:02 +0100
+From: Al Viro <viro@zeniv.linux.org.uk>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+	Linux trace kernel <linux-trace-kernel@vger.kernel.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Subject: Re: [PATCH] tracefs: Add d_delete to remove negative dentries
+Message-ID: <20250611173702.GL299672@ZenIV>
+References: <20250611121815.409d02f8@batman.local.home>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250611154859.259682-1-chen.dylane@linux.dev>
-In-Reply-To: <20250611154859.259682-1-chen.dylane@linux.dev>
-From: Song Liu <song@kernel.org>
-Date: Wed, 11 Jun 2025 10:20:25 -0700
-X-Gmail-Original-Message-ID: <CAPhsuW6ibk-9J21sUWkEbbQEhnFHpD4kT4m=KDQNYhk=9hZdWQ@mail.gmail.com>
-X-Gm-Features: AX0GCFuJ8rNu57C9FJ-Wz3R5VfjRW0Vsyy5lGcpdRHFGBSp7SWZZftUouh-S_XE
-Message-ID: <CAPhsuW6ibk-9J21sUWkEbbQEhnFHpD4kT4m=KDQNYhk=9hZdWQ@mail.gmail.com>
-Subject: Re: [PATCH bpf-next] bpf: clear user buf when bpf_d_path failed
-To: Tao Chen <chen.dylane@linux.dev>
-Cc: kpsingh@kernel.org, mattbobrowski@google.com, ast@kernel.org, 
-	daniel@iogearbox.net, andrii@kernel.org, martin.lau@linux.dev, 
-	eddyz87@gmail.com, yonghong.song@linux.dev, john.fastabend@gmail.com, 
-	sdf@fomichev.me, haoluo@google.com, jolsa@kernel.org, rostedt@goodmis.org, 
-	mhiramat@kernel.org, mathieu.desnoyers@efficios.com, bpf@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250611121815.409d02f8@batman.local.home>
+Sender: Al Viro <viro@ftp.linux.org.uk>
 
-On Wed, Jun 11, 2025 at 8:49=E2=80=AFAM Tao Chen <chen.dylane@linux.dev> wr=
-ote:
->
-> The bpf_d_path() function may fail. If it does,
-> clear the user buf, like bpf_probe_read etc.
->
-> Signed-off-by: Tao Chen <chen.dylane@linux.dev>
+On Wed, Jun 11, 2025 at 12:18:15PM -0400, Steven Rostedt wrote:
+> From: Steven Rostedt <rostedt@goodmis.org>
+> 
+> If a lookup in tracefs is done on a file that does not exist, it leaves a
+> dentry hanging around until memory pressure removes it. But eventfs
+> dentries should hang around as when their ref count goes to zero, it
+> requires more work to recreate it. For the rest of the tracefs dentries,
+> they hang around as their dentry is used as a descriptor for the tracing
+> system. But if a file lookup happens for a file in tracefs that does not
+> exist, it should be deleted.
+> 
+> Add a .d_delete callback that checks if dentry->fsdata is set or not. Only
+> eventfs dentries set fsdata so if it has content it should not be deleted
+> and should hang around in the cache.
+> 
+> Reported-by: Al Viro <viro@zeniv.linux.org.uk>
+> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 
-Acked-by: Song Liu <song@kernel.org>
-
-[...]
+Applied to #work.dcache
