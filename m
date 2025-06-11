@@ -1,132 +1,126 @@
-Received: from relay.hostedemail.com (smtprelay0016.hostedemail.com [216.40.44.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBEAE296147;
-	Wed, 11 Jun 2025 14:20:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.16
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C8F3C28C017;
+	Wed, 11 Jun 2025 14:28:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749651622; cv=none; b=Uk0uM2GTP5dJuckIr1TlqAoWwCQEXgKnHmEEqf7UojmS8qqDBlQ15Glvp192ApzoQtfOaT8QKNKwTfAJ+j1g2nJhA3noYQ/uxUOB7kqyX2Awnon/XeDjSoVHyHyrTjLgVbYkiCa/w2DNpFnO1pQvmofnGOn2Mcq0RZenLVmTr+M=
+	t=1749652138; cv=none; b=i1/4BmTl2QbQ6tPiZ/4GeIK826g2pvLnaXokAARqtzvFn1AvF/1jJXpfMtps0eQem4JjKp4L6wy7oQDZHGSxPQbop3bfmVJWLxL7nvVp3UQ1TDMwH5b7a3Sy8QNA8omdFI6BcvufTvufoEmWDjQkqmX3QHZlQzyxzMHoJcM4zS4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749651622; c=relaxed/simple;
-	bh=AG0Bs9vpCQ4T8QEl8ZO9vLvDMYsYLyqpe1wrOEo4RWI=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=UpMlqxto+w0n2VpuA7E+ykiBsv1za8vKpg09NwgD2PB80NFom7ExV0LKDoGC7TjDxa2fmgkt9kVe4riCWAL8+oRPPwCbTBVbQzm+wyi8qmloLar614hijzsvylda9xA7N6bldiEel0LFF9YIBsyHRDvF42a5cHp4Fa1p/BTH/uI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf04.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay09.hostedemail.com (Postfix) with ESMTP id 529F780E2D;
-	Wed, 11 Jun 2025 14:20:16 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf04.hostedemail.com (Postfix) with ESMTPA id 95CCA20027;
-	Wed, 11 Jun 2025 14:20:11 +0000 (UTC)
-Date: Wed, 11 Jun 2025 10:20:10 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>,
- Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>, Dave
- Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, Naresh Kamboju
- <naresh.kamboju@linaro.org>, open list <linux-kernel@vger.kernel.org>,
- Linux trace kernel <linux-trace-kernel@vger.kernel.org>,
- lkft-triage@lists.linaro.org, Stephen Rothwell <sfr@canb.auug.org.au>, Arnd
- Bergmann <arnd@arndb.de>, Dan Carpenter <dan.carpenter@linaro.org>, Anders
- Roxell <anders.roxell@linaro.org>, Peter Zijlstra <peterz@infradead.org>,
- Ingo  Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
- Borislav  Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- x86@kernel.org
-Subject: Re: [RFC PATCH 2/2] x86: alternative: Invalidate the cache for
- updated instructions
-Message-ID: <20250611102010.1bf7c264@batman.local.home>
-In-Reply-To: <20250611192610.6edf9713f6ee84c26f653ea5@kernel.org>
-References: <20250610234307.c675969e83ce53bb856e94d7@kernel.org>
-	<174956686826.1494782.11512582667456262594.stgit@mhiramat.tok.corp.google.com>
-	<20250610115030.0d60da65@gandalf.local.home>
-	<20250611192610.6edf9713f6ee84c26f653ea5@kernel.org>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1749652138; c=relaxed/simple;
+	bh=EY1GvCod1xS/lS7mriTNXRbI5lI8/SAVCHmM1jsz+0c=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Uc3Ma9ImeZkcUx/qbj7P1CqFj1psZmTv9T0S7QadanIwSgFE9dV0Tn8NX2fchjKZoHWyvtJdGKKyAR5RR5Vxb3kg79eo+8p3PF88P1udMWQxziUOnYFpWVit7SMQ8rgnJv0b7LnsB2OIOM7hYQ5vWzvz6cJr12qYQa27hfg6AWc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7A1AD15A1;
+	Wed, 11 Jun 2025 07:28:36 -0700 (PDT)
+Received: from [10.57.28.131] (unknown [10.57.28.131])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BB3DE3F673;
+	Wed, 11 Jun 2025 07:28:54 -0700 (PDT)
+Message-ID: <e2d856b7-0214-49ab-a4c5-4e6ee2541c6d@arm.com>
+Date: Wed, 11 Jun 2025 15:28:52 +0100
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] swiotlb: iommu/dma: Move trace_swiotlb_bounced() into
+ swiotlb_tbl_map_single()
+To: Steven Rostedt <rostedt@goodmis.org>, LKML
+ <linux-kernel@vger.kernel.org>,
+ Linux trace kernel <linux-trace-kernel@vger.kernel.org>,
+ iommu@lists.linux.dev
+Cc: Christoph Hellwig <hch@infradead.org>, Joerg Roedel <joro@8bytes.org>,
+ Will Deacon <will@kernel.org>
+References: <20250611100103.7b3c28c8@batman.local.home>
+From: Robin Murphy <robin.murphy@arm.com>
+Content-Language: en-GB
+In-Reply-To: <20250611100103.7b3c28c8@batman.local.home>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: 95CCA20027
-X-Stat-Signature: rhy6xig8f8wkqqnjpmmytqx9dmy49ou7
-X-Rspamd-Server: rspamout06
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX19mYjjxbE8STn8J2hKAdlQENeelbUtZG70=
-X-HE-Tag: 1749651611-325749
-X-HE-Meta: U2FsdGVkX1/2aM+oDd68kNXfBzofjOaafPkaVS0pnksX1xew9r6cjHEwJ4izXAJYQbx8MTAV21VwjnOr1iZ69Pq7JftqNEf7NpShANf7/ykgE/TcSnX+UK00rN+ieIwcw9tGM7VkVKPD6QF/7nwAftGkk2wpD/lF6DTNOSS2udxOzMtbf6le4PPGlalfxyJBp24xMw3mtmYEL4me12gH7BoBVM50q7cFhI3cBbzfEqOY5l/dPUM8JMMk/0PSn4lNlrngkM4UnmOepWaeHbKiEYiyec8gIYPFtf+wtqDI8mfYq9MJ0UwxazkzaXGfMGu6PSYrkQSoNH8VHpq4mK7fBWwMQc3tRjxFTQ4e+Q5NoTl7gBHv8DAqHizWgdFeMRRR0jEhxrQ4Mbds7aCafjkDuw==
 
+On 2025-06-11 3:01 pm, Steven Rostedt wrote:
+> From: Steven Rostedt <rostedt@goodmis.org>
+> 
+> I'm working on code that will warn when a tracepoint is defined but not
+> used. As the TRACE_EVENT() logic still creates all the code regardless if
+> something calls the trace_<event>() function. It wastes around 5K per trace
+> event (less for tracepoints).
+> 
+> But it seems that the code in drivers/iommu/dma-iommu.c does the opposite.
+> It calls the trace_swiotlb_bounced() tracepoint without it being defined.
+> The tracepoint is defined in kernel/dma/swiotlb.c when CONFIG_SWIOTLB is
+> defined, but this code exists when that config is not defined.
+> 
+> This now fails with my work because I have all the callers reference the
+> tracepoint that they will call.
+> 
+> Thanks to the kernel test robot, it found this:
+> 
+>    https://lore.kernel.org/all/202506091015.7zd87kI7-lkp@intel.com/
+> 
+> Instead of calling trace_swiotlb_bounced() from drivers/iommu/dma-iommu.c
+> where it is useless when CONFIG_SWIOTLB is not defined, move the
+> tracepoint into swiotlb_tbl_map_single(). This also makes it consistent
+> with which memory is being traced (physical as supposed to dma address).
 
-[ I just noticed that you continued on the thread without the x86 folks Cc ]
+Consistent with what? Certainly not the other callers which invoke the 
+tracepoint with phys_to_dma(orig_addr), but will now do so twice with 
+potentially different values. Arguably iommu-dma is already consistent 
+as things stand, since it does not support static address offsets 
+underneath IOMMU translation, and therefore orig_addr will always be 
+equal to phys_to_dma(orig_addr) anyway. The point of interest really is 
+in those other cases, where if there *were* a static DMA offset then 
+phys_to_dma(orig_addr) would actually be a pretty meaningless value 
+which is not used anywhere else and therefore not overly helpful to 
+trace - neither the recognisable PA of the underlying memory itself, nor 
+the actual DMA address which will be used subsequently, since at this 
+point that's yet to be allocated.
 
-On Wed, 11 Jun 2025 19:26:10 +0900
-Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
+> Fixes: ed18a46262be4 ("iommu/dma: Factor out a iommu_dma_map_swiotlb helper")
 
-> On Tue, 10 Jun 2025 11:50:30 -0400
-> Steven Rostedt <rostedt@goodmis.org> wrote:
-> 
-> > On Tue, 10 Jun 2025 23:47:48 +0900
-> > "Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
-> >   
-> > > Maybe one possible scenario is to hit the int3 after the third step
-> > > somehow (on I-cache).
-> > > 
-> > > ------
-> > > <CPU0>					<CPU1>
-> > > 					Start smp_text_poke_batch_finish().
-> > > 					Start the third step. (remove INT3)
-> > > 					on_each_cpu(do_sync_core)
-> > > do_sync_core(do SERIALIZE)
-> > > 					Finish the third step.
-> > > Hit INT3 (from I-cache)
-> > > 					Clear text_poke_array_refs[cpu0]
-> > > Start smp_text_poke_int3_handler()  
-> > 
-> > I believe your analysis is the issue here. The commit that changed the ref
-> > counter from a global to per cpu didn't cause the issue, it just made the
-> > race window bigger.
-> >   
-> 
-> Ah, OK. It seems more easier to explain. Since we use the
-> trap gate for #BP, it does not clear the IF automatically.
-> Thus there is a time window between executing INT3 on icache
-> (or already in the pipeline) and its handler disables
-> interrupts. If the IPI is received in the time window,
-> this bug happens.
-> 
-> <CPU0>					<CPU1>
-> 					Start smp_text_poke_batch_finish().
-> 					Start the third step. (remove INT3)
-> Hit INT3 (from icache/pipeline)
-> 					on_each_cpu(do_sync_core)
-> ----
-> do_sync_core(do SERIALIZE)
-> ----
-> 					Finish the third step.
-> Handle #BP including CLI
-> 					Clear text_poke_array_refs[cpu0]
-> preparing stack
-> Start smp_text_poke_int3_handler()
-> Failed to get text_poke_array_refs[cpu0]
-> 
-> In this case, per-cpu text_poke_array_refs will make a time
-> window bigger because clearing text_poke_array_refs is faster.
-> 
-> If this is correct, flushing cache does not matter (it
-> can make the window smaller.)
-> 
-> One possible solution is to send IPI again which ensures the
-> current #BP handler exits. It can make the window small enough.
-> 
-> Another solution is removing WARN_ONCE() from [1/2], which
-> means we accept this scenario, but avoid catastrophic result.
+It's a fair bit older than that, try a63c357b9fd5 ("iommu/dma: Trace 
+bounce buffer usage when mapping buffers") - looks like it's always just 
+been hopeful of being DCE'd.
 
-If interrupts are enabled when the break point hits and just enters the
-int3 handler, does that also mean it can schedule?
+Thanks,
+Robin.
 
-If that's the case, then we either have to remove the WARN_ONCE() or we
-would have to do something like a synchronize_rcu_tasks().
+> Closes: https://lore.kernel.org/all/20250610202457.5a599336@gandalf.local.home/
+> Suggested-by: Christoph Hellwig <hch@infradead.org>
+> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+> ---
+>   drivers/iommu/dma-iommu.c | 2 --
+>   kernel/dma/swiotlb.c      | 2 ++
+>   2 files changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/iommu/dma-iommu.c b/drivers/iommu/dma-iommu.c
+> index ea2ef53bd4fe..1935b360cc94 100644
+> --- a/drivers/iommu/dma-iommu.c
+> +++ b/drivers/iommu/dma-iommu.c
+> @@ -1153,8 +1153,6 @@ static phys_addr_t iommu_dma_map_swiotlb(struct device *dev, phys_addr_t phys,
+>   		return (phys_addr_t)DMA_MAPPING_ERROR;
+>   	}
+>   
+> -	trace_swiotlb_bounced(dev, phys, size);
+> -
+>   	phys = swiotlb_tbl_map_single(dev, phys, size, iova_mask(iovad), dir,
+>   			attrs);
+>   
+> diff --git a/kernel/dma/swiotlb.c b/kernel/dma/swiotlb.c
+> index abcf3fa63a56..c112f1d98861 100644
+> --- a/kernel/dma/swiotlb.c
+> +++ b/kernel/dma/swiotlb.c
+> @@ -1379,6 +1379,8 @@ phys_addr_t swiotlb_tbl_map_single(struct device *dev, phys_addr_t orig_addr,
+>   	phys_addr_t tlb_addr;
+>   	unsigned short pad_slots;
+>   
+> +	trace_swiotlb_bounced(dev, orig_addr, mapping_size);
+> +
+>   	if (!mem || !mem->nslabs) {
+>   		dev_warn_ratelimited(dev,
+>   			"Can not allocate SWIOTLB buffer earlier and can't now provide you with the DMA bounce buffer");
 
--- Steve
