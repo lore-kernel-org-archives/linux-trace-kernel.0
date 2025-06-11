@@ -1,184 +1,136 @@
-Received: from mail-il1-f179.google.com (mail-il1-f179.google.com [209.85.166.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADEB225BEEF;
-	Wed, 11 Jun 2025 12:20:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 917D728937E
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 11 Jun 2025 13:57:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749644449; cv=none; b=rTti1o03uaRc5DHQJdJN016qdmvOlweCIB7O+XnLA3NGKV4mzft+zTtO8u2PZiD27LpWcfwShqpMlIFK/RNIEpT6UY9be0LI/WJrKcMzbHEerJTB+deK1kGgTY6ESWLcE4jQAvWrbHMEvNZR+j5uLsMuW2xgjBH9Uqgc4ohY4EY=
+	t=1749650228; cv=none; b=pLlAMjH8y6hlGBKbXBz+t5nDbvDe8iYKxEY/EWyQT55bz4qpFfhH2F+NaMUshwmPvBYZMOQe8Acyw/MU3RWS6yukL9nt7jTDOOwRe8bYGJym5O73arYvuHkyCy9qfjwXsSXpI1WAuxQUayZ3WqcwtsYTKxtqa/flA5PyxIs4e/U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749644449; c=relaxed/simple;
-	bh=IHppgvzI4syY64UndWNyNk/lcgm8Qzoj/IK3X0IV+MA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ogd9hLs9WIHrECdjcDY+YXBicax3nSMXPJP7dYBK/0iRBAw0GxiaAY+CrhOq24kje481nvptl+28SWe8V/lGnCIWecqCiBFVpFmGqo6VkIeimHvUEPpSSC5mAt8JyhOn9WQPWusbL28Nf269KhI7s+Aoj1NIqBQQNuWqYy0WuVU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IEeo1Wvu; arc=none smtp.client-ip=209.85.166.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749650228; c=relaxed/simple;
+	bh=PtwNFMm6TSFT9rh/6yYlx/h7Ig3gXuqYO1GwibaIaNc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=gBccMxhEVEXNJ8atdULk5oxSuJOGU9Yltd8Ef/rdVtVzpgJuwMzJIEzHrCyQMaVJJqOkfR0B/SNysx45daKgQoySHu509Zz8Pr3SZvXrpSc+8+BfiBhYEKrGW+819VDZdrxm72Wh3n6qpgDInRWUTYTO6OVvhA9L2/XLyJp9QWo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=cnGlM9JU; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IEeo1Wvu"
-Received: by mail-il1-f179.google.com with SMTP id e9e14a558f8ab-3d6d6d82633so20000755ab.0;
-        Wed, 11 Jun 2025 05:20:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749644447; x=1750249247; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=dBvjnZ90Dp0F8XMlzbkh5jxvl8CN8DeTIwQ3MbTjXNw=;
-        b=IEeo1WvusE9pUMCLPFN2VyqSorod6YrW/VbVZ5LR1WpvYFJA7vP+VmpcSIAbFfPaef
-         OAUKCqrctO9GbUoyghtmtvORy3y8cALfKu28OQLzekN4w28bkM5TFgAUH/Lsc/njbvqj
-         HbK+9S2GNGUYydUV12SNTujdNFNK+fqas5MjUNfDZM7b0mShV7sgQrc9ndLZKzDWa7hn
-         GY1TL29O8NOsc5VHClWsY0NbaBGt2QGAbSFj+9ERkVjHKUGN3SNh9daXDraXZqgB0Ynl
-         cehDieUwxbJWrm83qMPJHVVdwS+xbUnNq01siSjE2qOYY1MKy0VvSVSqC6OexNOFI9pB
-         z+GQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749644447; x=1750249247;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=dBvjnZ90Dp0F8XMlzbkh5jxvl8CN8DeTIwQ3MbTjXNw=;
-        b=EFE4yxLkoly99+AT1vbzwWY5Bvg53A13vaVuw8oCMr8U0XV8BfBzUE1sx94Qog59FV
-         Jo1O7T/547FS8+l3nDneCsnj/d3cwOau1H/kcO9koGokYBW7PyYDli6vDVeoyPy96SO7
-         hcLWbHGQDH/o9esTqcLdqXRvQW8UrvX4ux+sZD+u+bJMOzWYUoEwVvgSpcdojAINcYTB
-         2ebJjtIbYnjnnB9oz4y5J49NnyrS5ykFI/RgAr3LP4IPNJ/ZtmjOVAveBuQ9DRoS0BlM
-         sNyWtMclR/4oDuosjd1NFzdDoqSPs949dL+dNLsoBj9BIR8FX+ByvTMFFM3stqrxQfGb
-         8miw==
-X-Forwarded-Encrypted: i=1; AJvYcCV7nGxvS+3TqfiojeRvkucrnnUGJufhAK63WVofip8LWprKTxDzcxIEzUhHpsLbG+sOHrDIeWUYcBYzGH2v5oYhUQL5@vger.kernel.org, AJvYcCVdDQbrxj7peOGybuWEM30UgIHnuHbqHQzoVkivANKuXLBqSHYa6hKq5ggkPMXBGsheO8+ja5dU+LFHvUH9@vger.kernel.org, AJvYcCVhK2BmvK0pvfbYoKYKeILq4kAI7Udle5nWqVgY+9xMkq3qmDoya4tbTox11zVjoj8p9uZFdJqrb86iMQ==@vger.kernel.org
-X-Gm-Message-State: AOJu0YwCNdkTbvDWQEN/cY5E/RVMyZUPjoaUDdyh6PbPbKRrrX8E88IB
-	LzUdrVYwO7njBL3Dkm6/ePJbYBf6aijpbxvaMIFySI6tt368h+B1tzLYxYF3Z5P0k2S4VN4Wc8Z
-	KJ2Tj+B0Jo/3P529D3RqhWlBv5CfNH+Y=
-X-Gm-Gg: ASbGncu1sPRi3dC4eYIjYJR6lhPV87VGr21hpMNTV+U9XxJCWwv0bW7E5nKXNqr+Dl9
-	BP1pcEuFRm3pQ/NVS6cso9AC1B9ChNaSfjux5PZRAKC40uVjaW0QtLq2ZBKZ4RLsEmCg6XBKTDw
-	5ArgD7VNUETYg8REGjmEFEFne8vmcGLZZ1EunpAv4CNI4=
-X-Google-Smtp-Source: AGHT+IE4k8M34kH1+0to98qZha6YDCpF10uoPuQmWlF7JjAoPYaJi/BRbveOdyY4jpVv3FoTiXKBp/TgaddM4ZbrpUk=
-X-Received: by 2002:a05:6e02:1a6a:b0:3dd:f1bb:da0b with SMTP id
- e9e14a558f8ab-3ddf423ed49mr34966435ab.7.1749644446692; Wed, 11 Jun 2025
- 05:20:46 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cnGlM9JU"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1749650225;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=l6FUPWHHcR0JatmzSzchERIjR2GyPvu7UE4LUtgRTBQ=;
+	b=cnGlM9JUx/tVfV9LhoAetsrWvUyVEjGKbaT4W3D3zEvBm3rizouIvJ8CELQ5BLQvPUgPd3
+	NiE6nA4dNvC3+w+a2yHa5tez8KpFrieL4/BRd2UdGncDiAj/OldOAF4ugg2Wx6a7r0c800
+	xoI54UXpLcI+EH+VD/Ie26n/LcSJZTU=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-81-ng4wFBA7PaKn_Lpf2AZ6wA-1; Wed,
+ 11 Jun 2025 09:57:02 -0400
+X-MC-Unique: ng4wFBA7PaKn_Lpf2AZ6wA-1
+X-Mimecast-MFC-AGG-ID: ng4wFBA7PaKn_Lpf2AZ6wA_1749650221
+Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 4D02D180028B;
+	Wed, 11 Jun 2025 13:57:01 +0000 (UTC)
+Received: from fedora.redhat.com (unknown [10.45.225.32])
+	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id DD69419560AF;
+	Wed, 11 Jun 2025 13:56:57 +0000 (UTC)
+From: Tomas Glozar <tglozar@redhat.com>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: linux-trace-kernel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	John Kacur <jkacur@redhat.com>,
+	Luis Goncalves <lgoncalv@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Chang Yin <cyin@redhat.com>,
+	Costa Shulyupin <costa.shul@redhat.com>,
+	Tomas Glozar <tglozar@redhat.com>
+Subject: [PATCH 0/8] rtla/timerlat: Support actions on threshold and on end
+Date: Wed, 11 Jun 2025 15:56:36 +0200
+Message-ID: <20250611135644.219127-1-tglozar@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250610004844.66688-5-kerneljasonxing@gmail.com>
- <202506102340.uo7QDaVk-lkp@intel.com> <CAL+tcoARvQVgd68HGoXXiK=+RSH12WQ_rc47B4rgtt2Eb05c0w@mail.gmail.com>
- <20250611170845.8f88347e3cba51cf15a01b21@kernel.org>
-In-Reply-To: <20250611170845.8f88347e3cba51cf15a01b21@kernel.org>
-From: Jason Xing <kerneljasonxing@gmail.com>
-Date: Wed, 11 Jun 2025 20:20:10 +0800
-X-Gm-Features: AX0GCFt9o6cS486F4_y9iaF71LRoSu0_FvAk5vs2fQpwxofQ65dX1xlkNYbdtGU
-Message-ID: <CAL+tcoBDJty6o_-c4__P=BES_uP6emO3TcuUTrFCJ92j2wNWPg@mail.gmail.com>
-Subject: Re: [PATCH v4 4/5] blktrace: use rbuf->stats.full as a drop indicator
- in relayfs
-To: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: kernel test robot <lkp@intel.com>, axboe@kernel.dk, rostedt@goodmis.org, 
-	mathieu.desnoyers@efficios.com, akpm@linux-foundation.org, 
-	oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	linux-block@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	Jason Xing <kernelxing@tencent.com>, Yushan Zhou <katrinzhou@tencent.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
 
-On Wed, Jun 11, 2025 at 4:08=E2=80=AFPM Masami Hiramatsu <mhiramat@kernel.o=
-rg> wrote:
->
-> On Wed, 11 Jun 2025 13:15:40 +0800
-> Jason Xing <kerneljasonxing@gmail.com> wrote:
->
-> > On Wed, Jun 11, 2025 at 9:42=E2=80=AFAM kernel test robot <lkp@intel.co=
-m> wrote:
-> > >
-> > > Hi Jason,
-> > >
-> > > kernel test robot noticed the following build warnings:
-> > >
-> > > [auto build test WARNING on axboe-block/for-next]
-> > > [also build test WARNING on drm-i915/for-linux-next drm-i915/for-linu=
-x-next-fixes akpm-mm/mm-everything linus/master v6.16-rc1 next-20250610]
-> > > [If your patch is applied to the wrong git tree, kindly drop us a not=
-e.
-> > > And when submitting patch, we suggest to use '--base' as documented i=
-n
-> > > https://git-scm.com/docs/git-format-patch#_base_tree_information]
-> > >
-> > > url:    https://github.com/intel-lab-lkp/linux/commits/Jason-Xing/rel=
-ayfs-abolish-prev_padding/20250610-085150
-> > > base:   https://git.kernel.org/pub/scm/linux/kernel/git/axboe/linux-b=
-lock.git for-next
-> > > patch link:    https://lore.kernel.org/r/20250610004844.66688-5-kerne=
-ljasonxing%40gmail.com
-> > > patch subject: [PATCH v4 4/5] blktrace: use rbuf->stats.full as a dro=
-p indicator in relayfs
-> > > config: arc-randconfig-001-20250610
-> > > compiler: arc-linux-gcc (GCC) 12.4.0
-> > > reproduce (this is a W=3D1 build):
-> > >
-> > > If you fix the issue in a separate patch/commit (i.e. not just a new =
-version of
-> > > the same patch/commit), kindly add following tags
-> > > | Reported-by: kernel test robot <lkp@intel.com>
-> > > | Closes: https://lore.kernel.org/oe-kbuild-all/202506102340.uo7QDaVk=
--lkp@intel.com/
-> > >
-> > > All warnings (new ones prefixed by >>):
-> > >
-> > >    kernel/trace/blktrace.c: In function 'blk_dropped_read':
-> > > >> kernel/trace/blktrace.c:421:39: warning: format '%lu' expects argu=
-ment of type 'long unsigned int', but argument 4 has type 'size_t' {aka 'un=
-signed int'} [-Wformat=3D]
-> > >      421 |         snprintf(buf, sizeof(buf), "%lu\n", dropped);
-> > >          |                                     ~~^     ~~~~~~~
-> > >          |                                       |     |
-> > >          |                                       |     size_t {aka un=
-signed int}
-> > >          |                                       long unsigned int
-> > >          |                                     %u
-> >
-> > Well, I suppose I will fix it in the re-spin after receiving more
-> > comments so that I don't need to quickly respond to this minor issue.
->
-> Please update the patch and send series with my reviewed-by on 1/5.
+This series adds a feature that allows to user to specify certain
+kinds of "actions" to be executed at one of two places in the rtla
+measurement: when tracing is stopped on latency threshold, and at the
+end of tracing.
 
-Sure, thanks for the review.
+Two new options are added: -A/--on-threshold, and -N/--on-end, taking
+the action as an argument. For example:
 
-> BTW, size_t should use %zu.
-> Please check Documentation/core-api/printk-formats.rst
+$ rtla timerlat hist -T 10 -A shell,command="echo Threshold" \
+-N shell,command="echo Tracing stopped"
 
-Thanks for the pointer :)
+will print "Threshold" if a thread latency higher than 10 microseconds
+is reached, and "Tracing stopped" always at the end.
 
-Thanks,
-Jason
->
-> Thank you,
->
-> >
-> > Thanks,
-> > Jason
-> >
-> > >
-> > >
-> > > vim +421 kernel/trace/blktrace.c
-> > >
-> > >    413
-> > >    414  static ssize_t blk_dropped_read(struct file *filp, char __use=
-r *buffer,
-> > >    415                                  size_t count, loff_t *ppos)
-> > >    416  {
-> > >    417          struct blk_trace *bt =3D filp->private_data;
-> > >    418          size_t dropped =3D relay_stats(bt->rchan, RELAY_STATS=
-_BUF_FULL);
-> > >    419          char buf[16];
-> > >    420
-> > >  > 421          snprintf(buf, sizeof(buf), "%lu\n", dropped);
-> > >    422
-> > >    423          return simple_read_from_buffer(buffer, count, ppos, b=
-uf, strlen(buf));
-> > >    424  }
-> > >    425
-> > >
-> > > --
-> > > 0-DAY CI Kernel Test Service
-> > > https://github.com/intel/lkp-tests/wiki
->
->
-> --
-> Masami Hiramatsu (Google) <mhiramat@kernel.org>
+The list of possible actions is extensible and is covered in
+the commit messages. Later, a documentation patch series will be sent
+with clear explanation of every action and its syntax.
+
+Notably, a special action "continue" resumes tracing. For example:
+
+$ rtla timerlat hist -T 100 -A shell,command="echo Threshold" \
+-A continue -d 10s
+
+will print "Threshold" as many times as tracing is stopped after
+thread latency reaches 100us.
+
+The feature was inspired by a case where collecting perf data on rtla
+latency overflow was required, which can be done by sending a signal
+to the perf process.
+
+Example of this with Intel PT aux buffer:
+
+$ perf record --cpu 0 -e intel_pt// -S -- rtla timerlat top -q -T 100 \
+-c 0 -A signal,pid=parent,num=12 -A continue
+
+In general, the feature is aiming to allow integration with external
+tooling. To implement even more flexibility, passing context to the
+shell through environmental variables, or even an entire scripting
+language with access to the rtla internals can be implemented if
+needed.
+
+Tomas Glozar (8):
+  rtla/timerlat: Introduce enum timerlat_tracing_mode
+  rtla/timerlat: Add action on threshold feature
+  rtla/timerlat_bpf: Allow resuming tracing
+  rtla/timerlat: Add continue action
+  rtla/timerlat: Add action on end feature
+  rtla/tests: Check rtla output with grep
+  rtla/tests: Add tests for actions
+  rtla/tests: Limit duration to maximum of 10s
+
+ tools/tracing/rtla/src/Build           |   1 +
+ tools/tracing/rtla/src/actions.c       | 260 +++++++++++++++++++++++++
+ tools/tracing/rtla/src/actions.h       |  52 +++++
+ tools/tracing/rtla/src/timerlat.bpf.c  |  13 +-
+ tools/tracing/rtla/src/timerlat.c      |  24 ++-
+ tools/tracing/rtla/src/timerlat.h      |  24 ++-
+ tools/tracing/rtla/src/timerlat_bpf.c  |  13 ++
+ tools/tracing/rtla/src/timerlat_bpf.h  |   3 +
+ tools/tracing/rtla/src/timerlat_hist.c | 145 ++++++++++----
+ tools/tracing/rtla/src/timerlat_top.c  | 167 ++++++++++------
+ tools/tracing/rtla/tests/engine.sh     |  21 +-
+ tools/tracing/rtla/tests/hwnoise.t     |   8 +-
+ tools/tracing/rtla/tests/osnoise.t     |   4 +-
+ tools/tracing/rtla/tests/timerlat.t    |  36 +++-
+ 14 files changed, 652 insertions(+), 119 deletions(-)
+ create mode 100644 tools/tracing/rtla/src/actions.c
+ create mode 100644 tools/tracing/rtla/src/actions.h
+
+-- 
+2.49.0
+
