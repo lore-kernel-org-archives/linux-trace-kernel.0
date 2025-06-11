@@ -1,119 +1,129 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BFCC25F967;
-	Wed, 11 Jun 2025 10:26:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FDA5227E87;
+	Wed, 11 Jun 2025 11:30:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749637575; cv=none; b=l5ExVKQ4ZDoHrmCL3jwig8zCxuWhwMk6QAs/DDEeR4F5cLOl6U8F2jsbOkmheb/3nkjJvbdxGoIG2J3PdfiPa3usLzhUtSExeGrw3vkRsEo7PyoiqYQDd1RX3i+ZOeqgv0RtYhoosTp7dOErDnnrzdV6PhM2ZX2ub3M/ap0MHZY=
+	t=1749641417; cv=none; b=abksqOMWlkJpAQOWBqLthQK2wYyFWuK8cTg/A4eD0UZ0bd2QCCSc1BadVXNPLVahHD6+g9YH+O4Gh6DDn19CV4zyIBgxQSKcAncwAAVr284qSXouGLdEkJipturNHJS9fY321jpIoiXTM1isaFHavSjLHQzkR8flx561I+n82yM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749637575; c=relaxed/simple;
-	bh=+y7RDxNBQgieh91E0p6llbHjFkjykarWWIot+/gLf8Y=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=fAM0+Ciz9K1rySJHqd9KKpz6BkHbzyrOAPCe1VkpisvEvJLPMcttThX5AiMRy5K8AVcZUUD5GXWoNPwzfCVUtWKFMmo96Ssv7VuRiSSsNyO7E2+oppKQa8b8XWxAWJ2Q6JEkU+9Zo6OhE10mv/Q3il61g5YHUInM4Xv7a2EJ1RE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Cp1DWkYp; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749641417; c=relaxed/simple;
+	bh=m6blkxtSiFevkn9+SEbUvI5bgj1njuddm9OXkMQ48Tk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=eIG8dkU8coirj2xTHD0j5qUwoi9BFv/JivD0hfir00+3jCvbyX9TUXFwINLxVYS0619VYfFO5aJFbKQvOd+cow++FfiOpYZ8lZBeI4nOgmfGKJFp2tue2GSIXqH4uWTn61vGfyq7wI5iY4tLkJl9atQqD1JQJICRoSoD3StTjME=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=Cr85IuBV; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Cp1DWkYp"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 92101C4CEF1;
-	Wed, 11 Jun 2025 10:26:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749637574;
-	bh=+y7RDxNBQgieh91E0p6llbHjFkjykarWWIot+/gLf8Y=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=Cp1DWkYptsuaZC/DfhiVQ1C6yfDl/DwyMIWoOpO8laP6dp910MGNxCcVUoxZkM6Dk
-	 aYho9MXPnRHZyJjZ5PzDx9shPkWL8r6DOqTizXQN/OAfCYF6EBv1TMKPEJ6w46s/Ql
-	 1vaZRULMhEHEVSmmHHMd6kB6COVWpW9yapj93z/eXy0Fws8kP9vuaGlceMKI328Hj4
-	 e/9dld5D63aZimksx/4JHw08InBEu1p2OcgVmo+eax/29o/qd9c0GLI8DVXCQz5jBv
-	 pAt3Y/nuOrF7f9kOYcreIrEPW7BTrm9roGjALwaNzEBsbTKiCk5q//MJgO56NBijYZ
-	 XiGrbtNdzk8iA==
-Date: Wed, 11 Jun 2025 19:26:10 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>,
- Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>, Dave
- Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, Naresh Kamboju
- <naresh.kamboju@linaro.org>, open list <linux-kernel@vger.kernel.org>,
- Linux trace kernel <linux-trace-kernel@vger.kernel.org>,
- lkft-triage@lists.linaro.org, Stephen Rothwell <sfr@canb.auug.org.au>, Arnd
- Bergmann <arnd@arndb.de>, Dan Carpenter <dan.carpenter@linaro.org>, Anders
- Roxell <anders.roxell@linaro.org>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Cr85IuBV"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=zbZtV+ASXG/xMvGIVDeJhxlEcfyIM+8fV7E63+SUj7Q=; b=Cr85IuBVTCeAC+RH1C5XYpgQhO
+	gxD4B+I8JzVnANm3DHp9zp9NYJNt+qRsHD05OLpU7KuFjrQpWHBCFYdKn+TxRihnZdX5jw+rDUeOt
+	RPin8Qq9kj9aNOKVq3fGBY00di26U1iylDh6vmTRAOJyVgNI7jezIcOTlPbeX27s1ctai69TLQdwC
+	6dAouMmbwaifqwdp88AZKWmApOGq0cOGgLs/B/4Fz0SRHqhi0k/azinqwMasTco8ajdMbhrXPXbsx
+	jghQ1/DT4pCzfTKSKvxgNDlJWpnK5jpBHXosjMKtVLa5bQcGYtbzrL6MX2Me2Aaa+GXarMLTnZgSj
+	OtnJsoHQ==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uPJeb-0000000Aa8i-3umN;
+	Wed, 11 Jun 2025 11:30:02 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 3121F30863B; Wed, 11 Jun 2025 13:30:01 +0200 (CEST)
+Date: Wed, 11 Jun 2025 13:30:01 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Steven Rostedt <rostedt@goodmis.org>, x86@kernel.org,
+	Naresh Kamboju <naresh.kamboju@linaro.org>,
+	open list <linux-kernel@vger.kernel.org>,
+	Linux trace kernel <linux-trace-kernel@vger.kernel.org>,
+	lkft-triage@lists.linaro.org,
+	Stephen Rothwell <sfr@canb.auug.org.au>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Dan Carpenter <dan.carpenter@linaro.org>,
+	Anders Roxell <anders.roxell@linaro.org>
 Subject: Re: [RFC PATCH 2/2] x86: alternative: Invalidate the cache for
  updated instructions
-Message-Id: <20250611192610.6edf9713f6ee84c26f653ea5@kernel.org>
-In-Reply-To: <20250610115030.0d60da65@gandalf.local.home>
+Message-ID: <20250611113001.GC2273038@noisy.programming.kicks-ass.net>
 References: <20250610234307.c675969e83ce53bb856e94d7@kernel.org>
-	<174956686826.1494782.11512582667456262594.stgit@mhiramat.tok.corp.google.com>
-	<20250610115030.0d60da65@gandalf.local.home>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+ <174956686826.1494782.11512582667456262594.stgit@mhiramat.tok.corp.google.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <174956686826.1494782.11512582667456262594.stgit@mhiramat.tok.corp.google.com>
 
-On Tue, 10 Jun 2025 11:50:30 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
-
-> On Tue, 10 Jun 2025 23:47:48 +0900
-> "Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
+On Tue, Jun 10, 2025 at 11:47:48PM +0900, Masami Hiramatsu (Google) wrote:
+> From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 > 
-> > Maybe one possible scenario is to hit the int3 after the third step
-> > somehow (on I-cache).
-> > 
-> > ------
-> > <CPU0>					<CPU1>
-> > 					Start smp_text_poke_batch_finish().
-> > 					Start the third step. (remove INT3)
-> > 					on_each_cpu(do_sync_core)
-> > do_sync_core(do SERIALIZE)
-> > 					Finish the third step.
-> > Hit INT3 (from I-cache)
-> > 					Clear text_poke_array_refs[cpu0]
-> > Start smp_text_poke_int3_handler()
+> Invalidate the cache after replacing INT3 with the new instruction.
+> This will prevent the other CPUs seeing the removed INT3 in their
+> cache after serializing the pipeline.
 > 
-> I believe your analysis is the issue here. The commit that changed the ref
-> counter from a global to per cpu didn't cause the issue, it just made the
-> race window bigger.
+> LKFT reported an oops by INT3 but there is no INT3 shown in the
+> dumped code. This means the INT3 is removed after the CPU hits
+> INT3.
 > 
+>  ## Test log
+>  ftrace-stress-test: <12>[   21.971153] /usr/local/bin/kirk[277]:
+>  starting test ftrace-stress-test (ftrace_stress_test.sh 90)
+>  <4>[   58.997439] Oops: int3: 0000 [#1] SMP PTI
+>  <4>[   58.998089] CPU: 0 UID: 0 PID: 323 Comm: sh Not tainted
+>  6.15.0-next-20250605 #1 PREEMPT(voluntary)
+>  <4>[   58.998152] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009),
+>  BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+>  <4>[   58.998260] RIP: 0010:_raw_spin_lock+0x5/0x50
+>  <4>[   58.998563] Code: 5d e9 ff 12 00 00 66 66 2e 0f 1f 84 00 00 00
+>  00 00 0f 1f 40 00 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 f3
+>  0f 1e fa 0f <1f> 44 00 00 55 48 89 e5 53 48 89 fb bf 01 00 00 00 e8 15
+>  12 e4 fe
+> 
+> Maybe one possible scenario is to hit the int3 after the third step
+> somehow (on I-cache).
+> 
+> ------
+> <CPU0>					<CPU1>
+> 					Start smp_text_poke_batch_finish().
+> 					Start the third step. (remove INT3)
+> 					on_each_cpu(do_sync_core)
+> do_sync_core(do SERIALIZE)
+> 					Finish the third step.
+> Hit INT3 (from I-cache)
+> 					Clear text_poke_array_refs[cpu0]
+> Start smp_text_poke_int3_handler()
+> Failed to get text_poke_array_refs[cpu0]
+> Oops: int3
+> ------
+> 
+> SERIALIZE instruction flashes pipeline, thus the processor needs
+> to reload the instruction. But it is not ensured to reload it from
+> memory because SERIALIZE does not invalidate the cache.
+> 
+> To prevent reloading replaced INT3, we need to invalidate the cache
+> (flush TLB) in the third step, before the do_sync_core().
 
-Ah, OK. It seems more easier to explain. Since we use the
-trap gate for #BP, it does not clear the IF automatically.
-Thus there is a time window between executing INT3 on icache
-(or already in the pipeline) and its handler disables
-interrupts. If the IPI is received in the time window,
-this bug happens.
+This sounds all sorts of wrong. x86 is supposed to be cache-coherent. A
+store should cause the invalidation per MESI and all that. This means
+the only place where the old instruction can stick around is in the
+uarch micro-ops cache and all that, and SERIALIZE will very much flush
+those.
 
-<CPU0>					<CPU1>
-					Start smp_text_poke_batch_finish().
-					Start the third step. (remove INT3)
-Hit INT3 (from icache/pipeline)
-					on_each_cpu(do_sync_core)
-----
-do_sync_core(do SERIALIZE)
-----
-					Finish the third step.
-Handle #BP including CLI
-					Clear text_poke_array_refs[cpu0]
-preparing stack
-Start smp_text_poke_int3_handler()
-Failed to get text_poke_array_refs[cpu0]
+Also, TLB flush != I$ flush. There is clflush_cache_range() for this.
+But still, this really should not be needed.
 
-In this case, per-cpu text_poke_array_refs will make a time
-window bigger because clearing text_poke_array_refs is faster.
+Also, this is all qemu, and qemu is known to have gotten this terribly
+wrong in the past.
 
-If this is correct, flushing cache does not matter (it
-can make the window smaller.)
+If you all cannot reproduce on real hardware, I'm considering this a
+qemu bug.
 
-One possible solution is to send IPI again which ensures the
-current #BP handler exits. It can make the window small enough.
 
-Another solution is removing WARN_ONCE() from [1/2], which
-means we accept this scenario, but avoid catastrophic result.
-
-Thank you,
-
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
