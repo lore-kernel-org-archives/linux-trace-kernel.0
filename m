@@ -1,169 +1,109 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from relay.hostedemail.com (smtprelay0017.hostedemail.com [216.40.44.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD2A92BD5BC
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 11 Jun 2025 13:57:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DBBA2E6138;
+	Wed, 11 Jun 2025 14:01:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749650260; cv=none; b=ZCiG+d202cfuyVhMnkXkPrAWA3IwN0QJUzaONpIznE0Qn7Nei3YDw2XFKtuuYUBr3YLVm0+nt7KJzmzcWgOJ0GC3kYGPWeB0QQXekq8tPEWp0JF1p+ncSzHATDUJ5bHOOaPrPFAQCwwwLlmR1LAgh0s23MH28KOXOLjaOfmHodo=
+	t=1749650470; cv=none; b=hLjSO7K6Uii4UfDge8HHXeQvQtDrNRyihJjv3ZBDOh+5A7Kye6A4HZSRdd7eetqn4XTPgdUwu+qCDYrwI2YcmaYcjE/06iWrWgJ8JQ8TcA9h7YCnQHWcWw+uj37gzJP9CzF7QMwVrddUwSFa5x+YGjCybFG07xjzkKNfztW5cZM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749650260; c=relaxed/simple;
-	bh=+3YUBwLdVlM80y5Z4ZZxUmJSTsY4yq9GlGFZH30XYBY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=WybAHnAKb80j+NS8zqgGqpaPwmrJ5JIdtg5sUL8TkXFL5cUEv0SWeaAIE6RjsJdELKVVMNwevNUJGVgNd/QfVEOFDKRukmsFeEI3214gVD1DQkPMXcD+OSxiesBBV7VmDBrt4ftWyf0iB7gXNsYiklFVXBF5m3kutDnMNX8oow0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=N7vvFcMi; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="N7vvFcMi"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1749650257;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=JwFqatCUz2bA7Mz3zTRUHBJnezMkE02OL4O8XuLPGfw=;
-	b=N7vvFcMi/Yu246AimtzWiFigSBtTxLKeIThBkMtXv/guRyhcDjArbZm6+lO202ZP6A+LU+
-	+yROQr3B8kf0Xam2zflmX8aZQ4TgAyHT90zk7Yv0r8sSdWeIvYl6FNdxiuReYk/1EfG6fg
-	5jkimhgM8HYGNdx7poQgUGyq4vVAB6A=
-Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-664-a5HsY95xNlmqw8ZCGRhxFA-1; Wed,
- 11 Jun 2025 09:57:33 -0400
-X-MC-Unique: a5HsY95xNlmqw8ZCGRhxFA-1
-X-Mimecast-MFC-AGG-ID: a5HsY95xNlmqw8ZCGRhxFA_1749650252
-Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id B9655195608E;
-	Wed, 11 Jun 2025 13:57:32 +0000 (UTC)
-Received: from fedora.redhat.com (unknown [10.45.225.32])
-	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 56FF919560A3;
-	Wed, 11 Jun 2025 13:57:28 +0000 (UTC)
-From: Tomas Glozar <tglozar@redhat.com>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: linux-trace-kernel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	John Kacur <jkacur@redhat.com>,
-	Luis Goncalves <lgoncalv@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Chang Yin <cyin@redhat.com>,
-	Costa Shulyupin <costa.shul@redhat.com>,
-	Tomas Glozar <tglozar@redhat.com>
-Subject: [PATCH 8/8] rtla/tests: Limit duration to maximum of 10s
-Date: Wed, 11 Jun 2025 15:56:44 +0200
-Message-ID: <20250611135644.219127-9-tglozar@redhat.com>
-In-Reply-To: <20250611135644.219127-1-tglozar@redhat.com>
-References: <20250611135644.219127-1-tglozar@redhat.com>
+	s=arc-20240116; t=1749650470; c=relaxed/simple;
+	bh=NhrX07/ZRSceAn54EclTOUnzutUk0530NLo3rTyHdVw=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=Rgd0bT6sVhnCAN1fFUkxAkm+6yhVrVRcC1dW47TeLK34g2dXPAJKU7v9GnxjEFtN1YlPzjE3GaRL2kx7wufWm+ZjMBf1XOYR3kpMepzCtP6PPlfRT5AhInuLlg786DBjoHMGNx92TXGtyhMnMTZ+tdkU/8nlOLJajYE9+JgvRkQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf10.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay03.hostedemail.com (Postfix) with ESMTP id 6D4FABE498;
+	Wed, 11 Jun 2025 14:01:05 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf10.hostedemail.com (Postfix) with ESMTPA id 6FCE43E;
+	Wed, 11 Jun 2025 14:01:03 +0000 (UTC)
+Date: Wed, 11 Jun 2025 10:01:03 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: LKML <linux-kernel@vger.kernel.org>, Linux trace kernel
+ <linux-trace-kernel@vger.kernel.org>, iommu@lists.linux.dev
+Cc: Christoph Hellwig <hch@infradead.org>, Robin Murphy
+ <robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>, Will Deacon
+ <will@kernel.org>
+Subject: [PATCH] swiotlb: iommu/dma: Move trace_swiotlb_bounced() into
+ swiotlb_tbl_map_single()
+Message-ID: <20250611100103.7b3c28c8@batman.local.home>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Queue-Id: 6FCE43E
+X-Stat-Signature: zem11qtoa7ykw6s6gddeq3hq71qif9n9
+X-Rspamd-Server: rspamout07
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX18PYlVOI4oQyNuuyaYyZm8y38u7vsKXNRc=
+X-HE-Tag: 1749650463-15101
+X-HE-Meta: U2FsdGVkX18M7A5fI6gPAjUd2fEJ01YjEmjh1dDQzNYPemSoCd1WtbC40yqMvEmrGa9hOqxcdlCQy4XFylpb8spwpcafpM51yiX9QdT0V4GYPdx+TWqjEdf9EZViGd45soNlCOp/dBaJ5dJsy/k6uQhQtAdmIkDCChkWUwkDYnh2LdF/biASjAlu3IpPUiRwWKxnpFiI8Ho9dNs2AS5EyhGCVospmhYOKGIuKWtTTi8qjH0qJL8Nvp7yyjTZhZMXDNaqnBtQei/HYi5RawNDlegOwJajSrYhyT4sjuJKGPUINEsZAY5vObj/3RLe/kkZXq0+xTpKnHkpDdM9Hc+3ETjmBmqRE2I1hIMpnlG03H8MuwQXVsiALyZapJtS7AHPUHAtnKnqsxq1buBNbrq16RZQ987gI+r1Pseq5jAWJYjyTFZjBQKaCkbNAz+XVVlHRrUzoWV5jGmZj6YOnLDcTK25rrt7tmEZ4bbIZSRK2Is=
 
-Many of the original rtla tests included durations of 1 minute and 30
-seconds. Experience has shown this is unnecessary, since 10 seconds as
-waiting time for samples to appear.
+From: Steven Rostedt <rostedt@goodmis.org>
 
-Change duration of all rtla tests to at most 10 seconds. This speeds up
-testing significantly.
+I'm working on code that will warn when a tracepoint is defined but not
+used. As the TRACE_EVENT() logic still creates all the code regardless if
+something calls the trace_<event>() function. It wastes around 5K per trace
+event (less for tracepoints).
 
-Before:
-$ make check
-All tests successful.
-Files=3, Tests=54, 536 wallclock secs
-( 0.03 usr  0.00 sys + 20.31 cusr 22.02 csys = 42.36 CPU)
-Result: PASS
+But it seems that the code in drivers/iommu/dma-iommu.c does the opposite.
+It calls the trace_swiotlb_bounced() tracepoint without it being defined.
+The tracepoint is defined in kernel/dma/swiotlb.c when CONFIG_SWIOTLB is
+defined, but this code exists when that config is not defined.
 
-After:
-$ make check
-...
-All tests successful.
-Files=3, Tests=54, 196 wallclock secs
-( 0.03 usr  0.01 sys + 20.28 cusr 20.68 csys = 41.00 CPU)
-Result: PASS
+This now fails with my work because I have all the callers reference the
+tracepoint that they will call.
 
-Signed-off-by: Tomas Glozar <tglozar@redhat.com>
+Thanks to the kernel test robot, it found this:
+
+  https://lore.kernel.org/all/202506091015.7zd87kI7-lkp@intel.com/
+
+Instead of calling trace_swiotlb_bounced() from drivers/iommu/dma-iommu.c
+where it is useless when CONFIG_SWIOTLB is not defined, move the
+tracepoint into swiotlb_tbl_map_single(). This also makes it consistent
+with which memory is being traced (physical as supposed to dma address).
+
+Fixes: ed18a46262be4 ("iommu/dma: Factor out a iommu_dma_map_swiotlb helper")
+Closes: https://lore.kernel.org/all/20250610202457.5a599336@gandalf.local.home/
+Suggested-by: Christoph Hellwig <hch@infradead.org>
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- tools/tracing/rtla/tests/hwnoise.t  | 8 ++++----
- tools/tracing/rtla/tests/osnoise.t  | 4 ++--
- tools/tracing/rtla/tests/timerlat.t | 8 ++++----
- 3 files changed, 10 insertions(+), 10 deletions(-)
+ drivers/iommu/dma-iommu.c | 2 --
+ kernel/dma/swiotlb.c      | 2 ++
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/tools/tracing/rtla/tests/hwnoise.t b/tools/tracing/rtla/tests/hwnoise.t
-index 5f71401a139e..448877564b8d 100644
---- a/tools/tracing/rtla/tests/hwnoise.t
-+++ b/tools/tracing/rtla/tests/hwnoise.t
-@@ -10,12 +10,12 @@ check "verify help page" \
- check "detect noise higher than one microsecond" \
- 	"hwnoise -c 0 -T 1 -d 5s -q"
- check "set the automatic trace mode" \
--	"hwnoise -a 5 -d 30s" 2
-+	"hwnoise -a 5 -d 10s" 2
- check "set scheduling param to the osnoise tracer threads" \
--	"hwnoise -P F:1 -c 0 -r 900000 -d 1M -q"
-+	"hwnoise -P F:1 -c 0 -r 900000 -d 10s -q"
- check "stop the trace if a single sample is higher than 1 us" \
--	"hwnoise -s 1 -T 1 -t -d 30s" 2
-+	"hwnoise -s 1 -T 1 -t -d 10s" 2
- check "enable a trace event trigger" \
--	"hwnoise -t -e osnoise:irq_noise trigger=\"hist:key=desc,duration:sort=desc,duration:vals=hitcount\" -d 1m"
-+	"hwnoise -t -e osnoise:irq_noise trigger=\"hist:key=desc,duration:sort=desc,duration:vals=hitcount\" -d 10s"
+diff --git a/drivers/iommu/dma-iommu.c b/drivers/iommu/dma-iommu.c
+index ea2ef53bd4fe..1935b360cc94 100644
+--- a/drivers/iommu/dma-iommu.c
++++ b/drivers/iommu/dma-iommu.c
+@@ -1153,8 +1153,6 @@ static phys_addr_t iommu_dma_map_swiotlb(struct device *dev, phys_addr_t phys,
+ 		return (phys_addr_t)DMA_MAPPING_ERROR;
+ 	}
  
- test_end
-diff --git a/tools/tracing/rtla/tests/osnoise.t b/tools/tracing/rtla/tests/osnoise.t
-index 44908fc01abf..6a4dfa31dc55 100644
---- a/tools/tracing/rtla/tests/osnoise.t
-+++ b/tools/tracing/rtla/tests/osnoise.t
-@@ -8,13 +8,13 @@ set_timeout 2m
- check "verify help page" \
- 	"osnoise --help"
- check "verify the --priority/-P param" \
--	"osnoise top -P F:1 -c 0 -r 900000 -d 1M -q"
-+	"osnoise top -P F:1 -c 0 -r 900000 -d 10s -q"
- check "verify the --stop/-s param" \
- 	"osnoise top -s 30 -T 1 -t" 2
- check "verify the  --trace param" \
- 	"osnoise hist -s 30 -T 1 -t" 2
- check "verify the --entries/-E param" \
--	"osnoise hist -P F:1 -c 0 -r 900000 -d 1M -b 10 -E 25"
-+	"osnoise hist -P F:1 -c 0 -r 900000 -d 10s -b 10 -E 25"
+-	trace_swiotlb_bounced(dev, phys, size);
+-
+ 	phys = swiotlb_tbl_map_single(dev, phys, size, iova_mask(iovad), dir,
+ 			attrs);
  
- # Test setting default period by putting an absurdly high period
- # and stopping on threshold.
-diff --git a/tools/tracing/rtla/tests/timerlat.t b/tools/tracing/rtla/tests/timerlat.t
-index b810b36a04a3..291d047420c3 100644
---- a/tools/tracing/rtla/tests/timerlat.t
-+++ b/tools/tracing/rtla/tests/timerlat.t
-@@ -25,9 +25,9 @@ check "verify help page" \
- check "verify -s/--stack" \
- 	"timerlat top -s 3 -T 10 -t" 2
- check "verify -P/--priority" \
--	"timerlat top -P F:1 -c 0 -d 1M -q"
-+	"timerlat top -P F:1 -c 0 -d 10s -q"
- check "test in nanoseconds" \
--	"timerlat top -i 2 -c 0 -n -d 30s" 2
-+	"timerlat top -i 2 -c 0 -n -d 10s" 2
- check "set the automatic trace mode" \
- 	"timerlat top -a 5 --dump-tasks" 2
- check "print the auto-analysis if hits the stop tracing condition" \
-@@ -35,9 +35,9 @@ check "print the auto-analysis if hits the stop tracing condition" \
- check "disable auto-analysis" \
- 	"timerlat top -s 3 -T 10 -t --no-aa" 2
- check "verify -c/--cpus" \
--	"timerlat hist -c 0 -d 30s"
-+	"timerlat hist -c 0 -d 10s"
- check "hist test in nanoseconds" \
--	"timerlat hist -i 2 -c 0 -n -d 30s" 2
-+	"timerlat hist -i 2 -c 0 -n -d 10s" 2
+diff --git a/kernel/dma/swiotlb.c b/kernel/dma/swiotlb.c
+index abcf3fa63a56..c112f1d98861 100644
+--- a/kernel/dma/swiotlb.c
++++ b/kernel/dma/swiotlb.c
+@@ -1379,6 +1379,8 @@ phys_addr_t swiotlb_tbl_map_single(struct device *dev, phys_addr_t orig_addr,
+ 	phys_addr_t tlb_addr;
+ 	unsigned short pad_slots;
  
- # Actions tests
- check "trace output through -t" \
++	trace_swiotlb_bounced(dev, orig_addr, mapping_size);
++
+ 	if (!mem || !mem->nslabs) {
+ 		dev_warn_ratelimited(dev,
+ 			"Can not allocate SWIOTLB buffer earlier and can't now provide you with the DMA bounce buffer");
 -- 
-2.49.0
+2.47.2
 
