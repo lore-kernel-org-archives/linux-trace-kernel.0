@@ -1,108 +1,182 @@
-Received: from relay.hostedemail.com (smtprelay0015.hostedemail.com [216.40.44.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f174.google.com (mail-pg1-f174.google.com [209.85.215.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 552FE2D4B7A;
-	Thu, 12 Jun 2025 21:25:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 222C42E0B69;
+	Thu, 12 Jun 2025 21:28:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749763506; cv=none; b=VCi+Fm4IBTDtyBb1AX+5cs2ugpRsfwnuifiSiLrgeFyCmeRPYYOtQeCJCMNnykvRWfKGnSRNHtiLsyFcPBSRQ/p9Qmyx4tArLty+9gQgnuV/LT22gtY6O9jr9y0lo96VQffMnDTpXXlwvZZRSUd1sXh5gD5ULHLJ+L3dO7ywbjo=
+	t=1749763684; cv=none; b=dZR7CO4+X4g+RrMnn9Qi595N52MoLbE/0IWHAo8d6g8cjRV/NuEdcZkAPDpLLT8r6pqLJWuXP7nAIhsW/I/nOtlyTNZzhITG5t6FZZk66bNMkFzIftgfGfFwpRrTbxcIjzSGSxSyoheztwVEdcVs2g0WxgOSkbo0J+fwO/AXWt0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749763506; c=relaxed/simple;
-	bh=HuMjZINpKSUcmI84cW4j+vLlDWcteElTKOayabQOjQY=;
-	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=QClrcU0IEdV6PKgzZ6TwJXRhsNv9UclJvx1BEsWnAkmywPB3PcniMM5fyzAngCM8sGkuiLyyFCUfOxOJiUG1mQ1hgdpN+LyNx0NBh7xk1CiA8TUfqPigWHGOmufuoeXOH6odzzaaOj0pnqr3fVhlSlWQTpRoCT4aLZp1jLofsoI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf06.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay02.hostedemail.com (Postfix) with ESMTP id 24740120242;
-	Thu, 12 Jun 2025 21:25:02 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: nevets@goodmis.org) by omf06.hostedemail.com (Postfix) with ESMTPA id 43A8220010;
-	Thu, 12 Jun 2025 21:25:00 +0000 (UTC)
-Received: from rostedt by gandalf with local (Exim 4.98.2)
-	(envelope-from <rostedt@goodmis.org>)
-	id 1uPpRU-00000001tSw-2Pc2;
-	Thu, 12 Jun 2025 17:26:36 -0400
-Message-ID: <20250612212636.430882263@goodmis.org>
-User-Agent: quilt/0.68
-Date: Thu, 12 Jun 2025 17:24:16 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org,
- linux-xfs@vger.kernel.org
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- Carlos  Maiolino <cem@kernel.org>,
- Christoph Hellwig <hch@lst.de>,
- "Darrick J. Wong" <djwong@kernel.org>
-Subject: [PATCH 11/14] xfs: Remove unused event xfs_pagecache_inval
-References: <20250612212405.877692069@goodmis.org>
+	s=arc-20240116; t=1749763684; c=relaxed/simple;
+	bh=Jy/yZ6vY7PvDZK4lQadHfmUekwMYcxQX96889QzZIQI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=C2jII8QDEKL3vEL71ORPeglFpB+ZGGlEwAGPtqcLNdl1s5qAshhYRERdGQyAZA/wZP1niX2+m8dGWwN9ficz8l9B8t4U5UajRn1sQ/oEVA50LhgUxlNcHHcNmhLIK3PmuBnsmNePfaWwrxilvzDNZTi4WD5c/wAB43NJvpJP2XY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hlEXkERD; arc=none smtp.client-ip=209.85.215.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hlEXkERD"
+Received: by mail-pg1-f174.google.com with SMTP id 41be03b00d2f7-afc857702d1so1126940a12.3;
+        Thu, 12 Jun 2025 14:28:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1749763682; x=1750368482; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=v/jVN4FCRaxQzsD77p3tTDX0LkCrSNulyTd+dxPmoWs=;
+        b=hlEXkERDGnlO5hJAj58h8iB83f7lSAt20ubWLlSJ+RzKgmP+WYcb8aj4WQX7Anhr8D
+         K6UVGGhckU5DPXifrByKFNYMdzkZEVjx8HwQRdLOAtqAHv5+mlb2wThYkLBH0ix+qqc4
+         0meuggSEm9hBFXteJxaw8j9HDhcIQ1yzaioMN9BnGWMGu7lr3EYc8VxBrtWxJBA2q0nt
+         2UwHlwq3wwP/wER+8sDOYmizDjFmeWC8bjdUXIRtBwx8cvSRlp0ogdEiw+V1VrmIRQI1
+         /4AI/qSQ7V4kulSFLvN8CCichI08kwmqLs+s+/+RpLrHlGZ/r5mggkk8gMpyNLKoc40x
+         p+vw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1749763682; x=1750368482;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=v/jVN4FCRaxQzsD77p3tTDX0LkCrSNulyTd+dxPmoWs=;
+        b=l9ExXP6KeQYQqOdUeVKjBnTRwSbiWUBJw1/2EPzSGqGbWacPISYrhZBrhMzljwXm0Q
+         BkQYOcILRkncYrAf08RbpYWZkiqQ3q4BMM7d/FQZ1wXWAcuqejdJ4toZ1OZgMHkkRBXp
+         1RnIBuy7jP8vAGqDEyFIBBB1q1Xwr/D6XLwtxzBqYLpYK/AbeBu/ouIVBDtLacIhTTX/
+         I2kGcOYZ7TJUwezsVCr1fNNo7YfyyfV0fnbNXgPq3QF9+piaWMA5lNHgPWudyzb0HEUC
+         7SkT9ENXtAvNDKTA/N+Vhl5ZFgADHgT13HXZghc1LifSkHhtNdt7SgNBlxZAFHhLMcK4
+         Khxg==
+X-Forwarded-Encrypted: i=1; AJvYcCUdLSZ8mDNPYiZDR2RkVadGQg70cex18RXOVigRaTCqeZfDpE0wWb+7YwqmJsHo5/ATK8db8ee9IlgLojOvPqE11gJy@vger.kernel.org, AJvYcCWZD2Qxr/8NBtMkWfcOrUdG9619rVMs+D6b7R3xfCOHPTBCt9gOAOa1odpWfiFV/6hm7a4=@vger.kernel.org, AJvYcCX7rDzY9ga6KSwwx3LzNgI6gaUZ9HKDEul3pnTaDwhqQ1o/ouGzSE3mRSkOrV4d8HE+PVU5RXcJEXAU1N2c@vger.kernel.org
+X-Gm-Message-State: AOJu0YzZNaUabELnaHwIwpp6sbDjY7NNlAHLL5h9XCdlZo6AkXA2dhpW
+	N9e+44oQm5CPczceGhbgaO8cu22yECfyvk/g1hkv2i3iJy3wN7MRGWgNXCjjk23AhjVFFsc1HLb
+	LoeIg1uI6gUIUGadq8hhGMUOaBFwCwFQ=
+X-Gm-Gg: ASbGncs9H5F68jZgfyPOS4j6ITe6AfNwAD8krJuv7xm0W4enKLmyZwBCq0iVd+B12Yj
+	kEdfEnJF1VbxqUq9PQ8HdLzkRgYrKLbTffKgmM8qyX9YKa1WHw/27pcClmo46UFbFsEfYj4wzz2
+	GeJLyan/uNa5Cvkm3plOQ9tBVtKqoszzPd8ItNOkrSv3DI+a48wmnJy/rONPM=
+X-Google-Smtp-Source: AGHT+IHC71UZaYX6LBU/R1I5IFL9TBpwhd5z6utXefL5DI7/jMlJA/Vzpc/3QGBxhZAe7aFb0RkhQsxJO9pQouTlCgM=
+X-Received: by 2002:a05:6a20:7fa3:b0:1ee:e33d:f477 with SMTP id
+ adf61e73a8af0-21facbc3112mr701553637.15.1749763682304; Thu, 12 Jun 2025
+ 14:28:02 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-Stat-Signature: u9qzqba3sbjuss5rnceuh3fo6gok7das
-X-Rspamd-Server: rspamout04
-X-Rspamd-Queue-Id: 43A8220010
-X-Session-Marker: 6E657665747340676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX19FFybcoQc1IEhFothZu6rsSnE/QAd4I/U=
-X-HE-Tag: 1749763500-295858
-X-HE-Meta: U2FsdGVkX1/j5UlrzR+HDEpRPi6KS7T4Ux1FzgznzSfyAYaaxe2IbU60ruu+rJ2SvfXxQ8XmQ3LE0Rc6+XRuoLFG2kAdiwchKTUmviC9MEdxcZrWfOu+7BBkTS9vVFiF9898NdTt6v9LFIgdsMg0LJK16ReU9Gk6S+FK7MhWMHRkhNY6cNB5F04jFqvf72TgJyTMRj7966xIgretl0rpgrM8i47XcnjcGm+XfRpky4Le2AsoIjdizg0DFCRSECrYNDm5PXBEDcArriviLzx72M9LNyLAsOahxUDoD6AHB9Snl4QPYepIXv1DPjOooaWQzfPmuDLZ0WAsVT8lMitKm15eqzduyKNmGlmyctPy90uu+b9NVAZ0k05XjgaHDFhlMgyoe1Nhsvb/zxGNTc6b/w==
+References: <20250612115556.295103-1-chen.dylane@linux.dev>
+In-Reply-To: <20250612115556.295103-1-chen.dylane@linux.dev>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Thu, 12 Jun 2025 14:27:49 -0700
+X-Gm-Features: AX0GCFttX6D2UIAegCADzLgzq3nurhhoxgD7HPEfDH6erHkUkFSrCjNJPjF5G_k
+Message-ID: <CAEf4BzbxGS85nKK8qAYkSE1HEj7hVshmr9xGsZcP5di0Fu02xQ@mail.gmail.com>
+Subject: Re: [PATCH bpf-next 1/2] bpf: Add show_fdinfo for uprobe_multi
+To: Tao Chen <chen.dylane@linux.dev>
+Cc: ast@kernel.org, daniel@iogearbox.net, andrii@kernel.org, 
+	martin.lau@linux.dev, eddyz87@gmail.com, song@kernel.org, 
+	yonghong.song@linux.dev, john.fastabend@gmail.com, kpsingh@kernel.org, 
+	sdf@fomichev.me, haoluo@google.com, jolsa@kernel.org, 
+	mattbobrowski@google.com, rostedt@goodmis.org, mhiramat@kernel.org, 
+	mathieu.desnoyers@efficios.com, bpf@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Steven Rostedt <rostedt@goodmis.org>
+On Thu, Jun 12, 2025 at 4:56=E2=80=AFAM Tao Chen <chen.dylane@linux.dev> wr=
+ote:
+>
+> Show uprobe_multi link info with fdinfo, the info as follows:
+>
+> link_type:      uprobe_multi
+> link_id:        9
+> prog_tag:       e729f789e34a8eca
+> prog_id:        39
+> type:   uprobe_multi
+> func_cnt:       3
+> pid:    0
+> path:   /home/dylane/bpf/tools/testing/selftests/bpf/test_progs
+> offset: 0xa69ed7
+> ref_ctr_offset: 0x0
+> cookie: 3
+> offset: 0xa69ee2
+> ref_ctr_offset: 0x0
+> cookie: 1
+> offset: 0xa69eed
+> ref_ctr_offset: 0x0
+> cookie: 2
+>
+> Signed-off-by: Tao Chen <chen.dylane@linux.dev>
+> ---
+>  kernel/trace/bpf_trace.c | 48 ++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 48 insertions(+)
+>
+> diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
+> index 24b94870b50..c4ad82b8fd8 100644
+> --- a/kernel/trace/bpf_trace.c
+> +++ b/kernel/trace/bpf_trace.c
+> @@ -3157,10 +3157,58 @@ static int bpf_uprobe_multi_link_fill_link_info(c=
+onst struct bpf_link *link,
+>         return err;
+>  }
+>
+> +#ifdef CONFIG_PROC_FS
+> +static void bpf_uprobe_multi_show_fdinfo(const struct bpf_link *link,
+> +                                        struct seq_file *seq)
+> +{
+> +       struct bpf_uprobe_multi_link *umulti_link;
+> +       char *p, *buf;
+> +
+> +       umulti_link =3D container_of(link, struct bpf_uprobe_multi_link, =
+link);
+> +
+> +       buf =3D kmalloc(PATH_MAX, GFP_KERNEL);
+> +       if (!buf)
+> +               return;
+> +
+> +       p =3D d_path(&umulti_link->path, buf, PATH_MAX);
+> +       if (IS_ERR(p)) {
+> +               kfree(buf);
+> +               return;
+> +       }
+> +
+> +       seq_printf(seq,
+> +                  "type:\t%s\n"
+> +                  "func_cnt:\t%u\n"
 
-When the function xfs_flushinval_pages() was removed, it removed the only
-caller to the trace event xfs_pagecache_inval. As trace events can take up
-to 5K of memory in text and meta data each regardless if they are used or
-not, they should not be created when unused. Remove the unused event.
-
-Fixes: fb59581404ab ("xfs: remove xfs_flushinval_pages")
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
- fs/xfs/xfs_trace.h | 25 -------------------------
- 1 file changed, 25 deletions(-)
-
-diff --git a/fs/xfs/xfs_trace.h b/fs/xfs/xfs_trace.h
-index 277402801394..ee21ce3651a5 100644
---- a/fs/xfs/xfs_trace.h
-+++ b/fs/xfs/xfs_trace.h
-@@ -1893,31 +1893,6 @@ DEFINE_EVENT(xfs_itrunc_class, name, \
- DEFINE_ITRUNC_EVENT(xfs_itruncate_extents_start);
- DEFINE_ITRUNC_EVENT(xfs_itruncate_extents_end);
- 
--TRACE_EVENT(xfs_pagecache_inval,
--	TP_PROTO(struct xfs_inode *ip, xfs_off_t start, xfs_off_t finish),
--	TP_ARGS(ip, start, finish),
--	TP_STRUCT__entry(
--		__field(dev_t, dev)
--		__field(xfs_ino_t, ino)
--		__field(xfs_fsize_t, size)
--		__field(xfs_off_t, start)
--		__field(xfs_off_t, finish)
--	),
--	TP_fast_assign(
--		__entry->dev = VFS_I(ip)->i_sb->s_dev;
--		__entry->ino = ip->i_ino;
--		__entry->size = ip->i_disk_size;
--		__entry->start = start;
--		__entry->finish = finish;
--	),
--	TP_printk("dev %d:%d ino 0x%llx disize 0x%llx start 0x%llx finish 0x%llx",
--		  MAJOR(__entry->dev), MINOR(__entry->dev),
--		  __entry->ino,
--		  __entry->size,
--		  __entry->start,
--		  __entry->finish)
--);
--
- TRACE_EVENT(xfs_bunmap,
- 	TP_PROTO(struct xfs_inode *ip, xfs_fileoff_t fileoff, xfs_filblks_t len,
- 		 int flags, unsigned long caller_ip),
--- 
-2.47.2
+it's not really *func* (e.g., for USDTs it's basically guaranteed to
+be somewhere inside the function, potentially in many places within
+the same function), I'd use generic "uprobe_{cnt,count}"
 
 
+> +                  "pid:\t%u\n"
+> +                  "path:\t%s\n",
+> +                  umulti_link->flags =3D=3D BPF_F_UPROBE_MULTI_RETURN ?
+> +                                        "uretprobe_multi" : "uprobe_mult=
+i",
+> +                  umulti_link->cnt,
+> +                  umulti_link->task ? task_pid_nr_ns(umulti_link->task,
+> +                          task_active_pid_ns(current)) : 0,
+> +                  p);
+> +
+> +       for (int i =3D 0; i < umulti_link->cnt; i++) {
+> +               seq_printf(seq,
+> +                          "offset:\t%#llx\n"
+> +                          "ref_ctr_offset:\t%#lx\n"
+> +                          "cookie:\t%llu\n",
+> +                          umulti_link->uprobes[i].offset,
+> +                          umulti_link->uprobes[i].ref_ctr_offset,
+> +                          umulti_link->uprobes[i].cookie);
+> +       }
+> +
+> +       kfree(buf);
+> +}
+> +#endif
+> +
+>  static const struct bpf_link_ops bpf_uprobe_multi_link_lops =3D {
+>         .release =3D bpf_uprobe_multi_link_release,
+>         .dealloc_deferred =3D bpf_uprobe_multi_link_dealloc,
+>         .fill_link_info =3D bpf_uprobe_multi_link_fill_link_info,
+> +#ifdef CONFIG_PROC_FS
+> +       .show_fdinfo =3D bpf_uprobe_multi_show_fdinfo,
+> +#endif
+>  };
+>
+>  static int uprobe_prog_run(struct bpf_uprobe *uprobe,
+> --
+> 2.48.1
+>
