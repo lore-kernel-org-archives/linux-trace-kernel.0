@@ -1,103 +1,108 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay.hostedemail.com (smtprelay0015.hostedemail.com [216.40.44.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71A9713D539;
-	Thu, 12 Jun 2025 18:47:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02AB92D8DA1;
+	Thu, 12 Jun 2025 21:25:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749754021; cv=none; b=NlFWtEBDsPKNVlr/t5N8PHNhcFrWXQNp4A0dy/EzwDIllodns/ofcvxoRWZdOABwGyY2DMOEdOOGfrWPPpPmkXBFAfh6Y5cMFpA+GegczrGIFiKCPmmc0io29bT7PC8ERkhAmK5A+WPNmpODfHxHMKojA0wPj8IFrOvkySfAYGY=
+	t=1749763503; cv=none; b=OQ7978/BTtAwEE6tCLKkha/FeUjntc4UKxQUec7Xq5B1LBBLMKmsqf2IdD3pkKlf1CgNf+u3TD/2AretD583yUTflPFmXPSCsy+yZ0e6ffK8uR9q3uCowA1Fc/0Hfg7hztTNlt8i9Tx5lnmDILGl40/CQBH9KV6owD/0rgtDHtc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749754021; c=relaxed/simple;
-	bh=rae+Xy+GVeClcCuswO7WbVtIsL71ZmU4FtcEUBegmnw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=JrOLie8W7A/P4toljWIbIMYpinyAPdpYs2TiHSo1k7Z0FtOg+YWtVsXlCzk01L+ah4Sy5oBdVtsRoQ9GUeLRuIGjVVprsUCPcqT5E4MJpmgxPoeuUJt2lr6zB7ukStZ/DJnmwpMrzfYXu4b654V4fVVltobY+1J8WB78tVFMDhA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OjiiOam3; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OjiiOam3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 037DAC4CEF1;
-	Thu, 12 Jun 2025 18:47:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749754021;
-	bh=rae+Xy+GVeClcCuswO7WbVtIsL71ZmU4FtcEUBegmnw=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=OjiiOam3P0ES7NiE+EZJjuXt7LqkCLNruQnPCNpX06jpVlpRfuT+ibrxnDfCr0Qgc
-	 aVmenVGPayEVh2vBYKeO9OxkFdANxN+sF9dpZl1f50vhu/3TPnrU6fxMxryjugHJ0F
-	 OKC1MjSo8BZ23PZF3xzP0Pw8eXOEpdfMIwAETx+6iXATUZ93/ovbHZklNkYigseKK1
-	 JRcZtE7lzdX62ZT87N0AZ+XGacFN00z4cIWuGiWW2U8AK/gPVPESeseWd5DA9iYXhT
-	 6WAamqnLjbDyz5qKvoz8e790Q2osebh0BfhNUmWJDrQD/hrQJK+PMqsG/tGOBfkszj
-	 Rjk7GyUDVfOlA==
-Received: by mail-oo1-f54.google.com with SMTP id 006d021491bc7-6065251725bso871119eaf.1;
-        Thu, 12 Jun 2025 11:47:00 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCW1rHUBy2kx3KRoTGpddzPz9vqOvfzo9fqma0Dy5HIZttUG/Gv5k2u+6UmF3uDDutOvhPp1sjwKGw==@vger.kernel.org, AJvYcCW5JliNhPEphbk4qbS3oLyS/PPN+mgniZbpA0rIvZKbikGRfSqxnRXqXOEJOe/MXbxYJ4oMmB094zIIHWylep3up4C/@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz3RQllC2Qm/q7CRxpFFUr73tr2qJWC6gkW/5FOVkdJqtp76mtm
-	SOI2xKwz7TGVS7sU5GrTHOvZ4RDhvlDdYZ+UbR83QyzUV0mLIa1MAlAk7ni8ifMsnLR8e7gqCTa
-	556zKbwyesbYOrwzPWSnQPXlBcS3lQxc=
-X-Google-Smtp-Source: AGHT+IGVBH3lWI6ocKqXpduli60MAl5yPrTXUSBJUCNvpZ8YMVLXnRTpp4jSJe5p38bu5Vi5w5+ShdNClwr7F6Qn4V8=
-X-Received: by 2002:a05:6820:1a09:b0:60f:3be9:187a with SMTP id
- 006d021491bc7-61107aa1b27mr172114eaf.8.1749754020209; Thu, 12 Jun 2025
- 11:47:00 -0700 (PDT)
+	s=arc-20240116; t=1749763503; c=relaxed/simple;
+	bh=+VnxRD5xgKbSbKAayVo76MzO4o48C8v5QVinLZE+2NM=;
+	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
+	 Content-Type; b=YA77KjwoE1k4w6yUA8GzVA9IDGCD00LFMEfx7hhFeu8njU9hf2cpyNJc2oePiNZrHyMIoVhLuiIIAWKgDKmTW5wkoUJj9JtYpBhpKT3csVHaH5sGeLUHSr0DbLqjjdr7zt52Pky648SALa2YtWDh8NuMn1tBoqChuH42n7g95sE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf12.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay03.hostedemail.com (Postfix) with ESMTP id B5DE5B6D1A;
+	Thu, 12 Jun 2025 21:25:00 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: nevets@goodmis.org) by omf12.hostedemail.com (Postfix) with ESMTPA id 19D6817;
+	Thu, 12 Jun 2025 21:24:59 +0000 (UTC)
+Received: from rostedt by gandalf with local (Exim 4.98.2)
+	(envelope-from <rostedt@goodmis.org>)
+	id 1uPpRT-00000001tPV-1dpx;
+	Thu, 12 Jun 2025 17:26:35 -0400
+Message-ID: <20250612212635.247519894@goodmis.org>
+User-Agent: quilt/0.68
+Date: Thu, 12 Jun 2025 17:24:09 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org,
+ linux-xfs@vger.kernel.org
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Carlos  Maiolino <cem@kernel.org>,
+ Christoph Hellwig <hch@lst.de>,
+ "Darrick J. Wong" <djwong@kernel.org>
+Subject: [PATCH 04/14] xfs: Remove unused event xfs_ioctl_clone
+References: <20250612212405.877692069@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250612145310.563358597@goodmis.org>
-In-Reply-To: <20250612145310.563358597@goodmis.org>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Thu, 12 Jun 2025 20:46:48 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0iTrDBV7wG0gzpg3hzjBFWUdohquyVGta93uOhyoWpiLw@mail.gmail.com>
-X-Gm-Features: AX0GCFtmIZhBJxZjxq0ItKlhq1D_VGfvqSHyPe_kp82oXVvS-MbMbDdYCDMbVmA
-Message-ID: <CAJZ5v0iTrDBV7wG0gzpg3hzjBFWUdohquyVGta93uOhyoWpiLw@mail.gmail.com>
-Subject: Re: [PATCH 0/4] PM: tracing: Don't compile in unused trace events
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	linux-pm@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Andrew Morton <akpm@linux-foundation.org>, 
-	"Rafael J. Wysocki" <rafael@kernel.org>, Viresh Kumar <viresh.kumar@linaro.org>, 
-	Madhavan Srinivasan <maddy@linux.ibm.com>, Michael Ellerman <mpe@ellerman.id.au>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+X-Rspamd-Queue-Id: 19D6817
+X-Stat-Signature: kx8igcgjwy9gpbhui7ifb7upcfhgmnig
+X-Rspamd-Server: rspamout06
+X-Session-Marker: 6E657665747340676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX19ue6BR7hXq+rMopguYaK4WKcIAj67jf8w=
+X-HE-Tag: 1749763499-217513
+X-HE-Meta: U2FsdGVkX1+NcEH23Na+DHN4SSRC7qXmptdij8TmrSYUjrlbz7/3CCnAUcTCcp1V1+3ru9u3IULozNrp43vLUv+CSxAzp7g/A4tzaQSBhmiQd1fKNI6Igr3L19WKH/W5Xph5n0MLYq8sT1tEA9KRAQafB0U6kqGCGb0OTXFq3KOJk2FCqky0xG6SW5TbS+7C/1dm5F2kFjLFnx12/0PvSofd6bwpgr8h5exBUPKNrPiAL6Obg1gwWwg203NosqjPMgWqojsq0VZkMSj+xMT45HLcsjus8GyBquBgyaC56CXk9BtyyvWytR6BvTdFAk7mo3h+M1uSU9yeUvRftbs8sFTXTwz4r+i5+V1y1R1i6ubqhqyH6XOc0tloldL5wdP6khlRsoM3N7x6fg+l07ZF9A==
 
-On Thu, Jun 12, 2025 at 4:52=E2=80=AFPM Steven Rostedt <rostedt@goodmis.org=
-> wrote:
->
->
-> I have code that makes unsued events trigger a warning. I'm currently cle=
-aning
-> up the kernel to remove the majority of events that are defined but not u=
-sed.
-> When an event is defined, it can take up to 5K of text and meta data per
-> event. An event should not be created if it is not being used.
->
-> The powernv_throttle event is only used by the powernv code so I moved it=
- to
-> its own header file and it gets created when the powernv code is compiled=
- in.
->
-> For the other power events, I just added #ifdef around them with the conf=
-igs
-> that enable them.
->
-> Steven Rostedt (4):
->       PM: cpufreq: powernv/tracing: Move powernv_throttle trace event
->       PM: tracing: Hide psci_domain_idle events under ARM_PSCI_CPUIDLE
->       PM: tracing: Hide device_pm_callback events under PM_SLEEP
->       PM: tracing: Hide power_domain_target event under ARCH_OMAP2PLUS
->
-> ----
->  drivers/cpufreq/Makefile          |  1 +
->  drivers/cpufreq/powernv-cpufreq.c |  4 +++-
->  drivers/cpufreq/powernv-trace.h   | 44 +++++++++++++++++++++++++++++++++=
-++++++
->  include/trace/events/power.h      | 28 ++++++-------------------
->  kernel/trace/power-traces.c       |  1 -
->  5 files changed, 54 insertions(+), 24 deletions(-)
->  create mode 100644 drivers/cpufreq/powernv-trace.h
+From: Steven Rostedt <rostedt@goodmis.org>
 
-For the series:
+The trace event xfs_ioctl_clone was added but never used. As trace events
+can take up to 5K of memory in text and meta data regardless if they are
+used or not, remove the unused trace event.
 
-Acked-by: Rafael J. Wysocki <rafael@kernel.org>
+Fixes: 53aa1c34f4eb ("xfs: define tracepoints for reflink activities")
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+ fs/xfs/xfs_trace.h | 26 --------------------------
+ 1 file changed, 26 deletions(-)
 
-Thanks!
+diff --git a/fs/xfs/xfs_trace.h b/fs/xfs/xfs_trace.h
+index 049bf9e34063..ad686fe0a577 100644
+--- a/fs/xfs/xfs_trace.h
++++ b/fs/xfs/xfs_trace.h
+@@ -4210,32 +4210,6 @@ DEFINE_INODE_IREC_EVENT(xfs_reflink_remap_extent_dest);
+ DEFINE_DOUBLE_IO_EVENT(xfs_reflink_compare_extents);
+ DEFINE_INODE_ERROR_EVENT(xfs_reflink_compare_extents_error);
+ 
+-/* ioctl tracepoints */
+-TRACE_EVENT(xfs_ioctl_clone,
+-	TP_PROTO(struct inode *src, struct inode *dest),
+-	TP_ARGS(src, dest),
+-	TP_STRUCT__entry(
+-		__field(dev_t, dev)
+-		__field(unsigned long, src_ino)
+-		__field(loff_t, src_isize)
+-		__field(unsigned long, dest_ino)
+-		__field(loff_t, dest_isize)
+-	),
+-	TP_fast_assign(
+-		__entry->dev = src->i_sb->s_dev;
+-		__entry->src_ino = src->i_ino;
+-		__entry->src_isize = i_size_read(src);
+-		__entry->dest_ino = dest->i_ino;
+-		__entry->dest_isize = i_size_read(dest);
+-	),
+-	TP_printk("dev %d:%d ino 0x%lx isize 0x%llx -> ino 0x%lx isize 0x%llx",
+-		  MAJOR(__entry->dev), MINOR(__entry->dev),
+-		  __entry->src_ino,
+-		  __entry->src_isize,
+-		  __entry->dest_ino,
+-		  __entry->dest_isize)
+-);
+-
+ /* unshare tracepoints */
+ DEFINE_SIMPLE_IO_EVENT(xfs_reflink_unshare);
+ DEFINE_INODE_ERROR_EVENT(xfs_reflink_unshare_error);
+-- 
+2.47.2
+
+
