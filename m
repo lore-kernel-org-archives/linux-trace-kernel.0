@@ -1,32 +1,33 @@
-Received: from relay.hostedemail.com (smtprelay0016.hostedemail.com [216.40.44.16])
+Received: from relay.hostedemail.com (smtprelay0017.hostedemail.com [216.40.44.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A948A2AEED;
-	Thu, 12 Jun 2025 13:46:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78D1B23E331;
+	Thu, 12 Jun 2025 13:49:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749735987; cv=none; b=YYSpTgZso2krTKur74WoyJGhdfuwZfDrG7iTsMt9XIo8VCxxRTzSscx7FWT7y4excIv0AxffNcFuDSCwUBAuvSg5gMXKuD/WM/re3HiVAMOQ+muu9zn6jo7YPm/k2hCeOM+MQ/lpxORn7U1D7hSyiHwC12UuVBmrDurfJFEBFSw=
+	t=1749736180; cv=none; b=YzmklFGKAo97TCR4basqStVeBu8Ot4YrK4goKtdVCeZ+BPvE59JV00/H1sjximZw0na49bQCxT2gBEeq70AtyqJLwouur099+lnGVCBUr5qaGk3053L8PKLAKik/Git95CGoSFsFkM9v07Cj8wWbPflOEGAGwUOD9oztLBeMC1s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749735987; c=relaxed/simple;
-	bh=ynUZwpv0LBlzaUspg0SsHNS5dRCcMW5Kf7O4Iaw8l5o=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=Cg6IHKi6/n1fzdG3wSnMJrHlyBBRu9RYnQKtfnmdkggxFjuN5rZqxCiC5EZEJ9CtVvzkozlvRizlc2QhJxnv9TFeXVa0zM/SFOQaf9MGN8dfNilOz6pAoYlALoBK9ci/6w4wFl0U2f/AptTOENFBrBlqeXNkM6pi8xaZkcekQgc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.16
+	s=arc-20240116; t=1749736180; c=relaxed/simple;
+	bh=vM1Gi5glxeC0aGXXy6A4/jHdYsq0naNODjna/tMhEHc=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=GMRoAsntbmfkwwifeWWkNZ0XTbtl1SEdSZmv5NrNL0GFltAO3/V7JdryvQYdnWonA5jlJEdAqZcBPCTIMSKEAvsNg/vLj1QgYCCe2UJ1YD0jKVkn9MVVErOJMLfjYuwYA/PjHIwAnt/rwHLZNmKpTp1LimoqR/peWFN16lqzGwk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.17
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf18.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay06.hostedemail.com (Postfix) with ESMTP id 58942100C3E;
-	Thu, 12 Jun 2025 13:46:18 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf18.hostedemail.com (Postfix) with ESMTPA id 6335E30;
-	Thu, 12 Jun 2025 13:46:16 +0000 (UTC)
-Date: Thu, 12 Jun 2025 09:46:16 -0400
+Received: from omf06.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay05.hostedemail.com (Postfix) with ESMTP id C8A845F824;
+	Thu, 12 Jun 2025 13:49:34 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf06.hostedemail.com (Postfix) with ESMTPA id EAF6F2000E;
+	Thu, 12 Jun 2025 13:49:32 +0000 (UTC)
+Date: Thu, 12 Jun 2025 09:49:32 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
 To: LKML <linux-kernel@vger.kernel.org>, Linux trace kernel
- <linux-trace-kernel@vger.kernel.org>, netdev@vger.kernel.org
+ <linux-trace-kernel@vger.kernel.org>, linux-edac@vger.kernel.org
 Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Eric Dumazet <edumazet@google.com>, Neal
- Cardwell <ncardwell@google.com>, Kuniyuki Iwashima <kuniyu@amazon.com>
-Subject: [PATCH] net/tcp_ao: tracing: Hide tcp_ao events under CONFIG_TCP_AO
-Message-ID: <20250612094616.4222daf0@batman.local.home>
+ <mathieu.desnoyers@efficios.com>, Borislav Petkov <bp@alien8.de>, Tony Luck
+ <tony.luck@intel.com>
+Subject: [PATCH] tracing, AER: Hide PCIe AER event when PCIEAER is not
+ configured
+Message-ID: <20250612094932.4a08abd6@batman.local.home>
 X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -36,48 +37,49 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: 6335E30
-X-Stat-Signature: 7y6jrrodeaqdincwbm4ks16c8s8mep8k
-X-Rspamd-Server: rspamout06
+X-Rspamd-Queue-Id: EAF6F2000E
+X-Rspamd-Server: rspamout08
+X-Stat-Signature: h4h7shhgddtenk6kgi5y5d97tqqa349s
 X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX18Q3W6llJvLwbjK3ADzrmeycf7ZFPSp9Xg=
-X-HE-Tag: 1749735976-138990
-X-HE-Meta: U2FsdGVkX1+1xXBpq6pG4SxWvRgVynsXgeL23sLYLZfNLLnbRtjDD26172GO4kFcM0fe75cBqTZLugVDvn+QXX+8C99upFENsVgFbWcTzSK9UWLG3KjqxdFssJk963r86YzcikTYEksUdpWtzNCeG6ZqubTVfMWhyszMkyVQHBYYDXbDh4wVcNOXQ72+YhwDdXx8mJqnz5JzTg25m/JmVpD1oD73Tb3nWAoRIQu9aj+RNivZWCetwt22PVayDk9W4lQ/ZDzMB1jlkrZNPzAzJooh2PxnwvST4ZfoVHSF39oxLHY7FtGEoaeC1uMQLsHALK1DyaEKUFtJbcQIkX8b2Da3VnP69hY/UOwa7GFXSqUmqSKrDzFYQ2aHtrwHBZUJ
+X-Session-ID: U2FsdGVkX18qPn9fd4gpyTjIqY3M7LdPyC4AqqEL6vs=
+X-HE-Tag: 1749736172-257217
+X-HE-Meta: U2FsdGVkX1/QpRpaxewuMvZQgpfNj6y0FJfkyv1wp4EKYBLc3jQqFcQaRZEEKaXs9wVBCCR4cOYNqVGE/dVATGTcbxB6SmUgjfJE2my6vmRhmVuvcPh28tKulzk8zi6BMyZo76vRmQfBB9LqUKdS4/PxLDcwy0Swt4ePhrMSysSCpX3FaljMOlVaf3oMYksvhZbGL/Sb/ef1ClFcqj4rIYqcFMMtOBV6YIFuaiyC6L2xGqbN/iZy6hC88GE+wTVVbQuSePEKozKnuKpVAAXQXQ2+jB0dCEyfBzqSCMgnGXGm126ykz9nbgokcpL0y5FWzBU+A4b3t+uK5Jy4gU4lWnaPABOhGjupWbShQLL6G5eCKv0xIsD3Y0yAJvkgQORO
 
 From: Steven Rostedt <rostedt@goodmis.org>
 
-Several of the tcp_ao events are only called when CONFIG_TCP_AO is
-defined. As each event can take up to 5K regardless if they are used or
-not, it's best not to define them when they are not used. Add #ifdef
-around these events when they are not used.
+The event aer_event is only used when CONFIG_PCIEAER is configured. It
+should not be created when it is not. When an event is created it creates
+around 5K of text and meta data regardless if the tracepoint is used or
+not. Instead of wasting this memory, put #ifdef around the event to not
+create it when it is not used.
 
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
-Note, I will be adding code soon that will make unused event cause a warning.
+Note, I will be adding code soon that will make unused events cause a warning.
 
- include/trace/events/tcp.h | 2 ++
+ include/ras/ras_event.h | 2 ++
  1 file changed, 2 insertions(+)
 
-diff --git a/include/trace/events/tcp.h b/include/trace/events/tcp.h
-index 95f59c1a6f57..54e60c6009e3 100644
---- a/include/trace/events/tcp.h
-+++ b/include/trace/events/tcp.h
-@@ -692,6 +692,7 @@ DEFINE_EVENT(tcp_ao_event, tcp_ao_handshake_failure,
- 	TP_ARGS(sk, skb, keyid, rnext, maclen)
+diff --git a/include/ras/ras_event.h b/include/ras/ras_event.h
+index 14c9f943d53f..c8cd0f00c845 100644
+--- a/include/ras/ras_event.h
++++ b/include/ras/ras_event.h
+@@ -252,6 +252,7 @@ TRACE_EVENT(non_standard_event,
+ 		  __print_hex(__get_dynamic_array(buf), __entry->len))
  );
  
-+#ifdef CONFIG_TCP_AO
- DEFINE_EVENT(tcp_ao_event, tcp_ao_wrong_maclen,
- 	TP_PROTO(const struct sock *sk, const struct sk_buff *skb,
- 		 const __u8 keyid, const __u8 rnext, const __u8 maclen),
-@@ -830,6 +831,7 @@ DEFINE_EVENT(tcp_ao_event_sne, tcp_ao_rcv_sne_update,
- 	TP_PROTO(const struct sock *sk, __u32 new_sne),
- 	TP_ARGS(sk, new_sne)
++#ifdef CONFIG_PCIEAER
+ /*
+  * PCIe AER Trace event
+  *
+@@ -337,6 +338,7 @@ TRACE_EVENT(aer_event,
+ 			__print_array(__entry->tlp_header, PCIE_STD_MAX_TLP_HEADERLOG, 4) :
+ 			"Not available")
  );
-+#endif /* CONFIG_TCP_AO */
++#endif /* CONFIG_PCIEAER */
  
- #endif /* _TRACE_TCP_H */
- 
+ /*
+  * memory-failure recovery action result event
 -- 
 2.47.2
 
