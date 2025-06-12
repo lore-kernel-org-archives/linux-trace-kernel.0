@@ -1,80 +1,80 @@
 Received: from relay.hostedemail.com (smtprelay0011.hostedemail.com [216.40.44.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00CA3248888;
-	Thu, 12 Jun 2025 14:41:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D0F026C397;
+	Thu, 12 Jun 2025 14:52:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749739285; cv=none; b=lMmWGjXqY7srxbN+VEYgE0E8hGxz9jRztJ8m6D+rhXG9HD0uoa9D3B6WJ9rYifV0vocUc8nsmuIup5W7Yd+2X5uWapEwv3qg296MjJsLpx7vHj4SE4EQWw0/tzCIKVS8QSPjT3nVBnBLXml/6z4x93CKRmzDKZTygrNiwTQtcLI=
+	t=1749739958; cv=none; b=c9I8W12YzzWVZu4mTPAVKsEk5seYehqEtVeAmuME51M6+T38ILa0Rb6WilqoCRnYDFdfwZr/DXVV+znXmAkDI5rx0+YnjCjwX0ytMxYEAnAwAs+GjuQqwjGe5+tNYt466OdNyVqD6tdbkdi3jIAoKPRb3eNYRfLxixvxeC7Q4mI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749739285; c=relaxed/simple;
-	bh=LFbsH10WLiGBngvFPh44/deNfnqtaymDaLb4kT/e05U=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=krdIU2bVQ+Uu7hG94w4zJKdrao37djGpRiCMLe+dMx1K8cW+V1gb4Vfgm0EJ81HC7jXDfOQyygm+ZmSs6vvIo4ZDlnBqcnxzPuaPxGCSiC8U4Ge/XCap4vGEwyxR/X1tQshAoGMUwudsVrhOmtdLVQNEknGpseNp7FQflQjU4fs=
+	s=arc-20240116; t=1749739958; c=relaxed/simple;
+	bh=SNJt80qACwYsMfBYoQhUvMzRumLNnmU93cx7xgvWIhA=;
+	h=Message-ID:Date:From:To:Cc:Subject; b=a+4Xd1Q3GB2UuDcVg2a4IiLLVzHtVfdtdoA/p+vq1rjY0GeDmERupajVOzpPp+BNqw238XzHKP/3wHLCnuXUXORm6rGk+3DMnDgLv2zjHecRWuMwhNi/YbV7w9YIVlG1xdPoHycPAC+bk2HBHSWGka4fshwTdc+LpVd0ww8fsM0=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.11
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf15.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay04.hostedemail.com (Postfix) with ESMTP id CEB5D1A1783;
-	Thu, 12 Jun 2025 14:41:20 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf15.hostedemail.com (Postfix) with ESMTPA id 74D8122;
-	Thu, 12 Jun 2025 14:41:17 +0000 (UTC)
-Date: Thu, 12 Jun 2025 10:41:15 -0400
+Received: from omf08.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay07.hostedemail.com (Postfix) with ESMTP id 14D5E16172E;
+	Thu, 12 Jun 2025 14:52:34 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: nevets@goodmis.org) by omf08.hostedemail.com (Postfix) with ESMTPA id 50B2120027;
+	Thu, 12 Jun 2025 14:52:32 +0000 (UTC)
+Received: from rostedt by gandalf with local (Exim 4.98.2)
+	(envelope-from <rostedt@goodmis.org>)
+	id 1uPjJf-00000001lO7-3fv0;
+	Thu, 12 Jun 2025 10:54:07 -0400
+Message-ID: <20250612145310.563358597@goodmis.org>
+User-Agent: quilt/0.68
+Date: Thu, 12 Jun 2025 10:53:10 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
-To: Dave Hansen <dave.hansen@intel.com>
-Cc: LKML <linux-kernel@vger.kernel.org>, Linux trace kernel
- <linux-trace-kernel@vger.kernel.org>, linux-mm@kvack.org, x86@kernel.org,
- Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Dave Hansen
- <dave.hansen@linux.intel.com>, Andy Lutomirski <luto@kernel.org>, Thomas
- Gleixner <tglx@linutronix.de>, Peter Zijlstra <peterz@infradead.org>,
- Andrew Morton <akpm@linux-foundation.org>, Lorenzo Stoakes
- <lorenzo.stoakes@oracle.com>, David Hildenbrand <david@redhat.com>,
- Borislav Petkov <bp@alien8.de>
-Subject: Re: [PATCH] mm, x86/mm: Move creating the tlb_flush event back to
- x86 code
-Message-ID: <20250612104115.039a3817@batman.local.home>
-In-Reply-To: <2aec964c-ed7d-4e37-9649-cc0d20469142@intel.com>
-References: <20250612100313.3b9a8b80@batman.local.home>
-	<2aec964c-ed7d-4e37-9649-cc0d20469142@intel.com>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+To: linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org,
+ linux-pm@vger.kernel.org,
+ linuxppc-dev@lists.ozlabs.org
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ "Rafael J. Wysocki" <rafael@kernel.org>,
+ Viresh Kumar <viresh.kumar@linaro.org>,
+ Madhavan Srinivasan <maddy@linux.ibm.com>,
+ Michael Ellerman <mpe@ellerman.id.au>
+Subject: [PATCH 0/4] PM: tracing: Don't compile in unused trace events
+X-Rspamd-Queue-Id: 50B2120027
+X-Stat-Signature: 671yypn3d1k3f91qa3qgzfbjcctxm555
+X-Rspamd-Server: rspamout07
+X-Session-Marker: 6E657665747340676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1+HKFgC2IAPMdV6bVqFLIbbF0jglEfehXs=
+X-HE-Tag: 1749739952-202480
+X-HE-Meta: U2FsdGVkX18Zx3d1zrK96W9dRamojZiOj5sofUya+o14Daoe7ojSHmOmb2s5GCt5YqPHpM1G8bLnUG/WIUTBXwRBtJwYtlfgrxTX17b23DSwS0eZSUvTQkJFnB1mcwNkl+rR+yNlKs3HsGqZZZ/lU0baogzv2nP/UhAXHDG1oSB1QhuzC4BYT4Fr94+ZQJSMoxez9+vSEX6GDuWdy6ulboooEBha/F2H9AGjz8NDn6k4bqAf61sU3pb9w5KRCdc/TsCnaSiurMzym7k84yRzZW3IhWukYIFB5JY/R4GhyA8=
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: 74D8122
-X-Stat-Signature: 14hjkb4s3yoff3wm6gf659x3bwz7783f
-X-Rspamd-Server: rspamout07
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX196er8TgFlcvZzFV7v1dZa9COTqpYsEhew=
-X-HE-Tag: 1749739277-873154
-X-HE-Meta: U2FsdGVkX18wyPL2yuue7VL02ph12FgTwvegfaD4iTi35/VWqfSPLmLSGyNWfO2TO40aBJ4fT8UNWbBF5M5sSxew+Vv9NO8j4KZIoq0bByed8Fk7orVUocN2xfl2i3omDu2fDOwQB954fenIF65SwV5zmPVfre53F+YzfzeYzN4G1ZvNGWEQQtrhDf1uV4cvgNLOUMr5HnOVfzKGHoN2ym+0r53vP2dKCr4I/dCkFtOIg/MlaXGtA2QpYO1iHgF76TZ87v9qt4jfNvVTNtVf/5t7meV7cTL+1mcBe1Q/6rEdETi1BTP1ShfcYZx0yZ3SkCWuLWB+HAuxyv5Aml3PCLJZOgNZ0YYJ
 
-On Thu, 12 Jun 2025 07:06:47 -0700
-Dave Hansen <dave.hansen@intel.com> wrote:
 
-> On 6/12/25 07:03, Steven Rostedt wrote:
-> > Remove the events/tlb.h from mm/rmap.c and add the define
-> > CREATE_TRACE_POINTS back in the x86 code.
-> > 
-> > Fixes: 4cc79b3303f22 ("mm/migration: add trace events for base page and HugeTLB migrations")  
-> 
-> Is this a big enough problem that it deserves a cc:stable@?
+I have code that makes unsued events trigger a warning. I'm currently cleaning
+up the kernel to remove the majority of events that are defined but not used.
+When an event is defined, it can take up to 5K of text and meta data per
+event. An event should not be created if it is not being used.
 
-That's questionable. Without this patch, some memory is simply wasted.
-So it matters how much you care about wasted memory? On memory tight
-systems it may make a difference. But it's just one trace event, which
-would free up around 5K of memory.
+The powernv_throttle event is only used by the powernv code so I moved it to
+its own header file and it gets created when the powernv code is compiled in.
 
-I put in the fixes tag here because it was an obvious mistake that the
-header file wasn't removed from rmap.c when the call to the tracepoint
-was. Hmm, I think I put in the wrong fixes tag. I should probably be
-the other commit:
+For the other power events, I just added #ifdef around them with the configs
+that enable them.
 
-Fixes: e73ad5ff2f76 ("mm, x86/mm: Make the batched unmap TLB flush API more generic")
+Steven Rostedt (4):
+      PM: cpufreq: powernv/tracing: Move powernv_throttle trace event
+      PM: tracing: Hide psci_domain_idle events under ARM_PSCI_CPUIDLE
+      PM: tracing: Hide device_pm_callback events under PM_SLEEP
+      PM: tracing: Hide power_domain_target event under ARCH_OMAP2PLUS
 
--- Steve
+----
+ drivers/cpufreq/Makefile          |  1 +
+ drivers/cpufreq/powernv-cpufreq.c |  4 +++-
+ drivers/cpufreq/powernv-trace.h   | 44 +++++++++++++++++++++++++++++++++++++++
+ include/trace/events/power.h      | 28 ++++++-------------------
+ kernel/trace/power-traces.c       |  1 -
+ 5 files changed, 54 insertions(+), 24 deletions(-)
+ create mode 100644 drivers/cpufreq/powernv-trace.h
