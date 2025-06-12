@@ -1,34 +1,34 @@
 Received: from relay.hostedemail.com (smtprelay0015.hostedemail.com [216.40.44.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC75C22157F;
-	Thu, 12 Jun 2025 14:13:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A3CC42048;
+	Thu, 12 Jun 2025 14:16:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749737587; cv=none; b=GTYcc8cwC4+BOa6ug33Sx3E4mAPtSANAxS/QG8O6iJ9+xYQKM/Lsf+liHdk/52dSDmnL5vvcAL4YofXHtIsW0UWK3Km3GLQItCjoQU/WbgMExL7Bk8oDvUhjrWcYZEeBpVZmFySZI5dxcLfwMIVzDazjWSwTgfXmmeBlKLKJ6AQ=
+	t=1749737780; cv=none; b=Uj9v6AREAdWHLALE+ZgaWPdqn7PG8oDXk5IRlXsQf8H9thqns1MCQJe6Cxu2FUwoPypiHm+8WwRz55lujsS2qHlljw7wLaeBmxNECMpjcZgoC/64XtP5WStf0UGvK++Yqe+/jsU6zgbBzXerewsx6Aimb2u7cWGnbYY6Uju1no0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749737587; c=relaxed/simple;
-	bh=Rpnn5xMwFPnTBd6TTY6z/Yi1ye7/TyK0BtV8aMiEVRk=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=hGPmk0CrOGoiTuP48bETyWwlBQ+pU7seUTGBHeZTGD0bj+OBqQTp1O4W/PmUakBRhtkz87HENgQR9nIk7UdOoZuBelBMt3LhGbp1s82GYoc+jmsCNbAI+RKUStjyisyFuqghMc9VioGyDQA7JeP+dxeBq1e9CEZn2yGZxbh5cDY=
+	s=arc-20240116; t=1749737780; c=relaxed/simple;
+	bh=qrWplOJ10X4pm1s0y3f27TzILjMBsOKq8Qs8gbRCNso=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=oEfsNxt9MaE1G7TKAXkdkLbZENmyEzk1cKD6tvOfa4eqws/S2M0wR6CKu1V8hzbVmmBtlp683/EXLSTTLm5cdOCcHhVR49Ycx7o8gEPs1s27udUzlQo9hsx+3OFh7XloG3sdvm8h5kou05/bRLDtd8v6i3oWT2UVZCw73/sTCFU=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.15
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf17.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay09.hostedemail.com (Postfix) with ESMTP id ED80F81105;
-	Thu, 12 Jun 2025 14:13:02 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf17.hostedemail.com (Postfix) with ESMTPA id D4CE518;
-	Thu, 12 Jun 2025 14:13:00 +0000 (UTC)
-Date: Thu, 12 Jun 2025 10:12:59 -0400
+Received: from omf09.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay09.hostedemail.com (Postfix) with ESMTP id 523D181154;
+	Thu, 12 Jun 2025 14:16:16 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf09.hostedemail.com (Postfix) with ESMTPA id 11D9520034;
+	Thu, 12 Jun 2025 14:16:13 +0000 (UTC)
+Date: Thu, 12 Jun 2025 10:16:12 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
 To: LKML <linux-kernel@vger.kernel.org>, Linux trace kernel
- <linux-trace-kernel@vger.kernel.org>, linux-mm@kvack.org
+ <linux-trace-kernel@vger.kernel.org>, bpf@vger.kernel.org
 Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Andrew Morton
- <akpm@linux-foundation.org>, David Hildenbrand <david@redhat.com>, Madhavan
- Srinivasan <maddy@linux.ibm.com>, Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH] powerpc/thp: tracing: Hide hugepage events under
- CONFIG_PPC_BOOK3S_64
-Message-ID: <20250612101259.0ad43e48@batman.local.home>
+ <mathieu.desnoyers@efficios.com>, Alexei Starovoitov <ast@kernel.org>,
+ Daniel Borkmann <daniel@iogearbox.net>, "David S. Miller\" 
+ <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>, Jesper Dangaard 
+ Brouer <hawk@kernel.org>, John Fastabend <john.fastabend@gmail.com>
+Subject: [PATCH] xdp: tracing: Hide some xdp events under CONFIG_BPF_SYSCALL
+Message-ID: <20250612101612.3d4509cc@batman.local.home>
 X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -38,49 +38,49 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Stat-Signature: bph8eeis91dcouz9rgjooibbaxyq1yrh
-X-Rspamd-Server: rspamout02
-X-Rspamd-Queue-Id: D4CE518
+X-Rspamd-Queue-Id: 11D9520034
+X-Rspamd-Server: rspamout08
+X-Stat-Signature: 9hqsohk4k1swyaj4fneziy7xjpjeeea7
 X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1/TNcbCQL4JSQd2WThmCKZIdmvrRbao+Pg=
-X-HE-Tag: 1749737580-822780
-X-HE-Meta: U2FsdGVkX1+l9YM5abWc5caLLQlplWKE+WQkJvUPSjXG5kG4eFjP+HIM2/a2LpO5jRBFVVvKGK5Dt5Wrtb1q64jWXnsO5l9ab27tqcNjb75RYUBiBD7M0J62l2cH7TSG1kd3z58eiTfTW928dek77QjPHuiNdToXVDAoqndf6gbqD7fnIGW4JNuoyF/QSdrr2EdufYw/lXM9pLVGN6c4/zHRRcKiCZMtjKzWOAY6gWZM/nwAXUlgMcmg52eaQKssksrYHBRiMZ0xLODygqNKD521zy3rOyE80bBFkeS/Ua8pqPK/TeYmNZPUg65ijCr1IvmqzAiwkGu5ieXeG2ACi6oQlnilmcjMK1E85Sxhg5WAVvGlfBetvlIvkffN5OhhLzFpYohGI5vNu6duHQCGRn53lTEF849O
+X-Session-ID: U2FsdGVkX18PXqm3lbcNbcwLPE/xFkUYzq26klDeJnA=
+X-HE-Tag: 1749737773-116136
+X-HE-Meta: U2FsdGVkX1/tmg2kusMKmWbH1yjUBWpNH4f4UUEmC1N4NlxI7UViqR/toP2SUNhWAharn5P649W28JDDyCeLq7qlCG7XlNQxYd/QGrH16eGCHUihy8alNT19WNh8+YFazlEQ80OnbeatjLvUplnZ/TF0WU95/zNrkftoizE5jU+/XY2k9uFVx7miw7uOdLtF68merSbsWeAbRnkYPrgOE4UQOgPQSbLJaNPjzGwYRvfbHwum6pD/b4Q5x8+GdQsE2jTZr4g2ym9m964e2mSizgO8E2WA+o36FjROQEIS9Phe9xAexS3VwoVleCCMLon7Eq5ReW06OsmxtiN6vGTSPoxy6JD+UvtoUcnFoOVv6LRDgKrJmWejjg8q56V65x4G
 
 From: Steven Rostedt <rostedt@goodmis.org>
 
-The events hugepage_set_pmd, hugepage_set_pud, hugepage_update_pmd and
-hugepage_update_pud are only called when CONFIG_PPC_BOOK3S_64 is defined.
-As each event can take up to 5K regardless if they are used or not, it's
-best not to define them when they are not used. Add #ifdef around these
-events when they are not used.
+The events xdp_cpumap_kthread, xdp_cpumap_enqueue and xdp_devmap_xmit are
+only called when CONFIG_BPF_SYSCALL is defined.  As each event can take up
+to 5K regardless if they are used or not, it's best not to define them
+when they are not used. Add #ifdef around these events when they are not
+used.
 
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
-Note, I will be adding code soon that will make unused events cause a warning.
+Note, I will be adding code soon that will make unused events cause a waring.
 
- include/trace/events/thp.h | 2 ++
+ include/trace/events/xdp.h | 2 ++
  1 file changed, 2 insertions(+)
 
-diff --git a/include/trace/events/thp.h b/include/trace/events/thp.h
-index f50048af5fcc..c8fe879d5828 100644
---- a/include/trace/events/thp.h
-+++ b/include/trace/events/thp.h
-@@ -8,6 +8,7 @@
- #include <linux/types.h>
- #include <linux/tracepoint.h>
+diff --git a/include/trace/events/xdp.h b/include/trace/events/xdp.h
+index 0fe0893c2567..18c0ac514fcb 100644
+--- a/include/trace/events/xdp.h
++++ b/include/trace/events/xdp.h
+@@ -168,6 +168,7 @@ DEFINE_EVENT(xdp_redirect_template, xdp_redirect_err,
+ #define _trace_xdp_redirect_map_err(dev, xdp, to, map_type, map_id, index, err) \
+ 	 trace_xdp_redirect_err(dev, xdp, to, err, map_type, map_id, index)
  
-+#ifdef CONFIG_PPC_BOOK3S_64
- DECLARE_EVENT_CLASS(hugepage_set,
++#ifdef CONFIG_BPF_SYSCALL
+ TRACE_EVENT(xdp_cpumap_kthread,
  
- 	    TP_PROTO(unsigned long addr, unsigned long pte),
-@@ -66,6 +67,7 @@ DEFINE_EVENT(hugepage_update, hugepage_update_pud,
- 	    TP_PROTO(unsigned long addr, unsigned long pud, unsigned long clr, unsigned long set),
- 	    TP_ARGS(addr, pud, clr, set)
+ 	TP_PROTO(int map_id, unsigned int processed,  unsigned int drops,
+@@ -281,6 +282,7 @@ TRACE_EVENT(xdp_devmap_xmit,
+ 		  __entry->sent, __entry->drops,
+ 		  __entry->err)
  );
-+#endif /* CONFIG_PPC_BOOK3S_64 */
++#endif /* CONFIG_BPF_SYSCALL */
  
- DECLARE_EVENT_CLASS(migration_pmd,
- 
+ /* Expect users already include <net/xdp.h>, but not xdp_priv.h */
+ #include <net/xdp_priv.h>
 -- 
 2.47.2
 
