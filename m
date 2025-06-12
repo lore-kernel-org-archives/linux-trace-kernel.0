@@ -1,123 +1,88 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CB432E62DA;
-	Thu, 12 Jun 2025 21:50:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1530921B9C5;
+	Thu, 12 Jun 2025 22:02:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749765038; cv=none; b=tKBssGT8Q/Pt5KJz04pJcGHk2zHkcsCCU88tzKHmxeRfvGy4UD3zOtjXA6ezHUSs6ruOpJYr1UXGlYlb0X80F4/lBzGX7v6BpI3IJWxVC5RSWHTk4stkFJ7VUymZJQ12IyyiHSnh2fZzuVVeFx70HSBSrsVfAsNxwDMkDKvkhUY=
+	t=1749765730; cv=none; b=TthvEJiAhb+jIe1lXY9VgJldVFIP8Z6M885eoZhOuBMWrZER5AaJ7u53EKNkhs6gV+0FwcKqyllGdCEp+P0AKPcHcQKY6Exq3y7K6ixYAdFzfVSx0PofD56xn7kFbJyJB6mSUcJlb8CSB/qS0+RxUd3iWpsCXLYk9gx+n4qRQ2Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749765038; c=relaxed/simple;
-	bh=HAJ/WUjo+26I25B8LZv9C58T13MdBKPP51Ed+aO6Hzc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ASztzlx9wtE+vt0p8j88jlfD7qYz2/oIb8aP+XlrKWmX5//IEl2m5rDtpaQXkEgwyTd6J45eGhFZcGTaOzNW+alCOLTH9+E8DgdY6obTpgh1rPd3I9G+yYJu+pOwZy16YNwX1hFxDMOBaOAgp4dONqcigTclV7FmtXRNqoATen0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LmtUbBWU; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1749765730; c=relaxed/simple;
+	bh=FSByyf8m0UgAvd7O4m9MAASg5nLIbzx8Gm82j24ErLk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VL319ZXvwsYk6fAPLWQGEIGsMz7DSwFrcywZeV5c7CpyDNLpELo8GIrkAlLxdKc8QVhBfIwCeNZ7RTlyiSXuEjowc2d1NRbfVGYo/pCV0Dd6/53CcsnXYSGSHe4TZ37E3mGRmgiQMV/t5VuvXCgSjJpNGgE6uxPzv6CmAZ0CFrs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iQyL3YmH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LmtUbBWU"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1749765037; x=1781301037;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=HAJ/WUjo+26I25B8LZv9C58T13MdBKPP51Ed+aO6Hzc=;
-  b=LmtUbBWUPASfVQNSGYgP+FS0eqPi7EmSC6aDmkNtLrGtUBfNpSWxhM/B
-   weos++PYbkhgJP78VLIlZhPK98vKpdFfkszpBGy/n/cha6jYvM94WBUOz
-   013cZm/7Dh9OhNMGAG5MyJllBuB/3gJCYU2GNG0LpAw3LlkYUaTuGx1On
-   FgpSgYsSOu5/cjMk5yIiV2yobCgCvZxe709zlbC1EUNnN8aX2HuE3Vcjj
-   +4Cjb6w55X2QXQ5EqycIOqzCO+sEP9l6rFSXg4BXU7U9z+SIsvwIILvSS
-   vEWPw6vP1uEdt1DCBdAJB/NHL7MOgUzHVvwjdHbnAAGb1VWpuF3tHumvH
-   Q==;
-X-CSE-ConnectionGUID: mpk+GHciSIaQcooH6X16jQ==
-X-CSE-MsgGUID: 9DKIFj24S7GMyR2vsMxIuA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11462"; a="52065412"
-X-IronPort-AV: E=Sophos;i="6.16,231,1744095600"; 
-   d="scan'208";a="52065412"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jun 2025 14:50:36 -0700
-X-CSE-ConnectionGUID: 6shFoTgzT5Oy0swil4gfEA==
-X-CSE-MsgGUID: YGQBP4BrTL+w7Bg/am6Chw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,231,1744095600"; 
-   d="scan'208";a="184882009"
-Received: from sohilmeh.sc.intel.com ([172.25.103.65])
-  by orviesa001.jf.intel.com with ESMTP; 12 Jun 2025 14:50:35 -0700
-From: Sohil Mehta <sohil.mehta@intel.com>
-To: x86@kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Xin Li <xin@zytor.com>,
-	"H . Peter Anvin" <hpa@zytor.com>,
-	Andy Lutomirski <luto@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Sean Christopherson <seanjc@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Tony Luck <tony.luck@intel.com>,
-	Zhang Rui <rui.zhang@intel.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Sohil Mehta <sohil.mehta@intel.com>,
-	Andrew Cooper <andrew.cooper3@citrix.com>,
-	"Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
-	Jacob Pan <jacob.pan@linux.microsoft.com>,
-	Andi Kleen <ak@linux.intel.com>,
-	Kai Huang <kai.huang@intel.com>,
-	Sandipan Das <sandipan.das@amd.com>,
-	linux-perf-users@vger.kernel.org,
-	linux-edac@vger.kernel.org,
-	kvm@vger.kernel.org,
-	linux-pm@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH v7 10/10] x86/nmi: Print source information with the unknown NMI console message
-Date: Thu, 12 Jun 2025 14:48:49 -0700
-Message-ID: <20250612214849.3950094-11-sohil.mehta@intel.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250612214849.3950094-1-sohil.mehta@intel.com>
-References: <20250612214849.3950094-1-sohil.mehta@intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iQyL3YmH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1E3A5C4CEED;
+	Thu, 12 Jun 2025 22:02:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749765729;
+	bh=FSByyf8m0UgAvd7O4m9MAASg5nLIbzx8Gm82j24ErLk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=iQyL3YmHYPx9iMTZ/0mR8JLnfgh6jwPeEsWhpHQUXVS9fFTvMXdZCFpjlgJs2Vuc/
+	 46XTCnSt4fq0L7Au4pIrnBofvMw4nNz7ONnm5PGsqHzCahUKK/GKNfHsx7XAvChEo9
+	 khEBKpLa+1p92ToFsdXS6qUYiL5MSCBc78g8AEa8w/dFED850bc814aiq4C79Q+ueb
+	 poeRRbgsJRQ2D/h0K0yeRs7MqnK9vEqgWFd+ykcbUThQcvKpzo3gcWbUmUHhmEl1ni
+	 CdzhLo5oCJfVo/Ik7CJzmLjxMbwAnB4r4fkQT1QiAZ/q/sKEULDZvVp7SulmMk8ma/
+	 IEkvS9RGPCH0g==
+Date: Thu, 12 Jun 2025 15:02:05 -0700
+From: Josh Poimboeuf <jpoimboe@kernel.org>
+To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>, linux-kernel@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org, x86@kernel.org, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
+	Namhyung Kim <namhyung@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, 
+	Andrii Nakryiko <andrii@kernel.org>, Indu Bhagat <indu.bhagat@oracle.com>, 
+	"Jose E. Marchesi" <jemarch@gnu.org>, Beau Belgrave <beaub@linux.microsoft.com>, 
+	Jens Remus <jremus@linux.ibm.com>, Linus Torvalds <torvalds@linux-foundation.org>, 
+	Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH v10 00/14] unwind_user: x86: Deferred unwinding
+ infrastructure
+Message-ID: <ldnmzsofhpy7rxk7rslgs5mevep7s22ltaqd7pxuoshs67flvm@cakolwpjdkwm>
+References: <20250611005421.144238328@goodmis.org>
+ <CAEf4BzZ9-wScwgYAc5ubEttZyZYUfkuAhr3dYiaqoVYu=yWKog@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAEf4BzZ9-wScwgYAc5ubEttZyZYUfkuAhr3dYiaqoVYu=yWKog@mail.gmail.com>
 
-The NMI-source bitmap is a useful piece of information provided by the
-NMI-source reporting feature. It is very helpful for debugging unknown
-NMIs, as it can pinpoint the exact source that caused the NMI.
+On Thu, Jun 12, 2025 at 02:44:18PM -0700, Andrii Nakryiko wrote:
+> On Tue, Jun 10, 2025 at 6:03 PM Steven Rostedt <rostedt@goodmis.org> wrote:
+> >
+> >
+> > Hi Peter and Ingo,
+> >
+> > This is the first patch series of a set that will make it possible to be able
+> > to use SFrames[1] in the Linux kernel. A quick recap of the motivation for
+> > doing this.
+> >
+> > Currently the only way to get a user space stack trace from a stack
+> > walk (and not just copying large amount of user stack into the kernel
+> > ring buffer) is to use frame pointers. This has a few issues. The biggest
+> > one is that compiling frame pointers into every application and library
+> > has been shown to cause performance overhead.
+> >
+> > Another issue is that the format of the frames may not always be consistent
+> > between different compilers and some architectures (s390) has no defined
+> > format to do a reliable stack walk. The only way to perform user space
+> > profiling on these architectures is to copy the user stack into the kernel
+> > buffer.
+> >
+> > SFrames is now supported in gcc binutils and soon will also be supported
+> > by LLVM. SFrames acts more like ORC, and lives in the ELF executable
+> 
+> Is there any upstream PR or discussion for SFrames support in LLVM to
+> keep track of?
 
-Print the complete source bitmap along with the "unknown NMI" kernel log
-message, since unexpected sources might have triggered the NMI.
+https://github.com/llvm/llvm-project/issues/64449
 
-Signed-off-by: Sohil Mehta <sohil.mehta@intel.com>
----
-v7: No change.
-
-v6: Drop the tracepoint modification part for now.
-
-v5: New patch
----
- arch/x86/kernel/nmi.c | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/arch/x86/kernel/nmi.c b/arch/x86/kernel/nmi.c
-index 3d2b636e9379..0b5bb20c5eb7 100644
---- a/arch/x86/kernel/nmi.c
-+++ b/arch/x86/kernel/nmi.c
-@@ -379,6 +379,9 @@ unknown_nmi_error(unsigned char reason, struct pt_regs *regs)
- 	pr_emerg_ratelimited("Uhhuh. NMI received for unknown reason %02x on CPU %d.\n",
- 			     reason, smp_processor_id());
- 
-+	if (cpu_feature_enabled(X86_FEATURE_NMI_SOURCE))
-+		pr_emerg_ratelimited("NMI-source bitmap is 0x%lx\n", fred_event_data(regs));
-+
- 	if (unknown_nmi_panic || panic_on_unrecovered_nmi)
- 		nmi_panic(regs, "NMI: Not continuing");
- 
 -- 
-2.43.0
-
+Josh
