@@ -1,33 +1,33 @@
-Received: from relay.hostedemail.com (smtprelay0017.hostedemail.com [216.40.44.17])
+Received: from relay.hostedemail.com (smtprelay0015.hostedemail.com [216.40.44.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78D1B23E331;
-	Thu, 12 Jun 2025 13:49:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 292BE244677;
+	Thu, 12 Jun 2025 13:58:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749736180; cv=none; b=YzmklFGKAo97TCR4basqStVeBu8Ot4YrK4goKtdVCeZ+BPvE59JV00/H1sjximZw0na49bQCxT2gBEeq70AtyqJLwouur099+lnGVCBUr5qaGk3053L8PKLAKik/Git95CGoSFsFkM9v07Cj8wWbPflOEGAGwUOD9oztLBeMC1s=
+	t=1749736721; cv=none; b=OZMWpU5fhR0w2vaCe6aAOwdqO8WOHH6A/SVKts7vlDxj/IlTIbMaPWWPUc4VzZprY/8SEQB0kRcqB8sI05BfZOTai9Ax1z2H/pOIp4zli3/6lDvJxJCgQUNbj+ckC6wsvKJjalr8pqkPLpc850E2pLqKCpX2XvNb+fr2s3HcehA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749736180; c=relaxed/simple;
-	bh=vM1Gi5glxeC0aGXXy6A4/jHdYsq0naNODjna/tMhEHc=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=GMRoAsntbmfkwwifeWWkNZ0XTbtl1SEdSZmv5NrNL0GFltAO3/V7JdryvQYdnWonA5jlJEdAqZcBPCTIMSKEAvsNg/vLj1QgYCCe2UJ1YD0jKVkn9MVVErOJMLfjYuwYA/PjHIwAnt/rwHLZNmKpTp1LimoqR/peWFN16lqzGwk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.17
+	s=arc-20240116; t=1749736721; c=relaxed/simple;
+	bh=5fG+ma7be2HXjLZY8eb1IqmlxKPaqchKCh/xX1V/3tc=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=MqiS91tHQWFYANLkyENnHw51ZEafTpAYcFqjPqpONSQDgivbgKS/aEMYskCdM9bbgYrTMb9w23w6IX1DhJt3gv7QPCUr0v4zN26te+esAiBYedf1urr+cPI+JHm4fvForGABjpbvab/NQWk78SNM6FYjaLHFMFkHt8MIumw81aE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.15
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf06.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay05.hostedemail.com (Postfix) with ESMTP id C8A845F824;
-	Thu, 12 Jun 2025 13:49:34 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf06.hostedemail.com (Postfix) with ESMTPA id EAF6F2000E;
-	Thu, 12 Jun 2025 13:49:32 +0000 (UTC)
-Date: Thu, 12 Jun 2025 09:49:32 -0400
+Received: from omf02.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay07.hostedemail.com (Postfix) with ESMTP id 2F5CE161545;
+	Thu, 12 Jun 2025 13:58:31 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf02.hostedemail.com (Postfix) with ESMTPA id 556FB80013;
+	Thu, 12 Jun 2025 13:58:29 +0000 (UTC)
+Date: Thu, 12 Jun 2025 09:58:28 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
 To: LKML <linux-kernel@vger.kernel.org>, Linux trace kernel
- <linux-trace-kernel@vger.kernel.org>, linux-edac@vger.kernel.org
+ <linux-trace-kernel@vger.kernel.org>
 Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Borislav Petkov <bp@alien8.de>, Tony Luck
- <tony.luck@intel.com>
-Subject: [PATCH] tracing, AER: Hide PCIe AER event when PCIEAER is not
- configured
-Message-ID: <20250612094932.4a08abd6@batman.local.home>
+ <mathieu.desnoyers@efficios.com>, Thomas Gleixner <tglx@linutronix.de>,
+ Peter Zijlstra <peterz@infradead.org>
+Subject: [PATCH] alarmtimer: Hide alarmtimer_suspend event when RTC_CLASS is
+ not configured
+Message-ID: <20250612095828.6d75dfa3@batman.local.home>
 X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -37,49 +37,48 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: EAF6F2000E
-X-Rspamd-Server: rspamout08
-X-Stat-Signature: h4h7shhgddtenk6kgi5y5d97tqqa349s
+X-Rspamd-Queue-Id: 556FB80013
+X-Stat-Signature: rzt6kqk8ua561tgw3cbq78kzrcybddjk
+X-Rspamd-Server: rspamout07
 X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX18qPn9fd4gpyTjIqY3M7LdPyC4AqqEL6vs=
-X-HE-Tag: 1749736172-257217
-X-HE-Meta: U2FsdGVkX1/QpRpaxewuMvZQgpfNj6y0FJfkyv1wp4EKYBLc3jQqFcQaRZEEKaXs9wVBCCR4cOYNqVGE/dVATGTcbxB6SmUgjfJE2my6vmRhmVuvcPh28tKulzk8zi6BMyZo76vRmQfBB9LqUKdS4/PxLDcwy0Swt4ePhrMSysSCpX3FaljMOlVaf3oMYksvhZbGL/Sb/ef1ClFcqj4rIYqcFMMtOBV6YIFuaiyC6L2xGqbN/iZy6hC88GE+wTVVbQuSePEKozKnuKpVAAXQXQ2+jB0dCEyfBzqSCMgnGXGm126ykz9nbgokcpL0y5FWzBU+A4b3t+uK5Jy4gU4lWnaPABOhGjupWbShQLL6G5eCKv0xIsD3Y0yAJvkgQORO
+X-Session-ID: U2FsdGVkX18vTyB+un0k1UFtVDec50hBidb6Mf66z3k=
+X-HE-Tag: 1749736709-495039
+X-HE-Meta: U2FsdGVkX19IPBBr4fOfFrdKCfTM4a/mK0amP6fvrFRKcEu5wAOkqxt0EK+DfBOCMGOTf2HMVHpXyPeoZhzox9wHHqVatbDgDFW7Z/fXwfykuJsOzaedor0V4YdGrvZ7/JEpHoRxcEwoHGPzTUzik6I5vSyedFBS8AY2e9uu9X5oS9pd0QGY/zqazdLzIWi32ukVti3kKDio4B1+BbEcVBgvCgZQcB91r4nX8FGsnptAY9q+/J5axGDBFFPFiQRUjA+9Vut94HsHRFV20ieLwnuW+NYpvP/JtwRkI5dj0OQmct17Wmgp4SI6fDfeCVyFIZXldlq2hUVEh0fA61R4H4PWK4iDNjKPOq4fWNUnt8CQmqmy6ftUrvhshw0U41tt
 
 From: Steven Rostedt <rostedt@goodmis.org>
 
-The event aer_event is only used when CONFIG_PCIEAER is configured. It
-should not be created when it is not. When an event is created it creates
-around 5K of text and meta data regardless if the tracepoint is used or
-not. Instead of wasting this memory, put #ifdef around the event to not
-create it when it is not used.
+The trace event alarmtimer_suspend is only called when RTC_CLASS is not
+defined. As every event created can create up to 5K of text and meta data
+regardless if it is called or not it should not be created and waste
+memory. Hide the event when CONFIG_RTC_CLASS is not defined.
 
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
 Note, I will be adding code soon that will make unused events cause a warning.
 
- include/ras/ras_event.h | 2 ++
+ include/trace/events/alarmtimer.h | 2 ++
  1 file changed, 2 insertions(+)
 
-diff --git a/include/ras/ras_event.h b/include/ras/ras_event.h
-index 14c9f943d53f..c8cd0f00c845 100644
---- a/include/ras/ras_event.h
-+++ b/include/ras/ras_event.h
-@@ -252,6 +252,7 @@ TRACE_EVENT(non_standard_event,
- 		  __print_hex(__get_dynamic_array(buf), __entry->len))
- );
+diff --git a/include/trace/events/alarmtimer.h b/include/trace/events/alarmtimer.h
+index 13483c7ca70b..8e9c76a7f21b 100644
+--- a/include/trace/events/alarmtimer.h
++++ b/include/trace/events/alarmtimer.h
+@@ -20,6 +20,7 @@ TRACE_DEFINE_ENUM(ALARM_BOOTTIME_FREEZER);
+ 	{ 1 << ALARM_REALTIME_FREEZER, "REALTIME Freezer" },	\
+ 	{ 1 << ALARM_BOOTTIME_FREEZER, "BOOTTIME Freezer" })
  
-+#ifdef CONFIG_PCIEAER
- /*
-  * PCIe AER Trace event
-  *
-@@ -337,6 +338,7 @@ TRACE_EVENT(aer_event,
- 			__print_array(__entry->tlp_header, PCIE_STD_MAX_TLP_HEADERLOG, 4) :
- 			"Not available")
- );
-+#endif /* CONFIG_PCIEAER */
++#ifdef CONFIG_RTC_CLASS
+ TRACE_EVENT(alarmtimer_suspend,
  
- /*
-  * memory-failure recovery action result event
+ 	TP_PROTO(ktime_t expires, int flag),
+@@ -41,6 +42,7 @@ TRACE_EVENT(alarmtimer_suspend,
+ 		  __entry->expires
+ 	)
+ );
++#endif /* CONFIG_RTC_CLASS */
+ 
+ DECLARE_EVENT_CLASS(alarm_class,
+ 
 -- 
 2.47.2
 
