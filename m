@@ -1,78 +1,76 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BE0E2367BC;
-	Thu, 12 Jun 2025 10:30:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C3411F8753
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 12 Jun 2025 10:44:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749724230; cv=none; b=h+0E7iHo3RBotLiIBIlGtnuf2SiZVHMyXlHzquRqYt1qUG4Sw9I32EgD7oFav0OxJyw1ftOndUlwJ7xgl8JFbXmGk2sUWrPmdZhvirkZd6JGaDx2B1EETjy5QAsSfCCpFEts6VcohcGA9YyWkfHLbTiPqUfRFo7NNj68pPg76PA=
+	t=1749725048; cv=none; b=aqjUSy1mpBUF2lti/7PvzEvXedjIsMI7JS+wb90qMgO/Y2XOsW/l3QbxjhxdtwUYiNhM9TO3Ur5pXKmW+0ASLvJtxLlMZTxsP12VkM+zqZlmlOeijVNaEuaCP104J4HzbA2kDqzvVY6uFlmNo4uHumgSzEL0Gj9nUuEQR8d7T1U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749724230; c=relaxed/simple;
-	bh=3DEc4h66KpM39d9s61Ex2AB7LLJV25GL4TXRcKI5g9k=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=iZo12j7ux+Dv2OIVjGdiGF9VWDvjAJHhSuhg3F8Yhu3TYKMeg7fsa5LywFx8J+Al8MgF4jo6qnHSxWGe7KAz5Yl3OHsmjeVeoRRxqtdYadB3RjXSd04SrZKb74P4z/W4iSAZZKQqIbVVCHU0xRqKM7UYaDYp5fD3kWYekzW2bZs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gu8Ia/uB; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749725048; c=relaxed/simple;
+	bh=IR2tm94ReCty00Me3LuhlSMLcePN3XeMWFB4N6hGKp0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Ogxn8LRpqOMuY/U2VhMuLCoLQRyM1+KAk3XO1tsxGOD9UcuRMdGBb/aX7xPByweNi+UY9CKTyH9kyT5Z+d446LYzQoSE6NKgCVSe2zOMh/+UjzyGc00vspGcq+WDeQXZI7v2v9V/L1Omy09Lxvnqo5PDHMlHmFXIWvwJPMcdV8E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=axYtKBiO; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gu8Ia/uB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5C5BCC4CEEA;
-	Thu, 12 Jun 2025 10:30:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749724230;
-	bh=3DEc4h66KpM39d9s61Ex2AB7LLJV25GL4TXRcKI5g9k=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=gu8Ia/uB/zXp9zILhzjNZwhHRUGppAZLKYL0Y9M36mf7Op4uV/G0ILdntfsh1FhQ6
-	 yqDj+1mCgeXlcDp8KT3el9cfRrjhWMHc0VRbjmbupczLOCDyoU466UAN+9ogDneodJ
-	 Vk6avv6cDdSUkkY74RIVntyr5y02OkqJ5sDsT7MeYgwFolE/U6ZEktL4pa9+1iRI/D
-	 wYyi3wqpN/NSRdUOg2tWigjHNmEZ9PD827+GIZOkK5kMftmlUA7u7MPuSjBDI5+aM6
-	 /EyqnF74hRUCjTnoH78r6Ko8gt0MgqviR6KjT0dVJSwxTWp9me2+t0AUuEuG5tX3w8
-	 FXRLp3RmoclEQ==
-Received: by alrua-x1.borgediget.toke.dk (Postfix, from userid 1000)
-	id D0DAA1AF6CD7; Thu, 12 Jun 2025 12:30:06 +0200 (CEST)
-From: Toke =?utf-8?Q?H=C3=B8iland-J=C3=B8rgensen?= <toke@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>, LKML
- <linux-kernel@vger.kernel.org>, Linux trace kernel
- <linux-trace-kernel@vger.kernel.org>, bpf@vger.kernel.org
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Alexei Starovoitov <ast@kernel.org>,
- Daniel Borkmann <daniel@iogearbox.net>, "David S. Miller"
- <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>, Jesper Dangaard
- Brouer <hawk@kernel.org>, John Fastabend <john.fastabend@gmail.com>
-Subject: Re: [PATCH] xdp: Remove unused events xdp_redirect_map and
- xdp_redirect_map_err
-In-Reply-To: <20250611155615.0c2cf61c@batman.local.home>
-References: <20250611155615.0c2cf61c@batman.local.home>
-X-Clacks-Overhead: GNU Terry Pratchett
-Date: Thu, 12 Jun 2025 12:30:06 +0200
-Message-ID: <87bjqtb6c1.fsf@toke.dk>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="axYtKBiO"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1749725045;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=evoxoq79rUNR1aL96QrvR7FxasZWL1eL5arK+Kk98Uw=;
+	b=axYtKBiOQR3afWfNmgfU2/N7GdP41gzqIt61hxASYu+/ZWkhUxEMTR/eVg5HraFXAde9nR
+	nA9F8Y8Lc+ojNXPzxpOPiO+2FpErY3TsJ/5weP84r0dxgaC4EujcMrD6pLMq85n+fODlGH
+	zPaEGz8Gb+PhWsuWpzMJGNwZQbwV2qM=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-636-RJVN8nC1M16lxocY0wblCg-1; Thu,
+ 12 Jun 2025 06:44:02 -0400
+X-MC-Unique: RJVN8nC1M16lxocY0wblCg-1
+X-Mimecast-MFC-AGG-ID: RJVN8nC1M16lxocY0wblCg_1749725041
+Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id C98601809C87;
+	Thu, 12 Jun 2025 10:44:00 +0000 (UTC)
+Received: from fedora.redhat.com (unknown [10.45.242.17])
+	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id B881719560A3;
+	Thu, 12 Jun 2025 10:43:56 +0000 (UTC)
+From: Gabriele Paoloni <gpaoloni@redhat.com>
+To: rostedt@goodmis.org,
+	mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Cc: acarmina@redhat.com,
+	chuck.wolber@boeing.com,
+	Gabriele Paoloni <gpaoloni@redhat.com>
+Subject: [RFC PATCH 0/2] tracing: ftrace_enable_fops fixes
+Date: Thu, 12 Jun 2025 12:43:47 +0200
+Message-ID: <20250612104349.5047-1-gpaoloni@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
 
-Steven Rostedt <rostedt@goodmis.org> writes:
+This patchset addresses some issues found in ftrace_enable_fops and
+proposes low-level documentation for event_enable_write/read.
 
-> From: Steven Rostedt <rostedt@goodmis.org>
->
-> Each TRACE_EVENT() defined can take up around 5K of text and meta data
-> regardless if they are used or not. New code is being developed that will
-> warn when a tracepoint is defined but not used.
->
-> The trace events xdp_redirect_map and xdp_redirect_map_err are defined but
-> not used, but there's also a comment that states these are kept around for
-> backward compatibility. Which is interesting because since they are not
-> used, any old BPF program that expects them to exist will get incorrect
-> data (no data) when they use them. It's worse than not working, it's
-> silently failing.
->
-> Remove them as they will soon cause warnings, or if they really need to
-> stick around, then code needs to be added to use them.
->
-> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+Gabriele Paoloni (2):
+  tracing: fixes of ftrace_enable_fops
+  tracing: add testable specifications for event_enable_write/read
 
-I guess that makes sense; I have no objections to getting rid of them.
+ kernel/trace/trace_events.c | 83 +++++++++++++++++++++++++++++++++++--
+ 1 file changed, 80 insertions(+), 3 deletions(-)
 
-Reviewed-by: Toke H=C3=B8iland-J=C3=B8rgensen <toke@kernel.org>
+-- 
+2.48.1
+
