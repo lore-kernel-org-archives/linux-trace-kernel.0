@@ -1,136 +1,84 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7403B23C51A;
-	Fri, 13 Jun 2025 02:45:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7579B433A8;
+	Fri, 13 Jun 2025 02:50:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749782732; cv=none; b=UfWAt0yb55E9B+k6ghWGZdf+iWi11yqxmKr5mChCDBshBw6L+M9vMaLoXq+/OUaFgXHCkq/Ch8Eg9mqL6qtdQWYF5g0GHbOfGPKXPxHUxL8qLzUR1rzCONu/bzOT8dxHYxfxWndKEKwvFBn4BAKTz/t000uz/TO3GqpQx82y6EY=
+	t=1749783003; cv=none; b=FBD6OCqh4NfK/mYiJF/ow/tlx2+MK+gozU8n+EcpxIP97Tw0GdUWOu/pj1xM7gWvXCua7yeM52ljlfxfEyYQqpU+uJFugT8s8TYeJm2Qv6IUmj1hv+qRCUpKJnQFDV637khmLVvVr+Ypbo7ziiRKm3t3sGg6sP6ACYojaUs3P78=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749782732; c=relaxed/simple;
-	bh=3/GEX8v0y2wHN1aX/L2mKFs1OFPJY5H90o4kJS9wwpM=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=Y3Sub0lbd6nVmE6XEn4305FbpOpB+stmXQpzfDAf/dOrOiY//2X+yoOakQjuf6Xy9FZyAaWSGeN5+ij6D7lDn1p6+0OE7Lcax/TqUpgwUOVkJGMXd+YJUkylXoIuc/cAE+byCmuJLHvf4iF6BzU8xeXAhZTd4xysh7PcLyOS3dA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZuNHrr8L; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749783003; c=relaxed/simple;
+	bh=NGlagSnJ4T/MF2hIBZ8ka35d70cJhY8BeilcrfmgwlY=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=DNbwGKaJ7aQXFsTcGRrdfL/BxecBz6f1m3ZgwmPhjKg+fEdNno+7AynMGk5WqNiIpfRq5mah5y350awcZuEWYk1dfw7EP3lNoInQol88U1vj6jxJmxI5yRU5Nvdj26fEwttwceLfHwE9uQphhZr8ZPa8r15DS9WSULgftZy/qM4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gjhcKUIk; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZuNHrr8L"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 05643C4CEEA;
-	Fri, 13 Jun 2025 02:45:29 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gjhcKUIk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0747DC4CEEA;
+	Fri, 13 Jun 2025 02:50:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749782732;
-	bh=3/GEX8v0y2wHN1aX/L2mKFs1OFPJY5H90o4kJS9wwpM=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=ZuNHrr8LNMudj5VjitbPf8sj267s1AVw4sJ3tx3f2xyysCzJgjUcKEpfJS+2+SHBC
-	 2vZw3CqSkknFLYIEYI+wvsMN1Q2YaDv0Twsni0z9M38p+F4vzH4bOjlQ0Wmkh9E6ic
-	 nPyJI7xc4mB71myghFYs6C0Nts84PHUuJz4Zlc+oMWJc227vMoT4w4KxQ328zTE0pA
-	 I2IRTj67MttXw0BB+bCTZOtXDeegB78y5mK9BBIL9W0TmjZ/fIxdFyzutiCdrEKMI6
-	 eVNtnkj5E+gSp1nOkQbuTgfkUSLsBj5tPP8zaM8AaJQMp6JMaFZHUbaoQo9BNdYHYw
-	 JwRtQGgb/TdAg==
-Date: Fri, 13 Jun 2025 11:45:27 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Gabriele Paoloni <gpaoloni@redhat.com>
-Cc: rostedt@goodmis.org, mathieu.desnoyers@efficios.com,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- acarmina@redhat.com, chuck.wolber@boeing.com
-Subject: Re: [RFC PATCH 1/2] tracing: fixes of ftrace_enable_fops
-Message-Id: <20250613114527.7e27a9a0ecc2b59d98677b0c@kernel.org>
-In-Reply-To: <20250612104349.5047-2-gpaoloni@redhat.com>
-References: <20250612104349.5047-1-gpaoloni@redhat.com>
-	<20250612104349.5047-2-gpaoloni@redhat.com>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=k20201202; t=1749783003;
+	bh=NGlagSnJ4T/MF2hIBZ8ka35d70cJhY8BeilcrfmgwlY=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=gjhcKUIkIvw0aFZzmmButMRI0Y6RX6YuRIpPhv/glNpgj1Vzj7nEjZn+LttDIR565
+	 n5ejnM3KxJ82r9Rf2tSVyQ7+bqBghW7ufCrtNGxjfAumvNJuQ13okOlmZfJ9qXTjLi
+	 QqcfrNcb/Fy/G++2kc6DglkfXAalHBxZxQzWuiF0MQ7uYnwRyG/xYpKnYUppgBoL1G
+	 Y7UJC1Z86RN52cf4tAPiHuqagFx7/jvoOGVCvnY/InDdSAHFhbfrgYVyLN8PBPJUq5
+	 RqHFts+KCuF6DrQuLVctQgkkL0I6TqRC+kbX9/u/hjpkL3T5xBLX1CLu/W8scJZlQF
+	 IcRJxlIrKXRMw==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id ADE3739EFFD0;
+	Fri, 13 Jun 2025 02:50:33 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH] xdp: Remove unused events xdp_redirect_map and
+ xdp_redirect_map_err
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <174978303251.199960.6452866597649393391.git-patchwork-notify@kernel.org>
+Date: Fri, 13 Jun 2025 02:50:32 +0000
+References: <20250611155615.0c2cf61c@batman.local.home>
+In-Reply-To: <20250611155615.0c2cf61c@batman.local.home>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ bpf@vger.kernel.org, mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
+ ast@kernel.org, daniel@iogearbox.net, davem@davemloft.net, kuba@kernel.org,
+ hawk@kernel.org, john.fastabend@gmail.com
 
-On Thu, 12 Jun 2025 12:43:48 +0200
-Gabriele Paoloni <gpaoloni@redhat.com> wrote:
+Hello:
 
-> Currently there are different issues associated with ftrace_enable_fops
-> - event_enable_write: *ppos is increased while not used at all in the
->   write operation itself (following a write, this could lead a read to
->   fail or report a corrupted event status);
+This patch was applied to bpf/bpf-next.git (net)
+by Alexei Starovoitov <ast@kernel.org>:
 
-Here, we expected the "enable" file is a pseudo text file. So if
-there is a write, the ppos should be incremented.
-
-> - event_enable_read: cnt < strlen(buf) is allowed and this can lead to
->   reading an incomplete event status (i.e. not all status characters
->   are retrieved) and/or reading the status in a non-atomic way (i.e.
->   the status could change between two consecutive reads);
-
-As I said, the "enable" file is a kind of text file. So reader must read
-it until EOF. If you need to get the consistent result, user should
-use the enough size of buffer.
-
-> - .llseek is set to default_llseek: this is wrong since for this
->   type of files it does not make sense to reposition the ppos offset.
->   Hence this should be set instead to noop_llseek.
-
-As I said, it is a kind of text file, default_llseek is better.
-
-But, if we change (re-design) what is this "enable" file is,
-we can accept these changes. So this is not a "Fix" but re-design
-of the "enable" file as an interface (as a char device), not a text
-file (or a block device).
-
-I want to keep this as is, same as other tracefs files.
-
-Thank you,
-
+On Wed, 11 Jun 2025 15:56:15 -0400 you wrote:
+> From: Steven Rostedt <rostedt@goodmis.org>
 > 
-> This patch fixes all the issues listed above.
+> Each TRACE_EVENT() defined can take up around 5K of text and meta data
+> regardless if they are used or not. New code is being developed that will
+> warn when a tracepoint is defined but not used.
 > 
-> Signed-off-by: Gabriele Paoloni <gpaoloni@redhat.com>
-> Tested-by: Alessandro Carminati <acarmina@redhat.com>
-> ---
->  kernel/trace/trace_events.c | 11 ++++++++---
->  1 file changed, 8 insertions(+), 3 deletions(-)
+> The trace events xdp_redirect_map and xdp_redirect_map_err are defined but
+> not used, but there's also a comment that states these are kept around for
+> backward compatibility. Which is interesting because since they are not
+> used, any old BPF program that expects them to exist will get incorrect
+> data (no data) when they use them. It's worse than not working, it's
+> silently failing.
 > 
-> diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
-> index 120531268abf..5e84ef01d0c8 100644
-> --- a/kernel/trace/trace_events.c
-> +++ b/kernel/trace/trace_events.c
-> @@ -1798,6 +1798,13 @@ event_enable_read(struct file *filp, char __user *ubuf, size_t cnt,
->  
->  	strcat(buf, "\n");
->  
-> +	/*
-> +	 * A requested cnt less than strlen(buf) could lead to a wrong
-> +	 * event status being reported.
-> +	 */
-> +	if (cnt < strlen(buf))
-> +		return -EINVAL;
-> +
->  	return simple_read_from_buffer(ubuf, cnt, ppos, buf, strlen(buf));
->  }
->  
-> @@ -1833,8 +1840,6 @@ event_enable_write(struct file *filp, const char __user *ubuf, size_t cnt,
->  		return -EINVAL;
->  	}
->  
-> -	*ppos += cnt;
-> -
->  	return cnt;
->  }
->  
-> @@ -2557,7 +2562,7 @@ static const struct file_operations ftrace_enable_fops = {
->  	.read = event_enable_read,
->  	.write = event_enable_write,
->  	.release = tracing_release_file_tr,
-> -	.llseek = default_llseek,
-> +	.llseek = noop_llseek,
->  };
->  
->  static const struct file_operations ftrace_event_format_fops = {
-> -- 
-> 2.48.1
-> 
+> [...]
 
+Here is the summary with links:
+  - xdp: Remove unused events xdp_redirect_map and xdp_redirect_map_err
+    https://git.kernel.org/bpf/bpf-next/c/a9a5f41b04dd
 
+You are awesome, thank you!
 -- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
+
