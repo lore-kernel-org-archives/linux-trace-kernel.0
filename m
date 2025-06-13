@@ -1,120 +1,187 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 540041E5206;
-	Fri, 13 Jun 2025 15:22:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF4BA1D07BA
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 13 Jun 2025 15:23:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749828147; cv=none; b=Up5LKz6jM0JeSq3YKUid47C9T1Z57AO2owdR0Qcg1nZDbjvosIZP+RcMluU5X9mJjWvFkUJDJ+5J/0k33pl1Qhji6WmUXG/vWpI7S8I+ISCqixbdcLynGcNnPT8gS/QcSLb/sv9bCqQbqY5UOvet8sIzyv/F5LQks+F1fklzT9E=
+	t=1749828203; cv=none; b=cCigqI3tnnsWnb+UO0HMUk6y7ONZIO1Bc0fiJRryzc2hH6dO/H30A/yE7twE7xhsSaEuCvxfZPGVkYgLH9926nhhjWyeC5KukboB2SpT0DhxMKjHPKQ+kKdSFOKtKDEajfM+1F6UmMYpetpvBrpVlnsUYsH8HqwDFnU3iXxbnkQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749828147; c=relaxed/simple;
-	bh=yraQ9N6DoxkVeYF+9KhqSRurdHu3KLUKyTGxW1FZ0ik=;
+	s=arc-20240116; t=1749828203; c=relaxed/simple;
+	bh=/hXfFYfBfbotrpQpMR/vgWRHOpzAwTsszsgRbICb1ss=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=E5dDETlXbsbBFdKxzcI4+rEKDO9XU2YPO8zJ6V8X2CtJPaSYYb4owjb3mA2Jzwmn4Z++yXXth4R8qUNHoAvdtkciSQShtiedgWFGt2d7qqs+Xggn47hhQMX4m9vis6bFcdNCGzH5RIzbIERZqcAPFt2d39aTsbKTCXOMye9TY+M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=1vD8Syex; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=tSuaW3Gm; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	 MIME-Version:Content-Type; b=jKJMHk/U9YPg+leeisCrZyouLduGFUHMZjeFO2/3Fjw1gEIRkpRy9OR4wFQGzeO5uD+E8qcXanRadE2QgrymQG52FraYwL44L/3p6FnVvwOUvCc2mT9hbAolzWyWCym/BHSh1AR7Vi6wXbYhDyQc6yKb7nWxnn8FAq4+jbHRZlA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=AwufcaXh; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="1vD8Syex";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="tSuaW3Gm"
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1749828144;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AwufcaXh"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1749828200;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=OaTlRENjdS56eVUvOmYn4aQmfrTxRF+Kl8v2rMC9NJA=;
-	b=1vD8Syex6ddWCBVl2TYcjfKwND97NhVYcVMCb6AaEJbTvD6mBXOYtEAbkRoNqp6bNHToqJ
-	a8fSEi4bn0iuHDFHcKUuxjYUhn+L9GRMR7KFGEPlf+4kz3DnaqYYBuhMfpCa0uqE45pLID
-	S2UojCAqVmYWtTsWEBMvQA8Ue7ppAiDXlexgtnc8c1sCXADLVZMhbAywovaMo6uEwKRwAA
-	AchVZ7sCTQuO+5BaKJdREDJOF12n4nCuuiNlJd+WSHDMzOWXN78kFR3m0bIvTJPg+MdZkW
-	t4FmPj1/8Y6Dq6Z4Ab8Mq7n+dKAcZztUMtRIxIg0ACNCDqoPeDmxcHknfz5vdQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1749828144;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=OaTlRENjdS56eVUvOmYn4aQmfrTxRF+Kl8v2rMC9NJA=;
-	b=tSuaW3GmESQfpxXxRqndAcsRra5d4ppFzfr6etGforslmF6wr6FYWbhXLcXG06R1+ufnJz
-	N5mK6Ir8UydKnIAg==
-To: linux-rt-devel@lists.linux.dev,
-	rcu@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Cc: "Paul E. McKenney" <paulmck@kernel.org>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Frederic Weisbecker <frederic@kernel.org>,
-	Joel Fernandes <joelagnelf@nvidia.com>,
-	Josh Triplett <josh@joshtriplett.org>,
-	Lai Jiangshan <jiangshanlai@gmail.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Uladzislau Rezki <urezki@gmail.com>,
-	Zqiang <qiang.zhang@linux.dev>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Subject: [RFC PATCH 2/2] trace: Use rcu_read_lock() instead preempt_disable()
-Date: Fri, 13 Jun 2025 17:22:18 +0200
-Message-ID: <20250613152218.1924093-3-bigeasy@linutronix.de>
-In-Reply-To: <20250613152218.1924093-1-bigeasy@linutronix.de>
-References: <20250613152218.1924093-1-bigeasy@linutronix.de>
+	bh=1p5HdA5CaRZpyjsJJugbtkVKQTEXEDNVElJiBH9/rEM=;
+	b=AwufcaXhKD+1pgYmGiCSlEXIgdZVcnNYSUlOrpypiGZjrbX+9YuuSwmRKqMoi4XjHGCuTQ
+	EVkxrIipL+MdZTkaR0hirZmxy0nhCUtfO0RAYzzZdB2t8MULp2x70p8KTXDL3c1spKDjj4
+	eHPik5oErnG3H6tTWK4wfD/StT6KfDo=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-251-C0We3tJzMne5spLZueix3g-1; Fri,
+ 13 Jun 2025 11:23:17 -0400
+X-MC-Unique: C0We3tJzMne5spLZueix3g-1
+X-Mimecast-MFC-AGG-ID: C0We3tJzMne5spLZueix3g_1749828195
+Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 71891195609F;
+	Fri, 13 Jun 2025 15:23:14 +0000 (UTC)
+Received: from [192.168.37.1] (unknown [10.22.58.9])
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id D6EEA180045C;
+	Fri, 13 Jun 2025 15:23:09 +0000 (UTC)
+From: Benjamin Coddington <bcodding@redhat.com>
+To: Chuck Lever <chuck.lever@oracle.com>
+Cc: Jeff Layton <jlayton@kernel.org>, Neil Brown <neilb@suse.de>,
+ Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>,
+ Tom Talpey <tom@talpey.com>, Steven Rostedt <rostedt@goodmis.org>,
+ Masami Hiramatsu <mhiramat@kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Simon Horman <horms@kernel.org>, Mike Snitzer <snitzer@kernel.org>,
+ linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, netdev@vger.kernel.org
+Subject: Re: [PATCH 1/2] nfsd: use threads array as-is in netlink interface
+Date: Fri, 13 Jun 2025 11:23:07 -0400
+Message-ID: <6D3B09C4-0E35-4A98-8C29-C2EDDBD17163@redhat.com>
+In-Reply-To: <df0a6fc5-6ef9-44b6-b6c2-e3cb4a2d1512@oracle.com>
+References: <20250527-rpc-numa-v1-0-fa1d98e9a900@kernel.org>
+ <20250527-rpc-numa-v1-1-fa1d98e9a900@kernel.org>
+ <a8d4c4cffe1a35ea831110ce1c7beea649352238.camel@kernel.org>
+ <ae18305b-167d-4f27-bc3b-3d2d5f216d85@oracle.com>
+ <1cd4d07f7afbd7322a1330a49a2cc24e8ff801cd.camel@kernel.org>
+ <38f1974c-f487-49b0-9447-74ed2db6ca7e@oracle.com>
+ <7DCDEBE1-1416-4A93-B994-49A6D21DC065@redhat.com>
+ <df0a6fc5-6ef9-44b6-b6c2-e3cb4a2d1512@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
 
-Switch from classic RCU to preemptible RCU.
+On 13 Jun 2025, at 10:56, Chuck Lever wrote:
 
-This requires to change the guard in the __do_trace_ macro and account
-for it in trace_event_buffer_reserve() where the preemption counter is
-substracted. This is then no longer needed.
+> On 6/13/25 7:33 AM, Benjamin Coddington wrote:
+>> We don't consider it acceptable to allow known defects to persist in our
+>> products just because they are bleeding edge.
+>
+> I'm not letting this issue persist. Proper testing takes time.
+>
+> The patch description and discussion around this change did not include
+> any information about its pervasiveness and only a little about its
+> severity. I used my best judgement and followed my usual rules, which
+> are:
+>
+> 1. Crashers, data corrupters, and security bugs with public bug reports
+>    and confirmed fix effectiveness go in as quickly as we can test.
+>    Note well that we have to balance the risk of introducing regressions
+>    in this case, since going in quickly means the fix lacks significant
+>    test experience.
+>
+> 1a. Rashes and bug bites require application of topical hydrocortisone.
 
-Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
----
- include/linux/tracepoint.h  | 2 +-
- kernel/trace/trace_events.c | 8 +-------
- 2 files changed, 2 insertions(+), 8 deletions(-)
+:) no rash here, this response is very soothing.
 
-diff --git a/include/linux/tracepoint.h b/include/linux/tracepoint.h
-index 826ce3f8e1f85..15f851a1de55d 100644
---- a/include/linux/tracepoint.h
-+++ b/include/linux/tracepoint.h
-@@ -271,7 +271,7 @@ static inline struct tracepoint *tracepoint_ptr_deref(t=
-racepoint_ptr_t *p)
- 	static inline void __do_trace_##name(proto)			\
- 	{								\
- 		if (cond) {						\
--			guard(preempt_notrace)();			\
-+			guard(rcu_notrace)();				\
- 			__DO_TRACE_CALL(name, TP_ARGS(args));		\
- 		}							\
- 	}								\
-diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
-index 120531268abff..76ea1cf9f4d65 100644
---- a/kernel/trace/trace_events.c
-+++ b/kernel/trace/trace_events.c
-@@ -659,13 +659,7 @@ void *trace_event_buffer_reserve(struct trace_event_bu=
-ffer *fbuffer,
- 	    trace_event_ignore_this_pid(trace_file))
- 		return NULL;
-=20
--	/*
--	 * If CONFIG_PREEMPTION is enabled, then the tracepoint itself disables
--	 * preemption (adding one to the preempt_count). Since we are
--	 * interested in the preempt_count at the time the tracepoint was
--	 * hit, we need to subtract one to offset the increment.
--	 */
--	fbuffer->trace_ctx =3D tracing_gen_ctx_dec();
-+	fbuffer->trace_ctx =3D tracing_gen_ctx();
- 	fbuffer->trace_file =3D trace_file;
-=20
- 	fbuffer->event =3D
---=20
-2.49.0
+> 2. Patches sit in nfsd-testing for at least two weeks; better if they
+>    are there for four. I have CI running daily on that branch, and
+>    sometimes it takes a while for a problem to surface and be noticed.
+>
+> 3. Patches should sit in nfsd-next or nfsd-fixes for at least as long
+>    as it takes for them to matriculate into linux-next and fs-next.
+>
+> 4. If the patch fixes an issue that was introduced in the most recent
+>    merge window, it goes in -fixes .
+>
+> 5. If the patch fixes an issue that is already in released kernels
+>    (and we are at rule 5 because the patch does not fix an immediate
+>    issue) then it goes in -next .
+>
+> These evidence-oriented guidelines are in place to ensure that we don't
+> panic and rush commits into the kernel without careful review and
+> testing. There have been plenty of times when a fix that was pushed
+> urgently was not complete or even made things worse. It's a long
+> pipeline on purpose.
+
+I totally understand, thanks very much for having a set of rules and
+guidelines and even more for taking the time to spell them out here.
+
+I wanted to express that Red Hat does consider all of its releases to be
+important to fix and maintain. I'd like to speak against arguments about fix
+urgency based on distro versions.  I think in this case we innocently crept
+into these arguments as Jeff presented evidence that the problem exists in
+the wild.
+
+> The issues with this patch were:
+>
+> - It was posted very late in the dev cycle for v6.16. (Jeff's urgent
+>   fixes always seem to happen during -rc7 ;-)
+>
+> - The Fixes: tag refers to a commit that was several releases ago, and
+>   I am not aware of specific reports of anyone hitting a similar issue.
+>
+> - IME, the adoption of enterprise distributions is slow. RHEL 10 is
+>   still only on its GA release. Therefore my estimation is that the
+>   number of potentially impacted customers will be small for some time,
+>   enough time for us to test Jeff's fix appropriately.
+
+While this is true, I hope we can still treat every release version equally
+/if/ we make any arguments about urgency based on what's currently released
+in a particular distro.  Your point is a good counter-arguement to Jeff's
+assertion that the problem has been widely distributed - but it does start
+to creep into a space which feels like we're treating certain early versions
+of a specific distro differently and didn't sit well for me.  I'd rather not
+have our upstream work or decisions appear to favor a particular distro.
+
+> - The issue did not appear to me to be severe, but maybe I didn't read
+>   the patch description carefully enough.
+>
+> - Although I respect, admire, and greatly appreciate the effort Jeff
+>   made to nail this one, that does not mean it is a pervasive problem.
+>   Jeff is quite capable of applying his own work to the kernels he and
+>   his employer care about.
+>
+<snip>
+>
+> It sounds like Red Hat also does not have clear evidence that links this
+> patch to a specific failure experienced by your customers. This affirms
+> my understanding that this fix is defensive rather than urgent.
+
+Also true - not yet, but there's a significant lag between customers
+discovering a problem and our engineers knowing about it, and during that
+lag all sorts of time, money, and reputation points are lost.
+
+> As a rule, defensive fixes go in during merge windows.
+>
+>> Its a real pain that we won't have an upstream commit assigned for it.
+>
+> It's not reasonable for any upstream maintainer not employed by Red Hat
+> to know about or cleave to Red Hat's internal processes. But, if an
+> issue is on Red Hat's radar, then you are welcome to make its priority
+> known to me so I can schedule fixes appropriately.
+
+Thanks!  I realize that, which is why I spoke up.
+
+> All that said, I've promoted the fix to nfsd-fixes, since it's narrow
+> and has several weeks of test experience now.
+
+Again, thanks!  We greatly appreciate the work you're doing.
+
+Best,
+Ben
 
