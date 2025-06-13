@@ -1,109 +1,123 @@
-Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DB41132111;
-	Fri, 13 Jun 2025 17:32:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADD272236FC;
+	Fri, 13 Jun 2025 18:52:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749835924; cv=none; b=gji6/aGkkJ9ul88PJlgd68uaRGi/1Xstz8k8v42aGAabN+yvIiDMTwlfIMaDrYqAvNTWP4Id46XOXDnzfPhPcT+SL/lgOyBw/BanLfWpFknqwTcYMTH0KhFC7UJnhfWZkHknYISpBlZgPPQcQG/BlX+JpLH4QroN9nazUkA6C98=
+	t=1749840780; cv=none; b=YfCKAa2bVPMRqCMkGaB81nLGA6QmItn+V05+AF3wsFUDFcM+v1wUK4V9PDkvkNTSy7CW6sgjrWCpItAz6lv/TRSfi7TaunlCvZUfRIqTQJ1rz60UOkwbYp5i4StSEKGsWorWEAhDh4H9grc6o/w2Xf46arQlGnaq1E8MU4kRZVM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749835924; c=relaxed/simple;
-	bh=t7N3BVq9WlE9phwxDsROYWpWt0kQq3OpsSCwh+9ECEM=;
+	s=arc-20240116; t=1749840780; c=relaxed/simple;
+	bh=4GG8h4VrUJ72KYx3JStbtJGGYIPOY8UMQiZqMjt0b+k=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=JZCccSOc1RmPfryszexKyRfdKA93WtrvXfrFUUOrNr2hqGeYeDVi8sjXrpfi3g6ZJCY8PXyqtUCC5Sorbve0SzcnF06cQoD7//mLVG4UBspR/wb/5q9s7fg5IK/my1rAo4AHlbzdaQxPPHmgyuEKB6LKDOkRFfQhIdSuPd/7/6k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XDfSphrd; arc=none smtp.client-ip=209.85.221.42
+	 To:Cc:Content-Type; b=PVSuNH+q72NLW8JSoS7br9yeIsX6emboCWphAWY2REIJaqJ/z2zFVSwu02jLrtTHpW1czbjeXBRG+BM6f70yKClGCXOVuQ3JawNNzlWOga4OILUGefTQ+KH0OhtUk5ef/+IZHSDuzTMC/itzZDsbSaoA+D26N+HMzqVutjNXk6s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FRvw/CvV; arc=none smtp.client-ip=209.85.221.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XDfSphrd"
-Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-3a4fd1ba177so1482872f8f.0;
-        Fri, 13 Jun 2025 10:32:02 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FRvw/CvV"
+Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-3a5123c1533so1535870f8f.2;
+        Fri, 13 Jun 2025 11:52:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749835921; x=1750440721; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1749840777; x=1750445577; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=NVccLtBUkLI1MEe4KbooOMLXqPFKOC+ce3CE/xpHyA4=;
-        b=XDfSphrdQeatcz66ziAHt45KLnwoY5U4UIqaykpHBTVfoswmQm37+A16PAUfyHoxwN
-         AxVZ1JLJkA185wHGmR1/hrkH3QIZfIkeiFcjsJdlDjausz6TqGEPBnnE/uojabmepMqM
-         OGboH3w7Pah7iu197XLGrGwucLvFN6qLq+4YQwo/tdXIC64ID4rSTh5lF33viT4dzJ6W
-         px5hvyai8t4khpnisSO4fe3VWdi2S7j0B77TtYO1i7vLEhlke3X0zKc3UaBoZBaQn/FZ
-         itlAx4x0vf+lN9+6Y8BDInKppa5X5w+MQeQfRcG+3xS87X4PsQfQLCm7+w/O11xbBm+A
-         A8Pg==
+        bh=WiNV/nTakryBZy7/aqri35p4mFreiS8n/RLeN55SiFs=;
+        b=FRvw/CvVt9iEZ/wVY2zWSzRMqZ+mQKZPJSUYW8hd2Qx/Lzy+vfsVuUeUX2OsBSpqxf
+         aUhQcjYnVkVEvkWkwlB1V21ZM3zCxST+A8CxFRg76oDLQLalYcE3/y07l7o8t1h/x+HF
+         LkS05mzYXMbZ1ftfmEYgTz/S2lW6Zhj2Apl9rZGk9TBc5snzDuKVffyYCGYN3c2vYQ9N
+         /SOh60SV1LMI8ZU8aqPK7KE/iZP5VB2qKPf1PzRM6BGR+MKaRYGpv0a9lBE6RXVqnIrv
+         Jg/3maNwRITLRyabsLjL9fHeOP0y+T/JFEDZOlrBtgG9TclPrCjEBOU5/8HQlBMeYmQI
+         sjew==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749835921; x=1750440721;
+        d=1e100.net; s=20230601; t=1749840777; x=1750445577;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=NVccLtBUkLI1MEe4KbooOMLXqPFKOC+ce3CE/xpHyA4=;
-        b=mvc2C3q8GlkzL5jlzoKtFICTCJDEbCTrW2YgFfSSjwvDJMjTaZJb8sP5vpTaYDzHsH
-         +pYz+qVT1F8oUYZoXRf7zG64Zxi1Voq6YqC5c+FiVll+oOHzIgcdenj8K671jIBBAe02
-         5X+cobKgDc0nvL1j0Nn1d/orF4vJ5p3DPHKTz+N2cTCEO8dM4FOlehnx3TYZFqsbkk+D
-         FMHHnoRP3QtJzPFm4oZ1yUdtZOVVKsRODEv2RrjsX3yeZWKJAr9Ryt8glFNWU1avJob2
-         uR6opXh1FuqIuhjloN+wktV8mQ4OB6Lr0LlmX/nQU4HIIWjfIwiBMY2Wr+d3sf7t/aOl
-         hmZA==
-X-Forwarded-Encrypted: i=1; AJvYcCU09bDxB+KapWi50O1bKso69bn1jLoum2K5XRfIkMylNc+WRbF8h66RTQFHRzH7n3krWe+WGc0YXc+pB49R@vger.kernel.org, AJvYcCVsHSCczqfVHDN9Ad40s7OwoH60qIW9R8AvlZGEK9+kXMUQdGHscGo5w42gfrxZ1xDDv74=@vger.kernel.org, AJvYcCX3aySYsXyhEElCH1NDU1W9W49865jWOh2+X5rpJ7JklwcWtOlLK/Et6PCxkUQ5a3xAQdD4PRG7PuaJGB0DRN4F5Bpn@vger.kernel.org
-X-Gm-Message-State: AOJu0YxlR+1XHskvosUJ0XyYZGxomGUvaOIH4KrC7R3634AQhaDDCuB1
-	3xM9aK7C2+t6xvQ4ofm7H5uFnbnTg3416pSSmKDvuqR/mioc8Q9l8jT5h39sVgNnH1nIeAGS2G/
-	detLw17mVlAERmmVNB0UHsrpV+C/RAECE6A==
-X-Gm-Gg: ASbGncvSZ7U84qJ0JpFYYM6dIRW+L+jQSY4N2RJtS6bMGc70rVN0cwq2NXqq7+kAvSf
-	gRF+YsiwV8eXpbtGdWLFyTGrhqG4mKfi0VY6qF19EKNGpzdktXRn9MdB1gcbyv4MQlCTNjEq1G2
-	Fys/9f5H28DmIb0Xps+z3IwIkaG6zf3B/8quf+PhrcA1y7/qfumq0XYeMwnC1gDB/Lbo2UR5t4
-X-Google-Smtp-Source: AGHT+IE5Txj9vSePCLXk8LXl4X9M2Y15KDj342FLtUVMXpCM6clk44IcqP+eIKErJWg8V6XaAMQaCZngglGDLa+g6xw=
-X-Received: by 2002:a05:6000:230a:b0:3a4:f7e7:3630 with SMTP id
- ffacd0b85a97d-3a572e66e95mr638250f8f.15.1749835921053; Fri, 13 Jun 2025
- 10:32:01 -0700 (PDT)
+        bh=WiNV/nTakryBZy7/aqri35p4mFreiS8n/RLeN55SiFs=;
+        b=qFHmmqHCMsGrvLq9FceZHxDBuI8kzzBPDnAQ3/r+8Pn2T+gXYWVCbm+FfTpzN2S3pe
+         lSiRDtVu/t5M8B8QEa8pnz0oKX6iEDzwN7CJcb94CnQaQaNeEpB3Kcp12P8cE4hJi8aX
+         Lr3JSuhf3fuxSukz/viT2f6OkuXNBoEBTvET6ysY2bSHKN8NjE3YULf9W7LkrY8f7Dzw
+         X5C7DBLF99f/lAPt46UEEAqjYHLSPdaIn6H8USxK9qZmMVzsYY8qIRrwuGk48DwfDpgV
+         mZau0ez5IOcvu6GJInIK5R2yf8Us+CCD9TkV+FEVoKNaNU3gKcyrJJOKGiEWQ5sojwhJ
+         Tnzw==
+X-Forwarded-Encrypted: i=1; AJvYcCVB01RnAdl9OiILaq9BkNmZlJlybiLRacs2Nzq69JL2UEjPx2QBcu/ruUx7z1QgqaX+DwNsg4Y9n8O7PWpvdGdKNdKw@vger.kernel.org, AJvYcCWbPgq0K8hE+nCZMlpIGOVadDiJHWDHy434oT3DEx5k0c5kEf5Ezq9ZnF+jwW4VgkIHN5c=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwaUj8i+mAjfIg10Aox+HObipyB1PhBF9t3bRNShkXcQ1UJthK0
+	kGALmRelPk7R1IBhpIrTYtFK7UIh7JCrthUtdcxQNWfLo7H5ww28FWU8iH3xGijMsch3a7G3j/U
+	zcRsqpZV9IRpM5TbyXQesi+e35X+MQZ8=
+X-Gm-Gg: ASbGncv+QX02F2vU+VlEc079VS1grM3+N7KA1fpRmTSfc0PETNroo4HKtBpHnatOQnG
+	mZb60yxky8cFMGO4UQ4GI6XhjDCLuTAyrrMv2BDMBRMHiiLk9HXFy3jOxESy1BbBB1qLyMhecNY
+	BrZCcYN17OHXEfoI9bSw0iWVt6yhT5H5uD1UZOOwoEzkmMmftCtUbzb2PA8pFf+MAnJTxo7Vr/
+X-Google-Smtp-Source: AGHT+IGjeC/2sHP/3xV2aREWxija/hCdRDjn++PYArbmyRHRCDcQw+76Cm4ulAFCUyk5xiXD43VC13Za3SnnbIQp1UA=
+X-Received: by 2002:a05:6000:144e:b0:3a4:eb92:b5eb with SMTP id
+ ffacd0b85a97d-3a572e998a0mr718423f8f.50.1749840776759; Fri, 13 Jun 2025
+ 11:52:56 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250612115556.295103-1-chen.dylane@linux.dev>
- <20250612115556.295103-2-chen.dylane@linux.dev> <CAADnVQLbpO7PED01OVZXTLib_hBYzwpC5hFyR_WMCCx8obR1Hw@mail.gmail.com>
- <00a22161-1e40-4ec0-be4f-e2c5dadbfe0b@linux.dev>
-In-Reply-To: <00a22161-1e40-4ec0-be4f-e2c5dadbfe0b@linux.dev>
+References: <20250612182023.78397b76@batman.local.home> <CAADnVQKEosaLbpLg4Zk_CcDSKT+Jzb3ScKQWBA51vLHt-AoQ8A@mail.gmail.com>
+ <20250612222652.229eaa9c@batman.local.home>
+In-Reply-To: <20250612222652.229eaa9c@batman.local.home>
 From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date: Fri, 13 Jun 2025 10:31:49 -0700
-X-Gm-Features: AX0GCFu5PYm5SWowV-4zYH0VtJdfphoQJYMykfiKk_2dN6Gss3ybOKWkgea3cQk
-Message-ID: <CAADnVQKZbVHX_juvWqP-BZ77+TLfF73qnoV-7uDe5LxJsf4=9A@mail.gmail.com>
-Subject: Re: [PATCH bpf-next 2/2] bpf: Add show_fdinfo for kprobe_multi
-To: Tao Chen <chen.dylane@linux.dev>
-Cc: Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, Eduard <eddyz87@gmail.com>, 
-	Song Liu <song@kernel.org>, Yonghong Song <yonghong.song@linux.dev>, 
-	John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>, 
-	Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Matt Bobrowski <mattbobrowski@google.com>, Steven Rostedt <rostedt@goodmis.org>, 
+Date: Fri, 13 Jun 2025 11:52:44 -0700
+X-Gm-Features: AX0GCFssdBMjywfJptOVExlGYdngzOBaGqfQs8frgcbBiaOQYEqFjNxYC18X14I
+Message-ID: <CAADnVQLkLPv6uvxXz0iWaA06KYXW8_P5fPPX2-WpXOYuXT-B5Q@mail.gmail.com>
+Subject: Re: [PATCH v2] xdp: tracing: Hide some xdp events under CONFIG_BPF_SYSCALL
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, 
+	Linux trace kernel <linux-trace-kernel@vger.kernel.org>, bpf <bpf@vger.kernel.org>, 
 	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	bpf <bpf@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
-	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>
+	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	"David S. Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>, 
+	Jesper Dangaard Brouer <hawk@kernel.org>, John Fastabend <john.fastabend@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jun 12, 2025 at 7:52=E2=80=AFPM Tao Chen <chen.dylane@linux.dev> wr=
-ote:
->
-> =E5=9C=A8 2025/6/13 00:01, Alexei Starovoitov =E5=86=99=E9=81=93:
-> > On Thu, Jun 12, 2025 at 4:56=E2=80=AFAM Tao Chen <chen.dylane@linux.dev=
+On Thu, Jun 12, 2025 at 7:27=E2=80=AFPM Steven Rostedt <rostedt@goodmis.org=
 > wrote:
-> >>
-> >> Show kprobe_multi link info with fdinfo, the info as follows:
-> >>
-> >> link_type:      kprobe_multi
-> >> link_id:        4
-> >> prog_tag:       279dd9c09dfbc757
-> >> prog_id:        30
-> >> type:   kprobe_multi
-> >> func_cnt:       8
-> >> missed: 0
-> >> addr:   0xffffffff81ecb1e0
-> >
-> > fdinfo shouldn't print kernel addresses.
-> > It defeats kaslr
-> >
 >
-> How about print the function name corresponding of the address, or
-> don't show the addr info.
+> On Thu, 12 Jun 2025 19:16:33 -0700
+> Alexei Starovoitov <alexei.starovoitov@gmail.com> wrote:
+>
+> > On Thu, Jun 12, 2025 at 3:20=E2=80=AFPM Steven Rostedt <rostedt@goodmis=
+.org> wrote:
+> > >
+> > > From: Steven Rostedt <rostedt@goodmis.org>
+> > >
+> > > The events xdp_cpumap_kthread, xdp_cpumap_enqueue and xdp_devmap_xmit=
+ are
+> > > only called when CONFIG_BPF_SYSCALL is defined.  As each event can ta=
+ke up
+> > > to 5K regardless if they are used or not, it's best not to define the=
+m
+> > > when they are not used. Add #ifdef around these events when they are =
+not
+> > > used.
+> > >
+> > > Acked-by: Jesper Dangaard Brouer <hawk@kernel.org>
+> > > Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+> > > ---
+> > > Changes since v1: https://lore.kernel.org/20250612101612.3d4509cc@bat=
+man.local.home
+> > >
+> > > - Rebased on top of bpf-next
+> >
+> > We can certainly take it, but you mentioned you're working
+> > on some patches that will warn when tracepoint is not used.
+> > So do you need this to land sooner than the next merge window ?
+>
+> No. I plan on sending that code near the end of the next merge window
+> to let these patches get in before they start to add warnings.
+>
+> I'm also going to wait till near the end of this cycle before I add
+> that code to linux-next to keep the warnings happening there too soon.
+>
+> So, please take it. That way there's less likelihood of another
+> conflict.
 
-Yeah. That would be much better. human readable unlike hex.
+It was applied to bpf-next/net yesterday.
+pw-bot didn't notice.
