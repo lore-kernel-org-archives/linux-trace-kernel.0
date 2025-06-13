@@ -1,337 +1,307 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 817E6270EBC;
-	Fri, 13 Jun 2025 21:05:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D1E614BF89;
+	Fri, 13 Jun 2025 23:53:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749848709; cv=none; b=q+pCr2+uZF/HMzS5Q8+vnvMa2g5AOcTQ8/16TYoRu3cmMU8NeNTM6ifr12rMziO+sOkbjskLMfb+c9v0czDFeZDtNwVVxNUqP61TOrrIrYyJ+hn8dliDl8hwsgVOtwTNbMATL7OvgR4fqmRryTqXBQnnlmWJ7l016Gs0+vLpaLs=
+	t=1749858817; cv=none; b=uiuIsaOfFltW8cvTUQ41T7PeF+wgWYp96hA29LjheTlawMSoCGuYJ906PglNpdVUltHP1aLeBnw89rHQRWxHL32QXMv3VMSg3KTwvA7Wsw8EFRlOxkr8U7ew1g+PZ8ti+mZa8EG6b6iz/2vCICosgxsniqPVawsPgT1qtB/XQ4g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749848709; c=relaxed/simple;
-	bh=riqdrxkchD8LFwzBCMlF3Imf3FCZoNoP21Xd7szeknw=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=IUgrD+siXLNvGF3AFzvcutLNRr5Xx6pDxyB1YrD/zo4SQte9Ac2+pIFnP06yqRaYLEp9PROWa1Ks1PO2/pi7O4j5xhTiFLKZFIKZiZi8S3gbH+oAZuzRbFLifUw9mAthUfX/GmSuXpAWx4iuC/S1YFKQj9XBdhgzQtY4ODvhhM0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ltGmLkZ0; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749858817; c=relaxed/simple;
+	bh=B+6kzccr+wLacaAhProqN6kMTvtAE7WAi//m7TysVN0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rvvqO/D3olohIqJAtQ67DBkzN0TnpygM88Sv5aRK3i0WpSGClLeJWo4xo4V5MDrzcFIAZe3HmtaQo1CtXvKLC/UNTW8db0tO8rdMqBOwtaypxB4zfrAWn5hMxrMej2MHa/jiQ1GAQIGyAuuc12LfY7Tbmtf+G7ABlwKZd+Zt3yU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SflhmcMH; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ltGmLkZ0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 383E1C4CEEF;
-	Fri, 13 Jun 2025 21:05:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749848709;
-	bh=riqdrxkchD8LFwzBCMlF3Imf3FCZoNoP21Xd7szeknw=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=ltGmLkZ0Y0nIy9SeSra84asXfRhsLs7IwyEyvPtTomikiRhLnJp4yE/NIY2PsuiY9
-	 8qXhVI0i/1Uv/7khX196sXH91ZbBW2/AiKW+rOAaiTo9KSK9XZYp2DMm2C0cRD+OFx
-	 t9q16sAiBnKJcUF2Q3jZS6rIodbYcH2w71u4Lfa+Dv1zxUgREJYeCZ9Lc+VRVxdl9g
-	 QyqaUFGq4YtC2LSZelNiK/rm+SEIZvJO8sYtrDjkNrg4Hn+CSXygSXqp+GhG2g3e0z
-	 sJd6+4rRtq8ef5bvLd0BJxL2e2X05NEYvnuUzT7a38hPVpO7uHuGpo50tcXz0OAi7l
-	 wqun6Y2YnhwwA==
-Message-ID: <238e4d9decc44ed82dcba940725cbf4c6802812e.camel@kernel.org>
-Subject: Re: [PATCH 1/2] nfsd: use threads array as-is in netlink interface
-From: Jeff Layton <jlayton@kernel.org>
-To: Chuck Lever <chuck.lever@oracle.com>, Benjamin Coddington
-	 <bcodding@redhat.com>
-Cc: Neil Brown <neilb@suse.de>, Olga Kornievskaia <okorniev@redhat.com>, Dai
- Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>, Steven Rostedt
- <rostedt@goodmis.org>,  Masami Hiramatsu <mhiramat@kernel.org>, Mathieu
- Desnoyers <mathieu.desnoyers@efficios.com>, Trond Myklebust	
- <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>, "David S. Miller"	
- <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub Kicinski	
- <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Simon Horman	
- <horms@kernel.org>, Mike Snitzer <snitzer@kernel.org>, 
-	linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, netdev@vger.kernel.org
-Date: Fri, 13 Jun 2025 17:05:06 -0400
-In-Reply-To: <df0a6fc5-6ef9-44b6-b6c2-e3cb4a2d1512@oracle.com>
-References: <20250527-rpc-numa-v1-0-fa1d98e9a900@kernel.org>
-	 <20250527-rpc-numa-v1-1-fa1d98e9a900@kernel.org>
-	 <a8d4c4cffe1a35ea831110ce1c7beea649352238.camel@kernel.org>
-	 <ae18305b-167d-4f27-bc3b-3d2d5f216d85@oracle.com>
-	 <1cd4d07f7afbd7322a1330a49a2cc24e8ff801cd.camel@kernel.org>
-	 <38f1974c-f487-49b0-9447-74ed2db6ca7e@oracle.com>
-	 <7DCDEBE1-1416-4A93-B994-49A6D21DC065@redhat.com>
-	 <df0a6fc5-6ef9-44b6-b6c2-e3cb4a2d1512@oracle.com>
-Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
- keydata=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
- QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.2 (3.56.2-1.fc42) 
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SflhmcMH"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1749858815; x=1781394815;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=B+6kzccr+wLacaAhProqN6kMTvtAE7WAi//m7TysVN0=;
+  b=SflhmcMHBHltsr65X9/Imj+EC5xrdB/GnVAR0R4kYVvhDVS6lPAyceU1
+   BRCb8Q4zT2dRFTkQo2H3OqXXALH+p7h4OVxIZrLVfsRi2N+7VnFYWPjM/
+   VJhtVN6FiOodZ8n3wLyLnyc5W2TStQn62ZjEEvMeuENEYSdeL85DGDvud
+   Ppnv30ULbgyyTDRrtXWJ1AjPnIAyTdVn/ZMWFp0Ms+udIpksLwM4KePsY
+   8B8lZoCkY7KhPAaw5RAzVKz8BkBizeUpHo1A+jnJTH2nMpWyoKUAOdQDO
+   I4eMdR1AWKMTAQLBEsisQkpggpRaPKJnMg/z6NqJLy+K8FrtY3HwJuvlT
+   w==;
+X-CSE-ConnectionGUID: S4C1jUfAT+SfsYegq92Kkg==
+X-CSE-MsgGUID: 3vcxTIr3RAOYHG8NrEgf2g==
+X-IronPort-AV: E=McAfee;i="6800,10657,11463"; a="51953407"
+X-IronPort-AV: E=Sophos;i="6.16,235,1744095600"; 
+   d="scan'208";a="51953407"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2025 16:53:34 -0700
+X-CSE-ConnectionGUID: MMF4g+PiTt6z7x4g0XHOJQ==
+X-CSE-MsgGUID: 30F/ZyKVS+yxq3xAfQRgQw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,235,1744095600"; 
+   d="scan'208";a="147850582"
+Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
+  by orviesa010.jf.intel.com with ESMTP; 13 Jun 2025 16:53:31 -0700
+Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uQEDA-000D6A-2d;
+	Fri, 13 Jun 2025 23:53:28 +0000
+Date: Sat, 14 Jun 2025 07:52:30 +0800
+From: kernel test robot <lkp@intel.com>
+To: Steven Rostedt <rostedt@goodmis.org>, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, linux-xfs@vger.kernel.org
+Cc: oe-kbuild-all@lists.linux.dev, Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Linux Memory Management List <linux-mm@kvack.org>,
+	Carlos Maiolino <cem@kernel.org>, Christoph Hellwig <hch@lst.de>,
+	"Darrick J. Wong" <djwong@kernel.org>
+Subject: Re: [PATCH 01/14] xfs: tracing; Remove unused event
+ xfs_reflink_cow_found
+Message-ID: <202506140710.bDy6wh4J-lkp@intel.com>
+References: <20250612212634.746367055@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250612212634.746367055@goodmis.org>
 
-On Fri, 2025-06-13 at 10:56 -0400, Chuck Lever wrote:
-> On 6/13/25 7:33 AM, Benjamin Coddington wrote:
-> > On 12 Jun 2025, at 12:42, Chuck Lever wrote:
-> >=20
-> > > On 6/12/25 12:15 PM, Jeff Layton wrote:
-> > > > On Thu, 2025-06-12 at 12:05 -0400, Chuck Lever wrote:
-> > > > > On 6/12/25 11:57 AM, Jeff Layton wrote:
-> > > > > > On Tue, 2025-05-27 at 20:12 -0400, Jeff Layton wrote:
-> > > > > > > The old nfsdfs interface for starting a server with multiple =
-pools
-> > > > > > > handles the special case of a single entry array passed down =
-from
-> > > > > > > userland by distributing the threads over every NUMA node.
-> > > > > > >=20
-> > > > > > > The netlink control interface however constructs an array of =
-length
-> > > > > > > nfsd_nrpools() and fills any unprovided slots with 0's. This =
-behavior
-> > > > > > > defeats the special casing that the old interface relies on.
-> > > > > > >=20
-> > > > > > > Change nfsd_nl_threads_set_doit() to pass down the array from=
- userland
-> > > > > > > as-is.
-> > > > > > >=20
-> > > > > > > Fixes: 7f5c330b2620 ("nfsd: allow passing in array of thread =
-counts via netlink")
-> > > > > > > Reported-by: Mike Snitzer <snitzer@kernel.org>
-> > > > > > > Closes: https://lore.kernel.org/linux-nfs/aDC-ftnzhJAlwqwh@ke=
-rnel.org/
-> > > > > > > Signed-off-by: Jeff Layton <jlayton@kernel.org>
-> > > > > > > ---
-> > > > > > >  fs/nfsd/nfsctl.c | 5 ++---
-> > > > > > >  1 file changed, 2 insertions(+), 3 deletions(-)
-> > > > > > >=20
-> > > > > > > diff --git a/fs/nfsd/nfsctl.c b/fs/nfsd/nfsctl.c
-> > > > > > > index ac265d6fde35df4e02b955050f5b0ef22e6e519c..22101e08c3e80=
-350668e94c395058bc228b08e64 100644
-> > > > > > > --- a/fs/nfsd/nfsctl.c
-> > > > > > > +++ b/fs/nfsd/nfsctl.c
-> > > > > > > @@ -1611,7 +1611,7 @@ int nfsd_nl_rpc_status_get_dumpit(struc=
-t sk_buff *skb,
-> > > > > > >   */
-> > > > > > >  int nfsd_nl_threads_set_doit(struct sk_buff *skb, struct gen=
-l_info *info)
-> > > > > > >  {
-> > > > > > > -	int *nthreads, count =3D 0, nrpools, i, ret =3D -EOPNOTSUPP=
-, rem;
-> > > > > > > +	int *nthreads, nrpools =3D 0, i, ret =3D -EOPNOTSUPP, rem;
-> > > > > > >  	struct net *net =3D genl_info_net(info);
-> > > > > > >  	struct nfsd_net *nn =3D net_generic(net, nfsd_net_id);
-> > > > > > >  	const struct nlattr *attr;
-> > > > > > > @@ -1623,12 +1623,11 @@ int nfsd_nl_threads_set_doit(struct s=
-k_buff *skb, struct genl_info *info)
-> > > > > > >  	/* count number of SERVER_THREADS values */
-> > > > > > >  	nlmsg_for_each_attr(attr, info->nlhdr, GENL_HDRLEN, rem) {
-> > > > > > >  		if (nla_type(attr) =3D=3D NFSD_A_SERVER_THREADS)
-> > > > > > > -			count++;
-> > > > > > > +			nrpools++;
-> > > > > > >  	}
-> > > > > > >=20
-> > > > > > >  	mutex_lock(&nfsd_mutex);
-> > > > > > >=20
-> > > > > > > -	nrpools =3D max(count, nfsd_nrpools(net));
-> > > > > > >  	nthreads =3D kcalloc(nrpools, sizeof(int), GFP_KERNEL);
-> > > > > > >  	if (!nthreads) {
-> > > > > > >  		ret =3D -ENOMEM;
-> > > > > >=20
-> > > > > > I noticed that this didn't go in to the recent merge window.
-> > > > > >=20
-> > > > > > This patch fixes a rather nasty regression when you try to star=
-t the
-> > > > > > server on a NUMA-capable box.
-> > > > >=20
-> > > > > The NFSD netlink interface is not broadly used yet, is it?
-> > > > >=20
-> > > >=20
-> > > > It is. RHEL10 shipped with it, for instance and it's been in Fedora=
- for
-> > > > a while.
-> > >=20
-> > > RHEL 10 is shiny and new, and Fedora is bleeding edge. It's not likel=
-y
-> > > either of these are deployed in production environments yet. Just say=
-in
-> > > that in this case, the Bayesian filter leans towards waiting a full d=
-ev
-> > > cycle.
-> >=20
-> > We don't consider it acceptable to allow known defects to persist in ou=
-r
-> > products just because they are bleeding edge.
->=20
-> I'm not letting this issue persist. Proper testing takes time.
->=20
-> The patch description and discussion around this change did not include
-> any information about its pervasiveness and only a little about its
-> severity. I used my best judgement and followed my usual rules, which
-> are:
->=20
-> 1. Crashers, data corrupters, and security bugs with public bug reports
->    and confirmed fix effectiveness go in as quickly as we can test.
->    Note well that we have to balance the risk of introducing regressions
->    in this case, since going in quickly means the fix lacks significant
->    test experience.
->=20
-> 1a. Rashes and bug bites require application of topical hydrocortisone.
->=20
-> 2. Patches sit in nfsd-testing for at least two weeks; better if they
->    are there for four. I have CI running daily on that branch, and
->    sometimes it takes a while for a problem to surface and be noticed.
->=20
-> 3. Patches should sit in nfsd-next or nfsd-fixes for at least as long
->    as it takes for them to matriculate into linux-next and fs-next.
->=20
-> 4. If the patch fixes an issue that was introduced in the most recent
->    merge window, it goes in -fixes .
->=20
-> 5. If the patch fixes an issue that is already in released kernels
->    (and we are at rule 5 because the patch does not fix an immediate
->    issue) then it goes in -next .
->=20
-> These evidence-oriented guidelines are in place to ensure that we don't
-> panic and rush commits into the kernel without careful review and
-> testing. There have been plenty of times when a fix that was pushed
-> urgently was not complete or even made things worse. It's a long
-> pipeline on purpose.
->=20
-> The issues with this patch were:
->=20
-> - It was posted very late in the dev cycle for v6.16. (Jeff's urgent
->   fixes always seem to happen during -rc7 ;-)
->=20
-> - The Fixes: tag refers to a commit that was several releases ago, and
->   I am not aware of specific reports of anyone hitting a similar issue.
->=20
-> - IME, the adoption of enterprise distributions is slow. RHEL 10 is
->   still only on its GA release. Therefore my estimation is that the
->   number of potentially impacted customers will be small for some time,
->   enough time for us to test Jeff's fix appropriately.
->=20
-> - The issue did not appear to me to be severe, but maybe I didn't read
->   the patch description carefully enough.
->=20
-> - Although I respect, admire, and greatly appreciate the effort Jeff
->   made to nail this one, that does not mean it is a pervasive problem.
->   Jeff is quite capable of applying his own work to the kernels he and
->   his employer care about.
->=20
+Hi Steven,
 
-The rules all make sense to me. In this case though, I felt the
-potential harm from not taking this patch outweighed the risk. NUMA
-hardware is more prevalent than you might think.=20
+kernel test robot noticed the following build errors:
 
->=20
-> > > > > Since this one came in late during the 6.16 dev cycle and the Fix=
-es: tag
-> > > > > references a commit that is already in released kernels, I put in=
- the
-> > > > > "next merge window" pile. On it's own it doesn't look urgent to m=
-e.
-> > > > >=20
-> > > >=20
-> > > > I'd really like to see this go in soon and to stable. If you want m=
-e to
-> > > > respin the changelog, I can. It's not a crash, but it manifests as =
-lost
-> > > > RPCs that just hang. It took me quite a while to figure out what wa=
-s
-> > > > going on, and I'd prefer that we not put users through that.
-> > >=20
-> > > If someone can confirm that it is effective, I'll add it to nfsd-fixe=
-s.
-> >=20
-> > I'm sure it is if Jeff spent time on it.
-> >=20
-> > We're going to try to get this into RHEL-10 ASAP, because dropped RPCs
-> > manifest as datacenter-wide problems that are very hard to diagnose.
->=20
-> It sounds like Red Hat also does not have clear evidence that links this
-> patch to a specific failure experienced by your customers. This affirms
-> my understanding that this fix is defensive rather than urgent.
->=20
-> As a rule, defensive fixes go in during merge windows.
->=20
->=20
-> > Its a
-> > real pain that we won't have an upstream commit assigned for it.
->=20
-> It's not reasonable for any upstream maintainer not employed by Red Hat
-> to know about or cleave to Red Hat's internal processes. But, if an
-> issue is on Red Hat's radar, then you are welcome to make its priority
-> known to me so I can schedule fixes appropriately.
->=20
-> All that said, I've promoted the fix to nfsd-fixes, since it's narrow
-> and has several weeks of test experience now.
->=20
+[auto build test ERROR on xfs-linux/for-next]
+[also build test ERROR on linus/master v6.16-rc1 next-20250613]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-Many thanks!
---=20
-Jeff Layton <jlayton@kernel.org>
+url:    https://github.com/intel-lab-lkp/linux/commits/Steven-Rostedt/xfs-tracing-Remove-unused-event-xfs_reflink_cow_found/20250613-052758
+base:   https://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git for-next
+patch link:    https://lore.kernel.org/r/20250612212634.746367055%40goodmis.org
+patch subject: [PATCH 01/14] xfs: tracing; Remove unused event xfs_reflink_cow_found
+config: s390-randconfig-r073-20250614 (https://download.01.org/0day-ci/archive/20250614/202506140710.bDy6wh4J-lkp@intel.com/config)
+compiler: clang version 21.0.0git (https://github.com/llvm/llvm-project f819f46284f2a79790038e1f6649172789734ae8)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250614/202506140710.bDy6wh4J-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202506140710.bDy6wh4J-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+>> fs/xfs/xfs_iomap.c:1614:3: error: call to undeclared function 'trace_xfs_reflink_cow_found'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
+    1614 |                 trace_xfs_reflink_cow_found(ip, &got);
+         |                 ^
+   fs/xfs/xfs_iomap.c:1614:3: note: did you mean 'trace_xfs_reflink_cow_enospc'?
+   fs/xfs/xfs_trace.h:4245:1: note: 'trace_xfs_reflink_cow_enospc' declared here
+    4245 | DEFINE_INODE_IREC_EVENT(xfs_reflink_cow_enospc);
+         | ^
+   fs/xfs/xfs_trace.h:4073:39: note: expanded from macro 'DEFINE_INODE_IREC_EVENT'
+    4073 | #define DEFINE_INODE_IREC_EVENT(name) \
+         |                                       ^
+   include/linux/tracepoint.h:594:2: note: expanded from macro '\
+   DEFINE_EVENT'
+     594 |         DECLARE_TRACE(name, PARAMS(proto), PARAMS(args))
+         |         ^
+   include/linux/tracepoint.h:467:2: note: expanded from macro 'DECLARE_TRACE'
+     467 |         __DECLARE_TRACE(name, PARAMS(proto), PARAMS(args),              \
+         |         ^
+   include/linux/tracepoint.h:409:2: note: expanded from macro '__DECLARE_TRACE'
+     409 |         __DECLARE_TRACE_COMMON(name, PARAMS(proto), PARAMS(args), PARAMS(data_proto))
+         |         ^
+   include/linux/tracepoint.h:385:21: note: expanded from macro '__DECLARE_TRACE_COMMON'
+     385 |         static inline void trace_##name(proto)                          \
+         |                            ^
+   <scratch space>:36:1: note: expanded from here
+      36 | trace_xfs_reflink_cow_enospc
+         | ^
+   fs/xfs/xfs_iomap.c:1792:4: error: call to undeclared function 'trace_xfs_reflink_cow_found'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
+    1792 |                         trace_xfs_reflink_cow_found(ip, &cmap);
+         |                         ^
+   2 errors generated.
+
+
+vim +/trace_xfs_reflink_cow_found +1614 fs/xfs/xfs_iomap.c
+
+7c879c8275c0505 Christoph Hellwig 2024-11-17  1514  
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1515  static int
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1516  xfs_zoned_buffered_write_iomap_begin(
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1517  	struct inode		*inode,
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1518  	loff_t			offset,
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1519  	loff_t			count,
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1520  	unsigned		flags,
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1521  	struct iomap		*iomap,
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1522  	struct iomap		*srcmap)
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1523  {
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1524  	struct iomap_iter	*iter =
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1525  		container_of(iomap, struct iomap_iter, iomap);
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1526  	struct xfs_zone_alloc_ctx *ac = iter->private;
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1527  	struct xfs_inode	*ip = XFS_I(inode);
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1528  	struct xfs_mount	*mp = ip->i_mount;
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1529  	xfs_fileoff_t		offset_fsb = XFS_B_TO_FSBT(mp, offset);
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1530  	xfs_fileoff_t		end_fsb = xfs_iomap_end_fsb(mp, offset, count);
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1531  	u16			iomap_flags = IOMAP_F_SHARED;
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1532  	unsigned int		lockmode = XFS_ILOCK_EXCL;
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1533  	xfs_filblks_t		count_fsb;
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1534  	xfs_extlen_t		indlen;
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1535  	struct xfs_bmbt_irec	got;
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1536  	struct xfs_iext_cursor	icur;
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1537  	int			error = 0;
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1538  
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1539  	ASSERT(!xfs_get_extsz_hint(ip));
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1540  	ASSERT(!(flags & IOMAP_UNSHARE));
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1541  	ASSERT(ac);
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1542  
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1543  	if (xfs_is_shutdown(mp))
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1544  		return -EIO;
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1545  
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1546  	error = xfs_qm_dqattach(ip);
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1547  	if (error)
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1548  		return error;
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1549  
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1550  	error = xfs_ilock_for_iomap(ip, flags, &lockmode);
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1551  	if (error)
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1552  		return error;
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1553  
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1554  	if (XFS_IS_CORRUPT(mp, !xfs_ifork_has_extents(&ip->i_df)) ||
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1555  	    XFS_TEST_ERROR(false, mp, XFS_ERRTAG_BMAPIFORMAT)) {
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1556  		xfs_bmap_mark_sick(ip, XFS_DATA_FORK);
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1557  		error = -EFSCORRUPTED;
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1558  		goto out_unlock;
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1559  	}
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1560  
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1561  	XFS_STATS_INC(mp, xs_blk_mapw);
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1562  
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1563  	error = xfs_iread_extents(NULL, ip, XFS_DATA_FORK);
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1564  	if (error)
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1565  		goto out_unlock;
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1566  
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1567  	/*
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1568  	 * For zeroing operations check if there is any data to zero first.
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1569  	 *
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1570  	 * For regular writes we always need to allocate new blocks, but need to
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1571  	 * provide the source mapping when the range is unaligned to support
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1572  	 * read-modify-write of the whole block in the page cache.
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1573  	 *
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1574  	 * In either case we need to limit the reported range to the boundaries
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1575  	 * of the source map in the data fork.
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1576  	 */
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1577  	if (!IS_ALIGNED(offset, mp->m_sb.sb_blocksize) ||
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1578  	    !IS_ALIGNED(offset + count, mp->m_sb.sb_blocksize) ||
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1579  	    (flags & IOMAP_ZERO)) {
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1580  		struct xfs_bmbt_irec	smap;
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1581  		struct xfs_iext_cursor	scur;
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1582  
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1583  		if (!xfs_iext_lookup_extent(ip, &ip->i_df, offset_fsb, &scur,
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1584  				&smap))
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1585  			smap.br_startoff = end_fsb; /* fake hole until EOF */
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1586  		if (smap.br_startoff > offset_fsb) {
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1587  			/*
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1588  			 * We never need to allocate blocks for zeroing a hole.
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1589  			 */
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1590  			if (flags & IOMAP_ZERO) {
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1591  				xfs_hole_to_iomap(ip, iomap, offset_fsb,
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1592  						smap.br_startoff);
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1593  				goto out_unlock;
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1594  			}
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1595  			end_fsb = min(end_fsb, smap.br_startoff);
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1596  		} else {
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1597  			end_fsb = min(end_fsb,
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1598  				smap.br_startoff + smap.br_blockcount);
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1599  			xfs_trim_extent(&smap, offset_fsb,
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1600  					end_fsb - offset_fsb);
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1601  			error = xfs_bmbt_to_iomap(ip, srcmap, &smap, flags, 0,
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1602  					xfs_iomap_inode_sequence(ip, 0));
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1603  			if (error)
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1604  				goto out_unlock;
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1605  		}
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1606  	}
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1607  
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1608  	if (!ip->i_cowfp)
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1609  		xfs_ifork_init_cow(ip);
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1610  
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1611  	if (!xfs_iext_lookup_extent(ip, ip->i_cowfp, offset_fsb, &icur, &got))
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1612  		got.br_startoff = end_fsb;
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1613  	if (got.br_startoff <= offset_fsb) {
+058dd70c65ab736 Christoph Hellwig 2025-02-13 @1614  		trace_xfs_reflink_cow_found(ip, &got);
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1615  		goto done;
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1616  	}
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1617  
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1618  	/*
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1619  	 * Cap the maximum length to keep the chunks of work done here somewhat
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1620  	 * symmetric with the work writeback does.
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1621  	 */
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1622  	end_fsb = min(end_fsb, got.br_startoff);
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1623  	count_fsb = min3(end_fsb - offset_fsb, XFS_MAX_BMBT_EXTLEN,
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1624  			 XFS_B_TO_FSB(mp, 1024 * PAGE_SIZE));
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1625  
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1626  	/*
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1627  	 * The block reservation is supposed to cover all blocks that the
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1628  	 * operation could possible write, but there is a nasty corner case
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1629  	 * where blocks could be stolen from underneath us:
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1630  	 *
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1631  	 *  1) while this thread iterates over a larger buffered write,
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1632  	 *  2) another thread is causing a write fault that calls into
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1633  	 *     ->page_mkwrite in range this thread writes to, using up the
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1634  	 *     delalloc reservation created by a previous call to this function.
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1635  	 *  3) another thread does direct I/O on the range that the write fault
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1636  	 *     happened on, which causes writeback of the dirty data.
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1637  	 *  4) this then set the stale flag, which cuts the current iomap
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1638  	 *     iteration short, causing the new call to ->iomap_begin that gets
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1639  	 *     us here again, but now without a sufficient reservation.
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1640  	 *
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1641  	 * This is a very unusual I/O pattern, and nothing but generic/095 is
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1642  	 * known to hit it. There's not really much we can do here, so turn this
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1643  	 * into a short write.
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1644  	 */
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1645  	if (count_fsb > ac->reserved_blocks) {
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1646  		xfs_warn_ratelimited(mp,
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1647  "Short write on ino 0x%llx comm %.20s due to three-way race with write fault and direct I/O",
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1648  			ip->i_ino, current->comm);
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1649  		count_fsb = ac->reserved_blocks;
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1650  		if (!count_fsb) {
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1651  			error = -EIO;
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1652  			goto out_unlock;
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1653  		}
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1654  	}
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1655  
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1656  	error = xfs_quota_reserve_blkres(ip, count_fsb);
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1657  	if (error)
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1658  		goto out_unlock;
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1659  
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1660  	indlen = xfs_bmap_worst_indlen(ip, count_fsb);
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1661  	error = xfs_dec_fdblocks(mp, indlen, false);
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1662  	if (error)
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1663  		goto out_unlock;
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1664  	ip->i_delayed_blks += count_fsb;
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1665  	xfs_mod_delalloc(ip, count_fsb, indlen);
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1666  
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1667  	got.br_startoff = offset_fsb;
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1668  	got.br_startblock = nullstartblock(indlen);
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1669  	got.br_blockcount = count_fsb;
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1670  	got.br_state = XFS_EXT_NORM;
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1671  	xfs_bmap_add_extent_hole_delay(ip, XFS_COW_FORK, &icur, &got);
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1672  	ac->reserved_blocks -= count_fsb;
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1673  	iomap_flags |= IOMAP_F_NEW;
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1674  
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1675  	trace_xfs_iomap_alloc(ip, offset, XFS_FSB_TO_B(mp, count_fsb),
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1676  			XFS_COW_FORK, &got);
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1677  done:
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1678  	error = xfs_bmbt_to_iomap(ip, iomap, &got, flags, iomap_flags,
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1679  			xfs_iomap_inode_sequence(ip, IOMAP_F_SHARED));
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1680  out_unlock:
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1681  	xfs_iunlock(ip, lockmode);
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1682  	return error;
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1683  }
+058dd70c65ab736 Christoph Hellwig 2025-02-13  1684  
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
