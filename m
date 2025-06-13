@@ -1,146 +1,91 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF09B15278E;
-	Fri, 13 Jun 2025 03:21:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA2671EE7C6;
+	Fri, 13 Jun 2025 07:06:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749784875; cv=none; b=ayWP+iYUrNYcKsraJ43HPrmDmNo87vBuvweDiQaOL4EDfxXI3SmvMrUzaTf5qgchd+D3ulX7q6C4GcSBcR1Q/ZyvbONYN8KOwalj7voSOddltS+zljUtjZFfvFwSVy0Vt778cHyBHp2Jj/ul1pSIC9nMHlewRKM0/PEfjCQybFI=
+	t=1749798398; cv=none; b=g9IdsBEvnWDNOpfEZI1OraYDjB6MuIyQTe52MRrL+CFMCXL+2obR+JEmatf0dG+JuawlO3SPF8oMMKOjZ+5sVMF3SvXW9b0TjLX6cLinAArPtdQNuTk4mK2sKZEUVf4qt3vo6ylFiM9Hs/4F0wfCVGIYaqnjGRZwLKB+nkZaABc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749784875; c=relaxed/simple;
-	bh=azL5StamfCxOer0bMUohJxx6uHwXifg+3tUWGX7wv0w=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fm3qEVqhjguSlSh/MX9U7fn70MQ+ICkSwgVQlqcHoSV9oTbkpuxojfnJCKkBMikGvi4SqDYoT3fNkkHT1ykRKY8S5VxlXD+wXAgrmYUNvaEIGoCX/KBIrxT02gfOxmKU/Va1dHTA4dw2ycEQ5Qib0OmjfdZzN4Bed0O35cXHoiU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=mM3WqZgI; arc=none smtp.client-ip=90.155.50.34
+	s=arc-20240116; t=1749798398; c=relaxed/simple;
+	bh=IHAV7nN6wCNIFQtTRtd4JrisWL7tQ9SP/C8Yiz9z6NE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=q4CyhQMgyUQr776wjy6rB6kFoEtQAUG2Bd2HOCxpkUwtxsBxYErGGWEEaKI7WQ/4eaRylHnO8yJkeC7B2QsbAuiV76HZjWw2iQT86ESweclL/Rq5pMrTzMKwYNwGB4mPuk6uu5ElAnx6tBqsR83U6pYzaUuZbbOCElNIFD1DgZ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=XpRr+gSf; arc=none smtp.client-ip=90.155.92.199
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="mM3WqZgI"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="XpRr+gSf"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description;
-	bh=dPy3+YPjM96m4w0mRmbzfdnzpTV1myn+efhkM8vgURI=; b=mM3WqZgIOER4uqpnsZyYwVGA13
-	sW2ZRZkAq9urHblXMxsY7Xy5/Yta84f5uh9blvSBULwxuqI8Csgk/kVGRyoNTwsKJU6d9SpmLxADs
-	wWV2d2vosvz4ONyPIFVNEGqRtImE5z7P3XnCO9f9N2L2w9Q0xTXndgkJdmyV+Alm3qlI1lNFgaP2t
-	UBkegHnyexuUFSN3UA8szD8m1B7RW5PGyEVjtBWVsU+TLmAnSTwEB0HWjBVu7s1EKnFKnPmOaQFY4
-	VjqkYDYEn00dMJqsR9uDb2nLCMrR+V2OW2OqzXyleSqp7GxezSmaV5JwodPSxuA0fYKg9OzMeXkOo
-	7Ij/king==;
-Received: from [50.53.25.54] (helo=[192.168.254.17])
-	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uPuyP-0000000CY5X-3tCF;
-	Fri, 13 Jun 2025 03:20:58 +0000
-Message-ID: <14fc8777-a5d2-4877-9707-73c25d9e9bd3@infradead.org>
-Date: Thu, 12 Jun 2025 20:20:48 -0700
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=UgEEh5fEgXDb+CnFS0SJsFPqsYxRiY/6CHzoXKuVSq0=; b=XpRr+gSf7eHZm/SvMSk2BRK55i
+	zvnTYKkkC7UhTM8baykOP0fG89XftqUEIJloIJ4aaUPnObzFpe+DTVSsj82sLbztMVoAFD5qBCgQF
+	Coeq/L+duldKcBhXbKAgQPbwU3W4mbxU0zzEA7iPmRuFo0eD53oqnXwF53Yr8hRVHfGIwVaef8NKy
+	dmh3P4kPB3j0WtLBnRvPaOgEt1jeA3hQkwcPQ93IMlD2GylVDpKMNKiSPc50+OyjGUGF/oMspCSBp
+	uwzdSgTgti/cYWtaAx352O5rqlxqRBzcKA5i/GLYcmTQbhLRj6KRpTkz6hv08xFllPEFop+1e8Tk0
+	4Ey7LRQA==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uPyUZ-00000002sn4-1cF9;
+	Fri, 13 Jun 2025 07:06:23 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 273C530BC56; Fri, 13 Jun 2025 09:06:19 +0200 (CEST)
+Date: Fri, 13 Jun 2025 09:06:19 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Sohil Mehta <sohil.mehta@intel.com>
+Cc: x86@kernel.org, linux-kernel@vger.kernel.org, Xin Li <xin@zytor.com>,
+	"H . Peter Anvin" <hpa@zytor.com>,
+	Andy Lutomirski <luto@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Sean Christopherson <seanjc@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	Tony Luck <tony.luck@intel.com>, Zhang Rui <rui.zhang@intel.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Andrew Cooper <andrew.cooper3@citrix.com>,
+	"Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+	Jacob Pan <jacob.pan@linux.microsoft.com>,
+	Andi Kleen <ak@linux.intel.com>, Kai Huang <kai.huang@intel.com>,
+	Sandipan Das <sandipan.das@amd.com>,
+	linux-perf-users@vger.kernel.org, linux-edac@vger.kernel.org,
+	kvm@vger.kernel.org, linux-pm@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH v7 00/10] x86: Add support for NMI-source reporting with
+ FRED
+Message-ID: <20250613070619.GF2273038@noisy.programming.kicks-ass.net>
+References: <20250612214849.3950094-1-sohil.mehta@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 0/5] tracepoints: Add warnings for unused tracepoints
- and trace events
-To: Steven Rostedt <rostedt@goodmis.org>, linux-arch@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- linux-kbuild@vger.kernel.org, llvm@lists.linux.dev
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Masami Hiramatsu <mhiramat@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
- Masahiro Yamada <masahiroy@kernel.org>, Nathan Chancellor
- <nathan@kernel.org>, Nicolas Schier <nicolas.schier@linux.dev>,
- Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
- Catalin Marinas <catalin.marinas@arm.com>,
- Andrew Morton <akpm@linux-foundation.org>
-References: <20250612235827.011358765@goodmis.org>
-Content-Language: en-US
-From: Randy Dunlap <rdunlap@infradead.org>
-In-Reply-To: <20250612235827.011358765@goodmis.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250612214849.3950094-1-sohil.mehta@intel.com>
 
-Hi,
+On Thu, Jun 12, 2025 at 02:48:39PM -0700, Sohil Mehta wrote:
 
-On 6/12/25 4:58 PM, Steven Rostedt wrote:
-> Every trace event can take up to 5K of memory in text and meta data regardless
+> Jacob Pan (1):
+>   perf/x86: Enable NMI-source reporting for perfmon
+> 
+> Sean Christopherson (1):
+>   x86/fred: Provide separate IRQ vs. NMI wrappers for entry from KVM
+> 
+> Sohil Mehta (8):
+>   x86/fred: Pass event data to the NMI entry point from KVM
+>   x86/cpufeatures: Add the CPUID feature bit for NMI-source reporting
+>   x86/nmi: Extend the registration interface to include the NMI-source
+>     vector
+>   x86/nmi: Assign and register NMI-source vectors
+>   x86/nmi: Add support to handle NMIs with source information
+>   x86/nmi: Prepare for the new NMI-source vector encoding
+>   x86/nmi: Enable NMI-source for IPIs delivered as NMIs
+>   x86/nmi: Print source information with the unknown NMI console message
 
-s/meta data/metadata/ unless you are referring to meta's data.
-
-s/meta data/metadata/ in patches 1 and 2 also.
-
-> if they are used or not. Trace events should not be created if they are not
-> used.  Currently there's over a hundred events in the kernel that are defined
-> but unused, either because their callers were removed without removing the
-> trace event with it, or a config hides the trace event caller but not the
-> trace event itself. And in some cases, trace events were simply added but were
-> never called for whatever reason. The number of unused trace events continues
-> to grow.
-> 
-> This patch series aims to fix this.
-> 
-> The first patch creates a new section called __tracepoint_check, where all
-> callers of a tracepoint creates a variable that is placed in this section with
-> a pointer to the tracepoint they use. Then on boot up, it iterates this
-> section and will modify the tracepoint's "func" field to a value of 1 (all
-> tracepoints "func" fields are initialized to NULL and is only set when they
-> are registered). This takes place before any tracepoint can be registered.
-> 
-> Then each tracepoint is iterated on and if any tracepoint does not have its
-> "func" field set to 1 a warning is triggerd and every tracepoint that doesn't
-
-triggered
-
-> have that field set is printed. The "func" field is then reset back to NULL.
-> 
-> The second patch modifies scripts/sorttable.c to read the __tracepoint_check
-> section. It sorts it, and then reads the __tracepoint_ptr section that has all
-> compiled in tracepoints. It makes sure that every tracepoint is found in the
-> check section and if not, it prints a warning message about it. This lists the
-> missing tracepoints at build time.
-> 
-> The third patch updates sorttable to work for arm64 when compiled with gcc. As
-> gcc's arm64 build doesn't put addresses in their section but saves them off in
-> the RELA sections. This mostly takes the work done that was needed to do the
-> mcount sorting at boot up on arm64.
-> 
-> The forth patch adds EXPORT_TRACEPOINT() to the __tracepoint_check section as
-
-fourth (or are you coding in forth?)
-
-> well. There was several locations that adds tracepoints in the kernel proper
-> that are only used in modules. It was getting quite complex trying to move
-> things around that I just decided to make any tracepoint in a
-> EXPORT_TRACEPOINT "used". I'm using the analogy of static and global
-> functions. An unused static function gets a warning but an unused global one
-> does not.
-> 
-> The last patch updates the trace_ftrace_test_filter boot up self test. That
-> selftest creates a trace event to run a bunch of filter tests on it without
-> actually calling the tracepoint. To quiet the warning, the selftest tracepoint
-> is called within a if (!trace_<event>_enabled()) section, where it will not be
-> optimized out, nor will it be called.
-> 
-> This is v2 from: https://lore.kernel.org/linux-trace-kernel/20250529130138.544ffec4@gandalf.local.home/
-> which was simply the first patch. This version adds the other patches.
-> 
-> Steven Rostedt (5):
->       tracepoints: Add verifier that makes sure all defined tracepoints are used
->       tracing: sorttable: Add a tracepoint verification check at build time
->       tracing: sorttable: Find unused tracepoints for arm64 that uses reloc for address
->       tracepoint: Do not warn for unused event that is exported
->       tracing: Call trace_ftrace_test_filter() for the event
-> 
-> ----
->  include/asm-generic/vmlinux.lds.h  |   1 +
->  include/linux/tracepoint.h         |  13 ++
->  kernel/trace/Kconfig               |  31 +++
->  kernel/trace/trace_events_filter.c |   4 +
->  kernel/tracepoint.c                |  26 +++
->  scripts/Makefile                   |   4 +
->  scripts/sorttable.c                | 444 ++++++++++++++++++++++++++++++-------
->  7 files changed, 437 insertions(+), 86 deletions(-)
-> 
-
-thanks.
--- 
-~Randy
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 
