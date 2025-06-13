@@ -1,189 +1,77 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86B3D2DECC7
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 13 Jun 2025 11:33:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 711E3275AEE;
+	Fri, 13 Jun 2025 12:01:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749814420; cv=none; b=am7ZjGYgCxHHdFYoz4ivY05/cDGxY+MvNlTdwnbq9RGCj6teK/lM6rsGhgdP2bhbFpT7AhagLVtv/kACxy8fbwtmlbZ5FZTAxdNCW0CzrD2AC6KYwEkUeMNu0ID2W9swm4voRUCun3Y8YuIweNI6v2me14Av+iM9iO1RL+SPkVY=
+	t=1749816119; cv=none; b=NkmSBIj/8B8ZH5T5eI6t6ghVh1vfehg1qztPd2adiJA2/LenXxBIixjIZLqxFr2RsSGB5kiLftXe8ZUQZnzENUDGvNFmaS35PY2JlZeWzFkWZV5pyehckL+Jcs1uRCkcYCiCwIBn7pnjPLXyOPljfGe1FVKe7Zh3jofoaJGdxdg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749814420; c=relaxed/simple;
-	bh=lfynEmycBcTUhYS2//mGCt+9+hiekxvpfMXULeOUjqs=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=heH11z3t4oCztCI/J0Zd4n/vGZSycV8jQNiWEe3lEP8yZvvem6veBl5Cp9ZjkrFeCaNMVj4EKc9jeaNIbcO7jgElre73H+mjEw4RyPopyn/pVZnUe39YeUQQ7APVWFQed9Ua6uck0FmWvv5cp3ErA5uOszbJ/8Q3Kv3jnIVF+D0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=GoGT+eoL; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1749816119; c=relaxed/simple;
+	bh=Gh2nhsaaPI2Pw0FhumH8XUZtTKmK6FkuDXlv3k8MGiQ=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=ofs078qyyhhhEapn6EICAkmQAXX9T7etu1HHa6Xu8NzuenhDOwkj1YG9bC6d+SZ4ZI2GkIQkE3p8RdNaM6Pqjmh3BZBaGoQbV2rihtWzulbr9kjzhdHFmhWCiPCF0vqBwbg0ETFdZwjAIbbGlakyPOl/sWtSDnGq3oFarAQz50I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oU47ixca; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GoGT+eoL"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1749814417;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=J4I9CYam3FITVcfvZRQPJD4i6p9XAy84R0dLNBapStE=;
-	b=GoGT+eoLp9n9ptFhEl9azcYHjvm5Uu8dEhZw77xZ4zPWEDbvJHkIc8hFKuFrxMWhEP5MFo
-	A0pbo9kRMG3OpkQTTlWs0i+DkKYkRcVY18PJSiLuYJtQh5SXHjkUCJJOHy9pDeuI4ZG9o5
-	7/SdiSQ5fCpkSjRsqwKSn3QciSnpV+k=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-163-s700-o_5NmuVtHYdjSzeJQ-1; Fri,
- 13 Jun 2025 07:33:35 -0400
-X-MC-Unique: s700-o_5NmuVtHYdjSzeJQ-1
-X-Mimecast-MFC-AGG-ID: s700-o_5NmuVtHYdjSzeJQ_1749814410
-Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 847B21800281;
-	Fri, 13 Jun 2025 11:33:29 +0000 (UTC)
-Received: from [192.168.37.1] (unknown [10.22.58.9])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 9651230044CC;
-	Fri, 13 Jun 2025 11:33:24 +0000 (UTC)
-From: Benjamin Coddington <bcodding@redhat.com>
-To: Chuck Lever <chuck.lever@oracle.com>
-Cc: Jeff Layton <jlayton@kernel.org>, Neil Brown <neilb@suse.de>,
- Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>,
- Tom Talpey <tom@talpey.com>, Steven Rostedt <rostedt@goodmis.org>,
- Masami Hiramatsu <mhiramat@kernel.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Simon Horman <horms@kernel.org>, Mike Snitzer <snitzer@kernel.org>,
- linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, netdev@vger.kernel.org
-Subject: Re: [PATCH 1/2] nfsd: use threads array as-is in netlink interface
-Date: Fri, 13 Jun 2025 07:33:22 -0400
-Message-ID: <7DCDEBE1-1416-4A93-B994-49A6D21DC065@redhat.com>
-In-Reply-To: <38f1974c-f487-49b0-9447-74ed2db6ca7e@oracle.com>
-References: <20250527-rpc-numa-v1-0-fa1d98e9a900@kernel.org>
- <20250527-rpc-numa-v1-1-fa1d98e9a900@kernel.org>
- <a8d4c4cffe1a35ea831110ce1c7beea649352238.camel@kernel.org>
- <ae18305b-167d-4f27-bc3b-3d2d5f216d85@oracle.com>
- <1cd4d07f7afbd7322a1330a49a2cc24e8ff801cd.camel@kernel.org>
- <38f1974c-f487-49b0-9447-74ed2db6ca7e@oracle.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oU47ixca"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C2BF4C4CEE3;
+	Fri, 13 Jun 2025 12:01:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749816119;
+	bh=Gh2nhsaaPI2Pw0FhumH8XUZtTKmK6FkuDXlv3k8MGiQ=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=oU47ixcaUvCGseubQ2LyG2gNbHEcJGf2TsMn8RrAl5J31EwbOBd2heAKBq3AWO7Mt
+	 7MgRlYbcUkCW9KK33IOAu8bR4ZOAHFSmoyqJS8oVlELKXAXRfZ9lUP5vSE13ZVujzp
+	 Bd3T2SkS2XDIybg0O3U/4B53fxSL6nM0ZdpyZpjfJGas8qCxI5g+5s66iBIhZUF+RX
+	 FPZOdN7lPud3DVqabqG0mo1yyLcv1OkQJOZt9pQ7jhP1ME/+rbvoFGut7o6qQNgld0
+	 A8PmzwGMw5q+WnqSoEQK52n7B3aGVQf/iUQbAMZhDyFpFt4KYGs+l40+SCm90QbuHE
+	 LI/03q26+xUfw==
+Date: Fri, 13 Jun 2025 21:01:54 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Cc: Naresh Kamboju <naresh.kamboju@linaro.org>, Steven Rostedt
+ <rostedt@goodmis.org>, open list <linux-kernel@vger.kernel.org>, Linux
+ trace kernel <linux-trace-kernel@vger.kernel.org>,
+ lkft-triage@lists.linaro.org, Stephen Rothwell <sfr@canb.auug.org.au>, Arnd
+ Bergmann <arnd@arndb.de>, Dan Carpenter <dan.carpenter@linaro.org>, Anders
+ Roxell <anders.roxell@linaro.org>
+Subject: Re: next-20250605: Test regression: qemu-x86_64-compat mode ltp
+ tracing Oops int3 kernel panic
+Message-Id: <20250613210154.dd5150d88f74673c1019a191@kernel.org>
+In-Reply-To: <20250613172753.3479f786d40c29ec7b51df0a@kernel.org>
+References: <CA+G9fYsLu0roY3DV=tKyqP7FEKbOEETRvTDhnpPxJGbA=Cg+4w@mail.gmail.com>
+	<20250609220934.2c3ed98ba8c624fc7cb45172@kernel.org>
+	<CA+G9fYsoCc3DnNGoavFiBdymVpdJiEfUSEq967GgThVQW7bTPA@mail.gmail.com>
+	<20250610105337.68df01f4@gandalf.local.home>
+	<CA+G9fYv+1FPMD8e1ZadA3nLcfSRDAWvPRW-A3bGrV0y1VP2zLQ@mail.gmail.com>
+	<20250613172753.3479f786d40c29ec7b51df0a@kernel.org>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On 12 Jun 2025, at 12:42, Chuck Lever wrote:
+On Fri, 13 Jun 2025 17:27:53 +0900
+Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
 
-> On 6/12/25 12:15 PM, Jeff Layton wrote:
->> On Thu, 2025-06-12 at 12:05 -0400, Chuck Lever wrote:
->>> On 6/12/25 11:57 AM, Jeff Layton wrote:
->>>> On Tue, 2025-05-27 at 20:12 -0400, Jeff Layton wrote:
->>>>> The old nfsdfs interface for starting a server with multiple pools
->>>>> handles the special case of a single entry array passed down from
->>>>> userland by distributing the threads over every NUMA node.
->>>>>
->>>>> The netlink control interface however constructs an array of length=
+> In do_int3(), if we hit a disappeared int3, it is evacuated after
+> all. This means kprobe_int3_handler() is hit, and call get_kprobe()
+> to find the corresponding kprobes. But,
+> 
+> ffffffff8150a040 <get_kprobe>:
+> ffffffff8150a040:       f3 0f 1e fa             endbr64
+> ffffffff8150a044:       e8 07 b0 e2 ff          call   ffffffff81335050 <__fentry__>
+> ffffffff8150a049:       48 b8 eb 83 b5 80 46    movabs $0x61c8864680b583eb,%rax
+> ffffffff8150a050:       86 c8 61 
 
->>>>> nfsd_nrpools() and fills any unprovided slots with 0's. This behavi=
-or
->>>>> defeats the special casing that the old interface relies on.
->>>>>
->>>>> Change nfsd_nl_threads_set_doit() to pass down the array from userl=
-and
->>>>> as-is.
->>>>>
->>>>> Fixes: 7f5c330b2620 ("nfsd: allow passing in array of thread counts=
- via netlink")
->>>>> Reported-by: Mike Snitzer <snitzer@kernel.org>
->>>>> Closes: https://lore.kernel.org/linux-nfs/aDC-ftnzhJAlwqwh@kernel.o=
-rg/
->>>>> Signed-off-by: Jeff Layton <jlayton@kernel.org>
->>>>> ---
->>>>>  fs/nfsd/nfsctl.c | 5 ++---
->>>>>  1 file changed, 2 insertions(+), 3 deletions(-)
->>>>>
->>>>> diff --git a/fs/nfsd/nfsctl.c b/fs/nfsd/nfsctl.c
->>>>> index ac265d6fde35df4e02b955050f5b0ef22e6e519c..22101e08c3e80350668=
-e94c395058bc228b08e64 100644
->>>>> --- a/fs/nfsd/nfsctl.c
->>>>> +++ b/fs/nfsd/nfsctl.c
->>>>> @@ -1611,7 +1611,7 @@ int nfsd_nl_rpc_status_get_dumpit(struct sk_b=
-uff *skb,
->>>>>   */
->>>>>  int nfsd_nl_threads_set_doit(struct sk_buff *skb, struct genl_info=
- *info)
->>>>>  {
->>>>> -	int *nthreads, count =3D 0, nrpools, i, ret =3D -EOPNOTSUPP, rem;=
+BTW, I think this get_kprobe() should be "notrace" because this
+is called from int3 handler.
 
->>>>> +	int *nthreads, nrpools =3D 0, i, ret =3D -EOPNOTSUPP, rem;
->>>>>  	struct net *net =3D genl_info_net(info);
->>>>>  	struct nfsd_net *nn =3D net_generic(net, nfsd_net_id);
->>>>>  	const struct nlattr *attr;
->>>>> @@ -1623,12 +1623,11 @@ int nfsd_nl_threads_set_doit(struct sk_buff=
- *skb, struct genl_info *info)
->>>>>  	/* count number of SERVER_THREADS values */
->>>>>  	nlmsg_for_each_attr(attr, info->nlhdr, GENL_HDRLEN, rem) {
->>>>>  		if (nla_type(attr) =3D=3D NFSD_A_SERVER_THREADS)
->>>>> -			count++;
->>>>> +			nrpools++;
->>>>>  	}
->>>>>
->>>>>  	mutex_lock(&nfsd_mutex);
->>>>>
->>>>> -	nrpools =3D max(count, nfsd_nrpools(net));
->>>>>  	nthreads =3D kcalloc(nrpools, sizeof(int), GFP_KERNEL);
->>>>>  	if (!nthreads) {
->>>>>  		ret =3D -ENOMEM;
->>>>
->>>> I noticed that this didn't go in to the recent merge window.
->>>>
->>>> This patch fixes a rather nasty regression when you try to start the=
+Thanks,
 
->>>> server on a NUMA-capable box.
->>>
->>> The NFSD netlink interface is not broadly used yet, is it?
->>>
->>
->> It is. RHEL10 shipped with it, for instance and it's been in Fedora fo=
-r
->> a while.
->
-> RHEL 10 is shiny and new, and Fedora is bleeding edge. It's not likely
-> either of these are deployed in production environments yet. Just sayin=
-
-> that in this case, the Bayesian filter leans towards waiting a full dev=
-
-> cycle.
-
-We don't consider it acceptable to allow known defects to persist in our
-products just because they are bleeding edge.
-
->>> Since this one came in late during the 6.16 dev cycle and the Fixes: =
-tag
->>> references a commit that is already in released kernels, I put in the=
-
->>> "next merge window" pile. On it's own it doesn't look urgent to me.
->>>
->>
->> I'd really like to see this go in soon and to stable. If you want me t=
-o
->> respin the changelog, I can. It's not a crash, but it manifests as los=
-t
->> RPCs that just hang. It took me quite a while to figure out what was
->> going on, and I'd prefer that we not put users through that.
->
-> If someone can confirm that it is effective, I'll add it to nfsd-fixes.=
-
-
-I'm sure it is if Jeff spent time on it.
-
-We're going to try to get this into RHEL-10 ASAP, because dropped RPCs
-manifest as datacenter-wide problems that are very hard to diagnose.  Its=
- a
-real pain that we won't have an upstream commit assigned for it.
-
-Ben
-
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
