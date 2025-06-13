@@ -1,123 +1,140 @@
-Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADD272236FC;
-	Fri, 13 Jun 2025 18:52:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DA282236FC;
+	Fri, 13 Jun 2025 18:57:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749840780; cv=none; b=YfCKAa2bVPMRqCMkGaB81nLGA6QmItn+V05+AF3wsFUDFcM+v1wUK4V9PDkvkNTSy7CW6sgjrWCpItAz6lv/TRSfi7TaunlCvZUfRIqTQJ1rz60UOkwbYp5i4StSEKGsWorWEAhDh4H9grc6o/w2Xf46arQlGnaq1E8MU4kRZVM=
+	t=1749841059; cv=none; b=DDgz67J8HylyEE+xkqaXYx9Zvnl1ZNdaGqUP+fB7Fki2vvkFXItALn9b58ynizsoL1IcSlK33qrVjNUUwvP8ruUWfrcUaTu37zAKsLVstZxvAf/tWJiUT8Q/lvCtQDE4YyYxekRcEiEcwD0JRSZXeHS0QIFSVmmm5KUVyXAEhtQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749840780; c=relaxed/simple;
-	bh=4GG8h4VrUJ72KYx3JStbtJGGYIPOY8UMQiZqMjt0b+k=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=PVSuNH+q72NLW8JSoS7br9yeIsX6emboCWphAWY2REIJaqJ/z2zFVSwu02jLrtTHpW1czbjeXBRG+BM6f70yKClGCXOVuQ3JawNNzlWOga4OILUGefTQ+KH0OhtUk5ef/+IZHSDuzTMC/itzZDsbSaoA+D26N+HMzqVutjNXk6s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FRvw/CvV; arc=none smtp.client-ip=209.85.221.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749841059; c=relaxed/simple;
+	bh=yM0YHtJ7BxqfyfLZ1pIJKzDis7Kx2BYqnliwZo6DSg8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=f3CARRROia8jAPYh7z1EVdVWaj+SycJzAr71yBRQu9vlLSC6vSEojZTz2LhE3cpTQb4z2YUpGe4QDRv9WyBnKFjA8iJrSrm5Y69aN+32A3yXvjXwfXEA4ZUSmTBvNBcQhZ6Xrea9+cOffoNPYYOa4+lP+m1IaYGJ/59r8ECTnGg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OE4UsPNt; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FRvw/CvV"
-Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-3a5123c1533so1535870f8f.2;
-        Fri, 13 Jun 2025 11:52:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749840777; x=1750445577; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=WiNV/nTakryBZy7/aqri35p4mFreiS8n/RLeN55SiFs=;
-        b=FRvw/CvVt9iEZ/wVY2zWSzRMqZ+mQKZPJSUYW8hd2Qx/Lzy+vfsVuUeUX2OsBSpqxf
-         aUhQcjYnVkVEvkWkwlB1V21ZM3zCxST+A8CxFRg76oDLQLalYcE3/y07l7o8t1h/x+HF
-         LkS05mzYXMbZ1ftfmEYgTz/S2lW6Zhj2Apl9rZGk9TBc5snzDuKVffyYCGYN3c2vYQ9N
-         /SOh60SV1LMI8ZU8aqPK7KE/iZP5VB2qKPf1PzRM6BGR+MKaRYGpv0a9lBE6RXVqnIrv
-         Jg/3maNwRITLRyabsLjL9fHeOP0y+T/JFEDZOlrBtgG9TclPrCjEBOU5/8HQlBMeYmQI
-         sjew==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749840777; x=1750445577;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=WiNV/nTakryBZy7/aqri35p4mFreiS8n/RLeN55SiFs=;
-        b=qFHmmqHCMsGrvLq9FceZHxDBuI8kzzBPDnAQ3/r+8Pn2T+gXYWVCbm+FfTpzN2S3pe
-         lSiRDtVu/t5M8B8QEa8pnz0oKX6iEDzwN7CJcb94CnQaQaNeEpB3Kcp12P8cE4hJi8aX
-         Lr3JSuhf3fuxSukz/viT2f6OkuXNBoEBTvET6ysY2bSHKN8NjE3YULf9W7LkrY8f7Dzw
-         X5C7DBLF99f/lAPt46UEEAqjYHLSPdaIn6H8USxK9qZmMVzsYY8qIRrwuGk48DwfDpgV
-         mZau0ez5IOcvu6GJInIK5R2yf8Us+CCD9TkV+FEVoKNaNU3gKcyrJJOKGiEWQ5sojwhJ
-         Tnzw==
-X-Forwarded-Encrypted: i=1; AJvYcCVB01RnAdl9OiILaq9BkNmZlJlybiLRacs2Nzq69JL2UEjPx2QBcu/ruUx7z1QgqaX+DwNsg4Y9n8O7PWpvdGdKNdKw@vger.kernel.org, AJvYcCWbPgq0K8hE+nCZMlpIGOVadDiJHWDHy434oT3DEx5k0c5kEf5Ezq9ZnF+jwW4VgkIHN5c=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwaUj8i+mAjfIg10Aox+HObipyB1PhBF9t3bRNShkXcQ1UJthK0
-	kGALmRelPk7R1IBhpIrTYtFK7UIh7JCrthUtdcxQNWfLo7H5ww28FWU8iH3xGijMsch3a7G3j/U
-	zcRsqpZV9IRpM5TbyXQesi+e35X+MQZ8=
-X-Gm-Gg: ASbGncv+QX02F2vU+VlEc079VS1grM3+N7KA1fpRmTSfc0PETNroo4HKtBpHnatOQnG
-	mZb60yxky8cFMGO4UQ4GI6XhjDCLuTAyrrMv2BDMBRMHiiLk9HXFy3jOxESy1BbBB1qLyMhecNY
-	BrZCcYN17OHXEfoI9bSw0iWVt6yhT5H5uD1UZOOwoEzkmMmftCtUbzb2PA8pFf+MAnJTxo7Vr/
-X-Google-Smtp-Source: AGHT+IGjeC/2sHP/3xV2aREWxija/hCdRDjn++PYArbmyRHRCDcQw+76Cm4ulAFCUyk5xiXD43VC13Za3SnnbIQp1UA=
-X-Received: by 2002:a05:6000:144e:b0:3a4:eb92:b5eb with SMTP id
- ffacd0b85a97d-3a572e998a0mr718423f8f.50.1749840776759; Fri, 13 Jun 2025
- 11:52:56 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OE4UsPNt"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 53B2AC4CEE3;
+	Fri, 13 Jun 2025 18:57:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749841058;
+	bh=yM0YHtJ7BxqfyfLZ1pIJKzDis7Kx2BYqnliwZo6DSg8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=OE4UsPNtrb2fx5m0o9Tc94Ho1/loam2DfUZZ4v+joXfL6ubxBS/0kBjxbZZ1EBn2x
+	 1HEVNQaP0GyRofvm/QqIzTuTkvzWhjI87nKFl5G29z1dgDbgKsGEEH5AtdOB9/mycO
+	 QucTM87AauTa/bfk0GY0pZeuARdCFwa34COOwTefm8uiRxpqt6jyDEnQmG0cIKOpEh
+	 9wdAK4ANsyXKw5Y/g6QjCh8ZDRDkOqpqDk8/SH0geD7vSzhiEWukOkPyz+Gc54bwv9
+	 H/tOFiiGx7os3tPbhlA96Txoxnz3+zR5Dtiz8etHAyePCvezeC/pqL+ZaGms0HSz3L
+	 qWxosvrka8s4Q==
+Date: Fri, 13 Jun 2025 14:57:37 -0400
+From: Mike Snitzer <snitzer@kernel.org>
+To: Jeff Layton <jlayton@kernel.org>
+Cc: Chuck Lever <chuck.lever@oracle.com>, Neil Brown <neilb@suse.de>,
+	Olga Kornievskaia <okorniev@redhat.com>,
+	Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Trond Myklebust <trondmy@kernel.org>,
+	Anna Schumaker <anna@kernel.org>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>, linux-nfs@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	netdev@vger.kernel.org
+Subject: Re: [PATCH 1/2] nfsd: use threads array as-is in netlink interface
+Message-ID: <aEx0ocoWoFkp8oCg@kernel.org>
+References: <20250527-rpc-numa-v1-0-fa1d98e9a900@kernel.org>
+ <20250527-rpc-numa-v1-1-fa1d98e9a900@kernel.org>
+ <a8d4c4cffe1a35ea831110ce1c7beea649352238.camel@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250612182023.78397b76@batman.local.home> <CAADnVQKEosaLbpLg4Zk_CcDSKT+Jzb3ScKQWBA51vLHt-AoQ8A@mail.gmail.com>
- <20250612222652.229eaa9c@batman.local.home>
-In-Reply-To: <20250612222652.229eaa9c@batman.local.home>
-From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date: Fri, 13 Jun 2025 11:52:44 -0700
-X-Gm-Features: AX0GCFssdBMjywfJptOVExlGYdngzOBaGqfQs8frgcbBiaOQYEqFjNxYC18X14I
-Message-ID: <CAADnVQLkLPv6uvxXz0iWaA06KYXW8_P5fPPX2-WpXOYuXT-B5Q@mail.gmail.com>
-Subject: Re: [PATCH v2] xdp: tracing: Hide some xdp events under CONFIG_BPF_SYSCALL
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, 
-	Linux trace kernel <linux-trace-kernel@vger.kernel.org>, bpf <bpf@vger.kernel.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	"David S. Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>, 
-	Jesper Dangaard Brouer <hawk@kernel.org>, John Fastabend <john.fastabend@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a8d4c4cffe1a35ea831110ce1c7beea649352238.camel@kernel.org>
 
-On Thu, Jun 12, 2025 at 7:27=E2=80=AFPM Steven Rostedt <rostedt@goodmis.org=
-> wrote:
->
-> On Thu, 12 Jun 2025 19:16:33 -0700
-> Alexei Starovoitov <alexei.starovoitov@gmail.com> wrote:
->
-> > On Thu, Jun 12, 2025 at 3:20=E2=80=AFPM Steven Rostedt <rostedt@goodmis=
-.org> wrote:
-> > >
-> > > From: Steven Rostedt <rostedt@goodmis.org>
-> > >
-> > > The events xdp_cpumap_kthread, xdp_cpumap_enqueue and xdp_devmap_xmit=
- are
-> > > only called when CONFIG_BPF_SYSCALL is defined.  As each event can ta=
-ke up
-> > > to 5K regardless if they are used or not, it's best not to define the=
-m
-> > > when they are not used. Add #ifdef around these events when they are =
-not
-> > > used.
-> > >
-> > > Acked-by: Jesper Dangaard Brouer <hawk@kernel.org>
-> > > Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-> > > ---
-> > > Changes since v1: https://lore.kernel.org/20250612101612.3d4509cc@bat=
-man.local.home
-> > >
-> > > - Rebased on top of bpf-next
-> >
-> > We can certainly take it, but you mentioned you're working
-> > on some patches that will warn when tracepoint is not used.
-> > So do you need this to land sooner than the next merge window ?
->
-> No. I plan on sending that code near the end of the next merge window
-> to let these patches get in before they start to add warnings.
->
-> I'm also going to wait till near the end of this cycle before I add
-> that code to linux-next to keep the warnings happening there too soon.
->
-> So, please take it. That way there's less likelihood of another
-> conflict.
+On Thu, Jun 12, 2025 at 11:57:59AM -0400, Jeff Layton wrote:
+> On Tue, 2025-05-27 at 20:12 -0400, Jeff Layton wrote:
+> > The old nfsdfs interface for starting a server with multiple pools
+> > handles the special case of a single entry array passed down from
+> > userland by distributing the threads over every NUMA node.
+> > 
+> > The netlink control interface however constructs an array of length
+> > nfsd_nrpools() and fills any unprovided slots with 0's. This behavior
+> > defeats the special casing that the old interface relies on.
+> > 
+> > Change nfsd_nl_threads_set_doit() to pass down the array from userland
+> > as-is.
+> > 
+> > Fixes: 7f5c330b2620 ("nfsd: allow passing in array of thread counts via netlink")
+> > Reported-by: Mike Snitzer <snitzer@kernel.org>
+> > Closes: https://lore.kernel.org/linux-nfs/aDC-ftnzhJAlwqwh@kernel.org/
+> > Signed-off-by: Jeff Layton <jlayton@kernel.org>
+> > ---
+> >  fs/nfsd/nfsctl.c | 5 ++---
+> >  1 file changed, 2 insertions(+), 3 deletions(-)
+> > 
+> > diff --git a/fs/nfsd/nfsctl.c b/fs/nfsd/nfsctl.c
+> > index ac265d6fde35df4e02b955050f5b0ef22e6e519c..22101e08c3e80350668e94c395058bc228b08e64 100644
+> > --- a/fs/nfsd/nfsctl.c
+> > +++ b/fs/nfsd/nfsctl.c
+> > @@ -1611,7 +1611,7 @@ int nfsd_nl_rpc_status_get_dumpit(struct sk_buff *skb,
+> >   */
+> >  int nfsd_nl_threads_set_doit(struct sk_buff *skb, struct genl_info *info)
+> >  {
+> > -	int *nthreads, count = 0, nrpools, i, ret = -EOPNOTSUPP, rem;
+> > +	int *nthreads, nrpools = 0, i, ret = -EOPNOTSUPP, rem;
+> >  	struct net *net = genl_info_net(info);
+> >  	struct nfsd_net *nn = net_generic(net, nfsd_net_id);
+> >  	const struct nlattr *attr;
+> > @@ -1623,12 +1623,11 @@ int nfsd_nl_threads_set_doit(struct sk_buff *skb, struct genl_info *info)
+> >  	/* count number of SERVER_THREADS values */
+> >  	nlmsg_for_each_attr(attr, info->nlhdr, GENL_HDRLEN, rem) {
+> >  		if (nla_type(attr) == NFSD_A_SERVER_THREADS)
+> > -			count++;
+> > +			nrpools++;
+> >  	}
+> >  
+> >  	mutex_lock(&nfsd_mutex);
+> >  
+> > -	nrpools = max(count, nfsd_nrpools(net));
+> >  	nthreads = kcalloc(nrpools, sizeof(int), GFP_KERNEL);
+> >  	if (!nthreads) {
+> >  		ret = -ENOMEM;
+> 
+> I noticed that this didn't go in to the recent merge window.
+> 
+> This patch fixes a rather nasty regression when you try to start the
+> server on a NUMA-capable box. It all looks like it works, but some RPCs
+> get silently dropped on the floor (if they happen to be received into a
+> node with no threads). It took me a while to track down the problem
+> after Mike reported it.
+> 
+> Can we go ahead and pull this in and send it to stable?
+> 
+> Also, did this patch fix the problem for you, Mike?
 
-It was applied to bpf-next/net yesterday.
-pw-bot didn't notice.
+Hi Jeff,
+
+I saw your other mail asking the same, figured it best to reply to this
+thread with the patch.
+
+YES, I just verified this patch fixes the issue I reported.  I didn't
+think I was critical path for confirming the fix, and since I had
+worked around it (by downgrading nfs-utils from EL10's 2.8.2 to EL9's
+2.5.4 it wasn't a super quick thing for me to test.. it became
+out-of-sight-out-of-mind...
+
+BTW, Chuck, I think the reason there aren't many/any reports (even
+with RHEL10 or Fedora users) is that the user needs to:
+1) have a NUMA system
+2) explicitly change sunrpc's default for pool_mode from global to pernode.
+
+Anyway:
+
+Tested-by: Mike Snitzer <snitzer@kernel.org>
