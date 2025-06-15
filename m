@@ -1,149 +1,158 @@
-Received: from relay.hostedemail.com (smtprelay0017.hostedemail.com [216.40.44.17])
+Received: from out-176.mta1.migadu.com (out-176.mta1.migadu.com [95.215.58.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B03362CCDB;
-	Sun, 15 Jun 2025 02:41:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76F80200132
+	for <linux-trace-kernel@vger.kernel.org>; Sun, 15 Jun 2025 15:05:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749955277; cv=none; b=iedtHIqFxoNxCdUqrCqnCrOLSWxGn73ne7yZn7t3e2Km6591GHr9Qe95e5Vyn2ra/iog8llcgyGryeXn8QUrcM+DHbASry+XxvKwXuwnPAgTwk0mqJKHaFCGNEVzUvArTjMwT+xLhr9Fbv6bWN11RbrQmMHCk7WqpzyFaA/iNpc=
+	t=1749999957; cv=none; b=JCBTEniCim7ViUASFnw/MPikA8HIamNj5dqhUsnDb5iBOSQIiRNedFSYWJ+LQMEZrV4c7ck+vZptg3TrJuxcXfPJ/Bam/m70gAvlbh58wOfegHdG2CW4mUmFwuhVl7iu0jURF2r6sP/OKS3zKi8bdNbWxYAiyBrNz0kya2P8P2w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749955277; c=relaxed/simple;
-	bh=42hHEKic1VacB13vV/becXEpEt+H8TRWfpKTXWoQMV8=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=hRhvDZ6fksH6K5JDjaNGLjsH+3OyNGbfFQ7tkhDpe0GCXY2JtfCOQ5miObe5nBfXedWObjjXbj+dwcwwZhQHd3ienYRDdtyNyqfRkinXbWWNDptp7zhNWrdh+WPWmcfzvIMipLknLq0rl5QXmnGNQlG2cPfVchN2b+kRcXOHAps=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf16.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay03.hostedemail.com (Postfix) with ESMTP id 69D87BE48A;
-	Sun, 15 Jun 2025 02:41:12 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf16.hostedemail.com (Postfix) with ESMTPA id 420FE20018;
-	Sun, 15 Jun 2025 02:41:08 +0000 (UTC)
-Date: Sat, 14 Jun 2025 22:41:07 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- bpf@vger.kernel.org, x86@kernel.org
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Josh Poimboeuf <jpoimboe@kernel.org>,
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, Jiri
- Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Thomas
- Gleixner <tglx@linutronix.de>, Andrii Nakryiko <andrii@kernel.org>, Indu
- Bhagat <indu.bhagat@oracle.com>, "Jose E. Marchesi" <jemarch@gnu.org>, Beau
- Belgrave <beaub@linux.microsoft.com>, Jens Remus <jremus@linux.ibm.com>,
- Linus Torvalds <torvalds@linux-foundation.org>, Andrew Morton
- <akpm@linux-foundation.org>
-Subject: Re: [PATCH v10 07/11] perf: Support deferred user callchains for
- per CPU events
-Message-ID: <20250614224107.5dfc9f9b@batman.local.home>
-In-Reply-To: <20250614024716.798086123@goodmis.org>
-References: <20250614024605.597728558@goodmis.org>
-	<20250614024716.798086123@goodmis.org>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1749999957; c=relaxed/simple;
+	bh=9x5d0MuH0alaGnZtLVJbiwg3/L6hyK1sziXN8OX+yS4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=OboiBYNIhzEcSCpCoK/Z8mIcKJdzuOHsXvpVKkxIn17NehUyG3DCYD+hLVI2Gm0QBRluMr2/W5Oami3SFVziy6LCxXuDMAenPjXBDDHGacIFphoyoTBmFBjfCo4zyfeVpNgwviu6jbBTrMM6G9UkoUpmJGRkJ4TnnLBBgcpSW9c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=bKvtJ6u9; arc=none smtp.client-ip=95.215.58.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="bKvtJ6u9"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1749999942;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=Xi5PEas38TLaRRKxnR4rXfoajkd7D2bySyWzaXWpC2A=;
+	b=bKvtJ6u9UmcUuUnsvV7wKQo4hMfeR3bPLWoEOVDvhy6/SkgL5L6diqee9HBwXsRnIOBGcW
+	PM1bVPb/zfkfKHa/luoQ9n24nVe3XpxcciJEeMETl12LaD5HreCUvHfnJGLRgBY86pA569
+	B0ml9SI4x9degePeM/O3+9ohHsPTKcs=
+From: Tao Chen <chen.dylane@linux.dev>
+To: song@kernel.org,
+	jolsa@kernel.org,
+	kpsingh@kernel.org,
+	mattbobrowski@google.com,
+	ast@kernel.org,
+	daniel@iogearbox.net,
+	andrii@kernel.org,
+	martin.lau@linux.dev,
+	eddyz87@gmail.com,
+	yonghong.song@linux.dev,
+	john.fastabend@gmail.com,
+	sdf@fomichev.me,
+	haoluo@google.com,
+	rostedt@goodmis.org,
+	mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com
+Cc: bpf@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	Tao Chen <chen.dylane@linux.dev>
+Subject: [PATCH bpf-next v2 1/2] bpf: Add show_fdinfo for uprobe_multi
+Date: Sun, 15 Jun 2025 23:05:13 +0800
+Message-ID: <20250615150514.418581-1-chen.dylane@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: 420FE20018
-X-Stat-Signature: gagcigm6c7ynt17aaadxay7m3th34881
-X-Rspamd-Server: rspamout06
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1/AgC/Hg0NQSm/NY+yVWvFc6hNX64fqZ10=
-X-HE-Tag: 1749955268-571584
-X-HE-Meta: U2FsdGVkX18lCD0oF62pyZw65mwLuJAHMAhN67MmLhqV6ghsR1XZJaO2RJjn5MfYCfzjG3xQkpp8R+VjIANl1rkY2OgB9NDggp8itSnBCvlQNUX2DXl2mfr1nzsy2uUEsnF538nURAmf2Cgh43IAEqHQ5mc+fOijY3PHg+eQuo/nsCR5PCFM6+BjaSVOClrpihmGvS0HweJhfXFEay0VPUjRR0LOpKdcCfukBv0nPNahLvAZza4zdys0a6aVF/Va8N9dpHTWmc7rH1EBmCwJFknEjpFXzwdxhKucVCC8lL8BBoQYMMl+PUEwj04mSmmHjW66XJIGKsajDHfiKsLVFhgDwiVX7tmTAFjMvET3CzR+XHERyecXHzsbVRAXeEhM
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On Fri, 13 Jun 2025 22:46:12 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
+Show uprobe_multi link info with fdinfo, the info as follows:
 
-> +/*
-> + * Deferred unwinding callback for per CPU events.
-> + * Note, the request for the deferred unwinding may have happened
-> + * on a different CPU.
-> + */
-> +static void perf_event_deferred_cpu(struct unwind_work *work,
-> +				    struct unwind_stacktrace *trace, u64 timestamp)
-> +{
-> +	struct perf_unwind_deferred *defer =
-> +		container_of(work, struct perf_unwind_deferred, unwind_work);
-> +	struct perf_unwind_cpu *cpu_events, *cpu_unwind;
-> +	struct perf_event *event;
-> +	int cpu;
-> +
-> +	guard(rcu)();
-> +	guard(preempt)();
-> +
-> +	cpu = smp_processor_id();
-> +	cpu_events = rcu_dereference(defer->cpu_events);
-> +	cpu_unwind = &cpu_events[cpu];
-> +
-> +	WRITE_ONCE(cpu_unwind->processing, 1);
-> +	/*
-> +	 * Make sure the above is seen before the event->unwind_deferred
-> +	 * is checked. This matches the mb() in rcuwait_rcu_wait_event() in
-> +	 * perf_remove_unwind_deferred().
-> +	 */
-> +	smp_mb();
-> +
-> +	list_for_each_entry_rcu(event, &cpu_unwind->list, unwind_list) {
-> +		/* If unwind_deferred is NULL the event is going away */
-> +		if (unlikely(!event->unwind_deferred))
-> +			continue;
-> +		perf_event_callchain_deferred(event, trace, timestamp);
-> +		/* Only the first CPU event gets the trace */
-> +		break;
-> +	}
-> +
+link_type:	uprobe_multi
+link_id:	9
+prog_tag:	e729f789e34a8eca
+prog_id:	58
+type:	uprobe_multi
+uprobe_cnt:	3
+pid:	0
+path:	/home/dylane/bpf/tools/testing/selftests/bpf/test_progs
+offset:	0xa69ed7
+ref_ctr_offset:	0x0
+cookie:	3
+offset:	0xa69ee2
+ref_ctr_offset:	0x0
+cookie:	1
+offset:	0xa69eed
+ref_ctr_offset:	0x0
+cookie:	2
 
-Hmm, I think I need a smp_mb() here too.
+Signed-off-by: Tao Chen <chen.dylane@linux.dev>
+---
+ kernel/trace/bpf_trace.c | 48 ++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 48 insertions(+)
 
-> +	WRITE_ONCE(cpu_unwind->processing, 0);
-> +	rcuwait_wake_up(&cpu_unwind->pending_unwind_wait);
-> +}
+Change list:
+  v1 -> v2:
+    - replace 'func_cnt' with 'uprobe_cnt'.(Andrii)
+    - print func name is more readable and security for kprobe_multi.(Alexei)
+  v1:
+  https://lore.kernel.org/bpf/20250612115556.295103-1-chen.dylane@linux.dev
 
-The first smp_mb() is for synchronizing removing of the event from
-perf_remove_unwind_deferred() that has:
-
-	event->unwind_deferred = NULL;
-
-	/*
-	 * Make sure perf_event_deferred_cpu() is done with this event.
-	 * That function will set cpu_unwind->processing and then
-	 * call smp_mb() before iterating the list of its events.
-	 * If the event's unwind_deferred is NULL, it will be skipped.
-	 * The smp_mb() in that function matches the mb() in
-	 * rcuwait_wait_event().
-	 */
-	rcuwait_wait_event(&cpu_unwind->pending_unwind_wait,
-				   !cpu_unwind->processing, TASK_UNINTERRUPTIBLE);
-
-
-So that the unwind_deferred setting to NULL is seen before the
-cpu_unwind->processing is checked. But I think, in theory, without the
-smp_mb() before the clearing of the cpu_unwind->procssing that it can
-be seen before the unwind_deferred is read.
-
-  CPU 0                                    CPU 1
-  -----                                    -----
-read event->unwind_deferred
-
-                                        write NULL > event->unwind_deferre
-                                        smp_mb() (in rcuwait)
-
-CPU writes 0 > cpu_unwind->processing (re-ordered)
-
-                                        reads cpu_unwind->processing == 0
-                                        Starts to free event
-
-Executes perf_event_callchain_deferred()
-
-
-I'll add another smp_mb() to be safe in v11.
-
--- Steve
-
-
-
+diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
+index 24b94870b50..9a8ca8a8e2b 100644
+--- a/kernel/trace/bpf_trace.c
++++ b/kernel/trace/bpf_trace.c
+@@ -3157,10 +3157,58 @@ static int bpf_uprobe_multi_link_fill_link_info(const struct bpf_link *link,
+ 	return err;
+ }
+ 
++#ifdef CONFIG_PROC_FS
++static void bpf_uprobe_multi_show_fdinfo(const struct bpf_link *link,
++					 struct seq_file *seq)
++{
++	struct bpf_uprobe_multi_link *umulti_link;
++	char *p, *buf;
++
++	umulti_link = container_of(link, struct bpf_uprobe_multi_link, link);
++
++	buf = kmalloc(PATH_MAX, GFP_KERNEL);
++	if (!buf)
++		return;
++
++	p = d_path(&umulti_link->path, buf, PATH_MAX);
++	if (IS_ERR(p)) {
++		kfree(buf);
++		return;
++	}
++
++	seq_printf(seq,
++		   "type:\t%s\n"
++		   "uprobe_cnt:\t%u\n"
++		   "pid:\t%u\n"
++		   "path:\t%s\n",
++		   umulti_link->flags == BPF_F_UPROBE_MULTI_RETURN ?
++					 "uretprobe_multi" : "uprobe_multi",
++		   umulti_link->cnt,
++		   umulti_link->task ? task_pid_nr_ns(umulti_link->task,
++			   task_active_pid_ns(current)) : 0,
++		   p);
++
++	for (int i = 0; i < umulti_link->cnt; i++) {
++		seq_printf(seq,
++			   "offset:\t%#llx\n"
++			   "ref_ctr_offset:\t%#lx\n"
++			   "cookie:\t%llu\n",
++			   umulti_link->uprobes[i].offset,
++			   umulti_link->uprobes[i].ref_ctr_offset,
++			   umulti_link->uprobes[i].cookie);
++	}
++
++	kfree(buf);
++}
++#endif
++
+ static const struct bpf_link_ops bpf_uprobe_multi_link_lops = {
+ 	.release = bpf_uprobe_multi_link_release,
+ 	.dealloc_deferred = bpf_uprobe_multi_link_dealloc,
+ 	.fill_link_info = bpf_uprobe_multi_link_fill_link_info,
++#ifdef CONFIG_PROC_FS
++	.show_fdinfo = bpf_uprobe_multi_show_fdinfo,
++#endif
+ };
+ 
+ static int uprobe_prog_run(struct bpf_uprobe *uprobe,
+-- 
+2.48.1
 
