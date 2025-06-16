@@ -1,92 +1,174 @@
-Received: from relay.hostedemail.com (smtprelay0011.hostedemail.com [216.40.44.11])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 796721C700D;
-	Mon, 16 Jun 2025 19:18:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B5311C700D
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 16 Jun 2025 19:19:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750101535; cv=none; b=Zf79Q5Bg2odi8Zbo5tGnmu7TxQs1rxqw6ULzUBOgQfT7uJZUK07i5ssSJ9C2a7CeTfryTbxSGzpvS870SPmqzpD5fOAC/4pT8Igvi7a6Qtyyb0LfOdHoaf6wKKA/+bk+TcCXcidk8hb+i2tHXq+mJEoh1c/k2Q3+Us8getYO+Yk=
+	t=1750101568; cv=none; b=fnVPJsdTv1Ru5E7bdjcnlbJeVeNjYXFe5afjKpNT6kfcaiZsajSpziAh+/yo7EDweutcdGurnAFaIZKYUs7VFwfhtY9b5TkmAHeegHrWEsbdxNLdujgDr3PlFkPW3jjEY+CZ9kXO76WcTjqTqHt1v89tNV6nde+pVHxSlfSSxsg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750101535; c=relaxed/simple;
-	bh=EpxFWOeKKzby0k/IoO779qDJQTpZINzLmss4VsjsOO4=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=COZKo8NQMBEiwCcig7Wc0gEUtewOsTZwVJ3M1gSL3jxg6K1UAJ7sz/PzLpmqP5QHJOVat+b8bG+vEVcyTueWFUu6dBVImkIQNYfUVaee3glHQ+PqISX/cEZBDoS0i0vKu3yMXUndFyfSbh/jzWTBgpR5QoV8GQfi2R1t2lru+fk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf01.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay07.hostedemail.com (Postfix) with ESMTP id 0750416032C;
-	Mon, 16 Jun 2025 19:18:51 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf01.hostedemail.com (Postfix) with ESMTPA id C50A46000C;
-	Mon, 16 Jun 2025 19:18:49 +0000 (UTC)
-Date: Mon, 16 Jun 2025 15:18:48 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- linux-xfs@vger.kernel.org
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland
- <mark.rutland@arm.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Andrew Morton <akpm@linux-foundation.org>, Carlos  Maiolino
- <cem@kernel.org>, Christoph Hellwig <hch@lst.de>, "Darrick J. Wong"
- <djwong@kernel.org>
-Subject: Re: [PATCH v2 00/13] xfs: tracing: remove unused event
- xfs_reflink_cow_found
-Message-ID: <20250616151848.36ddcee5@batman.local.home>
-In-Reply-To: <20250616175146.813055227@goodmis.org>
-References: <20250616175146.813055227@goodmis.org>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1750101568; c=relaxed/simple;
+	bh=mdIp3vB5Ha2CBwub/+NszE6ufI2ImASNO4IUFcNtGTA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Bwlml73qc9ZB0YVGUjfe4vOncgEkP58iek5vPrEqlObdMHMykSSLKi3qVsyzMELbouaKlwlVNJe9mZSAxX+A0KCeCDMqzTrIkiGuotmdliW0GZyHqGF9QbJ56Sdl/MtyMxzafFIfx455rZB3bal/SYRTybH4AYEq/50xz3/0nVE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=RzPnasRd; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RzPnasRd"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1750101565;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=EGTo+qwi+5/6fxTtPdb2ly3uANZ/FhKje73zzR3iPNE=;
+	b=RzPnasRdNISVxIEAWLBdexbDFf4CZTgcxoFgeFncILJ+P1lwLC2DsXzps7klDO/CCya754
+	sk5i1+96olwgVO1LwZNv6CubxCKusfqVfsd8SjC3imobzd1Rxf5A25VDhg99CzetGIwGhP
+	TMMPxzNNogftjtIiA03zmxbREfFLEFY=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-575-EpjIbHGBMPWoBeRfZTZUPA-1; Mon, 16 Jun 2025 15:19:22 -0400
+X-MC-Unique: EpjIbHGBMPWoBeRfZTZUPA-1
+X-Mimecast-MFC-AGG-ID: EpjIbHGBMPWoBeRfZTZUPA_1750101561
+Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-3a3696a0d3aso1773280f8f.2
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 16 Jun 2025 12:19:21 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750101561; x=1750706361;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=EGTo+qwi+5/6fxTtPdb2ly3uANZ/FhKje73zzR3iPNE=;
+        b=Kwm28ecLb1cooKdsm+pql8iLluNpKRohMK0YSlT1+UdxGQ4PxcypQC5JEJdSqUJeWv
+         QvHAW5pJsLxOfIbNy4VLuASikAu7DxA5mDJUq3bP5L2wvKIBtJWixb97I4Z0NbtO2C9Y
+         PJh93V4HhEigtLD8LUtTFyQ3A6soYNK/to+jzzcHShuNnVGJ1oi8KGb3j2Sddw009FXS
+         pBUtmadrVSZ2YDAI8fH+L5wXIg+vY6+uFSIdwhmDnbWvR4/pVbZCnRwL7sLS24pczyiI
+         O23PbSi7K1+XUtjTBbXGpy+fg1Na3iMTMMHLDUjKxj5O8oR3zANJIgZb0OR9hpH3ly74
+         sxWw==
+X-Forwarded-Encrypted: i=1; AJvYcCW2F0dbC7heoUZvVFhip6RgGypR0jpf8fIzQh6j/dSPe9V1sGltZSOImqhWnh0LrUr61o8PSnJZGcB0GljouFRYpBU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwDuVrysvi6WFvWZw5gcj84LxW8tHWCcTJ5ywREhvdhdHUY8IPo
+	T7ZJ4BO6r8OB65meYGwxmw343ELNZMEWhPSMzEUTfD7M/86P44t9vCc4GFURLrdiuotMcbs6Ga5
+	J6R31peIig3UJS1ZRfELX6RC06ti/MqkIlAPH5k+YOyr4c4kgEE1ilUvRtSNSPf0hUtT7KH+zWQ
+	==
+X-Gm-Gg: ASbGncvc14jDZgNyu2/I6XC9u0Dx6zYzuPxrS1caUZOLaTm0D4qQy3iQyzFIJeeW08h
+	E7Fsm+NNG7R+W9AtWZaqY0zq7fOzmwrRjEI3IfZU7Z8ww8NF4t4M35kQfitKWGz8KZMncmNf6rc
+	791d5Zdcyh3FB0AOMEQP19SV+CqDxFJ4GW7AL32p4W77NKsASmAq6sEe3tJAZMhNknkwhGzmQID
+	1BUauVeBAxiAtJh1rz09BQsvec2QRKCTsJ837oBVT4+cWZrH/naBsxeEP+eESk8kek0qqfXucV+
+	cijjGIXK+r2fabJ2h9/eTTsni0297zgGSUExti+4u8G7LoBEPBzB0Cv1H+slfNsC/fcPyWOunxy
+	YVbimD9pmq3koZidJqXzcwTzeju//abSIpg0HDz+jYgYBH0b0HA==
+X-Received: by 2002:a05:6000:402a:b0:3a5:2208:41e3 with SMTP id ffacd0b85a97d-3a572398dcfmr8187804f8f.4.1750101560802;
+        Mon, 16 Jun 2025 12:19:20 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFs3BDyNI99FOfL9EqfjBXFMImnIbuBvtQ454XoX1IczJP2AVZQLkQUA3sGStbQY/8LT3R1HQ==
+X-Received: by 2002:a05:6000:402a:b0:3a5:2208:41e3 with SMTP id ffacd0b85a97d-3a572398dcfmr8187786f8f.4.1750101560408;
+        Mon, 16 Jun 2025 12:19:20 -0700 (PDT)
+Received: from ?IPV6:2003:d8:2f3a:e300:c660:4ff5:5bfb:f5c5? (p200300d82f3ae300c6604ff55bfbf5c5.dip0.t-ipconnect.de. [2003:d8:2f3a:e300:c660:4ff5:5bfb:f5c5])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a568a7cb65sm12007711f8f.38.2025.06.16.12.19.19
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 16 Jun 2025 12:19:20 -0700 (PDT)
+Message-ID: <32c85c56-063a-40ea-b6ea-e49304447ad6@redhat.com>
+Date: Mon, 16 Jun 2025 21:19:18 +0200
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] mm, x86/mm: Move creating the tlb_flush event back to x86
+ code
+To: Steven Rostedt <rostedt@goodmis.org>,
+ Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+ Andrew Morton <akpm@linux-foundation.org>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+ Linux trace kernel <linux-trace-kernel@vger.kernel.org>, linux-mm@kvack.org,
+ x86@kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Dave Hansen <dave.hansen@linux.intel.com>, Andy Lutomirski
+ <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
+ Peter Zijlstra <peterz@infradead.org>, Borislav Petkov <bp@alien8.de>
+References: <20250612100313.3b9a8b80@batman.local.home>
+ <65bb272d-b2d4-4d2a-9c7f-d3d5d2eba23d@lucifer.local>
+ <20250616150942.789c791a@batman.local.home>
+From: David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; keydata=
+ xsFNBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
+ dBrn+lhhOYjjNefFQou6478faXE6o2AhmebqT4KiQoUQFV4R7y1KMEKoSyy8hQaK1umALTdL
+ QZLQMzNE74ap+GDK0wnacPQFpcG1AE9RMq3aeErY5tujekBS32jfC/7AnH7I0v1v1TbbK3Gp
+ XNeiN4QroO+5qaSr0ID2sz5jtBLRb15RMre27E1ImpaIv2Jw8NJgW0k/D1RyKCwaTsgRdwuK
+ Kx/Y91XuSBdz0uOyU/S8kM1+ag0wvsGlpBVxRR/xw/E8M7TEwuCZQArqqTCmkG6HGcXFT0V9
+ PXFNNgV5jXMQRwU0O/ztJIQqsE5LsUomE//bLwzj9IVsaQpKDqW6TAPjcdBDPLHvriq7kGjt
+ WhVhdl0qEYB8lkBEU7V2Yb+SYhmhpDrti9Fq1EsmhiHSkxJcGREoMK/63r9WLZYI3+4W2rAc
+ UucZa4OT27U5ZISjNg3Ev0rxU5UH2/pT4wJCfxwocmqaRr6UYmrtZmND89X0KigoFD/XSeVv
+ jwBRNjPAubK9/k5NoRrYqztM9W6sJqrH8+UWZ1Idd/DdmogJh0gNC0+N42Za9yBRURfIdKSb
+ B3JfpUqcWwE7vUaYrHG1nw54pLUoPG6sAA7Mehl3nd4pZUALHwARAQABzSREYXZpZCBIaWxk
+ ZW5icmFuZCA8ZGF2aWRAcmVkaGF0LmNvbT7CwZgEEwEIAEICGwMGCwkIBwMCBhUIAgkKCwQW
+ AgMBAh4BAheAAhkBFiEEG9nKrXNcTDpGDfzKTd4Q9wD/g1oFAl8Ox4kFCRKpKXgACgkQTd4Q
+ 9wD/g1oHcA//a6Tj7SBNjFNM1iNhWUo1lxAja0lpSodSnB2g4FCZ4R61SBR4l/psBL73xktp
+ rDHrx4aSpwkRP6Epu6mLvhlfjmkRG4OynJ5HG1gfv7RJJfnUdUM1z5kdS8JBrOhMJS2c/gPf
+ wv1TGRq2XdMPnfY2o0CxRqpcLkx4vBODvJGl2mQyJF/gPepdDfcT8/PY9BJ7FL6Hrq1gnAo4
+ 3Iv9qV0JiT2wmZciNyYQhmA1V6dyTRiQ4YAc31zOo2IM+xisPzeSHgw3ONY/XhYvfZ9r7W1l
+ pNQdc2G+o4Di9NPFHQQhDw3YTRR1opJaTlRDzxYxzU6ZnUUBghxt9cwUWTpfCktkMZiPSDGd
+ KgQBjnweV2jw9UOTxjb4LXqDjmSNkjDdQUOU69jGMUXgihvo4zhYcMX8F5gWdRtMR7DzW/YE
+ BgVcyxNkMIXoY1aYj6npHYiNQesQlqjU6azjbH70/SXKM5tNRplgW8TNprMDuntdvV9wNkFs
+ 9TyM02V5aWxFfI42+aivc4KEw69SE9KXwC7FSf5wXzuTot97N9Phj/Z3+jx443jo2NR34XgF
+ 89cct7wJMjOF7bBefo0fPPZQuIma0Zym71cP61OP/i11ahNye6HGKfxGCOcs5wW9kRQEk8P9
+ M/k2wt3mt/fCQnuP/mWutNPt95w9wSsUyATLmtNrwccz63XOwU0EVcufkQEQAOfX3n0g0fZz
+ Bgm/S2zF/kxQKCEKP8ID+Vz8sy2GpDvveBq4H2Y34XWsT1zLJdvqPI4af4ZSMxuerWjXbVWb
+ T6d4odQIG0fKx4F8NccDqbgHeZRNajXeeJ3R7gAzvWvQNLz4piHrO/B4tf8svmRBL0ZB5P5A
+ 2uhdwLU3NZuK22zpNn4is87BPWF8HhY0L5fafgDMOqnf4guJVJPYNPhUFzXUbPqOKOkL8ojk
+ CXxkOFHAbjstSK5Ca3fKquY3rdX3DNo+EL7FvAiw1mUtS+5GeYE+RMnDCsVFm/C7kY8c2d0G
+ NWkB9pJM5+mnIoFNxy7YBcldYATVeOHoY4LyaUWNnAvFYWp08dHWfZo9WCiJMuTfgtH9tc75
+ 7QanMVdPt6fDK8UUXIBLQ2TWr/sQKE9xtFuEmoQGlE1l6bGaDnnMLcYu+Asp3kDT0w4zYGsx
+ 5r6XQVRH4+5N6eHZiaeYtFOujp5n+pjBaQK7wUUjDilPQ5QMzIuCL4YjVoylWiBNknvQWBXS
+ lQCWmavOT9sttGQXdPCC5ynI+1ymZC1ORZKANLnRAb0NH/UCzcsstw2TAkFnMEbo9Zu9w7Kv
+ AxBQXWeXhJI9XQssfrf4Gusdqx8nPEpfOqCtbbwJMATbHyqLt7/oz/5deGuwxgb65pWIzufa
+ N7eop7uh+6bezi+rugUI+w6DABEBAAHCwXwEGAEIACYCGwwWIQQb2cqtc1xMOkYN/MpN3hD3
+ AP+DWgUCXw7HsgUJEqkpoQAKCRBN3hD3AP+DWrrpD/4qS3dyVRxDcDHIlmguXjC1Q5tZTwNB
+ boaBTPHSy/Nksu0eY7x6HfQJ3xajVH32Ms6t1trDQmPx2iP5+7iDsb7OKAb5eOS8h+BEBDeq
+ 3ecsQDv0fFJOA9ag5O3LLNk+3x3q7e0uo06XMaY7UHS341ozXUUI7wC7iKfoUTv03iO9El5f
+ XpNMx/YrIMduZ2+nd9Di7o5+KIwlb2mAB9sTNHdMrXesX8eBL6T9b+MZJk+mZuPxKNVfEQMQ
+ a5SxUEADIPQTPNvBewdeI80yeOCrN+Zzwy/Mrx9EPeu59Y5vSJOx/z6OUImD/GhX7Xvkt3kq
+ Er5KTrJz3++B6SH9pum9PuoE/k+nntJkNMmQpR4MCBaV/J9gIOPGodDKnjdng+mXliF3Ptu6
+ 3oxc2RCyGzTlxyMwuc2U5Q7KtUNTdDe8T0uE+9b8BLMVQDDfJjqY0VVqSUwImzTDLX9S4g/8
+ kC4HRcclk8hpyhY2jKGluZO0awwTIMgVEzmTyBphDg/Gx7dZU1Xf8HFuE+UZ5UDHDTnwgv7E
+ th6RC9+WrhDNspZ9fJjKWRbveQgUFCpe1sa77LAw+XFrKmBHXp9ZVIe90RMe2tRL06BGiRZr
+ jPrnvUsUUsjRoRNJjKKA/REq+sAnhkNPPZ/NNMjaZ5b8Tovi8C0tmxiCHaQYqj7G2rgnT0kt
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <20250616150942.789c791a@batman.local.home>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: dVJy4Jr7t9cxTs7Nrrav8QQyXH40coJPqg__qfyG0UQ_1750101561
+X-Mimecast-Originator: redhat.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: C50A46000C
-X-Rspamd-Server: rspamout08
-X-Stat-Signature: t8djaqg6jmxc3r9qw4a4cdjrsbrwpznt
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX19sFy0mMt69Phvj+J8Y/DQjMU5FGDu9ueY=
-X-HE-Tag: 1750101529-661037
-X-HE-Meta: U2FsdGVkX19WkZNorP5ucOpv6p01Ousfxni3d9I9O6JFDXYkkCSBUjIBDSGuoT07HgwIoEeRO4OcxARt7CeH36+t4981QWdE9DKFdDZPY8+OlCMOYziQTfg7ck4g2iXgxYhgvHNOoGqKF02FST9REKID5i+Wkwnc9RvJjDhCqAXBCzgyv4Ng1VDduqPZCs8pyXXTxxZ45KLvWTlo+LaUjhY0ERK+KM+xIiOksvhe+VCcliubHDThRrfdZPA1MoALQez8xEKvysSP9R4rr2ks7gEslofQtc/QTvtfHAegTt6gPh24EiUFUqaSgARKwHDHV0XXDC2MDjhurUBlQKxAQyLReROr9Fv6Iu5poGEURYLJHT6ijZdPAcJwEBmDYgpNmlShi+NhmlJl+Vja5tFOKg==
 
-
-Bah, I hate the multiple clipboards of the Linux desktop. I had cut and
-pasted the above subject line in one clipboard and then cut the subject
-I wanted in another, and unfortunately pasted the former :-p
-
-This is what the subject was supposed to be:
-
-  "xfs: remove unused trace events"
-
-
-On Mon, 16 Jun 2025 13:51:46 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
-
-> Trace events take up to 5K in memory for text and meta data. I have code that
-> will trigger a warning when it detects unused tracepoints[1]. The XFS file
-> system contains many events that are not called. Most of them used to be called
-> but due to code refactoring the calls were removed but the trace events stayed
-> behind.
+On 16.06.25 21:09, Steven Rostedt wrote:
+> On Thu, 12 Jun 2025 18:24:30 +0100
+> Lorenzo Stoakes <lorenzo.stoakes@oracle.com> wrote:
 > 
-> Some events were added but never used. If they were recent, I just reported
-> them, but if they were older, this series simply removes them.
+>>> Remove the events/tlb.h from mm/rmap.c and add the define
+>>> CREATE_TRACE_POINTS back in the x86 code.
+>>>
+>>> Fixes: 4cc79b3303f22 ("mm/migration: add trace events for base page and HugeTLB migrations")
+>>> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+>>
+>> LGTM so:
+>>
+>> Reviewed-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
 > 
-> One is called only when CONFIG_COMPACT is defined, so an #ifdef was placed
-> around it.
+> Thanks.
 > 
-> Finally, one event is supposed to be a trace event class, but was created with
-> the TRACE_EVENT() macro and not the DECLARE_EVENT_CLASS() macro. This works
-> because a TRACE_EVENT() is simply a DECLARE_EVENT_CLASS() and DEFINE_EVENT()
-> where the class and event have the same name. But as this was a mistake, the
-> event created should not exist.
-> 
-> [1] https://patchwork.kernel.org/project/linux-trace-kernel/cover/20250612235827.011358765@goodmis.org/
-> 
-> Changes since v1: https://lore.kernel.org/linux-trace-kernel/20250612212405.877692069@goodmis.org/
+> Should I take this or should this go through the mm tree?
 
-And this should have been to the lore link and not patchwork:
+I suspect this can go through your tree. (@Andrew)
 
-  https://lore.kernel.org/linux-trace-kernel/20250612235827.011358765@goodmis.org/
+Acked-by: David Hildenbrand <david@redhat.com>
 
--- Steve
+-- 
+Cheers,
+
+David / dhildenb
+
