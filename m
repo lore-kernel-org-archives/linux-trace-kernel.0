@@ -1,41 +1,38 @@
 Received: from relay.hostedemail.com (smtprelay0011.hostedemail.com [216.40.44.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71A173208;
-	Mon, 16 Jun 2025 19:09:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 796721C700D;
+	Mon, 16 Jun 2025 19:18:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750100990; cv=none; b=jjRU3mAfUc1hw93+NbbaqQGt9qki8l/CEQavwV33jJovwqgasF8sPy3VaN7KfzGBtvOYEfvZzjHHcWd8mcb0VL7MLlvKmZoy1fi2A2KJwSSLuPzpmqnEIeYKOotL4HaUEgbwPKALqDFq5Ey8k3xWXwxcenpM0SzYfgDUWKxcKHA=
+	t=1750101535; cv=none; b=Zf79Q5Bg2odi8Zbo5tGnmu7TxQs1rxqw6ULzUBOgQfT7uJZUK07i5ssSJ9C2a7CeTfryTbxSGzpvS870SPmqzpD5fOAC/4pT8Igvi7a6Qtyyb0LfOdHoaf6wKKA/+bk+TcCXcidk8hb+i2tHXq+mJEoh1c/k2Q3+Us8getYO+Yk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750100990; c=relaxed/simple;
-	bh=wnu3YbsnJ2Yf7tmNIBEoAlxCCOphEunwk6WezsjQHm4=;
+	s=arc-20240116; t=1750101535; c=relaxed/simple;
+	bh=EpxFWOeKKzby0k/IoO779qDJQTpZINzLmss4VsjsOO4=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=RlD2anOF8LyWDXlZYS/Nu+iIFMJPmU05L3PHEim/PTs3blqHIMaSrgrxJo1QjBlOPn4xfUil/A34mMUjWZbdTfpGmG5n+8H7Dw4JABN2s77ywkNoPoK/JUUuR00tvmIn+2YUKnevhh1kdYdbcqJwuRhnHPW9nzeFsr/EB/9Jd7M=
+	 MIME-Version:Content-Type; b=COZKo8NQMBEiwCcig7Wc0gEUtewOsTZwVJ3M1gSL3jxg6K1UAJ7sz/PzLpmqP5QHJOVat+b8bG+vEVcyTueWFUu6dBVImkIQNYfUVaee3glHQ+PqISX/cEZBDoS0i0vKu3yMXUndFyfSbh/jzWTBgpR5QoV8GQfi2R1t2lru+fk=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.11
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf12.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay07.hostedemail.com (Postfix) with ESMTP id 39EE6160CF3;
-	Mon, 16 Jun 2025 19:09:46 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf12.hostedemail.com (Postfix) with ESMTPA id 591DC19;
-	Mon, 16 Jun 2025 19:09:43 +0000 (UTC)
-Date: Mon, 16 Jun 2025 15:09:42 -0400
+Received: from omf01.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay07.hostedemail.com (Postfix) with ESMTP id 0750416032C;
+	Mon, 16 Jun 2025 19:18:51 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf01.hostedemail.com (Postfix) with ESMTPA id C50A46000C;
+	Mon, 16 Jun 2025 19:18:49 +0000 (UTC)
+Date: Mon, 16 Jun 2025 15:18:48 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Cc: LKML <linux-kernel@vger.kernel.org>, Linux trace kernel
- <linux-trace-kernel@vger.kernel.org>, linux-mm@kvack.org, x86@kernel.org,
- Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Dave Hansen
- <dave.hansen@linux.intel.com>, Andy Lutomirski <luto@kernel.org>, Thomas
- Gleixner <tglx@linutronix.de>, Peter Zijlstra <peterz@infradead.org>,
- Andrew Morton <akpm@linux-foundation.org>, David Hildenbrand
- <david@redhat.com>, Borislav Petkov <bp@alien8.de>
-Subject: Re: [PATCH] mm, x86/mm: Move creating the tlb_flush event back to
- x86 code
-Message-ID: <20250616150942.789c791a@batman.local.home>
-In-Reply-To: <65bb272d-b2d4-4d2a-9c7f-d3d5d2eba23d@lucifer.local>
-References: <20250612100313.3b9a8b80@batman.local.home>
-	<65bb272d-b2d4-4d2a-9c7f-d3d5d2eba23d@lucifer.local>
+To: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ linux-xfs@vger.kernel.org
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland
+ <mark.rutland@arm.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Andrew Morton <akpm@linux-foundation.org>, Carlos  Maiolino
+ <cem@kernel.org>, Christoph Hellwig <hch@lst.de>, "Darrick J. Wong"
+ <djwong@kernel.org>
+Subject: Re: [PATCH v2 00/13] xfs: tracing: remove unused event
+ xfs_reflink_cow_found
+Message-ID: <20250616151848.36ddcee5@batman.local.home>
+In-Reply-To: <20250616175146.813055227@goodmis.org>
+References: <20250616175146.813055227@goodmis.org>
 X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -45,29 +42,51 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Rspamd-Server: rspamout01
-X-Rspamd-Queue-Id: 591DC19
-X-Stat-Signature: jk7hh3u3w6trfftjeq7ppdn8swnose9c
+X-Rspamd-Queue-Id: C50A46000C
+X-Rspamd-Server: rspamout08
+X-Stat-Signature: t8djaqg6jmxc3r9qw4a4cdjrsbrwpznt
 X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1/VaxDIyC55AXDQ0qv+StA9ti40v4RPQ+o=
-X-HE-Tag: 1750100983-599652
-X-HE-Meta: U2FsdGVkX181xS3I1pAHbtGnXxJEFYKhBYA9HLRWEFe+IPDj//pnN3epLg/VnNAUhJPdPN7VepftovYDxyeBMCCW/H8QsTICb8Rl0mi4ooz+WGBO+uJ/n4RHQ6eqXUKIaEE+7prrUiBc9GbJEKS6CY4t0uRcgK9GWRpgZfeRoczoSPRbmoDsnAMFvK/OvnSUm9h7iFvfZ3HLHDiDihGwm+j51THM4tHSh176Ub8O8sNX9EV25u27WYnPcULkeO9S1rJC2Q7qKXzyzxcgICHa/+2R+yrvy9sN2/Oec8pk+uQu2BufYq3ExdvbggXGyEn1DviS/ij3u8pGsNn4UiqydTFMI9fZ3ZwCzMJgrmGIjQC5iNEq7VeI9a81htFmDoV9+vSCBtSCJKI+MUp/fQ05JA==
+X-Session-ID: U2FsdGVkX19sFy0mMt69Phvj+J8Y/DQjMU5FGDu9ueY=
+X-HE-Tag: 1750101529-661037
+X-HE-Meta: U2FsdGVkX19WkZNorP5ucOpv6p01Ousfxni3d9I9O6JFDXYkkCSBUjIBDSGuoT07HgwIoEeRO4OcxARt7CeH36+t4981QWdE9DKFdDZPY8+OlCMOYziQTfg7ck4g2iXgxYhgvHNOoGqKF02FST9REKID5i+Wkwnc9RvJjDhCqAXBCzgyv4Ng1VDduqPZCs8pyXXTxxZ45KLvWTlo+LaUjhY0ERK+KM+xIiOksvhe+VCcliubHDThRrfdZPA1MoALQez8xEKvysSP9R4rr2ks7gEslofQtc/QTvtfHAegTt6gPh24EiUFUqaSgARKwHDHV0XXDC2MDjhurUBlQKxAQyLReROr9Fv6Iu5poGEURYLJHT6ijZdPAcJwEBmDYgpNmlShi+NhmlJl+Vja5tFOKg==
 
-On Thu, 12 Jun 2025 18:24:30 +0100
-Lorenzo Stoakes <lorenzo.stoakes@oracle.com> wrote:
 
-> > Remove the events/tlb.h from mm/rmap.c and add the define
-> > CREATE_TRACE_POINTS back in the x86 code.
-> >
-> > Fixes: 4cc79b3303f22 ("mm/migration: add trace events for base page and HugeTLB migrations")
-> > Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>  
+Bah, I hate the multiple clipboards of the Linux desktop. I had cut and
+pasted the above subject line in one clipboard and then cut the subject
+I wanted in another, and unfortunately pasted the former :-p
+
+This is what the subject was supposed to be:
+
+  "xfs: remove unused trace events"
+
+
+On Mon, 16 Jun 2025 13:51:46 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
+
+> Trace events take up to 5K in memory for text and meta data. I have code that
+> will trigger a warning when it detects unused tracepoints[1]. The XFS file
+> system contains many events that are not called. Most of them used to be called
+> but due to code refactoring the calls were removed but the trace events stayed
+> behind.
 > 
-> LGTM so:
+> Some events were added but never used. If they were recent, I just reported
+> them, but if they were older, this series simply removes them.
 > 
-> Reviewed-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+> One is called only when CONFIG_COMPACT is defined, so an #ifdef was placed
+> around it.
+> 
+> Finally, one event is supposed to be a trace event class, but was created with
+> the TRACE_EVENT() macro and not the DECLARE_EVENT_CLASS() macro. This works
+> because a TRACE_EVENT() is simply a DECLARE_EVENT_CLASS() and DEFINE_EVENT()
+> where the class and event have the same name. But as this was a mistake, the
+> event created should not exist.
+> 
+> [1] https://patchwork.kernel.org/project/linux-trace-kernel/cover/20250612235827.011358765@goodmis.org/
+> 
+> Changes since v1: https://lore.kernel.org/linux-trace-kernel/20250612212405.877692069@goodmis.org/
 
-Thanks.
+And this should have been to the lore link and not patchwork:
 
-Should I take this or should this go through the mm tree?
+  https://lore.kernel.org/linux-trace-kernel/20250612235827.011358765@goodmis.org/
 
 -- Steve
