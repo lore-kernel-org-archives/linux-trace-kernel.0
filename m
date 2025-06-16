@@ -1,82 +1,125 @@
-Received: from relay.hostedemail.com (smtprelay0017.hostedemail.com [216.40.44.17])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 134C2216E26;
-	Mon, 16 Jun 2025 14:58:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D01E219E93
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 16 Jun 2025 15:52:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750085912; cv=none; b=Jj064MVyT+kCRzUf51jQv4V2OdEZ17vrTCVH+z9N9fbpLnpdJHXhnMDeRmYjtACzLJ2xsJHjX7u3IiNPIV6Z/M08KKUvynPreYJAAuvieKQ+8+2qwGRCLt2x2PhN0/XlmRFUdQ34PJmevWU7nBke9d3RJVw9INTW64PO5dNvmYg=
+	t=1750089141; cv=none; b=an2bs3ulSlA0ynoBrAxit1i4IgHDlFRvCb0+Qr4H6GUAtHWC1uTcgTRIqRmMxDlETYCViSD5w020Ibnr2CXIjCIwds0gXM/7jMVXvEsdPDjF3mdEzeZlouNneixBgtnj64kYUcfC1NIZINfgenyo50NEE8oicgoUpu23LEirZwk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750085912; c=relaxed/simple;
-	bh=wIdiZPYyli2N4szu69CA2U7XhLnv02tXx97AcQ5lBKk=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=O1cmxOMJoYvIRPmjwRC7fe4EcvD2MBVYdMKJqfrSz31RRHhBy6VS+9ETOb3dhBrgOp3bh/nloolO/we2UO8GCyVOs3jG5SZY8vGt+viOYORBctlXEUGw8/Vaa2O8og1Ie2g3lfZDWMGBe9t8Cmk+klKvnaEChpL5wlsesfCMBps=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf09.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay05.hostedemail.com (Postfix) with ESMTP id 425EB59CCB;
-	Mon, 16 Jun 2025 14:58:22 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf09.hostedemail.com (Postfix) with ESMTPA id 237CC20034;
-	Mon, 16 Jun 2025 14:58:20 +0000 (UTC)
-Date: Mon, 16 Jun 2025 10:58:19 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Christoph Hellwig <hch@lst.de>
-Cc: "Darrick J. Wong" <djwong@kernel.org>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, linux-xfs@vger.kernel.org, Masami
- Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Andrew Morton
- <akpm@linux-foundation.org>, Carlos Maiolino <cem@kernel.org>
-Subject: Re: [PATCH 00/14] xfs: Remove unused trace events
-Message-ID: <20250616105819.4d37b83a@batman.local.home>
-In-Reply-To: <20250616053119.GD1148@lst.de>
-References: <20250612212405.877692069@goodmis.org>
-	<20250613150855.GQ6156@frogsfrogsfrogs>
-	<20250613113119.24943f6d@batman.local.home>
-	<20250616053119.GD1148@lst.de>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1750089141; c=relaxed/simple;
+	bh=cgvgta8aciMoxErXIYuF2aSDop9idzFQFduLa/KczfY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=edzhVZC+2MbLCia66co+h4U9DZjP0eyi87smiJkyoYwJwcKFuYC2iAAX1QWcoScBzUIgWtfTchaG3izzM445AcJms5j/28kOHl9EwZfBOHpF3xC3DSty8o0djhhVokQNai9o1d6PUg+kP84au1wwZMzEWF+w3/smnrs3lqJ4yQs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=NRIufuTs; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NRIufuTs"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1750089139;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=cgvgta8aciMoxErXIYuF2aSDop9idzFQFduLa/KczfY=;
+	b=NRIufuTsHbEDoKCYRp3Ad1bRPaXOtNhIMsAgjZLq9URhStt6gZiMU9eE2vg7rVT5dZiMjD
+	ALycUeISdIe9AEwOgteCVygUZeLj7jrxo4cRV3bcbGec3fYGkoVLBsiP8Y8tFGqxfgwtcz
+	CTBLPDYyZIPsb5ZFs/ZhY/R6dUKulfg=
+Received: from mail-yw1-f197.google.com (mail-yw1-f197.google.com
+ [209.85.128.197]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-451-27TBJ0aYPuq2PnUDTGXS7A-1; Mon, 16 Jun 2025 11:52:16 -0400
+X-MC-Unique: 27TBJ0aYPuq2PnUDTGXS7A-1
+X-Mimecast-MFC-AGG-ID: 27TBJ0aYPuq2PnUDTGXS7A_1750089135
+Received: by mail-yw1-f197.google.com with SMTP id 00721157ae682-70e4269de4fso61846867b3.0
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 16 Jun 2025 08:52:16 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750089135; x=1750693935;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=cgvgta8aciMoxErXIYuF2aSDop9idzFQFduLa/KczfY=;
+        b=VxdP7Hnj4Y/dE2epr1QfDD+HGXxbYYAI4hZKmkNOVqAMNeqiAYMx/ku5GAwKBy+X9t
+         5wetiReFmzlgyZCqJYoOLxYGkMYOKdnl3oEtmSmZNWv27ayA2C9IJOpNTHJLKkHVi4mp
+         9BigRG4FlsHr6l04ruNotuSUTXu/9MWpunEaWOXHu27P8KPXGNHs2DM3HKN1DD5zZxMY
+         AGMYE6qyn8FZrzoAXSq6X/eA4sMjzmiHZ9rg2sEIx8YTfXsUtowwDih8NiEcd5Hfa6N9
+         yF/NmDDxlvydFoLkk5ozjEfeL21UtrJMLPFgZ0EnaIoh6ihJDog2dXe2MgIILIHdEGXR
+         lQYQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVxVukGTDe0ZqW4GhjbKzxhlqY9mKViQdW5Nj4ze2stzz5aCU6Bsl9Gt8KY9VoPERK1tfR6Rce0GcIPIx0S9gIWo/Q=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzMlNvO4CoR3wVLVVMJA7wzbGsV7k/y7PGmcNxHlTbMa42BX0GO
+	L3cCSjkpgtYs7XQr4hnNzmpZ0mJt/tzmXrfwaemHx3qgvZVWR8nkareA+1Y9lm8CQvjD7cwuVhq
+	nIV3QXPyvM69Kssx55/lSFzk/wgsTXFvz15Rtmtp3XPWlMkIm1OJC91mKEkUooHcDeqD4A9Ev+7
+	/EeOhNQJNcqoLuTmMvI3hLpfgxhRI2feKWPe7rZXDl7IsCyHtw
+X-Gm-Gg: ASbGncsZ/thYjebGnOwB4ilXD0JbBij/WFRXeHGyOGB4ygRlNXDWcdjDZRMVlRgVfCb
+	6tI2JMaVj1Erxf+eXcoyWVzy76LUd0YxPmZmcMgglMqYVsf6ZNdw84sMXmzfAYLH8CqfX6vcamZ
+	3QimmUig==
+X-Received: by 2002:a05:690c:385:b0:70d:f237:6a60 with SMTP id 00721157ae682-7117543cf7cmr125891007b3.7.1750089135481;
+        Mon, 16 Jun 2025 08:52:15 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGZXG6wclfxD90BTesxhzMtrDTqbltqXOg871c5dsmQbh0pbJek5ygMMH70krpIlhvDmoHznJlg+ptMx6vksPc=
+X-Received: by 2002:a05:690c:385:b0:70d:f237:6a60 with SMTP id
+ 00721157ae682-7117543cf7cmr125890177b3.7.1750089134944; Mon, 16 Jun 2025
+ 08:52:14 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: 237CC20034
-X-Stat-Signature: xrtt3cne15mpszeso61c3wd1iqzm4pfr
-X-Rspamd-Server: rspamout05
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX19hESC1G4pzjZZdZ9uHr9kQMXh3gtnL9xU=
-X-HE-Tag: 1750085900-926499
-X-HE-Meta: U2FsdGVkX193XZgjGdRK5j8nHlonQUe7QYiUVCQinh20elGdhOpp7c9hBPTtm5JJvTcbS6ldHLC9sbPCyryypjBGvpBDVZTRyqY6aSqmsqGX8RgyTMQRew3KOtRbz44Ssm6cDa1nhpy1kvsyLnwEXnPHc/Wl2q2iiV0gg+OdXBl9tTiyo79whbeqEcAMxUhRlKhyjxG1ZiINHlBzkHblOiFX6YI41WsbBFKzRnurU8Vt4O3bcR5X21qvWkiDwuqVsk1cdotXm2Vt0bvpVK8HGfdsZXy7TltjDrMcdDqu/qKaALWntfOpgYVkSbn1TCR81H27Gmk8wgv7TLGDJAdRDZbXi0my8FFs
+References: <20250515032226.128900-1-npache@redhat.com> <8621cd4f-a206-4440-9b02-52e9277ce212@arm.com>
+In-Reply-To: <8621cd4f-a206-4440-9b02-52e9277ce212@arm.com>
+From: Nico Pache <npache@redhat.com>
+Date: Mon, 16 Jun 2025 09:51:48 -0600
+X-Gm-Features: AX0GCFv_bntaKb1uWoTVlmOvBCUrEspFcRe-M6VQE_1ShbpjFnXLzcNhSs4x95w
+Message-ID: <CAA1CXcD=MOEfa6XBp3+e3dSMCmgfx0NgB0DgnxRWTAS-KKZx-g@mail.gmail.com>
+Subject: Re: [PATCH v7 00/12] khugepaged: mTHP support
+To: Dev Jain <dev.jain@arm.com>
+Cc: linux-mm@kvack.org, linux-doc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	david@redhat.com, ziy@nvidia.com, baolin.wang@linux.alibaba.com, 
+	lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com, ryan.roberts@arm.com, 
+	corbet@lwn.net, rostedt@goodmis.org, mhiramat@kernel.org, 
+	mathieu.desnoyers@efficios.com, akpm@linux-foundation.org, baohua@kernel.org, 
+	willy@infradead.org, peterx@redhat.com, wangkefeng.wang@huawei.com, 
+	usamaarif642@gmail.com, sunnanyong@huawei.com, vishal.moola@gmail.com, 
+	thomas.hellstrom@linux.intel.com, yang@os.amperecomputing.com, 
+	kirill.shutemov@linux.intel.com, aarcange@redhat.com, raquini@redhat.com, 
+	anshuman.khandual@arm.com, catalin.marinas@arm.com, tiwai@suse.de, 
+	will@kernel.org, dave.hansen@linux.intel.com, jack@suse.cz, cl@gentwo.org, 
+	jglisse@google.com, surenb@google.com, zokeefe@google.com, hannes@cmpxchg.org, 
+	rientjes@google.com, mhocko@suse.com, rdunlap@infradead.org
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: ONuGExD4r9KlHPdVkHzMYdtfmMe3Pa3Tc3QPA2QCbpE_1750089135
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, 16 Jun 2025 07:31:19 +0200
-Christoph Hellwig <hch@lst.de> wrote:
+On Sun, Jun 15, 2025 at 9:52=E2=80=AFPM Dev Jain <dev.jain@arm.com> wrote:
+>
+>
+> On 15/05/25 8:52 am, Nico Pache wrote:
+> > The following series provides khugepaged and madvise collapse with the
+> > capability to collapse anonymous memory regions to mTHPs.
+>
+> Hi Nico,
+Hey Dev!
 
-> > I just did an analysis of this:
-> > 
-> >   https://lore.kernel.org/lkml/20250613104240.509ff13c@batman.local.home/T/#md81abade0df19ba9062fd51ced4458161f885ac3
-> > 
-> > A TRACE_EVENT() is about 5K, and each DEFINE_EVENT() is about 1K.  
-> 
-> That's really quite expensive.  And you only measured the tezt/data/bss
+>
+> Can you tell the expected date of posting v8 of this patchset?
+Hopefully by next week, although it may be longer (as a try to catch
+up on everything after PTO). We were originally targeting 6.16, but we
+missed that window-- so I need to repost for 6.17, which we have
+plenty of time for. Ive also been releasing them slower as previously
+I was not giving reviewers enough time to actually review between my
+different versions (and this creates a lot of noise in people's
+inboxes).
 
-Yes. This is something I've spent a bit of time over the years trying
-to address. With moving a bunch of code into trace_event.c with the
-added expense that trace events do function calls.
+I'm also going through some of the testing again, this time with
+redis-memtier (as David suggested).
 
-It looks like it's still growing as the last time I checked it was just
-under 5K (something around 4800 bytes) and now it's over 5K, and the
-tracepoint code grew 4x. I'll start looking into "why" later when I
-have more time to deal with this. My time budget for removing unused
-events has pretty much dried up.
+Cheers,
+-- Nico
+>
+> >
+>
 
-> overhead and not even the dynamic memory overhead, which is probably
-> a lot more.
-
-Yes, and this is another area I look to make better. It was the
-motivation for eventfs which saved over 20 megs of memory by having
-trace event files dynamically created instead of being permanent.
-
--- Steve
