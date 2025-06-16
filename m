@@ -1,116 +1,120 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 062D82E424A;
-	Mon, 16 Jun 2025 12:06:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4F9126C3B7;
+	Mon, 16 Jun 2025 12:43:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750075564; cv=none; b=tzIe96KNyNUSzP7KYI1z4meYQ4OGwEtTZrhZFIHe1zoPDdJGOR2laQDzcEmChb5bGNX/CPrDNC7tnl2ydiJUXG4rrDF0Ve4OXwpiyZ8cve70aBArlO9ig33AWItLr/eLDNSjL+jZBd5akQLYlnLqm7LAQDRUpcFRfe0fGydqbp8=
+	t=1750077789; cv=none; b=U2+ypWhWw509rkjNlBipQ0uyVOhzZ9NM1RDFA9dracfdHuXEuvU959IqcZbAQTzsBA3FA6vIID4Zr1TkgYaMe33RUJtNvsqR1uVyMNE9O7k20CjkWPXIzYkTg75qaX98EtpSZ1vbGAqI/Ongn5IfN098YJl7QsHBUeJoJNJwm+U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750075564; c=relaxed/simple;
-	bh=b9WYpdYFnxnMvXA1h3uf/5jste9EtGT+SWQw77HmkHQ=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=Aupcn7drlTaujYfs4UdI/BGDOk49TB6mkAeYUYumxOu19FMEsts3G0V8A9NIvHjNFtgBbi2k1QOEsGV/wBa504Ht6cy5mgNXQMweA8ZaX8JDV9D7jcDctUuh+ZwGSbZb/jrTwf+cFXO6DbebO5Ypx0DzvWi6FIf8DvUfbee5OMA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pq67Wpiy; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750077789; c=relaxed/simple;
+	bh=rT/5O1pFR+fi1TbayQkW7zHw+KVBHF8HPxP4ZI+ohiw=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=OSod2wewLaVxUxXv+6NaUiiFRKojoro0cnLk8oheBiHk2l8S5NXfdQPOqAfgVJKOfvYjWRScnE9cSW4AjJ+Ek/6VHrUvQSj2uq8pQ/eznwbeorJEVSPEv+hS47ulKCAUQ4BhefTc0hlr14XY8u/7jqQjD6AIT8dJVmEgBBF1w3s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bNEYiPqc; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pq67Wpiy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5E4F8C4CEEA;
-	Mon, 16 Jun 2025 12:06:00 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bNEYiPqc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 369ECC4CEEA;
+	Mon, 16 Jun 2025 12:43:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750075563;
-	bh=b9WYpdYFnxnMvXA1h3uf/5jste9EtGT+SWQw77HmkHQ=;
-	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
-	b=pq67WpiybJlomxNo1Q0ynrhGsdBlLEZa3DapIvrN62fslXaJvFSseYU1F6UF6iK7m
-	 eRjNYnjG4H+HpTv+rDskCAVmxpco7/DZ+LSFuf6wTg0KlYhtOAWE/nAjK43uRVc+mZ
-	 jLR2DW/n7KG1ffCW0PtADsj9vMXl1cgYgm39oBRnpvW912H0vgijYY1cE6n2UfvoJo
-	 g3MFBCtiYS2xpwe4DQIkU5knmOVB1NsyYKYtmYFn55S1xvicbtUkR+RuAaSfi8PXXz
-	 U6Xd+aDPSj5ualUsK7k5hQqGA3nehA79pSkx32khEdCQ/bUQdJ+l6ni7LEO1Sq5oJo
-	 rkLvwouWXCydQ==
-Message-ID: <20415ab5-5003-4725-bf1b-560f197465c4@kernel.org>
-Date: Mon, 16 Jun 2025 14:05:58 +0200
+	s=k20201202; t=1750077788;
+	bh=rT/5O1pFR+fi1TbayQkW7zHw+KVBHF8HPxP4ZI+ohiw=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=bNEYiPqcCX0Xpwqz42+6CfGJMEtShOH8ujQuf9BG7VBCUsH9vd7Xr1ugSdFJasGwP
+	 BLkm8ZN61wW8GOgv2qWLHIHSlCcUUGdoiaDcD2HThCeVSlRBFYHS2g+2dsau49GAy1
+	 vwhAGz2VzXx+BzFws1qEVysVByDWNsBanLYJhM2CeLqiQG0VHLHaufnv06sqTpmO0e
+	 MxSQ2FRPSMrvtwId+11+ppKOOcWPp9ICnKI2+ryTkEMR7TbvGEkQTk73XG7Dq4bgzW
+	 4kZOXyD8s4O/RVV5up9vQkDAH6B72CEPCDXM+Z2zr4NbF/JdR2fULsnbLqCZFVRiVu
+	 rMuhGNlAz1R/g==
+Received: by alrua-x1.borgediget.toke.dk (Postfix, from userid 1000)
+	id 667051AF7032; Mon, 16 Jun 2025 14:42:54 +0200 (CEST)
+From: Toke =?utf-8?Q?H=C3=B8iland-J=C3=B8rgensen?= <toke@kernel.org>
+To: Jesper Dangaard Brouer <hawk@kernel.org>, Steven Rostedt
+ <rostedt@goodmis.org>, LKML <linux-kernel@vger.kernel.org>, Linux trace
+ kernel <linux-trace-kernel@vger.kernel.org>, bpf@vger.kernel.org
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Alexei Starovoitov <ast@kernel.org>,
+ Daniel Borkmann <daniel@iogearbox.net>, "David S. Miller"
+ <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>, John Fastabend
+ <john.fastabend@gmail.com>, Andrii Nakryiko <andrii@kernel.org>
+Subject: Re: [PATCH] xdp: Remove unused events xdp_redirect_map and
+ xdp_redirect_map_err
+In-Reply-To: <20415ab5-5003-4725-bf1b-560f197465c4@kernel.org>
+References: <20250611155615.0c2cf61c@batman.local.home>
+ <87bjqtb6c1.fsf@toke.dk> <4af27621-6d81-4316-b57a-b546c8a7ad08@kernel.org>
+ <20415ab5-5003-4725-bf1b-560f197465c4@kernel.org>
+X-Clacks-Overhead: GNU Terry Pratchett
+Date: Mon, 16 Jun 2025 14:42:54 +0200
+Message-ID: <87v7ovluwh.fsf@toke.dk>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] xdp: Remove unused events xdp_redirect_map and
- xdp_redirect_map_err
-From: Jesper Dangaard Brouer <hawk@kernel.org>
-To: =?UTF-8?Q?Toke_H=C3=B8iland-J=C3=B8rgensen?= <toke@kernel.org>,
- Steven Rostedt <rostedt@goodmis.org>, LKML <linux-kernel@vger.kernel.org>,
- Linux trace kernel <linux-trace-kernel@vger.kernel.org>, bpf@vger.kernel.org
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
- "David S. Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>,
- John Fastabend <john.fastabend@gmail.com>,
- Andrii Nakryiko <andrii@kernel.org>
-References: <20250611155615.0c2cf61c@batman.local.home>
- <87bjqtb6c1.fsf@toke.dk> <4af27621-6d81-4316-b57a-b546c8a7ad08@kernel.org>
-Content-Language: en-US
-In-Reply-To: <4af27621-6d81-4316-b57a-b546c8a7ad08@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
+Jesper Dangaard Brouer <hawk@kernel.org> writes:
 
-
-On 12/06/2025 12.54, Jesper Dangaard Brouer wrote:
-> 
-> 
-> On 12/06/2025 12.30, Toke Høiland-Jørgensen wrote:
->> Steven Rostedt <rostedt@goodmis.org> writes:
->>
->>> From: Steven Rostedt <rostedt@goodmis.org>
+> On 12/06/2025 12.54, Jesper Dangaard Brouer wrote:
+>>=20
+>>=20
+>> On 12/06/2025 12.30, Toke H=C3=B8iland-J=C3=B8rgensen wrote:
+>>> Steven Rostedt <rostedt@goodmis.org> writes:
 >>>
->>> Each TRACE_EVENT() defined can take up around 5K of text and meta data
->>> regardless if they are used or not. New code is being developed that 
->>> will
->>> warn when a tracepoint is defined but not used.
+>>>> From: Steven Rostedt <rostedt@goodmis.org>
+>>>>
+>>>> Each TRACE_EVENT() defined can take up around 5K of text and meta data
+>>>> regardless if they are used or not. New code is being developed that=20
+>>>> will
+>>>> warn when a tracepoint is defined but not used.
+>>>>
+>>>> The trace events xdp_redirect_map and xdp_redirect_map_err are=20
+>>>> defined but
+>>>> not used, but there's also a comment that states these are kept=20
+>>>> around for
+>>>> backward compatibility. Which is interesting because since they are not
+>>>> used, any old BPF program that expects them to exist will get incorrect
+>>>> data (no data) when they use them. It's worse than not working, it's
+>>>> silently failing.
+>>>>
+>>>> Remove them as they will soon cause warnings, or if they really need to
+>>>> stick around, then code needs to be added to use them.
+>>>>
+>>>> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 >>>
->>> The trace events xdp_redirect_map and xdp_redirect_map_err are 
->>> defined but
->>> not used, but there's also a comment that states these are kept 
->>> around for
->>> backward compatibility. Which is interesting because since they are not
->>> used, any old BPF program that expects them to exist will get incorrect
->>> data (no data) when they use them. It's worse than not working, it's
->>> silently failing.
+>>> I guess that makes sense; I have no objections to getting rid of them.
 >>>
->>> Remove them as they will soon cause warnings, or if they really need to
->>> stick around, then code needs to be added to use them.
->>>
->>> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
->>
->> I guess that makes sense; I have no objections to getting rid of them.
->>
->> Reviewed-by: Toke Høiland-Jørgensen <toke@kernel.org>
-> 
-> Make sense.
-> 
-> 
-> Toke we have to check how XDP-tools handle when these tracepoints 
-> disappears.
+>>> Reviewed-by: Toke H=C3=B8iland-J=C3=B8rgensen <toke@kernel.org>
+>>=20
+>> Make sense.
+>>=20
+>>=20
+>> Toke we have to check how XDP-tools handle when these tracepoints=20
+>> disappears.
+>
+> To Toke, notice that userspace tools expect this tracepoint to be
+> available will fail as below (for kernel release v6.16):
+>
+>   $ sudo ./xdp-bench redirect mlx5p1 veth41
+>    libbpf: prog 'tp_xdp_redirect_map_err': failed to find kernel BTF=20
+> type ID of 'xdp_redirect_map_err': -3
+>    libbpf: prog 'tp_xdp_redirect_map_err': failed to prepare load=20
+> attributes: -3
+>    libbpf: prog 'tp_xdp_redirect_map_err': failed to load: -3
+>    libbpf: failed to load object 'xdp_redirect_basic'
+>   Failed to attach XDP program: No such process
+>
+> IMHO this is a userspace problem, that needs to be more flexible and
+> adapt to this change.
+>
+> This was changed in kernel v5.6 (Jan 2020) commit 1d233886dd90 ("xdp:
+> Use bulking for non-map XDP_REDIRECT and consolidate code paths").
+> So, I'm thinking that xdp-tools could just remove monitoring for these
+> tracepoints?
 
-To Toke, notice that userspace tools expect this tracepoint to be
-available will fail as below (for kernel release v6.16):
+Yeah, let's just get rid of them:
+https://github.com/xdp-project/xdp-tools/pull/513
 
-  $ sudo ./xdp-bench redirect mlx5p1 veth41
-   libbpf: prog 'tp_xdp_redirect_map_err': failed to find kernel BTF 
-type ID of 'xdp_redirect_map_err': -3
-   libbpf: prog 'tp_xdp_redirect_map_err': failed to prepare load 
-attributes: -3
-   libbpf: prog 'tp_xdp_redirect_map_err': failed to load: -3
-   libbpf: failed to load object 'xdp_redirect_basic'
-  Failed to attach XDP program: No such process
-
-IMHO this is a userspace problem, that needs to be more flexible and
-adapt to this change.
-
-This was changed in kernel v5.6 (Jan 2020) commit 1d233886dd90 ("xdp:
-Use bulking for non-map XDP_REDIRECT and consolidate code paths").
-So, I'm thinking that xdp-tools could just remove monitoring for these
-tracepoints?
-
---Jesper
+-Toke
