@@ -1,77 +1,77 @@
-Received: from relay.hostedemail.com (smtprelay0014.hostedemail.com [216.40.44.14])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5DF3BA42;
-	Mon, 16 Jun 2025 20:20:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9A9A4A0C;
+	Mon, 16 Jun 2025 22:10:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750105242; cv=none; b=ZliCzlfmo6maah2feHlsVDMzNz7FpQVJMxl+NLsLEweNmH0kXPjYude/AAD7DJsXAP4/bPyFcdZcOjraEtcdRf8qRH4V6wZfzxOJ+TFD8BCTH38XPPKbIVsIGEPhOUla61dd96zUi+1BTiV8fqI+RWB6Q10dCg2Yu8GD0P7PZYM=
+	t=1750111808; cv=none; b=ORLQvWktjeMdaqWzN82DaRbKguOHrjtycB+O8zCCwbvBAhepHlvzfuZKfO8m5gJG6H+u//HqQdiSfRWoEkpWrTM19bbdWpOiofVdwHbt86vh9wWs4XLzmrLJiZg2PYB8IhYb93GnwrXswne1VShEs8AZM8Xn1rDhNBTihqZDlOg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750105242; c=relaxed/simple;
-	bh=0Ryv9UCpOn6jJJKlgtabqaN9ktZGehGgpZGDWaGIGVM=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=d+RB2GCAZcyTgw7q3QLlsAFkdNKuQ39iQLG0YXRu9fXwJQNANh89er+rVetDcUJrfi1FLnzsTWRPBy33ff1lbAdVwesZdxTociaeU6P6AxE1QvEt8u2c1n3jMqaHxy2++4sSoAPcK/zMN673s/7xnyRTWXIjU7VGrH6d68ZxLgQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf02.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay08.hostedemail.com (Postfix) with ESMTP id EA9CA140DFB;
-	Mon, 16 Jun 2025 20:20:37 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf02.hostedemail.com (Postfix) with ESMTPA id ACD2780014;
-	Mon, 16 Jun 2025 20:20:35 +0000 (UTC)
-Date: Mon, 16 Jun 2025 16:20:39 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Jakub Kicinski <kuba@kernel.org>
-Cc: Simon Horman <horms@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
- Linux trace kernel <linux-trace-kernel@vger.kernel.org>,
- netdev@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>, Mathieu
- Desnoyers <mathieu.desnoyers@efficios.com>, Eric Dumazet
- <edumazet@google.com>, Neal Cardwell <ncardwell@google.com>, Kuniyuki
- Iwashima <kuniyu@amazon.com>
-Subject: Re: [PATCH] net/tcp_ao: tracing: Hide tcp_ao events under
- CONFIG_TCP_AO
-Message-ID: <20250616162039.6c030caa@gandalf.local.home>
-In-Reply-To: <20250616131825.65e1c058@kernel.org>
-References: <20250612094616.4222daf0@batman.local.home>
-	<20250614153003.GP414686@horms.kernel.org>
-	<20250616144718.4e8e12bf@batman.local.home>
-	<20250616131825.65e1c058@kernel.org>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1750111808; c=relaxed/simple;
+	bh=OPxmYCFXXROUzhejBnVBLCe5VD2s5fkbuoEc+N9ZWBA=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=ZdN6sy9KAsvVr+0aHDSx7ng6G/3WnrnzymjUivbnup5IDCc2xMUi4UU8mp4S8+0mRXduF4YjTvO5ngBAasPgJSRyFakn3cwwGB/EyYgOzVjrSl7RPn4CyjlWjYpgs5dPrd/1j8kOUvrTI2KGulE6BkHSiWAT4MrxXKc0ZKwwwpI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gKyKFsSO; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gKyKFsSO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 35813C4CEEA;
+	Mon, 16 Jun 2025 22:10:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750111808;
+	bh=OPxmYCFXXROUzhejBnVBLCe5VD2s5fkbuoEc+N9ZWBA=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=gKyKFsSOYdC6PUzcjI3a4xboBv8AHU2cvVveqPaKIVu93S9B+pTHpEvkly0oUWyAH
+	 qnmyRm8iNpKSn0XhqFoiJ6LDyubb03xFMPBw2YGUeljO/fE7+FE4/GotlZxJyiy42K
+	 FKhh3VxAL5t3f/SKW/eSd/7IQzaXYzNEz6nAqfvLjoudnZmP6LKwY2fvtxWuWPHxNo
+	 P4UB5rCZyAL/1xtUkyl49eEMhsfm37eatZmKzJ01BIqG8VLqp8GG1769Rgz0JbnBAm
+	 Z2ParFcz44Kz9T2ukoHiGYQlAhrwMeOAm253m40cPGdW+DucB4L/LLHajQq2PZ7A/F
+	 6AQ5k161guvKw==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 33E1838111D8;
+	Mon, 16 Jun 2025 22:10:38 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: ACD2780014
-X-Stat-Signature: zxgueftpktfut71o33xeh3itqyewppis
-X-Rspamd-Server: rspamout06
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1/QrVKUF34VSnGMYo8mgDlWQZvoVVtRkoc=
-X-HE-Tag: 1750105235-693059
-X-HE-Meta: U2FsdGVkX1/Vn+Fk0EmiKG4pbp2Z4qZAwO5j3KL1FUoiwCoeBmmAL5GXGcmyc4wHb+OYnJkr2uFuD2wttsjOoW8RJZoHQmGU8Dfb6k8ev68FJRFAKUku0Yq/OyN8A1nFWNbufKxhY7TEV1rbwLWfVoxITlKlnSqDRzYN6xIlvcQLZ2J1tiv+w7K9qRvmMI9AlkYK3ngDX/0ncvgcZo+FudFdtNfrwvmWbaPnG+t8ZdPvIbOT/RiMfoz15D56E/atkZubz7Ww3VyjbEXHld4qmQgzJAk4BbPH5LZLV6mSYyF6LolXCuuMVhLm7vCWu3Tc8fzrVdlBNoWEFO4QZfQ7v0e72NLWJdVJ
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH] net/tcp_ao: tracing: Hide tcp_ao events under
+ CONFIG_TCP_AO
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <175011183700.2530350.11672479574209344326.git-patchwork-notify@kernel.org>
+Date: Mon, 16 Jun 2025 22:10:37 +0000
+References: <20250612094616.4222daf0@batman.local.home>
+In-Reply-To: <20250612094616.4222daf0@batman.local.home>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ netdev@vger.kernel.org, mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
+ edumazet@google.com, ncardwell@google.com, kuniyu@amazon.com
 
-On Mon, 16 Jun 2025 13:18:25 -0700
-Jakub Kicinski <kuba@kernel.org> wrote:
+Hello:
 
-> On Mon, 16 Jun 2025 14:47:18 -0400 Steven Rostedt wrote:
-> > On Sat, 14 Jun 2025 16:30:03 +0100
-> > Simon Horman <horms@kernel.org> wrote:
-> >   
-> > > I agree that the events and classes covered by this #define
-> > > are not used unless CONFIG_TCP_AO is set. And that the small
-> > > number of TCP_AO related events that are left outside
-> > > the define are used even when CONFIG_TCP_AO is not set.
-> > > 
-> > > Reviewed-by: Simon Horman <horms@kernel.org>    
-> > 
-> > Should I take this or should this go through the networking tree?  
+This patch was applied to netdev/net-next.git (main)
+by Jakub Kicinski <kuba@kernel.org>:
+
+On Thu, 12 Jun 2025 09:46:16 -0400 you wrote:
+> From: Steven Rostedt <rostedt@goodmis.org>
 > 
-> Weak preference towards networking tree. We'll apply by the end of 
-> the day.
+> Several of the tcp_ao events are only called when CONFIG_TCP_AO is
+> defined. As each event can take up to 5K regardless if they are used or
+> not, it's best not to define them when they are not used. Add #ifdef
+> around these events when they are not used.
+> 
+> [...]
 
-Thanks, much appreciated.
+Here is the summary with links:
+  - net/tcp_ao: tracing: Hide tcp_ao events under CONFIG_TCP_AO
+    https://git.kernel.org/netdev/net-next/c/3cfbde048b1c
 
--- Steve
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
+
