@@ -1,90 +1,67 @@
 Received: from relay.hostedemail.com (smtprelay0016.hostedemail.com [216.40.44.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABF4F288CB5;
-	Mon, 16 Jun 2025 17:53:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEC151C7017;
+	Mon, 16 Jun 2025 18:47:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750096386; cv=none; b=CVqajuLXT9+aRBSL84LI4k2gzk03A2gJZBlzSvki+Z9Ln82SmQgoPYfyL+V1+Fq1IVHlZg2UqskDFIfTOCyRL55jXzy00XRX5GgzvJs6W9781X2WwzsQUE3n+0YzS/l7rKu0vFTP2AfM1LNL4GZyPo5SLPhqMZlW4k4hFftpjy4=
+	t=1750099646; cv=none; b=jqHJYBkhQcHLWK304S3lXwG3RgYSr+18EklRBC+odifmz05LvpmTZP62VTB0KdXTNMkDUeMZfaO050enLYHxCyZGFGw007GMqSzfN0P5+TgM0vwldc3+M3fkjd3f+ZpJiR3LlvHA4xx/l9I4Og9WJJ+a8vJUQcDBxXy4NAEnjDQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750096386; c=relaxed/simple;
-	bh=NKxXMIXzsSM7kZFMLFM188WPZyVP6ERPHjmDt7Sjzjs=;
-	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=fpHQuu932OxxyUbPy77WaGW8PpIZ/uvoxOWmghbAGFmV3gWwclWc72QjDmoiLNMoAL4zWaq3Skg4UInXs3tJchCiUvDxYqJpdExT13KPNvusgXXKulgLIfMCDacUXk3/jCKL+jMfIyeihSZASGUmOaEhRUVYQFfiuj96fFORNaw=
+	s=arc-20240116; t=1750099646; c=relaxed/simple;
+	bh=+u6NIt7sxAbAcBUXeniPYLozYeGS9fVseDfzYPam3aA=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=doqrKzsmOBYPephUlfEWKllbuyYWUc21JZ0HZv3blHdCPz3VQzFCpUEPPqoioXC5nb5umpVB4Pt+f2ZZUEKC2JsYkytopCkQRTvPCiflrPabUYp7ymChkBpIAxRASmeN0JIe6JxV8wfLQn6Nr+rIkl3dtFp4eTCzSLm5OjVvvIE=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.16
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf14.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay06.hostedemail.com (Postfix) with ESMTP id 415D6101344;
-	Mon, 16 Jun 2025 17:52:56 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: nevets@goodmis.org) by omf14.hostedemail.com (Postfix) with ESMTPA id 8CF2C30;
-	Mon, 16 Jun 2025 17:52:54 +0000 (UTC)
-Received: from rostedt by gandalf with local (Exim 4.98.2)
-	(envelope-from <rostedt@goodmis.org>)
-	id 1uRE0w-00000001KYc-2opA;
-	Mon, 16 Jun 2025 13:52:58 -0400
-Message-ID: <20250616175258.528614307@goodmis.org>
-User-Agent: quilt/0.68
-Date: Mon, 16 Jun 2025 13:51:58 -0400
+Received: from omf13.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay09.hostedemail.com (Postfix) with ESMTP id 1E0E480CE4;
+	Mon, 16 Jun 2025 18:47:22 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf13.hostedemail.com (Postfix) with ESMTPA id 0A83420013;
+	Mon, 16 Jun 2025 18:47:19 +0000 (UTC)
+Date: Mon, 16 Jun 2025 14:47:18 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
-To: linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org,
- linux-xfs@vger.kernel.org
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- Carlos  Maiolino <cem@kernel.org>,
- Christoph Hellwig <hch@lst.de>,
- "Darrick J. Wong" <djwong@kernel.org>
-Subject: [PATCH v2 12/13] xfs: only create event xfs_file_compat_ioctl when CONFIG_COMPAT is
- configure
-References: <20250616175146.813055227@goodmis.org>
+To: Simon Horman <horms@kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, Linux trace kernel
+ <linux-trace-kernel@vger.kernel.org>, netdev@vger.kernel.org, Masami
+ Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Eric Dumazet <edumazet@google.com>, Neal
+ Cardwell <ncardwell@google.com>, Kuniyuki Iwashima <kuniyu@amazon.com>
+Subject: Re: [PATCH] net/tcp_ao: tracing: Hide tcp_ao events under
+ CONFIG_TCP_AO
+Message-ID: <20250616144718.4e8e12bf@batman.local.home>
+In-Reply-To: <20250614153003.GP414686@horms.kernel.org>
+References: <20250612094616.4222daf0@batman.local.home>
+	<20250614153003.GP414686@horms.kernel.org>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-Stat-Signature: bnkzq5i39athu4785ruc1wcg5jzjpyxf
-X-Rspamd-Server: rspamout02
-X-Rspamd-Queue-Id: 8CF2C30
-X-Session-Marker: 6E657665747340676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1+QZfLrgkevSGG6U4TZA9OYfpnsSZdbJIs=
-X-HE-Tag: 1750096374-221371
-X-HE-Meta: U2FsdGVkX19px8Fb8CkmNOiT1mEhlKTs0+8gaUgB8JXJqdaV4kFMqKW0pxevEZdglKLijc1+Xx4sDGHqlQ+8wkRiO5VyWNfrSLWT83FApzx/xlzL+Lo2dyK4fdgy/Fi6lK8ReI3xvUnIOK6Av6HNYgrOlTKtTk+9Jjt3gOTyQFO9yzoX4X0Y+Jy10Phl6AO+5O9PehVjceE4CorDoZfLEVULnXEFu8ADrSe+12MKRMT7SHXtP2gZA58ElcDPce543jIFtqNGzmFFjSQ40HOMofWl6Uqof7gquiJWvsBsSbKoGFpfxtIu0Hlf5iM1DkOgKb/L085+uV1sELqTr5Ayho2Cb5V7rWEHcBRXji2cDfXBOwLYz3qc9Tf1Dd/yzs+lFBwbiPFva8RW2V5p8J9HSw==
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Server: rspamout01
+X-Rspamd-Queue-Id: 0A83420013
+X-Stat-Signature: xesxf9bh9c5ri4ep9wzkp8y4rtsfehj9
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX19jT6mTF9UAA3Sd8LvPn4fMEC2UAzwUSpo=
+X-HE-Tag: 1750099639-458386
+X-HE-Meta: U2FsdGVkX1/ts7w0SxBLUpEGFjhG+2khnklr2JJmL3vQPwHvlwIFdxrN0q+NChc9H0e4y8Qln7DDTQijjJJvEui/2X06f0Pk/xazhotjyChetScSmrk2qM0jQtodiU3MW0ldiJ22coQePoEjSlrSEGbx+dHNADYsu3bVLw9DuR5k/bPfEL4Jlmf3gg7alkN1aqhQuc3nQlzNzY6m3o7BT70ghYkm32QrFKxl2N2589Ir1nbJLsSy0nozNY2vC9FmYSMf3EO94H1MZl8y1oAQebWYRIMANxmIqPYPMdmUUAvt6tOYqVto0GLAbEBL3W0oy1rcpESjIq6VgVDVjkRcZiLyZqmcDFIP
 
-From: Steven Rostedt <rostedt@goodmis.org>
+On Sat, 14 Jun 2025 16:30:03 +0100
+Simon Horman <horms@kernel.org> wrote:
 
-The trace event xfs_file_compat_ioctl is only used when CONFIG_COMPAT is
-configured in the build. As trace events can take up to 5K in memory for
-text and meta data regardless if they are used, they should not be created
-when unused. Add #ifdef CONFIG_COMPAT around the event so that it is only
-created when that is configured.
+> I agree that the events and classes covered by this #define
+> are not used unless CONFIG_TCP_AO is set. And that the small
+> number of TCP_AO related events that are left outside
+> the define are used even when CONFIG_TCP_AO is not set.
+> 
+> Reviewed-by: Simon Horman <horms@kernel.org>
 
-Fixes: cca28fb83d9e6 ("xfs: split xfs_itrace_entry")
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
- fs/xfs/xfs_trace.h | 2 ++
- 1 file changed, 2 insertions(+)
+Thanks,
 
-diff --git a/fs/xfs/xfs_trace.h b/fs/xfs/xfs_trace.h
-index 7977af7c6873..448dea97a052 100644
---- a/fs/xfs/xfs_trace.h
-+++ b/fs/xfs/xfs_trace.h
-@@ -1083,7 +1083,9 @@ DEFINE_INODE_EVENT(xfs_get_acl);
- #endif
- DEFINE_INODE_EVENT(xfs_vm_bmap);
- DEFINE_INODE_EVENT(xfs_file_ioctl);
-+#ifdef CONFIG_COMPAT
- DEFINE_INODE_EVENT(xfs_file_compat_ioctl);
-+#endif
- DEFINE_INODE_EVENT(xfs_ioctl_setattr);
- DEFINE_INODE_EVENT(xfs_dir_fsync);
- DEFINE_INODE_EVENT(xfs_file_fsync);
--- 
-2.47.2
+Should I take this or should this go through the networking tree?
 
-
+-- Steve
