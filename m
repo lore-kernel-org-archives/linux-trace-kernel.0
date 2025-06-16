@@ -1,39 +1,39 @@
-Received: from imap5.colo.codethink.co.uk (imap5.colo.codethink.co.uk [78.40.148.171])
+Received: from imap4.hz.codethink.co.uk (imap4.hz.codethink.co.uk [188.40.203.114])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A4C8216E26;
-	Mon, 16 Jun 2025 16:24:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.40.148.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB5A71E492;
+	Mon, 16 Jun 2025 16:33:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.40.203.114
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750091069; cv=none; b=rbyPAZtWmyeKuFohk2g4lkaIYUiJCTYkEfpmFG5jC1BntL4L4WcimShIcK5agVhQhjgooI0itTLiLeK084KnyuaDCZtsu3gDVW4UTqejtC3D5jtU3uvlQLiOTs5W25RRiukPamTOmx+DUOwIxdhMCxTmoAybI5sa/JBB4bVEaEg=
+	t=1750091615; cv=none; b=fdYZQFEVh7OrBs8Jnx1MBaHUL620zAANp4Z6pbLdXRG5AsNUMhNH7veJZDKF9uvC8arMatW1Eqx9IldWN25MdBOa2QEf//ZPumMOh7k6I+4L/A2b7x0F2saUaLLt/Okn/kQnmJzdtR8H296bapgVIyFe/YNbEqr1InEWJrYzebQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750091069; c=relaxed/simple;
-	bh=Uz857Oq2+oWLt5i1lXofzZcOyaFI4AsgP0/KjBuTWmM=;
+	s=arc-20240116; t=1750091615; c=relaxed/simple;
+	bh=qaYMOS+0hWyrlEytEKzx5H7nPMZQC1gNkn4R4GhTIR0=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=U/2RQDkrNW0hIaWFi4QFbnCA1f2SO2NL8LKXDglcPcNb7C6Tlxbib0yGUqI4hUSeLbWtuWtfhEz+qZEMOuXZz8M+/fIP0zCL3MSqTZpqv0oMRHffm6VubYBYVZf4rlFvbgfzynSkPQzkCsMyZvpR311fdG8qeZq8f9FiT+j1kF8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=codethink.co.uk; spf=pass smtp.mailfrom=codethink.com; dkim=pass (2048-bit key) header.d=codethink.co.uk header.i=@codethink.co.uk header.b=qQ/vVQOs; arc=none smtp.client-ip=78.40.148.171
+	 MIME-Version; b=TLv6JkGewewsfYlES7bl0AyC8jMAf2xLOQ2AJtpYliMFcg25a5yJLvNfokyFMJhob//HEkidyGlM02hm/CqMLscVeOSJ3/x8n09oIIYP7tRCCmeZc+8RwkII6S4f806m/v9dixJSoURXXCNiWS0wXZM5bdxznr+Hrm1WR6Kb+0U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=codethink.co.uk; spf=pass smtp.mailfrom=codethink.com; dkim=pass (2048-bit key) header.d=codethink.co.uk header.i=@codethink.co.uk header.b=me4EEnT8; arc=none smtp.client-ip=188.40.203.114
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=codethink.co.uk
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codethink.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=codethink.co.uk header.i=@codethink.co.uk header.b="qQ/vVQOs"
+	dkim=pass (2048-bit key) header.d=codethink.co.uk header.i=@codethink.co.uk header.b="me4EEnT8"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=codethink.co.uk; s=imap5-20230908; h=Sender:Content-Transfer-Encoding:
+	d=codethink.co.uk; s=imap4-20230908; h=Sender:Content-Transfer-Encoding:
 	MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
 	Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
 	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=5AGwWrRi8jrgw3xUdQEuuEMteyOTsTLzOSwAaSI3km4=; b=qQ/vVQOsBoTKNxsqcSqzZmGLg9
-	hQyXsN7Q2dUb3Wn7gvf4rdHkEfzF05K0YIYbuLV3gY0n8sVhpTd4hO/RDFQgy8BkXUGMdFMtBIeZ3
-	CatTtdCsuMwvg1nS1BmMiJpobtv/blCC6TU0nUy9vXJvBEc1LSumR5hm7dlVG5KVaS3Zth3jKqUTT
-	RmF/qnVnZH2mtVAWSSXQsbN57U0uX01GdY3C93jRZshGZLWGwv+JfxIjJpfgKCGaLFQgJgSYivQcu
-	QY1N3KOcAXx6AxgH86Df6iXnlCA967X72vOrMprTm0/f1UVwEs/esxWhBCwxlXf2JqWFDT5cEC28Y
-	c8trnfXw==;
+	bh=dVafAhGNitsOfreLos+zVpbRsLbs5vydoLjmX+bRpGI=; b=me4EEnT8FsbvDd1NLDN0CaRLBK
+	gG5EDAVg75xEMZgUYAS3/wDbJXGTOW9j3xD8bMjkICxzQxi1Eshm+UcFmKqOh+luVr7HzFoj69NIX
+	R2rPpXeDQ8QRUO3kkf+5c2JAgPcKdrundXOOHRMJpDB/Je9ZMAFB4Ob9B8a2YryWM3g6vbyKGRHBY
+	nfWaXQHsIZR9Ww+7xqQb35htQVmSh8ZTon5gBl/YnfLItz0DiJAzJ5zIAVqLQzYf7Nb7XUg1dRktv
+	5a/vru4ms6bMTYVMrXmp6G6o26bHR8bddTkC6j5/C60rgTZD6LtMnAJv365RWYroED57eFUz7bJVi
+	Fo4aPzQQ==;
 Received: from [167.98.27.226] (helo=rainbowdash)
-	by imap5.colo.codethink.co.uk with esmtpsa  (Exim 4.94.2 #2 (Debian))
-	id 1uRCGd-003LgT-Fm; Mon, 16 Jun 2025 17:01:04 +0100
+	by imap4.hz.codethink.co.uk with esmtpsa  (Exim 4.94.2 #2 (Debian))
+	id 1uRCGe-00FGuk-DJ; Mon, 16 Jun 2025 17:01:04 +0100
 Received: from ben by rainbowdash with local (Exim 4.98.2)
 	(envelope-from <ben@rainbowdash>)
-	id 1uRCGe-00000008pcl-0aOx;
+	id 1uRCGe-00000008pch-0Trg;
 	Mon, 16 Jun 2025 17:01:04 +0100
 From: Ben Dooks <ben.dooks@codethink.co.uk>
 To: thierry.reding@gmail.com,
@@ -44,9 +44,9 @@ To: thierry.reding@gmail.com,
 Cc: linux-trace-kernel@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Ben Dooks <ben.dooks@codethink.co.uk>
-Subject: [PATCH 2/2] drivers/firware/tegra: add tracing to bpmp code
-Date: Mon, 16 Jun 2025 17:01:03 +0100
-Message-Id: <20250616160103.2105041-3-ben.dooks@codethink.co.uk>
+Subject: [PATCH 1/2] memory: tegra-mc: add tracepoints for tegra mc tracing
+Date: Mon, 16 Jun 2025 17:01:02 +0100
+Message-Id: <20250616160103.2105041-2-ben.dooks@codethink.co.uk>
 X-Mailer: git-send-email 2.37.2.352.g3c44437643
 In-Reply-To: <20250616160103.2105041-1-ben.dooks@codethink.co.uk>
 References: <20250616160103.2105041-1-ben.dooks@codethink.co.uk>
@@ -59,91 +59,95 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: srv_ts003@codethink.com
 
-Add trace points to the communications with the bpmp
+Add trace points to allow tracing of how the tegra_mc driver is being
+called.
 
 Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
 ---
- drivers/firmware/tegra/bpmp.c     |  16 +++-
- include/trace/events/tegra_bpmp.h | 140 ++++++++++++++++++++++++++++++
- 2 files changed, 155 insertions(+), 1 deletion(-)
- create mode 100644 include/trace/events/tegra_bpmp.h
+ drivers/memory/tegra/mc.c       | 26 +++++++------
+ include/trace/events/tegra_mc.h | 69 +++++++++++++++++++++++++++++++++
+ 2 files changed, 84 insertions(+), 11 deletions(-)
+ create mode 100644 include/trace/events/tegra_mc.h
 
-diff --git a/drivers/firmware/tegra/bpmp.c b/drivers/firmware/tegra/bpmp.c
-index c3a1dc344961..b7c005990269 100644
---- a/drivers/firmware/tegra/bpmp.c
-+++ b/drivers/firmware/tegra/bpmp.c
-@@ -20,6 +20,9 @@
+diff --git a/drivers/memory/tegra/mc.c b/drivers/memory/tegra/mc.c
+index bd5b58f1fd42..256cf0d0aa2d 100644
+--- a/drivers/memory/tegra/mc.c
++++ b/drivers/memory/tegra/mc.c
+@@ -21,6 +21,9 @@
  
- #include "bpmp-private.h"
+ #include "mc.h"
  
 +#define CREATE_TRACE_POINTS
-+#include <trace/events/tegra_bpmp.h>
++#include <trace/events/tegra_mc.h>
 +
- #define MSG_ACK		BIT(0)
- #define MSG_RING	BIT(1)
- #define TAG_SZ		32
-@@ -227,6 +230,7 @@ static ssize_t tegra_bpmp_channel_read(struct tegra_bpmp_channel *channel,
- unlock:
- 	up(&bpmp->threaded.lock);
+ static const struct of_device_id tegra_mc_of_match[] = {
+ #ifdef CONFIG_ARCH_TEGRA_2x_SOC
+ 	{ .compatible = "nvidia,tegra20-mc-gart", .data = &tegra20_mc_soc },
+@@ -210,6 +213,8 @@ static int tegra_mc_hotreset_assert(struct reset_controller_dev *rcdev,
+ 	int retries = 500;
+ 	int err;
  
-+	trace_tegra_bpmp_channel_read(channel, data, size, ret, err);
- 	return err;
- }
- 
-@@ -240,6 +244,8 @@ static ssize_t __tegra_bpmp_channel_write(struct tegra_bpmp_channel *channel,
- 	if (data && size > 0)
- 		tegra_bpmp_mb_write(&channel->ob, data, size);
- 
-+	trace_tegra_bpmp_channel_write(channel, mrq, flags, data, size);
++	trace_tegra_mc_hotreset(mc->dev, id, true);
 +
- 	return tegra_bpmp_post_request(channel);
- }
+ 	rst = tegra_mc_reset_find(mc, id);
+ 	if (!rst)
+ 		return -ENODEV;
+@@ -269,6 +274,8 @@ static int tegra_mc_hotreset_deassert(struct reset_controller_dev *rcdev,
+ 	const struct tegra_mc_reset *rst;
+ 	int err;
  
-@@ -350,8 +356,12 @@ int tegra_bpmp_transfer_atomic(struct tegra_bpmp *bpmp,
- 	if (err < 0)
- 		return err;
- 
--	return __tegra_bpmp_channel_read(channel, msg->rx.data, msg->rx.size,
-+	err =  __tegra_bpmp_channel_read(channel, msg->rx.data, msg->rx.size,
- 					 &msg->rx.ret);
++	trace_tegra_mc_hotreset(mc->dev, id, false);
 +
-+	trace_tegra_bpmp_channel_read(channel, msg->rx.data, msg->rx.size,
-+				      &msg->rx.ret, err);
-+	return err;
- }
- EXPORT_SYMBOL_GPL(tegra_bpmp_transfer_atomic);
+ 	rst = tegra_mc_reset_find(mc, id);
+ 	if (!rst)
+ 		return -ENODEV;
+@@ -583,7 +590,7 @@ irqreturn_t tegra30_mc_handle_irq(int irq, void *data)
+ 	for_each_set_bit(bit, &status, 32) {
+ 		const char *error = tegra_mc_status_names[bit] ?: "unknown";
+ 		const char *client = "unknown", *desc;
+-		const char *direction, *secure;
++		bool secure, write;
+ 		u32 status_reg, addr_reg;
+ 		u32 intmask = BIT(bit);
+ 		phys_addr_t addr = 0;
+@@ -652,15 +659,8 @@ irqreturn_t tegra30_mc_handle_irq(int irq, void *data)
+ 		}
+ #endif
  
-@@ -368,6 +378,8 @@ int tegra_bpmp_transfer(struct tegra_bpmp *bpmp,
- 	if (!tegra_bpmp_message_valid(msg))
- 		return -EINVAL;
+-		if (value & MC_ERR_STATUS_RW)
+-			direction = "write";
+-		else
+-			direction = "read";
+-
+-		if (value & MC_ERR_STATUS_SECURITY)
+-			secure = "secure ";
+-		else
+-			secure = "";
++		write = value & MC_ERR_STATUS_RW;
++		secure = value & MC_ERR_STATUS_SECURITY;
  
-+	trace_tegra_bpmp_transfer(bpmp, msg);
+ 		id = value & mc->soc->client_id_mask;
+ 
+@@ -710,8 +710,12 @@ irqreturn_t tegra30_mc_handle_irq(int irq, void *data)
+ 			value = mc_readl(mc, addr_reg);
+ 		addr |= value;
+ 
++		trace_tegra_mc_err(mc->dev, client, secure, write, addr,
++				   error, desc, perm);
 +
- 	if (bpmp->suspended) {
- 		/* Reset BPMP IPC channels during resume based on flags passed */
- 		if (msg->flags & TEGRA_BPMP_MESSAGE_RESET)
-@@ -812,6 +824,7 @@ static int __maybe_unused tegra_bpmp_suspend(struct device *dev)
- {
- 	struct tegra_bpmp *bpmp = dev_get_drvdata(dev);
+ 		dev_err_ratelimited(mc->dev, "%s: %s%s @%pa: %s (%s%s)\n",
+-				    client, secure, direction, &addr, error,
++				    client, secure ? "secure" : "",
++				    write ? "write" : "read", &addr, error,
+ 				    desc, perm);
+ 	}
  
-+	trace_tegra_bpmp_pm(bpmp, true);
- 	bpmp->suspended = true;
- 
- 	return 0;
-@@ -821,6 +834,7 @@ static int __maybe_unused tegra_bpmp_resume(struct device *dev)
- {
- 	struct tegra_bpmp *bpmp = dev_get_drvdata(dev);
- 
-+	trace_tegra_bpmp_pm(bpmp, false);
- 	bpmp->suspended = false;
- 
- 	if (bpmp->soc->ops->resume)
-diff --git a/include/trace/events/tegra_bpmp.h b/include/trace/events/tegra_bpmp.h
+diff --git a/include/trace/events/tegra_mc.h b/include/trace/events/tegra_mc.h
 new file mode 100644
-index 000000000000..63289e475951
+index 000000000000..acf00a19240b
 --- /dev/null
-+++ b/include/trace/events/tegra_bpmp.h
-@@ -0,0 +1,140 @@
++++ b/include/trace/events/tegra_mc.h
+@@ -0,0 +1,69 @@
 +/* SPDX-License-Identifier: GPL-2.0-or-later */
 +/* tegra memory controller tracepoints
 + *
@@ -152,135 +156,64 @@ index 000000000000..63289e475951
 + */
 +
 +#undef TRACE_SYSTEM
-+#define TRACE_SYSTEM tegra_bpmp
++#define TRACE_SYSTEM tegra_mc
 +
-+#if !defined(_TRACE_TEGRA_BPMP_H) || defined(TRACE_HEADER_MULTI_READ)
-+#define _TRACE_TEGRA_BPMP_H
++#if !defined(_TRACE_TEGRA_MC_H) || defined(TRACE_HEADER_MULTI_READ)
++#define _TRACE_TEGRA_MC_H
 +
++#include <linux/device.h>
 +#include <linux/tracepoint.h>
 +
-+#include <soc/tegra/bpmp.h>
-+
-+#ifdef CREATE_TRACE_POINTS
-+static inline const char *tegra_bpmp_mrq_name(unsigned mrq)
-+{
-+	switch (mrq) {
-+	case MRQ_PING: return "ping";
-+	case MRQ_QUERY_TAG: return "query-tag";
-+	case MRQ_THREADED_PING: return "threaded-ping";
-+	case MRQ_DEBUGFS: return "debugfs";
-+	case MRQ_RESET: return "reset";
-+	case MRQ_I2C: return "i2c";
-+	case MRQ_CLK: return "clk";
-+	case MRQ_QUERY_ABI: return "query-abi";
-+	case MRQ_THERMAL: return "thermal";
-+	case MRQ_CPU_VHINT: return "cpu-vhint";
-+	case MRQ_ABI_RATCHET: return "abi-ratchet";
-+	case MRQ_EMC_DVFS_LATENCY: return "emc-dvfs-latency";
-+	case MRQ_RINGBUF_CONSOLE: return "ringbuf-console";
-+	case MRQ_PG: return "pg";
-+	case MRQ_CPU_NDIV_LIMITS: return "cpu-ndiv-limits";
-+	case MRQ_STRAP: return "strap";
-+	case MRQ_UPHY: return "uphy";
-+	case MRQ_CPU_AUTO_CC3: return "cpu-auto-cc3";
-+	case MRQ_QUERY_FW_TAG: return "query-fw-tag";
-+	case MRQ_FMON: return "fwmon";
-+	case MRQ_EC: return "ec";
-+	case MRQ_DEBUG: return "debug";
-+	case MRQ_EMC_DVFS_EMCHUB: return "emc-dvfs-emchub";
-+	case MRQ_BWMGR: return "bwmgr";
-+	case MRQ_ISO_CLIENT: return "iso-client";
-+	case MRQ_EMC_DISP_RFL: return "emc-disp-rfl";
-+	case MRQ_TELEMETRY: return "telemetry";
-+	case MRQ_PWR_LIMIT: return "pwr-limit";
-+	case MRQ_GEARS: return "gears";
-+	case MRQ_BWMGR_INT: return "bwmgr-int";
-+	case MRQ_OC_STATUS: return "oc-status";
-+	}
-+
-+	return "";
-+}
-+
-+#define __pm_state(__s) ((__s) ? "suspended" : "active")
-+#endif /* CREATE_TRACE_POINTS */
-+
-+TRACE_EVENT(tegra_bpmp_pm,
-+	    TP_PROTO(struct tegra_bpmp *bpmp, bool suspend),
-+	    TP_ARGS(bpmp, suspend),
++TRACE_EVENT(tegra_mc_hotreset,
++	    TP_PROTO(struct device *dev, unsigned long id, bool assert),
++	    TP_ARGS(dev, id, assert),
 +	    TP_STRUCT__entry(
-+		    __string(dev, dev_name(bpmp->dev))
-+		    __field(bool, suspend)
-+		    __field(bool, prev)),
-+	    TP_fast_assign(
-+		    __assign_str(dev);
-+		    __entry->prev = bpmp->suspended;
-+		    __entry->suspend = suspend;
-+		    ),
-+	    TP_printk("bpmp %s: pm %s to %s",
-+		      __get_str(dev),
-+		      __pm_state(__entry->prev), __pm_state(__entry->suspend))
-+);
-+
-+TRACE_EVENT(tegra_bpmp_transfer,
-+	    TP_PROTO(struct tegra_bpmp *bpmp,
-+		     struct tegra_bpmp_message *msg),
-+	    TP_ARGS(bpmp, msg),
-+	    TP_STRUCT__entry(
-+			     __string(dev, dev_name(bpmp->dev))
-+			     __field_struct(struct tegra_bpmp_message, msg)
-+	    ),
++			     __string(dev, dev_name(dev))
++			     __field(unsigned long, id)
++			     __field(bool, assert)),
 +	    TP_fast_assign(
 +			   __assign_str(dev);
-+			   __entry->msg = *msg;
-+	    ),
-+	    TP_printk("bpmp %s: tx %px, %zd rx %px, %zd, mrq %u (%s), flags %lu",
++			   __entry->id = id;
++			   __entry->assert = assert;
++			   ),
++	    TP_printk("rcdev %s, id %lu, %s\n",
++		      __get_str(dev), __entry->id, __entry->assert ? "assert" : "release")
++);
++
++TRACE_EVENT(tegra_mc_err,
++	    TP_PROTO(struct device *dev, const char *client,
++		     bool secure, bool write, phys_addr_t addr,
++		     const char *error, const char *desc, const char *perm),
++	    TP_ARGS(dev, client, secure, write, addr, error, desc, perm),
++	    TP_STRUCT__entry(
++			     __string(dev,		dev_name(dev))
++			     __field(const char *,	client)
++			     __field(bool, secure)
++			     __field(bool, write)
++			     __field(phys_addr_t, addr)
++			     __field(const char *, error)
++			     __field(const char *, desc)
++			     __string(perm, perm)),
++	    TP_fast_assign(
++			   __assign_str(dev);
++			   __entry->client = client;
++			   __entry->secure = secure;
++			   __entry->write = write;
++			   __entry->addr = addr;
++			   __entry->desc = desc;
++			   __assign_str(perm);
++			   ),
++	    TP_printk("%s: %s: %s%c @%pa %s (%s%s)",
 +		      __get_str(dev),
-+		      __entry->msg.tx.data, __entry->msg.tx.size,
-+		      __entry->msg.rx.data, __entry->msg.rx.size,
-+		      __entry->msg.mrq, tegra_bpmp_mrq_name(__entry->msg.mrq),
-+		      __entry->msg.flags)
++		      __entry->client, __entry->secure ? "secure/" : "",
++		      __entry->write ? 'w' : 'r',
++		      &__entry->addr,
++		      __entry->error,
++		      __entry->desc,
++		      __get_str(perm))
 +);
 +
-+TRACE_EVENT(tegra_bpmp_channel_write,
-+	    TP_PROTO(struct tegra_bpmp_channel *channel,
-+		     unsigned int mrq, unsigned long flags,
-+		     const void *data, size_t size),
-+	    TP_ARGS(channel, mrq, flags, data, size),
-+	    TP_STRUCT__entry(
-+			     __field(unsigned int, index)
-+			     __field(unsigned int, mrq)
-+			     __field(unsigned long, flags)
-+			     ),
-+	    TP_fast_assign(
-+		    __entry->index = channel->index;
-+		    __entry->mrq = mrq;
-+		    __entry->flags = flags;
-+		    ),
-+	    TP_printk("channel %u: mrq %u (%s), flags %lu",
-+		      __entry->index,
-+		      __entry->mrq, tegra_bpmp_mrq_name(__entry->mrq),
-+		      __entry->flags)
-+);
-+
-+TRACE_EVENT(tegra_bpmp_channel_read,
-+	    TP_PROTO(struct tegra_bpmp_channel *channel,
-+		     void *data, size_t size, int *ret, int err),
-+	    TP_ARGS(channel, data, size, ret, err),
-+	    TP_STRUCT__entry(
-+		    __field(unsigned int, index)
-+		    __field(int, ret)
-+		    __field(int, err)
-+		    ),
-+	    TP_fast_assign(
-+		    __entry->index = channel->index;
-+		    __entry->ret = ret ? *ret : -ENOENT;
-+		    __entry->err = err;
-+		    ),
-+	    TP_printk("channel %u: read returned %d, err %d",
-+		      __entry->index, __entry->ret, __entry->err)
-+);
-+
-+#endif /* _TRACE_TEGRA_BPMP_H */
++#endif /* _TRACE_TEGRA_MC_H */
 +
 +/* This part must be outside protection */
 +#include <trace/define_trace.h>
