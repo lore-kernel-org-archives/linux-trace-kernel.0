@@ -1,181 +1,116 @@
-Received: from out-179.mta1.migadu.com (out-179.mta1.migadu.com [95.215.58.179])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5003DF9E8
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 16 Jun 2025 08:39:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 062D82E424A;
+	Mon, 16 Jun 2025 12:06:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750063201; cv=none; b=gJBvWO+U8z+hlIibbFchuKFmzR7dVZirI972p9H8iKfyq7SLSGaRpu4Jlbv9K3FgBqZnupIeBwBp4bzWzdl2/8NVdnpVjBk/meNxrlIb8fkGjlCsvcMVL24m3uwwPGtMms7wOYVPb6tUQxoTvjWaxIAODWcL7M1Sxn1hhBZLFC8=
+	t=1750075564; cv=none; b=tzIe96KNyNUSzP7KYI1z4meYQ4OGwEtTZrhZFIHe1zoPDdJGOR2laQDzcEmChb5bGNX/CPrDNC7tnl2ydiJUXG4rrDF0Ve4OXwpiyZ8cve70aBArlO9ig33AWItLr/eLDNSjL+jZBd5akQLYlnLqm7LAQDRUpcFRfe0fGydqbp8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750063201; c=relaxed/simple;
-	bh=KypxWQJ2yT3gO1ghWzOCG7RfNuaeoxRXNjMEzLekFE8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=lj6j9Me16TL1lsz3+EjaoOfExJvDd1w1coSwEuAzY8bBAErspt1LL7wjRIXZHFXJVpkvtaXghm4mMY0B80YSNAEfD9CBMk4XTB/4iglqJRliAgQlcCDHDMmh1BiNkfHmT78bySj17uBnqQZJdkeha0opyqvUT3jyi6ND0FrU4OU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=ZrNV28i6; arc=none smtp.client-ip=95.215.58.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1750075564; c=relaxed/simple;
+	bh=b9WYpdYFnxnMvXA1h3uf/5jste9EtGT+SWQw77HmkHQ=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=Aupcn7drlTaujYfs4UdI/BGDOk49TB6mkAeYUYumxOu19FMEsts3G0V8A9NIvHjNFtgBbi2k1QOEsGV/wBa504Ht6cy5mgNXQMweA8ZaX8JDV9D7jcDctUuh+ZwGSbZb/jrTwf+cFXO6DbebO5Ypx0DzvWi6FIf8DvUfbee5OMA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pq67Wpiy; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="ZrNV28i6"
-Message-ID: <fdc58e38-8b54-4681-89e9-78f8941db1b0@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1750063187;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=kcKyRmwMINtcXDedCYZ06Q0fSCB+UG7zs+9U7ma+AdY=;
-	b=ZrNV28i6k4CSXtNM/s/DVddBAST36BpPJ7/tLqZDH9oyjEGuMwDJpZQLKVsO/3/raX1WtJ
-	g15cU9VatESzpopQDW/M/cNEH0hB/oCa9S5kY3pJlh5zLnvK62K9lILb2V5x9OoelkgDcg
-	Nodmiqp3YOc1jX3h6T+o0+Ud4HR2Irk=
-Date: Mon, 16 Jun 2025 16:39:35 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pq67Wpiy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5E4F8C4CEEA;
+	Mon, 16 Jun 2025 12:06:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750075563;
+	bh=b9WYpdYFnxnMvXA1h3uf/5jste9EtGT+SWQw77HmkHQ=;
+	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
+	b=pq67WpiybJlomxNo1Q0ynrhGsdBlLEZa3DapIvrN62fslXaJvFSseYU1F6UF6iK7m
+	 eRjNYnjG4H+HpTv+rDskCAVmxpco7/DZ+LSFuf6wTg0KlYhtOAWE/nAjK43uRVc+mZ
+	 jLR2DW/n7KG1ffCW0PtADsj9vMXl1cgYgm39oBRnpvW912H0vgijYY1cE6n2UfvoJo
+	 g3MFBCtiYS2xpwe4DQIkU5knmOVB1NsyYKYtmYFn55S1xvicbtUkR+RuAaSfi8PXXz
+	 U6Xd+aDPSj5ualUsK7k5hQqGA3nehA79pSkx32khEdCQ/bUQdJ+l6ni7LEO1Sq5oJo
+	 rkLvwouWXCydQ==
+Message-ID: <20415ab5-5003-4725-bf1b-560f197465c4@kernel.org>
+Date: Mon, 16 Jun 2025 14:05:58 +0200
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH bpf-next v2 1/2] bpf: Add show_fdinfo for uprobe_multi
-To: Jiri Olsa <olsajiri@gmail.com>
-Cc: song@kernel.org, kpsingh@kernel.org, mattbobrowski@google.com,
- ast@kernel.org, daniel@iogearbox.net, andrii@kernel.org,
- martin.lau@linux.dev, eddyz87@gmail.com, yonghong.song@linux.dev,
- john.fastabend@gmail.com, sdf@fomichev.me, haoluo@google.com,
- rostedt@goodmis.org, mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
- bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
-References: <20250615150514.418581-1-chen.dylane@linux.dev>
- <aE_KX66K-8yrSPtS@krava>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Tao Chen <chen.dylane@linux.dev>
-In-Reply-To: <aE_KX66K-8yrSPtS@krava>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] xdp: Remove unused events xdp_redirect_map and
+ xdp_redirect_map_err
+From: Jesper Dangaard Brouer <hawk@kernel.org>
+To: =?UTF-8?Q?Toke_H=C3=B8iland-J=C3=B8rgensen?= <toke@kernel.org>,
+ Steven Rostedt <rostedt@goodmis.org>, LKML <linux-kernel@vger.kernel.org>,
+ Linux trace kernel <linux-trace-kernel@vger.kernel.org>, bpf@vger.kernel.org
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
+ "David S. Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>,
+ John Fastabend <john.fastabend@gmail.com>,
+ Andrii Nakryiko <andrii@kernel.org>
+References: <20250611155615.0c2cf61c@batman.local.home>
+ <87bjqtb6c1.fsf@toke.dk> <4af27621-6d81-4316-b57a-b546c8a7ad08@kernel.org>
+Content-Language: en-US
+In-Reply-To: <4af27621-6d81-4316-b57a-b546c8a7ad08@kernel.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
-
-在 2025/6/16 15:40, Jiri Olsa 写道:
-> On Sun, Jun 15, 2025 at 11:05:13PM +0800, Tao Chen wrote:
->> Show uprobe_multi link info with fdinfo, the info as follows:
->>
->> link_type:	uprobe_multi
->> link_id:	9
->> prog_tag:	e729f789e34a8eca
->> prog_id:	58
->> type:	uprobe_multi
->> uprobe_cnt:	3
->> pid:	0
->> path:	/home/dylane/bpf/tools/testing/selftests/bpf/test_progs
->> offset:	0xa69ed7
->> ref_ctr_offset:	0x0
->> cookie:	3
->> offset:	0xa69ee2
->> ref_ctr_offset:	0x0
->> cookie:	1
->> offset:	0xa69eed
->> ref_ctr_offset:	0x0
->> cookie:	2
-> 
-> hi,
-> does this need to be 'tag: value' format ? bpftool uses:
-> 
->          offset             ref_ctr_offset     cookies
->          0xe558             0x0                0x0
->          0x2574e            0x0                0x0
->          0x6c393            0x0                0x0
-> 
-> which might be more readable, or at least extra line after each uprobe?
-> also using spaces instead of tabs  to align the values might help
-> 
-> same for kprobe_multi, otherwise looks lgtm
-> 
-
-That's a great suggestion, it does look more concise. I will change it 
-in v3, thanks!
-
-> thanks,
-> jirka
-> 
-> 
->>
->> Signed-off-by: Tao Chen <chen.dylane@linux.dev>
->> ---
->>   kernel/trace/bpf_trace.c | 48 ++++++++++++++++++++++++++++++++++++++++
->>   1 file changed, 48 insertions(+)
->>
->> Change list:
->>    v1 -> v2:
->>      - replace 'func_cnt' with 'uprobe_cnt'.(Andrii)
->>      - print func name is more readable and security for kprobe_multi.(Alexei)
->>    v1:
->>    https://lore.kernel.org/bpf/20250612115556.295103-1-chen.dylane@linux.dev
->>
->> diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
->> index 24b94870b50..9a8ca8a8e2b 100644
->> --- a/kernel/trace/bpf_trace.c
->> +++ b/kernel/trace/bpf_trace.c
->> @@ -3157,10 +3157,58 @@ static int bpf_uprobe_multi_link_fill_link_info(const struct bpf_link *link,
->>   	return err;
->>   }
->>   
->> +#ifdef CONFIG_PROC_FS
->> +static void bpf_uprobe_multi_show_fdinfo(const struct bpf_link *link,
->> +					 struct seq_file *seq)
->> +{
->> +	struct bpf_uprobe_multi_link *umulti_link;
->> +	char *p, *buf;
->> +
->> +	umulti_link = container_of(link, struct bpf_uprobe_multi_link, link);
->> +
->> +	buf = kmalloc(PATH_MAX, GFP_KERNEL);
->> +	if (!buf)
->> +		return;
->> +
->> +	p = d_path(&umulti_link->path, buf, PATH_MAX);
->> +	if (IS_ERR(p)) {
->> +		kfree(buf);
->> +		return;
->> +	}
->> +
->> +	seq_printf(seq,
->> +		   "type:\t%s\n"
->> +		   "uprobe_cnt:\t%u\n"
->> +		   "pid:\t%u\n"
->> +		   "path:\t%s\n",
->> +		   umulti_link->flags == BPF_F_UPROBE_MULTI_RETURN ?
->> +					 "uretprobe_multi" : "uprobe_multi",
->> +		   umulti_link->cnt,
->> +		   umulti_link->task ? task_pid_nr_ns(umulti_link->task,
->> +			   task_active_pid_ns(current)) : 0,
->> +		   p);
->> +
->> +	for (int i = 0; i < umulti_link->cnt; i++) {
->> +		seq_printf(seq,
->> +			   "offset:\t%#llx\n"
->> +			   "ref_ctr_offset:\t%#lx\n"
->> +			   "cookie:\t%llu\n",
->> +			   umulti_link->uprobes[i].offset,
->> +			   umulti_link->uprobes[i].ref_ctr_offset,
->> +			   umulti_link->uprobes[i].cookie);
->> +	}
->> +
->> +	kfree(buf);
->> +}
->> +#endif
->> +
->>   static const struct bpf_link_ops bpf_uprobe_multi_link_lops = {
->>   	.release = bpf_uprobe_multi_link_release,
->>   	.dealloc_deferred = bpf_uprobe_multi_link_dealloc,
->>   	.fill_link_info = bpf_uprobe_multi_link_fill_link_info,
->> +#ifdef CONFIG_PROC_FS
->> +	.show_fdinfo = bpf_uprobe_multi_show_fdinfo,
->> +#endif
->>   };
->>   
->>   static int uprobe_prog_run(struct bpf_uprobe *uprobe,
->> -- 
->> 2.48.1
->>
 
 
--- 
-Best Regards
-Tao Chen
+
+On 12/06/2025 12.54, Jesper Dangaard Brouer wrote:
+> 
+> 
+> On 12/06/2025 12.30, Toke Høiland-Jørgensen wrote:
+>> Steven Rostedt <rostedt@goodmis.org> writes:
+>>
+>>> From: Steven Rostedt <rostedt@goodmis.org>
+>>>
+>>> Each TRACE_EVENT() defined can take up around 5K of text and meta data
+>>> regardless if they are used or not. New code is being developed that 
+>>> will
+>>> warn when a tracepoint is defined but not used.
+>>>
+>>> The trace events xdp_redirect_map and xdp_redirect_map_err are 
+>>> defined but
+>>> not used, but there's also a comment that states these are kept 
+>>> around for
+>>> backward compatibility. Which is interesting because since they are not
+>>> used, any old BPF program that expects them to exist will get incorrect
+>>> data (no data) when they use them. It's worse than not working, it's
+>>> silently failing.
+>>>
+>>> Remove them as they will soon cause warnings, or if they really need to
+>>> stick around, then code needs to be added to use them.
+>>>
+>>> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+>>
+>> I guess that makes sense; I have no objections to getting rid of them.
+>>
+>> Reviewed-by: Toke Høiland-Jørgensen <toke@kernel.org>
+> 
+> Make sense.
+> 
+> 
+> Toke we have to check how XDP-tools handle when these tracepoints 
+> disappears.
+
+To Toke, notice that userspace tools expect this tracepoint to be
+available will fail as below (for kernel release v6.16):
+
+  $ sudo ./xdp-bench redirect mlx5p1 veth41
+   libbpf: prog 'tp_xdp_redirect_map_err': failed to find kernel BTF 
+type ID of 'xdp_redirect_map_err': -3
+   libbpf: prog 'tp_xdp_redirect_map_err': failed to prepare load 
+attributes: -3
+   libbpf: prog 'tp_xdp_redirect_map_err': failed to load: -3
+   libbpf: failed to load object 'xdp_redirect_basic'
+  Failed to attach XDP program: No such process
+
+IMHO this is a userspace problem, that needs to be more flexible and
+adapt to this change.
+
+This was changed in kernel v5.6 (Jan 2020) commit 1d233886dd90 ("xdp:
+Use bulking for non-map XDP_REDIRECT and consolidate code paths").
+So, I'm thinking that xdp-tools could just remove monitoring for these
+tracepoints?
+
+--Jesper
