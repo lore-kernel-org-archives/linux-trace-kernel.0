@@ -1,202 +1,186 @@
-Received: from relay.hostedemail.com (smtprelay0010.hostedemail.com [216.40.44.10])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 935892F0C46;
-	Tue, 17 Jun 2025 22:51:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 832812F5313;
+	Tue, 17 Jun 2025 23:05:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750200685; cv=none; b=q5oiIBY6W76+025kOokSDZyvUI7JcUMpG0K2wdnEGBKGxpgTET8+rIENKgOJIzeCS2aiqsCJ8Z8/gPZH0b5jUphdNxqH/XcxvEvSCbj/57X57D3nB5evFLgbdpoq7AXqb+FuWGwPHMKxlkv/gpdh+BV8flUrVUCb3Zr5FOWpuGQ=
+	t=1750201559; cv=none; b=luOJiSUlv573Yg2xb0hVXP8jf8AgCXegFIChPzNeJc83/vdsl29qXxi6xtjpT9vQ8YBzNgCjwL/NOefXBoRdLjjIs3YimvCBCGNYXK4ZcHyrqSdatvEipsiNZ5FHNzG+lHMhv14x9KFOUpmYLW+lkm9duBmulNo/Wk4rZAVAYBM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750200685; c=relaxed/simple;
-	bh=w3zlkwOetCuL4IjiyP6cPFfl8DekoC294wC1K1nFMzE=;
-	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=R/hWifxisjWh8V3/7Bmdg7P0PMifQk33V+7DosSHibIDYOMFw8Fp+UjC4sHYev5aTo6eRmQXQywU+fDHrMbJW7SAbXmevH8/XUQiMK52dvfiM4u1TOEKtFWYaE7qSAGN5aAoONYFAp+Aj1FlKpUrsPV+K0FnSwN5f/fEDrc7iRs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf13.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay03.hostedemail.com (Postfix) with ESMTP id 418F1BE35C;
-	Tue, 17 Jun 2025 22:51:14 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: nevets@goodmis.org) by omf13.hostedemail.com (Postfix) with ESMTPA id 2ABA820010;
-	Tue, 17 Jun 2025 22:51:11 +0000 (UTC)
-Received: from rostedt by gandalf with local (Exim 4.98.2)
-	(envelope-from <rostedt@goodmis.org>)
-	id 1uRf9C-00000002L5Q-00GT;
-	Tue, 17 Jun 2025 18:51:18 -0400
-Message-ID: <20250617225117.857138090@goodmis.org>
-User-Agent: quilt/0.68
-Date: Tue, 17 Jun 2025 18:50:14 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org,
- bpf@vger.kernel.org,
- x86@kernel.org
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Josh Poimboeuf <jpoimboe@kernel.org>,
- Peter Zijlstra <peterz@infradead.org>,
- Ingo Molnar <mingo@kernel.org>,
- Jiri Olsa <jolsa@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>,
- Thomas Gleixner <tglx@linutronix.de>,
- Andrii Nakryiko <andrii@kernel.org>,
- Indu Bhagat <indu.bhagat@oracle.com>,
- "Jose E. Marchesi" <jemarch@gnu.org>,
- Beau Belgrave <beaub@linux.microsoft.com>,
- Jens Remus <jremus@linux.ibm.com>,
- Linus Torvalds <torvalds@linux-foundation.org>,
- Andrew Morton <akpm@linux-foundation.org>
-Subject: [PATCH v6 05/12] unwind_user/sframe: Detect .sframe sections in executables
-References: <20250617225009.233007152@goodmis.org>
+	s=arc-20240116; t=1750201559; c=relaxed/simple;
+	bh=CTUqo8B5P8vHW8gKRTJ1qoHe3VAt104j1b9pgI+DQFk=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=TUie1Rd8w8e9bB7N/+6KR19PlPpo3haBFqUgWaNJX58BztRlw8AttrCdKqQapPPSutjnyc/LhitHYW1I6KYKGVOl74Fb8aKE27yHi0hsvQ24FIq/KV00ZpEVBqoaacIkXqH9uAN5B4ck7oWRotYr0LAquFXhmeZXmeIjm90GfK4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=I8TbTeYQ; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="I8TbTeYQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D1A74C4CEE3;
+	Tue, 17 Jun 2025 23:05:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750201559;
+	bh=CTUqo8B5P8vHW8gKRTJ1qoHe3VAt104j1b9pgI+DQFk=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=I8TbTeYQIjV1txjAV+Or3eHRJiTmriECCeTZmvw8nTy3yLyvTni4Z1vTPrCLyUeDc
+	 tzDaukyyPerb1jiZroSLIPfkZQjHbG2tKQqs4Bv3U1t2Oc/6sk3PTScyR3ql0vz0cQ
+	 23bjQPNag31tzMQgsUut9eP8vjmWEN+oWzRAHT54Wr0JkUXZ5OSt+h+UUHk4uBfZf4
+	 vspc1G2ZfGGup0y/QQcw11Jlt6GioC8ZvQanSpYj8IQM5xg1X65IlanD0E/kTE+gab
+	 JNDM2W4gkcE38PaSnm/5MUzY/Wmk0mpfT3sdRfedAwH8rL9dqzGcIldp3mCO9AUfDW
+	 TinduI8qhmr7A==
+Date: Wed, 18 Jun 2025 08:05:54 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Naresh Kamboju <naresh.kamboju@linaro.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>, open list
+ <linux-kernel@vger.kernel.org>, Linux trace kernel
+ <linux-trace-kernel@vger.kernel.org>, lkft-triage@lists.linaro.org, Stephen
+ Rothwell <sfr@canb.auug.org.au>, Arnd Bergmann <arnd@arndb.de>, Dan
+ Carpenter <dan.carpenter@linaro.org>, Anders Roxell
+ <anders.roxell@linaro.org>
+Subject: Re: next-20250605: Test regression: qemu-x86_64-compat mode ltp
+ tracing Oops int3 kernel panic
+Message-Id: <20250618080554.15415cc4ff7535554850c689@kernel.org>
+In-Reply-To: <CA+G9fYsBhS+yUa5KSzGDzqPhbRxW5p9_qLjt5taecAcguj7oNA@mail.gmail.com>
+References: <CA+G9fYsLu0roY3DV=tKyqP7FEKbOEETRvTDhnpPxJGbA=Cg+4w@mail.gmail.com>
+	<20250609220934.2c3ed98ba8c624fc7cb45172@kernel.org>
+	<CA+G9fYsoCc3DnNGoavFiBdymVpdJiEfUSEq967GgThVQW7bTPA@mail.gmail.com>
+	<20250610105337.68df01f4@gandalf.local.home>
+	<CA+G9fYv+1FPMD8e1ZadA3nLcfSRDAWvPRW-A3bGrV0y1VP2zLQ@mail.gmail.com>
+	<20250613172753.3479f786d40c29ec7b51df0a@kernel.org>
+	<20250616163659.d372cf60ee0c476168cd448e@kernel.org>
+	<20250617194159.d74b9cde9268ee8ace8e9018@kernel.org>
+	<CA+G9fYsBhS+yUa5KSzGDzqPhbRxW5p9_qLjt5taecAcguj7oNA@mail.gmail.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
+Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-X-Rspamd-Server: rspamout03
-X-Rspamd-Queue-Id: 2ABA820010
-X-Stat-Signature: ktbu8gxos6gsdxyc1mg5yj7ifbb75fk8
-X-Session-Marker: 6E657665747340676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX18FGArJhoVyKe6RDYevAgj6d/gAL0qynOY=
-X-HE-Tag: 1750200671-922853
-X-HE-Meta: U2FsdGVkX1/X080nOaR1PxwCcFKgfjzjCzc5fl3DBa93GszobtHhJQRm8X3Q/IXlps53Ayf1lNbcrc+yR4/u0OW+AnLQonx847AqAz4EflmmMlSRPg0nE5Ov+EXg0VvAMxkCNtJPrCuvRuGcZAFqHXc1bfWGpfYON9ovadUG6GaYCZwCiwDpe41n+nSqR2rd8ZWU44QgIw/umuPEWcWua0DRcZTVCdFLODEFp97LO7tt02kKkC1y1xt6REv9vy10aFfCFb46q57w8qRysUMdTOv22ByWKd7YNYpPyuNr34K3OrOqpJ61dPyJe2l5JpUtOpPQTrBJJQP9ewtCyDn8E0r6WWrGjO02jKvP9Wh8ZAD26BwvZtFr3OIyDkCGOvK160+jYhDAng4dja1dluhpEyVjC1EbUbCRKWzUAe6Pzb0=
+Content-Transfer-Encoding: 8bit
 
-From: Josh Poimboeuf <jpoimboe@kernel.org>
+On Tue, 17 Jun 2025 22:15:20 +0530
+Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
 
-When loading an ELF executable, automatically detect an .sframe section
-and associate it with the mm_struct.
+> On Tue, 17 Jun 2025 at 16:12, Masami Hiramatsu <mhiramat@kernel.org> wrote:
+> >
+> > On Mon, 16 Jun 2025 16:36:59 +0900
+> > Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
+> >
+> > > > So the fundamental issue is that smp_text_poke_batch missed
+> > > > handling INT3.
+> > > >
+> > > > I guess some text_poke user do not get text_mutex?
+> > >
+> > > Hmm, I've checked the smp_text_poke_* users, but it seems no problem.
+> > > Basically, those smp_text_poke* user locks text_mutex, and another
+> > > suspicious ftrace_start_up is also set under ftrace_lock.
+> > > ftrace_arch_code_modify_post_process() is also paired with
+> > > ftrace_arch_code_modify_prepare() and under ftrace_lock.
+> >
+> > Eventually, I found a bug in text_poke, and jump_label
+> > (tracepoint) hit the bug.
+> >
+> > The jump_label uses 2 different APIs (single and batch)
+> > which independently takes text_mutex lock.
+> >
+> > smp_text_poke_single()
+> >   __jump_label_transform()
+> >     jump_label_transform() --> lock text_mutex
+> >
+> > smp_text_poke_batch_add()
+> >   arch_jump_label_transform_queue() -> lock text_mutex
+> >
+> > smp_text_poke_batch_finish()
+> >   arch_jump_label_transform_apply() -> lock text_mutex
+> >
+> > This is allowed by commit 8a6a1b4e0ef1 ("x86/alternatives:
+> > Remove the mixed-patching restriction on smp_text_poke_single()"),
+> > but smp_text_poke_single() still expects that the batched
+> > APIs are run in the same text_mutex lock region.
+> > Thus if user calls those APIs in the below order;
+> >
+> > arch_jump_label_transform_queue(addr1)
+> > jump_label_transform(addr2)
+> > arch_jump_label_transform_apply()
+> >
+> > And if the addr1 > addr2, the bsearch on the array
+> > does not work, and failed to handle int3!
+> >
+> > This can explain the disappeared int3 case. If it happens
+> > right before int3 is overwritten, that int3 will be
+> > overwritten when the int3 handler dumps the code, but
+> > text_poke_array_refs is still 1.
+> >
+> > It seems that commit c8976ade0c1b ("x86/alternatives:
+> > Simplify smp_text_poke_single() by using tp_vec and existing APIs")
+> > introduced this problem, because it shares the global array in
+> > the text_poke_batch and text_poke_single. Before that commit,
+> > text_poke_single (text_poke_bp) uses its local variable.
+> >
+> > To fix this issue, Use smp_text_poke_batch_add() in
+> > smp_text_poke_single(), which checks whether the array
+> > sorted and the array index does not overflow.
+> >
+> > Please test below;
+> >
+> >
+> > From e2a49c7cefb4148ea3142c752396d39f103c9f4d Mon Sep 17 00:00:00 2001
+> > From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+> > Date: Tue, 17 Jun 2025 19:18:37 +0900
+> > Subject: [PATCH] x86: alternative: Fix int3 handling failure from broken
+> >  text_poke array
+> >
+> > Since smp_text_poke_single() does not expect there is another
+> > text_poke request is queued, it can make text_poke_array not
+> > sorted or cause a buffer overflow on the text_poke_array.vec[].
+> > This will cause an Oops in int3, or kernel page fault if it causes
+> > a buffer overflow.
+> >
+> > Use smp_text_poke_batch_add() instead of __smp_text_poke_batch_add()
+> > so that it correctly flush the queue if needed.
+> >
+> 
+> I’ve applied the patch on top of Linux next-20250617 and ran
+> the LTP tracing tests. I'm happy to report that the previously
+> observed kernel panic has been resolved.
+> 
+> Tested-by: Linux Kernel Functional Testing <lkft@linaro.org>
 
-Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
- fs/binfmt_elf.c          | 49 +++++++++++++++++++++++++++++++++++++---
- include/uapi/linux/elf.h |  1 +
- 2 files changed, 47 insertions(+), 3 deletions(-)
+Thank you for testing!
+This is a good chance for me to setup LTP environment locally :)
 
-diff --git a/fs/binfmt_elf.c b/fs/binfmt_elf.c
-index a43363d593e5..e7128d026ec0 100644
---- a/fs/binfmt_elf.c
-+++ b/fs/binfmt_elf.c
-@@ -47,6 +47,7 @@
- #include <linux/dax.h>
- #include <linux/uaccess.h>
- #include <linux/rseq.h>
-+#include <linux/sframe.h>
- #include <asm/param.h>
- #include <asm/page.h>
- 
-@@ -622,6 +623,21 @@ static inline int make_prot(u32 p_flags, struct arch_elf_state *arch_state,
- 	return arch_elf_adjust_prot(prot, arch_state, has_interp, is_interp);
- }
- 
-+static void elf_add_sframe(struct elf_phdr *text, struct elf_phdr *sframe,
-+			   unsigned long base_addr)
-+{
-+	unsigned long sframe_start, sframe_end, text_start, text_end;
-+
-+	sframe_start = base_addr + sframe->p_vaddr;
-+	sframe_end   = sframe_start + sframe->p_memsz;
-+
-+	text_start   = base_addr + text->p_vaddr;
-+	text_end     = text_start + text->p_memsz;
-+
-+	/* Ignore return value, sframe section isn't critical */
-+	sframe_add_section(sframe_start, sframe_end, text_start, text_end);
-+}
-+
- /* This is much more generalized than the library routine read function,
-    so we keep this separate.  Technically the library read function
-    is only provided so that we can read a.out libraries that have
-@@ -632,7 +648,7 @@ static unsigned long load_elf_interp(struct elfhdr *interp_elf_ex,
- 		unsigned long no_base, struct elf_phdr *interp_elf_phdata,
- 		struct arch_elf_state *arch_state)
- {
--	struct elf_phdr *eppnt;
-+	struct elf_phdr *eppnt, *sframe_phdr = NULL;
- 	unsigned long load_addr = 0;
- 	int load_addr_set = 0;
- 	unsigned long error = ~0UL;
-@@ -658,7 +674,8 @@ static unsigned long load_elf_interp(struct elfhdr *interp_elf_ex,
- 
- 	eppnt = interp_elf_phdata;
- 	for (i = 0; i < interp_elf_ex->e_phnum; i++, eppnt++) {
--		if (eppnt->p_type == PT_LOAD) {
-+		switch (eppnt->p_type) {
-+		case PT_LOAD: {
- 			int elf_type = MAP_PRIVATE;
- 			int elf_prot = make_prot(eppnt->p_flags, arch_state,
- 						 true, true);
-@@ -697,6 +714,20 @@ static unsigned long load_elf_interp(struct elfhdr *interp_elf_ex,
- 				error = -ENOMEM;
- 				goto out;
- 			}
-+			break;
-+		}
-+		case PT_GNU_SFRAME:
-+			sframe_phdr = eppnt;
-+			break;
-+		}
-+	}
-+
-+	if (sframe_phdr) {
-+		eppnt = interp_elf_phdata;
-+		for (i = 0; i < interp_elf_ex->e_phnum; i++, eppnt++) {
-+			if (eppnt->p_flags & PF_X) {
-+				elf_add_sframe(eppnt, sframe_phdr, load_addr);
-+			}
- 		}
- 	}
- 
-@@ -821,7 +852,7 @@ static int load_elf_binary(struct linux_binprm *bprm)
- 	int first_pt_load = 1;
- 	unsigned long error;
- 	struct elf_phdr *elf_ppnt, *elf_phdata, *interp_elf_phdata = NULL;
--	struct elf_phdr *elf_property_phdata = NULL;
-+	struct elf_phdr *elf_property_phdata = NULL, *sframe_phdr = NULL;
- 	unsigned long elf_brk;
- 	bool brk_moved = false;
- 	int retval, i;
-@@ -930,6 +961,10 @@ static int load_elf_binary(struct linux_binprm *bprm)
- 				executable_stack = EXSTACK_DISABLE_X;
- 			break;
- 
-+		case PT_GNU_SFRAME:
-+			sframe_phdr = elf_ppnt;
-+			break;
-+
- 		case PT_LOPROC ... PT_HIPROC:
- 			retval = arch_elf_pt_proc(elf_ex, elf_ppnt,
- 						  bprm->file, false,
-@@ -1227,6 +1262,14 @@ static int load_elf_binary(struct linux_binprm *bprm)
- 			elf_brk = k;
- 	}
- 
-+	if (sframe_phdr) {
-+		for (i = 0, elf_ppnt = elf_phdata;
-+		     i < elf_ex->e_phnum; i++, elf_ppnt++) {
-+			if ((elf_ppnt->p_flags & PF_X))
-+				elf_add_sframe(elf_ppnt, sframe_phdr, load_bias);
-+		}
-+	}
-+
- 	e_entry = elf_ex->e_entry + load_bias;
- 	phdr_addr += load_bias;
- 	elf_brk += load_bias;
-diff --git a/include/uapi/linux/elf.h b/include/uapi/linux/elf.h
-index 819ded2d39de..92c16c94fca8 100644
---- a/include/uapi/linux/elf.h
-+++ b/include/uapi/linux/elf.h
-@@ -41,6 +41,7 @@ typedef __u16	Elf64_Versym;
- #define PT_GNU_STACK	(PT_LOOS + 0x474e551)
- #define PT_GNU_RELRO	(PT_LOOS + 0x474e552)
- #define PT_GNU_PROPERTY	(PT_LOOS + 0x474e553)
-+#define PT_GNU_SFRAME	(PT_LOOS + 0x474e554)
- 
- 
- /* ARM MTE memory tag segment type */
+Thanks!
+
+> 
+> > Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+> > Closes: https://lore.kernel.org/all/CA+G9fYsLu0roY3DV=tKyqP7FEKbOEETRvTDhnpPxJGbA=Cg+4w@mail.gmail.com/
+> > Fixes: 8976ade0c1b ("x86/alternatives: Simplify smp_text_poke_single() by using tp_vec and existing APIs")
+> > Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> > ---
+> >  arch/x86/kernel/alternative.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/arch/x86/kernel/alternative.c b/arch/x86/kernel/alternative.c
+> > index ecfe7b497cad..8038951650c6 100644
+> > --- a/arch/x86/kernel/alternative.c
+> > +++ b/arch/x86/kernel/alternative.c
+> > @@ -3107,6 +3107,6 @@ void __ref smp_text_poke_batch_add(void *addr, const void *opcode, size_t len, c
+> >   */
+> >  void __ref smp_text_poke_single(void *addr, const void *opcode, size_t len, const void *emulate)
+> >  {
+> > -       __smp_text_poke_batch_add(addr, opcode, len, emulate);
+> > +       smp_text_poke_batch_add(addr, opcode, len, emulate);
+> >         smp_text_poke_batch_finish();
+> >  }
+> > --
+> > 2.50.0.rc2.692.g299adb8693-goog
+> >
+> >
+> >
+> >
+> > --
+> > Masami Hiramatsu (Google) <mhiramat@kernel.org>
+
+
 -- 
-2.47.2
-
-
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
