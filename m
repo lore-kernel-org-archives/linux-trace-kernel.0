@@ -1,146 +1,77 @@
-Received: from mail-il1-f177.google.com (mail-il1-f177.google.com [209.85.166.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay.hostedemail.com (smtprelay0016.hostedemail.com [216.40.44.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5F2B2EF9D4
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 17 Jun 2025 18:49:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0F5828C5A7;
+	Tue, 17 Jun 2025 19:14:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750186149; cv=none; b=FO19TIOR8ZZB04uhW5Hmm6nHM6ycVwjb/avcKXZiKrubx4RwMfWkdg5/485Ic97fpL6fLrNZ3wZTNehwuvkorUFl0S62s1my7XPX9uV2IlyCyGqa9PEmZAyoX7NSVO3Gr/prFguYwNy/f5pVCTWleE8YE3kC/6dzK54Zy58zfBo=
+	t=1750187697; cv=none; b=nXsHOJ/Gl+X136WKUFWGPhE/NQzIsUELe/22MHk1QGdFf5rbkffmufETD5vcJXvm1BA7xyanC5lpOpL0ZqL4E/2CU0NIatEN3O0aIOrLWQdDL4qN5E/owNrTx0Su+NPLUjZ/PMfp2SV50gBtjPMqIieunFX+ePL1RN6l2zHOW+4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750186149; c=relaxed/simple;
-	bh=KwqSD/mvRel9xI3T5LRWWp1qv/dt+bofRF5gsGxGzwY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Ixm9eYnjS3HACfWCGARhP344qhn9LZIrS/ao6u9LmifO96aRDQFL3xu43/EBdhPXNz2ygnBP9GYFF2WLHo/kNoV+3PTTUrTV48XhYTSYXwjR+XTNVHBiSMhSZVZbjQNjrKRot9vba9Fy/r6euBMPeTt+Se2D6NCDxDsxDDpHKxE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Y4vyDUn/; arc=none smtp.client-ip=209.85.166.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Y4vyDUn/"
-Received: by mail-il1-f177.google.com with SMTP id e9e14a558f8ab-3ddc99e0b77so30295ab.0
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 17 Jun 2025 11:49:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1750186147; x=1750790947; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=q8EJ5NTBcmp1K+DlZlLHbsBISbfgOHA/1xl7u6O9rkw=;
-        b=Y4vyDUn/WDsPTuUnxBSM9qdYXy5w18OKHDjxgvpcFP0B2veSRcvPZ1aJ5k+6jpWQ34
-         ayMssVNN9tLeQNiXEGIx6MRuWQkT2l8HZRjTn1Glgegm3cjNtPtxe58+OG+JXioZWS+F
-         qPI1ALFKc/KJxzkC5/JWJpf6l/C82L3/OsGNG5h9/CMqQ92QRKFT/5yCfhjwivSRjEel
-         zEFRSxDtJxP8yyJwSvBHgv9Y1k3H1YN7d/pqWiyiGB2aXFfWZctss4oYy6lN48lTs3RS
-         8qEaZFxoClgG74O6Ku6kByHu6T+AjRRsTUA22qCu7qFix4jAmtQLgIL4B/b+4NTz96z6
-         jYaw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750186147; x=1750790947;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=q8EJ5NTBcmp1K+DlZlLHbsBISbfgOHA/1xl7u6O9rkw=;
-        b=ctzPOosIDH/sda1OxSjTHYuUFtBY1BLdu3ySUlj8/qhvVkZuhpO9WuXpg2FE8g7xEk
-         8WHE7+MT81rZiW3PhckEBDEyhXQMHtAb/MHZJWvoCAShgg+D6/GGgAHQm7jzS9U7+U2t
-         zVgOQnzFXsIFN+KeGdeVRCGikrVEWugiAZuhej8NpTm9rSDPnHvjfC8n0+7Y1HIsXznI
-         gzs8nrdSYFXgE0VZlzg9y1G1dHj/ztGea1/EckQuXBdcCXIi+v5RN1y0RMRnbwoq1ig+
-         HD41wBK1sVmgxff/sTMiSbH66F7NnFfVjnDvzaGaCxJRVKWfno9boh3wP9g23rFx/Rmz
-         QDEw==
-X-Forwarded-Encrypted: i=1; AJvYcCX8ZKlPXy9JlpfPb0LsAPsRVsUkZ5OOi6JcJ45iNtxoZuW2QFQz16/ciaEoybOfz3ymZ2paxHNvsVSON22un9Fsab0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxpUxlQ1QWjBBEUKvVXiFFtXxqdgEnVbVD2DNaT3vS4/RxCPJDq
-	cvvitQ3JTRlw69R7kcqvZuOuJoBrSrfKj9Uz2+6mqt7zLJsbA9BPlwejAy1wXHI9GWwryShZk8e
-	/zrXXW+DzYCD+1kpDBRtt+90d85CJlON64e0oxoGx
-X-Gm-Gg: ASbGnct1jHr5xCIjvUg24dbEQk4pFAfJ0xbNEOqJ/nRmyLK5bNwoAji8kRE22YpUpq6
-	d5D5xlRx8tjyIJpY+M4kLOXVCwd8pYFWpwlg9g/FJPAmKjftuCgTJ3OJ2BBJDIn+PZ9ZT1vHsqh
-	B6M2XM+dH6BWCXw5IItuB0n/5ggJd/BJVEodXCwZXEs0jVOILhCVmtWqUmI9uHokWCoXhev++s
-X-Google-Smtp-Source: AGHT+IFzrUwC9gszj0tD9vuBEBQF9n3D4Q3WJTaRCUVhXGHHOddGa1pIqtmbyT4XwSHM/7FECm5kvyzNP+0l4d7kUpg=
-X-Received: by 2002:a92:ca47:0:b0:3dc:8596:b15 with SMTP id
- e9e14a558f8ab-3de08e309cemr12018435ab.20.1750186146706; Tue, 17 Jun 2025
- 11:49:06 -0700 (PDT)
+	s=arc-20240116; t=1750187697; c=relaxed/simple;
+	bh=Mlkho68yaCGW3nRvI32GhkwoRa6uQRsxczAa9nMl0+8=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=foeyRa/rCVDjPoKdO1k5xeVbLuY/+iSKy3KziWS3x872XjZrHl80yOsCM8hyPz+7sdz8aG3LQqwnvzKrlXHTiVu7uJiGCn/5hKXDkV7vtnGy5jwW4alga6TIhw6s0RpX5ool4xEmmwf1DcWI/ylTwL4igYfy9W5qAi66vtzV16g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf08.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay01.hostedemail.com (Postfix) with ESMTP id 4B4C41D6EE1;
+	Tue, 17 Jun 2025 19:14:46 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf08.hostedemail.com (Postfix) with ESMTPA id EC94A20028;
+	Tue, 17 Jun 2025 19:14:41 +0000 (UTC)
+Date: Tue, 17 Jun 2025 15:14:47 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Ian Rogers <irogers@google.com>
+Cc: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>, "linux-trace-users@vger.kernel.org"
+ <linux-trace-users@vger.kernel.org>, linux-fsdevel@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Mark Rutland
+ <mark.rutland@arm.com>, Thomas Gleixner <tglx@linutronix.de>, Sebastian
+ Andrzej Siewior <bigeasy@linutronix.de>, Namhyung Kim
+ <namhyung@kernel.org>, Linus Torvalds <torvalds@linux-foundation.org>,
+ Andrew Morton <akpm@linux-foundation.org>, Greg Kroah-Hartman
+ <gregkh@linuxfoundation.org>, Al Viro <viro@zeniv.linux.org.uk>, Christian
+ Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, Arnaldo Carvalho de
+ Melo <acme@kernel.org>, Frederic Weisbecker <fweisbec@gmail.com>, Jiri Olsa
+ <jolsa@kernel.org>, Peter Zijlstra <peterz@infradead.org>
+Subject: Re: [RFC][PATCH] tracing: Deprecate auto-mounting tracefs in
+ debugfs
+Message-ID: <20250617151447.36010066@gandalf.local.home>
+In-Reply-To: <CAP-5=fVH1HfdXT7HLZhav9k6m7t7Ji-=y2Gw13h1qMtgW8cRQA@mail.gmail.com>
+References: <20250617133614.24e2ba7f@gandalf.local.home>
+	<20250617174107.GB1613376@noisy.programming.kicks-ass.net>
+	<3201A571-6F08-4E26-AC33-39E0D1925D27@goodmis.org>
+	<20250617180023.GC1613376@noisy.programming.kicks-ass.net>
+	<CAP-5=fVH1HfdXT7HLZhav9k6m7t7Ji-=y2Gw13h1qMtgW8cRQA@mail.gmail.com>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250617133614.24e2ba7f@gandalf.local.home> <20250617174107.GB1613376@noisy.programming.kicks-ass.net>
- <3201A571-6F08-4E26-AC33-39E0D1925D27@goodmis.org> <20250617180023.GC1613376@noisy.programming.kicks-ass.net>
-In-Reply-To: <20250617180023.GC1613376@noisy.programming.kicks-ass.net>
-From: Ian Rogers <irogers@google.com>
-Date: Tue, 17 Jun 2025 11:48:53 -0700
-X-Gm-Features: AX0GCFv1wtGvcgVGSD1sgzvmQHC0HhNLOA8sTZ3tUy13Qbfl9q8mNJDIZ58ROyM
-Message-ID: <CAP-5=fVH1HfdXT7HLZhav9k6m7t7Ji-=y2Gw13h1qMtgW8cRQA@mail.gmail.com>
-Subject: Re: [RFC][PATCH] tracing: Deprecate auto-mounting tracefs in debugfs
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, 
-	Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>, 
-	"linux-trace-users@vger.kernel.org" <linux-trace-users@vger.kernel.org>, linux-fsdevel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Mark Rutland <mark.rutland@arm.com>, 
-	Thomas Gleixner <tglx@linutronix.de>, Sebastian Andrzej Siewior <bigeasy@linutronix.de>, 
-	Namhyung Kim <namhyung@kernel.org>, Linus Torvalds <torvalds@linux-foundation.org>, 
-	Andrew Morton <akpm@linux-foundation.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	Al Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Frederic Weisbecker <fweisbec@gmail.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Peter Zijlstra <peterz@infradead.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Server: rspamout03
+X-Rspamd-Queue-Id: EC94A20028
+X-Stat-Signature: rn1a6rfx7qsz1q6ymr5d84f68rizcbce
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1/dhm5moVN0TZwyG1ih33zPj0n4p6dC8go=
+X-HE-Tag: 1750187681-68726
+X-HE-Meta: U2FsdGVkX1/vQSCTT1fgthW4COBAcZErxaQy6RATzgHQe6CSzIxQCRH/WLygwcFDl5NWqeIdfI6GvciRJn004lzSRNJ50NXScP8uf7k7/JmGwexbOdJDjz80fUFF7dw1l552uOcZuZtcBPXLWNNzKjWcK6+mKil0daZd5wQSdeJ167rbhSDd3wSt4oNsA2gMJ0J6bVzBIa6i373F0gwbnJxFV/3vWpgOBFsuz87dCt0YmTSx92syuf2bG207AHqqoh3Hcul6gTqPAzFSZkHMgequzIqWqcoqTOUlOQwgOstuTHTOOjzDpzQ2hbENTh2dP0QCAhcK2dbWuIniDMJa3W3L8BUwIFGLShAUQMNMmjzxf7c7JMCUfw==
 
-On Tue, Jun 17, 2025 at 11:00=E2=80=AFAM Peter Zijlstra <peterz@infradead.o=
-rg> wrote:
->
-> On Tue, Jun 17, 2025 at 01:54:46PM -0400, Steven Rostedt wrote:
-> >
-> >
-> > On June 17, 2025 1:41:07 PM EDT, Peter Zijlstra <peterz@infradead.org> =
-wrote:
-> > >On Tue, Jun 17, 2025 at 01:36:14PM -0400, Steven Rostedt wrote:
-> > >> From: Steven Rostedt <rostedt@goodmis.org>
-> > >>
-> > >> In January 2015, tracefs was created to allow access to the tracing
-> > >> infrastructure without needing to compile in debugfs. When tracefs i=
-s
-> > >> configured, the directory /sys/kernel/tracing will exist and tooling=
- is
-> > >> expected to use that path to access the tracing infrastructure.
-> > >>
-> > >> To allow backward compatibility, when debugfs is mounted, it would
-> > >> automount tracefs in its "tracing" directory so that tooling that ha=
-d hard
-> > >> coded /sys/kernel/debug/tracing would still work.
-> > >>
-> > >> It has been over 10 years since the new interface was introduced, an=
-d all
-> > >> tooling should now be using it. Start the process of deprecating the=
- old
-> > >> path so that it doesn't need to be maintained anymore.
-> > >
-> > >I've always used /debug/tracing/ (because /debug is the right place to
-> > >mount debugfs). You're saying this is going away and will break all my
-> > >scripts?!
-> >
-> > You could mount tracefs in /tracing too:
-> >
-> >   # mount -t tracefs nodev /tracing
-> >
-> > And update you scripts with a simple sed script.
->
-> If I have to edit the mount table, I'll just keep it at /debug/tracing/.
-> Tracing is very much debug stuff anyway. While I knew there was tracefs,
-> I never knew there was another mount point.
->
-> Just annoying I now have to add two entries to every new machine.. Oh
-> well.
+On Tue, 17 Jun 2025 11:48:53 -0700
+Ian Rogers <irogers@google.com> wrote:
 
-It seems cleaning this up is a good thing wrt permission issues. On my
-local debian derived machine:
-```
-$ ls  /sys/kernel/debug/tracing/events
-ls: cannot access '/sys/kernel/debug/tracing/events': Permission denied
-$ ls  /sys/kernel/tracing/events
-alarmtimer        fib             irq            nmi             sunrpc
-...
-```
-I see a number of references to debug/tracing in places like perf testing:
-https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.gi=
-t/tree/tools/perf/tests/shell/common/init.sh?h=3Dperf-tools-next#n122
-are you planning patches for these?
+> I see a number of references to debug/tracing in places like perf testing:
+> https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tree/tools/perf/tests/shell/common/init.sh?h=perf-tools-next#n122
+> are you planning patches for these?
 
-Thanks,
-Ian
+Thanks for pointing that out.
+
+Yes, I plan on sending patches to remove all references to debug/tracing.
+
+One reason I put the removal date to Jan 2027. To give a year and a half.
+
+-- Steve
