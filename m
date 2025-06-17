@@ -1,27 +1,34 @@
-Received: from relay.hostedemail.com (smtprelay0016.hostedemail.com [216.40.44.16])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 979C2136A;
-	Tue, 17 Jun 2025 23:32:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8364928BABE;
+	Tue, 17 Jun 2025 23:40:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750203166; cv=none; b=byBBq6tm370Q5CEU3UaM66EyKis3U8095To5zR2JhoYfFhyC9t6C4Kcx/Elb+V0FM6sYSu5Xbg0kGds5UK4zenr9OKIwnxAoB665Z6nAKaDbjF/eC0oidTSMh2I4ZcmdJrFoafjOYgv9F76Hj4+r5KcjD82qnZeX9q7tNGsKCsc=
+	t=1750203625; cv=none; b=BC61ASCR6UzcHF10y9C5d6ZoiJhOp1fpd/dEt86gvmpAm11EUUQkaEgJijh8OHuR+sbnyxzY+ftiOIIDt1wkwqbce5tCs1feFz98uR3xnxh/kwfOaFIRtbxoWq3l6hnGzfJf6kpnyUvbV9NAGr720gQOdv77/ANI2VcL+WXS2uw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750203166; c=relaxed/simple;
-	bh=Cmo2gfCSY2IOU3EBYm8tRgNqy6MFqagqNSoNv0PfM0I=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=hbFH9ZcDIpEgi+uHmvb8cgmCCzLtEikZat+xuwSVvZcNMJNGJtBi2K77p9OLAGWI691pEFqJdfQAjJtNtm5LUKl7uHZAe2u+RbMfJw/9szIwJZqfnpKDHcBiyuUZL9XPjWm7x2VBa2Hwmmx8AEWD+nQZBCP8opQQUsnH5zDneWQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf14.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay07.hostedemail.com (Postfix) with ESMTP id CE47F1612CE;
-	Tue, 17 Jun 2025 23:32:38 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf14.hostedemail.com (Postfix) with ESMTPA id 9DF073D;
-	Tue, 17 Jun 2025 23:32:36 +0000 (UTC)
-Date: Tue, 17 Jun 2025 19:32:42 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+	s=arc-20240116; t=1750203625; c=relaxed/simple;
+	bh=/z3iN1khOpZmUMgnOifZps7TuwKv1jRjOjzM28piwsM=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=BiCsU0o+N1pFfZAZE6wRZcmki/fRZHjo8x+U1zhc5DvqFPfJF4TZ79EowqTBVFbR4T8BmfnAbn1xEJ7XD89BujVC3U3SpXDpx8Zxq+qt+wE6vhkr0SGylwT4vFOe3iy6/CoAEh2vMZSIIo4m/ekaL1aCVw1jhDhByVSIXWd6nQE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gmT6sTt0; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gmT6sTt0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E86F1C4CEE3;
+	Tue, 17 Jun 2025 23:40:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750203625;
+	bh=/z3iN1khOpZmUMgnOifZps7TuwKv1jRjOjzM28piwsM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=gmT6sTt0UcHk3m8n9ewawyjnp0oCTqUuIe//6DF1GaWp0mH2e1pWnyG/b5oi0pYAv
+	 5ZUP/c6YEuKA/UGQj02BX3cJ3tRKI8r3bq4PSjljYFslMib+6w1z2pQM+GJuGLqSK/
+	 TfImou9YuKsQVITjAm5JVFYMinTjdCY5vu2o5iiwIgULMdnvABNXsEdwnMDt5PQE4j
+	 PjwdQpEPGIqmMKVBJP39Q/QD8oylFAkFjc70xP4sduaw2J0CgqvJBWW2/ilO+g55kL
+	 3tx+Gyu5u0JacEOZ8/cbHOIhDGIlosf0asaDWUWrOatOKMZZ+72eoY2O2kix99SnHL
+	 OQwFg+BSXPZ3w==
+Date: Wed, 18 Jun 2025 08:40:22 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>
 Cc: Naresh Kamboju <naresh.kamboju@linaro.org>, open list
  <linux-kernel@vger.kernel.org>, Linux trace kernel
  <linux-trace-kernel@vger.kernel.org>, lkft-triage@lists.linaro.org, Stephen
@@ -30,8 +37,8 @@ Cc: Naresh Kamboju <naresh.kamboju@linaro.org>, open list
  <anders.roxell@linaro.org>
 Subject: Re: next-20250605: Test regression: qemu-x86_64-compat mode ltp
  tracing Oops int3 kernel panic
-Message-ID: <20250617193242.394edfc9@gandalf.local.home>
-In-Reply-To: <20250618080554.15415cc4ff7535554850c689@kernel.org>
+Message-Id: <20250618084022.db09168befebc193c5b13a6f@kernel.org>
+In-Reply-To: <20250617102951.4e8d936f@gandalf.local.home>
 References: <CA+G9fYsLu0roY3DV=tKyqP7FEKbOEETRvTDhnpPxJGbA=Cg+4w@mail.gmail.com>
 	<20250609220934.2c3ed98ba8c624fc7cb45172@kernel.org>
 	<CA+G9fYsoCc3DnNGoavFiBdymVpdJiEfUSEq967GgThVQW7bTPA@mail.gmail.com>
@@ -40,33 +47,129 @@ References: <CA+G9fYsLu0roY3DV=tKyqP7FEKbOEETRvTDhnpPxJGbA=Cg+4w@mail.gmail.com>
 	<20250613172753.3479f786d40c29ec7b51df0a@kernel.org>
 	<20250616163659.d372cf60ee0c476168cd448e@kernel.org>
 	<20250617194159.d74b9cde9268ee8ace8e9018@kernel.org>
-	<CA+G9fYsBhS+yUa5KSzGDzqPhbRxW5p9_qLjt5taecAcguj7oNA@mail.gmail.com>
-	<20250618080554.15415cc4ff7535554850c689@kernel.org>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	<20250617102951.4e8d936f@gandalf.local.home>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
+Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: 9DF073D
-X-Stat-Signature: mj4ygokcrgw336uotm664h4mxxhxjh7e
-X-Rspamd-Server: rspamout06
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1/RncOSInQYoMNFCmaEIx7ApmUQuON9NWc=
-X-HE-Tag: 1750203156-490063
-X-HE-Meta: U2FsdGVkX19FeYJmQQAOXmOqfl9jgVXIeyeNGTyXyuxc0mKBmYBhcy1pd07qj5XyUc9b3bjsIxmNGWmGvYHz8Gx4UWMYa0lHxf/i+Oa4RtsgamSo+lAdvy6nAZKQNReod9U5nF47FP6+bfHq/zzy5nloh8aDoMt8gN2+HvLxGQpwb6vFUMc3VwKW4VPwpIdERR3I+tm86XbHEEEmcQRMRbX8Vd0bfQc04h+wapfyFd5lXYy6dAlCry8bLTs10j0eQCSVEZQlLe9OvzgTuZ++A0dXbYRRQPW/eteXgs9DIKp3GJ0L/6MlXR19iYoduX3Sf5oymKCMMN5wSouFPzzgc/1MLIABl4Vrqi+8D6MC8xoiwT+gtY8eFIBE244XdjKMbDYd0ZJEKpkfargHjrgquA==
 
-On Wed, 18 Jun 2025 08:05:54 +0900
-Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
+On Tue, 17 Jun 2025 10:29:51 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-> > Tested-by: Linux Kernel Functional Testing <lkft@linaro.org>  
+> > >From e2a49c7cefb4148ea3142c752396d39f103c9f4d Mon Sep 17 00:00:00 2001  
+> > From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+> > Date: Tue, 17 Jun 2025 19:18:37 +0900
+> > Subject: [PATCH] x86: alternative: Fix int3 handling failure from broken
+> >  text_poke array
+> > 
+> > Since smp_text_poke_single() does not expect there is another
+> > text_poke request is queued, it can make text_poke_array not
+> > sorted or cause a buffer overflow on the text_poke_array.vec[].
+> > This will cause an Oops in int3, or kernel page fault if it causes
+> > a buffer overflow.
 > 
-> Thank you for testing!
-> This is a good chance for me to setup LTP environment locally :)
+> I would add more of what you found above in the change log. And the issue
+> that was triggered I don't think was because of a buffer overflow. It was
+> because an entry was added to the text_poke_array out of order causing the
+> bsearch to fail.
 
-It's a beast and so far, it continues to fail to build for me :-p
+There are two patterns of bugs I saw, one is "Oops: int3" and another is
+"#PF in smp_text_poke_batch_finish (or smp_text_poke_int3_handler)".
+The latter comes from buffer overflow.
 
--- Steve
+-----
+[  164.164215] BUG: unable to handle page fault for address: ffffffff32c00000
+[  164.166999] #PF: supervisor read access in kernel mode
+[  164.169096] #PF: error_code(0x0000) - not-present page
+[  164.171143] PGD 8364b067 P4D 8364b067 PUD 0 
+[  164.172954] Oops: Oops: 0000 [#1] SMP PTI
+[  164.174581] CPU: 4 UID: 0 PID: 2702 Comm: sh Tainted: G        W           6.15.0-next-20250606-00002-g75b4e49588c2 #239 PREEMPT(voluntary) 
+[  164.179193] Tainted: [W]=WARN
+[  164.180926] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+[  164.184696] RIP: 0010:smp_text_poke_batch_finish+0xb9/0x400
+[  164.186873] Code: e4 4c 8d 6d c2 85 c9 74 39 48 63 03 b9 01 00 00 00 4c 89 ea 41 83 c4 01 48 c7 c7 d0 f7 f7 b2 48 83 c3 10 48 8d b0 00 00 c0 b2 <0f> b6 80 00 00 c0 b2 88 43 ff e8 68 e3 ff ff 44 3b 25 d1 29 5f 02
+-----
+
+This is because smp_text_poke_single() overwrites the
+text_poke_array.vec[TEXT_POKE_ARRAY_MAX], which is nr_entries (and
+the variables next to text_poke_array.)
+
+-----
+static struct smp_text_poke_array {
+	struct smp_text_poke_loc vec[TEXT_POKE_ARRAY_MAX];
+	int nr_entries;
+} text_poke_array;
+-----
+
+> 
+> Please add to the change log that the issue is that smp_text_poke_single()
+> can be called while smp_text_poke_batch*() is being used. The locking is
+> around the called functions but nothing prevents them from being intermingled.
+
+OK.
+
+> 
+> This means that if we have:
+> 
+>    CPU 0                           CPU 1                      CPU 2
+>    -----                           -----                      -----
+> 
+>  smp_text_poke_batch_add()
+> 
+>                                 smp_text_poke_single() <<-- Adds out of order
+> 
+>                                                             <int3>
+>                                                            [Fails o find address in
+>                                                             text_poke_array ]
+>                                                            OOPS!
+
+Thanks for the chart!
+
+> 
+> No overflow. This could possibly happen with just two entries!
+
+Yes, that was actually I observed (by a debug patch)
+
+> 
+> > 
+> > Use smp_text_poke_batch_add() instead of __smp_text_poke_batch_add()
+> > so that it correctly flush the queue if needed.
+> > 
+> > Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+> > Closes: https://lore.kernel.org/all/CA+G9fYsLu0roY3DV=tKyqP7FEKbOEETRvTDhnpPxJGbA=Cg+4w@mail.gmail.com/
+> > Fixes: 8976ade0c1b ("x86/alternatives: Simplify smp_text_poke_single() by
+> > using tp_vec and existing APIs") Signed-off-by: Masami Hiramatsu (Google)
+> 
+> Reviewed-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+
+Thank you!
+
+> 
+> -- Steve
+> 
+> > <mhiramat@kernel.org> ---
+> >  arch/x86/kernel/alternative.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/arch/x86/kernel/alternative.c b/arch/x86/kernel/alternative.c
+> > index ecfe7b497cad..8038951650c6 100644
+> > --- a/arch/x86/kernel/alternative.c
+> > +++ b/arch/x86/kernel/alternative.c
+> > @@ -3107,6 +3107,6 @@ void __ref smp_text_poke_batch_add(void *addr,
+> > const void *opcode, size_t len, c */
+> >  void __ref smp_text_poke_single(void *addr, const void *opcode, size_t
+> > len, const void *emulate) {
+> > -	__smp_text_poke_batch_add(addr, opcode, len, emulate);
+> > +	smp_text_poke_batch_add(addr, opcode, len, emulate);
+> >  	smp_text_poke_batch_finish();
+> >  }
+> 
+
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
