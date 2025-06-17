@@ -1,25 +1,24 @@
-Received: from relay.hostedemail.com (smtprelay0017.hostedemail.com [216.40.44.17])
+Received: from relay.hostedemail.com (smtprelay0014.hostedemail.com [216.40.44.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05DA223B619;
-	Tue, 17 Jun 2025 19:29:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93DF12EFDB5;
+	Tue, 17 Jun 2025 20:26:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750188551; cv=none; b=nWafyWoTSeIxta6vLZ1KNo0LT1ctigUO6zI2oQGLB+Fb9Ff6wacZG/f1Apvfxg4kArakBLRdXzHNYnC2XnHrcdCNPouiGHcR5rpB2rXCCo21r/qIot3NZDCb1rFordHGnIdZDAYl4B2x/M30MceDZa1Mf83vpp9XKWzYZrHyQvo=
+	t=1750191990; cv=none; b=TQ8OKf/z/1jtb8auWLwo7fav/hX9fUFSs+e59/5TyCbF87rVLcNpqjbBZ14dvvYm/JApkpZ7xlsQ6M9JPoQnVanHn+PDavZ7MXGdC408tPl8VTH2aZJinOvyDn74zE3ZamgTZAH88fABtyd4VmLXw2kgC7rwl2Radvwj1xu5KkQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750188551; c=relaxed/simple;
-	bh=VsJd6ttGqQBN9ks01AazNLFJJg+8RLiWgRSo8ETRZ+8=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Ob99+OENUtBF7r6pM2Tu1TsKBMiNUNdAVwXJEAZvAoT3xEmvbyDHjGiRXuEb0Zpr61GUGmA7/n+oE1sNjN9nfXLa+d0yQmZfQaJUDu829W5t8nOdGlpPHRVac092xcfwJGXlM6LuTn3Qfvksi5oKPnV9fnwFAR6G8PoFno3T8Mk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.17
+	s=arc-20240116; t=1750191990; c=relaxed/simple;
+	bh=cqTl9Etvsf352tMZUXRY8foMIfzXbvY0PzDroxDp5co=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=hp9bTY5URufTG0Sa9sbGy6RfLydYxvq5e0MjewNKFrjdcmyIe/+ZjraFeTZsm+CR4fz1ixCk4dyReM92v1c6clTDlE84sXJiN0S1O0qhoDuBbUCP4VwlKREH2nyX6zMfqc0dZ/QOZSXUxinjbZCaqWZN1qba6rG/iJAotyzNzm4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.14
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf02.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay01.hostedemail.com (Postfix) with ESMTP id 486231D703F;
-	Tue, 17 Jun 2025 19:29:05 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf02.hostedemail.com (Postfix) with ESMTPA id C4D4680009;
-	Tue, 17 Jun 2025 19:29:00 +0000 (UTC)
-Date: Tue, 17 Jun 2025 15:29:06 -0400
+Received: from omf01.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay01.hostedemail.com (Postfix) with ESMTP id AA5181D6A5B;
+	Tue, 17 Jun 2025 20:26:24 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf01.hostedemail.com (Postfix) with ESMTPA id 3319F60010;
+	Tue, 17 Jun 2025 20:26:20 +0000 (UTC)
+Date: Tue, 17 Jun 2025 16:26:25 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
 To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
  <linux-trace-kernel@vger.kernel.org>, "linux-trace-users@vger.kernel.org"
@@ -36,11 +35,8 @@ Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
  <jack@suse.cz>, Arnaldo Carvalho de Melo <acme@kernel.org>, Frederic
  Weisbecker <fweisbec@gmail.com>, Jiri Olsa <jolsa@kernel.org>, Ian Rogers
  <irogers@google.com>
-Subject: Re: [RFC][PATCH] tracing: Deprecate auto-mounting tracefs in
- debugfs
-Message-ID: <20250617152906.2d7ddb9f@gandalf.local.home>
-In-Reply-To: <20250617133614.24e2ba7f@gandalf.local.home>
-References: <20250617133614.24e2ba7f@gandalf.local.home>
+Subject: [RFC][PATCH v2] tracing: Deprecate auto-mounting tracefs in debugfs
+Message-ID: <20250617162625.1d44862b@gandalf.local.home>
 X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -50,39 +46,163 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Rspamd-Server: rspamout03
-X-Rspamd-Queue-Id: C4D4680009
-X-Stat-Signature: gk36ycgwzjowosfq1zwebfrsrymmoweq
+X-Rspamd-Queue-Id: 3319F60010
+X-Stat-Signature: b7rn7txh4sm3734rzip95rghbr8gxj3g
+X-Rspamd-Server: rspamout05
 X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1/St4ra8YZaC4Iaqkr8XbkNC0YnPvl2HGA=
-X-HE-Tag: 1750188540-576187
-X-HE-Meta: U2FsdGVkX1+oC862ZBHjgTGSv07AHA0bEYpWkkCsfjwbQziAB8BonoefGszagsZgbN60zd6cAGeNpnndw/cJmgMKIjNM4uKV2oXZxC+pr0p08j0vczLpKHps5zoXkqz3iZIWKzDVRnb/F6RjrtDaOOpgaYeifM4H8X14udsNskE9AUJ7tk+SvQFImafG/m9sA3eq1B9seOW/+dHcAQdqWyI2ZD5okP+pDLsFJFM3B2IYfVhhmJRmT9/wOyKsQgsTkloksRO/UArhej+Yo9q6pnKR5brC3KEqdWt00n2RjvO3npY4uaGZ0pbmav7tRkq84Ku/qKK/VESgSeCEmOefZnCSIdMKhPz2nwrZ91azQIv/ZgMgn6ixBJEQBudL3aQ/
+X-Session-ID: U2FsdGVkX19VqbkcwJiB/aMINIF944FtS/w2WfpSG/8=
+X-HE-Tag: 1750191980-497717
+X-HE-Meta: U2FsdGVkX192M0RQ/UyFwqpdmFwlfSoe3kdAM/l1EYJsXgfMrcRu/YaY7RqGN8+ydHnrzXxfoL46pQg833zXkT8htVH3KMfXmeMYFaGZr2Zrvbk1FN7n09yDpjB+TK5UoRYjCc+B+BsLDA8uiPTe1+rc9iVnS28dqcXVxWwzJpAkyOH47uEieCQgUgs+laz6zG/8I7eLHZpNPFbQNlfCjmJq2DXDE84l9OsnZ6+Qv9EFBPE1y/mmlxFP2B1fnlSwepCmJVtetULl59sT3WPebrRwPqRbr8AteVWYrqdeQhisZ0ftQWgXYGlaFP6U978rxKC7eg1yhPl3RK1RvFUE25jUNWIW1wXXqxoP9hhDDM+Wl2P2KIio66m1j0mORIjfyzRBF1rkiXFmy35+AU7JNA==
 
-On Tue, 17 Jun 2025 13:36:14 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
 
-> @@ -10311,6 +10313,8 @@ int tracing_init_dentry(void)
->  	if (WARN_ON(!tracefs_initialized()))
->  		return -ENODEV;
->  
-> +#ifdef CONFIG_TRACEFS_AUTOMOUNT_DEPRECATED
-> +	pr_warning("NOTICE: Automounting of tracing to debugfs is deprecated and will be removed in 2027\n");
+In January 2015, tracefs was created to allow access to the tracing
+infrastructure without needing to compile in debugfs. When tracefs is
+configured, the directory /sys/kernel/tracing will exist and tooling is
+expected to use that path to access the tracing infrastructure.
 
-I tested this with the config off but not on.
+To allow backward compatibility, when debugfs is mounted, it would
+automount tracefs in its "tracing" directory so that tooling that had hard
+coded /sys/kernel/debug/tracing would still work.
 
-The above errors with pr_warning() undefined, "do you mean pr_warn?" :-p
+It has been over 10 years since the new interface was introduced, and all
+tooling should now be using it. Start the process of deprecating the old
+path so that it doesn't need to be maintained anymore.
 
--- Steve
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+Changes since v1: https://lore.kernel.org/linux-trace-kernel/20250617133614.24e2ba7f@gandalf.local.home/
 
->  	/*
->  	 * As there may still be users that expect the tracing
->  	 * files to exist in debugfs/tracing, we must automount
-> @@ -10319,6 +10323,7 @@ int tracing_init_dentry(void)
->  	 */
->  	tr->dir = debugfs_create_automount("tracing", NULL,
->  					   trace_automount, NULL);
-> +#endif
->  
->  	return 0;
->  }
-> -- 
+- Fixed pr_warn() print, and move it to when debugfs accesses the tracing dir
+  and not when tracefs automount is registered
+
+
+ .../ABI/obsolete/automount-tracefs-debugfs    | 20 +++++++++++++++++++
+ kernel/trace/Kconfig                          | 13 ++++++++++++
+ kernel/trace/trace.c                          | 14 +++++++++----
+ 3 files changed, 43 insertions(+), 4 deletions(-)
+ create mode 100644 Documentation/ABI/obsolete/automount-tracefs-debugfs
+
+diff --git a/Documentation/ABI/obsolete/automount-tracefs-debugfs b/Documentation/ABI/obsolete/automount-tracefs-debugfs
+new file mode 100644
+index 000000000000..8d03cf9e579f
+--- /dev/null
++++ b/Documentation/ABI/obsolete/automount-tracefs-debugfs
+@@ -0,0 +1,20 @@
++What:		/sys/kernel/debug/tracing
++Date:		May 2008
++KernelVersion:	2.6.27
++Contact:	linux-trace-kernel@vger.kernel.org
++Description:
++
++	The ftrace was first added to the kernel, its interface was placed
++	into the debugfs file system under the "tracing" directory. Access
++	to the files were in /sys/kernel/debug/tracing. As systems wanted
++	access to the tracing interface without having to enable debugfs, a
++	new interface was created called "tracefs". This was a stand alone
++	file system and was usually mounted in /sys/kernel/tracing.
++
++	To allow older tooling to continue to operate, when mounting
++	debugfs, the tracefs file system would automatically get mounted in
++	the "tracing" directory of debugfs. The tracefs interface was added
++	in January 2015 in the v4.1 kernel.
++
++	All tooling should now be using tracefs directly and the "tracing"
++	directory in debugfs should be removed by January 2027.
+diff --git a/kernel/trace/Kconfig b/kernel/trace/Kconfig
+index a3f35c7d83b6..93e8e7fc11c0 100644
+--- a/kernel/trace/Kconfig
++++ b/kernel/trace/Kconfig
+@@ -199,6 +199,19 @@ menuconfig FTRACE
+ 
+ if FTRACE
+ 
++config TRACEFS_AUTOMOUNT_DEPRECATED
++	bool "Automount tracefs on debugfs [DEPRECATED]"
++	depends on TRACING
++	default y
++	help
++	  The tracing interface was moved from /sys/kernel/debug/tracing
++	  to /sys/kernel/tracing in 2015, but the tracing file system
++	  was still automounted in /sys/kernel/debug for backward
++	  compatibility with tooling.
++
++	  The new interface has been around for more than 10 years and
++	  the old debug mount will soon be removed.
++
+ config BOOTTIME_TRACING
+ 	bool "Boot-time Tracing support"
+ 	depends on TRACING
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index 95ae7c4e5835..2dafe2748b16 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -6303,7 +6303,7 @@ static bool tracer_options_updated;
+ static void add_tracer_options(struct trace_array *tr, struct tracer *t)
+ {
+ 	/* Only enable if the directory has been created already. */
+-	if (!tr->dir)
++	if (!tr->dir && !(tr->flags & TRACE_ARRAY_FL_GLOBAL))
+ 		return;
+ 
+ 	/* Only create trace option files after update_tracer_options finish */
+@@ -8984,13 +8984,13 @@ static inline __init int register_snapshot_cmd(void) { return 0; }
+ 
+ static struct dentry *tracing_get_dentry(struct trace_array *tr)
+ {
+-	if (WARN_ON(!tr->dir))
+-		return ERR_PTR(-ENODEV);
+-
+ 	/* Top directory uses NULL as the parent */
+ 	if (tr->flags & TRACE_ARRAY_FL_GLOBAL)
+ 		return NULL;
+ 
++	if (WARN_ON(!tr->dir))
++		return ERR_PTR(-ENODEV);
++
+ 	/* All sub buffers have a descriptor */
+ 	return tr->dir;
+ }
+@@ -10256,6 +10256,7 @@ init_tracer_tracefs(struct trace_array *tr, struct dentry *d_tracer)
+ 	ftrace_init_tracefs(tr, d_tracer);
+ }
+ 
++#ifdef CONFIG_TRACEFS_AUTOMOUNT_DEPRECATED
+ static struct vfsmount *trace_automount(struct dentry *mntpt, void *ingore)
+ {
+ 	struct vfsmount *mnt;
+@@ -10277,6 +10278,8 @@ static struct vfsmount *trace_automount(struct dentry *mntpt, void *ingore)
+ 	if (IS_ERR(fc))
+ 		return ERR_CAST(fc);
+ 
++	pr_warn("NOTICE: Automounting of tracing to debugfs is deprecated and will be removed in 2027\n");
++
+ 	ret = vfs_parse_fs_string(fc, "source",
+ 				  "tracefs", strlen("tracefs"));
+ 	if (!ret)
+@@ -10287,6 +10290,7 @@ static struct vfsmount *trace_automount(struct dentry *mntpt, void *ingore)
+ 	put_fs_context(fc);
+ 	return mnt;
+ }
++#endif
+ 
+ /**
+  * tracing_init_dentry - initialize top level trace array
+@@ -10311,6 +10315,7 @@ int tracing_init_dentry(void)
+ 	if (WARN_ON(!tracefs_initialized()))
+ 		return -ENODEV;
+ 
++#ifdef CONFIG_TRACEFS_AUTOMOUNT_DEPRECATED
+ 	/*
+ 	 * As there may still be users that expect the tracing
+ 	 * files to exist in debugfs/tracing, we must automount
+@@ -10319,6 +10324,7 @@ int tracing_init_dentry(void)
+ 	 */
+ 	tr->dir = debugfs_create_automount("tracing", NULL,
+ 					   trace_automount, NULL);
++#endif
+ 
+ 	return 0;
+ }
+-- 
+2.47.2
+
