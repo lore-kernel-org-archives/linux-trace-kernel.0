@@ -1,78 +1,34 @@
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from verein.lst.de (verein.lst.de [213.95.11.211])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF2141F37A1
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 17 Jun 2025 03:29:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A119B2CA9;
+	Tue, 17 Jun 2025 04:46:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750131000; cv=none; b=NxY9Xwd2TqtuFbNGrzRwIuMrSxPZZhq5m7lbatVXebY9CMEP26iOkaQ37PGsSVV3A3rEeZ/CncLRGE8KHOKAlLXS7NR3VIXz3zEN0wkSlZeYI0v+zJLjfEXqT5Plh9w9xTRNZP1JY2snGA7og4tTsgOPLTviKvr5KWvS+61k8cI=
+	t=1750135592; cv=none; b=P/wBs10F8x1r+UoxQcIdC87har1MFFzKAOPa9E+rd52m9ea1FU9b9z90w4pv+2lnK9+c2aYJgTpGNj8RB7TQbrbS5XwNAZuUeolRGblOdQZHGc75TEr37FdPSFI1sfHa5k+ke/UEcepSJWggVUsx0PabsMvbPavv+ZZtFrlOtiY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750131000; c=relaxed/simple;
-	bh=yUjLj5dHFAp5s2XajRxukKnvBAY8lCZU277Bt4Hn2B8=;
+	s=arc-20240116; t=1750135592; c=relaxed/simple;
+	bh=uaIQ0uIzsqVYLwBrVtD7gETmN2xXO6XDLiJQ0hFgb8o=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pTXAdtudNwN/Ota9YAX/oqXzefpyAqEp6UFy7844Id5se1BMgdi967h2tSXnPtRVyXc4oRXBrR6/iOeEkPoOjZ9uXVpSp3CEi3uDSQ6BX6ZDDOosDKC6nfeZEI01nrbES6m4dRj2m1reYoSsTuNHJUFQg63QBn0CseZM8tEjNFU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ci8kuokl; arc=none smtp.client-ip=209.85.214.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ci8kuokl"
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-2348ac8e0b4so68075ad.1
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 16 Jun 2025 20:29:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1750130998; x=1750735798; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=CUqINV3rw8vfD2veAggpTZ6kVQqewNkg6mMiquBfyXs=;
-        b=ci8kuoklzcVwQ2utLbPg8S9e5aVuLfX/HqVa3YhrTppp5HHi2ZWF3MF4KbEP8CJTAh
-         xMwp8I9l8YmrCs2dUDdAU5K7J2Dq1mlykQZyeJdiSn5bVkxI2415o40b//bqprgph4IQ
-         ZXpF4JKExwfuiv+rk4docBecS33/KRG4WpXa4ji396tuuJy6iL4O7N+L1gipnfiscmha
-         IOXW38lqxuG3YBEd+oAkt0SULBeaoLPlDTph0xpmDZO6+9eEtkUSofaNL1O3caqCj5rn
-         g8PcxcZMUtY3OrTZdADv6rej8n3oFUEMMB4QW4cheyvv8BifhT8f4pkcZ6rRYcGmqrPm
-         NAjA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750130998; x=1750735798;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=CUqINV3rw8vfD2veAggpTZ6kVQqewNkg6mMiquBfyXs=;
-        b=K3Ixv8ib5t6b5Ou9jb8vHF4VlwGSxMKpZDAG+yhIxhUzxv/+s0AAXVm3fS4Ov5GfvK
-         OfbcEfnhVQfECkaq3oBv4+gIX8Qz1ccHkrC2L5DMmrpzIQKNg8pAlnooqCqiB2Woknld
-         Pt25QLdkChGU1BgDqyNuYKjMvmKYCNE1yn8puTfnXDcfbz5kg8ODWWF5s03zZ+hLXv3d
-         6TjxcLatjJi40S3Nea2SS/j10VujjtgJb7gYcwX8FJqFx8XMn8locd+8PHpGbQ1t11on
-         kAORbpfA1K4DjkQwUWRBUGo4bEBgz7CgwwF9Xq6tFYeZYVzlFy4rqcCj5EvLcNTf2Btm
-         1aNw==
-X-Forwarded-Encrypted: i=1; AJvYcCXthhoACKr8m5pDRv8CM/HvBXRP/FwUywGWEwM21D0Rhpp2bfk1NlLZuGnbPj/M/RfmAffWf5ietyKe6rKBC56VVp4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxWVJ08k0Hs5wS2+IYVT/fB5hlnd/p7LL7apB6BXYie23sTnSbP
-	G5aHTmaJ3U6Add4AQabkR1/q18MBYioXp0YOt/HpAwFdKR1JzoismEPiRo82pvhUyQ==
-X-Gm-Gg: ASbGncsZUoRgsgM4K4EJLrdvg5u2z2Ozd0+rnP1RcZklaZAcGyPCSzMMvVQwjsoWzjD
-	GemZLSzYhFCU2fgB0aZELV6jzc/KWkM9NwexJC6sxuJf1ronQDWrlhry0HNuItNEmLrxZjI6SNF
-	hsd7imvzTBw+MY81qoV9/p56y5RAN/NoTjHNzVF0hc0mgN2nkZvETaq3wcEDBHNokV+Vi4sRS0N
-	2e2JSxWzikZnnf4doE5C5vChKLU+mrpvTfNJOMyopVo+y8wyzMM/UONCrSEHgCB0NaJh8OcAvlL
-	EnpLI4dCROeMz+iUSaQTsBkicFZ2T0bVfffEVfDtSAszW2EdH2X6ANDjTk+qNlW1PrivPdRjNhY
-	/+fpQzUX3p7KW/dZRAmnJs3XA/D1SiRbItSMmmg==
-X-Google-Smtp-Source: AGHT+IHiDCwavgLhAVfK+Sm64NCnqWHuip3kUbYnXShrwNbzo/IsVxNbWKDXEl3n55X7VrEHzCOV/A==
-X-Received: by 2002:a17:902:cacc:b0:236:9402:a610 with SMTP id d9443c01a7336-2369402aadfmr323735ad.22.1750130997870;
-        Mon, 16 Jun 2025 20:29:57 -0700 (PDT)
-Received: from google.com (137.184.125.34.bc.googleusercontent.com. [34.125.184.137])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-313c1b2b545sm9464790a91.0.2025.06.16.20.29.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Jun 2025 20:29:57 -0700 (PDT)
-Date: Tue, 17 Jun 2025 03:29:52 +0000
-From: Carlos Llamas <cmllamas@google.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=fBq1DsDFYpAxJpi+47im/x2zCUcOo+oAc1H30uBf7k+SRKnerXuo/QNLaXDasW64prVEd1pbyhbzYeymlMmMEc8Bc6v9cHUPRFB8/q7OEU64t7X4ofoMUy5TdGfElpXjKQGiCdmI9DHMfZw0V2EjXxO8NOEL5ZzkbQ9e0/cuH5A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
+Received: by verein.lst.de (Postfix, from userid 2407)
+	id 063D768D0E; Tue, 17 Jun 2025 06:46:26 +0200 (CEST)
+Date: Tue, 17 Jun 2025 06:46:25 +0200
+From: Christoph Hellwig <hch@lst.de>
 To: Steven Rostedt <rostedt@goodmis.org>
-Cc: LKML <linux-kernel@vger.kernel.org>,
-	Linux trace kernel <linux-trace-kernel@vger.kernel.org>,
+Cc: Christoph Hellwig <hch@lst.de>, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, linux-xfs@vger.kernel.org,
 	Masami Hiramatsu <mhiramat@kernel.org>,
 	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Arve =?iso-8859-1?B?SGr4bm5lduVn?= <arve@android.com>,
-	Todd Kjos <tkjos@android.com>, Martijn Coenen <maco@android.com>,
-	Joel Fernandes <joelagnelf@nvidia.com>,
-	Christian Brauner <brauner@kernel.org>,
-	Suren Baghdasaryan <surenb@google.com>
-Subject: Re: [PATCH] binder: Remove unused binder lock events
-Message-ID: <aFDhMCoPsf7O1oHc@google.com>
-References: <20250612093408.3b7320fa@batman.local.home>
+	Andrew Morton <akpm@linux-foundation.org>,
+	Carlos Maiolino <cem@kernel.org>,
+	"Darrick J. Wong" <djwong@kernel.org>
+Subject: Re: [PATCH 07/14] xfs: ifdef out unused xfs_attr events
+Message-ID: <20250617044625.GD1824@lst.de>
+References: <20250612212405.877692069@goodmis.org> <20250612212635.748779142@goodmis.org> <20250616052810.GB1148@lst.de> <20250616105214.797509de@batman.local.home>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -81,21 +37,30 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250612093408.3b7320fa@batman.local.home>
+In-Reply-To: <20250616105214.797509de@batman.local.home>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 
-On Thu, Jun 12, 2025 at 09:34:08AM -0400, Steven Rostedt wrote:
-> From: Steven Rostedt <rostedt@goodmis.org>
+On Mon, Jun 16, 2025 at 10:52:14AM -0400, Steven Rostedt wrote:
+> On Mon, 16 Jun 2025 07:28:10 +0200
+> Christoph Hellwig <hch@lst.de> wrote:
 > 
-> Trace events can take up to 5K each when they are defined, regardless if
-> they are used or not. The binder lock events: binder_lock, binder_locked
-> and binder_unlock are no longer used.
+> > On Thu, Jun 12, 2025 at 05:24:12PM -0400, Steven Rostedt wrote:
+> > > From: Steven Rostedt <rostedt@goodmis.org>
+> > > 
+> > > Trace events can take up to 5K in memory for text and meta data per event
+> > > regardless if they are used or not, so they should not be defined when not
+> > > used. The events xfs_attr_fillstate and xfs_attr_refillstate are only
+> > > called in code that is #ifdef out and exists only for future reference.
+> > > 
+> > > Ifdef out the events that go with that code and add a comment mentioning
+> > > the other code.  
+> > 
+> > Just drop them entirely, which is what the code using them should
+> > have done as well.  We can always triviall bring back code from
+> > git history.
 > 
-> Remove them.
-> 
-> Fixes: a60b890f607d ("binder: remove global binder lock")
-> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-> ---
+> OK. But I'll only send a patch to delete the trace events. I'll let
+> someone else remove the actual code.
 
-Thanks Steven!
+Yeah, no need for you to fix up the other code.
 
-Acked-by: Carlos Llamas <cmllamas@google.com>
