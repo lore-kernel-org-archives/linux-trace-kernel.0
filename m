@@ -1,122 +1,93 @@
-Received: from mx0b-00364e01.pphosted.com (mx0b-00364e01.pphosted.com [148.163.139.74])
+Received: from relay.hostedemail.com (smtprelay0016.hostedemail.com [216.40.44.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCA30224220
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 17 Jun 2025 21:02:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.139.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E6372F5310;
+	Tue, 17 Jun 2025 22:51:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750194176; cv=none; b=iQTGvQHkwBhQLtBtFzAaILl6FCO8e3Dbt2QDrR3jDEonB4bzzZDYukg/x1TkJhqvbnTnh1cd6Tt9tqIbSCHqGbPCz+d1aWPvlWAfRAgqQ7pDJGR/0jI5HIdh5NKm6aUv9sC8QnpqNcDjg5iNAXcZJzlKqcRRY3MpVOCC2iO4AN4=
+	t=1750200678; cv=none; b=a/AY6WqwJ7BavUz3NEyMOxRf7iiwqNs2fIhOirZXAYAHbVxpRq/6dQEy4WERhYlqtEtTQHt4Poccqt5z/xWxfSRt+qQwRq87pbu9NfjA/O0lHvUrlNVhCea/TdpcilDwlmuIQ92DWipQILd7hjO3kdcr8L0O0UZtK7cxNF0fmSE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750194176; c=relaxed/simple;
-	bh=u9sQ5FNZIfCRkoh32wY/8yyyp10GkggqKBS9UMhJ8PA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Eom11w5xzZqNqYWZDDhlrPz99JOKlLi4pBgehaZRCVTtUtpuBTRPjNu3ArpQlUgFYuxEph15GQ7g6FzLgTGuxuluKpsKZ5Yc1Fhqf4J9EzhT+4FFDX2lx0YBlhzQ6lq3/ZHnPuD70g533HR5NTUGD8oGmydEgH2hA2TbV/ylMlg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=columbia.edu; spf=pass smtp.mailfrom=columbia.edu; dkim=pass (2048-bit key) header.d=columbia.edu header.i=@columbia.edu header.b=sL044JYV; arc=none smtp.client-ip=148.163.139.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=columbia.edu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=columbia.edu
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=columbia.edu header.i=@columbia.edu header.b="sL044JYV"
-Received: from pps.filterd (m0167073.ppops.net [127.0.0.1])
-	by mx0b-00364e01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55HKFjUc000922
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 17 Jun 2025 16:43:55 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=columbia.edu; h=cc :
- content-transfer-encoding : content-type : date : from : in-reply-to :
- message-id : mime-version : references : subject : to; s=pps01;
- bh=u9sQ5FNZIfCRkoh32wY/8yyyp10GkggqKBS9UMhJ8PA=;
- b=sL044JYV7uef5oYi0VV89Acktqm8ahYTVj+EwwoHVLCTzeBg3FDGb/w9n4QDgQA6tpxa
- BJR1rCPYYivPGmJmLaef4EpEZNXlYf2ljtqx8PBhYGiJet8Wqj2MnqPsQRI4biajggAK
- wQakfJQfmZbRkXLdvZE7P3rwnPLHkFiZpz+rj9UaXrVOvGpVSHolkGCbtIDjntRCoaN5
- 0UdSUoMIkoYouigvonAct9ROwkVo4ZH2Xk2nk2ptssdhJg2KC+53E3mYOLdnwvWUTSk5
- TO0bVIZIyfRPOhrSVKa5ZU6Wed98XPF+S+OCrT40JNtaZAWW8hMkCLlhDbDP1PTbkxeQ iA== 
-Received: from mail-yw1-f197.google.com (mail-yw1-f197.google.com [209.85.128.197])
-	by mx0b-00364e01.pphosted.com (PPS) with ESMTPS id 4794yfjtmp-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-trace-kernel@vger.kernel.org>; Tue, 17 Jun 2025 16:43:55 -0400
-Received: by mail-yw1-f197.google.com with SMTP id 00721157ae682-7118199f959so47822707b3.1
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 17 Jun 2025 13:43:55 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750193034; x=1750797834;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=u9sQ5FNZIfCRkoh32wY/8yyyp10GkggqKBS9UMhJ8PA=;
-        b=Ymvc6GN//JHT6bIjrv283eQM6hA/K4xM7G4iagZlKtyle9FYApx61Rxog1KN2SJxnT
-         ohQyzukiBPglLEQU8fAtHI7Wymidf6WKmSZIrejrhEYM32DXtAIgtQlvmfFKgUhYV5/3
-         lgljulF3lAHIq0lIfbuMXDLw93wzQHOpe6is2hknC7x4X70Leyq+9AzqvWZ0j+WgiWcF
-         ppMc957A6onttYlzWkdNz0notPL3AiVrUWGET2AFc/3Mw+TL4sHkjCVElH5NqPweUhIX
-         zvgxlzleHrA8q+59+FMOpYR/nlmNSIrz/IpDvHtkst5OvLoxQdIILVLdqD1uV8NGhn3i
-         vLBw==
-X-Forwarded-Encrypted: i=1; AJvYcCVMJuQk9Qpof21v5B0EX8PfuYxiU4A33Ali0jw5Lmcls2igrCg7kfNHpHpXzeCo7NbJKCSlqL9oQwFc/ItCk/IdYX0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwFg+oiLOGsqVI4StIhXv3UKyIU1rW+5doQ07vdE6XWfu67wI0X
-	4I9e2ebRaIyocMG+tpEUhCfewSdyqUjlXAizC/hCKRHnE4cXxN5M4kIYB+Y+2PbKq7OwjqRUGXr
-	TVrBMpUc+SbEImPsYREDpjCo40QK1p9N3ws0jZipgWzKWxdjkERErTr6xlpHz+EcU8a9GJIN28r
-	Q+FjX6xD8MAC42/TXA7In01YWzcCJ4pZ6OHBv4m+GjI1RB
-X-Gm-Gg: ASbGncvFBLiirkUC5Twpo8gdt8ITduof6TaZY62S57EauNUENFWhnH7YBulDEoeSZMU
-	O0hX0yvBCWwYGduAckhBeycKAwkM9kszShruxbyZVF8R0r0++TgHcFCqdOGAhnnjlWqpCpONgGs
-	YfGGi7
-X-Received: by 2002:a05:690c:6c83:b0:70e:2cba:868c with SMTP id 00721157ae682-71175489fbcmr243794547b3.11.1750193034527;
-        Tue, 17 Jun 2025 13:43:54 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFjF0ibehLbKNVTF8HcFuWA6h3KDVMReJtX7DTOphewbVZdmya9vlUAMYxWvtW5I5gCI+10/DiUzzrU1AQ0D2s=
-X-Received: by 2002:a05:690c:6c83:b0:70e:2cba:868c with SMTP id
- 00721157ae682-71175489fbcmr243794097b3.11.1750193034121; Tue, 17 Jun 2025
- 13:43:54 -0700 (PDT)
+	s=arc-20240116; t=1750200678; c=relaxed/simple;
+	bh=iXGszjtXOZHDy7gWbPWg+lr0E7dCDoezrDFH319UBvg=;
+	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
+	 Content-Type; b=TgNLYWg7DDrY6a6XO/pGL2V84mwmP/uP8M2QV+aHPBEMnLrPKubBX6Ufc+TVRW10jq/GanRCcZErJNy3C50XazULRTwiHjH7lFWQRg2hTPnaSwsp3+Ng1qf1PnHNARLSrY6cRwK47tCRy7PyIN312ttl+jSDlIH4tr7WGnXi61A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf18.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay06.hostedemail.com (Postfix) with ESMTP id B67CD1017B3;
+	Tue, 17 Jun 2025 22:51:14 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: nevets@goodmis.org) by omf18.hostedemail.com (Postfix) with ESMTPA id B0B0530;
+	Tue, 17 Jun 2025 22:51:11 +0000 (UTC)
+Received: from rostedt by gandalf with local (Exim 4.98.2)
+	(envelope-from <rostedt@goodmis.org>)
+	id 1uRf9C-00000002L6s-29si;
+	Tue, 17 Jun 2025 18:51:18 -0400
+Message-ID: <20250617225118.364667867@goodmis.org>
+User-Agent: quilt/0.68
+Date: Tue, 17 Jun 2025 18:50:17 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org,
+ bpf@vger.kernel.org,
+ x86@kernel.org
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Josh Poimboeuf <jpoimboe@kernel.org>,
+ Peter Zijlstra <peterz@infradead.org>,
+ Ingo Molnar <mingo@kernel.org>,
+ Jiri Olsa <jolsa@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>,
+ Thomas Gleixner <tglx@linutronix.de>,
+ Andrii Nakryiko <andrii@kernel.org>,
+ Indu Bhagat <indu.bhagat@oracle.com>,
+ "Jose E. Marchesi" <jemarch@gnu.org>,
+ Beau Belgrave <beaub@linux.microsoft.com>,
+ Jens Remus <jremus@linux.ibm.com>,
+ Linus Torvalds <torvalds@linux-foundation.org>,
+ Andrew Morton <akpm@linux-foundation.org>
+Subject: [PATCH v6 08/12] unwind_user/sframe/x86: Enable sframe unwinding on x86
+References: <20250617225009.233007152@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250528-tlb-trace-fix-v1-0-2e94c58f450d@columbia.edu>
-In-Reply-To: <20250528-tlb-trace-fix-v1-0-2e94c58f450d@columbia.edu>
-From: Tal Zussman <tz2294@columbia.edu>
-Date: Tue, 17 Jun 2025 16:43:43 -0400
-X-Gm-Features: AX0GCFuiCTOK14X6XurXoh82sgBg97ZdwtwT9OBTjyW80sMOJfdncixxOy-kdtk
-Message-ID: <CAKha_srZTXfQkizBzvrdpWs6Txw2PSgRAqT6QC8gom=PaitYNg@mail.gmail.com>
-Subject: Re: [PATCH 0/2] x86, mm: minor tlb_flush tracepoint adjustments
-To: Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Ingo Molnar <mingo@kernel.org>, Rik van Riel <riel@surriel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        David Hildenbrand <david@redhat.com>,
-        Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-        "Liam R. Howlett" <Liam.Howlett@oracle.com>,
-        Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
-        Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
-        x86@kernel.org
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        linux-mm@kvack.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Proofpoint-ORIG-GUID: nO3qTJ5V9SbFsc3gfpxBBmGNnNqX8Si0
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjE3MDE2NSBTYWx0ZWRfXy08YjsNLgn4P rrPAU+lxXksvjChXCpJvrYsG/hiVzsLvlTtmqD9Q1OpLpaGHAFxaBJyAQXw0FNJ4/cQQvcIoe7F ItNZT7oahjzB5gpWjUDKfRzf97cMbu1re6Alh73Bvrg30kiR0yQBE/h9MvxfEBldlTq8HhirAQO
- QZvLEszL5JzhYnfL1+j0eUuGlTZocM9/xZTCX4Ue/i1dYyL7JRvNPkggPFWY8H5Ar+QBHTXQRwE jzQRBqucVOZzINM8RPEZYrq++GSGgL2lij9TtUFKsNpkw3gjFzOhpsi2Pssof8T+1fE3iBrtzzb GH0ogg2D+1cv80FoBQETRymS9jWzD/KR2tNr8plPLOyhK4HtcFdyddO/Cnwe4MVX/wsc/zR1WWD BBoOnb6w
-X-Proofpoint-GUID: nO3qTJ5V9SbFsc3gfpxBBmGNnNqX8Si0
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-17_09,2025-06-13_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=785 clxscore=1015
- bulkscore=10 phishscore=0 adultscore=0 mlxscore=0 spamscore=0
- impostorscore=0 lowpriorityscore=10 malwarescore=0 priorityscore=1501
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2505160000 definitions=main-2506170165
+Content-Type: text/plain; charset=UTF-8
+X-Stat-Signature: q7ycq9d9dkc7owgwa5cynr53tds45bj8
+X-Rspamd-Server: rspamout04
+X-Rspamd-Queue-Id: B0B0530
+X-Session-Marker: 6E657665747340676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1/Uzply6cl3gsXjJr1KesH0wywOxldb14w=
+X-HE-Tag: 1750200671-394734
+X-HE-Meta: U2FsdGVkX19AJUtTTAelvx03X7L/01djQSa83Uwsp3IhNfD2PRZCjVo0MqQWFJfaGNNof5VwHcEYxMnzNbSJWrh8w/oiY9wOtCwKDtiNXIB1pekrwVTMxdwmQykBPnET6Fc+5MRvFv1+i3GGNotahAsOxsh11izQoycQjERlY2zkxVkfrmC7XgvRjVGBEhNYKrWmOSEYT+h8fATbnln8bU8PVukvSQwR92XlwNMXVW0bgw6KVInYGxTg6v2qrmPJaSoJ2kSGKzUVK8CjNKlF3UPTLc8fOOUwa35jIHkUzRwq+Kd05rIJS90PhmdJa/IzYJwR0pN/rWQOy9Bhk/eLau7tlIRFC3vxeZFLGMO08rFlS6uo8oBQX902PMbymuAn80vrv6ghWqMugBD5MguW3yJF6Ad1+Lz2xrA9CzsizHE=
 
-On Wed, May 28, 2025 at 1:35=E2=80=AFAM Tal Zussman <tz2294@columbia.edu> w=
-rote:
->
-> One minor fix and one minor cleanup related to the tlb_flush tracepoint.
->
-> As an aside, include/trace/events/tlb.h isn't covered by MAINTAINERS,
-> along with other mm related files under include/trace/events/. Flagging
-> this since I see there's a recent effort to overhaul the mm MAINTAINERS
-> entries.
->
-> It's been a while since I've submitted patches to the mailing list --
-> please let me know if anything looks off. Thanks!
+From: Josh Poimboeuf <jpoimboe@kernel.org>
 
-I don't see this series in any of the mm trees -- anything else that needs =
-to be
-done to get this in?
+The x86 sframe 2.0 implementation works fairly well, starting with
+binutils 2.41 (though some bugs are getting fixed in later versions).
+Enable it.
 
-Thanks,
-Tal
+Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+ arch/x86/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+index 3f7bdc9e3cec..e282c5123385 100644
+--- a/arch/x86/Kconfig
++++ b/arch/x86/Kconfig
+@@ -304,6 +304,7 @@ config X86
+ 	select HAVE_UNSTABLE_SCHED_CLOCK
+ 	select HAVE_UNWIND_USER_COMPAT_FP	if IA32_EMULATION
+ 	select HAVE_UNWIND_USER_FP		if X86_64
++	select HAVE_UNWIND_USER_SFRAME		if X86_64
+ 	select HAVE_USER_RETURN_NOTIFIER
+ 	select HAVE_GENERIC_VDSO
+ 	select VDSO_GETRANDOM			if X86_64
+-- 
+2.47.2
+
+
