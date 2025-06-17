@@ -1,208 +1,122 @@
-Received: from relay.hostedemail.com (smtprelay0014.hostedemail.com [216.40.44.14])
+Received: from mx0b-00364e01.pphosted.com (mx0b-00364e01.pphosted.com [148.163.139.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93DF12EFDB5;
-	Tue, 17 Jun 2025 20:26:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCA30224220
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 17 Jun 2025 21:02:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.139.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750191990; cv=none; b=TQ8OKf/z/1jtb8auWLwo7fav/hX9fUFSs+e59/5TyCbF87rVLcNpqjbBZ14dvvYm/JApkpZ7xlsQ6M9JPoQnVanHn+PDavZ7MXGdC408tPl8VTH2aZJinOvyDn74zE3ZamgTZAH88fABtyd4VmLXw2kgC7rwl2Radvwj1xu5KkQ=
+	t=1750194176; cv=none; b=iQTGvQHkwBhQLtBtFzAaILl6FCO8e3Dbt2QDrR3jDEonB4bzzZDYukg/x1TkJhqvbnTnh1cd6Tt9tqIbSCHqGbPCz+d1aWPvlWAfRAgqQ7pDJGR/0jI5HIdh5NKm6aUv9sC8QnpqNcDjg5iNAXcZJzlKqcRRY3MpVOCC2iO4AN4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750191990; c=relaxed/simple;
-	bh=cqTl9Etvsf352tMZUXRY8foMIfzXbvY0PzDroxDp5co=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=hp9bTY5URufTG0Sa9sbGy6RfLydYxvq5e0MjewNKFrjdcmyIe/+ZjraFeTZsm+CR4fz1ixCk4dyReM92v1c6clTDlE84sXJiN0S1O0qhoDuBbUCP4VwlKREH2nyX6zMfqc0dZ/QOZSXUxinjbZCaqWZN1qba6rG/iJAotyzNzm4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf01.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay01.hostedemail.com (Postfix) with ESMTP id AA5181D6A5B;
-	Tue, 17 Jun 2025 20:26:24 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf01.hostedemail.com (Postfix) with ESMTPA id 3319F60010;
-	Tue, 17 Jun 2025 20:26:20 +0000 (UTC)
-Date: Tue, 17 Jun 2025 16:26:25 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>, "linux-trace-users@vger.kernel.org"
- <linux-trace-users@vger.kernel.org>, linux-fsdevel@vger.kernel.org,
- linux-perf-users@vger.kernel.org
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Mark Rutland <mark.rutland@arm.com>,
- Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner
- <tglx@linutronix.de>, Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
- Namhyung Kim <namhyung@kernel.org>, Linus Torvalds
- <torvalds@linux-foundation.org>, Andrew Morton <akpm@linux-foundation.org>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Al Viro
- <viro@ZenIV.linux.org.uk>, Christian Brauner <brauner@kernel.org>, Jan Kara
- <jack@suse.cz>, Arnaldo Carvalho de Melo <acme@kernel.org>, Frederic
- Weisbecker <fweisbec@gmail.com>, Jiri Olsa <jolsa@kernel.org>, Ian Rogers
- <irogers@google.com>
-Subject: [RFC][PATCH v2] tracing: Deprecate auto-mounting tracefs in debugfs
-Message-ID: <20250617162625.1d44862b@gandalf.local.home>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1750194176; c=relaxed/simple;
+	bh=u9sQ5FNZIfCRkoh32wY/8yyyp10GkggqKBS9UMhJ8PA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Eom11w5xzZqNqYWZDDhlrPz99JOKlLi4pBgehaZRCVTtUtpuBTRPjNu3ArpQlUgFYuxEph15GQ7g6FzLgTGuxuluKpsKZ5Yc1Fhqf4J9EzhT+4FFDX2lx0YBlhzQ6lq3/ZHnPuD70g533HR5NTUGD8oGmydEgH2hA2TbV/ylMlg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=columbia.edu; spf=pass smtp.mailfrom=columbia.edu; dkim=pass (2048-bit key) header.d=columbia.edu header.i=@columbia.edu header.b=sL044JYV; arc=none smtp.client-ip=148.163.139.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=columbia.edu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=columbia.edu
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=columbia.edu header.i=@columbia.edu header.b="sL044JYV"
+Received: from pps.filterd (m0167073.ppops.net [127.0.0.1])
+	by mx0b-00364e01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55HKFjUc000922
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 17 Jun 2025 16:43:55 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=columbia.edu; h=cc :
+ content-transfer-encoding : content-type : date : from : in-reply-to :
+ message-id : mime-version : references : subject : to; s=pps01;
+ bh=u9sQ5FNZIfCRkoh32wY/8yyyp10GkggqKBS9UMhJ8PA=;
+ b=sL044JYV7uef5oYi0VV89Acktqm8ahYTVj+EwwoHVLCTzeBg3FDGb/w9n4QDgQA6tpxa
+ BJR1rCPYYivPGmJmLaef4EpEZNXlYf2ljtqx8PBhYGiJet8Wqj2MnqPsQRI4biajggAK
+ wQakfJQfmZbRkXLdvZE7P3rwnPLHkFiZpz+rj9UaXrVOvGpVSHolkGCbtIDjntRCoaN5
+ 0UdSUoMIkoYouigvonAct9ROwkVo4ZH2Xk2nk2ptssdhJg2KC+53E3mYOLdnwvWUTSk5
+ TO0bVIZIyfRPOhrSVKa5ZU6Wed98XPF+S+OCrT40JNtaZAWW8hMkCLlhDbDP1PTbkxeQ iA== 
+Received: from mail-yw1-f197.google.com (mail-yw1-f197.google.com [209.85.128.197])
+	by mx0b-00364e01.pphosted.com (PPS) with ESMTPS id 4794yfjtmp-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-trace-kernel@vger.kernel.org>; Tue, 17 Jun 2025 16:43:55 -0400
+Received: by mail-yw1-f197.google.com with SMTP id 00721157ae682-7118199f959so47822707b3.1
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 17 Jun 2025 13:43:55 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750193034; x=1750797834;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=u9sQ5FNZIfCRkoh32wY/8yyyp10GkggqKBS9UMhJ8PA=;
+        b=Ymvc6GN//JHT6bIjrv283eQM6hA/K4xM7G4iagZlKtyle9FYApx61Rxog1KN2SJxnT
+         ohQyzukiBPglLEQU8fAtHI7Wymidf6WKmSZIrejrhEYM32DXtAIgtQlvmfFKgUhYV5/3
+         lgljulF3lAHIq0lIfbuMXDLw93wzQHOpe6is2hknC7x4X70Leyq+9AzqvWZ0j+WgiWcF
+         ppMc957A6onttYlzWkdNz0notPL3AiVrUWGET2AFc/3Mw+TL4sHkjCVElH5NqPweUhIX
+         zvgxlzleHrA8q+59+FMOpYR/nlmNSIrz/IpDvHtkst5OvLoxQdIILVLdqD1uV8NGhn3i
+         vLBw==
+X-Forwarded-Encrypted: i=1; AJvYcCVMJuQk9Qpof21v5B0EX8PfuYxiU4A33Ali0jw5Lmcls2igrCg7kfNHpHpXzeCo7NbJKCSlqL9oQwFc/ItCk/IdYX0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwFg+oiLOGsqVI4StIhXv3UKyIU1rW+5doQ07vdE6XWfu67wI0X
+	4I9e2ebRaIyocMG+tpEUhCfewSdyqUjlXAizC/hCKRHnE4cXxN5M4kIYB+Y+2PbKq7OwjqRUGXr
+	TVrBMpUc+SbEImPsYREDpjCo40QK1p9N3ws0jZipgWzKWxdjkERErTr6xlpHz+EcU8a9GJIN28r
+	Q+FjX6xD8MAC42/TXA7In01YWzcCJ4pZ6OHBv4m+GjI1RB
+X-Gm-Gg: ASbGncvFBLiirkUC5Twpo8gdt8ITduof6TaZY62S57EauNUENFWhnH7YBulDEoeSZMU
+	O0hX0yvBCWwYGduAckhBeycKAwkM9kszShruxbyZVF8R0r0++TgHcFCqdOGAhnnjlWqpCpONgGs
+	YfGGi7
+X-Received: by 2002:a05:690c:6c83:b0:70e:2cba:868c with SMTP id 00721157ae682-71175489fbcmr243794547b3.11.1750193034527;
+        Tue, 17 Jun 2025 13:43:54 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFjF0ibehLbKNVTF8HcFuWA6h3KDVMReJtX7DTOphewbVZdmya9vlUAMYxWvtW5I5gCI+10/DiUzzrU1AQ0D2s=
+X-Received: by 2002:a05:690c:6c83:b0:70e:2cba:868c with SMTP id
+ 00721157ae682-71175489fbcmr243794097b3.11.1750193034121; Tue, 17 Jun 2025
+ 13:43:54 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: 3319F60010
-X-Stat-Signature: b7rn7txh4sm3734rzip95rghbr8gxj3g
-X-Rspamd-Server: rspamout05
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX19VqbkcwJiB/aMINIF944FtS/w2WfpSG/8=
-X-HE-Tag: 1750191980-497717
-X-HE-Meta: U2FsdGVkX192M0RQ/UyFwqpdmFwlfSoe3kdAM/l1EYJsXgfMrcRu/YaY7RqGN8+ydHnrzXxfoL46pQg833zXkT8htVH3KMfXmeMYFaGZr2Zrvbk1FN7n09yDpjB+TK5UoRYjCc+B+BsLDA8uiPTe1+rc9iVnS28dqcXVxWwzJpAkyOH47uEieCQgUgs+laz6zG/8I7eLHZpNPFbQNlfCjmJq2DXDE84l9OsnZ6+Qv9EFBPE1y/mmlxFP2B1fnlSwepCmJVtetULl59sT3WPebrRwPqRbr8AteVWYrqdeQhisZ0ftQWgXYGlaFP6U978rxKC7eg1yhPl3RK1RvFUE25jUNWIW1wXXqxoP9hhDDM+Wl2P2KIio66m1j0mORIjfyzRBF1rkiXFmy35+AU7JNA==
+References: <20250528-tlb-trace-fix-v1-0-2e94c58f450d@columbia.edu>
+In-Reply-To: <20250528-tlb-trace-fix-v1-0-2e94c58f450d@columbia.edu>
+From: Tal Zussman <tz2294@columbia.edu>
+Date: Tue, 17 Jun 2025 16:43:43 -0400
+X-Gm-Features: AX0GCFuiCTOK14X6XurXoh82sgBg97ZdwtwT9OBTjyW80sMOJfdncixxOy-kdtk
+Message-ID: <CAKha_srZTXfQkizBzvrdpWs6Txw2PSgRAqT6QC8gom=PaitYNg@mail.gmail.com>
+Subject: Re: [PATCH 0/2] x86, mm: minor tlb_flush tracepoint adjustments
+To: Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Ingo Molnar <mingo@kernel.org>, Rik van Riel <riel@surriel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        David Hildenbrand <david@redhat.com>,
+        Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+        "Liam R. Howlett" <Liam.Howlett@oracle.com>,
+        Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
+        Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
+        x86@kernel.org
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        linux-mm@kvack.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Proofpoint-ORIG-GUID: nO3qTJ5V9SbFsc3gfpxBBmGNnNqX8Si0
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjE3MDE2NSBTYWx0ZWRfXy08YjsNLgn4P rrPAU+lxXksvjChXCpJvrYsG/hiVzsLvlTtmqD9Q1OpLpaGHAFxaBJyAQXw0FNJ4/cQQvcIoe7F ItNZT7oahjzB5gpWjUDKfRzf97cMbu1re6Alh73Bvrg30kiR0yQBE/h9MvxfEBldlTq8HhirAQO
+ QZvLEszL5JzhYnfL1+j0eUuGlTZocM9/xZTCX4Ue/i1dYyL7JRvNPkggPFWY8H5Ar+QBHTXQRwE jzQRBqucVOZzINM8RPEZYrq++GSGgL2lij9TtUFKsNpkw3gjFzOhpsi2Pssof8T+1fE3iBrtzzb GH0ogg2D+1cv80FoBQETRymS9jWzD/KR2tNr8plPLOyhK4HtcFdyddO/Cnwe4MVX/wsc/zR1WWD BBoOnb6w
+X-Proofpoint-GUID: nO3qTJ5V9SbFsc3gfpxBBmGNnNqX8Si0
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-17_09,2025-06-13_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=785 clxscore=1015
+ bulkscore=10 phishscore=0 adultscore=0 mlxscore=0 spamscore=0
+ impostorscore=0 lowpriorityscore=10 malwarescore=0 priorityscore=1501
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2505160000 definitions=main-2506170165
 
+On Wed, May 28, 2025 at 1:35=E2=80=AFAM Tal Zussman <tz2294@columbia.edu> w=
+rote:
+>
+> One minor fix and one minor cleanup related to the tlb_flush tracepoint.
+>
+> As an aside, include/trace/events/tlb.h isn't covered by MAINTAINERS,
+> along with other mm related files under include/trace/events/. Flagging
+> this since I see there's a recent effort to overhaul the mm MAINTAINERS
+> entries.
+>
+> It's been a while since I've submitted patches to the mailing list --
+> please let me know if anything looks off. Thanks!
 
-In January 2015, tracefs was created to allow access to the tracing
-infrastructure without needing to compile in debugfs. When tracefs is
-configured, the directory /sys/kernel/tracing will exist and tooling is
-expected to use that path to access the tracing infrastructure.
+I don't see this series in any of the mm trees -- anything else that needs =
+to be
+done to get this in?
 
-To allow backward compatibility, when debugfs is mounted, it would
-automount tracefs in its "tracing" directory so that tooling that had hard
-coded /sys/kernel/debug/tracing would still work.
-
-It has been over 10 years since the new interface was introduced, and all
-tooling should now be using it. Start the process of deprecating the old
-path so that it doesn't need to be maintained anymore.
-
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
-Changes since v1: https://lore.kernel.org/linux-trace-kernel/20250617133614.24e2ba7f@gandalf.local.home/
-
-- Fixed pr_warn() print, and move it to when debugfs accesses the tracing dir
-  and not when tracefs automount is registered
-
-
- .../ABI/obsolete/automount-tracefs-debugfs    | 20 +++++++++++++++++++
- kernel/trace/Kconfig                          | 13 ++++++++++++
- kernel/trace/trace.c                          | 14 +++++++++----
- 3 files changed, 43 insertions(+), 4 deletions(-)
- create mode 100644 Documentation/ABI/obsolete/automount-tracefs-debugfs
-
-diff --git a/Documentation/ABI/obsolete/automount-tracefs-debugfs b/Documentation/ABI/obsolete/automount-tracefs-debugfs
-new file mode 100644
-index 000000000000..8d03cf9e579f
---- /dev/null
-+++ b/Documentation/ABI/obsolete/automount-tracefs-debugfs
-@@ -0,0 +1,20 @@
-+What:		/sys/kernel/debug/tracing
-+Date:		May 2008
-+KernelVersion:	2.6.27
-+Contact:	linux-trace-kernel@vger.kernel.org
-+Description:
-+
-+	The ftrace was first added to the kernel, its interface was placed
-+	into the debugfs file system under the "tracing" directory. Access
-+	to the files were in /sys/kernel/debug/tracing. As systems wanted
-+	access to the tracing interface without having to enable debugfs, a
-+	new interface was created called "tracefs". This was a stand alone
-+	file system and was usually mounted in /sys/kernel/tracing.
-+
-+	To allow older tooling to continue to operate, when mounting
-+	debugfs, the tracefs file system would automatically get mounted in
-+	the "tracing" directory of debugfs. The tracefs interface was added
-+	in January 2015 in the v4.1 kernel.
-+
-+	All tooling should now be using tracefs directly and the "tracing"
-+	directory in debugfs should be removed by January 2027.
-diff --git a/kernel/trace/Kconfig b/kernel/trace/Kconfig
-index a3f35c7d83b6..93e8e7fc11c0 100644
---- a/kernel/trace/Kconfig
-+++ b/kernel/trace/Kconfig
-@@ -199,6 +199,19 @@ menuconfig FTRACE
- 
- if FTRACE
- 
-+config TRACEFS_AUTOMOUNT_DEPRECATED
-+	bool "Automount tracefs on debugfs [DEPRECATED]"
-+	depends on TRACING
-+	default y
-+	help
-+	  The tracing interface was moved from /sys/kernel/debug/tracing
-+	  to /sys/kernel/tracing in 2015, but the tracing file system
-+	  was still automounted in /sys/kernel/debug for backward
-+	  compatibility with tooling.
-+
-+	  The new interface has been around for more than 10 years and
-+	  the old debug mount will soon be removed.
-+
- config BOOTTIME_TRACING
- 	bool "Boot-time Tracing support"
- 	depends on TRACING
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index 95ae7c4e5835..2dafe2748b16 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -6303,7 +6303,7 @@ static bool tracer_options_updated;
- static void add_tracer_options(struct trace_array *tr, struct tracer *t)
- {
- 	/* Only enable if the directory has been created already. */
--	if (!tr->dir)
-+	if (!tr->dir && !(tr->flags & TRACE_ARRAY_FL_GLOBAL))
- 		return;
- 
- 	/* Only create trace option files after update_tracer_options finish */
-@@ -8984,13 +8984,13 @@ static inline __init int register_snapshot_cmd(void) { return 0; }
- 
- static struct dentry *tracing_get_dentry(struct trace_array *tr)
- {
--	if (WARN_ON(!tr->dir))
--		return ERR_PTR(-ENODEV);
--
- 	/* Top directory uses NULL as the parent */
- 	if (tr->flags & TRACE_ARRAY_FL_GLOBAL)
- 		return NULL;
- 
-+	if (WARN_ON(!tr->dir))
-+		return ERR_PTR(-ENODEV);
-+
- 	/* All sub buffers have a descriptor */
- 	return tr->dir;
- }
-@@ -10256,6 +10256,7 @@ init_tracer_tracefs(struct trace_array *tr, struct dentry *d_tracer)
- 	ftrace_init_tracefs(tr, d_tracer);
- }
- 
-+#ifdef CONFIG_TRACEFS_AUTOMOUNT_DEPRECATED
- static struct vfsmount *trace_automount(struct dentry *mntpt, void *ingore)
- {
- 	struct vfsmount *mnt;
-@@ -10277,6 +10278,8 @@ static struct vfsmount *trace_automount(struct dentry *mntpt, void *ingore)
- 	if (IS_ERR(fc))
- 		return ERR_CAST(fc);
- 
-+	pr_warn("NOTICE: Automounting of tracing to debugfs is deprecated and will be removed in 2027\n");
-+
- 	ret = vfs_parse_fs_string(fc, "source",
- 				  "tracefs", strlen("tracefs"));
- 	if (!ret)
-@@ -10287,6 +10290,7 @@ static struct vfsmount *trace_automount(struct dentry *mntpt, void *ingore)
- 	put_fs_context(fc);
- 	return mnt;
- }
-+#endif
- 
- /**
-  * tracing_init_dentry - initialize top level trace array
-@@ -10311,6 +10315,7 @@ int tracing_init_dentry(void)
- 	if (WARN_ON(!tracefs_initialized()))
- 		return -ENODEV;
- 
-+#ifdef CONFIG_TRACEFS_AUTOMOUNT_DEPRECATED
- 	/*
- 	 * As there may still be users that expect the tracing
- 	 * files to exist in debugfs/tracing, we must automount
-@@ -10319,6 +10324,7 @@ int tracing_init_dentry(void)
- 	 */
- 	tr->dir = debugfs_create_automount("tracing", NULL,
- 					   trace_automount, NULL);
-+#endif
- 
- 	return 0;
- }
--- 
-2.47.2
-
+Thanks,
+Tal
