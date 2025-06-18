@@ -1,95 +1,111 @@
-Received: from mail-il1-f197.google.com (mail-il1-f197.google.com [209.85.166.197])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B6BF2E8E09
-	for <linux-trace-kernel@vger.kernel.org>; Wed, 18 Jun 2025 13:02:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.197
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC2652EA72C;
+	Wed, 18 Jun 2025 13:46:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750251746; cv=none; b=FWDnENQjCPbPXBX57yWGg6TgC4JhdHJF9BcR7lcX2P2ZL3aijSsKcMBVPqcQ6A6hzzpIWyrSApZ2xIlZ5ZjVjT1cBvP014IUrgSEK1yIu0Q76KqLSkOKmVB9qX3GAO6swGDwvOk8WfzUxzMgKatpy2IQRwTixvN5FIfHcLS4wp4=
+	t=1750254416; cv=none; b=VgprZ5VHraexH9ZBGFZpetFywftaR5Ej8qqNCzM3VPYmZ2E1obXhVLYUh3m4nG60Czrwms65KdWbACO+C3O0KcqDrkBsLtGEjXQsDOZHbVyo2dJw4wd8YiFYKZxA0L1D/c8WPcuCRoRaNtfYjX689NTpXp6raAWbpt71OtGWP60=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750251746; c=relaxed/simple;
-	bh=DZrItFbknpDI8Un2NH1UDZrniGfqOG2TVQADV98m+2M=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=RQazly6dgmTXvBUJpS+LWaLNVeNOuOnsb8i5DjvWEjuDUupYMncutT2tmN4tdk2qPEtTnOyQs6Cp2QVQSmrv1t+rzSSaCh3LK2YHf8twdOAooKPWrQ+Yg9m3g/8MUxt8+kY7/MlB11zAPH4IlOT0Fcnk5Nl99h2Bn9ZEER6Jio8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.197
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f197.google.com with SMTP id e9e14a558f8ab-3ddb4a92e80so90178335ab.3
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 18 Jun 2025 06:02:24 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750251744; x=1750856544;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=JHoM2hc0ODan9OanCJjAUYd3bM093eFl/sY6DRIpWVw=;
-        b=cpl1uDdqndltdEerbE6QGX8avQTs7+hJbuIlW2M1O+/js8T8TU1KXqIO9KHdAY+5Bd
-         DM3NfN6qKDhIzQ32mT5Kctt3tLLRhq9bababI1r6fb3Art0WCDT9LlOrzrCEP9ZHmafN
-         xEf2v8z5ZdZHHaKk+cah3Jc8H4EdRyiCvhlCA51umP4bhfH7lA4dai6KFQTlsiMvsz8D
-         bYFD2G5035Zm/OAzanFyfdGpFoPRAaaXRStqhIG7+8Vx7YfhNX3mLYmYqLaTzZdTsTPV
-         nRDgBzxlSKm4/OMeYRQQUxAhgXbne+XU6G4E7KzYNqQgIS+7b/lL9GrO9vBoHtPK9jzZ
-         ntQA==
-X-Forwarded-Encrypted: i=1; AJvYcCVS0fZZBHBh3aJ3wz1Txub5JUk2p0zQztyFsm7u/KCRn9p7b1USinv65mODtlCEttTr8cU2RArxQDL9dmxdhQKGNnI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw1l8lj8hdcI8joo2WhX9Xk364BkDUTiRqEtRTpEOliJneGfupo
-	m9CmOKNs6o1az7OqMnsaqrgMawOd3iE3dW7nfTveI/oeEp+gknBDLjfEce8g0dgkjLYKRzDyjxs
-	qEycH4k6j7ZyhPtV69y2vHcY3fiKMehcb3Ne8E61zRRVJNsuvdkBaLqjRPfw=
-X-Google-Smtp-Source: AGHT+IFZy5E14MM+IwBcGR58yUK6AtH4Lh6pEooLzYU75zu4OARXSaSJbJxCnwzvUpM3s6pBl8Dy2yWCKWo0/hVacfu3CZFSmkim
+	s=arc-20240116; t=1750254416; c=relaxed/simple;
+	bh=Losyn9nm+aZwZ+6Ag2jILDFw7Orn8sAev+dIcg1/bvE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gPqi5tsTkZb8ICPU+5/CVUAvpRCKVDv0iMjfLL8oZZs5/ZmN4NbOSTpgOwhRPgW2eLvTkakLpjrRIRkLTQhqQghchkCJHwq3f1N4SVbDxyUE0FvK/VsCogaw36FzA39kkFOB5KUF0lP+rxpHvHyv+StXD0KcJy7EQH3bUrN727Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=S62GXtaD; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="S62GXtaD"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=nQfAjPcRHPaRXr9YZUZxCpH5t/zDnAeC5NrEv6EAiGE=; b=S62GXtaD7FXRPvUVz70nXR7XnN
+	QMECWJWCUuNZASEE0MGUw7V3BMzwJu9X4dhXX7+OaY8d0HGPurwjeRD/0TSN0Vaywbl/ppsD92eHG
+	6nPUYMEMN0KkSZ8echa50tDx6KLWLZpQwwHYBnH3AGvAQiHxCB9tV70tXNFM6BkPbPO6TGNeYLkYR
+	IlYjJoMGXBP2Jh3S36SyVFsEobBQKGJXAWD6/XBI2k8AoiDreh0pw5XkJr7A36NPH/h8FtyP8Mhi+
+	UhBYj5G0IhkgLB4f905tbYsaM0QBc1HUrhZxfUELUX6JTKJDv0feCUomAFNLi010bue3uoaGcJayU
+	LNcvINeQ==;
+Received: from 2001-1c00-8d82-d000-266e-96ff-fe07-7dcc.cable.dynamic.v6.ziggo.nl ([2001:1c00:8d82:d000:266e:96ff:fe07:7dcc] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uRt7j-00000003hLX-2fLK;
+	Wed, 18 Jun 2025 13:46:43 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 63930307FB7; Wed, 18 Jun 2025 15:46:41 +0200 (CEST)
+Date: Wed, 18 Jun 2025 15:46:41 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	bpf@vger.kernel.org, x86@kernel.org,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Ingo Molnar <mingo@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Indu Bhagat <indu.bhagat@oracle.com>,
+	"Jose E. Marchesi" <jemarch@gnu.org>,
+	Beau Belgrave <beaub@linux.microsoft.com>,
+	Jens Remus <jremus@linux.ibm.com>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH v10 03/14] unwind_user: Add compat mode frame pointer
+ support
+Message-ID: <20250618134641.GJ1613376@noisy.programming.kicks-ass.net>
+References: <20250611005421.144238328@goodmis.org>
+ <20250611010428.261095906@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a92:b70e:0:b0:3dd:bfba:ff9c with SMTP id
- e9e14a558f8ab-3de07d686f0mr132141475ab.11.1750251744235; Wed, 18 Jun 2025
- 06:02:24 -0700 (PDT)
-Date: Wed, 18 Jun 2025 06:02:24 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <6852b8e0.050a0220.a0d10.0009.GAE@google.com>
-Subject: [syzbot] Monthly trace report (Jun 2025)
-From: syzbot <syzbot+list1e42a46dc3c6fe5776d5@syzkaller.appspotmail.com>
-To: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	mhiramat@kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250611010428.261095906@goodmis.org>
 
-Hello trace maintainers/developers,
+On Tue, Jun 10, 2025 at 08:54:24PM -0400, Steven Rostedt wrote:
+> diff --git a/kernel/unwind/user.c b/kernel/unwind/user.c
+> index 4fc550356b33..29e1f497a26e 100644
+> --- a/kernel/unwind/user.c
+> +++ b/kernel/unwind/user.c
+> @@ -12,12 +12,32 @@ static struct unwind_user_frame fp_frame = {
+>  	ARCH_INIT_USER_FP_FRAME
+>  };
+>  
+> +static struct unwind_user_frame compat_fp_frame = {
+> +	ARCH_INIT_USER_COMPAT_FP_FRAME
+> +};
+> +
+>  static inline bool fp_state(struct unwind_user_state *state)
+>  {
+>  	return IS_ENABLED(CONFIG_HAVE_UNWIND_USER_FP) &&
+>  	       state->type == UNWIND_USER_TYPE_FP;
+>  }
+>  
+> +static inline bool compat_state(struct unwind_user_state *state)
 
-This is a 31-day syzbot report for the trace subsystem.
-All related reports/information can be found at:
-https://syzkaller.appspot.com/upstream/s/trace
+Consistency would mandate this thing be called: compat_fp_state().
 
-During the period, 0 new issues were detected and 1 were fixed.
-In total, 14 issues are still open and 47 have already been fixed.
+> +{
+> +	return IS_ENABLED(CONFIG_HAVE_UNWIND_USER_COMPAT_FP) &&
+> +	       state->type == UNWIND_USER_TYPE_COMPAT_FP;
+> +}
+> +
+> +#define UNWIND_GET_USER_LONG(to, from, state)				\
 
-Some of the still happening issues:
+Do we have to shout this?
 
-Ref Crashes Repro Title
-<1> 1994    Yes   WARNING in format_decode (3)
-                  https://syzkaller.appspot.com/bug?extid=e2c932aec5c8a6e1d31c
-<2> 149     Yes   WARNING in tracing_buffers_mmap_close
-                  https://syzkaller.appspot.com/bug?extid=ddc001b92c083dbf2b97
-<3> 56      Yes   WARNING in blk_register_tracepoints
-                  https://syzkaller.appspot.com/bug?extid=c54ded83396afee31eb1
-<4> 44      Yes   INFO: task hung in blk_trace_ioctl (4)
-                  https://syzkaller.appspot.com/bug?extid=ed812ed461471ab17a0c
-<5> 33      Yes   WARNING in tracepoint_probe_unregister (3)
-                  https://syzkaller.appspot.com/bug?extid=a1d25e53cd4a10f7f2d3
-<6> 30      Yes   INFO: task hung in blk_trace_remove (2)
-                  https://syzkaller.appspot.com/bug?extid=2373f6be3e6de4f92562
-<7> 18      Yes   WARNING in get_probe_ref
-                  https://syzkaller.appspot.com/bug?extid=8672dcb9d10011c0a160
-<8> 12      No    BUG: soft lockup in hsr_announce (3)
-                  https://syzkaller.appspot.com/bug?extid=6c68a0400c33951a023c
-<9> 6       No    WARNING in tracing_start_tr
-                  https://syzkaller.appspot.com/bug?extid=ccdec3bfe0beec58a38d
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-To disable reminders for individual bugs, reply with the following command:
-#syz set <Ref> no-reminders
-
-To change bug's subsystems, reply with:
-#syz set <Ref> subsystems: new-subsystem
-
-You may send multiple commands in a single email message.
+> +({									\
+> +	int __ret;							\
+> +	if (compat_state(state))					\
+> +		__ret = get_user(to, (u32 __user *)(from));		\
+> +	else								\
+> +		__ret = get_user(to, (unsigned long __user *)(from));	\
+> +	__ret;								\
+> +})
+> +
+>  int unwind_user_next(struct unwind_user_state *state)
+>  {
+>  	struct unwind_user_frame *frame;
