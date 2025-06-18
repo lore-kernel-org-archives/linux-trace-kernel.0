@@ -1,25 +1,25 @@
-Received: from relay.hostedemail.com (smtprelay0010.hostedemail.com [216.40.44.10])
+Received: from relay.hostedemail.com (smtprelay0017.hostedemail.com [216.40.44.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E66AC16A95B;
-	Wed, 18 Jun 2025 15:10:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AC932EA724;
+	Wed, 18 Jun 2025 15:18:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750259448; cv=none; b=Q47wBYd8I+aAb8pufS5O1Oj+pbf3wa/gK7S2ue5HiwP10/oiCuQG5pxHXFJX5qDUEJoWj+nx+FgX23RTQ9Dtc58BM0gEyyxoQsxS/aqfvu8L9a9+/ok3rqwTItVBeaZdSQ1HBHjzj2aXXKCho3UxFXzS9WSUuYWmzkSK9LxqeT0=
+	t=1750259932; cv=none; b=WifL6HUBw4rpMBGUJUfF7DS6QynG9jTkC8FcdElbdEsKLc/InBcj0MRrKmeijmQ9ddTkGfHfOBZLsL0d8/2fSNUqiUTVbEXlLbYeNUy9uj8DpYhb6C4lQize93hWtW7CXWxrzG++UyI2bAnr7BNAAtO5O9fYKJu8wdgu1WhFXMo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750259448; c=relaxed/simple;
-	bh=7celbNZK7cUowrtpbJpvgT/P4/mtH33mLD4DahcanO0=;
+	s=arc-20240116; t=1750259932; c=relaxed/simple;
+	bh=Gh0v9Sq6hmQCc+/tG7k5ip84sNa2fop55rBiVVgpsjM=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=hlPznCfvQk1Jp2yWiPY7h56dTLTcCe+GbnNpa6Wx5TPG7/zhwLR1HBwG2HJ9Ib4wN9G/FqvB8O+IKDHOaB3q9zkSgJBYWrOtyVI1jWNLn/aJKqeU2el/ocaE4AYUZPgFXAC4bLE0A0CkpOJuBs8tbZMDzamjW6jH0Y8GehXWQ1A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.10
+	 MIME-Version:Content-Type; b=MT3Ja6yRfjzQgORfLo+V9NMOjV0rd115GM7/vw7Zp5rz1Q6E43bbLS4BYAX3jwIyI3/utC7VQNcGNEHeVXJlZtEKOXSiSyi1aKceaXBxGVPp+BuRYHr2cI0ytKY4hRG+WW75YFsxlCUgzkQqPyGffdec2BvHI4LGwvjezC1bI28=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.17
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf16.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay01.hostedemail.com (Postfix) with ESMTP id 640E31CD07A;
-	Wed, 18 Jun 2025 15:10:42 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf16.hostedemail.com (Postfix) with ESMTPA id 823AE20019;
-	Wed, 18 Jun 2025 15:10:38 +0000 (UTC)
-Date: Wed, 18 Jun 2025 11:10:46 -0400
+Received: from omf11.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay09.hostedemail.com (Postfix) with ESMTP id 43FEC80274;
+	Wed, 18 Jun 2025 15:18:37 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf11.hostedemail.com (Postfix) with ESMTPA id 4F9602002D;
+	Wed, 18 Jun 2025 15:18:33 +0000 (UTC)
+Date: Wed, 18 Jun 2025 11:18:40 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
 To: Peter Zijlstra <peterz@infradead.org>
 Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
@@ -34,11 +34,11 @@ Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
  <akpm@linux-foundation.org>
 Subject: Re: [PATCH v10 03/14] unwind_user: Add compat mode frame pointer
  support
-Message-ID: <20250618111046.793870b8@gandalf.local.home>
-In-Reply-To: <20250618134641.GJ1613376@noisy.programming.kicks-ass.net>
+Message-ID: <20250618111840.24a940f6@gandalf.local.home>
+In-Reply-To: <20250618134758.GK1613376@noisy.programming.kicks-ass.net>
 References: <20250611005421.144238328@goodmis.org>
 	<20250611010428.261095906@goodmis.org>
-	<20250618134641.GJ1613376@noisy.programming.kicks-ass.net>
+	<20250618134758.GK1613376@noisy.programming.kicks-ass.net>
 X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -47,68 +47,72 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Server: rspamout01
-X-Rspamd-Queue-Id: 823AE20019
-X-Stat-Signature: 4dy7nzocsgk4ijxsa3itupmpfbp6ogep
+Content-Transfer-Encoding: quoted-printable
+X-Rspamd-Queue-Id: 4F9602002D
+X-Stat-Signature: iafc33sogu1x5ojhjxzjmzhkj3hpyfpf
+X-Rspamd-Server: rspamout05
 X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX18qKTDnFjwgUe2QGMU6ftBeeSp0rG0uMe4=
-X-HE-Tag: 1750259438-195004
-X-HE-Meta: U2FsdGVkX18lMjb0gzHottcD+djXgm1V24zuIEaRz5H6kvhaYJpN5MnMA6PJDkC6o3d+5DKlf6puSBleP2YAsi2jHw4XzvzshrLt0mYR9R3n2YEhdgCTT7Pau02nG+TTjaZUenMtTUb9BKvDbajnAzwv4ZozWSJ1br5o+JRtU58jP9kx8u0uovm/J2+IERHAz5DsrOIZT/zBRGpiRKAFLmSHOR0os4/UO3MralzMnI8VeoHBA+8OxKxtIdjWDpeEfjJxsJWBQXJY9uCcs6XVUxQslCPlDqQJA6jkp/wBA2jzAXlRYO2bZ57e00XYCJ7mYlXFHHq7w4gLWaCMz7dhnSFgQIuDYwhfMUvUJQl+rl2UcqoRKWogbkuZ3rmH9DQW
+X-Session-ID: U2FsdGVkX1/VEB1AvzoDBoRkcbB9Zv/Ta/DbqKl+qYw=
+X-HE-Tag: 1750259913-886977
+X-HE-Meta: U2FsdGVkX19EpqP1YJ80kg0CNMkxNA/Kh9qLyQ7T+tbirmYKyY0vcIrQ4tgy/RKET6sH6Vxc/H8/xdX/JnWYFdZ3P2HwQBnG5I3959ejJ7pM45pAo1qaIBek1rhoGosa+i3eKhLXlvIB//R1OUnMwqM32JvzzSDXO9PC6nCU51WERdLNiitNzjR+zZ042s0iKvueltSqNCmQBHFmHBpvBuFLx87wvyOi1HAUVfNMe+8D4w2/kvbwkwdJLLjC3qASe/D01mM/NsIpFOmrjd0RIVeoRtB7m2a/u27yoG0B/L5TUszvo1+Enx2FQeKWGXBJx83Ss2Xe6Ex2hMC1I1qxVGMACpZRrdhHhpMfPuPRdtbtZi4JhbYlxG98wr5lRaZrCJk06NIqi67xdM1BgDppD6cuC+sjKejiwMamyY//NgU=
 
-On Wed, 18 Jun 2025 15:46:41 +0200
+On Wed, 18 Jun 2025 15:47:58 +0200
 Peter Zijlstra <peterz@infradead.org> wrote:
 
 > On Tue, Jun 10, 2025 at 08:54:24PM -0400, Steven Rostedt wrote:
-> > diff --git a/kernel/unwind/user.c b/kernel/unwind/user.c
-> > index 4fc550356b33..29e1f497a26e 100644
-> > --- a/kernel/unwind/user.c
-> > +++ b/kernel/unwind/user.c
-> > @@ -12,12 +12,32 @@ static struct unwind_user_frame fp_frame = {
-> >  	ARCH_INIT_USER_FP_FRAME
-> >  };
-> >  
-> > +static struct unwind_user_frame compat_fp_frame = {
-> > +	ARCH_INIT_USER_COMPAT_FP_FRAME
-> > +};
+>=20
+> > +#ifndef arch_unwind_user_init
+> > +static inline void arch_unwind_user_init(struct unwind_user_state *sta=
+te, struct pt_regs *reg) {}
+> > +#endif
 > > +
-> >  static inline bool fp_state(struct unwind_user_state *state)
-> >  {
-> >  	return IS_ENABLED(CONFIG_HAVE_UNWIND_USER_FP) &&
-> >  	       state->type == UNWIND_USER_TYPE_FP;
-> >  }
-> >  
-> > +static inline bool compat_state(struct unwind_user_state *state)  
-> 
-> Consistency would mandate this thing be called: compat_fp_state().
+> > +#ifndef arch_unwind_user_next
+> > +static inline void arch_unwind_user_next(struct unwind_user_state *sta=
+te) {}
+> > +#endif =20
+>=20
+> The purpose of these arch hooks is so far mysterious. No comments, no
+> changelog, no nothing.
 
-Sure. Will update it.
+I'll add comments.
 
-> 
-> > +{
-> > +	return IS_ENABLED(CONFIG_HAVE_UNWIND_USER_COMPAT_FP) &&
-> > +	       state->type == UNWIND_USER_TYPE_COMPAT_FP;
-> > +}
-> > +
-> > +#define UNWIND_GET_USER_LONG(to, from, state)				\  
-> 
-> Do we have to shout this?
+It's used later in the x86 compat code to allow the architecture to do any
+special initialization or to handling moving to the next frame.
 
-Don't we usually shout macros?
+=46rom patch 14:
+
++#define in_compat_mode(regs) !user_64bit_mode(regs)
++
++static inline void arch_unwind_user_init(struct unwind_user_state *state,
++					 struct pt_regs *regs)
++{
++	unsigned long cs_base, ss_base;
++
++	if (state->type !=3D UNWIND_USER_TYPE_COMPAT_FP)
++		return;
++
++	scoped_guard(irqsave) {
++		cs_base =3D segment_base_address(regs->cs);
++		ss_base =3D segment_base_address(regs->ss);
++	}
++
++	state->arch.cs_base =3D cs_base;
++	state->arch.ss_base =3D ss_base;
++
++	state->ip +=3D cs_base;
++	state->sp +=3D ss_base;
++	state->fp +=3D ss_base;
++}
++#define arch_unwind_user_init arch_unwind_user_init
++
++static inline void arch_unwind_user_next(struct unwind_user_state *state)
++{
++	if (state->type !=3D UNWIND_USER_TYPE_COMPAT_FP)
++		return;
++
++	state->ip +=3D state->arch.cs_base;
++	state->fp +=3D state->arch.ss_base;
++}
++#define arch_unwind_user_next arch_unwind_user_next
 
 -- Steve
-
-> 
-> > +({									\
-> > +	int __ret;							\
-> > +	if (compat_state(state))					\
-> > +		__ret = get_user(to, (u32 __user *)(from));		\
-> > +	else								\
-> > +		__ret = get_user(to, (unsigned long __user *)(from));	\
-> > +	__ret;								\
-> > +})
-> > +
-> >  int unwind_user_next(struct unwind_user_state *state)
-> >  {
-> >  	struct unwind_user_frame *frame;  
-
