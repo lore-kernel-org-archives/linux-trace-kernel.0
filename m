@@ -1,25 +1,25 @@
-Received: from relay.hostedemail.com (smtprelay0011.hostedemail.com [216.40.44.11])
+Received: from relay.hostedemail.com (smtprelay0010.hostedemail.com [216.40.44.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 961562EE969;
-	Wed, 18 Jun 2025 15:09:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E66AC16A95B;
+	Wed, 18 Jun 2025 15:10:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750259357; cv=none; b=VBsN8NeTC6VRn1neEWUkud61T96KeAD+SzjMJLhos70uLTOpgua9pC44056+y3T3qGZDC0zxX8f2w/XZJjSN4ygjYq/4uWIGn4Xcgad8ABzNuRXv+B6mtaxJfIJ2OXc4badFK1l8SWlttJXdrlX3n2QnJ9XKYMMM00ZaKuBke+k=
+	t=1750259448; cv=none; b=Q47wBYd8I+aAb8pufS5O1Oj+pbf3wa/gK7S2ue5HiwP10/oiCuQG5pxHXFJX5qDUEJoWj+nx+FgX23RTQ9Dtc58BM0gEyyxoQsxS/aqfvu8L9a9+/ok3rqwTItVBeaZdSQ1HBHjzj2aXXKCho3UxFXzS9WSUuYWmzkSK9LxqeT0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750259357; c=relaxed/simple;
-	bh=NM0uIEIBmKPjssAbv5WPcgFwThslLyP/kq/2pIREebo=;
+	s=arc-20240116; t=1750259448; c=relaxed/simple;
+	bh=7celbNZK7cUowrtpbJpvgT/P4/mtH33mLD4DahcanO0=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=aECsHcEyM1Z53ylkAz/5lHMVKda4/L6tsMe/nIFrO4QyQxA5Rqds38xxoJOiycnJ01A97MfLmTSfhPbyiyTX2qDUvj9mYc3lLc/Djz36fXmMt+ce4XMJ4OYisC8wh8L+xWL6PzHuhqsw5AaWFxkArgyK4xo+n8e94eXWMfwArJM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.11
+	 MIME-Version:Content-Type; b=hlPznCfvQk1Jp2yWiPY7h56dTLTcCe+GbnNpa6Wx5TPG7/zhwLR1HBwG2HJ9Ib4wN9G/FqvB8O+IKDHOaB3q9zkSgJBYWrOtyVI1jWNLn/aJKqeU2el/ocaE4AYUZPgFXAC4bLE0A0CkpOJuBs8tbZMDzamjW6jH0Y8GehXWQ1A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.10
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf01.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay01.hostedemail.com (Postfix) with ESMTP id B9DB91CF622;
-	Wed, 18 Jun 2025 15:09:11 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf01.hostedemail.com (Postfix) with ESMTPA id C60036000C;
-	Wed, 18 Jun 2025 15:09:07 +0000 (UTC)
-Date: Wed, 18 Jun 2025 11:09:15 -0400
+Received: from omf16.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay01.hostedemail.com (Postfix) with ESMTP id 640E31CD07A;
+	Wed, 18 Jun 2025 15:10:42 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf16.hostedemail.com (Postfix) with ESMTPA id 823AE20019;
+	Wed, 18 Jun 2025 15:10:38 +0000 (UTC)
+Date: Wed, 18 Jun 2025 11:10:46 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
 To: Peter Zijlstra <peterz@infradead.org>
 Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
@@ -32,12 +32,13 @@ Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
  Belgrave <beaub@linux.microsoft.com>, Jens Remus <jremus@linux.ibm.com>,
  Linus Torvalds <torvalds@linux-foundation.org>, Andrew Morton
  <akpm@linux-foundation.org>
-Subject: Re: [PATCH v10 02/14] unwind_user: Add frame pointer support
-Message-ID: <20250618110915.754e604f@gandalf.local.home>
-In-Reply-To: <20250618135201.GM1613376@noisy.programming.kicks-ass.net>
+Subject: Re: [PATCH v10 03/14] unwind_user: Add compat mode frame pointer
+ support
+Message-ID: <20250618111046.793870b8@gandalf.local.home>
+In-Reply-To: <20250618134641.GJ1613376@noisy.programming.kicks-ass.net>
 References: <20250611005421.144238328@goodmis.org>
-	<20250611010428.092934995@goodmis.org>
-	<20250618135201.GM1613376@noisy.programming.kicks-ass.net>
+	<20250611010428.261095906@goodmis.org>
+	<20250618134641.GJ1613376@noisy.programming.kicks-ass.net>
 X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -47,31 +48,67 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: C60036000C
-X-Stat-Signature: 73r1rkxrmzpy3cjc799wwjicbegsdwmk
-X-Rspamd-Server: rspamout05
+X-Rspamd-Server: rspamout01
+X-Rspamd-Queue-Id: 823AE20019
+X-Stat-Signature: 4dy7nzocsgk4ijxsa3itupmpfbp6ogep
 X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX18/w7XWFVjVdAceVbXFYHMY+StonkwTq24=
-X-HE-Tag: 1750259347-837396
-X-HE-Meta: U2FsdGVkX197pXU/+eJz5G9JDPn2gxiuB/VN7TILucKUgp0Vnd9b6s73QPwXmg6ohDGCwYBS52e+9HpjdgLM6UJDHhmfGD8lFNQbjAttS0AM957ejc0xPDuNLLF2yVd4AKMq55l3cmgddlyI3DTPPEdLqMuZDxvB1mZxvXTXfaJnlqpbMRXAeF4DdDott21EN5T6bbEMXgAqkFFJVPK6lv0kolDbiC0WnAUgOCiL4IWws4n/VZCmgkAg90BYDKkvapyojxv6mq0ZSlW/i/voyuZOQldY/HxCwuOilyKXyfLB7kkMxgXeYoJpGoV11YuajigkFMuvq/xLq/s/Mhw+1gYxuDmx4ajXsXDRvRv0FnA4uo+NoLSpatpuBh+e8z8Q
+X-Session-ID: U2FsdGVkX18qKTDnFjwgUe2QGMU6ftBeeSp0rG0uMe4=
+X-HE-Tag: 1750259438-195004
+X-HE-Meta: U2FsdGVkX18lMjb0gzHottcD+djXgm1V24zuIEaRz5H6kvhaYJpN5MnMA6PJDkC6o3d+5DKlf6puSBleP2YAsi2jHw4XzvzshrLt0mYR9R3n2YEhdgCTT7Pau02nG+TTjaZUenMtTUb9BKvDbajnAzwv4ZozWSJ1br5o+JRtU58jP9kx8u0uovm/J2+IERHAz5DsrOIZT/zBRGpiRKAFLmSHOR0os4/UO3MralzMnI8VeoHBA+8OxKxtIdjWDpeEfjJxsJWBQXJY9uCcs6XVUxQslCPlDqQJA6jkp/wBA2jzAXlRYO2bZ57e00XYCJ7mYlXFHHq7w4gLWaCMz7dhnSFgQIuDYwhfMUvUJQl+rl2UcqoRKWogbkuZ3rmH9DQW
 
-On Wed, 18 Jun 2025 15:52:01 +0200
+On Wed, 18 Jun 2025 15:46:41 +0200
 Peter Zijlstra <peterz@infradead.org> wrote:
 
-> > +the_end:
-> > +	state->done = true;
-> >  	return -EINVAL;
-> >  }  
+> On Tue, Jun 10, 2025 at 08:54:24PM -0400, Steven Rostedt wrote:
+> > diff --git a/kernel/unwind/user.c b/kernel/unwind/user.c
+> > index 4fc550356b33..29e1f497a26e 100644
+> > --- a/kernel/unwind/user.c
+> > +++ b/kernel/unwind/user.c
+> > @@ -12,12 +12,32 @@ static struct unwind_user_frame fp_frame = {
+> >  	ARCH_INIT_USER_FP_FRAME
+> >  };
+> >  
+> > +static struct unwind_user_frame compat_fp_frame = {
+> > +	ARCH_INIT_USER_COMPAT_FP_FRAME
+> > +};
+> > +
+> >  static inline bool fp_state(struct unwind_user_state *state)
+> >  {
+> >  	return IS_ENABLED(CONFIG_HAVE_UNWIND_USER_FP) &&
+> >  	       state->type == UNWIND_USER_TYPE_FP;
+> >  }
+> >  
+> > +static inline bool compat_state(struct unwind_user_state *state)  
 > 
-> I'm thinking 'the_end' might be better named 'done' ?
+> Consistency would mandate this thing be called: compat_fp_state().
 
-I thought it was cute ;-) (BTW, I didn't name it).
-
-But sure, I can update it to be something more common.
+Sure. Will update it.
 
 > 
-> Also, CFA here is Call-Frame-Address and RA Return-Address ?
+> > +{
+> > +	return IS_ENABLED(CONFIG_HAVE_UNWIND_USER_COMPAT_FP) &&
+> > +	       state->type == UNWIND_USER_TYPE_COMPAT_FP;
+> > +}
+> > +
+> > +#define UNWIND_GET_USER_LONG(to, from, state)				\  
+> 
+> Do we have to shout this?
 
-I believe so. Do you want me to add a comment?
+Don't we usually shout macros?
 
 -- Steve
+
+> 
+> > +({									\
+> > +	int __ret;							\
+> > +	if (compat_state(state))					\
+> > +		__ret = get_user(to, (u32 __user *)(from));		\
+> > +	else								\
+> > +		__ret = get_user(to, (unsigned long __user *)(from));	\
+> > +	__ret;								\
+> > +})
+> > +
+> >  int unwind_user_next(struct unwind_user_state *state)
+> >  {
+> >  	struct unwind_user_frame *frame;  
+
