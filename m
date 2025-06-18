@@ -1,79 +1,208 @@
-Received: from relay.hostedemail.com (smtprelay0011.hostedemail.com [216.40.44.11])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58C5770830;
-	Wed, 18 Jun 2025 18:37:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39EF31A3167;
+	Wed, 18 Jun 2025 18:46:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750271848; cv=none; b=Im7ZmlG8Bf7MPuoKc+B7ES+ppucsyaddsDIH4/PA6Z+glpwOXS695pVFbkT0BwJw+dWU408ZarWtgVcDfJeq6iH+LCAmmGfc/OrkkQYdSVTt5Hfbq5lwsB6ZoIdN/c5I6BpvCMJMAcfm9++4f4Cm3CPie3LogHdx7aqbCd01gkA=
+	t=1750272392; cv=none; b=Mtdhvr0iitT8sTuqUETNHUskpyR4u2cb6ueKH/2dltoABkc6ncTNk71REbKUrHygVYO0NO90kPX+76us2OwjFVAtnTpnBIUthnSQNlTUyYnq2AIPYNLkucCsEYIWEw008xouOZ4o4sTX/4OjXeZd/Jo5ken1k4znSXRZcCMCkyk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750271848; c=relaxed/simple;
-	bh=f+VRcUrtfNfbsVlJGbX2ScwKmROUjzBgQf0qso+uhm4=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=E7REBSZFj71USOZ2fs65Mg5IfrouCbD+Y1f+lApmcZ0+qcwi08SqaEFiajHAUkTVfOAza30z2YOiRgqIpNLkFwLw91gEkoSFwvFfekRT5PuTqFkwKcNkkpeASGkwWnYD0Nj8/U18/dglCHm5asC367cT/oOsHpo4BvUrJjCz09w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf10.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay08.hostedemail.com (Postfix) with ESMTP id 33E5F14014E;
-	Wed, 18 Jun 2025 18:37:23 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf10.hostedemail.com (Postfix) with ESMTPA id 5E7D43D;
-	Wed, 18 Jun 2025 18:37:19 +0000 (UTC)
-Date: Wed, 18 Jun 2025 14:37:27 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org, x86@kernel.org,
- Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Josh Poimboeuf <jpoimboe@kernel.org>,
- Ingo Molnar <mingo@kernel.org>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim
- <namhyung@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Andrii
- Nakryiko <andrii@kernel.org>, Indu Bhagat <indu.bhagat@oracle.com>, "Jose
- E. Marchesi" <jemarch@gnu.org>, Beau Belgrave <beaub@linux.microsoft.com>,
- Jens Remus <jremus@linux.ibm.com>, Andrew Morton
- <akpm@linux-foundation.org>
-Subject: Re: [PATCH v10 03/14] unwind_user: Add compat mode frame pointer
- support
-Message-ID: <20250618143727.1a406e41@gandalf.local.home>
-In-Reply-To: <CAHk-=whGWM50Qq3Dgha8ByU7t_dqvrCk3JFBSw2+X0KUAWuT1g@mail.gmail.com>
+	s=arc-20240116; t=1750272392; c=relaxed/simple;
+	bh=nwHc7+FhruTCmFkGw9cAHt/FPgfsGbv6otZRqkGaASc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=YhxaNUhmrMRGM+pUJhtPLUVQPVd+yWDfxgvMbL1DRMi3opl+CQPV/US+F6pjeD4ZUKPHAretb/XaB1KFQ/27AvutbFflr81Od0hSJqrs3A2Y8CjRY5o7IkaH3QFpYdGkCSNWO6zDNPXteIpJoLZiQ2ChQ/ITc1nHgbQya7SLNO8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=eTZEkEX4; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="eTZEkEX4"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=nnawhQuXAs7uTQeaNTHZqCRiwoXsLdqroTgKhX6cKYk=; b=eTZEkEX4ozmSlQkVChhsWgEg34
+	YmPB8fb5CQP5JO3PfozQmAgVu+sS7yexuPZ+ScWHOkeWdAYYXpt/BnojgX40wuNrspLuwdVBBWrOq
+	+62JZg+b3hS//vXrz/GKzQhbZ+gkaVxLs0MUYaFXyFbhL7Tos3BXkBCsbfVvja6Ta2DF7G7V56BuH
+	BCl98YXhutlHe6KuTloc5PrYlULiRgr0sK/73AxAk6sE3+k6NeVQ0T5nlTvsqM2CjkIggu956wfsu
+	bfB8yk5szx2KtGDxx3qAAJ42hPsRvUCL+8pslW98Fu+Tlrztc+Wp0z3M6aU7bK9/8ItvWO3t0id3H
+	775odANg==;
+Received: from 2001-1c00-8d82-d000-266e-96ff-fe07-7dcc.cable.dynamic.v6.ziggo.nl ([2001:1c00:8d82:d000:266e:96ff:fe07:7dcc] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uRxng-00000004auJ-3tiq;
+	Wed, 18 Jun 2025 18:46:21 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 5F7EC3061C1; Wed, 18 Jun 2025 20:46:20 +0200 (CEST)
+Date: Wed, 18 Jun 2025 20:46:20 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	bpf@vger.kernel.org, x86@kernel.org,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Ingo Molnar <mingo@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Indu Bhagat <indu.bhagat@oracle.com>,
+	"Jose E. Marchesi" <jemarch@gnu.org>,
+	Beau Belgrave <beaub@linux.microsoft.com>,
+	Jens Remus <jremus@linux.ibm.com>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH v10 06/14] unwind_user/deferred: Add deferred unwinding
+ interface
+Message-ID: <20250618184620.GT1613376@noisy.programming.kicks-ass.net>
 References: <20250611005421.144238328@goodmis.org>
-	<20250611010428.261095906@goodmis.org>
-	<20250618134641.GJ1613376@noisy.programming.kicks-ass.net>
-	<20250618111046.793870b8@gandalf.local.home>
-	<CAHk-=whGWM50Qq3Dgha8ByU7t_dqvrCk3JFBSw2+X0KUAWuT1g@mail.gmail.com>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+ <20250611010428.770214773@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Stat-Signature: kaft8otmjzhueip7qahnbp88fsp9xi8f
-X-Rspamd-Server: rspamout04
-X-Rspamd-Queue-Id: 5E7D43D
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1+UN8JBSQYqAgIPNeKriITrNSMcFBTyWhk=
-X-HE-Tag: 1750271839-295078
-X-HE-Meta: U2FsdGVkX18zLH47Eoc93NUEohNXYdPh4EqpqXsDDd3ZFtgkChU+zs5S/zd5x9G439Qu9QeJWkfk0FiGsn92CPKmYEbX7AWZvDSoBXRRf3zEae49Te6jlvhoVimCjaWAz8vIeLwJTFpX4ccJ/OjOZK/CR+xhe/fBp1SF+mQ6ZHtQu19Uj3TuzjHCJkrPh52728T/xIBEMVdIQmsQTu6R0xwO4MWzKa35i92O6QUfw3lZJEPucRX/bqdqs5FCVOcS8UAGtuRdZsMOSiWFY02g9dXXmxb3UMeyK+GdQAZ0OeZ0arEYSx1J0ETUOROdz1owLQ9S7cM/53KwkIBQb+mBffv9nUDIk+vILmZDT8z16frKmok3lqbd4y+Bho2RQuy3
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250611010428.770214773@goodmis.org>
 
-On Wed, 18 Jun 2025 10:52:22 -0700
-Linus Torvalds <torvalds@linux-foundation.org> wrote:
 
-> In this case, I have to agree with PeterZ that this just looks odd:
-> 
-> -       if (get_user(ra, (unsigned long *)(cfa + frame->ra_off)))
-> +       if (UNWIND_GET_USER_LONG(ra, cfa + frame->ra_off, state))
-> 
-> why is UNWIND_GET_USER_LONG() so loud when it just replaces "get_user()"?
-> 
-> Note that "get_user()" itself is a macro, and is lower-case, even
-> though you couldn't actually do it as a function (because it changes
-> its first argument in place).
+> +struct unwind_work;
+> +
+> +typedef void (*unwind_callback_t)(struct unwind_work *work, struct unwind_stacktrace *trace, u64 timestamp);
+> +
+> +struct unwind_work {
+> +	struct list_head		list;
 
-OK, I'll make it lower case.
+Does this really need to be a list? Single linked list like
+callback_head not good enough?
 
-Thanks!
+> +	unwind_callback_t		func;
+> +};
+> +
+>  #ifdef CONFIG_UNWIND_USER
+>  
+>  void unwind_task_init(struct task_struct *task);
+> @@ -12,10 +22,15 @@ void unwind_task_free(struct task_struct *task);
+>  
+>  int unwind_deferred_trace(struct unwind_stacktrace *trace);
+>  
+> +int unwind_deferred_init(struct unwind_work *work, unwind_callback_t func);
+> +int unwind_deferred_request(struct unwind_work *work, u64 *timestamp);
+> +void unwind_deferred_cancel(struct unwind_work *work);
+> +
+>  static __always_inline void unwind_exit_to_user_mode(void)
+>  {
+>  	if (unlikely(current->unwind_info.cache))
+>  		current->unwind_info.cache->nr_entries = 0;
+> +	current->unwind_info.timestamp = 0;
 
--- Steve
+Surely clearing that timestamp is only relevant when there is a cache
+around? Better to not add this unconditional write to the exit path.
+
+>  }
+>  
+>  #else /* !CONFIG_UNWIND_USER */
+> @@ -24,6 +39,9 @@ static inline void unwind_task_init(struct task_struct *task) {}
+>  static inline void unwind_task_free(struct task_struct *task) {}
+>  
+>  static inline int unwind_deferred_trace(struct unwind_stacktrace *trace) { return -ENOSYS; }
+> +static inline int unwind_deferred_init(struct unwind_work *work, unwind_callback_t func) { return -ENOSYS; }
+> +static inline int unwind_deferred_request(struct unwind_work *work, u64 *timestamp) { return -ENOSYS; }
+> +static inline void unwind_deferred_cancel(struct unwind_work *work) {}
+>  
+>  static inline void unwind_exit_to_user_mode(void) {}
+>  
+> diff --git a/include/linux/unwind_deferred_types.h b/include/linux/unwind_deferred_types.h
+> index db5b54b18828..5df264cf81ad 100644
+> --- a/include/linux/unwind_deferred_types.h
+> +++ b/include/linux/unwind_deferred_types.h
+> @@ -9,6 +9,9 @@ struct unwind_cache {
+>  
+>  struct unwind_task_info {
+>  	struct unwind_cache	*cache;
+> +	struct callback_head	work;
+> +	u64			timestamp;
+> +	int			pending;
+>  };
+>  
+>  #endif /* _LINUX_UNWIND_USER_DEFERRED_TYPES_H */
+> diff --git a/kernel/unwind/deferred.c b/kernel/unwind/deferred.c
+> index e3913781c8c6..b76c704ddc6d 100644
+> --- a/kernel/unwind/deferred.c
+> +++ b/kernel/unwind/deferred.c
+> @@ -2,13 +2,35 @@
+>  /*
+>   * Deferred user space unwinding
+>   */
+> +#include <linux/sched/task_stack.h>
+> +#include <linux/unwind_deferred.h>
+> +#include <linux/sched/clock.h>
+> +#include <linux/task_work.h>
+>  #include <linux/kernel.h>
+>  #include <linux/sched.h>
+>  #include <linux/slab.h>
+> -#include <linux/unwind_deferred.h>
+> +#include <linux/mm.h>
+>  
+>  #define UNWIND_MAX_ENTRIES 512
+>  
+> +/* Guards adding to and reading the list of callbacks */
+> +static DEFINE_MUTEX(callback_mutex);
+> +static LIST_HEAD(callbacks);
+
+Global state.. smells like failure.
+
+> +/*
+> + * Read the task context timestamp, if this is the first caller then
+> + * it will set the timestamp.
+> + */
+> +static u64 get_timestamp(struct unwind_task_info *info)
+> +{
+> +	lockdep_assert_irqs_disabled();
+> +
+> +	if (!info->timestamp)
+> +		info->timestamp = local_clock();
+> +
+> +	return info->timestamp;
+> +}
+> +
+>  /**
+>   * unwind_deferred_trace - Produce a user stacktrace in faultable context
+>   * @trace: The descriptor that will store the user stacktrace
+> @@ -59,11 +81,117 @@ int unwind_deferred_trace(struct unwind_stacktrace *trace)
+>  	return 0;
+>  }
+>  
+> +static void unwind_deferred_task_work(struct callback_head *head)
+> +{
+> +	struct unwind_task_info *info = container_of(head, struct unwind_task_info, work);
+> +	struct unwind_stacktrace trace;
+> +	struct unwind_work *work;
+> +	u64 timestamp;
+> +
+> +	if (WARN_ON_ONCE(!info->pending))
+> +		return;
+> +
+> +	/* Allow work to come in again */
+> +	WRITE_ONCE(info->pending, 0);
+> +
+> +	/*
+> +	 * From here on out, the callback must always be called, even if it's
+> +	 * just an empty trace.
+> +	 */
+> +	trace.nr = 0;
+> +	trace.entries = NULL;
+> +
+> +	unwind_deferred_trace(&trace);
+> +
+> +	timestamp = info->timestamp;
+> +
+> +	guard(mutex)(&callback_mutex);
+> +	list_for_each_entry(work, &callbacks, list) {
+> +		work->func(work, &trace, timestamp);
+> +	}
+
+So now you're globally serializing all return-to-user instances. How is
+that not a problem?
+
+> +}
