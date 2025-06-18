@@ -1,25 +1,25 @@
-Received: from relay.hostedemail.com (smtprelay0013.hostedemail.com [216.40.44.13])
+Received: from relay.hostedemail.com (smtprelay0017.hostedemail.com [216.40.44.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D155028FA85;
-	Wed, 18 Jun 2025 15:38:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 623962F0C71;
+	Wed, 18 Jun 2025 16:26:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750261111; cv=none; b=fUJnzXWC9OAst59j2i4s7kakv+47uZvi7Iw0Kj79DnPggh/KTY+OSdvl+UTktWSeI1mCzYG3LofVN+ThRRRDbxhTrGQ+BapS65m2MOVj0MNne/gfjNdWQA9WFt9bdk5JqidKv6Ed236ZXGDpnFfjahzCOoWWGQBHPp0aAUm8AlY=
+	t=1750263973; cv=none; b=PricAYfXcDL0SEtjnswixXXW6le3PON9H4OJgP6SqGOVbbDN3Nj6Dq2+11/3pzTeI6bMkMfCIkowzexf+bYlI47V1Wyd//czdKhQVTWublXpEmtch2N6kSz0bmbogtasdpimqdgbcl1ORD+fkN70WY4qIMTNmEzutKed/nsB9sA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750261111; c=relaxed/simple;
-	bh=cKSFSoxnitAjZGgvNgqUq5XLSDt0L0l7BTH00fNZQyY=;
+	s=arc-20240116; t=1750263973; c=relaxed/simple;
+	bh=D+Qku83705SirzEPM9r8Pk0Ogn4u/n3GmhVFtbHUaeQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ojpF50eljr42vqxQsuFyEJ5Q3jas6WRJB8JG4mnw9EOLcoDZjCEgskEqtY4xr0e4ucYNsN7Ps5yxUHBN3lP6sR1X4TJdEa/fZ5+EQtT9TOEDfpFjLXucwZ966nyWy865MMtjEKfR8WeMhGASUgKlS8BH6elHXEIwCyilEUxtAkE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.13
+	 MIME-Version:Content-Type; b=ZsCiDhPrgod2okZ5c2coy0iTXfQgXqS6r5MierPQ4W7h58CqW64Pm+7Ay1yuSkHiKpXd4fEEcX1cDN/viWqmVmZL7Fyl+0+kDjDExAERsJXJYWw0p3K+9eUMkcyWlRZJjPMszTA3YXd0lLmW/29jLVVrZUKfznpH4NhdzW3z0tI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.17
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf15.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay09.hostedemail.com (Postfix) with ESMTP id 513DF8030A;
-	Wed, 18 Jun 2025 15:38:27 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf15.hostedemail.com (Postfix) with ESMTPA id 8AC9A18;
-	Wed, 18 Jun 2025 15:38:23 +0000 (UTC)
-Date: Wed, 18 Jun 2025 11:38:31 -0400
+Received: from omf13.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay05.hostedemail.com (Postfix) with ESMTP id C979D593AB;
+	Wed, 18 Jun 2025 16:26:06 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf13.hostedemail.com (Postfix) with ESMTPA id D298A20020;
+	Wed, 18 Jun 2025 16:26:02 +0000 (UTC)
+Date: Wed, 18 Jun 2025 12:26:10 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
 To: Peter Zijlstra <peterz@infradead.org>
 Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
@@ -32,14 +32,14 @@ Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
  Belgrave <beaub@linux.microsoft.com>, Jens Remus <jremus@linux.ibm.com>,
  Linus Torvalds <torvalds@linux-foundation.org>, Andrew Morton
  <akpm@linux-foundation.org>
-Subject: Re: [PATCH v10 06/14] unwind_user/deferred: Add deferred unwinding
- interface
-Message-ID: <20250618113831.1e26bb8f@gandalf.local.home>
-In-Reply-To: <20250618113706.2eb46544@gandalf.local.home>
+Subject: Re: [PATCH v10 04/14] unwind_user/deferred: Add
+ unwind_deferred_trace()
+Message-ID: <20250618122610.6ba25735@gandalf.local.home>
+In-Reply-To: <20250618112015.56507e6f@gandalf.local.home>
 References: <20250611005421.144238328@goodmis.org>
-	<20250611010428.770214773@goodmis.org>
-	<20250618142000.GS1613376@noisy.programming.kicks-ass.net>
-	<20250618113706.2eb46544@gandalf.local.home>
+	<20250611010428.433111891@goodmis.org>
+	<20250618135907.GO1613376@noisy.programming.kicks-ass.net>
+	<20250618112015.56507e6f@gandalf.local.home>
 X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -49,27 +49,29 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: 8AC9A18
-X-Stat-Signature: 9iom6z8i66zini513gfg4cfdddsds1ej
-X-Rspamd-Server: rspamout05
+X-Rspamd-Queue-Id: D298A20020
+X-Stat-Signature: x4tdc5hqxfo9xxf98xh3h6tgxohhbp49
+X-Rspamd-Server: rspamout07
 X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1/ghWbw4OhlNrQUhRvEjr4WTJdnB8xIu9E=
-X-HE-Tag: 1750261103-260494
-X-HE-Meta: U2FsdGVkX1+Zb3aFmTig2sc9oHDxGzoxPAPVRMMDMdGsNcMwCVfCIq9cb5qeHdR9cf1rgXOoKdMI11YFVKGsQW7Hp6dXNkA2V82gofI8VLhDAr30CUBkbuwOSuRwOP82/pPxKL+3NYChbGNQ5PMTNiIoUD+VWuaHz8vouUcyKD525ahAgre4dQ2bMdbG/VBsWaTSUx1dLIJmwWwRxUz7gfm7PcbOWclEnyCBCTODpqi2ixk9w+ohsQrpMq4Ag6dm1YzrIJiv/kVmNCfiGI1uReR03BlrLa8TCyUsPJJfHxbE3j0II8hfVVeqKSxhmgQW8uyE22llU25FLW5ANafbO6wPFjB/KqmWKOa+Q1yB6DMK4voYlIeVQeH4S0vB1ydC
+X-Session-ID: U2FsdGVkX18Qym2J4G82XsIefTlvshJlZS5PiF4xJag=
+X-HE-Tag: 1750263962-794289
+X-HE-Meta: U2FsdGVkX1/RkiojAEr++IjGeZNqMK5NPmDnKCsDySmLXMjLE8pFM6iSm3/wVgR2zFjlFRaAoZuGhBEQj/O1QOkOibGSFEIH+pLrWVSnQd5DK8GVmLv41Nz49/1mK/VHJVnahQxuez5XmTmaQ+W9KX9gLipJH0XZD4/AnAgewMF0f3V1u9ohfClEc85e2qTEgZNOwGkuWyEAm830HELMFq4wZoKMz9uPF6/o8zoRvobUq1PHI3wfU0vn2mvhhvz7h2tn6cnvTFn0L7Hj8NJwUjt9Rz9PuMThJiqu0Iqov7dFS+Aps04zSI9tcmzWfu/Fh3K/ERzBKJpDxW7lM3vUSyg69+o13weRkRmJInaeQsCA/4h2X7lb588It7jJM0Lb
 
-On Wed, 18 Jun 2025 11:37:06 -0400
+On Wed, 18 Jun 2025 11:20:15 -0400
 Steven Rostedt <rostedt@goodmis.org> wrote:
 
-> > What about two CPUs managing to request an unwind at exactly the same
-> > time?  
+> > > +++ b/kernel/unwind/Makefile
+> > > @@ -1 +1 @@
+> > > - obj-$(CONFIG_UNWIND_USER) += user.o
+> > > + obj-$(CONFIG_UNWIND_USER)		+= user.o deferred.o    
+> > 
+> > We really needed that extra whitespace? :-)  
 > 
-> It's mapped to a task. As long as each timestamp is unique for a task it
-> should be fine. As the trace can record the current->pid along with the
-> timestamp to map to the unique user space stack trace.
-> 
-> As for resolution, as long as there can't be two system calls back to back
-> within the same time stamp. Otherwise, yeah, we have an issue.
+> Oops, I have no idea how that happened. Especially since emacs doesn't do
+> tabs well.
 
-I'll add a comment that states this as a constraint.
+I will replace the two tabs with a single tab which will still add space,
+as it replaces a single space with a tab. But tabs appear to be more
+consistent with other Makefiles.
 
 -- Steve
