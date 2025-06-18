@@ -1,36 +1,36 @@
 Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3ADC838DF9;
-	Wed, 18 Jun 2025 01:58:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A3AA18027;
+	Wed, 18 Jun 2025 02:40:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750211922; cv=none; b=n86vTaC7ZwoPUrleLANUh2dET8kLZ6+X+4cekIHU9PiTXEtYAhcVLGuaqZ3g0phjBYz+ts25Lq3QCrPZGdYZhnlyNWemx2E7IbcgYMbOSbGwumIYWhetmagZAEkg/yIHpu8bw85ihub7AsFmSZ1xV4Fw0cvG09SX6jq+8xog+DY=
+	t=1750214429; cv=none; b=uHBCi/lXk3jAShqpYNTowD55sH4baU8gqHWGX9vQSlM8cYMW/k+6WiiwB+jKNwynTOQ8kF2DGMyp7qtvVForjC7gxtwo2JbdaVhLAHvH50951vFQ3tPJxzi3ueSXu1Ib8WuKB8UsTfkecbnbKctpXiRNyeMJZeaiiY5UuRkRPrU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750211922; c=relaxed/simple;
-	bh=SnYF1Rn/y1Y11b9kHg/8YX8/Dx/xYoytHycMoGk0uFw=;
+	s=arc-20240116; t=1750214429; c=relaxed/simple;
+	bh=qsIA6mNPxnb7OXWg4kd4mkPdogx2qiMHk/5aIJp3TQY=;
 	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=Eoc/FP8um/ozgfG53/t9G710Lcnbt666/ckZZwMWDK/+uHWnwGdnZC0jwWuSFhCTV/TnlrWMgFiJUq9wJhLQmnvt5LhtuXrlvyAzfmhms8bptoEhHaifq06wQvDRFrxqyxKbpE5xVAvQe9WQIvffbPE5EOFWrEkh+gRrm2okG/s=
+	 Content-Type:MIME-Version; b=AyO/QXlJ1BWCjc6VtVqtarmy3vMVFbJxpd51NvTBZUHzxI0kbfdmZ1JTwIPoVZmeqiYs+BPJITSiuuXbnogszg/n4TtM1Jok9y31rk16LmZ6jt/gVwxCgXote7NSs/AsoCF8LjKI6nmZbBI2r/M/ANs8Y+n0MdQAci4mipc0xDE=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.234])
-	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4bMRcx6HKNz2CcB0;
-	Wed, 18 Jun 2025 09:54:41 +0800 (CST)
-Received: from dggemv712-chm.china.huawei.com (unknown [10.1.198.32])
-	by mail.maildlp.com (Postfix) with ESMTPS id 22DB81402C4;
-	Wed, 18 Jun 2025 09:58:36 +0800 (CST)
-Received: from kwepemq200001.china.huawei.com (7.202.195.16) by
- dggemv712-chm.china.huawei.com (10.1.198.32) with Microsoft SMTP Server
+Received: from mail.maildlp.com (unknown [172.19.88.163])
+	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4bMSY91Ymnz2Cfbr;
+	Wed, 18 Jun 2025 10:36:29 +0800 (CST)
+Received: from dggemv706-chm.china.huawei.com (unknown [10.3.19.33])
+	by mail.maildlp.com (Postfix) with ESMTPS id 7B72C1800B2;
+	Wed, 18 Jun 2025 10:40:23 +0800 (CST)
+Received: from kwepemq500002.china.huawei.com (7.202.195.240) by
+ dggemv706-chm.china.huawei.com (10.3.19.33) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Wed, 18 Jun 2025 09:58:35 +0800
+ 15.2.1544.11; Wed, 18 Jun 2025 10:40:22 +0800
 Received: from kwepemq200002.china.huawei.com (7.202.195.90) by
- kwepemq200001.china.huawei.com (7.202.195.16) with Microsoft SMTP Server
+ kwepemq500002.china.huawei.com (7.202.195.240) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Wed, 18 Jun 2025 09:58:35 +0800
+ 15.2.1544.11; Wed, 18 Jun 2025 10:40:22 +0800
 Received: from kwepemq200002.china.huawei.com ([7.202.195.90]) by
  kwepemq200002.china.huawei.com ([7.202.195.90]) with mapi id 15.02.1544.011;
- Wed, 18 Jun 2025 09:58:35 +0800
+ Wed, 18 Jun 2025 10:40:21 +0800
 From: duchangbin <changbin.du@huawei.com>
 To: Steven Rostedt <rostedt@goodmis.org>
 CC: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
@@ -41,9 +41,9 @@ Subject: Re: [PATCH] fgraph: Do not enable function_graph tracer when setting
  funcgraph-args
 Thread-Topic: [PATCH] fgraph: Do not enable function_graph tracer when setting
  funcgraph-args
-Thread-Index: AQHb3/SA+7oknDso50+sLYUJk+MmYg==
-Date: Wed, 18 Jun 2025 01:58:35 +0000
-Message-ID: <59be79fb062b4d4fbbff06e3d82925de@huawei.com>
+Thread-Index: AQHb3/pWjfZBtRicskuT1WyP/TidDQ==
+Date: Wed, 18 Jun 2025 02:40:21 +0000
+Message-ID: <ad0745b53e5046b79378bdc12ddfdd51@huawei.com>
 References: <20250617120830.24fbdd62@gandalf.local.home>
 In-Reply-To: <20250617120830.24fbdd62@gandalf.local.home>
 Accept-Language: en-US
@@ -53,7 +53,7 @@ X-MS-TNEF-Correlator:
 x-ms-exchange-imapappendstamp: kwepemq200002.china.huawei.com (15.02.1544.011)
 x-ms-exchange-messagesentrepresentingtype: 1
 Content-Type: text/plain; charset="us-ascii"
-Content-ID: <85E6536240149D468B7C1EAF3DC9383D@huawei.com>
+Content-ID: <98A46D4A86E7C845BBD920D113FB6E88@huawei.com>
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -62,10 +62,7 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-Thanks! I've applied this patch, and it has fixed the issue.
-
-Tested-by: Changbin Du <changbin.du@huawei.com>
-
+Hi, Steven,
 On Tue, Jun 17, 2025 at 12:08:30PM -0400, Steven Rostedt wrote:
 > From: Steven Rostedt <rostedt@goodmis.org>
 >=20
@@ -203,9 +200,15 @@ nctions_graph.c
 >  	trace_func_graph_ent_t entry;
 > =20
 > +	/* Do nothing if the current tracer is no this tracer */
+typo: no -> not
+
 > +	if (tr->current_trace !=3D &graph_trace)
 > +		return 0;
 > +
+This can fix the issue. But how are tr->current_trace and &graph_trace link=
+ed?
+When are they equal?
+
 >  	if (set)
 >  		entry =3D trace_graph_entry_args;
 >  	else
