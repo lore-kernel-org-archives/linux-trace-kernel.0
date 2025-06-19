@@ -1,91 +1,132 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from relay.hostedemail.com (smtprelay0010.hostedemail.com [216.40.44.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0845721CC47;
-	Thu, 19 Jun 2025 09:04:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DEBA1E0DCB;
+	Thu, 19 Jun 2025 09:07:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750323888; cv=none; b=enlC3GUmmpkWrPGBnQhwLUTHH9cxJKuG1UNny2VO8TuIzNm/GyW2cJ/KUUuRRJo3K09yZEQcqLhbN+YVL89Zy2It36DfMLt1GWHqQ1Kpsr8TSVGey5Hk1xR1R5ppot0vVCltjZgUi/xkAyLi2Q053R285Sfz8HTtBJti7+goAkw=
+	t=1750324039; cv=none; b=nIPoq2vFtZS43AhkzA6BsE4IXdFg/oZCvO9JTMGNDXXMcSv8BAo41W9UnVHxZ13vGQGU3EcZ3NpGLCTFdD2hesWgg3pXUeHu26l/4vb83+R3sguNXm7rXo3dfMu79LEIomqiwDolicD0/sEGucnFLTrR6Bo6ogpIbEjVG/Amibo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750323888; c=relaxed/simple;
-	bh=TxcuXMVV+aV1+GhdvzFE2xtaQghLDy476d1fX4BrXTw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=E4r6ZEag+FuExwtIUkmqiTcy5ytbC4olzrEkJheM8ltqZDBMURdRq3MMg64teFareAyGhCECCxciaScVdt5OrISi3Mao9AsiF1XOaJe4ukvLQsxvw1R7uM5hDWgoU6U8hBFGIOeM/4rGKAblPCxFE1xURdclq7FCltL56WHjC08=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=UD3wIrY+; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="UD3wIrY+"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=/kqvh4lUfMoQlrV4TypHYuQcQHe2CtjhOSnu/WvQXTM=; b=UD3wIrY+U78Zz3M2QjaI5kEwF3
-	d+ktMLqdBBS4v4XxS+QAm41wpFi+kz/AsqyW6qkycbE3daHw5YFRC7lt19DshmGP3uGFVehl5OCIi
-	G5SoD+HWlh/Xq0P2FRgJz/cSphsWxedi62u0EW3uYV4Lww8J647oXoTkUWNB19DTXpbm18nBjTJSf
-	WTkgFL0j10Rltd+mKo1+4RMtZOMbh0jHc/O70Fsxud8tiUtwsP7bPFDkckzfcjuF5NI9tDSIhq/A2
-	a8b7ycDTWZLSD+Hxx5jNpe2SJt8TW9l9fgh3wcyKRgTfCmAU3tG3sYXfGu5REMmCj4BL5xXESu8T/
-	biOI9Abg==;
-Received: from 2001-1c00-8d82-d000-266e-96ff-fe07-7dcc.cable.dynamic.v6.ziggo.nl ([2001:1c00:8d82:d000:266e:96ff:fe07:7dcc] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uSBCH-00000007z3S-2cV9;
-	Thu, 19 Jun 2025 09:04:37 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 6218F3088F2; Thu, 19 Jun 2025 11:04:36 +0200 (CEST)
-Date: Thu, 19 Jun 2025 11:04:36 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	bpf@vger.kernel.org, x86@kernel.org,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Ingo Molnar <mingo@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Indu Bhagat <indu.bhagat@oracle.com>,
-	"Jose E. Marchesi" <jemarch@gnu.org>,
-	Beau Belgrave <beaub@linux.microsoft.com>,
-	Jens Remus <jremus@linux.ibm.com>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH v10 05/14] unwind_user/deferred: Add unwind cache
-Message-ID: <20250619090436.GE1613200@noisy.programming.kicks-ass.net>
-References: <20250611005421.144238328@goodmis.org>
- <20250611010428.603778772@goodmis.org>
- <20250618141345.GR1613376@noisy.programming.kicks-ass.net>
- <20250618113359.585b3770@gandalf.local.home>
- <20250619075611.GX1613376@noisy.programming.kicks-ass.net>
- <20250619044714.5e676bf3@batman.local.home>
+	s=arc-20240116; t=1750324039; c=relaxed/simple;
+	bh=ahaaatE1/XxdTvUtlYxYK5uvRoyIvpukhvg61lG4J3A=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
+	 MIME-Version:Content-Type; b=IpJfOuscj1wKHTXnwLQAYic3fFu650DA3X90q2v5+HSPLZMKV8uEwGrE7AbuaCh+hlYEhwlsvF76bpNwpZUjyumz7ECldG35CJ0ipbaUerlMXZDaHqU8jm5lulFxvq5ACMo//64PGrMjv507QPGKE+cv3aey/6vUJLyzXvCgxA0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf02.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay04.hostedemail.com (Postfix) with ESMTP id 54BE91A0810;
+	Thu, 19 Jun 2025 09:07:13 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf02.hostedemail.com (Postfix) with ESMTPA id F3CCB80009;
+	Thu, 19 Jun 2025 09:07:09 +0000 (UTC)
+Date: Thu, 19 Jun 2025 05:07:10 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Peter Zijlstra <peterz@infradead.org>
+CC: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ bpf@vger.kernel.org, x86@kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Josh Poimboeuf <jpoimboe@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+ Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+ Thomas Gleixner <tglx@linutronix.de>, Andrii Nakryiko <andrii@kernel.org>,
+ Indu Bhagat <indu.bhagat@oracle.com>, "Jose E. Marchesi" <jemarch@gnu.org>,
+ Beau Belgrave <beaub@linux.microsoft.com>, Jens Remus <jremus@linux.ibm.com>,
+ Linus Torvalds <torvalds@linux-foundation.org>,
+ Andrew Morton <akpm@linux-foundation.org>
+Subject: =?US-ASCII?Q?Re=3A_=5BPATCH_v10_07/14=5D_unwind=5Fuser/deferre?=
+ =?US-ASCII?Q?d=3A_Make_unwind_deferral_requests_NMI-safe?=
+User-Agent: K-9 Mail for Android
+In-Reply-To: <20250619085717.GB1613376@noisy.programming.kicks-ass.net>
+References: <20250611005421.144238328@goodmis.org> <20250611010428.938845449@goodmis.org> <20250619085717.GB1613376@noisy.programming.kicks-ass.net>
+Message-ID: <FCBAD96C-AD1B-4144-91D2-2A48EDA9B6CC@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250619044714.5e676bf3@batman.local.home>
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-Rspamd-Queue-Id: F3CCB80009
+X-Stat-Signature: w4oadz4e5wjgp57dso48bdg8fbff6npa
+X-Rspamd-Server: rspamout06
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1+UcTmmDm/7gX7BO+6mWvuXzmb2JAzo29w=
+X-HE-Tag: 1750324029-462730
+X-HE-Meta: U2FsdGVkX19+7P6lonf3hA4ToYS+99YZHuL4HI/j3lJQyWszyj7ErdINMqxYUvAw+1tC7kLHl/TiMyhb39cZQj8hOgQQzXlBZdRW4PK6SFoCLS8e/lXMPtV/zaWqCCC3yHK58QrcoEo+slhLk9v5s+MhWFsWGB9nc4RmqUezSX6uexUeuEe1Bs7GbeEW/GUEbxnxBxr2oJ+kYNbDewIu3GbhstIqFcxtpD9F4yd0xZ1iq+ahgY5xT1MuaCSExO6o7pNSOTh06h06OTOrYzGZexookrde+zXKD8ZGxtL5CdG5n0IMyNzm15hhFJ9cm6ApLrsatRfDBybSaNKQM5OMZsD+wOraXB1TmYLdD+xpKXwjC33qNqEN8AC9XjdWqowwpbMuhRGPoHnDhFiicrCkfQ==
 
-On Thu, Jun 19, 2025 at 04:47:14AM -0400, Steven Rostedt wrote:
-> On Thu, 19 Jun 2025 09:56:11 +0200
-> Peter Zijlstra <peterz@infradead.org> wrote:
-> 
-> > Well, the trivial solution is to make it 511 and call it a day. Don't
-> > make things complicated if you don't have to.
-> 
-> I don't know if this is more complicated, but it should make it fit
-> nicely in a page:
-> 
->   /* Make the cache fit in a page */
->   #define UNWIND_MAX_ENTRIES                                      \
->         ((PAGE_SIZE - sizeof(struct unwind_cache)) / sizeof(long))
 
-Right, that's the fancy way of spelling 511 :-) Except on 32bit, where
-it now spells 1023 instead.
 
-Did you want that bitness difference?
+On June 19, 2025 4:57:17 AM EDT, Peter Zijlstra <peterz@infradead=2Eorg> w=
+rote:
+>On Tue, Jun 10, 2025 at 08:54:28PM -0400, Steven Rostedt wrote:
+>
+>>=20
+>> +		info->nmi_timestamp =3D local_clock();
+>> +		*timestamp =3D info->nmi_timestamp;
+>> +		inited_timestamp =3D true;
+>> +	}
+>> +
+>> +	if (info->pending)
+>> +		return 1;
+>> +
+>> +	ret =3D task_work_add(current, &info->work, TWA_NMI_CURRENT);
+>> +	if (ret < 0) {
+>> +		/*
+>> +		 * If this set nmi_timestamp and is not using it,
+>> +		 * there's no guarantee that it will be used=2E
+>> +		 * Set it back to zero=2E
+>> +		 */
+>> +		if (inited_timestamp)
+>> +			info->nmi_timestamp =3D 0;
+>> +		return ret;
+>> +	}
+>> +
+>> +	info->pending =3D 1;
+>> +
+>> +	return 0;
+>> +}
+>> +
+>>  /**
+>>   * unwind_deferred_request - Request a user stacktrace on task exit
+>>   * @work: Unwind descriptor requesting the trace
+>> @@ -139,31 +207,38 @@ static void unwind_deferred_task_work(struct call=
+back_head *head)
+>>  int unwind_deferred_request(struct unwind_work *work, u64 *timestamp)
+>>  {
+>>  	struct unwind_task_info *info =3D &current->unwind_info;
+>> +	int pending;
+>>  	int ret;
+>> =20
+>>  	*timestamp =3D 0;
+>> =20
+>>  	if ((current->flags & (PF_KTHREAD | PF_EXITING)) ||
+>>  	    !user_mode(task_pt_regs(current)))
+>>  		return -EINVAL;
+>> =20
+>> +	if (in_nmi())
+>> +		return unwind_deferred_request_nmi(work, timestamp);
+>
+>So nested NMI is a thing -- AFAICT this is broken in the face of nested
+>NMI=2E
+>
+>Specifically, we mark all exceptions that can happen with IRQs disabled
+>as NMI like (so that they don't go about taking locks etc=2E)=2E
+>
+>So imagine you're in #DB, you're asking for an unwind, you do the above
+>dance and get hit with NMI=2E
 
-Also, you ready for some *reaaally* big numbers on Power/ARM with 64K
-pages? :-)
+Does #DB make in_nmi() true? If that's the case then we do need to handle =
+that=2E
+
+-- Steve=20
+
+>
+>Then you get the NMI setting nmi_timestamp, and #DB overwriting it with
+>a later value, and you're back up the creek without no paddles=2E
+>
+>
+>Mix that with local_clock() that is only monotonic on a single CPU=2E And
+>you ask for an unwind on CPU0, get migrated to CPU1 which for the
+>argument will be behind, and see a timestamp 'far' in the future=2E
+>
