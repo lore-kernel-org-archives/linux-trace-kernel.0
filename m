@@ -1,244 +1,109 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95D5C21D3E7
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 19 Jun 2025 17:07:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9529063B9;
+	Thu, 19 Jun 2025 17:17:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750352872; cv=none; b=XBP8AtHerFGjKYarO9EZ6f2GkphkkACggR0xYnBR5W9h4NZU0WAIcPJ5lzR9dsDgpazU/0v/jJpKapw/SE3S7361sS8FXX7u2bBCaXBdVZtL48DMaPBsyrMvpGPdfTp7aRFWDA+AyeG3iBGwnCpeemxPr+rpGrwqm57l9xE+ulQ=
+	t=1750353480; cv=none; b=mlO91tPL46IvBNB2AmBBG5dDmK9vrXRf0mytvIl7+B4+hFDkeiYErlvJKwI0JHahWDDp+r6BoOlgDnSib/Mra2qsnd3qavJILQPqwgEvVROn+dF8P+G6uUWuPropi7vDIXHUqSCUYNje7JjojmEyrAWLO5pT8lhwPFAI0X1QOKo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750352872; c=relaxed/simple;
-	bh=B5xc4Im05++LMRdzad+5xNIee+4aqUsqqP5r2J93OA8=;
+	s=arc-20240116; t=1750353480; c=relaxed/simple;
+	bh=LcNOtOZVmNxbK5u9RD18K1PuavF+FHJXadsTd/s+9+Y=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ebOlWxF4abI4ZeWbXfRSfBwINt3wvZ20fBCHuWHFP6e90xWEhflb3WWF/YPMDBApF0AXIipP5T1ybtmud4x35uPH73G6ZM4cTgcWll5B9NrE2PNmv0LDGKUOtTRl/periIwX6L1ABsg3DQwwi0VGZ+xDDHaC8NzbjjtSMvKeuzM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=D+UViXE9; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 To:Cc:Content-Type; b=UUFM/9oPUa/rTkqYDBRVRF7zJHh0ADJkahd5o3+lEbY+U5TLVv8esc2x+M5GQlpBZ7/gXrTOXb2ufqek2fKJAfNHvnKhF+A/Axw3bJhIcSTVajTqe8PcjuMhS31U0itdoOG2QwnH2/8jWD9p3iTgBd0UB4CJJ/2Bs7HZN7Y0tFU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LeyPBqKU; arc=none smtp.client-ip=209.85.221.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="D+UViXE9"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1750352868;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=qjyIhtiRnhSBaob8GERBPEKyHALfv30BI7kLfLtsO80=;
-	b=D+UViXE9ZhqsaJYnHHui6y9FCQTVjZ50w8QrYkYurKUqGmkk8DYppYsTIZRMGab5DsxZeR
-	VnQOhkSj0LGyA61wQIpRMfZl6pt79rsCHeA7NdH1W77qRUz0BOVhSOSglBLU/4Oan6vCke
-	OHc+IT9QspXy4yHozIAisO68z7+o2Mo=
-Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com
- [209.85.160.199]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-86-Sm3vJqWTON-n4J9FvLyuew-1; Thu, 19 Jun 2025 13:07:47 -0400
-X-MC-Unique: Sm3vJqWTON-n4J9FvLyuew-1
-X-Mimecast-MFC-AGG-ID: Sm3vJqWTON-n4J9FvLyuew_1750352867
-Received: by mail-qt1-f199.google.com with SMTP id d75a77b69052e-4a42c569a9aso15506191cf.0
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 19 Jun 2025 10:07:47 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LeyPBqKU"
+Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-3a510432236so834350f8f.0;
+        Thu, 19 Jun 2025 10:17:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750353477; x=1750958277; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=uO/J7Pagnq01E8VPCwoxaOTTp05t+ZZcbvS8oAGS03o=;
+        b=LeyPBqKUaELvQiXYdbMvrIj3lmQ+YfNLyOGtb9PQhp/cJSmSA5gxDwzs1IEscReJ7x
+         JEfOSB8Dz8Ek5cp33XmNVI5lx1xg3SaCcJvlJmL2J2Ffezzb9ayn/ezEvTHl+iB8ZHPT
+         hpHd16Szh6Gvr+4rn2CG0b3uxmaSowxFrB8f6pACA47DI/LSQpf/TN+rLrPcZQgj6IaU
+         B2I3EFGhx1ZwDaIWkbPGZmA4N0z9ZxGJaZAN7jNg2j1OZ38uhmIFZbFvJmvdbdifxN1O
+         WswWKC3GYgew7Zgt0jD/5efITw4GMcIgy+U0vYXIIqKdv0aqOy/Frh0Qoqod2P8Vb4fv
+         CZgw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750352867; x=1750957667;
+        d=1e100.net; s=20230601; t=1750353477; x=1750958277;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=qjyIhtiRnhSBaob8GERBPEKyHALfv30BI7kLfLtsO80=;
-        b=eprzbYVUkzQ19m0/Hf17PiDocWuiPrtSwdWvuQWvZrBUQ5PsYmV4GJgwaWBV2uTowc
-         LytFq/3METXVqflVKDR+T2vcx5BNqktrfuIpnBvZsieJVpIYyh24vt+XmbuejHHINXRf
-         2h9i1SyXCU/ihRomWBs8JLcPRYt28puGdS2dDcgRUspXZICGnvVlNdWB9KKvNlej/92R
-         VamvBlY2uGgueLSHp/6bcuCnsHXUQgPySey3/yoNcy5l4zSffqyDEoVm8dDQIALI6x0Q
-         6JXNxwKnXL6Fmk3vdAqLX5Q6/QVB74Hhlko7Ak3k0hmupPiJPUdMyQNeikoda2G8ReRx
-         77MA==
-X-Forwarded-Encrypted: i=1; AJvYcCUsuOJi30Ic1wgGwbc7QTVGdoO1oxQuemjNhWeMixbZT2evykH4QzRkHu2U8ZTlE5c8Pp5YIkAAtEOy04ekbnvilfg=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyj1KZfoXcuPp1sFlEJyubPwTqgaYE6QhCCiLnYFfkY/aUvJKW9
-	Jpn3lY9vciJJoBSfjCRvZ+b2VSSpEMAM/ZHyaBw89dNFS+6dW3D7OGzHZGZE4xFpSKhNbY18WJZ
-	RaCLaPEO6HoUpkBM8XuUe7JivTWDtBnIRCS6abqE8YpxE3iNlDDv/YsAYM8yeG+gqacbxOASGTn
-	lEYO4JIyVp6+K8d6bPhrPBOldaSplNcub4RsiYv1Q8DVPUo29arB34h4jV2A9OI7JB3Jo=
-X-Gm-Gg: ASbGncv2YcqLhXvNH6aNesN1+8JT4v/EWhG3uvre2Bz7GeHH8Buxbra/kDrD43xCD3z
-	KhP3tEn42OQ86aeS3VrQdA+z4oHXj4pnOvYcbCnS4odczY6ARQvrycKnpfmb+El8rMD+GDbUASa
-	Ju9Ug=
-X-Received: by 2002:a05:622a:19a6:b0:4a7:8af:3372 with SMTP id d75a77b69052e-4a76e188722mr49519031cf.1.1750352866768;
-        Thu, 19 Jun 2025 10:07:46 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHSmzCND1WCN9txyruppfLoZ6hfmgwfWopqcmajFZQtgBnUJsRuaTRf7kq/mh+lvzQ9HZm6xdYEe9rxcT0QBgw=
-X-Received: by 2002:a05:622a:19a6:b0:4a7:8af:3372 with SMTP id
- d75a77b69052e-4a76e188722mr49518651cf.1.1750352866365; Thu, 19 Jun 2025
- 10:07:46 -0700 (PDT)
+        bh=uO/J7Pagnq01E8VPCwoxaOTTp05t+ZZcbvS8oAGS03o=;
+        b=t1B8s0KlYM7SgpA3jgFf8sgVeSuogekt1crNyJBv4oTh29MXk0gDwS6angqoa/nOrx
+         dLIlkjSHXUp3u9UcwwdpTmoqQDhHGhkSmdiXhDLT3FEHGX+x9RWgh9fomraHKVOF47ev
+         dwJDBETwZmGA5J9smo0kfEDCe/kkaOdoVs993rvAx3vHIJGUcKgzv30x2iHGu9TicfhU
+         e4luS5/ASJJBs9O+69aX00zUyqlr9Yg4Srwige/Yt+/iBgLlf6Mx5jwKPVwCysYxJWLf
+         qKmBHabMmeQcyZVUeGXJ7wwOupUqTAt+IO92q6DHECIfXPefqCU2MRnQ1qq7O1eEOUPm
+         eLxQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUaCXl3nTxnGqqOnHNYkmzUyHRLExadMkHcXXZv3QnaZizZVmdtUZGWU917JA2nW9f4GC5pypiWw41kvdG2@vger.kernel.org, AJvYcCWU5rUqz9xL4NzjjXPqYQp1AbjK38KHcDk3omg8jYTu2uG8iWCra3nNeynfyjlgkk9wfxn1FuqYcqrZl75YYlrTG7YE@vger.kernel.org, AJvYcCXride5SaE+W/CvYkc09yrJ+tBZM7JY9Nr46MABpe8hkd8a2YQKq7UbXh0rULutfYh1yJw=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw/xy5BY6IpLNcdiTKYYKrBnsuI0Dvo/g6ZVXrTKwJyyP6aVAuA
+	COewKdeviX1PXgU/q85HjOaw/eGuDbNkSN3g5avJuvvRAsyVuvIo8rO5PYAh9ciyi96dNRSfXSC
+	gJu8ws8guLX4Grk5UCnaHThTFiA8lzMI=
+X-Gm-Gg: ASbGncuPFrLeBeMzClMPUat3v6AJcz4wkGmIU/KGP662BHp/zshxKunx4q2jJrAiZo8
+	6TvAJZcPUHqta+Fmh3Jbdnn1DKypmrwg32U54WhHruuUZE0A2o0+vuubf5FMWICi7jWk/dMpkcE
+	rWtsKg4zIUFu4pYZCzOLCqv65K1xDt8Rid+YbnjX4ykUF3Pu5yLUBEVABnHkyJtZOJZ1DnsfnM
+X-Google-Smtp-Source: AGHT+IESQSXAdMTbOc8kYZxZDWdUN8Mzm3XZQmL6s7XT9MGp/1efEWuVZDh0wTvBIoOOmPc/4r8as/Zp+LeIstNQ0UU=
+X-Received: by 2002:a05:6000:4818:b0:3a5:2e59:833a with SMTP id
+ ffacd0b85a97d-3a57238b9fcmr17654499f8f.1.1750353476693; Thu, 19 Jun 2025
+ 10:17:56 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250612104349.5047-1-gpaoloni@redhat.com> <20250612104349.5047-2-gpaoloni@redhat.com>
- <20250613114527.7e27a9a0ecc2b59d98677b0c@kernel.org>
-In-Reply-To: <20250613114527.7e27a9a0ecc2b59d98677b0c@kernel.org>
-From: Gabriele Paoloni <gpaoloni@redhat.com>
-Date: Thu, 19 Jun 2025 19:07:33 +0200
-X-Gm-Features: AX0GCFvxdyIr50kq-ajUHcRRD0JDOX9DLGaUyoN1IXHTnqLROGXdeqmRnZ5jTng
-Message-ID: <CA+wEVJa0jL-JH_4=5sR+Mvb26n4mPPudmOL0LRBDV54nMZcw8g@mail.gmail.com>
-Subject: Re: [RFC PATCH 1/2] tracing: fixes of ftrace_enable_fops
-To: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: rostedt@goodmis.org, mathieu.desnoyers@efficios.com, 
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	acarmina@redhat.com, chuck.wolber@boeing.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: -l0rZq7ByENSIpdvfa9Z5VtRHLfmpWijw_0T2FlxRlI_1750352867
-X-Mimecast-Originator: redhat.com
+References: <20250619034257.70520-1-chen.dylane@linux.dev> <20250619034257.70520-2-chen.dylane@linux.dev>
+In-Reply-To: <20250619034257.70520-2-chen.dylane@linux.dev>
+From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date: Thu, 19 Jun 2025 10:17:44 -0700
+X-Gm-Features: Ac12FXwKpCNFWOuAGB2fPizZlJe9HoMAYx0YXyOn2INhIO7Op8ZkL1AOyKFu93A
+Message-ID: <CAADnVQLyAeo9ztPoJzU1QJUQf6SMptVNoOzZza02xPuXO1ES2g@mail.gmail.com>
+Subject: Re: [PATCH bpf-next v4 2/2] bpf: Add show_fdinfo for kprobe_multi
+To: Tao Chen <chen.dylane@linux.dev>
+Cc: Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, Eduard <eddyz87@gmail.com>, 
+	Song Liu <song@kernel.org>, Yonghong Song <yonghong.song@linux.dev>, 
+	John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>, 
+	Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Matt Bobrowski <mattbobrowski@google.com>, Steven Rostedt <rostedt@goodmis.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	bpf <bpf@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
+	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi Masami
+On Wed, Jun 18, 2025 at 8:44=E2=80=AFPM Tao Chen <chen.dylane@linux.dev> wr=
+ote:
+>
+> Show kprobe_multi link info with fdinfo, the info as follows:
+>
+> link_type:      kprobe_multi
+> link_id:        1
+> prog_tag:       a15b7646cb7f3322
+> prog_id:        21
+> type:   kprobe_multi
 
-On Fri, Jun 13, 2025 at 4:45=E2=80=AFAM Masami Hiramatsu <mhiramat@kernel.o=
-rg> wrote:
->
-> On Thu, 12 Jun 2025 12:43:48 +0200
-> Gabriele Paoloni <gpaoloni@redhat.com> wrote:
->
-> > Currently there are different issues associated with ftrace_enable_fops
-> > - event_enable_write: *ppos is increased while not used at all in the
-> >   write operation itself (following a write, this could lead a read to
-> >   fail or report a corrupted event status);
->
-> Here, we expected the "enable" file is a pseudo text file. So if
-> there is a write, the ppos should be incremented.
->
-> > - event_enable_read: cnt < strlen(buf) is allowed and this can lead to
-> >   reading an incomplete event status (i.e. not all status characters
-> >   are retrieved) and/or reading the status in a non-atomic way (i.e.
-> >   the status could change between two consecutive reads);
->
-> As I said, the "enable" file is a kind of text file. So reader must read
-> it until EOF. If you need to get the consistent result, user should
-> use the enough size of buffer.
+..
 
-What I am concerned about are scenarios like the one below:
----
-# strace -Tfe trace=3Dopenat,open,read,write scat 1
-/sys/kernel/tracing/events/kprobes/ev1/enable
-open("/sys/kernel/tracing/events/kprobes/ev1/enable",
-O_RDONLY|O_LARGEFILE) =3D 3 <0.000237>
-Open /sys/kernel/tracing/events/kprobes/ev1/enable ->fd=3D3
-read fd=3D3, 1
-read(3, "0", 1)                         =3D 1 <0.000099>
-1 bytes Read
-30,
-read(3, "\n", 1)                        =3D 1 <0.000095>
-1 bytes Read
-0a,
-read(3, "", 1)                          =3D 0 <0.000102>
-close fd=3D3
-+++ exited with 0 +++
----
-So in this case there are 2 consecutive reads byte by byte that
-could lead to inconsistent results if in the meantime the event
-status has changed.
-With the proposed patchset the same test would result in a failure
-as per log below:
----
-# strace -Tfe trace=3Dopenat,open,read,write scat 1
-/sys/kernel/tracing/events/kprobes/ev1/enable
-open("/sys/kernel/tracing/events/kprobes/ev1/enable",
-O_RDONLY|O_LARGEFILE) =3D 3 <0.000227>
-Open /sys/kernel/tracing/events/kprobes/ev1/enable ->fd=3D3
-read fd=3D3, 1
-read(3, 0x7ffd960234e0, 1)              =3D -1 EINVAL (Invalid argument)
-<0.000228>
-close fd=3D3
-+++ exited with 0 +++
----
-On the other side the proposed patchset would be still compatible with
-=E2=80=9Ccat=E2=80=9D or =E2=80=9Cscat 2=E2=80=9D commands that continue to=
- work as they do today.
+> +       seq_printf(seq,
+> +                  "type:\t%s\n"
+> +                  "kprobe_cnt:\t%u\n"
+> +                  "missed:\t%lu\n",
+> +                  kmulti_link->flags =3D=3D BPF_F_KPROBE_MULTI_RETURN ? =
+"kretprobe_multi" :
+> +                                        "kprobe_multi",
 
->
-> > - .llseek is set to default_llseek: this is wrong since for this
-> >   type of files it does not make sense to reposition the ppos offset.
-> >   Hence this should be set instead to noop_llseek.
->
-> As I said, it is a kind of text file, default_llseek is better.
->
-> But, if we change (re-design) what is this "enable" file is,
-> we can accept these changes. So this is not a "Fix" but re-design
-> of the "enable" file as an interface (as a char device), not a text
-> file (or a block device).
->
-> I want to keep this as is, same as other tracefs files.
+why print the same info twice ?
+seq_printf(m, "link_type:\t%s\n", bpf_link_type_strs[type]);
+in bpf_link_show_fdinfo() already did it in a cleaner way.
 
-IMO it is a redesign that is enforcing the user to avoid erroneous
-usages of enable files (because the reads are either reporting the
-whole and correct status of the event or failing to read; also the user
-cannot llseek into a position that would lead to not reading or reading
-a corrupted status).
+Same issue in the other patch.
 
-On the other hand the proposed re-design is fully compatible with
-the current user space commands reading and writing to the enable
-files.
-
-If the concern is having inconsistent implementations between tracefs
-files, I am happy to extend this patchset to all traces files, however,
-before doing so, I would like to have your approval.
-Otherwise I will just document the current functions and associated
-assumptions of use that the user must comply with in order to avoid
-the erroneous behaviour.
-
-Thanks a lot for your inputs and clarifications.
-Gab
->
-> Thank you,
->
-> >
-> > This patch fixes all the issues listed above.
-> >
-> > Signed-off-by: Gabriele Paoloni <gpaoloni@redhat.com>
-> > Tested-by: Alessandro Carminati <acarmina@redhat.com>
-> > ---
-> >  kernel/trace/trace_events.c | 11 ++++++++---
-> >  1 file changed, 8 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
-> > index 120531268abf..5e84ef01d0c8 100644
-> > --- a/kernel/trace/trace_events.c
-> > +++ b/kernel/trace/trace_events.c
-> > @@ -1798,6 +1798,13 @@ event_enable_read(struct file *filp, char __user=
- *ubuf, size_t cnt,
-> >
-> >       strcat(buf, "\n");
-> >
-> > +     /*
-> > +      * A requested cnt less than strlen(buf) could lead to a wrong
-> > +      * event status being reported.
-> > +      */
-> > +     if (cnt < strlen(buf))
-> > +             return -EINVAL;
-> > +
-> >       return simple_read_from_buffer(ubuf, cnt, ppos, buf, strlen(buf))=
-;
-> >  }
-> >
-> > @@ -1833,8 +1840,6 @@ event_enable_write(struct file *filp, const char =
-__user *ubuf, size_t cnt,
-> >               return -EINVAL;
-> >       }
-> >
-> > -     *ppos +=3D cnt;
-> > -
-> >       return cnt;
-> >  }
-> >
-> > @@ -2557,7 +2562,7 @@ static const struct file_operations ftrace_enable=
-_fops =3D {
-> >       .read =3D event_enable_read,
-> >       .write =3D event_enable_write,
-> >       .release =3D tracing_release_file_tr,
-> > -     .llseek =3D default_llseek,
-> > +     .llseek =3D noop_llseek,
-> >  };
-> >
-> >  static const struct file_operations ftrace_event_format_fops =3D {
-> > --
-> > 2.48.1
-> >
->
->
-> --
-> Masami Hiramatsu (Google) <mhiramat@kernel.org>
->
-
+pw-bot: cr
