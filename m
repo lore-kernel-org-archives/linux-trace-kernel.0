@@ -1,226 +1,99 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32BFF25EFBB;
-	Thu, 19 Jun 2025 08:34:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CF5F25A34D;
+	Thu, 19 Jun 2025 08:37:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750322068; cv=none; b=Yk/A62C8hPoijZ2loCAgWmeG8TiQCctxHsIP8mk6UGG0AZRHrpSrHN6zZlAmbf3CqZsHdPEOYUF7MOyfuz34cacgFrtnW1CNWEv0Gt2n/GNdXo7axeXao8PMHUGaJYCxL8e7SlbtzaeaoS5UIS9odUddDQIS0ReT5OLbiKP14eo=
+	t=1750322246; cv=none; b=FlPjkvNQF+LLPzrs6VRy13DU/oFf+dzrn2ebdWXnIwz5KjPnd96ctBj+tE2KM96dAQX7w3Vdbp0hsNWRpztBhpEyNI5DSjPjpw4qC46dZ7DvwJYIwJHgiY6k0c7axB/U0Mw8gVsgU0JN8t/GE8NPWVllbVq+H0B/K2DT46xkYZE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750322068; c=relaxed/simple;
-	bh=c4M48DAPUB6EdmaCMv6HQ2OsHeYOy7PcUMGd5aRfG+4=;
+	s=arc-20240116; t=1750322246; c=relaxed/simple;
+	bh=KLuXxcXXthjBdqrsgWNOCjHVsFbWRkn/d0K+J95dPpg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mJOPg7RKTugG/GChWWSI1y+TfnljmdoyI6CEDIzJCzAVRLOyrpHVgWcPKs8zh8QsAv1IS69Guc1K3+8QA7TssJcNOXd8HO9xz4GRUBHk8W84YlFXwAqFrTfP6LRCXwapfk+DPNLdF2yAN4RfTyDO5MuYgVU92Vo4ZCh4KLZtmOs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=WF+wGXau; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=mLSpBiyipiCJAu8/wyya/400abSbG4gpGf2rcdf5GN71MgDkHaOImwYWSjPy1lpj8YeBTnjvn+kHCT1o6gdvO0G/jEIuoTYttt4V2uZnaOhIj5tgQBgqXtFC/By80+ZrT+9c77EkGB5b6WxiWEC2iVIo+cDDkT3aYP/bBMot91k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R6yj1M0O; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="WF+wGXau"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=DsByoZYD8zFBKsiCOPlBpf2Aj97G3XGrcpCEr3Mc8Wk=; b=WF+wGXauAjTvc7esDxVuCdR2SV
-	64jbFjdk8sXoIcty5oT1C8gx/AgoyW7B6KRCUGhsMjZUeywOfKOK/nHwYFLlxnhQzzHuP6I9wVgfc
-	B7F2cLBYFeBP/Jz9/JKN4s8Y+RizMJO5pf/8H8SirFJuWyMmK3cY0D0q2UTmHzM8CV1P8z9Ms79fa
-	RvQNOi97XHkPQNplD8vzvqvVKYW1A54jJIrwNzxk9+zZRl5MsazSFz0vYqSpu/ALvDY2e8GW4Xf8g
-	zGmaxI7pD976dkTrKxEr1AQ1gVSymp3oQNediz1abz1cbEgntPnFJ+ib+it+oZDLSHxI20ZNCKa43
-	8ToYzQqQ==;
-Received: from 2001-1c00-8d82-d000-266e-96ff-fe07-7dcc.cable.dynamic.v6.ziggo.nl ([2001:1c00:8d82:d000:266e:96ff:fe07:7dcc] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uSAiu-00000007uGX-3Fl2;
-	Thu, 19 Jun 2025 08:34:16 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id B39593088F2; Thu, 19 Jun 2025 10:34:15 +0200 (CEST)
-Date: Thu, 19 Jun 2025 10:34:15 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	bpf@vger.kernel.org, x86@kernel.org,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Ingo Molnar <mingo@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Indu Bhagat <indu.bhagat@oracle.com>,
-	"Jose E. Marchesi" <jemarch@gnu.org>,
-	Beau Belgrave <beaub@linux.microsoft.com>,
-	Jens Remus <jremus@linux.ibm.com>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH v10 07/14] unwind_user/deferred: Make unwind deferral
- requests NMI-safe
-Message-ID: <20250619083415.GZ1613376@noisy.programming.kicks-ass.net>
-References: <20250611005421.144238328@goodmis.org>
- <20250611010428.938845449@goodmis.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R6yj1M0O"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BF58CC4CEEA;
+	Thu, 19 Jun 2025 08:37:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750322245;
+	bh=KLuXxcXXthjBdqrsgWNOCjHVsFbWRkn/d0K+J95dPpg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=R6yj1M0OkpFxO0SerjjhxBJlpExLKNruhn8PvIp0m8K+chuK//1kiny+q+oSzoZTM
+	 ZUkvpHsDUKNRDxnhaWFDynJPEOcQ50ZiAW5ZiyfrNo7zYcBux0MrO0PS3fzfxojDFU
+	 +cU7n8lklK9cWGX3u1ynoZQ1ggHpXiPgy0DNCKKkFoVKSGc/GwGWPXXZl2pyh6HRmZ
+	 86l3IHBmly0NUlRIh0qBJKKPsgPaBSkxHiILq3ccMeZBFVNZZ7kVTSiUs7N7Ah6ZV7
+	 VkISVRM5UjQNRigCAYrrpzRKvaF3Wm4jJnpmMLgHQZ9BH1FO4w3ufulwkEEwE/l+8Q
+	 W+fFs8U6UHmSQ==
+Date: Thu, 19 Jun 2025 10:37:08 +0200
+From: Christian Brauner <brauner@kernel.org>
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, 
+	Russell King <linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, 
+	Will Deacon <will@kernel.org>, Madhavan Srinivasan <maddy@linux.ibm.com>, 
+	Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>, 
+	Christophe Leroy <christophe.leroy@csgroup.eu>, "David S . Miller" <davem@davemloft.net>, 
+	Andreas Larsson <andreas@gaisler.com>, Jarkko Sakkinen <jarkko@kernel.org>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, Thomas Gleixner <tglx@linutronix.de>, 
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	"H . Peter Anvin" <hpa@zytor.com>, Andy Lutomirski <luto@kernel.org>, 
+	Peter Zijlstra <peterz@infradead.org>, Alexander Viro <viro@zeniv.linux.org.uk>, 
+	Jan Kara <jack@suse.cz>, Kees Cook <kees@kernel.org>, Peter Xu <peterx@redhat.com>, 
+	David Hildenbrand <david@redhat.com>, Zi Yan <ziy@nvidia.com>, 
+	Baolin Wang <baolin.wang@linux.alibaba.com>, "Liam R . Howlett" <Liam.Howlett@oracle.com>, 
+	Nico Pache <npache@redhat.com>, Ryan Roberts <ryan.roberts@arm.com>, Dev Jain <dev.jain@arm.com>, 
+	Barry Song <baohua@kernel.org>, Xu Xin <xu.xin16@zte.com.cn>, 
+	Chengming Zhou <chengming.zhou@linux.dev>, Hugh Dickins <hughd@google.com>, 
+	Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>, 
+	Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>, Rik van Riel <riel@surriel.com>, 
+	Harry Yoo <harry.yoo@oracle.com>, Dan Williams <dan.j.williams@intel.com>, 
+	Matthew Wilcox <willy@infradead.org>, Steven Rostedt <rostedt@goodmis.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	Jason Gunthorpe <jgg@ziepe.ca>, John Hubbard <jhubbard@nvidia.com>, 
+	Muchun Song <muchun.song@linux.dev>, Oscar Salvador <osalvador@suse.de>, Jann Horn <jannh@google.com>, 
+	Pedro Falcato <pfalcato@suse.de>, Johannes Weiner <hannes@cmpxchg.org>, 
+	Qi Zheng <zhengqi.arch@bytedance.com>, Shakeel Butt <shakeel.butt@linux.dev>, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, 
+	kvm@vger.kernel.org, sparclinux@vger.kernel.org, linux-sgx@vger.kernel.org, 
+	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org, nvdimm@lists.linux.dev, 
+	linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/3] mm: update core kernel code to use vm_flags_t
+ consistently
+Message-ID: <20250619-vormund-ungeachtet-8a9093d475e8@brauner>
+References: <cover.1750274467.git.lorenzo.stoakes@oracle.com>
+ <d1588e7bb96d1ea3fe7b9df2c699d5b4592d901d.1750274467.git.lorenzo.stoakes@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250611010428.938845449@goodmis.org>
+In-Reply-To: <d1588e7bb96d1ea3fe7b9df2c699d5b4592d901d.1750274467.git.lorenzo.stoakes@oracle.com>
 
-On Tue, Jun 10, 2025 at 08:54:28PM -0400, Steven Rostedt wrote:
-> From: Josh Poimboeuf <jpoimboe@kernel.org>
+On Wed, Jun 18, 2025 at 08:42:53PM +0100, Lorenzo Stoakes wrote:
+> The core kernel code is currently very inconsistent in its use of
+> vm_flags_t vs. unsigned long. This prevents us from changing the type of
+> vm_flags_t in the future and is simply not correct, so correct this.
 > 
-> Make unwind_deferred_request() NMI-safe so tracers in NMI context can
-> call it and safely request a user space stacktrace when the task exits.
+> While this results in rather a lot of churn, it is a critical pre-requisite
+> for a future planned change to VMA flag type.
 > 
-> A "nmi_timestamp" is added to the unwind_task_info that gets updated by
-> NMIs to not race with setting the info->timestamp.
-
-I feel this is missing something... or I am.
-
-> Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
-> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+> Additionally, update VMA userland tests to account for the changes.
+> 
+> To make review easier and to break things into smaller parts, driver and
+> architecture-specific changes is left for a subsequent commit.
+> 
+> The code has been adjusted to cascade the changes across all calling code
+> as far as is needed.
+> 
+> We will adjust architecture-specific and driver code in a subsequent patch.
+> 
+> Overall, this patch does not introduce any functional change.
+> 
+> Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
 > ---
-> Changes since v9: https://lore.kernel.org/linux-trace-kernel/20250513223552.636076711@goodmis.org/
-> 
-> - Check for ret < 0 instead of just ret != 0 from return code of
->   task_work_add(). Don't want to just assume it's less than zero as it
->   needs to return a negative on error.
-> 
->  include/linux/unwind_deferred_types.h |  1 +
->  kernel/unwind/deferred.c              | 91 ++++++++++++++++++++++++---
->  2 files changed, 84 insertions(+), 8 deletions(-)
-> 
-> diff --git a/include/linux/unwind_deferred_types.h b/include/linux/unwind_deferred_types.h
-> index 5df264cf81ad..ae27a02234b8 100644
-> --- a/include/linux/unwind_deferred_types.h
-> +++ b/include/linux/unwind_deferred_types.h
-> @@ -11,6 +11,7 @@ struct unwind_task_info {
->  	struct unwind_cache	*cache;
->  	struct callback_head	work;
->  	u64			timestamp;
-> +	u64			nmi_timestamp;
->  	int			pending;
->  };
->  
-> diff --git a/kernel/unwind/deferred.c b/kernel/unwind/deferred.c
-> index b76c704ddc6d..88c867c32c01 100644
-> --- a/kernel/unwind/deferred.c
-> +++ b/kernel/unwind/deferred.c
-> @@ -25,8 +25,27 @@ static u64 get_timestamp(struct unwind_task_info *info)
->  {
->  	lockdep_assert_irqs_disabled();
->  
-> -	if (!info->timestamp)
-> -		info->timestamp = local_clock();
-> +	/*
-> +	 * Note, the timestamp is generated on the first request.
-> +	 * If it exists here, then the timestamp is earlier than
-> +	 * this request and it means that this request will be
-> +	 * valid for the stracktrace.
-> +	 */
-> +	if (!info->timestamp) {
-> +		WRITE_ONCE(info->timestamp, local_clock());
-> +		barrier();
-> +		/*
-> +		 * If an NMI came in and set a timestamp, it means that
-> +		 * it happened before this timestamp was set (otherwise
-> +		 * the NMI would have used this one). Use the NMI timestamp
-> +		 * instead.
-> +		 */
-> +		if (unlikely(info->nmi_timestamp)) {
-> +			WRITE_ONCE(info->timestamp, info->nmi_timestamp);
-> +			barrier();
-> +			WRITE_ONCE(info->nmi_timestamp, 0);
-> +		}
-> +	}
->  
->  	return info->timestamp;
->  }
-> @@ -103,6 +122,13 @@ static void unwind_deferred_task_work(struct callback_head *head)
->  
->  	unwind_deferred_trace(&trace);
->  
-> +	/* Check if the timestamp was only set by NMI */
-> +	if (info->nmi_timestamp) {
-> +		WRITE_ONCE(info->timestamp, info->nmi_timestamp);
-> +		barrier();
-> +		WRITE_ONCE(info->nmi_timestamp, 0);
-> +	}
-> +
->  	timestamp = info->timestamp;
->  
->  	guard(mutex)(&callback_mutex);
-> @@ -111,6 +137,48 @@ static void unwind_deferred_task_work(struct callback_head *head)
->  	}
->  }
->  
-> +static int unwind_deferred_request_nmi(struct unwind_work *work, u64 *timestamp)
-> +{
-> +	struct unwind_task_info *info = &current->unwind_info;
-> +	bool inited_timestamp = false;
-> +	int ret;
-> +
-> +	/* Always use the nmi_timestamp first */
-> +	*timestamp = info->nmi_timestamp ? : info->timestamp;
-> +
-> +	if (!*timestamp) {
-> +		/*
-> +		 * This is the first unwind request since the most recent entry
-> +		 * from user space. Initialize the task timestamp.
-> +		 *
-> +		 * Don't write to info->timestamp directly, otherwise it may race
-> +		 * with an interruption of get_timestamp().
-> +		 */
-> +		info->nmi_timestamp = local_clock();
-> +		*timestamp = info->nmi_timestamp;
-> +		inited_timestamp = true;
-> +	}
-> +
-> +	if (info->pending)
-> +		return 1;
-> +
-> +	ret = task_work_add(current, &info->work, TWA_NMI_CURRENT);
-> +	if (ret < 0) {
-> +		/*
-> +		 * If this set nmi_timestamp and is not using it,
-> +		 * there's no guarantee that it will be used.
-> +		 * Set it back to zero.
-> +		 */
-> +		if (inited_timestamp)
-> +			info->nmi_timestamp = 0;
-> +		return ret;
-> +	}
-> +
-> +	info->pending = 1;
-> +
-> +	return 0;
-> +}
 
-So what's the actual problem here, something like this:
-
-  if (!info->timestamp)
-    <NMI>
-      if (!info->timestamp)
-        info->timestamp = local_clock(); /* Ta */
-    </NMI>
-      info->timestamp = local_clock();   /* Tb */
-
-And now info has Tb which is after Ta, which was recorded for the NMI
-request?
-       
-Why can't we cmpxchg_local() the thing and avoid this horrible stuff?
-
-static u64 get_timestamp(struct unwind_task_info *info)
-{
-	u64 new, old = info->timestamp;
-
-	if (old)
-		return old;
-	
-	new = local_clock();
-	old = cmpxchg_local(&info->timestamp, old, new);
-	if (old)
-		return old;
-	return new;
-}
-
-Seems simple enough; what's wrong with it?
+Acked-by: Christian Brauner <brauner@kernel.org>
