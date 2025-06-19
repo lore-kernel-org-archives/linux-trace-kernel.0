@@ -1,126 +1,150 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C233726FA69;
-	Wed, 18 Jun 2025 21:17:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D37142A1BA;
+	Thu, 19 Jun 2025 01:47:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750281438; cv=none; b=RMnMZqxUX1KKylXxj8mm4yD8zgY8+yCVeAioqSqYrAZKKsPWOkrr3eG9XaWUfhJ/m7OBC4/fB0Q2llZpv4jGTAUqLdQ/9sS36LISjsgVrvIM8/GtGP0WWGXzFMgZmVxIaHevceBNV65NsZSetxDtZ7d8abwqOOuyLk9fqUGjN7Y=
+	t=1750297633; cv=none; b=d2dP3G70CgfepwdrIQvabgHQ0V7FDI3Re92EIQEwsmKxvrcsHV2XQJtssi3X+JyBuFta4rJuVDZDr5ZsACRZnt9dTjYpecjil3V5nIHTZP9IhrGBXqaGzEJm549ISFwRBXVR8LpOwu3xB1pjCc2vVkfV+uMYU9OMLZDqH8+1vJA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750281438; c=relaxed/simple;
-	bh=KOEdlJiFTe+BKwO/glGv/UDTx5u3EWhGFs42UjnrPvk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BOm6apy3qg27+cv/cZYryLhsKuxJr1LOhrQMvcNubNrysSfIVx7eTMIl7KM8HfNxsQIoXlmCyawskNypiSSma0mM8xkpU2uR9KQR7cINlkJ5gjXcuuMRggNB2gZLRUxw7KZJ4Yi6PAXVICVyAHUo9Edyc7XF+ZbPCJRxA5Djd4w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Xalkmmc9; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750297633; c=relaxed/simple;
+	bh=L2knx86OQal9XYONCL4sc+TIQOIP3Hzk4meZfCXWWz8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=YIOoknPmRLfEhnrAs6bnNNeMbaElXh3n0qL442TOaWGR4uQSuEQ7Ab4c1TtppoOR8n2PaIqqBgQvhNKe/15FK8YXNXvbZ3VKgbhX5CnZBFja24v/abvFHPzPicMdEpArsXIhvBVOMZEF3jH/UCcEdAPzN0/kXFCH9NBA6FckLqY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nLm3gj3z; arc=none smtp.client-ip=209.85.128.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Xalkmmc9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 534F2C4CEE7;
-	Wed, 18 Jun 2025 21:17:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750281438;
-	bh=KOEdlJiFTe+BKwO/glGv/UDTx5u3EWhGFs42UjnrPvk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Xalkmmc9lBVHnHqvSKVAyn2X9Z/p24HQJAE1EnfIInP6cyPmXNiIiZdgA4Vz9P0Ka
-	 vlTMUlRBiP7lfkGLnRMehreY/IaGQQL0FHJ0jyGMaOziObPyRrFqkWMd4h58jcOoBJ
-	 E50oJhdMsrxnP66TK66u/iwiozRJcVrd8WfoZhVD6YN8Y6rpYOI+opR+fbMZxSWahP
-	 NQfPVwI/LPEodjKco+bjeFFspeachc2uyBv+g/pACl5ktiuPgBDNxZxHulA/BmhDb8
-	 k96qY8/zzGBB/NbudKj3nDtjRMaCjMbPEdYGJlexw5KuiI6+B5D/hOnEC97J15D3wl
-	 CGmTR+mfC8Lcg==
-Date: Wed, 18 Jun 2025 14:17:17 -0700
-From: Kees Cook <kees@kernel.org>
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	Russell King <linux@armlinux.org.uk>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	"David S . Miller" <davem@davemloft.net>,
-	Andreas Larsson <andreas@gaisler.com>,
-	Jarkko Sakkinen <jarkko@kernel.org>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	"H . Peter Anvin" <hpa@zytor.com>,
-	Andy Lutomirski <luto@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
-	Peter Xu <peterx@redhat.com>, David Hildenbrand <david@redhat.com>,
-	Zi Yan <ziy@nvidia.com>,
-	Baolin Wang <baolin.wang@linux.alibaba.com>,
-	"Liam R . Howlett" <Liam.Howlett@oracle.com>,
-	Nico Pache <npache@redhat.com>, Ryan Roberts <ryan.roberts@arm.com>,
-	Dev Jain <dev.jain@arm.com>, Barry Song <baohua@kernel.org>,
-	Xu Xin <xu.xin16@zte.com.cn>,
-	Chengming Zhou <chengming.zhou@linux.dev>,
-	Hugh Dickins <hughd@google.com>, Vlastimil Babka <vbabka@suse.cz>,
-	Mike Rapoport <rppt@kernel.org>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Michal Hocko <mhocko@suse.com>, Rik van Riel <riel@surriel.com>,
-	Harry Yoo <harry.yoo@oracle.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Matthew Wilcox <willy@infradead.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Jason Gunthorpe <jgg@ziepe.ca>, John Hubbard <jhubbard@nvidia.com>,
-	Muchun Song <muchun.song@linux.dev>,
-	Oscar Salvador <osalvador@suse.de>, Jann Horn <jannh@google.com>,
-	Pedro Falcato <pfalcato@suse.de>,
-	Johannes Weiner <hannes@cmpxchg.org>,
-	Qi Zheng <zhengqi.arch@bytedance.com>,
-	Shakeel Butt <shakeel.butt@linux.dev>,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org, kvm@vger.kernel.org,
-	sparclinux@vger.kernel.org, linux-sgx@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-	nvdimm@lists.linux.dev, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/3] mm: update core kernel code to use vm_flags_t
- consistently
-Message-ID: <202506181416.A32D378A6@keescook>
-References: <cover.1750274467.git.lorenzo.stoakes@oracle.com>
- <d1588e7bb96d1ea3fe7b9df2c699d5b4592d901d.1750274467.git.lorenzo.stoakes@oracle.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nLm3gj3z"
+Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-450cfb79177so1250795e9.0;
+        Wed, 18 Jun 2025 18:47:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750297630; x=1750902430; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=1ij91U4X4EWAUKBdWNI59qUxi343hUgQqe3atlrfEA4=;
+        b=nLm3gj3zJQl6L+VFBu9ftUdMRgi5Yed8QlBvorEiyXlUJhsyFyCvaVx5uWe1GrbXj9
+         lKoud3zJ0zLrXmiT1ktVccV1mtUdXFTlfAC+YcRQ90pdfTzSeyErbkD3G+PXilblwtLX
+         A5MoL19gmAfxU7r0XVbzShSOSpwdiEyymCWnLoIdFLZHCVOcKqEf7s82lN2cL6i8L9Ok
+         ym2ChImxFOAVnJ/JUD3dsH7MuY50bhvvk2c5YP9GpSxsFT7i+3wYr1qPipw5PTOjnQeW
+         5PXEmvvfCyCU/lrVsu8O6LvWCdz5FEYHyKEo1/IZB0GOALDjT9THqf8b8OXcoker+ZWw
+         gTQA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750297630; x=1750902430;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=1ij91U4X4EWAUKBdWNI59qUxi343hUgQqe3atlrfEA4=;
+        b=moRm6sS/pC1dalS/pOXcCqcib0/oz8UzfsQspMspXUS6/yUsbUrZH7StTi0zGvR1RQ
+         HWHsSYEIbApGe+8QAwjbrtV/ztgwgbwsLD0ILjzIbHaqPMqbHBTKaejQFi3ZavjQ3r7q
+         QzF4+Pe8DzSzsjxw7BTgKKhNSdlUCZdbmI2i/pnLgPDCsFDbybucRhrdX6HHxHG9+86Q
+         PM7Ygc4OdOHq0GInG2YEZR7Dwzcz9WEgFy95uIUB+hWrWIu4Sk8IkFk+gvzLtkw4C4XP
+         234jZxKPUQ2czcZH12w4bjeJ06Pn2atQEA9N6Uo5sCdIKCJRCrzul/LRgJj1b9vdX5wx
+         q4rA==
+X-Forwarded-Encrypted: i=1; AJvYcCVFlM++Mf70RAOC/NlR9ANLn29D9VV4uIk9g+0lka7mqiNGQyZ3cg1etto66Q7HtOcE7hU=@vger.kernel.org, AJvYcCX47XaTq5kznMRpFpPH2QWZqgWJ8c9Vmd9zT5F6L+kwrmPDakHbYRmp+YfqmoudURcEb36rX6ONvhGK+7tV094gJgpQ@vger.kernel.org, AJvYcCXKtPFCxCs2Vb8wlDPJhSjP6ELLiw9J0XMIuv/R1lAXJGSxY7Mxp941hyHjEPy50qdz3y7eeikQRO4wDaPH@vger.kernel.org
+X-Gm-Message-State: AOJu0YyX+ZDQIqUlrxeR/pzJaqfRmC/3OIn+RtxE6HjzriTFay35yeBf
+	0LeseVcQuOR6BHvREc0IN1yhhYGuQfqgzArhwnlbFX9hWcXUvh+q8tdrGZaW9iyI3pW1DDo+dAp
+	lMaFeMYiWvhfVJ9HUJUyCFFw5Y3XQGpc=
+X-Gm-Gg: ASbGncukCwu4h/iP85bgonPKfbdjpB5PuCqYNA51ixvxv6yyxNCQhTFs4umgsVgEu5O
+	VOX+CXYqUNlHXwOvvlBzmVzu6ENNFCAGLgpfGKiXG/t+HlZlpJ554v5+kypiU1tH9AEPUxtj8X/
+	VityueUnM0zdVYUiINE/EDJQkcL/+nrIHmVAoaxeEcH6FAV7viDQWR4o6k5ivYkgTCfK/hRj6a
+X-Google-Smtp-Source: AGHT+IG2AmEqikm1qvA0RevRw7p4TlVqDQPzSrbP0KQ0SvsyLwz3eYX++EPeknhtKepln57fyxGIhPWQvrkz48gQCgg=
+X-Received: by 2002:a05:600c:1e1a:b0:43c:f513:958a with SMTP id
+ 5b1f17b1804b1-453501b41d8mr122650995e9.13.1750297629958; Wed, 18 Jun 2025
+ 18:47:09 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <d1588e7bb96d1ea3fe7b9df2c699d5b4592d901d.1750274467.git.lorenzo.stoakes@oracle.com>
+References: <20250616130233.451439-1-chen.dylane@linux.dev> <20250616130233.451439-2-chen.dylane@linux.dev>
+In-Reply-To: <20250616130233.451439-2-chen.dylane@linux.dev>
+From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date: Wed, 18 Jun 2025 18:46:58 -0700
+X-Gm-Features: Ac12FXwy_GewLg35jF0VBUl4jY7PzBERUzs9sxbsB_bcuvlfJNZYNNXGe7Gr65U
+Message-ID: <CAADnVQ+hT6nCGoR5a0Z+52SrJzO9-ReBRds23mBfrG3SbwGFdw@mail.gmail.com>
+Subject: Re: [PATCH bpf-next v3 2/2] bpf: Add show_fdinfo for kprobe_multi
+To: Tao Chen <chen.dylane@linux.dev>
+Cc: Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, Eduard <eddyz87@gmail.com>, 
+	Song Liu <song@kernel.org>, Yonghong Song <yonghong.song@linux.dev>, 
+	John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>, 
+	Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Matt Bobrowski <mattbobrowski@google.com>, Steven Rostedt <rostedt@goodmis.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	bpf <bpf@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
+	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jun 18, 2025 at 08:42:53PM +0100, Lorenzo Stoakes wrote:
-> The core kernel code is currently very inconsistent in its use of
-> vm_flags_t vs. unsigned long. This prevents us from changing the type of
-> vm_flags_t in the future and is simply not correct, so correct this.
-
-Thank you for doing this!
-
-> 
-> While this results in rather a lot of churn, it is a critical pre-requisite
-> for a future planned change to VMA flag type.
-> 
-> Additionally, update VMA userland tests to account for the changes.
-> 
-> To make review easier and to break things into smaller parts, driver and
-> architecture-specific changes is left for a subsequent commit.
-> 
-> The code has been adjusted to cascade the changes across all calling code
-> as far as is needed.
-> 
-> We will adjust architecture-specific and driver code in a subsequent patch.
-> 
-> Overall, this patch does not introduce any functional change.
-> 
-> Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+On Mon, Jun 16, 2025 at 6:03=E2=80=AFAM Tao Chen <chen.dylane@linux.dev> wr=
+ote:
+>
+> Show kprobe_multi link info with fdinfo, the info as follows:
+>
+> link_type:      kprobe_multi
+> link_id:        1
+> prog_tag:       a15b7646cb7f3322
+> prog_id:        21
+> type:   kprobe_multi
+> kprobe_cnt:     8
+> missed: 0
+> cookie           func
+> 1                bpf_fentry_test1
+> 7                bpf_fentry_test2
+> 2                bpf_fentry_test3
+> 3                bpf_fentry_test4
+> 4                bpf_fentry_test5
+> 5                bpf_fentry_test6
+> 6                bpf_fentry_test7
+> 8                bpf_fentry_test8
+>
+> Signed-off-by: Tao Chen <chen.dylane@linux.dev>
 > ---
->  fs/exec.c                        |   2 +-
+>  kernel/trace/bpf_trace.c | 32 ++++++++++++++++++++++++++++++++
+>  1 file changed, 32 insertions(+)
+>
+> diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
+> index 2d422f897ac..fcf19e233b5 100644
+> --- a/kernel/trace/bpf_trace.c
+> +++ b/kernel/trace/bpf_trace.c
+> @@ -2623,10 +2623,42 @@ static int bpf_kprobe_multi_link_fill_link_info(c=
+onst struct bpf_link *link,
+>         return err;
+>  }
+>
+> +#ifdef CONFIG_PROC_FS
+> +static void bpf_kprobe_multi_show_fdinfo(const struct bpf_link *link,
+> +                                        struct seq_file *seq)
+> +{
+> +       struct bpf_kprobe_multi_link *kmulti_link;
+> +       char sym[KSYM_NAME_LEN];
+> +
+> +       kmulti_link =3D container_of(link, struct bpf_kprobe_multi_link, =
+link);
+> +
+> +       seq_printf(seq,
+> +                  "type:\t%s\n"
+> +                  "kprobe_cnt:\t%u\n"
+> +                  "missed:\t%lu\n",
+> +                  kmulti_link->flags =3D=3D BPF_F_KPROBE_MULTI_RETURN ? =
+"kretprobe_multi" :
+> +                                        "kprobe_multi",
+> +                  kmulti_link->cnt,
+> +                  kmulti_link->fp.nmissed);
+> +
+> +       seq_printf(seq, "%-16s %-16s\n", "cookie", "func");
+> +       for (int i =3D 0; i < kmulti_link->cnt; i++) {
+> +               sprint_symbol_no_offset(sym, kmulti_link->addrs[i]);
+> +               seq_printf(seq,
+> +                          "%-16llu %-16s\n",
+> +                          kmulti_link->cookies[i],
+> +                          sym);
 
-Acked-by: Kees Cook <kees@kernel.org>
+Why call sprint_symbol_no_offset() directly ?
+%pB is fine.
++off doesn't disclose anything.
 
--- 
-Kees Cook
+pw-bot: cr
