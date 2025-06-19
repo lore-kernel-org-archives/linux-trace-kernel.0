@@ -1,25 +1,25 @@
-Received: from relay.hostedemail.com (smtprelay0014.hostedemail.com [216.40.44.14])
+Received: from relay.hostedemail.com (smtprelay0016.hostedemail.com [216.40.44.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CADDA264F9C;
-	Thu, 19 Jun 2025 08:44:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 414CF265CBB;
+	Thu, 19 Jun 2025 08:47:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750322698; cv=none; b=SjLofCiwPoJSU0yyRvCcnsDBUtg2K9j1WkqvwjCpZmHBIxYGqbuBD34nnG+PwT/kmrrQFi7S6BJQTyfJm1gj0wvRyC2Fc0qyCcbR+H/MHiBqeemMZ8l40kvyloLh7i5oO7WXmE551d9yczKxO5E0KNq7/TgA/gD0iDAxxmOH4v0=
+	t=1750322837; cv=none; b=be+hAeoVag1nHrV4Wigt/EC08plTjvb8ek1zW8cfsajKhz0lULe3xWpdmBgai3MgbNkv+FsLSQBRtQ1bRDS3G+djJC/8v9kpV7lsVSH/d1/f4IGtvANAF/W2ES2gQBGLGS20znBLMDiOe/BkEVTQ5QL0FxC1dWQr8H0eG6gsYXA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750322698; c=relaxed/simple;
-	bh=4B1Mg/rUb8sAaCaNSvZH3vx8ti1Nm07+Tmko+JkJ1Yc=;
+	s=arc-20240116; t=1750322837; c=relaxed/simple;
+	bh=b0XWpvGm8wgW6A/uSiwkYOT2KLb+DLRb+ve9xFGOjd8=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=u2Pukh2vCbLvJQywWg8rs++0eDGIJuLz2QJUF0sj0H+YgU3RsRu1xLTOX5MCHyKIJixJGxFUB4gJVx3Mx2YbWnMEqLeW0vTRM0CVilcgj+I9UQ06V5VZBwhWAyPLNxuUsFT3J5OR0K2Fz0YLzcG89eKwCJlDDacqTq/Lky8OkGw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.14
+	 MIME-Version:Content-Type; b=hlD86U/aIWryqQnDblcvas44rqlOj3E0rG+fI8ocF5ICbDmCxKo5kvn2ZZWpS2OR2Niwkxf+EXXZFPk7C35m0HiW5JYnocb8z3sOMfDbzBYFia/2t3trJlBrhE4fcVZdY78ISjoP9GYiaXaGpjkkN7kL13FNUtBssSNY98agyjc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.16
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf20.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay05.hostedemail.com (Postfix) with ESMTP id B6A1B5AF53;
-	Thu, 19 Jun 2025 08:44:48 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf20.hostedemail.com (Postfix) with ESMTPA id CD0F620029;
-	Thu, 19 Jun 2025 08:44:44 +0000 (UTC)
-Date: Thu, 19 Jun 2025 04:44:50 -0400
+Received: from omf05.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay04.hostedemail.com (Postfix) with ESMTP id B99241A075C;
+	Thu, 19 Jun 2025 08:47:12 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf05.hostedemail.com (Postfix) with ESMTPA id D9D8C2000D;
+	Thu, 19 Jun 2025 08:47:08 +0000 (UTC)
+Date: Thu, 19 Jun 2025 04:47:14 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
 To: Peter Zijlstra <peterz@infradead.org>
 Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
@@ -32,15 +32,14 @@ Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
  Belgrave <beaub@linux.microsoft.com>, Jens Remus <jremus@linux.ibm.com>,
  Linus Torvalds <torvalds@linux-foundation.org>, Andrew Morton
  <akpm@linux-foundation.org>
-Subject: Re: [PATCH v10 04/14] unwind_user/deferred: Add
- unwind_deferred_trace()
-Message-ID: <20250619044450.64d6c019@batman.local.home>
-In-Reply-To: <20250619075417.GW1613376@noisy.programming.kicks-ass.net>
+Subject: Re: [PATCH v10 05/14] unwind_user/deferred: Add unwind cache
+Message-ID: <20250619044714.5e676bf3@batman.local.home>
+In-Reply-To: <20250619075611.GX1613376@noisy.programming.kicks-ass.net>
 References: <20250611005421.144238328@goodmis.org>
-	<20250611010428.433111891@goodmis.org>
-	<20250618140247.GQ1613376@noisy.programming.kicks-ass.net>
-	<20250618112939.76f4bb87@gandalf.local.home>
-	<20250619075417.GW1613376@noisy.programming.kicks-ass.net>
+	<20250611010428.603778772@goodmis.org>
+	<20250618141345.GR1613376@noisy.programming.kicks-ass.net>
+	<20250618113359.585b3770@gandalf.local.home>
+	<20250619075611.GX1613376@noisy.programming.kicks-ass.net>
 X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -50,60 +49,25 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: CD0F620029
-X-Stat-Signature: nief18z4berszsd815n6hk4gpk9zouig
+X-Rspamd-Queue-Id: D9D8C2000D
+X-Stat-Signature: hdnso6s7b8h14ty8pwta4y6t1z4ps3a6
 X-Rspamd-Server: rspamout07
 X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1+DCEjjs4l6M7N9GDYMFFUSWGqjmqCt2Cw=
-X-HE-Tag: 1750322684-366548
-X-HE-Meta: U2FsdGVkX19+H9lornc1JHqYbN9VPIzvbHGm9jmbvRYxx9zMgdUBFqYvC3XGtuNzvnhf3JUyerAOD3RZeCXHyxSVu1C+PPtyLPKro3pVcyQaMaCIc/RroFXcEhAvbH/UmykRpz2hF7dOfyzm9sHIi0uVQ/HvTHOHIpb1wRq49QXB3zIeqSEl/1KMBy/HPAeZxzlJFEPeuJQjoeQnUrto3T5i45t61XAXrmcQd359VlLNIem61rUTboA1PDwS4Q9mN9C3c1UaQcKCuA8iQWZxb1oYq9hPM6oS8SrJlE/KPdtOQnzC6t/Uy7326Xo9eIeMhV/iAiPLZbj6GU1SwICCM85cCLO/U/pUb/UQKpI0AbL8vXLLFZmE2M30B0/U19bO
+X-Session-ID: U2FsdGVkX18mL5Mp+KUi7te2UfafbcE31pupD+cnzTg=
+X-HE-Tag: 1750322828-715024
+X-HE-Meta: U2FsdGVkX1/6nmXO2xLOAzIpyS7FXKe4FiuacAkvz+FOe86TrNckB2C4V/DB0PqfuqCcIYSFlx7JIAKM8Sl1lCbwTmBopNN9hYbJhrGKJ5zwS8TG5y0SsSiybX4oYUoKi7R1VEG9MCmK1pnOdpwCAjSk0eObCETPMieQ2xZrRQVow61s0WfTp7bQye7vf9KsL2xFXydIb9H5q4GmlPLkjwbp9YAUOCpxoimMVgT/JuA03tf4+yQ51AIwY3pD7nI8eToHEESCgGFZljTyd6Scg1UoO07WBivLGtFmwzPTubHRHzJAav3GDewzhdMnDKrIwv+BjoYkx7qRFraknHjMtgibs3FafmEnOK8lUgMbFrK8R4fNj8SddH4rLYTGrv/c
 
-On Thu, 19 Jun 2025 09:54:17 +0200
+On Thu, 19 Jun 2025 09:56:11 +0200
 Peter Zijlstra <peterz@infradead.org> wrote:
 
-> On Wed, Jun 18, 2025 at 11:29:39AM -0400, Steven Rostedt wrote:
-> 
-> > Note, a request from the gcc folks is to add a system call that gives the
-> > user space application a backtrace from its current location. This can be
-> > handy for debugging as it would be similar to how we use dump_stack().  
-> 
-> That makes very little sense to me; apps can typically unwind themselves
-> just fine, no? In fact, they can use DWARFs and all that.
+> Well, the trivial solution is to make it 511 and call it a day. Don't
+> make things complicated if you don't have to.
 
-Not really. It can in gdb, but doing it from a running app means that
-the app needs a full parser, and access to the elf file it's running.
+I don't know if this is more complicated, but it should make it fit
+nicely in a page:
 
-> 
-> Also, how about we don't make thing complicated and not confuse comments
-> with things like this? Focus on the deferred stuff (that's what these
-> patches are about) -- and then return-to-user is the one and only place
-> that makes sense.
-
-The change log had:
-
-   Add a function that must be called inside a faultable context that will
-   retrieve a user space stack trace. The function unwind_deferred_trace()
-   can be called by a tracer when a task is about to enter user space, or has
-   just come back from user space and has interrupts enabled.
-
-It doesn't mention the backtrace thing. It only makes a statement that
-it needs to be done in a faultable context. I renamed the function to:
-
-   unwind_user_faultable()
-
-And updated the change log to:
-
-    unwind_user/deferred: Add unwind_user_faultable()
-    
-    Add a new API to retrieve a user space callstack called
-    unwind_user_faultable(). The difference between this user space stack
-    tracer from the current user space stack tracer is that this must be
-    called from faultable context as it may use routines to access user space
-    data that needs to be faulted in.
-    
-    It can be safely called from entering or exiting a system call as the code
-
-The explanation is that it must be called in faultable context. It
-doesn't add any more policy that that (like it having to be deferred).
+  /* Make the cache fit in a page */
+  #define UNWIND_MAX_ENTRIES                                      \
+        ((PAGE_SIZE - sizeof(struct unwind_cache)) / sizeof(long))
 
 -- Steve
