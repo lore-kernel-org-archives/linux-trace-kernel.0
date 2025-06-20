@@ -1,41 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98D5C4685;
-	Fri, 20 Jun 2025 00:30:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF3B17485;
+	Fri, 20 Jun 2025 00:41:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750379439; cv=none; b=heqf7q/Gjd1cfHy0HYOBCnB2xZ/JNUKCp5hoXC1HoaaMI5xnnzNpximYxg7kP5Lxd5pMDf7sGXnGQ0LgZ2I8lGyiUgH1TfH93mTsXs2WwzCTQFgNUM+CsEEI+OH8LuoslBXetdMXja4LVRxW+Kupjz96hGGS7zjlUPeouMoJYuo=
+	t=1750380079; cv=none; b=GHW6B68fH6K6EJsLxsetBP/8NaBiY4affiXUJeNVWeujPxbcSo2OF771lrlB8lcLx6X59KRXvYcoNkeb8i/wyLGd58yQ6D8RZqgd4thB1xOb5VPcXZ/NRw7LcT5Wertr6mLNXMN6EfJJ4LN6O2T8qTYYp3HzLSdsdaJyj5BERIw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750379439; c=relaxed/simple;
-	bh=PhUQJujY6I6sVBSqIbFXKN242JF/UeWEaGrQxM3Pno8=;
+	s=arc-20240116; t=1750380079; c=relaxed/simple;
+	bh=+3CHGjIM+Mr+pVGKhzmNeZi41Rr2EggZ3gp53Y6Wi1g=;
 	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=jJ94jtiI0QvyTBpGBX3zTIrOkdP8oBtVMnB3ctByH7P8oaRqv3Wdratf64fQwrsMUvy9j4fWl1woC13SFSTHWidUdP1nfESSvrCccjRUQhkwmj4V8/UFE7qkslNh4WdarUoCaCrRXrnhQCxXHa/2aC0hYM8sNkR56g+EgEVvIrM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WVN3GPla; arc=none smtp.client-ip=10.30.226.201
+	 Mime-Version:Content-Type; b=FvRdTeexeTTQ4/i65scJIav6HQKRJsG0gQ9q00D5tviJBcQPD7i8721lX6dVnp120f5YSUEQvo6ZzwuKIVHvbUd2pVDeHsxzF4uARBjC95o2iha6o9Fn3VbM4bDP8d6cAnNPmPVDxG0y+y8+oA9F99ANXDyOkb+KV0ffBw1pqxE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M/WMn6SV; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WVN3GPla"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0D464C4CEEA;
-	Fri, 20 Jun 2025 00:30:37 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M/WMn6SV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 97FDFC4CEEA;
+	Fri, 20 Jun 2025 00:41:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750379439;
-	bh=PhUQJujY6I6sVBSqIbFXKN242JF/UeWEaGrQxM3Pno8=;
+	s=k20201202; t=1750380079;
+	bh=+3CHGjIM+Mr+pVGKhzmNeZi41Rr2EggZ3gp53Y6Wi1g=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=WVN3GPlagMQWxf+TWxsS4PQbsNn9FyC6kCn/D0h2G+dnP9Z2rlnUrOS3a35GaOX6I
-	 s8O7BBt0oXebqBmRQSnEwb+9sOCxp23k1YSkGFcEPpmz83xlZ8HlKyJA5f/dnyVGqQ
-	 zJeyw75cllPmdYGS7C2AQrS9f+ERudaL+n9OHpcawmupO5Mn1X0ZY+teMhHDSVBQz2
-	 C+mLyUYCbGRiH9p4IiBW3syyeA4ivrHgnHU8KohA9WPmviv2mHyRI9uc7pLD15mSGk
-	 6F8mhGDDD4n91B3fILJMGrRyxTUteA3LNdoBpWw/QWZJcbSifsO0x7vn9U+8qN/UvD
-	 97dnFVe35FM4A==
-Date: Fri, 20 Jun 2025 09:30:30 +0900
+	b=M/WMn6SVuP+u5/SFJBpyzTJFMcNyPoxrKhOIQtECO3z4mpG3ocURkDWFKGo9DppC2
+	 0WKDK1XDKV9drzyHE5TabrD5I/nBz1uZBOadgqY8MULiwcbYfiSOco8BPLP+KhUi+T
+	 rb9F4tw6F97kpk7NIjNf9pa4LuKbaZU8pCErk2+dd2MnXBIx1x8Vqj+dG+vpOmymDm
+	 hzR5GPMNdbFK+MMt4qWaKzgkvRiW7Sle+nw3Bat2t3vIZc1JUH08UDATQafIzYzVdl
+	 ihubzytYA7iWfT4os6R9Ytl3S/QEVJ0ZW1jjqgiB1F56KlsWN47d0sfxwN2Y1JCw1C
+	 E/Eq5ElaQJCbQ==
+Date: Fri, 20 Jun 2025 09:41:16 +0900
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Artem Sadovnikov <a.sadovnikov@ispras.ru>
-Cc: linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
- Masami Hiramatsu <mhiramat@kernel.org>, linux-trace-kernel@vger.kernel.org,
- lvc-project@linuxtesting.org
-Subject: Re: [PATCH] fgraph: Make pid_str size match the comment
-Message-Id: <20250620093030.3d2d11edf2c4c54c263eddd5@kernel.org>
-In-Reply-To: <20250617152110.2530-1-a.sadovnikov@ispras.ru>
-References: <20250617152110.2530-1-a.sadovnikov@ispras.ru>
+To: Bhaskar Chowdhury <unixbhaskar@gmail.com>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH] tools:bootconfig:scripts: Put back the comments where
+ they should be
+Message-Id: <20250620094116.366eff08bc65f682cc1da74b@kernel.org>
+In-Reply-To: <20250521115018.32392-1-unixbhaskar@gmail.com>
+References: <20250521115018.32392-1-unixbhaskar@gmail.com>
 X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -46,45 +45,126 @@ Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Tue, 17 Jun 2025 15:21:09 +0000
-Artem Sadovnikov <a.sadovnikov@ispras.ru> wrote:
+On Wed, 21 May 2025 17:16:51 +0530
+Bhaskar Chowdhury <unixbhaskar@gmail.com> wrote:
 
-> The comment above buffer mentions sign, 10 bytes width for number and null
-> terminator, but buffer itself isn't large enough to hold that much data.
+> Mundane adjustment to the comments, where they should belong.
 > 
-> This is a cosmetic change, since PID cannot be negative, other than -1.
+> Does it change the functionality? NO
 > 
-> Found by Linux Verification Center (linuxtesting.org) with SVACE.
+> Does it improve the readability? Probably and that is why.
+> 
+> Signed-off-by: Bhaskar Chowdhury <unixbhaskar@gmail.com>
+> ---
+>  tools/bootconfig/scripts/ftrace.sh | 35 ++++++++++++++++++++----------
+>  1 file changed, 24 insertions(+), 11 deletions(-)
+> 
+> diff --git a/tools/bootconfig/scripts/ftrace.sh b/tools/bootconfig/scripts/ftrace.sh
+> index 186eed923041..e2a075879db4 100644
+> --- a/tools/bootconfig/scripts/ftrace.sh
+> +++ b/tools/bootconfig/scripts/ftrace.sh
+> @@ -1,23 +1,28 @@
+>  # SPDX-License-Identifier: GPL-2.0-only
+> 
+> -clear_trace() { # reset trace output
+> -    echo > trace
+> + # reset trace output
+> +clear_trace() {
+> +
+> +	 echo > trace
+>  }
+> 
+> -disable_tracing() { # stop trace recording
+> +# stop trace recording
+> +disable_tracing() {
+>      echo 0 > tracing_on
+>  }
+> 
+> -enable_tracing() { # start trace recording
+> +# start trace recording
+> +enable_tracing() {
+>      echo 1 > tracing_on
+>  }
+> 
+> -reset_tracer() { # reset the current tracer
+> +# reset the current tracer
+> +reset_tracer() {
+>      echo nop > current_tracer
+>  }
+> 
+> +# remove action triggers first
+>  reset_trigger_file() {
+> -    # remove action triggers first
+>      grep -H ':on[^:]*(' $@ |
+>      while read line; do
+>          cmd=`echo $line | cut -f2- -d: | cut -f1 -d"["`
+> @@ -32,21 +37,25 @@ reset_trigger_file() {
+>      done
+>  }
+> 
+> -reset_trigger() { # reset all current setting triggers
+> +# reset all current setting triggers
+> +reset_trigger() {
+>      if [ -d events/synthetic ]; then
+>          reset_trigger_file events/synthetic/*/trigger
+>      fi
+>      reset_trigger_file events/*/*/trigger
+>  }
+> 
+> -reset_events_filter() { # reset all current setting filters
+> +# reset all current setting filters
+> +reset_events_filter() {
+>      grep -v ^none events/*/*/filter |
+>      while read line; do
+>  	echo 0 > `echo $line | cut -f1 -d:`
+>      done
+>  }
+> 
+> -reset_ftrace_filter() { # reset all triggers in set_ftrace_filter
+> +# reset all triggers in set_ftrace_filter
+> +
 
-Looks good to me.
+Why this has an empty line after comment?
 
-Reviewed-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> +reset_ftrace_filter() {
+>      if [ ! -f set_ftrace_filter ]; then
+>        return 0
+>      fi
+> @@ -78,17 +87,21 @@ disable_events() {
+>      echo 0 > events/enable
+>  }
+> 
+> -clear_synthetic_events() { # reset all current synthetic events
+> +# reset all current synthetic events
+> +
+
+Ditto.
+
+> + clear_synthetic_events() {
+>      grep -v ^# synthetic_events |
+>      while read line; do
+>          echo "!$line" >> synthetic_events
+>      done
+>  }
+> 
+> -initialize_ftrace() { # Reset ftrace to initial-state
+> +# Reset ftrace to initial-state
+>  # As the initial state, ftrace will be set to nop tracer,
+>  # no events, no triggers, no filters, no function filters,
+>  # no probes, and tracing on.
+> +
+
+Here too.
+
+> +initialize_ftrace() {
+>      disable_tracing
+>      reset_tracer
+>      reset_trigger
+> --
+> 2.49.0
+> 
 
 Thanks,
-
-> 
-> Signed-off-by: Artem Sadovnikov <a.sadovnikov@ispras.ru>
-> ---
->  kernel/trace/trace_functions_graph.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/kernel/trace/trace_functions_graph.c b/kernel/trace/trace_functions_graph.c
-> index a8c1f56340680..d789d308ab1de 100644
-> --- a/kernel/trace/trace_functions_graph.c
-> +++ b/kernel/trace/trace_functions_graph.c
-> @@ -344,7 +344,7 @@ static void print_graph_proc(struct trace_seq *s, pid_t pid)
->  {
->  	char comm[TASK_COMM_LEN];
->  	/* sign + log10(MAX_INT) + '\0' */
-> -	char pid_str[11];
-> +	char pid_str[12];
->  	int spaces = 0;
->  	int len;
->  	int i;
-> -- 
-> 2.43.0
-> 
-
 
 -- 
 Masami Hiramatsu (Google) <mhiramat@kernel.org>
