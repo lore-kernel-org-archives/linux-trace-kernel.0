@@ -1,141 +1,159 @@
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7015F2E6127;
-	Fri, 20 Jun 2025 18:25:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B87B28A71D
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 20 Jun 2025 18:31:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750443921; cv=none; b=ssmk8snOBlD0gDJrtibdQEoqFQcsL8v8oHPFQx6Bybn9l5cadH1TEjPh2OBdmVIkkRCNNBirMW8nPEyz1Onffu/nPXlgb8c8/Pbt6rx6ILEC1skRlxhZSj26pNiOTktBXEIposliQfCrFk6uVhCSt/AjR6yWh5WfDWW7H7y4/pA=
+	t=1750444276; cv=none; b=b1pPaIOTf1r+QgQ8vVt4DeL19lxlzyBO/XJS6GIh72sRPfnOkc3C0s9k+iElq+H9qHrO5Ov506WoaT0dlWDEH/mdh1iix8pXRVLMY1KooYd89FEHZornY+zzBKgoN1lH6B3eMQ5n6mMZgMCN3nfQo6nVky0MetsrkNGHZ0m43ks=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750443921; c=relaxed/simple;
-	bh=jGhgKDFEe3Pg7Z8KZ0eA6tMXvUHpocTDBhojXUcAe4w=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=aoIWrCnho1GRJJf01Ner6r3TLQyxkpKaIr80kDnfFe0vF0cKp1TR3pVyiyu3w2OvN61fLLFGC5ZIK/plcFLOZ3G4W/2suSsEoCnuMhY38Y1eWHP//wWDSRWP4w8Yonp7NVMvIwoDtOSDtlAPy3cs1wyLJzAKPuBESl8ennv6R+g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YRgb9ajL; arc=none smtp.client-ip=209.85.128.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750444276; c=relaxed/simple;
+	bh=ad8vsSAm+A1358ro5HG+HW/KxeIAxNbEZgK7hOb00Nw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=r9z6gwB6bwNgy52BvbP9xT6uUPJ5WZ3tPxRIfw0lHZXC/JftF/wmkM/kFxy75wDThFeJhPdtDxOt8ebFkjSgb+6Uqk8XGUtSH7lFsn8OY5h9/hKcgAp/kLLiDDwQkOhog7czZ6VCg0gS+cBdeMfge+Kp3Qhyj8mDTXBIULU29CI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=FeUhZIrL; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=UpOOBQAm; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=FeUhZIrL; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=UpOOBQAm; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YRgb9ajL"
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-450d668c2a1so21318845e9.0;
-        Fri, 20 Jun 2025 11:25:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750443918; x=1751048718; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Gt/i0BLT2snEIhTbJGy1TYFOLnyF4y9hY/P46u8QJs0=;
-        b=YRgb9ajLqX1OrIriQ5nUrByhxx7RalmUnjZjcqzg+sDwhvivsDuukxlHRagAxYS8h7
-         /5+rQEvLrENoC2cxZFhJPLdVsR8xW5Hxw3jn/jTKACRjbI3MT48EQdk/du190e+JGrSf
-         wK6k/qA7oOPXduKaqCsYw795XpqLHM10VHR0rGxFB7rD4GR/mO2qbUX66vZh4HE7A1So
-         AZU0RSTuDSd4Gd5gKHaX8eILsI+HKfV7lFxZ86as0QCgQcJ3PqYd9AWg/vvCuFgD17pN
-         /IaNYhppap70syk+CPNCUC/AUSMZMD7927yHVF5fTb6gMyZ66IrAUiJUqNTIQ70pCuRl
-         r0aA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750443918; x=1751048718;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Gt/i0BLT2snEIhTbJGy1TYFOLnyF4y9hY/P46u8QJs0=;
-        b=xLaBgeKHnrFePasYscJ8gmatw59tIQWqaXSR4wHWRmTUHIXTvnJFxDKv06yH1fA+aE
-         sox/A65W/GrPqzuaNwIEk0V0utYP/zYlTv6IYAr++OYRshPTHevPcHjpes1C+ap4rmLB
-         pMkRDGek+t4i1SOTaRTQ5+OBqWNp63jYLvmInxHPlMDTwZslTbsLUcC9NtPJ3e7W73Z9
-         dABm2Z0Pf2M4NKFeLiQNftw92DgnDJ+uf6sJXgioIQfrJdyN872v/DvRwDRmdteyMfIY
-         ZkMUjDLQilopLpAuink8ayLtG/Ps7ed1UrX8QXgdtE2RUox8R2FaHImfG9WNk4Hiuyl7
-         w1wg==
-X-Forwarded-Encrypted: i=1; AJvYcCVfwZ9eJba3CsnHJ+FYJfun7foDkhO6z9ckcOLgHSxstkU5rWvrq/u1g38cThEba8Wx3jmZz2hviKZ9tiTvnd6mjH18@vger.kernel.org, AJvYcCWO8QLAST5xv/KS5unlAgJ2VBmNr83femqBhTzipJVyE7NZDZC2OBKjAR+FK4cBWzycsqU=@vger.kernel.org, AJvYcCWiPwFBDdAWIf7mymPg4CcnuiDfei+BY0/uDtACXu1T9rnk4ZvMBtztx/fHcWcr2zvDo02TyZgOwJbCjJbg@vger.kernel.org
-X-Gm-Message-State: AOJu0YzVf+G2CkVL5OOQ0sHrxcHZwy0eE3qPp8iBzb4s1wKe1vlVYyT/
-	/WfqWuJmuEcP4m1AnCMOH8DSYTB6jQL1N4UMiD3RV6Eo0ICNQ8hWIOiiVQI9DsKxOmqwPnxrPAG
-	8s7KJUHY8P6gNF5Jj/RPfv78ASeWVSw8=
-X-Gm-Gg: ASbGncsUI+edynR2IhT+IQOoPCdLRuLUHHJbSQxfcyfBPGFh6IFRAzcUFGKCsUC40ZZ
-	kYuGdhq2SveaCZJQvdrCGaDzwZshXJrjOK2kZ2VKdj3wGnLLXlRqrAr3OUW2aAMLywiV99pXbh8
-	DOw0jBhtqvie8BGf4Ifd6K0MOxLj9EdmiiwyGCM/XlwWLZ04nhOuCPOBoZY+Z63K/t3+6VWbiS
-X-Google-Smtp-Source: AGHT+IFq8K9bNqZ9f4cupMWMXq68frawsn8RVGfiyeoCiXF/kw+TVdBhMioEWGJkNhfPeR0A5MHmD4r80ke4UoM4SzU=
-X-Received: by 2002:a05:6000:40df:b0:3a5:5130:1c71 with SMTP id
- ffacd0b85a97d-3a6d26ec1c6mr3944019f8f.0.1750443917558; Fri, 20 Jun 2025
- 11:25:17 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="FeUhZIrL";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="UpOOBQAm";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="FeUhZIrL";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="UpOOBQAm"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id A1D172122A;
+	Fri, 20 Jun 2025 18:31:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1750444272; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=qmVG12TKwc2QVW0G8ian8AtN9mnqlZh4WCEqhc8pLTY=;
+	b=FeUhZIrLYm4/o8S8eNa53r7vMhoRAGFZLex3j4P4J6P9AZkL45f+IeQQIeeaiug+ZzRNFG
+	hARXJHANDh34/IjopPPX5I/xdKap8H63G8FhHa/3gDH6eeKztqNporF0VCesY+e0CanTA5
+	51aYl4AdOBArxDE3UjQRoagrNSvGRVg=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1750444272;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=qmVG12TKwc2QVW0G8ian8AtN9mnqlZh4WCEqhc8pLTY=;
+	b=UpOOBQAmFBCtjEINkxipWx6NT/FVaqv9UBV56UH2PdyRFK1+D8Q4qnl2CvuUL/i+Ynj3b+
+	2x9kYcDlaPYsWpDw==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1750444272; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=qmVG12TKwc2QVW0G8ian8AtN9mnqlZh4WCEqhc8pLTY=;
+	b=FeUhZIrLYm4/o8S8eNa53r7vMhoRAGFZLex3j4P4J6P9AZkL45f+IeQQIeeaiug+ZzRNFG
+	hARXJHANDh34/IjopPPX5I/xdKap8H63G8FhHa/3gDH6eeKztqNporF0VCesY+e0CanTA5
+	51aYl4AdOBArxDE3UjQRoagrNSvGRVg=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1750444272;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=qmVG12TKwc2QVW0G8ian8AtN9mnqlZh4WCEqhc8pLTY=;
+	b=UpOOBQAmFBCtjEINkxipWx6NT/FVaqv9UBV56UH2PdyRFK1+D8Q4qnl2CvuUL/i+Ynj3b+
+	2x9kYcDlaPYsWpDw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 1B93313736;
+	Fri, 20 Jun 2025 18:31:09 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id c8qtA+2oVWgNEwAAD6G6ig
+	(envelope-from <pfalcato@suse.de>); Fri, 20 Jun 2025 18:31:09 +0000
+Date: Fri, 20 Jun 2025 19:31:07 +0100
+From: Pedro Falcato <pfalcato@suse.de>
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, 
+	Russell King <linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, 
+	Will Deacon <will@kernel.org>, Madhavan Srinivasan <maddy@linux.ibm.com>, 
+	Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>, 
+	Christophe Leroy <christophe.leroy@csgroup.eu>, "David S . Miller" <davem@davemloft.net>, 
+	Andreas Larsson <andreas@gaisler.com>, Jarkko Sakkinen <jarkko@kernel.org>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, Thomas Gleixner <tglx@linutronix.de>, 
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	"H . Peter Anvin" <hpa@zytor.com>, Andy Lutomirski <luto@kernel.org>, 
+	Peter Zijlstra <peterz@infradead.org>, Alexander Viro <viro@zeniv.linux.org.uk>, 
+	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, Kees Cook <kees@kernel.org>, 
+	Peter Xu <peterx@redhat.com>, David Hildenbrand <david@redhat.com>, Zi Yan <ziy@nvidia.com>, 
+	Baolin Wang <baolin.wang@linux.alibaba.com>, "Liam R . Howlett" <Liam.Howlett@oracle.com>, 
+	Nico Pache <npache@redhat.com>, Ryan Roberts <ryan.roberts@arm.com>, Dev Jain <dev.jain@arm.com>, 
+	Barry Song <baohua@kernel.org>, Xu Xin <xu.xin16@zte.com.cn>, 
+	Chengming Zhou <chengming.zhou@linux.dev>, Hugh Dickins <hughd@google.com>, 
+	Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>, 
+	Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>, Rik van Riel <riel@surriel.com>, 
+	Harry Yoo <harry.yoo@oracle.com>, Dan Williams <dan.j.williams@intel.com>, 
+	Matthew Wilcox <willy@infradead.org>, Steven Rostedt <rostedt@goodmis.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	Jason Gunthorpe <jgg@ziepe.ca>, John Hubbard <jhubbard@nvidia.com>, 
+	Muchun Song <muchun.song@linux.dev>, Oscar Salvador <osalvador@suse.de>, Jann Horn <jannh@google.com>, 
+	Johannes Weiner <hannes@cmpxchg.org>, Qi Zheng <zhengqi.arch@bytedance.com>, 
+	Shakeel Butt <shakeel.butt@linux.dev>, linux-arm-kernel@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, kvm@vger.kernel.org, 
+	sparclinux@vger.kernel.org, linux-sgx@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	linux-mm@kvack.org, nvdimm@lists.linux.dev, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/3] mm: change vm_get_page_prot() to accept vm_flags_t
+ argument
+Message-ID: <drycqgdeh73cfghcovl3ujiaxcbmgrat73sf3aqtyanvoahrij@umib45jrz5qa>
+References: <cover.1750274467.git.lorenzo.stoakes@oracle.com>
+ <a12769720a2743f235643b158c4f4f0a9911daf0.1750274467.git.lorenzo.stoakes@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250619034257.70520-1-chen.dylane@linux.dev> <20250619034257.70520-2-chen.dylane@linux.dev>
- <CAADnVQLyAeo9ztPoJzU1QJUQf6SMptVNoOzZza02xPuXO1ES2g@mail.gmail.com>
- <9eedd830-9222-4ac0-8ccd-72499fb85b13@linux.dev> <CAADnVQJcdVCKPu8aPPj5hZExNTFYAYTd5xkF=Ljfm__+ugirGg@mail.gmail.com>
- <77b09f48-01d9-46f1-8a31-a1824c0eef8d@linux.dev>
-In-Reply-To: <77b09f48-01d9-46f1-8a31-a1824c0eef8d@linux.dev>
-From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date: Fri, 20 Jun 2025 11:25:06 -0700
-X-Gm-Features: Ac12FXyJkFR8rjBuSo4gLhjDVZGf9JFATvweEAE_aYUr4XayfWPQ7zQy3NpA0jE
-Message-ID: <CAADnVQ+SgYop50-1S7424ecRKWDM3R=8cHeizRCjeC_FXdkdLA@mail.gmail.com>
-Subject: Re: [PATCH bpf-next v4 2/2] bpf: Add show_fdinfo for kprobe_multi
-To: Tao Chen <chen.dylane@linux.dev>
-Cc: Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, Eduard <eddyz87@gmail.com>, 
-	Song Liu <song@kernel.org>, Yonghong Song <yonghong.song@linux.dev>, 
-	John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>, 
-	Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Matt Bobrowski <mattbobrowski@google.com>, Steven Rostedt <rostedt@goodmis.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	bpf <bpf@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
-	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a12769720a2743f235643b158c4f4f0a9911daf0.1750274467.git.lorenzo.stoakes@oracle.com>
+X-Spamd-Result: default: False [-3.80 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_RHS_NOT_FQDN(0.50)[];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	RCVD_TLS_ALL(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	ARC_NA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	RCPT_COUNT_GT_50(0.00)[64];
+	FROM_HAS_DN(0.00)[];
+	FREEMAIL_CC(0.00)[linux-foundation.org,armlinux.org.uk,arm.com,kernel.org,linux.ibm.com,ellerman.id.au,gmail.com,csgroup.eu,davemloft.net,gaisler.com,linux.intel.com,linutronix.de,redhat.com,alien8.de,zytor.com,infradead.org,zeniv.linux.org.uk,suse.cz,nvidia.com,linux.alibaba.com,oracle.com,zte.com.cn,linux.dev,google.com,suse.com,surriel.com,intel.com,goodmis.org,efficios.com,ziepe.ca,suse.de,cmpxchg.org,bytedance.com,lists.infradead.org,vger.kernel.org,lists.ozlabs.org,kvack.org,lists.linux.dev];
+	TO_DN_SOME(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_MATCH_ENVRCPT_SOME(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[oracle.com:email,suse.de:email]
+X-Spam-Level: 
+X-Spam-Flag: NO
+X-Spam-Score: -3.80
 
-On Thu, Jun 19, 2025 at 8:31=E2=80=AFPM Tao Chen <chen.dylane@linux.dev> wr=
-ote:
->
-> =E5=9C=A8 2025/6/20 10:59, Alexei Starovoitov =E5=86=99=E9=81=93:
-> > On Thu, Jun 19, 2025 at 7:46=E2=80=AFPM Tao Chen <chen.dylane@linux.dev=
-> wrote:
-> >>
-> >> =E5=9C=A8 2025/6/20 01:17, Alexei Starovoitov =E5=86=99=E9=81=93:
-> >>> On Wed, Jun 18, 2025 at 8:44=E2=80=AFPM Tao Chen <chen.dylane@linux.d=
-ev> wrote:
-> >>>>
-> >>>> Show kprobe_multi link info with fdinfo, the info as follows:
-> >>>>
-> >>>> link_type:      kprobe_multi
-> >>>> link_id:        1
-> >>>> prog_tag:       a15b7646cb7f3322
-> >>>> prog_id:        21
-> >>>> type:   kprobe_multi
-> >>>
-> >>> ..
-> >>>
-> >>>> +       seq_printf(seq,
-> >>>> +                  "type:\t%s\n"
-> >>>> +                  "kprobe_cnt:\t%u\n"
-> >>>> +                  "missed:\t%lu\n",
-> >>>> +                  kmulti_link->flags =3D=3D BPF_F_KPROBE_MULTI_RETU=
-RN ? "kretprobe_multi" :
-> >>>> +                                        "kprobe_multi",
-> >>>
-> >>> why print the same info twice ?
-> >>> seq_printf(m, "link_type:\t%s\n", bpf_link_type_strs[type]);
-> >>> in bpf_link_show_fdinfo() already did it in a cleaner way.
-> >>>
-> >>
-> >> link_type only shows 'kprobe_multi', maybe we can show the format like=
-:
-> >
-> > Ohh. Especially so. It would be wrong and confusing to display:
-> > link_type:      kprobe_multi
-> > type: kretprobe_multi
-> >
-> > Let's fix 'link_type' to display it properly.
->
-> What do you think show like this:
->
->      link_type:      kprobe_multi
->      link_id:        1
->      prog_tag:       33be53a4fd673e1d
->      prog_id:        21
->      retprobe:       false
+On Wed, Jun 18, 2025 at 08:42:52PM +0100, Lorenzo Stoakes wrote:
+> We abstract the type of the VMA flags to vm_flags_t, however in may places
+> it is simply assumed this is unsigned long, which is simply incorrect.
+> 
+> At the moment this is simply an incongruity, however in future we plan to
+> change this type and therefore this change is a critical requirement for
+> doing so.
+> 
+> Overall, this patch does not introduce any functional change.
+> 
+> Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
 
-It leaks implementation details.
-For the kernel the link type is BPF_LINK_TYPE_KPROBE_MULTI for retprobe too=
-,
-but show_fdinfo is for humans.
-'link_type:' field can be more precise and differentiate
-what's effectively a subtype of the link.
+Nice little cleanup, thanks!
+
+Reviewed-by: Pedro Falcato <pfalcato@suse.de>
+
+-- 
+Pedro
