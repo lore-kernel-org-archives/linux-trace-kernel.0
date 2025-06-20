@@ -1,99 +1,102 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CCF72836B4;
-	Fri, 20 Jun 2025 11:12:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1293F78F4A;
+	Fri, 20 Jun 2025 11:23:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750417940; cv=none; b=sifq8+S3veThqSMiKfnxcjoyIdmWmcq36PwUdUJ7xbgTx4UWXgOO10/osPh855Ilmu2NzNRLwd3hMETP5aF6tJbQDD89V3RD1CWX8dva2ilABrlAMkLJIXqhtO9+GV/opUosgSD9TSCnOEc7jrG5KoA5f+CrvZmtn7XklPLnrPo=
+	t=1750418632; cv=none; b=bkLMsSqD1fTJkZI0YqFp0KyeVUM4zpbfv9sGaG8NRPAQvdFKQJZLJJEcnzZm6WTElm6uGOarY+RG4KG/wafhvi+SNHp0wHkIGq/XFEFvhff/rEoyqY1uGLHrqBLBmKMGW2jDkMmTRpOYQ4SC8qlm1dcS/a5M+Svt832EMJWB+U0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750417940; c=relaxed/simple;
-	bh=WMxIjt67lfuwqeKRpfaOj1XAiUSOcn4mzIZSrhiNk7w=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=qHBM2lQft+ML6ZPZUp7iFtF/NQuuc+SFO6wsrKBVK10ol0fEjVmcMWQqSa+1WUXdC+ARMv+qw/YmAjHWdCYJK9neTvSs6YxdO74v91AMYW1RlmKhrzjssvefEwBgdS7ok9k3EbHsEi3vGzxjKPbLuIDB8yTBbo8wvI7SnZla6cM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LjjswfEM; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750418632; c=relaxed/simple;
+	bh=66n6XN5GLG8oS/KhyXU+4Cv1RfVfPu/ke39/ah7Y17o=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cNs5BNql7xBIq0577wLjqvCEbIM7RwzIqKB46idPacEpHAiLNZG/+KL/hlez82kBss83pozP8sEwWO8fvFlLWboNFOX0FABgf0IZGrEgcL+vmL8EUXftYaOfsUbQSYMaNj45VQ1tIRWFzZMeXSSbeeTDPtsqvkA0iSDc6kJ4hxI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=usnieh86; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LjjswfEM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4ADA7C4CEE3;
-	Fri, 20 Jun 2025 11:12:18 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="usnieh86"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AAF1DC4CEE3;
+	Fri, 20 Jun 2025 11:23:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750417939;
-	bh=WMxIjt67lfuwqeKRpfaOj1XAiUSOcn4mzIZSrhiNk7w=;
-	h=From:To:Cc:Subject:Date:From;
-	b=LjjswfEM6Xe5engaFwt9Sfm1HxRG/5s0+N5g7hXm6nVvVoOEw4FmuW6Njhw118/yF
-	 Y87+h3kKWBKOPkJt1bzl0oq8fRi3nWbX61Am53Yf8J+WJuAj7GccXP/2JPrsTltwIW
-	 9fGywE1XG+4nO5bKs4UTHaAyRGcuFCJKS9SYtrW2rUv84m7zDvA9aL/EH1kDraPycx
-	 fgrGDrLmA4ptelHhUPzOCBXbrnvF/1ReyiTo2iwHaXemhvs7KXUHMLsF88/nDUF5Qs
-	 z4G7CqSTMJcofA5r2MrMSmECRWJzOWdQXQRJ2Jo3B9hIk+nOqXaHhRCEH4rRz6w8II
-	 mPHouccUcPZgg==
-From: Arnd Bergmann <arnd@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>,
+	s=k20201202; t=1750418631;
+	bh=66n6XN5GLG8oS/KhyXU+4Cv1RfVfPu/ke39/ah7Y17o=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+	b=usnieh861Bm0GnT4+GEXqjfolK8ru7zwDWOH6a0B/2DgG3ercPsOv66eczER6U0sC
+	 F7k2ZKxFgJubdb+4Vt9w7c9OzkesdlR1YnJf85kRXkXJGmfLaFphUFy1oR/obcCDLz
+	 V1x0+U667FQHiQRtzEkgZzuB7PBYSBCCpMLkmayWQ65a+71GOpWjaXLEfNJ86FxsLD
+	 ZD7tcMjoEnyQT0IPqvkGpIx3s/IAdsAp/LsO1c/ly5EljQHeYKovhEr9l6Sr+ySJJK
+	 iXWQf9ec6WjSAyu30x/Aqv+uhvBSsGUNqYEw6OJ6J2/MgNAovPqpNAP3RSe1sCVagH
+	 HlCmVOdYJ5ZGA==
+Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
+	id 30FA3CE0B9E; Fri, 20 Jun 2025 04:23:49 -0700 (PDT)
+Date: Fri, 20 Jun 2025 04:23:49 -0700
+From: "Paul E. McKenney" <paulmck@kernel.org>
+To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc: Boqun Feng <boqun.feng@gmail.com>, linux-rt-devel@lists.linux.dev,
+	rcu@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	Frederic Weisbecker <frederic@kernel.org>,
+	Joel Fernandes <joelagnelf@nvidia.com>,
+	Josh Triplett <josh@joshtriplett.org>,
+	Lai Jiangshan <jiangshanlai@gmail.com>,
 	Masami Hiramatsu <mhiramat@kernel.org>,
-	Song Chen <chensong_2000@189.cn>
-Cc: Arnd Bergmann <arnd@arndb.de>,
 	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH] kernel: trace: preemptirq_delay_test: use offstack cpu mask
-Date: Fri, 20 Jun 2025 13:12:12 +0200
-Message-Id: <20250620111215.3365305-1-arnd@kernel.org>
-X-Mailer: git-send-email 2.39.5
+	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Uladzislau Rezki <urezki@gmail.com>, Zqiang <qiang.zhang@linux.dev>
+Subject: Re: [RFC PATCH 1/2] rcu: Add rcu_read_lock_notrace()
+Message-ID: <34957424-1f92-4085-b5d3-761799230f40@paulmck-laptop>
+Reply-To: paulmck@kernel.org
+References: <20250613152218.1924093-1-bigeasy@linutronix.de>
+ <20250613152218.1924093-2-bigeasy@linutronix.de>
+ <aFL1pIGMDX5DG9f_@tardis.local>
+ <20250620084334.Zb8O2SwS@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250620084334.Zb8O2SwS@linutronix.de>
 
-From: Arnd Bergmann <arnd@arndb.de>
+On Fri, Jun 20, 2025 at 10:43:34AM +0200, Sebastian Andrzej Siewior wrote:
+> On 2025-06-18 10:21:40 [-0700], Boqun Feng wrote:
+> > 
+> > If it doesn't participate in rcu_read_unlock_special() then it may not
+> > report a QS in time, right? For example:
+> > 
+> > 	CPU 2			CPU 3
+> > 	=====
+> > 	rcu_read_lock_notrace();
+> > 				synchronize_rcu();
+> > 				// need all CPUs report a QS.
+> > 	rcu_read_unlock_notrace();
+> > 	// no rcu_read_unlock_special() so QS will only be reported next
+> > 	// time we if another RCU read-side critical section exits.
+> > 
+> > Wouldn't this be a problem?
+> 
+> I hope not because it is not any different from
+> 
+>  	CPU 2			CPU 3
+>  	=====                   =====
+> 	NMI
+>  	rcu_read_lock();
+>  				synchronize_rcu();
+>  				// need all CPUs report a QS.
+>  	rcu_read_unlock();
+>  	// no rcu_read_unlock_special() due to in_nmi().
+> 
+> If the NMI happens while the CPU is in userland (say a perf event) then
+> the NMI returns directly to userland.
+> After the tracing event completes (in this case) the CPU should run into
+> another RCU section on its way out via context switch or the tick
+> interrupt.
+> I assume the tick interrupt is what makes the NMI case work.
 
-A CPU mask on the stack is broken for large values of CONFIG_NR_CPUS:
+Are you promising that interrupts will be always be disabled across
+the whole rcu_read_lock_notrace() read-side critical section?  If so,
+could we please have a lockdep_assert_irqs_disabled() call to check that?
 
-kernel/trace/preemptirq_delay_test.c: In function ‘preemptirq_delay_run’:
-kernel/trace/preemptirq_delay_test.c:143:1: error: the frame size of 8512 bytes is larger than 1536 bytes [-Werror=frame-larger-than=]
-
-Fall back to dynamic allocation here.
-
-Fixes: 4b9091e1c194 ("kernel: trace: preemptirq_delay_test: add cpu affinity")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- kernel/trace/preemptirq_delay_test.c | 13 +++++++++----
- 1 file changed, 9 insertions(+), 4 deletions(-)
-
-diff --git a/kernel/trace/preemptirq_delay_test.c b/kernel/trace/preemptirq_delay_test.c
-index 9b7037194663..331b49240180 100644
---- a/kernel/trace/preemptirq_delay_test.c
-+++ b/kernel/trace/preemptirq_delay_test.c
-@@ -117,12 +117,15 @@ static int preemptirq_delay_run(void *data)
- {
- 	int i;
- 	int s = min(burst_size, NR_TEST_FUNCS);
--	struct cpumask cpu_mask;
-+	cpumask_var_t cpu_mask;
-+
-+	if (!alloc_cpumask_var(&cpu_mask, GFP_KERNEL))
-+		return -ENOMEM;
- 
- 	if (cpu_affinity > -1) {
--		cpumask_clear(&cpu_mask);
--		cpumask_set_cpu(cpu_affinity, &cpu_mask);
--		if (set_cpus_allowed_ptr(current, &cpu_mask))
-+		cpumask_clear(cpu_mask);
-+		cpumask_set_cpu(cpu_affinity, cpu_mask);
-+		if (set_cpus_allowed_ptr(current, cpu_mask))
- 			pr_err("cpu_affinity:%d, failed\n", cpu_affinity);
- 	}
- 
-@@ -139,6 +142,8 @@ static int preemptirq_delay_run(void *data)
- 
- 	__set_current_state(TASK_RUNNING);
- 
-+	free_cpumask_var(cpu_mask);
-+
- 	return 0;
- }
- 
--- 
-2.39.5
-
+							Thanx, Paul
