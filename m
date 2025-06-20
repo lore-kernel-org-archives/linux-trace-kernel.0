@@ -1,125 +1,107 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2F5A28F3;
-	Fri, 20 Jun 2025 08:16:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C285F23717C;
+	Fri, 20 Jun 2025 08:43:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750407362; cv=none; b=YqJt16D5Ng8u1TjzSdDuNSGO2TPviCrpkspTPoSbQ6YiuJ54iX99UtNvQwtvzIsXY95lPLSzh5Bk8XmP62WY/1UXU9kuNaJIZNcO5O7dzLHDvLup6VgOggG3RJ4w296Eg6bxYtV/xOBxjY96xiJs2rAlsdcqxdsrtefsdSKKhBk=
+	t=1750409019; cv=none; b=B73R7B6JAHLhQetrEoCuD1LEmUcbRjXIMVRkRQNqjKhPhna2bKrskKx9KfhSJ1QbcInfMYM8HpXkJMZt/L+1FwuFXJlpJXxJXtUEO5UKVVawuv6H/rScX8TMgmAsRvNqpj/6+Su+NVxCHwzPjzvIiKTQe8dchItnWsuwrGur29k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750407362; c=relaxed/simple;
-	bh=wgoyCtEiXxlezBvNBqyM0qd8zvtWEkhDLIA41gSe+KY=;
+	s=arc-20240116; t=1750409019; c=relaxed/simple;
+	bh=xiYoiA0vD0R9FosBeepOA5ayZ68lc048xz2QjR77AQ0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=j1enz3dmm5IxqIvY99aFIYTd8ADnOmSFYbWz6Dcm0SzNxImEGWDwznNDUTSnc2v+EVLxNG1A+7WF4s0EiMNZcIC9XHn7cry/d8YJtiZOWy40/6TJ9hbOH4JKTur4FsZMJOX8m8aqOHaH2Jw3pAPhNQG6jiz/frYRWXhSKuOODl0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=DDVg+WAJ; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=qIalHB1qGW1KoLXB8ljyNBMfjnhTw4EsvMBiW9uuVQOWvJOKoQ4ss0yIfpJRC4cpc0jfjrVFzfoipuyYcSFwGuE3M9uazEy5Y6SwrNYj56w/iTV/VQux3cctPPNGKbI341xVppFx7FEvwA0BaCAJJ+tJPgL0nm52rvKOzi1yvX4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=SlC8L2zz; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=L0dFoXJI; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="DDVg+WAJ"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=C2SozZJF+dRAW0Ug5ciknM6joODBVsslgQj4ViQKp00=; b=DDVg+WAJhj1HBfuYFYKza+kG2L
-	FZDDJqxrzufbuVfq0x4QTJmAmJ0FMVsnBwOlLjFj6hVVoMW7dJCtGaCs+6NssJ4r0Ob5Rgg3kdg7/
-	3ZM2qiGLMirbX96pM44FaW/99Tzp+eVWIigQ2BxxqFBY8og/GWpezZgHUL6VBmpcy81I+xGK1qTFN
-	rY97ZdWCggDOBwx40+aTaru34tQZzLHZaG3chkNviXSqshmmxzIw2tC/cDRYSs2T8KK3EmVXULnKo
-	x03Mq9I3JWZYHKTEYFyjJHMK1Yj3YzPBlgqlXsn2HERUb/8lk+ef5xse3pBEBAbVmJ8X/dyAbVflN
-	/X8Isljg==;
-Received: from 2001-1c00-8d82-d000-266e-96ff-fe07-7dcc.cable.dynamic.v6.ziggo.nl ([2001:1c00:8d82:d000:266e:96ff:fe07:7dcc] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uSWuV-0000000C3B1-2rb6;
-	Fri, 20 Jun 2025 08:15:43 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id B3A69308989; Fri, 20 Jun 2025 10:15:42 +0200 (CEST)
-Date: Fri, 20 Jun 2025 10:15:42 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	bpf@vger.kernel.org, x86@kernel.org,
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="SlC8L2zz";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="L0dFoXJI"
+Date: Fri, 20 Jun 2025 10:43:34 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1750409016;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=nIoY8ERSlva0NoEjEF9t7JgdIzcqxRup7Yp6VS+OPfU=;
+	b=SlC8L2zzQ5ajZ7h+5wljjYQ0rN2aXw6LeknxNSo6/MXTghM/+L9wCOEt5K+pzVvWi+rPgI
+	9YrP3RVwY0ehgFsVLH6lMn/Dnmaa0c8s7rZTJmerdKJVqvH4EnM8kE01RrIUjRcgU4HG9F
+	a/khfxK84CkiwWPXzBVcM7Zy1ZuYcMviOimm3SAEmGwVH01txFu5mDTlv6jeliS5FvEZR9
+	k8m+yPr0SSx7mWzj3dU9URDAJzIqIUnDSNp3YldlZN6cPW8gilr32NJBmCY+ptkiCwv1sQ
+	undbVQ52Uumu+dxH3WGHcoMXUPUNOI2+jVRfyqCrOiE+YsCQ9qZmGxKfFJmxXQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1750409016;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=nIoY8ERSlva0NoEjEF9t7JgdIzcqxRup7Yp6VS+OPfU=;
+	b=L0dFoXJI2uUbWAgtm74SBNvu9ziOhm3tdTGAqSpWI6AmOcsrPe7n3ksZg+trecFINbAC5b
+	CB96TAdGSch1FMAw==
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To: Boqun Feng <boqun.feng@gmail.com>
+Cc: linux-rt-devel@lists.linux.dev, rcu@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	Frederic Weisbecker <frederic@kernel.org>,
+	Joel Fernandes <joelagnelf@nvidia.com>,
+	Josh Triplett <josh@joshtriplett.org>,
+	Lai Jiangshan <jiangshanlai@gmail.com>,
 	Masami Hiramatsu <mhiramat@kernel.org>,
 	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Ingo Molnar <mingo@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
+	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
 	Thomas Gleixner <tglx@linutronix.de>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Indu Bhagat <indu.bhagat@oracle.com>,
-	"Jose E. Marchesi" <jemarch@gnu.org>,
-	Beau Belgrave <beaub@linux.microsoft.com>,
-	Jens Remus <jremus@linux.ibm.com>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH v10 08/14] unwind deferred: Use bitmask to determine
- which callbacks to call
-Message-ID: <20250620081542.GK1613200@noisy.programming.kicks-ass.net>
-References: <20250611005421.144238328@goodmis.org>
- <20250611010429.105907436@goodmis.org>
+	Uladzislau Rezki <urezki@gmail.com>, Zqiang <qiang.zhang@linux.dev>
+Subject: Re: [RFC PATCH 1/2] rcu: Add rcu_read_lock_notrace()
+Message-ID: <20250620084334.Zb8O2SwS@linutronix.de>
+References: <20250613152218.1924093-1-bigeasy@linutronix.de>
+ <20250613152218.1924093-2-bigeasy@linutronix.de>
+ <aFL1pIGMDX5DG9f_@tardis.local>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250611010429.105907436@goodmis.org>
+In-Reply-To: <aFL1pIGMDX5DG9f_@tardis.local>
 
-On Tue, Jun 10, 2025 at 08:54:29PM -0400, Steven Rostedt wrote:
+On 2025-06-18 10:21:40 [-0700], Boqun Feng wrote:
+> 
+> If it doesn't participate in rcu_read_unlock_special() then it may not
+> report a QS in time, right? For example:
+> 
+> 	CPU 2			CPU 3
+> 	=====
+> 	rcu_read_lock_notrace();
+> 				synchronize_rcu();
+> 				// need all CPUs report a QS.
+> 	rcu_read_unlock_notrace();
+> 	// no rcu_read_unlock_special() so QS will only be reported next
+> 	// time we if another RCU read-side critical section exits.
+> 
+> Wouldn't this be a problem?
 
+I hope not because it is not any different from
 
->  void unwind_deferred_cancel(struct unwind_work *work)
->  {
-> +	struct task_struct *g, *t;
-> +
->  	if (!work)
->  		return;
->  
->  	guard(mutex)(&callback_mutex);
->  	list_del(&work->list);
-> +
-> +	clear_bit(work->bit, &unwind_mask);
+ 	CPU 2			CPU 3
+ 	=====                   =====
+	NMI
+ 	rcu_read_lock();
+ 				synchronize_rcu();
+ 				// need all CPUs report a QS.
+ 	rcu_read_unlock();
+ 	// no rcu_read_unlock_special() due to in_nmi().
 
-atomic bitop
+If the NMI happens while the CPU is in userland (say a perf event) then
+the NMI returns directly to userland.
+After the tracing event completes (in this case) the CPU should run into
+another RCU section on its way out via context switch or the tick
+interrupt.
+I assume the tick interrupt is what makes the NMI case work.
 
-> +
-> +	guard(rcu)();
-> +	/* Clear this bit from all threads */
-> +	for_each_process_thread(g, t) {
-> +		clear_bit(work->bit, &t->unwind_info.unwind_mask);
-> +	}
->  }
->  
->  int unwind_deferred_init(struct unwind_work *work, unwind_callback_t func)
-> @@ -256,6 +278,14 @@ int unwind_deferred_init(struct unwind_work *work, unwind_callback_t func)
->  	memset(work, 0, sizeof(*work));
->  
->  	guard(mutex)(&callback_mutex);
-> +
-> +	/* See if there's a bit in the mask available */
-> +	if (unwind_mask == ~0UL)
-> +		return -EBUSY;
-> +
-> +	work->bit = ffz(unwind_mask);
-> +	unwind_mask |= BIT(work->bit);
+> Regards,
+> Boqun
 
-regular or
-
-> +
->  	list_add(&work->list, &callbacks);
->  	work->func = func;
->  	return 0;
-> @@ -267,6 +297,7 @@ void unwind_task_init(struct task_struct *task)
->  
->  	memset(info, 0, sizeof(*info));
->  	init_task_work(&info->work, unwind_deferred_task_work);
-> +	info->unwind_mask = 0;
->  }
-
-Which is somewhat inconsistent;
-
-  __clear_bit()/__set_bit()
-
-or:
-
-  unwind_mask &= ~BIT() / unwind_mask |= BIT()
+Sebastian
