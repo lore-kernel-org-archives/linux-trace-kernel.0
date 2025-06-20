@@ -1,33 +1,33 @@
-Received: from out-173.mta1.migadu.com (out-173.mta1.migadu.com [95.215.58.173])
+Received: from out-181.mta1.migadu.com (out-181.mta1.migadu.com [95.215.58.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47C74801
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 20 Jun 2025 03:22:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 034E7625
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 20 Jun 2025 03:31:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750389729; cv=none; b=IJ+ZWRWP7OeHosZx7UxIwtT6VNWVx2cjX79ZAJSn0+kEu81u56E6XJgZVowWsSq2LLSDRFO8evlAY+rj2/yMMbI5C65otpxsyvQyE1N7J2iCuH5ef7JDxxNIjz0Y1iVxrsZxOLk4NqTpyu1zeFz44MNOQJ6wMXtNgMfidOCm55M=
+	t=1750390315; cv=none; b=frJvbzgKK26r9J3sXZopPhEMhLX+Bjw0YRn/S+DgKvOSLEfPd8fLpmvcdDqmqAoe+jgpUFEK6eFg4uaFjngAYGsCe57qU5Q/eKdbWt7/O7WaivGwJFee0xKZEW34NNZEfYISjLx76OefNRl7+LX2FnFLQ+KBRV0C6X1iLAhDFWk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750389729; c=relaxed/simple;
-	bh=BNVZL1LwSlKQ2Hwemkrc1kvOKy4tqch5FGs7pVe0NsE=;
+	s=arc-20240116; t=1750390315; c=relaxed/simple;
+	bh=qe2WZJOXDFXtbGsYs8yHVh293TDNB/jAfqNfOyKBbJk=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=SydAd0VcAHZO16FCNoUEnrZbR9czLs1pJb/nalJTN7MJntLaIyXH5q/Gl3DOpArZUyj0/1L3Sv/brPpc2hOPj/9ttdUFZyrG62LLqgKiiVfWFNuopLmDBvdM2DNYJxt2g+SpOAL3BH50rOzLr92o8RtsXVo3SNyoMu/tocqVEns=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=mh73/h4Q; arc=none smtp.client-ip=95.215.58.173
+	 In-Reply-To:Content-Type; b=DSqEo7sM5Dw8ARBxy/gF+ewbtls+38giUVwLduTM+VrJTusIdOsk6iJEwNYwqxb/uB8nBD3oOetbSLsMc00kRdgcgXccfuQEh3BOFfQvypWwFe6RAqeATGreSLPJLp7vUpzf/ZXSdj+2lYJfu/i4sLsuLTwFsnqugWTDFeoccNg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=EqRiKvO0; arc=none smtp.client-ip=95.215.58.181
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="mh73/h4Q"
-Message-ID: <28a6e8ae-7344-4c09-a779-af0d833d8578@linux.dev>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="EqRiKvO0"
+Message-ID: <77b09f48-01d9-46f1-8a31-a1824c0eef8d@linux.dev>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1750389722;
+	t=1750390311;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=yiYHAkxGzw2ln42MzS53hzpnRDIheaafpYaL8k6tDvA=;
-	b=mh73/h4QeFY3OkDc8dwZdRmQypRhWlNdTh8jivXqn5WIYL+6wa1OycpmOo/kvhSdXXT50J
-	FN2FYGs2v9HTj9BrmlHwMV94B2HP1JZJmNctXmM5jyZQyywIaS0jqj/hxWd6yqBzSjv7Bc
-	lUoPZbOhClFMcV5Qg7X8el9oPz7JIyo=
-Date: Fri, 20 Jun 2025 11:21:45 +0800
+	bh=IvpYb8k/NL2t39sUPEZh6TnSoeFYsRoqFlVYkMs7g3k=;
+	b=EqRiKvO08D0o/1M6IsABbVCaKpmV6NLcNhfCrPzEHHvkJmCWQLslajKSRPNcet189vJjX+
+	Sl0tvsTpjoiLAcuxW/EO/pNT0tjU+7pqDKfvVwd/P+2bFK0QzAija06prM6kzzHw/MkPrM
+	aSnHXnRzqiX50p4Dko8uruD2mj0rpKQ=
+Date: Fri, 20 Jun 2025 11:31:38 +0800
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -95,8 +95,24 @@ X-Migadu-Flow: FLOW_OUT
 > 
 > Let's fix 'link_type' to display it properly.
 
-Yeah, but it seems that 'link_type' is a common field for other link 
-types, you mean use 'link_type' to show 'kprobe_multi' or 'kretprobe_multi'?
+What do you think show like this:
+
+     link_type:      kprobe_multi
+     link_id:        1
+     prog_tag:       33be53a4fd673e1d
+     prog_id:        21
+     retprobe:       false
+     kprobe_cnt:     8
+     missed: 0
+     cookie           func
+     1                bpf_fentry_test1+0x0/0x20
+     7                bpf_fentry_test2+0x0/0x20
+     2                bpf_fentry_test3+0x0/0x20
+     3                bpf_fentry_test4+0x0/0x20
+     4                bpf_fentry_test5+0x0/0x20
+     5                bpf_fentry_test6+0x0/0x20
+     6                bpf_fentry_test7+0x0/0x20
+     8                bpf_fentry_test8+0x0/0x10
 
 -- 
 Best Regards
