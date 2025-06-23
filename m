@@ -1,132 +1,91 @@
-Received: from out-171.mta0.migadu.com (out-171.mta0.migadu.com [91.218.175.171])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 877BB24DCFD
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 23 Jun 2025 13:45:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D22A925393A;
+	Mon, 23 Jun 2025 13:57:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750686324; cv=none; b=qsFd3uAS1dgJHS7v1aXt1zooRgV4yh84qe5f/iK2+iygdJybATKYeg0HIQq4x2YQk9YdLH7yylKg80QYfsF9KTGYF0lXrFGKEQ067qoCLjB2X33GCsW+KoPYk2exe/SFbz7amvWDfRDmz2tMh1hLnF6pfgRZaqGEVfbWesZTryI=
+	t=1750687047; cv=none; b=YMjpf9hc6cRQpibCyW/EQiJF9OgZScZrHzqvY6hnvwLP8pb+jCd1gap1m5h/33LDapzzpf6hZlrqBAWPxnIed7R4GKJkfZIE7gMGesk+24UKd/byUQufQ9uzH11madWHkZVtFYg86v2vNHvSXCbluVzDksOP2t20Uk0yYMklrm0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750686324; c=relaxed/simple;
-	bh=AlyOK8e20E88te3l2GflfE+0qiJ/f6x6QhsyGZEf+P4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=USUDKXx8jCJUq330FkLgEILXrPgTmxNlZ2l5BGVBX3ic7HV2Dgxz7DXfWIzQVHNO/hmFO51dBORvBKVx4r57GVQOTYdr3rtn8CnImNwinOBak9vqrGeZVelPTkoupb6hgFIL1fADNSIwzuYMLIDQV29ZSgTZbrIqbbrqeZ+WbhI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=rJWg/h1p; arc=none smtp.client-ip=91.218.175.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1750687047; c=relaxed/simple;
+	bh=P0sFolHUxrVuoCE+6NvZQkcDRze9W1xjSNhVu3bmqhs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Bp+7IkfZ7zQ5C1o/7d7PCR8LQrdbnsuAn5LS9C3cXkPruBCKrppMS8Uf8WBKELtXQUNM/fm+fjXAzbCuB+2LLRaBp34s1/9MXnAadzbY7tAw+iUf+pG3avk/6Sac+R6Tgykd3Olz2mFeAeXzCAw8ckHJUupaafbK2AjlFeW9PXY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=b09dcOmP; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=CsVWcb5X; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="rJWg/h1p"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1750686319;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="b09dcOmP";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="CsVWcb5X"
+Date: Mon, 23 Jun 2025 15:57:18 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1750687043;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=mJg67qQuLrQ9MnWPvmahOxwsNWo0ze5flYtpMSuPnYs=;
-	b=rJWg/h1pRZ4c40l0vyoOnp5O/2sl6GygdG253RGmtoOy8Nvisi6UVVA7Iu/aTD8gdOciTP
-	5fbkpziz38DlTHL877Ou4aOEuhtbVsVhigKVl/w4cb7JcOIL9CsQX5hCPY1usrsMenIybJ
-	ZfQAALi68fkBgLJhQBHv5Sm2mZXkZTI=
-From: Tao Chen <chen.dylane@linux.dev>
-To: kpsingh@kernel.org,
-	mattbobrowski@google.com,
-	song@kernel.org,
-	jolsa@kernel.org,
-	ast@kernel.org,
-	daniel@iogearbox.net,
-	andrii@kernel.org,
-	martin.lau@linux.dev,
-	eddyz87@gmail.com,
-	yonghong.song@linux.dev,
-	john.fastabend@gmail.com,
-	sdf@fomichev.me,
-	haoluo@google.com,
-	rostedt@goodmis.org,
-	mhiramat@kernel.org,
-	mathieu.desnoyers@efficios.com
-Cc: bpf@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	Tao Chen <chen.dylane@linux.dev>
-Subject: [PATCH bpf-next v5 3/3] bpf: Add show_fdinfo for kprobe_multi
-Date: Mon, 23 Jun 2025 21:43:42 +0800
-Message-ID: <20250623134342.227347-3-chen.dylane@linux.dev>
-In-Reply-To: <20250623134342.227347-1-chen.dylane@linux.dev>
-References: <20250623134342.227347-1-chen.dylane@linux.dev>
+	bh=Cz2DKQba7gyNT9FBfEsFGB/ebwSNeejJWsxrap/HXEc=;
+	b=b09dcOmPJ9WTZdJ9Kx8pzwR2kDkG7WFul9r4XEla56yKYobxoiK0xLz2r+ipAhcSCCONRf
+	AmLdDXIn7LqLrpjA6Oj/Ys41/BqyAEkGwGzQb/uL0VjQnx/x8D/m0rXi5z6F5IeNG9ObtI
+	bnDw82nlc5hcYDbjka2S/rjj4r1L1I+LvkQ62MzC5hfc2vTbxAjF0mjNfl76tUIVciYoHE
+	+L4QrtVe5ZgkEA8jDkd9oEtBuE02ftphYOI4KERp0tt9+JFNYwDDjW4Yvlu0TXcwMPnR3c
+	emCvFtj4JTGXRFPZSAQ6fdOStyC3u0PVf1cKHf+AhrQeIJN6YGvhJkaHhTXS5Q==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1750687043;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Cz2DKQba7gyNT9FBfEsFGB/ebwSNeejJWsxrap/HXEc=;
+	b=CsVWcb5Xttzpchn17VPyWnYIsveUNvKtggmh1ypIzkTZDaPBH96sZiLd6BAHgeELRXJK8S
+	BjrZWIEcxbc4dwBw==
+From: Nam Cao <namcao@linutronix.de>
+To: Junxuan Liao <ljx@cs.wisc.edu>
+Cc: linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
+	x86@kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	"Paul E. McKenney" <paulmck@kernel.org>
+Subject: Re: [PATCH v3 RESEND] x86/tracing: introduce enter/exit tracepoint
+ pairs for page faults
+Message-ID: <20250623135718.Zc4hKa-u@linutronix.de>
+References: <2dda8c03-072a-43b2-af0c-bb996d64c388@cs.wisc.edu>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2dda8c03-072a-43b2-af0c-bb996d64c388@cs.wisc.edu>
 
-Show kprobe_multi link info with fdinfo, the info as follows:
+On Sun, Jun 15, 2025 at 07:32:00PM -0500, Junxuan Liao wrote:
+> Merge page_fault_{user,kernel}, rename it page_fault_enter, and add
+> page_fault_exit. This pair is useful for measuring page fault handling
+> latencies.
+> 
+> Add a new field to the merged tracepoints to indicate whether the page
+> fault happened in userspace. We no longer need the static key associated,
+> since it was used just to avoid checking user_mode when the tracepoints
+> were disabled.
 
-link_type:	kprobe_multi
-link_id:	1
-prog_tag:	33be53a4fd673e1d
-prog_id:	21
-kprobe_cnt:	8
-missed:	0
-cookie           func
-1                bpf_fentry_test1+0x0/0x20
-7                bpf_fentry_test2+0x0/0x20
-2                bpf_fentry_test3+0x0/0x20
-3                bpf_fentry_test4+0x0/0x20
-4                bpf_fentry_test5+0x0/0x20
-5                bpf_fentry_test6+0x0/0x20
-6                bpf_fentry_test7+0x0/0x20
-8                bpf_fentry_test8+0x0/0x10
+(I think) this breaks lttng which uses the old tracepoint names [1]. But
+I'm not sure if we should worry about that.
 
-Signed-off-by: Tao Chen <chen.dylane@linux.dev>
----
- kernel/trace/bpf_trace.c | 27 +++++++++++++++++++++++++++
- 1 file changed, 27 insertions(+)
+Do you plan to add this to other architectures?
 
-diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
-index 90209dda819..957e5b319ef 100644
---- a/kernel/trace/bpf_trace.c
-+++ b/kernel/trace/bpf_trace.c
-@@ -2623,10 +2623,37 @@ static int bpf_kprobe_multi_link_fill_link_info(const struct bpf_link *link,
- 	return err;
- }
- 
-+#ifdef CONFIG_PROC_FS
-+static void bpf_kprobe_multi_show_fdinfo(const struct bpf_link *link,
-+					 struct seq_file *seq)
-+{
-+	struct bpf_kprobe_multi_link *kmulti_link;
-+
-+	kmulti_link = container_of(link, struct bpf_kprobe_multi_link, link);
-+
-+	seq_printf(seq,
-+		   "kprobe_cnt:\t%u\n"
-+		   "missed:\t%lu\n",
-+		   kmulti_link->cnt,
-+		   kmulti_link->fp.nmissed);
-+
-+	seq_printf(seq, "%-16s %-16s\n", "cookie", "func");
-+	for (int i = 0; i < kmulti_link->cnt; i++) {
-+		seq_printf(seq,
-+			   "%-16llu %-16pS\n",
-+			   kmulti_link->cookies[i],
-+			   (void *)kmulti_link->addrs[i]);
-+	}
-+}
-+#endif
-+
- static const struct bpf_link_ops bpf_kprobe_multi_link_lops = {
- 	.release = bpf_kprobe_multi_link_release,
- 	.dealloc_deferred = bpf_kprobe_multi_link_dealloc,
- 	.fill_link_info = bpf_kprobe_multi_link_fill_link_info,
-+#ifdef CONFIG_PROC_FS
-+	.show_fdinfo = bpf_kprobe_multi_show_fdinfo,
-+#endif
- };
- 
- static void bpf_kprobe_multi_cookie_swap(void *a, void *b, int size, const void *priv)
--- 
-2.48.1
+Perhaps it is better to implement the other approach suggested by Frederic
+[2], using trace_user_exit/trace_user_enter? So that more architectures are
+covered, and avoid breaking user tools?
 
+(Btw, you would need to rebase this patch. The tracepoint has been moved,
+and the static key has been deleted.)
+
+Best regards,
+Nam
+
+[1] https://github.com/lttng/lttng-modules/blob/master/include/instrumentation/events/arch/x86/exceptions.h#L88C48-L88C63
+[2] https://lore.kernel.org/lkml/Z_mO6_m0bV-Q8NEa@pavilion.home/#t
