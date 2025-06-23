@@ -1,148 +1,121 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from out-177.mta1.migadu.com (out-177.mta1.migadu.com [95.215.58.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3111A157A67;
-	Sat, 21 Jun 2025 08:57:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 610E017A2F2
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 23 Jun 2025 02:32:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750496237; cv=none; b=g/MQUYT7ag72ObTN/JzGuPAyVPEIrXbNFRNqG/pYHpgf3vUW41DFWSKSI50BgWeupT7m2SE7orp2gFB/Oz8mMTW91Up8OhWZaBP86eph3xSmpn4E2Zj5Q8UXFn+xPGEtAE906t2pwBZzhq2Z1jcnKZOV3w9fEisdV2pbBL2Zcms=
+	t=1750645972; cv=none; b=Z+cIm4CRHXAz4ZafgnybwiYQ997cNSdonu9qqDrxnkd3YyysTETSR9oMlnWMeQhC05YjaaLObqYTcnNHyav2aDgvWyKRcqHvkBvIverxUmPFmjRLv48E1rSdi8B0QElHDed7hnqnmYBRovOPdvljMiDwrUaCE6xTm9bI2rxg8xg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750496237; c=relaxed/simple;
-	bh=z1609bAgBUIp/jgJsQxGpB32Y6A5jwc17jZ0FZC0UkI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aZXzjTP58Y3n/ZJg1TmeRlIbWuU3438ZcjUtEepaF79ayAsvfGpHrrT/WPpK08hmEmm7djAQP2kB7yZ5QGSwmxM76QFkEoum6+FyRWJE1jljq/VgslrwQJgBh23qbBV1LOp7cRlorb/14r7qw6wKvxM/PAEjn0boqMTWIUNuEX4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=bstSyS5a; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1750645972; c=relaxed/simple;
+	bh=8hluwjVTmXXog4aTRxgoRd/tz2EcAslNixaPAR1dtNM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=J+aw5YS99lT5qUYhVt6Gh/Gns3qTLgZ6RzUXC60ooVZubHrA2uWINaiL7sdPJpjH9cmRunAHesinaPYux4uOFW+5KoHKmWwNyKNodRSHzs7/ERTPTVPYXXP6NVSihLNLIVdbyLhO1ZFHI85YJ2WyzCa/oBXjxkUGhnK1qvfO9ME=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=sl30Inp7; arc=none smtp.client-ip=95.215.58.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="bstSyS5a"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=lXj6aZd0B3JE/QjD5McyxMpqZnX6HWv51quwI3Qk/SM=; b=bstSyS5ao+0n9VhZ4/1lrbqEju
-	mk9NP8v43SFdpDSpYBiEf4gP0sGo7ChvsPRsM1uiIsy1tqH3P4b8ceaeZhW9Pv2AmRLHi0M+zPDM7
-	IPlSZ2CGeWxkKv6pPc77hap9VfgHMEosvWvK/YEJEGd3eIovqhPYZWx7VPz7AuMDZ4IXW2VYGDGg+
-	2N1hDpPgV6xnYU0qg+OuzLe7y7iaZFhpKvARv03+bt5pln7tTKlBEA8VExCiKx0yvrOL//0B6H9id
-	rxQoGkfVLSQOFQwrlVMUR0S4eY/E12UGBMKViP7F2d/yS/+m6ieFByafsQM9S3VZ8Cp5/p21jdvaa
-	MvG5HwGg==;
-Received: from 2001-1c00-8d82-d000-266e-96ff-fe07-7dcc.cable.dynamic.v6.ziggo.nl ([2001:1c00:8d82:d000:266e:96ff:fe07:7dcc] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uSu28-00000004ssa-2awj;
-	Sat, 21 Jun 2025 08:57:08 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 921163087E7; Sat, 21 Jun 2025 10:57:06 +0200 (CEST)
-Date: Sat, 21 Jun 2025 10:57:06 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Gabriele Monaco <gmonaco@redhat.com>
-Cc: linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-	Andy Lutomirski <luto@kernel.org>, Ingo Molnar <mingo@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH] lockdep: Fix inconsistency in irq tracking on NMIs
-Message-ID: <20250621085706.GM1613200@noisy.programming.kicks-ass.net>
-References: <20250620125112.33978-2-gmonaco@redhat.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="sl30Inp7"
+Message-ID: <b2656172-091a-435b-a197-6472ca9a038a@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1750645968;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=voS/IXxDZSgvXt/HTZvb06bjDBsLY8G70iK7t5CzXcc=;
+	b=sl30Inp7L/uRJ9KlWfg7mh20YwAu/RTNbG+JqwALSU3CmnMZgQP4CJaIZcn9BdGjhz6dn0
+	0TCN/xTkJNH1YjvfJHIKGd1ChZV6jrNs1v2+IKrc4aSuY+GhejGCRtf2HG1fWJCHUgR4Fl
+	9afyH2U6vEpvvI63s7aftIqRAeawro8=
+Date: Mon, 23 Jun 2025 10:32:28 +0800
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250620125112.33978-2-gmonaco@redhat.com>
+Subject: Re: [PATCH bpf-next v4 2/2] bpf: Add show_fdinfo for kprobe_multi
+To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc: Alexei Starovoitov <ast@kernel.org>,
+ Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>,
+ Martin KaFai Lau <martin.lau@linux.dev>, Eduard <eddyz87@gmail.com>,
+ Song Liu <song@kernel.org>, Yonghong Song <yonghong.song@linux.dev>,
+ John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>,
+ Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>,
+ Jiri Olsa <jolsa@kernel.org>, Matt Bobrowski <mattbobrowski@google.com>,
+ Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ bpf <bpf@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+ linux-trace-kernel <linux-trace-kernel@vger.kernel.org>
+References: <20250619034257.70520-1-chen.dylane@linux.dev>
+ <20250619034257.70520-2-chen.dylane@linux.dev>
+ <CAADnVQLyAeo9ztPoJzU1QJUQf6SMptVNoOzZza02xPuXO1ES2g@mail.gmail.com>
+ <9eedd830-9222-4ac0-8ccd-72499fb85b13@linux.dev>
+ <CAADnVQJcdVCKPu8aPPj5hZExNTFYAYTd5xkF=Ljfm__+ugirGg@mail.gmail.com>
+ <77b09f48-01d9-46f1-8a31-a1824c0eef8d@linux.dev>
+ <CAADnVQ+SgYop50-1S7424ecRKWDM3R=8cHeizRCjeC_FXdkdLA@mail.gmail.com>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Tao Chen <chen.dylane@linux.dev>
+In-Reply-To: <CAADnVQ+SgYop50-1S7424ecRKWDM3R=8cHeizRCjeC_FXdkdLA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On Fri, Jun 20, 2025 at 02:51:13PM +0200, Gabriele Monaco wrote:
-
->  local_irq_enable()
->    void trace_hardirqs_on(void)
->    {
->    	if (tracing_irq_cpu) {
->    		trace(irq_enable);
->    		tracing_irq_cpu = 0;
->    	}
+在 2025/6/21 02:25, Alexei Starovoitov 写道:
+> On Thu, Jun 19, 2025 at 8:31 PM Tao Chen <chen.dylane@linux.dev> wrote:
+>>
+>> 在 2025/6/20 10:59, Alexei Starovoitov 写道:
+>>> On Thu, Jun 19, 2025 at 7:46 PM Tao Chen <chen.dylane@linux.dev> wrote:
+>>>>
+>>>> 在 2025/6/20 01:17, Alexei Starovoitov 写道:
+>>>>> On Wed, Jun 18, 2025 at 8:44 PM Tao Chen <chen.dylane@linux.dev> wrote:
+>>>>>>
+>>>>>> Show kprobe_multi link info with fdinfo, the info as follows:
+>>>>>>
+>>>>>> link_type:      kprobe_multi
+>>>>>> link_id:        1
+>>>>>> prog_tag:       a15b7646cb7f3322
+>>>>>> prog_id:        21
+>>>>>> type:   kprobe_multi
+>>>>>
+>>>>> ..
+>>>>>
+>>>>>> +       seq_printf(seq,
+>>>>>> +                  "type:\t%s\n"
+>>>>>> +                  "kprobe_cnt:\t%u\n"
+>>>>>> +                  "missed:\t%lu\n",
+>>>>>> +                  kmulti_link->flags == BPF_F_KPROBE_MULTI_RETURN ? "kretprobe_multi" :
+>>>>>> +                                        "kprobe_multi",
+>>>>>
+>>>>> why print the same info twice ?
+>>>>> seq_printf(m, "link_type:\t%s\n", bpf_link_type_strs[type]);
+>>>>> in bpf_link_show_fdinfo() already did it in a cleaner way.
+>>>>>
+>>>>
+>>>> link_type only shows 'kprobe_multi', maybe we can show the format like:
+>>>
+>>> Ohh. Especially so. It would be wrong and confusing to display:
+>>> link_type:      kprobe_multi
+>>> type: kretprobe_multi
+>>>
+>>> Let's fix 'link_type' to display it properly.
+>>
+>> What do you think show like this:
+>>
+>>       link_type:      kprobe_multi
+>>       link_id:        1
+>>       prog_tag:       33be53a4fd673e1d
+>>       prog_id:        21
+>>       retprobe:       false
 > 
->                 /*
->                  * NMI here
->                  * tracing_irq_cpu == 0 (done tracing)
->                  * lockdep_hardirqs_enabled == 0 (IRQs still disabled)
->                  */
-> 
->                                    irqentry_nmi_enter()
->                                        irq_state.lockdep = 0
->                                        trace(irq_disable);
+> It leaks implementation details.
+> For the kernel the link type is BPF_LINK_TYPE_KPROBE_MULTI for retprobe too,
+> but show_fdinfo is for humans.
+> 'link_type:' field can be more precise and differentiate
+> what's effectively a subtype of the link.
 
-				So you're saying this ^^^^^ is the
-				actual problem?
+Well, i will fix it in v5. Thanks.
 
-> 
->                                    irqentry_nmi_exit()
->                                        // irq_state.lockdep == 0
->                                        // do not trace(irq_enable)
-
-                                Because this ^^^^ might lead one to
-				believe the lack of trace(irq_enable)
-				is the problem.
-
->    	lockdep_hardirqs_on();
->    }
-
-
-Because I'm thinking the trace(irq_disable) is actually correct. We are
-entering an NMI handler, and that very much has IRQs disabled.
-
-> Prevent this scenario by checking lockdep_hardirqs_enabled to trace also
-> on nmi_entry.
-> 
-> Fixes: ba1f2b2eaa2a ("x86/entry: Fix NMI vs IRQ state tracking")
-> Cc: Steven Rostedt <rostedt@goodmis.org>
-> Cc: Masami Hiramatsu <mhiramat@kernel.org>
-> Cc: linux-trace-kernel@vger.kernel.org
-> Signed-off-by: Gabriele Monaco <gmonaco@redhat.com>
-> ---
->  kernel/entry/common.c | 6 ++++--
->  1 file changed, 4 insertions(+), 2 deletions(-)
-> 
-> diff --git a/kernel/entry/common.c b/kernel/entry/common.c
-> index a8dd1f27417cf..7369132c00ba4 100644
-> --- a/kernel/entry/common.c
-> +++ b/kernel/entry/common.c
-> @@ -326,13 +326,15 @@ irqentry_state_t noinstr irqentry_nmi_enter(struct pt_regs *regs)
->  	irq_state.lockdep = lockdep_hardirqs_enabled();
->  
->  	__nmi_enter();
-> -	lockdep_hardirqs_off(CALLER_ADDR0);
-> +	if (irq_state.lockdep)
-> +		lockdep_hardirqs_off(CALLER_ADDR0);
-
-This isn't needed... it is perfectly fine calling lockdep_hardirq_off()
-again here. You'll hit the redundant_hardirqs_off counter.
-
->  	lockdep_hardirq_enter();
->  	ct_nmi_enter();
->  
->  	instrumentation_begin();
->  	kmsan_unpoison_entry_regs(regs);
-> -	trace_hardirqs_off_finish();
-> +	if (irq_state.lockdep)
-> +		trace_hardirqs_off_finish();
-
-So I really think you're doing the wrong thing here. We traced IRQs are
-enabled, but then take an NMI, meaning IRQs are very much disabled. So
-we want this irqs_off to fire.
-
-The much more fun case is:
-
-	if (tracing_irq_cpu) {
-		trace(irq_enable);
-		<NMI>
-
-Because then it will see tracing_irq_cpu set, but also have issued
-irq_enable and not issue irq_disable, and then things are really messed
-up.
-
-
-So yes, you found a fun case, but your solution seemed aimed at pleasing
-the model, rather than reality.
-
+-- 
+Best Regards
+Tao Chen
