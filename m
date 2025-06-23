@@ -1,121 +1,152 @@
-Received: from out-177.mta1.migadu.com (out-177.mta1.migadu.com [95.215.58.177])
+Received: from out30-101.freemail.mail.aliyun.com (out30-101.freemail.mail.aliyun.com [115.124.30.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 610E017A2F2
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 23 Jun 2025 02:32:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18A051DDD1;
+	Mon, 23 Jun 2025 03:04:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750645972; cv=none; b=Z+cIm4CRHXAz4ZafgnybwiYQ997cNSdonu9qqDrxnkd3YyysTETSR9oMlnWMeQhC05YjaaLObqYTcnNHyav2aDgvWyKRcqHvkBvIverxUmPFmjRLv48E1rSdi8B0QElHDed7hnqnmYBRovOPdvljMiDwrUaCE6xTm9bI2rxg8xg=
+	t=1750647895; cv=none; b=BFlEyi4PjXnUm0sS1t5eUPNecTtEP03vOQl/CIKuHrZvnGYt7ZZHD2o5oopgcf1W2JccuGQJjtd5cqDKnqYbn81Eaah8MVt8DMDUirgWJ0UdLql2shkkJnbJDkTx1d66U2yGEJJ4cqQpFyIIj/NcNt0kcQvoO87sSdVc5Tt98eE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750645972; c=relaxed/simple;
-	bh=8hluwjVTmXXog4aTRxgoRd/tz2EcAslNixaPAR1dtNM=;
+	s=arc-20240116; t=1750647895; c=relaxed/simple;
+	bh=a648IPzo65DASVTu/mn0R4z0gLCIMWV2LgAjH1BnKUg=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=J+aw5YS99lT5qUYhVt6Gh/Gns3qTLgZ6RzUXC60ooVZubHrA2uWINaiL7sdPJpjH9cmRunAHesinaPYux4uOFW+5KoHKmWwNyKNodRSHzs7/ERTPTVPYXXP6NVSihLNLIVdbyLhO1ZFHI85YJ2WyzCa/oBXjxkUGhnK1qvfO9ME=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=sl30Inp7; arc=none smtp.client-ip=95.215.58.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	 In-Reply-To:Content-Type; b=Hjyyzjo2orI+neGiR23txGxoTVF/gPYRxRg60mmQzrSvu7SXQtAxAK0l4wOpNqBHTCywtAyk0c7ReekC6xDj4g0qYJYCz2bglrtTzoIorN5xNDUORroNFOIDVMg/dwAw6TzmzM8ha4YqI9UzcFHXp4JM8CuPtm3dxQFTMoaiZdY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=nKz+Mdq1; arc=none smtp.client-ip=115.124.30.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="sl30Inp7"
-Message-ID: <b2656172-091a-435b-a197-6472ca9a038a@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1750645968;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=voS/IXxDZSgvXt/HTZvb06bjDBsLY8G70iK7t5CzXcc=;
-	b=sl30Inp7L/uRJ9KlWfg7mh20YwAu/RTNbG+JqwALSU3CmnMZgQP4CJaIZcn9BdGjhz6dn0
-	0TCN/xTkJNH1YjvfJHIKGd1ChZV6jrNs1v2+IKrc4aSuY+GhejGCRtf2HG1fWJCHUgR4Fl
-	9afyH2U6vEpvvI63s7aftIqRAeawro8=
-Date: Mon, 23 Jun 2025 10:32:28 +0800
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="nKz+Mdq1"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1750647883; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=mcNkuNTmzIQu0HBmtmC8P6vqmaUZwx5CS6edDfV1nks=;
+	b=nKz+Mdq1XqmGBwQarPf/RmT0yi6yN3mQw8rZ60OSWMB2P6aHGv41Sr52nRBoFp57RLhi6wTPBwsUAgloKD7hbflmpysrJ1AfY0FbkVm7fpm5UqebBB6okiPmsuR8dELoE27P4EP9ZQDBKcW6NUIirR1uFE5/sMLUFRKyzQeiIcs=
+Received: from 30.246.181.6(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0WeSBcWA_1750647880 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Mon, 23 Jun 2025 11:04:41 +0800
+Message-ID: <c0cbdd85-9702-40ab-bc97-b51b02b9fc89@linux.alibaba.com>
+Date: Mon, 23 Jun 2025 11:04:40 +0800
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH bpf-next v4 2/2] bpf: Add show_fdinfo for kprobe_multi
-To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc: Alexei Starovoitov <ast@kernel.org>,
- Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>,
- Martin KaFai Lau <martin.lau@linux.dev>, Eduard <eddyz87@gmail.com>,
- Song Liu <song@kernel.org>, Yonghong Song <yonghong.song@linux.dev>,
- John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>,
- Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>,
- Jiri Olsa <jolsa@kernel.org>, Matt Bobrowski <mattbobrowski@google.com>,
- Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- bpf <bpf@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
- linux-trace-kernel <linux-trace-kernel@vger.kernel.org>
-References: <20250619034257.70520-1-chen.dylane@linux.dev>
- <20250619034257.70520-2-chen.dylane@linux.dev>
- <CAADnVQLyAeo9ztPoJzU1QJUQf6SMptVNoOzZza02xPuXO1ES2g@mail.gmail.com>
- <9eedd830-9222-4ac0-8ccd-72499fb85b13@linux.dev>
- <CAADnVQJcdVCKPu8aPPj5hZExNTFYAYTd5xkF=Ljfm__+ugirGg@mail.gmail.com>
- <77b09f48-01d9-46f1-8a31-a1824c0eef8d@linux.dev>
- <CAADnVQ+SgYop50-1S7424ecRKWDM3R=8cHeizRCjeC_FXdkdLA@mail.gmail.com>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Tao Chen <chen.dylane@linux.dev>
-In-Reply-To: <CAADnVQ+SgYop50-1S7424ecRKWDM3R=8cHeizRCjeC_FXdkdLA@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v8] PCI: hotplug: Add a generic RAS tracepoint for hotplug
+ event
+To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Lukas Wunner <lukas@wunner.de>, rostedt@goodmis.org
+Cc: rostedt@goodmis.org, linux-pci@vger.kernel.org,
+ LKML <linux-kernel@vger.kernel.org>, linux-edac@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, helgaas@kernel.org, bhelgaas@google.com,
+ tony.luck@intel.com, bp@alien8.de, mhiramat@kernel.org,
+ mathieu.desnoyers@efficios.com, oleg@redhat.com, naveen@kernel.org,
+ davem@davemloft.net, anil.s.keshavamurthy@intel.com, mark.rutland@arm.com,
+ peterz@infradead.org, tianruidong@linux.alibaba.com
+References: <20250512013839.45960-1-xueshuai@linux.alibaba.com>
+ <6b4d1351-805e-c8fc-3484-11c0ec466cf0@linux.intel.com>
+From: Shuai Xue <xueshuai@linux.alibaba.com>
+In-Reply-To: <6b4d1351-805e-c8fc-3484-11c0ec466cf0@linux.intel.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
 
-在 2025/6/21 02:25, Alexei Starovoitov 写道:
-> On Thu, Jun 19, 2025 at 8:31 PM Tao Chen <chen.dylane@linux.dev> wrote:
->>
->> 在 2025/6/20 10:59, Alexei Starovoitov 写道:
->>> On Thu, Jun 19, 2025 at 7:46 PM Tao Chen <chen.dylane@linux.dev> wrote:
->>>>
->>>> 在 2025/6/20 01:17, Alexei Starovoitov 写道:
->>>>> On Wed, Jun 18, 2025 at 8:44 PM Tao Chen <chen.dylane@linux.dev> wrote:
->>>>>>
->>>>>> Show kprobe_multi link info with fdinfo, the info as follows:
->>>>>>
->>>>>> link_type:      kprobe_multi
->>>>>> link_id:        1
->>>>>> prog_tag:       a15b7646cb7f3322
->>>>>> prog_id:        21
->>>>>> type:   kprobe_multi
->>>>>
->>>>> ..
->>>>>
->>>>>> +       seq_printf(seq,
->>>>>> +                  "type:\t%s\n"
->>>>>> +                  "kprobe_cnt:\t%u\n"
->>>>>> +                  "missed:\t%lu\n",
->>>>>> +                  kmulti_link->flags == BPF_F_KPROBE_MULTI_RETURN ? "kretprobe_multi" :
->>>>>> +                                        "kprobe_multi",
->>>>>
->>>>> why print the same info twice ?
->>>>> seq_printf(m, "link_type:\t%s\n", bpf_link_type_strs[type]);
->>>>> in bpf_link_show_fdinfo() already did it in a cleaner way.
->>>>>
->>>>
->>>> link_type only shows 'kprobe_multi', maybe we can show the format like:
->>>
->>> Ohh. Especially so. It would be wrong and confusing to display:
->>> link_type:      kprobe_multi
->>> type: kretprobe_multi
->>>
->>> Let's fix 'link_type' to display it properly.
->>
->> What do you think show like this:
->>
->>       link_type:      kprobe_multi
->>       link_id:        1
->>       prog_tag:       33be53a4fd673e1d
->>       prog_id:        21
->>       retprobe:       false
+
+
+在 2025/6/2 14:30, Ilpo Järvinen 写道:
+> On Mon, 12 May 2025, Shuai Xue wrote:
 > 
-> It leaks implementation details.
-> For the kernel the link type is BPF_LINK_TYPE_KPROBE_MULTI for retprobe too,
-> but show_fdinfo is for humans.
-> 'link_type:' field can be more precise and differentiate
-> what's effectively a subtype of the link.
+>> Hotplug events are critical indicators for analyzing hardware health,
+>> particularly in AI supercomputers where surprise link downs can
+>> significantly impact system performance and reliability.
+>>
+>> To this end, define a new TRACING_SYSTEM named pci, add a generic RAS
+>> tracepoint for hotplug event to help healthy check, and generate
+>> tracepoints for pcie hotplug event. Add enum pci_hotplug_event in
+>> include/uapi/linux/pci.h so applications like rasdaemon can register
+>> tracepoint event handlers for it.
+>>
+>> The output like below:
+>>
+>> $ echo 1 > /sys/kernel/debug/tracing/events/pci/pci_hp_event/enable
+>> $ cat /sys/kernel/debug/tracing/trace_pipe
+>>      <...>-206     [001] .....    40.373870: pci_hp_event: 0000:00:02.0 slot:10, event:Link Down
+>>
+>>      <...>-206     [001] .....    40.374871: pci_hp_event: 0000:00:02.0 slot:10, event:Card not present
+>>
+>> Suggested-by: Lukas Wunner <lukas@wunner.de>
+>> Suggested-by: Steven Rostedt <rostedt@goodmis.org>
+>> Signed-off-by: Shuai Xue <xueshuai@linux.alibaba.com>
+>> Reviewed-by: Lukas Wunner <lukas@wunner.de>
+>> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+>> ---
+>> changes since v7:
+>> - replace the TRACE_INCLUDE_PATH to avoid macro conflict per Steven
+>> - pick up Reviewed-by from Lukas Wunner
+>> ---
+>>   drivers/pci/hotplug/Makefile      |  3 ++
+>>   drivers/pci/hotplug/pciehp_ctrl.c | 33 ++++++++++++---
+>>   drivers/pci/hotplug/trace.h       | 68 +++++++++++++++++++++++++++++++
+>>   include/uapi/linux/pci.h          |  7 ++++
+>>   4 files changed, 105 insertions(+), 6 deletions(-)
+>>   create mode 100644 drivers/pci/hotplug/trace.h
+>>
+>> diff --git a/drivers/pci/hotplug/Makefile b/drivers/pci/hotplug/Makefile
+>> index 40aaf31fe338..a1a9d1e98962 100644
+>> --- a/drivers/pci/hotplug/Makefile
+>> +++ b/drivers/pci/hotplug/Makefile
+>> @@ -3,6 +3,9 @@
+>>   # Makefile for the Linux kernel pci hotplug controller drivers.
+>>   #
+>>   
+>> +# define_trace.h needs to know how to find our header
+>> +CFLAGS_pciehp_ctrl.o				:= -I$(src)
+>> +
+>>   obj-$(CONFIG_HOTPLUG_PCI)		+= pci_hotplug.o
+>>   obj-$(CONFIG_HOTPLUG_PCI_COMPAQ)	+= cpqphp.o
+>>   obj-$(CONFIG_HOTPLUG_PCI_IBM)		+= ibmphp.o
+>> diff --git a/drivers/pci/hotplug/pciehp_ctrl.c b/drivers/pci/hotplug/pciehp_ctrl.c
+>> index d603a7aa7483..f9beb4d3a9b8 100644
+>> --- a/drivers/pci/hotplug/pciehp_ctrl.c
+>> +++ b/drivers/pci/hotplug/pciehp_ctrl.c
+>> @@ -23,6 +23,9 @@
+>>   #include "../pci.h"
+>>   #include "pciehp.h"
+>>   
+>> +#define CREATE_TRACE_POINTS
+>> +#include "trace.h"
+> 
+> Hi,
+> 
+> Instead of spreading tracepoint creating into subdriver code like this,
+> should we place it into one place, e.g., drivers/pci/pci-trace.c (which is
+> what I seem to have used in my yet to be submitted patch that adds
+> tracepoints into bwctrl link speed events)?
+> 
+>> diff --git a/drivers/pci/hotplug/trace.h b/drivers/pci/hotplug/trace.h
+>> new file mode 100644
+>> index 000000000000..21329c198019
+>> --- /dev/null
+>> +++ b/drivers/pci/hotplug/trace.h
+> 
+> Perhaps in include/trace/events/pci.h (or
+> include/trace/events/pci-hotplug.h)?
+> 
+> I don't know what is the general rule having them inside drivers/ vs
+> include/trace/events, Documentation/trace/tracepoints.rst only mentions
+> the latter, but there seems to be plenty under drivers/ too.
+> 
 
-Well, i will fix it in v5. Thanks.
+Hi, Ilpo,
 
--- 
-Best Regards
-Tao Chen
+I don't know either.
+
+I think it is tracepoint stuff and it is up to @Steve.
+@Steve, which way do you prefer?
+
+Thanks for help.
+
+Best Regards,
+Shuai
+
+
