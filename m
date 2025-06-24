@@ -1,144 +1,89 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay.hostedemail.com (smtprelay0017.hostedemail.com [216.40.44.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D4193FB1B;
-	Tue, 24 Jun 2025 20:45:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BC2E2586FE;
+	Tue, 24 Jun 2025 22:36:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750797900; cv=none; b=pYs7gQ2Tm8aeOj96e48umWuRX4mFE/VSiFmEWiGzT8Iht7/BBGTn8I9Br5ey1VPb04sIzk6R8hY7Ubc8LQEoSYB6P8deGctavrvMqT1jA1YQ4Iio5Nu/ieAitFfjEIioPsihj6eSV+3PH9RmN+9LVZdia+KYbuv6QEG09iwfPtg=
+	t=1750804587; cv=none; b=GhxYUVshtlhPTI8x6xUkUMHgM2RZ4lnCS/T1igHfCKvL2bVKzYF6BkM7O0gfqlqkquY99z8J1mN7PzNMDDAkEeDxkPlCPwI7oP89/c8dBSJr8riNLuZ4JmlC1UqaC4UywCnfAdsoZ5g1QCY9fxmOAanHBthXYwfVce3S/FlErpM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750797900; c=relaxed/simple;
-	bh=AoFPMCIxkttPg56+0un4riAb99bPvrJcXHuKXirc4kE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=E8n4FQ+PTIjAD6taOMYxbl3zSjqh8jLajEoMHKfzWML4uTm3UG9fNFN2mGeMft8eUlZavbF526uO41CiZ+qLm5OBUgbZZIIKp79UxjIR6+As1ZwXCXWyy9Rf54Ea135nMxAg1an4e455TdN6IsYHYO/CWukWs4MxXBPNuF4SEK8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DdnrfDP1; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DdnrfDP1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 96D80C4CEE3;
-	Tue, 24 Jun 2025 20:44:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750797900;
-	bh=AoFPMCIxkttPg56+0un4riAb99bPvrJcXHuKXirc4kE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=DdnrfDP1H9mNBSpD5Y2HOlveUi/wqHGE06OJbvGfgz9LAgedeeFvamygl27k74DLg
-	 z3wshVBWK9q1KHtT53hcQNy9dVSFLbDWB+b+9NhOzwT0OUGYBC7oCWwGP66REdulcR
-	 ExUvcH/dJKv6VUs1oqrteB9roCwoHyjNFixHjaKU0GQxtk+tEWDi7zPhYYlHYGwpRV
-	 AH5Qtf0XvLBOODaXlYkMBtEnvZHCbEpwgTE9Ypyt8oY/tYQ86nWLr99rpX+B/BdOVD
-	 m6cOd7LPHkd71mK4yhsI+SD46i8WHOe2lEHsrccjP1jJXfvEbmhSnBUZog9qwAK75k
-	 p0hUTMnVqPt5Q==
-Date: Tue, 24 Jun 2025 23:44:56 +0300
-From: Jarkko Sakkinen <jarkko@kernel.org>
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	Russell King <linux@armlinux.org.uk>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	"David S . Miller" <davem@davemloft.net>,
-	Andreas Larsson <andreas@gaisler.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	"H . Peter Anvin" <hpa@zytor.com>,
-	Andy Lutomirski <luto@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
-	Kees Cook <kees@kernel.org>, Peter Xu <peterx@redhat.com>,
-	David Hildenbrand <david@redhat.com>, Zi Yan <ziy@nvidia.com>,
-	Baolin Wang <baolin.wang@linux.alibaba.com>,
-	"Liam R . Howlett" <Liam.Howlett@oracle.com>,
-	Nico Pache <npache@redhat.com>, Ryan Roberts <ryan.roberts@arm.com>,
-	Dev Jain <dev.jain@arm.com>, Barry Song <baohua@kernel.org>,
-	Xu Xin <xu.xin16@zte.com.cn>,
-	Chengming Zhou <chengming.zhou@linux.dev>,
-	Hugh Dickins <hughd@google.com>, Vlastimil Babka <vbabka@suse.cz>,
-	Mike Rapoport <rppt@kernel.org>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Michal Hocko <mhocko@suse.com>, Rik van Riel <riel@surriel.com>,
-	Harry Yoo <harry.yoo@oracle.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Matthew Wilcox <willy@infradead.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Jason Gunthorpe <jgg@ziepe.ca>, John Hubbard <jhubbard@nvidia.com>,
-	Muchun Song <muchun.song@linux.dev>,
-	Oscar Salvador <osalvador@suse.de>, Jann Horn <jannh@google.com>,
-	Pedro Falcato <pfalcato@suse.de>,
-	Johannes Weiner <hannes@cmpxchg.org>,
-	Qi Zheng <zhengqi.arch@bytedance.com>,
-	Shakeel Butt <shakeel.butt@linux.dev>,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org, kvm@vger.kernel.org,
-	sparclinux@vger.kernel.org, linux-sgx@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-	nvdimm@lists.linux.dev, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/3] mm: update architecture and driver code to use
- vm_flags_t
-Message-ID: <aFsOSL8hht-ZojTC@kernel.org>
-References: <cover.1750274467.git.lorenzo.stoakes@oracle.com>
- <b6eb1894abc5555ece80bb08af5c022ef780c8bc.1750274467.git.lorenzo.stoakes@oracle.com>
+	s=arc-20240116; t=1750804587; c=relaxed/simple;
+	bh=7L5rEGVO3mrtPyc5RGQpu5ReOYLzXADuN7/STbDJ1jw=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=P2qURzRhTuv+jEMEN4rTe5tu5WK8ycrn+XVUPa5YNWz8ol7Fpip6td4Al3Oe4UHLL78Slarafb9BlERKwKou0JkjQGCxjHr0PnjjNShMjP7yfvB/GuenL+mNyCN+ONJd5SUZ24cDBdaugt9zS5azD8h2enjax2iFIA5JU/zhxVE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf18.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay01.hostedemail.com (Postfix) with ESMTP id 9DB5F1D8A29;
+	Tue, 24 Jun 2025 22:36:21 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf18.hostedemail.com (Postfix) with ESMTPA id B628337;
+	Tue, 24 Jun 2025 22:36:17 +0000 (UTC)
+Date: Tue, 24 Jun 2025 18:36:16 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ bpf@vger.kernel.org, x86@kernel.org, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Josh Poimboeuf <jpoimboe@kernel.org>, Ingo Molnar <mingo@kernel.org>, Jiri
+ Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Thomas
+ Gleixner <tglx@linutronix.de>, Andrii Nakryiko <andrii@kernel.org>, Indu
+ Bhagat <indu.bhagat@oracle.com>, "Jose E. Marchesi" <jemarch@gnu.org>, Beau
+ Belgrave <beaub@linux.microsoft.com>, Jens Remus <jremus@linux.ibm.com>,
+ Linus Torvalds <torvalds@linux-foundation.org>, Andrew Morton
+ <akpm@linux-foundation.org>
+Subject: Re: [PATCH v10 06/14] unwind_user/deferred: Add deferred unwinding
+ interface
+Message-ID: <20250624183616.5b0a3ddc@batman.local.home>
+In-Reply-To: <20250618184620.GT1613376@noisy.programming.kicks-ass.net>
+References: <20250611005421.144238328@goodmis.org>
+	<20250611010428.770214773@goodmis.org>
+	<20250618184620.GT1613376@noisy.programming.kicks-ass.net>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b6eb1894abc5555ece80bb08af5c022ef780c8bc.1750274467.git.lorenzo.stoakes@oracle.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Queue-Id: B628337
+X-Stat-Signature: 9hbaj66wbm19opkqqp641h9p5jtsypgb
+X-Rspamd-Server: rspamout07
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX18kjCDdOfEldqCgG+Xb3ujrKQBHryBilNc=
+X-HE-Tag: 1750804577-207013
+X-HE-Meta: U2FsdGVkX1/qbrG10wqZmAfL6ElwAmwibtJjC1FxVLGSItuYoSR5syVwERHRqjHABd/xNiX6DA4hZCE/YhCX76No8uxwuK+g4ZPVSdvA0jJoy/gzSsd/PUCf0JOYCLHXBug0M750+oUlAIZ+577hjUTrahdgY3PlfI34CDdVfK8kDVYpxJmAsuYPY37FXjd85NVxM3hKsOn3vBf0WxFxE6Vk/EmbBb4KMSYHNDnVvKmGJBBJ7ngq42U9VfuKyqk10/xstuIIsz5CXHNvb71SLN0V6zXDjoLpp5Xxl9cAxMJG04WDTweOfRFFIdE8dsDHGGeEzQ6NwFUGI0g2jmokq3ax2DzhqCTwksqauDAv6IHhwOFMVEHXFkKsoBmL8rfx
 
-On Wed, Jun 18, 2025 at 08:42:54PM +0100, Lorenzo Stoakes wrote:
-> --- a/arch/x86/kernel/cpu/sgx/encl.c
-> +++ b/arch/x86/kernel/cpu/sgx/encl.c
-> @@ -279,7 +279,7 @@ static struct sgx_encl_page *__sgx_encl_load_page(struct sgx_encl *encl,
->  
->  static struct sgx_encl_page *sgx_encl_load_page_in_vma(struct sgx_encl *encl,
->  						       unsigned long addr,
-> -						       unsigned long vm_flags)
-> +						       vm_flags_t vm_flags)
->  {
->  	unsigned long vm_prot_bits = vm_flags & VM_ACCESS_FLAGS;
->  	struct sgx_encl_page *entry;
-> @@ -520,9 +520,9 @@ static void sgx_vma_open(struct vm_area_struct *vma)
->   * Return: 0 on success, -EACCES otherwise
->   */
->  int sgx_encl_may_map(struct sgx_encl *encl, unsigned long start,
-> -		     unsigned long end, unsigned long vm_flags)
-> +		     unsigned long end, vm_flags_t vm_flags)
->  {
-> -	unsigned long vm_prot_bits = vm_flags & VM_ACCESS_FLAGS;
-> +	vm_flags_t vm_prot_bits = vm_flags & VM_ACCESS_FLAGS;
->  	struct sgx_encl_page *page;
->  	unsigned long count = 0;
->  	int ret = 0;
-> @@ -605,7 +605,7 @@ static int sgx_encl_debug_write(struct sgx_encl *encl, struct sgx_encl_page *pag
->   */
->  static struct sgx_encl_page *sgx_encl_reserve_page(struct sgx_encl *encl,
->  						   unsigned long addr,
-> -						   unsigned long vm_flags)
-> +						   vm_flags_t vm_flags)
->  {
->  	struct sgx_encl_page *entry;
->  
-> diff --git a/arch/x86/kernel/cpu/sgx/encl.h b/arch/x86/kernel/cpu/sgx/encl.h
-> index f94ff14c9486..8ff47f6652b9 100644
-> --- a/arch/x86/kernel/cpu/sgx/encl.h
-> +++ b/arch/x86/kernel/cpu/sgx/encl.h
-> @@ -101,7 +101,7 @@ static inline int sgx_encl_find(struct mm_struct *mm, unsigned long addr,
->  }
->  
->  int sgx_encl_may_map(struct sgx_encl *encl, unsigned long start,
-> -		     unsigned long end, unsigned long vm_flags);
-> +		     unsigned long end, vm_flags_t vm_flags);
->  
->  bool current_is_ksgxd(void);
->  void sgx_encl_release(struct kref *ref);
- 
-Reviewed-by: Jarkko Sakkinen <jarkko@kernel.org>
+On Wed, 18 Jun 2025 20:46:20 +0200
+Peter Zijlstra <peterz@infradead.org> wrote:
 
-BR, Jarkko
+> >  static __always_inline void unwind_exit_to_user_mode(void)
+> >  {
+> >  	if (unlikely(current->unwind_info.cache))
+> >  		current->unwind_info.cache->nr_entries = 0;
+> > +	current->unwind_info.timestamp = 0;  
+> 
+> Surely clearing that timestamp is only relevant when there is a cache
+> around? Better to not add this unconditional write to the exit path.
+> 
+> >  }
+
+Note, the timestamp could be there if the cache failed to allocate, and
+we would still want to clear the timestamp. I did turn this into:
+
+static __always_inline void unwind_reset_info(void)
+{
+	/* Exit out early if this was never used */
+	if (likely(!current->unwind_info.timestamp))
+		return;
+
+	if (current->unwind_info.cache)
+		current->unwind_info.cache->nr_entries = 0;
+	current->unwind_info.timestamp = 0;
+}
+
+For this patch, but later patches will give us the bitmask to check.
+
+-- Steve
