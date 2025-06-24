@@ -1,116 +1,115 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E24CA2571BF;
-	Tue, 24 Jun 2025 07:36:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 729F518C00;
+	Tue, 24 Jun 2025 07:44:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750750583; cv=none; b=KH94Ms1S5QED2KwrHg/vV/ESW8t7EU8yKP2ptswwzpNLpY5cy02k+qx6kjyPNC5t8git0/ljI1TOcG3OtP/s+uEYG32NGVu65472rem4nYIbS7vymM9YnERW3KlV63V2zAMSW/Wpu1Q0Dcn+yciROpjLt5jzsw6YlTyiK2kMZK8=
+	t=1750751096; cv=none; b=IsevDdLp9Aa3S4YD2WagVZvzaQsQQN82VqIlapLQjRp0Hp6lhcHYuGNFvphIR0XPuGV6xMi7TeXRN4mQf6wkLan3Gwc2ETlWgS8w8FmyI3rDB1DYp5wsmzbk4Oh4O25TvJRAE9lwJxri7XVELDUO8SMqOc/6qewbrirfY8bRjtc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750750583; c=relaxed/simple;
-	bh=V00eRtkZmW3pS/tIYaNjrH9iQXJJOPTf0MJar/mKIVo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HyYDK2Y05SeUnSystEJ3prNLckCArl8M3mIcZVfsIBxk3NCjNGbhMEr0s7CC7NkjRCf7YsHoTm+q4A+2chyW3BLkUSDPscc1z9zEFUYdfoG+8YgEEU8o4qXhIIYxiFzFEDlQKB79cfbZ2Sl8NKAQBLc6EIT7QqiYe/BYijYnnhg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=i+Q7ULGT; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=2cWt1fdr; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1750751096; c=relaxed/simple;
+	bh=JPANF/AZaxCFtSECm0DM907Szo/dW1rQ1TnKB5Hs2Tc=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=a9Ikw2YPi1O2u/MyqFP2obA/jdrGoqWIhYjLKFSeuXMa5tgF97t3Ys/oROiAQI8LrLrjXAZqHBqxEvv6hkA6rBA+bQqY7OYiOr108awklBky1bhjssiGBh6urw/9MtSPaG7Wv70IayPGW61MVjn5/CReOlGacR1091QB5+NdOe0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aX5Eal8A; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="i+Q7ULGT";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="2cWt1fdr"
-Date: Tue, 24 Jun 2025 09:36:09 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1750750574;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=3i1MmWycKIjSa1eRswkqM6h98UB4zkHzxS3AAMMtz+E=;
-	b=i+Q7ULGTa616Iqv0o+NQzdQRe+CNprF6yDmVee8nf5+26nTWuTfbYPR0WUpzk4/EY2iMl2
-	+fb2pom2zzpVlBX9P0s1ICUN0ufE4FTEFZ5+VClq6j1YSuuTD6W6mEBhh4SL0xjcUfPhQQ
-	Q2Sh/1lCJxqiepbp2rvDrPGYveHJTIZZ49DmRyxR71rS5OlKOMu+BIbQSZjNVPCb3GcHQl
-	Z53kdHqu5KdDyxs0mDqIYVtKLKgEimUBaLJtHy4xCwR0jjjxidFCocEv30xnZAX7kk48ka
-	IifuT3wsO3mAbNt554ZvcST+RNRogJE44Yb7+SUEHRI2Lmp+TRlCJJZSXVj0nA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1750750574;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=3i1MmWycKIjSa1eRswkqM6h98UB4zkHzxS3AAMMtz+E=;
-	b=2cWt1fdrOBRfhNP+nkf8mfmrpu3POA7VXVHVN8W74rVO0Czrg52m/MlZWBGsjeROgUG92h
-	JFCpNJyuHUbrjmBw==
-From: Nam Cao <namcao@linutronix.de>
-To: Gabriele Monaco <gmonaco@redhat.com>
-Cc: linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-	Ingo Molnar <mingo@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Tomas Glozar <tglozar@redhat.com>, Juri Lelli <jlelli@redhat.com>,
-	john.ogness@linutronix.de
-Subject: Re: [RFC PATCH v2 09/12] rv: Replace tss monitor with more complete
- sts
-Message-ID: <20250624073609.OA9Q1V4g@linutronix.de>
-References: <20250514084314.57976-1-gmonaco@redhat.com>
- <20250514084314.57976-10-gmonaco@redhat.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aX5Eal8A"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B7BEBC4CEE3;
+	Tue, 24 Jun 2025 07:44:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750751095;
+	bh=JPANF/AZaxCFtSECm0DM907Szo/dW1rQ1TnKB5Hs2Tc=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=aX5Eal8A9ri4vis/Clh7HnU804P1NqMwrBwHRDpDG+s9uBRIAE58EEe+pWPQImXH4
+	 HgpdYThd/9W/D7IqlWs5IPBDuyezgWfw9Ls7NbrV/7lXeWC4cMSWyl7dsDDkmQQ/N2
+	 1GDdcdv6NIimV8CgKm0QakpTsaxJSdvgEPXRb6WrnxcrVlevL4HWznHrTb5aDE6LOb
+	 /bFUgTlQ3bi9o0ZwUTDYdjxvmb9AoltgDVbmBCYATHrNe6W3kGKGOJGGIYq22mQker
+	 lW6jptqSg9ysv86rBmkWV3lVfG2pZ4ZnvTyNQRoyaslTcFUbHTVEsuFM6rGBNwNWs1
+	 EA3gXnlWiVDZA==
+Date: Tue, 24 Jun 2025 16:44:53 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Edward Adam Davis <eadavis@qq.com>
+Cc: syzbot+daba72c4af9915e9c894@syzkaller.appspotmail.com,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ mathieu.desnoyers@efficios.com, mhiramat@kernel.org, rostedt@goodmis.org,
+ syzkaller-bugs@googlegroups.com
+Subject: Re: [PATCH] tracing: Fix filter logic error
+Message-Id: <20250624164453.e982cae14fbf3b53d477e2be@kernel.org>
+In-Reply-To: <tencent_4EF87A626D702F816CD0951CE956EC32CD0A@qq.com>
+References: <6859ea24.a00a0220.2e5631.0044.GAE@google.com>
+	<tencent_4EF87A626D702F816CD0951CE956EC32CD0A@qq.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250514084314.57976-10-gmonaco@redhat.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Wed, May 14, 2025 at 10:43:11AM +0200, Gabriele Monaco wrote:
-> diff --git a/kernel/trace/rv/monitors/tss/tss_trace.h b/kernel/trace/rv/monitors/sts/sts_trace.h
-> similarity index 67%
-> rename from kernel/trace/rv/monitors/tss/tss_trace.h
-> rename to kernel/trace/rv/monitors/sts/sts_trace.h
-> index 4619dbb50cc0..d78beb58d5b3 100644
-> --- a/kernel/trace/rv/monitors/tss/tss_trace.h
-> +++ b/kernel/trace/rv/monitors/sts/sts_trace.h
-> @@ -4,12 +4,12 @@
->   * Snippet to be included in rv_trace.h
->   */
+On Tue, 24 Jun 2025 14:38:46 +0800
+Edward Adam Davis <eadavis@qq.com> wrote:
+
+> If the processing of the tr->events loop fails, the filter that has been
+> added to filter_head will be released twice in free_filter_list(&head->rcu)
+> and __free_filter(filter).
+> 
+> After adding the filter of tr->events, add the filter to the filter_head
+> process to avoid triggering uaf.
+
+Looks good to me.
+
+Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+
+Thank you,
+
+> 
+> Fixes: a9d0aab5eb33 ("tracing: Fix regression of filter waiting a long time on RCU synchronization")
+> Reported-by: syzbot+daba72c4af9915e9c894@syzkaller.appspotmail.com
+> Closes: https://syzkaller.appspot.com/bug?extid=daba72c4af9915e9c894
+> Tested-by: syzbot+daba72c4af9915e9c894@syzkaller.appspotmail.com
+> Signed-off-by: Edward Adam Davis <eadavis@qq.com>
+> ---
+>  kernel/trace/trace_events_filter.c | 14 +++++++-------
+>  1 file changed, 7 insertions(+), 7 deletions(-)
+> 
+> diff --git a/kernel/trace/trace_events_filter.c b/kernel/trace/trace_events_filter.c
+> index 08141f105c95..3885aadc434d 100644
+> --- a/kernel/trace/trace_events_filter.c
+> +++ b/kernel/trace/trace_events_filter.c
+> @@ -1436,13 +1436,6 @@ static void filter_free_subsystem_filters(struct trace_subsystem_dir *dir,
 >  
-> -#ifdef CONFIG_RV_MON_TSS
-> -DEFINE_EVENT(event_da_monitor, event_tss,
-> +#ifdef CONFIG_RV_MON_STS
-> +DEFINE_EVENT(event_da_monitor, event_sts,
->  	     TP_PROTO(char *state, char *event, char *next_state, bool final_state),
->  	     TP_ARGS(state, event, next_state, final_state));
+>  	INIT_LIST_HEAD(&head->list);
 >  
-> -DEFINE_EVENT(error_da_monitor, error_tss,
-> +DEFINE_EVENT(error_da_monitor, error_sts,
->  	     TP_PROTO(char *state, char *event),
->  	     TP_ARGS(state, event));
-> -#endif /* CONFIG_RV_MON_TSS */
-> +#endif /* CONFIG_RV_MON_STS */
+> -	item = kmalloc(sizeof(*item), GFP_KERNEL);
+> -	if (!item)
+> -		goto free_now;
+> -
+> -	item->filter = filter;
+> -	list_add_tail(&item->list, &head->list);
+> -
+>  	list_for_each_entry(file, &tr->events, list) {
+>  		if (file->system != dir)
+>  			continue;
+> @@ -1454,6 +1447,13 @@ static void filter_free_subsystem_filters(struct trace_subsystem_dir *dir,
+>  		event_clear_filter(file);
+>  	}
+>  
+> +	item = kmalloc(sizeof(*item), GFP_KERNEL);
+> +	if (!item)
+> +		goto free_now;
+> +
+> +	item->filter = filter;
+> +	list_add_tail(&item->list, &head->list);
+> +
+>  	delay_free_filter(head);
+>  	return;
+>   free_now:
+> -- 
+> 2.43.0
+> 
 
-You are changing the tracepoint's name. Should we worry about breaking
-userspace?
 
-It probably doesn't matter at the moment, because I doubt anyone is really
-relying on this tracepoint. But I think we should have a definite stance on
-this, for future references.
-
-I have seen tracepoints being changed (I know of [1][2][3], I was one of
-them :P), so it seems to be considered okay. But adding userspace tools to
-the equation and it doesn't make sense to me. For example, lttng is using
-the page_fault tracepoints [4], which is broken by [3].
-
-If this should be stable user API, then we should starting thinking about
-better API which allows changes like this to happen. Otherwise, they should
-be clearly documented to be unstable.
-
-(I think I may also need to change my rtapp's tracepoint names at some point
-in the future, that's why I am asking)
-
-Best regards,
-Nam
-
-[1] commit dbb6ecb328cb ("btrfs: tracepoints: simplify raid56 events")
-[2] commit 244132c4e577 ("tracing/timers: Rename the hrtimer_init event to hrtimer_setup")
-[3] https://lore.kernel.org/lkml/2dda8c03-072a-43b2-af0c-bb996d64c388@cs.wisc.edu/#t
-[4] https://github.com/lttng/lttng-modules/blob/master/include/instrumentation/events/arch/x86/exceptions.h#L88C48-L88C63
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
