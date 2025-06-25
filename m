@@ -1,333 +1,188 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD9EF20E00B;
-	Wed, 25 Jun 2025 08:21:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B53C254AF0
+	for <linux-trace-kernel@vger.kernel.org>; Wed, 25 Jun 2025 12:08:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750839686; cv=none; b=hIAWrykGs2VN64rRifLUrA8x6Q4CJGZIQJUTQa6NmrY2b2Cpq38XYrDEClxOexioAm5ZtDIVttGR95nI55iUg/27vXioyjMbNUH7rNtM1JlOo0O/+jS6S5ppaT/XBaHTKJ+fgd0eXe3qnaVbsaSvsXV66f1m8Q3JBadK1znnTLA=
+	t=1750853333; cv=none; b=onpUHKoa9eqS4zzJe7DhL3ToYL4tzTqOwiYfqznkSt3/LrPraytsEZJWmgwufg3mLeAE4iqjlDnX3CO51gxmnvLfesxtpB1R07gCmIRnMd3hpZ9LCpRUvxsOSYNtPrmlxK2Mj1MeVK83YyO4uaZPreWi2JPN4v+ROL/xYx2dP0c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750839686; c=relaxed/simple;
-	bh=7DHD/1kpF16rely2ZdhPgdqVtGCe6hUy6TmFIpiu3Zo=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=aU8WP29UtxdpHh1MrqXLA46TlXGHiu31LkNBw3RDZnwJfV30X8WTAQOP/FkGntO1iLbZ6Eu1donkK2dmCE/4cVjQZZRa3j+GFHhMrdCU8k1iURU+ezq9HeCAx820DIpZLR/g8HfXf+clFdthPj+/Jx4Zu0SocdaXRJrWrGfn7Co=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c4qskF4o; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750853333; c=relaxed/simple;
+	bh=X8h3MG8s3fb3StRKIu5mktDQtEpEED8w2np7qHBxHZU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=jAbzlGHph3ANbPZVPN5mjBmeMUjticYLv5da4wo6p8eMKwe7kcJH74mZ+B05jkH7TpLjVMP7Qc5VdmEqMJi+Thl8PajBtw/STH10nnIRqB9gApk3iX1zt6p/s6IQCca11nzBoOBqDjbzKwWGQViJGiOIRVTxB0EG0zH+U1nYBbc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=AnAZeIl7; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c4qskF4o"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 07F25C4AF09;
-	Wed, 25 Jun 2025 08:21:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750839686;
-	bh=7DHD/1kpF16rely2ZdhPgdqVtGCe6hUy6TmFIpiu3Zo=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=c4qskF4oK+b6eiVtyYhD630yma7mdCBhaFly50kHvjm7t61HPlVIPhIj5jKcYpUxS
-	 /4WduTMuHmHACA6rxVD/EHvILJ58oJCUH9Oe+LZua+lzKszt4yOaclvV3UPFDs4zB8
-	 jzc987240W2mLNtl05HdLVQ7kuWTdRTe0E2YYHAKiceaq94mnPq7lIRqay0k7mwjHD
-	 WDbJOo2wX+pQIC8glR/xCNGRMpSROfJHJJQ72GQE2lAf/3EgQIy3GbG1tD+lag44Bh
-	 fF7As9jI4yJchSKx47tx4F87QD2/wEu10Z/yylBLxsxn5u+XWwjpziOHlcPBL7P9DI
-	 xKlqqVFXsR5pg==
-Date: Wed, 25 Jun 2025 17:21:22 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Jiri Olsa <jolsa@kernel.org>
-Cc: Oleg Nesterov <oleg@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
- Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- x86@kernel.org, Song Liu <songliubraving@fb.com>, Yonghong Song
- <yhs@fb.com>, John Fastabend <john.fastabend@gmail.com>, Hao Luo
- <haoluo@google.com>, Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Alan Maguire <alan.maguire@oracle.com>, David Laight
- <David.Laight@ACULAB.COM>, Thomas =?UTF-8?B?V2Vpw59zY2h1aA==?=
- <thomas@t-8ch.de>, Ingo Molnar <mingo@kernel.org>
-Subject: Re: [PATCHv3 perf/core 08/22] uprobes/x86: Add mapping for
- optimized uprobe trampolines
-Message-Id: <20250625172122.ad1e955ae2bc3957d9fb8546@kernel.org>
-In-Reply-To: <20250605132350.1488129-9-jolsa@kernel.org>
-References: <20250605132350.1488129-1-jolsa@kernel.org>
-	<20250605132350.1488129-9-jolsa@kernel.org>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AnAZeIl7"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1750853331;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=zTVi9eLGvwvzNaP8yl+nsFwlrw1BF+IPA5X1VEV65UQ=;
+	b=AnAZeIl7y/Eec5nKLhsF83vaZ+BCyQ+DakuZa2Qrq3iYK+XmjsyKAiXh8DOig2wV334+MB
+	6uBt59YbruwyvHs4oZlDxoclLjKCocc+CIFbNwn277WukpNuVnOVK79qOvRA6J/nS+JXkL
+	VM9Z8pRq9YFgvMf2ZzjC4KaXxW3h7Jw=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-626-QJVepUZHO4aAnGEtYhWywA-1; Wed,
+ 25 Jun 2025 08:08:47 -0400
+X-MC-Unique: QJVepUZHO4aAnGEtYhWywA-1
+X-Mimecast-MFC-AGG-ID: QJVepUZHO4aAnGEtYhWywA_1750853326
+Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id B12EA19560AF;
+	Wed, 25 Jun 2025 12:08:45 +0000 (UTC)
+Received: from gmonaco-thinkpadt14gen3.rmtit.com (unknown [10.45.225.149])
+	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id B49D71956096;
+	Wed, 25 Jun 2025 12:08:39 +0000 (UTC)
+From: Gabriele Monaco <gmonaco@redhat.com>
+To: linux-kernel@vger.kernel.org,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Andy Lutomirski <luto@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-trace-kernel@vger.kernel.org
+Cc: Gabriele Monaco <gmonaco@redhat.com>
+Subject: [PATCH v2] tracing: Fix inconsistency in irq tracking on NMIs
+Date: Wed, 25 Jun 2025 14:08:22 +0200
+Message-ID: <20250625120823.60600-1-gmonaco@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
 
-On Thu,  5 Jun 2025 15:23:35 +0200
-Jiri Olsa <jolsa@kernel.org> wrote:
+The irq_enable/irq_disable tracepoints fire only when there's an actual
+transition (enabled->disabled and vice versa), this needs special care
+in NMIs, as they can potentially start with interrupts already disabled.
+The current implementation takes care of this by tracking the lockdep
+state on nmi_entry as well as using the variable tracing_irq_cpu to
+synchronise with other calls (e.g. local_irq_disable/enable).
 
-> Adding support to add special mapping for user space trampoline with
-> following functions:
-> 
->   uprobe_trampoline_get - find or add uprobe_trampoline
->   uprobe_trampoline_put - remove or destroy uprobe_trampoline
-> 
-> The user space trampoline is exported as arch specific user space special
-> mapping through tramp_mapping, which is initialized in following changes
-> with new uprobe syscall.
-> 
-> The uprobe trampoline needs to be callable/reachable from the probed address,
-> so while searching for available address we use is_reachable_by_call function
-> to decide if the uprobe trampoline is callable from the probe address.
-> 
-> All uprobe_trampoline objects are stored in uprobes_state object and are
-> cleaned up when the process mm_struct goes down. Adding new arch hooks
-> for that, because this change is x86_64 specific.
-> 
-> Locking is provided by callers in following changes.
-> 
-> Acked-by: Oleg Nesterov <oleg@redhat.com>
-> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-> ---
->  arch/x86/kernel/uprobes.c | 115 ++++++++++++++++++++++++++++++++++++++
->  include/linux/uprobes.h   |   6 ++
->  kernel/events/uprobes.c   |  10 ++++
->  kernel/fork.c             |   1 +
->  4 files changed, 132 insertions(+)
-> 
-> diff --git a/arch/x86/kernel/uprobes.c b/arch/x86/kernel/uprobes.c
-> index 77050e5a4680..0295cfb625c0 100644
-> --- a/arch/x86/kernel/uprobes.c
-> +++ b/arch/x86/kernel/uprobes.c
-> @@ -608,6 +608,121 @@ static void riprel_post_xol(struct arch_uprobe *auprobe, struct pt_regs *regs)
->  		*sr = utask->autask.saved_scratch_register;
->  	}
->  }
-> +
-> +static int tramp_mremap(const struct vm_special_mapping *sm, struct vm_area_struct *new_vma)
-> +{
-> +	return -EPERM;
-> +}
-> +
-> +static struct page *tramp_mapping_pages[2] __ro_after_init;
-> +
-> +static struct vm_special_mapping tramp_mapping = {
-> +	.name   = "[uprobes-trampoline]",
-> +	.mremap = tramp_mremap,
-> +	.pages  = tramp_mapping_pages,
-> +};
-> +
-> +struct uprobe_trampoline {
-> +	struct hlist_node	node;
-> +	unsigned long		vaddr;
-> +};
-> +
-> +static bool is_reachable_by_call(unsigned long vtramp, unsigned long vaddr)
-> +{
-> +	long delta = (long)(vaddr + 5 - vtramp);
-> +
-> +	return delta >= INT_MIN && delta <= INT_MAX;
-> +}
-> +
-> +static unsigned long find_nearest_page(unsigned long vaddr)
+This can be racy in case of NMIs when lockdep is enabled, and can lead
+to missing events when lockdep is disabled.
 
-nit: this does not return the nearest one, but the highest one?
+Remove dependency on the lockdep status in the NMI common entry/exit
+code and adapt the tracing code to make sure that:
 
-If you really need the nearest one, we need to call
-vm_unmapped_area() twice.
+- The first call disabling interrupts fires the tracepoint
+- The first non-NMI call enabling interrupts fires the tracepoint
+- The last NMI call enabling interrupts fires the tracepoint unless
+  interrupts were disabled before the NMI
+- All other calls don't fire
 
-[low_limit, call_end] with TOPDOWN flag and 
-[call_end, high_limit] without TOPDOWN.
+Fixes: ba1f2b2eaa2a ("x86/entry: Fix NMI vs IRQ state tracking")
+Fixes: f0cd5ac1e4c5 ("arm64: entry: fix NMI {user, kernel}->kernel transitions")
+Signed-off-by: Gabriele Monaco <gmonaco@redhat.com>
+---
 
-and choose the nearest one. But I don't think we need it.
+The inconsistency is visible with the sncid RV monitor and particularly
+likely on machines with the following setup:
+- x86 bare-metal with 40+ CPUs
+- tuned throughput-performance (activating regular perf NMIs)
+- workload: stress-ng --cpu-sched 21 --timer 11 --signal 11
 
-> +{
-> +	struct vm_unmapped_area_info info = {
-> +		.length     = PAGE_SIZE,
-> +		.align_mask = ~PAGE_MASK,
-> +		.flags      = VM_UNMAPPED_AREA_TOPDOWN,
-> +		.low_limit  = PAGE_SIZE,
-> +		.high_limit = ULONG_MAX,
+The presence of the RV monitor is useful to see the error but it is not
+necessary to trigger it.
 
-Maybe "TASK_SIZE" is better than ULONG_MAX?
+Changes since V1:
+* Reworded confusing changelog
+* Remove dependency on lockdep counters for tracepoints
+* Ensure we don't drop valid tracepoints
+* Extend change to arm64 code
 
-> +	};
-> +	unsigned long limit, call_end = vaddr + 5;
-> +
-> +	if (!check_add_overflow(call_end, INT_MIN, &limit))
-> +		info.low_limit = limit;
-> +	if (!check_add_overflow(call_end, INT_MAX, &limit))
-> +		info.high_limit = limit;
-> +	return vm_unmapped_area(&info);
-> +}
-> +
-> +static struct uprobe_trampoline *create_uprobe_trampoline(unsigned long vaddr)
-> +{
-> +	struct pt_regs *regs = task_pt_regs(current);
-> +	struct mm_struct *mm = current->mm;
-> +	struct uprobe_trampoline *tramp;
-> +	struct vm_area_struct *vma;
-> +
-> +	if (!user_64bit_mode(regs))
-> +		return NULL;
-> +
-> +	vaddr = find_nearest_page(vaddr);
-> +	if (IS_ERR_VALUE(vaddr))
-> +		return NULL;
-> +
-> +	tramp = kzalloc(sizeof(*tramp), GFP_KERNEL);
-> +	if (unlikely(!tramp))
-> +		return NULL;
-> +
-> +	tramp->vaddr = vaddr;
-> +	vma = _install_special_mapping(mm, tramp->vaddr, PAGE_SIZE,
+ arch/arm64/kernel/entry-common.c |  5 ++---
+ kernel/entry/common.c            |  5 ++---
+ kernel/trace/trace_preemptirq.c  | 12 +++++++-----
+ 3 files changed, 11 insertions(+), 11 deletions(-)
 
-Just make sure, this special mapped page is mapped 1 page for each
-uprobe? (I think uprobe syscall trampoline size is far smaller
-than the page size.)
+diff --git a/arch/arm64/kernel/entry-common.c b/arch/arm64/kernel/entry-common.c
+index 7c1970b341b8c..7f1844123642e 100644
+--- a/arch/arm64/kernel/entry-common.c
++++ b/arch/arm64/kernel/entry-common.c
+@@ -213,10 +213,9 @@ static void noinstr arm64_exit_nmi(struct pt_regs *regs)
+ 	bool restore = regs->lockdep_hardirqs;
+ 
+ 	ftrace_nmi_exit();
+-	if (restore) {
+-		trace_hardirqs_on_prepare();
++	trace_hardirqs_on_prepare();
++	if (restore)
+ 		lockdep_hardirqs_on_prepare();
+-	}
+ 
+ 	ct_nmi_exit();
+ 	lockdep_hardirq_exit();
+diff --git a/kernel/entry/common.c b/kernel/entry/common.c
+index a8dd1f27417cf..e234f264fb495 100644
+--- a/kernel/entry/common.c
++++ b/kernel/entry/common.c
+@@ -343,10 +343,9 @@ void noinstr irqentry_nmi_exit(struct pt_regs *regs, irqentry_state_t irq_state)
+ {
+ 	instrumentation_begin();
+ 	ftrace_nmi_exit();
+-	if (irq_state.lockdep) {
+-		trace_hardirqs_on_prepare();
++	trace_hardirqs_on_prepare();
++	if (irq_state.lockdep)
+ 		lockdep_hardirqs_on_prepare();
+-	}
+ 	instrumentation_end();
+ 
+ 	ct_nmi_exit();
+diff --git a/kernel/trace/trace_preemptirq.c b/kernel/trace/trace_preemptirq.c
+index 0c42b15c38004..fa45474fc54f1 100644
+--- a/kernel/trace/trace_preemptirq.c
++++ b/kernel/trace/trace_preemptirq.c
+@@ -58,7 +58,11 @@ static DEFINE_PER_CPU(int, tracing_irq_cpu);
+  */
+ void trace_hardirqs_on_prepare(void)
+ {
+-	if (this_cpu_read(tracing_irq_cpu)) {
++	int tracing_count = this_cpu_read(tracing_irq_cpu);
++
++	if (in_nmi() && tracing_count > 1)
++		this_cpu_dec(tracing_irq_cpu);
++	else if (tracing_count) {
+ 		trace(irq_enable, TP_ARGS(CALLER_ADDR0, CALLER_ADDR1));
+ 		tracer_hardirqs_on(CALLER_ADDR0, CALLER_ADDR1);
+ 		this_cpu_write(tracing_irq_cpu, 0);
+@@ -89,8 +93,7 @@ NOKPROBE_SYMBOL(trace_hardirqs_on);
+  */
+ void trace_hardirqs_off_finish(void)
+ {
+-	if (!this_cpu_read(tracing_irq_cpu)) {
+-		this_cpu_write(tracing_irq_cpu, 1);
++	if (this_cpu_inc_return(tracing_irq_cpu) == 1) {
+ 		tracer_hardirqs_off(CALLER_ADDR0, CALLER_ADDR1);
+ 		trace(irq_disable, TP_ARGS(CALLER_ADDR0, CALLER_ADDR1));
+ 	}
+@@ -103,8 +106,7 @@ void trace_hardirqs_off(void)
+ {
+ 	lockdep_hardirqs_off(CALLER_ADDR0);
+ 
+-	if (!this_cpu_read(tracing_irq_cpu)) {
+-		this_cpu_write(tracing_irq_cpu, 1);
++	if (this_cpu_inc_return(tracing_irq_cpu) == 1) {
+ 		tracer_hardirqs_off(CALLER_ADDR0, CALLER_ADDR1);
+ 		trace(irq_disable, TP_ARGS(CALLER_ADDR0, CALLER_ADDR1));
+ 	}
 
-> +				VM_READ|VM_EXEC|VM_MAYEXEC|VM_MAYREAD|VM_DONTCOPY|VM_IO,
-> +				&tramp_mapping);
-> +	if (IS_ERR(vma))
-> +		goto free_area;
-
-nit: To simplify the code, instead of goto,
-
-if (IS_ERR(vma)) {
-	kfree(tramp);
-	return NULL;
-}
-
-> +	return tramp;
-> +
-> +free_area:
-> +	kfree(tramp);
-> +	return NULL;
-> +}
-> +
-> +__maybe_unused
-> +static struct uprobe_trampoline *get_uprobe_trampoline(unsigned long vaddr, bool *new)
-> +{
-> +	struct uprobes_state *state = &current->mm->uprobes_state;
-> +	struct uprobe_trampoline *tramp = NULL;
-> +
-> +	hlist_for_each_entry(tramp, &state->head_tramps, node) {
-> +		if (is_reachable_by_call(tramp->vaddr, vaddr))
-
-This should set '*new = false;' here.
-
-> +			return tramp;
-> +	}
-> +
-> +	tramp = create_uprobe_trampoline(vaddr);
-> +	if (!tramp)
-> +		return NULL;
-> +
-> +	*new = true;
-> +	hlist_add_head(&tramp->node, &state->head_tramps);
-> +	return tramp;
-> +}
-> +
-> +static void destroy_uprobe_trampoline(struct uprobe_trampoline *tramp)
-> +{
-> +	hlist_del(&tramp->node);
-> +	kfree(tramp);
-
-Don't we need to unmap the tramp->vaddr?
-
-> +}
-> +
-> +void arch_uprobe_init_state(struct mm_struct *mm)
-> +{
-> +	INIT_HLIST_HEAD(&mm->uprobes_state.head_tramps);
-> +}
-> +
-> +void arch_uprobe_clear_state(struct mm_struct *mm)
-> +{
-> +	struct uprobes_state *state = &mm->uprobes_state;
-> +	struct uprobe_trampoline *tramp;
-> +	struct hlist_node *n;
-> +
-> +	hlist_for_each_entry_safe(tramp, n, &state->head_tramps, node)
-> +		destroy_uprobe_trampoline(tramp);
-> +}
->  #else /* 32-bit: */
->  /*
->   * No RIP-relative addressing on 32-bit
-> diff --git a/include/linux/uprobes.h b/include/linux/uprobes.h
-> index 5080619560d4..b40d33aae016 100644
-> --- a/include/linux/uprobes.h
-> +++ b/include/linux/uprobes.h
-> @@ -17,6 +17,7 @@
->  #include <linux/wait.h>
->  #include <linux/timer.h>
->  #include <linux/seqlock.h>
-> +#include <linux/mutex.h>
->  
->  struct uprobe;
->  struct vm_area_struct;
-> @@ -185,6 +186,9 @@ struct xol_area;
->  
->  struct uprobes_state {
->  	struct xol_area		*xol_area;
-> +#ifdef CONFIG_X86_64
-
-Maybe we can introduce struct arch_uprobe_state{} here?
-
-> +	struct hlist_head	head_tramps;
-> +#endif
->  };
->  
->  typedef int (*uprobe_write_verify_t)(struct page *page, unsigned long vaddr,
-> @@ -233,6 +237,8 @@ extern void uprobe_handle_trampoline(struct pt_regs *regs);
->  extern void *arch_uretprobe_trampoline(unsigned long *psize);
->  extern unsigned long uprobe_get_trampoline_vaddr(void);
->  extern void uprobe_copy_from_page(struct page *page, unsigned long vaddr, void *dst, int len);
-> +extern void arch_uprobe_clear_state(struct mm_struct *mm);
-> +extern void arch_uprobe_init_state(struct mm_struct *mm);
->  #else /* !CONFIG_UPROBES */
->  struct uprobes_state {
->  };
-> diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
-> index 6795b8d82b9c..acec91a676b7 100644
-> --- a/kernel/events/uprobes.c
-> +++ b/kernel/events/uprobes.c
-> @@ -1802,6 +1802,14 @@ static struct xol_area *get_xol_area(void)
->  	return area;
->  }
->  
-> +void __weak arch_uprobe_clear_state(struct mm_struct *mm)
-> +{
-> +}
-> +
-> +void __weak arch_uprobe_init_state(struct mm_struct *mm)
-> +{
-> +}
-> +
->  /*
->   * uprobe_clear_state - Free the area allocated for slots.
->   */
-> @@ -1813,6 +1821,8 @@ void uprobe_clear_state(struct mm_struct *mm)
->  	delayed_uprobe_remove(NULL, mm);
->  	mutex_unlock(&delayed_uprobe_lock);
->  
-> +	arch_uprobe_clear_state(mm);
-> +
->  	if (!area)
->  		return;
->  
-> diff --git a/kernel/fork.c b/kernel/fork.c
-> index 1ee8eb11f38b..7108ca558518 100644
-> --- a/kernel/fork.c
-> +++ b/kernel/fork.c
-> @@ -1010,6 +1010,7 @@ static void mm_init_uprobes_state(struct mm_struct *mm)
->  {
->  #ifdef CONFIG_UPROBES
->  	mm->uprobes_state.xol_area = NULL;
-> +	arch_uprobe_init_state(mm);
->  #endif
-
-Can't we make this uprobe_init_state(mm)?
-
->  }
->  
-> -- 
-> 2.49.0
-> 
-
-Thank you,
-
-
+base-commit: 78f4e737a53e1163ded2687a922fce138aee73f5
 -- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+2.49.0
+
