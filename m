@@ -1,411 +1,378 @@
-Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay.hostedemail.com (smtprelay0015.hostedemail.com [216.40.44.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B24464C92;
-	Wed, 25 Jun 2025 15:16:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC8552877E4;
+	Wed, 25 Jun 2025 22:56:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750864606; cv=none; b=r9umEXQBOEzMIkzdxSsxnM5R/xmM5SWbE8BVm4wnaDEpnv8+S4FAcByjPhh7ig1AfW/i3LTxePt7m5Z+gPgwmILTYAoLgCikWWGNqmUCg5pmxW3//ZK+guJDYlGfeh8gJfGnVJOuhPG2mqC4lqwJRamfdZlD/GPk5jk6LbTxVlY=
+	t=1750892219; cv=none; b=P5I++vPx1xRtvAv7sRqEc96R7u+ffmw7HQ3bdbn2lZ7FY2tQfR/BwdAmLHfea7fctGId/Nm5YYeyswE3CmI01bWE11+10qs+BRAzcxBSZRQPu52Xhf/xysfUUYJbSYsmeoFrygN+/y82b+HdDOHx7IA3LP6uyCJMG4yZjAgU8LY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750864606; c=relaxed/simple;
-	bh=5gzcU5lYVyaDltG2aptsCIuIuEFSrzU7kQ1MaPmQcyU=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LgKNDUWj251VujVgK6FuBvrJSVt2SRVr22pf3Po+Gw2HeC6cBbZDnGTk/i2tchrmL6J8Tr2Fn0FkL8KMnifhbnEMCthbrgiZe5D+eAhUdzn0qRmDByUl7Zp0HWDDgSGSih6eOXRw7jfK2qlHyEWkaW/lZ/ZTlSkoS9Smkm9szHQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ivU64cyW; arc=none smtp.client-ip=209.85.208.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ivU64cyW"
-Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-606fdbd20afso3433571a12.1;
-        Wed, 25 Jun 2025 08:16:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750864603; x=1751469403; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=E1Vd7rjX99Xeecq3johLhJAXQYPhI5NMHiZ59CBcF44=;
-        b=ivU64cyW+u+zRr0RwOzOzfb2OD43qtGp/Yu5AbRhGSVmE2JphtJ7wahFDqKc7p2Vve
-         eTAGQeNSURPsdLZIBM42BW9Hdxi4Scjrv8PBDH725l/+D0qrrl5tGBeEXJXCEVpdhB6z
-         yPJNrlm8yjNPWMg1k67ozvHvxQj9qBGTDNjzHGuj3FXxM9VRgsZXwQ6Rddtst+973i9p
-         i0Fo4Scdgiq3qHaNhiq95MJdOompfs3FomOrrXsOHwcTIT7ALNtEJX2K7YMgrRK3fFod
-         7NUaN66+MRP0GZrz7KusbW/6NPI6/3IEHB5BAny8ke/UQQNBzBQVTy0S5CRKv4z6+b15
-         H8Yg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750864603; x=1751469403;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=E1Vd7rjX99Xeecq3johLhJAXQYPhI5NMHiZ59CBcF44=;
-        b=qwFnhMDntqy36oITwNs6kRIbP4MPpPCGCKkcN9OSGhTmIYutwzaW9U4yiNxX7olK2p
-         npbDyoksFI3ek1CC6qpo4McdqyUReW5+bORlbzPrB30niEJhdtLVLdqItQsIAWKzPc2N
-         SknfGGlGXcIQ3660OM2NGlKnyTXYG5tEdgNvVovJc/z/qRX+JTcn8E6nYvuqwgSWw0f0
-         CaqOFx05egWXcMDRiVnd5puBZTvpHiSs9LSBOtFv+hq9ghG+7EaMs4f0GF9tOWhGcaVQ
-         T9Q4mWT7z1R7JBRsuvuodkczEiYNdB1ZSBfsSgiufH1LVs5TX6WRWauZXdO/unMqK6nQ
-         N+Sw==
-X-Forwarded-Encrypted: i=1; AJvYcCU6Nm2a6TF8DbqIJrsAuO83jW5fcp0xeWaUe313Ki5iu/VJc1raaVgvwyQ839EuhamvqPA=@vger.kernel.org, AJvYcCUjbBl3e72V6MzViKT8bBEg/eC0T2Qf5gnosFFqZJc7sGR7XcXUzRLEASuIVLPYAVE5GGM40HWXXT/yZuamgodypw03@vger.kernel.org, AJvYcCXQMuTf7rRTfis/6M1OqZXNFTDqb3dU3+Qltcce7Ik2o/65zBEHGWMPNBmWl9MbtXo6gotp+DiWtNUcuJeW@vger.kernel.org
-X-Gm-Message-State: AOJu0YxR5DzpCcIY+cVL5WYAb/wwO2jx7JGZBmqOS4iwsdaA1I/jtzLQ
-	iYQEdkcduSBPfVjsrfs0uIO1HYJ/V1+WcCt9WPwECLXc9cTyPQZfm3oP
-X-Gm-Gg: ASbGnctaNX93Ob63iBpwD4mBdrh2yE0GZmmR41JbvJHzHIbJdQgS0nVJmCWNONEAJYJ
-	I/Pe4NYihFE4TPp64hKJ/6VrLaD2L02AjnIk3jvj1i276+1qk9Wddg45Zg3ThPm3nnnDbhRu/L5
-	uOh1LG2aPjvsUrmx0T8fXC3RCqx/TFt6eeXSGuR1iBm/TvuEVIgxP9In6Khiz1YYB02blSLvlGF
-	BcN8thodnG9M+tP79XMe2IW3qF2JvxC/IWnvW+d361QdO3NXnaCMPBlpIijUVo0v3TnZKVL+yN1
-	piu+K1YLOrImrFV9lHsposhwn+35OUxDpM+skq7cBiEF0g35mw==
-X-Google-Smtp-Source: AGHT+IGUKxVhzxYCbIyoITknvzZShVkYdCi+GTibaqaGfhvNfAbQjUzsgBS38MqE6qM6Hm5NGQhQ6Q==
-X-Received: by 2002:a17:906:7956:b0:ae0:b239:7fcc with SMTP id a640c23a62f3a-ae0bea8113amr381247066b.58.1750864602548;
-        Wed, 25 Jun 2025 08:16:42 -0700 (PDT)
-Received: from krava ([176.74.159.170])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae054083406sm1066721466b.75.2025.06.25.08.16.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Jun 2025 08:16:42 -0700 (PDT)
-From: Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date: Wed, 25 Jun 2025 17:16:40 +0200
-To: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Oleg Nesterov <oleg@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
-	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	x86@kernel.org, Song Liu <songliubraving@fb.com>,
-	Yonghong Song <yhs@fb.com>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Hao Luo <haoluo@google.com>, Steven Rostedt <rostedt@goodmis.org>,
-	Alan Maguire <alan.maguire@oracle.com>,
-	David Laight <David.Laight@aculab.com>,
-	Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas@t-8ch.de>,
-	Ingo Molnar <mingo@kernel.org>
-Subject: Re: [PATCHv3 perf/core 08/22] uprobes/x86: Add mapping for optimized
- uprobe trampolines
-Message-ID: <aFwS2EENyOFh7IbY@krava>
-References: <20250605132350.1488129-1-jolsa@kernel.org>
- <20250605132350.1488129-9-jolsa@kernel.org>
- <20250625172122.ad1e955ae2bc3957d9fb8546@kernel.org>
+	s=arc-20240116; t=1750892219; c=relaxed/simple;
+	bh=1REnszmbSgdI4pH4JSOyv7IfR9sppqawjYaSwndvGZM=;
+	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
+	 Content-Type; b=i4blrTZqDfMInP1A4Sh3srLu1/0/YhdWizKIdyG4szkmaqTgD41LCVfIirbI4ITW/EvaYgieXSAh2eCHy/snDcmNR4Y2h6x1jxMDuJ2+kwZQcN4WM9oTDLdZ+KbzVdzwIZdOs8RadyIEDOFhZ9Enl5Xpx4XGp/Es7vLSxWLgWsk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf20.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay04.hostedemail.com (Postfix) with ESMTP id 096E11A0784;
+	Wed, 25 Jun 2025 22:56:53 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: nevets@goodmis.org) by omf20.hostedemail.com (Postfix) with ESMTPA id BED1020026;
+	Wed, 25 Jun 2025 22:56:50 +0000 (UTC)
+Received: from rostedt by gandalf with local (Exim 4.98.2)
+	(envelope-from <rostedt@goodmis.org>)
+	id 1uUZ3L-000000043fn-44eR;
+	Wed, 25 Jun 2025 18:57:15 -0400
+Message-ID: <20250625225715.825831885@goodmis.org>
+User-Agent: quilt/0.68
+Date: Wed, 25 Jun 2025 18:56:06 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org,
+ bpf@vger.kernel.org,
+ x86@kernel.org
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Josh Poimboeuf <jpoimboe@kernel.org>,
+ Peter Zijlstra <peterz@infradead.org>,
+ Ingo Molnar <mingo@kernel.org>,
+ Jiri Olsa <jolsa@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>,
+ Thomas Gleixner <tglx@linutronix.de>,
+ Andrii Nakryiko <andrii@kernel.org>,
+ Indu Bhagat <indu.bhagat@oracle.com>,
+ "Jose E. Marchesi" <jemarch@gnu.org>,
+ Beau Belgrave <beaub@linux.microsoft.com>,
+ Jens Remus <jremus@linux.ibm.com>,
+ Linus Torvalds <torvalds@linux-foundation.org>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Jens Axboe <axboe@kernel.dk>
+Subject: [PATCH v11 06/14] unwind_user/deferred: Add deferred unwinding interface
+References: <20250625225600.555017347@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250625172122.ad1e955ae2bc3957d9fb8546@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+X-Stat-Signature: m96k1dzifbzeeiaqp1dic47185xecsiy
+X-Rspamd-Server: rspamout03
+X-Rspamd-Queue-Id: BED1020026
+X-Session-Marker: 6E657665747340676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX18XVPStbC6q5tH+to2GD7pEUKCYL0SrhZs=
+X-HE-Tag: 1750892210-680092
+X-HE-Meta: U2FsdGVkX18ThzG8jFOu6pSSfHCNQ59UQUzTkHbG87f/lfHAKTv1ghnm8h9sRmpIkkHjiA3psUv0sSPQ6tQuG2gToLoPJSt0TdJISNidmGp1oLsrfT+hD3fCWS8qtTiGTqrIuKGJG3Paakp4/5C1Jwv9zFWPCXDwd8dtZBNjuvG48kO4ZMxrKCGSL4rtj1tUHqR2BLeSIF4XNvqOt3EE4oakAUPi1AqYuLFhmgVeT+IX9sHvDaTlPKCTeeprXsWhJkvT2fDjdXj2gJPdOWv4fxdww6rKw3pHy8bMdAishtc01EtOwVUhk1jlubGlxsAjr73J5pL7ZRfaEmEP6FQjyDnzf9IUXy6LAq5GXLF9jNje1quq/5wPtLiT45SoOHXf0FU+N5NzQVX2K8gcp6lqLaVwhC/4aqie3EfRQuH9lCA=
 
-On Wed, Jun 25, 2025 at 05:21:22PM +0900, Masami Hiramatsu wrote:
-> On Thu,  5 Jun 2025 15:23:35 +0200
-> Jiri Olsa <jolsa@kernel.org> wrote:
-> 
-> > Adding support to add special mapping for user space trampoline with
-> > following functions:
-> > 
-> >   uprobe_trampoline_get - find or add uprobe_trampoline
-> >   uprobe_trampoline_put - remove or destroy uprobe_trampoline
-> > 
-> > The user space trampoline is exported as arch specific user space special
-> > mapping through tramp_mapping, which is initialized in following changes
-> > with new uprobe syscall.
-> > 
-> > The uprobe trampoline needs to be callable/reachable from the probed address,
-> > so while searching for available address we use is_reachable_by_call function
-> > to decide if the uprobe trampoline is callable from the probe address.
-> > 
-> > All uprobe_trampoline objects are stored in uprobes_state object and are
-> > cleaned up when the process mm_struct goes down. Adding new arch hooks
-> > for that, because this change is x86_64 specific.
-> > 
-> > Locking is provided by callers in following changes.
-> > 
-> > Acked-by: Oleg Nesterov <oleg@redhat.com>
-> > Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-> > ---
-> >  arch/x86/kernel/uprobes.c | 115 ++++++++++++++++++++++++++++++++++++++
-> >  include/linux/uprobes.h   |   6 ++
-> >  kernel/events/uprobes.c   |  10 ++++
-> >  kernel/fork.c             |   1 +
-> >  4 files changed, 132 insertions(+)
-> > 
-> > diff --git a/arch/x86/kernel/uprobes.c b/arch/x86/kernel/uprobes.c
-> > index 77050e5a4680..0295cfb625c0 100644
-> > --- a/arch/x86/kernel/uprobes.c
-> > +++ b/arch/x86/kernel/uprobes.c
-> > @@ -608,6 +608,121 @@ static void riprel_post_xol(struct arch_uprobe *auprobe, struct pt_regs *regs)
-> >  		*sr = utask->autask.saved_scratch_register;
-> >  	}
-> >  }
-> > +
-> > +static int tramp_mremap(const struct vm_special_mapping *sm, struct vm_area_struct *new_vma)
-> > +{
-> > +	return -EPERM;
-> > +}
-> > +
-> > +static struct page *tramp_mapping_pages[2] __ro_after_init;
-> > +
-> > +static struct vm_special_mapping tramp_mapping = {
-> > +	.name   = "[uprobes-trampoline]",
-> > +	.mremap = tramp_mremap,
-> > +	.pages  = tramp_mapping_pages,
-> > +};
-> > +
-> > +struct uprobe_trampoline {
-> > +	struct hlist_node	node;
-> > +	unsigned long		vaddr;
-> > +};
-> > +
-> > +static bool is_reachable_by_call(unsigned long vtramp, unsigned long vaddr)
-> > +{
-> > +	long delta = (long)(vaddr + 5 - vtramp);
-> > +
-> > +	return delta >= INT_MIN && delta <= INT_MAX;
-> > +}
-> > +
-> > +static unsigned long find_nearest_page(unsigned long vaddr)
-> 
-> nit: this does not return the nearest one, but the highest one?
+From: Josh Poimboeuf <jpoimboe@kernel.org>
 
-...
+Add an interface for scheduling task work to unwind the user space stack
+before returning to user space. This solves several problems for its
+callers:
 
-> 
-> If you really need the nearest one, we need to call
-> vm_unmapped_area() twice.
-> 
-> [low_limit, call_end] with TOPDOWN flag and 
-> [call_end, high_limit] without TOPDOWN.
-> 
-> and choose the nearest one. But I don't think we need it.
+  - Ensure the unwind happens in task context even if the caller may be
+    running in interrupt context.
 
-ugh you're right, let's rename it.. find_reachable_page ?
+  - Avoid duplicate unwinds, whether called multiple times by the same
+    caller or by different callers.
 
-> 
-> > +{
-> > +	struct vm_unmapped_area_info info = {
-> > +		.length     = PAGE_SIZE,
-> > +		.align_mask = ~PAGE_MASK,
-> > +		.flags      = VM_UNMAPPED_AREA_TOPDOWN,
-> > +		.low_limit  = PAGE_SIZE,
-> > +		.high_limit = ULONG_MAX,
-> 
-> Maybe "TASK_SIZE" is better than ULONG_MAX?
+  - Take a timestamp when the first request comes in since the task
+    entered the kernel. This will be returned to the calling function
+    along with the stack trace when the task leaves the kernel. This
+    timestamp can be used to correlate kernel unwinds/traces with the user
+    unwind. For this to work properly, the architecture must have a
+    local_clock() resolution that guarantees a different timestamp per
+    a task systemcall.
 
-ok
+The timestamp is created to detect when the stacktrace is the same. It is
+generated the first time a user space stacktrace is requested after the
+task enters the kernel.
 
-> 
-> > +	};
-> > +	unsigned long limit, call_end = vaddr + 5;
-> > +
-> > +	if (!check_add_overflow(call_end, INT_MIN, &limit))
-> > +		info.low_limit = limit;
-> > +	if (!check_add_overflow(call_end, INT_MAX, &limit))
-> > +		info.high_limit = limit;
-> > +	return vm_unmapped_area(&info);
-> > +}
-> > +
-> > +static struct uprobe_trampoline *create_uprobe_trampoline(unsigned long vaddr)
-> > +{
-> > +	struct pt_regs *regs = task_pt_regs(current);
-> > +	struct mm_struct *mm = current->mm;
-> > +	struct uprobe_trampoline *tramp;
-> > +	struct vm_area_struct *vma;
-> > +
-> > +	if (!user_64bit_mode(regs))
-> > +		return NULL;
-> > +
-> > +	vaddr = find_nearest_page(vaddr);
-> > +	if (IS_ERR_VALUE(vaddr))
-> > +		return NULL;
-> > +
-> > +	tramp = kzalloc(sizeof(*tramp), GFP_KERNEL);
-> > +	if (unlikely(!tramp))
-> > +		return NULL;
-> > +
-> > +	tramp->vaddr = vaddr;
-> > +	vma = _install_special_mapping(mm, tramp->vaddr, PAGE_SIZE,
-> 
-> Just make sure, this special mapped page is mapped 1 page for each
-> uprobe? (I think uprobe syscall trampoline size is far smaller
-> than the page size.)
+The timestamp is passed to the caller on request, and when the stacktrace is
+generated upon returning to user space, it will call the requester's callback
+with the timestamp as well as the stacktrace.
 
-so the trampoline is created for first uprobe within 4GB region of
-the probed address and will be reused by other uprobes in that region
+A global list is created and protected by a global mutex that holds
+tracers that register with the unwind infrastructure. The number of
+registered tracers will be limited in future changes. Each perf program or
+ftrace instance will register its own descriptor to use for deferred
+unwind stack traces.
 
-> 
-> > +				VM_READ|VM_EXEC|VM_MAYEXEC|VM_MAYREAD|VM_DONTCOPY|VM_IO,
-> > +				&tramp_mapping);
-> > +	if (IS_ERR(vma))
-> > +		goto free_area;
-> 
-> nit: To simplify the code, instead of goto,
-> 
-> if (IS_ERR(vma)) {
-> 	kfree(tramp);
-> 	return NULL;
-> }
+Note, in the function unwind_deferred_task_work() that gets called when
+returning to user space, it uses a global mutex for synchronization which
+will cause a big bottleneck. This will be replaced by SRCU, but that
+change adds some complex synchronization that deservers its own commit.
 
-ok
+Co-developed-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+Changes since v10: https://lore.kernel.org/20250611010428.770214773@goodmis.org
 
-> 
-> > +	return tramp;
-> > +
-> > +free_area:
-> > +	kfree(tramp);
-> > +	return NULL;
-> > +}
-> > +
-> > +__maybe_unused
-> > +static struct uprobe_trampoline *get_uprobe_trampoline(unsigned long vaddr, bool *new)
-> > +{
-> > +	struct uprobes_state *state = &current->mm->uprobes_state;
-> > +	struct uprobe_trampoline *tramp = NULL;
-> > +
-> > +	hlist_for_each_entry(tramp, &state->head_tramps, node) {
-> > +		if (is_reachable_by_call(tramp->vaddr, vaddr))
-> 
-> This should set '*new = false;' here.
+- Added comment stating that the clock used for the timestamp must have a
+  resolution that will guarantee that two system called back to back will
+  have a different timestamp.
 
-right, will fix, thanks
+- Use timestamp being zero to exit out early in unwind_reset_info() so
+  that there's no writes when not used. (Peter Zijlstra)
 
-> 
-> > +			return tramp;
-> > +	}
-> > +
-> > +	tramp = create_uprobe_trampoline(vaddr);
-> > +	if (!tramp)
-> > +		return NULL;
-> > +
-> > +	*new = true;
-> > +	hlist_add_head(&tramp->node, &state->head_tramps);
-> > +	return tramp;
-> > +}
-> > +
-> > +static void destroy_uprobe_trampoline(struct uprobe_trampoline *tramp)
-> > +{
-> > +	hlist_del(&tramp->node);
-> > +	kfree(tramp);
-> 
-> Don't we need to unmap the tramp->vaddr?
+- Update change log to mention that each perf program and ftrace intance
+  will register with the deferred unwinder. (Peter Zijlstra).
 
-that's tricky because we have no way to make sure the application is
-no longer executing the trampoline, it's described in the changelog
-of following patch:
+- Update change log to express that unwind_deferred_task_work() uses a
+  global lock but will later be replaced with SRCU. (Peter Zijlstra)
 
-    uprobes/x86: Add support to optimize uprobes
+ include/linux/unwind_deferred.h       |  24 ++++-
+ include/linux/unwind_deferred_types.h |   3 +
+ kernel/unwind/deferred.c              | 139 +++++++++++++++++++++++++-
+ 3 files changed, 164 insertions(+), 2 deletions(-)
 
-    ...
+diff --git a/include/linux/unwind_deferred.h b/include/linux/unwind_deferred.h
+index baacf4a1eb4c..26011b413142 100644
+--- a/include/linux/unwind_deferred.h
++++ b/include/linux/unwind_deferred.h
+@@ -2,9 +2,19 @@
+ #ifndef _LINUX_UNWIND_USER_DEFERRED_H
+ #define _LINUX_UNWIND_USER_DEFERRED_H
+ 
++#include <linux/task_work.h>
+ #include <linux/unwind_user.h>
+ #include <linux/unwind_deferred_types.h>
+ 
++struct unwind_work;
++
++typedef void (*unwind_callback_t)(struct unwind_work *work, struct unwind_stacktrace *trace, u64 timestamp);
++
++struct unwind_work {
++	struct list_head		list;
++	unwind_callback_t		func;
++};
++
+ #ifdef CONFIG_UNWIND_USER
+ 
+ void unwind_task_init(struct task_struct *task);
+@@ -12,10 +22,19 @@ void unwind_task_free(struct task_struct *task);
+ 
+ int unwind_user_faultable(struct unwind_stacktrace *trace);
+ 
++int unwind_deferred_init(struct unwind_work *work, unwind_callback_t func);
++int unwind_deferred_request(struct unwind_work *work, u64 *timestamp);
++void unwind_deferred_cancel(struct unwind_work *work);
++
+ static __always_inline void unwind_reset_info(void)
+ {
+-	if (unlikely(current->unwind_info.cache))
++	/* Exit out early if this was never used */
++	if (likely(!current->unwind_info.timestamp))
++		return;
++
++	if (current->unwind_info.cache)
+ 		current->unwind_info.cache->nr_entries = 0;
++	current->unwind_info.timestamp = 0;
+ }
+ 
+ #else /* !CONFIG_UNWIND_USER */
+@@ -24,6 +43,9 @@ static inline void unwind_task_init(struct task_struct *task) {}
+ static inline void unwind_task_free(struct task_struct *task) {}
+ 
+ static inline int unwind_user_faultable(struct unwind_stacktrace *trace) { return -ENOSYS; }
++static inline int unwind_deferred_init(struct unwind_work *work, unwind_callback_t func) { return -ENOSYS; }
++static inline int unwind_deferred_request(struct unwind_work *work, u64 *timestamp) { return -ENOSYS; }
++static inline void unwind_deferred_cancel(struct unwind_work *work) {}
+ 
+ static inline void unwind_reset_info(void) {}
+ 
+diff --git a/include/linux/unwind_deferred_types.h b/include/linux/unwind_deferred_types.h
+index db5b54b18828..5df264cf81ad 100644
+--- a/include/linux/unwind_deferred_types.h
++++ b/include/linux/unwind_deferred_types.h
+@@ -9,6 +9,9 @@ struct unwind_cache {
+ 
+ struct unwind_task_info {
+ 	struct unwind_cache	*cache;
++	struct callback_head	work;
++	u64			timestamp;
++	int			pending;
+ };
+ 
+ #endif /* _LINUX_UNWIND_USER_DEFERRED_TYPES_H */
+diff --git a/kernel/unwind/deferred.c b/kernel/unwind/deferred.c
+index 96368a5aa522..d5f2c004a5b0 100644
+--- a/kernel/unwind/deferred.c
++++ b/kernel/unwind/deferred.c
+@@ -2,16 +2,43 @@
+ /*
+  * Deferred user space unwinding
+  */
++#include <linux/sched/task_stack.h>
++#include <linux/unwind_deferred.h>
++#include <linux/sched/clock.h>
++#include <linux/task_work.h>
+ #include <linux/kernel.h>
+ #include <linux/sched.h>
+ #include <linux/sizes.h>
+ #include <linux/slab.h>
+-#include <linux/unwind_deferred.h>
++#include <linux/mm.h>
+ 
+ /* Make the cache fit in a 4K page */
+ #define UNWIND_MAX_ENTRIES					\
+ 	((SZ_4K - sizeof(struct unwind_cache)) / sizeof(long))
+ 
++/* Guards adding to and reading the list of callbacks */
++static DEFINE_MUTEX(callback_mutex);
++static LIST_HEAD(callbacks);
++
++/*
++ * Read the task context timestamp, if this is the first caller then
++ * it will set the timestamp.
++ *
++ * For this to work properly, the timestamp (local_clock()) must
++ * have a resolution that will guarantee a different timestamp
++ * everytime a task makes a system call. That is, two short
++ * system calls back to back must have a different timestamp.
++ */
++static u64 get_timestamp(struct unwind_task_info *info)
++{
++	lockdep_assert_irqs_disabled();
++
++	if (!info->timestamp)
++		info->timestamp = local_clock();
++
++	return info->timestamp;
++}
++
+ /**
+  * unwind_user_faultable - Produce a user stacktrace in faultable context
+  * @trace: The descriptor that will store the user stacktrace
+@@ -62,11 +89,120 @@ int unwind_user_faultable(struct unwind_stacktrace *trace)
+ 	return 0;
+ }
+ 
++static void unwind_deferred_task_work(struct callback_head *head)
++{
++	struct unwind_task_info *info = container_of(head, struct unwind_task_info, work);
++	struct unwind_stacktrace trace;
++	struct unwind_work *work;
++	u64 timestamp;
++
++	if (WARN_ON_ONCE(!info->pending))
++		return;
++
++	/* Allow work to come in again */
++	WRITE_ONCE(info->pending, 0);
++
++	/*
++	 * From here on out, the callback must always be called, even if it's
++	 * just an empty trace.
++	 */
++	trace.nr = 0;
++	trace.entries = NULL;
++
++	unwind_user_faultable(&trace);
++
++	timestamp = info->timestamp;
++
++	guard(mutex)(&callback_mutex);
++	list_for_each_entry(work, &callbacks, list) {
++		work->func(work, &trace, timestamp);
++	}
++}
++
++/**
++ * unwind_deferred_request - Request a user stacktrace on task exit
++ * @work: Unwind descriptor requesting the trace
++ * @timestamp: The time stamp of the first request made for this task
++ *
++ * Schedule a user space unwind to be done in task work before exiting the
++ * kernel.
++ *
++ * The returned @timestamp output is the timestamp of the very first request
++ * for a user space stacktrace for this task since it entered the kernel.
++ * It can be from a request by any caller of this infrastructure.
++ * Its value will also be passed to the callback function.  It can be
++ * used to stitch kernel and user stack traces together in post-processing.
++ *
++ * Note, the architecture must have a local_clock() implementation that
++ * guarantees a different timestamp per task systemcall.
++ *
++ * It's valid to call this function multiple times for the same @work within
++ * the same task entry context.  Each call will return the same timestamp
++ * while the task hasn't left the kernel. If the callback is not pending because
++ * it has already been previously called for the same entry context, it will be
++ * called again with the same stack trace and timestamp.
++ *
++ * Return: 1 if the the callback was already queued.
++ *         0 if the callback successfully was queued.
++ *         Negative if there's an error.
++ *         @timestamp holds the timestamp of the first request by any user
++ */
++int unwind_deferred_request(struct unwind_work *work, u64 *timestamp)
++{
++	struct unwind_task_info *info = &current->unwind_info;
++	int ret;
++
++	*timestamp = 0;
++
++	if (WARN_ON_ONCE(in_nmi()))
++		return -EINVAL;
++
++	if ((current->flags & (PF_KTHREAD | PF_EXITING)) ||
++	    !user_mode(task_pt_regs(current)))
++		return -EINVAL;
++
++	guard(irqsave)();
++
++	*timestamp = get_timestamp(info);
++
++	/* callback already pending? */
++	if (info->pending)
++		return 1;
++
++	/* The work has been claimed, now schedule it. */
++	ret = task_work_add(current, &info->work, TWA_RESUME);
++	if (WARN_ON_ONCE(ret))
++		return ret;
++
++	info->pending = 1;
++	return 0;
++}
++
++void unwind_deferred_cancel(struct unwind_work *work)
++{
++	if (!work)
++		return;
++
++	guard(mutex)(&callback_mutex);
++	list_del(&work->list);
++}
++
++int unwind_deferred_init(struct unwind_work *work, unwind_callback_t func)
++{
++	memset(work, 0, sizeof(*work));
++
++	guard(mutex)(&callback_mutex);
++	list_add(&work->list, &callbacks);
++	work->func = func;
++	return 0;
++}
++
+ void unwind_task_init(struct task_struct *task)
+ {
+ 	struct unwind_task_info *info = &task->unwind_info;
+ 
+ 	memset(info, 0, sizeof(*info));
++	init_task_work(&info->work, unwind_deferred_task_work);
+ }
+ 
+ void unwind_task_free(struct task_struct *task)
+@@ -74,4 +210,5 @@ void unwind_task_free(struct task_struct *task)
+ 	struct unwind_task_info *info = &task->unwind_info;
+ 
+ 	kfree(info->cache);
++	task_work_cancel(task, &info->work);
+ }
+-- 
+2.47.2
 
-    We do not unmap and release uprobe trampoline when it's no longer needed,
-    because there's no easy way to make sure none of the threads is still
-    inside the trampoline. But we do not waste memory, because there's just
-    single page for all the uprobe trampoline mappings.
 
-    We do waste frame on page mapping for every 4GB by keeping the uprobe
-    trampoline page mapped, but that seems ok.
-
-    ...
-
-> 
-> > +}
-> > +
-> > +void arch_uprobe_init_state(struct mm_struct *mm)
-> > +{
-> > +	INIT_HLIST_HEAD(&mm->uprobes_state.head_tramps);
-> > +}
-> > +
-> > +void arch_uprobe_clear_state(struct mm_struct *mm)
-> > +{
-> > +	struct uprobes_state *state = &mm->uprobes_state;
-> > +	struct uprobe_trampoline *tramp;
-> > +	struct hlist_node *n;
-> > +
-> > +	hlist_for_each_entry_safe(tramp, n, &state->head_tramps, node)
-> > +		destroy_uprobe_trampoline(tramp);
-> > +}
-> >  #else /* 32-bit: */
-> >  /*
-> >   * No RIP-relative addressing on 32-bit
-> > diff --git a/include/linux/uprobes.h b/include/linux/uprobes.h
-> > index 5080619560d4..b40d33aae016 100644
-> > --- a/include/linux/uprobes.h
-> > +++ b/include/linux/uprobes.h
-> > @@ -17,6 +17,7 @@
-> >  #include <linux/wait.h>
-> >  #include <linux/timer.h>
-> >  #include <linux/seqlock.h>
-> > +#include <linux/mutex.h>
-> >  
-> >  struct uprobe;
-> >  struct vm_area_struct;
-> > @@ -185,6 +186,9 @@ struct xol_area;
-> >  
-> >  struct uprobes_state {
-> >  	struct xol_area		*xol_area;
-> > +#ifdef CONFIG_X86_64
-> 
-> Maybe we can introduce struct arch_uprobe_state{} here?
-
-ok, on top of that Andrii also asked for [1]:
-  - alloc 'struct uprobes_state' for mm_struct only when needed
-
-this could be part of that follow up? I'd rather not complicate this
-patchset any further
-
-[1] https://lore.kernel.org/bpf/CAEf4BzY2zKPM9JHgn_wa8yCr8q5KntE5w8g=AoT2MnrD2Dx6gA@mail.gmail.com/
-
-> 
-> > +	struct hlist_head	head_tramps;
-> > +#endif
-> >  };
-> >  
-> >  typedef int (*uprobe_write_verify_t)(struct page *page, unsigned long vaddr,
-> > @@ -233,6 +237,8 @@ extern void uprobe_handle_trampoline(struct pt_regs *regs);
-> >  extern void *arch_uretprobe_trampoline(unsigned long *psize);
-> >  extern unsigned long uprobe_get_trampoline_vaddr(void);
-> >  extern void uprobe_copy_from_page(struct page *page, unsigned long vaddr, void *dst, int len);
-> > +extern void arch_uprobe_clear_state(struct mm_struct *mm);
-> > +extern void arch_uprobe_init_state(struct mm_struct *mm);
-> >  #else /* !CONFIG_UPROBES */
-> >  struct uprobes_state {
-> >  };
-> > diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
-> > index 6795b8d82b9c..acec91a676b7 100644
-> > --- a/kernel/events/uprobes.c
-> > +++ b/kernel/events/uprobes.c
-> > @@ -1802,6 +1802,14 @@ static struct xol_area *get_xol_area(void)
-> >  	return area;
-> >  }
-> >  
-> > +void __weak arch_uprobe_clear_state(struct mm_struct *mm)
-> > +{
-> > +}
-> > +
-> > +void __weak arch_uprobe_init_state(struct mm_struct *mm)
-> > +{
-> > +}
-> > +
-> >  /*
-> >   * uprobe_clear_state - Free the area allocated for slots.
-> >   */
-> > @@ -1813,6 +1821,8 @@ void uprobe_clear_state(struct mm_struct *mm)
-> >  	delayed_uprobe_remove(NULL, mm);
-> >  	mutex_unlock(&delayed_uprobe_lock);
-> >  
-> > +	arch_uprobe_clear_state(mm);
-> > +
-> >  	if (!area)
-> >  		return;
-> >  
-> > diff --git a/kernel/fork.c b/kernel/fork.c
-> > index 1ee8eb11f38b..7108ca558518 100644
-> > --- a/kernel/fork.c
-> > +++ b/kernel/fork.c
-> > @@ -1010,6 +1010,7 @@ static void mm_init_uprobes_state(struct mm_struct *mm)
-> >  {
-> >  #ifdef CONFIG_UPROBES
-> >  	mm->uprobes_state.xol_area = NULL;
-> > +	arch_uprobe_init_state(mm);
-> >  #endif
-> 
-> Can't we make this uprobe_init_state(mm)?
-
-hum, there are other mm_init_* functions around, I guess we should keep
-the same pattern?
-
-unless you mean s/arch_uprobe_init_state/uprobe_init_state/ but that's
-arch code.. so probably not sure what you mean ;-)
-
-thanks for review,
-jirka
