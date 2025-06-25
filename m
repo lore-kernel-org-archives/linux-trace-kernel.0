@@ -1,89 +1,118 @@
-Received: from relay.hostedemail.com (smtprelay0017.hostedemail.com [216.40.44.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BC2E2586FE;
-	Tue, 24 Jun 2025 22:36:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.17
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 33F3E16E863;
+	Wed, 25 Jun 2025 02:55:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750804587; cv=none; b=GhxYUVshtlhPTI8x6xUkUMHgM2RZ4lnCS/T1igHfCKvL2bVKzYF6BkM7O0gfqlqkquY99z8J1mN7PzNMDDAkEeDxkPlCPwI7oP89/c8dBSJr8riNLuZ4JmlC1UqaC4UywCnfAdsoZ5g1QCY9fxmOAanHBthXYwfVce3S/FlErpM=
+	t=1750820160; cv=none; b=idsZvv9VfQT6jpe+U3dCb2LYwavRy+hkvKJC+LCo3u5dH6DP9GbzWfcLguOjSRmS5TzQJ6RlYS6RcFAEh2D7tM5GiPvf9cDn9hlBKkHkY7O1eg3LT1+JpkkcNHe+iiO8DAZK5MXeCkF1Tllmq5BWJoWv/JPwPsKIAa3BD73D2n8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750804587; c=relaxed/simple;
-	bh=7L5rEGVO3mrtPyc5RGQpu5ReOYLzXADuN7/STbDJ1jw=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=P2qURzRhTuv+jEMEN4rTe5tu5WK8ycrn+XVUPa5YNWz8ol7Fpip6td4Al3Oe4UHLL78Slarafb9BlERKwKou0JkjQGCxjHr0PnjjNShMjP7yfvB/GuenL+mNyCN+ONJd5SUZ24cDBdaugt9zS5azD8h2enjax2iFIA5JU/zhxVE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf18.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay01.hostedemail.com (Postfix) with ESMTP id 9DB5F1D8A29;
-	Tue, 24 Jun 2025 22:36:21 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf18.hostedemail.com (Postfix) with ESMTPA id B628337;
-	Tue, 24 Jun 2025 22:36:17 +0000 (UTC)
-Date: Tue, 24 Jun 2025 18:36:16 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- bpf@vger.kernel.org, x86@kernel.org, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Josh Poimboeuf <jpoimboe@kernel.org>, Ingo Molnar <mingo@kernel.org>, Jiri
- Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Thomas
- Gleixner <tglx@linutronix.de>, Andrii Nakryiko <andrii@kernel.org>, Indu
- Bhagat <indu.bhagat@oracle.com>, "Jose E. Marchesi" <jemarch@gnu.org>, Beau
- Belgrave <beaub@linux.microsoft.com>, Jens Remus <jremus@linux.ibm.com>,
- Linus Torvalds <torvalds@linux-foundation.org>, Andrew Morton
- <akpm@linux-foundation.org>
-Subject: Re: [PATCH v10 06/14] unwind_user/deferred: Add deferred unwinding
- interface
-Message-ID: <20250624183616.5b0a3ddc@batman.local.home>
-In-Reply-To: <20250618184620.GT1613376@noisy.programming.kicks-ass.net>
-References: <20250611005421.144238328@goodmis.org>
-	<20250611010428.770214773@goodmis.org>
-	<20250618184620.GT1613376@noisy.programming.kicks-ass.net>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1750820160; c=relaxed/simple;
+	bh=UtkW3qucY6iNeZ6QdEnlpOKX0CFNUk0ZJoZv9+yY7WU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=IQhIPzF2wj6dYwpA9zfs7jtqxXBYuu9e5qJ5u4eo1gw9P/LDAFnoxECdeaHFOvs84WkeR6wWXFRlyaiv1j5iUhklmorYKC/HJNOSYb5MqNzhi3jYxWjJV2kSe4GB8yo9nhzqLCQBZ/PFxyoYDNQky1B3PF06WW8Hnp6uzwvV3Fs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4927B12FC;
+	Tue, 24 Jun 2025 19:55:40 -0700 (PDT)
+Received: from [10.164.146.16] (J09HK2D2RT.blr.arm.com [10.164.146.16])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4F6A63F58B;
+	Tue, 24 Jun 2025 19:55:38 -0700 (PDT)
+Message-ID: <46432a2e-1a9d-44f7-aa09-689d6e2a022a@arm.com>
+Date: Wed, 25 Jun 2025 08:25:35 +0530
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/3] use vm_flags_t consistently
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+ Andrew Morton <akpm@linux-foundation.org>
+Cc: Russell King <linux@armlinux.org.uk>,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Madhavan Srinivasan <maddy@linux.ibm.com>,
+ Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>,
+ Christophe Leroy <christophe.leroy@csgroup.eu>,
+ "David S . Miller" <davem@davemloft.net>,
+ Andreas Larsson <andreas@gaisler.com>, Jarkko Sakkinen <jarkko@kernel.org>,
+ Dave Hansen <dave.hansen@linux.intel.com>,
+ Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, "H . Peter Anvin" <hpa@zytor.com>,
+ Andy Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
+ Alexander Viro <viro@zeniv.linux.org.uk>,
+ Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+ Kees Cook <kees@kernel.org>, Peter Xu <peterx@redhat.com>,
+ David Hildenbrand <david@redhat.com>, Zi Yan <ziy@nvidia.com>,
+ Baolin Wang <baolin.wang@linux.alibaba.com>,
+ "Liam R . Howlett" <Liam.Howlett@oracle.com>, Nico Pache
+ <npache@redhat.com>, Ryan Roberts <ryan.roberts@arm.com>,
+ Dev Jain <dev.jain@arm.com>, Barry Song <baohua@kernel.org>,
+ Xu Xin <xu.xin16@zte.com.cn>, Chengming Zhou <chengming.zhou@linux.dev>,
+ Hugh Dickins <hughd@google.com>, Vlastimil Babka <vbabka@suse.cz>,
+ Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>,
+ Michal Hocko <mhocko@suse.com>, Rik van Riel <riel@surriel.com>,
+ Harry Yoo <harry.yoo@oracle.com>, Dan Williams <dan.j.williams@intel.com>,
+ Matthew Wilcox <willy@infradead.org>, Steven Rostedt <rostedt@goodmis.org>,
+ Masami Hiramatsu <mhiramat@kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Jason Gunthorpe <jgg@ziepe.ca>, John Hubbard <jhubbard@nvidia.com>,
+ Muchun Song <muchun.song@linux.dev>, Oscar Salvador <osalvador@suse.de>,
+ Jann Horn <jannh@google.com>, Pedro Falcato <pfalcato@suse.de>,
+ Johannes Weiner <hannes@cmpxchg.org>, Qi Zheng <zhengqi.arch@bytedance.com>,
+ Shakeel Butt <shakeel.butt@linux.dev>, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+ kvm@vger.kernel.org, sparclinux@vger.kernel.org, linux-sgx@vger.kernel.org,
+ linux-fsdevel@vger.kernel.org, linux-mm@kvack.org, nvdimm@lists.linux.dev,
+ linux-trace-kernel@vger.kernel.org
+References: <cover.1750274467.git.lorenzo.stoakes@oracle.com>
+Content-Language: en-US
+From: Anshuman Khandual <anshuman.khandual@arm.com>
+In-Reply-To: <cover.1750274467.git.lorenzo.stoakes@oracle.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: B628337
-X-Stat-Signature: 9hbaj66wbm19opkqqp641h9p5jtsypgb
-X-Rspamd-Server: rspamout07
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX18kjCDdOfEldqCgG+Xb3ujrKQBHryBilNc=
-X-HE-Tag: 1750804577-207013
-X-HE-Meta: U2FsdGVkX1/qbrG10wqZmAfL6ElwAmwibtJjC1FxVLGSItuYoSR5syVwERHRqjHABd/xNiX6DA4hZCE/YhCX76No8uxwuK+g4ZPVSdvA0jJoy/gzSsd/PUCf0JOYCLHXBug0M750+oUlAIZ+577hjUTrahdgY3PlfI34CDdVfK8kDVYpxJmAsuYPY37FXjd85NVxM3hKsOn3vBf0WxFxE6Vk/EmbBb4KMSYHNDnVvKmGJBBJ7ngq42U9VfuKyqk10/xstuIIsz5CXHNvb71SLN0V6zXDjoLpp5Xxl9cAxMJG04WDTweOfRFFIdE8dsDHGGeEzQ6NwFUGI0g2jmokq3ax2DzhqCTwksqauDAv6IHhwOFMVEHXFkKsoBmL8rfx
 
-On Wed, 18 Jun 2025 20:46:20 +0200
-Peter Zijlstra <peterz@infradead.org> wrote:
-
-> >  static __always_inline void unwind_exit_to_user_mode(void)
-> >  {
-> >  	if (unlikely(current->unwind_info.cache))
-> >  		current->unwind_info.cache->nr_entries = 0;
-> > +	current->unwind_info.timestamp = 0;  
+On 19/06/25 1:12 AM, Lorenzo Stoakes wrote:
+> The VMA flags field vma->vm_flags is of type vm_flags_t. Right now this is
+> exactly equivalent to unsigned long, but it should not be assumed to be.
 > 
-> Surely clearing that timestamp is only relevant when there is a cache
-> around? Better to not add this unconditional write to the exit path.
+> Much code that references vma->vm_flags already correctly uses vm_flags_t,
+> but a fairly large chunk of code simply uses unsigned long and assumes that
+> the two are equivalent.
 > 
-> >  }
+> This series corrects that and has us use vm_flags_t consistently.
+> 
+> This series is motivated by the desire to, in a future series, adjust
+> vm_flags_t to be a u64 regardless of whether the kernel is 32-bit or 64-bit
+> in order to deal with the VMA flag exhaustion issue and avoid all the
+> various problems that arise from it (being unable to use certain features
+> in 32-bit, being unable to add new flags except for 64-bit, etc.)
+> 
+> This is therefore a critical first step towards that goal. At any rate,
+> using the correct type is of value regardless.
+> 
+> We additionally take the opportunity to refer to VMA flags as vm_flags
+> where possible to make clear what we're referring to.
+> 
+> Overall, this series does not introduce any functional change.
+> 
+> Lorenzo Stoakes (3):
+>   mm: change vm_get_page_prot() to accept vm_flags_t argument
+>   mm: update core kernel code to use vm_flags_t consistently
+>   mm: update architecture and driver code to use vm_flags_t
 
-Note, the timestamp could be there if the cache failed to allocate, and
-we would still want to clear the timestamp. I did turn this into:
+Hello Lorenzo,
 
-static __always_inline void unwind_reset_info(void)
-{
-	/* Exit out early if this was never used */
-	if (likely(!current->unwind_info.timestamp))
-		return;
+Just wondering which tree-branch this series applies ? Tried all the usual
+ones but could not apply the series cleanly.
 
-	if (current->unwind_info.cache)
-		current->unwind_info.cache->nr_entries = 0;
-	current->unwind_info.timestamp = 0;
-}
+v6.16-rc3
+next-20250624
+mm-stable
+mm-unstable
 
-For this patch, but later patches will give us the bitmask to check.
+b4 am cover.1750274467.git.lorenzo.stoakes@oracle.com
+git am ./20250618_lorenzo_stoakes_use_vm_flags_t_consistently.mbx
 
--- Steve
+- Anshuman
