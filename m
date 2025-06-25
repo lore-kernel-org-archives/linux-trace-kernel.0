@@ -1,257 +1,304 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04C781EB5C2;
-	Wed, 25 Jun 2025 06:05:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 32CBD367;
+	Wed, 25 Jun 2025 06:08:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750831559; cv=none; b=pe9D5+wP2C4nuNOJCT3GCS6X99iSS/fPlTXpJiYk4SZ09wF7g+mNQeuxSsdOXlk90uie6Maz/6mAJQfS8xWI+58ZahSpuD14UodrwZ0YT8/QtDlF++XpKbkt0BSSJtL36tT6sDVtHQ9GFsWdUlRrzhAbxaPChmd/ilEf8gsTlI4=
+	t=1750831719; cv=none; b=Ac+VG8JpXLQ/dxOltqmu9wV2GFIjdf0YqT8yCwuUau4hb1wNl3E8rGqX4o3CmarXGqc29M/8UmfwBdRPmiafj0d1Ufmi3zXdHq8NEAlQUnfp1kkTQE0iIHyREOzbt/YZF+yIVdGCtew1+LPUu1o49mFovQ1DvLNHBbFqinGfgZM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750831559; c=relaxed/simple;
-	bh=Q28EoRlCHxoMaNgGOkukCqmPjyIq/8jmbDgvCGiLJew=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=FV4CVQ62lALDYATehd4J85um+2fWt4RR88oCmdExlwwvXRhGSZs4ou+OVL0DeS2tgHtvMIFogXfT/xBfYULR5RJkJy1ZNtcLLHTpCHiDvTTPQdtSeBlOfM7ETX79zPBYhuixWYhmVVZsl/zrHeon4W38YJcQgeF1+fwfbuLlDiU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DFa5ibB8; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DFa5ibB8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 23D90C4CEEE;
-	Wed, 25 Jun 2025 06:05:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750831558;
-	bh=Q28EoRlCHxoMaNgGOkukCqmPjyIq/8jmbDgvCGiLJew=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=DFa5ibB8Ln+ZaEf5b2ISYENoa//luatjioX7AXXTUyOq4JdCpf6iXP+txHPyDNSn9
-	 Vmj1Z4xrs6G7Q/SQtKCVMGo1QSAGT6m81iYdIJo/tz4evIQhLSHP3xDD6p3eON8lzQ
-	 VxBPRELlVZ0f9bk2v0/qXCIU+lsRGCkfvYCkGB45H1A8UsdueFrIOcwraDhaIZW8H1
-	 zvZsNcyWc83jGmE/OIdnKqP254cDkmgB1VRBjnYkQLVgiTRjFL3NvYpShWbsJcSsrB
-	 XkigCbNiCzUlkO8QQOgcR3OI2ynAa1/VXsfHYdqBUcbwiXOlY0Ws1H6XSE0Q0qkZQS
-	 Sb1pd7cokohBg==
-Date: Wed, 25 Jun 2025 15:05:54 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Jiri Olsa <olsajiri@gmail.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Oleg Nesterov <oleg@redhat.com>,
- Andrii Nakryiko <andrii@kernel.org>, Alejandro Colomar <alx@kernel.org>,
- Eyal Birger <eyal.birger@gmail.com>, kees@kernel.org, bpf@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- x86@kernel.org, Song Liu <songliubraving@fb.com>, Yonghong Song
- <yhs@fb.com>, John Fastabend <john.fastabend@gmail.com>, Hao Luo
- <haoluo@google.com>, Steven Rostedt <rostedt@goodmis.org>, Alan Maguire
- <alan.maguire@oracle.com>, David Laight <David.Laight@aculab.com>, Thomas
- =?UTF-8?B?V2Vpw59zY2h1aA==?= <thomas@t-8ch.de>, Ingo Molnar
- <mingo@kernel.org>
-Subject: Re: [PATCHv3 perf/core 00/22] uprobes: Add support to optimize usdt
- probes on x86_64
-Message-Id: <20250625150554.e87f4231180082e4c0a86024@kernel.org>
-In-Reply-To: <aFpjjeYKO5uBuwcl@krava>
-References: <20250605132350.1488129-1-jolsa@kernel.org>
-	<aFFouFEKLFsYhVOe@krava>
-	<aFpjjeYKO5uBuwcl@krava>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1750831719; c=relaxed/simple;
+	bh=bLi4ynvV/aqi+1KZSi/tN7G9FBtj+QNghtBZnlKhZlc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=CiJDaMZhldqTYRsem+34rL2ImVIsHG3DQzTtAQUPE2tBoRAD8P+foVK+hXVq5Nb1KqBr8NLv1GoQCpiruypBNFG2HzPGiaF9+5eNHSaX4sNwCrx+vHqGbrJo7nAYr3IjepgeMTmLpL5QdONERCd4fpFTIE9dLKIo/Cf+PqZg6qE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6DE4D113E;
+	Tue, 24 Jun 2025 23:08:19 -0700 (PDT)
+Received: from [10.164.146.16] (J09HK2D2RT.blr.arm.com [10.164.146.16])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 448623F63F;
+	Tue, 24 Jun 2025 23:08:18 -0700 (PDT)
+Message-ID: <52e6b931-3371-4adc-a680-add7413ab71c@arm.com>
+Date: Wed, 25 Jun 2025 11:38:15 +0530
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 3/3] mm: update architecture and driver code to use
+ vm_flags_t
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+ Andrew Morton <akpm@linux-foundation.org>
+Cc: Russell King <linux@armlinux.org.uk>,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Madhavan Srinivasan <maddy@linux.ibm.com>,
+ Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>,
+ Christophe Leroy <christophe.leroy@csgroup.eu>,
+ "David S . Miller" <davem@davemloft.net>,
+ Andreas Larsson <andreas@gaisler.com>, Jarkko Sakkinen <jarkko@kernel.org>,
+ Dave Hansen <dave.hansen@linux.intel.com>,
+ Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, "H . Peter Anvin" <hpa@zytor.com>,
+ Andy Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
+ Alexander Viro <viro@zeniv.linux.org.uk>,
+ Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+ Kees Cook <kees@kernel.org>, Peter Xu <peterx@redhat.com>,
+ David Hildenbrand <david@redhat.com>, Zi Yan <ziy@nvidia.com>,
+ Baolin Wang <baolin.wang@linux.alibaba.com>,
+ "Liam R . Howlett" <Liam.Howlett@oracle.com>, Nico Pache
+ <npache@redhat.com>, Ryan Roberts <ryan.roberts@arm.com>,
+ Dev Jain <dev.jain@arm.com>, Barry Song <baohua@kernel.org>,
+ Xu Xin <xu.xin16@zte.com.cn>, Chengming Zhou <chengming.zhou@linux.dev>,
+ Hugh Dickins <hughd@google.com>, Vlastimil Babka <vbabka@suse.cz>,
+ Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>,
+ Michal Hocko <mhocko@suse.com>, Rik van Riel <riel@surriel.com>,
+ Harry Yoo <harry.yoo@oracle.com>, Dan Williams <dan.j.williams@intel.com>,
+ Matthew Wilcox <willy@infradead.org>, Steven Rostedt <rostedt@goodmis.org>,
+ Masami Hiramatsu <mhiramat@kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Jason Gunthorpe <jgg@ziepe.ca>, John Hubbard <jhubbard@nvidia.com>,
+ Muchun Song <muchun.song@linux.dev>, Oscar Salvador <osalvador@suse.de>,
+ Jann Horn <jannh@google.com>, Pedro Falcato <pfalcato@suse.de>,
+ Johannes Weiner <hannes@cmpxchg.org>, Qi Zheng <zhengqi.arch@bytedance.com>,
+ Shakeel Butt <shakeel.butt@linux.dev>, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+ kvm@vger.kernel.org, sparclinux@vger.kernel.org, linux-sgx@vger.kernel.org,
+ linux-fsdevel@vger.kernel.org, linux-mm@kvack.org, nvdimm@lists.linux.dev,
+ linux-trace-kernel@vger.kernel.org
+References: <cover.1750274467.git.lorenzo.stoakes@oracle.com>
+ <b6eb1894abc5555ece80bb08af5c022ef780c8bc.1750274467.git.lorenzo.stoakes@oracle.com>
+Content-Language: en-US
+From: Anshuman Khandual <anshuman.khandual@arm.com>
+In-Reply-To: <b6eb1894abc5555ece80bb08af5c022ef780c8bc.1750274467.git.lorenzo.stoakes@oracle.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-
-Hi Jiri,
-
-Sorry I missed the series. Let me review it.
-I think it should go through x86 tree because this is targetting
-x86 code.
-
-Thanks,
+Content-Transfer-Encoding: 7bit
 
 
-On Tue, 24 Jun 2025 10:36:29 +0200
-Jiri Olsa <olsajiri@gmail.com> wrote:
 
-> ping
+On 19/06/25 1:12 AM, Lorenzo Stoakes wrote:
+> In future we intend to change the vm_flags_t type, so it isn't correct for
+> architecture and driver code to assume it is unsigned long. Correct this
+> assumption across the board.
 > 
-> On Tue, Jun 17, 2025 at 03:08:08PM +0200, Jiri Olsa wrote:
-> > hi, ping
-> > 
-> > thanks,
-> > jirka
-> > 
-> > On Thu, Jun 05, 2025 at 03:23:27PM +0200, Jiri Olsa wrote:
-> > > hi,
-> > > this patchset adds support to optimize usdt probes on top of 5-byte
-> > > nop instruction.
-> > > 
-> > > The generic approach (optimize all uprobes) is hard due to emulating
-> > > possible multiple original instructions and its related issues. The
-> > > usdt case, which stores 5-byte nop seems much easier, so starting
-> > > with that.
-> > > 
-> > > The basic idea is to replace breakpoint exception with syscall which
-> > > is faster on x86_64. For more details please see changelog of patch 8.
-> > > 
-> > > The run_bench_uprobes.sh benchmark triggers uprobe (on top of different
-> > > original instructions) in a loop and counts how many of those happened
-> > > per second (the unit below is million loops).
-> > > 
-> > > There's big speed up if you consider current usdt implementation
-> > > (uprobe-nop) compared to proposed usdt (uprobe-nop5):
-> > > 
-> > > current:
-> > >         usermode-count :  152.501 ± 0.012M/s
-> > >         syscall-count  :   14.463 ± 0.062M/s
-> > > -->     uprobe-nop     :    3.160 ± 0.005M/s
-> > >         uprobe-push    :    3.003 ± 0.003M/s
-> > >         uprobe-ret     :    1.100 ± 0.003M/s
-> > >         uprobe-nop5    :    3.132 ± 0.012M/s
-> > >         uretprobe-nop  :    2.103 ± 0.002M/s
-> > >         uretprobe-push :    2.027 ± 0.004M/s
-> > >         uretprobe-ret  :    0.914 ± 0.002M/s
-> > >         uretprobe-nop5 :    2.115 ± 0.002M/s
-> > > 
-> > > after the change:
-> > >         usermode-count :  152.343 ± 0.400M/s
-> > >         syscall-count  :   14.851 ± 0.033M/s
-> > >         uprobe-nop     :    3.204 ± 0.005M/s
-> > >         uprobe-push    :    3.040 ± 0.005M/s
-> > >         uprobe-ret     :    1.098 ± 0.003M/s
-> > > -->     uprobe-nop5    :    7.286 ± 0.017M/s
-> > >         uretprobe-nop  :    2.144 ± 0.001M/s
-> > >         uretprobe-push :    2.069 ± 0.002M/s
-> > >         uretprobe-ret  :    0.922 ± 0.000M/s
-> > >         uretprobe-nop5 :    3.487 ± 0.001M/s
-> > > 
-> > > I see bit more speed up on Intel (above) compared to AMD. The big nop5
-> > > speed up is partly due to emulating nop5 and partly due to optimization.
-> > > 
-> > > The key speed up we do this for is the USDT switch from nop to nop5:
-> > > 	uprobe-nop     :    3.160 ± 0.005M/s
-> > > 	uprobe-nop5    :    7.286 ± 0.017M/s
-> > > 
-> > > 
-> > > Changes from v2:
-> > > - rebased on top of tip/master + mm/mm-stable + 1 extra change [1]
-> > > - added acks [Oleg,Andrii]
-> > > - more details changelog for patch 1 [Masami]
-> > > - several tests changes [Andrii]
-> > > - add explicit PAGE_SIZE low limit to vm_unmapped_area call [Andrii]
-> > > 
-> > > 
-> > > This patchset is adding new syscall, here are notes to check list items
-> > > in Documentation/process/adding-syscalls.rst:
-> > > 
-> > > - System Call Alternatives
-> > >   New syscall seems like the best way in here, because we need
-> > >   just to quickly enter kernel with no extra arguments processing,
-> > >   which we'd need to do if we decided to use another syscall.
-> > > 
-> > > - Designing the API: Planning for Extension
-> > >   The uprobe syscall is very specific and most likely won't be
-> > >   extended in the future.
-> > > 
-> > > - Designing the API: Other Considerations
-> > >   N/A because uprobe syscall does not return reference to kernel
-> > >   object.
-> > > 
-> > > - Proposing the API
-> > >   Wiring up of the uprobe system call is in separate change,
-> > >   selftests and man page changes are part of the patchset.
-> > > 
-> > > - Generic System Call Implementation
-> > >   There's no CONFIG option for the new functionality because it
-> > >   keeps the same behaviour from the user POV.
-> > > 
-> > > - x86 System Call Implementation
-> > >   It's 64-bit syscall only.
-> > > 
-> > > - Compatibility System Calls (Generic)
-> > >   N/A uprobe syscall has no arguments and is not supported
-> > >   for compat processes.
-> > > 
-> > > - Compatibility System Calls (x86)
-> > >   N/A uprobe syscall is not supported for compat processes.
-> > > 
-> > > - System Calls Returning Elsewhere
-> > >   N/A.
-> > > 
-> > > - Other Details
-> > >   N/A.
-> > > 
-> > > - Testing
-> > >   Adding new bpf selftests.
-> > > 
-> > > - Man Page
-> > >   Attached.
-> > > 
-> > > - Do not call System Calls in the Kernel
-> > >   N/A
-> > > 
-> > > pending todo (or follow ups):
-> > > - use PROCMAP_QUERY in tests
-> > > - alloc 'struct uprobes_state' for mm_struct only when needed [Andrii]
-> > > - use mm_cpumask(vma->vm_mm) in text_poke_sync
-> > > 
-> > > thanks,
-> > > jirka
-> > > 
-> > > 
-> > > Cc: Alejandro Colomar <alx@kernel.org>
-> > > Cc: Eyal Birger <eyal.birger@gmail.com>
-> > > Cc: kees@kernel.org
-> > > 
-> > > [1] https://lore.kernel.org/linux-trace-kernel/20250514101809.2010193-1-jolsa@kernel.org/T/#u
-> > > ---
-> > > Jiri Olsa (21):
-> > >       uprobes: Remove breakpoint in unapply_uprobe under mmap_write_lock
-> > >       uprobes: Rename arch_uretprobe_trampoline function
-> > >       uprobes: Make copy_from_page global
-> > >       uprobes: Add uprobe_write function
-> > >       uprobes: Add nbytes argument to uprobe_write
-> > >       uprobes: Add is_register argument to uprobe_write and uprobe_write_opcode
-> > >       uprobes: Add do_ref_ctr argument to uprobe_write function
-> > >       uprobes/x86: Add mapping for optimized uprobe trampolines
-> > >       uprobes/x86: Add uprobe syscall to speed up uprobe
-> > >       uprobes/x86: Add support to optimize uprobes
-> > >       selftests/bpf: Import usdt.h from libbpf/usdt project
-> > >       selftests/bpf: Reorg the uprobe_syscall test function
-> > >       selftests/bpf: Rename uprobe_syscall_executed prog to test_uretprobe_multi
-> > >       selftests/bpf: Add uprobe/usdt syscall tests
-> > >       selftests/bpf: Add hit/attach/detach race optimized uprobe test
-> > >       selftests/bpf: Add uprobe syscall sigill signal test
-> > >       selftests/bpf: Add optimized usdt variant for basic usdt test
-> > >       selftests/bpf: Add uprobe_regs_equal test
-> > >       selftests/bpf: Change test_uretprobe_regs_change for uprobe and uretprobe
-> > >       seccomp: passthrough uprobe systemcall without filtering
-> > >       selftests/seccomp: validate uprobe syscall passes through seccomp
-> > > 
-> > >  arch/arm/probes/uprobes/core.c                              |   2 +-
-> > >  arch/x86/entry/syscalls/syscall_64.tbl                      |   1 +
-> > >  arch/x86/include/asm/uprobes.h                              |   7 ++
-> > >  arch/x86/kernel/uprobes.c                                   | 525 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-
-> > >  include/linux/syscalls.h                                    |   2 +
-> > >  include/linux/uprobes.h                                     |  20 +++-
-> > >  kernel/events/uprobes.c                                     | 100 ++++++++++++-----
-> > >  kernel/fork.c                                               |   1 +
-> > >  kernel/seccomp.c                                            |  32 ++++--
-> > >  kernel/sys_ni.c                                             |   1 +
-> > >  tools/testing/selftests/bpf/prog_tests/uprobe_syscall.c     | 523 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++------
-> > >  tools/testing/selftests/bpf/prog_tests/usdt.c               |  38 ++++---
-> > >  tools/testing/selftests/bpf/progs/uprobe_syscall.c          |   4 +-
-> > >  tools/testing/selftests/bpf/progs/uprobe_syscall_executed.c |  60 +++++++++-
-> > >  tools/testing/selftests/bpf/test_kmods/bpf_testmod.c        |  11 +-
-> > >  tools/testing/selftests/bpf/usdt.h                          | 545 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-> > >  tools/testing/selftests/seccomp/seccomp_bpf.c               | 107 ++++++++++++++----
-> > >  17 files changed, 1867 insertions(+), 112 deletions(-)
-> > >  create mode 100644 tools/testing/selftests/bpf/usdt.h
-> > > 
-> > > 
-> > > Jiri Olsa (1):
-> > >       man2: Add uprobe syscall page
-> > > 
-> > >  man/man2/uprobe.2    |  1 +
-> > >  man/man2/uretprobe.2 | 36 ++++++++++++++++++++++++------------
-> > >  2 files changed, 25 insertions(+), 12 deletions(-)
-> > >  create mode 100644 man/man2/uprobe.2
+> Overall, this patch does not introduce any functional change.
+> 
+> Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+> ---
+>  arch/arm/mm/fault.c                |  2 +-
+>  arch/arm64/include/asm/mman.h      | 10 +++++-----
+>  arch/arm64/mm/fault.c              |  2 +-
+>  arch/arm64/mm/mmu.c                |  2 +-
+>  arch/powerpc/include/asm/mman.h    |  2 +-
+>  arch/powerpc/include/asm/pkeys.h   |  4 ++--
+>  arch/powerpc/kvm/book3s_hv_uvmem.c |  2 +-
+>  arch/sparc/include/asm/mman.h      |  4 ++--
+>  arch/x86/kernel/cpu/sgx/encl.c     |  8 ++++----
+>  arch/x86/kernel/cpu/sgx/encl.h     |  2 +-
+>  tools/testing/vma/vma_internal.h   |  2 +-
+>  11 files changed, 20 insertions(+), 20 deletions(-)
+> 
+> diff --git a/arch/arm/mm/fault.c b/arch/arm/mm/fault.c
+> index ab01b51de559..46169fe42c61 100644
+> --- a/arch/arm/mm/fault.c
+> +++ b/arch/arm/mm/fault.c
+> @@ -268,7 +268,7 @@ do_page_fault(unsigned long addr, unsigned int fsr, struct pt_regs *regs)
+>  	int sig, code;
+>  	vm_fault_t fault;
+>  	unsigned int flags = FAULT_FLAG_DEFAULT;
+> -	unsigned long vm_flags = VM_ACCESS_FLAGS;
+> +	vm_flags_t vm_flags = VM_ACCESS_FLAGS;
+>  
+>  	if (kprobe_page_fault(regs, fsr))
+>  		return 0;
+> diff --git a/arch/arm64/include/asm/mman.h b/arch/arm64/include/asm/mman.h
+> index 21df8bbd2668..8770c7ee759f 100644
+> --- a/arch/arm64/include/asm/mman.h
+> +++ b/arch/arm64/include/asm/mman.h
+> @@ -11,10 +11,10 @@
+>  #include <linux/shmem_fs.h>
+>  #include <linux/types.h>
+>  
+> -static inline unsigned long arch_calc_vm_prot_bits(unsigned long prot,
+> +static inline vm_flags_t arch_calc_vm_prot_bits(unsigned long prot,
+>  	unsigned long pkey)
+>  {
+> -	unsigned long ret = 0;
+> +	vm_flags_t ret = 0;
+>  
+>  	if (system_supports_bti() && (prot & PROT_BTI))
+>  		ret |= VM_ARM64_BTI;
+> @@ -34,8 +34,8 @@ static inline unsigned long arch_calc_vm_prot_bits(unsigned long prot,
+>  }
+>  #define arch_calc_vm_prot_bits(prot, pkey) arch_calc_vm_prot_bits(prot, pkey)
+>  
+> -static inline unsigned long arch_calc_vm_flag_bits(struct file *file,
+> -						   unsigned long flags)
+> +static inline vm_flags_t arch_calc_vm_flag_bits(struct file *file,
+> +						unsigned long flags)
+>  {
+>  	/*
+>  	 * Only allow MTE on anonymous mappings as these are guaranteed to be
+> @@ -68,7 +68,7 @@ static inline bool arch_validate_prot(unsigned long prot,
+>  }
+>  #define arch_validate_prot(prot, addr) arch_validate_prot(prot, addr)
+>  
+> -static inline bool arch_validate_flags(unsigned long vm_flags)
+> +static inline bool arch_validate_flags(vm_flags_t vm_flags)
+>  {
+>  	if (system_supports_mte()) {
+>  		/*
+> diff --git a/arch/arm64/mm/fault.c b/arch/arm64/mm/fault.c
+> index ec0a337891dd..24be3e632f79 100644
+> --- a/arch/arm64/mm/fault.c
+> +++ b/arch/arm64/mm/fault.c
+> @@ -549,7 +549,7 @@ static int __kprobes do_page_fault(unsigned long far, unsigned long esr,
+>  	const struct fault_info *inf;
+>  	struct mm_struct *mm = current->mm;
+>  	vm_fault_t fault;
+> -	unsigned long vm_flags;
+> +	vm_flags_t vm_flags;
+>  	unsigned int mm_flags = FAULT_FLAG_DEFAULT;
+>  	unsigned long addr = untagged_addr(far);
+>  	struct vm_area_struct *vma;
+> diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
+> index 8fcf59ba39db..248d96349fd0 100644
+> --- a/arch/arm64/mm/mmu.c
+> +++ b/arch/arm64/mm/mmu.c
+> @@ -720,7 +720,7 @@ void mark_rodata_ro(void)
+>  
+>  static void __init declare_vma(struct vm_struct *vma,
+>  			       void *va_start, void *va_end,
+> -			       unsigned long vm_flags)
+> +			       vm_flags_t vm_flags)
+>  {
+>  	phys_addr_t pa_start = __pa_symbol(va_start);
+>  	unsigned long size = va_end - va_start;
+> diff --git a/arch/powerpc/include/asm/mman.h b/arch/powerpc/include/asm/mman.h
+> index 42a51a993d94..912f78a956a1 100644
+> --- a/arch/powerpc/include/asm/mman.h
+> +++ b/arch/powerpc/include/asm/mman.h
+> @@ -14,7 +14,7 @@
+>  #include <asm/cpu_has_feature.h>
+>  #include <asm/firmware.h>
+>  
+> -static inline unsigned long arch_calc_vm_prot_bits(unsigned long prot,
+> +static inline vm_flags_t arch_calc_vm_prot_bits(unsigned long prot,
+>  		unsigned long pkey)
+>  {
+>  #ifdef CONFIG_PPC_MEM_KEYS
+> diff --git a/arch/powerpc/include/asm/pkeys.h b/arch/powerpc/include/asm/pkeys.h
+> index 59a2c7dbc78f..28e752138996 100644
+> --- a/arch/powerpc/include/asm/pkeys.h
+> +++ b/arch/powerpc/include/asm/pkeys.h
+> @@ -30,9 +30,9 @@ extern u32 reserved_allocation_mask; /* bits set for reserved keys */
+>  #endif
+>  
+>  
+> -static inline u64 pkey_to_vmflag_bits(u16 pkey)
+> +static inline vm_flags_t pkey_to_vmflag_bits(u16 pkey)
+>  {
+> -	return (((u64)pkey << VM_PKEY_SHIFT) & ARCH_VM_PKEY_FLAGS);
+> +	return (((vm_flags_t)pkey << VM_PKEY_SHIFT) & ARCH_VM_PKEY_FLAGS);
+>  }
+>  
+>  static inline int vma_pkey(struct vm_area_struct *vma)
+> diff --git a/arch/powerpc/kvm/book3s_hv_uvmem.c b/arch/powerpc/kvm/book3s_hv_uvmem.c
+> index 3a6592a31a10..03f8c34fa0a2 100644
+> --- a/arch/powerpc/kvm/book3s_hv_uvmem.c
+> +++ b/arch/powerpc/kvm/book3s_hv_uvmem.c
+> @@ -393,7 +393,7 @@ static int kvmppc_memslot_page_merge(struct kvm *kvm,
+>  {
+>  	unsigned long gfn = memslot->base_gfn;
+>  	unsigned long end, start = gfn_to_hva(kvm, gfn);
+> -	unsigned long vm_flags;
+> +	vm_flags_t vm_flags;
+>  	int ret = 0;
+>  	struct vm_area_struct *vma;
+>  	int merge_flag = (merge) ? MADV_MERGEABLE : MADV_UNMERGEABLE;
+> diff --git a/arch/sparc/include/asm/mman.h b/arch/sparc/include/asm/mman.h
+> index af9c10c83dc5..3e4bac33be81 100644
+> --- a/arch/sparc/include/asm/mman.h
+> +++ b/arch/sparc/include/asm/mman.h
+> @@ -28,7 +28,7 @@ static inline void ipi_set_tstate_mcde(void *arg)
+>  }
+>  
+>  #define arch_calc_vm_prot_bits(prot, pkey) sparc_calc_vm_prot_bits(prot)
+> -static inline unsigned long sparc_calc_vm_prot_bits(unsigned long prot)
+> +static inline vm_flags_t sparc_calc_vm_prot_bits(unsigned long prot)
+>  {
+>  	if (adi_capable() && (prot & PROT_ADI)) {
+>  		struct pt_regs *regs;
+> @@ -58,7 +58,7 @@ static inline int sparc_validate_prot(unsigned long prot, unsigned long addr)
+>  /* arch_validate_flags() - Ensure combination of flags is valid for a
+>   *	VMA.
+>   */
+> -static inline bool arch_validate_flags(unsigned long vm_flags)
+> +static inline bool arch_validate_flags(vm_flags_t vm_flags)
+>  {
+>  	/* If ADI is being enabled on this VMA, check for ADI
+>  	 * capability on the platform and ensure VMA is suitable
+> diff --git a/arch/x86/kernel/cpu/sgx/encl.c b/arch/x86/kernel/cpu/sgx/encl.c
+> index 279148e72459..308dbbae6c6e 100644
+> --- a/arch/x86/kernel/cpu/sgx/encl.c
+> +++ b/arch/x86/kernel/cpu/sgx/encl.c
+> @@ -279,7 +279,7 @@ static struct sgx_encl_page *__sgx_encl_load_page(struct sgx_encl *encl,
+>  
+>  static struct sgx_encl_page *sgx_encl_load_page_in_vma(struct sgx_encl *encl,
+>  						       unsigned long addr,
+> -						       unsigned long vm_flags)
+> +						       vm_flags_t vm_flags)
+>  {
+>  	unsigned long vm_prot_bits = vm_flags & VM_ACCESS_FLAGS;
+>  	struct sgx_encl_page *entry;
+> @@ -520,9 +520,9 @@ static void sgx_vma_open(struct vm_area_struct *vma)
+>   * Return: 0 on success, -EACCES otherwise
+>   */
+>  int sgx_encl_may_map(struct sgx_encl *encl, unsigned long start,
+> -		     unsigned long end, unsigned long vm_flags)
+> +		     unsigned long end, vm_flags_t vm_flags)
+>  {
+> -	unsigned long vm_prot_bits = vm_flags & VM_ACCESS_FLAGS;
+> +	vm_flags_t vm_prot_bits = vm_flags & VM_ACCESS_FLAGS;
+>  	struct sgx_encl_page *page;
+>  	unsigned long count = 0;
+>  	int ret = 0;
+> @@ -605,7 +605,7 @@ static int sgx_encl_debug_write(struct sgx_encl *encl, struct sgx_encl_page *pag
+>   */
+>  static struct sgx_encl_page *sgx_encl_reserve_page(struct sgx_encl *encl,
+>  						   unsigned long addr,
+> -						   unsigned long vm_flags)
+> +						   vm_flags_t vm_flags)
+>  {
+>  	struct sgx_encl_page *entry;
+>  
+> diff --git a/arch/x86/kernel/cpu/sgx/encl.h b/arch/x86/kernel/cpu/sgx/encl.h
+> index f94ff14c9486..8ff47f6652b9 100644
+> --- a/arch/x86/kernel/cpu/sgx/encl.h
+> +++ b/arch/x86/kernel/cpu/sgx/encl.h
+> @@ -101,7 +101,7 @@ static inline int sgx_encl_find(struct mm_struct *mm, unsigned long addr,
+>  }
+>  
+>  int sgx_encl_may_map(struct sgx_encl *encl, unsigned long start,
+> -		     unsigned long end, unsigned long vm_flags);
+> +		     unsigned long end, vm_flags_t vm_flags);
+>  
+>  bool current_is_ksgxd(void);
+>  void sgx_encl_release(struct kref *ref);
+> diff --git a/tools/testing/vma/vma_internal.h b/tools/testing/vma/vma_internal.h
+> index 7919d7141537..b9eb8c889f96 100644
+> --- a/tools/testing/vma/vma_internal.h
+> +++ b/tools/testing/vma/vma_internal.h
+> @@ -1220,7 +1220,7 @@ static inline void vma_set_page_prot(struct vm_area_struct *vma)
+>  	WRITE_ONCE(vma->vm_page_prot, vm_page_prot);
+>  }
+>  
+> -static inline bool arch_validate_flags(unsigned long)
+> +static inline bool arch_validate_flags(vm_flags_t)
+>  {
+>  	return true;
+>  }
 
+Reviewed-by: Anshuman Khandual <anshuman.khandual@arm.com>
 
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
