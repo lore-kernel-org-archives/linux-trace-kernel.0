@@ -1,31 +1,30 @@
-Received: from relay.hostedemail.com (smtprelay0010.hostedemail.com [216.40.44.10])
+Received: from relay.hostedemail.com (smtprelay0013.hostedemail.com [216.40.44.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E495B2F49FC;
-	Wed, 25 Jun 2025 22:57:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9064F2F3646;
+	Wed, 25 Jun 2025 23:16:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750892227; cv=none; b=L7MhCFxLwTAgadMA9Wmi2qmugAJcDkrsx2vPgS3/HPP0iEdCSSUYTI/iNQJPzhCmIX7HyPTnZJtJqx2F3VgTVdVz845Ucy7MSJfIUDy7ogskTQFev6YMTYibDDLyYF/WTKGyQUjCDURVzCE6j/f5SXsaBecMeU5I0Z+GH7o/8SY=
+	t=1750893365; cv=none; b=Lp7q1PPKlh84Rk63VhoAP7zg8hksrpQJrFOF4FJQsTB6ji9y9cxDbdF6mKp0E+rqZM2nHroCeZKy575OVjQshRD0lcjXftc7Mz6eFMTHQ6VzbS6ug7K2i0P00SaVIxBg+7pi8490UKfoEGkmXJCRedl6dHpN1YOyVSMExjp1r5w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750892227; c=relaxed/simple;
-	bh=4vDOBIoUHUiC3BHSTDobiE9oNjdxoZfAGrZ2BlXpfY4=;
-	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=kF5tYh8JoVtjd4lFh/5zjS5+joadfKSNuaDzTBGFpiDV5Pda52mBTX/Tbk2JAevN5F+zeCcZSM93WKUUUFG2IHw0Wu071ifElBzgPVRmO5NS2eEou6/08hfn/40PJ6oJv3/y99/sEte7k2GI1bxnSKHTdRgAtopYirHZ5vnoYJs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.10
+	s=arc-20240116; t=1750893365; c=relaxed/simple;
+	bh=Umn+ScgSRnA/hfGr3imuIglkH7+kvqT0cE1QZM7nsdQ=;
+	h=Message-ID:Date:From:To:Cc:Subject; b=dT5OF+eb6Br/KpGo17ZBTCFKx4K6ubBV0ya5REtLoIKqu6kbfW/Nc5ueEB2bnJcO2FOWAtCJFc8ra1ZUFECtkOQkhcdlCE2iH0dCfcttCxOaEvVCme/TsL/RcACty4mJSt1vcUmTo5zhJdqkdKgMSB6WuHosmrZdjzO2GnA4BRo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.13
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf18.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay10.hostedemail.com (Postfix) with ESMTP id 2BE21C050D;
-	Wed, 25 Jun 2025 22:56:55 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: nevets@goodmis.org) by omf18.hostedemail.com (Postfix) with ESMTPA id E92FE2E;
-	Wed, 25 Jun 2025 22:56:51 +0000 (UTC)
+Received: from omf02.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay04.hostedemail.com (Postfix) with ESMTP id CA36C1A0784;
+	Wed, 25 Jun 2025 23:15:59 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: nevets@goodmis.org) by omf02.hostedemail.com (Postfix) with ESMTPA id D6C1080009;
+	Wed, 25 Jun 2025 23:15:56 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.98.2)
 	(envelope-from <rostedt@goodmis.org>)
-	id 1uUZ3N-000000043jC-0hQc;
-	Wed, 25 Jun 2025 18:57:17 -0400
-Message-ID: <20250625225717.016385736@goodmis.org>
+	id 1uUZLp-000000044fH-3OGU;
+	Wed, 25 Jun 2025 19:16:21 -0400
+Message-ID: <20250625231541.584226205@goodmis.org>
 User-Agent: quilt/0.68
-Date: Wed, 25 Jun 2025 18:56:13 -0400
+Date: Wed, 25 Jun 2025 19:15:41 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org,
  linux-trace-kernel@vger.kernel.org,
@@ -47,192 +46,76 @@ Cc: Masami Hiramatsu <mhiramat@kernel.org>,
  Linus Torvalds <torvalds@linux-foundation.org>,
  Andrew Morton <akpm@linux-foundation.org>,
  Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH v11 13/14] perf/x86: Rename and move get_segment_base() and make it global
-References: <20250625225600.555017347@goodmis.org>
+Subject: [PATCH v11 00/11] perf: Support the deferred unwinding infrastructure
+X-Rspamd-Server: rspamout02
+X-Rspamd-Queue-Id: D6C1080009
+X-Stat-Signature: c79fuz3hd14cab8ht74td7w538x3rkz8
+X-Session-Marker: 6E657665747340676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX19t464FQAQY5A9I2dwVp9JU1ObIkOlUlqA=
+X-HE-Tag: 1750893356-152776
+X-HE-Meta: U2FsdGVkX18bEXihUvvqf72N4carTM0iuAvItw6mJraqTC4iSm7aVCYe+5ysmN5fvlQ8xMVG3gdUnJtdKUp2O7ADoBwO+eZwxyMke6/LbJhfXd6PWx/hUAr1KIaNVXHJ85OemcMffPx5Iir+Y6Wj2wCgQ7wnR/l4Lp4h2kXBJ0bfE+wRaoZyuc6BStQxHh5TqhduciGrea6t0LvlMDMXEsi7XXrYe1jsERNUCdPBS3mIdTa5LoJi1LNrCnf6TpAjpowSbnGn4e51TMwho88PIu3XxS9Brr7dtSnm54JUq2q0SyOcKyAiYwuKdddSvY4UTAomGucKEYNQAC3RMF3kVz8EIw7mN6YHCDigds7dT8KGuK5sb0de4kJlHlUQtdkD
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-Stat-Signature: emrupgxgq1rapmeio3dk49kxngjxrbe5
-X-Rspamd-Server: rspamout03
-X-Rspamd-Queue-Id: E92FE2E
-X-Session-Marker: 6E657665747340676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX19GfgKJWxcrDJRgBFxTqvaBoBbdblVc8GU=
-X-HE-Tag: 1750892211-928430
-X-HE-Meta: U2FsdGVkX18KJlGFqh5T1dVmBut0o+O7x3cW0+8YhZ/RxHEb+o7IHnGnIpghDKoHXtxhlpbeeWJx63yi9VX6n68dwQ1wHZj16C+3EV4bHy04IpuMMYur1oqfX583VDymNylXa4rzgNU/Fm5IeiEUu52KUuBQRbRw69VkEZhoY6vTaUHCJuHrTrWBCFVdE9CuodUFIBjokTrqD2Ok4XvRNDFk/qSQX1PBgPTH12/qQiMs4/ozQ6I9rU++g1s9sDSjI+bugBrrJ8OE7nRNJ7VC2oCiSDSEm7N27ihT63qMI5vz8+QIqRbbN9xOMGj69AoYHAD2ia88/o3+TfzdCMU3+HYx/9tjov9vdHFirI1AVniZ4xJxSV+ia5kAmpHuGmHh9RspvdD0kkCfInTNpmbxJOSs0EG81z8AiDOX0v4/U6w=
 
-From: Josh Poimboeuf <jpoimboe@kernel.org>
+This is based on top of the deferred unwind core patch series:
 
-get_segment_base() will be used by the unwind_user code, so make it
-global and rename it to segment_base_address() so it doesn't conflict with
-a KVM function of the same name.
+ https://lore.kernel.org/linux-trace-kernel/20250625225600.555017347@goodmis.org/ 
 
-As the function is no longer specific to perf, move it to ptrace.c as that
-seems to be a better location for a generic function like this.
+This series implements the perf interface to use deferred user space stack
+tracing. This version fixes a few issues from v10.
 
-Also add a lockdep_assert_irqs_disabled() to make sure it's always called
-with interrupts disabled.
+Changes since v10: https://lore.kernel.org/linux-trace-kernel/20250614024605.597728558@goodmis.org/
 
-Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
- arch/x86/events/core.c        | 44 ++++-------------------------------
- arch/x86/include/asm/ptrace.h |  2 ++
- arch/x86/kernel/ptrace.c      | 38 ++++++++++++++++++++++++++++++
- 3 files changed, 45 insertions(+), 39 deletions(-)
+- Rebased on v11 of the core patches
 
-diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
-index 7610f26dfbd9..2f2ec84f2a14 100644
---- a/arch/x86/events/core.c
-+++ b/arch/x86/events/core.c
-@@ -43,6 +43,7 @@
- #include <asm/ldt.h>
- #include <asm/unwind.h>
- #include <asm/uprobes.h>
-+#include <asm/ptrace.h>
- #include <asm/ibt.h>
- 
- #include "perf_event.h"
-@@ -2808,41 +2809,6 @@ valid_user_frame(const void __user *fp, unsigned long size)
- 	return __access_ok(fp, size);
- }
- 
--static unsigned long get_segment_base(unsigned int segment)
--{
--	struct desc_struct *desc;
--	unsigned int idx = segment >> 3;
--
--	if ((segment & SEGMENT_TI_MASK) == SEGMENT_LDT) {
--#ifdef CONFIG_MODIFY_LDT_SYSCALL
--		struct ldt_struct *ldt;
--
--		/*
--		 * If we're not in a valid context with a real (not just lazy)
--		 * user mm, then don't even try.
--		 */
--		if (!nmi_uaccess_okay())
--			return 0;
--
--		/* IRQs are off, so this synchronizes with smp_store_release */
--		ldt = smp_load_acquire(&current->mm->context.ldt);
--		if (!ldt || idx >= ldt->nr_entries)
--			return 0;
--
--		desc = &ldt->entries[idx];
--#else
--		return 0;
--#endif
--	} else {
--		if (idx >= GDT_ENTRIES)
--			return 0;
--
--		desc = raw_cpu_ptr(gdt_page.gdt) + idx;
--	}
--
--	return get_desc_base(desc);
--}
--
- #ifdef CONFIG_UPROBES
- /*
-  * Heuristic-based check if uprobe is installed at the function entry.
-@@ -2899,8 +2865,8 @@ perf_callchain_user32(struct pt_regs *regs, struct perf_callchain_entry_ctx *ent
- 	if (user_64bit_mode(regs))
- 		return 0;
- 
--	cs_base = get_segment_base(regs->cs);
--	ss_base = get_segment_base(regs->ss);
-+	cs_base = segment_base_address(regs->cs);
-+	ss_base = segment_base_address(regs->ss);
- 
- 	fp = compat_ptr(ss_base + regs->bp);
- 	pagefault_disable();
-@@ -3019,11 +2985,11 @@ static unsigned long code_segment_base(struct pt_regs *regs)
- 		return 0x10 * regs->cs;
- 
- 	if (user_mode(regs) && regs->cs != __USER_CS)
--		return get_segment_base(regs->cs);
-+		return segment_base_address(regs->cs);
- #else
- 	if (user_mode(regs) && !user_64bit_mode(regs) &&
- 	    regs->cs != __USER32_CS)
--		return get_segment_base(regs->cs);
-+		return segment_base_address(regs->cs);
- #endif
- 	return 0;
- }
-diff --git a/arch/x86/include/asm/ptrace.h b/arch/x86/include/asm/ptrace.h
-index 50f75467f73d..59357ec98e52 100644
---- a/arch/x86/include/asm/ptrace.h
-+++ b/arch/x86/include/asm/ptrace.h
-@@ -314,6 +314,8 @@ static __always_inline bool regs_irqs_disabled(struct pt_regs *regs)
- 	return !(regs->flags & X86_EFLAGS_IF);
- }
- 
-+unsigned long segment_base_address(unsigned int segment);
-+
- /* Query offset/name of register from its name/offset */
- extern int regs_query_register_offset(const char *name);
- extern const char *regs_query_register_name(unsigned int offset);
-diff --git a/arch/x86/kernel/ptrace.c b/arch/x86/kernel/ptrace.c
-index 095f04bdabdc..81353a09701b 100644
---- a/arch/x86/kernel/ptrace.c
-+++ b/arch/x86/kernel/ptrace.c
-@@ -41,6 +41,7 @@
- #include <asm/syscall.h>
- #include <asm/fsgsbase.h>
- #include <asm/io_bitmap.h>
-+#include <asm/mmu_context.h>
- 
- #include "tls.h"
- 
-@@ -339,6 +340,43 @@ static int set_segment_reg(struct task_struct *task,
- 
- #endif	/* CONFIG_X86_32 */
- 
-+unsigned long segment_base_address(unsigned int segment)
-+{
-+	struct desc_struct *desc;
-+	unsigned int idx = segment >> 3;
-+
-+	lockdep_assert_irqs_disabled();
-+
-+	if ((segment & SEGMENT_TI_MASK) == SEGMENT_LDT) {
-+#ifdef CONFIG_MODIFY_LDT_SYSCALL
-+		struct ldt_struct *ldt;
-+
-+		/*
-+		 * If we're not in a valid context with a real (not just lazy)
-+		 * user mm, then don't even try.
-+		 */
-+		if (!nmi_uaccess_okay())
-+			return 0;
-+
-+		/* IRQs are off, so this synchronizes with smp_store_release */
-+		ldt = smp_load_acquire(&current->mm->context.ldt);
-+		if (!ldt || idx >= ldt->nr_entries)
-+			return 0;
-+
-+		desc = &ldt->entries[idx];
-+#else
-+		return 0;
-+#endif
-+	} else {
-+		if (idx >= GDT_ENTRIES)
-+			return 0;
-+
-+		desc = raw_cpu_ptr(gdt_page.gdt) + idx;
-+	}
-+
-+	return get_desc_base(desc);
-+}
-+
- static unsigned long get_flags(struct task_struct *task)
- {
- 	unsigned long retval = task_pt_regs(task)->flags;
--- 
-2.47.2
+- Added another smp_mb() between the call to perf_event_callchain_deferred()
+  and clearing of cpu_unwind->processing.
 
+- Update using the renamed function that was renamed from
+  unwind_deferred_trace() to unwind_user_faultable() in the core
+  series.
 
+Josh Poimboeuf (5):
+      perf: Remove get_perf_callchain() init_nr argument
+      perf: Have get_perf_callchain() return NULL if crosstask and user are set
+      perf: Simplify get_perf_callchain() user logic
+      perf: Skip user unwind if the task is a kernel thread
+      perf: Support deferred user callchains
+
+Namhyung Kim (4):
+      perf tools: Minimal CALLCHAIN_DEFERRED support
+      perf record: Enable defer_callchain for user callchains
+      perf script: Display PERF_RECORD_CALLCHAIN_DEFERRED
+      perf tools: Merge deferred user callchains
+
+Steven Rostedt (2):
+      perf: Use current->flags & PF_KTHREAD instead of current->mm == NULL
+      perf: Support deferred user callchains for per CPU events
+
+----
+ include/linux/perf_event.h                |  14 +-
+ include/uapi/linux/perf_event.h           |  19 +-
+ kernel/bpf/stackmap.c                     |   8 +-
+ kernel/events/callchain.c                 |  49 ++--
+ kernel/events/core.c                      | 426 +++++++++++++++++++++++++++++-
+ tools/include/uapi/linux/perf_event.h     |  19 +-
+ tools/lib/perf/include/perf/event.h       |   7 +
+ tools/perf/Documentation/perf-script.txt  |   5 +
+ tools/perf/builtin-script.c               |  92 +++++++
+ tools/perf/util/callchain.c               |  24 ++
+ tools/perf/util/callchain.h               |   3 +
+ tools/perf/util/event.c                   |   1 +
+ tools/perf/util/evlist.c                  |   1 +
+ tools/perf/util/evlist.h                  |   1 +
+ tools/perf/util/evsel.c                   |  39 +++
+ tools/perf/util/evsel.h                   |   1 +
+ tools/perf/util/machine.c                 |   1 +
+ tools/perf/util/perf_event_attr_fprintf.c |   1 +
+ tools/perf/util/sample.h                  |   3 +-
+ tools/perf/util/session.c                 |  78 ++++++
+ tools/perf/util/tool.c                    |   2 +
+ tools/perf/util/tool.h                    |   4 +-
+ 22 files changed, 763 insertions(+), 35 deletions(-)
