@@ -1,37 +1,43 @@
-Received: from relay.hostedemail.com (smtprelay0017.hostedemail.com [216.40.44.17])
+Received: from relay.hostedemail.com (smtprelay0016.hostedemail.com [216.40.44.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5D9F17C219;
-	Thu, 26 Jun 2025 16:34:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 537E52EAB7D;
+	Thu, 26 Jun 2025 16:48:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750955665; cv=none; b=IZdh+6Pek9abXXDKknvBbQsq0rvMessc/U/ZvxkoLRByUtv8TAvBs2lIs3Y1A0kUBOCm4sJtKo+wPmXxneIWPW6Xsam3fYHG1z58EHY5d6IwKeicidEFi/t9s8t/LachyyBzIpvxuy8sE4qsq+bvBWG4ElTLcW05N9acrhkOCD0=
+	t=1750956519; cv=none; b=V7AyWdUkCRGwfz1/jhNCAjKfEUcBxUy+k9hGRaRjP4AMtH4A4atUywCZsMXFGVXdXJMnAooQE7rHoAi3izpTP/1GWlL2iG6W9ve+P6i/8aaCdX8YX/qrJ0TL2UYC20LRBhuvx189nhuInnpDY4vbCxYB19FVd2PdymTg9yB+Wwk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750955665; c=relaxed/simple;
-	bh=JYE5pcEbbQ7PexQD5Qqy3qPqvYjgWviF0W373vmEc1Q=;
+	s=arc-20240116; t=1750956519; c=relaxed/simple;
+	bh=y57ov1HPON+7RblMpng15MaR78IYc0SQnNTkR4ODTQw=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=qgIqeCZI2Fb8pQCYnxwaVvRsiZaV5EbOyGH0WdDAoxU3D34MsIFTH2uhDbil8Kb61eVA+KyIulYzqmOSF2W3TBjT/rBnEKL91MpPlxweYA4cAHV+hehwJXwhnywVsNUyu4T3ZEYZf1RiglIyfjRcVeHCoIGau8QfN3ETjB8fMP8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.17
+	 MIME-Version:Content-Type; b=NwQ4OYhqa4zFpnQpfdUd0TKMdFiQrlh4Q9gUDXX71BQtF5xPfyvvTtZqfur6RBKmFuzaNUTmbY3Vj0KagYN644bRTq4vjCjzBzBsfQVUdO1TJqYy0SBJvg3FVMbEji39QP6LNfSBlX3tv4su5hNpXeqCGl4Z5QHulV/VQeNF9uc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.16
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf10.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay02.hostedemail.com (Postfix) with ESMTP id 4FDA11214B7;
-	Thu, 26 Jun 2025 16:34:21 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf10.hostedemail.com (Postfix) with ESMTPA id 577BF35;
-	Thu, 26 Jun 2025 16:34:19 +0000 (UTC)
-Date: Thu, 26 Jun 2025 12:34:45 -0400
+Received: from omf01.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay08.hostedemail.com (Postfix) with ESMTP id 8A1E3140328;
+	Thu, 26 Jun 2025 16:48:33 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf01.hostedemail.com (Postfix) with ESMTPA id 63E5560016;
+	Thu, 26 Jun 2025 16:48:29 +0000 (UTC)
+Date: Thu, 26 Jun 2025 12:48:55 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
-To: Nam Cao <namcao@linutronix.de>
+To: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ bpf@vger.kernel.org, x86@kernel.org
 Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, linux-trace-kernel@vger.kernel.org,
- linux-kernel@vger.kernel.org, Gabriele Monaco <gmonaco@redhat.com>,
- john.ogness@linutronix.de
-Subject: Re: [PATCH] tracing: Remove pointless memory barriers
-Message-ID: <20250626123445.5b01849d@gandalf.local.home>
-In-Reply-To: <20250626160459.soHxOROG@linutronix.de>
-References: <20250626151940.1756398-1-namcao@linutronix.de>
-	<20250626113520.315db641@gandalf.local.home>
-	<20250626160459.soHxOROG@linutronix.de>
+ <mathieu.desnoyers@efficios.com>, Josh Poimboeuf <jpoimboe@kernel.org>,
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, Jiri
+ Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Thomas
+ Gleixner <tglx@linutronix.de>, Andrii Nakryiko <andrii@kernel.org>, Indu
+ Bhagat <indu.bhagat@oracle.com>, "Jose E. Marchesi" <jemarch@gnu.org>, Beau
+ Belgrave <beaub@linux.microsoft.com>, Jens Remus <jremus@linux.ibm.com>,
+ Linus Torvalds <torvalds@linux-foundation.org>, Andrew Morton
+ <akpm@linux-foundation.org>, Jens Axboe <axboe@kernel.dk>
+Subject: Re: [PATCH v11 06/14] unwind_user/deferred: Add deferred unwinding
+ interface
+Message-ID: <20250626124855.116ef37d@gandalf.local.home>
+In-Reply-To: <20250625225715.825831885@goodmis.org>
+References: <20250625225600.555017347@goodmis.org>
+	<20250625225715.825831885@goodmis.org>
 X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -41,55 +47,42 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Stat-Signature: ni1jw18jkg4prw3mndxhtffzm3wfigec
-X-Rspamd-Server: rspamout03
-X-Rspamd-Queue-Id: 577BF35
+X-Stat-Signature: 7ot81a5mikoo8gjr6whkszf3pmtfff9m
+X-Rspamd-Server: rspamout02
+X-Rspamd-Queue-Id: 63E5560016
 X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1/b2JM2aeyr08bwnM39TYmxS3CKt1qrqTw=
-X-HE-Tag: 1750955659-626339
-X-HE-Meta: U2FsdGVkX19kpHORzFaT2SOLZyYQZLkmaBnDkJV0j7piw4tcdgUp0NgSnUHy3cQtSgv3ItzdlnZtMH6DKLqsyAbrflQlDoLTfCKslDS/CxA9izbhAswxw6fQZBicp/CVYiIc9mQTUDLEHzUj9wc+48d3lJxNXCsTCwz/q7TOmBI89Ga+oWmiYr4A13dJ8iuDj9ypi9PkBpKjCIZX6UYS4Lrp0d7KqLyWTRyfa1BrQVrmdK8LNTeYq2Yz9sMVLEZ5uN0SgbH33IpXd7YtDluc+Ztq7vh9fuMIWFJg3FMat1LkAvnqQTjCN+NVgKELZqG9
+X-Session-ID: U2FsdGVkX1+8u65s6mdvyn/bxtW51CRa4c+qOBayZ4I=
+X-HE-Tag: 1750956509-146722
+X-HE-Meta: U2FsdGVkX1/IV85kqIhmgvrBHUWfRrAiQq5kVJP/UBsRHt/vVFyJ6vGrppW+cwarjS6EdksjPJFRKJejl/ryM+Jm71O6QEil0DyZMzWKfChvk5tyZ65SQiyhjy+k5zPM3Awgsevu8T7jksfwDdQJMiLP4KPoXBPGHAnYegiG0OySbP9m6o8+8ek/GSsAoZMtkQHK1nsLCraR2HP8MqFWca9CTbOFsxDXyamBPCjBOp9Y1iMAjIsL3sYrlaUUzmf/LrFLIlOWJZXZjt7547Q+LOBSNEjlcTLCsRb+fVXMLclVFfMJNflsRALfMK07wkJB0fGT9FAx6eRAHeIdaMdWK5HcSUa6LCdpHqH8nbtuE/+4Zm79dMAIv1svNBqNkEa+
 
-On Thu, 26 Jun 2025 18:04:59 +0200
-Nam Cao <namcao@linutronix.de> wrote:
+On Wed, 25 Jun 2025 18:56:06 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-> I think you have it inverted? I assume you meant:
-> 
-> "Without the barriers, the tr->buffer_disabled = 1 can be set on one CPU,
-> and the other CPU can think the buffer is still enabled and do work that
-> will end up doing nothing."
-> 
-> Your scenario can still happen despite the memory barrier:
+>  static __always_inline void unwind_reset_info(void)
+>  {
+> -	if (unlikely(current->unwind_info.cache))
+> +	/* Exit out early if this was never used */
+> +	if (likely(!current->unwind_info.timestamp))
+> +		return;
 
-Yes, but the point isn't really to prevent the race. It's more about making
-the race window smaller.
+I found that this breaks the use of perf using the unwind_user_faultable()
+directly and not relying on the deferred infrastructure (which it does when
+it traces a single task and also needs to remove the separate in_nmi()
+code). Because this still requires the nr_entries to be set to zero.
 
-When we disable it, if something is currently using it then it may or may
-not get in. That's fine as this isn't critical.
+The clearing of the nr_entries has to be separate from the timestamp. To
+prevent unneeded writes after the cache is allocated, should we check the
+nr_entries is set before writing zero?
 
-But from my understanding, without the barriers, some architectures may
-never see the update. That is, the write from one CPU may not get to memory
-for a long time and new incoming readers will still see the old data. I'm
-more concerned with new readers than ones that are currently racing with
-the updates.
+	if (current->unwind_info.cache && current->unwind_info.cache->nr_entries)
+  		current->unwind_info.cache->nr_entries = 0;
 
-> 
-> CPU1                          CPU2
->                               smp_rb()
->                               read buffer_disabled, see 0 --> let's do work!
-> buffer_disabled=1
-> smp_wb()
->                               do work -> end up doing nothing
-> 
-> >From my understanding, smp_wb()'s purpose is ensuring the ordering of one  
-> write and another write, e.g.:
->     write(a)
->     smp_wb()
->     write(b)
-> 
-> For our case, there is only a single write. Therefore I don't think
-> smp_wb() is useful.
-
-Well, it does make it visible for other CPUs that do not have strong cache
-coherency.
+?
 
 -- Steve
+
+> +
+> +	if (current->unwind_info.cache)
+>  		current->unwind_info.cache->nr_entries = 0;
+> +	current->unwind_info.timestamp = 0;
+>  }
