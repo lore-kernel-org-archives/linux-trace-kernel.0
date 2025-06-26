@@ -1,109 +1,175 @@
-Received: from relay.hostedemail.com (smtprelay0014.hostedemail.com [216.40.44.14])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 332BE28FFEE;
-	Thu, 26 Jun 2025 14:11:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 259412E543B
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 26 Jun 2025 14:20:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750947065; cv=none; b=GFgHfeqmWyqfRf/5q4x0xE6RLUSl1b2gN+hEULdFIbrFB48j3yNzCzOtOXV5uNI7bW5bhl98bibuJF4L3ySrn3SPKXZFtHAFHtewJrpJx1wh+i2wEYdrwgQ3NFKMqEEshxTKJV7OPJQrzLui2TZVFoSXMS7gI49G8B720OnhUPA=
+	t=1750947652; cv=none; b=owIowbGucwyLq4b09DBU34YL/M2+rBfLP6WBNCuacEToV77JQEHPzfOcC/YP29C6NTY0fHh1VaDkuD4iNizqcsFbeVgatFVCfrIu5BNO/yEa40rNIA8EkWF3C6oOm4jyb/3dsyHFIVpxQ4sD1WWNvO+NAIgoV0fPPyR/Akf5GG4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750947065; c=relaxed/simple;
-	bh=k+PlH4M/dONX/Y7DAYamHb2UhCXdl+3x0eQwz8TJ+6E=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=hTySMhzCHJsy1w6TNjKt+IdGUBXZIqy7G/Owf/8vZATlCLRZDqBLeQg10/2K6ACecbVAfGORCAMlpwCfgZls7xfwj1u+DrNFn9YyyyR3lsjCW6M4ncU35Nu8sMi/RbUGn88/bYk6ivi/0M4q86thIANm7jrpSG3DJ9VzYcZpntg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf08.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay02.hostedemail.com (Postfix) with ESMTP id C2D9B1202D6;
-	Thu, 26 Jun 2025 14:10:59 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf08.hostedemail.com (Postfix) with ESMTPA id A18A320027;
-	Thu, 26 Jun 2025 14:10:55 +0000 (UTC)
-Date: Thu, 26 Jun 2025 10:11:15 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Jens Axboe <axboe@kernel.dk>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- bpf@vger.kernel.org, x86@kernel.org, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Josh Poimboeuf <jpoimboe@kernel.org>, Peter Zijlstra
- <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, Jiri Olsa
- <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Thomas Gleixner
- <tglx@linutronix.de>, Andrii Nakryiko <andrii@kernel.org>, Indu Bhagat
- <indu.bhagat@oracle.com>, "Jose E. Marchesi" <jemarch@gnu.org>, Beau
- Belgrave <beaub@linux.microsoft.com>, Jens Remus <jremus@linux.ibm.com>,
- Linus Torvalds <torvalds@linux-foundation.org>, Andrew Morton
- <akpm@linux-foundation.org>
-Subject: Re: [PATCH v11 03/11] perf: Use current->flags & PF_KTHREAD instead
- of current->mm == NULL
-Message-ID: <20250626101115.3e6b99bf@gandalf.local.home>
-In-Reply-To: <a3b456f2-deeb-45c9-b509-23bbe5e96cfd@kernel.dk>
-References: <20250625231541.584226205@goodmis.org>
-	<20250625231622.172100822@goodmis.org>
-	<a3b456f2-deeb-45c9-b509-23bbe5e96cfd@kernel.dk>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1750947652; c=relaxed/simple;
+	bh=bclxeXv0n/JZRrzO5RtoRO8C6M2nw+tu77BU7PQ5Up8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=uhjiln9BjgJFoW3RaO7Pq1a/H2s0UkSBwD1XTOP895MnR9AH/L/KqcFB4THl61hviwu7x9MsRqql1eJRN4jGcX2cErCUrj8SCZ24w35LX1wnijQ/VV1K6DbgY9BP+KR4AdHc8Nz32pZpCs3Fxw8wDzMv0pGLHuusC29FNDTSWVY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=CPSBUXrl; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CPSBUXrl"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1750947650;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=fpjZ7Ix+hSftMvcLs9udwlSD+jACUpMj3pQyikQ0cME=;
+	b=CPSBUXrln2teNfERB59cjXohq0vJ06taKcirs/2WYRfR/S/vah8AM8HsskhrOXgxPca+qU
+	Q7Io6Zk1pTSe4XcdeT2I2DzuO+g8hFYr++5b/h1fmXWFyXUZ1j2gUTI6m9tE32uHZPL34m
+	dQvFWoYkGX3Vj53DdZkWWlx/n6F1LIE=
+Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-605-Ee7nGeq4NKO0P7RyMkatVA-1; Thu,
+ 26 Jun 2025 10:20:44 -0400
+X-MC-Unique: Ee7nGeq4NKO0P7RyMkatVA-1
+X-Mimecast-MFC-AGG-ID: Ee7nGeq4NKO0P7RyMkatVA_1750947638
+Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 4237D193F069;
+	Thu, 26 Jun 2025 14:20:37 +0000 (UTC)
+Received: from wcosta-thinkpadt14gen4.rmtbr.csb (unknown [10.22.64.203])
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 063D818002B9;
+	Thu, 26 Jun 2025 14:20:24 +0000 (UTC)
+From: Wander Lairson Costa <wander@redhat.com>
+To: Ingo Molnar <mingo@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Ben Segall <bsegall@google.com>,
+	Mel Gorman <mgorman@suse.de>,
+	Valentin Schneider <vschneid@redhat.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Wander Lairson Costa <wander@redhat.com>,
+	David Woodhouse <dwmw@amazon.co.uk>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	linux-kernel@vger.kernel.org (open list),
+	linux-trace-kernel@vger.kernel.org (open list:TRACING)
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Clark Williams <williams@redhat.com>,
+	Gabriele Monaco <gmonaco@redhat.com>
+Subject: [PATCH 0/2] tracing/preemptirq: Optimize disabled tracepoint overhead
+Date: Thu, 26 Jun 2025 11:20:08 -0300
+Message-ID: <20250626142017.26372-1-wander@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Stat-Signature: 4ymo5mipbk8gcjdq5npams95x563i54f
-X-Rspamd-Server: rspamout08
-X-Rspamd-Queue-Id: A18A320027
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1/N621g61In4Y2fVBleF6OF75dPcGbes5E=
-X-HE-Tag: 1750947055-359244
-X-HE-Meta: U2FsdGVkX1+n3jdg+aKXOb56mHFBWq+oesOU81aTWJL+AgfIaVxEQitthOmfcgcL3jC1vpBKa52f4r+GBI4Vih6iDYN3bQKEIbSSHzyDJLa3smBvAloDRwJIibq3tFyiCBCJA9p6IQ6zsI74iBdTX846OXS/XBqfxz2RwZazjQXWqWFSbtl5uJVHaHzJtqjeMYHut6P3zIW1ka5/wQCw/RGGCKjJjhVJbuCybPsXREpP4SmmPdtOoIfbjAS24YGImnvegu2YuIEg7hDw0TJSV8Vgwnu//75qOeqFqwVqHeC79sbSgr0MIG2IgEKogLXYIpdJj4O+2v0NJ2dryEqMoIS1/bBEMW3rlzsWVWwc4c0R3HDFgVRtSdWy18q2m8mS624vAiwa6kQHZBAMmoUk3Q==
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
 
-On Thu, 26 Jun 2025 07:48:40 -0600
-Jens Axboe <axboe@kernel.dk> wrote:
 
-> On 6/25/25 5:15 PM, Steven Rostedt wrote:
-> > From: Steven Rostedt <rostedt@goodmis.org>
-> > 
-> > To determine if a task is a kernel thread or not, it is more reliable to
-> > use (current->flags & PF_KTHREAD) than to rely on current->mm being NULL.
-> > That is because some kernel tasks (io_uring helpers) may have a mm field.  
-> 
-> This commit message is very odd, imho, and wrong. To check if it's a
-> kernel thread yes you should use PF_KTHREAD, but that has nothing to do
+This series addresses unnecessary overhead introduced by the
+preempt/irq tracepoints when they are compiled into the kernel
+but are not actively enabled (i.e., when tracing is disabled).
 
-Yeah, I figured this was wrong when I saw your reply in the other thread.
-That's why I Cc'd you on this.
+These optimizations ensure that when tracing is inactive, the kernel
+can largely bypass operations that would otherwise incur a passive
+performance penalty. This makes the impact of disabled preemptirq
+IRQ and preempt tracing negligible in performance-sensitive environments.
 
-[
-  For those interested in what that other thread is:
-  https://lore.kernel.org/all/20250624130744.602c5b5f@batman.local.home/
-]
+Wander Lairson Costa (2):
+  trace/preemptirq: reduce overhead of irq_enable/disable tracepoints
+  tracing/preemptirq: Optimize preempt_disable/enable() tracepoint
+    overhead
 
-> with PF_USER_WORKER. In fact, as mentioned in a previous reply,
-> current->mm may be non-NULL for a kthread as well, if it's done
-> kthread_use_mm().
-> 
-> If the current check for "is kernel thread" was using ->mm to gauge
-> then, then the current check was just wrong, period.
+---
+Performance Measurements
 
-Yes, but unfortunately, that was a way a task was checked to see if it was
-a kernel thread or not. Which was right "most of the time". But it's wrong
-to use that, because it can be wrong "some of the time" :-p
+Measurements were taken using a specialized kernel module [1] to benchmark
+`local_irq_disable/enable()` and `preempt_disable/enable()` call pairs.
+The kernel used for benchmarking was version 6.16.0-rc2. "Max Average"
+represents the average of the 1000 highest samples, used to reduce noise
+from single highest samples.
 
-Which brings us to this discussion.
+Each benchmark run collected 10^7 samples in parallel from each CPU
+for each call pair (used for average, max_avg, and median calculations).
+The 99th percentile was measured in a separate benchmark run, focused
+on a single CPU.
 
-I believe Peter was under the assumption that we should not use current->mm
-to see if it's a user task or not, and use PF_KTHREAD instead. But for
-perf, a user task is something that will return back to user space, as the
-idea is to profile the user space stack trace.
+The results show that compiling with tracers (Kernel Build:
+`-master-trace`) introduced significant overhead compared to a base
+kernel without tracers (Kernel Build: `-master`). After applying these
+patches (Kernel Build: `-patched-trace`), the overhead is
+substantially reduced, approaching the baseline.
 
-You said that PF_USER_WORKER never came from user space, so from the perf
-point of view, it *is* a kernel thread, and we don't want to treat it as a
-user space one. If we check current->mm to be a user space task, or if we
-check for PF_KTHREAD to be a kernel task, we are wrong in both cases when
-it comes to a task marked as PF_USER_WORKER.
+x86-64 Metrics
 
-This brings up having a function like "is_kernel_thread()" (or remove the
-'is' if people don't like that) that returns true if the task *only* runs
-in the kernel.
+Tests were run on a system equipped with an Intel(R) Xeon(R) Silver 4310 CPU.
 
--- Steve
+IRQ Metrics
+
+Combined Metric            average  max_avg  median  percentile
+Kernel Build
+6.16.0-rc2-master               28     5587      29          23
+6.16.0-rc2-master-trace         46     7895      48          32
+6.16.0-rc2-patched-trace        30     6030      31          27
+
+Preempt Metrics
+
+Combined Metric            average  max_avg  median  percentile
+Kernel Build
+6.16.0-rc2-master               26     5748      27          20
+6.16.0-rc2-master-trace         45     7526      48          26
+6.16.0-rc2-patched-trace        27     5479      27          21
+
+AArch64 Metrics
+
+Tests were also conducted on an AArch64 platform.
+
+IRQ Metrics
+
+Combined Metric             average  max_avg  median  percentile
+Kernel Build
+aarch64-6.16.0-rc2-master        28     3298      32          64
+aarch64-6.16.0-rc2-master-trace 105     5769      96         128
+aarch64-6.16.0-rc2-patched-trace 29     3192      32          64
+
+Preempt Metrics
+
+Combined Metric             average  max_avg  median  percentile
+Kernel Build
+aarch64-6.16.0-rc2-master        27     3371      32          32
+aarch64-6.16.0-rc2-master-trace  32     3000      32          64
+aarch64-6.16.0-rc2-patched-trace 28     3132      32          64
+
+Suggested-by: Steven Rostedt <rostedt@goodmis.org>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Clark Williams <williams@redhat.com>
+Cc: Gabriele Monaco <gmonaco@redhat.com>
+Cc: Juri Lelli <juri.lelli@redhat.com>
+
+---
+References:
+[1] https://github.com/walac/tracer-benchmark
+
+Wander Lairson Costa (2):
+  trace/preemptirq: reduce overhead of irq_enable/disable tracepoints
+  tracing/preemptirq: Optimize preempt_disable/enable() tracepoint
+    overhead
+
+ include/linux/irqflags.h        | 25 +++++++++++++++--------
+ include/linux/preempt.h         | 35 ++++++++++++++++++++++++++++++---
+ kernel/sched/core.c             | 12 +----------
+ kernel/trace/trace_preemptirq.c | 22 +++++++++++++++++++++
+ 4 files changed, 72 insertions(+), 22 deletions(-)
+
+-- 
+2.50.0
+
