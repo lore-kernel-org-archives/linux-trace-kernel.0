@@ -1,47 +1,47 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C49E82DFF0D
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 26 Jun 2025 12:36:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1E052E425A
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 26 Jun 2025 12:36:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750941386; cv=none; b=l+mLfeqs1nsDF+b04SyYupSYjP4gUwwnZc7mlCHTwFeozAeEtfXjI+mcqNLPG/BsJvcSOSSi/ag1V1EjQI0Y74mnYuzsykxVcl8xt38BLC9PG6QtEkvCGyWapvtfYRLMkO+Yi7W+AE7SCijineZKlWHQRR+vXMraO9MUnf0BJNM=
+	t=1750941388; cv=none; b=u3JyyxqnXFokAcLkKMSi2uODtFT5dijQoeA9dyZjEXTLJJA07Kcq/dBDNud4S/6LTR+VnefwAouZwIFM5rF+BEjJis4hqFpDdTsHjwyVyyXakhswyZP1Prgd9uB2abSfFKDECd7veIINTa48A3mmHfdLFW62U9meAQ/sN+7cRIY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750941386; c=relaxed/simple;
-	bh=XBWN5KZHexp9ei5dl4X2qjbdQYssZL7zZfiVFNn2ZrE=;
+	s=arc-20240116; t=1750941388; c=relaxed/simple;
+	bh=72wucJGD61ASXRvziRF37YPvfvCkBbclhcdwDvqUTsI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=GaxXc7MqTmsjGHLiPkDUbrTWDmN50y1aYEUlmML+HGuQrIztWAqm0ZTH8WtWAc93cS7qt/fgBUlkJvn8detHxhBifUeEdzRTjgf2Dfs4ZsgNWRIdyR/CO213OmaAimQAuBIARrBsF5NnA4bj3hkCsnPzbT7rtGZ0YswrKHc/Vu8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=OI20YG7d; arc=none smtp.client-ip=170.10.129.124
+	 MIME-Version; b=XeaScQEag7wJv30UqFnSv66XMkVSP/llW73UdJ1yGxoe5W5pk/iq9hFvRtOCZQI8voaz5fJTauhrTP3xTdjtMv9KNhmcByWMVOwFfKUmg13IROIEHnkcUhkEn+tLu2hdQgrLRCEXUdzahBGujze3hgoAPrLUMuq1lrUPhaIdFmk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=SrC8uNhH; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OI20YG7d"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SrC8uNhH"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1750941382;
+	s=mimecast20190719; t=1750941385;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=qJdek3Tmd1i6NiuOEw7/enh8kH7UPfbPx2bOIgJR26E=;
-	b=OI20YG7dy9gQKipo33LVbm9ZURdpuuMMFHPWOir2VkKI9wIiMDBD6cwXQ5mxRU5i6mAUmr
-	4qZB7q81Xy9CzFjN1WWVKOxMF0P73ZFBhUtMjw2V0pNPCsBhouzC/CYsCtWvlccScLdFZo
-	eWOS4uIYc5UjiM471SGF23YWwoJyKRM=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+	bh=wMJg0dH4UPkLa1Hf7lH56pyNZrxSWYtoTrC2yVPM9go=;
+	b=SrC8uNhHcDky6R2fEsGsa84Q+Bq8IwIMHVCttYnkGQtdLyrbt/vaSJ+k//XmlGpmUhTuZI
+	Jqam32vyN5WgXsFWOuktN7X3mFnnkA6NkXYW9BX5aYT0ZsIjrseDpDN6OYrgeib/3Pd/F1
+	6o//w7ALwln+mG9CU0JsEKx9XxOm8fU=
+Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-263-MrmlD-aTOpKp-6Pe9XpCEQ-1; Thu,
- 26 Jun 2025 08:36:19 -0400
-X-MC-Unique: MrmlD-aTOpKp-6Pe9XpCEQ-1
-X-Mimecast-MFC-AGG-ID: MrmlD-aTOpKp-6Pe9XpCEQ_1750941378
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-7-3f56Zdm0M2OV4FIVE3J4eQ-1; Thu,
+ 26 Jun 2025 08:36:24 -0400
+X-MC-Unique: 3f56Zdm0M2OV4FIVE3J4eQ-1
+X-Mimecast-MFC-AGG-ID: 3f56Zdm0M2OV4FIVE3J4eQ_1750941383
 Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id A3BDB1800368;
-	Thu, 26 Jun 2025 12:36:18 +0000 (UTC)
+	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 4BA5419560B9;
+	Thu, 26 Jun 2025 12:36:23 +0000 (UTC)
 Received: from fedora.brq.redhat.com (unknown [10.43.17.241])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id B2E4F18003FC;
-	Thu, 26 Jun 2025 12:36:15 +0000 (UTC)
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 18B1B18003FC;
+	Thu, 26 Jun 2025 12:36:18 +0000 (UTC)
 From: Tomas Glozar <tglozar@redhat.com>
 To: Steven Rostedt <rostedt@goodmis.org>
 Cc: linux-trace-kernel@vger.kernel.org,
@@ -54,9 +54,9 @@ Cc: linux-trace-kernel@vger.kernel.org,
 	Crystal Wood <crwood@redhat.com>,
 	Gabriele Monaco <gmonaco@redhat.com>,
 	Tomas Glozar <tglozar@redhat.com>
-Subject: [PATCH v2 4/9] rtla/timerlat: Add continue action
-Date: Thu, 26 Jun 2025 14:34:00 +0200
-Message-ID: <20250626123405.1496931-5-tglozar@redhat.com>
+Subject: [PATCH v2 5/9] rtla/timerlat: Add action on end feature
+Date: Thu, 26 Jun 2025 14:34:01 +0200
+Message-ID: <20250626123405.1496931-6-tglozar@redhat.com>
 In-Reply-To: <20250626123405.1496931-1-tglozar@redhat.com>
 References: <20250626123405.1496931-1-tglozar@redhat.com>
 Precedence: bulk
@@ -68,311 +68,345 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
 
-Introduce option to resume tracing after a latency threshold overflow.
-The option is implemented as an action named "continue".
+Implement actions on end next to actions on threshold. A new option,
+--on-end is added, parallel to --on-threshold. Instead of being
+executed whenever a latency threshold is reached, it is executed at the
+end of the measurement.
 
-Example:
-$ rtla timerlat top -q -T 200 -d 1s --on-threshold \
-exec,command="echo Threshold" --on-threshold continue
-Threshold
-Threshold
-Threshold
-                                     Timer Latency
-...
+For example:
 
-The feature is supported for both hist and top. After the continue
-action is executed, processing of the list of actions is stopped and
-tracing is resumed.
+$ rtla timerlat hist -d 5s --on-end trace
+
+will save the trace output at the end.
+
+All actions supported by --on-threshold are also supported by --on-end,
+except for continue, which does nothing with --on-end.
 
 Signed-off-by: Tomas Glozar <tglozar@redhat.com>
 ---
- tools/tracing/rtla/src/actions.c       | 27 +++++++++++-
- tools/tracing/rtla/src/actions.h       |  5 ++-
- tools/tracing/rtla/src/timerlat_hist.c | 40 +++++++++++++++---
- tools/tracing/rtla/src/timerlat_top.c  | 57 ++++++++++++++++----------
- 4 files changed, 100 insertions(+), 29 deletions(-)
+ tools/tracing/rtla/src/timerlat.h      |  5 ++-
+ tools/tracing/rtla/src/timerlat_hist.c | 44 +++++++++++++++++--------
+ tools/tracing/rtla/src/timerlat_top.c  | 45 ++++++++++++++++++--------
+ 3 files changed, 65 insertions(+), 29 deletions(-)
 
-diff --git a/tools/tracing/rtla/src/actions.c b/tools/tracing/rtla/src/actions.c
-index 63bee5bdabfd..aaf0808125d7 100644
---- a/tools/tracing/rtla/src/actions.c
-+++ b/tools/tracing/rtla/src/actions.c
-@@ -17,6 +17,7 @@ actions_init(struct actions *self)
- 	self->size = action_default_size;
- 	self->list = calloc(self->size, sizeof(struct action));
- 	self->len = 0;
-+	self->continue_flag = false;
- 
- 	memset(&self->present, 0, sizeof(self->present));
- 
-@@ -108,6 +109,20 @@ actions_add_shell(struct actions *self, const char *command)
- 	return 0;
- }
- 
-+/*
-+ * actions_add_continue - add an action to resume measurement
-+ */
-+int
-+actions_add_continue(struct actions *self)
-+{
-+	struct action *action = actions_new(self);
+diff --git a/tools/tracing/rtla/src/timerlat.h b/tools/tracing/rtla/src/timerlat.h
+index d1fcf9a97621..bc55ed04fc96 100644
+--- a/tools/tracing/rtla/src/timerlat.h
++++ b/tools/tracing/rtla/src/timerlat.h
+@@ -48,7 +48,10 @@ struct timerlat_params {
+ 	struct sched_attr	sched_param;
+ 	struct trace_events	*events;
+ 	enum timerlat_tracing_mode mode;
+-	struct actions actions;
 +
-+	self->present[ACTION_CONTINUE] = true;
-+	action->type = ACTION_CONTINUE;
++	struct actions threshold_actions;
++	struct actions end_actions;
 +
-+	return 0;
-+}
-+
- /*
-  * actions_parse - add an action based on text specification
-  */
-@@ -133,6 +148,8 @@ actions_parse(struct actions *self, const char *trigger)
- 		type = ACTION_SIGNAL;
- 	else if (strcmp(token, "shell") == 0)
- 		type = ACTION_SHELL;
-+	else if (strcmp(token, "continue") == 0)
-+		type = ACTION_CONTINUE;
- 	else
- 		/* Invalid trigger type */
- 		return -1;
-@@ -187,6 +204,11 @@ actions_parse(struct actions *self, const char *trigger)
- 		if (strlen(token) > 8 && strncmp(token, "command=", 8) == 0)
- 			return actions_add_shell(self, token + 8);
- 		return -1;
-+	case ACTION_CONTINUE:
-+		/* Takes no argument */
-+		if (token != NULL)
-+			return -1;
-+		return actions_add_continue(self);
- 	default:
- 		return -1;
- 	}
-@@ -196,7 +218,7 @@ actions_parse(struct actions *self, const char *trigger)
-  * actions_perform - perform all actions
-  */
- int
--actions_perform(const struct actions *self)
-+actions_perform(struct actions *self)
- {
- 	int pid, retval;
- 	const struct action *action;
-@@ -226,6 +248,9 @@ actions_perform(const struct actions *self)
- 			if (retval)
- 				return retval;
- 			break;
-+		case ACTION_CONTINUE:
-+			self->continue_flag = true;
-+			return 0;
- 		default:
- 			break;
- 		}
-diff --git a/tools/tracing/rtla/src/actions.h b/tools/tracing/rtla/src/actions.h
-index 076bbff8519e..b10a19d55c49 100644
---- a/tools/tracing/rtla/src/actions.h
-+++ b/tools/tracing/rtla/src/actions.h
-@@ -7,6 +7,7 @@ enum action_type {
- 	ACTION_TRACE_OUTPUT,
- 	ACTION_SIGNAL,
- 	ACTION_SHELL,
-+	ACTION_CONTINUE,
- 	ACTION_FIELD_N
- };
- 
-@@ -35,6 +36,7 @@ struct actions {
- 	struct action *list;
- 	int len, size;
- 	bool present[ACTION_FIELD_N];
-+	bool continue_flag;
- 
- 	/* External dependencies */
- 	struct tracefs_instance *trace_output_inst;
-@@ -45,5 +47,6 @@ void actions_destroy(struct actions *self);
- int actions_add_trace_output(struct actions *self, const char *trace_output);
- int actions_add_signal(struct actions *self, int signal, int pid);
- int actions_add_shell(struct actions *self, const char *command);
-+int actions_add_continue(struct actions *self);
- int actions_parse(struct actions *self, const char *trigger);
--int actions_perform(const struct actions *self);
-+int actions_perform(struct actions *self);
+ 	union {
+ 		struct {
+ 			/* top only */
 diff --git a/tools/tracing/rtla/src/timerlat_hist.c b/tools/tracing/rtla/src/timerlat_hist.c
-index d975d2cd6604..4f13a8f92711 100644
+index 4f13a8f92711..9baea1b251ed 100644
 --- a/tools/tracing/rtla/src/timerlat_hist.c
 +++ b/tools/tracing/rtla/src/timerlat_hist.c
-@@ -1374,8 +1374,20 @@ int timerlat_hist_main(int argc, char *argv[])
- 				goto out_hist;
- 			}
+@@ -758,6 +758,7 @@ static void timerlat_hist_usage(char *usage)
+ 		"	     --trace-buffer-size kB: set the per-cpu trace buffer size in kB",
+ 		"	     --deepest-idle-state n: only go down to idle state n on cpus used by timerlat to reduce exit from idle latency",
+ 		"	     --on-threshold <action>: define action to be executed at latency threshold, multiple are allowed",
++		"	     --on-end <action>: define action to be executed at measurement end, multiple are allowed",
+ 		NULL,
+ 	};
  
--			if (osnoise_trace_is_off(tool, record))
--				break;
-+			if (osnoise_trace_is_off(tool, record)) {
-+				actions_perform(&params->actions);
-+
-+				if (!params->actions.continue_flag)
-+					/* continue flag not set, break */
-+					break;
-+
-+				/* continue action reached, re-enable tracing */
-+				if (params->actions.present[ACTION_TRACE_OUTPUT])
-+					trace_instance_start(&record->trace);
-+				if (!params->no_aa)
-+					trace_instance_start(&aa->trace);
-+				trace_instance_start(trace);
+@@ -793,7 +794,8 @@ static struct timerlat_params
+ 	if (!params)
+ 		exit(1);
+ 
+-	actions_init(&params->actions);
++	actions_init(&params->threshold_actions);
++	actions_init(&params->end_actions);
+ 
+ 	/* disabled by default */
+ 	params->dma_latency = -1;
+@@ -846,6 +848,7 @@ static struct timerlat_params
+ 			{"trace-buffer-size",	required_argument,	0, '\3'},
+ 			{"deepest-idle-state",	required_argument,	0, '\4'},
+ 			{"on-threshold",	required_argument,	0, '\5'},
++			{"on-end",		required_argument,	0, '\6'},
+ 			{0, 0, 0, 0}
+ 		};
+ 
+@@ -1038,7 +1041,14 @@ static struct timerlat_params
+ 			params->deepest_idle_state = get_llong_from_str(optarg);
+ 			break;
+ 		case '\5':
+-			retval = actions_parse(&params->actions, optarg);
++			retval = actions_parse(&params->threshold_actions, optarg);
++			if (retval) {
++				err_msg("Invalid action %s\n", optarg);
++				exit(EXIT_FAILURE);
 +			}
- 
- 			/* is there still any user-threads ? */
- 			if (params->user_workload) {
-@@ -1385,8 +1397,27 @@ int timerlat_hist_main(int argc, char *argv[])
- 				}
- 			}
- 		}
--	} else
--		timerlat_bpf_wait(-1);
-+	} else {
-+		while (!stop_tracing) {
-+			timerlat_bpf_wait(-1);
-+
-+			if (!stop_tracing) {
-+				/* Threshold overflow, perform actions on threshold */
-+				actions_perform(&params->actions);
-+
-+				if (!params->actions.continue_flag)
-+					/* continue flag not set, break */
-+					break;
-+
-+				/* continue action reached, re-enable tracing */
-+				if (params->actions.present[ACTION_TRACE_OUTPUT])
-+					trace_instance_start(&record->trace);
-+				if (!params->no_aa)
-+					trace_instance_start(&aa->trace);
-+				timerlat_bpf_restart_tracing();
-+			}
-+		}
-+	}
- 
- 	if (params->mode != TRACING_MODE_TRACEFS) {
- 		timerlat_bpf_detach();
-@@ -1412,7 +1443,6 @@ int timerlat_hist_main(int argc, char *argv[])
- 		if (!params->no_aa)
- 			timerlat_auto_analysis(params->stop_us, params->stop_total_us);
- 
--		actions_perform(&params->actions);
- 		return_value = FAILED;
++			break;
++		case '\6':
++			retval = actions_parse(&params->end_actions, optarg);
+ 			if (retval) {
+ 				err_msg("Invalid action %s\n", optarg);
+ 				exit(EXIT_FAILURE);
+@@ -1050,7 +1060,7 @@ static struct timerlat_params
  	}
  
+ 	if (trace_output)
+-		actions_add_trace_output(&params->actions, trace_output);
++		actions_add_trace_output(&params->threshold_actions, trace_output);
+ 
+ 	if (geteuid()) {
+ 		err_msg("rtla needs root permission\n");
+@@ -1077,7 +1087,8 @@ static struct timerlat_params
+ 	 * mixed mode
+ 	 */
+ 	if (params->mode == TRACING_MODE_BPF &&
+-	    (params->actions.present[ACTION_TRACE_OUTPUT] || !params->no_aa))
++	    (params->threshold_actions.present[ACTION_TRACE_OUTPUT] ||
++	     params->end_actions.present[ACTION_TRACE_OUTPUT] || !params->no_aa))
+ 		params->mode = TRACING_MODE_MIXED;
+ 
+ 	return params;
+@@ -1270,13 +1281,15 @@ int timerlat_hist_main(int argc, char *argv[])
+ 		}
+ 	}
+ 
+-	if (params->actions.present[ACTION_TRACE_OUTPUT]) {
++	if (params->threshold_actions.present[ACTION_TRACE_OUTPUT] ||
++	    params->end_actions.present[ACTION_TRACE_OUTPUT]) {
+ 		record = osnoise_init_trace_tool("timerlat");
+ 		if (!record) {
+ 			err_msg("Failed to enable the trace instance\n");
+ 			goto out_free;
+ 		}
+-		params->actions.trace_output_inst = record->trace.inst;
++		params->threshold_actions.trace_output_inst = record->trace.inst;
++		params->end_actions.trace_output_inst = record->trace.inst;
+ 
+ 		if (params->events) {
+ 			retval = trace_events_enable(&record->trace, params->events);
+@@ -1342,7 +1355,7 @@ int timerlat_hist_main(int argc, char *argv[])
+ 	 * tracing while enabling other instances. The trace instance is the
+ 	 * one with most valuable information.
+ 	 */
+-	if (params->actions.present[ACTION_TRACE_OUTPUT])
++	if (record)
+ 		trace_instance_start(&record->trace);
+ 	if (!params->no_aa)
+ 		trace_instance_start(&aa->trace);
+@@ -1375,14 +1388,14 @@ int timerlat_hist_main(int argc, char *argv[])
+ 			}
+ 
+ 			if (osnoise_trace_is_off(tool, record)) {
+-				actions_perform(&params->actions);
++				actions_perform(&params->threshold_actions);
+ 
+-				if (!params->actions.continue_flag)
++				if (!params->threshold_actions.continue_flag)
+ 					/* continue flag not set, break */
+ 					break;
+ 
+ 				/* continue action reached, re-enable tracing */
+-				if (params->actions.present[ACTION_TRACE_OUTPUT])
++				if (record)
+ 					trace_instance_start(&record->trace);
+ 				if (!params->no_aa)
+ 					trace_instance_start(&aa->trace);
+@@ -1403,14 +1416,14 @@ int timerlat_hist_main(int argc, char *argv[])
+ 
+ 			if (!stop_tracing) {
+ 				/* Threshold overflow, perform actions on threshold */
+-				actions_perform(&params->actions);
++				actions_perform(&params->threshold_actions);
+ 
+-				if (!params->actions.continue_flag)
++				if (!params->threshold_actions.continue_flag)
+ 					/* continue flag not set, break */
+ 					break;
+ 
+ 				/* continue action reached, re-enable tracing */
+-				if (params->actions.present[ACTION_TRACE_OUTPUT])
++				if (record)
+ 					trace_instance_start(&record->trace);
+ 				if (!params->no_aa)
+ 					trace_instance_start(&aa->trace);
+@@ -1435,6 +1448,8 @@ int timerlat_hist_main(int argc, char *argv[])
+ 
+ 	timerlat_print_stats(params, tool);
+ 
++	actions_perform(&params->end_actions);
++
+ 	return_value = PASSED;
+ 
+ 	if (osnoise_trace_is_off(tool, record) && !stop_tracing) {
+@@ -1464,7 +1479,8 @@ int timerlat_hist_main(int argc, char *argv[])
+ 	osnoise_destroy_tool(aa);
+ 	osnoise_destroy_tool(record);
+ 	osnoise_destroy_tool(tool);
+-	actions_destroy(&params->actions);
++	actions_destroy(&params->threshold_actions);
++	actions_destroy(&params->end_actions);
+ 	if (params->mode != TRACING_MODE_TRACEFS)
+ 		timerlat_bpf_destroy();
+ 	free(params);
 diff --git a/tools/tracing/rtla/src/timerlat_top.c b/tools/tracing/rtla/src/timerlat_top.c
-index cdbfda009974..60f9c78cb272 100644
+index 60f9c78cb272..c80b81c0b4da 100644
 --- a/tools/tracing/rtla/src/timerlat_top.c
 +++ b/tools/tracing/rtla/src/timerlat_top.c
-@@ -906,6 +906,7 @@ timerlat_top_set_signals(struct timerlat_params *params)
- static int
- timerlat_top_main_loop(struct osnoise_tool *top,
- 		       struct osnoise_tool *record,
-+		       struct osnoise_tool *aa,
- 		       struct timerlat_params *params,
- 		       struct timerlat_u_params *params_u)
- {
-@@ -932,8 +933,20 @@ timerlat_top_main_loop(struct osnoise_tool *top,
- 		if (!params->quiet)
- 			timerlat_print_stats(params, top);
+@@ -517,6 +517,7 @@ static void timerlat_top_usage(char *usage)
+ 		"	     --trace-buffer-size kB: set the per-cpu trace buffer size in kB",
+ 		"	     --deepest-idle-state n: only go down to idle state n on cpus used by timerlat to reduce exit from idle latency",
+ 		"	     --on-threshold <action>: define action to be executed at latency threshold, multiple are allowed",
++		"	     --on-end: define action to be executed at measurement end, multiple are allowed",
+ 		NULL,
+ 	};
  
--		if (osnoise_trace_is_off(top, record))
--			break;
-+		if (osnoise_trace_is_off(top, record)) {
-+			actions_perform(&params->actions);
-+
-+			if (!params->actions.continue_flag)
-+				/* continue flag not set, break */
-+				break;
-+
-+			/* continue action reached, re-enable tracing */
-+			if (params->actions.present[ACTION_TRACE_OUTPUT])
-+				trace_instance_start(&record->trace);
-+			if (!params->no_aa)
-+				trace_instance_start(&aa->trace);
-+			trace_instance_start(trace);
-+		}
+@@ -552,7 +553,8 @@ static struct timerlat_params
+ 	if (!params)
+ 		exit(1);
  
- 		/* is there still any user-threads ? */
- 		if (params->user_workload) {
-@@ -953,6 +966,7 @@ timerlat_top_main_loop(struct osnoise_tool *top,
- static int
- timerlat_top_bpf_main_loop(struct osnoise_tool *top,
- 			   struct osnoise_tool *record,
-+			   struct osnoise_tool *aa,
- 			   struct timerlat_params *params,
- 			   struct timerlat_u_params *params_u)
- {
-@@ -964,22 +978,9 @@ timerlat_top_bpf_main_loop(struct osnoise_tool *top,
- 		return 0;
+-	actions_init(&params->actions);
++	actions_init(&params->threshold_actions);
++	actions_init(&params->end_actions);
+ 
+ 	/* disabled by default */
+ 	params->dma_latency = -1;
+@@ -597,6 +599,7 @@ static struct timerlat_params
+ 			{"trace-buffer-size",	required_argument,	0, '7'},
+ 			{"deepest-idle-state",	required_argument,	0, '8'},
+ 			{"on-threshold",	required_argument,	0, '9'},
++			{"on-end",		required_argument,	0, '\1'},
+ 			{0, 0, 0, 0}
+ 		};
+ 
+@@ -623,6 +626,7 @@ static struct timerlat_params
+ 
+ 			/* set trace */
+ 			trace_output = "timerlat_trace.txt";
++
+ 			break;
+ 		case '5':
+ 			/* it is here because it is similar to -a */
+@@ -776,7 +780,14 @@ static struct timerlat_params
+ 			params->deepest_idle_state = get_llong_from_str(optarg);
+ 			break;
+ 		case '9':
+-			retval = actions_parse(&params->actions, optarg);
++			retval = actions_parse(&params->threshold_actions, optarg);
++			if (retval) {
++				err_msg("Invalid action %s\n", optarg);
++				exit(EXIT_FAILURE);
++			}
++			break;
++		case '\1':
++			retval = actions_parse(&params->end_actions, optarg);
+ 			if (retval) {
+ 				err_msg("Invalid action %s\n", optarg);
+ 				exit(EXIT_FAILURE);
+@@ -788,7 +799,7 @@ static struct timerlat_params
  	}
  
--	if (params->quiet) {
--		/* Quiet mode: wait for stop and then, print results */
--		timerlat_bpf_wait(-1);
--
--		retval = timerlat_top_bpf_pull_data(top);
--		if (retval) {
--			err_msg("Error pulling BPF data\n");
--			return retval;
--		}
--
--		return 0;
--	}
--
- 	/* Pull and display data in a loop */
- 	while (!stop_tracing) {
--		wait_retval = timerlat_bpf_wait(params->sleep_time);
-+		wait_retval = timerlat_bpf_wait(params->quiet ? -1 : params->sleep_time);
+ 	if (trace_output)
+-		actions_add_trace_output(&params->actions, trace_output);
++		actions_add_trace_output(&params->threshold_actions, trace_output);
  
- 		retval = timerlat_top_bpf_pull_data(top);
- 		if (retval) {
-@@ -987,11 +988,24 @@ timerlat_top_bpf_main_loop(struct osnoise_tool *top,
- 			return retval;
- 		}
+ 	if (geteuid()) {
+ 		err_msg("rtla needs root permission\n");
+@@ -812,7 +823,8 @@ static struct timerlat_params
+ 	 * mixed mode
+ 	 */
+ 	if (params->mode == TRACING_MODE_BPF &&
+-	    (params->actions.present[ACTION_TRACE_OUTPUT] || !params->no_aa))
++	    (params->threshold_actions.present[ACTION_TRACE_OUTPUT] ||
++	     params->end_actions.present[ACTION_TRACE_OUTPUT] || !params->no_aa))
+ 		params->mode = TRACING_MODE_MIXED;
  
--		timerlat_print_stats(params, top);
-+		if (!params->quiet)
-+			timerlat_print_stats(params, top);
+ 	return params;
+@@ -934,14 +946,14 @@ timerlat_top_main_loop(struct osnoise_tool *top,
+ 			timerlat_print_stats(params, top);
  
--		if (wait_retval == 1)
-+		if (wait_retval == 1) {
+ 		if (osnoise_trace_is_off(top, record)) {
+-			actions_perform(&params->actions);
++			actions_perform(&params->threshold_actions);
+ 
+-			if (!params->actions.continue_flag)
++			if (!params->threshold_actions.continue_flag)
+ 				/* continue flag not set, break */
+ 				break;
+ 
+ 			/* continue action reached, re-enable tracing */
+-			if (params->actions.present[ACTION_TRACE_OUTPUT])
++			if (record)
+ 				trace_instance_start(&record->trace);
+ 			if (!params->no_aa)
+ 				trace_instance_start(&aa->trace);
+@@ -993,14 +1005,14 @@ timerlat_top_bpf_main_loop(struct osnoise_tool *top,
+ 
+ 		if (wait_retval == 1) {
  			/* Stopping requested by tracer */
--			break;
-+			actions_perform(&params->actions);
+-			actions_perform(&params->actions);
++			actions_perform(&params->threshold_actions);
+ 
+-			if (!params->actions.continue_flag)
++			if (!params->threshold_actions.continue_flag)
+ 				/* continue flag not set, break */
+ 				break;
+ 
+ 			/* continue action reached, re-enable tracing */
+-			if (params->actions.present[ACTION_TRACE_OUTPUT])
++			if (record)
+ 				trace_instance_start(&record->trace);
+ 			if (!params->no_aa)
+ 				trace_instance_start(&aa->trace);
+@@ -1128,13 +1140,15 @@ int timerlat_top_main(int argc, char *argv[])
+ 		}
+ 	}
+ 
+-	if (params->actions.present[ACTION_TRACE_OUTPUT]) {
++	if (params->threshold_actions.present[ACTION_TRACE_OUTPUT] ||
++	    params->end_actions.present[ACTION_TRACE_OUTPUT]) {
+ 		record = osnoise_init_trace_tool("timerlat");
+ 		if (!record) {
+ 			err_msg("Failed to enable the trace instance\n");
+ 			goto out_free;
+ 		}
+-		params->actions.trace_output_inst = record->trace.inst;
++		params->threshold_actions.trace_output_inst = record->trace.inst;
++		params->end_actions.trace_output_inst = record->trace.inst;
+ 
+ 		if (params->events) {
+ 			retval = trace_events_enable(&record->trace, params->events);
+@@ -1201,7 +1215,7 @@ int timerlat_top_main(int argc, char *argv[])
+ 	 * tracing while enabling other instances. The trace instance is the
+ 	 * one with most valuable information.
+ 	 */
+-	if (params->actions.present[ACTION_TRACE_OUTPUT])
++	if (record)
+ 		trace_instance_start(&record->trace);
+ 	if (!params->no_aa)
+ 		trace_instance_start(&aa->trace);
+@@ -1236,6 +1250,8 @@ int timerlat_top_main(int argc, char *argv[])
+ 
+ 	timerlat_print_stats(params, top);
+ 
++	actions_perform(&params->end_actions);
 +
-+			if (!params->actions.continue_flag)
-+				/* continue flag not set, break */
-+				break;
-+
-+			/* continue action reached, re-enable tracing */
-+			if (params->actions.present[ACTION_TRACE_OUTPUT])
-+				trace_instance_start(&record->trace);
-+			if (!params->no_aa)
-+				trace_instance_start(&aa->trace);
-+			timerlat_bpf_restart_tracing();
-+		}
+ 	return_value = PASSED;
  
- 		/* is there still any user-threads ? */
- 		if (params->user_workload) {
-@@ -1205,9 +1219,9 @@ int timerlat_top_main(int argc, char *argv[])
- 	timerlat_top_set_signals(params);
- 
- 	if (params->mode == TRACING_MODE_TRACEFS)
--		retval = timerlat_top_main_loop(top, record, params, &params_u);
-+		retval = timerlat_top_main_loop(top, record, aa, params, &params_u);
- 	else
--		retval = timerlat_top_bpf_main_loop(top, record, params, &params_u);
-+		retval = timerlat_top_bpf_main_loop(top, record, aa, params, &params_u);
- 
- 	if (retval)
- 		goto out_top;
-@@ -1230,7 +1244,6 @@ int timerlat_top_main(int argc, char *argv[])
- 		if (!params->no_aa)
- 			timerlat_auto_analysis(params->stop_us, params->stop_total_us);
- 
--		actions_perform(&params->actions);
- 		return_value = FAILED;
- 	} else if (params->aa_only) {
- 		/*
+ 	if (osnoise_trace_is_off(top, record) && !stop_tracing) {
+@@ -1276,7 +1292,8 @@ int timerlat_top_main(int argc, char *argv[])
+ 		osnoise_destroy_tool(aa);
+ 	osnoise_destroy_tool(record);
+ 	osnoise_destroy_tool(top);
+-	actions_destroy(&params->actions);
++	actions_destroy(&params->threshold_actions);
++	actions_destroy(&params->end_actions);
+ 	if (params->mode != TRACING_MODE_TRACEFS)
+ 		timerlat_bpf_destroy();
+ 	free(params);
 -- 
 2.49.0
 
