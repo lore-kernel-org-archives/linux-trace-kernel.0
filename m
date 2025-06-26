@@ -1,102 +1,146 @@
-Received: from relay.hostedemail.com (smtprelay0012.hostedemail.com [216.40.44.12])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73C3FDDD2;
-	Thu, 26 Jun 2025 12:13:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDDEB2DFF0D
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 26 Jun 2025 12:36:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750940020; cv=none; b=ETssuZGI8lilvkJ4Ap5N0eAhn7FERcvgPNuiLt7cUh/Y4xS9TtI6Nuvb2jYt3gq8puao2D1lTRvsIZ13qCT41mZZ0O0WYRmkU2FDkG9iZ3E9fW7uHYCckjyicQcQIWwOVHFkgLZKwBb1s4IcQUfRmYe6pByUNLce8YE+jNbj/Sg=
+	t=1750941370; cv=none; b=LlqGSTwlgN4m1Koxf3bEEPKh/VC2wVdUPSwGLujsRB4sCpj8afg76QNPAcr2nT7CGKrFx6y7Jlm6qEJ+Ozgh3rSLzBY2536CAjme+D2AAUaZg2kflc69imC2vB9SYMKP/6c8trpeElUxPU381icXj2ZPsqQ7ZOjeAFwdqJQA/XE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750940020; c=relaxed/simple;
-	bh=ZJDkm+ay6O98NiXiGMPkpDGJGpWWhfw+/kn1f31F10Y=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=JGEk36fTRpeJ5yXjl5WYHWWf2Xc9HevGorBFptsvIQ00qcTKoLXgRiosTx3gJktyAAZk2VPt+LCBoAM6VSUgsH/nOS32z6KBXwWNc/Sl0zBqaArvxDeHbDAMqSJpvN1N8uLJQDcWsD9u4+/nj7InEFykVczwNcm0wHURpD9R7qs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf13.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay02.hostedemail.com (Postfix) with ESMTP id D538F1206B7;
-	Thu, 26 Jun 2025 12:13:35 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf13.hostedemail.com (Postfix) with ESMTPA id DE2412000E;
-	Thu, 26 Jun 2025 12:13:31 +0000 (UTC)
-Date: Thu, 26 Jun 2025 08:13:52 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- bpf@vger.kernel.org, x86@kernel.org, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Josh Poimboeuf <jpoimboe@kernel.org>, Peter Zijlstra
- <peterz@infradead.org>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim
- <namhyung@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Andrii
- Nakryiko <andrii@kernel.org>, Indu Bhagat <indu.bhagat@oracle.com>, "Jose
- E. Marchesi" <jemarch@gnu.org>, Beau Belgrave <beaub@linux.microsoft.com>,
- Jens Remus <jremus@linux.ibm.com>, Linus Torvalds
- <torvalds@linux-foundation.org>, Andrew Morton <akpm@linux-foundation.org>,
- Jens Axboe <axboe@kernel.dk>
-Subject: Re: [PATCH v11 13/14] perf/x86: Rename and move get_segment_base()
- and make it global
-Message-ID: <20250626081352.30b360f8@gandalf.local.home>
-In-Reply-To: <aF0IeDBaAfRypu1W@gmail.com>
-References: <20250625225600.555017347@goodmis.org>
-	<20250625225717.016385736@goodmis.org>
-	<aF0IeDBaAfRypu1W@gmail.com>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1750941370; c=relaxed/simple;
+	bh=EldGwDwLj9lbQI5sLAfG3j4GNA2ETgNSDZ40/lKfj2k=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ASXcwyTKFhhkivWLi5YIYkU0+TPZYpJ3i7NYYbf/3nL3GUa1Vv5uAOCEk006oPghUBOz9PEi7e4gDfKrCmXVIRRiw9EOlErG4w8LDu/lxIe54UjQ7DaLjTTZZx1MSF1C2MoMP7WOEQzMfrB7d4tJ+S2aUsk2e5lgeuhtt2TOUDw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=IqlCMjqQ; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IqlCMjqQ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1750941367;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=6C4BdrJF7WIpqXdFpP6dYYZvXiO0SgJqw+aD3tRKE3Q=;
+	b=IqlCMjqQcyMt8dsmtNXbEdoOEc9SNDHEqXBEfn7v4RN84nMyA6ivQKCD/c9RCs//Ry+fTd
+	pYWlx0bhTdLVy4pgX85RSQUBnrdRy5mNlZORZhI/PaRabIj1+PkIKwck/YHJVhxiUh87E1
+	wc51QS0rBEgigRjAQb75eIZgQoKZdAo=
+Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-196-B10s7GLmMveRAgPs2aXqFw-1; Thu,
+ 26 Jun 2025 08:36:06 -0400
+X-MC-Unique: B10s7GLmMveRAgPs2aXqFw-1
+X-Mimecast-MFC-AGG-ID: B10s7GLmMveRAgPs2aXqFw_1750941365
+Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id DCB4D1944AA9;
+	Thu, 26 Jun 2025 12:36:04 +0000 (UTC)
+Received: from fedora.brq.redhat.com (unknown [10.43.17.241])
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 57DAB18003FC;
+	Thu, 26 Jun 2025 12:36:01 +0000 (UTC)
+From: Tomas Glozar <tglozar@redhat.com>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: linux-trace-kernel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	John Kacur <jkacur@redhat.com>,
+	Luis Goncalves <lgoncalv@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Chang Yin <cyin@redhat.com>,
+	Costa Shulyupin <costa.shul@redhat.com>,
+	Crystal Wood <crwood@redhat.com>,
+	Gabriele Monaco <gmonaco@redhat.com>,
+	Tomas Glozar <tglozar@redhat.com>
+Subject: [PATCH v2 0/9] rtla/timerlat: Support actions on threshold and on end
+Date: Thu, 26 Jun 2025 14:33:56 +0200
+Message-ID: <20250626123405.1496931-1-tglozar@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Stat-Signature: uys6ttrkumetetsc4q3cpeitdrxnbwkr
-X-Rspamd-Server: rspamout08
-X-Rspamd-Queue-Id: DE2412000E
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX18rv6R1OBR9mcy111QH7t1FM1i8rlVGQg8=
-X-HE-Tag: 1750940011-661499
-X-HE-Meta: U2FsdGVkX1/qz+jyF9/tlZIldOEdrudCEWU5a97Pg8NrdTzggJLyt/G6ust73fl1uM28G8SoLmCp1MzDYLve+kVjCQMOJj1fZ5bFx5TzIIvRIax/WNSS6Nfm8IblnY7U66+aCfrWe3XzUzXayOZVVL60wng38G259CSVpirG52uKnhro+8qgaX9c+Fjc19tJyDhoxyYKezBgefNvhN4YwIQi1vYjdtu/BoEYF3iFiohTbVtHfhisEImvcNuQLkQALapWS2EKq+qRFoZnt4mQVzlO4pg5ugfSByIU32lGeGbpVse+Ni4DJkFaLT7e2OupK/8G4lFgS1tvLuws5tsn+J+YkiY7hrfbmA0mDDGdz4TD6bHN4cyP45lRqX6dWGW9syBoLLebtVuiQtO9E0bpug==
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
 
-On Thu, 26 Jun 2025 10:44:40 +0200
-Ingo Molnar <mingo@kernel.org> wrote:
+This series adds a feature that allows to user to specify certain
+kinds of "actions" to be executed at one of two places in the rtla
+measurement: when tracing is stopped on latency threshold, and at the
+end of tracing.
 
-> * Steven Rostedt <rostedt@goodmis.org> wrote:
-> 
-> > From: Josh Poimboeuf <jpoimboe@kernel.org>
-> > 
-> > get_segment_base() will be used by the unwind_user code, so make it
-> > global and rename it to segment_base_address() so it doesn't conflict with
-> > a KVM function of the same name.  
-> 
-> So if you make an x86-internal helper function global, please prefix it 
-> with x86_ or so:
-> 
-> 	unsigned long x86_get_segment_base(unsigned int segment)
-> 
-> Keeping the _get name also keeps it within the nomenclature of the 
-> general segment descriptor API family:
-> 
-> 	get_desc_base()
-> 	set_desc_base()
-> 	get_desc_limit()
-> 	set_desc_limit()
->   [x86_]get_segment_base()
+Two new options are added: --on-threshold, and --on-end, taking
+the action as an argument. For example:
 
-Sounds good.
+$ rtla timerlat hist -T 10 \
+--on-threshold shell,command="echo Threshold"
+--on-end shell,command="echo Tracing stopped"
 
-> 
-> > Also add a lockdep_assert_irqs_disabled() to make sure it's always 
-> > called with interrupts disabled.  
-> 
-> Please make this a separate patch, this change gets hidden in the noise 
-> of the function movement and renaming otherwise, plus it also makes the 
-> title false and misleading:
-> 
->    perf/x86: Rename and move get_segment_base() and make it global
-> 
+will print "Threshold" if a thread latency higher than 10 microseconds
+is reached, and "Tracing stopped" always at the end.
 
-I'll break it up.
+The list of possible actions is extensible and is covered in
+the commit messages. Later, a documentation patch series will be sent
+with clear explanation of every action and its syntax.
 
-Thanks for the review!
+Notably, a special action "continue" resumes tracing. For example:
 
--- Steve
+$ rtla timerlat hist -T 100 \
+--on-threshold shell,command="echo Threshold" \
+--on-threshold continue -d 10s
+
+will print "Threshold" as many times as tracing is stopped after
+thread latency reaches 100us.
+
+The feature was inspired by a case where collecting perf data on rtla
+latency overflow was required, which can be done by sending a signal
+to the perf process.
+
+Example of this with Intel PT aux buffer:
+
+$ perf record --cpu 0 -e intel_pt// -S -- rtla timerlat top -q -T 100 \
+-c 0 --on-threshold signal,pid=parent,num=12 --on-theshold continue
+
+In general, the feature is aiming to allow integration with external
+tooling. To implement even more flexibility, passing context to the
+shell through environmental variables, or even an entire scripting
+language with access to the rtla internals can be implemented if
+needed.
+
+Changes since v1:
+- Dropped short options on suggestion from Arnaldo.
+- Added documentation.
+
+Tomas Glozar (9):
+  rtla/timerlat: Introduce enum timerlat_tracing_mode
+  rtla/timerlat: Add action on threshold feature
+  rtla/timerlat_bpf: Allow resuming tracing
+  rtla/timerlat: Add continue action
+  rtla/timerlat: Add action on end feature
+  rtla/tests: Check rtla output with grep
+  rtla/tests: Add tests for actions
+  rtla/tests: Limit duration to maximum of 10s
+  Documentation/rtla: Add actions feature
+
+ .../tools/rtla/common_timerlat_options.rst    |  64 +++++
+ tools/tracing/rtla/src/Build                  |   1 +
+ tools/tracing/rtla/src/actions.c              | 260 ++++++++++++++++++
+ tools/tracing/rtla/src/actions.h              |  52 ++++
+ tools/tracing/rtla/src/timerlat.bpf.c         |  13 +-
+ tools/tracing/rtla/src/timerlat.c             |  24 +-
+ tools/tracing/rtla/src/timerlat.h             |  24 +-
+ tools/tracing/rtla/src/timerlat_bpf.c         |  13 +
+ tools/tracing/rtla/src/timerlat_bpf.h         |   3 +
+ tools/tracing/rtla/src/timerlat_hist.c        | 140 +++++++---
+ tools/tracing/rtla/src/timerlat_top.c         | 165 +++++++----
+ tools/tracing/rtla/tests/engine.sh            |  21 +-
+ tools/tracing/rtla/tests/hwnoise.t            |   8 +-
+ tools/tracing/rtla/tests/osnoise.t            |   4 +-
+ tools/tracing/rtla/tests/timerlat.t           |  36 ++-
+ 15 files changed, 712 insertions(+), 116 deletions(-)
+ create mode 100644 tools/tracing/rtla/src/actions.c
+ create mode 100644 tools/tracing/rtla/src/actions.h
+
+-- 
+2.49.0
+
