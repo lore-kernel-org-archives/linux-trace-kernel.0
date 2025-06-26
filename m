@@ -1,67 +1,127 @@
-Received: from relay.hostedemail.com (smtprelay0017.hostedemail.com [216.40.44.17])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CD592E6133;
-	Thu, 26 Jun 2025 15:36:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5690D8632C;
+	Thu, 26 Jun 2025 16:05:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750952207; cv=none; b=Lf5UPNDwpAq/+fiRhoO/QVbwRVYJam4WqtIxnUJQG6MLDXcSJ2RaUd8XHsf3QDx/9KSrF6qRBbwY07qFbD51e/LImqyswW2R2TB+EucUH4BZV4WdEqgFwHu0vRCDBWbF1CDiUoeTU2xTaLRu9geiGh7bA0j/KTPot2hW5Q48GAA=
+	t=1750953904; cv=none; b=OX1nks2DN2MPLsyXRI1jNtWA0uMXlF31bxSo7D/5QuNj+JcxvviKz5Xk00Qj6WRZHYMq1T6cTp/OI5UnZp9JKmRbPF0faTFR9mNiFXBbH5l7raF319waVrO94uAaDmgwXv+RJJ8UIpvnHDZSNZibJ+VMZhpsZGAe2ruF/MLEyFY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750952207; c=relaxed/simple;
-	bh=wDC8jYentfesMeMpkJeR4ttf+wzbV1AWv04wos7u40w=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=GSy6zaLBDkLOnbh8+Xbz1iuuxdk5/pbMfYRO/qx4uRH8I2dF5MC36o1L7zBxKlP74iCSZ2NbwE/D8uNHypOz0ZV5Z+I8mIRwK8syxUhSEqiVpKgcmg1JS4BX5D0lJn66UOcBBwVC80ZzbBv9icclQhHP0bc/wDSMlXhvU5CEhEs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf11.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay04.hostedemail.com (Postfix) with ESMTP id 7794B1A0287;
-	Thu, 26 Jun 2025 15:36:44 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf11.hostedemail.com (Postfix) with ESMTPA id 87A6B20031;
-	Thu, 26 Jun 2025 15:36:42 +0000 (UTC)
-Date: Thu, 26 Jun 2025 11:37:08 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Nam Cao <namcao@linutronix.de>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, linux-trace-kernel@vger.kernel.org,
- linux-kernel@vger.kernel.org, Gabriele Monaco <gmonaco@redhat.com>,
- john.ogness@linutronix.de
+	s=arc-20240116; t=1750953904; c=relaxed/simple;
+	bh=9PmHmcHy9eS+jHEx5bX+xBvU5X8RFlCe4CEn2nr7ZM0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GefSJVPzTFs9RgwkmXevqdrTIPPB1ipWj70wI7am0iLqA0K4RXygFI1tKtVF9MolVVxofAFEYmrzYl3OkKjnZF4EFesBrlUxq+maB6HMnOa22uWN+yyBTQpk9rn98PBNClHHayPneWNHH6BUOGnrzxtml1C3wXaVcs3EC5112yA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=yqoftNTm; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=bxu30B48; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="yqoftNTm";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="bxu30B48"
+Date: Thu, 26 Jun 2025 18:04:59 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1750953901;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=mL5oCUpY8O6HsAvUPjtA+7B0CN116b1jmnRtEOT4Bgw=;
+	b=yqoftNTmIWO8w20LOgqlPpXchx2n7q6CMc3o1+6zM7cjgOZhwidtRtiQ4/4wCP5gAJeq3m
+	XjmBLBn36CwgtCF/9387O8uyHuIMBVIT7zN+VNY1Ey1DkHlbHHxXyQE4GB7+CM+/NfJZwY
+	ZgpBnizlTxfUi9osLfBJbw+zkSnFVqM+srVvOPk7GyjMpE7gjdx6iw3YXOo+Qq52TAMA4L
+	Z4lMFFSGBN+DIetneD7rn04bv0dRdumQxACmZNbeqafdaM0RiNtJA82eAi69rISH55ipSs
+	0D46uhv8rVYBizXdV4SURoerQooSII2oM/BvIhiSiiAhXWMu1sFvhsJ7QVy5zA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1750953901;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=mL5oCUpY8O6HsAvUPjtA+7B0CN116b1jmnRtEOT4Bgw=;
+	b=bxu30B48B3rzCsnORaoes91Sd97VtxLtgubqiJmmhfEcqZ+ZtFo8pai2/KOmwJqSOgNwH3
+	6MQUCvbDwzpWGzBQ==
+From: Nam Cao <namcao@linutronix.de>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Gabriele Monaco <gmonaco@redhat.com>, john.ogness@linutronix.de
 Subject: Re: [PATCH] tracing: Remove pointless memory barriers
-Message-ID: <20250626113708.4a96e47c@gandalf.local.home>
-In-Reply-To: <20250626113520.315db641@gandalf.local.home>
+Message-ID: <20250626160459.soHxOROG@linutronix.de>
 References: <20250626151940.1756398-1-namcao@linutronix.de>
-	<20250626113520.315db641@gandalf.local.home>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+ <20250626113520.315db641@gandalf.local.home>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Stat-Signature: gcmfd58bhmc61ncuppn85sp3qbi9kgu3
-X-Rspamd-Server: rspamout08
-X-Rspamd-Queue-Id: 87A6B20031
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX19/ljJA5rKjppQWXrxvRGDaMwWf8qKESsA=
-X-HE-Tag: 1750952202-303129
-X-HE-Meta: U2FsdGVkX18ri2QmmzMURErDwCcIowdWfmK4u2wgAKljm2diZWhYl2M3BnCb7JBV9Bd6e2zYfM3IBZbvDvPx5qU+nDgOXkhoDdlYmLOsgnOPrWZkDdx2M8Hekpxlkc6nNkRbM200aOLYm3qxm/onOILYC7Lj490HjkXHPVU5BMVHD+UtWAoznA9OZOjWhbJQIq6lFigFP7/T36FA0JodScbea+wa4gaEmbIGgCq3pD/Q9VNWFoE0QK3RxaBj+vljT2ctDQIdBFtFOT3PAaaVcOM92OySNxHSm46UGGCg8LYOO3DgvKANlXBsFG4P9SDECJ/cgQgTNCe/pm+9tzbb33EwEq+taonUTBAfegputBCQ+bmXoQkgDw7hO83lexFBpbNKMK5MqChNtL9PnUn5mg==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250626113520.315db641@gandalf.local.home>
 
-On Thu, 26 Jun 2025 11:35:20 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
-
-> > @@ -2710,8 +2705,6 @@ void trace_buffered_event_enable(void)
+On Thu, Jun 26, 2025 at 11:35:20AM -0400, Steven Rostedt wrote:
+> On Thu, 26 Jun 2025 17:19:40 +0200
+> Nam Cao <namcao@linutronix.de> wrote:
+> >  static void turn_monitoring_on_with_reset(void)
+> > diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+> > index 95ae7c4e58357..0dff4298fc0e5 100644
+> > --- a/kernel/trace/trace.c
+> > +++ b/kernel/trace/trace.c
+> > @@ -936,7 +936,6 @@ int tracing_is_enabled(void)
+> >  	 * return the mirror variable of the state of the ring buffer.
+> >  	 * It's a little racy, but we don't really care.
+> >  	 */
+> > -	smp_rmb();
+> >  	return !global_trace.buffer_disabled;
+> >  }
 > >  
-> >  static void enable_trace_buffered_event(void *data)
-> >  {
-> > -	/* Probably not needed, but do it anyway */
-> > -	smp_rmb();  
+> > @@ -1107,8 +1106,6 @@ void tracer_tracing_on(struct trace_array *tr)
+> >  	 * important to be fast than accurate.
+> >  	 */
+> >  	tr->buffer_disabled = 0;
+> > -	/* Make the flag seen by readers */
+> > -	smp_wmb();
+> >  }
+> >  
+> >  /**
+> > @@ -1640,8 +1637,6 @@ void tracer_tracing_off(struct trace_array *tr)
+> >  	 * important to be fast than accurate.
+> >  	 */
+> >  	tr->buffer_disabled = 1;
+> > -	/* Make the flag seen by readers */
+> > -	smp_wmb();
+> >  }
 > 
-> As the comment says, this one actually isn't needed, and yes, it can be
-> removed.
+> The above three interact with each other. Without the barriers, the
+> tr->buffer_disabled = 0, can be set on one CPU, and the other CPU can think
+> the buffer is still enabled and do work that will end up doing nothing. Or
+> it can be set to 1, and the other CPU still sees it disabled and will not
+> do work when it can.
 
-One reason this isn't needed is because it's called via on_each_cpu() which
-will trigger its own barriers.
+(I'm not that experienced with memory barrier, so I may be writing nonsense
+here)
 
--- Steve
+I think you have it inverted? I assume you meant:
+
+"Without the barriers, the tr->buffer_disabled = 1 can be set on one CPU,
+and the other CPU can think the buffer is still enabled and do work that
+will end up doing nothing."
+
+Your scenario can still happen despite the memory barrier:
+
+CPU1                          CPU2
+                              smp_rb()
+                              read buffer_disabled, see 0 --> let's do work!
+buffer_disabled=1
+smp_wb()
+                              do work -> end up doing nothing
+
+From my understanding, smp_wb()'s purpose is ensuring the ordering of one
+write and another write, e.g.:
+    write(a)
+    smp_wb()
+    write(b)
+
+For our case, there is only a single write. Therefore I don't think
+smp_wb() is useful.
+
+Best regards,
+Nam
