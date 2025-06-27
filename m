@@ -1,106 +1,108 @@
-Received: from mailout1.w1.samsung.com (mailout1.w1.samsung.com [210.118.77.11])
+Received: from relay.hostedemail.com (smtprelay0012.hostedemail.com [216.40.44.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1B532D97B7
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 27 Jun 2025 13:44:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19A0B2F1FF0;
+	Fri, 27 Jun 2025 14:00:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751031856; cv=none; b=okIcmjiK5p0eUhzPhRzW0OTM6zFdt4u/zQP6v/fDCVjzL6xM+6c/oGIbBtQ68ndbdCp5iGN6z9I6K7np9k6PqmVyczITmzbTmIHS6FxxZxTfScwefqB+xX2ac/Gyk2V70lLZrz3VlxCdT4OgHjjgIWacagqWWAQyypN6juIwDyg=
+	t=1751032855; cv=none; b=orHUbUXPI3/2fM4xer9iolOaK10iyUy7OJ6nSTF5me9RkjBFD+TdLNfogLxWDm8MI6uKNg2WyLASDxyD+kETaL0V9rmbjZSXWsMCSW0zVHjQC5k/HCi8YB91JUZPTB1Nh+3esa1syOr3MwekB5P8sbycqzqDoWvbQBAGkJuvisI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751031856; c=relaxed/simple;
-	bh=5rws0OIbeHe2CRb1G1qFVEHOO3Qznulp1JmZYPqVS5A=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:From:In-Reply-To:
-	 Content-Type:References; b=JKlCCFOjuHNxnlH4jnhBLCeCQcuNNOjMri+3pNt7EWMkqZcKZe4pELw1BRSsWwhAQBiqOWNNCfHm+fjzhnAq04qyug8Ghn80mhzYVEqWW+YwrYJ2lc96OFsQrYuAgU4dy4BZ8ptz8MbOEeSfmYAWpt42kSo5M2nQt/Xw48yLOxc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=WhvmDKIT; arc=none smtp.client-ip=210.118.77.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="WhvmDKIT"
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-	by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20250627134412euoutp01e7127189844088e17a2208d9dcabf483~M6jFcXGQl0614006140euoutp01s
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 27 Jun 2025 13:44:12 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20250627134412euoutp01e7127189844088e17a2208d9dcabf483~M6jFcXGQl0614006140euoutp01s
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1751031852;
-	bh=XkLT3H6zpZxdqKr2mL/WBFZuhTWHNBcRcJJv1Mo/N0Y=;
-	h=Date:Subject:To:Cc:From:In-Reply-To:References:From;
-	b=WhvmDKITyLEkhw3MRTwTgoaWKOjFTMjKnV8wJOos+T/cXs8qV0a45KyYKjjHHphNR
-	 ejlC6A7c/3G9ZGM0g5x9rtRdfSUOXwvaNPvqe2cEjseVkiFdxFjJMEeYZdJBH545i+
-	 hY7QPcy7sQUOkaipwLKySn5wWBeenoGfWxQTqISc=
-Received: from eusmtip1.samsung.com (unknown [203.254.199.221]) by
-	eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-	20250627134412eucas1p153bc3e4a1c0897bca604e6864667b66d~M6jEutC8v1155611556eucas1p1O;
-	Fri, 27 Jun 2025 13:44:12 +0000 (GMT)
-Received: from [106.210.134.192] (unknown [106.210.134.192]) by
-	eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-	20250627134410eusmtip109d5d74275daabf2f21b42eb7440b88b~M6jDFXzcn2675526755eusmtip1I;
-	Fri, 27 Jun 2025 13:44:10 +0000 (GMT)
-Message-ID: <35df6f2a-0010-41fe-b490-f52693fe4778@samsung.com>
-Date: Fri, 27 Jun 2025 15:44:10 +0200
+	s=arc-20240116; t=1751032855; c=relaxed/simple;
+	bh=Y0zjR+0lq6F1z+5zhA934yp+N1Q5XifqEik1+HZfEtM=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Rg8YSBtHR/bxmOq7aHjapAZ0729Mx7LRWw4uA7vbR2iH9iadc6HpaWzWcLAttUYL6/nuBw4gPQufd90TwSpteuST4iiYOQzPaUAW5VbUr6UAI+udjBzjbLqkRcKaJ1SAMMk9uUfjtPH7go8edi/ntXuT/4AQeZVPhJIF6qRDUoM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf12.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay01.hostedemail.com (Postfix) with ESMTP id 93FB01D06DE;
+	Fri, 27 Jun 2025 14:00:49 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf12.hostedemail.com (Postfix) with ESMTPA id 57C1A19;
+	Fri, 27 Jun 2025 14:00:45 +0000 (UTC)
+Date: Fri, 27 Jun 2025 10:01:13 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Ingo Molnar <mingo@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ bpf@vger.kernel.org, x86@kernel.org, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Josh Poimboeuf <jpoimboe@kernel.org>, Peter Zijlstra
+ <peterz@infradead.org>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim
+ <namhyung@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Andrii
+ Nakryiko <andrii@kernel.org>, Indu Bhagat <indu.bhagat@oracle.com>, "Jose
+ E. Marchesi" <jemarch@gnu.org>, Beau Belgrave <beaub@linux.microsoft.com>,
+ Jens Remus <jremus@linux.ibm.com>, Linus Torvalds
+ <torvalds@linux-foundation.org>, Andrew Morton <akpm@linux-foundation.org>,
+ Jens Axboe <axboe@kernel.dk>
+Subject: Re: [PATCH v11 14/14] unwind_user/x86: Enable compat mode frame
+ pointer unwinding on x86
+Message-ID: <20250627100113.7f9ee77b@gandalf.local.home>
+In-Reply-To: <20250626081220.71ac3ab6@gandalf.local.home>
+References: <20250625225600.555017347@goodmis.org>
+	<20250625225717.187191105@goodmis.org>
+	<aF0FwYq1ECJV5Fdi@gmail.com>
+	<20250626081220.71ac3ab6@gandalf.local.home>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/8] dma-mapping: migrate to physical address-based API
-To: Leon Romanovsky <leon@kernel.org>
-Cc: Christoph Hellwig <hch@lst.de>, Jonathan Corbet <corbet@lwn.net>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>, Michael Ellerman
-	<mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>, Christophe Leroy
-	<christophe.leroy@csgroup.eu>, Robin Murphy <robin.murphy@arm.com>, Joerg
-	Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>, "Michael S.
-	Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>, Xuan Zhuo
- <xuanzhuo@linux.alibaba.com>, =?UTF-8?Q?Eugenio_P=C3=A9rez?=
- <eperezma@redhat.com>, Alexander Potapenko <glider@google.com>, Marco Elver
- <elver@google.com>, Dmitry Vyukov <dvyukov@google.com>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>, Andrew Morton
- <akpm@linux-foundation.org>, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
- iommu@lists.linux.dev, virtualization@lists.linux.dev,
- kasan-dev@googlegroups.com, linux-trace-kernel@vger.kernel.org,
- linux-mm@kvack.org, Jason Gunthorpe <jgg@ziepe.ca>
-Content-Language: en-US
-From: Marek Szyprowski <m.szyprowski@samsung.com>
-In-Reply-To: <cover.1750854543.git.leon@kernel.org>
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-CMS-MailID: 20250627134412eucas1p153bc3e4a1c0897bca604e6864667b66d
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20250625131920eucas1p271b196cde042bd39ac08fb12beff5baf
-X-EPHeader: CA
-X-CMS-RootMailID: 20250625131920eucas1p271b196cde042bd39ac08fb12beff5baf
-References: <CGME20250625131920eucas1p271b196cde042bd39ac08fb12beff5baf@eucas1p2.samsung.com>
-	<cover.1750854543.git.leon@kernel.org>
+X-Stat-Signature: hdt6wmr7gywmeefrxeczah87ep1ye9om
+X-Rspamd-Server: rspamout07
+X-Rspamd-Queue-Id: 57C1A19
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX19E746lenE+7SEV7ki2qR+MVKChNG+Z7fk=
+X-HE-Tag: 1751032845-404136
+X-HE-Meta: U2FsdGVkX1/P1YN2KwnQ0FhggpRH6yYU7kVuhVuoheh6IxatY7b07M7xU7cbGn1nBrAWOzahfJC8XSffe/AZawD//UHhhWMagG7OgkM2943jJk2ReX5jjoXhjR+fnJoZhziO6b+gWWNt+Qry0I6ikgX78Vd5rP2vq98dfI4oGLQWMkUKj2kh8NRdqhau8lYidMInfptkL+ssZpCtnNZXJWDfXrbraknillJFqRkiKHXdsHYe9xvKiS65KMpo6V33NxQkDivwbGq2cCSJUhF8+9xWOv/j8bKv8i/Veq59a28Ybgy75X+i4DB0TXpv/vkcvU/d5z7zSqHvyB6xNE9poU91DcHeBbF5nBvvKh3k4ZBDQ5tiWAKzWKE7XjFYTB3F
 
-On 25.06.2025 15:18, Leon Romanovsky wrote:
-> This series refactors the DMA mapping to use physical addresses
-> as the primary interface instead of page+offset parameters. This
-> change aligns the DMA API with the underlying hardware reality where
-> DMA operations work with physical addresses, not page structures.
->
-> The series consists of 8 patches that progressively convert the DMA
-> mapping infrastructure from page-based to physical address-based APIs:
->
-> The series maintains backward compatibility by keeping the old
-> page-based API as wrapper functions around the new physical
-> address-based implementations.
+On Thu, 26 Jun 2025 08:12:20 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-Thanks for this rework! I assume that the next step is to add map_phys 
-callback also to the dma_map_ops and teach various dma-mapping providers 
-to use it to avoid more phys-to-page-to-phys conversions.
+> 
+> 
+> >   
+> > > +/*
+> > > + * If an architecture needs to initialize the state for a specific
+> > > + * reason, for example, it may need to do something different
+> > > + * in compat mode, it can define arch_unwind_user_init to a
+> > > + * function that will perform this initialization.    
+> > 
+> > Please use 'func()' when referring to functions in comments.  
+> 
+> You mean to use "arch_unwind_user_init()"?
+> 
+> >   
+> > > +/*
+> > > + * If an architecture requires some more updates to the state between
+> > > + * stack frames, it can define arch_unwind_user_next to a function
+> > > + * that will update the state between reading stack frames during
+> > > + * the user space stack walk.    
+> > 
+> > Ditto.  
+> 
+> And this to have arch_unwind_user_next()?
 
-I only wonder if this newly introduced dma_map_phys()/dma_unmap_phys() 
-API is also suitable for the recently discussed PCI P2P DMA? While 
-adding a new API maybe we should take this into account? My main concern 
-is the lack of the source phys addr passed to the dma_unmap_phys() 
-function and I'm aware that this might complicate a bit code conversion 
-from old dma_map/unmap_page() API.
+I went to go update these than realized that the are not functions. As the
+comment says, "it can define arch_unwind_user_next", that means it has to be:
 
-Best regards
--- 
-Marek Szyprowski, PhD
-Samsung R&D Institute Poland
+  #define arch_unwind_user_next arch_unwind_user_next
 
+That's not a function. It's just setting a macro named arch_unwind_user_next to
+be arch_unwind_user_next. I think adding "()" to the end of that will be
+confusing. I could update it to say:
+
+  ... it can define a macro named arch_unwind_user_next with the name of the
+  function that will update ...
+
+Would that work?
+
+I may even change the x86 code to be:
+
+#define arch_unwind_user_next x86_unwind_user_next
+
+As the function name doesn't have to be the same as the macro.
+
+-- Steve
