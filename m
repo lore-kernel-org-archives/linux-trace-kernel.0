@@ -1,46 +1,36 @@
-Received: from relay.hostedemail.com (smtprelay0012.hostedemail.com [216.40.44.12])
+Received: from relay.hostedemail.com (smtprelay0013.hostedemail.com [216.40.44.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19A0B2F1FF0;
-	Fri, 27 Jun 2025 14:00:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEE7D2F1FD0;
+	Fri, 27 Jun 2025 14:16:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751032855; cv=none; b=orHUbUXPI3/2fM4xer9iolOaK10iyUy7OJ6nSTF5me9RkjBFD+TdLNfogLxWDm8MI6uKNg2WyLASDxyD+kETaL0V9rmbjZSXWsMCSW0zVHjQC5k/HCi8YB91JUZPTB1Nh+3esa1syOr3MwekB5P8sbycqzqDoWvbQBAGkJuvisI=
+	t=1751033770; cv=none; b=NwrmXUgJNWxxLzlJFLTrDtmr6EGohfhQc/lv0T35hdFbWj9kaDyofMBnL3AU7JUUJbsjKLfRaF5WSDTWoa22un/TWHUmOcWpsZX13HZWuIn09jPSNld7ctKIBeYOIfu7nnCUrtBKN1e1RYLwZzRRVDDVfqONBs2VLml6E6xQKPs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751032855; c=relaxed/simple;
-	bh=Y0zjR+0lq6F1z+5zhA934yp+N1Q5XifqEik1+HZfEtM=;
+	s=arc-20240116; t=1751033770; c=relaxed/simple;
+	bh=k2FLc+0Tz7FO8s4O76P4qaCM9wzLqwJ0DDO4zygQc44=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Rg8YSBtHR/bxmOq7aHjapAZ0729Mx7LRWw4uA7vbR2iH9iadc6HpaWzWcLAttUYL6/nuBw4gPQufd90TwSpteuST4iiYOQzPaUAW5VbUr6UAI+udjBzjbLqkRcKaJ1SAMMk9uUfjtPH7go8edi/ntXuT/4AQeZVPhJIF6qRDUoM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.12
+	 MIME-Version:Content-Type; b=Onu43qulf7VjwNRLSX26GQUgfOClue/o53xGeivL+GstDp8jglE4JfCCJpznHypGwPInGtstpsVVXTsICEExAwekK67x8Rch6E86aJ+gtaa+6XGEJLyX+8pCWJfm5F+jwzIUKtMkAoVHCSV3waqxar3Pw7Xlmjh9u2/gsDw4iJU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.13
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf12.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay01.hostedemail.com (Postfix) with ESMTP id 93FB01D06DE;
-	Fri, 27 Jun 2025 14:00:49 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf12.hostedemail.com (Postfix) with ESMTPA id 57C1A19;
-	Fri, 27 Jun 2025 14:00:45 +0000 (UTC)
-Date: Fri, 27 Jun 2025 10:01:13 -0400
+Received: from omf03.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay02.hostedemail.com (Postfix) with ESMTP id 489E3120FC1;
+	Fri, 27 Jun 2025 14:16:05 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf03.hostedemail.com (Postfix) with ESMTPA id 8AB4C6000C;
+	Fri, 27 Jun 2025 14:16:03 +0000 (UTC)
+Date: Fri, 27 Jun 2025 10:16:31 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
-To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- bpf@vger.kernel.org, x86@kernel.org, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Josh Poimboeuf <jpoimboe@kernel.org>, Peter Zijlstra
- <peterz@infradead.org>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim
- <namhyung@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Andrii
- Nakryiko <andrii@kernel.org>, Indu Bhagat <indu.bhagat@oracle.com>, "Jose
- E. Marchesi" <jemarch@gnu.org>, Beau Belgrave <beaub@linux.microsoft.com>,
- Jens Remus <jremus@linux.ibm.com>, Linus Torvalds
- <torvalds@linux-foundation.org>, Andrew Morton <akpm@linux-foundation.org>,
- Jens Axboe <axboe@kernel.dk>
-Subject: Re: [PATCH v11 14/14] unwind_user/x86: Enable compat mode frame
- pointer unwinding on x86
-Message-ID: <20250627100113.7f9ee77b@gandalf.local.home>
-In-Reply-To: <20250626081220.71ac3ab6@gandalf.local.home>
-References: <20250625225600.555017347@goodmis.org>
-	<20250625225717.187191105@goodmis.org>
-	<aF0FwYq1ECJV5Fdi@gmail.com>
-	<20250626081220.71ac3ab6@gandalf.local.home>
+To: Nam Cao <namcao@linutronix.de>
+Cc: Gabriele Monaco <gmonaco@redhat.com>,
+ linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
+ john.ogness@linutronix.de
+Subject: Re: [PATCH v10 00/19] RV: Linear temporal logic monitors for RT
+ application
+Message-ID: <20250627101631.59bd7ab0@gandalf.local.home>
+In-Reply-To: <20250627124248.fpuBrdWJ@linutronix.de>
+References: <cover.1749547399.git.namcao@linutronix.de>
+	<20250627124248.fpuBrdWJ@linutronix.de>
 X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -50,59 +40,23 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Stat-Signature: hdt6wmr7gywmeefrxeczah87ep1ye9om
-X-Rspamd-Server: rspamout07
-X-Rspamd-Queue-Id: 57C1A19
+X-Stat-Signature: ue6gif9a3x7tjq6nmyxm5qncfdq9zpjg
+X-Rspamd-Server: rspamout01
+X-Rspamd-Queue-Id: 8AB4C6000C
 X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX19E746lenE+7SEV7ki2qR+MVKChNG+Z7fk=
-X-HE-Tag: 1751032845-404136
-X-HE-Meta: U2FsdGVkX1/P1YN2KwnQ0FhggpRH6yYU7kVuhVuoheh6IxatY7b07M7xU7cbGn1nBrAWOzahfJC8XSffe/AZawD//UHhhWMagG7OgkM2943jJk2ReX5jjoXhjR+fnJoZhziO6b+gWWNt+Qry0I6ikgX78Vd5rP2vq98dfI4oGLQWMkUKj2kh8NRdqhau8lYidMInfptkL+ssZpCtnNZXJWDfXrbraknillJFqRkiKHXdsHYe9xvKiS65KMpo6V33NxQkDivwbGq2cCSJUhF8+9xWOv/j8bKv8i/Veq59a28Ybgy75X+i4DB0TXpv/vkcvU/d5z7zSqHvyB6xNE9poU91DcHeBbF5nBvvKh3k4ZBDQ5tiWAKzWKE7XjFYTB3F
+X-Session-ID: U2FsdGVkX19IhCPc7moF5EPHorqK1dcppX4vQe0dQnU=
+X-HE-Tag: 1751033763-947743
+X-HE-Meta: U2FsdGVkX1/8zHZi0UX/yXGYn9lWTvuruY0Mtcv1fXD3s+dTRTyPaycyvzQK0X+Jx3jWaGpXJLjnwjLEeH9mCmv9sZHPX927/0EQiT7hGMXuTj2V1OdjudYyR8xZ5z/MXFj6xZM355cKUASjYAUjaaFTGqvv15w2BtSrLiK9TJGAe7wu+JiWCnW8czLxaSQuz3CuKvsKlbXWndrtVHEujN2w38WDZLmdrBTv0ueFqY+HdCylg7/llmgsyftaKFJHX0wh0KMpL6fAYcgGd3trNJ5bx947gObZwCoNBXbXnpglJplb9iGLj8mIohULNChQRnJPMWX69Ydur99adod8Ex641KDM9JKZ2BwrpHI72vE=
 
-On Thu, 26 Jun 2025 08:12:20 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
+On Fri, 27 Jun 2025 14:42:48 +0200
+Nam Cao <namcao@linutronix.de> wrote:
 
-> 
-> 
-> >   
-> > > +/*
-> > > + * If an architecture needs to initialize the state for a specific
-> > > + * reason, for example, it may need to do something different
-> > > + * in compat mode, it can define arch_unwind_user_init to a
-> > > + * function that will perform this initialization.    
-> > 
-> > Please use 'func()' when referring to functions in comments.  
-> 
-> You mean to use "arch_unwind_user_init()"?
-> 
-> >   
-> > > +/*
-> > > + * If an architecture requires some more updates to the state between
-> > > + * stack frames, it can define arch_unwind_user_next to a function
-> > > + * that will update the state between reading stack frames during
-> > > + * the user space stack walk.    
-> > 
-> > Ditto.  
-> 
-> And this to have arch_unwind_user_next()?
+> Is there any chance this series could be applied soon? I have some more
+> patches which depend on this series, so it is holding up the show. I think
+> Gabriele needs this applied for his patches as well.
 
-I went to go update these than realized that the are not functions. As the
-comment says, "it can define arch_unwind_user_next", that means it has to be:
+I'll try to take a look at these today.
 
-  #define arch_unwind_user_next arch_unwind_user_next
-
-That's not a function. It's just setting a macro named arch_unwind_user_next to
-be arch_unwind_user_next. I think adding "()" to the end of that will be
-confusing. I could update it to say:
-
-  ... it can define a macro named arch_unwind_user_next with the name of the
-  function that will update ...
-
-Would that work?
-
-I may even change the x86 code to be:
-
-#define arch_unwind_user_next x86_unwind_user_next
-
-As the function name doesn't have to be the same as the macro.
+Thanks,
 
 -- Steve
