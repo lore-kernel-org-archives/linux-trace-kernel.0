@@ -1,166 +1,132 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B45281A2387;
-	Fri, 27 Jun 2025 16:19:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E37CD2EA755
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 27 Jun 2025 16:23:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751041181; cv=none; b=o8F3JZZlflWE3yWil9cSR+8OBtWpSu/IjR/LbL+o27kcymtczX5XOfSdvhxtL0nosCcagytOzZ4h1FOXbgJT6RkwH7DDpxQIB7Ifgra+lLfeG1CKnOyfiMsAqrMBKre7H6Vibpwh1aKoDACbnpvA+qF1bvg/iWJBJV6tQpy0VDo=
+	t=1751041421; cv=none; b=eXLtAi6fqMhrazSWVO/1OcpdxCGuqK1yeXmcBti8MsSTVtzcbH+LtDCHe+353eXXHBfFLfh5vR/0xrWtmSAXjOfClyh16ztR4v/IKJmx13SWV+/gabujpbECRLmKbRz0/3Gntbq9i8nkR5IsCDkLfx42LIMbohyW1bWkvstrMwc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751041181; c=relaxed/simple;
-	bh=dojDUaknWsQhUppWGBTY+TtDVjglusnc/IomcJ2SaIQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=iQ1iPh4Cd5HGxuY0ypL64b9vXMb3ucjK3sMTY2SfYUE1RnTs+NUggDIUQOm2mWv6gUeWjcONVq1wGDjTZws8K04+Z2RC1zgnEqyQbqV1BKJ3b0hpPUOv6//1pdjuvZCONEn7VK2++WtnXfi27I+nEq1Zqj+H8r8aVPGZIfHFKLY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=BJFZkKBC; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1751041421; c=relaxed/simple;
+	bh=1Z5FIvgVxVgOK1v1qVEDoeCNDa+RgVIxtitLI+LQd5g=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=nIe8Fdhqob9rQVQvTR/6RTPV9dSA6//4Nr27dzgee+hRUifMdHF0t4yrSYlZfEAJ2oEEu0D0jBRCL3AZAWC2quA9Gb8kOczK63EIrHs2Md6DS3u9UDleD05OAXoWKerRrjbdZZqGepDymYEoBvLqPA6xUayz37jHCnqeEUyFeuc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=BpdccJoS; arc=none smtp.client-ip=209.85.218.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="BJFZkKBC"
-Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55R8JAGo015779;
-	Fri, 27 Jun 2025 16:19:11 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=AUUGAs
-	jTPjmQje0zk6ojyUek1SCo7u8kOCyALn0F/Qw=; b=BJFZkKBCRZPUNFOUJOnQTk
-	NgIXC236oayhZRazl7BsxP6YfeXqMvcMRb825QsVgk6Uekkdy/58yOHB6dtNdcxY
-	Jxk3O9qwbYGHhJvwDkC/H0iTUiMQj5HbsH+8KRUVbAx/LZvC0HjfGNaH5LJFyRb5
-	jrE7cE3+XrJZ0c0IEvTMG7exDdyt0Gp8qCjh8WtmrAlf6WxoErflk4VSAFMb8/SJ
-	xklccYaoBZhSkN8W7EteIPQcomXYVl7uUnmj7F/67iI9LWhv9E9s7k1Lmm/1J9nN
-	puS3Fsaa0ViDFZgjLS0PfnEzU7MG5WFQ2hiTxc5Yy1LZjPD+O5TOduQKccoFhquA
-	==
-Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 47dm8jxmyy-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 27 Jun 2025 16:19:11 +0000 (GMT)
-Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 55RCb3AG006414;
-	Fri, 27 Jun 2025 16:19:09 GMT
-Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
-	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 47e82pn06r-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 27 Jun 2025 16:19:09 +0000
-Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
-	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 55RGJ7E342992004
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 27 Jun 2025 16:19:07 GMT
-Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 8AA5A20040;
-	Fri, 27 Jun 2025 16:19:07 +0000 (GMT)
-Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 9FB992004B;
-	Fri, 27 Jun 2025 16:19:06 +0000 (GMT)
-Received: from [9.111.156.254] (unknown [9.111.156.254])
-	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Fri, 27 Jun 2025 16:19:06 +0000 (GMT)
-Message-ID: <75c074f7-ed3c-4302-a962-b62b6ff644f5@linux.ibm.com>
-Date: Fri, 27 Jun 2025 18:19:05 +0200
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="BpdccJoS"
+Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-ae0de1c378fso261142666b.3
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 27 Jun 2025 09:23:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google; t=1751041414; x=1751646214; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=XIBFa7vtiai1aZdrnHbI17B2HX5VyBn+7Wdc06Hzja4=;
+        b=BpdccJoSfVTXxnRZuEtMgszt5iyr96sN1K1cZ2sawnRjZBm7MdUx3g1W45nA2aZTsl
+         bgm3qdkMwTdjm77B8uD0T68pcBRHDFdTR/GAWlWQvU4zMubrwhaSA1f20p7cEkNq79q2
+         KWviHfQMSwqPjXhnzxzLL8gyUACb/QR5VxS/0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751041414; x=1751646214;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=XIBFa7vtiai1aZdrnHbI17B2HX5VyBn+7Wdc06Hzja4=;
+        b=bME8KOMOEwsGz8ETBJdjrOClfhRWC457jEeKjj2RZ6K6PJwXMiGR2i5Sj0+6qQf+DQ
+         FvCIFimIYWJMaIEo3PgtjaudPIapEvb6kqdixBhMalZefDJJ0XzSuebBD42wF+RT+HLq
+         EqjgxHAl09PvmLJQGMdlS2HkHEh0J6TVQh4Ro7QjeY5qQ3beUcG3IjDOuUalEIbXq21y
+         Z96b7h//WMYAPuZPU6fT0fpGHbexuVk3zVJrqza+47RkK7G71e0Mp+XeMqmWUXK5e1v1
+         hHAKfCcQYiL5ePXPiPOhkQfcDi9leCd6nRlde9eV7Q4kyWrGJwlhvvjqCEgz4zohWB/d
+         gyZg==
+X-Forwarded-Encrypted: i=1; AJvYcCWtI/3YV1qYKjY5l5y2YgetoOqzTgNUQh2Rhi3dyUCYssb/DgKxfquJcdSYh+U5/7XtcIAU+KSZT+I93KBfZZOHjr0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyfxgZThxeaZ2S8XeCS+tscpUzBMEAZNR6SxLZ1dmTyzu7CQ9de
+	gyO2jJFTzQclCD9Z0bfhGCFAfyabY65MSFFB+m+CgGBxIF2034l311HMRVtlGxzhLlF3FDaM/uf
+	O1b/OZ4s=
+X-Gm-Gg: ASbGncuwiEkESlGCugWmfNFXS84lior8FGR2Mzk6dmv93lUa5d5yeTy3GtAJt91GaY7
+	E7xIJn4YDlGaS/dxn6Yp3y69xuI22zow51gdJfTBKQgVR8Ox93LzsRGk82xDN8l3lLUGLNY4SdV
+	IyDa7EtXwnU1e4OuNPGcpiX8tlWuylF4I0Zfc4YS7W+wIb1wOvsNW9zBV3bqXB0N8BPRdVF651a
+	J2qrjCGOuu226DUbqtreGLbSU5+PWuopuvqc87h1wSO2tx9YmBQ8Mh5rI4K7VIVFcyEzgcyj9ws
+	V9BH9BnbOsDqWk+4Z0C0TpnCoc7sFp9fAE+A7AfhfcuJXTy9YnAIhgwYfdyHR9EvM4JEUFg9U6b
+	agNzgrz2+Zve/w8bWC7Eq2v8xYFzAmBb1uB4kD7aXzCvbmhw=
+X-Google-Smtp-Source: AGHT+IHuzi41VFW2fKmF77e9yVaPL1YLKq5ySxS0iI4GQhtLng6F3ChhjjUdrIcVk2IdYSf4X3IzNA==
+X-Received: by 2002:a17:907:fdca:b0:ae3:6744:3675 with SMTP id a640c23a62f3a-ae367443a67mr86532166b.48.1751041413815;
+        Fri, 27 Jun 2025 09:23:33 -0700 (PDT)
+Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com. [209.85.208.54])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-60c828e1a96sm1682652a12.19.2025.06.27.09.23.31
+        for <linux-trace-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 27 Jun 2025 09:23:32 -0700 (PDT)
+Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-60c79bedc19so4784a12.3
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 27 Jun 2025 09:23:31 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCXi/RDgNfE0vdz9HsHXEp9mQXw3P91i/akpEW2O7X0tFKJAYstmYVS2e2pgYS0It5karknxX3b9GCMA6iqT8NUc7UU=@vger.kernel.org
+X-Received: by 2002:a05:6402:34c6:b0:5ff:ef06:1c52 with SMTP id
+ 4fb4d7f45d1cf-60c88d65540mr3554120a12.3.1751041411199; Fri, 27 Jun 2025
+ 09:23:31 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 07/12] unwind_user/sframe: Wire up unwind_user to
- sframe
-To: Steven Rostedt <rostedt@goodmis.org>, linux-kernel@vger.kernel.org,
-        linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org,
-        x86@kernel.org
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Josh Poimboeuf <jpoimboe@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Indu Bhagat <indu.bhagat@oracle.com>,
-        "Jose E. Marchesi" <jemarch@gnu.org>,
-        Beau Belgrave <beaub@linux.microsoft.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-References: <20250617225009.233007152@goodmis.org>
- <20250617225118.194027083@goodmis.org>
-Content-Language: en-US
-From: Jens Remus <jremus@linux.ibm.com>
-Organization: IBM Deutschland Research & Development GmbH
-In-Reply-To: <20250617225118.194027083@goodmis.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjI3MDEzMiBTYWx0ZWRfX5EOajJCM7rtq tJX1uS3QJ5qywbpBYkqH7VjetMeliH2CFgCFjf/+QkYQzXnoyw8XxjBnCsxfRI/DApJe8o/SVA9 HDxP+jVWMnsmHicIzJoRmcaBqor8aYFZR34Ke7pDrIt19JyZ3rMH0fG9KbHjiGFp+0Gj9LXwjZn
- 9LNeAMqCSZi5SMo9RG75MIEDwNBw3OyFMaAWkpi3N+ZcNTypyPCyVSa3I/QCETXtnobAhU7zIbm Wk63pvU4qUMqzXnl4UikOoGHflSbdiutp1YAyZ7pr/KxQdbaHN91Ro4T1aiaBPija1nXCguXGGc u5yvMhD2ZZRy9oQj9Ww/y+JvfDbfWesNqFu5HV3Azg64BzXphCgJiaU4pBvCozjX7J/ZAFs+k+I
- 4W7a2cc5riB9p13Dvl/TMnzGFksjfFdpslZr4c810GYtCTQZOHCW3dy7UDzTrN5gPl/cLv3f
-X-Proofpoint-GUID: 5jdiw-_Y8CleflV2OaRKTJR6UdrRSA12
-X-Proofpoint-ORIG-GUID: 5jdiw-_Y8CleflV2OaRKTJR6UdrRSA12
-X-Authority-Analysis: v=2.4 cv=combk04i c=1 sm=1 tr=0 ts=685ec47f cx=c_pps a=GFwsV6G8L6GxiO2Y/PsHdQ==:117 a=GFwsV6G8L6GxiO2Y/PsHdQ==:17 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=VnNF1IyMAAAA:8 a=VwQbUJbxAAAA:8 a=meVymXHHAAAA:8 a=mmEVG2U_Ztk9iETfGqQA:9
- a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10 a=2JgSa4NbpEOStq-L5dxp:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
- definitions=2025-06-27_05,2025-06-26_05,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 spamscore=0 adultscore=0 mlxlogscore=999 clxscore=1011
- impostorscore=0 suspectscore=0 mlxscore=0 phishscore=0 lowpriorityscore=0
- bulkscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
- adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2506270132
+References: <20250625225600.555017347@goodmis.org> <20250625225717.187191105@goodmis.org>
+ <aF0FwYq1ECJV5Fdi@gmail.com> <20250626081220.71ac3ab6@gandalf.local.home> <20250627100113.7f9ee77b@gandalf.local.home>
+In-Reply-To: <20250627100113.7f9ee77b@gandalf.local.home>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Fri, 27 Jun 2025 09:23:14 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wiXsMA3OJ0tnSWFDwqH=H8OAsUwF2hqCuQ6uHaLmpQubg@mail.gmail.com>
+X-Gm-Features: Ac12FXwXn1CGZ5TDseyf0yMPbEJKzZlOp6kLfp771zfoaf5rHgLNIhEIXduSSPA
+Message-ID: <CAHk-=wiXsMA3OJ0tnSWFDwqH=H8OAsUwF2hqCuQ6uHaLmpQubg@mail.gmail.com>
+Subject: Re: [PATCH v11 14/14] unwind_user/x86: Enable compat mode frame
+ pointer unwinding on x86
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Ingo Molnar <mingo@kernel.org>, linux-kernel@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org, x86@kernel.org, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	Josh Poimboeuf <jpoimboe@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Jiri Olsa <jolsa@kernel.org>, 
+	Namhyung Kim <namhyung@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, 
+	Andrii Nakryiko <andrii@kernel.org>, Indu Bhagat <indu.bhagat@oracle.com>, 
+	"Jose E. Marchesi" <jemarch@gnu.org>, Beau Belgrave <beaub@linux.microsoft.com>, 
+	Jens Remus <jremus@linux.ibm.com>, Andrew Morton <akpm@linux-foundation.org>, 
+	Jens Axboe <axboe@kernel.dk>
+Content-Type: text/plain; charset="UTF-8"
 
-On 18.06.2025 00:50, Steven Rostedt wrote:
-> From: Josh Poimboeuf <jpoimboe@kernel.org>
-> 
-> Now that the sframe infrastructure is fully in place, make it work by
-> hooking it up to the unwind_user interface.
-> 
-> Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
-> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+On Fri, 27 Jun 2025 at 07:01, Steven Rostedt <rostedt@goodmis.org> wrote:
+>
+> That's not a function. It's just setting a macro named arch_unwind_user_next to
+> be arch_unwind_user_next. I think adding "()" to the end of that will be
+> confusing.
 
-> diff --git a/kernel/unwind/user.c b/kernel/unwind/user.c
+Yeah, we use the pattern
 
-> @@ -41,17 +48,27 @@ static inline bool compat_state(struct unwind_user_state *state)
->  int unwind_user_next(struct unwind_user_state *state)
->  {
->  	struct unwind_user_frame *frame;
-> +	struct unwind_user_frame _frame;
->  	unsigned long cfa = 0, fp, ra = 0;
->  
->  	if (state->done)
->  		return -EINVAL;
->  
-> -	if (compat_state(state))
-> +	if (compat_state(state)) {
->  		frame = &compat_fp_frame;
-> -	else if (fp_state(state))
-> +	} else if (sframe_state(state)) {
-> +		/* sframe expects the frame to be local storage */
-> +		frame = &_frame;
-> +		if (sframe_find(state->ip, frame)) {
-> +			if (!IS_ENABLED(CONFIG_HAVE_UNWIND_USER_FP))
-> +				goto the_end;
+   #define abc abc
 
-Nit: s/the_end/done/
+just to show "I have my own architecture-specific implementation for
+this" without having to make up a *new* name for it.
 
-> +			frame = &fp_frame;
-> +		}
-> +	} else if (fp_state(state)) {
->  		frame = &fp_frame;
-> -	else
-> +	} else {
->  		goto the_end;
-> +	}
->  
->  	cfa = (frame->use_fp ? state->fp : state->sp) + frame->cfa_off;
->  
+[ We used to have things like "#define __arch_has_abc" instead, which
+is just annoying particularly when people didn't even always agree on
+the exact prefix. We still do, but we used to too. These days that
+"this arch has" pattern is _mostly_ confined to config variables, I
+think. ]
 
-Regards,
-Jens
--- 
-Jens Remus
-Linux on Z Development (D3303)
-+49-7031-16-1128 Office
-jremus@de.ibm.com
+Adding parenthesis not only makes that much more complicated - now you
+need to match argument numbers etc - but can actually end up causing
+real issues where you now can't use that 'abc' as a function pointer
+any more.
 
-IBM
+That said, parenthesis can also actually help catch mis-uses (ie maybe
+you *cannot* use the function as a function pointer, exactly because
+some architectures _only_ implement it as a macro), so it's not like
+parentheses are necessarily always wrong, but in general, I think that
 
-IBM Deutschland Research & Development GmbH; Vorsitzender des Aufsichtsrats: Wolfgang Wendt; Geschäftsführung: David Faller; Sitz der Gesellschaft: Böblingen; Registergericht: Amtsgericht Stuttgart, HRB 243294
-IBM Data Privacy Statement: https://www.ibm.com/privacy/
+  #define abc abc
 
+pattern is the simplest and best way for an architecture header file
+to say "I have an implementation for this".
+
+And obviously the reason we have to use macros for this is because C
+doesn't have a way to test for symbols existing. Other languages do
+have things like that (various levels of "reflection"), but in C
+you're basically limited to the pre-processor.
+
+             Linus
