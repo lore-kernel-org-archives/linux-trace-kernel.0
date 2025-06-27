@@ -1,132 +1,241 @@
-Received: from out-173.mta1.migadu.com (out-173.mta1.migadu.com [95.215.58.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 492D5241667
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 27 Jun 2025 08:23:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC45C2676D9;
+	Fri, 27 Jun 2025 12:39:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751012637; cv=none; b=GlmZ7tCBW5b/eIeUOHhvMrvSIUm7yhrf4FEl7Jty8PbfJ2JJp7m0/OvS/E7B7InWdhTdVS2mnizsbToLC9DMlCwOZt9bdAnrZBgEH8xtWa1KnrMD0e58eL0NrZPrRsUd4ZE4nIAeRF2rALouYEzNDrazPd3Fg33NOcUladCi7fY=
+	t=1751027963; cv=none; b=KnmdLttc19iFycxZ3l0O7tBLyaxEn58K4tFIiaDVSZfdMHHHg6+qUzVC3B42b00nKMx2otjxGW8LXkPX6DIF5t9JipGnTpKOQPUOunI5s3fmBN0/XQGgIdUD2MrUX6CtsZAnKeVsPWtSdEx2WY3qeT4V5jOdCJgEUtwxqm071RU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751012637; c=relaxed/simple;
-	bh=PKYIMuGy8OCleB8erimjBnJLkk6HD6Z5JWNdDkqlbYU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=oYf/n4No+1QKcQzjWXlom3E1v3eDDAI02Ri3vcPZJqmSxxF6Mw3mKqoS3BD+RctDl2ZQjRlwW3+f8nRMiKsxwNO/XOrfMG2FU0mMLXP+WaxTAamJXoBtOQ7v8jWMeNzUjiAR+aHa6r7w5XTBS/cG6m5Llhw0STZPajmmeCWZED4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=RmitdeHs; arc=none smtp.client-ip=95.215.58.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1751027963; c=relaxed/simple;
+	bh=q+W9clFXyqixdZYt2TKB/ms9dW6S3Soe+H6EaggnXfw=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FfG9W0VIwZKncc3ZlzT+PyYRpj9lUYv70iK9pq77n9DvH54WtnihasP/OuQsTgaxCXNUfpFn7yaCOpKNV6ZyCqqmmeoCepp9Nz/NaR6mJQsoBD30NXEuWKNXiZSjGY+4aeuTtYuMyo9tx9OqbMi9GJyxaaY1cPtq47I524aItDI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=c+XLj1Fs; arc=none smtp.client-ip=209.85.218.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="RmitdeHs"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1751012632;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=lMO1Z8SAg4HfgLswH5zPQRLzwrlmtOR8BlKrCJRhPV0=;
-	b=RmitdeHswGkbGrd8XZ1vRSucn/p9fnrPVLD0sTFs0/B8jjWKtZfyU8FqNsiPcGn+l9d8x/
-	h0z+8j6yau3w10eYPDW9X4ZIZ8EuFpoE/lsDKa9sRtto/gmseozfal24XGX5ADkRA8PrJv
-	37qG846HGEildZA71QMO6WG+QzXBkOE=
-From: Tao Chen <chen.dylane@linux.dev>
-To: ast@kernel.org,
-	daniel@iogearbox.net,
-	john.fastabend@gmail.com,
-	andrii@kernel.org,
-	martin.lau@linux.dev,
-	eddyz87@gmail.com,
-	song@kernel.org,
-	yonghong.song@linux.dev,
-	kpsingh@kernel.org,
-	sdf@fomichev.me,
-	haoluo@google.com,
-	jolsa@kernel.org,
-	mattbobrowski@google.com,
-	rostedt@goodmis.org,
-	mhiramat@kernel.org,
-	mathieu.desnoyers@efficios.com
-Cc: bpf@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	Tao Chen <chen.dylane@linux.dev>
-Subject: [PATCH bpf-next v6 3/3] bpf: Add show_fdinfo for kprobe_multi
-Date: Fri, 27 Jun 2025 16:22:52 +0800
-Message-ID: <20250627082252.431209-3-chen.dylane@linux.dev>
-In-Reply-To: <20250627082252.431209-1-chen.dylane@linux.dev>
-References: <20250627082252.431209-1-chen.dylane@linux.dev>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c+XLj1Fs"
+Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-ae35f36da9dso92894566b.0;
+        Fri, 27 Jun 2025 05:39:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751027960; x=1751632760; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=a3IxdIJGANIbuM0EwIBljBl1VLujBY16tfZJpkoeXXk=;
+        b=c+XLj1Fs/P3QwX9MH/dOYr9j1T5vbAOfZx1nZ3oGJpR41GD827DXCPxVZ41ZffYGXf
+         kVYPCXyfyELnZe8Z7o2amsjp4Vw9liP79UVYutBU9p0tJaT0ysgIUs83SQya0SneCu1t
+         H+33xHPzQbamSsUzwNaj7gPSiUBCuSiqmmHIKpcGcZXsmIusqxtpG+XdgnUJ+XfrG7nI
+         8FUnznmZJ77yObXzzC53ZMriUb2aiLESlLEqImGsrPP9HsfgKmIeLcYhTGbpn4le8ucZ
+         pT8XYOX8lWr8e7MmrxnPugPeg/MoRy0++ZwtRMIb2cWtG2II7tEFloKrt3M5z8Q+/8ck
+         gHIQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751027960; x=1751632760;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=a3IxdIJGANIbuM0EwIBljBl1VLujBY16tfZJpkoeXXk=;
+        b=EfLexMmAQ1B3LIkLL21MtJHbcQRsaKh8iQk6s1KG8S/5vdiWCRiucvV6V0zuHlzds1
+         82DunL+KZrJ9csNSXfyYzUs8FeufXO2D0BjcK55anPVqWcUR2gJmSfU8BqzYEuNduJW4
+         qiAmfZytu4EKKrGAbgwbDq9anx9a/Lk40nQPEy5JV8UJN7QcQhY/yiycJNrkvmDqOz67
+         Ij4j6LV7d7i8sQFm3Gsl9Atd/QvByxQM7/xHgNir2Oivky9AORIFTrcE96Z4inWLFHiI
+         d3+cyQZe8A0wz5d+UWwv0FLpdOS5jCRFuBaGs3nqQfS9ZFlM+zlPvffo8J73BIbrECOO
+         TlCA==
+X-Forwarded-Encrypted: i=1; AJvYcCUZU63IvQVVuOrF7n/4HgYKWSgLv8R1Gi9dRgBw5iE97ab+5zL1fqxjBO3QaGeqTeVIDX5CGcrKoYkPCb0g@vger.kernel.org, AJvYcCWMyMTs8WBYkYwdBRCOJdIcMUYemR6TLzGOUHJcCvJ/gA8zdn56v6y+6Ba2HS7Pfs/HP2TQYZFNp8jigrr9jxLQ0Hvu@vger.kernel.org, AJvYcCXVjwV3gWDNwp94XBIxkdCLpv/KOURiJOsOuMQZreoOLPs0HHg3nYZHqeuXSb1iWznMTRM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwO1O3Bq5P1F7dw9hay5bsNkXmXzvr8YV6O0VAb8mw0W0STxe3Q
+	aauSjgI3B/xmZCTTeCA1gVe8as9Ae3PU2Q1Fp0SAZgOGd1Q8vVNrvLF8
+X-Gm-Gg: ASbGncsMz5kitBjegtkEuZhgMSqsipNcK+13tm/UgHAh1PyXKpiguwCWt71H9k5LBDE
+	KZGa43+3NRrOEydxOYEWq+8hUWurlcZ4v2qDig6U600cEtrWuoK8nRx6lnqtiFDwAzZE0fvzxT/
+	GP0M5ZoxJrjHL4I3HVL7Jk5tVYtTfX6UtXN9t3bCnCYpjCDHWI1p6sRpDipV7aYBOgDpx+qGeav
+	1A/kAzzekw3i2sDXgNr3TAaapBBjoOCt55i8przV/ykyeyD6GdewpoOP5kbf752lqbkreduW6sf
+	XfybDUIaZ/n7s/HHwlzF6assqN8oY2zj9pOjTfl3hLxrbop+ww==
+X-Google-Smtp-Source: AGHT+IHsUZwSKf4TCEtGmaNkzr1qxFlEhEznA0V4fLhYIVRCyABvF+HRyhv/Eswv2pgIOA9WIQQi5A==
+X-Received: by 2002:a17:907:948e:b0:ae3:5e70:32fc with SMTP id a640c23a62f3a-ae35e70374cmr189812066b.29.1751027959614;
+        Fri, 27 Jun 2025 05:39:19 -0700 (PDT)
+Received: from krava ([176.74.159.170])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae353ca2bdasm118832466b.171.2025.06.27.05.39.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 27 Jun 2025 05:39:19 -0700 (PDT)
+From: Jiri Olsa <olsajiri@gmail.com>
+X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
+Date: Fri, 27 Jun 2025 14:39:16 +0200
+To: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Jiri Olsa <olsajiri@gmail.com>, Oleg Nesterov <oleg@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	x86@kernel.org, Song Liu <songliubraving@fb.com>,
+	Yonghong Song <yhs@fb.com>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Hao Luo <haoluo@google.com>, Steven Rostedt <rostedt@goodmis.org>,
+	Alan Maguire <alan.maguire@oracle.com>,
+	David Laight <David.Laight@aculab.com>,
+	Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas@t-8ch.de>,
+	Ingo Molnar <mingo@kernel.org>
+Subject: Re: [PATCHv3 perf/core 08/22] uprobes/x86: Add mapping for optimized
+ uprobe trampolines
+Message-ID: <aF6Q9NgCJx5p0MNJ@krava>
+References: <20250605132350.1488129-1-jolsa@kernel.org>
+ <20250605132350.1488129-9-jolsa@kernel.org>
+ <20250625172122.ad1e955ae2bc3957d9fb8546@kernel.org>
+ <aFwS2EENyOFh7IbY@krava>
+ <20250627150145.15cdec0f4991a99f997a8168@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250627150145.15cdec0f4991a99f997a8168@kernel.org>
 
-Show kprobe_multi link info with fdinfo, the info as follows:
+On Fri, Jun 27, 2025 at 03:01:45PM +0900, Masami Hiramatsu wrote:
 
-link_type:	kprobe_multi
-link_id:	1
-prog_tag:	33be53a4fd673e1d
-prog_id:	21
-kprobe_cnt:	8
-missed:	0
-cookie           func
-1                bpf_fentry_test1+0x0/0x20
-7                bpf_fentry_test2+0x0/0x20
-2                bpf_fentry_test3+0x0/0x20
-3                bpf_fentry_test4+0x0/0x20
-4                bpf_fentry_test5+0x0/0x20
-5                bpf_fentry_test6+0x0/0x20
-6                bpf_fentry_test7+0x0/0x20
-8                bpf_fentry_test8+0x0/0x10
+SNIP
 
-Signed-off-by: Tao Chen <chen.dylane@linux.dev>
----
- kernel/trace/bpf_trace.c | 27 +++++++++++++++++++++++++++
- 1 file changed, 27 insertions(+)
+> > > 
+> > > > +			return tramp;
+> > > > +	}
+> > > > +
+> > > > +	tramp = create_uprobe_trampoline(vaddr);
+> > > > +	if (!tramp)
+> > > > +		return NULL;
+> > > > +
+> > > > +	*new = true;
+> > > > +	hlist_add_head(&tramp->node, &state->head_tramps);
+> > > > +	return tramp;
+> > > > +}
+> > > > +
+> > > > +static void destroy_uprobe_trampoline(struct uprobe_trampoline *tramp)
+> > > > +{
+> > > > +	hlist_del(&tramp->node);
+> > > > +	kfree(tramp);
+> > > 
+> > > Don't we need to unmap the tramp->vaddr?
+> > 
+> > that's tricky because we have no way to make sure the application is
+> > no longer executing the trampoline, it's described in the changelog
+> > of following patch:
+> > 
+> >     uprobes/x86: Add support to optimize uprobes
+> > 
+> >     ...
+> > 
+> >     We do not unmap and release uprobe trampoline when it's no longer needed,
+> >     because there's no easy way to make sure none of the threads is still
+> >     inside the trampoline. But we do not waste memory, because there's just
+> >     single page for all the uprobe trampoline mappings.
+> > 
+> 
+> I think we should put this as a code comment.
 
-diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
-index 1c75f9c6c66..e8f070504c4 100644
---- a/kernel/trace/bpf_trace.c
-+++ b/kernel/trace/bpf_trace.c
-@@ -2622,10 +2622,37 @@ static int bpf_kprobe_multi_link_fill_link_info(const struct bpf_link *link,
- 	return err;
- }
- 
-+#ifdef CONFIG_PROC_FS
-+static void bpf_kprobe_multi_show_fdinfo(const struct bpf_link *link,
-+					 struct seq_file *seq)
-+{
-+	struct bpf_kprobe_multi_link *kmulti_link;
-+
-+	kmulti_link = container_of(link, struct bpf_kprobe_multi_link, link);
-+
-+	seq_printf(seq,
-+		   "kprobe_cnt:\t%u\n"
-+		   "missed:\t%lu\n",
-+		   kmulti_link->cnt,
-+		   kmulti_link->fp.nmissed);
-+
-+	seq_printf(seq, "%-16s %-16s\n", "cookie", "func");
-+	for (int i = 0; i < kmulti_link->cnt; i++) {
-+		seq_printf(seq,
-+			   "%-16llu %-16pS\n",
-+			   kmulti_link->cookies[i],
-+			   (void *)kmulti_link->addrs[i]);
-+	}
-+}
-+#endif
-+
- static const struct bpf_link_ops bpf_kprobe_multi_link_lops = {
- 	.release = bpf_kprobe_multi_link_release,
- 	.dealloc_deferred = bpf_kprobe_multi_link_dealloc,
- 	.fill_link_info = bpf_kprobe_multi_link_fill_link_info,
-+#ifdef CONFIG_PROC_FS
-+	.show_fdinfo = bpf_kprobe_multi_show_fdinfo,
-+#endif
- };
- 
- static void bpf_kprobe_multi_cookie_swap(void *a, void *b, int size, const void *priv)
--- 
-2.48.1
+ok
 
+> 
+> >     We do waste frame on page mapping for every 4GB by keeping the uprobe
+> >     trampoline page mapped, but that seems ok.
+> 
+> Hmm, this is not right with the current find_nearest_page(), because
+> it always finds a page from the farthest +2GB range until it is full.
+> Thus, in the worst case, if we hits uprobes with the order of
+> uprobe0 -> 1 -> 2 which is put as below;
+> 
+> 0x0abc0004  [uprobe2]
+> ...
+> 0x0abc2004  [uprobe1]
+> ...
+> 0x0abc4004  [uprobe0]
+> 
+> Then the trampoline pages can be allocated as below.
+> 
+> 0x8abc0000  [uprobe_tramp2]
+> [gap]
+> 0x8abc2000  [uprobe_tramp1]
+> [gap]
+> 0x8abc4000  [uprobe_tramp0]
+> 
+> Using true "find_nearest_page()", this will be mitigated. But not
+> allocated for "every 4GB". So I think we should drop that part
+> from the comment :)
+
+I think you're right, it's better to start with nearest page,
+will change it in new version
+
+SNIP
+
+> > > > diff --git a/include/linux/uprobes.h b/include/linux/uprobes.h
+> > > > index 5080619560d4..b40d33aae016 100644
+> > > > --- a/include/linux/uprobes.h
+> > > > +++ b/include/linux/uprobes.h
+> > > > @@ -17,6 +17,7 @@
+> > > >  #include <linux/wait.h>
+> > > >  #include <linux/timer.h>
+> > > >  #include <linux/seqlock.h>
+> > > > +#include <linux/mutex.h>
+> > > >  
+> > > >  struct uprobe;
+> > > >  struct vm_area_struct;
+> > > > @@ -185,6 +186,9 @@ struct xol_area;
+> > > >  
+> > > >  struct uprobes_state {
+> > > >  	struct xol_area		*xol_area;
+> > > > +#ifdef CONFIG_X86_64
+> > > 
+> > > Maybe we can introduce struct arch_uprobe_state{} here?
+> > 
+> > ok, on top of that Andrii also asked for [1]:
+> >   - alloc 'struct uprobes_state' for mm_struct only when needed
+> > 
+> > this could be part of that follow up? I'd rather not complicate this
+> > patchset any further
+> > 
+> > [1] https://lore.kernel.org/bpf/CAEf4BzY2zKPM9JHgn_wa8yCr8q5KntE5w8g=AoT2MnrD2Dx6gA@mail.gmail.com/
+> 
+> Hmm, OK. But if you need to avoid #ifdef CONFIG_<arch>,
+> you can use include/asm-generic to override macros.
+> 
+> struct uprobes_state {
+>  struct xol_area *xol_area;
+>  uprobe_arch_specific_data
+> };
+> 
+> 
+>  --- include/asm-generic/uprobes.h
+> 
+> #define uprobe_arch_specific_data
+> 
+>  --- arch/x86/include/asm/uprobes.h
+> 
+> #undef uprobe_arch_specific_data
+> #define uprobe_arch_specific_data \
+> 	struct hlist_head	head_tramps;
+
+ok
+
+SNIP
+
+> > > > diff --git a/kernel/fork.c b/kernel/fork.c
+> > > > index 1ee8eb11f38b..7108ca558518 100644
+> > > > --- a/kernel/fork.c
+> > > > +++ b/kernel/fork.c
+> > > > @@ -1010,6 +1010,7 @@ static void mm_init_uprobes_state(struct mm_struct *mm)
+> > > >  {
+> > > >  #ifdef CONFIG_UPROBES
+> > > >  	mm->uprobes_state.xol_area = NULL;
+> > > > +	arch_uprobe_init_state(mm);
+> > > >  #endif
+> > > 
+> > > Can't we make this uprobe_init_state(mm)?
+> > 
+> > hum, there are other mm_init_* functions around, I guess we should keep
+> > the same pattern?
+> > 
+> > unless you mean s/arch_uprobe_init_state/uprobe_init_state/ but that's
+> > arch code.. so probably not sure what you mean ;-)
+> 
+> Ah, I misunderstood. Yeah, this part is good to me.
+
+ok, thanks
+
+jirka
