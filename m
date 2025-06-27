@@ -1,132 +1,155 @@
-Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
+Received: from mail-qv1-f44.google.com (mail-qv1-f44.google.com [209.85.219.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E37CD2EA755
-	for <linux-trace-kernel@vger.kernel.org>; Fri, 27 Jun 2025 16:23:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 880852EB5BE
+	for <linux-trace-kernel@vger.kernel.org>; Fri, 27 Jun 2025 16:28:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751041421; cv=none; b=eXLtAi6fqMhrazSWVO/1OcpdxCGuqK1yeXmcBti8MsSTVtzcbH+LtDCHe+353eXXHBfFLfh5vR/0xrWtmSAXjOfClyh16ztR4v/IKJmx13SWV+/gabujpbECRLmKbRz0/3Gntbq9i8nkR5IsCDkLfx42LIMbohyW1bWkvstrMwc=
+	t=1751041734; cv=none; b=Mwpkv1/mv5eL5w+Pyzkeg6T4HImfLZ1Lh/rOyioP09LPc/Gsrtk302iLw0PP3F1lXsZEQ/wJyakMu/adQ1v1HY9At8XOU888nRH0N1QWdNN2cxOhMtm5wTChKyIHrm4T+YoRYwNQoH1iWEkwt+2NHnRa+DjHStw39pTvucXhZeA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751041421; c=relaxed/simple;
-	bh=1Z5FIvgVxVgOK1v1qVEDoeCNDa+RgVIxtitLI+LQd5g=;
+	s=arc-20240116; t=1751041734; c=relaxed/simple;
+	bh=ckwNK5l6kNEQi0dMFT1BhLSPph3IS47PHdxbRsKbg2c=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=nIe8Fdhqob9rQVQvTR/6RTPV9dSA6//4Nr27dzgee+hRUifMdHF0t4yrSYlZfEAJ2oEEu0D0jBRCL3AZAWC2quA9Gb8kOczK63EIrHs2Md6DS3u9UDleD05OAXoWKerRrjbdZZqGepDymYEoBvLqPA6xUayz37jHCnqeEUyFeuc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=BpdccJoS; arc=none smtp.client-ip=209.85.218.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	 To:Cc:Content-Type; b=h8xnllTPiivBBg5bRWAz7d+aa84Lr/eSvhbLolt80GI+e7rviQXfCvrdAjvAhnuUzw1or8ssxiEW5w+Rzr6pSqdJCOx5kfQY8QZk/sNGPwEAqhZWWAO25uTNQRLoKZvr9KPYOT9vNVM8peLDdunhPMXYgXzLl+G0qWNVv2R/ddQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=YBPSYhfY; arc=none smtp.client-ip=209.85.219.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="BpdccJoS"
-Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-ae0de1c378fso261142666b.3
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 27 Jun 2025 09:23:35 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YBPSYhfY"
+Received: by mail-qv1-f44.google.com with SMTP id 6a1803df08f44-6fb1be9ba89so95676d6.2
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 27 Jun 2025 09:28:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1751041414; x=1751646214; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=XIBFa7vtiai1aZdrnHbI17B2HX5VyBn+7Wdc06Hzja4=;
-        b=BpdccJoSfVTXxnRZuEtMgszt5iyr96sN1K1cZ2sawnRjZBm7MdUx3g1W45nA2aZTsl
-         bgm3qdkMwTdjm77B8uD0T68pcBRHDFdTR/GAWlWQvU4zMubrwhaSA1f20p7cEkNq79q2
-         KWviHfQMSwqPjXhnzxzLL8gyUACb/QR5VxS/0=
+        d=google.com; s=20230601; t=1751041731; x=1751646531; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Pwe6yBI0hTTSV4QKO/x65G0lF6NWazoC/YzcyBgyfJc=;
+        b=YBPSYhfYCSvcvlqkTTWKgBuoIRQJExKgNMxyXP8XSXfLKNKeWAiaMB3hwazPeve2l0
+         At507yVCtoH0Av1+Xq52NBbz5F98TC6dsmne30HfzRWpovfg9W1pvJDhT1H51QmR2d0c
+         Qb6YaY+VL6kXfjeqlBt3AmrhEt1cO+g7a86A0ZJ5ae+HQqdxZaPnt8a5jlPrcBxPB4YW
+         CagJZHFOz9cQtMfCfBJ7putglkR/QChte4bzPWOHUFSfTwXV0plMUZdnb/ZfADtI5FFC
+         aZtwU7E1KhdXW2kvEcRaC4o61dtFVW5Le/GIT4Vys8+U4t4ug3DQmlJ/EqMe2jBSiEy0
+         nCEw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751041414; x=1751646214;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=XIBFa7vtiai1aZdrnHbI17B2HX5VyBn+7Wdc06Hzja4=;
-        b=bME8KOMOEwsGz8ETBJdjrOClfhRWC457jEeKjj2RZ6K6PJwXMiGR2i5Sj0+6qQf+DQ
-         FvCIFimIYWJMaIEo3PgtjaudPIapEvb6kqdixBhMalZefDJJ0XzSuebBD42wF+RT+HLq
-         EqjgxHAl09PvmLJQGMdlS2HkHEh0J6TVQh4Ro7QjeY5qQ3beUcG3IjDOuUalEIbXq21y
-         Z96b7h//WMYAPuZPU6fT0fpGHbexuVk3zVJrqza+47RkK7G71e0Mp+XeMqmWUXK5e1v1
-         hHAKfCcQYiL5ePXPiPOhkQfcDi9leCd6nRlde9eV7Q4kyWrGJwlhvvjqCEgz4zohWB/d
-         gyZg==
-X-Forwarded-Encrypted: i=1; AJvYcCWtI/3YV1qYKjY5l5y2YgetoOqzTgNUQh2Rhi3dyUCYssb/DgKxfquJcdSYh+U5/7XtcIAU+KSZT+I93KBfZZOHjr0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyfxgZThxeaZ2S8XeCS+tscpUzBMEAZNR6SxLZ1dmTyzu7CQ9de
-	gyO2jJFTzQclCD9Z0bfhGCFAfyabY65MSFFB+m+CgGBxIF2034l311HMRVtlGxzhLlF3FDaM/uf
-	O1b/OZ4s=
-X-Gm-Gg: ASbGncuwiEkESlGCugWmfNFXS84lior8FGR2Mzk6dmv93lUa5d5yeTy3GtAJt91GaY7
-	E7xIJn4YDlGaS/dxn6Yp3y69xuI22zow51gdJfTBKQgVR8Ox93LzsRGk82xDN8l3lLUGLNY4SdV
-	IyDa7EtXwnU1e4OuNPGcpiX8tlWuylF4I0Zfc4YS7W+wIb1wOvsNW9zBV3bqXB0N8BPRdVF651a
-	J2qrjCGOuu226DUbqtreGLbSU5+PWuopuvqc87h1wSO2tx9YmBQ8Mh5rI4K7VIVFcyEzgcyj9ws
-	V9BH9BnbOsDqWk+4Z0C0TpnCoc7sFp9fAE+A7AfhfcuJXTy9YnAIhgwYfdyHR9EvM4JEUFg9U6b
-	agNzgrz2+Zve/w8bWC7Eq2v8xYFzAmBb1uB4kD7aXzCvbmhw=
-X-Google-Smtp-Source: AGHT+IHuzi41VFW2fKmF77e9yVaPL1YLKq5ySxS0iI4GQhtLng6F3ChhjjUdrIcVk2IdYSf4X3IzNA==
-X-Received: by 2002:a17:907:fdca:b0:ae3:6744:3675 with SMTP id a640c23a62f3a-ae367443a67mr86532166b.48.1751041413815;
-        Fri, 27 Jun 2025 09:23:33 -0700 (PDT)
-Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com. [209.85.208.54])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-60c828e1a96sm1682652a12.19.2025.06.27.09.23.31
-        for <linux-trace-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 27 Jun 2025 09:23:32 -0700 (PDT)
-Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-60c79bedc19so4784a12.3
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 27 Jun 2025 09:23:31 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCXi/RDgNfE0vdz9HsHXEp9mQXw3P91i/akpEW2O7X0tFKJAYstmYVS2e2pgYS0It5karknxX3b9GCMA6iqT8NUc7UU=@vger.kernel.org
-X-Received: by 2002:a05:6402:34c6:b0:5ff:ef06:1c52 with SMTP id
- 4fb4d7f45d1cf-60c88d65540mr3554120a12.3.1751041411199; Fri, 27 Jun 2025
- 09:23:31 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1751041731; x=1751646531;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Pwe6yBI0hTTSV4QKO/x65G0lF6NWazoC/YzcyBgyfJc=;
+        b=vsTBV4rmMYC9R5du9wzbAIOPafk00gUtTOCNSf221rKao7TBg2uDlOcz5rJBmX1bPu
+         T00klF5sZ4b4jb1zAV9gQfugTSvoCX4mFynIB2yHl1N6X540wIskML3k1rM8I10TOBMp
+         XxB6iSjNa4vOUSXONgIX5q2I+40ZYmWU490lxW1lGGs0wHgCNNlQC/3foQ+XNKV+guBb
+         ESEkRzOWd4Uz0H3W8v7fhOiyDrcIbEnJuBJIzAVjUooDw3S+YFyHy+D56mKdINvY/gD5
+         LiYbR4PZTVTbmH0nVnVg7/4nmPakNZ2mM9pfP64gJ1upyi++nHg9dJKbFr6oGvDcM5bN
+         NgZQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUZqhj2VOD4qRbX7hNUfGTi9Rfa2i9cwZmBCvQCy/gn2nXw80L1a0bqvHnwXyh1SJKctR8/RJHEyMQ6Ex07uXyoJt4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzxxSCEVRiINV6Cc2dVFl5rxptKAtqCqa4/0iE6t5Zvi/qzXfV1
+	Ch8ENOBiUK3YPBTcT0cL9WaSWRr1Kp9s1QIiXIdziAoJTq12JV8DoIiGkPWcCgau0SCIav21CPo
+	X9MZ2nzmonqobLfGoEcGj8+s+acSW4bGFdRz8ZDHx
+X-Gm-Gg: ASbGncvG51qPJoyVpWkkQ+5Ne4mRGOGisNiURjcbXtwmj5FhJYWxE7vcuhOyfRnq1jB
+	4R7n8wS9FEy3EM6o72EYNFd0FHVTN6zeuxvdV9XFZdvBImbjA/lFsP11/WH/bxWyRYEiOvzu8dR
+	rt7Ut+mmbNO1268aQ7D27UabOXGL/UmtsMrxNk40UMOb7oytZisGss/RQX8AxEsTe6J5jtlLCM/
+	A==
+X-Google-Smtp-Source: AGHT+IEaFjJbudXPZvs4+gz+Ul1aN+IO1A0S+wtT0rUBrPe4/pZbkYPC1YJ6B1u6KB5gj2C6Oj3GAR3BNtAmvLY3bsQ=
+X-Received: by 2002:ad4:5c6b:0:b0:6fb:33f7:5f34 with SMTP id
+ 6a1803df08f44-70002ee7d52mr61421106d6.43.1751041731049; Fri, 27 Jun 2025
+ 09:28:51 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250625225600.555017347@goodmis.org> <20250625225717.187191105@goodmis.org>
- <aF0FwYq1ECJV5Fdi@gmail.com> <20250626081220.71ac3ab6@gandalf.local.home> <20250627100113.7f9ee77b@gandalf.local.home>
-In-Reply-To: <20250627100113.7f9ee77b@gandalf.local.home>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Fri, 27 Jun 2025 09:23:14 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wiXsMA3OJ0tnSWFDwqH=H8OAsUwF2hqCuQ6uHaLmpQubg@mail.gmail.com>
-X-Gm-Features: Ac12FXwXn1CGZ5TDseyf0yMPbEJKzZlOp6kLfp771zfoaf5rHgLNIhEIXduSSPA
-Message-ID: <CAHk-=wiXsMA3OJ0tnSWFDwqH=H8OAsUwF2hqCuQ6uHaLmpQubg@mail.gmail.com>
-Subject: Re: [PATCH v11 14/14] unwind_user/x86: Enable compat mode frame
- pointer unwinding on x86
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Ingo Molnar <mingo@kernel.org>, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org, x86@kernel.org, 
+References: <cover.1750854543.git.leon@kernel.org> <cabe5b75fe1201baa6ecd209546c1f0913fc02ef.1750854543.git.leon@kernel.org>
+ <CAG_fn=XWP-rpV-D2nV-a3wMbzqLn2T-43tyGnoS2AhVGU8oZMw@mail.gmail.com> <20250626184504.GK17401@unreal>
+In-Reply-To: <20250626184504.GK17401@unreal>
+From: Alexander Potapenko <glider@google.com>
+Date: Fri, 27 Jun 2025 18:28:14 +0200
+X-Gm-Features: Ac12FXzk502TgF39Kdk9rDaSo7SztNg9o8ROEHR27kqxNaOw7yX3TSWKD6zOmLM
+Message-ID: <CAG_fn=WeK8q2g0bRna+fFx+ks4HbfoG3Tnw8PpSdmfdH=3+S=A@mail.gmail.com>
+Subject: Re: [PATCH 5/8] kmsan: convert kmsan_handle_dma to use physical addresses
+To: Leon Romanovsky <leon@kernel.org>
+Cc: Marek Szyprowski <m.szyprowski@samsung.com>, Christoph Hellwig <hch@lst.de>, 
+	Jonathan Corbet <corbet@lwn.net>, Madhavan Srinivasan <maddy@linux.ibm.com>, 
+	Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>, 
+	Christophe Leroy <christophe.leroy@csgroup.eu>, Robin Murphy <robin.murphy@arm.com>, 
+	Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>, "Michael S. Tsirkin" <mst@redhat.com>, 
+	Jason Wang <jasowang@redhat.com>, Xuan Zhuo <xuanzhuo@linux.alibaba.com>, 
+	=?UTF-8?Q?Eugenio_P=C3=A9rez?= <eperezma@redhat.com>, 
+	Marco Elver <elver@google.com>, Dmitry Vyukov <dvyukov@google.com>, 
 	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	Josh Poimboeuf <jpoimboe@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Jiri Olsa <jolsa@kernel.org>, 
-	Namhyung Kim <namhyung@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, 
-	Andrii Nakryiko <andrii@kernel.org>, Indu Bhagat <indu.bhagat@oracle.com>, 
-	"Jose E. Marchesi" <jemarch@gnu.org>, Beau Belgrave <beaub@linux.microsoft.com>, 
-	Jens Remus <jremus@linux.ibm.com>, Andrew Morton <akpm@linux-foundation.org>, 
-	Jens Axboe <axboe@kernel.dk>
+	=?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, linux-doc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, 
+	iommu@lists.linux.dev, virtualization@lists.linux.dev, 
+	kasan-dev@googlegroups.com, linux-trace-kernel@vger.kernel.org, 
+	linux-mm@kvack.org
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, 27 Jun 2025 at 07:01, Steven Rostedt <rostedt@goodmis.org> wrote:
+On Thu, Jun 26, 2025 at 8:45=E2=80=AFPM Leon Romanovsky <leon@kernel.org> w=
+rote:
 >
-> That's not a function. It's just setting a macro named arch_unwind_user_next to
-> be arch_unwind_user_next. I think adding "()" to the end of that will be
-> confusing.
+> On Thu, Jun 26, 2025 at 07:43:06PM +0200, Alexander Potapenko wrote:
+> > On Wed, Jun 25, 2025 at 3:19=E2=80=AFPM Leon Romanovsky <leon@kernel.or=
+g> wrote:
+> > >
+> > > From: Leon Romanovsky <leonro@nvidia.com>
+Acked-by: Alexander Potapenko <glider@google.com>
 
-Yeah, we use the pattern
+> >
+> > Hi Leon,
+> >
+> > >
+> > > Convert the KMSAN DMA handling function from page-based to physical
+> > > address-based interface.
+> > >
+> > > The refactoring renames kmsan_handle_dma() parameters from accepting
+> > > (struct page *page, size_t offset, size_t size) to (phys_addr_t phys,
+> > > size_t size).
+> >
+> > Could you please elaborate a bit why this is needed? Are you fixing
+> > some particular issue?
+>
+> It is soft of the fix and improvement at the same time.
+> Improvement:
+> It allows direct call to kmsan_handle_dma() without need
+> to convert from phys_addr_t to struct page for newly introduced
+> dma_map_phys() routine.
+>
+> Fix:
+> It prevents us from executing kmsan for addresses that don't have struct =
+page
+> (for example PCI_P2PDMA_MAP_THRU_HOST_BRIDGE pages), which we are doing
+> with original code.
+>
+> dma_map_sg_attrs()
+>  -> __dma_map_sg_attrs()
+>   -> dma_direct_map_sg()
+>    -> PCI_P2PDMA_MAP_THRU_HOST_BRIDGE and nents > 0
+>     -> kmsan_handle_dma_sg();
+>      -> kmsan_handle_dma(g_page(item) <---- this is "fake" page.
+>
+> We are trying to build DMA API that doesn't require struct pages.
 
-   #define abc abc
+Thanks for clarifying that!
 
-just to show "I have my own architecture-specific implementation for
-this" without having to make up a *new* name for it.
+> > KMSAN only works on 64-bit systems, do we actually have highmem on any =
+of these?
+>
+> I don't know, but the original code had this check:
+>   344         if (PageHighMem(page))
+>   345                 return;
+>
+> Thanks
 
-[ We used to have things like "#define __arch_has_abc" instead, which
-is just annoying particularly when people didn't even always agree on
-the exact prefix. We still do, but we used to too. These days that
-"this arch has" pattern is _mostly_ confined to config variables, I
-think. ]
+Ouch, I overlooked that, sorry!
 
-Adding parenthesis not only makes that much more complicated - now you
-need to match argument numbers etc - but can actually end up causing
-real issues where you now can't use that 'abc' as a function pointer
-any more.
+I spent a while trying to understand where this code originated from,
+and found the following discussion:
+https://lore.kernel.org/all/20200327170647.GA22758@lst.de/
 
-That said, parenthesis can also actually help catch mis-uses (ie maybe
-you *cannot* use the function as a function pointer, exactly because
-some architectures _only_ implement it as a macro), so it's not like
-parentheses are necessarily always wrong, but in general, I think that
-
-  #define abc abc
-
-pattern is the simplest and best way for an architecture header file
-to say "I have an implementation for this".
-
-And obviously the reason we have to use macros for this is because C
-doesn't have a way to test for symbols existing. Other languages do
-have things like that (various levels of "reflection"), but in C
-you're basically limited to the pre-processor.
-
-             Linus
+It's still unclear to me whether we actually need this check, because
+with my config it doesn't produce any code.
+But I think this shouldn't be blocking your patch, I'd rather make a
+follow-up fix.
