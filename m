@@ -1,214 +1,180 @@
-Received: from relay.hostedemail.com (smtprelay0013.hostedemail.com [216.40.44.13])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D95178635D;
-	Fri, 27 Jun 2025 01:09:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A116518DB35;
+	Fri, 27 Jun 2025 04:58:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750986543; cv=none; b=gqtzXUuxLSxpbojBNSSJKJIDZxSxqm9Muw0kuGCVfcmSoG/ErS1aF0Poh47MvCLzX+Qj3GueDsPH19Ru5aLphf+wHANKZveLQLXLwuv3WU0nYl97tVK6rQRJcSCrlsH+JIsRMDlDSIHPP3OvUfcf8evXJ+wzsnFRN1WanCKA6RY=
+	t=1751000291; cv=none; b=DNRaAcNBqogCuAd1KmzmukqH4BFu+9IxPhwXXQJgDGxCqcKPJwlQZe5x8uhp/xTUFWpUOZc0sKwLDQEm6vxsFrHp9TYKDvXYrhz64w016ObdIuEwl0kdtlXrzyeoEqlbJSK4CBGboVflCR+5rPo0WEu5yKVEEJ5fciGKv04Ysx0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750986543; c=relaxed/simple;
-	bh=sGPJyaMt5chGSbAS/TjitWf/JKBtwNhMQ3g3k4X3fJw=;
-	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=avqBkCwQSAiCOCm8PkSiZvvh4ht5Wdk4GGmalDmTOpFNeJB5vmGhJkpx2p0bJ6trV+D1nU05nI0CV5xVGYQDeBXEpMM8bGJWO2m2xiN/Ft1KueVENZHgPzam1EwLSJSErutYxUxAs3oYd9eHnFoDIXLB5++Jx2Cz1YU7r+IqHVw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf01.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay03.hostedemail.com (Postfix) with ESMTP id 1FD3CB9BD3;
-	Fri, 27 Jun 2025 01:08:54 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: nevets@goodmis.org) by omf01.hostedemail.com (Postfix) with ESMTPA id C86A660016;
-	Fri, 27 Jun 2025 01:08:50 +0000 (UTC)
-Received: from rostedt by gandalf with local (Exim 4.98.2)
-	(envelope-from <rostedt@goodmis.org>)
-	id 1uUZLr-000000044kD-23Gf;
-	Wed, 25 Jun 2025 19:16:23 -0400
-Message-ID: <20250625231623.340410869@goodmis.org>
-User-Agent: quilt/0.68
-Date: Wed, 25 Jun 2025 19:15:51 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org,
- bpf@vger.kernel.org,
- x86@kernel.org
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Josh Poimboeuf <jpoimboe@kernel.org>,
- Peter Zijlstra <peterz@infradead.org>,
- Ingo Molnar <mingo@kernel.org>,
- Jiri Olsa <jolsa@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>,
- Thomas Gleixner <tglx@linutronix.de>,
- Andrii Nakryiko <andrii@kernel.org>,
- Indu Bhagat <indu.bhagat@oracle.com>,
- "Jose E. Marchesi" <jemarch@gnu.org>,
- Beau Belgrave <beaub@linux.microsoft.com>,
- Jens Remus <jremus@linux.ibm.com>,
- Linus Torvalds <torvalds@linux-foundation.org>,
- Andrew Morton <akpm@linux-foundation.org>,
- Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH v11 10/11] perf script: Display PERF_RECORD_CALLCHAIN_DEFERRED
-References: <20250625231541.584226205@goodmis.org>
+	s=arc-20240116; t=1751000291; c=relaxed/simple;
+	bh=hh+Pcw6Bm2ZODy21sOTBGqmuusQEsI7aY0o1WB0Nl1c=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=hbaZolug4bh5M/Lh7yVjoE6WEbJ9QumOFEYopu0yQzHD86vwgW0cXFQA/f7Ne0QiKaKYDp/Hr3RKUl5aMemPfOOj6EI9QJcbCccDToxU2YlrejsYyCP5142xbbwZr2lRMz9hxvJtG116qXd1VwGtaZkico6RKOqroLVEwJmGNIY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MAsE4uBQ; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MAsE4uBQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 24FDEC4CEE3;
+	Fri, 27 Jun 2025 04:58:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751000291;
+	bh=hh+Pcw6Bm2ZODy21sOTBGqmuusQEsI7aY0o1WB0Nl1c=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=MAsE4uBQf9SAwhj9bFX1fXZozhWsCTxbzvleDxq+MTF5eYPJWzDUxYEDKM0R3vZ4S
+	 tnbI0Hs3qmWu474Zuv8EyE0L/ws6cADfKbe4fZ+sdG/kSEASjLuAv7eElKd+qrRCoE
+	 uYonxwEDCFhUobdkI1iw7+oyn1QiCJvyzCxxJv9gdXIHboqmCjArGQ+AEmTGBPxNH9
+	 DguOSfCVnDnGax6XYad+DAZKO6JhuMrSB019kM2StIzoBz2DMRfKFrWLxPIRDam1GU
+	 b/C8q0E1zxVXFhnJS/DCpGQi5UIFk1XFlnzB9pXbGLlKBV7F/e7LS+XSSanUCVwXKn
+	 xF+fpi08z4TNQ==
+Date: Fri, 27 Jun 2025 13:58:07 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Jiri Olsa <olsajiri@gmail.com>
+Cc: Oleg Nesterov <oleg@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
+ Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ x86@kernel.org, Song Liu <songliubraving@fb.com>, Yonghong Song
+ <yhs@fb.com>, John Fastabend <john.fastabend@gmail.com>, Hao Luo
+ <haoluo@google.com>, Steven Rostedt <rostedt@goodmis.org>, Alan Maguire
+ <alan.maguire@oracle.com>, David Laight <David.Laight@aculab.com>, Thomas
+ =?UTF-8?B?V2Vpw59zY2h1aA==?= <thomas@t-8ch.de>, Ingo Molnar
+ <mingo@kernel.org>
+Subject: Re: [PATCHv3 perf/core 07/22] uprobes: Add do_ref_ctr argument to
+ uprobe_write function
+Message-Id: <20250627135807.dd97ddf4cb6910df3c56e654@kernel.org>
+In-Reply-To: <aFwRjTkluiE-g-Ab@krava>
+References: <20250605132350.1488129-1-jolsa@kernel.org>
+	<20250605132350.1488129-8-jolsa@kernel.org>
+	<20250625154259.4a092f0213739404a0e9b210@kernel.org>
+	<aFwRjTkluiE-g-Ab@krava>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-Rspamd-Server: rspamout05
-X-Rspamd-Queue-Id: C86A660016
-X-Stat-Signature: ncra71ccokaaamoepgob6uqbks8d5udc
-X-Session-Marker: 6E657665747340676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX19chmM/tjRXnbjXfhUBl1ia12u36QB0Tes=
-X-HE-Tag: 1750986530-778693
-X-HE-Meta: U2FsdGVkX1+24g6/mU4ddjpqDRmDTQOB2dug6+orqRZjgMsZDL6R2hybGP++7zF1vsXGOuq6DF53a5ynVLtGbCjEiJ40/oyA2OgULrn/j+GpwHm18hQcOVnwuXmDL0USm2tlW6KvO4/TwaMzP99j4h4TE1QDyqjb4nIwGgp4LhQMn8Ay/n2aaeZr2iRxY5oRFakB/9ney9ts/9g1XiY8PDb0lqI0lrDQuAOXNwomiua4n17ItURmYXij4d6beXQiRERhRzb/Y8+TEoSsYz9l3nnBKFK7h9QLFKOusH1AYggWX1dhQS/emJjKfXHuF6bz6fYtZoDIjqnZbcBLcDDroKalRM+7Y83ZyD0hCr8epEGHTWhNQfB5vk9qe4WfYsCyaLSRxJ6mwnmpuiKvWhZzfRo+FKRUX42PEyOU3fznPGA=
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-From: Namhyung Kim <namhyung@kernel.org>
+On Wed, 25 Jun 2025 17:11:09 +0200
+Jiri Olsa <olsajiri@gmail.com> wrote:
 
-Handle the deferred callchains in the script output.
+> On Wed, Jun 25, 2025 at 03:42:59PM +0900, Masami Hiramatsu wrote:
+> > On Thu,  5 Jun 2025 15:23:34 +0200
+> > Jiri Olsa <jolsa@kernel.org> wrote:
+> > 
+> > > Making update_ref_ctr call in uprobe_write conditional based
+> > > on do_ref_ctr argument. This way we can use uprobe_write for
+> > > instruction update without doing ref_ctr_offset update.
+> > > 
+> > 
+> > Can we just decouple this update from uprobe_write()?
+> > If we do this exclusively, I think we can do something like;
+> > 
+> > lock()
+> > update_ref_ctr(uprobe, mm, +1);
+> > ...
+> > ret = uprobe_write();
+> > ...
+> > if (ret < 0)
+> >   update_ref_ctr(uprobe, mm, -1);
+> > unlock()
+> > 
+> > Thank you,
+> 
+> it was the intention in the v1 but as Oleg pointed out [1] it won't
+> work, because the set_orig_refctr part of this change does not know
+> if the refctr should be really updated or not
 
-  $ perf script
-  perf     801 [000]    18.031793:          1 cycles:P:
-          ffffffff91a14c36 __intel_pmu_enable_all.isra.0+0x56 ([kernel.kallsyms])
-          ffffffff91d373e9 perf_ctx_enable+0x39 ([kernel.kallsyms])
-          ffffffff91d36af7 event_function+0xd7 ([kernel.kallsyms])
-          ffffffff91d34222 remote_function+0x42 ([kernel.kallsyms])
-          ffffffff91c1ebe1 generic_exec_single+0x61 ([kernel.kallsyms])
-          ffffffff91c1edac smp_call_function_single+0xec ([kernel.kallsyms])
-          ffffffff91d37a9d event_function_call+0x10d ([kernel.kallsyms])
-          ffffffff91d33557 perf_event_for_each_child+0x37 ([kernel.kallsyms])
-          ffffffff91d47324 _perf_ioctl+0x204 ([kernel.kallsyms])
-          ffffffff91d47c43 perf_ioctl+0x33 ([kernel.kallsyms])
-          ffffffff91e2f216 __x64_sys_ioctl+0x96 ([kernel.kallsyms])
-          ffffffff9265f1ae do_syscall_64+0x9e ([kernel.kallsyms])
-          ffffffff92800130 entry_SYSCALL_64+0xb0 ([kernel.kallsyms])
+Ah, uprobe_unregister() can not check the given uprobe failed to
+update the code for each mm....
 
-  perf     801 [000]    18.031814: DEFERRED CALLCHAIN
-              7fb5fc22034b __GI___ioctl+0x3b (/usr/lib/x86_64-linux-gnu/libc.so.6)
+> 
+> while inside uprobe_write it happens right after verify callback and
+> we make sure to update refctr only if the instruction was updated
 
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
- tools/perf/builtin-script.c | 89 +++++++++++++++++++++++++++++++++++++
- 1 file changed, 89 insertions(+)
+OK. But this is very complicated. Eventually I think uprobe should
+have a list of mm(or refcnt) to manage whether it is updated the
+refcounter.
 
-diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-index 6c3bf74dd78c..a6f8209256fe 100644
---- a/tools/perf/builtin-script.c
-+++ b/tools/perf/builtin-script.c
-@@ -2483,6 +2483,93 @@ static int process_sample_event(const struct perf_tool *tool,
- 	return ret;
- }
- 
-+static int process_deferred_sample_event(const struct perf_tool *tool,
-+					 union perf_event *event,
-+					 struct perf_sample *sample,
-+					 struct evsel *evsel,
-+					 struct machine *machine)
-+{
-+	struct perf_script *scr = container_of(tool, struct perf_script, tool);
-+	struct perf_event_attr *attr = &evsel->core.attr;
-+	struct evsel_script *es = evsel->priv;
-+	unsigned int type = output_type(attr->type);
-+	struct addr_location al;
-+	FILE *fp = es->fp;
-+	int ret = 0;
-+
-+	if (output[type].fields == 0)
-+		return 0;
-+
-+	/* Set thread to NULL to indicate addr_al and al are not initialized */
-+	addr_location__init(&al);
-+
-+	if (perf_time__ranges_skip_sample(scr->ptime_range, scr->range_num,
-+					  sample->time)) {
-+		goto out_put;
-+	}
-+
-+	if (debug_mode) {
-+		if (sample->time < last_timestamp) {
-+			pr_err("Samples misordered, previous: %" PRIu64
-+				" this: %" PRIu64 "\n", last_timestamp,
-+				sample->time);
-+			nr_unordered++;
-+		}
-+		last_timestamp = sample->time;
-+		goto out_put;
-+	}
-+
-+	if (filter_cpu(sample))
-+		goto out_put;
-+
-+	if (machine__resolve(machine, &al, sample) < 0) {
-+		pr_err("problem processing %d event, skipping it.\n",
-+		       event->header.type);
-+		ret = -1;
-+		goto out_put;
-+	}
-+
-+	if (al.filtered)
-+		goto out_put;
-+
-+	if (!show_event(sample, evsel, al.thread, &al, NULL))
-+		goto out_put;
-+
-+	if (evswitch__discard(&scr->evswitch, evsel))
-+		goto out_put;
-+
-+	perf_sample__fprintf_start(scr, sample, al.thread, evsel,
-+				   PERF_RECORD_CALLCHAIN_DEFERRED, fp);
-+	fprintf(fp, "DEFERRED CALLCHAIN");
-+
-+	if (PRINT_FIELD(IP)) {
-+		struct callchain_cursor *cursor = NULL;
-+
-+		if (symbol_conf.use_callchain && sample->callchain) {
-+			cursor = get_tls_callchain_cursor();
-+			if (thread__resolve_callchain(al.thread, cursor, evsel,
-+						      sample, NULL, NULL,
-+						      scripting_max_stack)) {
-+				pr_info("cannot resolve deferred callchains\n");
-+				cursor = NULL;
-+			}
-+		}
-+
-+		fputc(cursor ? '\n' : ' ', fp);
-+		sample__fprintf_sym(sample, &al, 0, output[type].print_ip_opts,
-+				    cursor, symbol_conf.bt_stop_list, fp);
-+	}
-+
-+	fprintf(fp, "\n");
-+
-+	if (verbose > 0)
-+		fflush(fp);
-+
-+out_put:
-+	addr_location__exit(&al);
-+	return ret;
-+}
-+
- // Used when scr->per_event_dump is not set
- static struct evsel_script es_stdout;
- 
-@@ -4069,6 +4156,7 @@ int cmd_script(int argc, const char **argv)
- 
- 	perf_tool__init(&script.tool, !unsorted_dump);
- 	script.tool.sample		 = process_sample_event;
-+	script.tool.callchain_deferred	 = process_deferred_sample_event;
- 	script.tool.mmap		 = perf_event__process_mmap;
- 	script.tool.mmap2		 = perf_event__process_mmap2;
- 	script.tool.comm		 = perf_event__process_comm;
-@@ -4095,6 +4183,7 @@ int cmd_script(int argc, const char **argv)
- 	script.tool.throttle		 = process_throttle_event;
- 	script.tool.unthrottle		 = process_throttle_event;
- 	script.tool.ordering_requires_timestamps = true;
-+	script.tool.merge_deferred_callchains = false;
- 	session = perf_session__new(&data, &script.tool);
- 	if (IS_ERR(session))
- 		return PTR_ERR(session);
+Reviewed-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+
+Thanks,
+
+> 
+> thanks,
+> jirka
+> 
+> 
+> [1] https://lore.kernel.org/bpf/20250427141335.GA9350@redhat.com/
+> 
+> > 
+> > 
+> > > Acked-by: Oleg Nesterov <oleg@redhat.com>
+> > > Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+> > > ---
+> > >  include/linux/uprobes.h | 2 +-
+> > >  kernel/events/uprobes.c | 8 ++++----
+> > >  2 files changed, 5 insertions(+), 5 deletions(-)
+> > > 
+> > > diff --git a/include/linux/uprobes.h b/include/linux/uprobes.h
+> > > index 518b26756469..5080619560d4 100644
+> > > --- a/include/linux/uprobes.h
+> > > +++ b/include/linux/uprobes.h
+> > > @@ -200,7 +200,7 @@ extern unsigned long uprobe_get_trap_addr(struct pt_regs *regs);
+> > >  extern int uprobe_write_opcode(struct arch_uprobe *auprobe, struct vm_area_struct *vma, unsigned long vaddr, uprobe_opcode_t,
+> > >  			       bool is_register);
+> > >  extern int uprobe_write(struct arch_uprobe *auprobe, struct vm_area_struct *vma, const unsigned long opcode_vaddr,
+> > > -			uprobe_opcode_t *insn, int nbytes, uprobe_write_verify_t verify, bool is_register);
+> > > +			uprobe_opcode_t *insn, int nbytes, uprobe_write_verify_t verify, bool is_register, bool do_update_ref_ctr);
+> > >  extern struct uprobe *uprobe_register(struct inode *inode, loff_t offset, loff_t ref_ctr_offset, struct uprobe_consumer *uc);
+> > >  extern int uprobe_apply(struct uprobe *uprobe, struct uprobe_consumer *uc, bool);
+> > >  extern void uprobe_unregister_nosync(struct uprobe *uprobe, struct uprobe_consumer *uc);
+> > > diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
+> > > index 1e5dc3b30707..6795b8d82b9c 100644
+> > > --- a/kernel/events/uprobes.c
+> > > +++ b/kernel/events/uprobes.c
+> > > @@ -492,12 +492,12 @@ int uprobe_write_opcode(struct arch_uprobe *auprobe, struct vm_area_struct *vma,
+> > >  		bool is_register)
+> > >  {
+> > >  	return uprobe_write(auprobe, vma, opcode_vaddr, &opcode, UPROBE_SWBP_INSN_SIZE,
+> > > -			    verify_opcode, is_register);
+> > > +			    verify_opcode, is_register, true /* do_update_ref_ctr */);
+> > >  }
+> > >  
+> > >  int uprobe_write(struct arch_uprobe *auprobe, struct vm_area_struct *vma,
+> > >  		 const unsigned long insn_vaddr, uprobe_opcode_t *insn, int nbytes,
+> > > -		 uprobe_write_verify_t verify, bool is_register)
+> > > +		 uprobe_write_verify_t verify, bool is_register, bool do_update_ref_ctr)
+> > >  {
+> > >  	const unsigned long vaddr = insn_vaddr & PAGE_MASK;
+> > >  	struct mm_struct *mm = vma->vm_mm;
+> > > @@ -538,7 +538,7 @@ int uprobe_write(struct arch_uprobe *auprobe, struct vm_area_struct *vma,
+> > >  	}
+> > >  
+> > >  	/* We are going to replace instruction, update ref_ctr. */
+> > > -	if (!ref_ctr_updated && uprobe->ref_ctr_offset) {
+> > > +	if (do_update_ref_ctr && !ref_ctr_updated && uprobe->ref_ctr_offset) {
+> > >  		ret = update_ref_ctr(uprobe, mm, is_register ? 1 : -1);
+> > >  		if (ret) {
+> > >  			folio_put(folio);
+> > > @@ -590,7 +590,7 @@ int uprobe_write(struct arch_uprobe *auprobe, struct vm_area_struct *vma,
+> > >  
+> > >  out:
+> > >  	/* Revert back reference counter if instruction update failed. */
+> > > -	if (ret < 0 && ref_ctr_updated)
+> > > +	if (do_update_ref_ctr && ret < 0 && ref_ctr_updated)
+> > >  		update_ref_ctr(uprobe, mm, is_register ? -1 : 1);
+> > >  
+> > >  	/* try collapse pmd for compound page */
+> > > -- 
+> > > 2.49.0
+> > > 
+> > 
+> > 
+> > -- 
+> > Masami Hiramatsu (Google) <mhiramat@kernel.org>
+
+
 -- 
-2.47.2
-
-
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
