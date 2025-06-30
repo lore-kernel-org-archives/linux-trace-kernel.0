@@ -1,35 +1,31 @@
-Received: from relay.hostedemail.com (smtprelay0014.hostedemail.com [216.40.44.14])
+Received: from relay.hostedemail.com (smtprelay0015.hostedemail.com [216.40.44.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05F4E19F130;
-	Mon, 30 Jun 2025 20:04:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD59578F4A;
+	Mon, 30 Jun 2025 22:04:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751313876; cv=none; b=YxOzU30QnYvLnWyURFvMPVg77cHnKmCR8FRx/ArQgHIr6mWz2nu58b2oiBlyXEiNucHzQs5dBMi7zZUCvh14aJSeGXC3DDLjc3IBLkf01VNxpJn17wVXj1cxypOBohb3gqG1O7wF1le36gr2j4yMfRkGMJAUA2lnaZVtZWz7MlI=
+	t=1751321092; cv=none; b=nI5Ji0XLY+bBTkdLamRAnA8o5UXKV156ukmkN07Tjf63Q2Edapaz/hPuJo0k5P/nqxgTbY1WDBQeEln059q0QNXgKbLKP0JgMx7WI9v+EfIKrQ4boFrsrXVBBiihsTo91HcMF4cZLBtW5fQtdVg3vdbTojNq9sf0wfXERoQKS8E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751313876; c=relaxed/simple;
-	bh=xa33IS3UQEmZahHF2MYWQY7MF+mLgkuwCbErVfLDTQc=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=oGrblCAbayeyDn6nWRV7OGQXl3i9yfm4NphEXsKcpWxSR4ada06eTASSZLa/P/gtTMwvrc2YIFB9UQp25nRhgGLEBW3dZbOLDX4L8NgIFXO3h0kudZ8NxfviRAkfT24SYSC1Re6xkzj2x77R18lASViUfkOcEh5qFCKf5GIyFkg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.14
+	s=arc-20240116; t=1751321092; c=relaxed/simple;
+	bh=ACrbzdm4oj62OB/ibA6TNcnoIFFEkU+p0m2ZimjiRk0=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=VO9vh4aH7b+FKuOFIGfka4ybO6IHMuRqaD3/z7U3eXOYEtXHfF/NBxwqTHT+GvwMjopJyRZGFV/tYXEW/dCVuYwJpc/X0RHxtIg03Lc75E52iWF+ZhkLemN0nZGeIDgvAELNMzTHgdmE5Y0U4nHKjaC98zBTeJi3oQvz3OnY3d4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.15
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf11.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay01.hostedemail.com (Postfix) with ESMTP id C6F941CE072;
-	Mon, 30 Jun 2025 20:04:32 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf11.hostedemail.com (Postfix) with ESMTPA id 1767D2002A;
-	Mon, 30 Jun 2025 20:04:30 +0000 (UTC)
-Date: Mon, 30 Jun 2025 16:04:30 -0400
+Received: from omf12.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay06.hostedemail.com (Postfix) with ESMTP id 2CDD8103E98;
+	Mon, 30 Jun 2025 22:04:43 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf12.hostedemail.com (Postfix) with ESMTPA id 7C7391C;
+	Mon, 30 Jun 2025 22:04:41 +0000 (UTC)
+Date: Mon, 30 Jun 2025 18:04:40 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
-To: Nam Cao <namcao@linutronix.de>
-Cc: Gabriele Monaco <gmonaco@redhat.com>,
- linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
- john.ogness@linutronix.de
-Subject: Re: [PATCH v10 14/19] rv: Add rtapp container monitor
-Message-ID: <20250630160430.20dc6dc0@batman.local.home>
-In-Reply-To: <96c2766a74a730fe54a9339feb5b93128ee65331.1749547399.git.namcao@linutronix.de>
-References: <cover.1749547399.git.namcao@linutronix.de>
-	<96c2766a74a730fe54a9339feb5b93128ee65331.1749547399.git.namcao@linutronix.de>
+To: LKML <linux-kernel@vger.kernel.org>, Linux trace kernel
+ <linux-trace-kernel@vger.kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, David Howells <dhowells@redhat.com>
+Subject: [PATCH] ring-buffer: Remove ring_buffer_read_prepare_sync()
+Message-ID: <20250630180440.3eabb514@batman.local.home>
 X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -39,135 +35,215 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Stat-Signature: sxe4a575kkax86zy59qqnxzsmdx9t4bh
-X-Rspamd-Server: rspamout03
-X-Rspamd-Queue-Id: 1767D2002A
+X-Rspamd-Queue-Id: 7C7391C
+X-Stat-Signature: z3sxw6cper8zqqgonndi84nkz59qp8fh
+X-Rspamd-Server: rspamout06
 X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1/wGyjdvw7eluh7v4AyJGIhzwgw8kngfYA=
-X-HE-Tag: 1751313870-811461
-X-HE-Meta: U2FsdGVkX1/vvktjvdUTAaTsA5kmwXx66Pm+Iey61FGh2Fh1sK0ed8u073P/v4wc8kfZj3vYfnBrHN3uwTSmO61/fwH46AxYLFw48aWurMk8CQzBTLyTpMdYXzcAS4xNQocRndeyTWiBgBMnZ0NE0U6aCkt25oE94M7qls8/0+mr8RIrJba6jsoEMlUoy56q7ThsBnpxbZ8FUCGF0FJ8KZK2gCWhMWKfAtXyzh1aIoEYk4lGXodcFfcBvHgif5Bd88bWLmGLvCwVobXPgsEXwj66ND8FGPJ3vBBS1gZSle7QsIn/RpCKLT6Di/Lja47Gjvo7U84xkvgoCMGPD/BW0R0F7DYTtiyaElDyiDX7Flhdzb02BFP783fa3+TIRLZU
+X-Session-ID: U2FsdGVkX1+zEbTnsU7tmclh97WLU/iUycvhx5UegGU=
+X-HE-Tag: 1751321081-287218
+X-HE-Meta: U2FsdGVkX19kG3JrgoDwsJben4CgUePLHln43A+WO8LcTV2/vDpHtG+uQJd1X8Z9gvPjLu7Mhl8UvcYufilC7BQbWFz+4736rntJVcgfbbYfDbr++1KD8x0hL1aNL/rYLc1MKltnmTNQnLVorKY84J4hGZ8lLO4Z0SGoQQFvvKiKN2OffhxN0R0xrLfvz1seRNFW0jBsHW2Tt3o8ndHg622CWvv2x923QAz+schQxAsxflPuVMBdIAOHagyomfVxPxvi/N1L90fL/IAejVeV77y00en4l7AWha6oALtjeu1DDqdhwnYp5lFwIiEBHz+UGHdiqCUOQSm0OKmlpQwLDqehmEFv/45e7ncYeZdwvQAq9Mv7fJrc797JW8Ixm0/itYLQaF3HeAqITKzW13ut5A==
 
-On Tue, 10 Jun 2025 11:43:39 +0200
-Nam Cao <namcao@linutronix.de> wrote:
+From: Steven Rostedt <rostedt@goodmis.org>
 
-> Add the container "rtapp" which is the monitor collection for detecting
-> problems with real-time applications. The monitors will be added in the
-> follow-up commits.
-> 
-> Reviewed-by: Gabriele Monaco <gmonaco@redhat.com>
-> Signed-off-by: Nam Cao <namcao@linutronix.de>
-> ---
->  kernel/trace/rv/Kconfig                |  1 +
->  kernel/trace/rv/Makefile               |  1 +
->  kernel/trace/rv/monitors/rtapp/Kconfig | 14 +++++++++++
->  kernel/trace/rv/monitors/rtapp/rtapp.c | 33 ++++++++++++++++++++++++++
->  kernel/trace/rv/monitors/rtapp/rtapp.h |  3 +++
->  5 files changed, 52 insertions(+)
->  create mode 100644 kernel/trace/rv/monitors/rtapp/Kconfig
->  create mode 100644 kernel/trace/rv/monitors/rtapp/rtapp.c
->  create mode 100644 kernel/trace/rv/monitors/rtapp/rtapp.h
-> 
-> diff --git a/kernel/trace/rv/Kconfig b/kernel/trace/rv/Kconfig
-> index 6e157f9649915..5c407d2916614 100644
-> --- a/kernel/trace/rv/Kconfig
-> +++ b/kernel/trace/rv/Kconfig
-> @@ -41,6 +41,7 @@ source "kernel/trace/rv/monitors/snroc/Kconfig"
->  source "kernel/trace/rv/monitors/scpd/Kconfig"
->  source "kernel/trace/rv/monitors/snep/Kconfig"
->  source "kernel/trace/rv/monitors/sncid/Kconfig"
-> +source "kernel/trace/rv/monitors/rtapp/Kconfig"
->  # Add new monitors here
->  
->  config RV_REACTORS
-> diff --git a/kernel/trace/rv/Makefile b/kernel/trace/rv/Makefile
-> index f9b2cd0483c3c..9b28c24199955 100644
-> --- a/kernel/trace/rv/Makefile
-> +++ b/kernel/trace/rv/Makefile
-> @@ -12,6 +12,7 @@ obj-$(CONFIG_RV_MON_SNROC) += monitors/snroc/snroc.o
->  obj-$(CONFIG_RV_MON_SCPD) += monitors/scpd/scpd.o
->  obj-$(CONFIG_RV_MON_SNEP) += monitors/snep/snep.o
->  obj-$(CONFIG_RV_MON_SNCID) += monitors/sncid/sncid.o
-> +obj-$(CONFIG_RV_MON_RTAPP) += monitors/rtapp/rtapp.o
->  # Add new monitors here
->  obj-$(CONFIG_RV_REACTORS) += rv_reactors.o
->  obj-$(CONFIG_RV_REACT_PRINTK) += reactor_printk.o
-> diff --git a/kernel/trace/rv/monitors/rtapp/Kconfig b/kernel/trace/rv/monitors/rtapp/Kconfig
-> new file mode 100644
-> index 0000000000000..658bb78e733a0
-> --- /dev/null
-> +++ b/kernel/trace/rv/monitors/rtapp/Kconfig
-> @@ -0,0 +1,14 @@
-> +config RV_MON_RTAPP
-> +	depends on RV
-> +	bool "rtapp monitor"
-> +	help
-> +	  Collection of monitors to check for common problems with real-time
-> +	  application that may cause unexpected latency.
-> +
-> +	  If you are developing a real-time system and not entirely sure whether
-> +	  the applications are designed correctly for real-time, you want to say
-> +	  Y here.
-> +
-> +	  Beware that enabling this may have impact on performance, even if the
-> +	  monitors are not running. Therefore you probably should say N for
-> +	  production kernel.
+When the ring buffer was first introduced, reading the non-consuming
+"trace" file required disabling the writing of the ring buffer. To make
+sure the writing was fully disabled before iterating the buffer with a
+non-consuming read, it would set the disable flag of the buffer and then
+call an RCU synchronization to make sure all the buffers were
+synchronized.
 
-I'm trying to figure out from the patch how exactly does this cause
-performance issues?
+The function ring_buffer_read_start() originally  would initialize the
+iterator and call an RCU synchronization, but this was for each individual
+per CPU buffer where this would get called many times on a machine with
+many CPUs before the trace file could be read. The commit 72c9ddfd4c5bf
+("ring-buffer: Make non-consuming read less expensive with lots of cpus.")
+separated ring_buffer_read_start into ring_buffer_read_prepare(),
+ring_buffer_read_sync() and then ring_buffer_read_start() to allow each of
+the per CPU buffers to be prepared, call the read_buffer_read_sync() once,
+and then the ring_buffer_read_start() for each of the CPUs which made
+things much faster.
 
-Can you elaborate?
+The commit 1039221cc278 ("ring-buffer: Do not disable recording when there
+is an iterator") removed the requirement of disabling the recording of the
+ring buffer in order to iterate it, but it did not remove the
+synchronization that was happening that was required to wait for all the
+buffers to have no more writers. It's now OK for the buffers to have
+writers and no synchronization is needed.
 
-Thanks,
+Remove the synchronization and put back the interface for the ring buffer
+iterator back before commit 72c9ddfd4c5bf was applied.
 
--- Steve
+Reported-by: David Howells <dhowells@redhat.com>
+Fixes: 1039221cc278 ("ring-buffer: Do not disable recording when there is an iterator")
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+ include/linux/ring_buffer.h |  4 +--
+ kernel/trace/ring_buffer.c  | 63 ++++++-------------------------------
+ kernel/trace/trace.c        | 14 +++------
+ kernel/trace/trace_kdb.c    |  8 ++---
+ 4 files changed, 18 insertions(+), 71 deletions(-)
 
-
-> diff --git a/kernel/trace/rv/monitors/rtapp/rtapp.c b/kernel/trace/rv/monitors/rtapp/rtapp.c
-> new file mode 100644
-> index 0000000000000..fd75fc927d654
-> --- /dev/null
-> +++ b/kernel/trace/rv/monitors/rtapp/rtapp.c
-> @@ -0,0 +1,33 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
-> +#include <linux/init.h>
-> +#include <linux/rv.h>
-> +
-> +#define MODULE_NAME "rtapp"
-> +
-> +#include "rtapp.h"
-> +
-> +struct rv_monitor rv_rtapp;
-> +
-> +struct rv_monitor rv_rtapp = {
-> +	.name = "rtapp",
-> +	.description = "Collection of monitors for detecting problems with real-time applications",
-> +};
-> +
-> +static int __init register_rtapp(void)
-> +{
-> +	return rv_register_monitor(&rv_rtapp, NULL);
-> +}
-> +
-> +static void __exit unregister_rtapp(void)
-> +{
-> +	rv_unregister_monitor(&rv_rtapp);
-> +}
-> +
-> +module_init(register_rtapp);
-> +module_exit(unregister_rtapp);
-> +
-> +MODULE_LICENSE("GPL");
-> +MODULE_AUTHOR("Nam Cao <namcao@linutronix.de>");
-> +MODULE_DESCRIPTION("Collection of monitors for detecting problems with real-time applications");
-> diff --git a/kernel/trace/rv/monitors/rtapp/rtapp.h b/kernel/trace/rv/monitors/rtapp/rtapp.h
-> new file mode 100644
-> index 0000000000000..4c200d67c7f67
-> --- /dev/null
-> +++ b/kernel/trace/rv/monitors/rtapp/rtapp.h
-> @@ -0,0 +1,3 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +
-> +extern struct rv_monitor rv_rtapp;
+diff --git a/include/linux/ring_buffer.h b/include/linux/ring_buffer.h
+index cd7f0ae26615..bc90c3c7b5fd 100644
+--- a/include/linux/ring_buffer.h
++++ b/include/linux/ring_buffer.h
+@@ -152,9 +152,7 @@ ring_buffer_consume(struct trace_buffer *buffer, int cpu, u64 *ts,
+ 		    unsigned long *lost_events);
+ 
+ struct ring_buffer_iter *
+-ring_buffer_read_prepare(struct trace_buffer *buffer, int cpu, gfp_t flags);
+-void ring_buffer_read_prepare_sync(void);
+-void ring_buffer_read_start(struct ring_buffer_iter *iter);
++ring_buffer_read_start(struct trace_buffer *buffer, int cpu, gfp_t flags);
+ void ring_buffer_read_finish(struct ring_buffer_iter *iter);
+ 
+ struct ring_buffer_event *
+diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+index 00fc38d70e86..24bb5287c415 100644
+--- a/kernel/trace/ring_buffer.c
++++ b/kernel/trace/ring_buffer.c
+@@ -5846,24 +5846,20 @@ ring_buffer_consume(struct trace_buffer *buffer, int cpu, u64 *ts,
+ EXPORT_SYMBOL_GPL(ring_buffer_consume);
+ 
+ /**
+- * ring_buffer_read_prepare - Prepare for a non consuming read of the buffer
++ * ring_buffer_read_start - start a non consuming read of the buffer
+  * @buffer: The ring buffer to read from
+  * @cpu: The cpu buffer to iterate over
+  * @flags: gfp flags to use for memory allocation
+  *
+- * This performs the initial preparations necessary to iterate
+- * through the buffer.  Memory is allocated, buffer resizing
+- * is disabled, and the iterator pointer is returned to the caller.
+- *
+- * After a sequence of ring_buffer_read_prepare calls, the user is
+- * expected to make at least one call to ring_buffer_read_prepare_sync.
+- * Afterwards, ring_buffer_read_start is invoked to get things going
+- * for real.
++ * This creates an iterator to allow non-consuming iteration through
++ * the buffer. If the buffer is disabled for writing, it will produce
++ * the same information each time, but if the buffer is still writing
++ * then the first hit of a write will cause the iteration to stop.
+  *
+- * This overall must be paired with ring_buffer_read_finish.
++ * Must be paired with ring_buffer_read_finish.
+  */
+ struct ring_buffer_iter *
+-ring_buffer_read_prepare(struct trace_buffer *buffer, int cpu, gfp_t flags)
++ring_buffer_read_start(struct trace_buffer *buffer, int cpu, gfp_t flags)
+ {
+ 	struct ring_buffer_per_cpu *cpu_buffer;
+ 	struct ring_buffer_iter *iter;
+@@ -5889,51 +5885,12 @@ ring_buffer_read_prepare(struct trace_buffer *buffer, int cpu, gfp_t flags)
+ 
+ 	atomic_inc(&cpu_buffer->resize_disabled);
+ 
+-	return iter;
+-}
+-EXPORT_SYMBOL_GPL(ring_buffer_read_prepare);
+-
+-/**
+- * ring_buffer_read_prepare_sync - Synchronize a set of prepare calls
+- *
+- * All previously invoked ring_buffer_read_prepare calls to prepare
+- * iterators will be synchronized.  Afterwards, read_buffer_read_start
+- * calls on those iterators are allowed.
+- */
+-void
+-ring_buffer_read_prepare_sync(void)
+-{
+-	synchronize_rcu();
+-}
+-EXPORT_SYMBOL_GPL(ring_buffer_read_prepare_sync);
+-
+-/**
+- * ring_buffer_read_start - start a non consuming read of the buffer
+- * @iter: The iterator returned by ring_buffer_read_prepare
+- *
+- * This finalizes the startup of an iteration through the buffer.
+- * The iterator comes from a call to ring_buffer_read_prepare and
+- * an intervening ring_buffer_read_prepare_sync must have been
+- * performed.
+- *
+- * Must be paired with ring_buffer_read_finish.
+- */
+-void
+-ring_buffer_read_start(struct ring_buffer_iter *iter)
+-{
+-	struct ring_buffer_per_cpu *cpu_buffer;
+-	unsigned long flags;
+-
+-	if (!iter)
+-		return;
+-
+-	cpu_buffer = iter->cpu_buffer;
+-
+-	raw_spin_lock_irqsave(&cpu_buffer->reader_lock, flags);
++	guard(raw_spinlock_irqsave)(&cpu_buffer->reader_lock);
+ 	arch_spin_lock(&cpu_buffer->lock);
+ 	rb_iter_reset(iter);
+ 	arch_spin_unlock(&cpu_buffer->lock);
+-	raw_spin_unlock_irqrestore(&cpu_buffer->reader_lock, flags);
++
++	return iter;
+ }
+ EXPORT_SYMBOL_GPL(ring_buffer_read_start);
+ 
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index 95ae7c4e5835..7996f26c3f46 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -4735,21 +4735,15 @@ __tracing_open(struct inode *inode, struct file *file, bool snapshot)
+ 	if (iter->cpu_file == RING_BUFFER_ALL_CPUS) {
+ 		for_each_tracing_cpu(cpu) {
+ 			iter->buffer_iter[cpu] =
+-				ring_buffer_read_prepare(iter->array_buffer->buffer,
+-							 cpu, GFP_KERNEL);
+-		}
+-		ring_buffer_read_prepare_sync();
+-		for_each_tracing_cpu(cpu) {
+-			ring_buffer_read_start(iter->buffer_iter[cpu]);
++				ring_buffer_read_start(iter->array_buffer->buffer,
++						       cpu, GFP_KERNEL);
+ 			tracing_iter_reset(iter, cpu);
+ 		}
+ 	} else {
+ 		cpu = iter->cpu_file;
+ 		iter->buffer_iter[cpu] =
+-			ring_buffer_read_prepare(iter->array_buffer->buffer,
+-						 cpu, GFP_KERNEL);
+-		ring_buffer_read_prepare_sync();
+-		ring_buffer_read_start(iter->buffer_iter[cpu]);
++			ring_buffer_read_start(iter->array_buffer->buffer,
++					       cpu, GFP_KERNEL);
+ 		tracing_iter_reset(iter, cpu);
+ 	}
+ 
+diff --git a/kernel/trace/trace_kdb.c b/kernel/trace/trace_kdb.c
+index d7b135de958a..896ff78b8349 100644
+--- a/kernel/trace/trace_kdb.c
++++ b/kernel/trace/trace_kdb.c
+@@ -43,17 +43,15 @@ static void ftrace_dump_buf(int skip_entries, long cpu_file)
+ 	if (cpu_file == RING_BUFFER_ALL_CPUS) {
+ 		for_each_tracing_cpu(cpu) {
+ 			iter.buffer_iter[cpu] =
+-			ring_buffer_read_prepare(iter.array_buffer->buffer,
+-						 cpu, GFP_ATOMIC);
+-			ring_buffer_read_start(iter.buffer_iter[cpu]);
++			ring_buffer_read_start(iter.array_buffer->buffer,
++					       cpu, GFP_ATOMIC);
+ 			tracing_iter_reset(&iter, cpu);
+ 		}
+ 	} else {
+ 		iter.cpu_file = cpu_file;
+ 		iter.buffer_iter[cpu_file] =
+-			ring_buffer_read_prepare(iter.array_buffer->buffer,
++			ring_buffer_read_start(iter.array_buffer->buffer,
+ 						 cpu_file, GFP_ATOMIC);
+-		ring_buffer_read_start(iter.buffer_iter[cpu_file]);
+ 		tracing_iter_reset(&iter, cpu_file);
+ 	}
+ 
+-- 
+2.47.2
 
