@@ -1,102 +1,71 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from verein.lst.de (verein.lst.de [213.95.11.211])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E4D4285C9D
-	for <linux-trace-kernel@vger.kernel.org>; Mon, 30 Jun 2025 12:51:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C40EE28A73D;
+	Mon, 30 Jun 2025 13:38:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751287874; cv=none; b=DLkJNeGbX7T7PbziX9em2FmuJtdbpDNitEIJko9CMdIQMhswfP5KCQx/XcLi8LAoEeSJat/fKxjoOg9CgGvBTnmOl0wSEWO00JzjqZLBztMcBbmrR0+6QjAcAZ8L7sqREyFyc1cnE+je9iaMp2yjTLnKsbH52Vm0jUzoAJ2nelM=
+	t=1751290726; cv=none; b=dtBpYqOJlpRFx5PR4xCHWeVJN5/np+vQQc2XxwjstExsgsGeQ5Hv314/wyMASDu82CTgpJtTOnpARtzvY9TDvGxd43OFG+YuZTdoQjYGQlbi3C2uMz0I0yJVf+kT9NQw9ABDaK3XocGK4uoRtryBskJFq2iBnzYlh7TknkW6MwU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751287874; c=relaxed/simple;
-	bh=8ujMhUl7i4M3zObpjxjLUh1ZT+VHzlsAgD+fcoPERC8=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=obTXrWrUfdk0b2NAiCegdVfezC0OiiDxzwRBLC7jAIl9YfeiEW5XAjOwkfaPoTpREgAPIrlBI3vk9lodq92qr4JWU/4wUSL/jiax6TDeCQRKdTQi2lMCPbwfjXG19eyLcCdHFEoVzwI0Ns8JOtc090yg5LCnjkD7xSF8s4ayhuU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=TSyDPUrP; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TSyDPUrP"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1751287872;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=84LuPZ9pN40vZZj6LotxaTZH2u/8fUAdfMA409beGHI=;
-	b=TSyDPUrP4Vj5OtqEA7MLBoNqkFaMa3sKRKU4Msq3IUaxJy2sW7xudL1j7AhEDYu/FPT4U+
-	YnkUl2zMZFhVSBgoUlETigXfFoCVjqSzMYoCoEHIX8ibod39okdS8shQy1lOPCNDumfYNT
-	q7WnnJvjdNQEx3TGBxLkgOhY/rl9344=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-624-CKIX6GAvPeiF6kLzFqpz0Q-1; Mon,
- 30 Jun 2025 08:51:08 -0400
-X-MC-Unique: CKIX6GAvPeiF6kLzFqpz0Q-1
-X-Mimecast-MFC-AGG-ID: CKIX6GAvPeiF6kLzFqpz0Q_1751287866
-Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 3D6061800287;
-	Mon, 30 Jun 2025 12:51:05 +0000 (UTC)
-Received: from oldenburg3.str.redhat.com (unknown [10.44.33.80])
-	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 57A451956095;
-	Mon, 30 Jun 2025 12:50:56 +0000 (UTC)
-From: Florian Weimer <fweimer@redhat.com>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: linux-kernel@vger.kernel.org,  linux-trace-kernel@vger.kernel.org,
-  bpf@vger.kernel.org,  x86@kernel.org,  Masami Hiramatsu
- <mhiramat@kernel.org>,  Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>,  Josh Poimboeuf <jpoimboe@kernel.org>,
-  Peter Zijlstra <peterz@infradead.org>,  Ingo Molnar <mingo@kernel.org>,
-  Jiri Olsa <jolsa@kernel.org>,  Namhyung Kim <namhyung@kernel.org>,
-  Thomas Gleixner <tglx@linutronix.de>,  Andrii Nakryiko
- <andrii@kernel.org>,  Indu Bhagat <indu.bhagat@oracle.com>,  "Jose E.
- Marchesi" <jemarch@gnu.org>,  Beau Belgrave <beaub@linux.microsoft.com>,
-  Jens Remus <jremus@linux.ibm.com>,  Linus Torvalds
- <torvalds@linux-foundation.org>,  Andrew Morton
- <akpm@linux-foundation.org>,  Jens Axboe <axboe@kernel.dk>
-Subject: Re: [PATCH v11 00/14] unwind_user: x86: Deferred unwinding
- infrastructure
-In-Reply-To: <20250625225600.555017347@goodmis.org> (Steven Rostedt's message
-	of "Wed, 25 Jun 2025 18:56:00 -0400")
-References: <20250625225600.555017347@goodmis.org>
-Date: Mon, 30 Jun 2025 14:50:52 +0200
-Message-ID: <878ql9mlzn.fsf@oldenburg.str.redhat.com>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	s=arc-20240116; t=1751290726; c=relaxed/simple;
+	bh=LZiG3HgLUNmpOImgoNORgqbqT6uE7HpQAw31fKnOkVE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZXDcJ+sP0+vx0O8PGhWfen0TUSYPKbQE0dMAamp4SmBX1qjW/vYa/n+qsB5dgL5SG3Gmu72PmVkCPHvE67YePyVptg1+WBFe0/S/wrbe4qn2YMlZFsDKzEdVr+wPextp7NR9izwXquJuno/8ZaGKRPCWyVWIHqqMp99skPOukH0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
+Received: by verein.lst.de (Postfix, from userid 2407)
+	id BF34B227A88; Mon, 30 Jun 2025 15:38:39 +0200 (CEST)
+Date: Mon, 30 Jun 2025 15:38:39 +0200
+From: Christoph Hellwig <hch@lst.de>
+To: Leon Romanovsky <leon@kernel.org>
+Cc: Marek Szyprowski <m.szyprowski@samsung.com>,
+	Christoph Hellwig <hch@lst.de>, Jonathan Corbet <corbet@lwn.net>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Robin Murphy <robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>,
+	Will Deacon <will@kernel.org>,
+	"Michael S. Tsirkin" <mst@redhat.com>,
+	Jason Wang <jasowang@redhat.com>,
+	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
+	Eugenio =?iso-8859-1?Q?P=E9rez?= <eperezma@redhat.com>,
+	Alexander Potapenko <glider@google.com>,
+	Marco Elver <elver@google.com>, Dmitry Vyukov <dvyukov@google.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	=?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org, iommu@lists.linux.dev,
+	virtualization@lists.linux.dev, kasan-dev@googlegroups.com,
+	linux-trace-kernel@vger.kernel.org, linux-mm@kvack.org,
+	Jason Gunthorpe <jgg@ziepe.ca>
+Subject: Re: [PATCH 0/8] dma-mapping: migrate to physical address-based API
+Message-ID: <20250630133839.GA26981@lst.de>
+References: <CGME20250625131920eucas1p271b196cde042bd39ac08fb12beff5baf@eucas1p2.samsung.com> <cover.1750854543.git.leon@kernel.org> <35df6f2a-0010-41fe-b490-f52693fe4778@samsung.com> <20250627170213.GL17401@unreal>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250627170213.GL17401@unreal>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 
-* Steven Rostedt:
+On Fri, Jun 27, 2025 at 08:02:13PM +0300, Leon Romanovsky wrote:
+> > Thanks for this rework! I assume that the next step is to add map_phys 
+> > callback also to the dma_map_ops and teach various dma-mapping providers 
+> > to use it to avoid more phys-to-page-to-phys conversions.
+> 
+> Probably Christoph will say yes, however I personally don't see any
+> benefit in this. Maybe I wrong here, but all existing .map_page()
+> implementation platforms don't support p2p anyway. They won't benefit
+> from this such conversion.
 
-> SFrames is now supported in gcc binutils and soon will also be supported
-> by LLVM.
-
-Is the LLVM support discussed here?
-
-  [RFC] Adding SFrame support to llvm
-  <https://discourse.llvm.org/t/rfc-adding-sframe-support-to-llvm/86900>
-
-Or is there a secone effort?
-
-> I have more patches on top of this series that add perf support, ftrace
-> support, sframe support and the x86 fix ups (for VDSO). But each of those
-> patch series can be worked on independently, but they all depend on this
-> series (although the x86 specific patches at the end isn't necessarily
-> needed, at least for other architectures).
-
-Related to perf support: I'm writing up the SFrame change proposal for
-Fedora, and I want to include testing instructions.  Any idea yet what a
-typical =E2=80=9Cperf top=E2=80=9D or =E2=80=9Cperf report=E2=80=9D command=
- line would look like?
-
-Thanks,
-Florian
+I think that conversion should eventually happen, and rather sooner than
+later.
 
