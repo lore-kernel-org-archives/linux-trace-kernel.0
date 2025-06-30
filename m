@@ -1,109 +1,102 @@
-Received: from mxhk.zte.com.cn (mxhk.zte.com.cn [160.30.148.35])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A445B23F27B;
-	Mon, 30 Jun 2025 09:21:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=160.30.148.35
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E4D4285C9D
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 30 Jun 2025 12:51:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751275308; cv=none; b=oy8IT2BijjCvpWW5o2p/ihmRzK/onQNnVDyaamUmlU+9US0KNirujU46auWIi2+QJfAillm8rLO/VE1iT8spWVbVtfnOafgBWlhp5PrAtF8rGyUoCwfJOvsBvDNOUlyASwgr42Z/OVlZ98eKMgU2Xuti941l2G669lm9vu4BaOY=
+	t=1751287874; cv=none; b=DLkJNeGbX7T7PbziX9em2FmuJtdbpDNitEIJko9CMdIQMhswfP5KCQx/XcLi8LAoEeSJat/fKxjoOg9CgGvBTnmOl0wSEWO00JzjqZLBztMcBbmrR0+6QjAcAZ8L7sqREyFyc1cnE+je9iaMp2yjTLnKsbH52Vm0jUzoAJ2nelM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751275308; c=relaxed/simple;
-	bh=0o5W8/0cAILHSI6HC3ZBYG/F978FraAhDVWatzRNlH0=;
-	h=Date:Message-ID:In-Reply-To:References:Mime-Version:From:To:Cc:
-	 Subject:Content-Type; b=X8YCExNSqOXq3Ot5hWfPyq1anL01gp4uuVD2+ZA7Z5vsa+P9MHRQ3rsw5wTMd12C5nhR11lRiaM4XvxGO2/3eCISxdzbmb0rWzoeJ3FPscscPJt+YoB6+0qoh2+prPuz14d2J4EcmeU4QXTK8S5np0IZgM5df0HOK8vvviIYN04=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn; spf=pass smtp.mailfrom=zte.com.cn; arc=none smtp.client-ip=160.30.148.35
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zte.com.cn
-Received: from mse-fl2.zte.com.cn (unknown [10.5.228.133])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	s=arc-20240116; t=1751287874; c=relaxed/simple;
+	bh=8ujMhUl7i4M3zObpjxjLUh1ZT+VHzlsAgD+fcoPERC8=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=obTXrWrUfdk0b2NAiCegdVfezC0OiiDxzwRBLC7jAIl9YfeiEW5XAjOwkfaPoTpREgAPIrlBI3vk9lodq92qr4JWU/4wUSL/jiax6TDeCQRKdTQi2lMCPbwfjXG19eyLcCdHFEoVzwI0Ns8JOtc090yg5LCnjkD7xSF8s4ayhuU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=TSyDPUrP; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TSyDPUrP"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1751287872;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=84LuPZ9pN40vZZj6LotxaTZH2u/8fUAdfMA409beGHI=;
+	b=TSyDPUrP4Vj5OtqEA7MLBoNqkFaMa3sKRKU4Msq3IUaxJy2sW7xudL1j7AhEDYu/FPT4U+
+	YnkUl2zMZFhVSBgoUlETigXfFoCVjqSzMYoCoEHIX8ibod39okdS8shQy1lOPCNDumfYNT
+	q7WnnJvjdNQEx3TGBxLkgOhY/rl9344=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-624-CKIX6GAvPeiF6kLzFqpz0Q-1; Mon,
+ 30 Jun 2025 08:51:08 -0400
+X-MC-Unique: CKIX6GAvPeiF6kLzFqpz0Q-1
+X-Mimecast-MFC-AGG-ID: CKIX6GAvPeiF6kLzFqpz0Q_1751287866
+Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mxhk.zte.com.cn (FangMail) with ESMTPS id 4bW0z405gsz8RVF5;
-	Mon, 30 Jun 2025 17:21:36 +0800 (CST)
-Received: from xaxapp05.zte.com.cn ([10.99.98.109])
-	by mse-fl2.zte.com.cn with SMTP id 55U9LJaR085138;
-	Mon, 30 Jun 2025 17:21:20 +0800 (+08)
-	(envelope-from xu.xin16@zte.com.cn)
-Received: from mapi (xaxapp04[null])
-	by mapi (Zmail) with MAPI id mid32;
-	Mon, 30 Jun 2025 17:21:22 +0800 (CST)
-Date: Mon, 30 Jun 2025 17:21:22 +0800 (CST)
-X-Zmail-TransId: 2afb6862571207f-b17d5
-X-Mailer: Zmail v1.0
-Message-ID: <202506301721223475hGdoPaiDtgihIpp82pZF@zte.com.cn>
-In-Reply-To: <CANn89iK-6kT-ZUpNRMjPY9_TkQj-dLuKrDQtvO1140q4EUsjFg@mail.gmail.com>
-References: 2025063016045077919B2mfJO_YO81tg6CKfHY@zte.com.cn,CANn89iK-6kT-ZUpNRMjPY9_TkQj-dLuKrDQtvO1140q4EUsjFg@mail.gmail.com
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 3D6061800287;
+	Mon, 30 Jun 2025 12:51:05 +0000 (UTC)
+Received: from oldenburg3.str.redhat.com (unknown [10.44.33.80])
+	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 57A451956095;
+	Mon, 30 Jun 2025 12:50:56 +0000 (UTC)
+From: Florian Weimer <fweimer@redhat.com>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: linux-kernel@vger.kernel.org,  linux-trace-kernel@vger.kernel.org,
+  bpf@vger.kernel.org,  x86@kernel.org,  Masami Hiramatsu
+ <mhiramat@kernel.org>,  Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>,  Josh Poimboeuf <jpoimboe@kernel.org>,
+  Peter Zijlstra <peterz@infradead.org>,  Ingo Molnar <mingo@kernel.org>,
+  Jiri Olsa <jolsa@kernel.org>,  Namhyung Kim <namhyung@kernel.org>,
+  Thomas Gleixner <tglx@linutronix.de>,  Andrii Nakryiko
+ <andrii@kernel.org>,  Indu Bhagat <indu.bhagat@oracle.com>,  "Jose E.
+ Marchesi" <jemarch@gnu.org>,  Beau Belgrave <beaub@linux.microsoft.com>,
+  Jens Remus <jremus@linux.ibm.com>,  Linus Torvalds
+ <torvalds@linux-foundation.org>,  Andrew Morton
+ <akpm@linux-foundation.org>,  Jens Axboe <axboe@kernel.dk>
+Subject: Re: [PATCH v11 00/14] unwind_user: x86: Deferred unwinding
+ infrastructure
+In-Reply-To: <20250625225600.555017347@goodmis.org> (Steven Rostedt's message
+	of "Wed, 25 Jun 2025 18:56:00 -0400")
+References: <20250625225600.555017347@goodmis.org>
+Date: Mon, 30 Jun 2025 14:50:52 +0200
+Message-ID: <878ql9mlzn.fsf@oldenburg.str.redhat.com>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-From: <xu.xin16@zte.com.cn>
-To: <edumazet@google.com>
-Cc: <kuba@kernel.org>, <kuniyu@amazon.com>, <ncardwell@google.com>,
-        <davem@davemloft.net>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
-        <yang.yang29@zte.com.cn>, <fan.yu9@zte.com.cn>,
-        <tu.qiang35@zte.com.cn>, <jiang.kun2@zte.com.cn>
-Subject: =?UTF-8?B?UmU6IFtQQVRDSCBuZXQtbmV4dF0gdGNwOiBhZGQgcmV0cmFuc21pc3Npb24gcXVpdCByZWFzb25zIHRvIHRyYWNlcG9pbnQ=?=
-Content-Type: text/plain;
-	charset="UTF-8"
-X-MAIL:mse-fl2.zte.com.cn 55U9LJaR085138
-X-Fangmail-Anti-Spam-Filtered: true
-X-Fangmail-MID-QID: 6862571F.004/4bW0z405gsz8RVF5
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
 
-> >
-> > From: Fan Yu <fan.yu9@zte.com.cn>
-> >
-> > Problem
-> > =======
-> > When TCP retransmits a packet due to missing ACKs, the retransmission
-> > may fail for various reasons (e.g., packets stuck in driver queues,
-> > sequence errors, or routing issues). Currently, these failure reasons
-> > are internally handled in __tcp_retransmit_skb() but lack visibility to
-> > userspace, which makes it difficult to diagnose retransmission failures in
-> > production environments.
-> >
-> > Solution
-> > =======
-> > This patch adds a reason field to the tcp_retransmit_skb tracepoint,
-> > enumerating with explicit failure cases:
-> > TCP_RETRANS_IN_HOST_QUEUE          (packet still queued in driver)
-> > TCP_RETRANS_END_SEQ_ERROR          (invalid end sequence)
-> > TCP_RETRANS_TRIM_HEAD_NOMEM      (trim head no memory)
-> > TCP_RETRANS_UNCLONE_NOMEM    (skb unclone keeptruesize no memory)
-> > TCP_RETRANS_FRAG_NOMEM       (fragment no memory)
-> > TCP_RETRANS_ROUTE_FAIL       (routing failure)
-> > TCP_RETRANS_RCV_ZERO_WINDOW  (closed recevier window)
-> > TCP_RETRANS_PSKB_COPY_NOBUFS (no buffer for skb copy)
-> > TCP_RETRANS_QUIT_UNDEFINED   (quit reason undefined)
-> 
-> 'undefined' ?
-> 
+* Steven Rostedt:
 
-Oh, it's redundant indeed. Will remove it in v2.
+> SFrames is now supported in gcc binutils and soon will also be supported
+> by LLVM.
 
+Is the LLVM support discussed here?
 
-> >
-> > Impact
-> > ======
-> > 1. Enables BPF programs to filter retransmission failures by reason.
-> > 2. Allows precise failure rate monitoring via ftrace.
-> >
-> > Co-developed-by: xu xin <xu.xin16@zte.com.cn>
-> > Signed-off-by: xu xin <xu.xin16@zte.com.cn>
-> > Signed-off-by: Fan Yu <fan.yu9@zte.com.cn>
-> 
-> Problem is that this patch breaks the original trace point, without
-> any mention of the potential consequences in the changelog ?
-> 
+  [RFC] Adding SFrame support to llvm
+  <https://discourse.llvm.org/t/rfc-adding-sframe-support-to-llvm/86900>
 
-Huhh, indeed. Will add a part description of the potential consequences in v2.
+Or is there a secone effort?
 
-Thanks for reviews.
+> I have more patches on top of this series that add perf support, ftrace
+> support, sframe support and the x86 fix ups (for VDSO). But each of those
+> patch series can be worked on independently, but they all depend on this
+> series (although the x86 specific patches at the end isn't necessarily
+> needed, at least for other architectures).
 
-> commit e086101b150ae8e99e54ab26101ef3835fa9f48d
-> Author: Cong Wang <xiyou.wangcong@gmail.com>
-> Date:   Fri Oct 13 13:03:16 2017 -0700
-> 
->     tcp: add a tracepoint for tcp retransmission
+Related to perf support: I'm writing up the SFrame change proposal for
+Fedora, and I want to include testing instructions.  Any idea yet what a
+typical =E2=80=9Cperf top=E2=80=9D or =E2=80=9Cperf report=E2=80=9D command=
+ line would look like?
+
+Thanks,
+Florian
+
