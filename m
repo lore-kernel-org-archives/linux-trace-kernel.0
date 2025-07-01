@@ -1,39 +1,36 @@
-Received: from relay.hostedemail.com (smtprelay0017.hostedemail.com [216.40.44.17])
+Received: from relay.hostedemail.com (smtprelay0013.hostedemail.com [216.40.44.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 773C7230BE4;
-	Tue,  1 Jul 2025 21:58:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E8111CA81;
+	Tue,  1 Jul 2025 22:11:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751407119; cv=none; b=rRJMOVGKM2Rod054dxbIt8SLwsfdo6O+DPTsy6JzhTRskc/IDEBMNYLas3E0v7InLCOcZd6VQnKkRdGuVnDezUwS/CsFn27sYJG2yq3J55eJ4E+hfqO/iCuezP+qcPGdVSctj1fODD2/ap50wg+dUaRRzjbitboY+SqZzax1O3E=
+	t=1751407887; cv=none; b=Ysv/RhKwFZa49A+oUujGt9m8NVKCMIMnN2NgYHwbyDECFdpLrjbV27ZCeTvnGgoks1fqZr4RxZvJWGq8OxNb4B5gf8NCL0eFucxrr1qFVAXgwKAs/V5IcYhDM2VdajZlkjnb6OaTCoJ+3yd4/wszQOrI0Df35tFAIU1lX3H3yd4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751407119; c=relaxed/simple;
-	bh=Gd7h7V4tZUgx/tp/sk3Qd8v2RvWILzZB8Eff/zz4YZ4=;
+	s=arc-20240116; t=1751407887; c=relaxed/simple;
+	bh=fwzeZnsPwoY03IrV93gOz4MH43a/7r1n5nJHBDXSrJs=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=V2ncaaNn8n0nMkPVVoph0EhhU9ckodnRE6cxm0+RqxdkHTR7MGsSXeGOoc4RTq03GfHCaYLhK4tcerjssaMfR2T+dO0Tr2QficiGtRdOnEFde0sGbqFMEpsCPi0HONSc6Gu1rDwdJCqQYqXmid1+VhAFcMURf7kJWcz8PIfOhR8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.17
+	 MIME-Version:Content-Type; b=n4t/+GrAfGXOSPnvSjVGKwsOUT3MwNDoXvpBkkbfi9NTW8r8fupSFhWsB7DZDoFJ8NkKMOcDZMVe+Y7cawD/PnqPDMaOJfsZJo64F4K1LfKCYZpm060o496umg4XN4nnN5RVXmCpIllpp9nvmZJKyhbcwJmI6Xj93rGOtsYpikA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.13
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf04.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay10.hostedemail.com (Postfix) with ESMTP id 0A9AAC0636;
-	Tue,  1 Jul 2025 21:58:29 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf04.hostedemail.com (Postfix) with ESMTPA id 24A4C20030;
-	Tue,  1 Jul 2025 21:58:27 +0000 (UTC)
-Date: Tue, 1 Jul 2025 17:58:26 -0400
+Received: from omf01.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay07.hostedemail.com (Postfix) with ESMTP id EBA4B16066C;
+	Tue,  1 Jul 2025 22:11:22 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf01.hostedemail.com (Postfix) with ESMTPA id 0F8F560016;
+	Tue,  1 Jul 2025 22:11:20 +0000 (UTC)
+Date: Tue, 1 Jul 2025 18:11:19 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
 To: Gabriele Paoloni <gpaoloni@redhat.com>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, mathieu.desnoyers@efficios.com,
+Cc: mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
  linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
  acarmina@redhat.com, chuck.wolber@boeing.com
-Subject: Re: [RFC PATCH 1/2] tracing: fixes of ftrace_enable_fops
-Message-ID: <20250701175826.429a7b4b@batman.local.home>
-In-Reply-To: <CA+wEVJaQcHdpVc3Za8qy0+Z-CGNeaDTrXtjJg2j7J6qsW4uAkQ@mail.gmail.com>
+Subject: Re: [RFC PATCH 2/2] tracing: add testable specifications for
+ event_enable_write/read
+Message-ID: <20250701181119.7b0bc5d6@batman.local.home>
+In-Reply-To: <20250612104349.5047-3-gpaoloni@redhat.com>
 References: <20250612104349.5047-1-gpaoloni@redhat.com>
-	<20250612104349.5047-2-gpaoloni@redhat.com>
-	<20250613114527.7e27a9a0ecc2b59d98677b0c@kernel.org>
-	<CA+wEVJa0jL-JH_4=5sR+Mvb26n4mPPudmOL0LRBDV54nMZcw8g@mail.gmail.com>
-	<20250620183503.6c84eb22cca206cd10418c04@kernel.org>
-	<CA+wEVJaQcHdpVc3Za8qy0+Z-CGNeaDTrXtjJg2j7J6qsW4uAkQ@mail.gmail.com>
+	<20250612104349.5047-3-gpaoloni@redhat.com>
 X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -43,34 +40,137 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Stat-Signature: xsr3n6d733jgjkmmfciss1nb8euuoupd
-X-Rspamd-Server: rspamout05
-X-Rspamd-Queue-Id: 24A4C20030
+X-Stat-Signature: w6jcuxx8rb699hp9p9dhyz3a3uiqfsdo
+X-Rspamd-Server: rspamout01
+X-Rspamd-Queue-Id: 0F8F560016
 X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1+l/RQALv1HGE4aDzquDMpry/1Cchsc5q0=
-X-HE-Tag: 1751407107-332310
-X-HE-Meta: U2FsdGVkX1+ODILg/f0VuTzk7kNGIH/z+A3/7X+kaAtzbsqbVhRIGSqpb8avD5REDBlmQ2wUkIf1CAXuOJxqC1fkg8BBgLE2hNvKhsUl2lC/9O5A2g9YDHyuiLb8fespd3oqCr04jD4E0udf5smTgoBdSEvFIZuCkEuZ7PQ2q5zcOS3vOPQsdYpFLoFlzE3LqzA1ECf9zoIt1/CI2abBolG5pYQSh4ic7eanoys73bn4MUaiMDBdd310qoBoEmBTodZLWy0SMZrR9wwWfZamEiU4QiXEwm5pY0IqPWCrK7Q26rDRHQjBkVFK941/O1cP+yDeoIqu1k4dfW0hQ+vLZccqk3O0v5dI
+X-Session-ID: U2FsdGVkX189n404bB2lDgycaIoKc0jEy6ui6CG92Vw=
+X-HE-Tag: 1751407880-615471
+X-HE-Meta: U2FsdGVkX18q2sKeAnqXOYlQBfW7JoKiB6kNFFT04Zt8cTzVabZJNeN6WPdRX+prZ6dtXnZwk/gSMiCn9awSITF6QE13oPjhfcKrEIWYs0OZXeNdmkBPV+sNlAK1SWM45LTAkkAH6kaVi0xhlqaF8AkPVmamELB7ZvrJT10RKnqcnGcc721UnnFM7TcqrttjwAhQYNF4MeEhR5qdz8ZZoF7SmTrVjerwNJtuaI74EKu9C+7iHPPxUVjwKbHW6X3uYCc8FERlpEyf+JiFRYxMyic4eQcKqog8nTT/n8k+Xdm+dRLZlt934wA763BxkLpmgeQze+ZKzPrUeB5nqirBlufGCeEWjlC2
 
-On Fri, 20 Jun 2025 15:26:27 +0200
+On Thu, 12 Jun 2025 12:43:49 +0200
 Gabriele Paoloni <gpaoloni@redhat.com> wrote:
 
-> I think that from my side I do not have comprehensive answers to all your
-> questions (I need to read the code more in depth).
-> So to be pragmatic I can split this effort into two parts (documentation and
-> redesign); I will propose documentation first with the TIPs that you mentioned
-> above and later, if we find a better re-design solution, we can also amend
-> the documentation as needed.
+> This patch implements the documentation of event_enable_write and
+> event_enable_read in the form of testable function's expectations.
+> 
+> Signed-off-by: Gabriele Paoloni <gpaoloni@redhat.com>
+> ---
+>  kernel/trace/trace_events.c | 72 +++++++++++++++++++++++++++++++++++++
+>  1 file changed, 72 insertions(+)
+> 
+> diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
+> index 5e84ef01d0c8..eb3c5e6e557d 100644
+> --- a/kernel/trace/trace_events.c
+> +++ b/kernel/trace/trace_events.c
+> @@ -1771,6 +1771,46 @@ static void p_stop(struct seq_file *m, void *p)
+>  	mutex_unlock(&event_mutex);
+>  }
+>  
+> +/**
+> + * event_enable_read - read from a trace event file to retrieve its status.
+> + * @filp: file pointer associated with the target trace event;
+> + * @ubuf: user space buffer where the event status is copied to;
+> + * @cnt: number of bytes to be copied to the user space buffer;
 
-Just to confirm, I agree with Masami. The enable file is quite special,
-and I don't see the use of user space playing tricks with it, which
-even includes lseek. Maybe to keep rewinding a read to get a new status
-change?
+Why is the above ending with semicolons?
 
-But it usually contains a single character (sometimes two) and a new
-line. It's not something that's ever been reported as an issue. I
-rather not touch it if it hasn't been reported as broken because
-there's some hypothetical use case that can see it as broken.
+> + * @ppos: the current position in the buffer.
+> + *
+> + * This is a way for user space executables to retrieve the status of a
+> + * specific event
+> + *
+> + * Function's expectations:
+> + * - This function shall lock the global event_mutex before performing any
+> + *   operation on the target event file and unlock it after all operations on
+> + *   the target event file have completed;
+> + * - This function shall retrieve the status flags from the file associated
+> + *   with the target event;
+> + * - This function shall format the string to report the event status to user
+> + *   space:
+> + *   - The first character of the string to be copied to user space shall be
+> + *     set to "1" if the enabled flag is set AND the soft_disabled flag is not
+> + *     set, else it shall be set to "0";
+> + *   - The second character of the string to be copied to user space shall be
+> + *     set to "*" if either the soft_disabled flag or the soft_mode flag is
+> + *     set, else it shall be set to "\n";
+> + *   - The third character of the string to be copied to user space shall b
+> + *     set to "\n" if either the soft_disabled flag or the soft_mode flag is
+> + *     set, else it shall be set to "0";
+> + *   - Any other character in the string to be copied to user space shall be
+> + *     set to "0";
 
-Documenting its current behavior is perfectly fine with me.
+The above could use some new lines. Like between each bullet. My
+eyesight isn't as good anymore and I find reading gobs of text more
+difficult. Newlines give my eyes a break.
+
+I know this is being written so that a tool could parse it, but also
+needs to be parsed by aging developers. ;-)
+
+> + * - This function shall check if the requested cnt bytes are equal or greater
+> + *   than the length of the string to be copied to user space (else a
+> + *   corrupted event status could be reported);
+> + * - This function shall invoke simple_read_from_buffer() to perform the copy
+> + *   of the kernel space string to ubuf.
+
+Hmm, and it is also verbose. This is a relatively simple function, and
+it caused quite a bit of requirements. I wonder if it could be
+shortened a bit. Otherwise more complex and larger functions are going
+to be overwhelming and likely not acceptable. And those are the
+functions that I think this will benefit the most!
+
+> + *
+> + * Returns the number of copied bytes on success, -ENODEV if the event file
+> + * cannot be retrieved from the input filp, -EINVAL if cnt is less than the
+> + * length of the string to be copied to ubuf, any error returned by
+> + * simple_read_from_buffer
+
+Returns should be formatted better where each return value is on a
+separate line.
 
 -- Steve
+
+> + */
+>  static ssize_t
+>  event_enable_read(struct file *filp, char __user *ubuf, size_t cnt,
+>  		  loff_t *ppos)
+> @@ -1808,6 +1848,38 @@ event_enable_read(struct file *filp, char __user *ubuf, size_t cnt,
+>  	return simple_read_from_buffer(ubuf, cnt, ppos, buf, strlen(buf));
+>  }
+>  
+> +/**
+> + * event_enable_write - write to a trace event file to enable/disable it.
+> + * @filp: file pointer associated with the target trace event;
+> + * @ubuf: user space buffer where the enable/disable value is copied from;
+> + * @cnt: number of bytes to be copied from the user space buffer;
+> + * @ppos: the current position in the buffer.
+> + *
+> + * This is a way for user space executables to enable or disable event
+> + * recording.
+> + *
+> + * Function's expectations:
+> + * - This function shall copy cnt bytes from the input ubuf buffer to a kernel
+> + *   space buffer (or the whole input ubuf if cnt is larger than ubuf size)
+> + *   and shall convert the string within the kernel space buffer into a decimal
+> + *   base format number;
+> + * - This function shall lock the global event_mutex before performing any
+> + *   operation on the target event file and unlock it after all operations on
+> + *   the target event file have completed;
+> + * - This function shall check the size of the per-cpu ring-buffers used for
+> + *   the event trace data and, if smaller than TRACE_BUF_SIZE_DEFAULT, expand
+> + *   them to TRACE_BUF_SIZE_DEFAULT bytes (sizes larger than
+> + *   TRACE_BUF_SIZE_DEFAULT are not allowed);
+> + * - This function shall invoke ftrace_event_enable_disable to enable or
+> + *   disable the target trace event according to the value read from user space
+> + *   (0 - disable, 1 - enable);
+> + *
+> + * Returns 0 on success, any error returned by kstrtoul_from_user, -ENODEV if
+> + * the event file cannot be retrieved from the input filp, any error returned by
+> + * tracing_update_buffers, any error returned by ftrace_event_enable_disable,
+> + * -EINVAL if the value copied from the user space ubuf is different from 0 or
+> + *  1.
+> + */
+>  static ssize_t
+>  event_enable_write(struct file *filp, const char __user *ubuf, size_t cnt,
+>  		   loff_t *ppos)
+
