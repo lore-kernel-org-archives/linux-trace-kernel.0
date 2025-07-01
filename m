@@ -1,388 +1,329 @@
-Received: from mxct.zte.com.cn (mxct.zte.com.cn [183.62.165.209])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9BCF2309B0;
-	Tue,  1 Jul 2025 09:41:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=183.62.165.209
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 474012701B3;
+	Tue,  1 Jul 2025 12:06:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751362878; cv=none; b=Qb0JJW2IvivwjT6Upa3/vgDFuL+IvNSrApjQHccb5nG8NOhHjznAuEX/db8X6cb3SWQ7JvMGiIOTWLor8H6yxFoJRMjSmLBzJMy0yuyiZmgxKyf8XEGiDlgabWmVv4ug/oJelFfiKxkFzOdQzEcApRw6RUQZdNGTn/VjH6kOpoE=
+	t=1751371593; cv=none; b=iYpezlODOmauNyYRnw3hiOlA7ysno31L/CQ6SGg6FmNPDZLS7fp3Wuwg3Uw69M/MfQRNrrkMdlIT6BU2Ha4C6N7ztPdQILaiHrzEPVusMgaNBk1Y8u7x0vUVj5MVqU41xzaT8F3LT1WNnzDJHkK4Bp9sa8DuTPDDUZYB8mdATJ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751362878; c=relaxed/simple;
-	bh=1lHpk4falGd8CU4cBIEePpzPxJzDW//lHJ8RG77rWEE=;
-	h=Date:Message-ID:Mime-Version:From:To:Cc:Subject:Content-Type; b=WogVkjME7BKaPURxdMW8/rj8pW0z5NXr4mdXFtumPSxGvSYlUFkAihZuoub5vKmFNpX80eqYL9cD+SVkrgcS5KDPGDab11toq+Mn6tPXNsVnefsE/ybCe/9dmVVN9vBVktGA14OUSfcSa+gYpgb0lHqwfBpBaILW6slbOrwxgYI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn; spf=pass smtp.mailfrom=zte.com.cn; arc=none smtp.client-ip=183.62.165.209
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zte.com.cn
-Received: from mse-fl2.zte.com.cn (unknown [10.5.228.133])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mxct.zte.com.cn (FangMail) with ESMTPS id 4bWdM404Dfz51SWj;
-	Tue,  1 Jul 2025 17:41:04 +0800 (CST)
-Received: from xaxapp05.zte.com.cn ([10.99.98.109])
-	by mse-fl2.zte.com.cn with SMTP id 5619enZv054393;
-	Tue, 1 Jul 2025 17:40:49 +0800 (+08)
-	(envelope-from xu.xin16@zte.com.cn)
-Received: from mapi (xaxapp05[null])
-	by mapi (Zmail) with MAPI id mid32;
-	Tue, 1 Jul 2025 17:40:51 +0800 (CST)
-Date: Tue, 1 Jul 2025 17:40:51 +0800 (CST)
-X-Zmail-TransId: 2afc6863ad23ffffffffa60-b95ab
-X-Mailer: Zmail v1.0
-Message-ID: <20250701174051880riwWtq_0siCJ5Yfsa6ZOQ@zte.com.cn>
+	s=arc-20240116; t=1751371593; c=relaxed/simple;
+	bh=ZFLRqw5MOpvnRmBIZQmDPKCy9JWfoM1TPzQcS1l0THI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bxrya/ozfv0hVUd9J1hBXTJdEE/5C0XGrcWYx+EalBWFw9JcfOvVE6w6lUshyr/Y5E02iDaTl8Y+3Ahp2QanEibMpZbtVjnIPpYWeMP73bXm4XKrYJox+j7b1y27fvJKi73j49bAiK8OjFTAkOG9vp8uzuBn3JQC/P5rAwH18YI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fJfbH7VM; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fJfbH7VM"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1751371591; x=1782907591;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=ZFLRqw5MOpvnRmBIZQmDPKCy9JWfoM1TPzQcS1l0THI=;
+  b=fJfbH7VM9FFOqbX6u2zmum0CoFFcId0SsOHyMIps296C6dXsLhKuEP7G
+   +akrnQRVuJ1PkPBvvHURoMbSU0knmr+k+dl678mSvJhS9/IjG4uvddqWM
+   YqbqZkjakI3ebPcOa5u+HpQYnt+R+jnUYjgcvH1Lj3/sHbK0xu8BmZhJX
+   7XxRXHjcf4yKFCZ+mq3ga9R1tF5BeJcitTI94EvJaviQ5U7v0Z7trbj5X
+   JP1NlMlbp9aSY/WBrOuhCI876JvVQPYygWISQU6rF2XS+t7jLntlL1kBM
+   CxKRmf9Px+8u4/qOyciGPe1Pp66cEmDaRVPqoSWgDDb2mKxylnVmNQhs8
+   w==;
+X-CSE-ConnectionGUID: 60ujOHiERJmF0h4/RoE0Ow==
+X-CSE-MsgGUID: kQDMvOV8SDqO3GFiQ/5LQA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11481"; a="52748466"
+X-IronPort-AV: E=Sophos;i="6.16,279,1744095600"; 
+   d="scan'208";a="52748466"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2025 05:06:30 -0700
+X-CSE-ConnectionGUID: N1Us77y6SGaqPAwODbc00Q==
+X-CSE-MsgGUID: Y0hA0wQ8RgeU/4PPPa1m+Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,279,1744095600"; 
+   d="scan'208";a="158139137"
+Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
+  by orviesa003.jf.intel.com with ESMTP; 01 Jul 2025 05:06:25 -0700
+Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uWZkk-000a7C-2K;
+	Tue, 01 Jul 2025 12:06:22 +0000
+Date: Tue, 1 Jul 2025 20:05:36 +0800
+From: kernel test robot <lkp@intel.com>
+To: Wander Lairson Costa <wander@redhat.com>,
+	Ingo Molnar <mingo@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+	Valentin Schneider <vschneid@redhat.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	David Woodhouse <dwmw@amazon.co.uk>, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Clark Williams <williams@redhat.com>,
+	Gabriele Monaco <gmonaco@redhat.com>
+Subject: Re: [PATCH v2 1/2] trace/preemptirq: reduce overhead of
+ irq_enable/disable tracepoints
+Message-ID: <202507011949.4wad2fIh-lkp@intel.com>
+References: <20250630195243.701516-2-wander@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-From: <xu.xin16@zte.com.cn>
-To: <kuba@kernel.org>, <edumazet@google.com>, <kuniyu@amazon.com>,
-        <ncardwell@google.com>, <davem@davemloft.net>, <horms@kernel.org>
-Cc: <dsahern@kernel.org>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
-        <fan.yu9@zte.com.cn>, <xu.xin16@zte.com.cn>
-Subject: =?UTF-8?B?W1BBVENIIG5ldC1uZXh0IHYyXSB0Y3A6IGV4dGVuZCB0Y3BfcmV0cmFuc21pdF9za2IgdHJhY2Vwb2ludCB3aXRoIGZhaWx1cmUgcmVhc29ucw==?=
-Content-Type: text/plain;
-	charset="UTF-8"
-X-MAIL:mse-fl2.zte.com.cn 5619enZv054393
-X-Fangmail-Anti-Spam-Filtered: true
-X-Fangmail-MID-QID: 6863AD2F.001/4bWdM404Dfz51SWj
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250630195243.701516-2-wander@redhat.com>
 
-From: Fan Yu <fan.yu9@zte.com.cn>
+Hi Wander,
 
-Background
-==========
-When TCP retransmits a packet due to missing ACKs, the
-retransmission may fail for various reasons (e.g., packets
-stuck in driver queues, sequence errors, or routing issues).
+kernel test robot noticed the following build errors:
 
-The original tcp_retransmit_skb tracepoint:
-'commit e086101b150a ("tcp: add a tracepoint for tcp retransmission")'
-lacks visibility into these failure causes, making production
-diagnostics difficult.
+[auto build test ERROR on trace/for-next]
+[also build test ERROR on tip/sched/core linus/master v6.16-rc4 next-20250701]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-Solution
-=======
-Adds a 'reason' field to the tcp_retransmit_skb tracepoint,
-enumerating with explicit failure cases:
-TCP_RETRANS_ERR_DEFAULT (retransmit terminate unexpectedly)
-TCP_RETRANS_IN_HOST_QUEUE (packet still queued in driver)
-TCP_RETRANS_END_SEQ_ERROR (invalid end sequence)
-TCP_RETRANS_TRIM_HEAD_NOMEM (trim head no memory)
-TCP_RETRANS_UNCLONE_NOMEM (skb unclone keeptruesize no memory)
-TCP_RETRANS_FRAG_NOMEM (fragment no memory)
-TCP_RETRANS_ROUTE_FAIL (routing failure)
-TCP_RETRANS_RCV_ZERO_WINDOW (closed recevier window)
-TCP_RETRANS_PSKB_COPY_NOBUFS (no buffer for skb copy)
+url:    https://github.com/intel-lab-lkp/linux/commits/Wander-Lairson-Costa/trace-preemptirq-reduce-overhead-of-irq_enable-disable-tracepoints/20250701-035446
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace for-next
+patch link:    https://lore.kernel.org/r/20250630195243.701516-2-wander%40redhat.com
+patch subject: [PATCH v2 1/2] trace/preemptirq: reduce overhead of irq_enable/disable tracepoints
+config: arm-randconfig-004-20250701 (https://download.01.org/0day-ci/archive/20250701/202507011949.4wad2fIh-lkp@intel.com/config)
+compiler: clang version 21.0.0git (https://github.com/llvm/llvm-project e04c938cc08a90ae60440ce22d072ebc69d67ee8)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250701/202507011949.4wad2fIh-lkp@intel.com/reproduce)
 
-Functionality
-=============
-Enables users to know why some tcp retransmission quitted and filter
-retransmission failures by reason.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202507011949.4wad2fIh-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+   In file included from kernel/bounds.c:13:
+   In file included from include/linux/log2.h:12:
+   In file included from include/linux/bitops.h:68:
+   In file included from arch/arm/include/asm/bitops.h:28:
+   In file included from include/linux/irqflags.h:20:
+   In file included from include/linux/tracepoint-defs.h:11:
+   In file included from include/linux/atomic.h:7:
+   In file included from arch/arm/include/asm/atomic.h:16:
+   In file included from arch/arm/include/asm/cmpxchg.h:124:
+   include/asm-generic/cmpxchg-local.h:26:2: error: call to undeclared function 'raw_local_irq_save'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
+      26 |         raw_local_irq_save(flags);
+         |         ^
+   include/asm-generic/cmpxchg-local.h:26:2: note: did you mean 'arch_local_irq_save'?
+   arch/arm/include/asm/irqflags.h:72:29: note: 'arch_local_irq_save' declared here
+      72 | static inline unsigned long arch_local_irq_save(void)
+         |                             ^
+   arch/arm/include/asm/irqflags.h:71:29: note: expanded from macro 'arch_local_irq_save'
+      71 | #define arch_local_irq_save arch_local_irq_save
+         |                             ^
+   In file included from kernel/bounds.c:13:
+   In file included from include/linux/log2.h:12:
+   In file included from include/linux/bitops.h:68:
+   In file included from arch/arm/include/asm/bitops.h:28:
+   In file included from include/linux/irqflags.h:20:
+   In file included from include/linux/tracepoint-defs.h:11:
+   In file included from include/linux/atomic.h:7:
+   In file included from arch/arm/include/asm/atomic.h:16:
+   In file included from arch/arm/include/asm/cmpxchg.h:124:
+   include/asm-generic/cmpxchg-local.h:47:2: error: call to undeclared function 'raw_local_irq_restore'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
+      47 |         raw_local_irq_restore(flags);
+         |         ^
+   include/asm-generic/cmpxchg-local.h:47:2: note: did you mean 'arch_local_irq_restore'?
+   arch/arm/include/asm/irqflags.h:169:20: note: 'arch_local_irq_restore' declared here
+     169 | static inline void arch_local_irq_restore(unsigned long flags)
+         |                    ^
+   arch/arm/include/asm/irqflags.h:168:32: note: expanded from macro 'arch_local_irq_restore'
+     168 | #define arch_local_irq_restore arch_local_irq_restore
+         |                                ^
+   In file included from kernel/bounds.c:13:
+   In file included from include/linux/log2.h:12:
+   In file included from include/linux/bitops.h:68:
+   In file included from arch/arm/include/asm/bitops.h:28:
+   In file included from include/linux/irqflags.h:20:
+   In file included from include/linux/tracepoint-defs.h:11:
+   In file included from include/linux/atomic.h:7:
+   In file included from arch/arm/include/asm/atomic.h:16:
+   In file included from arch/arm/include/asm/cmpxchg.h:124:
+   include/asm-generic/cmpxchg-local.h:60:2: error: call to undeclared function 'raw_local_irq_save'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
+      60 |         raw_local_irq_save(flags);
+         |         ^
+   include/asm-generic/cmpxchg-local.h:64:2: error: call to undeclared function 'raw_local_irq_restore'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
+      64 |         raw_local_irq_restore(flags);
+         |         ^
+   In file included from kernel/bounds.c:13:
+   In file included from include/linux/log2.h:12:
+   In file included from include/linux/bitops.h:68:
+   In file included from arch/arm/include/asm/bitops.h:28:
+   In file included from include/linux/irqflags.h:20:
+   In file included from include/linux/tracepoint-defs.h:11:
+   In file included from include/linux/atomic.h:7:
+   In file included from arch/arm/include/asm/atomic.h:16:
+   In file included from arch/arm/include/asm/cmpxchg.h:148:
+>> include/asm-generic/cmpxchg.h:33:3: error: call to undeclared function 'local_irq_save'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
+      33 |                 local_irq_save(flags);
+         |                 ^
+>> include/asm-generic/cmpxchg.h:36:3: error: call to undeclared function 'local_irq_restore'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
+      36 |                 local_irq_restore(flags);
+         |                 ^
+   In file included from kernel/bounds.c:13:
+   In file included from include/linux/log2.h:12:
+   In file included from include/linux/bitops.h:68:
+   In file included from arch/arm/include/asm/bitops.h:28:
+   In file included from include/linux/irqflags.h:20:
+   In file included from include/linux/tracepoint-defs.h:11:
+   In file included from include/linux/atomic.h:7:
+>> arch/arm/include/asm/atomic.h:215:2: error: call to undeclared function 'raw_local_irq_save'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
+     215 |         raw_local_irq_save(flags);
+         |         ^
+>> arch/arm/include/asm/atomic.h:219:2: error: call to undeclared function 'raw_local_irq_restore'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
+     219 |         raw_local_irq_restore(flags);
+         |         ^
+   arch/arm/include/asm/atomic.h:232:1: error: call to undeclared function 'raw_local_irq_save'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
+     232 | ATOMIC_OPS(add, +=, add)
+         | ^
+   arch/arm/include/asm/atomic.h:228:2: note: expanded from macro 'ATOMIC_OPS'
+     228 |         ATOMIC_OP(op, c_op, asm_op)                                     \
+         |         ^
+   arch/arm/include/asm/atomic.h:167:2: note: expanded from macro 'ATOMIC_OP'
+     167 |         raw_local_irq_save(flags);                                      \
+         |         ^
+   arch/arm/include/asm/atomic.h:232:1: error: call to undeclared function 'raw_local_irq_restore'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
+   arch/arm/include/asm/atomic.h:228:2: note: expanded from macro 'ATOMIC_OPS'
+     228 |         ATOMIC_OP(op, c_op, asm_op)                                     \
+         |         ^
+   arch/arm/include/asm/atomic.h:169:2: note: expanded from macro 'ATOMIC_OP'
+     169 |         raw_local_irq_restore(flags);                                   \
+         |         ^
+   arch/arm/include/asm/atomic.h:232:1: error: call to undeclared function 'raw_local_irq_save'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
+   arch/arm/include/asm/atomic.h:229:2: note: expanded from macro 'ATOMIC_OPS'
+     229 |         ATOMIC_OP_RETURN(op, c_op, asm_op)                              \
+         |         ^
+   arch/arm/include/asm/atomic.h:178:2: note: expanded from macro 'ATOMIC_OP_RETURN'
+     178 |         raw_local_irq_save(flags);                                      \
+         |         ^
+   arch/arm/include/asm/atomic.h:232:1: error: call to undeclared function 'raw_local_irq_restore'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
+   arch/arm/include/asm/atomic.h:229:2: note: expanded from macro 'ATOMIC_OPS'
+     229 |         ATOMIC_OP_RETURN(op, c_op, asm_op)                              \
+         |         ^
+   arch/arm/include/asm/atomic.h:181:2: note: expanded from macro 'ATOMIC_OP_RETURN'
+     181 |         raw_local_irq_restore(flags);                                   \
+         |         ^
+   arch/arm/include/asm/atomic.h:232:1: error: call to undeclared function 'raw_local_irq_save'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
+   arch/arm/include/asm/atomic.h:230:2: note: expanded from macro 'ATOMIC_OPS'
+     230 |         ATOMIC_FETCH_OP(op, c_op, asm_op)
+         |         ^
+   arch/arm/include/asm/atomic.h:192:2: note: expanded from macro 'ATOMIC_FETCH_OP'
+     192 |         raw_local_irq_save(flags);                                      \
+         |         ^
+   arch/arm/include/asm/atomic.h:232:1: error: call to undeclared function 'raw_local_irq_restore'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
+   arch/arm/include/asm/atomic.h:230:2: note: expanded from macro 'ATOMIC_OPS'
+     230 |         ATOMIC_FETCH_OP(op, c_op, asm_op)
+         |         ^
+   arch/arm/include/asm/atomic.h:195:2: note: expanded from macro 'ATOMIC_FETCH_OP'
+     195 |         raw_local_irq_restore(flags);                                   \
+         |         ^
+   arch/arm/include/asm/atomic.h:233:1: error: call to undeclared function 'raw_local_irq_save'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
+     233 | ATOMIC_OPS(sub, -=, sub)
+         | ^
+   arch/arm/include/asm/atomic.h:228:2: note: expanded from macro 'ATOMIC_OPS'
+     228 |         ATOMIC_OP(op, c_op, asm_op)                                     \
+         |         ^
+   arch/arm/include/asm/atomic.h:167:2: note: expanded from macro 'ATOMIC_OP'
+     167 |         raw_local_irq_save(flags);                                      \
+         |         ^
+   arch/arm/include/asm/atomic.h:233:1: error: call to undeclared function 'raw_local_irq_restore'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
+   arch/arm/include/asm/atomic.h:228:2: note: expanded from macro 'ATOMIC_OPS'
+     228 |         ATOMIC_OP(op, c_op, asm_op)                                     \
+         |         ^
+   arch/arm/include/asm/atomic.h:169:2: note: expanded from macro 'ATOMIC_OP'
+     169 |         raw_local_irq_restore(flags);                                   \
+         |         ^
+   arch/arm/include/asm/atomic.h:233:1: error: call to undeclared function 'raw_local_irq_save'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
+   arch/arm/include/asm/atomic.h:229:2: note: expanded from macro 'ATOMIC_OPS'
+     229 |         ATOMIC_OP_RETURN(op, c_op, asm_op)                              \
+         |         ^
+   arch/arm/include/asm/atomic.h:178:2: note: expanded from macro 'ATOMIC_OP_RETURN'
+     178 |         raw_local_irq_save(flags);                                      \
+         |         ^
+   arch/arm/include/asm/atomic.h:233:1: error: call to undeclared function 'raw_local_irq_restore'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
+   arch/arm/include/asm/atomic.h:229:2: note: expanded from macro 'ATOMIC_OPS'
+     229 |         ATOMIC_OP_RETURN(op, c_op, asm_op)                              \
+         |         ^
+   arch/arm/include/asm/atomic.h:181:2: note: expanded from macro 'ATOMIC_OP_RETURN'
+     181 |         raw_local_irq_restore(flags);                                   \
+         |         ^
+   arch/arm/include/asm/atomic.h:233:1: error: call to undeclared function 'raw_local_irq_save'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
+   arch/arm/include/asm/atomic.h:230:2: note: expanded from macro 'ATOMIC_OPS'
+     230 |         ATOMIC_FETCH_OP(op, c_op, asm_op)
+         |         ^
+   arch/arm/include/asm/atomic.h:192:2: note: expanded from macro 'ATOMIC_FETCH_OP'
+     192 |         raw_local_irq_save(flags);                                      \
+         |         ^
+   fatal error: too many errors emitted, stopping now [-ferror-limit=]
+   20 errors generated.
+   make[3]: *** [scripts/Makefile.build:98: kernel/bounds.s] Error 1 shuffle=3679043308
+   make[3]: Target 'prepare' not remade because of errors.
+   make[2]: *** [Makefile:1274: prepare0] Error 2 shuffle=3679043308
+   make[2]: Target 'prepare' not remade because of errors.
+   make[1]: *** [Makefile:248: __sub-make] Error 2 shuffle=3679043308
+   make[1]: Target 'prepare' not remade because of errors.
+   make: *** [Makefile:248: __sub-make] Error 2 shuffle=3679043308
+   make: Target 'prepare' not remade because of errors.
 
 
-Compatibility description
-=========================
-This patch extends the tcp_retransmit_skb tracepoint
-by adding a new quit_reason field at the end of its
-existing structure (within TP_STRUCT__entry). The
-compatibility implications are detailed as follows:
+vim +/local_irq_save +33 include/asm-generic/cmpxchg.h
 
-1) Structural compatibility for legacy user-space tools
-
-Legacy tools/BPF programs accessing existing fields
-(by offset or name) can still work without modification
-or recompilation.The new field is appended to the end,
-preserving original memory layout. 
-
-2) Note: semantic changes
-
-The original tracepoint primarily only focused on
-successfully retransmitted packets. With this patch,
-the tracepoint now covers all packets that trigger
-retransmission attempts, including those that may
-terminate early due to specific reasons. For accurate
-statistics, users should filter using quit_reason
-to distinguish outcomes.
-
-
-
-Before patched:
-# cat /sys/kernel/debug/tracing/events/tcp/tcp_retransmit_skb/format
-        field:const void * skbaddr;     offset:8;       size:8; signed:0;
-        field:const void * skaddr;      offset:16;      size:8; signed:0;
-        field:int state;        offset:24;      size:4; signed:1;
-        field:__u16 sport;      offset:28;      size:2; signed:0;
-        field:__u16 dport;      offset:30;      size:2; signed:0;
-        field:__u16 family;     offset:32;      size:2; signed:0;
-        field:__u8 saddr[4];    offset:34;      size:4; signed:0;
-        field:__u8 daddr[4];    offset:38;      size:4; signed:0;
-        field:__u8 saddr_v6[16];        offset:42;      size:16;        signed:0;
-        field:__u8 daddr_v6[16];        offset:58;      size:16;        signed:0;
-print fmt: "skbaddr=%p skaddr=%p family=%s sport=%hu dport=%hu saddr=%pI4 daddr=%pI4 saddrv6=%pI6c daddrv6=%pI6c state=%s"
-
-After patched:
-# cat /sys/kernel/debug/tracing/events/tcp/tcp_retransmit_skb/format
-        field:const void * skbaddr;     offset:8;       size:8; signed:0;
-        field:const void * skaddr;      offset:16;      size:8; signed:0;
-        field:int state;        offset:24;      size:4; signed:1;
-        field:__u16 sport;      offset:28;      size:2; signed:0;
-        field:__u16 dport;      offset:30;      size:2; signed:0;
-        field:__u16 family;     offset:32;      size:2; signed:0;
-        field:__u8 saddr[4];    offset:34;      size:4; signed:0;
-        field:__u8 daddr[4];    offset:38;      size:4; signed:0;
-        field:__u8 saddr_v6[16];        offset:42;      size:16;        signed:0;
-        field:__u8 daddr_v6[16];        offset:58;      size:16;        signed:0;
-        field:enum tcp_retransmit_quit_reason quit_reason;      offset:76;      size:4; signed:0;
-print fmt: "skbaddr=%p skaddr=%p family=%s sport=%hu dport=%hu saddr=%pI4 daddr=%pI4 saddrv6=%pI6c daddrv6=%pI6c state=%s quit_reason=%s"
-
-
-Co-developed-by: xu xin <xu.xin16@zte.com.cn>
-Signed-off-by: xu xin <xu.xin16@zte.com.cn>
-Signed-off-by: Fan Yu <fan.yu9@zte.com.cn>
-
----
-v1->v2:
-
-1) Rename TCP_RETRANS_QUIT_UNDEFINED to TCP_RETRANS_ERR_DEFAULT,
-as error codes due to tcp_transmit_skb() calls within
-__tcp_retransmit_skb are not explicitly tracked, it is
-necessary to make default failure reason essential
-for clarity. 
-
-2) Added detailed compatibility consequences section.
-
- include/linux/tcp.h        | 13 +++++++++
- include/trace/events/tcp.h | 54 +++++++++++++++++++++++++-------------
- net/ipv4/tcp_output.c      | 52 ++++++++++++++++++++++++++----------
- 3 files changed, 87 insertions(+), 32 deletions(-)
-
-diff --git a/include/linux/tcp.h b/include/linux/tcp.h
-index 29f59d50dc73..7ffd5680c4ac 100644
---- a/include/linux/tcp.h
-+++ b/include/linux/tcp.h
-@@ -530,6 +530,19 @@ enum tsq_flags {
- 	TCPF_ACK_DEFERRED		= BIT(TCP_ACK_DEFERRED),
- };
-
-+enum tcp_retransmit_quit_reason {
-+	TCP_RETRANS_ERR_DEFAULT,
-+	TCP_RETRANS_SUCCESS,
-+	TCP_RETRANS_IN_HOST_QUEUE,
-+	TCP_RETRANS_END_SEQ_ERROR,
-+	TCP_RETRANS_TRIM_HEAD_NOMEM,
-+	TCP_RETRANS_UNCLONE_NOMEM,
-+	TCP_RETRANS_FRAG_NOMEM,
-+	TCP_RETRANS_ROUTE_FAIL,
-+	TCP_RETRANS_RCV_ZERO_WINDOW,
-+	TCP_RETRANS_PSKB_COPY_NOBUFS,
-+};
-+
- #define tcp_sk(ptr) container_of_const(ptr, struct tcp_sock, inet_conn.icsk_inet.sk)
-
- /* Variant of tcp_sk() upgrading a const sock to a read/write tcp socket.
-diff --git a/include/trace/events/tcp.h b/include/trace/events/tcp.h
-index 54e60c6009e3..3e24740d759e 100644
---- a/include/trace/events/tcp.h
-+++ b/include/trace/events/tcp.h
-@@ -13,17 +13,38 @@
- #include <linux/sock_diag.h>
- #include <net/rstreason.h>
-
--/*
-- * tcp event with arguments sk and skb
-- *
-- * Note: this class requires a valid sk pointer; while skb pointer could
-- *       be NULL.
-- */
--DECLARE_EVENT_CLASS(tcp_event_sk_skb,
-+#define TCP_RETRANSMIT_QUIT_REASON		\
-+		ENUM(TCP_RETRANS_ERR_DEFAULT,		"retransmit terminate unexpectedly")	\
-+		ENUM(TCP_RETRANS_SUCCESS,		"retransmit successfully")		\
-+		ENUM(TCP_RETRANS_IN_HOST_QUEUE,		"packet still queued in driver")	\
-+		ENUM(TCP_RETRANS_END_SEQ_ERROR,		"invalid end sequence")			\
-+		ENUM(TCP_RETRANS_TRIM_HEAD_NOMEM,	"trim head no memory")			\
-+		ENUM(TCP_RETRANS_UNCLONE_NOMEM,		"skb unclone keeptruesize no memory")	\
-+		ENUM(TCP_RETRANS_FRAG_NOMEM,		"fragment no memory")			\
-+		ENUM(TCP_RETRANS_ROUTE_FAIL,		"routing failure")			\
-+		ENUM(TCP_RETRANS_RCV_ZERO_WINDOW,	"closed recevier window")		\
-+		ENUMe(TCP_RETRANS_PSKB_COPY_NOBUFS,	"no buffer for skb copy")		\
-+
-+/* Redefine for export. */
-+#undef ENUM
-+#undef ENUMe
-+#define ENUM(a, b)	TRACE_DEFINE_ENUM(a);
-+#define ENUMe(a, b)	TRACE_DEFINE_ENUM(a);
-+
-+TCP_RETRANSMIT_QUIT_REASON
-+
-+/* Redefine for symbolic printing. */
-+#undef ENUM
-+#undef ENUMe
-+#define ENUM(a, b)	{ a, b },
-+#define ENUMe(a, b)	{ a, b }
-+
-+TRACE_EVENT(tcp_retransmit_skb,
-
--	TP_PROTO(const struct sock *sk, const struct sk_buff *skb),
-+	TP_PROTO(const struct sock *sk, const struct sk_buff *skb,
-+		enum tcp_retransmit_quit_reason quit_reason),
-
--	TP_ARGS(sk, skb),
-+	TP_ARGS(sk, skb, quit_reason),
-
- 	TP_STRUCT__entry(
- 		__field(const void *, skbaddr)
-@@ -36,6 +57,7 @@ DECLARE_EVENT_CLASS(tcp_event_sk_skb,
- 		__array(__u8, daddr, 4)
- 		__array(__u8, saddr_v6, 16)
- 		__array(__u8, daddr_v6, 16)
-+		__field(enum tcp_retransmit_quit_reason, quit_reason)
- 	),
-
- 	TP_fast_assign(
-@@ -58,21 +80,17 @@ DECLARE_EVENT_CLASS(tcp_event_sk_skb,
-
- 		TP_STORE_ADDRS(__entry, inet->inet_saddr, inet->inet_daddr,
- 			      sk->sk_v6_rcv_saddr, sk->sk_v6_daddr);
-+
-+		__entry->quit_reason = quit_reason;
- 	),
-
--	TP_printk("skbaddr=%p skaddr=%p family=%s sport=%hu dport=%hu saddr=%pI4 daddr=%pI4 saddrv6=%pI6c daddrv6=%pI6c state=%s",
-+	TP_printk("skbaddr=%p skaddr=%p family=%s sport=%hu dport=%hu saddr=%pI4 daddr=%pI4 saddrv6=%pI6c daddrv6=%pI6c state=%s quit_reason=%s",
- 		  __entry->skbaddr, __entry->skaddr,
- 		  show_family_name(__entry->family),
- 		  __entry->sport, __entry->dport, __entry->saddr, __entry->daddr,
- 		  __entry->saddr_v6, __entry->daddr_v6,
--		  show_tcp_state_name(__entry->state))
--);
--
--DEFINE_EVENT(tcp_event_sk_skb, tcp_retransmit_skb,
--
--	TP_PROTO(const struct sock *sk, const struct sk_buff *skb),
--
--	TP_ARGS(sk, skb)
-+		  show_tcp_state_name(__entry->state),
-+		  __print_symbolic(__entry->quit_reason, TCP_RETRANSMIT_QUIT_REASON))
- );
-
- #undef FN
-diff --git a/net/ipv4/tcp_output.c b/net/ipv4/tcp_output.c
-index 3ac8d2d17e1f..70b89b9fdf4d 100644
---- a/net/ipv4/tcp_output.c
-+++ b/net/ipv4/tcp_output.c
-@@ -3326,6 +3326,7 @@ static void tcp_retrans_try_collapse(struct sock *sk, struct sk_buff *to,
-  */
- int __tcp_retransmit_skb(struct sock *sk, struct sk_buff *skb, int segs)
- {
-+	enum tcp_retransmit_quit_reason reason = TCP_RETRANS_ERR_DEFAULT;
- 	struct inet_connection_sock *icsk = inet_csk(sk);
- 	struct tcp_sock *tp = tcp_sk(sk);
- 	unsigned int cur_mss;
-@@ -3336,8 +3337,11 @@ int __tcp_retransmit_skb(struct sock *sk, struct sk_buff *skb, int segs)
- 	if (icsk->icsk_mtup.probe_size)
- 		icsk->icsk_mtup.probe_size = 0;
-
--	if (skb_still_in_host_queue(sk, skb))
--		return -EBUSY;
-+	if (skb_still_in_host_queue(sk, skb)) {
-+		reason = TCP_RETRANS_IN_HOST_QUEUE;
-+		err = -EBUSY;
-+		goto out;
-+	}
-
- start:
- 	if (before(TCP_SKB_CB(skb)->seq, tp->snd_una)) {
-@@ -3348,14 +3352,22 @@ int __tcp_retransmit_skb(struct sock *sk, struct sk_buff *skb, int segs)
- 		}
- 		if (unlikely(before(TCP_SKB_CB(skb)->end_seq, tp->snd_una))) {
- 			WARN_ON_ONCE(1);
--			return -EINVAL;
-+			reason = TCP_RETRANS_END_SEQ_ERROR;
-+			err = -EINVAL;
-+			goto out;
-+		}
-+		if (tcp_trim_head(sk, skb, tp->snd_una - TCP_SKB_CB(skb)->seq)) {
-+			reason = TCP_RETRANS_TRIM_HEAD_NOMEM;
-+			err = -ENOMEM;
-+			goto out;
- 		}
--		if (tcp_trim_head(sk, skb, tp->snd_una - TCP_SKB_CB(skb)->seq))
--			return -ENOMEM;
- 	}
-
--	if (inet_csk(sk)->icsk_af_ops->rebuild_header(sk))
--		return -EHOSTUNREACH; /* Routing failure or similar. */
-+	if (inet_csk(sk)->icsk_af_ops->rebuild_header(sk)) {
-+		reason = TCP_RETRANS_ROUTE_FAIL;
-+		err = -EHOSTUNREACH; /* Routing failure or similar. */
-+		goto out;
-+	}
-
- 	cur_mss = tcp_current_mss(sk);
- 	avail_wnd = tcp_wnd_end(tp) - TCP_SKB_CB(skb)->seq;
-@@ -3366,8 +3378,11 @@ int __tcp_retransmit_skb(struct sock *sk, struct sk_buff *skb, int segs)
- 	 * our retransmit of one segment serves as a zero window probe.
- 	 */
- 	if (avail_wnd <= 0) {
--		if (TCP_SKB_CB(skb)->seq != tp->snd_una)
--			return -EAGAIN;
-+		if (TCP_SKB_CB(skb)->seq != tp->snd_una) {
-+			reason = TCP_RETRANS_RCV_ZERO_WINDOW;
-+			err = -EAGAIN;
-+			goto out;
-+		}
- 		avail_wnd = cur_mss;
- 	}
-
-@@ -3379,11 +3394,17 @@ int __tcp_retransmit_skb(struct sock *sk, struct sk_buff *skb, int segs)
- 	}
- 	if (skb->len > len) {
- 		if (tcp_fragment(sk, TCP_FRAG_IN_RTX_QUEUE, skb, len,
--				 cur_mss, GFP_ATOMIC))
--			return -ENOMEM; /* We'll try again later. */
-+				 cur_mss, GFP_ATOMIC)) {
-+			reason = TCP_RETRANS_FRAG_NOMEM;
-+			err = -ENOMEM;  /* We'll try again later. */
-+			goto out;
-+		}
- 	} else {
--		if (skb_unclone_keeptruesize(skb, GFP_ATOMIC))
--			return -ENOMEM;
-+		if (skb_unclone_keeptruesize(skb, GFP_ATOMIC)) {
-+			reason = TCP_RETRANS_UNCLONE_NOMEM;
-+			err = -ENOMEM;
-+			goto out;
-+		}
-
- 		diff = tcp_skb_pcount(skb);
- 		tcp_set_skb_tso_segs(skb, cur_mss);
-@@ -3421,6 +3442,7 @@ int __tcp_retransmit_skb(struct sock *sk, struct sk_buff *skb, int segs)
- 				nskb->dev = NULL;
- 				err = tcp_transmit_skb(sk, nskb, 0, GFP_ATOMIC);
- 			} else {
-+				reason = TCP_RETRANS_PSKB_COPY_NOBUFS;
- 				err = -ENOBUFS;
- 			}
- 		} tcp_skb_tsorted_restore(skb);
-@@ -3438,7 +3460,7 @@ int __tcp_retransmit_skb(struct sock *sk, struct sk_buff *skb, int segs)
- 				  TCP_SKB_CB(skb)->seq, segs, err);
-
- 	if (likely(!err)) {
--		trace_tcp_retransmit_skb(sk, skb);
-+		reason = TCP_RETRANS_SUCCESS;
- 	} else if (err != -EBUSY) {
- 		NET_ADD_STATS(sock_net(sk), LINUX_MIB_TCPRETRANSFAIL, segs);
- 	}
-@@ -3448,6 +3470,8 @@ int __tcp_retransmit_skb(struct sock *sk, struct sk_buff *skb, int segs)
- 	 */
- 	TCP_SKB_CB(skb)->sacked |= TCPCB_EVER_RETRANS;
-
-+out:
-+	trace_tcp_retransmit_skb(sk, skb, reason);
- 	return err;
- }
+b4816afa398670 David Howells 2012-03-28  22  
+b4816afa398670 David Howells 2012-03-28  23  static inline
+82b993e8249ae3 Mark Rutland  2021-05-25  24  unsigned long __generic_xchg(unsigned long x, volatile void *ptr, int size)
+b4816afa398670 David Howells 2012-03-28  25  {
+b4816afa398670 David Howells 2012-03-28  26  	unsigned long ret, flags;
+b4816afa398670 David Howells 2012-03-28  27  
+b4816afa398670 David Howells 2012-03-28  28  	switch (size) {
+b4816afa398670 David Howells 2012-03-28  29  	case 1:
+b4816afa398670 David Howells 2012-03-28  30  #ifdef __xchg_u8
+b4816afa398670 David Howells 2012-03-28  31  		return __xchg_u8(x, ptr);
+b4816afa398670 David Howells 2012-03-28  32  #else
+b4816afa398670 David Howells 2012-03-28 @33  		local_irq_save(flags);
+b4816afa398670 David Howells 2012-03-28  34  		ret = *(volatile u8 *)ptr;
+656e9007ef5862 Arnd Bergmann 2023-03-02  35  		*(volatile u8 *)ptr = (x & 0xffu);
+b4816afa398670 David Howells 2012-03-28 @36  		local_irq_restore(flags);
+b4816afa398670 David Howells 2012-03-28  37  		return ret;
+b4816afa398670 David Howells 2012-03-28  38  #endif /* __xchg_u8 */
+b4816afa398670 David Howells 2012-03-28  39  
+b4816afa398670 David Howells 2012-03-28  40  	case 2:
+b4816afa398670 David Howells 2012-03-28  41  #ifdef __xchg_u16
+b4816afa398670 David Howells 2012-03-28  42  		return __xchg_u16(x, ptr);
+b4816afa398670 David Howells 2012-03-28  43  #else
+b4816afa398670 David Howells 2012-03-28  44  		local_irq_save(flags);
+b4816afa398670 David Howells 2012-03-28  45  		ret = *(volatile u16 *)ptr;
+656e9007ef5862 Arnd Bergmann 2023-03-02  46  		*(volatile u16 *)ptr = (x & 0xffffu);
+b4816afa398670 David Howells 2012-03-28  47  		local_irq_restore(flags);
+b4816afa398670 David Howells 2012-03-28  48  		return ret;
+b4816afa398670 David Howells 2012-03-28  49  #endif /* __xchg_u16 */
+b4816afa398670 David Howells 2012-03-28  50  
+b4816afa398670 David Howells 2012-03-28  51  	case 4:
+b4816afa398670 David Howells 2012-03-28  52  #ifdef __xchg_u32
+b4816afa398670 David Howells 2012-03-28  53  		return __xchg_u32(x, ptr);
+b4816afa398670 David Howells 2012-03-28  54  #else
+b4816afa398670 David Howells 2012-03-28  55  		local_irq_save(flags);
+b4816afa398670 David Howells 2012-03-28  56  		ret = *(volatile u32 *)ptr;
+656e9007ef5862 Arnd Bergmann 2023-03-02  57  		*(volatile u32 *)ptr = (x & 0xffffffffu);
+b4816afa398670 David Howells 2012-03-28  58  		local_irq_restore(flags);
+b4816afa398670 David Howells 2012-03-28  59  		return ret;
+b4816afa398670 David Howells 2012-03-28  60  #endif /* __xchg_u32 */
+b4816afa398670 David Howells 2012-03-28  61  
 
 -- 
-2.25.1
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
