@@ -1,42 +1,34 @@
 Received: from relay.hostedemail.com (smtprelay0010.hostedemail.com [216.40.44.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCAFC1CA81;
-	Tue,  1 Jul 2025 21:17:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0774C2701C8;
+	Tue,  1 Jul 2025 21:44:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751404643; cv=none; b=guBoP7zLwo2WrsiPihsmeHIN0HIch1NCETPDu7uvBLCFTKEaW5mf1t9dp47j8ZSGPzQCWk1TndXxIODYwKOGMWrAtYjGXZKELMakUOWmkzbg4HOEDSJpTPlzTEnYytf0EOgdqcU7RrmpmpirY620YXUcJKnbA1Pw7GjdYLxC00c=
+	t=1751406246; cv=none; b=XR3yIIIW9WJTFTGM2+W7UC00UkIjZPiWAkN0d7XFS6x/qMSFzDnGGAZxEl9KUPPOQH22QdBZLKk/m51YmCx9PPVRS0iDLa6AB1g0qPh3b0UZyqByP/LeWYb5FK5swKa1Cev5ydNBs0oFMhx1eRAdMMIwqZzVR0macqA17Jyyihs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751404643; c=relaxed/simple;
-	bh=/cV6d1pkH2bVeRauPTOQ+IrbBObh9kcPyt+2bvoTv8U=;
+	s=arc-20240116; t=1751406246; c=relaxed/simple;
+	bh=fWpBk2lqDKfDmqSHwqMeo8Bl/Aw2dj3Vg5CyH1owqbE=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=c2QcGeZXWaD1HDbByJeVUN98x5dGc6PafBbFHxRW6Mr8RIjTyM998xAhqITzsWLZJkC59CiNuE9jwDuFnf7N9OXti7Ga9zGGUfByqNQjBWBtlgk1ZBffEDDU2dPjcbykfXg0UkQMkIknt5xDmT+qudLBPlL2qOzdxTsOpqk46z8=
+	 MIME-Version:Content-Type; b=c6GDA2zuBZY35YmaCG7P8UQnrG3E8PmLoqrsQCUNGxMnJ/OdO1ldhdv24NOAnTjH1kGUpN0BqF0xfHBmUeAceOGBQTgDyvKR3v73BjVjSTGDN3ns1s79A3n97H//lsAWl0qrMimsEhG2HVSOxsZ4iRgviksE7d8sh38sQJ9C6/c=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.10
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf17.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay07.hostedemail.com (Postfix) with ESMTP id 74F7016066C;
-	Tue,  1 Jul 2025 21:17:18 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf17.hostedemail.com (Postfix) with ESMTPA id AB1E01B;
-	Tue,  1 Jul 2025 21:17:16 +0000 (UTC)
-Date: Tue, 1 Jul 2025 17:17:15 -0400
+Received: from omf13.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay07.hostedemail.com (Postfix) with ESMTP id 787E5160675;
+	Tue,  1 Jul 2025 21:44:02 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf13.hostedemail.com (Postfix) with ESMTPA id 9A11B2000D;
+	Tue,  1 Jul 2025 21:44:00 +0000 (UTC)
+Date: Tue, 1 Jul 2025 17:43:59 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
-To: Nam Cao <namcao@linutronix.de>
-Cc: Gabriele Monaco <gmonaco@redhat.com>,
- linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
- john.ogness@linutronix.de
-Subject: Re: [PATCH v10 17/19] rv: Add rtapp_sleep monitor
-Message-ID: <20250701171715.5a1a99a0@batman.local.home>
-In-Reply-To: <20250701210338.BooVbo54@linutronix.de>
-References: <cover.1749547399.git.namcao@linutronix.de>
-	<d3cf55d3bf42a0f70a58c394b5cf6d603ca8a9f7.1749547399.git.namcao@linutronix.de>
-	<20250630203401.1a11e58f@gandalf.local.home>
-	<20250701051757.mBjQVdoo@linutronix.de>
-	<20250701110218.5e742850@batman.local.home>
-	<20250701110551.5c2dc2ee@batman.local.home>
-	<20250701151114.OJQTlRCY@linutronix.de>
-	<20250701111704.00456667@batman.local.home>
-	<20250701210338.BooVbo54@linutronix.de>
+To: Costa Shulyupin <costa.shul@redhat.com>
+Cc: Jonathan Corbet <corbet@lwn.net>, linux-trace-kernel@vger.kernel.org,
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Tomas Glozar
+ <tglozar@redhat.com>
+Subject: Re: [PATCH] Documentation/rtla: Add include common_appendix.rst
+Message-ID: <20250701174359.2bae6977@batman.local.home>
+In-Reply-To: <20250608104437.753708-2-costa.shul@redhat.com>
+References: <20250608104437.753708-2-costa.shul@redhat.com>
 X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -46,31 +38,39 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: AB1E01B
+X-Rspamd-Queue-Id: 9A11B2000D
 X-Rspamd-Server: rspamout02
-X-Stat-Signature: k1t1f6axigc9joo1kyg33sgiubod17fz
+X-Stat-Signature: hkzftsfbutcuogshk8fed4eunerdjshb
 X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX19Ok8LG1r6ryiL8bKaDIIsgZlORN5GmR1w=
-X-HE-Tag: 1751404636-345848
-X-HE-Meta: U2FsdGVkX1/64e4LZmiVpmpJXNn76gLDZ+XGrCIibaOiBdbiV5il0QIPUo0+WAKmrFyWTeCBwcAtoaSzjS7xlOL5fz2n2HeFx6syQ7HFJOixYpaSFCO/aT+wl5/HBU09h3leOZst51ChlUA+QHSCdLqM4TcvZJf+ym90w93zVr7fVivjksu7iQZ3+cQInLWP0o7NQ7n3a3Eou+XY0nFye1UPhJvIVfiw11fgaGAi7rqcdzGOjtF6ifUp3j8Bi87rtCyzACez8K3NkYEG1VFHIwVZ1kgKsUhAci4BGvrPrrVOhW2nC3B2fRZAvbJ+Vxrt
+X-Session-ID: U2FsdGVkX1/n5DMq2R0+gTKdHm3cyahxwmxaueuCico=
+X-HE-Tag: 1751406240-664871
+X-HE-Meta: U2FsdGVkX1/YZxxOEH8eskrMWivw/6zL+hxKFyqgYHRf2jhr85eCnNCJ6cW/4rWkbSL9TyKo+3OYVyzNUs9bQRrhn2b6KDvYCuy4MwpLNhiXGfrmFB3msCu3v4oatCxniQCYmQD4wNaPs7fU9XigTYPh3LnQ/h1z6XlcSIS4K9j4VSTv7N0qIfeRWIvFwvmVwy5NT+XTR4MTScn/f0T9JVMTZzYnbA70aL3aGmNSebFYn/1DVOc/ufKVsOD9WQqlMf8yE4ze7/R9GPl47RbAq92sZc4yla+KoahkH8IGRnPVLWhH3pKgrCvhJI/lQonltVN35FV222IqJm7hcmYeXGXhOUi45xHnkavtRlRlQxYeoQUVkuhcyq3RdOxXytPYhmrt1pn2uyXg4m25sxhUuKY8w8QK2BVzIE1dAE5siJE=
 
-On Tue, 1 Jul 2025 23:03:38 +0200
-Nam Cao <namcao@linutronix.de> wrote:
+On Sun,  8 Jun 2025 13:44:36 +0300
+Costa Shulyupin <costa.shul@redhat.com> wrote:
+
+> Add include common_appendix.rst into
+> Documentation/tools/rtla/rtla-timerlat-hist.rst - the only file of
+> rtla-*.rst still without common_appendix.rst.
 > 
-> > Bonus points if it shows how it was generated so that people will know
-> > how to regenerate it.  
-> 
-> If it's okay, not in this series. It requires changes to the RV core
-> script, and I prefer not touching things which are not LTL-specific for
-> now, unless necessary. The DA monitors and the containers do not have it as
-> well.
+> Signed-off-by: Costa Shulyupin <costa.shul@redhat.com>
 
-Yeah, just update this set to state that this code was generated.
-
-> 
-> Let me stash it into my TODO list of RV cleanups. I will add this for LTL,
-> deterministic automaton and container in one go.
-
-Thanks,
+Acked-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 
 -- Steve
+
+> ---
+>  Documentation/tools/rtla/rtla-timerlat-hist.rst | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/Documentation/tools/rtla/rtla-timerlat-hist.rst b/Documentation/tools/rtla/rtla-timerlat-hist.rst
+> index 03b7f3deb069..b2d8726271b3 100644
+> --- a/Documentation/tools/rtla/rtla-timerlat-hist.rst
+> +++ b/Documentation/tools/rtla/rtla-timerlat-hist.rst
+> @@ -107,3 +107,5 @@ SEE ALSO
+>  AUTHOR
+>  ======
+>  Written by Daniel Bristot de Oliveira <bristot@kernel.org>
+> +
+> +.. include:: common_appendix.rst
+
