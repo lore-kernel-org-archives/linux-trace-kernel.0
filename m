@@ -1,35 +1,35 @@
-Received: from relay.hostedemail.com (smtprelay0014.hostedemail.com [216.40.44.14])
+Received: from relay.hostedemail.com (smtprelay0012.hostedemail.com [216.40.44.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C39A52F1FE6;
-	Tue,  1 Jul 2025 00:33:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3249433A5;
+	Tue,  1 Jul 2025 00:34:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751330011; cv=none; b=U90XzyOgImkfxcRnjFLdHAuntuDRKH6CJG+v/Ggx3kH94LmEyRSTwLhYThg6/nXsiANl9SREdZGao07rLsShEIma41qRi3sn3U7H91JEyK8CDb6ubhKQGJ9Xgyd2sv+HL03rMC/PZ0V3CpD1fGLzba7VXch/qRkFrJl9VWEI3jM=
+	t=1751330070; cv=none; b=f5ZveWfhA5vMPkd+v5bs1IEy/SCNi4JaV9Umod+bJJxTx75bpml3Xj8HWO6OUprLb+5lBFPuCLVOiVMr/CMmaESYdjdZNPT7hETBhOQ3o3/DswcS7Dwi8vj2BY5pI4gkx5Y+9WVEJjfl3bXgnNSkVzQw23brW4MJv5E5OEa4ZII=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751330011; c=relaxed/simple;
-	bh=/skP8Ljo8IEscW1zmu5gFSkR+/tvjcLxuPcDoAwB+6M=;
+	s=arc-20240116; t=1751330070; c=relaxed/simple;
+	bh=soofGfktdUTzhkeLri62x3nc+7vffuBNlzyVx4ZXkKI=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=mPlC6TFxCLGQJ8t6AmQlxCVuVxPzE3vJNUU9e3q/S2E3wwAECrRqNqpoEy6X4JSWRoRHgcLsCAE7ZrFGcRXWQO1qiBfbbAn+QxhbWIP2YleGH2lXyKgFAnN47paFcYhkNqP6QtmJSPL8s/MTh99VMz1zsdqD+LmeEY1ZQg0U0rI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.14
+	 MIME-Version:Content-Type; b=JFCA0DEhPrTIkBgzoy+59Lel1p13b/R57+ah5NLaiejfQWKYOO8ua0dOeDG+x2Vf5yNWmrz2L5W5G55h5dDYdVKNUKPjWu9rGsirpGJLFrBjuNskomHvQMxakDy5wXzcv5ZiZIAzd1a95ut/IBa0ZEIAm4czqod5KhoGOj53jOM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.12
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf08.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay02.hostedemail.com (Postfix) with ESMTP id 6EF4F121CE1;
-	Tue,  1 Jul 2025 00:33:27 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf08.hostedemail.com (Postfix) with ESMTPA id B5A1E20029;
-	Tue,  1 Jul 2025 00:33:25 +0000 (UTC)
-Date: Mon, 30 Jun 2025 20:34:01 -0400
+Received: from omf19.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay08.hostedemail.com (Postfix) with ESMTP id 0D5C8140213;
+	Tue,  1 Jul 2025 00:34:22 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf19.hostedemail.com (Postfix) with ESMTPA id 3B1B720026;
+	Tue,  1 Jul 2025 00:34:20 +0000 (UTC)
+Date: Mon, 30 Jun 2025 20:34:56 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
 To: Nam Cao <namcao@linutronix.de>
 Cc: Gabriele Monaco <gmonaco@redhat.com>,
  linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
  john.ogness@linutronix.de
-Subject: Re: [PATCH v10 17/19] rv: Add rtapp_sleep monitor
-Message-ID: <20250630203401.1a11e58f@gandalf.local.home>
-In-Reply-To: <d3cf55d3bf42a0f70a58c394b5cf6d603ca8a9f7.1749547399.git.namcao@linutronix.de>
+Subject: Re: [PATCH v10 18/19] rv: Add documentation for rtapp monitor
+Message-ID: <20250630203456.5619393f@gandalf.local.home>
+In-Reply-To: <18984a62a214d18793b04cce98a4498a4813ff85.1749547399.git.namcao@linutronix.de>
 References: <cover.1749547399.git.namcao@linutronix.de>
-	<d3cf55d3bf42a0f70a58c394b5cf6d603ca8a9f7.1749547399.git.namcao@linutronix.de>
+	<18984a62a214d18793b04cce98a4498a4813ff85.1749547399.git.namcao@linutronix.de>
 X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -39,155 +39,48 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Stat-Signature: pjgbnxhko5ejey819w8n1j8n6cuyxz71
-X-Rspamd-Server: rspamout07
-X-Rspamd-Queue-Id: B5A1E20029
+X-Rspamd-Queue-Id: 3B1B720026
+X-Rspamd-Server: rspamout02
+X-Stat-Signature: 1egrhocr3kg31i6ezu4ahzh9pe6zh87g
 X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1+b2IhGEXg5GPmPtXjNLo1Qu7smsYZuQP0=
-X-HE-Tag: 1751330005-756817
-X-HE-Meta: U2FsdGVkX187jE53da+biyQct+qC0+tc43RGlHOpd9J+9/BJSRYAxs9npKwnthlQ38mbTcJE4YQl9gnvbpD0V98zAg0R2TyKlk9O9YMVTiBDnCLjrU+maXuCJCVXKW0e/4vR3wUTioZhbT86bWQegtpPZQ4dviNkkVDBVVHTjRFuBPN69+fVJCe4hD7HRBZgM4QyPbdCvQinoxDBpibzsWM3kxXCvc2hDzrsJlgLPEVXU20b9RVdn4K/w5qmtJGh/NHcapIcNB1eUZ37dNOAQG8mMPUf+j63W2FRZl0i5NKUM+NhPC7d/Vas5AtjVpTV
+X-Session-ID: U2FsdGVkX1/lVfUDTyAYSDNZKVoB8OEQUXTvUbr3vno=
+X-HE-Tag: 1751330060-542645
+X-HE-Meta: U2FsdGVkX18p/Om28DO7EaIfiJOoWPiMGv7BMMifbIoZU37wdUUgSpqgD2BvUIMFVUzRAeR1juAwE7/wfl1uqLPQUoujTvCuijEZ8f/4FjdUniM5kb8cJwQq5sTRD5VvWAM98R4kn0kYg4r3WrKsyrjyrJEhdUWy9K0r01rd3C3ZLFzGrkN7EAk1e4c2I3V2WB7LppdYDS5sX00UCa+6LniiS98b5mPLdlOSdty1cfJfMICqpT6hjcUwb+aIdgwUc3lxI4pwPvHN7vSxLZ/MSNYDiqSU+OomazMuPoYfzD2fvjVBFgYKl9DVXZUjPbK1
 
-On Tue, 10 Jun 2025 11:43:42 +0200
+On Tue, 10 Jun 2025 11:43:43 +0200
 Nam Cao <namcao@linutronix.de> wrote:
 
-> +static void
-> +ltl_possible_next_states(struct ltl_monitor *mon, unsigned int state, unsigned long *next)
-> +{
-> +	bool task_is_migration = test_bit(LTL_TASK_IS_MIGRATION, mon->atoms);
-> +	bool task_is_rcu = test_bit(LTL_TASK_IS_RCU, mon->atoms);
-> +	bool val40 = task_is_rcu || task_is_migration;
-> +	bool futex_lock_pi = test_bit(LTL_FUTEX_LOCK_PI, mon->atoms);
-> +	bool val41 = futex_lock_pi || val40;
-> +	bool block_on_rt_mutex = test_bit(LTL_BLOCK_ON_RT_MUTEX, mon->atoms);
-> +	bool val5 = block_on_rt_mutex || val41;
-> +	bool kthread_should_stop = test_bit(LTL_KTHREAD_SHOULD_STOP, mon->atoms);
-> +	bool abort_sleep = test_bit(LTL_ABORT_SLEEP, mon->atoms);
-> +	bool val32 = abort_sleep || kthread_should_stop;
-> +	bool woken_by_nmi = test_bit(LTL_WOKEN_BY_NMI, mon->atoms);
-> +	bool val33 = woken_by_nmi || val32;
-> +	bool woken_by_hardirq = test_bit(LTL_WOKEN_BY_HARDIRQ, mon->atoms);
-> +	bool val34 = woken_by_hardirq || val33;
-> +	bool woken_by_equal_or_higher_prio = test_bit(LTL_WOKEN_BY_EQUAL_OR_HIGHER_PRIO,
-> +	     mon->atoms);
-> +	bool val14 = woken_by_equal_or_higher_prio || val34;
-> +	bool wake = test_bit(LTL_WAKE, mon->atoms);
-> +	bool val13 = !wake;
-> +	bool kernel_thread = test_bit(LTL_KERNEL_THREAD, mon->atoms);
-> +	bool nanosleep_clock_tai = test_bit(LTL_NANOSLEEP_CLOCK_TAI, mon->atoms);
-> +	bool nanosleep_clock_monotonic = test_bit(LTL_NANOSLEEP_CLOCK_MONOTONIC, mon->atoms);
-> +	bool val24 = nanosleep_clock_monotonic || nanosleep_clock_tai;
-> +	bool nanosleep_timer_abstime = test_bit(LTL_NANOSLEEP_TIMER_ABSTIME, mon->atoms);
-> +	bool val25 = nanosleep_timer_abstime && val24;
-> +	bool clock_nanosleep = test_bit(LTL_CLOCK_NANOSLEEP, mon->atoms);
-> +	bool val18 = clock_nanosleep && val25;
-> +	bool futex_wait = test_bit(LTL_FUTEX_WAIT, mon->atoms);
-> +	bool val9 = futex_wait || val18;
-> +	bool val11 = val9 || kernel_thread;
-> +	bool sleep = test_bit(LTL_SLEEP, mon->atoms);
-> +	bool val2 = !sleep;
-> +	bool rt = test_bit(LTL_RT, mon->atoms);
-> +	bool val1 = !rt;
-> +	bool val3 = val1 || val2;
+> --- /dev/null
+> +++ b/Documentation/trace/rv/monitor_rtapp.rst
+> @@ -0,0 +1,116 @@
+> +Real-time application monitors
+> +==============================
 > +
-> +	switch (state) {
-> +	case S0:
-> +		if (val3)
-> +			__set_bit(S0, next);
-> +		if (val11 && val13)
-> +			__set_bit(S1, next);
-> +		if (val11 && val14)
-> +			__set_bit(S4, next);
-> +		if (val5)
-> +			__set_bit(S5, next);
-> +		break;
+> +- Name: rtapp
+> +- Type: container for multiple monitors
+> +- Author: Nam Cao <namcao@linutronix.de>
+> +
+> +Description
+> +-----------
+> +
+> +Real-time applications may have design flaws such that they experience unexpected latency and fail
+> +to meet their time requirements. Often, these flaws follow a few patterns:
+> +
+> +  - Page faults: A real-time thread may access memory that does not have a mapped physical backing
+> +    or must first be copied (such as for copy-on-write). Thus a page fault is raised and the kernel
+> +    must first perform the expensive action. This causes significant delays to the real-time thread
+> +  - Priority inversion: A real-time thread blocks waiting for a lower-priority thread. This causes
+> +    the real-time thread to effectively take on the scheduling priority of the lower-priority
+> +    thread. For example, the real-time thread needs to access a shared resource that is protected by
+> +    a non-pi-mutex, but the mutex is currently owned by a non-real-time thread.
+> +
+> +The `rtapp` monitor detects these patterns. It aids developers to identify reasons for unexpected
+> +latency with real-time applications. It is a container of multiple sub-monitors described in the
+> +following sections.
+> +
 
-What's with all the magic numbers?
+Again, please limit the documentation to 80 columns.
 
-Can we turn these into enums so they have some meaning for us humans?
+Thanks!
 
 -- Steve
-
-> +	case S1:
-> +		if (val11 && val13)
-> +			__set_bit(S1, next);
-> +		if (val13 && val3)
-> +			__set_bit(S2, next);
-> +		if (val14 && val3)
-> +			__set_bit(S3, next);
-> +		if (val11 && val14)
-> +			__set_bit(S4, next);
-> +		if (val13 && val5)
-> +			__set_bit(S6, next);
-> +		if (val14 && val5)
-> +			__set_bit(S7, next);
-> +		break;
-> +	case S2:
-> +		if (val11 && val13)
-> +			__set_bit(S1, next);
-> +		if (val13 && val3)
-> +			__set_bit(S2, next);
-> +		if (val14 && val3)
-> +			__set_bit(S3, next);
-> +		if (val11 && val14)
-> +			__set_bit(S4, next);
-> +		if (val13 && val5)
-> +			__set_bit(S6, next);
-> +		if (val14 && val5)
-> +			__set_bit(S7, next);
-> +		break;
-> +	case S3:
-> +		if (val3)
-> +			__set_bit(S0, next);
-> +		if (val11 && val13)
-> +			__set_bit(S1, next);
-> +		if (val11 && val14)
-> +			__set_bit(S4, next);
-> +		if (val5)
-> +			__set_bit(S5, next);
-> +		break;
-> +	case S4:
-> +		if (val3)
-> +			__set_bit(S0, next);
-> +		if (val11 && val13)
-> +			__set_bit(S1, next);
-> +		if (val11 && val14)
-> +			__set_bit(S4, next);
-> +		if (val5)
-> +			__set_bit(S5, next);
-> +		break;
-> +	case S5:
-> +		if (val3)
-> +			__set_bit(S0, next);
-> +		if (val11 && val13)
-> +			__set_bit(S1, next);
-> +		if (val11 && val14)
-> +			__set_bit(S4, next);
-> +		if (val5)
-> +			__set_bit(S5, next);
-> +		break;
-> +	case S6:
-> +		if (val11 && val13)
-> +			__set_bit(S1, next);
-> +		if (val13 && val3)
-> +			__set_bit(S2, next);
-> +		if (val14 && val3)
-> +			__set_bit(S3, next);
-> +		if (val11 && val14)
-> +			__set_bit(S4, next);
-> +		if (val13 && val5)
-> +			__set_bit(S6, next);
-> +		if (val14 && val5)
-> +			__set_bit(S7, next);
-> +		break;
-> +	case S7:
-> +		if (val3)
-> +			__set_bit(S0, next);
-> +		if (val11 && val13)
-> +			__set_bit(S1, next);
-> +		if (val11 && val14)
-> +			__set_bit(S4, next);
-> +		if (val5)
-> +			__set_bit(S5, next);
-> +		break;
-> +	}
-> +}
