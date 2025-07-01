@@ -1,47 +1,32 @@
-Received: from relay.hostedemail.com (smtprelay0017.hostedemail.com [216.40.44.17])
+Received: from relay.hostedemail.com (smtprelay0010.hostedemail.com [216.40.44.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 861CD265CC8;
-	Tue,  1 Jul 2025 23:25:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C85FBF9D9;
+	Tue,  1 Jul 2025 23:44:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751412351; cv=none; b=mjeNDwcwU8JXr4PPUbX2XbaM1jY3TdSC3fXluZ0Sn+Gwcg1Q4DIlbtDbhsbY24zMfeveqi8omgBE2QDO+z+fAc5kN4WSGieKWDGohxBDFvYnCXMn8WwcGSNx9FrUaWLdVP6vp89bEVWGqC4DSqq0y1SuKb8KbBt8OwN8V3TG47I=
+	t=1751413460; cv=none; b=oIO590GBjgk9mPjBIo41P5lWV5453XcKYyEJ4kjT/f5DZCEdmJSt/zc/EwwnhpBZ8mFt57D+LLgPa7nzWL2IPFR33KpwDecHzVJEiHz6XMpuY+zN3gYIOUx2vl0p7OtbQu8Yi5KSBuNN4ijmTFZzvAq1Do7JF+7P+DT100CLpV4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751412351; c=relaxed/simple;
-	bh=5LAi1AOn7t8Tm+vFBUGNdaWr1EwOHiTYD0dfTqMEO+A=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=HS/PW0oCkqeT1VusB6ZeED8+QoVK6ISxJSrWwhMuJTkK9a2rLOsjPXPpQGtvtA044BrlBZTs5SlXdVGqF2jhD1yJDVv3wrKU5WM0ZmSZ38GR7ImJrUjMem83F20aLHHzgs/+MFUF/V6N1C6/fKqZLNuRJ2n3dUbQezmnNd9tqE8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.17
+	s=arc-20240116; t=1751413460; c=relaxed/simple;
+	bh=c0lJLhW9sGJUTVi90BSg3VA0i1FvdVw1WWGoWae/x80=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=IAti7Kjh53JZZUd/CRclc3n85tVva98Hb7rZyUYXDcOdrsv12ypr9jU50VyV6bWlIt7qFxXPEQ1aiMqWkREs4T5fKq3n5I++gwDoz5hwPQZZZhRBvI2nGIiuvtGfw8G5OMvV/mqlCtN1UoWNboDiAXcHaCDCdHHCfAhrM8JTtdo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.10
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf07.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay08.hostedemail.com (Postfix) with ESMTP id B0854140698;
-	Tue,  1 Jul 2025 23:25:45 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf07.hostedemail.com (Postfix) with ESMTPA id 5611220024;
-	Tue,  1 Jul 2025 23:25:41 +0000 (UTC)
-Date: Tue, 1 Jul 2025 19:26:19 -0400
+Received: from omf14.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay09.hostedemail.com (Postfix) with ESMTP id 58CA5805C8;
+	Tue,  1 Jul 2025 23:44:15 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf14.hostedemail.com (Postfix) with ESMTPA id AE5562F;
+	Tue,  1 Jul 2025 23:44:13 +0000 (UTC)
+Date: Tue, 1 Jul 2025 19:44:51 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
-To: Kees Cook <kees@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- bpf@vger.kernel.org, x86@kernel.org, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Josh Poimboeuf <jpoimboe@kernel.org>, Peter Zijlstra
- <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, Jiri Olsa
- <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Thomas Gleixner
- <tglx@linutronix.de>, Andrii Nakryiko <andrii@kernel.org>, Indu Bhagat
- <indu.bhagat@oracle.com>, "Jose E. Marchesi" <jemarch@gnu.org>, Beau
- Belgrave <beaub@linux.microsoft.com>, Jens Remus <jremus@linux.ibm.com>,
- Andrew Morton <akpm@linux-foundation.org>, Jens Axboe <axboe@kernel.dk>,
- Florian Weimer <fweimer@redhat.com>
-Subject: Re: [PATCH v12 00/14] unwind_user: x86: Deferred unwinding
- infrastructure
-Message-ID: <20250701192619.20eb2a58@gandalf.local.home>
-In-Reply-To: <202507011547.D291476BE1@keescook>
-References: <20250701005321.942306427@goodmis.org>
-	<CAHk-=wijwK_idn0TFvu2NL0vUaQF93xK01_Rru78EMqUHj=b1w@mail.gmail.com>
-	<20250630224539.3ccf38b0@gandalf.local.home>
-	<202507011547.D291476BE1@keescook>
+To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Mark Rutland <mark.rutland@arm.com>
+Subject: [PATCH v2] fgraph: Keep track of when fgraph_ops are registered or
+ not
+Message-ID: <20250701194451.22e34724@gandalf.local.home>
 X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -51,66 +36,78 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Stat-Signature: tryfq3spsju364iez3ck1zrf7mt7enjs
+X-Stat-Signature: 34rgiku93yqq3ynf74xe73cb6g5f1m7m
 X-Rspamd-Server: rspamout05
-X-Rspamd-Queue-Id: 5611220024
+X-Rspamd-Queue-Id: AE5562F
 X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1+Quzu2eU2osAE3RdCKzkTyOA2Ps8IYTmg=
-X-HE-Tag: 1751412341-261051
-X-HE-Meta: U2FsdGVkX1+pOpssR8artnZXR620RStoUESbyBTmV1nqsXqVd+7Cd+0dbSMwBZAlLzhIXluPkWuMp8vrnXp3LYszOvRajvAfz0Q97/lv+SON7IClC5Jsp695rmInoxhUw95MPkUKs62z2nQ/A68+X3hApa63qFHuFL1oYBk/WvGB1zws/FqOI3mnpDnq/4yzFiMIof+xzwQuB/uL6jo9mZU1xBiSZlF88+f1yhv0e5tCwpdKQbkw84W8VYm927Xkm71XdiPrggYXWn0MFfqobVM475TwdaXgjHXh8Z5Pgd47rfQkwu/6wT/+FvSL0nCvtB+XffwFXsxVVTHpjMpLAqzIruUZHg3tV71CWG+neISVTgWokbHm+v2ExpYk98Af+KeX99+gmbG9gj9PcEGRXf+ZwVgH3NjswkOUSksJ4g9zQesrHaNSK7b72AE++39X4cLXnc9kLFpqV5UsHtLXBaMZDJufUogIOY6Ag+9uxdlK2RngOwi5jDn1leQHGMZxckrrW7U9/mk=
+X-Session-ID: U2FsdGVkX1+fUqFofNwisz3PsArUK+9V/cE8qGI00+Q=
+X-HE-Tag: 1751413453-248680
+X-HE-Meta: U2FsdGVkX181FSfaV+QlZ8xjKJU6V0UBmycvD0dX+k9HsUc+G9XrvG6I+Z1vgq4TliqXn4DQxsuSRCG8abbiLeSrGIVSvvULpBvbMX3GO7sHtlsloUV5Q8AiCzUTQtdWK3puhaMOeA/l04Zri8KyI6az5cWQJYGy+LmbgiyYhW1WDN+CwG9zQqH/aiopKXFpQq35Y2tx6lhi/O4kNIrB6Nq7Wu44TCq/kgTfqjuIrexLMzBHVo1WF+CdlBeYdPS6o5otTL3Jt6mDuTvr9L0EFCZ5qEHKu3mD0CUvBbb1/31y9WuUX371wCfaepqFZ9vnYJ7zpiQQ21uFcZzU8LxlfCwGM9dg3RG4lw+85R5pZ5haO7IrZsmp8Z8g0zWs4ZE3k7BRS5QHRLB7MxbJTgu57lkgqNu0f0CdYKB60BXyojVb2jbtGRHSjQ==
 
-On Tue, 1 Jul 2025 15:49:23 -0700
-Kees Cook <kees@kernel.org> wrote:
+From: Steven Rostedt <rostedt@goodmis.org>
 
-> On Mon, Jun 30, 2025 at 10:45:39PM -0400, Steven Rostedt wrote:
-> > On Mon, 30 Jun 2025 19:06:12 -0700
-> > Linus Torvalds <torvalds@linux-foundation.org> wrote:
-> >   
-> > > On Mon, 30 Jun 2025 at 17:54, Steven Rostedt <rostedt@goodmis.org> wrote:  
-> > > >
-> > > > This is the first patch series of a set that will make it possible to be able
-> > > > to use SFrames[1] in the Linux kernel. A quick recap of the motivation for
-> > > > doing this.    
-> > > 
-> > > You have a '[1]' to indicate there's a link to what SFrames are.  
-> > [...]
-> >   [1] https://sourceware.org/binutils/wiki/sframe  
-> 
-> Okay, I've read the cover letter and this wiki page, but I am dense: why
-> does the _kernel_ want to do this? Shouldn't it only be userspace that
-> cares about userspace unwinding? I don't use perf, ftrace, and ebpf
-> enough to make this obvious to me, I guess. ;)
-> 
+Add a warning if unregister_ftrace_graph() is called without ever
+registering it, or if register_ftrace_graph() is called twice. This can
+detect errors when they happen and not later when there's a side effect:
 
-It's how perf does profiling. It needs to walk the user space stack to see
-what functions are being called. Ftrace can do the same thing, but is not
-as used because it doesn't have the tooling (yet) to figure out what the
-user space addresses mean (but I'm working on fixing that).
+Link: https://lore.kernel.org/all/20250617120830.24fbdd62@gandalf.local.home/
 
-And BPF has commands that it can do, but I don't know BPF enough to comment.
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+Changes since v1: https://lore.kernel.org/20250618073117.024efb2e@gandalf.local.home
 
-The big user is perf with profiling. It currently uses frame pointers, but
-because of the way frame pointers are set up, it misses a lot of the leaf
-functions when the interrupt triggers (which sframes does not have that
-problem). Also, if frame pointers is not configured, perf may just copy
-thousands of bytes of the user space stack into the kernel ring buffer and
-then parse it later (this isn't used often due to the overhead).
+- Just zero out the FL_GRAPH flag instead of all flags (Masami Hiramatsu)
 
-Then there's s390 that doesn't have frame pointers and only has the copy of
-thousands of bytes to do any meaningful user space profiling.
+ kernel/trace/fgraph.c | 16 +++++++++++++---
+ 1 file changed, 13 insertions(+), 3 deletions(-)
 
-Note, this has been a long standing issue where in 2022, we had a BOF on
-this, looking for something like ORC in user space as it would solve lots
-of our issues. Then December of that same year, we heard about SFrames.
+diff --git a/kernel/trace/fgraph.c b/kernel/trace/fgraph.c
+index c5b207992fb4..f4d200f0c610 100644
+--- a/kernel/trace/fgraph.c
++++ b/kernel/trace/fgraph.c
+@@ -1325,6 +1325,10 @@ int register_ftrace_graph(struct fgraph_ops *gops)
+ 	int ret = 0;
+ 	int i = -1;
+ 
++	if (WARN_ONCE(gops->ops.flags & FTRACE_OPS_FL_GRAPH,
++		      "function graph ops registered again"))
++		return -EBUSY;
++
+ 	guard(mutex)(&ftrace_lock);
+ 
+ 	if (!fgraph_stack_cachep) {
+@@ -1401,17 +1405,21 @@ void unregister_ftrace_graph(struct fgraph_ops *gops)
+ {
+ 	int command = 0;
+ 
++	if (WARN_ONCE(!(gops->ops.flags & FTRACE_OPS_FL_GRAPH),
++		      "function graph ops unregistered without registering"))
++		return;
++
+ 	guard(mutex)(&ftrace_lock);
+ 
+ 	if (unlikely(!ftrace_graph_active))
+-		return;
++		goto out;
+ 
+ 	if (unlikely(gops->idx < 0 || gops->idx >= FGRAPH_ARRAY_SIZE ||
+ 		     fgraph_array[gops->idx] != gops))
+-		return;
++		goto out;
+ 
+ 	if (fgraph_lru_release_index(gops->idx) < 0)
+-		return;
++		goto out;
+ 
+ 	fgraph_array[gops->idx] = &fgraph_stub;
+ 
+@@ -1434,4 +1442,6 @@ void unregister_ftrace_graph(struct fgraph_ops *gops)
+ 		unregister_trace_sched_switch(ftrace_graph_probe_sched_switch, NULL);
+ 	}
+ 	gops->saved_func = NULL;
++ out:
++	gops->ops.flags &= ~FTRACE_OPS_FL_GRAPH;
+ }
+-- 
+2.47.2
 
-At Kernel Recipes in 2023, Brendan Gregg during his talk was saying that
-there needs to be a better way to do profiling of user space from the
-kernel without frame pointers. I mentioned SFrames and he was quite excited
-to hear about it. That's also when Josh, who was in the attendance, asked
-if he could do the implementation of it in the kernel!
-
-Anyway, yeah, it's something that has a ton of interest, as it's the way
-for tools like perf to give nice graphs of where user space bottlenecks
-exist.
-
--- Steve
