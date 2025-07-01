@@ -1,96 +1,175 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f43.google.com (mail-qv1-f43.google.com [209.85.219.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51329A47;
-	Tue,  1 Jul 2025 05:21:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1AC51F63CD
+	for <linux-trace-kernel@vger.kernel.org>; Tue,  1 Jul 2025 05:22:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751347277; cv=none; b=CTl2n9DecBoFcCG1O+C66GBUKlMhj1I5Xz02uJE+KWdYWxrE+PG6j4Kqun62tJAR5QTNPgDHZM/5sJw7udMhRa75uyK8BvLEc/hvi2uSWodKAXy8Rb6d5WusQiqjyxjuNUqmTQtcjpW0H1WtBYWPzjia2XvrbtIsZZurgy0UObk=
+	t=1751347381; cv=none; b=FFLCReemkwlukCeNnADwSC+6iOqjo8ib3c50wMnHGJRU+ziILsu8N8cF6mUJaDNEg16wAmTttCv9iwLh/bUF4fTieu0lexe0XMVh4IR3jMtAeuTJRftQc/9wkh4XcHYQ7zOmUngdbVSkkADgCNeVVXoBwa29z5Sjv5gBWwN+dMk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751347277; c=relaxed/simple;
-	bh=yQUoBZ2SMNI4V9Ij37O9fIStbSz+2/2OjfqIEVgGZ9Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jVgfuoWpoZUJqzK+cZqcLN6WnmG/d2KCM+riIIbuAffuncRGYDgvuQ+A8IUfvPlv2vkg6lA7xm0L3P6siJy8YdfnkGON3U6OR1HWV7wTaEpe8paRZFNfxSoNa8HgXGIRaYYR6FEL3MAWBdEcXRqF5WqlnUQ5HITjavWNajaFaUQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=lXKkCyxI; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ZedNDfLk; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1751347381; c=relaxed/simple;
+	bh=5/JwVEuz/UpsEESScBGzFxUIa7q8yQbIgcrUrStPkRI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=KGPO89o2c0J/KfNutpw8X0B3AhYksz9N/HFFdvtbbhD6saEwBWuVWRT3Qp5sy/R3kUQ+k+x/f4Nxw6CPFrCAJjNSigd6YJr9u288Z/R2XOVnN+16Q3+aypDTCvhT/O5HSuIRG4J2pJtLTSiixugz/GB6B5kZnCCeDLfHms4b1uc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ZRt744pc; arc=none smtp.client-ip=209.85.219.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="lXKkCyxI";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ZedNDfLk"
-Date: Tue, 1 Jul 2025 07:21:13 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1751347274;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=X03KVDX7Q7xCqvrk2MtgunqeHF2/HoDA6sxx6spzF5w=;
-	b=lXKkCyxIaWXSW7ZqYX/Bfr4xKROgJo9pl+JyfkSlaEUdx0dZxK4tH8PguLgrMBUcRSXCxN
-	ASEihq8UG+EY8WFmKmNFgwucAC+eEJE0RAJiQjLIzhDuUNH/OebsLlZOd5FI1dYK9XPs9h
-	mZ01DnwjhG/L54XmrS6ACGKIvaG8shTO3v+W/FdrNBKSrJza0R40/5+Ur8HghQNb7X5+8L
-	7MgoF/8xXYpDCS7XgfHADGBy3a9I4cbSSslzNnZEMHn8JL3hH6V8sE/Fbm1/gZ14lgyo3C
-	vSG3CSLiQ5XpkzuUb6luQd54c7GV4JddgVoM6YJ0EJ7CcYbqPGBgexK7VxNu9g==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1751347274;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=X03KVDX7Q7xCqvrk2MtgunqeHF2/HoDA6sxx6spzF5w=;
-	b=ZedNDfLkHlbXRoWzxgGihNkRKxnpzREhuqDwHExF1vD8abfOzWLxWN4QkQadRvpZlWS1PP
-	dHQsqo2lmsI30GAA==
-From: Nam Cao <namcao@linutronix.de>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Gabriele Monaco <gmonaco@redhat.com>,
-	linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
-	john.ogness@linutronix.de
-Subject: Re: [PATCH v10 14/19] rv: Add rtapp container monitor
-Message-ID: <20250701052113.HSInwOOF@linutronix.de>
-References: <cover.1749547399.git.namcao@linutronix.de>
- <96c2766a74a730fe54a9339feb5b93128ee65331.1749547399.git.namcao@linutronix.de>
- <20250630160430.20dc6dc0@batman.local.home>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ZRt744pc"
+Received: by mail-qv1-f43.google.com with SMTP id 6a1803df08f44-6fad3400ea3so47078386d6.0
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 30 Jun 2025 22:22:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1751347378; x=1751952178; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=FWbnuDQEG4ZG51rhVoXd9l74zp2+Y+DpuK1YGU3B97M=;
+        b=ZRt744pcl4cIp0OhwuCoWnWtgOoj978q9Yq42k9MWwr4kVDCOFYf4Au5JWfOmG9woQ
+         WL08stfcNsTA1U70uZxP03HJ84dtE8wp2MrH+ZMco7qQ4F+mz9pHThFnps/915TL+5Y+
+         97U6IbJ2EkAR5y4FQNTcugwmCcZMhnPNUU77OBiwWJ5XMTPxeLl4+W6TdRDDfV2ztFfP
+         7Ivwexpkxwra2rsaKf/YeNVj+cVOcNEBdnlcxZElF7GyxosaQwXngicj9Fy+3ZEcveEw
+         XOUaOcjaaAUqsCfWIJK9NbV9heIcLCA8wG2E2yRmJo+0avDOHSBtr45thTcsxVl/pE0h
+         AJYA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751347378; x=1751952178;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=FWbnuDQEG4ZG51rhVoXd9l74zp2+Y+DpuK1YGU3B97M=;
+        b=gRhAIv9JONRkC2CZRdyaL5YZrXfAka6ATinNAdburaJAGZQw5UiZqAZVy6wQxE1xvx
+         N4MU5Qru3HKc+rm/V8oGEV2OGSfNHU13sIQ0xA0XXQGX84lu1Q5Zc6KCc9KVoNjAEo85
+         m9lWxTPMW85wDczwy+H9JHz1qlTMrMbJTwHoMIOCuSeWSlRITICgfxYneslJXY4MHFlR
+         U7kU38nxiw94cDiu0aNQtTcQBQayZQYr995JulirhEuFMydteoh036ZTJ+MHagDvSvxv
+         N7/T9oEOMKNjAC5ZIpHYn1oplPF3tZcFABpepM6FFX8F+ZruJ9CJKumBGK+BIgRkdrJL
+         xxmQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXyPQqooorZvajlF8Wiw1/mpoUzt9GiuS2riSeDnmj8QDwjOA5rpTr6EceQhWmnFi4ZMLuOFJ9Cv0vTtv4KimXR96Q=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx/saZ5/EwgNNuRi6tRhIZ99VL042RIhdTdAAWHoWu+Mx1t8LcV
+	/D9Lb1fXBMez/g3b4gcHODBDDpAjofWpQ2bqlM+ReIrBgjBctpKuZC2p7zMPI8rmR+pJgZYstf2
+	40rArgl8vt6+Zqe79NLNGQdj8SArbobDQC6kPi54D
+X-Gm-Gg: ASbGncsHZ6TUONmjAoooEttVaLvfwgkbIIbClIaVExTJFFJm76eUNHNO8V84ITYg3RI
+	Yx/i2p12mYFQmUFZszp10bOpykcCJII6Zi643/OSurZdM9Vu6lwC/qsNNgiZ0haH9mBexU8Vkce
+	jpnes0bZ5gOY8L+Wop5zHf4D1eRBM/x9SfP8hUPWJPtkUy
+X-Google-Smtp-Source: AGHT+IGpzxDBrBogoKoyLkPPHM6iDSYvJhIuC7y6ZVpwiIprRtjwSBjJSKv3onzP0yROztlsN5fAxejSDBAAeoyetgE=
+X-Received: by 2002:a05:6214:5007:b0:6fd:ace:4cf8 with SMTP id
+ 6a1803df08f44-700035b781dmr234492016d6.30.1751347373427; Mon, 30 Jun 2025
+ 22:22:53 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250630160430.20dc6dc0@batman.local.home>
+References: <20250520082435.2255639-1-tzungbi@kernel.org> <CAGS_qxrcH0+mJTO4nJqXnk2Bh7oO_PEur=ytcxL8wxJNCu20Tw@mail.gmail.com>
+ <aGIvjrrSRPJQpNy7@google.com>
+In-Reply-To: <aGIvjrrSRPJQpNy7@google.com>
+From: Daniel Latypov <dlatypov@google.com>
+Date: Tue, 1 Jul 2025 14:22:40 +0900
+X-Gm-Features: Ac12FXxgYKxYb9vyVEWPlAfSA3bOrsnLZpveKjlL5T8zEbkPuStK5k7jGoQ6Uo0
+Message-ID: <CAGS_qxpqQ1Z5QOxmXoXQyFBygdfW+1R=g9f=bbJo54Ex8LA7Kw@mail.gmail.com>
+Subject: Re: [RFC PATCH 0/7] platform/chrome: Add Kunit tests for protocol
+ device drivers
+To: Tzung-Bi Shih <tzungbi@kernel.org>
+Cc: bleung@chromium.org, brendan.higgins@linux.dev, davidgow@google.com, 
+	rmoar@google.com, rostedt@goodmis.org, mhiramat@kernel.org, naveen@kernel.org, 
+	anil.s.keshavamurthy@intel.com, davem@davemloft.net, 
+	chrome-platform@lists.linux.dev, linux-kselftest@vger.kernel.org, 
+	kunit-dev@googlegroups.com, linux-trace-kernel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jun 30, 2025 at 04:04:30PM -0400, Steven Rostedt wrote:
-> On Tue, 10 Jun 2025 11:43:39 +0200
-> Nam Cao <namcao@linutronix.de> wrote:
-> > diff --git a/kernel/trace/rv/monitors/rtapp/Kconfig b/kernel/trace/rv/monitors/rtapp/Kconfig
-> > new file mode 100644
-> > index 0000000000000..658bb78e733a0
-> > --- /dev/null
-> > +++ b/kernel/trace/rv/monitors/rtapp/Kconfig
-> > @@ -0,0 +1,14 @@
-> > +config RV_MON_RTAPP
-> > +	depends on RV
-> > +	bool "rtapp monitor"
-> > +	help
-> > +	  Collection of monitors to check for common problems with real-time
-> > +	  application that may cause unexpected latency.
-> > +
-> > +	  If you are developing a real-time system and not entirely sure whether
-> > +	  the applications are designed correctly for real-time, you want to say
-> > +	  Y here.
-> > +
-> > +	  Beware that enabling this may have impact on performance, even if the
-> > +	  monitors are not running. Therefore you probably should say N for
-> > +	  production kernel.
-> 
-> I'm trying to figure out from the patch how exactly does this cause
-> performance issues?
-> 
-> Can you elaborate?
+On Mon, Jun 30, 2025 at 3:32=E2=80=AFPM Tzung-Bi Shih <tzungbi@kernel.org> =
+wrote:
+>
+> On Tue, May 20, 2025 at 09:04:53AM -0700, Daniel Latypov wrote:
 
-Sorry for the confusion, this patch alone doesn't affect performance.
+(snip)
 
-It is its child monitor which turns on CONFIG_TRACE_IRQFLAGS, which is
-added in a later patch.
+>
+> > We have these drawbacks with the current ftrace stubs:
+> > * doesn't compile on all arches
+> > * silently doesn't work on inlined functions <=3D=3D scariest one to me
+>
+> I see. I did some experiments and realized that kprobe stubs also share
+> the same concern. Thus I'm wondering if there is a way that kprobe stub
+> detects the redirection may fail, at least it can skip the test case
+> (e.g. register_kprobe() returns -ENOENT when it can't find the symbol
+> via kprobe_lookup_name()). But it seems no way if the target function
+> is partially inlined.
 
-Let me move this paragraph to that patch instead.
+Yeah, any such approach will need to be cautious of inlining, so
+they'd have to always be "for power users only: only use this if you
+understand the risk"
+Skipping when we can detect the user is obviously doing the wrong
+thing makes that a *bit* more palatable.
 
-Nam
+It's not like static stubs can detect at runtime if you've failed to
+add the necessary corresponding KUNIT_STATIC_STUB_REDIRECT() either,
+for example.
+
+But I still personally lean slightly against adding either kprobe or
+ftrace stubs, see below.
+
+>
+> > You mention you don't like how static stubs requires modifying the
+> > code-under-test.
+> > Since it gets eliminated by the preprocessor unless you're compiling
+> > for KUnit, is the concern more so about how it conceptually feels
+> > wrong to do so?
+> > For the Android GKI kernel, they have (or had) KUnit enabled so there
+> > is potentially concern about real runtime cost there, not sure if you
+> > have something similar in mind.
+>
+> Not exactly. Ideally, I think we shouldn't modify the CUT. I'm wondering
+> if there is a way to not change the CUT but also break the external
+> dependencies.
+>
+> > But stepping back, ftrace_stubs technically require modifying the code
+> > to make sure funcs are marked as `noinline`, which this patch series
+> > does not do.
+...
+> They could be partially inlined even though they are exported symbols.
+
+So to summarize, right now we're stuck with having to modify the code.
+(Unless someone can come up with something really clever, but not too cleve=
+r)
+
+To make it concrete, the current approach would look like:
+
+int func(char* arg1, int arg2) {
+  KUNIT_STATIC_STUB_REDIRECT(func, arg1, arg2);
+  ... // unchanged
+}
+
+vs an ftrace/kprobe approach that needs a conditional `noinline`
+
+KUNIT_STUBBABLE int func(char* arg1, int arg2) {
+  ... // unchanged
+}
+
+The latter is definitely simpler and less burdensome.
+But I don't know if it's simpler enough to warrant a second
+implementation existing for me personally.
+
+E.g. we already have some people who justifiably say it's too hard to
+figure out KUnit, so this is another decision point where a user might
+get stuck with "how should I know which one I should use?" and give
+up.
+
+Compatibility tangent:
+A smaller annoyance is KUNIT_STATIC_STUB_REDIRECT and KUNIT_STUBBABLE
+are incompatible (and always will be?)
+
+E.g. imagine a func has KUNIT_STUBBABLE on it, but a person authoring
+a new test wants needs to run without kprobe support, so they must add
+KUNIT_STATIC_STUB_REDIRECT.
+I can imagine an author deciding to make the func have *both* macros on it.=
+..
+That feels like a worst case outcome from the perspective of "we
+shouldn't modify the CUT just for the sake of tests" :\
+
+To be clear, the right approach in this scenario is to 1) swap to
+KUNIT_STATIC_STUB_REDIRECT and update the previous tests to use static
+stubs, 2) then add your new tests.
+But I can imagine that won't always happen, esp. if it crosses
+maintainer boundaries.
