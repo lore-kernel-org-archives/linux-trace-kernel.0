@@ -1,40 +1,44 @@
-Received: from relay.hostedemail.com (smtprelay0014.hostedemail.com [216.40.44.14])
+Received: from relay.hostedemail.com (smtprelay0011.hostedemail.com [216.40.44.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76921279785;
-	Tue,  1 Jul 2025 15:17:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 394B5279354;
+	Tue,  1 Jul 2025 15:21:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751383031; cv=none; b=XgRnDv5KT/DcbUzqE2He4WGEodoKeNyWO2cWmqDwsds/wPY6ovQlI1IVcK2WJfaC4O8nkGSOaTgS0KHaPHnqG6QGdXdeEtHwQ4gG54ksUTx9oT5KtCN1xhidAJfkCiBBQiDO0OOT1fF6J+wKXIEM5wd+pPdeue0QI0R389gBIuo=
+	t=1751383289; cv=none; b=GU+jhtm0kc7QJ07EiYbwd/peLR8ZbFRBXkZCD9nRBrtpdG3gEaEvkuyR8sXC02R9xbGXscYQHLOG1aSazdf+ulMsWmBZbfAzLt9fPH2QxRfrbK3SRU3B1mN55XU6V2vYhQCrLlMk46WauAMiPhszTfVJa03iNv+hmf4IdF3nMvE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751383031; c=relaxed/simple;
-	bh=T6CC/bF+0UrpLoMFgTTdtIesr+jqgX9wVhcRDJoCjvs=;
+	s=arc-20240116; t=1751383289; c=relaxed/simple;
+	bh=gEJZSp/jqAQmTBET9Lgo0F4Y5CN9so5vYjZ9igwKwG8=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=PmYWTNVmyv6Dx0mLa30Quj1M4nJzIueUAZBxUNacdbxY8+8nC0LQGGrFaOz0u1OG04oJKY3uf/mGo4igqmseTpkzk0aV59hNx3QtOLAwrg3Lnr+GUhqRI/xK8GuwoGB3mmPeczHP2f6Chf3jIW8Aa2GM5zmAj5BElRIsq3Plw7U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.14
+	 MIME-Version:Content-Type; b=DeQpg5fJKSuVIU0ETXSN8itWEkNXKSAXlsK2ki6FgG4yzVrjUdqkjs9EbKOdyXohUX9fUBrhG4cQXhwDXmVMBAC8k/q+weo0FsOZ26RqfK6BMq/GemxCitNE4I0XbNbvixByRor5BIP8RE7FIzXeJkJA4wBo/wC8zeROxcqk+lc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.11
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf08.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay03.hostedemail.com (Postfix) with ESMTP id E27C1B9A48;
-	Tue,  1 Jul 2025 15:17:06 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf08.hostedemail.com (Postfix) with ESMTPA id 0BC7A20025;
-	Tue,  1 Jul 2025 15:17:04 +0000 (UTC)
-Date: Tue, 1 Jul 2025 11:17:04 -0400
+Received: from omf06.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay03.hostedemail.com (Postfix) with ESMTP id E517DB9E49;
+	Tue,  1 Jul 2025 15:21:22 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf06.hostedemail.com (Postfix) with ESMTPA id 62A7A2000E;
+	Tue,  1 Jul 2025 15:21:17 +0000 (UTC)
+Date: Tue, 1 Jul 2025 11:21:16 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
-To: Nam Cao <namcao@linutronix.de>
-Cc: Gabriele Monaco <gmonaco@redhat.com>,
- linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
- john.ogness@linutronix.de
-Subject: Re: [PATCH v10 17/19] rv: Add rtapp_sleep monitor
-Message-ID: <20250701111704.00456667@batman.local.home>
-In-Reply-To: <20250701151114.OJQTlRCY@linutronix.de>
-References: <cover.1749547399.git.namcao@linutronix.de>
-	<d3cf55d3bf42a0f70a58c394b5cf6d603ca8a9f7.1749547399.git.namcao@linutronix.de>
-	<20250630203401.1a11e58f@gandalf.local.home>
-	<20250701051757.mBjQVdoo@linutronix.de>
-	<20250701110218.5e742850@batman.local.home>
-	<20250701110551.5c2dc2ee@batman.local.home>
-	<20250701151114.OJQTlRCY@linutronix.de>
+To: Alexandre Ghiti <alex@ghiti.fr>
+Cc: Yao Zi <ziyao@disroot.org>, Andy Chiu <andybnac@gmail.com>,
+ alexghiti@rivosinc.com, palmer@dabbelt.com, Andy Chiu
+ <andy.chiu@sifive.com>, =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?=
+ <bjorn@rivosinc.com>, Mark Rutland <mark.rutland@arm.com>,
+ puranjay12@gmail.com, paul.walmsley@sifive.com, greentime.hu@sifive.com,
+ nick.hu@sifive.com, nylon.chen@sifive.com, eric.lin@sifive.com,
+ vicent.chen@sifive.com, zong.li@sifive.com, yongxuan.wang@sifive.com,
+ samuel.holland@sifive.com, olivia.chu@sifive.com, c2232430@gmail.com, Han
+ Gao <rabenda.cn@gmail.com>, Vivian Wang <wangruikang@iscas.ac.cn>,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ regressions@lists.linux.dev, linux-riscv@lists.infradead.org
+Subject: Re: [REGRESSION] Random oops on SG2042 with Linux 6.16-rc and
+ dynamic ftrace
+Message-ID: <20250701112116.24cf8163@batman.local.home>
+In-Reply-To: <b060e694-caa0-4aa5-ac67-75531a5f60eb@ghiti.fr>
+References: <aGODMpq7TGINddzM@pie.lan>
+	<b060e694-caa0-4aa5-ac67-75531a5f60eb@ghiti.fr>
 X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -42,27 +46,64 @@ List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Stat-Signature: 57fic98dhtr6rjtionmrhfukq7h6eqxg
-X-Rspamd-Server: rspamout03
-X-Rspamd-Queue-Id: 0BC7A20025
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Rspamd-Queue-Id: 62A7A2000E
+X-Stat-Signature: 59cfkw1pdim9kresnutii68uakri7p8t
+X-Rspamd-Server: rspamout06
 X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX18MooYQoY8XdA99/UI9cZS8fiRimYxM4Kc=
-X-HE-Tag: 1751383024-59033
-X-HE-Meta: U2FsdGVkX1+i5PyWbO9ijWx6noMaTZwjyENR2apD4ZGj5GOCGIHrEQr+ouj2sjcye+NurUsT4ntGJW4Gwlwn2gHXKFco7OnEG+qWndwOmoQ9Yih5xFO2t4xT7BF2c0j9wNkx5f2jyLF2OMhk+KEZe9F9Sp5b8hfen/nK/ljCBqFhH2xxdAFdCIhFv3FrB3W02ZHSDGmQl4zcP2FobqayM/ePWKHmtcoNhhP70kEdNTmdIfCHxjsxdlxkCWNdT8CXBI3lBtDuohboqHJ4lWIRTZ9l5m9C+V4Qri3dRp8ef0SVo60pgC91HS42rxAJnXQO
+X-Session-ID: U2FsdGVkX1/NJMVWipJuBxIYkuT6e6RUoPIwwQiqAis=
+X-HE-Tag: 1751383277-669370
+X-HE-Meta: U2FsdGVkX182ALet42c3iMi2YFUYr6K+qXWSp9Nc2/oYd4UWY+lrz0yseqtNdf6s4czTyAhl5x/WZDEy3JbSXCbHDUBzGKoGw881QaXZ0ZsNE5KwJ/VDEiMwGYgEDlxQRRgmsoe+oGOwdoiHeZGVY8opsV8mRqdJhWy1IQGC73NeW1eMVY3rIrmb+6G0erF4jL93o1W4Wx3KJs1PLKxzpg7wAW1ad9oPC98SY87CUhOkRZE1ZzVdjmLD+HsHgydL+CSpVZ93Y8SBw2qi066qFiGHlmYeeyU+chGglyPEoNGNo5zNX5cGPjR0HknSPNxd
 
-On Tue, 1 Jul 2025 17:11:14 +0200
-Nam Cao <namcao@linutronix.de> wrote:
+On Tue, 1 Jul 2025 14:27:32 +0200
+Alexandre Ghiti <alex@ghiti.fr> wrote:
 
-> > There's nothing in the code that even states that this was generated
-> > (if they were).  
-> 
-> Yeah this entire file is generated from the LTL specification. I will add a
-> comment.
+> @@ -149,16 +157,17 @@ int ftrace_init_nop(struct module *mod, struct=20
+> dyn_ftrace *rec)
+>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 unsigned int nops[2], offset;
+>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 int ret;
+>=20
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 mutex_lock(&text_mutex);
 
-Yeah, generated code needs a big comment at the top of the file on what
-generated it. Bonus points if it shows how it was generated so that
-people will know how to regenerate it.
+This looks like a prime candidate for:
+
+	guard(mutex)(&text_mutex);
+
+>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ret =3D ftrace_rec_set_nop_op=
+s(rec);
+>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (ret)
+> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0 return ret;
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0 goto end;
+
+Then this change wouldn't be needed.
+
+>=20
+>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 offset =3D (unsigned long) &f=
+trace_caller - pc;
+>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 nops[0] =3D to_auipc_t0(offse=
+t);
+>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 nops[1] =3D RISCV_INSN_NOP4;
+>=20
+> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 mutex_lock(&text_mutex);
+>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ret =3D patch_insn_write((voi=
+d *)pc, nops, 2 * MCOUNT_INSN_SIZE);
+> +end:
+>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 mutex_unlock(&text_mutex);
+
+and "end:" as well as the mutex_unlock() can be removed.
+
+>=20
+>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return ret;
+>=20
+>=20
+> Andy is also taking a look, I'll let him confirm the above fix is correct.
+>=20
+> Thanks for the thorough report!
+
+Yes, thank you Yao Zi for the very detailed bug report! That made
+things so much easier.
 
 -- Steve
