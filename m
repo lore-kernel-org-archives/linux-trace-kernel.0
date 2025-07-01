@@ -1,34 +1,39 @@
-Received: from relay.hostedemail.com (smtprelay0012.hostedemail.com [216.40.44.12])
+Received: from relay.hostedemail.com (smtprelay0017.hostedemail.com [216.40.44.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31350269CE5;
-	Tue,  1 Jul 2025 21:44:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 773C7230BE4;
+	Tue,  1 Jul 2025 21:58:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751406261; cv=none; b=qrNW0oQYqzoagHKBXmVyc9l4TZIxEWSlfMrqdbXRmRWw6ALvn0MqsDiRH9MshC5tTBjGwuOFmkGYrltV33QnUm5uNoR/KB8ZX9gO2CpL6s0fr/7YELjwfAT8s8kM7SNwQcckxLU/9IUjryud+J/3X5ExwLhcFzChYVeLWm5anzs=
+	t=1751407119; cv=none; b=rRJMOVGKM2Rod054dxbIt8SLwsfdo6O+DPTsy6JzhTRskc/IDEBMNYLas3E0v7InLCOcZd6VQnKkRdGuVnDezUwS/CsFn27sYJG2yq3J55eJ4E+hfqO/iCuezP+qcPGdVSctj1fODD2/ap50wg+dUaRRzjbitboY+SqZzax1O3E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751406261; c=relaxed/simple;
-	bh=W7LKnr9BTr9RvR0PXGa2e5Z9V07E0/U6hof+n1GzTYA=;
+	s=arc-20240116; t=1751407119; c=relaxed/simple;
+	bh=Gd7h7V4tZUgx/tp/sk3Qd8v2RvWILzZB8Eff/zz4YZ4=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=tCmHRTkQ/8q5RUd9HUvlM5n94++0BIMO+P9h2+ieaCCgOJMffwSm9b1W4iwxk6pXNz6xRykby4KmJJ22j6DJE9CuF3Lz35A4J/47SLtBgbFlF6xSIgw30EBoH9YshwrmSNNRCd/Df8fGhPaVk20PbBsywPX0SDOtDtlSljET7i4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.12
+	 MIME-Version:Content-Type; b=V2ncaaNn8n0nMkPVVoph0EhhU9ckodnRE6cxm0+RqxdkHTR7MGsSXeGOoc4RTq03GfHCaYLhK4tcerjssaMfR2T+dO0Tr2QficiGtRdOnEFde0sGbqFMEpsCPi0HONSc6Gu1rDwdJCqQYqXmid1+VhAFcMURf7kJWcz8PIfOhR8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.17
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf09.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay09.hostedemail.com (Postfix) with ESMTP id BD86A80604;
-	Tue,  1 Jul 2025 21:44:17 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf09.hostedemail.com (Postfix) with ESMTPA id DE49520028;
-	Tue,  1 Jul 2025 21:44:15 +0000 (UTC)
-Date: Tue, 1 Jul 2025 17:44:15 -0400
+Received: from omf04.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay10.hostedemail.com (Postfix) with ESMTP id 0A9AAC0636;
+	Tue,  1 Jul 2025 21:58:29 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf04.hostedemail.com (Postfix) with ESMTPA id 24A4C20030;
+	Tue,  1 Jul 2025 21:58:27 +0000 (UTC)
+Date: Tue, 1 Jul 2025 17:58:26 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
-To: Costa Shulyupin <costa.shul@redhat.com>
-Cc: Jonathan Corbet <corbet@lwn.net>, linux-trace-kernel@vger.kernel.org,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Tomas Glozar
- <tglozar@redhat.com>
-Subject: Re: [PATCH] Documentation/rtla: Describe exit status
-Message-ID: <20250701174415.69edef99@batman.local.home>
-In-Reply-To: <20250608105531.758809-2-costa.shul@redhat.com>
-References: <20250608105531.758809-2-costa.shul@redhat.com>
+To: Gabriele Paoloni <gpaoloni@redhat.com>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, mathieu.desnoyers@efficios.com,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ acarmina@redhat.com, chuck.wolber@boeing.com
+Subject: Re: [RFC PATCH 1/2] tracing: fixes of ftrace_enable_fops
+Message-ID: <20250701175826.429a7b4b@batman.local.home>
+In-Reply-To: <CA+wEVJaQcHdpVc3Za8qy0+Z-CGNeaDTrXtjJg2j7J6qsW4uAkQ@mail.gmail.com>
+References: <20250612104349.5047-1-gpaoloni@redhat.com>
+	<20250612104349.5047-2-gpaoloni@redhat.com>
+	<20250613114527.7e27a9a0ecc2b59d98677b0c@kernel.org>
+	<CA+wEVJa0jL-JH_4=5sR+Mvb26n4mPPudmOL0LRBDV54nMZcw8g@mail.gmail.com>
+	<20250620183503.6c84eb22cca206cd10418c04@kernel.org>
+	<CA+wEVJaQcHdpVc3Za8qy0+Z-CGNeaDTrXtjJg2j7J6qsW4uAkQ@mail.gmail.com>
 X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -38,49 +43,34 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: DE49520028
-X-Rspamd-Server: rspamout02
-X-Stat-Signature: fdxczjk7h9c8sjqqprppu773cntqnpyg
+X-Stat-Signature: xsr3n6d733jgjkmmfciss1nb8euuoupd
+X-Rspamd-Server: rspamout05
+X-Rspamd-Queue-Id: 24A4C20030
 X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1/NxjR0UBRqlUphGddBto35IVNMCDqQDWw=
-X-HE-Tag: 1751406255-218448
-X-HE-Meta: U2FsdGVkX18oZXzUiLKUg2KU09oG603+uqoplxvOIspfh0sm2x7/LfPxDwr/xsuICCNHX2jSC9+aHLZAfv3uUTN7gziMXo45ijv8OSzpCCpZBiaFDKNtaaBB6BvrcvdVivvB3ZnzLcpZDcmCyN/7x7YjDkgM4H5WWpedQrNoO1pVctZm/aDew5/16+PCreNNSPFLjjHv1mN9Y14ELe2atr8gLTamPt8D6KsJDDGJzSzU8of3Kq/47KJlQ00aqt1XoVpFb189IlJYs4XJVg6pI9siCCG9f+F591BcJQgWy2CeLNRYSzlC5qej0oL8dMrn4GB/7d9/fQ2FklWRUyhCnV9OlAIJm9pLFYDJ9kl8ubKZi+CNun8Kyv1G1YEx949f9PA4BYHI9ooI3OU8cdX6GpEfeDQT2G9hFasxS6lfhPM=
+X-Session-ID: U2FsdGVkX1+l/RQALv1HGE4aDzquDMpry/1Cchsc5q0=
+X-HE-Tag: 1751407107-332310
+X-HE-Meta: U2FsdGVkX1+ODILg/f0VuTzk7kNGIH/z+A3/7X+kaAtzbsqbVhRIGSqpb8avD5REDBlmQ2wUkIf1CAXuOJxqC1fkg8BBgLE2hNvKhsUl2lC/9O5A2g9YDHyuiLb8fespd3oqCr04jD4E0udf5smTgoBdSEvFIZuCkEuZ7PQ2q5zcOS3vOPQsdYpFLoFlzE3LqzA1ECf9zoIt1/CI2abBolG5pYQSh4ic7eanoys73bn4MUaiMDBdd310qoBoEmBTodZLWy0SMZrR9wwWfZamEiU4QiXEwm5pY0IqPWCrK7Q26rDRHQjBkVFK941/O1cP+yDeoIqu1k4dfW0hQ+vLZccqk3O0v5dI
 
-On Sun,  8 Jun 2025 13:55:30 +0300
-Costa Shulyupin <costa.shul@redhat.com> wrote:
+On Fri, 20 Jun 2025 15:26:27 +0200
+Gabriele Paoloni <gpaoloni@redhat.com> wrote:
 
-> Commit 18682166f61494072d58 ("rtla: Set distinctive exit value for failed
-> tests") expands exit status making it useful.
-> 
-> Add section 'EXIT STATUS' and required SPDX-License-Identifier
-> to the documentation.
-> 
-> Signed-off-by: Costa Shulyupin <costa.shul@redhat.com>
+> I think that from my side I do not have comprehensive answers to all your
+> questions (I need to read the code more in depth).
+> So to be pragmatic I can split this effort into two parts (documentation and
+> redesign); I will propose documentation first with the TIPs that you mentioned
+> above and later, if we find a better re-design solution, we can also amend
+> the documentation as needed.
 
-Acked-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+Just to confirm, I agree with Masami. The enable file is quite special,
+and I don't see the use of user space playing tricks with it, which
+even includes lseek. Maybe to keep rewinding a read to get a new status
+change?
+
+But it usually contains a single character (sometimes two) and a new
+line. It's not something that's ever been reported as an issue. I
+rather not touch it if it hasn't been reported as broken because
+there's some hypothetical use case that can see it as broken.
+
+Documenting its current behavior is perfectly fine with me.
 
 -- Steve
-
-> ---
->  Documentation/tools/rtla/common_appendix.rst | 10 ++++++++++
->  1 file changed, 10 insertions(+)
-> 
-> diff --git a/Documentation/tools/rtla/common_appendix.rst b/Documentation/tools/rtla/common_appendix.rst
-> index b5cf2dc223df..a6233ca8e6d6 100644
-> --- a/Documentation/tools/rtla/common_appendix.rst
-> +++ b/Documentation/tools/rtla/common_appendix.rst
-> @@ -1,3 +1,13 @@
-> +.. SPDX-License-Identifier: GPL-2.0
-> +EXIT STATUS
-> +===========
-> +
-> +::
-> +
-> + 0  Passed: the test did not hit the stop tracing condition
-> + 1  Error: invalid argument
-> + 2  Failed: the test hit the stop tracing condition
-> +
->  REPORTING BUGS
->  ==============
->  Report bugs to <linux-kernel@vger.kernel.org>
-
