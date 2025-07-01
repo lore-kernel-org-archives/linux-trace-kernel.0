@@ -1,35 +1,38 @@
-Received: from relay.hostedemail.com (smtprelay0012.hostedemail.com [216.40.44.12])
+Received: from relay.hostedemail.com (smtprelay0015.hostedemail.com [216.40.44.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3249433A5;
-	Tue,  1 Jul 2025 00:34:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5807872618;
+	Tue,  1 Jul 2025 00:36:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751330070; cv=none; b=f5ZveWfhA5vMPkd+v5bs1IEy/SCNi4JaV9Umod+bJJxTx75bpml3Xj8HWO6OUprLb+5lBFPuCLVOiVMr/CMmaESYdjdZNPT7hETBhOQ3o3/DswcS7Dwi8vj2BY5pI4gkx5Y+9WVEJjfl3bXgnNSkVzQw23brW4MJv5E5OEa4ZII=
+	t=1751330203; cv=none; b=VDow87jSjFtXt/sLl/xtAQjCWfVJFkWPsw1uMdc3zcXM/AKDkm92kV2Q23cw06sxGJEEr5PHKVgg689hm8WiiX18b1E/m6xHlzHwbmXyUQQ4LnoSvukjxKj5PNps4+rmgWoitOawnmnaei1oh7HC5VEab+5Y9Hmo7fcyNCgljgM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751330070; c=relaxed/simple;
-	bh=soofGfktdUTzhkeLri62x3nc+7vffuBNlzyVx4ZXkKI=;
+	s=arc-20240116; t=1751330203; c=relaxed/simple;
+	bh=WPyoJI/uJRQN+gTOZt6D/Ivcynv4TMEJJ4cZChOY/OY=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=JFCA0DEhPrTIkBgzoy+59Lel1p13b/R57+ah5NLaiejfQWKYOO8ua0dOeDG+x2Vf5yNWmrz2L5W5G55h5dDYdVKNUKPjWu9rGsirpGJLFrBjuNskomHvQMxakDy5wXzcv5ZiZIAzd1a95ut/IBa0ZEIAm4czqod5KhoGOj53jOM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.12
+	 MIME-Version:Content-Type; b=DrGYof+YFfbF7guLEChbj7yF7U5BWsLU83KB8luEn9L6hku+oINkwrEksz7K7eCedR5dNUYkKltCBDBGw50eWB/XV5JC8s1pZ6lAMgtfyyTrKf1PGBm3nuHL4TG6gf+GjS81wP6UVw4mkLnyu9wy012PFfvbn6ld6dGF3lCPoII=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.15
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf19.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay08.hostedemail.com (Postfix) with ESMTP id 0D5C8140213;
-	Tue,  1 Jul 2025 00:34:22 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf19.hostedemail.com (Postfix) with ESMTPA id 3B1B720026;
-	Tue,  1 Jul 2025 00:34:20 +0000 (UTC)
-Date: Mon, 30 Jun 2025 20:34:56 -0400
+Received: from omf20.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay07.hostedemail.com (Postfix) with ESMTP id CD325160214;
+	Tue,  1 Jul 2025 00:36:39 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf20.hostedemail.com (Postfix) with ESMTPA id 10C4E20026;
+	Tue,  1 Jul 2025 00:36:37 +0000 (UTC)
+Date: Mon, 30 Jun 2025 20:37:14 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
 To: Nam Cao <namcao@linutronix.de>
 Cc: Gabriele Monaco <gmonaco@redhat.com>,
  linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
  john.ogness@linutronix.de
-Subject: Re: [PATCH v10 18/19] rv: Add documentation for rtapp monitor
-Message-ID: <20250630203456.5619393f@gandalf.local.home>
-In-Reply-To: <18984a62a214d18793b04cce98a4498a4813ff85.1749547399.git.namcao@linutronix.de>
+Subject: Re: [PATCH v10 00/19] RV: Linear temporal logic monitors for RT
+ application
+Message-ID: <20250630203714.7af11375@gandalf.local.home>
+In-Reply-To: <20250627141744.yTIdgd2m@linutronix.de>
 References: <cover.1749547399.git.namcao@linutronix.de>
-	<18984a62a214d18793b04cce98a4498a4813ff85.1749547399.git.namcao@linutronix.de>
+	<20250627124248.fpuBrdWJ@linutronix.de>
+	<20250627101631.59bd7ab0@gandalf.local.home>
+	<20250627141744.yTIdgd2m@linutronix.de>
 X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -39,48 +42,37 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: 3B1B720026
-X-Rspamd-Server: rspamout02
-X-Stat-Signature: 1egrhocr3kg31i6ezu4ahzh9pe6zh87g
+X-Stat-Signature: krkmfgaobojdt66b7uea7q781e75c3ob
+X-Rspamd-Server: rspamout05
+X-Rspamd-Queue-Id: 10C4E20026
 X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1/lVfUDTyAYSDNZKVoB8OEQUXTvUbr3vno=
-X-HE-Tag: 1751330060-542645
-X-HE-Meta: U2FsdGVkX18p/Om28DO7EaIfiJOoWPiMGv7BMMifbIoZU37wdUUgSpqgD2BvUIMFVUzRAeR1juAwE7/wfl1uqLPQUoujTvCuijEZ8f/4FjdUniM5kb8cJwQq5sTRD5VvWAM98R4kn0kYg4r3WrKsyrjyrJEhdUWy9K0r01rd3C3ZLFzGrkN7EAk1e4c2I3V2WB7LppdYDS5sX00UCa+6LniiS98b5mPLdlOSdty1cfJfMICqpT6hjcUwb+aIdgwUc3lxI4pwPvHN7vSxLZ/MSNYDiqSU+OomazMuPoYfzD2fvjVBFgYKl9DVXZUjPbK1
+X-Session-ID: U2FsdGVkX1+HY7j5IkGblfjjBvmiInQmjtNFN979ntY=
+X-HE-Tag: 1751330197-431042
+X-HE-Meta: U2FsdGVkX183VdravY5pttDtrgeEjLKvxDwl0MiHwm8AydbLHTQt84hn+viHFUkGpYEmchpnJRaR4Va6Ai2MHVV3uiuJA5wUQoY/bZAZmwEk1b5b6obVtyo7wZrHfOC2HAzdpYu+tMZRD/RtLCBed4uMXsyc0mlGrqa8v2/DyeFpphS3IhYkFDvpNFV5PW5mkAHKp5GW2+egNYksEh4OuuQQyvzj83bGLl+TJOjQWqBvk1UklP077Q0AXAFetMaq1uA2IwmhNBoxLf5yDS37weaG5oRgKYahfHzQJbipwV+f0xbLqqMCdei7mgFKu4Md
 
-On Tue, 10 Jun 2025 11:43:43 +0200
+On Fri, 27 Jun 2025 16:17:44 +0200
 Nam Cao <namcao@linutronix.de> wrote:
 
-> --- /dev/null
-> +++ b/Documentation/trace/rv/monitor_rtapp.rst
-> @@ -0,0 +1,116 @@
-> +Real-time application monitors
-> +==============================
-> +
-> +- Name: rtapp
-> +- Type: container for multiple monitors
-> +- Author: Nam Cao <namcao@linutronix.de>
-> +
-> +Description
-> +-----------
-> +
-> +Real-time applications may have design flaws such that they experience unexpected latency and fail
-> +to meet their time requirements. Often, these flaws follow a few patterns:
-> +
-> +  - Page faults: A real-time thread may access memory that does not have a mapped physical backing
-> +    or must first be copied (such as for copy-on-write). Thus a page fault is raised and the kernel
-> +    must first perform the expensive action. This causes significant delays to the real-time thread
-> +  - Priority inversion: A real-time thread blocks waiting for a lower-priority thread. This causes
-> +    the real-time thread to effectively take on the scheduling priority of the lower-priority
-> +    thread. For example, the real-time thread needs to access a shared resource that is protected by
-> +    a non-pi-mutex, but the mutex is currently owned by a non-real-time thread.
-> +
-> +The `rtapp` monitor detects these patterns. It aids developers to identify reasons for unexpected
-> +latency with real-time applications. It is a container of multiple sub-monitors described in the
-> +following sections.
-> +
+> On Fri, Jun 27, 2025 at 10:16:31AM -0400, Steven Rostedt wrote:
+> > On Fri, 27 Jun 2025 14:42:48 +0200
+> > Nam Cao <namcao@linutronix.de> wrote:
+> >   
+> > > Is there any chance this series could be applied soon? I have some more
+> > > patches which depend on this series, so it is holding up the show. I think
+> > > Gabriele needs this applied for his patches as well.  
+> > 
+> > I'll try to take a look at these today.  
+> 
 
-Again, please limit the documentation to 80 columns.
+OK, finished it. I didn't read the lines that were over 80 columns, as that
+does give me a headache. But that means I may only have questions on the
+comments and documentation.
 
-Thanks!
+The rest looks good besides the comments I made in the series.
+
+Please send a v11.
+
+Thanks,
 
 -- Steve
+
