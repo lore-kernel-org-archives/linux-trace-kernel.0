@@ -1,357 +1,388 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mxct.zte.com.cn (mxct.zte.com.cn [183.62.165.209])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF2AF25C6EC;
-	Tue,  1 Jul 2025 08:39:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9BCF2309B0;
+	Tue,  1 Jul 2025 09:41:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=183.62.165.209
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751359180; cv=none; b=OfrG2/6k2OHCLbsG9MmSm+t3o/VHfwVxOQnf0XNt+hqYG0rxOI8bafnAHra3R+Z0sgI7RM26Uas23rcWuzxH0lcGHRhMankgxRe0lBL2tAgSSVvHMTuco0MfRh1lrrqFqXqfubmJpfopu7gF23GEOWxT8Fd1MrfT2CW353WrX0U=
+	t=1751362878; cv=none; b=Qb0JJW2IvivwjT6Upa3/vgDFuL+IvNSrApjQHccb5nG8NOhHjznAuEX/db8X6cb3SWQ7JvMGiIOTWLor8H6yxFoJRMjSmLBzJMy0yuyiZmgxKyf8XEGiDlgabWmVv4ug/oJelFfiKxkFzOdQzEcApRw6RUQZdNGTn/VjH6kOpoE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751359180; c=relaxed/simple;
-	bh=6Ggj5SJgHebL8gcjHvs9jvZzSJ1s613481Vhv3KjfRU=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=a/s8+SMGz5fJdqW9FFY3kFLyySCxsfwdUvhC5LBAJFevdrBj/4Pme/wyfHSViCktstMRZ+5swa5//9CC2mztl9u7m4mwyPCZ/jug8HJw7i1Bf1BEOgRYHXYGSyE0Iey/0znLlwVxr+ThlvhV2KqzrEPiISGCeXJ9jrP/TpwwQm4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GCm73nGU; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GCm73nGU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5EAAFC4CEEB;
-	Tue,  1 Jul 2025 08:39:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751359179;
-	bh=6Ggj5SJgHebL8gcjHvs9jvZzSJ1s613481Vhv3KjfRU=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=GCm73nGU15vuV2sTjTwwXn59T9LmFXeMdS+GEy1dhUPutHdW61z0dbqa33kLknsjA
-	 V3js4HL7jNYC9mKajEgkRipDo7+6fyP/+pwfid/yGs6uJinH3hFIxRsmpSjPDZ7R/i
-	 1OnDkV1UJABp5u0XzYdqGMQx333tHFmQzBvRVfCEC6FRlyL0GtUZEelhb2TFtiarbH
-	 ZaycuwMtRKXTPp9xaKfoiVSvi+zl/qXQZrteVa9h6ak0klUYtxPxDMxgesJv7izsEB
-	 W5dCQZKH42CnbxmRnGJptcX4yviL1iPVWJI9JsjdGXdU3xwWDe7Kyo/XgIMTQSLEJD
-	 7+XMuVY4oDe7A==
-Date: Tue, 1 Jul 2025 17:39:34 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Yao Zi <ziyao@disroot.org>
-Cc: Andy Chiu <andybnac@gmail.com>, alexghiti@rivosinc.com,
- palmer@dabbelt.com, "Andy Chiu" <andy.chiu@sifive.com>, =?UTF-8?B?Qmo=?=
- =?UTF-8?B?w7ZybiBUw7ZwZWw=?= <bjorn@rivosinc.com>, Mark Rutland
- <mark.rutland@arm.com>, "Alexandre Ghiti" <alex@ghiti.fr>,
- puranjay12@gmail.com, paul.walmsley@sifive.com, greentime.hu@sifive.com,
- nick.hu@sifive.com, nylon.chen@sifive.com, eric.lin@sifive.com,
- vicent.chen@sifive.com, zong.li@sifive.com, yongxuan.wang@sifive.com,
- samuel.holland@sifive.com, olivia.chu@sifive.com, c2232430@gmail.com, Han
- Gao <rabenda.cn@gmail.com>, Vivian Wang <wangruikang@iscas.ac.cn>,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- regressions@lists.linux.dev, linux-riscv@lists.infradead.org
-Subject: Re: [REGRESSION] Random oops on SG2042 with Linux 6.16-rc and
- dynamic ftrace
-Message-Id: <20250701173934.cc92a6d1d5a976a6556e6863@kernel.org>
-In-Reply-To: <aGODMpq7TGINddzM@pie.lan>
-References: <aGODMpq7TGINddzM@pie.lan>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1751362878; c=relaxed/simple;
+	bh=1lHpk4falGd8CU4cBIEePpzPxJzDW//lHJ8RG77rWEE=;
+	h=Date:Message-ID:Mime-Version:From:To:Cc:Subject:Content-Type; b=WogVkjME7BKaPURxdMW8/rj8pW0z5NXr4mdXFtumPSxGvSYlUFkAihZuoub5vKmFNpX80eqYL9cD+SVkrgcS5KDPGDab11toq+Mn6tPXNsVnefsE/ybCe/9dmVVN9vBVktGA14OUSfcSa+gYpgb0lHqwfBpBaILW6slbOrwxgYI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn; spf=pass smtp.mailfrom=zte.com.cn; arc=none smtp.client-ip=183.62.165.209
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zte.com.cn
+Received: from mse-fl2.zte.com.cn (unknown [10.5.228.133])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mxct.zte.com.cn (FangMail) with ESMTPS id 4bWdM404Dfz51SWj;
+	Tue,  1 Jul 2025 17:41:04 +0800 (CST)
+Received: from xaxapp05.zte.com.cn ([10.99.98.109])
+	by mse-fl2.zte.com.cn with SMTP id 5619enZv054393;
+	Tue, 1 Jul 2025 17:40:49 +0800 (+08)
+	(envelope-from xu.xin16@zte.com.cn)
+Received: from mapi (xaxapp05[null])
+	by mapi (Zmail) with MAPI id mid32;
+	Tue, 1 Jul 2025 17:40:51 +0800 (CST)
+Date: Tue, 1 Jul 2025 17:40:51 +0800 (CST)
+X-Zmail-TransId: 2afc6863ad23ffffffffa60-b95ab
+X-Mailer: Zmail v1.0
+Message-ID: <20250701174051880riwWtq_0siCJ5Yfsa6ZOQ@zte.com.cn>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+From: <xu.xin16@zte.com.cn>
+To: <kuba@kernel.org>, <edumazet@google.com>, <kuniyu@amazon.com>,
+        <ncardwell@google.com>, <davem@davemloft.net>, <horms@kernel.org>
+Cc: <dsahern@kernel.org>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
+        <fan.yu9@zte.com.cn>, <xu.xin16@zte.com.cn>
+Subject: =?UTF-8?B?W1BBVENIIG5ldC1uZXh0IHYyXSB0Y3A6IGV4dGVuZCB0Y3BfcmV0cmFuc21pdF9za2IgdHJhY2Vwb2ludCB3aXRoIGZhaWx1cmUgcmVhc29ucw==?=
+Content-Type: text/plain;
+	charset="UTF-8"
+X-MAIL:mse-fl2.zte.com.cn 5619enZv054393
+X-Fangmail-Anti-Spam-Filtered: true
+X-Fangmail-MID-QID: 6863AD2F.001/4bWdM404Dfz51SWj
 
-On Tue, 1 Jul 2025 06:41:54 +0000
-Yao Zi <ziyao@disroot.org> wrote:
+From: Fan Yu <fan.yu9@zte.com.cn>
 
-> Linux v6.16 built with dynamic ftrace randomly oops or triggers
-> ftrace_bug() on Sophgo SG2042 when booting systemd-based userspace,
-> 
-> [    9.913462] ------------[ ftrace bug ]------------
-> [    9.913921] usbcore: registered new interface driver hub
-> [    9.917914] ftrace faulted on modifying
-> [    9.922947] usbcore: registered new device driver usb
-> [    9.928062] [<ffffffff030b7a7c>] 0xffffffff030b7a7c
-> [    9.941963] Initializing ftrace call sites
-> [    9.946086] ftrace record flags: 2000000
-> [    9.950028]  (0)
->                 expected tramp: ffffffff8001f840
-> [    9.956592] ------------[ cut here ]------------
-> [    9.956597] WARNING: CPU: 3 PID: 673 at kernel/trace/ftrace.c:2213 ftrace_bug+0x278/0x2b0
-> [    9.956625] Modules linked in: fixed_phy(E+) fwnode_mdio(E) nvme_core(E) usbcore(E) scsi_mod(E) sdhci(E) libphy(E) nvme_keyring(E) scsi_common(E) usb_common(E) nvme_auth(E) cqhci(E) mdio_bus(E) mdio(E) mmc_core(E) gpio_dwapb(E) spi_sg2044_nor(E) i2c_designware_platform(E)
-> [    9.956667] CPU: 3 UID: 0 PID: 673 Comm: (udev-worker) Tainted: G            E       6.16.0-rc3-pioneer #2025.06.24.16.00+074b194ff VOLUNTARY
-> [    9.956677] Tainted: [E]=UNSIGNED_MODULE
-> [    9.956680] Hardware name: Milk-V Pioneer (DT)
-> [    9.956683] epc : ftrace_bug+0x278/0x2b0
-> [    9.956689]  ra : ftrace_bug+0x278/0x2b0
-> [    9.956694] epc : ffffffff80007018 ra : ffffffff80007018 sp : ffffffc60a2b3800
-> [    9.956698]  gp : ffffffff81dbf1e8 tp : ffffffd70246aac0 t0 : ffffffff8001ff48
-> [    9.956702]  t1 : 0000000000000020 t2 : 6465746365707865 s0 : ffffffc60a2b3830
-> [    9.956705]  s1 : ffffffff030b7a7c a0 : 0000000000000022 a1 : fffffff5ffaad8c0
-> [    9.956708]  a2 : 0000000000000010 a3 : fffffff5ffaad8c0 a4 : 0000000000000000
-> [    9.956711]  a5 : 0000000000000000 a6 : 0000000000007ffe a7 : 000000000015ffa8
-> [    9.956715]  s2 : ffffffd722b77130 s3 : fffffffffffffff2 s4 : ffffffd722b77130
-> [    9.956718]  s5 : fffffff5dda52b60 s6 : ffffffff030ca500 s7 : 0000000002000000
-> [    9.956721]  s8 : 0000000000000013 s9 : fffffff5dda52b60 s10: 0000000000000046
-> [    9.956724]  s11: 0000000000000014 t3 : ffffffff81dda237 t4 : ffffffff81dda237
-> [    9.956727]  t5 : ffffffff81dda238 t6 : ffffffc60a2b3628
-> [    9.956730] status: 0000000200000120 badaddr: 0000000000000000 cause: 0000000000000003
-> [    9.956735] [<ffffffff80007018>] ftrace_bug+0x278/0x2b0
-> [    9.956753] [<ffffffff8015cc32>] ftrace_process_locs+0x392/0x4f0
-> [    9.956762] [<ffffffff80160a3c>] ftrace_module_init+0x3c/0x58
-> [    9.956768] [<ffffffff800f4c8e>] load_module+0x178e/0x1f78
-> [    9.956777] [<ffffffff800f5682>] init_module_from_file+0x82/0xc8
-> [    9.956783] [<ffffffff800f58e8>] __riscv_sys_finit_module+0x1c0/0x300
-> [    9.956789] [<ffffffff80b10c58>] do_trap_ecall_u+0xa0/0x420
-> [    9.956795] [<ffffffff80b1e17a>] handle_exception+0x14a/0x156
-> [    9.956804] ---[ end trace 0000000000000000 ]---
-> 
-> Here's the log when ftrace_bug() is triggered. It's worth noting that
-> all strange behaviors happen after the userspace starts to load modules.
-> 
-> During debugging, we found if the kernel is built with lockdep enabled,
-> it triggers tons of warnings during kernel startup and module
-> initialization, which is reproducible on QEMU as well. A typical log
-> looks like,
-> 
-> [   30.219049] ------------[ cut here ]------------
-> [   30.219072] WARNING: CPU: 0 PID: 61 at arch/riscv/kernel/patch.c:135 __patch_insn_write+0x356/0x3b8
-> [   30.219113] Modules linked in:
-> [   30.219145] CPU: 0 UID: 0 PID: 61 Comm: modprobe Tainted: G        W           6.16.0-rc4 #64 NONE
-> [   30.219170] Tainted: [W]=WARN
-> [   30.219179] Hardware name: riscv-virtio,qemu (DT)
-> [   30.219189] epc : __patch_insn_write+0x356/0x3b8
-> [   30.219209]  ra : __patch_insn_write+0x352/0x3b8
-> [   30.219227] epc : ffffffff80018c7e ra : ffffffff80018c7a sp : ff2000000032b9e0
-> [   30.219239]  gp : ffffffff81a07500 tp : ff600000823199c0 t0 : ffffffff8001ee78
-> [   30.219250]  t1 : ff6000008231a9c0 t2 : 0000000000000000 s0 : ff2000000032ba30
-> [   30.219261]  s1 : 0000000000000008 a0 : 0000000000000000 a1 : ffffffff8181f318
-> [   30.219272]  a2 : 0000000000000000 a3 : 0000000000000000 a4 : ff600000faa43398
-> [   30.219283]  a5 : 0000000000000000 a6 : 000000000e2d0519 a7 : 0000000000000004
-> [   30.219294]  s2 : ffffffff0258b3a0 s3 : 0000000000000008 s4 : 00000000000003a0
-> [   30.219305]  s5 : ff2000000032ba78 s6 : 00000000000003a8 s7 : 0000000002000000
-> [   30.219316]  s8 : 000000000000007a s9 : ff60000083a8a040 s10: 0000000000000147
-> [   30.219327]  s11: 000000000000007b t3 : 0000000000001fff t4 : 0000000000000004
-> [   30.219338]  t5 : 0000000000000002 t6 : 0000000000040000
-> [   30.219347] status: 0000000200000120 badaddr: ffffffff80018c7e cause: 0000000000000003
-> [   30.219360] [<ffffffff80018c7e>] __patch_insn_write+0x356/0x3b8
-> [   30.219380] [<ffffffff80019268>] patch_text_nosync+0x48/0x80
-> [   30.219400] [<ffffffff8001ebb6>] ftrace_init_nop+0x3e/0xd0
-> [   30.219417] [<ffffffff8016cbe4>] ftrace_process_locs+0x29c/0x530
-> [   30.219436] [<ffffffff80170d14>] ftrace_module_init+0x3c/0x58
-> [   30.219454] [<ffffffff800f8500>] load_module+0x14f0/0x1c70
-> [   30.219473] [<ffffffff800f8e6a>] init_module_from_file+0x82/0xc8
-> [   30.219491] [<ffffffff800f9066>] idempotent_init_module+0x1b6/0x2b8
-> [   30.219510] [<ffffffff800f922c>] __riscv_sys_finit_module+0x64/0xa0
-> [   30.219528] [<ffffffff80b1c590>] do_trap_ecall_u+0x2b0/0x4e0
-> [   30.219549] [<ffffffff80b2b172>] handle_exception+0x14a/0x156
-> [   30.219573] irq event stamp: 5143
-> [   30.219582] hardirqs last  enabled at (5143): [<ffffffff80b1d55a>] irqentry_exit+0x6a/0x128
-> [   30.219601] hardirqs last disabled at (5141): [<ffffffff800365fc>] handle_softirqs+0x4a4/0x518
-> [   30.219620] softirqs last  enabled at (5142): [<ffffffff8003661a>] handle_softirqs+0x4c2/0x518
-> [   30.219637] softirqs last disabled at (5137): [<ffffffff800367ee>] __irq_exit_rcu+0xe6/0x120
-> [   30.219656] ---[ end trace 0000000000000000 ]---
-> [   30.219858] ------------[ cut here ]------------
-> 
-> With some digging, it's found that mutex_lock isn't correctly held when
-> ftrace_init_nop() initializes the address of ops stored before the
-> function entry., which is the cause of crashes: without correct lock
-> protection, __patch_insn_write() may wrongly modify the text segment if
-> the userspace concurrently issues module initialization, since all code
-> patching functions share two fixmap pages to modify the code.
-> 
-> The bug was newly introduced by recent RISC-V ftrace changes[1] in
-> v6.16-rc1, precisely saying commit 881dadf0792c ("Merge patch series
-> "riscv: ftrace: atmoic patching and preempt improvements"").
-> 
-> We also found another lockdep failure introduced by the series, which
-> could be reproduced by loading a module after enabling a tracer,
-> 
->         cd /sys/kernel/debug/tracing
->         echo 0 > tracing_on
->         echo function > current_tracer
->         echo printk > set_ftrace_filter
->         echo 1 > tracing_on
->         modprobe xxx    # loading anything causes lockdep failures
-> 
-> a typical log for the issue looks like,
-> 
-> [   40.420039] ------------[ cut here ]------------
-> [   40.420078] WARNING: CPU: 1 PID: 60 at arch/riscv/kernel/patch.c:135 __patch_insn_write+0x356/0x3b8
-> [   40.420145] Modules linked in: fuse(+)
-> [   40.420229] CPU: 1 UID: 0 PID: 60 Comm: modprobe Tainted: G        W           6.16.0-rc4+ #69 NONE
-> [   40.420272] Tainted: [W]=WARN
-> [   40.420296] Hardware name: riscv-virtio,qemu (DT)
-> [   40.420323] epc : __patch_insn_write+0x356/0x3b8
-> [   40.420367]  ra : __patch_insn_write+0x352/0x3b8
-> [   40.420409] epc : ffffffff80018c7e ra : ffffffff80018c7a sp : ff2000000030b9d0
-> [   40.420437]  gp : ffffffff81a07500 tp : ff60000083433380 t0 : ffffffff80024060
-> [   40.420465]  t1 : ffffffff81a0a250 t2 : 0000000000000001 s0 : ff2000000030ba20
-> [   40.420492]  s1 : 0000000000000004 a0 : 0000000000000000 a1 : ffffffff8181f318
-> [   40.420519]  a2 : 0000000000000000 a3 : 0000000000000000 a4 : ff600000fac22398
-> [   40.420546]  a5 : 0000000000000000 a6 : 0000000000000000 a7 : 0000000052464e43
-> [   40.420573]  s2 : ffffffff02581804 s3 : 0000000000000004 s4 : 0000000000000804
-> [   40.420600]  s5 : ff2000000030ba74 s6 : 0000000000000808 s7 : 0000000000000002
-> [   40.420628]  s8 : 0000000000000001 s9 : ffffffff818b09d8 s10: 00000000efffffff
-> [   40.420655]  s11: 0000000040000000 t3 : 0000000000100000 t4 : 0000000000000064
-> [   40.420682]  t5 : ff6000008392a9d0 t6 : ff600000837c6fff
-> [   40.420708] status: 0000000200000120 badaddr: ffffffff80018c7e cause: 0000000000000003
-> [   40.420740] [<ffffffff80018c7e>] __patch_insn_write+0x356/0x3b8
-> [   40.420783] [<ffffffff800191f8>] patch_insn_write+0x48/0x70
-> [   40.420825] [<ffffffff8001eacc>] ftrace_make_call+0x8c/0xc0
-> [   40.420866] [<ffffffff8016c928>] __ftrace_replace_code+0xc0/0xd0
-> [   40.420909] [<ffffffff80170c82>] ftrace_module_enable+0x292/0x2d8
-> [   40.420951] [<ffffffff800f85e4>] load_module+0x15e4/0x1c70
-> [   40.420993] [<ffffffff800f8e5a>] init_module_from_file+0x82/0xc8
-> [   40.421035] [<ffffffff800f9056>] idempotent_init_module+0x1b6/0x2b8
-> [   40.421076] [<ffffffff800f921c>] __riscv_sys_finit_module+0x64/0xa0
-> [   40.421118] [<ffffffff80b1c580>] do_trap_ecall_u+0x2b0/0x4e0
-> [   40.421160] [<ffffffff80b2b162>] handle_exception+0x14a/0x156
-> [   40.421210] irq event stamp: 5977
-> [   40.421234] hardirqs last  enabled at (5977): [<ffffffff80b1d54a>] irqentry_exit+0x6a/0x128
-> [   40.421275] hardirqs last disabled at (5975): [<ffffffff800365ec>] handle_softirqs+0x4a4/0x518
-> [   40.421315] softirqs last  enabled at (5976): [<ffffffff8003660a>] handle_softirqs+0x4c2/0x518
-> [   40.421355] softirqs last disabled at (5969): [<ffffffff800367de>] __irq_exit_rcu+0xe6/0x120
-> [   40.421397] ---[ end trace 0000000000000000 ]---
-> 
-> the text_mutex lock isn't taken when ftrace_module_enable() indirectly
-> calls ftrace_make_call(), which *theoretically* may trigger a race, too.
+Background
+==========
+When TCP retransmits a packet due to missing ACKs, the
+retransmission may fail for various reasons (e.g., packets
+stuck in driver queues, sequence errors, or routing issues).
 
-Good catch! Thanks for this precise report.
+The original tcp_retransmit_skb tracepoint:
+'commit e086101b150a ("tcp: add a tracepoint for tcp retransmission")'
+lacks visibility into these failure causes, making production
+diagnostics difficult.
 
-Hm, it seems that the ftrace_module_enable() takes a text_mutex via
-ftrace_arch_code_modify_prepare() on x86. But commit 5aa4ef955884 
-("riscv: ftrace: do not use stop_machine to update code") removed it
-from RISCV.
+Solution
+=======
+Adds a 'reason' field to the tcp_retransmit_skb tracepoint,
+enumerating with explicit failure cases:
+TCP_RETRANS_ERR_DEFAULT (retransmit terminate unexpectedly)
+TCP_RETRANS_IN_HOST_QUEUE (packet still queued in driver)
+TCP_RETRANS_END_SEQ_ERROR (invalid end sequence)
+TCP_RETRANS_TRIM_HEAD_NOMEM (trim head no memory)
+TCP_RETRANS_UNCLONE_NOMEM (skb unclone keeptruesize no memory)
+TCP_RETRANS_FRAG_NOMEM (fragment no memory)
+TCP_RETRANS_ROUTE_FAIL (routing failure)
+TCP_RETRANS_RCV_ZERO_WINDOW (closed recevier window)
+TCP_RETRANS_PSKB_COPY_NOBUFS (no buffer for skb copy)
+
+Functionality
+=============
+Enables users to know why some tcp retransmission quitted and filter
+retransmission failures by reason.
 
 
-> 
-> Reverting the series fixes the second problem as well, but it's worth
-> noting that lockdep still reports a possible dead lock condition when
-> setting the tracer with
-> 
->         echo function > /sys/kernel/debug/tracing/current_tracer
-> 
-> [   21.344316] ======================================================
-> [   21.345382] WARNING: possible circular locking dependency detected
-> [   21.346914] 6.16.0-rc4+ #70 Not tainted
-> [   21.347924] ------------------------------------------------------
-> [   21.348961] bash/58 is trying to acquire lock:
-> [   21.349844] ffffffff8181a0a0 (cpu_hotplug_lock){++++}-{0:0}, at: stop_machine+0x24/0x4c
-> [   21.354283]
-> [   21.354283] but task is already holding lock:
-> [   21.355431] ffffffff8181f318 (text_mutex){+.+.}-{4:4}, at: ftrace_arch_code_modify_prepare+0x1a/0x2c
-> [   21.357233]
-> [   21.357233] which lock already depends on the new lock.
-> [   21.357233]
-> [   21.358534]
-> [   21.358534] the existing dependency chain (in reverse order) is:
-> [   21.359668]
-> [   21.359668] -> #2 (text_mutex){+.+.}-{4:4}:
-> [   21.360862]        lock_acquire+0xf0/0x30e
-> [   21.361749]        __mutex_lock+0xa6/0x8ee
-> [   21.362566]        mutex_lock_nested+0x20/0x28
-> [   21.363310]        arch_jump_label_transform_queue+0x48/0x100
-> [   21.364226]        __jump_label_update+0x42/0xe8
-> [   21.365034]        jump_label_update+0x126/0x1da
-> [   21.365764]        static_key_slow_inc_cpuslocked+0x6c/0xa4
-> [   21.366579]        static_key_slow_inc+0x26/0x3c
-> [   21.367305]        sched_clock_init+0x20/0x50
-> [   21.368041]        start_kernel+0x9b8/0xa94
-> [   21.368940]
-> [   21.368940] -> #1 (jump_label_mutex){+.+.}-{4:4}:
-> [   21.370062]        lock_acquire+0xf0/0x30e
-> [   21.370748]        __mutex_lock+0xa6/0x8ee
-> [   21.371459]        mutex_lock_nested+0x20/0x28
-> [   21.372136]        jump_label_init+0x38/0xee
-> [   21.372894]        setup_arch+0xd0/0x634
-> [   21.373568]        start_kernel+0x90/0xa94
-> [   21.374310]
-> [   21.374310] -> #0 (cpu_hotplug_lock){++++}-{0:0}:
-> [   21.375509]        check_noncircular+0x144/0x15c
-> [   21.376313]        __lock_acquire+0xd88/0x2176
-> [   21.377029]        lock_acquire+0xf0/0x30e
-> [   21.377683]        cpus_read_lock+0x44/0x118
-> [   21.378447]        stop_machine+0x24/0x4c
-> [   21.379123]        arch_ftrace_update_code+0x38/0x56
-> [   21.379896]        ftrace_startup+0xd0/0x170
-> [   21.380673]        register_ftrace_function+0x11c/0x1f0
-> [   21.381489]        function_trace_init+0x6c/0xae
-> [   21.382238]        tracing_set_tracer+0xba/0x14c
-> [   21.383044]        tracing_set_trace_write+0x96/0xd0
-> [   21.383871]        vfs_writev+0x1b8/0x400
-> [   21.384501]        do_writev+0x6e/0xe8
-> [   21.385168]        __riscv_sys_writev+0x22/0x2a
-> [   21.385919]        do_trap_ecall_u+0x2b0/0x4de
-> [   21.386695]        handle_exception+0x14a/0x156
-> [   21.387516]
-> [   21.387516] other info that might help us debug this:
-> [   21.387516]
-> [   21.388995] Chain exists of:
-> [   21.388995]   cpu_hotplug_lock --> jump_label_mutex --> text_mutex
+Compatibility description
+=========================
+This patch extends the tcp_retransmit_skb tracepoint
+by adding a new quit_reason field at the end of its
+existing structure (within TP_STRUCT__entry). The
+compatibility implications are detailed as follows:
 
-Yeah, this chain is correct. We can not get cpus_read_lock() after
-text_mutex. cpus_read_lock() before text_mutex and use
-stop_machine_cpuslocked() instead. (if revert the series).
+1) Structural compatibility for legacy user-space tools
 
-Thank you,
+Legacy tools/BPF programs accessing existing fields
+(by offset or name) can still work without modification
+or recompilation.The new field is appended to the end,
+preserving original memory layout. 
+
+2) Note: semantic changes
+
+The original tracepoint primarily only focused on
+successfully retransmitted packets. With this patch,
+the tracepoint now covers all packets that trigger
+retransmission attempts, including those that may
+terminate early due to specific reasons. For accurate
+statistics, users should filter using quit_reason
+to distinguish outcomes.
 
 
-> [   21.388995]
-> [   21.390786]  Possible unsafe locking scenario:
-> [   21.390786]
-> [   21.391724]        CPU0                    CPU1
-> [   21.392608]        ----                    ----
-> [   21.393357]   lock(text_mutex);
-> [   21.394035]                                lock(jump_label_mutex);
-> [   21.395118]                                lock(text_mutex);
-> [   21.396157]   rlock(cpu_hotplug_lock);
-> [   21.397030]
-> [   21.397030]  *** DEADLOCK ***
-> [   21.397030]
-> [   21.398110] 5 locks held by bash/58:
-> [   21.398751]  #0: ff60000080a59430 (sb_writers#6){.+.+}-{0:0}, at: do_writev+0x6e/0xe8
-> [   21.400343]  #1: ffffffff818b1548 (trace_types_lock){+.+.}-{4:4}, at: tracing_set_tracer+0x24/0x14c
-> [   21.401948]  #2: ffffffff818b0df8 (direct_mutex){+.+.}-{4:4}, at: register_ftrace_function+0x20/0x1f0
-> [   21.403531]  #3: ffffffff818b0908 (ftrace_lock){+.+.}-{4:4}, at: register_ftrace_function+0x110/0x1f0
-> [   21.405208]  #4: ffffffff8181f318 (text_mutex){+.+.}-{4:4}, at: ftrace_arch_code_modify_prepare+0x1a/0x2c
-> [   21.406948]
-> [   21.406948] stack backtrace:
-> [   21.408285] CPU: 1 UID: 0 PID: 58 Comm: bash Not tainted 6.16.0-rc4+ #70 NONE
-> [   21.408915] Hardware name: riscv-virtio,qemu (DT)
-> [   21.409325] Call Trace:
-> [   21.409448] [<ffffffff80016fa8>] dump_backtrace+0x28/0x30
-> [   21.409546] [<ffffffff80002534>] show_stack+0x38/0x44
-> [   21.409595] [<ffffffff8000fe1a>] dump_stack_lvl+0x70/0x9c
-> [   21.409644] [<ffffffff8000fe5e>] dump_stack+0x18/0x20
-> [   21.409691] [<ffffffff800a764c>] print_circular_bug+0x26c/0x2bc
-> [   21.409744] [<ffffffff800a77e0>] check_noncircular+0x144/0x15c
-> [   21.409797] [<ffffffff800aa1a6>] __lock_acquire+0xd88/0x2176
-> [   21.409850] [<ffffffff800ab684>] lock_acquire+0xf0/0x30e
-> [   21.409902] [<ffffffff8002bd76>] cpus_read_lock+0x44/0x118
-> [   21.409954] [<ffffffff80144498>] stop_machine+0x24/0x4c
-> [   21.410000] [<ffffffff8001d1ea>] arch_ftrace_update_code+0x38/0x56
-> [   21.410050] [<ffffffff80161fe4>] ftrace_startup+0xd0/0x170
-> [   21.410102] [<ffffffff80162ee8>] register_ftrace_function+0x11c/0x1f0
-> [   21.410154] [<ffffffff8017d9ac>] function_trace_init+0x6c/0xae
-> [   21.410207] [<ffffffff80176444>] tracing_set_tracer+0xba/0x14c
-> [   21.410262] [<ffffffff8017656c>] tracing_set_trace_write+0x96/0xd0
-> [   21.410318] [<ffffffff80292d70>] vfs_writev+0x1b8/0x400
-> [   21.410365] [<ffffffff80293026>] do_writev+0x6e/0xe8
-> [   21.410411] [<ffffffff80294982>] __riscv_sys_writev+0x22/0x2a
-> [   21.410460] [<ffffffff80ab6704>] do_trap_ecall_u+0x2b0/0x4de
-> [   21.410508] [<ffffffff80ac4b0e>] handle_exception+0x14a/0x156
-> 
-> which seems to exist since at least v6.15.
-> 
-> Not sure either reverting the commits or fixing them up is a better
-> idea, but anyway the fatal first issue shouidn't go into the stable
-> release.
-> 
-> Thanks for your suggestions on the problems.
-> 
-> Regards,
-> Yao Zi
-> 
-> [1]: https://lore.kernel.org/all/20250407180838.42877-1-andybnac@gmail.com/
-> 
-> #regzbot introduced: 881dadf0792c
-> 
 
+Before patched:
+# cat /sys/kernel/debug/tracing/events/tcp/tcp_retransmit_skb/format
+        field:const void * skbaddr;     offset:8;       size:8; signed:0;
+        field:const void * skaddr;      offset:16;      size:8; signed:0;
+        field:int state;        offset:24;      size:4; signed:1;
+        field:__u16 sport;      offset:28;      size:2; signed:0;
+        field:__u16 dport;      offset:30;      size:2; signed:0;
+        field:__u16 family;     offset:32;      size:2; signed:0;
+        field:__u8 saddr[4];    offset:34;      size:4; signed:0;
+        field:__u8 daddr[4];    offset:38;      size:4; signed:0;
+        field:__u8 saddr_v6[16];        offset:42;      size:16;        signed:0;
+        field:__u8 daddr_v6[16];        offset:58;      size:16;        signed:0;
+print fmt: "skbaddr=%p skaddr=%p family=%s sport=%hu dport=%hu saddr=%pI4 daddr=%pI4 saddrv6=%pI6c daddrv6=%pI6c state=%s"
+
+After patched:
+# cat /sys/kernel/debug/tracing/events/tcp/tcp_retransmit_skb/format
+        field:const void * skbaddr;     offset:8;       size:8; signed:0;
+        field:const void * skaddr;      offset:16;      size:8; signed:0;
+        field:int state;        offset:24;      size:4; signed:1;
+        field:__u16 sport;      offset:28;      size:2; signed:0;
+        field:__u16 dport;      offset:30;      size:2; signed:0;
+        field:__u16 family;     offset:32;      size:2; signed:0;
+        field:__u8 saddr[4];    offset:34;      size:4; signed:0;
+        field:__u8 daddr[4];    offset:38;      size:4; signed:0;
+        field:__u8 saddr_v6[16];        offset:42;      size:16;        signed:0;
+        field:__u8 daddr_v6[16];        offset:58;      size:16;        signed:0;
+        field:enum tcp_retransmit_quit_reason quit_reason;      offset:76;      size:4; signed:0;
+print fmt: "skbaddr=%p skaddr=%p family=%s sport=%hu dport=%hu saddr=%pI4 daddr=%pI4 saddrv6=%pI6c daddrv6=%pI6c state=%s quit_reason=%s"
+
+
+Co-developed-by: xu xin <xu.xin16@zte.com.cn>
+Signed-off-by: xu xin <xu.xin16@zte.com.cn>
+Signed-off-by: Fan Yu <fan.yu9@zte.com.cn>
+
+---
+v1->v2:
+
+1) Rename TCP_RETRANS_QUIT_UNDEFINED to TCP_RETRANS_ERR_DEFAULT,
+as error codes due to tcp_transmit_skb() calls within
+__tcp_retransmit_skb are not explicitly tracked, it is
+necessary to make default failure reason essential
+for clarity. 
+
+2) Added detailed compatibility consequences section.
+
+ include/linux/tcp.h        | 13 +++++++++
+ include/trace/events/tcp.h | 54 +++++++++++++++++++++++++-------------
+ net/ipv4/tcp_output.c      | 52 ++++++++++++++++++++++++++----------
+ 3 files changed, 87 insertions(+), 32 deletions(-)
+
+diff --git a/include/linux/tcp.h b/include/linux/tcp.h
+index 29f59d50dc73..7ffd5680c4ac 100644
+--- a/include/linux/tcp.h
++++ b/include/linux/tcp.h
+@@ -530,6 +530,19 @@ enum tsq_flags {
+ 	TCPF_ACK_DEFERRED		= BIT(TCP_ACK_DEFERRED),
+ };
+
++enum tcp_retransmit_quit_reason {
++	TCP_RETRANS_ERR_DEFAULT,
++	TCP_RETRANS_SUCCESS,
++	TCP_RETRANS_IN_HOST_QUEUE,
++	TCP_RETRANS_END_SEQ_ERROR,
++	TCP_RETRANS_TRIM_HEAD_NOMEM,
++	TCP_RETRANS_UNCLONE_NOMEM,
++	TCP_RETRANS_FRAG_NOMEM,
++	TCP_RETRANS_ROUTE_FAIL,
++	TCP_RETRANS_RCV_ZERO_WINDOW,
++	TCP_RETRANS_PSKB_COPY_NOBUFS,
++};
++
+ #define tcp_sk(ptr) container_of_const(ptr, struct tcp_sock, inet_conn.icsk_inet.sk)
+
+ /* Variant of tcp_sk() upgrading a const sock to a read/write tcp socket.
+diff --git a/include/trace/events/tcp.h b/include/trace/events/tcp.h
+index 54e60c6009e3..3e24740d759e 100644
+--- a/include/trace/events/tcp.h
++++ b/include/trace/events/tcp.h
+@@ -13,17 +13,38 @@
+ #include <linux/sock_diag.h>
+ #include <net/rstreason.h>
+
+-/*
+- * tcp event with arguments sk and skb
+- *
+- * Note: this class requires a valid sk pointer; while skb pointer could
+- *       be NULL.
+- */
+-DECLARE_EVENT_CLASS(tcp_event_sk_skb,
++#define TCP_RETRANSMIT_QUIT_REASON		\
++		ENUM(TCP_RETRANS_ERR_DEFAULT,		"retransmit terminate unexpectedly")	\
++		ENUM(TCP_RETRANS_SUCCESS,		"retransmit successfully")		\
++		ENUM(TCP_RETRANS_IN_HOST_QUEUE,		"packet still queued in driver")	\
++		ENUM(TCP_RETRANS_END_SEQ_ERROR,		"invalid end sequence")			\
++		ENUM(TCP_RETRANS_TRIM_HEAD_NOMEM,	"trim head no memory")			\
++		ENUM(TCP_RETRANS_UNCLONE_NOMEM,		"skb unclone keeptruesize no memory")	\
++		ENUM(TCP_RETRANS_FRAG_NOMEM,		"fragment no memory")			\
++		ENUM(TCP_RETRANS_ROUTE_FAIL,		"routing failure")			\
++		ENUM(TCP_RETRANS_RCV_ZERO_WINDOW,	"closed recevier window")		\
++		ENUMe(TCP_RETRANS_PSKB_COPY_NOBUFS,	"no buffer for skb copy")		\
++
++/* Redefine for export. */
++#undef ENUM
++#undef ENUMe
++#define ENUM(a, b)	TRACE_DEFINE_ENUM(a);
++#define ENUMe(a, b)	TRACE_DEFINE_ENUM(a);
++
++TCP_RETRANSMIT_QUIT_REASON
++
++/* Redefine for symbolic printing. */
++#undef ENUM
++#undef ENUMe
++#define ENUM(a, b)	{ a, b },
++#define ENUMe(a, b)	{ a, b }
++
++TRACE_EVENT(tcp_retransmit_skb,
+
+-	TP_PROTO(const struct sock *sk, const struct sk_buff *skb),
++	TP_PROTO(const struct sock *sk, const struct sk_buff *skb,
++		enum tcp_retransmit_quit_reason quit_reason),
+
+-	TP_ARGS(sk, skb),
++	TP_ARGS(sk, skb, quit_reason),
+
+ 	TP_STRUCT__entry(
+ 		__field(const void *, skbaddr)
+@@ -36,6 +57,7 @@ DECLARE_EVENT_CLASS(tcp_event_sk_skb,
+ 		__array(__u8, daddr, 4)
+ 		__array(__u8, saddr_v6, 16)
+ 		__array(__u8, daddr_v6, 16)
++		__field(enum tcp_retransmit_quit_reason, quit_reason)
+ 	),
+
+ 	TP_fast_assign(
+@@ -58,21 +80,17 @@ DECLARE_EVENT_CLASS(tcp_event_sk_skb,
+
+ 		TP_STORE_ADDRS(__entry, inet->inet_saddr, inet->inet_daddr,
+ 			      sk->sk_v6_rcv_saddr, sk->sk_v6_daddr);
++
++		__entry->quit_reason = quit_reason;
+ 	),
+
+-	TP_printk("skbaddr=%p skaddr=%p family=%s sport=%hu dport=%hu saddr=%pI4 daddr=%pI4 saddrv6=%pI6c daddrv6=%pI6c state=%s",
++	TP_printk("skbaddr=%p skaddr=%p family=%s sport=%hu dport=%hu saddr=%pI4 daddr=%pI4 saddrv6=%pI6c daddrv6=%pI6c state=%s quit_reason=%s",
+ 		  __entry->skbaddr, __entry->skaddr,
+ 		  show_family_name(__entry->family),
+ 		  __entry->sport, __entry->dport, __entry->saddr, __entry->daddr,
+ 		  __entry->saddr_v6, __entry->daddr_v6,
+-		  show_tcp_state_name(__entry->state))
+-);
+-
+-DEFINE_EVENT(tcp_event_sk_skb, tcp_retransmit_skb,
+-
+-	TP_PROTO(const struct sock *sk, const struct sk_buff *skb),
+-
+-	TP_ARGS(sk, skb)
++		  show_tcp_state_name(__entry->state),
++		  __print_symbolic(__entry->quit_reason, TCP_RETRANSMIT_QUIT_REASON))
+ );
+
+ #undef FN
+diff --git a/net/ipv4/tcp_output.c b/net/ipv4/tcp_output.c
+index 3ac8d2d17e1f..70b89b9fdf4d 100644
+--- a/net/ipv4/tcp_output.c
++++ b/net/ipv4/tcp_output.c
+@@ -3326,6 +3326,7 @@ static void tcp_retrans_try_collapse(struct sock *sk, struct sk_buff *to,
+  */
+ int __tcp_retransmit_skb(struct sock *sk, struct sk_buff *skb, int segs)
+ {
++	enum tcp_retransmit_quit_reason reason = TCP_RETRANS_ERR_DEFAULT;
+ 	struct inet_connection_sock *icsk = inet_csk(sk);
+ 	struct tcp_sock *tp = tcp_sk(sk);
+ 	unsigned int cur_mss;
+@@ -3336,8 +3337,11 @@ int __tcp_retransmit_skb(struct sock *sk, struct sk_buff *skb, int segs)
+ 	if (icsk->icsk_mtup.probe_size)
+ 		icsk->icsk_mtup.probe_size = 0;
+
+-	if (skb_still_in_host_queue(sk, skb))
+-		return -EBUSY;
++	if (skb_still_in_host_queue(sk, skb)) {
++		reason = TCP_RETRANS_IN_HOST_QUEUE;
++		err = -EBUSY;
++		goto out;
++	}
+
+ start:
+ 	if (before(TCP_SKB_CB(skb)->seq, tp->snd_una)) {
+@@ -3348,14 +3352,22 @@ int __tcp_retransmit_skb(struct sock *sk, struct sk_buff *skb, int segs)
+ 		}
+ 		if (unlikely(before(TCP_SKB_CB(skb)->end_seq, tp->snd_una))) {
+ 			WARN_ON_ONCE(1);
+-			return -EINVAL;
++			reason = TCP_RETRANS_END_SEQ_ERROR;
++			err = -EINVAL;
++			goto out;
++		}
++		if (tcp_trim_head(sk, skb, tp->snd_una - TCP_SKB_CB(skb)->seq)) {
++			reason = TCP_RETRANS_TRIM_HEAD_NOMEM;
++			err = -ENOMEM;
++			goto out;
+ 		}
+-		if (tcp_trim_head(sk, skb, tp->snd_una - TCP_SKB_CB(skb)->seq))
+-			return -ENOMEM;
+ 	}
+
+-	if (inet_csk(sk)->icsk_af_ops->rebuild_header(sk))
+-		return -EHOSTUNREACH; /* Routing failure or similar. */
++	if (inet_csk(sk)->icsk_af_ops->rebuild_header(sk)) {
++		reason = TCP_RETRANS_ROUTE_FAIL;
++		err = -EHOSTUNREACH; /* Routing failure or similar. */
++		goto out;
++	}
+
+ 	cur_mss = tcp_current_mss(sk);
+ 	avail_wnd = tcp_wnd_end(tp) - TCP_SKB_CB(skb)->seq;
+@@ -3366,8 +3378,11 @@ int __tcp_retransmit_skb(struct sock *sk, struct sk_buff *skb, int segs)
+ 	 * our retransmit of one segment serves as a zero window probe.
+ 	 */
+ 	if (avail_wnd <= 0) {
+-		if (TCP_SKB_CB(skb)->seq != tp->snd_una)
+-			return -EAGAIN;
++		if (TCP_SKB_CB(skb)->seq != tp->snd_una) {
++			reason = TCP_RETRANS_RCV_ZERO_WINDOW;
++			err = -EAGAIN;
++			goto out;
++		}
+ 		avail_wnd = cur_mss;
+ 	}
+
+@@ -3379,11 +3394,17 @@ int __tcp_retransmit_skb(struct sock *sk, struct sk_buff *skb, int segs)
+ 	}
+ 	if (skb->len > len) {
+ 		if (tcp_fragment(sk, TCP_FRAG_IN_RTX_QUEUE, skb, len,
+-				 cur_mss, GFP_ATOMIC))
+-			return -ENOMEM; /* We'll try again later. */
++				 cur_mss, GFP_ATOMIC)) {
++			reason = TCP_RETRANS_FRAG_NOMEM;
++			err = -ENOMEM;  /* We'll try again later. */
++			goto out;
++		}
+ 	} else {
+-		if (skb_unclone_keeptruesize(skb, GFP_ATOMIC))
+-			return -ENOMEM;
++		if (skb_unclone_keeptruesize(skb, GFP_ATOMIC)) {
++			reason = TCP_RETRANS_UNCLONE_NOMEM;
++			err = -ENOMEM;
++			goto out;
++		}
+
+ 		diff = tcp_skb_pcount(skb);
+ 		tcp_set_skb_tso_segs(skb, cur_mss);
+@@ -3421,6 +3442,7 @@ int __tcp_retransmit_skb(struct sock *sk, struct sk_buff *skb, int segs)
+ 				nskb->dev = NULL;
+ 				err = tcp_transmit_skb(sk, nskb, 0, GFP_ATOMIC);
+ 			} else {
++				reason = TCP_RETRANS_PSKB_COPY_NOBUFS;
+ 				err = -ENOBUFS;
+ 			}
+ 		} tcp_skb_tsorted_restore(skb);
+@@ -3438,7 +3460,7 @@ int __tcp_retransmit_skb(struct sock *sk, struct sk_buff *skb, int segs)
+ 				  TCP_SKB_CB(skb)->seq, segs, err);
+
+ 	if (likely(!err)) {
+-		trace_tcp_retransmit_skb(sk, skb);
++		reason = TCP_RETRANS_SUCCESS;
+ 	} else if (err != -EBUSY) {
+ 		NET_ADD_STATS(sock_net(sk), LINUX_MIB_TCPRETRANSFAIL, segs);
+ 	}
+@@ -3448,6 +3470,8 @@ int __tcp_retransmit_skb(struct sock *sk, struct sk_buff *skb, int segs)
+ 	 */
+ 	TCP_SKB_CB(skb)->sacked |= TCPCB_EVER_RETRANS;
+
++out:
++	trace_tcp_retransmit_skb(sk, skb, reason);
+ 	return err;
+ }
 
 -- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+2.25.1
