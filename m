@@ -1,187 +1,198 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E0E41D5CC6;
-	Tue,  1 Jul 2025 15:37:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 951BE275103
+	for <linux-trace-kernel@vger.kernel.org>; Tue,  1 Jul 2025 16:37:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751384268; cv=none; b=JxzN2ENVsrMX2pO6GHoSMsOp5JIhMhsmL/tEzPgm0v6c4c84SH94jhmbcvrmIbV/IjvjJU/SxxK7tVXI2WfLy/GuIFejah3WD6C944x/ObtJnalCH0nq815pxrTcxNzyYEeX5ygMH69v2Qcsnko/4ctu/SjV9LlUaDa6sqAy6LE=
+	t=1751387871; cv=none; b=abowXG0JzFtbhp4ZOABaJzw+BsxUDsubrnNHW4QzpE+ntuuP0Q789eLeT7B7q+Qk8EdVSL+epy3dMRbJlFGeVl8nokaaj+/awJnxx3QFbDMu6AGp7ddtSCiT2Np3o5G8g8pfk3ipVspNXK/SgQCjgyLzBO9l3tSVk6rasW19M1c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751384268; c=relaxed/simple;
-	bh=6wpryRMnDDKE/BFoP1AMkmw4nwDmAcGdbzoxKihmxa4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=PBTfJhAB1Fg1MLbGEW0khBauq4tqZLWEJuSTBmP3TLaklopdECFgKM/Xf0Wta0Md7eoHhMYyMyPw9b4ZS3GQki5CmaEpcIm+stb/4yfIJZ7dtqgegRe6y9as92/edIeRVH9X8AiwkPnCahCB7DvNcinZtWdpIi6nrhcK0r8wrxs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=hHyPz1B6; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1751387871; c=relaxed/simple;
+	bh=X6kzkxRq62hrdupe3Qvl/V+UACrDKcA+1A0KKz6FZ1g=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ijngK9rfqVH6NGxFoUM4llHXAalwQCj5qLhUOB77Kq0ynFVHn0h2H0BBmu2Th5Ofgck9h/Ezy0FeC76Cu5Xwsd6G7s4fNClIjJhrrfnKJSSEwh+w1SbM8qypGV6nDJeh1Z91w4P+as11Q6pA43x+MLJKDKkBP/CBu3KjXUYOaKE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=CNG+gFTN; arc=none smtp.client-ip=209.85.160.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="hHyPz1B6"
-Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5617vJwl011661;
-	Tue, 1 Jul 2025 15:36:59 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=VnE8i7
-	yDxme1281Y1pM272CwOTDiAbnhtGrHAcwV+dc=; b=hHyPz1B6avLBceIjtvg9Kn
-	q5xbk1g3CqPg5gjuOWQPCoI9yUZWwmFJUSioqG2m404229+ZVGRcRKnM8J/Ya3kt
-	UWp7CP4ycU/pXR3fLLK5j3BsCis9TMI88zz9+tRDE0G1XxQhoPae1gZRiEm69zsF
-	jfyadm24hDGZ//Tob5nMjo1aqoh2xVQ2tv7QA13QTWpBZ5qRLQmL4zT17cwfWXcz
-	ysgNysRjJPY8QZHD91q2HwQ19FGK5u3+CLPrGfaKfiv27OujovwACDTOAwpqviUo
-	jU82A7o6xyTyIHEvqbzJspkP1L9qBPIJs+NhwoD5B2fqHj0GhLacLEBrvLGtL5oQ
-	==
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 47j5tt8fyx-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 01 Jul 2025 15:36:58 +0000 (GMT)
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 561DQJMN006928;
-	Tue, 1 Jul 2025 15:36:57 GMT
-Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 47jvxmb2k5-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 01 Jul 2025 15:36:57 +0000
-Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
-	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 561Fau6L45285742
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 1 Jul 2025 15:36:56 GMT
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id F0B2D2004E;
-	Tue,  1 Jul 2025 15:36:55 +0000 (GMT)
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 97E7920040;
-	Tue,  1 Jul 2025 15:36:55 +0000 (GMT)
-Received: from [9.152.222.224] (unknown [9.152.222.224])
-	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Tue,  1 Jul 2025 15:36:55 +0000 (GMT)
-Message-ID: <a6a460e6-8cff-4353-a9e1-2e071d28e993@linux.ibm.com>
-Date: Tue, 1 Jul 2025 17:36:55 +0200
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="CNG+gFTN"
+Received: by mail-qt1-f170.google.com with SMTP id d75a77b69052e-4a4312b4849so68254061cf.1
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 01 Jul 2025 09:37:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1751387868; x=1751992668; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=3ISLdnPxtlGKf/l3qBzDBKL53pla5A655ILSzv3SOEo=;
+        b=CNG+gFTNiS8q27Lc3rAnzX2kqNYFwukkVeemw3MluDuzyhQL2rUyRS1VnsylKJbj08
+         NPTWiDrPhE0iFKGcu2nORXtov1juVEPoskpIrpDyJl5jMjGD0J5UUvlWyRyf6SzB8nFQ
+         Tvo9lQo7RFYf6rPFAFGUAODPWhZS52gMYenzVkD9sWPXuU5LdLS0ZbY9wt19mlYpBj07
+         b+CGfZ+QuYZR2z8qXQcoTXVHGCESIg3qrPMhFCa29psLvkBb3cp7gElcBZFnlJoAd7KT
+         lmklmf6+1Po2EpUf5wF3urrEsniunuA2PPlgYS7xQVaw3RNvKKOfoqYUeQTVXfsFdxQ6
+         OZxA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751387868; x=1751992668;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=3ISLdnPxtlGKf/l3qBzDBKL53pla5A655ILSzv3SOEo=;
+        b=h6jy+kXEJZ1xGpMAFlU2/Sb1UmZbcUWQouzRzRp3CXINUMsLTpaF7/QumCUQ9A71tH
+         zl87q0BmSIqpvBr2W+9In8kte41annfKqgGl8H2g4rq4fw9gWWBeIxm3HPbqu90Z7HUJ
+         8YXP2U802dSWGy039LTdSxskrF+JSkp8oFqFNzgiKr2YCG9FD82eqweKCmcQmyDeobiN
+         dGwRaQuHj7xDVBZ6YZgKQ+F14roRjNoLC681Xv3HZKHTpc780dc7V/eI/RUwEJODDWJg
+         w4i3ScaE4UcUHCjtfk7c9JwbaNb7OfVGXPH33Uu39kGmn8TSjXg4P1PUjS2eYmOi9NTg
+         IaWw==
+X-Forwarded-Encrypted: i=1; AJvYcCV4q8ml2eJACSND62/PUt+5b7qbVtrNMf38rnfUFugC9iKzaiFiMTMzNs30X0rcAh2l3YADtqTqTE3OseVA9GXDIsQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YysA0qnnNXTEdTaQy81ySOAQ+Fwvq2baZSsGDQXYtA9prRWV2vF
+	tVyFjZjk1sskh4zzLqeeQlH/99biySyoSX8n86dEuLW4yzLMlucF0D58x7qlHGzhVR+pqu28yqU
+	3yxuDPC0w03uDOq/kjcbQAQZYIrLF6sKAKw1Jv3B4
+X-Gm-Gg: ASbGncta7Wk5WjMp/kCEurZPbYdC564DtzYSemYf2A4S/dl4PKdztpd+XpoXamvF5AW
+	fGJZ4mJEcbNlUEqOhYCl1AJ7HrxUH+rmp6LKAzZHDkX21Pbv1XRm/+gS/93+C1qgND5KPVAz9kG
+	Ad74bqhIqXFSb+16cB0Xp8rI/7ETmJN/+e17FQ60SRAz0=
+X-Google-Smtp-Source: AGHT+IHAiK9oEfXH92Sml4i6lZf1ziKhaKb1A45g7ei6HvCGgdoXpQF1Hurv306Xf8kKYruBW3bAWalu9wYw+TNdGaw=
+X-Received: by 2002:a05:622a:54f:b0:4a7:ba7:1a2d with SMTP id
+ d75a77b69052e-4a7fc9cfbd9mr291679101cf.4.1751387867916; Tue, 01 Jul 2025
+ 09:37:47 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v12 02/14] unwind_user: Add frame pointer support
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        bpf@vger.kernel.org, x86@kernel.org,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Josh Poimboeuf <jpoimboe@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Indu Bhagat <indu.bhagat@oracle.com>,
-        "Jose E. Marchesi" <jemarch@gnu.org>,
-        Beau Belgrave <beaub@linux.microsoft.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Jens Axboe <axboe@kernel.dk>, Florian Weimer <fweimer@redhat.com>
-References: <20250701005321.942306427@goodmis.org>
- <20250701005450.888492528@goodmis.org>
- <CAHk-=wiWOYB4c3E-Cc=D89j0txbN4AGqm0j1dojqHq3uzJ+LqQ@mail.gmail.com>
- <20250630225603.72c84e67@gandalf.local.home>
-Content-Language: en-US
-From: Jens Remus <jremus@linux.ibm.com>
-Organization: IBM Deutschland Research & Development GmbH
-In-Reply-To: <20250630225603.72c84e67@gandalf.local.home>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: w9P4LMOdrWvgUUiT1PmRvsOe-G0TuFI1
-X-Authority-Analysis: v=2.4 cv=UtNjN/wB c=1 sm=1 tr=0 ts=6864009a cx=c_pps a=AfN7/Ok6k8XGzOShvHwTGQ==:117 a=AfN7/Ok6k8XGzOShvHwTGQ==:17 a=IkcTkHD0fZMA:10 a=Wb1JkmetP80A:10 a=VnNF1IyMAAAA:8 a=Z4Rwk6OoAAAA:8 a=meVymXHHAAAA:8 a=_rDHVYAfWBUfgVP2reoA:9
- a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10 a=HkZW87K1Qel5hWWM3VKY:22 a=2JgSa4NbpEOStq-L5dxp:22
-X-Proofpoint-ORIG-GUID: w9P4LMOdrWvgUUiT1PmRvsOe-G0TuFI1
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzAxMDEwMiBTYWx0ZWRfX4HgmYsLgk8Tr Y1S0lgg/l5m69uuVIXMDBqiBHdHcgY2Dk062312vnmRzTq0vweBM23ZnNNZnYnFj6S1/dsoUfAM jN5u6qncBB/ZifDdPmLetZPlOEwkjakEnR40VS2lBNutnIeBCK0oK2nMULsjX3Ek1gZCN+ngcMh
- fGIf6wnmJN08DzsIY88L607PIZUmGU9ASZwLzXcUWb92FfGo9wvR+Qr5IvjdGRhWDjBK8dJ3TIu At2afKWiD2PbTQUp1WDSPVg2Z4o++vPzSYLTP+p40nxDX3OjHYAb0kaX+rt0uDR7A5uF/BjKK+D aungzY52rPiFivbayioxpzuYS6jln6Q33eWpBdToKNmNSSNImDEM0Gge4mKpBvhk4blQ499a+sn
- vF0Cw7kpY5mqeUsDTEo0Y6synTOXPs8gAdjE1JP2P25/+6ezHZCxTq+6yNMsGmVFSD+ooOpT
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
- definitions=2025-07-01_02,2025-06-27_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
- priorityscore=1501 phishscore=0 mlxscore=0 spamscore=0 mlxlogscore=999
- adultscore=0 clxscore=1011 lowpriorityscore=0 bulkscore=0 impostorscore=0
- malwarescore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2507010102
+References: <20250701174051880riwWtq_0siCJ5Yfsa6ZOQ@zte.com.cn>
+In-Reply-To: <20250701174051880riwWtq_0siCJ5Yfsa6ZOQ@zte.com.cn>
+From: Eric Dumazet <edumazet@google.com>
+Date: Tue, 1 Jul 2025 09:37:36 -0700
+X-Gm-Features: Ac12FXzwmxaj70tKP4W8HtmDFZSM027mPiLZs_ytA57MBpY7K3gg1Pk__C05asI
+Message-ID: <CANn89iJvyYjiweCESQL8E-Si7M=gosYvh1BAVWwAWycXW8GSdg@mail.gmail.com>
+Subject: Re: [PATCH net-next v2] tcp: extend tcp_retransmit_skb tracepoint
+ with failure reasons
+To: xu.xin16@zte.com.cn
+Cc: kuba@kernel.org, kuniyu@amazon.com, ncardwell@google.com, 
+	davem@davemloft.net, horms@kernel.org, dsahern@kernel.org, 
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, fan.yu9@zte.com.cn
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 01.07.2025 04:56, Steven Rostedt wrote:
-> On Mon, 30 Jun 2025 19:10:09 -0700
-> Linus Torvalds <torvalds@linux-foundation.org> wrote:
->> On Mon, 30 Jun 2025 at 17:54, Steven Rostedt <rostedt@goodmis.org> wrote:
->>>
->>> +       /* stack going in wrong direction? */
->>> +       if (cfa <= state->sp)
->>> +               goto done;  
->>
->> I suspect this should do a lot more testing.
-> 
-> Sure.
+On Tue, Jul 1, 2025 at 2:42=E2=80=AFAM <xu.xin16@zte.com.cn> wrote:
+>
+> From: Fan Yu <fan.yu9@zte.com.cn>
+>
+> Background
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> When TCP retransmits a packet due to missing ACKs, the
+> retransmission may fail for various reasons (e.g., packets
+> stuck in driver queues, sequence errors, or routing issues).
+>
+> The original tcp_retransmit_skb tracepoint:
+> 'commit e086101b150a ("tcp: add a tracepoint for tcp retransmission")'
+> lacks visibility into these failure causes, making production
+> diagnostics difficult.
+>
+> Solution
+> =3D=3D=3D=3D=3D=3D=3D
+> Adds a 'reason' field to the tcp_retransmit_skb tracepoint,
+> enumerating with explicit failure cases:
+> TCP_RETRANS_ERR_DEFAULT (retransmit terminate unexpectedly)
+> TCP_RETRANS_IN_HOST_QUEUE (packet still queued in driver)
+> TCP_RETRANS_END_SEQ_ERROR (invalid end sequence)
+> TCP_RETRANS_TRIM_HEAD_NOMEM (trim head no memory)
+> TCP_RETRANS_UNCLONE_NOMEM (skb unclone keeptruesize no memory)
+> TCP_RETRANS_FRAG_NOMEM (fragment no memory)
+> TCP_RETRANS_ROUTE_FAIL (routing failure)
+> TCP_RETRANS_RCV_ZERO_WINDOW (closed recevier window)
+> TCP_RETRANS_PSKB_COPY_NOBUFS (no buffer for skb copy)
+>
+> Functionality
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> Enables users to know why some tcp retransmission quitted and filter
+> retransmission failures by reason.
+>
+>
 
-The above assumes:
+...
 
-	curr_frame_sp = state->sp
-	prev_frame_sp = cfa   // for arches that define CFA as SP at call site
+> +enum tcp_retransmit_quit_reason {
+> +       TCP_RETRANS_ERR_DEFAULT,
+> +       TCP_RETRANS_SUCCESS,
+> +       TCP_RETRANS_IN_HOST_QUEUE,
+> +       TCP_RETRANS_END_SEQ_ERROR,
+> +       TCP_RETRANS_TRIM_HEAD_NOMEM,
+> +       TCP_RETRANS_UNCLONE_NOMEM,
+> +       TCP_RETRANS_FRAG_NOMEM,
+> +       TCP_RETRANS_ROUTE_FAIL,
+> +       TCP_RETRANS_RCV_ZERO_WINDOW,
+> +       TCP_RETRANS_PSKB_COPY_NOBUFS,
+> +};
+> +
+>  #define tcp_sk(ptr) container_of_const(ptr, struct tcp_sock, inet_conn.i=
+csk_inet.sk)
+>
+>  /* Variant of tcp_sk() upgrading a const sock to a read/write tcp socket=
+.
+> diff --git a/include/trace/events/tcp.h b/include/trace/events/tcp.h
+> index 54e60c6009e3..3e24740d759e 100644
+> --- a/include/trace/events/tcp.h
+> +++ b/include/trace/events/tcp.h
+> @@ -13,17 +13,38 @@
+>  #include <linux/sock_diag.h>
+>  #include <net/rstreason.h>
+>
+> -/*
+> - * tcp event with arguments sk and skb
+> - *
+> - * Note: this class requires a valid sk pointer; while skb pointer could
+> - *       be NULL.
+> - */
+> -DECLARE_EVENT_CLASS(tcp_event_sk_skb,
+> +#define TCP_RETRANSMIT_QUIT_REASON             \
+> +               ENUM(TCP_RETRANS_ERR_DEFAULT,           "retransmit termi=
+nate unexpectedly")    \
+> +               ENUM(TCP_RETRANS_SUCCESS,               "retransmit succe=
+ssfully")              \
+> +               ENUM(TCP_RETRANS_IN_HOST_QUEUE,         "packet still que=
+ued in driver")        \
+> +               ENUM(TCP_RETRANS_END_SEQ_ERROR,         "invalid end sequ=
+ence")                 \
+> +               ENUM(TCP_RETRANS_TRIM_HEAD_NOMEM,       "trim head no mem=
+ory")                  \
+> +               ENUM(TCP_RETRANS_UNCLONE_NOMEM,         "skb unclone keep=
+truesize no memory")   \
+> +               ENUM(TCP_RETRANS_FRAG_NOMEM,            "fragment no memo=
+ry")                   \
 
-On s390 the prev_frame_sp may be equal to curr_frame_sp for the topmost
-frame, as long as the topmost function did not allocate any stack.  For
-instance when early in the prologue or when in a leaf function that does
-not require any stack space.  My s390 sframe support patches would
-therefore currently change above check to:
+Do we really need 3 + 1 different 'NOMEMORY' status ?
 
-	/* stack going in wrong direction? */
-	if (sp <= state->sp - topmost)
-		goto done;
+> +               ENUM(TCP_RETRANS_ROUTE_FAIL,            "routing failure"=
+)                      \
+> +               ENUM(TCP_RETRANS_RCV_ZERO_WINDOW,       "closed recevier =
+window")               \
 
-I assume that should be the case for all architectures whose function
-call instruction does not modify the SP, unlike x86-64's CALL does.
+receiver
 
->>> +       if (frame->fp_off && get_user(fp, (unsigned long __user *)(cfa + frame->fp_off)))
->>> +               goto done;  
->>
->> .. and this should check the frame for validity too.  At a minimum it
->> should be properly aligned, but things like "it had better be above
->> the current frame" to avoid having some loop would seem to be a good
->> idea.
-> 
-> Makes sense.
+> +               ENUMe(TCP_RETRANS_PSKB_COPY_NOBUFS,     "no buffer for sk=
+b copy")               \
 
-On s390 the FP (register) value does not necessarily need to be above
-the SP value, as the s390x ELF ABI does only designate a "preferred" FP
-register, so that the FP register may be used for other purposes, when a
-FP is not required in a function.
+-> another NOMEM...
 
-So the output FP value cannot be checked on s390.  But the input FP
-value could probably be checked as follows before computing the CFA:
+> +
+> +
 
-	if (frame->use_fp && state->fp < state->sp)
-		goto done;
 
-	/* Get the Canonical Frame Address (CFA) */
-	cfa = (frame->use_fp ? state->fp : state->sp) + frame->cfa_off;
+> +               __entry->quit_reason =3D quit_reason;
+>         ),
+>
+> -       TP_printk("skbaddr=3D%p skaddr=3D%p family=3D%s sport=3D%hu dport=
+=3D%hu saddr=3D%pI4 daddr=3D%pI4 saddrv6=3D%pI6c daddrv6=3D%pI6c state=3D%s=
+",
+> +       TP_printk("skbaddr=3D%p skaddr=3D%p family=3D%s sport=3D%hu dport=
+=3D%hu saddr=3D%pI4 daddr=3D%pI4 saddrv6=3D%pI6c daddrv6=3D%pI6c state=3D%s=
+ quit_reason=3D%s",
 
->> Maybe even check that it's the same vma?
-> 
-> Hmm, I call on to Jens Remus and ask if s390 can do anything whacky here?
-> Where something that isn't allowed on other architectures may be allowed
-> there? I know s390 has some strange type of stack usage.
+quit_reason is really weird, since most retransmits are a success.
 
-On s390, if a FP is required for dynamic stack allocation, it is only
-initialized as late as possible, that is usually after static stack
-allocation.  Therefore SP == FP is rather seldom the case.
+What about using : status or result ?
 
-Regards,
-Jens
--- 
-Jens Remus
-Linux on Z Development (D3303)
-+49-7031-16-1128 Office
-jremus@de.ibm.com
-
-IBM
-
-IBM Deutschland Research & Development GmbH; Vorsitzender des Aufsichtsrats: Wolfgang Wendt; Geschäftsführung: David Faller; Sitz der Gesellschaft: Böblingen; Registergericht: Amtsgericht Stuttgart, HRB 243294
-IBM Data Privacy Statement: https://www.ibm.com/privacy/
-
+Also, for scripts parsing the output, I would try to keep  key=3Dval
+format (no space in @val), and concise 'vals'
