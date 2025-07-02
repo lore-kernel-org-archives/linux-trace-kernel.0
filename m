@@ -1,25 +1,25 @@
-Received: from relay.hostedemail.com (smtprelay0012.hostedemail.com [216.40.44.12])
+Received: from relay.hostedemail.com (smtprelay0011.hostedemail.com [216.40.44.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46AD9253351;
-	Wed,  2 Jul 2025 17:26:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 970A423184F;
+	Wed,  2 Jul 2025 17:48:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751477177; cv=none; b=Y+XyKmWDtNgmoea+fMlfUXCn+fl0CZEHiKDjlCl78QijzUhTN4a8OfQi2v3FwsTS7AUTTviAHsf0SQ+wG1FMKhFZtTwXWHucNhMnMDQ5W1uB1gW/9XPCXDY+NNHD3fhsyi4RJfqWm6xhUljvYVkF32ttTUInCrso/yZ1RG5Sbbs=
+	t=1751478541; cv=none; b=EIlsAAqCJAb2lQ5vgpDNrcGbhMuhcJWsSXEwkJOjpiJXFc8iYnyHxyqdBWwTyJ1A3pvc6lZWJ/3KcuwGQgn8oyvOgHIzJ6/cEEgBRDBLnmfhvBMLuMcFqTdhmUQKnhwvXVdrT/mUTHkpJ4I5hdojv6pT77PrMZ8LMYxz/ssYuNg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751477177; c=relaxed/simple;
-	bh=bXSmc02F75nIJvMlBiM/UqcmD6w8cL7JjpMIMURcveg=;
+	s=arc-20240116; t=1751478541; c=relaxed/simple;
+	bh=W4clqCGcKkGRaHM8rxxqoaw6muvKMFw6Txw+b/rsxO0=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=UNDdoFC8gUoAuT2vknjEthh0QxxVkRm7W6l3AeI9bfNNWr9kCHXQhwiiHXemEJ5UuBU3rmAkN9yx5Nyc/boopTvLOWcva3wvgJf457m5ycJdiNJ7BEJz+Zu0jTLwbH4R7Pu11j3SWo7sBH3w/pEnLwhVJ6GzjjcfU2lgaL4fJAA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.12
+	 MIME-Version:Content-Type; b=L8wrAq/5rcFxwdZ9nuIHUZ057SHsuCbbYwc5CPaDWaAR6w2Sb8rcfK6Nej4UJvsyl+6x4gOOuxW6Ze9gnGeTIn7Bf7OB074w8Q6UDXizbpCJN8NA3Bjlvpfh3WnpBYThEOPCwxxkL0mHNMtEf62fENXKh/F76AoS81x+Gvwmz7I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.11
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf05.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay05.hostedemail.com (Postfix) with ESMTP id 50EE758773;
-	Wed,  2 Jul 2025 17:26:11 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf05.hostedemail.com (Postfix) with ESMTPA id C97E520011;
-	Wed,  2 Jul 2025 17:26:06 +0000 (UTC)
-Date: Wed, 2 Jul 2025 13:26:05 -0400
+Received: from omf17.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay09.hostedemail.com (Postfix) with ESMTP id 12AE180397;
+	Wed,  2 Jul 2025 17:48:56 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf17.hostedemail.com (Postfix) with ESMTPA id 85C361C;
+	Wed,  2 Jul 2025 17:48:51 +0000 (UTC)
+Date: Wed, 2 Jul 2025 13:48:50 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
 To: Linus Torvalds <torvalds@linux-foundation.org>
 Cc: Peter Zijlstra <peterz@infradead.org>, linux-kernel@vger.kernel.org,
@@ -35,13 +35,14 @@ Cc: Peter Zijlstra <peterz@infradead.org>, linux-kernel@vger.kernel.org,
  <fweimer@redhat.com>
 Subject: Re: [PATCH v12 06/14] unwind_user/deferred: Add deferred unwinding
  interface
-Message-ID: <20250702132605.6c79c1ec@batman.local.home>
-In-Reply-To: <CAHk-=wiXjrvif6ZdunRV3OT0YTrY=5Oiw1xU_F1L93iGLGUdhQ@mail.gmail.com>
+Message-ID: <20250702134850.254cec76@batman.local.home>
+In-Reply-To: <20250702132605.6c79c1ec@batman.local.home>
 References: <20250701005321.942306427@goodmis.org>
 	<20250701005451.571473750@goodmis.org>
 	<20250702163609.GR1613200@noisy.programming.kicks-ass.net>
 	<20250702124216.4668826a@batman.local.home>
 	<CAHk-=wiXjrvif6ZdunRV3OT0YTrY=5Oiw1xU_F1L93iGLGUdhQ@mail.gmail.com>
+	<20250702132605.6c79c1ec@batman.local.home>
 X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -51,82 +52,59 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Stat-Signature: tktg39hzfs7wn5za67xmj5fwbzdwkt8z
-X-Rspamd-Server: rspamout04
-X-Rspamd-Queue-Id: C97E520011
+X-Rspamd-Queue-Id: 85C361C
+X-Rspamd-Server: rspamout02
+X-Stat-Signature: 175jbe4168myexmy1gk6dtde914kmzj9
 X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1/RJ0IoK3u7id2+J4EPVANbMUuEfiAP0tQ=
-X-HE-Tag: 1751477166-162882
-X-HE-Meta: U2FsdGVkX1+uGjlTJH/4Zv4mwQYQFeUzECJf4kRqyI0KBAe8k0HYSMZwXsE/Iay4VbyjGmFc2ov6Bodb5hPI6+ybnn3EfqDDH3lU/BqV+adg5a99wBr5CcvG2rsFFiPHKgSYQtuEbh8dhgT9Ssxx6TbAO3GbEw+txahunb/IrVD6DBjQqtkdgKOXfx3mo84czb0GanscrXbM1GYTktTM7FTnWegNwszXowP+mkbdrrnK0VOZOGh9eMtwFc2W+htoauKMvUsaxW34LuWxgb46QwiCLpla8MKlm+XgPjP8IijKak936DW+addLIV00jceMLXwohpxTW4Plc7mRAgjlYgpykyipx5CU09GpKfWX4ESlfPtoD0Mi4MV/LTXuXhSJ
+X-Session-ID: U2FsdGVkX18LFL9mMEFyOkjz76afnK3fxJjKKQ7f0x4=
+X-HE-Tag: 1751478531-629861
+X-HE-Meta: U2FsdGVkX1/OiWiWpEVHt+o9dCeRXDTbiofXevMg1yXZS67j6WEEFBdCtKq8nE2r7OSUgZQ5Gb5xb6qhk4225JfyXP5xCaaMNUXqsKuh1L3YWxF3x/3YPJLFQ79yTimAun0pTD3KTU342Tt6GwM7zdETUua6tGFlojPwnR61c+T+pV2ALC4Zs5rLqds1+QMjYWFyBHIkzFpLfDArf/FAfnWPnnn7kaKqygomQcchcAxHbxonaBk4acXZbWAfcxwx0U/28bXtER+JR0TMBnGU9DUUktXm1rWUJOd9JqSy0wzF70ESeVdrBU/G4moPz3+qR96aT2i854+g57tTa/egXIhZtJbCG0+BjgC+Dciy0ZbSXO/bac6DkSUL7ax7l8oB
 
-On Wed, 2 Jul 2025 09:56:39 -0700
-Linus Torvalds <torvalds@linux-foundation.org> wrote:
+On Wed, 2 Jul 2025 13:26:05 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-> Also, does it actually have to be entirely unique? IOW, a 32-bit
-> counter (or even less) might be sufficient if there's some guarantee
-> that processing happens before the counter wraps around? Again - for
-> correlation purposes, just *how* many outstanding events can you have
-> that aren't ordered by other things too?
-> 
-> I'm sure people want to also get some kind of rough time idea, but
-> don't most perf events have them simply because people want time
-> information for _informatioal_ reasons, rather than to correlate two
-> events?
+> So I'm fine with making this a 32 bit counter using 16 bits for the CPU
+> and 16 bits for per thread uniqueness.
 
-And it only needs to be unique per thread per system call. The real
-reason for this identifier is for lost events. As I explained in the
-perf patchset, the issues is this:
+To still be able to use a 32 bit cmpxchg (for racing with an NMI), we
+could break this number up into two 32 bit words. One with the CPU that
+it was created on, and one with the per_cpu counter:
 
-In case of dropped events, we could have the case of:
+union unwind_task_id {
+	struct {
+		u32		cpu;
+		u32		cnt;
+	}
+	u64 id;
+};
 
-  system_call() {
-    <nmi> {
-      take kernel stack trace
-      ask for deferred trace.
+static DEFINE_PER_CPU(u32, unwind_ctx_ctr);
 
-   [EVENTS START DROPPING HERE]
-    }
-    Call deferred callback to record trace [ BUT IS DROPPED ]
-  }
+static u64 get_cookie(struct unwind_task_info *info)
+{
+	u32 cpu_cnt;
+	u32 cnt;
+	u32 old = 0;
 
-  system_call() {
-    <nmi> {
-      take kernel stack trace
-      ask for deferred trace [ STILL DROPPING ]
-    }
-    [ READER CATCHES UP AND STARTS READING EVENTS AGAIN]
+	if (info->id.cpu)
+		return info->id.id;
 
-    Call deferred callback to record trace
-  }
+	cpu_cnt = __this_cpu_read(unwind_ctx_ctr);
+	cpu_cnt += 2;
+	cnt = cpu_cnt | 1; /* Always make non zero */
 
-The user space tool will see that kernel stack traces of the first
-system call, then it will see events dropped, and then it will see the
-deferred user space stack trace of the second call.
+	if (try_cmpxchg(&info->id.cnt, &old, cnt)) {
+		/* Update the per cpu counter */
+		__this_cpu_write(unwind_ctx_ctr, cpu_cnt);
+	}
+	/* Interrupts are disabled, the CPU will always be same */
+	info->id.cpu = smp_processor_id() + 1; /* Must be non zero */
 
-The identifier is only there for uniqueness for that one thread to let
-the tracer know if the deferred trace can be tied to events before it
-lost them.
+	return info->id.id;
+}
 
-We figured a single 32 bit counter would be good enough when we first
-discussed this idea, but we wanted per cpu counters to not have cache
-contention every time a CPU wanted to increment the  counter. But each
-CPU would need an identifier so that a task migrating will not get the
-same identifier for a different system call just because it migrated.
+When leaving the kernel it does:
 
-We used 16 bits for the CPU counter thinking that 32K of CPUs would
-last some time in the future. We then chose to use a 64 bit number to
-allow us to have 48 bits left for uniqueness which is plenty.
-
-If we use 32 bits, that would give us 32K of unique systemcalls, and it
-does seem possible that on a busy system, a tracer could lose 32K of
-system calls before it gets going again. But we could still use it
-anyway as the likelihood of losing exactly 32K of system calls and
-starting tracing back up again will probably never happen. And if it
-does, the worse thing that it will do is have the tracer mistake which
-user space stack trace goes to which event. If your are tracing that
-many events, this will likely be in the noise.
-
-So I'm fine with making this a 32 bit counter using 16 bits for the CPU
-and 16 bits for per thread uniqueness.
+	info->id.id = 0;
 
 -- Steve
