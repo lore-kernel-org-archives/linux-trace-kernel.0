@@ -1,166 +1,205 @@
-Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay.hostedemail.com (smtprelay0012.hostedemail.com [216.40.44.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 630652ECEB1
-	for <linux-trace-kernel@vger.kernel.org>; Wed,  2 Jul 2025 18:21:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C48A2E4992;
+	Wed,  2 Jul 2025 18:37:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751480517; cv=none; b=XDcRWuY1GckC0QW5ireHbsOwTZknB8z+seb29+scTGNptb/HW4sSgdwlNEGOVgDw6m5yYYbEKopvqDWLBq/JNPpWi+W9fYTjy+VpptbZrRcvcXwLRyF2L5QUcVSSS1jdtzNNAQmxnD44V59tOD9c9xeC+f0LP+QefHbBs4/kG+Y=
+	t=1751481425; cv=none; b=oBHieAtVy3/3dlAM7ifVpeC8kVRpv1VfyCv9uBXqKKWHlBwJdbODQdAvgdX3G1zYjYrjymeVhquJTDfn6nD2zX9ISZNaqEPZ6dJh9bSgWbvlhQ433e32hu4GEcIKXBTqy7nAsH3gFqlJBuLGoYgiT5Y6aT50AosgB/JPPkbd0/o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751480517; c=relaxed/simple;
-	bh=8dPL6cewj+QXiDVpMgLbkUYfzccaNgbPuZ9A+ZlbtD8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ayzAm8U9EIcvT+jvl2yghqo+G5818X84zOS4ESdndGaeNlib5ShjMrk0RCimdvXYDDXXSB2OA6j+FNx0pf5kgmqvm5sjK2s5/zJut4+0s6NmbnqC6eU3qPJyvWy91sRe5p1IjKEYQ5tq5qKcTPM7r012AzXz9lAU/+SjlfyI8UQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=ft/YCqpO; arc=none smtp.client-ip=209.85.218.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="ft/YCqpO"
-Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-ae0de0c03e9so1083452166b.2
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 02 Jul 2025 11:21:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1751480513; x=1752085313; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=gAzEH7Ab5cAtbqr3Xp/qBBT6LGjJFnrqCTGw1ULOX9I=;
-        b=ft/YCqpO0FXHmQ+DZb14BXdPk+Yx/t5+rI0YwNA3RvujJAVMwTfI6u+5MQ1o1cX6VT
-         YbpeQ3Dg+XauhGKR1IdzsknmbPBMoCYt20eYyUiVvnupxPFy8hA4hVyHILp0AsPMlJng
-         rhiIFIowUh5zVWZyuMtJ8DSCYa+vTvFhUlNXA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751480513; x=1752085313;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=gAzEH7Ab5cAtbqr3Xp/qBBT6LGjJFnrqCTGw1ULOX9I=;
-        b=YpMQfgMjg/lcwCTTvpF6aKzRA7F61Q9qH8g+0VoynU84V54h+nrUvqCR8f2P3ON0n7
-         hvy+l9kIex6DDRI8NQ0cl751AlbFlWQqdJ7SV/dgCoY8puVBTgYhscncOfXxFwdyylVt
-         Yg2kKLsFFS4xff38zVUUtDUj8GerjsImDwrQWne9l2iiYjVYXq2s+PgH2BE7dCOKJ+xi
-         8EQqlMTeW26PXqPmqbsEkPLCm2tZIjtaaMvuxWrcCNyEOpkNr30oUaYGzVXmEKjeJewa
-         zuJb/Hehjxic6sXm0okMKsUJW2hXRndYoeh9XkCOcy60X1x/HKQBhku3k5Uvha3+1/Sg
-         Ts4A==
-X-Forwarded-Encrypted: i=1; AJvYcCVpzC89ZBJqapfhnYF5D/aMuF+d58agLw1PZ4d1zYnH4DhRgKSkAPPNiOdbx93l/+vYEi4w0XYlgNi9h/hu6PyR6Zc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyZZ6HRiSjo+HWoZOUylzFMTD2mJvbasTlIRZiI2ta9JYXetQdQ
-	b8737NRDe4rR5UbGl0mazRh27onGOXiJ6wpYUz7aoEYZpDpGNYf+WInWn0vzeq9UG2aUjQfUDdN
-	vPj9IvhVedQ==
-X-Gm-Gg: ASbGncsTD795hbY6lGvNBbqDLp5J+AWbGRMdbm3ZK7qXdBOVl9i+TLDzGsMkPRKgZPz
-	Yav/sg2TY7xbrNljQyTWbkXB+EX9Dx+yqqd7L3/wWApZQY0jzIaZsWj+UTSGsqVqdO3/1mq8MUZ
-	m/zDQuKwXor7j+WnNVp2gkCJmotj1OxMgqKq5tWwWa2jIMQm3eaA+C3reGkfD1kfkj3YpNtKPkj
-	+91NxOKOpyjS+1inD5LnjNyvz0kzS6BNsXv2XD7pU6lpH4/bIXUMmEQB+APRCPv5cesIznyvMnt
-	mZKF1iFOktsM0NEZIvIh7/u2uDtP+iirQeiH4587oPtOD+39sUCOE4KqE2te17S99vzhitgABos
-	oVJaoOQ6YujK/5LbGHqCQiT9WxmurgdC8taeM
-X-Google-Smtp-Source: AGHT+IEpKR3kJmsU9TVLtgB9MXdbtHvoCpVsUn6AnxuCMB/VxaXzzK4mN2jGbeRANsBCbz55vWMUTA==
-X-Received: by 2002:a17:906:478b:b0:ae0:da2d:44b9 with SMTP id a640c23a62f3a-ae3c2b12acemr426302066b.7.1751480513305;
-        Wed, 02 Jul 2025 11:21:53 -0700 (PDT)
-Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com. [209.85.208.45])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae35363b464sm1111041066b.1.2025.07.02.11.21.51
-        for <linux-trace-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 02 Jul 2025 11:21:52 -0700 (PDT)
-Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-60c4f796446so12116969a12.1
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 02 Jul 2025 11:21:51 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVV4TpGUYQYHFkMGUbQYha3khkyNNAkB7r/p77NVM5ZHkMhFgduWOBET7jKekA+tt3uTnMNH+R15kEsE50I23f5Gvs=@vger.kernel.org
-X-Received: by 2002:a05:6402:270d:b0:60c:5268:5587 with SMTP id
- 4fb4d7f45d1cf-60e5362ef3emr2951767a12.29.1751480511414; Wed, 02 Jul 2025
- 11:21:51 -0700 (PDT)
+	s=arc-20240116; t=1751481425; c=relaxed/simple;
+	bh=mDuuDEo7hJVCDmiNn9b+8+ybz+apZqRUyfPLZwxi2sI=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=R3/SUSQEcU72BfmwfJB/TURz1V79+1VJeWt0BXOhsER9KbG8pzxqPdVa5P7tjIwV+ZZbzBeMRy0X7hCBoOzQ2mKdkIeFmpm8lRvDnOt6gGRxathDO2ggPb2IVX+UQcl6xAyhTxU3uYn/AXYXTL4zqqWSFORHKMxVnV9ZcfdxKio=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf06.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay06.hostedemail.com (Postfix) with ESMTP id C682E10652D;
+	Wed,  2 Jul 2025 18:37:01 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf06.hostedemail.com (Postfix) with ESMTPA id 15B6420011;
+	Wed,  2 Jul 2025 18:36:58 +0000 (UTC)
+Date: Wed, 2 Jul 2025 14:36:57 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: LKML <linux-kernel@vger.kernel.org>, Linux trace kernel
+ <linux-trace-kernel@vger.kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Gabriele Paoloni <gpaoloni@redhat.com>
+Subject: [PATCH] tracing: Remove EVENT_FILE_FL_SOFT_MODE flag
+Message-ID: <20250702143657.18dd1882@batman.local.home>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250701005321.942306427@goodmis.org> <20250701005451.571473750@goodmis.org>
- <20250702163609.GR1613200@noisy.programming.kicks-ass.net>
- <20250702124216.4668826a@batman.local.home> <CAHk-=wiXjrvif6ZdunRV3OT0YTrY=5Oiw1xU_F1L93iGLGUdhQ@mail.gmail.com>
- <20250702132605.6c79c1ec@batman.local.home> <20250702134850.254cec76@batman.local.home>
-In-Reply-To: <20250702134850.254cec76@batman.local.home>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Wed, 2 Jul 2025 11:21:34 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wiU6aox6-QqrUY1AaBq87EsFuFa6q2w40PJkhKMEX213w@mail.gmail.com>
-X-Gm-Features: Ac12FXxdVtdafV1DjZUKNDDMmbhEtpMMqjKmEMhutyb6_ij-Rv8l7HBE6kdoJJ4
-Message-ID: <CAHk-=wiU6aox6-QqrUY1AaBq87EsFuFa6q2w40PJkhKMEX213w@mail.gmail.com>
-Subject: Re: [PATCH v12 06/14] unwind_user/deferred: Add deferred unwinding interface
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Peter Zijlstra <peterz@infradead.org>, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org, x86@kernel.org, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	Josh Poimboeuf <jpoimboe@kernel.org>, Ingo Molnar <mingo@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
-	Namhyung Kim <namhyung@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, 
-	Andrii Nakryiko <andrii@kernel.org>, Indu Bhagat <indu.bhagat@oracle.com>, 
-	"Jose E. Marchesi" <jemarch@gnu.org>, Beau Belgrave <beaub@linux.microsoft.com>, 
-	Jens Remus <jremus@linux.ibm.com>, Andrew Morton <akpm@linux-foundation.org>, 
-	Jens Axboe <axboe@kernel.dk>, Florian Weimer <fweimer@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Stat-Signature: zoean7keiabjx1k5d1bz7phkybkdfp9d
+X-Rspamd-Server: rspamout07
+X-Rspamd-Queue-Id: 15B6420011
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1/EnB+sZHxoyfhuA9GO4s6x+pfSn9COnK0=
+X-HE-Tag: 1751481418-778989
+X-HE-Meta: U2FsdGVkX1+8nu+gn7WrnX5rXzbbSRWGkevilAlr9elubWiAqZkiMWe/x5OEuyVbcAU+z+qojtWY8SDe/uiAcKcrOnu1dEtUV69PRaHeTSLjfvDsFqsYiBIwfe/6qV07+/tlz2wu6GzLLT2FejYSkAEXo1KY2d/0pDWVkYcydXxHm8YwXkawVsPyzmFwxKIoYuNy2ejNcl2IS6voRoK1+ZC8X9BbaSYyWw8arbOPgo5DymalCF15iBgG7J16M+CzAGf1DkNUkd/8rOpVPVUUH7Hb2AyUZJzkhtwRCMUVUm9XHD0jlz8XiqvgpX7q5Mz/vv6XiCEna+QInxwU0TAgLbz/rOy9rd8hbHjp8JPFbtip3rVjDyPHvJQBjCvrq+abtdmCsjwjHX2qymyFUWecTg==
 
-On Wed, 2 Jul 2025 at 10:49, Steven Rostedt <rostedt@goodmis.org> wrote:
->
-> To still be able to use a 32 bit cmpxchg (for racing with an NMI), we
-> could break this number up into two 32 bit words. One with the CPU that
-> it was created on, and one with the per_cpu counter:
+From: Steven Rostedt <rostedt@goodmis.org>
 
-Do you actually even need a cpu number at all?
+When soft disabling of trace events was first created, it needed to have a
+way to know if a file had a user that was using it with soft disabled (for
+triggers that need to enable or disable events from a context that can not
+really enable or disable the event, it would set SOFT_DISABLED to state it
+is disabled). The flag SOFT_MODE was used to denote that an event had a
+user that would enable or disable it via the SOFT_DISABLED flag.
 
-If this is per-thread, maybe just a per-thread counter would be good?
-And you already *have* that per-thread thing, in
-'current->unwind_info'.
+Commit 1cf4c0732db3c ("tracing: Modify soft-mode only if there's no other
+referrer") fixed a bug where if two users were using the SOFT_DISABLED
+flag the accounting would get messed up as the SOFT_MODE flag could only
+handle one user. That commit added the sm_ref counter which kept track of
+how many users were using the event in "soft mode". This made the
+SOFT_MODE flag redundant as it should only be set if the sm_ref counter is
+non zero.
 
-And the work is using task_work, so the worker callback is also per-thread.
+Remove the SOFT_MODE flag and just use the sm_ref counter to know the
+event is in soft mode or not. This makes the code a bit simpler.
 
-Also, is racing with NMI even a thing for the sequence number? I would
-expect that the only thing that NMI would race with is the 'pending'
-field, not the sequence number.
+Link: https://lore.kernel.org/all/20250702111908.03759998@batman.local.home/
 
-IOW, I think the logic could be
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+ include/linux/trace_events.h |  3 ---
+ kernel/trace/trace_events.c  | 24 ++++++++++++------------
+ 2 files changed, 12 insertions(+), 15 deletions(-)
 
- - check 'pending' non-atomically, just because it's cheap
+diff --git a/include/linux/trace_events.h b/include/linux/trace_events.h
+index fa9cf4292dff..04307a19cde3 100644
+--- a/include/linux/trace_events.h
++++ b/include/linux/trace_events.h
+@@ -480,7 +480,6 @@ enum {
+ 	EVENT_FILE_FL_RECORDED_TGID_BIT,
+ 	EVENT_FILE_FL_FILTERED_BIT,
+ 	EVENT_FILE_FL_NO_SET_FILTER_BIT,
+-	EVENT_FILE_FL_SOFT_MODE_BIT,
+ 	EVENT_FILE_FL_SOFT_DISABLED_BIT,
+ 	EVENT_FILE_FL_TRIGGER_MODE_BIT,
+ 	EVENT_FILE_FL_TRIGGER_COND_BIT,
+@@ -618,7 +617,6 @@ extern int __kprobe_event_add_fields(struct dynevent_cmd *cmd, ...);
+  *  RECORDED_TGID - The tgids should be recorded at sched_switch
+  *  FILTERED	  - The event has a filter attached
+  *  NO_SET_FILTER - Set when filter has error and is to be ignored
+- *  SOFT_MODE     - The event is enabled/disabled by SOFT_DISABLED
+  *  SOFT_DISABLED - When set, do not trace the event (even though its
+  *                   tracepoint may be enabled)
+  *  TRIGGER_MODE  - When set, invoke the triggers associated with the event
+@@ -633,7 +631,6 @@ enum {
+ 	EVENT_FILE_FL_RECORDED_TGID	= (1 << EVENT_FILE_FL_RECORDED_TGID_BIT),
+ 	EVENT_FILE_FL_FILTERED		= (1 << EVENT_FILE_FL_FILTERED_BIT),
+ 	EVENT_FILE_FL_NO_SET_FILTER	= (1 << EVENT_FILE_FL_NO_SET_FILTER_BIT),
+-	EVENT_FILE_FL_SOFT_MODE		= (1 << EVENT_FILE_FL_SOFT_MODE_BIT),
+ 	EVENT_FILE_FL_SOFT_DISABLED	= (1 << EVENT_FILE_FL_SOFT_DISABLED_BIT),
+ 	EVENT_FILE_FL_TRIGGER_MODE	= (1 << EVENT_FILE_FL_TRIGGER_MODE_BIT),
+ 	EVENT_FILE_FL_TRIGGER_COND	= (1 << EVENT_FILE_FL_TRIGGER_COND_BIT),
+diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
+index 120531268abf..0980f4def360 100644
+--- a/kernel/trace/trace_events.c
++++ b/kernel/trace/trace_events.c
+@@ -768,6 +768,7 @@ static int __ftrace_event_enable_disable(struct trace_event_file *file,
+ {
+ 	struct trace_event_call *call = file->event_call;
+ 	struct trace_array *tr = file->tr;
++	bool soft_mode = atomic_read(&file->sm_ref) != 0;
+ 	int ret = 0;
+ 	int disable;
+ 
+@@ -782,7 +783,7 @@ static int __ftrace_event_enable_disable(struct trace_event_file *file,
+ 		 * is set we do not want the event to be enabled before we
+ 		 * clear the bit.
+ 		 *
+-		 * When soft_disable is not set but the SOFT_MODE flag is,
++		 * When soft_disable is not set but the soft_mode is,
+ 		 * we do nothing. Do not disable the tracepoint, otherwise
+ 		 * "soft enable"s (clearing the SOFT_DISABLED bit) wont work.
+ 		 */
+@@ -790,11 +791,11 @@ static int __ftrace_event_enable_disable(struct trace_event_file *file,
+ 			if (atomic_dec_return(&file->sm_ref) > 0)
+ 				break;
+ 			disable = file->flags & EVENT_FILE_FL_SOFT_DISABLED;
+-			clear_bit(EVENT_FILE_FL_SOFT_MODE_BIT, &file->flags);
++			soft_mode = false;
+ 			/* Disable use of trace_buffered_event */
+ 			trace_buffered_event_disable();
+ 		} else
+-			disable = !(file->flags & EVENT_FILE_FL_SOFT_MODE);
++			disable = !soft_mode;
+ 
+ 		if (disable && (file->flags & EVENT_FILE_FL_ENABLED)) {
+ 			clear_bit(EVENT_FILE_FL_ENABLED_BIT, &file->flags);
+@@ -812,8 +813,8 @@ static int __ftrace_event_enable_disable(struct trace_event_file *file,
+ 
+ 			WARN_ON_ONCE(ret);
+ 		}
+-		/* If in SOFT_MODE, just set the SOFT_DISABLE_BIT, else clear it */
+-		if (file->flags & EVENT_FILE_FL_SOFT_MODE)
++		/* If in soft mode, just set the SOFT_DISABLE_BIT, else clear it */
++		if (soft_mode)
+ 			set_bit(EVENT_FILE_FL_SOFT_DISABLED_BIT, &file->flags);
+ 		else
+ 			clear_bit(EVENT_FILE_FL_SOFT_DISABLED_BIT, &file->flags);
+@@ -823,7 +824,7 @@ static int __ftrace_event_enable_disable(struct trace_event_file *file,
+ 		 * When soft_disable is set and enable is set, we want to
+ 		 * register the tracepoint for the event, but leave the event
+ 		 * as is. That means, if the event was already enabled, we do
+-		 * nothing (but set SOFT_MODE). If the event is disabled, we
++		 * nothing (but set soft_mode). If the event is disabled, we
+ 		 * set SOFT_DISABLED before enabling the event tracepoint, so
+ 		 * it still seems to be disabled.
+ 		 */
+@@ -832,7 +833,7 @@ static int __ftrace_event_enable_disable(struct trace_event_file *file,
+ 		else {
+ 			if (atomic_inc_return(&file->sm_ref) > 1)
+ 				break;
+-			set_bit(EVENT_FILE_FL_SOFT_MODE_BIT, &file->flags);
++			soft_mode = true;
+ 			/* Enable use of trace_buffered_event */
+ 			trace_buffered_event_enable();
+ 		}
+@@ -840,7 +841,7 @@ static int __ftrace_event_enable_disable(struct trace_event_file *file,
+ 		if (!(file->flags & EVENT_FILE_FL_ENABLED)) {
+ 			bool cmd = false, tgid = false;
+ 
+-			/* Keep the event disabled, when going to SOFT_MODE. */
++			/* Keep the event disabled, when going to soft mode. */
+ 			if (soft_disable)
+ 				set_bit(EVENT_FILE_FL_SOFT_DISABLED_BIT, &file->flags);
+ 
+@@ -1792,8 +1793,7 @@ event_enable_read(struct file *filp, char __user *ubuf, size_t cnt,
+ 	    !(flags & EVENT_FILE_FL_SOFT_DISABLED))
+ 		strcpy(buf, "1");
+ 
+-	if (flags & EVENT_FILE_FL_SOFT_DISABLED ||
+-	    flags & EVENT_FILE_FL_SOFT_MODE)
++	if (atomic_read(&file->sm_ref) != 0)
+ 		strcat(buf, "*");
+ 
+ 	strcat(buf, "\n");
+@@ -3584,7 +3584,7 @@ static int probe_remove_event_call(struct trace_event_call *call)
+ 			continue;
+ 		/*
+ 		 * We can't rely on ftrace_event_enable_disable(enable => 0)
+-		 * we are going to do, EVENT_FILE_FL_SOFT_MODE can suppress
++		 * we are going to do, soft mode can suppress
+ 		 * TRACE_REG_UNREGISTER.
+ 		 */
+ 		if (file->flags & EVENT_FILE_FL_ENABLED)
+@@ -3997,7 +3997,7 @@ static int free_probe_data(void *data)
+ 
+ 	edata->ref--;
+ 	if (!edata->ref) {
+-		/* Remove the SOFT_MODE flag */
++		/* Remove soft mode */
+ 		__ftrace_event_enable_disable(edata->file, 0, 1);
+ 		trace_event_put_ref(edata->file->event_call);
+ 		kfree(edata);
+-- 
+2.47.2
 
- - do a try_cmpxchg() on pending to actually deal with nmi races
-
-Actually, there are no SMP issues, just instruction atomicity - so a
-'local_try_cmpxchg() would be sufficient, but that's a 'long' not a
-'u32' ;^(
-
- - now you are exclusive for that thread, you're done, no more need
-for any atomic counter or percpu things
-
-And then the next step is to just say "pending is the low bit of the
-id word" and having a separate 31-bit counter that gets incremented by
-"get_cookie()".
-
-So then you end up with something like
-
-  // New name for 'get_timestamp()'
-  get_current_cookie() { return current->unwind_info.cookie; }
-  // New name for 'get_cookie()':
-  // 31-bit counter by just leaving bit #0 alone
-  get_new_cookie() { current->unwind_info.cookie += 2; }
-
-and then unwind_deferred_request() would do something like
-
-  unwind_deferred_request()
-  {
-        int old, new;
-
-        if (current->unwind_info.id)
-                return 1;
-
-        guard(irqsave)();
-        // For NMI, if we race with 'get_new_cookie()'
-        // we don't care if we get the old or the new one
-        old = 0; new = get_current_cookie() | 1;
-        if (!try_cmpxchg(&current->unwind_info.id, &old, new))
-                return 1;
-        .. now schedule the thing with that cookie set.
-
-Hmm?
-
-But I didn't actually look at the users, so maybe I'm missing some
-reason why you want to have a separate per-cpu value.
-
-Or maybe I missed something else entirely, and the above is complete
-garbage and the ramblings of a insane mind.
-
-It happens.
-
-Off to get more coffee.
-
-             Linus
