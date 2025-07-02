@@ -1,203 +1,219 @@
-Received: from relay.hostedemail.com (smtprelay0014.hostedemail.com [216.40.44.14])
+Received: from out-179.mta0.migadu.com (out-179.mta0.migadu.com [91.218.175.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9DFF2EE60E;
-	Wed,  2 Jul 2025 15:19:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9EE43196C7
+	for <linux-trace-kernel@vger.kernel.org>; Wed,  2 Jul 2025 15:41:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751469560; cv=none; b=QIi/mkXw8VjZyonVGdHM6XgodQyMwL4hqbc9rLrkDcMHlfM5yeTO5GQcQKANEeiaAfTB5LtnqxlcsTrPpZqVaci8m9SH8s5NGJuIpuHj1s05P8YztqXAkmXmGX07aJoNhdXgCVlJodm3efR2/sSbKONkR78bUsZV3FBEfEA6CLY=
+	t=1751470880; cv=none; b=uWkS63mQyWCTRvU+4wguBa6x4ori5BTueHUeRXW6yxVH7sxQTyuA8HDYQB2XTa6DuRgdrxK4ppB3CnfYkwvSDoVhRpf12RUYhX8wEJs+4ouIHvJDqIe15NElQKZlTknGaExqcPNiY3Pc+a/xYx5o3Z51nCUTNon7ApP7bpEWnVs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751469560; c=relaxed/simple;
-	bh=Lu/ZAODxLaemEaV9l9QVx0JzgoCvcqQ5n7yacN5Y2v0=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Bay+7VhVeTtE3NCEAd3GJjXN3i2quf4jULKFrPbutMN9mG+wFK3OazhByS6lm9Fs3zARsyZa34IMotCHZP0HhLc2GLUX4ghB/jxdeJhLokOkpYTosCRZs06wvVbfTCVr4cfMZ6dPD5x4kRvgoPQLglB2n89Y/Sh4pchPPnb6Les=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf06.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay09.hostedemail.com (Postfix) with ESMTP id 10200802E3;
-	Wed,  2 Jul 2025 15:19:11 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf06.hostedemail.com (Postfix) with ESMTPA id 50E2B20012;
-	Wed,  2 Jul 2025 15:19:09 +0000 (UTC)
-Date: Wed, 2 Jul 2025 11:19:08 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Gabriele Paoloni <gpaoloni@redhat.com>
-Cc: mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH RESEND] tracing: add kernel documentation for
- trace_array_set_clr_event, trace_set_clr_event and supporting functions
-Message-ID: <20250702111908.03759998@batman.local.home>
-In-Reply-To: <20250702104058.3cf9c1a3@batman.local.home>
-References: <20250620085618.4489-1-gpaoloni@redhat.com>
-	<20250701195939.3e297e20@gandalf.local.home>
-	<CA+wEVJY2a_ERXemup7EefPPXHOv8DAfyauuP6Mn5vHYFkbbBcQ@mail.gmail.com>
-	<20250702104058.3cf9c1a3@batman.local.home>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1751470880; c=relaxed/simple;
+	bh=u4W2Z/TU+YB4Ijy/Gte4BRSlL9Zv3XISeoAVt1fLVSI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=uyDK8P1hRreussEk2u5D5IsmBUD6rxmJwp4zWKQEhC01FUbUgcErv9jGhtx/tj53+4j43LqCGZO9qeGZtm3aEOmId0uhMvE5um4i7IMV0oYHp8TRozCsjL/YtF5dguY+KuOphLwvbTL3TQLYdGGAIFp9rkBb/BlYCRHDUGpk6p4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=q6Z/91YG; arc=none smtp.client-ip=91.218.175.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="q6Z/91YG"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1751470865;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=JHo1YDWLvWpOCNgZLEBk5Fsdvw+OSzNkQJKF7Fq1xL0=;
+	b=q6Z/91YGqqvFC8+PcQcYDCLQhvBn6l9NfGd3SsCn3XS3bv4ph2LB3XGTRfCQH+H6vx5h0R
+	kljQwPEOkKcGCUJ5TytMB/KpBofGgj8SWViAP04b3LXktOkCno90hWGUh9Mf6ydMFFZ9/m
+	YPav8McZt6rpWOr260wF5n6LbZxnfEQ=
+From: Tao Chen <chen.dylane@linux.dev>
+To: ast@kernel.org,
+	daniel@iogearbox.net,
+	andrii@kernel.org,
+	martin.lau@linux.dev,
+	eddyz87@gmail.com,
+	song@kernel.org,
+	yonghong.song@linux.dev,
+	john.fastabend@gmail.com,
+	kpsingh@kernel.org,
+	sdf@fomichev.me,
+	haoluo@google.com,
+	jolsa@kernel.org,
+	mattbobrowski@google.com,
+	rostedt@goodmis.org,
+	mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com
+Cc: bpf@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	Tao Chen <chen.dylane@linux.dev>
+Subject: [PATCH bpf-next v7 1/3] bpf: Show precise link_type for {uprobe,kprobe}_multi fdinfo
+Date: Wed,  2 Jul 2025 23:39:56 +0800
+Message-ID: <20250702153958.639852-1-chen.dylane@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Stat-Signature: 1g4uh95se6shgazt9w7shktus1jgmmy9
-X-Rspamd-Server: rspamout08
-X-Rspamd-Queue-Id: 50E2B20012
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX18qkscrzzLqEmbSf3UBv7pNNZnerq4LmjA=
-X-HE-Tag: 1751469549-651443
-X-HE-Meta: U2FsdGVkX1+O5OG2NHn2uTZBGAH810WURW+jWmysukVwqiMeVC33ecgVT8PpWYrMaPNko16N0jbDFfwJKvIXDEPeRlKAK5UQzNPwotn1GpqmRSi+++b+vlM2Qf2WNwuR8rOPlg3YdWk68qA0zIT88NkC9jTX7oFYwbhO88fj1+06ftC31v8QODqErLLAl8L4vlzyAAvGmJNVt0vuobwW8VE8YZ91yJFdG3jnvDX14aP6kz4lWRhtbxh3JQC1K7M/MsAvDmrvSdfCpY/WIx2mSMIw4Ur4P2ty2Ae23FP+WOWiuZv31LiQNVndBZqAD1MrLTpfFi6HwqQlBIg/qNqntVxHikUFLrs82uDDxD20AHFURQVYDjJ93Yfh8pQO4KR5
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On Wed, 2 Jul 2025 10:40:58 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
+Alexei suggested, 'link_type' can be more precise and differentiate
+for human in fdinfo. In fact BPF_LINK_TYPE_KPROBE_MULTI includes
+kretprobe_multi type, the same as BPF_LINK_TYPE_UPROBE_MULTI, so we
+can show it more concretely.
 
-> Now technically, the SOFT_MODE bit should only be set iff the ref count
-> is greater than zero. But it's easier to test a flag than to always
-> test a ref count.
+link_type:	kprobe_multi
+link_id:	1
+prog_tag:	d2b307e915f0dd37
+...
+link_type:	kretprobe_multi
+link_id:	2
+prog_tag:	ab9ea0545870781d
+...
+link_type:	uprobe_multi
+link_id:	9
+prog_tag:	e729f789e34a8eca
+...
+link_type:	uretprobe_multi
+link_id:	10
+prog_tag:	7db356c03e61a4d4
 
-So the reason for why we have both a SOFT_MODE flag and a ref count is
-because the original code expected only one user of the SOFT_MODE case.
-But in 2013, Masami found that if two users used soft mode the
-accounting broke and added a ref count. This does make the SOFT_MODE
-flag redundant.
+Co-developed-by: Jiri Olsa <jolsa@kernel.org>
+Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+Signed-off-by: Tao Chen <chen.dylane@linux.dev>
+---
+ include/linux/bpf.h      |  1 +
+ kernel/bpf/syscall.c     |  9 ++++++++-
+ kernel/trace/bpf_trace.c | 10 ++++------
+ 3 files changed, 13 insertions(+), 7 deletions(-)
 
-I just tried to remove it and I think it can work. Instead of using a
-SOFT_MODE flag in the file flags field, simply using the ref counter is
-just as fine.
+Change list:
+  v6 -> v7:
+    - Show the same order cookie for kprobe/uprobe.(Andrii)
+    - Use tab format to show multi events for kprobe/uprobe.(Andrii)
+    - Use u32 flags in bpf_link.(Alexei)
+  v6:
+  https://lore.kernel.org/bpf/20250627082252.431209-1-chen.dylane@linux.dev
 
-Also note, I'm not sure there's any reason the ref counter is an atomic
-value. All updates to it are done under the event_mutex lock. But that
-can be another clean up.
+  v5 -> v6:
+    - Move flags into bpf_link to get retprobe info
+      directly.(Alexei, Jiri)
+  v5:
+  https://lore.kernel.org/bpf/20250623134342.227347-1-chen.dylane@linux.dev
 
--- Steve
+  v4 -> v5:
+    - Add patch1 to show precise link_type for
+      {uprobe,kprobe}_multi.(Alexei)
+    - patch2,3 just remove type field, which will be showed in
+      link_type
+  v4:
+  https://lore.kernel.org/bpf/20250619034257.70520-1-chen.dylane@linux.dev
 
-diff --git a/include/linux/trace_events.h b/include/linux/trace_events.h
-index fa9cf4292dff..04307a19cde3 100644
---- a/include/linux/trace_events.h
-+++ b/include/linux/trace_events.h
-@@ -480,7 +480,6 @@ enum {
- 	EVENT_FILE_FL_RECORDED_TGID_BIT,
- 	EVENT_FILE_FL_FILTERED_BIT,
- 	EVENT_FILE_FL_NO_SET_FILTER_BIT,
--	EVENT_FILE_FL_SOFT_MODE_BIT,
- 	EVENT_FILE_FL_SOFT_DISABLED_BIT,
- 	EVENT_FILE_FL_TRIGGER_MODE_BIT,
- 	EVENT_FILE_FL_TRIGGER_COND_BIT,
-@@ -618,7 +617,6 @@ extern int __kprobe_event_add_fields(struct dynevent_cmd *cmd, ...);
-  *  RECORDED_TGID - The tgids should be recorded at sched_switch
-  *  FILTERED	  - The event has a filter attached
-  *  NO_SET_FILTER - Set when filter has error and is to be ignored
-- *  SOFT_MODE     - The event is enabled/disabled by SOFT_DISABLED
-  *  SOFT_DISABLED - When set, do not trace the event (even though its
-  *                   tracepoint may be enabled)
-  *  TRIGGER_MODE  - When set, invoke the triggers associated with the event
-@@ -633,7 +631,6 @@ enum {
- 	EVENT_FILE_FL_RECORDED_TGID	= (1 << EVENT_FILE_FL_RECORDED_TGID_BIT),
- 	EVENT_FILE_FL_FILTERED		= (1 << EVENT_FILE_FL_FILTERED_BIT),
- 	EVENT_FILE_FL_NO_SET_FILTER	= (1 << EVENT_FILE_FL_NO_SET_FILTER_BIT),
--	EVENT_FILE_FL_SOFT_MODE		= (1 << EVENT_FILE_FL_SOFT_MODE_BIT),
- 	EVENT_FILE_FL_SOFT_DISABLED	= (1 << EVENT_FILE_FL_SOFT_DISABLED_BIT),
- 	EVENT_FILE_FL_TRIGGER_MODE	= (1 << EVENT_FILE_FL_TRIGGER_MODE_BIT),
- 	EVENT_FILE_FL_TRIGGER_COND	= (1 << EVENT_FILE_FL_TRIGGER_COND_BIT),
-diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
-index 120531268abf..0980f4def360 100644
---- a/kernel/trace/trace_events.c
-+++ b/kernel/trace/trace_events.c
-@@ -768,6 +768,7 @@ static int __ftrace_event_enable_disable(struct trace_event_file *file,
- {
- 	struct trace_event_call *call = file->event_call;
- 	struct trace_array *tr = file->tr;
-+	bool soft_mode = atomic_read(&file->sm_ref) != 0;
- 	int ret = 0;
- 	int disable;
+  v3 -> v4:
+    - use %pS to print func info.(Alexei)
+  v3:
+  https://lore.kernel.org/bpf/20250616130233.451439-1-chen.dylane@linux.dev
+
+  v2 -> v3:
+    - show info in one line for multi events.(Jiri)
+  v2:
+  https://lore.kernel.org/bpf/20250615150514.418581-1-chen.dylane@linux.dev
+
+  v1 -> v2:
+    - replace 'func_cnt' with 'uprobe_cnt'.(Andrii)
+    - print func name is more readable and security for kprobe_multi.(Alexei)
+  v1:
+  https://lore.kernel.org/bpf/20250612115556.295103-1-chen.dylane@linux.dev
+
+diff --git a/include/linux/bpf.h b/include/linux/bpf.h
+index 5b25d278409..751ea3f5480 100644
+--- a/include/linux/bpf.h
++++ b/include/linux/bpf.h
+@@ -1702,6 +1702,7 @@ struct bpf_link {
+ 	 * link's semantics is determined by target attach hook
+ 	 */
+ 	bool sleepable;
++	u32 flags;
+ 	/* rcu is used before freeing, work can be used to schedule that
+ 	 * RCU-based freeing before that, so they never overlap
+ 	 */
+diff --git a/kernel/bpf/syscall.c b/kernel/bpf/syscall.c
+index 51ba1a7aa43..e6eea594f1c 100644
+--- a/kernel/bpf/syscall.c
++++ b/kernel/bpf/syscall.c
+@@ -3228,7 +3228,14 @@ static void bpf_link_show_fdinfo(struct seq_file *m, struct file *filp)
+ 	char prog_tag[sizeof(prog->tag) * 2 + 1] = { };
  
-@@ -782,7 +783,7 @@ static int __ftrace_event_enable_disable(struct trace_event_file *file,
- 		 * is set we do not want the event to be enabled before we
- 		 * clear the bit.
- 		 *
--		 * When soft_disable is not set but the SOFT_MODE flag is,
-+		 * When soft_disable is not set but the soft_mode is,
- 		 * we do nothing. Do not disable the tracepoint, otherwise
- 		 * "soft enable"s (clearing the SOFT_DISABLED bit) wont work.
- 		 */
-@@ -790,11 +791,11 @@ static int __ftrace_event_enable_disable(struct trace_event_file *file,
- 			if (atomic_dec_return(&file->sm_ref) > 0)
- 				break;
- 			disable = file->flags & EVENT_FILE_FL_SOFT_DISABLED;
--			clear_bit(EVENT_FILE_FL_SOFT_MODE_BIT, &file->flags);
-+			soft_mode = false;
- 			/* Disable use of trace_buffered_event */
- 			trace_buffered_event_disable();
- 		} else
--			disable = !(file->flags & EVENT_FILE_FL_SOFT_MODE);
-+			disable = !soft_mode;
+ 	if (type < ARRAY_SIZE(bpf_link_type_strs) && bpf_link_type_strs[type]) {
+-		seq_printf(m, "link_type:\t%s\n", bpf_link_type_strs[type]);
++		if (link->type == BPF_LINK_TYPE_KPROBE_MULTI)
++			seq_printf(m, "link_type:\t%s\n", link->flags == BPF_F_KPROBE_MULTI_RETURN ?
++				   "kretprobe_multi" : "kprobe_multi");
++		else if (link->type == BPF_LINK_TYPE_UPROBE_MULTI)
++			seq_printf(m, "link_type:\t%s\n", link->flags == BPF_F_UPROBE_MULTI_RETURN ?
++				   "uretprobe_multi" : "uprobe_multi");
++		else
++			seq_printf(m, "link_type:\t%s\n", bpf_link_type_strs[type]);
+ 	} else {
+ 		WARN_ONCE(1, "missing BPF_LINK_TYPE(...) for link type %u\n", type);
+ 		seq_printf(m, "link_type:\t<%u>\n", type);
+diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
+index 24b94870b50..85f07f662fe 100644
+--- a/kernel/trace/bpf_trace.c
++++ b/kernel/trace/bpf_trace.c
+@@ -2469,7 +2469,6 @@ struct bpf_kprobe_multi_link {
+ 	u32 cnt;
+ 	u32 mods_cnt;
+ 	struct module **mods;
+-	u32 flags;
+ };
  
- 		if (disable && (file->flags & EVENT_FILE_FL_ENABLED)) {
- 			clear_bit(EVENT_FILE_FL_ENABLED_BIT, &file->flags);
-@@ -812,8 +813,8 @@ static int __ftrace_event_enable_disable(struct trace_event_file *file,
+ struct bpf_kprobe_multi_run_ctx {
+@@ -2589,7 +2588,7 @@ static int bpf_kprobe_multi_link_fill_link_info(const struct bpf_link *link,
  
- 			WARN_ON_ONCE(ret);
- 		}
--		/* If in SOFT_MODE, just set the SOFT_DISABLE_BIT, else clear it */
--		if (file->flags & EVENT_FILE_FL_SOFT_MODE)
-+		/* If in soft mode, just set the SOFT_DISABLE_BIT, else clear it */
-+		if (soft_mode)
- 			set_bit(EVENT_FILE_FL_SOFT_DISABLED_BIT, &file->flags);
- 		else
- 			clear_bit(EVENT_FILE_FL_SOFT_DISABLED_BIT, &file->flags);
-@@ -823,7 +824,7 @@ static int __ftrace_event_enable_disable(struct trace_event_file *file,
- 		 * When soft_disable is set and enable is set, we want to
- 		 * register the tracepoint for the event, but leave the event
- 		 * as is. That means, if the event was already enabled, we do
--		 * nothing (but set SOFT_MODE). If the event is disabled, we
-+		 * nothing (but set soft_mode). If the event is disabled, we
- 		 * set SOFT_DISABLED before enabling the event tracepoint, so
- 		 * it still seems to be disabled.
- 		 */
-@@ -832,7 +833,7 @@ static int __ftrace_event_enable_disable(struct trace_event_file *file,
- 		else {
- 			if (atomic_inc_return(&file->sm_ref) > 1)
- 				break;
--			set_bit(EVENT_FILE_FL_SOFT_MODE_BIT, &file->flags);
-+			soft_mode = true;
- 			/* Enable use of trace_buffered_event */
- 			trace_buffered_event_enable();
- 		}
-@@ -840,7 +841,7 @@ static int __ftrace_event_enable_disable(struct trace_event_file *file,
- 		if (!(file->flags & EVENT_FILE_FL_ENABLED)) {
- 			bool cmd = false, tgid = false;
+ 	kmulti_link = container_of(link, struct bpf_kprobe_multi_link, link);
+ 	info->kprobe_multi.count = kmulti_link->cnt;
+-	info->kprobe_multi.flags = kmulti_link->flags;
++	info->kprobe_multi.flags = kmulti_link->link.flags;
+ 	info->kprobe_multi.missed = kmulti_link->fp.nmissed;
  
--			/* Keep the event disabled, when going to SOFT_MODE. */
-+			/* Keep the event disabled, when going to soft mode. */
- 			if (soft_disable)
- 				set_bit(EVENT_FILE_FL_SOFT_DISABLED_BIT, &file->flags);
+ 	if (!uaddrs)
+@@ -2979,7 +2978,7 @@ int bpf_kprobe_multi_link_attach(const union bpf_attr *attr, struct bpf_prog *pr
+ 	link->addrs = addrs;
+ 	link->cookies = cookies;
+ 	link->cnt = cnt;
+-	link->flags = flags;
++	link->link.flags = flags;
  
-@@ -1792,8 +1793,7 @@ event_enable_read(struct file *filp, char __user *ubuf, size_t cnt,
- 	    !(flags & EVENT_FILE_FL_SOFT_DISABLED))
- 		strcpy(buf, "1");
- 
--	if (flags & EVENT_FILE_FL_SOFT_DISABLED ||
--	    flags & EVENT_FILE_FL_SOFT_MODE)
-+	if (atomic_read(&file->sm_ref) != 0)
- 		strcat(buf, "*");
- 
- 	strcat(buf, "\n");
-@@ -3584,7 +3584,7 @@ static int probe_remove_event_call(struct trace_event_call *call)
- 			continue;
+ 	if (cookies) {
  		/*
- 		 * We can't rely on ftrace_event_enable_disable(enable => 0)
--		 * we are going to do, EVENT_FILE_FL_SOFT_MODE can suppress
-+		 * we are going to do, soft mode can suppress
- 		 * TRACE_REG_UNREGISTER.
- 		 */
- 		if (file->flags & EVENT_FILE_FL_ENABLED)
-@@ -3997,7 +3997,7 @@ static int free_probe_data(void *data)
+@@ -3048,7 +3047,6 @@ struct bpf_uprobe_multi_link {
+ 	struct path path;
+ 	struct bpf_link link;
+ 	u32 cnt;
+-	u32 flags;
+ 	struct bpf_uprobe *uprobes;
+ 	struct task_struct *task;
+ };
+@@ -3112,7 +3110,7 @@ static int bpf_uprobe_multi_link_fill_link_info(const struct bpf_link *link,
  
- 	edata->ref--;
- 	if (!edata->ref) {
--		/* Remove the SOFT_MODE flag */
-+		/* Remove soft mode */
- 		__ftrace_event_enable_disable(edata->file, 0, 1);
- 		trace_event_put_ref(edata->file->event_call);
- 		kfree(edata);
+ 	umulti_link = container_of(link, struct bpf_uprobe_multi_link, link);
+ 	info->uprobe_multi.count = umulti_link->cnt;
+-	info->uprobe_multi.flags = umulti_link->flags;
++	info->uprobe_multi.flags = umulti_link->link.flags;
+ 	info->uprobe_multi.pid = umulti_link->task ?
+ 				 task_pid_nr_ns(umulti_link->task, task_active_pid_ns(current)) : 0;
+ 
+@@ -3372,7 +3370,7 @@ int bpf_uprobe_multi_link_attach(const union bpf_attr *attr, struct bpf_prog *pr
+ 	link->uprobes = uprobes;
+ 	link->path = path;
+ 	link->task = task;
+-	link->flags = flags;
++	link->link.flags = flags;
+ 
+ 	bpf_link_init(&link->link, BPF_LINK_TYPE_UPROBE_MULTI,
+ 		      &bpf_uprobe_multi_link_lops, prog);
+-- 
+2.48.1
+
