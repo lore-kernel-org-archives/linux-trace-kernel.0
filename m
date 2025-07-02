@@ -1,173 +1,185 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6859247297;
-	Wed,  2 Jul 2025 09:39:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BE171DFE20;
+	Wed,  2 Jul 2025 10:50:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751449181; cv=none; b=uzC/2obtvAMwRmw3uhThLEJUbfICsmWiZdrQ2dWIpSj9XinmNqroX37CuxLkykiWvmTdce/AFEf/rg8xtqsdnAHL1YERUYBN7G4+LgcfS6ix+3zBOWIJbquNdqQgaa4BAAKt1xxfK9xnzehLrOkrrGSyhCT0gFLjnYUVGKbtxp4=
+	t=1751453456; cv=none; b=XA1IRo6mg80z0BL+LLEcHPK1PNi+je3CNSYwWT9FkuoOkRQe3ExdLx/0rJC17eASNtIx/uq0Pa5Zis4+vdyBJ9upJ3/n01CIhILwO/I3wWtweCOQ6BtLPO6sYjnTZ2YTVUOUwZSsQlRwfvSSmbr25sIfCCm3fUcJMvF7y8w12uQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751449181; c=relaxed/simple;
-	bh=pFfRtSm1nfVwd8I1W0M4HDCGj4ZuRd/Raq3zwaQ2dL4=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=uPQzfEtyVqbtn78Fb1XZRH+pCFAVIFof75vAVgm9G7Ncb5xHSTmw/UA3DZHujxh3N1K53rDGulJmu/ZoIUKrpSLlc0XMw5Z9f8sYA0vT0Xgn1zRFpqJ8/WuCkZBKEVBOfT9jNzXdOrGyQ3ycz+LclpDTY5G4IGJxKODgOJHv6cU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=DADx7Gs5; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=+Fnw+crH; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1751453456; c=relaxed/simple;
+	bh=vmWjYoBfYxlOYco20r6RIBn8cZBvLKaPN8KKU21TzFQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kUJmWs/cABK/VEU6GhCpoaa2DCcZ2LjJbY5Vu2oSWrZvzopaQGqM3Fapj7z+KjCw+sZritSPa794lXkGkwbIVKq7cRNX5rnkJKEQkwG2xuXd160o9H99filsH+LaaUgu9VeTfznrgq2GT+qnWuMiN5YMN6J2f6jeEwz6Yd8KH2E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=RnVx24f9; arc=none smtp.client-ip=178.21.23.139
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="DADx7Gs5";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="+Fnw+crH"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1751449177;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=10CYibGvwIVYchOvUOxwjyPV91vxtw5BqVOM0fUyS28=;
-	b=DADx7Gs5oChS8tz124E7PgQoyjZN6PFOt4xrJCp3IqgpGjjCcEC5wYQyUQRUMjZf40GGtd
-	7+o2D0aaPfDvvMnZxlGuhwqZfMHc/MjsHF/bn3YTBPhaD9J1sP7pxpDE92CKIwJKalhrsF
-	S231rF82KkiFdKdaZsK8Ubl4tM+TWB5FuWXcTdgo/XGhYO+RDMlwxoq03lZLxjgeZNdswe
-	M8PcHw4GMz+LIGmpReA+V8d2XAyKB7X+LSo9IxVsQ9crJJx/uJSfevHeKTpxBGQlFCMqQ8
-	dBLVOa5OlWGb+B13Xq8S+Y2YlLBKmxsBLO4QGSV34yQlzcSj6tWDMkNPHO0V3A==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1751449177;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=10CYibGvwIVYchOvUOxwjyPV91vxtw5BqVOM0fUyS28=;
-	b=+Fnw+crHy4xmKh/dT5Ygf/U+FvNoiyjfkNEflf8c5EM8g/kWZhBsHHPEN5bLiR0h4eM84O
-	qN71oJUcjhDkrRDg==
-To: Gabriele Monaco <gmonaco@redhat.com>, Peter Zijlstra <peterz@infradead.org>
-Cc: linux-kernel@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>,
- Will Deacon <will@kernel.org>, Andy
- Lutomirski <luto@kernel.org>, Steven Rostedt <rostedt@goodmis.org>, Masami
- Hiramatsu <mhiramat@kernel.org>, Ingo Molnar <mingo@kernel.org>, Mark
- Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org,
- linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] tracing: Fix inconsistency in irq tracking on NMIs
-In-Reply-To: <5097b17cc506af60ca718aba5a0a10e0fda01440.camel@redhat.com>
-References: <20250625120823.60600-1-gmonaco@redhat.com>
- <20250701125459.GL1613200@noisy.programming.kicks-ass.net>
- <5097b17cc506af60ca718aba5a0a10e0fda01440.camel@redhat.com>
-Date: Wed, 02 Jul 2025 11:39:37 +0200
-Message-ID: <87cyajkk2u.ffs@tglx>
+	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="RnVx24f9"
+Received: from mail01.disroot.lan (localhost [127.0.0.1])
+	by disroot.org (Postfix) with ESMTP id D1B6D25989;
+	Wed,  2 Jul 2025 12:50:44 +0200 (CEST)
+X-Virus-Scanned: SPAM Filter at disroot.org
+Received: from layka.disroot.org ([127.0.0.1])
+ by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
+ id wXDIgFDv1hRC; Wed,  2 Jul 2025 12:50:43 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
+	t=1751453443; bh=vmWjYoBfYxlOYco20r6RIBn8cZBvLKaPN8KKU21TzFQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=RnVx24f9NbGTPcW02J4/MbYtrfymL7Riba0/wdfkV2lAwx9rP1m+kCb0/bcq307O4
+	 oo9GMzcj/rrGQHZbDaRM4t07RH4cxgUK3TTX28E+t9UGTl7uB57tiZLJIqt+uWJY9G
+	 8V4Hut87c6Yg8tkudmT3/DYNX8AokQCL2xqQN6Ney3mA4DulZg7hJIyOQHsQNWydD0
+	 kuTPDcem79XpW8KZVfCXb5OyWqMHGfDMNuXZCECPze1vHh8B1U4vylPGACv1d2nfOA
+	 UFivrXR741lHUtMOtf8VrjvIZpDhJpYf9idLf9b7WxCIwe5TC3y24Iyw73FmSH5JD+
+	 HB4t47eI68uJQ==
+Date: Wed, 2 Jul 2025 10:50:24 +0000
+From: Yao Zi <ziyao@disroot.org>
+To: Alexandre Ghiti <alex@ghiti.fr>, Andy Chiu <andybnac@gmail.com>,
+	alexghiti@rivosinc.com, palmer@dabbelt.com,
+	Andy Chiu <andy.chiu@sifive.com>,
+	=?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn@rivosinc.com>,
+	Mark Rutland <mark.rutland@arm.com>, puranjay12@gmail.com,
+	paul.walmsley@sifive.com, greentime.hu@sifive.com,
+	nick.hu@sifive.com, nylon.chen@sifive.com, eric.lin@sifive.com,
+	vicent.chen@sifive.com, zong.li@sifive.com,
+	yongxuan.wang@sifive.com, samuel.holland@sifive.com,
+	olivia.chu@sifive.com, c2232430@gmail.com
+Cc: Han Gao <rabenda.cn@gmail.com>, Vivian Wang <wangruikang@iscas.ac.cn>,
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	regressions@lists.linux.dev, linux-riscv@lists.infradead.org
+Subject: Re: [REGRESSION] Random oops on SG2042 with Linux 6.16-rc and
+ dynamic ftrace
+Message-ID: <aGUO8L7oXpvEpvZo@pie.lan>
+References: <aGODMpq7TGINddzM@pie.lan>
+ <b060e694-caa0-4aa5-ac67-75531a5f60eb@ghiti.fr>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <b060e694-caa0-4aa5-ac67-75531a5f60eb@ghiti.fr>
 
-On Wed, Jul 02 2025 at 09:18, Gabriele Monaco wrote:
-> On Tue, 2025-07-01 at 14:54 +0200, Peter Zijlstra wrote:
-> I could probably only fix this without even considering NMIs when
-> interrupts are disabled, but I believe if that happens, the tracepoints
-> would report something wrong, since using tracing_irq_cpu alone does:
->
-> local_irq_disable -> trace_irq_off
->   nmi_enter -> no trace
->   nmi_exit -> trace_irq_on
->   // here interrupts are still off, aren't they?
-> local_irq_enable -> no trace
->
-> The idea that I described poorly, was to use tracing_irq_cpu in a way
-> that the first context disabling interrupts fires the tracepoint
-> (current behaviour), but when it's time to enable interrupts, an NMI
-> which didn't disable interrupts shouldn't trace but let the next
-> context trace.
+On Tue, Jul 01, 2025 at 02:27:32PM +0200, Alexandre Ghiti wrote:
+> Hi Yao,
+> 
+> On 7/1/25 08:41, Yao Zi wrote:
+> > Linux v6.16 built with dynamic ftrace randomly oops or triggers
+> > ftrace_bug() on Sophgo SG2042 when booting systemd-based userspace,
+
 ...
-> [1] - https://lore.kernel.org/lkml/87sejup1fe.ffs@tglx
 
-As I told you before:
+> > Not sure either reverting the commits or fixing them up is a better
+> > idea, but anyway the fatal first issue shouidn't go into the stable
+> > release.
+> 
+> Let's fix this, we were expecting issues with dynamic ftrace :)
+> 
+> So the following diff fixes all the issues you mentioned (not the first
+> crash though, I'll let you test and see if it works better, I don't have
+> this board):
 
- "As you correctly described, the two states are asynchronous in the
-  context of NMIs, so the obvious thing is to treat them as seperate
-  entities so that the trace really contains the off/on events
-  independent of lockdep enablement and lockdep's internal state. No?"
+Thanks for the fix! I've tested it with both QEMU and SG2042, it does
+fix the lockdep failures as well as the boot time crash on SG2042. The
+boot-time crash is caused by the race so will disappear as long as we
+fix the race.
 
-So I would have expected that you look at the lockdep implementation and
-figure out why that one works correctly. Let's have a look at it:
+> diff --git a/arch/riscv/kernel/ftrace.c b/arch/riscv/kernel/ftrace.c
+> index 4c6c24380cfd9..97ced537aa1e0 100644
+> --- a/arch/riscv/kernel/ftrace.c
+> +++ b/arch/riscv/kernel/ftrace.c
+> @@ -14,6 +14,16 @@
+>  #include <asm/text-patching.h>
+> 
+>  #ifdef CONFIG_DYNAMIC_FTRACE
+> +void ftrace_arch_code_modify_prepare(void)
+> +{
+> +       mutex_lock(&text_mutex);
+> +}
+> +
+> +void ftrace_arch_code_modify_post_process(void)
+> +{
+> +       mutex_unlock(&text_mutex);
+> +}
+> +
+>  unsigned long ftrace_call_adjust(unsigned long addr)
+>  {
+>         if (IS_ENABLED(CONFIG_DYNAMIC_FTRACE_WITH_CALL_OPS))
+> @@ -29,10 +39,8 @@ unsigned long arch_ftrace_get_symaddr(unsigned long
+> fentry_ip)
+> 
+>  void arch_ftrace_update_code(int command)
+>  {
+> -       mutex_lock(&text_mutex);
+>         command |= FTRACE_MAY_SLEEP;
+>         ftrace_modify_all_code(command);
+> -       mutex_unlock(&text_mutex);
+>         flush_icache_all();
+>  }
+> 
+> @@ -149,16 +157,17 @@ int ftrace_init_nop(struct module *mod, struct
+> dyn_ftrace *rec)
+>         unsigned int nops[2], offset;
+>         int ret;
+> 
+> +       mutex_lock(&text_mutex);
 
-nmi_entry()
-   irq_state.lockdep = lockdep_hardirqs_enabled();
+Besides using the guard API, could we swap the order between
+ftrace_rec_set_nop_ops() and calculation of the nops array? This shrinks
+the critical region a little.
 
-   lockdep_hardirqs_off(CALLER_ADDR0);
-   ...
-   return irq_state;
+With or without the change, here's my tag,
 
-nmi_exit(irq_state)
+Tested-by: Yao Zi <ziyao@disroot.org>
 
-   if (irq_state.lockdep)
-	lockdep_hardirqs_on(CALLER_ADDR0);
+and also
 
-On NMI entry the internal state of lockdep tracking is recorded and
-lockdep_hardirqs_off() handles a redundant off gracefully. As I said it
-might be arguable to invoke it only when irq_state.lockdep == true, but
-that's a cosmetic or performance issue not a correctness problem.
+Reported-by: Han Gao <rabenda.cn@gmail.com>
+Reported-by: Vivian Wang <wangruikang@iscas.ac.cn>
 
-On NMI exit lockdep_hardirqs_on() is only invoked when the lockdep internal
-state at entry was 'enabled' so it can restore the state correctly.
+for their first-hand report of boot-time crash and analysis for the
+first lock issue.
 
-If you model the tracer exactly the same way:
+Regards,
+Yao Zi
 
-   irq_state.lockdep = lockdep_hardirqs_enabled();
-   irq_state.tracer = tracer_hardirqs_enabled();
-   ....
-
-   You get the idea...
-
-That will be "correct" in terms of sequencing depending on your trace side
-implementation:
-
-  trace_hardirqs_off()
-        if (trace_hardirqs_enabled()) {
-        	trace_irqs_enabled = false;     // A
-                emit_trace(OFF);	        // B
-
-If the NMI hits before A, everything is fine because it will record a
-ON->OFF transition on NMI entry and a OFF->ON transition on NMI
-exit. Then the interrupted context records a ON->OFF transition again.
-
-If it hits between A and B, then the NMI tracing wont do anything
-because enabled state is already false, but the resulting trace
-sequencing is messed up:
-
-     irqs on
-     ...
-     nmi_entry
-     nmi_exit
-     irqs off
-
-IOW, it misses the ON->OFF OFF->ON transitions in the NMI.
-
-So you want to do it the other way round:
-
-  trace_hardirqs_off()
-        if (trace_hardirqs_enabled()) {
-                emit_trace(OFF);	        // A
-        	trace_irqs_enabled = false;     // B
-
-If the NMI hits before A, everything is fine because it will record a
-ON->OFF transition on NMI entry and a OFF->ON transition on NMI
-exit. Then the interrupted context records a ON->OFF transition again.
-
-If it hits between A and B then you get a duplicate
-
-     irqs on
-     ...
-     irqs off
-     nmi_entry
-     irqs off
-     irqs on
-     nmi_exit
-
-There is nothing you can do about it, but that's easy enough to filter
-out, no?
-
-I'm pretty sure you can figure out how that should be modeled on the
-on() side of affairs.
-
-Thanks,
-
-        tglx
+>         ret = ftrace_rec_set_nop_ops(rec);
+>         if (ret)
+> -               return ret;
+> +               goto end;
+> 
+>         offset = (unsigned long) &ftrace_caller - pc;
+>         nops[0] = to_auipc_t0(offset);
+>         nops[1] = RISCV_INSN_NOP4;
+> 
+> -       mutex_lock(&text_mutex);
+>         ret = patch_insn_write((void *)pc, nops, 2 * MCOUNT_INSN_SIZE);
+> +end:
+>         mutex_unlock(&text_mutex);
+> 
+>         return ret;
+> 
+> Andy is also taking a look, I'll let him confirm the above fix is correct.
+> 
+> Thanks for the thorough report!
+> 
+> Alex
+> 
+> 
+> > 
+> > Thanks for your suggestions on the problems.
+> > 
+> > Regards,
+> > Yao Zi
+> > 
+> > [1]: https://lore.kernel.org/all/20250407180838.42877-1-andybnac@gmail.com/
+> > 
+> > #regzbot introduced: 881dadf0792c
+> > 
+> > _______________________________________________
+> > linux-riscv mailing list
+> > linux-riscv@lists.infradead.org
+> > http://lists.infradead.org/mailman/listinfo/linux-riscv
