@@ -1,36 +1,35 @@
-Received: from relay.hostedemail.com (smtprelay0012.hostedemail.com [216.40.44.12])
+Received: from relay.hostedemail.com (smtprelay0017.hostedemail.com [216.40.44.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6510224882;
-	Thu,  3 Jul 2025 15:30:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B5451FFC46;
+	Thu,  3 Jul 2025 15:52:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751556615; cv=none; b=XEZTyaqj2Tx96dUCm6sua2v7lOuU++z6DZGHQ+D5g7GDmcHWu1WJP1fyvnsfAfViUO7dj3uyRz/zeD6pB8xyTA+RZuMuLyjzyrTUiCwyNnA7ycV+G0sXdxcqnRiOe2U5BUfWw2Y05WfhhIRVxX0gmVxihzOQMiJUZReIsQeMLHA=
+	t=1751557949; cv=none; b=B8EYlNQE/DHucTOjk1GYtUdn45zp2mt7exSKXsD/ZTmLNgxOcU1O8um5Nx+nExNrKXXri0i4hDYiXfGwjBjC4OSqOLUy1osD9JNHlT7O49Jf11EVxjWWTRDEApsbSyGUgPwtqCWyoNG7IQ4ztJAP45jEMwcVpsqcdUWnw8CdN5s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751556615; c=relaxed/simple;
-	bh=Midkn1Xwtp4OL+Lym1QanU5upXg6cal2GSP4RDHTegU=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=lXkddZWieSJhn5calxt7JPgTyI3KODD5+bjKwA8U94pUm230jzQJA889IXGwqsZqFvcWyKIlhFLqLtWTtCc7D7wxGBtb9TmC5TvX2hst+2Rxr3erpnI19cOayHvhFfgA763NO4N+TC+uWS+FEwHCnGCX1w41D7ZEF2OCd6EPSGo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.12
+	s=arc-20240116; t=1751557949; c=relaxed/simple;
+	bh=jwgKZTPaZQlwll7qCULdeQgNvtUTTT/x/yMZSiwNCwE=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=on3Gz+GBjRpxeI8fCUX1PX1KpZaPhk0x7fQ9JGLLePUtPkE3CRQQt1JHIC4DSPjogv3KpkEDC2j2xzo54U/MnSAf7cun4VSMc8s9As0SmQzgiz598P2Tv1DtdkFcWibnaAUUb+HO+sgzxyaWCMNT2paLChDx6Ze/kwiQv+c6Zqw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.17
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
 Received: from omf14.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay07.hostedemail.com (Postfix) with ESMTP id 6557416027E;
-	Thu,  3 Jul 2025 15:30:05 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf14.hostedemail.com (Postfix) with ESMTPA id CD5243B;
-	Thu,  3 Jul 2025 15:30:02 +0000 (UTC)
-Date: Thu, 3 Jul 2025 11:30:01 -0400
+	by unirelay01.hostedemail.com (Postfix) with ESMTP id 6BE4C1D3D6D;
+	Thu,  3 Jul 2025 15:52:25 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf14.hostedemail.com (Postfix) with ESMTPA id 5B44433;
+	Thu,  3 Jul 2025 15:52:23 +0000 (UTC)
+Date: Thu, 3 Jul 2025 11:52:22 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
-To: Menglong Dong <menglong8.dong@gmail.com>
-Cc: alexei.starovoitov@gmail.com, jolsa@kernel.org, bpf@vger.kernel.org,
- Menglong Dong <dongml2@chinatelecom.cn>, Mark Rutland
- <mark.rutland@arm.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH bpf-next v2 04/18] ftrace: add reset_ftrace_direct_ips
-Message-ID: <20250703113001.099dc88f@batman.local.home>
-In-Reply-To: <20250703121521.1874196-5-dongml2@chinatelecom.cn>
-References: <20250703121521.1874196-1-dongml2@chinatelecom.cn>
-	<20250703121521.1874196-5-dongml2@chinatelecom.cn>
+To: LKML <linux-kernel@vger.kernel.org>, Linux trace kernel
+ <linux-trace-kernel@vger.kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Mark Rutland <mark.rutland@arm.com>,
+ Linus Torvalds <torvalds@linux-foundation.org>, Alexandre Ghiti
+ <alex@ghiti.fr>, ChenMiao <chenmiao.ku@gmail.com>,
+ linux-arch@vger.kernel.org
+Subject: [RFC][PATCH] ftrace: Make DYNAMIC_FTRACE always enabled for
+ architectures that support it
+Message-ID: <20250703115222.2d7c8cd5@batman.local.home>
 X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -40,199 +39,54 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Stat-Signature: yu9k4juoddbxh539wfecre1dnfmdgbzk
-X-Rspamd-Server: rspamout01
-X-Rspamd-Queue-Id: CD5243B
+X-Stat-Signature: dfnkcxf73rcxdf54d4ej8zbyr86zosuy
+X-Rspamd-Server: rspamout04
+X-Rspamd-Queue-Id: 5B44433
 X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1/x9+2Gkl0bLv99oqhAlyDopYKg4Dbgx6k=
-X-HE-Tag: 1751556602-956081
-X-HE-Meta: U2FsdGVkX19dPdUqBcQIwd55zOtqPhMAfP9K1ZUY4b6lHAd3pwk0Iy1sV1K/m/r1wORmWx3jBgV8J/4Ct+MnvvnN5XhCNEJIYkyPwAzgUtq5IXE7gU5cwxmgBo5b4k2TPmeAX/M750OVZjcKnnfqygvXP3iHuhYyxljycr/0ef/KceelGDbznfr+ng1MWmUpEAOCr0egjhf139Qw6+lx3mDRdZ2qlgd3H1NxPsWTlaqdoKLQXdOWx+RufD85szWqhnoIC5BbBzCUofZT2UGLnKKPBd/v96I67YhV22oJdkG0vH2ukV3muvmex2RJ5Az8iyGMu4IXv/oddVOk/BDxv1AFqbzAZTlh
+X-Session-ID: U2FsdGVkX1941fakycO7fuixZ+xnYJobriHijGZxFo0=
+X-HE-Tag: 1751557943-567718
+X-HE-Meta: U2FsdGVkX1+SUmEj7Iin14aLs/X5m3iQXwVMmZcDYZr7pBi5yC56SE0+vRaEXCEvgookkK+fOlzaZS2AS55vrq/oXrmgjhD/y6YMUUGbIluIRTKQFs+0zKEH/1KkAVpWs9QXzLzOf8P47ivGbBq0cxh5h/O5unyC4+BizN24I1qIaT11atH6g149UACqZaTkZVW75PrcHbnm7hWhW7f3/ZmY3cxc/aHjoqYELWJ0AJlecP7azdaNrdHQANkRvrDyuRKBQ6g7ESMnDGXtfkB34DRbaAHZMtYQlqTuI/+hIwbJ2ehP3dWSyrstyaVNojv5teDKzJIz3kKaP9HOXD5czraiKZy8QjIO3xeY0mjY+VtbmUuiJSKxN6oeZGxRx9Cr2CRmHCT1KoinVz7GXLYRFA==
 
-On Thu,  3 Jul 2025 20:15:07 +0800
-Menglong Dong <menglong8.dong@gmail.com> wrote:
+From: Steven Rostedt <rostedt@goodmis.org>
 
-Note, the tracing subsystem uses capitalization in the subject:
+ftrace has two flavors:
 
-  ftrace: Add reset_ftrace_direct_ips
+ 1) static: Where every function always calls the ftrace trampoline
 
+ 2) dynamic: Where each function has nops that can be changed on demand to
+             jump to the ftrace trampoline when needed.
 
-> For now, we can change the address of a direct ftrace_ops with
-> modify_ftrace_direct(). However, we can't change the functions to filter
-> for a direct ftrace_ops. Therefore, we introduce the function
-> reset_ftrace_direct_ips() to do such things, and this function will reset
-> the functions to filter for a direct ftrace_ops.
-> 
-> This function do such thing in following steps:
-> 
-> 1. filter out the new functions from ips that don't exist in the
->    ops->func_hash->filter_hash and add them to the new hash.
-> 2. add all the functions in the new ftrace_hash to direct_functions by
->    ftrace_direct_update().
-> 3. reset the functions to filter of the ftrace_ops to the ips with
->    ftrace_set_filter_ips().
-> 4. remove the functions that in the old ftrace_hash, but not in the new
->    ftrace_hash from direct_functions.
+The static flavor has very high performance overhead and was only created
+to make it easier for architectures to implement the dynamic flavor. An
+architecture developer can first implement the static ftrace to make sure
+the trampolines work before working on the more complicated dynamic aspect
+of ftrace. Once the architecture can support dynamic ftrace, there's no
+reason to continue to support the static flavor. In fact, the static
+flavor tends to bitrot and bugs start to appear in them.
 
-Please also include a module that can be loaded for testing.
-See samples/ftrace/ftrace-direct*
+Remove the prompt to pick DYNAMIC_FTRACE and simply enable it if the
+architecture supports it.
 
-But make it a separate patch. And you'll need to add a test in selftests.
-See tools/testing/selftests/ftrace/test.d/direct
+Link: https://lore.kernel.org/all/f7e12c6d-892e-4ca3-9ef0-fbb524d04a48@ghiti.fr/
 
-> 
-> Signed-off-by: Menglong Dong <dongml2@chinatelecom.cn>
-> ---
->  include/linux/ftrace.h |  7 ++++
->  kernel/trace/ftrace.c  | 75 ++++++++++++++++++++++++++++++++++++++++++
->  2 files changed, 82 insertions(+)
-> 
-> diff --git a/include/linux/ftrace.h b/include/linux/ftrace.h
-> index b672ca15f265..b7c60f5a4120 100644
-> --- a/include/linux/ftrace.h
-> +++ b/include/linux/ftrace.h
-> @@ -528,6 +528,8 @@ int modify_ftrace_direct_nolock(struct ftrace_ops *ops, unsigned long addr);
->  
->  void ftrace_stub_direct_tramp(void);
->  
-> +int reset_ftrace_direct_ips(struct ftrace_ops *ops, unsigned long *ips,
-> +			    unsigned int cnt);
->  #else
->  struct ftrace_ops;
->  static inline unsigned long ftrace_find_rec_direct(unsigned long ip)
-> @@ -551,6 +553,11 @@ static inline int modify_ftrace_direct_nolock(struct ftrace_ops *ops, unsigned l
->  {
->  	return -ENODEV;
->  }
-> +static inline int reset_ftrace_direct_ips(struct ftrace_ops *ops, unsigned long *ips,
-> +					  unsigned int cnt)
-> +{
-> +	return -ENODEV;
-> +}
->  
->  /*
->   * This must be implemented by the architecture.
-> diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-> index f5f6d7bc26f0..db3aa61889d3 100644
-> --- a/kernel/trace/ftrace.c
-> +++ b/kernel/trace/ftrace.c
-> @@ -6224,6 +6224,81 @@ int modify_ftrace_direct(struct ftrace_ops *ops, unsigned long addr)
->  	return err;
->  }
->  EXPORT_SYMBOL_GPL(modify_ftrace_direct);
-> +
-> +/* reset the ips for a direct ftrace (add or remove) */
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+ kernel/trace/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-As this function is being used externally, it requires proper KernelDoc
-headers.
-
-What exactly do you mean by "reset"?
-
-> +int reset_ftrace_direct_ips(struct ftrace_ops *ops, unsigned long *ips,
-> +			    unsigned int cnt)
-> +{
-> +	struct ftrace_hash *hash, *free_hash;
-> +	struct ftrace_func_entry *entry, *del;
-> +	unsigned long ip;
-> +	int err, size;
-> +
-> +	if (check_direct_multi(ops))
-> +		return -EINVAL;
-> +	if (!(ops->flags & FTRACE_OPS_FL_ENABLED))
-> +		return -EINVAL;
-> +
-> +	mutex_lock(&direct_mutex);
-> +	hash = alloc_ftrace_hash(FTRACE_HASH_DEFAULT_BITS);
-> +	if (!hash) {
-> +		err = -ENOMEM;
-> +		goto out_unlock;
-> +	}
-> +
-> +	/* find out the new functions from ips and add to hash */
-
-Capitalize comment: /* Find out ...
-
-> +	for (int i = 0; i < cnt; i++) {
-> +		ip = ftrace_location(ips[i]);
-> +		if (!ip) {
-> +			err = -ENOENT;
-> +			goto out_unlock;
-> +		}
-> +		if (__ftrace_lookup_ip(ops->func_hash->filter_hash, ip))
-> +			continue;
-> +		err = __ftrace_match_addr(hash, ip, 0);
-> +		if (err)
-> +			goto out_unlock;
-> +	}
-> +
-> +	free_hash = direct_functions;
-
-Add newline.
-
-> +	/* add the new ips to direct hash. */
-
-Again capitalize.
-
-> +	err = ftrace_direct_update(hash, ops->direct_call);
-> +	if (err)
-> +		goto out_unlock;
-> +
-> +	if (free_hash && free_hash != EMPTY_HASH)
-> +		call_rcu_tasks(&free_hash->rcu, register_ftrace_direct_cb);
-
-Since the above is now used more than once, let's make it into a helper
-function so that if things change, there's only one place to change it:
-
-	free_ftrace_direct(free_hash);
-
-static inline void free_ftrace_direct(struct ftrace_hash *hash)
-{
-	if (hash && hash != EMPTY_HASH)
-		call_rcu_tasks(&free_hash->rcu, register_ftrace_direct_cb);
-}
-
-> +
-> +	free_ftrace_hash(hash);
-> +	hash = alloc_and_copy_ftrace_hash(FTRACE_HASH_DEFAULT_BITS,
-> +					  ops->func_hash->filter_hash);
-> +	if (!hash) {
-> +		err = -ENOMEM;
-> +		goto out_unlock;
-> +	}
-> +	err = ftrace_set_filter_ips(ops, ips, cnt, 0, 1);
-> +
-> +	/* remove the entries that don't exist in our filter_hash anymore
-> +	 * from the direct_functions.
-> +	 */
-
-This isn't the network subsystem, we use the default comment style for multiple lines:
-
-/*
- * line 1
- * line 2
- * ...
- */
-
--- Steve
-
-> +	size = 1 << hash->size_bits;
-> +	for (int i = 0; i < size; i++) {
-> +		hlist_for_each_entry(entry, &hash->buckets[i], hlist) {
-> +			if (__ftrace_lookup_ip(ops->func_hash->filter_hash, entry->ip))
-> +				continue;
-> +			del = __ftrace_lookup_ip(direct_functions, entry->ip);
-> +			if (del && del->direct == ops->direct_call) {
-> +				remove_hash_entry(direct_functions, del);
-> +				kfree(del);
-> +			}
-> +		}
-> +	}
-> +out_unlock:
-> +	mutex_unlock(&direct_mutex);
-> +	if (hash)
-> +		free_ftrace_hash(hash);
-> +	return err;
-> +}
->  #endif /* CONFIG_DYNAMIC_FTRACE_WITH_DIRECT_CALLS */
->  
->  /**
+diff --git a/kernel/trace/Kconfig b/kernel/trace/Kconfig
+index a3f35c7d83b6..28afc6941e7a 100644
+--- a/kernel/trace/Kconfig
++++ b/kernel/trace/Kconfig
+@@ -275,7 +275,7 @@ config FUNCTION_TRACE_ARGS
+ 	  funcgraph-args (for the function graph tracer)
+ 
+ config DYNAMIC_FTRACE
+-	bool "enable/disable function tracing dynamically"
++	bool
+ 	depends on FUNCTION_TRACER
+ 	depends on HAVE_DYNAMIC_FTRACE
+ 	default y
+-- 
+2.47.2
 
