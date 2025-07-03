@@ -1,63 +1,63 @@
-Received: from mail-pf1-f193.google.com (mail-pf1-f193.google.com [209.85.210.193])
+Received: from mail-pf1-f196.google.com (mail-pf1-f196.google.com [209.85.210.196])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE1D12E54BF;
-	Thu,  3 Jul 2025 12:17:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.193
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6E5E2EA461;
+	Thu,  3 Jul 2025 12:17:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.196
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751545046; cv=none; b=JVECiXkTKq2wXWVbX/BEytSl/oAK3i3no4w1E+KMdJrI3v/dnPLu031WuQ9rd9XoOrhfAL2OxRkuWLbvwGdlJNtwwWfHm/iIelnErhurELCNWaztg19yc8ULCZ/RRzUOmMbT645La7l8Iswuhqt2W/4z/e9tVIjuR7voZzpThYs=
+	t=1751545059; cv=none; b=r5R+PZM6o5t/4Ew8J1pRih9Vor19pfFOJCEK0G8qXKTijayoRTGkaeJruqf8okdhOiyp9deJzcfTKWWVpn7OtdQsiL/AY13k/N+YxDMfYhs+xPMY0Tsj+gwMGxccuhvDgQt2GybqzSCMy7ZwLNdLdJdO0ZpIzM87MVX0him9Uc8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751545046; c=relaxed/simple;
-	bh=5oCXAqnGUnQLOPxG3F1XjOlkZaQdZfxbKDxj9Ga5C+0=;
+	s=arc-20240116; t=1751545059; c=relaxed/simple;
+	bh=riTJJ7GS+XGjt+PMc7tEQ67eI533L9DAfcyCSOU104A=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=MGPDOpUd8J/m+lNv08FBlI3fuqkkVYB4h74PckLzhF69hX/onHZrD9UELzAEWlxz0Vh/0T0iSjG3dexmOpDJaOLR1rZZDmx03t2uAyhH3iaEfyPCQGI6AHc/vnaeZjYB4H4SnpdsvudduCwhpAGSyakXigkciwTmOefXgTwOXas=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jj9E5/Ni; arc=none smtp.client-ip=209.85.210.193
+	 MIME-Version; b=kChSRy8PMgDTGAI+wi4GDRn3s9G6TJBrBaVN9bCGjBHIXHGA3SJs0amXAB/wkNqOPRearrTDmKElUaJPoa+cAUhIgIu7eNH7+DXy3UNkKFGLHcKpHORIJU7MYdcTRmjeFqqae3bFQXetCb/iqjGPSNDr3E2GqZvOF4oLZKBD6e8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Z85v4I1/; arc=none smtp.client-ip=209.85.210.196
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jj9E5/Ni"
-Received: by mail-pf1-f193.google.com with SMTP id d2e1a72fcca58-747c2cc3419so7285961b3a.2;
-        Thu, 03 Jul 2025 05:17:24 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z85v4I1/"
+Received: by mail-pf1-f196.google.com with SMTP id d2e1a72fcca58-748e63d4b05so3582088b3a.2;
+        Thu, 03 Jul 2025 05:17:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751545044; x=1752149844; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1751545055; x=1752149855; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=niyqKP09k4jZALhCpCoq03PetO0aqU/sqgXLnPNk78o=;
-        b=jj9E5/NiYH4gpalKNX8TLs7pJPK4IE3YB5JTxvmZmzGY5/O0A9ddYjNUbMNcsnBtym
-         mXfZYtGLIBjXvmf0pA5JgFZ9pvKBGlYC53eJT13czebw+t7zyKDMuMHWP/nFKbz6EQI8
-         FUx3N750MICPMoSLsP0dk91ivme2zIywlQTw5y6+4WQfPwSkoehtRYXRejGFwI7Sitvw
-         kf8ry03ra71IcXMRsm6/Cc52mAVrYMtIumeVXW/F5PLkwL4SqCKhO4jmfajjNkDntaAI
-         vy9TfDTuOO81ao/cd9Hq+TMnTRKoqPGBOaee07MUj4y3EFwJ5kHO/GOg5YxLhXbVlK4q
-         PrHA==
+        bh=enw74RGNYkSSq6fVi/NS1y3MQoKg1WZClxqzEbAxtug=;
+        b=Z85v4I1/w8DwRtqKRCq/SVq3VZUCV1HfgAUUzwjX9g3Q5ivayVAUHeAuBr1s1lfnje
+         9secgvsI7Aqlcf3R3t4vny+ucEDBi7G9DTlMFS+tCYl9fFW0tMrOTZzXubIyossP2uGO
+         Lt7Bz4WNp7p82/KuzNmeaaKk4D160ZECuHSCCPDXUgtvaD5Zje/fr6pd2F1MMTkOiIhn
+         CiKKrI2zhKvYfIWIl9Nzx+8cMiV2z84fYAuIWCSLSgRfcwXVGyHimzeoyk2iNjB6Bpbo
+         NtJmvrmXJaTQDStyF5tO8dPyz6GTprlrf0i1Dru1neIKDL+kn+t/y1e4pIPiGWtZbFiH
+         4/Pg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751545044; x=1752149844;
+        d=1e100.net; s=20230601; t=1751545055; x=1752149855;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=niyqKP09k4jZALhCpCoq03PetO0aqU/sqgXLnPNk78o=;
-        b=U8jndX9RU+WnSjFIyfIkc1omBvRwsuKUWgHt8VT2ToOIlxppu1oj5M0Lp0/m/S54cT
-         TFsxuanAhK0WDQyxd7YZVrhjuDqnjnekAf9iNuq5TUFBKqgJbbTr9vmJMPA3D/1u/ZT9
-         jZ/q4dgpaKLHhZcTzHBbb8vDqPaMk+MRl9cdwsxXkzqt0r9xthkfBFZL6YlJ0H5xllzP
-         LC6EDQiMTzHUWtP7EHSYpebJR4YYgvXRXezoZb3IFIb9UKpVNBf2/RmfuMBHkjUur3mp
-         VTPwcvvVR012JhA/vWf2/hE4mU0DqqewJPAmANqu5Kw1YXvFO6nx0ytMGk0kEWWyOJXm
-         2sVg==
-X-Forwarded-Encrypted: i=1; AJvYcCWyP5d65h9lIXLi9zy+p+3cZ9W1JK8K3D8RU3+6DbA+HlT+pL2oPsJqATm4l+0Ve3WgrIH9d5MquBv94A0=@vger.kernel.org, AJvYcCXCVIkOjcBixyaPDL70+hVjy1FY8+a3za6luh8xQk9aRlgIinFXOrt4kk1vSnvFZx95ivuyLRqJsFTVmMK/gus5OeBe@vger.kernel.org
-X-Gm-Message-State: AOJu0YzG27tZchYJm+sMKATOKR6+kvR25WwCoOVDlSo/hFsjPcr3mYez
-	hUUAT+hCKbsbrKQHxVqK4OVwjya5PdZ6nnEfhHL4eLu9TSTfn5fWIz735e6wc7AEbztmEA==
-X-Gm-Gg: ASbGncuHS0a1oD9yznTC4mMzbpKX8N3onBAIyISoqIrNGkFEw4mglkwYL05QG82JXk3
-	s1tjGm+6mZMNw2/8+1qshA9WYNu8BkuZx8VhtpsdqKcOPySyGUAyLkP7vevMPsCbdPrEsrT6dkt
-	SHKlIciPhGZlpmc3xskTOPsZKrEfXNsbbLnnDvV/Uvo8O7XqbphYIzxBpjcuyhlLqOKMi4DOmux
-	BCVXtqbAekLppUkUFw0U5kPjf7WnXsgIa+jBK677g2N5J2a3QN0qZFkaqneadOUnYrAaBZgBmIv
-	4VHIvbbCTNG7mUlaaPNIlqAWdI+WKdJeNZV00KM8zczJxL3+2tD3ovH4wDNWOIFcXAKEmP8dFFl
-	kbW8=
-X-Google-Smtp-Source: AGHT+IEM7HNVGdaso9YQFp+Gv95PHeQAf0tTWJGRHPZl4vGWMvFxEvK/XZ7mPQp72+Jc1khasprRIQ==
-X-Received: by 2002:a05:6a20:6a1f:b0:1f5:8622:5ecb with SMTP id adf61e73a8af0-2240c6a1a38mr5632587637.34.1751545043827;
-        Thu, 03 Jul 2025 05:17:23 -0700 (PDT)
+        bh=enw74RGNYkSSq6fVi/NS1y3MQoKg1WZClxqzEbAxtug=;
+        b=l0X7m1Xx0xQOQ5mD5QZHGsRKhkej1DbisOwDn45znoS7awmiXIyID59rwr8uAWG4Gi
+         I0JkWSIkpc46xTRuPbxoYnRnbbAV6BQxbgHsjBfYXCCmZAaHXNvLUd41XTmbEwTLTlj1
+         s/eZw8tCdsZB0mYwfaw2nPSS1snXmiuUMWyLzXdND7m1xdhYHmGtEu3sBkC4XOycYJ8I
+         v2Q6IwQNCBz+xs2oKnEgLFbf1w0jX5GV6wH0mZ8p5x5DFSG72A5obJijmtvs8alsKDuM
+         SKWwazmfPTAkD6slNTuOVdXOVlKSARM0WnFr1jCtllwHjeuEwMBgh7+V7bGAA3jL+HbK
+         bwGg==
+X-Forwarded-Encrypted: i=1; AJvYcCVgphAvcpA0mvLfKRQyBvHyrranbbt/KPlYqbm/XrbeywgCN6jWV3o/dDpMWplAgtBf5svguxuC26ITAVQ+SKG3bKwh@vger.kernel.org, AJvYcCVsexMJQLBlyr3VpRa/2Sgvj1aYZ4ckQd9NTUj0tCRnvFRS56tpw+OkmqprTv3VF9uc2zMmVl4We2bs4iE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxJ7DkFgbID5CXHCFkFoSY6bhvMzsqor7CcpiywRELavYtlJPqg
+	NmDnJQagXDVjdOpTiErUZEdKMOSsGcwb9BKNeRW9idaSWrdwPx/Na6Oq
+X-Gm-Gg: ASbGncvIT0CWdgEelG199XQ9VsDdJGehaHdoK0u4eOKEqm9xN8yFqxkQnzp8uNgIrsH
+	ZH/8WM+gR26DbhPwbZmK6QmTxHrxQkFlv4q869b9a9eF5XPcZXv2Xaj+XR3t6x74K7FM08ET287
+	+qkX9/N4T6/3unT3VWuZvKh5Mx1MmZ3SSdK0/6MPbuZHFNT266ff0vGZPsnPwasgVe/MTvr4k37
+	/SaNbo/naiF1/wVXwAojm9HQG1/YIct0lufuy4T+6aAK7dglgQTDBFrmTkML997jJMGrmHiX3GA
+	L51E7qYrVJTARav7X+6Iu4pgQkq6mm1EpGEHK9iBlyTc1G8ZG/NgSHS504A3/WmEWbZPeQLKXnJ
+	tTzM=
+X-Google-Smtp-Source: AGHT+IEQJQLFrBGT5NBzSNn4/3BL0aVjMHD3jm10eW3DLG/DVSGDgTEu21IAQFv99xrfkFg6/s85ow==
+X-Received: by 2002:a05:6a00:174b:b0:740:a023:5d60 with SMTP id d2e1a72fcca58-74b5138c735mr7925298b3a.19.1751545054876;
+        Thu, 03 Jul 2025 05:17:34 -0700 (PDT)
 Received: from localhost.localdomain ([43.129.244.20])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74af5575895sm18591081b3a.94.2025.07.03.05.17.21
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74af5575895sm18591081b3a.94.2025.07.03.05.17.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Jul 2025 05:17:23 -0700 (PDT)
+        Thu, 03 Jul 2025 05:17:34 -0700 (PDT)
 From: Menglong Dong <menglong8.dong@gmail.com>
 X-Google-Original-From: Menglong Dong <dongml2@chinatelecom.cn>
 To: alexei.starovoitov@gmail.com,
@@ -65,13 +65,20 @@ To: alexei.starovoitov@gmail.com,
 	jolsa@kernel.org
 Cc: bpf@vger.kernel.org,
 	Menglong Dong <dongml2@chinatelecom.cn>,
-	Mark Rutland <mark.rutland@arm.com>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	Eduard Zingerman <eddyz87@gmail.com>,
+	Song Liu <song@kernel.org>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	John Fastabend <john.fastabend@gmail.com>,
+	KP Singh <kpsingh@kernel.org>,
+	Stanislav Fomichev <sdf@fomichev.me>,
+	Hao Luo <haoluo@google.com>,
 	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
 	linux-kernel@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH bpf-next v2 04/18] ftrace: add reset_ftrace_direct_ips
-Date: Thu,  3 Jul 2025 20:15:07 +0800
-Message-Id: <20250703121521.1874196-5-dongml2@chinatelecom.cn>
+Subject: [PATCH bpf-next v2 07/18] bpf: refactor the modules_array to ptr_array
+Date: Thu,  3 Jul 2025 20:15:10 +0800
+Message-Id: <20250703121521.1874196-8-dongml2@chinatelecom.cn>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250703121521.1874196-1-dongml2@chinatelecom.cn>
 References: <20250703121521.1874196-1-dongml2@chinatelecom.cn>
@@ -83,140 +90,176 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-For now, we can change the address of a direct ftrace_ops with
-modify_ftrace_direct(). However, we can't change the functions to filter
-for a direct ftrace_ops. Therefore, we introduce the function
-reset_ftrace_direct_ips() to do such things, and this function will reset
-the functions to filter for a direct ftrace_ops.
+Refactor the struct modules_array to more general struct ptr_array, which
+is used to store the pointers.
 
-This function do such thing in following steps:
+Meanwhile, introduce the bpf_try_add_ptr(), which checks the existing of
+the ptr before adding it to the array.
 
-1. filter out the new functions from ips that don't exist in the
-   ops->func_hash->filter_hash and add them to the new hash.
-2. add all the functions in the new ftrace_hash to direct_functions by
-   ftrace_direct_update().
-3. reset the functions to filter of the ftrace_ops to the ips with
-   ftrace_set_filter_ips().
-4. remove the functions that in the old ftrace_hash, but not in the new
-   ftrace_hash from direct_functions.
+Seems it should be moved to another files in "lib", and I'm not sure where
+to add it now, and let's move it to kernel/bpf/syscall.c for now.
 
 Signed-off-by: Menglong Dong <dongml2@chinatelecom.cn>
 ---
- include/linux/ftrace.h |  7 ++++
- kernel/trace/ftrace.c  | 75 ++++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 82 insertions(+)
+ include/linux/bpf.h      | 10 +++++++++
+ kernel/bpf/syscall.c     | 36 ++++++++++++++++++++++++++++++
+ kernel/trace/bpf_trace.c | 48 ++++++----------------------------------
+ 3 files changed, 53 insertions(+), 41 deletions(-)
 
-diff --git a/include/linux/ftrace.h b/include/linux/ftrace.h
-index b672ca15f265..b7c60f5a4120 100644
---- a/include/linux/ftrace.h
-+++ b/include/linux/ftrace.h
-@@ -528,6 +528,8 @@ int modify_ftrace_direct_nolock(struct ftrace_ops *ops, unsigned long addr);
+diff --git a/include/linux/bpf.h b/include/linux/bpf.h
+index 5e6d83750d39..bb3ab1aa3a9d 100644
+--- a/include/linux/bpf.h
++++ b/include/linux/bpf.h
+@@ -314,6 +314,16 @@ struct bpf_map {
+ 	s64 __percpu *elem_count;
+ };
  
- void ftrace_stub_direct_tramp(void);
- 
-+int reset_ftrace_direct_ips(struct ftrace_ops *ops, unsigned long *ips,
-+			    unsigned int cnt);
- #else
- struct ftrace_ops;
- static inline unsigned long ftrace_find_rec_direct(unsigned long ip)
-@@ -551,6 +553,11 @@ static inline int modify_ftrace_direct_nolock(struct ftrace_ops *ops, unsigned l
++struct ptr_array {
++	void **ptrs;
++	int cnt;
++	int cap;
++};
++
++int bpf_add_ptr(struct ptr_array *arr, void *ptr);
++bool bpf_has_ptr(struct ptr_array *arr, struct module *mod);
++int bpf_try_add_ptr(struct ptr_array *arr, void *ptr);
++
+ static inline const char *btf_field_type_name(enum btf_field_type type)
  {
- 	return -ENODEV;
+ 	switch (type) {
+diff --git a/kernel/bpf/syscall.c b/kernel/bpf/syscall.c
+index 56500381c28a..8ce061b079ec 100644
+--- a/kernel/bpf/syscall.c
++++ b/kernel/bpf/syscall.c
+@@ -619,6 +619,42 @@ int bpf_map_alloc_pages(const struct bpf_map *map, int nid,
+ 	return ret;
  }
-+static inline int reset_ftrace_direct_ips(struct ftrace_ops *ops, unsigned long *ips,
-+					  unsigned int cnt)
+ 
++int bpf_add_ptr(struct ptr_array *arr, void *ptr)
 +{
-+	return -ENODEV;
++	void **ptrs;
++
++	if (arr->cnt == arr->cap) {
++		arr->cap = max(16, arr->cap * 3 / 2);
++		ptrs = krealloc_array(arr->ptrs, arr->cap, sizeof(*ptrs), GFP_KERNEL);
++		if (!ptrs)
++			return -ENOMEM;
++		arr->ptrs = ptrs;
++	}
++
++	arr->ptrs[arr->cnt] = ptr;
++	arr->cnt++;
++	return 0;
++}
++
++bool bpf_has_ptr(struct ptr_array *arr, struct module *mod)
++{
++	int i;
++
++	for (i = arr->cnt - 1; i >= 0; i--) {
++		if (arr->ptrs[i] == mod)
++			return true;
++	}
++	return false;
++}
++
++int bpf_try_add_ptr(struct ptr_array *arr, void *ptr)
++{
++	if (bpf_has_ptr(arr, ptr))
++		return -EEXIST;
++	if (bpf_add_ptr(arr, ptr))
++		return -ENOMEM;
++	return 0;
 +}
  
- /*
-  * This must be implemented by the architecture.
-diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-index f5f6d7bc26f0..db3aa61889d3 100644
---- a/kernel/trace/ftrace.c
-+++ b/kernel/trace/ftrace.c
-@@ -6224,6 +6224,81 @@ int modify_ftrace_direct(struct ftrace_ops *ops, unsigned long addr)
- 	return err;
+ static int btf_field_cmp(const void *a, const void *b)
+ {
+diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
+index 0a06ea6638fe..167fd1dcc28b 100644
+--- a/kernel/trace/bpf_trace.c
++++ b/kernel/trace/bpf_trace.c
+@@ -2779,43 +2779,9 @@ static void symbols_swap_r(void *a, void *b, int size, const void *priv)
+ 	}
  }
- EXPORT_SYMBOL_GPL(modify_ftrace_direct);
-+
-+/* reset the ips for a direct ftrace (add or remove) */
-+int reset_ftrace_direct_ips(struct ftrace_ops *ops, unsigned long *ips,
-+			    unsigned int cnt)
-+{
-+	struct ftrace_hash *hash, *free_hash;
-+	struct ftrace_func_entry *entry, *del;
-+	unsigned long ip;
-+	int err, size;
-+
-+	if (check_direct_multi(ops))
-+		return -EINVAL;
-+	if (!(ops->flags & FTRACE_OPS_FL_ENABLED))
-+		return -EINVAL;
-+
-+	mutex_lock(&direct_mutex);
-+	hash = alloc_ftrace_hash(FTRACE_HASH_DEFAULT_BITS);
-+	if (!hash) {
-+		err = -ENOMEM;
-+		goto out_unlock;
-+	}
-+
-+	/* find out the new functions from ips and add to hash */
-+	for (int i = 0; i < cnt; i++) {
-+		ip = ftrace_location(ips[i]);
-+		if (!ip) {
-+			err = -ENOENT;
-+			goto out_unlock;
-+		}
-+		if (__ftrace_lookup_ip(ops->func_hash->filter_hash, ip))
-+			continue;
-+		err = __ftrace_match_addr(hash, ip, 0);
-+		if (err)
-+			goto out_unlock;
-+	}
-+
-+	free_hash = direct_functions;
-+	/* add the new ips to direct hash. */
-+	err = ftrace_direct_update(hash, ops->direct_call);
-+	if (err)
-+		goto out_unlock;
-+
-+	if (free_hash && free_hash != EMPTY_HASH)
-+		call_rcu_tasks(&free_hash->rcu, register_ftrace_direct_cb);
-+
-+	free_ftrace_hash(hash);
-+	hash = alloc_and_copy_ftrace_hash(FTRACE_HASH_DEFAULT_BITS,
-+					  ops->func_hash->filter_hash);
-+	if (!hash) {
-+		err = -ENOMEM;
-+		goto out_unlock;
-+	}
-+	err = ftrace_set_filter_ips(ops, ips, cnt, 0, 1);
-+
-+	/* remove the entries that don't exist in our filter_hash anymore
-+	 * from the direct_functions.
-+	 */
-+	size = 1 << hash->size_bits;
-+	for (int i = 0; i < size; i++) {
-+		hlist_for_each_entry(entry, &hash->buckets[i], hlist) {
-+			if (__ftrace_lookup_ip(ops->func_hash->filter_hash, entry->ip))
-+				continue;
-+			del = __ftrace_lookup_ip(direct_functions, entry->ip);
-+			if (del && del->direct == ops->direct_call) {
-+				remove_hash_entry(direct_functions, del);
-+				kfree(del);
-+			}
-+		}
-+	}
-+out_unlock:
-+	mutex_unlock(&direct_mutex);
-+	if (hash)
-+		free_ftrace_hash(hash);
-+	return err;
-+}
- #endif /* CONFIG_DYNAMIC_FTRACE_WITH_DIRECT_CALLS */
  
- /**
+-struct modules_array {
+-	struct module **mods;
+-	int mods_cnt;
+-	int mods_cap;
+-};
+-
+-static int add_module(struct modules_array *arr, struct module *mod)
+-{
+-	struct module **mods;
+-
+-	if (arr->mods_cnt == arr->mods_cap) {
+-		arr->mods_cap = max(16, arr->mods_cap * 3 / 2);
+-		mods = krealloc_array(arr->mods, arr->mods_cap, sizeof(*mods), GFP_KERNEL);
+-		if (!mods)
+-			return -ENOMEM;
+-		arr->mods = mods;
+-	}
+-
+-	arr->mods[arr->mods_cnt] = mod;
+-	arr->mods_cnt++;
+-	return 0;
+-}
+-
+-static bool has_module(struct modules_array *arr, struct module *mod)
+-{
+-	int i;
+-
+-	for (i = arr->mods_cnt - 1; i >= 0; i--) {
+-		if (arr->mods[i] == mod)
+-			return true;
+-	}
+-	return false;
+-}
+-
+ static int get_modules_for_addrs(struct module ***mods, unsigned long *addrs, u32 addrs_cnt)
+ {
+-	struct modules_array arr = {};
++	struct ptr_array arr = {};
+ 	u32 i, err = 0;
+ 
+ 	for (i = 0; i < addrs_cnt; i++) {
+@@ -2825,7 +2791,7 @@ static int get_modules_for_addrs(struct module ***mods, unsigned long *addrs, u3
+ 		scoped_guard(rcu) {
+ 			mod = __module_address(addrs[i]);
+ 			/* Either no module or it's already stored  */
+-			if (!mod || has_module(&arr, mod)) {
++			if (!mod || bpf_has_ptr(&arr, mod)) {
+ 				skip_add = true;
+ 				break; /* scoped_guard */
+ 			}
+@@ -2836,7 +2802,7 @@ static int get_modules_for_addrs(struct module ***mods, unsigned long *addrs, u3
+ 			continue;
+ 		if (err)
+ 			break;
+-		err = add_module(&arr, mod);
++		err = bpf_add_ptr(&arr, mod);
+ 		if (err) {
+ 			module_put(mod);
+ 			break;
+@@ -2845,14 +2811,14 @@ static int get_modules_for_addrs(struct module ***mods, unsigned long *addrs, u3
+ 
+ 	/* We return either err < 0 in case of error, ... */
+ 	if (err) {
+-		kprobe_multi_put_modules(arr.mods, arr.mods_cnt);
+-		kfree(arr.mods);
++		kprobe_multi_put_modules((struct module **)arr.ptrs, arr.cnt);
++		kfree(arr.ptrs);
+ 		return err;
+ 	}
+ 
+ 	/* or number of modules found if everything is ok. */
+-	*mods = arr.mods;
+-	return arr.mods_cnt;
++	*mods = (struct module **)arr.ptrs;
++	return arr.cnt;
+ }
+ 
+ static int addrs_check_error_injection_list(unsigned long *addrs, u32 cnt)
 -- 
 2.39.5
 
