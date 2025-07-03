@@ -1,102 +1,94 @@
-Received: from tarta.nabijaczleweli.xyz (tarta.nabijaczleweli.xyz [139.28.40.42])
+Received: from relay.hostedemail.com (smtprelay0015.hostedemail.com [216.40.44.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBBB32F4327;
-	Thu,  3 Jul 2025 18:21:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=139.28.40.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FC741DC07D;
+	Thu,  3 Jul 2025 19:26:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751566877; cv=none; b=ApY6tHJKp4Fz5VbNTFIKdLndJ8bUUfHqD4TmLAwt4uueQR2jpfDkrntTZBn05QFoIadEZX4os7mqC4pI/vj71rhQT3JSwZXyInmBFuYUg7bebk94UsgUQKMo29Bdnmepnyn/qLc6u5VFiyHYDLDp3ooOokXTf2eEJQT10rfqjqM=
+	t=1751570768; cv=none; b=ny9QxY2ln4HD1lc7hZiVSs8pii7GT7tMUAqmkwr/ZfY/1QS4szKQ4yblr7ruIkpgRitTgJKVO67U+mzT5SXLDCRdXSiZaFZROa2W5nM2Hg/CgENQ/8MFcSFj3IYuZ/6OczZ08mhZgp30TGA34HDjiahFnzbm2ysxt0fKxDN2dbU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751566877; c=relaxed/simple;
-	bh=aK5BGIPAnLlDK2DcLG20FyVQPYNP6IsQ4xVEf9jXgn0=;
-	h=Date:From:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=VEIZXrwyZlFPMd//LTcWI2xa6WzkTOHoDvRURedxd9V5EFN4mi1I0hJ/Tc3bFjSkRhyR4CraKuBjDa7aGfBlKPD90q2W+ZVbsjRnk5v523NDHQjJiOa26FHVzxeceUHorY7YnvrTOLkUL4TURGE51vsQCOVy9GHbnY1zTKbOtBQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nabijaczleweli.xyz; spf=pass smtp.mailfrom=nabijaczleweli.xyz; dkim=pass (2048-bit key) header.d=nabijaczleweli.xyz header.i=@nabijaczleweli.xyz header.b=R/edhYDB; arc=none smtp.client-ip=139.28.40.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nabijaczleweli.xyz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nabijaczleweli.xyz
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nabijaczleweli.xyz header.i=@nabijaczleweli.xyz header.b="R/edhYDB"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=nabijaczleweli.xyz;
-	s=202505; t=1751566869;
-	bh=aK5BGIPAnLlDK2DcLG20FyVQPYNP6IsQ4xVEf9jXgn0=;
-	h=Date:From:Cc:Subject:From;
-	b=R/edhYDBjTWDQfcjDbNxHSBQRNUmpwaLaUNQ84aLBTkir/bX347/2iSOvOdC8EWPB
-	 gs0PN1xMskT6iQBtFpG32rW0u7ux66VFAy8FlytO0brdGoLBLU1L+1F5/vXoYN160c
-	 RThLd4ZwW8miacXZPyyuhD+nI6LsD4uceaO6iQ8rMidu3QYscOkZyJUaXdoFNLvI7O
-	 Jr/eOQKeDnILJd7AfYEdPXvG817s2BKwcxL9XpTzFPBc7dfWSAugM/mGpPn9dfdvxd
-	 Dx7B2ctxPneV9OuyKDnbw/s4ePCKAibf06X0n2h0u2HOJ63zSmCScaXkzIAH8uM2AO
-	 4igjen5ArFqlw==
-Received: from tarta.nabijaczleweli.xyz (unknown [192.168.1.250])
-	by tarta.nabijaczleweli.xyz (Postfix) with ESMTPSA id 9FE7E36A;
-	Thu,  3 Jul 2025 20:21:09 +0200 (CEST)
-Date: Thu, 3 Jul 2025 20:21:09 +0200
-From: 
-	Ahelenia =?utf-8?Q?Ziemia=C5=84ska?= <nabijaczleweli@nabijaczleweli.xyz>
-Cc: Steven Rostedt <rostedt@goodmis.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Jonathan Corbet <corbet@lwn.net>, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org
-Subject: [PATCH v2] tracing: doc: fix "for a while" typo
-Message-ID: <xygdnynf7m55p7d27ovzqtdjaa7pua3bxuk5c22cnmoovaji5e@tarta.nabijaczleweli.xyz>
+	s=arc-20240116; t=1751570768; c=relaxed/simple;
+	bh=j3BqMHZzwhNrJybEJPOvx4Oxy3URGDNRO2/SGiYf7PE=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=WFKvxktCfFtCf6qR+lGzcMAqOnKzQlOocFQ6TcocI5zj8hmpq6GPBgW+JwZzZaGIcBkP+WMnD8crYckN+IYNEMo9dzDegqCLj5Y3+qP+CgUXvFBu5DaPLabXTIRRZ7zoKlfk2tFNUtXPPvBh5sGONXwOkYqlgGIkwjH4IPKveoE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf17.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay05.hostedemail.com (Postfix) with ESMTP id 2662958825;
+	Thu,  3 Jul 2025 19:26:03 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf17.hostedemail.com (Postfix) with ESMTPA id E36621C;
+	Thu,  3 Jul 2025 19:26:00 +0000 (UTC)
+Date: Thu, 3 Jul 2025 15:26:43 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, Linux trace kernel
+ <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Mark Rutland <mark.rutland@arm.com>, Alexandre Ghiti <alex@ghiti.fr>,
+ ChenMiao <chenmiao.ku@gmail.com>, linux-arch@vger.kernel.org
+Subject: Re: [RFC][PATCH] ftrace: Make DYNAMIC_FTRACE always enabled for
+ architectures that support it
+Message-ID: <20250703152643.0a4a45fe@gandalf.local.home>
+In-Reply-To: <CAHk-=wjXjq7wJM-xnTCcGCxg2viUcN6JfHBETpvD94HX7HTHFQ@mail.gmail.com>
+References: <20250703115222.2d7c8cd5@batman.local.home>
+	<CAHk-=wjXjq7wJM-xnTCcGCxg2viUcN6JfHBETpvD94HX7HTHFQ@mail.gmail.com>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="3kgz5vvztx6zh7dz"
-Content-Disposition: inline
-User-Agent: NeoMutt/20231221-2-4202cf-dirty
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Stat-Signature: hr1euapfnnep8njxgwp5joy1wbjhyhno
+X-Rspamd-Server: rspamout03
+X-Rspamd-Queue-Id: E36621C
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1/iH5gEHhRKD9+CeGdSUOEbWin5kTTRHAI=
+X-HE-Tag: 1751570760-527583
+X-HE-Meta: U2FsdGVkX1/wUa0BLats7GHDVovY69eeN5z2hsQb2/BfFQD07+39fN3mmgkI+xoYFKxcNCFIEMGvLDqRXQgb3cva0oCqn1Z/kugIPS9D2Vg/BrCBo73LqotS1/u/cVlS+ElNjbI9cX4htjRVx4abjKYM1+pAbc152sleXtjP3W1a11zirSET+Y7+4zH2FktLCNfgOPYW06zC50G/wKXg4mbu74fN3KYfp6RABbly9IDWeuXA4vXLm/Y8+QJiUUOB8ajbMTtAEX70n0Dea9MPB0RVvcl7yCf9FclZp9AQUHu6YKB94iqbcxBmvbPLwBqQgz5Djv6kaGtTnmmF5DFn6J5bTZ7tv9L1mKEpsD43hqIty9daciwsM82Y29J64VGB
 
+On Thu, 3 Jul 2025 09:57:37 -0700
+Linus Torvalds <torvalds@linux-foundation.org> wrote:
 
---3kgz5vvztx6zh7dz
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> IOW, I think that if we do this, we should just get rid of the
+> "HAVE_DYNAMIC_FTRACE{_XYZ}" config variables entirely, and just make
+> architectures say
+> 
+>         select DYNAMIC_FTRACE if FUNCTION_TRACER
+> 
+> because the "HAVE_xyz" config variables seem to add no actual value,
+> only confusion.
+> 
+> Or am I missing some reason for still having that extra config
+> variable indirection?
 
-Signed-off-by: Ahelenia Ziemia=C5=84ska <nabijaczleweli@nabijaczleweli.xyz>
----
-v1: https://lore.kernel.org/lkml/h2ieddqja5jfrnuh3mvlxt6njrvp352t5rfzp2cvnr=
-ufop6tch@tarta.nabijaczleweli.xyz/t/#u
+I always thought the "HAVE_" configs was a way for architectures to state
+that it supports something but doesn't necessarily enable it. Whereas the
+not "HAVE_" configs are user selectable.
 
- Documentation/trace/histogram.rst | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+If I go and make all the architectures have:
 
-diff --git a/Documentation/trace/histogram.rst b/Documentation/trace/histog=
-ram.rst
-index 0aada18c38c6..2b98c1720a54 100644
---- a/Documentation/trace/histogram.rst
-+++ b/Documentation/trace/histogram.rst
-@@ -249,7 +249,7 @@ Extended error information
-   table, it should keep a running total of the number of bytes
-   requested by that call_site.
-=20
--  We'll let it run for awhile and then dump the contents of the 'hist'
-+  We'll let it run for a while and then dump the contents of the 'hist'
-   file in the kmalloc event's subdirectory (for readability, a number
-   of entries have been omitted)::
-=20
---=20
-2.39.5
+	select DYNAMIC_FTRACE if FUNCTION_TRACER
 
---3kgz5vvztx6zh7dz
-Content-Type: application/pgp-signature; name="signature.asc"
+it seems to be duplicating the work, where all the architectures need to
+know the dependencies. To me, that belongs in the generic configs.
 
------BEGIN PGP SIGNATURE-----
+The FUNCTION_TRACER config is user selectable, and DYNMIC_FTRACE gets set
+when the arch supports dynamic ftrace and the user enables function tracing.
 
-iQIzBAABCgAdFiEEfWlHToQCjFzAxEFjvP0LAY0mWPEFAmhmyhIACgkQvP0LAY0m
-WPFD4A//bFS2MxLU0WVJQhOnXSrjKl0M+OR/eRlXk6exVysizFEjUoZfptV6js8I
-DJtP3sa6lLVA/qDIkk2h5VznKl08y2thFzr0Cj7/MqKHoWtc2EKQNnz8d1e1aqLo
-kpL1Hm8orZ5V9OsnxobD6JbixDwx08osmr4orDyeVSUpd4JRtwy0/gXxKUlIVHrU
-UK7qU9oAZuC9cncO9HEfRjadT9n8GNTbJQHVkknCGKugBkamRQ49mUsQv26bmauh
-IolN/54XUoyBsaYrdgoDZBhCcpH3uWssIQBRd82WJFPBzhtF2qpZdI9PT+x+g0wL
-1R9VZ7RJRT7OHpPcLF9U2QNjs3xQtYKPZL65pqyjfRoaai0qpmR3NjtR0uFedVz0
-lSVSofx423cBV36J/klUqeHNyuaAtyDhREF1wuE86QeXUS0COfjK+RdYippei6cq
-XGlN4oHNU+KhR+m9lLlhKdUQ57abQlV+L+JIXrcT3aDGXfZcXhl+StNTnYlvzV4v
-I0ZdvjOzUh17wOyISQt89NfFSBVgM/azwG0OFakLeMS8khP4S4EWLdKrsOfAwqQd
-+WGrUesePk2JGUHeCXkr8VJvOe5J1AxITALRpiaRluLfT5tq6j3O6xFhebJOhPbn
-9Q8SxqZ80Y2xMSJOAlueaEYRg/FtyqHLXhsX43AvD9rpBeSBlfw=
-=VZAt
------END PGP SIGNATURE-----
+Now, I probably could go and try to clean up some of the HAVE_FTRACE_*
+configs. Ftrace has a lot of code that is tightly coupled to architecture
+specific code because it relies on trampolines written in assembly.
+Throughout the years, I added new features and optimizations that required
+architecture fixes. As a lot of the architectures support ftrace but I have
+no idea how to update them, I implemented the change in x86 and added a
+HAVE_FTRACE_* config so that other architectures could have time to update
+to the new feature too and the old way still works.
 
---3kgz5vvztx6zh7dz--
+I should look to see what hasn't been ported to every architecture that
+supports ftrace and remove the configs that are now universal.
+
+-- Steve
