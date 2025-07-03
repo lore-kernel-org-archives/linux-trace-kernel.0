@@ -1,144 +1,136 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 711F82E5400;
-	Thu,  3 Jul 2025 12:39:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 413FB2E03F4;
+	Thu,  3 Jul 2025 13:35:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751546355; cv=none; b=BfaqyRyeaaPV9PLnYZELz0+CHrMEhihNrCEIbCNO7pdvNerOmCzcB9woVvAU4NWJ/xeJ0XHx52DNEv4y862IB4DLek5v0NZh2NdpKcy8KuXqjiOriBMWPDYN5rbCk6jCkp3/+2OmiDKmCeTxpx7NEpy8oN/Y1s8LlejILbRZfng=
+	t=1751549704; cv=none; b=kmedMZQAPN6cCKZoW5HSQehSOoQ2NrkWiNr2ylSH8pMvmi1e4U1dP804OmQRpTliCx2XkKujSJ5OnPjv5pIa/a6t1+lt6uv12BB/iS7q75lFUpAsKVKdsZl50GsRukei2yFOMMLNll8QgVMvY0nvyh3e7VQs3P9MbYkLTD2aE5c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751546355; c=relaxed/simple;
-	bh=sS5BJFq5yl1Cpp9kuGgfCMujzkfDmeSN9fqRocDqWZY=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=eS3wEp0ttuxK5gB9ilz/01NuRW03+vHTJLCZC5WjchDwabZO4WMyGKbvmOzsUx0/o44kzmerDUFcHBO+kpAR3QbufearcVL7+5ANgII29LtT5HNLV2tden92NAMbg4vGrY2XuJuIWOFNr8F/NEoCNDpG7B/hqREq/tg4klOICTo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=vzXpOSXZ; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=FzUfzSgG; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1751549704; c=relaxed/simple;
+	bh=WVh03UrKKMZebFsj28jXXmaKIXAvdki6/0YMrcBckWE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Zi8HJ/nUIMNVoHRg6ubGqlEUBPO+Z4oja+qKfwmZLG7YfmL4XEKBK5E8avJaqNh4amLFooSIo/63Q5oxxxAcDrSv7TXI23qJYN0g1aq5XjgxBNSX+eSbswM3h34wzamKHPH52ob6jzLocVz0swHojAtM38l0WiueIzgMmjH1uco=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iqPzRx1r; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="vzXpOSXZ";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="FzUfzSgG"
-From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1751546351;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=+Z0MqZuZk9ZorWcjtJWd2TxVCHlbiuTD5yZSdlZfeII=;
-	b=vzXpOSXZEV/ki4Fz56c1LN7R+SoJv7a0tWyetgyw+Vv2V+U76gNI8tlqrmISKPXQy2SY6D
-	0aqIr6/cHHuvlHMtZnazdEKO51Qb7fktkaM8LmoP47mIV/n8oERHZG4r7fNG9M1yvbgPsm
-	pgYQmojQGYmXDyHS4cfaLe0WeLAH2JSdJHdKq1vUJHD7EHAGXVDsqMMuf0+2VpUmHHV7wg
-	zE5IJjDCpmOvhkxkrrGUN7IBkErGnLEbnCOpVkstow06QoCV80pFViZkqdU2eV4I0PuNAr
-	jbuvUxzD0pMvKIfYqx1aVt31nmEGX36gXVOXfDG5764NtgD+A6Nwf5l1tFc1hw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1751546351;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=+Z0MqZuZk9ZorWcjtJWd2TxVCHlbiuTD5yZSdlZfeII=;
-	b=FzUfzSgGPqvzHpwS71OnYN2WaJ+oJocoZiFsGmmcKJzDy6QxguVcuw8gMFoxVG2PvZI6Na
-	mYXsXWIucs0CCKDg==
-Date: Thu, 03 Jul 2025 14:38:55 +0200
-Subject: [PATCH 2/2] um/ptrace: Implement HAVE_SYSCALL_TRACEPOINTS
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iqPzRx1r"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C778FC4CEE3;
+	Thu,  3 Jul 2025 13:35:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751549703;
+	bh=WVh03UrKKMZebFsj28jXXmaKIXAvdki6/0YMrcBckWE=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=iqPzRx1rrUSaHtuwZ6DJdTYB4GQ8FkakwKL7eBHFP2oehlq+8Nov6LTzI/Tg1Z+Bi
+	 U1Wk7TKZ43JEscCnyQSP//4x/umWagmt6mZL4g8ihF46qG/rAlBQuXKqcrJvDUbUOM
+	 /P18XaYsiwTr8aZBWMftAC0fI7pMsMr5T32ksODQvTWWXEYZ1/+R++z1gDkNk8NsQS
+	 p3lvKj2/JIRESxM8SRQYnlp/w1/pbF6sIxw/kuTSHUheZbU4G2gV5X5SwvRHYYajhZ
+	 g6yDDuLDW+YJ2McJcemnXp4Pwq4Q+e/nmkYMiID3987fADkBz6QY6IKGbrLVJkhw4L
+	 CgH+9by2T3vOg==
+Received: by mail-oo1-f50.google.com with SMTP id 006d021491bc7-611b246727cso2843307eaf.0;
+        Thu, 03 Jul 2025 06:35:03 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVAWiFLEzhLFYvFzYxMkrRjr1AI1LjOeKfi4m8IRVTV8hwF5Po2gQwfiZ5taAEn2dzKLhtRlXIT4LTf942z3ZPF6kgn@vger.kernel.org, AJvYcCVlkxsOB8FrgRH/0u8yFqh2QAchvdlsb47ve3qSkp5zlXXVUiqsXPfyHaqeBlFPtSPSl1ZRi4EP6g==@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy3u1wpG02eNGwbbw4wlSlcrYoBw4CHGoKKNybg1smw2F6IXLRe
+	9df5mM46RLAm6kdM2kAo0jAVwSj9DXAjI2lGBwERn3d9pcu2zcvqlWnZtYWcl1UfmUO+g6WCgZ8
+	puifWlSzDrnD6/rnaolak98boPNGnLYg=
+X-Google-Smtp-Source: AGHT+IFXCo3QjWMLEfAx2AHr/+WcA8i4kKNZBECRqwWrpQd2bXdgx/R657LBUV+shBDZm70G215NOPFVkIIseBbBgRw=
+X-Received: by 2002:a05:6820:218:b0:612:c547:7984 with SMTP id
+ 006d021491bc7-612c54780dbmr3207808eaf.1.1751549703080; Thu, 03 Jul 2025
+ 06:35:03 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20250703-uml-have_syscall_tracepoints-v1-2-23c1d3808578@linutronix.de>
-References: <20250703-uml-have_syscall_tracepoints-v1-0-23c1d3808578@linutronix.de>
-In-Reply-To: <20250703-uml-have_syscall_tracepoints-v1-0-23c1d3808578@linutronix.de>
-To: Richard Weinberger <richard@nod.at>, 
- Anton Ivanov <anton.ivanov@cambridgegreys.com>, 
- Johannes Berg <johannes@sipsolutions.net>, 
- Steven Rostedt <rostedt@goodmis.org>, 
- Masami Hiramatsu <mhiramat@kernel.org>, 
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: linux-um@lists.infradead.org, linux-kernel@vger.kernel.org, 
- linux-trace-kernel@vger.kernel.org, Nam Cao <namcao@linutronix.de>, 
- =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1751546346; l=2501;
- i=thomas.weissschuh@linutronix.de; s=20240209; h=from:subject:message-id;
- bh=sS5BJFq5yl1Cpp9kuGgfCMujzkfDmeSN9fqRocDqWZY=;
- b=sGqrzfKZ+sO/4nzPW8zOoYWd7/SFalzFdwiFKLOhLCnOKZyiaLC0lwAQxnyzYWV3KIvuw15HZ
- AZJ7dueIW2tBUs+uy/X0/KmVvlNUmUJC+ibbivqmdK9MkypSeTSxHxf
-X-Developer-Key: i=thomas.weissschuh@linutronix.de; a=ed25519;
- pk=pfvxvpFUDJV2h2nY0FidLUml22uGLSjByFbM6aqQQws=
+References: <20250611032310.10610-1-qiwu.chen@transsion.com>
+In-Reply-To: <20250611032310.10610-1-qiwu.chen@transsion.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Thu, 3 Jul 2025 15:34:51 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0g-7ZrnKO5s--zXmaA+M07tiLBy1x-hsw4JqLPvCtt4aQ@mail.gmail.com>
+X-Gm-Features: Ac12FXwcnbbdlK2F_TNpx83OutHKwJ5zPO-Qu4_o-BgPDR5aZCj7-ZW1Q4QnlV8
+Message-ID: <CAJZ5v0g-7ZrnKO5s--zXmaA+M07tiLBy1x-hsw4JqLPvCtt4aQ@mail.gmail.com>
+Subject: Re: [RESEND PATCH] cpuidle: Add find_deepest_state trace event
+To: "qiwu.chen" <qiwuchen55@gmail.com>
+Cc: rafael@kernel.org, daniel.lezcano@linaro.org, rostedt@goodmis.org, 
+	mhiramat@kernel.org, linux-pm@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, "qiwu.chen" <qiwu.chen@transsion.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Implement syscall tracepoints through the generic tracing infrastructure.
+On Wed, Jun 11, 2025 at 5:23=E2=80=AFAM qiwu.chen <qiwuchen55@gmail.com> wr=
+ote:
+>
+> Add a new trace event namely cpuidle_find_deepest_state to trace
+> the found deepest idle state during CPUidle flow.
+>
+> The new trace event will help developers debug CPUidle issues by
+> providing more detailed information about the CPUidle states.
 
-Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
-Reviewed-by: Nam Cao <namcao@linutronix.de>
----
- arch/um/Kconfig                   | 1 +
- arch/um/include/asm/thread_info.h | 2 ++
- arch/um/kernel/ptrace.c           | 9 +++++++++
- 3 files changed, 12 insertions(+)
+I wonder what exactly this is needed for.
 
-diff --git a/arch/um/Kconfig b/arch/um/Kconfig
-index f08e8a7fac93d9f98384de02710542fd75d23553..c2d2d2d99bbe3f5a5dc4afaa69e02a520e326c2d 100644
---- a/arch/um/Kconfig
-+++ b/arch/um/Kconfig
-@@ -35,6 +35,7 @@ config UML
- 	select HAVE_RUST
- 	select ARCH_HAS_UBSAN
- 	select HAVE_ARCH_TRACEHOOK
-+	select HAVE_SYSCALL_TRACEPOINTS
- 	select THREAD_INFO_IN_TASK
- 
- config MMU
-diff --git a/arch/um/include/asm/thread_info.h b/arch/um/include/asm/thread_info.h
-index f9ad06fcc991a2b10e2aa6059880b993e3d60a2d..b8c021f97bd17515e4f9082206addfce05b9321e 100644
---- a/arch/um/include/asm/thread_info.h
-+++ b/arch/um/include/asm/thread_info.h
-@@ -43,6 +43,8 @@ struct thread_info {
- #define TIF_NOTIFY_RESUME	8
- #define TIF_SECCOMP		9	/* secure computing */
- #define TIF_SINGLESTEP		10	/* single stepping userspace */
-+#define TIF_SYSCALL_TRACEPOINT	11	/* syscall tracepoint instrumentation */
-+
- 
- #define _TIF_SYSCALL_TRACE	(1 << TIF_SYSCALL_TRACE)
- #define _TIF_SIGPENDING		(1 << TIF_SIGPENDING)
-diff --git a/arch/um/kernel/ptrace.c b/arch/um/kernel/ptrace.c
-index 2124624b7817439b8e1c962e8e6eb0e267db6f53..fdbb37b5c3996188d92cf307d31eeaeca1f0acce 100644
---- a/arch/um/kernel/ptrace.c
-+++ b/arch/um/kernel/ptrace.c
-@@ -9,6 +9,9 @@
- #include <linux/uaccess.h>
- #include <asm/ptrace-abi.h>
- 
-+#define CREATE_TRACE_POINTS
-+#include <trace/events/syscalls.h>
-+
- void user_enable_single_step(struct task_struct *child)
- {
- 	set_tsk_thread_flag(child, TIF_SINGLESTEP);
-@@ -126,6 +129,9 @@ int syscall_trace_enter(struct pt_regs *regs)
- 			    UPT_SYSCALL_ARG3(&regs->regs),
- 			    UPT_SYSCALL_ARG4(&regs->regs));
- 
-+	if (test_thread_flag(TIF_SYSCALL_TRACEPOINT))
-+		trace_sys_enter(regs, UPT_SYSCALL_NR(&regs->regs));
-+
- 	if (!test_thread_flag(TIF_SYSCALL_TRACE))
- 		return 0;
- 
-@@ -142,6 +148,9 @@ void syscall_trace_leave(struct pt_regs *regs)
- 	if (test_thread_flag(TIF_SINGLESTEP))
- 		send_sigtrap(&regs->regs, 0);
- 
-+	if (test_thread_flag(TIF_SYSCALL_TRACEPOINT))
-+		trace_sys_exit(regs, PT_REGS_SYSCALL_RET(regs));
-+
- 	if (!test_thread_flag(TIF_SYSCALL_TRACE))
- 		return;
- 
+The function being traced is used mostly during suspend-to-idle, so is
+this what you have in mind or something else?
 
--- 
-2.50.0
+In any case, the changelog needs to be more specific about the reason
+why the new trace event is needed.
 
+> Signed-off-by: qiwu.chen <qiwu.chen@transsion.com>
+> ---
+>  drivers/cpuidle/cpuidle.c    |  2 ++
+>  include/trace/events/power.h | 24 ++++++++++++++++++++++++
+>  2 files changed, 26 insertions(+)
+>
+> diff --git a/drivers/cpuidle/cpuidle.c b/drivers/cpuidle/cpuidle.c
+> index 0835da449db8..9065aa396892 100644
+> --- a/drivers/cpuidle/cpuidle.c
+> +++ b/drivers/cpuidle/cpuidle.c
+> @@ -103,6 +103,8 @@ static int find_deepest_state(struct cpuidle_driver *=
+drv,
+>                 latency_req =3D s->exit_latency_ns;
+>                 ret =3D i;
+>         }
+> +       trace_cpuidle_find_deepest_state(dev->cpu, s2idle, ret);
+> +
+>         return ret;
+>  }
+>
+> diff --git a/include/trace/events/power.h b/include/trace/events/power.h
+> index 9253e83b9bb4..82b5ac8c46e6 100644
+> --- a/include/trace/events/power.h
+> +++ b/include/trace/events/power.h
+> @@ -62,6 +62,30 @@ TRACE_EVENT(cpu_idle_miss,
+>                 (unsigned long)__entry->state, (__entry->below)?"below":"=
+above")
+>  );
+>
+> +TRACE_EVENT(cpuidle_find_deepest_state,
+> +
+> +       TP_PROTO(unsigned int cpu_id, bool s2idle, unsigned int deepest_s=
+tate),
+> +
+> +       TP_ARGS(cpu_id, s2idle, deepest_state),
+> +
+> +       TP_STRUCT__entry(
+> +               __field(u32,            cpu_id)
+> +               __field(bool,           s2idle)
+> +               __field(u32,            deepest_state)
+> +       ),
+> +
+> +       TP_fast_assign(
+> +               __entry->cpu_id =3D cpu_id;
+> +               __entry->s2idle =3D s2idle;
+> +               __entry->deepest_state =3D deepest_state;
+> +       ),
+> +
+> +       TP_printk("cpu_id=3D%lu is_s2idle=3D%s deepest_state=3D%lu",
+> +                (unsigned long)__entry->cpu_id,
+> +                (__entry->s2idle)?"yes":"no",
+> +                (unsigned long)__entry->deepest_state)
+> +);
+> +
+>  DECLARE_EVENT_CLASS(psci_domain_idle,
+>
+>         TP_PROTO(unsigned int cpu_id, unsigned int state, bool s2idle),
+> --
+> 2.25.1
+>
