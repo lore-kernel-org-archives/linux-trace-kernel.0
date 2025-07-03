@@ -1,136 +1,84 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay.hostedemail.com (smtprelay0017.hostedemail.com [216.40.44.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 413FB2E03F4;
-	Thu,  3 Jul 2025 13:35:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C90092EBBB7;
+	Thu,  3 Jul 2025 14:30:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751549704; cv=none; b=kmedMZQAPN6cCKZoW5HSQehSOoQ2NrkWiNr2ylSH8pMvmi1e4U1dP804OmQRpTliCx2XkKujSJ5OnPjv5pIa/a6t1+lt6uv12BB/iS7q75lFUpAsKVKdsZl50GsRukei2yFOMMLNll8QgVMvY0nvyh3e7VQs3P9MbYkLTD2aE5c=
+	t=1751553022; cv=none; b=i/gVkJzIZvZhp0VFsnupyEJum1R3CiNCsVvZPwbVZPQWN2dARZ/q0OG8gn6ZiPfkHE3TGIcsZ31JO2V80yCCuLrotRgvttlBIZxxx7uH4Z3XbT2pyxR0mX47lEGwuMMsZExDGsgPyTG9sOxaenvEyhucX1kCCjakCz80LH5rFaE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751549704; c=relaxed/simple;
-	bh=WVh03UrKKMZebFsj28jXXmaKIXAvdki6/0YMrcBckWE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Zi8HJ/nUIMNVoHRg6ubGqlEUBPO+Z4oja+qKfwmZLG7YfmL4XEKBK5E8avJaqNh4amLFooSIo/63Q5oxxxAcDrSv7TXI23qJYN0g1aq5XjgxBNSX+eSbswM3h34wzamKHPH52ob6jzLocVz0swHojAtM38l0WiueIzgMmjH1uco=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iqPzRx1r; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iqPzRx1r"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C778FC4CEE3;
-	Thu,  3 Jul 2025 13:35:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751549703;
-	bh=WVh03UrKKMZebFsj28jXXmaKIXAvdki6/0YMrcBckWE=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=iqPzRx1rrUSaHtuwZ6DJdTYB4GQ8FkakwKL7eBHFP2oehlq+8Nov6LTzI/Tg1Z+Bi
-	 U1Wk7TKZ43JEscCnyQSP//4x/umWagmt6mZL4g8ihF46qG/rAlBQuXKqcrJvDUbUOM
-	 /P18XaYsiwTr8aZBWMftAC0fI7pMsMr5T32ksODQvTWWXEYZ1/+R++z1gDkNk8NsQS
-	 p3lvKj2/JIRESxM8SRQYnlp/w1/pbF6sIxw/kuTSHUheZbU4G2gV5X5SwvRHYYajhZ
-	 g6yDDuLDW+YJ2McJcemnXp4Pwq4Q+e/nmkYMiID3987fADkBz6QY6IKGbrLVJkhw4L
-	 CgH+9by2T3vOg==
-Received: by mail-oo1-f50.google.com with SMTP id 006d021491bc7-611b246727cso2843307eaf.0;
-        Thu, 03 Jul 2025 06:35:03 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVAWiFLEzhLFYvFzYxMkrRjr1AI1LjOeKfi4m8IRVTV8hwF5Po2gQwfiZ5taAEn2dzKLhtRlXIT4LTf942z3ZPF6kgn@vger.kernel.org, AJvYcCVlkxsOB8FrgRH/0u8yFqh2QAchvdlsb47ve3qSkp5zlXXVUiqsXPfyHaqeBlFPtSPSl1ZRi4EP6g==@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy3u1wpG02eNGwbbw4wlSlcrYoBw4CHGoKKNybg1smw2F6IXLRe
-	9df5mM46RLAm6kdM2kAo0jAVwSj9DXAjI2lGBwERn3d9pcu2zcvqlWnZtYWcl1UfmUO+g6WCgZ8
-	puifWlSzDrnD6/rnaolak98boPNGnLYg=
-X-Google-Smtp-Source: AGHT+IFXCo3QjWMLEfAx2AHr/+WcA8i4kKNZBECRqwWrpQd2bXdgx/R657LBUV+shBDZm70G215NOPFVkIIseBbBgRw=
-X-Received: by 2002:a05:6820:218:b0:612:c547:7984 with SMTP id
- 006d021491bc7-612c54780dbmr3207808eaf.1.1751549703080; Thu, 03 Jul 2025
- 06:35:03 -0700 (PDT)
+	s=arc-20240116; t=1751553022; c=relaxed/simple;
+	bh=iT5wdTPtTT05Zvme6nev472oJWo2SHintu4IzMCzQhQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=KkBYJZ7JUYbyv7+G8iWyRmFNIyDp0rZ6LBlkh49LOX/4qswLEEaf+1wTD/degZBq+ONDjth30dV+Zid9I+O1gOGBa/KihxPwHjjfbYIvWBx8L9SwEq/Vakh+sIcYfCOvaL/5vX9On7TETAYrWpokHrxBLiZFyrHzEYVLK8VKpG0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf12.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay02.hostedemail.com (Postfix) with ESMTP id 1CF6A121B66;
+	Thu,  3 Jul 2025 14:30:12 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf12.hostedemail.com (Postfix) with ESMTPA id 3262A18;
+	Thu,  3 Jul 2025 14:30:10 +0000 (UTC)
+Date: Thu, 3 Jul 2025 10:30:08 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc: Shuah Khan <shuah@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH 0/2] tracing: Fixes for filter
+Message-ID: <20250703103008.0086bb77@batman.local.home>
+In-Reply-To: <175151678585.2149615.8702513393985992418.stgit@mhiramat.tok.corp.google.com>
+References: <175151678585.2149615.8702513393985992418.stgit@mhiramat.tok.corp.google.com>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250611032310.10610-1-qiwu.chen@transsion.com>
-In-Reply-To: <20250611032310.10610-1-qiwu.chen@transsion.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Thu, 3 Jul 2025 15:34:51 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0g-7ZrnKO5s--zXmaA+M07tiLBy1x-hsw4JqLPvCtt4aQ@mail.gmail.com>
-X-Gm-Features: Ac12FXwcnbbdlK2F_TNpx83OutHKwJ5zPO-Qu4_o-BgPDR5aZCj7-ZW1Q4QnlV8
-Message-ID: <CAJZ5v0g-7ZrnKO5s--zXmaA+M07tiLBy1x-hsw4JqLPvCtt4aQ@mail.gmail.com>
-Subject: Re: [RESEND PATCH] cpuidle: Add find_deepest_state trace event
-To: "qiwu.chen" <qiwuchen55@gmail.com>
-Cc: rafael@kernel.org, daniel.lezcano@linaro.org, rostedt@goodmis.org, 
-	mhiramat@kernel.org, linux-pm@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, "qiwu.chen" <qiwu.chen@transsion.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Stat-Signature: 6c46ktuzxx17auoub1guzsao9kakiiwo
+X-Rspamd-Server: rspamout03
+X-Rspamd-Queue-Id: 3262A18
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1+QmiWMNgwVUBBGerzOCgRGrRzN3IHpN70=
+X-HE-Tag: 1751553010-501758
+X-HE-Meta: U2FsdGVkX1/xDOO7/4mkJB3tKQ+uaVxtBbIxutGlHsH3nxfG5E+vxFNv68ThwdXMiSiBSb8gnQGDh3AzNzawYZjzMCA0WEtMzu+0bx1//5aJ4qHVKM3ZGvbcBCWiVovGNx7UsNUG3DtuQbMjTqhkrxS01mef046kjNJLYM7sz/tR1Tghcxj8q4+YgjKuPltlap2R0Nl2uprb9kGcvDGS4YDAlrAr1tddl1J73PSBdy7tpyiGoWDRqM7kvxcg3MHjgd1T+ZvDA3deuj4H3xJcfs2b3ypHUBu0IHU5FtChm8nf9TUfyNJv2tmeyocODa7fyHDTFF+aJ6Uf2+6EJDlKh11tyQIk2hgZ
 
-On Wed, Jun 11, 2025 at 5:23=E2=80=AFAM qiwu.chen <qiwuchen55@gmail.com> wr=
-ote:
->
-> Add a new trace event namely cpuidle_find_deepest_state to trace
-> the found deepest idle state during CPUidle flow.
->
-> The new trace event will help developers debug CPUidle issues by
-> providing more detailed information about the CPUidle states.
+On Thu,  3 Jul 2025 13:26:26 +0900
+"Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
 
-I wonder what exactly this is needed for.
-
-The function being traced is used mostly during suspend-to-idle, so is
-this what you have in mind or something else?
-
-In any case, the changelog needs to be more specific about the reason
-why the new trace event is needed.
-
-> Signed-off-by: qiwu.chen <qiwu.chen@transsion.com>
+> Hi,
+> 
+> Here is a patch series to fix some issues on the trace event
+> and function filters.
+> 
+> The first patch fixes an issue that the event filter can not
+> handle the string pointer with BTF attribute tag. This happens
+> with CONFIG_DEBUG_INFO_BTF=y and PAHOLE_HAS_BTF_TAG=y.
+> 
+> The second patch fixes a selftest issue on the function glob
+> filter. Since mutex_trylock() can be an inline function, it
+> is not a good example for ftrace. This replaces it with
+> mutex_unlock().
+> 
+> Thank you,
+> 
 > ---
->  drivers/cpuidle/cpuidle.c    |  2 ++
->  include/trace/events/power.h | 24 ++++++++++++++++++++++++
->  2 files changed, 26 insertions(+)
->
-> diff --git a/drivers/cpuidle/cpuidle.c b/drivers/cpuidle/cpuidle.c
-> index 0835da449db8..9065aa396892 100644
-> --- a/drivers/cpuidle/cpuidle.c
-> +++ b/drivers/cpuidle/cpuidle.c
-> @@ -103,6 +103,8 @@ static int find_deepest_state(struct cpuidle_driver *=
-drv,
->                 latency_req =3D s->exit_latency_ns;
->                 ret =3D i;
->         }
-> +       trace_cpuidle_find_deepest_state(dev->cpu, s2idle, ret);
-> +
->         return ret;
->  }
->
-> diff --git a/include/trace/events/power.h b/include/trace/events/power.h
-> index 9253e83b9bb4..82b5ac8c46e6 100644
-> --- a/include/trace/events/power.h
-> +++ b/include/trace/events/power.h
-> @@ -62,6 +62,30 @@ TRACE_EVENT(cpu_idle_miss,
->                 (unsigned long)__entry->state, (__entry->below)?"below":"=
-above")
->  );
->
-> +TRACE_EVENT(cpuidle_find_deepest_state,
-> +
-> +       TP_PROTO(unsigned int cpu_id, bool s2idle, unsigned int deepest_s=
-tate),
-> +
-> +       TP_ARGS(cpu_id, s2idle, deepest_state),
-> +
-> +       TP_STRUCT__entry(
-> +               __field(u32,            cpu_id)
-> +               __field(bool,           s2idle)
-> +               __field(u32,            deepest_state)
-> +       ),
-> +
-> +       TP_fast_assign(
-> +               __entry->cpu_id =3D cpu_id;
-> +               __entry->s2idle =3D s2idle;
-> +               __entry->deepest_state =3D deepest_state;
-> +       ),
-> +
-> +       TP_printk("cpu_id=3D%lu is_s2idle=3D%s deepest_state=3D%lu",
-> +                (unsigned long)__entry->cpu_id,
-> +                (__entry->s2idle)?"yes":"no",
-> +                (unsigned long)__entry->deepest_state)
-> +);
-> +
->  DECLARE_EVENT_CLASS(psci_domain_idle,
->
->         TP_PROTO(unsigned int cpu_id, unsigned int state, bool s2idle),
-> --
-> 2.25.1
->
+> Masami Hiramatsu (Google) (2):
+>       tracing: Handle "(const) char __attribute() *" as string ptr type
+
+I can take the first patch.
+
+>       selftests: tracing: Use mutex_unlock for testing glob filter
+
+This patch should go via Shuah's tree.
+
+-- Steve
+
+> 
+>  kernel/trace/trace_events_filter.c                         | 5 +++++
+>  tools/testing/selftests/ftrace/test.d/ftrace/func-filter-glob.tc | 2 +-
+>  2 files changed, 6 insertions(+), 1 deletion(-)
+
