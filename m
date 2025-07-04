@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32D9230AAC5;
-	Fri,  4 Jul 2025 13:50:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 901F7306DDF;
+	Fri,  4 Jul 2025 13:50:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751637021; cv=none; b=FhgajUKFlel/NoCD+dP5wBog5y0h5JZjaqUPD3jPetz/cfXXb92894SA6R2ZlUA+/7dts6sGsbgBiE/XyXaAIiJg2PL3h7RE1BLTzRpvjZmEE2bn2hO71zcOJd2cMNOho3A9qn5dVPzH5Qoh8UUw/cuAeHQXSEgWsPQrKGPAwXw=
+	t=1751637025; cv=none; b=kdvOy8Jn0cBppm5PZP/79R6k1swBoZtaJGB1EmN27p/PjOOYCle0RHJshOr2oTOC60qYl2qjMKMZ3SGsIcTpKbYr5euYwcIoyd6nd4v1k163XPRkBIk4Xk+eHp2fuQrOrBhB6MeSk+kTN+j4QVFeMxjPdrFKfdPUYvBp1dh+92c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751637021; c=relaxed/simple;
-	bh=GUCCcYH19Ye+ebUGH5iigB3tILGu1YhJq+jW18wLp4U=;
+	s=arc-20240116; t=1751637025; c=relaxed/simple;
+	bh=LpVdGb6KRirZdT05J73u+j0sDks+bcZOsNalMSCnv6o=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ugOyJF9fL5OYo/G/4JnyDjPdQ1IcJHYBvbTVAEUJkHYZJQRRqGvxSr6z03W3E+iVVtVzlL5Wh0OgikUiCoro+36PAgC55L2v/bcFcK8jqpDsd04DzT1dikqUxW+HvqiC2G1xZyF2TO06rd/DXqpxSPfNrfLsl5KLrisvy4Egydk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AUKnVSBm; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=mgJGwGmBBggftB+ty41BqVh/IE65QiciFn1lt9LkLT9YjnMFrVBGr9ytvMELOUbBMLzpYKC4PpKuhOS/SWzePlcYQzXMNChmoqX6unwRt2eWtg9JZxfWlYRpn7+h0C5rAb0BJJuDxD8OqBlRpJY1/ghuiddK7JnLSDC0uTchWpk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=s5SHeyJO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AUKnVSBm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 067D0C4CEE3;
-	Fri,  4 Jul 2025 13:50:14 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="s5SHeyJO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7B78EC4CEEB;
+	Fri,  4 Jul 2025 13:50:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751637020;
-	bh=GUCCcYH19Ye+ebUGH5iigB3tILGu1YhJq+jW18wLp4U=;
+	s=k20201202; t=1751637025;
+	bh=LpVdGb6KRirZdT05J73u+j0sDks+bcZOsNalMSCnv6o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=AUKnVSBmR+9ZHYaZdh6o3tuMFSCpTJv8fsfg5Bsuc7N/GIg6OKPKO1uuobiWUOK40
-	 qKsB4BwOXXyzJ2RmLIGqr1ceennVXZB3vvnuYnT0/KnqPRO+XOOfifpRaZD1p++eu/
-	 2d+28Rxk7NSh7E+J1Ub6ZE+CSAFXfapwaLLK4FKBPcjydUZIKuyIPz5Bu10FekiXDR
-	 JMIqWlgYeg3zzNz+6SEXFTIEeml8W037fwdtjJYFeeS28BS91d3pUelBp0Th0GV47H
-	 OAZ0Vvc+KS42TfEbyT1q9ngi/XA2sir8YA+sGcCatYmMzIDQSgATIsxgbXBoIbA2gp
-	 cI5ZOxWEyQYoQ==
+	b=s5SHeyJO0YmS+UuFO30EnLCBY1/QU2m9p5YinIlB6hYFx/7N+5Zczxfo6UkAgJTRA
+	 WPfC2UqtpDJL2APhGa1UNLRSRS9OOb4WF33Ne0GkvfxgrdLlkmRF+fz/tn1DOjhxaH
+	 ZNXVObc8wxGuh5WXTX8tG1MlYhnlJYNYYFpCzKRL3SD9NhUh0pZ6bQng2tV1eDpuKS
+	 3ytPqvu9imp/jqF5ouyR4oLHgVOblK8w9E61NmvtLIkYen43S0ji2NvtzhxSOdoSyD
+	 Pkqx2YAZgFt3yLIvkH+5ePwHgQzZuYoH/vGDe8npvULS4kvQ9I3m3AUOwierxO74ZX
+	 LD9maYY9v7vxA==
 From: Mike Rapoport <rppt@kernel.org>
 To: Andrew Morton <akpm@linux-foundation.org>
 Cc: Andy Lutomirski <luto@kernel.org>,
@@ -48,9 +48,9 @@ Cc: Andy Lutomirski <luto@kernel.org>,
 	linux-modules@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org,
 	x86@kernel.org
-Subject: [PATCH 5/8] execmem: add fallback for failures in vmalloc(VM_ALLOW_HUGE_VMAP)
-Date: Fri,  4 Jul 2025 16:49:40 +0300
-Message-ID: <20250704134943.3524829-6-rppt@kernel.org>
+Subject: [PATCH 6/8] execmem: drop writable parameter from execmem_fill_trapping_insns()
+Date: Fri,  4 Jul 2025 16:49:41 +0300
+Message-ID: <20250704134943.3524829-7-rppt@kernel.org>
 X-Mailer: git-send-email 2.47.2
 In-Reply-To: <20250704134943.3524829-1-rppt@kernel.org>
 References: <20250704134943.3524829-1-rppt@kernel.org>
@@ -64,49 +64,77 @@ Content-Transfer-Encoding: 8bit
 
 From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
 
-When execmem populates ROX cache it uses vmalloc(VM_ALLOW_HUGE_VMAP).
-Although vmalloc falls back to allocating base pages if high order
-allocation fails, it may happen that it still cannot allocate enough
-memory.
-
-Right now ROX cache is only used by modules and in majority of cases the
-allocations happen at boot time when there's plenty of free memory, but
-upcoming enabling ROX cache for ftrace and kprobes would mean that execmem
-allocations can happen when the system is under memory pressure and a
-failure to allocate large page worth of memory becomes more likely.
-
-Fallback to regular vmalloc() if vmalloc(VM_ALLOW_HUGE_VMAP) fails.
+After update of execmem_cache_free() that made memory writable before
+updating it, there is no need to update read only memory, so the writable
+parameter to execmem_fill_trapping_insns() is not needed. Drop it.
 
 Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
 ---
- mm/execmem.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ arch/x86/mm/init.c      | 8 ++------
+ include/linux/execmem.h | 3 +--
+ mm/execmem.c            | 4 ++--
+ 3 files changed, 5 insertions(+), 10 deletions(-)
 
+diff --git a/arch/x86/mm/init.c b/arch/x86/mm/init.c
+index 7456df985d96..dbc63f0d538f 100644
+--- a/arch/x86/mm/init.c
++++ b/arch/x86/mm/init.c
+@@ -1063,13 +1063,9 @@ unsigned long arch_max_swapfile_size(void)
+ static struct execmem_info execmem_info __ro_after_init;
+ 
+ #ifdef CONFIG_ARCH_HAS_EXECMEM_ROX
+-void execmem_fill_trapping_insns(void *ptr, size_t size, bool writeable)
++void execmem_fill_trapping_insns(void *ptr, size_t size)
+ {
+-	/* fill memory with INT3 instructions */
+-	if (writeable)
+-		memset(ptr, INT3_INSN_OPCODE, size);
+-	else
+-		text_poke_set(ptr, INT3_INSN_OPCODE, size);
++	memset(ptr, INT3_INSN_OPCODE, size);
+ }
+ #endif
+ 
+diff --git a/include/linux/execmem.h b/include/linux/execmem.h
+index 4e510d1c609c..fe367bdadc3e 100644
+--- a/include/linux/execmem.h
++++ b/include/linux/execmem.h
+@@ -60,12 +60,11 @@ enum execmem_range_flags {
+  *				 will trap
+  * @ptr:	pointer to memory to fill
+  * @size:	size of the range to fill
+- * @writable:	is the memory poited by @ptr is writable or ROX
+  *
+  * A hook for architecures to fill execmem ranges with invalid instructions.
+  * Architectures that use EXECMEM_ROX_CACHE must implement this.
+  */
+-void execmem_fill_trapping_insns(void *ptr, size_t size, bool writable);
++void execmem_fill_trapping_insns(void *ptr, size_t size);
+ 
+ /**
+  * execmem_restore_rox - restore read-only-execute permissions
 diff --git a/mm/execmem.c b/mm/execmem.c
-index 3cb3a9d1c93f..ec2a6aab143b 100644
+index ec2a6aab143b..398e60c1002f 100644
 --- a/mm/execmem.c
 +++ b/mm/execmem.c
-@@ -291,6 +291,11 @@ static int execmem_cache_populate(struct execmem_range *range, size_t size)
+@@ -304,7 +304,7 @@ static int execmem_cache_populate(struct execmem_range *range, size_t size)
+ 		goto err_free_mem;
  
- 	alloc_size = round_up(size, PMD_SIZE);
- 	p = execmem_vmalloc(range, alloc_size, PAGE_KERNEL, vm_flags);
-+	if (!p) {
-+		alloc_size = size;
-+		p = execmem_vmalloc(range, alloc_size, PAGE_KERNEL, vm_flags);
-+	}
-+
- 	if (!p)
+ 	/* fill memory with instructions that will trap */
+-	execmem_fill_trapping_insns(p, alloc_size, /* writable = */ true);
++	execmem_fill_trapping_insns(p, alloc_size);
+ 
+ 	err = set_memory_rox((unsigned long)p, vm->nr_pages);
+ 	if (err)
+@@ -363,7 +363,7 @@ static int __execmem_cache_free(struct ma_state *mas, void *ptr, gfp_t gfp_mask)
+ 	if (err)
  		return err;
  
-@@ -457,7 +462,7 @@ void *execmem_alloc(enum execmem_type type, size_t size)
- 	bool use_cache = range->flags & EXECMEM_ROX_CACHE;
- 	unsigned long vm_flags = VM_FLUSH_RESET_PERMS;
- 	pgprot_t pgprot = range->pgprot;
--	void *p;
-+	void *p = NULL;
+-	execmem_fill_trapping_insns(ptr, size, /* writable = */ true);
++	execmem_fill_trapping_insns(ptr, size);
+ 	execmem_restore_rox(ptr, size);
  
- 	size = PAGE_ALIGN(size);
- 
+ 	err = execmem_cache_add_locked(ptr, size, gfp_mask);
 -- 
 2.47.2
 
