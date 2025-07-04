@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8B5630205F;
-	Fri,  4 Jul 2025 13:50:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34C1930749E;
+	Fri,  4 Jul 2025 13:50:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751637004; cv=none; b=X4XZIUoaw67DtMDntP+Zi+H55jMEwmmdpVWoP9+BYHwwBmKU7w9auCKwuVXoti3YMBqgGbu9hzTvBanfxMIXPyATEWXnz0C7yYHWdBVdn4RHEqeHgo7wLI61OiHnxz3Zdly+HbQTaXsEikr/p0H9JVgEaXwcn882h7R7gJS2dvE=
+	t=1751637009; cv=none; b=q5foNlV5jVFNDkRxgSeMDeeP4z8ACqhaNMfBxJf3NjUkRRHhFWZgyV4DfeIZBrje6d7Op9CJ4uDOoVLaAURTrKC94ZFfautTrgI3IJTnd/98wZepBLsqaRbxPLjkYCUQh1XeLHHToTL9bfdSuS54U1NhnDjq/NgmlpvE6Ixb0C4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751637004; c=relaxed/simple;
-	bh=NrvBoIv7ihWz3msr5ucNgQMNcZ4XLlRn/Kum2bPi/3o=;
+	s=arc-20240116; t=1751637009; c=relaxed/simple;
+	bh=ZNEJRJfWjPqcxgGqudYL+ToTxSRDO6h8hesaJrQI5DI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=KO6REvpDUpqDvRNVEyvCgKNgknQkduGgL+a3TcuS+eYtGHs9dhMoxX/pmA/XWgQLQho0n0Xjscb9hAd3JPFlAG0yX2J+ske9cMcgy/j4nlKI4xU9RB0QmyYhP8Ft67yWXokRlelgEGHGQk5KOdoYl1lyUGcGBQMnnyMNo8autZg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=du9mSzGa; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=DKn3CBKN1C2f5z8HNb4ZH3AHj6oCvo+IF65U3SQYZlFWpZctcj4AHiShDLPgnfbXWh3M3zp5gTsPXkPRQIwnTWzf/sBjNv62TBZXkeSy+LcbkiDnD/M2r6LluoRBcOmqwMKk3ERqn+mhZvBrbja/OjME3+Go0xmT0//54uDxRA8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hkADYyEV; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="du9mSzGa"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 79C19C4CEE3;
-	Fri,  4 Jul 2025 13:49:58 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hkADYyEV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 10628C4CEE3;
+	Fri,  4 Jul 2025 13:50:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751637003;
-	bh=NrvBoIv7ihWz3msr5ucNgQMNcZ4XLlRn/Kum2bPi/3o=;
+	s=k20201202; t=1751637009;
+	bh=ZNEJRJfWjPqcxgGqudYL+ToTxSRDO6h8hesaJrQI5DI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=du9mSzGaCObmMu4AJfvOoggVAr+IvAH88kHSLClKN/Mfwta17SYcXTn/8LmevqoGx
-	 AcvO1HVvuNnHtYa2S3cTeJpP/UAadzyjKs+bueQhrshFpa73GQXfrPqjv/3xZAl5oJ
-	 ZuHXPvfRdopM8RuzgkMy1C4gekeUHMofMNM79RXoQkBZ19n34qDLy1rE3DU/u18JZ9
-	 ajmTCNtxJpyfh9oBrBWU0N1CsaKDxgBBnnqkQUC5tMFeaaxSfXsni9oXxgiycthABl
-	 whmMPdoAKby8UIZBKLXZUi6axYTd9YPeIGG9ZyGSxn9RkmCzQgrPDQawnEKDvsGZVC
-	 0+BAZ5kPr6WrA==
+	b=hkADYyEVBsAD4xvYJYsQt0aFOqjZU0QQRSfnrXMVtaXTRlEr14ZKnEmIcyLYlQ9B7
+	 T87qoQKOZoW+Fe35J6xQLShFllVVa37D2ooami7C5m/C+aoAQ8+cc/jYlPv45TT/N9
+	 z+R3Y/dVyudtJtrK7qldz0PWCkIOp4lnwLxn/8uEt9ZRYsTbhpKkpgemL9SNR0Ay7n
+	 xRdwk4w65l3IoBGi6GHxh/seT0aEir6Q7bNZqm+g0SLgbmDVkzx/3wwClFJLvvKE6Z
+	 2zLubvsO9TcXOosj/LslipVCKSELNYMhMgoCpS4d/H11Fz5E1NFO+IVCCa4jZSBwBn
+	 Tvjd42nCrNiXQ==
 From: Mike Rapoport <rppt@kernel.org>
 To: Andrew Morton <akpm@linux-foundation.org>
 Cc: Andy Lutomirski <luto@kernel.org>,
@@ -48,9 +48,9 @@ Cc: Andy Lutomirski <luto@kernel.org>,
 	linux-modules@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org,
 	x86@kernel.org
-Subject: [PATCH 2/8] execmem: introduce execmem_alloc_rw()
-Date: Fri,  4 Jul 2025 16:49:37 +0300
-Message-ID: <20250704134943.3524829-3-rppt@kernel.org>
+Subject: [PATCH 3/8] execmem: rework execmem_cache_free()
+Date: Fri,  4 Jul 2025 16:49:38 +0300
+Message-ID: <20250704134943.3524829-4-rppt@kernel.org>
 X-Mailer: git-send-email 2.47.2
 In-Reply-To: <20250704134943.3524829-1-rppt@kernel.org>
 References: <20250704134943.3524829-1-rppt@kernel.org>
@@ -64,183 +64,218 @@ Content-Transfer-Encoding: 8bit
 
 From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
 
-Some callers of execmem_alloc() require the memory to be temporarily
-writable even when it is allocated from ROX cache. These callers use
-execemem_make_temp_rw() right after the call to execmem_alloc().
+Currently execmem_cache_free() ignores potential allocation failures that
+may happen in execmem_cache_add(). Besides, it uses text poking to fill the
+memory with trapping instructions before returning it to cache although it
+would be more efficient to make that memory writable, update it using
+memcpy and then restore ROX protection.
 
-Wrap this sequence in execmem_alloc_rw() API.
+Rework execmem_cache_free() so that in case of an error it will defer
+freeing of the memory to a delayed work.
+
+With this the happy fast path will now change permissions to RW, fill the
+memory with trapping instructions using memcpy, restore ROX permissions,
+add the memory back to the free cache and clear the relevant entry in
+busy_areas.
+
+If any step in the fast path fails, the entry in busy_areas will be marked
+as pending_free. These entries will be handled by a delayed work and freed
+asynchronously.
+
+To make the fast path faster, use __GFP_NORETRY for memory allocations and
+let asynchronous handler try harder with GFP_KERNEL.
 
 Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
 ---
- arch/x86/kernel/alternative.c |  3 +--
- include/linux/execmem.h       | 38 ++++++++++++++++++++---------------
- kernel/module/main.c          | 13 ++----------
- mm/execmem.c                  | 27 ++++++++++++++++++++++++-
- 4 files changed, 51 insertions(+), 30 deletions(-)
+ mm/execmem.c | 120 +++++++++++++++++++++++++++++++++++++++++----------
+ 1 file changed, 97 insertions(+), 23 deletions(-)
 
-diff --git a/arch/x86/kernel/alternative.c b/arch/x86/kernel/alternative.c
-index ea1d984166cd..526a5fef93ab 100644
---- a/arch/x86/kernel/alternative.c
-+++ b/arch/x86/kernel/alternative.c
-@@ -120,7 +120,7 @@ struct its_array its_pages;
- 
- static void *__its_alloc(struct its_array *pages)
- {
--	void *page __free(execmem) = execmem_alloc(EXECMEM_MODULE_TEXT, PAGE_SIZE);
-+	void *page __free(execmem) = execmem_alloc_rw(EXECMEM_MODULE_TEXT, PAGE_SIZE);
- 	if (!page)
- 		return NULL;
- 
-@@ -237,7 +237,6 @@ static void *its_alloc(void)
- 	if (!page)
- 		return NULL;
- 
--	execmem_make_temp_rw(page, PAGE_SIZE);
- 	if (pages == &its_pages)
- 		set_memory_x((unsigned long)page, 1);
- 
-diff --git a/include/linux/execmem.h b/include/linux/execmem.h
-index 734fbe83d98e..4e510d1c609c 100644
---- a/include/linux/execmem.h
-+++ b/include/linux/execmem.h
-@@ -67,21 +67,6 @@ enum execmem_range_flags {
-  */
- void execmem_fill_trapping_insns(void *ptr, size_t size, bool writable);
- 
--/**
-- * execmem_make_temp_rw - temporarily remap region with read-write
-- *			  permissions
-- * @ptr:	address of the region to remap
-- * @size:	size of the region to remap
-- *
-- * Remaps a part of the cached large page in the ROX cache in the range
-- * [@ptr, @ptr + @size) as writable and not executable. The caller must
-- * have exclusive ownership of this range and ensure nothing will try to
-- * execute code in this range.
-- *
-- * Return: 0 on success or negative error code on failure.
-- */
--int execmem_make_temp_rw(void *ptr, size_t size);
--
- /**
-  * execmem_restore_rox - restore read-only-execute permissions
-  * @ptr:	address of the region to remap
-@@ -95,7 +80,6 @@ int execmem_make_temp_rw(void *ptr, size_t size);
-  */
- int execmem_restore_rox(void *ptr, size_t size);
- #else
--static inline int execmem_make_temp_rw(void *ptr, size_t size) { return 0; }
- static inline int execmem_restore_rox(void *ptr, size_t size) { return 0; }
- #endif
- 
-@@ -165,6 +149,28 @@ struct execmem_info *execmem_arch_setup(void);
-  */
- void *execmem_alloc(enum execmem_type type, size_t size);
- 
-+/**
-+ * execmem_alloc_rw - allocate writatble executable memory
-+ * @type: type of the allocation
-+ * @size: how many bytes of memory are required
-+ *
-+ * Allocates memory that will contain executable code, either generated or
-+ * loaded from kernel modules.
-+ *
-+ * Allocates memory that will contain data coupled with executable code,
-+ * like data sections in kernel modules.
-+ *
-+ * Forces writable permissions on the allocated memory and the caller is
-+ * responsible to manage the permissions afterwards.
-+ *
-+ * For architectures that use ROX cache the permissions will be set to R+W.
-+ * For architectures that don't use ROX cache the default permissions for @type
-+ * will be used as they must be writable.
-+ *
-+ * Return: a pointer to the allocated memory or %NULL
-+ */
-+void *execmem_alloc_rw(enum execmem_type type, size_t size);
-+
- /**
-  * execmem_free - free executable memory
-  * @ptr: pointer to the memory that should be freed
-diff --git a/kernel/module/main.c b/kernel/module/main.c
-index 413ac6ea3702..d009326ef7bb 100644
---- a/kernel/module/main.c
-+++ b/kernel/module/main.c
-@@ -1292,20 +1292,11 @@ static int module_memory_alloc(struct module *mod, enum mod_mem_type type)
- 	else
- 		execmem_type = EXECMEM_MODULE_TEXT;
- 
--	ptr = execmem_alloc(execmem_type, size);
-+	ptr = execmem_alloc_rw(execmem_type, size);
- 	if (!ptr)
- 		return -ENOMEM;
- 
--	if (execmem_is_rox(execmem_type)) {
--		int err = execmem_make_temp_rw(ptr, size);
--
--		if (err) {
--			execmem_free(ptr);
--			return -ENOMEM;
--		}
--
--		mod->mem[type].is_rox = true;
--	}
-+	mod->mem[type].is_rox = execmem_is_rox(execmem_type);
- 
- 	/*
- 	 * The pointer to these blocks of memory are stored on the module
 diff --git a/mm/execmem.c b/mm/execmem.c
-index 0712ebb4eb77..6b040fbc5f4f 100644
+index 6b040fbc5f4f..1cc781244593 100644
 --- a/mm/execmem.c
 +++ b/mm/execmem.c
-@@ -336,7 +336,7 @@ static bool execmem_cache_free(void *ptr)
- 	return true;
- }
+@@ -93,8 +93,15 @@ struct execmem_cache {
+ 	struct mutex mutex;
+ 	struct maple_tree busy_areas;
+ 	struct maple_tree free_areas;
++	unsigned int pending_free_cnt;	/* protected by mutex */
+ };
  
--int execmem_make_temp_rw(void *ptr, size_t size)
-+static int execmem_force_rw(void *ptr, size_t size)
++/* delay to schedule asynchronous free if fast path free fails */
++#define FREE_DELAY	(msecs_to_jiffies(10))
++
++/* mark entries in busy_areas that should be freed asynchronously */
++#define PENDING_FREE_MASK	(1 << (PAGE_SHIFT - 1))
++
+ static struct execmem_cache execmem_cache = {
+ 	.mutex = __MUTEX_INITIALIZER(execmem_cache.mutex),
+ 	.busy_areas = MTREE_INIT_EXT(busy_areas, MT_FLAGS_LOCK_EXTERN,
+@@ -155,20 +162,17 @@ static void execmem_cache_clean(struct work_struct *work)
+ 
+ static DECLARE_WORK(execmem_cache_clean_work, execmem_cache_clean);
+ 
+-static int execmem_cache_add(void *ptr, size_t size)
++static int execmem_cache_add_locked(void *ptr, size_t size, gfp_t gfp_mask)
  {
- 	unsigned int nr = PAGE_ALIGN(size) >> PAGE_SHIFT;
+ 	struct maple_tree *free_areas = &execmem_cache.free_areas;
+-	struct mutex *mutex = &execmem_cache.mutex;
  	unsigned long addr = (unsigned long)ptr;
-@@ -358,6 +358,16 @@ int execmem_restore_rox(void *ptr, size_t size)
+ 	MA_STATE(mas, free_areas, addr - 1, addr + 1);
+ 	unsigned long lower, upper;
+ 	void *area = NULL;
+-	int err;
+ 
+ 	lower = addr;
+ 	upper = addr + size - 1;
+ 
+-	mutex_lock(mutex);
+ 	area = mas_walk(&mas);
+ 	if (area && mas.last == addr - 1)
+ 		lower = mas.index;
+@@ -178,12 +182,14 @@ static int execmem_cache_add(void *ptr, size_t size)
+ 		upper = mas.last;
+ 
+ 	mas_set_range(&mas, lower, upper);
+-	err = mas_store_gfp(&mas, (void *)lower, GFP_KERNEL);
+-	mutex_unlock(mutex);
+-	if (err)
+-		return err;
++	return mas_store_gfp(&mas, (void *)lower, gfp_mask);
++}
+ 
+-	return 0;
++static int execmem_cache_add(void *ptr, size_t size, gfp_t gfp_mask)
++{
++	guard(mutex)(&execmem_cache.mutex);
++
++	return execmem_cache_add_locked(ptr, size, gfp_mask);
  }
  
- #else /* CONFIG_ARCH_HAS_EXECMEM_ROX */
-+/*
-+ * when ROX cache is not used the permissions defined by architectures for
-+ * execmem ranges that are updated before use (e.g. EXECMEM_MODULE_TEXT) must
-+ * be writable anyway
-+ */
-+static inline int execmem_force_rw(void *ptr, size_t size)
+ static bool within_range(struct execmem_range *range, struct ma_state *mas,
+@@ -278,7 +284,7 @@ static int execmem_cache_populate(struct execmem_range *range, size_t size)
+ 	if (err)
+ 		goto err_free_mem;
+ 
+-	err = execmem_cache_add(p, alloc_size);
++	err = execmem_cache_add(p, alloc_size, GFP_KERNEL);
+ 	if (err)
+ 		goto err_reset_direct_map;
+ 
+@@ -307,33 +313,101 @@ static void *execmem_cache_alloc(struct execmem_range *range, size_t size)
+ 	return __execmem_cache_alloc(range, size);
+ }
+ 
++static inline bool is_pending_free(void *ptr)
 +{
++	return ((unsigned long)ptr & PENDING_FREE_MASK);
++}
++
++static inline void *pending_free_set(void *ptr)
++{
++	return (void *)((unsigned long)ptr | PENDING_FREE_MASK);
++}
++
++static inline void *pending_free_clear(void *ptr)
++{
++	return (void *)((unsigned long)ptr & ~PENDING_FREE_MASK);
++}
++
++static int execmem_force_rw(void *ptr, size_t size);
++
++static int __execmem_cache_free(struct ma_state *mas, void *ptr, gfp_t gfp_mask)
++{
++	size_t size = mas_range_len(mas);
++	int err;
++
++	err = execmem_force_rw(ptr, size);
++	if (err)
++		return err;
++
++	execmem_fill_trapping_insns(ptr, size, /* writable = */ true);
++	execmem_restore_rox(ptr, size);
++
++	err = execmem_cache_add_locked(ptr, size, gfp_mask);
++	if (err)
++		return err;
++
++	mas_store_gfp(mas, NULL, gfp_mask);
 +	return 0;
 +}
 +
- static void *execmem_cache_alloc(struct execmem_range *range, size_t size)
- {
- 	return NULL;
-@@ -387,6 +397,21 @@ void *execmem_alloc(enum execmem_type type, size_t size)
- 	return kasan_reset_tag(p);
- }
- 
-+void *execmem_alloc_rw(enum execmem_type type, size_t size)
++static void execmem_cache_free_slow(struct work_struct *work);
++static DECLARE_DELAYED_WORK(execmem_cache_free_work, execmem_cache_free_slow);
++
++static void execmem_cache_free_slow(struct work_struct *work)
 +{
-+	void *p __free(execmem) = execmem_alloc(type, size);
-+	int err;
++	struct maple_tree *busy_areas = &execmem_cache.busy_areas;
++	MA_STATE(mas, busy_areas, 0, ULONG_MAX);
++	void *area;
 +
-+	if (!p)
-+		return NULL;
++	guard(mutex)(&execmem_cache.mutex);
 +
-+	err = execmem_force_rw(p, size);
-+	if (err)
-+		return NULL;
++	if (!execmem_cache.pending_free_cnt)
++		return;
 +
-+	return no_free_ptr(p);
++	mas_for_each(&mas, area, ULONG_MAX) {
++		if (!is_pending_free(area))
++			continue;
++
++		pending_free_clear(area);
++		if (__execmem_cache_free(&mas, area, GFP_KERNEL))
++			continue;
++
++		execmem_cache.pending_free_cnt--;
++	}
++
++	if (execmem_cache.pending_free_cnt)
++		schedule_delayed_work(&execmem_cache_free_work, FREE_DELAY);
++	else
++		schedule_work(&execmem_cache_clean_work);
 +}
 +
- void execmem_free(void *ptr)
+ static bool execmem_cache_free(void *ptr)
  {
- 	/*
+ 	struct maple_tree *busy_areas = &execmem_cache.busy_areas;
+-	struct mutex *mutex = &execmem_cache.mutex;
+ 	unsigned long addr = (unsigned long)ptr;
+ 	MA_STATE(mas, busy_areas, addr, addr);
+-	size_t size;
+ 	void *area;
++	int err;
++
++	guard(mutex)(&execmem_cache.mutex);
+ 
+-	mutex_lock(mutex);
+ 	area = mas_walk(&mas);
+-	if (!area) {
+-		mutex_unlock(mutex);
++	if (!area)
+ 		return false;
+-	}
+-	size = mas_range_len(&mas);
+-
+-	mas_store_gfp(&mas, NULL, GFP_KERNEL);
+-	mutex_unlock(mutex);
+-
+-	execmem_fill_trapping_insns(ptr, size, /* writable = */ false);
+ 
+-	execmem_cache_add(ptr, size);
++	err = __execmem_cache_free(&mas, ptr, GFP_KERNEL | __GFP_NORETRY);
++	if (err)
++		goto err_slowpath;
+ 
+ 	schedule_work(&execmem_cache_clean_work);
+ 
+ 	return true;
++
++err_slowpath:
++	mas_store_gfp(&mas, pending_free_set(ptr), GFP_KERNEL);
++	execmem_cache.pending_free_cnt++;
++	schedule_delayed_work(&execmem_cache_free_work, FREE_DELAY);
++	return true;
+ }
+ 
+ static int execmem_force_rw(void *ptr, size_t size)
 -- 
 2.47.2
 
