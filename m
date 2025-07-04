@@ -1,133 +1,83 @@
-Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay.hostedemail.com (smtprelay0010.hostedemail.com [216.40.44.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDC5D2BE648
-	for <linux-trace-kernel@vger.kernel.org>; Thu,  3 Jul 2025 20:58:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26F073B19A;
+	Fri,  4 Jul 2025 00:36:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751576321; cv=none; b=sLR1aDfNp1KBO3nQqVTMBNCoNrNfHNOcLeAcV2tGr1EdIF41Nsxl+fB0K8X3OkXITjQCUGtapZHFnbi5ivS7aCclK3sODnt/MQfLoDafze7SuO9dnhmVi8EUdRNMo3IgyO/VjPPQfY4Efhcb5/bcZWl0GElyFM99GZanEU/N88M=
+	t=1751589405; cv=none; b=R5f+VsxKciVVoq75/ORVJSCiKNQ7a7fCWq3KCMApt3ctDECWD7FCk6T3u2we0xeripcmafpu2BjJYfe2mi2l0uyQrv0mIqE0Ws7d0YzFp3u58txlbTS0gjtQfUxPjZ8SMgoYpOe/k2fu/2YsxTKmuLrajggvuRZjErxsnfVLpVw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751576321; c=relaxed/simple;
-	bh=DiJjAsxd3NLx6OvlELv3sKg3BSU/dtVOQuiuh5Nz4Ls=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=eikIsDkVWJwbiMjvdyk6fU4aKQoVwrerEM43Sd8KsvZf4dlo+85/uvh8zBQMxyORCpQi7HC1wWvtslluRoq1Qx0y68SU41hS5cmkBKuw+QD8TwfV+W1ClbVqveJtZEY42HVf2Y7YxodmBJmU9NkIKtkaJzGWeEDQUNZj9yBJqeE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=AVzQ77Im; arc=none smtp.client-ip=209.85.218.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="AVzQ77Im"
-Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-ade5b8aab41so60907666b.0
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 03 Jul 2025 13:58:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1751576315; x=1752181115; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=XpibsVHxYqxJwhE/Mgkya5GxIWQIBQtSRQMl/dLvVIY=;
-        b=AVzQ77Imqo9REfO/kKiLsqagdUITM63fRGqXnI52YTKLrX9TsV5V98i2s/XRl1vJHZ
-         Ntxm0yd/MnaDmGZYWrxy/AuWeKbuN0Ulz1h35PLPS/eZMyMzA9UMYJivB64P0vxxJdGi
-         ZJ0YCk6TMhCZiXr93SpB4yhtfxODcyRFrvqWQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751576315; x=1752181115;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=XpibsVHxYqxJwhE/Mgkya5GxIWQIBQtSRQMl/dLvVIY=;
-        b=N3vrADeqkPSd9dgUf74YFSl9qL3vurhXmvw8rTCPu5Vcf/I9Scrap+rFzI1iyQ3Y9C
-         tNu7ZYi9T1BmGGpjFLIbUU8ovnoMNYxI8Ld3d3xeHsRBRLKH9n9uVVm/NUnjme4lQqNC
-         aqJbjdnvMvPfHrjOed18n08o7/vw6rSn0xc2+coBSvuaOLIbiKCnPywbNwqq2eTYmOjc
-         eoKrCFBR5z9c+B4GN8SqwcnULAJkMs/nZYu2roBEHcBRj9wU8NkuGN7gSnw8qycg19QQ
-         sXxA8Rq/SqcWMeSNWcXTjetws6Rbq1IlRcMLhsIEG5PdQBcZRdCV6uZ0UhdNy4ybBRt7
-         voPA==
-X-Forwarded-Encrypted: i=1; AJvYcCWZqMQQV9v/56P96uM7OS2M/IN8GjkSU4DmAIE+KiOHx7KO3BXSzWtSaLmuG/ORSEEZ/PNZ+y3o6rFTmXEth1bpT8I=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxn/YsWhF9BeDnFKV/+EE+54RT3VIdG07j2rZjWsI/AcUyiEEUP
-	DR/i5NrWeDZToPIGVLVBiW+xMAgOASdgKA7dZih6FQViJcrp01JXFYRSpKrC0zKMjpnBLdCLmmg
-	0qRW3xG4=
-X-Gm-Gg: ASbGncvoTnDtnKCtJCWVjqxCPGRNlvazg66Ek2eafDbQXbe/WKuvIYUvCx+nuCTx2ec
-	LA9PO3NW0PUbbIrtTMtbBuk8y7CmS9UXVJYannjP9JV3k+Ib8JZnBfd29MNXlrOuVYr5ftvga+o
-	cXFqqAlTXreOiPYvTFL04N4AK8uZzn6+J1ysoJ3e2rr/OXj3xcBpg6kBpTSXv+sdqpBHhcNSWcv
-	F7YgRw6G2G1Z+jfL6TQmHUpkZY5BoYArrDegaNFIW8qAYbf3p1YK6Amk7e8rwCJrioSCdiCglaL
-	AAwvLhlghiWuEEpjUAz6y1WY4cc7u24OFkMYYezKrehToGBNSRhw+IgObKwCIsdhFuBcvYXptkU
-	ginBYVy9962VE+DljE9hByGOas5njU3n7CKoC
-X-Google-Smtp-Source: AGHT+IFldfU95Kmf9ZiGP80xYp/G+jyCmVSpStgj175jv5reRsP6pcBNfUCaVUj27gIlb6jAIapDpQ==
-X-Received: by 2002:a17:907:3d8f:b0:ade:4593:d7cd with SMTP id a640c23a62f3a-ae3c2abad80mr924172466b.13.1751576314915;
-        Thu, 03 Jul 2025 13:58:34 -0700 (PDT)
-Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com. [209.85.208.51])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae3f6ac5474sm39147366b.77.2025.07.03.13.58.33
-        for <linux-trace-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 03 Jul 2025 13:58:34 -0700 (PDT)
-Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-60bf5a08729so526855a12.0
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 03 Jul 2025 13:58:33 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWQQhv0E33BF+6/wGRJd+9OhsgOVHSdk5Eotkd+pa6mU4A4Mjbbu5/xQWCm9ekzZC61afuBGo1ihPayZUlIW+VIUs0=@vger.kernel.org
-X-Received: by 2002:a05:6402:d0b:b0:607:f257:ad1e with SMTP id
- 4fb4d7f45d1cf-60fd33621b5mr42848a12.22.1751576313551; Thu, 03 Jul 2025
- 13:58:33 -0700 (PDT)
+	s=arc-20240116; t=1751589405; c=relaxed/simple;
+	bh=PhACeU+IJvtaLptUIt3uwtCFvi3EQuqw8vEaWB4nQgo=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=quz7kh16DRiPPBoq0G/5SCI5HaA1SjQdePi6qcUI97h7wuAqcDCgHM9OxSKD+Ahk+0wCa4q0K6KizpVYOcpnQmaixA6uQC3ju1DvAxg83Jq8jMSIpDtHfyevb24B/XdmDuOdJ4kPQTI5iU7algq0q/0FeLJjJpJ1vIcQPjIoswE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf10.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay01.hostedemail.com (Postfix) with ESMTP id E82CA1D8CAA;
+	Fri,  4 Jul 2025 00:36:34 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf10.hostedemail.com (Postfix) with ESMTPA id 0C4E630;
+	Fri,  4 Jul 2025 00:36:29 +0000 (UTC)
+Date: Thu, 3 Jul 2025 20:36:28 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Jens Remus <jremus@linux.ibm.com>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ bpf@vger.kernel.org, x86@kernel.org, Indu Bhagat <indu.bhagat@oracle.com>,
+ Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Josh Poimboeuf <jpoimboe@kernel.org>,
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, Jiri
+ Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Thomas
+ Gleixner <tglx@linutronix.de>, Andrii Nakryiko <andrii@kernel.org>, "Jose
+ E. Marchesi" <jemarch@gnu.org>, Beau Belgrave <beaub@linux.microsoft.com>,
+ Linus Torvalds <torvalds@linux-foundation.org>, Andrew Morton
+ <akpm@linux-foundation.org>, Jens Axboe <axboe@kernel.dk>, Florian Weimer
+ <fweimer@redhat.com>, Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik
+ <gor@linux.ibm.com>
+Subject: Re: [PATCH v7 00/12] unwind_deferred: Implement sframe handling
+Message-ID: <20250703203628.09291030@batman.local.home>
+In-Reply-To: <7eea50a5-e1b0-4319-9a25-cb8b327a836d@linux.ibm.com>
+References: <20250701184939.026626626@goodmis.org>
+	<7eea50a5-e1b0-4319-9a25-cb8b327a836d@linux.ibm.com>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250703115222.2d7c8cd5@batman.local.home> <CAHk-=wjXjq7wJM-xnTCcGCxg2viUcN6JfHBETpvD94HX7HTHFQ@mail.gmail.com>
- <20250703152643.0a4a45fe@gandalf.local.home>
-In-Reply-To: <20250703152643.0a4a45fe@gandalf.local.home>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Thu, 3 Jul 2025 13:58:17 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wgdM_A1iWs6=y__nDcVq9pZRynd1mO8F9XnAeZuHumHtA@mail.gmail.com>
-X-Gm-Features: Ac12FXwYVzSrl3kui7aMRaxe8iQweZ7A051wIMsfyQxmbAoaWneINGskzeXmSE4
-Message-ID: <CAHk-=wgdM_A1iWs6=y__nDcVq9pZRynd1mO8F9XnAeZuHumHtA@mail.gmail.com>
-Subject: Re: [RFC][PATCH] ftrace: Make DYNAMIC_FTRACE always enabled for
- architectures that support it
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, 
-	Linux trace kernel <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexandre Ghiti <alex@ghiti.fr>, ChenMiao <chenmiao.ku@gmail.com>, linux-arch@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Queue-Id: 0C4E630
+X-Rspamd-Server: rspamout02
+X-Stat-Signature: m95h75hykg7614nsbpbz6riykcyxiz5m
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1/LdmgPZ7NYINeP0/nCbMhlgGHVrf3SR/Q=
+X-HE-Tag: 1751589389-636873
+X-HE-Meta: U2FsdGVkX18andQ6UqQeO2LphyWVEA/lJt8H7gykBKlvnnbhBTegBZdjSkZZO28KlEi4PdGvkkYYlqygGuN/zNL5cQ+I4C2gf56uB9qrQpZSTcHFkn7zw1Q1DWfxMslNFFk4r5UnqzBEYsV4sGEz6C3kNCj9x473rekZ496MT5esYvaGFu/YTK6Cwk2E1Mhi1IwPgNlq80ikdCIamfJAw12aiKQ0wDMN5bGGIXNdC/C5AspFxR9rnIv0ZZ7PiK9/ELuITfS6Mwz5eZuoHcTAmR79tn+5erVT+x4CpRX2uQV/powB/2HsbxN2PZs8ilNyi9ilwn6CIT+nYfAuyFec4GDcqy+hEFUcJfS74yMEMZCptzHix9ctQIh+rOHNr7Ay1NsSPSS3n5v5rYrD3wEBRAxTRL4lQNO1vMuUDvCAx1o=
 
-" part
+On Wed, 2 Jul 2025 14:57:22 +0200
+Jens Remus <jremus@linux.ibm.com> wrote:
 
-On Thu, 3 Jul 2025 at 12:26, Steven Rostedt <rostedt@goodmis.org> wrote:
->
-> I always thought the "HAVE_" configs was a way for architectures to state
-> that it supports something but doesn't necessarily enable it. Whereas the
-> not "HAVE_" configs are user selectable.
+> Additionally it would make sense to include the patches from Josh that
+> add SFrame information to the vDSO on x86 [3].
+> 
+> [1]: [PATCH v12 00/11] perf: Support the deferred unwinding infrastructure,
+> https://lore.kernel.org/linux-trace-kernel/20250701180410.755491417@goodmis.org/
+> 
+> [2]: https://lore.kernel.org/linux-trace-kernel/51903e66-56bc-42a4-b80c-9c3223e2a48a@linux.ibm.com/
+> 
+> [3]: [PATCH v6 0/6] x86/vdso: VDSO updates and fixes for sframes,
+> https://lore.kernel.org/all/20250425023750.669174660@goodmis.org/
 
-I don't actually think we have those kinds of rules in practice.
+I didn't add the VDSO yet, but I just pushed to the linux-trace.git
+tree as:
 
-We have very random Kconfig things. A lot of things are "architecture
-just selects the feature directly", and the naming is a random
-collection of ARCH_HAS_abc, ARCH_USE_abc, ARCH_WANT_abc, HAVE_ARCH_abc
-and HAVE_abc.
+   unwind/main
 
-And those are the patterns that _try_ to be some kind of pattern, and
-ignores all the "architecture just selects the feature directly".
+that has my latest perf and sframe code merged. It's my work in
+progress and is not what I published yet as patches.
 
-Honestly, when we have *five* different syntaxes for "this
-architecture supports feature 'abc'", I'd argue that not only isn't
-there a standard way, all those different syntax forms are just
-confusing.
+It's firework holiday here so I'm going to be mostly offline until Monday.
 
-I get the strong feeling that the reason people have those different
-prefixes is literally to just group things together alphabetically -
-ie some people use "ARCH_HAS_xyz" just because that way they can put
-the "select" statement next to another ARCH_HAS_xyz that they also
-maintain.
-
-And then in addition to those various "arch has", we have the
-"GENERIC_xyz" Kconfig entries that architectures also select.
-
-I think those GENERIC_xyz Kconfig options may actually have more of a
-pattern: that _tends_ to be about "I'm not implementing my own
-version, please just pick the generic version". That one is one of our
-better patterns, I think.
-
-So the reason I dislike the HAVE_xyz pattern is exactly that there
-_isn't_ a pattern. When there are fifteen different patterns, it's not
-a pattern at all.
-
-That said, maybe it's better to have one place that has that "if
-FUNCTION_TRACER, even if I despise the nonsensical "helper
-indirection" just because of the random naming.
-
-              Linus
+-- Steve
