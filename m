@@ -1,44 +1,44 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84CAD2FF497;
-	Fri,  4 Jul 2025 13:20:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA743303DCB;
+	Fri,  4 Jul 2025 13:20:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751635240; cv=none; b=C0awIcdpYxx1p57KxJ341DVENMDKzaOf2ag65et5LvdP6y3RwuJDlgBD3o8CbPof69bHgcpVPTJda8l4BbWOMSED7XXu27CoiDRicWATxJGhHvn/00V1sNZFhNrwcv6GVG5NeWAS8QmMAZ9XaqQx0TmBFuIm4P18jZD2JIFjhKE=
+	t=1751635243; cv=none; b=H4vD2tVxAERoJDE64+woQ2yhcWNuM+1XW45a+bIqo2KDnqVfYTW9xvI+jH9ENXog6+YHZBTwLUtGzfndYXIFvmHn69iqa4MmjeM08UKDLlwVB6SZWUKB9uybkpvn1mU9QuWYBws1G1qN5VWU3i9RHkylytuQs2b+TczjJD5e//I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751635240; c=relaxed/simple;
-	bh=ej4y0chUHV1X9BRd0j3lK7NyOoVBhIdQuzQiHYUH+3A=;
+	s=arc-20240116; t=1751635243; c=relaxed/simple;
+	bh=TBOO2AQSEASuyWnG4DlvlSfUwCeZ9UIJdlj7NIr/YgU=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=MmYbeGp8/x45XWeCm9y2y+utRvbsTTTt208WszhwOBCbEMPizApQ1YYyd0bosMzaW98+7KJ0M//6TtJfwBqhypSEdwpOYihcFVuoNyd184Qc3I8FhyrFw2jSQunqgDqtume2jKd6VI3CrC6e4c65wmKVhgVhE43ZYfg+k++Kb9Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=fG1fjO6C; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=JGCFPOoP; arc=none smtp.client-ip=193.142.43.55
+	 MIME-Version:Content-Type; b=jCide+SCqrO7cpf0HCpd8EyBSrfhsqglWjoLW6C62+wD7dE9Fp4SWCJPrfemQvuVG6Op4NRKVKcucHva8pnGxvSN1DF/eBKXbkCKLK8EEVL3kImX4symXCYVKL1xZ0aACOz8HpjYUa1a7zsSxI8DF26FuwgTpW7azndbNXXbpNU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=mgdLzJak; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=7u+9oYe4; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="fG1fjO6C";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="JGCFPOoP"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="mgdLzJak";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="7u+9oYe4"
 From: Nam Cao <namcao@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1751635236;
+	s=2020; t=1751635238;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=AXMNC3VDuZEOrDVFsrDc68QHYikn2X7hWmfHQcqaREo=;
-	b=fG1fjO6C9X9jv7e8Jci03rPUl7C4znaHKn/wzFEi5Mdo0vR3KBO8kC25B0MuOdyVTSUV+v
-	gIqeqHDIb9xA4uCDaX9ZznBVr1oLqcKK6LD/TROyfPedfiFDpr5XSvEMXG78JaF1Cx+cRK
-	F2o2cPQeL77SeA2nhuPiayEkWdIqHghmMH9UqGXz4rtZcvscHZ0S2vALizOHM99YBQyeff
-	HQRg5dKuniXxnet+cH/t+58nDiJ0lGucjFMl+//Yu0Rr/oqiVHSOmLRfF+GAw5C1pwnETw
-	Aot97DGv/Io2YA8kkbVqYcgQbsL2/Dk2VucuVZmHLC44R086WBt3dpvgVvR89w==
+	bh=1sIiqASdnVahoU69Z+YarnWuWRAvV/Tk9WWJfBmMBXk=;
+	b=mgdLzJakv5jot1BD/tTKNWGPWHb3mYXJWNKmfXyd4qvdmCRjHILrt4+M3Wa0bG5OcqupYo
+	XWZT+pCC+HEoWbwX0OIBlCfUYyQB1jBWxODyywNGqnio8M7s5esgprfUTtZcZboKXR98Ml
+	SrD3yWMMsaDXnniPLeXv+2aQrP7Yd8plu1K9wGAwYwVqJj5tXpchkjK9YLBO62/ihg4P3z
+	rwgpwNlBOTW7c1oEDPp9vaQCUvjSqmUbOvgDh9IqkFHWz1xbDXfZJh2CE/nqc1aAy7sfbb
+	pWAP9UnNHEAPdKkXJJ8+Dz6Aw1EePZxRnON3P8z5saJDhvn4PmKuOl3eZxMdYQ==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1751635236;
+	s=2020e; t=1751635238;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=AXMNC3VDuZEOrDVFsrDc68QHYikn2X7hWmfHQcqaREo=;
-	b=JGCFPOoPTTOmS8eIC2tGih1DzJsJJWSMEr+N5fHahyb+3Sx34XnNs9/+WkxUyKVGbuakG0
-	ytmnzQjgNtgO6bCg==
+	bh=1sIiqASdnVahoU69Z+YarnWuWRAvV/Tk9WWJfBmMBXk=;
+	b=7u+9oYe4V7jh5JbBNHG8Mzevoz9WHgDM6ZcIvRxy86lLgIr5wx6+rAABx+PvozeXyHZz7W
+	ADcfVabh0gQKn/Bw==
 To: Steven Rostedt <rostedt@goodmis.org>,
 	Masami Hiramatsu <mhiramat@kernel.org>,
 	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
@@ -47,9 +47,9 @@ To: Steven Rostedt <rostedt@goodmis.org>,
 Cc: Gabriele Monaco <gmonaco@redhat.com>,
 	john.ogness@linutronix.de,
 	Nam Cao <namcao@linutronix.de>
-Subject: [PATCH v11 13/21] rv: Add support for LTL monitors
-Date: Fri,  4 Jul 2025 15:20:05 +0200
-Message-Id: <b25b8f29aedf09c76e8357ff280dfd747ea9b435.1751634289.git.namcao@linutronix.de>
+Subject: [PATCH v11 15/21] Documentation/rv: Add documentation for linear temporal logic monitors
+Date: Fri,  4 Jul 2025 15:20:07 +0200
+Message-Id: <be13719e66fd8da147d7c69d5365aa23c52b743f.1751634289.git.namcao@linutronix.de>
 In-Reply-To: <cover.1751634289.git.namcao@linutronix.de>
 References: <cover.1751634289.git.namcao@linutronix.de>
 Precedence: bulk
@@ -58,417 +58,427 @@ List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 
-While attempting to implement DA monitors for some complex specifications,
-deterministic automaton is found to be inappropriate as the specification
-language. The automaton is complicated, hard to understand, and
-error-prone.
-
-For these cases, linear temporal logic is more suitable as the
-specification language.
-
-Add support for linear temporal logic runtime verification monitor.
+Add documents describing linear temporal logic runtime verification
+monitors and how to generate them using rvgen.
 
 Signed-off-by: Nam Cao <namcao@linutronix.de>
 ---
 v11:
-  - Keep comments within 80 colums
-  - Add '&' to make memset() looks "natural"
-  - Split this part out from the bigger patch
+  - Keep the doc within 80 columns
+  - Split this out from the bigger patch
 ---
- include/linux/rv.h         |  63 ++++++++++++-
- include/rv/ltl_monitor.h   | 184 +++++++++++++++++++++++++++++++++++++
- kernel/fork.c              |   5 +-
- kernel/trace/rv/Kconfig    |   7 ++
- kernel/trace/rv/rv_trace.h |  47 ++++++++++
- 5 files changed, 298 insertions(+), 8 deletions(-)
- create mode 100644 include/rv/ltl_monitor.h
+ Documentation/trace/rv/index.rst              |   1 +
+ .../trace/rv/linear_temporal_logic.rst        | 133 +++++++++++++++
+ Documentation/trace/rv/monitor_synthesis.rst  | 156 ++++++++++++++++--
+ 3 files changed, 274 insertions(+), 16 deletions(-)
+ create mode 100644 Documentation/trace/rv/linear_temporal_logic.rst
 
-diff --git a/include/linux/rv.h b/include/linux/rv.h
-index 9428e62eb8e9..1d5579f9b75a 100644
---- a/include/linux/rv.h
-+++ b/include/linux/rv.h
-@@ -10,6 +10,10 @@
- #define MAX_DA_NAME_LEN	32
+diff --git a/Documentation/trace/rv/index.rst b/Documentation/trace/rv/inde=
+x.rst
+index 8e411b76ec82..2a27f6bc9429 100644
+--- a/Documentation/trace/rv/index.rst
++++ b/Documentation/trace/rv/index.rst
+@@ -8,6 +8,7 @@ Runtime Verification
 =20
- #ifdef CONFIG_RV
-+#include <linux/bitops.h>
-+#include <linux/types.h>
-+#include <linux/array_size.h>
-+
- /*
-  * Deterministic automaton per-object variables.
-  */
-@@ -18,6 +22,59 @@ struct da_monitor {
- 	unsigned int	curr_state;
- };
-=20
-+#ifdef CONFIG_RV_LTL_MONITOR
-+
-+/*
-+ * In the future, if the number of atomic propositions or the size of Buchi
-+ * automaton is larger, we can switch to dynamic allocation. For now, the =
-code
-+ * is simpler this way.
-+ */
-+#define RV_MAX_LTL_ATOM 32
-+#define RV_MAX_BA_STATES 32
-+
-+/**
-+ * struct ltl_monitor - A linear temporal logic runtime verification monit=
-or
-+ * @states:	States in the Buchi automaton. As Buchi automaton is a
-+ *		non-deterministic state machine, the monitor can be in multiple
-+ *		states simultaneously. This is a bitmask of all possible states.
-+ *		If this is zero, that means either:
-+ *		    - The monitor has not started yet (e.g. because not all
-+ *		      atomic propositions are known).
-+ *		    - There is no possible state to be in. In other words, a
-+ *		      violation of the LTL property is detected.
-+ * @atoms:	The values of atomic propositions.
-+ * @unknown_atoms: Atomic propositions which are still unknown.
-+ */
-+struct ltl_monitor {
-+	DECLARE_BITMAP(states, RV_MAX_BA_STATES);
-+	DECLARE_BITMAP(atoms, RV_MAX_LTL_ATOM);
-+	DECLARE_BITMAP(unknown_atoms, RV_MAX_LTL_ATOM);
-+};
-+
-+static inline bool rv_ltl_valid_state(struct ltl_monitor *mon)
-+{
-+	for (int i =3D 0; i < ARRAY_SIZE(mon->states); ++i) {
-+		if (mon->states[i])
-+			return true;
-+	}
-+	return false;
-+}
-+
-+static inline bool rv_ltl_all_atoms_known(struct ltl_monitor *mon)
-+{
-+	for (int i =3D 0; i < ARRAY_SIZE(mon->unknown_atoms); ++i) {
-+		if (mon->unknown_atoms[i])
-+			return false;
-+	}
-+	return true;
-+}
-+
-+#else
-+
-+struct ltl_monitor {};
-+
-+#endif /* CONFIG_RV_LTL_MONITOR */
-+
- /*
-  * Per-task RV monitors count. Nowadays fixed in RV_PER_TASK_MONITORS.
-  * If we find justification for more monitors, we can think about
-@@ -27,11 +84,9 @@ struct da_monitor {
- #define RV_PER_TASK_MONITORS		1
- #define RV_PER_TASK_MONITOR_INIT	(RV_PER_TASK_MONITORS)
-=20
--/*
-- * Futher monitor types are expected, so make this a union.
-- */
- union rv_task_monitor {
--	struct da_monitor da_mon;
-+	struct da_monitor	da_mon;
-+	struct ltl_monitor	ltl_mon;
- };
-=20
- #ifdef CONFIG_RV_REACTORS
-diff --git a/include/rv/ltl_monitor.h b/include/rv/ltl_monitor.h
+    runtime-verification.rst
+    deterministic_automata.rst
++   linear_temporal_logic.rst
+    monitor_synthesis.rst
+    da_monitor_instrumentation.rst
+    monitor_wip.rst
+diff --git a/Documentation/trace/rv/linear_temporal_logic.rst b/Documentati=
+on/trace/rv/linear_temporal_logic.rst
 new file mode 100644
-index 000000000000..9a583125b566
+index 000000000000..57f107fcf6dd
 --- /dev/null
-+++ b/include/rv/ltl_monitor.h
-@@ -0,0 +1,184 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/**
-+ * This file must be combined with the $(MODEL_NAME).h file generated by
-+ * tools/verification/rvgen.
-+ */
++++ b/Documentation/trace/rv/linear_temporal_logic.rst
+@@ -0,0 +1,133 @@
++Linear temporal logic
++=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
 +
-+#include <linux/args.h>
-+#include <linux/rv.h>
-+#include <linux/stringify.h>
-+#include <linux/seq_buf.h>
-+#include <rv/instrumentation.h>
-+#include <trace/events/task.h>
-+#include <trace/events/sched.h>
++Introduction
++------------
 +
-+#ifndef MONITOR_NAME
-+#error "Please include $(MODEL_NAME).h generated by rvgen"
-+#endif
++Runtime verification monitor is a verification technique which checks that=
+ the
++kernel follows a specification. It does so by using tracepoints to monitor=
+ the
++kernel's execution trace, and verifying that the execution trace sastifies=
+ the
++specification.
 +
-+#ifdef CONFIG_RV_REACTORS
-+#define RV_MONITOR_NAME CONCATENATE(rv_, MONITOR_NAME)
-+static struct rv_monitor RV_MONITOR_NAME;
++Initially, the specification can only be written in the form of determinis=
+tic
++automaton (DA).  However, while attempting to implement DA monitors for so=
+me
++complex specifications, deterministic automaton is found to be inappropria=
+te as
++the specification language. The automaton is complicated, hard to understa=
+nd,
++and error-prone.
 +
-+static void rv_cond_react(struct task_struct *task)
-+{
-+	if (!rv_reacting_on() || !RV_MONITOR_NAME.react)
-+		return;
-+	RV_MONITOR_NAME.react("rv: "__stringify(MONITOR_NAME)": %s[%d]: violation=
- detected\n",
-+			      task->comm, task->pid);
-+}
-+#else
-+static void rv_cond_react(struct task_struct *task)
-+{
-+}
-+#endif
++Thus, RV monitors based on linear temporal logic (LTL) are introduced. Thi=
+s type
++of monitor uses LTL as specification instead of DA. For some cases, writin=
+g the
++specification as LTL is more concise and intuitive.
 +
-+static int ltl_monitor_slot =3D RV_PER_TASK_MONITOR_INIT;
++Many materials explain LTL in details. One book is::
 +
-+static void ltl_atoms_fetch(struct task_struct *task, struct ltl_monitor *=
-mon);
-+static void ltl_atoms_init(struct task_struct *task, struct ltl_monitor *m=
-on, bool task_creation);
++  Christel Baier and Joost-Pieter Katoen: Principles of Model Checking, Th=
+e MIT
++  Press, 2008.
 +
-+static struct ltl_monitor *ltl_get_monitor(struct task_struct *task)
-+{
-+	return &task->rv[ltl_monitor_slot].ltl_mon;
-+}
++Grammar
++-------
 +
-+static void ltl_task_init(struct task_struct *task, bool task_creation)
-+{
-+	struct ltl_monitor *mon =3D ltl_get_monitor(task);
++Unlike some existing syntax, kernel's implementation of LTL is more verbos=
+e.
++This is motivated by considering that the people who read the LTL specific=
+ations
++may not be well-versed in LTL.
 +
-+	memset(&mon->states, 0, sizeof(mon->states));
++Grammar:
++    ltl ::=3D opd | ( ltl ) | ltl binop ltl | unop ltl
 +
-+	for (int i =3D 0; i < LTL_NUM_ATOM; ++i)
-+		__set_bit(i, mon->unknown_atoms);
++Operands (opd):
++    true, false, user-defined names consisting of upper-case characters, d=
+igits,
++    and underscore.
 +
-+	ltl_atoms_init(task, mon, task_creation);
-+	ltl_atoms_fetch(task, mon);
-+}
++Unary Operators (unop):
++    always
++    eventually
++    not
 +
-+static void handle_task_newtask(void *data, struct task_struct *task, unsi=
-gned long flags)
-+{
-+	ltl_task_init(task, true);
-+}
++Binary Operators (binop):
++    until
++    and
++    or
++    imply
++    equivalent
 +
-+static int ltl_monitor_init(void)
-+{
-+	struct task_struct *g, *p;
-+	int ret, cpu;
++This grammar is ambiguous: operator precedence is not defined. Parentheses=
+ must
++be used.
 +
-+	ret =3D rv_get_task_monitor_slot();
-+	if (ret < 0)
-+		return ret;
++Example linear temporal logic
++-----------------------------
++.. code-block::
 +
-+	ltl_monitor_slot =3D ret;
++   RAIN imply (GO_OUTSIDE imply HAVE_UMBRELLA)
 +
-+	rv_attach_trace_probe(name, task_newtask, handle_task_newtask);
++means: if it is raining, going outside means having an umbrella.
 +
-+	read_lock(&tasklist_lock);
++.. code-block::
 +
-+	for_each_process_thread(g, p)
-+		ltl_task_init(p, false);
++   RAIN imply (WET until not RAIN)
 +
-+	for_each_present_cpu(cpu)
-+		ltl_task_init(idle_task(cpu), false);
++means: if it is raining, it is going to be wet until the rain stops.
 +
-+	read_unlock(&tasklist_lock);
++.. code-block::
 +
-+	return 0;
-+}
++   RAIN imply eventually not RAIN
 +
-+static void ltl_monitor_destroy(void)
-+{
-+	rv_detach_trace_probe(name, task_newtask, handle_task_newtask);
++means: if it is raining, rain will eventually stop.
 +
-+	rv_put_task_monitor_slot(ltl_monitor_slot);
-+	ltl_monitor_slot =3D RV_PER_TASK_MONITOR_INIT;
-+}
++The above examples are referring to the current time instance only. For ke=
+rnel
++verification, the `always` operator is usually desirable, to specify that
++something is always true at the present and for all future. For example::
 +
-+static void ltl_illegal_state(struct task_struct *task, struct ltl_monitor=
- *mon)
-+{
-+	CONCATENATE(trace_error_, MONITOR_NAME)(task);
-+	rv_cond_react(task);
-+}
++    always (RAIN imply eventually not RAIN)
 +
-+static void ltl_attempt_start(struct task_struct *task, struct ltl_monitor=
- *mon)
-+{
-+	if (rv_ltl_all_atoms_known(mon))
-+		ltl_start(task, mon);
-+}
++means: *all* rain eventually stops.
 +
-+static inline void ltl_atom_set(struct ltl_monitor *mon, enum ltl_atom ato=
-m, bool value)
-+{
-+	__clear_bit(atom, mon->unknown_atoms);
-+	if (value)
-+		__set_bit(atom, mon->atoms);
-+	else
-+		__clear_bit(atom, mon->atoms);
-+}
++In the above examples, `RAIN`, `GO_OUTSIDE`, `HAVE_UMBRELLA` and `WET` are=
+ the
++"atomic propositions".
 +
-+static void
-+ltl_trace_event(struct task_struct *task, struct ltl_monitor *mon, unsigne=
-d long *next_state)
-+{
-+	const char *format_str =3D "%s";
-+	DECLARE_SEQ_BUF(atoms, 64);
-+	char states[32], next[32];
-+	int i;
++Monitor synthesis
++-----------------
 +
-+	if (!CONCATENATE(CONCATENATE(trace_event_, MONITOR_NAME), _enabled)())
-+		return;
++To synthesize an LTL into a kernel monitor, the `rvgen` tool can be used:
++`tools/verification/rvgen`. The specification needs to be provided as a fi=
+le,
++and it must have a "RULE =3D LTL" assignment. For example::
 +
-+	snprintf(states, sizeof(states), "%*pbl", RV_MAX_BA_STATES, mon->states);
-+	snprintf(next, sizeof(next), "%*pbl", RV_MAX_BA_STATES, next_state);
++    RULE =3D always (ACQUIRE imply ((not KILLED and not CRASHED) until REL=
+EASE))
 +
-+	for (i =3D 0; i < LTL_NUM_ATOM; ++i) {
-+		if (test_bit(i, mon->atoms)) {
-+			seq_buf_printf(&atoms, format_str, ltl_atom_str(i));
-+			format_str =3D ",%s";
-+		}
-+	}
++which says: if `ACQUIRE`, then `RELEASE` must happen before `KILLED` or
++`CRASHED`.
 +
-+	CONCATENATE(trace_event_, MONITOR_NAME)(task, states, atoms.buffer, next);
-+}
++The LTL can be broken down using sub-expressions. The above is equivalent =
+to:
 +
-+static void ltl_validate(struct task_struct *task, struct ltl_monitor *mon)
-+{
-+	DECLARE_BITMAP(next_states, RV_MAX_BA_STATES) =3D {0};
++   .. code-block::
 +
-+	if (!rv_ltl_valid_state(mon))
-+		return;
++    RULE =3D always (ACQUIRE imply (ALIVE until RELEASE))
++    ALIVE =3D not KILLED and not CRASHED
 +
-+	for (unsigned int i =3D 0; i < RV_NUM_BA_STATES; ++i) {
-+		if (test_bit(i, mon->states))
-+			ltl_possible_next_states(mon, i, next_states);
-+	}
++From this specification, `rvgen` generates the C implementation of a Buchi
++automaton - a non-deterministic state machine which checks the satisfiabil=
+ity of
++the LTL. See Documentation/trace/rv/monitor_synthesis.rst for details on u=
+sing
++`rvgen`.
 +
-+	ltl_trace_event(task, mon, next_states);
++References
++----------
 +
-+	memcpy(mon->states, next_states, sizeof(next_states));
++One book covering model checking and linear temporal logic is::
 +
-+	if (!rv_ltl_valid_state(mon))
-+		ltl_illegal_state(task, mon);
-+}
++  Christel Baier and Joost-Pieter Katoen: Principles of Model Checking, Th=
+e MIT
++  Press, 2008.
 +
-+static void ltl_atom_update(struct task_struct *task, enum ltl_atom atom, =
-bool value)
-+{
-+	struct ltl_monitor *mon =3D ltl_get_monitor(task);
++For an example of using linear temporal logic in software testing, see::
 +
-+	ltl_atom_set(mon, atom, value);
-+	ltl_atoms_fetch(task, mon);
++  Ruijie Meng, Zhen Dong, Jialin Li, Ivan Beschastnikh, and Abhik Roychoud=
+hury.
++  2022. Linear-time temporal logic guided greybox fuzzing. In Proceedings =
+of the
++  44th International Conference on Software Engineering (ICSE '22).  Assoc=
+iation
++  for Computing Machinery, New York, NY, USA, 1343=E2=80=931355.
++  https://doi.org/10.1145/3510003.3510082
 +
-+	if (!rv_ltl_valid_state(mon))
-+		ltl_attempt_start(task, mon);
++The kernel's LTL monitor implementation is based on::
 +
-+	ltl_validate(task, mon);
-+}
-+
-+static void __maybe_unused ltl_atom_pulse(struct task_struct *task, enum l=
-tl_atom atom, bool value)
-+{
-+	struct ltl_monitor *mon =3D ltl_get_monitor(task);
-+
-+	ltl_atom_update(task, atom, value);
-+
-+	ltl_atom_set(mon, atom, !value);
-+	ltl_validate(task, mon);
-+}
-diff --git a/kernel/fork.c b/kernel/fork.c
-index 1ee8eb11f38b..1f06559d17bf 100644
---- a/kernel/fork.c
-+++ b/kernel/fork.c
-@@ -1886,10 +1886,7 @@ static void copy_oom_score_adj(u64 clone_flags, stru=
-ct task_struct *tsk)
- #ifdef CONFIG_RV
- static void rv_task_fork(struct task_struct *p)
- {
--	int i;
--
--	for (i =3D 0; i < RV_PER_TASK_MONITORS; i++)
--		p->rv[i].da_mon.monitoring =3D false;
-+	memset(&p->rv, 0, sizeof(p->rv));
- }
- #else
- #define rv_task_fork(p) do {} while (0)
-diff --git a/kernel/trace/rv/Kconfig b/kernel/trace/rv/Kconfig
-index 6cdffc04b73c..6e157f964991 100644
---- a/kernel/trace/rv/Kconfig
-+++ b/kernel/trace/rv/Kconfig
-@@ -11,6 +11,13 @@ config DA_MON_EVENTS_ID
- 	select RV_MON_EVENTS
- 	bool
++  Gerth, R., Peled, D., Vardi, M.Y., Wolper, P. (1996). Simple On-the-fly
++  Automatic Verification of Linear Temporal Logic. In: Dembi=C5=84ski, P.,=
+ =C5=9Aredniawa,
++  M. (eds) Protocol Specification, Testing and Verification XV. PSTV 1995.=
+ IFIP
++  Advances in Information and Communication Technology. Springer, Boston, =
+MA.
++  https://doi.org/10.1007/978-0-387-34892-6_1
+diff --git a/Documentation/trace/rv/monitor_synthesis.rst b/Documentation/t=
+race/rv/monitor_synthesis.rst
+index 85624062073b..ac808a7554f5 100644
+--- a/Documentation/trace/rv/monitor_synthesis.rst
++++ b/Documentation/trace/rv/monitor_synthesis.rst
+@@ -39,16 +39,18 @@ below::
+ RV monitor synthesis
+ --------------------
 =20
-+config LTL_MON_EVENTS_ID
-+	select RV_MON_EVENTS
-+	bool
+-The synthesis of automata-based models into the Linux *RV monitor* abstrac=
+tion
+-is automated by the rvgen tool and the rv/da_monitor.h header file that
+-contains a set of macros that automatically generate the monitor's code.
++The synthesis of a specification into the Linux *RV monitor* abstraction is
++automated by the rvgen tool and the header file containing common code for
++creating monitors. The header files are:
 +
-+config RV_LTL_MONITOR
-+	bool
-+
- menuconfig RV
- 	bool "Runtime Verification"
- 	depends on TRACING
-diff --git a/kernel/trace/rv/rv_trace.h b/kernel/trace/rv/rv_trace.h
-index 99c3801616d4..fd3111ad1d51 100644
---- a/kernel/trace/rv/rv_trace.h
-+++ b/kernel/trace/rv/rv_trace.h
-@@ -127,6 +127,53 @@ DECLARE_EVENT_CLASS(error_da_monitor_id,
- // Add new monitors based on CONFIG_DA_MON_EVENTS_ID here
++  * rv/da_monitor.h for deterministic automaton monitor.
++  * rv/ltl_monitor.h for linear temporal logic monitor.
 =20
- #endif /* CONFIG_DA_MON_EVENTS_ID */
-+#ifdef CONFIG_LTL_MON_EVENTS_ID
-+DECLARE_EVENT_CLASS(event_ltl_monitor_id,
-+
-+	TP_PROTO(struct task_struct *task, char *states, char *atoms, char *next),
-+
-+	TP_ARGS(task, states, atoms, next),
-+
-+	TP_STRUCT__entry(
-+		__string(comm, task->comm)
-+		__field(pid_t, pid)
-+		__string(states, states)
-+		__string(atoms, atoms)
-+		__string(next, next)
-+	),
-+
-+	TP_fast_assign(
-+		__assign_str(comm);
-+		__entry->pid =3D task->pid;
-+		__assign_str(states);
-+		__assign_str(atoms);
-+		__assign_str(next);
-+	),
-+
-+	TP_printk("%s[%d]: (%s) x (%s) -> (%s)", __get_str(comm), __entry->pid,
-+		  __get_str(states), __get_str(atoms), __get_str(next))
-+);
-+
-+DECLARE_EVENT_CLASS(error_ltl_monitor_id,
-+
-+	TP_PROTO(struct task_struct *task),
-+
-+	TP_ARGS(task),
-+
-+	TP_STRUCT__entry(
-+		__string(comm, task->comm)
-+		__field(pid_t, pid)
-+	),
-+
-+	TP_fast_assign(
-+		__assign_str(comm);
-+		__entry->pid =3D task->pid;
-+	),
-+
-+	TP_printk("%s[%d]: violation detected", __get_str(comm), __entry->pid)
-+);
-+// Add new monitors based on CONFIG_LTL_MON_EVENTS_ID here
-+#endif /* CONFIG_LTL_MON_EVENTS_ID */
- #endif /* _TRACE_RV_H */
+ rvgen
+ -----
 =20
- /* This part must be outside protection */
+-The rvgen utility leverages dot2c by converting an automaton model in
+-the DOT format into the C representation [1] and creating the skeleton of
+-a kernel monitor in C.
++The rvgen utility converts a specification into the C presentation and cre=
+ating
++the skeleton of a kernel monitor in C.
+=20
+ For example, it is possible to transform the wip.dot model present in
+ [1] into a per-cpu monitor with the following command::
+@@ -63,18 +65,38 @@ This will create a directory named wip/ with the follow=
+ing files:
+ The wip.c file contains the monitor declaration and the starting point for
+ the system instrumentation.
+=20
+-Monitor macros
+---------------
++Similarly, a linear temporal logic monitor can be generated with the follo=
+wing
++command::
++
++  $ rvgen monitor -c ltl -s pagefault.ltl -t per_task
++
++This generates pagefault/ directory with:
++
++- pagefault.h: The Buchi automaton (the non-deterministic state machine to
++  verify the specification)
++- pagefault.c: The skeleton for the RV monitor
++
++Monitor header files
++--------------------
++
++The header files:
++
++- `rv/da_monitor.h` for deterministic automaton monitor
++- `rv/ltl_monitor` for linear temporal logic monitor
++
++include common macros and static functions for implementing *Monitor
++Instance(s)*.
+=20
+-The rv/da_monitor.h enables automatic code generation for the *Monitor
+-Instance(s)* using C macros.
++The benefits of having all common functionalities in a single header file =
+are
++3-fold:
+=20
+-The benefits of the usage of macro for monitor synthesis are 3-fold as it:
++  - Reduce the code duplication;
++  - Facilitate the bug fix/improvement;
++  - Avoid the case of developers changing the core of the monitor code to
++    manipulate the model in a (let's say) non-standard way.
+=20
+-- Reduces the code duplication;
+-- Facilitates the bug fix/improvement;
+-- Avoids the case of developers changing the core of the monitor code
+-  to manipulate the model in a (let's say) non-standard way.
++rv/da_monitor.h
+++++++++++++++++
+=20
+ This initial implementation presents three different types of monitor inst=
+ances:
+=20
+@@ -130,10 +152,112 @@ While the event "preempt_enabled" will use::
+ To notify the monitor that the system will be returning to the initial sta=
+te,
+ so the system and the monitor should be in sync.
+=20
++rv/ltl_monitor.h
++++++++++++++++++
++This file must be combined with the $(MODEL_NAME).h file (generated by `rv=
+gen`)
++to be complete. For example, for the `pagefault` monitor, the `pagefault.c`
++source file must include::
++
++  #include "pagefault.h"
++  #include <rv/ltl_monitor.h>
++
++(the skeleton monitor file generated by `rvgen` already does this).
++
++`$(MODEL_NAME).h` (`pagefault.h` in the above example) includes the
++implementation of the Buchi automaton - a non-deterministic state machine =
+that
++verifies the LTL specification. While `rv/ltl_monitor.h` includes the comm=
+on
++helper functions to interact with the Buchi automaton and to implement an =
+RV
++monitor. An important definition in `$(MODEL_NAME).h` is::
++
++  enum ltl_atom {
++      LTL_$(FIRST_ATOMIC_PROPOSITION),
++      LTL_$(SECOND_ATOMIC_PROPOSITION),
++      ...
++      LTL_NUM_ATOM
++  };
++
++which is the list of atomic propositions present in the LTL specification
++(prefixed with "LTL\_" to avoid name collision). This `enum` is passed to =
+the
++functions interacting with the Buchi automaton.
++
++While generating code, `rvgen` cannot understand the meaning of the atomic
++propositions. Thus, that task is left for manual work. The recommended pra=
+tice
++is adding tracepoints to places where the atomic propositions change; and =
+in the
++tracepoints' handlers: the Buchi automaton is executed using::
++
++  void ltl_atom_update(struct task_struct *task, enum ltl_atom atom, bool =
+value)
++
++which tells the Buchi automaton that the atomic proposition `atom` is now
++`value`. The Buchi automaton checks whether the LTL specification is still
++satisfied, and invokes the monitor's error tracepoint and the reactor if
++violation is detected.
++
++Tracepoints and `ltl_atom_update()` should be used whenever possible. Howe=
+ver,
++it is sometimes not the most convenient. For some atomic propositions whic=
+h are
++changed in multiple places in the kernel, it is cumbersome to trace all th=
+ose
++places. Furthermore, it may not be important that the atomic propositions =
+are
++updated at precise times. For example, considering the following linear te=
+mporal
++logic::
++
++  RULE =3D always (RT imply not PAGEFAULT)
++
++This LTL states that a real-time task does not raise page faults. For this
++specification, it is not important when `RT` changes, as long as it has the
++correct value when `PAGEFAULT` is true.  Motivated by this case, another
++function is introduced::
++
++  void ltl_atom_fetch(struct task_struct *task, struct ltl_monitor *mon)
++
++This function is called whenever the Buchi automaton is triggered. Therefo=
+re, it
++can be manually implemented to "fetch" `RT`::
++
++  void ltl_atom_fetch(struct task_struct *task, struct ltl_monitor *mon)
++  {
++      ltl_atom_set(mon, LTL_RT, rt_task(task));
++  }
++
++Effectively, whenever `PAGEFAULT` is updated with a call to `ltl_atom_upda=
+te()`,
++`RT` is also fetched. Thus, the LTL specification can be verified without
++tracing `RT` everywhere.
++
++For atomic propositions which act like events, they usually need to be set=
+ (or
++cleared) and then immediately cleared (or set). A convenient function is
++provided::
++
++  void ltl_atom_pulse(struct task_struct *task, enum ltl_atom atom, bool v=
+alue)
++
++which is equivalent to::
++
++  ltl_atom_update(task, atom, value);
++  ltl_atom_update(task, atom, !value);
++
++To initialize the atomic propositions, the following function must be
++implemented::
++
++  ltl_atoms_init(struct task_struct *task, struct ltl_monitor *mon, bool t=
+ask_creation)
++
++This function is called for all running tasks when the monitor is enabled.=
+ It is
++also called for new tasks created after the enabling the monitor. It should
++initialize as many atomic propositions as possible, for example::
++
++  void ltl_atom_init(struct task_struct *task, struct ltl_monitor *mon, bo=
+ol task_creation)
++  {
++      ltl_atom_set(mon, LTL_RT, rt_task(task));
++      if (task_creation)
++          ltl_atom_set(mon, LTL_PAGEFAULT, false);
++  }
++
++Atomic propositions not initialized by `ltl_atom_init()` will stay in the
++unknown state until relevant tracepoints are hit, which can take some time=
+. As
++monitoring for a task cannot be done until all atomic propositions is know=
+n for
++the task, the monitor may need some time to start validating tasks which h=
+ave
++been running before the monitor is enabled. Therefore, it is recommended to
++start the tasks of interest after enabling the monitor.
++
+ Final remarks
+ -------------
+=20
+-With the monitor synthesis in place using the rv/da_monitor.h and
++With the monitor synthesis in place using the header files and
+ rvgen, the developer's work should be limited to the instrumentation
+ of the system, increasing the confidence in the overall approach.
+=20
 --=20
 2.39.5
 
