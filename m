@@ -1,89 +1,66 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 972102E36F6;
-	Fri,  4 Jul 2025 21:14:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9087B1D7E5C;
+	Fri,  4 Jul 2025 22:14:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751663664; cv=none; b=N5WoI8mH3spVrZtSkPrqrtm4iX0QUidXW/13OHWIQriDXDOy8Jco16iwKJvzBtLeIosyAhC0iJCYsn8HB3WudNYnWSIerfiZjJqsYP2h12g/YqZOIo1VXRPtLVZK9t6tbJmEGTc1pPECc16IUKJKtjx3fg640DgTeCW10ZIRc6k=
+	t=1751667253; cv=none; b=RYk4H8tcgY/D/3fdwM+mF0nVVXiGJhAfwqQBSb35c1jlV7/NAvSWd+X/qsyiIg3DAZ+vSeGhsgaKUKlnNyNatldbsaCr6nso/gYhqVXGCXCfwUV0P9c+4i1wosL3FK1KEjB9q4oXVbONi0STw3hhZCjD5lU0OYEUvqydCBd/Z/Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751663664; c=relaxed/simple;
-	bh=4ZXjjIEFeyNziz8nI9hyycb93PeMN+TlTyQFX8ZUBy8=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=VGRgpLe6Ps+ifPRfesxz/MDIiCcq1cgsZG392FpvJoV8QzVLDdmzXqUDcfmmrDmTtLLfnbuUlTABgyyc8iJyk+rB7Brkbz3dn5Mn6CSSFdMUa9K6mBsnzM5uJa31c2VvNmEuKXQTTyQhlvkuxkt7qeaIvd2lyJXzmz6tmn5DxUM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=P+mguad3; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751667253; c=relaxed/simple;
+	bh=iweyl4UADi/qIPmNnASst+ROilTN90Y7YfVHKjKx0MQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Q/yJ/vNqEqtC970sG6Q7k9Ff955wzJN7REIK2X6npWa5lTq52w5rbbD0QY24rbo2y08sn9a1NDYC+mg7Q8J3TG+Q2+So71bW1cDU8qtWjocPuwEn7dPuZuSj6FxzqRajtrVZ3n0vgWPtyv+EDp92ork7ILaxcO9ukyw8TJbd5LA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=F6EFnAVS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="P+mguad3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CE8B8C4CEE3;
-	Fri,  4 Jul 2025 21:14:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-	s=korg; t=1751663664;
-	bh=4ZXjjIEFeyNziz8nI9hyycb93PeMN+TlTyQFX8ZUBy8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=P+mguad3o1QgfcWmYUtbI6/FsgHbbB1PA5+bCjq2nLDTkFt6v2jx4aZiXAWx0pGHX
-	 GYiIki4MzU5sYOZthXKw5Qdw3sFPMG9PgFKOFzykAvnsiUDIk7rb95YkqaazLj6zw4
-	 3dbkLeWZtRfOmQ8v6ZKZpz4JUS1oNnQLE+gi45Rw=
-Date: Fri, 4 Jul 2025 14:14:22 -0700
-From: Andrew Morton <akpm@linux-foundation.org>
-To: Baolin Wang <baolin.wang@linux.alibaba.com>
-Cc: Nico Pache <npache@redhat.com>, linux-mm@kvack.org,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, david@redhat.com, ziy@nvidia.com,
- lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com, ryan.roberts@arm.com,
- dev.jain@arm.com, corbet@lwn.net, rostedt@goodmis.org, mhiramat@kernel.org,
- mathieu.desnoyers@efficios.com, baohua@kernel.org, willy@infradead.org,
- peterx@redhat.com, wangkefeng.wang@huawei.com, usamaarif642@gmail.com,
- sunnanyong@huawei.com, vishal.moola@gmail.com,
- thomas.hellstrom@linux.intel.com, yang@os.amperecomputing.com,
- kirill.shutemov@linux.intel.com, aarcange@redhat.com, raquini@redhat.com,
- anshuman.khandual@arm.com, catalin.marinas@arm.com, tiwai@suse.de,
- will@kernel.org, dave.hansen@linux.intel.com, jack@suse.cz, cl@gentwo.org,
- jglisse@google.com, surenb@google.com, zokeefe@google.com,
- hannes@cmpxchg.org, rientjes@google.com, mhocko@suse.com,
- rdunlap@infradead.org
-Subject: Re: [PATCH v8 11/15] khugepaged: allow madvise_collapse to check
- all anonymous mTHP orders
-Message-Id: <20250704141422.359c89146ad69512b9be4902@linux-foundation.org>
-In-Reply-To: <2f6d9541-8083-4d3c-a9c1-cba0d5bf98a0@linux.alibaba.com>
-References: <20250702055742.102808-1-npache@redhat.com>
-	<20250702055742.102808-12-npache@redhat.com>
-	<2f6d9541-8083-4d3c-a9c1-cba0d5bf98a0@linux.alibaba.com>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="F6EFnAVS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E95C4C4CEEE;
+	Fri,  4 Jul 2025 22:14:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751667253;
+	bh=iweyl4UADi/qIPmNnASst+ROilTN90Y7YfVHKjKx0MQ=;
+	h=From:To:Cc:Subject:Date:From;
+	b=F6EFnAVSOGwjnVn1IFEFhW244EfvLZUgICVSoHKXRDnl6WiyvM0TPPtnUa1KIv0mE
+	 44GwDzaryp6XwtD1dk4xLZwYDNf14e7g/1/Mc79Y+inkAG22PCUpGgP4v1TY0xV7/M
+	 yH+9QGc1YeeCChJV8mpo14uG76LRl44uMpB9zblZ4F2TsrvNHxOlcluxjMnZ5xoidZ
+	 0z6DtfDfDpNn281yqx8m7loEvrANAc/4fbaNOo3848C630fh1k1o9cGI3Musbta1mA
+	 1ZD8xg6JgCoC/Dr6Mc8e00edeiOZx1WrUezmIK3/O1EUmX+vS8YWMS8EWvNTGl0J9M
+	 mzZ4hYMiuXeAQ==
+From: SeongJae Park <sj@kernel.org>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: SeongJae Park <sj@kernel.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	damon@lists.linux.dev,
+	kernel-team@meta.com,
+	linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org,
+	linux-trace-kernel@vger.kernel.org
+Subject: [PATCH 0/2] mm/damon: add trace events for auto-tuned monitoring intervals and DAMOS quota
+Date: Fri,  4 Jul 2025 15:14:06 -0700
+Message-Id: <20250704221408.38510-1-sj@kernel.org>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Fri, 4 Jul 2025 14:11:13 +0800 Baolin Wang <baolin.wang@linux.alibaba.com> wrote:
+The aim-oriented auto-tuning features for monitoring intervals and DAMOS
+quota are important and recommended.  Add tracepoints for observabilities
+of those tuned values and the tuning itself.
 
-> On 2025/7/2 13:57, Nico Pache wrote:
-> > Allow madvise_collapse to scan/collapse all mTHP orders without the
-> > strict requirement of needing the PMD-order enabled.
-> > 
-> > Signed-off-by: Nico Pache <npache@redhat.com>
-> 
-> I am afraid we should drop this patch from the series, since Hugh 
-> explicitly opposed my modification of the madvise_collapse control logic 
-> in this thread[1].
+SeongJae Park (2):
+  mm/damon: add trace event for auto-tuned monitoring intervals
+  mm/damon: add trace event for effective size quota
 
-Well it drops easily enough.  I don't know if it compiles yet.
+ include/trace/events/damon.h | 43 ++++++++++++++++++++++++++++++++++++
+ mm/damon/core.c              | 21 +++++++++++++++++-
+ 2 files changed, 63 insertions(+), 1 deletion(-)
 
-Nico, can you confirm that you're OK with the droppage and that the
-series is still good without this patch?
 
-> Moreover, since we have not yet clarified how to handle the conflict 
-> between the semantics of madvise_collapse and the THP interfaces, we 
-> should keep the current logic[2] (means madvise_collapse still only 
-> allows PMD collapse).
-> 
-> If madvise_collapse is to support mTHP collapse, there will be more 
-> semantic conflicts to discuss.
-> 
-> [1] 
-> https://lore.kernel.org/all/cover.1750815384.git.baolin.wang@linux.alibaba.com/
-> [2] 
-> https://lore.kernel.org/all/23b8ad10-cd1f-45df-a25c-78d01c8af44f@redhat.com/
+base-commit: 09cf52aa7503a7126edc3af797e116a7ec49e572
+-- 
+2.39.5
