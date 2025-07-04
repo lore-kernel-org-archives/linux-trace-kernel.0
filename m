@@ -1,30 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8D332877C7;
-	Fri,  4 Jul 2025 13:49:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BB1A2877C7;
+	Fri,  4 Jul 2025 13:49:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751636993; cv=none; b=Mjw/QJb+HLWKMI0jXfuVGDDDwIlpHsBDw/b8fs93XCs3No49gidp1I2H58dkwbF8aYk6LzV29ZJODKshE4tmwLNkvO8c5Sb8b6XQO5Nz/IotOPu4X8kmfoPWXcgOBh57TA60AT3HBqRMkTo2Tw1Bb8Rc6wlE2DfHMlVFs0cSwn8=
+	t=1751636998; cv=none; b=l1N4EjK0lDJevVvnQodlAvwyhI9Omk3AKbLRNzoBMJjpvR8E0Vpxjd2S46Do4+ulHDzsH2BB1QNpHDtJyNOidvQ0l2PYL0kRazill2NiiVsFzAZ3bwGT3EiTYyRTTeKrGr3TKI0dFFb3qr5mUUC4PRyKtTlojXVKDfxWTFh93/A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751636993; c=relaxed/simple;
-	bh=RPKWI41dVFPie/nu06bres1q6kZy+kb86c66f3Y/tZA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=XAoyDLQmUhQGiHVODN4iZuLSs23Fr33kFNFErf5JO8THuBbDwNhe9qGloL+GoWSaP6cu7GgzbIXPu9RkKkEeSxgOPTuX8zFd7xCoWTd3W/pAmqyfXOrUnlZu49dQGSJoTs3GX26vsPMuJbQuacB9g1d1G5TpVjhAWu7BE0sdLIc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CjlGXGnZ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751636998; c=relaxed/simple;
+	bh=vyVIGCtc0jVROOiaoRDc63+XloT/k7Y60usHpVt467Y=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=uVN8bQJH6RToQI92JSNKizkQ5QlrnDMYPGNJf/2Yn4KskoJLiTV/cCZseHXFfrLeWC+KMmyF6P5FxYxRTUsxW4Hv6zo41MS0lZJSWHHPkLOubHR1GYVWQXtwxiTYTiRLdVZ4bz0Lyspbr2K/gfG0hGZ2e1yF4KCEgLRqJQ+jycQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QeBTJcLv; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CjlGXGnZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7CF03C4CEE3;
-	Fri,  4 Jul 2025 13:49:47 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QeBTJcLv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 047A4C4CEEB;
+	Fri,  4 Jul 2025 13:49:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751636992;
-	bh=RPKWI41dVFPie/nu06bres1q6kZy+kb86c66f3Y/tZA=;
-	h=From:To:Cc:Subject:Date:From;
-	b=CjlGXGnZNUQ09Q2dji8FQ4JJtKPMwHPnjkuQdDJ/5x1ilkHQHVqrdaHScxCFQSZRj
-	 FbOcjmD1SAI9b7K9+sfxm6JzxFvXfSnDREJPOF8/MiEttxvj6DlttNTHGmvu2IidWG
-	 6waL6vHe26+TtUx6cWEGc498MtOWmzzt4Wz9FVORUUINvHGDbtINdXjBqGnIpOw9Cj
-	 9dKFEkT0gQBlpxOEpA1KYgaLL5FV0SdNmljhBVJn/dcFTr1DE7Yidcl1J/ORN54oXq
-	 dG/QtNlMlHEiUtWAlnQuCwS32P9KW3stTlCADhLh4VZ3k8nq5mlGqQn2YMpuiNwxv3
-	 2lMuvwHCWzZpg==
+	s=k20201202; t=1751636998;
+	bh=vyVIGCtc0jVROOiaoRDc63+XloT/k7Y60usHpVt467Y=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=QeBTJcLvOcdLQq7prI/RVYQdCGmN/+LTcJOHYLGUX8iY+VcLj1yRa98RNlHOzXWEc
+	 ahn08iR5xHokPzlcUIAQ73+776hKf0+qcyFdT/8o5hlTSDaQwAugpnB5JtC3IAobcX
+	 +sv9y+8AF034fxCW04J8WnEoYTtST/7KDtzaw5uONIaj515sxtShlw5M70yHDGXuQY
+	 o+wESRph61IDDV5a41OwvMIOX8gkyBtSS/wldo76STb0T8DALcWfrKpxx6fy/tDwji
+	 KJt6L3V/XNSl5c40uACeUCc3k/fm9uDz3F+fVnpGfPKjRjBJ/DAPUPDKbjSuYnuedr
+	 PJBDR6Xylg8Pg==
 From: Mike Rapoport <rppt@kernel.org>
 To: Andrew Morton <akpm@linux-foundation.org>
 Cc: Andy Lutomirski <luto@kernel.org>,
@@ -47,10 +48,12 @@ Cc: Andy Lutomirski <luto@kernel.org>,
 	linux-modules@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org,
 	x86@kernel.org
-Subject: [PATCH 0/8] x86: enable EXECMEM_ROX_CACHE for ftrace and kprobes
-Date: Fri,  4 Jul 2025 16:49:35 +0300
-Message-ID: <20250704134943.3524829-1-rppt@kernel.org>
+Subject: [PATCH 1/8] execmem: drop unused execmem_update_copy()
+Date: Fri,  4 Jul 2025 16:49:36 +0300
+Message-ID: <20250704134943.3524829-2-rppt@kernel.org>
 X-Mailer: git-send-email 2.47.2
+In-Reply-To: <20250704134943.3524829-1-rppt@kernel.org>
+References: <20250704134943.3524829-1-rppt@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -61,49 +64,59 @@ Content-Transfer-Encoding: 8bit
 
 From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
 
-Hi,
+The execmem_update_copy() that used text poking was required when memory
+allocated from ROX cache was always read-only. Since now its permissions
+can be switched to read-write there is no need in a function that updates
+memory with text poking.
 
-These patches enable use of EXECMEM_ROX_CACHE for ftrace and kprobes
-allocations on x86.
+Remove it.
 
-They also include some ground work in execmem.
+Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+---
+ include/linux/execmem.h | 13 -------------
+ mm/execmem.c            |  5 -----
+ 2 files changed, 18 deletions(-)
 
-Since the execmem model for caching large ROX pages changed from the
-initial assumption that the memory that is allocated from ROX cache is
-always ROX to the current state where memory can be temporarily made RW and
-then restored to ROX, we can stop using text poking to update it. This also
-saves the hassle of trying lock text_mutex in execmem_cache_free() when
-kprobes already hold that mutex.
-
-The patches 1-6 update and cleanup execmem ROX cache management,
-patch 7 enables EXECMEM_ROX_CACHE for kprobes and
-patch 8 enables EXECMEM_ROX_CACHE for frace.
-
-The patches are also available at git:
-
-https://git.kernel.org/rppt/h/execmem/x86-rox/ftrace%2bkprobes
-
-Mike Rapoport (Microsoft) (8):
-  execmem: drop unused execmem_update_copy()
-  execmem: introduce execmem_alloc_rw()
-  execmem: rework execmem_cache_free()
-  execmem: move execmem_force_rw() and execmem_restore_rox() before use
-  execmem: add fallback for failures in vmalloc(VM_ALLOW_HUGE_VMAP)
-  execmem: drop writable parameter from execmem_fill_trapping_insns()
-  x86/kprobes: enable EXECMEM_ROX_CACHE for kprobes allocations
-  x86/ftrace: enable EXECMEM_ROX_CACHE for ftrace allocations
-
- arch/x86/kernel/alternative.c  |   3 +-
- arch/x86/kernel/ftrace.c       |   2 +-
- arch/x86/kernel/kprobes/core.c |  18 ---
- arch/x86/mm/init.c             |  24 ++--
- include/linux/execmem.h        |  54 ++++-----
- kernel/module/main.c           |  13 +--
- mm/execmem.c                   | 193 +++++++++++++++++++++++++--------
- 7 files changed, 189 insertions(+), 118 deletions(-)
-
-
-base-commit: 86731a2a651e58953fc949573895f2fa6d456841
+diff --git a/include/linux/execmem.h b/include/linux/execmem.h
+index 3be35680a54f..734fbe83d98e 100644
+--- a/include/linux/execmem.h
++++ b/include/linux/execmem.h
+@@ -185,19 +185,6 @@ DEFINE_FREE(execmem, void *, if (_T) execmem_free(_T));
+ struct vm_struct *execmem_vmap(size_t size);
+ #endif
+ 
+-/**
+- * execmem_update_copy - copy an update to executable memory
+- * @dst:  destination address to update
+- * @src:  source address containing the data
+- * @size: how many bytes of memory shold be copied
+- *
+- * Copy @size bytes from @src to @dst using text poking if the memory at
+- * @dst is read-only.
+- *
+- * Return: a pointer to @dst or NULL on error
+- */
+-void *execmem_update_copy(void *dst, const void *src, size_t size);
+-
+ /**
+  * execmem_is_rox - check if execmem is read-only
+  * @type - the execmem type to check
+diff --git a/mm/execmem.c b/mm/execmem.c
+index 2b683e7d864d..0712ebb4eb77 100644
+--- a/mm/execmem.c
++++ b/mm/execmem.c
+@@ -399,11 +399,6 @@ void execmem_free(void *ptr)
+ 		vfree(ptr);
+ }
+ 
+-void *execmem_update_copy(void *dst, const void *src, size_t size)
+-{
+-	return text_poke_copy(dst, src, size);
+-}
+-
+ bool execmem_is_rox(enum execmem_type type)
+ {
+ 	return !!(execmem_info->ranges[type].flags & EXECMEM_ROX_CACHE);
 -- 
 2.47.2
 
