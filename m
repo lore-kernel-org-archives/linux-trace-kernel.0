@@ -1,77 +1,62 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7058915ADB4;
-	Sun,  6 Jul 2025 04:30:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B9161A76D0;
+	Sun,  6 Jul 2025 06:00:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751776217; cv=none; b=CEW/07xuCwOS/w/zHSkezg03XzuYVKHGJe+tLpLLTCR32wMe8F6j2hnl82DT1J0eV1JCKKXDGGc0VCOUa4BkgaMiAfRXO6JJrwKXEGmXcEAkJFz9+zea9ioL7itE9kUZwkGi/On8lmvq2UQdw/Sf+9L10KnHcHUTrXCa9N2UU8Y=
+	t=1751781612; cv=none; b=BqcFkGGakU/+PaE+ZDIX/B/q2KSypGvY8oy50cK7PGYhdCZt9I/MHAYf1HYptDDQZK1Uwa2m9wTw2EmRXguEQeND9U4ndc7HvmEraIAt9C5rdO+8VbEDsZ8rSrM+ELk7rL6v7br22nw8Gipoi76JyE6LdA+0TII2OzVf4iPVL1s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751776217; c=relaxed/simple;
-	bh=wooHoirHZtu0a5A+d2+8+BgRHGQ/MFCV+B8Pz8Sx2/I=;
+	s=arc-20240116; t=1751781612; c=relaxed/simple;
+	bh=6LXeYQHiR9KdMFnH25UR1nczxh0conAegX4pfPWuIkE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dqSVeKI/sksAlOdqhS8aMkLKV2nI/W6uy3tmvMsoqvJHogaRjHVHM1aJ7JH2dDZ8nDblvOtY5HnXNmYxxZXCTktvOthpPM3fJ/pHji3zZEmPY2w/Krp0Ge6y8gey/vmVXICfy5NG6fUtB5NyoIxiaTzTJgexard41qGZFDsXQEw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=I8GhsPsa; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=LfF7Ojq6JMMoeGp3+1XvJgtAiYWus88dik8LjqM40mYsZDb25TlXUhFJKBHjlPNvIdo3QUyKMQTbbqA7/eifHfYJE9oRi48ozewy5DvjVWe2C0IJiok1eIkDuIdcT1rN4bSmz0w4fXoQx4eNHoTKet7deThGOPUiNYWYdOevdp8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rGudv65b; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="I8GhsPsa"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751776216; x=1783312216;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=wooHoirHZtu0a5A+d2+8+BgRHGQ/MFCV+B8Pz8Sx2/I=;
-  b=I8GhsPsa5bBSxilXEXZgPf3t+8qgnekKbzA+mtLu5oCl4pNcnuoGYJbw
-   AN1al6lBbAffkryVlumbw21onG+hougSD+bFObaHtatqfyHWRekvfI+wL
-   Rfphw7TveHEi9bywDNETbHkmkFD9Sz3FaLwj0drZVncymtpxZGe+QOOaP
-   s2iemOGooIK6LXfj2FZBuX0Mi88QIS32IVNgR4axzwVi1AD/QbIbkdJGU
-   dMWSi4MjqNKM6TSw1pbFp1iShff/Zerit/+mvvs92qbCZrFwqJqure2wu
-   HawP+tE35/pkIYhDDkt0nxQXCyf6muMqaKwyJ5g3axffKRr6XNAL+1qIc
-   w==;
-X-CSE-ConnectionGUID: OHYwXaQQR+WSwSL7AlFcNw==
-X-CSE-MsgGUID: M+b16x8BQdKpGqf0G6CCUA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11485"; a="65091574"
-X-IronPort-AV: E=Sophos;i="6.16,291,1744095600"; 
-   d="scan'208";a="65091574"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jul 2025 21:30:15 -0700
-X-CSE-ConnectionGUID: dp3PM6/bQKuctTFEjrYzCw==
-X-CSE-MsgGUID: OuBbdbJ3QhyP47pk4JZepQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,291,1744095600"; 
-   d="scan'208";a="154337953"
-Received: from lkp-server01.sh.intel.com (HELO 0b2900756c14) ([10.239.97.150])
-  by orviesa010.jf.intel.com with ESMTP; 05 Jul 2025 21:30:10 -0700
-Received: from kbuild by 0b2900756c14 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uYH0x-0004sd-1e;
-	Sun, 06 Jul 2025 04:30:07 +0000
-Date: Sun, 6 Jul 2025 12:29:29 +0800
-From: kernel test robot <lkp@intel.com>
-To: Wander Lairson Costa <wander@redhat.com>,
-	Ingo Molnar <mingo@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-	Valentin Schneider <vschneid@redhat.com>,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rGudv65b"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5853DC4CEED;
+	Sun,  6 Jul 2025 06:00:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751781612;
+	bh=6LXeYQHiR9KdMFnH25UR1nczxh0conAegX4pfPWuIkE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=rGudv65bW/I8lfKVqqK+2DB/GumrSqAs4KGqsf9lwb5vIM0lf5rqwLOiBIWp47ysv
+	 4r0WG7tURWg1tGnjjq79aeVVQsZyXGj8cR1nXlmSb/tIyQdxWa5jBPwYgk4Ibn8/K9
+	 8aclrjMylHDqCzPAf4qXddw9XneKJKYKYM0CiGX5G6xkO/XRKoQ3qrE6gYkXOWmNgu
+	 3ThVFn2essmngu1U6ie6u/JjbUhg1oKvSHUs8gt+5x+lYChW6F8Iwx5TWrOW2nYZQ7
+	 U+zyKgjP6FtLwjG/hLHgAU67WZV0PzQ/Jx8mTjGv1yy23vzA7uiG8kCNLs0kGzeagw
+	 h+sF92nUwh5Nw==
+Date: Sun, 6 Jul 2025 09:00:07 +0300
+From: Leon Romanovsky <leon@kernel.org>
+To: Marek Szyprowski <m.szyprowski@samsung.com>
+Cc: Christoph Hellwig <hch@lst.de>, Jonathan Corbet <corbet@lwn.net>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Robin Murphy <robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>,
+	Will Deacon <will@kernel.org>,
+	"Michael S. Tsirkin" <mst@redhat.com>,
+	Jason Wang <jasowang@redhat.com>,
+	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
+	Eugenio =?iso-8859-1?Q?P=E9rez?= <eperezma@redhat.com>,
+	Alexander Potapenko <glider@google.com>,
+	Marco Elver <elver@google.com>, Dmitry Vyukov <dvyukov@google.com>,
 	Masami Hiramatsu <mhiramat@kernel.org>,
 	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	David Woodhouse <dwmw@amazon.co.uk>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Cc: oe-kbuild-all@lists.linux.dev,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Clark Williams <williams@redhat.com>,
-	Gabriele Monaco <gmonaco@redhat.com>
-Subject: Re: [PATCH v3 1/2] trace/preemptirq: reduce overhead of
- irq_enable/disable tracepoints
-Message-ID: <202507061226.y7g5eBuq-lkp@intel.com>
-References: <20250704170748.97632-2-wander@redhat.com>
+	=?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org, iommu@lists.linux.dev,
+	virtualization@lists.linux.dev, kasan-dev@googlegroups.com,
+	linux-trace-kernel@vger.kernel.org, linux-mm@kvack.org,
+	Jason Gunthorpe <jgg@ziepe.ca>
+Subject: Re: [PATCH 0/8] dma-mapping: migrate to physical address-based API
+Message-ID: <20250706060007.GP6278@unreal>
+References: <CGME20250625131920eucas1p271b196cde042bd39ac08fb12beff5baf@eucas1p2.samsung.com>
+ <cover.1750854543.git.leon@kernel.org>
+ <35df6f2a-0010-41fe-b490-f52693fe4778@samsung.com>
+ <20250627170213.GL17401@unreal>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -80,132 +65,116 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250704170748.97632-2-wander@redhat.com>
+In-Reply-To: <20250627170213.GL17401@unreal>
 
-Hi Wander,
+On Fri, Jun 27, 2025 at 08:02:13PM +0300, Leon Romanovsky wrote:
+> On Fri, Jun 27, 2025 at 03:44:10PM +0200, Marek Szyprowski wrote:
+> > On 25.06.2025 15:18, Leon Romanovsky wrote:
+> > > This series refactors the DMA mapping to use physical addresses
+> > > as the primary interface instead of page+offset parameters. This
+> > > change aligns the DMA API with the underlying hardware reality where
+> > > DMA operations work with physical addresses, not page structures.
+> > >
+> > > The series consists of 8 patches that progressively convert the DMA
+> > > mapping infrastructure from page-based to physical address-based APIs:
+> > >
+> > > The series maintains backward compatibility by keeping the old
+> > > page-based API as wrapper functions around the new physical
+> > > address-based implementations.
+> > 
+> > Thanks for this rework! I assume that the next step is to add map_phys 
+> > callback also to the dma_map_ops and teach various dma-mapping providers 
+> > to use it to avoid more phys-to-page-to-phys conversions.
+> 
+> Probably Christoph will say yes, however I personally don't see any
+> benefit in this. Maybe I wrong here, but all existing .map_page()
+> implementation platforms don't support p2p anyway. They won't benefit
+> from this such conversion.
+> 
+> > 
+> > I only wonder if this newly introduced dma_map_phys()/dma_unmap_phys() 
+> > API is also suitable for the recently discussed PCI P2P DMA? While 
+> > adding a new API maybe we should take this into account?
+> 
+> First, immediate user (not related to p2p) is blk layer:
+> https://lore.kernel.org/linux-nvme/bcdcb5eb-17ed-412f-bf5c-303079798fe2@nvidia.com/T/#m7e715697d4b2e3997622a3400243477c75cab406
+> 
+> +static bool blk_dma_map_direct(struct request *req, struct device *dma_dev,
+> +		struct blk_dma_iter *iter, struct phys_vec *vec)
+> +{
+> +	iter->addr = dma_map_page(dma_dev, phys_to_page(vec->paddr),
+> +			offset_in_page(vec->paddr), vec->len, rq_dma_dir(req));
+> +	if (dma_mapping_error(dma_dev, iter->addr)) {
+> +		iter->status = BLK_STS_RESOURCE;
+> +		return false;
+> +	}
+> +	iter->len = vec->len;
+> +	return true;
+> +}
+> 
+> Block layer started to store phys addresses instead of struct pages and
+> this phys_to_page() conversion in data-path will be avoided.
 
-kernel test robot noticed the following build errors:
+I almost completed main user of this dma_map_phys() callback. It is
+rewrite of this patch [PATCH v3 3/3] vfio/pci: Allow MMIO regions to be exported through dma-buf
+https://lore.kernel.org/all/20250307052248.405803-4-vivek.kasireddy@intel.com/
 
-[auto build test ERROR on trace/for-next]
-[also build test ERROR on tip/sched/core linus/master v6.16-rc4 next-20250704]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+Whole populate_sgt()->dma_map_resource() block looks differently now and
+it is relying on dma_map_phys() as we are exporting memory without
+struct pages. It will be something like this:
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Wander-Lairson-Costa/trace-preemptirq-reduce-overhead-of-irq_enable-disable-tracepoints/20250705-011058
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace for-next
-patch link:    https://lore.kernel.org/r/20250704170748.97632-2-wander%40redhat.com
-patch subject: [PATCH v3 1/2] trace/preemptirq: reduce overhead of irq_enable/disable tracepoints
-config: nios2-randconfig-r123-20250706 (https://download.01.org/0day-ci/archive/20250706/202507061226.y7g5eBuq-lkp@intel.com/config)
-compiler: nios2-linux-gcc (GCC) 8.5.0
-reproduce: (https://download.01.org/0day-ci/archive/20250706/202507061226.y7g5eBuq-lkp@intel.com/reproduce)
+   89         for (i = 0; i < priv->nr_ranges; i++) {
+   90                 phys = pci_resource_start(priv->vdev->pdev,
+   91                                           dma_ranges[i].region_index);
+   92                 phys += dma_ranges[i].offset;
+   93
+   94                 if (priv->bus_addr) {
+   95                         addr = pci_p2pdma_bus_addr_map(&p2pdma_state, phys);
+   96                         fill_sg_entry(sgl, dma_ranges[i].length, addr);
+   97                         sgl = sg_next(sgl);
+   98                 } else if (dma_use_iova(&priv->state)) {
+   99                         ret = dma_iova_link(attachment->dev, &priv->state, phys,
+  100                                             priv->mapped_len,
+  101                                             dma_ranges[i].length, dir, attrs);
+  102                         if (ret)
+  103                                 goto err_unmap_dma;
+  104
+  105                         priv->mapped_len += dma_ranges[i].length;
+  106                 } else {
+  107                         addr = dma_map_phys(attachment->dev, phys, 0,
+  108                                             dma_ranges[i].length, dir, attrs);
+  109                         ret = dma_mapping_error(attachment->dev, addr);
+  110                         if (ret)
+  111                                 goto unmap_dma_buf;
+  112
+  113                         fill_sg_entry(sgl, dma_ranges[i].length, addr);
+  114                         sgl = sg_next(sgl);
+  115                 }
+  116         }
+  117
+  118         if (dma_use_iova(&priv->state) && !priv->bus_addr) {
+  119                 ret = dma_iova_sync(attachment->dev, &pri->state, 0,
+  120                                     priv->mapped_len);
+  121                 if (ret)
+  122                         goto err_unmap_dma;
+  123
+  124                 fill_sg_entry(sgl, priv->mapped_len, priv->state.addr);
+  125         }
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202507061226.y7g5eBuq-lkp@intel.com/
+> 
+> > My main concern is the lack of the source phys addr passed to the dma_unmap_phys() 
+> > function and I'm aware that this might complicate a bit code conversion 
+> > from old dma_map/unmap_page() API.
 
-All errors (new ones prefixed by >>):
+It is not needed for now, all p2p logic is external to DMA API.
 
-   In file included from ./arch/nios2/include/generated/asm/cmpxchg.h:1,
-                    from include/asm-generic/atomic.h:12,
-                    from ./arch/nios2/include/generated/asm/atomic.h:1,
-                    from include/linux/atomic.h:7,
-                    from include/linux/jump_label.h:257,
-                    from include/linux/static_key.h:1,
-                    from include/linux/tracepoint-defs.h:11,
-                    from include/linux/irqflags.h:20,
-                    from include/asm-generic/bitops.h:14,
-                    from ./arch/nios2/include/generated/asm/bitops.h:1,
-                    from include/linux/bitops.h:68,
-                    from include/linux/log2.h:12,
-                    from kernel/bounds.c:13:
-   include/asm-generic/cmpxchg.h: In function '__generic_xchg':
->> include/asm-generic/cmpxchg.h:33:3: error: implicit declaration of function 'local_irq_save'; did you mean 'arch_local_irq_save'? [-Werror=implicit-function-declaration]
-      local_irq_save(flags);
-      ^~~~~~~~~~~~~~
-      arch_local_irq_save
->> include/asm-generic/cmpxchg.h:36:3: error: implicit declaration of function 'local_irq_restore'; did you mean 'arch_local_irq_restore'? [-Werror=implicit-function-declaration]
-      local_irq_restore(flags);
-      ^~~~~~~~~~~~~~~~~
-      arch_local_irq_restore
-   In file included from include/asm-generic/cmpxchg.h:89,
-                    from ./arch/nios2/include/generated/asm/cmpxchg.h:1,
-                    from include/asm-generic/atomic.h:12,
-                    from ./arch/nios2/include/generated/asm/atomic.h:1,
-                    from include/linux/atomic.h:7,
-                    from include/linux/jump_label.h:257,
-                    from include/linux/static_key.h:1,
-                    from include/linux/tracepoint-defs.h:11,
-                    from include/linux/irqflags.h:20,
-                    from include/asm-generic/bitops.h:14,
-                    from ./arch/nios2/include/generated/asm/bitops.h:1,
-                    from include/linux/bitops.h:68,
-                    from include/linux/log2.h:12,
-                    from kernel/bounds.c:13:
-   include/asm-generic/cmpxchg-local.h: In function '__generic_cmpxchg_local':
->> include/asm-generic/cmpxchg-local.h:26:2: error: implicit declaration of function 'raw_local_irq_save'; did you mean 'arch_local_irq_save'? [-Werror=implicit-function-declaration]
-     raw_local_irq_save(flags);
-     ^~~~~~~~~~~~~~~~~~
-     arch_local_irq_save
->> include/asm-generic/cmpxchg-local.h:47:2: error: implicit declaration of function 'raw_local_irq_restore'; did you mean 'arch_local_irq_restore'? [-Werror=implicit-function-declaration]
-     raw_local_irq_restore(flags);
-     ^~~~~~~~~~~~~~~~~~~~~
-     arch_local_irq_restore
-   cc1: some warnings being treated as errors
-   make[3]: *** [scripts/Makefile.build:98: kernel/bounds.s] Error 1
-   make[3]: Target 'prepare' not remade because of errors.
-   make[2]: *** [Makefile:1274: prepare0] Error 2
-   make[2]: Target 'prepare' not remade because of errors.
-   make[1]: *** [Makefile:248: __sub-make] Error 2
-   make[1]: Target 'prepare' not remade because of errors.
-   make: *** [Makefile:248: __sub-make] Error 2
-   make: Target 'prepare' not remade because of errors.
+Thanks
 
-
-vim +33 include/asm-generic/cmpxchg.h
-
-b4816afa3986704 David Howells 2012-03-28  22  
-b4816afa3986704 David Howells 2012-03-28  23  static inline
-82b993e8249ae3c Mark Rutland  2021-05-25  24  unsigned long __generic_xchg(unsigned long x, volatile void *ptr, int size)
-b4816afa3986704 David Howells 2012-03-28  25  {
-b4816afa3986704 David Howells 2012-03-28  26  	unsigned long ret, flags;
-b4816afa3986704 David Howells 2012-03-28  27  
-b4816afa3986704 David Howells 2012-03-28  28  	switch (size) {
-b4816afa3986704 David Howells 2012-03-28  29  	case 1:
-b4816afa3986704 David Howells 2012-03-28  30  #ifdef __xchg_u8
-b4816afa3986704 David Howells 2012-03-28  31  		return __xchg_u8(x, ptr);
-b4816afa3986704 David Howells 2012-03-28  32  #else
-b4816afa3986704 David Howells 2012-03-28 @33  		local_irq_save(flags);
-b4816afa3986704 David Howells 2012-03-28  34  		ret = *(volatile u8 *)ptr;
-656e9007ef58627 Arnd Bergmann 2023-03-02  35  		*(volatile u8 *)ptr = (x & 0xffu);
-b4816afa3986704 David Howells 2012-03-28 @36  		local_irq_restore(flags);
-b4816afa3986704 David Howells 2012-03-28  37  		return ret;
-b4816afa3986704 David Howells 2012-03-28  38  #endif /* __xchg_u8 */
-b4816afa3986704 David Howells 2012-03-28  39  
-b4816afa3986704 David Howells 2012-03-28  40  	case 2:
-b4816afa3986704 David Howells 2012-03-28  41  #ifdef __xchg_u16
-b4816afa3986704 David Howells 2012-03-28  42  		return __xchg_u16(x, ptr);
-b4816afa3986704 David Howells 2012-03-28  43  #else
-b4816afa3986704 David Howells 2012-03-28  44  		local_irq_save(flags);
-b4816afa3986704 David Howells 2012-03-28  45  		ret = *(volatile u16 *)ptr;
-656e9007ef58627 Arnd Bergmann 2023-03-02  46  		*(volatile u16 *)ptr = (x & 0xffffu);
-b4816afa3986704 David Howells 2012-03-28  47  		local_irq_restore(flags);
-b4816afa3986704 David Howells 2012-03-28  48  		return ret;
-b4816afa3986704 David Howells 2012-03-28  49  #endif /* __xchg_u16 */
-b4816afa3986704 David Howells 2012-03-28  50  
-b4816afa3986704 David Howells 2012-03-28  51  	case 4:
-b4816afa3986704 David Howells 2012-03-28  52  #ifdef __xchg_u32
-b4816afa3986704 David Howells 2012-03-28  53  		return __xchg_u32(x, ptr);
-b4816afa3986704 David Howells 2012-03-28  54  #else
-b4816afa3986704 David Howells 2012-03-28  55  		local_irq_save(flags);
-b4816afa3986704 David Howells 2012-03-28  56  		ret = *(volatile u32 *)ptr;
-656e9007ef58627 Arnd Bergmann 2023-03-02  57  		*(volatile u32 *)ptr = (x & 0xffffffffu);
-b4816afa3986704 David Howells 2012-03-28  58  		local_irq_restore(flags);
-b4816afa3986704 David Howells 2012-03-28  59  		return ret;
-b4816afa3986704 David Howells 2012-03-28  60  #endif /* __xchg_u32 */
-b4816afa3986704 David Howells 2012-03-28  61  
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+> > 
+> > Best regards
+> > -- 
+> > Marek Szyprowski, PhD
+> > Samsung R&D Institute Poland
+> > 
+> > 
+> 
