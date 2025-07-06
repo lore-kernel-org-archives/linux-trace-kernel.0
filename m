@@ -1,100 +1,211 @@
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 496FE43159;
-	Sat,  5 Jul 2025 15:16:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7058915ADB4;
+	Sun,  6 Jul 2025 04:30:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751728588; cv=none; b=MaRpufC3CwuIuH7pAvfxkqDbN9fy7nv6OfTNW5gQx00BYjsfBBuxtzrqyMwpe6JMqILGbUD21DsTwcWdzNESQUMa+lcIEf8Lr1TYSOe32+62l8YiCzFUuVES6z/SmVFQ7J92YlSUETrKx1fdiMtyE5wWcrmK251EFZsfrnHzuro=
+	t=1751776217; cv=none; b=CEW/07xuCwOS/w/zHSkezg03XzuYVKHGJe+tLpLLTCR32wMe8F6j2hnl82DT1J0eV1JCKKXDGGc0VCOUa4BkgaMiAfRXO6JJrwKXEGmXcEAkJFz9+zea9ioL7itE9kUZwkGi/On8lmvq2UQdw/Sf+9L10KnHcHUTrXCa9N2UU8Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751728588; c=relaxed/simple;
-	bh=IVbkd/IVrWWUlEr5Nl9gyhToDCubslv31uTR8EVwGyM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=fdOf+MoxdjAPGLmpEna9MTzD6jO9TGzspUbOQN4xe7WKqGyHpeXSjNt3Q9HHf3k0uG0Lv1XWr7qFuXBRlEi1qStqZ0v7uMSl36Gmpz8bmHNuV9Tg0GooWEGVGi3ZmkdFRSd80tDMXlPMh4H8/W7zMuSyO338sptAuvyJauTrM1g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=U1AVvgxR; arc=none smtp.client-ip=209.85.214.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751776217; c=relaxed/simple;
+	bh=wooHoirHZtu0a5A+d2+8+BgRHGQ/MFCV+B8Pz8Sx2/I=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dqSVeKI/sksAlOdqhS8aMkLKV2nI/W6uy3tmvMsoqvJHogaRjHVHM1aJ7JH2dDZ8nDblvOtY5HnXNmYxxZXCTktvOthpPM3fJ/pHji3zZEmPY2w/Krp0Ge6y8gey/vmVXICfy5NG6fUtB5NyoIxiaTzTJgexard41qGZFDsXQEw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=I8GhsPsa; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U1AVvgxR"
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-234b9dfb842so15144495ad.1;
-        Sat, 05 Jul 2025 08:16:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751728586; x=1752333386; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=ppkGylIpL3e5C3TVURbfkBpVr8RCQTzH0w7GOalefMw=;
-        b=U1AVvgxRr/Hx3pkcc1t9q21+qmypQ5kLXm8AjrmwJI/unmmV5nJyti4LTf25pBtGQi
-         co9GOLDcB3EftC3NviKJGTmutfZXCyJ9MjotKcyS7tpz+V0n6o71wRhbfUgGPxhydfNi
-         Yam9mzTgaDQfaprpQV8Np5YxswVcuduvGx46aJahVM6+MAYUW7UC+ytdfsRUEotgSuGU
-         sZFi7DebWP0jXggEMKPcBv5LWRDnjfxWpfrNIZwpDCbuw6CG8ShyNi2frkc1OsFfA5nV
-         ZUidGpfeE9r7QymzhjV9gsvz+fReHZ88RNdJURSEIoGSiGfZsXIZ9baAx8NkJmPHsSXj
-         s0Iw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751728586; x=1752333386;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ppkGylIpL3e5C3TVURbfkBpVr8RCQTzH0w7GOalefMw=;
-        b=QKapVNVlAfHkDL9slsyibFXzaSLlcXtuMhKh0i726UoHDUzIVsPcTtSF86A1BHvXwZ
-         LgXLxAxk7OxS9m4VwsWjs9iABJJ+psvb/xkrIKpdVsOWnq/BzwlVVgzg6Hmh7AHyjwuN
-         72l8lzO/SWWFDR2Kz+GRDiCzObQJdoFN1Bi20BhEv34ZOa9rFUURyNC1iqb5AcVZRgb2
-         2WYqepFGnX7CVCb0AKPJbSCkumHXYcBj05M3V4zITGfErAtFI/Kh/rv2lIYGt8tOvUzQ
-         U0YrKfpwXZbs2h/D4wbtpuuz92WWuuuU0clUhbg64yNWawm6n1DWCFRAEIgb8bkUN3DS
-         0HTA==
-X-Forwarded-Encrypted: i=1; AJvYcCU+Fpm9pacN+Et7Z24cmUrwpZm/+PN9OinPoGXIS/dROl+qQxmhMpnpb15q5yBevrBPZExCtKF2zXut6ptTJu4qvaj1@vger.kernel.org, AJvYcCVBBNi0mplFmsqE/kbiMEgWS3yfFls9OoSG1i4a3ElDbqQzWA2w56TKXJm0fiwkGqiOpzLjQ83M8kgZpbU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwQG1hNaVAHeDOQtbCho65na70fnmdfumnLWhqmb9xpIv+GqJiP
-	067LDYOLAozTnZEM79SAIPzQNOdHDt6V2RcIk30E7lnKk8WyzADgcVjaedyXKOGvTkU=
-X-Gm-Gg: ASbGncva/aYB9cAxCECHscaz6v3iUvnH5ztgY+wEKjJhigfQHsQLsVe0ejOeXriuxZO
-	ALasJ0odvC/csfsnic/cn83U/Mtd22n1SsPTXMn7YUeVI025pkwo67D6/jis+VfDBYfAXY63T+O
-	COcjuZqE3GMv6vp9TfWb5WtXxWxFqf7mfRAPbBUZ+v0uzGBvuoyucUsEnLb789ofV4OqbwiIVwA
-	f0T2Fa2RYBnCKw12gy6T7veNiUH5K5xdHORP9bcogXWn8VCqP18522g7kMiPAQouRnb2myELJ7A
-	QnC/jDhMdmrptJMD9iKmkndS4wJHCcTQCP3ogfQv70hB8rQLyjDmW+pBJi6sOArpzwKQPBVksrZ
-	v
-X-Google-Smtp-Source: AGHT+IENTRwP9/XEq552vcsWILcUg7zV7ZKO0TjnKhOOgaoX4RsFlYOE2TspM2LWSIIQ4x3wJKNKKQ==
-X-Received: by 2002:a17:902:f609:b0:234:98eb:8eda with SMTP id d9443c01a7336-23c8755bdeemr102662375ad.28.1751728586446;
-        Sat, 05 Jul 2025 08:16:26 -0700 (PDT)
-Received: from gmail.com ([2402:e280:3e9b:22f:a1d5:dc5b:40df:a106])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23c845b962asm43463035ad.237.2025.07.05.08.16.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 05 Jul 2025 08:16:26 -0700 (PDT)
-From: Sumeet Pawnikar <sumeet4linux@gmail.com>
-To: mhiramat@kernel.org,
-	corbet@lwn.net
-Cc: linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	sumeet4linux@gmail.com
-Subject: [PATCH] Documentation: Remove duplicate word size in bootconfig
-Date: Sat,  5 Jul 2025 20:46:17 +0530
-Message-ID: <20250705151618.4806-1-sumeet4linux@gmail.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="I8GhsPsa"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1751776216; x=1783312216;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=wooHoirHZtu0a5A+d2+8+BgRHGQ/MFCV+B8Pz8Sx2/I=;
+  b=I8GhsPsa5bBSxilXEXZgPf3t+8qgnekKbzA+mtLu5oCl4pNcnuoGYJbw
+   AN1al6lBbAffkryVlumbw21onG+hougSD+bFObaHtatqfyHWRekvfI+wL
+   Rfphw7TveHEi9bywDNETbHkmkFD9Sz3FaLwj0drZVncymtpxZGe+QOOaP
+   s2iemOGooIK6LXfj2FZBuX0Mi88QIS32IVNgR4axzwVi1AD/QbIbkdJGU
+   dMWSi4MjqNKM6TSw1pbFp1iShff/Zerit/+mvvs92qbCZrFwqJqure2wu
+   HawP+tE35/pkIYhDDkt0nxQXCyf6muMqaKwyJ5g3axffKRr6XNAL+1qIc
+   w==;
+X-CSE-ConnectionGUID: OHYwXaQQR+WSwSL7AlFcNw==
+X-CSE-MsgGUID: M+b16x8BQdKpGqf0G6CCUA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11485"; a="65091574"
+X-IronPort-AV: E=Sophos;i="6.16,291,1744095600"; 
+   d="scan'208";a="65091574"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jul 2025 21:30:15 -0700
+X-CSE-ConnectionGUID: dp3PM6/bQKuctTFEjrYzCw==
+X-CSE-MsgGUID: OuBbdbJ3QhyP47pk4JZepQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,291,1744095600"; 
+   d="scan'208";a="154337953"
+Received: from lkp-server01.sh.intel.com (HELO 0b2900756c14) ([10.239.97.150])
+  by orviesa010.jf.intel.com with ESMTP; 05 Jul 2025 21:30:10 -0700
+Received: from kbuild by 0b2900756c14 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uYH0x-0004sd-1e;
+	Sun, 06 Jul 2025 04:30:07 +0000
+Date: Sun, 6 Jul 2025 12:29:29 +0800
+From: kernel test robot <lkp@intel.com>
+To: Wander Lairson Costa <wander@redhat.com>,
+	Ingo Molnar <mingo@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+	Valentin Schneider <vschneid@redhat.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	David Woodhouse <dwmw@amazon.co.uk>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Cc: oe-kbuild-all@lists.linux.dev,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Clark Williams <williams@redhat.com>,
+	Gabriele Monaco <gmonaco@redhat.com>
+Subject: Re: [PATCH v3 1/2] trace/preemptirq: reduce overhead of
+ irq_enable/disable tracepoints
+Message-ID: <202507061226.y7g5eBuq-lkp@intel.com>
+References: <20250704170748.97632-2-wander@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250704170748.97632-2-wander@redhat.com>
 
-Remove duplicate word size in bootconfig.rst
+Hi Wander,
 
-Signed-off-by: Sumeet Pawnikar <sumeet4linux@gmail.com>
----
- Documentation/admin-guide/bootconfig.rst | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+kernel test robot noticed the following build errors:
 
-diff --git a/Documentation/admin-guide/bootconfig.rst b/Documentation/admin-guide/bootconfig.rst
-index 91339efdcb54..7a86042c9b6d 100644
---- a/Documentation/admin-guide/bootconfig.rst
-+++ b/Documentation/admin-guide/bootconfig.rst
-@@ -265,7 +265,7 @@ The final kernel cmdline will be the following::
- Config File Limitation
- ======================
- 
--Currently the maximum config size size is 32KB and the total key-words (not
-+Currently the maximum config size is 32KB and the total key-words (not
- key-value entries) must be under 1024 nodes.
- Note: this is not the number of entries but nodes, an entry must consume
- more than 2 nodes (a key-word and a value). So theoretically, it will be
+[auto build test ERROR on trace/for-next]
+[also build test ERROR on tip/sched/core linus/master v6.16-rc4 next-20250704]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Wander-Lairson-Costa/trace-preemptirq-reduce-overhead-of-irq_enable-disable-tracepoints/20250705-011058
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace for-next
+patch link:    https://lore.kernel.org/r/20250704170748.97632-2-wander%40redhat.com
+patch subject: [PATCH v3 1/2] trace/preemptirq: reduce overhead of irq_enable/disable tracepoints
+config: nios2-randconfig-r123-20250706 (https://download.01.org/0day-ci/archive/20250706/202507061226.y7g5eBuq-lkp@intel.com/config)
+compiler: nios2-linux-gcc (GCC) 8.5.0
+reproduce: (https://download.01.org/0day-ci/archive/20250706/202507061226.y7g5eBuq-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202507061226.y7g5eBuq-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+   In file included from ./arch/nios2/include/generated/asm/cmpxchg.h:1,
+                    from include/asm-generic/atomic.h:12,
+                    from ./arch/nios2/include/generated/asm/atomic.h:1,
+                    from include/linux/atomic.h:7,
+                    from include/linux/jump_label.h:257,
+                    from include/linux/static_key.h:1,
+                    from include/linux/tracepoint-defs.h:11,
+                    from include/linux/irqflags.h:20,
+                    from include/asm-generic/bitops.h:14,
+                    from ./arch/nios2/include/generated/asm/bitops.h:1,
+                    from include/linux/bitops.h:68,
+                    from include/linux/log2.h:12,
+                    from kernel/bounds.c:13:
+   include/asm-generic/cmpxchg.h: In function '__generic_xchg':
+>> include/asm-generic/cmpxchg.h:33:3: error: implicit declaration of function 'local_irq_save'; did you mean 'arch_local_irq_save'? [-Werror=implicit-function-declaration]
+      local_irq_save(flags);
+      ^~~~~~~~~~~~~~
+      arch_local_irq_save
+>> include/asm-generic/cmpxchg.h:36:3: error: implicit declaration of function 'local_irq_restore'; did you mean 'arch_local_irq_restore'? [-Werror=implicit-function-declaration]
+      local_irq_restore(flags);
+      ^~~~~~~~~~~~~~~~~
+      arch_local_irq_restore
+   In file included from include/asm-generic/cmpxchg.h:89,
+                    from ./arch/nios2/include/generated/asm/cmpxchg.h:1,
+                    from include/asm-generic/atomic.h:12,
+                    from ./arch/nios2/include/generated/asm/atomic.h:1,
+                    from include/linux/atomic.h:7,
+                    from include/linux/jump_label.h:257,
+                    from include/linux/static_key.h:1,
+                    from include/linux/tracepoint-defs.h:11,
+                    from include/linux/irqflags.h:20,
+                    from include/asm-generic/bitops.h:14,
+                    from ./arch/nios2/include/generated/asm/bitops.h:1,
+                    from include/linux/bitops.h:68,
+                    from include/linux/log2.h:12,
+                    from kernel/bounds.c:13:
+   include/asm-generic/cmpxchg-local.h: In function '__generic_cmpxchg_local':
+>> include/asm-generic/cmpxchg-local.h:26:2: error: implicit declaration of function 'raw_local_irq_save'; did you mean 'arch_local_irq_save'? [-Werror=implicit-function-declaration]
+     raw_local_irq_save(flags);
+     ^~~~~~~~~~~~~~~~~~
+     arch_local_irq_save
+>> include/asm-generic/cmpxchg-local.h:47:2: error: implicit declaration of function 'raw_local_irq_restore'; did you mean 'arch_local_irq_restore'? [-Werror=implicit-function-declaration]
+     raw_local_irq_restore(flags);
+     ^~~~~~~~~~~~~~~~~~~~~
+     arch_local_irq_restore
+   cc1: some warnings being treated as errors
+   make[3]: *** [scripts/Makefile.build:98: kernel/bounds.s] Error 1
+   make[3]: Target 'prepare' not remade because of errors.
+   make[2]: *** [Makefile:1274: prepare0] Error 2
+   make[2]: Target 'prepare' not remade because of errors.
+   make[1]: *** [Makefile:248: __sub-make] Error 2
+   make[1]: Target 'prepare' not remade because of errors.
+   make: *** [Makefile:248: __sub-make] Error 2
+   make: Target 'prepare' not remade because of errors.
+
+
+vim +33 include/asm-generic/cmpxchg.h
+
+b4816afa3986704 David Howells 2012-03-28  22  
+b4816afa3986704 David Howells 2012-03-28  23  static inline
+82b993e8249ae3c Mark Rutland  2021-05-25  24  unsigned long __generic_xchg(unsigned long x, volatile void *ptr, int size)
+b4816afa3986704 David Howells 2012-03-28  25  {
+b4816afa3986704 David Howells 2012-03-28  26  	unsigned long ret, flags;
+b4816afa3986704 David Howells 2012-03-28  27  
+b4816afa3986704 David Howells 2012-03-28  28  	switch (size) {
+b4816afa3986704 David Howells 2012-03-28  29  	case 1:
+b4816afa3986704 David Howells 2012-03-28  30  #ifdef __xchg_u8
+b4816afa3986704 David Howells 2012-03-28  31  		return __xchg_u8(x, ptr);
+b4816afa3986704 David Howells 2012-03-28  32  #else
+b4816afa3986704 David Howells 2012-03-28 @33  		local_irq_save(flags);
+b4816afa3986704 David Howells 2012-03-28  34  		ret = *(volatile u8 *)ptr;
+656e9007ef58627 Arnd Bergmann 2023-03-02  35  		*(volatile u8 *)ptr = (x & 0xffu);
+b4816afa3986704 David Howells 2012-03-28 @36  		local_irq_restore(flags);
+b4816afa3986704 David Howells 2012-03-28  37  		return ret;
+b4816afa3986704 David Howells 2012-03-28  38  #endif /* __xchg_u8 */
+b4816afa3986704 David Howells 2012-03-28  39  
+b4816afa3986704 David Howells 2012-03-28  40  	case 2:
+b4816afa3986704 David Howells 2012-03-28  41  #ifdef __xchg_u16
+b4816afa3986704 David Howells 2012-03-28  42  		return __xchg_u16(x, ptr);
+b4816afa3986704 David Howells 2012-03-28  43  #else
+b4816afa3986704 David Howells 2012-03-28  44  		local_irq_save(flags);
+b4816afa3986704 David Howells 2012-03-28  45  		ret = *(volatile u16 *)ptr;
+656e9007ef58627 Arnd Bergmann 2023-03-02  46  		*(volatile u16 *)ptr = (x & 0xffffu);
+b4816afa3986704 David Howells 2012-03-28  47  		local_irq_restore(flags);
+b4816afa3986704 David Howells 2012-03-28  48  		return ret;
+b4816afa3986704 David Howells 2012-03-28  49  #endif /* __xchg_u16 */
+b4816afa3986704 David Howells 2012-03-28  50  
+b4816afa3986704 David Howells 2012-03-28  51  	case 4:
+b4816afa3986704 David Howells 2012-03-28  52  #ifdef __xchg_u32
+b4816afa3986704 David Howells 2012-03-28  53  		return __xchg_u32(x, ptr);
+b4816afa3986704 David Howells 2012-03-28  54  #else
+b4816afa3986704 David Howells 2012-03-28  55  		local_irq_save(flags);
+b4816afa3986704 David Howells 2012-03-28  56  		ret = *(volatile u32 *)ptr;
+656e9007ef58627 Arnd Bergmann 2023-03-02  57  		*(volatile u32 *)ptr = (x & 0xffffffffu);
+b4816afa3986704 David Howells 2012-03-28  58  		local_irq_restore(flags);
+b4816afa3986704 David Howells 2012-03-28  59  		return ret;
+b4816afa3986704 David Howells 2012-03-28  60  #endif /* __xchg_u32 */
+b4816afa3986704 David Howells 2012-03-28  61  
+
 -- 
-2.43.0
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
