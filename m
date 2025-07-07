@@ -1,118 +1,165 @@
-Received: from mail-il1-f182.google.com (mail-il1-f182.google.com [209.85.166.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D31772080C4
-	for <linux-trace-kernel@vger.kernel.org>; Mon,  7 Jul 2025 21:36:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29D4716DEB3;
+	Mon,  7 Jul 2025 21:56:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751924173; cv=none; b=cSmk5b67uwZpP54vZqzR6eyZpuz1ktTP7i3dU3mweAZhxlLHsUWwQUReotF+2M3RgYXuWtgZbNiQwZ+DytVtWqUFXGvRsjvD2Dm0tOCOYzqcaqMJXY3fRe3BtD88gr5IHkIzsRtObEbv6Qi+R03P9LyHOUWGU+6I5TKEytvUXeQ=
+	t=1751925375; cv=none; b=A/SRVNs5UjdaMgXsIDQ0rxw8paev2ZZouv/BQroxEWcFiEGZrWL1K3gCgItG3floycXxsXn4Vl4RYkphh3n48gXIiEUjhs80QKgrQYbiVzgu9sBFWnzFZC1I+pbcs91outykCWoD1E2TrVBUED+rZFB3fcxK3onMWhTmAkM4zQ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751924173; c=relaxed/simple;
-	bh=FoE1yw4PinF8aLsqwiVP49aNTfhL5YfYRDuew1h9slM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=E3geZHMgaUwVq8OAq4AfEPg9d7deRAFtrfL2s5fPRBEeHttuvCN5aHcgJMsJFBWsBzCtxfS0cMMc756Kf2qJSCqlZU0EK/ijO6VuUt9CRcXkhMgLkL2zLMIECILReK2YdQb7Ao9f/mEXHpYj5o9UNQWBpTjWoXuJqnky00SeOag=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=ZuhSX/Rm; arc=none smtp.client-ip=209.85.166.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1751925375; c=relaxed/simple;
+	bh=SN7gE7wv44HsOXYJxG4NYhkPrK17oXrOVljL+MEmuDw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=eOgNHTi658XoCz69FesYftqPLrq1gSA0Sp9XhWk5ubP6jmT+AwF918HuwyAgL+F8AZePsAKlVeb+zWxDfKQmrn/7i0Qs8/HUE0c7/vBuJHDDDgs+MwD1W0aTZz70HUHQGNlzNzXVuCtpH9BYPtWzpnkVGDPxylkcNo1jGFtA9i0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=euzUwa+h; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="ZuhSX/Rm"
-Received: by mail-il1-f182.google.com with SMTP id e9e14a558f8ab-3df210930f7so13690035ab.1
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 07 Jul 2025 14:36:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1751924169; x=1752528969; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=5Y+/uCDo8Ap/hlxb/YHfGaplN840tpeb83kN5x/Y9MM=;
-        b=ZuhSX/RmBiY/WSTlomwxELJK18RRt8o2YaBsq19C+h/8M7Zlqcm88ZN0Z1pWZkUEYq
-         x36BN9F9Uqnj0NJTqeXjifoLpCdcuX3wNcM5sEIn3rP+xv2DvJL+0WsfJDD5+pVM191V
-         apGnv0fE5VlNtfme18Nc7ZCRU26+jGOppG8CE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751924169; x=1752528969;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=5Y+/uCDo8Ap/hlxb/YHfGaplN840tpeb83kN5x/Y9MM=;
-        b=uWFYIAQYjzoOJAinbKW4VK6iPp8yp72isjN356s8IPhfuU92HEVNPwU5/hXGUd+BO2
-         djbqOKTpEPT+D6esIiT9RgwDFG4F+YKVC04X34Z2Od69vL1e43V4vpUU7Rm6ta8nJW9O
-         SYDoUojcPZESjPQs784orrT/FO1nhS06l4GFYBN5rseJuAO9v6As7F1KZ3/aJUUySKfN
-         bCRncjkKv4oRoR0PQm3iN+d8xD4SJ+abc8ST4TerYNqgzHkVBAOEnumSQZnTgRzd4oS6
-         jAT2eIWKAm76OeP0WcMGpGuVsSUZPf55y3AxyHtkT/YpPk6ZgN0lktrYJAFAa6inXpfE
-         FvZQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWDEzC2bOLNwGDfj+xv3OIX7PqItt1cwL4QUvYOoFSpe/lRyJJX4zCvZPntZd8378CwPt1l9wmoozygxyahAy/TyQQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwJCj+HVSDZQG1lnwZqbMtb1EnX44cRUyeAwNO6g6ymFEOEr49c
-	A13WA1StiJ7qJrmp8DRgX6P6iAibrdXP+FyK/ZDb1KD42eHYg5dt+qQhre6RV9TaHdA=
-X-Gm-Gg: ASbGncsqtJHOqhRYaAO5/dMAyLCgj/41RxPJHYT2z5vVPENTxe9Yk5JRUe1xFVdUY3E
-	cD4ODvlhjvaB8LgGzP8H9+AYBhoI/Qj9WhmYJyxab5sAOo+XR+TctHuKegABOEFW7fpudbOL1pn
-	CMdQB20UpF6te9bHROkn2mOzRDy/zlw3mso0aMiz5Jk6u7mcg+Cy7oSwCJCECcU5E2GCRMQiUBj
-	I5XYX/UnTS6SKQxQF+M4k0IwGntNL5o9yz9oeAadKV1PGoVhktQuLT7jkoXf48H77FjDIVeHytv
-	0GBF0Nj3gvys3KDxTz8jwCBuKMIHlHW/i0KuXJCyJFT/czt9wbMClnseJ2WWHykKX6CW22rBUC/
-	x4/EBufqa
-X-Google-Smtp-Source: AGHT+IF53byRaWgnL2/6PRGJxd7DTJKFA1T8Wjv6k5cGUjcY6U6GoMsR0lJgobtuehyYtbBQa4iQiA==
-X-Received: by 2002:a05:6e02:522:b0:3e1:433e:2605 with SMTP id e9e14a558f8ab-3e154e63815mr2132085ab.9.1751924168902;
-        Mon, 07 Jul 2025 14:36:08 -0700 (PDT)
-Received: from [192.168.1.14] ([38.175.170.29])
-        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-503b59c6d77sm1911718173.32.2025.07.07.14.36.08
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 07 Jul 2025 14:36:08 -0700 (PDT)
-Message-ID: <57f72a27-10b0-49d4-8bd3-39b35f422a95@linuxfoundation.org>
-Date: Mon, 7 Jul 2025 15:36:07 -0600
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="euzUwa+h"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 97C25C4CEE3;
+	Mon,  7 Jul 2025 21:56:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751925374;
+	bh=SN7gE7wv44HsOXYJxG4NYhkPrK17oXrOVljL+MEmuDw=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+	b=euzUwa+hWzgM2vB6hlO5Ds4h8txZL0Ee+YHbwT6jEx3xE7NwaoevERCfTSnIRcvNf
+	 Z77BTpGPEhXKQSJRY7EESiXdvGQPSn5Yt0E1766VwQJ0fG2w8gdqdvEIYT9Gg6SpfV
+	 ggrv2/s86HLFP3cj8zq2RVcnPN/+b+RfWXJgHnF9BBFsX0Y+N3Z897M7/w2n5WSiSO
+	 ZWOqQe6Z4ISu2VVsLuSokujES01RBrTYKlSXv3/9wmWjUKYOKouC88xufDNgyg5wNY
+	 T5Gpt20kgvnmWiy6uvqZo1j8C/PaEHbCWqCZpScacvMXHLyg3B8+QZaAcIAaVijxea
+	 KjPk8Nr1qqclA==
+Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
+	id 3E7DCCE0E61; Mon,  7 Jul 2025 14:56:14 -0700 (PDT)
+Date: Mon, 7 Jul 2025 14:56:14 -0700
+From: "Paul E. McKenney" <paulmck@kernel.org>
+To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc: Boqun Feng <boqun.feng@gmail.com>, linux-rt-devel@lists.linux.dev,
+	rcu@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	Frederic Weisbecker <frederic@kernel.org>,
+	Joel Fernandes <joelagnelf@nvidia.com>,
+	Josh Triplett <josh@joshtriplett.org>,
+	Lai Jiangshan <jiangshanlai@gmail.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Uladzislau Rezki <urezki@gmail.com>, Zqiang <qiang.zhang@linux.dev>
+Subject: Re: [RFC PATCH 1/2] rcu: Add rcu_read_lock_notrace()
+Message-ID: <fa80f087-d4ff-4499-aec9-157edafb85eb@paulmck-laptop>
+Reply-To: paulmck@kernel.org
+References: <20250613152218.1924093-1-bigeasy@linutronix.de>
+ <20250613152218.1924093-2-bigeasy@linutronix.de>
+ <aFL1pIGMDX5DG9f_@tardis.local>
+ <20250620084334.Zb8O2SwS@linutronix.de>
+ <34957424-1f92-4085-b5d3-761799230f40@paulmck-laptop>
+ <20250623104941.WxOQtAmV@linutronix.de>
+ <03083dee-6668-44bb-9299-20eb68fd00b8@paulmck-laptop>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] selftests: tracing: Use mutex_unlock for testing glob
- filter
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
- Shuah Khan <shuah@kernel.org>, Steven Rostedt <rostedt@goodmis.org>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- linux-kselftest@vger.kernel.org, Shuah Khan <skhan@linuxfoundation.org>
-References: <175151678585.2149615.8702513393985992418.stgit@mhiramat.tok.corp.google.com>
- <175151680309.2149615.9795104805153538717.stgit@mhiramat.tok.corp.google.com>
- <20250703103039.3559a7e1@batman.local.home>
- <20250704150425.a8a82c7768e1c99ee272e585@kernel.org>
-Content-Language: en-US
-From: Shuah Khan <skhan@linuxfoundation.org>
-In-Reply-To: <20250704150425.a8a82c7768e1c99ee272e585@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <03083dee-6668-44bb-9299-20eb68fd00b8@paulmck-laptop>
 
-On 7/4/25 00:04, Masami Hiramatsu (Google) wrote:
-> Shuah,
+On Mon, Jun 23, 2025 at 11:13:03AM -0700, Paul E. McKenney wrote:
+> On Mon, Jun 23, 2025 at 12:49:41PM +0200, Sebastian Andrzej Siewior wrote:
+> > On 2025-06-20 04:23:49 [-0700], Paul E. McKenney wrote:
+> > > > I hope not because it is not any different from
+> > > > 
+> > > >  	CPU 2			CPU 3
+> > > >  	=====                   =====
+> > > > 	NMI
+> > > >  	rcu_read_lock();
+> > > >  				synchronize_rcu();
+> > > >  				// need all CPUs report a QS.
+> > > >  	rcu_read_unlock();
+> > > >  	// no rcu_read_unlock_special() due to in_nmi().
+> > > > 
+> > > > If the NMI happens while the CPU is in userland (say a perf event) then
+> > > > the NMI returns directly to userland.
+> > > > After the tracing event completes (in this case) the CPU should run into
+> > > > another RCU section on its way out via context switch or the tick
+> > > > interrupt.
+> > > > I assume the tick interrupt is what makes the NMI case work.
+> > > 
+> > > Are you promising that interrupts will be always be disabled across
+> > > the whole rcu_read_lock_notrace() read-side critical section?  If so,
+> > > could we please have a lockdep_assert_irqs_disabled() call to check that?
+> > 
+> > No, that should stay preemptible because bpf can attach itself to
+> > tracepoints and this is the root cause of the exercise. Now if you say
+> > it has to be run with disabled interrupts to match the NMI case then it
+> > makes sense (since NMIs have interrupts off) but I do not understand why
+> > it matters here (since the CPU returns to userland without passing the
+> > kernel).
 > 
-> Can you take this patch (fix) to your tree since this is
-> a fix for the selftest?
+> Given your patch, if you don't disable interrupts in a preemptible kernel
+> across your rcu_read_lock_notrace()/rcu_read_unlock_notrace() pair, then a
+> concurrent expedited grace period might send its IPI in the middle of that
+> critical section.  That IPI handler would set up state so that the next
+> rcu_preempt_deferred_qs_irqrestore() would report the quiescent state.
+> Except that without the call to rcu_read_unlock_special(), there might
+> not be any subsequent call to rcu_preempt_deferred_qs_irqrestore().
 > 
-> Thank you,
+> This is even more painful if this is a CONFIG_PREEMPT_RT kernel.
+> Then if that critical section was preempted and then priority-boosted,
+> the unboosting also won't happen until the next call to that same
+> rcu_preempt_deferred_qs_irqrestore() function, which again might not
+> happen.  Or might be significantly delayed.
 > 
-> On Thu, 3 Jul 2025 10:30:39 -0400
-> Steven Rostedt <rostedt@goodmis.org> wrote:
+> Or am I missing some trick that fixes all of this?
 > 
->> On Thu,  3 Jul 2025 13:26:43 +0900
->> "Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
->>
->>> From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
->>>
->>> Since commit c5b6ababd21a ("locking/mutex: implement
->>> mutex_trylock_nested") makes mutex_trylock() as an inlined
->>> function if CONFIG_DEBUG_LOCK_ALLOC=y, we can not use
->>> mutex_trylock() for testing the glob filter of ftrace.
->>>
->>> Use mutex_unlock instead.
->>>
->>> Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
->>
->> Acked-by: Steven Rostedt (Google) <rostedt@goodmis.org>
->>
->> -- Steve
+> > I'm not sure how much can be done here due to the notrace part. Assuming
+> > rcu_read_unlock_special() is not doable, would forcing a context switch
+> > (via setting need-resched and irq_work, as the IRQ-off case) do the
+> > trick?
+> > Looking through rcu_preempt_deferred_qs_irqrestore() it does not look to
+> > be "usable from the scheduler (with rq lock held)" due to RCU-boosting
+> > or the wake of expedited_wq (which is one of the requirement).
 > 
+> But if rq_lock is held, then interrupts are disabled, which will
+> cause the unboosting to be deferred.
 > 
+> Or are the various deferral mechanisms also unusable in this context?
 
-Applied to linux-kselftest next
+OK, looking back through this thread, it appears that you need both
+an rcu_read_lock_notrace() and an rcu_read_unlock_notrace() that are
+covered by Mathieu's list of requirements [1]:
 
-thanks,
--- Shuah
+| - NMI-safe
+	This is covered by the existing rcu_read_lock() and
+	rcu_read_unlock().
+| - notrace
+	I am guessing that by "notrace", you mean the "notrace" CPP
+	macro attribute defined in include/linux/compiler_types.h.
+	This has no fewer than four different definitions, so I will
+	need some help understanding what the restrictions are.
+| - usable from the scheduler (with rq lock held)
+	This is covered by the existing rcu_read_lock() and
+	rcu_read_unlock().
+| - usable to trace the RCU implementation
+	This one I don't understand.  Can I put tracepoints on
+	rcu_read_lock_notrace() and rcu_read_unlock_notrace() or can't I?
+	I was assuming that tracepoints would be forbidden.  Until I
+	reached this requirement, that is.
+
+One possible path forward is to ensure that rcu_read_unlock_special()
+calls only functions that are compatible with the notrace/trace
+requirements.  The ones that look like they might need some help are
+raise_softirq_irqoff() and irq_work_queue_on().  Note that although
+rcu_preempt_deferred_qs_irqrestore() would also need help, it is easy to
+avoid its being invoked, for example, by disabing interrupts across the
+call to rcu_read_unlock_notrace().  Or by making rcu_read_unlock_notrace()
+do the disabling.
+
+However, I could easily be missing something, especially given my being
+confused by the juxtaposition of "notrace" and "usable to trace the
+RCU implementation".  These appear to me to be contradicting each other.
+
+Help?
+
+							Thanx, Paul
+
+[1] https://lore.kernel.org/all/20250613152218.1924093-1-bigeasy@linutronix.de/
