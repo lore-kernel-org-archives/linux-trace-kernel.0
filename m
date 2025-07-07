@@ -1,114 +1,123 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f174.google.com (mail-yw1-f174.google.com [209.85.128.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDC3FEEDE;
-	Mon,  7 Jul 2025 15:12:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0B86881E;
+	Mon,  7 Jul 2025 15:32:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751901157; cv=none; b=l2d2/pt6RfQzWNYTbCla62LC6TNMNUs0cAdxy6CIQXvZ0Ee1rIHkJDwQshGt5WYuImoEItwViDF6J1XtG8pKObljTvm+VyRmho9ChYsdR4TvXXm4Hepvvkdy8r4Jk+VYo9XEPCuKdylIQGlSPLib7Dondj0oF7lW3hQfzcZg6CM=
+	t=1751902345; cv=none; b=OsdxWoWQ5lM5H4HrhkeMsC5t+ISCaEYARJsPjDXlQKLtQRmiy/pnwaH/uvEhoGAVdjg3d/QwDBN71P6HzovOURQO7+1d8+BzEyBM7F5HlGKBjvEbNr+fMbABr1lQYSAvMjSx6otBdi1FJXUVg81NrKPqSlo0MAxfqPJjCwsEI4E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751901157; c=relaxed/simple;
-	bh=86jv6TqQn5yuh5DalX835vrMiMFE7du1E1IFZ2wdSCI=;
-	h=Date:From:To:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qeMdI9iMUgWrbpOUTodFHsh60/asOWIef1v7EIV6cDxK+rWr02DX3tqMXFiKFosDd2Xp3lyi03r+0UT2XlWwYE+drnFCjHO1YTOkkSqWuSPjHbY8eFeFTyv5usbi3yePJK1qCJ1m9mufvE82X7+eLTObyBDojG0skziZUCuYYL8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=r96uYTz0; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751902345; c=relaxed/simple;
+	bh=3cUG4Qr+IPNv64Z1EWnT8TrT8XUMf+AT0Rh3TTHODsk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Xd+HNwqgbGicqZ4n+ZIZx8D/kRTX1mbzH1xa83zSCTXn1dsuoUboK4UI0f8vetGpdftM0lUzlj6Vr9hg63+3n4rVtNyaE93PormHk99K5wlir4fXST+o+qZ+Gz4qnp5NzZ6dq1rV54heJc8otp60GOJuBZuV9fnY0kpVPSXJpgc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NFqYy9Uf; arc=none smtp.client-ip=209.85.128.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="r96uYTz0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D4E95C4CEE3;
-	Mon,  7 Jul 2025 15:12:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751901157;
-	bh=86jv6TqQn5yuh5DalX835vrMiMFE7du1E1IFZ2wdSCI=;
-	h=Date:From:To:Subject:References:In-Reply-To:From;
-	b=r96uYTz0WB9wY3LKuWZK6rlfZqhyqdaLQusdcI2E+FktIkUIJmnKPaFAbCDBXs5HD
-	 44gRL3Y8HZwj3DulGdYnLzZwalxcgGYc0uiO7l/go6sCjEbIoQpGSzvAVwmYu+yUMp
-	 yDgS7q2BDW3oAoI2gqkPxwGOix6TYp5XJjfPxPG6NyQhHhYHhFb3pzvBfBs7mKrjhs
-	 tjKc9VEAPk/70oUF3roMlpayKy595b+PlgE1XSM58B+cpgfyep6F2jMnTroqSNYq0P
-	 DifSAle8BcSNfrVK62xhqfX8JOjErV7PDTrnrLGa5UrAQPvUZlOBy4jmPt/fmOOxRP
-	 yI53p7unEOKrw==
-Date: Mon, 7 Jul 2025 18:12:26 +0300
-From: Mike Rapoport <rppt@kernel.org>
-To: "Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Andy Lutomirski <luto@kernel.org>, Borislav Petkov <bp@alien8.de>,
-	Daniel Gomez <da.gomez@samsung.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Ingo Molnar <mingo@redhat.com>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	"H. Peter Anvin" <hpa@zytor.com>, Petr Pavlu <petr.pavlu@suse.com>,
-	Sami Tolvanen <samitolvanen@google.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org, linux-modules@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, x86@kernel.org
-Subject: Re: [PATCH 3/8] execmem: rework execmem_cache_free()
-Message-ID: <aGvj2gUHntuuOp4H@kernel.org>
-References: <20250704134943.3524829-1-rppt@kernel.org>
- <20250704134943.3524829-4-rppt@kernel.org>
- <20250707111102.GF1613200@noisy.programming.kicks-ass.net>
- <aGuwMtxsouXvdiCK@kernel.org>
- <oez2aoegd2dfq4h4fg2on2rsgwp36aumpedmobxkj7dlmaoeyr@sqz27uhgf3f7>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NFqYy9Uf"
+Received: by mail-yw1-f174.google.com with SMTP id 00721157ae682-70a57a8ffc3so26392537b3.0;
+        Mon, 07 Jul 2025 08:32:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751902343; x=1752507143; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=z2RtvBnwq2IfJ0CHGCYGxVehGv3P86Mh/6/45Jb+Dlk=;
+        b=NFqYy9Ufp9r8b/81rzU6jaUinDICszmIl43b6vk7Zt/6aYTAm5Kk0QCMytJUD23feT
+         cEl0Vi+W8aJPOWpH/ff1b6K1RpVvUzad0kV+jIRarYyHvQ8t7Uoe9LCLJYhGhBTspwf4
+         IvYZrLEeF6MWjA+MMJ9Jj/ni0mvzeERqFOHoR4dw9X9zcdgejqJuhGaOWth3vPcy4yG6
+         vlOJ9gxGWLkKLQ9BuRzHHrYP1Q9K8qk7bLHAlE4ydmo7ZtjVlGRjV/owWbnH1xzthdRL
+         QqMFXe24FgJHzy9es7alLxYO5k+8qCXW+NX/BaeuZ0GLTlmaZodpDENxxGFDgmaG33dY
+         l6JA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751902343; x=1752507143;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=z2RtvBnwq2IfJ0CHGCYGxVehGv3P86Mh/6/45Jb+Dlk=;
+        b=ItNyiISUxhcZjU1kOyTCDG6jWhoTZzmtHUj8MrLcYZ5addBuxpobOqKQs40DZTDb4k
+         o/a0KwN0DLtsRUySonfrSJ803u4FjRghocO4mzgzigSlMR9hhXY7hvIUVjNcrqOKUucw
+         iFstgX79DawDqvs8K2VlDy2mL64oGNsPH243rTOPiumc/WHMfbemtCHMh7OiSH1eSybS
+         HuGG1Dec/kpmrzOIJ3cPOAYEmKY+NwaG+O7AF9sJlaiAH3xbc3pULX83wwU22SyXCrP9
+         N/GyE4hYLa7I1z8gOsJEiorNX78riCg9aVDoCCim6440UhqYvSTMZoEJDsybed7wIbjZ
+         YQNA==
+X-Forwarded-Encrypted: i=1; AJvYcCU2jRaTPDmeNcva1ff0c/tR3WkaXhMW7JBze6fK9fTdLeQtDwGtaMGX7gX/9lXQ3ObzXcYDijHB5z+MjwVMru61T5rP@vger.kernel.org, AJvYcCVlYP0eNL49su6VP4KaALH5/JWkdsJcHbioiRsYgQmkHtbARABoyMxnYRj3SjlY01Suka+e+Oibp3R0Trc=@vger.kernel.org, AJvYcCXkkJ7ANtTsMZN1kjE7OkAX9KZev3MXp4EoZ+bG82QoDgz1NBpkGDSI5t7zbHlmnPD72+jtsbwV2DcFPq0vrA==@vger.kernel.org
+X-Gm-Message-State: AOJu0YxOJrPxlINjT8/ntCMwSmfp5g0aGstvu+F5BKVnCCgyG8Lv3Mkz
+	wDzywq7wpf68o/C0hfYA0oVSs0yPM3RlniWGB8t+bZs7j+sE5KrSA7PPbEqei2rAisd4gjj/wei
+	tjaIeXZO+9kIzsoR3l3y+D6gMjom/atw=
+X-Gm-Gg: ASbGncsDCjkFwhUBOKXY4okQ1o+ydq3HJ+YKSy34c2IZ9MTuDeRUlPlEqSWTRxXJcHQ
+	h7j1UYRn9ZiRcyHVmeuz0p1yT/7026Cx4GpDV2yBgWHf16Ftr6UuhjbESW+4ls1nOxFANpAIgKm
+	AGxO2crZXXpNkVkqofjr3YYu7KPz9XLcrv1W7NZd0MEBhPiokcpAc5FIdibCe3d1XqBC3iHEm3N
+	Dha
+X-Google-Smtp-Source: AGHT+IHobRt0IVZ9y2H5aHieKxZBuZ9kYKxX7bRopQYtEGb00kgxf2fb/BJfcAAzEetydaLae4Xw+yKZZLvrXk3th6Q=
+X-Received: by 2002:a05:690c:6911:b0:70e:2a0c:bc5 with SMTP id
+ 00721157ae682-7176ccf0b4amr110470747b3.38.1751902342763; Mon, 07 Jul 2025
+ 08:32:22 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <oez2aoegd2dfq4h4fg2on2rsgwp36aumpedmobxkj7dlmaoeyr@sqz27uhgf3f7>
+References: <20250704134943.3524829-1-rppt@kernel.org> <20250704134943.3524829-4-rppt@kernel.org>
+In-Reply-To: <20250704134943.3524829-4-rppt@kernel.org>
+From: Yann Ylavic <ylavic.dev@gmail.com>
+Date: Mon, 7 Jul 2025 17:32:11 +0200
+X-Gm-Features: Ac12FXyaAajnDBmF1qqrRhSguxWKBF3vJJ9uNxcN4-zDud7xknCeyy1uyLlWfCY
+Message-ID: <CAKQ1sVN9KZYt=M5cst+BonDMVL_wO3sbhgZ+JPzc=Rw9Qfz9tw@mail.gmail.com>
+Subject: Re: [PATCH 3/8] execmem: rework execmem_cache_free()
+To: Mike Rapoport <rppt@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>, Andy Lutomirski <luto@kernel.org>, 
+	Borislav Petkov <bp@alien8.de>, Daniel Gomez <da.gomez@samsung.com>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, Ingo Molnar <mingo@redhat.com>, 
+	Luis Chamberlain <mcgrof@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Petr Pavlu <petr.pavlu@suse.com>, 
+	Sami Tolvanen <samitolvanen@google.com>, Steven Rostedt <rostedt@goodmis.org>, 
+	Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
+	linux-modules@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	x86@kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jul 07, 2025 at 11:06:25AM -0400, Liam R. Howlett wrote:
-> * Mike Rapoport <rppt@kernel.org> [250707 07:32]:
-> > On Mon, Jul 07, 2025 at 01:11:02PM +0200, Peter Zijlstra wrote:
-> > > 
-> > > 	err = __execmem_cache_free(&mas, ptr, GFP_KERNEL | __GFP_NORETRY);
-> > > 	if (err) {
-> > > 		mas_store_gfp(&mas, pending_free_set(ptr), GFP_KERNEL);
-> > > 		execmem_cache.pending_free_cnt++;
-> > > 		schedule_delayed_work(&execmem_cache_free_work, FREE_DELAY);
-> > > 		return true;
-> > > 	}
-> > > 
-> > > 	schedule_work(&execmem_cache_clean_work);
-> > > 	return true;
-> > > }
-> > > 
-> > > And now I have to ask what happens if mas_store_gfp() returns an error?
-> > 
-> > AFAIU it won't. mas points to exact slot we've got the area from, nothing else
-> > can modify the tree because of the mutex, so that mas_store_gfp()
-> > essentially updates the value at an existing entry.
-> > 
-> > I'll add a comment about it.
-> > 
-> > Added @Liam to make sure I'm not saying nonsense :)
-> > 
-> 
-> Yes, if there is already a node with a value with the same range, there
-> will be no allocations that will happen, so it'll just change the
-> pointer for you.  This is a slot store operation.
-> 
-> But, if it's possible to have no entries (an empty tree, or a single
-> value at 0), you will most likely allocate a node to store it, which is
-> 256B.
-> 
-> I don't think this is a concern in this particular case though as you
-> are searching for an entry and storing, so it needs to exist.  So
-> really, the only scenario here is if you store 1 - ULONG_MAX (without
-> having expanded a root node) or 0 - ULONG_MAX, and that seems invalid.
+On Fri, Jul 4, 2025 at 3:54=E2=80=AFPM Mike Rapoport <rppt@kernel.org> wrot=
+e:
+> +
+> +static void execmem_cache_free_slow(struct work_struct *work)
+> +{
+> +       struct maple_tree *busy_areas =3D &execmem_cache.busy_areas;
+> +       MA_STATE(mas, busy_areas, 0, ULONG_MAX);
+> +       void *area;
+> +
+> +       guard(mutex)(&execmem_cache.mutex);
+> +
+> +       if (!execmem_cache.pending_free_cnt)
+> +               return;
+> +
+> +       mas_for_each(&mas, area, ULONG_MAX) {
+> +               if (!is_pending_free(area))
+> +                       continue;
+> +
+> +               pending_free_clear(area);
 
-Thanks for clarification, Liam!
-The tree cannot be empty at that point and if it has a single value, it
-won't be at 0, I'm quite sure no architecture has execmem areas at 0.
+Probably:
+                  area =3D pending_free_clear(area);
+?
 
- 
-> Thanks,
-> Liam
+> +               if (__execmem_cache_free(&mas, area, GFP_KERNEL))
+> +                       continue;
+> +
+> +               execmem_cache.pending_free_cnt--;
+> +       }
+> +
+> +       if (execmem_cache.pending_free_cnt)
+> +               schedule_delayed_work(&execmem_cache_free_work, FREE_DELA=
+Y);
+> +       else
+> +               schedule_work(&execmem_cache_clean_work);
+> +}
 
--- 
-Sincerely yours,
-Mike.
+
+Regards;
+Yann.
