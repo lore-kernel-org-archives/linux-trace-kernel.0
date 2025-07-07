@@ -1,114 +1,123 @@
-Received: from mail-qt1-f180.google.com (mail-qt1-f180.google.com [209.85.160.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B12B429A30D
-	for <linux-trace-kernel@vger.kernel.org>; Mon,  7 Jul 2025 12:22:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.180
+Received: from pegase1.c-s.fr (pegase1.c-s.fr [93.17.236.30])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6F8B92877DD;
+	Mon,  7 Jul 2025 13:20:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.17.236.30
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751890978; cv=none; b=uuwMcp7tF5UF1OR0yRC2qoIShgGnPU70Mv1HKuyLL+TnJfZH6O1k4ZYgaAiTQC81ajveQMI4OvguIXHnuF4dNiMFW1JJ+qYfDuXFADOVBQUamv5viVMlZLZSmo8GaM+UIib7VnFWaq73w0LLU3BfOhHET6fCPyMhydcztIl8J9Y=
+	t=1751894438; cv=none; b=YWQ0REJXxzwXZAixzUwF9yEfwR1FFDbXAe/PKNXi8rot87H7mXkql0iIdR+05vU3KEkgGMV9mGuNUcJghOT7Hxo/Jkz0f8sKBPmJjFThgw344GEtBqbIUACMffzYu0cho2U+BlGqdg02hlWi+qWRfCihzpn8RxVLJtfbESveNTY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751890978; c=relaxed/simple;
-	bh=EbIwVWGrvCj/w9SGk7EAImBhD9ATPqR/BLUabvsyYm0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=nVrHHMg0QNgcGYkZDOUsEOUEaov8Cq+aV11a+UHD8mZjh/GMoy79J5J2X+GJafTYMFDRc0cVMLSJEqGtj0C81hWppJjyEUPxT+mjl89kIARPcNUgAyxKPqJ8pQ6kxn+ZRGUf1omImNnjncRiYqYKxELtGXkNGCRbqbjjcODVw/A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=aroYKfJf; arc=none smtp.client-ip=209.85.160.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="aroYKfJf"
-Received: by mail-qt1-f180.google.com with SMTP id d75a77b69052e-4a44e94f0b0so40553201cf.1
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 07 Jul 2025 05:22:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1751890975; x=1752495775; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=kC2OTWmkGVSsuY5pTtvXdp/tUOOzmOOr9IcRB4wUDDM=;
-        b=aroYKfJftD16ZuvOuV8wMdmzkvcDv2PXn2Rhv+hhCFD80ltv8cFTTqDY/4XBOaFDpx
-         DJhoIFQu9cWEoVhDM25qYKgFNW5eCCDT7VZjPZosJt+LZqtnzlJmA068zRFPt5P3Y1FF
-         4U0kwKlU9/NlERCnBlRkw8Ahjda0h8qX23W3cgko1NkOb88zMBgI00JyFdw99EOdpRqJ
-         O+vmEd7VBWDgfpi35c+tGSK/JrFZZCQg7CGUFPfFPIvcOmQ1hfYZdoF8xsg3/1yJ2m7E
-         eylWcH4bjEoPUqdlLRBMiCMSyaw+/q97OpJpIw3Whq/knt2IexzR0RjjQPiCAxkO3p8f
-         lhgA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751890975; x=1752495775;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=kC2OTWmkGVSsuY5pTtvXdp/tUOOzmOOr9IcRB4wUDDM=;
-        b=pEPe5j7UZ00Pq9MEu/ufB/yfHpZoFp4XwJWrYkX9Wh1mj2s6fdQHeVle+wnmumPwaT
-         S72vOG4hMPYXvxvQTafrhOjbGUulUUP5mIQWANsKHQC1GME08x0GaZYuziiQYuzUU93J
-         jRKUk4omPPIwETp3xJs+iyIMHK3iEaPKvXdaPuTU8D7fnHdmQy6+bnfVtarwi9w0w8nU
-         C3I2sjJqTw8RtkJPeopKzSRZzcs/tBsbS5p6/q+X6AY2EU7Ljv44r8gzajT53UZshdzs
-         tBFoSngcDGgzMIDjOsHkQxXy9nY8/ev2EAjtCJHrV+Q3AbRAA6BYF9g/FcfblA3mGOAT
-         boYw==
-X-Forwarded-Encrypted: i=1; AJvYcCUf4/ZtRtzOS6gE53I7S5q4ug8Z7PXl8PgD8WQHHy2C8UuH85OB0iVyuNAqeQDSniUdmCRXsXbih1ZFG6uCA1CcCRA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxUi7KkwuGnoGaJtcQLWfj1vzrtoL9f2iDy3dh/X5MLB9gxZz0G
-	RDDu3APOpNm04lBmWguBNhMt9ioZqizASF0PIlfp5xR7FlnxLbo92yL7OM1f2JxPu3kuTy+kL0H
-	zuVHS5hfc6DWvKYjgOQ6iJ8sjzjkylcKMV8eVzDFu
-X-Gm-Gg: ASbGncu9Du4wi3padx7sNhEy/ezgAlVKnZT/KYRnztWoPmu3jgkde6xS2JmGf04rezc
-	m7FAoooUTbMYFzbPhXPBW4wfOyj4IRKj0rav5nllql1eCVZshB3h45+4gQNn8fvdrsG/tzVPBsa
-	4TzgWMACL4VEyJYRXTRzQXUCnHAjy/ml2FJK64ZY5zeqc=
-X-Google-Smtp-Source: AGHT+IGmu1jMB8m9mV8Tvai9M9eqluKCKwizyfOIqDCTpHTFG9NpgFDmREZITt+nSs5e8TFauiHUjuiBum43hF1gaYA=
-X-Received: by 2002:a05:622a:5e83:b0:4a7:1403:15c0 with SMTP id
- d75a77b69052e-4a9a6828d6bmr143410911cf.4.1751890974914; Mon, 07 Jul 2025
- 05:22:54 -0700 (PDT)
+	s=arc-20240116; t=1751894438; c=relaxed/simple;
+	bh=HX/Wn7yFzVm60oKLboh9jjsNNdPthnujxuDWLlK2SRQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=gEEyo/xray/D7U81UCO7hMhgSI+eOrF7rndlTEa/geQE+WDPdDF16fX0h2pdeAXVPWeTTzMSjKQfOZkEhNMu1DZLPNHcUwulDRtex7RtPu6QPxEZLk4EHB6cTt07zPunvBP+pVm0ZJp3Hhi/FtlVNYKN6/rwxCO2aDBduZD2BZU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; arc=none smtp.client-ip=93.17.236.30
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
+Received: from localhost (mailhub3.si.c-s.fr [192.168.12.233])
+	by localhost (Postfix) with ESMTP id 4bbPXT2Pk5z9sHR;
+	Mon,  7 Jul 2025 15:02:17 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+	by localhost (pegase1.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id x54AqpKF2bFd; Mon,  7 Jul 2025 15:02:17 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+	by pegase1.c-s.fr (Postfix) with ESMTP id 4bbPXT1Wqrz9sCk;
+	Mon,  7 Jul 2025 15:02:17 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id 2AC538B767;
+	Mon,  7 Jul 2025 15:02:17 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+	with ESMTP id QYGnrCvnMDzJ; Mon,  7 Jul 2025 15:02:17 +0200 (CEST)
+Received: from [192.168.235.99] (unknown [192.168.235.99])
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id 3F5A48B763;
+	Mon,  7 Jul 2025 15:02:16 +0200 (CEST)
+Message-ID: <2ea9c28f-c3d1-4837-b000-10eccaa2775b@csgroup.eu>
+Date: Mon, 7 Jul 2025 15:02:15 +0200
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CANn89iJvyYjiweCESQL8E-Si7M=gosYvh1BAVWwAWycXW8GSdg@mail.gmail.com>
- <202507071846455418y7RHD-cnstxL3SlD6hBH@zte.com.cn>
-In-Reply-To: <202507071846455418y7RHD-cnstxL3SlD6hBH@zte.com.cn>
-From: Eric Dumazet <edumazet@google.com>
-Date: Mon, 7 Jul 2025 05:22:43 -0700
-X-Gm-Features: Ac12FXxCIE-AGdCW1zPw0jMzjWM8tMZL_ZlRElWTTwxHobUT7zQ-ePBitnGFpAw
-Message-ID: <CANn89i+JGSt=_CtWfhDXypWW-34a6SoP3RAzWQ9B9VL4+PHjDw@mail.gmail.com>
-Subject: Re: [PATCH net-next v2] tcp: extend tcp_retransmit_skb tracepoint
- with failure reasons
-To: xu.xin16@zte.com.cn
-Cc: kuba@kernel.org, kuniyu@amazon.com, ncardwell@google.com, 
-	davem@davemloft.net, horms@kernel.org, dsahern@kernel.org, 
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, fan.yu9@zte.com.cn
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/8] execmem: drop unused execmem_update_copy()
+To: Mike Rapoport <rppt@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+ Andy Lutomirski <luto@kernel.org>, Borislav Petkov <bp@alien8.de>,
+ Daniel Gomez <da.gomez@samsung.com>,
+ Dave Hansen <dave.hansen@linux.intel.com>, Ingo Molnar <mingo@redhat.com>,
+ Luis Chamberlain <mcgrof@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Masami Hiramatsu <mhiramat@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
+ Peter Zijlstra <peterz@infradead.org>, Petr Pavlu <petr.pavlu@suse.com>,
+ Sami Tolvanen <samitolvanen@google.com>, Steven Rostedt
+ <rostedt@goodmis.org>, Thomas Gleixner <tglx@linutronix.de>,
+ linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+ linux-modules@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ x86@kernel.org
+References: <20250704134943.3524829-1-rppt@kernel.org>
+ <20250704134943.3524829-2-rppt@kernel.org>
+ <7e52f721-1d8e-4c50-af33-bee3f0d2ac6e@csgroup.eu>
+ <aGu0Yj08EZvpL5Xv@kernel.org>
+Content-Language: fr-FR
+From: Christophe Leroy <christophe.leroy@csgroup.eu>
+In-Reply-To: <aGu0Yj08EZvpL5Xv@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Mon, Jul 7, 2025 at 3:47=E2=80=AFAM <xu.xin16@zte.com.cn> wrote:
->
-> > >
-> > > -/*
-> > > - * tcp event with arguments sk and skb
-> > > - *
-> > > - * Note: this class requires a valid sk pointer; while skb pointer c=
-ould
-> > > - *       be NULL.
-> > > - */
-> > > -DECLARE_EVENT_CLASS(tcp_event_sk_skb,
-> > > +#define TCP_RETRANSMIT_QUIT_REASON             \
-> > > +               ENUM(TCP_RETRANS_ERR_DEFAULT,           "retransmit t=
-erminate unexpectedly")    \
-> > > +               ENUM(TCP_RETRANS_SUCCESS,               "retransmit s=
-uccessfully")              \
-> > > +               ENUM(TCP_RETRANS_IN_HOST_QUEUE,         "packet still=
- queued in driver")        \
-> > > +               ENUM(TCP_RETRANS_END_SEQ_ERROR,         "invalid end =
-sequence")                 \
-> > > +               ENUM(TCP_RETRANS_TRIM_HEAD_NOMEM,       "trim head no=
- memory")                  \
-> > > +               ENUM(TCP_RETRANS_UNCLONE_NOMEM,         "skb unclone =
-keeptruesize no memory")   \
-> > > +               ENUM(TCP_RETRANS_FRAG_NOMEM,            "fragment no =
-memory")                   \
-> >
-> > Do we really need 3 + 1 different 'NOMEMORY' status ?
->
-> Yes, different "NOMEM" status pinpoint exact failure stages in packet ret=
-ransmission,
-> which helps distinguish which process triggered it. Beneficia
 
-ENOMEM is ENOMEM. Honestly I fail to see why it matters.
 
-If this was the case, we would have thousands of different ENOMEM errnos.
+Le 07/07/2025 à 13:49, Mike Rapoport a écrit :
+> On Mon, Jul 07, 2025 at 12:10:43PM +0200, Christophe Leroy wrote:
+>>
+>> Le 04/07/2025 à 15:49, Mike Rapoport a écrit :
+>>> From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
+>>>
+>>> The execmem_update_copy() that used text poking was required when memory
+>>> allocated from ROX cache was always read-only. Since now its permissions
+>>> can be switched to read-write there is no need in a function that updates
+>>> memory with text poking.
+>>
+>> Erm. Looks like I missed the patch that introduced this change.
+>>
+>> On some variant of powerpc, namely book3s/32, this is not feasible.
+> 
+> The only user of EXECMEM_ROX_CACHE for now is x86-64, we can always revisit
+> when powerpc book3s/32 would want to opt in to cache usage.
+> 
+> And it seems that [MODULES_VADDR, MODULES_END] is already mapped with
+> "large pages", isn't it?
+
+I don't think so. It uses execmem_alloc() which sets VM_ALLOW_HUGE_VMAP 
+only when using EXECMEM_ROX_CACHE. And book3s/32 doesn't have large pages.
+
+Only 8xx has large pages but they are not PMD aligned (PMD_SIZE is 4M 
+while large pages are 512k and 8M) so it wouldn't work well with 
+existing execmem_vmalloc().
+
+> 
+>> The granularity for setting the NX (non exec) bit is 256 Mbytes sections.
+>> So the area dedicated to execmem [MODULES_VADDR; MODULES_END[ always have
+>> the NX bit unset.
+>>
+>> You can change any page within this area from ROX to RWX but you can't make
+>> it RW without X. If you want RW without X you must map it in the VMALLOC
+>> area, as VMALLOC area have NX bit always set.
+> 
+> So what will happen when one callse
+> 
+> 	set_memory_nx()
+> 	set_memory_rw()
+> 
+> in such areas?
+
+Nothing will happen. It will successfully unset the X bit on the PTE but 
+that will be ignored by the HW which only relies on the segment's NX bit 
+which is set for the entire VMALLOC area and unset for the entire MODULE 
+area.
+
+That's one of the reasons why it has 
+CONFIG_ARCH_WANTS_MODULES_DATA_IN_VMALLOC , to make sure text is 
+allocated in exec area and data in no-exec area.
+
+Christophe
