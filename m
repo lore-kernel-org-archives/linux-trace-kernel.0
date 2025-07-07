@@ -1,123 +1,122 @@
-Received: from mail-yw1-f174.google.com (mail-yw1-f174.google.com [209.85.128.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-170.mta0.migadu.com (out-170.mta0.migadu.com [91.218.175.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0B86881E;
-	Mon,  7 Jul 2025 15:32:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 610301E2312
+	for <linux-trace-kernel@vger.kernel.org>; Mon,  7 Jul 2025 15:41:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751902345; cv=none; b=OsdxWoWQ5lM5H4HrhkeMsC5t+ISCaEYARJsPjDXlQKLtQRmiy/pnwaH/uvEhoGAVdjg3d/QwDBN71P6HzovOURQO7+1d8+BzEyBM7F5HlGKBjvEbNr+fMbABr1lQYSAvMjSx6otBdi1FJXUVg81NrKPqSlo0MAxfqPJjCwsEI4E=
+	t=1751902883; cv=none; b=bAXt1+tMM8/2SEpVFiPCZvPVmI3mjgjT62CvNVckpn2woLy9czRtDjSeKe0bEgcxzZc9+Q6Z8c2kfYQGWe3ytoiaAtZH0BKKdU1UchRUvz/bPIWT8N7FGE2ZkD73Qo0GY1iJerSKfij2sp61bCsOrjLgOfQg6rrXIgLVU/o6DlA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751902345; c=relaxed/simple;
-	bh=3cUG4Qr+IPNv64Z1EWnT8TrT8XUMf+AT0Rh3TTHODsk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Xd+HNwqgbGicqZ4n+ZIZx8D/kRTX1mbzH1xa83zSCTXn1dsuoUboK4UI0f8vetGpdftM0lUzlj6Vr9hg63+3n4rVtNyaE93PormHk99K5wlir4fXST+o+qZ+Gz4qnp5NzZ6dq1rV54heJc8otp60GOJuBZuV9fnY0kpVPSXJpgc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NFqYy9Uf; arc=none smtp.client-ip=209.85.128.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751902883; c=relaxed/simple;
+	bh=ePOPubuWj17eRi0sYt5gn5zhUwG2cej8IddcFeCTXXM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Ce9AiQp+jjdTafVksCjumUAAdVCKGh9iCbkpm/1EfqumfUsAOYIhTBo5DLK5GI9FzE8u5fIsnHRoVmblNyxXPlnZeV0N6ccocrw/12dxPmLscW56xlWuOHDSQybhh46RL6a5j7s1f/jXd7mps2b+OZqUV0E1uLnoy3DmwR+e31A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Yr0XVWux; arc=none smtp.client-ip=91.218.175.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NFqYy9Uf"
-Received: by mail-yw1-f174.google.com with SMTP id 00721157ae682-70a57a8ffc3so26392537b3.0;
-        Mon, 07 Jul 2025 08:32:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751902343; x=1752507143; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=z2RtvBnwq2IfJ0CHGCYGxVehGv3P86Mh/6/45Jb+Dlk=;
-        b=NFqYy9Ufp9r8b/81rzU6jaUinDICszmIl43b6vk7Zt/6aYTAm5Kk0QCMytJUD23feT
-         cEl0Vi+W8aJPOWpH/ff1b6K1RpVvUzad0kV+jIRarYyHvQ8t7Uoe9LCLJYhGhBTspwf4
-         IvYZrLEeF6MWjA+MMJ9Jj/ni0mvzeERqFOHoR4dw9X9zcdgejqJuhGaOWth3vPcy4yG6
-         vlOJ9gxGWLkKLQ9BuRzHHrYP1Q9K8qk7bLHAlE4ydmo7ZtjVlGRjV/owWbnH1xzthdRL
-         QqMFXe24FgJHzy9es7alLxYO5k+8qCXW+NX/BaeuZ0GLTlmaZodpDENxxGFDgmaG33dY
-         l6JA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751902343; x=1752507143;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=z2RtvBnwq2IfJ0CHGCYGxVehGv3P86Mh/6/45Jb+Dlk=;
-        b=ItNyiISUxhcZjU1kOyTCDG6jWhoTZzmtHUj8MrLcYZ5addBuxpobOqKQs40DZTDb4k
-         o/a0KwN0DLtsRUySonfrSJ803u4FjRghocO4mzgzigSlMR9hhXY7hvIUVjNcrqOKUucw
-         iFstgX79DawDqvs8K2VlDy2mL64oGNsPH243rTOPiumc/WHMfbemtCHMh7OiSH1eSybS
-         HuGG1Dec/kpmrzOIJ3cPOAYEmKY+NwaG+O7AF9sJlaiAH3xbc3pULX83wwU22SyXCrP9
-         N/GyE4hYLa7I1z8gOsJEiorNX78riCg9aVDoCCim6440UhqYvSTMZoEJDsybed7wIbjZ
-         YQNA==
-X-Forwarded-Encrypted: i=1; AJvYcCU2jRaTPDmeNcva1ff0c/tR3WkaXhMW7JBze6fK9fTdLeQtDwGtaMGX7gX/9lXQ3ObzXcYDijHB5z+MjwVMru61T5rP@vger.kernel.org, AJvYcCVlYP0eNL49su6VP4KaALH5/JWkdsJcHbioiRsYgQmkHtbARABoyMxnYRj3SjlY01Suka+e+Oibp3R0Trc=@vger.kernel.org, AJvYcCXkkJ7ANtTsMZN1kjE7OkAX9KZev3MXp4EoZ+bG82QoDgz1NBpkGDSI5t7zbHlmnPD72+jtsbwV2DcFPq0vrA==@vger.kernel.org
-X-Gm-Message-State: AOJu0YxOJrPxlINjT8/ntCMwSmfp5g0aGstvu+F5BKVnCCgyG8Lv3Mkz
-	wDzywq7wpf68o/C0hfYA0oVSs0yPM3RlniWGB8t+bZs7j+sE5KrSA7PPbEqei2rAisd4gjj/wei
-	tjaIeXZO+9kIzsoR3l3y+D6gMjom/atw=
-X-Gm-Gg: ASbGncsDCjkFwhUBOKXY4okQ1o+ydq3HJ+YKSy34c2IZ9MTuDeRUlPlEqSWTRxXJcHQ
-	h7j1UYRn9ZiRcyHVmeuz0p1yT/7026Cx4GpDV2yBgWHf16Ftr6UuhjbESW+4ls1nOxFANpAIgKm
-	AGxO2crZXXpNkVkqofjr3YYu7KPz9XLcrv1W7NZd0MEBhPiokcpAc5FIdibCe3d1XqBC3iHEm3N
-	Dha
-X-Google-Smtp-Source: AGHT+IHobRt0IVZ9y2H5aHieKxZBuZ9kYKxX7bRopQYtEGb00kgxf2fb/BJfcAAzEetydaLae4Xw+yKZZLvrXk3th6Q=
-X-Received: by 2002:a05:690c:6911:b0:70e:2a0c:bc5 with SMTP id
- 00721157ae682-7176ccf0b4amr110470747b3.38.1751902342763; Mon, 07 Jul 2025
- 08:32:22 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Yr0XVWux"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1751902869;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=q3RrQWA0hl2m0Jg5mJm6780LOhvTRsObdRFSzyTIGtE=;
+	b=Yr0XVWuxfD334RtnfP0rxbc+BWxrdqSYqtRltclNSQJe/WG7/ZAUAZLPOgQonXSIf4O+zi
+	wPVs1mBAUazhpSsbztZiS7Vy3GfvHYgBMk2/BCsd/u0L258ep/8V8if24dVPYCtugI+bqE
+	7JRo1lDd8eyvUhNFvmxoanDff6hGxyk=
+From: Tao Chen <chen.dylane@linux.dev>
+To: ast@kernel.org,
+	daniel@iogearbox.net,
+	john.fastabend@gmail.com,
+	andrii@kernel.org,
+	martin.lau@linux.dev,
+	eddyz87@gmail.com,
+	song@kernel.org,
+	yonghong.song@linux.dev,
+	kpsingh@kernel.org,
+	sdf@fomichev.me,
+	haoluo@google.com,
+	jolsa@kernel.org,
+	mattbobrowski@google.com,
+	rostedt@goodmis.org,
+	mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	horms@kernel.org,
+	kuniyu@amazon.com,
+	willemb@google.com,
+	jakub@cloudflare.com,
+	pablo@netfilter.org,
+	kadlec@netfilter.org,
+	hawk@kernel.org
+Cc: bpf@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	netfilter-devel@vger.kernel.org,
+	coreteam@netfilter.org,
+	Tao Chen <chen.dylane@linux.dev>
+Subject: [PATCH bpf-next 0/6] Move attach_type into bpf_link
+Date: Mon,  7 Jul 2025 23:39:10 +0800
+Message-ID: <20250707153916.802802-1-chen.dylane@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250704134943.3524829-1-rppt@kernel.org> <20250704134943.3524829-4-rppt@kernel.org>
-In-Reply-To: <20250704134943.3524829-4-rppt@kernel.org>
-From: Yann Ylavic <ylavic.dev@gmail.com>
-Date: Mon, 7 Jul 2025 17:32:11 +0200
-X-Gm-Features: Ac12FXyaAajnDBmF1qqrRhSguxWKBF3vJJ9uNxcN4-zDud7xknCeyy1uyLlWfCY
-Message-ID: <CAKQ1sVN9KZYt=M5cst+BonDMVL_wO3sbhgZ+JPzc=Rw9Qfz9tw@mail.gmail.com>
-Subject: Re: [PATCH 3/8] execmem: rework execmem_cache_free()
-To: Mike Rapoport <rppt@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>, Andy Lutomirski <luto@kernel.org>, 
-	Borislav Petkov <bp@alien8.de>, Daniel Gomez <da.gomez@samsung.com>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, Ingo Molnar <mingo@redhat.com>, 
-	Luis Chamberlain <mcgrof@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Petr Pavlu <petr.pavlu@suse.com>, 
-	Sami Tolvanen <samitolvanen@google.com>, Steven Rostedt <rostedt@goodmis.org>, 
-	Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
-	linux-modules@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	x86@kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On Fri, Jul 4, 2025 at 3:54=E2=80=AFPM Mike Rapoport <rppt@kernel.org> wrot=
-e:
-> +
-> +static void execmem_cache_free_slow(struct work_struct *work)
-> +{
-> +       struct maple_tree *busy_areas =3D &execmem_cache.busy_areas;
-> +       MA_STATE(mas, busy_areas, 0, ULONG_MAX);
-> +       void *area;
-> +
-> +       guard(mutex)(&execmem_cache.mutex);
-> +
-> +       if (!execmem_cache.pending_free_cnt)
-> +               return;
-> +
-> +       mas_for_each(&mas, area, ULONG_MAX) {
-> +               if (!is_pending_free(area))
-> +                       continue;
-> +
-> +               pending_free_clear(area);
+Andrii suggested moving the attach_type into bpf_link, the previous discussion
+is as follows:
+https://lore.kernel.org/bpf/CAEf4BzY7TZRjxpCJM-+LYgEqe23YFj5Uv3isb7gat2-HU4OSng@mail.gmail.com
 
-Probably:
-                  area =3D pending_free_clear(area);
-?
+patch1 add attach_type in bpf_link, and pass it to bpf_link_init, which
+will init the attach_type field.
 
-> +               if (__execmem_cache_free(&mas, area, GFP_KERNEL))
-> +                       continue;
-> +
-> +               execmem_cache.pending_free_cnt--;
-> +       }
-> +
-> +       if (execmem_cache.pending_free_cnt)
-> +               schedule_delayed_work(&execmem_cache_free_work, FREE_DELA=
-Y);
-> +       else
-> +               schedule_work(&execmem_cache_clean_work);
-> +}
+patch2-6 remove the attach_type in struct bpf_xx_link, update the info
+with bpf_link attach_type.
 
+There are some functions finally call bpf_link_init but do not have bpf_attr
+from user or do not need to init attach_type from user like bpf_raw_tracepoint_open,
+now use prog->expected_attach_type to init attach_type.
 
-Regards;
-Yann.
+bpf_struct_ops_map_update_elem
+bpf_raw_tracepoint_open
+bpf_struct_ops_test_run
+
+Feedback of any kind is welcome, thanks.
+
+Tao Chen (6):
+  bpf: Add attach_type in bpf_link
+  bpf: Remove attach_type in bpf_cgroup_link
+  bpf: Remove attach_type in bpf_sockmap_link
+  bpf: Remove location field in tcx_link
+  bpf: Remove attach_type in bpf_netns_link
+  bpf: Remove attach_type in bpf_tracing_link
+
+ include/linux/bpf-cgroup.h     |  1 -
+ include/linux/bpf.h            | 18 +++++++++------
+ include/net/tcx.h              |  1 -
+ kernel/bpf/bpf_iter.c          |  3 ++-
+ kernel/bpf/bpf_struct_ops.c    |  5 +++--
+ kernel/bpf/cgroup.c            | 17 +++++++--------
+ kernel/bpf/net_namespace.c     |  8 +++----
+ kernel/bpf/syscall.c           | 40 ++++++++++++++++++++--------------
+ kernel/bpf/tcx.c               | 16 +++++++-------
+ kernel/bpf/trampoline.c        | 10 +++++----
+ kernel/trace/bpf_trace.c       |  4 ++--
+ net/bpf/bpf_dummy_struct_ops.c |  3 ++-
+ net/core/dev.c                 |  3 ++-
+ net/core/sock_map.c            | 13 +++++------
+ net/netfilter/nf_bpf_link.c    |  3 ++-
+ 15 files changed, 79 insertions(+), 66 deletions(-)
+
+-- 
+2.48.1
+
