@@ -1,45 +1,49 @@
-Received: from relay.hostedemail.com (smtprelay0017.hostedemail.com [216.40.44.17])
+Received: from relay.hostedemail.com (smtprelay0010.hostedemail.com [216.40.44.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 403B6285CB3;
-	Mon,  7 Jul 2025 21:17:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66C4A194C96;
+	Mon,  7 Jul 2025 21:28:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751923069; cv=none; b=ETO8whqf5uYFXlItPGcMgc0qEOw8fT1W0nawAf9OwYOR8wQNlwZC+A18Bzv4s8Td2swVrH714KufcaA6ECBlz6cx4qQbzxG4myw8Rqlu1RUaaZiyMtibzlXCq/l5l3puJrdj0FAdXI8EYwg+pFQspxR11p65svqQkfOt6lacZ0M=
+	t=1751923737; cv=none; b=Us5BZYsOdYvZc7zeLyI3Sgk75h0SVH0oQEqju0nAti6uEe0ziIPbt6425DPLoTht2uHudNda+G9G+MV5EsKd58A9LrUOBGC503cf7mZA0dP2ppepMJlfU65dejTOS2LxuCMjQzLRYpGeawytlk5sdpUNJOLc6zc8XhUioUPZgNQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751923069; c=relaxed/simple;
-	bh=6w1dVPixiY3k13k17rtRyUsCZzgPtumdTmATn1RT6BU=;
+	s=arc-20240116; t=1751923737; c=relaxed/simple;
+	bh=YY91jF2kIXgCSrAhHbLH3CIxeqcI9tB+rbtCD3eLjz8=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=LoPoQoLRC3JD4iih/VhiJz0c71wLTj5bSMtIKX7nItXV+sxh65ma35eZwjCeezk1M/iuJnZ9DAII/AVYzdrThvLUNlUPsgJA5F6Lm4ifWD2EUlrdTi2xFw+m9aCm/tyCsNZuTQaBBeolxtqxX00a22o92/0OFCAXb+EpEEYLHTs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.17
+	 MIME-Version:Content-Type; b=uhl+OM39rY2JAJ0lZsFEt9DdKLjhQ3kRzK2ZlBOT+rtCyTz7+u8klpJNABgHssgpn8nNu/FUBm5hoBvoFtDF/XRayGQPnmGj04EjKT9ubPOmAIh8oi1uSiOuDv5sq8RHqLlh6xRdLjLDBBNYtQMHPUi5reg40yMyn2teAOFMh9g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.10
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf01.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay09.hostedemail.com (Postfix) with ESMTP id ECC2D8037B;
-	Mon,  7 Jul 2025 21:01:10 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf01.hostedemail.com (Postfix) with ESMTPA id 5AD786000F;
-	Mon,  7 Jul 2025 21:01:06 +0000 (UTC)
-Date: Mon, 7 Jul 2025 17:01:05 -0400
+Received: from omf13.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay07.hostedemail.com (Postfix) with ESMTP id F40E81603A7;
+	Mon,  7 Jul 2025 21:28:52 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf13.hostedemail.com (Postfix) with ESMTPA id 5720820010;
+	Mon,  7 Jul 2025 21:28:48 +0000 (UTC)
+Date: Mon, 7 Jul 2025 17:28:47 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
-To: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+To: Jens Remus <jremus@linux.ibm.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
  bpf@vger.kernel.org, x86@kernel.org, Masami Hiramatsu
- <mhiramat@kernel.org>, Josh Poimboeuf <jpoimboe@kernel.org>, Peter Zijlstra
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Josh Poimboeuf <jpoimboe@kernel.org>, Peter Zijlstra
  <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, Jiri Olsa
  <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Thomas Gleixner
  <tglx@linutronix.de>, Andrii Nakryiko <andrii@kernel.org>, Indu Bhagat
  <indu.bhagat@oracle.com>, "Jose E. Marchesi" <jemarch@gnu.org>, Beau
- Belgrave <beaub@linux.microsoft.com>, Jens Remus <jremus@linux.ibm.com>,
- Linus Torvalds <torvalds@linux-foundation.org>, Andrew Morton
+ Belgrave <beaub@linux.microsoft.com>, Andrew Morton
  <akpm@linux-foundation.org>, Jens Axboe <axboe@kernel.dk>, Florian Weimer
  <fweimer@redhat.com>
-Subject: Re: [PATCH v12 01/14] unwind_user: Add user space unwinding API
-Message-ID: <20250707170105.1ea1ccd5@batman.local.home>
-In-Reply-To: <20250707154245.7eeeb448@batman.local.home>
+Subject: Re: [PATCH v12 02/14] unwind_user: Add frame pointer support
+Message-ID: <20250707172847.75bb6190@batman.local.home>
+In-Reply-To: <d4fb9d4c-13d6-41fc-8c17-dee6cc0a77eb@linux.ibm.com>
 References: <20250701005321.942306427@goodmis.org>
-	<20250701005450.721228270@goodmis.org>
-	<12c620ea-4bee-4019-8143-8ecbaeeafc11@efficios.com>
-	<20250707154245.7eeeb448@batman.local.home>
+	<20250701005450.888492528@goodmis.org>
+	<CAHk-=wiWOYB4c3E-Cc=D89j0txbN4AGqm0j1dojqHq3uzJ+LqQ@mail.gmail.com>
+	<20250630225603.72c84e67@gandalf.local.home>
+	<a6a460e6-8cff-4353-a9e1-2e071d28e993@linux.ibm.com>
+	<20250702195058.7ebb026d@gandalf.local.home>
+	<d4fb9d4c-13d6-41fc-8c17-dee6cc0a77eb@linux.ibm.com>
 X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -49,34 +53,50 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: 5AD786000F
-X-Rspamd-Server: rspamout02
-X-Stat-Signature: t8cy4pfn5kbywkbtcd3fwte3h7einzic
+X-Stat-Signature: sakoqdihpa7b49ngohg5pdhgdcunrjrp
+X-Rspamd-Server: rspamout01
+X-Rspamd-Queue-Id: 5720820010
 X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1/hJGEJuHvQAlzXM3nyahxqw5XL3ZPesbc=
-X-HE-Tag: 1751922066-394350
-X-HE-Meta: U2FsdGVkX184maHp6AbgAf/k2jFaTcaeSpS3K9TchigjJp+AUwA/uPIZxrsWq7w+ozKsT2CHLZtdR/CMMdEZsv1i16RlIkZ3Whg0lthKOJcoNFa0x7FuSkemuK4mA0+U8bZuj/O51FHf+WNP1GIjLiW7wPxUeDVpTZmok2m+9aPbm1I4hEWS+uOWaWIyd5V54lInMb9k6AH42l8AEwtbpPgUmNFWTuLi5+2Su6KN+wFZejFeA4XWH36aDSjowkMB+UJjVp0UDuLZ1KLiLOSGrjhiu8uNgeS95bn+njQz+L/NPoC+dzquqoBguOOpBvdM8Uxx3Rfz6O6M1oC2du4HLTFx2lVrFt6GpeZGY9hN6x1QyknJ6BqBptV48fHoSaN5pahZ+k18pqtE38ILr/yfnJ07mKf2V+5hvzpnN7isVTDnmpmM9z/clCEPpEaUhbc/
+X-Session-ID: U2FsdGVkX1/BaoY0sYmWm4CGwHUM7pkPRsQVgrbcglY=
+X-HE-Tag: 1751923728-40853
+X-HE-Meta: U2FsdGVkX1+6lJPe/TyS0k8S8ysy1ySKSNO9cRN3ne/FLvKPmvmCe27F5fMYniDvvpVXbr41FBJPafYCZE1OtkCsUj1yHGIYqt2qulZs3RvBIBvSdnzusIRCf+fVRGBrnF5aDcZOOtGnwmMWU9XRwqnTffdJlKUd3X8381wPe4w3tLXOBh/0MrE5jyD+ScRk3BATac6GBy6y+N2ji46T4GFzIaKEjvnXqSFF+nxJZRmoKzDLPMVHEljGMXEe0CF/oRbzDxEJhgOklsI5D1lr8RYTl/PzYUw7lDKgzDIHhErDTKB2iRvywJ4iK7bV/SBCMb4vXawyZrfIjc3xVSLV8g2bKR9YGs9iW/fkQwi13BKVfLHqM0Vdqg==
 
-On Mon, 7 Jul 2025 15:42:45 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
+On Thu, 3 Jul 2025 18:21:10 +0200
+Jens Remus <jremus@linux.ibm.com> wrote:
 
-> On Fri, 4 Jul 2025 14:20:54 -0400
-> Mathieu Desnoyers <mathieu.desnoyers@efficios.com> wrote:
-> 
-> > > None of the structures introduced will be exposed to user space tooling.    
+> >> 	/* stack going in wrong direction? */
+> >> 	if (sp <= state->sp - topmost)
+> >> 		goto done;  
 > > 
-> > Would it be possible to make those unwind APIs EXPORT_SYMBOL_GPL
-> > so they are available for GPL kernel modules ?  
+> > How do you calculate "topmost" then?
+> > 
+> > Is it another field you add to "state"?  
 > 
-> I'm OK with that, but others tend to complain about EXPORT_SYMBOL_GPL
-> for functions not used by modules in the kernel. But I personally feel
-> that LTTng should get an exception for that rule ;-)
+> Correct.  It is a boolean set to true in unwind_user_start() and set to
+> false in unwind_user_next() when updating the state.
 
-I just noticed that this was to patch 1. The functions here probably
-shouldn't be exported as they are more internal to the infrastructure.
+So it's subtracting 1 or zero? So that the topmost can be equal. Well,
+that would need a bit of commenting.
 
-In fact, I think I'll move that macro into the user.c code. I don't
-think it should be used outside that function. And the
-unwind_user_start/next() could also be static functions.
+> 
+> I assume most architectures need above change, as their SP at function
+> entry should be equal to the SP at call site (unlike x86-64 due to CALL).
+> 
+> s390 also needs this information to allow restoring of FP/RA saved in
+> other registers (instead of on the stack) only for the topmost frame.
+> For any other frame arbitrary register contents would not be available,
+> as user unwind only unwinds SP, FP, and RA.
+> 
+> I would post my s390 sframe support patches as RFC once you have
+> provided a merged sframe branch as discussed in:
+> https://lore.kernel.org/all/20250702124737.565934b5@batman.local.home/
+
+I did have a merge branch on my repo. But I was hoping to see your code
+so that I can add this to this patch before having to post again. But
+now I'm posting without this change, as I don't want to screw it up. I
+think I know what it it looks like, but it would be better to see what
+you did to make sure what I envision is correct.
+
+Oh well. I'll post v13 without it.
 
 -- Steve
