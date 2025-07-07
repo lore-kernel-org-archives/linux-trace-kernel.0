@@ -1,38 +1,44 @@
-Received: from relay.hostedemail.com (smtprelay0010.hostedemail.com [216.40.44.10])
+Received: from relay.hostedemail.com (smtprelay0012.hostedemail.com [216.40.44.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C05F7219311;
-	Mon,  7 Jul 2025 18:52:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 145BA13A244;
+	Mon,  7 Jul 2025 19:49:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751914361; cv=none; b=hizhsYjPYbGKYDMSMr77MwxpD/6CIOtiWS5P1gZT7hcZ4VynwPT8sXBsiEY4XVoaQE8wh1Hf4z/rBzlqih7vM63HhfGbXrDYvrlpHInR12q/pzPKCxM/agX9vsKDODNAm9L+xE37RB39pkiHxy/bNbFzXZftX9KyLlMMxZT3Cv4=
+	t=1751917799; cv=none; b=W3dvxY2sp6NlG+tpkHES+6IGpaPw23L/EDXN0Mtl5zC/lk/Lu9xjO8BfgdJCoXMx2t3PVhPCzeq3pD56WVGHLTZ7dYi6stRHMN7/zdJfXBvMo/LyujHarghrsFiRKjmthIWX6OzvSloVcwcVXw1WY0DNjk++iz4s+qghn94Cozs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751914361; c=relaxed/simple;
-	bh=+9uNWNwUoOguNrh0MWB0aDiKzTBk8vpWgi+MvD5HvaA=;
+	s=arc-20240116; t=1751917799; c=relaxed/simple;
+	bh=C/pxVwNNcO2P81TrbKVfUEX/hAn4awsUloccI8+e050=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=nfmniIhFXI3iYXBzcCzhBQI3zwIxmIJNBIVTfwfC9DzDxPI7XXwFNwR3NAt6bb/oNir3O30Lt1giTDdnD0tsIIjFBYeJMJugKDGvMp9DW3I70cRlqxbh+MJtX4UKN9zVy/77HWJev62hY8b2TZbeVCzF37N1m5hsJ9wn/n+mqGI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.10
+	 MIME-Version:Content-Type; b=aUvt+kXLC4/1edT6/biAkjXSbvrSJ7jSfhI4opxOiFfCVwH/xXoMe89DJUcYgEUgfvIXhGJOrkpcetMGBpZ8iu+thjDF9H/bgaR5JkEEy/g5UeJFVZLPabTHF9CLvUAmxaHV4wA6ZBjHyd9UlIQs7KblYRJc7wIauYH5iD9BSqo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.12
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf03.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay04.hostedemail.com (Postfix) with ESMTP id B17AF1A02AF;
-	Mon,  7 Jul 2025 18:52:31 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf03.hostedemail.com (Postfix) with ESMTPA id A39946000A;
-	Mon,  7 Jul 2025 18:52:29 +0000 (UTC)
-Date: Mon, 7 Jul 2025 14:52:28 -0400
+Received: from omf06.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay02.hostedemail.com (Postfix) with ESMTP id BBABA128655;
+	Mon,  7 Jul 2025 19:42:50 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf06.hostedemail.com (Postfix) with ESMTPA id 5AB922000E;
+	Mon,  7 Jul 2025 19:42:46 +0000 (UTC)
+Date: Mon, 7 Jul 2025 15:42:45 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
-To: Menglong Dong <menglong8.dong@gmail.com>
-Cc: alexei.starovoitov@gmail.com, jolsa@kernel.org, bpf@vger.kernel.org,
- Menglong Dong <dongml2@chinatelecom.cn>, Mark Rutland
- <mark.rutland@arm.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH bpf-next v2 04/18] ftrace: add reset_ftrace_direct_ips
-Message-ID: <20250707145228.43c669f6@batman.local.home>
-In-Reply-To: <CADxym3YaHGxQ7AORGka1CV+KpnPOknohP9a6zi=3RSPXYBKC-g@mail.gmail.com>
-References: <20250703121521.1874196-1-dongml2@chinatelecom.cn>
-	<20250703121521.1874196-5-dongml2@chinatelecom.cn>
-	<20250703113001.099dc88f@batman.local.home>
-	<CADxym3YaHGxQ7AORGka1CV+KpnPOknohP9a6zi=3RSPXYBKC-g@mail.gmail.com>
+To: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ bpf@vger.kernel.org, x86@kernel.org, Masami Hiramatsu
+ <mhiramat@kernel.org>, Josh Poimboeuf <jpoimboe@kernel.org>, Peter Zijlstra
+ <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, Jiri Olsa
+ <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Thomas Gleixner
+ <tglx@linutronix.de>, Andrii Nakryiko <andrii@kernel.org>, Indu Bhagat
+ <indu.bhagat@oracle.com>, "Jose E. Marchesi" <jemarch@gnu.org>, Beau
+ Belgrave <beaub@linux.microsoft.com>, Jens Remus <jremus@linux.ibm.com>,
+ Linus Torvalds <torvalds@linux-foundation.org>, Andrew Morton
+ <akpm@linux-foundation.org>, Jens Axboe <axboe@kernel.dk>, Florian Weimer
+ <fweimer@redhat.com>
+Subject: Re: [PATCH v12 01/14] unwind_user: Add user space unwinding API
+Message-ID: <20250707154245.7eeeb448@batman.local.home>
+In-Reply-To: <12c620ea-4bee-4019-8143-8ecbaeeafc11@efficios.com>
+References: <20250701005321.942306427@goodmis.org>
+	<20250701005450.721228270@goodmis.org>
+	<12c620ea-4bee-4019-8143-8ecbaeeafc11@efficios.com>
 X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -42,29 +48,24 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Stat-Signature: 95a8k6ienbz8rqbrctynjw3ezmx355qx
+X-Stat-Signature: uffcqguk36b5rtzjb97yrcmziuh1i78n
 X-Rspamd-Server: rspamout07
-X-Rspamd-Queue-Id: A39946000A
+X-Rspamd-Queue-Id: 5AB922000E
 X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX18Mfh5tsCyW2yAj7VkmmhrAhpOV5HeX750=
-X-HE-Tag: 1751914349-443376
-X-HE-Meta: U2FsdGVkX19TYR69O3Hdm/4ht9uO86N3LmzV5jWzVaB0EkVyRqHPW54KBGNipbjT4qeTnoSR+/RgBlYz/+07ycDukYP+pSXOU5gFLQbiOXVJilKWvEzBYWT2Rz73WlV8AHy7baQssxv9cYYSVQjXeRnGygFn1DzUQeJBW3y1SV+H1jnwsl+fZv8eVd+4ntBlHaqHmo+la2HIUNO2T7SHlSr/zI9kQV0XDmBChpOwo4D4IHjM/aj8fHHhWIGJ61ztE7fmR7BTQjviJ1HnWP9cxdTcD9tdjEpolhqFSd9CAh432MNl6zwEsxHIaHzGUqbyk+YH3jOf5he9Sm7mP8j+BLN42nLfxsUU
+X-Session-ID: U2FsdGVkX1+hZRXtt2n9xM25ZjI5RbURs4uzubwh+r8=
+X-HE-Tag: 1751917366-491360
+X-HE-Meta: U2FsdGVkX1+TlfiLJboUxWFVhq/aBl2bQgU922t12rSyi1JWsFcrAHFLerzbTnq0xq41SHga/xi2kKB4hiRLNrK7Sr/df8bn4Ok62X/V3VK/V3SswAQzMX9VCDljJDlt7APU+uY5E1je+9lfT+EYlIA4gPiazZCNjkMqgqs0aHjqNHR9km2DNUlKiZna5qWTOEtyUxQ2vMYb86+abAM+c1AsOtBnALmMrkH0DfjCFVvUMNArbVac5C55LarMjElCob+NOedjbvXxRkqbN3v6NiL2gdG8qQWXdxCGbT6cDbbjTcUvnFsDoSCTTgP+Cp9IUDWchw8XOXUjEDadYhZZbyb72eQ9VbN+QrFcopOe0qhoKDnLwNsyka8qd3KG6kFL
 
-On Fri, 4 Jul 2025 09:54:52 +0800
-Menglong Dong <menglong8.dong@gmail.com> wrote:
+On Fri, 4 Jul 2025 14:20:54 -0400
+Mathieu Desnoyers <mathieu.desnoyers@efficios.com> wrote:
 
-> > What exactly do you mean by "reset"?  
+> > None of the structures introduced will be exposed to user space tooling.  
 > 
-> It means to reset the filter hash of the ftrace_ops to ips. In
-> the origin logic, the filter hash of a direct ftrace_ops will not
-> be changed. However, in the tracing-multi case, there are
-> multi functions in the filter hash and can change. This function
-> is used to change the filter hash of a direct ftrace_ops.
+> Would it be possible to make those unwind APIs EXPORT_SYMBOL_GPL
+> so they are available for GPL kernel modules ?
 
-The above still doesn't make sense to me.
-
-Can you explain more what exactly you are doing at a higher level? To
-me "reset" means to set back to what it originally was (which usually
-is zero or nothing).
+I'm OK with that, but others tend to complain about EXPORT_SYMBOL_GPL
+for functions not used by modules in the kernel. But I personally feel
+that LTTng should get an exception for that rule ;-)
 
 -- Steve
