@@ -1,102 +1,118 @@
-Received: from relay.hostedemail.com (smtprelay0010.hostedemail.com [216.40.44.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f182.google.com (mail-il1-f182.google.com [209.85.166.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66C4A194C96;
-	Mon,  7 Jul 2025 21:28:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D31772080C4
+	for <linux-trace-kernel@vger.kernel.org>; Mon,  7 Jul 2025 21:36:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751923737; cv=none; b=Us5BZYsOdYvZc7zeLyI3Sgk75h0SVH0oQEqju0nAti6uEe0ziIPbt6425DPLoTht2uHudNda+G9G+MV5EsKd58A9LrUOBGC503cf7mZA0dP2ppepMJlfU65dejTOS2LxuCMjQzLRYpGeawytlk5sdpUNJOLc6zc8XhUioUPZgNQ=
+	t=1751924173; cv=none; b=cSmk5b67uwZpP54vZqzR6eyZpuz1ktTP7i3dU3mweAZhxlLHsUWwQUReotF+2M3RgYXuWtgZbNiQwZ+DytVtWqUFXGvRsjvD2Dm0tOCOYzqcaqMJXY3fRe3BtD88gr5IHkIzsRtObEbv6Qi+R03P9LyHOUWGU+6I5TKEytvUXeQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751923737; c=relaxed/simple;
-	bh=YY91jF2kIXgCSrAhHbLH3CIxeqcI9tB+rbtCD3eLjz8=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=uhl+OM39rY2JAJ0lZsFEt9DdKLjhQ3kRzK2ZlBOT+rtCyTz7+u8klpJNABgHssgpn8nNu/FUBm5hoBvoFtDF/XRayGQPnmGj04EjKT9ubPOmAIh8oi1uSiOuDv5sq8RHqLlh6xRdLjLDBBNYtQMHPUi5reg40yMyn2teAOFMh9g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf13.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay07.hostedemail.com (Postfix) with ESMTP id F40E81603A7;
-	Mon,  7 Jul 2025 21:28:52 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf13.hostedemail.com (Postfix) with ESMTPA id 5720820010;
-	Mon,  7 Jul 2025 21:28:48 +0000 (UTC)
-Date: Mon, 7 Jul 2025 17:28:47 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Jens Remus <jremus@linux.ibm.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- bpf@vger.kernel.org, x86@kernel.org, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Josh Poimboeuf <jpoimboe@kernel.org>, Peter Zijlstra
- <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, Jiri Olsa
- <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Thomas Gleixner
- <tglx@linutronix.de>, Andrii Nakryiko <andrii@kernel.org>, Indu Bhagat
- <indu.bhagat@oracle.com>, "Jose E. Marchesi" <jemarch@gnu.org>, Beau
- Belgrave <beaub@linux.microsoft.com>, Andrew Morton
- <akpm@linux-foundation.org>, Jens Axboe <axboe@kernel.dk>, Florian Weimer
- <fweimer@redhat.com>
-Subject: Re: [PATCH v12 02/14] unwind_user: Add frame pointer support
-Message-ID: <20250707172847.75bb6190@batman.local.home>
-In-Reply-To: <d4fb9d4c-13d6-41fc-8c17-dee6cc0a77eb@linux.ibm.com>
-References: <20250701005321.942306427@goodmis.org>
-	<20250701005450.888492528@goodmis.org>
-	<CAHk-=wiWOYB4c3E-Cc=D89j0txbN4AGqm0j1dojqHq3uzJ+LqQ@mail.gmail.com>
-	<20250630225603.72c84e67@gandalf.local.home>
-	<a6a460e6-8cff-4353-a9e1-2e071d28e993@linux.ibm.com>
-	<20250702195058.7ebb026d@gandalf.local.home>
-	<d4fb9d4c-13d6-41fc-8c17-dee6cc0a77eb@linux.ibm.com>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1751924173; c=relaxed/simple;
+	bh=FoE1yw4PinF8aLsqwiVP49aNTfhL5YfYRDuew1h9slM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=E3geZHMgaUwVq8OAq4AfEPg9d7deRAFtrfL2s5fPRBEeHttuvCN5aHcgJMsJFBWsBzCtxfS0cMMc756Kf2qJSCqlZU0EK/ijO6VuUt9CRcXkhMgLkL2zLMIECILReK2YdQb7Ao9f/mEXHpYj5o9UNQWBpTjWoXuJqnky00SeOag=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=ZuhSX/Rm; arc=none smtp.client-ip=209.85.166.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="ZuhSX/Rm"
+Received: by mail-il1-f182.google.com with SMTP id e9e14a558f8ab-3df210930f7so13690035ab.1
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 07 Jul 2025 14:36:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google; t=1751924169; x=1752528969; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=5Y+/uCDo8Ap/hlxb/YHfGaplN840tpeb83kN5x/Y9MM=;
+        b=ZuhSX/RmBiY/WSTlomwxELJK18RRt8o2YaBsq19C+h/8M7Zlqcm88ZN0Z1pWZkUEYq
+         x36BN9F9Uqnj0NJTqeXjifoLpCdcuX3wNcM5sEIn3rP+xv2DvJL+0WsfJDD5+pVM191V
+         apGnv0fE5VlNtfme18Nc7ZCRU26+jGOppG8CE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751924169; x=1752528969;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=5Y+/uCDo8Ap/hlxb/YHfGaplN840tpeb83kN5x/Y9MM=;
+        b=uWFYIAQYjzoOJAinbKW4VK6iPp8yp72isjN356s8IPhfuU92HEVNPwU5/hXGUd+BO2
+         djbqOKTpEPT+D6esIiT9RgwDFG4F+YKVC04X34Z2Od69vL1e43V4vpUU7Rm6ta8nJW9O
+         SYDoUojcPZESjPQs784orrT/FO1nhS06l4GFYBN5rseJuAO9v6As7F1KZ3/aJUUySKfN
+         bCRncjkKv4oRoR0PQm3iN+d8xD4SJ+abc8ST4TerYNqgzHkVBAOEnumSQZnTgRzd4oS6
+         jAT2eIWKAm76OeP0WcMGpGuVsSUZPf55y3AxyHtkT/YpPk6ZgN0lktrYJAFAa6inXpfE
+         FvZQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWDEzC2bOLNwGDfj+xv3OIX7PqItt1cwL4QUvYOoFSpe/lRyJJX4zCvZPntZd8378CwPt1l9wmoozygxyahAy/TyQQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwJCj+HVSDZQG1lnwZqbMtb1EnX44cRUyeAwNO6g6ymFEOEr49c
+	A13WA1StiJ7qJrmp8DRgX6P6iAibrdXP+FyK/ZDb1KD42eHYg5dt+qQhre6RV9TaHdA=
+X-Gm-Gg: ASbGncsqtJHOqhRYaAO5/dMAyLCgj/41RxPJHYT2z5vVPENTxe9Yk5JRUe1xFVdUY3E
+	cD4ODvlhjvaB8LgGzP8H9+AYBhoI/Qj9WhmYJyxab5sAOo+XR+TctHuKegABOEFW7fpudbOL1pn
+	CMdQB20UpF6te9bHROkn2mOzRDy/zlw3mso0aMiz5Jk6u7mcg+Cy7oSwCJCECcU5E2GCRMQiUBj
+	I5XYX/UnTS6SKQxQF+M4k0IwGntNL5o9yz9oeAadKV1PGoVhktQuLT7jkoXf48H77FjDIVeHytv
+	0GBF0Nj3gvys3KDxTz8jwCBuKMIHlHW/i0KuXJCyJFT/czt9wbMClnseJ2WWHykKX6CW22rBUC/
+	x4/EBufqa
+X-Google-Smtp-Source: AGHT+IF53byRaWgnL2/6PRGJxd7DTJKFA1T8Wjv6k5cGUjcY6U6GoMsR0lJgobtuehyYtbBQa4iQiA==
+X-Received: by 2002:a05:6e02:522:b0:3e1:433e:2605 with SMTP id e9e14a558f8ab-3e154e63815mr2132085ab.9.1751924168902;
+        Mon, 07 Jul 2025 14:36:08 -0700 (PDT)
+Received: from [192.168.1.14] ([38.175.170.29])
+        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-503b59c6d77sm1911718173.32.2025.07.07.14.36.08
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 07 Jul 2025 14:36:08 -0700 (PDT)
+Message-ID: <57f72a27-10b0-49d4-8bd3-39b35f422a95@linuxfoundation.org>
+Date: Mon, 7 Jul 2025 15:36:07 -0600
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/2] selftests: tracing: Use mutex_unlock for testing glob
+ filter
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
+ Shuah Khan <shuah@kernel.org>, Steven Rostedt <rostedt@goodmis.org>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, Shuah Khan <skhan@linuxfoundation.org>
+References: <175151678585.2149615.8702513393985992418.stgit@mhiramat.tok.corp.google.com>
+ <175151680309.2149615.9795104805153538717.stgit@mhiramat.tok.corp.google.com>
+ <20250703103039.3559a7e1@batman.local.home>
+ <20250704150425.a8a82c7768e1c99ee272e585@kernel.org>
+Content-Language: en-US
+From: Shuah Khan <skhan@linuxfoundation.org>
+In-Reply-To: <20250704150425.a8a82c7768e1c99ee272e585@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Stat-Signature: sakoqdihpa7b49ngohg5pdhgdcunrjrp
-X-Rspamd-Server: rspamout01
-X-Rspamd-Queue-Id: 5720820010
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1/BaoY0sYmWm4CGwHUM7pkPRsQVgrbcglY=
-X-HE-Tag: 1751923728-40853
-X-HE-Meta: U2FsdGVkX1+6lJPe/TyS0k8S8ysy1ySKSNO9cRN3ne/FLvKPmvmCe27F5fMYniDvvpVXbr41FBJPafYCZE1OtkCsUj1yHGIYqt2qulZs3RvBIBvSdnzusIRCf+fVRGBrnF5aDcZOOtGnwmMWU9XRwqnTffdJlKUd3X8381wPe4w3tLXOBh/0MrE5jyD+ScRk3BATac6GBy6y+N2ji46T4GFzIaKEjvnXqSFF+nxJZRmoKzDLPMVHEljGMXEe0CF/oRbzDxEJhgOklsI5D1lr8RYTl/PzYUw7lDKgzDIHhErDTKB2iRvywJ4iK7bV/SBCMb4vXawyZrfIjc3xVSLV8g2bKR9YGs9iW/fkQwi13BKVfLHqM0Vdqg==
 
-On Thu, 3 Jul 2025 18:21:10 +0200
-Jens Remus <jremus@linux.ibm.com> wrote:
-
-> >> 	/* stack going in wrong direction? */
-> >> 	if (sp <= state->sp - topmost)
-> >> 		goto done;  
-> > 
-> > How do you calculate "topmost" then?
-> > 
-> > Is it another field you add to "state"?  
+On 7/4/25 00:04, Masami Hiramatsu (Google) wrote:
+> Shuah,
 > 
-> Correct.  It is a boolean set to true in unwind_user_start() and set to
-> false in unwind_user_next() when updating the state.
-
-So it's subtracting 1 or zero? So that the topmost can be equal. Well,
-that would need a bit of commenting.
-
+> Can you take this patch (fix) to your tree since this is
+> a fix for the selftest?
 > 
-> I assume most architectures need above change, as their SP at function
-> entry should be equal to the SP at call site (unlike x86-64 due to CALL).
+> Thank you,
 > 
-> s390 also needs this information to allow restoring of FP/RA saved in
-> other registers (instead of on the stack) only for the topmost frame.
-> For any other frame arbitrary register contents would not be available,
-> as user unwind only unwinds SP, FP, and RA.
+> On Thu, 3 Jul 2025 10:30:39 -0400
+> Steven Rostedt <rostedt@goodmis.org> wrote:
 > 
-> I would post my s390 sframe support patches as RFC once you have
-> provided a merged sframe branch as discussed in:
-> https://lore.kernel.org/all/20250702124737.565934b5@batman.local.home/
+>> On Thu,  3 Jul 2025 13:26:43 +0900
+>> "Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
+>>
+>>> From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+>>>
+>>> Since commit c5b6ababd21a ("locking/mutex: implement
+>>> mutex_trylock_nested") makes mutex_trylock() as an inlined
+>>> function if CONFIG_DEBUG_LOCK_ALLOC=y, we can not use
+>>> mutex_trylock() for testing the glob filter of ftrace.
+>>>
+>>> Use mutex_unlock instead.
+>>>
+>>> Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+>>
+>> Acked-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+>>
+>> -- Steve
+> 
+> 
 
-I did have a merge branch on my repo. But I was hoping to see your code
-so that I can add this to this patch before having to post again. But
-now I'm posting without this change, as I don't want to screw it up. I
-think I know what it it looks like, but it would be better to see what
-you did to make sure what I envision is correct.
+Applied to linux-kselftest next
 
-Oh well. I'll post v13 without it.
-
--- Steve
+thanks,
+-- Shuah
