@@ -1,35 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D97B821FF36;
-	Mon,  7 Jul 2025 11:32:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62431946C;
+	Mon,  7 Jul 2025 11:50:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751887934; cv=none; b=mLqL14YZ1NAr9d5suZ3fvsuVzWi2dGyw8FWFBzSTt3sHIrawUOhFvRMakrAonBNldm+FgtpD/mh2eODJxXdGgNPhjW4PtsQVoD/BZl2wlL/W0eJjuF7whrZDTrvUMr7wK5gCao4rTIXZh3A1Ru1J+dx0IVqsmG6ZgUDHqG7Fz+w=
+	t=1751889006; cv=none; b=fOlQS4JEpcG+vQGLP1MkRQNZVfq68hGChAxfitidX4F+4yAr/CgXNL7k/D0aHJBdL+1GJIeTn79Zrv545K8wLv+6eNoAMt0lnOzCl3sBY0w+/f0S87Vh2dHmDuK4aUeLV9WTJujMoh8IYRzyKpdNDFjUnaD+/LmnLfKdH5lz23A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751887934; c=relaxed/simple;
-	bh=KJ9ivJDcFfm+HtMTDVXkf8LFJkwB6s4Vcp0E0EjRA2c=;
+	s=arc-20240116; t=1751889006; c=relaxed/simple;
+	bh=gMlTu9+xpafBOmuhtK1ioviaKSGzsyQjs0ZPKAH3vHE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JkG688BjzStHvNHkKqfuwnJeZnDyrPHaZp+9+S7GkDcN1g1nnXnxDyKEJy2tgT7jvQ1f8R+gCki5EtjFqEfPL/113SUVjoLboBZlkSiFcWLbeHyOtmgnDgNAC2FpuyXkZmYlctsAN96Od874Z9mYq+qSagWtFrh4iUUOwht7u2Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ObJ/+U2n; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=B5VfhY8Shz/IzToIiT/7RwC1eqGFju9DztskRAlps0pX1V+Ezifkl+SPpRGTki0vXTGMLFBQZrvOEJ+R7Tmg/2m/JAhYxGT0WClssxXTQ2vUVfbairtwtKRBDuSDidvYWk1/UAiEIzK0LAHwBT37Qs97QvCEd/rtu8KDukl2hXQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AQnc7yKN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ObJ/+U2n"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 95FD5C4CEE3;
-	Mon,  7 Jul 2025 11:32:06 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AQnc7yKN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 727DEC4CEE3;
+	Mon,  7 Jul 2025 11:49:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751887933;
-	bh=KJ9ivJDcFfm+HtMTDVXkf8LFJkwB6s4Vcp0E0EjRA2c=;
+	s=k20201202; t=1751889005;
+	bh=gMlTu9+xpafBOmuhtK1ioviaKSGzsyQjs0ZPKAH3vHE=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ObJ/+U2noTTkjAYPn1YG/pdjcVIrO/IOmmZsAYxhvnAnuEEw46VjHz21QdgfI8cKT
-	 +7NSFG8lrtgTjmywMa+vSb4IahbVlsmSRAt7+EOguDQ/KXOcN8yLq86WtCfj/iQqjm
-	 iMnILzLyLzqgvWZ5zRVkCEoY3pLWijnv0qT9pHeJUcS4/EAG4LuQpQTCw+mOWrmedl
-	 aoeDXJgFYb5adTum4hw3gLcZESV5SUWXdTax8l3IIvEL1mxa5h3565ySjNU1Le1ZWW
-	 MVAlLNI7a0P/eIN7r3+qI4dWVJBoCnTb9ClSSRXMoxWDHybNjqnWeOkN0VfAVYkCjz
-	 dJOZ4soLHExRg==
-Date: Mon, 7 Jul 2025 14:32:02 +0300
+	b=AQnc7yKNW3i8pmak2bYHKx2Cz85ciohsohKN9pxII2y9lEWftE7WydnybBVfZbIad
+	 INSkrf1uXq4CXyCWssKQEyW4K+HeEfwpUu059CUl4epfcb3RFELY+9g4TI5J/iEoyq
+	 lGMwEGBfUidqbLh87sxYEXp/waMNBs7XCaeR0yghvuco4KQDF2WUUJlRpNFWYphEhV
+	 Vc3DBNvJSS1XcyK7n8TnqH8X0zTcrsnvH3/9mg8H3LeOcaO1Xavw1t9xSzgGQ27jeS
+	 FLirz73cArp1zZ9eEA5vf6TRtDA2vz59Muxcjjpd8+OGLRVB/EHazahnfmDhH6n98h
+	 aLX0DWT5F92ug==
+Date: Mon, 7 Jul 2025 14:49:54 +0300
 From: Mike Rapoport <rppt@kernel.org>
-To: Peter Zijlstra <peterz@infradead.org>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>
+To: Christophe Leroy <christophe.leroy@csgroup.eu>
 Cc: Andrew Morton <akpm@linux-foundation.org>,
 	Andy Lutomirski <luto@kernel.org>, Borislav Petkov <bp@alien8.de>,
 	Daniel Gomez <da.gomez@samsung.com>,
@@ -38,99 +37,66 @@ Cc: Andrew Morton <akpm@linux-foundation.org>,
 	Luis Chamberlain <mcgrof@kernel.org>,
 	Mark Rutland <mark.rutland@arm.com>,
 	Masami Hiramatsu <mhiramat@kernel.org>,
-	"H. Peter Anvin" <hpa@zytor.com>, Petr Pavlu <petr.pavlu@suse.com>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Petr Pavlu <petr.pavlu@suse.com>,
 	Sami Tolvanen <samitolvanen@google.com>,
 	Steven Rostedt <rostedt@goodmis.org>,
 	Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org,
 	linux-mm@kvack.org, linux-modules@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org, x86@kernel.org
-Subject: Re: [PATCH 3/8] execmem: rework execmem_cache_free()
-Message-ID: <aGuwMtxsouXvdiCK@kernel.org>
+Subject: Re: [PATCH 1/8] execmem: drop unused execmem_update_copy()
+Message-ID: <aGu0Yj08EZvpL5Xv@kernel.org>
 References: <20250704134943.3524829-1-rppt@kernel.org>
- <20250704134943.3524829-4-rppt@kernel.org>
- <20250707111102.GF1613200@noisy.programming.kicks-ass.net>
+ <20250704134943.3524829-2-rppt@kernel.org>
+ <7e52f721-1d8e-4c50-af33-bee3f0d2ac6e@csgroup.eu>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20250707111102.GF1613200@noisy.programming.kicks-ass.net>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <7e52f721-1d8e-4c50-af33-bee3f0d2ac6e@csgroup.eu>
 
-On Mon, Jul 07, 2025 at 01:11:02PM +0200, Peter Zijlstra wrote:
-> On Fri, Jul 04, 2025 at 04:49:38PM +0300, Mike Rapoport wrote:
-> >  static bool execmem_cache_free(void *ptr)
-> >  {
-> >  	struct maple_tree *busy_areas = &execmem_cache.busy_areas;
-> >  	unsigned long addr = (unsigned long)ptr;
-> >  	MA_STATE(mas, busy_areas, addr, addr);
-> >  	void *area;
-> > +	int err;
-> > +
-> > +	guard(mutex)(&execmem_cache.mutex);
-> >  
-> >  	area = mas_walk(&mas);
-> > +	if (!area)
-> >  		return false;
-> >  
-> > +	err = __execmem_cache_free(&mas, ptr, GFP_KERNEL | __GFP_NORETRY);
-> > +	if (err)
-> > +		goto err_slowpath;
-> >  
-> >  	schedule_work(&execmem_cache_clean_work);
-> >  
-> >  	return true;
-> > +
-> > +err_slowpath:
-> > +	mas_store_gfp(&mas, pending_free_set(ptr), GFP_KERNEL);
-> > +	execmem_cache.pending_free_cnt++;
-> > +	schedule_delayed_work(&execmem_cache_free_work, FREE_DELAY);
-> > +	return true;
-> >  }
+On Mon, Jul 07, 2025 at 12:10:43PM +0200, Christophe Leroy wrote:
 > 
-> This is a bit if an anti-pattern, using guard() and error goto. Since
+> Le 04/07/2025 à 15:49, Mike Rapoport a écrit :
+> > From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
+> > 
+> > The execmem_update_copy() that used text poking was required when memory
+> > allocated from ROX cache was always read-only. Since now its permissions
+> > can be switched to read-write there is no need in a function that updates
+> > memory with text poking.
+> 
+> Erm. Looks like I missed the patch that introduced this change.
+> 
+> On some variant of powerpc, namely book3s/32, this is not feasible.
 
-Good to know :)
+The only user of EXECMEM_ROX_CACHE for now is x86-64, we can always revisit
+when powerpc book3s/32 would want to opt in to cache usage.
 
-> there is only the one site, its best to write it like so:
-> 
-> static bool execmem_cache_free(void *ptr)
-> {
-> 	struct maple_tree *busy_areas = &execmem_cache.busy_areas;
-> 	unsigned long addr = (unsigned long)ptr;
-> 	MA_STATE(mas, busy_areas, addr, addr);
-> 	void *area;
-> 	int err;
-> 
-> 	guard(mutex)(&execmem_cache.mutex);
-> 
-> 	area = mas_walk(&mas);
-> 	if (!area)
-> 		return false;
-> 
-> 	err = __execmem_cache_free(&mas, ptr, GFP_KERNEL | __GFP_NORETRY);
-> 	if (err) {
-> 		mas_store_gfp(&mas, pending_free_set(ptr), GFP_KERNEL);
-> 		execmem_cache.pending_free_cnt++;
-> 		schedule_delayed_work(&execmem_cache_free_work, FREE_DELAY);
-> 		return true;
-> 	}
-> 
-> 	schedule_work(&execmem_cache_clean_work);
-> 	return true;
-> }
-> 
-> And now I have to ask what happens if mas_store_gfp() returns an error?
+And it seems that [MODULES_VADDR, MODULES_END] is already mapped with
+"large pages", isn't it?
 
-AFAIU it won't. mas points to exact slot we've got the area from, nothing else
-can modify the tree because of the mutex, so that mas_store_gfp()
-essentially updates the value at an existing entry.
+> The granularity for setting the NX (non exec) bit is 256 Mbytes sections.
+> So the area dedicated to execmem [MODULES_VADDR; MODULES_END[ always have
+> the NX bit unset.
+> 
+> You can change any page within this area from ROX to RWX but you can't make
+> it RW without X. If you want RW without X you must map it in the VMALLOC
+> area, as VMALLOC area have NX bit always set.
 
-I'll add a comment about it.
+So what will happen when one callse
 
-Added @Liam to make sure I'm not saying nonsense :)
+	set_memory_nx()
+	set_memory_rw()
+
+in such areas?
+
+> Christophe
 
 -- 
 Sincerely yours,
