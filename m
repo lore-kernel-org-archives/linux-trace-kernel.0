@@ -1,38 +1,38 @@
 Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9272C1EA7F4;
-	Mon,  7 Jul 2025 11:20:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB288191F98;
+	Mon,  7 Jul 2025 11:26:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751887216; cv=none; b=X2QhdqeQN+AAiPwU2UEqeTIb0F757F5lqBfRMHF5+gI0wHm+evTTBaYxvyS0XaKhpACEgM1QK5VqF5Zxat30wkDyvSQL/IVQ/MZs3kEYI+3Cpa5syb//SoM6oMGM8BB8Wrwduxj5411VL5/eXo9NmfM6zdPv/Z9SSEU7UbhDTTo=
+	t=1751887594; cv=none; b=lME+3uIcX4o/lnxs5iTsM3+RPimg8aYSnERxIuhAPpTFaBz5X9kCyRgHLiYSEgojOxPfAX6LtS+Vv8mOohjLb/r4noemuakHeQrSjQNMFOjmZOOdud732vuHc2oydsksjwBURYArh+cNiQ7V60mnoG8E8dvv+NW0YCRz/fmlWig=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751887216; c=relaxed/simple;
-	bh=jGJv2jD1XliaBIVIsdqHQMv9dLKCXfRhTPtoA4SGGAE=;
+	s=arc-20240116; t=1751887594; c=relaxed/simple;
+	bh=Hcilk+1gc7opmTuORKXudv4wdN1mbGDUSQFfRBQvgBs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gMqEeU8JYl+uFWNznKedfxfwGSTWIXFTfSNx2DZ0pUfJkQLge8LCMH/oTz99N48jNWcL3hbJjXpyw3zatL2rYGdfdltKzTY0DgOHJtLUl4SSbZnp2yEdYyLWGjAEJVCPdl5kdXrYU2hxQMxKN6sXkTRwEBKE+STWcbgPxjjQXAE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=R8LinyIA; arc=none smtp.client-ip=90.155.92.199
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZC/w96rayKoBdnPmzzH32xIjBn6HkcEXAZn8dqA+YsyJGOQxT+vRstKYQ1LY9WNWvZ/JHV8LmJCm4gzWG8O44ojsWfwEqN75YGUSQ0EF5Ne+vDdBJAMmvTGseFXuMASnNt2KS4QidA6qcaNXCMDMzo4SwnGr/qKx/Ax5QT9kXck=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=NVSXNiGZ; arc=none smtp.client-ip=90.155.92.199
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="R8LinyIA"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="NVSXNiGZ"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
 	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=AFfQkkgZzfauywkGBPgbqC8epe1MW8MLE7JR074khWM=; b=R8LinyIA58zjWkyc7cu3rYC/52
-	QZcZ01yx++c2zOAcfnhH10NsxZ4ceEpqwyFmXyHRye2oE2t8ZseJ8+HJrWJh/qGc+oi8m2lMeRn8A
-	p/cZIigLytjdPiCz/8iSV/q+SfXzYrr2YWCveOdy5kgDcvVt0b2qPejgcz0ydp87WTq8QeY44T9xa
-	SxC3kgyjKKE3JHNs8mBZpqWRQkuNpQ1dn5ae2IlNDRJYpPPMDNZhTolgl/KLjbKSUIqF95LyMuVPh
-	/JPzRIwM4ME3MMfZ8uUkNJPcJPxYWGa835ACJ1yuPofqhYsfOCthJaRC3Q8QvGVN+SMKuPkbCqt7F
-	+RDbidiw==;
+	bh=Pzsgu0KWdlrvYJUBaVS/BahIave3CRDWqYqZMw/y10s=; b=NVSXNiGZGUsEnLgLoQXSaxxKzS
+	5E5i3NfZ/JTpEpylCPKb9s/ePSMiCGUAFSENBPgfM2N8W9inRHFIqNmHOKqn+65bRnKzJDDuPhWyz
+	qN8/161xQ3akgW/mhKV5QECrEll9D1aOVUM+WlEeEfqXyRTMTUpCx7f1YB0Mt95RqLWdrN//J0ZAz
+	mMHJ3RuZPw50BsrPNkC/ZjUtDrJdnZGnqpJYvgI2zbFBaTd29qQXfpFnesNw0MKIb+F6cmo/tAVi4
+	3v/o/FNA0vBdqqxsDGOssaMCDvBkYgFQyAmrPupx3vQ6oLNklTDtbfl4odj7K2zcRz2o4BLJNBf0o
+	dS+ibZxw==;
 Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
 	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uYjtD-00000008TYL-3zoG;
-	Mon, 07 Jul 2025 11:20:04 +0000
+	id 1uYjzL-00000008Tg7-1xeD;
+	Mon, 07 Jul 2025 11:26:23 +0000
 Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 7CB5B300399; Mon, 07 Jul 2025 13:20:03 +0200 (CEST)
-Date: Mon, 7 Jul 2025 13:20:03 +0200
+	id 036FE300399; Mon, 07 Jul 2025 13:26:23 +0200 (CEST)
+Date: Mon, 7 Jul 2025 13:26:22 +0200
 From: Peter Zijlstra <peterz@infradead.org>
 To: Wander Lairson Costa <wander@redhat.com>
 Cc: Ingo Molnar <mingo@redhat.com>, Juri Lelli <juri.lelli@redhat.com>,
@@ -53,7 +53,7 @@ Cc: Ingo Molnar <mingo@redhat.com>, Juri Lelli <juri.lelli@redhat.com>,
 	Gabriele Monaco <gmonaco@redhat.com>
 Subject: Re: [PATCH v3 2/2] tracing/preemptirq: Optimize
  preempt_disable/enable() tracepoint overhead
-Message-ID: <20250707112003.GY1613376@noisy.programming.kicks-ass.net>
+Message-ID: <20250707112622.GZ1613376@noisy.programming.kicks-ass.net>
 References: <20250704170748.97632-1-wander@redhat.com>
  <20250704170748.97632-3-wander@redhat.com>
 Precedence: bulk
@@ -67,26 +67,9 @@ Content-Disposition: inline
 In-Reply-To: <20250704170748.97632-3-wander@redhat.com>
 
 On Fri, Jul 04, 2025 at 02:07:43PM -0300, Wander Lairson Costa wrote:
-> Similar to the IRQ tracepoint, the preempt tracepoints are typically
-> disabled in production systems due to the significant overhead they
-> introduce even when not in use.
-> 
-> The overhead primarily comes from two sources: First, when tracepoints
-> are compiled into the kernel, preempt_count_add() and preempt_count_sub()
-> become external function calls rather than inlined operations. Second,
-> these functions perform unnecessary preempt_count() checks even when the
-> tracepoint itself is disabled.
-> 
-> This optimization introduces an early check of the tracepoint static key,
-> which allows us to skip both the function call overhead and the redundant
-> preempt_count() checks when tracing is disabled. The change maintains all
-> existing functionality when tracing is active while significantly
-> reducing overhead for the common case where tracing is inactive.
-> 
+> +#if defined(CONFIG_DEBUG_PREEMPT) || defined(CONFIG_TRACE_PREEMPT_TOGGLE)
+> +#define preempt_count_dec_and_test() \
+> +	({ preempt_count_sub(1); should_resched(0); })
+> +#endif
 
-This one in particular I worry about the code gen impact. There are a
-*LOT* of preempt_{dis,en}able() sites in the kernel and now they all get
-this static branch and call crud on.
-
-We spend significant effort to make preempt_{dis,en}able() as small as
-possible.
+Also this is terrible. Surely you can do better.
