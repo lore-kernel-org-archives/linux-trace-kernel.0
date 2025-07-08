@@ -1,106 +1,106 @@
-Received: from mail-qv1-f43.google.com (mail-qv1-f43.google.com [209.85.219.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailout2.w1.samsung.com (mailout2.w1.samsung.com [210.118.77.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 741EC20E6E2;
-	Tue,  8 Jul 2025 09:22:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97BBA2264B6
+	for <linux-trace-kernel@vger.kernel.org>; Tue,  8 Jul 2025 10:27:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751966552; cv=none; b=HSRVDMWBKK5M1Mb32E0J3bCCjrdqkqa5lSxhHBxo9GfrNdc8umfrNjjN58ttrn3h+LzxbXtbhzJNTfzqeZZt9tWpdM0jwSSNtde8VNli3T9RNIM9SNbr8wIRcfAi/LNodbbzIgEp8kzjMiOzxDiaY2FS/QaI99+V9qsw2LvZy+Q=
+	t=1751970443; cv=none; b=W+suY5YoSVWBJoSSSVtSg7skguuUMGfsF5Qr4Y9IQaRhefWCZ/ln4u+EdqjsCgpaCXYWd6+gWUQBZzGs+ELt+lmKw8nzRv0VjorgngVjD7vfcXpwXT2cmi9FfZdNvDlenkmdH21FQmRBeGRaGzlO077FuyFZ0GtxPaXR35DO5yo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751966552; c=relaxed/simple;
-	bh=77sVB26jwnSDML95AMB5ZHnN2D1iy2E80tv3DtFH/tk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=m8qBZkYVZfKQ6Qy9jpjX93L8yJ2sHdbWgteIu6GRzOG2Ptiqs4DeEq9DxPI6r4g/VGQsJakxdGLUAVPDWsJZ9tkni7aEbGdJLyhaDt302MVw3u45ROMmk6rrk89bpoJ3y39hlw8YzyZjyOFzBS2ebLYV1KMTznQzq6sxK0K3poQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=i/+YEXbF; arc=none smtp.client-ip=209.85.219.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1751970443; c=relaxed/simple;
+	bh=14manGusg8Qgqx1rKMesK88ejf15XhHcScCCmKXCkgk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:From:In-Reply-To:
+	 Content-Type:References; b=FPaMU4tvx7mxXany6DyzXVHtrgGbio0/Uqey3ff6eBthYUHyL6OelCH6t3ykoaYqM2v6LHhpE+bmoEg82EtktVrYX1S9rfzc0ALnNIRQGB5KRXIBQO6tigNOoD/7qQfujTXvGKaBwzDgJ05JIGsCQrz2IGRMra4GHlm7Wq+jBsk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=goyCVYPT; arc=none smtp.client-ip=210.118.77.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i/+YEXbF"
-Received: by mail-qv1-f43.google.com with SMTP id 6a1803df08f44-6fd1b2a57a0so43854456d6.1;
-        Tue, 08 Jul 2025 02:22:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1751966550; x=1752571350; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=77sVB26jwnSDML95AMB5ZHnN2D1iy2E80tv3DtFH/tk=;
-        b=i/+YEXbF7kTUAnSpqPq4cGXnGzfvrsDBpPYouPfa7MDPxAF0ZTrHjSb11TfSjlRnW9
-         LkU5cyzQ0R3fMZvsseUYUVYEXQ1kbV2yMUj38pwlo0k7/P3fAWFMG2zVUglVWsc8C5gh
-         QXecMtirDUFoF+mtwR3s6e4+/KTMuIZ7mlXu3GbwZxtRAoJ7wt937ZjPojFO+af1vm4f
-         PTQnLSgyOoefj2vn7MymrdzH1rPuo0yUN7WBX8R27wSqgyO7v5WPpyiUAxhJqaGn+yMD
-         rOJINutjvUSlD9PMD+ac9M+6tjXuhazaqGoFfGJELDT48hNULOu36pza6OgdU45hi3RG
-         RnXQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751966550; x=1752571350;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=77sVB26jwnSDML95AMB5ZHnN2D1iy2E80tv3DtFH/tk=;
-        b=lJQ70RT5kY5KouPR1QzMIxh1OOsEZt2gZag7odTgv+OHQReptFz/wiY3O1gXxfSS+i
-         FFAjVO+ubGHbW++XyzjWVw13hLy2zauybCu6oFJadpkSlDVO5A7H4n/1lMafq4h3rnbN
-         T/0bc8pn2mtaQVBv6e2Xvd+0d2MvcVonWyBlw89myLAjmKizo+vyQjuSsa90ioANIEK7
-         oLTeeSpvtyMKW6VEIa0LwS2eE4uMQ3HVOJse+OYwn2wASY7OLu2ceXDcnKK0lktZ2iDt
-         7dq1AnfZBrDoJv9xS4wqp5emHn2wcUXxC8Vryzd+uOEqJwbEO5eiL07+44vIC9ZrKHht
-         W5XA==
-X-Forwarded-Encrypted: i=1; AJvYcCWgF2M0lkLGjvG9uGFcmHP8Q2PDSBcb7xdC+Zr0YUHTZYYe+7fBTqhl2NoBkCuy7Rg5kIqlaw4w2JoEA5c=@vger.kernel.org, AJvYcCXxY0qadV1IpGn6aJJSt3UbD3+0/dFqxjepe6UkTbHMTf7ZAM8RA98vIJPXbggWX7KnSpQGcSNlo4ae1oqMfHDg0w+J@vger.kernel.org
-X-Gm-Message-State: AOJu0YxMF0mxidW+EV1M943GDd7BRC/AR2i6lpUUf9AmH6Tc1j2pUc5c
-	5wTJXdtcom7BC3EdjBD5fCHnFJwEv0XdFd98AuZnPsl1y9pvbuO8Rtl7
-X-Gm-Gg: ASbGncu0kqGFmf6XsCLH3sUiJ6S4PrnDLLyPs6QCRhbyH/AQke33x/b7usbkXhZXK6V
-	HCfAmuW9+3pLaGsxFYguAnog1ujY77J/ciVNaxmSynt8nLZoumdhuIdW46gwoFu/DCURdBT++Gx
-	t7N2ikJYQ0iCetEJFrc/lmzQiqqp2+IpAm0PhBRSONS65KxHq5Zpt0dnZ+Qso1Y6j6NCMc/ACVL
-	dZl1ChRS3S/gDw5nXYpaEsZJCDw1UAQEjlJ5X2g8GjU2qcsIjPHVCZUD1dRYZ6NruAgQpqSQba5
-	SHmj0BvJA4ikFJ4r9cyUQaeo4VcKj8Wx9Wpln5pIr/3cK+xL4+/dze/F8iKIkmlOz/tCFuNYUyl
-	dNoxQ2w==
-X-Google-Smtp-Source: AGHT+IHSRzfQIdbKo7DAP1+iZkydKoM5NXdbUrrSwPBS8gomxfUQmwQgpncvTRLwCoXrDZEWMDyFcw==
-X-Received: by 2002:a05:6214:54c2:b0:6e8:9dfa:d932 with SMTP id 6a1803df08f44-7047d95a8ebmr32687226d6.15.1751966550311;
-        Tue, 08 Jul 2025 02:22:30 -0700 (PDT)
-Received: from Gentoo.localdomain ([37.19.198.89])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7d9f590f256sm112284385a.109.2025.07.08.02.22.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Jul 2025 02:22:29 -0700 (PDT)
-From: Bhaskar Chowdhury <unixbhaskar@gmail.com>
-To: mhiramat@kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Cc: Bhaskar Chowdhury <unixbhaskar@gmail.com>
-Subject: [PATCH] tools: bootconfig:  Regex brackets need escape
-Date: Tue,  8 Jul 2025 14:46:08 +0530
-Message-ID: <20250708092204.1558-1-unixbhaskar@gmail.com>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="goyCVYPT"
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+	by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20250708102713euoutp0248cde03210b33501767839a2d5b8e32f~QP9OXMRl32176921769euoutp022
+	for <linux-trace-kernel@vger.kernel.org>; Tue,  8 Jul 2025 10:27:13 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20250708102713euoutp0248cde03210b33501767839a2d5b8e32f~QP9OXMRl32176921769euoutp022
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1751970433;
+	bh=CvHwMYp2XIGbJnf/9QWS8C8NtBZtZV/va6aW8p1Pd0k=;
+	h=Date:Subject:To:Cc:From:In-Reply-To:References:From;
+	b=goyCVYPTGJec31NpQ9MuiZWPNwVsd9Tmt+dtufXuoWH9fESY6GRmHCV3IogYjxBwH
+	 FW8wi7eGBCXxHU70+QuQ5gt30FB8PoRsvUbcIZug6xKW+KWkUZqnck9E+kKu8ENViC
+	 LMtHzrZh60YIQnqMgYskMSyViJ/QRqZzQZ1yrD5A=
+Received: from eusmtip1.samsung.com (unknown [203.254.199.221]) by
+	eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+	20250708102712eucas1p1199b906d3c40b7ff5066a92aacd7b14c~QP9NsRWhM2715427154eucas1p1l;
+	Tue,  8 Jul 2025 10:27:12 +0000 (GMT)
+Received: from [106.210.134.192] (unknown [106.210.134.192]) by
+	eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+	20250708102710eusmtip12ad336592b93f91919ed398faf3d4122~QP9LytFDz1124711247eusmtip1B;
+	Tue,  8 Jul 2025 10:27:10 +0000 (GMT)
+Message-ID: <69b177dc-c149-40d3-bbde-3f6bad0efd0e@samsung.com>
+Date: Tue, 8 Jul 2025 12:27:09 +0200
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/8] dma-mapping: migrate to physical address-based API
+To: Christoph Hellwig <hch@lst.de>, Leon Romanovsky <leon@kernel.org>
+Cc: Jonathan Corbet <corbet@lwn.net>, Madhavan Srinivasan
+	<maddy@linux.ibm.com>, Michael Ellerman <mpe@ellerman.id.au>, Nicholas
+	Piggin <npiggin@gmail.com>, Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Robin Murphy <robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>, Will
+	Deacon <will@kernel.org>, "Michael S. Tsirkin" <mst@redhat.com>, Jason Wang
+	<jasowang@redhat.com>, Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
+	=?UTF-8?Q?Eugenio_P=C3=A9rez?= <eperezma@redhat.com>, Alexander Potapenko
+	<glider@google.com>, Marco Elver <elver@google.com>, Dmitry Vyukov
+	<dvyukov@google.com>, Masami Hiramatsu <mhiramat@kernel.org>, Mathieu
+	Desnoyers <mathieu.desnoyers@efficios.com>, =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?=
+	<jglisse@redhat.com>, Andrew Morton <akpm@linux-foundation.org>,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org, iommu@lists.linux.dev,
+	virtualization@lists.linux.dev, kasan-dev@googlegroups.com,
+	linux-trace-kernel@vger.kernel.org, linux-mm@kvack.org, Jason Gunthorpe
+	<jgg@ziepe.ca>
+Content-Language: en-US
+From: Marek Szyprowski <m.szyprowski@samsung.com>
+In-Reply-To: <20250630133839.GA26981@lst.de>
+Content-Transfer-Encoding: 7bit
+X-CMS-MailID: 20250708102712eucas1p1199b906d3c40b7ff5066a92aacd7b14c
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20250625131920eucas1p271b196cde042bd39ac08fb12beff5baf
+X-EPHeader: CA
+X-CMS-RootMailID: 20250625131920eucas1p271b196cde042bd39ac08fb12beff5baf
+References: <CGME20250625131920eucas1p271b196cde042bd39ac08fb12beff5baf@eucas1p2.samsung.com>
+	<cover.1750854543.git.leon@kernel.org>
+	<35df6f2a-0010-41fe-b490-f52693fe4778@samsung.com>
+	<20250627170213.GL17401@unreal> <20250630133839.GA26981@lst.de>
 
-It was showing malformed syntax colors below those lines,escaping the posix
-class brackets bring back the syntatic reference back.
+On 30.06.2025 15:38, Christoph Hellwig wrote:
+> On Fri, Jun 27, 2025 at 08:02:13PM +0300, Leon Romanovsky wrote:
+>>> Thanks for this rework! I assume that the next step is to add map_phys
+>>> callback also to the dma_map_ops and teach various dma-mapping providers
+>>> to use it to avoid more phys-to-page-to-phys conversions.
+>> Probably Christoph will say yes, however I personally don't see any
+>> benefit in this. Maybe I wrong here, but all existing .map_page()
+>> implementation platforms don't support p2p anyway. They won't benefit
+>> from this such conversion.
+> I think that conversion should eventually happen, and rather sooner than
+> later.
 
-Oh, malformed syntax colors means,(in a editor,in this case Vim, where syntax
-highlight is on). In essence, it might complain while running the script.
+Agreed.
 
-Hence, this trivialities.
+Applied patches 1-7 to my dma-mapping-next branch. Let me know if one 
+needs a stable branch with it.
 
-Signed-off-by: Bhaskar Chowdhury <unixbhaskar@gmail.com>
----
- tools/bootconfig/test-bootconfig.sh | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Leon, it would be great if You could also prepare an incremental patch 
+adding map_phys callback to the dma_maps_ops, so the individual 
+arch-specific dma-mapping providers can be then converted (or simplified 
+in many cases) too.
 
-diff --git a/tools/bootconfig/test-bootconfig.sh b/tools/bootconfig/test-bootconfig.sh
-index a2c484c243f5..211409539737 100755
---- a/tools/bootconfig/test-bootconfig.sh
-+++ b/tools/bootconfig/test-bootconfig.sh
-@@ -167,8 +167,8 @@ echo > $INITRD
-
- xpass $BOOTCONF -a $TEMPCONF $INITRD
- $BOOTCONF $INITRD > $OUTFILE
--xfail grep -q val[[:space:]] $OUTFILE
--xpass grep -q val2[[:space:]] $OUTFILE
-+xfail grep -q val\[\[:space:\]\] $OUTFILE
-+xpass grep -q val2\[\[:space:\]\] $OUTFILE
-
- echo "=== expected failure cases ==="
- for i in samples/bad-* ; do
---
-2.49.0
+Best regards
+-- 
+Marek Szyprowski, PhD
+Samsung R&D Institute Poland
 
