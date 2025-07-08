@@ -1,38 +1,39 @@
-Received: from relay.hostedemail.com (smtprelay0016.hostedemail.com [216.40.44.16])
+Received: from relay.hostedemail.com (smtprelay0011.hostedemail.com [216.40.44.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DA19AD21;
-	Tue,  8 Jul 2025 22:09:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D81C25A337;
+	Tue,  8 Jul 2025 22:17:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752012579; cv=none; b=oHbofOykhfUDyUiDkheSPKBEcMn8JclfYFuRtMq59H4nt94Lrl0BdFf/oV6q56DezAm+MSlJShp0QOfdYz5RTQvYpH3qsuPejyEtif1YywPnERa2ce+VQf7HsGiZJQ3SeUljd2hPSbDd1srzoYr6oITb0fSoV1ryHIYS5PmzsDA=
+	t=1752013070; cv=none; b=Aud53RRm3mjzPiE+Wo0/6cnstlIhBt2kbmnTdbpYtVm7vg8fWVoDsuOKaAtxBnWDagipdGCzaQsZ/2JCU88Qdf0hFCSXHm26wzE1piiB9ULFmaBhpstVJiCw9Dp6OvtaABopdjonzSc5n5hbc3NZc/59owTy3vLhvF4FmmWrszk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752012579; c=relaxed/simple;
-	bh=Zrcf/4rib4V7MmaFntVQOz4YMBCbvsWPfjhkWyYeAB8=;
+	s=arc-20240116; t=1752013070; c=relaxed/simple;
+	bh=OERbHD/6UtndaUo7nvHq24lajNCUAEF0sKY39B869HM=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=eWrXlVQnZJKUOySoW4W6V3oPKQhPPdIyU0QgBY2TRp3ag4b58btqNPcyFS3JRkISevp2FlOhdxugz2s6zot7Kbhnrd+pI1sth/pqM0bWtbJvVjvYeZEOSeIySv6MIE3OV4gt2f9ADlckGQ20o1lYAHzFElaCwl6DHId4vmltQEc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.16
+	 MIME-Version:Content-Type; b=LD4lqTdoly/m0mtWXS9UQOQloiStxgSzGF0w1EQmGHYnWAOvQyqGz37SxyxXAA27Qg+LDYOI+0evnmvaV/LQRwsLuIkJJnUlfcXHYlbdFWZ0rq4hJcIpq4/OJOch70AAwIfo+XCsUfnoOJNBLEWOxV670IWRxgXrFaoD9OTi7Kk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.11
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf07.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay01.hostedemail.com (Postfix) with ESMTP id 3DA511D853C;
-	Tue,  8 Jul 2025 22:09:33 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf07.hostedemail.com (Postfix) with ESMTPA id 29B7A20024;
-	Tue,  8 Jul 2025 22:09:31 +0000 (UTC)
-Date: Tue, 8 Jul 2025 18:09:32 -0400
+Received: from omf02.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay09.hostedemail.com (Postfix) with ESMTP id 810018026B;
+	Tue,  8 Jul 2025 22:12:19 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf02.hostedemail.com (Postfix) with ESMTPA id AF3FC8000F;
+	Tue,  8 Jul 2025 22:12:17 +0000 (UTC)
+Date: Tue, 8 Jul 2025 18:12:19 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
-To: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- linux-xfs@vger.kernel.org
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland
- <mark.rutland@arm.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Andrew Morton <akpm@linux-foundation.org>, Carlos  Maiolino
- <cem@kernel.org>, Christoph Hellwig <hch@lst.de>, "Darrick J. Wong"
- <djwong@kernel.org>
-Subject: Re: [PATCH v2 00/13] xfs: tracing: remove unused event
- xfs_reflink_cow_found
-Message-ID: <20250708180932.1ffdca63@gandalf.local.home>
-In-Reply-To: <20250616175146.813055227@goodmis.org>
-References: <20250616175146.813055227@goodmis.org>
+To: Gabriele Paoloni <gpaoloni@redhat.com>
+Cc: mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH RESEND] tracing: add kernel documentation for
+ trace_array_set_clr_event, trace_set_clr_event and supporting functions
+Message-ID: <20250708181219.3abf0871@gandalf.local.home>
+In-Reply-To: <CA+wEVJaH8NcwUoobn7UMFBJzyT-4xyqD34bntmWCukKLAPbG6w@mail.gmail.com>
+References: <20250620085618.4489-1-gpaoloni@redhat.com>
+	<20250701195939.3e297e20@gandalf.local.home>
+	<CA+wEVJY2a_ERXemup7EefPPXHOv8DAfyauuP6Mn5vHYFkbbBcQ@mail.gmail.com>
+	<20250702104058.3cf9c1a3@batman.local.home>
+	<20250702111908.03759998@batman.local.home>
+	<CA+wEVJaH8NcwUoobn7UMFBJzyT-4xyqD34bntmWCukKLAPbG6w@mail.gmail.com>
 X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -42,73 +43,23 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Stat-Signature: pm7k4g8qysdsrm1wtfihrks9f6pniye1
-X-Rspamd-Server: rspamout05
-X-Rspamd-Queue-Id: 29B7A20024
+X-Rspamd-Queue-Id: AF3FC8000F
+X-Stat-Signature: w9f48jxqpkpb6ttk6i46mqws8mdozor3
+X-Rspamd-Server: rspamout06
 X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX18zyU2k3dO5Lc1tmm0xtU6mAOSFP+U3xjI=
-X-HE-Tag: 1752012571-580348
-X-HE-Meta: U2FsdGVkX1+gP+LMV0n4w+CJAzKr0PBeKS4qefE50YlXdw1XPxWzeym1Bh3VLuVFAn4/FIg5fDtpfxLOW3Dm54FNszDfCfK/YXjtbutpwS0MBUlqZMCSNgNdyzu9LdbroZP/VGbmSQTeMtmjb51as0xW+ddFSstyTyS0TeGhamawP03ylTeaVvGYKTp38cTX6EwPoNjsu3Bz5V0V8/sqwBehtAwC7DfmkxY4GOqvZLLJkEKA1D7/zeOLK65uLaJ9cLDqYaVrdAUASwGjFhZVqfRaF+l6+rjRxxrHA+7vSmI0qwjmZPUwi3kYxr0M6fo/TrozhbEoFLwqsB8UEzhMvh7QwgHjxaEDOLR+lkVUcwascAoZpVEc+buFuccm41fGkTrF/87DR3h6N9HzsYzyJw==
+X-Session-ID: U2FsdGVkX18InQAfwwpmMLLDsRbnHspREgFUtWbhi7s=
+X-HE-Tag: 1752012737-798506
+X-HE-Meta: U2FsdGVkX1/anaBaOgEloSRMzu8chxhapLLyCRFOLwJWHWUNpxIak4mJ+vTOJqPm4YBE+b//pBcP11wZNhw5pbAR4LQ01evnXV7znJBX7lUAcclxy7AgCroRvNwzFnXKEyYShiolatkHNMOcejs00tucnxEIGMZsyj003DYzEH+m/UjwP2AR0ZtrLIlj0yqKWpFTBCO9FLFiz4Au4tft0luS6QKwKtLB6er3PTLzyhvGZM8mxHJFkGt7n9zt/tT7U9LAsTpGMHh7L8meMTaJEzbSwFRL/VnHcX/JHGWs5fhVgOU8JfkzzcyF2LDV6fVCiRfJjDrF3YuVITQn7cHtqWUdIcQHY4xQ
 
+On Wed, 2 Jul 2025 19:16:56 +0200
+Gabriele Paoloni <gpaoloni@redhat.com> wrote:
 
-Should this go through the XFS tree, or should I take it?
+> I also cannot see a reason for an atomic counter. Please let me know
+> if you want me to add this cleanup patch as part of next patchset
+> revision (if so the doc patch will change accordingly).
+
+You can send a patch but it shouldn't be related to this series.
+
+Just send it separately.
 
 -- Steve
-
-
-On Mon, 16 Jun 2025 13:51:46 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
-
-> Trace events take up to 5K in memory for text and meta data. I have code that
-> will trigger a warning when it detects unused tracepoints[1]. The XFS file
-> system contains many events that are not called. Most of them used to be called
-> but due to code refactoring the calls were removed but the trace events stayed
-> behind.
-> 
-> Some events were added but never used. If they were recent, I just reported
-> them, but if they were older, this series simply removes them.
-> 
-> One is called only when CONFIG_COMPACT is defined, so an #ifdef was placed
-> around it.
-> 
-> Finally, one event is supposed to be a trace event class, but was created with
-> the TRACE_EVENT() macro and not the DECLARE_EVENT_CLASS() macro. This works
-> because a TRACE_EVENT() is simply a DECLARE_EVENT_CLASS() and DEFINE_EVENT()
-> where the class and event have the same name. But as this was a mistake, the
-> event created should not exist.
-> 
-> [1] https://patchwork.kernel.org/project/linux-trace-kernel/cover/20250612235827.011358765@goodmis.org/
-> 
-> Changes since v1: https://lore.kernel.org/linux-trace-kernel/20250612212405.877692069@goodmis.org/
-> 
-> - Removed the first patch that mistakenly removed xfs_reflink_cow_found
-> 
-> - Change subjects to start with lowercase
-> 
-> - Removed xfs_attr events that are used in an #if 0 section instead of
->   adding #if 0 around them
-> 
-> - I added: Reviewed-by: Christoph Hellwig <hch@lst.de>
->   to all patches but the one with the modified #if 0 as Christoph
->   said he looked at them all.
-> 
-> Steven Rostedt (13):
->       xfs: remove unused trace event xfs_attr_remove_iter_return
->       xfs: remove unused event xlog_iclog_want_sync
->       xfs: remove unused event xfs_ioctl_clone
->       xfs: remove unused xfs_reflink_compare_extents events
->       xfs: remove unused trace event xfs_attr_rmtval_set
->       xfs: remove unused xfs_attr events
->       xfs: remove unused event xfs_attr_node_removename
->       xfs: remove unused event xfs_alloc_near_error
->       xfs: remove unused event xfs_alloc_near_nominleft
->       xfs: remove unused event xfs_pagecache_inval
->       xfs: remove usused xfs_end_io_direct events
->       xfs: only create event xfs_file_compat_ioctl when CONFIG_COMPAT is configure
->       xfs: change xfs_xattr_class from a TRACE_EVENT() to DECLARE_EVENT_CLASS()
-> 
-> ----
->  fs/xfs/scrub/trace.h |  2 +-
->  fs/xfs/xfs_trace.h   | 68 ++--------------------------------------------------
->  2 files changed, 3 insertions(+), 67 deletions(-)
-
