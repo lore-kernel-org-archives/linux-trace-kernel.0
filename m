@@ -1,169 +1,106 @@
-Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
+Received: from mail-qv1-f43.google.com (mail-qv1-f43.google.com [209.85.219.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE7121E231E
-	for <linux-trace-kernel@vger.kernel.org>; Tue,  8 Jul 2025 08:34:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 741EC20E6E2;
+	Tue,  8 Jul 2025 09:22:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751963690; cv=none; b=eSRYOwy1ECvlj2Mpi6rC7vu1AcEG4RGQxGRmolpWKNkOmvfBpi63MyetHKi/JyP6iTUDFQ7BUQ1fjGNXoinxuhFG1x1PkoCC3DyzlUPWq4GYdbY3/a0QlKIrck5db10hWQWezZhe0WNZVFYLqYZtXEXaMq5aJoQzWaKnNqDYHkk=
+	t=1751966552; cv=none; b=HSRVDMWBKK5M1Mb32E0J3bCCjrdqkqa5lSxhHBxo9GfrNdc8umfrNjjN58ttrn3h+LzxbXtbhzJNTfzqeZZt9tWpdM0jwSSNtde8VNli3T9RNIM9SNbr8wIRcfAi/LNodbbzIgEp8kzjMiOzxDiaY2FS/QaI99+V9qsw2LvZy+Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751963690; c=relaxed/simple;
-	bh=3Ds2Sx45pnkMg7iaFweDgWNlUOwHGzX5GUkhgeYgbzQ=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=FGVazqGMA6ciOw5gBp/VLIcA+CBMxzVv9AbA3S7aRx2edyeNp8J3wmq1FgVF7Huhn4nUjleLp6E1nIno7RV6UmblGJmd0jALZpJgFxy/qrSYibEdIqk7vQYM75jhUySlyRH/86PPhL/HPkdf7q0Ctk0it9a7y3qHc8zVoRM7MO8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=JHlCq5M/; arc=none smtp.client-ip=209.85.210.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	s=arc-20240116; t=1751966552; c=relaxed/simple;
+	bh=77sVB26jwnSDML95AMB5ZHnN2D1iy2E80tv3DtFH/tk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=m8qBZkYVZfKQ6Qy9jpjX93L8yJ2sHdbWgteIu6GRzOG2Ptiqs4DeEq9DxPI6r4g/VGQsJakxdGLUAVPDWsJZ9tkni7aEbGdJLyhaDt302MVw3u45ROMmk6rrk89bpoJ3y39hlw8YzyZjyOFzBS2ebLYV1KMTznQzq6sxK0K3poQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=i/+YEXbF; arc=none smtp.client-ip=209.85.219.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="JHlCq5M/"
-Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-73c17c770a7so5039884b3a.2
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 08 Jul 2025 01:34:48 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i/+YEXbF"
+Received: by mail-qv1-f43.google.com with SMTP id 6a1803df08f44-6fd1b2a57a0so43854456d6.1;
+        Tue, 08 Jul 2025 02:22:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1751963688; x=1752568488; darn=vger.kernel.org;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=km9alGI0XcL6Qvzjzja6icFIdbRKvCumIapJv3kvhgI=;
-        b=JHlCq5M/IYsv507yOK/iTHer+g0MTpws79Wg84pR4YXLTi3g0xFVEfKBISBY5rXMjD
-         LUTIddSIPHdwfK6WO+apj5EZSwotAg50PwzmzH2HSqkzWfrXpT516GTiut7iTpjZRtKL
-         l9v4fIxBWQr6Yy4w1SWos/MRMZI96/8cNQmVce61rG7MxAIyopRTY4IezJsITs2viXj9
-         KCoEKUBg0p7fBX2H9dL8Q3oyHS87R7nDSBxL5bGquZa2CXHBnXqDPFckMz2lkwcOJ4Ph
-         pUoNTPZpoIf12pOtzdV+9teoDqAdU50FMaOwfAkYDEkXl08T45qTToEEhdSVNwx7ZnnU
-         YrKA==
+        d=gmail.com; s=20230601; t=1751966550; x=1752571350; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=77sVB26jwnSDML95AMB5ZHnN2D1iy2E80tv3DtFH/tk=;
+        b=i/+YEXbF7kTUAnSpqPq4cGXnGzfvrsDBpPYouPfa7MDPxAF0ZTrHjSb11TfSjlRnW9
+         LkU5cyzQ0R3fMZvsseUYUVYEXQ1kbV2yMUj38pwlo0k7/P3fAWFMG2zVUglVWsc8C5gh
+         QXecMtirDUFoF+mtwR3s6e4+/KTMuIZ7mlXu3GbwZxtRAoJ7wt937ZjPojFO+af1vm4f
+         PTQnLSgyOoefj2vn7MymrdzH1rPuo0yUN7WBX8R27wSqgyO7v5WPpyiUAxhJqaGn+yMD
+         rOJINutjvUSlD9PMD+ac9M+6tjXuhazaqGoFfGJELDT48hNULOu36pza6OgdU45hi3RG
+         RnXQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751963688; x=1752568488;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=1e100.net; s=20230601; t=1751966550; x=1752571350;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=km9alGI0XcL6Qvzjzja6icFIdbRKvCumIapJv3kvhgI=;
-        b=VEF04JDv99FGq8Gv2mFzW8nxhLZGduHmRtJpzdKZ5iaMQcLs15n1quyNknQ6lbk+ok
-         UTFtI61ff8mi1oZwbNxwtdVHQ98d+vVEHNtEyvfN/bJqafk7MToChWK9DMT+Mi6Y3ZAH
-         FlTGlLkBIWz2CP1LCg6igD4C4BJUQ9vHPiP3JfxPXWpiROcTCJqfVNW5ZylDvObKaH3F
-         ESW/RE5NmxrDtuj10PuF1Ed8ibPKZLIDU29SlpaRtark7OF13MCxMOBscHRv1tch9Q/x
-         nWVWR2dSqjhehz01NL3efIeUZzBXoZbZ6DS8HkmPGDJVLLqBJPvjLW7oLMgKHe2GYcp2
-         iu5g==
-X-Forwarded-Encrypted: i=1; AJvYcCUNioy/AMO+DT/5bwjRh9/jMhhTBytTArkQsltFWmaeIYwKsgR7cbW8lnStbxTgnQsr4z1p7uRiRWUPKzo9tWPDq0c=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyyxOkk/7hWRLpg8PwBwlMuJAdV6l36NIk3gR/awZs9m3e+YKlZ
-	SMDxlq/wMgc+6psJcVDztcgVCixe1ZBH/C36GqUTWQXuzXC0SBpwUw18g1SrgQpp6cg=
-X-Gm-Gg: ASbGncvT4swp8TKc6lLEIJOAqnFBo8qG1k8gDpfQKtlV5upsAueiHhEc37Uf2wVcbLA
-	UML+dbHlVI5I3DAXFNspjFu2mH5t07c7vieN9BjlIeniAO3DxL1vsKhEKMlrKeUDn5Nuha65Tjo
-	AY0fRI3WCL9T312MEvx2jSqnj9VF+WJyaQCSWfa8ckro3eFbx5e99JLw0sqjDfWnsLTQOjfO6+m
-	f5s77M+YqzFfG9W/g9vrqsq7loKeg0+VGXbg4TP/2I1dnMvTxSDrEpxQCn5QVz36UIdgF7EBC6h
-	jE50frXNlmL/GDt0dC5vO8uAqUj8sgr6L/yo+VaRrLQLW6eql+FdG1vx2GfJq1x2J003MOVTmZR
-	Ecgy2oyDA2mXoykdmQftd15Q1ituzOt4Qzt8ZZPj5Ov+k
-X-Google-Smtp-Source: AGHT+IHRcwV/1/T5oymXkbwGRFIYuEsWNfVXVWrzLoP+RWTG54BAK6UpJOoefXueOfXgf20o6DvMKw==
-X-Received: by 2002:a05:6a21:7a44:b0:215:efe1:a680 with SMTP id adf61e73a8af0-2260a795654mr20246310637.16.1751963688189;
-        Tue, 08 Jul 2025 01:34:48 -0700 (PDT)
-Received: from alexghiti.eu.rivosinc.com (alexghiti.eu.rivosinc.com. [141.95.202.232])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74ce43d4f1asm10877511b3a.161.2025.07.08.01.34.44
+        bh=77sVB26jwnSDML95AMB5ZHnN2D1iy2E80tv3DtFH/tk=;
+        b=lJQ70RT5kY5KouPR1QzMIxh1OOsEZt2gZag7odTgv+OHQReptFz/wiY3O1gXxfSS+i
+         FFAjVO+ubGHbW++XyzjWVw13hLy2zauybCu6oFJadpkSlDVO5A7H4n/1lMafq4h3rnbN
+         T/0bc8pn2mtaQVBv6e2Xvd+0d2MvcVonWyBlw89myLAjmKizo+vyQjuSsa90ioANIEK7
+         oLTeeSpvtyMKW6VEIa0LwS2eE4uMQ3HVOJse+OYwn2wASY7OLu2ceXDcnKK0lktZ2iDt
+         7dq1AnfZBrDoJv9xS4wqp5emHn2wcUXxC8Vryzd+uOEqJwbEO5eiL07+44vIC9ZrKHht
+         W5XA==
+X-Forwarded-Encrypted: i=1; AJvYcCWgF2M0lkLGjvG9uGFcmHP8Q2PDSBcb7xdC+Zr0YUHTZYYe+7fBTqhl2NoBkCuy7Rg5kIqlaw4w2JoEA5c=@vger.kernel.org, AJvYcCXxY0qadV1IpGn6aJJSt3UbD3+0/dFqxjepe6UkTbHMTf7ZAM8RA98vIJPXbggWX7KnSpQGcSNlo4ae1oqMfHDg0w+J@vger.kernel.org
+X-Gm-Message-State: AOJu0YxMF0mxidW+EV1M943GDd7BRC/AR2i6lpUUf9AmH6Tc1j2pUc5c
+	5wTJXdtcom7BC3EdjBD5fCHnFJwEv0XdFd98AuZnPsl1y9pvbuO8Rtl7
+X-Gm-Gg: ASbGncu0kqGFmf6XsCLH3sUiJ6S4PrnDLLyPs6QCRhbyH/AQke33x/b7usbkXhZXK6V
+	HCfAmuW9+3pLaGsxFYguAnog1ujY77J/ciVNaxmSynt8nLZoumdhuIdW46gwoFu/DCURdBT++Gx
+	t7N2ikJYQ0iCetEJFrc/lmzQiqqp2+IpAm0PhBRSONS65KxHq5Zpt0dnZ+Qso1Y6j6NCMc/ACVL
+	dZl1ChRS3S/gDw5nXYpaEsZJCDw1UAQEjlJ5X2g8GjU2qcsIjPHVCZUD1dRYZ6NruAgQpqSQba5
+	SHmj0BvJA4ikFJ4r9cyUQaeo4VcKj8Wx9Wpln5pIr/3cK+xL4+/dze/F8iKIkmlOz/tCFuNYUyl
+	dNoxQ2w==
+X-Google-Smtp-Source: AGHT+IHSRzfQIdbKo7DAP1+iZkydKoM5NXdbUrrSwPBS8gomxfUQmwQgpncvTRLwCoXrDZEWMDyFcw==
+X-Received: by 2002:a05:6214:54c2:b0:6e8:9dfa:d932 with SMTP id 6a1803df08f44-7047d95a8ebmr32687226d6.15.1751966550311;
+        Tue, 08 Jul 2025 02:22:30 -0700 (PDT)
+Received: from Gentoo.localdomain ([37.19.198.89])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7d9f590f256sm112284385a.109.2025.07.08.02.22.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Jul 2025 01:34:47 -0700 (PDT)
-From: Alexandre Ghiti <alexghiti@rivosinc.com>
-Date: Tue, 08 Jul 2025 08:33:48 +0000
-Subject: [PATCH] riscv: ftrace: Properly acquire text_mutex to fix a race
- condition
+        Tue, 08 Jul 2025 02:22:29 -0700 (PDT)
+From: Bhaskar Chowdhury <unixbhaskar@gmail.com>
+To: mhiramat@kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Cc: Bhaskar Chowdhury <unixbhaskar@gmail.com>
+Subject: [PATCH] tools: bootconfig:  Regex brackets need escape
+Date: Tue,  8 Jul 2025 14:46:08 +0530
+Message-ID: <20250708092204.1558-1-unixbhaskar@gmail.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250708-alex-fixes-v1-1-5b008d3f4d0c@rivosinc.com>
-X-B4-Tracking: v=1; b=H4sIAOzXbGgC/x2LQQqAIBAAvyJ7TlAj1L4SHazWWggLF0II/550H
- GbmBcZMyDCKFzI+xHSlBroTsB4h7ShpawxGmUFZ5WQ4schIBVlqtNov3nkfe2jDnfEXrZ/mWj+
- cWU9oXAAAAA==
-X-Change-ID: 20250708-alex-fixes-1e719b9899f3
-To: Steven Rostedt <rostedt@goodmis.org>, 
- Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
- Paul Walmsley <paul.walmsley@sifive.com>, 
- Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
- Alexandre Ghiti <alex@ghiti.fr>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
- linux-riscv@lists.infradead.org, Han Gao <rabenda.cn@gmail.com>, 
- Vivian Wang <wangruikang@iscas.ac.cn>, Yao Zi <ziyao@disroot.org>, 
- Alexandre Ghiti <alexghiti@rivosinc.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2192;
- i=alexghiti@rivosinc.com; h=from:subject:message-id;
- bh=3Ds2Sx45pnkMg7iaFweDgWNlUOwHGzX5GUkhgeYgbzQ=;
- b=owGbwMvMwCGWYr9pz6TW912Mp9WSGDJybqi8ChN0klf9crq7b8aPt753f26W6d7Q/lf4XIly/
- tbNVWHHOkpZGMQ4GGTFFFkUzBO6WuzP1s/+c+k9zBxWJpAhDFycAjARhkcM/71fRb1avvPr6cDQ
- 57eWZxy+GdJybW8Tt0THf0umRv+l5qsYGe4fuN+4spx9reHpB0yRSob6tk+dHI13b2m5sXtL/ql
- 4LV4A
-X-Developer-Key: i=alexghiti@rivosinc.com; a=openpgp;
- fpr=DC049C97114ED82152FE79A783E4BA75438E93E3
+Content-Transfer-Encoding: 8bit
 
-As reported by lockdep, some patching was done without acquiring
-text_mutex, so there could be a race when mapping the page to patch
-since we use the same fixmap entry.
+It was showing malformed syntax colors below those lines,escaping the posix
+class brackets bring back the syntatic reference back.
 
-Reported-by: Han Gao <rabenda.cn@gmail.com>
-Reported-by: Vivian Wang <wangruikang@iscas.ac.cn>
-Reported-by: Yao Zi <ziyao@disroot.org>
-Closes: https://lore.kernel.org/linux-riscv/aGODMpq7TGINddzM@pie.lan/
-Tested-by: Yao Zi <ziyao@disroot.org>
-Signed-off-by: Alexandre Ghiti <alexghiti@rivosinc.com>
+Oh, malformed syntax colors means,(in a editor,in this case Vim, where syntax
+highlight is on). In essence, it might complain while running the script.
+
+Hence, this trivialities.
+
+Signed-off-by: Bhaskar Chowdhury <unixbhaskar@gmail.com>
 ---
- arch/riscv/kernel/ftrace.c | 16 ++++++++++++----
- 1 file changed, 12 insertions(+), 4 deletions(-)
+ tools/bootconfig/test-bootconfig.sh | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/riscv/kernel/ftrace.c b/arch/riscv/kernel/ftrace.c
-index 4c6c24380cfd9d6c51f0e4340cd674160b83a610..22e7bdf8de2b6ca950cf2c8b734bc82ea46ba8bf 100644
---- a/arch/riscv/kernel/ftrace.c
-+++ b/arch/riscv/kernel/ftrace.c
-@@ -14,6 +14,16 @@
- #include <asm/text-patching.h>
- 
- #ifdef CONFIG_DYNAMIC_FTRACE
-+void ftrace_arch_code_modify_prepare(void)
-+{
-+	mutex_lock(&text_mutex);
-+}
-+
-+void ftrace_arch_code_modify_post_process(void)
-+{
-+	mutex_unlock(&text_mutex);
-+}
-+
- unsigned long ftrace_call_adjust(unsigned long addr)
- {
- 	if (IS_ENABLED(CONFIG_DYNAMIC_FTRACE_WITH_CALL_OPS))
-@@ -29,10 +39,8 @@ unsigned long arch_ftrace_get_symaddr(unsigned long fentry_ip)
- 
- void arch_ftrace_update_code(int command)
- {
--	mutex_lock(&text_mutex);
- 	command |= FTRACE_MAY_SLEEP;
- 	ftrace_modify_all_code(command);
--	mutex_unlock(&text_mutex);
- 	flush_icache_all();
- }
- 
-@@ -149,6 +157,8 @@ int ftrace_init_nop(struct module *mod, struct dyn_ftrace *rec)
- 	unsigned int nops[2], offset;
- 	int ret;
- 
-+	guard(mutex)(&text_mutex);
-+
- 	ret = ftrace_rec_set_nop_ops(rec);
- 	if (ret)
- 		return ret;
-@@ -157,9 +167,7 @@ int ftrace_init_nop(struct module *mod, struct dyn_ftrace *rec)
- 	nops[0] = to_auipc_t0(offset);
- 	nops[1] = RISCV_INSN_NOP4;
- 
--	mutex_lock(&text_mutex);
- 	ret = patch_insn_write((void *)pc, nops, 2 * MCOUNT_INSN_SIZE);
--	mutex_unlock(&text_mutex);
- 
- 	return ret;
- }
+diff --git a/tools/bootconfig/test-bootconfig.sh b/tools/bootconfig/test-bootconfig.sh
+index a2c484c243f5..211409539737 100755
+--- a/tools/bootconfig/test-bootconfig.sh
++++ b/tools/bootconfig/test-bootconfig.sh
+@@ -167,8 +167,8 @@ echo > $INITRD
 
----
-base-commit: d7b8f8e20813f0179d8ef519541a3527e7661d3a
-change-id: 20250708-alex-fixes-1e719b9899f3
+ xpass $BOOTCONF -a $TEMPCONF $INITRD
+ $BOOTCONF $INITRD > $OUTFILE
+-xfail grep -q val[[:space:]] $OUTFILE
+-xpass grep -q val2[[:space:]] $OUTFILE
++xfail grep -q val\[\[:space:\]\] $OUTFILE
++xpass grep -q val2\[\[:space:\]\] $OUTFILE
 
-Best regards,
--- 
-Alexandre Ghiti <alexghiti@rivosinc.com>
+ echo "=== expected failure cases ==="
+ for i in samples/bad-* ; do
+--
+2.49.0
 
