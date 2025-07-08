@@ -1,130 +1,169 @@
-Received: from out-188.mta1.migadu.com (out-188.mta1.migadu.com [95.215.58.188])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFE602BE637;
-	Tue,  8 Jul 2025 08:25:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.188
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE7121E231E
+	for <linux-trace-kernel@vger.kernel.org>; Tue,  8 Jul 2025 08:34:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751963115; cv=none; b=sWWVqKtI8HYpPAmiKZ5xy5rcrOLaFJDZU1SAHVIJ4qXe0Tj8Z7nUbXKyPTgGYq8nSpeA1dyMQCJdZ3wrarBgqiSFkKKS/BkJDiyj2y0QpbhiOnt6WXzvDF75XSTbsWwnUpOnRUDCn2su674VmXp0m8SRkTyAa2hj5lCA7OYDW/w=
+	t=1751963690; cv=none; b=eSRYOwy1ECvlj2Mpi6rC7vu1AcEG4RGQxGRmolpWKNkOmvfBpi63MyetHKi/JyP6iTUDFQ7BUQ1fjGNXoinxuhFG1x1PkoCC3DyzlUPWq4GYdbY3/a0QlKIrck5db10hWQWezZhe0WNZVFYLqYZtXEXaMq5aJoQzWaKnNqDYHkk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751963115; c=relaxed/simple;
-	bh=36z0UV8fxJObKtRYSJiLD5FflrpuclUu7P1ftcfJG7w=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=RsmfLZzgqVjyfWsPemoRxSHtsQI+Cqh2uV8hjwa+zyE1yEwjnPbX1ZxHAFPLErqymIOdY9OTAsTmK2dp+hoq0VQ9EY27a5XFDvHBmxN+OwQ1oS/GZqpE/qRr9OR4Ctms5M9WYz1JKnx8ywKq1/HK7/0DqWwcbar9ns3tW8wVHmA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=knWrRcv7; arc=none smtp.client-ip=95.215.58.188
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1751963690; c=relaxed/simple;
+	bh=3Ds2Sx45pnkMg7iaFweDgWNlUOwHGzX5GUkhgeYgbzQ=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=FGVazqGMA6ciOw5gBp/VLIcA+CBMxzVv9AbA3S7aRx2edyeNp8J3wmq1FgVF7Huhn4nUjleLp6E1nIno7RV6UmblGJmd0jALZpJgFxy/qrSYibEdIqk7vQYM75jhUySlyRH/86PPhL/HPkdf7q0Ctk0it9a7y3qHc8zVoRM7MO8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=JHlCq5M/; arc=none smtp.client-ip=209.85.210.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="knWrRcv7"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1751963111;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ip1HWxxpZVZ+acPGUerAZmLvMn8cqD2ZX+zb9hEbz8s=;
-	b=knWrRcv7Z7+L5As1/5NxH5ItPaZ+LRdPXOKO/dwrpe5PJ4vUBaDrx2UxZ1fxJl1tf0V7J1
-	FjEUePFz7wmdUD+x1sYOgDRO0mKLwo+7zP9kKw5tIC5WvizHEKAQ4k6a/Le5SmWQ7s+IZO
-	0ty+PKg4IQchW8b+zmUrFy0zoAi9OJM=
-From: Tao Chen <chen.dylane@linux.dev>
-To: daniel@iogearbox.net,
-	razor@blackwall.org,
-	andrew+netdev@lunn.ch,
-	davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	ast@kernel.org,
-	andrii@kernel.org,
-	martin.lau@linux.dev,
-	eddyz87@gmail.com,
-	song@kernel.org,
-	yonghong.song@linux.dev,
-	john.fastabend@gmail.com,
-	kpsingh@kernel.org,
-	sdf@fomichev.me,
-	haoluo@google.com,
-	jolsa@kernel.org,
-	mattbobrowski@google.com,
-	rostedt@goodmis.org,
-	mhiramat@kernel.org,
-	mathieu.desnoyers@efficios.com,
-	horms@kernel.org,
-	willemb@google.com,
-	jakub@cloudflare.com,
-	pablo@netfilter.org,
-	kadlec@netfilter.org,
-	hawk@kernel.org
-Cc: bpf@vger.kernel.org,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	netfilter-devel@vger.kernel.org,
-	coreteam@netfilter.org,
-	Tao Chen <chen.dylane@linux.dev>
-Subject: [PATCH bpf-next v2 7/7] netkit: Remove location field in netkit_link
-Date: Tue,  8 Jul 2025 16:22:28 +0800
-Message-ID: <20250708082228.824766-8-chen.dylane@linux.dev>
-In-Reply-To: <20250708082228.824766-1-chen.dylane@linux.dev>
-References: <20250708082228.824766-1-chen.dylane@linux.dev>
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="JHlCq5M/"
+Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-73c17c770a7so5039884b3a.2
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 08 Jul 2025 01:34:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1751963688; x=1752568488; darn=vger.kernel.org;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=km9alGI0XcL6Qvzjzja6icFIdbRKvCumIapJv3kvhgI=;
+        b=JHlCq5M/IYsv507yOK/iTHer+g0MTpws79Wg84pR4YXLTi3g0xFVEfKBISBY5rXMjD
+         LUTIddSIPHdwfK6WO+apj5EZSwotAg50PwzmzH2HSqkzWfrXpT516GTiut7iTpjZRtKL
+         l9v4fIxBWQr6Yy4w1SWos/MRMZI96/8cNQmVce61rG7MxAIyopRTY4IezJsITs2viXj9
+         KCoEKUBg0p7fBX2H9dL8Q3oyHS87R7nDSBxL5bGquZa2CXHBnXqDPFckMz2lkwcOJ4Ph
+         pUoNTPZpoIf12pOtzdV+9teoDqAdU50FMaOwfAkYDEkXl08T45qTToEEhdSVNwx7ZnnU
+         YrKA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751963688; x=1752568488;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=km9alGI0XcL6Qvzjzja6icFIdbRKvCumIapJv3kvhgI=;
+        b=VEF04JDv99FGq8Gv2mFzW8nxhLZGduHmRtJpzdKZ5iaMQcLs15n1quyNknQ6lbk+ok
+         UTFtI61ff8mi1oZwbNxwtdVHQ98d+vVEHNtEyvfN/bJqafk7MToChWK9DMT+Mi6Y3ZAH
+         FlTGlLkBIWz2CP1LCg6igD4C4BJUQ9vHPiP3JfxPXWpiROcTCJqfVNW5ZylDvObKaH3F
+         ESW/RE5NmxrDtuj10PuF1Ed8ibPKZLIDU29SlpaRtark7OF13MCxMOBscHRv1tch9Q/x
+         nWVWR2dSqjhehz01NL3efIeUZzBXoZbZ6DS8HkmPGDJVLLqBJPvjLW7oLMgKHe2GYcp2
+         iu5g==
+X-Forwarded-Encrypted: i=1; AJvYcCUNioy/AMO+DT/5bwjRh9/jMhhTBytTArkQsltFWmaeIYwKsgR7cbW8lnStbxTgnQsr4z1p7uRiRWUPKzo9tWPDq0c=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyyxOkk/7hWRLpg8PwBwlMuJAdV6l36NIk3gR/awZs9m3e+YKlZ
+	SMDxlq/wMgc+6psJcVDztcgVCixe1ZBH/C36GqUTWQXuzXC0SBpwUw18g1SrgQpp6cg=
+X-Gm-Gg: ASbGncvT4swp8TKc6lLEIJOAqnFBo8qG1k8gDpfQKtlV5upsAueiHhEc37Uf2wVcbLA
+	UML+dbHlVI5I3DAXFNspjFu2mH5t07c7vieN9BjlIeniAO3DxL1vsKhEKMlrKeUDn5Nuha65Tjo
+	AY0fRI3WCL9T312MEvx2jSqnj9VF+WJyaQCSWfa8ckro3eFbx5e99JLw0sqjDfWnsLTQOjfO6+m
+	f5s77M+YqzFfG9W/g9vrqsq7loKeg0+VGXbg4TP/2I1dnMvTxSDrEpxQCn5QVz36UIdgF7EBC6h
+	jE50frXNlmL/GDt0dC5vO8uAqUj8sgr6L/yo+VaRrLQLW6eql+FdG1vx2GfJq1x2J003MOVTmZR
+	Ecgy2oyDA2mXoykdmQftd15Q1ituzOt4Qzt8ZZPj5Ov+k
+X-Google-Smtp-Source: AGHT+IHRcwV/1/T5oymXkbwGRFIYuEsWNfVXVWrzLoP+RWTG54BAK6UpJOoefXueOfXgf20o6DvMKw==
+X-Received: by 2002:a05:6a21:7a44:b0:215:efe1:a680 with SMTP id adf61e73a8af0-2260a795654mr20246310637.16.1751963688189;
+        Tue, 08 Jul 2025 01:34:48 -0700 (PDT)
+Received: from alexghiti.eu.rivosinc.com (alexghiti.eu.rivosinc.com. [141.95.202.232])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74ce43d4f1asm10877511b3a.161.2025.07.08.01.34.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 08 Jul 2025 01:34:47 -0700 (PDT)
+From: Alexandre Ghiti <alexghiti@rivosinc.com>
+Date: Tue, 08 Jul 2025 08:33:48 +0000
+Subject: [PATCH] riscv: ftrace: Properly acquire text_mutex to fix a race
+ condition
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250708-alex-fixes-v1-1-5b008d3f4d0c@rivosinc.com>
+X-B4-Tracking: v=1; b=H4sIAOzXbGgC/x2LQQqAIBAAvyJ7TlAj1L4SHazWWggLF0II/550H
+ GbmBcZMyDCKFzI+xHSlBroTsB4h7ShpawxGmUFZ5WQ4schIBVlqtNov3nkfe2jDnfEXrZ/mWj+
+ cWU9oXAAAAA==
+X-Change-ID: 20250708-alex-fixes-1e719b9899f3
+To: Steven Rostedt <rostedt@goodmis.org>, 
+ Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+ Paul Walmsley <paul.walmsley@sifive.com>, 
+ Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
+ Alexandre Ghiti <alex@ghiti.fr>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+ linux-riscv@lists.infradead.org, Han Gao <rabenda.cn@gmail.com>, 
+ Vivian Wang <wangruikang@iscas.ac.cn>, Yao Zi <ziyao@disroot.org>, 
+ Alexandre Ghiti <alexghiti@rivosinc.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2192;
+ i=alexghiti@rivosinc.com; h=from:subject:message-id;
+ bh=3Ds2Sx45pnkMg7iaFweDgWNlUOwHGzX5GUkhgeYgbzQ=;
+ b=owGbwMvMwCGWYr9pz6TW912Mp9WSGDJybqi8ChN0klf9crq7b8aPt753f26W6d7Q/lf4XIly/
+ tbNVWHHOkpZGMQ4GGTFFFkUzBO6WuzP1s/+c+k9zBxWJpAhDFycAjARhkcM/71fRb1avvPr6cDQ
+ 57eWZxy+GdJybW8Tt0THf0umRv+l5qsYGe4fuN+4spx9reHpB0yRSob6tk+dHI13b2m5sXtL/ql
+ 4LV4A
+X-Developer-Key: i=alexghiti@rivosinc.com; a=openpgp;
+ fpr=DC049C97114ED82152FE79A783E4BA75438E93E3
 
-Use attach_type in bpf_link to replace the location field, and
-remove location field in netkit_link.
+As reported by lockdep, some patching was done without acquiring
+text_mutex, so there could be a race when mapping the page to patch
+since we use the same fixmap entry.
 
-Signed-off-by: Tao Chen <chen.dylane@linux.dev>
+Reported-by: Han Gao <rabenda.cn@gmail.com>
+Reported-by: Vivian Wang <wangruikang@iscas.ac.cn>
+Reported-by: Yao Zi <ziyao@disroot.org>
+Closes: https://lore.kernel.org/linux-riscv/aGODMpq7TGINddzM@pie.lan/
+Tested-by: Yao Zi <ziyao@disroot.org>
+Signed-off-by: Alexandre Ghiti <alexghiti@rivosinc.com>
 ---
- drivers/net/netkit.c | 8 +++-----
- 1 file changed, 3 insertions(+), 5 deletions(-)
+ arch/riscv/kernel/ftrace.c | 16 ++++++++++++----
+ 1 file changed, 12 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/net/netkit.c b/drivers/net/netkit.c
-index 5928c99eac7..492be60f2e7 100644
---- a/drivers/net/netkit.c
-+++ b/drivers/net/netkit.c
-@@ -32,7 +32,6 @@ struct netkit {
- struct netkit_link {
- 	struct bpf_link link;
- 	struct net_device *dev;
--	u32 location;
- };
+diff --git a/arch/riscv/kernel/ftrace.c b/arch/riscv/kernel/ftrace.c
+index 4c6c24380cfd9d6c51f0e4340cd674160b83a610..22e7bdf8de2b6ca950cf2c8b734bc82ea46ba8bf 100644
+--- a/arch/riscv/kernel/ftrace.c
++++ b/arch/riscv/kernel/ftrace.c
+@@ -14,6 +14,16 @@
+ #include <asm/text-patching.h>
  
- static __always_inline int
-@@ -733,8 +732,8 @@ static void netkit_link_fdinfo(const struct bpf_link *link, struct seq_file *seq
- 
- 	seq_printf(seq, "ifindex:\t%u\n", ifindex);
- 	seq_printf(seq, "attach_type:\t%u (%s)\n",
--		   nkl->location,
--		   nkl->location == BPF_NETKIT_PRIMARY ? "primary" : "peer");
-+		   link->attach_type,
-+		   link->attach_type == BPF_NETKIT_PRIMARY ? "primary" : "peer");
- }
- 
- static int netkit_link_fill_info(const struct bpf_link *link,
-@@ -749,7 +748,7 @@ static int netkit_link_fill_info(const struct bpf_link *link,
- 	rtnl_unlock();
- 
- 	info->netkit.ifindex = ifindex;
--	info->netkit.attach_type = nkl->location;
-+	info->netkit.attach_type = link->attach_type;
- 	return 0;
- }
- 
-@@ -776,7 +775,6 @@ static int netkit_link_init(struct netkit_link *nkl,
+ #ifdef CONFIG_DYNAMIC_FTRACE
++void ftrace_arch_code_modify_prepare(void)
++{
++	mutex_lock(&text_mutex);
++}
++
++void ftrace_arch_code_modify_post_process(void)
++{
++	mutex_unlock(&text_mutex);
++}
++
+ unsigned long ftrace_call_adjust(unsigned long addr)
  {
- 	bpf_link_init(&nkl->link, BPF_LINK_TYPE_NETKIT,
- 		      &netkit_link_lops, prog, attr->link_create.attach_type);
--	nkl->location = attr->link_create.attach_type;
- 	nkl->dev = dev;
- 	return bpf_link_prime(&nkl->link, link_primer);
+ 	if (IS_ENABLED(CONFIG_DYNAMIC_FTRACE_WITH_CALL_OPS))
+@@ -29,10 +39,8 @@ unsigned long arch_ftrace_get_symaddr(unsigned long fentry_ip)
+ 
+ void arch_ftrace_update_code(int command)
+ {
+-	mutex_lock(&text_mutex);
+ 	command |= FTRACE_MAY_SLEEP;
+ 	ftrace_modify_all_code(command);
+-	mutex_unlock(&text_mutex);
+ 	flush_icache_all();
  }
+ 
+@@ -149,6 +157,8 @@ int ftrace_init_nop(struct module *mod, struct dyn_ftrace *rec)
+ 	unsigned int nops[2], offset;
+ 	int ret;
+ 
++	guard(mutex)(&text_mutex);
++
+ 	ret = ftrace_rec_set_nop_ops(rec);
+ 	if (ret)
+ 		return ret;
+@@ -157,9 +167,7 @@ int ftrace_init_nop(struct module *mod, struct dyn_ftrace *rec)
+ 	nops[0] = to_auipc_t0(offset);
+ 	nops[1] = RISCV_INSN_NOP4;
+ 
+-	mutex_lock(&text_mutex);
+ 	ret = patch_insn_write((void *)pc, nops, 2 * MCOUNT_INSN_SIZE);
+-	mutex_unlock(&text_mutex);
+ 
+ 	return ret;
+ }
+
+---
+base-commit: d7b8f8e20813f0179d8ef519541a3527e7661d3a
+change-id: 20250708-alex-fixes-1e719b9899f3
+
+Best regards,
 -- 
-2.48.1
+Alexandre Ghiti <alexghiti@rivosinc.com>
 
