@@ -1,90 +1,122 @@
-Received: from relay.hostedemail.com (smtprelay0017.hostedemail.com [216.40.44.17])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 794272DC34F;
-	Tue,  8 Jul 2025 13:23:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9A7A2DCBF7;
+	Tue,  8 Jul 2025 13:24:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751981041; cv=none; b=houRbCw2Ez3JIWkMCyo5k+nEfJX2jWBIgxXk5AG+Z1iXMVzB3Ep7rAEjjkNjWhNCdHAvMmqVP3maUZYPVrUUY78tiKyFg+wyEB1XB4dhXddBSmCQ2i5252Si4BIKKvGr42uJ9kjv34BD4w0niqXP5M7KqqFqoCejKqo+SKqY1Fs=
+	t=1751981051; cv=none; b=Ga/fp++esH60jv5g/oxkSopgjXh6SMkrg2/PMSrCyHPsKvLmoozCxr9eOztRXBiXA4flJ+D6bhZjMTYHif0EkM8/LG7UXe882hldWv/6VoQ+zonS8Q7yguD4exaAFD46q/CtjvdNLOxQqWa0n8UQfxOW88g1RFdp0tAU5u2mmpk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751981041; c=relaxed/simple;
-	bh=7monKkYWpbsiwqmcPJ9ewRBgJ6OuWduYqF1PGNpRsbg=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=IxrjfnpdaFzgLTUfcX8qJByKkH7p0JdpPLO6inzgBZQlQbYp1gGaseDqM2tEEBIWITivN9uxkpby79yWdYFbiYLgaZ7cWaRv+Jltv4gjOo+AHZNbqZfUqa5tDxk5q30bat8/QSXWjMH+C9CG+zYWboC53hYzvJWCmxIearXhNDU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf19.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay06.hostedemail.com (Postfix) with ESMTP id 9768810B47C;
-	Tue,  8 Jul 2025 13:23:55 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf19.hostedemail.com (Postfix) with ESMTPA id 2A3112002B;
-	Tue,  8 Jul 2025 13:23:51 +0000 (UTC)
-Date: Tue, 8 Jul 2025 09:23:51 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Steven Rostedt <rostedt@kernel.org>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org, x86@kernel.org,
- Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Josh Poimboeuf <jpoimboe@kernel.org>,
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, Jiri
- Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Thomas
- Gleixner <tglx@linutronix.de>, Andrii Nakryiko <andrii@kernel.org>, Indu
- Bhagat <indu.bhagat@oracle.com>, "Jose E. Marchesi" <jemarch@gnu.org>, Beau
- Belgrave <beaub@linux.microsoft.com>, Jens Remus <jremus@linux.ibm.com>,
- Andrew Morton <akpm@linux-foundation.org>, Jens Axboe <axboe@kernel.dk>,
- Florian Weimer <fweimer@redhat.com>, Sam James <sam@gentoo.org>
-Subject: Re: [PATCH v8 10/12] unwind_user/sframe: Enable debugging in
- uaccess regions
-Message-ID: <20250708092351.4548c613@gandalf.local.home>
-In-Reply-To: <CAHk-=widGT2M=kJJr6TwWsMjfYSghL9k3LgxJvRard0wtiP62A@mail.gmail.com>
-References: <20250708021115.894007410@kernel.org>
-	<20250708021200.058879671@kernel.org>
-	<CAHk-=widGT2M=kJJr6TwWsMjfYSghL9k3LgxJvRard0wtiP62A@mail.gmail.com>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1751981051; c=relaxed/simple;
+	bh=9lFlVOdytSTp+Mlnaj/abCNFlmJvW5VU8XlxoHegnqA=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=PLsMVQDlTP8KfCNZHK12LR7VmdNWmvVAHhsHqpmxCld8wlCjKcFVrY1TQKopo0yo7QGWe+/h8dOpEB1n3mnvO4Vj5ZjoqDBL6HsYqglwU6wUHnN1Dc4BLUdgCteByr5LYXW6jdH5ep0QglUAXdkRoBTUuYbeLdD2AHyZEjnoSzo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DGafFHGK; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DGafFHGK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 54AB6C4CEED;
+	Tue,  8 Jul 2025 13:24:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751981051;
+	bh=9lFlVOdytSTp+Mlnaj/abCNFlmJvW5VU8XlxoHegnqA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=DGafFHGKLnShijrG4GwB8Lvb0eufCcpRfXfk79AHYLx1a0iORNyu7DVXlW3+sF4D8
+	 WYxP4L2+M6P3yuTQ2R1rXNZpBi6FyeuFL93GqQVIPsQE8ahEPoVBZmqDWIiPiz9O78
+	 i3S/2xIj035iWOwyv0YA1OJfdiRHIjt8PCQzFfBC28Mrao0GoCJAN2zZaKGfP2vG6m
+	 bsmXpF9DO0RIKIeQ6okdYscA3B/DjIF1HBmtdgag+pHzfHMO/95V3/uQ85iOHPDtoU
+	 CHuBs2zgb1VNkbwHPyY7i2oxQvs+nvbeBbt+yMTRVwyHmO7xOxF810AkMGT+ikOlTo
+	 3QwHYcrIivhJg==
+From: Jiri Olsa <jolsa@kernel.org>
+To: Oleg Nesterov <oleg@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Andrii Nakryiko <andrii@kernel.org>
+Cc: bpf@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	x86@kernel.org,
+	Song Liu <songliubraving@fb.com>,
+	Yonghong Song <yhs@fb.com>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Hao Luo <haoluo@google.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Alan Maguire <alan.maguire@oracle.com>,
+	David Laight <David.Laight@ACULAB.COM>,
+	=?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <thomas@t-8ch.de>,
+	Ingo Molnar <mingo@kernel.org>
+Subject: [PATCHv4 perf/core 02/22] uprobes: Rename arch_uretprobe_trampoline function
+Date: Tue,  8 Jul 2025 15:23:11 +0200
+Message-ID: <20250708132333.2739553-3-jolsa@kernel.org>
+X-Mailer: git-send-email 2.50.0
+In-Reply-To: <20250708132333.2739553-1-jolsa@kernel.org>
+References: <20250708132333.2739553-1-jolsa@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Stat-Signature: dc4xdpf4z87w6szwu9dypej9kfpddoyi
-X-Rspamd-Server: rspamout08
-X-Rspamd-Queue-Id: 2A3112002B
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1+57oX9VAnEecWyeiP8Yv6pObwlrH3aVvE=
-X-HE-Tag: 1751981031-844406
-X-HE-Meta: U2FsdGVkX1/w1JlnuOsbVF2S/OVXwPY8+3db7fI/ABcC5i1TfeJIuYFXajKcdC4OG0lOuY8YXF0+VmapkgFecGjFtv3euyock0XZjulJFEYrJpa4v5OrvyQZ13hdvfNCuAb3QYzk8WIaaFTyZ/E9eAye71wMEAB1o7RzSDWhvtX7XCduFeIZ6zpYgLYoIEdqRglTnBZnd7zsa/0LGQbs2QL4EynTw9p3vJaJjtg8XGLxAhhz4fjTG7gl4O23Z4cB29w56uaKetrgjJeTMIab75/hzbD28QVZR7AFXwllZBpjUnrB/8Kdk+CMFTFFQ+oUB8zmgQH2secpUAKn2dCP+C3TR3RKMEAH8NHhaxeMjI4huJSGMkY7+nitPjS48z8LLJeY+cIiWJxp7Dg/Uiy4Nw==
+Content-Transfer-Encoding: 8bit
 
-On Mon, 7 Jul 2025 20:38:35 -0700
-Linus Torvalds <torvalds@linux-foundation.org> wrote:
+We are about to add uprobe trampoline, so cleaning up the namespace.
 
-> On Mon, 7 Jul 2025 at 19:12, Steven Rostedt <rostedt@kernel.org> wrote:
+Acked-by: Andrii Nakryiko <andrii@kernel.org>
+Acked-by: Oleg Nesterov <oleg@redhat.com>
+Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+---
+ arch/x86/kernel/uprobes.c | 2 +-
+ include/linux/uprobes.h   | 2 +-
+ kernel/events/uprobes.c   | 4 ++--
+ 3 files changed, 4 insertions(+), 4 deletions(-)
 
-> This patch is disgusting, in other words. It's wrong. STOP IT.
-> 
+diff --git a/arch/x86/kernel/uprobes.c b/arch/x86/kernel/uprobes.c
+index 6d383839e839..77050e5a4680 100644
+--- a/arch/x86/kernel/uprobes.c
++++ b/arch/x86/kernel/uprobes.c
+@@ -338,7 +338,7 @@ extern u8 uretprobe_trampoline_entry[];
+ extern u8 uretprobe_trampoline_end[];
+ extern u8 uretprobe_syscall_check[];
+ 
+-void *arch_uprobe_trampoline(unsigned long *psize)
++void *arch_uretprobe_trampoline(unsigned long *psize)
+ {
+ 	static uprobe_opcode_t insn = UPROBE_SWBP_INSN;
+ 	struct pt_regs *regs = task_pt_regs(current);
+diff --git a/include/linux/uprobes.h b/include/linux/uprobes.h
+index 516217c39094..01112f27cd21 100644
+--- a/include/linux/uprobes.h
++++ b/include/linux/uprobes.h
+@@ -224,7 +224,7 @@ extern bool arch_uprobe_ignore(struct arch_uprobe *aup, struct pt_regs *regs);
+ extern void arch_uprobe_copy_ixol(struct page *page, unsigned long vaddr,
+ 					 void *src, unsigned long len);
+ extern void uprobe_handle_trampoline(struct pt_regs *regs);
+-extern void *arch_uprobe_trampoline(unsigned long *psize);
++extern void *arch_uretprobe_trampoline(unsigned long *psize);
+ extern unsigned long uprobe_get_trampoline_vaddr(void);
+ #else /* !CONFIG_UPROBES */
+ struct uprobes_state {
+diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
+index 257581432cd8..4e8e607abda8 100644
+--- a/kernel/events/uprobes.c
++++ b/kernel/events/uprobes.c
+@@ -1727,7 +1727,7 @@ static int xol_add_vma(struct mm_struct *mm, struct xol_area *area)
+ 	return ret;
+ }
+ 
+-void * __weak arch_uprobe_trampoline(unsigned long *psize)
++void * __weak arch_uretprobe_trampoline(unsigned long *psize)
+ {
+ 	static uprobe_opcode_t insn = UPROBE_SWBP_INSN;
+ 
+@@ -1759,7 +1759,7 @@ static struct xol_area *__create_xol_area(unsigned long vaddr)
+ 	init_waitqueue_head(&area->wq);
+ 	/* Reserve the 1st slot for get_trampoline_vaddr() */
+ 	set_bit(0, area->bitmap);
+-	insns = arch_uprobe_trampoline(&insns_size);
++	insns = arch_uretprobe_trampoline(&insns_size);
+ 	arch_uprobe_copy_ixol(area->page, 0, insns, insns_size);
+ 
+ 	if (!xol_add_vma(mm, area))
+-- 
+2.50.0
 
-No problem, I can easily drop it.
-
-I just took Josh's PoC patches and posted them. This particular series
-still needs a bit of work. That's one of the reasons I split it out of the
-other series. The core series is at the stage for acceptance and looking
-for feedback from other maintainers. This series is still a work in
-progress. Others have asked me to post them so they can start playing with
-it.
-
-We still need to come up with a system call with a robust API to allow the
-dynamic linker to tell the kernel where the SFrames are for the libraries
-it loads. Hence the "DO NOT APPLY" patch at the end (which I just noticed the
-subject text got dropped when I pulled it into git from patchwork and sent
-out this version, at least the change long still suggest it shouldn't be
-applied).
-
-But I will remove this patch from the queue. I never even used this
-debugging. What I did was inject trace_printk() all over the place to make
-sure it was working as expected.
-
-Thanks,
-
--- Steve
