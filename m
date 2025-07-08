@@ -1,168 +1,153 @@
-Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out30-119.freemail.mail.aliyun.com (out30-119.freemail.mail.aliyun.com [115.124.30.119])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E715D27E;
-	Tue,  8 Jul 2025 05:16:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 444B321FF3E;
+	Tue,  8 Jul 2025 06:09:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.119
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751951765; cv=none; b=EU5bzjDzB/aK63dvdZK6BHc0IwgljXdOXOL+vwsSvPZpW0aRwGNrCDZC/LqI6nu8ggRygNB6HXs/596yx0/AYVyNoQ3L4Vz6ck22JK6svW8h+v4Wp0OYUET+acfK0crqP60HTTE/YsDUd81Qxzxq3kGma9o7oDtyLnF/XtxO9n8=
+	t=1751954964; cv=none; b=MY9ek3bE5uqmPvcgQ57ogyb9qwr4HSvrlbxEtbKVB1NNTqTEGFT51cv27XzRR+9GJ0XYor0tOocvZ1GLejU+hyojYBU6vKXCPK7+M7bxWZhE3109ft1clwOo1pso/SsqOxWFnWzEoo/4XdphEh6zXB1q0rMmPVYstz22zVsOIeM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751951765; c=relaxed/simple;
-	bh=vwWTmtEhyYaokbT4pg4vQi/76twGoXovFRT7DrY0su0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SiLskqV7+rT0Cs+ldYWFqg4QOfcGR7Stj0ILGWRPwXpfWyiwy0Tx7iHTkZlf7/wShzZHIMtuu/936YvOOxEzwAeff4TT6JlpfHIz6NkL18X5DX0/soMA/hAOyLZ5NUtdC2v6B2D/o2eNT3tHckW7JZJovLN9wdBWNInDc0N/xsk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=HsWlEiWh; arc=none smtp.client-ip=178.21.23.139
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
+	s=arc-20240116; t=1751954964; c=relaxed/simple;
+	bh=pPOo+ktL9Tfotnr6ffVPd/vkVlhcENzcynw9OZkpRdY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=gZVQoHWFNAuN51sU9qSrCVVUe+79TrK9KzsG1S50/LD4tov9c2181xO4Cw3lm1ff0+LkdLzPIQIwG13fgJPcRutPVaFBuhdlc+BozruQmnLjEzgc8WXvDoU2xFQqvJvXDVqvF67nw3BhRzsYReCqBEu2AxMuqstp5N2wQY8ZBbU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=WgtQwHLl; arc=none smtp.client-ip=115.124.30.119
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="HsWlEiWh"
-Received: from mail01.disroot.lan (localhost [127.0.0.1])
-	by disroot.org (Postfix) with ESMTP id 8997825D3C;
-	Tue,  8 Jul 2025 07:16:01 +0200 (CEST)
-X-Virus-Scanned: SPAM Filter at disroot.org
-Received: from layka.disroot.org ([127.0.0.1])
- by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
- id wH3v3tcvD4eS; Tue,  8 Jul 2025 07:16:00 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
-	t=1751951760; bh=vwWTmtEhyYaokbT4pg4vQi/76twGoXovFRT7DrY0su0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=HsWlEiWhVQJ5oNbhnw+ykb0EgLDskRU/cQH8h0Y1qV8sdf5ZQhtU5FwXjsvJkQxux
-	 ybOJgF+ZPVB0dQhier81jKRf9gMQEqgixR4xtdQn+fw/KgZdmDwtF9vrC9Dwrhl/Hw
-	 CeSkUincSsq3pbnoAu+C8vur5Ykkoxo8BBJfLqcT3pRjDGAAiV5QfhnawC8hu97G/J
-	 m5IejVLcCywGXIrWPGe0x0KMTZDMuUHPt+aonHX/sTbP/LJOTNzCsHBOI7n0bqFSvV
-	 mrIUZ43EYi0tXEOsxo5cBfO0F+8WlIjgrWLV4+LrOuPLn9pMpUgnE5fqt30YhKTrcm
-	 F2pVrsBr1qTEQ==
-Date: Tue, 8 Jul 2025 05:15:15 +0000
-From: Yao Zi <ziyao@disroot.org>
-To: Alexandre Ghiti <alex@ghiti.fr>, Andy Chiu <andybnac@gmail.com>,
-	alexghiti@rivosinc.com, palmer@dabbelt.com,
-	Andy Chiu <andy.chiu@sifive.com>,
-	=?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn@rivosinc.com>,
-	Mark Rutland <mark.rutland@arm.com>, puranjay12@gmail.com,
-	paul.walmsley@sifive.com, greentime.hu@sifive.com,
-	nick.hu@sifive.com, nylon.chen@sifive.com, eric.lin@sifive.com,
-	vicent.chen@sifive.com, zong.li@sifive.com,
-	yongxuan.wang@sifive.com, samuel.holland@sifive.com,
-	olivia.chu@sifive.com, c2232430@gmail.com
-Cc: Han Gao <rabenda.cn@gmail.com>, Vivian Wang <wangruikang@iscas.ac.cn>,
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	regressions@lists.linux.dev, linux-riscv@lists.infradead.org
-Subject: Re: [REGRESSION] Random oops on SG2042 with Linux 6.16-rc and
- dynamic ftrace
-Message-ID: <aGypYyyR3EtsKGKy@pie.lan>
-References: <aGODMpq7TGINddzM@pie.lan>
- <b060e694-caa0-4aa5-ac67-75531a5f60eb@ghiti.fr>
- <aGUO8L7oXpvEpvZo@pie.lan>
- <6d478129-324a-4c5a-8258-4abe3d0732d6@ghiti.fr>
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="WgtQwHLl"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1751954952; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=zh0GZgGllEOdHJ4JfcnZXS605Yci87SIRFoTaKVIHL0=;
+	b=WgtQwHLlxa1M42TBYI2ooP+5blNjMNxRxKxO/rzsAKwzRNXLL0wgQWfy0BinSS22T84tqW925Z5dR+ww8BbOLhpaCXZ7CIPfKZ9n9yR8UHYcRaeVHS0O8E8aAyKwCV8llTrVr/V63XG3a6KVM/PLPZQEkDPmAbVpystHaQzOq3s=
+Received: from 30.74.144.119(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0WiL4DJh_1751954947 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Tue, 08 Jul 2025 14:09:08 +0800
+Message-ID: <342d5fe1-cd39-462c-b2a4-b5d6979a8a21@linux.alibaba.com>
+Date: Tue, 8 Jul 2025 14:09:07 +0800
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <6d478129-324a-4c5a-8258-4abe3d0732d6@ghiti.fr>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v8 14/15] khugepaged: add per-order mTHP khugepaged stats
+To: Nico Pache <npache@redhat.com>, linux-mm@kvack.org,
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+Cc: david@redhat.com, ziy@nvidia.com, lorenzo.stoakes@oracle.com,
+ Liam.Howlett@oracle.com, ryan.roberts@arm.com, dev.jain@arm.com,
+ corbet@lwn.net, rostedt@goodmis.org, mhiramat@kernel.org,
+ mathieu.desnoyers@efficios.com, akpm@linux-foundation.org,
+ baohua@kernel.org, willy@infradead.org, peterx@redhat.com,
+ wangkefeng.wang@huawei.com, usamaarif642@gmail.com, sunnanyong@huawei.com,
+ vishal.moola@gmail.com, thomas.hellstrom@linux.intel.com,
+ yang@os.amperecomputing.com, kirill.shutemov@linux.intel.com,
+ aarcange@redhat.com, raquini@redhat.com, anshuman.khandual@arm.com,
+ catalin.marinas@arm.com, tiwai@suse.de, will@kernel.org,
+ dave.hansen@linux.intel.com, jack@suse.cz, cl@gentwo.org,
+ jglisse@google.com, surenb@google.com, zokeefe@google.com,
+ hannes@cmpxchg.org, rientjes@google.com, mhocko@suse.com,
+ rdunlap@infradead.org
+References: <20250702055742.102808-1-npache@redhat.com>
+ <20250702055742.102808-15-npache@redhat.com>
+From: Baolin Wang <baolin.wang@linux.alibaba.com>
+In-Reply-To: <20250702055742.102808-15-npache@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Wed, Jul 02, 2025 at 03:05:06PM +0200, Alexandre Ghiti wrote:
-> Hi Yao,
-> 
-> On 7/2/25 12:50, Yao Zi wrote:
-> > On Tue, Jul 01, 2025 at 02:27:32PM +0200, Alexandre Ghiti wrote:
-> > > Hi Yao,
-> > > 
-> > > On 7/1/25 08:41, Yao Zi wrote:
-> > > > Linux v6.16 built with dynamic ftrace randomly oops or triggers
-> > > > ftrace_bug() on Sophgo SG2042 when booting systemd-based userspace,
-> > ...
-> > 
-> > > > Not sure either reverting the commits or fixing them up is a better
-> > > > idea, but anyway the fatal first issue shouidn't go into the stable
-> > > > release.
-> > > Let's fix this, we were expecting issues with dynamic ftrace :)
-> > > 
-> > > So the following diff fixes all the issues you mentioned (not the first
-> > > crash though, I'll let you test and see if it works better, I don't have
-> > > this board):
-> > Thanks for the fix! I've tested it with both QEMU and SG2042, it does
-> > fix the lockdep failures as well as the boot time crash on SG2042. The
-> > boot-time crash is caused by the race so will disappear as long as we
-> > fix the race.
-> > 
-> > > diff --git a/arch/riscv/kernel/ftrace.c b/arch/riscv/kernel/ftrace.c
-> > > index 4c6c24380cfd9..97ced537aa1e0 100644
-> > > --- a/arch/riscv/kernel/ftrace.c
-> > > +++ b/arch/riscv/kernel/ftrace.c
-> > > @@ -14,6 +14,16 @@
-> > >   #include <asm/text-patching.h>
-> > > 
-> > >   #ifdef CONFIG_DYNAMIC_FTRACE
-> > > +void ftrace_arch_code_modify_prepare(void)
-> > > +{
-> > > +       mutex_lock(&text_mutex);
-> > > +}
-> > > +
-> > > +void ftrace_arch_code_modify_post_process(void)
-> > > +{
-> > > +       mutex_unlock(&text_mutex);
-> > > +}
-> > > +
-> > >   unsigned long ftrace_call_adjust(unsigned long addr)
-> > >   {
-> > >          if (IS_ENABLED(CONFIG_DYNAMIC_FTRACE_WITH_CALL_OPS))
-> > > @@ -29,10 +39,8 @@ unsigned long arch_ftrace_get_symaddr(unsigned long
-> > > fentry_ip)
-> > > 
-> > >   void arch_ftrace_update_code(int command)
-> > >   {
-> > > -       mutex_lock(&text_mutex);
-> > >          command |= FTRACE_MAY_SLEEP;
-> > >          ftrace_modify_all_code(command);
-> > > -       mutex_unlock(&text_mutex);
-> > >          flush_icache_all();
-> > >   }
-> > > 
-> > > @@ -149,16 +157,17 @@ int ftrace_init_nop(struct module *mod, struct
-> > > dyn_ftrace *rec)
-> > >          unsigned int nops[2], offset;
-> > >          int ret;
-> > > 
-> > > +       mutex_lock(&text_mutex);
-> > Besides using the guard API, could we swap the order between
-> > ftrace_rec_set_nop_ops() and calculation of the nops array? This shrinks
-> > the critical region a little.
-> 
-> 
-> If you don't mind, I won't, I don't like initializing stuff which could
-> never be used in case of error.
 
-Yes, I don't mind it.
 
+On 2025/7/2 13:57, Nico Pache wrote:
+> With mTHP support inplace, let add the per-order mTHP stats for
+> exceeding NONE, SWAP, and SHARED.
 > 
-> > 
-> > With or without the change, here's my tag,
-> > 
-> > Tested-by: Yao Zi <ziyao@disroot.org>
-> > 
-> > and also
-> > 
-> > Reported-by: Han Gao <rabenda.cn@gmail.com>
-> > Reported-by: Vivian Wang <wangruikang@iscas.ac.cn>
-> > 
-> > for their first-hand report of boot-time crash and analysis for the
-> > first lock issue.
+> Signed-off-by: Nico Pache <npache@redhat.com>
+> ---
+>   include/linux/huge_mm.h |  3 +++
+>   mm/huge_memory.c        |  7 +++++++
+>   mm/khugepaged.c         | 15 ++++++++++++---
+>   3 files changed, 22 insertions(+), 3 deletions(-)
 > 
-> 
-> I'll add all those tags in the patch I'll send today (or tomorrow if the CI
-> is slow).
+> diff --git a/include/linux/huge_mm.h b/include/linux/huge_mm.h
+> index a6ea89fdaee6..6034b4c9dae5 100644
+> --- a/include/linux/huge_mm.h
+> +++ b/include/linux/huge_mm.h
+> @@ -141,6 +141,9 @@ enum mthp_stat_item {
+>   	MTHP_STAT_SPLIT_DEFERRED,
+>   	MTHP_STAT_NR_ANON,
+>   	MTHP_STAT_NR_ANON_PARTIALLY_MAPPED,
+> +	MTHP_STAT_COLLAPSE_EXCEED_SWAP,
 
-Is there any update about the fix patch? It'll be nice to get the
-problem fixed soon.
+This stat seems never used.
 
-> Thanks again for the great bug report, really appreciated.
-> 
-> Alex
+> +	MTHP_STAT_COLLAPSE_EXCEED_NONE,
+> +	MTHP_STAT_COLLAPSE_EXCEED_SHARED,
+>   	__MTHP_STAT_COUNT
+>   };
 
-Best regards,
-Yao Zi
+Please also update the 'Documentation/admin-guide/mm/transhuge.rst' for 
+these new statistics.
+
+>   
+> diff --git a/mm/huge_memory.c b/mm/huge_memory.c
+> index 69777a35e722..3eb1c34be601 100644
+> --- a/mm/huge_memory.c
+> +++ b/mm/huge_memory.c
+> @@ -632,6 +632,10 @@ DEFINE_MTHP_STAT_ATTR(split_failed, MTHP_STAT_SPLIT_FAILED);
+>   DEFINE_MTHP_STAT_ATTR(split_deferred, MTHP_STAT_SPLIT_DEFERRED);
+>   DEFINE_MTHP_STAT_ATTR(nr_anon, MTHP_STAT_NR_ANON);
+>   DEFINE_MTHP_STAT_ATTR(nr_anon_partially_mapped, MTHP_STAT_NR_ANON_PARTIALLY_MAPPED);
+> +DEFINE_MTHP_STAT_ATTR(collapse_exceed_swap_pte, MTHP_STAT_COLLAPSE_EXCEED_SWAP);
+> +DEFINE_MTHP_STAT_ATTR(collapse_exceed_none_pte, MTHP_STAT_COLLAPSE_EXCEED_NONE);
+> +DEFINE_MTHP_STAT_ATTR(collapse_exceed_shared_pte, MTHP_STAT_COLLAPSE_EXCEED_SHARED);
+> +
+>   
+>   static struct attribute *anon_stats_attrs[] = {
+>   	&anon_fault_alloc_attr.attr,
+> @@ -648,6 +652,9 @@ static struct attribute *anon_stats_attrs[] = {
+>   	&split_deferred_attr.attr,
+>   	&nr_anon_attr.attr,
+>   	&nr_anon_partially_mapped_attr.attr,
+> +	&collapse_exceed_swap_pte_attr.attr,
+> +	&collapse_exceed_none_pte_attr.attr,
+> +	&collapse_exceed_shared_pte_attr.attr,
+>   	NULL,
+>   };
+>   
+> diff --git a/mm/khugepaged.c b/mm/khugepaged.c
+> index 2c0962637c34..636b84bf1ca1 100644
+> --- a/mm/khugepaged.c
+> +++ b/mm/khugepaged.c
+> @@ -594,7 +594,10 @@ static int __collapse_huge_page_isolate(struct vm_area_struct *vma,
+>   				continue;
+>   			} else {
+>   				result = SCAN_EXCEED_NONE_PTE;
+> -				count_vm_event(THP_SCAN_EXCEED_NONE_PTE);
+> +				if (order == HPAGE_PMD_ORDER)
+> +					count_vm_event(THP_SCAN_EXCEED_NONE_PTE);
+> +				else
+> +					count_mthp_stat(order, MTHP_STAT_COLLAPSE_EXCEED_NONE);
+>   				goto out;
+>   			}
+>   		}
+> @@ -623,8 +626,14 @@ static int __collapse_huge_page_isolate(struct vm_area_struct *vma,
+>   		/* See khugepaged_scan_pmd(). */
+>   		if (folio_maybe_mapped_shared(folio)) {
+>   			++shared;
+> -			if (order != HPAGE_PMD_ORDER || (cc->is_khugepaged &&
+> -			    shared > khugepaged_max_ptes_shared)) {
+> +			if (order != HPAGE_PMD_ORDER) {
+> +				result = SCAN_EXCEED_SHARED_PTE;
+> +				count_mthp_stat(order, MTHP_STAT_COLLAPSE_EXCEED_SHARED);
+> +				goto out;
+> +			}
+> +
+> +			if (cc->is_khugepaged &&
+> +				shared > khugepaged_max_ptes_shared) {
+>   				result = SCAN_EXCEED_SHARED_PTE;
+>   				count_vm_event(THP_SCAN_EXCEED_SHARED_PTE);
+>   				goto out;
+
