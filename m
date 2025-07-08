@@ -1,66 +1,65 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4856801;
-	Tue,  8 Jul 2025 12:06:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4712A17A2E0
+	for <linux-trace-kernel@vger.kernel.org>; Tue,  8 Jul 2025 12:54:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751976414; cv=none; b=JcDMSwa2X93EMu/uX4v49TWSRaqzzHWtvX4MG+AefqrssbC7r6OCfqRgL6d9ZnNeWwcf/02szdnBBxRws7Ip4W/mmdDXmwtNLewTfh15ON9p4heF65TM37X0xw45HUDh7WEbwCNdV4z545bYxe5LzjdOuNcXSDOxygrEOrxgtK4=
+	t=1751979265; cv=none; b=WLCFGIH+PW9N/6g6lYHaiyMc6JbGW5btFnkB7zgi8DWjIOch+rMJc5RQLcpi/fVkzGjpq0Q3P+2HVZiGxFLBAxi0NAYH92GpPi6346U/DW/5J6mZSZLnnpjzWAlex5aITWiFpJAUhBHqepidflNf3eG3CTl3buiav3gm7hu3pN0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751976414; c=relaxed/simple;
-	bh=Kp+7+tPAvccy71FanvJSzbOLd0z4kN89DqWYezw1OYU=;
+	s=arc-20240116; t=1751979265; c=relaxed/simple;
+	bh=gCvRXp5IUoejm+SeREkfPCa6p5ZAtiPS7x9Pu01lKpw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=L+Pklfw6CURlFJVa0qebXMuEKLNZCq7/6j2mYp+H2XGX4kTCdXCEyNy2eyDK2HswW5B6i14m0dQNKBhfFy77/qXrsvpPzZTv7gAuK02Y9lWjCbSGVnsz1lnoSP5pirzJcdn7yLGtmwY8PasmiRxeaSJsB5Un6TsXo2/UBcaA+QA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=s4Ol3iwJ; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=BnkZcFL6WCpQojE/3izexGkA56okvXvLzRTlABa6pMlnEZwdiJuF0+LJpDvCemWt3ATP3I/0WyHbu02GJDInzBiq9sft3dImyvGB/d8n7pTC4AfB+3Vj/Jpb0W4PEyqEO4kWXlhgymrlniFX7/oSecaqdUCJ/6LzRvTes+ElRRo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=CqVdjSuZ; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="s4Ol3iwJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0BD93C4CEED;
-	Tue,  8 Jul 2025 12:06:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751976413;
-	bh=Kp+7+tPAvccy71FanvJSzbOLd0z4kN89DqWYezw1OYU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=s4Ol3iwJuZ3bPifC90ngIr53J9DwqfI6SbJ5ng6mhsvmmhKJUSP01KISqF+xudx5r
-	 OwNqQVnrJ4kgc1lmi+fQdvA0puZRnmrNIscNKhk5x+qQ848zPKeKACjmQZlA8St0fV
-	 Wh5vNh7wUnm4qxPx7+pAli1/51YHFmtJSZMusuSZuTl+gmd4JhiDkCdnWCI/H5I1ks
-	 daIfLQQN7QeyVcgmSHDG4twzeXB/Ep5gXJRK1YtdaaDN50mReflr3MzMrYthKL7TRa
-	 VEK8qO2fuRa1AUaPB9bVOUF38SjH0Q+6EnxeFRNWiQ3OyIyapOpfsk4PRDL5JY2WCt
-	 ethkWrczJo/aQ==
-Date: Tue, 8 Jul 2025 15:06:47 +0300
-From: Leon Romanovsky <leon@kernel.org>
-To: Marek Szyprowski <m.szyprowski@samsung.com>
-Cc: Christoph Hellwig <hch@lst.de>, Jonathan Corbet <corbet@lwn.net>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Robin Murphy <robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>,
-	Will Deacon <will@kernel.org>,
-	"Michael S. Tsirkin" <mst@redhat.com>,
-	Jason Wang <jasowang@redhat.com>,
-	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
-	Eugenio =?iso-8859-1?Q?P=E9rez?= <eperezma@redhat.com>,
-	Alexander Potapenko <glider@google.com>,
-	Marco Elver <elver@google.com>, Dmitry Vyukov <dvyukov@google.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	=?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org, iommu@lists.linux.dev,
-	virtualization@lists.linux.dev, kasan-dev@googlegroups.com,
-	linux-trace-kernel@vger.kernel.org, linux-mm@kvack.org,
-	Jason Gunthorpe <jgg@ziepe.ca>
-Subject: Re: [PATCH 0/8] dma-mapping: migrate to physical address-based API
-Message-ID: <20250708120647.GG592765@unreal>
-References: <CGME20250625131920eucas1p271b196cde042bd39ac08fb12beff5baf@eucas1p2.samsung.com>
- <cover.1750854543.git.leon@kernel.org>
- <35df6f2a-0010-41fe-b490-f52693fe4778@samsung.com>
- <20250627170213.GL17401@unreal>
- <20250630133839.GA26981@lst.de>
- <69b177dc-c149-40d3-bbde-3f6bad0efd0e@samsung.com>
- <20250708110007.GF592765@unreal>
- <261f2417-78a9-45b8-bcec-7e36421a243c@samsung.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CqVdjSuZ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1751979262;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=VsRZnLqc6bCbMesWPscz6CEY2RWuz7oE/SD/UpR8kA0=;
+	b=CqVdjSuZTkSzOhvuRo9DDuvvEewRniHB8NKAz1pnT4CsmTFgvu+FNe/W9UdtcMa+pRay4w
+	kEcyflcdCe4ThkUeYqEXdywQyxjAl5W36KcjdD6TKLcTeA1OYoEYhsXi5SVTIuM+gFfzr9
+	BgYJj38efpQTXukpO9cB4T9OJ3ndlWo=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-348-5BSFM9d_Nnq71JBThATDDQ-1; Tue,
+ 08 Jul 2025 08:54:19 -0400
+X-MC-Unique: 5BSFM9d_Nnq71JBThATDDQ-1
+X-Mimecast-MFC-AGG-ID: 5BSFM9d_Nnq71JBThATDDQ_1751979257
+Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 06A751800290;
+	Tue,  8 Jul 2025 12:54:16 +0000 (UTC)
+Received: from wcosta-thinkpadt14gen4.rmtbr.csb (unknown [10.22.81.8])
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 0634530001B1;
+	Tue,  8 Jul 2025 12:54:08 +0000 (UTC)
+Date: Tue, 8 Jul 2025 09:54:06 -0300
+From: Wander Lairson Costa <wander@redhat.com>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Ingo Molnar <mingo@redhat.com>, Juri Lelli <juri.lelli@redhat.com>, 
+	Vincent Guittot <vincent.guittot@linaro.org>, Dietmar Eggemann <dietmar.eggemann@arm.com>, 
+	Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>, 
+	Valentin Schneider <vschneid@redhat.com>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, David Woodhouse <dwmw@amazon.co.uk>, 
+	Thomas Gleixner <tglx@linutronix.de>, Boqun Feng <boqun.feng@gmail.com>, 
+	open list <linux-kernel@vger.kernel.org>, "open list:TRACING" <linux-trace-kernel@vger.kernel.org>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Clark Williams <williams@redhat.com>, 
+	Gabriele Monaco <gmonaco@redhat.com>
+Subject: Re: [PATCH v3 2/2] tracing/preemptirq: Optimize
+ preempt_disable/enable() tracepoint overhead
+Message-ID: <33jax5mmu7mdt6ph5t5bb7fvprbypxhefrvgrc2ru4p2dpqldg@d6af6oc6442r>
+References: <20250704170748.97632-1-wander@redhat.com>
+ <20250704170748.97632-3-wander@redhat.com>
+ <20250707112003.GY1613376@noisy.programming.kicks-ass.net>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -70,48 +69,39 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <261f2417-78a9-45b8-bcec-7e36421a243c@samsung.com>
+In-Reply-To: <20250707112003.GY1613376@noisy.programming.kicks-ass.net>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
 
-On Tue, Jul 08, 2025 at 01:45:20PM +0200, Marek Szyprowski wrote:
-> On 08.07.2025 13:00, Leon Romanovsky wrote:
-> > On Tue, Jul 08, 2025 at 12:27:09PM +0200, Marek Szyprowski wrote:
-> >> On 30.06.2025 15:38, Christoph Hellwig wrote:
-> >>> On Fri, Jun 27, 2025 at 08:02:13PM +0300, Leon Romanovsky wrote:
-> >>>>> Thanks for this rework! I assume that the next step is to add map_phys
-> >>>>> callback also to the dma_map_ops and teach various dma-mapping providers
-> >>>>> to use it to avoid more phys-to-page-to-phys conversions.
-> >>>> Probably Christoph will say yes, however I personally don't see any
-> >>>> benefit in this. Maybe I wrong here, but all existing .map_page()
-> >>>> implementation platforms don't support p2p anyway. They won't benefit
-> >>>> from this such conversion.
-> >>> I think that conversion should eventually happen, and rather sooner than
-> >>> later.
-> >> Agreed.
-> >>
-> >> Applied patches 1-7 to my dma-mapping-next branch. Let me know if one
-> >> needs a stable branch with it.
-> > Thanks a lot, I don't think that stable branch is needed. Realistically
-> > speaking, my VFIO DMA work won't be merged this cycle, We are in -rc5,
-> > it is complete rewrite from RFC version and touches pci-p2p code (to
-> > remove dependency on struct page) in addition to VFIO, so it will take
-> > time.
-> >
-> > Regarding, last patch (hmm), it will be great if you can take it.
-> > We didn't touch anything in hmm.c this cycle and have no plans to send PR.
-> > It can safely go through your tree.
+O Mon, Jul 07, 2025 at 01:20:03PM +0200, Peter Zijlstra wrote:
+> On Fri, Jul 04, 2025 at 02:07:43PM -0300, Wander Lairson Costa wrote:
+> > Similar to the IRQ tracepoint, the preempt tracepoints are typically
+> > disabled in production systems due to the significant overhead they
+> > introduce even when not in use.
+> > 
+> > The overhead primarily comes from two sources: First, when tracepoints
+> > are compiled into the kernel, preempt_count_add() and preempt_count_sub()
+> > become external function calls rather than inlined operations. Second,
+> > these functions perform unnecessary preempt_count() checks even when the
+> > tracepoint itself is disabled.
+> > 
+> > This optimization introduces an early check of the tracepoint static key,
+> > which allows us to skip both the function call overhead and the redundant
+> > preempt_count() checks when tracing is disabled. The change maintains all
+> > existing functionality when tracing is active while significantly
+> > reducing overhead for the common case where tracing is inactive.
+> > 
 > 
-> Okay, then I would like to get an explicit ack from Jérôme for this.
+> This one in particular I worry about the code gen impact. There are a
+> *LOT* of preempt_{dis,en}able() sites in the kernel and now they all get
+> this static branch and call crud on.
+> 
+> We spend significant effort to make preempt_{dis,en}able() as small as
+> possible.
+> 
 
-Jerome is not active in HMM world for a long time already.
-HMM tree is managed by us (RDMA) https://git.kernel.org/pub/scm/linux/kernel/git/rdma/rdma.git/log/?h=hmm
-➜  kernel git:(m/dmabuf-vfio) git log --merges mm/hmm.c
-...
-Pull HMM updates from Jason Gunthorpe:
-...
+Thank you for the feedback, it's much appreciated. I just want to make sure
+I'm on the right track. If I understand your concern correctly, it revolves
+around the overhead this patch might introduce—specifically to the binary
+size and its effect on the iCache—when the kernel is built with preempt
+tracepoints enabled. Is that an accurate summary?
 
-https://web.git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?id=58ba80c4740212c29a1cf9b48f588e60a7612209
-+hmm		git	git://git.kernel.org/pub/scm/linux/kernel/git/rdma/rdma.git#hmm
-
-We just never bothered to reflect current situation in MAINTAINERS file.
-
-Thanks
