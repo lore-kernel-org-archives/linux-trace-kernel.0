@@ -1,134 +1,89 @@
-Received: from mailout1.w1.samsung.com (mailout1.w1.samsung.com [210.118.77.11])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7936E1E5B91
-	for <linux-trace-kernel@vger.kernel.org>; Tue,  8 Jul 2025 12:56:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E55392E03E8
+	for <linux-trace-kernel@vger.kernel.org>; Tue,  8 Jul 2025 13:10:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751979392; cv=none; b=Ncz4Oscp7z1E+Bo+c4kIjKun+62FA6aQzNWlTukSjnEwuu8SCJ+ZL0i81gUkbV0nN+gy66F1DWhOmhewiiOxreOjo8ODCDqY5DT5n01qPesolpcVlPacv0WJ+ncMpqKEjpJVdMCvXmD2WO46RunxyBbOu603CUJBfCH7rGkDpv8=
+	t=1751980206; cv=none; b=asomIhtkHNm6s6/NVwyQau8WHe5bbe6X1paQuYuz1E2YzBgHgeFm0mU7DoDgkl9vBAzY4IAVkllmr7u9A8RkT63lqxhO3t++I1+lxjgGEY5H8L207uZhnoqMsGUTPTk6w8JvIxNDx4Oz0EKgSnwEniW6ajnCW/o3BJXI1mmh3F8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751979392; c=relaxed/simple;
-	bh=tJRA7m1/e900tlxVd4Za+3wH7OTzUtyyJem1XRv1vJ8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:From:In-Reply-To:
-	 Content-Type:References; b=lFDYZPYqi7VDWP4rn+xcQ5ajdb1tQ3Q2s3q5sCH1nMm3plPpGucPi8W5BtMAiH1iKr8pC/XyNfaO0qVq/Q9508aKp+8BGXqB0UkipzboMKTrv+5fV/Vz5P5uLjaR5z8VpdPtlATm3olNmkTa5ofGZaJU9nwaSrD6grP6Ssss4/E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=rUMpLiKt; arc=none smtp.client-ip=210.118.77.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1751980206; c=relaxed/simple;
+	bh=kM0UdzLblDdqAakOw++JKFWNdpIs5ahNdvhftauQoIY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=A4IlEORqGfaM2ThyWJOycQiI7P4dsKNJNUQ7htOCha/naNfskKSESJIzI0+6zMOQhHDRxhHQYZt2SxPeDzLkExBiGwDi4uBDp7x8hyfvUtd16pTTQL7dbcyJxqTSZ6xS5pwvxY992icP7c1FKcGYW4wAEbeM+nQO+Jrgl8sPy9w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=AcomI83+; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="rUMpLiKt"
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-	by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20250708125626euoutp01df7e3daa526b94834efe641554ef6ef8~QR-hLylh-0770307703euoutp01D
-	for <linux-trace-kernel@vger.kernel.org>; Tue,  8 Jul 2025 12:56:26 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20250708125626euoutp01df7e3daa526b94834efe641554ef6ef8~QR-hLylh-0770307703euoutp01D
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1751979386;
-	bh=7/XLYR0OqGT6q8wsQL9awTM8RahowyCK2kF3Lml5n78=;
-	h=Date:Subject:To:Cc:From:In-Reply-To:References:From;
-	b=rUMpLiKtylansmwZEOTSLIDw3e88apapi9cZUeM+VwB6dnZwW74YiawcqeB7aNHsz
-	 phmldqGZGmgcE5mbHZFMvy+/ua/qmdnZrQIXXdjq/6DIcaz3yi5eWLpP0dS+1ew2NU
-	 O2DMyf6ZjkU0E5KGbps8p5YBy+HTdwiEMA3XvUgM=
-Received: from eusmtip2.samsung.com (unknown [203.254.199.222]) by
-	eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-	20250708125626eucas1p10fea4e2440d7273510ca606b8c879240~QR-go19vo0583905839eucas1p1z;
-	Tue,  8 Jul 2025 12:56:26 +0000 (GMT)
-Received: from [106.210.134.192] (unknown [106.210.134.192]) by
-	eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-	20250708125622eusmtip2e8d499202aebc1a18605d526cd72bbdc~QR-dBQdu70489204892eusmtip2-;
-	Tue,  8 Jul 2025 12:56:22 +0000 (GMT)
-Message-ID: <39d43309-9f34-48bc-a9ad-108c607ba175@samsung.com>
-Date: Tue, 8 Jul 2025 14:56:21 +0200
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AcomI83+"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1751980203;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=NoHYDFHcFAzofPpYOAys2AY84RdkQXBE1/kxrLhMTeg=;
+	b=AcomI83+1ov0yb8+IzIiF8ueIp7U3KQ/gd4ChiHQ+WoOwmfx5PHnnLPLVw+ky2T4hD70nK
+	kk43bXOKQkio9w4e3OkTokNui3y6MGvXgc62rPqaAxobdZl5gA4BWe3zmcOg46pxDsL108
+	1jAAJLG0DKTcnyTqRjkhdHwsROQnAQ0=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-138-YL5rmCQvOfuXsZ7EjdZuPg-1; Tue,
+ 08 Jul 2025 09:09:58 -0400
+X-MC-Unique: YL5rmCQvOfuXsZ7EjdZuPg-1
+X-Mimecast-MFC-AGG-ID: YL5rmCQvOfuXsZ7EjdZuPg_1751980196
+Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id DAD0B180028D;
+	Tue,  8 Jul 2025 13:09:55 +0000 (UTC)
+Received: from wcosta-thinkpadt14gen4.rmtbr.csb (unknown [10.22.81.8])
+	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id AA35419560AD;
+	Tue,  8 Jul 2025 13:09:46 +0000 (UTC)
+Date: Tue, 8 Jul 2025 10:09:45 -0300
+From: Wander Lairson Costa <wander@redhat.com>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Ingo Molnar <mingo@redhat.com>, Juri Lelli <juri.lelli@redhat.com>, 
+	Vincent Guittot <vincent.guittot@linaro.org>, Dietmar Eggemann <dietmar.eggemann@arm.com>, 
+	Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>, 
+	Valentin Schneider <vschneid@redhat.com>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, David Woodhouse <dwmw@amazon.co.uk>, 
+	Thomas Gleixner <tglx@linutronix.de>, Boqun Feng <boqun.feng@gmail.com>, 
+	open list <linux-kernel@vger.kernel.org>, "open list:TRACING" <linux-trace-kernel@vger.kernel.org>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Clark Williams <williams@redhat.com>, 
+	Gabriele Monaco <gmonaco@redhat.com>
+Subject: Re: [PATCH v3 2/2] tracing/preemptirq: Optimize
+ preempt_disable/enable() tracepoint overhead
+Message-ID: <ppdduzdqnd3kwourcmocfi35i7wcbuagmzqgtgmyr55aps774t@37wucnoii7o3>
+References: <20250704170748.97632-1-wander@redhat.com>
+ <20250704170748.97632-3-wander@redhat.com>
+ <20250707112622.GZ1613376@noisy.programming.kicks-ass.net>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/8] dma-mapping: migrate to physical address-based API
-To: Leon Romanovsky <leon@kernel.org>
-Cc: Christoph Hellwig <hch@lst.de>, Jonathan Corbet <corbet@lwn.net>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>, Michael Ellerman
-	<mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>, Christophe Leroy
-	<christophe.leroy@csgroup.eu>, Robin Murphy <robin.murphy@arm.com>, Joerg
-	Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>, "Michael S.
-	Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>, Xuan Zhuo
- <xuanzhuo@linux.alibaba.com>, =?UTF-8?Q?Eugenio_P=C3=A9rez?=
- <eperezma@redhat.com>, Alexander Potapenko <glider@google.com>, Marco Elver
- <elver@google.com>, Dmitry Vyukov <dvyukov@google.com>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>, Andrew Morton
- <akpm@linux-foundation.org>, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
- iommu@lists.linux.dev, virtualization@lists.linux.dev,
- kasan-dev@googlegroups.com, linux-trace-kernel@vger.kernel.org,
- linux-mm@kvack.org, Jason Gunthorpe <jgg@ziepe.ca>
-Content-Language: en-US
-From: Marek Szyprowski <m.szyprowski@samsung.com>
-In-Reply-To: <20250708120647.GG592765@unreal>
-Content-Transfer-Encoding: 8bit
-X-CMS-MailID: 20250708125626eucas1p10fea4e2440d7273510ca606b8c879240
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20250625131920eucas1p271b196cde042bd39ac08fb12beff5baf
-X-EPHeader: CA
-X-CMS-RootMailID: 20250625131920eucas1p271b196cde042bd39ac08fb12beff5baf
-References: <CGME20250625131920eucas1p271b196cde042bd39ac08fb12beff5baf@eucas1p2.samsung.com>
-	<cover.1750854543.git.leon@kernel.org>
-	<35df6f2a-0010-41fe-b490-f52693fe4778@samsung.com>
-	<20250627170213.GL17401@unreal> <20250630133839.GA26981@lst.de>
-	<69b177dc-c149-40d3-bbde-3f6bad0efd0e@samsung.com>
-	<20250708110007.GF592765@unreal>
-	<261f2417-78a9-45b8-bcec-7e36421a243c@samsung.com>
-	<20250708120647.GG592765@unreal>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250707112622.GZ1613376@noisy.programming.kicks-ass.net>
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
 
-On 08.07.2025 14:06, Leon Romanovsky wrote:
-> On Tue, Jul 08, 2025 at 01:45:20PM +0200, Marek Szyprowski wrote:
->> On 08.07.2025 13:00, Leon Romanovsky wrote:
->>> On Tue, Jul 08, 2025 at 12:27:09PM +0200, Marek Szyprowski wrote:
->>>> On 30.06.2025 15:38, Christoph Hellwig wrote:
->>>>> On Fri, Jun 27, 2025 at 08:02:13PM +0300, Leon Romanovsky wrote:
->>>>>>> Thanks for this rework! I assume that the next step is to add map_phys
->>>>>>> callback also to the dma_map_ops and teach various dma-mapping providers
->>>>>>> to use it to avoid more phys-to-page-to-phys conversions.
->>>>>> Probably Christoph will say yes, however I personally don't see any
->>>>>> benefit in this. Maybe I wrong here, but all existing .map_page()
->>>>>> implementation platforms don't support p2p anyway. They won't benefit
->>>>>> from this such conversion.
->>>>> I think that conversion should eventually happen, and rather sooner than
->>>>> later.
->>>> Agreed.
->>>>
->>>> Applied patches 1-7 to my dma-mapping-next branch. Let me know if one
->>>> needs a stable branch with it.
->>> Thanks a lot, I don't think that stable branch is needed. Realistically
->>> speaking, my VFIO DMA work won't be merged this cycle, We are in -rc5,
->>> it is complete rewrite from RFC version and touches pci-p2p code (to
->>> remove dependency on struct page) in addition to VFIO, so it will take
->>> time.
->>>
->>> Regarding, last patch (hmm), it will be great if you can take it.
->>> We didn't touch anything in hmm.c this cycle and have no plans to send PR.
->>> It can safely go through your tree.
->> Okay, then I would like to get an explicit ack from Jérôme for this.
-> Jerome is not active in HMM world for a long time already.
-> HMM tree is managed by us (RDMA) https://git.kernel.org/pub/scm/linux/kernel/git/rdma/rdma.git/log/?h=hmm
-> ➜  kernel git:(m/dmabuf-vfio) git log --merges mm/hmm.c
-> ...
-> Pull HMM updates from Jason Gunthorpe:
-> ...
->
-> https://web.git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?id=58ba80c4740212c29a1cf9b48f588e60a7612209
-> +hmm		git	git://git.kernel.org/pub/scm/linux/kernel/git/rdma/rdma.git#hmm
->
-> We just never bothered to reflect current situation in MAINTAINERS file.
+On Mon, Jul 07, 2025 at 01:26:22PM +0200, Peter Zijlstra wrote:
+> On Fri, Jul 04, 2025 at 02:07:43PM -0300, Wander Lairson Costa wrote:
+> > +#if defined(CONFIG_DEBUG_PREEMPT) || defined(CONFIG_TRACE_PREEMPT_TOGGLE)
+> > +#define preempt_count_dec_and_test() \
+> > +	({ preempt_count_sub(1); should_resched(0); })
+> > +#endif
+> 
+> Also this is terrible. Surely you can do better.
+> 
 
-Maybe this is the time to update it :)
+Thank you for pointing this out. I'm not sure I've fully understood the
+concern here. My understanding was that this logic was pre-existing and
+my patch only reorganized it.
 
-I was just a bit confused that no-one commented the HMM patch, but if 
-You maintain it, then this is okay.
-
-Best regards
--- 
-Marek Szyprowski, PhD
-Samsung R&D Institute Poland
+I'm clearly missing something. Could you please elaborate a bit on the
+issue you've spotted?
 
