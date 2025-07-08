@@ -1,219 +1,90 @@
-Received: from mail-pf1-f201.google.com (mail-pf1-f201.google.com [209.85.210.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3045D2DC34A
-	for <linux-trace-kernel@vger.kernel.org>; Tue,  8 Jul 2025 18:37:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC274204096;
+	Tue,  8 Jul 2025 18:47:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751999853; cv=none; b=DarkzVZUiyDyZHdbvjNhBScVKMh/0nifb3XzuHzE3wbxYVnpP70rJKRxjfT+B2X7jsAwZoUkJItbxeO7WqHo7HYLqR4rivYFbc5DNLBrRS8noYTvmpiG5m+5GKfZXzF6idNsjJgdkkyMQtdv3hzufoht1Ducd56rv9oPVM050z0=
+	t=1752000432; cv=none; b=TOgxkElCNMkRFYOC8p1mJ941h6pO0QEgLTdxm99RANNbTxwkqnbM5Iwk/bU3xKmLdjpVUnF2qvQO3Qq9vyc33DXTwvPwimxg46cNIhKAs8l/D37/r/8Ko3XdvgtMGu99hA9PRr2I505T35D75QJnvV+SQrHyF2xYfSls0PnHbzE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751999853; c=relaxed/simple;
-	bh=vg+uQCJ+lSN99jIomcmUQZbwXNmXTfe07jNsopO6k20=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=DkFLK8KESSoLL6EhIZHqDURYityECZIGgir1QPSHCn27aJrnKIggpEIDr9QfLH9Eqoy69ZVEtt4+U683SnqIVQUJum2fpjoKDnRkGATuZ444AXtIahWGe6gowIU3SItE/mA0tqBAIPSADY+krgBIY27O64vdmiwUGOT0N7724Hw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=JzJzAK+h; arc=none smtp.client-ip=209.85.210.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1752000432; c=relaxed/simple;
+	bh=4+18+jchT43E/3fu8il7fe0GWHCQbDcpPrVhJA7oKtg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=aKPaL2lMAhhgl1dBDirpVpLeYuPgQsUbS2sZ5dY/3NgUphTxZNWszQXvgXUsdm0rWej8PFF7/iyRzOvTTJNLwWw8fRSk5Ei3f++JVz/7yugVB00dWMNCBUsXsdbJzj+wQPqIPCE0oqGib1GEGhsZkgg+UUdm4WkQtPBauK2WJf4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=hdDt39ro; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JzJzAK+h"
-Received: by mail-pf1-f201.google.com with SMTP id d2e1a72fcca58-74ad608d60aso3464393b3a.1
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 08 Jul 2025 11:37:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1751999850; x=1752604650; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=yuihDo1m5FyoRrxBA7eIdTW1eQsHNBGooJAzPvs8+c8=;
-        b=JzJzAK+hOjajiXZF2foPPNeEcg8NgJEqFaw4SXnoVwtt0Ow0MQ0Yym5Si4xM5OxKJ7
-         uJAn0hwGne/geNeEqPkBj8iyu7wdQddTjdOiqm79OrNacRCk8suq3s5gig9hTqmcqMOc
-         JEjtcThza8JjMKihIp/QgskQYRuRS+266BXwFjU0u7FTHV67aDkBD85TrQVM2t+I5sZl
-         sVifKdzVCNtabPIkbY01vab2YCX0NXVp0XiaFs4CYylp4LJPzl0TryWQ9VI/bLeGw2ul
-         Yv/M/3kpBi2Wlc6bwQ7Alo+wFYYNO0FloWHprl5ARmoob82Jhhr9xUfuA6/rSGG58VhF
-         qCkQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751999850; x=1752604650;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=yuihDo1m5FyoRrxBA7eIdTW1eQsHNBGooJAzPvs8+c8=;
-        b=QxcFDyodKu3u6DMqNJLrsoBpbFrHEnKYx/zv1CIWQ0zqie6H+LZnqKLFoSIdxj4Vk+
-         MwVEyvFBAE3lGF0I2B5sY23IIu1djikWl5eeqUhhVzX3VN9qGKIteCP06dN3uKNjgc0m
-         nCpYtiakvvU4kUSNA0ZqH8/f2R7Mu7dZVsxfRlgIIfOA1c80v5gLIcgbxrJU+R2wr2Am
-         VMHi9T1VeENQ9IVdnG13oW5mgPj4s+uYtgdzS3r8pmD5qWzs1rp4o6ybAT6ppfIVlLmF
-         IRhhDrYlVYCobJNZS1p7rRUxLPvZ/UC+3yI0B1NhTQUd77Er/qghP+7p0NUivyfzgZ3e
-         eQOg==
-X-Forwarded-Encrypted: i=1; AJvYcCX3LdSVcFX3OOY49YQuxFHPZdR76XSYo7abd8q9Y2KDeMp2Eiy3b7KISXW1ALwW8e3ysWyRGxwM+WPkxxg0dfX4Iik=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxjhX4FC9kbc6ts47iacuMe8YI4APhhkzJxW74rhxjerSscgufI
-	jOM4zbjVw9R28rmeni3F1aAAzuv/sA0KXd8hlUTAPHfQeoCbhX5+dS16De3ZUdZefiHlwJnyXm9
-	317t0vw==
-X-Google-Smtp-Source: AGHT+IE0jOeDJGjqyFwQLwFs8IMKVlBUzhMwAfpeufc6A4eZa0THyR4cN5PjdVCjvg8e5KCGp+se29EjQ+4=
-X-Received: from pfbjw38.prod.google.com ([2002:a05:6a00:92a6:b0:74c:ee73:4859])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:856:b0:748:e1e4:71e7
- with SMTP id d2e1a72fcca58-74ea498dc91mr157508b3a.23.1751999850363; Tue, 08
- Jul 2025 11:37:30 -0700 (PDT)
-Date: Tue, 8 Jul 2025 11:37:28 -0700
-In-Reply-To: <20250612214849.3950094-9-sohil.mehta@intel.com>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="hdDt39ro"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=ZQneKyvkXDsqYAiLGke2KZOCslgy/Tt7BsquQZrhyG4=; b=hdDt39roxDX2oEb+qSiSIGnL0G
+	WSGfjWKxmYVVy4gH05igS98k0uNlhPbx1a3fb+JPGM65aUnmoi7ZyjKehLPvz5z4wKxP5bfEBOFam
+	6HFrx50yefbNRJ4sCe0+HvDfOPFuDzgYq4Hz1wshAyoxnfSdw22r7wktbOPB3kd9rIILh7ifPO6zG
+	XDh5D9p/r74hJOBy3MLxQWjLl3eApAN0yEfIlB0Tt+GLhAH56yBnxp9k64GAE6erCaybHPz+T77+3
+	Qo2Htt1ooFB92IzwufPAfor3OYTCGYZew49VhbeUzvwlpMr0fkzlzVPjLC7I9hVSzkxl8B3Yg1oSZ
+	YTFIiNpg==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uZDLG-00000008mJf-1OYp;
+	Tue, 08 Jul 2025 18:46:58 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 24DCB300125; Tue, 08 Jul 2025 20:46:57 +0200 (CEST)
+Date: Tue, 8 Jul 2025 20:46:56 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Wander Lairson Costa <wander@redhat.com>
+Cc: Ingo Molnar <mingo@redhat.com>, Juri Lelli <juri.lelli@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+	Valentin Schneider <vschneid@redhat.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	David Woodhouse <dwmw@amazon.co.uk>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	open list <linux-kernel@vger.kernel.org>,
+	"open list:TRACING" <linux-trace-kernel@vger.kernel.org>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Clark Williams <williams@redhat.com>,
+	Gabriele Monaco <gmonaco@redhat.com>
+Subject: Re: [PATCH v3 2/2] tracing/preemptirq: Optimize
+ preempt_disable/enable() tracepoint overhead
+Message-ID: <20250708184656.GB477119@noisy.programming.kicks-ass.net>
+References: <20250704170748.97632-1-wander@redhat.com>
+ <20250704170748.97632-3-wander@redhat.com>
+ <20250707112622.GZ1613376@noisy.programming.kicks-ass.net>
+ <ppdduzdqnd3kwourcmocfi35i7wcbuagmzqgtgmyr55aps774t@37wucnoii7o3>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250612214849.3950094-1-sohil.mehta@intel.com> <20250612214849.3950094-9-sohil.mehta@intel.com>
-Message-ID: <aG1laKXYu7Uc4Tsb@google.com>
-Subject: Re: [PATCH v7 08/10] x86/nmi: Enable NMI-source for IPIs delivered as NMIs
-From: Sean Christopherson <seanjc@google.com>
-To: Sohil Mehta <sohil.mehta@intel.com>
-Cc: x86@kernel.org, linux-kernel@vger.kernel.org, Xin Li <xin@zytor.com>, 
-	"H . Peter Anvin" <hpa@zytor.com>, Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, 
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	Tony Luck <tony.luck@intel.com>, Zhang Rui <rui.zhang@intel.com>, 
-	Steven Rostedt <rostedt@goodmis.org>, Andrew Cooper <andrew.cooper3@citrix.com>, 
-	"Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>, Jacob Pan <jacob.pan@linux.microsoft.com>, 
-	Andi Kleen <ak@linux.intel.com>, Kai Huang <kai.huang@intel.com>, 
-	Sandipan Das <sandipan.das@amd.com>, linux-perf-users@vger.kernel.org, 
-	linux-edac@vger.kernel.org, kvm@vger.kernel.org, linux-pm@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ppdduzdqnd3kwourcmocfi35i7wcbuagmzqgtgmyr55aps774t@37wucnoii7o3>
 
-On Thu, Jun 12, 2025, Sohil Mehta wrote:
-> With the IPI handling APIs ready to support the new NMI encoding, encode
-> the NMI delivery mode directly with the NMI-source vectors to trigger
-> NMIs.
+On Tue, Jul 08, 2025 at 10:09:45AM -0300, Wander Lairson Costa wrote:
+> On Mon, Jul 07, 2025 at 01:26:22PM +0200, Peter Zijlstra wrote:
+> > On Fri, Jul 04, 2025 at 02:07:43PM -0300, Wander Lairson Costa wrote:
+> > > +#if defined(CONFIG_DEBUG_PREEMPT) || defined(CONFIG_TRACE_PREEMPT_TOGGLE)
+> > > +#define preempt_count_dec_and_test() \
+> > > +	({ preempt_count_sub(1); should_resched(0); })
+> > > +#endif
+> > 
+> > Also this is terrible. Surely you can do better.
+> > 
 > 
-> Move most of the existing NMI-based IPIs to use the new NMI-source
-> vectors, except for the microcode rendezvous NMI and the crash reboot
-> NMI. NMI handling for them is special-cased in exc_nmi() and does not
-> need NMI-source reporting.
+> Thank you for pointing this out. I'm not sure I've fully understood the
+> concern here. My understanding was that this logic was pre-existing and
+> my patch only reorganized it.
 > 
-> However, in the future, it might be useful to assign a source vector to
-> all NMI sources to improve isolation and debuggability.
-> 
-> Originally-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> Suggested-by: Sean Christopherson <seanjc@google.com>
-> Co-developed-by: Xin Li (Intel) <xin@zytor.com>
-> Signed-off-by: Xin Li (Intel) <xin@zytor.com>
-> Signed-off-by: Sohil Mehta <sohil.mehta@intel.com>
-> ---
-> v7: No change.
-> 
-> v6: Include asm/nmi.h to avoid compile errors. (LKP)
-> 
-> v5: Encode APIC_DM_NMI directly with the NMI-source vector.
-> ---
->  arch/x86/include/asm/apic.h      | 8 ++++++++
->  arch/x86/kernel/apic/hw_nmi.c    | 2 +-
->  arch/x86/kernel/cpu/mce/inject.c | 2 +-
->  arch/x86/kernel/kgdb.c           | 2 +-
->  arch/x86/kernel/nmi_selftest.c   | 2 +-
->  arch/x86/kernel/smp.c            | 2 +-
->  6 files changed, 13 insertions(+), 5 deletions(-)
-> 
-> diff --git a/arch/x86/include/asm/apic.h b/arch/x86/include/asm/apic.h
-> index 32cdd81e5e45..5789df1708bd 100644
-> --- a/arch/x86/include/asm/apic.h
-> +++ b/arch/x86/include/asm/apic.h
-> @@ -14,6 +14,7 @@
->  #include <asm/msr.h>
->  #include <asm/hardirq.h>
->  #include <asm/io.h>
-> +#include <asm/nmi.h>
->  #include <asm/posted_intr.h>
->  
->  #define ARCH_APICTIMER_STOPS_ON_C3	1
-> @@ -23,6 +24,13 @@
->  #define APIC_EXTNMI_ALL		1
->  #define APIC_EXTNMI_NONE	2
->  
-> +/* Trigger NMIs with source information */
-> +#define TEST_NMI		(APIC_DM_NMI | NMIS_VECTOR_TEST)
-> +#define SMP_STOP_NMI		(APIC_DM_NMI | NMIS_VECTOR_SMP_STOP)
-> +#define BT_NMI			(APIC_DM_NMI | NMIS_VECTOR_BT)
+> I'm clearly missing something. Could you please elaborate a bit on the
+> issue you've spotted?
 
-s/BT/BACKTRACE?
-
-> +#define KGDB_NMI		(APIC_DM_NMI | NMIS_VECTOR_KGDB)
-> +#define MCE_NMI			(APIC_DM_NMI | NMIS_VECTOR_MCE)
-
-IMO, NMI_xxx reads better, e.g. it's easier to see that code is sending an NMI
-at the call sites.
-
-> +
->  /*
->   * Debugging macros
->   */
-> diff --git a/arch/x86/kernel/apic/hw_nmi.c b/arch/x86/kernel/apic/hw_nmi.c
-> index 4e04f13d2de9..586f4b25feae 100644
-> --- a/arch/x86/kernel/apic/hw_nmi.c
-> +++ b/arch/x86/kernel/apic/hw_nmi.c
-> @@ -33,7 +33,7 @@ u64 hw_nmi_get_sample_period(int watchdog_thresh)
->  #ifdef arch_trigger_cpumask_backtrace
->  static void nmi_raise_cpu_backtrace(cpumask_t *mask)
->  {
-> -	__apic_send_IPI_mask(mask, NMI_VECTOR);
-> +	__apic_send_IPI_mask(mask, BT_NMI);
-
-This patch is buggy.  There are at least two implementations of ->send_IPI_mask()
-that this breaks:
-
-  uv_send_IPI_mask() = > uv_send_IPI_one():
-
-	if (vector == NMI_VECTOR)
-		dmode = APIC_DELIVERY_MODE_NMI;
-	else
-		dmode = APIC_DELIVERY_MODE_FIXED;
-
-
-and xen_send_IPI_mask() => xen_map_vector():
-
-	switch (vector) {
-	case RESCHEDULE_VECTOR:
-		xen_vector = XEN_RESCHEDULE_VECTOR;
-		break;
-	case CALL_FUNCTION_VECTOR:
-		xen_vector = XEN_CALL_FUNCTION_VECTOR;
-		break;
-	case CALL_FUNCTION_SINGLE_VECTOR:
-		xen_vector = XEN_CALL_FUNCTION_SINGLE_VECTOR;
-		break;
-	case IRQ_WORK_VECTOR:
-		xen_vector = XEN_IRQ_WORK_VECTOR;
-		break;
-#ifdef CONFIG_X86_64
-	case NMI_VECTOR:
-	case APIC_DM_NMI: /* Some use that instead of NMI_VECTOR */
-		xen_vector = XEN_NMI_VECTOR;
-		break;
-#endif
-	default:
-		xen_vector = -1;
-		printk(KERN_ERR "xen: vector 0x%x is not implemented\n",
-			vector);
-	}
-
-	return xen_vector;
-
-Looking at all of this again, shoving the NMI source information into the @vector
-is quite brittle.  Nothing forces implementations to handle embedded delivery
-mode information.
-
-One thought would be to pass a small struct (by value), and then provide macros
-to generate the structure for a specific vector.  That provides some amount of
-type safety and should make it a bit harder to pass in garbage, without making
-the callers any less readable.
-
-struct apic_ipi {
-	u8 vector;
-	u8 type;
-};
-
-#define APIC_IPI(v, t) ({ struct apic_ipi i = { .vector = v, .type = t }; i; })
-#define APIC_IPI_IRQ(vector) APIC_IPI(vector, APIC_DELIVERY_MODE_FIXED)
-#define APIC_IPI_NMI(vector) APIC_IPI(vector, APIC_DELIVERY_MODE_NMI)
-
-#define IPI_IRQ_WORK		APIC_IPI_IRQ(IRQ_WORK_VECTOR)
-#define IPI_POSTED_INTR_WAKEUP	APIC_IPI_IRQ(POSTED_INTR_WAKEUP_VECTOR)
-
-#define IPI_NMI_BACKTRACE	APIC_IPI_NMI(NMI_BACKTRACE_VECTOR)
-
-static __always_inline void __apic_send_IPI_self(struct apic_ipi ipi)
+The normal (!DEBUG) case uses __preempt_count_dec_and_test(), which is
+significantly better.
