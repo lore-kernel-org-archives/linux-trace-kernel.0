@@ -1,114 +1,108 @@
-Received: from out30-119.freemail.mail.aliyun.com (out30-119.freemail.mail.aliyun.com [115.124.30.119])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77676219EB;
-	Tue,  8 Jul 2025 06:19:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.119
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B5F721B905;
+	Tue,  8 Jul 2025 07:10:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751955572; cv=none; b=rzvISAd90zz6gcf/hXAqC4baCKUc7KDIVBY5jZKRlY4U4cXfLj/JgaHCtQexcdCovT1XRu4G5NM7iEzY/E2rNNyLc9LJQrGO+7FEBVisjltcBu5qZB+bfzIVyxb+oGzswpk3r+sk9Bi7uY7WzUAFH9oXg5xVUkknfbJp2E4QW18=
+	t=1751958650; cv=none; b=oBUsSDtOqXP394Eqk4EH3JHyGCMInOYDt19zHPDxScqxPh++YFYzv4UE3eaqoE7JDtDMvDa87tpzREF4VdLfjiZ1Nn9F5+hX3SuXZmR+9xiFSFhLdd3o7bDvrJoV6VCAHOwyBFWNlwe+JmVE7PTjffafwhQfPIrWlfRKQU+NKKw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751955572; c=relaxed/simple;
-	bh=fdKst7IRAsqsenZliJt+GWMMOBmwKJwlNY3fqlSVZkE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=d4+mS7PweKbbILQYj9iAo2EcuzYadQHRUYKwvTKoFGBIyhB4h0tYLBSfBPv+YYfw9RjobNW5uJMTrryFPmsu1PJ1mueudxpt1PLcHS3U2X0raarVED3fvm1TYSR4GqF9sKX2YYEaHGcan5U43RWyTPoeLEZ+Knqics/S0Wvrj6U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=mcR6ytGf; arc=none smtp.client-ip=115.124.30.119
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1751958650; c=relaxed/simple;
+	bh=CC5iDx0Wrj+Klrk9Ri4aS+NjdvqOQWWSjSxWvVcXFTo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rAZYEYU4o4MPwLnbKG5faXn9UD4ztAsSI10rCJgqmAFDShPZVcOynsrB5TTNL+xXStUVeZENzpTzWV1/lF3EO/CLTGB24xcAbDPDZanAQpFAEtvAahsstwCIHQMWu97orMipvag4wiG9lrJoRyAhGCb0KpL9MjxS2Aj4NYW3k1M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=afTs5ENv; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="mcR6ytGf"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1751955566; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=qIRx+HCehqqza2IJhsneJV4WjfRLShJN2Hjm8Xb7L4M=;
-	b=mcR6ytGfjlZqBSdQlw2EshP17cFillFU1uZpHPvB1K09ZpkARvtetnsxNjsvXJ48TGFgoanB32ts36Wb9OLIq6GlZckOUDo/bwTlAZ8iXUmtZhOhKEcjx9lpHz3Y2nov6DqBkzND0nfCgIb4wu18bCcJ/zCH+khgEDI1tRsJpCc=
-Received: from 30.74.144.119(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0WiLFdgJ_1751955558 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Tue, 08 Jul 2025 14:19:23 +0800
-Message-ID: <e6a18289-1417-4f47-a919-bb5a8ddc1579@linux.alibaba.com>
-Date: Tue, 8 Jul 2025 14:19:18 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="afTs5ENv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 90835C4CEED;
+	Tue,  8 Jul 2025 07:10:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751958649;
+	bh=CC5iDx0Wrj+Klrk9Ri4aS+NjdvqOQWWSjSxWvVcXFTo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=afTs5ENvhkamb0LLqd+IgEiyQGBJe90QeMYZYjcrMkTNC8Yu/NUAMmEf9niXbRH7a
+	 mYJWapF7+xQckyQVQmHOifdktVPPFNQniSX4nriWuNq61s3H7R7txv3USrHQ/l1De8
+	 XwVHB3FItTDK9gJGT0g8XBRf5UxPYBI5VCtKChiCxSy7sh4Twat/vQu4c5wES8cXG/
+	 Qw75thLg7rjQNPPWvLjr9xHmdMxlKoViNHGp6O1/7jjBFU652BDxVZzEiQ/2Pd46u4
+	 se56Zl8WSMr/s0TMKrumCoE+CTJ+R8u8BV9TcygQUFtUFgsXl/nJDWWEYtQz6A2BT/
+	 wly+OikM25RRw==
+Date: Tue, 8 Jul 2025 10:10:39 +0300
+From: Mike Rapoport <rppt@kernel.org>
+To: Yann Ylavic <ylavic.dev@gmail.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Andy Lutomirski <luto@kernel.org>, Borislav Petkov <bp@alien8.de>,
+	Daniel Gomez <da.gomez@samsung.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Ingo Molnar <mingo@redhat.com>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Petr Pavlu <petr.pavlu@suse.com>,
+	Sami Tolvanen <samitolvanen@google.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org, linux-modules@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, x86@kernel.org
+Subject: Re: [PATCH 3/8] execmem: rework execmem_cache_free()
+Message-ID: <aGzEbw3BybnWOidx@kernel.org>
+References: <20250704134943.3524829-1-rppt@kernel.org>
+ <20250704134943.3524829-4-rppt@kernel.org>
+ <CAKQ1sVN9KZYt=M5cst+BonDMVL_wO3sbhgZ+JPzc=Rw9Qfz9tw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v8 04/15] khugepaged: generalize alloc_charge_folio()
-To: Nico Pache <npache@redhat.com>, linux-mm@kvack.org,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
-Cc: david@redhat.com, ziy@nvidia.com, lorenzo.stoakes@oracle.com,
- Liam.Howlett@oracle.com, ryan.roberts@arm.com, dev.jain@arm.com,
- corbet@lwn.net, rostedt@goodmis.org, mhiramat@kernel.org,
- mathieu.desnoyers@efficios.com, akpm@linux-foundation.org,
- baohua@kernel.org, willy@infradead.org, peterx@redhat.com,
- wangkefeng.wang@huawei.com, usamaarif642@gmail.com, sunnanyong@huawei.com,
- vishal.moola@gmail.com, thomas.hellstrom@linux.intel.com,
- yang@os.amperecomputing.com, kirill.shutemov@linux.intel.com,
- aarcange@redhat.com, raquini@redhat.com, anshuman.khandual@arm.com,
- catalin.marinas@arm.com, tiwai@suse.de, will@kernel.org,
- dave.hansen@linux.intel.com, jack@suse.cz, cl@gentwo.org,
- jglisse@google.com, surenb@google.com, zokeefe@google.com,
- hannes@cmpxchg.org, rientjes@google.com, mhocko@suse.com,
- rdunlap@infradead.org
-References: <20250702055742.102808-1-npache@redhat.com>
- <20250702055742.102808-5-npache@redhat.com>
-From: Baolin Wang <baolin.wang@linux.alibaba.com>
-In-Reply-To: <20250702055742.102808-5-npache@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAKQ1sVN9KZYt=M5cst+BonDMVL_wO3sbhgZ+JPzc=Rw9Qfz9tw@mail.gmail.com>
 
-
-
-On 2025/7/2 13:57, Nico Pache wrote:
-> From: Dev Jain <dev.jain@arm.com>
+On Mon, Jul 07, 2025 at 05:32:11PM +0200, Yann Ylavic wrote:
+> On Fri, Jul 4, 2025 at 3:54 PM Mike Rapoport <rppt@kernel.org> wrote:
+> > +
+> > +static void execmem_cache_free_slow(struct work_struct *work)
+> > +{
+> > +       struct maple_tree *busy_areas = &execmem_cache.busy_areas;
+> > +       MA_STATE(mas, busy_areas, 0, ULONG_MAX);
+> > +       void *area;
+> > +
+> > +       guard(mutex)(&execmem_cache.mutex);
+> > +
+> > +       if (!execmem_cache.pending_free_cnt)
+> > +               return;
+> > +
+> > +       mas_for_each(&mas, area, ULONG_MAX) {
+> > +               if (!is_pending_free(area))
+> > +                       continue;
+> > +
+> > +               pending_free_clear(area);
 > 
-> Pass order to alloc_charge_folio() and update mTHP statistics.
-> 
-> Reviewed-by: Baolin Wang <baolin.wang@linux.alibaba.com>
-> Co-developed-by: Nico Pache <npache@redhat.com>
-> Signed-off-by: Nico Pache <npache@redhat.com>
-> Signed-off-by: Dev Jain <dev.jain@arm.com>
-> ---
->   include/linux/huge_mm.h |  2 ++
->   mm/huge_memory.c        |  4 ++++
->   mm/khugepaged.c         | 17 +++++++++++------
->   3 files changed, 17 insertions(+), 6 deletions(-)
-> 
-> diff --git a/include/linux/huge_mm.h b/include/linux/huge_mm.h
-> index 4d5bb67dc4ec..a6ea89fdaee6 100644
-> --- a/include/linux/huge_mm.h
-> +++ b/include/linux/huge_mm.h
-> @@ -125,6 +125,8 @@ enum mthp_stat_item {
->   	MTHP_STAT_ANON_FAULT_ALLOC,
->   	MTHP_STAT_ANON_FAULT_FALLBACK,
->   	MTHP_STAT_ANON_FAULT_FALLBACK_CHARGE,
-> +	MTHP_STAT_COLLAPSE_ALLOC,
-> +	MTHP_STAT_COLLAPSE_ALLOC_FAILED,
->   	MTHP_STAT_ZSWPOUT,
->   	MTHP_STAT_SWPIN,
->   	MTHP_STAT_SWPIN_FALLBACK,
-> diff --git a/mm/huge_memory.c b/mm/huge_memory.c
-> index ce130225a8e5..69777a35e722 100644
-> --- a/mm/huge_memory.c
-> +++ b/mm/huge_memory.c
-> @@ -614,6 +614,8 @@ static struct kobj_attribute _name##_attr = __ATTR_RO(_name)
->   DEFINE_MTHP_STAT_ATTR(anon_fault_alloc, MTHP_STAT_ANON_FAULT_ALLOC);
->   DEFINE_MTHP_STAT_ATTR(anon_fault_fallback, MTHP_STAT_ANON_FAULT_FALLBACK);
->   DEFINE_MTHP_STAT_ATTR(anon_fault_fallback_charge, MTHP_STAT_ANON_FAULT_FALLBACK_CHARGE);
-> +DEFINE_MTHP_STAT_ATTR(collapse_alloc, MTHP_STAT_COLLAPSE_ALLOC);
-> +DEFINE_MTHP_STAT_ATTR(collapse_alloc_failed, MTHP_STAT_COLLAPSE_ALLOC_FAILED);
->   DEFINE_MTHP_STAT_ATTR(zswpout, MTHP_STAT_ZSWPOUT);
->   DEFINE_MTHP_STAT_ATTR(swpin, MTHP_STAT_SWPIN);
->   DEFINE_MTHP_STAT_ATTR(swpin_fallback, MTHP_STAT_SWPIN_FALLBACK);
-> @@ -679,6 +681,8 @@ static struct attribute *any_stats_attrs[] = {
->   #endif
->   	&split_attr.attr,
->   	&split_failed_attr.attr,
-> +	&collapse_alloc_attr.attr,
-> +	&collapse_alloc_failed_attr.attr,
->   	NULL,
->   };
+> Probably:
+>                   area = pending_free_clear(area);
+> ?
 
-Sorry, I forgot to mention that you should update the 
-'Documentation/admin-guide/mm/transhuge.rst' file for these new statistics.
+Right, thanks!
+ 
+> > +               if (__execmem_cache_free(&mas, area, GFP_KERNEL))
+> > +                       continue;
+> > +
+> > +               execmem_cache.pending_free_cnt--;
+> > +       }
+> > +
+> > +       if (execmem_cache.pending_free_cnt)
+> > +               schedule_delayed_work(&execmem_cache_free_work, FREE_DELAY);
+> > +       else
+> > +               schedule_work(&execmem_cache_clean_work);
+> > +}
+> 
+> 
+> Regards;
+> Yann.
+
+-- 
+Sincerely yours,
+Mike.
