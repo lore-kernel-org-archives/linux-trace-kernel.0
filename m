@@ -1,57 +1,59 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 040601E48A;
-	Tue,  8 Jul 2025 07:42:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A67F9298983;
+	Tue,  8 Jul 2025 07:50:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751960544; cv=none; b=K25LKYsw/5CSrpBgQE1Z2QG7kXbLNfDeAO3PTUrClZQ/XIbEWa5N1iIyhTrivscflL/cK7kF1LuAJeLBl3mSJQW4tIeqQ1AfuxIVNKlp1WW0XZdyXfBwgrHt7jsLTh7zvXF/DjwZnCUWqLsPKfLoM+ahMnLeZksRCoUULjn+H8Q=
+	t=1751961018; cv=none; b=ISsMtvEeZ1r2LXcwrs/mPQOIPyEkiFPuAOenLp0pR2L8H7J05W9ly9EYZOUIUdNRXEpLgS3XP2Rt08zht4xGHXzmuL+zXtXpa4VI4Q8b0C+Gr0DVrXHDI2pyHWliDycoHiUUQTPCEqq1DC+xnnpiiwHlmR3SIfA8UJnRKr2zNwU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751960544; c=relaxed/simple;
-	bh=j9Gcl1MR8XonGtAZ9WPFx91cUYqZF+ofU8py5vit9KM=;
+	s=arc-20240116; t=1751961018; c=relaxed/simple;
+	bh=bp8wxgQ06nWmM2ZEK7BMnYwzPK2cJ1ftNM3z1kB5UbM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Fygsgs8r1r5PyGOZFOyv+v+c+NRCEWWCoNhaTKWxOBIqWMgmYzX8WlP/eqm1mAVm7AuzHugeiKFUszrDfDMFWIHHgmJzgRfPsej+Od78npe4q5QYn4P0pmx6HbuOrO7BuWgnNfi7TODQ75aaL7N8kvTgwTXWO3Ulmx5SL5yoLmE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=r1arUOkR; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=WwiY0sYJ; arc=none smtp.client-ip=193.142.43.55
+	 Content-Type:Content-Disposition:In-Reply-To; b=dySIbasKz3OgQqsdVhvO4788TyEYemQyv0ZTqlRxspE+CHf0X62D1QO5cB379iOXqiT6gO9Yp68XaGO4c41OFzKwdru5mNmqqvctwEpRJlG1VdsbcoRPY5I4YoumoKjSMqpXtFaXtY3FM2+eF5UB2p+DZfoi5kBY99bwFAEnpQE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=q02YgEe7; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=H+z4SYro; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="r1arUOkR";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="WwiY0sYJ"
-Date: Tue, 8 Jul 2025 09:42:19 +0200
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="q02YgEe7";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="H+z4SYro"
+Date: Tue, 8 Jul 2025 09:50:13 +0200
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1751960540;
+	s=2020; t=1751961014;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=/y+zGBFHtkzuV2I1Uve5PJvHwtJ2rfDUFlcVSxc1/yA=;
-	b=r1arUOkR/5qzhcm7UyPVWfoVuYNdSm1wKr/YSAtoUpEmcAhZNPjB3xxDRRX1dVKW8PdcAi
-	QY+LjHf8xBw46E8IMcv1wUveWoePKPUHLfNoDuXLilxa9m5hko/0s8UyX9YdbHEjFAtTH2
-	bLMelHKYIMgZA8wpFzpY7bG8Ujv6OnejDWLuEY2Ln/16XveX2qbmujevLFoWuWeHCTdlG8
-	TcxLHEIDDvAhic4b2J2mY94MuQfFlkr3AXJFxKN+PSVpASxNxoKZWPH1T7fv6qgPI/Gc3L
-	9lt4t/NGNoywWgiK6EopH5kBNJy922zaNDYQZhoGZcXZIzmjTFNDVg+yDuqPkw==
+	bh=AaSSFAIVJg+nrHF54Fxykfa7qVOo8icj8RNY5lB8ERc=;
+	b=q02YgEe7f2DE0eQedcOfU+2mv66JXzVOubhGsCxTuCFMdOM8sEX5UWDaCPKiKfXZwN0M84
+	gRYkTFHxdzThmTIfRbPG9N01ZiyUGzZkfJy6F8RbXPegdUnpVcwCe8x8YlUnWdFwmh5NJ2
+	gQci5voGId6r6up46fCjgMWoMGOVNILwaPN6xhNPO/oCkIKvwM/8CIo3TFPHVeD6ufcWDI
+	9UQ8cNlsUGvnpG3Ty5WGeGTeE3pXqw+niuyb++Id6D3jXEbZ3gf9m7Ygdx8MJ4lP6qJSO8
+	zmpJDoWj66mvhqD2pILs1A4n7CwoWFIpzbg0H6MXlgCPIbV1dapF1p0N6XIntg==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1751960540;
+	s=2020e; t=1751961014;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=/y+zGBFHtkzuV2I1Uve5PJvHwtJ2rfDUFlcVSxc1/yA=;
-	b=WwiY0sYJLObRNWCl3F0+8+OkcQhtgk7gbiOJAu7dWSL+2p5r6+8FjUm7bt1R4SOJXUOfLb
-	MdrXe/luiz9c7XAA==
+	bh=AaSSFAIVJg+nrHF54Fxykfa7qVOo8icj8RNY5lB8ERc=;
+	b=H+z4SYroc5SaVsN9JI+QCEYflST+5opIKgSuEVnCb3vS3xZfCDO76t1fjhI7ofZ58L+V48
+	q5EjNnHdxQSPxOBQ==
 From: Nam Cao <namcao@linutronix.de>
 To: Gabriele Monaco <gmonaco@redhat.com>
-Cc: John Ogness <john.ogness@linutronix.de>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] tracing: Remove pointless memory barriers
-Message-ID: <20250708074219.K7BthlGg@linutronix.de>
-References: <20250626151940.1756398-1-namcao@linutronix.de>
- <20250626113520.315db641@gandalf.local.home>
- <20250626160459.soHxOROG@linutronix.de>
- <20250626123445.5b01849d@gandalf.local.home>
- <84o6uatn6i.fsf@jogness.linutronix.de>
- <564f10574f11bd7ca42fcc5fb4d6c5625dc17205.camel@redhat.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>,
+	linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
+	john.ogness@linutronix.de
+Subject: Re: [PATCH v10 17/19] rv: Add rtapp_sleep monitor
+Message-ID: <20250708075013.hMCRH87n@linutronix.de>
+References: <d3cf55d3bf42a0f70a58c394b5cf6d603ca8a9f7.1749547399.git.namcao@linutronix.de>
+ <20250630203401.1a11e58f@gandalf.local.home>
+ <20250701051757.mBjQVdoo@linutronix.de>
+ <20250701110218.5e742850@batman.local.home>
+ <20250701110551.5c2dc2ee@batman.local.home>
+ <20250701151114.OJQTlRCY@linutronix.de>
+ <20250701111704.00456667@batman.local.home>
+ <20250701210338.BooVbo54@linutronix.de>
+ <20250701171715.5a1a99a0@batman.local.home>
+ <309ecabeacc72f13de7b190f37423f1aeafe991d.camel@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -60,57 +62,28 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <564f10574f11bd7ca42fcc5fb4d6c5625dc17205.camel@redhat.com>
+In-Reply-To: <309ecabeacc72f13de7b190f37423f1aeafe991d.camel@redhat.com>
 
-On Thu, Jul 03, 2025 at 10:05:59AM +0200, Gabriele Monaco wrote:
-> Hi all,
-Hi Gabriele,
-
-> these statements made me curious: I always thought of memory barriers as a way
-> to order reads and writes to the same address across different CPUs (in other
-> words, for visibility).
+On Wed, Jul 02, 2025 at 08:29:28AM +0200, Gabriele Monaco wrote:
+> That's a good point, at the moment the DA monitors have a comment in
+> the /completely/ generated files (the automata header), the others
+> where just a skeleton is prepared have some hints that we removed while
+> filling the monitor.
 > 
-> For instance I'd do something like:
-> 
-> CPU 1             CPU2
-> 
-> write(x)
-> smp_mb()
->                   <implicit paired barrier>
->                   READ_ONCE(x)
-> 
-> Now, I get there isn't much we can do if reader and writer are racing, but, as
-> Steve said, I'm expecting the presence of barriers to make the racing window
-> smaller.
-> 
-> Am I misinterpreting the whole thing here? Are those barriers just ordering
-> reads with reads and writes with writes (hence useful only with multiple
-> variables)?
+> I'd say for now it's good to just add a comment in the LTL header (like
+> Dot2k:fill_model_h_header), then we can adapt all generated files
+> (whether fully or not) to have also the actual command that generated
+> them starting from the model file.
+> Or did you have something different in mind, Nam?
 
-From "WHAT ARE MEMORY BARRIERS?" section in
-https://www.kernel.org/doc/Documentation/memory-barriers.txt
+Yes, I think the same.
 
-    "Memory barriers [...] impose a perceived partial ordering over the
-    memory operations on either side of the barrier."
-
-and also have a look at "WHAT MAY NOT BE ASSUMED ABOUT MEMORY BARRIERS?"
-later on:
-
-    "There is no guarantee that any of the memory accesses specified before
-    a memory barrier will be _complete_ by the completion of a memory
-    barrier instruction"
-
-Or data memory barrier explanation from Arm
-(https://developer.arm.com/documentation/den0042/0100/Memory-Ordering/Memory-barriers)
-
-    "This instruction ensures that all memory accesses in program order
-    before the barrier are observed in the system before any explicit
-    memory accesses that appear in program order after the barrier. It does
-    not affect the ordering of any other instructions executing on the
-    processor, or of instruction fetches."
-
-So yes, smp_rmb() is only useful inbetween reads, and smp_wmb() is only
-userful inbetween writes.
+An easy way to do it is just dump out sys.argv. But one thing I'm unsure
+about: I prefer to execute the command from tools/verification, and the
+command I use would not work for people running from root directory. I
+would like the printed command to always appear as if it is executed from
+root directory. However, I see no elegant way to do it - will need to think
+some more.
 
 Best regards,
 Nam
