@@ -1,202 +1,219 @@
-Received: from relay.hostedemail.com (smtprelay0015.hostedemail.com [216.40.44.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f201.google.com (mail-pf1-f201.google.com [209.85.210.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E21701CD1E4;
-	Tue,  8 Jul 2025 16:31:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3045D2DC34A
+	for <linux-trace-kernel@vger.kernel.org>; Tue,  8 Jul 2025 18:37:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751992296; cv=none; b=dXlhShIv+hiMD0TPA+LiCiSCqxZsVO6jPwnjDLGpOF/BsY5KWRniBOGEMHlEVzcarTnF+wGZTN174uNRIWkEzWSlPk/C5eidOLPpomiXR0ROaeb6Jy/YxTzhQyQFKh7/huClugqi4nOF2ZFx3ivsLkjYjdc8H62yq9CYhDrNHps=
+	t=1751999853; cv=none; b=DarkzVZUiyDyZHdbvjNhBScVKMh/0nifb3XzuHzE3wbxYVnpP70rJKRxjfT+B2X7jsAwZoUkJItbxeO7WqHo7HYLqR4rivYFbc5DNLBrRS8noYTvmpiG5m+5GKfZXzF6idNsjJgdkkyMQtdv3hzufoht1Ducd56rv9oPVM050z0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751992296; c=relaxed/simple;
-	bh=kKFfVsjjQy3Sye5RAKQyCnZiAtZH86+HYBvB16fyzoI=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=H7EV2fRc8eTNdHX7uHJurqFeJ16oRd4nu0DVDhD746bQhz3p/0EyYMUmoT58IYPIUPeEWcnu9M2oi6263KwYpHShOnTNjdyuKVy8U0lri5nnrNOaFy8cT+bi0iHJe/6d4/c1qpbYCJXkIGAciBr4TuSxO5woQ32yBB5Kuv6/MbY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf16.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay06.hostedemail.com (Postfix) with ESMTP id A04AB10B198;
-	Tue,  8 Jul 2025 16:31:24 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf16.hostedemail.com (Postfix) with ESMTPA id 04DFD2000E;
-	Tue,  8 Jul 2025 16:31:19 +0000 (UTC)
-Date: Tue, 8 Jul 2025 12:31:20 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Josh Poimboeuf <jpoimboe@kernel.org>, Steven Rostedt
- <rostedt@kernel.org>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org, x86@kernel.org,
- Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Peter Zijlstra <peterz@infradead.org>,
- Ingo Molnar <mingo@kernel.org>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim
- <namhyung@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Andrii
- Nakryiko <andrii@kernel.org>, Indu Bhagat <indu.bhagat@oracle.com>, "Jose
- E. Marchesi" <jemarch@gnu.org>, Beau Belgrave <beaub@linux.microsoft.com>,
- Jens Remus <jremus@linux.ibm.com>, Andrew Morton
- <akpm@linux-foundation.org>, Jens Axboe <axboe@kernel.dk>, Florian Weimer
- <fweimer@redhat.com>, Sam James <sam@gentoo.org>
-Subject: Re: [PATCH v8 10/12] unwind_user/sframe: Enable debugging in
- uaccess regions
-Message-ID: <20250708123120.7862c458@gandalf.local.home>
-In-Reply-To: <CAHk-=wgXcc99EXKfK++FEQzMQc8S16WOwvn=1DcP_ns1jCCYeA@mail.gmail.com>
-References: <20250708021115.894007410@kernel.org>
-	<20250708021200.058879671@kernel.org>
-	<CAHk-=widGT2M=kJJr6TwWsMjfYSghL9k3LgxJvRard0wtiP62A@mail.gmail.com>
-	<20250708092351.4548c613@gandalf.local.home>
-	<orpxec72lzxzkwhcu3gateqbcw6cdlojxvxmvopa2jxr67d4az@rvgfflvrbzk5>
-	<20250708104130.25b76df9@gandalf.local.home>
-	<CAHk-=wgXcc99EXKfK++FEQzMQc8S16WOwvn=1DcP_ns1jCCYeA@mail.gmail.com>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1751999853; c=relaxed/simple;
+	bh=vg+uQCJ+lSN99jIomcmUQZbwXNmXTfe07jNsopO6k20=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=DkFLK8KESSoLL6EhIZHqDURYityECZIGgir1QPSHCn27aJrnKIggpEIDr9QfLH9Eqoy69ZVEtt4+U683SnqIVQUJum2fpjoKDnRkGATuZ444AXtIahWGe6gowIU3SItE/mA0tqBAIPSADY+krgBIY27O64vdmiwUGOT0N7724Hw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=JzJzAK+h; arc=none smtp.client-ip=209.85.210.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JzJzAK+h"
+Received: by mail-pf1-f201.google.com with SMTP id d2e1a72fcca58-74ad608d60aso3464393b3a.1
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 08 Jul 2025 11:37:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1751999850; x=1752604650; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=yuihDo1m5FyoRrxBA7eIdTW1eQsHNBGooJAzPvs8+c8=;
+        b=JzJzAK+hOjajiXZF2foPPNeEcg8NgJEqFaw4SXnoVwtt0Ow0MQ0Yym5Si4xM5OxKJ7
+         uJAn0hwGne/geNeEqPkBj8iyu7wdQddTjdOiqm79OrNacRCk8suq3s5gig9hTqmcqMOc
+         JEjtcThza8JjMKihIp/QgskQYRuRS+266BXwFjU0u7FTHV67aDkBD85TrQVM2t+I5sZl
+         sVifKdzVCNtabPIkbY01vab2YCX0NXVp0XiaFs4CYylp4LJPzl0TryWQ9VI/bLeGw2ul
+         Yv/M/3kpBi2Wlc6bwQ7Alo+wFYYNO0FloWHprl5ARmoob82Jhhr9xUfuA6/rSGG58VhF
+         qCkQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751999850; x=1752604650;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=yuihDo1m5FyoRrxBA7eIdTW1eQsHNBGooJAzPvs8+c8=;
+        b=QxcFDyodKu3u6DMqNJLrsoBpbFrHEnKYx/zv1CIWQ0zqie6H+LZnqKLFoSIdxj4Vk+
+         MwVEyvFBAE3lGF0I2B5sY23IIu1djikWl5eeqUhhVzX3VN9qGKIteCP06dN3uKNjgc0m
+         nCpYtiakvvU4kUSNA0ZqH8/f2R7Mu7dZVsxfRlgIIfOA1c80v5gLIcgbxrJU+R2wr2Am
+         VMHi9T1VeENQ9IVdnG13oW5mgPj4s+uYtgdzS3r8pmD5qWzs1rp4o6ybAT6ppfIVlLmF
+         IRhhDrYlVYCobJNZS1p7rRUxLPvZ/UC+3yI0B1NhTQUd77Er/qghP+7p0NUivyfzgZ3e
+         eQOg==
+X-Forwarded-Encrypted: i=1; AJvYcCX3LdSVcFX3OOY49YQuxFHPZdR76XSYo7abd8q9Y2KDeMp2Eiy3b7KISXW1ALwW8e3ysWyRGxwM+WPkxxg0dfX4Iik=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxjhX4FC9kbc6ts47iacuMe8YI4APhhkzJxW74rhxjerSscgufI
+	jOM4zbjVw9R28rmeni3F1aAAzuv/sA0KXd8hlUTAPHfQeoCbhX5+dS16De3ZUdZefiHlwJnyXm9
+	317t0vw==
+X-Google-Smtp-Source: AGHT+IE0jOeDJGjqyFwQLwFs8IMKVlBUzhMwAfpeufc6A4eZa0THyR4cN5PjdVCjvg8e5KCGp+se29EjQ+4=
+X-Received: from pfbjw38.prod.google.com ([2002:a05:6a00:92a6:b0:74c:ee73:4859])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:856:b0:748:e1e4:71e7
+ with SMTP id d2e1a72fcca58-74ea498dc91mr157508b3a.23.1751999850363; Tue, 08
+ Jul 2025 11:37:30 -0700 (PDT)
+Date: Tue, 8 Jul 2025 11:37:28 -0700
+In-Reply-To: <20250612214849.3950094-9-sohil.mehta@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Stat-Signature: bb3hnktb3dp9a9m7owwr4xcq4fdujnkx
-X-Rspamd-Server: rspamout04
-X-Rspamd-Queue-Id: 04DFD2000E
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX19Y0fUepPxaRcfNYrcIABvux8APfNuf2IY=
-X-HE-Tag: 1751992279-762972
-X-HE-Meta: U2FsdGVkX1+CMuUGypXL1y73IoeNSQJkVrDtzFJSFsYtnPyrjYDQzSR06KYhMnOrpl4Lx/0EQbc7AAqZnPhyKPxXa7LC4/yAbqexMWif3OPVCK16R9a1OF/BJDHp0yNzqkR8J8DPHFolf0Ub7avQHNpfq8NVp/hVZARN9i+lMO5yBn/X9x+BagzI2sp3C87zrNi9XCZJHUnWsWtsDJ6B3QVOWlh37MD62LAKuZsLe+Ck6jECrDxvCgyCblw1LaFpP7K24I8tFo1/AAq6oaPG46VTqMrzxVFQE8FT65YIBX6+eiwFfvI7ATf4iDMYLufw+MzgQMCOmpwB6TXuakm++cl/zFjtNfl5wr1pSUOG3pNkYhO1PYEQ7MeM8lVQfWc8VxLfR/zTkKJarEaTvB9r/YLpcs38622Ue65Z1gzXqcRUBGhJBkPvDqDRO0SV95s21xe+dPHNSs1dQVAwDyuigYcncWln1OuGlkYTjNGR7iaO+8sNYSHqvA==
+Mime-Version: 1.0
+References: <20250612214849.3950094-1-sohil.mehta@intel.com> <20250612214849.3950094-9-sohil.mehta@intel.com>
+Message-ID: <aG1laKXYu7Uc4Tsb@google.com>
+Subject: Re: [PATCH v7 08/10] x86/nmi: Enable NMI-source for IPIs delivered as NMIs
+From: Sean Christopherson <seanjc@google.com>
+To: Sohil Mehta <sohil.mehta@intel.com>
+Cc: x86@kernel.org, linux-kernel@vger.kernel.org, Xin Li <xin@zytor.com>, 
+	"H . Peter Anvin" <hpa@zytor.com>, Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, 
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	Tony Luck <tony.luck@intel.com>, Zhang Rui <rui.zhang@intel.com>, 
+	Steven Rostedt <rostedt@goodmis.org>, Andrew Cooper <andrew.cooper3@citrix.com>, 
+	"Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>, Jacob Pan <jacob.pan@linux.microsoft.com>, 
+	Andi Kleen <ak@linux.intel.com>, Kai Huang <kai.huang@intel.com>, 
+	Sandipan Das <sandipan.das@amd.com>, linux-perf-users@vger.kernel.org, 
+	linux-edac@vger.kernel.org, kvm@vger.kernel.org, linux-pm@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
 
-On Tue, 8 Jul 2025 08:53:56 -0700
-Linus Torvalds <torvalds@linux-foundation.org> wrote:
-
-> On Tue, 8 Jul 2025 at 07:41, Steven Rostedt <rostedt@goodmis.org> wrote:
-> >
-> > Would something like this work? If someone enables the config to enable the
-> > validation, I don't think we need dynamic printk to do it (as that requires
-> > passing in the format directly and not via a pointer).  
+On Thu, Jun 12, 2025, Sohil Mehta wrote:
+> With the IPI handling APIs ready to support the new NMI encoding, encode
+> the NMI delivery mode directly with the NMI-source vectors to trigger
+> NMIs.
 > 
-> I really think you should just not use 'user_access_begin()" AT ALL if
-> you need to play these kinds of games.
+> Move most of the existing NMI-based IPIs to use the new NMI-source
+> vectors, except for the microcode rendezvous NMI and the crash reboot
+> NMI. NMI handling for them is special-cased in exc_nmi() and does not
+> need NMI-source reporting.
 > 
+> However, in the future, it might be useful to assign a source vector to
+> all NMI sources to improve isolation and debuggability.
+> 
+> Originally-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> Suggested-by: Sean Christopherson <seanjc@google.com>
+> Co-developed-by: Xin Li (Intel) <xin@zytor.com>
+> Signed-off-by: Xin Li (Intel) <xin@zytor.com>
+> Signed-off-by: Sohil Mehta <sohil.mehta@intel.com>
+> ---
+> v7: No change.
+> 
+> v6: Include asm/nmi.h to avoid compile errors. (LKP)
+> 
+> v5: Encode APIC_DM_NMI directly with the NMI-source vector.
+> ---
+>  arch/x86/include/asm/apic.h      | 8 ++++++++
+>  arch/x86/kernel/apic/hw_nmi.c    | 2 +-
+>  arch/x86/kernel/cpu/mce/inject.c | 2 +-
+>  arch/x86/kernel/kgdb.c           | 2 +-
+>  arch/x86/kernel/nmi_selftest.c   | 2 +-
+>  arch/x86/kernel/smp.c            | 2 +-
+>  6 files changed, 13 insertions(+), 5 deletions(-)
+> 
+> diff --git a/arch/x86/include/asm/apic.h b/arch/x86/include/asm/apic.h
+> index 32cdd81e5e45..5789df1708bd 100644
+> --- a/arch/x86/include/asm/apic.h
+> +++ b/arch/x86/include/asm/apic.h
+> @@ -14,6 +14,7 @@
+>  #include <asm/msr.h>
+>  #include <asm/hardirq.h>
+>  #include <asm/io.h>
+> +#include <asm/nmi.h>
+>  #include <asm/posted_intr.h>
+>  
+>  #define ARCH_APICTIMER_STOPS_ON_C3	1
+> @@ -23,6 +24,13 @@
+>  #define APIC_EXTNMI_ALL		1
+>  #define APIC_EXTNMI_NONE	2
+>  
+> +/* Trigger NMIs with source information */
+> +#define TEST_NMI		(APIC_DM_NMI | NMIS_VECTOR_TEST)
+> +#define SMP_STOP_NMI		(APIC_DM_NMI | NMIS_VECTOR_SMP_STOP)
+> +#define BT_NMI			(APIC_DM_NMI | NMIS_VECTOR_BT)
 
-Looking at the code a bit deeper, I don't think we need to play these games
-and still keep the user_read_access_begin().
+s/BT/BACKTRACE?
 
-The places that are more performance critical (where it reads the sframe
-during normal stack walking during profiling) has no debug output, and
-there's nothing there that needs to take it out of the user_read_access
-area.
+> +#define KGDB_NMI		(APIC_DM_NMI | NMIS_VECTOR_KGDB)
+> +#define MCE_NMI			(APIC_DM_NMI | NMIS_VECTOR_MCE)
 
-It's the validator that adds these hacks. I don't think it needs to. It can
-just wrap the calls to the code that requires user_read_access and then
-check the return value. The validator is just a debugging feature and
-performance should not be an issue.
+IMO, NMI_xxx reads better, e.g. it's easier to see that code is sending an NMI
+at the call sites.
 
-But I do think performance is something to care about during normal
-operations where the one big user_read_access_begin() can help.
+> +
+>  /*
+>   * Debugging macros
+>   */
+> diff --git a/arch/x86/kernel/apic/hw_nmi.c b/arch/x86/kernel/apic/hw_nmi.c
+> index 4e04f13d2de9..586f4b25feae 100644
+> --- a/arch/x86/kernel/apic/hw_nmi.c
+> +++ b/arch/x86/kernel/apic/hw_nmi.c
+> @@ -33,7 +33,7 @@ u64 hw_nmi_get_sample_period(int watchdog_thresh)
+>  #ifdef arch_trigger_cpumask_backtrace
+>  static void nmi_raise_cpu_backtrace(cpumask_t *mask)
+>  {
+> -	__apic_send_IPI_mask(mask, NMI_VECTOR);
+> +	__apic_send_IPI_mask(mask, BT_NMI);
 
-What about something like this? It adds "safe" versions of the user space
-access functions and uses them only in the slow (we don't care about
-performance) validator:
+This patch is buggy.  There are at least two implementations of ->send_IPI_mask()
+that this breaks:
 
--- Steve
+  uv_send_IPI_mask() = > uv_send_IPI_one():
 
-diff --git a/kernel/unwind/sframe.c b/kernel/unwind/sframe.c
-index 0060cc576776..79ff3c0fc11f 100644
---- a/kernel/unwind/sframe.c
-+++ b/kernel/unwind/sframe.c
-@@ -321,7 +321,34 @@ int sframe_find(unsigned long ip, struct unwind_user_frame *frame)
- 
- #ifdef CONFIG_SFRAME_VALIDATION
- 
--static __always_inline int __sframe_validate_section(struct sframe_section *sec)
-+static int safe_read_fde(struct sframe_section *sec,
-+			 unsigned int fde_num, struct sframe_fde *fde)
-+{
-+	int ret;
-+
-+	if (!user_read_access_begin((void __user *)sec->sframe_start,
-+				    sec->sframe_end - sec->sframe_start))
-+		return -EFAULT;
-+	ret = __read_fde(sec, fde_num, fde);
-+	user_read_access_end();
-+	return ret;
-+}
-+
-+static int safe_read_fre(struct sframe_section *sec,
-+			 struct sframe_fde *fde, unsigned long fre_addr,
-+			 struct sframe_fre *fre)
-+{
-+	int ret;
-+
-+	if (!user_read_access_begin((void __user *)sec->sframe_start,
-+				    sec->sframe_end - sec->sframe_start))
-+		return -EFAULT;
-+	ret = __read_fre(sec, fde, fre_addr, fre);
-+	user_read_access_end();
-+	return ret;
-+}
-+
-+static int sframe_validate_section(struct sframe_section *sec)
- {
- 	unsigned long prev_ip = 0;
- 	unsigned int i;
-@@ -335,13 +362,13 @@ static __always_inline int __sframe_validate_section(struct sframe_section *sec)
- 		unsigned int j;
- 		int ret;
- 
--		ret = __read_fde(sec, i, &fde);
-+		ret = safe_read_fde(sec, i, &fde);
- 		if (ret)
- 			return ret;
- 
- 		ip = sec->sframe_start + fde.start_addr;
- 		if (ip <= prev_ip) {
--			dbg_sec_uaccess("fde %u not sorted\n", i);
-+			dbg_sec("fde %u not sorted\n", i);
- 			return -EFAULT;
- 		}
- 		prev_ip = ip;
-@@ -353,17 +380,20 @@ static __always_inline int __sframe_validate_section(struct sframe_section *sec)
- 			fre = which ? fres : fres + 1;
- 			which = !which;
- 
--			ret = __read_fre(sec, &fde, fre_addr, fre);
-+			ret = safe_read_fre(sec, &fde, fre_addr, fre);
- 			if (ret) {
--				dbg_sec_uaccess("fde %u: __read_fre(%u) failed\n", i, j);
--				dbg_print_fde_uaccess(sec, &fde);
-+				dbg_sec("fde %u: __read_fre(%u) failed\n", i, j);
-+				dbg_sec("FDE: start_addr:0x%x func_size:0x%x fres_off:0x%x fres_num:%d info:%u rep_size:%u\n",
-+					fde.start_addr, fde.func_size,
-+					fde.fres_off, fde.fres_num,
-+					fde.info, fde.rep_size);
- 				return ret;
- 			}
- 
- 			fre_addr += fre->size;
- 
- 			if (prev_fre && fre->ip_off <= prev_fre->ip_off) {
--				dbg_sec_uaccess("fde %u: fre %u not sorted\n", i, j);
-+				dbg_sec("fde %u: fre %u not sorted\n", i, j);
- 				return -EFAULT;
- 			}
- 
-@@ -374,21 +404,6 @@ static __always_inline int __sframe_validate_section(struct sframe_section *sec)
- 	return 0;
- }
- 
--static int sframe_validate_section(struct sframe_section *sec)
--{
--	int ret;
--
--	if (!user_read_access_begin((void __user *)sec->sframe_start,
--				    sec->sframe_end - sec->sframe_start)) {
--		dbg_sec("section usercopy failed\n");
--		return -EFAULT;
--	}
--
--	ret = __sframe_validate_section(sec);
--	user_read_access_end();
--	return ret;
--}
--
- #else /*  !CONFIG_SFRAME_VALIDATION */
- 
- static int sframe_validate_section(struct sframe_section *sec) { return 0; }
+	if (vector == NMI_VECTOR)
+		dmode = APIC_DELIVERY_MODE_NMI;
+	else
+		dmode = APIC_DELIVERY_MODE_FIXED;
+
+
+and xen_send_IPI_mask() => xen_map_vector():
+
+	switch (vector) {
+	case RESCHEDULE_VECTOR:
+		xen_vector = XEN_RESCHEDULE_VECTOR;
+		break;
+	case CALL_FUNCTION_VECTOR:
+		xen_vector = XEN_CALL_FUNCTION_VECTOR;
+		break;
+	case CALL_FUNCTION_SINGLE_VECTOR:
+		xen_vector = XEN_CALL_FUNCTION_SINGLE_VECTOR;
+		break;
+	case IRQ_WORK_VECTOR:
+		xen_vector = XEN_IRQ_WORK_VECTOR;
+		break;
+#ifdef CONFIG_X86_64
+	case NMI_VECTOR:
+	case APIC_DM_NMI: /* Some use that instead of NMI_VECTOR */
+		xen_vector = XEN_NMI_VECTOR;
+		break;
+#endif
+	default:
+		xen_vector = -1;
+		printk(KERN_ERR "xen: vector 0x%x is not implemented\n",
+			vector);
+	}
+
+	return xen_vector;
+
+Looking at all of this again, shoving the NMI source information into the @vector
+is quite brittle.  Nothing forces implementations to handle embedded delivery
+mode information.
+
+One thought would be to pass a small struct (by value), and then provide macros
+to generate the structure for a specific vector.  That provides some amount of
+type safety and should make it a bit harder to pass in garbage, without making
+the callers any less readable.
+
+struct apic_ipi {
+	u8 vector;
+	u8 type;
+};
+
+#define APIC_IPI(v, t) ({ struct apic_ipi i = { .vector = v, .type = t }; i; })
+#define APIC_IPI_IRQ(vector) APIC_IPI(vector, APIC_DELIVERY_MODE_FIXED)
+#define APIC_IPI_NMI(vector) APIC_IPI(vector, APIC_DELIVERY_MODE_NMI)
+
+#define IPI_IRQ_WORK		APIC_IPI_IRQ(IRQ_WORK_VECTOR)
+#define IPI_POSTED_INTR_WAKEUP	APIC_IPI_IRQ(POSTED_INTR_WAKEUP_VECTOR)
+
+#define IPI_NMI_BACKTRACE	APIC_IPI_NMI(NMI_BACKTRACE_VECTOR)
+
+static __always_inline void __apic_send_IPI_self(struct apic_ipi ipi)
