@@ -1,491 +1,112 @@
-Received: from out-179.mta1.migadu.com (out-179.mta1.migadu.com [95.215.58.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECAB71401B
-	for <linux-trace-kernel@vger.kernel.org>; Tue,  8 Jul 2025 02:27:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D37AE13959D
+	for <linux-trace-kernel@vger.kernel.org>; Tue,  8 Jul 2025 03:38:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751941641; cv=none; b=tHXwKaZinlg+GqHSEgRtKrnredGyvCiJy8li4gNfOO7a703RAXrq4NDOFOfnqwA82pAFR01rEqCG4lsSkWXONCC1psDg0aHTM1Px9dwVwkjVPAwPtR202AgngrpRWFlNp2KUygTSWPQ5acLGlExwi3AyRqeIqENApzICImm05Po=
+	t=1751945936; cv=none; b=QhAVTyAT1a+jDllAT8IMpVQrxWhjPaO8SNi85+S4vl9oWEbV7Gs7pAoyWvqNJjyYeTFL/BX9OP2EvZQKDRzyadXKjY6kZbYWPBA8WyKP4WmxQcKhijEqF5PEEnGiqx2RJAM1d4WCwt352oHUUF4IPpzaUROfmH/qQ3i1TpfQN/U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751941641; c=relaxed/simple;
-	bh=j9UvsaaHxmtYaGTO38L32nn09P+CtwXrZ8CVThXcLi4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=cS1agX51warhw8gBPumZBCSPWPIKQZQUzV0pQGWHG3zJxh2ezarleayHPkRaMFW21PyMnjE0eWienryzrwk3t+YmA0kxCKRA7v/wPPXUwpW50StbWzXgOnh495/41CDI2ERCMZvz/7eGaaGfGs4qJ48fkJKnSNLf6yJGFX6ADxo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=kMYK9yyQ; arc=none smtp.client-ip=95.215.58.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1751945936; c=relaxed/simple;
+	bh=ngQvRTDNb77/II45kf0Htc4COiMKkjz3h+Tg9M3hNoc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Pyv0hypkrcpwW7+srsdXhI5O6dVCUJAWlSa/UinLsBmfJ4K7negq7FREmzyqg3+P1VseoxIOrXmTFjIHu7mDN9f10RVUiAz8TPJBTZ6R+EpQEZLW6X/u6bWnjsN8t7bNerwBQNzWRSp8LvcLol39Nb701N7autKsvqV8bJFVc4I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=F0XdwP33; arc=none smtp.client-ip=209.85.218.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="kMYK9yyQ"
-Message-ID: <9da29bd6-228a-4047-afbe-2072d795243b@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1751941635;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=/Ng24SlWO6YjCJBDcOp6gZ3iPyXRTJHPHyTRS4V7beI=;
-	b=kMYK9yyQboknX8Z+aBCqCPDEo0tfyidUuVU1oVTctQxETFTE1M/qi07D2Sc3O8BKOfaEby
-	CDurZqHZ6YeyDHfv/nL/Y9ZDcfKtz1fTzGtf/Q+pmNBh7miNOKAscQ8qS/jxRn7uA6vZZ1
-	Ux1O/8FsrZDJ7/E7z6NQvVWt3XQzigQ=
-Date: Tue, 8 Jul 2025 10:26:57 +0800
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="F0XdwP33"
+Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-ae0d758c3a2so642286266b.2
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 07 Jul 2025 20:38:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google; t=1751945933; x=1752550733; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=OvkINbyTdUcHfBHAuLeuJlwUIwFpUBssPFgUpHXAs88=;
+        b=F0XdwP330qjiSW2gYaMj3+17vssubfP0mQkQefY0NOnH60UmvTe9Pem/6X6N3/TOss
+         C6ywArj/JZcDOfXpTAUBxZMVzDZr/dQnAL9qFPsDe9oFvhBSc7viV6Gj37dnZfpRTGKk
+         mO19i5swt4Mmth1hggw4Ha5ywDEe+t1CtZKxY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751945933; x=1752550733;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=OvkINbyTdUcHfBHAuLeuJlwUIwFpUBssPFgUpHXAs88=;
+        b=mb5xHPngLDIQ95hjQgVW4NfTVzrDbMe7B8jJIRZjNUPtuaztwd70mufLZYZOnrQjqg
+         AV/Fw9dxLk6It+rDRkJ7Asn2mSrpX/nBn5zJSmv7ARgBWmZyZThNNPcJv1U94GGzr6W3
+         3nnF6sQ1yuLJDQ3c/o7gowQ8Q35K8XmPg6ZbyIDeQUPYZQRzzNMS17YcMxSFIdwKOiVG
+         KZ998g1Uok+iujbhpweTUeYqBVzWOGjcGpyIigF9dayQXvtfCRiA8NsXlL+DAquvVGzP
+         25GiGzC4h+DdJ7txsDRiIJi2bjAmeNURpR46iaFeNkTuQyAPcfLOHE/3IlClDamYWMsN
+         LOXQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWNj7eOHowqIxfeGeS2hNVZUPn5OukJWCM3S3XL2+8fRvb+BhCW1HTWcJMqk7u0C9DfrxktBIWFPNp6uIry+G2RR3s=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx4eDyKDCuGVjCtbpitdboDhnABZ7vGYslvXaficgCbtlc0MV20
+	Ey0gPJfzH5yAKiigQroQzo8PPxJE673D2ZD0HWLlZxzvTD6v2Lu0hfSFDyj2x+mMUP39p04MAQl
+	VMu14OUxjzg==
+X-Gm-Gg: ASbGncuqF24ddmYTvceLPbowBqmRRX+Be1YDVb0ne1EPxu4VeU0SI7D5F6KPNneu6cL
+	DXWmNg8p1vyp6QoRzvW0RDmXItJieuTY2NHYurU8ZKrK7pNPW1LuCwHc+7bPpR+To8OUt253d3t
+	h35e3GIeRJZnAUCBfOWJEyUUJOZZr6AGlwS/fxU/R60iTDcTCVmVPK+90sbBbmPOwqZboD0H0YW
+	ezchMkXD6Bfl7mt2Soe1yHZsRkw0B3JY0WGnA6PCiskoxmfngBrB1FFci/m7dpqD4WtJ+v8O7SU
+	wqnW05Gbvw8DhmVagXjnZKLt8Hll/kvjfCm7CzpirGSNG5AteYQqVbjTZs8B45pDH37I6T84xig
+	NF+LBu4U22l1hnl77l1xED89Zqis9Ze1d2fem
+X-Google-Smtp-Source: AGHT+IEycfPqGH3WOozMfPmagQFRlvVFcNQo7vr/wWxZCmFwJJGg67ZEn3wSASeO1gKJ1Jvj/mUhaQ==
+X-Received: by 2002:a17:907:3f17:b0:ae3:bd92:e69b with SMTP id a640c23a62f3a-ae6b0b1ebbcmr138120766b.7.1751945932977;
+        Mon, 07 Jul 2025 20:38:52 -0700 (PDT)
+Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com. [209.85.218.42])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae3f692d101sm821864966b.54.2025.07.07.20.38.51
+        for <linux-trace-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 07 Jul 2025 20:38:51 -0700 (PDT)
+Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-ade5a0442dfso629966066b.1
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 07 Jul 2025 20:38:51 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVKlEVwDHliZMalk172FJ3fIsXmPsGYl9G7p+9nuVFLessS3uSBfqu0QGwNAXEIY2TuW51c1a+/aT1d6dcapu25nmM=@vger.kernel.org
+X-Received: by 2002:a17:907:c89f:b0:ae0:a483:7b29 with SMTP id
+ a640c23a62f3a-ae6b0e7e526mr127666166b.49.1751945931447; Mon, 07 Jul 2025
+ 20:38:51 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH bpf-next 1/6] bpf: Add attach_type in bpf_link
-To: Jiri Olsa <olsajiri@gmail.com>
-Cc: ast@kernel.org, daniel@iogearbox.net, john.fastabend@gmail.com,
- andrii@kernel.org, martin.lau@linux.dev, eddyz87@gmail.com, song@kernel.org,
- yonghong.song@linux.dev, kpsingh@kernel.org, sdf@fomichev.me,
- haoluo@google.com, mattbobrowski@google.com, rostedt@goodmis.org,
- mhiramat@kernel.org, mathieu.desnoyers@efficios.com, davem@davemloft.net,
- edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, horms@kernel.org,
- kuniyu@amazon.com, willemb@google.com, jakub@cloudflare.com,
- pablo@netfilter.org, kadlec@netfilter.org, hawk@kernel.org,
- bpf@vger.kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, netfilter-devel@vger.kernel.org,
- coreteam@netfilter.org
-References: <20250707153916.802802-1-chen.dylane@linux.dev>
- <20250707153916.802802-2-chen.dylane@linux.dev> <aGw4iGLkKkUE-qxG@krava>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Tao Chen <chen.dylane@linux.dev>
-In-Reply-To: <aGw4iGLkKkUE-qxG@krava>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+References: <20250708021115.894007410@kernel.org> <20250708021200.058879671@kernel.org>
+In-Reply-To: <20250708021200.058879671@kernel.org>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Mon, 7 Jul 2025 20:38:35 -0700
+X-Gmail-Original-Message-ID: <CAHk-=widGT2M=kJJr6TwWsMjfYSghL9k3LgxJvRard0wtiP62A@mail.gmail.com>
+X-Gm-Features: Ac12FXw7XrtMv7eiXSoEnutRZCfRzsH4c97ToPOt-fI15G3BOCR69VhCXEriwaQ
+Message-ID: <CAHk-=widGT2M=kJJr6TwWsMjfYSghL9k3LgxJvRard0wtiP62A@mail.gmail.com>
+Subject: Re: [PATCH v8 10/12] unwind_user/sframe: Enable debugging in uaccess regions
+To: Steven Rostedt <rostedt@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	bpf@vger.kernel.org, x86@kernel.org, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Josh Poimboeuf <jpoimboe@kernel.org>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
+	Namhyung Kim <namhyung@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, 
+	Andrii Nakryiko <andrii@kernel.org>, Indu Bhagat <indu.bhagat@oracle.com>, 
+	"Jose E. Marchesi" <jemarch@gnu.org>, Beau Belgrave <beaub@linux.microsoft.com>, 
+	Jens Remus <jremus@linux.ibm.com>, Andrew Morton <akpm@linux-foundation.org>, 
+	Jens Axboe <axboe@kernel.dk>, Florian Weimer <fweimer@redhat.com>, Sam James <sam@gentoo.org>
+Content-Type: text/plain; charset="UTF-8"
 
-在 2025/7/8 05:13, Jiri Olsa 写道:
-> On Mon, Jul 07, 2025 at 11:39:11PM +0800, Tao Chen wrote:
->> Attach_type will be set when link created from user, it is better
->> to record attach_type in bpf_link directly suggested by Andrii.
->>
->> Signed-off-by: Tao Chen <chen.dylane@linux.dev>
->> ---
->>   include/linux/bpf.h            | 17 +++++++++++------
->>   kernel/bpf/bpf_iter.c          |  3 ++-
->>   kernel/bpf/bpf_struct_ops.c    |  5 +++--
->>   kernel/bpf/cgroup.c            |  4 ++--
->>   kernel/bpf/net_namespace.c     |  2 +-
->>   kernel/bpf/syscall.c           | 35 +++++++++++++++++++++-------------
->>   kernel/bpf/tcx.c               |  3 ++-
->>   kernel/bpf/trampoline.c        | 10 ++++++----
->>   kernel/trace/bpf_trace.c       |  4 ++--
->>   net/bpf/bpf_dummy_struct_ops.c |  3 ++-
->>   net/core/dev.c                 |  3 ++-
->>   net/core/sock_map.c            |  3 ++-
->>   net/netfilter/nf_bpf_link.c    |  3 ++-
-> 
-> there's one more caller from drivers/net/netkit.c, check CI
-> https://github.com/kernel-patches/bpf/actions/runs/16121901562/job/45489558386#annotation:11:4597
-> 
+On Mon, 7 Jul 2025 at 19:12, Steven Rostedt <rostedt@kernel.org> wrote:
+>
+> From: Josh Poimboeuf <jpoimboe@kernel.org>
+>
+> Objtool warns about calling pr_debug() from uaccess-enabled regions, and
+> rightfully so.  Add a dbg_sec_uaccess() macro which temporarily disables
+> uaccess before doing the dynamic printk, and use that to add debug
+> messages throughout the uaccess-enabled regions.
 
-my fault, there are some configs not opened in my develop enviroment, i 
-will fix it, thanks.
+Please kill this patch, and stop doing stupid things.
 
-> jirka
-> 
-> 
->>   13 files changed, 59 insertions(+), 36 deletions(-)
->>
->> diff --git a/include/linux/bpf.h b/include/linux/bpf.h
->> index 34dd90ec7fa..12a965362de 100644
->> --- a/include/linux/bpf.h
->> +++ b/include/linux/bpf.h
->> @@ -1735,6 +1735,8 @@ struct bpf_link {
->>   	 */
->>   	bool sleepable;
->>   	u32 flags;
->> +	enum bpf_attach_type attach_type;
->> +
->>   	/* rcu is used before freeing, work can be used to schedule that
->>   	 * RCU-based freeing before that, so they never overlap
->>   	 */
->> @@ -2034,11 +2036,13 @@ int bpf_prog_ctx_arg_info_init(struct bpf_prog *prog,
->>   
->>   #if defined(CONFIG_CGROUP_BPF) && defined(CONFIG_BPF_LSM)
->>   int bpf_trampoline_link_cgroup_shim(struct bpf_prog *prog,
->> -				    int cgroup_atype);
->> +				    int cgroup_atype,
->> +				    enum bpf_attach_type attach_type);
->>   void bpf_trampoline_unlink_cgroup_shim(struct bpf_prog *prog);
->>   #else
->>   static inline int bpf_trampoline_link_cgroup_shim(struct bpf_prog *prog,
->> -						  int cgroup_atype)
->> +						  int cgroup_atype,
->> +						  enum bpf_attach_type attach_type)
->>   {
->>   	return -EOPNOTSUPP;
->>   }
->> @@ -2528,10 +2532,11 @@ int bpf_map_new_fd(struct bpf_map *map, int flags);
->>   int bpf_prog_new_fd(struct bpf_prog *prog);
->>   
->>   void bpf_link_init(struct bpf_link *link, enum bpf_link_type type,
->> -		   const struct bpf_link_ops *ops, struct bpf_prog *prog);
->> +		   const struct bpf_link_ops *ops, struct bpf_prog *prog,
->> +		   enum bpf_attach_type attach_type);
->>   void bpf_link_init_sleepable(struct bpf_link *link, enum bpf_link_type type,
->>   			     const struct bpf_link_ops *ops, struct bpf_prog *prog,
->> -			     bool sleepable);
->> +			     bool sleepable, enum bpf_attach_type attach_type);
->>   int bpf_link_prime(struct bpf_link *link, struct bpf_link_primer *primer);
->>   int bpf_link_settle(struct bpf_link_primer *primer);
->>   void bpf_link_cleanup(struct bpf_link_primer *primer);
->> @@ -2883,13 +2888,13 @@ bpf_prog_inc_not_zero(struct bpf_prog *prog)
->>   
->>   static inline void bpf_link_init(struct bpf_link *link, enum bpf_link_type type,
->>   				 const struct bpf_link_ops *ops,
->> -				 struct bpf_prog *prog)
->> +				 struct bpf_prog *prog, enum bpf_attach_type attach_type)
->>   {
->>   }
->>   
->>   static inline void bpf_link_init_sleepable(struct bpf_link *link, enum bpf_link_type type,
->>   					   const struct bpf_link_ops *ops, struct bpf_prog *prog,
->> -					   bool sleepable)
->> +					   bool sleepable, enum bpf_attach_type attach_type)
->>   {
->>   }
->>   
->> diff --git a/kernel/bpf/bpf_iter.c b/kernel/bpf/bpf_iter.c
->> index 303ab1f42d3..0cbcae72707 100644
->> --- a/kernel/bpf/bpf_iter.c
->> +++ b/kernel/bpf/bpf_iter.c
->> @@ -552,7 +552,8 @@ int bpf_iter_link_attach(const union bpf_attr *attr, bpfptr_t uattr,
->>   	if (!link)
->>   		return -ENOMEM;
->>   
->> -	bpf_link_init(&link->link, BPF_LINK_TYPE_ITER, &bpf_iter_link_lops, prog);
->> +	bpf_link_init(&link->link, BPF_LINK_TYPE_ITER, &bpf_iter_link_lops, prog,
->> +		      attr->link_create.attach_type);
->>   	link->tinfo = tinfo;
->>   
->>   	err = bpf_link_prime(&link->link, &link_primer);
->> diff --git a/kernel/bpf/bpf_struct_ops.c b/kernel/bpf/bpf_struct_ops.c
->> index 96113633e39..687a3e9c76f 100644
->> --- a/kernel/bpf/bpf_struct_ops.c
->> +++ b/kernel/bpf/bpf_struct_ops.c
->> @@ -808,7 +808,7 @@ static long bpf_struct_ops_map_update_elem(struct bpf_map *map, void *key,
->>   			goto reset_unlock;
->>   		}
->>   		bpf_link_init(&link->link, BPF_LINK_TYPE_STRUCT_OPS,
->> -			      &bpf_struct_ops_link_lops, prog);
->> +			      &bpf_struct_ops_link_lops, prog, prog->expected_attach_type);
->>   		*plink++ = &link->link;
->>   
->>   		ksym = kzalloc(sizeof(*ksym), GFP_USER);
->> @@ -1351,7 +1351,8 @@ int bpf_struct_ops_link_create(union bpf_attr *attr)
->>   		err = -ENOMEM;
->>   		goto err_out;
->>   	}
->> -	bpf_link_init(&link->link, BPF_LINK_TYPE_STRUCT_OPS, &bpf_struct_ops_map_lops, NULL);
->> +	bpf_link_init(&link->link, BPF_LINK_TYPE_STRUCT_OPS, &bpf_struct_ops_map_lops, NULL,
->> +		      attr->link_create.attach_type);
->>   
->>   	err = bpf_link_prime(&link->link, &link_primer);
->>   	if (err)
->> diff --git a/kernel/bpf/cgroup.c b/kernel/bpf/cgroup.c
->> index cd220e861d6..bacdd0ca741 100644
->> --- a/kernel/bpf/cgroup.c
->> +++ b/kernel/bpf/cgroup.c
->> @@ -867,7 +867,7 @@ static int __cgroup_bpf_attach(struct cgroup *cgrp,
->>   	cgrp->bpf.flags[atype] = saved_flags;
->>   
->>   	if (type == BPF_LSM_CGROUP) {
->> -		err = bpf_trampoline_link_cgroup_shim(new_prog, atype);
->> +		err = bpf_trampoline_link_cgroup_shim(new_prog, atype, type);
->>   		if (err)
->>   			goto cleanup;
->>   	}
->> @@ -1495,7 +1495,7 @@ int cgroup_bpf_link_attach(const union bpf_attr *attr, struct bpf_prog *prog)
->>   		goto out_put_cgroup;
->>   	}
->>   	bpf_link_init(&link->link, BPF_LINK_TYPE_CGROUP, &bpf_cgroup_link_lops,
->> -		      prog);
->> +		      prog, attr->link_create.attach_type);
->>   	link->cgroup = cgrp;
->>   	link->type = attr->link_create.attach_type;
->>   
->> diff --git a/kernel/bpf/net_namespace.c b/kernel/bpf/net_namespace.c
->> index 868cc2c4389..63702c86275 100644
->> --- a/kernel/bpf/net_namespace.c
->> +++ b/kernel/bpf/net_namespace.c
->> @@ -501,7 +501,7 @@ int netns_bpf_link_create(const union bpf_attr *attr, struct bpf_prog *prog)
->>   		goto out_put_net;
->>   	}
->>   	bpf_link_init(&net_link->link, BPF_LINK_TYPE_NETNS,
->> -		      &bpf_netns_link_ops, prog);
->> +		      &bpf_netns_link_ops, prog, type);
->>   	net_link->net = net;
->>   	net_link->type = type;
->>   	net_link->netns_type = netns_type;
->> diff --git a/kernel/bpf/syscall.c b/kernel/bpf/syscall.c
->> index 7db7182a305..14883b3040a 100644
->> --- a/kernel/bpf/syscall.c
->> +++ b/kernel/bpf/syscall.c
->> @@ -3069,7 +3069,7 @@ static int bpf_obj_get(const union bpf_attr *attr)
->>    */
->>   void bpf_link_init_sleepable(struct bpf_link *link, enum bpf_link_type type,
->>   			     const struct bpf_link_ops *ops, struct bpf_prog *prog,
->> -			     bool sleepable)
->> +			     bool sleepable, enum bpf_attach_type attach_type)
->>   {
->>   	WARN_ON(ops->dealloc && ops->dealloc_deferred);
->>   	atomic64_set(&link->refcnt, 1);
->> @@ -3078,12 +3078,14 @@ void bpf_link_init_sleepable(struct bpf_link *link, enum bpf_link_type type,
->>   	link->id = 0;
->>   	link->ops = ops;
->>   	link->prog = prog;
->> +	link->attach_type = attach_type;
->>   }
->>   
->>   void bpf_link_init(struct bpf_link *link, enum bpf_link_type type,
->> -		   const struct bpf_link_ops *ops, struct bpf_prog *prog)
->> +		   const struct bpf_link_ops *ops, struct bpf_prog *prog,
->> +		   enum bpf_attach_type attach_type)
->>   {
->> -	bpf_link_init_sleepable(link, type, ops, prog, false);
->> +	bpf_link_init_sleepable(link, type, ops, prog, false, attach_type);
->>   }
->>   
->>   static void bpf_link_free_id(int id)
->> @@ -3443,7 +3445,8 @@ static const struct bpf_link_ops bpf_tracing_link_lops = {
->>   static int bpf_tracing_prog_attach(struct bpf_prog *prog,
->>   				   int tgt_prog_fd,
->>   				   u32 btf_id,
->> -				   u64 bpf_cookie)
->> +				   u64 bpf_cookie,
->> +				   enum bpf_attach_type attach_type)
->>   {
->>   	struct bpf_link_primer link_primer;
->>   	struct bpf_prog *tgt_prog = NULL;
->> @@ -3511,7 +3514,8 @@ static int bpf_tracing_prog_attach(struct bpf_prog *prog,
->>   		goto out_put_prog;
->>   	}
->>   	bpf_link_init(&link->link.link, BPF_LINK_TYPE_TRACING,
->> -		      &bpf_tracing_link_lops, prog);
->> +		      &bpf_tracing_link_lops, prog, attach_type);
->> +
->>   	link->attach_type = prog->expected_attach_type;
->>   	link->link.cookie = bpf_cookie;
->>   
->> @@ -4049,7 +4053,8 @@ static int bpf_perf_link_attach(const union bpf_attr *attr, struct bpf_prog *pro
->>   		err = -ENOMEM;
->>   		goto out_put_file;
->>   	}
->> -	bpf_link_init(&link->link, BPF_LINK_TYPE_PERF_EVENT, &bpf_perf_link_lops, prog);
->> +	bpf_link_init(&link->link, BPF_LINK_TYPE_PERF_EVENT, &bpf_perf_link_lops, prog,
->> +		      attr->link_create.attach_type);
->>   	link->perf_file = perf_file;
->>   
->>   	err = bpf_link_prime(&link->link, &link_primer);
->> @@ -4081,7 +4086,8 @@ static int bpf_perf_link_attach(const union bpf_attr *attr, struct bpf_prog *pro
->>   #endif /* CONFIG_PERF_EVENTS */
->>   
->>   static int bpf_raw_tp_link_attach(struct bpf_prog *prog,
->> -				  const char __user *user_tp_name, u64 cookie)
->> +				  const char __user *user_tp_name, u64 cookie,
->> +				  enum bpf_attach_type attach_type)
->>   {
->>   	struct bpf_link_primer link_primer;
->>   	struct bpf_raw_tp_link *link;
->> @@ -4104,7 +4110,7 @@ static int bpf_raw_tp_link_attach(struct bpf_prog *prog,
->>   			tp_name = prog->aux->attach_func_name;
->>   			break;
->>   		}
->> -		return bpf_tracing_prog_attach(prog, 0, 0, 0);
->> +		return bpf_tracing_prog_attach(prog, 0, 0, 0, attach_type);
->>   	case BPF_PROG_TYPE_RAW_TRACEPOINT:
->>   	case BPF_PROG_TYPE_RAW_TRACEPOINT_WRITABLE:
->>   		if (strncpy_from_user(buf, user_tp_name, sizeof(buf) - 1) < 0)
->> @@ -4127,7 +4133,7 @@ static int bpf_raw_tp_link_attach(struct bpf_prog *prog,
->>   	}
->>   	bpf_link_init_sleepable(&link->link, BPF_LINK_TYPE_RAW_TRACEPOINT,
->>   				&bpf_raw_tp_link_lops, prog,
->> -				tracepoint_is_faultable(btp->tp));
->> +				tracepoint_is_faultable(btp->tp), attach_type);
->>   	link->btp = btp;
->>   	link->cookie = cookie;
->>   
->> @@ -4168,7 +4174,7 @@ static int bpf_raw_tracepoint_open(const union bpf_attr *attr)
->>   
->>   	tp_name = u64_to_user_ptr(attr->raw_tracepoint.name);
->>   	cookie = attr->raw_tracepoint.cookie;
->> -	fd = bpf_raw_tp_link_attach(prog, tp_name, cookie);
->> +	fd = bpf_raw_tp_link_attach(prog, tp_name, cookie, prog->expected_attach_type);
->>   	if (fd < 0)
->>   		bpf_prog_put(prog);
->>   	return fd;
->> @@ -5536,7 +5542,8 @@ static int link_create(union bpf_attr *attr, bpfptr_t uattr)
->>   		ret = bpf_tracing_prog_attach(prog,
->>   					      attr->link_create.target_fd,
->>   					      attr->link_create.target_btf_id,
->> -					      attr->link_create.tracing.cookie);
->> +					      attr->link_create.tracing.cookie,
->> +					      attr->link_create.attach_type);
->>   		break;
->>   	case BPF_PROG_TYPE_LSM:
->>   	case BPF_PROG_TYPE_TRACING:
->> @@ -5545,7 +5552,8 @@ static int link_create(union bpf_attr *attr, bpfptr_t uattr)
->>   			goto out;
->>   		}
->>   		if (prog->expected_attach_type == BPF_TRACE_RAW_TP)
->> -			ret = bpf_raw_tp_link_attach(prog, NULL, attr->link_create.tracing.cookie);
->> +			ret = bpf_raw_tp_link_attach(prog, NULL, attr->link_create.tracing.cookie,
->> +						     attr->link_create.attach_type);
->>   		else if (prog->expected_attach_type == BPF_TRACE_ITER)
->>   			ret = bpf_iter_link_attach(attr, uattr, prog);
->>   		else if (prog->expected_attach_type == BPF_LSM_CGROUP)
->> @@ -5554,7 +5562,8 @@ static int link_create(union bpf_attr *attr, bpfptr_t uattr)
->>   			ret = bpf_tracing_prog_attach(prog,
->>   						      attr->link_create.target_fd,
->>   						      attr->link_create.target_btf_id,
->> -						      attr->link_create.tracing.cookie);
->> +						      attr->link_create.tracing.cookie,
->> +						      attr->link_create.attach_type);
->>   		break;
->>   	case BPF_PROG_TYPE_FLOW_DISSECTOR:
->>   	case BPF_PROG_TYPE_SK_LOOKUP:
->> diff --git a/kernel/bpf/tcx.c b/kernel/bpf/tcx.c
->> index 2e4885e7781..e6a14f408d9 100644
->> --- a/kernel/bpf/tcx.c
->> +++ b/kernel/bpf/tcx.c
->> @@ -301,7 +301,8 @@ static int tcx_link_init(struct tcx_link *tcx,
->>   			 struct net_device *dev,
->>   			 struct bpf_prog *prog)
->>   {
->> -	bpf_link_init(&tcx->link, BPF_LINK_TYPE_TCX, &tcx_link_lops, prog);
->> +	bpf_link_init(&tcx->link, BPF_LINK_TYPE_TCX, &tcx_link_lops, prog,
->> +		      attr->link_create.attach_type);
->>   	tcx->location = attr->link_create.attach_type;
->>   	tcx->dev = dev;
->>   	return bpf_link_prime(&tcx->link, link_primer);
->> diff --git a/kernel/bpf/trampoline.c b/kernel/bpf/trampoline.c
->> index b1e358c16ee..0e364614c3a 100644
->> --- a/kernel/bpf/trampoline.c
->> +++ b/kernel/bpf/trampoline.c
->> @@ -674,7 +674,8 @@ static const struct bpf_link_ops bpf_shim_tramp_link_lops = {
->>   
->>   static struct bpf_shim_tramp_link *cgroup_shim_alloc(const struct bpf_prog *prog,
->>   						     bpf_func_t bpf_func,
->> -						     int cgroup_atype)
->> +						     int cgroup_atype,
->> +						     enum bpf_attach_type attach_type)
->>   {
->>   	struct bpf_shim_tramp_link *shim_link = NULL;
->>   	struct bpf_prog *p;
->> @@ -701,7 +702,7 @@ static struct bpf_shim_tramp_link *cgroup_shim_alloc(const struct bpf_prog *prog
->>   	p->expected_attach_type = BPF_LSM_MAC;
->>   	bpf_prog_inc(p);
->>   	bpf_link_init(&shim_link->link.link, BPF_LINK_TYPE_UNSPEC,
->> -		      &bpf_shim_tramp_link_lops, p);
->> +		      &bpf_shim_tramp_link_lops, p, attach_type);
->>   	bpf_cgroup_atype_get(p->aux->attach_btf_id, cgroup_atype);
->>   
->>   	return shim_link;
->> @@ -726,7 +727,8 @@ static struct bpf_shim_tramp_link *cgroup_shim_find(struct bpf_trampoline *tr,
->>   }
->>   
->>   int bpf_trampoline_link_cgroup_shim(struct bpf_prog *prog,
->> -				    int cgroup_atype)
->> +				    int cgroup_atype,
->> +				    enum bpf_attach_type attach_type)
->>   {
->>   	struct bpf_shim_tramp_link *shim_link = NULL;
->>   	struct bpf_attach_target_info tgt_info = {};
->> @@ -763,7 +765,7 @@ int bpf_trampoline_link_cgroup_shim(struct bpf_prog *prog,
->>   
->>   	/* Allocate and install new shim. */
->>   
->> -	shim_link = cgroup_shim_alloc(prog, bpf_func, cgroup_atype);
->> +	shim_link = cgroup_shim_alloc(prog, bpf_func, cgroup_atype, attach_type);
->>   	if (!shim_link) {
->>   		err = -ENOMEM;
->>   		goto err;
->> diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
->> index e7f97a9a8bb..ffdde840abb 100644
->> --- a/kernel/trace/bpf_trace.c
->> +++ b/kernel/trace/bpf_trace.c
->> @@ -2986,7 +2986,7 @@ int bpf_kprobe_multi_link_attach(const union bpf_attr *attr, struct bpf_prog *pr
->>   	}
->>   
->>   	bpf_link_init(&link->link, BPF_LINK_TYPE_KPROBE_MULTI,
->> -		      &bpf_kprobe_multi_link_lops, prog);
->> +		      &bpf_kprobe_multi_link_lops, prog, attr->link_create.attach_type);
->>   
->>   	err = bpf_link_prime(&link->link, &link_primer);
->>   	if (err)
->> @@ -3441,7 +3441,7 @@ int bpf_uprobe_multi_link_attach(const union bpf_attr *attr, struct bpf_prog *pr
->>   	link->link.flags = flags;
->>   
->>   	bpf_link_init(&link->link, BPF_LINK_TYPE_UPROBE_MULTI,
->> -		      &bpf_uprobe_multi_link_lops, prog);
->> +		      &bpf_uprobe_multi_link_lops, prog, attr->link_create.attach_type);
->>   
->>   	for (i = 0; i < cnt; i++) {
->>   		uprobes[i].uprobe = uprobe_register(d_real_inode(link->path.dentry),
->> diff --git a/net/bpf/bpf_dummy_struct_ops.c b/net/bpf/bpf_dummy_struct_ops.c
->> index f71f67c6896..812457819b5 100644
->> --- a/net/bpf/bpf_dummy_struct_ops.c
->> +++ b/net/bpf/bpf_dummy_struct_ops.c
->> @@ -171,7 +171,8 @@ int bpf_struct_ops_test_run(struct bpf_prog *prog, const union bpf_attr *kattr,
->>   	}
->>   	/* prog doesn't take the ownership of the reference from caller */
->>   	bpf_prog_inc(prog);
->> -	bpf_link_init(&link->link, BPF_LINK_TYPE_STRUCT_OPS, &bpf_struct_ops_link_lops, prog);
->> +	bpf_link_init(&link->link, BPF_LINK_TYPE_STRUCT_OPS, &bpf_struct_ops_link_lops, prog,
->> +		      prog->expected_attach_type);
->>   
->>   	op_idx = prog->expected_attach_type;
->>   	err = bpf_struct_ops_prepare_trampoline(tlinks, link,
->> diff --git a/net/core/dev.c b/net/core/dev.c
->> index be97c440ecd..7969fddc94e 100644
->> --- a/net/core/dev.c
->> +++ b/net/core/dev.c
->> @@ -10364,7 +10364,8 @@ int bpf_xdp_link_attach(const union bpf_attr *attr, struct bpf_prog *prog)
->>   		goto unlock;
->>   	}
->>   
->> -	bpf_link_init(&link->link, BPF_LINK_TYPE_XDP, &bpf_xdp_link_lops, prog);
->> +	bpf_link_init(&link->link, BPF_LINK_TYPE_XDP, &bpf_xdp_link_lops, prog,
->> +		      attr->link_create.attach_type);
->>   	link->dev = dev;
->>   	link->flags = attr->link_create.flags;
->>   
->> diff --git a/net/core/sock_map.c b/net/core/sock_map.c
->> index 82a14f131d0..fbe9a33ddf1 100644
->> --- a/net/core/sock_map.c
->> +++ b/net/core/sock_map.c
->> @@ -1866,7 +1866,8 @@ int sock_map_link_create(const union bpf_attr *attr, struct bpf_prog *prog)
->>   	}
->>   
->>   	attach_type = attr->link_create.attach_type;
->> -	bpf_link_init(&sockmap_link->link, BPF_LINK_TYPE_SOCKMAP, &sock_map_link_ops, prog);
->> +	bpf_link_init(&sockmap_link->link, BPF_LINK_TYPE_SOCKMAP, &sock_map_link_ops, prog,
->> +		      attach_type);
->>   	sockmap_link->map = map;
->>   	sockmap_link->attach_type = attach_type;
->>   
->> diff --git a/net/netfilter/nf_bpf_link.c b/net/netfilter/nf_bpf_link.c
->> index 06b08484470..a054d3b216d 100644
->> --- a/net/netfilter/nf_bpf_link.c
->> +++ b/net/netfilter/nf_bpf_link.c
->> @@ -225,7 +225,8 @@ int bpf_nf_link_attach(const union bpf_attr *attr, struct bpf_prog *prog)
->>   	if (!link)
->>   		return -ENOMEM;
->>   
->> -	bpf_link_init(&link->link, BPF_LINK_TYPE_NETFILTER, &bpf_nf_link_lops, prog);
->> +	bpf_link_init(&link->link, BPF_LINK_TYPE_NETFILTER, &bpf_nf_link_lops, prog,
->> +		      attr->link_create.attach_type);
->>   
->>   	link->hook_ops.hook = nf_hook_run_bpf;
->>   	link->hook_ops.hook_ops_type = NF_HOOK_OP_BPF;
->> -- 
->> 2.48.1
->>
+The whole AND ONLY point of using the unsafe user access macros is
+performance. You are now actively breaking the whole point of them.
 
+If you need to add debug printouts to user accesses, just don't use
+the 'unsafe' ones.
 
--- 
-Best Regards
-Tao Chen
+Or add the debug to after the unsafe region has finished. Not this way.
+
+This patch is disgusting, in other words. It's wrong. STOP IT.
+
+              Linus
