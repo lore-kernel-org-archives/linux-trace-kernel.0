@@ -1,31 +1,31 @@
-Received: from out30-119.freemail.mail.aliyun.com (out30-119.freemail.mail.aliyun.com [115.124.30.119])
+Received: from out30-99.freemail.mail.aliyun.com (out30-99.freemail.mail.aliyun.com [115.124.30.99])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 444B321FF3E;
-	Tue,  8 Jul 2025 06:09:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.119
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF8F5219EB;
+	Tue,  8 Jul 2025 06:15:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.99
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751954964; cv=none; b=MY9ek3bE5uqmPvcgQ57ogyb9qwr4HSvrlbxEtbKVB1NNTqTEGFT51cv27XzRR+9GJ0XYor0tOocvZ1GLejU+hyojYBU6vKXCPK7+M7bxWZhE3109ft1clwOo1pso/SsqOxWFnWzEoo/4XdphEh6zXB1q0rMmPVYstz22zVsOIeM=
+	t=1751955350; cv=none; b=p/noFvPopP+LQOsYB9TmTDIv6zcyoSLhMzbrjze6fGDCWwZzucnf8dcoNJanNH4p4RzCru8pCI2whiEPFliPaJAhy403cdiimMEmLnlwpJ6x/6CqyanoYEtUHhKSviKMN6DKlfts1ghxp9zP5OBh2NvLU36wuDmgewiGErXFyHg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751954964; c=relaxed/simple;
-	bh=pPOo+ktL9Tfotnr6ffVPd/vkVlhcENzcynw9OZkpRdY=;
+	s=arc-20240116; t=1751955350; c=relaxed/simple;
+	bh=mbSg54oeCfBlZ8IPSjr+o7H6yLf1p5I8PFKTtzGrV+A=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=gZVQoHWFNAuN51sU9qSrCVVUe+79TrK9KzsG1S50/LD4tov9c2181xO4Cw3lm1ff0+LkdLzPIQIwG13fgJPcRutPVaFBuhdlc+BozruQmnLjEzgc8WXvDoU2xFQqvJvXDVqvF67nw3BhRzsYReCqBEu2AxMuqstp5N2wQY8ZBbU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=WgtQwHLl; arc=none smtp.client-ip=115.124.30.119
+	 In-Reply-To:Content-Type; b=fviyF/0Z2Ar5nIlgzok1os+GOqBYJn8VuaCBI5krLs+wLq7O6+GrSZVuj748oWRnZ5XsRnRWudVdU6iF/oTO0peLyMa/6LVMPGVthFzr5LLbusjkOjSfd3zzFZoQQ1/X61HKb2WPDxpQK2We+kinVc1Y+adSMgadF1KjWbMwrI4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=CD/2dz8C; arc=none smtp.client-ip=115.124.30.99
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="WgtQwHLl"
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="CD/2dz8C"
 DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linux.alibaba.com; s=default;
-	t=1751954952; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=zh0GZgGllEOdHJ4JfcnZXS605Yci87SIRFoTaKVIHL0=;
-	b=WgtQwHLlxa1M42TBYI2ooP+5blNjMNxRxKxO/rzsAKwzRNXLL0wgQWfy0BinSS22T84tqW925Z5dR+ww8BbOLhpaCXZ7CIPfKZ9n9yR8UHYcRaeVHS0O8E8aAyKwCV8llTrVr/V63XG3a6KVM/PLPZQEkDPmAbVpystHaQzOq3s=
-Received: from 30.74.144.119(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0WiL4DJh_1751954947 cluster:ay36)
+	t=1751955344; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=wupd60Oal9Y3QOsXWJFex1COZtG3ybcO2A2WTdS/tRc=;
+	b=CD/2dz8CHnUnoRqLxvrPobeLgm8kAFQfK1Fr2priGLVi6y13CWdDCggZiKdTX1VC3E1XS6uvDyI9ZTkgZNKnlJ0OUn4D9ifMDxc8bWWWkDw63Hi96f1pgdmmX6yogzjO2Ejl2XCyojHZK3qEhCCUfrZ7bPDESx/WmWLcMiIX2l4=
+Received: from 30.74.144.119(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0WiL4GDP_1751955340 cluster:ay36)
           by smtp.aliyun-inc.com;
-          Tue, 08 Jul 2025 14:09:08 +0800
-Message-ID: <342d5fe1-cd39-462c-b2a4-b5d6979a8a21@linux.alibaba.com>
-Date: Tue, 8 Jul 2025 14:09:07 +0800
+          Tue, 08 Jul 2025 14:15:41 +0800
+Message-ID: <854ef84f-20ae-4985-9514-7f0616e0fc85@linux.alibaba.com>
+Date: Tue, 8 Jul 2025 14:15:40 +0800
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -33,121 +33,89 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v8 14/15] khugepaged: add per-order mTHP khugepaged stats
-To: Nico Pache <npache@redhat.com>, linux-mm@kvack.org,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
-Cc: david@redhat.com, ziy@nvidia.com, lorenzo.stoakes@oracle.com,
- Liam.Howlett@oracle.com, ryan.roberts@arm.com, dev.jain@arm.com,
- corbet@lwn.net, rostedt@goodmis.org, mhiramat@kernel.org,
- mathieu.desnoyers@efficios.com, akpm@linux-foundation.org,
- baohua@kernel.org, willy@infradead.org, peterx@redhat.com,
- wangkefeng.wang@huawei.com, usamaarif642@gmail.com, sunnanyong@huawei.com,
- vishal.moola@gmail.com, thomas.hellstrom@linux.intel.com,
- yang@os.amperecomputing.com, kirill.shutemov@linux.intel.com,
- aarcange@redhat.com, raquini@redhat.com, anshuman.khandual@arm.com,
- catalin.marinas@arm.com, tiwai@suse.de, will@kernel.org,
- dave.hansen@linux.intel.com, jack@suse.cz, cl@gentwo.org,
+Subject: Re: [PATCH v8 11/15] khugepaged: allow madvise_collapse to check all
+ anonymous mTHP orders
+To: Nico Pache <npache@redhat.com>, Andrew Morton
+ <akpm@linux-foundation.org>, david@redhat.com, dev.jain@arm.com,
+ Hugh Dickins <hughd@google.com>
+Cc: linux-mm@kvack.org, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ ziy@nvidia.com, lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com,
+ ryan.roberts@arm.com, corbet@lwn.net, rostedt@goodmis.org,
+ mhiramat@kernel.org, mathieu.desnoyers@efficios.com, baohua@kernel.org,
+ willy@infradead.org, peterx@redhat.com, wangkefeng.wang@huawei.com,
+ usamaarif642@gmail.com, sunnanyong@huawei.com, vishal.moola@gmail.com,
+ thomas.hellstrom@linux.intel.com, yang@os.amperecomputing.com,
+ kirill.shutemov@linux.intel.com, aarcange@redhat.com, raquini@redhat.com,
+ anshuman.khandual@arm.com, catalin.marinas@arm.com, tiwai@suse.de,
+ will@kernel.org, dave.hansen@linux.intel.com, jack@suse.cz, cl@gentwo.org,
  jglisse@google.com, surenb@google.com, zokeefe@google.com,
  hannes@cmpxchg.org, rientjes@google.com, mhocko@suse.com,
  rdunlap@infradead.org
 References: <20250702055742.102808-1-npache@redhat.com>
- <20250702055742.102808-15-npache@redhat.com>
+ <20250702055742.102808-12-npache@redhat.com>
+ <2f6d9541-8083-4d3c-a9c1-cba0d5bf98a0@linux.alibaba.com>
+ <20250704141422.359c89146ad69512b9be4902@linux-foundation.org>
+ <CAA1CXcDkr8itrXiuVq+Tck1hkRwgq-byXCcM3oHqy1dXOhhTTg@mail.gmail.com>
 From: Baolin Wang <baolin.wang@linux.alibaba.com>
-In-Reply-To: <20250702055742.102808-15-npache@redhat.com>
+In-Reply-To: <CAA1CXcDkr8itrXiuVq+Tck1hkRwgq-byXCcM3oHqy1dXOhhTTg@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
 
 
-On 2025/7/2 13:57, Nico Pache wrote:
-> With mTHP support inplace, let add the per-order mTHP stats for
-> exceeding NONE, SWAP, and SHARED.
+On 2025/7/8 12:37, Nico Pache wrote:
+> On Fri, Jul 4, 2025 at 3:14 PM Andrew Morton <akpm@linux-foundation.org> wrote:
+>>
+>> On Fri, 4 Jul 2025 14:11:13 +0800 Baolin Wang <baolin.wang@linux.alibaba.com> wrote:
+>>
+>>> On 2025/7/2 13:57, Nico Pache wrote:
+>>>> Allow madvise_collapse to scan/collapse all mTHP orders without the
+>>>> strict requirement of needing the PMD-order enabled.
+>>>>
+>>>> Signed-off-by: Nico Pache <npache@redhat.com>
+>>>
+>>> I am afraid we should drop this patch from the series, since Hugh
+>>> explicitly opposed my modification of the madvise_collapse control logic
+>>> in this thread[1].
+>>
+>> Well it drops easily enough.  I don't know if it compiles yet.
+>>
+>> Nico, can you confirm that you're OK with the droppage and that the
+>> series is still good without this patch?
+> Yes that is fine, it shouldn't conflict at all. Although this isn't
+> the only patch that will need modification... Ill reply to Baolin
+> inline here.
+>>
+>>> Moreover, since we have not yet clarified how to handle the conflict
+>>> between the semantics of madvise_collapse and the THP interfaces, we
+>>> should keep the current logic[2] (means madvise_collapse still only
+>>> allows PMD collapse).
+> Hi Baolin,
 > 
-> Signed-off-by: Nico Pache <npache@redhat.com>
-> ---
->   include/linux/huge_mm.h |  3 +++
->   mm/huge_memory.c        |  7 +++++++
->   mm/khugepaged.c         | 15 ++++++++++++---
->   3 files changed, 22 insertions(+), 3 deletions(-)
+> Sorry I saw most of that discussion but missed that point by David.
 > 
-> diff --git a/include/linux/huge_mm.h b/include/linux/huge_mm.h
-> index a6ea89fdaee6..6034b4c9dae5 100644
-> --- a/include/linux/huge_mm.h
-> +++ b/include/linux/huge_mm.h
-> @@ -141,6 +141,9 @@ enum mthp_stat_item {
->   	MTHP_STAT_SPLIT_DEFERRED,
->   	MTHP_STAT_NR_ANON,
->   	MTHP_STAT_NR_ANON_PARTIALLY_MAPPED,
-> +	MTHP_STAT_COLLAPSE_EXCEED_SWAP,
+> We should come to an agreement on what the proper approach is, because
+> if not we'll ALWAYS have this problem and NEVER solve it (pun
+> intended).
+> 
+> Jokes aside, if we are leaving MADV_COLLAPSE untouched then I need to
+> make some slight modifications to this series so that MADV_COLLAPSE
+> never tries anything other than PMD collapse (should be a pretty small
+> change). Dropping this commit alone does not achieve that, but rather
+> just allows MADV_COLLAPSE to work if PMD is disabled, and one other
+> mTHP size is enabled. On second thought this isn't great either as
+> MADV_COLLAPSE ignores sysfs, so if you have any mTHP size enabled, it
+> will still continue to collapse to other PMD+mTHP sizes... wow this
+> really is a mess.
 
-This stat seems never used.
+Yes, this is what I mentioned earlier about the conflict between 
+MADV_COLLAPSE and mTHP collapse :(
 
-> +	MTHP_STAT_COLLAPSE_EXCEED_NONE,
-> +	MTHP_STAT_COLLAPSE_EXCEED_SHARED,
->   	__MTHP_STAT_COUNT
->   };
+>>> If madvise_collapse is to support mTHP collapse, there will be more
+>>> semantic conflicts to discuss.
+> I guess a V9 is inevitable, I will drop mTHP support for
+> MADV_COLLAPSE, and drop this patch too. I'll let this series sit for a
+> week or so to gather reviews (and make sure nothing else is missing).
 
-Please also update the 'Documentation/admin-guide/mm/transhuge.rst' for 
-these new statistics.
-
->   
-> diff --git a/mm/huge_memory.c b/mm/huge_memory.c
-> index 69777a35e722..3eb1c34be601 100644
-> --- a/mm/huge_memory.c
-> +++ b/mm/huge_memory.c
-> @@ -632,6 +632,10 @@ DEFINE_MTHP_STAT_ATTR(split_failed, MTHP_STAT_SPLIT_FAILED);
->   DEFINE_MTHP_STAT_ATTR(split_deferred, MTHP_STAT_SPLIT_DEFERRED);
->   DEFINE_MTHP_STAT_ATTR(nr_anon, MTHP_STAT_NR_ANON);
->   DEFINE_MTHP_STAT_ATTR(nr_anon_partially_mapped, MTHP_STAT_NR_ANON_PARTIALLY_MAPPED);
-> +DEFINE_MTHP_STAT_ATTR(collapse_exceed_swap_pte, MTHP_STAT_COLLAPSE_EXCEED_SWAP);
-> +DEFINE_MTHP_STAT_ATTR(collapse_exceed_none_pte, MTHP_STAT_COLLAPSE_EXCEED_NONE);
-> +DEFINE_MTHP_STAT_ATTR(collapse_exceed_shared_pte, MTHP_STAT_COLLAPSE_EXCEED_SHARED);
-> +
->   
->   static struct attribute *anon_stats_attrs[] = {
->   	&anon_fault_alloc_attr.attr,
-> @@ -648,6 +652,9 @@ static struct attribute *anon_stats_attrs[] = {
->   	&split_deferred_attr.attr,
->   	&nr_anon_attr.attr,
->   	&nr_anon_partially_mapped_attr.attr,
-> +	&collapse_exceed_swap_pte_attr.attr,
-> +	&collapse_exceed_none_pte_attr.attr,
-> +	&collapse_exceed_shared_pte_attr.attr,
->   	NULL,
->   };
->   
-> diff --git a/mm/khugepaged.c b/mm/khugepaged.c
-> index 2c0962637c34..636b84bf1ca1 100644
-> --- a/mm/khugepaged.c
-> +++ b/mm/khugepaged.c
-> @@ -594,7 +594,10 @@ static int __collapse_huge_page_isolate(struct vm_area_struct *vma,
->   				continue;
->   			} else {
->   				result = SCAN_EXCEED_NONE_PTE;
-> -				count_vm_event(THP_SCAN_EXCEED_NONE_PTE);
-> +				if (order == HPAGE_PMD_ORDER)
-> +					count_vm_event(THP_SCAN_EXCEED_NONE_PTE);
-> +				else
-> +					count_mthp_stat(order, MTHP_STAT_COLLAPSE_EXCEED_NONE);
->   				goto out;
->   			}
->   		}
-> @@ -623,8 +626,14 @@ static int __collapse_huge_page_isolate(struct vm_area_struct *vma,
->   		/* See khugepaged_scan_pmd(). */
->   		if (folio_maybe_mapped_shared(folio)) {
->   			++shared;
-> -			if (order != HPAGE_PMD_ORDER || (cc->is_khugepaged &&
-> -			    shared > khugepaged_max_ptes_shared)) {
-> +			if (order != HPAGE_PMD_ORDER) {
-> +				result = SCAN_EXCEED_SHARED_PTE;
-> +				count_mthp_stat(order, MTHP_STAT_COLLAPSE_EXCEED_SHARED);
-> +				goto out;
-> +			}
-> +
-> +			if (cc->is_khugepaged &&
-> +				shared > khugepaged_max_ptes_shared) {
->   				result = SCAN_EXCEED_SHARED_PTE;
->   				count_vm_event(THP_SCAN_EXCEED_SHARED_PTE);
->   				goto out;
-
+Sure.
