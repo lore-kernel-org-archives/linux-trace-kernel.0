@@ -1,123 +1,72 @@
-Received: from mailout2.w1.samsung.com (mailout2.w1.samsung.com [210.118.77.12])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B58120B80D
-	for <linux-trace-kernel@vger.kernel.org>; Tue,  8 Jul 2025 11:45:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5249827147B;
+	Tue,  8 Jul 2025 11:54:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751975128; cv=none; b=hM7vmASWw0NofnLgzFirLApRkicDonUjrTAxgK+KIzwwE6ThKkGnAVRrrIDrEZSKlHNLk9ZuXAx4ftVgARNUTX9DipcbqVAMN8VFKWaf84iBonJiEXlUpOrxLu554ivFoKw4vT89aujmDlRIFAh4XI6FphXdl85NV5I9nH5b2r4=
+	t=1751975684; cv=none; b=puataQXj3R662DTr64xIAmytqDlYNYZ57RBz2WVRRK7hUdvn/Z0blWgs85vh6oQJLudccvMZ0wr96n9rIYIqlWMg5ci5w/pv79FpDgeh0FImkQO2Gr2d7eFxRavoaPl5Qw8LhHpWkPJRYvUgw/OEL+4A3M/9vGsiS2y6xObOSak=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751975128; c=relaxed/simple;
-	bh=dDGmDdXbAVgOpktFUq0Y8CUWVS+LmZQ4NuInAHKnznw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:From:In-Reply-To:
-	 Content-Type:References; b=nA6kVgAfIUgSGS+5Vq4hfKfTWPAsZ1WQgOvSrkgh71KlT8Z9ivgE9O5JUsgs5WXKyrhBkNwL7mH/z4RCVLYb39etZF6i7fMpmBxqzs394S/hultxsF6Tv4YWA7HD9FXFTFyMN0mCmHWVlVkAWWkZsP9dQvclrea1pjPtNYaxLKI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=hTSmuD7o; arc=none smtp.client-ip=210.118.77.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1751975684; c=relaxed/simple;
+	bh=6kDPYQjd8AtPRzEp8sTWR+daYx1oyoORPe3Bk7shSGU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=ZAxPC+MGCAiUcbRNwdAjzkuQhlrFVQJaXSMxDpDz+jOlOJbDC1uqTx7GLuWpbAulDJM54eP4gxt+ARSgxUfIqMCRHIg3ENIJXYrqkyyDIoIYfafwmCK21G8dy/SDCj4auNLYa8n3xuxUfdKZC71aHlwU5qWeO0tDfykITIixoy4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iT2iUml+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="hTSmuD7o"
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-	by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20250708114524euoutp027d1e8eae51ec13c7aeb60ce27b82431b~QRBfjDPuo1955819558euoutp02h
-	for <linux-trace-kernel@vger.kernel.org>; Tue,  8 Jul 2025 11:45:24 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20250708114524euoutp027d1e8eae51ec13c7aeb60ce27b82431b~QRBfjDPuo1955819558euoutp02h
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1751975124;
-	bh=1ym+ZPwSAJBlUJTRBRpHOrnxcWfoWCspHKNp3aF96Zc=;
-	h=Date:Subject:To:Cc:From:In-Reply-To:References:From;
-	b=hTSmuD7oMDEzit2qwO94PA3KuPM3t2VfPla+ZeQLlhsNzfaZcuY74yloqGgMlREzO
-	 CsGI/sYzA9Yc1mk5B7u3++o5ws1E5d1puriNBi3OjaJXBAd0aHxnL7ewrUPjNlgXd6
-	 LV3oL4gOBjFPocvDRFQB7NcOwi5rH+2xd/RpiYis=
-Received: from eusmtip2.samsung.com (unknown [203.254.199.222]) by
-	eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-	20250708114523eucas1p2d8771c6a0d017b9bb67a6528e7582617~QRBe5i9Re1494914949eucas1p2S;
-	Tue,  8 Jul 2025 11:45:23 +0000 (GMT)
-Received: from [106.210.134.192] (unknown [106.210.134.192]) by
-	eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-	20250708114521eusmtip2651e660db53304d0ed855a7d7f6ea665~QRBcy78Hv2034520345eusmtip2O;
-	Tue,  8 Jul 2025 11:45:21 +0000 (GMT)
-Message-ID: <261f2417-78a9-45b8-bcec-7e36421a243c@samsung.com>
-Date: Tue, 8 Jul 2025 13:45:20 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iT2iUml+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 26F54C4CEED;
+	Tue,  8 Jul 2025 11:54:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751975683;
+	bh=6kDPYQjd8AtPRzEp8sTWR+daYx1oyoORPe3Bk7shSGU=;
+	h=From:To:Cc:Subject:Date:From;
+	b=iT2iUml+PnAUAylP8sk5mxXdymZJPsiPzAdn+FVpobPLt80UtehXXeCh1QIGn5P+f
+	 ef5GXBtyrr2KgFBwiDgBUv8m3X2XMw3wnABEpWDLrl+i6p7SLv5EeYRXf3ZElqB+Qe
+	 Z8vlh6+2bbix183O93h3Hn20Vv5bKbCYFcSH7DHrR21UOUjgXDr7fQ/QN/1ZaExIz6
+	 omLzQW64x8AfzLcyUw0pLeIsSgZC6yKnKNwSTIAS+fhLOF4962vvoKTyVywoQ/LLXi
+	 7tYSzYm/j9fVOIaP4b2tDScodqrA07Vak2VCuLzZNTJR82nZQDjDGjvT+KuWkrxaiU
+	 22F6plNANXnMw==
+From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Subject: [PATCH 0/2] tracing: Fix an event field filter issue
+Date: Tue,  8 Jul 2025 20:54:40 +0900
+Message-ID:  <175197567999.977073.8989204607899013923.stgit@mhiramat.tok.corp.google.com>
+X-Mailer: git-send-email 2.50.0.727.gbf7dc18ff4-goog
+User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/8] dma-mapping: migrate to physical address-based API
-To: Leon Romanovsky <leon@kernel.org>
-Cc: Christoph Hellwig <hch@lst.de>, Jonathan Corbet <corbet@lwn.net>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>, Michael Ellerman
-	<mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>, Christophe Leroy
-	<christophe.leroy@csgroup.eu>, Robin Murphy <robin.murphy@arm.com>, Joerg
-	Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>, "Michael S.
-	Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>, Xuan Zhuo
- <xuanzhuo@linux.alibaba.com>, =?UTF-8?Q?Eugenio_P=C3=A9rez?=
- <eperezma@redhat.com>, Alexander Potapenko <glider@google.com>, Marco Elver
- <elver@google.com>, Dmitry Vyukov <dvyukov@google.com>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>, Andrew Morton
- <akpm@linux-foundation.org>, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
- iommu@lists.linux.dev, virtualization@lists.linux.dev,
- kasan-dev@googlegroups.com, linux-trace-kernel@vger.kernel.org,
- linux-mm@kvack.org, Jason Gunthorpe <jgg@ziepe.ca>
-Content-Language: en-US
-From: Marek Szyprowski <m.szyprowski@samsung.com>
-In-Reply-To: <20250708110007.GF592765@unreal>
-Content-Transfer-Encoding: 8bit
-X-CMS-MailID: 20250708114523eucas1p2d8771c6a0d017b9bb67a6528e7582617
-X-Msg-Generator: CA
 Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20250625131920eucas1p271b196cde042bd39ac08fb12beff5baf
-X-EPHeader: CA
-X-CMS-RootMailID: 20250625131920eucas1p271b196cde042bd39ac08fb12beff5baf
-References: <CGME20250625131920eucas1p271b196cde042bd39ac08fb12beff5baf@eucas1p2.samsung.com>
-	<cover.1750854543.git.leon@kernel.org>
-	<35df6f2a-0010-41fe-b490-f52693fe4778@samsung.com>
-	<20250627170213.GL17401@unreal> <20250630133839.GA26981@lst.de>
-	<69b177dc-c149-40d3-bbde-3f6bad0efd0e@samsung.com>
-	<20250708110007.GF592765@unreal>
+Content-Transfer-Encoding: 8bit
 
-On 08.07.2025 13:00, Leon Romanovsky wrote:
-> On Tue, Jul 08, 2025 at 12:27:09PM +0200, Marek Szyprowski wrote:
->> On 30.06.2025 15:38, Christoph Hellwig wrote:
->>> On Fri, Jun 27, 2025 at 08:02:13PM +0300, Leon Romanovsky wrote:
->>>>> Thanks for this rework! I assume that the next step is to add map_phys
->>>>> callback also to the dma_map_ops and teach various dma-mapping providers
->>>>> to use it to avoid more phys-to-page-to-phys conversions.
->>>> Probably Christoph will say yes, however I personally don't see any
->>>> benefit in this. Maybe I wrong here, but all existing .map_page()
->>>> implementation platforms don't support p2p anyway. They won't benefit
->>>> from this such conversion.
->>> I think that conversion should eventually happen, and rather sooner than
->>> later.
->> Agreed.
->>
->> Applied patches 1-7 to my dma-mapping-next branch. Let me know if one
->> needs a stable branch with it.
-> Thanks a lot, I don't think that stable branch is needed. Realistically
-> speaking, my VFIO DMA work won't be merged this cycle, We are in -rc5,
-> it is complete rewrite from RFC version and touches pci-p2p code (to
-> remove dependency on struct page) in addition to VFIO, so it will take
-> time.
->
-> Regarding, last patch (hmm), it will be great if you can take it.
-> We didn't touch anything in hmm.c this cycle and have no plans to send PR.
-> It can safely go through your tree.
+Hi,
 
-Okay, then I would like to get an explicit ack from Jérôme for this.
+Here is a series to fix some issues in the tracing event filter.
+The first patch removes the __attribute__ from the event format type
+string, which can cause issues with parsing (detecting the string
+type). The second patch optimizes memory allocation in
+__trace_define_field() by only allocating field->type when it
+needs to be sanitized.
 
->> Leon, it would be great if You could also prepare an incremental patch
->> adding map_phys callback to the dma_maps_ops, so the individual
->> arch-specific dma-mapping providers can be then converted (or simplified
->> in many cases) too.
-> Sure, will do.
+Thank you,
 
-Thanks!
 
-Best regards
--- 
-Marek Szyprowski, PhD
-Samsung R&D Institute Poland
+---
 
+Masami Hiramatsu (Google) (2):
+      tracing: Remove "__attribute__()" from the type field of event format
+      tracing: Allocate field->type only if it needs to be sanitized
+
+
+ kernel/trace/trace.h        |    1 +
+ kernel/trace/trace_events.c |   60 +++++++++++++++++++++++++++++++++++++++++--
+ 2 files changed, 58 insertions(+), 3 deletions(-)
+
+--
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
