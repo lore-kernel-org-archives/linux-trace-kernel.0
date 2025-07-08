@@ -1,104 +1,149 @@
-Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailout2.w1.samsung.com (mailout2.w1.samsung.com [210.118.77.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73865261595
-	for <linux-trace-kernel@vger.kernel.org>; Tue,  8 Jul 2025 15:54:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A43112E264D
+	for <linux-trace-kernel@vger.kernel.org>; Tue,  8 Jul 2025 15:57:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751990058; cv=none; b=qtrNQV/opC3lSbI7Ro9tyBqc6hYPWhlF26UqKb9VnY17+92AT/XjQUxsrCvJ/csOadZ6ClRvoeepXE2F8Ufs5oI3Hd9t5lQIp9bzPBFJesXPyPlJY6hIwFe7/nEXuSe3UvES3yvKcXgVR0t8DO0m2wOXqkami6ILrM6Y/yEFV4k=
+	t=1751990259; cv=none; b=urfiCQhs9ug3EHuB1+e2eTc7J2uaF9vl+BTaDcSF5qo5hc6W1F1LTeg0eKzcCSz5QNEtle6hO5cZOYx+4m9GH1XtIrw3dYY1UVtp4o4mjjt/ZLIz7BqqRPF7hIA9ls/5xuW3Nx2DhnLBYRGhxlfziLkl7DTECeJKCAtCUymxQBw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751990058; c=relaxed/simple;
-	bh=gjZLHGLmfbVObDGOZ4Dg5r0jve/c3K3iH7rC6rix6b0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=be1FjgXZACov9ANUcbffHY+Xu4AZJ2TTKgOVj8nb0hXKDMk6YRFAmLA5HE6NVzMZ/LMTIJYxbqE5srsmBA8PYrIhspScqhVb9jgCpLDtD8q1RKljdb1kCh8F51DCVJ/qbKb88BeGTzeulY70dwkI9j/PxBvbvP/gEA76l+SS+Hg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=ef4TnyBY; arc=none smtp.client-ip=209.85.208.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1751990259; c=relaxed/simple;
+	bh=CkzfE94IorgBBRqnMAAmMmq24EJdqyfxe6lmBjXxP6U=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:In-Reply-To:
+	 Content-Type:References; b=WArnoqqiATX6rfs/1pmBdLw90bS1Ft1OR/ImjBksq3FhEUzz88N9O/nZlaiwrztve5oCTZpdR8QpDfbgKqNq/wNTpnchNulhcpvLLqoyZGqcEtwuNGkAoxS6DxztvZYkPh52dj3iO10jiOvaf+NUvd+x7QOQfpAadLi58XBHJmM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=PAX9aPjm; arc=none smtp.client-ip=210.118.77.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="ef4TnyBY"
-Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-60bf5a08729so8469593a12.0
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 08 Jul 2025 08:54:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1751990054; x=1752594854; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=JviNfoY/DbOqb7IBhvcbJrjlb0wZveDxGuzjGFCnAdw=;
-        b=ef4TnyBYTj4iDNrEIclbT9tK1giFtWOLDdEwzLM1+HYwwUHO9PyEMleMNFxSIxsmmv
-         lUovRuQd+9tWda/QsNynUMklonaEFih2HMA89xSx7CBvZ3PHAvkuIaddqAolPfSspV8N
-         B8jRtLcOn0qoMVfPH2sWThM2yJY187m0krAnk=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751990054; x=1752594854;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=JviNfoY/DbOqb7IBhvcbJrjlb0wZveDxGuzjGFCnAdw=;
-        b=lxPRYxYOvmPka4rm7jHYjG7JIABPldxHQwey9JaV4CdWaUBei6384by6qYI5vvhcyw
-         MA48517orBxe/7B40IgsQYg4gP9j+cyYNfo66eZUfVrsJr5moDODsKxpz5vHEmTLSZmB
-         T8YaODgRbIEnKCdFfzVGQHPY0rN8A+Wz2V5Mka03jFO5SNvhmBN7t7ozVsIaMBsJF/Me
-         R1VVSCuczGi6Puw+Mcjkk5A3vDPk9ParwPkWWBjLRpj/Xa+qJf0F3OrwpupnKi5Sz+qn
-         mMQdwOSicrxCWlme4u930goBP1Lcdfmx0R53GmXFZ0buCsE5dIjmnIuE30t0x10oC+4u
-         GXJA==
-X-Forwarded-Encrypted: i=1; AJvYcCVVAcvesrjjl4nYqcN0NjZWx5Fv6f+3xFWn8gfBjfXk4hTU5yTN2p14Tl3BEhAZA/CJ0fbizV94rAcmvM2goFrag4Y=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyid9mSLLIwJ0mjjvJ3KRX21XM6zHqUDHefE1KS2d9fwObDhs1T
-	cCi0KpJVBQeq3IvMUbXtYooNvUF02Na2gvGuYkI35p9JiswiajFqu6koOZDSAa49oT3DUi6Zy9C
-	ckh+fRQ1O7A==
-X-Gm-Gg: ASbGncsJlgTCZzpTCXy052mRSNJ4IJ5FmA5xLGPft5Bu8g//cflG9tIEswkwBxMJEBM
-	VHJno5HUVmAGGAk5SxgkfDZFzXJxnf/E/pxaiNYVoQ76+5C/FlryBSyGxYaSwAniwxGX/OkPyah
-	gtlxUl9Kfu6reNV1nX6ORqpxSFtnTTJv8uytm8XJ9jq0/4cNfSi/YQOcYgn+SJeZ8OjOGKC8lNj
-	p3BqOYdSlUXRHH2AfptX8Ah1hICy6eR9Eg69OIEzcFXFESW3tFBGD79/B43q9H7U4sYMXkOc9t4
-	ZCMqDsI7eCamECP8qc7H7Iz5Ak2zdcjARil/MlXC07TlSn/0EcKJmtHAOVnwtm3BA5xsrSgDzWT
-	XFAqohzpHOrAJdUfYBh66E6pkHKE014bAg22S
-X-Google-Smtp-Source: AGHT+IEFVnFH0FMqUpez+Sp8XwtGiJtIkF0tW3EF8+POpGQ4O1eCGAqmizFlXv/o4nrFNdQAAIiZOw==
-X-Received: by 2002:aa7:d958:0:b0:608:f493:871c with SMTP id 4fb4d7f45d1cf-60fd6527017mr12841324a12.14.1751990054547;
-        Tue, 08 Jul 2025 08:54:14 -0700 (PDT)
-Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com. [209.85.208.46])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-61045467919sm1770196a12.68.2025.07.08.08.54.13
-        for <linux-trace-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 08 Jul 2025 08:54:13 -0700 (PDT)
-Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-6099d89a19cso8111782a12.2
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 08 Jul 2025 08:54:13 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWq7F7+DCzN5/Kh61ThJv21peuS6gTJBWxUrZViFN/vvRbexoK7YetGQ+l4upOSt3kD9lkOxZXwR/rXwooHddmnn6A=@vger.kernel.org
-X-Received: by 2002:a05:6402:27c9:b0:607:f64a:47f9 with SMTP id
- 4fb4d7f45d1cf-60fd65092eamr15258834a12.3.1751990052924; Tue, 08 Jul 2025
- 08:54:12 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="PAX9aPjm"
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+	by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20250708155734euoutp0256ddf36cb3b699d93cba42df2704a7f7~QUdqy_o9F1579915799euoutp028
+	for <linux-trace-kernel@vger.kernel.org>; Tue,  8 Jul 2025 15:57:34 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20250708155734euoutp0256ddf36cb3b699d93cba42df2704a7f7~QUdqy_o9F1579915799euoutp028
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1751990254;
+	bh=uyab8dr49wEubYW85hrXKyGCcYl1OC56FE0kAT8DEIc=;
+	h=Date:Subject:From:To:Cc:In-Reply-To:References:From;
+	b=PAX9aPjmQKMw6GLmeGQtiXElLQtSpy3YzZ/VZyQdgAMom5kiPE/FjvCg3WC/1+nPy
+	 10u5WabCCNOfLJhq7QAU3B1PpRxFQR3S//A+2qstDRiCAC24ehoVJf28O8MpDNi/Zp
+	 1CxnqxNQY3PzCfWVombnnMFfy4sDHCYVZ/YIErc0=
+Received: from eusmtip2.samsung.com (unknown [203.254.199.222]) by
+	eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+	20250708155734eucas1p1407185657d9833058c6b35d11e1d0b01~QUdqUADk60849108491eucas1p1v;
+	Tue,  8 Jul 2025 15:57:34 +0000 (GMT)
+Received: from [106.210.134.192] (unknown [106.210.134.192]) by
+	eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+	20250708155731eusmtip2162f9813a1cd05daa31b4d62d2bead82~QUdnRS2nc2073620736eusmtip2d;
+	Tue,  8 Jul 2025 15:57:30 +0000 (GMT)
+Message-ID: <b542bfa3-d680-4952-98fe-0a44ae3bddd7@samsung.com>
+Date: Tue, 8 Jul 2025 17:57:30 +0200
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250708021115.894007410@kernel.org> <20250708021200.058879671@kernel.org>
- <CAHk-=widGT2M=kJJr6TwWsMjfYSghL9k3LgxJvRard0wtiP62A@mail.gmail.com>
- <20250708092351.4548c613@gandalf.local.home> <orpxec72lzxzkwhcu3gateqbcw6cdlojxvxmvopa2jxr67d4az@rvgfflvrbzk5>
- <20250708104130.25b76df9@gandalf.local.home>
-In-Reply-To: <20250708104130.25b76df9@gandalf.local.home>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Tue, 8 Jul 2025 08:53:56 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wgXcc99EXKfK++FEQzMQc8S16WOwvn=1DcP_ns1jCCYeA@mail.gmail.com>
-X-Gm-Features: Ac12FXxjWw7PewHMCf7vpGhvfipJRiRQXNVSUY5qO5rT6dy-QSSufIBM28NP0Kw
-Message-ID: <CAHk-=wgXcc99EXKfK++FEQzMQc8S16WOwvn=1DcP_ns1jCCYeA@mail.gmail.com>
-Subject: Re: [PATCH v8 10/12] unwind_user/sframe: Enable debugging in uaccess regions
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Josh Poimboeuf <jpoimboe@kernel.org>, Steven Rostedt <rostedt@kernel.org>, 
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	bpf@vger.kernel.org, x86@kernel.org, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@kernel.org>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Thomas Gleixner <tglx@linutronix.de>, Andrii Nakryiko <andrii@kernel.org>, 
-	Indu Bhagat <indu.bhagat@oracle.com>, "Jose E. Marchesi" <jemarch@gnu.org>, 
-	Beau Belgrave <beaub@linux.microsoft.com>, Jens Remus <jremus@linux.ibm.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, Jens Axboe <axboe@kernel.dk>, 
-	Florian Weimer <fweimer@redhat.com>, Sam James <sam@gentoo.org>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/8] dma-mapping: migrate to physical address-based API
+From: Marek Szyprowski <m.szyprowski@samsung.com>
+To: Leon Romanovsky <leon@kernel.org>
+Cc: Christoph Hellwig <hch@lst.de>, Jonathan Corbet <corbet@lwn.net>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>, Michael Ellerman
+	<mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>, Christophe Leroy
+	<christophe.leroy@csgroup.eu>, Robin Murphy <robin.murphy@arm.com>, Joerg
+	Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>, "Michael S.
+	Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>, Xuan Zhuo
+ <xuanzhuo@linux.alibaba.com>, =?UTF-8?Q?Eugenio_P=C3=A9rez?=
+ <eperezma@redhat.com>, Alexander Potapenko <glider@google.com>, Marco Elver
+ <elver@google.com>, Dmitry Vyukov <dvyukov@google.com>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>, Andrew Morton
+ <akpm@linux-foundation.org>, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+ iommu@lists.linux.dev, virtualization@lists.linux.dev,
+ kasan-dev@googlegroups.com, linux-trace-kernel@vger.kernel.org,
+ linux-mm@kvack.org, Jason Gunthorpe <jgg@ziepe.ca>
+Content-Language: en-US
+In-Reply-To: <39d43309-9f34-48bc-a9ad-108c607ba175@samsung.com>
+Content-Transfer-Encoding: 8bit
+X-CMS-MailID: 20250708155734eucas1p1407185657d9833058c6b35d11e1d0b01
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20250625131920eucas1p271b196cde042bd39ac08fb12beff5baf
+X-EPHeader: CA
+X-CMS-RootMailID: 20250625131920eucas1p271b196cde042bd39ac08fb12beff5baf
+References: <CGME20250625131920eucas1p271b196cde042bd39ac08fb12beff5baf@eucas1p2.samsung.com>
+	<cover.1750854543.git.leon@kernel.org>
+	<35df6f2a-0010-41fe-b490-f52693fe4778@samsung.com>
+	<20250627170213.GL17401@unreal> <20250630133839.GA26981@lst.de>
+	<69b177dc-c149-40d3-bbde-3f6bad0efd0e@samsung.com>
+	<20250708110007.GF592765@unreal>
+	<261f2417-78a9-45b8-bcec-7e36421a243c@samsung.com>
+	<20250708120647.GG592765@unreal>
+	<39d43309-9f34-48bc-a9ad-108c607ba175@samsung.com>
 
-On Tue, 8 Jul 2025 at 07:41, Steven Rostedt <rostedt@goodmis.org> wrote:
+On 08.07.2025 14:56, Marek Szyprowski wrote:
+> On 08.07.2025 14:06, Leon Romanovsky wrote:
+>> On Tue, Jul 08, 2025 at 01:45:20PM +0200, Marek Szyprowski wrote:
+>>> On 08.07.2025 13:00, Leon Romanovsky wrote:
+>>>> On Tue, Jul 08, 2025 at 12:27:09PM +0200, Marek Szyprowski wrote:
+>>>>> On 30.06.2025 15:38, Christoph Hellwig wrote:
+>>>>>> On Fri, Jun 27, 2025 at 08:02:13PM +0300, Leon Romanovsky wrote:
+>>>>>>>> Thanks for this rework! I assume that the next step is to add 
+>>>>>>>> map_phys
+>>>>>>>> callback also to the dma_map_ops and teach various dma-mapping 
+>>>>>>>> providers
+>>>>>>>> to use it to avoid more phys-to-page-to-phys conversions.
+>>>>>>> Probably Christoph will say yes, however I personally don't see any
+>>>>>>> benefit in this. Maybe I wrong here, but all existing .map_page()
+>>>>>>> implementation platforms don't support p2p anyway. They won't 
+>>>>>>> benefit
+>>>>>>> from this such conversion.
+>>>>>> I think that conversion should eventually happen, and rather 
+>>>>>> sooner than
+>>>>>> later.
+>>>>> Agreed.
+>>>>>
+>>>>> Applied patches 1-7 to my dma-mapping-next branch. Let me know if one
+>>>>> needs a stable branch with it.
+>>>> Thanks a lot, I don't think that stable branch is needed. 
+>>>> Realistically
+>>>> speaking, my VFIO DMA work won't be merged this cycle, We are in -rc5,
+>>>> it is complete rewrite from RFC version and touches pci-p2p code (to
+>>>> remove dependency on struct page) in addition to VFIO, so it will take
+>>>> time.
+>>>>
+>>>> Regarding, last patch (hmm), it will be great if you can take it.
+>>>> We didn't touch anything in hmm.c this cycle and have no plans to 
+>>>> send PR.
+>>>> It can safely go through your tree.
+>>> Okay, then I would like to get an explicit ack from Jérôme for this.
+>> Jerome is not active in HMM world for a long time already.
+>> HMM tree is managed by us (RDMA) 
+>> https://git.kernel.org/pub/scm/linux/kernel/git/rdma/rdma.git/log/?h=hmm
+>> ➜  kernel git:(m/dmabuf-vfio) git log --merges mm/hmm.c
+>> ...
+>> Pull HMM updates from Jason Gunthorpe:
+>> ...
+>>
+>> https://web.git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?id=58ba80c4740212c29a1cf9b48f588e60a7612209 
+>>
+>> +hmm        git 
+>> git://git.kernel.org/pub/scm/linux/kernel/git/rdma/rdma.git#hmm
+>>
+>> We just never bothered to reflect current situation in MAINTAINERS file.
 >
-> Would something like this work? If someone enables the config to enable the
-> validation, I don't think we need dynamic printk to do it (as that requires
-> passing in the format directly and not via a pointer).
+> Maybe this is the time to update it :)
+>
+> I was just a bit confused that no-one commented the HMM patch, but if 
+> You maintain it, then this is okay.
 
-I really think you should just not use 'user_access_begin()" AT ALL if
-you need to play these kinds of games.
 
-               Linus
+I've applied the last patch to dma-mapping-for-next branch.
+
+
+Best regards
+-- 
+Marek Szyprowski, PhD
+Samsung R&D Institute Poland
+
