@@ -1,36 +1,39 @@
-Received: from relay.hostedemail.com (smtprelay0014.hostedemail.com [216.40.44.14])
+Received: from relay.hostedemail.com (smtprelay0013.hostedemail.com [216.40.44.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CECE4146D45;
-	Wed,  9 Jul 2025 16:21:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C60B21D5BD;
+	Wed,  9 Jul 2025 16:45:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752078090; cv=none; b=CxcdRuylkLwk3tH5zLhjDcz5V2ZUem+z8u2bY/h5uiipkOdfkA1+bBHkIDrJXsg34fdAmzdC/dSp0X/SQMHnOAIbE49Hcu1a8fpYUOPOVnrIxFVHZRSfopxHZ5TTwKHUgE4wP8/HwPhQKmeypiSZ/5nUBk0aLbDr1t6bsw6YkCI=
+	t=1752079545; cv=none; b=llqv2g9jxzGQFenc/3sTUwtUHntTMv52+qU9kQf3cVzS+1tPu7bELOKKYZo95SaCq3pBzeNg5Vg5l88P3TAAS3vDZE0ssdAk33CEgdEbcwWd75C6g01hxDWld4U1s03d37hC1VcZajLg1pIlN38C6EdZGauZC1kr9ebxoSRHyD0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752078090; c=relaxed/simple;
-	bh=vNFKpWvUgiRSxy59r6jbFTJESnlfgfLQit6HrriuWvY=;
+	s=arc-20240116; t=1752079545; c=relaxed/simple;
+	bh=Tb8SyoTnhwKs90lbvP0xyKWYMU93ftYSwCjgAtcSIfU=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ECV6Mqv055woE/vatgh+KYmEBE3yWyg5z48u8fa8wDJc1IhU4VPTu6Tc3Uu3kqNpuibuYuESCRvm096WQsnQsefjLu0REUoZHnAlYflfUGZ0GuDz/C9L5EM89MtlP+Ei0DA7TAJhHpBtkWP+QhXlJSmim9NDuH4L67z4Fxza/s4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.14
+	 MIME-Version:Content-Type; b=SneXn9Sukx4jzLHsmaB5DvwwwxvHzquaamVDSQ5xEoaaymVY7W5WJWA5GIsB36CUGh3/wa/kf4QM8MRSoiaP4oQ5203wchSdUZ1ChpGRYwwnAS17x/QtubG9P7dJv+JEc8rkBRwuVC+69v2MVvfn09zyHXKZ7LJ3JfuDLutqP8c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.13
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf11.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay05.hostedemail.com (Postfix) with ESMTP id 04B2858876;
-	Wed,  9 Jul 2025 16:21:26 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf11.hostedemail.com (Postfix) with ESMTPA id D78A020029;
-	Wed,  9 Jul 2025 16:21:24 +0000 (UTC)
-Date: Wed, 9 Jul 2025 12:21:23 -0400
+Received: from omf01.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay05.hostedemail.com (Postfix) with ESMTP id DF2F157E1F;
+	Wed,  9 Jul 2025 16:45:40 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf01.hostedemail.com (Postfix) with ESMTPA id 0C5A460011;
+	Wed,  9 Jul 2025 16:45:37 +0000 (UTC)
+Date: Wed, 9 Jul 2025 12:45:36 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
-To: SeongJae Park <sj@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- damon@lists.linux.dev, kernel-team@meta.com, linux-kernel@vger.kernel.org,
- linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] mm/damon: add trace event for effective size quota
-Message-ID: <20250709122123.779c874f@batman.local.home>
-In-Reply-To: <20250704221408.38510-3-sj@kernel.org>
-References: <20250704221408.38510-1-sj@kernel.org>
-	<20250704221408.38510-3-sj@kernel.org>
+To: Palmer Dabbelt <palmer@dabbelt.com>
+Cc: alexghiti@rivosinc.com, mhiramat@kernel.org, Mark Rutland
+ <mark.rutland@arm.com>, Paul Walmsley <paul.walmsley@sifive.com>,
+ aou@eecs.berkeley.edu, Alexandre Ghiti <alex@ghiti.fr>,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ linux-riscv@lists.infradead.org, rabenda.cn@gmail.com,
+ wangruikang@iscas.ac.cn, ziyao@disroot.org
+Subject: Re: [PATCH] riscv: ftrace: Properly acquire text_mutex to fix a
+ race condition
+Message-ID: <20250709124536.4ce3a90b@batman.local.home>
+In-Reply-To: <mhng-6AFAE150-B97C-493D-9699-545AABAC78FD@palmerdabbelt-mac>
+References: <20250708-alex-fixes-v1-1-5b008d3f4d0c@rivosinc.com>
+	<mhng-6AFAE150-B97C-493D-9699-545AABAC78FD@palmerdabbelt-mac>
 X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -40,116 +43,35 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: D78A020029
-X-Rspamd-Server: rspamout02
-X-Stat-Signature: fkg984hkoqjmczbxduzqcafqtg6cfuhe
+X-Stat-Signature: dbppecj37pgrgr3u6b58j3g43t3z69f5
+X-Rspamd-Server: rspamout07
+X-Rspamd-Queue-Id: 0C5A460011
 X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1+J83NPMP8Sb/jo8DzLq42jn+04tnd7tQs=
-X-HE-Tag: 1752078084-665881
-X-HE-Meta: U2FsdGVkX19yh07IWGJTt82fNF/ks4rwm7Vd04a3pMjNbEa9Iu2kCulF+w3I8TKkzOcC4LrKMfExorhkuneJ5aivcdQPGfaB6Gv4+YvVKYa2/plhI4vNpcQzOpfwvfwhDrczQIa6wsJd4+jOewKhbRkkpXCfLfONXlESW3UW1+31AQReitUvox9NrhHOAuaUTOQvYIIqS59/hfasvc0RbYsmz/pUa8MbHpoO4PXVx+Cjbbh2yrudjrxhbM532YhV5U8srTsOI8YRlh2VE6kzlDbTskCtxjbP0bl16FzcfvePsjdD6eMLnNMxZ4OHxl1BfdJMcHDeqkN0iaWxWdXTOI1aLdkYiVdr
+X-Session-ID: U2FsdGVkX18UUMhmi698+5oz7ltzhrraposOL8pK02w=
+X-HE-Tag: 1752079537-42978
+X-HE-Meta: U2FsdGVkX180JxbK93sOvlUDnb3OvLcohVzegobLEKocfOHmrAVGuLey7IEzNeauoVjMkrt8/FPTHMUlZRq0i/F3+H4KTwAsMbeus86KcB6dVwleMtJsfRmSAQDi5IKFYul6PZw7fYTZGkG1L60CJlkZz7d8Ep9nH3I6Oa45sv+5Clu+5c3wwnOIFlaH/dPFGCf/P9vkD2R/PoRW2AZikTv6zjr+lbizAuKNUSyrLJUTKmVTAPcdrR2I4Ih/zqHz9YqD65NPVkLdw2fE5CkvO2aoRGoxYNXduZ0GLyurW0IW2WS+7nOGLUF/0eHmu0mQLslKniVrItLW1dzjlikxFw9JkaJ/+W6fbrf79PNu6lldwbDO+vm+/pDBAYnyZbRVgKRK/GFqUXqrhLJSIoYGIAU89mjquIGM6P+8LfTJJdQ=
 
-On Fri,  4 Jul 2025 15:14:08 -0700
-SeongJae Park <sj@kernel.org> wrote:
+On Wed, 09 Jul 2025 07:12:47 -0700 (PDT)
+Palmer Dabbelt <palmer@dabbelt.com> wrote:
 
-> Aim-oriented DAMOS quota auto-tuning is an important and recommended
-> feature for DAMOS users.  Add a trace event for the observability of the
-> tuned quota and tuning itself.
+> >  #ifdef CONFIG_DYNAMIC_FTRACE
+> > +void ftrace_arch_code_modify_prepare(void)
+> > +{
+> > +	mutex_lock(&text_mutex);
+> > +}
+> > +
+> > +void ftrace_arch_code_modify_post_process(void)
+> > +{
+> > +	mutex_unlock(&text_mutex);
+> > +}  
 > 
-> Signed-off-by: SeongJae Park <sj@kernel.org>
-> ---
->  include/trace/events/damon.h | 26 ++++++++++++++++++++++++++
->  mm/damon/core.c              | 20 +++++++++++++++++++-
->  2 files changed, 45 insertions(+), 1 deletion(-)
-> 
-> diff --git a/include/trace/events/damon.h b/include/trace/events/damon.h
-> index 32c611076023..36b2cdf47dce 100644
-> --- a/include/trace/events/damon.h
-> +++ b/include/trace/events/damon.h
-> @@ -9,6 +9,32 @@
->  #include <linux/types.h>
->  #include <linux/tracepoint.h>
->  
-> +TRACE_EVENT_CONDITION(damos_esz,
-> +
-> +	TP_PROTO(unsigned int context_idx, unsigned int scheme_idx,
-> +		unsigned long esz, bool do_trace),
-> +
-> +	TP_ARGS(context_idx, scheme_idx, esz, do_trace),
-> +
-> +	TP_CONDITION(do_trace),
+> IIRC there's a reason we don't do it this way, we had (or had tried to) 
+> have it before.  It's been a while, though, and I'm just having some a 
+> coffee so may I'm just wrong...
 
-Please explain to me why you are using a conditional here?
+Yes, because it caused issues with stop machine[1], but if you are no
+longer using stop machine, this should be what you should do now.
 
-> +
-> +	TP_STRUCT__entry(
-> +		__field(unsigned int, context_idx)
-> +		__field(unsigned int, scheme_idx)
-> +		__field(unsigned long, esz)
-> +	),
-> +
-> +	TP_fast_assign(
-> +		__entry->context_idx = context_idx;
-> +		__entry->scheme_idx = scheme_idx;
-> +		__entry->esz = esz;
-> +	),
-> +
-> +	TP_printk("ctx_idx=%u scheme_idx=%u esz=%lu",
-> +			__entry->context_idx, __entry->scheme_idx,
-> +			__entry->esz)
-> +);
-> +
->  TRACE_EVENT_CONDITION(damos_before_apply,
->  
->  	TP_PROTO(unsigned int context_idx, unsigned int scheme_idx,
-> diff --git a/mm/damon/core.c b/mm/damon/core.c
-> index 57a1ace4d10d..6019b8ec4bba 100644
-> --- a/mm/damon/core.c
-> +++ b/mm/damon/core.c
-> @@ -2011,12 +2011,26 @@ static void damos_set_effective_quota(struct damos_quota *quota)
->  	quota->esz = esz;
->  }
->  
-> +static void damos_trace_esz(struct damon_ctx *c, struct damos *s,
-> +		struct damos_quota *quota)
-> +{
-> +	unsigned int cidx = 0, sidx;
-> +	struct damos *siter;
-> +
-> +	damon_for_each_scheme(siter, c) {
-> +		if (siter == s)
-> +			break;
-> +		sidx++;
-> +	}
-> +	trace_damos_esz(cidx, sidx, quota->esz, true);
-
-It's set to true, so it's not even a conditional anymore. The compiler
-will likely optimize it out!
+[1] https://lore.kernel.org/all/20220310045454.672097-1-changbin.du@gmail.com/
 
 -- Steve
-
-
-> +}
-> +
->  static void damos_adjust_quota(struct damon_ctx *c, struct damos *s)
->  {
->  	struct damos_quota *quota = &s->quota;
->  	struct damon_target *t;
->  	struct damon_region *r;
-> -	unsigned long cumulated_sz;
-> +	unsigned long cumulated_sz, cached_esz;
->  	unsigned int score, max_score = 0;
->  
->  	if (!quota->ms && !quota->sz && list_empty(&quota->goals))
-> @@ -2030,7 +2044,11 @@ static void damos_adjust_quota(struct damon_ctx *c, struct damos *s)
->  		quota->total_charged_sz += quota->charged_sz;
->  		quota->charged_from = jiffies;
->  		quota->charged_sz = 0;
-> +		if (trace_damos_esz_enabled())
-> +			cached_esz = quota->esz;
->  		damos_set_effective_quota(quota);
-> +		if (trace_damos_esz_enabled() && quota->esz != cached_esz)
-> +			damos_trace_esz(c, s, quota);
->  	}
->  
->  	if (!c->ops.get_scheme_score)
-
