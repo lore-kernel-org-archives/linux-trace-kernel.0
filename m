@@ -1,60 +1,46 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from www62.your-server.de (www62.your-server.de [213.133.104.62])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C352D2874F3;
-	Wed,  9 Jul 2025 10:02:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F653265292;
+	Wed,  9 Jul 2025 10:39:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.133.104.62
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752055327; cv=none; b=rKDEZcTcyfODUVZAbRjK5ANaP1nn1ljy/xOIRoTCdeU+rmGB0hy/UOM0HZ7aluLg852fdaa3mF2l9+hscVWcL38BCGh0rD/PAaZvw0y+raZrtkU5ewPKQ8m/UIGfiMpeWrXtxd60Ywx+LdRFxdhE+P31rVpj1BxeRcpGR0QW+a0=
+	t=1752057564; cv=none; b=BR3IQJR11hyfzPk6GFmI1fayEYJw5MWun5YvRmoWaK7hlLUaF07Uy+Rbwq4ckGYEbkWUThM3kK1fanuLzj1IUh3f22PECWTgKtH7c5Vm686BcjyfB2uzSBZWNGbM34iXX6huY0DrKudpSanAGRvfggjrboh7CEZ8VdiNQaTiRcY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752055327; c=relaxed/simple;
-	bh=mFf2lXciUCUy0DWeK8EaWfhZiWoiX1K1u9dq8jPS26Y=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=BnaiU/XAQA1trN/w1vTQJH76R0r41oKqwNRACRIh9wWwDLWTHDN+oHQZyQ7v8maxVksKDKjSZC6ia0WMBjeaze/KHL5dHjueVAj+288aR/NXbefaqR+eB0ehix9JSJb914AneM5R22R91yiOYihmdqu3DYYelZ4QpvgSFOE3V88=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=Vs+hFX9e; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1752057564; c=relaxed/simple;
+	bh=NifevKX03FvbQZtxsg/oKHi2t2U7YN62ml/hqwFv1So=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=PT73VP9KbpI3VwCK2ufNKa3z2gDaz0kPHgTImvOB+ywSVVy5Nh1Z+pXR3ma3n4PXxh+X9NuWudP0OOCUnKbQRR6H25oCotfY38FpfgeuMWvSlBFuQEUtZFG5vBvEXMXF7UvIXY4hNw4duR9Zjy920eztbxZ3ksPxLgWY/aoJjRI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=iogearbox.net; spf=pass smtp.mailfrom=iogearbox.net; dkim=pass (2048-bit key) header.d=iogearbox.net header.i=@iogearbox.net header.b=PRjN93NO; arc=none smtp.client-ip=213.133.104.62
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=iogearbox.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iogearbox.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Vs+hFX9e"
-Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5699tBrZ025920;
-	Wed, 9 Jul 2025 10:01:20 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=dPEJWo
-	wSApW3ihOeZAzPSmPZW963DAdzR9LVDUMg73w=; b=Vs+hFX9exPiNGKbU50lWyn
-	/4G5HJQabRgvG/45timEAl/TJB1PAONKQ+Muxis2rVrb7D7LuqS2gi2dw1L9vL3I
-	OAG8iA5NBvFjbwBL2ER+YJGH7BNg0vFeIom5Nglvo+EVs6J9eTf5vBnC+NHYsNjd
-	qE2+dkygUgeTjobtPfQ62q+bUzSdwiJ+Fjku9tMH1VkUd6t1ogVgUXVboVC+SJi1
-	XkzzMeDUzHR0SMjZBiFQNO8cZdzxxWrbcXSYSqNLVsl9xD0ZXd5xD0CnjS5w6B0q
-	eaa0s7nJlTy0bJYBfdUudwky5dQDH2R7xm+kdiiJ9KtjWKQgWt4gR7koIP6mhd9g
-	==
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 47puss5h40-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 09 Jul 2025 10:01:20 +0000 (GMT)
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 5698U7XC024678;
-	Wed, 9 Jul 2025 10:01:19 GMT
-Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 47qh32f9gt-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 09 Jul 2025 10:01:19 +0000
-Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
-	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 569A1FIr35324652
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 9 Jul 2025 10:01:15 GMT
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id AC0772004D;
-	Wed,  9 Jul 2025 10:01:15 +0000 (GMT)
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 5BE8120049;
-	Wed,  9 Jul 2025 10:01:15 +0000 (GMT)
-Received: from [9.152.222.224] (unknown [9.152.222.224])
-	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Wed,  9 Jul 2025 10:01:15 +0000 (GMT)
-Message-ID: <d3279556-9bb6-429d-a037-fe279c5e3c67@linux.ibm.com>
-Date: Wed, 9 Jul 2025 12:01:14 +0200
+	dkim=pass (2048-bit key) header.d=iogearbox.net header.i=@iogearbox.net header.b="PRjN93NO"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=iogearbox.net; s=default2302; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID;
+	bh=C7nZ3M+syfM61I7byhhVKRhaJsF+1QENEjv09HSZRQU=; b=PRjN93NOb2tlfYFOlwfmeDssOA
+	GafrBTEBOTAUDuGKcqFLWn3JcN3Niwjsb81sMFPmxhDXHNQQmAtbKZUC/h/eLkInfTZlRb8P/w73c
+	GKNGP1JpYvpvLK/0zFhlnKymaNm9GruitjtoDq+yw6/ySXXS8g1kyI5lwZf/zWxGa2Iz03xabeAwX
+	62OpRJgOgEJNr8YSwAcc5JOzFYQl/VedCu8jpBa6Xmww5K4GEKyfKA+y8zV/NqklrKKxkrBkvgeR6
+	1mHXp6s/F1YjDCr8MUWNy7y1j7GmzLFBY5HkcTlGNWdKSWOJarND+dYeNqKUgMDQCKVGPJO3Jusrz
+	4qOgVDCw==;
+Received: from sslproxy06.your-server.de ([78.46.172.3])
+	by www62.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
+	(Exim 4.96.2)
+	(envelope-from <daniel@iogearbox.net>)
+	id 1uZSCl-000HJ5-1S;
+	Wed, 09 Jul 2025 12:39:11 +0200
+Received: from localhost ([127.0.0.1])
+	by sslproxy06.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <daniel@iogearbox.net>)
+	id 1uZSCj-000F68-2U;
+	Wed, 09 Jul 2025 12:39:09 +0200
+Message-ID: <d02100f8-5ecd-45f6-b9ad-00dfc991b772@iogearbox.net>
+Date: Wed, 9 Jul 2025 12:39:08 +0200
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -62,168 +48,77 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-From: Jens Remus <jremus@linux.ibm.com>
-Subject: Re: [PATCH v13 02/14] unwind_user: Add frame pointer support
-To: Steven Rostedt <rostedt@kernel.org>, linux-kernel@vger.kernel.org,
-        linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org,
-        x86@kernel.org
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Josh Poimboeuf <jpoimboe@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Indu Bhagat <indu.bhagat@oracle.com>,
-        "Jose E. Marchesi" <jemarch@gnu.org>,
-        Beau Belgrave <beaub@linux.microsoft.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Jens Axboe <axboe@kernel.dk>, Florian Weimer <fweimer@redhat.com>,
-        Sam James <sam@gentoo.org>, Heiko Carstens <hca@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>
-References: <20250708012239.268642741@kernel.org>
- <20250708012357.982692711@kernel.org>
+Subject: Re: [PATCH bpf-next v3 4/7] bpf: Remove location field in tcx_link
+To: Tao Chen <chen.dylane@linux.dev>, razor@blackwall.org,
+ andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
+ kuba@kernel.org, pabeni@redhat.com, ast@kernel.org, andrii@kernel.org,
+ martin.lau@linux.dev, eddyz87@gmail.com, song@kernel.org,
+ yonghong.song@linux.dev, john.fastabend@gmail.com, kpsingh@kernel.org,
+ sdf@fomichev.me, haoluo@google.com, jolsa@kernel.org,
+ mattbobrowski@google.com, rostedt@goodmis.org, mhiramat@kernel.org,
+ mathieu.desnoyers@efficios.com, horms@kernel.org, willemb@google.com,
+ jakub@cloudflare.com, pablo@netfilter.org, kadlec@netfilter.org,
+ hawk@kernel.org
+Cc: bpf@vger.kernel.org, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ netfilter-devel@vger.kernel.org, coreteam@netfilter.org
+References: <20250709030802.850175-1-chen.dylane@linux.dev>
+ <20250709030802.850175-5-chen.dylane@linux.dev>
 Content-Language: en-US
-Organization: IBM Deutschland Research & Development GmbH
-In-Reply-To: <20250708012357.982692711@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Authority-Analysis: v=2.4 cv=Vaj3PEp9 c=1 sm=1 tr=0 ts=686e3df0 cx=c_pps a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17 a=IkcTkHD0fZMA:10 a=Wb1JkmetP80A:10 a=VnNF1IyMAAAA:8 a=VwQbUJbxAAAA:8 a=meVymXHHAAAA:8 a=_CACeNGGoOMxVHxd7LAA:9
- a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10 a=2JgSa4NbpEOStq-L5dxp:22
-X-Proofpoint-GUID: Gmo4rqtPTAQXrEYEpkkFAP_k6cwoLgOD
-X-Proofpoint-ORIG-GUID: Gmo4rqtPTAQXrEYEpkkFAP_k6cwoLgOD
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzA5MDA4NyBTYWx0ZWRfX2P9D659LQTcK WKxc+m3p7CZdR6XikHfTqXjxBviNPfD1Dtf3cWdkRB2h+6GejEBru+1KoSO7JLGWmjcd7VQpd2c r70cVWkv7z8hLB/Toef9nszBxTD0eSOqbLoDNIAypS7UgVGwaGQMMFf9GCNJXEvt73u+XMZY7fc
- /OIqPNLqT4/lleOVwzMMTYo9YdB4OOR6wStuo3PyOV0SbLv4cW2ONnD4MfqEcVFafpWhH2unRlr 365MELt2IQ9apjY26Z8gllYE0Q5Y20s8tEFQzTf2ZAkWRznnACBQ6AVR3RpXOyepAjK4/YUJ2OJ VjQFDppaDCGOl9OfjiqZshxbapNT85ScJabDsBcsdt5UvYyMnVWAM/L/WIpTepDmTqcfXdPkPza
- NcW8GjUsmTVjhpN3mWe95XSfKAqdor6ONOvyHQh77xwxSD4SJumNkf7SFfwMhoAEvlWZOBj+
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
- definitions=2025-07-09_02,2025-07-08_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- mlxlogscore=999 suspectscore=0 clxscore=1015 adultscore=0
- lowpriorityscore=0 impostorscore=0 malwarescore=0 bulkscore=0 mlxscore=0
- spamscore=0 phishscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2507090087
+From: Daniel Borkmann <daniel@iogearbox.net>
+Autocrypt: addr=daniel@iogearbox.net; keydata=
+ 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
+In-Reply-To: <20250709030802.850175-5-chen.dylane@linux.dev>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Virus-Scanned: Clear (ClamAV 1.0.7/27694/Wed Jul  9 10:42:34 2025)
 
-On 08.07.2025 03:22, Steven Rostedt wrote:
-> From: Josh Poimboeuf <jpoimboe@kernel.org>
+On 7/9/25 5:07 AM, Tao Chen wrote:
+> Use attach_type in bpf_link to replace the location filed, and
+> remove location field in tcx_link.
 > 
-> Add optional support for user space frame pointer unwinding.  If
-> supported, the arch needs to enable CONFIG_HAVE_UNWIND_USER_FP and
-> define ARCH_INIT_USER_FP_FRAME.
-> 
-> By encoding the frame offsets in struct unwind_user_frame, much of this
-> code can also be reused for future unwinder implementations like sframe.
-> 
-> Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
-> Co-developed-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+> Acked-by: Jiri Olsa <jolsa@kernel.org>
+> Signed-off-by: Tao Chen <chen.dylane@linux.dev>
 
-> diff --git a/kernel/unwind/user.c b/kernel/unwind/user.c
-
-> @@ -6,13 +6,71 @@
->  #include <linux/sched.h>
->  #include <linux/sched/task_stack.h>
->  #include <linux/unwind_user.h>
-> +#include <linux/uaccess.h>
-> +
-> +static struct unwind_user_frame fp_frame = {
-> +	ARCH_INIT_USER_FP_FRAME
-> +};
-> +
-> +static inline bool fp_state(struct unwind_user_state *state)
-> +{
-> +	return IS_ENABLED(CONFIG_HAVE_UNWIND_USER_FP) &&
-> +	       state->type == UNWIND_USER_TYPE_FP;
-> +}
->  
->  #define for_each_user_frame(state) \
->  	for (unwind_user_start(state); !(state)->done; unwind_user_next(state))
->  
->  static int unwind_user_next(struct unwind_user_state *state)
->  {
-> -	/* no implementation yet */
-> +	struct unwind_user_frame *frame;
-> +	unsigned long cfa = 0, fp, ra = 0;
-> +	unsigned int shift;
-> +
-> +	if (state->done)
-> +		return -EINVAL;
-> +
-> +	if (fp_state(state))
-> +		frame = &fp_frame;
-> +	else
-> +		goto done;
-> +
-> +	if (frame->use_fp) {
-> +		if (state->fp < state->sp)
-
-		if (state->fp <= state->sp)
-
-I meanwhile came to the conclusion that for architectures, such as s390,
-where SP at function entry == SP at call site, the FP may be equal to
-the SP.  At least for the brief period where the FP has been setup and
-stack allocation did not yet take place.  For most architectures this
-can probably only occur in the topmost frame.  For s390 the FP is setup
-after static stack allocation, so --fno-omit-frame-pointer would enforce
-FP==SP in any frame that does not perform dynamic stack allocation.
-
-> +			goto done;
-> +		cfa = state->fp;
-> +	} else {
-> +		cfa = state->sp;
-> +	}
-> +
-> +	/* Get the Canonical Frame Address (CFA) */
-> +	cfa += frame->cfa_off;
-> +
-> +	/* stack going in wrong direction? */
-> +	if (cfa <= state->sp)
-> +		goto done;
-> +
-> +	/* Make sure that the address is word aligned */
-> +	shift = sizeof(long) == 4 ? 2 : 3;
-> +	if ((cfa + frame->ra_off) & ((1 << shift) - 1))
-> +		goto done;
-
-Do all architectures/ABI mandate register stack save slots to be aligned?
-s390 does.
-
-> +
-> +	/* Find the Return Address (RA) */
-> +	if (get_user(ra, (unsigned long *)(cfa + frame->ra_off)))
-> +		goto done;
-> +
-
-Why not validate the FP stack save slot address as well?
-
-> +	if (frame->fp_off && get_user(fp, (unsigned long __user *)(cfa + frame->fp_off)))
-> +		goto done;
-> +
-> +	state->ip = ra;
-> +	state->sp = cfa;
-> +	if (frame->fp_off)
-> +		state->fp = fp;
-> +
-> +	return 0;
-> +
-> +done:
-> +	state->done = true;
->  	return -EINVAL;
->  }
-
-Thanks and regards,
-Jens
--- 
-Jens Remus
-Linux on Z Development (D3303)
-+49-7031-16-1128 Office
-jremus@de.ibm.com
-
-IBM
-
-IBM Deutschland Research & Development GmbH; Vorsitzender des Aufsichtsrats: Wolfgang Wendt; Geschäftsführung: David Faller; Sitz der Gesellschaft: Böblingen; Registergericht: Amtsgericht Stuttgart, HRB 243294
-IBM Data Privacy Statement: https://www.ibm.com/privacy/
-
+Acked-by: Daniel Borkmann <daniel@iogearbox.net>
