@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86422A923;
-	Wed,  9 Jul 2025 13:50:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B29AA2E49BD;
+	Wed,  9 Jul 2025 13:50:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752069007; cv=none; b=u2agu8iQgvtAaGgAdebC5iywRKuXTeq8rZrlIJo1Pw+tundgVu2use6Jv5+C6fM9nDWKZ8QwlZhHoWmz+kpwm1sqBxpdc0TibwIRZFkUQdgDS8q/d30H3aZRnQcYwQTk2GL20P3cBe/aJ82nva3NwBTDY0j2b22T1QK2eih6X0o=
+	t=1752069013; cv=none; b=tGrYhtSwEFfMSXsPnF1lljQrzjl/nyRFleZphVbMxaWArfCvJ0NNEq3fOViy6VGCOVs3NCgMm4ksAX6lyqVD//2N827cDqHy/kRkeo3S1SUJYHzYhBU0SIpo0iuKEYM7WlWaohTKId4qX4TKm3uQfidhFKQjaH4QSpzKh39tTh4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752069007; c=relaxed/simple;
-	bh=Cy9nbTY7/RsVWsT8Lzwrq/nzdX4k1/Ew/ELbVa13ynM=;
+	s=arc-20240116; t=1752069013; c=relaxed/simple;
+	bh=3rjfBdytCgPEmue4GcEI2ssOKhgIJ1qlJg3E/xaLrs0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=uqsv4GkQwWle/cvRoel/t5h4axKFlk2dw69G0hrYxV5LnQFnqG+UJsgiBUfw/56GgHudmu5kQuqBi1BRcasdtVBaVazm4Dfv8OK9MXA9w5ZDtwIHpfP4Agf5AwOptEaHeUba4ncYR5VyVS/TUtio+GI0iXtKWdag8vOHzq9Ch7E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pqUhi77p; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=ZykpO+qYemCCRBpbNUzNv6MbgYfB1OIKKLEHWrAZIDbd2DRBUkV8mPrQCkqODZFf595sSPSpahI963O2bTPQugyWqtaHRm+EAxGmF+3yUxCIIq6LJnPc2R2QddkWLFULWLfkgWyLSkL/AMRrpj5NeRBRoPYaagRF6nExrLizsOk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=i6mb4tb/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pqUhi77p"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8CD24C4CEF8;
-	Wed,  9 Jul 2025 13:50:01 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="i6mb4tb/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A0F91C4CEEF;
+	Wed,  9 Jul 2025 13:50:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1752069007;
-	bh=Cy9nbTY7/RsVWsT8Lzwrq/nzdX4k1/Ew/ELbVa13ynM=;
+	s=k20201202; t=1752069013;
+	bh=3rjfBdytCgPEmue4GcEI2ssOKhgIJ1qlJg3E/xaLrs0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=pqUhi77pGCtV3tt1XSaEAlSwTSPrlnCtKynuwZKBGvvm2a3hBX1u1HdXX6n2XyZP1
-	 PcdOUyXq5A3sEsMlmgy/FUvWYAaQOsFGIVeWQP3ry8aY5muSVr3P7sSxpopbGs75ai
-	 1MSce67W63oPqC95WRZXbnlkXWPjbim5rnc0DqcpoJPwrsHcsqgJSq3ONwoSWKxmVd
-	 Tv0Qif46FGD3GEQrYtiZznj9oLESU9aaBcTEw6X563qJpzcn6d2aKRT8YM0hESsW+7
-	 Yk3RoFidd0OLMIzXn1z5EMdVC54svbGUNEy/q6DzhcxIuQEdSI9J9QRXWbfzIbEDZa
-	 +3V8vzpoT6c8g==
+	b=i6mb4tb/c5ErumOIPqYDTAF5gBHWVxb1YJiVQFg8YU/ymef36m7/KBWmtp6YhPXD7
+	 VhjC36mzromjvGypCvFoZU5WRmUVg5YseVQOBP6/WRSxg+8XYIgFFu0R2/FjRMukz+
+	 BTp5uWcXNBH51L7rvo25EghdRCbCkPzeGslyNIBFqyusGbg0rK+UBU9PxZHm/Tgsow
+	 k778y1swFYWdZuEUC0CHxiav3CG9aUOi6NWdtstzvWPqV0Ts9oeBzTI0K4+YpQYYD2
+	 21K0u/A6g76A6LiiWRLCNgsCl2xEf3YvhB4O7D30F1GQS6t1GvUmGwZlJ1qj/rUTP3
+	 +IgOb3QxDYbnQ==
 From: Mike Rapoport <rppt@kernel.org>
 To: Andrew Morton <akpm@linux-foundation.org>
 Cc: Andy Lutomirski <luto@kernel.org>,
@@ -51,9 +51,9 @@ Cc: Andy Lutomirski <luto@kernel.org>,
 	linux-modules@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org,
 	x86@kernel.org
-Subject: [PATCH v2 4/8] execmem: move execmem_force_rw() and execmem_restore_rox() before use
-Date: Wed,  9 Jul 2025 16:49:29 +0300
-Message-ID: <20250709134933.3848895-5-rppt@kernel.org>
+Subject: [PATCH v2 5/8] execmem: add fallback for failures in vmalloc(VM_ALLOW_HUGE_VMAP)
+Date: Wed,  9 Jul 2025 16:49:30 +0300
+Message-ID: <20250709134933.3848895-6-rppt@kernel.org>
 X-Mailer: git-send-email 2.47.2
 In-Reply-To: <20250709134933.3848895-1-rppt@kernel.org>
 References: <20250709134933.3848895-1-rppt@kernel.org>
@@ -67,82 +67,49 @@ Content-Transfer-Encoding: 8bit
 
 From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
 
-to avoid static declarations.
+When execmem populates ROX cache it uses vmalloc(VM_ALLOW_HUGE_VMAP).
+Although vmalloc falls back to allocating base pages if high order
+allocation fails, it may happen that it still cannot allocate enough
+memory.
+
+Right now ROX cache is only used by modules and in majority of cases the
+allocations happen at boot time when there's plenty of free memory, but
+upcoming enabling ROX cache for ftrace and kprobes would mean that execmem
+allocations can happen when the system is under memory pressure and a
+failure to allocate large page worth of memory becomes more likely.
+
+Fallback to regular vmalloc() if vmalloc(VM_ALLOW_HUGE_VMAP) fails.
 
 Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
 ---
- mm/execmem.c | 44 +++++++++++++++++++++-----------------------
- 1 file changed, 21 insertions(+), 23 deletions(-)
+ mm/execmem.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
 diff --git a/mm/execmem.c b/mm/execmem.c
-index 4670e97f8e4e..056d3caaf4a1 100644
+index 056d3caaf4a1..04c35c3a9361 100644
 --- a/mm/execmem.c
 +++ b/mm/execmem.c
-@@ -137,6 +137,27 @@ static int execmem_set_direct_map_valid(struct vm_struct *vm, bool valid)
- 	return err;
- }
+@@ -291,6 +291,11 @@ static int execmem_cache_populate(struct execmem_range *range, size_t size)
  
-+static int execmem_force_rw(void *ptr, size_t size)
-+{
-+	unsigned int nr = PAGE_ALIGN(size) >> PAGE_SHIFT;
-+	unsigned long addr = (unsigned long)ptr;
-+	int ret;
+ 	alloc_size = round_up(size, PMD_SIZE);
+ 	p = execmem_vmalloc(range, alloc_size, PAGE_KERNEL, vm_flags);
++	if (!p) {
++		alloc_size = size;
++		p = execmem_vmalloc(range, alloc_size, PAGE_KERNEL, vm_flags);
++	}
 +
-+	ret = set_memory_nx(addr, nr);
-+	if (ret)
-+		return ret;
-+
-+	return set_memory_rw(addr, nr);
-+}
-+
-+int execmem_restore_rox(void *ptr, size_t size)
-+{
-+	unsigned int nr = PAGE_ALIGN(size) >> PAGE_SHIFT;
-+	unsigned long addr = (unsigned long)ptr;
-+
-+	return set_memory_rox(addr, nr);
-+}
-+
- static void execmem_cache_clean(struct work_struct *work)
- {
- 	struct maple_tree *free_areas = &execmem_cache.free_areas;
-@@ -328,8 +349,6 @@ static inline void *pending_free_clear(void *ptr)
- 	return (void *)((unsigned long)ptr & ~PENDING_FREE_MASK);
- }
+ 	if (!p)
+ 		return err;
  
--static int execmem_force_rw(void *ptr, size_t size);
--
- static int __execmem_cache_free(struct ma_state *mas, void *ptr, gfp_t gfp_mask)
- {
- 	size_t size = mas_range_len(mas);
-@@ -415,27 +434,6 @@ static bool execmem_cache_free(void *ptr)
- 	return true;
- }
+@@ -462,7 +467,7 @@ void *execmem_alloc(enum execmem_type type, size_t size)
+ 	bool use_cache = range->flags & EXECMEM_ROX_CACHE;
+ 	unsigned long vm_flags = VM_FLUSH_RESET_PERMS;
+ 	pgprot_t pgprot = range->pgprot;
+-	void *p;
++	void *p = NULL;
  
--static int execmem_force_rw(void *ptr, size_t size)
--{
--	unsigned int nr = PAGE_ALIGN(size) >> PAGE_SHIFT;
--	unsigned long addr = (unsigned long)ptr;
--	int ret;
--
--	ret = set_memory_nx(addr, nr);
--	if (ret)
--		return ret;
--
--	return set_memory_rw(addr, nr);
--}
--
--int execmem_restore_rox(void *ptr, size_t size)
--{
--	unsigned int nr = PAGE_ALIGN(size) >> PAGE_SHIFT;
--	unsigned long addr = (unsigned long)ptr;
--
--	return set_memory_rox(addr, nr);
--}
--
- #else /* CONFIG_ARCH_HAS_EXECMEM_ROX */
- /*
-  * when ROX cache is not used the permissions defined by architectures for
+ 	size = PAGE_ALIGN(size);
+ 
 -- 
 2.47.2
 
