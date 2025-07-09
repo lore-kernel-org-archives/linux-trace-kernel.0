@@ -1,69 +1,177 @@
-Received: from relay.hostedemail.com (smtprelay0014.hostedemail.com [216.40.44.14])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F2A58F40;
-	Wed,  9 Jul 2025 18:02:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EDD4239085;
+	Wed,  9 Jul 2025 18:28:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752084184; cv=none; b=A7jEISWfDmwswzdQSiM+b0gh2vdMAs8a/3fuh1Z/RfhUsbFpJBa1WMI8+KchXGmemOVAioRpBFKRkiXPKOOwPfiji9kUUhiazmyvb4zPVHRTkYrbfn303ZGRDgqUXMsboHR8wA4R0kUH2a6muVMyTjERPVAQxIJ2fhIwF5+M9ZI=
+	t=1752085727; cv=none; b=V6xzRt5ygVtOgURnQJim7w4UMzn8hkCYkrzIueWc4a6xXYnEXZBj95GaGgH6jtlLGE+ZaM7NGIja/6FQz8U40ilwXxhxfIN5rnKENSn7nFcxLmUS1TvlUIXQH7rJTCWM14R1EDcBy92o5cmS+YB6NX9mHIBEY3hRtoQ53OtegYE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752084184; c=relaxed/simple;
-	bh=zmETjLkQxPZXJE78cPJUhx1Pvi3XOdZVoPP1hS4dWTw=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=n13BvFjBJYMi2AlAgzs19mjYeL3vb441P0C91LpYc16rEmV5Fie3dOS9xWocsLUF88x2VTQm5gqnw6E+zpwl2KxSZkZ3aAO7FYiMjlV1lLk14bD9ZRwqEZDFZOS0w/YJNYmo35k3ttckBuBYhOzH4Xe71jt+dfAYm3IFKqdNtE0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf13.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay02.hostedemail.com (Postfix) with ESMTP id 15B94129394;
-	Wed,  9 Jul 2025 18:02:49 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf13.hostedemail.com (Postfix) with ESMTPA id 06AE32000D;
-	Wed,  9 Jul 2025 18:02:45 +0000 (UTC)
-Date: Wed, 9 Jul 2025 14:02:45 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Nam Cao <namcao@linutronix.de>
-Cc: John Ogness <john.ogness@linutronix.de>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Gabriele Monaco <gmonaco@redhat.com>, linux-trace-kernel@vger.kernel.org,
- linux-kernel@vger.kernel.org, Petr Mladek <pmladek@suse.com>, Sergey
- Senozhatsky <senozhatsky@chromium.org>, Paul Walmsley
- <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou
- <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
- linux-riscv@lists.infradead.org
-Subject: Re: [PATCH v12 00/12] RV: Linear temporal logic monitors for RT
- application
-Message-ID: <20250709140245.555f5fd6@batman.local.home>
-In-Reply-To: <cover.1752082806.git.namcao@linutronix.de>
-References: <cover.1752082806.git.namcao@linutronix.de>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1752085727; c=relaxed/simple;
+	bh=9fdOdgXFqFowyzNU5tXxjS4uhBhKB/MS4gO9Omh2uak=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=RPxzGhz5z0lMi33B+A9mKgCHFGF0XCP2jMgu9lspOeY4y7GVH7Maf8l2c2xq4I0iSTktRTJveiWgJqkEliCN9rz0i6asST58I86FILLz7LsFQMLuQilEoDwYYfNWgWXoVxqzEf3TR8rgI6u/K+bp23BFSgt4ltoTnN0P99UHGII=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rQe5hD/X; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rQe5hD/X"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0CBBFC4CEEF;
+	Wed,  9 Jul 2025 18:28:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1752085726;
+	bh=9fdOdgXFqFowyzNU5tXxjS4uhBhKB/MS4gO9Omh2uak=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=rQe5hD/Xy2KnOs/bQB0lEgW4j3mQDC4PfqWXL07vLm2IdbrLSoh1i8OS5yTv9I69G
+	 HentD9Mbh4/GyVFaO/5UGpCitKYz2zIWnFvM4LdA2j0hnbCKTiN5vn78vF3oEtn57r
+	 WUOC+ZjrXr6CgsbnSUxBMl80DM28klUBJYS8bcz6Q5/pHvC6BQS8DMMR3vFUOcyMA1
+	 wnZZ3O2mR8i+1phLiwuqaOMhZ8rYXW5zDvcys/+O7fuyqaE7jdbOmN1bZE/9Nf5CTW
+	 y/7u14FN1rLcV4/BNFXA1892o6y4j2x+hXZt9/4zChKhrW90fV5Z2a8ikf8XlO9a8g
+	 NW4bbjPKdSiiA==
+From: SeongJae Park <sj@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: SeongJae Park <sj@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	damon@lists.linux.dev,
+	kernel-team@meta.com,
+	linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org,
+	linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] mm/damon: add trace event for effective size quota
+Date: Wed,  9 Jul 2025 11:28:43 -0700
+Message-Id: <20250709182843.35812-1-sj@kernel.org>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250709122123.779c874f@batman.local.home>
+References: 
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: 06AE32000D
-X-Stat-Signature: 4tomrud9jwmunkyz57wfp5k71ry5wety
-X-Rspamd-Server: rspamout06
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1/ggJjnnsruuPvYIVxNLflPkiwzfzc0XTE=
-X-HE-Tag: 1752084165-40581
-X-HE-Meta: U2FsdGVkX1+FoU1zagZx+55nCSK0CRRO+gJw16rt4pRYrTaqRE+5MdFJDk8bVx1GCKROKOBODMciAKoOKdnbMPBNtuWYohDXRGiFjMAzO5YrSBY8leaRpHNz49vZzwck91lLvIklDX5cJF/1KjjUrpojPk+/Bu2jSPizMhI2Lfx+pVOmDiYGSF7vBwGkiUHPDw9SSbsN4bYg6b2f0rS9+ZguPNCmTaoLzzPwlNF80ZguwzDoEuDTjUaeWauPMw8KE8VJSjaG7AwZIdqbPVrg9v6hYtRssSWiLZNIcAGVrxKgmeMzvN2XzYndvAly0iLN8pcTh2sYXlfq3XOrFaOq2jZpSnS3YCLX
+Content-Transfer-Encoding: 8bit
 
-On Wed,  9 Jul 2025 19:56:17 +0200
-Nam Cao <namcao@linutronix.de> wrote:
+Hi Steven,
 
-> v11->v12 https://lore.kernel.org/linux-trace-kernel/cover.1751634289.git.namcao@linutronix.de
->   - drop the applied patches
->   - fixup build failure when CONFIG_PRINTK=n
+On Wed, 9 Jul 2025 12:21:23 -0400 Steven Rostedt <rostedt@goodmis.org> wrote:
 
-Bah, I didn't see this. I was actually testing this series, but the
-tests are having issues.
+> On Fri,  4 Jul 2025 15:14:08 -0700
+> SeongJae Park <sj@kernel.org> wrote:
+> 
+> > Aim-oriented DAMOS quota auto-tuning is an important and recommended
+> > feature for DAMOS users.  Add a trace event for the observability of the
+> > tuned quota and tuning itself.
+> > 
+> > Signed-off-by: SeongJae Park <sj@kernel.org>
+> > ---
+> >  include/trace/events/damon.h | 26 ++++++++++++++++++++++++++
+> >  mm/damon/core.c              | 20 +++++++++++++++++++-
+> >  2 files changed, 45 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/include/trace/events/damon.h b/include/trace/events/damon.h
+> > index 32c611076023..36b2cdf47dce 100644
+> > --- a/include/trace/events/damon.h
+> > +++ b/include/trace/events/damon.h
+> > @@ -9,6 +9,32 @@
+> >  #include <linux/types.h>
+> >  #include <linux/tracepoint.h>
+> >  
+> > +TRACE_EVENT_CONDITION(damos_esz,
+> > +
+> > +	TP_PROTO(unsigned int context_idx, unsigned int scheme_idx,
+> > +		unsigned long esz, bool do_trace),
+> > +
+> > +	TP_ARGS(context_idx, scheme_idx, esz, do_trace),
+> > +
+> > +	TP_CONDITION(do_trace),
+> 
+> Please explain to me why you are using a conditional here?
 
-Anyway, I'll apply these instead and restart the tests.
+There is no reason to make this conditional.  Maybe I was out of my mind.
+
+[...]
+> > --- a/mm/damon/core.c
+> > +++ b/mm/damon/core.c
+> > @@ -2011,12 +2011,26 @@ static void damos_set_effective_quota(struct damos_quota *quota)
+> >  	quota->esz = esz;
+> >  }
+> >  
+> > +static void damos_trace_esz(struct damon_ctx *c, struct damos *s,
+> > +		struct damos_quota *quota)
+> > +{
+> > +	unsigned int cidx = 0, sidx;
+> > +	struct damos *siter;
+> > +
+> > +	damon_for_each_scheme(siter, c) {
+> > +		if (siter == s)
+> > +			break;
+> > +		sidx++;
+> > +	}
+> > +	trace_damos_esz(cidx, sidx, quota->esz, true);
+> 
+> It's set to true, so it's not even a conditional anymore. The compiler
+> will likely optimize it out!
+
+You're right.
+
+Andrew, could you please add below fixup patch?
+
 
 Thanks,
+SJ
 
--- Steve
+=================== >8 ======================
+From 13975534cad603410837c5eca299f0a24ad802a1 Mon Sep 17 00:00:00 2001
+From: SeongJae Park <sj@kernel.org>
+Date: Wed, 9 Jul 2025 11:22:39 -0700
+Subject: [PATCH] mm/damon: make damos_esz unconditional trace event
+
+It has no reason to be conditional.  Make it unconditional trace event.
+
+Fixes: 9a365a71b830 ("mm/damon: add trace event for effective size quota") # mm-unstable
+Closes: https://lore.kernel.org/20250709122123.779c874f@batman.local.home
+Reported-by: Steven Rostedt <rostedt@goodmis.org>
+Signed-off-by: SeongJae Park <sj@kernel.org>
+---
+ include/trace/events/damon.h | 8 +++-----
+ mm/damon/core.c              | 2 +-
+ 2 files changed, 4 insertions(+), 6 deletions(-)
+
+diff --git a/include/trace/events/damon.h b/include/trace/events/damon.h
+index 2e4d7d281fa7..fc2c61ccc887 100644
+--- a/include/trace/events/damon.h
++++ b/include/trace/events/damon.h
+@@ -9,14 +9,12 @@
+ #include <linux/types.h>
+ #include <linux/tracepoint.h>
+ 
+-TRACE_EVENT_CONDITION(damos_esz,
++TRACE_EVENT(damos_esz,
+ 
+ 	TP_PROTO(unsigned int context_idx, unsigned int scheme_idx,
+-		unsigned long esz, bool do_trace),
++		unsigned long esz),
+ 
+-	TP_ARGS(context_idx, scheme_idx, esz, do_trace),
+-
+-	TP_CONDITION(do_trace),
++	TP_ARGS(context_idx, scheme_idx, esz),
+ 
+ 	TP_STRUCT__entry(
+ 		__field(unsigned int, context_idx)
+diff --git a/mm/damon/core.c b/mm/damon/core.c
+index 0f7d8b37c91d..775e097b6538 100644
+--- a/mm/damon/core.c
++++ b/mm/damon/core.c
+@@ -2223,7 +2223,7 @@ static void damos_trace_esz(struct damon_ctx *c, struct damos *s,
+ 			break;
+ 		sidx++;
+ 	}
+-	trace_damos_esz(cidx, sidx, quota->esz, true);
++	trace_damos_esz(cidx, sidx, quota->esz);
+ }
+ 
+ static void damos_adjust_quota(struct damon_ctx *c, struct damos *s)
+-- 
+2.39.5
+
