@@ -1,146 +1,125 @@
-Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFE5E2701CC
-	for <linux-trace-kernel@vger.kernel.org>; Wed,  9 Jul 2025 07:37:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93B7F27281C;
+	Wed,  9 Jul 2025 07:52:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752046678; cv=none; b=p0S6QAg2E9E/Hnqo01Nrs14sCcoHxbfZsFWDf3ZxPB2Ye12JQarMACOH43vRetmcRaXUHGpgqNbzAq3bVTOsCUBOjzaQ8Mlvm5Hr5jSYzWiEGUoj+l3KVu1RX7qYyoxNAC7bNbfwomFbGMgfl1zy8O5kvX5D3BV4bOyao5J97jg=
+	t=1752047535; cv=none; b=dq9ZEyCH9JOasuAyzXz92g99Ezjs4h+ktB9lySkKUoejsTqCEjWn/LeWdon82gekkF9v/pmzYQ0Si6FyguruXBL4uw6AEx3QCkxYF1YoZQ9XXi/sK4PiwlHfssVsC9hG4t+vK1APB8u2zXzQ+XjgBI0qoQgVT7UTBpo1mgZOSd4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752046678; c=relaxed/simple;
-	bh=9OPmNg1Ke93Fs8SkZKBisFI6U+uVxoHqsm9QDX67Rgk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=UxZRcq3Z1emgH7uiS+e/q7n6vo8AArsms4c9UMyq2uXmX2EkRkTnrRQ4XtJ8Gg1aWehanU43Kp+WINMCuOzBd0rFDx/uiDLRxG4CSbzGbaX+qwCr4iINI9Ua57n0dgjZWjVEjbDWOoED5L8ePWXnzXCkVXBnfj5FAw3EMumeyo8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=blackwall.org; spf=none smtp.mailfrom=blackwall.org; dkim=pass (2048-bit key) header.d=blackwall-org.20230601.gappssmtp.com header.i=@blackwall-org.20230601.gappssmtp.com header.b=Fyx0jAOV; arc=none smtp.client-ip=209.85.208.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=blackwall.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=blackwall.org
+	s=arc-20240116; t=1752047535; c=relaxed/simple;
+	bh=epd3CHTiwOCyBkCaPvv+RUvjNQZuUDRifZBMiy5pQb8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=s8Rier40ggNB7mqFwqHY0lVackzDM0D4uIhq/JbpOfSsiifa8peYH+7i7HjHgUNNh7yLudeRA+mIRs/PPeEZgy53dTZECM7a0iosLzkY600c/pptSa+RpUkH5VbSyhQcuKbwKRHLFIa2FRIJ7eMEZ1zpG9iqLQquITzuXFvkKy0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DmPLMd81; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=blackwall-org.20230601.gappssmtp.com header.i=@blackwall-org.20230601.gappssmtp.com header.b="Fyx0jAOV"
-Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-608acb0a27fso7193334a12.0
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 09 Jul 2025 00:37:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=blackwall-org.20230601.gappssmtp.com; s=20230601; t=1752046675; x=1752651475; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=7AF17i32IwMLY62AXSip2mxJYEDMY02Ret/Hrjg5ZK0=;
-        b=Fyx0jAOVtP481WsWBZ5NWcYpPL1fT5ZKqKrZq+LAj+HgBJf945INpeqp56yXMTt9BI
-         1eE9321Nax0+yrQnBRuLuX384KLwGUk6XIEy9adBSzXKf+tGIFjiN/uRiRBdzouYiHnM
-         ZqnTu4cQNzotKyKcUHeaImmmetjzNbVlzQtq+r7UDGMN6AuxbtzZQEGEtQaQLD6xFdOB
-         mEGrJdrpxT0NLzlM7ZjgqlGsUQVNgRh1EoZ4mQJfs4xByBRUu5IzeehyDSSuLUl4mdEt
-         XgBN7nNkfWDPUra62kCWaPl94JtN+PGIVnZKKT+YTh5KAV7PRbINNxTZZOXlPF7D7tLx
-         0grg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1752046675; x=1752651475;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=7AF17i32IwMLY62AXSip2mxJYEDMY02Ret/Hrjg5ZK0=;
-        b=wSx+okyWaUNM/ViFMqm/lnJO+dFaP7m/ew2Z0Yv1cBHSsFzEJQQBrlMOkIII1ze2GK
-         6qHPg9Ytuk2Zi2iSXH6Z+tyxL1LPgT71RDvp86UE/JE2aQNHFDUWitBkv0Ty0Kq/s4F9
-         Iv9sLRY7NssvfI75sSaHdgdChL/NMZTobYm4kj2PG7BRwjwzQb27wAIAygBXJy7TIPHw
-         WY6HA46/C0jMNTEDXf2vnE7Lan5D3+74PzC6e31FCmFBcLD8QUYPctUQ4twLpUUz9SkB
-         KpatQbhvwoy1NzokykXJooI3x35Bw3ALhOQEMspe0K7mOuqDBFJ6pFxA4L3+hj7e4RI+
-         DYwQ==
-X-Forwarded-Encrypted: i=1; AJvYcCX3PmbrM8lXNfBjEkBBG3ym2vCuWt6Sy1G+8ex+JF1O0Nhnkr9ZJDVjvOaowszj4CHKF3KOCSq3YpzhA4JNSy1K7ik=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyU8i55WxoROyqLuaI0e+/CtfGSiXzxUmvr7bPvUCxoLmV34MaG
-	dTp31I2U8uyMECTTz85WhSLE3TY8MC3uPqO60YKaAWQWXlO7/ZvLg5UPj2uirODMrjM=
-X-Gm-Gg: ASbGncsbgAsYtQpnw8jD0PzAnOTeWYEcd2r9kpzjrHoUmrL6d7uRO4nOlDzDz3+y/dt
-	L3IXQupk3Tr+60IX1NyA5hD8mVRg7CJdUFELAZhH75nXuQkSz8iuV2poZiDuJn8HqYyzOlfy+Oc
-	GuA6aViKAt95TKnouSy1Nhw2shl6NMC7md49RDhLqJw32SgSwsF9CkNWtaYQ2lAHJ+WepHMgglW
-	fkiPf+R+Ndg0AZiyysmNWjDUT6N/ufshE+FXtPo+nC+C4AShRWM/ND1nGbQoWoBYydxDmgmj9d9
-	odpm/jU7eidnts94hmlBwsnm9ssQtditzxDcTvmMnzw937JkhgO+J5hOZnrcnDAUPukQv+4nO8H
-	UEXAoVDLZLcCY1TNUjA==
-X-Google-Smtp-Source: AGHT+IGKNKwRhwXTcmwtGN+5HGqX7L50fvavD2PabeX9y+OqiZC5bMINAl/BO5b4T2iWDRdBG72Lbw==
-X-Received: by 2002:a17:907:3f9c:b0:ae0:cccd:3e7d with SMTP id a640c23a62f3a-ae6cf73f3f5mr147273866b.33.1752046674928;
-        Wed, 09 Jul 2025 00:37:54 -0700 (PDT)
-Received: from [192.168.0.205] (78-154-15-142.ip.btc-net.bg. [78.154.15.142])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae3f6b02f68sm1054983366b.117.2025.07.09.00.37.52
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 09 Jul 2025 00:37:54 -0700 (PDT)
-Message-ID: <f382be0d-6f30-443e-b161-d1d172dcd801@blackwall.org>
-Date: Wed, 9 Jul 2025 10:37:51 +0300
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DmPLMd81"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AB77EC4CEEF;
+	Wed,  9 Jul 2025 07:52:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1752047535;
+	bh=epd3CHTiwOCyBkCaPvv+RUvjNQZuUDRifZBMiy5pQb8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=DmPLMd81t0yoXx25uaKNU2G1LwqlWjnhyrX+3ikxKjK4OTzJUVHKa6pcDdl8suWd3
+	 ZI0sxEuJnrHbYg54ml0ov60YVCLM8EL++/M3fNVbR4Hjv/PkaRRc9HgnKLLT+yY/xV
+	 lhkf8Ak8HR2/hxjVukxQ4bjIAVGn4VvYdUf+fvGc4b2Px+5BM5SoHB9O6ZIVc/cu0B
+	 Ll09LIwpbvb6gvY+gqwyQaRU16enGnmYEt5zQlBNem9N9kwz0ccSxwEJm4ai3jsXI0
+	 WTY3+B8c92GMEmxrVHOd2KydJCczZ9qd9+lS3rHPz0st8szMCCrkp6qH3Gbc2a4JYf
+	 FbQGa6uLN405Q==
+Date: Wed, 9 Jul 2025 09:52:08 +0200
+From: Carlos Maiolino <cem@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	linux-xfs@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, Christoph Hellwig <hch@lst.de>, 
+	"Darrick J. Wong" <djwong@kernel.org>
+Subject: Re: [PATCH v2 00/13] xfs: tracing: remove unused event
+ xfs_reflink_cow_found
+Message-ID: <cugjvra5mo6omruov6tb4rkn4ruxjvax2tgb5bcse4zl5ju7ul@rdekur676goj>
+References: <20250616175146.813055227@goodmis.org>
+ <uggqM4FTewFhLCJboUto49yP1wdr5erpnCdX-piLRMNV8IzM9h6Qv-nkmI6ieg6aAWOSRe9IiJvLS2R3yyCklQ==@protonmail.internalid>
+ <20250708180932.1ffdca63@gandalf.local.home>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH bpf-next v3 7/7] netkit: Remove location field in
- netkit_link
-To: Tao Chen <chen.dylane@linux.dev>, daniel@iogearbox.net,
- andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
- kuba@kernel.org, pabeni@redhat.com, ast@kernel.org, andrii@kernel.org,
- martin.lau@linux.dev, eddyz87@gmail.com, song@kernel.org,
- yonghong.song@linux.dev, john.fastabend@gmail.com, kpsingh@kernel.org,
- sdf@fomichev.me, haoluo@google.com, jolsa@kernel.org,
- mattbobrowski@google.com, rostedt@goodmis.org, mhiramat@kernel.org,
- mathieu.desnoyers@efficios.com, horms@kernel.org, willemb@google.com,
- jakub@cloudflare.com, pablo@netfilter.org, kadlec@netfilter.org,
- hawk@kernel.org
-Cc: bpf@vger.kernel.org, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- netfilter-devel@vger.kernel.org, coreteam@netfilter.org
-References: <20250709030802.850175-1-chen.dylane@linux.dev>
- <20250709030802.850175-8-chen.dylane@linux.dev>
-Content-Language: en-US
-From: Nikolay Aleksandrov <razor@blackwall.org>
-In-Reply-To: <20250709030802.850175-8-chen.dylane@linux.dev>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250708180932.1ffdca63@gandalf.local.home>
 
-On 7/9/25 06:08, Tao Chen wrote:
-> Use attach_type in bpf_link to replace the location field, and
-> remove location field in netkit_link.
+On Tue, Jul 08, 2025 at 06:09:32PM -0400, Steven Rostedt wrote:
 > 
-> Acked-by: Jiri Olsa <jolsa@kernel.org>
-> Signed-off-by: Tao Chen <chen.dylane@linux.dev>
-> ---
->  drivers/net/netkit.c | 8 +++-----
->  1 file changed, 3 insertions(+), 5 deletions(-)
+> Should this go through the XFS tree, or should I take it?
+
+This is in XFS tree for a while now:
+
+https://web.git.kernel.org/pub/scm/fs/xfs/xfs-linux.git/?h=xfs-6.17-merge
+
+https://lore.kernel.org/linux-xfs/aF6a1GhCdT_llDSm@infradead.org/T/#mae0757697a557087c723de553b7ccd2bb7a39c9c
+
+
+Carlos
+
 > 
-> diff --git a/drivers/net/netkit.c b/drivers/net/netkit.c
-> index 5928c99eac7..492be60f2e7 100644
-> --- a/drivers/net/netkit.c
-> +++ b/drivers/net/netkit.c
-> @@ -32,7 +32,6 @@ struct netkit {
->  struct netkit_link {
->  	struct bpf_link link;
->  	struct net_device *dev;
-> -	u32 location;
->  };
->  
->  static __always_inline int
-> @@ -733,8 +732,8 @@ static void netkit_link_fdinfo(const struct bpf_link *link, struct seq_file *seq
->  
->  	seq_printf(seq, "ifindex:\t%u\n", ifindex);
->  	seq_printf(seq, "attach_type:\t%u (%s)\n",
-> -		   nkl->location,
-> -		   nkl->location == BPF_NETKIT_PRIMARY ? "primary" : "peer");
-> +		   link->attach_type,
-> +		   link->attach_type == BPF_NETKIT_PRIMARY ? "primary" : "peer");
->  }
->  
->  static int netkit_link_fill_info(const struct bpf_link *link,
-> @@ -749,7 +748,7 @@ static int netkit_link_fill_info(const struct bpf_link *link,
->  	rtnl_unlock();
->  
->  	info->netkit.ifindex = ifindex;
-> -	info->netkit.attach_type = nkl->location;
-> +	info->netkit.attach_type = link->attach_type;
->  	return 0;
->  }
->  
-> @@ -776,7 +775,6 @@ static int netkit_link_init(struct netkit_link *nkl,
->  {
->  	bpf_link_init(&nkl->link, BPF_LINK_TYPE_NETKIT,
->  		      &netkit_link_lops, prog, attr->link_create.attach_type);
-> -	nkl->location = attr->link_create.attach_type;
->  	nkl->dev = dev;
->  	return bpf_link_prime(&nkl->link, link_primer);
->  }
-
-LGTM for netkit,
-Acked-by: Nikolay Aleksandrov <razor@blackwall.org>
-
+> -- Steve
+> 
+> 
+> On Mon, 16 Jun 2025 13:51:46 -0400
+> Steven Rostedt <rostedt@goodmis.org> wrote:
+> 
+> > Trace events take up to 5K in memory for text and meta data. I have code that
+> > will trigger a warning when it detects unused tracepoints[1]. The XFS file
+> > system contains many events that are not called. Most of them used to be called
+> > but due to code refactoring the calls were removed but the trace events stayed
+> > behind.
+> >
+> > Some events were added but never used. If they were recent, I just reported
+> > them, but if they were older, this series simply removes them.
+> >
+> > One is called only when CONFIG_COMPACT is defined, so an #ifdef was placed
+> > around it.
+> >
+> > Finally, one event is supposed to be a trace event class, but was created with
+> > the TRACE_EVENT() macro and not the DECLARE_EVENT_CLASS() macro. This works
+> > because a TRACE_EVENT() is simply a DECLARE_EVENT_CLASS() and DEFINE_EVENT()
+> > where the class and event have the same name. But as this was a mistake, the
+> > event created should not exist.
+> >
+> > [1] https://patchwork.kernel.org/project/linux-trace-kernel/cover/20250612235827.011358765@goodmis.org/
+> >
+> > Changes since v1: https://lore.kernel.org/linux-trace-kernel/20250612212405.877692069@goodmis.org/
+> >
+> > - Removed the first patch that mistakenly removed xfs_reflink_cow_found
+> >
+> > - Change subjects to start with lowercase
+> >
+> > - Removed xfs_attr events that are used in an #if 0 section instead of
+> >   adding #if 0 around them
+> >
+> > - I added: Reviewed-by: Christoph Hellwig <hch@lst.de>
+> >   to all patches but the one with the modified #if 0 as Christoph
+> >   said he looked at them all.
+> >
+> > Steven Rostedt (13):
+> >       xfs: remove unused trace event xfs_attr_remove_iter_return
+> >       xfs: remove unused event xlog_iclog_want_sync
+> >       xfs: remove unused event xfs_ioctl_clone
+> >       xfs: remove unused xfs_reflink_compare_extents events
+> >       xfs: remove unused trace event xfs_attr_rmtval_set
+> >       xfs: remove unused xfs_attr events
+> >       xfs: remove unused event xfs_attr_node_removename
+> >       xfs: remove unused event xfs_alloc_near_error
+> >       xfs: remove unused event xfs_alloc_near_nominleft
+> >       xfs: remove unused event xfs_pagecache_inval
+> >       xfs: remove usused xfs_end_io_direct events
+> >       xfs: only create event xfs_file_compat_ioctl when CONFIG_COMPAT is configure
+> >       xfs: change xfs_xattr_class from a TRACE_EVENT() to DECLARE_EVENT_CLASS()
+> >
+> > ----
+> >  fs/xfs/scrub/trace.h |  2 +-
+> >  fs/xfs/xfs_trace.h   | 68 ++--------------------------------------------------
+> >  2 files changed, 3 insertions(+), 67 deletions(-)
+> 
