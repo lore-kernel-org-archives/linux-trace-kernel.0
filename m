@@ -1,65 +1,68 @@
-Received: from relay.hostedemail.com (smtprelay0011.hostedemail.com [216.40.44.11])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D81C25A337;
-	Tue,  8 Jul 2025 22:17:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39518137932;
+	Wed,  9 Jul 2025 01:06:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752013070; cv=none; b=Aud53RRm3mjzPiE+Wo0/6cnstlIhBt2kbmnTdbpYtVm7vg8fWVoDsuOKaAtxBnWDagipdGCzaQsZ/2JCU88Qdf0hFCSXHm26wzE1piiB9ULFmaBhpstVJiCw9Dp6OvtaABopdjonzSc5n5hbc3NZc/59owTy3vLhvF4FmmWrszk=
+	t=1752023189; cv=none; b=MDqBBtdKziLBVbndZxkv1Zm7TnTutE8MvszIR4ylNZbm4lZ5VyKS3doMuobNR/ZsXCtMsikzqy0G2rvWp8CUg+Ijp1Ux//7mKrtjhK4cczCp1gD/wJyk+fBBkgecjuNXgwOSRRVFSeYaWEZ90eCjSmxfn6wjotv8j44TtlONdC0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752013070; c=relaxed/simple;
-	bh=OERbHD/6UtndaUo7nvHq24lajNCUAEF0sKY39B869HM=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=LD4lqTdoly/m0mtWXS9UQOQloiStxgSzGF0w1EQmGHYnWAOvQyqGz37SxyxXAA27Qg+LDYOI+0evnmvaV/LQRwsLuIkJJnUlfcXHYlbdFWZ0rq4hJcIpq4/OJOch70AAwIfo+XCsUfnoOJNBLEWOxV670IWRxgXrFaoD9OTi7Kk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf02.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay09.hostedemail.com (Postfix) with ESMTP id 810018026B;
-	Tue,  8 Jul 2025 22:12:19 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf02.hostedemail.com (Postfix) with ESMTPA id AF3FC8000F;
-	Tue,  8 Jul 2025 22:12:17 +0000 (UTC)
-Date: Tue, 8 Jul 2025 18:12:19 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Gabriele Paoloni <gpaoloni@redhat.com>
-Cc: mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+	s=arc-20240116; t=1752023189; c=relaxed/simple;
+	bh=+uzmlFz8iYlo60nhP0pzuMSC2bp0z52jdCRIXrQFpm0=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=pzBfhzMYZIiSDWjmpbIAGHyxhi+g54ZuJe202wYT+X4zj23NQR0Z3NQl5OcCs4p/sS3Mq1SPfImC06dXjsv1+3TFqhBxulduXHsKyJ13Mg3TexAbU+hQ0xdgeWL2VDTHX9EJ0ADDqPZAkd/rdhTl+Tgz7JK2jQOq9paNbEkVez8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=n7Nl3BiI; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="n7Nl3BiI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C85B2C4CEED;
+	Wed,  9 Jul 2025 01:06:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1752023188;
+	bh=+uzmlFz8iYlo60nhP0pzuMSC2bp0z52jdCRIXrQFpm0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=n7Nl3BiI7UM5xACeiBG5qdew3FdOpoPUYl1wHLjP6ubzqnXelREIpy34gacTY34rE
+	 bY7tCo1lw306SSVV4H2RmpnLS1OaGLQlN3ttROLIaNzqsuUYNg1DxPNC3B2oGMZSIX
+	 YoFVV1ocT9bcUNjrye9eooJP4DoO6mMKktZMInz70DBu9GsvOftzRM/lgZfSZxoRkC
+	 seJkfo5mpTsOGIm51iZRtHHv9u7RcFqlpJQA1Isy4imx2j7XZntEpcmeAciafuTyIg
+	 JZyegeVMIXI+El4eYYlj/RO2L/fQ6BViivtdKd+0fmf4NI03M6KJUqMeGFqfvMD38X
+	 GP4Dk25hFtARA==
+Date: Wed, 9 Jul 2025 10:06:26 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Gabriele Paoloni <gpaoloni@redhat.com>, mhiramat@kernel.org,
+ mathieu.desnoyers@efficios.com, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
 Subject: Re: [RFC PATCH RESEND] tracing: add kernel documentation for
  trace_array_set_clr_event, trace_set_clr_event and supporting functions
-Message-ID: <20250708181219.3abf0871@gandalf.local.home>
-In-Reply-To: <CA+wEVJaH8NcwUoobn7UMFBJzyT-4xyqD34bntmWCukKLAPbG6w@mail.gmail.com>
+Message-Id: <20250709100626.fc0611eb6801b7a8dad9164f@kernel.org>
+In-Reply-To: <20250701195939.3e297e20@gandalf.local.home>
 References: <20250620085618.4489-1-gpaoloni@redhat.com>
 	<20250701195939.3e297e20@gandalf.local.home>
-	<CA+wEVJY2a_ERXemup7EefPPXHOv8DAfyauuP6Mn5vHYFkbbBcQ@mail.gmail.com>
-	<20250702104058.3cf9c1a3@batman.local.home>
-	<20250702111908.03759998@batman.local.home>
-	<CA+wEVJaH8NcwUoobn7UMFBJzyT-4xyqD34bntmWCukKLAPbG6w@mail.gmail.com>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
+Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: AF3FC8000F
-X-Stat-Signature: w9f48jxqpkpb6ttk6i46mqws8mdozor3
-X-Rspamd-Server: rspamout06
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX18InQAfwwpmMLLDsRbnHspREgFUtWbhi7s=
-X-HE-Tag: 1752012737-798506
-X-HE-Meta: U2FsdGVkX1/anaBaOgEloSRMzu8chxhapLLyCRFOLwJWHWUNpxIak4mJ+vTOJqPm4YBE+b//pBcP11wZNhw5pbAR4LQ01evnXV7znJBX7lUAcclxy7AgCroRvNwzFnXKEyYShiolatkHNMOcejs00tucnxEIGMZsyj003DYzEH+m/UjwP2AR0ZtrLIlj0yqKWpFTBCO9FLFiz4Au4tft0luS6QKwKtLB6er3PTLzyhvGZM8mxHJFkGt7n9zt/tT7U9LAsTpGMHh7L8meMTaJEzbSwFRL/VnHcX/JHGWs5fhVgOU8JfkzzcyF2LDV6fVCiRfJjDrF3YuVITQn7cHtqWUdIcQHY4xQ
 
-On Wed, 2 Jul 2025 19:16:56 +0200
-Gabriele Paoloni <gpaoloni@redhat.com> wrote:
+On Tue, 1 Jul 2025 19:59:39 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-> I also cannot see a reason for an atomic counter. Please let me know
-> if you want me to add this cleanup patch as part of next patchset
-> revision (if so the doc patch will change accordingly).
+> > + * __ftrace_event_enable_disable - enable or disable a trace event
+> > + * @file: trace event file associated with the event.
+> > + * @enable: 0 or 1 respectively to disable/enable the event (any other value is
+> > + * invalid).
+> 
+> Saying 0 or 1 should assume that those are the only values. Don't need the
+> content in the parenthesis.
 
-You can send a patch but it shouldn't be related to this series.
+BTW, it should be "0 or !0"? (or we should make it boolean)
+This description means if it is "2", that is undefined.
 
-Just send it separately.
+Thanks,
 
--- Steve
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
