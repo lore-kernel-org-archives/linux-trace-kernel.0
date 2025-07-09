@@ -1,41 +1,41 @@
-Received: from relay.hostedemail.com (smtprelay0013.hostedemail.com [216.40.44.13])
+Received: from relay.hostedemail.com (smtprelay0017.hostedemail.com [216.40.44.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 740CE2D320E;
-	Wed,  9 Jul 2025 14:55:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0A5C2D8380;
+	Wed,  9 Jul 2025 15:08:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752072956; cv=none; b=YVgrSAUDPta+C9ztoPJNyu56jHnqlLXjXmjOhkQFwX4iLnFwu+KoB9YYpJeKcG/bKW5xIv154Q9zp3W6ffsssmAqm2mrMoSjPYfbLKF0pYsvuk7ySTNyFGLQXoE/k+KkwIZeF2yyxK4jJpIzreQqCX2RvaKgM4VwFpSLV4WXFZk=
+	t=1752073714; cv=none; b=Ga70nCJ1hWHJm8wZbh30RTwfolKNtCi2HrooECHnmwqEWUXAwYCjWkor6dcYcDQ5PlKOEV7XdCpfGTUHsIXECLRIWY8U2RBkjQFTHblz8q55JQgrNfvuG7rVRYzgGkLA0YK0qXztcA/1zfnWrRPlUv8Y+6aDb9XZQ7eSic8IsEY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752072956; c=relaxed/simple;
-	bh=FuH/t6Fa+7Lm+Dj+i+9o2GEHu7PMV2e9Tkd/K3GrMKA=;
+	s=arc-20240116; t=1752073714; c=relaxed/simple;
+	bh=+YrnJroSXCdx+fDrdiaBVBxfnwOU8so60G2bKJ2HRXo=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=QIpB/t69O3WoFMqmYcNbihUhbaRrk6FRYQl2Jd6kHtlpvh0o4xUkuqkZc5uJUAwKoBy8LoQpRQBwEnTN/C0aJmiBqYeSvOv6tNHE/Z4eBanxNPmwZZAfw2D/G6NKyVYy+yPmN5JQuXgqiA3XKR2ehIgZg2OVQbCYKqqjm8S1MJQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.13
+	 MIME-Version:Content-Type; b=SXSDFwslQsov2mm6RwCzLVRiwQw+cVtaHfX+SxFsnxCMb5Nv6NWjC30jkfYsAQubyO6lIbJ9Q5JCCvL8fwA/4MbHr9xNeuuuWsbCYRWK+qjCiURw92PzeAembRCupRw3UwBMMVQEHS5UaLrfed5GoPqr5egrjK9DUzN4KvmxDJU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.17
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf09.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay08.hostedemail.com (Postfix) with ESMTP id 068231404C3;
-	Wed,  9 Jul 2025 14:55:51 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf09.hostedemail.com (Postfix) with ESMTPA id C418420030;
-	Wed,  9 Jul 2025 14:55:49 +0000 (UTC)
-Date: Wed, 9 Jul 2025 10:55:48 -0400
+Received: from omf16.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay08.hostedemail.com (Postfix) with ESMTP id 3DB0B140570;
+	Wed,  9 Jul 2025 15:08:30 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf16.hostedemail.com (Postfix) with ESMTPA id 41BC72000E;
+	Wed,  9 Jul 2025 15:08:28 +0000 (UTC)
+Date: Wed, 9 Jul 2025 11:08:27 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
-To: Carlos Maiolino <cem@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- linux-xfs@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>, Mark
- Rutland <mark.rutland@arm.com>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Andrew Morton
- <akpm@linux-foundation.org>, Christoph Hellwig <hch@lst.de>, "Darrick J.
- Wong" <djwong@kernel.org>
-Subject: Re: [PATCH v2 00/13] xfs: tracing: remove unused event
- xfs_reflink_cow_found
-Message-ID: <20250709105548.2e2bf86c@batman.local.home>
-In-Reply-To: <l56iobcpwdvdd5b7elwxcvp7btp2sfubqoxg7intx5wjzuj5bc@dc3v7mpgr5pa>
-References: <20250616175146.813055227@goodmis.org>
-	<uggqM4FTewFhLCJboUto49yP1wdr5erpnCdX-piLRMNV8IzM9h6Qv-nkmI6ieg6aAWOSRe9IiJvLS2R3yyCklQ==@protonmail.internalid>
-	<20250708180932.1ffdca63@gandalf.local.home>
-	<l56iobcpwdvdd5b7elwxcvp7btp2sfubqoxg7intx5wjzuj5bc@dc3v7mpgr5pa>
+To: Nam Cao <namcao@linutronix.de>
+Cc: Gabriele Monaco <gmonaco@redhat.com>, John Ogness
+ <john.ogness@linutronix.de>, Masami Hiramatsu <mhiramat@kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] tracing: Remove pointless memory barriers
+Message-ID: <20250709110827.0dce4012@batman.local.home>
+In-Reply-To: <20250708074219.K7BthlGg@linutronix.de>
+References: <20250626151940.1756398-1-namcao@linutronix.de>
+	<20250626113520.315db641@gandalf.local.home>
+	<20250626160459.soHxOROG@linutronix.de>
+	<20250626123445.5b01849d@gandalf.local.home>
+	<84o6uatn6i.fsf@jogness.linutronix.de>
+	<564f10574f11bd7ca42fcc5fb4d6c5625dc17205.camel@redhat.com>
+	<20250708074219.K7BthlGg@linutronix.de>
 X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -45,25 +45,41 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Stat-Signature: ccknmeksjuyehpdop68j47atzpipceze
-X-Rspamd-Server: rspamout04
-X-Rspamd-Queue-Id: C418420030
+X-Stat-Signature: adga67gho9eapbk1zb6y4tyds8jt4xbc
+X-Rspamd-Server: rspamout08
+X-Rspamd-Queue-Id: 41BC72000E
 X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1+tboONSqvUwp4f0Tpak0w+3BIwaCMJpHE=
-X-HE-Tag: 1752072949-601206
-X-HE-Meta: U2FsdGVkX19dmTpf4JUuloMWeIXrW8AWgu3R79cEmUwK63M+5dsTskAnhWHXpbu80NS3Fad7sPqw0PiDh3rcl9ASc+w629nOzHWPgycI7pA6Kg0TghgOEohCykdTksewWIkqMPtgWLvTZxKC/yVmYSGAw2fbY4J8UWfgq2YzmJcXjgO91oPrIpWM51Fq4hMTCsrQJmW08Bp1x00zTOGrmgORvn1xEaEd1ctCZ7F2278soLVKxqURLZsJHKKH21I0Gg8ODKgheVxy0/7883eRibdjdu/uNrSQn084vQipzAwpD6MZGrchY0nPk5eHx6USjZ69s9M0Lo4LgVhrlKfKg3l5Gluoclet
+X-Session-ID: U2FsdGVkX1+UGYGwD7G/ehMISPNzeyKG1gcAru3YHmM=
+X-HE-Tag: 1752073708-336087
+X-HE-Meta: U2FsdGVkX18fLP3zoZqaHRKv/dmgJ+PUBNP7VVDnpIPBTHoHm5m8YZ2+fDs05HWdXMS21LDB5f8e0/T4S358QBc0kBN1XfcniGM5OjC1S2aMEHNNIprHA2ZhRsGcyy23ku9eUDP0zYc/K5CyNPZPYbxqoJJSvT4Qu2Trin3HnauZlno1/ZY+L2o02w/Kh6eSE8gvtziOXY6TJyx/zBZAuxrwv0dP5OUkHk0fbkf3A3ZunnDwirn1Z1TZVI4z22JCKRSGeYKBqBZsYXzLj5mKbqGbZ7NyF060E4/gmtUpgc0lumFFwcITOG4WXPD+f2Xj
 
-On Wed, 9 Jul 2025 09:54:37 +0200
-Carlos Maiolino <cem@kernel.org> wrote:
+On Tue, 8 Jul 2025 09:42:19 +0200
+Nam Cao <namcao@linutronix.de> wrote:
 
-> On Tue, Jul 08, 2025 at 06:09:32PM -0400, Steven Rostedt wrote:
-> > 
-> > Should this go through the XFS tree, or should I take it?  
-> 
-> FWIW, I just realized that for whatever reason b4 chocked to send a
-> 'Thank You' msg to you when I applied your patches. It sent to every
-> submitter but you. That's why you didn't receive a 'personal' thanks :)
+> So yes, smp_rmb() is only useful inbetween reads, and smp_wmb() is
+> only userful inbetween writes.
 
-Ah, OK. Well, thanks, I think ;-)
+Hmm, I wonder if barriers isn't needed but atomic values are?
+
+That is, it looks like rv_monitoring_on() is looking to read the
+current state, where as turn_monitoring_on/off() changes the state.
+
+Perhaps instead of barriers, it should use atomics?
+
+ bool rv_monitoring_on(void)
+ {
+	return atomic_read(&monitoring_on);
+ }
+ 
+ static void turn_monitoring_off(void)
+ {
+	atomic_set(&monitoring_on, 0);
+ }
+ 
+
+Doesn't atomic make sure the values are seen when they are changed?
+
+As this code is more about looking at state and not ordering, and I
+think that's what atomics are about.
 
 -- Steve
