@@ -1,44 +1,44 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A06523FC7D;
-	Wed,  9 Jul 2025 19:21:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDF60242D76;
+	Wed,  9 Jul 2025 19:21:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752088909; cv=none; b=JcuElA3uLyxZeTkdIcFkh4+llGoNH/qlkVl9GidiD6lxJ4JSwsEq03AwqGj0sbswFap1aCu1O5W4DX2mfPYblUYM9GjSyNmES0E/dwzjujfNeVjcfgCQMCjhhMmgZl3X6BfabdKSTrc6xu6fUXaROJmWyW7Bprd2rLpFAMRPTdY=
+	t=1752088909; cv=none; b=A/VUUd2kGePlagB7E5t/I5j8kcrsiViwr1bl24uV2a6HIMBDiiRHdUrJfPfj3zSFjGQwIAHvMqYNYgJ2rRdhubV9w9akM+nexiojbz3skun0egyHikb1IejcbOnQkMqOBUbtSGPGcQjjPsfBTFKNsU5Gt/vRwTCkcAJCZdmOOZs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1752088909; c=relaxed/simple;
-	bh=wn2eJuS+zEx8XuEUjHUhCIJA/y0N3h9PIoDYfiC14KY=;
+	bh=85/U39BHNtL7BqDwSk7MztK54qQamsoQh/UQWNU8dqI=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=IkqMLJDi1/UrbNcOqPnUWQ6+uodYrpbEHrsuLQcDgOKXruDydLJW9USTKUE77DYNvFoU21tyXUPc/zij4QZuaPdSoOhQMGW+XGRFzRMJDO4ngV9ERmWJAtATXfk4w5Q73CcYMuZxRvEpga/z8lsBvEpYBq13qRL8M8QyqeS3oKc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=pozCRbxE; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=NW1VlUeR; arc=none smtp.client-ip=193.142.43.55
+	 MIME-Version; b=V6xkwX3eMBBdDCuujieDd0zqIGDsMHCykBfb8FBPu9pAv9wWKFjA7366Mes2Fvp+LrWjGxs+SYqmQCvr96SjTN3JRRqRKBHQFWrFZyWX1VmWhVh72eji9EiFBVYbfAJnSvmRcQOa55m7oL+pAM2PV2ZUuU+3PHJfO76qr0I4kPI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=0eoRKFRB; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=MC3wXHI+; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="pozCRbxE";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="NW1VlUeR"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="0eoRKFRB";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="MC3wXHI+"
 From: Nam Cao <namcao@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1752088903;
+	s=2020; t=1752088905;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=X6K97kNqS9iVwLaZLV56vbzJZXc6QFuHBHlvLvdFEbg=;
-	b=pozCRbxEDKgqgk5WJ/OmvMCBPiSpezn8rxYnITh9Ifl5+MibJWXREyUmhmT7Xgl+ar/a3c
-	/9BA3GEO1yBeMVbXWHSIhzdPBfETe/VsJHM+8Nb5igkQu6Kdp199HmBIC/Qp62f2fM5IY4
-	FxN03Q/G76vcqb28vVIA9dlcgjnEuA1mK6OvEGG9iYfQ9sXFPzMyMygQjX3LaAOSSlX03L
-	UmWvyAXGi8IfdtN9PCquTHixCe762TUrLrvk+DRzeVWT7hr0wJbKyjk8rnCmBNt5S9ieQK
-	5GkVRFVH28vdnx9YJgvrL4kEvopIjTNdjPViI2xFE9OqSD7sElZfK2EzjRSinw==
+	bh=5dQqqOzbNH8/khkeLA5QFd/dgTcqukCvnc+4mKvB/t8=;
+	b=0eoRKFRBGulJ+4LMNTde7VNIcJs5uoZ09kUqozji/C6zrXV28DCe+RdoG2WBdPXVUXmnr1
+	aRvROFnOj05hMD2N2qCAszwTpAq3+K3mLZ/8TN6yqpZtwxdtFv52/EE8yJ+vxDNneJYoXt
+	elYzK2vi0KGt/7tEcyUVuXKtkf9oGpzI4+UChvCnzPFHsHL+x5mljMo8Jah88TxkRudDQG
+	CQDz6HnDg+EVxcotXJuQU7UY/HedacavUfujV/ki0zuqGVFZPcM9MpyeAn96lGjuMCDnMr
+	d/8sjDXQwVoa9W8foFjHySY0kt4DyzoUdmpWAdiqjPuIfpb7oqBtEpg+4cBkNQ==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1752088903;
+	s=2020e; t=1752088905;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=X6K97kNqS9iVwLaZLV56vbzJZXc6QFuHBHlvLvdFEbg=;
-	b=NW1VlUeRiZkDqMJ/HmlXsRXPP+bX7Ch1baqDSY9XEGVMgBiDb7kd0raIABV6sQAABWSOn5
-	UiyLddrnOBq+eVAA==
+	bh=5dQqqOzbNH8/khkeLA5QFd/dgTcqukCvnc+4mKvB/t8=;
+	b=MC3wXHI+7fy8rhqJRNEfweTWTXPCLRuarAr4wdl1gttDAzXeksXnqmamrqFGD73XwWQ2jw
+	tELr3/hJXRzJb+Cw==
 To: Steven Rostedt <rostedt@goodmis.org>,
 	John Ogness <john.ogness@linutronix.de>,
 	Masami Hiramatsu <mhiramat@kernel.org>,
@@ -46,12 +46,10 @@ To: Steven Rostedt <rostedt@goodmis.org>,
 	Gabriele Monaco <gmonaco@redhat.com>,
 	linux-trace-kernel@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Cc: Nam Cao <namcao@linutronix.de>,
-	Petr Mladek <pmladek@suse.com>,
-	Sergey Senozhatsky <senozhatsky@chromium.org>
-Subject: [PATCH v13 04/12] rv: Let the reactors take care of buffers
-Date: Wed,  9 Jul 2025 21:21:15 +0200
-Message-Id: <620a25d4b2e0f73701c4f255063b60c8d8feb7e7.1752088709.git.namcao@linutronix.de>
+Cc: Nam Cao <namcao@linutronix.de>
+Subject: [PATCH v13 07/12] rv: Add rtapp container monitor
+Date: Wed,  9 Jul 2025 21:21:18 +0200
+Message-Id: <fb18b87631d386271de00959d8d4826f23fcd1cd.1752088709.git.namcao@linutronix.de>
 In-Reply-To: <cover.1752088709.git.namcao@linutronix.de>
 References: <cover.1752088709.git.namcao@linutronix.de>
 Precedence: bulk
@@ -62,198 +60,116 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Each RV monitor has one static buffer to send to the reactors. If multiple
-errors are detected simultaneously, the one buffer could be overwritten.
-
-Instead, leave it to the reactors to handle buffering.
+Add the container "rtapp" which is the monitor collection for detecting
+problems with real-time applications. The monitors will be added in the
+follow-up commits.
 
 Reviewed-by: Gabriele Monaco <gmonaco@redhat.com>
 Signed-off-by: Nam Cao <namcao@linutronix.de>
 ---
-Cc: Petr Mladek <pmladek@suse.com>
-Cc: John Ogness <john.ogness@linutronix.de>
-Cc: Sergey Senozhatsky <senozhatsky@chromium.org>
----
- include/linux/rv.h               |  9 +++++--
- include/rv/da_monitor.h          | 45 +++++++-------------------------
- kernel/trace/rv/reactor_panic.c  |  8 ++++--
- kernel/trace/rv/reactor_printk.c |  8 ++++--
- kernel/trace/rv/rv_reactors.c    |  2 +-
- 5 files changed, 30 insertions(+), 42 deletions(-)
+ kernel/trace/rv/Kconfig                |  1 +
+ kernel/trace/rv/Makefile               |  1 +
+ kernel/trace/rv/monitors/rtapp/Kconfig | 10 ++++++++
+ kernel/trace/rv/monitors/rtapp/rtapp.c | 33 ++++++++++++++++++++++++++
+ kernel/trace/rv/monitors/rtapp/rtapp.h |  3 +++
+ 5 files changed, 48 insertions(+)
+ create mode 100644 kernel/trace/rv/monitors/rtapp/Kconfig
+ create mode 100644 kernel/trace/rv/monitors/rtapp/rtapp.c
+ create mode 100644 kernel/trace/rv/monitors/rtapp/rtapp.h
 
-diff --git a/include/linux/rv.h b/include/linux/rv.h
-index 3452b5e4b29e..9428e62eb8e9 100644
---- a/include/linux/rv.h
-+++ b/include/linux/rv.h
-@@ -38,7 +38,7 @@ union rv_task_monitor {
- struct rv_reactor {
- 	const char		*name;
- 	const char		*description;
--	void			(*react)(char *msg);
-+	__printf(1, 2) void	(*react)(const char *msg, ...);
- };
- #endif
+diff --git a/kernel/trace/rv/Kconfig b/kernel/trace/rv/Kconfig
+index 6e157f964991..5c407d291661 100644
+--- a/kernel/trace/rv/Kconfig
++++ b/kernel/trace/rv/Kconfig
+@@ -41,6 +41,7 @@ source "kernel/trace/rv/monitors/snroc/Kconfig"
+ source "kernel/trace/rv/monitors/scpd/Kconfig"
+ source "kernel/trace/rv/monitors/snep/Kconfig"
+ source "kernel/trace/rv/monitors/sncid/Kconfig"
++source "kernel/trace/rv/monitors/rtapp/Kconfig"
+ # Add new monitors here
 =20
-@@ -50,7 +50,7 @@ struct rv_monitor {
- 	void			(*disable)(void);
- 	void			(*reset)(void);
- #ifdef CONFIG_RV_REACTORS
--	void			(*react)(char *msg);
-+	__printf(1, 2) void	(*react)(const char *msg, ...);
- #endif
- };
-=20
-@@ -64,6 +64,11 @@ void rv_put_task_monitor_slot(int slot);
- bool rv_reacting_on(void);
- int rv_unregister_reactor(struct rv_reactor *reactor);
- int rv_register_reactor(struct rv_reactor *reactor);
-+#else
-+static inline bool rv_reacting_on(void)
+ config RV_REACTORS
+diff --git a/kernel/trace/rv/Makefile b/kernel/trace/rv/Makefile
+index f9b2cd0483c3..9b28c2419995 100644
+--- a/kernel/trace/rv/Makefile
++++ b/kernel/trace/rv/Makefile
+@@ -12,6 +12,7 @@ obj-$(CONFIG_RV_MON_SNROC) +=3D monitors/snroc/snroc.o
+ obj-$(CONFIG_RV_MON_SCPD) +=3D monitors/scpd/scpd.o
+ obj-$(CONFIG_RV_MON_SNEP) +=3D monitors/snep/snep.o
+ obj-$(CONFIG_RV_MON_SNCID) +=3D monitors/sncid/sncid.o
++obj-$(CONFIG_RV_MON_RTAPP) +=3D monitors/rtapp/rtapp.o
+ # Add new monitors here
+ obj-$(CONFIG_RV_REACTORS) +=3D rv_reactors.o
+ obj-$(CONFIG_RV_REACT_PRINTK) +=3D reactor_printk.o
+diff --git a/kernel/trace/rv/monitors/rtapp/Kconfig b/kernel/trace/rv/monit=
+ors/rtapp/Kconfig
+new file mode 100644
+index 000000000000..b7415c3570bb
+--- /dev/null
++++ b/kernel/trace/rv/monitors/rtapp/Kconfig
+@@ -0,0 +1,10 @@
++config RV_MON_RTAPP
++	depends on RV
++	bool "rtapp monitor"
++	help
++	  Collection of monitors to check for common problems with real-time
++	  application that may cause unexpected latency.
++
++	  If you are developing a real-time system and not entirely sure whether
++	  the applications are designed correctly for real-time, you want to say
++	  Y here.
+diff --git a/kernel/trace/rv/monitors/rtapp/rtapp.c b/kernel/trace/rv/monit=
+ors/rtapp/rtapp.c
+new file mode 100644
+index 000000000000..fd75fc927d65
+--- /dev/null
++++ b/kernel/trace/rv/monitors/rtapp/rtapp.c
+@@ -0,0 +1,33 @@
++// SPDX-License-Identifier: GPL-2.0
++#include <linux/kernel.h>
++#include <linux/module.h>
++#include <linux/init.h>
++#include <linux/rv.h>
++
++#define MODULE_NAME "rtapp"
++
++#include "rtapp.h"
++
++struct rv_monitor rv_rtapp;
++
++struct rv_monitor rv_rtapp =3D {
++	.name =3D "rtapp",
++	.description =3D "Collection of monitors for detecting problems with real=
+-time applications",
++};
++
++static int __init register_rtapp(void)
 +{
-+	return false;
++	return rv_register_monitor(&rv_rtapp, NULL);
 +}
- #endif /* CONFIG_RV_REACTORS */
-=20
- #endif /* CONFIG_RV */
-diff --git a/include/rv/da_monitor.h b/include/rv/da_monitor.h
-index 510c88bfabd4..15f9ed4e4bb6 100644
---- a/include/rv/da_monitor.h
-+++ b/include/rv/da_monitor.h
-@@ -19,45 +19,22 @@
- #ifdef CONFIG_RV_REACTORS
-=20
- #define DECLARE_RV_REACTING_HELPERS(name, type)							\
--static char REACT_MSG_##name[1024];								\
--												\
--static inline char *format_react_msg_##name(type curr_state, type event)		=
-	\
--{												\
--	snprintf(REACT_MSG_##name, 1024,							\
--		 "rv: monitor %s does not allow event %s on state %s\n",			\
--		 #name,										\
--		 model_get_event_name_##name(event),						\
--		 model_get_state_name_##name(curr_state));					\
--	return REACT_MSG_##name;								\
--}												\
--												\
--static void cond_react_##name(char *msg)							\
-+static void cond_react_##name(type curr_state, type event)					\
- {												\
--	if (rv_##name.react)									\
--		rv_##name.react(msg);								\
--}												\
--												\
--static bool rv_reacting_on_##name(void)								\
--{												\
--	return rv_reacting_on();								\
-+	if (!rv_reacting_on() || !rv_##name.react)						\
-+		return;										\
-+	rv_##name.react("rv: monitor %s does not allow event %s on state %s\n",		=
-	\
-+			#name,									\
-+			model_get_event_name_##name(event),					\
-+			model_get_state_name_##name(curr_state));				\
- }
-=20
- #else /* CONFIG_RV_REACTOR */
-=20
- #define DECLARE_RV_REACTING_HELPERS(name, type)							\
--static inline char *format_react_msg_##name(type curr_state, type event)		=
-	\
--{												\
--	return NULL;										\
--}												\
--												\
--static void cond_react_##name(char *msg)							\
-+static void cond_react_##name(type curr_state, type event)					\
- {												\
- 	return;											\
--}												\
--												\
--static bool rv_reacting_on_##name(void)								\
--{												\
--	return 0;										\
- }
- #endif
-=20
-@@ -170,8 +147,7 @@ da_event_##name(struct da_monitor *da_mon, enum events_=
-##name event)				\
- 		return true;									\
- 	}											\
- 												\
--	if (rv_reacting_on_##name())								\
--		cond_react_##name(format_react_msg_##name(curr_state, event));			\
-+	cond_react_##name(curr_state, event);							\
- 												\
- 	trace_error_##name(model_get_state_name_##name(curr_state),				\
- 			   model_get_event_name_##name(event));					\
-@@ -202,8 +178,7 @@ static inline bool da_event_##name(struct da_monitor *d=
-a_mon, struct task_struct
- 		return true;									\
- 	}											\
- 												\
--	if (rv_reacting_on_##name())								\
--		cond_react_##name(format_react_msg_##name(curr_state, event));			\
-+	cond_react_##name(curr_state, event);							\
- 												\
- 	trace_error_##name(tsk->pid,								\
- 			   model_get_state_name_##name(curr_state),				\
-diff --git a/kernel/trace/rv/reactor_panic.c b/kernel/trace/rv/reactor_pani=
-c.c
-index 0186ff4cbd0b..74c6bcc2c749 100644
---- a/kernel/trace/rv/reactor_panic.c
-+++ b/kernel/trace/rv/reactor_panic.c
-@@ -13,9 +13,13 @@
- #include <linux/init.h>
- #include <linux/rv.h>
-=20
--static void rv_panic_reaction(char *msg)
-+__printf(1, 2) static void rv_panic_reaction(const char *msg, ...)
- {
--	panic(msg);
-+	va_list args;
 +
-+	va_start(args, msg);
-+	vpanic(msg, args);
-+	va_end(args);
- }
-=20
- static struct rv_reactor rv_panic =3D {
-diff --git a/kernel/trace/rv/reactor_printk.c b/kernel/trace/rv/reactor_pri=
-ntk.c
-index 178759dbf89f..2dae2916c05f 100644
---- a/kernel/trace/rv/reactor_printk.c
-+++ b/kernel/trace/rv/reactor_printk.c
-@@ -12,9 +12,13 @@
- #include <linux/init.h>
- #include <linux/rv.h>
-=20
--static void rv_printk_reaction(char *msg)
-+__printf(1, 2) static void rv_printk_reaction(const char *msg, ...)
- {
--	printk_deferred(msg);
-+	va_list args;
++static void __exit unregister_rtapp(void)
++{
++	rv_unregister_monitor(&rv_rtapp);
++}
 +
-+	va_start(args, msg);
-+	vprintk_deferred(msg, args);
-+	va_end(args);
- }
-=20
- static struct rv_reactor rv_printk =3D {
-diff --git a/kernel/trace/rv/rv_reactors.c b/kernel/trace/rv/rv_reactors.c
-index 9501ca886d83..740603670dd1 100644
---- a/kernel/trace/rv/rv_reactors.c
-+++ b/kernel/trace/rv/rv_reactors.c
-@@ -490,7 +490,7 @@ void reactor_cleanup_monitor(struct rv_monitor_def *mde=
-f)
- /*
-  * Nop reactor register
-  */
--static void rv_nop_reaction(char *msg)
-+__printf(1, 2) static void rv_nop_reaction(const char *msg, ...)
- {
- }
-=20
++module_init(register_rtapp);
++module_exit(unregister_rtapp);
++
++MODULE_LICENSE("GPL");
++MODULE_AUTHOR("Nam Cao <namcao@linutronix.de>");
++MODULE_DESCRIPTION("Collection of monitors for detecting problems with rea=
+l-time applications");
+diff --git a/kernel/trace/rv/monitors/rtapp/rtapp.h b/kernel/trace/rv/monit=
+ors/rtapp/rtapp.h
+new file mode 100644
+index 000000000000..4c200d67c7f6
+--- /dev/null
++++ b/kernel/trace/rv/monitors/rtapp/rtapp.h
+@@ -0,0 +1,3 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++
++extern struct rv_monitor rv_rtapp;
 --=20
 2.39.5
 
