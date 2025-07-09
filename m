@@ -1,117 +1,86 @@
-Received: from out-182.mta0.migadu.com (out-182.mta0.migadu.com [91.218.175.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F973283151
-	for <linux-trace-kernel@vger.kernel.org>; Wed,  9 Jul 2025 08:58:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.182
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.3])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 67A4A21FF48;
+	Wed,  9 Jul 2025 09:12:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.3
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752051533; cv=none; b=qFkV5jAkkxCClBbGypnuBNRhu74aPW5npOie05UFU8f4kRIZobBuVySkjPskf3PgVFxJBwrRE5vFBvYCsexEwGYD3oe1DnnKLMgyeqKXHfuN2NRbDtfe8IcPmSxMaeZp3JR3ViQx0wBQuyR3V2RWKs76H2N5g96Bhdy6nDFhot8=
+	t=1752052359; cv=none; b=B9QRDf73jL+Hsu96azXVkOReJ3cHv3PEs/y9pdQ1wZU2/9QyH6Upsw2pheWJrAjQPV66N10n6q2AkRTzPhhTgA/3/jpPAz6KynNM77cuNN8Khb72ieoj+NNVBbTmhVuVBxi+0DUrPbhGX/tWJjuWiW2FXOl9n0J3tz0C6Ia5pL4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752051533; c=relaxed/simple;
-	bh=U9/cmNWHSKmPc3QSgv92YKAiDqZjIrfs5dRo8/xJljo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=E6HmZCuQFlnIcZ/BVk0w/P5fHVjMl2oiPGHLFMAvHFhGGH+MbrBBdaHB5sti5eA/xdgQFNHgB/453RHexd4r5mw/iS88Fq/L6SwXqFWXhsZKhvkHt/cjgH1MmVjcvPq8f4kWXqpMyGRuPKQw+NG6GvDdxkfkaQHRrdfGrRqbg2o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=aShfP3nD; arc=none smtp.client-ip=91.218.175.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1752052359; c=relaxed/simple;
+	bh=O+BLsHpgnFUtvEtPC/XBdVip6wm1ro7CzzM4jXQG/v0=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=ZkM8GEy2w1cYjGN+aG+a7mjiXrNPsB57chpf+CLHMDJ0oqLd1tIdcQSamoHyIDAyvKhzDvlVwawDyNE+Gp42vGrJ05j9SpRsRrxubIiTpUWxqRYVrSbZqj9qdeOiYHOPvbL6ZPzmb4g0klifDSRMILg8nrSCTOpjj60cvTFNuoo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=dVwsXNe5; arc=none smtp.client-ip=117.135.210.3
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="aShfP3nD"
-Message-ID: <540c2855-da19-4562-ac17-d85225886732@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1752051519;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Dux8HAaVmUxWXS8Gbs3Xy9RMiPdruTHWLLZ5gnv1ECE=;
-	b=aShfP3nDbvgVx7l9jECP1YajsjEoxOUiiJ23tNZpdsd+c9JhApnCCwa3QZ9JNHJwkOXtmk
-	2QcboS3rjOC3HGbRPfyj7Ryuh1WzCmiv6wMPpk6Le07Omn/ZlsUNNqhVpXWbhultsRcLgf
-	r19FWoNPQ4qS9KeptPURc9+hHrUrf5Y=
-Date: Wed, 9 Jul 2025 16:58:26 +0800
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="dVwsXNe5"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version; bh=lh
+	Cp80mQdElxK6fidVFF2nq8SJyzqnVgad3pG4eNrmg=; b=dVwsXNe59pn5KL4R6M
+	2ATHt8KHEywcLi4tt8VpVUXFtBnYZY0rqQi9M+DFC4QJBywYqBqthy/UkJt1A9IQ
+	brr3+LTYZUgfnRxzKTLjcYzudrTf8ut/AQ75dk1fmX/sMefMtVyVvDTjB2HVTyBA
+	97TRxyMyULb/qW+6LonfxwhlA=
+Received: from localhost.localdomain (unknown [])
+	by gzsmtp5 (Coremail) with SMTP id QCgvCgDXR3BFMm5oWupSBg--.30597S2;
+	Wed, 09 Jul 2025 17:11:34 +0800 (CST)
+From: Feng Yang <yangfeng59949@163.com>
+To: olsajiri@gmail.com
+Cc: andrii@kernel.org,
+	ast@kernel.org,
+	bpf@vger.kernel.org,
+	daniel@iogearbox.net,
+	eddyz87@gmail.com,
+	haoluo@google.com,
+	john.fastabend@gmail.com,
+	kpsingh@kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	martin.lau@linux.dev,
+	mattbobrowski@google.com,
+	mhiramat@kernel.org,
+	rostedt@goodmis.org,
+	sdf@fomichev.me,
+	song@kernel.org,
+	yangfeng59949@163.com,
+	yonghong.song@linux.dev
+Subject: Re: [PATCH bpf-next] bpf: Clean up individual BTF_ID code
+Date: Wed,  9 Jul 2025 17:11:33 +0800
+Message-Id: <20250709091133.127961-1-yangfeng59949@163.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <aG4vNLiusia14f4Z@krava>
+References: <aG4vNLiusia14f4Z@krava>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH bpf-next v3 5/7] bpf: Remove attach_type in bpf_netns_link
-To: Jakub Sitnicki <jakub@cloudflare.com>
-Cc: daniel@iogearbox.net, razor@blackwall.org, andrew+netdev@lunn.ch,
- davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
- pabeni@redhat.com, ast@kernel.org, andrii@kernel.org, martin.lau@linux.dev,
- eddyz87@gmail.com, song@kernel.org, yonghong.song@linux.dev,
- john.fastabend@gmail.com, kpsingh@kernel.org, sdf@fomichev.me,
- haoluo@google.com, jolsa@kernel.org, mattbobrowski@google.com,
- rostedt@goodmis.org, mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
- horms@kernel.org, willemb@google.com, pablo@netfilter.org,
- kadlec@netfilter.org, hawk@kernel.org, bpf@vger.kernel.org,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, netfilter-devel@vger.kernel.org,
- coreteam@netfilter.org
-References: <20250709030802.850175-1-chen.dylane@linux.dev>
- <20250709030802.850175-6-chen.dylane@linux.dev>
- <874ivlg4fq.fsf@cloudflare.com>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Tao Chen <chen.dylane@linux.dev>
-In-Reply-To: <874ivlg4fq.fsf@cloudflare.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+X-CM-TRANSID:QCgvCgDXR3BFMm5oWupSBg--.30597S2
+X-Coremail-Antispam: 1Uf129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
+	VFW2AGmfu7bjvjm3AaLaJ3UbIYCTnIWIevJa73UjIFyTuYvjfUYvtADUUUU
+X-CM-SenderInfo: p1dqww5hqjkmqzuzqiywtou0bp/1tbipQWFeGhuLVMwQAACsX
 
-在 2025/7/9 16:21, Jakub Sitnicki 写道:
-> On Wed, Jul 09, 2025 at 11:08 AM +08, Tao Chen wrote:
->> Use attach_type in bpf_link, and remove it in bpf_netns_link.
->>
->> Acked-by: Jiri Olsa <jolsa@kernel.org>
->> Signed-off-by: Tao Chen <chen.dylane@linux.dev>
->> ---
->>   kernel/bpf/net_namespace.c | 6 ++----
->>   1 file changed, 2 insertions(+), 4 deletions(-)
->>
->> diff --git a/kernel/bpf/net_namespace.c b/kernel/bpf/net_namespace.c
->> index 63702c86275..6d27bd97c95 100644
->> --- a/kernel/bpf/net_namespace.c
->> +++ b/kernel/bpf/net_namespace.c
->> @@ -11,7 +11,6 @@
->>   
->>   struct bpf_netns_link {
->>   	struct bpf_link	link;
->> -	enum bpf_attach_type type;
->>   	enum netns_bpf_attach_type netns_type;
->>   
->>   	/* We don't hold a ref to net in order to auto-detach the link
+Date: Wed, 9 Jul 2025 10:58:28 +0200 Jiri Olsa <olsajiri@gmail.com> wrote:
+
+> On Wed, Jul 09, 2025 at 04:20:38PM +0800, Feng Yang wrote:
+> > From: Feng Yang <yangfeng@kylinos.cn>
+> > 
+> > Use BTF_ID_LIST_SINGLE(a, b, c) instead of
+> > BTF_ID_LIST(a)
+> > BTF_ID(b, c)
 > 
-> Nit: Doesn't that create a hole? Maybe move netns_type to the end.
+> there's couple more in:
+> 
+> net/ipv6/route.c
+> net/netlink/af_netlink.c
+> net/sched/bpf_qdisc.c
+> 
+> jirka
 > 
 
-Hi Jakub,
-You are right, i will change it in v4, thanks.
+I see. Can all of these be included in one patch? 
+There's also one in kernel/kallsyms.c.
 
-pahole -C bpf_netns_link vmlinux
-struct bpf_netns_link {
-	struct bpf_link            link __attribute__((__aligned__(8))); /* 
-0    80 */
+Thanks.
 
-	/* XXX last struct has 7 bytes of padding */
-
-	/* --- cacheline 1 boundary (64 bytes) was 16 bytes ago --- */
-	enum netns_bpf_attach_type netns_type;           /*    80     4 */
-
-	/* XXX 4 bytes hole, try to pack */
-
-	struct net *               net;                  /*    88     8 */
-	struct list_head           node;                 /*    96    16 */
-
-	/* size: 112, cachelines: 2, members: 4 */
-	/* sum members: 108, holes: 1, sum holes: 4 */
-	/* paddings: 1, sum paddings: 7 */
-	/* forced alignments: 1 */
-	/* last cacheline: 48 bytes */
-} __attribute__((__aligned__(8)));
-
-> [...]
-
-
--- 
-Best Regards
-Tao Chen
