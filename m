@@ -1,142 +1,123 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from www62.your-server.de (www62.your-server.de [213.133.104.62])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9604B226D1D
-	for <linux-trace-kernel@vger.kernel.org>; Wed,  9 Jul 2025 13:36:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E74022154D;
+	Wed,  9 Jul 2025 13:44:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.133.104.62
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752068168; cv=none; b=emATRzF0aaW5qdWzjRZ3oR/3mgUlRfuManfQN0dLYS9qSZMV6LDzPmfzCKbuPcuOAUjV1O8MZW+H9DfyePmB64yVWQ3ovx5MDnmv0bb6DqQE+OhKdNRBhMfTL1qZp/UAYrroJntq83RG+TP9aqW0QWr4RVRT1z9DPVaiY0P4cfk=
+	t=1752068694; cv=none; b=Ev1zS6f7dxU6TIYyDjgtEFAPRvvjqmTXZmTxTALxtUtsaVVeNd+EkT8LPlgK7BpHSz3SO7z9vXWwYtR3Rgp30nD/UjYz5mx79d7RC3IsOl9cNn7iutY7bYf8clYMbbHyNV6ZaXLHz+Cyi8JJUwQh6m9yoBXyedf7Mz+vd1mJZmY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752068168; c=relaxed/simple;
-	bh=eqEtyyZVHwgeHDKi4pSEA0NHYMoZ+A867z2ivGKxh20=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=akhJ1LFnWHkZI+JUfBUGJqoDk4OZbn5kWAgCTWePbnR7xcb7mAC2OaWirb00ofiQbP5YFlEUw6Ukf3yia1D4wfqXLeEnlildg2VoHCAxbC5xgwllI5xPl3FPvGSpl6uEjsycwLY0K8xGq1dsdk5VLxlds39o/YSIzDaMwVeYOKg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=MMj4xhy3; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1752068694; c=relaxed/simple;
+	bh=Qiz8jkzFdjFvWHzOg/eNcBaD6xh8Qe49GngRQWMhwqk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=VyH4Vvib8y/8lo3ZU0CFTBbmUwqjOjdn/s/oz93G6EfviDi8TYns7ANWyb1kO4LT3lRH9AGDGDdBu+8S8sMZH37NRGxTQEIOYs3d+TZgRO0gX3nkI8wyi+d5DmJC1+k8wfPe+a1pvQPNLr1ltHgpBX11POL+NwjqjekGGc7JUrU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=iogearbox.net; spf=pass smtp.mailfrom=iogearbox.net; dkim=pass (2048-bit key) header.d=iogearbox.net header.i=@iogearbox.net header.b=OQFNT69U; arc=none smtp.client-ip=213.133.104.62
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=iogearbox.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iogearbox.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MMj4xhy3"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1752068164;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=eqEtyyZVHwgeHDKi4pSEA0NHYMoZ+A867z2ivGKxh20=;
-	b=MMj4xhy3r7H38Chff8Mu34lWVBCebcqcESMzUGa/i7V3qHJUD2OQdeik5eDO+yDdbbCJXn
-	U/mFLJV6G9eStXTzCsGaQ9+pMZIR72m2R7JDo/V8+qwkZywZ6DWl5Tcv/a3tpmOJAzIf2F
-	xcqPR4wAC9ODySkYhsgHTnc5qamxhzg=
-Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com
- [209.85.160.198]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-650-xIEdp7LzPJKwNeHmm2GiWw-1; Wed, 09 Jul 2025 09:36:02 -0400
-X-MC-Unique: xIEdp7LzPJKwNeHmm2GiWw-1
-X-Mimecast-MFC-AGG-ID: xIEdp7LzPJKwNeHmm2GiWw_1752068162
-Received: by mail-qt1-f198.google.com with SMTP id d75a77b69052e-4a9e1de6f5cso10672151cf.1
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 09 Jul 2025 06:36:02 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1752068162; x=1752672962;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=eqEtyyZVHwgeHDKi4pSEA0NHYMoZ+A867z2ivGKxh20=;
-        b=bvzITE4Ibda9/qTrTdtgCJ3G/VuA7NkZWaXl4j09+cjEYZaNxIqPpjan1vlyYXhHck
-         +43WX2jcYF+S3gf77ukdS12xHpVSBEygKT/vItVPuovYWnWZna4ppNYqNrQXc1pZAsF7
-         EY0hUgelut/exS2SdkkO0Vxu44uLEIHghgHh7xmZpH7XIIdkESIaiLiCv4cvfnx3UYqM
-         TJFGplSFu+IGh+CVUliViVbQOEx/MrhyXaYNeQ2SYJxLb5Hec9tbRqaap6dlaKRjticY
-         dUNI+svEdQLGGGz5taiyMmxaCZyQGzR0ApdB6/AGq3PoIzwRAGzck+OeCMFE2PVLpSsH
-         og2w==
-X-Forwarded-Encrypted: i=1; AJvYcCX/7L5aSGosYUuNj5JEPNRpn+ARPUgievfPzQSPgos7+wqlgnfiQGfA8tPAsm6Kq34xBsXLWHQi9XvDhDDAdE6Qg1I=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyZfukWgnkT6GBbfHDlVfL//z/42lbFnpuxiAvP9oHAxNgZdXRF
-	ksGppFXQqFnWLOJWxKz/6kViqp+sNYBgn16IN2LucGfGzZex+Nq3las49zvvbFDCuYgQX+L8ekY
-	oEpq4lxkT0i2Cek7BQyjPzvlGCC0pa+anO4u8/O/rH9Yobg2CSxi9XG909R7twVRa9CfQ659pz6
-	XPcVVgMcKOnP4zjv4lBnCbCLXqt0TFT+wsPjnAF1szx0ZC7j/P
-X-Gm-Gg: ASbGncvS9dMwHBADstdJxz3d9mkE5oDRqIUUXAleePg/BuOxxBK2RVzFoHwwhw1lUl+
-	sYL4QNrPN33aLoLrOuHFLY5d02aaW9e7hJ5v9Ky+3cy6ts4YojcH3SJP0ENwPKNSt2UaGCQF9L0
-	TxdUTv06ZvYqKpTVLcZHzrIdK7pMrQyavxUD4=
-X-Received: by 2002:ac8:7f09:0:b0:4a9:93f0:e228 with SMTP id d75a77b69052e-4a9dec29279mr34551801cf.1.1752068161591;
-        Wed, 09 Jul 2025 06:36:01 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFYc5vsGllycl+RXMiSuYfzk8U7dnfUY+sNJIFkjl/O4iokoCHvRs0OAlE8JVinxjj5VrbetYBd4QXqaj0LYBo=
-X-Received: by 2002:ac8:7f09:0:b0:4a9:93f0:e228 with SMTP id
- d75a77b69052e-4a9dec29279mr34551371cf.1.1752068161026; Wed, 09 Jul 2025
- 06:36:01 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=iogearbox.net header.i=@iogearbox.net header.b="OQFNT69U"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=iogearbox.net; s=default2302; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID;
+	bh=+DuSs7+HO6S55eYdw8ekha/jUpWcL3QX9dXbppxNaiE=; b=OQFNT69U0IO1VYWJLFnULtg9B/
+	8dhlrS4bPMG5lXjnKz/6aS4LYXz2IKOKFqIinzH4fY5kbQ4gxgNQm/M6rFVeTiE9Ju5Kq8PGDbOCf
+	GMHdUTkjCn6MkB3XC66kqprEvYD+87hbXKA71udI8PrkQS37t/EDEg24ADL5Y6wOGQs8zOnAh4X3e
+	FT8Z8WQ6ltcRXcFQyfaZVN+8HFO53R7/d/82R1/rmuR/Xdd72Dj2553jkEFiYriDirDJXZUFm0i2d
+	cUi/ksbA/IuVc/rwfRoQMAAg+WDYKnkrRgdtbGocseVlW0kn5m4lz9R9vBQFAh7SP+l5FYU7ZiadN
+	dkcwchsQ==;
+Received: from sslproxy06.your-server.de ([78.46.172.3])
+	by www62.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
+	(Exim 4.96.2)
+	(envelope-from <daniel@iogearbox.net>)
+	id 1uZUWU-0009EY-2o;
+	Wed, 09 Jul 2025 15:07:42 +0200
+Received: from localhost ([127.0.0.1])
+	by sslproxy06.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <daniel@iogearbox.net>)
+	id 1uZUWT-0007WK-0e;
+	Wed, 09 Jul 2025 15:07:41 +0200
+Message-ID: <eb27adb1-8d43-4e65-b0b9-cffd9bd831b0@iogearbox.net>
+Date: Wed, 9 Jul 2025 15:07:40 +0200
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250620085618.4489-1-gpaoloni@redhat.com> <20250701195939.3e297e20@gandalf.local.home>
- <20250709100626.fc0611eb6801b7a8dad9164f@kernel.org> <20250708212539.054a7d5b@batman.local.home>
-In-Reply-To: <20250708212539.054a7d5b@batman.local.home>
-From: Gabriele Paoloni <gpaoloni@redhat.com>
-Date: Wed, 9 Jul 2025 15:35:50 +0200
-X-Gm-Features: Ac12FXx5NWw9UHzx8YL3iucBA2PdBGf-Feo4aqU3LLlrumvb9g_yTwBvoL9WwGA
-Message-ID: <CA+wEVJab6Gwkd7q58=v8uVhfmKpwNRAqtK67f15JtZcKSB_ziA@mail.gmail.com>
-Subject: Re: [RFC PATCH RESEND] tracing: add kernel documentation for
- trace_array_set_clr_event, trace_set_clr_event and supporting functions
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>, mathieu.desnoyers@efficios.com, 
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: IkwVUkqsEdjmndFKUJW87nnmTaEY1fA3qlssXQtR0hk_1752068162
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH bpf-next v3 3/7] bpf: Remove attach_type in sockmap_link
+To: Tao Chen <chen.dylane@linux.dev>, razor@blackwall.org,
+ andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
+ kuba@kernel.org, pabeni@redhat.com, ast@kernel.org, andrii@kernel.org,
+ martin.lau@linux.dev, eddyz87@gmail.com, song@kernel.org,
+ yonghong.song@linux.dev, john.fastabend@gmail.com, kpsingh@kernel.org,
+ sdf@fomichev.me, haoluo@google.com, jolsa@kernel.org,
+ mattbobrowski@google.com, rostedt@goodmis.org, mhiramat@kernel.org,
+ mathieu.desnoyers@efficios.com, horms@kernel.org, willemb@google.com,
+ jakub@cloudflare.com, pablo@netfilter.org, kadlec@netfilter.org,
+ hawk@kernel.org
+Cc: bpf@vger.kernel.org, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ netfilter-devel@vger.kernel.org, coreteam@netfilter.org
+References: <20250709030802.850175-1-chen.dylane@linux.dev>
+ <20250709030802.850175-4-chen.dylane@linux.dev>
+Content-Language: en-US
+From: Daniel Borkmann <daniel@iogearbox.net>
+Autocrypt: addr=daniel@iogearbox.net; keydata=
+ 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
+In-Reply-To: <20250709030802.850175-4-chen.dylane@linux.dev>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Virus-Scanned: Clear (ClamAV 1.0.7/27694/Wed Jul  9 10:42:34 2025)
 
-[resending as my previous reply had HTML stuff and was rejected]
-Apologies for duplicates
+On 7/9/25 5:07 AM, Tao Chen wrote:
+> Use attach_type in bpf_link, and remove it in sockmap_link.
+> 
+> Acked-by: Jiri Olsa <jolsa@kernel.org>
+> Signed-off-by: Tao Chen <chen.dylane@linux.dev>
 
-On Wed, Jul 9, 2025 at 3:25=E2=80=AFAM Steven Rostedt <rostedt@goodmis.org>=
- wrote:
->
-> On Wed, 9 Jul 2025 10:06:26 +0900
-> Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
->
-> > On Tue, 1 Jul 2025 19:59:39 -0400
-> > Steven Rostedt <rostedt@goodmis.org> wrote:
-> >
-> > > > + * __ftrace_event_enable_disable - enable or disable a trace event
-> > > > + * @file: trace event file associated with the event.
-> > > > + * @enable: 0 or 1 respectively to disable/enable the event (any o=
-ther value is
-> > > > + * invalid).
-> > >
-> > > Saying 0 or 1 should assume that those are the only values. Don't nee=
-d the
-> > > content in the parenthesis.
-> >
-> > BTW, it should be "0 or !0"? (or we should make it boolean)
-> > This description means if it is "2", that is undefined.
->
-> Hmm, now here's an interesting point. So this is to define requirements
-> of a function based on what the function is doing. But does the
-> function have to have strict requirements?
-
-IMO one of the main goals for these requirements is testability.
-In order to have testable requirements we should state what the
-valid input values are. In this case:
-0 -> disable, 1 -> enable, everything else -> Error.
-
-Now checking the code again it seems that the switch statement
-is missing a default "ret =3D -EINVAL" (or else it should be changed
-to boolean, but I guess it would have a wider impact on the rest
-of the code...).
-
->
-> If it can handle "0" or "!0" does that mean that's how it will be
-> defined? Or can it just state "0" or "1" and yes "2" is UB. That is,
-> it's not part of the requirements but if someone passes in 2, it could
-> act as a 1 as it's UB and implementation defined. Not a requirement.
-
-Right now if 2 is passed the function would silently return success,
-but do we have a use case for this? I am trying to understand
-where the implementation defined behavior would be....
-
-Thanks
-Gab
-
->
-> -- Steve
->
-
+Acked-by: Daniel Borkmann <daniel@iogearbox.net>
