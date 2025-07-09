@@ -1,44 +1,44 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A0CD242925;
-	Wed,  9 Jul 2025 19:21:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA03E243951;
+	Wed,  9 Jul 2025 19:21:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752088910; cv=none; b=Da4s3QtIosCrp+ffxouD4IY6agqIu/Jl4IOVAY0mh1SCGd6J3g7K2Sk2FwxAgdTmyFc4KtGEmPAKQKlViz6qSxMxU9XTF/VY8TLNCmcazC4sW5oj6Y9Oj4ZSDG0U3M6i8Fd5eR10z37rCpFqhpzpHS0QKlybkK+Gpis72KZRkAE=
+	t=1752088910; cv=none; b=CXnZecdntWVWSsQpr9M2heS9Ve0Ztuqao69Rotjvl2xSicjIP6jElbqL4VlDF+ecvxvsnO3yAxGMAO1CRejPckR4Y0rA7UuV9Rg2ovMBdqmZ37YCrrgUtJisAn6kjjmH4iLUmntTDHvz87H/1XFIbKB7B7XcYK8xGvbCmI2fbqQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1752088910; c=relaxed/simple;
-	bh=t966SBTRSkTazpO3zLrg8iJK79jVq7Q8fs/VhLQsRwc=;
+	bh=QikPuesc4B/13zDdpgGHsddz3vJrrDz110M8NWmMzvY=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=d7E9Md8JU8jEUKvVVZcrDh480wsGO4JAR1AcXtQStEWfTClds2UPT2hv/E61JHY6D8R/G5iL3wfbyXa+cUK0q4z8uLZ/vrQpRX5UbnZeOOIh6ohpA0BIet6mXlgCYUG3jzaaAF9X3N+j9SPdI1uI1NAjFICHh05oumBvgownmxQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=BfJhuED9; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=1223+vl6; arc=none smtp.client-ip=193.142.43.55
+	 MIME-Version; b=UMQHUypqYF7et2vOUb+C6xHdHrEqDZvlxf+jXMvoT3hLbpHyG5oNw+HDeUYw2DTSY3NZ/lPF4Bc1flHCd3zuuRKM9G+QuHa0RLHJuexBuwmKPwStByFJDwghgeopsMjuJioSNHEt96plkpgdrLkKKCHspP5TnVWckgGe+TBqdCY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=sd0sBo95; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=jmeEHfTW; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="BfJhuED9";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="1223+vl6"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="sd0sBo95";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="jmeEHfTW"
 From: Nam Cao <namcao@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1752088904;
+	s=2020; t=1752088907;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=v+8V91KjOkCp/pfQj+U3LLLv35Icg6E4+KOLEJJ0DqE=;
-	b=BfJhuED9pfU2u3Dfkwa/2jry1zxkdCNXJIH+CXrlgozLGpIiiglsUEHf7NOOVhp6H/asW1
-	pmNp+kBIBJgiNTM6p/lFPbvxBQqD+I6ILMX6bOu8HP3kjuunZMYh/Z/1MPRhmABOlihtE1
-	mr3e56rNkJjPneTDpp4EON+I9CpBHx5DUr7RzksxLv3avnI4Lf8BCQ8qhXiLavub53BjMA
-	pu8ObAE4+06ZmuuVTzgnerC5L218CAGaDgznSyeRgWp3uK+zQCCGBGR06a/DmjjOQfAqjO
-	mnBh/WzLUpb6AGvC9Dt8J1ZoVW00QVchIqiAvq7fuDRTPU9ykq+5QFFNFERunw==
+	bh=GvaGJm6tNpJP8KHlvubeC777ZLLmkrS528HtYD07bQE=;
+	b=sd0sBo95cAKp3UQwHX9qCDT1jo9be9bfryZ0R6dD+4xekiE1ngrrmYmPXKZnMwmL4SY1yf
+	O1NptUJkqumLymcGH2QC6AjCEk6kUiHly9BAMuE/AocENH3plDCZiaupsO+lYILO9PvW/V
+	qYjRX4aEMHJQOILucY7lVlAGvcynboaWITMczL/5zUa2zHeo4jYGZnSZzG45TzQ7dXl+vl
+	BZLq0efKQC1mKQlPfELSZNmmBVHNgGIdDJ38056YcI0A5AI31tIVxh3Ed9gFMLzuoBsOJR
+	/DIM6UYAI3qAvo18dVLe2/BoOAdolm67ZM8TLLg7LgLuONowrKEz+XYT3jIL0Q==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1752088904;
+	s=2020e; t=1752088907;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=v+8V91KjOkCp/pfQj+U3LLLv35Icg6E4+KOLEJJ0DqE=;
-	b=1223+vl6rVNnQefQX5kwnHnvNY6rC3HRG5xWywuQ6WO2RkfNS6S23rV7+KwxhQVOfe1U7w
-	xqAeJOvLGQEvDYCw==
+	bh=GvaGJm6tNpJP8KHlvubeC777ZLLmkrS528HtYD07bQE=;
+	b=jmeEHfTWVjh4WIUOSA6i0zd2A5tQA8+6S5BEJab0rcyLIyE3MSt4CEv2sUg/C8250+vMgW
+	T2IQDl+YT1C9YiBw==
 To: Steven Rostedt <rostedt@goodmis.org>,
 	John Ogness <john.ogness@linutronix.de>,
 	Masami Hiramatsu <mhiramat@kernel.org>,
@@ -47,9 +47,9 @@ To: Steven Rostedt <rostedt@goodmis.org>,
 	linux-trace-kernel@vger.kernel.org,
 	linux-kernel@vger.kernel.org
 Cc: Nam Cao <namcao@linutronix.de>
-Subject: [PATCH v13 06/12] rv: Add support for LTL monitors
-Date: Wed,  9 Jul 2025 21:21:17 +0200
-Message-Id: <d366c1fed60ed4e8f6451f3c15a99755f2740b5f.1752088709.git.namcao@linutronix.de>
+Subject: [PATCH v13 11/12] rv: Add documentation for rtapp monitor
+Date: Wed,  9 Jul 2025 21:21:22 +0200
+Message-Id: <df0242d74c12511e82cc9d73c082def91a160c74.1752088709.git.namcao@linutronix.de>
 In-Reply-To: <cover.1752088709.git.namcao@linutronix.de>
 References: <cover.1752088709.git.namcao@linutronix.de>
 Precedence: bulk
@@ -60,410 +60,198 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-While attempting to implement DA monitors for some complex specifications,
-deterministic automaton is found to be inappropriate as the specification
-language. The automaton is complicated, hard to understand, and
-error-prone.
+Add documentation describing the rtapp monitor.
 
-For these cases, linear temporal logic is more suitable as the
-specification language.
-
-Add support for linear temporal logic runtime verification monitor.
-
+Reviewed-by: Gabriele Monaco <gmonaco@redhat.com>
 Signed-off-by: Nam Cao <namcao@linutronix.de>
 ---
- include/linux/rv.h         |  63 ++++++++++++-
- include/rv/ltl_monitor.h   | 184 +++++++++++++++++++++++++++++++++++++
- kernel/fork.c              |   5 +-
- kernel/trace/rv/Kconfig    |   7 ++
- kernel/trace/rv/rv_trace.h |  47 ++++++++++
- 5 files changed, 298 insertions(+), 8 deletions(-)
- create mode 100644 include/rv/ltl_monitor.h
+ Documentation/trace/rv/index.rst         |   1 +
+ Documentation/trace/rv/monitor_rtapp.rst | 133 +++++++++++++++++++++++
+ 2 files changed, 134 insertions(+)
+ create mode 100644 Documentation/trace/rv/monitor_rtapp.rst
 
-diff --git a/include/linux/rv.h b/include/linux/rv.h
-index 9428e62eb8e9..1d5579f9b75a 100644
---- a/include/linux/rv.h
-+++ b/include/linux/rv.h
-@@ -10,6 +10,10 @@
- #define MAX_DA_NAME_LEN	32
-=20
- #ifdef CONFIG_RV
-+#include <linux/bitops.h>
-+#include <linux/types.h>
-+#include <linux/array_size.h>
-+
- /*
-  * Deterministic automaton per-object variables.
-  */
-@@ -18,6 +22,59 @@ struct da_monitor {
- 	unsigned int	curr_state;
- };
-=20
-+#ifdef CONFIG_RV_LTL_MONITOR
-+
-+/*
-+ * In the future, if the number of atomic propositions or the size of Buchi
-+ * automaton is larger, we can switch to dynamic allocation. For now, the =
-code
-+ * is simpler this way.
-+ */
-+#define RV_MAX_LTL_ATOM 32
-+#define RV_MAX_BA_STATES 32
-+
-+/**
-+ * struct ltl_monitor - A linear temporal logic runtime verification monit=
-or
-+ * @states:	States in the Buchi automaton. As Buchi automaton is a
-+ *		non-deterministic state machine, the monitor can be in multiple
-+ *		states simultaneously. This is a bitmask of all possible states.
-+ *		If this is zero, that means either:
-+ *		    - The monitor has not started yet (e.g. because not all
-+ *		      atomic propositions are known).
-+ *		    - There is no possible state to be in. In other words, a
-+ *		      violation of the LTL property is detected.
-+ * @atoms:	The values of atomic propositions.
-+ * @unknown_atoms: Atomic propositions which are still unknown.
-+ */
-+struct ltl_monitor {
-+	DECLARE_BITMAP(states, RV_MAX_BA_STATES);
-+	DECLARE_BITMAP(atoms, RV_MAX_LTL_ATOM);
-+	DECLARE_BITMAP(unknown_atoms, RV_MAX_LTL_ATOM);
-+};
-+
-+static inline bool rv_ltl_valid_state(struct ltl_monitor *mon)
-+{
-+	for (int i =3D 0; i < ARRAY_SIZE(mon->states); ++i) {
-+		if (mon->states[i])
-+			return true;
-+	}
-+	return false;
-+}
-+
-+static inline bool rv_ltl_all_atoms_known(struct ltl_monitor *mon)
-+{
-+	for (int i =3D 0; i < ARRAY_SIZE(mon->unknown_atoms); ++i) {
-+		if (mon->unknown_atoms[i])
-+			return false;
-+	}
-+	return true;
-+}
-+
-+#else
-+
-+struct ltl_monitor {};
-+
-+#endif /* CONFIG_RV_LTL_MONITOR */
-+
- /*
-  * Per-task RV monitors count. Nowadays fixed in RV_PER_TASK_MONITORS.
-  * If we find justification for more monitors, we can think about
-@@ -27,11 +84,9 @@ struct da_monitor {
- #define RV_PER_TASK_MONITORS		1
- #define RV_PER_TASK_MONITOR_INIT	(RV_PER_TASK_MONITORS)
-=20
--/*
-- * Futher monitor types are expected, so make this a union.
-- */
- union rv_task_monitor {
--	struct da_monitor da_mon;
-+	struct da_monitor	da_mon;
-+	struct ltl_monitor	ltl_mon;
- };
-=20
- #ifdef CONFIG_RV_REACTORS
-diff --git a/include/rv/ltl_monitor.h b/include/rv/ltl_monitor.h
+diff --git a/Documentation/trace/rv/index.rst b/Documentation/trace/rv/inde=
+x.rst
+index e80e0057feb4..26042dff70bb 100644
+--- a/Documentation/trace/rv/index.rst
++++ b/Documentation/trace/rv/index.rst
+@@ -13,3 +13,4 @@ Runtime Verification
+    monitor_wip.rst
+    monitor_wwnr.rst
+    monitor_sched.rst
++   monitor_rtapp.rst
+diff --git a/Documentation/trace/rv/monitor_rtapp.rst b/Documentation/trace=
+/rv/monitor_rtapp.rst
 new file mode 100644
-index 000000000000..9a583125b566
+index 000000000000..c8104eda924a
 --- /dev/null
-+++ b/include/rv/ltl_monitor.h
-@@ -0,0 +1,184 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/**
-+ * This file must be combined with the $(MODEL_NAME).h file generated by
-+ * tools/verification/rvgen.
-+ */
++++ b/Documentation/trace/rv/monitor_rtapp.rst
+@@ -0,0 +1,133 @@
++Real-time application monitors
++=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D
 +
-+#include <linux/args.h>
-+#include <linux/rv.h>
-+#include <linux/stringify.h>
-+#include <linux/seq_buf.h>
-+#include <rv/instrumentation.h>
-+#include <trace/events/task.h>
-+#include <trace/events/sched.h>
++- Name: rtapp
++- Type: container for multiple monitors
++- Author: Nam Cao <namcao@linutronix.de>
 +
-+#ifndef MONITOR_NAME
-+#error "Please include $(MODEL_NAME).h generated by rvgen"
-+#endif
++Description
++-----------
 +
-+#ifdef CONFIG_RV_REACTORS
-+#define RV_MONITOR_NAME CONCATENATE(rv_, MONITOR_NAME)
-+static struct rv_monitor RV_MONITOR_NAME;
++Real-time applications may have design flaws such that they experience
++unexpected latency and fail to meet their time requirements. Often, these =
+flaws
++follow a few patterns:
 +
-+static void rv_cond_react(struct task_struct *task)
-+{
-+	if (!rv_reacting_on() || !RV_MONITOR_NAME.react)
-+		return;
-+	RV_MONITOR_NAME.react("rv: "__stringify(MONITOR_NAME)": %s[%d]: violation=
- detected\n",
-+			      task->comm, task->pid);
-+}
-+#else
-+static void rv_cond_react(struct task_struct *task)
-+{
-+}
-+#endif
++  - Page faults: A real-time thread may access memory that does not have a
++    mapped physical backing or must first be copied (such as for copy-on-w=
+rite).
++    Thus a page fault is raised and the kernel must first perform the expe=
+nsive
++    action. This causes significant delays to the real-time thread
++  - Priority inversion: A real-time thread blocks waiting for a lower-prio=
+rity
++    thread. This causes the real-time thread to effectively take on the
++    scheduling priority of the lower-priority thread. For example, the rea=
+l-time
++    thread needs to access a shared resource that is protected by a
++    non-pi-mutex, but the mutex is currently owned by a non-real-time thre=
+ad.
 +
-+static int ltl_monitor_slot =3D RV_PER_TASK_MONITOR_INIT;
++The `rtapp` monitor detects these patterns. It aids developers to identify
++reasons for unexpected latency with real-time applications. It is a contai=
+ner of
++multiple sub-monitors described in the following sections.
 +
-+static void ltl_atoms_fetch(struct task_struct *task, struct ltl_monitor *=
-mon);
-+static void ltl_atoms_init(struct task_struct *task, struct ltl_monitor *m=
-on, bool task_creation);
++Monitor pagefault
+++++++++++++++++++
 +
-+static struct ltl_monitor *ltl_get_monitor(struct task_struct *task)
-+{
-+	return &task->rv[ltl_monitor_slot].ltl_mon;
-+}
++The `pagefault` monitor reports real-time tasks raising page faults. Its
++specification is::
 +
-+static void ltl_task_init(struct task_struct *task, bool task_creation)
-+{
-+	struct ltl_monitor *mon =3D ltl_get_monitor(task);
++  RULE =3D always (RT imply not PAGEFAULT)
 +
-+	memset(&mon->states, 0, sizeof(mon->states));
++To fix warnings reported by this monitor, `mlockall()` or `mlock()` can be=
+ used
++to ensure physical backing for memory.
 +
-+	for (int i =3D 0; i < LTL_NUM_ATOM; ++i)
-+		__set_bit(i, mon->unknown_atoms);
++This monitor may have false negatives because the pages used by the real-t=
+ime
++threads may just happen to be directly available during testing.  To minim=
+ize
++this, the system can be put under memory pressure (e.g.  invoking the OOM =
+killer
++using a program that does `ptr =3D malloc(SIZE_OF_RAM); memset(ptr, 0,
++SIZE_OF_RAM);`) so that the kernel executes aggressive strategies to recyc=
+le as
++much physical memory as possible.
 +
-+	ltl_atoms_init(task, mon, task_creation);
-+	ltl_atoms_fetch(task, mon);
-+}
++Monitor sleep
+++++++++++++++
 +
-+static void handle_task_newtask(void *data, struct task_struct *task, unsi=
-gned long flags)
-+{
-+	ltl_task_init(task, true);
-+}
++The `sleep` monitor reports real-time threads sleeping in a manner that may
++cause undesirable latency. Real-time applications should only put a real-t=
+ime
++thread to sleep for one of the following reasons:
 +
-+static int ltl_monitor_init(void)
-+{
-+	struct task_struct *g, *p;
-+	int ret, cpu;
++  - Cyclic work: real-time thread sleeps waiting for the next cycle. For t=
+his
++    case, only the `clock_nanosleep` syscall should be used with `TIMER_AB=
+STIME`
++    (to avoid time drift) and `CLOCK_MONOTONIC` (to avoid the clock being
++    changed). No other method is safe for real-time. For example, threads
++    waiting for timerfd can be woken by softirq which provides no real-time
++    guarantee.
++  - Real-time thread waiting for something to happen (e.g. another thread
++    releasing shared resources, or a completion signal from another thread=
+). In
++    this case, only futexes (FUTEX_LOCK_PI, FUTEX_LOCK_PI2 or one of
++    FUTEX_WAIT_*) should be used.  Applications usually do not use futexes
++    directly, but use PI mutexes and PI condition variables which are buil=
+t on
++    top of futexes. Be aware that the C library might not implement condit=
+ional
++    variables as safe for real-time. As an alternative, the librtpi library
++    exists to provide a conditional variable implementation that is correc=
+t for
++    real-time applications in Linux.
 +
-+	ret =3D rv_get_task_monitor_slot();
-+	if (ret < 0)
-+		return ret;
++Beside the reason for sleeping, the eventual waker should also be
++real-time-safe. Namely, one of:
 +
-+	ltl_monitor_slot =3D ret;
++  - An equal-or-higher-priority thread
++  - Hard interrupt handler
++  - Non-maskable interrupt handler
 +
-+	rv_attach_trace_probe(name, task_newtask, handle_task_newtask);
++This monitor's warning usually means one of the following:
 +
-+	read_lock(&tasklist_lock);
++  - Real-time thread is blocked by a non-real-time thread (e.g. due to
++    contention on a mutex without priority inheritance). This is priority
++    inversion.
++  - Time-critical work waits for something which is not safe for real-time=
+ (e.g.
++    timerfd).
++  - The work executed by the real-time thread does not need to run at real=
+-time
++    priority at all.  This is not a problem for the real-time thread itsel=
+f, but
++    it is potentially taking the CPU away from other important real-time w=
+ork.
 +
-+	for_each_process_thread(g, p)
-+		ltl_task_init(p, false);
++Application developers may purposely choose to have their real-time applic=
+ation
++sleep in a way that is not safe for real-time. It is debatable whether tha=
+t is a
++problem. Application developers must analyze the warnings to make a proper
++assessment.
 +
-+	for_each_present_cpu(cpu)
-+		ltl_task_init(idle_task(cpu), false);
++The monitor's specification is::
 +
-+	read_unlock(&tasklist_lock);
++  RULE =3D always ((RT and SLEEP) imply (RT_FRIENDLY_SLEEP or ALLOWLIST))
 +
-+	return 0;
-+}
++  RT_FRIENDLY_SLEEP =3D (RT_VALID_SLEEP_REASON or KERNEL_THREAD)
++                  and ((not WAKE) until RT_FRIENDLY_WAKE)
 +
-+static void ltl_monitor_destroy(void)
-+{
-+	rv_detach_trace_probe(name, task_newtask, handle_task_newtask);
++  RT_VALID_SLEEP_REASON =3D FUTEX_WAIT
++                       or RT_FRIENDLY_NANOSLEEP
 +
-+	rv_put_task_monitor_slot(ltl_monitor_slot);
-+	ltl_monitor_slot =3D RV_PER_TASK_MONITOR_INIT;
-+}
++  RT_FRIENDLY_NANOSLEEP =3D CLOCK_NANOSLEEP
++                      and NANOSLEEP_TIMER_ABSTIME
++                      and NANOSLEEP_CLOCK_MONOTONIC
 +
-+static void ltl_illegal_state(struct task_struct *task, struct ltl_monitor=
- *mon)
-+{
-+	CONCATENATE(trace_error_, MONITOR_NAME)(task);
-+	rv_cond_react(task);
-+}
++  RT_FRIENDLY_WAKE =3D WOKEN_BY_EQUAL_OR_HIGHER_PRIO
++                  or WOKEN_BY_HARDIRQ
++                  or WOKEN_BY_NMI
++                  or KTHREAD_SHOULD_STOP
 +
-+static void ltl_attempt_start(struct task_struct *task, struct ltl_monitor=
- *mon)
-+{
-+	if (rv_ltl_all_atoms_known(mon))
-+		ltl_start(task, mon);
-+}
++  ALLOWLIST =3D BLOCK_ON_RT_MUTEX
++           or FUTEX_LOCK_PI
++           or TASK_IS_RCU
++           or TASK_IS_MIGRATION
 +
-+static inline void ltl_atom_set(struct ltl_monitor *mon, enum ltl_atom ato=
-m, bool value)
-+{
-+	__clear_bit(atom, mon->unknown_atoms);
-+	if (value)
-+		__set_bit(atom, mon->atoms);
-+	else
-+		__clear_bit(atom, mon->atoms);
-+}
++Beside the scenarios described above, this specification also handle some
++special cases:
 +
-+static void
-+ltl_trace_event(struct task_struct *task, struct ltl_monitor *mon, unsigne=
-d long *next_state)
-+{
-+	const char *format_str =3D "%s";
-+	DECLARE_SEQ_BUF(atoms, 64);
-+	char states[32], next[32];
-+	int i;
-+
-+	if (!CONCATENATE(CONCATENATE(trace_event_, MONITOR_NAME), _enabled)())
-+		return;
-+
-+	snprintf(states, sizeof(states), "%*pbl", RV_MAX_BA_STATES, mon->states);
-+	snprintf(next, sizeof(next), "%*pbl", RV_MAX_BA_STATES, next_state);
-+
-+	for (i =3D 0; i < LTL_NUM_ATOM; ++i) {
-+		if (test_bit(i, mon->atoms)) {
-+			seq_buf_printf(&atoms, format_str, ltl_atom_str(i));
-+			format_str =3D ",%s";
-+		}
-+	}
-+
-+	CONCATENATE(trace_event_, MONITOR_NAME)(task, states, atoms.buffer, next);
-+}
-+
-+static void ltl_validate(struct task_struct *task, struct ltl_monitor *mon)
-+{
-+	DECLARE_BITMAP(next_states, RV_MAX_BA_STATES) =3D {0};
-+
-+	if (!rv_ltl_valid_state(mon))
-+		return;
-+
-+	for (unsigned int i =3D 0; i < RV_NUM_BA_STATES; ++i) {
-+		if (test_bit(i, mon->states))
-+			ltl_possible_next_states(mon, i, next_states);
-+	}
-+
-+	ltl_trace_event(task, mon, next_states);
-+
-+	memcpy(mon->states, next_states, sizeof(next_states));
-+
-+	if (!rv_ltl_valid_state(mon))
-+		ltl_illegal_state(task, mon);
-+}
-+
-+static void ltl_atom_update(struct task_struct *task, enum ltl_atom atom, =
-bool value)
-+{
-+	struct ltl_monitor *mon =3D ltl_get_monitor(task);
-+
-+	ltl_atom_set(mon, atom, value);
-+	ltl_atoms_fetch(task, mon);
-+
-+	if (!rv_ltl_valid_state(mon))
-+		ltl_attempt_start(task, mon);
-+
-+	ltl_validate(task, mon);
-+}
-+
-+static void __maybe_unused ltl_atom_pulse(struct task_struct *task, enum l=
-tl_atom atom, bool value)
-+{
-+	struct ltl_monitor *mon =3D ltl_get_monitor(task);
-+
-+	ltl_atom_update(task, atom, value);
-+
-+	ltl_atom_set(mon, atom, !value);
-+	ltl_validate(task, mon);
-+}
-diff --git a/kernel/fork.c b/kernel/fork.c
-index 1ee8eb11f38b..1f06559d17bf 100644
---- a/kernel/fork.c
-+++ b/kernel/fork.c
-@@ -1886,10 +1886,7 @@ static void copy_oom_score_adj(u64 clone_flags, stru=
-ct task_struct *tsk)
- #ifdef CONFIG_RV
- static void rv_task_fork(struct task_struct *p)
- {
--	int i;
--
--	for (i =3D 0; i < RV_PER_TASK_MONITORS; i++)
--		p->rv[i].da_mon.monitoring =3D false;
-+	memset(&p->rv, 0, sizeof(p->rv));
- }
- #else
- #define rv_task_fork(p) do {} while (0)
-diff --git a/kernel/trace/rv/Kconfig b/kernel/trace/rv/Kconfig
-index 6cdffc04b73c..6e157f964991 100644
---- a/kernel/trace/rv/Kconfig
-+++ b/kernel/trace/rv/Kconfig
-@@ -11,6 +11,13 @@ config DA_MON_EVENTS_ID
- 	select RV_MON_EVENTS
- 	bool
-=20
-+config LTL_MON_EVENTS_ID
-+	select RV_MON_EVENTS
-+	bool
-+
-+config RV_LTL_MONITOR
-+	bool
-+
- menuconfig RV
- 	bool "Runtime Verification"
- 	depends on TRACING
-diff --git a/kernel/trace/rv/rv_trace.h b/kernel/trace/rv/rv_trace.h
-index 99c3801616d4..fd3111ad1d51 100644
---- a/kernel/trace/rv/rv_trace.h
-+++ b/kernel/trace/rv/rv_trace.h
-@@ -127,6 +127,53 @@ DECLARE_EVENT_CLASS(error_da_monitor_id,
- // Add new monitors based on CONFIG_DA_MON_EVENTS_ID here
-=20
- #endif /* CONFIG_DA_MON_EVENTS_ID */
-+#ifdef CONFIG_LTL_MON_EVENTS_ID
-+DECLARE_EVENT_CLASS(event_ltl_monitor_id,
-+
-+	TP_PROTO(struct task_struct *task, char *states, char *atoms, char *next),
-+
-+	TP_ARGS(task, states, atoms, next),
-+
-+	TP_STRUCT__entry(
-+		__string(comm, task->comm)
-+		__field(pid_t, pid)
-+		__string(states, states)
-+		__string(atoms, atoms)
-+		__string(next, next)
-+	),
-+
-+	TP_fast_assign(
-+		__assign_str(comm);
-+		__entry->pid =3D task->pid;
-+		__assign_str(states);
-+		__assign_str(atoms);
-+		__assign_str(next);
-+	),
-+
-+	TP_printk("%s[%d]: (%s) x (%s) -> (%s)", __get_str(comm), __entry->pid,
-+		  __get_str(states), __get_str(atoms), __get_str(next))
-+);
-+
-+DECLARE_EVENT_CLASS(error_ltl_monitor_id,
-+
-+	TP_PROTO(struct task_struct *task),
-+
-+	TP_ARGS(task),
-+
-+	TP_STRUCT__entry(
-+		__string(comm, task->comm)
-+		__field(pid_t, pid)
-+	),
-+
-+	TP_fast_assign(
-+		__assign_str(comm);
-+		__entry->pid =3D task->pid;
-+	),
-+
-+	TP_printk("%s[%d]: violation detected", __get_str(comm), __entry->pid)
-+);
-+// Add new monitors based on CONFIG_LTL_MON_EVENTS_ID here
-+#endif /* CONFIG_LTL_MON_EVENTS_ID */
- #endif /* _TRACE_RV_H */
-=20
- /* This part must be outside protection */
++  - `KERNEL_THREAD`: kernel tasks do not have any pattern that can be reco=
+gnized
++    as valid real-time sleeping reasons. Therefore sleeping reason is not
++    checked for kernel tasks.
++  - `KTHREAD_SHOULD_STOP`: a non-real-time thread may stop a real-time ker=
+nel
++    thread by waking it and waiting for it to exit (`kthread_stop()`). This
++    wakeup is safe for real-time.
++  - `ALLOWLIST`: to handle known false positives with the kernel.
++  - `BLOCK_ON_RT_MUTEX` is included in the allowlist due to its implementa=
+tion.
++    In the release path of rt_mutex, a boosted task is de-boosted before w=
+aking
++    the rt_mutex's waiter. Consequently, the monitor may see a real-time-u=
+nsafe
++    wakeup (e.g. non-real-time task waking real-time task). This is actual=
+ly
++    real-time-safe because preemption is disabled for the duration.
++  - `FUTEX_LOCK_PI` is included in the allowlist for the same reason as
++    `BLOCK_ON_RT_MUTEX`.
 --=20
 2.39.5
 
