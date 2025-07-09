@@ -1,69 +1,69 @@
-Received: from mail-qv1-f43.google.com (mail-qv1-f43.google.com [209.85.219.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-181.mta1.migadu.com (out-181.mta1.migadu.com [95.215.58.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CE9FA935;
-	Wed,  9 Jul 2025 03:02:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D45371B87F0
+	for <linux-trace-kernel@vger.kernel.org>; Wed,  9 Jul 2025 03:08:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752030137; cv=none; b=ISWSUE6MYk9Pq/OcR+6knuFj/mqCbfR+guiruaqj9YOMuZnJN7q3ZnrpRevv/mDw/Z4oNtnzaqJ7h4X+N+vodkVpeA6pVvb/A5MzVjruPzNeelSLYFsy6sSQFeA99bgsrzNe72ZEIYe3KjkQ1pPk7H0f97UB55zmYpwPZb80oAc=
+	t=1752030521; cv=none; b=kBbWbzaG/3fcmH3xFmNjUCnc27rvQ7GRP1oB5lHwnyhk2dL7gn8+bFMkwXLhvWIKBTR6ZIo5+6RLnY62QHv4q4Nm92cYQ9zknlgBT6a82fnWXmNP3OZPbCOwEGNwwzJzu77Gt+i+T1SiLkABclv2Wl4hiNgrjX6lZyn2OBX3GxQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752030137; c=relaxed/simple;
-	bh=1TxgMYE9++GnFVSzAjKqyUDUv01Zd/sioU0KNv6N91I=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=sSxvE7cnJ6LR6HVLPla/4bG6lPdSTFF9YLmP7eLedpU6ePl8LMd5FBopodez0uw7SVa5orhuYJvdX9QOgIQcobSXvD4yu/MbZxTa35t5BvojjDcoRPgUiFazk9x11HQIuX8By/7kaZrUc6ai7VcEebVpvG2+LO/zgHL5oMdzhok=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FyGsnWJm; arc=none smtp.client-ip=209.85.219.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1752030521; c=relaxed/simple;
+	bh=jTuYztbbMoYi0F79k6LUCNZpwzjRGgr3peSsD6k78Xk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=oojkp0lKXi6biV4QNQ3o/zeUsHobaF8kJzvM9qF7vJ6xLmx+M4E9HvOesGggwmTOdAbhd4d6H2uUL5XnmcyUXkACWk5yHkF/VXTUqc6idfpm4/Iw9XhO+thvLpcdfouoxieqeQm5CgvIj2K4XWmkxSR7apDOG8zqnSDaKhtIPBM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Bm75rnhJ; arc=none smtp.client-ip=95.215.58.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FyGsnWJm"
-Received: by mail-qv1-f43.google.com with SMTP id 6a1803df08f44-6fad3400ea3so52471486d6.0;
-        Tue, 08 Jul 2025 20:02:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1752030134; x=1752634934; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=1TxgMYE9++GnFVSzAjKqyUDUv01Zd/sioU0KNv6N91I=;
-        b=FyGsnWJmheQRPdZ0YmUg9EzOXvIZAv1DMzW57F22FA9MVTHCxLZOkC0XPhsdQWDT4p
-         A53oJYXohzVVx253XVlsUj+MZo5Qvms2wzN99TTad6UJZhpqCKbuW+/LqJygNUy77PO6
-         YmhwAye/+QthbPBoXm6/0m7BGfpa/4hAVvgriFdtQk+qtkszBcdGPBVqU2+hGF/bCjP8
-         rpWL/VBF55qv+//ij5r9w3z+8FiJJjuIxj2F5MZt9k4+joQlZoaXevb9vlQK4+KUxn4d
-         gb1ombCp45N3+ImMQGQyp0GCP9w6TzSioERNAABcUz+fMZmFKfmPTezkzTfY1VHfRrmc
-         5zyw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1752030134; x=1752634934;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=1TxgMYE9++GnFVSzAjKqyUDUv01Zd/sioU0KNv6N91I=;
-        b=omYZZwIC7OekL4WI4hyZ5tAnroeI9oyywD0wTZT6eIOyX8bd1fws80Fhc+NFIFdLTI
-         WqjEFNHKkHEeB+c+D2778DqUXvDPX189xDs0WRklh3PdpXQTpdU267Qef4CF5WRHWZLk
-         sj9JkN+ZkokVR+XH+vY5SP79c4yMD0ixXnhm9HJ7NTIz4oDGysA4aOOHRSPpMkqSswHY
-         l4l/ewrf/S93Z7lKqdV5lYirbXThAbsMtfRA8JaRXMcDd2Y+fV5yt5anphFD9vj0+HPX
-         garKNumOoYQf7yT9kTAu2wYrIm3IhmaAZxsALXP7iN6ScA/8zWx+eC4ftFWNCmHqWDVr
-         /usQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVkZOYnOsqVQ+sI97tkx6PDPFsQZvl7/Xe1csqkzTSoDui/W+7CfANobT8vKWj9U/jJocxyDqn0WDxGTy+7a0wDVt5A@vger.kernel.org, AJvYcCXgU6kP9HWi50LpZWYCH2U0T93QaaAVn840eDVvTGPZUvLGjDo+VhSnyljbuGSdea42GULFczJSku39tlg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzJ0zvVSGhqvRgGlOV5Hlz9eNi99vq3WKFVJq9G7LKqY1lJWXpe
-	m8d6/ifClWp7X6+DaxyU1MGxkq8GdOoXBWL8hNb0vV/RNnfyVOUJUbs2
-X-Gm-Gg: ASbGncsMiu5tYu3YGk8h3Aepin2BntwrjZ2Eq0ndPfCKqcUnvAlz7zFw85m99V8zwcD
-	kbqSdTgQxdQSui4n8S1iBZXyz9nko5F3sSydH5gxLQcyr4rOmVEFIga+9+7+fkLYXDvCFPZCmeo
-	LtXZMeWBOd3NTSjMTJMQYKbnZqTjAEX8fVnCOfVRn/NDjuz4ut6U55yXlSZjdxFyob9vSEjZKxG
-	aRLvwPWcdPEcWcMXBNjObhc6k4FmtINH2OLjN5B5nMBYBE/wALfBHZS1Sm1bdj2BcwU0ijulzvh
-	rDwyDVwZQoTUrdiOgyDfqEX20T1hg8OE3M68LJfdIs6R1vXqJTNdSxwmgXQEOaovOecPkrj7
-X-Google-Smtp-Source: AGHT+IEMskgkktm/W5i7zY7vOnFEXI8EB3Uo2kSxb0cJyri6/9nwvM/FG7TvB1INkm0xZvjjwSbdzg==
-X-Received: by 2002:ad4:5cac:0:b0:702:c4d8:ec02 with SMTP id 6a1803df08f44-7048b93f4f4mr12101976d6.40.1752030134206;
-        Tue, 08 Jul 2025 20:02:14 -0700 (PDT)
-Received: from Gentoo.localdomain ([191.96.227.86])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-702c4d5a902sm85216716d6.83.2025.07.08.20.02.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Jul 2025 20:02:13 -0700 (PDT)
-From: Bhaskar Chowdhury <unixbhaskar@gmail.com>
-To: mhiramat@kernel.org,
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Bm75rnhJ"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1752030504;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=r/YRLtQXL3400MG0L8PDnU71+sc8ggILskVIUPnOQuQ=;
+	b=Bm75rnhJrY96g9BbfOWhUHqSZGjPjPx0Oe1Y5tfYDExWkSPii/biY8HIV4AxhFSko1c3NM
+	6PiZGj++VWS0/bcLP7ZlHkYlpQSxXVwFwoPeq4uQGjIpJnj6i+GtEfoHq+YnVoBck+fg/S
+	LcrySkv1fEGK/VtIlL20o/sJu8jpMd0=
+From: Tao Chen <chen.dylane@linux.dev>
+To: daniel@iogearbox.net,
+	razor@blackwall.org,
+	andrew+netdev@lunn.ch,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	ast@kernel.org,
+	andrii@kernel.org,
+	martin.lau@linux.dev,
+	eddyz87@gmail.com,
+	song@kernel.org,
+	yonghong.song@linux.dev,
+	john.fastabend@gmail.com,
+	kpsingh@kernel.org,
+	sdf@fomichev.me,
+	haoluo@google.com,
+	jolsa@kernel.org,
+	mattbobrowski@google.com,
+	rostedt@goodmis.org,
+	mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com,
+	horms@kernel.org,
+	willemb@google.com,
+	jakub@cloudflare.com,
+	pablo@netfilter.org,
+	kadlec@netfilter.org,
+	hawk@kernel.org
+Cc: bpf@vger.kernel.org,
+	netdev@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Cc: Bhaskar Chowdhury <unixbhaskar@gmail.com>
-Subject: [PATCH v2] tools: bootconfig: Regex enclosed with quotes to make syntax highlight proper
-Date: Wed,  9 Jul 2025 08:27:59 +0530
-Message-ID: <20250709030141.27483-1-unixbhaskar@gmail.com>
-X-Mailer: git-send-email 2.49.1
+	linux-trace-kernel@vger.kernel.org,
+	netfilter-devel@vger.kernel.org,
+	coreteam@netfilter.org,
+	Tao Chen <chen.dylane@linux.dev>
+Subject: [PATCH bpf-next v3 0/7] Add attach_type in bpf_link
+Date: Wed,  9 Jul 2025 11:07:55 +0800
+Message-ID: <20250709030802.850175-1-chen.dylane@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -71,33 +71,64 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-As suggested, changed the square brackets escaping to quote the whole Regex
-class.
+Andrii suggested moving the attach_type into bpf_link, the previous discussion
+is as follows:
+https://lore.kernel.org/bpf/CAEf4BzY7TZRjxpCJM-+LYgEqe23YFj5Uv3isb7gat2-HU4OSng@mail.gmail.com
 
-Signed-off-by: Bhaskar Chowdhury <unixbhaskar@gmail.com>
----
- Changes to V2 from V1:
- Surround the Regex class with single quotations.
+patch1 add attach_type in bpf_link, and pass it to bpf_link_init, which
+will init the attach_type field.
 
- tools/bootconfig/test-bootconfig.sh | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+patch2-7 remove the attach_type in struct bpf_xx_link, update the info
+with bpf_link attach_type.
 
-diff --git a/tools/bootconfig/test-bootconfig.sh b/tools/bootconfig/test-bootconfig.sh
-index a2c484c243f5..32401bf61340 100755
---- a/tools/bootconfig/test-bootconfig.sh
-+++ b/tools/bootconfig/test-bootconfig.sh
-@@ -167,8 +167,8 @@ echo > $INITRD
+There are some functions finally call bpf_link_init but do not have bpf_attr
+from user or do not need to init attach_type from user like bpf_raw_tracepoint_open,
+now use prog->expected_attach_type to init attach_type.
 
- xpass $BOOTCONF -a $TEMPCONF $INITRD
- $BOOTCONF $INITRD > $OUTFILE
--xfail grep -q val[[:space:]] $OUTFILE
--xpass grep -q val2[[:space:]] $OUTFILE
-+xfail grep -q 'val[[:space:]]' $OUTFILE
-+xpass grep -q 'val2[[:space:]]' $OUTFILE
+bpf_struct_ops_map_update_elem
+bpf_raw_tracepoint_open
+bpf_struct_ops_test_run
 
- echo "=== expected failure cases ==="
- for i in samples/bad-* ; do
---
-2.49.1
+Feedback of any kind is welcome, thanks.
+
+Tao Chen (7):
+  bpf: Add attach_type in bpf_link
+  bpf: Remove attach_type in bpf_cgroup_link
+  bpf: Remove attach_type in sockmap_link
+  bpf: Remove location field in tcx_link
+  bpf: Remove attach_type in bpf_netns_link
+  bpf: Remove attach_type in bpf_tracing_link
+  netkit: Remove location field in netkit_link
+
+ drivers/net/netkit.c           | 10 ++++-----
+ include/linux/bpf-cgroup.h     |  1 -
+ include/linux/bpf.h            | 29 ++++++++++++++----------
+ include/net/tcx.h              |  1 -
+ kernel/bpf/bpf_iter.c          |  3 ++-
+ kernel/bpf/bpf_struct_ops.c    |  5 +++--
+ kernel/bpf/cgroup.c            | 17 +++++++--------
+ kernel/bpf/net_namespace.c     |  8 +++----
+ kernel/bpf/syscall.c           | 40 ++++++++++++++++++++--------------
+ kernel/bpf/tcx.c               | 16 +++++++-------
+ kernel/bpf/trampoline.c        | 10 +++++----
+ kernel/trace/bpf_trace.c       |  4 ++--
+ net/bpf/bpf_dummy_struct_ops.c |  3 ++-
+ net/core/dev.c                 |  3 ++-
+ net/core/sock_map.c            | 13 +++++------
+ net/netfilter/nf_bpf_link.c    |  3 ++-
+ 16 files changed, 89 insertions(+), 77 deletions(-)
+
+Change list:
+ v2 -> v3:
+  - move sleepable field to the end in bpf_link to fill the byte hole.(Jiri)
+  - Acked from Jiri
+ v2: https://lore.kernel.org/bpf/20250708082228.824766-1-chen.dylane@linux.dev
+
+ v1 -> v2:
+  - fix build error.(Jiri)
+ v1: https://lore.kernel.org/bpf/20250707153916.802802-1-chen.dylane@linux.dev
+-- 
+2.48.1
 
