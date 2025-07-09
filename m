@@ -1,22 +1,22 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F09A123FC52;
-	Wed,  9 Jul 2025 19:21:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F09F823FC66;
+	Wed,  9 Jul 2025 19:21:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752088906; cv=none; b=Zqu7lMOmxO2+xjI5STOBWCCyLRuNJO9GqH7+KUqPcGeTaJ00ifaHRk7tcWbwuFh37aLfCWwpboPjsK7SGFHk+ah8Du6PbYr3zlgZ+3A/mTLe4IKVpHstf+Ut1mbADc7AK+Rgjl31IXf0j+IGoKBCuGwpeSgXsoPIPNV+2oCDL0Q=
+	t=1752088906; cv=none; b=PJ86eo6WEUohf8p8j6m99mKbz3bA3PYQnwcej9otycDHAs+Fp5BFlJcgJ+he+RGqyLMNL3PAcRZ6CwSWYjziUKUXwQoHVTt/aA4yKmF1zsmkCAU/x6LkwDmPywvqIrIA095OWsfHJLJybSIJo7qp2VoY4pmY0naNSQDRt0BYafk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1752088906; c=relaxed/simple;
-	bh=9REGFnfyFOEyIjAE1cjJKsPFnrPKw4O7e9wg4waN3vU=;
+	bh=uUCFxmo45gH4FNKoJkFKyvfUrVp0TDpC9KtK9KK+nbQ=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=jIpZfubw726fzwaEDQ6jByatfHUvfaKgz8xprgOqv4V71DTGOsq91h1XQfzffJHhJ+CCiw3/UkH9DxSe7LImqHksh5dTjRv2LQ4uurJm3ManAOmXUvQKfGjm19ind4KPw9qDc1HYLhp7EMKYH/WL0+j+c1jAyGK4achVx/B1xG8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=I+/yQgGg; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=tHOrg51K; arc=none smtp.client-ip=193.142.43.55
+	 MIME-Version; b=X/3NFZLTkbbJkAebcLS4qD8s/BsPObr6Q+3onxCPl1DxKzrwlY/UNoykmJm1fB7lYAUQVf21BUI0bpEYk/scJ9ySgA6uCgGol04PmpM3jPjVeZ5nosVIqfqrLeLNj9GdIUL6C/4MHALlaWFG7f2Y+VTFnuuI9hcRm6RjLi2SR2w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=KkafzTSe; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=DKX/Ih0l; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="I+/yQgGg";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="tHOrg51K"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="KkafzTSe";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="DKX/Ih0l"
 From: Nam Cao <namcao@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
 	s=2020; t=1752088902;
@@ -24,21 +24,21 @@ DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=9REGFnfyFOEyIjAE1cjJKsPFnrPKw4O7e9wg4waN3vU=;
-	b=I+/yQgGg1309dec53ELluYJGR5+YoopHs8xy0tOk1zG0IlqoQKw8GZ5nCOm1FEqYAItv+A
-	pWJeCNrxLG/ptFIywqJan0Ux7EFl23v37w8QQEc7PIa8p5O0mRJnG9GADchH9tJ1rUQcm6
-	wiJvWqHhMf/tGLzfAUfFRO9gOffPXig/QqtkmQe24XeNfbdYPGRXAvGCoCUzovJF4tAcSl
-	loS5DM2creW//2pasbwQG1C2rvNaO6BsHay3Fk01w7K8maf9ecnkgOHZwu1ep+v98V2n1m
-	Xpujz1L2lz/PMa9QqeQAGzaKEnoe1CmabRqVeag6mIE+A9OQojvqtZaoUAXbDw==
+	bh=Cz7kLMF6V+pL7G20nftlZK+3bi9npXI9tcPWSQmYOx4=;
+	b=KkafzTSeatKZVOSg4UCMmksRfod0BCo8vmKjqYJAcVX9bvjSH6MxHI1JsB5KXlczHTCGfW
+	U7EbfclaH8fjhNXLA76EEp4pQjcKCbU8r7WxpTcQuD9tR9W8sYZO+TettXd2mGCn/Dz5qy
+	fw4pq+ycWIinM8htp20gKVuAH98tbkyZYO9m69BBa5vCpn5igyE1WXMbo0Qk+MUaJo2WC2
+	cjkTDMAqGf5zAH93xPbl7Rz8QlnwFQJ6UxYjIpfk0jEdn3SjqP3QeYL4V/j/SV9dqLvzmy
+	yA7ZZ3iRSXwAtB1FvdFyXXnGeaLILFSzxz7H680RlkywBQinYX7diGquKaCdow==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
 	s=2020e; t=1752088902;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=9REGFnfyFOEyIjAE1cjJKsPFnrPKw4O7e9wg4waN3vU=;
-	b=tHOrg51KJSU1Nq/NXlHoWyPwoHpEGRk3fRHYoGcCBeYmivIVJasWx8PtAk/J14yV2rAnlv
-	QwFuIbYNOU+raMBw==
+	bh=Cz7kLMF6V+pL7G20nftlZK+3bi9npXI9tcPWSQmYOx4=;
+	b=DKX/Ih0l9mfXAa8HRwt5rcHmyOK79b6swFUe5U+k34vIv8QqShjRIZS64pZdZBswAmvYJK
+	KfTfevAiBa4QF1Dw==
 To: Steven Rostedt <rostedt@goodmis.org>,
 	John Ogness <john.ogness@linutronix.de>,
 	Masami Hiramatsu <mhiramat@kernel.org>,
@@ -46,10 +46,12 @@ To: Steven Rostedt <rostedt@goodmis.org>,
 	Gabriele Monaco <gmonaco@redhat.com>,
 	linux-trace-kernel@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Cc: Nam Cao <namcao@linutronix.de>
-Subject: [PATCH v13 01/12] rv: Add #undef TRACE_INCLUDE_FILE
-Date: Wed,  9 Jul 2025 21:21:12 +0200
-Message-Id: <f805e074581e927bb176c742c981fa7675b6ebe5.1752088709.git.namcao@linutronix.de>
+Cc: Nam Cao <namcao@linutronix.de>,
+	Petr Mladek <pmladek@suse.com>,
+	Sergey Senozhatsky <senozhatsky@chromium.org>
+Subject: [PATCH v13 02/12] printk: Make vprintk_deferred() public
+Date: Wed,  9 Jul 2025 21:21:13 +0200
+Message-Id: <66086aa267f2f3b431ff46dba1e7092030fcfe58.1752088709.git.namcao@linutronix.de>
 In-Reply-To: <cover.1752088709.git.namcao@linutronix.de>
 References: <cover.1752088709.git.namcao@linutronix.de>
 Precedence: bulk
@@ -60,32 +62,58 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Without "#undef TRACE_INCLUDE_FILE", there could be a build error due to
-TRACE_INCLUDE_FILE being redefined. Therefore add it.
+vprintk_deferred() is useful for implementing runtime verification
+reactors. Make it public.
 
-Also fix a typo while at it.
-
-Reviewed-by: Gabriele Monaco <gmonaco@redhat.com>
 Signed-off-by: Nam Cao <namcao@linutronix.de>
+Reviewed-by: Petr Mladek <pmladek@suse.com>
 ---
- kernel/trace/rv/rv_trace.h | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+Cc: John Ogness <john.ogness@linutronix.de>
+Cc: Sergey Senozhatsky <senozhatsky@chromium.org>
+---
+v13: keep consistent format and put __printf(1, 0) in another line
+---
+ include/linux/printk.h   | 7 +++++++
+ kernel/printk/internal.h | 1 -
+ 2 files changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/kernel/trace/rv/rv_trace.h b/kernel/trace/rv/rv_trace.h
-index 422b75f58891..99c3801616d4 100644
---- a/kernel/trace/rv/rv_trace.h
-+++ b/kernel/trace/rv/rv_trace.h
-@@ -129,8 +129,9 @@ DECLARE_EVENT_CLASS(error_da_monitor_id,
- #endif /* CONFIG_DA_MON_EVENTS_ID */
- #endif /* _TRACE_RV_H */
+diff --git a/include/linux/printk.h b/include/linux/printk.h
+index 5b462029d03c..5d22b803f51e 100644
+--- a/include/linux/printk.h
++++ b/include/linux/printk.h
+@@ -154,6 +154,8 @@ int vprintk_emit(int facility, int level,
 =20
--/* This part ust be outside protection */
-+/* This part must be outside protection */
- #undef TRACE_INCLUDE_PATH
- #define TRACE_INCLUDE_PATH .
-+#undef TRACE_INCLUDE_FILE
- #define TRACE_INCLUDE_FILE rv_trace
- #include <trace/define_trace.h>
+ asmlinkage __printf(1, 0)
+ int vprintk(const char *fmt, va_list args);
++__printf(1, 0)
++int vprintk_deferred(const char *fmt, va_list args);
+=20
+ asmlinkage __printf(1, 2) __cold
+ int _printk(const char *fmt, ...);
+@@ -214,6 +216,11 @@ int vprintk(const char *s, va_list args)
+ {
+ 	return 0;
+ }
++static inline __printf(1, 0)
++int vprintk_deferred(const char *fmt, va_list args)
++{
++	return 0;
++}
+ static inline __printf(1, 2) __cold
+ int _printk(const char *s, ...)
+ {
+diff --git a/kernel/printk/internal.h b/kernel/printk/internal.h
+index 48a24e7b309d..bbed41ad29cf 100644
+--- a/kernel/printk/internal.h
++++ b/kernel/printk/internal.h
+@@ -72,7 +72,6 @@ int vprintk_store(int facility, int level,
+ 		  const char *fmt, va_list args);
+=20
+ __printf(1, 0) int vprintk_default(const char *fmt, va_list args);
+-__printf(1, 0) int vprintk_deferred(const char *fmt, va_list args);
+=20
+ void __printk_safe_enter(void);
+ void __printk_safe_exit(void);
 --=20
 2.39.5
 
