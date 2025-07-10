@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2565B19D065;
-	Thu, 10 Jul 2025 02:24:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C840627F177;
+	Thu, 10 Jul 2025 02:24:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752114252; cv=none; b=kiyYaF3669+cmWh5005jHONrhjGD2h9o7L6I8FXUHTn5mPf3CvypLNMirLck3bDZ0mgFISn9Ckr2MOsRM248J8eaNW005fC97q0HiPuSORAeYKLkU15inx5zfyw6sQI9rzldyTMerYiDy6sHYG/Yc4ppPxQ5P1hULZCPR1GAYsQ=
+	t=1752114259; cv=none; b=uvS3QA69HvOg6VmK8+oI2OeCk44fldhN+pAKe0iw/C/+8UolRsv5m40G/2DR1hRzIxb4r0UJSDo/DvhvGdPirDoPo+jeIke/ROtZYX6WFIlFbHU+7HpZpDH1LWLiR+gH3L2bWI6Q68W9dCLop12UQndix9f4xYGWvFWPZGYthO4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752114252; c=relaxed/simple;
-	bh=eNUYIuBrI00d0BN0sGSJNg9zzMel1CtWv7LSmD+61UQ=;
+	s=arc-20240116; t=1752114259; c=relaxed/simple;
+	bh=ivZC/XFatW2s4LOWzt6Q3Nl/+GkonjI1yVt9hS6OW0c=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=o59/FPKPDUBaas0AFEI7blRuCX5+jf8ag2oGXh2I+mgCI9aUurNgvJ6PHaV6jScD1ga/sSd/ioXCCAeDOf6PODOq5+KDup7KJIW52v3em79JIq92gwEw1sEbavaXWcRUDycO0TME29Bl3eCBABcF3k1+rFkkTr7Q944uPHjSeHg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dZLTSEBQ; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=eMG9geTeRNrvi0yUlasrdrNSZcteGzJojIwPSykIMFRg2JxTg9tRp6eYBEG/fvIGxYAbWeHmJciNNR6r9mq2z0/O5kdR/jHdlGcJCQ1j5Sxfypyj5P7GC2kUkLnkfeS6H6w+BvzkfX3TL99ZiPXAOQF1e7xiFQS12vQegb/ABbo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W0BUaHlV; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dZLTSEBQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2CD37C4CEEF;
-	Thu, 10 Jul 2025 02:24:11 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W0BUaHlV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B7118C4CEF0;
+	Thu, 10 Jul 2025 02:24:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1752114251;
-	bh=eNUYIuBrI00d0BN0sGSJNg9zzMel1CtWv7LSmD+61UQ=;
+	s=k20201202; t=1752114259;
+	bh=ivZC/XFatW2s4LOWzt6Q3Nl/+GkonjI1yVt9hS6OW0c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=dZLTSEBQLXORN0Jt4WCZn8woUuX3sBJRIBfv0jqtoKuTpiCC5HSKpBEnCYJian/Wg
-	 NxG76tnfKOnQ0vRFcrQJaENtSZl8teXS1zl+ET8yUDOr3xUJCJTu/BPjn1UZqlkY4E
-	 /Hyx+J5ApotefrszGpNmreBkrVwv2/3a0QEH45FFKdpJ91wzm1ebdFOQq+kLQtkYPL
-	 zlZqtk1h/vtltsLXRxSC8whuE/OAoA4RCSw/zEexIiST85zVXdksMlHEpZPmZGuysa
-	 1klIXIFSuahcr5eKxcZ/mfYRvPqDSCa3Lzw01EOMY6b88tGnJe61uPrRsfmunvhF8o
-	 k/n9BoXzzd0MQ==
+	b=W0BUaHlVxjEPkb70aq58V9T0hLd6SfF7qFvKwabvE+4OEh9koyYD6Wum3INMQl5ao
+	 zA+wZPNju9vXnTXugo5EoGD9yxptjmTSxT+trOJyzAYuWbuqnqNfiBahdT/i5UoKlX
+	 VZbUS/CYWUekprt0GggyTUbBAn38xd5D7ZC/GUxcW6ONUGmcc3vm0WEhNuQ8b2os79
+	 WffiT88cwHGdwVDVWRelMem22j/LNqanOfa2EgrfcJPfNpZBX0PZOZm2KzB1IT0anN
+	 MO2ZOnKy9fmyZHEVGjqbiowZH2UiSzqez95uJDhEbf5pyXY/TDKFZeIzp9rIoqOKkC
+	 rY0R9Dui5Bw/g==
 From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org
 Cc: Masami Hiramatsu <mhiramat@kernel.org>
-Subject: [PATCH 2/3] tools/bootconfig: Replace some echo with printf for more portability
-Date: Thu, 10 Jul 2025 11:24:09 +0900
-Message-ID:  <175211424942.2591046.5439447789303314213.stgit@mhiramat.tok.corp.google.com>
+Subject: [PATCH 3/3] tools/bootconfig: Cleanup bootconfig footer size calculations
+Date: Thu, 10 Jul 2025 11:24:17 +0900
+Message-ID:  <175211425693.2591046.16029516706923643510.stgit@mhiramat.tok.corp.google.com>
 X-Mailer: git-send-email 2.50.0.727.gbf7dc18ff4-goog
 In-Reply-To:  <175211423307.2591046.14863142130524442068.stgit@mhiramat.tok.corp.google.com>
 References:  <175211423307.2591046.14863142130524442068.stgit@mhiramat.tok.corp.google.com>
@@ -48,82 +48,89 @@ Content-Transfer-Encoding: 8bit
 
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-Since echo is not portable, use printf instead. This fixes a wrong
-test result formatting in some environment. (showing "\t\t[OK]")
-Also this uses printf command for generating test data instead of
-echo.
+There are many same pattern of 8 + BOOTCONFIG_MAGIC_LEN for calculating
+the size of bootconfig footer. Use BOOTCONFIG_FOOTER_SIZE macro to
+clean up those magic numbers.
 
 Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 ---
- tools/bootconfig/test-bootconfig.sh |   20 ++++++++++----------
- 1 file changed, 10 insertions(+), 10 deletions(-)
+ tools/bootconfig/main.c |   19 +++++++++++--------
+ 1 file changed, 11 insertions(+), 8 deletions(-)
 
-diff --git a/tools/bootconfig/test-bootconfig.sh b/tools/bootconfig/test-bootconfig.sh
-index 127172945893..93f963c7d619 100755
---- a/tools/bootconfig/test-bootconfig.sh
-+++ b/tools/bootconfig/test-bootconfig.sh
-@@ -27,16 +27,16 @@ NO=1
+diff --git a/tools/bootconfig/main.c b/tools/bootconfig/main.c
+index 8a48cc2536f5..4988e23a1422 100644
+--- a/tools/bootconfig/main.c
++++ b/tools/bootconfig/main.c
+@@ -16,6 +16,10 @@
  
- xpass() { # pass test command
-   echo "test case $NO ($*)... "
--  if ! ($@ && echo "\t\t[OK]"); then
--     echo "\t\t[NG]"; NG=$((NG + 1))
-+  if ! ($@ && printf "\t\t[OK]\n"); then
-+     printf "\t\t[NG]\n"; NG=$((NG + 1))
-   fi
-   NO=$((NO + 1))
- }
+ #define pr_err(fmt, ...) fprintf(stderr, fmt, ##__VA_ARGS__)
  
- xfail() { # fail test command
-   echo "test case $NO ($*)... "
--  if ! (! $@ && echo "\t\t[OK]"); then
--     echo "\t\t[NG]"; NG=$((NG + 1))
-+  if ! (! $@ && printf "\t\t[OK]\n"); then
-+     printf "\t\t[NG]\n"; NG=$((NG + 1))
-   fi
-   NO=$((NO + 1))
- }
-@@ -48,7 +48,7 @@ echo "Delete command should success without bootconfig"
- xpass $BOOTCONF -d $INITRD
++/* Bootconfig footer is [size][csum][BOOTCONFIG_MAGIC]. */
++#define BOOTCONFIG_FOOTER_SIZE	\
++	(sizeof(uint32_t) * 2 + BOOTCONFIG_MAGIC_LEN)
++
+ static int xbc_show_value(struct xbc_node *node, bool semicolon)
+ {
+ 	const char *val, *eol;
+@@ -185,7 +189,7 @@ static int load_xbc_from_initrd(int fd, char **buf)
+ 	if (ret < 0)
+ 		return -errno;
  
- dd if=/dev/zero of=$INITRD bs=4096 count=1
--echo "key = value;" > $TEMPCONF
-+printf "key = value;" > $TEMPCONF
- bconf_size=$(wc -c < $TEMPCONF)
- initrd_size=$(wc -c < $INITRD)
+-	if (stat.st_size < 8 + BOOTCONFIG_MAGIC_LEN)
++	if (stat.st_size < BOOTCONFIG_FOOTER_SIZE)
+ 		return 0;
  
-@@ -97,20 +97,20 @@ BEGIN {
- ' > $TEMPCONF
- xpass $BOOTCONF -a $TEMPCONF $INITRD
+ 	if (lseek(fd, -BOOTCONFIG_MAGIC_LEN, SEEK_END) < 0)
+@@ -198,7 +202,7 @@ static int load_xbc_from_initrd(int fd, char **buf)
+ 	if (memcmp(magic, BOOTCONFIG_MAGIC, BOOTCONFIG_MAGIC_LEN) != 0)
+ 		return 0;
  
--echo "badnode" >> $TEMPCONF
-+printf "badnode\n" >> $TEMPCONF
- xfail $BOOTCONF -a $TEMPCONF $INITRD
+-	if (lseek(fd, -(8 + BOOTCONFIG_MAGIC_LEN), SEEK_END) < 0)
++	if (lseek(fd, -BOOTCONFIG_FOOTER_SIZE, SEEK_END) < 0)
+ 		return pr_errno("Failed to lseek for size", -errno);
  
- echo "Max filesize check"
+ 	if (read(fd, &size, sizeof(uint32_t)) < 0)
+@@ -210,12 +214,12 @@ static int load_xbc_from_initrd(int fd, char **buf)
+ 	csum = le32toh(csum);
  
- # Max size is 32767 (including terminal byte)
--echo -n "data = \"" > $TEMPCONF
-+printf "data = \"" > $TEMPCONF
- dd if=/dev/urandom bs=768 count=32 | base64 -w0 >> $TEMPCONF
--echo "\"" >> $TEMPCONF
-+printf "\"\n" >> $TEMPCONF
- xfail $BOOTCONF -a $TEMPCONF $INITRD
+ 	/* Wrong size error  */
+-	if (stat.st_size < size + 8 + BOOTCONFIG_MAGIC_LEN) {
++	if (stat.st_size < size + BOOTCONFIG_FOOTER_SIZE) {
+ 		pr_err("bootconfig size is too big\n");
+ 		return -E2BIG;
+ 	}
  
- dd if=$TEMPCONF of=$OUTFILE bs=1 count=32764
- cp $OUTFILE $TEMPCONF
--echo "\"" >> $TEMPCONF	# add 2 bytes + terminal ('\"\n\0')
-+printf "\"\n" >> $TEMPCONF	# add 2 bytes + terminal ('\"\n\0')
- xpass $BOOTCONF -a $TEMPCONF $INITRD
+-	if (lseek(fd, stat.st_size - (size + 8 + BOOTCONFIG_MAGIC_LEN),
++	if (lseek(fd, stat.st_size - (size + BOOTCONFIG_FOOTER_SIZE),
+ 		  SEEK_SET) < 0)
+ 		return pr_errno("Failed to lseek", -errno);
  
- echo "Adding same-key values"
-@@ -140,7 +140,7 @@ xfail grep -q "baz" $OUTFILE
- xpass grep -q "qux" $OUTFILE
+@@ -346,7 +350,7 @@ static int delete_xbc(const char *path)
+ 		ret = fstat(fd, &stat);
+ 		if (!ret)
+ 			ret = ftruncate(fd, stat.st_size
+-					- size - 8 - BOOTCONFIG_MAGIC_LEN);
++					- size - BOOTCONFIG_FOOTER_SIZE);
+ 		if (ret)
+ 			ret = -errno;
+ 	} /* Ignore if there is no boot config in initrd */
+@@ -376,8 +380,7 @@ static int apply_xbc(const char *path, const char *xbc_path)
+ 	csum = xbc_calc_checksum(buf, size);
  
- echo "Double/single quotes test"
--echo "key = '\"string\"';" > $TEMPCONF
-+printf "key = '\"string\"';" > $TEMPCONF
- $BOOTCONF -a $TEMPCONF $INITRD
- $BOOTCONF $INITRD > $TEMPCONF
- cat $TEMPCONF
+ 	/* Backup the bootconfig data */
+-	data = calloc(size + BOOTCONFIG_ALIGN +
+-		      sizeof(uint32_t) + sizeof(uint32_t) + BOOTCONFIG_MAGIC_LEN, 1);
++	data = calloc(size + BOOTCONFIG_ALIGN + BOOTCONFIG_FOOTER_SIZE, 1);
+ 	if (!data)
+ 		return -ENOMEM;
+ 	memcpy(data, buf, size);
+@@ -425,7 +428,7 @@ static int apply_xbc(const char *path, const char *xbc_path)
+ 	}
+ 
+ 	/* To align up the total size to BOOTCONFIG_ALIGN, get padding size */
+-	total_size = stat.st_size + size + sizeof(uint32_t) * 2 + BOOTCONFIG_MAGIC_LEN;
++	total_size = stat.st_size + size + BOOTCONFIG_FOOTER_SIZE;
+ 	pad = ((total_size + BOOTCONFIG_ALIGN - 1) & (~BOOTCONFIG_ALIGN_MASK)) - total_size;
+ 	size += pad;
+ 
 
