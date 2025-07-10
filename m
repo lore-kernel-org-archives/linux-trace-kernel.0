@@ -1,48 +1,36 @@
 Received: from relay.hostedemail.com (smtprelay0015.hostedemail.com [216.40.44.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49C4642A9D;
-	Thu, 10 Jul 2025 17:09:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3A2E21A43D;
+	Thu, 10 Jul 2025 19:34:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752167351; cv=none; b=JB+fOlXWzCA8I51/3qES+lJT9tZPrElVns1Y9XI1a18TxJl4MHyBGs0pWFKt5ImLTav/AC1Hr07ebOJAdoae9F/LwFQCfK7HD8asA3kJTUCNgjP+8Vx+c/OOMHkXEMGpQWt4IgnMBQZO79e7HGoJLsAZqxoqc8imhLXba8B3O4w=
+	t=1752176058; cv=none; b=kesc6wg55osaVX4lH/3GnA6lzxvUZBZvyIk2yzLJUUD28fz0BCSKyDUGcoxDxc7WnvcZpYSxkf8q6YiVPNaN74XFO+Xm93NtoDz2KEoXKDT9kJ0Eu1MidQF6jNZOeIHY24v9IqHosk/Rdbn8baoHbYn2sDwQDOJ9XO/HjeH4rDY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752167351; c=relaxed/simple;
-	bh=fnSrmvINOTQCBaTJNNf92+lWkybHVGjaYPdxfM+hCjc=;
+	s=arc-20240116; t=1752176058; c=relaxed/simple;
+	bh=HQmL8qC/NJpVN+Y9DU6iB7BsPtcSr1FwNmcTw1svsfw=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=qJ0auJqoPDW7jv2k8sPVwI6qYNmeBxX3/enCi49tnZEkO12vVPtEHh8ada3BaKeRoWXK0uw20u4koUNJwNGCsBgg5g3o3bfxIBXdEzSg4wUmjlgtQfComTlLi2T9Ny0i0b5lWyXVADE4WVudD7koHZYkW4f/SWLqzB7rxuX+p9Y=
+	 MIME-Version:Content-Type; b=mWn7SD5yvThDCbHX+zXsNg+X1S+PovC9m/IhadNnzpFN3SnBjep1TUQzxKpgJRBBQwsNCW6eZuM4PB1OSQrPNvW1wrTiHlyDMTcRQd2ihTRwIKGI+lh01+pTNLeUooz5OmSAbHydYLekEEm1TUDEwQSDdyv3/dO5T+OHDv+vZ/o=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.15
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf06.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay04.hostedemail.com (Postfix) with ESMTP id 01A4B1A0374;
-	Thu, 10 Jul 2025 17:09:05 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf06.hostedemail.com (Postfix) with ESMTPA id C0FA92000F;
-	Thu, 10 Jul 2025 17:09:00 +0000 (UTC)
-Date: Thu, 10 Jul 2025 13:08:59 -0400
+Received: from omf08.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay08.hostedemail.com (Postfix) with ESMTP id 15BEE140F6F;
+	Thu, 10 Jul 2025 19:34:13 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf08.hostedemail.com (Postfix) with ESMTPA id 0578420026;
+	Thu, 10 Jul 2025 19:34:10 +0000 (UTC)
+Date: Thu, 10 Jul 2025 15:34:09 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
-To: Jens Remus <jremus@linux.ibm.com>
-Cc: Steven Rostedt <rostedt@kernel.org>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org, x86@kernel.org,
- Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Josh Poimboeuf <jpoimboe@kernel.org>,
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, Jiri
- Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Thomas
- Gleixner <tglx@linutronix.de>, Andrii Nakryiko <andrii@kernel.org>, Indu
- Bhagat <indu.bhagat@oracle.com>, "Jose E. Marchesi" <jemarch@gnu.org>, Beau
- Belgrave <beaub@linux.microsoft.com>, Linus Torvalds
- <torvalds@linux-foundation.org>, Andrew Morton <akpm@linux-foundation.org>,
- Jens Axboe <axboe@kernel.dk>, Florian Weimer <fweimer@redhat.com>, Sam
- James <sam@gentoo.org>, Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik
- <gor@linux.ibm.com>
-Subject: Re: [PATCH v13 02/14] unwind_user: Add frame pointer support
-Message-ID: <20250710130859.41f3d5d0@batman.local.home>
-In-Reply-To: <155f22cb-b986-4d22-a853-6de49a1c2e03@linux.ibm.com>
-References: <20250708012239.268642741@kernel.org>
-	<20250708012357.982692711@kernel.org>
-	<d3279556-9bb6-429d-a037-fe279c5e3c67@linux.ibm.com>
-	<20250710112147.41585f6a@batman.local.home>
-	<155f22cb-b986-4d22-a853-6de49a1c2e03@linux.ibm.com>
+To: Tengda Wu <wutengda@huaweicloud.com>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Shuah Khan <shuah@kernel.org>, Yuanhe Shu
+ <xiangzao@linux.alibaba.com>, linux-trace-kernel@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH -next] selftests/ftrace: Prevent potential failure in
+ subsystem-enable test case
+Message-ID: <20250710153409.3135fb17@batman.local.home>
+In-Reply-To: <20250710130134.591066-1-wutengda@huaweicloud.com>
+References: <20250710130134.591066-1-wutengda@huaweicloud.com>
 X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -52,30 +40,102 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Stat-Signature: depqztwu8wiqfietk8fu8n7763s51ws5
-X-Rspamd-Server: rspamout01
-X-Rspamd-Queue-Id: C0FA92000F
+X-Stat-Signature: hbn5tzpcwd5ghuwt5pssryo7et9px9pj
+X-Rspamd-Server: rspamout07
+X-Rspamd-Queue-Id: 0578420026
 X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1+01n35r8VXAY4UbJG9hSOyN+nC70zKvas=
-X-HE-Tag: 1752167340-156481
-X-HE-Meta: U2FsdGVkX1/tlcw3ZQtrsCXf5B3curUZeKn1VNU/to0VOeOauQxGd7Ve6hk7iq3DF8ewqmO7sODtFQ5ZuXg6O4v3iz/2FcMy2S94Q4hRg5Gtcn4ls6WHO6ovHxSi015cjB18I0oDgln5oKHSm4zpRu5Jiiusb6hlzrWJFcvnUna7+zW4uqbulKgPd9VBCbx0V/H/57o8NMWGQYCt7glbYmmvLSL6HNDO8jD5HmRFbP5LKDXYfN2y2LSVe9GPv60jJ7AZxAma5JlegirY/AVxAsHZCIJld95RxpTxpH9C2jG9opLBFqbRftwzaHzzQd2YI5VgRVOuh3c4a+ahCEkV8iTM+vQd6rEY
+X-Session-ID: U2FsdGVkX19ny7HmihNTvti8NVpFB1Jp8hNcklJzZc4=
+X-HE-Tag: 1752176050-153866
+X-HE-Meta: U2FsdGVkX1//K8elZUG++8hVHzegozmIyXvruB1fQfVLOaf3/LlwE2lUGVSEyrYP89mNBXwdjJmv2OlMflHCchCyJz1WMymp9xY1fLX9bUxUqTiRfyiwZzUV9a3Ws1kf7LCKLMeOqeHEmLZfkhAgnBSyS3Wzj8mOrAsqa9bpqKM9lRx2fM5L56/o7jyurhWx6v/LAIQzarUhuHOkfvTxK3nL5LofiRQpc/HvwR7zZAN18O/989aWVnv2hr2zDSoI53wA0U135iRaMjT58WTMvxC/enWrFBmswzt6lNF2Ci42+6k6Tlp15vtw5KmZK3nhvy7TPP1L2ShfVIOg7B5Ar2CS0ShiSB8zG9eI5GpKMwUeycMTxMUbPxBUGzzr4Ap2
 
-On Thu, 10 Jul 2025 17:41:36 +0200
-Jens Remus <jremus@linux.ibm.com> wrote:
+On Thu, 10 Jul 2025 13:01:34 +0000
+Tengda Wu <wutengda@huaweicloud.com> wrote:
 
-> cfa + frame->ra_off could be aligned by chance.  So could
-> cfa + frame->fp_off be as well of course.
+
 > 
-> On s390 the CFA must be aligned (as the SP must be aligned) and the
-> FP and RA offsets from CFA must be aligned, as pointer / 64-bit integers
-> (such as 64-bit register values) must be aligned as well.
+> Fixes: 1a4ea83a6e67 ("selftests/ftrace: Limit length in subsystem-enable tests")
+> Signed-off-by: Tengda Wu <wutengda@huaweicloud.com>
+> ---
+>  .../selftests/ftrace/test.d/event/subsystem-enable.tc     | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
 > 
-> So the CFA (and/or offset), FP offset, and RA offset could be validated
-> individually.  Not sure if that would be over engineering though.
+> diff --git a/tools/testing/selftests/ftrace/test.d/event/subsystem-enable.tc b/tools/testing/selftests/ftrace/test.d/event/subsystem-enable.tc
+> index b7c8f29c09a9..3a28adc7b727 100644
+> --- a/tools/testing/selftests/ftrace/test.d/event/subsystem-enable.tc
+> +++ b/tools/testing/selftests/ftrace/test.d/event/subsystem-enable.tc
+> @@ -19,8 +19,8 @@ echo 'sched:*' > set_event
+>  yield
+>  
+>  count=`head -n 100 trace | grep -v ^# | awk '{ print $5 }' | sort -u | wc -l`
+> -if [ $count -lt 3 ]; then
+> -    fail "at least fork, exec and exit events should be recorded"
+> +if [ $count -eq 0 ]; then
+> +    fail "none of scheduler events are recorded"
+>  fi
+>  
+>  do_reset
+> @@ -30,8 +30,8 @@ echo 1 > events/sched/enable
+>  yield
+>  
+>  count=`head -n 100 trace | grep -v ^# | awk '{ print $5 }' | sort -u | wc -l`
+> -if [ $count -lt 3 ]; then
+> -    fail "at least fork, exec and exit events should be recorded"
+> +if [ $count -eq 0 ]; then
+> +    fail "none of scheduler events are recorded"
 
-I wonder if we should just validate that cfa is aligned? Would that work?
+So if there's a bug that causes the system enable to only enable a
+single event, this will no longer catch it?
 
-I would think that ra_off and fp_off should be aligned as well and if
-cfa is aligned then it would still be aligned when adding those offsets.
+I rather not let the slide.
+
+Can you test this to see if this works for you?
 
 -- Steve
+
+diff --git a/tools/testing/selftests/ftrace/test.d/event/subsystem-enable.tc b/tools/testing/selftests/ftrace/test.d/event/subsystem-enable.tc
+index b7c8f29c09a9..46a9e6d92730 100644
+--- a/tools/testing/selftests/ftrace/test.d/event/subsystem-enable.tc
++++ b/tools/testing/selftests/ftrace/test.d/event/subsystem-enable.tc
+@@ -14,11 +14,32 @@ fail() { #msg
+     exit_fail
+ }
+ 
++check_unique() {
++    cat trace_pipe | grep -v '^#' | awk '
++	BEGIN { cnt = 0; }
++	{
++	    for (i = 0; i < cnt; i++) {
++		if (event[i] == $5) {
++		    break;
++		}
++	    }
++	    if (i == cnt) {
++		event[cnt++] = $5;
++		if (cnt > 2) {
++		    exit;
++		}
++	    }
++	}
++	END {
++	    printf "%d", cnt;
++	}'
++}
++
+ echo 'sched:*' > set_event
+ 
+ yield
+ 
+-count=`head -n 100 trace | grep -v ^# | awk '{ print $5 }' | sort -u | wc -l`
++count=`check_unique`
+ if [ $count -lt 3 ]; then
+     fail "at least fork, exec and exit events should be recorded"
+ fi
+@@ -29,7 +50,7 @@ echo 1 > events/sched/enable
+ 
+ yield
+ 
+-count=`head -n 100 trace | grep -v ^# | awk '{ print $5 }' | sort -u | wc -l`
++count=`check_unique`
+ if [ $count -lt 3 ]; then
+     fail "at least fork, exec and exit events should be recorded"
+ fi
