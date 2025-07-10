@@ -1,37 +1,31 @@
 Received: from relay.hostedemail.com (smtprelay0012.hostedemail.com [216.40.44.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A931274665;
-	Thu, 10 Jul 2025 13:53:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E10B2E406;
+	Thu, 10 Jul 2025 14:02:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752155612; cv=none; b=uXlqkffWILXYKzQAYCWBVyJYPauVubpdapCzhEvdyueTvfZmm0BSvFmtpNQHLzyLichCaZL1XTZv93/oFVUPa2Zub6a3oTxunWIEWrIXw75UtZktBnOmvmkuYepf72bUo/g2/8d6QGJeuZtCN5hsGGMrTPIiwQ2uq0PvG559YRM=
+	t=1752156136; cv=none; b=Z9LJawLMXyhF3VmoJl9naXPfMYMwH9Ne9Ednt4dYR3zCqxLkrKW6N2DLIjH+Lc7dH8yXaz35FXEx0RC6P6qoj01mZcO52zV7zRSJjPUxnLV7KZbZctRl0NiBknAGoRHTTlLHquwvlbeAFlt3hSN7WbcOYF/7+Off117+yAUyKeI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752155612; c=relaxed/simple;
-	bh=8tgmd27PZJO+f1MkLCVnDaaj/lGU7A5SeFzrYU6FRDQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=lAa6Dyzdxlo6Qob3m5ePkhIa6htuK3SAU1uE9rCMWDSEXccqkKkWRg9bI7npVhbLMgx2FT/E45g0gjK5jj6k3YmiU6+qH3ciaF6ikRw7M5tvVPuqDdNpA2N9w96LWT1I7+yBcnCZIIvgj1rN5r/u74YaQeN3zIh2aeF9yA0axSw=
+	s=arc-20240116; t=1752156136; c=relaxed/simple;
+	bh=Ijmbj3xOzEkLZirDypj5Z1yFCDCFkMyCGXynqHEowqE=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=ZTvlHWxpbTll/xg5WfHCTcY6edn6OkhHylStIM9eDZKH5j49kKENb1iVQpRYNRV81meG9Nw6CEqUgLbMH9JrtD8GJOObtSIdjKiqHfAUHBjZo324AE7PAb2Qq2xWxZWZHkBdR6tN5BOUJCAk2Zd2OJ9DibVcjaU1HbH1Ra45dcc=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.12
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf12.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay08.hostedemail.com (Postfix) with ESMTP id 0DCE01401B6;
-	Thu, 10 Jul 2025 13:53:29 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf12.hostedemail.com (Postfix) with ESMTPA id 52B9A1D;
-	Thu, 10 Jul 2025 13:53:27 +0000 (UTC)
-Date: Thu, 10 Jul 2025 09:53:27 -0400
+Received: from omf01.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay01.hostedemail.com (Postfix) with ESMTP id 8C5341D72E1;
+	Thu, 10 Jul 2025 13:56:29 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf01.hostedemail.com (Postfix) with ESMTPA id 064BD60016;
+	Thu, 10 Jul 2025 13:56:27 +0000 (UTC)
+Date: Thu, 10 Jul 2025 09:56:28 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] tracing: Remove "__attribute__()" from the type
- field of event format
-Message-ID: <20250710095327.69144489@batman.local.home>
-In-Reply-To: <20250710224520.4eaf514db761ecaaee9bc1e1@kernel.org>
-References: <175197567999.977073.8989204607899013923.stgit@mhiramat.tok.corp.google.com>
-	<175197568917.977073.2201559708302320631.stgit@mhiramat.tok.corp.google.com>
-	<20250709131107.397a3278@batman.local.home>
-	<20250710224520.4eaf514db761ecaaee9bc1e1@kernel.org>
+To: LKML <linux-kernel@vger.kernel.org>, Linux trace kernel
+ <linux-trace-kernel@vger.kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>
+Subject: [PATCH] tracing: Fix comment in trace_module_remove_events()
+Message-ID: <20250710095628.42ed6b06@batman.local.home>
 X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -41,28 +35,36 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: 52B9A1D
-X-Stat-Signature: 19tnw31sz843bq1nxpccj6tyzqa9gtd1
-X-Rspamd-Server: rspamout06
+X-Stat-Signature: j78xgr3jiageuapf5kjw7y3ukrrfzj96
+X-Rspamd-Server: rspamout01
+X-Rspamd-Queue-Id: 064BD60016
 X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1+IJW9/QRzN9RaMvgA2YJBEQbpPpiLISkg=
-X-HE-Tag: 1752155607-777588
-X-HE-Meta: U2FsdGVkX1/utthPu7SJsfJznStU8xu1t7c1F0+n0Qc/Sv43I2mLOqApnVtRsNU9P9I00h1nwTh9j1lkFQD4aWnvy1GHvXDv+dlz7H5am82nlUnmvxnI+bBppuwEMQstbIsTQLmHcr29Ugw+LqynCSU9rRLpdh6/zbi+5LN46c9NG+K00gsIDKcfximup5oOVwkFQVRdfBpJfUKgyK+tZOulovsO+8OhbgiLnExZxsRbRCxH81y2ewcCu1gLSMd3sKt58hr/WvCdjcUDXwQsGVSWGSwWwxbCjroDPFNnSgbW8auL7wL43OySw5hMlfofXgqqFsjFQlLys/RMiMP6Zp96noa/GyI7
+X-Session-ID: U2FsdGVkX1/hSOZpqMxsj0Oy5LhnPgKNXsqWB23nXSE=
+X-HE-Tag: 1752155787-452959
+X-HE-Meta: U2FsdGVkX18XxSX59ydGaeGJ9fZSwp9EuqxEtW6ncX+B95PalRV2/+aGk2VxgOf9zOCjNbknIWvwQv73jqFUUybeIQPCAHoW1WXsuVL6F+LeMAROsP6pUJk0wQPYu8tsC6HKhBwSfE1L+W8a1gNrQBn/3E4lv+hNkvJ+tSirlHrtkAsdzeWD8Y5s1j3vO9zZPhuwuvHgoTZfHp6clpthhvtlYdU4JtAZE1k1lIjo/pwpLP/yyXK3SNCoV/2iF9dc12Zp3XoIgUkmO+NX43rOd3JaMq7NYpL2yYO8yNSoBt7PE9Yw90tl/zqwiDKkQL7NcRHwu4focvq7F1L4L3//kEj5mwMNWJzb8+mAttKZkaPDhjnAIVXYTANmK66ZZ9u5
 
-On Thu, 10 Jul 2025 22:45:20 +0900
-Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
+From: Steven Rostedt <rostedt@goodmis.org>
 
-> > And it doesn't free after allocation because it only does the
-> > allocation for events that will never be freed. For modules, it
-> > registers the allocated string so it will be freed on unload.  
-> 
-> What happen if the tracepoint in module has the __attribute__?
-> (or enum etc?)
+Fix typo "allocade" -> "allocated".
 
-It adds the string to a linked list via add_str_to_module(). When the
-module is unloaded, it searches the link list "module_strings" for all
-the strings registered under that module and frees it.
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+ kernel/trace/trace_events.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-See trace_module_remove_events().
+diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
+index 120531268abf..cdd4993d4a4a 100644
+--- a/kernel/trace/trace_events.c
++++ b/kernel/trace/trace_events.c
+@@ -3695,7 +3695,7 @@ static void trace_module_remove_events(struct module *mod)
+ 		if (call->module == mod)
+ 			__trace_remove_event_call(call);
+ 	}
+-	/* Check for any strings allocade for this module */
++	/* Check for any strings allocated for this module */
+ 	list_for_each_entry_safe(modstr, m, &module_strings, next) {
+ 		if (modstr->module != mod)
+ 			continue;
+-- 
+2.47.2
 
--- Steve
