@@ -1,36 +1,50 @@
 Received: from relay.hostedemail.com (smtprelay0015.hostedemail.com [216.40.44.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3A2E21A43D;
-	Thu, 10 Jul 2025 19:34:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 270A118FDAF;
+	Thu, 10 Jul 2025 20:52:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752176058; cv=none; b=kesc6wg55osaVX4lH/3GnA6lzxvUZBZvyIk2yzLJUUD28fz0BCSKyDUGcoxDxc7WnvcZpYSxkf8q6YiVPNaN74XFO+Xm93NtoDz2KEoXKDT9kJ0Eu1MidQF6jNZOeIHY24v9IqHosk/Rdbn8baoHbYn2sDwQDOJ9XO/HjeH4rDY=
+	t=1752180730; cv=none; b=l+8CVal4X9iN8zpmbr6qgQd2kRS5tTa+Yw0MNps3LSRx8nCNCHP7XHDroP4dELs1Y4pXj6cHmadN7Niq3GJ4yMsw0gFUlA+CQ66v0DC/CCNnyekiSgSysSG5NngG4ma+l6H1kxoV0Mj5XdSiNgwQ24Iu5r58xKQ2aIOgbnlhCDY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752176058; c=relaxed/simple;
-	bh=HQmL8qC/NJpVN+Y9DU6iB7BsPtcSr1FwNmcTw1svsfw=;
+	s=arc-20240116; t=1752180730; c=relaxed/simple;
+	bh=rdpdVgXpSuN5GUouenqoitYbhNcxEsDckDUzI/BHjH4=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=mWn7SD5yvThDCbHX+zXsNg+X1S+PovC9m/IhadNnzpFN3SnBjep1TUQzxKpgJRBBQwsNCW6eZuM4PB1OSQrPNvW1wrTiHlyDMTcRQd2ihTRwIKGI+lh01+pTNLeUooz5OmSAbHydYLekEEm1TUDEwQSDdyv3/dO5T+OHDv+vZ/o=
+	 MIME-Version:Content-Type; b=ZqbisRhXb2wc4ScyYNhDN6s9q/u/4+rjhV/21Ma4ZhPe7ygBGquNPP0x+tlLNesMkCAjCNAa6mLqWo5lcFvSfcW/8azSbP0SXg/nFAsDBo/prMUfUG48VrW7jBHqJBoaiXcCikqNvuvgjEDQgiy0qouh2um6FByEiiPoesU2FBY=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.15
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf08.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay08.hostedemail.com (Postfix) with ESMTP id 15BEE140F6F;
-	Thu, 10 Jul 2025 19:34:13 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf08.hostedemail.com (Postfix) with ESMTPA id 0578420026;
-	Thu, 10 Jul 2025 19:34:10 +0000 (UTC)
-Date: Thu, 10 Jul 2025 15:34:09 -0400
+Received: from omf02.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay08.hostedemail.com (Postfix) with ESMTP id 8DE67141589;
+	Thu, 10 Jul 2025 20:52:03 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf02.hostedemail.com (Postfix) with ESMTPA id 3D0368000F;
+	Thu, 10 Jul 2025 20:51:58 +0000 (UTC)
+Date: Thu, 10 Jul 2025 16:51:57 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
-To: Tengda Wu <wutengda@huaweicloud.com>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Shuah Khan <shuah@kernel.org>, Yuanhe Shu
- <xiangzao@linux.alibaba.com>, linux-trace-kernel@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH -next] selftests/ftrace: Prevent potential failure in
- subsystem-enable test case
-Message-ID: <20250710153409.3135fb17@batman.local.home>
-In-Reply-To: <20250710130134.591066-1-wutengda@huaweicloud.com>
-References: <20250710130134.591066-1-wutengda@huaweicloud.com>
+To: Jens Remus <jremus@linux.ibm.com>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Steven Rostedt
+ <rostedt@kernel.org>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org, x86@kernel.org,
+ Masami Hiramatsu <mhiramat@kernel.org>, Josh Poimboeuf
+ <jpoimboe@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar
+ <mingo@kernel.org>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim
+ <namhyung@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Andrii
+ Nakryiko <andrii@kernel.org>, Indu Bhagat <indu.bhagat@oracle.com>, "Jose
+ E. Marchesi" <jemarch@gnu.org>, Beau Belgrave <beaub@linux.microsoft.com>,
+ Linus Torvalds <torvalds@linux-foundation.org>, Andrew Morton
+ <akpm@linux-foundation.org>, Jens Axboe <axboe@kernel.dk>, Florian Weimer
+ <fweimer@redhat.com>, Sam James <sam@gentoo.org>, Heiko Carstens
+ <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>
+Subject: Re: [PATCH v8 06/12] unwind_user/sframe: Wire up unwind_user to
+ sframe
+Message-ID: <20250710165157.6e0936e9@batman.local.home>
+In-Reply-To: <20250710113039.04a431d9@batman.local.home>
+References: <20250708021115.894007410@kernel.org>
+	<20250708021159.386608979@kernel.org>
+	<d7d840f6-dc79-471e-9390-a58da20b6721@efficios.com>
+	<20250708161124.23d775f4@gandalf.local.home>
+	<a52c508c-2596-49d1-bbe8-8a92599714f6@linux.ibm.com>
+	<20250710113039.04a431d9@batman.local.home>
 X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -40,102 +54,105 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Stat-Signature: hbn5tzpcwd5ghuwt5pssryo7et9px9pj
-X-Rspamd-Server: rspamout07
-X-Rspamd-Queue-Id: 0578420026
+X-Stat-Signature: wg7qym5dhdouejzwatqiqc4e5qk7187g
+X-Rspamd-Server: rspamout08
+X-Rspamd-Queue-Id: 3D0368000F
 X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX19ny7HmihNTvti8NVpFB1Jp8hNcklJzZc4=
-X-HE-Tag: 1752176050-153866
-X-HE-Meta: U2FsdGVkX1//K8elZUG++8hVHzegozmIyXvruB1fQfVLOaf3/LlwE2lUGVSEyrYP89mNBXwdjJmv2OlMflHCchCyJz1WMymp9xY1fLX9bUxUqTiRfyiwZzUV9a3Ws1kf7LCKLMeOqeHEmLZfkhAgnBSyS3Wzj8mOrAsqa9bpqKM9lRx2fM5L56/o7jyurhWx6v/LAIQzarUhuHOkfvTxK3nL5LofiRQpc/HvwR7zZAN18O/989aWVnv2hr2zDSoI53wA0U135iRaMjT58WTMvxC/enWrFBmswzt6lNF2Ci42+6k6Tlp15vtw5KmZK3nhvy7TPP1L2ShfVIOg7B5Ar2CS0ShiSB8zG9eI5GpKMwUeycMTxMUbPxBUGzzr4Ap2
+X-Session-ID: U2FsdGVkX1+mONFfQ6muWwYwXRfXDA3phF2+Buj9aKA=
+X-HE-Tag: 1752180718-389422
+X-HE-Meta: U2FsdGVkX1/zGKDFsZIgwyfki/04YelAXL/CFwu3MtOfXh6MZ5lRKF3ALBt+23EQkFXrhZX0apSeNji5UwtoDJEzfKleuVKUoeIUEpmmx2Dlr3nTJZQUIC7wtAKnLGNevwpoWajqHSworsX4u4xTiO9CSxpHAafYXbo54zws1+uq5puNSaw2s1yeVIDomuFBka9UcQ9N3a7CG1BN5G4LGrVjXPAyhKWZiEUyatNITEWgz17DDP/EigFdcbeejGG+XfCA8GJUcI1aesPTBZaVnU66ZKu5DfSMywjJFYa6Vkh87K6Is6hn6NoDiAKU5NorPOCHMNKDEPz+ARMuHInYoUsixw9PqYUm/SQkeY4zX0j042jsxMHAIVsLG4OuFRQb
 
-On Thu, 10 Jul 2025 13:01:34 +0000
-Tengda Wu <wutengda@huaweicloud.com> wrote:
+On Thu, 10 Jul 2025 11:30:39 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-
+> I'm not too comfortable with the compat patches at this stage. I'm
+> thinking of separating out the compat patches, and just reject the
+> deferred unwind if the task is in compat mode (forcing perf or other
+> tracers to use whatever it uses today).
 > 
-> Fixes: 1a4ea83a6e67 ("selftests/ftrace: Limit length in subsystem-enable tests")
-> Signed-off-by: Tengda Wu <wutengda@huaweicloud.com>
-> ---
->  .../selftests/ftrace/test.d/event/subsystem-enable.tc     | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
-> 
-> diff --git a/tools/testing/selftests/ftrace/test.d/event/subsystem-enable.tc b/tools/testing/selftests/ftrace/test.d/event/subsystem-enable.tc
-> index b7c8f29c09a9..3a28adc7b727 100644
-> --- a/tools/testing/selftests/ftrace/test.d/event/subsystem-enable.tc
-> +++ b/tools/testing/selftests/ftrace/test.d/event/subsystem-enable.tc
-> @@ -19,8 +19,8 @@ echo 'sched:*' > set_event
->  yield
->  
->  count=`head -n 100 trace | grep -v ^# | awk '{ print $5 }' | sort -u | wc -l`
-> -if [ $count -lt 3 ]; then
-> -    fail "at least fork, exec and exit events should be recorded"
-> +if [ $count -eq 0 ]; then
-> +    fail "none of scheduler events are recorded"
->  fi
->  
->  do_reset
-> @@ -30,8 +30,8 @@ echo 1 > events/sched/enable
->  yield
->  
->  count=`head -n 100 trace | grep -v ^# | awk '{ print $5 }' | sort -u | wc -l`
-> -if [ $count -lt 3 ]; then
-> -    fail "at least fork, exec and exit events should be recorded"
-> +if [ $count -eq 0 ]; then
-> +    fail "none of scheduler events are recorded"
+> I'll take Mathieu's patches and merge them with Josh's, but make them a
+> separate series.
 
-So if there's a bug that causes the system enable to only enable a
-single event, this will no longer catch it?
-
-I rather not let the slide.
-
-Can you test this to see if this works for you?
+So I'm removing the two compat patches from the series for now and plan
+to replace it with this:
 
 -- Steve
 
-diff --git a/tools/testing/selftests/ftrace/test.d/event/subsystem-enable.tc b/tools/testing/selftests/ftrace/test.d/event/subsystem-enable.tc
-index b7c8f29c09a9..46a9e6d92730 100644
---- a/tools/testing/selftests/ftrace/test.d/event/subsystem-enable.tc
-+++ b/tools/testing/selftests/ftrace/test.d/event/subsystem-enable.tc
-@@ -14,11 +14,32 @@ fail() { #msg
-     exit_fail
- }
+
+From: Steven Rostedt <rostedt@goodmis.org>
+Subject: [PATCH] unwind deferred/x86: Do not defer stack tracing for compat
+ tasks
+
+Currently compat tasks are not supported. If a deferred user space stack
+trace is requested on a compat task, it should fail and return an error so
+that the profiler can use an alternative approach (whatever it uses
+today).
+
+Add a arch_unwind_can_defer() macro that is called in
+unwind_deferred_request(). Have x86 define it to a function that makes
+sure that the current task is running in 64bit mode, and if it is not, it
+returns false. This will cause unwind_deferred_request() to error out and
+the caller can use the current method of user space stack tracing.
+
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+ arch/x86/include/asm/unwind_user.h | 11 +++++++++++
+ include/linux/unwind_deferred.h    |  5 +++++
+ kernel/unwind/deferred.c           |  3 +++
+ 3 files changed, 19 insertions(+)
+
+diff --git a/arch/x86/include/asm/unwind_user.h b/arch/x86/include/asm/unwind_user.h
+index 8597857bf896..220fd0a6e175 100644
+--- a/arch/x86/include/asm/unwind_user.h
++++ b/arch/x86/include/asm/unwind_user.h
+@@ -2,6 +2,17 @@
+ #ifndef _ASM_X86_UNWIND_USER_H
+ #define _ASM_X86_UNWIND_USER_H
  
-+check_unique() {
-+    cat trace_pipe | grep -v '^#' | awk '
-+	BEGIN { cnt = 0; }
-+	{
-+	    for (i = 0; i < cnt; i++) {
-+		if (event[i] == $5) {
-+		    break;
-+		}
-+	    }
-+	    if (i == cnt) {
-+		event[cnt++] = $5;
-+		if (cnt > 2) {
-+		    exit;
-+		}
-+	    }
-+	}
-+	END {
-+	    printf "%d", cnt;
-+	}'
-+}
++#ifdef CONFIG_IA32_EMULATION
++/* Currently compat mode is not supported for deferred stack trace */
++static inline bool arch_unwind_can_defer(void)
++{
++	struct pt_regs *regs = task_pt_regs(current);
 +
- echo 'sched:*' > set_event
++	return user_64bit_mode(regs);
++}
++# define arch_unwind_can_defer	arch_unwind_can_defer
++#endif /* CONFIG_IA32_EMULATION */
++
+ #define ARCH_INIT_USER_FP_FRAME							\
+ 	.cfa_off	= (s32)sizeof(long) *  2,				\
+ 	.ra_off		= (s32)sizeof(long) * -1,				\
+diff --git a/include/linux/unwind_deferred.h b/include/linux/unwind_deferred.h
+index a9d5b100d6b2..6ba4fff066dd 100644
+--- a/include/linux/unwind_deferred.h
++++ b/include/linux/unwind_deferred.h
+@@ -16,6 +16,11 @@ struct unwind_work {
+ 	int				bit;
+ };
  
- yield
++/* Architectures can add a test to not defer unwinding */
++#ifndef arch_unwind_can_defer
++# define arch_unwind_can_defer()	(true)
++#endif
++
+ #ifdef CONFIG_UNWIND_USER
  
--count=`head -n 100 trace | grep -v ^# | awk '{ print $5 }' | sort -u | wc -l`
-+count=`check_unique`
- if [ $count -lt 3 ]; then
-     fail "at least fork, exec and exit events should be recorded"
- fi
-@@ -29,7 +50,7 @@ echo 1 > events/sched/enable
+ #define UNWIND_PENDING_BIT	(BITS_PER_LONG - 1)
+diff --git a/kernel/unwind/deferred.c b/kernel/unwind/deferred.c
+index 039e12700d49..745144e4717c 100644
+--- a/kernel/unwind/deferred.c
++++ b/kernel/unwind/deferred.c
+@@ -236,6 +236,9 @@ int unwind_deferred_request(struct unwind_work *work, u64 *cookie)
  
- yield
+ 	*cookie = 0;
  
--count=`head -n 100 trace | grep -v ^# | awk '{ print $5 }' | sort -u | wc -l`
-+count=`check_unique`
- if [ $count -lt 3 ]; then
-     fail "at least fork, exec and exit events should be recorded"
- fi
++	if (!arch_unwind_can_defer())
++		return -EINVAL;
++
+ 	if ((current->flags & (PF_KTHREAD | PF_EXITING)) ||
+ 	    !user_mode(task_pt_regs(current)))
+ 		return -EINVAL;
+-- 
+2.47.2
+
