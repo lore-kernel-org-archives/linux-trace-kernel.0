@@ -1,23 +1,60 @@
-Received: from relay16.mail.gandi.net (relay16.mail.gandi.net [217.70.178.236])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFE8423E226;
-	Thu, 10 Jul 2025 11:54:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.178.236
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79A922512D5;
+	Thu, 10 Jul 2025 12:28:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752148449; cv=none; b=PvxNrT2hiLOF0bM+o2sjRHSiHGj6T8fXxKCwpeRRUxHpV3sQHuupnHdsstmpssINtIgKpa68tAufjFLI8i24++olB07Qt3axVWXPWkkBxKNtv8EiPHdI8c7KfG8iMhtR7AezJriVUnjuTo3RZ9z8Pw0hfBHmrpP15ZWJ2Fa2wn4=
+	t=1752150518; cv=none; b=gjn563bye2mgQv6BDRoSPsWg57GFdukp3KIEoeRiUT9TdFq3EIZnXuySm7Z3aMje6HiNpB2gDvphI39zBnPEp2Ao0ZAX22DlegqA+VgVAVvrpXcbv5WScHqUTJEWPc82erfRReZuYUaBOyMADlrXOWJifHdt6QrYegHCwfrY1Lc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752148449; c=relaxed/simple;
-	bh=MVHqixVBLg0H9xE1bSL31ysVRFUE+Oyp0iIqhY4ebuw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=DgIIZOkpZrBR5hqAGNcSjJ3BrPBai2x8iijbosFq5gtqfS9J46IzjtlbVUviJRg3hdQI8xUEzkQHrOLPwvnYntopM+MVopN953pC6cglf9fXAmX4zWkU9ga5Gd8RjOa+w5TB00Cv/kq1bIuo2JZ/tkFeBqABbMe2TynE6WVChqk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr; spf=pass smtp.mailfrom=ghiti.fr; arc=none smtp.client-ip=217.70.178.236
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ghiti.fr
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 670B8449CD;
-	Thu, 10 Jul 2025 11:53:54 +0000 (UTC)
-Message-ID: <f5b1fc77-d180-4df7-b8f6-0cb0ca4a187a@ghiti.fr>
-Date: Thu, 10 Jul 2025 13:53:53 +0200
+	s=arc-20240116; t=1752150518; c=relaxed/simple;
+	bh=uVwWozQdm8dl9zMzLnAU4GJ3N1SGHAS9efDRdRXlv60=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=ZYsOel3JOB4L3VIJQXYPxaTweN780kHVp/M6FyGK0I9VmcM2wAud77hRkf7eCExe4xin39pEZ3lN1qw/KfSe4660oy+c7WHh5Kn//lcgbwbPwCDdbSjemCzVmqxPyZB+qnfScP7UYZ1Eox+qMk0rbvJUW8sr9HYazC3lW3Mxxw4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=SUKrbUkr; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="SUKrbUkr"
+Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 56A61rJS010735;
+	Thu, 10 Jul 2025 12:28:12 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=W7y3iB
+	FzU3kHVk3xzJUXtgMnwiA/4a2QpmH4yjepWvY=; b=SUKrbUkrRBEJAY2i7SeKnV
+	OAVGrjYoMGG/+NvnESJ2V87mm3+R9BgR6ih/nKy5wJAn6Tj3n6T0k1jrbYYOmt8r
+	NBvYt2qHBM/POWlJigBknGW+SkWCvln5UpSe1MtPCBGl/zgTqbcl/F2qFifH1LVn
+	5y0h5uEnztMPiiPZccSUj4HWPjRVwY0jD1wrorOtOB+sKrVfFq8yaTcIjt053XvX
+	mhKfO+Hm4J5Uiqn2b6WkqL2ImTWBlEfsuKMUQ7H+3Pm0ARuIlp9TAu+dLNDVHxfT
+	dy4t7+IeLsB4e7QmDo74nTNYBUNeY1vQhg1pmX4+NVDY7P/Mq3F9rOAsqtGZjWDw
+	==
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 47puqnkqdq-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 10 Jul 2025 12:28:12 +0000 (GMT)
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 56ABpQSE024311;
+	Thu, 10 Jul 2025 12:28:10 GMT
+Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
+	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 47qh32nabn-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 10 Jul 2025 12:28:10 +0000
+Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
+	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 56ACS76l56492344
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 10 Jul 2025 12:28:07 GMT
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 3E47220043;
+	Thu, 10 Jul 2025 12:28:07 +0000 (GMT)
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id B969520040;
+	Thu, 10 Jul 2025 12:28:06 +0000 (GMT)
+Received: from [9.152.222.235] (unknown [9.152.222.235])
+	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Thu, 10 Jul 2025 12:28:06 +0000 (GMT)
+Message-ID: <70803af5-369c-4de2-af30-70d74f1e6256@linux.ibm.com>
+Date: Thu, 10 Jul 2025 14:28:06 +0200
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -25,177 +62,109 @@ List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V2] riscv: ftrace: Fix the logic issue in DYNAMIC_FTRACE
- selection
-To: kernel test robot <lkp@intel.com>, ChenMiao <chenmiao.ku@gmail.com>,
- Linux RISCV <linux-riscv@lists.infradead.org>
-Cc: oe-kbuild-all@lists.linux.dev, Paul Walmsley <paul.walmsley@sifive.com>,
- Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
- Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Heiko Carstens <hca@linux.ibm.com>, Pu Lehui <pulehui@huawei.com>,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-References: <aG3A8Jirg+TxNza/@rli9-mobl>
+Subject: Re: [PATCH v13 02/14] unwind_user: Add frame pointer support
+From: Jens Remus <jremus@linux.ibm.com>
+To: Steven Rostedt <rostedt@kernel.org>, linux-kernel@vger.kernel.org,
+        linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org,
+        x86@kernel.org
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Josh Poimboeuf <jpoimboe@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Indu Bhagat <indu.bhagat@oracle.com>,
+        "Jose E. Marchesi" <jemarch@gnu.org>,
+        Beau Belgrave <beaub@linux.microsoft.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Jens Axboe <axboe@kernel.dk>, Florian Weimer <fweimer@redhat.com>,
+        Sam James <sam@gentoo.org>, Heiko Carstens <hca@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>
+References: <20250708012239.268642741@kernel.org>
+ <20250708012357.982692711@kernel.org>
+ <d3279556-9bb6-429d-a037-fe279c5e3c67@linux.ibm.com>
 Content-Language: en-US
-From: Alexandre Ghiti <alex@ghiti.fr>
-In-Reply-To: <aG3A8Jirg+TxNza/@rli9-mobl>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgdegtdefiecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepkfffgggfuffvvehfhfgjtgfgsehtjeertddtvdejnecuhfhrohhmpeetlhgvgigrnhgurhgvucfihhhithhiuceorghlvgigsehghhhithhirdhfrheqnecuggftrfgrthhtvghrnhepueekjeefieeikeevvefhtddtteevgefgtdffheegieegkeffueeujefhjefftdeinecuffhomhgrihhnpehgihhthhhusgdrtghomhdpkhgvrhhnvghlrdhorhhgnecukfhppedvtddtudemkeeiudemfeefkedvmegvfheltdemsgeffhdumeejtgeirgemsgehudelmegrfhgstdenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvtddtudemkeeiudemfeefkedvmegvfheltdemsgeffhdumeejtgeirgemsgehudelmegrfhgstddphhgvlhhopeglkffrggeimedvtddtudemkeeiudemfeefkedvmegvfheltdemsgeffhdumeejtgeirgemsgehudelmegrfhgstdgnpdhmrghilhhfrhhomheprghlvgigsehghhhithhirdhfrhdpnhgspghrtghpthhtohepudehpdhrtghpthhtoheplhhkphesihhnthgvlhdrtghomhdprhgtphhtthhopegthhgvnhhmihgrohdrkhhusehgmhgrihhlrdgtohhmpdhrtghpthhto
- heplhhinhhugidqrhhishgtvheslhhishhtshdrihhnfhhrrgguvggrugdrohhrghdprhgtphhtthhopehovgdqkhgsuhhilhguqdgrlhhlsehlihhsthhsrdhlihhnuhigrdguvghvpdhrtghpthhtohepphgruhhlrdifrghlmhhslhgvhiesshhifhhivhgvrdgtohhmpdhrtghpthhtohepphgrlhhmvghrsegurggssggvlhhtrdgtohhmpdhrtghpthhtoheprghouhesvggvtghsrdgsvghrkhgvlhgvhidrvgguuhdprhgtphhtthhopehrohhsthgvughtsehgohhoughmihhsrdhorhhg
+Organization: IBM Deutschland Research & Development GmbH
+In-Reply-To: <d3279556-9bb6-429d-a037-fe279c5e3c67@linux.ibm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Authority-Analysis: v=2.4 cv=FZ43xI+6 c=1 sm=1 tr=0 ts=686fb1dc cx=c_pps a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17 a=IkcTkHD0fZMA:10 a=Wb1JkmetP80A:10 a=VnNF1IyMAAAA:8 a=VwQbUJbxAAAA:8 a=xGKi6vjhqkjxjNt39fsA:9 a=3ZKOabzyN94A:10
+ a=QEXdDO2ut3YA:10
+X-Proofpoint-GUID: sJrvX2rJR0n-3zeimi9EkXiwKcJZV73C
+X-Proofpoint-ORIG-GUID: sJrvX2rJR0n-3zeimi9EkXiwKcJZV73C
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzEwMDEwNSBTYWx0ZWRfX9WHaz58xiiaQ iRbl9JwMZP3iJc8BmTDuvRm/P5xYrBk6TpSmXbjn9US8P1z7yL11slNTW400otCXgES/8sVRC0A uX5PG7sYhxMazuFbu39xr2ua+aSvmCmPEzvDlU4zfRnDo0x7JjPdSuWgI3ecdC3c6RMhwM6/ry1
+ ZPaZqY9ZQH1Q6C5ry4QRBgTr6IJ8ZkxKlVMjAtiCUeSCiFKlWtop7N4cvJoztRQxkjKNRnOKTVh 7dCDjgVGhaUAQbICdmuIeMPhvhFe73bwR4cMvaZ8qXdVWy+FnsIrFgmYsilWB0xpVaSU3KTQdp6 YrGjwdWQzvs8uLmwzIFwFQYfZW3aFMRvLinXFQV8LMcLOKx3D6cP3UzVL1jbAudVCBa78VG4Lv+
+ UwDwsPDsi0DDdACXzQlg21M4yCvhA6lio85mkq4tR6r3dhEC6u11yhUcYZAG2HwDjRY3hGKd
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-07-10_02,2025-07-09_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 mlxscore=0
+ priorityscore=1501 malwarescore=0 mlxlogscore=999 clxscore=1015
+ spamscore=0 bulkscore=0 phishscore=0 lowpriorityscore=0 impostorscore=0
+ adultscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
+ adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2507100105
 
-Hi ChenMiao,
+On 09.07.2025 12:01, Jens Remus wrote:
+> On 08.07.2025 03:22, Steven Rostedt wrote:
+>> From: Josh Poimboeuf <jpoimboe@kernel.org>
 
-On 7/9/25 03:08, kernel test robot wrote:
-> Hi ChenMiao,
->
-> kernel test robot noticed the following build errors:
->
-> [auto build test ERROR on fda589c286040d9ba2d72a0eaf0a13945fc48026]
->
-> url:    https://github.com/intel-lab-lkp/linux/commits/ChenMiao/riscv-ftrace-Fix-the-logic-issue-in-DYNAMIC_FTRACE-selection/20250706-231907
-> base:   fda589c286040d9ba2d72a0eaf0a13945fc48026
-> patch link:    https://lore.kernel.org/r/20250706151830.25091-1-chenmiao.ku%40gmail.com
-> patch subject: [PATCH V2] riscv: ftrace: Fix the logic issue in DYNAMIC_FTRACE selection
-> :::::: branch date: 2 days ago
-> :::::: commit date: 2 days ago
-> config: riscv-randconfig-r112-20250708 (attached as .config)
-> compiler: clang version 19.1.7 (https://github.com/llvm/llvm-project cd708029e0b2869e80abe31ddb175f7c35361f90)
-> reproduce: (attached as reproduce)
->
-> If you fix the issue in a separate patch/commit (i.e. not just a new version of
-> the same patch/commit), kindly add following tags
-> | Reported-by: kernel test robot <lkp@intel.com>
-> | Closes: https://lore.kernel.org/oe-kbuild-all/202507090650.YGY56SIA-lkp@intel.com/
->
-> All errors (new ones prefixed by >>):
->
->>> <instantiation>:1:14: error: operand must be a symbol with %lo/%pcrel_lo/%tprel_lo modifier or an integer in the range [-2048, 2047]
->     addi sp, sp, -FREGS_SIZE_ON_STACK
->                  ^
->     arch/riscv/kernel/mcount-dyn.S:185:2: note: while in macro instantiation
->      SAVE_ABI_REGS
->      ^
->>> <instantiation>:2:18: error: unexpected token
->      sw t0, FREGS_EPC(sp)
->                      ^
->     arch/riscv/kernel/mcount-dyn.S:185:2: note: while in macro instantiation
->      SAVE_ABI_REGS
->      ^
->     <instantiation>:3:17: error: unexpected token
->      sw x1, FREGS_RA(sp)
->                     ^
->     arch/riscv/kernel/mcount-dyn.S:185:2: note: while in macro instantiation
->      SAVE_ABI_REGS
->      ^
->     <instantiation>:7:17: error: unexpected token
->      sw x6, FREGS_T1(sp)
->                     ^
->     arch/riscv/kernel/mcount-dyn.S:185:2: note: while in macro instantiation
->      SAVE_ABI_REGS
->      ^
->     <instantiation>:9:17: error: unexpected token
->      sw x7, FREGS_T2(sp)
->                     ^
->     arch/riscv/kernel/mcount-dyn.S:185:2: note: while in macro instantiation
->      SAVE_ABI_REGS
->      ^
->     <instantiation>:10:18: error: unexpected token
->      sw x28, FREGS_T3(sp)
->                      ^
->     arch/riscv/kernel/mcount-dyn.S:185:2: note: while in macro instantiation
->      SAVE_ABI_REGS
->      ^
->     <instantiation>:11:18: error: unexpected token
->      sw x29, FREGS_T4(sp)
->                      ^
->     arch/riscv/kernel/mcount-dyn.S:185:2: note: while in macro instantiation
->      SAVE_ABI_REGS
->      ^
->     <instantiation>:12:18: error: unexpected token
->      sw x30, FREGS_T5(sp)
->                      ^
->     arch/riscv/kernel/mcount-dyn.S:185:2: note: while in macro instantiation
->      SAVE_ABI_REGS
->      ^
->     <instantiation>:13:18: error: unexpected token
->      sw x31, FREGS_T6(sp)
->                      ^
->     arch/riscv/kernel/mcount-dyn.S:185:2: note: while in macro instantiation
->      SAVE_ABI_REGS
->      ^
->     <instantiation>:16:18: error: unexpected token
->      sw x10, FREGS_A0(sp)
->                      ^
->     arch/riscv/kernel/mcount-dyn.S:185:2: note: while in macro instantiation
->      SAVE_ABI_REGS
->      ^
->     <instantiation>:17:18: error: unexpected token
->      sw x11, FREGS_A1(sp)
->                      ^
->     arch/riscv/kernel/mcount-dyn.S:185:2: note: while in macro instantiation
->      SAVE_ABI_REGS
->      ^
->     <instantiation>:18:18: error: unexpected token
->      sw x12, FREGS_A2(sp)
->                      ^
->     arch/riscv/kernel/mcount-dyn.S:185:2: note: while in macro instantiation
->      SAVE_ABI_REGS
->      ^
->     <instantiation>:19:18: error: unexpected token
->      sw x13, FREGS_A3(sp)
->                      ^
->     arch/riscv/kernel/mcount-dyn.S:185:2: note: while in macro instantiation
->      SAVE_ABI_REGS
->      ^
->     <instantiation>:20:18: error: unexpected token
->      sw x14, FREGS_A4(sp)
->                      ^
->     arch/riscv/kernel/mcount-dyn.S:185:2: note: while in macro instantiation
->      SAVE_ABI_REGS
->      ^
->     <instantiation>:21:18: error: unexpected token
->      sw x15, FREGS_A5(sp)
->                      ^
->     arch/riscv/kernel/mcount-dyn.S:185:2: note: while in macro instantiation
->      SAVE_ABI_REGS
->      ^
->     <instantiation>:22:18: error: unexpected token
->      sw x16, FREGS_A6(sp)
->                      ^
->     arch/riscv/kernel/mcount-dyn.S:185:2: note: while in macro instantiation
->      SAVE_ABI_REGS
->      ^
->     <instantiation>:23:18: error: unexpected token
->      sw x17, FREGS_A7(sp)
->                      ^
->     arch/riscv/kernel/mcount-dyn.S:185:2: note: while in macro instantiation
->      SAVE_ABI_REGS
->      ^
->     <instantiation>:25:15: error: operand must be a symbol with %lo/%pcrel_lo/%tprel_lo modifier or an integer in the range [-2048, 2047]
->      addi a0, a0, FREGS_SIZE_ON_STACK
->                   ^
->     arch/riscv/kernel/mcount-dyn.S:185:2: note: while in macro instantiation
->      SAVE_ABI_REGS
->
-> Kconfig warnings: (for reference only)
->     WARNING: unmet direct dependencies detected for DYNAMIC_FTRACE
->     Depends on [n]: FTRACE [=y] && FUNCTION_TRACER [=y] && HAVE_DYNAMIC_FTRACE [=n]
->     Selected by [y]:
->     - RISCV [=y] && FUNCTION_TRACER [=y]
+>> diff --git a/kernel/unwind/user.c b/kernel/unwind/user.c
 
-To avoid that, we should check HAVE_DYNAMIC_FTRACE too:
+>>  static int unwind_user_next(struct unwind_user_state *state)
+>>  {
+>> -	/* no implementation yet */
+>> +	struct unwind_user_frame *frame;
+>> +	unsigned long cfa = 0, fp, ra = 0;
+>> +	unsigned int shift;
+>> +
+>> +	if (state->done)
+>> +		return -EINVAL;
+>> +
+>> +	if (fp_state(state))
+>> +		frame = &fp_frame;
+>> +	else
+>> +		goto done;
+>> +
+>> +	if (frame->use_fp) {
+>> +		if (state->fp < state->sp)
 
-select DYNAMIC_FTRACE if FUNCTION_TRACER && HAVE_DYNAMIC_FTRACE
+The initial check above is correct.  I got the logic wrong.  Sorry for
+the fuss!  Do not change the check to what I came up with yesterday:
 
-That fixes the build error for me. Can you send a v3 with this change?
+> 		if (state->fp <= state->sp)
+> 
 
-Thanks,
+Below s390 particularity, that FP may be equal to FP in any frame,
+is only allowed with the initial check.
 
-Alex
+> I meanwhile came to the conclusion that for architectures, such as s390,
+> where SP at function entry == SP at call site, the FP may be equal to
+> the SP.  At least for the brief period where the FP has been setup and
+> stack allocation did not yet take place.  For most architectures this
+> can probably only occur in the topmost frame.  For s390 the FP is setup
+> after static stack allocation, so --fno-omit-frame-pointer would enforce
+> FP==SP in any frame that does not perform dynamic stack allocation.
+> 
+>> +			goto done;
+>> +		cfa = state->fp;
+>> +	} else {
+>> +		cfa = state->sp;
+>> +	}
 
+Regards,
+Jens
+-- 
+Jens Remus
+Linux on Z Development (D3303)
++49-7031-16-1128 Office
+jremus@de.ibm.com
 
->
+IBM
+
+IBM Deutschland Research & Development GmbH; Vorsitzender des Aufsichtsrats: Wolfgang Wendt; Geschäftsführung: David Faller; Sitz der Gesellschaft: Böblingen; Registergericht: Amtsgericht Stuttgart, HRB 243294
+IBM Data Privacy Statement: https://www.ibm.com/privacy/
+
