@@ -1,307 +1,348 @@
-Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BE6D279DA0;
-	Thu, 10 Jul 2025 15:57:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B2D1271441;
+	Thu, 10 Jul 2025 16:35:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752163062; cv=none; b=KhLfAHnC297TGXQ2bN+OwcysNyWTtc5k4mMwhfn0l+1WOhglS20GtUK2Z+iZSAU5gpEr+qXLvzerGEJDjbYnNUt5zm5FHjQcdY3iWJNGz8zJE4EBsgK68B3+Cd+o+36M8oIeqXAsQlH/hh5e7mU07b0S3rbUntriSzDc0avTdnE=
+	t=1752165353; cv=none; b=m8srOcf273jIrgth3nZVIdTTg3mlXzHs1XzeA47oer4QMxwAtB1YQ8Sny+2W2bUhDGEWEBSatYcQgl0mr8Ml+S5tIx1w8MvjPCm7rKwmhoqu58HP2FVr8z8Vmo57YQ04b9NM6ysnKzvpCbGNhKz4faxTQG1oXkKQjIPPufqHrQc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752163062; c=relaxed/simple;
-	bh=lFZcBY3URVFrvN1SU2OnNL6+oWxyKK5PS2R0CTUJbu0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=cl928np0ar0UnMJTwU9tgKHW4NqK9tZYT4TPpw13Yt3//W84IpRLeZ1gi1qGGS9wOa4iYS9+DfRNQM3xSeV8malJRdbiseTLgAN9I1yX287/Kq/TWMYmPRZlqijjp6FXbkhWHWWdLWtXVScZChM0FRDs4jHKzin8+mH5g1QLkiw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Cmn4w510; arc=none smtp.client-ip=209.85.218.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1752165353; c=relaxed/simple;
+	bh=WeMe4aAFoj8CCDszqd7zTqOwo34LjyucoBCk9E/sNAg=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=YDRxU1NGvmDP3sLvkoto9T/Ki/F0EnptVq8RqoG3AcenY4CyL05fsNBJ3+r6vHntoDlOAmsl7w35AEjLtvawwq1o8yc+zloZdomB7vZrhT1rAudwKgU/h2YewDIghg5x5XxkCb+etkZuzfmEM1/hK+V4mTSFTEIxWEWoOCFURg4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=YLHh1Chu; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Cmn4w510"
-Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-ae3be3eabd8so244399966b.1;
-        Thu, 10 Jul 2025 08:57:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1752163057; x=1752767857; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=gyFwto6duT8k2J6PKEM3Zq5e4wrdh9RzheYLqE65elg=;
-        b=Cmn4w510/dOnHMjGxqxzKEEENYUfboPRoS24tVcSSxXI2RwMWAHh7w8+Y/FWmCeYIV
-         yU/w8aw9enJkA2mQOtHGydLtNUe1+x+e1s4i4a4yo3jgzwu7Ngpawa5Es0v5NUS2RI0K
-         VgXxvdccW2yNkR8UCGphmadRdfXkLs4bb9NAiD1oawBO7BP6+bN1mh6azNXxcxOeaU9v
-         Mlmvw7lMWXsC7CisyMN/tWeEmYxIHUx9y4kKFMrQVL3UKKwipFp4hF+CCPTtsRNsHZCB
-         Ah/kNOBMTT1HdG/uanE9YY5YZxCTAUtBK5e/2n3LzX0dhDOLENS+65L8CJ93MNAjzrJA
-         3Mpg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1752163057; x=1752767857;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=gyFwto6duT8k2J6PKEM3Zq5e4wrdh9RzheYLqE65elg=;
-        b=YQXZgQnj3H2CFwiAhhMHt4l5AWfrz7kYaRMSBjGOW/WDHmyXKZH357R+daLFCVhH5H
-         4XeUmfq/lBltdrxlD5GBG7ZfpTQLDDKbyzvc5RI2B3DXBuYrzHiUKBVqKNqAkTMeHRQl
-         DGlJ2lFXmcQWECldanJANW/QD805DSJy2UE3qu4zB7UfneVk2KToz2alGNsXQmMdW7Yl
-         XVLvM7KeWciKsq0JKAO7N0YicB9UvfbuTD3ITn0Kg8SmIiW4F/MKhyEWkgaAeTuqAwa5
-         UYnSWuB7c6dBWJRiZaHgsho2gpwP/glstFB8R5zwuf6xiah7/CPUhKJ5ZL/LFfAOxIOx
-         2uog==
-X-Forwarded-Encrypted: i=1; AJvYcCVnAjIMK0Bv11rWROXB45wO0o3y3iIGOhxjU2jqYfUsCdVRwQNtjvf5lBwXQuI04yPGmizYICkMKcYQ/R51MgwqUY4D@vger.kernel.org, AJvYcCXvCkcH/yEZA7R6KI4N5FiuGtV9/NYLDApfFBWN8Y5oSP0svm83+tLv6bAV2wfVk3QW827CX/AZgEw/sKE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YySqqlkHFMRkGfJO3mvvBC2EyhRcOiXr7BhXRoLT+fjrkdAcDAW
-	UuIl10JQ0e2nMNXidwYvuthux1VlNH3A62maK9dn4QBtIm/bg2Mw2DgoWGRF/SOMp13FnSplmLR
-	DoUyC8JTTtzvwkX8zGaUYrSveRreH62Q=
-X-Gm-Gg: ASbGncvtfBP8Hw/+Hw6iah79vqofR5fZz3dzJs8/aClFiE0ytTu3aBBsppnR/uT1QlS
-	ENTK1zHnxpS0aAyOKss2YumSWOM7ZJupWPSNXURvP3wUQnQZyVvKVMLaC03wr2F1HRAF68Q6/x/
-	2BtcKCPJ+OCMuFvlGWOx7Ij7MGDC/ViAR/lJoPJvZZ8UY=
-X-Google-Smtp-Source: AGHT+IFDjIdZXlAQN0o9gcQft8bdsUVAZWKdpbA0Umxqt7nH2dtNl+9/RBdEY1alElz7unAk1Y4PgfpvrjfUKZtYKls=
-X-Received: by 2002:a17:907:7f24:b0:ae3:bb0a:1ce9 with SMTP id
- a640c23a62f3a-ae6e23472c0mr495513166b.12.1752163056970; Thu, 10 Jul 2025
- 08:57:36 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="YLHh1Chu"
+Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 56ACJJav010221;
+	Thu, 10 Jul 2025 16:35:31 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:date:from:in-reply-to:message-id
+	:mime-version:references:subject:to; s=pp1; bh=a2QnHXfSjqiJcYDdg
+	SLbDeTmwAq43ZDRI3vvdFCTwp8=; b=YLHh1ChufYeacNR0LblxBCU/PThYOBH8u
+	imhtso02uTaZA8Mpeh9k355DJe76tMqMTgwcAUDLEtCsVsJ4rEECUXzo5UVkF3E3
+	RC741d2bALqf5232cXqw2hefs7FAJy/DxpG/ieMUC8hHcT2KyX61NICNFujYwcLG
+	PQMvfBwsuYEDX0olG4rUgwmSyTKa3W91EhlmmKPxiYzBTmRmIHbk4xw+54Le8EM+
+	kiZDlnkVHEN3H+1IYc0ccZ0RaBe6cSeSFGFimprTO4bulr/Bg0kX0O/JqlS7Bjcs
+	H/E0Ej3IG8m9NDvT3ZJZRA7WFYLwOZqbG+nJET6umdjS2FPhvaVvw==
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 47svb26ate-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 10 Jul 2025 16:35:30 +0000 (GMT)
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 56AEdWPo003123;
+	Thu, 10 Jul 2025 16:35:30 GMT
+Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 47qfvmpenb-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 10 Jul 2025 16:35:30 +0000
+Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
+	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 56AGZQSN13304230
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 10 Jul 2025 16:35:26 GMT
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 3B65020040;
+	Thu, 10 Jul 2025 16:35:26 +0000 (GMT)
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id E9F5E2004E;
+	Thu, 10 Jul 2025 16:35:25 +0000 (GMT)
+Received: from tuxmaker.lnxne.boe (unknown [9.152.85.9])
+	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Thu, 10 Jul 2025 16:35:25 +0000 (GMT)
+From: Jens Remus <jremus@linux.ibm.com>
+To: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        bpf@vger.kernel.org, x86@kernel.org,
+        Steven Rostedt <rostedt@kernel.org>
+Cc: Jens Remus <jremus@linux.ibm.com>, Heiko Carstens <hca@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Ilya Leoshkevich <iii@linux.ibm.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Josh Poimboeuf <jpoimboe@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Indu Bhagat <indu.bhagat@oracle.com>,
+        "Jose E. Marchesi" <jemarch@gnu.org>,
+        Beau Belgrave <beaub@linux.microsoft.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Jens Axboe <axboe@kernel.dk>, Florian Weimer <fweimer@redhat.com>,
+        Sam James <sam@gentoo.org>
+Subject: [RFC PATCH v1 07/16] unwind_user: Enable archs that do not necessarily save RA
+Date: Thu, 10 Jul 2025 18:35:13 +0200
+Message-ID: <20250710163522.3195293-8-jremus@linux.ibm.com>
+X-Mailer: git-send-email 2.48.1
+In-Reply-To: <20250710163522.3195293-1-jremus@linux.ibm.com>
+References: <20250710163522.3195293-1-jremus@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <aG3A8Jirg+TxNza/@rli9-mobl> <f5b1fc77-d180-4df7-b8f6-0cb0ca4a187a@ghiti.fr>
- <CAKxVwge4=cagaVDesKWe0BE88U0YmNn5LLDJvJG=F7EEP2=-LQ@mail.gmail.com> <7204f633-5b35-41ce-b847-7dfbaedbac47@ghiti.fr>
-In-Reply-To: <7204f633-5b35-41ce-b847-7dfbaedbac47@ghiti.fr>
-From: Miao Chen <chenmiao.ku@gmail.com>
-Date: Thu, 10 Jul 2025 23:56:59 +0800
-X-Gm-Features: Ac12FXwpHGHrqNJMYOCJrRAIJPU1S5sbSrf6kJb2PGDBA5iQ-Twvb8GXnLf4awU
-Message-ID: <CAKxVwgdoK6wSt-1LNZ8Tn3MPaETR58RThbcdydijrKPbfpE68g@mail.gmail.com>
-Subject: Re: [PATCH V2] riscv: ftrace: Fix the logic issue in DYNAMIC_FTRACE selection
-To: Alexandre Ghiti <alex@ghiti.fr>
-Cc: kernel test robot <lkp@intel.com>, Linux RISCV <linux-riscv@lists.infradead.org>, 
-	oe-kbuild-all@lists.linux.dev, Paul Walmsley <paul.walmsley@sifive.com>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
-	Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	Heiko Carstens <hca@linux.ibm.com>, Pu Lehui <pulehui@huawei.com>, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzEwMDEzOSBTYWx0ZWRfX1fZS5HfnoCKn covDhxdqgyesad77GoNAbsLf1DclPuRfgEHTX/rMgCd3FMzzYBKqlAItLiFmtU/50q3h9UgiK30 E8SWutf3k4txyxRNer1l38dJLamaB0kiKnddvJiQE0/Z1fgZDD0llZ8cpuOE/FykWh852HFIYH3
+ 3aGHC2LXmEKlUQz4o7Es5KITLWz4g5qVhKmq3ArnY3WmrYpYtsiGmDvio6ckhxAoumjHrQHtYl5 HVn9NfFYtI65vvfAfSP0/U0ZHu56xqrg8JhEAruTvDS9VU11EazxLQOjRViFXLRqgxAOY1bcnRF IC+g46pN2iJzoU6VtFegUeZgfGdjsApzcI0ku4z0tteKAvIG5YHjy4qriOJ4YSZgnSWJfOpjDgE
+ mbf0pRFujsE9YXRmngshM5O9Ah85Z6XQxIygK24AR3w3E09vWByl6DtSLVexzos2SLmz81kH
+X-Authority-Analysis: v=2.4 cv=Y774sgeN c=1 sm=1 tr=0 ts=686febd3 cx=c_pps a=3Bg1Hr4SwmMryq2xdFQyZA==:117 a=3Bg1Hr4SwmMryq2xdFQyZA==:17 a=Wb1JkmetP80A:10 a=VnNF1IyMAAAA:8 a=-JoFLTHXnnuQBJsBKZgA:9
+X-Proofpoint-ORIG-GUID: FzkgWJBakICnhs7gazxtaS3x9RVSQtcu
+X-Proofpoint-GUID: FzkgWJBakICnhs7gazxtaS3x9RVSQtcu
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-07-10_04,2025-07-09_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 adultscore=0
+ priorityscore=1501 malwarescore=0 bulkscore=0 impostorscore=0
+ lowpriorityscore=0 phishscore=0 suspectscore=0 mlxlogscore=999 mlxscore=0
+ clxscore=1015 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2507100139
 
-Hello Alex,
+Not all architectures have the return address (RA) in user space saved
+on the stack on function entry, as x86-64 does due to its CALL
+instruction pushing the RA onto the stack.  Architectures/ABIs, such as
+s390, also do not necessarily enforce to save the RA in user space on
+the stack in the function prologue or even at all, for instance in leaf
+functions.
 
-I found where the error is, but there's a problem here:
+Treat a RA offset from CFA of zero as indication that the RA is not
+saved on the stack.  In that case obtain the RA from the RA register.
+Allow the SP to be unchanged in the topmost frame, for architectures
+where SP at function entry == SP at call site.
 
-config PORTABLE
-  bool
-  default !NONPORTABLE
-  select EFI
-  select MMU
-  select OF
+Note that treating a RA offset from CFA of zero as indication that
+the RA is not saved on the stack additionally allows for architectures,
+such as s390, where the frame pointer (FP) may be saved without the RA
+being saved as well.  Provided that such architectures represent this
+in SFrame by encoding the "missing" RA offset using a padding RA offset
+with a value of zero.
 
-select HAVE_DYNAMIC_FTRACE if !XIP_KERNEL && MMU &&
-(CLANG_SUPPORTS_DYNAMIC_FTRACE || GCC_SUPPORTS_DYNAMIC_FTRACE)
+Signed-off-by: Jens Remus <jremus@linux.ibm.com>
+---
+ arch/Kconfig                      |  5 +++++
+ include/linux/ptrace.h            |  8 ++++++++
+ include/linux/sframe.h            |  4 ++--
+ include/linux/unwind_user_types.h |  1 +
+ kernel/unwind/sframe.c            | 21 +++++++++++---------
+ kernel/unwind/user.c              | 32 ++++++++++++++++++++++---------
+ 6 files changed, 51 insertions(+), 20 deletions(-)
 
-Because HAVE_DYNAMIC_FTRACE depends on the MMU=E2=80=94of course, it's
-reasonable for DYNAMIC_FTRACE to depend on the MMU=E2=80=94*but since
-NONPORTABLE is enabled by default, this causes PORTABLE to default to
-n, thereby preventing the MMU from being enabled*. So, should I change
-NONPORTABLE to default to n?
+diff --git a/arch/Kconfig b/arch/Kconfig
+index 86eec85cb898..367eaf7e62e0 100644
+--- a/arch/Kconfig
++++ b/arch/Kconfig
+@@ -450,6 +450,11 @@ config HAVE_UNWIND_USER_SFRAME
+ 	bool
+ 	select UNWIND_USER
+ 
++config HAVE_USER_RA_REG
++	bool
++	help
++	  The arch passes the return address (RA) in user space in a register.
++
+ config SFRAME_VALIDATION
+ 	bool "Enable .sframe section debugging"
+ 	depends on HAVE_UNWIND_USER_SFRAME
+diff --git a/include/linux/ptrace.h b/include/linux/ptrace.h
+index 90507d4afcd6..a245c8586673 100644
+--- a/include/linux/ptrace.h
++++ b/include/linux/ptrace.h
+@@ -397,6 +397,14 @@ static inline void user_single_step_report(struct pt_regs *regs)
+ #define exception_ip(x) instruction_pointer(x)
+ #endif
+ 
++#ifndef user_return_address
++static inline unsigned long user_return_address(const struct pt_regs *regs)
++{
++	WARN_ON_ONCE(1);
++	return 0;
++}
++#endif
++
+ extern int task_current_syscall(struct task_struct *target, struct syscall_info *info);
+ 
+ extern void sigaction_compat_abi(struct k_sigaction *act, struct k_sigaction *oact);
+diff --git a/include/linux/sframe.h b/include/linux/sframe.h
+index b79c5ec09229..e3c6414f1a17 100644
+--- a/include/linux/sframe.h
++++ b/include/linux/sframe.h
+@@ -33,7 +33,7 @@ extern void sframe_free_mm(struct mm_struct *mm);
+ extern int sframe_add_section(unsigned long sframe_start, unsigned long sframe_end,
+ 			      unsigned long text_start, unsigned long text_end);
+ extern int sframe_remove_section(unsigned long sframe_addr);
+-extern int sframe_find(unsigned long ip, struct unwind_user_frame *frame);
++extern int sframe_find(unsigned long ip, struct unwind_user_frame *frame, bool topmost);
+ 
+ static inline bool current_has_sframe(void)
+ {
+@@ -52,7 +52,7 @@ static inline int sframe_add_section(unsigned long sframe_start, unsigned long s
+ 	return -ENOSYS;
+ }
+ static inline int sframe_remove_section(unsigned long sframe_addr) { return -ENOSYS; }
+-static inline int sframe_find(unsigned long ip, struct unwind_user_frame *frame) { return -ENOSYS; }
++static inline int sframe_find(unsigned long ip, struct unwind_user_frame *frame, bool topmost) { return -ENOSYS; }
+ static inline bool current_has_sframe(void) { return false; }
+ 
+ #endif /* CONFIG_HAVE_UNWIND_USER_SFRAME */
+diff --git a/include/linux/unwind_user_types.h b/include/linux/unwind_user_types.h
+index 8050a3237a03..adef01698bb3 100644
+--- a/include/linux/unwind_user_types.h
++++ b/include/linux/unwind_user_types.h
+@@ -35,6 +35,7 @@ struct unwind_user_state {
+ 	unsigned long fp;
+ 	struct arch_unwind_user_state arch;
+ 	enum unwind_user_type type;
++	bool topmost;
+ 	bool done;
+ };
+ 
+diff --git a/kernel/unwind/sframe.c b/kernel/unwind/sframe.c
+index acbf791e713b..5bfaf06e6cd2 100644
+--- a/kernel/unwind/sframe.c
++++ b/kernel/unwind/sframe.c
+@@ -222,12 +222,8 @@ static __always_inline int __read_fre(struct sframe_section *sec,
+ 	offset_count--;
+ 
+ 	ra_off = sec->ra_off;
+-	if (!ra_off) {
+-		if (!offset_count--) {
+-			dbg_sec_uaccess("zero offset_count, can't find ra_off\n");
+-			return -EFAULT;
+-		}
+-
++	if (!ra_off && offset_count) {
++		offset_count--;
+ 		UNSAFE_GET_USER_INC(ra_off, cur, offset_size, Efault);
+ 	}
+ 
+@@ -257,7 +253,8 @@ static __always_inline int __read_fre(struct sframe_section *sec,
+ 
+ static __always_inline int __find_fre(struct sframe_section *sec,
+ 				      struct sframe_fde *fde, unsigned long ip,
+-				      struct unwind_user_frame *frame)
++				      struct unwind_user_frame *frame,
++				      bool topmost)
+ {
+ 	unsigned char fde_type = SFRAME_FUNC_FDE_TYPE(fde->info);
+ 	struct sframe_fre *fre, *prev_fre = NULL;
+@@ -310,6 +307,12 @@ static __always_inline int __find_fre(struct sframe_section *sec,
+ 		return -EINVAL;
+ 	fre = prev_fre;
+ 
++	if ((!IS_ENABLED(CONFIG_HAVE_USER_RA_REG) || !topmost) && !fre->ra_off) {
++		dbg_sec_uaccess("fde addr 0x%x: zero ra_off\n",
++				fde->start_addr);
++		return -EINVAL;
++	}
++
+ 	frame->cfa_off = fre->cfa_off;
+ 	frame->ra_off  = fre->ra_off;
+ 	frame->fp_off  = fre->fp_off;
+@@ -319,7 +322,7 @@ static __always_inline int __find_fre(struct sframe_section *sec,
+ 	return 0;
+ }
+ 
+-int sframe_find(unsigned long ip, struct unwind_user_frame *frame)
++int sframe_find(unsigned long ip, struct unwind_user_frame *frame, bool topmost)
+ {
+ 	struct mm_struct *mm = current->mm;
+ 	struct sframe_section *sec;
+@@ -343,7 +346,7 @@ int sframe_find(unsigned long ip, struct unwind_user_frame *frame)
+ 	if (ret)
+ 		goto end;
+ 
+-	ret = __find_fre(sec, &fde, ip, frame);
++	ret = __find_fre(sec, &fde, ip, frame, topmost);
+ end:
+ 	user_read_access_end();
+ 
+diff --git a/kernel/unwind/user.c b/kernel/unwind/user.c
+index 45c8c6932ba6..03a6da36192f 100644
+--- a/kernel/unwind/user.c
++++ b/kernel/unwind/user.c
+@@ -3,6 +3,7 @@
+ * Generic interfaces for unwinding user space
+ */
+ #include <linux/kernel.h>
++#include <linux/ptrace.h>
+ #include <linux/sched.h>
+ #include <linux/sched/task_stack.h>
+ #include <linux/unwind_user.h>
+@@ -53,6 +54,7 @@ static int unwind_user_next(struct unwind_user_state *state)
+ 	struct unwind_user_frame *frame;
+ 	struct unwind_user_frame _frame;
+ 	unsigned long cfa = 0, sp, fp, ra = 0;
++	bool topmost = state->topmost;
+ 	unsigned int shift;
+ 
+ 	if (state->done)
+@@ -63,7 +65,7 @@ static int unwind_user_next(struct unwind_user_state *state)
+ 	} else if (sframe_state(state)) {
+ 		/* sframe expects the frame to be local storage */
+ 		frame = &_frame;
+-		if (sframe_find(state->ip, frame)) {
++		if (sframe_find(state->ip, frame, topmost)) {
+ 			if (!IS_ENABLED(CONFIG_HAVE_UNWIND_USER_FP))
+ 				goto done;
+ 			frame = &fp_frame;
+@@ -86,18 +88,28 @@ static int unwind_user_next(struct unwind_user_state *state)
+ 
+ 	/* Get the Stack Pointer (SP) */
+ 	sp = cfa + frame->sp_val_off;
+-	/* Make sure that stack is not going in wrong direction */
+-	if (sp <= state->sp)
++	/*
++	 * Make sure that stack is not going in wrong direction.  Allow SP
++	 * to be unchanged for the topmost frame, by subtracting topmost,
++	 * which is either 0 or 1.
++	 */
++	if (sp <= state->sp - topmost)
+ 		goto done;
+ 
+-	/* Make sure that the address is word aligned */
+-	shift = sizeof(long) == 4 || compat_fp_state(state) ? 2 : 3;
+-	if ((cfa + frame->ra_off) & ((1 << shift) - 1))
+-		goto done;
+ 
+ 	/* Get the Return Address (RA) */
+-	if (unwind_get_user_long(ra, cfa + frame->ra_off, state))
+-		goto done;
++	if (frame->ra_off) {
++		/* Make sure that the address is word aligned */
++		shift = sizeof(long) == 4 || compat_fp_state(state) ? 2 : 3;
++		if ((cfa + frame->ra_off) & ((1 << shift) - 1))
++			goto done;
++		if (unwind_get_user_long(ra, cfa + frame->ra_off, state))
++			goto done;
++	} else {
++		if (!IS_ENABLED(CONFIG_HAVE_USER_RA_REG) || !topmost)
++			goto done;
++		ra = user_return_address(task_pt_regs(current));
++	}
+ 
+ 	/* Get the Frame Pointer (FP) */
+ 	if (frame->fp_off && unwind_get_user_long(fp, cfa + frame->fp_off, state))
+@@ -110,6 +122,7 @@ static int unwind_user_next(struct unwind_user_state *state)
+ 
+ 	arch_unwind_user_next(state);
+ 
++	state->topmost = false;
+ 	return 0;
+ 
+ done:
+@@ -140,6 +153,7 @@ static int unwind_user_start(struct unwind_user_state *state)
+ 	state->ip = instruction_pointer(regs);
+ 	state->sp = user_stack_pointer(regs);
+ 	state->fp = frame_pointer(regs);
++	state->topmost = true;
+ 
+ 	arch_unwind_user_init(state, regs);
+ 
+-- 
+2.48.1
 
-Thanks,
-
-Alex
-
-Alexandre Ghiti <alex@ghiti.fr> =E4=BA=8E2025=E5=B9=B47=E6=9C=8810=E6=97=A5=
-=E5=91=A8=E5=9B=9B 22:33=E5=86=99=E9=81=93=EF=BC=9A
->
->
-> On 7/10/25 14:34, Miao Chen wrote:
-> > Hello Alex,
-> >
-> > Sure, I'll checkout it. Btw, this is my first commit, so can u tell
-> > how to reproduce failed case? Using the reproduce and .config.gz gived
-> > by build-bot?
->
->
-> Yes exactly!
->
->
-> >
-> > Thanks,
-> >
-> > Chen Miao
-> >
-> > Alexandre Ghiti <alex@ghiti.fr> =E4=BA=8E2025=E5=B9=B47=E6=9C=8810=E6=
-=97=A5=E5=91=A8=E5=9B=9B 19:53=E5=86=99=E9=81=93=EF=BC=9A
-> >> Hi ChenMiao,
-> >>
-> >> On 7/9/25 03:08, kernel test robot wrote:
-> >>> Hi ChenMiao,
-> >>>
-> >>> kernel test robot noticed the following build errors:
-> >>>
-> >>> [auto build test ERROR on fda589c286040d9ba2d72a0eaf0a13945fc48026]
-> >>>
-> >>> url:    https://github.com/intel-lab-lkp/linux/commits/ChenMiao/riscv=
--ftrace-Fix-the-logic-issue-in-DYNAMIC_FTRACE-selection/20250706-231907
-> >>> base:   fda589c286040d9ba2d72a0eaf0a13945fc48026
-> >>> patch link:    https://lore.kernel.org/r/20250706151830.25091-1-chenm=
-iao.ku%40gmail.com
-> >>> patch subject: [PATCH V2] riscv: ftrace: Fix the logic issue in DYNAM=
-IC_FTRACE selection
-> >>> :::::: branch date: 2 days ago
-> >>> :::::: commit date: 2 days ago
-> >>> config: riscv-randconfig-r112-20250708 (attached as .config)
-> >>> compiler: clang version 19.1.7 (https://github.com/llvm/llvm-project =
-cd708029e0b2869e80abe31ddb175f7c35361f90)
-> >>> reproduce: (attached as reproduce)
-> >>>
-> >>> If you fix the issue in a separate patch/commit (i.e. not just a new =
-version of
-> >>> the same patch/commit), kindly add following tags
-> >>> | Reported-by: kernel test robot <lkp@intel.com>
-> >>> | Closes: https://lore.kernel.org/oe-kbuild-all/202507090650.YGY56SIA=
--lkp@intel.com/
-> >>>
-> >>> All errors (new ones prefixed by >>):
-> >>>
-> >>>>> <instantiation>:1:14: error: operand must be a symbol with %lo/%pcr=
-el_lo/%tprel_lo modifier or an integer in the range [-2048, 2047]
-> >>>      addi sp, sp, -FREGS_SIZE_ON_STACK
-> >>>                   ^
-> >>>      arch/riscv/kernel/mcount-dyn.S:185:2: note: while in macro insta=
-ntiation
-> >>>       SAVE_ABI_REGS
-> >>>       ^
-> >>>>> <instantiation>:2:18: error: unexpected token
-> >>>       sw t0, FREGS_EPC(sp)
-> >>>                       ^
-> >>>      arch/riscv/kernel/mcount-dyn.S:185:2: note: while in macro insta=
-ntiation
-> >>>       SAVE_ABI_REGS
-> >>>       ^
-> >>>      <instantiation>:3:17: error: unexpected token
-> >>>       sw x1, FREGS_RA(sp)
-> >>>                      ^
-> >>>      arch/riscv/kernel/mcount-dyn.S:185:2: note: while in macro insta=
-ntiation
-> >>>       SAVE_ABI_REGS
-> >>>       ^
-> >>>      <instantiation>:7:17: error: unexpected token
-> >>>       sw x6, FREGS_T1(sp)
-> >>>                      ^
-> >>>      arch/riscv/kernel/mcount-dyn.S:185:2: note: while in macro insta=
-ntiation
-> >>>       SAVE_ABI_REGS
-> >>>       ^
-> >>>      <instantiation>:9:17: error: unexpected token
-> >>>       sw x7, FREGS_T2(sp)
-> >>>                      ^
-> >>>      arch/riscv/kernel/mcount-dyn.S:185:2: note: while in macro insta=
-ntiation
-> >>>       SAVE_ABI_REGS
-> >>>       ^
-> >>>      <instantiation>:10:18: error: unexpected token
-> >>>       sw x28, FREGS_T3(sp)
-> >>>                       ^
-> >>>      arch/riscv/kernel/mcount-dyn.S:185:2: note: while in macro insta=
-ntiation
-> >>>       SAVE_ABI_REGS
-> >>>       ^
-> >>>      <instantiation>:11:18: error: unexpected token
-> >>>       sw x29, FREGS_T4(sp)
-> >>>                       ^
-> >>>      arch/riscv/kernel/mcount-dyn.S:185:2: note: while in macro insta=
-ntiation
-> >>>       SAVE_ABI_REGS
-> >>>       ^
-> >>>      <instantiation>:12:18: error: unexpected token
-> >>>       sw x30, FREGS_T5(sp)
-> >>>                       ^
-> >>>      arch/riscv/kernel/mcount-dyn.S:185:2: note: while in macro insta=
-ntiation
-> >>>       SAVE_ABI_REGS
-> >>>       ^
-> >>>      <instantiation>:13:18: error: unexpected token
-> >>>       sw x31, FREGS_T6(sp)
-> >>>                       ^
-> >>>      arch/riscv/kernel/mcount-dyn.S:185:2: note: while in macro insta=
-ntiation
-> >>>       SAVE_ABI_REGS
-> >>>       ^
-> >>>      <instantiation>:16:18: error: unexpected token
-> >>>       sw x10, FREGS_A0(sp)
-> >>>                       ^
-> >>>      arch/riscv/kernel/mcount-dyn.S:185:2: note: while in macro insta=
-ntiation
-> >>>       SAVE_ABI_REGS
-> >>>       ^
-> >>>      <instantiation>:17:18: error: unexpected token
-> >>>       sw x11, FREGS_A1(sp)
-> >>>                       ^
-> >>>      arch/riscv/kernel/mcount-dyn.S:185:2: note: while in macro insta=
-ntiation
-> >>>       SAVE_ABI_REGS
-> >>>       ^
-> >>>      <instantiation>:18:18: error: unexpected token
-> >>>       sw x12, FREGS_A2(sp)
-> >>>                       ^
-> >>>      arch/riscv/kernel/mcount-dyn.S:185:2: note: while in macro insta=
-ntiation
-> >>>       SAVE_ABI_REGS
-> >>>       ^
-> >>>      <instantiation>:19:18: error: unexpected token
-> >>>       sw x13, FREGS_A3(sp)
-> >>>                       ^
-> >>>      arch/riscv/kernel/mcount-dyn.S:185:2: note: while in macro insta=
-ntiation
-> >>>       SAVE_ABI_REGS
-> >>>       ^
-> >>>      <instantiation>:20:18: error: unexpected token
-> >>>       sw x14, FREGS_A4(sp)
-> >>>                       ^
-> >>>      arch/riscv/kernel/mcount-dyn.S:185:2: note: while in macro insta=
-ntiation
-> >>>       SAVE_ABI_REGS
-> >>>       ^
-> >>>      <instantiation>:21:18: error: unexpected token
-> >>>       sw x15, FREGS_A5(sp)
-> >>>                       ^
-> >>>      arch/riscv/kernel/mcount-dyn.S:185:2: note: while in macro insta=
-ntiation
-> >>>       SAVE_ABI_REGS
-> >>>       ^
-> >>>      <instantiation>:22:18: error: unexpected token
-> >>>       sw x16, FREGS_A6(sp)
-> >>>                       ^
-> >>>      arch/riscv/kernel/mcount-dyn.S:185:2: note: while in macro insta=
-ntiation
-> >>>       SAVE_ABI_REGS
-> >>>       ^
-> >>>      <instantiation>:23:18: error: unexpected token
-> >>>       sw x17, FREGS_A7(sp)
-> >>>                       ^
-> >>>      arch/riscv/kernel/mcount-dyn.S:185:2: note: while in macro insta=
-ntiation
-> >>>       SAVE_ABI_REGS
-> >>>       ^
-> >>>      <instantiation>:25:15: error: operand must be a symbol with %lo/=
-%pcrel_lo/%tprel_lo modifier or an integer in the range [-2048, 2047]
-> >>>       addi a0, a0, FREGS_SIZE_ON_STACK
-> >>>                    ^
-> >>>      arch/riscv/kernel/mcount-dyn.S:185:2: note: while in macro insta=
-ntiation
-> >>>       SAVE_ABI_REGS
-> >>>
-> >>> Kconfig warnings: (for reference only)
-> >>>      WARNING: unmet direct dependencies detected for DYNAMIC_FTRACE
-> >>>      Depends on [n]: FTRACE [=3Dy] && FUNCTION_TRACER [=3Dy] && HAVE_=
-DYNAMIC_FTRACE [=3Dn]
-> >>>      Selected by [y]:
-> >>>      - RISCV [=3Dy] && FUNCTION_TRACER [=3Dy]
-> >> To avoid that, we should check HAVE_DYNAMIC_FTRACE too:
-> >>
-> >> select DYNAMIC_FTRACE if FUNCTION_TRACER && HAVE_DYNAMIC_FTRACE
-> >>
-> >> That fixes the build error for me. Can you send a v3 with this change?
-> >>
-> >> Thanks,
-> >>
-> >> Alex
-> >>
-> >>
-> > _______________________________________________
-> > linux-riscv mailing list
-> > linux-riscv@lists.infradead.org
-> > http://lists.infradead.org/mailman/listinfo/linux-riscv
