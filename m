@@ -1,117 +1,329 @@
-Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
+Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C89219D8A2
-	for <linux-trace-kernel@vger.kernel.org>; Thu, 10 Jul 2025 13:25:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7982725F995;
+	Thu, 10 Jul 2025 13:42:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752153919; cv=none; b=U1xTKTuGuocEsV07NyzXK9URqthxhgkqg9J8powQSqIiyeWMYpUeB85ma2ycrzz41+r1kwvrhUJVpxl1JniHZn/mQ7sE2MZqf2eZAB0wZKkZwzu1gmVMobx9H+Ep3YEuMZUlebPV8pjLlHq9mWxMchp3BD6yMpRgC2D8yFR0O18=
+	t=1752154959; cv=none; b=PARKbmz/GvE2li7JMjK+j1a+LAV8qKYdWKiNOOWe1R6Z/zWnC+i23tgi8t/YqQrieC6H6VRL5f+KqJW1KEawLRyqonIUsc1P3ItC00+aDJzlLxcBCOovFazAm8N2STGA5IMn+75pYFkP9r13N9W0WvjhUvL5CHgIb38UrYTHUAQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752153919; c=relaxed/simple;
-	bh=uKsWEy5y9VSiG6NkzSuXx6HrcjOJV5515mwFzVhA0fU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=TYJRVMhpSm27FWGYxuPi9KJrNgcYRv4vfDz1ZPJl4Fjvw0hVQQqTlcQBLlpCWR8NymPbz9XiK3BVRQol1mHvO2QQHxL8oh1/EyYY1QcZQ89PZtF5YfIPtDPQL7lkB5HtqVe/m4UDQ0mrnPlYLs0BJOgl+pijeCodDo73xv7Ozoo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=cduuu6q6; arc=none smtp.client-ip=209.85.221.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1752154959; c=relaxed/simple;
+	bh=/rxMRUEkRaHDUkR38UuqRy4okB2bxejm4JUutNL8sjI=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=j1XN8DrYwH2Dy/RrZ6mMqZGsQwbKIOrKMqGj1+ElexOoSQsNhAPBbWyClJ8yq9EENF+WI526Pe02dMS+5EEbsJv2dYRoCFcP6G97JebWTI3dDIZa26AUZ/xujoazHIntyREOnI13ZYFSIY02WvcXJN/kOSe5Yktawv9GIGrVH7Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nZXfde5E; arc=none smtp.client-ip=209.85.221.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="cduuu6q6"
-Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-3a6d1369d4eso586527f8f.2
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 10 Jul 2025 06:25:17 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nZXfde5E"
+Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-3b49ffbb31bso622785f8f.3;
+        Thu, 10 Jul 2025 06:42:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1752153916; x=1752758716; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=M/eGn7NuVMyg3g4kV1aRC05vflk6dbUfw0/9TsPqLpQ=;
-        b=cduuu6q6KKXwSk7dmq9imGdNfCneaOSXsmgLU0aUCILl2B0lATP2lcrGuCfsqIpANs
-         +XrW72Vb6+i7SdPGrcShBHwIk9YP4z7rigEGumgZ9w231XBDHWCw4RbxXfoEuU/mbvt6
-         aBNjRl7t0/URhN+ZOkNP30bi9lKzwUtdAGkEq+QgJvWs2mfBl3cic2zEU24h0V5CWa0M
-         3hU3uGbJgc30kVX3BrV0Jpb8Lwler/MmcHqbHhdJ2K4tuDgw1eM6ShDIQrQmSMOeeqgK
-         5wjN/qVpCuiyfpDrVpNAvvqRfS78V9hAbu5nggS8TRsC2IMT3dTsYBdO2bY8G+umxkxK
-         uNsA==
+        d=gmail.com; s=20230601; t=1752154956; x=1752759756; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=2qxPYSfmGEaTu7IijXvJrNmea414EV9xmgzdA7CtC60=;
+        b=nZXfde5EHAy1vGqWk1UgCloxQ2wvrK5bg6ARRGIrfU2K4vDy/ddZD1eZROHfPqcXjF
+         4t2SsLAdmj0sk9Azb5Feul2GWhedPfTwdyYeS3XxBJMANRgnk1VJEOxlCaordeTLAX4G
+         /tSErml0NE4LNqTkLWfsz7Yr1pAqXsGgmIVeYu255l8iNhDzsCdoNtQiK4/OdtaEZuzj
+         7uL1nBY7Tv+BVUsoLQn1CXQK9b32tuin+Vp3i7wqWIY8bsWsLYfM9jUatcdmayT7yXIa
+         YgtzgltrkqIMtwhGsTrxi+AcD+FF5NQKY7uJLyO3j9T/VWBeO9VPyCIXwPNQsmZmF/Bw
+         6xCQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1752153916; x=1752758716;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=M/eGn7NuVMyg3g4kV1aRC05vflk6dbUfw0/9TsPqLpQ=;
-        b=d019H5ARIiMY5rE4JLPDHE+YR++OqqLpV3qd2ltCPB5EwxI5Bu0Xse8H/dxD0AreFi
-         oDpVhI7Noap5lEBJWDJakerQd/srXN11tKi9rXZzJcfTeEYCUn2+EGqG3e24ZeDf9ZoG
-         KCM7dF1uZ5WVyiY50VdlrPKBrqwJ3BQEW3F+Osrbjlo7WYaAA551M02UryMi3VwMqSrq
-         kf6NWnfy78022Pw0oE2IVtFhtqC0z0MBJHWVlwoAtaoQgauU34kFbejHL0egm4Y121lt
-         u4mg4Z1T/65bR2jD9hWrxq4cO5sNXL4dn4QXmuQWFCIOZlZ3+nVJg/UCYyKjf/7BnVUU
-         FGsg==
-X-Forwarded-Encrypted: i=1; AJvYcCUWOZT7H1wAkCgaDZ3fQZAZbQS3TcHvBfCrtH73OEtn+lyutFxMnicAIgBwwr/Y7n8QORsjG79bZT3tVjNOfk8z10U=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzHPE49QkddyyUPhukd7V3TbegDoPIEz6a7NwgrkOh5V1xZ1oDU
-	YQ/qgB7JUPjOSVU4JfYuDcY0CfI4jjssL46VVqDxsVI23r3BJjv5xiTydPe2FnR2idg=
-X-Gm-Gg: ASbGnctroD7GVFDCIadmP7QBoq0bvJcKOtU1VbSIvAezu+WC3HxLJoK7OMX/rM1LqZD
-	NlViPw0UjwZG9QgMbUW94yWwjAjJ8MdQynNpXGkwmzo+6T5sye0J9KzxFI0RFEtXhHuHIwtdPZU
-	APzUszDdw3+VBN3TQsIzuB1eFkIt4fH4WZSJTZb+dY4HhNxULq/T8G/9kdfZvt5yhD6xI9ur5vm
-	jRt+RckFYqcrL4wRL2D30jPi8qp0DxKQHPgywAsiWkIRI7npjxsD7YRbzJlUGDoL7AodhjfhfLI
-	ie2kuNH+y/egL13SyArfHZnxYhKJhSBslez0rmpsIRpCjKbzEFNmxDIgmdywlP7gwA==
-X-Google-Smtp-Source: AGHT+IFdiG+P1ZqYFxIeseud+QzQaQn7SlSZAoLSnUGAXEZP6QmXVIjqwZeJ+t0ffyU7gMkR+isFPA==
-X-Received: by 2002:a05:6000:25c1:b0:3a3:67bb:8f3f with SMTP id ffacd0b85a97d-3b5e453e795mr6244295f8f.53.1752153915596;
-        Thu, 10 Jul 2025 06:25:15 -0700 (PDT)
-Received: from [10.100.51.209] ([193.86.92.181])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3b5e8dc22a8sm1942182f8f.34.2025.07.10.06.25.14
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 10 Jul 2025 06:25:15 -0700 (PDT)
-Message-ID: <0d6bcd81-3b27-414f-a626-350cba268c92@suse.com>
-Date: Thu, 10 Jul 2025 15:25:14 +0200
+        d=1e100.net; s=20230601; t=1752154956; x=1752759756;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=2qxPYSfmGEaTu7IijXvJrNmea414EV9xmgzdA7CtC60=;
+        b=EokYUC3X0uYTUA9qr62CQUqUAL+jO/mp5vTKhw8BCr4yLwY3KSLyN6ZsKR3O8fNQDo
+         wwzwKxx6enRvF2CaF57zaSiN/ZfW/BSxgkaEy8Zih2giQEuirsm4Omaxk4dQHAHxOmTD
+         H+XcxEAgYqJKW5+kCKBgK3vHCFkRervWL/v5hhKFxcTGCysIPiuCQNohzD+NECI8SCRG
+         DF0Gz3I9vp+WoPQ4RfeUEtRZO2Qud8ttcs9tKlRlQcEFxULlj+yne7wMBr8+G3YZIC8q
+         yx4BMUsAXEXNpAG0lsTs3A6PJLKZyoluYD/H6PAivPppIkoGzf7wVRSPs2yOPWn16yy+
+         lFIg==
+X-Forwarded-Encrypted: i=1; AJvYcCUcaXXcIQofhDhBY/use9xTMeeTuxMCmx2gp8t5ZsRA95UZei17fpr0ws805VGq7+JYH6tYtf5CeTQvzUiXczDJrIC+@vger.kernel.org, AJvYcCVnHxYiHNuei0o9VcdIj734KIoJaFJLfZdprLyeqDGrL6X/vxUxQIiFzdDNolZs2BN95wA=@vger.kernel.org, AJvYcCVzh4/R+kAG6PXbSru2bw3MtoxZNCRrP8XY6STUgGJbrs/jk5w60sJAASlws1/sjg1tcfNnbFn2fNvh7DwS@vger.kernel.org
+X-Gm-Message-State: AOJu0YyxWg8qOLHP5fkh1qaPsocnLc3ezGTywQkvv+uk8oG8a2G+wZG0
+	ovwUyyr7ax7Clg6CkDFYD7H2odBDdMUeQtzyPs+xJux0jtwE8TC4qyfj
+X-Gm-Gg: ASbGncsvePk9KT070OMOX9MIT+GCSCYSGOyXxexICc0RyaH8sC5NmfkXJH42STn0i10
+	UsAH/15mDNrvgJgdXYto3O1ccDkwIMa1e0EtR/1QT+16qJ6WRscq14lEx2TLSLJg9dQKVT0y7P0
+	53Cign9SEmeAmXsOQJ/EDOc/jG++4rHlFnMt5N9c2Zjpcn9aFhnLh3HON+FUrKGQTelTk74WUvx
+	R3dTEj3QyIj5eAycdSYaGQ4eXtDpPEBbnoSLP7Go/gM63XYGuzxS4KdEH6oooO0ocLdValFyaHs
+	XWFS18JqMExEfSMAyThF8LE0bs8Ye+t3ekhG
+X-Google-Smtp-Source: AGHT+IG1d0xnvmWxFdS34PVwqumri1XNuY+ZN4paBlqiv6sef7DWcYdK6ETUUhc7zaM1zJdrXSUXaQ==
+X-Received: by 2002:a05:6000:18ab:b0:3a5:2beb:7493 with SMTP id ffacd0b85a97d-3b5e44e4a30mr6134161f8f.9.1752154955451;
+        Thu, 10 Jul 2025 06:42:35 -0700 (PDT)
+Received: from krava ([2a02:8308:a00c:e200::42b7])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3b5e8bd1997sm1961062f8f.10.2025.07.10.06.42.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 10 Jul 2025 06:42:35 -0700 (PDT)
+From: Jiri Olsa <olsajiri@gmail.com>
+X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
+Date: Thu, 10 Jul 2025 15:42:33 +0200
+To: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Oleg Nesterov <oleg@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
+	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	x86@kernel.org, Song Liu <songliubraving@fb.com>,
+	Yonghong Song <yhs@fb.com>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Hao Luo <haoluo@google.com>, Steven Rostedt <rostedt@goodmis.org>,
+	Alan Maguire <alan.maguire@oracle.com>,
+	David Laight <David.Laight@aculab.com>,
+	Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas@t-8ch.de>,
+	Ingo Molnar <mingo@kernel.org>
+Subject: Re: [PATCHv4 perf/core 08/22] uprobes/x86: Add mapping for optimized
+ uprobe trampolines
+Message-ID: <aG_DSXNFol_03h75@krava>
+References: <20250708132333.2739553-1-jolsa@kernel.org>
+ <20250708132333.2739553-9-jolsa@kernel.org>
+ <20250710160233.8750ccd59b3b9d62e78491e5@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/8] execmem: introduce execmem_alloc_rw()
-To: Mike Rapoport <rppt@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
- Andy Lutomirski <luto@kernel.org>, Borislav Petkov <bp@alien8.de>,
- Christophe Leroy <christophe.leroy@csgroup.eu>,
- Daniel Gomez <da.gomez@samsung.com>,
- Dave Hansen <dave.hansen@linux.intel.com>, Ingo Molnar <mingo@redhat.com>,
- "Liam R. Howlett" <Liam.Howlett@oracle.com>,
- Luis Chamberlain <mcgrof@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Masami Hiramatsu <mhiramat@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
- Peter Zijlstra <peterz@infradead.org>,
- Sami Tolvanen <samitolvanen@google.com>, Steven Rostedt
- <rostedt@goodmis.org>, Thomas Gleixner <tglx@linutronix.de>,
- Yann Ylavic <ylavic.dev@gmail.com>, linux-kernel@vger.kernel.org,
- linux-mm@kvack.org, linux-modules@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, x86@kernel.org
-References: <20250709134933.3848895-1-rppt@kernel.org>
- <20250709134933.3848895-3-rppt@kernel.org>
-Content-Language: en-US
-From: Petr Pavlu <petr.pavlu@suse.com>
-In-Reply-To: <20250709134933.3848895-3-rppt@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250710160233.8750ccd59b3b9d62e78491e5@kernel.org>
 
-On 7/9/25 3:49 PM, Mike Rapoport wrote:
-> From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
+On Thu, Jul 10, 2025 at 04:02:33PM +0900, Masami Hiramatsu wrote:
+> Hi Jiri,
 > 
-> Some callers of execmem_alloc() require the memory to be temporarily
-> writable even when it is allocated from ROX cache. These callers use
-> execemem_make_temp_rw() right after the call to execmem_alloc().
+> On Tue,  8 Jul 2025 15:23:17 +0200
+> Jiri Olsa <jolsa@kernel.org> wrote:
 > 
-> Wrap this sequence in execmem_alloc_rw() API.
+> > Adding support to add special mapping for user space trampoline with
+> > following functions:
+> > 
+> >   uprobe_trampoline_get - find or add uprobe_trampoline
+> >   uprobe_trampoline_put - remove or destroy uprobe_trampoline
+> > 
+> > The user space trampoline is exported as arch specific user space special
+> > mapping through tramp_mapping, which is initialized in following changes
+> > with new uprobe syscall.
+> > 
+> > The uprobe trampoline needs to be callable/reachable from the probed address,
+> > so while searching for available address we use is_reachable_by_call function
+> > to decide if the uprobe trampoline is callable from the probe address.
+> > 
+> > All uprobe_trampoline objects are stored in uprobes_state object and are
+> > cleaned up when the process mm_struct goes down. Adding new arch hooks
+> > for that, because this change is x86_64 specific.
+> > 
+> > Locking is provided by callers in following changes.
+> > 
+> > Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+> > ---
+> >  arch/x86/kernel/uprobes.c | 169 ++++++++++++++++++++++++++++++++++++++
+> >  include/linux/uprobes.h   |   6 ++
+> >  kernel/events/uprobes.c   |  10 +++
+> >  kernel/fork.c             |   1 +
+> >  4 files changed, 186 insertions(+)
+> > 
+> > diff --git a/arch/x86/kernel/uprobes.c b/arch/x86/kernel/uprobes.c
+> > index 77050e5a4680..6336bb961907 100644
+> > --- a/arch/x86/kernel/uprobes.c
+> > +++ b/arch/x86/kernel/uprobes.c
+> > @@ -608,6 +608,175 @@ static void riprel_post_xol(struct arch_uprobe *auprobe, struct pt_regs *regs)
+> >  		*sr = utask->autask.saved_scratch_register;
+> >  	}
+> >  }
+> > +
+> > +static int tramp_mremap(const struct vm_special_mapping *sm, struct vm_area_struct *new_vma)
+> > +{
+> > +	return -EPERM;
+> > +}
+> > +
+> > +static struct page *tramp_mapping_pages[2] __ro_after_init;
+> > +
+> > +static struct vm_special_mapping tramp_mapping = {
+> > +	.name   = "[uprobes-trampoline]",
+> > +	.mremap = tramp_mremap,
+> > +	.pages  = tramp_mapping_pages,
+> > +};
+> > +
+> > +struct uprobe_trampoline {
+> > +	struct hlist_node	node;
+> > +	unsigned long		vaddr;
+> > +};
+> > +
+> > +static bool is_reachable_by_call(unsigned long vtramp, unsigned long vaddr)
+> > +{
+> > +	long delta = (long)(vaddr + 5 - vtramp);
+> > +
+> > +	return delta >= INT_MIN && delta <= INT_MAX;
+> > +}
+> > +
+> > +#define __4GB		 (1UL << 32)
+> > +#define MASK_4GB	~(__4GB - 1)
+> > +#define PAGE_COUNT(addr) ((addr & ~MASK_4GB) >> PAGE_SHIFT)
+> > +
+> > +static unsigned long find_nearest_trampoline(unsigned long vaddr)
+> > +{
+> > +	struct vm_unmapped_area_info info = {
+> > +		.length     = PAGE_SIZE,
+> > +		.align_mask = ~PAGE_MASK,
+> > +	};
+> > +	unsigned long limit, low_limit = PAGE_SIZE, high_limit = TASK_SIZE;
+> > +	unsigned long cross_4GB, low_4GB, high_4GB;
+> > +	unsigned long low_tramp, high_tramp;
+> > +	unsigned long call_end = vaddr + 5;
+> > +
+> > +	/*
+> > +	 * The idea is to create a trampoline every 4GB, so we need to find free
+> > +	 * page closest to the 4GB alignment. We find intersecting 4GB alignment
+> > +	 * address and search up and down to find the closest free page.
 > 
-> Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+> It is not guaranteed to be able to find unmapped 4GB aligned page.
+> I still think just finding the nearest area is better (simpler and
+> good enough.)
+> 
+> 	if (check_add_overflow(call_end, INT_MIN, &low_limit))
+> 		low_limit = PAGE_SIZE;
+> 
+> 	high_limit = call_end + INT_MAX;
+> 
+> 	/* Search up from intersecting 4GB alignment address. */
+> 	info.low_limit = call_end;
+> 	info.high_limit = min(high_limit, TASK_SIZE);
+> 	high_tramp = vm_unmapped_area(&info);
+> 
+> 	/* Search down from intersecting 4GB alignment address. */
+> 	info.low_limit = max(low_limit, PAGE_SIZE);
+> 	info.high_limit = call_end;
+> 	info.flags = VM_UNMAPPED_AREA_TOPDOWN;
+> 	low_tramp = vm_unmapped_area(&info);
+> 
+> See below;
+> 
+> > +	 */
+> > +
+> > +	low_4GB = call_end & MASK_4GB;
+> > +	high_4GB = low_4GB + __4GB;
+> > +
+> > +	/* Restrict limits to be within (PAGE_SIZE,TASK_SIZE) boundaries. */
+> > +	if (!check_add_overflow(call_end, INT_MIN, &limit))
+> > +		low_limit = limit;
+> 
+> if not overflow, low_limit = limit = call_end - 2GB.
+> 
+> * if call_end := 2GB + 4095, limit can be 4095 < PAGE_SIZE. 
+>   at the same time, low_4G == 0.
+> 
+> Note that low_limit can be > low_4G or < low_4G.
+> 
+> > +	if (low_limit == PAGE_SIZE)
+> > +		low_4GB = low_limit;
+> 
+> If overflow, low_4GB = PAGE_SIZE too.
+> 
+> In summary, 
+> 
+> (a) 0 < call_end < 2GB: (overflow)
+>   low_limit := PAGE_SIZE
+>   low_4GB := PAGE_SIZE
+> 
+> (b) 2GB <= call_end < 2GB + PAGE_SIZE:
+>   low_limit := call_end - 2GB (>= 0, < PAGE_SIZE)
+>   low_4GB := 0 (= call_end & MASK_4GB)
+> 
+> (c) call_end == 2GB + PAGE_SIZE:
+>   low_limit := PAGE_SIZE
+>   low_4GB := PAGE_SIZE
+> 
+> (d) 2GB + PAGE_SIZE <= call_end < 4GB:
+>   low_limit := call_end - 2GB (> PAGE_SIZE)
+>   low_4GB := 0
+> 
+> (e) 4GB <= call_end:
+>   low_limit := call_end - 2GB (> 2GB)
+>   low_4GB := call_end & MASK_4GB (> 4GB)
+> 
+> Maybe (b) and (d) cases are unexpected?
+> 
+> 
+> > +
+> > +	high_limit = call_end + INT_MAX;
+> 
+> This should not overflow, OK.
+> 
+> > +	if (high_limit > TASK_SIZE)
+> > +		high_limit = high_4GB = TASK_SIZE;
+> > +
+> > +	/* Get 4GB alligned address that's within 2GB distance from call_end */
+> > +	if (low_limit <= low_4GB)
+> 
+> This means call_end is within the [low_4GB, low_4GB + 2GB).
+> Call this case as (A)
+> 
+> > +		cross_4GB = low_4GB;
+> > +	else
+> > +		cross_4GB = high_4GB;
+> 
+> And this case as (B).
+> 
+> > +
+> > +	/* Search up from intersecting 4GB alignment address. */
+> > +	info.low_limit = cross_4GB;
+> > +	info.high_limit = high_limit;
+> > +	high_tramp = vm_unmapped_area(&info);
+> 
+> This searches the unmapped pages from low_limit.
+> In (A) case, this starts from low_4GB to high_limit.
+> In (B) case, this starts from high_4GB to high_limit.
+> 
+> So basically you search the unmapped area around the 4GB
+> aligned address instead of the nearest area of the vaddr.
+> But it is not guarantee that can find unmapped area near
+> the 4GB aligned address.
 
-Reviewed-by: Petr Pavlu <petr.pavlu@suse.com>
+ok, as you said the current code does the same logic but from 4GB
+aligned address, while you suggest nearest page from the caller
 
-> @@ -165,6 +149,28 @@ struct execmem_info *execmem_arch_setup(void);
->   */
->  void *execmem_alloc(enum execmem_type type, size_t size);
->  
-> +/**
-> + * execmem_alloc_rw - allocate writatble executable memory
+I can't think of any benefit one way or the other apart from that
+your change is less code, I ended up with code below
 
-Nit: writatble -> writable.
+thanks,
+jirka
 
--- 
-Thanks,
-Petr
+
+---
++static unsigned long find_nearest_trampoline(unsigned long vaddr)
++{
++	struct vm_unmapped_area_info info = {
++		.length     = PAGE_SIZE,
++		.align_mask = ~PAGE_MASK,
++	};
++	unsigned long low_limit, high_limit;
++	unsigned long low_tramp, high_tramp;
++	unsigned long call_end = vaddr + 5;
++
++	if (check_add_overflow(call_end, INT_MIN, &low_limit))
++		low_limit = PAGE_SIZE;
++
++	high_limit = call_end + INT_MAX;
++
++	/* Search up from the caller address. */
++	info.low_limit = call_end;
++	info.high_limit = min(high_limit, TASK_SIZE);
++	high_tramp = vm_unmapped_area(&info);
++
++	/* Search down from the caller address. */
++	info.low_limit = max(low_limit, PAGE_SIZE);
++	info.high_limit = call_end;
++	info.flags = VM_UNMAPPED_AREA_TOPDOWN;
++	low_tramp = vm_unmapped_area(&info);
++
++	if (IS_ERR_VALUE(high_tramp) && IS_ERR_VALUE(low_tramp))
++		return -ENOMEM;
++	if (IS_ERR_VALUE(high_tramp))
++		return low_tramp;
++	if (IS_ERR_VALUE(low_tramp))
++		return high_tramp;
++
++	/* Return address that's closest to the caller address. */
++	if (call_end - low_tramp < high_tramp - call_end)
++		return low_tramp;
++	return high_tramp;
++}
