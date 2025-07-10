@@ -1,70 +1,225 @@
-Received: from relay.hostedemail.com (smtprelay0012.hostedemail.com [216.40.44.12])
+Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E10B2E406;
-	Thu, 10 Jul 2025 14:02:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A138155389;
+	Thu, 10 Jul 2025 14:33:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752156136; cv=none; b=Z9LJawLMXyhF3VmoJl9naXPfMYMwH9Ne9Ednt4dYR3zCqxLkrKW6N2DLIjH+Lc7dH8yXaz35FXEx0RC6P6qoj01mZcO52zV7zRSJjPUxnLV7KZbZctRl0NiBknAGoRHTTlLHquwvlbeAFlt3hSN7WbcOYF/7+Off117+yAUyKeI=
+	t=1752157990; cv=none; b=LI7oN1cFDV0/5/1VWFLihTCTJ2V8aKWBNscdeQwipfe12zsDI6fYAivTtmkN1XBaW8BWsQN/yIJogKRbCOhJcY8ieUAoU3mV1J40vy5BbxOlrnkTls/2KWtNUJsmeXt7iSV8cqJa2RIw2xfWLhLFtdbnWhIzd+5ANbg6lAWMBgg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752156136; c=relaxed/simple;
-	bh=Ijmbj3xOzEkLZirDypj5Z1yFCDCFkMyCGXynqHEowqE=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=ZTvlHWxpbTll/xg5WfHCTcY6edn6OkhHylStIM9eDZKH5j49kKENb1iVQpRYNRV81meG9Nw6CEqUgLbMH9JrtD8GJOObtSIdjKiqHfAUHBjZo324AE7PAb2Qq2xWxZWZHkBdR6tN5BOUJCAk2Zd2OJ9DibVcjaU1HbH1Ra45dcc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf01.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay01.hostedemail.com (Postfix) with ESMTP id 8C5341D72E1;
-	Thu, 10 Jul 2025 13:56:29 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf01.hostedemail.com (Postfix) with ESMTPA id 064BD60016;
-	Thu, 10 Jul 2025 13:56:27 +0000 (UTC)
-Date: Thu, 10 Jul 2025 09:56:28 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: LKML <linux-kernel@vger.kernel.org>, Linux trace kernel
- <linux-trace-kernel@vger.kernel.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>
-Subject: [PATCH] tracing: Fix comment in trace_module_remove_events()
-Message-ID: <20250710095628.42ed6b06@batman.local.home>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1752157990; c=relaxed/simple;
+	bh=d2PggKXh65C5wsYv+sAOWEiyIFudIEs6dBBQURke4Pg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=agelgz66Zx5QHRBsiFW0XLyxWSC3nmjNLPLzkIoQgrM9SQXzmHIhy8cHam4/wiKPy2nWEv00aHn5obM3YxHWlDkvSq1zmvVqXeoVR2vyJcJxcRTjAXwvsaiTv/lo3n2b8o/0fr/GmQ6in5MdjkCAeRUGCjqjc+TZm2d0twbOHfk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr; spf=pass smtp.mailfrom=ghiti.fr; arc=none smtp.client-ip=217.70.183.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ghiti.fr
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 8123C44330;
+	Thu, 10 Jul 2025 14:32:58 +0000 (UTC)
+Message-ID: <7204f633-5b35-41ce-b847-7dfbaedbac47@ghiti.fr>
+Date: Thu, 10 Jul 2025 16:32:57 +0200
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Stat-Signature: j78xgr3jiageuapf5kjw7y3ukrrfzj96
-X-Rspamd-Server: rspamout01
-X-Rspamd-Queue-Id: 064BD60016
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1/hSOZpqMxsj0Oy5LhnPgKNXsqWB23nXSE=
-X-HE-Tag: 1752155787-452959
-X-HE-Meta: U2FsdGVkX18XxSX59ydGaeGJ9fZSwp9EuqxEtW6ncX+B95PalRV2/+aGk2VxgOf9zOCjNbknIWvwQv73jqFUUybeIQPCAHoW1WXsuVL6F+LeMAROsP6pUJk0wQPYu8tsC6HKhBwSfE1L+W8a1gNrQBn/3E4lv+hNkvJ+tSirlHrtkAsdzeWD8Y5s1j3vO9zZPhuwuvHgoTZfHp6clpthhvtlYdU4JtAZE1k1lIjo/pwpLP/yyXK3SNCoV/2iF9dc12Zp3XoIgUkmO+NX43rOd3JaMq7NYpL2yYO8yNSoBt7PE9Yw90tl/zqwiDKkQL7NcRHwu4focvq7F1L4L3//kEj5mwMNWJzb8+mAttKZkaPDhjnAIVXYTANmK66ZZ9u5
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V2] riscv: ftrace: Fix the logic issue in DYNAMIC_FTRACE
+ selection
+To: Miao Chen <chenmiao.ku@gmail.com>
+Cc: kernel test robot <lkp@intel.com>,
+ Linux RISCV <linux-riscv@lists.infradead.org>,
+ oe-kbuild-all@lists.linux.dev, Paul Walmsley <paul.walmsley@sifive.com>,
+ Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
+ Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Heiko Carstens <hca@linux.ibm.com>, Pu Lehui <pulehui@huawei.com>,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+References: <aG3A8Jirg+TxNza/@rli9-mobl>
+ <f5b1fc77-d180-4df7-b8f6-0cb0ca4a187a@ghiti.fr>
+ <CAKxVwge4=cagaVDesKWe0BE88U0YmNn5LLDJvJG=F7EEP2=-LQ@mail.gmail.com>
+Content-Language: en-US
+From: Alexandre Ghiti <alex@ghiti.fr>
+In-Reply-To: <CAKxVwge4=cagaVDesKWe0BE88U0YmNn5LLDJvJG=F7EEP2=-LQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgdegtdeilecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepkfffgggfuffvvehfhfgjtgfgsehtkeertddtvdejnecuhfhrohhmpeetlhgvgigrnhgurhgvucfihhhithhiuceorghlvgigsehghhhithhirdhfrheqnecuggftrfgrthhtvghrnhepfeeujedtgeekvdehhfduhfegfeeiveehueegheegvdfgjefhteejieduledvfeetnecuffhomhgrihhnpehgihhthhhusgdrtghomhdpkhgvrhhnvghlrdhorhhgpdhinhhfrhgruggvrggurdhorhhgnecukfhppedvtddtudemkeeiudemfeefkedvmegvfheltdemsgeffhdumeejtgeirgemsgehudelmegrfhgstdenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvtddtudemkeeiudemfeefkedvmegvfheltdemsgeffhdumeejtgeirgemsgehudelmegrfhgstddphhgvlhhopeglkffrggeimedvtddtudemkeeiudemfeefkedvmegvfheltdemsgeffhdumeejtgeirgemsgehudelmegrfhgstdgnpdhmrghilhhfrhhomheprghlvgigsehghhhithhirdhfrhdpnhgspghrtghpthhtohepudehpdhrtghpthhtoheptghhvghnmhhirghordhkuhesghhmrghilhdrtghomhdprhgtphhtthhopehlkhhpsehin
+ hhtvghlrdgtohhmpdhrtghpthhtoheplhhinhhugidqrhhishgtvheslhhishhtshdrihhnfhhrrgguvggrugdrohhrghdprhgtphhtthhopehovgdqkhgsuhhilhguqdgrlhhlsehlihhsthhsrdhlihhnuhigrdguvghvpdhrtghpthhtohepphgruhhlrdifrghlmhhslhgvhiesshhifhhivhgvrdgtohhmpdhrtghpthhtohepphgrlhhmvghrsegurggssggvlhhtrdgtohhmpdhrtghpthhtoheprghouhesvggvtghsrdgsvghrkhgvlhgvhidrvgguuhdprhgtphhtthhopehrohhsthgvughtsehgohhoughmihhsrdhorhhg
+X-GND-Sasl: alex@ghiti.fr
 
-From: Steven Rostedt <rostedt@goodmis.org>
 
-Fix typo "allocade" -> "allocated".
+On 7/10/25 14:34, Miao Chen wrote:
+> Hello Alex,
+>
+> Sure, I'll checkout it. Btw, this is my first commit, so can u tell
+> how to reproduce failed case? Using the reproduce and .config.gz gived
+> by build-bot?
 
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
- kernel/trace/trace_events.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
-index 120531268abf..cdd4993d4a4a 100644
---- a/kernel/trace/trace_events.c
-+++ b/kernel/trace/trace_events.c
-@@ -3695,7 +3695,7 @@ static void trace_module_remove_events(struct module *mod)
- 		if (call->module == mod)
- 			__trace_remove_event_call(call);
- 	}
--	/* Check for any strings allocade for this module */
-+	/* Check for any strings allocated for this module */
- 	list_for_each_entry_safe(modstr, m, &module_strings, next) {
- 		if (modstr->module != mod)
- 			continue;
--- 
-2.47.2
+Yes exactly!
 
+
+>
+> Thanks,
+>
+> Chen Miao
+>
+> Alexandre Ghiti <alex@ghiti.fr> 于2025年7月10日周四 19:53写道：
+>> Hi ChenMiao,
+>>
+>> On 7/9/25 03:08, kernel test robot wrote:
+>>> Hi ChenMiao,
+>>>
+>>> kernel test robot noticed the following build errors:
+>>>
+>>> [auto build test ERROR on fda589c286040d9ba2d72a0eaf0a13945fc48026]
+>>>
+>>> url:    https://github.com/intel-lab-lkp/linux/commits/ChenMiao/riscv-ftrace-Fix-the-logic-issue-in-DYNAMIC_FTRACE-selection/20250706-231907
+>>> base:   fda589c286040d9ba2d72a0eaf0a13945fc48026
+>>> patch link:    https://lore.kernel.org/r/20250706151830.25091-1-chenmiao.ku%40gmail.com
+>>> patch subject: [PATCH V2] riscv: ftrace: Fix the logic issue in DYNAMIC_FTRACE selection
+>>> :::::: branch date: 2 days ago
+>>> :::::: commit date: 2 days ago
+>>> config: riscv-randconfig-r112-20250708 (attached as .config)
+>>> compiler: clang version 19.1.7 (https://github.com/llvm/llvm-project cd708029e0b2869e80abe31ddb175f7c35361f90)
+>>> reproduce: (attached as reproduce)
+>>>
+>>> If you fix the issue in a separate patch/commit (i.e. not just a new version of
+>>> the same patch/commit), kindly add following tags
+>>> | Reported-by: kernel test robot <lkp@intel.com>
+>>> | Closes: https://lore.kernel.org/oe-kbuild-all/202507090650.YGY56SIA-lkp@intel.com/
+>>>
+>>> All errors (new ones prefixed by >>):
+>>>
+>>>>> <instantiation>:1:14: error: operand must be a symbol with %lo/%pcrel_lo/%tprel_lo modifier or an integer in the range [-2048, 2047]
+>>>      addi sp, sp, -FREGS_SIZE_ON_STACK
+>>>                   ^
+>>>      arch/riscv/kernel/mcount-dyn.S:185:2: note: while in macro instantiation
+>>>       SAVE_ABI_REGS
+>>>       ^
+>>>>> <instantiation>:2:18: error: unexpected token
+>>>       sw t0, FREGS_EPC(sp)
+>>>                       ^
+>>>      arch/riscv/kernel/mcount-dyn.S:185:2: note: while in macro instantiation
+>>>       SAVE_ABI_REGS
+>>>       ^
+>>>      <instantiation>:3:17: error: unexpected token
+>>>       sw x1, FREGS_RA(sp)
+>>>                      ^
+>>>      arch/riscv/kernel/mcount-dyn.S:185:2: note: while in macro instantiation
+>>>       SAVE_ABI_REGS
+>>>       ^
+>>>      <instantiation>:7:17: error: unexpected token
+>>>       sw x6, FREGS_T1(sp)
+>>>                      ^
+>>>      arch/riscv/kernel/mcount-dyn.S:185:2: note: while in macro instantiation
+>>>       SAVE_ABI_REGS
+>>>       ^
+>>>      <instantiation>:9:17: error: unexpected token
+>>>       sw x7, FREGS_T2(sp)
+>>>                      ^
+>>>      arch/riscv/kernel/mcount-dyn.S:185:2: note: while in macro instantiation
+>>>       SAVE_ABI_REGS
+>>>       ^
+>>>      <instantiation>:10:18: error: unexpected token
+>>>       sw x28, FREGS_T3(sp)
+>>>                       ^
+>>>      arch/riscv/kernel/mcount-dyn.S:185:2: note: while in macro instantiation
+>>>       SAVE_ABI_REGS
+>>>       ^
+>>>      <instantiation>:11:18: error: unexpected token
+>>>       sw x29, FREGS_T4(sp)
+>>>                       ^
+>>>      arch/riscv/kernel/mcount-dyn.S:185:2: note: while in macro instantiation
+>>>       SAVE_ABI_REGS
+>>>       ^
+>>>      <instantiation>:12:18: error: unexpected token
+>>>       sw x30, FREGS_T5(sp)
+>>>                       ^
+>>>      arch/riscv/kernel/mcount-dyn.S:185:2: note: while in macro instantiation
+>>>       SAVE_ABI_REGS
+>>>       ^
+>>>      <instantiation>:13:18: error: unexpected token
+>>>       sw x31, FREGS_T6(sp)
+>>>                       ^
+>>>      arch/riscv/kernel/mcount-dyn.S:185:2: note: while in macro instantiation
+>>>       SAVE_ABI_REGS
+>>>       ^
+>>>      <instantiation>:16:18: error: unexpected token
+>>>       sw x10, FREGS_A0(sp)
+>>>                       ^
+>>>      arch/riscv/kernel/mcount-dyn.S:185:2: note: while in macro instantiation
+>>>       SAVE_ABI_REGS
+>>>       ^
+>>>      <instantiation>:17:18: error: unexpected token
+>>>       sw x11, FREGS_A1(sp)
+>>>                       ^
+>>>      arch/riscv/kernel/mcount-dyn.S:185:2: note: while in macro instantiation
+>>>       SAVE_ABI_REGS
+>>>       ^
+>>>      <instantiation>:18:18: error: unexpected token
+>>>       sw x12, FREGS_A2(sp)
+>>>                       ^
+>>>      arch/riscv/kernel/mcount-dyn.S:185:2: note: while in macro instantiation
+>>>       SAVE_ABI_REGS
+>>>       ^
+>>>      <instantiation>:19:18: error: unexpected token
+>>>       sw x13, FREGS_A3(sp)
+>>>                       ^
+>>>      arch/riscv/kernel/mcount-dyn.S:185:2: note: while in macro instantiation
+>>>       SAVE_ABI_REGS
+>>>       ^
+>>>      <instantiation>:20:18: error: unexpected token
+>>>       sw x14, FREGS_A4(sp)
+>>>                       ^
+>>>      arch/riscv/kernel/mcount-dyn.S:185:2: note: while in macro instantiation
+>>>       SAVE_ABI_REGS
+>>>       ^
+>>>      <instantiation>:21:18: error: unexpected token
+>>>       sw x15, FREGS_A5(sp)
+>>>                       ^
+>>>      arch/riscv/kernel/mcount-dyn.S:185:2: note: while in macro instantiation
+>>>       SAVE_ABI_REGS
+>>>       ^
+>>>      <instantiation>:22:18: error: unexpected token
+>>>       sw x16, FREGS_A6(sp)
+>>>                       ^
+>>>      arch/riscv/kernel/mcount-dyn.S:185:2: note: while in macro instantiation
+>>>       SAVE_ABI_REGS
+>>>       ^
+>>>      <instantiation>:23:18: error: unexpected token
+>>>       sw x17, FREGS_A7(sp)
+>>>                       ^
+>>>      arch/riscv/kernel/mcount-dyn.S:185:2: note: while in macro instantiation
+>>>       SAVE_ABI_REGS
+>>>       ^
+>>>      <instantiation>:25:15: error: operand must be a symbol with %lo/%pcrel_lo/%tprel_lo modifier or an integer in the range [-2048, 2047]
+>>>       addi a0, a0, FREGS_SIZE_ON_STACK
+>>>                    ^
+>>>      arch/riscv/kernel/mcount-dyn.S:185:2: note: while in macro instantiation
+>>>       SAVE_ABI_REGS
+>>>
+>>> Kconfig warnings: (for reference only)
+>>>      WARNING: unmet direct dependencies detected for DYNAMIC_FTRACE
+>>>      Depends on [n]: FTRACE [=y] && FUNCTION_TRACER [=y] && HAVE_DYNAMIC_FTRACE [=n]
+>>>      Selected by [y]:
+>>>      - RISCV [=y] && FUNCTION_TRACER [=y]
+>> To avoid that, we should check HAVE_DYNAMIC_FTRACE too:
+>>
+>> select DYNAMIC_FTRACE if FUNCTION_TRACER && HAVE_DYNAMIC_FTRACE
+>>
+>> That fixes the build error for me. Can you send a v3 with this change?
+>>
+>> Thanks,
+>>
+>> Alex
+>>
+>>
+> _______________________________________________
+> linux-riscv mailing list
+> linux-riscv@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-riscv
