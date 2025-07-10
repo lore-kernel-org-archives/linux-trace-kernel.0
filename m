@@ -1,115 +1,117 @@
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0AC0241132;
-	Thu, 10 Jul 2025 13:01:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C89219D8A2
+	for <linux-trace-kernel@vger.kernel.org>; Thu, 10 Jul 2025 13:25:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752152514; cv=none; b=CPrM9ZPYe9D3uCcVavIbI0dSu0aqfKFGwHcp0RTterGi/4V1HQks1oezkewVP5jQMc/I0ddzKqghnBjadpxhdeEXus1+9lPEZtSLi0Lgf1sG/PZhitNbIrK9xKviPOyN3lFL4PO6Ny/kIgFXEkrmNFgMhnmEKr/666Pdx7ccLjg=
+	t=1752153919; cv=none; b=U1xTKTuGuocEsV07NyzXK9URqthxhgkqg9J8powQSqIiyeWMYpUeB85ma2ycrzz41+r1kwvrhUJVpxl1JniHZn/mQ7sE2MZqf2eZAB0wZKkZwzu1gmVMobx9H+Ep3YEuMZUlebPV8pjLlHq9mWxMchp3BD6yMpRgC2D8yFR0O18=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752152514; c=relaxed/simple;
-	bh=5491tcOvMmeOhV7CHKAE15EGHqNMpbS86rZBXtkRIcs=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=u7NUwFbuwrTPIQ0pFDu+S3IQ8nL+hYxVCENLr9ZZRXuGFOI3ivUynat9wS+G7xYz2b5TOUllDCUuBYNJvxVgnblqB1V6eWdN8JCu2+cXkea0pF/XLYr9/UMHd0vgwMshs4tquKtQyWDo0EMGRPIO/9xm6d9DsyiAS7J4vFgxOFA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.93.142])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4bdFNZ2RHvzYQvHB;
-	Thu, 10 Jul 2025 21:01:50 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.252])
-	by mail.maildlp.com (Postfix) with ESMTP id 221FA1A0E31;
-	Thu, 10 Jul 2025 21:01:49 +0800 (CST)
-Received: from huawei.com (unknown [10.67.174.45])
-	by APP3 (Coremail) with SMTP id _Ch0CgBXtyS0uW9o1jsSBQ--.59794S2;
-	Thu, 10 Jul 2025 21:01:49 +0800 (CST)
-From: Tengda Wu <wutengda@huaweicloud.com>
-To: Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Shuah Khan <shuah@kernel.org>,
-	Yuanhe Shu <xiangzao@linux.alibaba.com>,
-	linux-trace-kernel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-kselftest@vger.kernel.org,
-	Tengda Wu <wutengda@huaweicloud.com>
-Subject: [PATCH -next] selftests/ftrace: Prevent potential failure in subsystem-enable test case
-Date: Thu, 10 Jul 2025 13:01:34 +0000
-Message-Id: <20250710130134.591066-1-wutengda@huaweicloud.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1752153919; c=relaxed/simple;
+	bh=uKsWEy5y9VSiG6NkzSuXx6HrcjOJV5515mwFzVhA0fU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=TYJRVMhpSm27FWGYxuPi9KJrNgcYRv4vfDz1ZPJl4Fjvw0hVQQqTlcQBLlpCWR8NymPbz9XiK3BVRQol1mHvO2QQHxL8oh1/EyYY1QcZQ89PZtF5YfIPtDPQL7lkB5HtqVe/m4UDQ0mrnPlYLs0BJOgl+pijeCodDo73xv7Ozoo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=cduuu6q6; arc=none smtp.client-ip=209.85.221.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="cduuu6q6"
+Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-3a6d1369d4eso586527f8f.2
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 10 Jul 2025 06:25:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1752153916; x=1752758716; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=M/eGn7NuVMyg3g4kV1aRC05vflk6dbUfw0/9TsPqLpQ=;
+        b=cduuu6q6KKXwSk7dmq9imGdNfCneaOSXsmgLU0aUCILl2B0lATP2lcrGuCfsqIpANs
+         +XrW72Vb6+i7SdPGrcShBHwIk9YP4z7rigEGumgZ9w231XBDHWCw4RbxXfoEuU/mbvt6
+         aBNjRl7t0/URhN+ZOkNP30bi9lKzwUtdAGkEq+QgJvWs2mfBl3cic2zEU24h0V5CWa0M
+         3hU3uGbJgc30kVX3BrV0Jpb8Lwler/MmcHqbHhdJ2K4tuDgw1eM6ShDIQrQmSMOeeqgK
+         5wjN/qVpCuiyfpDrVpNAvvqRfS78V9hAbu5nggS8TRsC2IMT3dTsYBdO2bY8G+umxkxK
+         uNsA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1752153916; x=1752758716;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=M/eGn7NuVMyg3g4kV1aRC05vflk6dbUfw0/9TsPqLpQ=;
+        b=d019H5ARIiMY5rE4JLPDHE+YR++OqqLpV3qd2ltCPB5EwxI5Bu0Xse8H/dxD0AreFi
+         oDpVhI7Noap5lEBJWDJakerQd/srXN11tKi9rXZzJcfTeEYCUn2+EGqG3e24ZeDf9ZoG
+         KCM7dF1uZ5WVyiY50VdlrPKBrqwJ3BQEW3F+Osrbjlo7WYaAA551M02UryMi3VwMqSrq
+         kf6NWnfy78022Pw0oE2IVtFhtqC0z0MBJHWVlwoAtaoQgauU34kFbejHL0egm4Y121lt
+         u4mg4Z1T/65bR2jD9hWrxq4cO5sNXL4dn4QXmuQWFCIOZlZ3+nVJg/UCYyKjf/7BnVUU
+         FGsg==
+X-Forwarded-Encrypted: i=1; AJvYcCUWOZT7H1wAkCgaDZ3fQZAZbQS3TcHvBfCrtH73OEtn+lyutFxMnicAIgBwwr/Y7n8QORsjG79bZT3tVjNOfk8z10U=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzHPE49QkddyyUPhukd7V3TbegDoPIEz6a7NwgrkOh5V1xZ1oDU
+	YQ/qgB7JUPjOSVU4JfYuDcY0CfI4jjssL46VVqDxsVI23r3BJjv5xiTydPe2FnR2idg=
+X-Gm-Gg: ASbGnctroD7GVFDCIadmP7QBoq0bvJcKOtU1VbSIvAezu+WC3HxLJoK7OMX/rM1LqZD
+	NlViPw0UjwZG9QgMbUW94yWwjAjJ8MdQynNpXGkwmzo+6T5sye0J9KzxFI0RFEtXhHuHIwtdPZU
+	APzUszDdw3+VBN3TQsIzuB1eFkIt4fH4WZSJTZb+dY4HhNxULq/T8G/9kdfZvt5yhD6xI9ur5vm
+	jRt+RckFYqcrL4wRL2D30jPi8qp0DxKQHPgywAsiWkIRI7npjxsD7YRbzJlUGDoL7AodhjfhfLI
+	ie2kuNH+y/egL13SyArfHZnxYhKJhSBslez0rmpsIRpCjKbzEFNmxDIgmdywlP7gwA==
+X-Google-Smtp-Source: AGHT+IFdiG+P1ZqYFxIeseud+QzQaQn7SlSZAoLSnUGAXEZP6QmXVIjqwZeJ+t0ffyU7gMkR+isFPA==
+X-Received: by 2002:a05:6000:25c1:b0:3a3:67bb:8f3f with SMTP id ffacd0b85a97d-3b5e453e795mr6244295f8f.53.1752153915596;
+        Thu, 10 Jul 2025 06:25:15 -0700 (PDT)
+Received: from [10.100.51.209] ([193.86.92.181])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3b5e8dc22a8sm1942182f8f.34.2025.07.10.06.25.14
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 10 Jul 2025 06:25:15 -0700 (PDT)
+Message-ID: <0d6bcd81-3b27-414f-a626-350cba268c92@suse.com>
+Date: Thu, 10 Jul 2025 15:25:14 +0200
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_Ch0CgBXtyS0uW9o1jsSBQ--.59794S2
-X-Coremail-Antispam: 1UD129KBjvJXoWxJr1DZF18Jr4UXw1kZF48Xrb_yoW8trW3p3
-	9rZrnrKrn5Ga4jkas7C3Z3Xry5XrykAryqqrW5Aa43JF15J34ftFn3tr1agF12qrZakry3
-	Aw1I9a47Z3Wjv3DanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUkC14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
-	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
-	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
-	2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
-	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc7CjxVAaw2AFwI0_
-	Jw0_GFyl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67
-	AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIY
-	rxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14
-	v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8
-	JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjfUonmRUU
-	UUU
-X-CM-SenderInfo: pzxwv0hjgdqx5xdzvxpfor3voofrz/
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/8] execmem: introduce execmem_alloc_rw()
+To: Mike Rapoport <rppt@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+ Andy Lutomirski <luto@kernel.org>, Borislav Petkov <bp@alien8.de>,
+ Christophe Leroy <christophe.leroy@csgroup.eu>,
+ Daniel Gomez <da.gomez@samsung.com>,
+ Dave Hansen <dave.hansen@linux.intel.com>, Ingo Molnar <mingo@redhat.com>,
+ "Liam R. Howlett" <Liam.Howlett@oracle.com>,
+ Luis Chamberlain <mcgrof@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Masami Hiramatsu <mhiramat@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
+ Peter Zijlstra <peterz@infradead.org>,
+ Sami Tolvanen <samitolvanen@google.com>, Steven Rostedt
+ <rostedt@goodmis.org>, Thomas Gleixner <tglx@linutronix.de>,
+ Yann Ylavic <ylavic.dev@gmail.com>, linux-kernel@vger.kernel.org,
+ linux-mm@kvack.org, linux-modules@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, x86@kernel.org
+References: <20250709134933.3848895-1-rppt@kernel.org>
+ <20250709134933.3848895-3-rppt@kernel.org>
+Content-Language: en-US
+From: Petr Pavlu <petr.pavlu@suse.com>
+In-Reply-To: <20250709134933.3848895-3-rppt@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-The first 100 lines of trace output don't always contain 3 or more
-distinct events. In busy systems, they may be dominated by repetitive
-events like sched_stat_runtime, causing the `$count -lt 3` check to
-fail. Example trace:
+On 7/9/25 3:49 PM, Mike Rapoport wrote:
+> From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
+> 
+> Some callers of execmem_alloc() require the memory to be temporarily
+> writable even when it is allocated from ROX cache. These callers use
+> execemem_make_temp_rw() right after the call to execmem_alloc().
+> 
+> Wrap this sequence in execmem_alloc_rw() API.
+> 
+> Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
 
-$ head -n 100 trace | grep -v ^#
- systemd-timesyn-266     [006] d.h2.   738.778482: sched_stat_runtime: comm=systemd-timesyn pid=266 runtime=976854 [ns]
-      ftracetest-8751    [001] d.h2.   738.778512: sched_stat_runtime: comm=ftracetest pid=8751 runtime=938335 [ns]
- systemd-timesyn-266     [006] d.h1.   738.779531: sched_stat_runtime: comm=systemd-timesyn pid=266 runtime=1044284 [ns]
-      ftracetest-8751    [001] d.h2.   738.779541: sched_stat_runtime: comm=ftracetest pid=8751 runtime=1028575 [ns]
-         systemd-1       [007] d.h5.   738.779657: sched_stat_runtime: comm=systemd pid=1 runtime=642624 [ns]
-[...]
+Reviewed-by: Petr Pavlu <petr.pavlu@suse.com>
 
-With trace cleared, simply check `$count -eq 0` to confirm subsystem
-enablement, just like toplevel-enable.tc does.
+> @@ -165,6 +149,28 @@ struct execmem_info *execmem_arch_setup(void);
+>   */
+>  void *execmem_alloc(enum execmem_type type, size_t size);
+>  
+> +/**
+> + * execmem_alloc_rw - allocate writatble executable memory
 
-Fixes: 1a4ea83a6e67 ("selftests/ftrace: Limit length in subsystem-enable tests")
-Signed-off-by: Tengda Wu <wutengda@huaweicloud.com>
----
- .../selftests/ftrace/test.d/event/subsystem-enable.tc     | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+Nit: writatble -> writable.
 
-diff --git a/tools/testing/selftests/ftrace/test.d/event/subsystem-enable.tc b/tools/testing/selftests/ftrace/test.d/event/subsystem-enable.tc
-index b7c8f29c09a9..3a28adc7b727 100644
---- a/tools/testing/selftests/ftrace/test.d/event/subsystem-enable.tc
-+++ b/tools/testing/selftests/ftrace/test.d/event/subsystem-enable.tc
-@@ -19,8 +19,8 @@ echo 'sched:*' > set_event
- yield
- 
- count=`head -n 100 trace | grep -v ^# | awk '{ print $5 }' | sort -u | wc -l`
--if [ $count -lt 3 ]; then
--    fail "at least fork, exec and exit events should be recorded"
-+if [ $count -eq 0 ]; then
-+    fail "none of scheduler events are recorded"
- fi
- 
- do_reset
-@@ -30,8 +30,8 @@ echo 1 > events/sched/enable
- yield
- 
- count=`head -n 100 trace | grep -v ^# | awk '{ print $5 }' | sort -u | wc -l`
--if [ $count -lt 3 ]; then
--    fail "at least fork, exec and exit events should be recorded"
-+if [ $count -eq 0 ]; then
-+    fail "none of scheduler events are recorded"
- fi
- 
- do_reset
 -- 
-2.34.1
-
+Thanks,
+Petr
