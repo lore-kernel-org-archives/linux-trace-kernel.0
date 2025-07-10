@@ -1,220 +1,160 @@
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.5])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 420205383;
-	Thu, 10 Jul 2025 05:55:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.5
+Received: from mail-vk1-f169.google.com (mail-vk1-f169.google.com [209.85.221.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 385A51F948;
+	Thu, 10 Jul 2025 06:21:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752126930; cv=none; b=RAXjFMJx8654T5wXIId4AX2jnj1puFQbkZyBheF1EGryp6rlm/31muQpdtr2nlijsuQaXYP/T8JaHNs7ZgqrPyl1fwEsw1LDwXEOyPjEqD+Z5VkKNe3ZJIjM3vCWmyO7YDozU2w85FYV1aaGKD6UmdGrUt2U5nnHE0HIS99l17c=
+	t=1752128487; cv=none; b=mc77uowgtMU5YMZhDUhGpIrYr8brCeReEO8Go2rXLkPnGUGicojnfDzkuap3niI8JkQ6TATnAn604vbJUzWV/GURToeJirbwVjePzLlGS7SUd+QN7lo7VAvTfQZOnBKDh81qm1EwwJp1zSiSNEM6nig9dNzXDcfj+sBZ4mhf8ZU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752126930; c=relaxed/simple;
-	bh=GlRTsNWYMTrAcXnXTGWwFfiMFFeCUzzVnFeqbx0HAzs=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=lLruVrfmdSKcswuL2Dc/p3peSmouf9/JLsdOS2Q6ZkrWb3tcW7w+KnAZs8p7ybNYm0JpRl1BLlOZIvisfVNALgJ4aFHdAXFpPG5soq1YUdNLYIad2mcZHukIayCB0zR+anrPYhE3y4fkTlZ2hqQaA0dfUDv3zApk/oG6U/nMGyA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=hfrQuwvl; arc=none smtp.client-ip=220.197.31.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1752128487; c=relaxed/simple;
+	bh=3VK0g5yX+5MXamCiciw8gTT2Y0ypYsIyeBfFgXcL4+Y=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=E3vJtREl0oa9cQA+QEdEKy9N9enq/+2ELfh39ORG/kIt98movshNaRopFWDKMvTGoTAM87qzqEWa+pfNQqQBP2k5/5lHT8jf29vhXbcuSquY+zzPDqQswOQtTyb+yQkxYgs2D1j9s1/PaU8nEmNMNUoWQm0mgtIpGwayHGYJz88=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dBVgd9jn; arc=none smtp.client-ip=209.85.221.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="hfrQuwvl"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version; bh=Ok
-	Omog+xA6ZskFrf7mJLxT2vs7YHH1y9jNOPVQ1DbRU=; b=hfrQuwvlfSGZevpZBB
-	M2b5RmvtGGFuO64H2DqqDVLLUBe4XlCOZgtADHgyYvQctTxuSMIAgALe2gogRy65
-	hxvwpOVDDxLTgZziu789UyTFNTG20xfRBGv7dBE2NuXwpFafhKe2BVlYFMrKZNVb
-	yRVRyckjLVamBdkIIHDmVBUzk=
-Received: from localhost.localdomain (unknown [])
-	by gzga-smtp-mtada-g1-2 (Coremail) with SMTP id _____wCnddKLVW9o_xi_Dw--.25287S2;
-	Thu, 10 Jul 2025 13:54:21 +0800 (CST)
-From: Feng Yang <yangfeng59949@163.com>
-To: martin.lau@linux.dev,
-	ast@kernel.org,
-	daniel@iogearbox.net,
-	andrii@kernel.org,
-	eddyz87@gmail.com,
-	song@kernel.org,
-	yonghong.song@linux.dev,
-	john.fastabend@gmail.com,
-	kpsingh@kernel.org,
-	sdf@fomichev.me,
-	haoluo@google.com,
-	jolsa@kernel.org,
-	mattbobrowski@google.com,
-	rostedt@goodmis.org,
-	mhiramat@kernel.org,
-	olsajiri@gmail.com
-Cc: bpf@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	netdev@vger.kernel.org
-Subject: [PATCH v2 bpf-next] bpf: Clean up individual BTF_ID code
-Date: Thu, 10 Jul 2025 13:54:19 +0800
-Message-Id: <20250710055419.70544-1-yangfeng59949@163.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dBVgd9jn"
+Received: by mail-vk1-f169.google.com with SMTP id 71dfb90a1353d-53159d11cecso538732e0c.2;
+        Wed, 09 Jul 2025 23:21:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1752128484; x=1752733284; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=BG4giksOjxTPwU+J2iWDHmet2nmN8VvPq1vMXwURQq4=;
+        b=dBVgd9jnxIsr2vfB7yzynSkEEl+5P9/gP1WPdwXEcWwbIBrrr+XdHW7/rp4xoRwhCR
+         CcwkvjAcNGLgMgC3lO7/8GgN8FolTkxLCJ79rp83FXMjw1cQUvs5xDvs5D49ITxuU0yJ
+         YE59xKmgugTkLRLAQUkDQAFHRyqK067RnPENkRAVsQXNgrNQ/ccCIZn5Fa+4vpsy/yF2
+         kMKFozomfOVXU9SOLQrHKAKyrGyUNNT3CP9YscolDjlOXiSOzA0Ylo9oiMYa62AzFmzV
+         RfWilxrkQCuYy6btRqDAFkdpTw9DREGUwx/BtJJE91EKWiqjMEucGYBh6PHEPJXZ8a4n
+         mAnA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1752128484; x=1752733284;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=BG4giksOjxTPwU+J2iWDHmet2nmN8VvPq1vMXwURQq4=;
+        b=huAzDBJ8eKQAAHBsma+GsOyzqnKjLOEP1KTarMUkbLic/rIOWWDJUMFyV/3Luwgyff
+         rGYnqHv/IIYY1ivMzWxV8PFrubV8S9NfXG/1AAkUSoa/XKlT1B8OAPZ1+dvCLwQro+17
+         p1tAzITYzaO6jh61/beaUkzKVIIaCwcGd3T+HtBMyIBMk7tT6U+JhSUqwP++X3xqevXR
+         6QBTI8bW5J/+NwXW7iwfNZzBKheZ4RAIzKP/JSjhXYyRNwQJHb6XxU6riOStr3FYKKsh
+         JR9Gngw7TQ3wg+8FiLNI5GNfdnHrpNSLIG9RTSgXCUFrR+xPjOT/6W/uOtpnPFzqZXmB
+         gw3w==
+X-Forwarded-Encrypted: i=1; AJvYcCVrOCHa+ItIOGxNbnQPiCjzhxMQksoOsOlGj1SFZOYBrRtuTKtUo3wRlQ6g8GVmZT5daIQSlGot9DGJyFw=@vger.kernel.org, AJvYcCXYBfbM5CoRe6VHFJZatIoyTXDs6iNr8V+5BH7IhWdfe1UzBhqn454GBThTEmUrDmTq7ATUSBQot6trmg2Tw6+YgC0C@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx00ZBFqK6/FlUa+UOKOSNfTff62oeaqHIsc2qWaGdE8V6a3/Jk
+	Vw5a3c44CQ4PwM+hlpNa+hrFNBiAIhuB02IG0UT1+w7rXhxuDJpnQnYIdeSHH2nN7iNcyfi/6fA
+	VIBSmxNEIe5IHL3X7PAcMZS0A/W7caKc=
+X-Gm-Gg: ASbGncugGcC7nL3WGObEY1KBP3/nZ2dp17Gk3a6Cck6jtqfsnuvSykNYj/4YNBW8gUX
+	JnDzNWNNUYiuhTHXl45x0ty3c7LRhPAOVPTnfRg6iNqzDLj9yToQNum1iLIEtQd8SGEi9SgZs0h
+	dNyGddCLxIb/Cfid3XeRHgk60uIhWwVXV0FLJIfgU=
+X-Google-Smtp-Source: AGHT+IEgfvNN9FUwR3ZzrltKi9tZrr8t/tLqZDsrlrxTUcs2wTebLZttNZHuq1wo9nJSxTMEW3FjE5Desh6wAFxUVFQ=
+X-Received: by 2002:a05:6122:1ad0:b0:531:2906:752d with SMTP id
+ 71dfb90a1353d-535d73ce217mr4038139e0c.11.1752128483540; Wed, 09 Jul 2025
+ 23:21:23 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wCnddKLVW9o_xi_Dw--.25287S2
-X-Coremail-Antispam: 1Uf129KBjvJXoW3Ww15KFy5AF4UKw15ZrWDJwb_yoW7tr1fpF
-	W8Z3srCr48tw4YgF1DJF4Uuryag3Z5W3y7Cr4DC3ySkF1DXryDWF1jgw13ZF1a9ryqgr9a
-	qr109F1avw1fuFJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jnYFAUUUUU=
-X-CM-SenderInfo: p1dqww5hqjkmqzuzqiywtou0bp/1tbipRWGeGhvJOiDmgABsd
+References: <20250708-alex-fixes-v1-1-5b008d3f4d0c@rivosinc.com>
+In-Reply-To: <20250708-alex-fixes-v1-1-5b008d3f4d0c@rivosinc.com>
+From: Han Gao <rabenda.cn@gmail.com>
+Date: Thu, 10 Jul 2025 14:21:11 +0800
+X-Gm-Features: Ac12FXztJeD7IrDDbYBNj91A-BzmMZeUwgymejmbAOGChNwao1zJg6R95vGMKZc
+Message-ID: <CAAT7Ki-+xk-NDixFhSKNQ_zcfzkQMHfBODVuw_Q52ocJQAHaSQ@mail.gmail.com>
+Subject: Re: [PATCH] riscv: ftrace: Properly acquire text_mutex to fix a race condition
+To: Alexandre Ghiti <alexghiti@rivosinc.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, Paul Walmsley <paul.walmsley@sifive.com>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
+	Alexandre Ghiti <alex@ghiti.fr>, linux-kernel@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, 
+	Vivian Wang <wangruikang@iscas.ac.cn>, Yao Zi <ziyao@disroot.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Feng Yang <yangfeng@kylinos.cn>
-
-Use BTF_ID_LIST_SINGLE(a, b, c) instead of
-BTF_ID_LIST(a)
-BTF_ID(b, c)
-
-Signed-off-by: Feng Yang <yangfeng@kylinos.cn>
----
-Changes in v2:
-- Add the missing ones, thanks: jirka.
-- Link to v1: https://lore.kernel.org/all/20250709082038.103249-1-yangfeng59949@163.com/
----
- kernel/bpf/btf.c         | 3 +--
- kernel/bpf/link_iter.c   | 3 +--
- kernel/bpf/prog_iter.c   | 3 +--
- kernel/kallsyms.c        | 3 +--
- kernel/trace/bpf_trace.c | 3 +--
- net/ipv6/route.c         | 3 +--
- net/netlink/af_netlink.c | 3 +--
- net/sched/bpf_qdisc.c    | 9 +++------
- 8 files changed, 10 insertions(+), 20 deletions(-)
-
-diff --git a/kernel/bpf/btf.c b/kernel/bpf/btf.c
-index 2dd13eea7b0e..0aff814cb53a 100644
---- a/kernel/bpf/btf.c
-+++ b/kernel/bpf/btf.c
-@@ -6200,8 +6200,7 @@ int get_kern_ctx_btf_id(struct bpf_verifier_log *log, enum bpf_prog_type prog_ty
- 	return kctx_type_id;
- }
- 
--BTF_ID_LIST(bpf_ctx_convert_btf_id)
--BTF_ID(struct, bpf_ctx_convert)
-+BTF_ID_LIST_SINGLE(bpf_ctx_convert_btf_id, struct, bpf_ctx_convert)
- 
- static struct btf *btf_parse_base(struct btf_verifier_env *env, const char *name,
- 				  void *data, unsigned int data_size)
-diff --git a/kernel/bpf/link_iter.c b/kernel/bpf/link_iter.c
-index fec8005a121c..8158e9c1af7b 100644
---- a/kernel/bpf/link_iter.c
-+++ b/kernel/bpf/link_iter.c
-@@ -78,8 +78,7 @@ static const struct seq_operations bpf_link_seq_ops = {
- 	.show	= bpf_link_seq_show,
- };
- 
--BTF_ID_LIST(btf_bpf_link_id)
--BTF_ID(struct, bpf_link)
-+BTF_ID_LIST_SINGLE(btf_bpf_link_id, struct, bpf_link)
- 
- static const struct bpf_iter_seq_info bpf_link_seq_info = {
- 	.seq_ops		= &bpf_link_seq_ops,
-diff --git a/kernel/bpf/prog_iter.c b/kernel/bpf/prog_iter.c
-index 53a73c841c13..85d8fcb56fb7 100644
---- a/kernel/bpf/prog_iter.c
-+++ b/kernel/bpf/prog_iter.c
-@@ -78,8 +78,7 @@ static const struct seq_operations bpf_prog_seq_ops = {
- 	.show	= bpf_prog_seq_show,
- };
- 
--BTF_ID_LIST(btf_bpf_prog_id)
--BTF_ID(struct, bpf_prog)
-+BTF_ID_LIST_SINGLE(btf_bpf_prog_id, struct, bpf_prog)
- 
- static const struct bpf_iter_seq_info bpf_prog_seq_info = {
- 	.seq_ops		= &bpf_prog_seq_ops,
-diff --git a/kernel/kallsyms.c b/kernel/kallsyms.c
-index 4198f30aac3c..1e7635864124 100644
---- a/kernel/kallsyms.c
-+++ b/kernel/kallsyms.c
-@@ -829,8 +829,7 @@ static struct bpf_iter_reg ksym_iter_reg_info = {
- 	.seq_info		= &ksym_iter_seq_info,
- };
- 
--BTF_ID_LIST(btf_ksym_iter_id)
--BTF_ID(struct, kallsym_iter)
-+BTF_ID_LIST_SINGLE(btf_ksym_iter_id, struct, kallsym_iter)
- 
- static int __init bpf_ksym_iter_register(void)
- {
-diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
-index e7f97a9a8bbd..c8162dc89dc3 100644
---- a/kernel/trace/bpf_trace.c
-+++ b/kernel/trace/bpf_trace.c
-@@ -781,8 +781,7 @@ BPF_CALL_1(bpf_task_pt_regs, struct task_struct *, task)
- 	return (unsigned long) task_pt_regs(task);
- }
- 
--BTF_ID_LIST(bpf_task_pt_regs_ids)
--BTF_ID(struct, pt_regs)
-+BTF_ID_LIST_SINGLE(bpf_task_pt_regs_ids, struct, pt_regs)
- 
- const struct bpf_func_proto bpf_task_pt_regs_proto = {
- 	.func		= bpf_task_pt_regs,
-diff --git a/net/ipv6/route.c b/net/ipv6/route.c
-index 79c8f1acf8a3..0d5464c64965 100644
---- a/net/ipv6/route.c
-+++ b/net/ipv6/route.c
-@@ -6805,8 +6805,7 @@ void __init ip6_route_init_special_entries(void)
- #if defined(CONFIG_BPF_SYSCALL) && defined(CONFIG_PROC_FS)
- DEFINE_BPF_ITER_FUNC(ipv6_route, struct bpf_iter_meta *meta, struct fib6_info *rt)
- 
--BTF_ID_LIST(btf_fib6_info_id)
--BTF_ID(struct, fib6_info)
-+BTF_ID_LIST_SINGLE(btf_fib6_info_id, struct, fib6_info)
- 
- static const struct bpf_iter_seq_info ipv6_route_seq_info = {
- 	.seq_ops		= &ipv6_route_seq_ops,
-diff --git a/net/netlink/af_netlink.c b/net/netlink/af_netlink.c
-index e8972a857e51..bea064febf80 100644
---- a/net/netlink/af_netlink.c
-+++ b/net/netlink/af_netlink.c
-@@ -2869,8 +2869,7 @@ static const struct rhashtable_params netlink_rhashtable_params = {
- };
- 
- #if defined(CONFIG_BPF_SYSCALL) && defined(CONFIG_PROC_FS)
--BTF_ID_LIST(btf_netlink_sock_id)
--BTF_ID(struct, netlink_sock)
-+BTF_ID_LIST_SINGLE(btf_netlink_sock_id, struct, netlink_sock)
- 
- static const struct bpf_iter_seq_info netlink_seq_info = {
- 	.seq_ops		= &netlink_seq_ops,
-diff --git a/net/sched/bpf_qdisc.c b/net/sched/bpf_qdisc.c
-index 7ea8b54b2ab1..adcb618a2bfc 100644
---- a/net/sched/bpf_qdisc.c
-+++ b/net/sched/bpf_qdisc.c
-@@ -130,8 +130,7 @@ static int bpf_qdisc_btf_struct_access(struct bpf_verifier_log *log,
- 	return 0;
- }
- 
--BTF_ID_LIST(bpf_qdisc_init_prologue_ids)
--BTF_ID(func, bpf_qdisc_init_prologue)
-+BTF_ID_LIST_SINGLE(bpf_qdisc_init_prologue_ids, func, bpf_qdisc_init_prologue)
- 
- static int bpf_qdisc_gen_prologue(struct bpf_insn *insn_buf, bool direct_write,
- 				  const struct bpf_prog *prog)
-@@ -161,8 +160,7 @@ static int bpf_qdisc_gen_prologue(struct bpf_insn *insn_buf, bool direct_write,
- 	return insn - insn_buf;
- }
- 
--BTF_ID_LIST(bpf_qdisc_reset_destroy_epilogue_ids)
--BTF_ID(func, bpf_qdisc_reset_destroy_epilogue)
-+BTF_ID_LIST_SINGLE(bpf_qdisc_reset_destroy_epilogue_ids, func, bpf_qdisc_reset_destroy_epilogue)
- 
- static int bpf_qdisc_gen_epilogue(struct bpf_insn *insn_buf, const struct bpf_prog *prog,
- 				  s16 ctx_stack_off)
-@@ -451,8 +449,7 @@ static struct bpf_struct_ops bpf_Qdisc_ops = {
- 	.owner = THIS_MODULE,
- };
- 
--BTF_ID_LIST(bpf_sk_buff_dtor_ids)
--BTF_ID(func, bpf_kfree_skb)
-+BTF_ID_LIST_SINGLE(bpf_sk_buff_dtor_ids, func, bpf_kfree_skb)
- 
- static int __init bpf_qdisc_kfunc_init(void)
- {
--- 
-2.43.0
-
+On Tue, Jul 8, 2025 at 4:34=E2=80=AFPM Alexandre Ghiti <alexghiti@rivosinc.=
+com> wrote:
+>
+> As reported by lockdep, some patching was done without acquiring
+> text_mutex, so there could be a race when mapping the page to patch
+> since we use the same fixmap entry.
+>
+> Reported-by: Han Gao <rabenda.cn@gmail.com>
+> Reported-by: Vivian Wang <wangruikang@iscas.ac.cn>
+> Reported-by: Yao Zi <ziyao@disroot.org>
+> Closes: https://lore.kernel.org/linux-riscv/aGODMpq7TGINddzM@pie.lan/
+> Tested-by: Yao Zi <ziyao@disroot.org>
+> Signed-off-by: Alexandre Ghiti <alexghiti@rivosinc.com>
+Tested-by: Han Gao <rabenda.cn@gmail.com>
+> ---
+>  arch/riscv/kernel/ftrace.c | 16 ++++++++++++----
+>  1 file changed, 12 insertions(+), 4 deletions(-)
+>
+> diff --git a/arch/riscv/kernel/ftrace.c b/arch/riscv/kernel/ftrace.c
+> index 4c6c24380cfd9d6c51f0e4340cd674160b83a610..22e7bdf8de2b6ca950cf2c8b7=
+34bc82ea46ba8bf 100644
+> --- a/arch/riscv/kernel/ftrace.c
+> +++ b/arch/riscv/kernel/ftrace.c
+> @@ -14,6 +14,16 @@
+>  #include <asm/text-patching.h>
+>
+>  #ifdef CONFIG_DYNAMIC_FTRACE
+> +void ftrace_arch_code_modify_prepare(void)
+> +{
+> +       mutex_lock(&text_mutex);
+> +}
+> +
+> +void ftrace_arch_code_modify_post_process(void)
+> +{
+> +       mutex_unlock(&text_mutex);
+> +}
+> +
+>  unsigned long ftrace_call_adjust(unsigned long addr)
+>  {
+>         if (IS_ENABLED(CONFIG_DYNAMIC_FTRACE_WITH_CALL_OPS))
+> @@ -29,10 +39,8 @@ unsigned long arch_ftrace_get_symaddr(unsigned long fe=
+ntry_ip)
+>
+>  void arch_ftrace_update_code(int command)
+>  {
+> -       mutex_lock(&text_mutex);
+>         command |=3D FTRACE_MAY_SLEEP;
+>         ftrace_modify_all_code(command);
+> -       mutex_unlock(&text_mutex);
+>         flush_icache_all();
+>  }
+>
+> @@ -149,6 +157,8 @@ int ftrace_init_nop(struct module *mod, struct dyn_ft=
+race *rec)
+>         unsigned int nops[2], offset;
+>         int ret;
+>
+> +       guard(mutex)(&text_mutex);
+> +
+>         ret =3D ftrace_rec_set_nop_ops(rec);
+>         if (ret)
+>                 return ret;
+> @@ -157,9 +167,7 @@ int ftrace_init_nop(struct module *mod, struct dyn_ft=
+race *rec)
+>         nops[0] =3D to_auipc_t0(offset);
+>         nops[1] =3D RISCV_INSN_NOP4;
+>
+> -       mutex_lock(&text_mutex);
+>         ret =3D patch_insn_write((void *)pc, nops, 2 * MCOUNT_INSN_SIZE);
+> -       mutex_unlock(&text_mutex);
+>
+>         return ret;
+>  }
+>
+> ---
+> base-commit: d7b8f8e20813f0179d8ef519541a3527e7661d3a
+> change-id: 20250708-alex-fixes-1e719b9899f3
+>
+> Best regards,
+> --
+> Alexandre Ghiti <alexghiti@rivosinc.com>
+>
