@@ -1,149 +1,99 @@
-Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
+Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4241223B0;
-	Fri, 11 Jul 2025 17:18:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBABA2F1997;
+	Fri, 11 Jul 2025 17:38:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752254286; cv=none; b=AQRLHA6Xdgk/XroyqSRE5f9ZD7m9aS5oVCY7Os5ooqUeIJg1tltVHzBX2ot6+TEH0K35rOIaHUXqwesSElaRYt83Ax2sbRL1ReedSHESV3YN60DI3sFnKnOaW8f+7nADJDssy9gbpaSWByDjpoweOcFpJIyal3drfFlCcVPpLZA=
+	t=1752255487; cv=none; b=qRgIeQW0Hszc5J8N86VU3tRJo9rAobT940SA1dT8wwfe+BJDHbFmBDovfsWKog1tnNqG+TtS0hIhd8gnoF7z8PkDuUUfLs2qoPSojfbAC2GIG6qTrQ3BTwKEZAdxdYw+vu0eDKoV/nJ2Q08GuPFzKYxZ6/CVjXXz2di43iP4vic=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752254286; c=relaxed/simple;
-	bh=tRRgm1TCKRIxxicc390nlYIrkP0eQctG04d74RMi8ss=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=QvV+eMNnJFLR/EbRn4t39EqY/SDf9gL1Ubm+sv2KV8U3cQcAZoOCjZINsuhZM+i0zUoMXZumQNZ1gfTCrhJYCrnfW7PS7Z7ANi3Q3ATXPfwVScZv/HI+Dsv+UkuTOkwWD/r0c+RsCtLdtu4CG8tPt9k5iYBw1wA9iXnqriPKK40=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=G1J2UNJg; arc=none smtp.client-ip=209.85.216.42
+	s=arc-20240116; t=1752255487; c=relaxed/simple;
+	bh=VUH6NlLAyCfyhZB52sXzXQruzhIssmN6iMcI+FM7aQ4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ricgvKgWohfgoylIfNz1QJYoNBKivDl3+poSYxsapgHSYTpnMeq2UK3AHwRl9tWKZYI2oyDJD/bghHGWUNHNlRYNDDG+tr4z0lDxBQfUAcxPSGV37meKm4bmnSufK4eC796Zjt8dK6Ls5OOrAk3qdZqZfgZwFnRENhFpe+5zhgg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=i8JZ6VU4; arc=none smtp.client-ip=209.85.210.175
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G1J2UNJg"
-Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-313a188174fso2937614a91.1;
-        Fri, 11 Jul 2025 10:18:05 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i8JZ6VU4"
+Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-749068b9b63so1687924b3a.0;
+        Fri, 11 Jul 2025 10:38:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1752254284; x=1752859084; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=YN8JhcJPAFmyUnXWefNQx1CdU4pcrbO6LEejen5i4nE=;
-        b=G1J2UNJgP9OJBV7LocXmtw3V84CE+marCAGcU2aXinE01ajJWygXaAygQ2zMHzjLNB
-         DIY1j/eABWkiUzwngJBRSh1SB/3JhQ6TGjbINTIPX+7wODiS4sDQI3eKHQ/TOfvNnxHK
-         /Wvy02LApCWkLNzbWWQ1h+QCJvKoZ94crl6ApfLkTFaMGOWniyVviGJJrZSY+iB3z5MS
-         miRSKHnKLk/dxheFXX20LhuF/fM/e8uXXRu4G4m0ZdFwpHJ9w0CX3u7iWLFaHlPehBVu
-         W2rqsR5GBz4+mNReSOBYvZXOPUAxL1KuNFLUOs0Oq7mpakelXvkDWzt9475uqCCxq0Bf
-         Q8rg==
+        d=gmail.com; s=20230601; t=1752255485; x=1752860285; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=tcp1q3eJtn4RvXXFfNrI5IhZ5HGzP24EtfNVHh3pe30=;
+        b=i8JZ6VU4IWJ6yshwGEcKRPVfl9znRyBezDSBZ688IZXrmzWNA6uCTpjsZzGtb8WSk2
+         TlKepAxTRbe/YCVpG8gND2Z7rVI47ZS+oF9Kt2qSoE8kX5EkdWnWFZJ5bzXYKIkYop1L
+         msPL0A37tBOmhTYczwk6RBc4xDc1PTpdbQI88ow3/WMeYYdUeoWMK21rO/Ba3kRziF8b
+         QjbpODM6CZRU3P7MNI/WKg2winw0LS6BkfXcLnUuO6+qcQsv5u1O1x/4gGcdI0jPqqat
+         oIn07hMR7RjL6kyKdVlBj4wB0yk0nHwN8JGS6rQ2znk/MgNKrZx10bY4JNoKSFfFTVqS
+         XmAQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1752254284; x=1752859084;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=YN8JhcJPAFmyUnXWefNQx1CdU4pcrbO6LEejen5i4nE=;
-        b=Y3+fKAdFDEb3F52wnEPbJt84RVX6CrkDlnhkeLEn+r7OI7QYjQLu37+EFepa/slLUN
-         wCU3BXG/h33l67mN4Hm2BewB1KJC5zaYYeKI4oEbqM2tbgR0D7btnZbKUCYyIOjxHB3v
-         ESCC1cgp0UMK+cnOtfIjUn4VdyoBANmStftCNjwjh4dy0sJd/kahdj6FsH5ZLsvkrgXW
-         ayFkfxIRhcPmo0V1jwWIIH4ONWw6HalFV49vf9tKNDtg6Vn7G0SM0MNmpX4mWV+c8x4o
-         DiAUsUECSJLXPWp9ldiP3MfcewBW7kil/+zc0TE+F8AyxIUl+cTntzSrFzENdmdOZDD5
-         3R8A==
-X-Forwarded-Encrypted: i=1; AJvYcCUfuW9Pa54IQ/MCcpjIcpvkCdKmQd8T4JbIhfH0qQVeIQjryfQXd8okZXVw+iIREGWYCNIoqKsXwfHJxFAn@vger.kernel.org, AJvYcCWGWe/+/quA3OtKfF87dm6zzVrPReFlFQtfPRflZZCjvjObtkaldbiFEx7DFQDfs1B/eoY=@vger.kernel.org, AJvYcCXoQv62EXJM8liP4erz98gul92bioaa9+IjALIA0nyenpkbCSX2NxLom0+8HNVK9M74FXCizvryPsskdDgBzbdItqwP@vger.kernel.org
-X-Gm-Message-State: AOJu0YyFIHGSouM4sVhJg0bi1ehoP40jGiSe8axHa+iNwlpSx7iCnImq
-	Bv6l6CovPOY9tevFiGxVlr53iY2bCJunAATTf28OiLewnFSeeAG9sMh458RDyn2LkKbVqp4Cwwu
-	CPtRYRNsBrf/4M08LgueMe632GfjOd50=
-X-Gm-Gg: ASbGncucGMLZwBNUr1a1RjeM2nNA353niAELt6hDaTh3nbmxddiO73zWUGK6NiyC43i
-	1/s7fZRvtINyyY11xq/Xoho6JjS/CxMdkm/MujtTzXXd2Q+8iynlhsUecORH9EPHRkWFDX3jV7C
-	fDkzsM+NxKOL1Y8/tOC9Is13FfS3w/A1JMcbChpqktkUEFdKvhfiHPFdN5I+4eYYxoqwEnWIwb9
-	VLqehf96otlB7SMEwKykio=
-X-Google-Smtp-Source: AGHT+IFAYCkRpVVEg0QdLRvRVHmC8QaVJXMfi9fmJHYomD6pCx7wxiWWUcIXcZjMo1+KVeUZKV95FSYT0bwK6iyXmYg=
-X-Received: by 2002:a17:90b:56ce:b0:315:f6d6:d29c with SMTP id
- 98e67ed59e1d1-31c3d0c3803mr13249177a91.15.1752254283864; Fri, 11 Jul 2025
- 10:18:03 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1752255485; x=1752860285;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=tcp1q3eJtn4RvXXFfNrI5IhZ5HGzP24EtfNVHh3pe30=;
+        b=R7kme073BJnqUcueQRq5l8vvTYXWzab4Pf9tiGflHdRB3JHW0WuPofmP6JKaQt0b0N
+         W5+XkKvs7jVvaUwznILcY9PAUoh3IMx5mtx5HJ/I+se6RtCixP5v1xNg+T4F2D2imisb
+         N8yHjbm84y03tdCR5rTF0IqIoLDqzefdZYG6Y5iu5Hsyf9FfHm2aZ6X6l5UdWD8ecuwM
+         QnSS9dwO3vJKQWeZbc9fGSr+UmdAbSST8nmGsb9E0Dq8mR/YqpJDbyN7prnPuS/ftuCl
+         UHJ9vsuhAMfRKmlVJ7GLeQGVY50cPhfaLTa4EiKvfhUgXLWVXS+7XhDos0reBELTZIak
+         M4Tg==
+X-Forwarded-Encrypted: i=1; AJvYcCUnviGrBIr2jv2HV7kY8fSSAT5Gqy0q1GhOEUn1N1xQOlHLNrwhCsVcOBtcgd+ElXr+GQo=@vger.kernel.org, AJvYcCVy3tNqdQjBra2olkVEXywNZ/ook8pbjk5NlumrebRqnBw3E5Ctw+eNr6fRyw3L0gAEPVoofhkU7r4vg2P6@vger.kernel.org, AJvYcCWENXmtjkXGqWIc2mmSLol5GJpu906kJ4EO1V3rk6OBITfSuJvUkNytYX/zEW9/nQuywL60mivU8RpEf0x461VqXWKQ@vger.kernel.org, AJvYcCWUItiDGJrLxOnIrqRpGgAS+NuVg+oDRtVCIWBPD5tqdLmOwxOYfndrZhDk7Y3qYtM9hPJIg8UGgRoL2S/qMO43@vger.kernel.org, AJvYcCX/utiRvVXxhUDEBbtfr9uEyny6H8XlIuyJ8qxVuG280aRKRCjoMlLi6iyxVZMtFR88C4UmeJJr@vger.kernel.org
+X-Gm-Message-State: AOJu0YzjAs4KvD5dHST8S0Qaw4aAMMu01N4d5dk5pRoM8MTFubdx/k6d
+	5HYuZfCcKMqqcFO5etx0RmcWaJmU/hqBUthEw+lAYleX4WkeY6ILneTu
+X-Gm-Gg: ASbGnctAFkeLVxogtfxnXqLSaf0/SQcCoZWWjbmuOKEtS76bmX+geRkdhyTPByTaaeV
+	LXVoCjKcUKLbnnWpFPlbzcp6AlbyjO+PFjs6dPYFyd1qx5IhAQTkNbKo3h8yCmWcLolDoA0Ghoh
+	mt8ua1sQG+O6QPpNQUtlm0nq+d5gkY6RvRfsgW6J8s8m6cgwhG/8jtAy0/3VmA3ZjDGDn4LsO/G
+	8PBjl8H7ejoJlGBJcDuQ0pDlTvm/cEiKi8RgBVRdRnJ9pMc1wGxfmr1JuViTsoPIQeMSyoy1nlS
+	uLz//QG8XsnK2AjP6fiLl8qZo4ESB9CIHgQc0E7Erhg8viGuldJgp3bJ8wiDnvf0llsSfGMZ30Z
+	+4B0Uq2V454ZhGoGRK902QhE=
+X-Google-Smtp-Source: AGHT+IGJbwFQH56VXL0M9um3HUdIb4haabnjbvaowHGGvlG+5zNyV1YZ+Wpapkx9WznqUu292jb7ww==
+X-Received: by 2002:a17:90b:4c0d:b0:315:af43:12ee with SMTP id 98e67ed59e1d1-31c50e1763cmr3739058a91.16.1752255485099;
+        Fri, 11 Jul 2025 10:38:05 -0700 (PDT)
+Received: from gmail.com ([98.97.39.174])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-31c3eb62056sm5764526a91.38.2025.07.11.10.38.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 11 Jul 2025 10:38:04 -0700 (PDT)
+Date: Fri, 11 Jul 2025 10:37:48 -0700
+From: John Fastabend <john.fastabend@gmail.com>
+To: Tao Chen <chen.dylane@linux.dev>
+Cc: daniel@iogearbox.net, razor@blackwall.org, andrew+netdev@lunn.ch,
+	davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+	pabeni@redhat.com, ast@kernel.org, andrii@kernel.org,
+	martin.lau@linux.dev, eddyz87@gmail.com, song@kernel.org,
+	yonghong.song@linux.dev, kpsingh@kernel.org, sdf@fomichev.me,
+	haoluo@google.com, jolsa@kernel.org, mattbobrowski@google.com,
+	rostedt@goodmis.org, mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com, horms@kernel.org,
+	willemb@google.com, jakub@cloudflare.com, pablo@netfilter.org,
+	kadlec@netfilter.org, hawk@kernel.org, bpf@vger.kernel.org,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, netfilter-devel@vger.kernel.org,
+	coreteam@netfilter.org
+Subject: Re: [PATCH bpf-next v4 4/7] bpf: Remove location field in tcx_link
+Message-ID: <20250711173748.ojinljlncddm2c43@gmail.com>
+References: <20250710032038.888700-1-chen.dylane@linux.dev>
+ <20250710032038.888700-5-chen.dylane@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250711082931.3398027-1-jolsa@kernel.org>
-In-Reply-To: <20250711082931.3398027-1-jolsa@kernel.org>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Fri, 11 Jul 2025 10:17:50 -0700
-X-Gm-Features: Ac12FXyY6qtXVwPUhYw-o64HRgW0NuQb1LV0LQ1wJ9aG7f6XWtpN8LrQvHGnlSA
-Message-ID: <CAEf4Bzbg2ROstG5+1XUoZre403n-B3CHuW9E0UECNY364giDcw@mail.gmail.com>
-Subject: Re: [PATCHv5 perf/core 00/22] uprobes: Add support to optimize usdt
- probes on x86_64
-To: Jiri Olsa <jolsa@kernel.org>
-Cc: Oleg Nesterov <oleg@redhat.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Andrii Nakryiko <andrii@kernel.org>, Alejandro Colomar <alx@kernel.org>, Eyal Birger <eyal.birger@gmail.com>, 
-	kees@kernel.org, bpf@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, x86@kernel.org, 
-	Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>, 
-	John Fastabend <john.fastabend@gmail.com>, Hao Luo <haoluo@google.com>, 
-	Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Alan Maguire <alan.maguire@oracle.com>, David Laight <David.Laight@aculab.com>, 
-	=?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas@t-8ch.de>, 
-	Ingo Molnar <mingo@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250710032038.888700-5-chen.dylane@linux.dev>
 
-On Fri, Jul 11, 2025 at 1:29=E2=80=AFAM Jiri Olsa <jolsa@kernel.org> wrote:
->
-> hi,
-> this patchset adds support to optimize usdt probes on top of 5-byte
-> nop instruction.
->
-> The generic approach (optimize all uprobes) is hard due to emulating
-> possible multiple original instructions and its related issues. The
-> usdt case, which stores 5-byte nop seems much easier, so starting
-> with that.
->
-> The basic idea is to replace breakpoint exception with syscall which
-> is faster on x86_64. For more details please see changelog of patch 8.
->
-> The run_bench_uprobes.sh benchmark triggers uprobe (on top of different
-> original instructions) in a loop and counts how many of those happened
-> per second (the unit below is million loops).
->
-> There's big speed up if you consider current usdt implementation
-> (uprobe-nop) compared to proposed usdt (uprobe-nop5):
->
-> current:
->         usermode-count :  152.501 =C2=B1 0.012M/s
->         syscall-count  :   14.463 =C2=B1 0.062M/s
-> -->     uprobe-nop     :    3.160 =C2=B1 0.005M/s
->         uprobe-push    :    3.003 =C2=B1 0.003M/s
->         uprobe-ret     :    1.100 =C2=B1 0.003M/s
->         uprobe-nop5    :    3.132 =C2=B1 0.012M/s
->         uretprobe-nop  :    2.103 =C2=B1 0.002M/s
->         uretprobe-push :    2.027 =C2=B1 0.004M/s
->         uretprobe-ret  :    0.914 =C2=B1 0.002M/s
->         uretprobe-nop5 :    2.115 =C2=B1 0.002M/s
->
-> after the change:
->         usermode-count :  152.343 =C2=B1 0.400M/s
->         syscall-count  :   14.851 =C2=B1 0.033M/s
->         uprobe-nop     :    3.204 =C2=B1 0.005M/s
->         uprobe-push    :    3.040 =C2=B1 0.005M/s
->         uprobe-ret     :    1.098 =C2=B1 0.003M/s
-> -->     uprobe-nop5    :    7.286 =C2=B1 0.017M/s
->         uretprobe-nop  :    2.144 =C2=B1 0.001M/s
->         uretprobe-push :    2.069 =C2=B1 0.002M/s
->         uretprobe-ret  :    0.922 =C2=B1 0.000M/s
->         uretprobe-nop5 :    3.487 =C2=B1 0.001M/s
->
-> I see bit more speed up on Intel (above) compared to AMD. The big nop5
-> speed up is partly due to emulating nop5 and partly due to optimization.
->
-> The key speed up we do this for is the USDT switch from nop to nop5:
->         uprobe-nop     :    3.160 =C2=B1 0.005M/s
->         uprobe-nop5    :    7.286 =C2=B1 0.017M/s
->
+On 2025-07-10 11:20:35, Tao Chen wrote:
+> Use attach_type in bpf_link to replace the location filed, and
+> remove location field in tcx_link.
+> 
+> Acked-by: Daniel Borkmann <daniel@iogearbox.net>
+> Acked-by: Jiri Olsa <jolsa@kernel.org>
+> Signed-off-by: Tao Chen <chen.dylane@linux.dev>
+> ---
 
-We've been waiting for this to land for so long, I hope this gets
-applied soon...
-
-Once this lands, we can finally start implementing USDT support that
-can take advantage of this transparently and with no performance
-regression on old kernel.
-
-For the series:
-
-Acked-by: Andrii Nakryiko <andrii@kernel.org>
-
-[...]
+Acked-by: John Fastabend <john.fastabend@gmail.com>
