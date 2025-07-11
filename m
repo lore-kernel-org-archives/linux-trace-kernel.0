@@ -1,41 +1,44 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7639D2D0C6B;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24B142BF3CF;
 	Fri, 11 Jul 2025 13:17:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752239869; cv=none; b=fELSaZT36pZBatLeiY0HZpX5QYLX+HU2ZdziAuCT5i0a87jbTRWQGhP2LL5cm5xe4jPJnzvpEj/lv4LYp6SvJlHCMF3N0El4ezqJPIaYb1yWprrQj2W4kZggioUeF5vout/ErOFSbR7ir7GfkRTZH4WjlN/UbNnQNduO8mihBAo=
+	t=1752239870; cv=none; b=I3+TarBr06U5zf+KkAbxJF6dlPnG8mFRp1QeswFtFCK5ILQmUCncCkWB12RLST5AGjBKlehLH1CUiDi2icW7BxmEGpgfcRkaGgcZM47RW3wUGWYd1OWc6Pxwv+TFjuomzFTgCgtD3iZWd0G/38OkueOASJrxBpQgri9D31Su3zc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752239869; c=relaxed/simple;
-	bh=GRA74LOTuk1uJOCrkdqqWrOoo7DoiAXzeWM1+TSA8iQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=tZgoXEi8G+yHxw1kmXVBSSw2ChBgQ3yu439ZcA+Vzq033ipue/oTcd3johUxHvrmNCSxA0eBjAHE3cu9ILwmgqllfcXhOsW2h/2j3hQNFigstXLT/F50lcuMLrTAtmpcpQYdJQSK14wSTivPG3ZlpVXnSzeO5/6kQ25k/zHpi4Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=qeiQ04HQ; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ah5ugfQ2; arc=none smtp.client-ip=193.142.43.55
+	s=arc-20240116; t=1752239870; c=relaxed/simple;
+	bh=2sx+KHYNlqmjmePdZpE8eMjypL3Mb80fn3kZxiey0PA=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=LCIjwRg2UChOtFxNMNCRzY+k6Sd1wu4Dom7ThN6Hnvy/6kHlinDWuOphHClRLxBZvsgmxQs97HsrelQKtHDIGKcfAyALQD7LiZUU+wP8CBF02l1peeNuh9ZpsPp/prWjnltv9ez4H8xUULRNEXDSxHKxlmb+TVeEHDd1g3gkpGM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=qkn4WlHO; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ho3SL/ik; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="qeiQ04HQ";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ah5ugfQ2"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="qkn4WlHO";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ho3SL/ik"
 From: Nam Cao <namcao@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1752239866;
+	s=2020; t=1752239867;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=3k27oHJLKOGmZgBLMjFziWxaMQVkPvdeaqKeFOZO54M=;
-	b=qeiQ04HQTEuW36RpeVVh21dOiizfEWeSVwhombKJRZyYbxPdt3EuQxIDygF9q4y/guUTDD
-	m+UfpWFsDYVJJ17oqrHVDF1aBWxHiRMxeIlQZNooOD8WsSaT5kjnEJQzCPqenM4KAgo6gi
-	8qjQfWAUcylmma3E3W4zyaLivdEwjVyD3FyrT4dYyhWImLAt+rTcVmwZemnSZEYF9RBiMd
-	zSTjv+YtsiN90xxp5XOZ6BtaTwooVnZyAF8yTl27xbNjA3tz89gb3p9R0jLGTPEc+9WqL0
-	K3+24aasYg6azjl1RpuUX2N3v9QPRP8sqx+HRuDPxP2dboGvlc+NnXdIR48ddw==
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=kmSeSCaMLTxjNle1bg96T1FnAl3KVrKCCr1RGJGYED4=;
+	b=qkn4WlHORQUrFdQhPExQFdwDpontQI2oyBhYQz9t1T91kDagDvRjVH00EDS1PuLmpJkwmJ
+	k8C/L1oBiZrOgEu37vgwCSiMV4WFpzmjVRPge078ymPiRWdTqluOd4kbDQ2qLZBA9TNc/M
+	78OnznMULS8oq4nfKAMGTHrK9P9Lc3KK5EcwH9t2oLoJmGK8q7eqbaCpPoWlxxyexD+sWW
+	qy5ijG4J0MTw7EwoHTo5O8gwPUoFawnHHsy6N4nUfQ+Onkl6OOJKYIwTplDDoQzLIFtquI
+	oWcvb4HF3vBfoL3AkeE7wry6HQ7Lr8EEA+twRVAOsD+xu1cbHFabVPgDtQO7Jg==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1752239866;
+	s=2020e; t=1752239867;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=3k27oHJLKOGmZgBLMjFziWxaMQVkPvdeaqKeFOZO54M=;
-	b=ah5ugfQ2ogqEqgmBXFJPX5EokUlSA8iZ7La6kLb4jtFwwSulJgYAZFRFNzMqzUyIb73reo
-	1bhTRClm5JTr92CQ==
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=kmSeSCaMLTxjNle1bg96T1FnAl3KVrKCCr1RGJGYED4=;
+	b=ho3SL/ik71cNHV7Z0fe1DIrlJnkTfnPjH89WsDnFYQ1T8dLlVuATes6EbnzeRuCQGb3lvM
+	63KmJSt1FIlBovDg==
 To: Steven Rostedt <rostedt@goodmis.org>,
 	John Ogness <john.ogness@linutronix.de>,
 	Masami Hiramatsu <mhiramat@kernel.org>,
@@ -44,9 +47,11 @@ To: Steven Rostedt <rostedt@goodmis.org>,
 	linux-trace-kernel@vger.kernel.org,
 	linux-kernel@vger.kernel.org
 Cc: Nam Cao <namcao@linutronix.de>
-Subject: [PATCH 0/2] rv/ltl: Support the 'next' operator
-Date: Fri, 11 Jul 2025 15:17:36 +0200
-Message-Id: <cover.1752239482.git.namcao@linutronix.de>
+Subject: [PATCH 1/2] rv/ltl: Do not execute the Buchi automaton twice on start condition
+Date: Fri, 11 Jul 2025 15:17:37 +0200
+Message-Id: <9379f4e7b9c1c69a6dca3e20a22936c850a25ca7.1752239482.git.namcao@linutronix.de>
+In-Reply-To: <cover.1752239482.git.namcao@linutronix.de>
+References: <cover.1752239482.git.namcao@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -55,28 +60,37 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Hi,
+On start condition of a Buchi automaton, the automaton is executed twice.
 
-In the theory of linear temporal logic, there is also the 'next' unary
-operator defined as: next time, the operand must be true.
+This is fine for now, as all the current LTL operators do not care about
+this. But it would break the 'next' operator, which will be introduced in a
+follow-up patch.
 
-During my initial implementation, I thought kernel RV monitors would not
-have a use case for this operator. Therefore I omitted it.
+Prepare for the introduction of the 'next' operator, only execute the
+automaton once on start condition.
 
-However, me and Gabriele had a conversion off list, and he may have a use
-case for this operator.
+Signed-off-by: Nam Cao <namcao@linutronix.de>
+---
+ include/rv/ltl_monitor.h | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-Therefore, implement the theory completely and add the 'next' operator.
-
-Nam Cao (2):
-  rv/ltl: Do not execute the Buchi automaton twice on start condition
-  verification/rvgen: Support the 'next' operator
-
- .../trace/rv/linear_temporal_logic.rst        |  1 +
- include/rv/ltl_monitor.h                      |  4 ++-
- tools/verification/rvgen/rvgen/ltl2ba.py      | 26 +++++++++++++++++++
- 3 files changed, 30 insertions(+), 1 deletion(-)
-
+diff --git a/include/rv/ltl_monitor.h b/include/rv/ltl_monitor.h
+index 9a583125b566..67031a774e3d 100644
+--- a/include/rv/ltl_monitor.h
++++ b/include/rv/ltl_monitor.h
+@@ -167,8 +167,10 @@ static void ltl_atom_update(struct task_struct *task, =
+enum ltl_atom atom, bool v
+ 	ltl_atom_set(mon, atom, value);
+ 	ltl_atoms_fetch(task, mon);
+=20
+-	if (!rv_ltl_valid_state(mon))
++	if (!rv_ltl_valid_state(mon)) {
+ 		ltl_attempt_start(task, mon);
++		return;
++	}
+=20
+ 	ltl_validate(task, mon);
+ }
 --=20
 2.39.5
 
