@@ -1,37 +1,43 @@
-Received: from relay.hostedemail.com (smtprelay0012.hostedemail.com [216.40.44.12])
+Received: from relay.hostedemail.com (smtprelay0015.hostedemail.com [216.40.44.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C440218E750;
-	Fri, 11 Jul 2025 16:03:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF1D22ED149;
+	Fri, 11 Jul 2025 16:08:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752249814; cv=none; b=e/Fq212Ys78q1HWVQLnj4ILHGmokC0zlO5OX+96m8iQ0MLhmI+m55IpKN2+97GBShsDaG2SLekEruVrnNNJ4lcHhoneoqemxa03GvNO6Fi3S2m40zb1i6yummGFooULtRk+Mu8v7fG1sF67eTu1itwSDcgAX3bSXfBRpjm+evKQ=
+	t=1752250093; cv=none; b=G8ZS2pgYJvc41AOfgCvpT+HN0pJz0zZTB4jSgzaM8sGQybfgQH9oF2y7yqS4TXodIBaSW+GKMgvMV0y8wLkHtIe5vRvJKsIeOnk5U0sf8LRPBhfPvqy6TRGPdeiYPokz+U7hbwBjxs0v8yP8RetDe0nDYUEovgwP4wRBi8ADQ58=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752249814; c=relaxed/simple;
-	bh=M2rhZ6UpzBO+56biWhK8JC/KSqvxqAizce9vg2Hwl8M=;
+	s=arc-20240116; t=1752250093; c=relaxed/simple;
+	bh=Uy4Zxm8qEhAQy0/hG84LOWQs66Csqb8gSMvRyqPJ0ck=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=sIPtngu5GeYt2tYcEro8sbSmWUKchfnXKIJ3wap0AA12T2c5nS1f+zEchYxVARAkE1Vxn0gW18zIO2VK+C4OTE4Ex8c35nRkeJ8ZZy5vnlkgbRxE3ow/d6D825ZjrDolQ37hIpZVocBAZmPEau2IfpWeHMfQpkWeqpfrX0eCiz4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.12
+	 MIME-Version:Content-Type; b=B3NVnCbXdXyjhMkVZmFx20kVNaeHZHDJCgqzvFyvObjHj4RrJPNuF/sjdJB7Ox/QkkyDBe4bnh7IEQsXeTMZ2Pw4vR3HNjDg23sPYGRnWL3SrqPwQFamzUAuvm/vRQ0zKCrb/4rNWDw7yJRGPV9nJewmgHyeT1jROlflSgAuaX8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.15
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf10.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay09.hostedemail.com (Postfix) with ESMTP id 9785D80A27;
-	Fri, 11 Jul 2025 16:03:25 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf10.hostedemail.com (Postfix) with ESMTPA id E87803E;
-	Fri, 11 Jul 2025 16:03:23 +0000 (UTC)
-Date: Fri, 11 Jul 2025 12:03:22 -0400
+Received: from omf09.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay09.hostedemail.com (Postfix) with ESMTP id 2663C80A3C;
+	Fri, 11 Jul 2025 16:08:02 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf09.hostedemail.com (Postfix) with ESMTPA id E8EB620024;
+	Fri, 11 Jul 2025 16:07:59 +0000 (UTC)
+Date: Fri, 11 Jul 2025 12:07:58 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] tracing: Remove "__attribute__()" from the type
- field of event format
-Message-ID: <20250711120322.4ddb9b39@batman.local.home>
-In-Reply-To: <20250711143703.60a1a9a9f31a45f2000eec9d@kernel.org>
-References: <175197567999.977073.8989204607899013923.stgit@mhiramat.tok.corp.google.com>
-	<175197568917.977073.2201559708302320631.stgit@mhiramat.tok.corp.google.com>
-	<20250709131107.397a3278@batman.local.home>
-	<20250711143703.60a1a9a9f31a45f2000eec9d@kernel.org>
+To: David Laight <david.laight.linux@gmail.com>
+Cc: Nam Cao <namcao@linutronix.de>, Gabriele Monaco <gmonaco@redhat.com>,
+ John Ogness <john.ogness@linutronix.de>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] tracing: Remove pointless memory barriers
+Message-ID: <20250711120758.3f6904e9@batman.local.home>
+In-Reply-To: <20250711092946.1bbd58ef@pumpkin>
+References: <20250626151940.1756398-1-namcao@linutronix.de>
+	<20250626113520.315db641@gandalf.local.home>
+	<20250626160459.soHxOROG@linutronix.de>
+	<20250626123445.5b01849d@gandalf.local.home>
+	<84o6uatn6i.fsf@jogness.linutronix.de>
+	<564f10574f11bd7ca42fcc5fb4d6c5625dc17205.camel@redhat.com>
+	<20250708074219.K7BthlGg@linutronix.de>
+	<20250709110827.0dce4012@batman.local.home>
+	<20250711092946.1bbd58ef@pumpkin>
 X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -41,57 +47,28 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Stat-Signature: uzge8baockmurhn8dmux1zg965cb6pgm
-X-Rspamd-Server: rspamout05
-X-Rspamd-Queue-Id: E87803E
+X-Stat-Signature: n75e47kzdasjzuxp45e7bn6wjorpqtek
+X-Rspamd-Server: rspamout01
+X-Rspamd-Queue-Id: E8EB620024
 X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX195baZcmXnkODmJnqNUYI9nKpCdoyxokbA=
-X-HE-Tag: 1752249803-793985
-X-HE-Meta: U2FsdGVkX1840AX1DqO9JhaE0Ssy9P+/hvxo7CN/A3fGdUisgch0ZLP2XQ3mKnww+aRUOCgn9DdNf6MMLAqW+V1HlA8Si2FCDsBdg7brZMAiPCkjS4E/qmH+QbnKjoa5CcUEo3FYL2LxcYjVxfufiC/aPmP088UpSBemuy6D0WoFtrFsBjy2VTHcXYCjGwf2FUvikFPxHPCZQEIA0usUAVslJpJiF3o4T1ifbwP8H2467q6aTtYVJYbVF2KEFAF9AOIiK5NymNQq7gZI7XmQD42SUKj6Orm1edoAiLG/Zl26lH1Nc0n1BZCVmhYdIU8+XHmKAa7cp27N3pZB6tla3JWM+DgF4uxM
+X-Session-ID: U2FsdGVkX1/fdHFSxGdHkrgqj6zrC1ejyafkaGQjA4Q=
+X-HE-Tag: 1752250079-604324
+X-HE-Meta: U2FsdGVkX1+uNop2+UGknTnVPsmahA7Y1zkbmQ32Nq/YDGwvYOKI3ZvYEdhKqA/YxGcxDSaPHyxsZgWvPXNRKIft1yY8eE1zUmEae56Zlbap2j/dv19WZr+5bD5RaMqg1A04U3wHF7yJpP8Jz+N9JVhdQQv+Idy101nAo1CTl5lJjUW5a4XcbqFysAnSFj7l0YMHsLqngfrRjLAmiIk4uQjLLsKjZcrtZWJKCUu6px80gCJSKGlhf1h8ol9qFWTRL07UBcYPG7IBNiUej5RlTz3y9LQcB6Z/BCl7dw6/E3sVk6rzNxJ6Ws4Q2LgAcw79EwIKqwSYG2kNnJCthdPZkN/4lLny/3qs
 
-On Fri, 11 Jul 2025 14:37:03 +0900
-Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
+On Fri, 11 Jul 2025 09:29:46 +0100
+David Laight <david.laight.linux@gmail.com> wrote:
 
-> I investigated this but it is not possible to use update_event_fields()
-> because that function is only used if the 
-> CONFIG_TRACE_EVAL_MAP_FILE=y.
+> > Doesn't atomic make sure the values are seen when they are changed?  
+> 
+> No.
+> It normally just ensures the read/write aren't 'torn'.
+> Atomics are used for read-modify-writes to ensure two cpu don't
+> do read-read-modify-modify-write-write losing one of the changes.
+> (They can need special instructions for read and write - but normally don't.)
+> So here just the same as the volatile accesses READ_ONCE() and WRITE_ONCE().
 
-That had better *not* be true, otherwise all the TRACE_DEFINE_ENUM() in
-include/trace/events/*.h would be useless and those events would not
-parse. Note, I usually run without that config enabled, so it would
-most definitely break on me if this was true.
-
-In the code we have:
-
-----------------------8<----------------------
-#else /* CONFIG_TRACE_EVAL_MAP_FILE */
-static inline void trace_create_eval_file(struct dentry *d_tracer) { }
-static inline void trace_insert_eval_map_file(struct module *mod,
-			      struct trace_eval_map **start, int len) { }
-#endif /* !CONFIG_TRACE_EVAL_MAP_FILE */
-
-static void trace_insert_eval_map(struct module *mod,
-				  struct trace_eval_map **start, int len)
-{
-	struct trace_eval_map **map;
-
-	if (len <= 0)
-		return;
-
-	map = start;
-
-	trace_event_eval_update(map, len);
-
-	trace_insert_eval_map_file(mod, start, len);
-}
----------------------->8----------------------
-
-Notice the "#endif". The trace_insert_eval_map_file() is a nop, but the
-trace_event_eval_update() is not. That has the call to
-update_event_printk() and update_event_fields().
-
-So it can most definitely be used when that config is not defined. That
-config only creates a file to show you *what* was replaced. It doesn't
-stop the replacing.
+At first I was about to say "But wait! I rely on this to work in other
+parts of my code", but then realized I use atomic_inc_return() and
+similar that actually do make the update atomic across CPUs.
 
 -- Steve
