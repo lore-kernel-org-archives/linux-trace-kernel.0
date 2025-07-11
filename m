@@ -1,51 +1,84 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37DFC5383;
-	Fri, 11 Jul 2025 18:18:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D0525FDA7;
+	Fri, 11 Jul 2025 19:36:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752257935; cv=none; b=tGTQQ52tPWwaKkdtmJRIg4egaKMR/y1aqW1PlEBmGw8giftITsEku75AVxN6hT45BpVWw0+qgNvUet2dl5u3aU3ZVG+0Ywh0E9Q4t2CVfe+LGLhdI4dE1fMLz7MCFZFpkbAoRULs+MaNKR/Hz3MNpuHWW87Vs8DQy0Rwgixl3MA=
+	t=1752262571; cv=none; b=ZuQi5IdfBuv+0oki0HBSOZl8pov5wlbJGAOv9Maat9Rc4gDfYlM9xIef6U5RAV3jY1nv+eZs8WnwYh+lreqof03cKElLuiDMPxRP1DJaUWzed5PksZz8FsB3SOn0hrPvGHrmWI0JWix/EusO9RqNbrMfiZym004qeHe7eS4uBPk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752257935; c=relaxed/simple;
-	bh=RaXFaKhMptA0VWI0bcnG6YmJ4qntVveyRzZV3R4NIWs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iMwUFt0tuL38JurLud6FYftsp/aSlySIuZY93YMLLMTSiCg0XQAUJQ8VOmw0Zn685VIbG3Q9WMn0KZAr3MGDjiFB0QAywbQvor3JXul01hHi0jwY23sV2aGM7BXPsqr9/G+2sZZAPl/nTehF3vNMtZ0dGp0GJsgPvQSnpV5ydlo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=R58PcrH/; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1752262571; c=relaxed/simple;
+	bh=2JyjkZbaVpOcZNXUr6/+YHVMQgQYM+1Zvh45n+aaKwo=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=E10dW2tlAbTlZrTqKoNMpgKbglw8HWM0lYTWb4/By6PXsd+mnOLp8Yhyz9eRTA5l5Vb2bqdaQ5xmMBfd8IbM/ejT68QZPja07lDaZ8txFo5jp1yRN3h54aZbep26LqD2sxuszEvynaE32a0XznGrdDGe9QQH5dM8FDAdjrqGrQo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gQFuFEk2; arc=none smtp.client-ip=209.85.208.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="R58PcrH/"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=Adhh9U7HQoWtfmousRvgTn6pHJmknUfcCaBoye1pSMY=; b=R58PcrH/4K187twPLAxOLJLy3Y
-	EEIzQod0raQWLqjhgHb+OWq3UrI/tB2Z9xnnkHGs9kcrdW72tuTdPwLtkrsj1YBF4r3LVlk3O4xRl
-	/Ugm8jCyGTIliT8P+a/kdVEtgp9bBPWBbVz10dvjNO8T6TLeNHstcH9tfXstTK4nhYXWmNMUwcqug
-	/HfbANSG32eHWS5OgWdGOsp1gVf89e7Olva0Wi5riQNCH7C3bSC0RBRaeIyq1APBArH2jdi+2oTWk
-	Aro1btZHZdXK5OF3S9jM/30ctMi0BuRsQlYegBkoNW4TaXjyas18/XuoJ5IPGMg6xqLo9qBmzsMMj
-	CBJLW06A==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uaIKd-00000009JrZ-1A1X;
-	Fri, 11 Jul 2025 18:18:47 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 0A55B3001AA; Fri, 11 Jul 2025 20:18:46 +0200 (CEST)
-Date: Fri, 11 Jul 2025 20:18:45 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Nam Cao <namcao@linutronix.de>, John Ogness <john.ogness@linutronix.de>,
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gQFuFEk2"
+Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-608acb0a27fso3471281a12.0;
+        Fri, 11 Jul 2025 12:36:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1752262568; x=1752867368; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=zIfOn6Rb3tfseofOmKK1vxMi7RNeHNheLMa9bMxs2dU=;
+        b=gQFuFEk2mQShfqaO0EsmvmDIZ96zNnjv/LqQPCW9uBn9JXa8LVuKNX5DANWDXy+jCS
+         5xKv+7U0nwfSyVwHekw6/JjjHj6W8tZDgb1GIMom1dEqsbcn3mXE2Y9FcHXnea4h767D
+         naB44CU3AOmz+948/1AuDRk0MsuHprvrTOvNkTmmTFL5qs0AEDufB3307wyrfUIsjPTZ
+         83RPhvxIFeZq8vkBVEBd+b2gLcbrw8LJBcbZkXd29HT7L3Dq/BJCuxOkyeZOYQwZwmEt
+         UfNI26YFSTfiyQmCb3W+Q106mxL4AhjmKVMZoiZG+brKn5jL49ozGlZf48R2xe6x05Cg
+         f7Nw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1752262568; x=1752867368;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=zIfOn6Rb3tfseofOmKK1vxMi7RNeHNheLMa9bMxs2dU=;
+        b=dRJusogo6NHR/ULLSej8Z3rNy1rrKhOp1jvqmbX0bYCrEDbRq391XOD18MMNK1gYkJ
+         3Zd4tYot1HCB11YBvyN4lDrqu6l4jG4XfTAhTbxWBNCF8jhZnbSUN9uTYIk+9MgVu6WC
+         CpxR/am45hUMcCUl4hfQUjHB6oHGNC0+2c1HrQzdxzApOIpVossfxkyEKKUAy98TZNiP
+         z6LVZdkh1Vas1lEBN32AMBesr74TwBHwh7zYwdybTl/iiN2SJBHYvyKZIyEE7BTvX/yK
+         SeXFaScBcg/YkXmI40/wadPN4Rko4j3hqikkkbhDqa4AXuhH9VIr8V24PPO60peN+27o
+         LMrw==
+X-Forwarded-Encrypted: i=1; AJvYcCW/lxBhJJxDM+vwU6/dpiBR1/zpx2TAbsUrki0lPyN4HUuNcAlrPEEvz0z5rI2jcGlSsls=@vger.kernel.org, AJvYcCWqVwHtNIO/SbAJj5xdzmaO4mzu/21LBVx9SnSlglvJu3krMEPH18ZWJhOKSzd/H3Sc9akAjDqFU5sQjp+Mng6kV9m9@vger.kernel.org, AJvYcCXuqe+d8dXPImlK3rvf39OXreWS1G0lw7Es1ecxvlfdIUS1uPNGdy4DsSAQeoYxZ3nVVaK7S5HXKqx06vU1@vger.kernel.org
+X-Gm-Message-State: AOJu0YyRVocii2TA8NdGJqcgtJ7CCkFWjL3xwFzbctUwER0NXbcm+BNa
+	xqHlGlf3iW3F3Kn+8808DJfZsqoqcJEegP6escc/pIRRvxB02oWpUSx8
+X-Gm-Gg: ASbGncv4go8QWHFCrBPCiBxPyKLt8+xnc5wodzy3CEqPlVf8V+j84tfVJCDIOlz2exa
+	TYhCA++LKt43EREf60AawICO/vY9IGbbka9TbqzZJViqd2v0ys2JA5HpQdyIkh/Vc64lAmsrqN1
+	es0581mZ6nuIPcItO6EC05GATJ0lDUUPxiRSmE43apIzj2/x8mznq8q2ejWc8hX5KuZ+7/pdN/a
+	iWgMpOypCOvLArQYRSkS6Fz/r5kbsy3hNtx75MOswlUqrddIJdvu4Hb62nQ3myOEm3geKSRmiwE
+	RJu8WUDqfs8DwQqebwJUhQhu441SOeH0/PrSgRMBp+kSM5yyqrLxgjn5iAu381JkkQFysKEa2px
+	YJeyhsNeB4Q==
+X-Google-Smtp-Source: AGHT+IFDvB4IMf95WTCzX7Zq4Ah+hUJyynqhCkjv6kas9TazcKdgKM0N+esvU7a8CHSkhakrT8CgRA==
+X-Received: by 2002:a05:6402:42d4:b0:604:a869:67e9 with SMTP id 4fb4d7f45d1cf-611e8479c1amr3737986a12.22.1752262568011;
+        Fri, 11 Jul 2025 12:36:08 -0700 (PDT)
+Received: from krava ([176.74.159.170])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-611c973360bsm2615306a12.45.2025.07.11.12.36.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 11 Jul 2025 12:36:07 -0700 (PDT)
+From: Jiri Olsa <olsajiri@gmail.com>
+X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
+Date: Fri, 11 Jul 2025 21:36:06 +0200
+To: Oleg Nesterov <oleg@redhat.com>
+Cc: Peter Zijlstra <peterz@infradead.org>,
+	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	x86@kernel.org, Song Liu <songliubraving@fb.com>,
+	Yonghong Song <yhs@fb.com>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Hao Luo <haoluo@google.com>, Steven Rostedt <rostedt@goodmis.org>,
 	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Gabriele Monaco <gmonaco@redhat.com>,
-	linux-trace-kernel@vger.kernel.org,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Petr Mladek <pmladek@suse.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/2] Fix up build issues with vpanic
-Message-ID: <20250711181845.GA4105545@noisy.programming.kicks-ass.net>
-References: <cover.1752232374.git.namcao@linutronix.de>
- <20250711122413.15b8456f@batman.local.home>
+	Alan Maguire <alan.maguire@oracle.com>,
+	David Laight <David.Laight@aculab.com>,
+	Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas@t-8ch.de>,
+	Ingo Molnar <mingo@kernel.org>
+Subject: Re: [PATCHv5 perf/core 08/22] uprobes/x86: Add mapping for optimized
+ uprobe trampolines
+Message-ID: <aHFnppb8xUGyezsK@krava>
+References: <20250711082931.3398027-1-jolsa@kernel.org>
+ <20250711082931.3398027-9-jolsa@kernel.org>
+ <20250711174631.GB11322@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -54,23 +87,58 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250711122413.15b8456f@batman.local.home>
+In-Reply-To: <20250711174631.GB11322@redhat.com>
 
-On Fri, Jul 11, 2025 at 12:24:13PM -0400, Steven Rostedt wrote:
-> On Fri, 11 Jul 2025 13:20:41 +0200
-> Nam Cao <namcao@linutronix.de> wrote:
+On Fri, Jul 11, 2025 at 07:46:32PM +0200, Oleg Nesterov wrote:
+> On 07/11, Jiri Olsa wrote:
+> >
+> > +static unsigned long find_nearest_trampoline(unsigned long vaddr)
+> > +{
+> > +	struct vm_unmapped_area_info info = {
+> > +		.length     = PAGE_SIZE,
+> > +		.align_mask = ~PAGE_MASK,
+> > +	};
+> > +	unsigned long low_limit, high_limit;
+> > +	unsigned long low_tramp, high_tramp;
+> > +	unsigned long call_end = vaddr + 5;
+> > +
+> > +	if (check_add_overflow(call_end, INT_MIN, &low_limit))
+> > +		low_limit = PAGE_SIZE;
+> > +
+> > +	high_limit = call_end + INT_MAX;
+> > +
+> > +	/* Search up from the caller address. */
+> > +	info.low_limit = call_end;
+> > +	info.high_limit = min(high_limit, TASK_SIZE);
+> > +	high_tramp = vm_unmapped_area(&info);
+> > +
+> > +	/* Search down from the caller address. */
+> > +	info.low_limit = max(low_limit, PAGE_SIZE);
+> > +	info.high_limit = call_end;
+> > +	info.flags = VM_UNMAPPED_AREA_TOPDOWN;
+> > +	low_tramp = vm_unmapped_area(&info);
+> > +
+> > +	if (IS_ERR_VALUE(high_tramp) && IS_ERR_VALUE(low_tramp))
+> > +		return -ENOMEM;
+> > +	if (IS_ERR_VALUE(high_tramp))
+> > +		return low_tramp;
+> > +	if (IS_ERR_VALUE(low_tramp))
+> > +		return high_tramp;
+> > +
+> > +	/* Return address that's closest to the caller address. */
+> > +	if (call_end - low_tramp < high_tramp - call_end)
+> > +		return low_tramp;
+> > +	return high_tramp;
+> > +}
 > 
-> > Hi,
-> > 
-> > The newly introduced vpanic() has some build issues. This series fix them
-> > up.
-> > 
-> > As the vpanic() is only in ftrace tree for now, it is probably best to let
-> > this series goes to ftrace tree, if everyone is okay with that.
+> IIUC, nothing else has changed since I've acked the previous version?
+> Then my ack still stands,
+
+correct, just the find_nearest_trampoline function
+
 > 
-> Since the bug is in my tree I'll take it, but can I get an acked-by
-> from Peter or Josh?
+> Acked-by: Oleg Nesterov <oleg@redhat.com>
+> 
 
-Sure
-
-Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+thanks,
+jirka
