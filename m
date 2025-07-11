@@ -1,147 +1,79 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay.hostedemail.com (smtprelay0014.hostedemail.com [216.40.44.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD71B1F3B83;
-	Fri, 11 Jul 2025 20:26:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F2C019995E;
+	Fri, 11 Jul 2025 20:56:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752265591; cv=none; b=M94BTcZPTO/ao9LSRhwEv/VKoiT8/iW3GNXV+z5zkgc/7xEViJOVRufkc6EcSj3G0ZyEy8QZiCc2M/hVjkY0wimuZ7xCidytOX0JigXhdp5krrrKJmYy225a5JH95bmnrMOAlS8ea3FT7HL5C8JebRiD167Oho959CizFYI7wVE=
+	t=1752267416; cv=none; b=pxtmWn95Lf71IQf26wxnk3Zh1Q6dFskcvluC/vV/xCmEfdNbfBVriSE9MsToSZZfG44AaHS8XN4MwWXHanEhnB1IvfN2gOe0/kpNIzFcqXhjAqUZTEu5bIgxEY1WlAZcG59iDhW1IMDptMIOfMfI3nqhgAP/m6SBmSDJop8rFDc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752265591; c=relaxed/simple;
-	bh=zKrzcOnCHUbj1zpcoKwKR8VG4KSswYK1nelmipRVgEo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lkHT2HCRAihdKqS0qxGjyypKcIemC5Dk3I2u2VlPPnxtWN8XEl4fxeBLwsXd0XIb9tU9Y/VE7kBhAx8kebYrbFoaN5eK4DgU7DyI+21xDlS+YwaQRYsJLrmrNqV89HnC8VrFRaLPF+W75t1U6LprW7xxJE36/OsVdFNj3WY7/a0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sZty94Ez; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sZty94Ez"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 80926C4CEED;
-	Fri, 11 Jul 2025 20:26:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1752265591;
-	bh=zKrzcOnCHUbj1zpcoKwKR8VG4KSswYK1nelmipRVgEo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=sZty94EzXu9ZGA3d79jnP7xeZIQ+FddaAmdFFBCuYZasAlqflfiw8zpn62X+Pu6oz
-	 /SrDhdiyMvf/OIiQHoCdGr1KT32HAR0NSKMHca42W6xnOAC2vyOCb4/J87Ds1WgoRB
-	 AUUp5w8dDMjBsfs5NNPJHG0mWVWYtkBXxnzlBLhYOKUX1DQKTmKqueeZ0B9nt9qhMi
-	 tXvbd7wgK6K4nDKLIFWkYHoAKrGPBswnH/n6NDqs9G9a+a2R3+skjjSryVm4pHPhpF
-	 sxNDzQo3Dz/+1avKMPQh1PeMGXV4sywDvrRNbJVCOHjGbUy/ce/ZXlncPfRN1XrPsC
-	 dhRFQoYswVdog==
-Date: Fri, 11 Jul 2025 13:26:28 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: Steven Rostedt <rostedt@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	bpf@vger.kernel.org, x86@kernel.org,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Indu Bhagat <indu.bhagat@oracle.com>,
-	"Jose E. Marchesi" <jemarch@gnu.org>,
-	Beau Belgrave <beaub@linux.microsoft.com>,
-	Jens Remus <jremus@linux.ibm.com>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Jens Axboe <axboe@kernel.dk>, Florian Weimer <fweimer@redhat.com>,
-	Sam James <sam@gentoo.org>
+	s=arc-20240116; t=1752267416; c=relaxed/simple;
+	bh=uZumtuSSmliFMIBh5qSPbQhn5tbKEvU5/OkxUvh3Y5o=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=TKxza4/C55nl86RxM9IJJRW96AcA/hvqmBcEQ2CwIcvn8GyVChRVYzZ+q0jjx2NJMPbVb7CnQghEUIb6mO9gNHr0FRfRVh/As9CUmyvKTbFJNEkiHjSUQ2oQG4+6MetJCJhS2ZAlH4I7aZhvkORwvXiPkAH96DASPCTc0zprWdA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf15.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay09.hostedemail.com (Postfix) with ESMTP id 0952F80BCA;
+	Fri, 11 Jul 2025 20:56:51 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf15.hostedemail.com (Postfix) with ESMTPA id 897A91D;
+	Fri, 11 Jul 2025 20:56:46 +0000 (UTC)
+Date: Fri, 11 Jul 2025 16:56:54 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Steven Rostedt <rostedt@kernel.org>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org, x86@kernel.org,
+ Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Josh Poimboeuf <jpoimboe@kernel.org>,
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, Jiri
+ Olsa <jolsa@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Andrii
+ Nakryiko <andrii@kernel.org>, Indu Bhagat <indu.bhagat@oracle.com>, "Jose
+ E. Marchesi" <jemarch@gnu.org>, Beau Belgrave <beaub@linux.microsoft.com>,
+ Jens Remus <jremus@linux.ibm.com>, Linus Torvalds
+ <torvalds@linux-foundation.org>, Andrew Morton <akpm@linux-foundation.org>,
+ Jens Axboe <axboe@kernel.dk>, Florian Weimer <fweimer@redhat.com>, Sam
+ James <sam@gentoo.org>
 Subject: Re: [PATCH v13 00/11] perf: Support the deferred unwinding
  infrastructure
-Message-ID: <aHFzdCv3-BRw9btW@google.com>
+Message-ID: <20250711165654.08ab1dc5@gandalf.local.home>
+In-Reply-To: <aHFzdCv3-BRw9btW@google.com>
 References: <20250708020003.565862284@kernel.org>
+	<aHFzdCv3-BRw9btW@google.com>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250708020003.565862284@kernel.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Queue-Id: 897A91D
+X-Stat-Signature: jhaiescu5rgpejwnpgpjzxkm6ysbsrk4
+X-Rspamd-Server: rspamout06
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX19Ej+U+j9CCCPQAsk9gmwhcIoQOTKRD9v8=
+X-HE-Tag: 1752267406-533946
+X-HE-Meta: U2FsdGVkX19h7c8SjJQl6kkGtiqlV6jLIs5Ez8svbcPe1Co0sf+IdUDgo+Fx3uFlUCujEwxzV6X+N/e06MT7SvUfeAYXY84V9aFBsvOCZx0ouswLcgKVoRNRapMjH/oaXx0O+HPW274ZszFZh4b1l2IO2XlsxMKHtV8xU8yV2G5tcSa6AwBZJ62tml72QhZLTllXjVeDWx6UM7ssoxmMSiz5DXVQaa3y08DCfA1Wn7IY/GK0A920KWt3y3uyTZZFfMPFkJ8BiQ3jIwtQlNoQUB11sqeCMTP834Ea4ROEG//rcSOo71wHMOqbcgZ8Zxy1ECYgiiRwLS570mGBgxKKDid5WuIO5VEZ
 
-Hi Steve,
+On Fri, 11 Jul 2025 13:26:28 -0700
+Namhyung Kim <namhyung@kernel.org> wrote:
 
-On Mon, Jul 07, 2025 at 10:00:03PM -0400, Steven Rostedt wrote:
-> This is based on top of the deferred unwind core patch series:
+> > - Removed use of timestamp. The deferred unwind has gone back to using
+> >   cookies, and perf doesn't use the cookie. This means the
+> >   struct perf_callchain_deferred_event is not modified.  
 > 
->  https://lore.kernel.org/linux-trace-kernel/20250708012239.268642741@kernel.org/
->    git://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace.git
->      unwind/core
-> 
-> This series implements the perf interface to use deferred user space stack
-> tracing.
-> 
-> The code for this series is located here:
-> 
->   git://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace.git
-> unwind/perf
-> 
-> Changes since v12: https://lore.kernel.org/linux-trace-kernel/20250701180410.755491417@goodmis.org/
-> 
-> - Also check against PF_USER_WORKER as io workers do not have PF_KTHREAD
->   set.
-> 
-> - Removed deferred_request_nmi() and have NMIs just use the normal
->   deferred_request() function. As Peter Zijlstra has stated, in_nmi() can
->   nest because some exceptions set in_nmi() and another NMI could come in.
-> 
-> - Removed use of timestamp. The deferred unwind has gone back to using
->   cookies, and perf doesn't use the cookie. This means the
->   struct perf_callchain_deferred_event is not modified.
+> What about adding the cookies in the records to handle lost data?  Even
+> if it's not necessary to match callchains to samples, it still needs to
+> reject invalid callchains across the losts.  Maybe it can just flush
+> pending samples when it sees LOST records and not try to match them but
+> having the cookies will handle it more accurately as some callchains may
+> be valid after the LOST.
 
-What about adding the cookies in the records to handle lost data?  Even
-if it's not necessary to match callchains to samples, it still needs to
-reject invalid callchains across the losts.  Maybe it can just flush
-pending samples when it sees LOST records and not try to match them but
-having the cookies will handle it more accurately as some callchains may
-be valid after the LOST.
+Sure, I can add that back, with the added comments needed that Jens
+suggested.
 
 Thanks,
-Namhyung
 
-> 
-> Head SHA1: 3d88d03d533ede8d2d513942e768607aa9279c4b
-> 
-> 
-> Josh Poimboeuf (5):
->       perf: Remove get_perf_callchain() init_nr argument
->       perf: Have get_perf_callchain() return NULL if crosstask and user are set
->       perf: Simplify get_perf_callchain() user logic
->       perf: Skip user unwind if the task is a kernel thread
->       perf: Support deferred user callchains
-> 
-> Namhyung Kim (4):
->       perf tools: Minimal CALLCHAIN_DEFERRED support
->       perf record: Enable defer_callchain for user callchains
->       perf script: Display PERF_RECORD_CALLCHAIN_DEFERRED
->       perf tools: Merge deferred user callchains
-> 
-> Steven Rostedt (2):
->       perf: Use current->flags & PF_KTHREAD|PF_USER_WORKER instead of current->mm == NULL
->       perf: Support deferred user callchains for per CPU events
-> 
-> ----
->  include/linux/perf_event.h                |  13 +-
->  include/uapi/linux/perf_event.h           |  19 +-
->  kernel/bpf/stackmap.c                     |   8 +-
->  kernel/events/callchain.c                 |  49 ++--
->  kernel/events/core.c                      | 407 +++++++++++++++++++++++++++++-
->  tools/include/uapi/linux/perf_event.h     |  19 +-
->  tools/lib/perf/include/perf/event.h       |   7 +
->  tools/perf/Documentation/perf-script.txt  |   5 +
->  tools/perf/builtin-script.c               |  92 +++++++
->  tools/perf/util/callchain.c               |  24 ++
->  tools/perf/util/callchain.h               |   3 +
->  tools/perf/util/event.c                   |   1 +
->  tools/perf/util/evlist.c                  |   1 +
->  tools/perf/util/evlist.h                  |   1 +
->  tools/perf/util/evsel.c                   |  39 +++
->  tools/perf/util/evsel.h                   |   1 +
->  tools/perf/util/machine.c                 |   1 +
->  tools/perf/util/perf_event_attr_fprintf.c |   1 +
->  tools/perf/util/sample.h                  |   3 +-
->  tools/perf/util/session.c                 |  78 ++++++
->  tools/perf/util/tool.c                    |   2 +
->  tools/perf/util/tool.h                    |   4 +-
->  22 files changed, 742 insertions(+), 36 deletions(-)
+-- Steve
