@@ -1,51 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38D21190477;
-	Fri, 11 Jul 2025 05:26:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1DC4625;
+	Fri, 11 Jul 2025 05:37:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752211581; cv=none; b=BN3qrjvoEkn6rxdIonjsRzC3CRs4yRXTXtDPPrIhNizF54x7HRMMlCKafsskd5Mzuu0gp/7AWrtNz0rHQIDtH4qPqUhtJeiRBM1xpQV9T0wYmIJOrGrPKrB5XNqVREjES9415CtfkWUzUZifXxntkMCTmDNw9C9sLHfWVO7tiu8=
+	t=1752212226; cv=none; b=IhnGsw6soCK7G8bcVCEl0QY5pXfe0ZjdE9j8xLMrYhDfPobyKl9KFA0oymTlBt4Z8U+2WcuvHAjVZX43ELeUc4svepdg1Og2kli6VhmipcKdJ5H7mhtoQSw4tUcNS01rx3pIulcBiY9PTbBQp3dKx0vPHZ2j94FupSDGNTnOG9k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752211581; c=relaxed/simple;
-	bh=dppASgAanlsLZisx8bBsFuYj29uQNEX3zHa01KVeP3M=;
+	s=arc-20240116; t=1752212226; c=relaxed/simple;
+	bh=rrPMseUm+lcefTjIo2vJ1vwq6HJlDpn6g0FP76bzlmo=;
 	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=Dv4zFpRWeC0CsJw7LmoHqFKJEKXaID/0ApvMsfGGggHeX40AbzSQ5/7qticnwpoZWGarxFgKXWydqYnPPTR2Uo9weqEp2n94lMqcmhpBHt4H5W6BsAvATYAz8353YIG+KotlEQLPP6GMdcIUjWr5/1Xs2PURPycX1Q0SzpJ4oDQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tGC4meOS; arc=none smtp.client-ip=10.30.226.201
+	 Mime-Version:Content-Type; b=fp667YTCGcyXNRNM4ZJLt1iBUwT7qE7Poi4XQDdalsHWb7N1v/U6Lx8bvBweMxaHSLN5oR787yRP5GNJOyamFrdJAfchVdjtHe3L2KCPPFWmPvpt2KM0ClZOCBVBnr4AoUn4CF+rzipHyBH14Hin+1wLJh8JvZUqD8ZuCiCTh/w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uESNkhD4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tGC4meOS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B048CC4CEED;
-	Fri, 11 Jul 2025 05:26:16 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uESNkhD4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 73AA4C4CEED;
+	Fri, 11 Jul 2025 05:37:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1752211578;
-	bh=dppASgAanlsLZisx8bBsFuYj29uQNEX3zHa01KVeP3M=;
+	s=k20201202; t=1752212226;
+	bh=rrPMseUm+lcefTjIo2vJ1vwq6HJlDpn6g0FP76bzlmo=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=tGC4meOSfwwbY+Y6W1tA3PEHWqt2KNsPwCzm3fXT2q6NnL1PbDPXw3ljOYoaqome0
-	 O965kDtenyVKNEsylTSoKhEry8Mn9YomFtjUcX1TjyUp4WNT0CsGq5okLbCyqwoJOe
-	 0I7WbLNVS9XR/GP+suW/VwZszhPQEc+MDVShFbm0VxT9TTPuTUEgAhRdss08N7jWSm
-	 uQHW0ZoWvZ0o2bXqA6JgQ8T/Qa4IHKrrYK5DZto3edHIvQ84YDOHHz2kZPohNBzdet
-	 aUl40dYPSke24lmiKtWgasMLtvEQv3+CFS2xPWahQnObVQtUyGGLbkBF/IXqnnLf91
-	 TCp3+x5FVc+Gw==
-Date: Fri, 11 Jul 2025 14:26:15 +0900
+	b=uESNkhD4F+Ez280CSnVLwqZIWsvm3LOw10iAG1MCb6TrUsLpxANf+KYDnSm/te6Kz
+	 YUC5lOHgR0OMc3wrjo71NLoJbcg5klETwRlxjz6TNI+VzyjUwBKmwFVlLdyZW6dhtl
+	 8ULKhxjo+4FqMFbia8ucGgTn+IHqP2NdxHkIOcPZ64/LxHM1+4I+Mh3ex60XDJwuMO
+	 MNnrElKi00GbiMYibIhOrojAYYdswv1WY6tBI8vEXf/Cu3GHLdTaaXl80U6um7OLzT
+	 XktQbds/6jFOd1ZoQKyslmH8vsQRmNJ6RhL+cZpZ04g5UtUQwbpD732d4L/kqZjnqK
+	 McRUce02Ih/pw==
+Date: Fri, 11 Jul 2025 14:37:03 +0900
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Jiri Olsa <olsajiri@gmail.com>
-Cc: Oleg Nesterov <oleg@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
- Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- x86@kernel.org, Song Liu <songliubraving@fb.com>, Yonghong Song
- <yhs@fb.com>, John Fastabend <john.fastabend@gmail.com>, Hao Luo
- <haoluo@google.com>, Steven Rostedt <rostedt@goodmis.org>, Alan Maguire
- <alan.maguire@oracle.com>, David Laight <David.Laight@aculab.com>, Thomas
- =?UTF-8?B?V2Vpw59zY2h1aA==?= <thomas@t-8ch.de>, Ingo Molnar
- <mingo@kernel.org>
-Subject: Re: [PATCHv4 perf/core 08/22] uprobes/x86: Add mapping for
- optimized uprobe trampolines
-Message-Id: <20250711142615.867e25926a4026f496b23e22@kernel.org>
-In-Reply-To: <aG_DSXNFol_03h75@krava>
-References: <20250708132333.2739553-1-jolsa@kernel.org>
-	<20250708132333.2739553-9-jolsa@kernel.org>
-	<20250710160233.8750ccd59b3b9d62e78491e5@kernel.org>
-	<aG_DSXNFol_03h75@krava>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] tracing: Remove "__attribute__()" from the type
+ field of event format
+Message-Id: <20250711143703.60a1a9a9f31a45f2000eec9d@kernel.org>
+In-Reply-To: <20250709131107.397a3278@batman.local.home>
+References: <175197567999.977073.8989204607899013923.stgit@mhiramat.tok.corp.google.com>
+	<175197568917.977073.2201559708302320631.stgit@mhiramat.tok.corp.google.com>
+	<20250709131107.397a3278@batman.local.home>
 X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -56,255 +48,70 @@ Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Thu, 10 Jul 2025 15:42:33 +0200
-Jiri Olsa <olsajiri@gmail.com> wrote:
+On Wed, 9 Jul 2025 13:11:07 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-> On Thu, Jul 10, 2025 at 04:02:33PM +0900, Masami Hiramatsu wrote:
-> > Hi Jiri,
-> > 
-> > On Tue,  8 Jul 2025 15:23:17 +0200
-> > Jiri Olsa <jolsa@kernel.org> wrote:
-> > 
-> > > Adding support to add special mapping for user space trampoline with
-> > > following functions:
-> > > 
-> > >   uprobe_trampoline_get - find or add uprobe_trampoline
-> > >   uprobe_trampoline_put - remove or destroy uprobe_trampoline
-> > > 
-> > > The user space trampoline is exported as arch specific user space special
-> > > mapping through tramp_mapping, which is initialized in following changes
-> > > with new uprobe syscall.
-> > > 
-> > > The uprobe trampoline needs to be callable/reachable from the probed address,
-> > > so while searching for available address we use is_reachable_by_call function
-> > > to decide if the uprobe trampoline is callable from the probe address.
-> > > 
-> > > All uprobe_trampoline objects are stored in uprobes_state object and are
-> > > cleaned up when the process mm_struct goes down. Adding new arch hooks
-> > > for that, because this change is x86_64 specific.
-> > > 
-> > > Locking is provided by callers in following changes.
-> > > 
-> > > Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-> > > ---
-> > >  arch/x86/kernel/uprobes.c | 169 ++++++++++++++++++++++++++++++++++++++
-> > >  include/linux/uprobes.h   |   6 ++
-> > >  kernel/events/uprobes.c   |  10 +++
-> > >  kernel/fork.c             |   1 +
-> > >  4 files changed, 186 insertions(+)
-> > > 
-> > > diff --git a/arch/x86/kernel/uprobes.c b/arch/x86/kernel/uprobes.c
-> > > index 77050e5a4680..6336bb961907 100644
-> > > --- a/arch/x86/kernel/uprobes.c
-> > > +++ b/arch/x86/kernel/uprobes.c
-> > > @@ -608,6 +608,175 @@ static void riprel_post_xol(struct arch_uprobe *auprobe, struct pt_regs *regs)
-> > >  		*sr = utask->autask.saved_scratch_register;
-> > >  	}
-> > >  }
-> > > +
-> > > +static int tramp_mremap(const struct vm_special_mapping *sm, struct vm_area_struct *new_vma)
-> > > +{
-> > > +	return -EPERM;
-> > > +}
-> > > +
-> > > +static struct page *tramp_mapping_pages[2] __ro_after_init;
-> > > +
-> > > +static struct vm_special_mapping tramp_mapping = {
-> > > +	.name   = "[uprobes-trampoline]",
-> > > +	.mremap = tramp_mremap,
-> > > +	.pages  = tramp_mapping_pages,
-> > > +};
-> > > +
-> > > +struct uprobe_trampoline {
-> > > +	struct hlist_node	node;
-> > > +	unsigned long		vaddr;
-> > > +};
-> > > +
-> > > +static bool is_reachable_by_call(unsigned long vtramp, unsigned long vaddr)
-> > > +{
-> > > +	long delta = (long)(vaddr + 5 - vtramp);
-> > > +
-> > > +	return delta >= INT_MIN && delta <= INT_MAX;
-> > > +}
-> > > +
-> > > +#define __4GB		 (1UL << 32)
-> > > +#define MASK_4GB	~(__4GB - 1)
-> > > +#define PAGE_COUNT(addr) ((addr & ~MASK_4GB) >> PAGE_SHIFT)
-> > > +
-> > > +static unsigned long find_nearest_trampoline(unsigned long vaddr)
-> > > +{
-> > > +	struct vm_unmapped_area_info info = {
-> > > +		.length     = PAGE_SIZE,
-> > > +		.align_mask = ~PAGE_MASK,
-> > > +	};
-> > > +	unsigned long limit, low_limit = PAGE_SIZE, high_limit = TASK_SIZE;
-> > > +	unsigned long cross_4GB, low_4GB, high_4GB;
-> > > +	unsigned long low_tramp, high_tramp;
-> > > +	unsigned long call_end = vaddr + 5;
-> > > +
-> > > +	/*
-> > > +	 * The idea is to create a trampoline every 4GB, so we need to find free
-> > > +	 * page closest to the 4GB alignment. We find intersecting 4GB alignment
-> > > +	 * address and search up and down to find the closest free page.
-> > 
-> > It is not guaranteed to be able to find unmapped 4GB aligned page.
-> > I still think just finding the nearest area is better (simpler and
-> > good enough.)
-> > 
-> > 	if (check_add_overflow(call_end, INT_MIN, &low_limit))
-> > 		low_limit = PAGE_SIZE;
-> > 
-> > 	high_limit = call_end + INT_MAX;
-> > 
-> > 	/* Search up from intersecting 4GB alignment address. */
-> > 	info.low_limit = call_end;
-> > 	info.high_limit = min(high_limit, TASK_SIZE);
-> > 	high_tramp = vm_unmapped_area(&info);
-> > 
-> > 	/* Search down from intersecting 4GB alignment address. */
-> > 	info.low_limit = max(low_limit, PAGE_SIZE);
-> > 	info.high_limit = call_end;
-> > 	info.flags = VM_UNMAPPED_AREA_TOPDOWN;
-> > 	low_tramp = vm_unmapped_area(&info);
-> > 
-> > See below;
-> > 
-> > > +	 */
-> > > +
-> > > +	low_4GB = call_end & MASK_4GB;
-> > > +	high_4GB = low_4GB + __4GB;
-> > > +
-> > > +	/* Restrict limits to be within (PAGE_SIZE,TASK_SIZE) boundaries. */
-> > > +	if (!check_add_overflow(call_end, INT_MIN, &limit))
-> > > +		low_limit = limit;
-> > 
-> > if not overflow, low_limit = limit = call_end - 2GB.
-> > 
-> > * if call_end := 2GB + 4095, limit can be 4095 < PAGE_SIZE. 
-> >   at the same time, low_4G == 0.
-> > 
-> > Note that low_limit can be > low_4G or < low_4G.
-> > 
-> > > +	if (low_limit == PAGE_SIZE)
-> > > +		low_4GB = low_limit;
-> > 
-> > If overflow, low_4GB = PAGE_SIZE too.
-> > 
-> > In summary, 
-> > 
-> > (a) 0 < call_end < 2GB: (overflow)
-> >   low_limit := PAGE_SIZE
-> >   low_4GB := PAGE_SIZE
-> > 
-> > (b) 2GB <= call_end < 2GB + PAGE_SIZE:
-> >   low_limit := call_end - 2GB (>= 0, < PAGE_SIZE)
-> >   low_4GB := 0 (= call_end & MASK_4GB)
-> > 
-> > (c) call_end == 2GB + PAGE_SIZE:
-> >   low_limit := PAGE_SIZE
-> >   low_4GB := PAGE_SIZE
-> > 
-> > (d) 2GB + PAGE_SIZE <= call_end < 4GB:
-> >   low_limit := call_end - 2GB (> PAGE_SIZE)
-> >   low_4GB := 0
-> > 
-> > (e) 4GB <= call_end:
-> >   low_limit := call_end - 2GB (> 2GB)
-> >   low_4GB := call_end & MASK_4GB (> 4GB)
-> > 
-> > Maybe (b) and (d) cases are unexpected?
-> > 
-> > 
-> > > +
-> > > +	high_limit = call_end + INT_MAX;
-> > 
-> > This should not overflow, OK.
-> > 
-> > > +	if (high_limit > TASK_SIZE)
-> > > +		high_limit = high_4GB = TASK_SIZE;
-> > > +
-> > > +	/* Get 4GB alligned address that's within 2GB distance from call_end */
-> > > +	if (low_limit <= low_4GB)
-> > 
-> > This means call_end is within the [low_4GB, low_4GB + 2GB).
-> > Call this case as (A)
-> > 
-> > > +		cross_4GB = low_4GB;
-> > > +	else
-> > > +		cross_4GB = high_4GB;
-> > 
-> > And this case as (B).
-> > 
-> > > +
-> > > +	/* Search up from intersecting 4GB alignment address. */
-> > > +	info.low_limit = cross_4GB;
-> > > +	info.high_limit = high_limit;
-> > > +	high_tramp = vm_unmapped_area(&info);
-> > 
-> > This searches the unmapped pages from low_limit.
-> > In (A) case, this starts from low_4GB to high_limit.
-> > In (B) case, this starts from high_4GB to high_limit.
-> > 
-> > So basically you search the unmapped area around the 4GB
-> > aligned address instead of the nearest area of the vaddr.
-> > But it is not guarantee that can find unmapped area near
-> > the 4GB aligned address.
+> On Tue,  8 Jul 2025 20:54:49 +0900
+> "Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
 > 
-> ok, as you said the current code does the same logic but from 4GB
-> aligned address, while you suggest nearest page from the caller
+> > From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> > 
+> > With CONFIG_DEBUG_INFO_BTF=y and PAHOLE_HAS_BTF_TAG=y, `__user` is
+> > converted to `__attribute__((btf_type_tag("user")))`. In this case,
+> > some syscall events have it for __user data, like below;
+> > 
+> > /sys/kernel/tracing # cat events/syscalls/sys_enter_openat/format
+> > name: sys_enter_openat
+> > ID: 720
+> > format:
+> >         field:unsigned short common_type;       offset:0;       size:2; signed:0;
+> >         field:unsigned char common_flags;       offset:2;       size:1; signed:0;
+> >         field:unsigned char common_preempt_count;       offset:3;       size:1; signed:0;
+> >         field:int common_pid;   offset:4;       size:4; signed:1;
+> > 
+> >         field:int __syscall_nr; offset:8;       size:4; signed:1;
+> >         field:int dfd;  offset:16;      size:8; signed:0;
+> >         field:const char __attribute__((btf_type_tag("user"))) * filename;      offset:24;      size:8; signed:0;
+> >         field:int flags;        offset:32;      size:8; signed:0;
+> >         field:umode_t mode;     offset:40;      size:8; signed:0;
+> > 
+> > .
+> > Then the trace event filter fails to set the string acceptable flag
+> > (FILTER_PTR_STRING) to the field and rejects setting string filter;
+> > 
+> >  # echo 'filename.ustring ~ "*ftracetest-dir.wbx24v*"' \
+> >     >> events/syscalls/sys_enter_openat/filter  
+> >  sh: write error: Invalid argument
+> >  # cat error_log
+> >  [  723.743637] event filter parse error: error: Expecting numeric field
+> >    Command: filename.ustring ~ "*ftracetest-dir.wbx24v*"
+> > 
+> > Since this __attribute__ makes format parsing complicated and not
+> > needed, remove the __attribute__(.*) from the type string.
 > 
-> I can't think of any benefit one way or the other apart from that
-> your change is less code, I ended up with code below
+> Actually, you can do this in update_event_fields() that already does
+> this magic for enums as the field length.
 
+I investigated this but it is not possible to use update_event_fields()
+because that function is only used if the 
+CONFIG_TRACE_EVAL_MAP_FILE=y.
 
-Yeah, below one is simple and easy to read.
+But since update_event_fields() can replace the allocated
+field->type, we need a special care for that case too.
+E.g. if update_event_fields() finds field->alloc_type set,
+it will reuse field->type instead of allocate new string.
 
-Thank you!
+Let me fix that. At lease we need to fold these 2 patches
+into one.
+
+Thank you,
 
 > 
-> thanks,
-> jirka
+> And it doesn't free after allocation because it only does the
+> allocation for events that will never be freed. For modules, it
+> registers the allocated string so it will be freed on unload.
 > 
-> 
-> ---
-> +static unsigned long find_nearest_trampoline(unsigned long vaddr)
-> +{
-> +	struct vm_unmapped_area_info info = {
-> +		.length     = PAGE_SIZE,
-> +		.align_mask = ~PAGE_MASK,
-> +	};
-> +	unsigned long low_limit, high_limit;
-> +	unsigned long low_tramp, high_tramp;
-> +	unsigned long call_end = vaddr + 5;
-> +
-> +	if (check_add_overflow(call_end, INT_MIN, &low_limit))
-> +		low_limit = PAGE_SIZE;
-> +
-> +	high_limit = call_end + INT_MAX;
-> +
-> +	/* Search up from the caller address. */
-> +	info.low_limit = call_end;
-> +	info.high_limit = min(high_limit, TASK_SIZE);
-> +	high_tramp = vm_unmapped_area(&info);
-> +
-> +	/* Search down from the caller address. */
-> +	info.low_limit = max(low_limit, PAGE_SIZE);
-> +	info.high_limit = call_end;
-> +	info.flags = VM_UNMAPPED_AREA_TOPDOWN;
-> +	low_tramp = vm_unmapped_area(&info);
-> +
-> +	if (IS_ERR_VALUE(high_tramp) && IS_ERR_VALUE(low_tramp))
-> +		return -ENOMEM;
-> +	if (IS_ERR_VALUE(high_tramp))
-> +		return low_tramp;
-> +	if (IS_ERR_VALUE(low_tramp))
-> +		return high_tramp;
-> +
-> +	/* Return address that's closest to the caller address. */
-> +	if (call_end - low_tramp < high_tramp - call_end)
-> +		return low_tramp;
-> +	return high_tramp;
-> +}
+> -- Steve
 
 
 -- 
