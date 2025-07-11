@@ -1,43 +1,46 @@
-Received: from relay.hostedemail.com (smtprelay0015.hostedemail.com [216.40.44.15])
+Received: from relay.hostedemail.com (smtprelay0016.hostedemail.com [216.40.44.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF1D22ED149;
-	Fri, 11 Jul 2025 16:08:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DBE82EF28F;
+	Fri, 11 Jul 2025 16:11:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752250093; cv=none; b=G8ZS2pgYJvc41AOfgCvpT+HN0pJz0zZTB4jSgzaM8sGQybfgQH9oF2y7yqS4TXodIBaSW+GKMgvMV0y8wLkHtIe5vRvJKsIeOnk5U0sf8LRPBhfPvqy6TRGPdeiYPokz+U7hbwBjxs0v8yP8RetDe0nDYUEovgwP4wRBi8ADQ58=
+	t=1752250310; cv=none; b=gyYgy9OOiG3uHS39bAOowFzi5J+iCYqJc9Iw4Si/Cp3E2Za4th+Xiu9rahvPHeFTcSC6ACKabcfLZ45IS9HuVomy7wjeF8f+WsoChdW7jpXz+gPfUqVC7xWqkIjHBjABWaf0/ZE3g3m4v4sAuvmveoohPJIg7aS+hyHivQJSRC4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752250093; c=relaxed/simple;
-	bh=Uy4Zxm8qEhAQy0/hG84LOWQs66Csqb8gSMvRyqPJ0ck=;
+	s=arc-20240116; t=1752250310; c=relaxed/simple;
+	bh=HiyWvgjQ6Tw3t/L7Jjs6qn/jzZEYZ7vQ42nz5apuopU=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=B3NVnCbXdXyjhMkVZmFx20kVNaeHZHDJCgqzvFyvObjHj4RrJPNuF/sjdJB7Ox/QkkyDBe4bnh7IEQsXeTMZ2Pw4vR3HNjDg23sPYGRnWL3SrqPwQFamzUAuvm/vRQ0zKCrb/4rNWDw7yJRGPV9nJewmgHyeT1jROlflSgAuaX8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.15
+	 MIME-Version:Content-Type; b=cisF6S2kwaRCDEnaUdIa8hZnOVKa1r0QIjI+/5ntGourZLnAEIqxG5RDftCUpQZ7FmRDtwSg8AFjf/k9CABd62N65w32sdUQtrZiTsl64hQb1W0bBfck1oTD5Oo/m1/kfnggbaNX6VyNELMPyiZNcxi0OE0Pm/sRhl03/tp+fIg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.16
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf09.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay09.hostedemail.com (Postfix) with ESMTP id 2663C80A3C;
-	Fri, 11 Jul 2025 16:08:02 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf09.hostedemail.com (Postfix) with ESMTPA id E8EB620024;
-	Fri, 11 Jul 2025 16:07:59 +0000 (UTC)
-Date: Fri, 11 Jul 2025 12:07:58 -0400
+Received: from omf08.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay09.hostedemail.com (Postfix) with ESMTP id 2339680B95;
+	Fri, 11 Jul 2025 16:11:38 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf08.hostedemail.com (Postfix) with ESMTPA id 121EC20026;
+	Fri, 11 Jul 2025 16:11:32 +0000 (UTC)
+Date: Fri, 11 Jul 2025 12:11:32 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
 To: David Laight <david.laight.linux@gmail.com>
-Cc: Nam Cao <namcao@linutronix.de>, Gabriele Monaco <gmonaco@redhat.com>,
- John Ogness <john.ogness@linutronix.de>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] tracing: Remove pointless memory barriers
-Message-ID: <20250711120758.3f6904e9@batman.local.home>
-In-Reply-To: <20250711092946.1bbd58ef@pumpkin>
-References: <20250626151940.1756398-1-namcao@linutronix.de>
-	<20250626113520.315db641@gandalf.local.home>
-	<20250626160459.soHxOROG@linutronix.de>
-	<20250626123445.5b01849d@gandalf.local.home>
-	<84o6uatn6i.fsf@jogness.linutronix.de>
-	<564f10574f11bd7ca42fcc5fb4d6c5625dc17205.camel@redhat.com>
-	<20250708074219.K7BthlGg@linutronix.de>
-	<20250709110827.0dce4012@batman.local.home>
-	<20250711092946.1bbd58ef@pumpkin>
+Cc: Steven Rostedt <rostedt@kernel.org>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org, x86@kernel.org,
+ Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Josh Poimboeuf <jpoimboe@kernel.org>,
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, Jiri
+ Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Thomas
+ Gleixner <tglx@linutronix.de>, Andrii Nakryiko <andrii@kernel.org>, Indu
+ Bhagat <indu.bhagat@oracle.com>, "Jose E. Marchesi" <jemarch@gnu.org>, Beau
+ Belgrave <beaub@linux.microsoft.com>, Jens Remus <jremus@linux.ibm.com>,
+ Linus Torvalds <torvalds@linux-foundation.org>, Andrew Morton
+ <akpm@linux-foundation.org>, Jens Axboe <axboe@kernel.dk>, Florian Weimer
+ <fweimer@redhat.com>, Sam James <sam@gentoo.org>
+Subject: Re: [PATCH v13 13/14] unwind_user/x86: Enable frame pointer
+ unwinding on x86
+Message-ID: <20250711121132.5c270cfa@batman.local.home>
+In-Reply-To: <20250711094321.3c64757c@pumpkin>
+References: <20250708012239.268642741@kernel.org>
+	<20250708012359.853818537@kernel.org>
+	<20250711094321.3c64757c@pumpkin>
 X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -47,28 +50,32 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Stat-Signature: n75e47kzdasjzuxp45e7bn6wjorpqtek
-X-Rspamd-Server: rspamout01
-X-Rspamd-Queue-Id: E8EB620024
+X-Stat-Signature: qte6h5trxd3jihtuk7dcq8a8fkt59xrd
+X-Rspamd-Server: rspamout08
+X-Rspamd-Queue-Id: 121EC20026
 X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1/fdHFSxGdHkrgqj6zrC1ejyafkaGQjA4Q=
-X-HE-Tag: 1752250079-604324
-X-HE-Meta: U2FsdGVkX1+uNop2+UGknTnVPsmahA7Y1zkbmQ32Nq/YDGwvYOKI3ZvYEdhKqA/YxGcxDSaPHyxsZgWvPXNRKIft1yY8eE1zUmEae56Zlbap2j/dv19WZr+5bD5RaMqg1A04U3wHF7yJpP8Jz+N9JVhdQQv+Idy101nAo1CTl5lJjUW5a4XcbqFysAnSFj7l0YMHsLqngfrRjLAmiIk4uQjLLsKjZcrtZWJKCUu6px80gCJSKGlhf1h8ol9qFWTRL07UBcYPG7IBNiUej5RlTz3y9LQcB6Z/BCl7dw6/E3sVk6rzNxJ6Ws4Q2LgAcw79EwIKqwSYG2kNnJCthdPZkN/4lLny/3qs
+X-Session-ID: U2FsdGVkX19LrrO7/3ROS0s3nj8/FX9Fdpx8NaF9lw4=
+X-HE-Tag: 1752250292-817812
+X-HE-Meta: U2FsdGVkX1/0H3hjP9wfcZqo8vyVdb4L53LrCbGzExj4KDyuH8b7gd7vaGl1BvB4SeCbfzOzI4Wbt58bGq2RetlPLrWrmisZPVsRcgGvTs03Zent/H178cz9Ai7I3qeI62Dxe2zHe/4MhC/rKj6rGS8OdYdZSJQBg/X8yinSczds9RNb8JApEfWL2Wse/dZ5aaFX04aRQ1sSzl+NplmdoprUJXLpc8UPDSjd67eApnugahbbKYhldnptsjRuTOQFS6mn727yLuXp2C4fpfdCK7Q2TnWCiudswVsXWCkKOCdNEsWkh4Mm2aTc0FEpCpC7lFCsSi+0VAgitWpcdArLP3E75mGI5bSjtcpdBQ8CI+7xsWRgd75sKhwz6eeuxOV+U89Tga8dhb9P+4oPS7esbZRo8mRNnkjN/b/QHHrk0Ag=
 
-On Fri, 11 Jul 2025 09:29:46 +0100
+On Fri, 11 Jul 2025 09:43:21 +0100
 David Laight <david.laight.linux@gmail.com> wrote:
 
-> > Doesn't atomic make sure the values are seen when they are changed?  
+> On Mon, 07 Jul 2025 21:22:52 -0400
+> Steven Rostedt <rostedt@kernel.org> wrote:
 > 
-> No.
-> It normally just ensures the read/write aren't 'torn'.
-> Atomics are used for read-modify-writes to ensure two cpu don't
-> do read-read-modify-modify-write-write losing one of the changes.
-> (They can need special instructions for read and write - but normally don't.)
-> So here just the same as the volatile accesses READ_ONCE() and WRITE_ONCE().
+> > From: Josh Poimboeuf <jpoimboe@kernel.org>
+> > 
+> > Use ARCH_INIT_USER_FP_FRAME to describe how frame pointers are unwound
+> > on x86, and enable CONFIG_HAVE_UNWIND_USER_FP accordingly so the
+> > unwind_user interfaces can be used.  
+> 
+> How is that going to work?
+> Pretty much all x86 userspace is compiled with bp as a general
+> purpose register not a frame pointer.
 
-At first I was about to say "But wait! I rely on this to work in other
-parts of my code", but then realized I use atomic_inc_return() and
-similar that actually do make the update atomic across CPUs.
+Which is where this patch set comes in...
+
+  https://lore.kernel.org/linux-trace-kernel/20250701184939.026626626@goodmis.org
 
 -- Steve
