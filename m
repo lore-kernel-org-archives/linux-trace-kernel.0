@@ -1,144 +1,147 @@
-Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D0525FDA7;
-	Fri, 11 Jul 2025 19:36:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD71B1F3B83;
+	Fri, 11 Jul 2025 20:26:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752262571; cv=none; b=ZuQi5IdfBuv+0oki0HBSOZl8pov5wlbJGAOv9Maat9Rc4gDfYlM9xIef6U5RAV3jY1nv+eZs8WnwYh+lreqof03cKElLuiDMPxRP1DJaUWzed5PksZz8FsB3SOn0hrPvGHrmWI0JWix/EusO9RqNbrMfiZym004qeHe7eS4uBPk=
+	t=1752265591; cv=none; b=M94BTcZPTO/ao9LSRhwEv/VKoiT8/iW3GNXV+z5zkgc/7xEViJOVRufkc6EcSj3G0ZyEy8QZiCc2M/hVjkY0wimuZ7xCidytOX0JigXhdp5krrrKJmYy225a5JH95bmnrMOAlS8ea3FT7HL5C8JebRiD167Oho959CizFYI7wVE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752262571; c=relaxed/simple;
-	bh=2JyjkZbaVpOcZNXUr6/+YHVMQgQYM+1Zvh45n+aaKwo=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=E10dW2tlAbTlZrTqKoNMpgKbglw8HWM0lYTWb4/By6PXsd+mnOLp8Yhyz9eRTA5l5Vb2bqdaQ5xmMBfd8IbM/ejT68QZPja07lDaZ8txFo5jp1yRN3h54aZbep26LqD2sxuszEvynaE32a0XznGrdDGe9QQH5dM8FDAdjrqGrQo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gQFuFEk2; arc=none smtp.client-ip=209.85.208.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1752265591; c=relaxed/simple;
+	bh=zKrzcOnCHUbj1zpcoKwKR8VG4KSswYK1nelmipRVgEo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lkHT2HCRAihdKqS0qxGjyypKcIemC5Dk3I2u2VlPPnxtWN8XEl4fxeBLwsXd0XIb9tU9Y/VE7kBhAx8kebYrbFoaN5eK4DgU7DyI+21xDlS+YwaQRYsJLrmrNqV89HnC8VrFRaLPF+W75t1U6LprW7xxJE36/OsVdFNj3WY7/a0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sZty94Ez; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gQFuFEk2"
-Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-608acb0a27fso3471281a12.0;
-        Fri, 11 Jul 2025 12:36:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1752262568; x=1752867368; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=zIfOn6Rb3tfseofOmKK1vxMi7RNeHNheLMa9bMxs2dU=;
-        b=gQFuFEk2mQShfqaO0EsmvmDIZ96zNnjv/LqQPCW9uBn9JXa8LVuKNX5DANWDXy+jCS
-         5xKv+7U0nwfSyVwHekw6/JjjHj6W8tZDgb1GIMom1dEqsbcn3mXE2Y9FcHXnea4h767D
-         naB44CU3AOmz+948/1AuDRk0MsuHprvrTOvNkTmmTFL5qs0AEDufB3307wyrfUIsjPTZ
-         83RPhvxIFeZq8vkBVEBd+b2gLcbrw8LJBcbZkXd29HT7L3Dq/BJCuxOkyeZOYQwZwmEt
-         UfNI26YFSTfiyQmCb3W+Q106mxL4AhjmKVMZoiZG+brKn5jL49ozGlZf48R2xe6x05Cg
-         f7Nw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1752262568; x=1752867368;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=zIfOn6Rb3tfseofOmKK1vxMi7RNeHNheLMa9bMxs2dU=;
-        b=dRJusogo6NHR/ULLSej8Z3rNy1rrKhOp1jvqmbX0bYCrEDbRq391XOD18MMNK1gYkJ
-         3Zd4tYot1HCB11YBvyN4lDrqu6l4jG4XfTAhTbxWBNCF8jhZnbSUN9uTYIk+9MgVu6WC
-         CpxR/am45hUMcCUl4hfQUjHB6oHGNC0+2c1HrQzdxzApOIpVossfxkyEKKUAy98TZNiP
-         z6LVZdkh1Vas1lEBN32AMBesr74TwBHwh7zYwdybTl/iiN2SJBHYvyKZIyEE7BTvX/yK
-         SeXFaScBcg/YkXmI40/wadPN4Rko4j3hqikkkbhDqa4AXuhH9VIr8V24PPO60peN+27o
-         LMrw==
-X-Forwarded-Encrypted: i=1; AJvYcCW/lxBhJJxDM+vwU6/dpiBR1/zpx2TAbsUrki0lPyN4HUuNcAlrPEEvz0z5rI2jcGlSsls=@vger.kernel.org, AJvYcCWqVwHtNIO/SbAJj5xdzmaO4mzu/21LBVx9SnSlglvJu3krMEPH18ZWJhOKSzd/H3Sc9akAjDqFU5sQjp+Mng6kV9m9@vger.kernel.org, AJvYcCXuqe+d8dXPImlK3rvf39OXreWS1G0lw7Es1ecxvlfdIUS1uPNGdy4DsSAQeoYxZ3nVVaK7S5HXKqx06vU1@vger.kernel.org
-X-Gm-Message-State: AOJu0YyRVocii2TA8NdGJqcgtJ7CCkFWjL3xwFzbctUwER0NXbcm+BNa
-	xqHlGlf3iW3F3Kn+8808DJfZsqoqcJEegP6escc/pIRRvxB02oWpUSx8
-X-Gm-Gg: ASbGncv4go8QWHFCrBPCiBxPyKLt8+xnc5wodzy3CEqPlVf8V+j84tfVJCDIOlz2exa
-	TYhCA++LKt43EREf60AawICO/vY9IGbbka9TbqzZJViqd2v0ys2JA5HpQdyIkh/Vc64lAmsrqN1
-	es0581mZ6nuIPcItO6EC05GATJ0lDUUPxiRSmE43apIzj2/x8mznq8q2ejWc8hX5KuZ+7/pdN/a
-	iWgMpOypCOvLArQYRSkS6Fz/r5kbsy3hNtx75MOswlUqrddIJdvu4Hb62nQ3myOEm3geKSRmiwE
-	RJu8WUDqfs8DwQqebwJUhQhu441SOeH0/PrSgRMBp+kSM5yyqrLxgjn5iAu381JkkQFysKEa2px
-	YJeyhsNeB4Q==
-X-Google-Smtp-Source: AGHT+IFDvB4IMf95WTCzX7Zq4Ah+hUJyynqhCkjv6kas9TazcKdgKM0N+esvU7a8CHSkhakrT8CgRA==
-X-Received: by 2002:a05:6402:42d4:b0:604:a869:67e9 with SMTP id 4fb4d7f45d1cf-611e8479c1amr3737986a12.22.1752262568011;
-        Fri, 11 Jul 2025 12:36:08 -0700 (PDT)
-Received: from krava ([176.74.159.170])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-611c973360bsm2615306a12.45.2025.07.11.12.36.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Jul 2025 12:36:07 -0700 (PDT)
-From: Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date: Fri, 11 Jul 2025 21:36:06 +0200
-To: Oleg Nesterov <oleg@redhat.com>
-Cc: Peter Zijlstra <peterz@infradead.org>,
-	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	x86@kernel.org, Song Liu <songliubraving@fb.com>,
-	Yonghong Song <yhs@fb.com>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Hao Luo <haoluo@google.com>, Steven Rostedt <rostedt@goodmis.org>,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sZty94Ez"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 80926C4CEED;
+	Fri, 11 Jul 2025 20:26:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1752265591;
+	bh=zKrzcOnCHUbj1zpcoKwKR8VG4KSswYK1nelmipRVgEo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=sZty94EzXu9ZGA3d79jnP7xeZIQ+FddaAmdFFBCuYZasAlqflfiw8zpn62X+Pu6oz
+	 /SrDhdiyMvf/OIiQHoCdGr1KT32HAR0NSKMHca42W6xnOAC2vyOCb4/J87Ds1WgoRB
+	 AUUp5w8dDMjBsfs5NNPJHG0mWVWYtkBXxnzlBLhYOKUX1DQKTmKqueeZ0B9nt9qhMi
+	 tXvbd7wgK6K4nDKLIFWkYHoAKrGPBswnH/n6NDqs9G9a+a2R3+skjjSryVm4pHPhpF
+	 sxNDzQo3Dz/+1avKMPQh1PeMGXV4sywDvrRNbJVCOHjGbUy/ce/ZXlncPfRN1XrPsC
+	 dhRFQoYswVdog==
+Date: Fri, 11 Jul 2025 13:26:28 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: Steven Rostedt <rostedt@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	bpf@vger.kernel.org, x86@kernel.org,
 	Masami Hiramatsu <mhiramat@kernel.org>,
-	Alan Maguire <alan.maguire@oracle.com>,
-	David Laight <David.Laight@aculab.com>,
-	Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas@t-8ch.de>,
-	Ingo Molnar <mingo@kernel.org>
-Subject: Re: [PATCHv5 perf/core 08/22] uprobes/x86: Add mapping for optimized
- uprobe trampolines
-Message-ID: <aHFnppb8xUGyezsK@krava>
-References: <20250711082931.3398027-1-jolsa@kernel.org>
- <20250711082931.3398027-9-jolsa@kernel.org>
- <20250711174631.GB11322@redhat.com>
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Indu Bhagat <indu.bhagat@oracle.com>,
+	"Jose E. Marchesi" <jemarch@gnu.org>,
+	Beau Belgrave <beaub@linux.microsoft.com>,
+	Jens Remus <jremus@linux.ibm.com>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Jens Axboe <axboe@kernel.dk>, Florian Weimer <fweimer@redhat.com>,
+	Sam James <sam@gentoo.org>
+Subject: Re: [PATCH v13 00/11] perf: Support the deferred unwinding
+ infrastructure
+Message-ID: <aHFzdCv3-BRw9btW@google.com>
+References: <20250708020003.565862284@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250711174631.GB11322@redhat.com>
+In-Reply-To: <20250708020003.565862284@kernel.org>
 
-On Fri, Jul 11, 2025 at 07:46:32PM +0200, Oleg Nesterov wrote:
-> On 07/11, Jiri Olsa wrote:
-> >
-> > +static unsigned long find_nearest_trampoline(unsigned long vaddr)
-> > +{
-> > +	struct vm_unmapped_area_info info = {
-> > +		.length     = PAGE_SIZE,
-> > +		.align_mask = ~PAGE_MASK,
-> > +	};
-> > +	unsigned long low_limit, high_limit;
-> > +	unsigned long low_tramp, high_tramp;
-> > +	unsigned long call_end = vaddr + 5;
-> > +
-> > +	if (check_add_overflow(call_end, INT_MIN, &low_limit))
-> > +		low_limit = PAGE_SIZE;
-> > +
-> > +	high_limit = call_end + INT_MAX;
-> > +
-> > +	/* Search up from the caller address. */
-> > +	info.low_limit = call_end;
-> > +	info.high_limit = min(high_limit, TASK_SIZE);
-> > +	high_tramp = vm_unmapped_area(&info);
-> > +
-> > +	/* Search down from the caller address. */
-> > +	info.low_limit = max(low_limit, PAGE_SIZE);
-> > +	info.high_limit = call_end;
-> > +	info.flags = VM_UNMAPPED_AREA_TOPDOWN;
-> > +	low_tramp = vm_unmapped_area(&info);
-> > +
-> > +	if (IS_ERR_VALUE(high_tramp) && IS_ERR_VALUE(low_tramp))
-> > +		return -ENOMEM;
-> > +	if (IS_ERR_VALUE(high_tramp))
-> > +		return low_tramp;
-> > +	if (IS_ERR_VALUE(low_tramp))
-> > +		return high_tramp;
-> > +
-> > +	/* Return address that's closest to the caller address. */
-> > +	if (call_end - low_tramp < high_tramp - call_end)
-> > +		return low_tramp;
-> > +	return high_tramp;
-> > +}
+Hi Steve,
+
+On Mon, Jul 07, 2025 at 10:00:03PM -0400, Steven Rostedt wrote:
+> This is based on top of the deferred unwind core patch series:
 > 
-> IIUC, nothing else has changed since I've acked the previous version?
-> Then my ack still stands,
+>  https://lore.kernel.org/linux-trace-kernel/20250708012239.268642741@kernel.org/
+>    git://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace.git
+>      unwind/core
+> 
+> This series implements the perf interface to use deferred user space stack
+> tracing.
+> 
+> The code for this series is located here:
+> 
+>   git://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace.git
+> unwind/perf
+> 
+> Changes since v12: https://lore.kernel.org/linux-trace-kernel/20250701180410.755491417@goodmis.org/
+> 
+> - Also check against PF_USER_WORKER as io workers do not have PF_KTHREAD
+>   set.
+> 
+> - Removed deferred_request_nmi() and have NMIs just use the normal
+>   deferred_request() function. As Peter Zijlstra has stated, in_nmi() can
+>   nest because some exceptions set in_nmi() and another NMI could come in.
+> 
+> - Removed use of timestamp. The deferred unwind has gone back to using
+>   cookies, and perf doesn't use the cookie. This means the
+>   struct perf_callchain_deferred_event is not modified.
 
-correct, just the find_nearest_trampoline function
+What about adding the cookies in the records to handle lost data?  Even
+if it's not necessary to match callchains to samples, it still needs to
+reject invalid callchains across the losts.  Maybe it can just flush
+pending samples when it sees LOST records and not try to match them but
+having the cookies will handle it more accurately as some callchains may
+be valid after the LOST.
+
+Thanks,
+Namhyung
 
 > 
-> Acked-by: Oleg Nesterov <oleg@redhat.com>
+> Head SHA1: 3d88d03d533ede8d2d513942e768607aa9279c4b
 > 
-
-thanks,
-jirka
+> 
+> Josh Poimboeuf (5):
+>       perf: Remove get_perf_callchain() init_nr argument
+>       perf: Have get_perf_callchain() return NULL if crosstask and user are set
+>       perf: Simplify get_perf_callchain() user logic
+>       perf: Skip user unwind if the task is a kernel thread
+>       perf: Support deferred user callchains
+> 
+> Namhyung Kim (4):
+>       perf tools: Minimal CALLCHAIN_DEFERRED support
+>       perf record: Enable defer_callchain for user callchains
+>       perf script: Display PERF_RECORD_CALLCHAIN_DEFERRED
+>       perf tools: Merge deferred user callchains
+> 
+> Steven Rostedt (2):
+>       perf: Use current->flags & PF_KTHREAD|PF_USER_WORKER instead of current->mm == NULL
+>       perf: Support deferred user callchains for per CPU events
+> 
+> ----
+>  include/linux/perf_event.h                |  13 +-
+>  include/uapi/linux/perf_event.h           |  19 +-
+>  kernel/bpf/stackmap.c                     |   8 +-
+>  kernel/events/callchain.c                 |  49 ++--
+>  kernel/events/core.c                      | 407 +++++++++++++++++++++++++++++-
+>  tools/include/uapi/linux/perf_event.h     |  19 +-
+>  tools/lib/perf/include/perf/event.h       |   7 +
+>  tools/perf/Documentation/perf-script.txt  |   5 +
+>  tools/perf/builtin-script.c               |  92 +++++++
+>  tools/perf/util/callchain.c               |  24 ++
+>  tools/perf/util/callchain.h               |   3 +
+>  tools/perf/util/event.c                   |   1 +
+>  tools/perf/util/evlist.c                  |   1 +
+>  tools/perf/util/evlist.h                  |   1 +
+>  tools/perf/util/evsel.c                   |  39 +++
+>  tools/perf/util/evsel.h                   |   1 +
+>  tools/perf/util/machine.c                 |   1 +
+>  tools/perf/util/perf_event_attr_fprintf.c |   1 +
+>  tools/perf/util/sample.h                  |   3 +-
+>  tools/perf/util/session.c                 |  78 ++++++
+>  tools/perf/util/tool.c                    |   2 +
+>  tools/perf/util/tool.h                    |   4 +-
+>  22 files changed, 742 insertions(+), 36 deletions(-)
