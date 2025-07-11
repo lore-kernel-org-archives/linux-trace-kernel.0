@@ -1,244 +1,134 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B8A9202976;
-	Fri, 11 Jul 2025 08:29:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E989D20E71C;
+	Fri, 11 Jul 2025 08:29:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752222584; cv=none; b=gtBWvedVmo3Tw/fDfWGgC8a8gX00gSi1bbfDZGjvVYxCHgrP3WjA0+jnJ9egBzNWOkZ2LmOgvmxM2ShSZmvqkJckUFwRJqeWcy9E0HYnGUWdAfAop4I5Ib/a/sLVZSvvb11Yqi/f/OBK+OJEGdtXxmNDq9T0l5BAhtNRHFQfnRI=
+	t=1752222591; cv=none; b=WcFPGNPY1YE77ILSfyCGIIqt+m4KAt8XExveYT+n0HeiYm6EDjb1l5eyl+KFKkakBoyq6u9+xneL5wtdbX2wAJKgWNMQgqST0ddEVgIPGLIWEGdEU52dLeTOC2ALoI7DfmFd+4KVG/LSVfbBLPIxukH5qvlnWx4MNK+Z7r4oXZU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752222584; c=relaxed/simple;
-	bh=9bh7znodlw8FlXp/na//YSh9kRdbfbFY0AFANoOPt+Q=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=F13bCtGW8UnygeBrU6euI4yA9Tpbsf9koQyP/G1X11/o+JHrgBIMvJeX1Gkm6/awY63X4GWMOGTlVwyQdhY58NFpnJLZku1XRQ7UqBrXu/6q/H7FIbJx8vIzhQVND9w2Zw2u1tXI8Dmek/9qCvdGWnsWhSehU9zaBn7k5SQjzg0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=T0MgCYy2; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1752222591; c=relaxed/simple;
+	bh=uX7kAAr0Zms8GHwI2NhTf9BFEixUQXR5PTdXh5l4plk=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=tO4GijfdHzl0fJ8O6KRXIMzZqdLjr1TW4NB+WFtbKXd6ooZ1Cz4cA9jL81bZ6CvfetUgGvcAbMfq3PRi7LeuTwDXwtM0P6Dc12jmNdENYxRlcLMtYFTfmwGXI+yu1EmNqwltjZmg6kOFQjRQ0x64V1AF+gM7n3SURII/0d4fitA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=igdZymDS; arc=none smtp.client-ip=209.85.221.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="T0MgCYy2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D635BC4CEFC;
-	Fri, 11 Jul 2025 08:29:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1752222583;
-	bh=9bh7znodlw8FlXp/na//YSh9kRdbfbFY0AFANoOPt+Q=;
-	h=From:To:Cc:Subject:Date:From;
-	b=T0MgCYy2yD58wkhMifpgEp1TXMyDvKtayNpsOxtRiwjmbfNEXyK2LDZzF/yPtzox2
-	 LyqNd1O+/lbR2fvJOW8194IVHuUXUCgGlIj9cvnit00ZpRXmLTzsa0/i1cIbTeWoc6
-	 NY7tJTkO44CFbE09uTUaZvh2vVfEujE9xZHv7qoFKPF18LpU++MgKlao3Rh7N4Hr3J
-	 AWP6vzzl6WSaOpp6BLVN9S/iy9kh+Y+y7+zOSF5tf+1sfC8RxWqihmcBx4+5qVLP5W
-	 bqRgl1Scpg3vcs6Q9ftZ1AmGUXQmKFhzZuGySvf0+MhBOXeEEmc/Vd5hl1AV50y7tz
-	 D1QRfPmXVKEew==
-From: Jiri Olsa <jolsa@kernel.org>
-To: Oleg Nesterov <oleg@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Andrii Nakryiko <andrii@kernel.org>
-Cc: Alejandro Colomar <alx@kernel.org>,
-	Eyal Birger <eyal.birger@gmail.com>,
-	kees@kernel.org,
-	bpf@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	x86@kernel.org,
-	Song Liu <songliubraving@fb.com>,
-	Yonghong Song <yhs@fb.com>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Hao Luo <haoluo@google.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Alan Maguire <alan.maguire@oracle.com>,
-	David Laight <David.Laight@ACULAB.COM>,
-	=?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <thomas@t-8ch.de>,
-	Ingo Molnar <mingo@kernel.org>
-Subject: [PATCHv5 perf/core 00/22] uprobes: Add support to optimize usdt probes on x86_64
-Date: Fri, 11 Jul 2025 10:29:08 +0200
-Message-ID: <20250711082931.3398027-1-jolsa@kernel.org>
-X-Mailer: git-send-email 2.50.0
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="igdZymDS"
+Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-3b5e6bfb427so954957f8f.2;
+        Fri, 11 Jul 2025 01:29:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1752222588; x=1752827388; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=rSa3YUeww4KG61axfUhT3FJetunA3Fy2YZv9Jh/Wo3U=;
+        b=igdZymDSRMlCgx5npODMWFW9Y/oC9pciRRROH3NgHwa8bMAyucOL7/P2QxGma9dm8O
+         XC0JqNThAsuujUKsNnKmgws5Yf+nxnCASK4GGt7cU2TjmF/NbN7pV2at4OznZLhk4mDZ
+         V3iIR7Ui5Q5FwsYtb4Ia6LxypEqnpjfDGWWj4g01BHGuKkL2qSCK3iq9NNCQzk1QsgL9
+         jZ61oWNwSOcdTibWTqLOjQJC4bAHtnwJq00+TXsvy3FmyGETJEuxfHf1XYOV+lkfUHaU
+         uzElB+MvCNyeZhhd5k8x5JYpUCM6g3eDSNarYKBO4y6WUm0cTa41GjQijXka2ykRbo2Z
+         4Wtw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1752222588; x=1752827388;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=rSa3YUeww4KG61axfUhT3FJetunA3Fy2YZv9Jh/Wo3U=;
+        b=mbqHVc3W/jGgOZJMdgZ64ZWWYB0ucWs5EUzTnJkpNyxlmqdVBVNiqUg6grqjtHYEyM
+         XQIsXmykub5GY8t8qjsTSwGozKb1htQ3InAzO3SpB+k3YvnVuVdTeyrWxwQ7IfnUwjjS
+         p57xZxMTJxj2+nxo6wqf8Ql2TXJ04++CorN+3kvGLddDRDJbzvIQyW7rzrGRzgyehUHp
+         EQURdQ+Z/xBKlbBPE5xam/hPLruew2ew3YmcEjPdbqrcIwD2WhE/EMvIX8eI/cBr4gPg
+         eLECUuaF+WMSGosB/pGm+BzDRSLQ9+CiPjpfAdjbziL12qqVbeuW2DdxDyyBBDi99JY8
+         72CA==
+X-Forwarded-Encrypted: i=1; AJvYcCWYVvVbRmT/sZZVvX6UtyXEDuKEhgeVlJLe3GnGDxOUjEqoPpQxrD1fizuQxdESi8tnQLbkgOyuiDvBTe8di20zzDJ2@vger.kernel.org, AJvYcCWr59biX5F8pP9sr+uI4JRTV7GrPZ0vpmHqrfkaf+bInpYjhgHOVCZaWlxKfj2iYmqwFuLlkle1AnIIoqo=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz7p7Pl+PR40osPbF9j+PIFrEGjLyYRNuIKpVGDjz2kFcC1Sfzz
+	PYnkxsvhk3w3k0ETQWvXBnKQUaMdNO3MoPqnL3E945AqyYoX0bkwX9Jv
+X-Gm-Gg: ASbGncvElcVhsY6RzGiCPBGOqmCPEfbiD/cb9pxIOEYnKFPkgekN+Ui1SXkpp35Lc1L
+	GUIiXIvynBeS5kZ6fsmWszr5jyPumJ8AcX4RSfV6Wx53p6/qB8tdzEA7vgswi1tF296knWoVLrM
+	9fpk6cf2T1AcUJUB+WUzBXqnh7Nx6YmJfFmA3wcoql3DSUcNs8EAIG1VxEg/jh/bRFWemnR5ar/
+	n+1wXIJB5TKrh8plhZmNDlZtXVRjwg81LW131FjYWJMGPgq7Cdx/+5uBcV8Ugg/fiY6rtJycYY4
+	X+tZdWtm7eM8fe8ouFwq/TqB1Ugv3kxv5p6vrsJDtS10R/vDVRpqGfqkY3lXLkknXMb3cqhARr4
+	mzyem2Az3aIAX437JfzuNl1w/OsPuYMNLihEg4pfSWhvW0PHeaU9ngA==
+X-Google-Smtp-Source: AGHT+IGY9EpaTi9BiyGDdjiVOG/mfSWL/Apd51kiQUUKiH+wJtv1y8Yl0GYgyopVELCC/Vmfmv4rCg==
+X-Received: by 2002:adf:e7d1:0:b0:3b4:4790:8415 with SMTP id ffacd0b85a97d-3b5f18d977dmr2104752f8f.48.1752222587971;
+        Fri, 11 Jul 2025 01:29:47 -0700 (PDT)
+Received: from pumpkin (host-92-21-58-28.as13285.net. [92.21.58.28])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3b5e8e0d571sm3908758f8f.57.2025.07.11.01.29.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 11 Jul 2025 01:29:47 -0700 (PDT)
+Date: Fri, 11 Jul 2025 09:29:46 +0100
+From: David Laight <david.laight.linux@gmail.com>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Nam Cao <namcao@linutronix.de>, Gabriele Monaco <gmonaco@redhat.com>,
+ John Ogness <john.ogness@linutronix.de>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] tracing: Remove pointless memory barriers
+Message-ID: <20250711092946.1bbd58ef@pumpkin>
+In-Reply-To: <20250709110827.0dce4012@batman.local.home>
+References: <20250626151940.1756398-1-namcao@linutronix.de>
+	<20250626113520.315db641@gandalf.local.home>
+	<20250626160459.soHxOROG@linutronix.de>
+	<20250626123445.5b01849d@gandalf.local.home>
+	<84o6uatn6i.fsf@jogness.linutronix.de>
+	<564f10574f11bd7ca42fcc5fb4d6c5625dc17205.camel@redhat.com>
+	<20250708074219.K7BthlGg@linutronix.de>
+	<20250709110827.0dce4012@batman.local.home>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-hi,
-this patchset adds support to optimize usdt probes on top of 5-byte
-nop instruction.
+On Wed, 9 Jul 2025 11:08:27 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-The generic approach (optimize all uprobes) is hard due to emulating
-possible multiple original instructions and its related issues. The
-usdt case, which stores 5-byte nop seems much easier, so starting
-with that.
+> On Tue, 8 Jul 2025 09:42:19 +0200
+> Nam Cao <namcao@linutronix.de> wrote:
+> 
+> > So yes, smp_rmb() is only useful inbetween reads, and smp_wmb() is
+> > only userful inbetween writes.  
+> 
+> Hmm, I wonder if barriers isn't needed but atomic values are?
+> 
+> That is, it looks like rv_monitoring_on() is looking to read the
+> current state, where as turn_monitoring_on/off() changes the state.
+> 
+> Perhaps instead of barriers, it should use atomics?
+> 
+>  bool rv_monitoring_on(void)
+>  {
+> 	return atomic_read(&monitoring_on);
+>  }
+>  
+>  static void turn_monitoring_off(void)
+>  {
+> 	atomic_set(&monitoring_on, 0);
+>  }
+>  
+> 
+> Doesn't atomic make sure the values are seen when they are changed?
 
-The basic idea is to replace breakpoint exception with syscall which
-is faster on x86_64. For more details please see changelog of patch 8.
+No.
+It normally just ensures the read/write aren't 'torn'.
+Atomics are used for read-modify-writes to ensure two cpu don't
+do read-read-modify-modify-write-write losing one of the changes.
+(They can need special instructions for read and write - but normally don't.)
+So here just the same as the volatile accesses READ_ONCE() and WRITE_ONCE().
 
-The run_bench_uprobes.sh benchmark triggers uprobe (on top of different
-original instructions) in a loop and counts how many of those happened
-per second (the unit below is million loops).
-
-There's big speed up if you consider current usdt implementation
-(uprobe-nop) compared to proposed usdt (uprobe-nop5):
-
-current:
-        usermode-count :  152.501 ± 0.012M/s
-        syscall-count  :   14.463 ± 0.062M/s
--->     uprobe-nop     :    3.160 ± 0.005M/s
-        uprobe-push    :    3.003 ± 0.003M/s
-        uprobe-ret     :    1.100 ± 0.003M/s
-        uprobe-nop5    :    3.132 ± 0.012M/s
-        uretprobe-nop  :    2.103 ± 0.002M/s
-        uretprobe-push :    2.027 ± 0.004M/s
-        uretprobe-ret  :    0.914 ± 0.002M/s
-        uretprobe-nop5 :    2.115 ± 0.002M/s
-
-after the change:
-        usermode-count :  152.343 ± 0.400M/s
-        syscall-count  :   14.851 ± 0.033M/s
-        uprobe-nop     :    3.204 ± 0.005M/s
-        uprobe-push    :    3.040 ± 0.005M/s
-        uprobe-ret     :    1.098 ± 0.003M/s
--->     uprobe-nop5    :    7.286 ± 0.017M/s
-        uretprobe-nop  :    2.144 ± 0.001M/s
-        uretprobe-push :    2.069 ± 0.002M/s
-        uretprobe-ret  :    0.922 ± 0.000M/s
-        uretprobe-nop5 :    3.487 ± 0.001M/s
-
-I see bit more speed up on Intel (above) compared to AMD. The big nop5
-speed up is partly due to emulating nop5 and partly due to optimization.
-
-The key speed up we do this for is the USDT switch from nop to nop5:
-	uprobe-nop     :    3.160 ± 0.005M/s
-	uprobe-nop5    :    7.286 ± 0.017M/s
-
-Changes from v4:
-- reworked search for trampoline page, dropped Oleg's ack from that patch
-  because of the change [Masami]
-
-Changes from v3:
-- rebased on top of tip/master + bpf-next/master + mm/mm-nonmm-unstable
-- reworked patch#8 to lookup trampoline trampoline every 4GB so we don't
-  waste page frames in some cases [Masami]
-- several minor fixes [Masami]
-- added acks [Oleg, Alejandro, Masami]
-
-Changes from v2:
-- rebased on top of tip/master + mm/mm-stable + 1 extra change [1]
-- added acks [Oleg,Andrii]
-- more details changelog for patch 1 [Masami]
-- several tests changes [Andrii]
-- add explicit PAGE_SIZE low limit to vm_unmapped_area call [Andrii]
+	David
 
 
-This patchset is adding new syscall, here are notes to check list items
-in Documentation/process/adding-syscalls.rst:
+> 
+> As this code is more about looking at state and not ordering, and I
+> think that's what atomics are about.
+> 
+> -- Steve
+> 
 
-- System Call Alternatives
-  New syscall seems like the best way in here, because we need
-  just to quickly enter kernel with no extra arguments processing,
-  which we'd need to do if we decided to use another syscall.
-
-- Designing the API: Planning for Extension
-  The uprobe syscall is very specific and most likely won't be
-  extended in the future.
-
-- Designing the API: Other Considerations
-  N/A because uprobe syscall does not return reference to kernel
-  object.
-
-- Proposing the API
-  Wiring up of the uprobe system call is in separate change,
-  selftests and man page changes are part of the patchset.
-
-- Generic System Call Implementation
-  There's no CONFIG option for the new functionality because it
-  keeps the same behaviour from the user POV.
-
-- x86 System Call Implementation
-  It's 64-bit syscall only.
-
-- Compatibility System Calls (Generic)
-  N/A uprobe syscall has no arguments and is not supported
-  for compat processes.
-
-- Compatibility System Calls (x86)
-  N/A uprobe syscall is not supported for compat processes.
-
-- System Calls Returning Elsewhere
-  N/A.
-
-- Other Details
-  N/A.
-
-- Testing
-  Adding new bpf selftests.
-
-- Man Page
-  Attached.
-
-- Do not call System Calls in the Kernel
-  N/A
-
-pending todo (or follow ups):
-- use PROCMAP_QUERY in tests
-- alloc 'struct uprobes_state' for mm_struct only when needed [Andrii]
-- use mm_cpumask(vma->vm_mm) in text_poke_sync
-
-thanks,
-jirka
-
-
-Cc: Alejandro Colomar <alx@kernel.org>
-Cc: Eyal Birger <eyal.birger@gmail.com>
-Cc: kees@kernel.org
-
-[1] https://lore.kernel.org/linux-trace-kernel/20250514101809.2010193-1-jolsa@kernel.org/T/#u
----
-Jiri Olsa (21):
-      uprobes: Remove breakpoint in unapply_uprobe under mmap_write_lock
-      uprobes: Rename arch_uretprobe_trampoline function
-      uprobes: Make copy_from_page global
-      uprobes: Add uprobe_write function
-      uprobes: Add nbytes argument to uprobe_write
-      uprobes: Add is_register argument to uprobe_write and uprobe_write_opcode
-      uprobes: Add do_ref_ctr argument to uprobe_write function
-      uprobes/x86: Add mapping for optimized uprobe trampolines
-      uprobes/x86: Add uprobe syscall to speed up uprobe
-      uprobes/x86: Add support to optimize uprobes
-      selftests/bpf: Import usdt.h from libbpf/usdt project
-      selftests/bpf: Reorg the uprobe_syscall test function
-      selftests/bpf: Rename uprobe_syscall_executed prog to test_uretprobe_multi
-      selftests/bpf: Add uprobe/usdt syscall tests
-      selftests/bpf: Add hit/attach/detach race optimized uprobe test
-      selftests/bpf: Add uprobe syscall sigill signal test
-      selftests/bpf: Add optimized usdt variant for basic usdt test
-      selftests/bpf: Add uprobe_regs_equal test
-      selftests/bpf: Change test_uretprobe_regs_change for uprobe and uretprobe
-      seccomp: passthrough uprobe systemcall without filtering
-      selftests/seccomp: validate uprobe syscall passes through seccomp
-
- arch/arm/probes/uprobes/core.c                              |   2 +-
- arch/x86/entry/syscalls/syscall_64.tbl                      |   1 +
- arch/x86/include/asm/uprobes.h                              |   7 ++
- arch/x86/kernel/uprobes.c                                   | 554 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-
- include/linux/syscalls.h                                    |   2 +
- include/linux/uprobes.h                                     |  20 +++-
- kernel/events/uprobes.c                                     | 100 ++++++++++++-----
- kernel/fork.c                                               |   1 +
- kernel/seccomp.c                                            |  32 ++++--
- kernel/sys_ni.c                                             |   1 +
- tools/testing/selftests/bpf/prog_tests/uprobe_syscall.c     | 518 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++------
- tools/testing/selftests/bpf/prog_tests/usdt.c               |  38 ++++---
- tools/testing/selftests/bpf/progs/uprobe_syscall.c          |   4 +-
- tools/testing/selftests/bpf/progs/uprobe_syscall_executed.c |  60 +++++++++-
- tools/testing/selftests/bpf/test_kmods/bpf_testmod.c        |  11 +-
- tools/testing/selftests/bpf/usdt.h                          | 545 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
- tools/testing/selftests/seccomp/seccomp_bpf.c               | 107 ++++++++++++++----
- 17 files changed, 1891 insertions(+), 112 deletions(-)
- create mode 100644 tools/testing/selftests/bpf/usdt.h
-
-Jiri Olsa (1):
-      man2: Add uprobe syscall page
-
- man/man2/uprobe.2    |  1 +
- man/man2/uretprobe.2 | 36 ++++++++++++++++++++++++------------
- 2 files changed, 25 insertions(+), 12 deletions(-)
- create mode 100644 man/man2/uprobe.2
