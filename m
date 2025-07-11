@@ -1,96 +1,76 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F27702F19B1;
-	Fri, 11 Jul 2025 17:59:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37DFC5383;
+	Fri, 11 Jul 2025 18:18:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752256794; cv=none; b=nXM55IugeienCJRtyK98pkrTzF+Ymf+RunQXdkAu0aTYRx2I4pLYJYnDB8ulug54ChwUsVg+oeZ37t4wOIUtAY9ekUHDWpk5XuGJwMc4X0mZEc4GBhOVoaVuic7Jou/h/2j2FuCWMjCXLiYi46zrQ85Nci/3pg3hDavsnoTj7RM=
+	t=1752257935; cv=none; b=tGTQQ52tPWwaKkdtmJRIg4egaKMR/y1aqW1PlEBmGw8giftITsEku75AVxN6hT45BpVWw0+qgNvUet2dl5u3aU3ZVG+0Ywh0E9Q4t2CVfe+LGLhdI4dE1fMLz7MCFZFpkbAoRULs+MaNKR/Hz3MNpuHWW87Vs8DQy0Rwgixl3MA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752256794; c=relaxed/simple;
-	bh=AKpW72VC+1HOMYg6B0t+mzIDn2Tzs/VVIAhuZ2bpIQU=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=CipqR4of7+YQzayz8X0UXbQau+ln1aERtmdOl4PS5LIyhdFdPEbYzXK8Fq8CvNLYg92gXB7ukEKjJ/XXf8THET0NwNAhFHQt/l2SfqhPalLh72FkhRVcnorg7W9SqwS73cWCfxNfACyTogkkJkxtcCUK5v4WivO1/LNhgGzG7rw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LGCXV47h; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1752257935; c=relaxed/simple;
+	bh=RaXFaKhMptA0VWI0bcnG6YmJ4qntVveyRzZV3R4NIWs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=iMwUFt0tuL38JurLud6FYftsp/aSlySIuZY93YMLLMTSiCg0XQAUJQ8VOmw0Zn685VIbG3Q9WMn0KZAr3MGDjiFB0QAywbQvor3JXul01hHi0jwY23sV2aGM7BXPsqr9/G+2sZZAPl/nTehF3vNMtZ0dGp0GJsgPvQSnpV5ydlo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=R58PcrH/; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LGCXV47h"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 95FBBC4CEED;
-	Fri, 11 Jul 2025 17:59:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1752256793;
-	bh=AKpW72VC+1HOMYg6B0t+mzIDn2Tzs/VVIAhuZ2bpIQU=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=LGCXV47hplNjKNNtfxkpYShpJrK1VY2QNanrzvUJ5enWnyEGrJATEcjXlLcyCkM0j
-	 MaF8K9RNAZYeIm63IIpfCtGy8U0+OIad6u5fGRPPJ+VFP09z78l/MlHzQZH6th5K8R
-	 AMJT2nRDxRXm3VbGymENADxOGF0teuWuNgsmFfzzs2VWs/OAIboGLX3Tls3bDC8NGf
-	 JQEEdYLBetuvGmKNkAcVX9CGloop9MMSg6pkYMj+hHPWjOileui90osc/acQkBh6Dj
-	 uLExsKfgwdeoDWnHappV7uhpPHt7SK8Jeg/KOR3CmAHh8Ildeda8m+dgmpkOPSOFvW
-	 +bWvA9o+5IuXg==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id ADF4B383B275;
-	Fri, 11 Jul 2025 18:00:16 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="R58PcrH/"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=Adhh9U7HQoWtfmousRvgTn6pHJmknUfcCaBoye1pSMY=; b=R58PcrH/4K187twPLAxOLJLy3Y
+	EEIzQod0raQWLqjhgHb+OWq3UrI/tB2Z9xnnkHGs9kcrdW72tuTdPwLtkrsj1YBF4r3LVlk3O4xRl
+	/Ugm8jCyGTIliT8P+a/kdVEtgp9bBPWBbVz10dvjNO8T6TLeNHstcH9tfXstTK4nhYXWmNMUwcqug
+	/HfbANSG32eHWS5OgWdGOsp1gVf89e7Olva0Wi5riQNCH7C3bSC0RBRaeIyq1APBArH2jdi+2oTWk
+	Aro1btZHZdXK5OF3S9jM/30ctMi0BuRsQlYegBkoNW4TaXjyas18/XuoJ5IPGMg6xqLo9qBmzsMMj
+	CBJLW06A==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uaIKd-00000009JrZ-1A1X;
+	Fri, 11 Jul 2025 18:18:47 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 0A55B3001AA; Fri, 11 Jul 2025 20:18:46 +0200 (CEST)
+Date: Fri, 11 Jul 2025 20:18:45 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Nam Cao <namcao@linutronix.de>, John Ogness <john.ogness@linutronix.de>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Gabriele Monaco <gmonaco@redhat.com>,
+	linux-trace-kernel@vger.kernel.org,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Petr Mladek <pmladek@suse.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/2] Fix up build issues with vpanic
+Message-ID: <20250711181845.GA4105545@noisy.programming.kicks-ass.net>
+References: <cover.1752232374.git.namcao@linutronix.de>
+ <20250711122413.15b8456f@batman.local.home>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH bpf-next v4 0/7] Move attach_type into bpf_link
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <175225681552.2356840.5924088851532659615.git-patchwork-notify@kernel.org>
-Date: Fri, 11 Jul 2025 18:00:15 +0000
-References: <20250710032038.888700-1-chen.dylane@linux.dev>
-In-Reply-To: <20250710032038.888700-1-chen.dylane@linux.dev>
-To: Tao Chen <chen.dylane@linux.dev>
-Cc: daniel@iogearbox.net, razor@blackwall.org, andrew+netdev@lunn.ch,
- davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
- ast@kernel.org, andrii@kernel.org, martin.lau@linux.dev, eddyz87@gmail.com,
- song@kernel.org, yonghong.song@linux.dev, john.fastabend@gmail.com,
- kpsingh@kernel.org, sdf@fomichev.me, haoluo@google.com, jolsa@kernel.org,
- mattbobrowski@google.com, rostedt@goodmis.org, mhiramat@kernel.org,
- mathieu.desnoyers@efficios.com, horms@kernel.org, willemb@google.com,
- jakub@cloudflare.com, pablo@netfilter.org, kadlec@netfilter.org,
- hawk@kernel.org, bpf@vger.kernel.org, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- netfilter-devel@vger.kernel.org, coreteam@netfilter.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250711122413.15b8456f@batman.local.home>
 
-Hello:
-
-This series was applied to bpf/bpf-next.git (master)
-by Andrii Nakryiko <andrii@kernel.org>:
-
-On Thu, 10 Jul 2025 11:20:31 +0800 you wrote:
-> Andrii suggested moving the attach_type into bpf_link, the previous discussion
-> is as follows:
-> https://lore.kernel.org/bpf/CAEf4BzY7TZRjxpCJM-+LYgEqe23YFj5Uv3isb7gat2-HU4OSng@mail.gmail.com
+On Fri, Jul 11, 2025 at 12:24:13PM -0400, Steven Rostedt wrote:
+> On Fri, 11 Jul 2025 13:20:41 +0200
+> Nam Cao <namcao@linutronix.de> wrote:
 > 
-> patch1 add attach_type in bpf_link, and pass it to bpf_link_init, which
-> will init the attach_type field.
+> > Hi,
+> > 
+> > The newly introduced vpanic() has some build issues. This series fix them
+> > up.
+> > 
+> > As the vpanic() is only in ftrace tree for now, it is probably best to let
+> > this series goes to ftrace tree, if everyone is okay with that.
 > 
-> [...]
+> Since the bug is in my tree I'll take it, but can I get an acked-by
+> from Peter or Josh?
 
-Here is the summary with links:
-  - [bpf-next,v4,1/7] bpf: Add attach_type in bpf_link
-    (no matching commit)
-  - [bpf-next,v4,2/7] bpf: Remove attach_type in bpf_cgroup_link
-    https://git.kernel.org/bpf/bpf-next/c/9b8d543dc2bb
-  - [bpf-next,v4,3/7] bpf: Remove attach_type in sockmap_link
-    https://git.kernel.org/bpf/bpf-next/c/33f69f736570
-  - [bpf-next,v4,4/7] bpf: Remove location field in tcx_link
-    https://git.kernel.org/bpf/bpf-next/c/5d93e091911c
-  - [bpf-next,v4,5/7] bpf: Remove attach_type in bpf_netns_link
-    https://git.kernel.org/bpf/bpf-next/c/146ecb1e5cf7
-  - [bpf-next,v4,6/7] bpf: Remove attach_type in bpf_tracing_link
-    https://git.kernel.org/bpf/bpf-next/c/6b3c64b371da
-  - [bpf-next,v4,7/7] netkit: Remove location field in netkit_link
-    https://git.kernel.org/bpf/bpf-next/c/4254873c58bf
+Sure
 
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
-
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
