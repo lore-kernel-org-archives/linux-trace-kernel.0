@@ -1,40 +1,44 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88A5E27E06D;
-	Fri, 11 Jul 2025 11:28:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 504671F4C8C;
+	Fri, 11 Jul 2025 12:06:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752233340; cv=none; b=HhLjBYKJ9NRiIxnL+Xsjx9hD6+e/XC94KZ2LHv3IpwLOSH2DjmK/Yz0IKSYUaZCnxlHxRrPL53IpHJN1qZ80mIIXx/NpauBNO0N+fkIdgi8/lUG2Ex+kY5+NG77Een3hkgmz5+aV9QXNmcDm316P258FXoeN0/ROnUrfu3xQRWs=
+	t=1752235565; cv=none; b=XAurSeFOXuMF0s4prmXiWDy+nQ3SDPPjbWyuo2Vms+XkLwolLxOhS3eZi2eiNI8zxgT1CwBmKWmFsfwi6RajV3NWhPe5tp14W6jpQJNv7d2x6wetw3ShAEifa9cuDZtkCWC/TGqN/spu29/8Kpyh17IHhNcA+JTtMQOLvvyXTO0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752233340; c=relaxed/simple;
-	bh=dgDIwm5xlRv1g5vIU7zlBaROFKCXWPLawVbEOwjuzP4=;
+	s=arc-20240116; t=1752235565; c=relaxed/simple;
+	bh=w+C2sUjQwouIsFCsNgntt7YUSEbg7ZM2AJSFbZgLf/M=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WFYWXJRCnRuIlmcmGHAP5ZbYh6uYkfmh+YIb+/2W7BhusBNrJjVwsZItdG2fbGGhuqxuUCNClKFbBcg7aEt3CoFFUvlXkKostix7VaFMjpIwqaGAzBUy5Sr6kC2xwuCnGiupjGVEVfEd8iJXaYJp4Okvbqb6ky+z9nxRV0UWfd4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=qQaulez1; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=RLdWZz8va+07zGSp+vnLV/Gq8Jgizd4dKJ5yeg7vgUWqjd2UZVI3wy1rUx7pVB9LJg5QEz0uHUculDEgZYGpMEyd11rAVtXihwpkOyBWg1PQ8MoXAa5V0mzlOhOF9r1lFSW3EXw6azlxKKfaCMAHZ8UxMw8QjLBLkw3Q6Fmwydo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=gHeh1jlB; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=AKJZmfcb; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="qQaulez1"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=ayfckBgnCQFU9do9xtsmFvO4mmpAGlXUzGjcFbd2Geg=; b=qQaulez15z5DAC8vzlS/V4GlAD
-	lKzjlmdmgG5AuIrf3EvQrzuWXwHB2OmVCwdQfwcnCVhUpHkgnlJCv3Zqud82Jdyyd43ikp1g/g0A7
-	07uM5YIcOUw82zGNIeMT07Z48ygBkoDc6XBECDOTxGtYVnS3UvMwuPcakbo9545iehqD7Z6hknnc+
-	e/bSG+f0jNFtpo+thwv+KfvzTa1dyJHKK8WV+eaUbmweuZ0+M9b2e53ifXbzb4dFzpPLLLek7Xelm
-	FEaQQp6nGxBJcUDOcuvUD4mjzXUW3b9J0PuSdSbJ4nR4IKGeoY07mTbJAqyEAoYqDX7GGyaF7m6eX
-	YY1SesyQ==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uaBvp-0000000CmkJ-2OU4;
-	Fri, 11 Jul 2025 11:28:45 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 826593001AA; Fri, 11 Jul 2025 13:28:44 +0200 (CEST)
-Date: Fri, 11 Jul 2025 13:28:44 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Nam Cao <namcao@linutronix.de>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="gHeh1jlB";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="AKJZmfcb"
+Date: Fri, 11 Jul 2025 14:06:00 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1752235561;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=kvc+RvZAMi5L4w+1ft+c4pN/XBlm8iNMT/0QmnTIUFE=;
+	b=gHeh1jlBff4kNzcrsOcqJqZ3SiBpyWAcDrvMZsk+jj+yeWIBYmehvGrYcgyDzISIyN3Ufd
+	IR5ifz0JlwrGj7xUcMc3EMxo3km7ZT9taFr+/Sv7AnM+/5E+0xgF0G4KZ9N942vAhq38ZY
+	xlwplTL8oVnw87angdq8SIIQ/emP8kz1PgGYHs1g9A5avxBQv4eLOrtlE59q3Kib8PRBfg
+	zlnY2+6lZLL8WxaMMnF4TJ13kisdOUsgk2F+vkPt6l3zDXH8nS36c5JTb+Czol3vV656lg
+	DKAkZbOLpoHuggs/xb7/IsqODKzHSinXTW7D4bhp6atAFt2hwlszmeMTjiOIQQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1752235561;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=kvc+RvZAMi5L4w+1ft+c4pN/XBlm8iNMT/0QmnTIUFE=;
+	b=AKJZmfcb8nY1cV+rE1kKcc0kFq1uy6tI7obvkMLjs0eBDnvOJWbGTCiBFBLB7vi7mPpw2O
+	6J9f4yHeAWjBTZBA==
+From: Nam Cao <namcao@linutronix.de>
+To: Peter Zijlstra <peterz@infradead.org>
 Cc: Steven Rostedt <rostedt@goodmis.org>,
 	John Ogness <john.ogness@linutronix.de>,
 	Masami Hiramatsu <mhiramat@kernel.org>,
@@ -44,8 +48,9 @@ Cc: Steven Rostedt <rostedt@goodmis.org>,
 	Josh Poimboeuf <jpoimboe@kernel.org>,
 	Petr Mladek <pmladek@suse.com>, linux-kernel@vger.kernel.org
 Subject: Re: [PATCH 0/2] Fix up build issues with vpanic
-Message-ID: <20250711112844.GG1099709@noisy.programming.kicks-ass.net>
+Message-ID: <20250711120600.fIZo17WG@linutronix.de>
 References: <cover.1752232374.git.namcao@linutronix.de>
+ <20250711112844.GG1099709@noisy.programming.kicks-ass.net>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -54,15 +59,31 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <cover.1752232374.git.namcao@linutronix.de>
+In-Reply-To: <20250711112844.GG1099709@noisy.programming.kicks-ass.net>
 
-On Fri, Jul 11, 2025 at 01:20:41PM +0200, Nam Cao wrote:
-> Hi,
+On Fri, Jul 11, 2025 at 01:28:44PM +0200, Peter Zijlstra wrote:
+> On Fri, Jul 11, 2025 at 01:20:41PM +0200, Nam Cao wrote:
+> > Hi,
+> > 
+> > The newly introduced vpanic() has some build issues. This series fix them
+> > up.
+> > 
+> > As the vpanic() is only in ftrace tree for now, it is probably best to let
+> > this series goes to ftrace tree, if everyone is okay with that.
 > 
-> The newly introduced vpanic() has some build issues. This series fix them
-> up.
-> 
-> As the vpanic() is only in ftrace tree for now, it is probably best to let
-> this series goes to ftrace tree, if everyone is okay with that.
+> Does it make sense to make panic a static inline?
 
-Does it make sense to make panic a static inline?
+I think no, code size increases by a few K:
+
+text      data     bss     dec       hex      filename
+12222627  6097658  479669  18799954  11edd52  vmlinux.before
+12226703  6098618  479669  18804990  11ef0fe  vmlinux.after
+
+(it's riscv64, I had issue converting on x86 because there's another
+definition of panic())
+
+Maybe faster? But panic() doesn't need to be fast, it's not called in
+normal circumstances anyway.
+
+Best regards,
+Nam
