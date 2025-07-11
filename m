@@ -1,46 +1,37 @@
-Received: from relay.hostedemail.com (smtprelay0016.hostedemail.com [216.40.44.16])
+Received: from relay.hostedemail.com (smtprelay0012.hostedemail.com [216.40.44.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DBE82EF28F;
-	Fri, 11 Jul 2025 16:11:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A62BB1CDFD5;
+	Fri, 11 Jul 2025 16:24:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752250310; cv=none; b=gyYgy9OOiG3uHS39bAOowFzi5J+iCYqJc9Iw4Si/Cp3E2Za4th+Xiu9rahvPHeFTcSC6ACKabcfLZ45IS9HuVomy7wjeF8f+WsoChdW7jpXz+gPfUqVC7xWqkIjHBjABWaf0/ZE3g3m4v4sAuvmveoohPJIg7aS+hyHivQJSRC4=
+	t=1752251061; cv=none; b=YvNr26rghOded4HGa3pjMEWYOn5N2gqrI4H2kRkfC3qw12sNG+OYI+nry7hSOFhOGMWnFQoSh9sMe5v/85D47bMcp8VrBMupUdegNZxnQFjMwi6O2grGJkcygikQxLrscPPvKvp1sOgemmu1CIA0KruVimOP/l9mbiV4zG96PMw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752250310; c=relaxed/simple;
-	bh=HiyWvgjQ6Tw3t/L7Jjs6qn/jzZEYZ7vQ42nz5apuopU=;
+	s=arc-20240116; t=1752251061; c=relaxed/simple;
+	bh=B07AFIXz8x2CBNkfSGAD1YIVHaOwa73nqUf3T2GkWQA=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=cisF6S2kwaRCDEnaUdIa8hZnOVKa1r0QIjI+/5ntGourZLnAEIqxG5RDftCUpQZ7FmRDtwSg8AFjf/k9CABd62N65w32sdUQtrZiTsl64hQb1W0bBfck1oTD5Oo/m1/kfnggbaNX6VyNELMPyiZNcxi0OE0Pm/sRhl03/tp+fIg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.16
+	 MIME-Version:Content-Type; b=N3gqEmGAS46sPceFmZwtpJ2lJ2toXG/6lVKA3yiW6vyCeHWs3yqTo5lxJprQFrZFnBORaiBJb1dHqUU5YziLjtSK/yNGzaLa+8E5aZLR46Z61tq97u1QjQfgG5plSX6k+qx1jtRcJvD5jZWyYXWQTIiZ4HQttC3FJBeXk0RY78E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.12
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf08.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay09.hostedemail.com (Postfix) with ESMTP id 2339680B95;
-	Fri, 11 Jul 2025 16:11:38 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf08.hostedemail.com (Postfix) with ESMTPA id 121EC20026;
-	Fri, 11 Jul 2025 16:11:32 +0000 (UTC)
-Date: Fri, 11 Jul 2025 12:11:32 -0400
+Received: from omf09.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay05.hostedemail.com (Postfix) with ESMTP id 0A82C5D512;
+	Fri, 11 Jul 2025 16:24:17 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf09.hostedemail.com (Postfix) with ESMTPA id C07B82002A;
+	Fri, 11 Jul 2025 16:24:14 +0000 (UTC)
+Date: Fri, 11 Jul 2025 12:24:13 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
-To: David Laight <david.laight.linux@gmail.com>
-Cc: Steven Rostedt <rostedt@kernel.org>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org, x86@kernel.org,
- Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Josh Poimboeuf <jpoimboe@kernel.org>,
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, Jiri
- Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Thomas
- Gleixner <tglx@linutronix.de>, Andrii Nakryiko <andrii@kernel.org>, Indu
- Bhagat <indu.bhagat@oracle.com>, "Jose E. Marchesi" <jemarch@gnu.org>, Beau
- Belgrave <beaub@linux.microsoft.com>, Jens Remus <jremus@linux.ibm.com>,
- Linus Torvalds <torvalds@linux-foundation.org>, Andrew Morton
- <akpm@linux-foundation.org>, Jens Axboe <axboe@kernel.dk>, Florian Weimer
- <fweimer@redhat.com>, Sam James <sam@gentoo.org>
-Subject: Re: [PATCH v13 13/14] unwind_user/x86: Enable frame pointer
- unwinding on x86
-Message-ID: <20250711121132.5c270cfa@batman.local.home>
-In-Reply-To: <20250711094321.3c64757c@pumpkin>
-References: <20250708012239.268642741@kernel.org>
-	<20250708012359.853818537@kernel.org>
-	<20250711094321.3c64757c@pumpkin>
+To: Nam Cao <namcao@linutronix.de>
+Cc: John Ogness <john.ogness@linutronix.de>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Gabriele Monaco <gmonaco@redhat.com>, linux-trace-kernel@vger.kernel.org,
+ Josh Poimboeuf <jpoimboe@kernel.org>, Peter Zijlstra
+ <peterz@infradead.org>, Petr Mladek <pmladek@suse.com>,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/2] Fix up build issues with vpanic
+Message-ID: <20250711122413.15b8456f@batman.local.home>
+In-Reply-To: <cover.1752232374.git.namcao@linutronix.de>
+References: <cover.1752232374.git.namcao@linutronix.de>
 X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -50,32 +41,28 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Stat-Signature: qte6h5trxd3jihtuk7dcq8a8fkt59xrd
-X-Rspamd-Server: rspamout08
-X-Rspamd-Queue-Id: 121EC20026
+X-Stat-Signature: 4fm9d6grjcfjrxhitoc89phodocr3w61
+X-Rspamd-Server: rspamout04
+X-Rspamd-Queue-Id: C07B82002A
 X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX19LrrO7/3ROS0s3nj8/FX9Fdpx8NaF9lw4=
-X-HE-Tag: 1752250292-817812
-X-HE-Meta: U2FsdGVkX1/0H3hjP9wfcZqo8vyVdb4L53LrCbGzExj4KDyuH8b7gd7vaGl1BvB4SeCbfzOzI4Wbt58bGq2RetlPLrWrmisZPVsRcgGvTs03Zent/H178cz9Ai7I3qeI62Dxe2zHe/4MhC/rKj6rGS8OdYdZSJQBg/X8yinSczds9RNb8JApEfWL2Wse/dZ5aaFX04aRQ1sSzl+NplmdoprUJXLpc8UPDSjd67eApnugahbbKYhldnptsjRuTOQFS6mn727yLuXp2C4fpfdCK7Q2TnWCiudswVsXWCkKOCdNEsWkh4Mm2aTc0FEpCpC7lFCsSi+0VAgitWpcdArLP3E75mGI5bSjtcpdBQ8CI+7xsWRgd75sKhwz6eeuxOV+U89Tga8dhb9P+4oPS7esbZRo8mRNnkjN/b/QHHrk0Ag=
+X-Session-ID: U2FsdGVkX1/ZHgneXBDZjZOMaJc5MGp5oQDB4BbUZuo=
+X-HE-Tag: 1752251054-968879
+X-HE-Meta: U2FsdGVkX18AurL+Ktxdx9Vo9Jj+ixQ+eTFaV91s4dRUU/gI5AfKNrmcoRqkzE4Us1A9DBo1w73xAWUFOfFoeking1IC46yBJUVfUpY/7qfGytILr7ecrcIXt/+PI979Yu3+F4eT4Q3YWrscLnHqvBW+1RZcRi8OwEISVoGNZDt2JO9ivi01GnXhfNj51KhssMGgaxZrKlfKvoDosZehKOkuuGQeGMtO0XU6AMZ5Pe/GA3YX3HJI2oMwG5yIlCkeRYPMaknMvJGx7KFuNKe+LDsZnys36ghqaUsJ5I8vV11FgyHLZuNwGzd+zyqSt65C
 
-On Fri, 11 Jul 2025 09:43:21 +0100
-David Laight <david.laight.linux@gmail.com> wrote:
+On Fri, 11 Jul 2025 13:20:41 +0200
+Nam Cao <namcao@linutronix.de> wrote:
 
-> On Mon, 07 Jul 2025 21:22:52 -0400
-> Steven Rostedt <rostedt@kernel.org> wrote:
+> Hi,
 > 
-> > From: Josh Poimboeuf <jpoimboe@kernel.org>
-> > 
-> > Use ARCH_INIT_USER_FP_FRAME to describe how frame pointers are unwound
-> > on x86, and enable CONFIG_HAVE_UNWIND_USER_FP accordingly so the
-> > unwind_user interfaces can be used.  
+> The newly introduced vpanic() has some build issues. This series fix them
+> up.
 > 
-> How is that going to work?
-> Pretty much all x86 userspace is compiled with bp as a general
-> purpose register not a frame pointer.
+> As the vpanic() is only in ftrace tree for now, it is probably best to let
+> this series goes to ftrace tree, if everyone is okay with that.
 
-Which is where this patch set comes in...
+Since the bug is in my tree I'll take it, but can I get an acked-by
+from Peter or Josh?
 
-  https://lore.kernel.org/linux-trace-kernel/20250701184939.026626626@goodmis.org
+Thanks,
 
 -- Steve
