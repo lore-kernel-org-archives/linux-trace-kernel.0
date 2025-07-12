@@ -1,108 +1,83 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay.hostedemail.com (smtprelay0013.hostedemail.com [216.40.44.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD840DDC3;
-	Sat, 12 Jul 2025 11:45:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFECA27E7C8;
+	Sat, 12 Jul 2025 14:37:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752320732; cv=none; b=fyxqRB5n2iWFc7irtz8Hjv5TQQApivUUH4ZhMCKWwerJbhtz9PrZ3V4YDnGscREOgSL7TP8gNwcZicgtvihhoHry3UjkT9tRtv0F3tbQaS505rB+UOQlvuxTF0KNzMaW5PZJWXFAR10nPPZWl/dve50EpbNfEsX85uackTdVN2o=
+	t=1752331062; cv=none; b=PQ/hUSHTAQ2orxDfHtVSzNEtrsH39CNLhDPwSLSJpqZuGhn4mOUqA+yoi8905namwxIsvFgjteFAr45RbtKR2juUqJA7dQTfeqJqIg5r0TTcZM4AvHm+dioAXlcfz7toIV1JXfmBkqcqLColqpiYzd+tJq6KxktwDqmJe+e7Z5g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752320732; c=relaxed/simple;
-	bh=ddivwdzozJ2VGB4GHxJ253lZeTs7Y4i4mulioXauf0I=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=m84JwpcvSEg0EesKRIZJMQXWpH2mgddMWWKlA7C6koPZUu76UMTDvcG2EyssExLrDtvZj5XaxOPko31u/9ZivbLvUrpxiqxddrhIT/VwPOIrP9Q4lbvfbGiWe4JGxuzTLPk3msLoXkhxPxnMTANbMu6FlvzFmULwv2R1LmxX3g4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=teYBuNIF; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="teYBuNIF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6B4CBC4CEEF;
-	Sat, 12 Jul 2025 11:45:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1752320731;
-	bh=ddivwdzozJ2VGB4GHxJ253lZeTs7Y4i4mulioXauf0I=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=teYBuNIFXlrTpBzVBWREfiyv+AnYnmtdyCmT/m38E+5kwh7/goFcereq51OSF9BzH
-	 h3MdWULA1mROgshj0jTdOeKclzvfz8ysvse4cRaccuRnwcoC+zs8ZIus3+vadFpp2N
-	 ZdjxrLCd8JybdHQNdzCe1Zdg/e+9rxPJlILY09XHz8HgtliNpw4/WKat7AOZORcxMv
-	 X6oYBYj5Bq/gbAvoN3kucsafTZpxF2stL63VAmcRjPG3TV3umFCyalARSDGt/P8dlC
-	 Az/7MkjVnqpiylUpiGvlEMBDumGJzR00rjmK7WHI7j5P9SdcTTLBW0wHJIayiuRytt
-	 q2eMf1pW7mQPQ==
-Date: Sat, 12 Jul 2025 20:45:24 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
+	s=arc-20240116; t=1752331062; c=relaxed/simple;
+	bh=PFQv1MiKwPHjCbE3SkmZSPRK8MgN7zNlyxripA+FjFE=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=X6khXT6Yi/ysOW+7oofObr8RHXEWXDtCKgvG+haFHcj1f7xMR2ntpFlBktGirAKgpDnI+vDiDUfKRcbDTLACCzTC0P3DMCnVCuAGAekehXU+229pueCZ78JwgC7/oRy74f1VnN6EYzIUdQvxHsR9+o7RqV0rOsAtDs7AR6gYgMs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf09.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay07.hostedemail.com (Postfix) with ESMTP id 5A52316013F;
+	Sat, 12 Jul 2025 14:37:33 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf09.hostedemail.com (Postfix) with ESMTPA id B056E20025;
+	Sat, 12 Jul 2025 14:37:31 +0000 (UTC)
+Date: Sat, 12 Jul 2025 10:37:32 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
 Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
  linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
 Subject: Re: [PATCH 1/2] tracing: Remove "__attribute__()" from the type
  field of event format
-Message-Id: <20250712204524.13ece418f90ea66d4bd0e598@kernel.org>
-In-Reply-To: <20250711120322.4ddb9b39@batman.local.home>
+Message-ID: <20250712103732.79c7b9e1@batman.local.home>
+In-Reply-To: <20250712204524.13ece418f90ea66d4bd0e598@kernel.org>
 References: <175197567999.977073.8989204607899013923.stgit@mhiramat.tok.corp.google.com>
 	<175197568917.977073.2201559708302320631.stgit@mhiramat.tok.corp.google.com>
 	<20250709131107.397a3278@batman.local.home>
 	<20250711143703.60a1a9a9f31a45f2000eec9d@kernel.org>
 	<20250711120322.4ddb9b39@batman.local.home>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	<20250712204524.13ece418f90ea66d4bd0e598@kernel.org>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
+MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
+X-Stat-Signature: f1rei356ssetnsu795jz3xcer5gyhgi8
+X-Rspamd-Server: rspamout01
+X-Rspamd-Queue-Id: B056E20025
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1+hQ6GS8OZgON/sLVGwYmpUtRbcIiBkgMQ=
+X-HE-Tag: 1752331051-649973
+X-HE-Meta: U2FsdGVkX1/hBdxgzFDNgX9buPFxsa0V/rMcqEPnhJKZif5/dc3xmV8oP/4FK6lLfXCkexGeWX7sXo4OJsFH3kcFv7XCXWyDSU/K7UxfBRzsBpSW+PNP9oEObbMfM0QNeDMD3pe5r+MDu7rqzVp3t4LcYI+uFBaHPWH7b/RhZnN9uqr/Itd3cyIM/UN2BbG2lRRBxgwoNFEVbr0SuYN66vhKdLtcrcEiU95jk4TmErQmxjpKEX7c81pFs4+daZ1j54MgcHwa66q5aCK3R40gqWMqYFRUig2a8OSHLLBdisp5hYIdWyPNMUOqzWhglZgaCQ1GS8qFpdev41UZZdYJBxdfChm22eFC
 
-On Fri, 11 Jul 2025 12:03:22 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
+On Sat, 12 Jul 2025 20:45:24 +0900
+Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
 
-> On Fri, 11 Jul 2025 14:37:03 +0900
-> Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
-> 
-> > I investigated this but it is not possible to use update_event_fields()
-> > because that function is only used if the 
-> > CONFIG_TRACE_EVAL_MAP_FILE=y.
-> 
-> That had better *not* be true, otherwise all the TRACE_DEFINE_ENUM() in
-> include/trace/events/*.h would be useless and those events would not
-> parse. Note, I usually run without that config enabled, so it would
-> most definitely break on me if this was true.
-> 
-> In the code we have:
-> 
-> ----------------------8<----------------------
-> #else /* CONFIG_TRACE_EVAL_MAP_FILE */
-> static inline void trace_create_eval_file(struct dentry *d_tracer) { }
-> static inline void trace_insert_eval_map_file(struct module *mod,
-> 			      struct trace_eval_map **start, int len) { }
-> #endif /* !CONFIG_TRACE_EVAL_MAP_FILE */
-> 
-> static void trace_insert_eval_map(struct module *mod,
-> 				  struct trace_eval_map **start, int len)
-> {
-> 	struct trace_eval_map **map;
-> 
-> 	if (len <= 0)
-> 		return;
-> 
-> 	map = start;
-> 
-> 	trace_event_eval_update(map, len);
-> 
-> 	trace_insert_eval_map_file(mod, start, len);
-> }
-> ---------------------->8----------------------
-> 
-> Notice the "#endif". The trace_insert_eval_map_file() is a nop, but the
-> trace_event_eval_update() is not. That has the call to
-> update_event_printk() and update_event_fields().
-> 
-> So it can most definitely be used when that config is not defined. That
-> config only creates a file to show you *what* was replaced. It doesn't
-> stop the replacing.
+> Hmm, Ok. But when I sanitized the field->type in
+> update_event_fields(), it did not work. So something
+> we missed.
 
-Hmm, Ok. But when I sanitized the field->type in
-update_event_fields(), it did not work. So something
-we missed.
+Ah, it's because we test to see if the event has enums or not before
+calling update_event_fields. We need something like this:
 
-Thanksm
 
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
+index 120531268abf..52829b950022 100644
+--- a/kernel/trace/trace_events.c
++++ b/kernel/trace/trace_events.c
+@@ -3349,6 +3349,8 @@ void trace_event_eval_update(struct trace_eval_map **map, int len)
+ 				}
+ 				update_event_printk(call, map[i]);
+ 				update_event_fields(call, map[i]);
++			} else if (need_sanitize_field_type(__type)) {
++				sanitize_fields(call);
+ 			}
+ 		}
+ 		cond_resched();
+
+
+And have the attribute fixed in both update_event_fields() and have
+your own sanitize_fields() that just does the attribute update.
+
+-- Steve
