@@ -1,66 +1,121 @@
-Received: from relay.hostedemail.com (smtprelay0011.hostedemail.com [216.40.44.11])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2F6F275B12;
-	Sat, 12 Jul 2025 15:13:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC7381367;
+	Sun, 13 Jul 2025 07:17:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752333197; cv=none; b=Joswp8a2TEG7eB+omNnkX5+fqMilZNZQrhwS4+4SVgPc2ydD9aQdAl+E47nUK4FOzLG/tMJCTtTujyRMm7T/43wzppapsA3SXPJNmwT5O3Zdq47pkUTTvNOw9jK6/iFfgGffRbscpBF+3Tiy+jOm84igeeOJy7aU2Hy3YHusrsg=
+	t=1752391060; cv=none; b=D6hHvmRSw+OmJIr4/2qwQORe3f6JCvooJ573AL1cP0Jwcc2ffBhu/S+5XE4jI5GtbU354yI6haoY+EeNj2Ksx0ccptSfn+zp44kEt1KzVk7fBGcm4vXpHtQ+Q7zjyvkgeemG3KFJKP1yzsz5ZmOcLIfWZLE5d8HkuKtoeQUoiyE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752333197; c=relaxed/simple;
-	bh=TxM6V5lQNkqAI2vum6w5k/qqAHVj2nw6yWinElESfns=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Ob+VYrrlBls305DGvPodSdBZ2UGyvLgJeNBrI9F07yt7OThvJX5lvj5HRV8o1Nsq68Yiwx6+B5LIjzjX/tgHohDbj92leCt1O1YGw/UZdSk4sta0un0QmGMpfq0ue7SaOngCBQIeYCcsZhbksvOv9Chs1HYcVxLIWjh7JEzQdAk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf10.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay05.hostedemail.com (Postfix) with ESMTP id 786C555B63;
-	Sat, 12 Jul 2025 15:13:08 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf10.hostedemail.com (Postfix) with ESMTPA id CF4DC40;
-	Sat, 12 Jul 2025 15:13:06 +0000 (UTC)
-Date: Sat, 12 Jul 2025 11:13:05 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] tracing: Remove "__attribute__()" from the type
- field of event format
-Message-ID: <20250712111305.22586237@batman.local.home>
-In-Reply-To: <20250712103732.79c7b9e1@batman.local.home>
-References: <175197567999.977073.8989204607899013923.stgit@mhiramat.tok.corp.google.com>
-	<175197568917.977073.2201559708302320631.stgit@mhiramat.tok.corp.google.com>
-	<20250709131107.397a3278@batman.local.home>
-	<20250711143703.60a1a9a9f31a45f2000eec9d@kernel.org>
-	<20250711120322.4ddb9b39@batman.local.home>
-	<20250712204524.13ece418f90ea66d4bd0e598@kernel.org>
-	<20250712103732.79c7b9e1@batman.local.home>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1752391060; c=relaxed/simple;
+	bh=sCEGchPk57A1a1Hap+1jxUD6UZPcz9tgIrKQpcRxyis=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=WZSEnUgXIKjy2GoNvKrcFo3c9TdEfHMUjdFKIMPDKOpZCGRr2H2sCo8F9YU7HA/D7MdGZFXsxs/nHEIcs1m+ug1D/YwioysX+XIygYn0wRjT7ZwvgVc2rz3vKyBXDHfqBdNoJxjN+iUJAo7SR3B5eNifWOjLXGv/mGbzrDXrOE8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cj9wKHy2; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cj9wKHy2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5CD38C4CEE3;
+	Sun, 13 Jul 2025 07:17:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1752391060;
+	bh=sCEGchPk57A1a1Hap+1jxUD6UZPcz9tgIrKQpcRxyis=;
+	h=From:To:Cc:Subject:Date:From;
+	b=cj9wKHy2Rk4JCQgZuB6e4IvnTq8AWaZ5Wv+qxuR6VlwQZDx/jsCQJshf1KNE6q/0A
+	 xUM/vTsiWCZ7I0YPS4Z5bk4U1XOGx2oNlFKlS2ZCH/Wqa5A9svaIolJbcbAtRx8o3r
+	 E5V0MfYYueJdleQO242WfkDTZDVAD0fjyJftWT+d7SQsz055+uKD2YjArZckuBocUH
+	 3mC+KHG33IHdCqRtu96zmTulgn3n6vgKjjJG5O7QtjN9zxAkq9+ZddYDRgTn+MxkrV
+	 vnOScBdoJJ7/dYe5ed+B+a1YP4yrc9Oq+OmmLSfYuYbmwMt4+S4K8Bm1kbt9p6MQx1
+	 FAy2EghCCyEeQ==
+From: Mike Rapoport <rppt@kernel.org>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Andy Lutomirski <luto@kernel.org>,
+	Borislav Petkov <bp@alien8.de>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Daniel Gomez <da.gomez@samsung.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Ingo Molnar <mingo@redhat.com>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mike Rapoport <rppt@kernel.org>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Petr Pavlu <petr.pavlu@suse.com>,
+	Sami Tolvanen <samitolvanen@google.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Yann Ylavic <ylavic.dev@gmail.com>,
+	linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org,
+	linux-modules@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	x86@kernel.org
+Subject: [PATCH v3 0/8] x86: enable EXECMEM_ROX_CACHE for ftrace and kprobes
+Date: Sun, 13 Jul 2025 10:17:22 +0300
+Message-ID: <20250713071730.4117334-1-rppt@kernel.org>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Server: rspamout04
-X-Rspamd-Queue-Id: CF4DC40
-X-Stat-Signature: s1ymsnhyputens5ishmdqroc9x6s5576
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX19Oy2ACIXxHoH8Xg8IjNLWVkjTlIXRdxP8=
-X-HE-Tag: 1752333186-143848
-X-HE-Meta: U2FsdGVkX187K0UYmllEuW5yt+mnhLMDSA+mOWJTuAEO3u3c53yBj0jxpaqJRVOZjrSE5NmQEkZhZiJJspaB+G2DcgEKnRrUfM0ni97GA4rNYvBD+1mSe/W9qTou0kkhwSEi8c44ZuaheHmQKBFP9cjT2agqQjwx6GMbpIDFfSc1U7p0qLe9VsWgh+SIel5sxp2JUwWuRSydzT4Dwiz3VSnsaUnIDQLZYJZie8kTlHUfD5KGNHn8l7M7dHhZJaWDwstJMvh3arA/xUxIFKco/WdT0wgWcLjZOy5tKDfSikWgHiC+1M9cRAaFhhgVJRQR1Dns8zrj662B5aT0VrYWWkKInjmnVF6ELF0KSSCvn3WAUcSQGhTWLq06+rf7bhrh
+Content-Transfer-Encoding: 8bit
 
-On Sat, 12 Jul 2025 10:37:32 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
+From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
 
-> +			} else if (need_sanitize_field_type(__type)) {
-> +				sanitize_fields(call);
->  			}
+Hi,
 
-Note, I just cut and pasted what you had and added "sanitize_fields()".
-Obviously this isn't going to compile, but I just did this to show you
-where the changes had to be made.
+These patches enable use of EXECMEM_ROX_CACHE for ftrace and kprobes
+allocations on x86.
 
--- Steve
+They also include some ground work in execmem.
+
+Since the execmem model for caching large ROX pages changed from the
+initial assumption that the memory that is allocated from ROX cache is
+always ROX to the current state where memory can be temporarily made RW and
+then restored to ROX, we can stop using text poking to update it. This also
+saves the hassle of trying lock text_mutex in execmem_cache_free() when
+kprobes already hold that mutex.
+
+The patches 1-6 update and cleanup execmem ROX cache management,
+patch 7 enables EXECMEM_ROX_CACHE for kprobes and
+patch 8 enables EXECMEM_ROX_CACHE for frace.
+
+The patches are also available at git:
+
+https://git.kernel.org/rppt/h/execmem/x86-rox/ftrace%2bkprobes/v3
+
+v3:
+* Fix spelling (Petr)
+* Add ack and review tags, thanks all!
+
+v2: https://lore.kernel.org/all/20250709134933.3848895-1-rppt@kernel.org
+* Fix setting and clearing pending_free for an area (Yann)
+* Reorder execmem_cache_free() to avoid error goto (Peter)
+* Add comment why mas_store_gfp() cannot fail in execmem_cache_free() (Peter)
+
+
+Mike Rapoport (Microsoft) (8):
+  execmem: drop unused execmem_update_copy()
+  execmem: introduce execmem_alloc_rw()
+  execmem: rework execmem_cache_free()
+  execmem: move execmem_force_rw() and execmem_restore_rox() before use
+  execmem: add fallback for failures in vmalloc(VM_ALLOW_HUGE_VMAP)
+  execmem: drop writable parameter from execmem_fill_trapping_insns()
+  x86/kprobes: enable EXECMEM_ROX_CACHE for kprobes allocations
+  x86/ftrace: enable EXECMEM_ROX_CACHE for ftrace allocations
+
+ arch/x86/kernel/alternative.c  |   3 +-
+ arch/x86/kernel/ftrace.c       |   2 +-
+ arch/x86/kernel/kprobes/core.c |  18 ---
+ arch/x86/mm/init.c             |  24 ++--
+ include/linux/execmem.h        |  54 ++++-----
+ kernel/module/main.c           |  13 +--
+ mm/execmem.c                   | 198 +++++++++++++++++++++++++--------
+ 7 files changed, 194 insertions(+), 118 deletions(-)
+
+
+base-commit: 86731a2a651e58953fc949573895f2fa6d456841
+--
+2.47.2
