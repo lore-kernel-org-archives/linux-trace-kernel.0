@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14D261DF756;
-	Sun, 13 Jul 2025 07:18:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 623321E22E6;
+	Sun, 13 Jul 2025 07:18:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752391098; cv=none; b=ci22WhYglMnJIcZmrpvM54N5tOXuXOi//vM5SOyXSUzwWKDavoME3kOgd7EHSIMBmk4lBHjj9VYNDMic+e2SSJb+Z5VcYUyUKvRaLU/O/GTye3tzVWD8lFW9f6URZmP36HSlwQzXzxNZo6UBbPOGnFvzTd2pivap74Ned4Rr6zU=
+	t=1752391104; cv=none; b=QFnx6H6uXQuto9/9B0tzkCUhR+HlnQF8cgWsLfsiMm5jWjm1MwLUIKGKW7QUtuj7WIceuGsylxuZFDfVbMxuyCtfhJ5mCONKlmgHf9YAWs42DiqBQlPZzJCjf5ZRIiSPTHCZDQ0nv86h+Y6JKDQJw0B0T/6P5tBo/45Ltj4hvMw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752391098; c=relaxed/simple;
-	bh=bidj/q64QU+7yTnn+7Fdxeop4Ya6ZnjaNbOgpoV8vTA=;
+	s=arc-20240116; t=1752391104; c=relaxed/simple;
+	bh=9YZfDECqQGQ531UjogQBUu7pWagY+AKXs1wDqpr/qhs=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=HoHSRJd1FCBXpv+v5EgJwujEoD5n43GjX7M5cvB5WZH6riSikHSZFbIQA2NO4Zmxt7PcK+H1s3MpG7W00EnXSEaVeGqhSflFkwS0henSCNk+3AXiYYfUSk+HGI/fzTA9kpx2Wctxxzn+7q42Pz0TSTMG8W5vgwPhGRELHRBWSMc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qGwTKuxZ; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=WrZI3DUvY8of4T23rLfKtY4/gq3nYaEIS6V4RhIwQI7pgKHRef6SO0OfkilqQvIxMDo6LAURuNc8HIoCvVjLL879Jf1OffcJ+/tPfcgoX+Ijw8H0AZkeD92fPDParmXwwmJzK0nHBoeqgupzPMvXWljoITCyLpqU6z8YNE+d2w4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KamgB060; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qGwTKuxZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EFA2BC4CEE3;
-	Sun, 13 Jul 2025 07:18:11 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KamgB060"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 38D6FC4CEF1;
+	Sun, 13 Jul 2025 07:18:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1752391097;
-	bh=bidj/q64QU+7yTnn+7Fdxeop4Ya6ZnjaNbOgpoV8vTA=;
+	s=k20201202; t=1752391103;
+	bh=9YZfDECqQGQ531UjogQBUu7pWagY+AKXs1wDqpr/qhs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=qGwTKuxZerSIN55A/xBAJe0q0FfGdCZ4FMRonrPNNRAH+1fDtxxN+n8bx18oax0Jz
-	 W6PY2ndfl+tJi7BbZRpVb8av8GGe/6IN1v6AVqmAz7UjuG1KPwJEDWVRKmviqdCoR6
-	 RrVO+USneuiLQmildLfpCcrdN0tn9FNkTxdW4SazIX6PvmeAuzDazSlZgmLVlATSgp
-	 ORvnWAwza4lVpg5gdfH4pLaEK7ULljXB1jD/p5CXXifh0lC+6GHKq32WyUHhuXVIr6
-	 IxCNtCwg3Rkk5/BG+KJffbYTVDmrr8A6gSrHhyPgj7wHgq12R+jG5ECaXJiQe9kbQx
-	 1BrE2MPjlqa9w==
+	b=KamgB060Bvsoix98TZWks50/I13lZhrhFcsv9XHufF9YHPir24VlIQe5VkT51CH4Z
+	 AeUD3eAP+47gTJeIkA3ABhZ7bbzEsShNDKHcGpJPq55trM7HD7fWewlpUaw5bFpAzO
+	 zT/Ld6lcfyFAOc4uWlHlzn1rHlCVB6vsTk6gxwhCu3dfSJHU2LYsHLfSBraWFIFaCr
+	 xGRjaCyOt4iwAE7pLT/gIFx9WUkXhIZLigZNwfxL1nMdOC+N+2Qym6UAyA2UJcrsTf
+	 xsdpneO8e3DVCZI9ht9+RQ2V63FSsOrr2amroBsSJKgkIU3wWO4ekDAQ2kUkCfpuA9
+	 tAcv5E/0mTyJg==
 From: Mike Rapoport <rppt@kernel.org>
 To: Andrew Morton <akpm@linux-foundation.org>
 Cc: Andy Lutomirski <luto@kernel.org>,
@@ -51,9 +51,9 @@ Cc: Andy Lutomirski <luto@kernel.org>,
 	linux-modules@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org,
 	x86@kernel.org
-Subject: [PATCH v3 6/8] execmem: drop writable parameter from execmem_fill_trapping_insns()
-Date: Sun, 13 Jul 2025 10:17:28 +0300
-Message-ID: <20250713071730.4117334-7-rppt@kernel.org>
+Subject: [PATCH v3 7/8] x86/kprobes: enable EXECMEM_ROX_CACHE for kprobes allocations
+Date: Sun, 13 Jul 2025 10:17:29 +0300
+Message-ID: <20250713071730.4117334-8-rppt@kernel.org>
 X-Mailer: git-send-email 2.47.2
 In-Reply-To: <20250713071730.4117334-1-rppt@kernel.org>
 References: <20250713071730.4117334-1-rppt@kernel.org>
@@ -67,78 +67,68 @@ Content-Transfer-Encoding: 8bit
 
 From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
 
-After update of execmem_cache_free() that made memory writable before
-updating it, there is no need to update read only memory, so the writable
-parameter to execmem_fill_trapping_insns() is not needed. Drop it.
+x86::alloc_insn_page() always allocates ROX memory.
+
+Instead of overriding this method, add EXECMEM_KPROBES entry in
+execmem_info with pgprot set to PAGE_KERNEL_ROX and  use ROX cache when
+configuration and CPU features allow it.
 
 Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
 ---
- arch/x86/mm/init.c      | 8 ++------
- include/linux/execmem.h | 3 +--
- mm/execmem.c            | 4 ++--
- 3 files changed, 5 insertions(+), 10 deletions(-)
+ arch/x86/kernel/kprobes/core.c | 18 ------------------
+ arch/x86/mm/init.c             |  9 ++++++++-
+ 2 files changed, 8 insertions(+), 19 deletions(-)
 
+diff --git a/arch/x86/kernel/kprobes/core.c b/arch/x86/kernel/kprobes/core.c
+index 47cb8eb138ba..6079d15dab8c 100644
+--- a/arch/x86/kernel/kprobes/core.c
++++ b/arch/x86/kernel/kprobes/core.c
+@@ -481,24 +481,6 @@ static int prepare_singlestep(kprobe_opcode_t *buf, struct kprobe *p,
+ 	return len;
+ }
+ 
+-/* Make page to RO mode when allocate it */
+-void *alloc_insn_page(void)
+-{
+-	void *page;
+-
+-	page = execmem_alloc(EXECMEM_KPROBES, PAGE_SIZE);
+-	if (!page)
+-		return NULL;
+-
+-	/*
+-	 * TODO: Once additional kernel code protection mechanisms are set, ensure
+-	 * that the page was not maliciously altered and it is still zeroed.
+-	 */
+-	set_memory_rox((unsigned long)page, 1);
+-
+-	return page;
+-}
+-
+ /* Kprobe x86 instruction emulation - only regs->ip or IF flag modifiers */
+ 
+ static void kprobe_emulate_ifmodifiers(struct kprobe *p, struct pt_regs *regs)
 diff --git a/arch/x86/mm/init.c b/arch/x86/mm/init.c
-index 7456df985d96..dbc63f0d538f 100644
+index dbc63f0d538f..442fafd8ff52 100644
 --- a/arch/x86/mm/init.c
 +++ b/arch/x86/mm/init.c
-@@ -1063,13 +1063,9 @@ unsigned long arch_max_swapfile_size(void)
- static struct execmem_info execmem_info __ro_after_init;
- 
- #ifdef CONFIG_ARCH_HAS_EXECMEM_ROX
--void execmem_fill_trapping_insns(void *ptr, size_t size, bool writeable)
-+void execmem_fill_trapping_insns(void *ptr, size_t size)
- {
--	/* fill memory with INT3 instructions */
--	if (writeable)
--		memset(ptr, INT3_INSN_OPCODE, size);
--	else
--		text_poke_set(ptr, INT3_INSN_OPCODE, size);
-+	memset(ptr, INT3_INSN_OPCODE, size);
- }
- #endif
- 
-diff --git a/include/linux/execmem.h b/include/linux/execmem.h
-index 8b61b05da7d5..7de229134e30 100644
---- a/include/linux/execmem.h
-+++ b/include/linux/execmem.h
-@@ -60,12 +60,11 @@ enum execmem_range_flags {
-  *				 will trap
-  * @ptr:	pointer to memory to fill
-  * @size:	size of the range to fill
-- * @writable:	is the memory poited by @ptr is writable or ROX
-  *
-  * A hook for architecures to fill execmem ranges with invalid instructions.
-  * Architectures that use EXECMEM_ROX_CACHE must implement this.
-  */
--void execmem_fill_trapping_insns(void *ptr, size_t size, bool writable);
-+void execmem_fill_trapping_insns(void *ptr, size_t size);
- 
- /**
-  * execmem_restore_rox - restore read-only-execute permissions
-diff --git a/mm/execmem.c b/mm/execmem.c
-index 04c35c3a9361..0822305413ec 100644
---- a/mm/execmem.c
-+++ b/mm/execmem.c
-@@ -304,7 +304,7 @@ static int execmem_cache_populate(struct execmem_range *range, size_t size)
- 		goto err_free_mem;
- 
- 	/* fill memory with instructions that will trap */
--	execmem_fill_trapping_insns(p, alloc_size, /* writable = */ true);
-+	execmem_fill_trapping_insns(p, alloc_size);
- 
- 	err = set_memory_rox((unsigned long)p, vm->nr_pages);
- 	if (err)
-@@ -363,7 +363,7 @@ static int __execmem_cache_free(struct ma_state *mas, void *ptr, gfp_t gfp_mask)
- 	if (err)
- 		return err;
- 
--	execmem_fill_trapping_insns(ptr, size, /* writable = */ true);
-+	execmem_fill_trapping_insns(ptr, size);
- 	execmem_restore_rox(ptr, size);
- 
- 	err = execmem_cache_add_locked(ptr, size, gfp_mask);
+@@ -1098,7 +1098,14 @@ struct execmem_info __init *execmem_arch_setup(void)
+ 				.pgprot	= pgprot,
+ 				.alignment = MODULE_ALIGN,
+ 			},
+-			[EXECMEM_KPROBES ... EXECMEM_BPF] = {
++			[EXECMEM_KPROBES] = {
++				.flags	= flags,
++				.start	= start,
++				.end	= MODULES_END,
++				.pgprot	= PAGE_KERNEL_ROX,
++				.alignment = MODULE_ALIGN,
++			},
++			[EXECMEM_FTRACE ... EXECMEM_BPF] = {
+ 				.flags	= EXECMEM_KASAN_SHADOW,
+ 				.start	= start,
+ 				.end	= MODULES_END,
 -- 
 2.47.2
 
