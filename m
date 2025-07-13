@@ -1,30 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC7381367;
-	Sun, 13 Jul 2025 07:17:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D98EE1AC44D;
+	Sun, 13 Jul 2025 07:17:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752391060; cv=none; b=D6hHvmRSw+OmJIr4/2qwQORe3f6JCvooJ573AL1cP0Jwcc2ffBhu/S+5XE4jI5GtbU354yI6haoY+EeNj2Ksx0ccptSfn+zp44kEt1KzVk7fBGcm4vXpHtQ+Q7zjyvkgeemG3KFJKP1yzsz5ZmOcLIfWZLE5d8HkuKtoeQUoiyE=
+	t=1752391067; cv=none; b=iC+V8+sfnoifdB2GiYH4+F9aFLKQwT5GCMbxXMmbYyQ39u4jmOiC7cUXSBNLjSvLVlKDSeBIHZeUfwGXQDmQP0mlM2hKw53sVz+y88euHkvrqml1dcnkqT4L34zJOMzNU4PepTtxxBWDfKVRXo3ey5C5Cl0cDJGHvnmc/W8eP9M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752391060; c=relaxed/simple;
-	bh=sCEGchPk57A1a1Hap+1jxUD6UZPcz9tgIrKQpcRxyis=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=WZSEnUgXIKjy2GoNvKrcFo3c9TdEfHMUjdFKIMPDKOpZCGRr2H2sCo8F9YU7HA/D7MdGZFXsxs/nHEIcs1m+ug1D/YwioysX+XIygYn0wRjT7ZwvgVc2rz3vKyBXDHfqBdNoJxjN+iUJAo7SR3B5eNifWOjLXGv/mGbzrDXrOE8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cj9wKHy2; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1752391067; c=relaxed/simple;
+	bh=P4fHP9UFyAr3Scf7HStnOCqWcHWXOAR5PCL9m8hSZVE=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=otzuMcT1cHlh2WZJXVdHMV9cxSPLXXdo0ZG9uZEVAUTchx7AOSCxSISLT95NYeGQOnVvdc23nLaZ6UMYhuUa91OJADx8OnVTUSRuW98FCaoTXsidr/h5jxvkZMzjUfLPMH6ZsbUGzE3yubjZLlGKxxd7qAeQUG1X8pqlSmzAuXI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ffjn4N7L; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cj9wKHy2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5CD38C4CEE3;
-	Sun, 13 Jul 2025 07:17:34 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ffjn4N7L"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A8B10C4CEF5;
+	Sun, 13 Jul 2025 07:17:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1752391060;
-	bh=sCEGchPk57A1a1Hap+1jxUD6UZPcz9tgIrKQpcRxyis=;
-	h=From:To:Cc:Subject:Date:From;
-	b=cj9wKHy2Rk4JCQgZuB6e4IvnTq8AWaZ5Wv+qxuR6VlwQZDx/jsCQJshf1KNE6q/0A
-	 xUM/vTsiWCZ7I0YPS4Z5bk4U1XOGx2oNlFKlS2ZCH/Wqa5A9svaIolJbcbAtRx8o3r
-	 E5V0MfYYueJdleQO242WfkDTZDVAD0fjyJftWT+d7SQsz055+uKD2YjArZckuBocUH
-	 3mC+KHG33IHdCqRtu96zmTulgn3n6vgKjjJG5O7QtjN9zxAkq9+ZddYDRgTn+MxkrV
-	 vnOScBdoJJ7/dYe5ed+B+a1YP4yrc9Oq+OmmLSfYuYbmwMt4+S4K8Bm1kbt9p6MQx1
-	 FAy2EghCCyEeQ==
+	s=k20201202; t=1752391066;
+	bh=P4fHP9UFyAr3Scf7HStnOCqWcHWXOAR5PCL9m8hSZVE=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=ffjn4N7LSxiD9F/zVzjTT8+NJhOcazHVy9FHNuKWp5JVdcf2dF29EBCJYEoqX27Jj
+	 CVGHuLbuTrj8XmzGaDcaVMFUihPaBebeM7T8yhV9ZItqEf7Fw6JovzMVIoNKL9BxJ5
+	 bFL7jtV0VHZgCmZS1WG/HHhQOwp1UBFYngSGfAzMIlEaMqPLJAOPFsZBw19mVFOFQM
+	 3TzOT02U5r2/lypPzC287BLucq7AC/bJIncxrGAGbgFnQ04ROTH4bZ+zp9RYJK2OTY
+	 2rRZFvZbwfqAnEGaelbjVbn9v95V9YrnNXMqM2u7t8MS4DW1BprMc/pjgBuXbY1vdb
+	 JhyVpYKOAy7WA==
 From: Mike Rapoport <rppt@kernel.org>
 To: Andrew Morton <akpm@linux-foundation.org>
 Cc: Andy Lutomirski <luto@kernel.org>,
@@ -50,10 +51,12 @@ Cc: Andy Lutomirski <luto@kernel.org>,
 	linux-modules@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org,
 	x86@kernel.org
-Subject: [PATCH v3 0/8] x86: enable EXECMEM_ROX_CACHE for ftrace and kprobes
-Date: Sun, 13 Jul 2025 10:17:22 +0300
-Message-ID: <20250713071730.4117334-1-rppt@kernel.org>
+Subject: [PATCH v3 1/8] execmem: drop unused execmem_update_copy()
+Date: Sun, 13 Jul 2025 10:17:23 +0300
+Message-ID: <20250713071730.4117334-2-rppt@kernel.org>
 X-Mailer: git-send-email 2.47.2
+In-Reply-To: <20250713071730.4117334-1-rppt@kernel.org>
+References: <20250713071730.4117334-1-rppt@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -64,58 +67,60 @@ Content-Transfer-Encoding: 8bit
 
 From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
 
-Hi,
+The execmem_update_copy() that used text poking was required when memory
+allocated from ROX cache was always read-only. Since now its permissions
+can be switched to read-write there is no need in a function that updates
+memory with text poking.
 
-These patches enable use of EXECMEM_ROX_CACHE for ftrace and kprobes
-allocations on x86.
+Remove it.
 
-They also include some ground work in execmem.
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+---
+ include/linux/execmem.h | 13 -------------
+ mm/execmem.c            |  5 -----
+ 2 files changed, 18 deletions(-)
 
-Since the execmem model for caching large ROX pages changed from the
-initial assumption that the memory that is allocated from ROX cache is
-always ROX to the current state where memory can be temporarily made RW and
-then restored to ROX, we can stop using text poking to update it. This also
-saves the hassle of trying lock text_mutex in execmem_cache_free() when
-kprobes already hold that mutex.
-
-The patches 1-6 update and cleanup execmem ROX cache management,
-patch 7 enables EXECMEM_ROX_CACHE for kprobes and
-patch 8 enables EXECMEM_ROX_CACHE for frace.
-
-The patches are also available at git:
-
-https://git.kernel.org/rppt/h/execmem/x86-rox/ftrace%2bkprobes/v3
-
-v3:
-* Fix spelling (Petr)
-* Add ack and review tags, thanks all!
-
-v2: https://lore.kernel.org/all/20250709134933.3848895-1-rppt@kernel.org
-* Fix setting and clearing pending_free for an area (Yann)
-* Reorder execmem_cache_free() to avoid error goto (Peter)
-* Add comment why mas_store_gfp() cannot fail in execmem_cache_free() (Peter)
-
-
-Mike Rapoport (Microsoft) (8):
-  execmem: drop unused execmem_update_copy()
-  execmem: introduce execmem_alloc_rw()
-  execmem: rework execmem_cache_free()
-  execmem: move execmem_force_rw() and execmem_restore_rox() before use
-  execmem: add fallback for failures in vmalloc(VM_ALLOW_HUGE_VMAP)
-  execmem: drop writable parameter from execmem_fill_trapping_insns()
-  x86/kprobes: enable EXECMEM_ROX_CACHE for kprobes allocations
-  x86/ftrace: enable EXECMEM_ROX_CACHE for ftrace allocations
-
- arch/x86/kernel/alternative.c  |   3 +-
- arch/x86/kernel/ftrace.c       |   2 +-
- arch/x86/kernel/kprobes/core.c |  18 ---
- arch/x86/mm/init.c             |  24 ++--
- include/linux/execmem.h        |  54 ++++-----
- kernel/module/main.c           |  13 +--
- mm/execmem.c                   | 198 +++++++++++++++++++++++++--------
- 7 files changed, 194 insertions(+), 118 deletions(-)
-
-
-base-commit: 86731a2a651e58953fc949573895f2fa6d456841
---
+diff --git a/include/linux/execmem.h b/include/linux/execmem.h
+index 3be35680a54f..734fbe83d98e 100644
+--- a/include/linux/execmem.h
++++ b/include/linux/execmem.h
+@@ -185,19 +185,6 @@ DEFINE_FREE(execmem, void *, if (_T) execmem_free(_T));
+ struct vm_struct *execmem_vmap(size_t size);
+ #endif
+ 
+-/**
+- * execmem_update_copy - copy an update to executable memory
+- * @dst:  destination address to update
+- * @src:  source address containing the data
+- * @size: how many bytes of memory shold be copied
+- *
+- * Copy @size bytes from @src to @dst using text poking if the memory at
+- * @dst is read-only.
+- *
+- * Return: a pointer to @dst or NULL on error
+- */
+-void *execmem_update_copy(void *dst, const void *src, size_t size);
+-
+ /**
+  * execmem_is_rox - check if execmem is read-only
+  * @type - the execmem type to check
+diff --git a/mm/execmem.c b/mm/execmem.c
+index 2b683e7d864d..0712ebb4eb77 100644
+--- a/mm/execmem.c
++++ b/mm/execmem.c
+@@ -399,11 +399,6 @@ void execmem_free(void *ptr)
+ 		vfree(ptr);
+ }
+ 
+-void *execmem_update_copy(void *dst, const void *src, size_t size)
+-{
+-	return text_poke_copy(dst, src, size);
+-}
+-
+ bool execmem_is_rox(enum execmem_type type)
+ {
+ 	return !!(execmem_info->ranges[type].flags & EXECMEM_ROX_CACHE);
+-- 
 2.47.2
+
