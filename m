@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D98EE1AC44D;
-	Sun, 13 Jul 2025 07:17:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18D8F1DA60F;
+	Sun, 13 Jul 2025 07:17:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752391067; cv=none; b=iC+V8+sfnoifdB2GiYH4+F9aFLKQwT5GCMbxXMmbYyQ39u4jmOiC7cUXSBNLjSvLVlKDSeBIHZeUfwGXQDmQP0mlM2hKw53sVz+y88euHkvrqml1dcnkqT4L34zJOMzNU4PepTtxxBWDfKVRXo3ey5C5Cl0cDJGHvnmc/W8eP9M=
+	t=1752391073; cv=none; b=Tb3wzTkGVLiaazVM4Re9UyUhvuuF/q/P4p4GavjdpHoD68vRzD5TF8j+YwijYLTnKSQE8cLSvLv0Rodl51QexFeUqCT8vPzN0r2lPztk0W0FKgdwQu3b8k4N4Y+KxxgrdZA6yni4jw1CVCLs8AYkA8tge0Uh00hpnZw7xkYMxqs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752391067; c=relaxed/simple;
-	bh=P4fHP9UFyAr3Scf7HStnOCqWcHWXOAR5PCL9m8hSZVE=;
+	s=arc-20240116; t=1752391073; c=relaxed/simple;
+	bh=3dUBpvEhYnlflMVnyRwOxMHiJIQysIRUBLUfy0VHZwY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=otzuMcT1cHlh2WZJXVdHMV9cxSPLXXdo0ZG9uZEVAUTchx7AOSCxSISLT95NYeGQOnVvdc23nLaZ6UMYhuUa91OJADx8OnVTUSRuW98FCaoTXsidr/h5jxvkZMzjUfLPMH6ZsbUGzE3yubjZLlGKxxd7qAeQUG1X8pqlSmzAuXI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ffjn4N7L; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=NW2SC9mLa5jenSToje3FP0IQMDghomwClQu5tHd1W1hOlquRsoZABSWY7HRffS6/w+99tCdaumuwrvJzcIs919f9I2P3FcqgZYrvwprXcsgKpm5P+SDCsVUVscPAqmDs2SG3NBeqdPZw4x76z4PkZPYcblvov/pwYq3We97Yeb4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kXpza8uf; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ffjn4N7L"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A8B10C4CEF5;
-	Sun, 13 Jul 2025 07:17:40 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kXpza8uf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E6C6AC4CEF9;
+	Sun, 13 Jul 2025 07:17:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1752391066;
-	bh=P4fHP9UFyAr3Scf7HStnOCqWcHWXOAR5PCL9m8hSZVE=;
+	s=k20201202; t=1752391072;
+	bh=3dUBpvEhYnlflMVnyRwOxMHiJIQysIRUBLUfy0VHZwY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ffjn4N7LSxiD9F/zVzjTT8+NJhOcazHVy9FHNuKWp5JVdcf2dF29EBCJYEoqX27Jj
-	 CVGHuLbuTrj8XmzGaDcaVMFUihPaBebeM7T8yhV9ZItqEf7Fw6JovzMVIoNKL9BxJ5
-	 bFL7jtV0VHZgCmZS1WG/HHhQOwp1UBFYngSGfAzMIlEaMqPLJAOPFsZBw19mVFOFQM
-	 3TzOT02U5r2/lypPzC287BLucq7AC/bJIncxrGAGbgFnQ04ROTH4bZ+zp9RYJK2OTY
-	 2rRZFvZbwfqAnEGaelbjVbn9v95V9YrnNXMqM2u7t8MS4DW1BprMc/pjgBuXbY1vdb
-	 JhyVpYKOAy7WA==
+	b=kXpza8uf1fpZTHSm35hPSgJxQLhzXrdXpH/RX0ji3Z1XguEuWUQ9JT/jx8CqQAZEl
+	 7HSZz/Iq2CY2Fe1t5oS3TPYKeZ8v93bV5hK4tDYwRl7VVq03+XCmcv89gctSoJ1Vkq
+	 QdWcpJsQ5TQZYb23jqSLscMepwHxYvO8QHQI8xQ58e7rTS1wIimyRqgYzrPUKGF54C
+	 yBsnVy330Hp7e87+oJuxNp8rPyLFe+43pcFfqiK/hYbpWZv4YjSOfMiR+Usc/aqbQB
+	 RPcsI5rnUTl5B/5/al4NEX9Fl5x7Fj3Q5zBaqUSwisYxBQRJHWtLUz8PV56DlAiahL
+	 PWlIIXbzMDwkg==
 From: Mike Rapoport <rppt@kernel.org>
 To: Andrew Morton <akpm@linux-foundation.org>
 Cc: Andy Lutomirski <luto@kernel.org>,
@@ -51,9 +51,9 @@ Cc: Andy Lutomirski <luto@kernel.org>,
 	linux-modules@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org,
 	x86@kernel.org
-Subject: [PATCH v3 1/8] execmem: drop unused execmem_update_copy()
-Date: Sun, 13 Jul 2025 10:17:23 +0300
-Message-ID: <20250713071730.4117334-2-rppt@kernel.org>
+Subject: [PATCH v3 2/8] execmem: introduce execmem_alloc_rw()
+Date: Sun, 13 Jul 2025 10:17:24 +0300
+Message-ID: <20250713071730.4117334-3-rppt@kernel.org>
 X-Mailer: git-send-email 2.47.2
 In-Reply-To: <20250713071730.4117334-1-rppt@kernel.org>
 References: <20250713071730.4117334-1-rppt@kernel.org>
@@ -67,60 +67,186 @@ Content-Transfer-Encoding: 8bit
 
 From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
 
-The execmem_update_copy() that used text poking was required when memory
-allocated from ROX cache was always read-only. Since now its permissions
-can be switched to read-write there is no need in a function that updates
-memory with text poking.
+Some callers of execmem_alloc() require the memory to be temporarily
+writable even when it is allocated from ROX cache. These callers use
+execemem_make_temp_rw() right after the call to execmem_alloc().
 
-Remove it.
+Wrap this sequence in execmem_alloc_rw() API.
 
+Reviewed-by: Daniel Gomez <da.gomez@samsung.com>
+Reviewed-by: Petr Pavlu <petr.pavlu@suse.com>
 Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
 ---
- include/linux/execmem.h | 13 -------------
- mm/execmem.c            |  5 -----
- 2 files changed, 18 deletions(-)
+ arch/x86/kernel/alternative.c |  3 +--
+ include/linux/execmem.h       | 38 ++++++++++++++++++++---------------
+ kernel/module/main.c          | 13 ++----------
+ mm/execmem.c                  | 27 ++++++++++++++++++++++++-
+ 4 files changed, 51 insertions(+), 30 deletions(-)
 
+diff --git a/arch/x86/kernel/alternative.c b/arch/x86/kernel/alternative.c
+index ea1d984166cd..526a5fef93ab 100644
+--- a/arch/x86/kernel/alternative.c
++++ b/arch/x86/kernel/alternative.c
+@@ -120,7 +120,7 @@ struct its_array its_pages;
+ 
+ static void *__its_alloc(struct its_array *pages)
+ {
+-	void *page __free(execmem) = execmem_alloc(EXECMEM_MODULE_TEXT, PAGE_SIZE);
++	void *page __free(execmem) = execmem_alloc_rw(EXECMEM_MODULE_TEXT, PAGE_SIZE);
+ 	if (!page)
+ 		return NULL;
+ 
+@@ -237,7 +237,6 @@ static void *its_alloc(void)
+ 	if (!page)
+ 		return NULL;
+ 
+-	execmem_make_temp_rw(page, PAGE_SIZE);
+ 	if (pages == &its_pages)
+ 		set_memory_x((unsigned long)page, 1);
+ 
 diff --git a/include/linux/execmem.h b/include/linux/execmem.h
-index 3be35680a54f..734fbe83d98e 100644
+index 734fbe83d98e..8b61b05da7d5 100644
 --- a/include/linux/execmem.h
 +++ b/include/linux/execmem.h
-@@ -185,19 +185,6 @@ DEFINE_FREE(execmem, void *, if (_T) execmem_free(_T));
- struct vm_struct *execmem_vmap(size_t size);
- #endif
+@@ -67,21 +67,6 @@ enum execmem_range_flags {
+  */
+ void execmem_fill_trapping_insns(void *ptr, size_t size, bool writable);
  
 -/**
-- * execmem_update_copy - copy an update to executable memory
-- * @dst:  destination address to update
-- * @src:  source address containing the data
-- * @size: how many bytes of memory shold be copied
+- * execmem_make_temp_rw - temporarily remap region with read-write
+- *			  permissions
+- * @ptr:	address of the region to remap
+- * @size:	size of the region to remap
 - *
-- * Copy @size bytes from @src to @dst using text poking if the memory at
-- * @dst is read-only.
+- * Remaps a part of the cached large page in the ROX cache in the range
+- * [@ptr, @ptr + @size) as writable and not executable. The caller must
+- * have exclusive ownership of this range and ensure nothing will try to
+- * execute code in this range.
 - *
-- * Return: a pointer to @dst or NULL on error
+- * Return: 0 on success or negative error code on failure.
 - */
--void *execmem_update_copy(void *dst, const void *src, size_t size);
+-int execmem_make_temp_rw(void *ptr, size_t size);
 -
  /**
-  * execmem_is_rox - check if execmem is read-only
-  * @type - the execmem type to check
+  * execmem_restore_rox - restore read-only-execute permissions
+  * @ptr:	address of the region to remap
+@@ -95,7 +80,6 @@ int execmem_make_temp_rw(void *ptr, size_t size);
+  */
+ int execmem_restore_rox(void *ptr, size_t size);
+ #else
+-static inline int execmem_make_temp_rw(void *ptr, size_t size) { return 0; }
+ static inline int execmem_restore_rox(void *ptr, size_t size) { return 0; }
+ #endif
+ 
+@@ -165,6 +149,28 @@ struct execmem_info *execmem_arch_setup(void);
+  */
+ void *execmem_alloc(enum execmem_type type, size_t size);
+ 
++/**
++ * execmem_alloc_rw - allocate writable executable memory
++ * @type: type of the allocation
++ * @size: how many bytes of memory are required
++ *
++ * Allocates memory that will contain executable code, either generated or
++ * loaded from kernel modules.
++ *
++ * Allocates memory that will contain data coupled with executable code,
++ * like data sections in kernel modules.
++ *
++ * Forces writable permissions on the allocated memory and the caller is
++ * responsible to manage the permissions afterwards.
++ *
++ * For architectures that use ROX cache the permissions will be set to R+W.
++ * For architectures that don't use ROX cache the default permissions for @type
++ * will be used as they must be writable.
++ *
++ * Return: a pointer to the allocated memory or %NULL
++ */
++void *execmem_alloc_rw(enum execmem_type type, size_t size);
++
+ /**
+  * execmem_free - free executable memory
+  * @ptr: pointer to the memory that should be freed
+diff --git a/kernel/module/main.c b/kernel/module/main.c
+index 413ac6ea3702..d009326ef7bb 100644
+--- a/kernel/module/main.c
++++ b/kernel/module/main.c
+@@ -1292,20 +1292,11 @@ static int module_memory_alloc(struct module *mod, enum mod_mem_type type)
+ 	else
+ 		execmem_type = EXECMEM_MODULE_TEXT;
+ 
+-	ptr = execmem_alloc(execmem_type, size);
++	ptr = execmem_alloc_rw(execmem_type, size);
+ 	if (!ptr)
+ 		return -ENOMEM;
+ 
+-	if (execmem_is_rox(execmem_type)) {
+-		int err = execmem_make_temp_rw(ptr, size);
+-
+-		if (err) {
+-			execmem_free(ptr);
+-			return -ENOMEM;
+-		}
+-
+-		mod->mem[type].is_rox = true;
+-	}
++	mod->mem[type].is_rox = execmem_is_rox(execmem_type);
+ 
+ 	/*
+ 	 * The pointer to these blocks of memory are stored on the module
 diff --git a/mm/execmem.c b/mm/execmem.c
-index 2b683e7d864d..0712ebb4eb77 100644
+index 0712ebb4eb77..6b040fbc5f4f 100644
 --- a/mm/execmem.c
 +++ b/mm/execmem.c
-@@ -399,11 +399,6 @@ void execmem_free(void *ptr)
- 		vfree(ptr);
+@@ -336,7 +336,7 @@ static bool execmem_cache_free(void *ptr)
+ 	return true;
  }
  
--void *execmem_update_copy(void *dst, const void *src, size_t size)
--{
--	return text_poke_copy(dst, src, size);
--}
--
- bool execmem_is_rox(enum execmem_type type)
+-int execmem_make_temp_rw(void *ptr, size_t size)
++static int execmem_force_rw(void *ptr, size_t size)
  {
- 	return !!(execmem_info->ranges[type].flags & EXECMEM_ROX_CACHE);
+ 	unsigned int nr = PAGE_ALIGN(size) >> PAGE_SHIFT;
+ 	unsigned long addr = (unsigned long)ptr;
+@@ -358,6 +358,16 @@ int execmem_restore_rox(void *ptr, size_t size)
+ }
+ 
+ #else /* CONFIG_ARCH_HAS_EXECMEM_ROX */
++/*
++ * when ROX cache is not used the permissions defined by architectures for
++ * execmem ranges that are updated before use (e.g. EXECMEM_MODULE_TEXT) must
++ * be writable anyway
++ */
++static inline int execmem_force_rw(void *ptr, size_t size)
++{
++	return 0;
++}
++
+ static void *execmem_cache_alloc(struct execmem_range *range, size_t size)
+ {
+ 	return NULL;
+@@ -387,6 +397,21 @@ void *execmem_alloc(enum execmem_type type, size_t size)
+ 	return kasan_reset_tag(p);
+ }
+ 
++void *execmem_alloc_rw(enum execmem_type type, size_t size)
++{
++	void *p __free(execmem) = execmem_alloc(type, size);
++	int err;
++
++	if (!p)
++		return NULL;
++
++	err = execmem_force_rw(p, size);
++	if (err)
++		return NULL;
++
++	return no_free_ptr(p);
++}
++
+ void execmem_free(void *ptr)
+ {
+ 	/*
 -- 
 2.47.2
 
