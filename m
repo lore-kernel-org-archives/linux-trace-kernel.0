@@ -1,57 +1,56 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 211E91D63E6;
-	Mon, 14 Jul 2025 09:39:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 264311E47A8;
+	Mon, 14 Jul 2025 09:48:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752485956; cv=none; b=qAMFwROJ7Q1bch5j5siAB5wqy59YyDTu05KCk+3fOutfs1kqm0uDwN5nGmjIFGXZ7p7T6QYfDGKMSCuu67N9pvluwdy2Ptz7GBau9e2pcpa4SkLbtr2HEg85xtL2W6QAQ+gYOKTtIneDaAvEltcMQAbYRVx/tXU+RhePHq/9Sks=
+	t=1752486516; cv=none; b=UF8ya5VVgdgzdIYBlN0CxD7Q0X51CB3zT7b0RTDncPj2Jm38zctwKbPfwZ015Jbk02nmpWGnhlSlPIlxzzPI2XtKVq4AqYx59BNwWHXYsANE/R+hQgbcgSU7iPYFXsDGooY5KdueCln9LtAFRDBSElnpWndZU35L6CtzLoMJduE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752485956; c=relaxed/simple;
-	bh=QvgqyqI/2e3vh73jqS9rVOu/+alucobeVAg8wWEq7Lk=;
+	s=arc-20240116; t=1752486516; c=relaxed/simple;
+	bh=Pqhjlt7Xe4QZEQNw9loSdR5L7feW5hzre3d9xP9ALNs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LJPH0rqy/E0ddVTxxVdLJX4jgFc3HDgCeOdgg16eOq+zXTi6CbJk2CNMzYp/Xs6cgJ1BUo08Bh2VV4lUoY7jgsPuneY4/CB/5UmSquKWA+mtvkiJwVhJSSTAnxgiL4XU+CyxXw0BHmZX5MrjVRFl7Fvxs/nibJFWc9tJgy0t2mM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=BgUpScsw; arc=none smtp.client-ip=90.155.50.34
+	 Content-Type:Content-Disposition:In-Reply-To; b=gvn7BtCLIZV9VlGN6NuEhvJpC+R4WxE7QAprLCyXSSjnijVMCYOCoeN/FXMTwxS3FOR6XcWWq08dDRGycs+sjoadbEEaJHzvGpygLJGJH5N2m7+QyY+ooDhQT9+I/1EIywIT0oZyAbdu/4pBysPQtnNRQzEJZMxSy/fsKJ2tqBA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=BeWA0E5X; arc=none smtp.client-ip=90.155.92.199
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="BgUpScsw"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="BeWA0E5X"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
 	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=3++uAiHE4dUTcjWQO8Rw5mELn141xV8QyvzG/GiDdnA=; b=BgUpScswDlu1T5aShhumrPUi3I
-	d6Gy/j7og8KYXxuLi7KafgU075SXzFz+5zefYVrPAF2DquglxxbDBHzCIt3EhU5X9ZY7tPUWD7uRX
-	zeumm+eTiJLMX+TiQNUrBzAkxSGLxfiCogTGxMbp79AE6L5vhafTr+h7yT93I4byOZR8wapWB7LFv
-	W0jOqvtZfLs4HY+7Kv8AqegtZZN2B1l9Wkv8rJRCQg3qmgIcijU2EYzZSI2vUJmhfqibGafH9s72p
-	uZQIDpMkFydGL68Jne7rR0JNTOk5WS/s7yLRLFVG8T6AO7VglGmhtbG9D1a/+AmgjfGoW1y11/rfi
-	BS20n2mA==;
+	bh=0BQrc84RUIgCrBwltnNpR1JpwRq1C4cmxPtCU54YBc0=; b=BeWA0E5XyP48nCmsFvJIJs73aS
+	8gVWLdq+voR0crClgGWWRv1JrT9+htkSYntujcpCiu+awuHnsNjyRmC+fHkKqSrYvJsMGykhBY2Hh
+	6lgBVzbJIw3NM86AtzG7efTn9wTVj8JgX8TzXpIQG/B0CGmRBkoaIYUmLRY+Am9bSorRvidnMIkji
+	q+E8v9L3rYRkfxS0Np2Q4Nhpjaw22IZHl43VPtmejI/vB0wjtvQETBjZrNdCkm5iTbYc0IIE7OgTu
+	Z/4BvKl/HdHioId1SNJsmTJ2n9d9EVpYz6quXrmaqN0d/U4IluC4fBcKm0u/uROsMG9h7TZhxIcAC
+	shSWd9Jg==;
 Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1ubFeK-00000006hbD-2KWo;
-	Mon, 14 Jul 2025 09:39:04 +0000
+	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1ubFnM-00000009k4R-3bMv;
+	Mon, 14 Jul 2025 09:48:25 +0000
 Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 6AE11300186; Mon, 14 Jul 2025 11:39:03 +0200 (CEST)
-Date: Mon, 14 Jul 2025 11:39:03 +0200
+	id 54682300186; Mon, 14 Jul 2025 11:48:24 +0200 (CEST)
+Date: Mon, 14 Jul 2025 11:48:24 +0200
 From: Peter Zijlstra <peterz@infradead.org>
-To: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Jiri Olsa <jolsa@kernel.org>, Oleg Nesterov <oleg@redhat.com>,
-	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	x86@kernel.org, Song Liu <songliubraving@fb.com>,
-	Yonghong Song <yhs@fb.com>,
+To: Jiri Olsa <jolsa@kernel.org>
+Cc: Oleg Nesterov <oleg@redhat.com>, Andrii Nakryiko <andrii@kernel.org>,
+	bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, x86@kernel.org,
+	Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
 	John Fastabend <john.fastabend@gmail.com>,
 	Hao Luo <haoluo@google.com>, Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
 	Alan Maguire <alan.maguire@oracle.com>,
 	David Laight <David.Laight@aculab.com>,
 	Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas@t-8ch.de>,
 	Ingo Molnar <mingo@kernel.org>
-Subject: Re: [PATCHv5 perf/core 09/22] uprobes/x86: Add uprobe syscall to
- speed up uprobe
-Message-ID: <20250714093903.GP905792@noisy.programming.kicks-ass.net>
+Subject: Re: [PATCHv5 perf/core 10/22] uprobes/x86: Add support to optimize
+ uprobes
+Message-ID: <20250714094824.GQ905792@noisy.programming.kicks-ass.net>
 References: <20250711082931.3398027-1-jolsa@kernel.org>
- <20250711082931.3398027-10-jolsa@kernel.org>
- <20250714173915.b9edd474742de46bcbe9c617@kernel.org>
+ <20250711082931.3398027-11-jolsa@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -60,46 +59,151 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250714173915.b9edd474742de46bcbe9c617@kernel.org>
+In-Reply-To: <20250711082931.3398027-11-jolsa@kernel.org>
 
-On Mon, Jul 14, 2025 at 05:39:15PM +0900, Masami Hiramatsu wrote:
+On Fri, Jul 11, 2025 at 10:29:18AM +0200, Jiri Olsa wrote:
+> +enum {
+> +	OPT_PART,
+> +	OPT_INSN,
+> +	UNOPT_INT3,
+> +	UNOPT_PART,
+> +};
+> +
+> +struct write_opcode_ctx {
+> +	unsigned long base;
+> +	int update;
+> +};
+> +
+> +static int is_call_insn(uprobe_opcode_t *insn)
+> +{
+> +	return *insn == CALL_INSN_OPCODE;
+> +}
+> +
+> +static int verify_insn(struct page *page, unsigned long vaddr, uprobe_opcode_t *new_opcode,
+> +		       int nbytes, void *data)
+> +{
+> +	struct write_opcode_ctx *ctx = data;
+> +	uprobe_opcode_t old_opcode[5];
+> +
+> +	uprobe_copy_from_page(page, ctx->base, (uprobe_opcode_t *) &old_opcode, 5);
+> +
+> +	switch (ctx->update) {
+> +	case OPT_PART:
+> +	case OPT_INSN:
+> +		if (is_swbp_insn(&old_opcode[0]))
+> +			return 1;
+> +		break;
+> +	case UNOPT_INT3:
+> +		if (is_call_insn(&old_opcode[0]))
+> +			return 1;
+> +		break;
+> +	case UNOPT_PART:
+> +		if (is_swbp_insn(&old_opcode[0]))
+> +			return 1;
+> +		break;
+> +	}
+> +
+> +	return -1;
+> +}
+> +
+> +static int write_insn(struct arch_uprobe *auprobe, struct vm_area_struct *vma, unsigned long vaddr,
+> +		      uprobe_opcode_t *insn, int nbytes, void *ctx)
+> +{
+> +	return uprobe_write(auprobe, vma, vaddr, insn, nbytes, verify_insn,
+> +			    true /* is_register */, false /* do_update_ref_ctr */, ctx);
+> +}
+> +
+> +static void relative_call(void *dest, long from, long to)
+> +{
+> +	struct __packed __arch_relative_insn {
+> +		u8 op;
+> +		s32 raddr;
+> +	} *insn;
+> +
+> +	insn = (struct __arch_relative_insn *)dest;
+> +	insn->raddr = (s32)(to - (from + 5));
+> +	insn->op = CALL_INSN_OPCODE;
+> +}
 
-> > +	/*
-> > +	 * Some of the uprobe consumers has changed sp, we can do nothing,
-> > +	 * just return via iret.
-> > +	 */
-> 
-> Do we allow consumers to change the `sp`? It seems dangerous
-> because consumer needs to know whether it is called from
-> breakpoint or syscall. Note that it has to set up ax, r11
-> and cx on the stack correctly only if it is called from syscall,
-> that is not compatible with breakpoint mode.
-> 
-> > +	if (regs->sp != sp)
-> > +		return regs->ax;
-> 
-> Shouldn't we recover regs->ip? Or in this case does consumer has
-> to change ip (== return address from trampline) too?
-> 
-> IMHO, it should not allow to change the `sp` and `ip` directly
-> in syscall mode. In case of kprobes, kprobe jump optimization
-> must be disabled explicitly (e.g. setting dummy post_handler)
-> if the handler changes `ip`.
-> 
-> Or, even if allowing to modify `sp` and `ip`, it should be helped
-> by this function, e.g. stack up the dummy regs->ax/r11/cx on the
-> new stack at the new `regs->sp`. This will allow modifying those
-> registries transparently as same as breakpoint mode.
-> In this case, I think we just need to remove above 2 lines.
+We already have this in asm/text-patching.h, its called
+__text_gen_insn().
 
-There are two syscall return paths; the 'normal' is sysret and for that
-you need to undo all things just right.
+> +
+> +static int swbp_optimize(struct arch_uprobe *auprobe, struct vm_area_struct *vma,
+> +			 unsigned long vaddr, unsigned long tramp)
+> +{
+> +	struct write_opcode_ctx ctx = {
+> +		.base = vaddr,
+> +	};
+> +	char call[5];
+> +	int err;
+> +
+> +	relative_call(call, vaddr, tramp);
 
-The other is IRET. At which point we can have whatever state we want,
-including modified SP.
+	__text_gen_insn(call, CALL_INSN_OPCODE, vaddr, tramp, CALL_INSN_SIZE);
 
-See arch/x86/entry/syscall_64.c:do_syscall_64() and
-arch/x86/entry/entry_64.S:entry_SYSCALL_64
+> +
+> +	/*
+> +	 * We are in state where breakpoint (int3) is installed on top of first
+> +	 * byte of the nop5 instruction. We will do following steps to overwrite
+> +	 * this to call instruction:
+> +	 *
+> +	 * - sync cores
+> +	 * - write last 4 bytes of the call instruction
+> +	 * - sync cores
+> +	 * - update the call instruction opcode
 
-The IRET path should return pt_regs as is from an interrupt/exception
-very much like INT3.
+The sanctioned text poke sequence has another sync-core at the end.
+Please also do this.
+
+> +	 */
+> +
+> +	smp_text_poke_sync_each_cpu();
+> +
+> +	ctx.update = OPT_PART;
+> +	err = write_insn(auprobe, vma, vaddr + 1, call + 1, 4, &ctx);
+> +	if (err)
+> +		return err;
+> +
+> +	smp_text_poke_sync_each_cpu();
+> +
+> +	ctx.update = OPT_INSN;
+> +	return write_insn(auprobe, vma, vaddr, call, 1, &ctx);
+> +}
+> +
+> +static int swbp_unoptimize(struct arch_uprobe *auprobe, struct vm_area_struct *vma,
+> +			   unsigned long vaddr)
+> +{
+> +	uprobe_opcode_t int3 = UPROBE_SWBP_INSN;
+> +	struct write_opcode_ctx ctx = {
+> +		.base = vaddr,
+> +	};
+> +	int err;
+> +
+> +	/*
+> +	 * We need to overwrite call instruction into nop5 instruction with
+> +	 * breakpoint (int3) installed on top of its first byte. We will:
+> +	 *
+> +	 * - overwrite call opcode with breakpoint (int3)
+> +	 * - sync cores
+> +	 * - write last 4 bytes of the nop5 instruction
+> +	 * - sync cores
+> +	 */
+> +
+> +	ctx.update = UNOPT_INT3;
+> +	err = write_insn(auprobe, vma, vaddr, &int3, 1, &ctx);
+> +	if (err)
+> +		return err;
+> +
+> +	smp_text_poke_sync_each_cpu();
+> +
+> +	ctx.update = UNOPT_PART;
+> +	err = write_insn(auprobe, vma, vaddr + 1, (uprobe_opcode_t *) auprobe->insn + 1, 4, &ctx);
+> +
+> +	smp_text_poke_sync_each_cpu();
+> +	return err;
+> +}
+
+Please unify these two functions; it makes absolutely no sense to have
+two copies of this logic around.
+
