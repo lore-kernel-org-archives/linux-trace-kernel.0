@@ -1,121 +1,166 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B96142580F7;
-	Mon, 14 Jul 2025 13:56:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C286E24DCEF;
+	Mon, 14 Jul 2025 14:04:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752501411; cv=none; b=MqRggS8Vyo96coJ3/KhM6Bcm+aOgYGevJn3M6Tj54NX1CPj7dJygc9U5whMH7k1fYe5BeqWd6JgPdqnw4yUEIDV21IBrqxN5JM0fJhXdnX889lqkbDI6ZebGBdwOCDCAyFnOdLTEKPIa7N/GeetFQuQ9m1rvhpPrKVEW+WARh8E=
+	t=1752501882; cv=none; b=P1qDba/ZVmz3PkL8ydrC46ayFN1NxvywHfyvD2euAqX/lfLVDwCwo+2Huw2yB26DrLbJ+0w6m8wVQAleM1hXlrY8aSxPhBSzB1JZWFCQsgPYlttfMzlc7hwHazV04ACUZYlrwi+zORyjTjpl2u0wjarhVr+on5jRfsajbdUDgbg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752501411; c=relaxed/simple;
-	bh=MlE8252+KP78YDkF+Nc2zLmb4D0AJx0GRBStApfzprk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=D5ysmYshEDJL92oP7J3WlmD7pIbknKiWuk+ozZD69udsUSaRDo1ipTXgs5LeCNljKY1B3nHjXk7sc2BVpbjSN/rZZCUGSMJGapAqFCK3jLRqyyyEvLs42j36sVDQ423zktVb8F8vbvgUQifBOvfIVUTxeL5v4Uo3B2e5Nf2x6Ss=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=WkhC9Ud1; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1752501882; c=relaxed/simple;
+	bh=YH668rpFJXukxr+2YwtKp1L0+P3LzA2wA6CXb2BnnQg=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=Y/3bAfnIjH8GU2uYmZyGDYS0NnD+S2E9VaPrp6gBoWbeI3WucPgF2zHCvvZkoTywhO91KPkshZh4lVagGJM9b9J5YcXfAOoJ4OnqFoxKpE3jezmp0tpEnCu38Vb2mWrT3iFiS+RbykPQ1uaaS4g3Vm2NA/902F2s5gNJjic9Ftw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tmaXUJhO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="WkhC9Ud1"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=rJfNwhvDwBdRdwUftFwhy6EVQXSWL+4MqfUGTAPT3b0=; b=WkhC9Ud1STBCVebdnVnk9lb+iE
-	8LVYgZHqJJqG8ZydHrqWJYCYLlvxftl4mPeFnnpU00HYwSpbajCZG1yrObIVUtPi5wMW6S15yVsUZ
-	+zt/9BpAfOqpzj9jOlJVWxxAjO5Z6uoghr3ueSuo3pQasnb4geHnaZH9pTla0Yt0lK1rAkqmnxrC8
-	tZKOc6X9jkypK+1FMQaEUSayJvbybCwFVmmqVf22/vonPN6jVYnnKMgitoGAsJkoc35hgelyid8X1
-	BCD5wmDP0qbnuVG5MP4keUG0VkFsthCg+lZk5zEvHbudEufJE7FlEfyI+IH8xhq3tWuJBoYU3GNEM
-	q+yv+2fQ==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1ubJfb-00000009luO-19Ot;
-	Mon, 14 Jul 2025 13:56:39 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id C8623300186; Mon, 14 Jul 2025 15:56:38 +0200 (CEST)
-Date: Mon, 14 Jul 2025 15:56:38 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Steven Rostedt <rostedt@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	bpf@vger.kernel.org, x86@kernel.org,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Ingo Molnar <mingo@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Indu Bhagat <indu.bhagat@oracle.com>,
-	"Jose E. Marchesi" <jemarch@gnu.org>,
-	Beau Belgrave <beaub@linux.microsoft.com>,
-	Jens Remus <jremus@linux.ibm.com>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Jens Axboe <axboe@kernel.dk>, Florian Weimer <fweimer@redhat.com>,
-	Sam James <sam@gentoo.org>
-Subject: Re: [PATCH v13 09/14] unwind deferred: Use SRCU
- unwind_deferred_task_work()
-Message-ID: <20250714135638.GC4105545@noisy.programming.kicks-ass.net>
-References: <20250708012239.268642741@kernel.org>
- <20250708012359.172959778@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tmaXUJhO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D7722C4CEED;
+	Mon, 14 Jul 2025 14:04:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1752501882;
+	bh=YH668rpFJXukxr+2YwtKp1L0+P3LzA2wA6CXb2BnnQg=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=tmaXUJhOO8qybGoimCIa4isgnq+xkf3T3BhrXkU9fzm+cA2Ch6J72q09lN5cfBjbE
+	 WzYmXaE2GRADoAZYwrFIopbZZ8tplLswF9KfPSXHlcjiPtMtGG2zRgeynf604KU20M
+	 2r2teSMcYiyoGttJ57Ao7otA0AJFGpL/3Zp1xhQL71SpCMthxrdauPxO217kK4hB9V
+	 QjPp9LmUnY/GmmzhUMOxfA9e4PqLO+wvMpZW81AS6zNgCMXHb4QKj8gCNiJG45aQiw
+	 Xsstnu66NOxAgnx5klLX7njL3Qkn9EAFrQQbGcn/WIeDGnWTl2dP4gcJjRUT7Wesmq
+	 FWQLsc+kIJKfw==
+Date: Mon, 14 Jul 2025 23:04:38 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Jiri Olsa <jolsa@kernel.org>
+Cc: Oleg Nesterov <oleg@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
+ Andrii Nakryiko <andrii@kernel.org>, Alejandro Colomar <alx@kernel.org>,
+ bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, x86@kernel.org, Song Liu
+ <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>, John Fastabend
+ <john.fastabend@gmail.com>, Hao Luo <haoluo@google.com>, Steven Rostedt
+ <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, Alan Maguire
+ <alan.maguire@oracle.com>, David Laight <David.Laight@ACULAB.COM>, Thomas
+ =?UTF-8?B?V2Vpw59zY2h1aA==?= <thomas@t-8ch.de>, Ingo Molnar
+ <mingo@kernel.org>
+Subject: Re: [PATCHv5 22/22] man2: Add uprobe syscall page
+Message-Id: <20250714230438.c5494ba28608e9466d676763@kernel.org>
+In-Reply-To: <20250711082931.3398027-23-jolsa@kernel.org>
+References: <20250711082931.3398027-1-jolsa@kernel.org>
+	<20250711082931.3398027-23-jolsa@kernel.org>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250708012359.172959778@kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Mon, Jul 07, 2025 at 09:22:48PM -0400, Steven Rostedt wrote:
+On Fri, 11 Jul 2025 10:29:30 +0200
+Jiri Olsa <jolsa@kernel.org> wrote:
 
-> @@ -143,6 +144,7 @@ static void unwind_deferred_task_work(struct callback_head *head)
->  	struct unwind_stacktrace trace;
->  	struct unwind_work *work;
->  	u64 cookie;
-> +	int idx;
->  
->  	if (WARN_ON_ONCE(!local_read(&info->pending)))
->  		return;
-> @@ -161,13 +163,15 @@ static void unwind_deferred_task_work(struct callback_head *head)
->  
->  	cookie = info->id.id;
->  
-> -	guard(mutex)(&callback_mutex);
-> -	list_for_each_entry(work, &callbacks, list) {
-> +	idx = srcu_read_lock(&unwind_srcu);
-> +	list_for_each_entry_srcu(work, &callbacks, list,
-> +				 srcu_read_lock_held(&unwind_srcu)) {
->  		if (test_bit(work->bit, &info->unwind_mask)) {
->  			work->func(work, &trace, cookie);
->  			clear_bit(work->bit, &info->unwind_mask);
->  		}
->  	}
-> +	srcu_read_unlock(&unwind_srcu, idx);
->  }
+> Changing uretprobe syscall man page to be shared with new
+> uprobe syscall man page.
+> 
 
-Please; something like so:
+Looks good to me.
 
---- a/include/linux/srcu.h
-+++ b/include/linux/srcu.h
-@@ -524,4 +524,9 @@ DEFINE_LOCK_GUARD_1(srcu, struct srcu_st
- 		    srcu_read_unlock(_T->lock, _T->idx),
- 		    int idx)
- 
-+DEFINE_LOCK_GUARD_1(srcu_lite, struct srcu_struct,
-+		    _T->idx = srcu_read_lock_lite(_T->lock),
-+		    srcu_read_unlock_lite(_T->lock, _T->idx),
-+		    int idx)
-+
- #endif
---- a/kernel/unwind/deferred.c
-+++ b/kernel/unwind/deferred.c
-@@ -165,7 +165,7 @@ static void unwind_deferred_task_work(st
- 
- 	cookie = info->id.id;
- 
--	guard(mutex)(&callback_mutex);
-+	guard(srcu_lite)(&unwind_srcu);
- 	list_for_each_entry(work, &callbacks, list) {
- 		work->func(work, &trace, cookie);
- 	}
+Reviewed-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+
+Thanks,
+
+> Cc: Alejandro Colomar <alx@kernel.org>
+> Reviewed-by: Alejandro Colomar <alx@kernel.org>
+> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+> ---
+>  man/man2/uprobe.2    |  1 +
+>  man/man2/uretprobe.2 | 36 ++++++++++++++++++++++++------------
+>  2 files changed, 25 insertions(+), 12 deletions(-)
+>  create mode 100644 man/man2/uprobe.2
+> 
+> diff --git a/man/man2/uprobe.2 b/man/man2/uprobe.2
+> new file mode 100644
+> index 000000000000..ea5ccf901591
+> --- /dev/null
+> +++ b/man/man2/uprobe.2
+> @@ -0,0 +1 @@
+> +.so man2/uretprobe.2
+> diff --git a/man/man2/uretprobe.2 b/man/man2/uretprobe.2
+> index bbbfb0c59335..df0e5d92e5ed 100644
+> --- a/man/man2/uretprobe.2
+> +++ b/man/man2/uretprobe.2
+> @@ -2,22 +2,28 @@
+>  .\"
+>  .\" SPDX-License-Identifier: Linux-man-pages-copyleft
+>  .\"
+> -.TH uretprobe 2 (date) "Linux man-pages (unreleased)"
+> +.TH uprobe 2 (date) "Linux man-pages (unreleased)"
+>  .SH NAME
+> +uprobe,
+>  uretprobe
+>  \-
+> -execute pending return uprobes
+> +execute pending entry or return uprobes
+>  .SH SYNOPSIS
+>  .nf
+> +.B int uprobe(void);
+>  .B int uretprobe(void);
+>  .fi
+>  .SH DESCRIPTION
+> +.BR uprobe ()
+> +is an alternative to breakpoint instructions
+> +for triggering entry uprobe consumers.
+> +.P
+>  .BR uretprobe ()
+>  is an alternative to breakpoint instructions
+>  for triggering return uprobe consumers.
+>  .P
+>  Calls to
+> -.BR uretprobe ()
+> +these system calls
+>  are only made from the user-space trampoline provided by the kernel.
+>  Calls from any other place result in a
+>  .BR SIGILL .
+> @@ -26,22 +32,28 @@ The return value is architecture-specific.
+>  .SH ERRORS
+>  .TP
+>  .B SIGILL
+> -.BR uretprobe ()
+> -was called by a user-space program.
+> +These system calls
+> +were called by a user-space program.
+>  .SH VERSIONS
+>  The behavior varies across systems.
+>  .SH STANDARDS
+>  None.
+>  .SH HISTORY
+> +.TP
+> +.BR uprobe ()
+> +TBD
+> +.TP
+> +.BR uretprobe ()
+>  Linux 6.11.
+>  .P
+> -.BR uretprobe ()
+> -was initially introduced for the x86_64 architecture
+> -where it was shown to be faster than breakpoint traps.
+> -It might be extended to other architectures.
+> +These system calls
+> +were initially introduced for the x86_64 architecture
+> +where they were shown to be faster than breakpoint traps.
+> +They might be extended to other architectures.
+>  .SH CAVEATS
+> -.BR uretprobe ()
+> -exists only to allow the invocation of return uprobe consumers.
+> -It should
+> +These system calls
+> +exist only to allow the invocation of
+> +entry or return uprobe consumers.
+> +They should
+>  .B never
+>  be called directly.
+> -- 
+> 2.49.0
+> 
+
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
