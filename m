@@ -1,328 +1,390 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mxct.zte.com.cn (mxct.zte.com.cn [183.62.165.209])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2678D22F767;
-	Mon, 14 Jul 2025 07:23:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1D1C1E9B29;
+	Mon, 14 Jul 2025 07:32:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=183.62.165.209
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752477824; cv=none; b=QQAj/lSbO77qBb85an2lQLeqflM3CZGwokQWTkIyrUj07WR33iP77eCGETgoS9nOsIFbV2Z33+bApR27JoIqQu/IJK1BOrvYxv/uk26NbP8UvXJn5wD+3RH6sWezYi0yIK6GQnt8TYOdS0FfDccX1/gPA/yzQDHLFfc9p2YOiAE=
+	t=1752478333; cv=none; b=Ufd1olN97K1TsNLGPASVcyPWl19JgjzRWyLbU9KEcUfcKwE6NX20Q7tPPCte0QwzRcYryC/TFjfFs3JZA1dVRi2GruMCPIHSbJtS92a/tEjeB9aOU8c3tkxcm77I9eWLMOr1AS8y0WrxE58JwbkhTO6DK5Er7mcAvSZGdK914A0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752477824; c=relaxed/simple;
-	bh=IYR1PWD+TFjz+HdMhUoBPAdd7rh92NNnRH3cV7LbYSM=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=GmVxjidfXM32f/YduR9dAdS7Ccao2nD8WZ0xSBim9p2Sg6RUpKTTwCxmI+O8a7Dg2vZdsLls5KCqA9ozYDp8J7RHmPGdkSy2/pl2gtet9uPnDpWBc0BT2837ft6QwWyBppEobqUGjzg0MsJ2LKNPYCOyT56o6XJw9IKGsqBIWHE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ibCNhVJE; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ibCNhVJE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 89F9AC4CEED;
-	Mon, 14 Jul 2025 07:23:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1752477822;
-	bh=IYR1PWD+TFjz+HdMhUoBPAdd7rh92NNnRH3cV7LbYSM=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=ibCNhVJEzhMI0W7M9WIBfCK4fCRK4YjqB0JwcbDjDwKLBpZ7KWOvWHY0ybyYGn8Yy
-	 fk6S3o2I5o3t5DZ7cw8F8PLFIz1xLi9rYMhHclQs/RNWVQZV1l+b3WuTuf5m4c9T4s
-	 xenT7ltaDDJ5lgNPZoMsjr9Sjt8/9pM1M080iRYl16V4/JOyQJ2e9V+vHz0l6IRHfh
-	 UTo7yZkMQnJsq8gYRSFzjIHMEBuubOkhLz4pUwxgRMZkGtM+PjaN3zqI3RvfdsI/5r
-	 D9tzfYMdY8agkdRRUNRdck3DFq/06fH6zsAqiZzLehA0xJmvro5l1egGvYCGWHUbnR
-	 2esd0UNwXzrfw==
-Date: Mon, 14 Jul 2025 16:23:38 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Jiri Olsa <jolsa@kernel.org>
-Cc: Oleg Nesterov <oleg@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
- Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- x86@kernel.org, Song Liu <songliubraving@fb.com>, Yonghong Song
- <yhs@fb.com>, John Fastabend <john.fastabend@gmail.com>, Hao Luo
- <haoluo@google.com>, Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Alan Maguire <alan.maguire@oracle.com>, David Laight
- <David.Laight@ACULAB.COM>, Thomas =?UTF-8?B?V2Vpw59zY2h1aA==?=
- <thomas@t-8ch.de>, Ingo Molnar <mingo@kernel.org>
-Subject: Re: [PATCHv5 perf/core 08/22] uprobes/x86: Add mapping for
- optimized uprobe trampolines
-Message-Id: <20250714162338.0c9e13b530c835f3010b3ff0@kernel.org>
-In-Reply-To: <20250711082931.3398027-9-jolsa@kernel.org>
-References: <20250711082931.3398027-1-jolsa@kernel.org>
-	<20250711082931.3398027-9-jolsa@kernel.org>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1752478333; c=relaxed/simple;
+	bh=iPmlH9IS+Cm4g5BFjXOHe2StK5wu94hpmwV62BAx9/c=;
+	h=Date:Message-ID:Mime-Version:From:To:Cc:Subject:Content-Type; b=KT3YoUIguehPK852zkBNiE+A0vD+ydJv0ibeOBPTsh0rEZdiBzKUZvcS9L7s6ru3S1Q9nfYRs4REcdPQ7t1Y2gHAYwo9Nwv+6w0vEuHlL859BRj0fqPQpWaDbhNNEpVO7nkwDuiJJ508eduyfVy/2au3Du5jZc1b9u/MmaZsDxc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn; spf=pass smtp.mailfrom=zte.com.cn; arc=none smtp.client-ip=183.62.165.209
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zte.com.cn
+Received: from mse-fl2.zte.com.cn (unknown [10.5.228.133])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mxct.zte.com.cn (FangMail) with ESMTPS id 4bgYt46yDSz4xVcs;
+	Mon, 14 Jul 2025 15:31:56 +0800 (CST)
+Received: from xaxapp05.zte.com.cn ([10.99.98.109])
+	by mse-fl2.zte.com.cn with SMTP id 56E7Vm3Z002820;
+	Mon, 14 Jul 2025 15:31:48 +0800 (+08)
+	(envelope-from fan.yu9@zte.com.cn)
+Received: from mapi (xaxapp05[null])
+	by mapi (Zmail) with MAPI id mid32;
+	Mon, 14 Jul 2025 15:31:50 +0800 (CST)
+Date: Mon, 14 Jul 2025 15:31:50 +0800 (CST)
+X-Zmail-TransId: 2afc6874b266ffffffff8ce-17bff
+X-Mailer: Zmail v1.0
+Message-ID: <202507141531506787l5w2IA8v8T_DcZ960ijO@zte.com.cn>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+From: <fan.yu9@zte.com.cn>
+To: <kuba@kernel.org>, <edumazet@google.com>, <kuniyu@amazon.com>,
+        <ncardwell@google.com>, <davem@davemloft.net>, <dsahern@kernel.org>
+Cc: <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-trace-kernel@vger.kernel.org>, <yang.yang29@zte.com.cn>,
+        <xu.xin16@zte.com.cn>, <tu.qiang35@zte.com.cn>,
+        <jiang.kun2@zte.com.cn>, <qiu.yutan@zte.com.cn>,
+        <wang.yaxin@zte.com.cn>, <he.peilin@zte.com.cn>
+Subject: =?UTF-8?B?W1BBVENIIFJFU0VORCBuZXQtbmV4dCB2NF0gdGNwOiBleHRlbmQgdGNwX3JldHJhbnNtaXRfc2tiIHRyYWNlcG9pbnQgd2l0aCBmYWlsdXJlIHJlYXNvbnM=?=
+Content-Type: text/plain;
+	charset="UTF-8"
+X-MAIL:mse-fl2.zte.com.cn 56E7Vm3Z002820
+X-Fangmail-Anti-Spam-Filtered: true
+X-Fangmail-MID-QID: 6874B26C.000/4bgYt46yDSz4xVcs
 
-On Fri, 11 Jul 2025 10:29:16 +0200
-Jiri Olsa <jolsa@kernel.org> wrote:
+From: Fan Yu <fan.yu9@zte.com.cn>
 
-> Adding support to add special mapping for user space trampoline with
-> following functions:
-> 
->   uprobe_trampoline_get - find or add uprobe_trampoline
->   uprobe_trampoline_put - remove or destroy uprobe_trampoline
-> 
-> The user space trampoline is exported as arch specific user space special
-> mapping through tramp_mapping, which is initialized in following changes
-> with new uprobe syscall.
-> 
-> The uprobe trampoline needs to be callable/reachable from the probed address,
-> so while searching for available address we use is_reachable_by_call function
-> to decide if the uprobe trampoline is callable from the probe address.
-> 
-> All uprobe_trampoline objects are stored in uprobes_state object and are
-> cleaned up when the process mm_struct goes down. Adding new arch hooks
-> for that, because this change is x86_64 specific.
-> 
-> Locking is provided by callers in following changes.
-> 
-> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+Background
+==========
+When TCP retransmits a packet due to missing ACKs, the
+retransmission may fail for various reasons (e.g., packets
+stuck in driver queues, sequence errors, or routing issues).
 
-Looks good to me.
+The original tcp_retransmit_skb tracepoint:
+&apos;commit e086101b150a ("tcp: add a tracepoint for tcp retransmission")&apos;
+lacks visibility into these failure causes, making production
+diagnostics difficult.
 
-Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Solution
+========
+Adds a "result" field to the tcp_retransmit_skb tracepoint,
+enumerating with explicit failure cases:
+TCP_RETRANS_ERR_DEFAULT (retransmit terminate unexpectedly)
+TCP_RETRANS_IN_HOST_QUEUE (packet still queued in driver)
+TCP_RETRANS_END_SEQ_ERROR (invalid end sequence)
+TCP_RETRANS_NOMEM (retransmit no memory)
+TCP_RETRANS_ROUTE_FAIL (routing failure)
+TCP_RETRANS_RCV_ZERO_WINDOW (closed receiver window)
 
+Functionality
+=============
+Enables users to know why some tcp retransmission failed and filter
+retransmission failures by reason.
 
-Thank you!
+Compatibility description
+=========================
+This patch extends the tcp_retransmit_skb tracepoint
+by adding a new "result" field at the end of its
+existing structure (within TP_STRUCT__entry). The
+compatibility implications are detailed as follows:
 
-> ---
->  arch/x86/kernel/uprobes.c | 144 ++++++++++++++++++++++++++++++++++++++
->  include/linux/uprobes.h   |   6 ++
->  kernel/events/uprobes.c   |  10 +++
->  kernel/fork.c             |   1 +
->  4 files changed, 161 insertions(+)
-> 
-> diff --git a/arch/x86/kernel/uprobes.c b/arch/x86/kernel/uprobes.c
-> index 77050e5a4680..6c4dcbdd0c3c 100644
-> --- a/arch/x86/kernel/uprobes.c
-> +++ b/arch/x86/kernel/uprobes.c
-> @@ -608,6 +608,150 @@ static void riprel_post_xol(struct arch_uprobe *auprobe, struct pt_regs *regs)
->  		*sr = utask->autask.saved_scratch_register;
->  	}
->  }
-> +
-> +static int tramp_mremap(const struct vm_special_mapping *sm, struct vm_area_struct *new_vma)
-> +{
-> +	return -EPERM;
-> +}
-> +
-> +static struct page *tramp_mapping_pages[2] __ro_after_init;
-> +
-> +static struct vm_special_mapping tramp_mapping = {
-> +	.name   = "[uprobes-trampoline]",
-> +	.mremap = tramp_mremap,
-> +	.pages  = tramp_mapping_pages,
-> +};
-> +
-> +struct uprobe_trampoline {
-> +	struct hlist_node	node;
-> +	unsigned long		vaddr;
-> +};
-> +
-> +static bool is_reachable_by_call(unsigned long vtramp, unsigned long vaddr)
-> +{
-> +	long delta = (long)(vaddr + 5 - vtramp);
-> +
-> +	return delta >= INT_MIN && delta <= INT_MAX;
-> +}
-> +
-> +static unsigned long find_nearest_trampoline(unsigned long vaddr)
-> +{
-> +	struct vm_unmapped_area_info info = {
-> +		.length     = PAGE_SIZE,
-> +		.align_mask = ~PAGE_MASK,
-> +	};
-> +	unsigned long low_limit, high_limit;
-> +	unsigned long low_tramp, high_tramp;
-> +	unsigned long call_end = vaddr + 5;
-> +
-> +	if (check_add_overflow(call_end, INT_MIN, &low_limit))
-> +		low_limit = PAGE_SIZE;
-> +
-> +	high_limit = call_end + INT_MAX;
-> +
-> +	/* Search up from the caller address. */
-> +	info.low_limit = call_end;
-> +	info.high_limit = min(high_limit, TASK_SIZE);
-> +	high_tramp = vm_unmapped_area(&info);
-> +
-> +	/* Search down from the caller address. */
-> +	info.low_limit = max(low_limit, PAGE_SIZE);
-> +	info.high_limit = call_end;
-> +	info.flags = VM_UNMAPPED_AREA_TOPDOWN;
-> +	low_tramp = vm_unmapped_area(&info);
-> +
-> +	if (IS_ERR_VALUE(high_tramp) && IS_ERR_VALUE(low_tramp))
-> +		return -ENOMEM;
-> +	if (IS_ERR_VALUE(high_tramp))
-> +		return low_tramp;
-> +	if (IS_ERR_VALUE(low_tramp))
-> +		return high_tramp;
-> +
-> +	/* Return address that's closest to the caller address. */
-> +	if (call_end - low_tramp < high_tramp - call_end)
-> +		return low_tramp;
-> +	return high_tramp;
-> +}
-> +
-> +static struct uprobe_trampoline *create_uprobe_trampoline(unsigned long vaddr)
-> +{
-> +	struct pt_regs *regs = task_pt_regs(current);
-> +	struct mm_struct *mm = current->mm;
-> +	struct uprobe_trampoline *tramp;
-> +	struct vm_area_struct *vma;
-> +
-> +	if (!user_64bit_mode(regs))
-> +		return NULL;
-> +
-> +	vaddr = find_nearest_trampoline(vaddr);
-> +	if (IS_ERR_VALUE(vaddr))
-> +		return NULL;
-> +
-> +	tramp = kzalloc(sizeof(*tramp), GFP_KERNEL);
-> +	if (unlikely(!tramp))
-> +		return NULL;
-> +
-> +	tramp->vaddr = vaddr;
-> +	vma = _install_special_mapping(mm, tramp->vaddr, PAGE_SIZE,
-> +				VM_READ|VM_EXEC|VM_MAYEXEC|VM_MAYREAD|VM_DONTCOPY|VM_IO,
-> +				&tramp_mapping);
-> +	if (IS_ERR(vma)) {
-> +		kfree(tramp);
-> +		return NULL;
-> +	}
-> +	return tramp;
-> +}
-> +
-> +__maybe_unused
-> +static struct uprobe_trampoline *get_uprobe_trampoline(unsigned long vaddr, bool *new)
-> +{
-> +	struct uprobes_state *state = &current->mm->uprobes_state;
-> +	struct uprobe_trampoline *tramp = NULL;
-> +
-> +	if (vaddr > TASK_SIZE || vaddr < PAGE_SIZE)
-> +		return NULL;
-> +
-> +	hlist_for_each_entry(tramp, &state->head_tramps, node) {
-> +		if (is_reachable_by_call(tramp->vaddr, vaddr)) {
-> +			*new = false;
-> +			return tramp;
-> +		}
-> +	}
-> +
-> +	tramp = create_uprobe_trampoline(vaddr);
-> +	if (!tramp)
-> +		return NULL;
-> +
-> +	*new = true;
-> +	hlist_add_head(&tramp->node, &state->head_tramps);
-> +	return tramp;
-> +}
-> +
-> +static void destroy_uprobe_trampoline(struct uprobe_trampoline *tramp)
-> +{
-> +	/*
-> +	 * We do not unmap and release uprobe trampoline page itself,
-> +	 * because there's no easy way to make sure none of the threads
-> +	 * is still inside the trampoline.
-> +	 */
-> +	hlist_del(&tramp->node);
-> +	kfree(tramp);
-> +}
-> +
-> +void arch_uprobe_init_state(struct mm_struct *mm)
-> +{
-> +	INIT_HLIST_HEAD(&mm->uprobes_state.head_tramps);
-> +}
-> +
-> +void arch_uprobe_clear_state(struct mm_struct *mm)
-> +{
-> +	struct uprobes_state *state = &mm->uprobes_state;
-> +	struct uprobe_trampoline *tramp;
-> +	struct hlist_node *n;
-> +
-> +	hlist_for_each_entry_safe(tramp, n, &state->head_tramps, node)
-> +		destroy_uprobe_trampoline(tramp);
-> +}
->  #else /* 32-bit: */
->  /*
->   * No RIP-relative addressing on 32-bit
-> diff --git a/include/linux/uprobes.h b/include/linux/uprobes.h
-> index 5080619560d4..b40d33aae016 100644
-> --- a/include/linux/uprobes.h
-> +++ b/include/linux/uprobes.h
-> @@ -17,6 +17,7 @@
->  #include <linux/wait.h>
->  #include <linux/timer.h>
->  #include <linux/seqlock.h>
-> +#include <linux/mutex.h>
->  
->  struct uprobe;
->  struct vm_area_struct;
-> @@ -185,6 +186,9 @@ struct xol_area;
->  
->  struct uprobes_state {
->  	struct xol_area		*xol_area;
-> +#ifdef CONFIG_X86_64
-> +	struct hlist_head	head_tramps;
-> +#endif
->  };
->  
->  typedef int (*uprobe_write_verify_t)(struct page *page, unsigned long vaddr,
-> @@ -233,6 +237,8 @@ extern void uprobe_handle_trampoline(struct pt_regs *regs);
->  extern void *arch_uretprobe_trampoline(unsigned long *psize);
->  extern unsigned long uprobe_get_trampoline_vaddr(void);
->  extern void uprobe_copy_from_page(struct page *page, unsigned long vaddr, void *dst, int len);
-> +extern void arch_uprobe_clear_state(struct mm_struct *mm);
-> +extern void arch_uprobe_init_state(struct mm_struct *mm);
->  #else /* !CONFIG_UPROBES */
->  struct uprobes_state {
->  };
-> diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
-> index 6795b8d82b9c..acec91a676b7 100644
-> --- a/kernel/events/uprobes.c
-> +++ b/kernel/events/uprobes.c
-> @@ -1802,6 +1802,14 @@ static struct xol_area *get_xol_area(void)
->  	return area;
->  }
->  
-> +void __weak arch_uprobe_clear_state(struct mm_struct *mm)
-> +{
-> +}
-> +
-> +void __weak arch_uprobe_init_state(struct mm_struct *mm)
-> +{
-> +}
-> +
->  /*
->   * uprobe_clear_state - Free the area allocated for slots.
->   */
-> @@ -1813,6 +1821,8 @@ void uprobe_clear_state(struct mm_struct *mm)
->  	delayed_uprobe_remove(NULL, mm);
->  	mutex_unlock(&delayed_uprobe_lock);
->  
-> +	arch_uprobe_clear_state(mm);
-> +
->  	if (!area)
->  		return;
->  
-> diff --git a/kernel/fork.c b/kernel/fork.c
-> index bd8c21d64746..70f2d4e2e8fe 100644
-> --- a/kernel/fork.c
-> +++ b/kernel/fork.c
-> @@ -1009,6 +1009,7 @@ static void mm_init_uprobes_state(struct mm_struct *mm)
->  {
->  #ifdef CONFIG_UPROBES
->  	mm->uprobes_state.xol_area = NULL;
-> +	arch_uprobe_init_state(mm);
->  #endif
->  }
->  
-> -- 
-> 2.50.0
-> 
+1) Structural compatibility for legacy user-space tools
 
+Legacy tools/BPF programs accessing existing fields
+(by offset or name) can still work without modification
+or recompilation.The new field is appended to the end,
+preserving original memory layout.
 
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+2) Note: semantic changes
+
+The original tracepoint primarily only focused on
+successfully retransmitted packets. With this patch,
+the tracepoint now covers all packets that trigger
+retransmission attempts, including those that may
+terminate early due to specific reasons. For accurate
+statistics, users should filter using "result" to
+distinguish outcomes.
+
+Before patched:
+# cat /sys/kernel/debug/tracing/events/tcp/tcp_retransmit_skb/format
+field:const void * skbaddr; offset:8; size:8; signed:0;
+field:const void * skaddr; offset:16; size:8; signed:0;
+field:int state; offset:24; size:4; signed:1;
+field:__u16 sport; offset:28; size:2; signed:0;
+field:__u16 dport; offset:30; size:2; signed:0;
+field:__u16 family; offset:32; size:2; signed:0;
+field:__u8 saddr[4]; offset:34; size:4; signed:0;
+field:__u8 daddr[4]; offset:38; size:4; signed:0;
+field:__u8 saddr_v6[16]; offset:42; size:16; signed:0;
+field:__u8 daddr_v6[16]; offset:58; size:16; signed:0;
+print fmt: "skbaddr=%p skaddr=%p family=%s sport=%hu dport=%hu saddr=%pI4 daddr=%pI4 saddrv6=%pI6c daddrv6=%pI6c state=%s"
+
+After patched:
+# cat /sys/kernel/debug/tracing/events/tcp/tcp_retransmit_skb/format
+field:unsigned short common_type; offset:0; size:2; signed:0;
+field:unsigned char common_flags; offset:2; size:1; signed:0;
+field:unsigned char common_preempt_count; offset:3; size:1; signed:0;
+field:int common_pid; offset:4; size:4; signed:1;
+
+field:const void * skbaddr; offset:8; size:8; signed:0;
+field:const void * skaddr; offset:16; size:8; signed:0;
+field:int state; offset:24; size:4; signed:1;
+field:__u16 sport; offset:28; size:2; signed:0;
+field:__u16 dport; offset:30; size:2; signed:0;
+field:__u16 family; offset:32; size:2; signed:0;
+field:__u8 saddr[4]; offset:34; size:4; signed:0;
+field:__u8 daddr[4]; offset:38; size:4; signed:0;
+field:__u8 saddr_v6[16]; offset:42; size:16; signed:0;
+field:__u8 daddr_v6[16]; offset:58; size:16; signed:0;
+field:enum tcp_retransmit_result result; offset:76; size:4; signed:0;
+
+print fmt: "skbaddr=%p skaddr=%p family=%s sport=%hu dport=%hu saddr=%pI4 daddr=%pI4 saddrv6=%pI6c daddrv6=%pI6c state=%s result=%s"
+
+Change Log
+=========
+v3->v4:
+Some fixes according to
+https://lore.kernel.org/all/CANn89i+JGSt=_CtWfhDXypWW-34a6SoP3RAzWQ9B9VL4+PHjDw@mail.gmail.com/
+1. Consolidate ENOMEMs into a unified TCP_RETRANS_NOMEM
+
+v2->v3:
+Some fixes according to
+https://lore.kernel.org/all/CANn89iJvyYjiweCESQL8E-Si7M=gosYvh1BAVWwAWycXW8GSdg@mail.gmail.com/
+1. Rename "quit_reason" to "result". Also, keep "key=val" format concise(no space in vals)
+
+v1->v2:
+Some fixes according to
+https://lore.kernel.org/all/CANn89iK-6kT-ZUpNRMjPY9_TkQj-dLuKrDQtvO1140q4EUsjFg@mail.gmail.com/
+1.Rename TCP_RETRANS_QUIT_UNDEFINED to TCP_RETRANS_ERR_DEFAULT.
+2.Added detailed compatibility consequences section.
+
+Co-developed-by: xu xin <xu.xin16@zte.com.cn>
+Signed-off-by: xu xin <xu.xin16@zte.com.cn>
+Signed-off-by: Fan Yu <fan.yu9@zte.com.cn>
+---
+include/linux/tcp.h        | 10 ++++++++
+include/trace/events/tcp.h | 51 ++++++++++++++++++++++++-------------
+net/ipv4/tcp_output.c      | 52 ++++++++++++++++++++++++++++----------
+3 files changed, 81 insertions(+), 32 deletions(-)
+
+diff --git a/include/linux/tcp.h b/include/linux/tcp.h
+index 29f59d50dc73..b34479f5cb56 100644
+--- a/include/linux/tcp.h
++++ b/include/linux/tcp.h
+@@ -530,6 +530,16 @@ enum tsq_flags {
+ 	TCPF_ACK_DEFERRED		= BIT(TCP_ACK_DEFERRED),
+};
+
++enum tcp_retransmit_result {
++	TCP_RETRANS_ERR_DEFAULT,
++	TCP_RETRANS_SUCCESS,
++	TCP_RETRANS_IN_HOST_QUEUE,
++	TCP_RETRANS_END_SEQ_ERROR,
++	TCP_RETRANS_NOMEM,
++	TCP_RETRANS_ROUTE_FAIL,
++	TCP_RETRANS_RCV_ZERO_WINDOW,
++};
++
+#define tcp_sk(ptr) container_of_const(ptr, struct tcp_sock, inet_conn.icsk_inet.sk)
+
+/* Variant of tcp_sk() upgrading a const sock to a read/write tcp socket.
+diff --git a/include/trace/events/tcp.h b/include/trace/events/tcp.h
+index 54e60c6009e3..6b736fa01d94 100644
+--- a/include/trace/events/tcp.h
++++ b/include/trace/events/tcp.h
+@@ -13,17 +13,35 @@
+#include <linux/sock_diag.h>
+#include <net/rstreason.h>
+
+-/*
+- * tcp event with arguments sk and skb
+- *
+- * Note: this class requires a valid sk pointer; while skb pointer could
+- *       be NULL.
+- */
+-DECLARE_EVENT_CLASS(tcp_event_sk_skb,
++#define TCP_RETRANSMIT_RESULT		\
++		ENUM(TCP_RETRANS_ERR_DEFAULT,		"retrans_err_default")	\
++		ENUM(TCP_RETRANS_SUCCESS,		"retrans_succ")		\
++		ENUM(TCP_RETRANS_IN_HOST_QUEUE,		"packet_in_driver")	\
++		ENUM(TCP_RETRANS_END_SEQ_ERROR,		"end_seq_error")	\
++		ENUM(TCP_RETRANS_NOMEM,			"retrans_nomem")	\
++		ENUM(TCP_RETRANS_ROUTE_FAIL,		"route_fail")		\
++		ENUMe(TCP_RETRANS_RCV_ZERO_WINDOW,	"rcv_zero_window")	\
++
++/* Redefine for export. */
++#undef ENUM
++#undef ENUMe
++#define ENUM(a, b)	TRACE_DEFINE_ENUM(a);
++#define ENUMe(a, b)	TRACE_DEFINE_ENUM(a);
++
++TCP_RETRANSMIT_RESULT
++
++/* Redefine for symbolic printing. */
++#undef ENUM
++#undef ENUMe
++#define ENUM(a, b)	{ a, b },
++#define ENUMe(a, b)	{ a, b }
++
++TRACE_EVENT(tcp_retransmit_skb,
+
+-	TP_PROTO(const struct sock *sk, const struct sk_buff *skb),
++	TP_PROTO(const struct sock *sk, const struct sk_buff *skb,
++		enum tcp_retransmit_result result),
+
+-	TP_ARGS(sk, skb),
++	TP_ARGS(sk, skb, result),
+
+ 	TP_STRUCT__entry(
+ 		__field(const void *, skbaddr)
+@@ -36,6 +54,7 @@ DECLARE_EVENT_CLASS(tcp_event_sk_skb,
+ 		__array(__u8, daddr, 4)
+ 		__array(__u8, saddr_v6, 16)
+ 		__array(__u8, daddr_v6, 16)
++		__field(enum tcp_retransmit_result, result)
+ 	),
+
+ 	TP_fast_assign(
+@@ -58,21 +77,17 @@ DECLARE_EVENT_CLASS(tcp_event_sk_skb,
+
+ 		TP_STORE_ADDRS(__entry, inet->inet_saddr, inet->inet_daddr,
+ 			sk->sk_v6_rcv_saddr, sk->sk_v6_daddr);
++
++		__entry->result = result;
+ 	),
+
+-	TP_printk("skbaddr=%p skaddr=%p family=%s sport=%hu dport=%hu saddr=%pI4 daddr=%pI4 saddrv6=%pI6c daddrv6=%pI6c state=%s",
++	TP_printk("skbaddr=%p skaddr=%p family=%s sport=%hu dport=%hu saddr=%pI4 daddr=%pI4 saddrv6=%pI6c daddrv6=%pI6c state=%s result=%s",
+ 		__entry->skbaddr, __entry->skaddr,
+ 		show_family_name(__entry->family),
+ 		__entry->sport, __entry->dport, __entry->saddr, __entry->daddr,
+ 		__entry->saddr_v6, __entry->daddr_v6,
+-		  show_tcp_state_name(__entry->state))
+-);
+-
+-DEFINE_EVENT(tcp_event_sk_skb, tcp_retransmit_skb,
+-
+-	TP_PROTO(const struct sock *sk, const struct sk_buff *skb),
+-
+-	TP_ARGS(sk, skb)
++		  show_tcp_state_name(__entry->state),
++		  __print_symbolic(__entry->result, TCP_RETRANSMIT_RESULT))
+);
+
+#undef FN
+diff --git a/net/ipv4/tcp_output.c b/net/ipv4/tcp_output.c
+index 3ac8d2d17e1f..8f7bc33f30be 100644
+--- a/net/ipv4/tcp_output.c
++++ b/net/ipv4/tcp_output.c
+@@ -3326,6 +3326,7 @@ static void tcp_retrans_try_collapse(struct sock *sk, struct sk_buff *to,
+*/
+int __tcp_retransmit_skb(struct sock *sk, struct sk_buff *skb, int segs)
+{
++	enum tcp_retransmit_result result = TCP_RETRANS_ERR_DEFAULT;
+ 	struct inet_connection_sock *icsk = inet_csk(sk);
+ 	struct tcp_sock *tp = tcp_sk(sk);
+ 	unsigned int cur_mss;
+@@ -3336,8 +3337,11 @@ int __tcp_retransmit_skb(struct sock *sk, struct sk_buff *skb, int segs)
+ 	if (icsk->icsk_mtup.probe_size)
+ 		icsk->icsk_mtup.probe_size = 0;
+
+-	if (skb_still_in_host_queue(sk, skb))
+-		return -EBUSY;
++	if (skb_still_in_host_queue(sk, skb)) {
++		result = TCP_RETRANS_IN_HOST_QUEUE;
++		err = -EBUSY;
++		goto out;
++	}
+
+start:
+ 	if (before(TCP_SKB_CB(skb)->seq, tp->snd_una)) {
+@@ -3348,14 +3352,22 @@ int __tcp_retransmit_skb(struct sock *sk, struct sk_buff *skb, int segs)
+ 		}
+ 		if (unlikely(before(TCP_SKB_CB(skb)->end_seq, tp->snd_una))) {
+ 			WARN_ON_ONCE(1);
+-			return -EINVAL;
++			result = TCP_RETRANS_END_SEQ_ERROR;
++			err = -EINVAL;
++			goto out;
++		}
++		if (tcp_trim_head(sk, skb, tp->snd_una - TCP_SKB_CB(skb)->seq)) {
++			result = TCP_RETRANS_NOMEM;
++			err = -ENOMEM;
++			goto out;
+ 		}
+-		if (tcp_trim_head(sk, skb, tp->snd_una - TCP_SKB_CB(skb)->seq))
+-			return -ENOMEM;
+ 	}
+
+-	if (inet_csk(sk)->icsk_af_ops->rebuild_header(sk))
+-		return -EHOSTUNREACH; /* Routing failure or similar. */
++	if (inet_csk(sk)->icsk_af_ops->rebuild_header(sk)) {
++		result = TCP_RETRANS_ROUTE_FAIL;
++		err = -EHOSTUNREACH; /* Routing failure or similar. */
++		goto out;
++	}
+
+ 	cur_mss = tcp_current_mss(sk);
+ 	avail_wnd = tcp_wnd_end(tp) - TCP_SKB_CB(skb)->seq;
+@@ -3366,8 +3378,11 @@ int __tcp_retransmit_skb(struct sock *sk, struct sk_buff *skb, int segs)
+ 	* our retransmit of one segment serves as a zero window probe.
+ 	*/
+ 	if (avail_wnd <= 0) {
+-		if (TCP_SKB_CB(skb)->seq != tp->snd_una)
+-			return -EAGAIN;
++		if (TCP_SKB_CB(skb)->seq != tp->snd_una) {
++			result = TCP_RETRANS_RCV_ZERO_WINDOW;
++			err = -EAGAIN;
++			goto out;
++		}
+ 		avail_wnd = cur_mss;
+ 	}
+
+@@ -3379,11 +3394,17 @@ int __tcp_retransmit_skb(struct sock *sk, struct sk_buff *skb, int segs)
+ 	}
+ 	if (skb->len > len) {
+ 		if (tcp_fragment(sk, TCP_FRAG_IN_RTX_QUEUE, skb, len,
+-				 cur_mss, GFP_ATOMIC))
+-			return -ENOMEM; /* We&apos;ll try again later. */
++				 cur_mss, GFP_ATOMIC)) {
++			result = TCP_RETRANS_NOMEM;
++			err = -ENOMEM;  /* We&apos;ll try again later. */
++			goto out;
++		}
+ 	} else {
+-		if (skb_unclone_keeptruesize(skb, GFP_ATOMIC))
+-			return -ENOMEM;
++		if (skb_unclone_keeptruesize(skb, GFP_ATOMIC)) {
++			result = TCP_RETRANS_NOMEM;
++			err = -ENOMEM;
++			goto out;
++		}
+
+ 		diff = tcp_skb_pcount(skb);
+ 		tcp_set_skb_tso_segs(skb, cur_mss);
+@@ -3421,6 +3442,7 @@ int __tcp_retransmit_skb(struct sock *sk, struct sk_buff *skb, int segs)
+ 				nskb->dev = NULL;
+ 				err = tcp_transmit_skb(sk, nskb, 0, GFP_ATOMIC);
+ 			} else {
++				result = TCP_RETRANS_NOMEM;
+ 				err = -ENOBUFS;
+ 			}
+ 		} tcp_skb_tsorted_restore(skb);
+@@ -3438,7 +3460,7 @@ int __tcp_retransmit_skb(struct sock *sk, struct sk_buff *skb, int segs)
+ 				TCP_SKB_CB(skb)->seq, segs, err);
+
+ 	if (likely(!err)) {
+-		trace_tcp_retransmit_skb(sk, skb);
++		result = TCP_RETRANS_SUCCESS;
+ 	} else if (err != -EBUSY) {
+ 		NET_ADD_STATS(sock_net(sk), LINUX_MIB_TCPRETRANSFAIL, segs);
+ 	}
+@@ -3448,6 +3470,8 @@ int __tcp_retransmit_skb(struct sock *sk, struct sk_buff *skb, int segs)
+ 	*/
+ 	TCP_SKB_CB(skb)->sacked |= TCPCB_EVER_RETRANS;
+
++out:
++	trace_tcp_retransmit_skb(sk, skb, result);
+ 	return err;
+}
+
+--
+2.25.1
