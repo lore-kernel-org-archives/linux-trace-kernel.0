@@ -1,390 +1,89 @@
-Received: from mxct.zte.com.cn (mxct.zte.com.cn [183.62.165.209])
+Received: from out-183.mta0.migadu.com (out-183.mta0.migadu.com [91.218.175.183])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1D1C1E9B29;
-	Mon, 14 Jul 2025 07:32:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=183.62.165.209
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61E812E371E
+	for <linux-trace-kernel@vger.kernel.org>; Mon, 14 Jul 2025 07:55:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.183
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752478333; cv=none; b=Ufd1olN97K1TsNLGPASVcyPWl19JgjzRWyLbU9KEcUfcKwE6NX20Q7tPPCte0QwzRcYryC/TFjfFs3JZA1dVRi2GruMCPIHSbJtS92a/tEjeB9aOU8c3tkxcm77I9eWLMOr1AS8y0WrxE58JwbkhTO6DK5Er7mcAvSZGdK914A0=
+	t=1752479754; cv=none; b=BvHj/2jML6vTW/vMpuCSu2+sIDBZjFDEyirkVD+OYKLg3PrjrAGPCuULmw6QU37J0NpqqOzhrxHCXCISlNJhQlojFkOCuzzBGKnQ6iy8J2PIUxQK+9mniP71P4f5kE7U7Ybx9lbba3F5TesMJtzqF8MAvQwB6xQFjHtXEgARbkc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752478333; c=relaxed/simple;
-	bh=iPmlH9IS+Cm4g5BFjXOHe2StK5wu94hpmwV62BAx9/c=;
-	h=Date:Message-ID:Mime-Version:From:To:Cc:Subject:Content-Type; b=KT3YoUIguehPK852zkBNiE+A0vD+ydJv0ibeOBPTsh0rEZdiBzKUZvcS9L7s6ru3S1Q9nfYRs4REcdPQ7t1Y2gHAYwo9Nwv+6w0vEuHlL859BRj0fqPQpWaDbhNNEpVO7nkwDuiJJ508eduyfVy/2au3Du5jZc1b9u/MmaZsDxc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn; spf=pass smtp.mailfrom=zte.com.cn; arc=none smtp.client-ip=183.62.165.209
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zte.com.cn
-Received: from mse-fl2.zte.com.cn (unknown [10.5.228.133])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mxct.zte.com.cn (FangMail) with ESMTPS id 4bgYt46yDSz4xVcs;
-	Mon, 14 Jul 2025 15:31:56 +0800 (CST)
-Received: from xaxapp05.zte.com.cn ([10.99.98.109])
-	by mse-fl2.zte.com.cn with SMTP id 56E7Vm3Z002820;
-	Mon, 14 Jul 2025 15:31:48 +0800 (+08)
-	(envelope-from fan.yu9@zte.com.cn)
-Received: from mapi (xaxapp05[null])
-	by mapi (Zmail) with MAPI id mid32;
-	Mon, 14 Jul 2025 15:31:50 +0800 (CST)
-Date: Mon, 14 Jul 2025 15:31:50 +0800 (CST)
-X-Zmail-TransId: 2afc6874b266ffffffff8ce-17bff
-X-Mailer: Zmail v1.0
-Message-ID: <202507141531506787l5w2IA8v8T_DcZ960ijO@zte.com.cn>
+	s=arc-20240116; t=1752479754; c=relaxed/simple;
+	bh=B9h3hRprYcgNci58s5419jngt37Jl+qroxT5D0K6igw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=OtK54KVdvUApu1G5di+Krzw0AmadyZMMdSHLnScSQt2rUe4/rHqK+2499rimcviOjq/X37q9lNcuata4BWAvfB5h6rxa44+Kp0hGcOSXaco43P4c0DOtFfMfgefciOZYOgqY54OErQSfrVCsuLcO+HQ/+djZgHVNwphpVbFZBfs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=frUvedzU; arc=none smtp.client-ip=91.218.175.183
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="frUvedzU"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1752479740;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=vPxMdQC2ns7gLLrlIIRncvrzyqThLyDSkJC6jrXOdSg=;
+	b=frUvedzU1obDUzjEFU8sjsjN1f9OWS11jTPC/KrOtlg/xagLHMHyI0zOQNup5GG1uuIe/W
+	FHK0i9sBgNmhYofDP/I0MvsdIRDS5+mfzL7qB5TGYcmb0Txk3QMaA5o7wuWG7jNi8NbYyt
+	xvAN244WjrQK0TySQQjDBnyn5ebpMOk=
+From: Thorsten Blum <thorsten.blum@linux.dev>
+To: Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Guillaume Nault <gnault@redhat.com>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Ido Schimmel <idosch@nvidia.com>,
+	Petr Machata <petrm@nvidia.com>
+Cc: Thorsten Blum <thorsten.blum@linux.dev>,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Subject: [PATCH net-next] tracing: ipv6: Replace deprecated strcpy() with strscpy()
+Date: Mon, 14 Jul 2025 09:54:33 +0200
+Message-ID: <20250714075436.226197-2-thorsten.blum@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-From: <fan.yu9@zte.com.cn>
-To: <kuba@kernel.org>, <edumazet@google.com>, <kuniyu@amazon.com>,
-        <ncardwell@google.com>, <davem@davemloft.net>, <dsahern@kernel.org>
-Cc: <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-trace-kernel@vger.kernel.org>, <yang.yang29@zte.com.cn>,
-        <xu.xin16@zte.com.cn>, <tu.qiang35@zte.com.cn>,
-        <jiang.kun2@zte.com.cn>, <qiu.yutan@zte.com.cn>,
-        <wang.yaxin@zte.com.cn>, <he.peilin@zte.com.cn>
-Subject: =?UTF-8?B?W1BBVENIIFJFU0VORCBuZXQtbmV4dCB2NF0gdGNwOiBleHRlbmQgdGNwX3JldHJhbnNtaXRfc2tiIHRyYWNlcG9pbnQgd2l0aCBmYWlsdXJlIHJlYXNvbnM=?=
-Content-Type: text/plain;
-	charset="UTF-8"
-X-MAIL:mse-fl2.zte.com.cn 56E7Vm3Z002820
-X-Fangmail-Anti-Spam-Filtered: true
-X-Fangmail-MID-QID: 6874B26C.000/4bgYt46yDSz4xVcs
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-From: Fan Yu <fan.yu9@zte.com.cn>
+strcpy() is deprecated; use strscpy() instead.
 
-Background
-==========
-When TCP retransmits a packet due to missing ACKs, the
-retransmission may fail for various reasons (e.g., packets
-stuck in driver queues, sequence errors, or routing issues).
+Since the destination buffer has a fixed length, strscpy() automatically
+determines its size using sizeof() when the size argument is omitted.
+This makes the explicit size argument unnecessary - remove it.
 
-The original tcp_retransmit_skb tracepoint:
-&apos;commit e086101b150a ("tcp: add a tracepoint for tcp retransmission")&apos;
-lacks visibility into these failure causes, making production
-diagnostics difficult.
+Now, combine both if-else branches using strscpy() and the same buffer
+into a single statement to simplify the code.
 
-Solution
-========
-Adds a "result" field to the tcp_retransmit_skb tracepoint,
-enumerating with explicit failure cases:
-TCP_RETRANS_ERR_DEFAULT (retransmit terminate unexpectedly)
-TCP_RETRANS_IN_HOST_QUEUE (packet still queued in driver)
-TCP_RETRANS_END_SEQ_ERROR (invalid end sequence)
-TCP_RETRANS_NOMEM (retransmit no memory)
-TCP_RETRANS_ROUTE_FAIL (routing failure)
-TCP_RETRANS_RCV_ZERO_WINDOW (closed receiver window)
+No functional changes intended.
 
-Functionality
-=============
-Enables users to know why some tcp retransmission failed and filter
-retransmission failures by reason.
-
-Compatibility description
-=========================
-This patch extends the tcp_retransmit_skb tracepoint
-by adding a new "result" field at the end of its
-existing structure (within TP_STRUCT__entry). The
-compatibility implications are detailed as follows:
-
-1) Structural compatibility for legacy user-space tools
-
-Legacy tools/BPF programs accessing existing fields
-(by offset or name) can still work without modification
-or recompilation.The new field is appended to the end,
-preserving original memory layout.
-
-2) Note: semantic changes
-
-The original tracepoint primarily only focused on
-successfully retransmitted packets. With this patch,
-the tracepoint now covers all packets that trigger
-retransmission attempts, including those that may
-terminate early due to specific reasons. For accurate
-statistics, users should filter using "result" to
-distinguish outcomes.
-
-Before patched:
-# cat /sys/kernel/debug/tracing/events/tcp/tcp_retransmit_skb/format
-field:const void * skbaddr; offset:8; size:8; signed:0;
-field:const void * skaddr; offset:16; size:8; signed:0;
-field:int state; offset:24; size:4; signed:1;
-field:__u16 sport; offset:28; size:2; signed:0;
-field:__u16 dport; offset:30; size:2; signed:0;
-field:__u16 family; offset:32; size:2; signed:0;
-field:__u8 saddr[4]; offset:34; size:4; signed:0;
-field:__u8 daddr[4]; offset:38; size:4; signed:0;
-field:__u8 saddr_v6[16]; offset:42; size:16; signed:0;
-field:__u8 daddr_v6[16]; offset:58; size:16; signed:0;
-print fmt: "skbaddr=%p skaddr=%p family=%s sport=%hu dport=%hu saddr=%pI4 daddr=%pI4 saddrv6=%pI6c daddrv6=%pI6c state=%s"
-
-After patched:
-# cat /sys/kernel/debug/tracing/events/tcp/tcp_retransmit_skb/format
-field:unsigned short common_type; offset:0; size:2; signed:0;
-field:unsigned char common_flags; offset:2; size:1; signed:0;
-field:unsigned char common_preempt_count; offset:3; size:1; signed:0;
-field:int common_pid; offset:4; size:4; signed:1;
-
-field:const void * skbaddr; offset:8; size:8; signed:0;
-field:const void * skaddr; offset:16; size:8; signed:0;
-field:int state; offset:24; size:4; signed:1;
-field:__u16 sport; offset:28; size:2; signed:0;
-field:__u16 dport; offset:30; size:2; signed:0;
-field:__u16 family; offset:32; size:2; signed:0;
-field:__u8 saddr[4]; offset:34; size:4; signed:0;
-field:__u8 daddr[4]; offset:38; size:4; signed:0;
-field:__u8 saddr_v6[16]; offset:42; size:16; signed:0;
-field:__u8 daddr_v6[16]; offset:58; size:16; signed:0;
-field:enum tcp_retransmit_result result; offset:76; size:4; signed:0;
-
-print fmt: "skbaddr=%p skaddr=%p family=%s sport=%hu dport=%hu saddr=%pI4 daddr=%pI4 saddrv6=%pI6c daddrv6=%pI6c state=%s result=%s"
-
-Change Log
-=========
-v3->v4:
-Some fixes according to
-https://lore.kernel.org/all/CANn89i+JGSt=_CtWfhDXypWW-34a6SoP3RAzWQ9B9VL4+PHjDw@mail.gmail.com/
-1. Consolidate ENOMEMs into a unified TCP_RETRANS_NOMEM
-
-v2->v3:
-Some fixes according to
-https://lore.kernel.org/all/CANn89iJvyYjiweCESQL8E-Si7M=gosYvh1BAVWwAWycXW8GSdg@mail.gmail.com/
-1. Rename "quit_reason" to "result". Also, keep "key=val" format concise(no space in vals)
-
-v1->v2:
-Some fixes according to
-https://lore.kernel.org/all/CANn89iK-6kT-ZUpNRMjPY9_TkQj-dLuKrDQtvO1140q4EUsjFg@mail.gmail.com/
-1.Rename TCP_RETRANS_QUIT_UNDEFINED to TCP_RETRANS_ERR_DEFAULT.
-2.Added detailed compatibility consequences section.
-
-Co-developed-by: xu xin <xu.xin16@zte.com.cn>
-Signed-off-by: xu xin <xu.xin16@zte.com.cn>
-Signed-off-by: Fan Yu <fan.yu9@zte.com.cn>
+Link: https://github.com/KSPP/linux/issues/88
+Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
 ---
-include/linux/tcp.h        | 10 ++++++++
-include/trace/events/tcp.h | 51 ++++++++++++++++++++++++-------------
-net/ipv4/tcp_output.c      | 52 ++++++++++++++++++++++++++++----------
-3 files changed, 81 insertions(+), 32 deletions(-)
+ include/trace/events/fib6.h | 8 +++-----
+ 1 file changed, 3 insertions(+), 5 deletions(-)
 
-diff --git a/include/linux/tcp.h b/include/linux/tcp.h
-index 29f59d50dc73..b34479f5cb56 100644
---- a/include/linux/tcp.h
-+++ b/include/linux/tcp.h
-@@ -530,6 +530,16 @@ enum tsq_flags {
- 	TCPF_ACK_DEFERRED		= BIT(TCP_ACK_DEFERRED),
-};
-
-+enum tcp_retransmit_result {
-+	TCP_RETRANS_ERR_DEFAULT,
-+	TCP_RETRANS_SUCCESS,
-+	TCP_RETRANS_IN_HOST_QUEUE,
-+	TCP_RETRANS_END_SEQ_ERROR,
-+	TCP_RETRANS_NOMEM,
-+	TCP_RETRANS_ROUTE_FAIL,
-+	TCP_RETRANS_RCV_ZERO_WINDOW,
-+};
-+
-#define tcp_sk(ptr) container_of_const(ptr, struct tcp_sock, inet_conn.icsk_inet.sk)
-
-/* Variant of tcp_sk() upgrading a const sock to a read/write tcp socket.
-diff --git a/include/trace/events/tcp.h b/include/trace/events/tcp.h
-index 54e60c6009e3..6b736fa01d94 100644
---- a/include/trace/events/tcp.h
-+++ b/include/trace/events/tcp.h
-@@ -13,17 +13,35 @@
-#include <linux/sock_diag.h>
-#include <net/rstreason.h>
-
--/*
-- * tcp event with arguments sk and skb
-- *
-- * Note: this class requires a valid sk pointer; while skb pointer could
-- *       be NULL.
-- */
--DECLARE_EVENT_CLASS(tcp_event_sk_skb,
-+#define TCP_RETRANSMIT_RESULT		\
-+		ENUM(TCP_RETRANS_ERR_DEFAULT,		"retrans_err_default")	\
-+		ENUM(TCP_RETRANS_SUCCESS,		"retrans_succ")		\
-+		ENUM(TCP_RETRANS_IN_HOST_QUEUE,		"packet_in_driver")	\
-+		ENUM(TCP_RETRANS_END_SEQ_ERROR,		"end_seq_error")	\
-+		ENUM(TCP_RETRANS_NOMEM,			"retrans_nomem")	\
-+		ENUM(TCP_RETRANS_ROUTE_FAIL,		"route_fail")		\
-+		ENUMe(TCP_RETRANS_RCV_ZERO_WINDOW,	"rcv_zero_window")	\
-+
-+/* Redefine for export. */
-+#undef ENUM
-+#undef ENUMe
-+#define ENUM(a, b)	TRACE_DEFINE_ENUM(a);
-+#define ENUMe(a, b)	TRACE_DEFINE_ENUM(a);
-+
-+TCP_RETRANSMIT_RESULT
-+
-+/* Redefine for symbolic printing. */
-+#undef ENUM
-+#undef ENUMe
-+#define ENUM(a, b)	{ a, b },
-+#define ENUMe(a, b)	{ a, b }
-+
-+TRACE_EVENT(tcp_retransmit_skb,
-
--	TP_PROTO(const struct sock *sk, const struct sk_buff *skb),
-+	TP_PROTO(const struct sock *sk, const struct sk_buff *skb,
-+		enum tcp_retransmit_result result),
-
--	TP_ARGS(sk, skb),
-+	TP_ARGS(sk, skb, result),
-
- 	TP_STRUCT__entry(
- 		__field(const void *, skbaddr)
-@@ -36,6 +54,7 @@ DECLARE_EVENT_CLASS(tcp_event_sk_skb,
- 		__array(__u8, daddr, 4)
- 		__array(__u8, saddr_v6, 16)
- 		__array(__u8, daddr_v6, 16)
-+		__field(enum tcp_retransmit_result, result)
- 	),
-
- 	TP_fast_assign(
-@@ -58,21 +77,17 @@ DECLARE_EVENT_CLASS(tcp_event_sk_skb,
-
- 		TP_STORE_ADDRS(__entry, inet->inet_saddr, inet->inet_daddr,
- 			sk->sk_v6_rcv_saddr, sk->sk_v6_daddr);
-+
-+		__entry->result = result;
- 	),
-
--	TP_printk("skbaddr=%p skaddr=%p family=%s sport=%hu dport=%hu saddr=%pI4 daddr=%pI4 saddrv6=%pI6c daddrv6=%pI6c state=%s",
-+	TP_printk("skbaddr=%p skaddr=%p family=%s sport=%hu dport=%hu saddr=%pI4 daddr=%pI4 saddrv6=%pI6c daddrv6=%pI6c state=%s result=%s",
- 		__entry->skbaddr, __entry->skaddr,
- 		show_family_name(__entry->family),
- 		__entry->sport, __entry->dport, __entry->saddr, __entry->daddr,
- 		__entry->saddr_v6, __entry->daddr_v6,
--		  show_tcp_state_name(__entry->state))
--);
--
--DEFINE_EVENT(tcp_event_sk_skb, tcp_retransmit_skb,
--
--	TP_PROTO(const struct sock *sk, const struct sk_buff *skb),
--
--	TP_ARGS(sk, skb)
-+		  show_tcp_state_name(__entry->state),
-+		  __print_symbolic(__entry->result, TCP_RETRANSMIT_RESULT))
-);
-
-#undef FN
-diff --git a/net/ipv4/tcp_output.c b/net/ipv4/tcp_output.c
-index 3ac8d2d17e1f..8f7bc33f30be 100644
---- a/net/ipv4/tcp_output.c
-+++ b/net/ipv4/tcp_output.c
-@@ -3326,6 +3326,7 @@ static void tcp_retrans_try_collapse(struct sock *sk, struct sk_buff *to,
-*/
-int __tcp_retransmit_skb(struct sock *sk, struct sk_buff *skb, int segs)
-{
-+	enum tcp_retransmit_result result = TCP_RETRANS_ERR_DEFAULT;
- 	struct inet_connection_sock *icsk = inet_csk(sk);
- 	struct tcp_sock *tp = tcp_sk(sk);
- 	unsigned int cur_mss;
-@@ -3336,8 +3337,11 @@ int __tcp_retransmit_skb(struct sock *sk, struct sk_buff *skb, int segs)
- 	if (icsk->icsk_mtup.probe_size)
- 		icsk->icsk_mtup.probe_size = 0;
-
--	if (skb_still_in_host_queue(sk, skb))
--		return -EBUSY;
-+	if (skb_still_in_host_queue(sk, skb)) {
-+		result = TCP_RETRANS_IN_HOST_QUEUE;
-+		err = -EBUSY;
-+		goto out;
-+	}
-
-start:
- 	if (before(TCP_SKB_CB(skb)->seq, tp->snd_una)) {
-@@ -3348,14 +3352,22 @@ int __tcp_retransmit_skb(struct sock *sk, struct sk_buff *skb, int segs)
+diff --git a/include/trace/events/fib6.h b/include/trace/events/fib6.h
+index 8d22b2e98d48..903a18836bc6 100644
+--- a/include/trace/events/fib6.h
++++ b/include/trace/events/fib6.h
+@@ -64,11 +64,9 @@ TRACE_EVENT(fib6_table_lookup,
+ 			__entry->dport = 0;
  		}
- 		if (unlikely(before(TCP_SKB_CB(skb)->end_seq, tp->snd_una))) {
- 			WARN_ON_ONCE(1);
--			return -EINVAL;
-+			result = TCP_RETRANS_END_SEQ_ERROR;
-+			err = -EINVAL;
-+			goto out;
-+		}
-+		if (tcp_trim_head(sk, skb, tp->snd_una - TCP_SKB_CB(skb)->seq)) {
-+			result = TCP_RETRANS_NOMEM;
-+			err = -ENOMEM;
-+			goto out;
- 		}
--		if (tcp_trim_head(sk, skb, tp->snd_una - TCP_SKB_CB(skb)->seq))
--			return -ENOMEM;
- 	}
+ 
+-		if (res->nh && res->nh->fib_nh_dev) {
+-			strscpy(__entry->name, res->nh->fib_nh_dev->name, IFNAMSIZ);
+-		} else {
+-			strcpy(__entry->name, "-");
+-		}
++		strscpy(__entry->name, res->nh && res->nh->fib_nh_dev ?
++				       res->nh->fib_nh_dev->name : "-");
++
+ 		if (res->f6i == net->ipv6.fib6_null_entry) {
+ 			in6 = (struct in6_addr *)__entry->gw;
+ 			*in6 = in6addr_any;
+-- 
+2.50.0
 
--	if (inet_csk(sk)->icsk_af_ops->rebuild_header(sk))
--		return -EHOSTUNREACH; /* Routing failure or similar. */
-+	if (inet_csk(sk)->icsk_af_ops->rebuild_header(sk)) {
-+		result = TCP_RETRANS_ROUTE_FAIL;
-+		err = -EHOSTUNREACH; /* Routing failure or similar. */
-+		goto out;
-+	}
-
- 	cur_mss = tcp_current_mss(sk);
- 	avail_wnd = tcp_wnd_end(tp) - TCP_SKB_CB(skb)->seq;
-@@ -3366,8 +3378,11 @@ int __tcp_retransmit_skb(struct sock *sk, struct sk_buff *skb, int segs)
- 	* our retransmit of one segment serves as a zero window probe.
- 	*/
- 	if (avail_wnd <= 0) {
--		if (TCP_SKB_CB(skb)->seq != tp->snd_una)
--			return -EAGAIN;
-+		if (TCP_SKB_CB(skb)->seq != tp->snd_una) {
-+			result = TCP_RETRANS_RCV_ZERO_WINDOW;
-+			err = -EAGAIN;
-+			goto out;
-+		}
- 		avail_wnd = cur_mss;
- 	}
-
-@@ -3379,11 +3394,17 @@ int __tcp_retransmit_skb(struct sock *sk, struct sk_buff *skb, int segs)
- 	}
- 	if (skb->len > len) {
- 		if (tcp_fragment(sk, TCP_FRAG_IN_RTX_QUEUE, skb, len,
--				 cur_mss, GFP_ATOMIC))
--			return -ENOMEM; /* We&apos;ll try again later. */
-+				 cur_mss, GFP_ATOMIC)) {
-+			result = TCP_RETRANS_NOMEM;
-+			err = -ENOMEM;  /* We&apos;ll try again later. */
-+			goto out;
-+		}
- 	} else {
--		if (skb_unclone_keeptruesize(skb, GFP_ATOMIC))
--			return -ENOMEM;
-+		if (skb_unclone_keeptruesize(skb, GFP_ATOMIC)) {
-+			result = TCP_RETRANS_NOMEM;
-+			err = -ENOMEM;
-+			goto out;
-+		}
-
- 		diff = tcp_skb_pcount(skb);
- 		tcp_set_skb_tso_segs(skb, cur_mss);
-@@ -3421,6 +3442,7 @@ int __tcp_retransmit_skb(struct sock *sk, struct sk_buff *skb, int segs)
- 				nskb->dev = NULL;
- 				err = tcp_transmit_skb(sk, nskb, 0, GFP_ATOMIC);
- 			} else {
-+				result = TCP_RETRANS_NOMEM;
- 				err = -ENOBUFS;
- 			}
- 		} tcp_skb_tsorted_restore(skb);
-@@ -3438,7 +3460,7 @@ int __tcp_retransmit_skb(struct sock *sk, struct sk_buff *skb, int segs)
- 				TCP_SKB_CB(skb)->seq, segs, err);
-
- 	if (likely(!err)) {
--		trace_tcp_retransmit_skb(sk, skb);
-+		result = TCP_RETRANS_SUCCESS;
- 	} else if (err != -EBUSY) {
- 		NET_ADD_STATS(sock_net(sk), LINUX_MIB_TCPRETRANSFAIL, segs);
- 	}
-@@ -3448,6 +3470,8 @@ int __tcp_retransmit_skb(struct sock *sk, struct sk_buff *skb, int segs)
- 	*/
- 	TCP_SKB_CB(skb)->sacked |= TCPCB_EVER_RETRANS;
-
-+out:
-+	trace_tcp_retransmit_skb(sk, skb, result);
- 	return err;
-}
-
---
-2.25.1
