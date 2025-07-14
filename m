@@ -1,84 +1,174 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D51E5367;
-	Mon, 14 Jul 2025 23:46:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 415F01CD1F;
+	Mon, 14 Jul 2025 23:54:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752536786; cv=none; b=DtNssmqmADDIdE5IXIHJ2BN27tcZ7bAJ3MCYfFdEPFn2RF9p7h/R0+v3ktc3Egmb/I1kih1QHIhPBSUEvFdZzrOytUPoIjEjv1dqpKeXAvRHpwixpRTLIh2JfsCWJYKn5EFj/Al7M2qutRAD3NjeowcG8/SXDVztz5Rg8j29SNw=
+	t=1752537295; cv=none; b=OewFVaze6V1GZBSP/Oj76t5lbx/WCi+C93jz4meSCM1/oOR9k/OzGDs3EWjFnSuy93nEUfsLJVt8MGTXa0UQbNFC6KtWQVcRllcOUsnElB7AFVO2O5WPY7bCx/vAyaMzXsni1IYoey86aRzgg35W7GLuUxAl9jtiDqAGa8wMLKY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752536786; c=relaxed/simple;
-	bh=gkzrKeuYhn6WyF4dG4lf+r1H4tUF4Ef69EciCVClaTk=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=tbdt7TUBRAZQAsTSZa27N6RqTgkpKgxNSUPeVlSWnLNdcmNFtOt8l23xY+dv+SIwc2Roxgpi0XpJH6WjzzWH3dyC41ERmZZjAzYPCXBtF6myq9nfddsASoEmt/WMRi6mZxt8EIFZA//KABz58+YCzPQpXyNYYB+/H9qF2gYIVQQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=A+evtysO; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1752537295; c=relaxed/simple;
+	bh=RF5FQP+eMAd2Jg+qBB19wJDPlGSH92fwMalkqtfYpiA=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=BAnSD/IivybwJxzOcpZqtMEeyIU0+BZz0n26jotdFq6/+fmx2oLtvoKMI6BQCQ0HuwNareEiB1rp20Dmkjh7w6QVLTvsE8BdxKlgwQ9gjYoODkUXBJKqvgoC+djl5LPX6ctlec5CY/zClF+89Yd2j2fVICNsJBHJduJ+UkzbxaU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qT+1i+SJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A+evtysO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0CB22C4CEED;
-	Mon, 14 Jul 2025 23:46:26 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qT+1i+SJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A6D10C4CEED;
+	Mon, 14 Jul 2025 23:54:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1752536786;
-	bh=gkzrKeuYhn6WyF4dG4lf+r1H4tUF4Ef69EciCVClaTk=;
+	s=k20201202; t=1752537294;
+	bh=RF5FQP+eMAd2Jg+qBB19wJDPlGSH92fwMalkqtfYpiA=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=A+evtysOQGd69ioWv6yqlm0LYX5pe1DpGB+vCYv5+/fcGsenngcaHogLRUp3fX7//
-	 xGwbwDqH79m5FyOwoAdInoAiieeULE7Pq8Pb3H5g2FVqtETIch1hi4Ke88Df4K9R4P
-	 ZkTzrCNDLMmhcZcPAtICpRq9U30cbaZkWylQjLYvGoPrJwFDwaGBZhDWh+fnDlqy57
-	 Fsu2S2JSAJZebbt2iD7Elp8ds8jTVBvbqHOmDcLsUjiraRhsrCyVgubv6c/G9IqehR
-	 Jw2gMRvKw1NJQkPbnuUdxp1xNunFX84ZOUXoLNVFsNn/iTLFlso2Rk6OdYUCkv5KI1
-	 +HAiVQLUIQxsg==
-Date: Mon, 14 Jul 2025 16:46:25 -0700
-From: Jakub Kicinski <kuba@kernel.org>
-To: <fan.yu9@zte.com.cn>
-Cc: <edumazet@google.com>, <kuniyu@amazon.com>, <ncardwell@google.com>,
- <davem@davemloft.net>, <netdev@vger.kernel.org>,
- <linux-kernel@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
- <yang.yang29@zte.com.cn>, <xu.xin16@zte.com.cn>, <tu.qiang35@zte.com.cn>,
- <jiang.kun2@zte.com.cn>
-Subject: Re: [PATCH net-next v4] tcp: extend tcp_retransmit_skb tracepoint
- with failure reasons
-Message-ID: <20250714164625.788f7044@kernel.org>
-In-Reply-To: <20250710100138588y-Q-MXtJiwV7aVn_cY0pb@zte.com.cn>
-References: <20250710100138588y-Q-MXtJiwV7aVn_cY0pb@zte.com.cn>
+	b=qT+1i+SJ+7QknqHTQBNUHAD7FEktNLURySkqyn3pCf7HK/o0UuZYuZQDXzQPk+LI3
+	 QJy0cj4MYHgDFaB2gt1uVGagdknr0dA5lx/aMsoKqcEbfgEX/Z6S5t2dAtAAATIZTr
+	 WaoJhfN/Iz6r7ec4uhG5OXsu2B/Uv9D0HRPYrdFWdfAUVG6rKRugWASuUYmCJg0xZd
+	 gOmZTeeiAi8qyY9yJND6g8q82jsetLKOdCD63/YEYSRKndXexrCTrReiK3NngQ6q0p
+	 ZrYOksYG3QbvVYnfViT/eHBNffZvzNbiU3FxpxDw+RnBiqM/j427Cwr4vfUythgLn+
+	 yJwGS+Z46996A==
+Date: Tue, 15 Jul 2025 08:54:51 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Jiri Olsa <olsajiri@gmail.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Oleg Nesterov <oleg@redhat.com>,
+ Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ x86@kernel.org, Song Liu <songliubraving@fb.com>, Yonghong Song
+ <yhs@fb.com>, John Fastabend <john.fastabend@gmail.com>, Hao Luo
+ <haoluo@google.com>, Steven Rostedt <rostedt@goodmis.org>, Alan Maguire
+ <alan.maguire@oracle.com>, David Laight <David.Laight@aculab.com>, Thomas
+ =?UTF-8?B?V2Vpw59zY2h1aA==?= <thomas@t-8ch.de>, Ingo Molnar
+ <mingo@kernel.org>
+Subject: Re: [PATCHv5 perf/core 09/22] uprobes/x86: Add uprobe syscall to
+ speed up uprobe
+Message-Id: <20250715085451.6a871a3b40c5ff19d3568956@kernel.org>
+In-Reply-To: <aHV2mrao8EMOTz8S@krava>
+References: <20250711082931.3398027-1-jolsa@kernel.org>
+	<20250711082931.3398027-10-jolsa@kernel.org>
+	<20250714173915.b9edd474742de46bcbe9c617@kernel.org>
+	<20250714093903.GP905792@noisy.programming.kicks-ass.net>
+	<20250714191935.577ec7df5ae8a73282cddce7@kernel.org>
+	<aHV2mrao8EMOTz8S@krava>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
+Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Thu, 10 Jul 2025 10:01:38 +0800 (CST) fan.yu9@zte.com.cn wrote:
-> Background
-> ==========
-> When TCP retransmits a packet due to missing ACKs, the
-> retransmission may fail for various reasons (e.g., packets
-> stuck in driver queues, sequence errors, or routing issues).
-> 
-> The original tcp_retransmit_skb tracepoint:
-> 'commit e086101b150a ("tcp: add a tracepoint for tcp retransmission")'
-> lacks visibility into these failure causes, making production
-> diagnostics difficult.
-> 
-> Solution
-> ========
-> Adds a "result" field to the tcp_retransmit_skb tracepoint,
-> enumerating with explicit failure cases:
-> TCP_RETRANS_ERR_DEFAULT (retransmit terminate unexpectedly)
-> TCP_RETRANS_IN_HOST_QUEUE (packet still queued in driver)
-> TCP_RETRANS_END_SEQ_ERROR (invalid end sequence)
-> TCP_RETRANS_NOMEM (retransmit no memory)
-> TCP_RETRANS_ROUTE_FAIL (routing failure)
-> TCP_RETRANS_RCV_ZERO_WINDOW (closed receiver window)
+On Mon, 14 Jul 2025 23:28:58 +0200
+Jiri Olsa <olsajiri@gmail.com> wrote:
 
-Have you tried to use this or perform some analysis of which of these
-reasons actually make sense to add? I'd venture a guess that
-IN_HOST_QUEUE will dominate in datacenter. Maybe RCV_ZERO_WINDOW
-can happen. Tracing ENOMEM is a waste of time, so is this:
+> On Mon, Jul 14, 2025 at 07:19:35PM +0900, Masami Hiramatsu wrote:
+> > On Mon, 14 Jul 2025 11:39:03 +0200
+> > Peter Zijlstra <peterz@infradead.org> wrote:
+> > 
+> > > On Mon, Jul 14, 2025 at 05:39:15PM +0900, Masami Hiramatsu wrote:
+> > > 
+> > > > > +	/*
+> > > > > +	 * Some of the uprobe consumers has changed sp, we can do nothing,
+> > > > > +	 * just return via iret.
+> > > > > +	 */
+> > > > 
+> > > > Do we allow consumers to change the `sp`? It seems dangerous
+> > > > because consumer needs to know whether it is called from
+> > > > breakpoint or syscall. Note that it has to set up ax, r11
+> > > > and cx on the stack correctly only if it is called from syscall,
+> > > > that is not compatible with breakpoint mode.
+> > > > 
+> > > > > +	if (regs->sp != sp)
+> > > > > +		return regs->ax;
+> > > > 
+> > > > Shouldn't we recover regs->ip? Or in this case does consumer has
+> > > > to change ip (== return address from trampline) too?
+> > > > 
+> > > > IMHO, it should not allow to change the `sp` and `ip` directly
+> > > > in syscall mode. In case of kprobes, kprobe jump optimization
+> > > > must be disabled explicitly (e.g. setting dummy post_handler)
+> > > > if the handler changes `ip`.
+> > > > 
+> > > > Or, even if allowing to modify `sp` and `ip`, it should be helped
+> > > > by this function, e.g. stack up the dummy regs->ax/r11/cx on the
+> > > > new stack at the new `regs->sp`. This will allow modifying those
+> > > > registries transparently as same as breakpoint mode.
+> > > > In this case, I think we just need to remove above 2 lines.
+> > > 
+> > > There are two syscall return paths; the 'normal' is sysret and for that
+> > > you need to undo all things just right.
+> > > 
+> > > The other is IRET. At which point we can have whatever state we want,
+> > > including modified SP.
+> > > 
+> > > See arch/x86/entry/syscall_64.c:do_syscall_64() and
+> > > arch/x86/entry/entry_64.S:entry_SYSCALL_64
+> > > 
+> > > The IRET path should return pt_regs as is from an interrupt/exception
+> > > very much like INT3.
+> > 
+> > OK, so SYSRET case, we need to follow;
+> > 
+> > sys_uprobe -> do_syscall_64 -> entry_SYSCALL_64 -> trampoline -> retaddr
+> > 
+> > But using IRET to return, we can skip returning to trampoline,
+> > 
+> > sys_uprobe -> do_syscall_64 -> entry_SYSCALL_64 -> regs->ip
+> 
+> the handler gets the original breakpoint address, it's set in:
+> 
+>         regs->ip  = ax_r11_cx_ip[3] - 5;
+> 
+> and at the point we do:
+> 
+>         /*
+>          * Some of the uprobe consumers has changed sp, we can do nothing,
+>          * just return via iret.
+>          */
+>         if (regs->sp != sp)
+>                 return regs->ax;
+> 
+> 
+> .. regs->ip value wasn't restored for the trampoline's return address,
+> so iret will skip the trampoline
 
- 		if (unlikely(before(TCP_SKB_CB(skb)->end_seq, tp->snd_una))) {
-            >>>>>	WARN_ON_ONCE(1);  <<<<<<<<
--			return -EINVAL;
-+			result = TCP_RETRANS_END_SEQ_ERROR;
+Ah, OK. So unless we restore regs->cx = regs->ip and 
+regs->r11 = regs->flags, it automatically use IRET. Got it.
+
+> 
+> but perhaps we could do the extra check below to land on the next instruction?
+
+Hmm, can you clarify the required condition of changing regs
+in the consumers? regs->sp change need to be handled by the
+IRET, but other changes can be handled by trampoline. Is that
+correct?
+
+Thank you,
+
+> 
+> jirka
+> 
+> 
+> ---
+> diff --git a/arch/x86/kernel/uprobes.c b/arch/x86/kernel/uprobes.c
+> index 043d826295a3..4318517aa852 100644
+> --- a/arch/x86/kernel/uprobes.c
+> +++ b/arch/x86/kernel/uprobes.c
+> @@ -817,8 +817,12 @@ SYSCALL_DEFINE0(uprobe)
+>  	 * Some of the uprobe consumers has changed sp, we can do nothing,
+>  	 * just return via iret.
+>  	 */
+> -	if (regs->sp != sp)
+> +	if (regs->sp != sp) {
+> +		/* skip the trampoline call */
+> +		if (ax_r11_cx_ip[3] - 5 == regs->ip)
+> +			regs->ip += 5;
+>  		return regs->ax;
+> +	}
+>  
+>  	regs->sp -= sizeof(ax_r11_cx_ip);
+>  
+
+
 -- 
-pw-bot: cr
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
