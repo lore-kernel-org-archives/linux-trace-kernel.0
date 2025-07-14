@@ -1,69 +1,103 @@
-Received: from relay.hostedemail.com (smtprelay0017.hostedemail.com [216.40.44.17])
+Received: from mail-internal.sh.cz (mail-internal.sh.cz [95.168.196.40])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF2AA11CBA;
-	Mon, 14 Jul 2025 14:32:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E55625A2D1;
+	Mon, 14 Jul 2025 14:37:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.168.196.40
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752503574; cv=none; b=UYsFxr25xjluu8yJuyJs+XToJAyeMibNtE7/a08ZMRDSwDludc399fTmJDl1nIFL8s8p6B1YetwldmnNQqT9EvJkCeGMGFYLo3t+YJsBK/pWZ+HVffpoSDXyntTJOQKepmhldRKXa4p8ha6wK6182FW0DviW5BH18Fbuhbwrwso=
+	t=1752503839; cv=none; b=aQAOfIpz+KtP1uQS7WEsIQLUQ3DAD6Wi1joeyDghBJyEj5tqznPMIQKAI3FJruYUG/eMRGO1oHpAZTI4FUtapfgBbQk6zsXuR/zxHsKvrhnfzg21OKcPwRjlT7pt7whhNIevRMVyYJh2OX4P1HN4lhvNAA/eYycq99JXDs1hpvc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752503574; c=relaxed/simple;
-	bh=y8Zyu954SfhFDdcRBZhN33yK86h816ltT5DQDQhAZ0g=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=FoaJEWakFCTE3vhyWMiRCCsHZM+OCPYCSZEKHM30fVkdoOnaetA1aY6Zeyb07ELZG012QqDto2cpX/ljhsymF/eKKaPJl1x9mO6TM5RjAPjofl+Eos0OgJOE7tdbM4aaFiPg/BTfWytVmAuIXnyTSxO1fBPBus4xYE+ptiN2218=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf16.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay05.hostedemail.com (Postfix) with ESMTP id 32B055690E;
-	Mon, 14 Jul 2025 14:32:45 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf16.hostedemail.com (Postfix) with ESMTPA id 7BE4E2000D;
-	Mon, 14 Jul 2025 14:32:43 +0000 (UTC)
-Date: Mon, 14 Jul 2025 10:32:48 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] tracing: Remove "__attribute__()" from the type
- field of event format
-Message-ID: <20250714103248.0673aba8@batman.local.home>
-In-Reply-To: <20250714231412.73e511c5c9524cde5d475770@kernel.org>
-References: <175197567999.977073.8989204607899013923.stgit@mhiramat.tok.corp.google.com>
-	<175197568917.977073.2201559708302320631.stgit@mhiramat.tok.corp.google.com>
-	<20250709131107.397a3278@batman.local.home>
-	<20250711143703.60a1a9a9f31a45f2000eec9d@kernel.org>
-	<20250711120322.4ddb9b39@batman.local.home>
-	<20250712204524.13ece418f90ea66d4bd0e598@kernel.org>
-	<20250712103732.79c7b9e1@batman.local.home>
-	<20250714231412.73e511c5c9524cde5d475770@kernel.org>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1752503839; c=relaxed/simple;
+	bh=ON5W1OOwsqtjKlSAI23AxoIarfROCOeFz96KIcbGA8A=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=JpwdIADHZEJu2ohQAtHwaUiPB/+IDgId/wFonNJZ1iNHCFGR8O9tMh1NBzvduCXRGtd8QGw9g4HntnD4YT9foSbMCDiHh4TgttYn732vr7/LT1MKWv9IQI3X6Le3fyH9wGBE0LGmrXkV1TQ6AZnUQWC0IceP8Nyywj9IzyEdGq4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cdn77.com; spf=pass smtp.mailfrom=cdn77.com; dkim=pass (1024-bit key) header.d=cdn77.com header.i=@cdn77.com header.b=IX13G8BJ; arc=none smtp.client-ip=95.168.196.40
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cdn77.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cdn77.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=cdn77.com header.i=@cdn77.com header.b="IX13G8BJ"
+DKIM-Signature: a=rsa-sha256; t=1752503828; x=1753108628; s=dkim2019; d=cdn77.com; c=relaxed/relaxed; v=1; bh=NTis1DRQ6YWvIefOVgBik3VycLjAWOLQXvC3R0BRRP4=; h=From:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Transfer-Encoding;
+   b=IX13G8BJ/CadbLQZSJoUtz8zeSdaXtwa67CZ0BspEDyNiJgMfnCmEqpRh4BA+Oo21JQRRdWHq0ENp8Sj+/si3wOktTM/+4pnrcIDnbeEG7Z5LiGJBKlG6wfBmLcUJRHHwAGEYDyt+yUclb7GU1RhxYTQDTuD4hIMB1Mm7CJPEwk=
+Received: from osgiliath.superhosting.cz ([95.168.203.222])
+        by mail.sh.cz (14.1.0 build 16 ) with ASMTP (SSL) id 202507141637061503;
+        Mon, 14 Jul 2025 16:37:06 +0200
+From: Daniel Sedlak <daniel.sedlak@cdn77.com>
+To: "David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Neal Cardwell <ncardwell@google.com>,
+	Kuniyuki Iwashima <kuniyu@google.com>,
+	David Ahern <dsahern@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Shakeel Butt <shakeel.butt@linux.dev>,
+	Yosry Ahmed <yosry.ahmed@linux.dev>,
+	linux-mm@kvack.org,
+	netdev@vger.kernel.org
+Cc: Daniel Sedlak <daniel.sedlak@cdn77.com>,
+	linux-trace-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Subject: [PATCH v2 net-next 0/2] account for TCP memory pressure signaled by cgroup
+Date: Mon, 14 Jul 2025 16:36:11 +0200
+Message-ID: <20250714143613.42184-1-daniel.sedlak@cdn77.com>
+X-Mailer: git-send-email 2.50.1
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Server: rspamout04
-X-Rspamd-Queue-Id: 7BE4E2000D
-X-Stat-Signature: djbo74g3ejbp1ccpjbr5jcx51nmsdnrz
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1/Z2Ik69s9g68g35xz+FYMx443Wo7Gyzi4=
-X-HE-Tag: 1752503563-818362
-X-HE-Meta: U2FsdGVkX1/vDIkwvVBYX0cCb3zLhGDtCX1e0C1WzdzIZY9HE3qann50Q40/Pmo3qC3Hslah5Qm0Zwn337LfCoCblCB+GVgh+0HoLBVo/mIC/qm0t87ki/4jN6HBXWxtMEHu6jlAtK7rhATeIe28NKP4/dzT7IdZF6cvqyl3zScHGtKMLsSOGf/eYbm80OzNhohshS31HEKtUvRaN48X/o/dw4350/gVw/b0EFmTrgkCd/ILLLSiDJBpJPwPHV1qL5l7sgielu7GQ13K8VgwlLAyA38q/VaVYCx1yla1iclOLs6byDgGXIWu7n5CFPpbYC0xmasakLFpX8k5ykyYNyQrYeNr5GOY
+Content-Transfer-Encoding: 8bit
+X-CTCH: RefID="str=0001.0A006396.68751624.0053,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0"; Spam="Unknown"; VOD="Unknown"
 
-On Mon, 14 Jul 2025 23:14:12 +0900
-Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
+Greetings kernel wizards,
 
-> Hmm, is this called unless loading modules? It seems that the
-> function is only kicked from trace_module_notify() -> trace_module_add_evals() -> trace_insert_eval_map() (but if mod has any trace_evals)
+To summarize from the commit messages, the attached patches are the
+result of our recent debugging sessions, where we were hunting sudden
+TCP network throughput drops, where the throughput dropped from tens of
+Gbps to a few Mbps for an undeterministic amount of time.
 
-As it has to work on non-module events, yes it is called.
+The first patch adds a new counter for netstat, so users can notice that
+the sockets are marked as under pressure. The second patch adds a new
+tracepoint so it is easier to pinpoint which exact cgroup is having
+difficulties.
 
-late_init_syscall() -> trace_eval_init() -> queue_work(eval_map_work)
+Individual commit messages should contain more detailed reasoning.
 
-  eval_map_work_func() -> trace_insert_eval_map() -> ...
+Thanks!
+Daniel
 
--- Steve
+Changes:
+
+v1 -> v2:
+Add tracepoint
+Link: https://lore.kernel.org/netdev/20250707105205.222558-1-daniel.sedlak@cdn77.com/
+
+Daniel Sedlak (1):
+  tcp: account for memory pressure signaled by cgroup
+
+Matyas Hurtik (1):
+  mm/vmpressure: add tracepoint for socket pressure detection
+
+ .../networking/net_cachelines/snmp.rst        |  1 +
+ include/net/tcp.h                             | 14 ++++++-----
+ include/trace/events/memcg.h                  | 25 +++++++++++++++++++
+ include/uapi/linux/snmp.h                     |  1 +
+ mm/vmpressure.c                               |  3 +++
+ net/ipv4/proc.c                               |  1 +
+ 6 files changed, 39 insertions(+), 6 deletions(-)
+
+cc: linux-trace-kernel@vger.kernel.org
+cc: linux-doc@vger.kernel.org
+cc: Steven Rostedt <rostedt@goodmis.org>
+cc: Masami Hiramatsu <mhiramat@kernel.org>
+cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+
+base-commit: e96ee511c906c59b7c4e6efd9d9b33917730e000
+-- 
+2.39.5
 
