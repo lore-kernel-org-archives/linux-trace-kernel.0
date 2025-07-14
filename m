@@ -1,103 +1,110 @@
-Received: from mail-internal.sh.cz (mail-internal.sh.cz [95.168.196.40])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E55625A2D1;
-	Mon, 14 Jul 2025 14:37:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.168.196.40
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73F01246778;
+	Mon, 14 Jul 2025 15:04:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752503839; cv=none; b=aQAOfIpz+KtP1uQS7WEsIQLUQ3DAD6Wi1joeyDghBJyEj5tqznPMIQKAI3FJruYUG/eMRGO1oHpAZTI4FUtapfgBbQk6zsXuR/zxHsKvrhnfzg21OKcPwRjlT7pt7whhNIevRMVyYJh2OX4P1HN4lhvNAA/eYycq99JXDs1hpvc=
+	t=1752505444; cv=none; b=s0rd73/RBnzXYJqiPrnHop1rgKJxftctdfLdB+k/FgkdAkS3nFjUg8qb0ARqgnXgOJkjijHZ8YB2/YgUQaJgZ+pRlNna/8ZP9OYYNJo0MLRrht4Dfni6akKy4ATLIP+nWNLo1NGnupzdczYtDR6flIM4LlSq5S8KY4LNi/N8930=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752503839; c=relaxed/simple;
-	bh=ON5W1OOwsqtjKlSAI23AxoIarfROCOeFz96KIcbGA8A=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=JpwdIADHZEJu2ohQAtHwaUiPB/+IDgId/wFonNJZ1iNHCFGR8O9tMh1NBzvduCXRGtd8QGw9g4HntnD4YT9foSbMCDiHh4TgttYn732vr7/LT1MKWv9IQI3X6Le3fyH9wGBE0LGmrXkV1TQ6AZnUQWC0IceP8Nyywj9IzyEdGq4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cdn77.com; spf=pass smtp.mailfrom=cdn77.com; dkim=pass (1024-bit key) header.d=cdn77.com header.i=@cdn77.com header.b=IX13G8BJ; arc=none smtp.client-ip=95.168.196.40
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cdn77.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cdn77.com
+	s=arc-20240116; t=1752505444; c=relaxed/simple;
+	bh=7kzQgCqlTjkjlznWYkmhokDiFU/LWNISMUtL8pwfR3s=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DneE1y0c1lIq85+qj2zSCh5ayNMuzNLcuOUh7Rtjl5I/cKLvo3pWciDl7/7dl5+UAA8UKS0OJOm88971ACp0sRylms7vkOkbHensna8bLiwIbzUngjJBBGxB86qv8FCeEZAOqIQcuyMYd4sLzTm+h3xh8QKSJVCXb2QZ31HONqI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=EIbDYaxC; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=cdn77.com header.i=@cdn77.com header.b="IX13G8BJ"
-DKIM-Signature: a=rsa-sha256; t=1752503828; x=1753108628; s=dkim2019; d=cdn77.com; c=relaxed/relaxed; v=1; bh=NTis1DRQ6YWvIefOVgBik3VycLjAWOLQXvC3R0BRRP4=; h=From:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Transfer-Encoding;
-   b=IX13G8BJ/CadbLQZSJoUtz8zeSdaXtwa67CZ0BspEDyNiJgMfnCmEqpRh4BA+Oo21JQRRdWHq0ENp8Sj+/si3wOktTM/+4pnrcIDnbeEG7Z5LiGJBKlG6wfBmLcUJRHHwAGEYDyt+yUclb7GU1RhxYTQDTuD4hIMB1Mm7CJPEwk=
-Received: from osgiliath.superhosting.cz ([95.168.203.222])
-        by mail.sh.cz (14.1.0 build 16 ) with ASMTP (SSL) id 202507141637061503;
-        Mon, 14 Jul 2025 16:37:06 +0200
-From: Daniel Sedlak <daniel.sedlak@cdn77.com>
-To: "David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Neal Cardwell <ncardwell@google.com>,
-	Kuniyuki Iwashima <kuniyu@google.com>,
-	David Ahern <dsahern@kernel.org>,
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="EIbDYaxC"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=rE0ipn3kKI2mA1FsjVZAKGKcjbPn01lZj8/tcXHVRzI=; b=EIbDYaxCcw/NxNHtcL5sQaMn+o
+	UXadanzF9T7fTGHeBhlz/OUBeu46P/p83dm2IPmgruw0zP+wbhhoQlCkyOPP1at+LL6bvBjVujMB6
+	aczpzZm+UKtPvy2G+idbaalzAASVItqck6LzmNRlPiWpPl/PyEx/ar9n3fJ93Gqway9asI6tNsjpy
+	TxBcushnJ9MAl1cwtrvpmHXuh++0DtnYidBF1l5ttgKk/dJdptkjllLxBR/cSHqkeMQ8T9faG5Qee
+	oKNGp2A7lIQhXGZd5IW+NKOqinLhJYTmywf1AM332HHTBEWDVtqLzzPa2s3lthUZWwqbZhQB2WrQ0
+	+ZgxnIQQ==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1ubKiZ-00000009mK7-1F6h;
+	Mon, 14 Jul 2025 15:03:48 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 2D2C33001AA; Mon, 14 Jul 2025 17:03:46 +0200 (CEST)
+Date: Mon, 14 Jul 2025 17:03:46 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Steven Rostedt <rostedt@kernel.org>, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org,
+	x86@kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Ingo Molnar <mingo@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Indu Bhagat <indu.bhagat@oracle.com>,
+	"Jose E. Marchesi" <jemarch@gnu.org>,
+	Beau Belgrave <beaub@linux.microsoft.com>,
+	Jens Remus <jremus@linux.ibm.com>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
 	Andrew Morton <akpm@linux-foundation.org>,
-	Shakeel Butt <shakeel.butt@linux.dev>,
-	Yosry Ahmed <yosry.ahmed@linux.dev>,
-	linux-mm@kvack.org,
-	netdev@vger.kernel.org
-Cc: Daniel Sedlak <daniel.sedlak@cdn77.com>,
-	linux-trace-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Subject: [PATCH v2 net-next 0/2] account for TCP memory pressure signaled by cgroup
-Date: Mon, 14 Jul 2025 16:36:11 +0200
-Message-ID: <20250714143613.42184-1-daniel.sedlak@cdn77.com>
-X-Mailer: git-send-email 2.50.1
+	Jens Axboe <axboe@kernel.dk>, Florian Weimer <fweimer@redhat.com>,
+	Sam James <sam@gentoo.org>
+Subject: Re: [PATCH v13 09/14] unwind deferred: Use SRCU
+ unwind_deferred_task_work()
+Message-ID: <20250714150346.GD4105545@noisy.programming.kicks-ass.net>
+References: <20250708012239.268642741@kernel.org>
+ <20250708012359.172959778@kernel.org>
+ <20250714135638.GC4105545@noisy.programming.kicks-ass.net>
+ <20250714102140.4886afa0@batman.local.home>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CTCH: RefID="str=0001.0A006396.68751624.0053,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0"; Spam="Unknown"; VOD="Unknown"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250714102140.4886afa0@batman.local.home>
 
-Greetings kernel wizards,
+On Mon, Jul 14, 2025 at 10:21:40AM -0400, Steven Rostedt wrote:
+> On Mon, 14 Jul 2025 15:56:38 +0200
+> Peter Zijlstra <peterz@infradead.org> wrote:
+> 
+> > Please; something like so:
+> > 
+> > --- a/include/linux/srcu.h
+> > +++ b/include/linux/srcu.h
+> > @@ -524,4 +524,9 @@ DEFINE_LOCK_GUARD_1(srcu, struct srcu_st
+> >  		    srcu_read_unlock(_T->lock, _T->idx),
+> >  		    int idx)
+> >  
+> > +DEFINE_LOCK_GUARD_1(srcu_lite, struct srcu_struct,
+> > +		    _T->idx = srcu_read_lock_lite(_T->lock),
+> > +		    srcu_read_unlock_lite(_T->lock, _T->idx),
+> > +		    int idx)
+> > +
+> >  #endif
+> > --- a/kernel/unwind/deferred.c
+> > +++ b/kernel/unwind/deferred.c
+> > @@ -165,7 +165,7 @@ static void unwind_deferred_task_work(st
+> >  
+> >  	cookie = info->id.id;
+> >  
+> > -	guard(mutex)(&callback_mutex);
+> > +	guard(srcu_lite)(&unwind_srcu);
+> >  	list_for_each_entry(work, &callbacks, list) {
+> >  		work->func(work, &trace, cookie);
+> >  	}
+> 
+> I think I rather have a scoped_guard() here. One thing that bothers me
+> about the guard() logic is that it could easily start to "leak"
+> protection. That is, the unwind_srcu is only needed for walking the
+> list. The reason I chose to open code the protection, is because I
+> wanted to distinctly denote where the end of the protection was.
 
-To summarize from the commit messages, the attached patches are the
-result of our recent debugging sessions, where we were hunting sudden
-TCP network throughput drops, where the throughput dropped from tens of
-Gbps to a few Mbps for an undeterministic amount of time.
-
-The first patch adds a new counter for netstat, so users can notice that
-the sockets are marked as under pressure. The second patch adds a new
-tracepoint so it is easier to pinpoint which exact cgroup is having
-difficulties.
-
-Individual commit messages should contain more detailed reasoning.
-
-Thanks!
-Daniel
-
-Changes:
-
-v1 -> v2:
-Add tracepoint
-Link: https://lore.kernel.org/netdev/20250707105205.222558-1-daniel.sedlak@cdn77.com/
-
-Daniel Sedlak (1):
-  tcp: account for memory pressure signaled by cgroup
-
-Matyas Hurtik (1):
-  mm/vmpressure: add tracepoint for socket pressure detection
-
- .../networking/net_cachelines/snmp.rst        |  1 +
- include/net/tcp.h                             | 14 ++++++-----
- include/trace/events/memcg.h                  | 25 +++++++++++++++++++
- include/uapi/linux/snmp.h                     |  1 +
- mm/vmpressure.c                               |  3 +++
- net/ipv4/proc.c                               |  1 +
- 6 files changed, 39 insertions(+), 6 deletions(-)
-
-cc: linux-trace-kernel@vger.kernel.org
-cc: linux-doc@vger.kernel.org
-cc: Steven Rostedt <rostedt@goodmis.org>
-cc: Masami Hiramatsu <mhiramat@kernel.org>
-cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-
-base-commit: e96ee511c906c59b7c4e6efd9d9b33917730e000
--- 
-2.39.5
-
+Sure. But the point was more to:
+ - use scru_lite; and,
+ - use guards
