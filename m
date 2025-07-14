@@ -1,148 +1,194 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AAD42441A0;
-	Mon, 14 Jul 2025 12:53:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EB3D149C51;
+	Mon, 14 Jul 2025 13:29:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752497604; cv=none; b=QzMUOHtcp0SahLGi816epjygmQK8pEY7++evrWeeJs2L9/CBxkQazE0v5ZIdf/Zv+ikunlAAQj4CtWQSuQp0sVoMo2boOSQzfxpParB4CCx/aA9w1o8tq7aBJgm6M0J5LpmpO9HvrclLmHS7aa9RECd4s9D5R5E9GeCeKGqr9SU=
+	t=1752499799; cv=none; b=nmBYrdYGHAk4XLOezVt+jYG2TpO9VsrC0i04ZGBKslryrYnt1PiMXTtwfRBlPV7jcwdl9bBSYxs/bW8FTQ5QZtIlhgfO6gHUdGsiMJ6frv+6TM7ar96mX9CUw/pItpMMkF38iU2TL3juv82YWwOOHQd7Oz++yEUYKtkMyLkquIo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752497604; c=relaxed/simple;
-	bh=Yk7o+6QKjO2xscEPPdtN+Wix7XgzMepfTG8R21PfXDA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=jYWLugX7CAKDxOfIOOF/44UtmaEXxIha/tUcUCmrLfO5TzcT5tDSA3g0YNmDurJfkoiX1wsVNdfwyvRyE5GX+A0Teko76TJzBzMfyOjluvoY5dGqMzWyGX65KtHn4Ri5689kPWTwqhmN9ywJ/vmpS/LQvHd9OlATx29dGuMieuw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=HSAA6N3i; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1752499799; c=relaxed/simple;
+	bh=uSDvZ7VTvhMtab969Fj7Ke5hLfJuIyLW2Vi1cGLIv8c=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CGZ0HxKBeIHgFyQpjkSPss6ygE35Ick/2fCxLPuQfydJV6YAx+hbJGQQUT7XbbkWb9kfkT4FP10Xk/PrtaZsoVeHPCpQ1+oXf1HNWOGY+OwNCmhvsHesGFftNN8qXTYLJton8kxF53fPab+iGd4UK+cflst0g6tX/ysLp+rdjsE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=QaRYtQUT; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="HSAA6N3i"
-Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 56ECU9ns000345;
-	Mon, 14 Jul 2025 12:52:21 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=Dmi3t6
-	tQeygD99OL+wSK/MG41ey1/Qsgx6cZ4EEJJp0=; b=HSAA6N3iaC9khs3r7wAPmT
-	DC9xXRagVCk+cnyU9Xh/NOCbsga74dnW7c6Hc9td/k8YK1HnARyfAW/zfLNDq6Aj
-	O7ZrfJY4Dv2VcOoxzZ5Y4gtjAhXk3eG0FkqR3EAbkcqLjen1KCbfhDW6pPAvrx8a
-	fENDULULW31D2Dj+f9TCUi4ZqOpwiBeT57cZrEPPrMAQLu1ju5zBXOOJg4HWZp5+
-	u8mgCmeZFP0+34UYeYLNUQ2qnp1t/oR6NsJeIpjSjjr/njUpsiWLFaVhKj8aN9qM
-	YXE7hk8deB1zaZxGyrkD755SNUTaf6p7ugZnTwX9kdGIkHFDNVqvO1h8KyzdZKTw
-	==
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 47ufc6se70-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 14 Jul 2025 12:52:20 +0000 (GMT)
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 56E8WYMI008150;
-	Mon, 14 Jul 2025 12:52:20 GMT
-Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 47v2e0e2h2-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 14 Jul 2025 12:52:19 +0000
-Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
-	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 56ECqFQ735193566
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 14 Jul 2025 12:52:15 GMT
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id CADE720043;
-	Mon, 14 Jul 2025 12:52:15 +0000 (GMT)
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 865CE20040;
-	Mon, 14 Jul 2025 12:52:14 +0000 (GMT)
-Received: from [9.111.200.219] (unknown [9.111.200.219])
-	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Mon, 14 Jul 2025 12:52:14 +0000 (GMT)
-Message-ID: <98eeabe4-4458-4440-86f1-fc7fa55dfbbd@linux.ibm.com>
-Date: Mon, 14 Jul 2025 14:52:13 +0200
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="QaRYtQUT"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=pLHtmwVxblwTxA9MgozfbATAwzmb9kfhVgNP2IA4oMs=; b=QaRYtQUT8DMpCfibdprLAmU2yP
+	s6O31SaFATCU/6kXR25bnBKQDVCedhjAlRRXmVan5tWPqWOZcv7tVMfpG9exJ28l6GxzxB+uxYSNj
+	wOcJUw7oBaKIFgS6MfzlbfjHEIYJihiwqUJ3J6JbfI/Cytmb9XVIwWgBD3ExsOtvcWVmx+ehLJUeQ
+	QCO9FS7+H/RYp/PSOotRq/8iL/xAx9/nqbDNglsbFm6ejOlZAgzgRL47Low1Mkl1cMAKerFC6ZW/5
+	nOjzbrrsbBWh5gz5sQghWUoRysrTMWEJ+1w5F0v459MxIn2MDZOWQUF43xb+ATuRG7XS+H3mSAuf1
+	CzpLgnJg==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1ubJFR-00000009llQ-3hx3;
+	Mon, 14 Jul 2025 13:29:38 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id BC1CA30039A; Mon, 14 Jul 2025 15:29:36 +0200 (CEST)
+Date: Mon, 14 Jul 2025 15:29:36 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Steven Rostedt <rostedt@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	bpf@vger.kernel.org, x86@kernel.org,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Ingo Molnar <mingo@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Indu Bhagat <indu.bhagat@oracle.com>,
+	"Jose E. Marchesi" <jemarch@gnu.org>,
+	Beau Belgrave <beaub@linux.microsoft.com>,
+	Jens Remus <jremus@linux.ibm.com>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Jens Axboe <axboe@kernel.dk>, Florian Weimer <fweimer@redhat.com>,
+	Sam James <sam@gentoo.org>
+Subject: Re: [PATCH v13 07/14] unwind_user/deferred: Make unwind deferral
+ requests NMI-safe
+Message-ID: <20250714132936.GB4105545@noisy.programming.kicks-ass.net>
+References: <20250708012239.268642741@kernel.org>
+ <20250708012358.831631671@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v13 02/14] unwind_user: Add frame pointer support
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Steven Rostedt <rostedt@kernel.org>, linux-kernel@vger.kernel.org,
-        linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org,
-        x86@kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Josh Poimboeuf <jpoimboe@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Indu Bhagat <indu.bhagat@oracle.com>,
-        "Jose E. Marchesi" <jemarch@gnu.org>,
-        Beau Belgrave <beaub@linux.microsoft.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Jens Axboe <axboe@kernel.dk>, Florian Weimer <fweimer@redhat.com>,
-        Sam James <sam@gentoo.org>, Heiko Carstens <hca@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>
-References: <20250708012239.268642741@kernel.org>
- <20250708012357.982692711@kernel.org>
- <d3279556-9bb6-429d-a037-fe279c5e3c67@linux.ibm.com>
- <20250710112147.41585f6a@batman.local.home>
- <155f22cb-b986-4d22-a853-6de49a1c2e03@linux.ibm.com>
- <20250710130859.41f3d5d0@batman.local.home>
-Content-Language: en-US
-From: Jens Remus <jremus@linux.ibm.com>
-Organization: IBM Deutschland Research & Development GmbH
-In-Reply-To: <20250710130859.41f3d5d0@batman.local.home>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Authority-Analysis: v=2.4 cv=Je68rVKV c=1 sm=1 tr=0 ts=6874fd84 cx=c_pps a=5BHTudwdYE3Te8bg5FgnPg==:117 a=5BHTudwdYE3Te8bg5FgnPg==:17 a=IkcTkHD0fZMA:10 a=Wb1JkmetP80A:10 a=VnNF1IyMAAAA:8 a=0MvmVg10__VCTnNSAJcA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNzE0MDA3MiBTYWx0ZWRfX0GmA12MjXPl0 mBleebw0c2P9DZSyzdVI/rFwyNpnKJuNwnipHu0cbHFskKcidiy6ktJrwTumFiA1pla+/R9Kkg8 ExFHZVn7WB4+Ve7gAZZub7bJBNJLq/2RlsS1Xx8H/nb02b+0/+cIuqonSJJf/1+3OqFuVQHF8kg
- 6DmWruXn4r8mxIm3n2rvEg64x0SYfhh48L5clhqbjjjJDNqjaW8bPJxidrfJKqEXLQalez1kBTE RHOZLgfa/I1ON24ruFHu88Bp8sPdxK3V6lM8I+MCuBWEW14hehWKJ9Fczb0Lq3PgVVbO4qNcXjk oBPCVzaPB3JwXG39TH2uHqsBCpsleaCU5ospb4AjU+ZqIVgWvN2AFJs9HAXm676t5Avv1N7gEh/
- 09VYeV53/4d29g21i51TT+ddWkVB3qJblodQp0HbdZ+ErmqMYZr/uKkHSTFiahhXixBX50P/
-X-Proofpoint-GUID: Oh6bCUxjZdZRr-S4SJxqEUAcMtwALGGj
-X-Proofpoint-ORIG-GUID: Oh6bCUxjZdZRr-S4SJxqEUAcMtwALGGj
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
- definitions=2025-07-14_01,2025-07-14_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
- malwarescore=0 lowpriorityscore=0 suspectscore=0 adultscore=0
- priorityscore=1501 clxscore=1015 bulkscore=0 phishscore=0 spamscore=0
- mlxlogscore=999 mlxscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2507140072
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250708012358.831631671@kernel.org>
 
-On 10.07.2025 19:08, Steven Rostedt wrote:
-> On Thu, 10 Jul 2025 17:41:36 +0200
-> Jens Remus <jremus@linux.ibm.com> wrote:
+On Mon, Jul 07, 2025 at 09:22:46PM -0400, Steven Rostedt wrote:
+> From: Steven Rostedt <rostedt@goodmis.org>
 > 
->> cfa + frame->ra_off could be aligned by chance.  So could
->> cfa + frame->fp_off be as well of course.
->>
->> On s390 the CFA must be aligned (as the SP must be aligned) and the
->> FP and RA offsets from CFA must be aligned, as pointer / 64-bit integers
->> (such as 64-bit register values) must be aligned as well.
->>
->> So the CFA (and/or offset), FP offset, and RA offset could be validated
->> individually.  Not sure if that would be over engineering though.
+> Make unwind_deferred_request() NMI-safe so tracers in NMI context can
+> call it and safely request a user space stacktrace when the task exits.
 > 
-> I wonder if we should just validate that cfa is aligned? Would that work?
+> Note, this is only allowed for architectures that implement a safe
+> cmpxchg. If an architecture requests a deferred stack trace from NMI
+> context that does not support a safe NMI cmpxchg, it will get an -EINVAL.
+> For those architectures, they would need another method (perhaps an
+> irqwork), to request a deferred user space stack trace. That can be dealt
+> with later if one of theses architectures require this feature.
 > 
-> I would think that ra_off and fp_off should be aligned as well and if
-> cfa is aligned then it would still be aligned when adding those offsets.
+> Suggested-by: Peter Zijlstra <peterz@infradead.org>
 
-Makes sense, if the base assumption is that the SFrame information is
-valid and the primary intend is to check that the used CFA base register
-(i.e. SP or FP) was aligned.
+How's this instead?
 
-Regards,
-Jens
--- 
-Jens Remus
-Linux on Z Development (D3303)
-+49-7031-16-1128 Office
-jremus@de.ibm.com
-
-IBM
-
-IBM Deutschland Research & Development GmbH; Vorsitzender des Aufsichtsrats: Wolfgang Wendt; Geschäftsführung: David Faller; Sitz der Gesellschaft: Böblingen; Registergericht: Amtsgericht Stuttgart, HRB 243294
-IBM Data Privacy Statement: https://www.ibm.com/privacy/
-
+---
+--- a/kernel/unwind/deferred.c
++++ b/kernel/unwind/deferred.c
+@@ -12,6 +12,40 @@
+ #include <linux/slab.h>
+ #include <linux/mm.h>
+ 
++/*
++ * For requesting a deferred user space stack trace from NMI context
++ * the architecture must support a safe cmpxchg in NMI context.
++ * For those architectures that do not have that, then it cannot ask
++ * for a deferred user space stack trace from an NMI context. If it
++ * does, then it will get -EINVAL.
++ */
++#ifdef CONFIG_ARCH_HAVE_NMI_SAFE_CMPXCHG
++#define UNWIND_NMI_SAFE 1
++static inline bool try_assign_cnt(struct unwind_task_info *info, u32 cnt)
++{
++	u32 zero = 0;
++	return try_cmpxchg(&info->id.cnt, &zero, cnt);
++}
++static inline bool test_and_set_pending(struct unwind_task_info *info)
++{
++	return info->pending || cmpxchg_local(&info->pending, 0, 1);
++}
++#else
++#define UNWIND_NMI_SAFE 0
++/* When NMIs are not allowed, this always succeeds */
++static inline bool try_assign_cnt(struct unwind_task_info *info, u32 cnt)
++{
++	info->id.cnt = cnt;
++	return true;
++}
++static inline bool test_and_set_pending(struct unwind_task_info *info)
++{
++	int pending = info->pending;
++	info->pending = 1;
++	return pending;
++}
++#endif /* CONFIG_ARCH_HAVE_NMI_SAFE_CMPXCHG */
++
+ /* Make the cache fit in a 4K page */
+ #define UNWIND_MAX_ENTRIES					\
+ 	((SZ_4K - sizeof(struct unwind_cache)) / sizeof(long))
+@@ -41,21 +75,16 @@ static DEFINE_PER_CPU(u32, unwind_ctx_ct
+  */
+ static u64 get_cookie(struct unwind_task_info *info)
+ {
+-	u32 cpu_cnt;
+-	u32 cnt;
+-	u32 old = 0;
++	u32 cnt = 1;
+ 
+ 	if (info->id.cpu)
+ 		return info->id.id;
+ 
+-	cpu_cnt = __this_cpu_read(unwind_ctx_ctr);
+-	cpu_cnt += 2;
+-	cnt = cpu_cnt | 1; /* Always make non zero */
+-
+-	if (try_cmpxchg(&info->id.cnt, &old, cnt)) {
+-		/* Update the per cpu counter */
+-		__this_cpu_write(unwind_ctx_ctr, cpu_cnt);
+-	}
++	/* LSB it always set to ensure 0 is an invalid value. */
++	cnt |= __this_cpu_read(unwind_ctx_ctr) + 2;
++	if (try_assign_cnt(info, cnt))
++		__this_cpu_write(unwind_ctx_ctr, cnt);
++
+ 	/* Interrupts are disabled, the CPU will always be same */
+ 	info->id.cpu = smp_processor_id() + 1; /* Must be non zero */
+ 
+@@ -174,27 +203,29 @@ int unwind_deferred_request(struct unwin
+ 
+ 	*cookie = 0;
+ 
+-	if (WARN_ON_ONCE(in_nmi()))
+-		return -EINVAL;
+-
+ 	if ((current->flags & (PF_KTHREAD | PF_EXITING)) ||
+ 	    !user_mode(task_pt_regs(current)))
+ 		return -EINVAL;
+ 
++	/* NMI requires having safe cmpxchg operations */
++	if (WARN_ON_ONCE(!UNWIND_NMI_SAFE && in_nmi()))
++		return -EINVAL;
++
+ 	guard(irqsave)();
+ 
+ 	*cookie = get_cookie(info);
+ 
+ 	/* callback already pending? */
+-	if (info->pending)
++	if (test_and_set_pending(info))
+ 		return 1;
+ 
+ 	/* The work has been claimed, now schedule it. */
+ 	ret = task_work_add(current, &info->work, TWA_RESUME);
+-	if (WARN_ON_ONCE(ret))
++	if (WARN_ON_ONCE(ret)) {
++		WRITE_ONCE(info->pending, 0);
+ 		return ret;
++	}
+ 
+-	info->pending = 1;
+ 	return 0;
+ }
+ 
