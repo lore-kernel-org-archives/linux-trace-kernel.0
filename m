@@ -1,58 +1,61 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64D27BA42;
-	Tue, 15 Jul 2025 13:31:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FFD52E7F37;
+	Tue, 15 Jul 2025 13:58:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752586297; cv=none; b=nfnlcQpEOZguorrJ9WzX3yrzyykoWXCVh3ZQGJiwjJ87zhQaU2d52ED48R3aSVVl4sioNdb7fLpb1Dijwlypm2u74loDP44ZoW96QlYg2St9w2iiVneJwzxZ2ZPt/YUCfdlXWrg93DTuslv0vcaje6DtFZeiEPbYZ/xsshqfODY=
+	t=1752587913; cv=none; b=pOLD2djuhhaoTUeyw791v6IIrpXh3GKN+VWjhlaBkHMAAQVAzC+zC67UyNGAnGyC0LatAoqxAA+hYC06eXcxifilXU/n6wM41LqiB5DpTqIBtQmac0YJ5k3lQwsMO7gakrhJ+fp9M+Qt20KpzuTykCjtt23NqWt4cDaVFgCnMSg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752586297; c=relaxed/simple;
-	bh=3qlg0SCNcg8nKs+ycOKHvY064/ex0vaLBe/HisISSaU=;
+	s=arc-20240116; t=1752587913; c=relaxed/simple;
+	bh=fxS+g8tNbMk1/UdhRU/HlLfSUskJDrVIrYOCQQhuqIY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kmmeaLo9zi7davCIJorEhLXTUt8ttLzJrjtCwrJXZyKrsl2UMjBBUe+XZXnEqa3p0cj16y2b6/t/42wRmvInvWf+vA9q82q9WhOamIDKJldYR2rRLGSBYiuVVai4Arj6zPgReaDvdPENXPGSRzk8q3/KALxf+Smm62uvd2zhxPA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=SviX5acN; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=GGv12Rg2; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	 Content-Type:Content-Disposition:In-Reply-To; b=tY26acRLx8ZqXiV5n/UUwWKZ0uPgbkz5CVQemrVZ8OJ0cOFphuxpThPhREqlsV82JBceouheUCn2I/OGwisYAIu1yQmRj7tf0mTToVLCNPuZ0Hx7EYvAsmKuWCLGGpr45PgKZuqhi+Biy96fezLFWdca0s4KHHamxWEiXpbDsd0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=l4Vizggn; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="SviX5acN";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="GGv12Rg2"
-Date: Tue, 15 Jul 2025 15:31:33 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1752586294;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=joOFFAAY8AYV/4LY8627HFskz6QEGnW/9xaT8auIfuo=;
-	b=SviX5acNSqCWkmpRxHMexOAoIu9URZfsVbTsQI3SRxptnXwXmArcprncFBz7Ig76QH3QSH
-	gZKk7ALmkGj5GHAICMMBFtO/px50l5T2I/6NAx0hXqabMYYLfMiiBlDA75q+KakwkmNh1A
-	85oy+RsfJcQNYFDXJdwUP22houo6rdzpK5KRnFvIE/yK9+4h1YeqOb8CMABziNzD0MFd3s
-	rS/neYrkdwmbgwzSC1ngmw5Gp7H/XAYmUOCDXlj5kmVA8OGO7IdVh63UmRe+5M6Gct79fY
-	7jyxoF88HfwtNqwrTtiKr01O5CmsifSokJ1JjWEms69+D/Yc9N0a4dJAeeEnUQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1752586294;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=joOFFAAY8AYV/4LY8627HFskz6QEGnW/9xaT8auIfuo=;
-	b=GGv12Rg2+mLFhFwugX+3vHNk4RRbpwu/P5RqOZBT75BAVDK4nV/yOJUpYeIIhbeUSkL39W
-	1ndNqBMvAf7PazDg==
-From: Nam Cao <namcao@linutronix.de>
-To: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>,
-	John Ogness <john.ogness@linutronix.de>,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="l4Vizggn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6E39CC4CEE3;
+	Tue, 15 Jul 2025 13:58:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1752587913;
+	bh=fxS+g8tNbMk1/UdhRU/HlLfSUskJDrVIrYOCQQhuqIY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=l4VizggnWo1DpwbZuWP/wgm3VApTeTCEOnymfwBXT+GilXimDEQE0iPIBqdfv6kCi
+	 kvrSMjoaH00P8jMdB4VBav7nnidtnHwAto4lOKuhIXdRUv9zLac0k9qGP1dt9vU+Kx
+	 besMzcLyEY6CL3CXJ/iulu2Ux2wmI6rIlbokZUIfssTq+7xCt4aR4/gUg5F8zwheNy
+	 38Z2YuBFkCPHKo42aC2RxBV7YCSsmJFp5Nn2VHoOI+x4EAhgotJS6lFClihLkokNmk
+	 clpPZozDwuZYTrNm/DjfETz/I7kal1xj7ibFiF39RZ8jyeg3fbnaBQWAnL0Q+x4geu
+	 jTleqek0Z+P7g==
+Date: Tue, 15 Jul 2025 16:58:28 +0300
+From: Leon Romanovsky <leon@kernel.org>
+To: Will Deacon <will@kernel.org>
+Cc: Marek Szyprowski <m.szyprowski@samsung.com>,
+	Christoph Hellwig <hch@lst.de>, Jonathan Corbet <corbet@lwn.net>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Robin Murphy <robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>,
+	"Michael S. Tsirkin" <mst@redhat.com>,
+	Jason Wang <jasowang@redhat.com>,
+	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
+	Eugenio =?iso-8859-1?Q?P=E9rez?= <eperezma@redhat.com>,
+	Alexander Potapenko <glider@google.com>,
+	Marco Elver <elver@google.com>, Dmitry Vyukov <dvyukov@google.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
 	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Gabriele Monaco <gmonaco@redhat.com>,
-	linux-trace-kernel@vger.kernel.org,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Petr Mladek <pmladek@suse.com>, linux-kernel@vger.kernel.org,
-	Stephen Rothwell <sfr@canb.auug.org.au>
-Subject: Re: [PATCH 2/2] panic: Fix up description of vpanic()
-Message-ID: <20250715133133.XyZEBK7y@linutronix.de>
-References: <cover.1752232374.git.namcao@linutronix.de>
- <23a7e8add6546b155371b7e0fbb37bb1def13d6e.1752232374.git.namcao@linutronix.de>
- <20250715145601.2489a701c86ae48a75d1995f@kernel.org>
+	=?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org, iommu@lists.linux.dev,
+	virtualization@lists.linux.dev, kasan-dev@googlegroups.com,
+	linux-trace-kernel@vger.kernel.org, linux-mm@kvack.org
+Subject: Re: [PATCH 8/8] mm/hmm: migrate to physical address-based DMA
+ mapping API
+Message-ID: <20250715135828.GE5882@unreal>
+References: <cover.1750854543.git.leon@kernel.org>
+ <8a85f4450905fcb6b17d146cc86c11410d522de4.1750854543.git.leon@kernel.org>
+ <aHZWlu7Td9ijFhhh@willie-the-truck>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
@@ -61,37 +64,67 @@ List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250715145601.2489a701c86ae48a75d1995f@kernel.org>
+In-Reply-To: <aHZWlu7Td9ijFhhh@willie-the-truck>
 
-On Tue, Jul 15, 2025 at 02:56:01PM +0900, Masami Hiramatsu wrote:
-> On Fri, 11 Jul 2025 13:20:43 +0200
-> Nam Cao <namcao@linutronix.de> wrote:
-> >  /**
-> > - * panic - halt the system
-> > + * vpanic - halt the system
+On Tue, Jul 15, 2025 at 02:24:38PM +0100, Will Deacon wrote:
+> Hi Leon,
 > 
-> Shouldn't we make a copy the doc for the panic() (keep the text as it is)
-> and change the short explanation?
+> On Wed, Jun 25, 2025 at 04:19:05PM +0300, Leon Romanovsky wrote:
+> > From: Leon Romanovsky <leonro@nvidia.com>
+> > 
+> > Convert HMM DMA operations from the legacy page-based API to the new
+> > physical address-based dma_map_phys() and dma_unmap_phys() functions.
+> > This demonstrates the preferred approach for new code that should use
+> > physical addresses directly rather than page+offset parameters.
+> > 
+> > The change replaces dma_map_page() and dma_unmap_page() calls with
+> > dma_map_phys() and dma_unmap_phys() respectively, using the physical
+> > address that was already available in the code. This eliminates the
+> > redundant page-to-physical address conversion and aligns with the
+> > DMA subsystem's move toward physical address-centric interfaces.
+> > 
+> > This serves as an example of how new code should be written to leverage
+> > the more efficient physical address API, which provides cleaner interfaces
+> > for drivers that already have access to physical addresses.
 > 
-> panic - halt the system
-> @fmt: ...
+> I'm struggling a little to see how this is cleaner or more efficient
+> than the old code.
+
+It is not, the main reason for hmm conversion is to show how the API is
+used. HMM is built around struct page.
+
 > 
-> vpanic - halt the system with va_list
-> @fmt: ...
-> @args: ...
+> From what I can tell, dma_map_page_attrs() takes a 'struct page *' and
+> converts it to a physical address using page_to_phys() whilst your new
+> dma_map_phys() interface takes a physical address and converts it to
+> a 'struct page *' using phys_to_page(). In both cases, hmm_dma_map_pfn()
+> still needs the page for other reasons. If anything, existing users of
+> dma_map_page_attrs() now end up with a redundant page-to-phys-to-page
+> conversion which hopefully the compiler folds away.
 > 
->  From the newbie's viewpoint, as far as we keep providing the same
-> function, it is better to keep the same document to avoid confusion.
+> I'm assuming there's future work which builds on top of the new API
+> and removes the reliance on 'struct page' entirely, is that right? If
+> so, it would've been nicer to be clearer about that as, on its own, I'm
+> not really sure this patch series achieves an awful lot and the
+> efficiency argument looks quite weak to me.
 
-That would be nice for sure. But I think the counter arguments are
-stronger:
+Yes, there is ongoing work, which is built on top of dma_map_phys() API
+and can't be built without DMA phys.
 
-  - Two copies need to be maintained
+My WIP branch, where I'm using it can be found here:
+https://git.kernel.org/pub/scm/linux/kernel/git/leon/linux-rdma.git/log/?h=dmabuf-vfio
 
-  - panic() is only a few lines, and it is obvious at first glance that it
-    is simply a thin wrapper around vpanic()
+In that branch, we save one phys_to_page conversion in block datapath:
+block-dma: migrate to dma_map_phys instead of map_page
 
-So I think it is better to leave it as is.
+and implement DMABUF exporter for MMIO pages:
+vfio/pci: Allow MMIO regions to be exported through dma-buf
+see vfio_pci_dma_buf_map() function.
 
-Best regards,
-Nam
+Thanks
+
+> 
+> Cheers,
+> 
+> Will
+> 
