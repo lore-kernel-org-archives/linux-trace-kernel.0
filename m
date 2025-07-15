@@ -1,120 +1,109 @@
-Received: from mxhk.zte.com.cn (mxhk.zte.com.cn [160.30.148.35])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E054202C49;
-	Tue, 15 Jul 2025 15:13:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=160.30.148.35
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D64E229A5;
+	Tue, 15 Jul 2025 15:23:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752592423; cv=none; b=Cwndt3JnQZE3X6c39RP1XNW+O5pBoCLiD9JBdN9UHcFpy3fxHFOWt8dblxuQLKVboaj1z27pAVIcFAKMiROiH+IlJb7IiPcgWDAqBMqyaxVAhRbe1b3SsnYvUfLBCeh+p2J1F6FFIPk+UzmqkpjJyfz8plvbRqQdaml1Uivh0UQ=
+	t=1752593008; cv=none; b=QmT1kGGz0Msn4lsxIX4+NkQHMTqCj2WxN8rNOAv6ElxDnymUMSPCNodjY84L6Fz8unx81kaZeBKR9JSE5aUtgCfU1I0qTTm6r92CiGQuRuYacfOVg5flnj8yYK4flbA50ugFrt0MP0xaw4S0fAqeJJTEY+myKf6l+BMnux0hqWA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752592423; c=relaxed/simple;
-	bh=kKxqrmLt4lcjaPEkskXnTFZjIxXnpmJGM1JM7tMvYNo=;
-	h=Date:Message-ID:In-Reply-To:References:Mime-Version:From:To:Cc:
-	 Subject:Content-Type; b=USS8lT/UhU6Mubzv8bYpIQ9QVCPY9/3fA36UvlgeVO0Yy5683Do5XMCFvyUedW1roMfzIXdsgAzrcaPX+2HHxiiB/Atr98Np3a2yZ7MyUekt5l/1Ll1ZAJfDnBLaPJb+UiFN75llYaqeFBdygh9QY7d7qVpVVN6fv8ILIXBgfJ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn; spf=pass smtp.mailfrom=zte.com.cn; arc=none smtp.client-ip=160.30.148.35
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zte.com.cn
-Received: from mse-fl1.zte.com.cn (unknown [10.5.228.132])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mxhk.zte.com.cn (FangMail) with ESMTPS id 4bhN4700wSz8R039;
-	Tue, 15 Jul 2025 23:13:27 +0800 (CST)
-Received: from xaxapp02.zte.com.cn ([10.88.97.241])
-	by mse-fl1.zte.com.cn with SMTP id 56FFDLSd040471;
-	Tue, 15 Jul 2025 23:13:21 +0800 (+08)
-	(envelope-from fan.yu9@zte.com.cn)
-Received: from mapi (xaxapp02[null])
-	by mapi (Zmail) with MAPI id mid32;
-	Tue, 15 Jul 2025 23:13:25 +0800 (CST)
-Date: Tue, 15 Jul 2025 23:13:25 +0800 (CST)
-X-Zmail-TransId: 2afa6876701553c-d3fb8
-X-Mailer: Zmail v1.0
-Message-ID: <20250715231325415aMAZWoPQiUJ2Fe-ongTRW@zte.com.cn>
-In-Reply-To: <20250715072058.12f343bb@kernel.org>
-References: 20250714164625.788f7044@kernel.org,20250715072058.12f343bb@kernel.org
+	s=arc-20240116; t=1752593008; c=relaxed/simple;
+	bh=+yL4ogP4Wz0Yje7FHM6qD6QqNRwtP+1HxDsWdBMXUE8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CV2QB87WUT0S/zlaoWddjxKukxvjDFtyQttbjbLAsuHJW1i1o3hIkiOy1s8VCUVakW2c5AJfXe1Y95j4fRqcArKV8rVs8R+9Ecy1zD56Z8ziDh0eRJc/k3drTZckfWwpmESoj2W5LW86vSw71DwskQ2mPe5v/k2YVHFtPkGz64c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=kvMgQdn1; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=qH91vFjX; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="kvMgQdn1";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="qH91vFjX"
+Date: Tue, 15 Jul 2025 17:23:22 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1752593004;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=FnM7eSwbv+3Rg1wGrB5sgJ9RF8txXyxgxRZUjbAWnEE=;
+	b=kvMgQdn1Q1E2EGPsndz0rRF/MjmkhA9or9SpOr8b+ThpEAcw6+kfie9EVmAcQXentasC9d
+	TG1xoIaej3V18mk8pNVcEdGecWk/o1leTMTPpq2eGxV4KoNooQJSU9j2WkMXKC0EkVk887
+	Exvjq8i+xEGmrCc5PPFjtzHddSLakezaRr5j7cfE78gWAogM4cJESBCm4SR1Ch0g++c6eS
+	23KcxLW5KHep0jUMbJYt/bdYp9clahb8TuKDyuwmX0eyZVCVcrdydcI+juzrh9rX7S9DlR
+	tDUc3COiMB+K1CX/R3cmwg97T/oB1qNPtke2ucKRRYuQzmi33ocbLTWiMywRUQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1752593004;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=FnM7eSwbv+3Rg1wGrB5sgJ9RF8txXyxgxRZUjbAWnEE=;
+	b=qH91vFjX+eLZnKDEItJIWcAtN1a+1NoHkf09ubX4GSaJR6OU6fX0bMilGKdTcBgHkJEhmx
+	dtQo6JKqy1n35XAA==
+From: Nam Cao <namcao@linutronix.de>
+To: Gabriele Monaco <gmonaco@redhat.com>
+Cc: linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
+	linux-trace-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Tomas Glozar <tglozar@redhat.com>, Juri Lelli <jlelli@redhat.com>,
+	Clark Williams <williams@redhat.com>,
+	John Kacur <jkacur@redhat.com>
+Subject: Re: [PATCH v3 11/17] rv: Retry when da monitor detects race
+ conditions
+Message-ID: <20250715152322.Os4lDq_B@linutronix.de>
+References: <20250715071434.22508-1-gmonaco@redhat.com>
+ <20250715071434.22508-12-gmonaco@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 List-Id: <linux-trace-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-trace-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-trace-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-From: <fan.yu9@zte.com.cn>
-To: <kuba@kernel.org>
-Cc: <edumazet@google.com>, <kuniyu@amazon.com>, <ncardwell@google.com>,
-        <davem@davemloft.net>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
-        <yang.yang29@zte.com.cn>, <xu.xin16@zte.com.cn>,
-        <tu.qiang35@zte.com.cn>, <jiang.kun2@zte.com.cn>, <pabeni@redhat.com>,
-        <horms@kernel.org>
-Subject: =?UTF-8?B?UmU6IFtQQVRDSCBuZXQtbmV4dCB2NF0gdGNwOiBleHRlbmQgdGNwX3JldHJhbnNtaXRfc2tiIHRyYWNlcG9pbnQgd2l0aCBmYWlsdXJlIHJlYXNvbnM=?=
-Content-Type: multipart/mixed;
-	boundary="=====_001_next====="
-X-MAIL:mse-fl1.zte.com.cn 56FFDLSd040471
-X-Fangmail-Anti-Spam-Filtered: true
-X-Fangmail-MID-QID: 68767016.000/4bhN4700wSz8R039
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250715071434.22508-12-gmonaco@redhat.com>
 
+On Tue, Jul 15, 2025 at 09:14:28AM +0200, Gabriele Monaco wrote:
+>  static inline bool										\
+>  da_event_##name(struct da_monitor *da_mon, enum events_##name event)				\
+>  {												\
+> -	type curr_state = da_monitor_curr_state_##name(da_mon);					\
+> -	type next_state = model_get_next_state_##name(curr_state, event);			\
+> -												\
+> -	if (next_state != INVALID_STATE) {							\
+> -		da_monitor_set_state_##name(da_mon, next_state);				\
+> -												\
+> -		trace_event_##name(model_get_state_name_##name(curr_state),			\
+> -				   model_get_event_name_##name(event),				\
+> -				   model_get_state_name_##name(next_state),			\
+> -				   model_is_final_state_##name(next_state));			\
+> -												\
+> -		return true;									\
+> +	enum states_##name curr_state, next_state;						\
+> +												\
+> +	curr_state = READ_ONCE(da_mon->curr_state);						\
+> +	for (int i = 0; i < MAX_DA_RETRY_RACING_EVENTS; i++) {					\
+> +		next_state = model_get_next_state_##name(curr_state, event);			\
+> +		if (next_state == INVALID_STATE)						\
+> +			goto out_react;								\
+> +		if (likely(try_cmpxchg(&da_mon->curr_state, &curr_state, next_state)))		\
+> +			goto out_success;							\
+>  	}											\
+> +	/* Special invalid transition if we run out of retries. */				\
+> +	curr_state = INVALID_STATE;								\
+>  												\
+> +out_react:											\
+>  	cond_react_##name(curr_state, event);							\
+>  												\
+>  	trace_error_##name(model_get_state_name_##name(curr_state),				\
+>  			   model_get_event_name_##name(event));					\
 
+If I understand correctly, if after 3 tries and we still fail to change the
+state, we will invoke the reactor and trace_error? Doesn't that cause a
+false positive? Because it is not a violation of the model, it is just a
+race making us fail to change the state.
 
---=====_001_next=====
-Content-Type: multipart/related;
-	boundary="=====_002_next====="
+Same below.
 
+Also, I wouldn't use goto unless necessary. Perhaps it is better to put the
+code at "out_react:" and "out_success:" into the loop. But that's just my
+personal preference, up to you.
 
---=====_002_next=====
-Content-Type: multipart/alternative;
-	boundary="=====_003_next====="
-
-
---=====_003_next=====
-Content-Type: text/plain;
-	charset="UTF-8"
-Content-Transfer-Encoding: base64
-
-PiA+IEkgYWdyZWUgdGhhdCBzb21lIG9mIHRoZSByZXN1bHQgdHlwZXMgKGUuZy4sIEVOT01FTSwg
-RU5EX1NFUV9FUlJPUikNCj4gPiBtYXkgYmUgcmVkdW5kYW50IG9yIHVubGlrZWx5IGluIHByYWN0
-aWNlLiBJZiB3ZSBmb2N1cyBvbmx5IG9uIHRoZSBtb3N0DQo+ID4gY3JpdGljYWwgY2FzZXMsIHdv
-dWxkIHRoZSBmb2xsb3dpbmcgc3Vic2V0IGJlIG1vcmUgYWNjZXB0YWJsZT8NCj4gPiAtIFRDUF9S
-RVRSQU5TX0ZBSUxfUVVFVUVEIChwYWNrZXQgc3R1Y2sgaW4gaG9zdC9kcml2ZXIgcXVldWUpDQo+
-ID4gLSBUQ1BfUkVUUkFOU19GQUlMX1pFUk9fV0lORE9XIChyZWNlaXZlciB3aW5kb3cgY2xvc2Vk
-KQ0KPiA+IC0gVENQX1JFVFJBTlNfRkFJTF9ST1VURSAocm91dGluZyBpc3N1ZXMpDQo+ID4gLSBU
-Q1BfUkVUUkFOU19GQUlMX0RFRkFVTFQgKGNhdGNoLWFsbCBmb3IgdW5leHBlY3RlZCBmYWlsdXJl
-cykNCj4gDQo+IElzbid0IGl0IGVub3VnaCB0byBhZGQgdGhlIHJldHZhbCB0byB0aGUgdHJhY2Vw
-b2ludD8NCj4gQWxsIHRoZSBjYXNlcyB3ZSBjYXJlIGFib3V0IGFscmVhZHkgaGF2ZSBtZWFuaW5n
-ZnVsIGFuZCBkaXN0aW5jdCBlcnJvcg0KPiBjb2Rlcy4NCkhpIEpha3ViLA0KSSBhZ3JlZSB0aGF0
-IHVzaW5nIGV4aXN0aW5nIGVycm9yIGNvZGVzIChyZXR2YWwpIGluDQpjb3VsZCBiZSBhIHNpbXBs
-ZXIgYW5kIG1vcmUgbWFpbnRhaW5hYmxlIGFwcHJvYWNoLg0KDQpJbnN0ZWFkIG9mIGludHJvZHVj
-aW5nIG5ldyBUQ1BfUkVUUkFOU18qIGVudW1zLCBJ4oCZbGwgZGlyZWN0bHkNCnBhc3MgdGhlIHJl
-dHZhbCB0byB0aGUgdHJhY2Vwb2ludCBpbiBwYXRjaCB2NS4=
-
-
---=====_003_next=====
-Content-Type: text/html ;
-	charset="UTF-8"
-Content-Transfer-Encoding: base64
-
-PGRpdiBjbGFzcz0iemNvbnRlbnRSb3ciPjxwPiZndDsgJmd0OyBJIGFncmVlIHRoYXQgc29tZSBv
-ZiB0aGUgcmVzdWx0IHR5cGVzIChlLmcuLCBFTk9NRU0sIEVORF9TRVFfRVJST1IpPC9wPjxwPiZn
-dDsgJmd0OyBtYXkgYmUgcmVkdW5kYW50IG9yIHVubGlrZWx5IGluIHByYWN0aWNlLiBJZiB3ZSBm
-b2N1cyBvbmx5IG9uIHRoZSBtb3N0PC9wPjxwPiZndDsgJmd0OyBjcml0aWNhbCBjYXNlcywgd291
-bGQgdGhlIGZvbGxvd2luZyBzdWJzZXQgYmUgbW9yZSBhY2NlcHRhYmxlPzwvcD48cD4mZ3Q7ICZn
-dDsgLSBUQ1BfUkVUUkFOU19GQUlMX1FVRVVFRCAocGFja2V0IHN0dWNrIGluIGhvc3QvZHJpdmVy
-IHF1ZXVlKTwvcD48cD4mZ3Q7ICZndDsgLSBUQ1BfUkVUUkFOU19GQUlMX1pFUk9fV0lORE9XIChy
-ZWNlaXZlciB3aW5kb3cgY2xvc2VkKTwvcD48cD4mZ3Q7ICZndDsgLSBUQ1BfUkVUUkFOU19GQUlM
-X1JPVVRFIChyb3V0aW5nIGlzc3Vlcyk8L3A+PHA+Jmd0OyAmZ3Q7IC0gVENQX1JFVFJBTlNfRkFJ
-TF9ERUZBVUxUIChjYXRjaC1hbGwgZm9yIHVuZXhwZWN0ZWQgZmFpbHVyZXMpPC9wPjxwPiZndDsm
-bmJzcDs8L3A+PHA+Jmd0OyBJc24ndCBpdCBlbm91Z2ggdG8gYWRkIHRoZSByZXR2YWwgdG8gdGhl
-IHRyYWNlcG9pbnQ/PC9wPjxwPiZndDsgQWxsIHRoZSBjYXNlcyB3ZSBjYXJlIGFib3V0IGFscmVh
-ZHkgaGF2ZSBtZWFuaW5nZnVsIGFuZCBkaXN0aW5jdCBlcnJvcjwvcD48cD4mZ3Q7IGNvZGVzLjwv
-cD48cD5IaSBKYWt1Yiw8L3A+PHA+SSBhZ3JlZSB0aGF0IHVzaW5nIGV4aXN0aW5nIGVycm9yIGNv
-ZGVzIChyZXR2YWwpIGluPC9wPjxwPmNvdWxkIGJlIGEgc2ltcGxlciBhbmQgbW9yZSBtYWludGFp
-bmFibGUgYXBwcm9hY2guPC9wPjxwPjxicj48L3A+PHA+SW5zdGVhZCBvZiBpbnRyb2R1Y2luZyBu
-ZXcgVENQX1JFVFJBTlNfKiBlbnVtcywgSeKAmWxsIGRpcmVjdGx5PC9wPjxwPnBhc3MgdGhlIHJl
-dHZhbCB0byB0aGUgdHJhY2Vwb2ludCBpbiBwYXRjaCB2NS48L3A+PC9kaXY+
-
-
---=====_003_next=====--
-
---=====_002_next=====--
-
---=====_001_next=====--
-
+Nam
